@@ -34,7 +34,7 @@ export const prototype: CardPrototype = {
                 ...DefineFn.createRollCostRequire(1, "黒"),
                 "自分の手札２枚": {
                   title: "",
-                  responsePlayerId: DefineFn.PlayerIDFn.getOpponent(cardController),
+                  relatedPlayerSideKeyword: "敵軍",
                   actions: [
                     {
                       title: ["_ロールする", "廃棄"],

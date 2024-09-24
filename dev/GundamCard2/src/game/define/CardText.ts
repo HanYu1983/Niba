@@ -99,7 +99,7 @@ export type Condition = {
     title?: ConditionTitle,
     actions?: Action[],
     exceptItemSelf?: boolean,
-    responsePlayerId?: PlayerID,
+    relatedPlayerSideKeyword?: RelatedPlayerSideKeyword,
 }
 
 export type ConditionTitleFn = (ctx: any, effect: Effect, lib: any) => Tip | null;

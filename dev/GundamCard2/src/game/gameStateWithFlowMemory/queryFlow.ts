@@ -40,6 +40,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
         if (currentActiveEffect == null) {
             throw new Error("activeEffectID not found");
         }
+        // 是否決定了使用哪個邏輯
         const activeLogicID = getActiveLogicID(ctx)
         if (activeLogicID == null) {
             const controller = EffectFn.getPlayerID(currentActiveEffect);
@@ -53,9 +54,11 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                 ];
             }
             const cets = createCommandEffectTips(ctx, currentActiveEffect).filter(CommandEffecTipFn.filterNoError)
+            // 必須至少有一個正確邏輯可用, 不然不能到這一步
             if (cets.length == 0) {
                 throw new Error(`cets.length must > 0`);
             }
+            // 讓效果擁用者選定邏輯
             return [
                 {
                     id: "FlowSetActiveLogicID",
@@ -65,6 +68,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                 }
             ]
         }
+        // 如果決定了邏輯, 那子元素的ID則已選定
         const activeLogicSubID = getActiveLogicSubID(ctx)
         if (activeLogicSubID == null) {
             throw new Error(`activeLogicSubID must exist now`)
@@ -116,47 +120,13 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                             },
                         ];
                     }
-                    const cets = createCommandEffectTips(ctx, currentActiveEffect)
-                    if (cets.length == 0) {
-                        throw new Error(`cets.length must > 0`);
-                    }
-                    const useCet = cets.find(cet => cet.logicID == activeLogicID && cet.logicSubID == activeLogicSubID)
-                    if (useCet == null) {
-                        throw new Error(`cet must found`)
-                    }
-                    const toes = useCet.tipOrErrors.filter(toe => toe.errors.length != 0)
-                    if (toes.length == 0) {
-                        return [
-                            {
-                                id: "FlowPassPayCost",
-                                effectID: activeEffectID,
-                            },
-                        ];
-                    }
-                    const tipInfos = toes.map(toe => {
-                        const con = currentActiveEffect.text.conditions?.[toe.conditionKey]
-                        if (con == null) {
-                            throw new Error(`con must exist`)
-                        }
-                        const tip = getConditionTitleFn(con, {})(ctx, currentActiveEffect, createBridge())
-                        return {
-                            conditionKey: toe.conditionKey,
-                            condition: con,
-                            tip: tip
-                        }
-                    }).filter(info => info.tip)
-                    return tipInfos.map(info => {
-                        if (info.tip == null) {
-                            throw new Error(`info.tip must found`)
-                        }
-                        return {
-                            id: "FlowSetTipSelection",
-                            effectID: currentActiveEffect.id,
-                            conditionKey: info.conditionKey,
-                            tip: info.tip,
-                            description: `select ${info.conditionKey}`
-                        } as Flow
-                    })
+                    return [
+                        {
+                            id: "FlowPassPayCost",
+                            effectID: activeEffectID,
+                        },
+                    ];
+
                 }
             }
             if (controller != playerID) {
@@ -178,7 +148,50 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                 },
             ];
         }
-
+        if (false) {
+            const cets = createCommandEffectTips(ctx, currentActiveEffect)
+            // 必須至少有一個正確邏輯可用, 不然不能到這一步
+            if (cets.length == 0) {
+                throw new Error(`cets.length must > 0`);
+            }
+            const useCet = cets.find(cet => cet.logicID == activeLogicID && cet.logicSubID == activeLogicSubID)
+            if (useCet == null) {
+                throw new Error(`cet must found`)
+            }
+            const toes = useCet.tipOrErrors.filter(toe => toe.errors.length != 0)
+            if (toes.length == 0) {
+                return [
+                    {
+                        id: "FlowPassPayCost",
+                        effectID: activeEffectID,
+                    },
+                ];
+            }
+            const tipInfos = toes.map(toe => {
+                const con = currentActiveEffect.text.conditions?.[toe.conditionKey]
+                if (con == null) {
+                    throw new Error(`con must exist`)
+                }
+                const tip = getConditionTitleFn(con, {})(ctx, currentActiveEffect, createBridge())
+                return {
+                    conditionKey: toe.conditionKey,
+                    condition: con,
+                    tip: tip
+                }
+            }).filter(info => info.tip)
+            return tipInfos.map(info => {
+                if (info.tip == null) {
+                    throw new Error(`info.tip must found`)
+                }
+                return {
+                    id: "FlowSetTipSelection",
+                    effectID: currentActiveEffect.id,
+                    conditionKey: info.conditionKey,
+                    tip: info.tip,
+                    description: `select ${info.conditionKey}`
+                } as Flow
+            })
+        }
         const controller = EffectFn.getPlayerID(currentActiveEffect);
         if (controller != playerID) {
             return [
