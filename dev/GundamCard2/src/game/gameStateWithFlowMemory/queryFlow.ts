@@ -75,14 +75,54 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
         }
         const enablePayCost = true;
         if (enablePayCost) {
-            const controller = EffectFn.getPlayerID(currentActiveEffect);
+            const effectCreator = EffectFn.getPlayerID(currentActiveEffect);
+            const cets = createCommandEffectTips(ctx, currentActiveEffect)
+            // 必須至少有一個正確邏輯可用, 不然不能到這一步
+            if (cets.length == 0) {
+                throw new Error(`cets.length must > 0`);
+            }
+            const useCet = cets.find(cet => cet.logicID == activeLogicID && cet.logicSubID == activeLogicSubID)
+            if (useCet == null) {
+                throw new Error(`cet must found`)
+            }
+            const toes = useCet.tipOrErrors.filter(toe => toe.errors.length != 0)
+            const tipInfos = toes.map(toe => {
+                const con = currentActiveEffect.text.conditions?.[toe.conditionKey]
+                if (con == null) {
+                    throw new Error(`con must exist`)
+                }
+                const tip = getConditionTitleFn(con, {})(ctx, currentActiveEffect, createBridge())
+                return {
+                    conditionKey: toe.conditionKey,
+                    condition: con,
+                    tip: tip
+                }
+            }).filter(info => info.tip)
+            const playerTips = tipInfos.filter(info => {
+                if (info.condition.relatedPlayerSideKeyword == "敵軍") {
+                    return effectCreator != playerID
+                }
+                return effectCreator == playerID
+            }).map(info => {
+                if (info.tip == null) {
+                    throw new Error(`info.tip must found`)
+                }
+                return {
+                    id: "FlowSetTipSelection",
+                    effectID: currentActiveEffect.id,
+                    conditionKey: info.conditionKey,
+                    tip: info.tip,
+                    description: `select ${info.conditionKey}`
+                } as Flow
+            })
+            // ======
             const isPass = !!ctx.flowMemory.hasPlayerPassPayCost[playerID];
             const isOpponentPass =
                 !!ctx.flowMemory.hasPlayerPassPayCost[
                 PlayerIDFn.getOpponent(playerID)
                 ];
             if (isPass && isOpponentPass) {
-                if (controller != playerID) {
+                if (effectCreator != playerID) {
                     return [
                         {
                             id: "FlowObserveEffect",
@@ -100,7 +140,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                     },
                 ];
             } else if (isPass || isOpponentPass) {
-                if (controller == playerID) {
+                if (effectCreator == playerID) {
                     if (isPass) {
                         return [
                             {
@@ -121,15 +161,17 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                         ];
                     }
                     return [
-                        {
-                            id: "FlowPassPayCost",
-                            effectID: activeEffectID,
-                        },
+                        ...(playerTips.length ?
+                            playerTips :
+                            [{
+                                id: "FlowPassPayCost",
+                                effectID: activeEffectID,
+                            }] as Flow[])
                     ];
 
                 }
             }
-            if (controller != playerID) {
+            if (effectCreator != playerID) {
                 return [
                     {
                         id: "FlowWaitPlayer",
@@ -142,10 +184,12 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                     id: "FlowCancelActiveEffectID",
                     description: "取消支付效果，讓其它玩家可以支付",
                 },
-                {
-                    id: "FlowPassPayCost",
-                    effectID: activeEffectID,
-                },
+                ...(playerTips.length ?
+                    playerTips :
+                    [{
+                        id: "FlowPassPayCost",
+                        effectID: activeEffectID,
+                    }] as Flow[])
             ];
         }
         if (false) {
