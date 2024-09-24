@@ -1,6 +1,7 @@
 import { CommandEffectTip } from "../define/CommandEffectTip";
 import { Effect } from "../define/Effect";
 import { GameEvent } from "../define/GameEvent";
+import { Tip } from "../define/Tip";
 
 type FlowUpdateCommand = {
     id: "FlowUpdateCommand";
@@ -83,6 +84,13 @@ type FlowHandleStackEffectFinished = {
     id: "FlowHandleStackEffectFinished";
     description?: string;
 };
+type FlowSetTipSelection = {
+    id: "FlowSetTipSelection";
+    effectID: string;
+    conditionKey: string;
+    tip: Tip;
+    description?: string;
+};
 type FlowPassPayCost = {
     id: "FlowPassPayCost";
     effectID: string;
@@ -112,5 +120,6 @@ export type Flow =
     | FlowPassCut
     | FlowCancelPassCut
     | FlowHandleStackEffectFinished
+    | FlowSetTipSelection
     | FlowPassPayCost
     | FlowMakeDestroyOrder;

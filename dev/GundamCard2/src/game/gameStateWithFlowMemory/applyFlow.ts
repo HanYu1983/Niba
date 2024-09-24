@@ -13,7 +13,10 @@ import { ToolFn } from "../tool";
 import { updateCommand } from "./updateCommand";
 import { getItemIdsByBasyou } from "../gameState/ItemTableComponent";
 import { TableFns } from "../../tool/table";
-import { setTipSelectionForUser } from "../gameState/effect";
+import { setCardTipStrBaSyouPairs, setTipSelectionForUser } from "../gameState/effect";
+import { EffectFn } from "../define/Effect";
+import { mapItemState } from "../gameState/ItemStateComponent";
+import { ItemStateFn } from "../define/ItemState";
 
 export function applyFlow(
     ctx: GameStateWithFlowMemory,
@@ -51,7 +54,7 @@ export function applyFlow(
             }
             return deleteImmediateEffect(ctx, playerID, flow.effectID);
         }
-        case "FlowSetActiveLogicID":{
+        case "FlowSetActiveLogicID": {
             return setActiveLogicID(ctx, flow.logicID, flow.logicSubID)
         }
         case "FlowDoEffect": {
@@ -376,6 +379,12 @@ export function applyFlow(
                     hasPlayerPassCut: {},
                 },
             };
+        }
+        case "FlowSetTipSelection": {
+            const effect = getEffectIncludePlayerCommand(ctx, flow.effectID)
+            const cardId = EffectFn.getCardID(effect)
+            ctx = mapItemState(ctx, cardId, is => ItemStateFn.setTip(is, flow.conditionKey, flow.tip)) as GameStateWithFlowMemory
+            return ctx
         }
     }
     return ctx;
