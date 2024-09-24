@@ -11,7 +11,7 @@ import { getSetGroupBattlePoint } from "../gameState/setGroup";
 import { CommandEffectTip } from "../define/CommandEffectTip";
 
 export function getEffectIncludePlayerCommand(ctx: GameStateWithFlowMemory, effectId: string): Effect {
-  return ctx.commandEffects.find(cmd=>cmd.id == effectId) || getEffect(ctx, effectId)
+  return ctx.commandEffects.find(cmd => cmd.id == effectId) || getEffect(ctx, effectId)
 }
 export function setActiveEffectID(
   ctx: GameStateWithFlowMemory,
@@ -21,18 +21,18 @@ export function setActiveEffectID(
   if (ctx.activeEffectID != null) {
     throw new Error("有人在執行其它指令");
   }
-  // if (ctx.activeEffectID != null) {
-  //   const currentActiveEffect = getEffect(ctx, ctx.activeEffectID)
-  //   if (currentActiveEffect != null) {
-  //     const controller = EffectFn.getPlayerID(currentActiveEffect);
-  //     if (controller != playerID) {
-  //       throw new Error("[cancelCommand] 你不是控制者");
-  //     }
-  //     if (currentActiveEffect.requirePassed) {
-  //       throw new Error("[cancelCommand] 已經處理需求的不能取消");
-  //     }
-  //   }
-  // }
+  if (ctx.activeEffectID != null) {
+    const currentActiveEffect = getEffectIncludePlayerCommand(ctx, ctx.activeEffectID)
+    if (currentActiveEffect != null) {
+      const controller = EffectFn.getPlayerID(currentActiveEffect);
+      if (controller != playerID) {
+        throw new Error("[cancelCommand] 你不是控制者");
+      }
+      if (currentActiveEffect.requirePassed) {
+        throw new Error("[cancelCommand] 已經處理需求的不能取消");
+      }
+    }
+  }
   const effect = getEffectIncludePlayerCommand(ctx, effectID)
   if (effect == null) {
     throw new Error("effect not found");
