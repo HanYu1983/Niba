@@ -45,7 +45,8 @@ export async function test179030_11E_C_BL079R_blue() {
         ctx = addCards(ctx, originBasyouB, [cardB]) as GameState
         const cardC: Card = {
             id: "cardC",
-            protoID: "unit"
+            protoID: "unitBlue",
+            isRoll: true
         }
         const originBasyouC = AbsoluteBaSyouFn.of(PlayerA, "配備エリア")
         ctx = addCards(ctx, originBasyouC, [cardC]) as GameState
@@ -74,6 +75,9 @@ export async function test179030_11E_C_BL079R_blue() {
                 throw new Error(`effect.reason[0]!="場に出る`)
             }
             console.log(`執行效果: ${effect.description}`)
+            if (getCard(ctx, cardC.id).isRoll != true) {
+                throw new Error()
+            }
             ctx = doEffect(ctx, effect, 0, 0)
             ctx = removeEffect(ctx, effect.id) as GameState
             console.log("指令卡會移到墓地")
@@ -84,12 +88,23 @@ export async function test179030_11E_C_BL079R_blue() {
                 throw new Error(`getCardLiketemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "手札")).length != 0`)
             }
             console.log("cardB和cardC交換位置")
-            if (AbsoluteBaSyouFn.eq(getItemBaSyou(ctx, cardB.id), originBasyouC) != true) {
-                throw new Error(`AbsoluteBaSyouFn.eq(getItemBaSyou(ctx, cardB.id),originBasyouC) != true`)
+            if (getCard(ctx, cardB.id).protoID != "unitBlue") {
+                throw new Error()
             }
-            if (AbsoluteBaSyouFn.eq(getItemBaSyou(ctx, cardC.id), originBasyouB) != true) {
-                throw new Error(`AbsoluteBaSyouFn.eq(getItemBaSyou(ctx, cardC.id),originBasyouB) != true`)
+            if (getCard(ctx, cardC.id).protoID != "unit") {
+                throw new Error()
             }
+            console.log("cardC直立狀態進場")
+            if (getCard(ctx, cardC.id).isRoll != false) {
+                throw new Error()
+            }
+            // 以下應不需要, 置換只有換protoID和狀態, 這樣才能繼承所有對象
+            // if (AbsoluteBaSyouFn.eq(getItemBaSyou(ctx, cardB.id), originBasyouC) != true) {
+            //     throw new Error(`AbsoluteBaSyouFn.eq(getItemBaSyou(ctx, cardB.id),originBasyouC) != true`)
+            // }
+            // if (AbsoluteBaSyouFn.eq(getItemBaSyou(ctx, cardC.id), originBasyouB) != true) {
+            //     throw new Error(`AbsoluteBaSyouFn.eq(getItemBaSyou(ctx, cardC.id),originBasyouB) != true`)
+            // }
         }
         if (ctx.immediateEffect.length) {
             const effect = getEffect(ctx, ctx.immediateEffect[0])

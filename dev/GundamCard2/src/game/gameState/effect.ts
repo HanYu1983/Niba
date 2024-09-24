@@ -763,18 +763,18 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
         const cardId = EffectFn.getCardID(effect)
         const [[t1, t1ba]] = getCardTipStrBaSyouPairs(ctx, varNames[0], cardId)
         const [[t2, t2ba]] = getCardTipStrBaSyouPairs(ctx, varNames[1], cardId)
-        // ctx = swapItem(ctx, t1, t2)
-        // ctx = mapCard(ctx, t1, card=>({...card, isRoll: false})) as GameState
-
-        ctx = moveItem(ctx, t2ba, [t1, t1ba]) as GameState
-        ctx = moveItem(ctx, t1ba, [t2, t2ba]) as GameState
-        let t1card = getCard(ctx, t1)
-        t1card = CardFn.setIsRoll(t1card, false)
-        ctx = setCard(ctx, t1, t1card) as GameState
-        const t1State = { ...getItemState(ctx, t1) }
-        const t2State = { ...getItemState(ctx, t2) }
-        ctx = setItemState(ctx, t1, t2State) as GameState
-        ctx = setItemState(ctx, t2, t1State) as GameState
+        ctx = swapItem(ctx, t1, t2)
+        ctx = mapCard(ctx, t2, card => ({ ...card, isRoll: false })) as GameState
+        // 以下應不需要, 置換只有換protoID和狀態, 這樣才能繼承所有對象
+        // ctx = moveItem(ctx, t2ba, [t1, t1ba]) as GameState
+        // ctx = moveItem(ctx, t1ba, [t2, t2ba]) as GameState
+        // let t1card = getCard(ctx, t1)
+        // t1card = CardFn.setIsRoll(t1card, false)
+        // ctx = setCard(ctx, t1, t1card) as GameState
+        // const t1State = { ...getItemState(ctx, t1) }
+        // const t2State = { ...getItemState(ctx, t2) }
+        // ctx = setItemState(ctx, t1, t2State) as GameState
+        // ctx = setItemState(ctx, t2, t1State) as GameState
         return ctx
       }
     case "合計国力〔x〕": {
