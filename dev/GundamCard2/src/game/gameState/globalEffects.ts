@@ -63,7 +63,7 @@ function getSituationEffects(ctx: GameState, situation: Situation | null): Globa
       return [item, texts] as [Item, CardText[]]
     })
   )
-  // 恒常
+  // 恒常 & 使用型
   const getTextGroup2 = pipe(
     always(AbsoluteBaSyouFn.getScriptAll()),
     map(basyou => getItemIdsByBasyou(ctx, basyou)),
@@ -78,7 +78,7 @@ function getSituationEffects(ctx: GameState, situation: Situation | null): Globa
         }
         return [text]
       })
-      texts = texts.filter(text => text.title[0] == "自動型" && text.title[1] == "恒常")
+      texts = texts.filter(text => (text.title[0] == "自動型" && text.title[1] == "恒常") || text.title[0] == "使用型")
       return [item, texts] as [Item, CardText[]]
     })
   )

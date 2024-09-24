@@ -1,6 +1,6 @@
 const hideCategory: string[] = [
   "triggerEvent",
-  "getPlayEffects",
+  //"getPlayEffects",
   //"getConditionTitleFn",
   "doEffect",
   "applyFlow",

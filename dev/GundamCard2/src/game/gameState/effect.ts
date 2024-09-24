@@ -843,7 +843,7 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
         const cardId = EffectFn.getCardID(effect)
         const cardController = getItemController(ctx, cardId)
         const playerId = side == "自軍" ? cardController : PlayerIDFn.getOpponent(cardController)
-        const gsignCount = getItemIdsByPlayerId(ctx, true, playerId)
+        const gsignCount = getItemIdsByPlayerId(ctx, false, playerId)
           .filter(itemId => getItemPrototype(ctx, itemId).gsign?.[0].includes(color))
           .filter(itemId => getItemRuntimeCategory(ctx, itemId) == category).length
         if (gsignCount < count) {

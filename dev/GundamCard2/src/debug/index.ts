@@ -32,6 +32,7 @@ import { getItemState, mapItemState } from "../game/gameState/ItemStateComponent
 import { swap } from "ramda";
 import { swapItem } from "../game/gameState/swapItem";
 import { getItemBaSyou } from "../game/gameState/ItemTableComponent";
+import { test179030_11E_U_BK194S_2_black } from "./test179030_11E_U_BK194S_2_black";
 
 export async function tests() {
     return [
@@ -58,6 +59,7 @@ export async function tests() {
         test179030_11E_C_BL079R_blue,
         test179015_04B_U_BK061C_black,
         test179016_04B_U_BK066C_black,
+        test179030_11E_U_BK194S_2_black,
     ].reduce((worker, testF) => {
         return worker.then(async () => {
             console.log(`==============================${testF.name}==================================`);

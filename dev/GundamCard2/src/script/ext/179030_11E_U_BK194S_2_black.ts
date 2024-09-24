@@ -29,17 +29,19 @@ export const prototype: CardPrototype = {
         {
           actions: [
             {
-              title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
-                const cardId = DefineFn.EffectFn.getCardID(effect)
-                const ge1: GlobalEffect = {
-                  title: ["場、または手札から、自軍ジャンクヤードにカードが移る場合、ジャンクヤードに移る代わりにゲームから取り除かれる"],
-                  cardIds: [cardId]
-                }
-                ctx = GameStateFn.mapItemState(ctx, cardId, is => DefineFn.ItemStateFn.setGlobalEffect(is, null, ge1, { isRemoveOnTurnEnd: true })) as GameState
-                ctx = GameStateFn.mapItemState(ctx, cardId, is => DefineFn.ItemStateFn.setFlag(is, "enabled", true, { isRemoveOnTurnEnd: true })) as GameState
-                return ctx
-              }.toString()
-            }
+              title: ["cutIn", [{
+                title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+                  const cardId = DefineFn.EffectFn.getCardID(effect)
+                  const ge1: GlobalEffect = {
+                    title: ["場、または手札から、自軍ジャンクヤードにカードが移る場合、ジャンクヤードに移る代わりにゲームから取り除かれる"],
+                    cardIds: [cardId]
+                  }
+                  ctx = GameStateFn.mapItemState(ctx, cardId, is => DefineFn.ItemStateFn.setGlobalEffect(is, null, ge1, { isRemoveOnTurnEnd: true })) as GameState
+                  ctx = GameStateFn.mapItemState(ctx, cardId, is => DefineFn.ItemStateFn.setFlag(is, "enabled", true, { isRemoveOnTurnEnd: true })) as GameState
+                  return ctx
+                }.toString()
+              }]]
+            },
           ]
         }
       ],
@@ -54,12 +56,14 @@ export const prototype: CardPrototype = {
           const cardController = GameStateFn.getItemController(ctx, cardId);
           const targetIds = GameStateFn.getItemIdsByBasyou(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "ジャンクヤード"))
             .filter(cardId => GameStateFn.getItemPrototype(ctx, cardId).gsign?.[0].includes("黒"))
-          return [
-            {
-              title: ["自軍手札にあるかのようにプレイできる"],
-              cardIds: targetIds
-            }
-          ]
+          if (targetIds.length) {
+            return [
+              {
+                title: ["自軍手札にあるかのようにプレイできる"],
+                cardIds: targetIds
+              }
+            ]
+          }
         }
         return []
       }.toString()

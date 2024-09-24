@@ -6,11 +6,10 @@ import { AbsoluteBaSyouFn, BaSyouKeywordFn } from "../define/BaSyou";
 import { addCards, createCardWithProtoIds, getCard } from "./CardTableComponent";
 import { Effect } from "../define/Effect";
 import { getPlayCardEffects } from "./getPlayCardEffect";
-import { getItemIdsByBasyou, getItemIdsByBasyou, getItemPrototype } from "./ItemTableComponent";
+import { getItemBaSyou, getItemIdsByBasyou, getItemPrototype } from "./ItemTableComponent";
 import { getPrototype, loadPrototype } from "../../script";
-import { always, flatten, ifElse, lift, map, pipe } from "ramda";
+import { always, concat, flatten, ifElse, lift, map, pipe } from "ramda";
 import { createGameState, GameState } from "./GameState";
-import { ToolFn } from "../tool";
 import { getPhase, setPhase } from "./PhaseComponent";
 import { getCardHasSpeicalEffect, getCardTexts } from "./card";
 import { Card } from "../define/Card";
@@ -18,16 +17,23 @@ import { setActivePlayerID } from "./ActivePlayerComponent";
 import { getTextsFromSpecialEffect } from "./getTextsFromSpecialEffect";
 import { getPlayGEffects } from "./getPlayGEffect";
 import { Bridge } from "../../script/bridge";
-import { TargetMissingError } from "../define/GameError";
+import { getGlobalEffects, setGlobalEffects } from "./globalEffects";
 
 export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
     log("getPlayEffects", "start")
+    const ges = getGlobalEffects(ctx, null)
+    ctx = setGlobalEffects(ctx, null, ges)
+    log("getPlayEffects", "ges", ges)
+    const canPlayByText = ges
+        .filter(ge => ge.title[0] == "自軍手札にあるかのようにプレイできる")
+        .flatMap(ge => ge.cardIds).filter(itemId => AbsoluteBaSyouFn.getPlayerID(getItemBaSyou(ctx, itemId)) == playerId)
     const getPlayCardEffectsF = ifElse(
         always(PhaseFn.eq(getPhase(ctx), ["配備フェイズ", "フリータイミング"])),
         pipe(
             always([AbsoluteBaSyouFn.of(playerId, "手札"), AbsoluteBaSyouFn.of(playerId, "ハンガー")]),
             map(basyou => getItemIdsByBasyou(ctx, basyou)), flatten,
-            map(cardId => getPlayCardEffects(ctx, cardId)), flatten
+            concat(canPlayByText),
+            map(cardId => getPlayCardEffects(ctx, cardId)), flatten,
         ),
         // クイック
         ifElse(
@@ -35,6 +41,7 @@ export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
             pipe(
                 always([AbsoluteBaSyouFn.of(playerId, "手札"), AbsoluteBaSyouFn.of(playerId, "ハンガー")]),
                 map(basyou => getItemIdsByBasyou(ctx, basyou)), flatten,
+                concat(canPlayByText),
                 map(cardId => {
                     if (getCardHasSpeicalEffect(ctx, ["クイック"], cardId)) {
                         return getPlayCardEffects(ctx, cardId)
@@ -46,14 +53,13 @@ export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
             always([] as Effect[])
         )
     )
-    // TODO
-    // 自軍手札にあるかのようにプレイできる
 
     const getPlayGF = ifElse(
         always(PhaseFn.eq(getPhase(ctx), ["配備フェイズ", "フリータイミング"])),
         pipe(
             always([AbsoluteBaSyouFn.of(playerId, "手札"), AbsoluteBaSyouFn.of(playerId, "ハンガー")]),
             map(basyou => getItemIdsByBasyou(ctx, basyou)), flatten,
+            concat(canPlayByText),
             map(cardId => {
                 const card = getCard(ctx, cardId)
                 return getPlayGEffects(ctx, card.id)
@@ -121,6 +127,7 @@ export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
         pipe(
             always([AbsoluteBaSyouFn.of(playerId, "手札"), AbsoluteBaSyouFn.of(playerId, "ハンガー")]),
             map(basyou => getItemIdsByBasyou(ctx, basyou)), flatten,
+            concat(canPlayByText),
             map(cardId => {
                 const card = getCard(ctx, cardId)
                 const proto = getItemPrototype(ctx, card.id)

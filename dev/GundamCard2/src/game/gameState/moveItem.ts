@@ -4,7 +4,7 @@ import { StrBaSyouPair } from "../define/Tip"
 import { onMoveItem } from "./effect"
 import { EventCenterFn } from "./EventCenter"
 import { GameState } from "./GameState"
-import { getGlobalEffects } from "./globalEffects"
+import { getGlobalEffects, setGlobalEffects } from "./globalEffects"
 import { ItemTableComponent, isCard, isChip, getItemBaSyou, isCoin, getItemController, assertTargetMissingError } from "./ItemTableComponent"
 import { getSetGroupChildren } from "./SetGroupComponent"
 
@@ -15,8 +15,9 @@ export function moveItem(ctx: GameState, to: AbsoluteBaSyou, [itemId, from]: Str
     } if (isCard(ctx, itemId) || isChip(ctx, itemId)) {
         const oldTable = ctx.table
         {
-            const redirectEs = getGlobalEffects(ctx, null)
-                .filter(ge => ge.title[0] == "場、または手札から、自軍ジャンクヤードにカードが移る場合、ジャンクヤードに移る代わりにゲームから取り除かれる")
+            const ges = getGlobalEffects(ctx, null)
+            ctx = setGlobalEffects(ctx, null, ges)
+            const redirectEs = ges.filter(ge => ge.title[0] == "場、または手札から、自軍ジャンクヤードにカードが移る場合、ジャンクヤードに移る代わりにゲームから取り除かれる")
             if (redirectEs.length) {
                 // 取得效果的擁有者
                 const textControllers = redirectEs.flatMap(e => e.cardIds).map(id => getItemController(ctx, id))
