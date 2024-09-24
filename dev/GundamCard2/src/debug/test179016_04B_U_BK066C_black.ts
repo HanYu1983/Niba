@@ -10,7 +10,7 @@ import { setActivePlayerID } from "../game/gameState/ActivePlayerComponent"
 import { getCardRollCostLength, getCardBattlePoint } from "../game/gameState/card"
 import { addCards, createCardWithProtoIds, getCard, mapCard } from "../game/gameState/CardTableComponent"
 import { getCardIdByCoinId, getCoins } from "../game/gameState/CoinTableComponent"
-import { getEffectTips, doEffect, onMoveItem, setTipSelectionForUser, getCommandEffectTips, setEffectTips } from "../game/gameState/effect"
+import { createEffectTips, doEffect, onMoveItem, setTipSelectionForUser, createCommandEffectTips, setEffectTips } from "../game/gameState/effect"
 import { getEffect, getTopEffect } from "../game/gameState/EffectStackComponent"
 import { createGameState, GameState } from "../game/gameState/GameState"
 import { createConditionKeyOfPayColorX, getPlayCardEffects } from "../game/gameState/getPlayCardEffect"
@@ -47,7 +47,7 @@ export async function test179016_04B_U_BK066C_black() {
             throw new Error()
         }
         const effect = effects[0]
-        const toes = getEffectTips(ctx, effect, 0, 0)
+        const toes = createEffectTips(ctx, effect, 0, 0)
         const payKey = createConditionKeyOfPayColorX(getItemPrototype(ctx, cardA.id))
         for (const toe of toes) {
             let tip = toe.tip

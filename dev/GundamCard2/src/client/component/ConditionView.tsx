@@ -3,7 +3,7 @@ import { CardText, Condition } from "../../game/define/CardText";
 import { Effect } from "../../game/define/Effect";
 import { AppContext } from "../tool/appContext";
 import { TargetTypeView } from "./TargetTypeView";
-import { getEffectTips } from "../../game/gameState/effect";
+import { createEffectTips } from "../../game/gameState/effect";
 
 export const ConditionView = (props: {
   effect: Effect;
@@ -11,7 +11,7 @@ export const ConditionView = (props: {
 }) => {
   const appContext = useContext(AppContext);
   const render = useMemo(() => {
-    const tips = getEffectTips(appContext.viewModel.model.gameState, props.effect, 0, 0)
+    const tips = createEffectTips(appContext.viewModel.model.gameState, props.effect, 0, 0)
     return (
       <div>
         {

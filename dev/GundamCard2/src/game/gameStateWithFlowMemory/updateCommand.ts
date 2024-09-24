@@ -1,7 +1,7 @@
 import { CommandEffectTip, CommandEffecTipFn } from "../define/CommandEffectTip"
 import { Effect, EffectFn } from "../define/Effect"
 import { PlayerA, PlayerB } from "../define/PlayerID"
-import { getCommandEffectTips, getConditionTitleFn } from "../gameState/effect"
+import { createCommandEffectTips, getConditionTitleFn } from "../gameState/effect"
 import { getPlayEffects } from "../gameState/getPlayEffects"
 import { setCommandEffects, setCommandEffectTips } from "./effect"
 import { GameStateWithFlowMemory } from "./GameStateWithFlowMemory"
@@ -11,7 +11,7 @@ export function updateCommand(ctx: GameStateWithFlowMemory): GameStateWithFlowMe
     const playerAEffects = getPlayEffects(ctx, PlayerA)
     const playerBEffects = getPlayEffects(ctx, PlayerB)
     const allEffects = [...playerAEffects, ...playerBEffects]
-    const testedEffects = allEffects.flatMap(e => getCommandEffectTips(ctx, e))
+    const testedEffects = allEffects.flatMap(e => createCommandEffectTips(ctx, e))
     ctx = setCommandEffectTips(ctx, testedEffects) as GameStateWithFlowMemory
     ctx = setCommandEffects(ctx, testedEffects.filter((command, index, self) =>
         index === self.findIndex(c => c.effect.id === command.effect.id)

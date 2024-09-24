@@ -174,7 +174,7 @@ export async function testFlow2() {
   }
   console.log(`執行[${flows[0].id}]`)
   ctx = applyFlow(ctx, PlayerA, flows[0]);
-  if (ctx.activeEffectID == null) {
+  if (ctx.flowMemory.activeEffectID == null) {
     throw new Error("ctx.activeEffectID must exist");
   }
   console.log(getPhase(ctx))
@@ -228,7 +228,7 @@ export async function testFlow2() {
   }
   console.log(getPhase(ctx))
   ctx = applyFlow(ctx, PlayerA, doEffectFlowA);
-  if (ctx.activeEffectID != null) {
+  if (ctx.flowMemory.activeEffectID != null) {
     throw new Error("ctx.activeEffectID must null");
   }
   if (ctx.immediateEffect.length > 0) {

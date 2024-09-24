@@ -1,3 +1,4 @@
+import { CommandEffectTip } from "../define/CommandEffectTip";
 import { Effect } from "../define/Effect";
 import { GameEvent } from "../define/GameEvent";
 
@@ -31,6 +32,17 @@ type FlowSetActiveEffectID = {
 };
 type FlowCancelActiveEffectID = {
     id: "FlowCancelActiveEffectID";
+    description?: string;
+};
+type FlowSetActiveLogicID = {
+    id: "FlowSetActiveLogicID";
+    logicID: number;
+    logicSubID: number;
+    tips: CommandEffectTip[],
+    description?: string;
+};
+type FlowCancelActiveLogicID = {
+    id: "FlowCancelActiveLogicID";
     description?: string;
 };
 type FlowDoEffect = {
@@ -90,6 +102,8 @@ export type Flow =
     | FlowWaitPlayer
     | FlowSetActiveEffectID
     | FlowCancelActiveEffectID
+    | FlowSetActiveLogicID
+    | FlowCancelActiveLogicID
     | FlowDoEffect
     | FlowObserveEffect
     | FlowDeleteImmediateEffect

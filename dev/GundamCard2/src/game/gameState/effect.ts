@@ -33,7 +33,7 @@ import { EventCenterFn } from "./EventCenter"
 import { moveItem } from "./moveItem"
 import { swapItem } from "./swapItem"
 
-export function getEffectTips(
+export function createEffectTips(
   ctx: GameState,
   effect: Effect,
   logicId: number,
@@ -138,12 +138,12 @@ export function assertEffectCanPass(
   }
 }
 
-export function getCommandEffectTips(ctx: GameState, effect: Effect): CommandEffectTip[] {
+export function createCommandEffectTips(ctx: GameState, effect: Effect): CommandEffectTip[] {
   if (effect.text.logicTreeActions) {
     const testedEffects = effect.text.logicTreeActions.flatMap((lta, logicId) => {
       const allTree = CardTextFn.getLogicTreeActionConditions(effect.text, lta)
       const allTest = allTree.map((conditions, logicSubId) => {
-        const conTipErrors = getEffectTips(ctx, effect, logicId, logicSubId)
+        const conTipErrors = createEffectTips(ctx, effect, logicId, logicSubId)
         return {
           id: ToolFn.getUUID("getCommandEffectTips"),
           effect: effect,
@@ -160,7 +160,7 @@ export function getCommandEffectTips(ctx: GameState, effect: Effect): CommandEff
 }
 
 export function setTipSelectionForUser(ctx: GameState, e: Effect, logicId: number, logicSubId: number): GameState {
-  return setEffectTips(ctx, e, getEffectTips(ctx, e, logicId, logicSubId))
+  return setEffectTips(ctx, e, createEffectTips(ctx, e, logicId, logicSubId))
 }
 
 export function doEffect(

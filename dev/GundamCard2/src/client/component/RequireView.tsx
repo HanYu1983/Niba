@@ -7,7 +7,7 @@ import { TargetTypeView } from "./TargetTypeView";
 import { Effect, EffectFn } from "../../game/define/Effect";
 import { Tip } from "../../game/define/Tip";
 import { CardText, Condition } from "../../game/define/CardText";
-import { getEffectTips } from "../../game/gameState/effect";
+import { createEffectTips } from "../../game/gameState/effect";
 import { prop } from "ramda";
 
 export const RequireView = (props: {
@@ -17,7 +17,7 @@ export const RequireView = (props: {
 }) => {
   const appContext = useContext(AppContext);
   const render = useMemo(() => {
-    const tipOrEs = getEffectTips(appContext.viewModel.model.gameState, props.effect, 0, 0)
+    const tipOrEs = createEffectTips(appContext.viewModel.model.gameState, props.effect, 0, 0)
     return (
       <div style={{ border: "1px solid black" }}>
         {tipOrEs.map((tipOrE, i) => {

@@ -1,14 +1,14 @@
 import { assoc } from "ramda";
 import { log } from "../../tool/logger";
 import { DestroyReason, Effect, EffectFn } from "../define/Effect";
-import { doEffect } from "../gameState/effect";
+import { doEffect, createCommandEffectTips } from "../gameState/effect";
 import { getEffect, isStackEffect, removeEffect } from "../gameState/EffectStackComponent";
 import { ToolFn } from "../tool";
 import { GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
 import { getItemStateValues } from "../gameState/ItemStateComponent";
 import { getItemController } from "../gameState/ItemTableComponent";
 import { getSetGroupBattlePoint } from "../gameState/setGroup";
-import { CommandEffectTip } from "../define/CommandEffectTip";
+import { CommandEffecTipFn, CommandEffectTip } from "../define/CommandEffectTip";
 
 export function getEffectIncludePlayerCommand(ctx: GameStateWithFlowMemory, effectId: string): Effect {
   return ctx.commandEffects.find(cmd => cmd.id == effectId) || getEffect(ctx, effectId)
@@ -18,11 +18,12 @@ export function setActiveEffectID(
   playerID: string,
   effectID: string
 ): GameStateWithFlowMemory {
-  if (ctx.activeEffectID != null) {
+  const activeEffectID = getActiveEffectID(ctx)
+  if (activeEffectID != null) {
     throw new Error("有人在執行其它指令");
   }
-  if (ctx.activeEffectID != null) {
-    const currentActiveEffect = getEffectIncludePlayerCommand(ctx, ctx.activeEffectID)
+  if (activeEffectID != null) {
+    const currentActiveEffect = getEffectIncludePlayerCommand(ctx, activeEffectID)
     if (currentActiveEffect != null) {
       const controller = EffectFn.getPlayerID(currentActiveEffect);
       if (controller != playerID) {
@@ -41,20 +42,39 @@ export function setActiveEffectID(
   if (controller != playerID) {
     throw new Error("[cancelCommand] 你不是控制者");
   }
-  return {
+  ctx = {
     ...ctx,
-    activeEffectID: effectID
+    flowMemory: {
+      ...ctx.flowMemory,
+      activeEffectID: effectID
+    }
   };
+  const cets = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)
+  if (cets.length == 0) {
+    throw new Error(`cets.length must not 0`)
+  }
+  if (cets.length == 1) {
+    ctx = {
+      ...ctx,
+      flowMemory: {
+        ...ctx.flowMemory,
+        activeLogicID: cets[0].logicID,
+        activeLogicSubID: cets[0].logicSubID,
+      }
+    };
+  }
+  return ctx
 }
 
 export function cancelActiveEffectID(
   ctx: GameStateWithFlowMemory,
   playerID: string
 ): GameStateWithFlowMemory {
-  if (ctx.activeEffectID == null) {
+  const activeEffectID = getActiveEffectID(ctx)
+  if (activeEffectID == null) {
     throw new Error("[cancelEffectID] activeEffectID not exist");
   }
-  const effect = getEffectIncludePlayerCommand(ctx, ctx.activeEffectID)
+  const effect = getEffectIncludePlayerCommand(ctx, activeEffectID)
   if (effect == null) {
     return ctx;
   }
@@ -67,18 +87,45 @@ export function cancelActiveEffectID(
   }
   return {
     ...ctx,
-    activeEffectID: null,
+    flowMemory: {
+      ...ctx.flowMemory,
+      activeEffectID: null,
+    }
   };
 }
 
 export function getActiveEffectID(ctx: GameStateWithFlowMemory): string | null {
-  return ctx.activeEffectID
+  return ctx.flowMemory.activeEffectID
 }
 
 export function clearActiveEffectID(ctx: GameStateWithFlowMemory): GameStateWithFlowMemory {
   return {
     ...ctx,
-    activeEffectID: null
+    flowMemory: {
+      ...ctx.flowMemory,
+      activeEffectID: null,
+      activeLogicID: null,
+      activeLogicSubID: null
+    }
+  }
+}
+
+export function getActiveLogicID(ctx: GameStateWithFlowMemory): number | null {
+  return ctx.flowMemory.activeLogicID
+}
+
+export function getActiveLogicSubID(ctx: GameStateWithFlowMemory): number | null {
+  return ctx.flowMemory.activeLogicSubID
+}
+
+export function setActiveLogicID(ctx: GameStateWithFlowMemory, logicID: number, logicSubID: number): GameStateWithFlowMemory {
+  return {
+    ...ctx,
+    flowMemory: {
+      ...ctx.flowMemory,
+      activeLogicID: logicID,
+      activeLogicSubID: logicSubID
+    }
   }
 }
 
@@ -159,6 +206,10 @@ export function addDestroyEffect(ctx: GameStateWithFlowMemory, block: Effect): G
     ...ctx,
     destroyEffect: [block, ...ctx.destroyEffect],
   };
+}
+
+export function getCommandEffecTips(ctx: GameStateWithFlowMemory): CommandEffectTip[] {
+  return ctx.commandEffectTips
 }
 
 export function setCommandEffectTips(ctx: GameStateWithFlowMemory, effects: CommandEffectTip[]): GameStateWithFlowMemory {

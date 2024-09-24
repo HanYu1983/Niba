@@ -5,7 +5,7 @@ import { addImmediateEffect, addStackEffect, getEffect } from "../gameState/Effe
 import { checkIsBattle } from "../gameState/IsBattleComponent";
 import { Flow } from "./Flow";
 import { GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
-import { setActiveEffectID, cancelActiveEffectID, doActiveEffect, deleteImmediateEffect, clearDestroyEffects, updateDestroyEffect, getEffectIncludePlayerCommand } from "./effect";
+import { setActiveEffectID, cancelActiveEffectID, doActiveEffect, deleteImmediateEffect, clearDestroyEffects, updateDestroyEffect, getEffectIncludePlayerCommand, setActiveLogicID } from "./effect";
 import { PhaseFn } from "../define/Timing";
 import { doPlayerAttack } from "../gameState/player";
 import { triggerEvent } from "../gameState/triggerEvent";
@@ -51,6 +51,9 @@ export function applyFlow(
             }
             return deleteImmediateEffect(ctx, playerID, flow.effectID);
         }
+        case "FlowSetActiveLogicID":{
+            return setActiveLogicID(ctx, flow.logicID, flow.logicSubID)
+        }
         case "FlowDoEffect": {
             if (flow.effectID == null) {
                 throw new Error("effectID not found");
@@ -61,7 +64,7 @@ export function applyFlow(
             if (flow.logicSubID == null) {
                 throw new Error("logicSubID not found");
             }
-            ctx = setTipSelectionForUser(ctx, getEffectIncludePlayerCommand(ctx, flow.effectID), flow.logicID, flow.logicSubID) as GameStateWithFlowMemory
+            //ctx = setTipSelectionForUser(ctx, getEffectIncludePlayerCommand(ctx, flow.effectID), flow.logicID, flow.logicSubID) as GameStateWithFlowMemory
             ctx = doActiveEffect(ctx, playerID, flow.effectID, flow.logicID, flow.logicSubID);
             // 執行完效果時自動取消其中一方的結束宣告
             ctx = {

@@ -19,6 +19,9 @@ export type FlowMemoryComponent = {
     hasPlayerPassCut: { [key: string]: boolean };
     hasPlayerPassPayCost: { [key: string]: boolean };
     shouldTriggerStackEffectFinishedEvent: boolean;
+    activeEffectID: string | null;
+    activeLogicID: number | null;
+    activeLogicSubID: number | null;
 }
 
 export const DEFAULT_FLOW_MEMORY: FlowMemoryComponent = {
@@ -28,6 +31,9 @@ export const DEFAULT_FLOW_MEMORY: FlowMemoryComponent = {
     hasPlayerPassCut: {},
     hasPlayerPassPayCost: {},
     shouldTriggerStackEffectFinishedEvent: false,
+    activeEffectID: null,
+    activeLogicID: null,
+    activeLogicSubID: null,
 }
 
 export type HasFlowMemoryComponent = {
@@ -46,14 +52,13 @@ export type GameStateWithFlowMemory = {
     commandEffectTips: CommandEffectTip[];
     commandEffects: Effect[],
     stackEffectMemory: Effect[];
-    activeEffectID: string | null;
+
 } & GameState & HasFlowMemoryComponent;
 
 export function createGameStateWithFlowMemory(): GameStateWithFlowMemory {
     return {
         ...createGameState(),
         stackEffectMemory: [],
-        activeEffectID: null,
         flowMemory: DEFAULT_FLOW_MEMORY,
         commandEffectTips: [],
         commandEffects: [],

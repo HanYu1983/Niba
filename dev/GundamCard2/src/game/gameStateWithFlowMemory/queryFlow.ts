@@ -1,6 +1,6 @@
 import { getEffect, getTopEffect } from "../gameState/EffectStackComponent";
 import { Flow } from "./Flow";
-import { getActiveEffectID, getEffectIncludePlayerCommand } from "./effect";
+import { getActiveEffectID, getActiveLogicID, getActiveLogicSubID, getCommandEffecTips, getEffectIncludePlayerCommand } from "./effect";
 import { GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
 import { PlayerA, PlayerB, PlayerIDFn } from "../define/PlayerID";
 import { AbsoluteBaSyouFn } from "../define/BaSyou";
@@ -11,6 +11,8 @@ import { getDrawPhaseRuleEffect } from "../gameState/getDrawPhaseRuleEffect";
 import { getRerollPhaseRuleEffect } from "../gameState/getRerollPhaseRuleEffect";
 import { getDamageRuleEffect } from "../gameState/getDamageRuleEffect";
 import { getReturnRuleEffect } from "../gameState/getReturnRuleEffect";
+import { createCommandEffectTips } from "../gameState/effect";
+import { CommandEffecTipFn } from "../define/CommandEffectTip";
 
 export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[] {
     if (true) {
@@ -37,6 +39,35 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
         if (currentActiveEffect == null) {
             throw new Error("activeEffectID not found");
         }
+        const activeLogicID = getActiveLogicID(ctx)
+        if (activeLogicID == null) {
+            const controller = EffectFn.getPlayerID(currentActiveEffect);
+            if (controller != playerID) {
+                return [
+                    {
+                        id: "FlowObserveEffect",
+                        effectID: activeEffectID,
+                        description: `觀察正在支付的效果: ${currentActiveEffect.description}`
+                    },
+                ];
+            }
+            const cets = createCommandEffectTips(ctx, currentActiveEffect).filter(CommandEffecTipFn.filterNoError)
+            if (cets.length == 0) {
+                throw new Error(`cets.length must > 0`);
+            }
+            return [
+                {
+                    id: "FlowSetActiveLogicID",
+                    logicID: cets[0].logicID,
+                    logicSubID: cets[0].logicSubID,
+                    tips: cets,
+                }
+            ]
+        }
+        const activeLogicSubID = getActiveLogicSubID(ctx)
+        if (activeLogicSubID == null) {
+            throw new Error(`activeLogicSubID must exist now`)
+        }
         const enablePayCost = true;
         if (enablePayCost) {
             const controller = EffectFn.getPlayerID(currentActiveEffect);
@@ -59,8 +90,8 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                     {
                         id: "FlowDoEffect",
                         effectID: activeEffectID,
-                        logicID: 0,
-                        logicSubID: 0,
+                        logicID: activeLogicID,
+                        logicSubID: activeLogicSubID,
                     },
                 ];
             } else if (isPass || isOpponentPass) {

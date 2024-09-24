@@ -9,7 +9,7 @@ import { setActivePlayerID } from "../game/gameState/ActivePlayerComponent"
 import { getCardRollCostLength, getCardBattlePoint } from "../game/gameState/card"
 import { addCards, createCardWithProtoIds, getCard, mapCard } from "../game/gameState/CardTableComponent"
 import { getCardIdByCoinId, getCoins } from "../game/gameState/CoinTableComponent"
-import { getEffectTips, doEffect, onMoveItem, setTipSelectionForUser, getCommandEffectTips } from "../game/gameState/effect"
+import { createEffectTips, doEffect, onMoveItem, setTipSelectionForUser, createCommandEffectTips } from "../game/gameState/effect"
 import { getEffect, getTopEffect } from "../game/gameState/EffectStackComponent"
 import { createGameState, GameState } from "../game/gameState/GameState"
 import { getPlayCardEffects } from "../game/gameState/getPlayCardEffect"
@@ -43,7 +43,7 @@ export async function test179015_04B_U_BK061C_black() {
     }
     {
         const effect = getEffect(ctx, ctx.immediateEffect[0])
-        const cets = getCommandEffectTips(ctx, effect)
+        const cets = createCommandEffectTips(ctx, effect)
         if (cets.length != 2) {
             throw new Error()
         }
@@ -67,7 +67,7 @@ export async function test179015_04B_U_BK061C_black() {
         }
         ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerB, "配備エリア"), [unit2]) as GameState
         const effect = getEffect(ctx, ctx.immediateEffect[0])
-        const cets = getCommandEffectTips(ctx, effect)
+        const cets = createCommandEffectTips(ctx, effect)
         if (cets.length != 2) {
             throw new Error()
         }

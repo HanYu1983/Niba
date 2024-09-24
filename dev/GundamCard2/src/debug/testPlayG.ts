@@ -5,7 +5,7 @@ import { PlayerA } from "../game/define/PlayerID";
 import { PhaseFn } from "../game/define/Timing";
 import { setActivePlayerID } from "../game/gameState/ActivePlayerComponent";
 import { addCards } from "../game/gameState/CardTableComponent";
-import { doEffect, getEffectTips } from "../game/gameState/effect";
+import { doEffect, createEffectTips } from "../game/gameState/effect";
 import { createGameState, GameState } from "../game/gameState/GameState";
 import { getPlayEffects } from "../game/gameState/getPlayEffects";
 import { getPlayGEffects } from "../game/gameState/getPlayGEffect";
@@ -49,7 +49,7 @@ export async function testPlayG() {
     }
     {
         const effect = getPlayGEffects(ctx, unitBlue2.id)
-        const toes = getEffectTips(ctx, effect, 0, 0)
+        const toes = createEffectTips(ctx, effect, 0, 0)
         if(toes.flatMap(toe=>toe.errors).length == 0){
             throw new Error()
         }
