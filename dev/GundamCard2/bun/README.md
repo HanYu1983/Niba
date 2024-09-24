@@ -4,10 +4,10 @@ bun create typescript
 ```
 
 # 建立web專案
+## 舊方法
 ```bash
 # 先build index.js到public
 bun build src\index.ts --outdir public
-bun build src\web.tsx --outdir public
 
 # copy script/data到public/data
 xcopy /E /I /Y src\script\data public\data
@@ -25,4 +25,9 @@ xcopy /E /I /Y tmp\script\ext public\ext
 # 測試WEB
 cd public
 run.bat
+```
+## 目前方法
+```bash
+bun build src\web.tsx --outdir public
+runWeb.bat
 ```
