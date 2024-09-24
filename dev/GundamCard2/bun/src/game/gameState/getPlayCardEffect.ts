@@ -209,47 +209,53 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
     const ret = [playCardEffect]
     const ges = getGlobalEffects(ctx, null)
     ctx = setGlobalEffects(ctx, null, ges)
-    const morePlayEfs = ges.filter(g => g.title[0] == "合計国力＋(１)してプレイできる" && g.cardIds.includes(cardId))
-    const hasMorePlay = morePlayEfs.length > 0
-    const addedLength = pipe(always(morePlayEfs), map(g => g.title[0] == "合計国力＋(１)してプレイできる" ? g.title[1] : 0), sum)()
-    if (hasMorePlay) {
-        const morePlayCardEffect: Effect = {
-            ...playCardEffect,
-            text: {
-                ...playCardEffect.text,
-                conditions: {
-                    ...playCardEffect.text.conditions,
-                    "合計国力〔x〕": {
-                        actions: [
-                            {
-                                title: ["合計国力〔x〕", cardRollCostLength + addedLength]
-                            }
-                        ]
-                    }
-                },
+    {
+        const morePlayEfs = ges.filter(g => g.title[0] == "合計国力＋(１)してプレイできる" && g.cardIds.includes(cardId))
+        const hasTotolCostPlusPlay = morePlayEfs.length > 0
+        const addedLength = pipe(always(morePlayEfs), map(g => g.title[0] == "合計国力＋(１)してプレイできる" ? g.title[1] : 0), sum)()
+        if (hasTotolCostPlusPlay) {
+            const totalCostPlusPlayEffect: Effect = {
+                ...playCardEffect,
+                id: `totalCostPlusPlayEffect_${cardId}`,
+                text: {
+                    ...playCardEffect.text,
+                    id: `totalCostPlusPlayEffect_text_${cardId}`,
+                    conditions: {
+                        ...playCardEffect.text.conditions,
+                        "合計国力〔x〕": {
+                            actions: [
+                                {
+                                    title: ["合計国力〔x〕", cardRollCostLength + addedLength]
+                                }
+                            ]
+                        }
+                    },
+                }
             }
+            totalCostPlusPlayEffect.text.logicTreeActions = JSON.parse(JSON.stringify(playCardEffect.text.logicTreeActions))
+            if (totalCostPlusPlayEffect.text.logicTreeActions?.[0] == null) {
+                throw new Error(`morePlayCardEffect.text.logicTreeActions?.[0] == null`)
+            }
+            totalCostPlusPlayEffect.text.logicTreeActions[0].actions.push({
+                title: function _(ctx: GameState, effect: Effect, { GameStateFn, DefineFn }: Bridge): GameState {
+                    const { addedLength } = { addedLength: 0 }
+                    const cardId = DefineFn.EffectFn.getCardID(effect)
+                    let cs = GameStateFn.getItemState(ctx, cardId)
+                    cs = DefineFn.ItemStateFn.setMoreTotalRollCostLengthPlay(cs, addedLength)
+                    ctx = GameStateFn.setItemState(ctx, cardId, cs) as GameState
+                    return ctx
+                }.toString().replace("{ addedLength: 0 }", `{addedLength: ${addedLength}}`)
+            })
+            ret.push(totalCostPlusPlayEffect)
         }
-        morePlayCardEffect.text.logicTreeActions = JSON.parse(JSON.stringify(playCardEffect.text.logicTreeActions))
-        if (morePlayCardEffect.text.logicTreeActions?.[0] == null) {
-            throw new Error(`morePlayCardEffect.text.logicTreeActions?.[0] == null`)
-        }
-        morePlayCardEffect.text.logicTreeActions[0].actions.push({
-            title: function _(ctx: GameState, effect: Effect, { GameStateFn, DefineFn }: Bridge): GameState {
-                const { addedLength } = { addedLength: 0 }
-                const cardId = DefineFn.EffectFn.getCardID(effect)
-                let cs = GameStateFn.getItemState(ctx, cardId)
-                cs = DefineFn.ItemStateFn.setMoreTotalRollCostLengthPlay(cs, addedLength)
-                ctx = GameStateFn.setItemState(ctx, cardId, cs) as GameState
-                return ctx
-            }.toString().replace("{ addedLength: 0 }", `{addedLength: ${addedLength}}`)
-        })
-        ret.push(morePlayCardEffect)
     }
     if (prototype.category == "キャラクター" && getCardHasSpeicalEffect(ctx, ["ステイ"], cardId)) {
-        const morePlayCardEffect: Effect = {
+        const stayPlayEffect: Effect = {
             ...playCardEffect,
+            id: `stayPlayEffect_${cardId}`,
             text: {
                 ...playCardEffect.text,
+                id: `stayPlayEffect_text_${cardId}`,
                 conditions: {
                     ...dissoc("一個自軍機體", playCardEffect.text.conditions || {})
                 },
@@ -271,6 +277,7 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
                 ]
             }
         }
+        ret.push(stayPlayEffect)
     }
     return ret
 }

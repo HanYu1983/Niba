@@ -20,10 +20,8 @@ import { Bridge } from "../../script/bridge";
 import { getGlobalEffects, setGlobalEffects } from "./globalEffects";
 
 export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
-    log("getPlayEffects", "start")
     const ges = getGlobalEffects(ctx, null)
     ctx = setGlobalEffects(ctx, null, ges)
-    log("getPlayEffects", "ges", ges)
     const canPlayByText = ges
         .filter(ge => ge.title[0] == "自軍手札にあるかのようにプレイできる")
         .flatMap(ge => ge.cardIds).filter(itemId => AbsoluteBaSyouFn.getPlayerID(getItemBaSyou(ctx, itemId)) == playerId)
