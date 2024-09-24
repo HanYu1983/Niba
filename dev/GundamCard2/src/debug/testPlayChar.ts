@@ -13,7 +13,7 @@ import { getPlayEffects } from "../game/gameState/getPlayEffects";
 import { getPlayGEffects } from "../game/gameState/getPlayGEffect";
 import { getItemBaSyou } from "../game/gameState/ItemTableComponent";
 import { setPhase } from "../game/gameState/PhaseComponent";
-import { getSetGroupCards, getSetGroupRoot } from "../game/gameState/SetGroupComponent";
+import { getSetGroupChildren, getSetGroupRoot } from "../game/gameState/SetGroupComponent";
 import { triggerEvent } from "../game/gameState/triggerEvent";
 import { loadPrototype } from "../script";
 
@@ -53,11 +53,11 @@ export async function testPlayChar() {
             throw new Error()
         }
         // 子樹
-        if(getSetGroupCards(ctx, unitBlue.id).length != 2){
+        if(getSetGroupChildren(ctx, unitBlue.id).length != 2){
             throw new Error()
         }
         // 子樹
-        if(getSetGroupCards(ctx, charBlue.id).length != 1){
+        if(getSetGroupChildren(ctx, charBlue.id).length != 1){
             throw new Error()
         }
         if(getSetGroupRoot(ctx, charBlue.id) != unitBlue.id){

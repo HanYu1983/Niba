@@ -10,7 +10,7 @@ import { getCoins, getCardIdByCoinId } from "./CoinTableComponent"
 import { GameState } from "./GameState"
 import { getGlobalEffects, setGlobalEffects, clearGlobalEffects } from "./globalEffects"
 import { getItemPrototype, getItemIdsByBasyou, getItemBaSyou, isChip, isCard, getCardLikeItemIdsByBasyou, getItemController } from "./ItemTableComponent"
-import { getSetGroupCards } from "./SetGroupComponent"
+import { getSetGroupChildren } from "./SetGroupComponent"
 import { TipTitleTextRef } from "../define/Tip"
 
 export function getCardTextFromCardTextRef(ctx: GameState, textRef: TipTitleTextRef): CardText {
@@ -201,7 +201,7 @@ export function isCardCanReroll(
       return false;
   }
   const baSyou = getItemBaSyou(ctx, cardID);
-  const setGroup = getSetGroupCards(ctx, cardID);
+  const setGroup = getSetGroupChildren(ctx, cardID);
   return true;
 }
 

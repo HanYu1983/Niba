@@ -6,7 +6,7 @@ import { GameState } from "./GameState";
 import { getItemState } from "./ItemStateComponent";
 import { getItemIdsByBasyou, getItemBaSyou, getCardLikeItemIdsByBasyou } from "./ItemTableComponent";
 import { getSetGroupBattlePoint } from "./setGroup";
-import { getSetGroupRoot, getSetGroupCards } from "./SetGroupComponent";
+import { getSetGroupRoot, getSetGroupChildren } from "./SetGroupComponent";
 
 // battleGroup
 export function getBattleGroup(
@@ -59,7 +59,7 @@ export function isABattleGroup(
     battleGroup
       .map((cardID) => {
         // 其中一張卡有就行了
-        const setGroupCards = getSetGroupCards(ctx, cardID);
+        const setGroupCards = getSetGroupChildren(ctx, cardID);
         for (const cardGroupCardID of setGroupCards) {
           if (getCardHasSpeicalEffect(ctx, a, cardGroupCardID)) {
             return true;
@@ -84,7 +84,7 @@ export function isBattleGroupHasA(
     battleGroup
       .map((cardID) => {
         // 其中一張卡有就行了
-        const setGroupCards = getSetGroupCards(ctx, cardID);
+        const setGroupCards = getSetGroupChildren(ctx, cardID);
         for (const cardGroupCardID of setGroupCards) {
           if (getCardHasSpeicalEffect(ctx, a, cardGroupCardID)) {
             return true;

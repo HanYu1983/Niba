@@ -3,12 +3,12 @@ import { BattlePointFn } from "../define/BattlePoint";
 import { BattleBonus } from "../define/CardText";
 import { getCardBattlePoint } from "./card";
 import { GameState } from "./GameState";
-import { getSetGroupCards } from "./SetGroupComponent";
+import { getSetGroupChildren } from "./SetGroupComponent";
 
 // setgroup
 export function getSetGroupBattlePoint(ctx: GameState, cardId: string): BattleBonus {
     return pipe(
-        always(getSetGroupCards(ctx, cardId)),
+        always(getSetGroupChildren(ctx, cardId)),
         map(setGroupCardID => getCardBattlePoint(ctx, setGroupCardID)),
         reduce(BattlePointFn.add, BattlePointFn.getAllStar()),
         BattlePointFn.toBattleBonus

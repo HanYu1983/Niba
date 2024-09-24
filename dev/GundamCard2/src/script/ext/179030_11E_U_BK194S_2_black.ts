@@ -30,10 +30,12 @@ export const prototype: CardPrototype = {
               title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
                 const cardId = DefineFn.EffectFn.getCardID(effect)
                 const ge1: GlobalEffect = {
-                  title: ["場、または手札から、自軍ジャンクヤードにカードが移る場合、ジャンクヤードに移る代わりにゲームから取り除かれる"]
+                  title: ["場、または手札から、自軍ジャンクヤードにカードが移る場合、ジャンクヤードに移る代わりにゲームから取り除かれる"],
+                  cardIds: [cardId]
                 }
                 const ge2: GlobalEffect = {
-                  title: ["自軍手札にあるかのようにプレイできる"]
+                  title: ["自軍手札にあるかのようにプレイできる"],
+                  cardIds: []
                 }
 
                 // const addedEffects = GameStateFn.getPlayCardEffects(ctx, cardId).map(e => {

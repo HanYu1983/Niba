@@ -7,7 +7,7 @@ import { addCoins, CoinTableComponent, getCardIdByCoinId, getCoin, getCoinIds, g
 import { ChipTableComponent, getChip, getChipIds, getChipOwner, getChipPrototype, setChip } from "./ChipTableComponent";
 import { Coin } from "../define/Coin";
 import { StrBaSyouPair } from "../define/Tip";
-import { getSetGroupCards, SetGroupComponent } from "./SetGroupComponent";
+import { getSetGroupChildren, SetGroupComponent } from "./SetGroupComponent";
 import { TargetMissingError } from "../define/GameError";
 import { CardPrototype } from "../define/CardPrototype";
 import { getPrototype } from "../../script";
@@ -19,6 +19,7 @@ import { log } from "../../tool/logger";
 import { GameState } from "./GameState";
 import { getGlobalEffects } from "./globalEffects";
 import { EventCenterFn } from "./EventCenter";
+import { moveCardLike } from "./moveCardLikeItem";
 
 export type Item = Card | Coin | Chip;
 
@@ -143,30 +144,32 @@ export type OnMoveItemFn = (ctx: any, to: AbsoluteBaSyou, sb: StrBaSyouPair) => 
 export function moveItem(ctx: ItemTableComponent, to: AbsoluteBaSyou, sb: StrBaSyouPair, onFn?: OnMoveItemFn): ItemTableComponent {
   assertTargetMissingError(ctx, sb)
   const [itemId, originBasyou] = sb
-  if (isCard(ctx, itemId) || isChip(ctx, itemId)) {
-    // if(getGlobalEffects(ctx, null).find(ge=>ge.title[0]=="場、または手札から、自軍ジャンクヤードにカードが移る場合、ジャンクヤードに移る代わりにゲームから取り除かれる")){
-
-    // }
-    const oldTable = ctx.table
-    const nowBasyou = getItemBaSyou(ctx, itemId)
-    const itemIds = getSetGroupCards(ctx, itemId)
-    const table = itemIds.reduce((table, itemId) => {
-      return TableFns.moveCard(table, AbsoluteBaSyouFn.toString(nowBasyou), AbsoluteBaSyouFn.toString(to), itemId)
-    }, ctx.table)
-    ctx = {
-      ...ctx,
-      table: table
-    }
-    if (onFn) {
-      ctx = onFn(ctx, to, sb)
-    }
-    ctx = EventCenterFn.onTableChange(ctx, oldTable, ctx.table)
-    return ctx
+  ctx = moveCardLike(ctx as GameState, originBasyou, to, itemId)
+  if (onFn) {
+    ctx = onFn(ctx, to, sb)
   }
-  if (isCoin(ctx, itemId)) {
-    throw new Error(`coin can not move: ${itemId}`)
-  }
-  throw new Error(`moveItem unknown item: ${itemId}`)
+  return ctx
+  // if (isCard(ctx, itemId) || isChip(ctx, itemId)) {
+  //   const oldTable = ctx.table
+  //   const nowBasyou = getItemBaSyou(ctx, itemId)
+  //   const itemIds = getSetGroupChildren(ctx, itemId)
+  //   const table = itemIds.reduce((table, itemId) => {
+  //     return TableFns.moveCard(table, AbsoluteBaSyouFn.toString(nowBasyou), AbsoluteBaSyouFn.toString(to), itemId)
+  //   }, ctx.table)
+  //   ctx = {
+  //     ...ctx,
+  //     table: table
+  //   }
+  //   if (onFn) {
+  //     ctx = onFn(ctx, to, sb)
+  //   }
+  //   ctx = EventCenterFn.onTableChange(ctx, oldTable, ctx.table)
+  //   return ctx
+  // }
+  // if (isCoin(ctx, itemId)) {
+  //   throw new Error(`coin can not move: ${itemId}`)
+  // }
+  // throw new Error(`moveItem unknown item: ${itemId}`)
 }
 
 export function setItemIsRoll(ctx: ItemTableComponent, isRoll: boolean, [itemId, originBasyou]: StrBaSyouPair): ItemTableComponent {
@@ -175,7 +178,7 @@ export function setItemIsRoll(ctx: ItemTableComponent, isRoll: boolean, [itemId,
     if (AbsoluteBaSyouFn.eq(nowBasyou, originBasyou) == false) {
       throw new TargetMissingError(`target missing: ${itemId} from ${originBasyou}`)
     }
-    const itemIds = getSetGroupCards(ctx, itemId)
+    const itemIds = getSetGroupChildren(ctx, itemId)
     ctx = itemIds.reduce((ctx, itemId) => {
       if (isCard(ctx, itemId)) {
         let item = getCard(ctx, itemId)
