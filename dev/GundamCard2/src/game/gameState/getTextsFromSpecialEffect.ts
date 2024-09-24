@@ -421,7 +421,7 @@ export function getTextsFromSpecialEffect(ctx: GameState, text: CardText): CardT
                                 const { GameStateFn, DefineFn } = bridge
                                 const cardId = DefineFn.EffectFn.getCardID(effect)
                                 const cardController = GameStateFn.getItemController(ctx, cardId)
-                                const gCount = GameStateFn.getItemIdsByBasyou(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "Gゾーン")).length
+                                const gCount = GameStateFn.getCardLikeItemIdsByBasyou(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "Gゾーン")).length
                                 return GameStateFn.getConditionTitleFn({
                                     title: ["打開自軍手裡或指定HANGER中特徵_A並合計國力_x以下的_1張卡", A, gCount, 1]
                                 }, {})(ctx, effect, bridge)

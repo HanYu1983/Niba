@@ -8,7 +8,7 @@ import { getCardTexts } from "./card"
 import { getCardIds } from "./CardTableComponent"
 import { getOnEventTitleFn } from "./effect"
 import { GameState } from "./GameState"
-import { getCardLikeItemIds, getItemIds, getItemIdsByBasyou, getItemPrototype } from "./ItemTableComponent"
+import { getCardLikeItemIds, getItemPrototype } from "./ItemTableComponent"
 import { ItemStateFn } from "../define/ItemState"
 import { PhaseFn } from "../define/Timing"
 import { getItemState, mapItemState, mapItemStateValues, setItemState } from "./ItemStateComponent"
@@ -83,7 +83,7 @@ export function triggerEvent(
         const activePlayerId = getActivePlayerID(ctx)
         // BaSyouKeywordFn.getAll()
         //     .map(kw => AbsoluteBaSyouFn.of(activePlayerId, kw))
-        //     .flatMap(basyou => getItemIdsByBasyou(ctx, basyou))
+        //     .flatMap(basyou => getCardLikeItemIdsByBasyou(ctx, basyou))
         //     .reduce((ctx, itemId) => {
         //         return mapItemState(ctx, itemId, cs => {
         //             return ItemStateFn.onTurnEnd(cs)

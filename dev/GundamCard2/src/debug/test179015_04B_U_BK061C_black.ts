@@ -17,7 +17,7 @@ import { getPlayEffects } from "../game/gameState/getPlayEffects"
 import { getGlobalEffects, setGlobalEffects, clearGlobalEffects } from "../game/gameState/globalEffects"
 import { checkIsBattle, isBattle } from "../game/gameState/IsBattleComponent"
 import { getItemState, setItemState } from "../game/gameState/ItemStateComponent"
-import { getCardLikeItemIdsByBasyou, getItemBaSyou, getItemIds, getItemIdsByBasyou } from "../game/gameState/ItemTableComponent"
+import { getCardLikeItemIdsByBasyou } from "../game/gameState/ItemTableComponent"
 import { setPhase } from "../game/gameState/PhaseComponent"
 import { triggerEvent } from "../game/gameState/triggerEvent"
 import { loadPrototype } from "../script"
@@ -51,12 +51,12 @@ export async function test179015_04B_U_BK061C_black() {
         if (cetsCanUse.length != 1) {
             throw new Error()
         }
-        if (getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerB, "本国")).length != 1) {
+        if (getCardLikeItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerB, "本国")).length != 1) {
             throw new Error()
         }
         const [{ logicID, logicSubID }] = cetsCanUse
         ctx = doEffect(ctx, effect, logicID, logicSubID)
-        if (getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerB, "本国")).length != 0) {
+        if (getCardLikeItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerB, "本国")).length != 0) {
             throw new Error()
         }
     }

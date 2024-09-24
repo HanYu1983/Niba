@@ -14,7 +14,7 @@ import { getCard, mapCard, setCard } from "./CardTableComponent"
 import { GameState } from "./GameState"
 import { clearGlobalEffects } from "./globalEffects"
 import { getItemStateValues, getItemState, setItemState, mapItemState } from "./ItemStateComponent"
-import { getItemController, addCoinsToCard, isCard, isChip, getItemBaSyou, isCoin, getItemPrototype, getItemIdsByBasyou, setItemIsRoll, getCardLikeItemIdsByBasyou, assertTargetMissingError } from "./ItemTableComponent"
+import { getItemController, addCoinsToCard, isCard, isChip, getItemBaSyou, isCoin, getItemPrototype, setItemIsRoll, getCardLikeItemIdsByBasyou, assertTargetMissingError } from "./ItemTableComponent"
 import { triggerEvent } from "./triggerEvent"
 import { Bridge } from "../../script/bridge"
 import { GlobalEffect } from "../define/GlobalEffect"
@@ -640,7 +640,7 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
         const cardController = getItemController(ctx, cardId)
         const playerId = side == "自軍" ? cardController : PlayerIDFn.getOpponent(cardController)
         const from = AbsoluteBaSyouFn.of(playerId, "本国")
-        const pairs = getItemIdsByBasyou(ctx, from).map(itemId => {
+        const pairs = getCardLikeItemIdsByBasyou(ctx, from).map(itemId => {
           return [itemId, from] as StrBaSyouPair
         }).slice(0, damage)
         const to = AbsoluteBaSyouFn.of(playerId, "捨て山")
