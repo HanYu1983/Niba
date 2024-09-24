@@ -55,6 +55,7 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
         ...prototype.commandText.conditions
     } : {}
     const rollCostConditions = createRollCostConditions(ctx, prototype, prototype.rollCost || [])
+    // 注意, 這裡的effect.id是用函數名為前綴+卡片ID, 必須是唯一的
     const playCardEffect: Effect = {
         id: `getPlayCardEffects_${cardId}`,
         reason: ["PlayCard", playerId, cardId],

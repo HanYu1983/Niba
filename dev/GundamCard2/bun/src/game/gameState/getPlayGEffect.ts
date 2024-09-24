@@ -8,11 +8,11 @@ import { TargetMissingError } from "../define/GameError"
 export function getPlayGEffects(ctx: GameState, cardId: string): Effect {
     const playerId = getItemOwner(ctx, cardId)
     const effect: Effect = {
-        id: `getPlayCardEffects_${cardId}`,
+        id: `getPlayGEffects_${cardId}`,
         reason: ["PlayCard", playerId, cardId],
         description: "PlayG",
         text: {
-            id: `getPlayCardEffects_text_${cardId}`,
+            id: `getPlayGEffects_text_${cardId}`,
             title: [],
             conditions: {
                 "出G上限": {

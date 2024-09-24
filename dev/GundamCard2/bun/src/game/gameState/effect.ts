@@ -145,12 +145,12 @@ export function createCommandEffectTips(ctx: GameState, effect: Effect): Command
       const allTest = allTree.map((conditions, logicSubId) => {
         const conTipErrors = createEffectTips(ctx, effect, logicId, logicSubId)
         return {
-          id: ToolFn.getUUID("getCommandEffectTips"),
+          //id: ToolFn.getUUID("getCommandEffectTips"),
           effect: effect,
           logicID: logicId,
           logicSubID: logicSubId,
           tipOrErrors: conTipErrors
-        }
+        } as CommandEffectTip
       })
       return allTest
     })

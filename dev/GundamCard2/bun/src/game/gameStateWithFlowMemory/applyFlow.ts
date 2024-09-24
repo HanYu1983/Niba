@@ -23,7 +23,7 @@ export function applyFlow(
     playerID: string,
     flow: Flow
 ): GameStateWithFlowMemory {
-    log("applyFlow", playerID, flow);
+    log("applyFlow", playerID, flow.description);
     switch (flow.id) {
         case "FlowSetActiveEffectID": {
             if (flow.effectID == null) {

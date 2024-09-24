@@ -27,7 +27,7 @@ type FlowWaitPlayer = {
 };
 type FlowSetActiveEffectID = {
     id: "FlowSetActiveEffectID";
-    effectID: string | null;
+    effectID: string;
     tips: Effect[];
     description?: string;
 };

@@ -1,10 +1,11 @@
 const hideCategory: string[] = [
   "triggerEvent",
-  //"getPlayEffects",
-  //"getConditionTitleFn",
+  "getPlayEffects",
+  "getConditionTitleFn",
   "doEffect",
-  "applyFlow",
-  "handleAttackDamage"
+  //"applyFlow",
+  "handleAttackDamage",
+  "getGlobalEffects"
 ];
 let filterCategory = true;
 

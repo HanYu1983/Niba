@@ -38,9 +38,25 @@ export function setActiveEffectID(
   if (effect == null) {
     throw new Error("effect not found");
   }
+
   const controller = EffectFn.getPlayerID(effect);
   if (controller != playerID) {
     throw new Error("[cancelCommand] 你不是控制者");
+  }
+  // error
+  const cetsNoErr = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)
+  if (cetsNoErr.length == 0) {
+    throw new Error(`cets.length must not 0`)
+  }
+  if (cetsNoErr.length == 1) {
+    ctx = {
+      ...ctx,
+      flowMemory: {
+        ...ctx.flowMemory,
+        activeLogicID: cetsNoErr[0].logicID,
+        activeLogicSubID: cetsNoErr[0].logicSubID,
+      }
+    };
   }
   ctx = {
     ...ctx,
@@ -49,20 +65,6 @@ export function setActiveEffectID(
       activeEffectID: effectID
     }
   };
-  const cets = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)
-  if (cets.length == 0) {
-    throw new Error(`cets.length must not 0`)
-  }
-  if (cets.length == 1) {
-    ctx = {
-      ...ctx,
-      flowMemory: {
-        ...ctx.flowMemory,
-        activeLogicID: cets[0].logicID,
-        activeLogicSubID: cets[0].logicSubID,
-      }
-    };
-  }
   return ctx
 }
 

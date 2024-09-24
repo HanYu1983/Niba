@@ -12,10 +12,9 @@ export function updateCommand(ctx: GameStateWithFlowMemory): GameStateWithFlowMe
     const playerBEffects = getPlayEffects(ctx, PlayerB)
     const allEffects = [...playerAEffects, ...playerBEffects]
     const testedEffects = allEffects.flatMap(e => createCommandEffectTips(ctx, e))
+    const effects = testedEffects.filter(CommandEffecTipFn.filterEffectDistinct).map(tip => tip.effect)
     ctx = setCommandEffectTips(ctx, testedEffects) as GameStateWithFlowMemory
-    ctx = setCommandEffects(ctx, testedEffects.filter((command, index, self) =>
-        index === self.findIndex(c => c.effect.id === command.effect.id)
-    ).map(tip => tip.effect))
+    ctx = setCommandEffects(ctx, effects)
     return ctx
 }
 

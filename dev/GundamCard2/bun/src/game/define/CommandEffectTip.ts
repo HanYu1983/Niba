@@ -8,7 +8,7 @@ export type TipOrErrors = {
 }
 
 export type CommandEffectTip = {
-    id: string,
+    //id: string,
     effect: Effect,
     logicID: number,
     logicSubID: number,

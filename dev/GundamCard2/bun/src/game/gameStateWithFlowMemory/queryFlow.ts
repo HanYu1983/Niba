@@ -253,13 +253,29 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                 },
             ];
         }
+        const effect = myEffect[0]
+        // temp test
+        {
+            const cets = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)
+            if (cets.length == 0) {
+                throw new Error(`cets.length must not 0`)
+            }
+        }
         const optionEffect = myEffect.filter((v) => v.isOption == true);
+        // temp test
+        if (optionEffect.length) {
+            const effect = optionEffect[0]
+            const cets = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)
+            if (cets.length == 0) {
+                throw new Error(`cets.length must not 0`)
+            }
+        }
         return [
             ...(myEffect.length
                 ? [
                     {
                         id: "FlowSetActiveEffectID",
-                        effectID: myEffect[0].id,
+                        effectID: effect.id,
                         description: "選擇一個起動效果",
                         tips: myEffect,
                     } as Flow,
@@ -381,10 +397,18 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                     if (myCommandList.length == 0) {
                         return [];
                     }
+                    const effect = myCommandList[0]
+                    // temp test
+                    {
+                        const cets = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)
+                        if (cets.length == 0) {
+                            throw new Error(`cets.length must not 0`)
+                        }
+                    }
                     return [
                         {
                             id: "FlowSetActiveEffectID",
-                            effectID: myCommandList[0].id,
+                            effectID: effect.id,
                             tips: myCommandList,
                             description: "你可以切入",
                         },
@@ -404,6 +428,13 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                     description: "等待效果控制者處理",
                 },
             ];
+        }
+        // temp test
+        {
+            const cets = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)
+            if (cets.length == 0) {
+                throw new Error(`cets.length must not 0`)
+            }
         }
         return [
             {
@@ -438,10 +469,18 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                     if (myCommandList.length == 0) {
                         return [];
                     }
+                    const effect = myCommandList[0]
+                    // temp test
+                    {
+                        const cets = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)
+                        if (cets.length == 0) {
+                            throw new Error(`cets.length must not 0`)
+                        }
+                    }
                     return [
                         {
                             id: "FlowSetActiveEffectID",
-                            effectID: myCommandList[0].id,
+                            effectID: effect.id,
                             description: "選擇一個指令",
                             tips: myCommandList,
                         },

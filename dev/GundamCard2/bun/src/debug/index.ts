@@ -33,10 +33,13 @@ import { swap } from "ramda";
 import { swapItem } from "../game/gameState/swapItem";
 import { getItemBaSyou } from "../game/gameState/ItemTableComponent";
 import { test179030_11E_U_BK194S_2_black } from "./test179030_11E_U_BK194S_2_black";
+import { createCommandEffectTips, setTipSelectionForUser } from "../game/gameState/effect";
+import { CommandEffecTipFn } from "../game/define/CommandEffectTip";
+const fs = require('fs').promises;
 
 export async function tests() {
     return [
-        //testCompress,
+        testCompress,
         testLoadPrototype,
         testSwapItem,
         itemGroupTests,
@@ -113,53 +116,68 @@ async function testSwapItem() {
         throw new Error()
     }
     // unit.id還在是戦闘エリア1, 但是imgID對換了, 看起來就像是置換
-    if(AbsoluteBaSyouFn.getBaSyouKeyword(getItemBaSyou(ctx, unit.id)) != "戦闘エリア1"){
+    if (AbsoluteBaSyouFn.getBaSyouKeyword(getItemBaSyou(ctx, unit.id)) != "戦闘エリア1") {
         throw new Error()
     }
-    if(AbsoluteBaSyouFn.getBaSyouKeyword(getItemBaSyou(ctx, unit2.id)) != "戦闘エリア2"){
+    if (AbsoluteBaSyouFn.getBaSyouKeyword(getItemBaSyou(ctx, unit2.id)) != "戦闘エリア2") {
         throw new Error()
     }
 }
 
 async function testCompress() {
-    const blackT3 = ["179015_04B_O_BK010C_black", "179015_04B_O_BK010C_black", "179015_04B_U_BK058R_black", "179015_04B_U_BK058R_black", "179015_04B_U_BK059C_black", "179015_04B_U_BK059C_black", "179015_04B_U_BK061C_black", "179015_04B_U_BK061C_black", "179016_04B_U_BK066C_black", "179016_04B_U_BK066C_black", "179019_02A_C_BK015S_black", "179019_02A_C_BK015S_black", "179020_05C_U_BK100U_black", "179020_05C_U_BK100U_black", "179023_06C_C_BK048R_black", "179023_06C_C_BK048R_black", "179023_06C_C_BK049U_black", "179023_06C_C_BK049U_black", "179024_04B_C_BK027U_black", "179024_04B_C_BK027U_black", "179024_04B_U_BK060C_black", "179024_04B_U_BK060C_black", "179024_04B_U_BK067C_black", "179024_04B_U_BK067C_black", "179024_B2B_C_BK054C_black", "179024_B2B_C_BK054C_black", "179024_B2B_U_BK128S_black_02", "179024_B2B_U_BK128S_black_02", "179024_B2B_U_BK129R_black", "179024_B2B_U_BK129R_black", "179027_09D_C_BK063R_black", "179027_09D_C_BK063R_black", "179027_09D_O_BK010N_black", "179027_09D_O_BK010N_black", "179027_09D_U_BK163S_black", "179027_09D_U_BK163S_black", "179027_09D_U_BK163S_black", "179029_06C_C_BK045U_black", "179029_06C_C_BK045U_black", "179029_B3C_C_BK071N_black", "179029_B3C_C_BK071N_black", "179029_B3C_U_BK184N_black", "179029_B3C_U_BK184N_black", "179029_B3C_U_BK184N_black", "179029_B3C_U_BK185N_black", "179029_B3C_U_BK185N_black", "179030_11E_U_BK194S_2_black", "179030_11E_U_BK194S_2_black", "179030_11E_U_BK194S_2_black", "179901_B2B_C_BK005P_black"]
-    await Promise.all(blackT3.map(loadPrototype))
     let ctx = createGameStateWithFlowMemory()
-    ctx = setActivePlayerID(ctx, PlayerA) as GameStateWithFlowMemory
-    ctx = setPhase(ctx, ["配備フェイズ", "フリータイミング"]) as GameStateWithFlowMemory
-    ctx = setActivePlayerID(ctx, PlayerA) as GameStateWithFlowMemory
-    ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国"), blackT3) as GameStateWithFlowMemory
-    ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "手札"), blackT3.slice(0, 6)) as GameStateWithFlowMemory
-    ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア"), blackT3.slice(6, 6)) as GameStateWithFlowMemory
-    ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), blackT3.slice(12, 6)) as GameStateWithFlowMemory
-    ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerB, "本国"), blackT3) as GameStateWithFlowMemory
-    ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerB, "手札"), blackT3.slice(0, 6)) as GameStateWithFlowMemory
-    ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerB, "配備エリア"), blackT3.slice(6, 6)) as GameStateWithFlowMemory
-    ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerB, "Gゾーン"), blackT3.slice(12, 6)) as GameStateWithFlowMemory
-    for (let i = 0; i < 1000; ++i) {
-        console.log(`${i} > ${getPhase(ctx)} > ${getActivePlayerID(ctx)}`)
-        const playerId = PlayerIDFn.getAll()[Math.round(Math.random() * 1000) % 2]
-        {
-            const clickTime = Math.round(Math.random() * 1000) % 3
-            for (let t = 0; t < clickTime; ++t) {
-                const flows = queryFlow(ctx, playerId)
-                if (flows.length) {
-                    try {
-                        const flow = flows[Math.round(Math.random() * 1000) % flows.length]
-                        console.log(`${playerId}>${flow.id}>${flow.description}`)
-                        ctx = applyFlow(ctx, playerId, flow)
-                    } catch (e) {
-                        if (e instanceof TargetMissingError) {
-                            console.log(e.message)
-                        } else {
-                            throw e
+    try {
+        const blackT3 = ["179015_04B_O_BK010C_black", "179015_04B_O_BK010C_black", "179015_04B_U_BK058R_black", "179015_04B_U_BK058R_black", "179015_04B_U_BK059C_black", "179015_04B_U_BK059C_black", "179015_04B_U_BK061C_black", "179015_04B_U_BK061C_black", "179016_04B_U_BK066C_black", "179016_04B_U_BK066C_black", "179019_02A_C_BK015S_black", "179019_02A_C_BK015S_black", "179020_05C_U_BK100U_black", "179020_05C_U_BK100U_black", "179023_06C_C_BK048R_black", "179023_06C_C_BK048R_black", "179023_06C_C_BK049U_black", "179023_06C_C_BK049U_black", "179024_04B_C_BK027U_black", "179024_04B_C_BK027U_black", "179024_04B_U_BK060C_black", "179024_04B_U_BK060C_black", "179024_04B_U_BK067C_black", "179024_04B_U_BK067C_black", "179024_B2B_C_BK054C_black", "179024_B2B_C_BK054C_black", "179024_B2B_U_BK128S_black_02", "179024_B2B_U_BK128S_black_02", "179024_B2B_U_BK129R_black", "179024_B2B_U_BK129R_black", "179027_09D_C_BK063R_black", "179027_09D_C_BK063R_black", "179027_09D_O_BK010N_black", "179027_09D_O_BK010N_black", "179027_09D_U_BK163S_black", "179027_09D_U_BK163S_black", "179027_09D_U_BK163S_black", "179029_06C_C_BK045U_black", "179029_06C_C_BK045U_black", "179029_B3C_C_BK071N_black", "179029_B3C_C_BK071N_black", "179029_B3C_U_BK184N_black", "179029_B3C_U_BK184N_black", "179029_B3C_U_BK184N_black", "179029_B3C_U_BK185N_black", "179029_B3C_U_BK185N_black", "179030_11E_U_BK194S_2_black", "179030_11E_U_BK194S_2_black", "179030_11E_U_BK194S_2_black", "179901_B2B_C_BK005P_black"]
+        await Promise.all(blackT3.map(loadPrototype))
+        ctx = setActivePlayerID(ctx, PlayerA) as GameStateWithFlowMemory
+        ctx = setPhase(ctx, ["配備フェイズ", "フリータイミング"]) as GameStateWithFlowMemory
+        ctx = setActivePlayerID(ctx, PlayerA) as GameStateWithFlowMemory
+        ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国"), blackT3) as GameStateWithFlowMemory
+        ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "手札"), blackT3.slice(0, 6)) as GameStateWithFlowMemory
+        ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア"), blackT3.slice(6, 6)) as GameStateWithFlowMemory
+        ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), blackT3.slice(12, 6)) as GameStateWithFlowMemory
+        ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerB, "本国"), blackT3) as GameStateWithFlowMemory
+        ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerB, "手札"), blackT3.slice(0, 6)) as GameStateWithFlowMemory
+        ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerB, "配備エリア"), blackT3.slice(6, 6)) as GameStateWithFlowMemory
+        ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerB, "Gゾーン"), blackT3.slice(12, 6)) as GameStateWithFlowMemory
+        for (let i = 0; i < 1000; ++i) {
+            console.log(`${i} > ${getPhase(ctx)} > ${getActivePlayerID(ctx)}`)
+            const playerId = PlayerIDFn.getAll()[Math.round(Math.random() * 1000) % 2]
+            {
+                const clickTime = Math.round(Math.random() * 1000) % 3
+                for (let t = 0; t < clickTime; ++t) {
+                    const flows = queryFlow(ctx, playerId)
+                    if (flows.length) {
+                        try {
+                            const flow = flows[Math.round(Math.random() * 1000) % flows.length]
+                            if (flow.id == "FlowSetActiveEffectID") {
+                                const effect = flow.tips.find(e => e.id == flow.effectID)
+                                if (effect == null) {
+                                    throw new Error()
+                                }
+                                const cets = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)
+                                for (const cet of cets) {
+                                    ctx = setTipSelectionForUser(ctx, effect, cet.logicID, cet.logicSubID) as GameStateWithFlowMemory
+                                }
+                            }
+                            ctx = applyFlow(ctx, playerId, flow)
+                        } catch (e) {
+                            if (e instanceof TargetMissingError) {
+                                console.log(e.message)
+                            } else {
+                                throw e
+                            }
                         }
                     }
                 }
             }
+            getGlobalEffects(ctx, null)
+            const cmd = getPlayEffects(ctx, playerId)
+            console.log(`${playerId} 能用的指令數量: ${cmd.length}`)
         }
-        getGlobalEffects(ctx, null)
-        const cmd = getPlayEffects(ctx, playerId)
-        console.log(`${playerId} 能用的指令數量: ${cmd.length}`)
+    } catch (e) {
+        ctx.globalEffectPool = {}
+        await fs.writeFile('__gameState_bug.json', JSON.stringify(ctx));
+        throw e
     }
 }
