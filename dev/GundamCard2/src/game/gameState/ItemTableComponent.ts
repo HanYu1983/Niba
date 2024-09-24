@@ -139,14 +139,6 @@ export function assertTargetMissingError(ctx: ItemTableComponent, [itemId, origi
   }
 }
 
-export type OnMoveItemFn = (ctx: any, to: AbsoluteBaSyou, sb: StrBaSyouPair) => any;
-
-export function moveItem(ctx: ItemTableComponent, to: AbsoluteBaSyou, sb: StrBaSyouPair, onFn?: OnMoveItemFn): ItemTableComponent {
-  const [itemId, originBasyou] = sb
-  ctx = moveCardLikeItem(ctx as GameState, to, sb)
-  return ctx
-}
-
 export function setItemIsRoll(ctx: ItemTableComponent, isRoll: boolean, [itemId, originBasyou]: StrBaSyouPair): ItemTableComponent {
   if (isCard(ctx, itemId)) {
     const nowBasyou = getItemBaSyou(ctx, itemId)

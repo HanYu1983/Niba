@@ -5,7 +5,7 @@ import { onMoveItem } from "./effect"
 import { EventCenterFn } from "./EventCenter"
 import { GameState } from "./GameState"
 import { getGlobalEffects } from "./globalEffects"
-import { ItemTableComponent, OnMoveItemFn, isCard, isChip, getItemBaSyou, isCoin, getItemController, assertTargetMissingError } from "./ItemTableComponent"
+import { ItemTableComponent, isCard, isChip, getItemBaSyou, isCoin, getItemController, assertTargetMissingError } from "./ItemTableComponent"
 import { getSetGroupChildren } from "./SetGroupComponent"
 
 export function moveCardLikeItem(ctx: GameState, to: AbsoluteBaSyou, [itemId, from]: StrBaSyouPair): GameState {

@@ -12,7 +12,7 @@ import { getEffectTips, doEffect, onMoveItem, assertEffectCanPass, setTipSelecti
 import { getEffect, getTopEffect, removeEffect } from "../game/gameState/EffectStackComponent"
 import { createGameState, GameState } from "../game/gameState/GameState"
 import { getPlayEffects } from "../game/gameState/getPlayEffects"
-import { getCardLikeItemIdsByBasyou, getItem, getItemBaSyou, getItemIds, getItemIdsByBasyou, moveItem } from "../game/gameState/ItemTableComponent"
+import { getCardLikeItemIdsByBasyou, getItem, getItemBaSyou } from "../game/gameState/ItemTableComponent"
 import { setPhase } from "../game/gameState/PhaseComponent"
 import { loadPrototype } from "../script"
 import { getItemState, setItemState } from "../game/gameState/ItemStateComponent"

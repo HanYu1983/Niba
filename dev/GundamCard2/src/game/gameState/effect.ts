@@ -10,11 +10,11 @@ import { ItemStateFn } from "../define/ItemState"
 import { PhaseFn } from "../define/Timing"
 import { Tip, TipFn, StrBaSyouPair, TipTitleTextRef } from "../define/Tip"
 import { getItemCharacteristic, getCardIdsCanPayRollCost, getCardRollCostLength, getItemRuntimeCategory, getCardTexts, getCardBattlePoint, getCardIdsCanPayRollColor } from "./card"
-import { getCard, setCard } from "./CardTableComponent"
+import { getCard, mapCard, setCard } from "./CardTableComponent"
 import { GameState } from "./GameState"
 import { clearGlobalEffects } from "./globalEffects"
 import { getItemStateValues, getItemState, setItemState, mapItemState } from "./ItemStateComponent"
-import { getItemController, addCoinsToCard, isCard, isChip, getItemBaSyou, isCoin, getItemPrototype, getItemIdsByBasyou, moveItem, setItemIsRoll, getCardLikeItemIdsByBasyou, assertTargetMissingError } from "./ItemTableComponent"
+import { getItemController, addCoinsToCard, isCard, isChip, getItemBaSyou, isCoin, getItemPrototype, getItemIdsByBasyou, setItemIsRoll, getCardLikeItemIdsByBasyou, assertTargetMissingError } from "./ItemTableComponent"
 import { triggerEvent } from "./triggerEvent"
 import { Bridge } from "../../script/bridge"
 import { GlobalEffect } from "../define/GlobalEffect"
@@ -30,6 +30,8 @@ import { getSetGroupBattlePoint } from "./setGroup"
 import { isBattle } from "./IsBattleComponent"
 import { TipOrErrors, CommandEffectTip } from "../define/CommandEffectTip"
 import { EventCenterFn } from "./EventCenter"
+import { moveCardLikeItem } from "./moveCardLikeItem"
+import { swapItem } from "./swapItem"
 
 export function getEffectTips(
   ctx: GameState,
@@ -600,7 +602,7 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
           }
           case "廃棄": {
             for (const pair of pairs) {
-              ctx = moveItem(ctx, AbsoluteBaSyouFn.of(cardController, "ジャンクヤード"), pair, onMoveItem) as GameState
+              ctx = moveCardLikeItem(ctx, AbsoluteBaSyouFn.of(cardController, "ジャンクヤード"), pair)
             }
             return ctx
           }
@@ -643,7 +645,7 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
         }).slice(0, damage)
         const to = AbsoluteBaSyouFn.of(playerId, "捨て山")
         for (const pair of pairs) {
-          ctx = moveItem(ctx, to, pair, onMoveItem) as GameState
+          ctx = moveCardLikeItem(ctx, to, pair)
         }
         return ctx
       }
@@ -662,7 +664,7 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
         const playerId = side == "自軍" ? cardController : PlayerIDFn.getOpponent(cardController)
         const to = AbsoluteBaSyouFn.of(playerId, basyouKw)
         for (const pair of pairs) {
-          ctx = moveItem(ctx, to, pair, onMoveItem) as GameState
+          ctx = moveCardLikeItem(ctx, to, pair)
         }
         return ctx
       }
@@ -747,7 +749,7 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
           return [cardId, fromBasyou] as StrBaSyouPair
         })
         for (const pair of pairs) {
-          ctx = moveItem(ctx, AbsoluteBaSyouFn.of(cardController, "手札"), pair, onMoveItem) as GameState
+          ctx = moveCardLikeItem(ctx, AbsoluteBaSyouFn.of(cardController, "手札"), pair)
         }
         return ctx
       }
@@ -761,8 +763,11 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
         const cardId = EffectFn.getCardID(effect)
         const [[t1, t1ba]] = getCardTipStrBaSyouPairs(ctx, varNames[0], cardId)
         const [[t2, t2ba]] = getCardTipStrBaSyouPairs(ctx, varNames[1], cardId)
-        ctx = moveItem(ctx, t2ba, [t1, t1ba], onMoveItem) as GameState
-        ctx = moveItem(ctx, t1ba, [t2, t2ba], onMoveItem) as GameState
+        // ctx = swapItem(ctx, t1, t2)
+        // ctx = mapCard(ctx, t1, card=>({...card, isRoll: false})) as GameState
+
+        ctx = moveCardLikeItem(ctx, t2ba, [t1, t1ba]) as GameState
+        ctx = moveCardLikeItem(ctx, t1ba, [t2, t2ba]) as GameState
         let t1card = getCard(ctx, t1)
         t1card = CardFn.setIsRoll(t1card, false)
         ctx = setCard(ctx, t1, t1card) as GameState
