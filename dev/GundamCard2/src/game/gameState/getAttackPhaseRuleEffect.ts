@@ -48,7 +48,7 @@ export function getAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID): Ef
                                 const fackCardId = DefineFn.EffectFn.getCardID(effect)
                                 const earthPairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "去地球", fackCardId)
                                 for (const pair of earthPairs) {
-                                    ctx = GameStateFn.moveCardLikeItem(ctx, DefineFn.AbsoluteBaSyouFn.of(playerId, "戦闘エリア1"), pair) as GameState
+                                    ctx = GameStateFn.moveItem(ctx, DefineFn.AbsoluteBaSyouFn.of(playerId, "戦闘エリア1"), pair) as GameState
                                 }
                                 return ctx
                             }.toString()
@@ -88,7 +88,7 @@ export function getAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID): Ef
                                 const fackCardId = DefineFn.EffectFn.getCardID(effect)
                                 const spacePairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "去宇宙", fackCardId)
                                 for (const pair of spacePairs) {
-                                    ctx = GameStateFn.moveCardLikeItem(ctx, DefineFn.AbsoluteBaSyouFn.of(playerId, "戦闘エリア2"), pair) as GameState
+                                    ctx = GameStateFn.moveItem(ctx, DefineFn.AbsoluteBaSyouFn.of(playerId, "戦闘エリア2"), pair) as GameState
                                 }
                                 ctx = GameStateFn.setNextPhase(ctx) as GameState
                                 return ctx

@@ -30,7 +30,7 @@ import { getSetGroupBattlePoint } from "./setGroup"
 import { isBattle } from "./IsBattleComponent"
 import { TipOrErrors, CommandEffectTip } from "../define/CommandEffectTip"
 import { EventCenterFn } from "./EventCenter"
-import { moveCardLikeItem } from "./moveCardLikeItem"
+import { moveItem } from "./moveItem"
 import { swapItem } from "./swapItem"
 
 export function getEffectTips(
@@ -602,7 +602,7 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
           }
           case "廃棄": {
             for (const pair of pairs) {
-              ctx = moveCardLikeItem(ctx, AbsoluteBaSyouFn.of(cardController, "ジャンクヤード"), pair)
+              ctx = moveItem(ctx, AbsoluteBaSyouFn.of(cardController, "ジャンクヤード"), pair)
             }
             return ctx
           }
@@ -645,7 +645,7 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
         }).slice(0, damage)
         const to = AbsoluteBaSyouFn.of(playerId, "捨て山")
         for (const pair of pairs) {
-          ctx = moveCardLikeItem(ctx, to, pair)
+          ctx = moveItem(ctx, to, pair)
         }
         return ctx
       }
@@ -664,7 +664,7 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
         const playerId = side == "自軍" ? cardController : PlayerIDFn.getOpponent(cardController)
         const to = AbsoluteBaSyouFn.of(playerId, basyouKw)
         for (const pair of pairs) {
-          ctx = moveCardLikeItem(ctx, to, pair)
+          ctx = moveItem(ctx, to, pair)
         }
         return ctx
       }
@@ -749,7 +749,7 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
           return [cardId, fromBasyou] as StrBaSyouPair
         })
         for (const pair of pairs) {
-          ctx = moveCardLikeItem(ctx, AbsoluteBaSyouFn.of(cardController, "手札"), pair)
+          ctx = moveItem(ctx, AbsoluteBaSyouFn.of(cardController, "手札"), pair)
         }
         return ctx
       }
@@ -766,8 +766,8 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
         // ctx = swapItem(ctx, t1, t2)
         // ctx = mapCard(ctx, t1, card=>({...card, isRoll: false})) as GameState
 
-        ctx = moveCardLikeItem(ctx, t2ba, [t1, t1ba]) as GameState
-        ctx = moveCardLikeItem(ctx, t1ba, [t2, t2ba]) as GameState
+        ctx = moveItem(ctx, t2ba, [t1, t1ba]) as GameState
+        ctx = moveItem(ctx, t1ba, [t2, t2ba]) as GameState
         let t1card = getCard(ctx, t1)
         t1card = CardFn.setIsRoll(t1card, false)
         ctx = setCard(ctx, t1, t1card) as GameState

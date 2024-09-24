@@ -20,7 +20,7 @@ import * as RuntimeBattleAreaComponent from "./RuntimeBattleAreaComponent"
 import * as getPlayCardEffect from "./getPlayCardEffect"
 import * as getNextPhase from "./getNextPhase"
 import * as swapItem from "./swapItem"
-import * as moveCardLikeItem from "./moveCardLikeItem"
+import * as moveCardLikeItem from "./moveItem"
 export const GameStateFn = {
     ...GameState,
     ...CardState,

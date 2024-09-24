@@ -77,7 +77,7 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
                                 const cardId = DefineFn.EffectFn.getCardID(effect)
                                 const prototype = GameStateFn.getItemPrototype(ctx, cardId)
                                 const from = GameStateFn.getItemBaSyou(ctx, cardId)
-                                ctx = GameStateFn.moveCardLikeItem(ctx, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "プレイされているカード"), [cardId, from]) as GameState
+                                ctx = GameStateFn.moveItem(ctx, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "プレイされているカード"), [cardId, from]) as GameState
                                 if (prototype.category == "ユニット") {
                                     return GameStateFn.addStackEffect(ctx, {
                                         id: ToolFn.getUUID("getPlayCardEffects"),
@@ -95,7 +95,7 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
                                                                 const cardId = DefineFn.EffectFn.getCardID(effect)
                                                                 const from = GameStateFn.getItemBaSyou(ctx, cardId)
                                                                 const to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "配備エリア")
-                                                                ctx = GameStateFn.moveCardLikeItem(ctx, to, [cardId, from]) as GameState
+                                                                ctx = GameStateFn.moveItem(ctx, to, [cardId, from]) as GameState
                                                                 const hasHigh = GameStateFn.getCardHasSpeicalEffect(ctx, ["戦闘配備"], cardId)
                                                                 const hasPS = GameStateFn.getCardHasSpeicalEffect(ctx, ["PS装甲"], cardId)
                                                                 const isNoNeedRoll = (hasHigh || hasPS)
@@ -131,7 +131,7 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
                                                                 const [targetCardId, targetBasyou] = pairs[0]
                                                                 const from = GameStateFn.getItemBaSyou(ctx, cardId)
                                                                 const to = targetBasyou
-                                                                ctx = GameStateFn.moveCardLikeItem(ctx, to, [cardId, from]) as GameState
+                                                                ctx = GameStateFn.moveItem(ctx, to, [cardId, from]) as GameState
                                                                 ctx = GameStateFn.setSetGroupParent(ctx, targetCardId, cardId) as GameState
                                                                 ctx = GameStateFn.triggerEvent(ctx, { title: ["プレイされて場に出た場合"], cardIds: [cardId] })
                                                                 ctx = GameStateFn.triggerEvent(ctx, { title: ["プレイされて場にセットされた場合"], cardIds: [cardId] })
@@ -162,7 +162,7 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
                                                                 const cardId = DefineFn.EffectFn.getCardID(effect)
                                                                 const from = GameStateFn.getItemBaSyou(ctx, cardId)
                                                                 const to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "ジャンクヤード")
-                                                                ctx = GameStateFn.moveCardLikeItem(ctx, to, [cardId, from]) as GameState
+                                                                ctx = GameStateFn.moveItem(ctx, to, [cardId, from]) as GameState
                                                                 ctx = GameStateFn.triggerEvent(ctx, { title: ["プレイされて場に出た場合"], cardIds: [cardId] })
                                                                 return ctx
                                                             }.toString()
@@ -180,7 +180,7 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
                                     const cardId = DefineFn.EffectFn.getCardID(effect)
                                     const from = GameStateFn.getItemBaSyou(ctx, cardId)
                                     const to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "Gゾーン")
-                                    ctx = GameStateFn.moveCardLikeItem(ctx, to, [cardId, from]) as GameState
+                                    ctx = GameStateFn.moveItem(ctx, to, [cardId, from]) as GameState
                                     ctx = GameStateFn.triggerEvent(ctx, { title: ["プレイされて場に出た場合"], cardIds: [cardId] })
                                     return ctx
                                 }
@@ -189,7 +189,7 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
                                     const cardId = DefineFn.EffectFn.getCardID(effect)
                                     const from = GameStateFn.getItemBaSyou(ctx, cardId)
                                     const to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "配備エリア")
-                                    ctx = GameStateFn.moveCardLikeItem(ctx, to, [cardId, from]) as GameState
+                                    ctx = GameStateFn.moveItem(ctx, to, [cardId, from]) as GameState
                                     ctx = GameStateFn.triggerEvent(ctx, { title: ["プレイされて場に出た場合"], cardIds: [cardId] })
                                     return ctx
                                 }
@@ -260,7 +260,7 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
                                     const cardId = DefineFn.EffectFn.getCardID(effect)
                                     const from = GameStateFn.getItemBaSyou(ctx, cardId)
                                     const to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "配備エリア")
-                                    ctx = GameStateFn.moveCardLikeItem(ctx, to, [cardId, from]) as GameState
+                                    ctx = GameStateFn.moveItem(ctx, to, [cardId, from]) as GameState
                                     ctx = GameStateFn.triggerEvent(ctx, { title: ["プレイされて場に出た場合"], cardIds: [cardId] })
                                     return ctx
                                 }.toString()

@@ -10,7 +10,7 @@ import { createGameState, GameState } from "../game/gameState/GameState";
 import { getPlayEffects } from "../game/gameState/getPlayEffects";
 import { getItemState } from "../game/gameState/ItemStateComponent";
 import { getItemBaSyou } from "../game/gameState/ItemTableComponent";
-import { moveCardLikeItem } from "../game/gameState/moveCardLikeItem";
+import { moveItem } from "../game/gameState/moveItem";
 import { setPhase } from "../game/gameState/PhaseComponent";
 import { triggerEvent } from "../game/gameState/triggerEvent";
 import { loadPrototype } from "../script";
@@ -57,7 +57,7 @@ export async function testPS() {
         }
     }
     {
-        ctx = moveCardLikeItem(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1"), [unitHasPS.id, getItemBaSyou(ctx, unitHasPS.id)])
+        ctx = moveItem(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1"), [unitHasPS.id, getItemBaSyou(ctx, unitHasPS.id)])
         if (getItemState(ctx, unitHasPS.id).flags["return"] == null) {
             throw new Error("")
         }
@@ -76,7 +76,7 @@ export async function testPS() {
         if (getItemState(ctx, unitHasPS.id).flags["return"] != true) {
             throw new Error("")
         }
-        ctx = moveCardLikeItem(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1"), [unitHasSupply.id, getItemBaSyou(ctx, unitHasSupply.id)])
+        ctx = moveItem(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1"), [unitHasSupply.id, getItemBaSyou(ctx, unitHasSupply.id)])
         if (getItemState(ctx, unitHasPS.id).flags["return"]) {
             throw new Error("")
         }

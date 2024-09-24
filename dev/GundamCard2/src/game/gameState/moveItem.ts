@@ -8,7 +8,7 @@ import { getGlobalEffects } from "./globalEffects"
 import { ItemTableComponent, isCard, isChip, getItemBaSyou, isCoin, getItemController, assertTargetMissingError } from "./ItemTableComponent"
 import { getSetGroupChildren } from "./SetGroupComponent"
 
-export function moveCardLikeItem(ctx: GameState, to: AbsoluteBaSyou, [itemId, from]: StrBaSyouPair): GameState {
+export function moveItem(ctx: GameState, to: AbsoluteBaSyou, [itemId, from]: StrBaSyouPair): GameState {
     assertTargetMissingError(ctx, [itemId, from])
     if (isCoin(ctx, itemId)) {
         throw new Error(`moveCardLike`)

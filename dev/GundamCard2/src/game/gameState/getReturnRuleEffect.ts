@@ -30,14 +30,14 @@ export function getReturnRuleEffect(ctx: GameState, playerId: PlayerID): Effect 
                                     for (const cardId of unitIdsAtArea1) {
                                         if (GameStateFn.getCardBattleArea(ctx, cardId).includes(runtimeArea1)) {
                                             ctx = GameStateFn.setItemIsRoll(ctx, true, [cardId, DefineFn.AbsoluteBaSyouFn.of(playerId, fromKw)]) as GameState
-                                            ctx = GameStateFn.moveCardLikeItem(
+                                            ctx = GameStateFn.moveItem(
                                                 ctx,
                                                 DefineFn.AbsoluteBaSyouFn.of(playerId, "配備エリア"),
                                                 [cardId, DefineFn.AbsoluteBaSyouFn.of(playerId, fromKw)]
                                             ) as GameState
                                         } else {
                                             // Rule book p73
-                                            ctx = GameStateFn.moveCardLikeItem(
+                                            ctx = GameStateFn.moveItem(
                                                 ctx,
                                                 DefineFn.AbsoluteBaSyouFn.of(playerId, "ジャンクヤード"),
                                                 [cardId, DefineFn.AbsoluteBaSyouFn.of(playerId, fromKw)]
