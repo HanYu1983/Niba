@@ -50,10 +50,10 @@ export const prototype: CardPrototype = {
                         const bonus: BattleBonus = [-bonusV, -bonusV, -bonusV]
                         for (const pair of pairs) {
                           GameStateFn.assertTargetMissingError(ctx, pair)
-                          ctx = GameStateFn.mapItemState(ctx, cardId, is => ItemStateFn.setGlobalEffect(is, null, true, {
+                          ctx = GameStateFn.mapItemState(ctx, cardId, is => ItemStateFn.setGlobalEffect(is, null, {
                             title: ["＋x／＋x／＋xを得る", bonus],
                             cardIds: [cardId]
-                          })) as GameState
+                          }, {isRemoveOnTurnEnd: true})) as GameState
                         }
                         return ctx
                       }.toString()

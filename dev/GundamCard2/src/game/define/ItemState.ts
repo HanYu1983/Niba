@@ -32,15 +32,15 @@ export const ItemStateFn = {
             varNamesRemoveOnTurnEnd: {}
         }
     },
-    setFlag(ctx: ItemState, k: string, v: any, options?: { isRemoveOnTurnEnd?: boolean }): ItemState {
+    setFlag(ctx: ItemState, name: string, v: any, options?: { isRemoveOnTurnEnd?: boolean }): ItemState {
         ctx = {
             ...ctx,
-            flags: assoc(k, v, ctx.flags)
+            flags: assoc(name, v, ctx.flags)
         }
         if (options?.isRemoveOnTurnEnd) {
             ctx = {
                 ...ctx,
-                varNamesRemoveOnTurnEnd: assoc(k, true, ctx.varNamesRemoveOnTurnEnd)
+                varNamesRemoveOnTurnEnd: assoc(name, true, ctx.varNamesRemoveOnTurnEnd)
             }
         }
         return ctx
@@ -79,7 +79,7 @@ export const ItemStateFn = {
     getGlobalEffects(ctx: ItemState): GlobalEffect[] {
         return Object.values(ctx.globalEffects)
     },
-    setGlobalEffect(ctx: ItemState, name: string | null, isRemoveOnTurnEnd: boolean, ge: GlobalEffect) {
+    setGlobalEffect(ctx: ItemState, name: string | null, ge: GlobalEffect, options?: { isRemoveOnTurnEnd: boolean }) {
         if (name == null) {
             name = ToolFn.getUUID("setGlobalEffect")
         }
@@ -87,7 +87,7 @@ export const ItemStateFn = {
             ...ctx,
             globalEffects: assoc(name, ge, ctx.globalEffects),
         }
-        if (isRemoveOnTurnEnd) {
+        if (options?.isRemoveOnTurnEnd) {
             ctx = {
                 ...ctx,
                 varNamesRemoveOnTurnEnd: assoc(name, true, ctx.varNamesRemoveOnTurnEnd)

@@ -902,7 +902,7 @@ export function setItemGlobalEffectsUntilEndOfTurn(ctx: GameState, egs: GlobalEf
     }
     let cs = getItemState(ctx, itemId)
     for (const eg of egs) {
-      cs = ItemStateFn.setGlobalEffect(cs, ToolFn.getUUID("setItemGlobalEffectsUntilEndOfTurn"), true, eg)
+      cs = ItemStateFn.setGlobalEffect(cs, null, eg, {isRemoveOnTurnEnd: true})
     }
     ctx = setItemState(ctx, itemId, cs) as GameState
     return ctx

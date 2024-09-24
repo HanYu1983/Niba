@@ -35,7 +35,7 @@ export const prototype: CardPrototype = {
                   title: ["場、または手札から、自軍ジャンクヤードにカードが移る場合、ジャンクヤードに移る代わりにゲームから取り除かれる"],
                   cardIds: [cardId]
                 }
-                ctx = GameStateFn.mapItemState(ctx, cardId, is => DefineFn.ItemStateFn.setGlobalEffect(is, null, true, ge1)) as GameState
+                ctx = GameStateFn.mapItemState(ctx, cardId, is => DefineFn.ItemStateFn.setGlobalEffect(is, null, ge1, { isRemoveOnTurnEnd: true })) as GameState
                 ctx = GameStateFn.mapItemState(ctx, cardId, is => DefineFn.ItemStateFn.setFlag(is, "enabled", true, { isRemoveOnTurnEnd: true })) as GameState
                 return ctx
               }.toString()

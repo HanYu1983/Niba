@@ -51,10 +51,10 @@ export const prototype: CardPrototype = {
                             const cardId = DefineFn.EffectFn.getCardID(effect)
                             if (GameStateFn.isBattle(ctx, cardId, null)) {
                               let cardState = GameStateFn.getItemState(ctx, cardId);
-                              cardState = DefineFn.ItemStateFn.setGlobalEffect(cardState, null, true, {
+                              cardState = DefineFn.ItemStateFn.setGlobalEffect(cardState, null, {
                                 title: ["AddText", { id: ToolFn.getUUID("179024_03B_U_WT042U_white"), title: ["TextBattleBonus", [1, 1, 1]] }],
                                 cardIds: [cardId]
-                              })
+                              }, {isRemoveOnTurnEnd: true})
                               ctx = GameStateFn.setItemState(ctx, cardId, cardState) as GameState
                               return ctx
                             }
