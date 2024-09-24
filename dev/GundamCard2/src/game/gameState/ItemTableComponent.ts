@@ -19,7 +19,7 @@ import { log } from "../../tool/logger";
 import { GameState } from "./GameState";
 import { getGlobalEffects } from "./globalEffects";
 import { EventCenterFn } from "./EventCenter";
-import { moveCardLike } from "./moveCardLikeItem";
+import { moveCardLikeItem } from "./moveCardLikeItem";
 
 export type Item = Card | Coin | Chip;
 
@@ -142,34 +142,9 @@ export function assertTargetMissingError(ctx: ItemTableComponent, [itemId, origi
 export type OnMoveItemFn = (ctx: any, to: AbsoluteBaSyou, sb: StrBaSyouPair) => any;
 
 export function moveItem(ctx: ItemTableComponent, to: AbsoluteBaSyou, sb: StrBaSyouPair, onFn?: OnMoveItemFn): ItemTableComponent {
-  assertTargetMissingError(ctx, sb)
   const [itemId, originBasyou] = sb
-  ctx = moveCardLike(ctx as GameState, originBasyou, to, itemId)
-  if (onFn) {
-    ctx = onFn(ctx, to, sb)
-  }
+  ctx = moveCardLikeItem(ctx as GameState, to, sb)
   return ctx
-  // if (isCard(ctx, itemId) || isChip(ctx, itemId)) {
-  //   const oldTable = ctx.table
-  //   const nowBasyou = getItemBaSyou(ctx, itemId)
-  //   const itemIds = getSetGroupChildren(ctx, itemId)
-  //   const table = itemIds.reduce((table, itemId) => {
-  //     return TableFns.moveCard(table, AbsoluteBaSyouFn.toString(nowBasyou), AbsoluteBaSyouFn.toString(to), itemId)
-  //   }, ctx.table)
-  //   ctx = {
-  //     ...ctx,
-  //     table: table
-  //   }
-  //   if (onFn) {
-  //     ctx = onFn(ctx, to, sb)
-  //   }
-  //   ctx = EventCenterFn.onTableChange(ctx, oldTable, ctx.table)
-  //   return ctx
-  // }
-  // if (isCoin(ctx, itemId)) {
-  //   throw new Error(`coin can not move: ${itemId}`)
-  // }
-  // throw new Error(`moveItem unknown item: ${itemId}`)
 }
 
 export function setItemIsRoll(ctx: ItemTableComponent, isRoll: boolean, [itemId, originBasyou]: StrBaSyouPair): ItemTableComponent {

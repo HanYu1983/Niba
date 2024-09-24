@@ -1,13 +1,15 @@
 import { TableFns } from "../../tool/table"
 import { AbsoluteBaSyou, AbsoluteBaSyouFn, BaSyouKeywordFn } from "../define/BaSyou"
 import { StrBaSyouPair } from "../define/Tip"
+import { onMoveItem } from "./effect"
 import { EventCenterFn } from "./EventCenter"
 import { GameState } from "./GameState"
 import { getGlobalEffects } from "./globalEffects"
-import { ItemTableComponent, OnMoveItemFn, isCard, isChip, getItemBaSyou, isCoin, getItemController } from "./ItemTableComponent"
+import { ItemTableComponent, OnMoveItemFn, isCard, isChip, getItemBaSyou, isCoin, getItemController, assertTargetMissingError } from "./ItemTableComponent"
 import { getSetGroupChildren } from "./SetGroupComponent"
 
-export function moveCardLike(ctx: GameState, from: AbsoluteBaSyou, to: AbsoluteBaSyou, itemId: string): GameState {
+export function moveCardLikeItem(ctx: GameState, to: AbsoluteBaSyou, [itemId, from]: StrBaSyouPair): GameState {
+    assertTargetMissingError(ctx, [itemId, from])
     if (isCoin(ctx, itemId)) {
         throw new Error(`moveCardLike`)
     } if (isCard(ctx, itemId) || isChip(ctx, itemId)) {
@@ -36,6 +38,7 @@ export function moveCardLike(ctx: GameState, from: AbsoluteBaSyou, to: AbsoluteB
             ...ctx,
             table: table
         }
+        ctx = onMoveItem(ctx, to, [itemId, from])
         ctx = EventCenterFn.onTableChange(ctx, oldTable, ctx.table)
         return ctx
     }

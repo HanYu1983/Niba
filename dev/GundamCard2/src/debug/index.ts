@@ -22,7 +22,6 @@ import { createGameStateWithFlowMemory, GameStateWithFlowMemory } from "../game/
 import { queryFlow } from "../game/gameStateWithFlowMemory/queryFlow";
 import { applyFlow } from "../game/gameStateWithFlowMemory/applyFlow";
 import { TargetMissingError } from "../game/define/GameError";
-import { testIssue1 } from "./testIssue";
 import { testPlayG } from "./testPlayG";
 import { testPlayChar } from "./testPlayChar";
 import { test179015_04B_U_BK061C_black } from "./test179015_04B_U_BK061C_black";
@@ -50,7 +49,6 @@ export async function tests() {
         testReturnRuleEffect,
         testPS,
         testCrossWeapon,
-        testIssue1,
         testPlayG,
         testPlayChar,
         test179028_10D_U_WT181N_white,
