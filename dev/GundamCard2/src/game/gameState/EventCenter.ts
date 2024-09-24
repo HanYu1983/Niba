@@ -1,4 +1,5 @@
 import { Table, TableFns } from "../../tool/table"
+import { Card } from "../define/Card"
 import { Effect } from "../define/Effect"
 import { ItemState } from "../define/ItemState"
 import { PlayerState } from "../define/PlayerState"
@@ -25,6 +26,11 @@ export const EventCenterFn = {
         return ctx
     },
     onItemStateChange(_ctx: any, old: ItemState, curr: ItemState): any {
+        let ctx = getGameStateAndAssert(_ctx)
+        let effect = getMessageCurrentEffect(ctx)
+        return ctx
+    },
+    onCardChange(_ctx: any, old: Card, curr: Card): any {
         let ctx = getGameStateAndAssert(_ctx)
         let effect = getMessageCurrentEffect(ctx)
         return ctx

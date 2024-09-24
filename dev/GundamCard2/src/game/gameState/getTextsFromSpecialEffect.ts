@@ -432,24 +432,20 @@ export function getTextsFromSpecialEffect(ctx: GameState, text: CardText): CardT
                                         const cardId = DefineFn.EffectFn.getCardID(effect)
                                         const basyou = GameStateFn.getItemBaSyou(ctx, cardId)
                                         const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "打開自軍手裡或指定HANGER中特徵A並合計國力x以下的1張卡", cardId)
-                                        for (const pair of pairs) {
-                                            const [targetCardId, targetBasyou] = pair
-                                            if (AbsoluteBaSyouFn.getBaSyouKeyword(targetBasyou) == "手札") {
-                                                ctx = mapItemState(ctx, targetCardId, is => ({ ...is, isOpenForGain: true })) as GameState
-                                            }
-                                            ctx = GameStateFn.moveItem(ctx, basyou, [targetCardId, targetBasyou], GameStateFn.onMoveItem) as GameState
-                                            ctx = GameStateFn.moveItem(ctx, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(basyou, "ジャンクヤード"), [cardId, basyou], GameStateFn.onMoveItem) as GameState
-
-                                            let targetCard = GameStateFn.getCard(ctx, targetCardId)
-                                            targetCard = DefineFn.CardFn.setIsRoll(targetCard, false)
-                                            ctx = GameStateFn.setCard(ctx, targetCard.id, targetCard) as GameState
-                                            // TODO
-                                            // 置換是指ID的置換, 而不是狀態的置換(p77)
-                                            GameStateFn.mapItemState(ctx, targetCardId, () => getItemState(ctx, cardId))
-                                            // only first
-                                            return ctx
+                                        if (pairs.length == 0) {
+                                            throw new Error()
                                         }
-                                        throw new Error()
+                                        const targetPair = pairs[0]
+                                        GameStateFn.assertTargetMissingError(ctx, targetPair)
+                                        const [targetCardId, targetBasyou] = targetPair
+                                        ctx = GameStateFn.swapItem(ctx, cardId, targetCardId)
+                                        ctx = GameStateFn.mapCard(ctx, cardId, card => ({ ...card, isRoll: false })) as GameState
+                                        ctx = GameStateFn.moveItem(ctx,
+                                            DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(basyou, "ジャンクヤード"),
+                                            targetPair,
+                                            GameStateFn.onMoveItem
+                                        ) as GameState
+                                        return ctx
                                     }.toString()
                                 }
                             ]

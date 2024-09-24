@@ -11,7 +11,7 @@ import { getPrototype, loadPrototype } from "../../script";
 import { always, flatten, ifElse, lift, map, pipe } from "ramda";
 import { createGameState, GameState } from "./GameState";
 import { ToolFn } from "../tool";
-import { getPhase, setNextPhase, setPhase } from "./PhaseComponent";
+import { getPhase, setPhase } from "./PhaseComponent";
 import { getCardHasSpeicalEffect, getCardTexts } from "./card";
 import { Card } from "../define/Card";
 import { setActivePlayerID } from "./ActivePlayerComponent";

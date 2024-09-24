@@ -20,13 +20,16 @@ export function getCard(ctx: CardTableComponent, cardId: string): Card {
 }
 
 export function setCard(ctx: CardTableComponent, id: string, card: Card): CardTableComponent {
-  return {
+  const oldCard = getCard(ctx, id)
+  ctx = {
     ...ctx,
     cards: {
       ...ctx.cards,
       [id]: card
     }
   }
+  ctx = EventCenterFn.onCardChange(ctx, oldCard, getCard(ctx, id))
+  return ctx
 }
 
 export function mapCard(ctx: CardTableComponent, id: string, f: (card: Card) => Card): CardTableComponent {

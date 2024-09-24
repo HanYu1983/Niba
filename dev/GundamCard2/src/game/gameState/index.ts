@@ -18,6 +18,8 @@ import * as ActivePlayerComponent from "./ActivePlayerComponent"
 import * as PlayerStateComponent from "./PlayerStateComponent"
 import * as RuntimeBattleAreaComponent from "./RuntimeBattleAreaComponent"
 import * as getPlayCardEffect from "./getPlayCardEffect"
+import * as getNextPhase from "./getNextPhase"
+import * as swapItem from "./swapItem"
 
 export const GameStateFn = {
     ...GameState,
@@ -39,5 +41,7 @@ export const GameStateFn = {
     ...ActivePlayerComponent,
     ...PlayerStateComponent,
     ...RuntimeBattleAreaComponent,
-    ...getPlayCardEffect
+    ...getPlayCardEffect,
+    ...getNextPhase,
+    ...swapItem,
 }
