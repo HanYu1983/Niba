@@ -7,6 +7,7 @@ import { TargetMissingError } from "../define/GameError"
 
 export function getPlayGEffects(ctx: GameState, cardId: string): Effect {
     const playerId = getItemOwner(ctx, cardId)
+    // 注意, 這裡的effect.id是用函數名為前綴+卡片ID, 必須是唯一的
     const effect: Effect = {
         id: `getPlayGEffects_${cardId}`,
         reason: ["PlayCard", playerId, cardId],
