@@ -11,7 +11,7 @@ import { getDrawPhaseRuleEffect } from "../gameState/getDrawPhaseRuleEffect";
 import { getRerollPhaseRuleEffect } from "../gameState/getRerollPhaseRuleEffect";
 import { getDamageRuleEffect } from "../gameState/getDamageRuleEffect";
 import { getReturnRuleEffect } from "../gameState/getReturnRuleEffect";
-import { createCommandEffectTips, getConditionTitleFn } from "../gameState/effect";
+import { createCommandEffectTips, createEffectTips, getConditionTitleFn } from "../gameState/effect";
 import { CommandEffecTipFn } from "../define/CommandEffectTip";
 import { createBridge } from "../bridge/createBridge";
 
@@ -76,16 +76,8 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
         const enablePayCost = true;
         if (enablePayCost) {
             const effectCreator = EffectFn.getPlayerID(currentActiveEffect);
-            const cets = createCommandEffectTips(ctx, currentActiveEffect)
-            // 必須至少有一個正確邏輯可用, 不然不能到這一步
-            if (cets.length == 0) {
-                throw new Error(`cets.length must > 0`);
-            }
-            const useCet = cets.find(cet => cet.logicID == activeLogicID && cet.logicSubID == activeLogicSubID)
-            if (useCet == null) {
-                throw new Error(`cet must found`)
-            }
-            const toes = useCet.tipOrErrors.filter(toe => toe.errors.length != 0)
+            const tipOrErrors = createEffectTips(ctx, currentActiveEffect, activeLogicID, activeLogicSubID, {isCheckUserSelection: true})
+            const toes = tipOrErrors.filter(toe => toe.errors.length != 0)
             const tipInfos = toes.map(toe => {
                 const con = currentActiveEffect.text.conditions?.[toe.conditionKey]
                 if (con == null) {

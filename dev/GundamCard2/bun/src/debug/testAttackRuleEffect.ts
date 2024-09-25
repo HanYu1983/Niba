@@ -4,7 +4,7 @@ import { Card } from "../game/define/Card";
 import { PlayerA, PlayerB } from "../game/define/PlayerID";
 import { getBattleGroup, isABattleGroup } from "../game/gameState/battleGroup";
 import { addCards } from "../game/gameState/CardTableComponent";
-import { createCommandEffectTips, doEffect, getConditionTitleFn, setCardTipStrBaSyouPairs, setTipSelectionForUser } from "../game/gameState/effect";
+import { createCommandEffectTips, createEffectTips, doEffect, getConditionTitleFn, setCardTipStrBaSyouPairs, setTipSelectionForUser } from "../game/gameState/effect";
 import { createGameState, GameState } from "../game/gameState/GameState";
 import { getAttackPhaseRuleEffect } from "../game/gameState/getAttackPhaseRuleEffect";
 import { getItem, getItemBaSyou } from "../game/gameState/ItemTableComponent";
@@ -75,12 +75,8 @@ export async function testAttackRuleEffect3() {
     await loadPrototype("unitHasHigh")
     let ctx = createGameState()
     const attackEffect = getAttackPhaseRuleEffect(ctx, PlayerA)
-    const cets = createCommandEffectTips(ctx, attackEffect, { isCheckUserSelection: true })
-    if (cets.length == 0) {
-        throw new Error(`cets.length must > 0`);
-    }
-    const useCet = cets[0]
-    const toes = useCet.tipOrErrors.filter(toe => toe.errors.length != 0)
+    const tipOrErrors = createEffectTips(ctx, attackEffect, 0, 0, { isCheckUserSelection: true })
+    const toes = tipOrErrors.filter(toe => toe.errors.length != 0)
     const tipInfos = toes.map(toe => {
         const con = attackEffect.text.conditions?.[toe.conditionKey]
         if (con == null) {

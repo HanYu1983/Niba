@@ -156,10 +156,10 @@ async function testCompress() {
                                 if (effect == null) {
                                     throw new Error()
                                 }
-                                const cets = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)
-                                for (const cet of cets) {
-                                    ctx = setTipSelectionForUser(ctx, effect, cet.logicID, cet.logicSubID) as GameStateWithFlowMemory
-                                }
+                                // const cets = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)
+                                // for (const cet of cets) {
+                                //     ctx = setTipSelectionForUser(ctx, effect, cet.logicID, cet.logicSubID) as GameStateWithFlowMemory
+                                // }
                             }
                             ctx = applyFlow(ctx, playerId, flow)
                         } catch (e) {

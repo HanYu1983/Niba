@@ -154,12 +154,12 @@ export function assertEffectCanPass(
   }
 }
 
-export function createCommandEffectTips(ctx: GameState, effect: Effect, options?: { isCheckUserSelection?: boolean }): CommandEffectTip[] {
+export function createCommandEffectTips(ctx: GameState, effect: Effect): CommandEffectTip[] {
   if (effect.text.logicTreeActions) {
     const testedEffects = effect.text.logicTreeActions.flatMap((lta, logicId) => {
       const allTree = CardTextFn.getLogicTreeActionConditions(effect.text, lta)
       const allTest = allTree.map((conditions, logicSubId) => {
-        const conTipErrors = createEffectTips(ctx, effect, logicId, logicSubId, options)
+        const conTipErrors = createEffectTips(ctx, effect, logicId, logicSubId)
         return {
           //id: ToolFn.getUUID("getCommandEffectTips"),
           effect: effect,
