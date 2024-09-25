@@ -59,7 +59,7 @@ export function createEffectTips(
         const cardId = EffectFn.getCardID(effect)
         ctx = mapItemState(ctx, cardId, is => ItemStateFn.setTip(is, key, tip)) as GameState
       } catch (e) {
-        if (e instanceof TargetMissingError) {
+        if (e instanceof GameError) {
           errors.push(e.message)
         } else {
           throw e
@@ -804,7 +804,7 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
         const cardController = getItemController(ctx, cardId)
         const cardIdsCanPay = getCardIdsCanPayRollCost(ctx, cardController, null)
         if (cardIdsCanPay.length < x) {
-          throw new TargetMissingError(`合計国力〔x〕:${cardIdsCanPay.length} < ${x}. ${effect.text.description}`)
+          throw new GameError(`合計国力〔x〕:${cardIdsCanPay.length} < ${x}. ${effect.text.description}`)
         }
         return ctx
       }
@@ -822,7 +822,7 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
             .map(cardId => [cardId, basyou] as StrBaSyouPair)
         )
         if (pairs.length == 0) {
-          throw new TargetMissingError(`${action.title[0]} ${pairs.length}`)
+          throw new GameError(`${action.title[0]} ${pairs.length}`)
         }
         return ctx
       }
@@ -835,7 +835,7 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
         if (areas.includes(AbsoluteBaSyouFn.getBaSyouKeyword(from))) {
 
         } else {
-          throw new TargetMissingError(`${action.title} ${cardId} not in ${JSON.stringify(areas)}`)
+          throw new GameError(`${action.title} ${cardId} not in ${JSON.stringify(areas)}`)
         }
         return ctx
       }
@@ -850,7 +850,7 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
           .filter(itemId => getItemPrototype(ctx, itemId).gsign?.[0].includes(color))
           .filter(itemId => getItemRuntimeCategory(ctx, itemId) == category).length
         if (gsignCount < count) {
-          throw new TargetMissingError(`you have ${gsignCount}. must ${count}: ${action.title[0]}`)
+          throw new GameError(`you have ${gsignCount}. must ${count}: ${action.title[0]}`)
         }
         return ctx
       }

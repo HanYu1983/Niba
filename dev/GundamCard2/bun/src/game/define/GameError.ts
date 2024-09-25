@@ -6,7 +6,7 @@ export class GameError extends Error {
     }
 }
 
-export class TargetMissingError extends GameError {
+export class TargetMissingError extends Error {
     constructor(message: any) {
         super(message);
         this.name = "TargetMissingError";
