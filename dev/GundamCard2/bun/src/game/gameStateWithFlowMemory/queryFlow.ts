@@ -226,6 +226,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
         const opponentEffect: Effect[] = [];
         ctx.immediateEffect.forEach((effectID) => {
             const effect = getEffect(ctx, effectID) as Effect
+            // Event no playerID
             const controller = EffectFn.getPlayerID(effect);
             if (controller == playerID) {
                 myEffect.push(effect);

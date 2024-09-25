@@ -60,6 +60,8 @@ export async function testPlayG() {
             if (e instanceof TargetMissingError) {
                 if (e.message.startsWith("出G上限")) {
 
+                } else {
+                    throw e
                 }
             } else {
                 throw e

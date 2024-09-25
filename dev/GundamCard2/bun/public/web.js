@@ -25204,9 +25204,11 @@ function getPhase(ctx2) {
 // src/tool/logger.ts
 var hideCategory = [
   "triggerEvent",
+  "getPlayEffects",
+  "getConditionTitleFn",
   "doEffect",
-  "applyFlow",
-  "handleAttackDamage"
+  "handleAttackDamage",
+  "getGlobalEffects"
 ];
 var filterCategory = true;
 var log = (category, ...msg) => {
@@ -25938,6 +25940,12 @@ var CardTextFn = {
 };
 
 // src/script/index.ts
+async function importJson(path) {
+  return (await import(path)).default;
+}
+async function importJs(path) {
+  return await import(path);
+}
 async function loadPrototype(imgID) {
   if (_preloadPrototype[imgID]) {
     return _preloadPrototype[imgID];
@@ -25948,7 +25956,7 @@ async function loadPrototype(imgID) {
   if (imgID.split("_").length > 1) {
     const [prodid, part2, part3, part4, part5] = imgID.split("_");
     const info_25 = `${part2}_${part3}_${part4}_${part5}`;
-    const data = (await import(`./data/${prodid}.json`)).default.data.find((d) => {
+    const data = (await importJson(`./data/${prodid}.json`)).data.find((d) => {
       return d.info_25 == info_25;
     });
     if (data) {
@@ -26037,7 +26045,7 @@ async function loadPrototype(imgID) {
     }
   }
   {
-    const scriptProto = (await import(`./ext/${imgID}`).catch(() => {
+    const scriptProto = (await importJs(`./ext/${imgID}`).catch(() => {
       console.log(`script/${imgID}.ts not found. use default`);
       return { prototype: {} };
     })).prototype;
@@ -26652,7 +26660,7 @@ var ItemStateFn = {
   },
   getTip(ctx2, k) {
     if (ctx2.tips[k] == null) {
-      throw new TargetMissingError(`cardId: ${ctx2.id} target not set yet: ${k}`);
+      throw new Error(`cardId: ${ctx2.id} target not set yet: ${k}`);
     }
     return ctx2.tips[k];
   },
@@ -28045,47 +28053,53 @@ function getPlayCardEffects(ctx2, cardId) {
   const ret = [playCardEffect];
   const ges = getGlobalEffects(ctx2, null);
   ctx2 = setGlobalEffects(ctx2, null, ges);
-  const morePlayEfs = ges.filter((g) => g.title[0] == "\u5408\u8A08\u56FD\u529B\uFF0B(\uFF11)\u3057\u3066\u30D7\u30EC\u30A4\u3067\u304D\u308B" && g.cardIds.includes(cardId));
-  const hasMorePlay = morePlayEfs.length > 0;
-  const addedLength = pipe(always_default(morePlayEfs), map_default((g) => g.title[0] == "\u5408\u8A08\u56FD\u529B\uFF0B(\uFF11)\u3057\u3066\u30D7\u30EC\u30A4\u3067\u304D\u308B" ? g.title[1] : 0), sum_default)();
-  if (hasMorePlay) {
-    const morePlayCardEffect = {
-      ...playCardEffect,
-      text: {
-        ...playCardEffect.text,
-        conditions: {
-          ...playCardEffect.text.conditions,
-          "\u5408\u8A08\u56FD\u529B\u3014x\u3015": {
-            actions: [
-              {
-                title: ["\u5408\u8A08\u56FD\u529B\u3014x\u3015", cardRollCostLength + addedLength]
-              }
-            ]
+  {
+    const morePlayEfs = ges.filter((g) => g.title[0] == "\u5408\u8A08\u56FD\u529B\uFF0B(\uFF11)\u3057\u3066\u30D7\u30EC\u30A4\u3067\u304D\u308B" && g.cardIds.includes(cardId));
+    const hasTotolCostPlusPlay = morePlayEfs.length > 0;
+    const addedLength = pipe(always_default(morePlayEfs), map_default((g) => g.title[0] == "\u5408\u8A08\u56FD\u529B\uFF0B(\uFF11)\u3057\u3066\u30D7\u30EC\u30A4\u3067\u304D\u308B" ? g.title[1] : 0), sum_default)();
+    if (hasTotolCostPlusPlay) {
+      const totalCostPlusPlayEffect = {
+        ...playCardEffect,
+        id: `totalCostPlusPlayEffect_${cardId}`,
+        text: {
+          ...playCardEffect.text,
+          id: `totalCostPlusPlayEffect_text_${cardId}`,
+          conditions: {
+            ...playCardEffect.text.conditions,
+            "\u5408\u8A08\u56FD\u529B\u3014x\u3015": {
+              actions: [
+                {
+                  title: ["\u5408\u8A08\u56FD\u529B\u3014x\u3015", cardRollCostLength + addedLength]
+                }
+              ]
+            }
           }
         }
+      };
+      totalCostPlusPlayEffect.text.logicTreeActions = JSON.parse(JSON.stringify(playCardEffect.text.logicTreeActions));
+      if (totalCostPlusPlayEffect.text.logicTreeActions?.[0] == null) {
+        throw new Error(`morePlayCardEffect.text.logicTreeActions?.[0] == null`);
       }
-    };
-    morePlayCardEffect.text.logicTreeActions = JSON.parse(JSON.stringify(playCardEffect.text.logicTreeActions));
-    if (morePlayCardEffect.text.logicTreeActions?.[0] == null) {
-      throw new Error(`morePlayCardEffect.text.logicTreeActions?.[0] == null`);
+      totalCostPlusPlayEffect.text.logicTreeActions[0].actions.push({
+        title: function _(ctx3, effect2, { GameStateFn, DefineFn }) {
+          const { addedLength: addedLength2 } = { addedLength: 0 };
+          const cardId2 = DefineFn.EffectFn.getCardID(effect2);
+          let cs = GameStateFn.getItemState(ctx3, cardId2);
+          cs = DefineFn.ItemStateFn.setMoreTotalRollCostLengthPlay(cs, addedLength2);
+          ctx3 = GameStateFn.setItemState(ctx3, cardId2, cs);
+          return ctx3;
+        }.toString().replace("{ addedLength: 0 }", `{addedLength: ${addedLength}}`)
+      });
+      ret.push(totalCostPlusPlayEffect);
     }
-    morePlayCardEffect.text.logicTreeActions[0].actions.push({
-      title: function _(ctx3, effect2, { GameStateFn, DefineFn }) {
-        const { addedLength: addedLength2 } = { addedLength: 0 };
-        const cardId2 = DefineFn.EffectFn.getCardID(effect2);
-        let cs = GameStateFn.getItemState(ctx3, cardId2);
-        cs = DefineFn.ItemStateFn.setMoreTotalRollCostLengthPlay(cs, addedLength2);
-        ctx3 = GameStateFn.setItemState(ctx3, cardId2, cs);
-        return ctx3;
-      }.toString().replace("{ addedLength: 0 }", `{addedLength: ${addedLength}}`)
-    });
-    ret.push(morePlayCardEffect);
   }
   if (prototype.category == "\u30AD\u30E3\u30E9\u30AF\u30BF\u30FC" && getCardHasSpeicalEffect(ctx2, ["\u30B9\u30C6\u30A4"], cardId)) {
-    const morePlayCardEffect = {
+    const stayPlayEffect = {
       ...playCardEffect,
+      id: `stayPlayEffect_${cardId}`,
       text: {
         ...playCardEffect.text,
+        id: `stayPlayEffect_text_${cardId}`,
         conditions: {
           ...dissoc_default("\u4E00\u500B\u81EA\u8ECD\u6A5F\u9AD4", playCardEffect.text.conditions || {})
         },
@@ -28107,6 +28121,7 @@ function getPlayCardEffects(ctx2, cardId) {
         ]
       }
     };
+    ret.push(stayPlayEffect);
   }
   return ret;
 }
@@ -28367,6 +28382,7 @@ function createEffectTips(ctx2, effect3, logicId, logicSubId) {
   });
 }
 function setEffectTips(ctx2, e, toes) {
+  log("setEffectTips", "effect", e.description);
   switch (e.reason[0]) {
     case "Event":
     case "GameRule":
@@ -28375,6 +28391,7 @@ function setEffectTips(ctx2, e, toes) {
     case "PlayCard":
     case "PlayText": {
       const cardId = EffectFn.getCardID(e);
+      log("setEffectTips", "cardId", cardId);
       toes.forEach((toe) => {
         if (toe.errors.length) {
           return;
@@ -28384,6 +28401,7 @@ function setEffectTips(ctx2, e, toes) {
           return;
         }
         const key = toe.conditionKey;
+        log("setEffectTips", key, tip.title);
         ctx2 = mapItemState(ctx2, cardId, (is) => ItemStateFn.setTip(is, key, tip));
       });
       return ctx2;
@@ -28420,7 +28438,6 @@ function createCommandEffectTips(ctx2, effect3) {
       const allTest = allTree.map((conditions, logicSubId) => {
         const conTipErrors = createEffectTips(ctx2, effect3, logicId, logicSubId);
         return {
-          id: ToolFn.getUUID("getCommandEffectTips"),
           effect: effect3,
           logicID: logicId,
           logicSubID: logicSubId,
@@ -29200,6 +29217,20 @@ function setActiveEffectID(ctx2, playerID, effectID) {
   if (controller != playerID) {
     throw new Error("[cancelCommand] \u4F60\u4E0D\u662F\u63A7\u5236\u8005");
   }
+  const cetsNoErr = createCommandEffectTips(ctx2, effect4).filter(CommandEffecTipFn.filterNoError);
+  if (cetsNoErr.length == 0) {
+    throw new Error(`cets.length must not 0`);
+  }
+  if (cetsNoErr.length == 1) {
+    ctx2 = {
+      ...ctx2,
+      flowMemory: {
+        ...ctx2.flowMemory,
+        activeLogicID: cetsNoErr[0].logicID,
+        activeLogicSubID: cetsNoErr[0].logicSubID
+      }
+    };
+  }
   ctx2 = {
     ...ctx2,
     flowMemory: {
@@ -29207,20 +29238,6 @@ function setActiveEffectID(ctx2, playerID, effectID) {
       activeEffectID: effectID
     }
   };
-  const cets = createCommandEffectTips(ctx2, effect4).filter(CommandEffecTipFn.filterNoError);
-  if (cets.length == 0) {
-    throw new Error(`cets.length must not 0`);
-  }
-  if (cets.length == 1) {
-    ctx2 = {
-      ...ctx2,
-      flowMemory: {
-        ...ctx2.flowMemory,
-        activeLogicID: cets[0].logicID,
-        activeLogicSubID: cets[0].logicSubID
-      }
-    };
-  }
   return ctx2;
 }
 function cancelActiveEffectID(ctx2, playerID) {
@@ -29391,11 +29408,11 @@ function updateDestroyEffect(ctx2) {
 function getPlayGEffects(ctx2, cardId) {
   const playerId = getItemOwner(ctx2, cardId);
   const effect4 = {
-    id: `getPlayCardEffects_${cardId}`,
+    id: `getPlayGEffects_${cardId}`,
     reason: ["PlayCard", playerId, cardId],
     description: "PlayG",
     text: {
-      id: `getPlayCardEffects_text_${cardId}`,
+      id: `getPlayGEffects_text_${cardId}`,
       title: [],
       conditions: {
         "\u51FAG\u4E0A\u9650": {
@@ -29447,10 +29464,8 @@ function getPlayGEffects(ctx2, cardId) {
 
 // src/game/gameState/getPlayEffects.ts
 function getPlayEffects(ctx2, playerId) {
-  log("getPlayEffects", "start");
   const ges = getGlobalEffects(ctx2, null);
   ctx2 = setGlobalEffects(ctx2, null, ges);
-  log("getPlayEffects", "ges", ges);
   const canPlayByText = ges.filter((ge) => ge.title[0] == "\u81EA\u8ECD\u624B\u672D\u306B\u3042\u308B\u304B\u306E\u3088\u3046\u306B\u30D7\u30EC\u30A4\u3067\u304D\u308B").flatMap((ge) => ge.cardIds).filter((itemId) => AbsoluteBaSyouFn.getPlayerID(getItemBaSyou(ctx2, itemId)) == playerId);
   const getPlayCardEffectsF = ifElse_default(always_default(PhaseFn.eq(getPhase(ctx2), ["\u914D\u5099\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"])), pipe(always_default([AbsoluteBaSyouFn.of(playerId, "\u624B\u672D"), AbsoluteBaSyouFn.of(playerId, "\u30CF\u30F3\u30AC\u30FC")]), map_default((basyou) => getItemIdsByBasyou(ctx2, basyou)), flatten_default, concat_default(canPlayByText), map_default((cardId) => getPlayCardEffects(ctx2, cardId)), flatten_default), ifElse_default(always_default(PhaseFn.isFreeTiming(getPhase(ctx2))), pipe(always_default([AbsoluteBaSyouFn.of(playerId, "\u624B\u672D"), AbsoluteBaSyouFn.of(playerId, "\u30CF\u30F3\u30AC\u30FC")]), map_default((basyou) => getItemIdsByBasyou(ctx2, basyou)), flatten_default, concat_default(canPlayByText), map_default((cardId) => {
     if (getCardHasSpeicalEffect(ctx2, ["\u30AF\u30A4\u30C3\u30AF"], cardId)) {
@@ -29608,8 +29623,9 @@ function updateCommand(ctx2) {
   const playerBEffects = getPlayEffects(ctx2, PlayerB);
   const allEffects = [...playerAEffects, ...playerBEffects];
   const testedEffects = allEffects.flatMap((e) => createCommandEffectTips(ctx2, e));
+  const effects = testedEffects.filter(CommandEffecTipFn.filterEffectDistinct).map((tip) => tip.effect);
   ctx2 = setCommandEffectTips(ctx2, testedEffects);
-  ctx2 = setCommandEffects(ctx2, testedEffects.filter((command, index, self) => index === self.findIndex((c) => c.effect.id === command.effect.id)).map((tip) => tip.effect));
+  ctx2 = setCommandEffects(ctx2, effects);
   return ctx2;
 }
 function getPlayerCommands(ctx2, playerID) {
@@ -29624,7 +29640,7 @@ function getPlayerCommandsFilterNoErrorDistinct(ctx2, playerID) {
 
 // src/game/gameStateWithFlowMemory/applyFlow.ts
 function applyFlow(ctx2, playerID, flow) {
-  log("applyFlow", playerID, flow);
+  log("applyFlow", playerID, flow.description);
   switch (flow.id) {
     case "FlowSetActiveEffectID": {
       if (flow.effectID == null) {
@@ -31411,12 +31427,12 @@ function queryFlow(ctx2, playerID) {
     const myEffect = [];
     const opponentEffect = [];
     ctx2.immediateEffect.forEach((effectID) => {
-      const effect9 = getEffect(ctx2, effectID);
-      const controller = EffectFn.getPlayerID(effect9);
+      const effect10 = getEffect(ctx2, effectID);
+      const controller = EffectFn.getPlayerID(effect10);
       if (controller == playerID) {
-        myEffect.push(effect9);
+        myEffect.push(effect10);
       } else {
-        opponentEffect.push(effect9);
+        opponentEffect.push(effect10);
       }
     });
     if (isActivePlayer == false) {
@@ -31437,12 +31453,26 @@ function queryFlow(ctx2, playerID) {
         }
       ];
     }
+    const effect9 = myEffect[0];
+    {
+      const cets = createCommandEffectTips(ctx2, effect9).filter(CommandEffecTipFn.filterNoError);
+      if (cets.length == 0) {
+        throw new Error(`cets.length must not 0`);
+      }
+    }
     const optionEffect = myEffect.filter((v) => v.isOption == true);
+    if (optionEffect.length) {
+      const effect10 = optionEffect[0];
+      const cets = createCommandEffectTips(ctx2, effect10).filter(CommandEffecTipFn.filterNoError);
+      if (cets.length == 0) {
+        throw new Error(`cets.length must not 0`);
+      }
+    }
     return [
       ...myEffect.length ? [
         {
           id: "FlowSetActiveEffectID",
-          effectID: myEffect[0].id,
+          effectID: effect9.id,
           description: "\u9078\u64C7\u4E00\u500B\u8D77\u52D5\u6548\u679C",
           tips: myEffect
         }
@@ -31544,10 +31574,17 @@ function queryFlow(ctx2, playerID) {
           if (myCommandList.length == 0) {
             return [];
           }
+          const effect10 = myCommandList[0];
+          {
+            const cets = createCommandEffectTips(ctx2, effect10).filter(CommandEffecTipFn.filterNoError);
+            if (cets.length == 0) {
+              throw new Error(`cets.length must not 0`);
+            }
+          }
           return [
             {
               id: "FlowSetActiveEffectID",
-              effectID: myCommandList[0].id,
+              effectID: effect10.id,
               tips: myCommandList,
               description: "\u4F60\u53EF\u4EE5\u5207\u5165"
             }
@@ -31565,6 +31602,12 @@ function queryFlow(ctx2, playerID) {
           description: "\u7B49\u5F85\u6548\u679C\u63A7\u5236\u8005\u8655\u7406"
         }
       ];
+    }
+    {
+      const cets = createCommandEffectTips(ctx2, effect9).filter(CommandEffecTipFn.filterNoError);
+      if (cets.length == 0) {
+        throw new Error(`cets.length must not 0`);
+      }
     }
     return [
       {
@@ -31595,10 +31638,17 @@ function queryFlow(ctx2, playerID) {
           if (myCommandList.length == 0) {
             return [];
           }
+          const effect9 = myCommandList[0];
+          {
+            const cets = createCommandEffectTips(ctx2, effect9).filter(CommandEffecTipFn.filterNoError);
+            if (cets.length == 0) {
+              throw new Error(`cets.length must not 0`);
+            }
+          }
           return [
             {
               id: "FlowSetActiveEffectID",
-              effectID: myCommandList[0].id,
+              effectID: effect9.id,
               description: "\u9078\u64C7\u4E00\u500B\u6307\u4EE4",
               tips: myCommandList
             }
@@ -32043,23 +32093,15 @@ var FlowListView = (props) => {
     return queryFlow(appContext5.viewModel.model.gameState, props.clientID);
   }, [appContext5.viewModel.model.gameState, props.clientID]);
   import_react6.useEffect(() => {
-    const payCost = flows.find((flow) => flow.id == "FlowPassPayCost");
-    if (payCost == null) {
-      return;
-    }
-    if (payCost.id != "FlowPassPayCost") {
-      throw new Error("must be FlowPassPayCost");
-    }
-    const effect12 = getEffectIncludePlayerCommand(appContext5.viewModel.model.gameState, payCost.effectID);
-    if (effect12 == null) {
-      throw new Error("must find effect");
-    }
-    if (effect12.text.conditions == null) {
-      OnEvent.next({
-        id: "OnClickFlowConfirm",
-        clientID: props.clientID,
-        flow: payCost
-      });
+    if (flows.length) {
+      const flow = flows[Math.round(Math.random() * 1000) % flows.length];
+      setTimeout(() => {
+        OnEvent.next({
+          id: "OnClickFlowConfirm",
+          clientID: props.clientID,
+          flow
+        });
+      }, 500);
     }
   }, [appContext5.viewModel.model.gameState, props.clientID, flows]);
   const renderControlPanel = import_react6.useMemo(() => {

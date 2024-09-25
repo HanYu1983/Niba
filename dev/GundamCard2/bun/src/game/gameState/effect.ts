@@ -4,7 +4,7 @@ import { AbsoluteBaSyouFn, AbsoluteBaSyou, BaSyouKeywordFn, BaSyouKeyword } from
 import { CardTextFn, ConditionFn, LogicTreeActionFn, Condition, ConditionTitleFn, Action, ActionTitleFn, ActionFn, CardText, OnEventFn } from "../define/CardText"
 import { CoinFn } from "../define/Coin"
 import { Effect, DestroyReason, EffectFn } from "../define/Effect"
-import { TargetMissingError } from "../define/GameError"
+import { GameError, TargetMissingError } from "../define/GameError"
 import { GameEvent } from "../define/GameEvent"
 import { ItemStateFn } from "../define/ItemState"
 import { PhaseFn } from "../define/Timing"
@@ -70,7 +70,7 @@ export function createEffectTips(
       try {
         return fn(ctx, effect, bridge)
       } catch (e) {
-        if (e instanceof TargetMissingError) {
+        if (e instanceof GameError) {
           errors.push(e.message)
           return ctx
         } else {
@@ -83,6 +83,7 @@ export function createEffectTips(
 }
 
 export function setEffectTips(ctx: GameState, e: Effect, toes: TipOrErrors[]): GameState {
+  log("setEffectTips", "effect", e.description)
   switch (e.reason[0]) {
     case "Event":
     case "GameRule":
@@ -91,6 +92,7 @@ export function setEffectTips(ctx: GameState, e: Effect, toes: TipOrErrors[]): G
     case "PlayCard":
     case "PlayText": {
       const cardId = EffectFn.getCardID(e)
+      log("setEffectTips", "cardId", cardId)
       toes.forEach(toe => {
         if (toe.errors.length) {
           return
@@ -100,6 +102,7 @@ export function setEffectTips(ctx: GameState, e: Effect, toes: TipOrErrors[]): G
           return
         }
         const key = toe.conditionKey
+        log("setEffectTips", key, tip.title)
         ctx = mapItemState(ctx, cardId, is => ItemStateFn.setTip(is, key, tip)) as GameState
       })
       return ctx
@@ -902,7 +905,7 @@ export function setItemGlobalEffectsUntilEndOfTurn(ctx: GameState, egs: GlobalEf
     }
     let cs = getItemState(ctx, itemId)
     for (const eg of egs) {
-      cs = ItemStateFn.setGlobalEffect(cs, null, eg, {isRemoveOnTurnEnd: true})
+      cs = ItemStateFn.setGlobalEffect(cs, null, eg, { isRemoveOnTurnEnd: true })
     }
     ctx = setItemState(ctx, itemId, cs) as GameState
     return ctx

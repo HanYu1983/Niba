@@ -5,6 +5,11 @@ import { OnEvent } from "../tool/appContext/eventCenter";
 import { EffectView } from "./EffectView";
 import { getEffect } from "../../game/gameState/EffectStackComponent";
 import { getEffectIncludePlayerCommand } from "../../game/gameStateWithFlowMemory/effect";
+import { CommandEffecTipFn } from "../../game/define/CommandEffectTip";
+import { TargetMissingError } from "../../game/define/GameError";
+import { createCommandEffectTips, setTipSelectionForUser } from "../../game/gameState/effect";
+import { applyFlow } from "../../game/gameStateWithFlowMemory/applyFlow";
+import { GameStateWithFlowMemory } from "../../game/gameStateWithFlowMemory/GameStateWithFlowMemory";
 
 export const FlowListView = (props: { clientID: string }) => {
   const appContext = useContext(AppContext);
@@ -12,23 +17,33 @@ export const FlowListView = (props: { clientID: string }) => {
     return queryFlow(appContext.viewModel.model.gameState, props.clientID);
   }, [appContext.viewModel.model.gameState, props.clientID]);
   useEffect(() => {
-    const payCost = flows.find((flow) => flow.id == "FlowPassPayCost");
-    if (payCost == null) {
-      return;
-    }
-    if (payCost.id != "FlowPassPayCost") {
-      throw new Error("must be FlowPassPayCost");
-    }
-    const effect = getEffectIncludePlayerCommand(appContext.viewModel.model.gameState, payCost.effectID)
-    if (effect == null) {
-      throw new Error("must find effect");
-    }
-    if (effect.text.conditions == null) {
-      OnEvent.next({
-        id: "OnClickFlowConfirm",
-        clientID: props.clientID,
-        flow: payCost,
-      });
+    // const payCost = flows.find((flow) => flow.id == "FlowPassPayCost");
+    // if (payCost == null) {
+    //   return;
+    // }
+    // if (payCost.id != "FlowPassPayCost") {
+    //   throw new Error("must be FlowPassPayCost");
+    // }
+    // const effect = getEffectIncludePlayerCommand(appContext.viewModel.model.gameState, payCost.effectID)
+    // if (effect == null) {
+    //   throw new Error("must find effect");
+    // }
+    // if (effect.text.conditions == null) {
+    //   OnEvent.next({
+    //     id: "OnClickFlowConfirm",
+    //     clientID: props.clientID,
+    //     flow: payCost,
+    //   });
+    // }
+    if (flows.length) {
+      const flow = flows[Math.round(Math.random() * 1000) % flows.length]
+      setTimeout(() => {
+        OnEvent.next({
+          id: "OnClickFlowConfirm",
+          clientID: props.clientID,
+          flow: flow,
+        });
+      }, 500)
     }
   }, [appContext.viewModel.model.gameState, props.clientID, flows]);
   // ============== control panel ============= //

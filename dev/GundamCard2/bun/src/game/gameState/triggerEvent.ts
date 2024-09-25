@@ -8,7 +8,7 @@ import { getCardTexts } from "./card"
 import { getCardIds } from "./CardTableComponent"
 import { getOnEventTitleFn } from "./effect"
 import { GameState } from "./GameState"
-import { getCardLikeItemIds, getItemPrototype } from "./ItemTableComponent"
+import { getCardLikeItemIds, getItemController, getItemPrototype } from "./ItemTableComponent"
 import { ItemStateFn } from "../define/ItemState"
 import { PhaseFn } from "../define/Timing"
 import { getItemState, mapItemState, mapItemStateValues, setItemState } from "./ItemStateComponent"
@@ -52,7 +52,7 @@ export function triggerEvent(
                     log("triggerEvent", "處理單個內文", text.title, text.description)
                     const effect: Effect = {
                         id: ToolFn.getUUID("triggerTextEvent"),
-                        reason: ["Event", cardId, event],
+                        reason: ["Event", getItemController(ctx, cardId), cardId, event],
                         text: text
                     }
                     return getOnEventTitleFn(text)(ctx, effect, bridge)

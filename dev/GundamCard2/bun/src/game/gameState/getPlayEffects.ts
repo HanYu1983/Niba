@@ -72,12 +72,12 @@ export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
         map(cardId => {
             return (getCardTexts(ctx, cardId)).flatMap(text => {
                 switch (text.title[0]) {
+                    case "使用型":
+                        return [text]
                     case "特殊型":
-                        return getTextsFromSpecialEffect(ctx, text)
-                    case "TextBattleBonus":
-                        return []
+                        return getTextsFromSpecialEffect(ctx, text).filter(text => text.title[0] == "使用型")
                 }
-                return [text]
+                return []
             }).filter(inTiming).map(text => {
                 const playTextConditions: { [key: string]: Condition } = {
                     "同切上限": {
@@ -145,18 +145,7 @@ export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
             if (text.title[0] == "使用型") {
                 return text.title[1]
             }
-            if (text.title[0] == "特殊型") {
-                const [_, toku] = text.title;
-                const t = getTextsFromSpecialEffect(ctx, text).find((v) => v.title[0] == "使用型");
-                if (t == null) {
-                    throw new Error("t must find");
-                }
-                if (t.title[0] != "使用型") {
-                    throw new Error("must be 使用型")
-                }
-                return t.title[1];
-            }
-            throw new Error("not support:" + text);
+            throw new Error("not support:" + text.title[0] + ":" + text.description);
         })();
         switch (siYouTiming[0]) {
             case "自軍":
