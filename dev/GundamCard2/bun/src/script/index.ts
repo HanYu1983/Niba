@@ -3,6 +3,14 @@ import { BattleAreaKeyword } from "../game/define/BaSyou";
 import { CardCategory, CardColor, CardColorFn, CardPrototype, RollCostColor } from "../game/define/CardPrototype";
 import { CardText, Condition, createRollCostRequire } from "../game/define/CardText";
 
+export async function importJson(path: string): Promise<any> {
+  return (await import(path, { with: { type: "json" } })).default
+}
+
+export async function importJs(path: string): Promise<any> {
+  return await import(path)
+}
+
 export async function loadPrototype(imgID: string): Promise<CardPrototype> {
   if (_preloadPrototype[imgID]) {
     return _preloadPrototype[imgID]
@@ -15,7 +23,7 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
     const info_25 = `${part2}_${part3}_${part4}_${part5}`
     // https://stackoverflow.com/questions/69548822/how-to-import-js-that-imported-json-from-html
     // 加入, {with: {type: "json"}}到編譯過後的檔案裡
-    const data = (await import(`./data/${prodid}.json`, { with: { type: "json" } })).default.data.find((d: any) => {
+    const data = (await importJson(`./data/${prodid}.json`)).data.find((d: any) => {
       return d.info_25 == info_25
     });
     if (data) {
@@ -114,7 +122,7 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
   }
   {
     // 修改成import(`./ext/${imgID}.js`)到編譯後的檔案裡
-    const scriptProto = (await import(`./ext/${imgID}`).catch(() => {
+    const scriptProto = (await importJs(`./ext/${imgID}`).catch(() => {
       console.log(`script/${imgID}.ts not found. use default`)
       return { prototype: {} }
     })).prototype as CardPrototype;
