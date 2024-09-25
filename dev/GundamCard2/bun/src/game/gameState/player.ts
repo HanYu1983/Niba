@@ -8,12 +8,12 @@ import { PlayerID, PlayerIDFn } from "../define/PlayerID";
 import { isABattleGroup, getBattleGroup, getBattleGroupBattlePoint } from "./battleGroup";
 import { GameState } from "./GameState";
 import { getItemState, setItemState } from "./ItemStateComponent";
-import { getItemIdsByBasyou, getItemIdsByBasyou } from "./ItemTableComponent";
 import { GameEvent } from "../define/GameEvent";
 import { getSetGroupBattlePoint } from "./setGroup";
 import { triggerEvent } from "./triggerEvent";
 import { StrBaSyouPair } from "../define/Tip";
 import { moveItem } from "./moveItem";
+import { getItemIdsByBasyou } from "./ItemTableComponent";
 
 // player
 export function isPlayerHasBattleGroup(
