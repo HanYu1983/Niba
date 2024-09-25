@@ -9,6 +9,7 @@ import { getItemStateValues } from "../gameState/ItemStateComponent";
 import { getItemController } from "../gameState/ItemTableComponent";
 import { getSetGroupBattlePoint } from "../gameState/setGroup";
 import { CommandEffecTipFn, CommandEffectTip } from "../define/CommandEffectTip";
+import { TargetMissingError } from "../define/GameError";
 
 export function getEffectIncludePlayerCommand(ctx: GameStateWithFlowMemory, effectId: string): Effect {
   return ctx.commandEffects.find(cmd => cmd.id == effectId) || getEffect(ctx, effectId)
@@ -143,7 +144,13 @@ export function doActiveEffect(ctx: GameStateWithFlowMemory, playerID: string, e
     throw new Error("effect not found")
   }
   const isStackEffect_ = isStackEffect(ctx, effectID)
-  ctx = doEffect(ctx, effect, logicId, logicSubId) as GameStateWithFlowMemory;
+  try {
+    ctx = doEffect(ctx, effect, logicId, logicSubId) as GameStateWithFlowMemory;
+  } catch (e) {
+    if (e instanceof TargetMissingError) {
+      console.log(`對象遺失: ${e.message}`)
+    }
+  }
   // 清除旗標，代表現在沒有正在支付的效果
   ctx = clearActiveEffectID(ctx) as GameStateWithFlowMemory;
   // 將效果移除

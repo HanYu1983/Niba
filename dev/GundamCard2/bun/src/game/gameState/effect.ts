@@ -51,6 +51,8 @@ export function createEffectTips(
     const tip = getConditionTitleFn(con, {})(ctx, effect, bridge)
     const errors: string[] = []
     if (tip) {
+      // 一開始找可用指令時不需要包含[對象有沒有被使用者選擇]
+      // 等到確定要用這個指令時, 再用這個選項來找出[哪一個對象還沒有被使用者選擇]
       if (options?.isCheckUserSelection) {
         try {
           const cardId = EffectFn.getCardID(effect)

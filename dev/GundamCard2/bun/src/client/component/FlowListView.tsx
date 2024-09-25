@@ -43,7 +43,7 @@ export const FlowListView = (props: { clientID: string }) => {
           clientID: props.clientID,
           flow: flow,
         });
-      }, 500)
+      }, 100)
     }
   }, [appContext.viewModel.model.gameState, props.clientID, flows]);
   // ============== control panel ============= //
