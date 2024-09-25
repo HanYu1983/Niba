@@ -27996,7 +27996,7 @@ function getPlayCardEffects(ctx2, cardId) {
                                 const hasPS = GameStateFn2.getCardHasSpeicalEffect(ctx4, ["PS\u88C5\u7532"], cardId3);
                                 const isNoNeedRoll = hasHigh || hasPS;
                                 const isRoll = isNoNeedRoll == false;
-                                ctx4 = GameStateFn2.setItemIsRoll(ctx4, isRoll, [cardId3, to]);
+                                ctx4 = GameStateFn2.mapCard(ctx4, cardId3, (card6) => ({ ...card6, isRoll }));
                                 ctx4 = GameStateFn2.triggerEvent(ctx4, { title: ["\u30D7\u30EC\u30A4\u3055\u308C\u3066\u5834\u306B\u51FA\u305F\u5834\u5408"], cardIds: [cardId3] });
                                 return ctx4;
                               }.toString()
