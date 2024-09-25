@@ -6,12 +6,12 @@ import { PhaseFn } from "../game/define/Timing"
 import { getCardRollCostLength, getCardBattlePoint, getCardIdsCanPayRollCost } from "../game/gameState/card"
 import { addCards, createCardWithProtoIds } from "../game/gameState/CardTableComponent"
 import { createEffectTips, doEffect, setTipSelectionForUser, createCommandEffectTips } from "../game/gameState/effect"
-import { getTopEffect } from "../game/gameState/EffectStackComponent"
+import { getEffect, getTopEffect } from "../game/gameState/EffectStackComponent"
 import { createGameState, GameState } from "../game/gameState/GameState"
 import { getPlayCardEffects } from "../game/gameState/getPlayCardEffect"
 import { getGlobalEffects, setGlobalEffects, clearGlobalEffects } from "../game/gameState/globalEffects"
 import { getItemState } from "../game/gameState/ItemStateComponent"
-import { getItemIdsByBasyou, getItemIds, getItemBaSyou } from "../game/gameState/ItemTableComponent"
+import { getItemIdsByBasyou, getItemIds, getItemBaSyou, getItemPrototype } from "../game/gameState/ItemTableComponent"
 import { loadPrototype } from "../script"
 import { setActivePlayerID } from "../game/gameState/ActivePlayerComponent"
 import { setPhase } from "../game/gameState/PhaseComponent"
@@ -98,7 +98,47 @@ export async function test179030_11E_U_BK194S_2_black() {
             throw new Error()
         }
         ctx = doEffect(ctx, effect, 0, 0)
-        if(AbsoluteBaSyouFn.getBaSyouKeyword(getItemBaSyou(ctx, unitAtGravyard.id)) != "配備エリア"){
+        if (AbsoluteBaSyouFn.getBaSyouKeyword(getItemBaSyou(ctx, unitAtGravyard.id)) != "配備エリア") {
+            throw new Error()
+        }
+    }
+}
+
+export async function test179030_11E_U_BK194S_2_black_2() {
+    await loadPrototype("179030_11E_U_BK194S_2_black")
+    await loadPrototype("unitBlack")
+    let ctx = createGameState()
+    const cardA: Card = {
+        id: "unit",
+        protoID: "179030_11E_U_BK194S_2_black"
+    }
+    ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "手札"), [cardA]) as GameState
+    ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), repeat("unitBlack", 6)) as GameState
+    ctx = setActivePlayerID(ctx, PlayerA) as GameState
+    ctx = setPhase(ctx, ["ドローフェイズ", "フリータイミング"]) as GameState
+    if (getItemPrototype(ctx, cardA.id).category != "ユニット") {
+        console.log(getItemPrototype(ctx, cardA.id))
+        throw new Error()
+    }
+    const effects = getPlayCardEffects(ctx, cardA.id)
+    if (effects.length == 0) {
+        throw new Error()
+    }
+    {
+        const effect = effects[0]
+        ctx = setTipSelectionForUser(ctx, effect, 0, 0)
+        ctx = doEffect(ctx, effect, 0, 0)
+        if (AbsoluteBaSyouFn.getBaSyouKeyword(getItemBaSyou(ctx, cardA.id)) != "プレイされているカード") {
+            throw new Error()
+        }
+    }
+    {
+        const effect = getTopEffect(ctx)
+        if (effect == null) {
+            throw new Error()
+        }
+        ctx = doEffect(ctx, effect, 0, 0)
+        if (AbsoluteBaSyouFn.getBaSyouKeyword(getItemBaSyou(ctx, cardA.id)) != "配備エリア") {
             throw new Error()
         }
     }

@@ -4,6 +4,8 @@ import { CardCategory, CardColor, CardColorFn, CardPrototype, RollCostColor } fr
 import { CardText, Condition, createRollCostRequire } from "../game/define/CardText";
 
 export async function importJson(path: string): Promise<any> {
+  // https://stackoverflow.com/questions/69548822/how-to-import-js-that-imported-json-from-html
+  // 加入, {with: {type: "json"}}到編譯過後的檔案裡
   return (await import(path, { with: { type: "json" } })).default
 }
 
@@ -19,10 +21,8 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
     id: imgID
   }
   if (imgID.split("_").length > 1) {
-    const [prodid, part2, part3, part4, part5] = imgID.split("_")
-    const info_25 = `${part2}_${part3}_${part4}_${part5}`
-    // https://stackoverflow.com/questions/69548822/how-to-import-js-that-imported-json-from-html
-    // 加入, {with: {type: "json"}}到編譯過後的檔案裡
+    const [prodid, ...parts] = imgID.split("_")
+    const info_25 = parts.join("_")
     const data = (await importJson(`./data/${prodid}.json`)).data.find((d: any) => {
       return d.info_25 == info_25
     });
@@ -30,7 +30,7 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
       //console.log(`find origin data: ${data.info_2}`)
       const id = data.id
       const title = data.info_2
-      const category = data.info_3
+      const categoryStr = data.info_3
       const totalCostLengthStr = data.info_4
       const colorCost = data.info_5
       const gsignProperty = data.info_6
@@ -98,10 +98,14 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
           title: ["特殊型", ["高機動"]]
         })
       }
+      const category = categoryMapping[categoryStr]
+      if (category == null) {
+        throw new Error(`unknown categoryStr: ${categoryStr}`)
+      }
       const originData: CardPrototype = {
         originCardId: id,
         title: title,
-        category: categoryMapping[category],
+        category: category,
         color: color,
         totalCost: totalCostLengthStr == "X" ? "X" : parseInt(totalCostLengthStr, 10),
         rollCost: parseColors(color, colorCost),
@@ -118,6 +122,8 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
         ...proto,
         ...originData,
       }
+    } else {
+      console.log(`loadPrototype not found: ${imgID}`)
     }
   }
   {

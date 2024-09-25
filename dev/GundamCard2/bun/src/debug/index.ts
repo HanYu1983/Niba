@@ -32,7 +32,7 @@ import { getItemState, mapItemState } from "../game/gameState/ItemStateComponent
 import { swap } from "ramda";
 import { swapItem } from "../game/gameState/swapItem";
 import { getItemBaSyou } from "../game/gameState/ItemTableComponent";
-import { test179030_11E_U_BK194S_2_black } from "./test179030_11E_U_BK194S_2_black";
+import { test179030_11E_U_BK194S_2_black, test179030_11E_U_BK194S_2_black_2 } from "./test179030_11E_U_BK194S_2_black";
 import { createCommandEffectTips, createEffectTips, doEffect, setTipSelectionForUser } from "../game/gameState/effect";
 import { CommandEffecTipFn } from "../game/define/CommandEffectTip";
 import { StrBaSyouPair, TipFn } from "../game/define/Tip";
@@ -45,7 +45,6 @@ const fs = require('fs').promises;
 
 export async function tests() {
     return [
-        //testIssue,
         testCompress,
         testLoadPrototype,
         testSwapItem,
@@ -72,6 +71,7 @@ export async function tests() {
         test179016_04B_U_BK066C_black,
         test179030_11E_U_BK194S_2_black,
         test179015_04B_U_BK058R_black,
+        test179030_11E_U_BK194S_2_black_2
     ].reduce((worker, testF) => {
         return worker.then(async () => {
             console.log(`==============================${testF.name}==================================`);

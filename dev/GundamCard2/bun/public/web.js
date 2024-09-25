@@ -32126,7 +32126,7 @@ var FlowListView = (props) => {
     return queryFlow(appContext5.viewModel.model.gameState, props.clientID);
   }, [appContext5.viewModel.model.gameState, props.clientID]);
   import_react6.useEffect(() => {
-    const speed = 200;
+    const speed = 50;
     if (props.clientID == PlayerA) {
       const payCost = flows.find((flow) => flow.id == "FlowPassPayCost");
       if (payCost) {

@@ -19,7 +19,7 @@ export const FlowListView = (props: { clientID: string }) => {
     return queryFlow(appContext.viewModel.model.gameState, props.clientID);
   }, [appContext.viewModel.model.gameState, props.clientID]);
   useEffect(() => {
-    const speed = 200
+    const speed = 50
     if (props.clientID == PlayerA) {
       const payCost = flows.find((flow) => flow.id == "FlowPassPayCost");
       if(payCost){
