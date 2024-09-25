@@ -11,7 +11,7 @@ import { doPlayerAttack } from "../gameState/player";
 import { triggerEvent } from "../gameState/triggerEvent";
 import { ToolFn } from "../tool";
 import { updateCommand } from "./updateCommand";
-import { getItemIdsByBasyou } from "../gameState/ItemTableComponent";
+import { getItemIdsByBasyou, shuffleItems } from "../gameState/ItemTableComponent";
 import { TableFns } from "../../tool/table";
 import { setCardTipStrBaSyouPairs, setTipSelectionForUser } from "../gameState/effect";
 import { EffectFn } from "../define/Effect";
@@ -168,42 +168,8 @@ export function applyFlow(
                 if (ctx.flowMemory.state != "playing") {
                     switch (ctx.flowMemory.state) {
                         case "prepareDeck": {
-                            {
-                                const plyrID = PlayerA;
-                                const baSyou: AbsoluteBaSyou = AbsoluteBaSyouFn.of(plyrID, "本国")
-                                const fromCS =
-                                    ctx.table.cardStack[AbsoluteBaSyouFn.toString(baSyou)];
-                                ctx = {
-                                    ...ctx,
-                                    table: {
-                                        ...ctx.table,
-                                        cardStack: {
-                                            ...ctx.table.cardStack,
-                                            [AbsoluteBaSyouFn.toString(baSyou)]: fromCS.sort(
-                                                () => Math.random() - 0.5
-                                            ),
-                                        },
-                                    },
-                                };
-                            }
-                            {
-                                const plyrID = PlayerB;
-                                const baSyou: AbsoluteBaSyou = AbsoluteBaSyouFn.of(plyrID, "本国")
-                                const fromCS =
-                                    ctx.table.cardStack[AbsoluteBaSyouFn.toString(baSyou)];
-                                ctx = {
-                                    ...ctx,
-                                    table: {
-                                        ...ctx.table,
-                                        cardStack: {
-                                            ...ctx.table.cardStack,
-                                            [AbsoluteBaSyouFn.toString(baSyou)]: fromCS.sort(
-                                                () => Math.random() - 0.5
-                                            ),
-                                        },
-                                    },
-                                };
-                            }
+                            ctx = shuffleItems(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国")) as GameStateWithFlowMemory
+                            ctx = shuffleItems(ctx, AbsoluteBaSyouFn.of(PlayerB, "本国")) as GameStateWithFlowMemory
                             ctx = {
                                 ...ctx,
                                 flowMemory: {

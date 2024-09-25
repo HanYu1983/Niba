@@ -162,6 +162,9 @@ async function testCompress() {
                                 // }
                             }
                             ctx = applyFlow(ctx, playerId, flow)
+                            if(Object.keys(ctx).filter(key=>key.startsWith("card_")).length){
+                                throw new Error()
+                            }
                         } catch (e) {
                             if (e instanceof TargetMissingError) {
                                 console.log(e.message)

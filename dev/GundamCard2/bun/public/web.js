@@ -25136,7 +25136,7 @@ function mapCardsWithBasyou(ctx2, f) {
     const cards = cardIds.map((cardId) => getCard(ctx2, cardId));
     return [basyou, cards];
   }).reduce((ctx3, [basyou, cards]) => {
-    return cards.map((card) => f(basyou, card)).reduce((ctx4, card) => assoc_default(card.id, card, ctx4), ctx3);
+    return cards.map((card) => f(basyou, card)).reduce((ctx4, card) => setCard(ctx4, card.id, card), ctx3);
   }, ctx2);
 }
 function createCardWithProtoIds(ctx2, basyou, cardProtoIds) {
@@ -29787,36 +29787,8 @@ function applyFlow(ctx2, playerID, flow) {
         if (ctx2.flowMemory.state != "playing") {
           switch (ctx2.flowMemory.state) {
             case "prepareDeck": {
-              {
-                const plyrID = PlayerA;
-                const baSyou = AbsoluteBaSyouFn.of(plyrID, "\u672C\u56FD");
-                const fromCS = ctx2.table.cardStack[AbsoluteBaSyouFn.toString(baSyou)];
-                ctx2 = {
-                  ...ctx2,
-                  table: {
-                    ...ctx2.table,
-                    cardStack: {
-                      ...ctx2.table.cardStack,
-                      [AbsoluteBaSyouFn.toString(baSyou)]: fromCS.sort(() => Math.random() - 0.5)
-                    }
-                  }
-                };
-              }
-              {
-                const plyrID = PlayerB;
-                const baSyou = AbsoluteBaSyouFn.of(plyrID, "\u672C\u56FD");
-                const fromCS = ctx2.table.cardStack[AbsoluteBaSyouFn.toString(baSyou)];
-                ctx2 = {
-                  ...ctx2,
-                  table: {
-                    ...ctx2.table,
-                    cardStack: {
-                      ...ctx2.table.cardStack,
-                      [AbsoluteBaSyouFn.toString(baSyou)]: fromCS.sort(() => Math.random() - 0.5)
-                    }
-                  }
-                };
-              }
+              ctx2 = shuffleItems(ctx2, AbsoluteBaSyouFn.of(PlayerA, "\u672C\u56FD"));
+              ctx2 = shuffleItems(ctx2, AbsoluteBaSyouFn.of(PlayerB, "\u672C\u56FD"));
               ctx2 = {
                 ...ctx2,
                 flowMemory: {
@@ -31814,12 +31786,19 @@ function queryFlow(ctx2, playerID) {
               }
               switch (phase[1]) {
                 case "\u653B\u6483\u30B9\u30C6\u30C3\u30D7":
+                  return [
+                    {
+                      id: "FlowAddBlock",
+                      description: `${phase[1]}\u898F\u5B9A\u6548\u679C`,
+                      block: getAttackPhaseRuleEffect(ctx2, ctx2.activePlayerID)
+                    }
+                  ];
                 case "\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7": {
                   return [
                     {
                       id: "FlowAddBlock",
                       description: `${phase[1]}\u898F\u5B9A\u6548\u679C`,
-                      block: getAttackPhaseRuleEffect(ctx2, playerID)
+                      block: getAttackPhaseRuleEffect(ctx2, PlayerIDFn.getOpponent(ctx2.activePlayerID))
                     }
                   ];
                 }
@@ -31828,7 +31807,7 @@ function queryFlow(ctx2, playerID) {
                     {
                       id: "FlowAddBlock",
                       description: `${phase[1]}\u898F\u5B9A\u6548\u679C`,
-                      block: getDamageRuleEffect(ctx2, playerID)
+                      block: getDamageRuleEffect(ctx2, ctx2.activePlayerID)
                     }
                   ];
                 case "\u5E30\u9084\u30B9\u30C6\u30C3\u30D7":
@@ -32099,15 +32078,59 @@ var FlowListView = (props) => {
     return queryFlow(appContext5.viewModel.model.gameState, props.clientID);
   }, [appContext5.viewModel.model.gameState, props.clientID]);
   import_react6.useEffect(() => {
+    if (props.clientID == PlayerA) {
+      const payCost = flows.find((flow) => flow.id == "FlowPassPayCost");
+      if (payCost) {
+        setTimeout(() => {
+          OnEvent.next({
+            id: "OnClickFlowConfirm",
+            clientID: props.clientID,
+            flow: payCost
+          });
+        }, 1000);
+        return;
+      }
+      if (flows.length == 1) {
+        const flow = flows[0];
+        if (flow.id == "FlowCancelPassPhase") {
+          return;
+        }
+        if (flow.id == "FlowCancelPassCut") {
+          return;
+        }
+        if (flow.id == "FlowWaitPlayer") {
+          return;
+        }
+        setTimeout(() => {
+          OnEvent.next({
+            id: "OnClickFlowConfirm",
+            clientID: props.clientID,
+            flow
+          });
+        }, 1000);
+      }
+      return;
+    }
     if (flows.length) {
-      const flow = flows[Math.round(Math.random() * 1000) % flows.length];
-      setTimeout(() => {
-        OnEvent.next({
-          id: "OnClickFlowConfirm",
-          clientID: props.clientID,
-          flow
-        });
-      }, 100);
+      let flow = flows.find((flow2) => flow2.id == "FlowPassPayCost");
+      if (flow == null) {
+        flow = flows[Math.round(Math.random() * 1000) % flows.length];
+      }
+      if (flow.id == "FlowCancelPassPhase") {
+        return;
+      }
+      if (flow.id == "FlowCancelPassCut") {
+        return;
+      }
+      if (flow) {
+        setTimeout(() => {
+          OnEvent.next({
+            id: "OnClickFlowConfirm",
+            clientID: props.clientID,
+            flow
+          });
+        }, 1000);
+      }
     }
   }, [appContext5.viewModel.model.gameState, props.clientID, flows]);
   const renderControlPanel = import_react6.useMemo(() => {

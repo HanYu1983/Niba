@@ -50,7 +50,7 @@ export function mapCardsWithBasyou(ctx: CardTableComponent, f: (key: AbsoluteBaS
     const cards = cardIds.map(cardId => getCard(ctx, cardId))
     return [basyou, cards] as [AbsoluteBaSyou, Card[]]
   }).reduce((ctx, [basyou, cards]) => {
-    return cards.map(card => f(basyou, card)).reduce((ctx, card) => assoc(card.id, card, ctx), ctx)
+    return cards.map(card => f(basyou, card)).reduce((ctx, card) => setCard(ctx, card.id, card), ctx)
   }, ctx)
 }
 
