@@ -33,12 +33,18 @@ import { swap } from "ramda";
 import { swapItem } from "../game/gameState/swapItem";
 import { getItemBaSyou } from "../game/gameState/ItemTableComponent";
 import { test179030_11E_U_BK194S_2_black } from "./test179030_11E_U_BK194S_2_black";
-import { createCommandEffectTips, setTipSelectionForUser } from "../game/gameState/effect";
+import { createCommandEffectTips, createEffectTips, doEffect, setTipSelectionForUser } from "../game/gameState/effect";
 import { CommandEffecTipFn } from "../game/define/CommandEffectTip";
+import { StrBaSyouPair, TipFn } from "../game/define/Tip";
+import { getCardIdsCanPayRollColor } from "../game/gameState/card";
+import { EffectFn } from "../game/define/Effect";
+import { ItemStateFn } from "../game/define/ItemState";
+import { testIssue } from "./testIssue";
 const fs = require('fs').promises;
 
 export async function tests() {
     return [
+        testIssue,
         testCompress,
         testLoadPrototype,
         testSwapItem,
@@ -162,7 +168,7 @@ async function testCompress() {
                                 // }
                             }
                             ctx = applyFlow(ctx, playerId, flow)
-                            if(Object.keys(ctx).filter(key=>key.startsWith("card_")).length){
+                            if (Object.keys(ctx).filter(key => key.startsWith("card_")).length) {
                                 throw new Error()
                             }
                         } catch (e) {
@@ -185,3 +191,4 @@ async function testCompress() {
         throw e
     }
 }
+

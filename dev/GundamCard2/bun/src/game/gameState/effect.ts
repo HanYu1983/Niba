@@ -142,16 +142,24 @@ export function assertEffectCanPass(
     case "GameRule":
     case "PlayCard":
     case "PlayText":
+      log("assertEffectCanPass", effect.reason[0])
       Object.keys(ltacs).forEach(key => {
+        log("assertEffectCanPass", "conditionKey", key)
         const con = ltacs[key]
         const tip = getConditionTitleFn(con, {})(ctx, effect, bridge)
         // 可選對象滿足
         if (tip) {
           TipFn.checkTipSatisfies(tip)
           // 玩家是否已選擇
-          ItemStateFn.getTip(getItemState(ctx, EffectFn.getCardID(effect)), key)
+          const selection = ItemStateFn.getTip(getItemState(ctx, EffectFn.getCardID(effect)), key)
+          log("assertEffectCanPass", "selection", selection)
+          log("assertEffectCanPass", "cardId", EffectFn.getCardID(effect))
+          log("assertEffectCanPass", "itemState", getItemState(ctx, EffectFn.getCardID(effect)).tips)
         }
-        ConditionFn.getActionTitleFns(con, getActionTitleFn).reduce((ctx, fn) => fn(ctx, effect, bridge), ctx)
+        ConditionFn.getActionTitleFns(con, getActionTitleFn).reduce((ctx, fn) => {
+          log("assertEffectCanPass", "doActionTitle")
+          return fn(ctx, effect, bridge)
+        }, ctx)
       })
   }
 }
@@ -195,23 +203,55 @@ export function doEffect(
   }
   const bridge = createBridge()
   const conditionIds = Object.keys(ltacs)
-  const conditions = conditionIds.map(id => CardTextFn.getCondition(effect.text, id))
-  const processCondition = (ctx: GameState) => pipe(
-    always(conditions),
-    map(condition => ConditionFn.getActionTitleFns(condition, getActionTitleFn)),
-    flatten,
-    reduce((ctx, fn) => fn(ctx, effect, bridge), ctx)
-  )
-  const processLogicAction = (ctx: GameState) => pipe(
-    always(CardTextFn.getLogicTreeAction(effect.text, logicId)),
-    lta => LogicTreeActionFn.getActionTitleFns(lta, getActionTitleFn),
-    reduce((ctx, fn) => {
-      ctx = fn(ctx, effect, bridge)
-      return ctx
-    }, ctx)
-  )
-  ctx = processCondition(ctx)()
-  ctx = processLogicAction(ctx)()
+  const cardId = EffectFn.getCardID(effect)
+  conditionIds.forEach(conditionKey => {
+    const condition = CardTextFn.getCondition(effect.text, conditionKey)
+    const actionFns = ConditionFn.getActionTitleFns(condition, getActionTitleFn)
+    for (const actionFn of actionFns) {
+      ctx = actionFn(ctx, effect, bridge)
+    }
+    if (condition.actions) {
+      for (const action of condition.actions) {
+        if (action.vars) {
+          for (const name of action.vars) {
+            log("doEffect", conditionKey, "clearTip", name)
+            ctx = mapItemState(ctx, cardId, is => ItemStateFn.clearTip(is, name)) as GameState
+          }
+        }
+      }
+    }
+  })
+  const lta = CardTextFn.getLogicTreeAction(effect.text, logicId)
+  for (const actionFn of LogicTreeActionFn.getActionTitleFns(lta, getActionTitleFn)) {
+    ctx = actionFn(ctx, effect, bridge)
+  }
+  for (const action of lta.actions) {
+    if (action.vars) {
+      for (const name of action.vars) {
+        log("doEffect", "clearTip", name)
+        ctx = mapItemState(ctx, cardId, is => ItemStateFn.clearTip(is, name)) as GameState
+      }
+    }
+  }
+
+  // const conditions = conditionIds.map(id => CardTextFn.getCondition(effect.text, id))
+  // const processCondition = (ctx: GameState) => pipe(
+  //   always(conditions),
+  //   map(condition => ConditionFn.getActionTitleFns(condition, getActionTitleFn)),
+  //   flatten,
+  //   reduce((ctx, fn) => fn(ctx, effect, bridge), ctx)
+  // )
+  // const processLogicAction = (ctx: GameState) => pipe(
+  //   always(CardTextFn.getLogicTreeAction(effect.text, logicId)),
+  //   lta => LogicTreeActionFn.getActionTitleFns(lta, getActionTitleFn),
+  //   reduce((ctx, fn) => {
+  //     ctx = fn(ctx, effect, bridge)
+  //     return ctx
+  //   }, ctx)
+  // )
+  // ctx = processCondition(ctx)()
+  // ctx = processLogicAction(ctx)()
+
   ctx = clearGlobalEffects(ctx)
   ctx = EventCenterFn.onEffectEnd(ctx, effect)
   return ctx;
@@ -512,7 +552,7 @@ export function getConditionTitleFn(condition: Condition, options: { isPlay?: bo
         const pairs = colorIds.map(colorId => [colorId, getItemBaSyou(ctx, colorId)] as StrBaSyouPair)
         return {
           title: ["カード", cardIdColorsPairs, pairs],
-          min: 1,
+          min: pairs.length,
         }
       }
     }
@@ -610,6 +650,7 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
           })
         switch (whatToDo) {
           case "ロール": {
+            log("getActionTitleFn", whatToDo, varNames, pairs)
             for (const pair of pairs) {
               ctx = setItemIsRoll(ctx, true, pair) as GameState
             }

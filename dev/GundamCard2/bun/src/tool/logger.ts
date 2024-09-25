@@ -5,7 +5,8 @@ const hideCategory: string[] = [
   "doEffect",
   //"applyFlow",
   "handleAttackDamage",
-  "getGlobalEffects"
+  "getGlobalEffects",
+  "getEffectTips",
 ];
 let filterCategory = true;
 

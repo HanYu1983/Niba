@@ -105,6 +105,7 @@ export async function test179024_03B_U_WT042U_white() {
         if (playCardEffects.length != 1) {
             throw new Error(`playCardEffects.length != 1`)
         }
+        ctx = setTipSelectionForUser(ctx, playCardEffects[0], 0, 0)
         ctx = doEffect(ctx, playCardEffects[0], 0, 0)
         const effect = getTopEffect(ctx)
         if (effect == null) {

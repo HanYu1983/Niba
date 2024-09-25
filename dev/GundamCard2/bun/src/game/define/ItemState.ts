@@ -20,6 +20,14 @@ export type ItemState = {
     textIdsUseThisTurn?: { [key: string]: any }
 };
 
+function clearTip(ctx: ItemState, key: string): ItemState {
+    ctx = {
+        ...ctx,
+        tips: dissoc(key, ctx.tips)
+    }
+    return ctx
+}
+
 export const ItemStateFn = {
     identity(): ItemState {
         return {
@@ -64,6 +72,7 @@ export const ItemStateFn = {
         }
         return ctx
     },
+    clearTip: clearTip,
     damage(ctx: ItemState, v: number): ItemState {
         return {
             ...ctx,

@@ -164,6 +164,7 @@ function getSituationEffects(ctx: GameState, situation: Situation | null): Globa
     .flatMap(basyou => getItemIdsByBasyou(ctx, basyou))
     .filter(itemId => getCard(ctx, itemId).isRoll != true)
     .map(itemId => {
+      // 空陣列代表產生無色國力
       const colors = getItemPrototype(ctx, itemId).gsign?.[0] || []
       return { title: ["發生國力", colors], cardIds: [itemId] } as GlobalEffect
     })
