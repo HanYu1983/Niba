@@ -5,7 +5,7 @@ import { test179028_10D_U_WT181N_white } from "./test179028_10D_U_WT181N_white";
 import { test179024_03B_U_WT042U_white } from "./test179024_03B_U_WT042U_white";
 import { test179001_01A_CH_WT007R_white } from "./test179001_01A_CH_WT007R_white";
 import { test179030_11E_C_BL079R_blue } from "./test179030_11E_C_BL079R_blue";
-import { testAttackRuleEffect, testAttackRuleEffect2 } from "./testAttackRuleEffect";
+import { testAttackRuleEffect, testAttackRuleEffect2, testAttackRuleEffect3 } from "./testAttackRuleEffect";
 import { testDrawRuleEffect } from "./testDrawRuleEffect";
 import { testReollRuleEffect } from "./testRerollRuleEffect";
 import { testReturnRuleEffect } from "./testReturnRuleEffect";
@@ -49,6 +49,7 @@ export async function tests() {
         testGetPlayEffects,
         testAttackRuleEffect,
         testAttackRuleEffect2,
+        testAttackRuleEffect3,
         testDrawRuleEffect,
         testReollRuleEffect,
         testReturnRuleEffect,

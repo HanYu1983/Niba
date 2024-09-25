@@ -1,12 +1,14 @@
+import { createBridge } from "../game/bridge/createBridge";
 import { AbsoluteBaSyouFn } from "../game/define/BaSyou";
 import { Card } from "../game/define/Card";
 import { PlayerA, PlayerB } from "../game/define/PlayerID";
 import { getBattleGroup, isABattleGroup } from "../game/gameState/battleGroup";
 import { addCards } from "../game/gameState/CardTableComponent";
-import { doEffect, setCardTipStrBaSyouPairs, setTipSelectionForUser } from "../game/gameState/effect";
+import { createCommandEffectTips, doEffect, getConditionTitleFn, setCardTipStrBaSyouPairs, setTipSelectionForUser } from "../game/gameState/effect";
 import { createGameState, GameState } from "../game/gameState/GameState";
 import { getAttackPhaseRuleEffect } from "../game/gameState/getAttackPhaseRuleEffect";
 import { getItem, getItemBaSyou } from "../game/gameState/ItemTableComponent";
+import { Flow } from "../game/gameStateWithFlowMemory/Flow";
 import { loadPrototype } from "../script";
 
 export async function testAttackRuleEffect() {
@@ -64,6 +66,43 @@ export async function testAttackRuleEffect2() {
     ctx = setTipSelectionForUser(ctx, attackEffect, 0, 0)
     ctx = doEffect(ctx, attackEffect, 0, 0)
     if (AbsoluteBaSyouFn.eq(getItemBaSyou(ctx, earthUnit.id), AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1")) != false) {
+        throw new Error()
+    }
+}
+
+export async function testAttackRuleEffect3() {
+    await loadPrototype("earthUnit")
+    await loadPrototype("unitHasHigh")
+    let ctx = createGameState()
+    const attackEffect = getAttackPhaseRuleEffect(ctx, PlayerA)
+    const cets = createCommandEffectTips(ctx, attackEffect, { isCheckUserSelection: true })
+    if (cets.length == 0) {
+        throw new Error(`cets.length must > 0`);
+    }
+    const useCet = cets[0]
+    const toes = useCet.tipOrErrors.filter(toe => toe.errors.length != 0)
+    const tipInfos = toes.map(toe => {
+        const con = attackEffect.text.conditions?.[toe.conditionKey]
+        if (con == null) {
+            throw new Error(`con must exist`)
+        }
+        const tip = getConditionTitleFn(con, {})(ctx, attackEffect, createBridge())
+        return {
+            conditionKey: toe.conditionKey,
+            condition: con,
+            tip: tip
+        }
+    }).filter(info => info.tip)
+    const playerTips = tipInfos.filter(info => {
+        if (info.condition.relatedPlayerSideKeyword == "敵軍") {
+            return PlayerB
+        }
+        return PlayerA
+    })
+    if (playerTips.filter(tip => tip.conditionKey == "去地球").length != 1) {
+        throw new Error()
+    }
+    if (playerTips.filter(tip => tip.conditionKey == "去宇宙").length != 1) {
         throw new Error()
     }
 }

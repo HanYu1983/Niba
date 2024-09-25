@@ -38,6 +38,7 @@ export function createEffectTips(
   effect: Effect,
   logicId: number,
   logicSubId: number,
+  options?: { isCheckUserSelection?: boolean }
 ): TipOrErrors[] {
   const ltacs = CardTextFn.getLogicTreeActionConditions(effect.text, CardTextFn.getLogicTreeAction(effect.text, logicId))[logicSubId]
   if (ltacs == null) {
@@ -50,6 +51,18 @@ export function createEffectTips(
     const tip = getConditionTitleFn(con, {})(ctx, effect, bridge)
     const errors: string[] = []
     if (tip) {
+      if (options?.isCheckUserSelection) {
+        try {
+          const cardId = EffectFn.getCardID(effect)
+          ItemStateFn.getTip(getItemState(ctx, cardId), key)
+        } catch (e) {
+          if (e instanceof GameError) {
+            errors.push(e.message)
+          } else {
+            throw e
+          }
+        }
+      }
       try {
         log("getEffectTips", "tip", tip)
         const error = TipFn.checkTipSatisfies(tip)
@@ -141,12 +154,12 @@ export function assertEffectCanPass(
   }
 }
 
-export function createCommandEffectTips(ctx: GameState, effect: Effect): CommandEffectTip[] {
+export function createCommandEffectTips(ctx: GameState, effect: Effect, options?: { isCheckUserSelection?: boolean }): CommandEffectTip[] {
   if (effect.text.logicTreeActions) {
     const testedEffects = effect.text.logicTreeActions.flatMap((lta, logicId) => {
       const allTree = CardTextFn.getLogicTreeActionConditions(effect.text, lta)
       const allTest = allTree.map((conditions, logicSubId) => {
-        const conTipErrors = createEffectTips(ctx, effect, logicId, logicSubId)
+        const conTipErrors = createEffectTips(ctx, effect, logicId, logicSubId, options)
         return {
           //id: ToolFn.getUUID("getCommandEffectTips"),
           effect: effect,
