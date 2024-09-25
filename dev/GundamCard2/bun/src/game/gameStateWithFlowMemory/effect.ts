@@ -1,7 +1,7 @@
 import { assoc } from "ramda";
 import { log } from "../../tool/logger";
 import { DestroyReason, Effect, EffectFn } from "../define/Effect";
-import { doEffect, createCommandEffectTips } from "../gameState/effect";
+import { doEffect, createCommandEffectTips, clearTipForUserSelection } from "../gameState/effect";
 import { getEffect, isStackEffect, removeEffect } from "../gameState/EffectStackComponent";
 import { ToolFn } from "../tool";
 import { GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
@@ -49,15 +49,20 @@ export function setActiveEffectID(
   if (cetsNoErr.length == 0) {
     throw new Error(`cets.length must not 0`)
   }
-  if (cetsNoErr.length == 1) {
+  if (cetsNoErr.length) {
+    const activeLogicID = cetsNoErr[0].logicID
+    const activeLogicSubID = cetsNoErr[0].logicSubID
     ctx = {
       ...ctx,
       flowMemory: {
         ...ctx.flowMemory,
-        activeLogicID: cetsNoErr[0].logicID,
-        activeLogicSubID: cetsNoErr[0].logicSubID,
+        activeLogicID: activeLogicID,
+        activeLogicSubID: activeLogicSubID,
       }
     };
+    for (const cet of cetsNoErr) {
+      ctx = clearTipForUserSelection(ctx, effect, cet.logicID, cet.logicSubID) as GameStateWithFlowMemory
+    }
   }
   ctx = {
     ...ctx,
@@ -148,7 +153,10 @@ export function doActiveEffect(ctx: GameStateWithFlowMemory, playerID: string, e
     ctx = doEffect(ctx, effect, logicId, logicSubId) as GameStateWithFlowMemory;
   } catch (e) {
     if (e instanceof TargetMissingError) {
-      console.log(`對象遺失: ${e.message}`)
+      log("doActiveEffect", `=======================`)
+      log("doActiveEffect", `對象遺失: ${e.message}`)
+    } else {
+      throw e
     }
   }
   // 清除旗標，代表現在沒有正在支付的效果

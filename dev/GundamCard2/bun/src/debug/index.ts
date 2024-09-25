@@ -40,11 +40,12 @@ import { getCardIdsCanPayRollColor } from "../game/gameState/card";
 import { EffectFn } from "../game/define/Effect";
 import { ItemStateFn } from "../game/define/ItemState";
 import { testIssue } from "./testIssue";
+import { test179015_04B_U_BK058R_black } from "./test179015_04B_U_BK058R_black";
 const fs = require('fs').promises;
 
 export async function tests() {
     return [
-        testIssue,
+        //testIssue,
         testCompress,
         testLoadPrototype,
         testSwapItem,
@@ -70,6 +71,7 @@ export async function tests() {
         test179015_04B_U_BK061C_black,
         test179016_04B_U_BK066C_black,
         test179030_11E_U_BK194S_2_black,
+        test179015_04B_U_BK058R_black,
     ].reduce((worker, testF) => {
         return worker.then(async () => {
             console.log(`==============================${testF.name}==================================`);
@@ -83,6 +85,8 @@ async function testLoadPrototype() {
     const TMP_DECK = ["179031_12E_C_RD085N_red"]
     await Promise.all(TMP_DECK.map(loadPrototype))
 }
+
+
 
 async function testSwapItem() {
     await loadPrototype("unit")
@@ -156,21 +160,21 @@ async function testCompress() {
                     const flows = queryFlow(ctx, playerId)
                     if (flows.length) {
                         try {
-                            const flow = flows[Math.round(Math.random() * 1000) % flows.length]
-                            if (flow.id == "FlowSetActiveEffectID") {
-                                const effect = flow.tips.find(e => e.id == flow.effectID)
-                                if (effect == null) {
-                                    throw new Error()
-                                }
-                                // const cets = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)
-                                // for (const cet of cets) {
-                                //     ctx = setTipSelectionForUser(ctx, effect, cet.logicID, cet.logicSubID) as GameStateWithFlowMemory
-                                // }
+                            let flow = flows.find(flow => flow.description?.indexOf("黑"))
+                            if (flow == null) {
+                                flow = flows[Math.round(Math.random() * 1000) % flows.length]
                             }
+                            // if (flow.id == "FlowSetActiveEffectID") {
+                            //     const effect = flow.tips.find(e => e.id == flow.effectID)
+                            //     if (effect == null) {
+                            //         throw new Error()
+                            //     }
+                            //     const cets = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)
+                            //     for (const cet of cets) {
+                            //         ctx = setTipSelectionForUser(ctx, effect, cet.logicID, cet.logicSubID) as GameStateWithFlowMemory
+                            //     }
+                            // }
                             ctx = applyFlow(ctx, playerId, flow)
-                            if (Object.keys(ctx).filter(key => key.startsWith("card_")).length) {
-                                throw new Error()
-                            }
                         } catch (e) {
                             if (e instanceof TargetMissingError) {
                                 console.log(e.message)

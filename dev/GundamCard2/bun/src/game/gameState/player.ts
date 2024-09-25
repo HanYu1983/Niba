@@ -12,6 +12,8 @@ import { getItemIdsByBasyou, getItemIdsByBasyou } from "./ItemTableComponent";
 import { GameEvent } from "../define/GameEvent";
 import { getSetGroupBattlePoint } from "./setGroup";
 import { triggerEvent } from "./triggerEvent";
+import { StrBaSyouPair } from "../define/Tip";
+import { moveItem } from "./moveItem";
 
 // player
 export function isPlayerHasBattleGroup(
@@ -113,28 +115,14 @@ function doDamage(
       ) {
         // 本國傷害
         log("handleAttackDamage", "attack 本国", currentAttackPower);
-        let table = ctx.table;
-        let fromCardStackID = AbsoluteBaSyouFn.toString(AbsoluteBaSyouFn.of(currentGuardPlayerID, "本国"))
-        let toCardStackID = AbsoluteBaSyouFn.toString(AbsoluteBaSyouFn.of(currentGuardPlayerID, "捨て山"))
-        table = {
-          ...table,
-          cardStack: {
-            ...table.cardStack,
-            [fromCardStackID]:
-              table.cardStack[fromCardStackID].slice(currentAttackPower),
-            [toCardStackID]: [
-              ...table.cardStack[fromCardStackID].slice(
-                0,
-                currentAttackPower
-              ),
-              ...table.cardStack[toCardStackID],
-            ],
-          },
-        };
-        ctx = {
-          ...ctx,
-          table: table,
-        };
+        const from = AbsoluteBaSyouFn.of(currentGuardPlayerID, "本国")
+        const pairs = getItemIdsByBasyou(ctx, from).map(itemId => {
+          return [itemId, from] as StrBaSyouPair
+        }).slice(0, currentAttackPower)
+        const to = AbsoluteBaSyouFn.of(currentGuardPlayerID, "捨て山")
+        for (const pair of pairs) {
+          ctx = moveItem(ctx, to, pair)
+        }
       }
     }
   }

@@ -19,6 +19,7 @@ export const FlowListView = (props: { clientID: string }) => {
     return queryFlow(appContext.viewModel.model.gameState, props.clientID);
   }, [appContext.viewModel.model.gameState, props.clientID]);
   useEffect(() => {
+    const speed = 200
     if (props.clientID == PlayerA) {
       const payCost = flows.find((flow) => flow.id == "FlowPassPayCost");
       if(payCost){
@@ -28,7 +29,7 @@ export const FlowListView = (props: { clientID: string }) => {
             clientID: props.clientID,
             flow: payCost,
           });
-        }, 1000)
+        }, speed)
         return
       }
       if (flows.length == 1) {
@@ -48,7 +49,7 @@ export const FlowListView = (props: { clientID: string }) => {
             clientID: props.clientID,
             flow: flow,
           });
-        }, 1000)
+        }, speed)
       }
       // const payCost = flows.find((flow) => flow.id == "FlowPassPayCost");
       // if (payCost == null) {
@@ -90,7 +91,7 @@ export const FlowListView = (props: { clientID: string }) => {
             clientID: props.clientID,
             flow: flow,
           });
-        }, 1000)
+        }, speed)
       }
     }
   }, [appContext.viewModel.model.gameState, props.clientID, flows]);

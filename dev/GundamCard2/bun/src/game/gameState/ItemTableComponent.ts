@@ -139,14 +139,14 @@ export function setItemIsRoll(ctx: ItemTableComponent, isRoll: boolean, [itemId,
   if (isCard(ctx, itemId)) {
     const nowBasyou = getItemBaSyou(ctx, itemId)
     if (AbsoluteBaSyouFn.eq(nowBasyou, originBasyou) == false) {
-      throw new TargetMissingError(`target missing: ${itemId} from ${originBasyou}`)
+      throw new Error(`target missing: ${itemId} from ${originBasyou}`)
     }
     const itemIds = getSetGroupChildren(ctx, itemId)
     ctx = itemIds.reduce((ctx, itemId) => {
       if (isCard(ctx, itemId)) {
         let item = getCard(ctx, itemId)
         if (item.isRoll == isRoll) {
-          throw new TargetMissingError(`card already roll: ${item.id}`)
+          throw new Error(`card already roll: ${item.id}`)
         }
         item = CardFn.setIsRoll(item, isRoll)
         ctx = setCard(ctx, itemId, item) as ItemTableComponent
@@ -155,7 +155,7 @@ export function setItemIsRoll(ctx: ItemTableComponent, isRoll: boolean, [itemId,
       if (isChip(ctx, itemId)) {
         let item = getChip(ctx, itemId)
         if (item.isRoll == isRoll) {
-          throw new TargetMissingError(`chip already roll: ${item.id}`)
+          throw new Error(`chip already roll: ${item.id}`)
         }
         item = ChipFn.setIsRoll(item, isRoll)
         ctx = setChip(ctx, itemId, item) as ItemTableComponent

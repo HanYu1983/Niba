@@ -11,7 +11,7 @@ import { getDrawPhaseRuleEffect } from "../gameState/getDrawPhaseRuleEffect";
 import { getRerollPhaseRuleEffect } from "../gameState/getRerollPhaseRuleEffect";
 import { getDamageRuleEffect } from "../gameState/getDamageRuleEffect";
 import { getReturnRuleEffect } from "../gameState/getReturnRuleEffect";
-import { createCommandEffectTips, createEffectTips, getConditionTitleFn } from "../gameState/effect";
+import { clearTipForUserSelection, createCommandEffectTips, createEffectTips, getConditionTitleFn } from "../gameState/effect";
 import { CommandEffecTipFn } from "../define/CommandEffectTip";
 import { createBridge } from "../bridge/createBridge";
 import { getActivePlayerID } from "../gameState/ActivePlayerComponent";
@@ -79,20 +79,9 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
             const effectCreator = EffectFn.getPlayerID(currentActiveEffect);
             const tipOrErrors = createEffectTips(ctx, currentActiveEffect, activeLogicID, activeLogicSubID, { isCheckUserSelection: true })
             const toes = tipOrErrors.filter(toe => toe.errors.length != 0)
-            const tipInfos = toes.map(toe => {
-                const con = currentActiveEffect.text.conditions?.[toe.conditionKey]
-                if (con == null) {
-                    throw new Error(`con must exist`)
-                }
-                const tip = getConditionTitleFn(con, {})(ctx, currentActiveEffect, createBridge())
-                return {
-                    conditionKey: toe.conditionKey,
-                    condition: con,
-                    tip: tip
-                }
-            }).filter(info => info.tip)
-            const playerTips = tipInfos.filter(info => {
-                if (info.condition.relatedPlayerSideKeyword == "敵軍") {
+            const playerTips = toes.filter(info => {
+                const condition = currentActiveEffect.text.conditions?.[info.conditionKey]
+                if (condition?.relatedPlayerSideKeyword == "敵軍") {
                     return effectCreator != playerID
                 }
                 return effectCreator == playerID

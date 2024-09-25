@@ -33,6 +33,30 @@ import { EventCenterFn } from "./EventCenter"
 import { moveItem } from "./moveItem"
 import { swapItem } from "./swapItem"
 
+export function clearTipForUserSelection(
+  ctx: GameState,
+  effect: Effect,
+  logicId: number,
+  logicSubId: number,
+) {
+  const ltacs = CardTextFn.getLogicTreeActionConditions(effect.text, CardTextFn.getLogicTreeAction(effect.text, logicId))[logicSubId]
+  if (ltacs == null) {
+    throw new Error(`ltasc not found: ${logicId}/${logicSubId}`)
+  }
+  const bridge = createBridge()
+  Object.keys(ltacs).forEach(key => {
+    const con = ltacs[key]
+    const tip = getConditionTitleFn(con, {})(ctx, effect, bridge)
+    if (tip) {
+      const cardId = EffectFn.getCardID(effect)
+      if (getItemState(ctx, cardId).tips[key]) {
+        ctx = mapItemState(ctx, cardId, is => ItemStateFn.clearTip(is, key)) as GameState
+      }
+    }
+  })
+  return ctx
+}
+
 export function createEffectTips(
   ctx: GameState,
   effect: Effect,
@@ -47,7 +71,7 @@ export function createEffectTips(
   const bridge = createBridge()
   return Object.keys(ltacs).map(key => {
     const con = ltacs[key]
-    log("getEffectTips", key, con.title)
+    log("createEffectTips", key, con.title)
     const tip = getConditionTitleFn(con, {})(ctx, effect, bridge)
     const errors: string[] = []
     if (tip) {
@@ -66,7 +90,7 @@ export function createEffectTips(
         }
       }
       try {
-        log("getEffectTips", "tip", tip)
+        log("createEffectTips", "tip", tip)
         const error = TipFn.checkTipSatisfies(tip)
         if (error) {
           throw error
@@ -83,7 +107,9 @@ export function createEffectTips(
     }
     ctx = ConditionFn.getActionTitleFns(con, getActionTitleFn).reduce((ctx, fn): GameState => {
       try {
-        return fn(ctx, effect, bridge)
+        ctx = fn(ctx, effect, bridge)
+        //ctx = clearGlobalEffects(ctx)
+        return ctx
       } catch (e) {
         if (e instanceof GameError) {
           errors.push(e.message)
@@ -171,7 +197,6 @@ export function createCommandEffectTips(ctx: GameState, effect: Effect): Command
       const allTest = allTree.map((conditions, logicSubId) => {
         const conTipErrors = createEffectTips(ctx, effect, logicId, logicSubId)
         return {
-          //id: ToolFn.getUUID("getCommandEffectTips"),
           effect: effect,
           logicID: logicId,
           logicSubID: logicSubId,
@@ -195,6 +220,7 @@ export function doEffect(
   logicId: number,
   logicSubId: number,
 ): GameState {
+  log("doEffect", effect.text.description)
   ctx = EventCenterFn.onEffectStart(ctx, effect)
   assertEffectCanPass(ctx, effect, logicId, logicSubId)
   const ltacs = CardTextFn.getLogicTreeActionConditions(effect.text, CardTextFn.getLogicTreeAction(effect.text, logicId))[logicSubId]
@@ -205,16 +231,18 @@ export function doEffect(
   const conditionIds = Object.keys(ltacs)
   const cardId = EffectFn.getCardID(effect)
   conditionIds.forEach(conditionKey => {
+    log("doEffect", "conditionKey", conditionKey)
     const condition = CardTextFn.getCondition(effect.text, conditionKey)
     const actionFns = ConditionFn.getActionTitleFns(condition, getActionTitleFn)
     for (const actionFn of actionFns) {
       ctx = actionFn(ctx, effect, bridge)
+      //ctx = clearGlobalEffects(ctx)
     }
     if (condition.actions) {
       for (const action of condition.actions) {
         if (action.vars) {
           for (const name of action.vars) {
-            log("doEffect", conditionKey, "clearTip", name)
+            log("doEffect", "clearTip", name)
             ctx = mapItemState(ctx, cardId, is => ItemStateFn.clearTip(is, name)) as GameState
           }
         }
@@ -224,6 +252,7 @@ export function doEffect(
   const lta = CardTextFn.getLogicTreeAction(effect.text, logicId)
   for (const actionFn of LogicTreeActionFn.getActionTitleFns(lta, getActionTitleFn)) {
     ctx = actionFn(ctx, effect, bridge)
+    //ctx = clearGlobalEffects(ctx)
   }
   for (const action of lta.actions) {
     if (action.vars) {
@@ -251,8 +280,6 @@ export function doEffect(
   // )
   // ctx = processCondition(ctx)()
   // ctx = processLogicAction(ctx)()
-
-  ctx = clearGlobalEffects(ctx)
   ctx = EventCenterFn.onEffectEnd(ctx, effect)
   return ctx;
 }

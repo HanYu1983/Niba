@@ -8,10 +8,10 @@ import { GameState } from "./GameState";
 
 export function getRerollPhaseRuleEffect(ctx: GameState, playerId: PlayerID): Effect {
     return {
-        id: ToolFn.getUUID("getRerollPhaseRuleEffect"),
+        id: "getRerollPhaseRuleEffect",
         reason: ["GameRule", playerId],
         text: {
-            id: ToolFn.getUUID("getRerollPhaseRuleEffect"),
+            id: "getRerollPhaseRuleEffect",
             title: [],
             description: "getRerollPhaseRuleEffect",
             logicTreeActions: [
@@ -29,7 +29,8 @@ export function getRerollPhaseRuleEffect(ctx: GameState, playerId: PlayerID): Ef
                                         })
                                 })
                                 for (const pair of pairs) {
-                                    ctx = GameStateFn.setItemIsRoll(ctx, false, pair) as GameState
+                                    GameStateFn.assertTargetMissingError(ctx, pair)
+                                    ctx = GameStateFn.mapCard(ctx, pair[0], card=>({...card, isRoll: false})) as GameState
                                 }
                                 return ctx
                             }.toString()

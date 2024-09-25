@@ -29,7 +29,7 @@ export function getReturnRuleEffect(ctx: GameState, playerId: PlayerID): Effect 
                                     const unitIdsAtArea1 = GameStateFn.getItemIdsByBasyou(ctx, DefineFn.AbsoluteBaSyouFn.of(playerId, fromKw))
                                     for (const cardId of unitIdsAtArea1) {
                                         if (GameStateFn.getCardBattleArea(ctx, cardId).includes(runtimeArea1)) {
-                                            ctx = GameStateFn.setItemIsRoll(ctx, true, [cardId, DefineFn.AbsoluteBaSyouFn.of(playerId, fromKw)]) as GameState
+                                            ctx = GameStateFn.mapCard(ctx, cardId, card => ({ ...card, isRoll: true })) as GameState
                                             ctx = GameStateFn.moveItem(
                                                 ctx,
                                                 DefineFn.AbsoluteBaSyouFn.of(playerId, "配備エリア"),
