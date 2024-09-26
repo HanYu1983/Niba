@@ -314,7 +314,7 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
         return function (ctx: GameState, effect: Effect): GameState {
           const cardId = EffectFn.getCardID(effect)
           const cardController = getItemController(ctx, cardId)
-          const playerId = side == "自軍" ? cardController : PlayerIDFn.getOpponent(cardController)
+          const playerId = PlayerIDFn.fromRelatedPlayerSideKeyword(side, cardController)
           const gsignCount = getItemIdsByPlayerId(ctx, false, playerId)
             .filter(itemId => getItemPrototype(ctx, itemId).gsign?.[0].includes(color))
             .filter(itemId => getItemRuntimeCategory(ctx, itemId) == category).length
