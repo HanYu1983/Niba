@@ -27,32 +27,45 @@ export const prototype: CardPrototype = {
     logicTreeActions: [
       {
         logicTree: {
-          type: "Leaf",
-          value: "交戦中の自軍ユニット１枚は"
+          type: "Or",
+          children: [
+            {
+              type: "Leaf",
+              value: "交戦中の自軍ユニット１枚は"
+            },
+            {
+              type: "Leaf",
+              value: "非交戦中の自軍ユニット１枚の破壊"
+            }
+          ]
         },
         actions: [
           {
-            title: ["cutIn", [{
-              title: ["ターン終了時まで「速攻」を得る。", [{ title: ["＋x／＋x／＋xを得る", [3, 3, 3]], cardIds: [] }]],
-              vars: ["交戦中の自軍ユニット１枚は"]
-            }]]
+            title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+              const cardId = DefineFn.EffectFn.getCardID(effect)
+              const enable1 = DefineFn.ItemStateFn.hasTip(GameStateFn.getItemState(ctx, cardId), "交戦中の自軍ユニット１枚は")
+              if (enable1) {
+                console.log("XX")
+                const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "交戦中の自軍ユニット１枚は", cardId)
+                for (const pair of pairs) {
+                  ctx = GameStateFn.setItemGlobalEffectsUntilEndOfTurn(ctx, [{ title: ["＋x／＋x／＋xを得る", [3, 3, 3]], cardIds: [pair[0]] }], pair)
+                }
+                ctx = GameStateFn.mapItemState(ctx, cardId, is => DefineFn.ItemStateFn.clearTip(is, "交戦中の自軍ユニット１枚は")) as GameState
+              }
+              const enable2 = DefineFn.ItemStateFn.hasTip(GameStateFn.getItemState(ctx, cardId), "非交戦中の自軍ユニット１枚の破壊")
+              if (enable2) {
+                console.log("XX22")
+                const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "非交戦中の自軍ユニット１枚の破壊", cardId)
+                for (const pair of pairs) {
+                  ctx = GameStateFn.doItemSetDestroy(ctx, null, pair, { isSkipTargetMissing: true })
+                }
+                ctx = GameStateFn.mapItemState(ctx, cardId, is => DefineFn.ItemStateFn.clearTip(is, "非交戦中の自軍ユニット１枚の破壊")) as GameState
+              }
+              return ctx
+            }.toString()
           }
         ]
       },
-      {
-        logicTree: {
-          type: "Leaf",
-          value: "非交戦中の自軍ユニット１枚"
-        },
-        actions: [
-          {
-            title: ["cutIn", [{
-              title: ["_ロールする", "破壊を無効"],
-              vars: ["非交戦中の自軍ユニット１枚"]
-            }]]
-          }
-        ]
-      }
     ]
   }
 };

@@ -243,9 +243,9 @@ export function createCommandEffectTips(ctx: GameState, effect: Effect): Command
   if (effect.text.logicTreeActions) {
     logCategory("createCommandEffectTips", effect.text.logicTreeActions.length)
     const testedEffects = effect.text.logicTreeActions.flatMap((lta, logicId) => {
-      const allTree = CardTextFn.getLogicTreeActionConditions(effect.text, lta)
-      const allTest = allTree.map((conditions, logicSubId) => {
-        logCategory("createCommandEffectTips", "createEffectTips", logicId, logicSubId, effect.description)
+      const conditionsList = CardTextFn.getLogicTreeActionConditions(effect.text, lta)
+      const allTest = conditionsList.map((conditions, logicSubId) => {
+        logCategory("createCommandEffectTips", "createEffectTips", logicId, logicSubId, Object.keys(conditions))
         const conTipErrors = createEffectTips(ctx, effect, logicId, logicSubId)
         return {
           effect: effect,

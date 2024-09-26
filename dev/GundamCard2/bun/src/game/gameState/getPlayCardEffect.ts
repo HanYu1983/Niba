@@ -1,13 +1,14 @@
 import { pipe, always, map, sum, dissoc } from "ramda"
 import { Bridge } from "../../script/bridge"
 import { CardColorFn, CardColor, CardPrototypeRollCost, CardPrototype } from "../define/CardPrototype"
-import { Condition, createRollCostRequire } from "../define/CardText"
+import { CardTextFn, Condition, createRollCostRequire } from "../define/CardText"
 import { Effect } from "../define/Effect"
 import { getCardHasSpeicalEffect, getCardRollCostLength } from "./card"
 import { GameState } from "./GameState"
 import { getGlobalEffects, setGlobalEffects } from "./globalEffects"
 import { getItemPrototype, getItemOwner } from "./ItemTableComponent"
 import { logCategory } from "../../tool/logger"
+import { LogicTree } from "../../tool/logicTree"
 
 export function createConditionKeyOfPayColorX(proto: CardPrototype): string {
     if (proto.color == null) {
@@ -51,10 +52,19 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
             title: ["_自軍_ユニット_１枚", "自軍", "ユニット", 1],
         }
     } : {}
-    const commandConditions: { [key: string]: Condition } = (prototype.category == "コマンド" && prototype.commandText) ? {
-        ...prototype.commandText.conditions
-    } : {}
     const rollCostConditions = createRollCostConditions(ctx, prototype, prototype.rollCost || [])
+    const conditions: { [key: string]: Condition } = {
+        ...costConditions,
+        ...characterConditions,
+        ...rollCostConditions,
+    }
+    const logicLeafs: LogicTree[] = Object.keys(conditions).map(k => {
+        const ret: LogicTree = {
+            type: "Leaf",
+            value: k
+        }
+        return ret
+    })
     // 注意, 這裡的effect.id是用函數名為前綴+卡片ID, 必須是唯一的
     const playCardEffect: Effect = {
         id: `getPlayCardEffects_${cardId}`,
@@ -65,13 +75,17 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
             title: ["使用型", ["配備フェイズ"]],
             description: "從手中即將出牌, 出牌後會產生場出的效果",
             conditions: {
-                ...costConditions,
-                ...characterConditions,
-                ...commandConditions,
-                ...rollCostConditions,
+                ...conditions,
+                ...prototype.commandText?.conditions
             },
             logicTreeActions: [
                 {
+                    logicTree: {
+                        type: "And",
+                        children: prototype.commandText?.logicTreeActions?.[0] ?
+                            [...logicLeafs, ...CardTextFn.getLogicTreeTreeLeafs(prototype.commandText, prototype.commandText.logicTreeActions[0])] :
+                            logicLeafs
+                    },
                     actions: [
                         {
                             title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, ToolFn }: Bridge): GameState {
@@ -101,7 +115,7 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
                                                                 const hasPS = GameStateFn.getCardHasSpeicalEffect(ctx, ["PS装甲"], cardId)
                                                                 const isNoNeedRoll = (hasHigh || hasPS)
                                                                 const isRoll = isNoNeedRoll == false
-                                                                ctx = GameStateFn.doItemSetRollState(ctx, isRoll, [cardId, from], {isSkipTargetMissing: true})
+                                                                ctx = GameStateFn.doItemSetRollState(ctx, isRoll, [cardId, from], { isSkipTargetMissing: true })
                                                                 ctx = GameStateFn.triggerEvent(ctx, { title: ["プレイされて場に出た場合"], cardIds: [cardId] })
                                                                 return ctx
                                                             }.toString()
@@ -202,7 +216,6 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
                         }
                     ]
                 },
-                ...(prototype.commandText?.logicTreeActions || []).map(lta=>({...lta, actions: []}))
             ]
         }
     }

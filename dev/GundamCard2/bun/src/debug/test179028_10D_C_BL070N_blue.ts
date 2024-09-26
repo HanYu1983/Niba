@@ -12,13 +12,15 @@ import { createCommandEffectTips, createEffectTips, doEffect, setTipSelectionFor
 import { getTopEffect } from "../game/gameState/EffectStackComponent"
 import { createGameState, GameState } from "../game/gameState/GameState"
 import { getPlayEffects } from "../game/gameState/getPlayEffects"
-import { getItemState, setItemState } from "../game/gameState/ItemStateComponent"
+import { getItemState, mapItemState, setItemState } from "../game/gameState/ItemStateComponent"
 import { getItemBaSyou, getItemPrototype } from "../game/gameState/ItemTableComponent"
 import { setPhase } from "../game/gameState/PhaseComponent"
 import { triggerEvent } from "../game/gameState/triggerEvent"
 import { loadPrototype } from "../script"
 import { CommandEffecTipFn } from "../game/define/CommandEffectTip"
 import { doItemSetDestroy } from "../game/gameState/doItemSetDestroy"
+import { checkIsBattle } from "../game/gameState/IsBattleComponent"
+import { getSetGroupBattlePoint } from "../game/gameState/setGroup"
 
 export async function test179028_10D_C_BL070N_blue() {
     await loadPrototype("179028_10D_C_BL070N_blue")
@@ -37,25 +39,105 @@ export async function test179028_10D_C_BL070N_blue() {
         throw new Error()
     }
     {
-        const e = effects[0]
-        const cets = createCommandEffectTips(ctx, e).filter(CommandEffecTipFn.filterNoError)
+        const effect = effects[0]
+        const cets = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)
         if (cets.length != 0) {
             throw new Error()
         }
-        const destroyUnit: Card = {
-            id: "destroyUnit",
-            protoID: "unitBlue",
-        }
-        ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア"), [destroyUnit]) as GameState
-        ctx = doItemSetDestroy(ctx, { id: "破壊する", playerID: PlayerB }, [destroyUnit.id, getItemBaSyou(ctx, destroyUnit.id)])
+        const originCtx = JSON.parse(JSON.stringify(ctx))
         {
-            const cets = createCommandEffectTips(ctx, e)//.filter(CommandEffecTipFn.filterNoError)
-            for(const cet of cets){
-                console.log(cet.logicID, cet.logicSubID, cet.tipOrErrors.map(t=>t.errors))
+            const destroyUnit: Card = {
+                id: "destroyUnit",
+                protoID: "unitBlue",
             }
+            ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア"), [destroyUnit]) as GameState
+            ctx = doItemSetDestroy(ctx, { id: "破壊する", playerID: PlayerB }, [destroyUnit.id, getItemBaSyou(ctx, destroyUnit.id)])
+            if (getItemState(ctx, destroyUnit.id).destroyReason == null) {
+                throw new Error()
+            }
+            const cets = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)
             if (cets.length != 1) {
+                throw new Error()
+            }
+            const cet = cets[0]
+            ctx = setTipSelectionForUser(ctx, cet.effect, cet.logicID, cet.logicSubID)
+            ctx = doEffect(ctx, cet.effect, cet.logicID, cet.logicSubID)
+            {
+                const effect = getTopEffect(ctx)
+                if (effect == null) {
+                    throw new Error()
+                }
+                ctx = doEffect(ctx, effect, 0, 0)
+                if (getItemState(ctx, destroyUnit.id).destroyReason != null) {
+                    throw new Error()
+                }
+            }
+        }
+        ctx = originCtx
+        {
+            const cets = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)
+            if (cets.length != 0) {
+                throw new Error()
+            }
+            const enemyUnit: Card = {
+                id: "enemyUnit",
+                protoID: "unitBlue",
+            }
+            ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア1"), [enemyUnit]) as GameState
+            const friendUnit: Card = {
+                id: "friendUnit",
+                protoID: "unitBlue",
+            }
+            ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1"), [friendUnit]) as GameState
+            ctx = checkIsBattle(ctx) as GameState
+            {
+                const cets = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)
+                console.log(cets.map(cet => cet.tipOrErrors.map(toe => toe.conditionKey)))
+                if (cets.length != 1) {
+                    throw new Error()
+                }
+                const cet = cets[0]
+                ctx = setTipSelectionForUser(ctx, cet.effect, cet.logicID, cet.logicSubID)
+                ctx = doEffect(ctx, cet.effect, cet.logicID, cet.logicSubID)
+                {
+                    const effect = getTopEffect(ctx)
+                    if (effect == null) {
+                        throw new Error()
+                    }
+                    ctx = doEffect(ctx, effect, 0, 0)
+                    if (BattlePointFn.eq(getSetGroupBattlePoint(ctx, friendUnit.id), [3, 3, 3]) == false) {
+                        throw new Error()
+                    }
+                }
+            }
+        }
+        ctx = originCtx
+        {
+            const destroyUnit: Card = {
+                id: "destroyUnit",
+                protoID: "unitBlue",
+            }
+            ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア"), [destroyUnit]) as GameState
+            ctx = doItemSetDestroy(ctx, { id: "破壊する", playerID: PlayerB }, [destroyUnit.id, getItemBaSyou(ctx, destroyUnit.id)])
+            if (getItemState(ctx, destroyUnit.id).destroyReason == null) {
+                throw new Error()
+            }
+            const enemyUnit: Card = {
+                id: "enemyUnit",
+                protoID: "unitBlue",
+            }
+            ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア1"), [enemyUnit]) as GameState
+            const friendUnit: Card = {
+                id: "friendUnit",
+                protoID: "unitBlue",
+            }
+            ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1"), [friendUnit]) as GameState
+            ctx = checkIsBattle(ctx) as GameState
+            const cets = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)
+            if (cets.length != 2) {
                 throw new Error()
             }
         }
     }
+
 }

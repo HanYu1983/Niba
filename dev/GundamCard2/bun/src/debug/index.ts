@@ -47,7 +47,8 @@ const fs = require('fs').promises;
 
 export async function tests() {
     return [
-        //test179028_10D_C_BL070N_blue
+        test179030_11E_C_BL079R_blue,
+        test179028_10D_C_BL070N_blue,
         testGain,
         testLoadPrototype,
         testSwapItem,
@@ -69,7 +70,6 @@ export async function tests() {
         test179028_10D_U_WT181N_white,
         test179024_03B_U_WT042U_white,
         test179001_01A_CH_WT007R_white,
-        test179030_11E_C_BL079R_blue,
         test179015_04B_U_BK061C_black,
         test179016_04B_U_BK066C_black,
         test179030_11E_U_BK194S_2_black,

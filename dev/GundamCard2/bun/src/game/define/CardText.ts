@@ -9,6 +9,7 @@ import { GlobalEffect } from "./GlobalEffect";
 import { Phase, SiYouTiming } from "./Timing";
 import { StrBaSyouPair, Tip } from "./Tip";
 import { PlayerID } from "./PlayerID";
+import { logCategory } from "../../tool/logger";
 
 export type BattleBonus = [number, number, number]
 
@@ -185,13 +186,16 @@ export type CardText = {
     isEnabledWhileG?: boolean
 }
 
+function getCondition(ctx: CardText, conditionId: string): Condition {
+    if (ctx.conditions?.[conditionId] == null) {
+        console.log(ctx.conditions)
+        throw new Error(`condition not found: ${conditionId}`)
+    }
+    return ctx.conditions[conditionId]
+}
+
 export const CardTextFn = {
-    getCondition(ctx: CardText, conditionId: string): Condition {
-        if (ctx.conditions?.[conditionId] == null) {
-            throw new Error(`condition not found: ${conditionId}`)
-        }
-        return ctx.conditions[conditionId]
-    },
+    getCondition: getCondition,
 
     getLogicTreeAction(ctx: CardText, id: number): LogicTreeAction {
         if (ctx.logicTreeActions?.[id] == null) {
@@ -200,26 +204,30 @@ export const CardTextFn = {
         return ctx.logicTreeActions[id]
     },
 
+    getLogicTreeTreeLeafs(ctx: CardText, logicTreeCommand: LogicTreeAction): LogicTree[] {
+        if (logicTreeCommand.logicTree == null) {
+            const logicLeafs: LogicTree[] = Object.keys(ctx.conditions || {}).map(k => {
+                const ret: LogicTree = {
+                    type: "Leaf",
+                    value: k
+                }
+                return ret
+            })
+            return logicLeafs
+        }
+        return [logicTreeCommand.logicTree]
+    },
+
     getLogicTreeActionConditions(ctx: CardText, logicTreeCommand: LogicTreeAction): { [key: string]: Condition }[] {
-        // return pipe(
-        //     ifElse(
-        //         always(logicTreeCommand.logicTree == null),
-        //         always([Object.keys(ctx.conditions || {})]),
-        //         always(LogicTreeFn.enumerateAll(logicTreeCommand.logicTree!) as string[][])
-        //     ),
-        //     map(conditionIds => {
-        //         const conditions = conditionIds.map(conditionId => this.getCondition(ctx, conditionId))
-        //         return zipObj(conditionIds, conditions)
-        //     })
-        // )()
         if (logicTreeCommand.logicTree == null) {
             const conditionIds = Object.keys(ctx.conditions || {})
-            const conditions = conditionIds.map(conditionId => this.getCondition(ctx, conditionId))
+            const conditions = conditionIds.map(conditionId => getCondition(ctx, conditionId))
             return [zipObj(conditionIds, conditions)]
         }
         const conditionIdsList = LogicTreeFn.enumerateAll(logicTreeCommand.logicTree) as string[][]
+        logCategory("getLogicTreeActionConditions", logicTreeCommand.logicTree, conditionIdsList)
         return conditionIdsList.map(conditionIds => {
-            const conditions = conditionIds.map(conditionId => this.getCondition(ctx, conditionId))
+            const conditions = conditionIds.map(conditionId => getCondition(ctx, conditionId))
             return zipObj(conditionIds, conditions)
         })
     },

@@ -26,6 +26,8 @@ import * as getActionTitleFn from "./getActionTitleFn"
 import * as getOnEventTitleFn from "./getOnEventTitleFn"
 import * as doSetItemRollState from "./doItemSetRollState"
 import * as doCountryDamage from "./doCountryDamage"
+import * as doItemSetDestroy from "./doItemSetDestroy"
+
 export const GameStateFn = {
     ...GameState,
     ...CardState,
@@ -55,4 +57,5 @@ export const GameStateFn = {
     ...getOnEventTitleFn,
     ...doSetItemRollState,
     ...doCountryDamage,
+    ...doItemSetDestroy
 }
