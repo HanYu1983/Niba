@@ -14,7 +14,7 @@ export type CardTableComponent = {
 
 export function getCard(ctx: CardTableComponent, cardId: string): Card {
   if (ctx.cards[cardId] == null) {
-    throw new Error("card not found")
+    throw new Error(`card not found: ${cardId}`)
   }
   return ctx.cards[cardId];
 }

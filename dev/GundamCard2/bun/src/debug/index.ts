@@ -160,7 +160,7 @@ async function testCompress() {
                     const flows = queryFlow(ctx, playerId)
                     if (flows.length) {
                         try {
-                            const aiChoiseList = flows.flatMap(flow => createAIChoiseList(ctx, playerId, flow))
+                            const aiChoiseList = flows.flatMap(flow => createAIChoiseList(ctx, flow))
                             if (aiChoiseList.length > 0) {
                                 aiChoiseList.sort((a, b) => b.weight - a.weight)
                                 const flow = aiChoiseList[0].flow

@@ -23558,6 +23558,276 @@ var PlayerIDFn = {
 // src/client/tool/appContext/index.tsx
 var import_react = __toESM(require_react(), 1);
 
+// src/game/define/Timing.ts
+var exports_Timing = {};
+__export(exports_Timing, {
+  PhaseFn: () => PhaseFn
+});
+var PhaseFn = {
+  eq(l, r) {
+    return l[0] === r[0] && l[1] === r[1] && l[2] === r[2];
+  },
+  isFreeTiming(phase) {
+    switch (phase[0]) {
+      case "\u30C9\u30ED\u30FC\u30D5\u30A7\u30A4\u30BA":
+        return phase[1] == "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0";
+      case "\u30EA\u30ED\u30FC\u30EB\u30D5\u30A7\u30A4\u30BA":
+      case "\u914D\u5099\u30D5\u30A7\u30A4\u30BA":
+        return phase[1] == "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0";
+      case "\u6226\u95D8\u30D5\u30A7\u30A4\u30BA":
+        return phase[2] == "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0" || phase[2] == "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02";
+    }
+  },
+  getAll() {
+    return [
+      ["\u30EA\u30ED\u30FC\u30EB\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30A7\u30A4\u30BA\u958B\u59CB"],
+      ["\u30EA\u30ED\u30FC\u30EB\u30D5\u30A7\u30A4\u30BA", "\u898F\u5B9A\u306E\u52B9\u679C"],
+      ["\u30EA\u30ED\u30FC\u30EB\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
+      ["\u30EA\u30ED\u30FC\u30EB\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30A7\u30A4\u30BA\u7D42\u4E86"],
+      ["\u30C9\u30ED\u30FC\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30A7\u30A4\u30BA\u958B\u59CB"],
+      ["\u30C9\u30ED\u30FC\u30D5\u30A7\u30A4\u30BA", "\u898F\u5B9A\u306E\u52B9\u679C"],
+      ["\u30C9\u30ED\u30FC\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
+      ["\u30C9\u30ED\u30FC\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30A7\u30A4\u30BA\u7D42\u4E86"],
+      ["\u914D\u5099\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30A7\u30A4\u30BA\u958B\u59CB"],
+      ["\u914D\u5099\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
+      ["\u914D\u5099\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30A7\u30A4\u30BA\u7D42\u4E86"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u653B\u6483\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u958B\u59CB"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u653B\u6483\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u653B\u6483\u30B9\u30C6\u30C3\u30D7", "\u898F\u5B9A\u306E\u52B9\u679C"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u653B\u6483\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u653B\u6483\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u7D42\u4E86"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u958B\u59CB"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7", "\u898F\u5B9A\u306E\u52B9\u679C"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u7D42\u4E86"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u958B\u59CB"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7", "\u898F\u5B9A\u306E\u52B9\u679C"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u7D42\u4E86"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u5E30\u9084\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u958B\u59CB"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u5E30\u9084\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u5E30\u9084\u30B9\u30C6\u30C3\u30D7", "\u898F\u5B9A\u306E\u52B9\u679C"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u5E30\u9084\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u5E30\u9084\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u7D42\u4E86"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30BF\u30FC\u30F3\u7D42\u4E86\u6642", "\u30C0\u30E1\u30FC\u30B8\u30EA\u30BB\u30C3\u30C8"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30BF\u30FC\u30F3\u7D42\u4E86\u6642", "\u52B9\u679C\u89E3\u6C7A"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30BF\u30FC\u30F3\u7D42\u4E86\u6642", "\u624B\u672D\u8ABF\u6574"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30BF\u30FC\u30F3\u7D42\u4E86\u6642", "\u52B9\u679C\u7D42\u4E86\u3002\u30BF\u30FC\u30F3\u7D42\u4E86"]
+    ];
+  },
+  getFirst() {
+    const all = this.getAll();
+    return all[0];
+  },
+  getLast() {
+    const all = this.getAll();
+    return all[all.length - 1];
+  },
+  getNext(timing) {
+    const all = this.getAll();
+    const idx = (this.getSeqId(timing) + 1) % all.length;
+    return all[idx];
+  },
+  getSeqId(timing) {
+    const all = this.getAll();
+    const idx = all.findIndex((t) => this.eq(t, timing));
+    return idx;
+  }
+};
+
+// src/game/gameState/PhaseComponent.ts
+var exports_PhaseComponent = {};
+__export(exports_PhaseComponent, {
+  setPhase: () => setPhase,
+  getPhase: () => getPhase
+});
+
+// src/tool/table/index.ts
+function addCard(table, position, cardId) {
+  return {
+    ...table,
+    cardStack: {
+      ...table.cardStack,
+      [position]: [...table.cardStack[position] || [], cardId]
+    }
+  };
+}
+function getCardsByPosition(table, position) {
+  if (table.cardStack[position] == null) {
+    return [];
+  }
+  return table.cardStack[position];
+}
+function moveCard(table, fromPosition, toPosition, cardId) {
+  if (!table.cardStack[fromPosition] || !table.cardStack[fromPosition].includes(cardId)) {
+    throw new Error("Card not found in the specified position");
+  }
+  const updatedFromStack = table.cardStack[fromPosition].filter((id) => id !== cardId);
+  const updatedToStack = table.cardStack[toPosition] ? [...table.cardStack[toPosition], cardId] : [cardId];
+  return {
+    ...table,
+    cardStack: {
+      ...table.cardStack,
+      [fromPosition]: updatedFromStack,
+      [toPosition]: updatedToStack
+    }
+  };
+}
+function getCardPosition(table, cardId) {
+  for (const [key, value] of Object.entries(table.cardStack)) {
+    if (value.includes(cardId)) {
+      return key;
+    }
+  }
+  return null;
+}
+function shuffleCards(ctx2, position) {
+  const cards = ctx2.cardStack[position];
+  if (!cards)
+    return ctx2;
+  const shuffledCards = [...cards].sort(() => Math.random() - 0.5);
+  return {
+    ...ctx2,
+    cardStack: {
+      ...ctx2.cardStack,
+      [position]: shuffledCards
+    }
+  };
+}
+var DEFAULT_TABLE = {
+  cardStack: {}
+};
+var TableFns = {
+  addCard,
+  moveCard,
+  getCardPosition,
+  getCardsByPosition,
+  shuffleCards
+};
+
+// src/game/gameState/MessageComponent.ts
+function setMessageCurrentEffect(ctx2, effect) {
+  return {
+    ...ctx2,
+    messagesCurrentEffect: effect
+  };
+}
+function getMessageCurrentEffect(ctx2) {
+  return ctx2.messagesCurrentEffect;
+}
+
+// src/game/gameState/EventCenter.ts
+function getGameStateAndAssert(ctx2) {
+  if (ctx2.isGameState != true) {
+    throw new Error(`must is gameState`);
+  }
+  return ctx2;
+}
+var EventCenterFn = {
+  onEffectStart(_ctx, effect) {
+    let ctx2 = getGameStateAndAssert(_ctx);
+    ctx2 = setMessageCurrentEffect(ctx2, effect);
+    return ctx2;
+  },
+  onEffectEnd(_ctx, effect) {
+    let ctx2 = getGameStateAndAssert(_ctx);
+    ctx2 = setMessageCurrentEffect(ctx2, null);
+    return ctx2;
+  },
+  onItemStateChange(_ctx, old, curr) {
+    let ctx2 = getGameStateAndAssert(_ctx);
+    let effect = getMessageCurrentEffect(ctx2);
+    return ctx2;
+  },
+  onCardChange(_ctx, old, curr) {
+    let ctx2 = getGameStateAndAssert(_ctx);
+    let effect = getMessageCurrentEffect(ctx2);
+    return ctx2;
+  },
+  onPlayerStateChange(_ctx, old, curr) {
+    let ctx2 = getGameStateAndAssert(_ctx);
+    return ctx2;
+  },
+  onSetSetGroupParent(_ctx, parentId, itemId) {
+    let ctx2 = getGameStateAndAssert(_ctx);
+    return ctx2;
+  },
+  onSetPhase(_ctx, old, curr) {
+    let ctx2 = getGameStateAndAssert(_ctx);
+    return ctx2;
+  },
+  onItemAdd(_ctx, itemId) {
+    let ctx2 = getGameStateAndAssert(_ctx);
+    return ctx2;
+  },
+  onItemMove(_ctx, from, to, itemId) {
+    let ctx2 = getGameStateAndAssert(_ctx);
+    return ctx2;
+  },
+  onItemDelete(_ctx, itemId) {
+    let ctx2 = getGameStateAndAssert(_ctx);
+    return ctx2;
+  },
+  onTableChange(_ctx, old, curr) {
+    for (const oldBasyouStr in old.cardStack) {
+      for (const itemId of old.cardStack[oldBasyouStr]) {
+        const newBasyouStr = TableFns.getCardPosition(curr, itemId);
+        if (newBasyouStr == null) {
+          _ctx = this.onItemDelete(_ctx, itemId);
+        } else if (newBasyouStr != oldBasyouStr) {
+          _ctx = this.onItemMove(_ctx, oldBasyouStr, newBasyouStr, itemId);
+        }
+      }
+    }
+    for (const newBasyouStr in curr.cardStack) {
+      for (const itemId of curr.cardStack[newBasyouStr]) {
+        const oldBasyouStr = TableFns.getCardPosition(curr, itemId);
+        if (oldBasyouStr == null) {
+          _ctx = this.onItemAdd(_ctx, itemId);
+        } else if (newBasyouStr != oldBasyouStr) {
+          _ctx = this.onItemMove(_ctx, oldBasyouStr, newBasyouStr, itemId);
+        }
+      }
+    }
+    return _ctx;
+  }
+};
+
+// src/game/gameState/PhaseComponent.ts
+function setPhase(ctx2, timing) {
+  const old = ctx2.phase;
+  ctx2 = {
+    ...ctx2,
+    phase: timing
+  };
+  ctx2 = EventCenterFn.onSetPhase(ctx2, old, ctx2.phase);
+  return ctx2;
+}
+function getPhase(ctx2) {
+  return ctx2.phase;
+}
+
+// src/tool/logger.ts
+var hideCategory = [
+  "triggerEvent",
+  "getPlayEffects",
+  "getConditionTitleFn",
+  "handleAttackDamage",
+  "getGlobalEffects",
+  "getEffectTips"
+];
+var filterCategory = true;
+var logCategory = (category, ...msg) => {
+  if (filterCategory) {
+    if (hideCategory.find((c) => c == category)) {
+      return;
+    }
+  }
+  console.log(`[${new Date().toLocaleTimeString()}][${category}]`, ...msg);
+};
+
 // src/game/define/BaSyou.ts
 var exports_BaSyou = {};
 __export(exports_BaSyou, {
@@ -24766,161 +25036,17 @@ var AbsoluteBaSyouFn = {
   }
 };
 
-// src/game/define/Timing.ts
-var exports_Timing = {};
-__export(exports_Timing, {
-  PhaseFn: () => PhaseFn
+// src/game/gameState/EffectStackComponent.ts
+var exports_EffectStackComponent = {};
+__export(exports_EffectStackComponent, {
+  removeEffect: () => removeEffect,
+  isStackEffect: () => isStackEffect,
+  isImmediateEffect: () => isImmediateEffect,
+  getTopEffect: () => getTopEffect,
+  getEffect: () => getEffect,
+  addStackEffect: () => addStackEffect,
+  addImmediateEffect: () => addImmediateEffect
 });
-var PhaseFn = {
-  eq(l, r) {
-    return l[0] === r[0] && l[1] === r[1] && l[2] === r[2];
-  },
-  isFreeTiming(phase) {
-    switch (phase[0]) {
-      case "\u30C9\u30ED\u30FC\u30D5\u30A7\u30A4\u30BA":
-        return phase[1] == "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0";
-      case "\u30EA\u30ED\u30FC\u30EB\u30D5\u30A7\u30A4\u30BA":
-      case "\u914D\u5099\u30D5\u30A7\u30A4\u30BA":
-        return phase[1] == "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0";
-      case "\u6226\u95D8\u30D5\u30A7\u30A4\u30BA":
-        return phase[2] == "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0" || phase[2] == "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02";
-    }
-  },
-  getAll() {
-    return [
-      ["\u30EA\u30ED\u30FC\u30EB\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30A7\u30A4\u30BA\u958B\u59CB"],
-      ["\u30EA\u30ED\u30FC\u30EB\u30D5\u30A7\u30A4\u30BA", "\u898F\u5B9A\u306E\u52B9\u679C"],
-      ["\u30EA\u30ED\u30FC\u30EB\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
-      ["\u30EA\u30ED\u30FC\u30EB\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30A7\u30A4\u30BA\u7D42\u4E86"],
-      ["\u30C9\u30ED\u30FC\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30A7\u30A4\u30BA\u958B\u59CB"],
-      ["\u30C9\u30ED\u30FC\u30D5\u30A7\u30A4\u30BA", "\u898F\u5B9A\u306E\u52B9\u679C"],
-      ["\u30C9\u30ED\u30FC\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
-      ["\u30C9\u30ED\u30FC\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30A7\u30A4\u30BA\u7D42\u4E86"],
-      ["\u914D\u5099\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30A7\u30A4\u30BA\u958B\u59CB"],
-      ["\u914D\u5099\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
-      ["\u914D\u5099\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30A7\u30A4\u30BA\u7D42\u4E86"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u653B\u6483\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u958B\u59CB"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u653B\u6483\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u653B\u6483\u30B9\u30C6\u30C3\u30D7", "\u898F\u5B9A\u306E\u52B9\u679C"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u653B\u6483\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u653B\u6483\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u7D42\u4E86"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u958B\u59CB"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7", "\u898F\u5B9A\u306E\u52B9\u679C"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u7D42\u4E86"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u958B\u59CB"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7", "\u898F\u5B9A\u306E\u52B9\u679C"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u7D42\u4E86"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u5E30\u9084\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u958B\u59CB"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u5E30\u9084\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u5E30\u9084\u30B9\u30C6\u30C3\u30D7", "\u898F\u5B9A\u306E\u52B9\u679C"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u5E30\u9084\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u5E30\u9084\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u7D42\u4E86"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30BF\u30FC\u30F3\u7D42\u4E86\u6642", "\u30C0\u30E1\u30FC\u30B8\u30EA\u30BB\u30C3\u30C8"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30BF\u30FC\u30F3\u7D42\u4E86\u6642", "\u52B9\u679C\u89E3\u6C7A"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30BF\u30FC\u30F3\u7D42\u4E86\u6642", "\u624B\u672D\u8ABF\u6574"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30BF\u30FC\u30F3\u7D42\u4E86\u6642", "\u52B9\u679C\u7D42\u4E86\u3002\u30BF\u30FC\u30F3\u7D42\u4E86"]
-    ];
-  },
-  getFirst() {
-    const all = this.getAll();
-    return all[0];
-  },
-  getLast() {
-    const all = this.getAll();
-    return all[all.length - 1];
-  },
-  getNext(timing) {
-    const all = this.getAll();
-    const idx = (this.getSeqId(timing) + 1) % all.length;
-    return all[idx];
-  },
-  getSeqId(timing) {
-    const all = this.getAll();
-    const idx = all.findIndex((t) => this.eq(t, timing));
-    return idx;
-  }
-};
-
-// src/game/gameState/CardTableComponent.ts
-var exports_CardTableComponent = {};
-__export(exports_CardTableComponent, {
-  setCard: () => setCard,
-  mapCardsWithBasyou: () => mapCardsWithBasyou,
-  mapCard: () => mapCard,
-  getCards: () => getCards,
-  getCardOwner: () => getCardOwner,
-  getCardIds: () => getCardIds,
-  getCard: () => getCard,
-  createCardWithProtoIds: () => createCardWithProtoIds,
-  addCards: () => addCards
-});
-
-// src/tool/table/index.ts
-function addCard(table, position, cardId) {
-  return {
-    ...table,
-    cardStack: {
-      ...table.cardStack,
-      [position]: [...table.cardStack[position] || [], cardId]
-    }
-  };
-}
-function getCardsByPosition(table, position) {
-  if (table.cardStack[position] == null) {
-    return [];
-  }
-  return table.cardStack[position];
-}
-function moveCard(table, fromPosition, toPosition, cardId) {
-  if (!table.cardStack[fromPosition] || !table.cardStack[fromPosition].includes(cardId)) {
-    throw new Error("Card not found in the specified position");
-  }
-  const updatedFromStack = table.cardStack[fromPosition].filter((id) => id !== cardId);
-  const updatedToStack = table.cardStack[toPosition] ? [...table.cardStack[toPosition], cardId] : [cardId];
-  return {
-    ...table,
-    cardStack: {
-      ...table.cardStack,
-      [fromPosition]: updatedFromStack,
-      [toPosition]: updatedToStack
-    }
-  };
-}
-function getCardPosition(table, cardId) {
-  for (const [key, value] of Object.entries(table.cardStack)) {
-    if (value.includes(cardId)) {
-      return key;
-    }
-  }
-  return null;
-}
-function shuffleCards(ctx2, position) {
-  const cards = ctx2.cardStack[position];
-  if (!cards)
-    return ctx2;
-  const shuffledCards = [...cards].sort(() => Math.random() - 0.5);
-  return {
-    ...ctx2,
-    cardStack: {
-      ...ctx2.cardStack,
-      [position]: shuffledCards
-    }
-  };
-}
-var DEFAULT_TABLE = {
-  cardStack: {}
-};
-var TableFns = {
-  addCard,
-  moveCard,
-  getCardPosition,
-  getCardsByPosition,
-  shuffleCards
-};
 
 // node_modules/uuid/dist/esm-browser/stringify.js
 function unsafeStringify(arr, offset = 0) {
@@ -25018,223 +25144,7 @@ var ToolFn = {
   }
 };
 
-// src/game/gameState/MessageComponent.ts
-function setMessageCurrentEffect(ctx2, effect) {
-  return {
-    ...ctx2,
-    messagesCurrentEffect: effect
-  };
-}
-function getMessageCurrentEffect(ctx2) {
-  return ctx2.messagesCurrentEffect;
-}
-
-// src/game/gameState/EventCenter.ts
-function getGameStateAndAssert(ctx2) {
-  if (ctx2.isGameState != true) {
-    throw new Error(`must is gameState`);
-  }
-  return ctx2;
-}
-var EventCenterFn = {
-  onEffectStart(_ctx, effect) {
-    let ctx2 = getGameStateAndAssert(_ctx);
-    ctx2 = setMessageCurrentEffect(ctx2, effect);
-    return ctx2;
-  },
-  onEffectEnd(_ctx, effect) {
-    let ctx2 = getGameStateAndAssert(_ctx);
-    ctx2 = setMessageCurrentEffect(ctx2, null);
-    return ctx2;
-  },
-  onItemStateChange(_ctx, old, curr) {
-    let ctx2 = getGameStateAndAssert(_ctx);
-    let effect = getMessageCurrentEffect(ctx2);
-    return ctx2;
-  },
-  onCardChange(_ctx, old, curr) {
-    let ctx2 = getGameStateAndAssert(_ctx);
-    let effect = getMessageCurrentEffect(ctx2);
-    return ctx2;
-  },
-  onPlayerStateChange(_ctx, old, curr) {
-    let ctx2 = getGameStateAndAssert(_ctx);
-    return ctx2;
-  },
-  onSetSetGroupParent(_ctx, parentId, itemId) {
-    let ctx2 = getGameStateAndAssert(_ctx);
-    return ctx2;
-  },
-  onSetPhase(_ctx, old, curr) {
-    let ctx2 = getGameStateAndAssert(_ctx);
-    return ctx2;
-  },
-  onItemAdd(_ctx, itemId) {
-    let ctx2 = getGameStateAndAssert(_ctx);
-    return ctx2;
-  },
-  onItemMove(_ctx, from, to, itemId) {
-    let ctx2 = getGameStateAndAssert(_ctx);
-    return ctx2;
-  },
-  onItemDelete(_ctx, itemId) {
-    let ctx2 = getGameStateAndAssert(_ctx);
-    return ctx2;
-  },
-  onTableChange(_ctx, old, curr) {
-    for (const oldBasyouStr in old.cardStack) {
-      for (const itemId of old.cardStack[oldBasyouStr]) {
-        const newBasyouStr = TableFns.getCardPosition(curr, itemId);
-        if (newBasyouStr == null) {
-          _ctx = this.onItemDelete(_ctx, itemId);
-        } else if (newBasyouStr != oldBasyouStr) {
-          _ctx = this.onItemMove(_ctx, oldBasyouStr, newBasyouStr, itemId);
-        }
-      }
-    }
-    for (const newBasyouStr in curr.cardStack) {
-      for (const itemId of curr.cardStack[newBasyouStr]) {
-        const oldBasyouStr = TableFns.getCardPosition(curr, itemId);
-        if (oldBasyouStr == null) {
-          _ctx = this.onItemAdd(_ctx, itemId);
-        } else if (newBasyouStr != oldBasyouStr) {
-          _ctx = this.onItemMove(_ctx, oldBasyouStr, newBasyouStr, itemId);
-        }
-      }
-    }
-    return _ctx;
-  }
-};
-
-// src/game/gameState/CardTableComponent.ts
-function getCard(ctx2, cardId) {
-  if (ctx2.cards[cardId] == null) {
-    throw new Error("card not found");
-  }
-  return ctx2.cards[cardId];
-}
-function setCard(ctx2, id, card) {
-  const oldCard = getCard(ctx2, id);
-  ctx2 = {
-    ...ctx2,
-    cards: {
-      ...ctx2.cards,
-      [id]: card
-    }
-  };
-  ctx2 = EventCenterFn.onCardChange(ctx2, oldCard, getCard(ctx2, id));
-  return ctx2;
-}
-function mapCard(ctx2, id, f) {
-  return setCard(ctx2, id, f(getCard(ctx2, id)));
-}
-function getCardIds(ctx2) {
-  return Object.keys(ctx2.cards);
-}
-function getCards(ctx2) {
-  return Object.values(ctx2.cards);
-}
-function mapCardsWithBasyou(ctx2, f) {
-  return toPairs_default(ctx2.table.cardStack).map(([k, cardIds]) => {
-    const basyou = AbsoluteBaSyouFn.fromString(k);
-    const cards = cardIds.map((cardId) => getCard(ctx2, cardId));
-    return [basyou, cards];
-  }).reduce((ctx3, [basyou, cards]) => {
-    return cards.map((card) => f(basyou, card)).reduce((ctx4, card) => setCard(ctx4, card.id, card), ctx3);
-  }, ctx2);
-}
-function createCardWithProtoIds(ctx2, basyou, cardProtoIds) {
-  ctx2 = addCards(ctx2, basyou, cardProtoIds.map((protoId, i) => {
-    return {
-      id: ToolFn.getUUID("card"),
-      protoID: protoId,
-      ownerID: AbsoluteBaSyouFn.getPlayerID(basyou)
-    };
-  }));
-  return ctx2;
-}
-function addCards(ctx2, basyou, addedCards) {
-  const old = ctx2.table;
-  ctx2 = addedCards.reduce((ctx3, newCard) => {
-    if (newCard.id == "") {
-      newCard.id = ToolFn.getUUID("addCards");
-    }
-    if (newCard.ownerID == null) {
-      newCard.ownerID = AbsoluteBaSyouFn.getPlayerID(basyou);
-    }
-    const table3 = TableFns.addCard(ctx3.table, AbsoluteBaSyouFn.toString(basyou), newCard.id);
-    return {
-      ...ctx3,
-      table: table3,
-      cards: {
-        ...ctx3.cards,
-        [newCard.id]: newCard
-      }
-    };
-  }, ctx2);
-  ctx2 = EventCenterFn.onTableChange(ctx2, old, ctx2.table);
-  return ctx2;
-}
-function getCardOwner(ctx2, cardID) {
-  const card = getCard(ctx2, cardID);
-  if (card == null) {
-    throw new Error("[getCardOwner] card not found");
-  }
-  if (card.ownerID == null) {
-    throw new Error("[getCardOwner] card.ownerID not found");
-  }
-  return card.ownerID;
-}
-
-// src/game/gameState/PhaseComponent.ts
-var exports_PhaseComponent = {};
-__export(exports_PhaseComponent, {
-  setPhase: () => setPhase,
-  getPhase: () => getPhase
-});
-function setPhase(ctx2, timing) {
-  const old = ctx2.phase;
-  ctx2 = {
-    ...ctx2,
-    phase: timing
-  };
-  ctx2 = EventCenterFn.onSetPhase(ctx2, old, ctx2.phase);
-  return ctx2;
-}
-function getPhase(ctx2) {
-  return ctx2.phase;
-}
-
-// src/tool/logger.ts
-var hideCategory = [
-  "triggerEvent",
-  "getPlayEffects",
-  "getConditionTitleFn",
-  "handleAttackDamage",
-  "getGlobalEffects",
-  "getEffectTips"
-];
-var filterCategory = true;
-var logCategory = (category, ...msg) => {
-  if (filterCategory) {
-    if (hideCategory.find((c) => c == category)) {
-      return;
-    }
-  }
-  console.log(`[${new Date().toLocaleTimeString()}][${category}]`, ...msg);
-};
-
 // src/game/gameState/EffectStackComponent.ts
-var exports_EffectStackComponent = {};
-__export(exports_EffectStackComponent, {
-  removeEffect: () => removeEffect,
-  isStackEffect: () => isStackEffect,
-  isImmediateEffect: () => isImmediateEffect,
-  getTopEffect: () => getTopEffect,
-  getEffect: () => getEffect,
-  addStackEffect: () => addStackEffect,
-  addImmediateEffect: () => addImmediateEffect
-});
 function isStackEffect(ctx2, id) {
   return ctx2.stackEffect.includes(id);
 }
@@ -25453,6 +25363,7 @@ function createGameState() {
     globalEffectPool: {},
     messages: [],
     messagesCurrentEffect: null,
+    turn: 0,
     ...createSetGroupComponent()
   };
 }
@@ -25478,6 +25389,98 @@ __export(exports_ItemTableComponent, {
   assertTargetMissingError: () => assertTargetMissingError,
   addCoinsToCard: () => addCoinsToCard
 });
+
+// src/game/gameState/CardTableComponent.ts
+var exports_CardTableComponent = {};
+__export(exports_CardTableComponent, {
+  setCard: () => setCard,
+  mapCardsWithBasyou: () => mapCardsWithBasyou,
+  mapCard: () => mapCard,
+  getCards: () => getCards,
+  getCardOwner: () => getCardOwner,
+  getCardIds: () => getCardIds,
+  getCard: () => getCard,
+  createCardWithProtoIds: () => createCardWithProtoIds,
+  addCards: () => addCards
+});
+function getCard(ctx2, cardId) {
+  if (ctx2.cards[cardId] == null) {
+    throw new Error(`card not found: ${cardId}`);
+  }
+  return ctx2.cards[cardId];
+}
+function setCard(ctx2, id, card) {
+  const oldCard = getCard(ctx2, id);
+  ctx2 = {
+    ...ctx2,
+    cards: {
+      ...ctx2.cards,
+      [id]: card
+    }
+  };
+  ctx2 = EventCenterFn.onCardChange(ctx2, oldCard, getCard(ctx2, id));
+  return ctx2;
+}
+function mapCard(ctx2, id, f) {
+  return setCard(ctx2, id, f(getCard(ctx2, id)));
+}
+function getCardIds(ctx2) {
+  return Object.keys(ctx2.cards);
+}
+function getCards(ctx2) {
+  return Object.values(ctx2.cards);
+}
+function mapCardsWithBasyou(ctx2, f) {
+  return toPairs_default(ctx2.table.cardStack).map(([k, cardIds]) => {
+    const basyou = AbsoluteBaSyouFn.fromString(k);
+    const cards = cardIds.map((cardId) => getCard(ctx2, cardId));
+    return [basyou, cards];
+  }).reduce((ctx3, [basyou, cards]) => {
+    return cards.map((card) => f(basyou, card)).reduce((ctx4, card) => setCard(ctx4, card.id, card), ctx3);
+  }, ctx2);
+}
+function createCardWithProtoIds(ctx2, basyou, cardProtoIds) {
+  ctx2 = addCards(ctx2, basyou, cardProtoIds.map((protoId, i) => {
+    return {
+      id: ToolFn.getUUID("card"),
+      protoID: protoId,
+      ownerID: AbsoluteBaSyouFn.getPlayerID(basyou)
+    };
+  }));
+  return ctx2;
+}
+function addCards(ctx2, basyou, addedCards) {
+  const old = ctx2.table;
+  ctx2 = addedCards.reduce((ctx3, newCard) => {
+    if (newCard.id == "") {
+      newCard.id = ToolFn.getUUID("addCards");
+    }
+    if (newCard.ownerID == null) {
+      newCard.ownerID = AbsoluteBaSyouFn.getPlayerID(basyou);
+    }
+    const table4 = TableFns.addCard(ctx3.table, AbsoluteBaSyouFn.toString(basyou), newCard.id);
+    return {
+      ...ctx3,
+      table: table4,
+      cards: {
+        ...ctx3.cards,
+        [newCard.id]: newCard
+      }
+    };
+  }, ctx2);
+  ctx2 = EventCenterFn.onTableChange(ctx2, old, ctx2.table);
+  return ctx2;
+}
+function getCardOwner(ctx2, cardID) {
+  const card = getCard(ctx2, cardID);
+  if (card == null) {
+    throw new Error("[getCardOwner] card not found");
+  }
+  if (card.ownerID == null) {
+    throw new Error("[getCardOwner] card.ownerID not found");
+  }
+  return card.ownerID;
+}
 
 // src/game/gameState/CoinTableComponent.ts
 var exports_CoinTableComponent = {};
@@ -26497,6 +26500,9 @@ __export(exports_Effect, {
   EffectFn: () => EffectFn
 });
 var EffectFn = {
+  isFakeCardID(string) {
+    return string.startsWith("SystemFakeCardID_");
+  },
   getCardID(ctx2) {
     switch (ctx2.reason[0]) {
       case "GameRule":
@@ -29496,6 +29502,9 @@ function setCommandEffects(ctx2, effects) {
 }
 function updateDestroyEffect(ctx2) {
   return getItemStateValues(ctx2).reduce((ctx3, cs) => {
+    if (EffectFn.isFakeCardID(cs.id)) {
+      return ctx3;
+    }
     if (cs.destroyReason) {
       const effect = {
         id: ToolFn.getUUID("updateDestroyEffect"),
@@ -29942,16 +29951,17 @@ function applyFlow(ctx2, playerID, flow) {
           return ctx2;
         }
       }
-      if (ctx2.phase[1][0] == "\u6226\u95D8\u30D5\u30A7\u30A4\u30BA" && ctx2.phase[1][1] == "\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7" && ctx2.phase[1][2] == "\u898F\u5B9A\u306E\u52B9\u679C") {
+      if (ctx2.phase[0] == "\u6226\u95D8\u30D5\u30A7\u30A4\u30BA" && ctx2.phase[1] == "\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7" && ctx2.phase[2] == "\u898F\u5B9A\u306E\u52B9\u679C") {
         ctx2 = updateDestroyEffect(ctx2);
       }
-      if (ctx2.phase[1][0] == "\u6226\u95D8\u30D5\u30A7\u30A4\u30BA" && ctx2.phase[1][1] == "\u30BF\u30FC\u30F3\u7D42\u4E86\u6642" && ctx2.phase[1][2] == "\u52B9\u679C\u7D42\u4E86\u3002\u30BF\u30FC\u30F3\u7D42\u4E86") {
+      if (ctx2.phase[0] == "\u6226\u95D8\u30D5\u30A7\u30A4\u30BA" && ctx2.phase[1] == "\u30BF\u30FC\u30F3\u7D42\u4E86\u6642" && ctx2.phase[2] == "\u52B9\u679C\u7D42\u4E86\u3002\u30BF\u30FC\u30F3\u7D42\u4E86") {
         if (ctx2.activePlayerID == null) {
           throw new Error("activePlayerID not found");
         }
         ctx2 = {
           ...ctx2,
-          activePlayerID: PlayerIDFn.getOpponent(ctx2.activePlayerID)
+          activePlayerID: PlayerIDFn.getOpponent(ctx2.activePlayerID),
+          turn: ctx2.turn + 1
         };
       }
       {
@@ -29961,7 +29971,7 @@ function applyFlow(ctx2, playerID, flow) {
           phase: nextTiming
         };
       }
-      if (ctx2.phase[1][0] == "\u6226\u95D8\u30D5\u30A7\u30A4\u30BA" && ctx2.phase[1][2] == "\u30B9\u30C6\u30C3\u30D7\u958B\u59CB") {
+      if (ctx2.phase[0] == "\u6226\u95D8\u30D5\u30A7\u30A4\u30BA" && ctx2.phase[2] == "\u30B9\u30C6\u30C3\u30D7\u958B\u59CB") {
         ctx2 = checkIsBattle(ctx2);
       }
       ctx2 = {
@@ -30051,24 +30061,9 @@ function applyFlow(ctx2, playerID, flow) {
   }
   return ctx2;
 }
-function createAIChoiseList(ctx2, playerId, flow) {
+function createAIChoiseList(ctx2, flow) {
   switch (flow.id) {
     case "FlowSetActiveEffectID": {
-      const playGTips = flow.tips.filter((tip) => tip.isPlayG);
-      if (playGTips.length < 6) {
-        const flows = playGTips.map((tip) => {
-          return {
-            ...flow,
-            effectID: tip.id
-          };
-        });
-        return flows.map((flow2) => {
-          return {
-            weight: 100,
-            flow: flow2
-          };
-        });
-      }
       return flow.tips.map((tip) => {
         return {
           weight: 95,
@@ -31060,7 +31055,6 @@ var OnViewModel = OnEvent.pipe(scan((viewModel, evt) => {
         };
         Promise.all(TMP_DECK.map(loadPrototype));
         ctx2.gameState = initState(ctx2.gameState, TMP_DECK, TMP_DECK);
-        ctx2.gameState = createCardWithProtoIds(ctx2.gameState, AbsoluteBaSyouFn.of(PlayerA, "G\u30BE\u30FC\u30F3"), TMP_DECK.slice(0, 6));
         ctx2.gameState = updateCommand(ctx2.gameState);
         return { ...DEFAULT_VIEW_MODEL, model: ctx2 };
       }
@@ -32222,30 +32216,10 @@ var FlowListView = (props) => {
   import_react6.useEffect(() => {
     const speed = 50;
     if (flows.length) {
-      const aiChoiseList = flows.flatMap((flow2) => createAIChoiseList(appContext5.viewModel.model.gameState, props.clientID, flow2));
+      const aiChoiseList = flows.flatMap((flow) => createAIChoiseList(appContext5.viewModel.model.gameState, flow));
       if (aiChoiseList.length > 0) {
         aiChoiseList.sort((a, b) => b.weight - a.weight);
-        const flow2 = aiChoiseList[0].flow;
-        setTimeout(() => {
-          OnEvent.next({
-            id: "OnClickFlowConfirm",
-            clientID: props.clientID,
-            flow: flow2
-          });
-        }, speed);
-        return;
-      }
-      let flow = flows.find((flow2) => flow2.id == "FlowPassPayCost");
-      if (flow == null) {
-        flow = flows[Math.round(Math.random() * 1000) % flows.length];
-      }
-      if (flow.id == "FlowCancelPassPhase") {
-        return;
-      }
-      if (flow.id == "FlowCancelPassCut") {
-        return;
-      }
-      if (flow) {
+        const flow = aiChoiseList[0].flow;
         setTimeout(() => {
           OnEvent.next({
             id: "OnClickFlowConfirm",
@@ -32583,6 +32557,18 @@ function ClientView(props) {
           children: [
             "flowMemory:",
             JSON.stringify(appContext7.viewModel.model.gameState.flowMemory)
+          ]
+        }, undefined, true, undefined, this),
+        /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
+          children: [
+            "activePlayerID: ",
+            appContext7.viewModel.model.gameState.activePlayerID
+          ]
+        }, undefined, true, undefined, this),
+        /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
+          children: [
+            "turn: ",
+            appContext7.viewModel.model.gameState.turn
           ]
         }, undefined, true, undefined, this),
         /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("h1", {

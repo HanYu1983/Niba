@@ -33,6 +33,10 @@ export type Effect = {
 }
 
 export const EffectFn = {
+    isFakeCardID(string: string): boolean {
+        return string.startsWith("SystemFakeCardID_")
+    },
+
     getCardID(ctx: Effect): string {
         switch (ctx.reason[0]) {
             case "GameRule":

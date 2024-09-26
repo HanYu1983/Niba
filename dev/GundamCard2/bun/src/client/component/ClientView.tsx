@@ -11,6 +11,8 @@ export function ClientView(props: { clientID: string }) {
       <div>version:{JSON.stringify(appContext.viewModel.model.versionID)}</div>
       <div>timing:{JSON.stringify(appContext.viewModel.model.gameState.phase)}</div>
       <div>flowMemory:{JSON.stringify(appContext.viewModel.model.gameState.flowMemory)}</div>
+      <div>activePlayerID: {appContext.viewModel.model.gameState.activePlayerID}</div>
+      <div>turn: {appContext.viewModel.model.gameState.turn}</div>
       <h1>{props.clientID}</h1>
       <FlowListView clientID={props.clientID}></FlowListView>
       <TableView clientID={props.clientID}></TableView>

@@ -16,7 +16,8 @@ import { SetGroupComponent, createSetGroupComponent } from "./SetGroupComponent"
 
 export type GameState = {
   isGameState: true,
-  globalEffectPool: { [key: string]: GlobalEffect[] }
+  globalEffectPool: { [key: string]: GlobalEffect[] },
+  turn: number;
 } & SetGroupComponent
   & IsBattleComponent
   & CardTableComponent
@@ -50,6 +51,7 @@ export function createGameState(): GameState {
     globalEffectPool: {},
     messages: [],
     messagesCurrentEffect: null,
+    turn: 0,
     ...createSetGroupComponent(),
   }
 }

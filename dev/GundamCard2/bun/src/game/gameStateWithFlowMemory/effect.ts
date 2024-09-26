@@ -248,6 +248,9 @@ export function updateDestroyEffect(ctx: GameStateWithFlowMemory): GameStateWith
   // 加入破壞用堆疊後，主動玩家就必須決定解決順序
   // 決定後，依順序將所有效果移到正在解決中的堆疊，並重設切入的旗標，讓玩家可以在堆疊解決中可以再次切入
   return getItemStateValues(ctx).reduce((ctx, cs) => {
+    if (EffectFn.isFakeCardID(cs.id)) {
+      return ctx
+    }
     if (cs.destroyReason) {
       const effect: Effect = {
         id: ToolFn.getUUID("updateDestroyEffect"),
