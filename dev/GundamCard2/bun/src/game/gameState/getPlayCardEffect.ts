@@ -101,7 +101,7 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
                                                                 const hasPS = GameStateFn.getCardHasSpeicalEffect(ctx, ["PS装甲"], cardId)
                                                                 const isNoNeedRoll = (hasHigh || hasPS)
                                                                 const isRoll = isNoNeedRoll == false
-                                                                ctx = GameStateFn.doSetItemRollState(ctx, isRoll, [cardId, from], {isSkipTargetMissing: true})
+                                                                ctx = GameStateFn.doItemSetRollState(ctx, isRoll, [cardId, from], {isSkipTargetMissing: true})
                                                                 ctx = GameStateFn.triggerEvent(ctx, { title: ["プレイされて場に出た場合"], cardIds: [cardId] })
                                                                 return ctx
                                                             }.toString()
@@ -152,7 +152,7 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
                                         reason: ["場に出る", DefineFn.EffectFn.getPlayerID(effect), DefineFn.EffectFn.getCardID(effect)],
                                         description: effect.text.description,
                                         text: {
-                                            id: prototype.commandText?.id || ToolFn.getUUID("getPlayCardEffects"),
+                                            id: prototype.commandText?.id || `getPlayCardEffects_commentText_${cardId}`,
                                             description: prototype.commandText?.description || "unknown",
                                             title: [],
                                             logicTreeActions: [
@@ -168,10 +168,9 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
                                                                 return ctx
                                                             }.toString()
                                                         },
-                                                        ...prototype.commandText?.logicTreeActions?.[0].actions || [],
+                                                        ...(prototype.commandText?.logicTreeActions?.[0]?.actions || [])
                                                     ]
                                                 },
-                                                ...prototype.commandText?.logicTreeActions?.slice(1) || []
                                             ]
                                         }
                                     }) as GameState
@@ -202,7 +201,8 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
                             }.toString()
                         }
                     ]
-                }
+                },
+                ...(prototype.commandText?.logicTreeActions || []).map(lta=>({...lta, actions: []}))
             ]
         }
     }

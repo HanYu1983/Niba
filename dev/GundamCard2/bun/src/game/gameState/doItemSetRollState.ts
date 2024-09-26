@@ -9,7 +9,7 @@ import { GameState } from "./GameState"
 import { ItemTableComponent, assertTargetMissingError, isCard, isChip, getItemBaSyou } from "./ItemTableComponent"
 import { getSetGroup, getSetGroupChildren } from "./SetGroupComponent"
 
-export function doSetItemRollState(ctx: GameState, isRoll: boolean, [itemId, originBasyou]: StrBaSyouPair, options?: { isSkipTargetMissing?: boolean }): GameState {
+export function doItemSetRollState(ctx: GameState, isRoll: boolean, [itemId, originBasyou]: StrBaSyouPair, options?: { isSkipTargetMissing?: boolean }): GameState {
   if (options?.isSkipTargetMissing) {
 
   } else {

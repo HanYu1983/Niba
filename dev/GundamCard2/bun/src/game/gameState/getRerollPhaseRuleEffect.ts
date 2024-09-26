@@ -29,7 +29,7 @@ export function getRerollPhaseRuleEffect(ctx: GameState, playerId: PlayerID): Ef
                                         })
                                 })
                                 for (const pair of pairs) {
-                                    ctx = GameStateFn.doSetItemRollState(ctx, false, pair, {isSkipTargetMissing: true})
+                                    ctx = GameStateFn.doItemSetRollState(ctx, false, pair, {isSkipTargetMissing: true})
                                 }
                                 return ctx
                             }.toString()

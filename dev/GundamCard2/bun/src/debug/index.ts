@@ -42,10 +42,12 @@ import { ItemStateFn } from "../game/define/ItemState";
 import { testIssue } from "./testIssue";
 import { test179015_04B_U_BK058R_black } from "./test179015_04B_U_BK058R_black";
 import { testGain } from "./testGain";
+import { test179028_10D_C_BL070N_blue } from "./test179028_10D_C_BL070N_blue";
 const fs = require('fs').promises;
 
 export async function tests() {
     return [
+        //test179028_10D_C_BL070N_blue
         testGain,
         testLoadPrototype,
         testSwapItem,

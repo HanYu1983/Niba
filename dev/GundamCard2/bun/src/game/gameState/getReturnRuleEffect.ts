@@ -32,7 +32,7 @@ export function getReturnRuleEffect(ctx: GameState, playerId: PlayerID): Effect 
                                     for (const cardId of unitIdsAtArea1) {
                                         const target = [cardId, from] as StrBaSyouPair
                                         if (GameStateFn.getCardBattleArea(ctx, cardId).includes(runtimeArea1)) {
-                                            ctx = GameStateFn.doSetItemRollState(ctx, true, target, { isSkipTargetMissing: true })
+                                            ctx = GameStateFn.doItemSetRollState(ctx, true, target, { isSkipTargetMissing: true })
                                             ctx = GameStateFn.doItemMove(
                                                 ctx,
                                                 DefineFn.AbsoluteBaSyouFn.of(playerId, "配備エリア"),

@@ -403,9 +403,6 @@ export function getConditionTitleFn(condition: Condition, options: { isPlay?: bo
                     entityList = entityList.filter(EntityFn.filterIsDestroy(options.isDestroy))
                 }
                 entityList = entityList.filter(EntityFn.filterDistinct)
-                if (entityList.length == 0) {
-                    return null
-                }
                 const pairs = entityList.map(entity => {
                     if (entity.baSyouKeyword == null) {
                         throw new Error()

@@ -19,7 +19,7 @@ import { doItemMove } from "./doItemMove"
 import { doItemSwap } from "./doItemSwap"
 import { triggerEvent } from "./triggerEvent"
 import { doItemDamage } from "./doItemDamage"
-import { doSetItemRollState } from "./doSetItemRollState"
+import { doItemSetRollState } from "./doItemSetRollState"
 import { doCountryDamage } from "./doCountryDamage"
 import { logCategory } from "../../tool/logger"
 import { doItemSetDestroy } from "./doItemSetDestroy"
@@ -73,13 +73,13 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
           case "ロール": {
             logCategory("getActionTitleFn", whatToDo, varNames, pairs)
             for (const pair of pairs) {
-              ctx = doSetItemRollState(ctx, true, pair) as GameState
+              ctx = doItemSetRollState(ctx, true, pair) as GameState
             }
             return ctx
           }
           case "リロール": {
             for (const pair of pairs) {
-              ctx = doSetItemRollState(ctx, false, pair) as GameState
+              ctx = doItemSetRollState(ctx, false, pair) as GameState
             }
             return ctx
           }
@@ -259,7 +259,7 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
         const [target1] = getCardTipStrBaSyouPairs(ctx, varNames[0], cardId)
         const [target2] = getCardTipStrBaSyouPairs(ctx, varNames[1], cardId)
         ctx = doItemSwap(ctx, target1, target2)
-        ctx = doSetItemRollState(ctx, false, target2, { isSkipTargetMissing: true })
+        ctx = doItemSetRollState(ctx, false, target2, { isSkipTargetMissing: true })
         // 以下應不需要, 置換只有換protoID和狀態, 這樣才能繼承所有對象
         // ctx = moveItem(ctx, t2ba, [t1, t1ba]) as GameState
         // ctx = moveItem(ctx, t1ba, [t2, t2ba]) as GameState
