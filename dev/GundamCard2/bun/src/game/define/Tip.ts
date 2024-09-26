@@ -1,5 +1,5 @@
 import { AbsoluteBaSyou } from "./BaSyou";
-import { GameError, TargetMissingError } from "./GameError";
+import { TipError, TargetMissingError } from "./GameError";
 
 export type StrBaSyouPair = [string, AbsoluteBaSyou]
 
@@ -64,13 +64,13 @@ export const TipFn = {
     checkTipSatisfies(tip: Tip): TargetMissingError | null {
         const selection = this.getSelection(tip)
         if (tip.count != null && tip.count != selection.length) {
-            return new GameError(`count ${selection.length} not right: ${tip.title[0]}/${tip.count}`)
+            return new TipError(`count ${selection.length} not right: ${tip.title[0]}/${tip.count}`)
         }
         if (tip.min != null && selection.length < tip.min) {
-            return new GameError(`min ${selection.length} not right: ${tip.title[0]}/${tip.min}`)
+            return new TipError(`min ${selection.length} not right: ${tip.title[0]}/${tip.min}`)
         }
         if (tip.max != null && selection.length > tip.max) {
-            return new GameError(`max ${selection.length} not right: ${tip.title[0]}/${tip.max}`)
+            return new TipError(`max ${selection.length} not right: ${tip.title[0]}/${tip.max}`)
         }
         return null;
     }

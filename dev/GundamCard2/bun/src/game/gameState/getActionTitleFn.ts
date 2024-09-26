@@ -4,7 +4,7 @@ import { AbsoluteBaSyouFn, AbsoluteBaSyou } from "../define/BaSyou"
 import { Action, ActionTitleFn, ActionFn } from "../define/CardText"
 import { CoinFn } from "../define/Coin"
 import { Effect, EffectFn } from "../define/Effect"
-import { GameError } from "../define/GameError"
+import { TipError } from "../define/GameError"
 import { GlobalEffect } from "../define/GlobalEffect"
 import { ItemStateFn } from "../define/ItemState"
 import { PlayerIDFn } from "../define/PlayerID"
@@ -277,7 +277,7 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
           const cardController = getItemController(ctx, cardId)
           const cardIdsCanPay = getCardIdsCanPayRollCost(ctx, cardController, null)
           if (cardIdsCanPay.length < x) {
-            throw new GameError(`合計国力〔x〕:${cardIdsCanPay.length} < ${x}. ${effect.text.description}`)
+            throw new TipError(`合計国力〔x〕:${cardIdsCanPay.length} < ${x}. ${effect.text.description}`)
           }
           return ctx
         }
@@ -295,7 +295,7 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
               .map(cardId => [cardId, basyou] as StrBaSyouPair)
           )
           if (pairs.length == 0) {
-            throw new GameError(`${action.title[0]} ${pairs.length}`)
+            throw new TipError(`${action.title[0]} ${pairs.length}`)
           }
           return ctx
         }
@@ -308,7 +308,7 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
           if (areas.includes(AbsoluteBaSyouFn.getBaSyouKeyword(from))) {
   
           } else {
-            throw new GameError(`${action.title} ${cardId} not in ${JSON.stringify(areas)}`)
+            throw new TipError(`${action.title} ${cardId} not in ${JSON.stringify(areas)}`)
           }
           return ctx
         }
@@ -323,7 +323,7 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
             .filter(itemId => getItemPrototype(ctx, itemId).gsign?.[0].includes(color))
             .filter(itemId => getItemRuntimeCategory(ctx, itemId) == category).length
           if (gsignCount < count) {
-            throw new GameError(`you have ${gsignCount}. must ${count}: ${action.title[0]}`)
+            throw new TipError(`you have ${gsignCount}. must ${count}: ${action.title[0]}`)
           }
           return ctx
         }

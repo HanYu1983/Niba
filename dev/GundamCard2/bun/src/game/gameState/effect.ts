@@ -4,7 +4,7 @@ import { AbsoluteBaSyouFn, AbsoluteBaSyou, BaSyouKeywordFn, BaSyouKeyword } from
 import { CardTextFn, ConditionFn, LogicTreeActionFn, Condition, ConditionTitleFn, Action, ActionTitleFn, ActionFn, CardText, OnEventFn } from "../define/CardText"
 import { CoinFn } from "../define/Coin"
 import { Effect, DestroyReason, EffectFn } from "../define/Effect"
-import { GameError, TargetMissingError } from "../define/GameError"
+import { TipError, TargetMissingError } from "../define/GameError"
 import { GameEvent } from "../define/GameEvent"
 import { ItemStateFn } from "../define/ItemState"
 import { PhaseFn } from "../define/Timing"
@@ -58,7 +58,7 @@ export function createEffectTips(
           const cardId = EffectFn.getCardID(effect)
           ItemStateFn.getTip(getItemState(ctx, cardId), key)
         } catch (e) {
-          if (e instanceof GameError) {
+          if (e instanceof TipError) {
             errors.push(e.message)
           } else {
             throw e
@@ -74,7 +74,7 @@ export function createEffectTips(
         const cardId = EffectFn.getCardID(effect)
         ctx = mapItemState(ctx, cardId, is => ItemStateFn.setTip(is, key, tip)) as GameState
       } catch (e) {
-        if (e instanceof GameError) {
+        if (e instanceof TipError) {
           errors.push(e.message)
         } else {
           throw e
@@ -87,7 +87,7 @@ export function createEffectTips(
         //ctx = clearGlobalEffects(ctx)
         return ctx
       } catch (e) {
-        if (e instanceof GameError) {
+        if (e instanceof TipError) {
           errors.push(e.message)
           return ctx
         } else {
@@ -163,6 +163,11 @@ export function assertEffectCanPass(
   logicId: number,
   logicSubId: number,
 ) {
+  // createEffectTips(ctx, effect, logicId, logicSubId, { isCheckUserSelection: true }).forEach(cet => {
+  //   if (cet.errors.length) {
+  //     throw new Error(`assertEffectCanPass error: ${cet.errors.join("|")}`)
+  //   }
+  // })
   const ltacs = CardTextFn.getLogicTreeActionConditions(effect.text, CardTextFn.getLogicTreeAction(effect.text, logicId))[logicSubId]
   if (ltacs == null) {
     throw new Error(`ltasc not found: ${logicId}/${logicSubId}`)

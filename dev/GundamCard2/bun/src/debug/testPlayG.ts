@@ -1,6 +1,6 @@
 import { AbsoluteBaSyouFn } from "../game/define/BaSyou";
 import { Card } from "../game/define/Card";
-import { GameError, TargetMissingError } from "../game/define/GameError";
+import { TipError, TargetMissingError } from "../game/define/GameError";
 import { PlayerA } from "../game/define/PlayerID";
 import { PhaseFn } from "../game/define/Timing";
 import { setActivePlayerID } from "../game/gameState/ActivePlayerComponent";
@@ -57,8 +57,8 @@ export async function testPlayG() {
             ctx = doEffect(ctx, effect, 0, 0)
             throw new Error()
         } catch (e) {
-            if (e instanceof GameError) {
-                if (e.message.startsWith("出G上限")) {
+            if (e instanceof TipError) {
+                if (e.info.flags.includes("出G上限")) {
 
                 } else {
                     throw e

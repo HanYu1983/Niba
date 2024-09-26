@@ -1,16 +1,33 @@
 
-// 只給createEffectTips補捉
+
+export type GameErrorInfo = {
+    flags: "出G上限"[]
+}
+
 export class GameError extends Error {
-    constructor(message: any) {
+    info: GameErrorInfo
+    constructor(message: any, info?: GameErrorInfo) {
         super(message);
         this.name = "GameError";
+        this.info = info || {
+            flags: []
+        }
+    }
+}
+
+
+// 只給createEffectTips補捉
+export class TipError extends GameError {
+    constructor(message: any, info?:GameErrorInfo) {
+        super(message, info);
+        this.name = "TipError";
     }
 }
 
 // 主程式只補捉這個
-export class TargetMissingError extends Error {
-    constructor(message: any) {
-        super(message);
+export class TargetMissingError extends GameError {
+    constructor(message: any, info?:GameErrorInfo) {
+        super(message, info);
         this.name = "TargetMissingError";
     }
 }
