@@ -10,7 +10,7 @@ import { PhaseFn } from "../define/Timing";
 import { doPlayerAttack } from "../gameState/player";
 import { triggerEvent } from "../gameState/triggerEvent";
 import { ToolFn } from "../tool";
-import { updateCommand } from "./updateCommand";
+import { updateCommand } from "../gameState/updateCommand";
 import { getItem, getItemController, getItemIdsByBasyou, isCard, isCardLike, isChip, isCoin, Item, shuffleItems } from "../gameState/ItemTableComponent";
 import { TableFns } from "../../tool/table";
 import { setCardTipStrBaSyouPairs, setTipSelectionForUser } from "../gameState/doEffect";
@@ -92,7 +92,7 @@ export function applyFlow(
                 },
             };
             // 每執行完一次效果，就更新指令
-            ctx = updateCommand(ctx);
+            ctx = updateCommand(ctx) as GameStateWithFlowMemory;
             return ctx;
         }
         case "FlowPassPhase": {
@@ -158,7 +158,7 @@ export function applyFlow(
             };
             return ctx;
         case "FlowUpdateCommand":
-            ctx = updateCommand(ctx);
+            ctx = updateCommand(ctx) as GameStateWithFlowMemory;
             // set hasTriggerEvent
             ctx = {
                 ...ctx,
@@ -285,7 +285,7 @@ export function applyFlow(
                 }
             };
             // 自動更新指令
-            ctx = updateCommand(ctx);
+            ctx = updateCommand(ctx) as GameStateWithFlowMemory;
             return ctx;
         }
         case "FlowAddBlock": {

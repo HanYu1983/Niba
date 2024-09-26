@@ -6,6 +6,7 @@ import { createDestroyEffect } from "./createDestroyEffect";
 import { getItemStateValues } from "./ItemStateComponent";
 import { getItemController } from "./ItemTableComponent";
 import { getSetGroupBattlePoint } from "./setGroup";
+import { CommandEffectTip } from "../define/CommandEffectTip";
 
 export type EffectStackComponent = {
   // 立即效果。玩家必須立即一個一個進行處理
@@ -19,7 +20,10 @@ export type EffectStackComponent = {
   // 旗標為假時，才能才能開放給玩家切入
   // 這個堆疊解決完後，才回復到本來的堆疊的解決程序
   destroyEffect: string[];
+  // 指令效果
+  commandEffects: string[],
   effects: { [key: string]: Effect };
+  commandEffectTips: CommandEffectTip[];
 }
 
 export function isStackEffect(ctx: EffectStackComponent, id: string): boolean {
@@ -141,3 +145,28 @@ export function pushDestroyEffectsToStackAndClear(ctx: EffectStackComponent, ord
   return ctx
 }
 
+export function setCommandEffects(ctx: EffectStackComponent, addeds: Effect[]): EffectStackComponent {
+  const effects = { ...ctx.effects }
+  for (const k of ctx.commandEffects) {
+    delete effects[k]
+  }
+  for (const added of addeds) {
+    effects[added.id] = added
+  }
+  return {
+    ...ctx,
+    commandEffects: addeds.map(e => e.id),
+    effects: effects
+  };
+}
+
+export function setCommandEffectTips(ctx: EffectStackComponent, effects: CommandEffectTip[]): EffectStackComponent {
+  return {
+    ...ctx,
+    commandEffectTips: effects
+  };
+}
+
+export function getCommandEffecTips(ctx: GameState): CommandEffectTip[] {
+  return ctx.commandEffectTips
+}

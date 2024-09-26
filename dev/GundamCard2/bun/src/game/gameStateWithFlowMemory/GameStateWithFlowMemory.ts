@@ -9,8 +9,6 @@ import { Tip, TipFn } from "../define/Tip";
 import { setActivePlayerID } from "../gameState/ActivePlayerComponent";
 import { createCardWithProtoIds, mapCardsWithBasyou } from "../gameState/CardTableComponent";
 import { createGameState, GameState } from "../gameState/GameState";
-import { getPlayEffects } from "../gameState/getPlayEffects";
-import { setCommandEffectTips } from "./effect";
 
 export type FlowMemoryComponent = {
     state: "prepareDeck" | "whoFirst" | "draw6AndConfirm" | "playing";
@@ -41,9 +39,6 @@ export type HasFlowMemoryComponent = {
 }
 
 export type GameStateWithFlowMemory = {
-    // 指令效果
-    commandEffectTips: CommandEffectTip[];
-    commandEffects: Effect[],
     stackEffectMemory: Effect[];
 } & GameState & HasFlowMemoryComponent;
 
@@ -52,8 +47,6 @@ export function createGameStateWithFlowMemory(): GameStateWithFlowMemory {
         ...createGameState(),
         stackEffectMemory: [],
         flowMemory: DEFAULT_FLOW_MEMORY,
-        commandEffectTips: [],
-        commandEffects: [],
     }
 }
 

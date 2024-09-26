@@ -6,7 +6,7 @@ import { GameState } from "../../../game/gameState/GameState";
 import { getPhase } from "../../../game/gameState/PhaseComponent";
 import { applyFlow } from "../../../game/gameStateWithFlowMemory/applyFlow";
 import { GameStateWithFlowMemory, initState } from "../../../game/gameStateWithFlowMemory/GameStateWithFlowMemory";
-import { updateCommand } from "../../../game/gameStateWithFlowMemory/updateCommand";
+import { updateCommand } from "../../../game/gameState/updateCommand";
 import { loadPrototype } from "../../../script";
 import { logCategory } from "../../../tool/logger";
 import { createGameContext, GameContext } from "../../define/GameContext";

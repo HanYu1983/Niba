@@ -1,4 +1,5 @@
 import { DEFAULT_TABLE } from "../../tool/table";
+import { CommandEffectTip } from "../define/CommandEffectTip";
 import { GlobalEffect } from "../define/GlobalEffect";
 import { PhaseFn } from "../define/Timing";
 import { ActivePlayerComponent } from "./ActivePlayerComponent";
@@ -46,6 +47,8 @@ export function createGameState(): GameState {
     immediateEffect: [],
     stackEffect: [],
     destroyEffect: [],
+    commandEffects: [],
+    commandEffectTips: [],
     isBattle: {},
     coins: {},
     coinId2cardId: {},

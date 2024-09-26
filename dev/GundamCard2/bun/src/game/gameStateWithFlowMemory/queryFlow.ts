@@ -1,11 +1,11 @@
 import { getEffect, getTopEffect } from "../gameState/EffectStackComponent";
 import { Flow } from "./Flow";
-import { getActiveEffectID, getActiveLogicID, getActiveLogicSubID, getCommandEffecTips, getEffectIncludePlayerCommand } from "./effect";
+import { getActiveEffectID, getActiveLogicID, getActiveLogicSubID, getEffectIncludePlayerCommand } from "./effect";
 import { GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
 import { PlayerA, PlayerB, PlayerIDFn } from "../define/PlayerID";
 import { AbsoluteBaSyouFn } from "../define/BaSyou";
 import { Effect, EffectFn } from "../define/Effect";
-import { getPlayerCommandsFilterNoErrorDistinct } from "./updateCommand";
+import { getPlayerCommandsFilterNoErrorDistinct } from "../gameState/updateCommand";
 import { getAttackPhaseRuleEffect } from "../gameState/getAttackPhaseRuleEffect";
 import { getDrawPhaseRuleEffect } from "../gameState/getDrawPhaseRuleEffect";
 import { getRerollPhaseRuleEffect } from "../gameState/getRerollPhaseRuleEffect";

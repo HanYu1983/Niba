@@ -64,7 +64,7 @@ export function doActiveEffect(ctx: GameStateWithFlowMemory, playerID: string, e
 }
 
 export function getEffectIncludePlayerCommand(ctx: GameStateWithFlowMemory, effectId: string): Effect {
-  return ctx.commandEffects.find(cmd => cmd.id == effectId) || getEffect(ctx, effectId)
+  return getEffect(ctx, effectId)
 }
 export function setActiveEffectID(
   ctx: GameStateWithFlowMemory,
@@ -211,21 +211,4 @@ export function deleteImmediateEffect(
 }
 
 
-export function getCommandEffecTips(ctx: GameStateWithFlowMemory): CommandEffectTip[] {
-  return ctx.commandEffectTips
-}
-
-export function setCommandEffectTips(ctx: GameStateWithFlowMemory, effects: CommandEffectTip[]): GameStateWithFlowMemory {
-  return {
-    ...ctx,
-    commandEffectTips: effects
-  };
-}
-
-export function setCommandEffects(ctx: GameStateWithFlowMemory, effects: Effect[]): GameStateWithFlowMemory {
-  return {
-    ...ctx,
-    commandEffects: effects
-  };
-}
 
