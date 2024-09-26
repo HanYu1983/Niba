@@ -3,9 +3,9 @@ import { DestroyReason, Effect } from "../define/Effect"
 import { ToolFn } from "../tool"
 import { GameState } from "./GameState"
 
-export function getDestroyEffect(ctx: GameState, reason: DestroyReason, cardId: string): Effect {
+export function createDestroyEffect(ctx: GameState, reason: DestroyReason, cardId: string): Effect {
     const effect: Effect = {
-      id: ToolFn.getUUID("getDestroyEffect"),
+      id: ToolFn.getUUID("createDestroyEffect"),
       reason: ["Destroy", reason.playerID, cardId, reason],
       text: {
         id: `Destroy_card_${cardId}`,

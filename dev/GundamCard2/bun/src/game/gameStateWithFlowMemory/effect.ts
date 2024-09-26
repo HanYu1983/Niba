@@ -12,7 +12,7 @@ import { CommandEffecTipFn, CommandEffectTip } from "../define/CommandEffectTip"
 import { TargetMissingError } from "../define/GameError";
 import { Bridge } from "../../script/bridge";
 import { GameState } from "../gameState/GameState";
-import { getDestroyEffect } from "../gameState/getDestroyEffect";
+import { createDestroyEffect } from "../gameState/createDestroyEffect";
 
 export function doActiveEffect(ctx: GameStateWithFlowMemory, playerID: string, effectID: string, logicId: number, logicSubId: number): GameStateWithFlowMemory {
   logCategory("doEffect", effectID);
@@ -258,7 +258,7 @@ export function updateDestroyEffect(ctx: GameStateWithFlowMemory): GameStateWith
       return ctx
     }
     if (cs.destroyReason) {
-      const effect: Effect = getDestroyEffect(ctx, cs.destroyReason, cs.id)
+      const effect: Effect = createDestroyEffect(ctx, cs.destroyReason, cs.id)
       ctx = addDestroyEffect(ctx, effect) as GameStateWithFlowMemory
       return ctx
     }
@@ -268,7 +268,7 @@ export function updateDestroyEffect(ctx: GameStateWithFlowMemory): GameStateWith
         id: "マイナスの戦闘修正",
         playerID: getItemController(ctx, cs.id)
       }
-      const effect: Effect = getDestroyEffect(ctx, destroyReason, cs.id)
+      const effect: Effect = createDestroyEffect(ctx, destroyReason, cs.id)
       ctx = addDestroyEffect(ctx, effect) as GameStateWithFlowMemory
       return ctx
     }

@@ -1,9 +1,11 @@
 import { BaSyouKeyword, BaSyouKeywordFn, AbsoluteBaSyouFn } from "../define/BaSyou";
 import { CardCategory, CardColor } from "../define/CardPrototype";
+import { DestroyReason, EffectFn } from "../define/Effect";
 import { ItemState } from "../define/ItemState";
 import { PlayerID, PlayerA, PlayerB } from "../define/PlayerID";
 import { getCardColor, getItemRuntimeCategory } from "./card";
 import { getCoinIds, getCoin, getCoinOwner } from "./CoinTableComponent";
+import { getDestroyEffects, getEffect, getEffects, isStackEffect } from "./EffectStackComponent";
 import { GameState } from "./GameState";
 import { isBattle } from "./IsBattleComponent";
 import { getItemState } from "./ItemStateComponent";
@@ -19,15 +21,18 @@ export type Entity = {
     isCoin: boolean,
     isCard: boolean,
     baSyouKeyword: BaSyouKeyword | null,
+    destroyReason: DestroyReason | null
 }
 
 export function createEntityIterator(ctx: GameState) {
+    const destroyEffects = getDestroyEffects(ctx)
     const rets: Entity[] = [];
     [PlayerA, PlayerB].map(playerId => {
         BaSyouKeywordFn.getAll().map(basyouKw => {
             const basyou = AbsoluteBaSyouFn.of(playerId, basyouKw)
             getItemIdsByBasyou(ctx, basyou).map(itemId => {
                 const item = getItem(ctx, itemId)
+                const destroyEffect = destroyEffects.find(e => EffectFn.getCardID(e) == itemId)
                 const entity: Entity = {
                     itemController: playerId,
                     itemId: itemId,
@@ -36,7 +41,8 @@ export function createEntityIterator(ctx: GameState) {
                     isCard: isCard(ctx, item.id),
                     isCoin: false,
                     isChip: isChip(ctx, item.id),
-                    baSyouKeyword: basyouKw
+                    baSyouKeyword: basyouKw,
+                    destroyReason: destroyEffect?.reason[0] == "Destroy" ? destroyEffect.reason[3] : null
                 }
                 rets.push(entity)
             })
@@ -52,7 +58,8 @@ export function createEntityIterator(ctx: GameState) {
             isCard: false,
             isCoin: true,
             isChip: false,
-            baSyouKeyword: null
+            baSyouKeyword: null,
+            destroyReason: null
         }
         rets.push(entity)
     })
@@ -88,7 +95,7 @@ export const EntityFn = {
     },
     filterIsDestroy(v: boolean) {
         return (entity: Entity) => {
-            return (entity.itemState.destroyReason != null) == v
+            return (entity.destroyReason != null) == v
         }
     },
     filterIsBattle(ctx: GameState, targetId: string | null, v: boolean) {

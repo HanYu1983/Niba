@@ -9,7 +9,7 @@ import { setActivePlayerID } from "../game/gameState/ActivePlayerComponent"
 import { getCardRollCostLength, getCardBattlePoint, getCardHasSpeicalEffect } from "../game/gameState/card"
 import { addCards, createCardWithProtoIds } from "../game/gameState/CardTableComponent"
 import { createCommandEffectTips, createEffectTips, doEffect, setTipSelectionForUser } from "../game/gameState/doEffect"
-import { getTopEffect } from "../game/gameState/EffectStackComponent"
+import { addStackEffect, getDestroyEffects, getTopEffect } from "../game/gameState/EffectStackComponent"
 import { createGameState, GameState } from "../game/gameState/GameState"
 import { getPlayEffects } from "../game/gameState/getPlayEffects"
 import { getItemState, mapItemState, setItemState } from "../game/gameState/ItemStateComponent"
@@ -21,6 +21,8 @@ import { CommandEffecTipFn } from "../game/define/CommandEffectTip"
 import { doItemSetDestroy } from "../game/gameState/doItemSetDestroy"
 import { checkIsBattle } from "../game/gameState/IsBattleComponent"
 import { getSetGroupBattlePoint } from "../game/gameState/setGroup"
+import { createDestroyEffect } from "../game/gameState/createDestroyEffect"
+import { DestroyReason, EffectFn } from "../game/define/Effect"
 
 export async function test179028_10D_C_BL070N_blue() {
     await loadPrototype("179028_10D_C_BL070N_blue")
@@ -51,11 +53,20 @@ export async function test179028_10D_C_BL070N_blue() {
                 protoID: "unitBlue",
             }
             ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア"), [destroyUnit]) as GameState
-            ctx = doItemSetDestroy(ctx, { id: "破壊する", playerID: PlayerB }, [destroyUnit.id, getItemBaSyou(ctx, destroyUnit.id)])
+            const destroyReason: DestroyReason = { id: "破壊する", playerID: PlayerB }
+            ctx = doItemSetDestroy(ctx, destroyReason, [destroyUnit.id, getItemBaSyou(ctx, destroyUnit.id)])
             if (getItemState(ctx, destroyUnit.id).destroyReason == null) {
                 throw new Error()
             }
+            // 這裡模擬破壞效果進了堆疊了
+            const destroyEffect = createDestroyEffect(ctx, destroyReason, destroyUnit.id)
+            ctx = addStackEffect(ctx, destroyEffect) as GameState
+            if (getDestroyEffects(ctx).find(e => EffectFn.getCardID(e) == destroyUnit.id) == null) {
+                throw new Error()
+            }
+            // 
             const cets = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)
+            console.log(cets.map(cet => cet.tipOrErrors.map(toe => toe.conditionKey)))
             if (cets.length != 1) {
                 throw new Error()
             }
@@ -69,6 +80,9 @@ export async function test179028_10D_C_BL070N_blue() {
                 }
                 ctx = doEffect(ctx, effect, 0, 0)
                 if (getItemState(ctx, destroyUnit.id).destroyReason != null) {
+                    throw new Error()
+                }
+                if (getDestroyEffects(ctx).find(e => EffectFn.getCardID(e) == destroyUnit.id) != null) {
                     throw new Error()
                 }
             }
@@ -118,8 +132,15 @@ export async function test179028_10D_C_BL070N_blue() {
                 protoID: "unitBlue",
             }
             ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア"), [destroyUnit]) as GameState
-            ctx = doItemSetDestroy(ctx, { id: "破壊する", playerID: PlayerB }, [destroyUnit.id, getItemBaSyou(ctx, destroyUnit.id)])
+            const destroyReason: DestroyReason = { id: "破壊する", playerID: PlayerB }
+            ctx = doItemSetDestroy(ctx, destroyReason, [destroyUnit.id, getItemBaSyou(ctx, destroyUnit.id)])
             if (getItemState(ctx, destroyUnit.id).destroyReason == null) {
+                throw new Error()
+            }
+            // 這裡模擬破壞效果進了堆疊了
+            const destroyEffect = createDestroyEffect(ctx, destroyReason, destroyUnit.id)
+            ctx = addStackEffect(ctx, destroyEffect) as GameState
+            if (getDestroyEffects(ctx).find(e => EffectFn.getCardID(e) == destroyUnit.id) == null) {
                 throw new Error()
             }
             const enemyUnit: Card = {

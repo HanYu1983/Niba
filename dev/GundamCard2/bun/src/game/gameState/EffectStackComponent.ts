@@ -33,6 +33,10 @@ export function getEffect(ctx: EffectStackComponent, id: string): Effect {
   return ctx.effects[id]
 }
 
+export function getEffects(ctx: EffectStackComponent) {
+  return ctx.effects
+}
+
 export function removeEffect(ctx: EffectStackComponent, id: string): EffectStackComponent {
   return {
     ...ctx,
@@ -68,4 +72,11 @@ export function addImmediateEffect(ctx: EffectStackComponent, block: Effect): Ef
     immediateEffect: [block.id, ...ctx.immediateEffect],
     effects: assoc(block.id, block, ctx.effects),
   };
+}
+
+export function getDestroyEffects(ctx: EffectStackComponent): Effect[] {
+  return Object.keys(getEffects(ctx))
+    .filter(id => isStackEffect(ctx, id))
+    .map(id => getEffect(ctx, id))
+    .filter(e => e.reason[0] == "Destroy")
 }
