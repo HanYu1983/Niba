@@ -37,6 +37,32 @@ export function isCoin(ctx: ItemTableComponent, id: string): boolean {
   return getCoinIds(ctx).includes(id)
 }
 
+export function isCardLike(ctx: ItemTableComponent): (itemId: string) => boolean {
+  return (itemId: string): boolean => {
+    return isCard(ctx, itemId) || isChip(ctx, itemId)
+  }
+}
+
+export function addCoinsToCard(ctx: ItemTableComponent, target: StrBaSyouPair, coins: Coin[]): ItemTableComponent {
+  assertTargetMissingError(ctx, target)
+  const [targetItemId, targetOriginBasyou] = target
+  if (isCard(ctx, targetItemId)) {
+    ctx = addCoins(ctx, targetItemId, coins) as ItemTableComponent
+    return ctx
+  }
+  throw new Error(`addCoinsToCard unknown item: ${targetItemId}`)
+}
+
+export function shuffleItems(ctx: ItemTableComponent, basyou: AbsoluteBaSyou): ItemTableComponent {
+  const oldTable = ctx.table
+  ctx = {
+    ...ctx,
+    table: TableFns.shuffleCards(ctx.table, AbsoluteBaSyouFn.toString(basyou))
+  }
+  ctx = EventCenterFn.onTableChange(ctx, oldTable, ctx.table)
+  return ctx
+}
+
 export function getItem(ctx: ItemTableComponent, id: string): Item {
   if (isCard(ctx, id)) {
     return getCard(ctx, id)
@@ -72,12 +98,6 @@ export function getItemIdsByPlayerId(ctx: ItemTableComponent, isBa: boolean, pla
 
 export function getItemIdsByBasyou(ctx: ItemTableComponent, basyou: AbsoluteBaSyou): string[] {
   return TableFns.getCardsByPosition(ctx.table, AbsoluteBaSyouFn.toString(basyou))
-}
-
-export function isCardLikeItemId(ctx: ItemTableComponent): (itemId: string) => boolean {
-  return (itemId: string): boolean => {
-    return isCard(ctx, itemId) || isChip(ctx, itemId)
-  }
 }
 
 export function getItemController(ctx: ItemTableComponent, id: string): PlayerID {
@@ -122,74 +142,20 @@ export function getItemBaSyou(
   throw new Error(`getItemBaSyou unknown item: ${id}`)
 }
 
-export function assertTargetMissingError(ctx: ItemTableComponent, [itemId, originBasyou]: StrBaSyouPair) {
-  if (isCard(ctx, itemId) || isChip(ctx, itemId)) {
-    const nowBasyou = getItemBaSyou(ctx, itemId)
-    if (AbsoluteBaSyouFn.eq(nowBasyou, originBasyou) == false) {
-      throw new TargetMissingError(`assertTargetMissingError: ${itemId} from ${AbsoluteBaSyouFn.toString(originBasyou)} now ${AbsoluteBaSyouFn.toString(nowBasyou)}`)
-    }
-  } else if (isCoin(ctx, itemId)) {
-    throw new Error(`coin not support`)
-  } else {
-    throw new Error(`unknown cardId type ${itemId}`)
-  }
-}
-
-export function setItemIsRoll(ctx: ItemTableComponent, isRoll: boolean, [itemId, originBasyou]: StrBaSyouPair): ItemTableComponent {
+export function getItemPrototype(ctx: ItemTableComponent, itemId: string): CardPrototype {
   if (isCard(ctx, itemId)) {
-    const nowBasyou = getItemBaSyou(ctx, itemId)
-    if (AbsoluteBaSyouFn.eq(nowBasyou, originBasyou) == false) {
-      throw new Error(`target missing: ${itemId} from ${originBasyou}`)
-    }
-    const itemIds = getSetGroupChildren(ctx, itemId)
-    ctx = itemIds.reduce((ctx, itemId) => {
-      if (isCard(ctx, itemId)) {
-        let item = getCard(ctx, itemId)
-        if (item.isRoll == isRoll) {
-          throw new Error(`card already roll: ${item.id}`)
-        }
-        item = CardFn.setIsRoll(item, isRoll)
-        ctx = setCard(ctx, itemId, item) as ItemTableComponent
-        return ctx
-      }
-      if (isChip(ctx, itemId)) {
-        let item = getChip(ctx, itemId)
-        if (item.isRoll == isRoll) {
-          throw new Error(`chip already roll: ${item.id}`)
-        }
-        item = ChipFn.setIsRoll(item, isRoll)
-        ctx = setChip(ctx, itemId, item) as ItemTableComponent
-        return ctx
-      }
-      return ctx
-    }, ctx)
-    return ctx
+    return getPrototype(getCard(ctx, itemId).protoID || "unknown")
   }
   if (isChip(ctx, itemId)) {
-    const nowBasyou = getItemBaSyou(ctx, itemId)
-    if (AbsoluteBaSyouFn.eq(nowBasyou, originBasyou) == false) {
-      throw new TargetMissingError(`target missing: ${itemId} from ${originBasyou}`)
-    }
-    let item = getChip(ctx, itemId)
-    item = ChipFn.setIsRoll(item, isRoll)
-    ctx = setChip(ctx, itemId, item) as ItemTableComponent
-    return ctx
+    return getChipPrototype(ctx, getChip(ctx, itemId).protoID || "unknown")
   }
-  throw new Error(`setItemIsRoll unknown item: ${itemId}`)
+  if (isCoin(ctx, itemId)) {
+    throw new Error(`coin no prototype: ${itemId}`)
+  }
+  throw new Error(`getItemPrototype unknown item: ${itemId}`)
 }
 
-export function addCoinsToCard(ctx: ItemTableComponent, target: StrBaSyouPair, coins: Coin[]): ItemTableComponent {
-  assertTargetMissingError(ctx, target)
-  const [targetItemId, targetOriginBasyou] = target
-  if (isCard(ctx, targetItemId)) {
-    ctx = addCoins(ctx, targetItemId, coins) as ItemTableComponent
-    return ctx
-  }
-  throw new Error(`addCoinsToCard unknown item: ${targetItemId}`)
-}
-
-
-export function getAbsoluteBaSyou(
+export function getAbsoluteBaSyouFromBaSyou(
   ctx: ItemTableComponent,
   itemId: string,
   baSyou: BaSyou
@@ -211,25 +177,15 @@ export function getAbsoluteBaSyou(
   return AbsoluteBaSyouFn.of(_playerID, baSyou.value[1])
 }
 
-export function getItemPrototype(ctx: ItemTableComponent, itemId: string): CardPrototype {
-  if (isCard(ctx, itemId)) {
-    return getPrototype(getCard(ctx, itemId).protoID || "unknown")
+export function assertTargetMissingError(ctx: ItemTableComponent, [itemId, originBasyou]: StrBaSyouPair) {
+  if (isCard(ctx, itemId) || isChip(ctx, itemId)) {
+    const nowBasyou = getItemBaSyou(ctx, itemId)
+    if (AbsoluteBaSyouFn.eq(nowBasyou, originBasyou) == false) {
+      throw new TargetMissingError(`assertTargetMissingError: ${itemId} from ${AbsoluteBaSyouFn.toString(originBasyou)} now ${AbsoluteBaSyouFn.toString(nowBasyou)}`)
+    }
+  } else if (isCoin(ctx, itemId)) {
+    throw new Error(`coin not support`)
+  } else {
+    throw new Error(`unknown cardId type ${itemId}`)
   }
-  if (isChip(ctx, itemId)) {
-    return getChipPrototype(ctx, getChip(ctx, itemId).protoID || "unknown")
-  }
-  if (isCoin(ctx, itemId)) {
-    throw new Error(`coin no prototype: ${itemId}`)
-  }
-  throw new Error(`getItemPrototype unknown item: ${itemId}`)
-}
-
-export function shuffleItems(ctx: GameState, basyou: AbsoluteBaSyou): GameState {
-  const oldTable = ctx.table
-  ctx = {
-    ...ctx,
-    table: TableFns.shuffleCards(ctx.table, AbsoluteBaSyouFn.toString(basyou))
-  }
-  ctx = EventCenterFn.onTableChange(ctx, oldTable, ctx.table)
-  return ctx
 }

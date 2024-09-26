@@ -24,6 +24,7 @@ import * as doItemMove from "./doItemMove"
 import * as getConditionTitleFn from "./getConditionTitleFn"
 import * as getActionTitleFn from "./getActionTitleFn"
 import * as getOnEventTitleFn from "./getOnEventTitleFn"
+import * as doSetItemRollState from "./doSetItemRollState"
 export const GameStateFn = {
     ...GameState,
     ...CardState,
@@ -50,5 +51,6 @@ export const GameStateFn = {
     ...doItemMove,
     ...getConditionTitleFn,
     ...getActionTitleFn,
-    ...getOnEventTitleFn
+    ...getOnEventTitleFn,
+    ...doSetItemRollState
 }

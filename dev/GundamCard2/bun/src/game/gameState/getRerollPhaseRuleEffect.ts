@@ -29,8 +29,7 @@ export function getRerollPhaseRuleEffect(ctx: GameState, playerId: PlayerID): Ef
                                         })
                                 })
                                 for (const pair of pairs) {
-                                    GameStateFn.assertTargetMissingError(ctx, pair)
-                                    ctx = GameStateFn.mapCard(ctx, pair[0], card=>({...card, isRoll: false})) as GameState
+                                    ctx = GameStateFn.doSetItemRollState(ctx, false, pair, {isSkipTargetMissing: true})
                                 }
                                 return ctx
                             }.toString()

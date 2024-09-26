@@ -387,7 +387,7 @@ export function getTextsFromSpecialEffect(ctx: GameState, text: CardText): CardT
                                                                         for (const pair of pairs) {
                                                                             ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "ハンガー"), pair) as GameState
                                                                         }
-                                                                        ctx = GameStateFn.shuffleItems(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "本国"))
+                                                                        ctx = GameStateFn.shuffleItems(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "本国")) as GameState
                                                                     }
                                                                     return ctx
                                                                 }.toString()
@@ -438,7 +438,7 @@ export function getTextsFromSpecialEffect(ctx: GameState, text: CardText): CardT
                                         const targetPair = pairs[0]
                                         GameStateFn.assertTargetMissingError(ctx, targetPair)
                                         ctx = GameStateFn.doItemSwap(ctx, [cardId, basyou], targetPair)
-                                        ctx = GameStateFn.mapCard(ctx, cardId, card => ({ ...card, isRoll: false })) as GameState
+                                        ctx = GameStateFn.doSetItemRollState(ctx, false, [cardId, basyou], { isSkipTargetMissing: true })
                                         ctx = GameStateFn.doItemMove(ctx,
                                             DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(basyou, "ジャンクヤード"),
                                             targetPair

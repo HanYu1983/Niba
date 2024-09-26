@@ -101,7 +101,7 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
                                                                 const hasPS = GameStateFn.getCardHasSpeicalEffect(ctx, ["PS装甲"], cardId)
                                                                 const isNoNeedRoll = (hasHigh || hasPS)
                                                                 const isRoll = isNoNeedRoll == false
-                                                                ctx = GameStateFn.mapCard(ctx, cardId, card => ({ ...card, isRoll: isRoll })) as GameState
+                                                                ctx = GameStateFn.doSetItemRollState(ctx, isRoll, [cardId, from], {isSkipTargetMissing: true})
                                                                 ctx = GameStateFn.triggerEvent(ctx, { title: ["プレイされて場に出た場合"], cardIds: [cardId] })
                                                                 return ctx
                                                             }.toString()

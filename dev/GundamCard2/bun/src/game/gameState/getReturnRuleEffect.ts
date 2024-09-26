@@ -2,6 +2,7 @@ import { Bridge } from "../../script/bridge";
 import { AbsoluteBaSyouFn, BaKeyword, BaSyouKeyword } from "../define/BaSyou";
 import { Effect } from "../define/Effect";
 import { PlayerID } from "../define/PlayerID";
+import { StrBaSyouPair } from "../define/Tip";
 import { ToolFn } from "../tool";
 import { GameState } from "./GameState";
 
@@ -25,22 +26,24 @@ export function getReturnRuleEffect(ctx: GameState, playerId: PlayerID): Effect 
                                 ctx = _processKw(ctx, opponentId, "戦闘エリア1")
                                 ctx = _processKw(ctx, opponentId, "戦闘エリア2")
                                 function _processKw(ctx: GameState, playerId: PlayerID, fromKw: BaKeyword): GameState {
+                                    const from = DefineFn.AbsoluteBaSyouFn.of(playerId, fromKw)
                                     const runtimeArea1 = GameStateFn.getRuntimeBattleArea(ctx, fromKw)
-                                    const unitIdsAtArea1 = GameStateFn.getItemIdsByBasyou(ctx, DefineFn.AbsoluteBaSyouFn.of(playerId, fromKw))
+                                    const unitIdsAtArea1 = GameStateFn.getItemIdsByBasyou(ctx, from)
                                     for (const cardId of unitIdsAtArea1) {
+                                        const target = [cardId, from] as StrBaSyouPair
                                         if (GameStateFn.getCardBattleArea(ctx, cardId).includes(runtimeArea1)) {
-                                            ctx = GameStateFn.mapCard(ctx, cardId, card => ({ ...card, isRoll: true })) as GameState
+                                            ctx = GameStateFn.doSetItemRollState(ctx, true, target, { isSkipTargetMissing: true })
                                             ctx = GameStateFn.doItemMove(
                                                 ctx,
                                                 DefineFn.AbsoluteBaSyouFn.of(playerId, "配備エリア"),
-                                                [cardId, DefineFn.AbsoluteBaSyouFn.of(playerId, fromKw)]
+                                                target, { isSkipTargetMissing: true }
                                             ) as GameState
                                         } else {
                                             // Rule book p73
                                             ctx = GameStateFn.doItemMove(
                                                 ctx,
                                                 DefineFn.AbsoluteBaSyouFn.of(playerId, "ジャンクヤード"),
-                                                [cardId, DefineFn.AbsoluteBaSyouFn.of(playerId, fromKw)]
+                                                target, { isSkipTargetMissing: true }
                                             ) as GameState
                                         }
                                     }
