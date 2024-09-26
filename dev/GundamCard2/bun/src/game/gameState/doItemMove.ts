@@ -11,11 +11,16 @@ import { ItemTableComponent, isCard, isChip, getItemBaSyou, isCoin, getItemContr
 import { getSetGroupChildren } from "./SetGroupComponent"
 import { triggerEvent } from "./triggerEvent"
 
-export function doItemMove(ctx: GameState, to: AbsoluteBaSyou, [itemId, from]: StrBaSyouPair): GameState {
-    assertTargetMissingError(ctx, [itemId, from])
+export function doItemMove(ctx: GameState, to: AbsoluteBaSyou, [itemId, from]: StrBaSyouPair, options?: { isSkipTargetMissing?: boolean }): GameState {
+    if(options?.isSkipTargetMissing){
+
+    } else {
+        assertTargetMissingError(ctx, [itemId, from])
+    }
     if (isCoin(ctx, itemId)) {
         throw new Error(`moveCardLike`)
-    } if (isCard(ctx, itemId) || isChip(ctx, itemId)) {
+    } 
+    if (isCard(ctx, itemId) || isChip(ctx, itemId)) {
         const oldTable = ctx.table
         {
             const ges = getGlobalEffects(ctx, null)

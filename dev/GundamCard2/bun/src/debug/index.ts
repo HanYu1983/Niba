@@ -30,7 +30,7 @@ import { Card } from "../game/define/Card";
 import { createGameState, GameState } from "../game/gameState/GameState";
 import { getItemState, mapItemState } from "../game/gameState/ItemStateComponent";
 import { swap } from "ramda";
-import { swapItem } from "../game/gameState/swapItem";
+import { doItemSwap } from "../game/gameState/doItemSwap";
 import { getItemBaSyou } from "../game/gameState/ItemTableComponent";
 import { test179030_11E_U_BK194S_2_black, test179030_11E_U_BK194S_2_black_2 } from "./test179030_11E_U_BK194S_2_black";
 import { createCommandEffectTips, createEffectTips, doEffect, setTipSelectionForUser } from "../game/gameState/doEffect";
@@ -110,7 +110,7 @@ async function testSwapItem() {
     if (getItemState(ctx, unit2.id).damage != 0) {
         throw new Error()
     }
-    ctx = swapItem(ctx, unit.id, unit2.id)
+    ctx = doItemSwap(ctx, [unit.id, getItemBaSyou(ctx, unit.id)], [unit2.id, getItemBaSyou(ctx, unit2.id)])
     if (getItemState(ctx, unit.id).damage != 0) {
         throw new Error()
     }

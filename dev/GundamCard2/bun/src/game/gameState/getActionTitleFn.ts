@@ -17,7 +17,7 @@ import { GameState } from "./GameState"
 import { mapItemState, getItemState, setItemState } from "./ItemStateComponent"
 import { getItemController, getItemBaSyou, setItemIsRoll, assertTargetMissingError, getItemIdsByBasyou, addCoinsToCard, getItemIdsByPlayerId, getItemPrototype } from "./ItemTableComponent"
 import { doItemMove } from "./doItemMove"
-import { swapItem } from "./swapItem"
+import { doItemSwap } from "./doItemSwap"
 import { triggerEvent } from "./triggerEvent"
 import { doItemDamage } from "./doItemDamage"
 
@@ -255,10 +255,10 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
         }
         return function (ctx: GameState, effect: Effect): GameState {
           const cardId = EffectFn.getCardID(effect)
-          const [[t1, t1ba]] = getCardTipStrBaSyouPairs(ctx, varNames[0], cardId)
-          const [[t2, t2ba]] = getCardTipStrBaSyouPairs(ctx, varNames[1], cardId)
-          ctx = swapItem(ctx, t1, t2)
-          ctx = mapCard(ctx, t2, card => ({ ...card, isRoll: false })) as GameState
+          const [target1] = getCardTipStrBaSyouPairs(ctx, varNames[0], cardId)
+          const [target2] = getCardTipStrBaSyouPairs(ctx, varNames[1], cardId)
+          ctx = doItemSwap(ctx, target1, target2)
+          ctx = mapCard(ctx, target2[0], card => ({ ...card, isRoll: false })) as GameState
           // 以下應不需要, 置換只有換protoID和狀態, 這樣才能繼承所有對象
           // ctx = moveItem(ctx, t2ba, [t1, t1ba]) as GameState
           // ctx = moveItem(ctx, t1ba, [t2, t2ba]) as GameState

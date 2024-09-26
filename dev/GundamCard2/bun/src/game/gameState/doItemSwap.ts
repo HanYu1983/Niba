@@ -1,10 +1,19 @@
 import { TableFns } from "../../tool/table";
+import { StrBaSyouPair } from "../define/Tip";
 import { getCard, mapCard, setCard } from "./CardTableComponent";
 import { GameState } from "./GameState";
 import { getItemState, setItemState } from "./ItemStateComponent";
-import { isCard } from "./ItemTableComponent";
+import { assertTargetMissingError, isCard } from "./ItemTableComponent";
 
-export function swapItem(ctx: GameState, itemId1: string, itemId2: string): GameState {
+export function doItemSwap(ctx: GameState, pair1: StrBaSyouPair, pair2: StrBaSyouPair, options?: { isSkipTargetMissing?: boolean }): GameState {
+    if (options?.isSkipTargetMissing) {
+
+    } else {
+        assertTargetMissingError(ctx, pair1)
+        assertTargetMissingError(ctx, pair2)
+    }
+    const [itemId1] = pair1
+    const [itemId2] = pair2
     // 置換(p77)
     if (isCard(ctx, itemId1) && isCard(ctx, itemId2)) {
         const card1 = getCard(ctx, itemId1)

@@ -117,7 +117,7 @@ export function getTextsFromSpecialEffect(ctx: GameState, text: CardText): CardT
                                                             targetItemState = DefineFn.ItemStateFn.setGlobalEffect(targetItemState, null, {
                                                                 title: ["AddTextRef", textRef],
                                                                 cardIds: [targetItemState.id]
-                                                            }, {isRemoveOnTurnEnd: true})
+                                                            }, { isRemoveOnTurnEnd: true })
                                                         }
                                                         return targetItemState
                                                     }) as GameState
@@ -205,7 +205,7 @@ export function getTextsFromSpecialEffect(ctx: GameState, text: CardText): CardT
                                                                         // 『起動』：このカードは、「ゲイン」の効果で戦闘修正を得る場合、その戦闘修正を得る代わりに、ターン終了時まで、「速攻」を得る事ができる。
                                                                         ctx = mapItemState(ctx, cardId, is => DefineFn.ItemStateFn.setGlobalEffect(is, null, {
                                                                             title: ["＋x／＋x／＋xを得る", [bonus, bonus, bonus]], cardIds: [cardId]
-                                                                        }, {isRemoveOnTurnEnd: true})) as GameState
+                                                                        }, { isRemoveOnTurnEnd: true })) as GameState
                                                                     }
                                                                     return ctx
                                                                 }.toString()
@@ -437,8 +437,7 @@ export function getTextsFromSpecialEffect(ctx: GameState, text: CardText): CardT
                                         }
                                         const targetPair = pairs[0]
                                         GameStateFn.assertTargetMissingError(ctx, targetPair)
-                                        const [targetCardId, targetBasyou] = targetPair
-                                        ctx = GameStateFn.swapItem(ctx, cardId, targetCardId)
+                                        ctx = GameStateFn.doItemSwap(ctx, [cardId, basyou], targetPair)
                                         ctx = GameStateFn.mapCard(ctx, cardId, card => ({ ...card, isRoll: false })) as GameState
                                         ctx = GameStateFn.doItemMove(ctx,
                                             DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(basyou, "ジャンクヤード"),

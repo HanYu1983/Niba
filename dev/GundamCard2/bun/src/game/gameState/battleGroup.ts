@@ -4,7 +4,7 @@ import { getCardHasSpeicalEffect } from "./card";
 import { getCard } from "./CardTableComponent";
 import { GameState } from "./GameState";
 import { getItemState } from "./ItemStateComponent";
-import { getItemIdsByBasyou, getItemBaSyou, getItemIdsByBasyou } from "./ItemTableComponent";
+import { getItemIdsByBasyou, getItemBaSyou } from "./ItemTableComponent";
 import { getSetGroupBattlePoint } from "./setGroup";
 import { getSetGroupRoot, getSetGroupChildren } from "./SetGroupComponent";
 
