@@ -12,6 +12,7 @@ export function getPlayGEffects(ctx: GameState, cardId: string): Effect {
         id: `getPlayGEffects_${cardId}`,
         reason: ["PlayCard", playerId, cardId],
         description: "PlayG",
+        isPlayG: true,
         text: {
             id: `getPlayGEffects_text_${cardId}`,
             title: [],

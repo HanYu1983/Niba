@@ -1,5 +1,5 @@
 import { pipe, always, map, flatten } from "ramda"
-import { log } from "../../tool/logger"
+import { logCategory } from "../../tool/logger"
 import { createBridge } from "../bridge/createBridge"
 import { AbsoluteBaSyouFn } from "../define/BaSyou"
 import { Effect } from "../define/Effect"
@@ -18,7 +18,7 @@ export function getGlobalEffects(ctx: GameState, situation: Situation | null): G
   const key = JSON.stringify(situation)
   const cached = ctx.globalEffectPool[key]
   if (cached) {
-    log("getGlobalEffects", "useCache")
+    logCategory("getGlobalEffects", "useCache")
     return cached
   }
   return getSituationEffects(ctx, situation)

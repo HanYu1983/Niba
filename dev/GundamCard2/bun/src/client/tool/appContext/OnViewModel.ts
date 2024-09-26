@@ -8,7 +8,7 @@ import { applyFlow } from "../../../game/gameStateWithFlowMemory/applyFlow";
 import { GameStateWithFlowMemory, initState } from "../../../game/gameStateWithFlowMemory/GameStateWithFlowMemory";
 import { updateCommand } from "../../../game/gameStateWithFlowMemory/updateCommand";
 import { loadPrototype } from "../../../script";
-import { log } from "../../../tool/logger";
+import { logCategory } from "../../../tool/logger";
 import { createGameContext, GameContext } from "../../define/GameContext";
 import { OnEvent, OnError } from "./eventCenter";
 import * as rxjs from "rxjs"
@@ -41,7 +41,7 @@ const TMP_DECK = ["179015_04B_O_BK010C_black", "179015_04B_O_BK010C_black", "179
 
 export const OnViewModel = OnEvent.pipe(
   rxjs.scan((viewModel, evt): ViewModel => {
-    log("OnViewModel", "evt", evt);
+    logCategory("OnViewModel", "evt", evt);
     try {
       switch (evt.id) {
         case "OnClickNewGame": {

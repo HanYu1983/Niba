@@ -15,7 +15,7 @@ import { Card, CardFn } from "../define/Card";
 import { Chip, ChipFn } from "../define/Chip";
 import { GlobalEffect } from "../define/GlobalEffect";
 import { getItemState } from "./ItemStateComponent";
-import { log } from "../../tool/logger";
+import { logCategory } from "../../tool/logger";
 import { GameState } from "./GameState";
 import { getGlobalEffects } from "./globalEffects";
 import { EventCenterFn } from "./EventCenter";

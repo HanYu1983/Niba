@@ -1,4 +1,4 @@
-import { log } from "../../tool/logger";
+import { logCategory } from "../../tool/logger";
 import { PhaseFn, SiYouTiming } from "../define/Timing";
 import { CardText, Condition } from "../define/CardText";
 import { PlayerA, PlayerB, PlayerID } from "../define/PlayerID";
@@ -150,7 +150,7 @@ export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
         switch (siYouTiming[0]) {
             case "自軍":
                 if (ctx.activePlayerID != playerId) {
-                    log(
+                    logCategory(
                         "getPlayEffects",
                         `ctx.activePlayerID != ${playerId}`,
                         text.title, text.description
@@ -160,7 +160,7 @@ export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
                 break;
             case "敵軍":
                 if (ctx.activePlayerID == playerId) {
-                    log(
+                    logCategory(
                         "getPlayEffects",
                         `ctx.activePlayerID == ${playerId}`,
                         text.title, text.description
@@ -170,7 +170,7 @@ export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
                 break;
             case "戦闘フェイズ":
                 if (ctx.phase[0] != "戦闘フェイズ") {
-                    log(
+                    logCategory(
                         "getPlayEffects",
                         `ctx.timing[0] != "戦闘フェイズ"`,
                         text.title, text.description
@@ -183,7 +183,7 @@ export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
             case "ダメージ判定ステップ":
             case "帰還ステップ":
                 if (ctx.phase[0] != "戦闘フェイズ") {
-                    log(
+                    logCategory(
                         "getPlayEffects",
                         `ctx.timing[0] != "戦闘フェイズ"`,
                         text.title, text.description
@@ -191,7 +191,7 @@ export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
                     return false;
                 }
                 if (ctx.phase[1] != siYouTiming[0]) {
-                    log(
+                    logCategory(
                         "getPlayEffects",
                         `ctx.timing[1] != ${siYouTiming[0]}`,
                         text.title, text.description
@@ -207,7 +207,7 @@ export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
                     case "配備フェイズ":
                     case "戦闘フェイズ":
                         if (ctx.phase[0] != siYouTiming[1]) {
-                            log(
+                            logCategory(
                                 "getPlayEffects",
                                 `ctx.timing[0] != ${siYouTiming[1]}`,
                                 text.title, text.description
@@ -220,7 +220,7 @@ export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
                     case "ダメージ判定ステップ":
                     case "帰還ステップ":
                         if (ctx.phase[0] != "戦闘フェイズ") {
-                            log(
+                            logCategory(
                                 "getPlayEffects",
                                 `ctx.timing[0] != "戦闘フェイズ"`,
                                 text.title, text.description
@@ -228,7 +228,7 @@ export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
                             return false;
                         }
                         if (ctx.phase[1] != siYouTiming[1]) {
-                            log(
+                            logCategory(
                                 "getPlayEffects",
                                 `ctx.timing[1] != ${siYouTiming[1]}`,
                                 text.title, text.description

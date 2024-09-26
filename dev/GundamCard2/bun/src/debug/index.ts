@@ -20,7 +20,7 @@ import { addCards, createCardWithProtoIds, getCard, mapCard } from "../game/game
 import { getGlobalEffects } from "../game/gameState/globalEffects";
 import { createGameStateWithFlowMemory, GameStateWithFlowMemory } from "../game/gameStateWithFlowMemory/GameStateWithFlowMemory";
 import { queryFlow } from "../game/gameStateWithFlowMemory/queryFlow";
-import { applyFlow } from "../game/gameStateWithFlowMemory/applyFlow";
+import { applyFlow, createAIChoise } from "../game/gameStateWithFlowMemory/applyFlow";
 import { TargetMissingError } from "../game/define/GameError";
 import { testPlayG } from "./testPlayG";
 import { testPlayChar } from "./testPlayChar";
@@ -160,10 +160,14 @@ async function testCompress() {
                     const flows = queryFlow(ctx, playerId)
                     if (flows.length) {
                         try {
-                            let flow = flows.find(flow => flow.description?.indexOf("黑"))
-                            if (flow == null) {
-                                flow = flows[Math.round(Math.random() * 1000) % flows.length]
-                            }
+                            const aiChoise = flows.map(flow => createAIChoise(ctx, playerId, flow))
+                            aiChoise.sort((a, b) => b.weight - a.weight)
+                            const flow = aiChoise[0].flow
+
+                            // let flow = flows.find(flow => flow.description?.indexOf("黑"))
+                            // if (flow == null) {
+                            //     flow = flows[Math.round(Math.random() * 1000) % flows.length]
+                            // }
                             // if (flow.id == "FlowSetActiveEffectID") {
                             //     const effect = flow.tips.find(e => e.id == flow.effectID)
                             //     if (effect == null) {

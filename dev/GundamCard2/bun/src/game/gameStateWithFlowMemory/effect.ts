@@ -1,5 +1,5 @@
 import { assoc } from "ramda";
-import { log } from "../../tool/logger";
+import { logCategory } from "../../tool/logger";
 import { DestroyReason, Effect, EffectFn } from "../define/Effect";
 import { doEffect, createCommandEffectTips, clearTipSelectionForUser } from "../gameState/doEffect";
 import { getEffect, isStackEffect, removeEffect } from "../gameState/EffectStackComponent";
@@ -138,7 +138,7 @@ export function setActiveLogicID(ctx: GameStateWithFlowMemory, logicID: number, 
 }
 
 export function doActiveEffect(ctx: GameStateWithFlowMemory, playerID: string, effectID: string, logicId: number, logicSubId: number): GameStateWithFlowMemory {
-  log("doEffect", effectID);
+  logCategory("doEffect", effectID);
   // 判斷這個效果是否正在支付，不然不應該執行
   if (getActiveEffectID(ctx) != effectID) {
     throw new Error("activeEffectID != effectID");
@@ -153,8 +153,8 @@ export function doActiveEffect(ctx: GameStateWithFlowMemory, playerID: string, e
     ctx = doEffect(ctx, effect, logicId, logicSubId) as GameStateWithFlowMemory;
   } catch (e) {
     if (e instanceof TargetMissingError) {
-      log("doActiveEffect", `=======================`)
-      log("doActiveEffect", `對象遺失: ${e.message}`)
+      logCategory("doActiveEffect", `=======================`)
+      logCategory("doActiveEffect", `對象遺失: ${e.message}`)
     } else {
       throw e
     }

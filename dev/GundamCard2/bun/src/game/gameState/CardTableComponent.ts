@@ -4,7 +4,7 @@ import { AbsoluteBaSyou, BaSyou, AbsoluteBaSyouFn } from "../define/BaSyou";
 import { PlayerID } from "../define/PlayerID";
 import { Card } from "../define/Card";
 import { ToolFn } from "../tool";
-import { log } from "../../tool/logger";
+import { logCategory } from "../../tool/logger";
 import { EventCenterFn } from "./EventCenter";
 
 export type CardTableComponent = {

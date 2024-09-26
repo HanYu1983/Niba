@@ -7,7 +7,7 @@ import { getCardHasSpeicalEffect, getCardRollCostLength } from "./card"
 import { GameState } from "./GameState"
 import { getGlobalEffects, setGlobalEffects } from "./globalEffects"
 import { getItemPrototype, getItemOwner } from "./ItemTableComponent"
-import { log } from "../../tool/logger"
+import { logCategory } from "../../tool/logger"
 
 export function createConditionKeyOfPayColorX(proto: CardPrototype): string {
     if (proto.color == null) {

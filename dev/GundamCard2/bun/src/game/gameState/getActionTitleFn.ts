@@ -1,4 +1,3 @@
-import { log } from "console"
 import { repeat, lift } from "ramda"
 import { AbsoluteBaSyouFn, AbsoluteBaSyou } from "../define/BaSyou"
 import { Action, ActionTitleFn, ActionFn } from "../define/CardText"
@@ -22,6 +21,7 @@ import { triggerEvent } from "./triggerEvent"
 import { doItemDamage } from "./doItemDamage"
 import { doSetItemRollState } from "./doSetItemRollState"
 import { doCountryDamage } from "./doCountryDamage"
+import { logCategory } from "../../tool/logger"
 
 export function getActionTitleFn(action: Action): ActionTitleFn {
     if (typeof action.title == "string") {
@@ -70,7 +70,7 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
             })
           switch (whatToDo) {
             case "ロール": {
-              log("getActionTitleFn", whatToDo, varNames, pairs)
+              logCategory("getActionTitleFn", whatToDo, varNames, pairs)
               for (const pair of pairs) {
                 ctx = doSetItemRollState(ctx, true, pair) as GameState
               }

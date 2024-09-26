@@ -8,7 +8,7 @@ import { getEffectIncludePlayerCommand } from "../../game/gameStateWithFlowMemor
 import { CommandEffecTipFn } from "../../game/define/CommandEffectTip";
 import { TargetMissingError } from "../../game/define/GameError";
 import { createCommandEffectTips, setTipSelectionForUser } from "../../game/gameState/doEffect";
-import { applyFlow } from "../../game/gameStateWithFlowMemory/applyFlow";
+import { applyFlow, createAIChoise } from "../../game/gameStateWithFlowMemory/applyFlow";
 import { GameStateWithFlowMemory } from "../../game/gameStateWithFlowMemory/GameStateWithFlowMemory";
 import { Flow } from "../../game/gameStateWithFlowMemory/Flow";
 import { PlayerA, PlayerB } from "../../game/define/PlayerID";
@@ -22,7 +22,7 @@ export const FlowListView = (props: { clientID: string }) => {
     const speed = 50
     if (props.clientID == PlayerA) {
       const payCost = flows.find((flow) => flow.id == "FlowPassPayCost");
-      if(payCost){
+      if (payCost) {
         setTimeout(() => {
           OnEvent.next({
             id: "OnClickFlowConfirm",
@@ -74,16 +74,22 @@ export const FlowListView = (props: { clientID: string }) => {
       return
     }
     if (flows.length) {
-      let flow: Flow | undefined = flows.find((flow) => flow.id == "FlowPassPayCost")
-      if (flow == null) {
-        flow = flows[Math.round(Math.random() * 1000) % flows.length]
-      }
-      if (flow.id == "FlowCancelPassPhase") {
+      const aiChoise = flows.map(flow => createAIChoise(appContext.viewModel.model.gameState, PlayerB, flow))
+      aiChoise.sort((a, b) => b.weight - a.weight)
+      if(aiChoise[0].isStop){
         return
       }
-      if (flow.id == "FlowCancelPassCut") {
-        return
-      }
+      const flow = aiChoise[0].flow
+      // let flow: Flow | undefined = flows.find((flow) => flow.id == "FlowPassPayCost")
+      // if (flow == null) {
+      //   flow = flows[Math.round(Math.random() * 1000) % flows.length]
+      // }
+      // if (flow.id == "FlowCancelPassPhase") {
+      //   return
+      // }
+      // if (flow.id == "FlowCancelPassCut") {
+      //   return
+      // }
       if (flow) {
         setTimeout(() => {
           OnEvent.next({

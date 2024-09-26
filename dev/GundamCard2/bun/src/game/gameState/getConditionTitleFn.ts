@@ -1,4 +1,4 @@
-import { log } from "console"
+
 import { lift } from "ramda"
 import { AbsoluteBaSyou, AbsoluteBaSyouFn, BaSyouKeywordFn } from "../define/BaSyou"
 import { Condition, ConditionTitleFn, ConditionFn } from "../define/CardText"
@@ -13,12 +13,13 @@ import { isBattle } from "./IsBattleComponent"
 import { getItemController, getItemIdsByBasyou, getItemPrototype, getItemBaSyou } from "./ItemTableComponent"
 import { getSetGroupBattlePoint } from "./setGroup"
 import { getSetGroupRoot } from "./SetGroupComponent"
+import { logCategory } from "../../tool/logger"
 
 export function getConditionTitleFn(condition: Condition, options: { isPlay?: boolean }): ConditionTitleFn {
     if (condition.title == null || typeof condition.title == "string") {
         return ConditionFn.getTitleFn(condition)
     }
-    log("getConditionTitleFn", condition.title)
+    logCategory("getConditionTitleFn", condition.title)
     switch (condition.title[0]) {
         case "_自軍_ジャンクヤードにある、_黒のGサインを持つ全てのカードは": {
             const [_, side, basyouKw, color] = condition.title
@@ -72,7 +73,7 @@ export function getConditionTitleFn(condition: Condition, options: { isPlay?: bo
                         textId: text.id
                     }
                 })
-                log(`getConditionTitleFn`, textRefs)
+                logCategory(`getConditionTitleFn`, textRefs)
                 return {
                     title: ["テキスト", textRefs, textRefs.slice(0, count)],
                     count: count,

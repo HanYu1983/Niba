@@ -1,5 +1,5 @@
 import { pipe, always, map, sum } from "ramda";
-import { log } from "../../tool/logger";
+import { logCategory } from "../../tool/logger";
 import { AttackSpeed } from "../define";
 import { AbsoluteBaSyouFn, BaSyouKeyword } from "../define/BaSyou";
 import { DestroyReason } from "../define/Effect";
@@ -41,10 +41,10 @@ function doDamage(
   willGuardUnits: string[],
   willAttackPower: number
 ): GameState {
-  log("handleAttackDamage", "speed", speedPhase);
-  log("handleAttackDamage", "willAttackUnits", willAttackUnits);
-  log("handleAttackDamage", "willGuardUnits", willGuardUnits);
-  log("handleAttackDamage", "willAttackPower", willAttackPower);
+  logCategory("handleAttackDamage", "speed", speedPhase);
+  logCategory("handleAttackDamage", "willAttackUnits", willAttackUnits);
+  logCategory("handleAttackDamage", "willGuardUnits", willGuardUnits);
+  logCategory("handleAttackDamage", "willAttackPower", willAttackPower);
   if (willAttackUnits.length) {
     // 判斷速度1速度2是否可攻擊
     const hasSpeedAttack = isABattleGroup(ctx, ["速攻"], willAttackUnits[0]);
@@ -55,7 +55,7 @@ function doDamage(
       (hasSpeedAttack == false && speedPhase == 2)
     ) {
       let currentAttackPower = willAttackPower;
-      log("handleAttackDamage", "attack", currentAttackPower);
+      logCategory("handleAttackDamage", "attack", currentAttackPower);
       // 敵方機體存在, 攻擊機體
       if (willGuardUnits.length) {
         const changedCardState = willGuardUnits.map((cardID): ItemState => {
@@ -114,7 +114,7 @@ function doDamage(
         (willGuardUnits.length && isABattleGroup(ctx, ["強襲"], willAttackUnits[0]))
       ) {
         // 本國傷害
-        log("handleAttackDamage", "attack 本国", currentAttackPower);
+        logCategory("handleAttackDamage", "attack 本国", currentAttackPower);
         const from = AbsoluteBaSyouFn.of(currentGuardPlayerID, "本国")
         const pairs = getItemIdsByBasyou(ctx, from).map(itemId => {
           return [itemId, from] as StrBaSyouPair

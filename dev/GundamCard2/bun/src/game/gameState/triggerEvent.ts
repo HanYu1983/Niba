@@ -12,7 +12,7 @@ import { ItemStateFn } from "../define/ItemState"
 import { PhaseFn } from "../define/Timing"
 import { getItemState, mapItemState, mapItemStateValues, setItemState } from "./ItemStateComponent"
 import { getTextsFromSpecialEffect } from "./getTextsFromSpecialEffect"
-import { log } from "../../tool/logger"
+import { logCategory } from "../../tool/logger"
 import { mapPlayerState } from "./PlayerStateComponent"
 import { PlayerStateFn } from "../define/PlayerState"
 import { getActivePlayerID } from "./ActivePlayerComponent"
@@ -26,7 +26,7 @@ export function triggerEvent(
     ctx: GameState,
     event: GameEvent
 ): GameState {
-    log("triggerEvent", event.title, event.cardIds)
+    logCategory("triggerEvent", event.title, event.cardIds)
     const bridge = createBridge()
     // command
     const commands = pipe(
@@ -45,11 +45,11 @@ export function triggerEvent(
         map(cardId => ({ cardId: cardId, texts: getCardTexts(ctx, cardId) })),
         concat(commands),
         reduce((ctx, { cardId, texts }) => {
-            log("triggerEvent", "找到卡和內文", cardId, texts)
+            logCategory("triggerEvent", "找到卡和內文", cardId, texts)
             return texts
                 .flatMap(text => text.title[0] == "特殊型" ? getTextsFromSpecialEffect(ctx, text) : [text])
                 .reduce((ctx, text) => {
-                    log("triggerEvent", "處理單個內文", text.title, text.description)
+                    logCategory("triggerEvent", "處理單個內文", text.title, text.description)
                     const effect: Effect = {
                         id: ToolFn.getUUID("triggerTextEvent"),
                         reason: ["Event", getItemController(ctx, cardId), cardId, event],

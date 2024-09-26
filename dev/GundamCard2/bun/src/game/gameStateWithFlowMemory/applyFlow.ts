@@ -1,6 +1,6 @@
-import { log } from "../../tool/logger";
-import { PlayerA, PlayerB, PlayerIDFn } from "../define/PlayerID";
-import { AbsoluteBaSyou, AbsoluteBaSyouFn } from "../define/BaSyou";
+import { logCategory } from "../../tool/logger";
+import { PlayerA, PlayerB, PlayerID, PlayerIDFn } from "../define/PlayerID";
+import { AbsoluteBaSyou, AbsoluteBaSyouFn, BaSyouKeyword, BaSyouKeywordFn } from "../define/BaSyou";
 import { addImmediateEffect, addStackEffect, getEffect } from "../gameState/EffectStackComponent";
 import { checkIsBattle } from "../gameState/IsBattleComponent";
 import { Flow } from "./Flow";
@@ -11,19 +11,24 @@ import { doPlayerAttack } from "../gameState/player";
 import { triggerEvent } from "../gameState/triggerEvent";
 import { ToolFn } from "../tool";
 import { updateCommand } from "./updateCommand";
-import { getItemIdsByBasyou, shuffleItems } from "../gameState/ItemTableComponent";
+import { getItem, getItemController, getItemIdsByBasyou, isCard, isCardLike, isChip, isCoin, Item, shuffleItems } from "../gameState/ItemTableComponent";
 import { TableFns } from "../../tool/table";
 import { setCardTipStrBaSyouPairs, setTipSelectionForUser } from "../gameState/doEffect";
 import { EffectFn } from "../define/Effect";
 import { mapItemState } from "../gameState/ItemStateComponent";
 import { ItemStateFn } from "../define/ItemState";
+import { GameState } from "../gameState/GameState";
+import { flow, lift } from "ramda";
+import { getCard } from "../gameState/CardTableComponent";
+import { getCoin, getCoinIds, getCoinOwner } from "../gameState/CoinTableComponent";
+import { createEntityIterator, EntityFn } from "../gameState/Entity";
 
 export function applyFlow(
     ctx: GameStateWithFlowMemory,
     playerID: string,
     flow: Flow
 ): GameStateWithFlowMemory {
-    log("applyFlow", playerID, flow.description);
+    logCategory("applyFlow", playerID, flow.description);
     switch (flow.id) {
         case "FlowSetActiveEffectID": {
             if (flow.effectID == null) {
@@ -138,7 +143,7 @@ export function applyFlow(
             };
         case "FlowTriggerTextEvent":
             if (ctx.flowMemory.hasTriggerEvent) {
-                log("applyFlow", "已經執行過triggerTextEvent");
+                logCategory("applyFlow", "已經執行過triggerTextEvent");
                 return ctx;
             }
             ctx = triggerEvent(ctx, flow.event) as GameStateWithFlowMemory;
@@ -354,4 +359,74 @@ export function applyFlow(
         }
     }
     return ctx;
+}
+
+export type AIChoise = {
+    weight: number,
+    flow: Flow,
+    isStop?: boolean
+}
+
+export function createAIChoise(ctx: GameStateWithFlowMemory, playerId: PlayerID, flow: Flow): AIChoise {
+    switch (flow.id) {
+        case "FlowSetActiveEffectID": {
+            const playGTips = flow.tips.filter(tip => tip.isPlayG)
+            const playTips = flow.tips.filter(tip => tip.isPlayG != true)
+            const flows: Flow[] = []
+            const myGcnt = createEntityIterator(ctx)
+                .filter(EntityFn.filterController(playerId))
+                .filter(EntityFn.filterAtBaSyou(ctx, "Gゾーン"))
+                .length
+            if (playGTips.length) {
+                if (myGcnt <= 10) {
+                    flows.push(...playGTips.map(tip => {
+                        return {
+                            ...flow,
+                            effectID: tip.id
+                        }
+                    }))
+                } else {
+                    flows.push(...playTips.map(tip => {
+                        return {
+                            ...flow,
+                            effectID: tip.id
+                        }
+                    }))
+                }
+            } else {
+                flows.push(...playTips.map(tip => {
+                    return {
+                        ...flow,
+                        effectID: tip.id
+                    }
+                }))
+            }
+            const useFlow = flows[Math.round(Math.random() * 1000) % flows.length]
+            return {
+                weight: 100,
+                flow: useFlow
+            }
+        }
+        case "FlowAddBlock":
+        case "FlowDoEffect":
+        case "FlowSetActiveLogicID":
+        case "FlowSetTipSelection":
+            return {
+                weight: 100,
+                flow: flow
+            }
+        case "FlowCancelPassCut":
+        case "FlowCancelActiveEffectID":
+        case "FlowCancelActiveLogicID":
+        case "FlowCancelPassPhase":
+            return {
+                weight: 0,
+                flow: flow,
+                isStop: true
+            }
+    }
+    return {
+        weight: 0,
+        flow: flow
+    }
 }

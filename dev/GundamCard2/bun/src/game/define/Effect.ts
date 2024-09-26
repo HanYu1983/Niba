@@ -28,7 +28,8 @@ export type Effect = {
     description?: string
     isOption?: boolean
     // TODO: delete
-    requirePassed?: boolean
+    requirePassed?: boolean,
+    isPlayG?: boolean
 }
 
 export const EffectFn = {

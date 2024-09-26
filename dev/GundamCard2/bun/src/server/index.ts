@@ -8,7 +8,7 @@ import { setActivePlayerID } from '../game/gameState/ActivePlayerComponent';
 import { createCardWithProtoIds } from '../game/gameState/CardTableComponent';
 import { AbsoluteBaSyouFn } from '../game/define/BaSyou';
 import { loadPrototype } from '../script';
-import { log } from '../tool/logger';
+import { logCategory } from '../tool/logger';
 const url = require('url');
 const fs = require('fs').promises;
 
@@ -54,7 +54,7 @@ export async function createServer() {
     }
     function handlePlayer(playerId: string) {
         return (req: http.IncomingMessage, res: http.ServerResponse, params: any) => {
-            log("createServer", "handlePlayer", playerId)
+            logCategory("createServer", "handlePlayer", playerId)
             if (params.flow) {
                 const flow = JSON.parse(params.flow)
                 try {

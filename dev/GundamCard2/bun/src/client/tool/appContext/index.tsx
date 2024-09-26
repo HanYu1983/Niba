@@ -1,7 +1,7 @@
 import { createContext, PropsWithChildren, useState, useEffect } from "react";
 import { OnEvent } from "./eventCenter";
 import { ViewModel, DEFAULT_VIEW_MODEL, OnViewModel } from "./OnViewModel";
-import { log } from "../../../tool/logger";
+import { logCategory } from "../../../tool/logger";
 
 
 export type AppContextType = {
@@ -16,7 +16,7 @@ export const AppContextProvider = (props: PropsWithChildren<any>) => {
   const [viewModel, setViewModel] = useState<ViewModel>(DEFAULT_VIEW_MODEL);
   useEffect(() => {
     const subscriber = OnViewModel.subscribe((model) => {
-      log("AppContextProvider", "OnViewModel", model);
+      logCategory("AppContextProvider", "OnViewModel", model);
       setViewModel(model);
     });
     return () => {

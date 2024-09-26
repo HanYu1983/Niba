@@ -1,4 +1,5 @@
-import { log } from "console"
+
+import { logCategory } from "../../tool/logger"
 import { createBridge } from "../bridge/createBridge"
 import { AbsoluteBaSyouFn } from "../define/BaSyou"
 import { CardTextFn, ConditionFn, LogicTreeActionFn } from "../define/CardText"
@@ -21,7 +22,7 @@ export function doEffect(
   logicId: number,
   logicSubId: number,
 ): GameState {
-  log("doEffect", effect.text.description)
+  logCategory("doEffect", effect.text.description)
   ctx = EventCenterFn.onEffectStart(ctx, effect)
   assertEffectCanPass(ctx, effect, logicId, logicSubId)
   const ltacs = CardTextFn.getLogicTreeActionConditions(effect.text, CardTextFn.getLogicTreeAction(effect.text, logicId))[logicSubId]
@@ -32,7 +33,7 @@ export function doEffect(
   const conditionIds = Object.keys(ltacs)
   const cardId = EffectFn.getCardID(effect)
   conditionIds.forEach(conditionKey => {
-    log("doEffect", "conditionKey", conditionKey)
+    logCategory("doEffect", "conditionKey", conditionKey)
     const condition = CardTextFn.getCondition(effect.text, conditionKey)
     const actionFns = ConditionFn.getActionTitleFns(condition, getActionTitleFn)
     for (const actionFn of actionFns) {
@@ -81,7 +82,7 @@ export function createEffectTips(
   const bridge = createBridge()
   return Object.keys(ltacs).map(key => {
     const con = ltacs[key]
-    log("createEffectTips", key, con.title)
+    logCategory("createEffectTips", key, con.title)
     const tip = getConditionTitleFn(con, {})(ctx, effect, bridge)
     const errors: string[] = []
     if (tip) {
@@ -103,7 +104,7 @@ export function createEffectTips(
         }
       }
       try {
-        log("createEffectTips", "tip", tip)
+        logCategory("createEffectTips", "tip", tip)
         const error = TipFn.checkTipSatisfies(tip)
         if (error) {
           throw error
@@ -143,7 +144,7 @@ export function createEffectTips(
 }
 
 export function setEffectTips(ctx: GameState, e: Effect, toes: TipOrErrors[]): GameState {
-  log("setEffectTips", "effect", e.description)
+  logCategory("setEffectTips", "effect", e.description)
   switch (e.reason[0]) {
     case "Event":
     case "GameRule":
@@ -152,7 +153,7 @@ export function setEffectTips(ctx: GameState, e: Effect, toes: TipOrErrors[]): G
     case "PlayCard":
     case "PlayText": {
       const cardId = EffectFn.getCardID(e)
-      log("setEffectTips", "cardId", cardId)
+      logCategory("setEffectTips", "cardId", cardId)
       toes.forEach(toe => {
         if (toe.errors.length) {
           return
@@ -162,7 +163,7 @@ export function setEffectTips(ctx: GameState, e: Effect, toes: TipOrErrors[]): G
           return
         }
         const key = toe.conditionKey
-        log("setEffectTips", key, tip.title)
+        logCategory("setEffectTips", key, tip.title)
         ctx = mapItemState(ctx, cardId, is => ItemStateFn.setTip(is, key, tip)) as GameState
       })
       return ctx
