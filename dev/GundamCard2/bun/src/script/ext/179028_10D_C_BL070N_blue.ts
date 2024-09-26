@@ -24,6 +24,7 @@ export const prototype: CardPrototype = {
         title: ["Entity", { isBattle: false, side: "自軍", runtimeItemCategory: "ユニット", count: 1, isDestroy: true }]
       }
     },
+    // logicTreeActions只能支援一個元素, 不能多個
     logicTreeActions: [
       {
         logicTree: {
@@ -45,7 +46,6 @@ export const prototype: CardPrototype = {
               const cardId = DefineFn.EffectFn.getCardID(effect)
               const enable1 = DefineFn.ItemStateFn.hasTip(GameStateFn.getItemState(ctx, cardId), "交戦中の自軍ユニット１枚は")
               if (enable1) {
-                console.log("XX")
                 const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "交戦中の自軍ユニット１枚は", cardId)
                 for (const pair of pairs) {
                   ctx = GameStateFn.setItemGlobalEffectsUntilEndOfTurn(ctx, [{ title: ["＋x／＋x／＋xを得る", [3, 3, 3]], cardIds: [pair[0]] }], pair)
@@ -54,7 +54,6 @@ export const prototype: CardPrototype = {
               }
               const enable2 = DefineFn.ItemStateFn.hasTip(GameStateFn.getItemState(ctx, cardId), "非交戦中の自軍ユニット１枚の破壊")
               if (enable2) {
-                console.log("XX22")
                 const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "非交戦中の自軍ユニット１枚の破壊", cardId)
                 for (const pair of pairs) {
                   ctx = GameStateFn.doItemSetDestroy(ctx, null, pair, { isSkipTargetMissing: true })
