@@ -42,7 +42,7 @@ export function getConditionTitleFn(condition: Condition, options: { isPlay?: bo
         return function (ctx: GameState, effect: Effect): Tip | null {
           const cardId = EffectFn.getCardID(effect)
           const playerId = getItemController(ctx, cardId);
-          const targetPlayerId = side == "自軍" ? playerId : PlayerIDFn.getOpponent(playerId)
+          const targetPlayerId = PlayerIDFn.fromRelatedPlayerSideKeyword(side, playerId)
           const basyous: AbsoluteBaSyou[] = (lift(AbsoluteBaSyouFn.of)([targetPlayerId], [basyouKw]))
           const pairs = basyous.flatMap(basyou =>
             getItemIdsByBasyou(ctx, basyou)
@@ -85,7 +85,7 @@ export function getConditionTitleFn(condition: Condition, options: { isPlay?: bo
         return function (ctx: GameState, effect: Effect): Tip | null {
           const fromCardId = EffectFn.getCardID(effect)
           const playerId = getItemController(ctx, fromCardId);
-          const targetPlayerId = side == "自軍" ? playerId : PlayerIDFn.getOpponent(playerId)
+          const targetPlayerId = PlayerIDFn.fromRelatedPlayerSideKeyword(side, playerId)
           if (category == "グラフィック") {
             const basyous: AbsoluteBaSyou[] = [AbsoluteBaSyouFn.of(targetPlayerId, "Gゾーン")]
             const pairs = basyous.flatMap(basyou =>
@@ -142,6 +142,7 @@ export function getConditionTitleFn(condition: Condition, options: { isPlay?: bo
           const cardId = EffectFn.getCardID(effect)
           const playerId = getItemController(ctx, cardId);
           const targetPlayerId = side == "自軍" ? playerId : PlayerIDFn.getOpponent(playerId)
+          
           const basyous: AbsoluteBaSyou[] = (lift(AbsoluteBaSyouFn.of)([targetPlayerId], basyouKws))
           const pairs = basyous.flatMap(basyou =>
             getItemIdsByBasyou(ctx, basyou)

@@ -16,9 +16,6 @@ export function doItemMove(ctx: GameState, to: AbsoluteBaSyou, [itemId, from]: S
 
     } else {
         assertTargetMissingError(ctx, [itemId, from])
-    }
-    if (isCoin(ctx, itemId)) {
-        throw new Error(`moveCardLike`)
     } 
     if (isCard(ctx, itemId) || isChip(ctx, itemId)) {
         const oldTable = ctx.table

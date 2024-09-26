@@ -21,6 +21,7 @@ import { doItemSwap } from "./doItemSwap"
 import { triggerEvent } from "./triggerEvent"
 import { doItemDamage } from "./doItemDamage"
 import { doSetItemRollState } from "./doSetItemRollState"
+import { doCountryDamage } from "./doCountryDamage"
 
 export function getActionTitleFn(action: Action): ActionTitleFn {
     if (typeof action.title == "string") {
@@ -133,15 +134,8 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
         return function (ctx: GameState, effect: Effect): GameState {
           const cardId = EffectFn.getCardID(effect)
           const cardController = getItemController(ctx, cardId)
-          const playerId = side == "自軍" ? cardController : PlayerIDFn.getOpponent(cardController)
-          const from = AbsoluteBaSyouFn.of(playerId, "本国")
-          const pairs = getItemIdsByBasyou(ctx, from).map(itemId => {
-            return [itemId, from] as StrBaSyouPair
-          }).slice(0, damage)
-          const to = AbsoluteBaSyouFn.of(playerId, "捨て山")
-          for (const pair of pairs) {
-            ctx = doItemMove(ctx, to, pair)
-          }
+          const playerId = PlayerIDFn.fromRelatedPlayerSideKeyword(side, cardController)
+          ctx = doCountryDamage(ctx, playerId, damage)
           return ctx
         }
       }
@@ -156,7 +150,7 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
             varNames.flatMap(varName => {
               return getCardTipStrBaSyouPairs(ctx, varName, cardId)
             })
-          const playerId = side == "自軍" ? cardController : PlayerIDFn.getOpponent(cardController)
+          const playerId = PlayerIDFn.fromRelatedPlayerSideKeyword(side, cardController)
           const to = AbsoluteBaSyouFn.of(playerId, basyouKw)
           for (const pair of pairs) {
             ctx = doItemMove(ctx, to, pair)
@@ -289,7 +283,7 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
         return function (ctx: GameState, effect: Effect): GameState {
           const cardId = EffectFn.getCardID(effect)
           const playerId = getItemController(ctx, cardId);
-          const targetPlayerId = side == "自軍" ? playerId : PlayerIDFn.getOpponent(playerId)
+          const targetPlayerId = PlayerIDFn.fromRelatedPlayerSideKeyword(side, playerId)
           const basyous: AbsoluteBaSyou[] = (lift(AbsoluteBaSyouFn.of)([targetPlayerId], areas))
           const pairs = basyous.flatMap(basyou =>
             getItemIdsByBasyou(ctx, basyou)

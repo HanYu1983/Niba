@@ -45,7 +45,6 @@ const fs = require('fs').promises;
 
 export async function tests() {
     return [
-        testCompress,
         testLoadPrototype,
         testSwapItem,
         itemGroupTests,
@@ -71,7 +70,8 @@ export async function tests() {
         test179016_04B_U_BK066C_black,
         test179030_11E_U_BK194S_2_black,
         test179015_04B_U_BK058R_black,
-        test179030_11E_U_BK194S_2_black_2
+        test179030_11E_U_BK194S_2_black_2,
+        testCompress,
     ].reduce((worker, testF) => {
         return worker.then(async () => {
             console.log(`==============================${testF.name}==================================`);
