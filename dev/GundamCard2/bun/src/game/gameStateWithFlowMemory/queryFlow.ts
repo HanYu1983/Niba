@@ -12,7 +12,7 @@ import { getRerollPhaseRuleEffect } from "../gameState/getRerollPhaseRuleEffect"
 import { getDamageRuleEffect } from "../gameState/getDamageRuleEffect";
 import { getReturnRuleEffect } from "../gameState/getReturnRuleEffect";
 import { clearTipSelectionForUser, createCommandEffectTips, createEffectTips } from "../gameState/doEffect";
-import { CommandEffecTipFn } from "../define/CommandEffectTip";
+import { CommandEffecTipFn, TipOrErrorsFn } from "../define/CommandEffectTip";
 
 export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[] {
     if (true) {
@@ -75,26 +75,21 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
         const enablePayCost = true;
         if (enablePayCost) {
             const effectCreator = EffectFn.getPlayerID(currentActiveEffect);
-            const tipOrErrors = createEffectTips(ctx, currentActiveEffect, activeLogicID, activeLogicSubID, { isCheckUserSelection: true })
-            const toes = tipOrErrors.filter(toe => toe.errors.length != 0)
-            const playerTips = toes.filter(info => {
-                const condition = currentActiveEffect.text.conditions?.[info.conditionKey]
-                if (condition?.relatedPlayerSideKeyword == "敵軍") {
-                    return effectCreator != playerID
-                }
-                return effectCreator == playerID
-            }).map(info => {
-                if (info.tip == null) {
-                    throw new Error(`info.tip must found`)
-                }
-                return {
-                    id: "FlowSetTipSelection",
-                    effectID: currentActiveEffect.id,
-                    conditionKey: info.conditionKey,
-                    tip: info.tip,
-                    description: `select ${info.conditionKey}`
-                } as Flow
-            })
+            const playerTips = createEffectTips(ctx, currentActiveEffect, activeLogicID, activeLogicSubID, { isCheckUserSelection: true })
+                .filter(toe => toe.errors.length != 0)
+                .filter(TipOrErrorsFn.filterPlayerId(effectCreator))
+                .map(info => {
+                    if (info.tip == null) {
+                        throw new Error(`這裡時候有錯誤的只能是TIP存在的場合, 其它的情況應該在使用者取得指令時就過濾掉了`)
+                    }
+                    return {
+                        id: "FlowSetTipSelection",
+                        effectID: currentActiveEffect.id,
+                        conditionKey: info.conditionKey,
+                        tip: info.tip,
+                        description: `select ${info.conditionKey}`
+                    } as Flow
+                })
             // ======
             const isPass = !!ctx.flowMemory.hasPlayerPassPayCost[playerID];
             const isOpponentPass =
