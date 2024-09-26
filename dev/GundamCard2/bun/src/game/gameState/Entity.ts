@@ -1,12 +1,19 @@
 import { BaSyouKeyword, BaSyouKeywordFn, AbsoluteBaSyouFn } from "../define/BaSyou";
+import { CardCategory, CardColor } from "../define/CardPrototype";
+import { ItemState } from "../define/ItemState";
 import { PlayerID, PlayerA, PlayerB } from "../define/PlayerID";
+import { getCardColor, getItemRuntimeCategory } from "./card";
 import { getCoinIds, getCoin, getCoinOwner } from "./CoinTableComponent";
 import { GameState } from "./GameState";
-import { Item, getItemIdsByBasyou, getItem, isCard, isChip } from "./ItemTableComponent";
+import { isBattle } from "./IsBattleComponent";
+import { getItemState } from "./ItemStateComponent";
+import { Item, getItemIdsByBasyou, getItem, isCard, isChip, getItemController, getItemPrototype } from "./ItemTableComponent";
+import { getSetGroupRoot } from "./SetGroupComponent";
 
 export type Entity = {
     itemController: PlayerID,
     itemId: string,
+    itemState: ItemState,
     item: Item,
     isChip: boolean,
     isCoin: boolean,
@@ -24,6 +31,7 @@ export function createEntityIterator(ctx: GameState) {
                 const entity: Entity = {
                     itemController: playerId,
                     itemId: itemId,
+                    itemState: getItemState(ctx, itemId),
                     item: item,
                     isCard: isCard(ctx, item.id),
                     isCoin: false,
@@ -39,6 +47,7 @@ export function createEntityIterator(ctx: GameState) {
         const entity: Entity = {
             itemController: getCoinOwner(ctx, coin.id),
             itemId: coin.id,
+            itemState: getItemState(ctx, coin.id),
             item: coin,
             isCard: false,
             isCoin: true,
@@ -51,14 +60,68 @@ export function createEntityIterator(ctx: GameState) {
 }
 
 export const EntityFn = {
-    filterAtBaSyou(ctx: GameState, kw: BaSyouKeyword) {
-        return (ctx: Entity) => {
-            return ctx.baSyouKeyword == kw
+    filterAtBaSyous(kws: BaSyouKeyword[]) {
+        return (entity: Entity) => {
+            if (entity.baSyouKeyword == null) {
+                return false
+            }
+            return kws.includes(entity.baSyouKeyword)
+        }
+    },
+    filterAtBattleArea(v: boolean) {
+        return (entity: Entity) => {
+            return (entity.baSyouKeyword == "戦闘エリア1" || entity.baSyouKeyword == "戦闘エリア2") == v
+        }
+    },
+    filterAtBa(v: boolean) {
+        return (entity: Entity) => {
+            if (entity.baSyouKeyword == null) {
+                return false
+            }
+            return BaSyouKeywordFn.isBa(entity.baSyouKeyword) == v
         }
     },
     filterController(playerId: PlayerID) {
-        return (ctx: Entity) => {
-            return ctx.itemController == playerId
+        return (entity: Entity) => {
+            return entity.itemController == playerId
         }
-    }
+    },
+    filterIsDestroy(v: boolean) {
+        return (entity: Entity) => {
+            return (entity.itemState.destroyReason != null) == v
+        }
+    },
+    filterIsBattle(ctx: GameState, targetId: string | null, v: boolean) {
+        return (entity: Entity) => {
+            return isBattle(ctx, entity.itemId, targetId) == v
+        }
+    },
+    filterRuntimeCategory(ctx: GameState, category: CardCategory) {
+        return (entity: Entity) => {
+            return getItemRuntimeCategory(ctx, entity.itemId) == category
+        }
+    },
+    filterCategory(ctx: GameState, category: CardCategory) {
+        return (entity: Entity) => {
+            return getItemPrototype(ctx, entity.itemId).category == category
+        }
+    },
+    filterItemController(ctx: GameState, playerId: string) {
+        return (entity: Entity) => {
+            return getItemController(ctx, entity.itemId) == playerId
+        }
+    },
+    filterItemColor(ctx: GameState, color: CardColor) {
+        return (entity: Entity) => {
+            return getCardColor(ctx, entity.itemId) == color
+        }
+    },
+    filterIsSetGroup(ctx: GameState, v: boolean) {
+        return (entity: Entity) => {
+            return (getSetGroupRoot(ctx, entity.itemId) == entity.itemId) == v
+        }
+    },
+    filterDistinct(cet: Entity, index: number, self: Entity[]): boolean {
+        return index === self.findIndex(c => c.itemId === cet.itemId)
+    },
 }

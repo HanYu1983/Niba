@@ -144,7 +144,9 @@ async function testCompress() {
         const blackT3 = ["179015_04B_O_BK010C_black", "179015_04B_O_BK010C_black", "179015_04B_U_BK058R_black", "179015_04B_U_BK058R_black", "179015_04B_U_BK059C_black", "179015_04B_U_BK059C_black", "179015_04B_U_BK061C_black", "179015_04B_U_BK061C_black", "179016_04B_U_BK066C_black", "179016_04B_U_BK066C_black", "179019_02A_C_BK015S_black", "179019_02A_C_BK015S_black", "179020_05C_U_BK100U_black", "179020_05C_U_BK100U_black", "179023_06C_C_BK048R_black", "179023_06C_C_BK048R_black", "179023_06C_C_BK049U_black", "179023_06C_C_BK049U_black", "179024_04B_C_BK027U_black", "179024_04B_C_BK027U_black", "179024_04B_U_BK060C_black", "179024_04B_U_BK060C_black", "179024_04B_U_BK067C_black", "179024_04B_U_BK067C_black", "179024_B2B_C_BK054C_black", "179024_B2B_C_BK054C_black", "179024_B2B_U_BK128S_black_02", "179024_B2B_U_BK128S_black_02", "179024_B2B_U_BK129R_black", "179024_B2B_U_BK129R_black", "179027_09D_C_BK063R_black", "179027_09D_C_BK063R_black", "179027_09D_O_BK010N_black", "179027_09D_O_BK010N_black", "179027_09D_U_BK163S_black", "179027_09D_U_BK163S_black", "179027_09D_U_BK163S_black", "179029_06C_C_BK045U_black", "179029_06C_C_BK045U_black", "179029_B3C_C_BK071N_black", "179029_B3C_C_BK071N_black", "179029_B3C_U_BK184N_black", "179029_B3C_U_BK184N_black", "179029_B3C_U_BK184N_black", "179029_B3C_U_BK185N_black", "179029_B3C_U_BK185N_black", "179030_11E_U_BK194S_2_black", "179030_11E_U_BK194S_2_black", "179030_11E_U_BK194S_2_black", "179901_B2B_C_BK005P_black"]
         await Promise.all(blackT3.concat(whiteSpeed).map(loadPrototype))
         ctx = initState(ctx, whiteSpeed, whiteSpeed)
-        for (let i = 0; i < 5000; ++i) {
+        ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), whiteSpeed.slice(0, 6)) as GameStateWithFlowMemory
+        ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerB, "Gゾーン"), whiteSpeed.slice(0, 6)) as GameStateWithFlowMemory
+        for (let i = 0; i < 1000; ++i) {
             console.log(`${i} > ${getPhase(ctx)} > ${getActivePlayerID(ctx)}`)
             const playerId = PlayerIDFn.getAll()[Math.round(Math.random() * 1000) % 2]
             {
@@ -188,8 +190,8 @@ async function testCompress() {
 // Windows v.win10_fe
 // CPU: sse42 avx avx2
 // Args: "C:\Program Files\nodejs\node_modules\bun\bin\bun.exe" "run" ".\src\index.ts"
-// Features: jsc tsconfig(2) 
-// Builtins: "bun:main" "node:buffer" "node:crypto" "node:fs" "node:string_decoder" "node:util/types" 
+// Features: jsc tsconfig(2)
+// Builtins: "bun:main" "node:buffer" "node:crypto" "node:fs" "node:string_decoder" "node:util/types"
 // Elapsed: 24026ms | User: 9625ms | Sys: 78ms
 // RSS: 0.35GB | Peak: 0.35GB | Commit: 0.48GB | Faults: 88180
 

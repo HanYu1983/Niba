@@ -11,6 +11,10 @@ export function createSetGroupComponent(): SetGroupComponent {
   };
 }
 
+export function getSetGroup(ctx: SetGroupComponent, itemId: string): string[] {
+  return ItemGroupFn.getItemGroupFromRoot(ctx.setGroup, itemId)
+}
+
 export function getSetGroupChildren(ctx: SetGroupComponent, itemId: string): string[] {
   return ItemGroupFn.getItemGroup(ctx.setGroup, itemId)
 }

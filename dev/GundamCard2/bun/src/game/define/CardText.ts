@@ -37,7 +37,7 @@ export const TextSpeicalEffectFn = {
 
 export type ActionTitle =
     | string
-    | ["_ロールする", "ロール" | "リロール" | "打開" | "リロール" | "破壞" | "廃棄"]
+    | ["_ロールする", "ロール" | "リロール" | "打開" | "リロール" | "破壞" | "廃棄" | "破壊を無効"]
     | ["_１ダメージを与える", number]
     | ["_－１／－１／－１コイン_１個を乗せる", BattleBonus, number]
     | ["移除卡狀態_旗標", string]
@@ -94,6 +94,19 @@ export type ConditionTitle =
     | ["_配備エリアにいる、「特徴：_T3部隊」を持つ_自軍_ユニット_１枚", BaSyouKeyword, string, RelatedPlayerSideKeyword, CardCategory, number]
     | ["_自軍_本国の上のカード_１～_４枚を見て、その中にある、「特徴：_ヘイズル系」を持つ_ユニット_１枚", RelatedPlayerSideKeyword, BaSyouKeyword, number, number, string, CardCategory, number]
     | ["_自軍_ジャンクヤードにある、_黒のGサインを持つ全てのカードは", RelatedPlayerSideKeyword, BaSyouKeyword, CardColor]
+    | ["Entity", {
+        isBattle?: boolean,
+        side?: RelatedPlayerSideKeyword,
+        runtimeItemCategory?: CardCategory,
+        itemCategory?: CardCategory,
+        baSyouKeywords?: BaSyouKeyword[],
+        itemColor?: CardColor,
+        isDestroy?: boolean,
+        isSetGroup?: boolean,
+        count?: number,
+        min?: number,
+        max?: number
+    }]
 
 export type Condition = {
     title?: ConditionTitle,
