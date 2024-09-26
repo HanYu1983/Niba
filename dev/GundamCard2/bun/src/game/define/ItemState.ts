@@ -65,6 +65,9 @@ export const ItemStateFn = {
         }
         return ctx.tips[k]
     },
+    hasTip(ctx: ItemState, k: string): boolean {
+        return ctx.tips[k] != null
+    },
     setTip(ctx: ItemState, k: string, tip: Tip): ItemState {
         ctx = {
             ...ctx,

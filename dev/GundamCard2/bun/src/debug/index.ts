@@ -18,7 +18,7 @@ import { getPhase, setPhase } from "../game/gameState/PhaseComponent";
 import { AbsoluteBaSyouFn } from "../game/define/BaSyou";
 import { addCards, createCardWithProtoIds, getCard, mapCard } from "../game/gameState/CardTableComponent";
 import { getGlobalEffects } from "../game/gameState/globalEffects";
-import { createGameStateWithFlowMemory, GameStateWithFlowMemory } from "../game/gameStateWithFlowMemory/GameStateWithFlowMemory";
+import { createGameStateWithFlowMemory, GameStateWithFlowMemory, initState } from "../game/gameStateWithFlowMemory/GameStateWithFlowMemory";
 import { queryFlow } from "../game/gameStateWithFlowMemory/queryFlow";
 import { applyFlow, createAIChoiseList } from "../game/gameStateWithFlowMemory/applyFlow";
 import { TargetMissingError } from "../game/define/GameError";
@@ -31,7 +31,7 @@ import { createGameState, GameState } from "../game/gameState/GameState";
 import { getItemState, mapItemState } from "../game/gameState/ItemStateComponent";
 import { swap } from "ramda";
 import { doItemSwap } from "../game/gameState/doItemSwap";
-import { getItemBaSyou } from "../game/gameState/ItemTableComponent";
+import { getItemBaSyou, getItemIdsByBasyou } from "../game/gameState/ItemTableComponent";
 import { test179030_11E_U_BK194S_2_black, test179030_11E_U_BK194S_2_black_2 } from "./test179030_11E_U_BK194S_2_black";
 import { createCommandEffectTips, createEffectTips, doEffect, setTipSelectionForUser } from "../game/gameState/doEffect";
 import { CommandEffecTipFn } from "../game/define/CommandEffectTip";
@@ -41,10 +41,12 @@ import { EffectFn } from "../game/define/Effect";
 import { ItemStateFn } from "../game/define/ItemState";
 import { testIssue } from "./testIssue";
 import { test179015_04B_U_BK058R_black } from "./test179015_04B_U_BK058R_black";
+import { testGain } from "./testGain";
 const fs = require('fs').promises;
 
 export async function tests() {
     return [
+        testGain,
         testLoadPrototype,
         testSwapItem,
         itemGroupTests,
@@ -138,20 +140,11 @@ async function testSwapItem() {
 async function testCompress() {
     let ctx = createGameStateWithFlowMemory()
     try {
+        const whiteSpeed = ["179001_01A_CH_WT007R_white", "179004_01A_CH_WT009R_white", "179004_01A_CH_WT010C_white", "179007_02A_U_WT027U_white", "179007_02A_U_WT027U_white", "179008_02A_U_WT034U_white", "179008_02A_U_WT034U_white", "179008_02A_U_WT034U_white", "179014_03B_CH_WT027R_white", "179015_04B_U_WT067C_white", "179015_04B_U_WT067C_white", "179015_04B_U_WT067C_white", "179016_04B_U_WT074C_white", "179016_04B_U_WT074C_white", "179016_04B_U_WT074C_white", "179016_04B_U_WT075C_white", "179016_04B_U_WT075C_white", "179016_04B_U_WT075C_white", "179019_01A_C_WT010C_white", "179019_01A_C_WT010C_white", "179019_02A_U_WT028R_white", "179019_02A_U_WT028R_white", "179022_06C_CH_WT057R_white", "179022_06C_CH_WT057R_white", "179022_06C_CH_WT057R_white", "179022_06C_U_WT113R_white", "179022_06C_U_WT113R_white", "179022_06C_U_WT113R_white", "179023_06C_CH_WT067C_white", "179024_03B_U_WT057U_white", "179024_03B_U_WT057U_white", "179025_07D_C_WT060U_white", "179025_07D_CH_WT075C_white", "179025_07D_CH_WT075C_white", "179025_07D_CH_WT075C_white", "179027_09D_C_WT067R_white", "179027_09D_C_WT067R_white", "179029_B3C_CH_WT102R_white", "179029_B3C_CH_WT103N_white", "179029_B3C_U_WT196R_white", "179030_11E_C_WT077S_white", "179030_11E_C_WT077S_white", "179030_11E_C_WT077S_white", "179030_11E_CH_WT108N_white", "179901_00_C_WT003P_white", "179901_00_C_WT003P_white", "179901_00_C_WT003P_white", "179901_CG_C_WT001P_white", "179901_CG_C_WT001P_white", "179901_CG_CH_WT002P_white"]
         const blackT3 = ["179015_04B_O_BK010C_black", "179015_04B_O_BK010C_black", "179015_04B_U_BK058R_black", "179015_04B_U_BK058R_black", "179015_04B_U_BK059C_black", "179015_04B_U_BK059C_black", "179015_04B_U_BK061C_black", "179015_04B_U_BK061C_black", "179016_04B_U_BK066C_black", "179016_04B_U_BK066C_black", "179019_02A_C_BK015S_black", "179019_02A_C_BK015S_black", "179020_05C_U_BK100U_black", "179020_05C_U_BK100U_black", "179023_06C_C_BK048R_black", "179023_06C_C_BK048R_black", "179023_06C_C_BK049U_black", "179023_06C_C_BK049U_black", "179024_04B_C_BK027U_black", "179024_04B_C_BK027U_black", "179024_04B_U_BK060C_black", "179024_04B_U_BK060C_black", "179024_04B_U_BK067C_black", "179024_04B_U_BK067C_black", "179024_B2B_C_BK054C_black", "179024_B2B_C_BK054C_black", "179024_B2B_U_BK128S_black_02", "179024_B2B_U_BK128S_black_02", "179024_B2B_U_BK129R_black", "179024_B2B_U_BK129R_black", "179027_09D_C_BK063R_black", "179027_09D_C_BK063R_black", "179027_09D_O_BK010N_black", "179027_09D_O_BK010N_black", "179027_09D_U_BK163S_black", "179027_09D_U_BK163S_black", "179027_09D_U_BK163S_black", "179029_06C_C_BK045U_black", "179029_06C_C_BK045U_black", "179029_B3C_C_BK071N_black", "179029_B3C_C_BK071N_black", "179029_B3C_U_BK184N_black", "179029_B3C_U_BK184N_black", "179029_B3C_U_BK184N_black", "179029_B3C_U_BK185N_black", "179029_B3C_U_BK185N_black", "179030_11E_U_BK194S_2_black", "179030_11E_U_BK194S_2_black", "179030_11E_U_BK194S_2_black", "179901_B2B_C_BK005P_black"]
-        await Promise.all(blackT3.map(loadPrototype))
-        ctx = setActivePlayerID(ctx, PlayerA) as GameStateWithFlowMemory
-        ctx = setPhase(ctx, ["配備フェイズ", "フリータイミング"]) as GameStateWithFlowMemory
-        ctx = setActivePlayerID(ctx, PlayerA) as GameStateWithFlowMemory
-        ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国"), blackT3) as GameStateWithFlowMemory
-        ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "手札"), blackT3.slice(0, 6)) as GameStateWithFlowMemory
-        ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア"), blackT3.slice(6, 6)) as GameStateWithFlowMemory
-        ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), blackT3.slice(12, 6)) as GameStateWithFlowMemory
-        ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerB, "本国"), blackT3) as GameStateWithFlowMemory
-        ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerB, "手札"), blackT3.slice(0, 6)) as GameStateWithFlowMemory
-        ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerB, "配備エリア"), blackT3.slice(6, 6)) as GameStateWithFlowMemory
-        ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerB, "Gゾーン"), blackT3.slice(12, 6)) as GameStateWithFlowMemory
-        for (let i = 0; i < 1000; ++i) {
+        await Promise.all(blackT3.concat(whiteSpeed).map(loadPrototype))
+        ctx = initState(ctx, whiteSpeed, whiteSpeed)
+        for (let i = 0; i < 5000; ++i) {
             console.log(`${i} > ${getPhase(ctx)} > ${getActivePlayerID(ctx)}`)
             const playerId = PlayerIDFn.getAll()[Math.round(Math.random() * 1000) % 2]
             {
@@ -178,10 +171,10 @@ async function testCompress() {
                     }
                 }
             }
-            getGlobalEffects(ctx, null)
-            const cmd = getPlayEffects(ctx, playerId)
-            console.log(`${playerId} 能用的指令數量: ${cmd.length}`)
         }
+        console.log(`PlayerA: ${getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国")).length}`)
+        console.log(`PlayerB: ${getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerB, "本国")).length}`)
+        console.log(`turn: ${ctx.turn}`)
     } catch (e) {
         ctx.globalEffectPool = {}
         await fs.writeFile('__gameState_bug.json', JSON.stringify(ctx));
@@ -189,3 +182,21 @@ async function testCompress() {
     }
 }
 
+
+// ============================================================
+// Bun v1.1.27 (267afa29) Windows x64
+// Windows v.win10_fe
+// CPU: sse42 avx avx2
+// Args: "C:\Program Files\nodejs\node_modules\bun\bin\bun.exe" "run" ".\src\index.ts"
+// Features: jsc tsconfig(2) 
+// Builtins: "bun:main" "node:buffer" "node:crypto" "node:fs" "node:string_decoder" "node:util/types" 
+// Elapsed: 24026ms | User: 9625ms | Sys: 78ms
+// RSS: 0.35GB | Peak: 0.35GB | Commit: 0.48GB | Faults: 88180
+
+// panic(main thread): Segmentation fault at address 0x30
+// oh no: Bun has crashed. This indicates a bug in Bun, not your code.
+
+// To send a redacted crash report to Bun's team,
+// please file a GitHub issue using the link below:
+
+//  https://bun.report/1.1.27/wr1267afa2AiggggCyhwk3Cyjhk3Csg9j3C4tqyN6nx9X0uqpT2vguJsozwJ47z57C20wjqBA2AgD

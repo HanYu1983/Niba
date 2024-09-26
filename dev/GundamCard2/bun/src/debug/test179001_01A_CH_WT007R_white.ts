@@ -7,7 +7,7 @@ import { PhaseFn } from "../game/define/Timing"
 import { setActivePlayerID } from "../game/gameState/ActivePlayerComponent"
 import { getCardRollCostLength, getCardBattlePoint, getCardHasSpeicalEffect } from "../game/gameState/card"
 import { addCards, createCardWithProtoIds } from "../game/gameState/CardTableComponent"
-import { createEffectTips, doEffect, onMoveItem } from "../game/gameState/doEffect"
+import { createEffectTips, doEffect, setTipSelectionForUser } from "../game/gameState/doEffect"
 import { getTopEffect } from "../game/gameState/EffectStackComponent"
 import { createGameState, GameState } from "../game/gameState/GameState"
 import { getPlayEffects } from "../game/gameState/getPlayEffects"
@@ -25,6 +25,7 @@ export async function test179001_01A_CH_WT007R_white() {
     }
     let ctx = createGameState()
     ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1"), [cardA]) as GameState
+    ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), ["179001_01A_CH_WT007R_white", "179001_01A_CH_WT007R_white"]) as GameState
     ctx = setActivePlayerID(ctx, PlayerA) as GameState
     ctx = setPhase(ctx, ["戦闘フェイズ", "ダメージ判定ステップ", "フリータイミング"]) as GameState
     {
@@ -35,6 +36,7 @@ export async function test179001_01A_CH_WT007R_white() {
         if (playCardEffects.length != 1) {
             throw new Error(`playCardEffects.length != 1`)
         }
+        ctx = setTipSelectionForUser(ctx, playCardEffects[0], 0, 0)
         ctx = doEffect(ctx, playCardEffects[0], 0, 0)
         const effect = getTopEffect(ctx)
         if (effect == null) {
@@ -45,11 +47,11 @@ export async function test179001_01A_CH_WT007R_white() {
         }
         ctx = doEffect(ctx, effect, 0, 0)
         if (getCardHasSpeicalEffect(ctx, ["速攻"], cardA.id) != true) {
-            throw new Error(`getCardHasSpeicalEffect(ctx, ["速攻"],cardA.id) != true`)
+            throw new Error()
         }
         ctx = triggerEvent(ctx, { title: ["GameEventOnTiming", PhaseFn.getLast()] })
         if (getCardHasSpeicalEffect(ctx, ["速攻"], cardA.id) != false) {
-            throw new Error(`getCardHasSpeicalEffect(ctx, ["速攻"],cardA.id) != false`)
+            throw new Error()
         }
     }
 }

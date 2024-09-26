@@ -23662,7 +23662,7 @@ function getCardsByPosition(table, position) {
 }
 function moveCard(table, fromPosition, toPosition, cardId) {
   if (!table.cardStack[fromPosition] || !table.cardStack[fromPosition].includes(cardId)) {
-    throw new Error("Card not found in the specified position");
+    throw new Error(`Card not found in the specified position:${fromPosition} ${toPosition} ${cardId}`);
   }
   const updatedFromStack = table.cardStack[fromPosition].filter((id) => id !== cardId);
   const updatedToStack = table.cardStack[toPosition] ? [...table.cardStack[toPosition], cardId] : [cardId];
@@ -23820,6 +23820,7 @@ var hideCategory = [
 ];
 var filterCategory = true;
 var logCategory = (category, ...msg) => {
+  return;
   if (filterCategory) {
     if (hideCategory.find((c) => c == category)) {
       return;
@@ -27097,7 +27098,7 @@ function getTextsFromSpecialEffect(ctx2, text) {
                   title: function _(ctx3, effect, { GameStateFn, DefineFn }) {
                     const cardId = DefineFn.EffectFn.getCardID(effect);
                     if (GameStateFn.getItemState(ctx3, cardId).isFirstTurn != true) {
-                      throw new DefineFn.TargetMissingError(`\u9019\u500B\u6548\u679C\u53EA\u6709\u9019\u5F35\u5361\u5F9E\u624B\u4E2D\u6253\u51FA\u7684\u56DE\u5408\u53EF\u4EE5\u4F7F\u7528:${effect.text.description}`);
+                      throw new DefineFn.TipError(`\u9019\u500B\u6548\u679C\u53EA\u6709\u9019\u5F35\u5361\u5F9E\u624B\u4E2D\u6253\u51FA\u7684\u56DE\u5408\u53EF\u4EE5\u4F7F\u7528:${effect.text.description}`);
                     }
                     return ctx3;
                   }.toString()
@@ -27723,13 +27724,12 @@ function doItemMove(ctx2, to, [itemId, from], options) {
       }
     }
     const itemIds = getSetGroupChildren(ctx2, itemId);
-    const table7 = itemIds.reduce((table8, itemId2) => {
-      return TableFns.moveCard(table8, AbsoluteBaSyouFn.toString(from), AbsoluteBaSyouFn.toString(to), itemId2);
-    }, ctx2.table);
-    ctx2 = {
-      ...ctx2,
-      table: table7
-    };
+    itemIds.forEach((itemId2) => {
+      ctx2 = {
+        ...ctx2,
+        table: TableFns.moveCard(ctx2.table, AbsoluteBaSyouFn.toString(getItemBaSyou(ctx2, itemId2)), AbsoluteBaSyouFn.toString(to), itemId2)
+      };
+    });
     ctx2 = onMoveItem(ctx2, to, [itemId, from]);
     ctx2 = EventCenterFn.onTableChange(ctx2, oldTable, ctx2.table);
     return ctx2;
@@ -27872,7 +27872,7 @@ function doSetItemRollState(ctx2, isRoll, [itemId, originBasyou], options) {
       if (options?.isSkipTargetMissing) {
       } else {
         if (item.isRoll == isRoll) {
-          throw new Error(`card already roll: ${item.id}`);
+          throw new TargetMissingError(`card already roll: ${item.id}`);
         }
       }
       item = CardFn.setIsRoll(item, isRoll);
@@ -27884,7 +27884,7 @@ function doSetItemRollState(ctx2, isRoll, [itemId, originBasyou], options) {
       if (options?.isSkipTargetMissing) {
       } else {
         if (item.isRoll == isRoll) {
-          throw new Error(`chip already roll: ${item.id}`);
+          throw new TargetMissingError(`chip already roll: ${item.id}`);
         }
       }
       item = ChipFn.setIsRoll(item, isRoll);
@@ -29306,7 +29306,74 @@ var CommandEffecTipFn = {
   }
 };
 
+// src/game/gameState/getDestroyEffect.ts
+function getDestroyEffect(ctx2, reason, cardId) {
+  const effect = {
+    id: ToolFn.getUUID("getDestroyEffect"),
+    reason: ["Destroy", reason.playerID, cardId, reason],
+    text: {
+      id: `Destroy_card_${cardId}`,
+      title: [],
+      logicTreeActions: [
+        {
+          actions: [
+            {
+              title: function _(ctx3, effect2, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {
+                const cardId2 = DefineFn2.EffectFn.getCardID(effect2);
+                const cardOwner = GameStateFn2.getItemOwner(ctx3, cardId2);
+                ctx3 = GameStateFn2.doItemMove(ctx3, DefineFn2.AbsoluteBaSyouFn.of(cardOwner, "\u30B8\u30E3\u30F3\u30AF\u30E4\u30FC\u30C9"), [cardId2, GameStateFn2.getItemBaSyou(ctx3, cardId2)], { isSkipTargetMissing: true });
+                return ctx3;
+              }.toString()
+            }
+          ]
+        }
+      ]
+    }
+  };
+  return effect;
+}
+
 // src/game/gameStateWithFlowMemory/effect.ts
+function doActiveEffect(ctx2, playerID, effectID, logicId, logicSubId) {
+  logCategory("doEffect", effectID);
+  if (getActiveEffectID(ctx2) != effectID) {
+    throw new Error("activeEffectID != effectID");
+  }
+  const effect = getEffectIncludePlayerCommand(ctx2, effectID);
+  if (effect == null) {
+    throw new Error("effect not found");
+  }
+  const isStackEffect_ = isStackEffect(ctx2, effectID);
+  try {
+    ctx2 = doEffect2(ctx2, effect, logicId, logicSubId);
+  } catch (e) {
+    if (e instanceof TargetMissingError) {
+      logCategory("doActiveEffect", `=======================`);
+      logCategory("doActiveEffect", `\u5C0D\u8C61\u907A\u5931: ${e.message}`);
+    } else {
+      throw e;
+    }
+  }
+  ctx2 = clearActiveEffectID(ctx2);
+  ctx2 = removeEffect(ctx2, effectID);
+  if (isStackEffect_) {
+    ctx2 = {
+      ...ctx2,
+      stackEffectMemory: [...ctx2.stackEffectMemory, effect]
+    };
+  }
+  const isStackFinished = isStackEffect_ && ctx2.stackEffect.length == 0;
+  if (isStackFinished) {
+    ctx2 = {
+      ...ctx2,
+      flowMemory: {
+        ...ctx2.flowMemory,
+        shouldTriggerStackEffectFinishedEvent: true
+      }
+    };
+  }
+  return ctx2;
+}
 function getEffectIncludePlayerCommand(ctx2, effectId) {
   return ctx2.commandEffects.find((cmd) => cmd.id == effectId) || getEffect(ctx2, effectId);
 }
@@ -29337,6 +29404,7 @@ function setActiveEffectID(ctx2, playerID, effectID) {
   }
   const cetsNoErr = createCommandEffectTips(ctx2, effect).filter(CommandEffecTipFn.filterNoError);
   if (cetsNoErr.length == 0) {
+    console.log(JSON.stringify(effect, null, 2));
     throw new Error(`cets.length must not 0`);
   }
   if (cetsNoErr.length) {
@@ -29358,7 +29426,9 @@ function setActiveEffectID(ctx2, playerID, effectID) {
     ...ctx2,
     flowMemory: {
       ...ctx2.flowMemory,
-      activeEffectID: effectID
+      activeEffectID: effectID,
+      activeLogicID: 0,
+      activeLogicSubID: 0
     }
   };
   return ctx2;
@@ -29417,46 +29487,6 @@ function setActiveLogicID(ctx2, logicID, logicSubID) {
     }
   };
 }
-function doActiveEffect(ctx2, playerID, effectID, logicId, logicSubId) {
-  logCategory("doEffect", effectID);
-  if (getActiveEffectID(ctx2) != effectID) {
-    throw new Error("activeEffectID != effectID");
-  }
-  const effect = getEffectIncludePlayerCommand(ctx2, effectID);
-  if (effect == null) {
-    throw new Error("effect not found");
-  }
-  const isStackEffect_ = isStackEffect(ctx2, effectID);
-  try {
-    ctx2 = doEffect2(ctx2, effect, logicId, logicSubId);
-  } catch (e) {
-    if (e instanceof TargetMissingError) {
-      logCategory("doActiveEffect", `=======================`);
-      logCategory("doActiveEffect", `\u5C0D\u8C61\u907A\u5931: ${e.message}`);
-    } else {
-      throw e;
-    }
-  }
-  ctx2 = clearActiveEffectID(ctx2);
-  ctx2 = removeEffect(ctx2, effectID);
-  if (isStackEffect_) {
-    ctx2 = {
-      ...ctx2,
-      stackEffectMemory: [...ctx2.stackEffectMemory, effect]
-    };
-  }
-  const isStackFinished = isStackEffect_ && ctx2.stackEffect.length == 0;
-  if (isStackFinished) {
-    ctx2 = {
-      ...ctx2,
-      flowMemory: {
-        ...ctx2.flowMemory,
-        shouldTriggerStackEffectFinishedEvent: true
-      }
-    };
-  }
-  return ctx2;
-}
 function deleteImmediateEffect(ctx2, playerID, effectID) {
   const effect = getEffect(ctx2, effectID);
   if (effect == null) {
@@ -29507,14 +29537,7 @@ function updateDestroyEffect(ctx2) {
       return ctx3;
     }
     if (cs.destroyReason) {
-      const effect = {
-        id: ToolFn.getUUID("updateDestroyEffect"),
-        reason: ["Destroy", cs.destroyReason.playerID, cs.id, cs.destroyReason],
-        text: {
-          id: ToolFn.getUUID("updateDestroyEffect"),
-          title: []
-        }
-      };
+      const effect = getDestroyEffect(ctx3, cs.destroyReason, cs.id);
       ctx3 = addDestroyEffect(ctx3, effect);
       return ctx3;
     }
@@ -29524,14 +29547,7 @@ function updateDestroyEffect(ctx2) {
         id: "\u30DE\u30A4\u30CA\u30B9\u306E\u6226\u95D8\u4FEE\u6B63",
         playerID: getItemController(ctx3, cs.id)
       };
-      const effect = {
-        id: ToolFn.getUUID("updateDestroyEffect"),
-        reason: ["Destroy", destroyReason.playerID, cs.id, destroyReason],
-        text: {
-          id: ToolFn.getUUID("updateDestroyEffect"),
-          title: []
-        }
-      };
+      const effect = getDestroyEffect(ctx3, destroyReason, cs.id);
       ctx3 = addDestroyEffect(ctx3, effect);
       return ctx3;
     }
@@ -29631,7 +29647,7 @@ function getPlayEffects(ctx2, playerId) {
                 const cardId2 = DefineFn2.EffectFn.getCardID(effect);
                 const ps = GameStateFn2.getItemState(ctx3, cardId2);
                 if (ps.textIdsUseThisCut?.[effect.text.id]) {
-                  throw new DefineFn2.TargetMissingError(`\u540C\u5207\u4E0A\u9650: ${effect.text.description}`);
+                  throw new DefineFn2.TipError(`\u540C\u5207\u4E0A\u9650: ${effect.text.description}`);
                 }
                 ctx3 = GameStateFn2.mapItemState(ctx3, cardId2, (ps2) => {
                   return {
@@ -31044,6 +31060,7 @@ var DEFAULT_VIEW_MODEL = {
   }
 };
 var TMP_DECK = ["179015_04B_O_BK010C_black", "179015_04B_O_BK010C_black", "179015_04B_U_BK058R_black", "179015_04B_U_BK058R_black", "179015_04B_U_BK059C_black", "179015_04B_U_BK059C_black", "179015_04B_U_BK061C_black", "179015_04B_U_BK061C_black", "179016_04B_U_BK066C_black", "179016_04B_U_BK066C_black", "179019_02A_C_BK015S_black", "179019_02A_C_BK015S_black", "179020_05C_U_BK100U_black", "179020_05C_U_BK100U_black", "179023_06C_C_BK048R_black", "179023_06C_C_BK048R_black", "179023_06C_C_BK049U_black", "179023_06C_C_BK049U_black", "179024_04B_C_BK027U_black", "179024_04B_C_BK027U_black", "179024_04B_U_BK060C_black", "179024_04B_U_BK060C_black", "179024_04B_U_BK067C_black", "179024_04B_U_BK067C_black", "179024_B2B_C_BK054C_black", "179024_B2B_C_BK054C_black", "179024_B2B_U_BK128S_black_02", "179024_B2B_U_BK128S_black_02", "179024_B2B_U_BK129R_black", "179024_B2B_U_BK129R_black", "179027_09D_C_BK063R_black", "179027_09D_C_BK063R_black", "179027_09D_O_BK010N_black", "179027_09D_O_BK010N_black", "179027_09D_U_BK163S_black", "179027_09D_U_BK163S_black", "179027_09D_U_BK163S_black", "179029_06C_C_BK045U_black", "179029_06C_C_BK045U_black", "179029_B3C_C_BK071N_black", "179029_B3C_C_BK071N_black", "179029_B3C_U_BK184N_black", "179029_B3C_U_BK184N_black", "179029_B3C_U_BK184N_black", "179029_B3C_U_BK185N_black", "179029_B3C_U_BK185N_black", "179030_11E_U_BK194S_2_black", "179030_11E_U_BK194S_2_black", "179030_11E_U_BK194S_2_black", "179901_B2B_C_BK005P_black"];
+var TMP_DECK2 = ["179001_01A_CH_WT007R_white", "179004_01A_CH_WT009R_white", "179004_01A_CH_WT010C_white", "179007_02A_U_WT027U_white", "179007_02A_U_WT027U_white", "179008_02A_U_WT034U_white", "179008_02A_U_WT034U_white", "179008_02A_U_WT034U_white", "179014_03B_CH_WT027R_white", "179015_04B_U_WT067C_white", "179015_04B_U_WT067C_white", "179015_04B_U_WT067C_white", "179016_04B_U_WT074C_white", "179016_04B_U_WT074C_white", "179016_04B_U_WT074C_white", "179016_04B_U_WT075C_white", "179016_04B_U_WT075C_white", "179016_04B_U_WT075C_white", "179019_01A_C_WT010C_white", "179019_01A_C_WT010C_white", "179019_02A_U_WT028R_white", "179019_02A_U_WT028R_white", "179022_06C_CH_WT057R_white", "179022_06C_CH_WT057R_white", "179022_06C_CH_WT057R_white", "179022_06C_U_WT113R_white", "179022_06C_U_WT113R_white", "179022_06C_U_WT113R_white", "179023_06C_CH_WT067C_white", "179024_03B_U_WT057U_white", "179024_03B_U_WT057U_white", "179025_07D_C_WT060U_white", "179025_07D_CH_WT075C_white", "179025_07D_CH_WT075C_white", "179025_07D_CH_WT075C_white", "179027_09D_C_WT067R_white", "179027_09D_C_WT067R_white", "179029_B3C_CH_WT102R_white", "179029_B3C_CH_WT103N_white", "179029_B3C_U_WT196R_white", "179030_11E_C_WT077S_white", "179030_11E_C_WT077S_white", "179030_11E_C_WT077S_white", "179030_11E_CH_WT108N_white", "179901_00_C_WT003P_white", "179901_00_C_WT003P_white", "179901_00_C_WT003P_white", "179901_CG_C_WT001P_white", "179901_CG_C_WT001P_white", "179901_CG_CH_WT002P_white"];
 var OnViewModel = OnEvent.pipe(scan((viewModel, evt) => {
   logCategory("OnViewModel", "evt", evt);
   try {
@@ -31054,8 +31071,8 @@ var OnViewModel = OnEvent.pipe(scan((viewModel, evt) => {
           ...ctx2,
           versionID: viewModel.model.versionID
         };
-        Promise.all(TMP_DECK.map(loadPrototype));
-        ctx2.gameState = initState(ctx2.gameState, TMP_DECK, TMP_DECK);
+        Promise.all(TMP_DECK.concat(TMP_DECK2).map(loadPrototype));
+        ctx2.gameState = initState(ctx2.gameState, TMP_DECK, TMP_DECK2);
         ctx2.gameState = updateCommand(ctx2.gameState);
         return { ...DEFAULT_VIEW_MODEL, model: ctx2 };
       }
@@ -31620,11 +31637,11 @@ function queryFlow(ctx2, playerID) {
     ];
   }
   SelectDestroyOrder: {
-    switch (ctx2.phase[1][0]) {
+    switch (ctx2.phase[0]) {
       case "\u6226\u95D8\u30D5\u30A7\u30A4\u30BA":
-        switch (ctx2.phase[1][1]) {
+        switch (ctx2.phase[1]) {
           case "\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7":
-            switch (ctx2.phase[1][2]) {
+            switch (ctx2.phase[2]) {
               case "\u898F\u5B9A\u306E\u52B9\u679C":
                 break SelectDestroyOrder;
             }
@@ -31721,6 +31738,7 @@ function queryFlow(ctx2, playerID) {
     {
       const cets = createCommandEffectTips(ctx2, effect4).filter(CommandEffecTipFn.filterNoError);
       if (cets.length == 0) {
+        console.log(JSON.stringify(effect4, null, 2));
         throw new Error(`cets.length must not 0`);
       }
     }
@@ -32300,6 +32318,8 @@ var FlowListView = (props) => {
                       ]
                     }, tip.id, true, undefined, this);
                   });
+                default:
+                  return /* @__PURE__ */ jsx_dev_runtime6.jsxDEV(jsx_dev_runtime6.Fragment, {}, undefined, false, undefined, this);
               }
             })()
           ]
@@ -32357,12 +32377,12 @@ var CardStackView = (props) => {
           ];
           return /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("div", {
             style: { border: "3px solid blue", display: "flex" },
-            children: cardsInSetGroup.map((cardID) => {
+            children: cardsInSetGroup.map((cardID, i) => {
               return /* @__PURE__ */ jsx_dev_runtime7.jsxDEV(CardView, {
                 enabled: true,
                 clientID: props.clinetID,
                 cardID
-              }, `${rootCardId}_${cardID}`, false, undefined, this);
+              }, `${rootCardId}_${cardID}_${i}`, false, undefined, this);
             })
           }, rootCardId, false, undefined, this);
         })

@@ -37,6 +37,12 @@ export const CommandEffecTipFn = {
         }
     },
 
+    not(fn: (cet: CommandEffectTip) => boolean) {
+        return (cet: CommandEffectTip): boolean => {
+            return !fn(cet)
+        }
+    },
+
     filterNoError(cet: CommandEffectTip): boolean {
         return cet.tipOrErrors.every(toes => toes.errors.length == 0)
     },

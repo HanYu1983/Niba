@@ -36,14 +36,16 @@ export function getReturnRuleEffect(ctx: GameState, playerId: PlayerID): Effect 
                                             ctx = GameStateFn.doItemMove(
                                                 ctx,
                                                 DefineFn.AbsoluteBaSyouFn.of(playerId, "配備エリア"),
-                                                target, { isSkipTargetMissing: true }
+                                                target,
+                                                { isSkipTargetMissing: true }
                                             ) as GameState
                                         } else {
                                             // Rule book p73
                                             ctx = GameStateFn.doItemMove(
                                                 ctx,
                                                 DefineFn.AbsoluteBaSyouFn.of(playerId, "ジャンクヤード"),
-                                                target, { isSkipTargetMissing: true }
+                                                target,
+                                                { isSkipTargetMissing: true }
                                             ) as GameState
                                         }
                                     }

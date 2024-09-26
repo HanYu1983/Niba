@@ -23,7 +23,7 @@ export function doSetItemRollState(ctx: GameState, isRoll: boolean, [itemId, ori
 
       } else {
         if (item.isRoll == isRoll) {
-          throw new Error(`card already roll: ${item.id}`)
+          throw new TargetMissingError(`card already roll: ${item.id}`)
         }
       }
       item = CardFn.setIsRoll(item, isRoll)
@@ -36,7 +36,7 @@ export function doSetItemRollState(ctx: GameState, isRoll: boolean, [itemId, ori
 
       } else {
         if (item.isRoll == isRoll) {
-          throw new Error(`chip already roll: ${item.id}`)
+          throw new TargetMissingError(`chip already roll: ${item.id}`)
         }
       }
       item = ChipFn.setIsRoll(item, isRoll)

@@ -11,6 +11,7 @@ const hideCategory: string[] = [
 let filterCategory = true;
 
 export const logCategory = (category: string, ...msg: any[]) => {
+  return
   if (filterCategory) {
     if (hideCategory.find(c => c == category)) {
       return;

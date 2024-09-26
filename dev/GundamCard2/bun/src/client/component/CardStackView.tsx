@@ -59,10 +59,10 @@ export const CardStackView = (props: {
               key={rootCardId}
               style={{ border: "3px solid blue", display: "flex" }}
             >
-              {cardsInSetGroup.map((cardID) => {
+              {cardsInSetGroup.map((cardID, i) => {
                 return (
                   <CardView
-                    key={`${rootCardId}_${cardID}`}
+                    key={`${rootCardId}_${cardID}_${i}`}
                     enabled={true}
                     clientID={props.clinetID}
                     cardID={cardID}

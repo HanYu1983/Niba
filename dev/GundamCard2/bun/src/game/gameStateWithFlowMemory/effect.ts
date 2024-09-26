@@ -14,6 +14,55 @@ import { Bridge } from "../../script/bridge";
 import { GameState } from "../gameState/GameState";
 import { getDestroyEffect } from "../gameState/getDestroyEffect";
 
+export function doActiveEffect(ctx: GameStateWithFlowMemory, playerID: string, effectID: string, logicId: number, logicSubId: number): GameStateWithFlowMemory {
+  logCategory("doEffect", effectID);
+  // 判斷這個效果是否正在支付，不然不應該執行
+  if (getActiveEffectID(ctx) != effectID) {
+    throw new Error("activeEffectID != effectID");
+  }
+  // 處理事件
+  const effect = getEffectIncludePlayerCommand(ctx, effectID)
+  if (effect == null) {
+    throw new Error("effect not found")
+  }
+  const isStackEffect_ = isStackEffect(ctx, effectID)
+  try {
+    ctx = doEffect(ctx, effect, logicId, logicSubId) as GameStateWithFlowMemory;
+  } catch (e) {
+    if (e instanceof TargetMissingError) {
+      logCategory("doActiveEffect", `=======================`)
+      logCategory("doActiveEffect", `對象遺失: ${e.message}`)
+    } else {
+      throw e
+    }
+  }
+  // 清除旗標，代表現在沒有正在支付的效果
+  ctx = clearActiveEffectID(ctx) as GameStateWithFlowMemory;
+  // 將效果移除
+  ctx = removeEffect(ctx, effectID) as GameStateWithFlowMemory;
+  // 如果是堆疊事件，將事件移到堆疊記憶去
+  if (isStackEffect_) {
+    ctx = {
+      ...ctx,
+      stackEffectMemory: [...ctx.stackEffectMemory, effect],
+    };
+  }
+  // 是否堆疊結束
+  // 觸發切入解決事件，並清空堆疊記憶
+  const isStackFinished =
+    isStackEffect_ && ctx.stackEffect.length == 0;
+  if (isStackFinished) {
+    ctx = {
+      ...ctx,
+      flowMemory: {
+        ...ctx.flowMemory,
+        shouldTriggerStackEffectFinishedEvent: true,
+      },
+    };
+  }
+  return ctx;
+}
+
 export function getEffectIncludePlayerCommand(ctx: GameStateWithFlowMemory, effectId: string): Effect {
   return ctx.commandEffects.find(cmd => cmd.id == effectId) || getEffect(ctx, effectId)
 }
@@ -47,12 +96,12 @@ export function setActiveEffectID(
   if (controller != playerID) {
     throw new Error("[cancelCommand] 你不是控制者");
   }
-  // temp test
   const cetsNoErr = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)
-  if (cetsNoErr.length == 0) {
-    console.log(JSON.stringify(effect, null, 2))
-    throw new Error(`cets.length must not 0`)
-  }
+  // temp test
+  // if (cetsNoErr.length == 0) {
+  //   console.log(JSON.stringify(effect, null, 2))
+  //   throw new Error(`cets.length must not 0`)
+  // }
   if (cetsNoErr.length) {
     const activeLogicID = cetsNoErr[0].logicID
     const activeLogicSubID = cetsNoErr[0].logicSubID
@@ -141,55 +190,6 @@ export function setActiveLogicID(ctx: GameStateWithFlowMemory, logicID: number, 
       activeLogicSubID: logicSubID
     }
   }
-}
-
-export function doActiveEffect(ctx: GameStateWithFlowMemory, playerID: string, effectID: string, logicId: number, logicSubId: number): GameStateWithFlowMemory {
-  logCategory("doEffect", effectID);
-  // 判斷這個效果是否正在支付，不然不應該執行
-  if (getActiveEffectID(ctx) != effectID) {
-    throw new Error("activeEffectID != effectID");
-  }
-  // 處理事件
-  const effect = getEffectIncludePlayerCommand(ctx, effectID)
-  if (effect == null) {
-    throw new Error("effect not found")
-  }
-  const isStackEffect_ = isStackEffect(ctx, effectID)
-  try {
-    ctx = doEffect(ctx, effect, logicId, logicSubId) as GameStateWithFlowMemory;
-  } catch (e) {
-    if (e instanceof TargetMissingError) {
-      logCategory("doActiveEffect", `=======================`)
-      logCategory("doActiveEffect", `對象遺失: ${e.message}`)
-    } else {
-      throw e
-    }
-  }
-  // 清除旗標，代表現在沒有正在支付的效果
-  ctx = clearActiveEffectID(ctx) as GameStateWithFlowMemory;
-  // 將效果移除
-  ctx = removeEffect(ctx, effectID) as GameStateWithFlowMemory;
-  // 如果是堆疊事件，將事件移到堆疊記憶去
-  if (isStackEffect_) {
-    ctx = {
-      ...ctx,
-      stackEffectMemory: [...ctx.stackEffectMemory, effect],
-    };
-  }
-  // 是否堆疊結束
-  // 觸發切入解決事件，並清空堆疊記憶
-  const isStackFinished =
-    isStackEffect_ && ctx.stackEffect.length == 0;
-  if (isStackFinished) {
-    ctx = {
-      ...ctx,
-      flowMemory: {
-        ...ctx.flowMemory,
-        shouldTriggerStackEffectFinishedEvent: true,
-      },
-    };
-  }
-  return ctx;
 }
 
 export function deleteImmediateEffect(

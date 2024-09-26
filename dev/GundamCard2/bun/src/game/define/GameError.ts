@@ -17,6 +17,7 @@ export class GameError extends Error {
 
 
 // 只給createEffectTips補捉
+// Condition中只能用這個
 export class TipError extends GameError {
     constructor(message: any, info?:GameErrorInfo) {
         super(message, info);

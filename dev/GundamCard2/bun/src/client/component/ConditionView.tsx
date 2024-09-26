@@ -4,8 +4,10 @@ import { Effect } from "../../game/define/Effect";
 import { AppContext } from "../tool/appContext";
 import { TargetTypeView } from "./TargetTypeView";
 import { createEffectTips } from "../../game/gameState/doEffect";
+import { PlayerID } from "../../game/define/PlayerID";
 
 export const ConditionView = (props: {
+  clientID: PlayerID,
   effect: Effect;
   targets: { [key: string]: Condition };
 }) => {
@@ -17,13 +19,14 @@ export const ConditionView = (props: {
         {
           tips.map((tipOrE, i) => {
             if (tipOrE.errors) {
-              return <div>{tipOrE.errors.map(e => e.message).join("|")}</div>
+              return <div>{tipOrE.errors.join("|")}</div>
             }
             if (tipOrE.tip == null) {
               return <div>tip not found</div>
             }
             return <TargetTypeView
               key={i}
+              clientID={props.clientID}
               effect={props.effect}
               target={tipOrE.tip}
             ></TargetTypeView>

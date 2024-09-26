@@ -355,8 +355,20 @@ export function getConditionTitleFn(condition: Condition, options: { isPlay?: bo
             }
         }
         case "このセットグループの_ユニットは":
+            const [_, category] = condition.title
             return function (ctx: GameState, effect: Effect): Tip | null {
-                return null
+                const cardId = EffectFn.getCardID(effect)
+                switch (category) {
+                    case "ユニット":
+                        const targetId = getSetGroupRoot(ctx, cardId)
+                        const pair: StrBaSyouPair = [targetId, getItemBaSyou(ctx, targetId)]
+                        return {
+                            title: ["カード", [pair], [pair]],
+                            min: 1
+                        }
+                    default:
+                        throw new Error(`このセットグループの_ユニットは: not support ${category}`)
+                }
             }
     }
 }

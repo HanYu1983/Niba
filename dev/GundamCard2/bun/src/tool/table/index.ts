@@ -22,7 +22,7 @@ function getCardsByPosition(table: Table, position: string): string[] {
 
 function moveCard(table: Table, fromPosition: string, toPosition: string, cardId: string): Table {
     if (!table.cardStack[fromPosition] || !table.cardStack[fromPosition].includes(cardId)) {
-        throw new Error("Card not found in the specified position");
+        throw new Error(`Card not found in the specified position:${fromPosition} ${toPosition} ${cardId}`);
     }
     const updatedFromStack = table.cardStack[fromPosition].filter(id => id !== cardId);
     const updatedToStack = table.cardStack[toPosition] ? [...table.cardStack[toPosition], cardId] : [cardId];

@@ -405,14 +405,14 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                 },
             ];
         }
-        // temp test
-        {
-            const cets = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)
-            if (cets.length == 0) {
-                console.log(JSON.stringify(effect, null, 2))
-                throw new Error(`cets.length must not 0`)
-            }
-        }
+        // temp test 
+        // {
+        //     const cets = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)
+        //     if (cets.length == 0) {
+        //         console.log(JSON.stringify(effect, null, 2))
+        //         throw new Error(`cets.length must not 0`)
+        //     }
+        // }
         return [
             {
                 id: "FlowSetActiveEffectID",

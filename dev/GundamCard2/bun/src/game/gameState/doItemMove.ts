@@ -37,13 +37,12 @@ export function doItemMove(ctx: GameState, to: AbsoluteBaSyou, [itemId, from]: S
         }
         // 移動子樹
         const itemIds = getSetGroupChildren(ctx, itemId)
-        const table = itemIds.reduce((table, itemId) => {
-            return TableFns.moveCard(table, AbsoluteBaSyouFn.toString(from), AbsoluteBaSyouFn.toString(to), itemId)
-        }, ctx.table)
-        ctx = {
-            ...ctx,
-            table: table
-        }
+        itemIds.forEach(itemId => {
+            ctx = {
+                ...ctx,
+                table: TableFns.moveCard(ctx.table, AbsoluteBaSyouFn.toString(getItemBaSyou(ctx, itemId)), AbsoluteBaSyouFn.toString(to), itemId)
+            }
+        })
         ctx = onMoveItem(ctx, to, [itemId, from])
         ctx = EventCenterFn.onTableChange(ctx, oldTable, ctx.table)
         return ctx

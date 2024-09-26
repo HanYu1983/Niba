@@ -150,6 +150,8 @@ export const FlowListView = (props: { clientID: string }) => {
                         </div>
                       );
                     });
+                  default:
+                    return <></>
                 }
               })()}
             </div>
