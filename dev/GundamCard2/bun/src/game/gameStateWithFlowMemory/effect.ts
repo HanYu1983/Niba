@@ -1,7 +1,7 @@
 import { assoc } from "ramda";
 import { log } from "../../tool/logger";
 import { DestroyReason, Effect, EffectFn } from "../define/Effect";
-import { doEffect, createCommandEffectTips, clearTipForUserSelection } from "../gameState/effect";
+import { doEffect, createCommandEffectTips, clearTipSelectionForUser } from "../gameState/effect";
 import { getEffect, isStackEffect, removeEffect } from "../gameState/EffectStackComponent";
 import { ToolFn } from "../tool";
 import { GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
@@ -61,7 +61,7 @@ export function setActiveEffectID(
       }
     };
     for (const cet of cetsNoErr) {
-      ctx = clearTipForUserSelection(ctx, effect, cet.logicID, cet.logicSubID) as GameStateWithFlowMemory
+      ctx = clearTipSelectionForUser(ctx, effect, cet.logicID, cet.logicSubID) as GameStateWithFlowMemory
     }
   }
   ctx = {

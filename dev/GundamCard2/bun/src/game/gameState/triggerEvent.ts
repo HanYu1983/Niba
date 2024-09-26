@@ -6,7 +6,6 @@ import { GameEvent } from "../define/GameEvent"
 import { ToolFn } from "../tool"
 import { getCardTexts } from "./card"
 import { getCardIds } from "./CardTableComponent"
-import { getOnEventTitleFn } from "./effect"
 import { GameState } from "./GameState"
 import { getCardLikeItemIds, getItemController, getItemPrototype } from "./ItemTableComponent"
 import { ItemStateFn } from "../define/ItemState"
@@ -18,6 +17,7 @@ import { mapPlayerState } from "./PlayerStateComponent"
 import { PlayerStateFn } from "../define/PlayerState"
 import { getActivePlayerID } from "./ActivePlayerComponent"
 import { AbsoluteBaSyouFn, BaSyouKeywordFn } from "../define/BaSyou"
+import { getOnEventTitleFn } from "./getOnEventTitleFn"
 
 // 觸發事件腳本
 // 在每次事件發生時都要呼叫

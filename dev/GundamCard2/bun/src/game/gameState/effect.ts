@@ -30,32 +30,8 @@ import { getSetGroupBattlePoint } from "./setGroup"
 import { isBattle } from "./IsBattleComponent"
 import { TipOrErrors, CommandEffectTip } from "../define/CommandEffectTip"
 import { EventCenterFn } from "./EventCenter"
-import { moveItem } from "./moveItem"
-import { swapItem } from "./swapItem"
-
-export function clearTipForUserSelection(
-  ctx: GameState,
-  effect: Effect,
-  logicId: number,
-  logicSubId: number,
-) {
-  const ltacs = CardTextFn.getLogicTreeActionConditions(effect.text, CardTextFn.getLogicTreeAction(effect.text, logicId))[logicSubId]
-  if (ltacs == null) {
-    throw new Error(`ltasc not found: ${logicId}/${logicSubId}`)
-  }
-  const bridge = createBridge()
-  Object.keys(ltacs).forEach(key => {
-    const con = ltacs[key]
-    const tip = getConditionTitleFn(con, {})(ctx, effect, bridge)
-    if (tip) {
-      const cardId = EffectFn.getCardID(effect)
-      if (getItemState(ctx, cardId).tips[key]) {
-        ctx = mapItemState(ctx, cardId, is => ItemStateFn.clearTip(is, key)) as GameState
-      }
-    }
-  })
-  return ctx
-}
+import { getActionTitleFn } from "./getActionTitleFn"
+import { getConditionTitleFn } from "./getConditionTitleFn"
 
 export function createEffectTips(
   ctx: GameState,
@@ -153,6 +129,34 @@ export function setEffectTips(ctx: GameState, e: Effect, toes: TipOrErrors[]): G
   }
 }
 
+export function setTipSelectionForUser(ctx: GameState, e: Effect, logicId: number, logicSubId: number): GameState {
+  return setEffectTips(ctx, e, createEffectTips(ctx, e, logicId, logicSubId))
+}
+
+export function clearTipSelectionForUser(
+  ctx: GameState,
+  effect: Effect,
+  logicId: number,
+  logicSubId: number,
+) {
+  const ltacs = CardTextFn.getLogicTreeActionConditions(effect.text, CardTextFn.getLogicTreeAction(effect.text, logicId))[logicSubId]
+  if (ltacs == null) {
+    throw new Error(`ltasc not found: ${logicId}/${logicSubId}`)
+  }
+  const bridge = createBridge()
+  Object.keys(ltacs).forEach(key => {
+    const con = ltacs[key]
+    const tip = getConditionTitleFn(con, {})(ctx, effect, bridge)
+    if (tip) {
+      const cardId = EffectFn.getCardID(effect)
+      if (getItemState(ctx, cardId).tips[key]) {
+        ctx = mapItemState(ctx, cardId, is => ItemStateFn.clearTip(is, key)) as GameState
+      }
+    }
+  })
+  return ctx
+}
+
 export function assertEffectCanPass(
   ctx: GameState,
   effect: Effect,
@@ -210,9 +214,6 @@ export function createCommandEffectTips(ctx: GameState, effect: Effect): Command
   return []
 }
 
-export function setTipSelectionForUser(ctx: GameState, e: Effect, logicId: number, logicSubId: number): GameState {
-  return setEffectTips(ctx, e, createEffectTips(ctx, e, logicId, logicSubId))
-}
 
 export function doEffect(
   ctx: GameState,
@@ -238,732 +239,33 @@ export function doEffect(
       ctx = actionFn(ctx, effect, bridge)
       //ctx = clearGlobalEffects(ctx)
     }
-    if (condition.actions) {
-      for (const action of condition.actions) {
-        if (action.vars) {
-          for (const name of action.vars) {
-            log("doEffect", "clearTip", name)
-            ctx = mapItemState(ctx, cardId, is => ItemStateFn.clearTip(is, name)) as GameState
-          }
-        }
-      }
-    }
+    // if (condition.actions) {
+    //   for (const action of condition.actions) {
+    //     if (action.vars) {
+    //       for (const name of action.vars) {
+    //         log("doEffect", "clearTip", name)
+    //         ctx = mapItemState(ctx, cardId, is => ItemStateFn.clearTip(is, name)) as GameState
+    //       }
+    //     }
+    //   }
+    // }
   })
   const lta = CardTextFn.getLogicTreeAction(effect.text, logicId)
   for (const actionFn of LogicTreeActionFn.getActionTitleFns(lta, getActionTitleFn)) {
     ctx = actionFn(ctx, effect, bridge)
     //ctx = clearGlobalEffects(ctx)
   }
-  for (const action of lta.actions) {
-    if (action.vars) {
-      for (const name of action.vars) {
-        log("doEffect", "clearTip", name)
-        ctx = mapItemState(ctx, cardId, is => ItemStateFn.clearTip(is, name)) as GameState
-      }
-    }
-  }
-
-  // const conditions = conditionIds.map(id => CardTextFn.getCondition(effect.text, id))
-  // const processCondition = (ctx: GameState) => pipe(
-  //   always(conditions),
-  //   map(condition => ConditionFn.getActionTitleFns(condition, getActionTitleFn)),
-  //   flatten,
-  //   reduce((ctx, fn) => fn(ctx, effect, bridge), ctx)
-  // )
-  // const processLogicAction = (ctx: GameState) => pipe(
-  //   always(CardTextFn.getLogicTreeAction(effect.text, logicId)),
-  //   lta => LogicTreeActionFn.getActionTitleFns(lta, getActionTitleFn),
-  //   reduce((ctx, fn) => {
-  //     ctx = fn(ctx, effect, bridge)
-  //     return ctx
-  //   }, ctx)
-  // )
-  // ctx = processCondition(ctx)()
-  // ctx = processLogicAction(ctx)()
+  // for (const action of lta.actions) {
+  //   if (action.vars) {
+  //     for (const name of action.vars) {
+  //       log("doEffect", "clearTip", name)
+  //       ctx = mapItemState(ctx, cardId, is => ItemStateFn.clearTip(is, name)) as GameState
+  //     }
+  //   }
+  // }
   ctx = EventCenterFn.onEffectEnd(ctx, effect)
   return ctx;
 }
-
-export function getConditionTitleFn(condition: Condition, options: { isPlay?: boolean }): ConditionTitleFn {
-  if (condition.title == null || typeof condition.title == "string") {
-    return ConditionFn.getTitleFn(condition)
-  }
-  log("getConditionTitleFn", condition.title)
-  switch (condition.title[0]) {
-    case "_自軍_ジャンクヤードにある、_黒のGサインを持つ全てのカードは": {
-      const [_, side, basyouKw, color] = condition.title
-      return function (ctx: GameState, effect: Effect): Tip | null {
-        const cardId = EffectFn.getCardID(effect)
-        const cardController = getItemController(ctx, cardId);
-        const playerId = side == "自軍" ? cardController : PlayerIDFn.getOpponent(cardController)
-        const basyous: AbsoluteBaSyou[] = (lift(AbsoluteBaSyouFn.of)([playerId], [basyouKw]))
-        const pairs = basyous.flatMap(basyou =>
-          getItemIdsByBasyou(ctx, basyou)
-            .filter(cardId => getItemPrototype(ctx, cardId).gsign?.[0].includes(color))
-            .map(cardId => [cardId, basyou] as StrBaSyouPair)
-        )
-        return {
-          title: ["カード", pairs, pairs],
-        }
-      }
-    }
-    case "_自軍_本国の上のカード_１～_４枚を見て、その中にある、「特徴：_ヘイズル系」を持つ_ユニット_１枚": {
-      const [_, side, basyouKw, min, max, char, category, count] = condition.title
-      return function (ctx: GameState, effect: Effect): Tip | null {
-        const cardId = EffectFn.getCardID(effect)
-        const playerId = getItemController(ctx, cardId);
-        const targetPlayerId = side == "自軍" ? playerId : PlayerIDFn.getOpponent(playerId)
-        const basyous: AbsoluteBaSyou[] = (lift(AbsoluteBaSyouFn.of)([targetPlayerId], [basyouKw]))
-        const pairs = basyous.flatMap(basyou =>
-          getItemIdsByBasyou(ctx, basyou)
-            .filter(cardId => getItemCharacteristic(ctx, cardId).includes(char))
-            .filter(cardId => getItemRuntimeCategory(ctx, cardId) == category)
-            .map(cardId => [cardId, basyou] as StrBaSyouPair)
-        ).slice(0, max)
-        if (pairs.length < min) {
-          throw new TargetMissingError(`length is ${pairs.length}, min is ${min}: ${effect.text.description}`)
-        }
-        return {
-          title: ["カード", pairs, pairs.slice(0, count)],
-          count: count,
-        }
-      }
-    }
-    case "このカードの_本来のテキスト１つ": {
-      const [_, isOrigin, count] = condition.title
-      return function (ctx: GameState, effect: Effect): Tip | null {
-        const cardId = EffectFn.getCardID(effect)
-        const texts = isOrigin ?
-          (getItemPrototype(ctx, cardId).texts || []) :
-          getCardTexts(ctx, cardId)
-        const textRefs: TipTitleTextRef[] = texts.filter(text => (text.title[0] == "特殊型" && text.title[1][0] == "クロスウェポン") == false).map(text => {
-          return {
-            cardId: cardId,
-            textId: text.id
-          }
-        })
-        log(`getConditionTitleFn`, textRefs)
-        return {
-          title: ["テキスト", textRefs, textRefs.slice(0, count)],
-          count: count,
-        }
-      }
-    }
-    case "_本来の記述に｢特徴：_装弾｣を持つ_自軍_G_１枚": {
-      const [_, isOrigin, targetChar, side, category, count] = condition.title
-      const exceptItemSelf = condition.exceptItemSelf
-      return function (ctx: GameState, effect: Effect): Tip | null {
-        const fromCardId = EffectFn.getCardID(effect)
-        const playerId = getItemController(ctx, fromCardId);
-        const targetPlayerId = side == "自軍" ? playerId : PlayerIDFn.getOpponent(playerId)
-        if (category == "グラフィック") {
-          const basyous: AbsoluteBaSyou[] = [AbsoluteBaSyouFn.of(targetPlayerId, "Gゾーン")]
-          const pairs = basyous.flatMap(basyou =>
-            getItemIdsByBasyou(ctx, basyou)
-              .filter(cardId => {
-                if (exceptItemSelf && fromCardId == cardId) {
-                  return false
-                }
-                if (getCard(ctx, cardId).isRoll) {
-                  return false
-                }
-                if (isOrigin) {
-                  return getItemPrototype(ctx, cardId).characteristic?.includes(targetChar)
-                } else {
-                  return getItemCharacteristic(ctx, cardId)
-                }
-              })
-              .map(cardId => [cardId, basyou] as StrBaSyouPair)
-          )
-          return {
-            title: ["カード", pairs, pairs.slice(0, count)],
-            count: count,
-          }
-
-        } else {
-          const basyous: AbsoluteBaSyou[] = (lift(AbsoluteBaSyouFn.of)([targetPlayerId], BaSyouKeywordFn.getBaAll()))
-          const pairs = basyous.flatMap(basyou =>
-            getItemIdsByBasyou(ctx, basyou)
-              .filter(cardId => getSetGroupRoot(ctx, cardId))
-              .filter(cardId => getItemRuntimeCategory(ctx, cardId) == category)
-              .filter(cardId => {
-                if (exceptItemSelf && fromCardId == cardId) {
-                  return false
-                }
-                if (isOrigin) {
-                  return getItemPrototype(ctx, cardId).characteristic?.includes(targetChar)
-                } else {
-                  return getItemCharacteristic(ctx, cardId).includes(targetChar)
-                }
-              })
-              .map(cardId => [cardId, basyou] as StrBaSyouPair)
-          )
-          return {
-            title: ["カード", pairs, pairs.slice(0, count)],
-            count: count,
-          }
-
-        }
-      }
-    }
-    case "_戦闘エリアにいる_敵軍_ユニット_１～_２枚": {
-      const [_, basyouKws, side, category, min, max] = condition.title
-      return function (ctx: GameState, effect: Effect): Tip | null {
-        const cardId = EffectFn.getCardID(effect)
-        const playerId = getItemController(ctx, cardId);
-        const targetPlayerId = side == "自軍" ? playerId : PlayerIDFn.getOpponent(playerId)
-        const basyous: AbsoluteBaSyou[] = (lift(AbsoluteBaSyouFn.of)([targetPlayerId], basyouKws))
-        const pairs = basyous.flatMap(basyou =>
-          getItemIdsByBasyou(ctx, basyou)
-            .filter(cardId => getItemRuntimeCategory(ctx, cardId) == category)
-            .map(cardId => [cardId, basyou] as StrBaSyouPair)
-        )
-        return {
-          title: ["カード", pairs, pairs.slice(0, max)],
-          min: min,
-          max: max,
-        }
-
-      }
-    }
-    case "_自軍_ユニット_１枚": {
-      const [_, side, category, count] = condition.title
-      return function (ctx: GameState, effect: Effect): Tip | null {
-        const cardId = EffectFn.getCardID(effect)
-        const playerId = getItemController(ctx, cardId);
-        const targetPlayerId = side == "自軍" ? playerId : PlayerIDFn.getOpponent(playerId)
-        const basyous: AbsoluteBaSyou[] = (lift(AbsoluteBaSyouFn.of)([targetPlayerId], BaSyouKeywordFn.getBaAll()))
-        const pairs = basyous.flatMap(basyou =>
-          getItemIdsByBasyou(ctx, basyou)
-            .filter(cardId => getItemRuntimeCategory(ctx, cardId) == category)
-            .map(cardId => [cardId, basyou] as StrBaSyouPair)
-        )
-        return {
-          title: ["カード", pairs, pairs.slice(0, count)],
-          count: 1,
-        }
-
-      }
-    }
-    case "_自軍手札、または自軍ハンガーにある、_６以下の合計国力を持つ_ユニット_１枚を": {
-      const [_, side, totalCost, category, count] = condition.title
-      return function (ctx: GameState, effect: Effect): Tip | null {
-        const cardId = EffectFn.getCardID(effect)
-        const playerId = getItemController(ctx, cardId);
-        const targetPlayerId = side == "自軍" ? playerId : PlayerIDFn.getOpponent(playerId)
-        const basyous: AbsoluteBaSyou[] = (lift(AbsoluteBaSyouFn.of)([targetPlayerId], ["手札", "ハンガー"]))
-        const pairs = basyous.flatMap(basyou =>
-          getItemIdsByBasyou(ctx, basyou)
-            .filter(cardId => getItemRuntimeCategory(ctx, cardId) == category)
-            .filter(cardId => getCardRollCostLength(ctx, cardId) <= totalCost)
-            .map(cardId => [cardId, basyou] as StrBaSyouPair)
-        )
-        return {
-          title: ["カード", pairs, pairs.slice(0, count)],
-          min: count,
-        }
-      }
-    }
-    case "打開自軍手裡或指定HANGER中特徵_A並合計國力_x以下的_1張卡":
-      {
-        const [_, char, x, count] = condition.title
-        return function (ctx: GameState, effect: Effect): Tip | null {
-          const cardId = EffectFn.getCardID(effect)
-          const playerId = getItemController(ctx, cardId);
-          const basyous: AbsoluteBaSyou[] = (lift(AbsoluteBaSyouFn.of)([playerId], ["手札", "ハンガー"]))
-          const pairs = basyous.flatMap(basyou =>
-            getItemIdsByBasyou(ctx, basyou)
-              .filter(cardId => getItemCharacteristic(ctx, cardId).includes(char))
-              .filter(cardId => getCardRollCostLength(ctx, cardId) <= x)
-              .map(cardId => [cardId, basyou] as StrBaSyouPair)
-          )
-          return {
-            title: ["カード", pairs, pairs.slice(0, count)],
-            min: count,
-          }
-        }
-      }
-    case "_自軍_本國上的_1張卡": {
-      const [_, side, basyouKw, count] = condition.title
-      return function (ctx: GameState, effect: Effect): Tip | null {
-        const cardId = EffectFn.getCardID(effect)
-        const playerId = getItemController(ctx, cardId);
-        const targetPlayerId = side == "自軍" ? playerId : PlayerIDFn.getOpponent(playerId)
-        const basyous: AbsoluteBaSyou[] = (lift(AbsoluteBaSyouFn.of)([targetPlayerId], [basyouKw]))
-        const pairs = basyous.flatMap(basyou =>
-          getItemIdsByBasyou(ctx, basyou).map(cardId => [cardId, basyou] as StrBaSyouPair)
-        )
-        return {
-          title: ["カード", pairs, pairs.slice(0, count)],
-          min: count,
-        }
-
-      }
-    }
-    case "這張卡交戰的防禦力_x以下的敵軍機體_1張": {
-      const [_, x, count] = condition.title
-      return function (ctx: GameState, effect: Effect): Tip | null {
-        const cardId = EffectFn.getCardID(effect)
-        if (AbsoluteBaSyouFn.getBaSyouKeyword(getItemBaSyou(ctx, cardId)) == "戦闘エリア1" || AbsoluteBaSyouFn.getBaSyouKeyword(getItemBaSyou(ctx, cardId)) == "戦闘エリア2") {
-
-        } else {
-          return null
-        }
-        const cardController = getItemController(ctx, cardId)
-        const opponentId = PlayerIDFn.getOpponent(cardController)
-        const from = AbsoluteBaSyouFn.setPlayerID(getItemBaSyou(ctx, cardId), opponentId)
-        // TODO 去掉重復
-        const targetIds = getItemIdsByBasyou(ctx, from)
-          .map(itemId => getSetGroupRoot(ctx, itemId))
-          .filter(itemId => {
-            const [_, def, _2] = getSetGroupBattlePoint(ctx, itemId)
-            return def <= x
-          })
-        const pairs = targetIds.map(itemId => [itemId, from] as StrBaSyouPair)
-        return {
-          title: ["カード", pairs, pairs.slice(0, count)],
-          min: count,
-        }
-      }
-    }
-    case "_自軍_本國找出特徵_A的_1張卡": {
-      const [_, side, basyouKw, char, count] = condition.title
-      return function (ctx: GameState, effect: Effect): Tip | null {
-        const cardId = EffectFn.getCardID(effect)
-        const playerId = getItemController(ctx, cardId);
-        const targetPlayerId = side == "自軍" ? playerId : PlayerIDFn.getOpponent(playerId)
-        const from = AbsoluteBaSyouFn.of(targetPlayerId, basyouKw)
-        const itemIdAtBasyou = getItemIdsByBasyou(ctx, from)
-        const targetIds = itemIdAtBasyou.filter(itemId => {
-          return getItemCharacteristic(ctx, itemId).indexOf(char) != -1
-        })
-        const pairs = targetIds.map(targetId => [targetId, from] as StrBaSyouPair)
-        return {
-          title: ["カード", pairs, pairs.slice(0, count)],
-          min: count,
-          cheatCardIds: itemIdAtBasyou
-        }
-      }
-    }
-    case "RollColor": {
-      const [_, color] = condition.title
-      return function (ctx: GameState, effect: Effect): Tip | null {
-        const cardId = EffectFn.getCardID(effect)
-        const cardController = getItemController(ctx, cardId)
-        const cardIdColors = getCardIdsCanPayRollColor(ctx, null, cardController, color)
-        let colorIds = []
-        if (color == null) {
-          colorIds = cardIdColors.map(gId => gId.cardId).slice(0, 1)
-        } else if (color == "紫") {
-          // 單紫優先
-          colorIds = cardIdColors.filter(gId => gId.colors.length == 1 && gId.colors[0] == color).map(gId => gId.cardId).slice(0, 1)
-          // 若無單紫
-          if (colorIds.length == 0) {
-            // 非紫需要2張
-            colorIds = cardIdColors.filter(gId => gId.colors.length == 1).map(gId => gId.cardId).slice(0, 2)
-            // 若非紫小於2張
-            if (colorIds.length < 2) {
-              // 最下策則用雙色卡支付
-              colorIds = cardIdColors.filter(gId => gId.colors.length > 1).map(gId => gId.cardId).slice(0, 2)
-            }
-          }
-        } else {
-          // 單色優先
-          colorIds = cardIdColors.filter(gId => gId.colors.length == 1 && gId.colors[0] == color).map(gId => gId.cardId).slice(0, 1)
-          if (colorIds.length == 0) {
-            // 最下策則用雙色卡支付
-            colorIds = cardIdColors.filter(gId => gId.colors.length > 1 && gId.colors.includes(color)).map(gId => gId.cardId).slice(0, 1)
-          }
-        }
-        const cardIdColorsPairs = cardIdColors.map(gId => gId.cardId).map(colorId => [colorId, getItemBaSyou(ctx, colorId)] as StrBaSyouPair)
-        const pairs = colorIds.map(colorId => [colorId, getItemBaSyou(ctx, colorId)] as StrBaSyouPair)
-        return {
-          title: ["カード", cardIdColorsPairs, pairs],
-          min: pairs.length,
-        }
-      }
-    }
-    case "_交戦中の_自軍_ユニット_１枚": {
-      const [_, battleStr, side, category, count] = condition.title
-      return function (ctx: GameState, effect: Effect): Tip | null {
-        const cardId = EffectFn.getCardID(effect)
-        const playerId = getItemController(ctx, cardId);
-        const targetPlayerId = side == "自軍" ? playerId : PlayerIDFn.getOpponent(playerId)
-        const basyous: AbsoluteBaSyou[] = (lift(AbsoluteBaSyouFn.of)([targetPlayerId], BaSyouKeywordFn.getBaAll()))
-        const pairs = basyous.flatMap(basyou =>
-          getItemIdsByBasyou(ctx, basyou)
-            .filter(cardId => getItemRuntimeCategory(ctx, cardId) == category)
-            .filter(cardId => isBattle(ctx, cardId, null) == (battleStr == "交戦中"))
-            .map(cardId => [cardId, basyou] as StrBaSyouPair)
-        )
-        return {
-          title: ["カード", pairs, pairs.slice(0, count)],
-          count: 1,
-        }
-
-      }
-    }
-    case "_配備エリアにいる、「特徴：_T3部隊」を持つ_自軍_ユニット_１枚": {
-      const [_, basyouKw, char, side, category, count] = condition.title
-      return function (ctx: GameState, effect: Effect): Tip | null {
-        const cardId = EffectFn.getCardID(effect)
-        const cardController = getItemController(ctx, cardId);
-        const targetPlayerId = side == "自軍" ? cardController : PlayerIDFn.getOpponent(cardController)
-        const from = AbsoluteBaSyouFn.of(targetPlayerId, basyouKw)
-        const itemIdsAtBasyou = getItemIdsByBasyou(ctx, from)
-        const targetIds = itemIdsAtBasyou.filter(itemId => {
-          return getItemCharacteristic(ctx, itemId).indexOf(char) != -1
-        }).filter(itemId => {
-          return getItemRuntimeCategory(ctx, itemId) == category
-        })
-        const pairs = targetIds.map(targetId => [targetId, from] as StrBaSyouPair)
-        return {
-          title: ["カード", pairs, pairs.slice(0, count)],
-          min: count
-        }
-      }
-    }
-    case "このセットグループの_ユニットは":
-      return function (ctx: GameState, effect: Effect): Tip | null {
-        return null
-      }
-  }
-}
-
-export function getActionTitleFn(action: Action): ActionTitleFn {
-  if (typeof action.title == "string") {
-    return ActionFn.getTitleFn(action)
-  }
-  switch (action.title[0]) {
-    case "triggerEvent": {
-      const [_, event] = action.title
-      return function (ctx: GameState, effect: Effect): GameState {
-        ctx = triggerEvent(ctx, { ...event, effect: effect })
-        return ctx
-      }
-    }
-    case "cutIn": {
-      const [_, actions] = action.title
-      return function (ctx: GameState, effect: Effect): GameState {
-        const cardId = EffectFn.getCardID(effect)
-        ctx = addStackEffect(ctx, {
-          id: "",
-          description: effect.text.description,
-          reason: ["PlayText", EffectFn.getPlayerID(effect), cardId, effect.text.id],
-          text: {
-            id: effect.text.id,
-            description: effect.text.description,
-            title: [],
-            logicTreeActions: [
-              {
-                actions: actions
-              }
-            ]
-          }
-        }) as GameState
-        return ctx
-      }
-    }
-    case "_ロールする": {
-      const [_, whatToDo] = action.title
-      const varNames = action.vars
-      return function (ctx: GameState, effect: Effect): GameState {
-        const cardId = EffectFn.getCardID(effect)
-        const cardController = getItemController(ctx, cardId)
-        const pairs = varNames == null ?
-          [[cardId, getItemBaSyou(ctx, cardId)] as StrBaSyouPair] :
-          varNames.flatMap(varName => {
-            return getCardTipStrBaSyouPairs(ctx, varName, cardId)
-          })
-        switch (whatToDo) {
-          case "ロール": {
-            log("getActionTitleFn", whatToDo, varNames, pairs)
-            for (const pair of pairs) {
-              ctx = setItemIsRoll(ctx, true, pair) as GameState
-            }
-            return ctx
-          }
-          case "リロール": {
-            for (const pair of pairs) {
-              ctx = setItemIsRoll(ctx, false, pair) as GameState
-            }
-            return ctx
-          }
-          case "打開": {
-            for (const pair of pairs) {
-              assertTargetMissingError(ctx, pair)
-              ctx = mapItemState(ctx, pair[0], is => ({ ...is, isOpenForGain: true })) as GameState
-            }
-            return ctx
-          }
-          case "破壞": {
-            for (const pair of pairs) {
-              assertTargetMissingError(ctx, pair)
-              ctx = mapItemState(ctx, pair[0], is => ({ ...is, destroyReason: { id: "破壊する", playerID: cardController } })) as GameState
-            }
-            return ctx
-          }
-          case "廃棄": {
-            for (const pair of pairs) {
-              ctx = moveItem(ctx, AbsoluteBaSyouFn.of(cardController, "ジャンクヤード"), pair)
-            }
-            return ctx
-          }
-        }
-      }
-    }
-    case "_２ダメージを与える": {
-      const [_, damage] = action.title
-      const varNames = action.vars
-      return function (ctx: GameState, effect: Effect): GameState {
-        const cardId = EffectFn.getCardID(effect)
-        const pairs = varNames == null ?
-          [[cardId, getItemBaSyou(ctx, cardId)] as StrBaSyouPair] :
-          varNames.flatMap(varName => {
-            return getCardTipStrBaSyouPairs(ctx, varName, cardId)
-          })
-
-        for (const pair of pairs) {
-          assertTargetMissingError(ctx, pair)
-          const [targetId, _] = pair
-          ctx = mapItemState(ctx, targetId, is => {
-            return {
-              ...is,
-              damage: is.damage + damage
-            }
-          }) as GameState
-        }
-        return ctx
-      }
-    }
-    case "_敵軍本国に_１ダメージ": {
-      const [_, side, damage] = action.title
-      return function (ctx: GameState, effect: Effect): GameState {
-        const cardId = EffectFn.getCardID(effect)
-        const cardController = getItemController(ctx, cardId)
-        const playerId = side == "自軍" ? cardController : PlayerIDFn.getOpponent(cardController)
-        const from = AbsoluteBaSyouFn.of(playerId, "本国")
-        const pairs = getItemIdsByBasyou(ctx, from).map(itemId => {
-          return [itemId, from] as StrBaSyouPair
-        }).slice(0, damage)
-        const to = AbsoluteBaSyouFn.of(playerId, "捨て山")
-        for (const pair of pairs) {
-          ctx = moveItem(ctx, to, pair)
-        }
-        return ctx
-      }
-    }
-    case "_の_ハンガーに移す": {
-      const [_, side, basyouKw] = action.title
-      const varNames = action.vars
-      return function (ctx: GameState, effect: Effect): GameState {
-        const cardId = EffectFn.getCardID(effect)
-        const cardController = getItemController(ctx, cardId)
-        const pairs = varNames == null ?
-          [[cardId, getItemBaSyou(ctx, cardId)] as StrBaSyouPair] :
-          varNames.flatMap(varName => {
-            return getCardTipStrBaSyouPairs(ctx, varName, cardId)
-          })
-        const playerId = side == "自軍" ? cardController : PlayerIDFn.getOpponent(cardController)
-        const to = AbsoluteBaSyouFn.of(playerId, basyouKw)
-        for (const pair of pairs) {
-          ctx = moveItem(ctx, to, pair)
-        }
-        return ctx
-      }
-    }
-    case "看自己_本國全部的卡": {
-      const [_, basyouKw] = action.title
-      return function (ctx: GameState, effect: Effect): GameState {
-        const cardId = EffectFn.getCardID(effect)
-        const cardController = getItemController(ctx, cardId)
-        for (const itemId of getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(cardController, basyouKw))) {
-          ctx = mapItemState(ctx, itemId, is => ({ ...is, isCheat: true })) as GameState
-        }
-        return ctx
-      }
-    }
-    case "_１ダメージを与える": {
-      return function (ctx: GameState, effect: Effect): GameState {
-        if (action.vars == null) {
-          throw new Error(`action.var not found: ${action.title[0]}`)
-        }
-        const cardId = EffectFn.getCardID(effect)
-        const targetPairs = getCardTipStrBaSyouPairs(ctx, action.vars[0], cardId)
-        ctx = targetPairs.reduce((ctx, pair) => {
-          return makeItemDamage(ctx, 1, pair)
-        }, ctx)
-        return ctx
-      }
-    }
-    case "_－１／－１／－１コイン_１個を乗せる": {
-      const [_, bonus, x] = action.title
-      const varNames = action.vars
-      if (varNames == null) {
-        throw new Error(`action.var not found: ${action.title[0]}`)
-      }
-      return function (ctx: GameState, effect: Effect): GameState {
-        const cardId = EffectFn.getCardID(effect)
-        const pairs = getCardTipStrBaSyouPairs(ctx, varNames[0], cardId)
-        const [targetCardId, targetBasyou] = pairs[0]
-        const coins = repeat(CoinFn.battleBonus(bonus))(x)
-        ctx = addCoinsToCard(ctx, [targetCardId, targetBasyou], coins) as GameState
-        return ctx
-      }
-    }
-    case "移除卡狀態_旗標": {
-      const [_, flagName] = action.title
-      return function (ctx: GameState, effect: Effect): GameState {
-        const cardId = EffectFn.getCardID(effect)
-        let cardState = getItemState(ctx, cardId);
-        cardState = ItemStateFn.removeFlag(cardState, flagName)
-        ctx = setItemState(ctx, cardId, cardState) as GameState
-        return ctx
-      }
-    }
-    case "ターン終了時まで「速攻」を得る。": {
-      const [_, ges] = action.title
-      const varNames = action.vars
-      if (varNames == null) {
-        throw new Error(`action.var not found: ${action.title[0]}`)
-      }
-      return function (ctx: GameState, effect: Effect): GameState {
-        const cardId = EffectFn.getCardID(effect)
-        const pairs = getCardTipStrBaSyouPairs(ctx, varNames[0], cardId)
-        for (const [targetCardId, targetBaSyou] of pairs) {
-          const gesForCard = ges.map(ge => {
-            return {
-              ...ge,
-              cardIds: [targetCardId],
-            } as GlobalEffect
-          })
-          ctx = setItemGlobalEffectsUntilEndOfTurn(ctx, gesForCard, [targetCardId, targetBaSyou])
-        }
-        return ctx
-      }
-    }
-    case "カード_１枚を引く": {
-      const [_, count] = action.title
-      return function (ctx: GameState, effect: Effect): GameState {
-        const cardId = EffectFn.getCardID(effect)
-        const cardController = getItemController(ctx, cardId)
-        const fromBasyou = AbsoluteBaSyouFn.of(cardController, "本国")
-        const pairs = getItemIdsByBasyou(ctx, fromBasyou).slice(0, count).map(cardId => {
-          return [cardId, fromBasyou] as StrBaSyouPair
-        })
-        for (const pair of pairs) {
-          ctx = moveItem(ctx, AbsoluteBaSyouFn.of(cardController, "手札"), pair)
-        }
-        return ctx
-      }
-    }
-    case "リロール状態で置き換える":
-      const varNames = action.vars
-      if (varNames == null) {
-        throw new Error(`action.var not found: ${action.title[0]}`)
-      }
-      return function (ctx: GameState, effect: Effect): GameState {
-        const cardId = EffectFn.getCardID(effect)
-        const [[t1, t1ba]] = getCardTipStrBaSyouPairs(ctx, varNames[0], cardId)
-        const [[t2, t2ba]] = getCardTipStrBaSyouPairs(ctx, varNames[1], cardId)
-        ctx = swapItem(ctx, t1, t2)
-        ctx = mapCard(ctx, t2, card => ({ ...card, isRoll: false })) as GameState
-        // 以下應不需要, 置換只有換protoID和狀態, 這樣才能繼承所有對象
-        // ctx = moveItem(ctx, t2ba, [t1, t1ba]) as GameState
-        // ctx = moveItem(ctx, t1ba, [t2, t2ba]) as GameState
-        // let t1card = getCard(ctx, t1)
-        // t1card = CardFn.setIsRoll(t1card, false)
-        // ctx = setCard(ctx, t1, t1card) as GameState
-        // const t1State = { ...getItemState(ctx, t1) }
-        // const t2State = { ...getItemState(ctx, t2) }
-        // ctx = setItemState(ctx, t1, t2State) as GameState
-        // ctx = setItemState(ctx, t2, t1State) as GameState
-        return ctx
-      }
-    case "合計国力〔x〕": {
-      const [_, x] = action.title
-      return function (ctx: GameState, effect: Effect): GameState {
-        const cardId = EffectFn.getCardID(effect)
-        const cardController = getItemController(ctx, cardId)
-        const cardIdsCanPay = getCardIdsCanPayRollCost(ctx, cardController, null)
-        if (cardIdsCanPay.length < x) {
-          throw new GameError(`合計国力〔x〕:${cardIdsCanPay.length} < ${x}. ${effect.text.description}`)
-        }
-        return ctx
-      }
-    }
-    case "_敵軍_ユニットが_戦闘エリアにいる場合": {
-      const [_, side, category, areas] = action.title
-      return function (ctx: GameState, effect: Effect): GameState {
-        const cardId = EffectFn.getCardID(effect)
-        const playerId = getItemController(ctx, cardId);
-        const targetPlayerId = side == "自軍" ? playerId : PlayerIDFn.getOpponent(playerId)
-        const basyous: AbsoluteBaSyou[] = (lift(AbsoluteBaSyouFn.of)([targetPlayerId], areas))
-        const pairs = basyous.flatMap(basyou =>
-          getItemIdsByBasyou(ctx, basyou)
-            .filter(cardId => getItemRuntimeCategory(ctx, cardId) == category)
-            .map(cardId => [cardId, basyou] as StrBaSyouPair)
-        )
-        if (pairs.length == 0) {
-          throw new GameError(`${action.title[0]} ${pairs.length}`)
-        }
-        return ctx
-      }
-    }
-    case "這張卡在_戰區的場合": {
-      const [_, areas] = action.title
-      return function (ctx: GameState, effect: Effect): GameState {
-        const cardId = EffectFn.getCardID(effect)
-        const from = getItemBaSyou(ctx, cardId)
-        if (areas.includes(AbsoluteBaSyouFn.getBaSyouKeyword(from))) {
-
-        } else {
-          throw new GameError(`${action.title} ${cardId} not in ${JSON.stringify(areas)}`)
-        }
-        return ctx
-      }
-    }
-    case "_黒のGサインを持つ_自軍_Gが_５枚以上ある場合": {
-      const [_, color, side, category, count] = action.title
-      return function (ctx: GameState, effect: Effect): GameState {
-        const cardId = EffectFn.getCardID(effect)
-        const cardController = getItemController(ctx, cardId)
-        const playerId = side == "自軍" ? cardController : PlayerIDFn.getOpponent(cardController)
-        const gsignCount = getItemIdsByPlayerId(ctx, false, playerId)
-          .filter(itemId => getItemPrototype(ctx, itemId).gsign?.[0].includes(color))
-          .filter(itemId => getItemRuntimeCategory(ctx, itemId) == category).length
-        if (gsignCount < count) {
-          throw new GameError(`you have ${gsignCount}. must ${count}: ${action.title[0]}`)
-        }
-        return ctx
-      }
-    }
-    case "這個效果1回合只能用1次": {
-      return function (ctx: GameState, effect: Effect): GameState {
-        return ctx
-      }
-    }
-  }
-}
-
-export function getOnEventTitleFn(text: CardText): OnEventFn {
-  if (text.onEvent == null || typeof text.onEvent == "string") {
-    return CardTextFn.getOnEventFn(text)
-  }
-  switch (text.onEvent[0]) {
-    case "GameEventOnTimingDoAction": {
-      const [_, timing, action] = text.onEvent;
-      return function (ctx: GameState, effect: Effect): GameState {
-        const event = EffectFn.getEvent(effect)
-        if (event.title[0] == "GameEventOnTiming" && PhaseFn.eq(event.title[1], timing)) {
-          return getActionTitleFn(action)(ctx, effect, null)
-        }
-        return ctx
-      }
-    }
-  }
-}
-
 
 export function makeItemDamage(ctx: GameState, damage: number, target: StrBaSyouPair): GameState {
   const [targetItemId, targetOriginBasyou] = target

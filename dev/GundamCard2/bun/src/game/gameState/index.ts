@@ -21,6 +21,9 @@ import * as getPlayCardEffect from "./getPlayCardEffect"
 import * as getNextPhase from "./getNextPhase"
 import * as swapItem from "./swapItem"
 import * as moveCardLikeItem from "./moveItem"
+import * as getConditionTitleFn from "./getConditionTitleFn"
+import * as getActionTitleFn from "./getActionTitleFn"
+import * as getOnEventTitleFn from "./getOnEventTitleFn"
 export const GameStateFn = {
     ...GameState,
     ...CardState,
@@ -44,5 +47,8 @@ export const GameStateFn = {
     ...getPlayCardEffect,
     ...getNextPhase,
     ...swapItem,
-    ...moveCardLikeItem
+    ...moveCardLikeItem,
+    ...getConditionTitleFn,
+    ...getActionTitleFn,
+    ...getOnEventTitleFn
 }

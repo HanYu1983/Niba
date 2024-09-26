@@ -11,7 +11,7 @@ import { getDrawPhaseRuleEffect } from "../gameState/getDrawPhaseRuleEffect";
 import { getRerollPhaseRuleEffect } from "../gameState/getRerollPhaseRuleEffect";
 import { getDamageRuleEffect } from "../gameState/getDamageRuleEffect";
 import { getReturnRuleEffect } from "../gameState/getReturnRuleEffect";
-import { clearTipForUserSelection, createCommandEffectTips, createEffectTips, getConditionTitleFn } from "../gameState/effect";
+import { clearTipSelectionForUser, createCommandEffectTips, createEffectTips, getConditionTitleFn } from "../gameState/effect";
 import { CommandEffecTipFn } from "../define/CommandEffectTip";
 import { createBridge } from "../bridge/createBridge";
 import { getActivePlayerID } from "../gameState/ActivePlayerComponent";

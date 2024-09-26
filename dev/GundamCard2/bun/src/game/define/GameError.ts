@@ -1,4 +1,5 @@
 
+// 只給createEffectTips補捉
 export class GameError extends Error {
     constructor(message: any) {
         super(message);
@@ -6,6 +7,7 @@ export class GameError extends Error {
     }
 }
 
+// 主程式只補捉這個
 export class TargetMissingError extends Error {
     constructor(message: any) {
         super(message);

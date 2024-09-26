@@ -25962,15 +25962,15 @@ async function loadPrototype(imgID) {
     id: imgID
   };
   if (imgID.split("_").length > 1) {
-    const [prodid, part2, part3, part4, part5] = imgID.split("_");
-    const info_25 = `${part2}_${part3}_${part4}_${part5}`;
+    const [prodid, ...parts] = imgID.split("_");
+    const info_25 = parts.join("_");
     const data = (await importJson(`./data/${prodid}.json`)).data.find((d) => {
       return d.info_25 == info_25;
     });
     if (data) {
       const id = data.id;
       const title = data.info_2;
-      const category = data.info_3;
+      const categoryStr = data.info_3;
       const totalCostLengthStr = data.info_4;
       const colorCost = data.info_5;
       const gsignProperty = data.info_6;
@@ -26030,10 +26030,14 @@ async function loadPrototype(imgID) {
           title: ["\u7279\u6B8A\u578B", ["\u9AD8\u6A5F\u52D5"]]
         });
       }
+      const category = categoryMapping[categoryStr];
+      if (category == null) {
+        throw new Error(`unknown categoryStr: ${categoryStr}`);
+      }
       const originData = {
         originCardId: id,
         title,
-        category: categoryMapping[category],
+        category,
         color,
         totalCost: totalCostLengthStr == "X" ? "X" : parseInt(totalCostLengthStr, 10),
         rollCost: parseColors(color, colorCost),
@@ -26050,6 +26054,8 @@ async function loadPrototype(imgID) {
         ...proto,
         ...originData
       };
+    } else {
+      console.log(`loadPrototype not found: ${imgID}`);
     }
   }
   {
