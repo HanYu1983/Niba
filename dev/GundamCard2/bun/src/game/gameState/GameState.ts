@@ -45,6 +45,7 @@ export function createGameState(): GameState {
     activePlayerID: null,
     immediateEffect: [],
     stackEffect: [],
+    destroyEffect: [],
     isBattle: {},
     coins: {},
     coinId2cardId: {},

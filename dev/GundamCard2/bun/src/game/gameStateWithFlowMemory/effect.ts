@@ -211,26 +211,6 @@ export function deleteImmediateEffect(
 }
 
 
-export function clearDestroyEffects(ctx: GameStateWithFlowMemory): GameStateWithFlowMemory {
-  return {
-    ...ctx,
-    destroyEffect: []
-  }
-}
-
-export function addDestroyEffect(ctx: GameStateWithFlowMemory, block: Effect): GameStateWithFlowMemory {
-  if (block.id == null) {
-    block.id = ToolFn.getUUID("addDestroyEffect")
-  }
-  if (block.text.id == "") {
-    block.text.id = ToolFn.getUUID("addDestroyEffect")
-  }
-  return {
-    ...ctx,
-    destroyEffect: [block, ...ctx.destroyEffect],
-  };
-}
-
 export function getCommandEffecTips(ctx: GameStateWithFlowMemory): CommandEffectTip[] {
   return ctx.commandEffectTips
 }
@@ -249,29 +229,3 @@ export function setCommandEffects(ctx: GameStateWithFlowMemory, effects: Effect[
   };
 }
 
-export function updateDestroyEffect(ctx: GameStateWithFlowMemory): GameStateWithFlowMemory {
-  // 將所有破壞效果加入破壞用堆疊
-  // 加入破壞用堆疊後，主動玩家就必須決定解決順序
-  // 決定後，依順序將所有效果移到正在解決中的堆疊，並重設切入的旗標，讓玩家可以在堆疊解決中可以再次切入
-  return getItemStateValues(ctx).reduce((ctx, cs) => {
-    if (EffectFn.isFakeCardID(cs.id)) {
-      return ctx
-    }
-    if (cs.destroyReason) {
-      const effect: Effect = createDestroyEffect(ctx, cs.destroyReason, cs.id)
-      ctx = addDestroyEffect(ctx, effect) as GameStateWithFlowMemory
-      return ctx
-    }
-    const [_, _2, hp] = getSetGroupBattlePoint(ctx, cs.id)
-    if (hp <= cs.damage) {
-      const destroyReason: DestroyReason = {
-        id: "マイナスの戦闘修正",
-        playerID: getItemController(ctx, cs.id)
-      }
-      const effect: Effect = createDestroyEffect(ctx, destroyReason, cs.id)
-      ctx = addDestroyEffect(ctx, effect) as GameStateWithFlowMemory
-      return ctx
-    }
-    return ctx
-  }, ctx)
-}

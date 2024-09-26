@@ -1,11 +1,11 @@
 import { logCategory } from "../../tool/logger";
 import { PlayerA, PlayerB, PlayerID, PlayerIDFn } from "../define/PlayerID";
 import { AbsoluteBaSyou, AbsoluteBaSyouFn, BaSyouKeyword, BaSyouKeywordFn } from "../define/BaSyou";
-import { addImmediateEffect, addStackEffect, getEffect } from "../gameState/EffectStackComponent";
+import { addImmediateEffect, addStackEffect, clearDestroyEffects, pushDestroyEffectsToStackAndClear } from "../gameState/EffectStackComponent";
 import { checkIsBattle } from "../gameState/IsBattleComponent";
 import { Flow } from "./Flow";
 import { GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
-import { setActiveEffectID, cancelActiveEffectID, doActiveEffect, deleteImmediateEffect, clearDestroyEffects, updateDestroyEffect, getEffectIncludePlayerCommand, setActiveLogicID } from "./effect";
+import { setActiveEffectID, cancelActiveEffectID, doActiveEffect, deleteImmediateEffect, getEffectIncludePlayerCommand, setActiveLogicID } from "./effect";
 import { PhaseFn } from "../define/Timing";
 import { doPlayerAttack } from "../gameState/player";
 import { triggerEvent } from "../gameState/triggerEvent";
@@ -22,6 +22,7 @@ import { flow, lift } from "ramda";
 import { getCard } from "../gameState/CardTableComponent";
 import { getCoin, getCoinIds, getCoinOwner } from "../gameState/CoinTableComponent";
 import { createEntityIterator, EntityFn } from "../gameState/Entity";
+import { createDestroyEffectAndPush } from "../gameState/doItemSetDestroy";
 
 export function applyFlow(
     ctx: GameStateWithFlowMemory,
@@ -234,7 +235,7 @@ export function applyFlow(
             ) {
                 // 更新所有破壞而廢棄的效果
                 // 若有產生值，在下一步時主動玩家就要拿到決定解決順序的指令
-                ctx = updateDestroyEffect(ctx) as GameStateWithFlowMemory;
+                ctx = createDestroyEffectAndPush(ctx) as GameStateWithFlowMemory;
             }
             // 回合結束時切換主動玩家
             if (
@@ -332,17 +333,14 @@ export function applyFlow(
             return ctx;
         }
         case "FlowMakeDestroyOrder": {
-            const willAddedDestroyEffect = ctx.destroyEffect.filter((a) => {
-                return ctx.stackEffect.find((id) => a.id == id) == null;
+            const willAddedDestroyEffect = ctx.destroyEffect.filter((aid) => {
+                return ctx.stackEffect.find((id) => aid == id) == null;
             });
             if (flow.destroyEffect.length != willAddedDestroyEffect.length) {
                 throw new Error("長度不符合");
             }
             // 移除破壞效果，全部移到堆疊
-            ctx = clearDestroyEffects(ctx) as GameStateWithFlowMemory
-            for (const effect of flow.destroyEffect) {
-                ctx = addStackEffect(ctx, effect) as GameStateWithFlowMemory
-            }
+            ctx = pushDestroyEffectsToStackAndClear(ctx, flow.destroyEffect) as GameStateWithFlowMemory
             return {
                 ...ctx,
                 // 重設切入旗標，讓玩家再次切入

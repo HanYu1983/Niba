@@ -1,16 +1,18 @@
 import { TableFns } from "../../tool/table"
 import { AbsoluteBaSyou, AbsoluteBaSyouFn, BaSyouKeyword, BaSyouKeywordFn } from "../define/BaSyou"
-import { DestroyReason, EffectFn } from "../define/Effect"
+import { DestroyReason, Effect, EffectFn } from "../define/Effect"
 import { GameError } from "../define/GameError"
 import { GameEvent } from "../define/GameEvent"
 import { StrBaSyouPair } from "../define/Tip"
 import { getCard, setCard } from "./CardTableComponent"
-import { getEffects, isStackEffect, getEffect, getDestroyEffects, removeEffect } from "./EffectStackComponent"
+import { createDestroyEffect } from "./createDestroyEffect"
+import { getEffects, isStackEffect, getEffect, getDestroyEffects, removeEffect, addDestroyEffect } from "./EffectStackComponent"
 import { EventCenterFn } from "./EventCenter"
 import { GameState } from "./GameState"
 import { clearGlobalEffects, getGlobalEffects, setGlobalEffects } from "./globalEffects"
-import { mapItemState } from "./ItemStateComponent"
+import { getItemStateValues, mapItemState } from "./ItemStateComponent"
 import { ItemTableComponent, isCard, isChip, getItemBaSyou, isCoin, getItemController, assertTargetMissingError } from "./ItemTableComponent"
+import { getSetGroupBattlePoint } from "./setGroup"
 import { getSetGroupChildren } from "./SetGroupComponent"
 import { triggerEvent } from "./triggerEvent"
 
@@ -50,5 +52,32 @@ export function doItemSetDestroy(ctx: GameState, reason: DestroyReason | null, [
         throw new Error(`coin can not move: ${itemId}`)
     }
     throw new Error(`moveItem unknown item: ${itemId}`)
+}
+
+export function createDestroyEffectAndPush(ctx: GameState): GameState {
+    // 將所有破壞效果加入破壞用堆疊
+    // 加入破壞用堆疊後，主動玩家就必須決定解決順序
+    // 決定後，依順序將所有效果移到正在解決中的堆疊，並重設切入的旗標，讓玩家可以在堆疊解決中可以再次切入
+    return getItemStateValues(ctx).reduce((ctx, cs) => {
+        if (EffectFn.isFakeCardID(cs.id)) {
+            return ctx
+        }
+        if (cs.destroyReason) {
+            const effect: Effect = createDestroyEffect(ctx, cs.destroyReason, cs.id)
+            ctx = addDestroyEffect(ctx, effect) as GameState
+            return ctx
+        }
+        const [_, _2, hp] = getSetGroupBattlePoint(ctx, cs.id)
+        if (hp <= cs.damage) {
+            const destroyReason: DestroyReason = {
+                id: "マイナスの戦闘修正",
+                playerID: getItemController(ctx, cs.id)
+            }
+            const effect: Effect = createDestroyEffect(ctx, destroyReason, cs.id)
+            ctx = addDestroyEffect(ctx, effect) as GameState
+            return ctx
+        }
+        return ctx
+    }, ctx)
 }
 

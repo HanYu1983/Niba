@@ -9,7 +9,7 @@ import { setActivePlayerID } from "../game/gameState/ActivePlayerComponent"
 import { getCardRollCostLength, getCardBattlePoint, getCardHasSpeicalEffect } from "../game/gameState/card"
 import { addCards, createCardWithProtoIds } from "../game/gameState/CardTableComponent"
 import { createCommandEffectTips, createEffectTips, doEffect, setTipSelectionForUser } from "../game/gameState/doEffect"
-import { addStackEffect, getDestroyEffects, getTopEffect } from "../game/gameState/EffectStackComponent"
+import { addStackEffect, getDestroyEffects, getTopEffect, pushDestroyEffectsToStackAndClear } from "../game/gameState/EffectStackComponent"
 import { createGameState, GameState } from "../game/gameState/GameState"
 import { getPlayEffects } from "../game/gameState/getPlayEffects"
 import { getItemState, mapItemState, setItemState } from "../game/gameState/ItemStateComponent"
@@ -18,7 +18,7 @@ import { setPhase } from "../game/gameState/PhaseComponent"
 import { triggerEvent } from "../game/gameState/triggerEvent"
 import { loadPrototype } from "../script"
 import { CommandEffecTipFn } from "../game/define/CommandEffectTip"
-import { doItemSetDestroy } from "../game/gameState/doItemSetDestroy"
+import { doItemSetDestroy, createDestroyEffectAndPush } from "../game/gameState/doItemSetDestroy"
 import { checkIsBattle } from "../game/gameState/IsBattleComponent"
 import { getSetGroupBattlePoint } from "../game/gameState/setGroup"
 import { createDestroyEffect } from "../game/gameState/createDestroyEffect"
@@ -59,8 +59,8 @@ export async function test179028_10D_C_BL070N_blue() {
                 throw new Error()
             }
             // 這裡模擬破壞效果進了堆疊了
-            const destroyEffect = createDestroyEffect(ctx, destroyReason, destroyUnit.id)
-            ctx = addStackEffect(ctx, destroyEffect) as GameState
+            ctx = createDestroyEffectAndPush(ctx)
+            ctx = pushDestroyEffectsToStackAndClear(ctx) as GameState
             if (getDestroyEffects(ctx).find(e => EffectFn.getCardID(e) == destroyUnit.id) == null) {
                 throw new Error()
             }
@@ -138,8 +138,8 @@ export async function test179028_10D_C_BL070N_blue() {
                 throw new Error()
             }
             // 這裡模擬破壞效果進了堆疊了
-            const destroyEffect = createDestroyEffect(ctx, destroyReason, destroyUnit.id)
-            ctx = addStackEffect(ctx, destroyEffect) as GameState
+            ctx = createDestroyEffectAndPush(ctx)
+            ctx = pushDestroyEffectsToStackAndClear(ctx) as GameState
             if (getDestroyEffects(ctx).find(e => EffectFn.getCardID(e) == destroyUnit.id) == null) {
                 throw new Error()
             }
