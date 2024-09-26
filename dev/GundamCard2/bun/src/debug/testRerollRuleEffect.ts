@@ -2,7 +2,7 @@ import { AbsoluteBaSyouFn } from "../game/define/BaSyou";
 import { Card } from "../game/define/Card";
 import { PlayerA, PlayerB } from "../game/define/PlayerID";
 import { addCards, createCardWithProtoIds, getCard } from "../game/gameState/CardTableComponent";
-import { doEffect, setCardTipStrBaSyouPairs, setTipSelectionForUser } from "../game/gameState/effect";
+import { doEffect, setCardTipStrBaSyouPairs, setTipSelectionForUser } from "../game/gameState/doEffect";
 import { createGameState, GameState } from "../game/gameState/GameState";
 import { getRerollPhaseRuleEffect } from "../game/gameState/getRerollPhaseRuleEffect";
 import { loadPrototype } from "../script";

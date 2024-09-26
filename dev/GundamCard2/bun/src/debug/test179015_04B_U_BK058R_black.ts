@@ -6,7 +6,7 @@ import { ItemStateFn } from "../game/define/ItemState";
 import { PlayerA } from "../game/define/PlayerID";
 import { setActivePlayerID } from "../game/gameState/ActivePlayerComponent";
 import { addCards, createCardWithProtoIds, getCard } from "../game/gameState/CardTableComponent";
-import { createEffectTips, doEffect, setTipSelectionForUser } from "../game/gameState/effect";
+import { createEffectTips, doEffect, setTipSelectionForUser } from "../game/gameState/doEffect";
 import { createGameState, GameState } from "../game/gameState/GameState";
 import { getPlayCardEffects } from "../game/gameState/getPlayCardEffect";
 import { mapItemState } from "../game/gameState/ItemStateComponent";

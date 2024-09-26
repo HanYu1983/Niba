@@ -7,7 +7,7 @@ import { setActivePlayerID } from "../game/gameState/ActivePlayerComponent";
 import { getCardTexts, getItemCharacteristic } from "../game/gameState/card";
 import { addCards, getCard } from "../game/gameState/CardTableComponent";
 import { addChips, setChipPrototype } from "../game/gameState/ChipTableComponent";
-import { assertEffectCanPass, doEffect, onMoveItem, setTipSelectionForUser } from "../game/gameState/effect";
+import { assertEffectCanPass, doEffect, onMoveItem, setTipSelectionForUser } from "../game/gameState/doEffect";
 import { getTopEffect } from "../game/gameState/EffectStackComponent";
 import { createGameState, GameState } from "../game/gameState/GameState";
 import { getPlayEffects } from "../game/gameState/getPlayEffects";

@@ -7,7 +7,7 @@ import { TargetTypeView } from "./TargetTypeView";
 import { Effect, EffectFn } from "../../game/define/Effect";
 import { Tip } from "../../game/define/Tip";
 import { CardText, Condition } from "../../game/define/CardText";
-import { createEffectTips } from "../../game/gameState/effect";
+import { createEffectTips } from "../../game/gameState/doEffect";
 import { prop } from "ramda";
 
 export const RequireView = (props: {

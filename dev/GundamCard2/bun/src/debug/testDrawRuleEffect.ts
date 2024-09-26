@@ -3,7 +3,7 @@ import { Card } from "../game/define/Card";
 import { PlayerA, PlayerB } from "../game/define/PlayerID";
 import { getBattleGroup, isABattleGroup } from "../game/gameState/battleGroup";
 import { addCards, createCardWithProtoIds } from "../game/gameState/CardTableComponent";
-import { doEffect, setCardTipStrBaSyouPairs, setTipSelectionForUser } from "../game/gameState/effect";
+import { doEffect, setCardTipStrBaSyouPairs, setTipSelectionForUser } from "../game/gameState/doEffect";
 import { createGameState, GameState } from "../game/gameState/GameState";
 import { getAttackPhaseRuleEffect } from "../game/gameState/getAttackPhaseRuleEffect";
 import { getDrawPhaseRuleEffect } from "../game/gameState/getDrawPhaseRuleEffect";

@@ -13,7 +13,7 @@ import { ToolFn } from "../tool";
 import { updateCommand } from "./updateCommand";
 import { getItemIdsByBasyou, shuffleItems } from "../gameState/ItemTableComponent";
 import { TableFns } from "../../tool/table";
-import { setCardTipStrBaSyouPairs, setTipSelectionForUser } from "../gameState/effect";
+import { setCardTipStrBaSyouPairs, setTipSelectionForUser } from "../gameState/doEffect";
 import { EffectFn } from "../define/Effect";
 import { mapItemState } from "../gameState/ItemStateComponent";
 import { ItemStateFn } from "../define/ItemState";

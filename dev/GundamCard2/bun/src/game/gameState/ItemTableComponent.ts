@@ -19,7 +19,7 @@ import { log } from "../../tool/logger";
 import { GameState } from "./GameState";
 import { getGlobalEffects } from "./globalEffects";
 import { EventCenterFn } from "./EventCenter";
-import { moveItem } from "./moveItem";
+import { doItemMove } from "./doItemMove";
 
 export type Item = Card | Coin | Chip;
 

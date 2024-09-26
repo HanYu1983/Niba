@@ -7,7 +7,7 @@ import { getEffect } from "../../game/gameState/EffectStackComponent";
 import { getEffectIncludePlayerCommand } from "../../game/gameStateWithFlowMemory/effect";
 import { CommandEffecTipFn } from "../../game/define/CommandEffectTip";
 import { TargetMissingError } from "../../game/define/GameError";
-import { createCommandEffectTips, setTipSelectionForUser } from "../../game/gameState/effect";
+import { createCommandEffectTips, setTipSelectionForUser } from "../../game/gameState/doEffect";
 import { applyFlow } from "../../game/gameStateWithFlowMemory/applyFlow";
 import { GameStateWithFlowMemory } from "../../game/gameStateWithFlowMemory/GameStateWithFlowMemory";
 import { Flow } from "../../game/gameStateWithFlowMemory/Flow";

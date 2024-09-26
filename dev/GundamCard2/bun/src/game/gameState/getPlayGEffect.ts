@@ -45,7 +45,7 @@ export function getPlayGEffects(ctx: GameState, cardId: string): Effect {
                             title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, ToolFn }: Bridge): GameState {
                                 const cardId = DefineFn.EffectFn.getCardID(effect)
                                 const from = GameStateFn.getItemBaSyou(ctx, cardId)
-                                ctx = GameStateFn.moveItem(ctx, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "Gゾーン"), [cardId, from]) as GameState
+                                ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "Gゾーン"), [cardId, from]) as GameState
                                 return ctx
                             }.toString()
                         },

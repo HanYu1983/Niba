@@ -11,7 +11,7 @@ import { getDrawPhaseRuleEffect } from "../gameState/getDrawPhaseRuleEffect";
 import { getRerollPhaseRuleEffect } from "../gameState/getRerollPhaseRuleEffect";
 import { getDamageRuleEffect } from "../gameState/getDamageRuleEffect";
 import { getReturnRuleEffect } from "../gameState/getReturnRuleEffect";
-import { clearTipSelectionForUser, createCommandEffectTips, createEffectTips } from "../gameState/effect";
+import { clearTipSelectionForUser, createCommandEffectTips, createEffectTips } from "../gameState/doEffect";
 import { CommandEffecTipFn } from "../define/CommandEffectTip";
 
 export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[] {

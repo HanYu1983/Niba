@@ -8,7 +8,7 @@ import { setActivePlayerID } from "../game/gameState/ActivePlayerComponent"
 import { getCardRollCostLength, getCardBattlePoint } from "../game/gameState/card"
 import { addCards, createCardWithProtoIds, getCard, mapCard } from "../game/gameState/CardTableComponent"
 import { getCardIdByCoinId, getCoins } from "../game/gameState/CoinTableComponent"
-import { createEffectTips, doEffect, onMoveItem, setTipSelectionForUser } from "../game/gameState/effect"
+import { createEffectTips, doEffect, onMoveItem, setTipSelectionForUser } from "../game/gameState/doEffect"
 import { getTopEffect } from "../game/gameState/EffectStackComponent"
 import { createGameState, GameState } from "../game/gameState/GameState"
 import { getPlayCardEffects } from "../game/gameState/getPlayCardEffect"
@@ -17,7 +17,7 @@ import { getGlobalEffects, setGlobalEffects, clearGlobalEffects } from "../game/
 import { checkIsBattle, isBattle } from "../game/gameState/IsBattleComponent"
 import { getItemState, setItemState } from "../game/gameState/ItemStateComponent"
 import { getItemIdsByBasyou, getItemBaSyou } from "../game/gameState/ItemTableComponent"
-import { moveItem } from "../game/gameState/moveItem"
+import { doItemMove } from "../game/gameState/doItemMove"
 import { setPhase } from "../game/gameState/PhaseComponent"
 import { triggerEvent } from "../game/gameState/triggerEvent"
 import { loadPrototype } from "../script"
@@ -80,7 +80,7 @@ export async function test179024_03B_U_WT042U_white() {
         }
     }
     // battle
-    ctx = moveItem(ctx, AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア1"), [cardB.id, getItemBaSyou(ctx, cardB.id)]) as GameState
+    ctx = doItemMove(ctx, AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア1"), [cardB.id, getItemBaSyou(ctx, cardB.id)]) as GameState
     const itemIds = getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア1"))
     if (itemIds.length > 0 && itemIds[0] == cardB.id) {
 

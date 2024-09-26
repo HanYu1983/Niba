@@ -1,7 +1,7 @@
 import { CommandEffectTip, CommandEffecTipFn } from "../define/CommandEffectTip"
 import { Effect, EffectFn } from "../define/Effect"
 import { PlayerA, PlayerB } from "../define/PlayerID"
-import { createCommandEffectTips, getConditionTitleFn } from "../gameState/effect"
+import { createCommandEffectTips, getConditionTitleFn } from "../gameState/doEffect"
 import { getPlayEffects } from "../gameState/getPlayEffects"
 import { setCommandEffects, setCommandEffectTips } from "./effect"
 import { GameStateWithFlowMemory } from "./GameStateWithFlowMemory"

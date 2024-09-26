@@ -33,6 +33,58 @@ import { EventCenterFn } from "./EventCenter"
 import { getActionTitleFn } from "./getActionTitleFn"
 import { getConditionTitleFn } from "./getConditionTitleFn"
 
+export function doEffect(
+  ctx: GameState,
+  effect: Effect,
+  logicId: number,
+  logicSubId: number,
+): GameState {
+  log("doEffect", effect.text.description)
+  ctx = EventCenterFn.onEffectStart(ctx, effect)
+  assertEffectCanPass(ctx, effect, logicId, logicSubId)
+  const ltacs = CardTextFn.getLogicTreeActionConditions(effect.text, CardTextFn.getLogicTreeAction(effect.text, logicId))[logicSubId]
+  if (ltacs == null) {
+    throw new Error(`ltasc not found: ${logicId}/${logicSubId}`)
+  }
+  const bridge = createBridge()
+  const conditionIds = Object.keys(ltacs)
+  const cardId = EffectFn.getCardID(effect)
+  conditionIds.forEach(conditionKey => {
+    log("doEffect", "conditionKey", conditionKey)
+    const condition = CardTextFn.getCondition(effect.text, conditionKey)
+    const actionFns = ConditionFn.getActionTitleFns(condition, getActionTitleFn)
+    for (const actionFn of actionFns) {
+      ctx = actionFn(ctx, effect, bridge)
+      //ctx = clearGlobalEffects(ctx)
+    }
+    // if (condition.actions) {
+    //   for (const action of condition.actions) {
+    //     if (action.vars) {
+    //       for (const name of action.vars) {
+    //         log("doEffect", "clearTip", name)
+    //         ctx = mapItemState(ctx, cardId, is => ItemStateFn.clearTip(is, name)) as GameState
+    //       }
+    //     }
+    //   }
+    // }
+  })
+  const lta = CardTextFn.getLogicTreeAction(effect.text, logicId)
+  for (const actionFn of LogicTreeActionFn.getActionTitleFns(lta, getActionTitleFn)) {
+    ctx = actionFn(ctx, effect, bridge)
+    //ctx = clearGlobalEffects(ctx)
+  }
+  // for (const action of lta.actions) {
+  //   if (action.vars) {
+  //     for (const name of action.vars) {
+  //       log("doEffect", "clearTip", name)
+  //       ctx = mapItemState(ctx, cardId, is => ItemStateFn.clearTip(is, name)) as GameState
+  //     }
+  //   }
+  // }
+  ctx = EventCenterFn.onEffectEnd(ctx, effect)
+  return ctx;
+}
+
 export function createEffectTips(
   ctx: GameState,
   effect: Effect,
@@ -225,138 +277,6 @@ export function createCommandEffectTips(ctx: GameState, effect: Effect): Command
 }
 
 
-export function doEffect(
-  ctx: GameState,
-  effect: Effect,
-  logicId: number,
-  logicSubId: number,
-): GameState {
-  log("doEffect", effect.text.description)
-  ctx = EventCenterFn.onEffectStart(ctx, effect)
-  assertEffectCanPass(ctx, effect, logicId, logicSubId)
-  const ltacs = CardTextFn.getLogicTreeActionConditions(effect.text, CardTextFn.getLogicTreeAction(effect.text, logicId))[logicSubId]
-  if (ltacs == null) {
-    throw new Error(`ltasc not found: ${logicId}/${logicSubId}`)
-  }
-  const bridge = createBridge()
-  const conditionIds = Object.keys(ltacs)
-  const cardId = EffectFn.getCardID(effect)
-  conditionIds.forEach(conditionKey => {
-    log("doEffect", "conditionKey", conditionKey)
-    const condition = CardTextFn.getCondition(effect.text, conditionKey)
-    const actionFns = ConditionFn.getActionTitleFns(condition, getActionTitleFn)
-    for (const actionFn of actionFns) {
-      ctx = actionFn(ctx, effect, bridge)
-      //ctx = clearGlobalEffects(ctx)
-    }
-    // if (condition.actions) {
-    //   for (const action of condition.actions) {
-    //     if (action.vars) {
-    //       for (const name of action.vars) {
-    //         log("doEffect", "clearTip", name)
-    //         ctx = mapItemState(ctx, cardId, is => ItemStateFn.clearTip(is, name)) as GameState
-    //       }
-    //     }
-    //   }
-    // }
-  })
-  const lta = CardTextFn.getLogicTreeAction(effect.text, logicId)
-  for (const actionFn of LogicTreeActionFn.getActionTitleFns(lta, getActionTitleFn)) {
-    ctx = actionFn(ctx, effect, bridge)
-    //ctx = clearGlobalEffects(ctx)
-  }
-  // for (const action of lta.actions) {
-  //   if (action.vars) {
-  //     for (const name of action.vars) {
-  //       log("doEffect", "clearTip", name)
-  //       ctx = mapItemState(ctx, cardId, is => ItemStateFn.clearTip(is, name)) as GameState
-  //     }
-  //   }
-  // }
-  ctx = EventCenterFn.onEffectEnd(ctx, effect)
-  return ctx;
-}
-
-export function makeItemDamage(ctx: GameState, damage: number, target: StrBaSyouPair): GameState {
-  const [targetItemId, targetOriginBasyou] = target
-  if (isCard(ctx, targetItemId) || isChip(ctx, targetItemId)) {
-    const nowBasyou = getItemBaSyou(ctx, targetItemId)
-    if (AbsoluteBaSyouFn.eq(targetOriginBasyou, nowBasyou)) {
-      throw new TargetMissingError("basyou not same")
-    }
-    let cardState = getItemState(ctx, targetItemId);
-    cardState = ItemStateFn.damage(cardState, damage)
-    ctx = setItemState(ctx, targetItemId, cardState) as GameState
-    return ctx
-  }
-  throw new Error(`makeItemDamage unknown item: ${targetItemId}`)
-}
-
-export function setItemGlobalEffectsUntilEndOfTurn(ctx: GameState, egs: GlobalEffect[], [itemId, originBasyou]: StrBaSyouPair): GameState {
-  if (isCard(ctx, itemId) || isChip(ctx, itemId)) {
-    const nowBasyou = getItemBaSyou(ctx, itemId)
-    if (AbsoluteBaSyouFn.eq(nowBasyou, originBasyou) == false) {
-      throw new TargetMissingError(`target missing: ${itemId} from ${originBasyou}`)
-    }
-    let cs = getItemState(ctx, itemId)
-    for (const eg of egs) {
-      cs = ItemStateFn.setGlobalEffect(cs, null, eg, { isRemoveOnTurnEnd: true })
-    }
-    ctx = setItemState(ctx, itemId, cs) as GameState
-    return ctx
-  }
-  if (isCoin(ctx, itemId)) {
-    throw new Error(`coin can not setItemGlobalEffectsUntilEndOfTurn: ${itemId}`)
-  }
-  throw new Error(`setItemGlobalEffectsUntilEndOfTurn unknown item: ${itemId}`)
-}
-
-export function onMoveItem(ctx: GameState, to: AbsoluteBaSyou, [cardId, from]: StrBaSyouPair): GameState {
-  ctx = clearGlobalEffects(ctx)
-  if (AbsoluteBaSyouFn.getBaSyouKeyword(from) == "手札") {
-    if (AbsoluteBaSyouFn.getBaSyouKeyword(to) == "プレイされているカード") {
-      ctx = triggerEvent(ctx, {
-        title: ["プレイした場合"],
-        cardIds: [cardId]
-      } as GameEvent)
-    }
-  }
-  // 從非場所到場所=出場
-  if (BaSyouKeywordFn.isBa(AbsoluteBaSyouFn.getBaSyouKeyword(from)) == false && BaSyouKeywordFn.isBa(AbsoluteBaSyouFn.getBaSyouKeyword(to))) {
-    // 剛出場的回合
-    ctx = mapItemState(ctx, cardId, is => {
-      return {
-        ...is,
-        isFirstTurn: true
-      }
-    }) as GameState
-    ctx = triggerEvent(ctx, {
-      title: ["場に出た場合"],
-      cardIds: [cardId]
-    } as GameEvent)
-  }
-  if ((["ジャンクヤード", "捨て山", "本国"] as BaSyouKeyword[]).includes(AbsoluteBaSyouFn.getBaSyouKeyword(to))) {
-    let card = getCard(ctx, cardId)
-    card = {
-      ...card,
-      isRoll: false,
-      isFaceDown: true,
-    }
-    ctx = setCard(ctx, cardId, card) as GameState
-  } else if ((["Gゾーン", "ハンガー", "プレイされているカード", "取り除かれたカード"] as BaSyouKeyword[]).includes(AbsoluteBaSyouFn.getBaSyouKeyword(to))) {
-    let card = getCard(ctx, cardId)
-    card = {
-      ...card,
-      isFaceDown: false,
-    }
-    ctx = setCard(ctx, cardId, card) as GameState
-  }
-  ctx = triggerEvent(ctx, {
-    title: ["GameEventOnMove", from, to],
-    cardIds: [cardId]
-  })
-  return ctx
-}
 
 function getCardTipSelection(ctx: GameState, varName: string, cardId: string) {
   const cardState = getItemState(ctx, cardId);
@@ -397,3 +317,21 @@ export function setCardTipStrBaSyouPairs(ctx: GameState, varName: string, pairs:
   return ctx
 }
 
+export function setItemGlobalEffectsUntilEndOfTurn(ctx: GameState, egs: GlobalEffect[], [itemId, originBasyou]: StrBaSyouPair): GameState {
+  if (isCard(ctx, itemId) || isChip(ctx, itemId)) {
+    const nowBasyou = getItemBaSyou(ctx, itemId)
+    if (AbsoluteBaSyouFn.eq(nowBasyou, originBasyou) == false) {
+      throw new TargetMissingError(`target missing: ${itemId} from ${originBasyou}`)
+    }
+    let cs = getItemState(ctx, itemId)
+    for (const eg of egs) {
+      cs = ItemStateFn.setGlobalEffect(cs, null, eg, { isRemoveOnTurnEnd: true })
+    }
+    ctx = setItemState(ctx, itemId, cs) as GameState
+    return ctx
+  }
+  if (isCoin(ctx, itemId)) {
+    throw new Error(`coin can not setItemGlobalEffectsUntilEndOfTurn: ${itemId}`)
+  }
+  throw new Error(`setItemGlobalEffectsUntilEndOfTurn unknown item: ${itemId}`)
+}

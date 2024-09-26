@@ -3,7 +3,7 @@ import { CardText, Condition } from "../../game/define/CardText";
 import { Effect } from "../../game/define/Effect";
 import { AppContext } from "../tool/appContext";
 import { TargetTypeView } from "./TargetTypeView";
-import { createEffectTips } from "../../game/gameState/effect";
+import { createEffectTips } from "../../game/gameState/doEffect";
 
 export const ConditionView = (props: {
   effect: Effect;

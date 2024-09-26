@@ -23,7 +23,7 @@ export function getDrawPhaseRuleEffect(ctx: GameState, playerId: PlayerID): Effe
                                 const from = DefineFn.AbsoluteBaSyouFn.of(playerId, "本国")
                                 const cardIds = GameStateFn.getItemIdsByBasyou(ctx, from).slice(0, drawCount)
                                 for (const cardId of cardIds) {
-                                    ctx = GameStateFn.moveItem(ctx, DefineFn.AbsoluteBaSyouFn.of(playerId, "手札"), [cardId, from]) as GameState
+                                    ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(playerId, "手札"), [cardId, from]) as GameState
                                 }
                                 return ctx
                             }.toString()

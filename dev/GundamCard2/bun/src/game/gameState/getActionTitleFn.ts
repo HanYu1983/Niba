@@ -11,14 +11,15 @@ import { PlayerIDFn } from "../define/PlayerID"
 import { StrBaSyouPair } from "../define/Tip"
 import { getCardIdsCanPayRollCost, getItemRuntimeCategory } from "./card"
 import { mapCard } from "./CardTableComponent"
-import { getCardTipStrBaSyouPairs, makeItemDamage, setItemGlobalEffectsUntilEndOfTurn } from "./effect"
+import { getCardTipStrBaSyouPairs, setItemGlobalEffectsUntilEndOfTurn } from "./doEffect"
 import { addStackEffect } from "./EffectStackComponent"
 import { GameState } from "./GameState"
 import { mapItemState, getItemState, setItemState } from "./ItemStateComponent"
 import { getItemController, getItemBaSyou, setItemIsRoll, assertTargetMissingError, getItemIdsByBasyou, addCoinsToCard, getItemIdsByPlayerId, getItemPrototype } from "./ItemTableComponent"
-import { moveItem } from "./moveItem"
+import { doItemMove } from "./doItemMove"
 import { swapItem } from "./swapItem"
 import { triggerEvent } from "./triggerEvent"
+import { doItemDamage } from "./doItemDamage"
 
 export function getActionTitleFn(action: Action): ActionTitleFn {
     if (typeof action.title == "string") {
@@ -95,7 +96,7 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
             }
             case "廃棄": {
               for (const pair of pairs) {
-                ctx = moveItem(ctx, AbsoluteBaSyouFn.of(cardController, "ジャンクヤード"), pair)
+                ctx = doItemMove(ctx, AbsoluteBaSyouFn.of(cardController, "ジャンクヤード"), pair)
               }
               return ctx
             }
@@ -138,7 +139,7 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
           }).slice(0, damage)
           const to = AbsoluteBaSyouFn.of(playerId, "捨て山")
           for (const pair of pairs) {
-            ctx = moveItem(ctx, to, pair)
+            ctx = doItemMove(ctx, to, pair)
           }
           return ctx
         }
@@ -157,7 +158,7 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
           const playerId = side == "自軍" ? cardController : PlayerIDFn.getOpponent(cardController)
           const to = AbsoluteBaSyouFn.of(playerId, basyouKw)
           for (const pair of pairs) {
-            ctx = moveItem(ctx, to, pair)
+            ctx = doItemMove(ctx, to, pair)
           }
           return ctx
         }
@@ -181,7 +182,7 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
           const cardId = EffectFn.getCardID(effect)
           const targetPairs = getCardTipStrBaSyouPairs(ctx, action.vars[0], cardId)
           ctx = targetPairs.reduce((ctx, pair) => {
-            return makeItemDamage(ctx, 1, pair)
+            return doItemDamage(ctx, 1, pair)
           }, ctx)
           return ctx
         }
@@ -242,7 +243,7 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
             return [cardId, fromBasyou] as StrBaSyouPair
           })
           for (const pair of pairs) {
-            ctx = moveItem(ctx, AbsoluteBaSyouFn.of(cardController, "手札"), pair)
+            ctx = doItemMove(ctx, AbsoluteBaSyouFn.of(cardController, "手札"), pair)
           }
           return ctx
         }

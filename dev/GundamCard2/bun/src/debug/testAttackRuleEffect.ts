@@ -4,7 +4,7 @@ import { Card } from "../game/define/Card";
 import { PlayerA, PlayerB } from "../game/define/PlayerID";
 import { getBattleGroup, isABattleGroup } from "../game/gameState/battleGroup";
 import { addCards } from "../game/gameState/CardTableComponent";
-import { createCommandEffectTips, createEffectTips, doEffect, setCardTipStrBaSyouPairs, setTipSelectionForUser } from "../game/gameState/effect";
+import { createCommandEffectTips, createEffectTips, doEffect, setCardTipStrBaSyouPairs, setTipSelectionForUser } from "../game/gameState/doEffect";
 import { createGameState, GameState } from "../game/gameState/GameState";
 import { getAttackPhaseRuleEffect } from "../game/gameState/getAttackPhaseRuleEffect";
 import { getConditionTitleFn } from "../game/gameState/getConditionTitleFn";

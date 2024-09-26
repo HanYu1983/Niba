@@ -4,13 +4,13 @@ import { PlayerA } from "../game/define/PlayerID";
 import { PhaseFn } from "../game/define/Timing";
 import { setActivePlayerID } from "../game/gameState/ActivePlayerComponent";
 import { addCards, getCard } from "../game/gameState/CardTableComponent";
-import { doEffect, onMoveItem, setTipSelectionForUser } from "../game/gameState/effect";
+import { doEffect, onMoveItem, setTipSelectionForUser } from "../game/gameState/doEffect";
 import { getTopEffect } from "../game/gameState/EffectStackComponent";
 import { createGameState, GameState } from "../game/gameState/GameState";
 import { getPlayEffects } from "../game/gameState/getPlayEffects";
 import { getItemState } from "../game/gameState/ItemStateComponent";
 import { getItemBaSyou } from "../game/gameState/ItemTableComponent";
-import { moveItem } from "../game/gameState/moveItem";
+import { doItemMove } from "../game/gameState/doItemMove";
 import { setPhase } from "../game/gameState/PhaseComponent";
 import { triggerEvent } from "../game/gameState/triggerEvent";
 import { loadPrototype } from "../script";
@@ -57,7 +57,7 @@ export async function testPS() {
         }
     }
     {
-        ctx = moveItem(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1"), [unitHasPS.id, getItemBaSyou(ctx, unitHasPS.id)])
+        ctx = doItemMove(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1"), [unitHasPS.id, getItemBaSyou(ctx, unitHasPS.id)])
         if (getItemState(ctx, unitHasPS.id).flags["return"] == null) {
             throw new Error("")
         }
@@ -76,7 +76,7 @@ export async function testPS() {
         if (getItemState(ctx, unitHasPS.id).flags["return"] != true) {
             throw new Error("")
         }
-        ctx = moveItem(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1"), [unitHasSupply.id, getItemBaSyou(ctx, unitHasSupply.id)])
+        ctx = doItemMove(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1"), [unitHasSupply.id, getItemBaSyou(ctx, unitHasSupply.id)])
         if (getItemState(ctx, unitHasPS.id).flags["return"]) {
             throw new Error("")
         }

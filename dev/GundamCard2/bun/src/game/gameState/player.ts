@@ -12,7 +12,7 @@ import { GameEvent } from "../define/GameEvent";
 import { getSetGroupBattlePoint } from "./setGroup";
 import { triggerEvent } from "./triggerEvent";
 import { StrBaSyouPair } from "../define/Tip";
-import { moveItem } from "./moveItem";
+import { doItemMove } from "./doItemMove";
 import { getItemIdsByBasyou } from "./ItemTableComponent";
 
 // player
@@ -121,7 +121,7 @@ function doDamage(
         }).slice(0, currentAttackPower)
         const to = AbsoluteBaSyouFn.of(currentGuardPlayerID, "捨て山")
         for (const pair of pairs) {
-          ctx = moveItem(ctx, to, pair)
+          ctx = doItemMove(ctx, to, pair)
         }
       }
     }

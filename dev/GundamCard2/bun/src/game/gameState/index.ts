@@ -8,7 +8,7 @@ import * as CoinTableComponent from "./CoinTableComponent"
 import * as ItemTableComponent from "./ItemTableComponent"
 import * as card from "./card"
 import * as battleGroup from "./battleGroup"
-import * as effect from "./effect"
+import * as doEffect from "./doEffect"
 import * as player from "./player"
 import * as setGroup from "./setGroup"
 import * as triggerEvent from "./triggerEvent"
@@ -20,7 +20,7 @@ import * as RuntimeBattleAreaComponent from "./RuntimeBattleAreaComponent"
 import * as getPlayCardEffect from "./getPlayCardEffect"
 import * as getNextPhase from "./getNextPhase"
 import * as swapItem from "./swapItem"
-import * as moveCardLikeItem from "./moveItem"
+import * as doItemMove from "./doItemMove"
 import * as getConditionTitleFn from "./getConditionTitleFn"
 import * as getActionTitleFn from "./getActionTitleFn"
 import * as getOnEventTitleFn from "./getOnEventTitleFn"
@@ -35,7 +35,7 @@ export const GameStateFn = {
     ...ItemTableComponent,
     ...card,
     ...battleGroup,
-    ...effect,
+    ...doEffect,
     ...player,
     ...setGroup,
     ...triggerEvent,
@@ -47,7 +47,7 @@ export const GameStateFn = {
     ...getPlayCardEffect,
     ...getNextPhase,
     ...swapItem,
-    ...moveCardLikeItem,
+    ...doItemMove,
     ...getConditionTitleFn,
     ...getActionTitleFn,
     ...getOnEventTitleFn

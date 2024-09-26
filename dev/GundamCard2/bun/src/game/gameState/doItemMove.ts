@@ -1,14 +1,17 @@
 import { TableFns } from "../../tool/table"
-import { AbsoluteBaSyou, AbsoluteBaSyouFn, BaSyouKeywordFn } from "../define/BaSyou"
+import { AbsoluteBaSyou, AbsoluteBaSyouFn, BaSyouKeyword, BaSyouKeywordFn } from "../define/BaSyou"
+import { GameEvent } from "../define/GameEvent"
 import { StrBaSyouPair } from "../define/Tip"
-import { onMoveItem } from "./effect"
+import { getCard, setCard } from "./CardTableComponent"
 import { EventCenterFn } from "./EventCenter"
 import { GameState } from "./GameState"
-import { getGlobalEffects, setGlobalEffects } from "./globalEffects"
+import { clearGlobalEffects, getGlobalEffects, setGlobalEffects } from "./globalEffects"
+import { mapItemState } from "./ItemStateComponent"
 import { ItemTableComponent, isCard, isChip, getItemBaSyou, isCoin, getItemController, assertTargetMissingError } from "./ItemTableComponent"
 import { getSetGroupChildren } from "./SetGroupComponent"
+import { triggerEvent } from "./triggerEvent"
 
-export function moveItem(ctx: GameState, to: AbsoluteBaSyou, [itemId, from]: StrBaSyouPair): GameState {
+export function doItemMove(ctx: GameState, to: AbsoluteBaSyou, [itemId, from]: StrBaSyouPair): GameState {
     assertTargetMissingError(ctx, [itemId, from])
     if (isCoin(ctx, itemId)) {
         throw new Error(`moveCardLike`)
@@ -47,4 +50,51 @@ export function moveItem(ctx: GameState, to: AbsoluteBaSyou, [itemId, from]: Str
         throw new Error(`coin can not move: ${itemId}`)
     }
     throw new Error(`moveItem unknown item: ${itemId}`)
+}
+
+export function onMoveItem(ctx: GameState, to: AbsoluteBaSyou, [cardId, from]: StrBaSyouPair): GameState {
+    ctx = clearGlobalEffects(ctx)
+    if (AbsoluteBaSyouFn.getBaSyouKeyword(from) == "手札") {
+        if (AbsoluteBaSyouFn.getBaSyouKeyword(to) == "プレイされているカード") {
+            ctx = triggerEvent(ctx, {
+                title: ["プレイした場合"],
+                cardIds: [cardId]
+            } as GameEvent)
+        }
+    }
+    // 從非場所到場所=出場
+    if (BaSyouKeywordFn.isBa(AbsoluteBaSyouFn.getBaSyouKeyword(from)) == false && BaSyouKeywordFn.isBa(AbsoluteBaSyouFn.getBaSyouKeyword(to))) {
+        // 剛出場的回合
+        ctx = mapItemState(ctx, cardId, is => {
+            return {
+                ...is,
+                isFirstTurn: true
+            }
+        }) as GameState
+        ctx = triggerEvent(ctx, {
+            title: ["場に出た場合"],
+            cardIds: [cardId]
+        } as GameEvent)
+    }
+    if ((["ジャンクヤード", "捨て山", "本国"] as BaSyouKeyword[]).includes(AbsoluteBaSyouFn.getBaSyouKeyword(to))) {
+        let card = getCard(ctx, cardId)
+        card = {
+            ...card,
+            isRoll: false,
+            isFaceDown: true,
+        }
+        ctx = setCard(ctx, cardId, card) as GameState
+    } else if ((["Gゾーン", "ハンガー", "プレイされているカード", "取り除かれたカード"] as BaSyouKeyword[]).includes(AbsoluteBaSyouFn.getBaSyouKeyword(to))) {
+        let card = getCard(ctx, cardId)
+        card = {
+            ...card,
+            isFaceDown: false,
+        }
+        ctx = setCard(ctx, cardId, card) as GameState
+    }
+    ctx = triggerEvent(ctx, {
+        title: ["GameEventOnMove", from, to],
+        cardIds: [cardId]
+    })
+    return ctx
 }

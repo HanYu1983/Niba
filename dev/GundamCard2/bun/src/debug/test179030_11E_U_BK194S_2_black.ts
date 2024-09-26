@@ -5,7 +5,7 @@ import { PlayerA, PlayerB } from "../game/define/PlayerID"
 import { PhaseFn } from "../game/define/Timing"
 import { getCardRollCostLength, getCardBattlePoint, getCardIdsCanPayRollCost } from "../game/gameState/card"
 import { addCards, createCardWithProtoIds } from "../game/gameState/CardTableComponent"
-import { createEffectTips, doEffect, setTipSelectionForUser, createCommandEffectTips } from "../game/gameState/effect"
+import { createEffectTips, doEffect, setTipSelectionForUser, createCommandEffectTips } from "../game/gameState/doEffect"
 import { getEffect, getTopEffect } from "../game/gameState/EffectStackComponent"
 import { createGameState, GameState } from "../game/gameState/GameState"
 import { getPlayCardEffects } from "../game/gameState/getPlayCardEffect"
@@ -17,7 +17,7 @@ import { setActivePlayerID } from "../game/gameState/ActivePlayerComponent"
 import { setPhase } from "../game/gameState/PhaseComponent"
 import { getPlayEffects } from "../game/gameState/getPlayEffects"
 import { Card } from "../game/define/Card"
-import { moveItem } from "../game/gameState/moveItem"
+import { doItemMove } from "../game/gameState/doItemMove"
 
 export async function test179030_11E_U_BK194S_2_black() {
     await loadPrototype("179030_11E_U_BK194S_2_black")
@@ -60,7 +60,7 @@ export async function test179030_11E_U_BK194S_2_black() {
         }
         {
             let ctx2 = JSON.parse(JSON.stringify(ctx))
-            ctx2 = moveItem(ctx2, AbsoluteBaSyouFn.of(PlayerA, "ジャンクヤード"), [unitWillMove.id, getItemBaSyou(ctx2, unitWillMove.id)])
+            ctx2 = doItemMove(ctx2, AbsoluteBaSyouFn.of(PlayerA, "ジャンクヤード"), [unitWillMove.id, getItemBaSyou(ctx2, unitWillMove.id)])
             if (AbsoluteBaSyouFn.getBaSyouKeyword(getItemBaSyou(ctx2, unitWillMove.id)) == "ジャンクヤード") {
                 throw new Error()
             }
@@ -71,7 +71,7 @@ export async function test179030_11E_U_BK194S_2_black() {
         {
             // 移到敵軍墓地則沒有影響
             let ctx2 = JSON.parse(JSON.stringify(ctx))
-            ctx2 = moveItem(ctx2, AbsoluteBaSyouFn.of(PlayerB, "ジャンクヤード"), [unitWillMove.id, getItemBaSyou(ctx2, unitWillMove.id)])
+            ctx2 = doItemMove(ctx2, AbsoluteBaSyouFn.of(PlayerB, "ジャンクヤード"), [unitWillMove.id, getItemBaSyou(ctx2, unitWillMove.id)])
             if (AbsoluteBaSyouFn.getBaSyouKeyword(getItemBaSyou(ctx2, unitWillMove.id)) == "取り除かれたカード") {
                 throw new Error()
             }

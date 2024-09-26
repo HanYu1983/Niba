@@ -5,7 +5,7 @@ import { PlayerA } from "../game/define/PlayerID";
 import { PhaseFn } from "../game/define/Timing";
 import { setActivePlayerID } from "../game/gameState/ActivePlayerComponent";
 import { addCards } from "../game/gameState/CardTableComponent";
-import { doEffect, createEffectTips } from "../game/gameState/effect";
+import { doEffect, createEffectTips } from "../game/gameState/doEffect";
 import { createGameState, GameState } from "../game/gameState/GameState";
 import { getPlayEffects } from "../game/gameState/getPlayEffects";
 import { getPlayGEffects } from "../game/gameState/getPlayGEffect";

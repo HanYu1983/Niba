@@ -1,7 +1,7 @@
 import { assoc } from "ramda";
 import { log } from "../../tool/logger";
 import { DestroyReason, Effect, EffectFn } from "../define/Effect";
-import { doEffect, createCommandEffectTips, clearTipSelectionForUser } from "../gameState/effect";
+import { doEffect, createCommandEffectTips, clearTipSelectionForUser } from "../gameState/doEffect";
 import { getEffect, isStackEffect, removeEffect } from "../gameState/EffectStackComponent";
 import { ToolFn } from "../tool";
 import { GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
