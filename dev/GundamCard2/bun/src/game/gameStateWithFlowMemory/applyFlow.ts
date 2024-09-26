@@ -364,69 +364,97 @@ export function applyFlow(
 export type AIChoise = {
     weight: number,
     flow: Flow,
-    isStop?: boolean
 }
 
-export function createAIChoise(ctx: GameStateWithFlowMemory, playerId: PlayerID, flow: Flow): AIChoise {
+export function createAIChoiseList(ctx: GameStateWithFlowMemory, playerId: PlayerID, flow: Flow): AIChoise[] {
     switch (flow.id) {
         case "FlowSetActiveEffectID": {
             const playGTips = flow.tips.filter(tip => tip.isPlayG)
-            const playTips = flow.tips.filter(tip => tip.isPlayG != true)
-            const flows: Flow[] = []
-            const myGcnt = createEntityIterator(ctx)
-                .filter(EntityFn.filterController(playerId))
-                .filter(EntityFn.filterAtBaSyou(ctx, "Gゾーン"))
-                .length
-            if (playGTips.length) {
-                if (myGcnt <= 10) {
-                    flows.push(...playGTips.map(tip => {
-                        return {
-                            ...flow,
-                            effectID: tip.id
-                        }
-                    }))
-                } else {
-                    flows.push(...playTips.map(tip => {
-                        return {
-                            ...flow,
-                            effectID: tip.id
-                        }
-                    }))
-                }
-            } else {
-                flows.push(...playTips.map(tip => {
+            if (playGTips.length < 6) {
+                const flows: Flow[] = playGTips.map(tip => {
                     return {
                         ...flow,
                         effectID: tip.id
                     }
-                }))
+                })
+                return flows.map(flow => {
+                    return {
+                        weight: 100,
+                        flow: flow,
+                    }
+                })
             }
-            const useFlow = flows[Math.round(Math.random() * 1000) % flows.length]
-            return {
-                weight: 100,
-                flow: useFlow
-            }
+            return flow.tips.map(tip => {
+                return {
+                    weight: 95,
+                    flow: {
+                        ...flow,
+                        effectID: tip.id
+                    },
+                }
+            })
+            // const playTips = flow.tips.filter(tip => tip.isPlayG != true)
+            // const flows: Flow[] = []
+            // const myGcnt = createEntityIterator(ctx)
+            //     .filter(EntityFn.filterController(playerId))
+            //     .filter(EntityFn.filterAtBaSyou(ctx, "Gゾーン"))
+            //     .length
+            // if (playGTips.length) {
+            //     if (myGcnt <= 10) {
+            //         flows.push(...playGTips.map(tip => {
+            //             return {
+            //                 ...flow,
+            //                 effectID: tip.id
+            //             }
+            //         }))
+            //     } else {
+            //         flows.push(...playTips.map(tip => {
+            //             return {
+            //                 ...flow,
+            //                 effectID: tip.id
+            //             }
+            //         }))
+            //     }
+            // } else {
+            //     flows.push(...playTips.map(tip => {
+            //         return {
+            //             ...flow,
+            //             effectID: tip.id
+            //         }
+            //     }))
+            // }
+            // const useFlow = flows[Math.round(Math.random() * 1000) % flows.length]
+            // return {
+            //     weight: 100,
+            //     flow: useFlow
+            // }
         }
+        case "FlowSetTipSelection":
+            return [{
+                weight: 100,
+                flow: flow
+            }]
         case "FlowAddBlock":
         case "FlowDoEffect":
         case "FlowSetActiveLogicID":
-        case "FlowSetTipSelection":
-            return {
-                weight: 100,
+            return [{
+                weight: 90,
                 flow: flow
-            }
+            }]
+        case "FlowPassPayCost":
+        case "FlowPassPhase":
+            return [{
+                weight: 50,
+                flow: flow
+            }]
         case "FlowCancelPassCut":
         case "FlowCancelActiveEffectID":
         case "FlowCancelActiveLogicID":
         case "FlowCancelPassPhase":
-            return {
-                weight: 0,
-                flow: flow,
-                isStop: true
-            }
+            return []
     }
-    return {
+    return [{
         weight: 0,
         flow: flow
-    }
+    }]
 }

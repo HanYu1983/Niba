@@ -20,7 +20,7 @@ import { addCards, createCardWithProtoIds, getCard, mapCard } from "../game/game
 import { getGlobalEffects } from "../game/gameState/globalEffects";
 import { createGameStateWithFlowMemory, GameStateWithFlowMemory } from "../game/gameStateWithFlowMemory/GameStateWithFlowMemory";
 import { queryFlow } from "../game/gameStateWithFlowMemory/queryFlow";
-import { applyFlow, createAIChoise } from "../game/gameStateWithFlowMemory/applyFlow";
+import { applyFlow, createAIChoiseList } from "../game/gameStateWithFlowMemory/applyFlow";
 import { TargetMissingError } from "../game/define/GameError";
 import { testPlayG } from "./testPlayG";
 import { testPlayChar } from "./testPlayChar";
@@ -160,25 +160,14 @@ async function testCompress() {
                     const flows = queryFlow(ctx, playerId)
                     if (flows.length) {
                         try {
-                            const aiChoise = flows.map(flow => createAIChoise(ctx, playerId, flow))
-                            aiChoise.sort((a, b) => b.weight - a.weight)
-                            const flow = aiChoise[0].flow
-
-                            // let flow = flows.find(flow => flow.description?.indexOf("黑"))
-                            // if (flow == null) {
-                            //     flow = flows[Math.round(Math.random() * 1000) % flows.length]
-                            // }
-                            // if (flow.id == "FlowSetActiveEffectID") {
-                            //     const effect = flow.tips.find(e => e.id == flow.effectID)
-                            //     if (effect == null) {
-                            //         throw new Error()
-                            //     }
-                            //     const cets = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)
-                            //     for (const cet of cets) {
-                            //         ctx = setTipSelectionForUser(ctx, effect, cet.logicID, cet.logicSubID) as GameStateWithFlowMemory
-                            //     }
-                            // }
-                            ctx = applyFlow(ctx, playerId, flow)
+                            const aiChoiseList = flows.flatMap(flow => createAIChoiseList(ctx, playerId, flow))
+                            if (aiChoiseList.length > 0) {
+                                aiChoiseList.sort((a, b) => b.weight - a.weight)
+                                const flow = aiChoiseList[0].flow
+                                ctx = applyFlow(ctx, playerId, flow)
+                                continue
+                            }
+                            ctx = applyFlow(ctx, playerId, flows[0])
                         } catch (e) {
                             if (e instanceof TargetMissingError) {
                                 console.log(e.message)

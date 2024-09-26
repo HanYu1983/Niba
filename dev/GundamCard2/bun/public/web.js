@@ -27858,42 +27858,35 @@ function doSetItemRollState(ctx2, isRoll, [itemId, originBasyou], options) {
   } else {
     assertTargetMissingError(ctx2, [itemId, originBasyou]);
   }
-  if (isCard(ctx2, itemId)) {
-    const itemIds = getSetGroupChildren(ctx2, itemId);
-    ctx2 = itemIds.reduce((ctx3, itemId2) => {
-      if (isCard(ctx3, itemId2)) {
-        let item = getCard(ctx3, itemId2);
+  const itemIds = getSetGroupChildren(ctx2, itemId);
+  ctx2 = itemIds.reduce((ctx3, itemId2) => {
+    if (isCard(ctx3, itemId2)) {
+      let item = getCard(ctx3, itemId2);
+      if (options?.isSkipTargetMissing) {
+      } else {
         if (item.isRoll == isRoll) {
           throw new Error(`card already roll: ${item.id}`);
         }
-        item = CardFn.setIsRoll(item, isRoll);
-        ctx3 = setCard(ctx3, itemId2, item);
-        return ctx3;
       }
-      if (isChip(ctx3, itemId2)) {
-        let item = getChip(ctx3, itemId2);
+      item = CardFn.setIsRoll(item, isRoll);
+      ctx3 = setCard(ctx3, itemId2, item);
+      return ctx3;
+    }
+    if (isChip(ctx3, itemId2)) {
+      let item = getChip(ctx3, itemId2);
+      if (options?.isSkipTargetMissing) {
+      } else {
         if (item.isRoll == isRoll) {
           throw new Error(`chip already roll: ${item.id}`);
         }
-        item = ChipFn.setIsRoll(item, isRoll);
-        ctx3 = setChip(ctx3, itemId2, item);
-        return ctx3;
       }
+      item = ChipFn.setIsRoll(item, isRoll);
+      ctx3 = setChip(ctx3, itemId2, item);
       return ctx3;
-    }, ctx2);
-    return ctx2;
-  }
-  if (isChip(ctx2, itemId)) {
-    const nowBasyou = getItemBaSyou(ctx2, itemId);
-    if (AbsoluteBaSyouFn.eq(nowBasyou, originBasyou) == false) {
-      throw new TargetMissingError(`target missing: ${itemId} from ${originBasyou}`);
     }
-    let item = getChip(ctx2, itemId);
-    item = ChipFn.setIsRoll(item, isRoll);
-    ctx2 = setChip(ctx2, itemId, item);
-    return ctx2;
-  }
-  throw new Error(`setItemIsRoll unknown item: ${itemId}`);
+    return ctx3;
+  }, ctx2);
+  return ctx2;
 }
 
 // src/game/gameState/doCountryDamage.ts
@@ -29760,55 +29753,6 @@ function getPlayerCommandsFilterNoErrorDistinct(ctx2, playerID) {
   return getPlayerCommandsFilterNoError(ctx2, playerID).filter(CommandEffecTipFn.filterEffectDistinct);
 }
 
-// src/game/gameState/Entity.ts
-function createEntityIterator(ctx2) {
-  const rets = [];
-  [PlayerA, PlayerB].map((playerId) => {
-    BaSyouKeywordFn.getAll().map((basyouKw) => {
-      const basyou = AbsoluteBaSyouFn.of(playerId, basyouKw);
-      getItemIdsByBasyou(ctx2, basyou).map((itemId) => {
-        const item = getItem(ctx2, itemId);
-        const entity = {
-          itemController: playerId,
-          itemId,
-          item,
-          isCard: isCard(ctx2, item.id),
-          isCoin: false,
-          isChip: isChip(ctx2, item.id),
-          baSyouKeyword: basyouKw
-        };
-        rets.push(entity);
-      });
-    });
-  });
-  getCoinIds(ctx2).map((coinId) => {
-    const coin = getCoin(ctx2, coinId);
-    const entity = {
-      itemController: getCoinOwner(ctx2, coin.id),
-      itemId: coin.id,
-      item: coin,
-      isCard: false,
-      isCoin: true,
-      isChip: false,
-      baSyouKeyword: null
-    };
-    rets.push(entity);
-  });
-  return rets;
-}
-var EntityFn = {
-  filterAtBaSyou(ctx2, kw) {
-    return (ctx3) => {
-      return ctx3.baSyouKeyword == kw;
-    };
-  },
-  filterController(playerId) {
-    return (ctx2) => {
-      return ctx2.itemController == playerId;
-    };
-  }
-};
-
 // src/game/gameStateWithFlowMemory/applyFlow.ts
 function applyFlow(ctx2, playerID, flow) {
   logCategory("applyFlow", playerID, flow.description);
@@ -30107,65 +30051,62 @@ function applyFlow(ctx2, playerID, flow) {
   }
   return ctx2;
 }
-function createAIChoise(ctx2, playerId, flow) {
+function createAIChoiseList(ctx2, playerId, flow) {
   switch (flow.id) {
     case "FlowSetActiveEffectID": {
       const playGTips = flow.tips.filter((tip) => tip.isPlayG);
-      const playTips = flow.tips.filter((tip) => tip.isPlayG != true);
-      const flows = [];
-      const myGcnt = createEntityIterator(ctx2).filter(EntityFn.filterController(playerId)).filter(EntityFn.filterAtBaSyou(ctx2, "G\u30BE\u30FC\u30F3")).length;
-      if (playGTips.length) {
-        if (myGcnt <= 10) {
-          flows.push(...playGTips.map((tip) => {
-            return {
-              ...flow,
-              effectID: tip.id
-            };
-          }));
-        } else {
-          flows.push(...playTips.map((tip) => {
-            return {
-              ...flow,
-              effectID: tip.id
-            };
-          }));
-        }
-      } else {
-        flows.push(...playTips.map((tip) => {
+      if (playGTips.length < 6) {
+        const flows = playGTips.map((tip) => {
           return {
             ...flow,
             effectID: tip.id
           };
-        }));
+        });
+        return flows.map((flow2) => {
+          return {
+            weight: 100,
+            flow: flow2
+          };
+        });
       }
-      const useFlow = flows[Math.round(Math.random() * 1000) % flows.length];
-      return {
-        weight: 100,
-        flow: useFlow
-      };
+      return flow.tips.map((tip) => {
+        return {
+          weight: 95,
+          flow: {
+            ...flow,
+            effectID: tip.id
+          }
+        };
+      });
     }
+    case "FlowSetTipSelection":
+      return [{
+        weight: 100,
+        flow
+      }];
     case "FlowAddBlock":
     case "FlowDoEffect":
     case "FlowSetActiveLogicID":
-    case "FlowSetTipSelection":
-      return {
-        weight: 100,
+      return [{
+        weight: 90,
         flow
-      };
+      }];
+    case "FlowPassPayCost":
+    case "FlowPassPhase":
+      return [{
+        weight: 50,
+        flow
+      }];
     case "FlowCancelPassCut":
     case "FlowCancelActiveEffectID":
     case "FlowCancelActiveLogicID":
     case "FlowCancelPassPhase":
-      return {
-        weight: 0,
-        flow,
-        isStop: true
-      };
+      return [];
   }
-  return {
+  return [{
     weight: 0,
     flow
-  };
+  }];
 }
 
 // src/game/gameStateWithFlowMemory/GameStateWithFlowMemory.ts
@@ -32280,46 +32221,30 @@ var FlowListView = (props) => {
   }, [appContext5.viewModel.model.gameState, props.clientID]);
   import_react6.useEffect(() => {
     const speed = 50;
-    if (props.clientID == PlayerA) {
-      const payCost = flows.find((flow) => flow.id == "FlowPassPayCost");
-      if (payCost) {
-        setTimeout(() => {
-          OnEvent.next({
-            id: "OnClickFlowConfirm",
-            clientID: props.clientID,
-            flow: payCost
-          });
-        }, speed);
-        return;
-      }
-      if (flows.length == 1) {
-        const flow = flows[0];
-        if (flow.id == "FlowCancelPassPhase") {
-          return;
-        }
-        if (flow.id == "FlowCancelPassCut") {
-          return;
-        }
-        if (flow.id == "FlowWaitPlayer") {
-          return;
-        }
-        setTimeout(() => {
-          OnEvent.next({
-            id: "OnClickFlowConfirm",
-            clientID: props.clientID,
-            flow
-          });
-        }, speed);
-      }
-      return;
-    }
     if (flows.length) {
-      const aiChoise = flows.map((flow2) => createAIChoise(appContext5.viewModel.model.gameState, PlayerB, flow2));
-      aiChoise.sort((a, b) => b.weight - a.weight);
-      if (aiChoise[0].isStop) {
+      const aiChoiseList = flows.flatMap((flow2) => createAIChoiseList(appContext5.viewModel.model.gameState, props.clientID, flow2));
+      if (aiChoiseList.length > 0) {
+        aiChoiseList.sort((a, b) => b.weight - a.weight);
+        const flow2 = aiChoiseList[0].flow;
+        setTimeout(() => {
+          OnEvent.next({
+            id: "OnClickFlowConfirm",
+            clientID: props.clientID,
+            flow: flow2
+          });
+        }, speed);
         return;
       }
-      const flow = aiChoise[0].flow;
+      let flow = flows.find((flow2) => flow2.id == "FlowPassPayCost");
+      if (flow == null) {
+        flow = flows[Math.round(Math.random() * 1000) % flows.length];
+      }
+      if (flow.id == "FlowCancelPassPhase") {
+        return;
+      }
+      if (flow.id == "FlowCancelPassCut") {
+        return;
+      }
       if (flow) {
         setTimeout(() => {
           OnEvent.next({

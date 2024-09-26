@@ -8,7 +8,7 @@ import { getEffectIncludePlayerCommand } from "../../game/gameStateWithFlowMemor
 import { CommandEffecTipFn } from "../../game/define/CommandEffectTip";
 import { TargetMissingError } from "../../game/define/GameError";
 import { createCommandEffectTips, setTipSelectionForUser } from "../../game/gameState/doEffect";
-import { applyFlow, createAIChoise } from "../../game/gameStateWithFlowMemory/applyFlow";
+import { applyFlow, createAIChoiseList } from "../../game/gameStateWithFlowMemory/applyFlow";
 import { GameStateWithFlowMemory } from "../../game/gameStateWithFlowMemory/GameStateWithFlowMemory";
 import { Flow } from "../../game/gameStateWithFlowMemory/Flow";
 import { PlayerA, PlayerB } from "../../game/define/PlayerID";
@@ -20,29 +20,44 @@ export const FlowListView = (props: { clientID: string }) => {
   }, [appContext.viewModel.model.gameState, props.clientID]);
   useEffect(() => {
     const speed = 50
-    if (props.clientID == PlayerA) {
-      const payCost = flows.find((flow) => flow.id == "FlowPassPayCost");
-      if (payCost) {
-        setTimeout(() => {
-          OnEvent.next({
-            id: "OnClickFlowConfirm",
-            clientID: props.clientID,
-            flow: payCost,
-          });
-        }, speed)
-        return
-      }
-      if (flows.length == 1) {
-        const flow = flows[0]
-        if (flow.id == "FlowCancelPassPhase") {
-          return
-        }
-        if (flow.id == "FlowCancelPassCut") {
-          return
-        }
-        if (flow.id == "FlowWaitPlayer") {
-          return
-        }
+    // if (props.clientID == PlayerA) {
+    //   const payCost = flows.find((flow) => flow.id == "FlowPassPayCost");
+    //   if (payCost) {
+    //     setTimeout(() => {
+    //       OnEvent.next({
+    //         id: "OnClickFlowConfirm",
+    //         clientID: props.clientID,
+    //         flow: payCost,
+    //       });
+    //     }, speed)
+    //     return
+    //   }
+    //   if (flows.length == 1) {
+    //     const flow = flows[0]
+    //     if (flow.id == "FlowCancelPassPhase") {
+    //       return
+    //     }
+    //     if (flow.id == "FlowCancelPassCut") {
+    //       return
+    //     }
+    //     if (flow.id == "FlowWaitPlayer") {
+    //       return
+    //     }
+    //     setTimeout(() => {
+    //       OnEvent.next({
+    //         id: "OnClickFlowConfirm",
+    //         clientID: props.clientID,
+    //         flow: flow,
+    //       });
+    //     }, speed)
+    //   }
+    //   return
+    // }
+    if (flows.length) {
+      const aiChoiseList = flows.flatMap(flow => createAIChoiseList(appContext.viewModel.model.gameState, props.clientID, flow))
+      if (aiChoiseList.length > 0) {
+        aiChoiseList.sort((a, b) => b.weight - a.weight)
+        const flow = aiChoiseList[0].flow
         setTimeout(() => {
           OnEvent.next({
             id: "OnClickFlowConfirm",
@@ -50,46 +65,18 @@ export const FlowListView = (props: { clientID: string }) => {
             flow: flow,
           });
         }, speed)
-      }
-      // const payCost = flows.find((flow) => flow.id == "FlowPassPayCost");
-      // if (payCost == null) {
-      //   return;
-      // }
-      // if (payCost.id != "FlowPassPayCost") {
-      //   throw new Error("must be FlowPassPayCost");
-      // }
-      // const effect = getEffectIncludePlayerCommand(appContext.viewModel.model.gameState, payCost.effectID)
-      // if (effect == null) {
-      //   throw new Error("must find effect");
-      // }
-      // if (effect.text.conditions == null) {
-      //   setTimeout(() => {
-      //     OnEvent.next({
-      //       id: "OnClickFlowConfirm",
-      //       clientID: props.clientID,
-      //       flow: payCost,
-      //     });
-      //   }, 100)
-      // }
-      return
-    }
-    if (flows.length) {
-      const aiChoise = flows.map(flow => createAIChoise(appContext.viewModel.model.gameState, PlayerB, flow))
-      aiChoise.sort((a, b) => b.weight - a.weight)
-      if(aiChoise[0].isStop){
         return
       }
-      const flow = aiChoise[0].flow
-      // let flow: Flow | undefined = flows.find((flow) => flow.id == "FlowPassPayCost")
-      // if (flow == null) {
-      //   flow = flows[Math.round(Math.random() * 1000) % flows.length]
-      // }
-      // if (flow.id == "FlowCancelPassPhase") {
-      //   return
-      // }
-      // if (flow.id == "FlowCancelPassCut") {
-      //   return
-      // }
+      let flow: Flow | undefined = flows.find((flow) => flow.id == "FlowPassPayCost")
+      if (flow == null) {
+        flow = flows[Math.round(Math.random() * 1000) % flows.length]
+      }
+      if (flow.id == "FlowCancelPassPhase") {
+        return
+      }
+      if (flow.id == "FlowCancelPassCut") {
+        return
+      }
       if (flow) {
         setTimeout(() => {
           OnEvent.next({
