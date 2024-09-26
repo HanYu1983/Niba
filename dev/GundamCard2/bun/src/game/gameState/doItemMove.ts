@@ -12,11 +12,11 @@ import { getSetGroupChildren } from "./SetGroupComponent"
 import { triggerEvent } from "./triggerEvent"
 
 export function doItemMove(ctx: GameState, to: AbsoluteBaSyou, [itemId, from]: StrBaSyouPair, options?: { isSkipTargetMissing?: boolean }): GameState {
-    if(options?.isSkipTargetMissing){
+    if (options?.isSkipTargetMissing) {
 
     } else {
         assertTargetMissingError(ctx, [itemId, from])
-    } 
+    }
     if (isCard(ctx, itemId) || isChip(ctx, itemId)) {
         const oldTable = ctx.table
         {
@@ -78,7 +78,7 @@ export function onMoveItem(ctx: GameState, to: AbsoluteBaSyou, [cardId, from]: S
             cardIds: [cardId]
         } as GameEvent)
     }
-    if ((["ジャンクヤード", "捨て山", "本国"] as BaSyouKeyword[]).includes(AbsoluteBaSyouFn.getBaSyouKeyword(to))) {
+    if ((["捨て山", "本国", "手札"] as BaSyouKeyword[]).includes(AbsoluteBaSyouFn.getBaSyouKeyword(to))) {
         let card = getCard(ctx, cardId)
         card = {
             ...card,
@@ -86,10 +86,11 @@ export function onMoveItem(ctx: GameState, to: AbsoluteBaSyou, [cardId, from]: S
             isFaceDown: true,
         }
         ctx = setCard(ctx, cardId, card) as GameState
-    } else if ((["Gゾーン", "ハンガー", "プレイされているカード", "取り除かれたカード"] as BaSyouKeyword[]).includes(AbsoluteBaSyouFn.getBaSyouKeyword(to))) {
+    } else if ((["ジャンクヤード", "Gゾーン", "ハンガー", "プレイされているカード", "取り除かれたカード"] as BaSyouKeyword[]).includes(AbsoluteBaSyouFn.getBaSyouKeyword(to))) {
         let card = getCard(ctx, cardId)
         card = {
             ...card,
+            isRoll: false,
             isFaceDown: false,
         }
         ctx = setCard(ctx, cardId, card) as GameState

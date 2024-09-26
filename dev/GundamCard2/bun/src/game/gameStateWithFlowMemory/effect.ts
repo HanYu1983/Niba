@@ -10,6 +10,9 @@ import { getItemController } from "../gameState/ItemTableComponent";
 import { getSetGroupBattlePoint } from "../gameState/setGroup";
 import { CommandEffecTipFn, CommandEffectTip } from "../define/CommandEffectTip";
 import { TargetMissingError } from "../define/GameError";
+import { Bridge } from "../../script/bridge";
+import { GameState } from "../gameState/GameState";
+import { getDestroyEffect } from "../gameState/getDestroyEffect";
 
 export function getEffectIncludePlayerCommand(ctx: GameStateWithFlowMemory, effectId: string): Effect {
   return ctx.commandEffects.find(cmd => cmd.id == effectId) || getEffect(ctx, effectId)
@@ -44,9 +47,10 @@ export function setActiveEffectID(
   if (controller != playerID) {
     throw new Error("[cancelCommand] 你不是控制者");
   }
-  // error
+  // temp test
   const cetsNoErr = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)
   if (cetsNoErr.length == 0) {
+    console.log(JSON.stringify(effect, null, 2))
     throw new Error(`cets.length must not 0`)
   }
   if (cetsNoErr.length) {
@@ -68,7 +72,9 @@ export function setActiveEffectID(
     ...ctx,
     flowMemory: {
       ...ctx.flowMemory,
-      activeEffectID: effectID
+      activeEffectID: effectID,
+      activeLogicID: 0,
+      activeLogicSubID: 0,
     }
   };
   return ctx
@@ -252,14 +258,7 @@ export function updateDestroyEffect(ctx: GameStateWithFlowMemory): GameStateWith
       return ctx
     }
     if (cs.destroyReason) {
-      const effect: Effect = {
-        id: ToolFn.getUUID("updateDestroyEffect"),
-        reason: ["Destroy", cs.destroyReason.playerID, cs.id, cs.destroyReason],
-        text: {
-          id: ToolFn.getUUID("updateDestroyEffect"),
-          title: [],
-        }
-      }
+      const effect: Effect = getDestroyEffect(ctx, cs.destroyReason, cs.id)
       ctx = addDestroyEffect(ctx, effect) as GameStateWithFlowMemory
       return ctx
     }
@@ -269,14 +268,7 @@ export function updateDestroyEffect(ctx: GameStateWithFlowMemory): GameStateWith
         id: "マイナスの戦闘修正",
         playerID: getItemController(ctx, cs.id)
       }
-      const effect: Effect = {
-        id: ToolFn.getUUID("updateDestroyEffect"),
-        reason: ["Destroy", destroyReason.playerID, cs.id, destroyReason],
-        text: {
-          id: ToolFn.getUUID("updateDestroyEffect"),
-          title: [],
-        }
-      }
+      const effect: Effect = getDestroyEffect(ctx, destroyReason, cs.id)
       ctx = addDestroyEffect(ctx, effect) as GameStateWithFlowMemory
       return ctx
     }

@@ -27761,7 +27761,7 @@ function onMoveItem(ctx2, to, [cardId, from]) {
       cardIds: [cardId]
     });
   }
-  if (["\u30B8\u30E3\u30F3\u30AF\u30E4\u30FC\u30C9", "\u6368\u3066\u5C71", "\u672C\u56FD"].includes(AbsoluteBaSyouFn.getBaSyouKeyword(to))) {
+  if (["\u6368\u3066\u5C71", "\u672C\u56FD", "\u624B\u672D"].includes(AbsoluteBaSyouFn.getBaSyouKeyword(to))) {
     let card4 = getCard(ctx2, cardId);
     card4 = {
       ...card4,
@@ -27769,10 +27769,11 @@ function onMoveItem(ctx2, to, [cardId, from]) {
       isFaceDown: true
     };
     ctx2 = setCard(ctx2, cardId, card4);
-  } else if (["G\u30BE\u30FC\u30F3", "\u30CF\u30F3\u30AC\u30FC", "\u30D7\u30EC\u30A4\u3055\u308C\u3066\u3044\u308B\u30AB\u30FC\u30C9", "\u53D6\u308A\u9664\u304B\u308C\u305F\u30AB\u30FC\u30C9"].includes(AbsoluteBaSyouFn.getBaSyouKeyword(to))) {
+  } else if (["\u30B8\u30E3\u30F3\u30AF\u30E4\u30FC\u30C9", "G\u30BE\u30FC\u30F3", "\u30CF\u30F3\u30AC\u30FC", "\u30D7\u30EC\u30A4\u3055\u308C\u3066\u3044\u308B\u30AB\u30FC\u30C9", "\u53D6\u308A\u9664\u304B\u308C\u305F\u30AB\u30FC\u30C9"].includes(AbsoluteBaSyouFn.getBaSyouKeyword(to))) {
     let card4 = getCard(ctx2, cardId);
     card4 = {
       ...card4,
+      isRoll: false,
       isFaceDown: false
     };
     ctx2 = setCard(ctx2, cardId, card4);
@@ -32039,6 +32040,7 @@ var CardView = (props) => {
           children: card9.id
         }, undefined, false, undefined, this),
         /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
+          hidden: true,
           children: card9.isFaceDown ? "O" : "X"
         }, undefined, false, undefined, this)
       ]

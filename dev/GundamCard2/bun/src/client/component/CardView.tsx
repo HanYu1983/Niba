@@ -54,7 +54,7 @@ export const CardView = (props: {
       >
         <img src={imgSrc} style={{ height: CARD_SIZE }}></img>
         <div hidden>{card.id}</div>
-        <div>{card.isFaceDown ? "O" : "X"}</div>
+        <div hidden>{card.isFaceDown ? "O" : "X"}</div>
       </div>
     );
   }, [card, isVisible, appContext.viewModel.cardSelection, props.enabled]);

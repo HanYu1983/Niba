@@ -288,11 +288,11 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
     }
     // 破壞效果，如果效果多於1個，則讓主動玩家選擇順序
     SelectDestroyOrder: {
-        switch (ctx.phase[1][0]) {
+        switch (ctx.phase[0]) {
             case "戦闘フェイズ":
-                switch (ctx.phase[1][1]) {
+                switch (ctx.phase[1]) {
                     case "ダメージ判定ステップ":
-                        switch (ctx.phase[1][2]) {
+                        switch (ctx.phase[2]) {
                             case "規定の効果":
                                 break SelectDestroyOrder;
                         }
@@ -409,6 +409,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
         {
             const cets = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)
             if (cets.length == 0) {
+                console.log(JSON.stringify(effect, null, 2))
                 throw new Error(`cets.length must not 0`)
             }
         }
