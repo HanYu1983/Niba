@@ -55,6 +55,7 @@ export function removeEffect(ctx: EffectStackComponent, id: string): EffectStack
     effects: dissoc(id, ctx.effects),
     stackEffect: ctx.stackEffect.filter(_id => _id != id),
     immediateEffect: ctx.immediateEffect.filter(_id => _id != id),
+    destroyEffect: ctx.destroyEffect.filter(_id => _id != id),
   }
 }
 
@@ -104,9 +105,14 @@ export function addDestroyEffect(ctx: EffectStackComponent, block: Effect): Effe
 }
 
 export function clearDestroyEffects(ctx: EffectStackComponent): EffectStackComponent {
+  const effects = { ...ctx.effects }
+  for (const k of ctx.destroyEffect) {
+    delete effects[k]
+  }
   return {
     ...ctx,
-    destroyEffect: []
+    destroyEffect: [],
+    effects: effects
   }
 }
 
