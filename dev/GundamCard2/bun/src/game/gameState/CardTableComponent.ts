@@ -55,11 +55,14 @@ export function mapCardsWithBasyou(ctx: CardTableComponent, f: (key: AbsoluteBaS
 }
 
 export function createCardWithProtoIds(ctx: CardTableComponent, basyou: AbsoluteBaSyou, cardProtoIds: string[]): CardTableComponent {
+  const cardLen = Object.keys(ctx.cards).length
   ctx = addCards(ctx, basyou, cardProtoIds.map((protoId, i) => {
+    const ownerID = AbsoluteBaSyouFn.getPlayerID(basyou)
+    const cardId = `${ownerID}_${cardLen + i}`
     return {
-      id: ToolFn.getUUID("card"),
+      id: cardId,
       protoID: protoId,
-      ownerID: AbsoluteBaSyouFn.getPlayerID(basyou),
+      ownerID: ownerID,
     }
   }))
   return ctx;
@@ -68,11 +71,14 @@ export function createCardWithProtoIds(ctx: CardTableComponent, basyou: Absolute
 export function addCards(ctx: CardTableComponent, basyou: AbsoluteBaSyou, addedCards: Card[]): CardTableComponent {
   const old = ctx.table
   ctx = addedCards.reduce((ctx, newCard) => {
+    const ownerID = AbsoluteBaSyouFn.getPlayerID(basyou)
     if (newCard.id == "") {
-      newCard.id = ToolFn.getUUID("addCards")
+      const cardLen = Object.keys(ctx.cards).length
+      const cardId = `${ownerID}_${cardLen}`
+      newCard.id = cardId
     }
     if (newCard.ownerID == null) {
-      newCard.ownerID = AbsoluteBaSyouFn.getPlayerID(basyou)
+      newCard.ownerID = ownerID
     }
     const table = TableFns.addCard(ctx.table, AbsoluteBaSyouFn.toString(basyou), newCard.id)
     return {

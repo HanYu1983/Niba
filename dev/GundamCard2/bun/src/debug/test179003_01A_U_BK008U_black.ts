@@ -54,7 +54,7 @@ export async function test179003_01A_U_BK008U_black() {
                 throw new Error()
             }
             // 這裡模擬破壞效果進了堆疊了
-            ctx = createDestroyEffectAndPush(ctx)
+            //ctx = createDestroyEffectAndPush(ctx)
             ctx = doCutInDestroyEffectsAndClear(ctx) as GameState
             if (getCutInDestroyEffects(ctx).find(e => EffectFn.getCardID(e) == cardA.id) == null) {
                 throw new Error()

@@ -297,12 +297,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                                 break SelectDestroyOrder;
                         }
                 }
-                // 因為destroyEffect可以重復刷新，所以在加入到堆疊時，不能加入重復的
-                const willAddedDestroyEffects = ctx.destroyEffect.filter(
-                    (aid) => {
-                        return ctx.stackEffect.find((id) => aid == id) == null;
-                    }
-                ).map(aid => getEffect(ctx, aid));
+                const willAddedDestroyEffects = ctx.destroyEffect.map(aid => getEffect(ctx, aid));
                 if (willAddedDestroyEffects.length) {
                     const isActivePlayer = ctx.activePlayerID == playerID;
                     if (isActivePlayer == false) {

@@ -30,7 +30,7 @@ export function applyFlow(
     playerID: string,
     flow: Flow
 ): GameStateWithFlowMemory {
-    logCategory("applyFlow", playerID, flow.description);
+    logCategory("applyFlow", playerID, flow.id);
     switch (flow.id) {
         case "FlowSetActiveEffectID": {
             if (flow.effectID == null) {
@@ -229,15 +229,15 @@ export function applyFlow(
                 }
             }
             // 傷判的規定效果一結束就收集所有破壞的卡並建立破壞而廢棄的效果
-            if (
-                ctx.phase[0] == "戦闘フェイズ" &&
-                ctx.phase[1] == "ダメージ判定ステップ" &&
-                ctx.phase[2] == "規定の効果"
-            ) {
-                // 更新所有破壞而廢棄的效果
-                // 若有產生值，在下一步時主動玩家就要拿到決定解決順序的指令
-                ctx = createDestroyEffectAndPush(ctx) as GameStateWithFlowMemory;
-            }
+            // if (
+            //     ctx.phase[0] == "戦闘フェイズ" &&
+            //     ctx.phase[1] == "ダメージ判定ステップ" &&
+            //     ctx.phase[2] == "規定の効果"
+            // ) {
+            //     // 更新所有破壞而廢棄的效果
+            //     // 若有產生值，在下一步時主動玩家就要拿到決定解決順序的指令
+            //     ctx = createDestroyEffectAndPush(ctx) as GameStateWithFlowMemory
+            // }
             // 回合結束時切換主動玩家
             if (
                 ctx.phase[0] == "戦闘フェイズ" &&
@@ -287,6 +287,9 @@ export function applyFlow(
             };
             // 自動更新指令
             ctx = updateCommand(ctx) as GameStateWithFlowMemory;
+            // 更新所有破壞而廢棄的效果
+            // 若有產生值，在下一步時主動玩家就要拿到決定解決順序的指令
+            ctx = createDestroyEffectAndPush(ctx) as GameStateWithFlowMemory;
             return ctx;
         }
         case "FlowAddBlock": {
@@ -334,14 +337,8 @@ export function applyFlow(
             return ctx;
         }
         case "FlowMakeDestroyOrder": {
-            const willAddedDestroyEffect = ctx.destroyEffect.filter((aid) => {
-                return ctx.stackEffect.find((id) => aid == id) == null;
-            });
-            if (flow.destroyEffect.length != willAddedDestroyEffect.length) {
-                throw new Error("長度不符合");
-            }
             // 移除破壞效果，全部移到堆疊
-            ctx = doCutInDestroyEffectsAndClear(ctx, flow.destroyEffect.map(e=>e.id)) as GameStateWithFlowMemory
+            ctx = doCutInDestroyEffectsAndClear(ctx, flow.destroyEffect.map(i => i.id)) as GameStateWithFlowMemory
             return {
                 ...ctx,
                 // 重設切入旗標，讓玩家再次切入

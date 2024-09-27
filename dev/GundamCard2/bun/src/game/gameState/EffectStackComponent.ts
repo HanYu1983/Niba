@@ -100,11 +100,10 @@ export function getImmediateEffects(ctx: EffectStackComponent): Effect[] {
 }
 
 export function addDestroyEffect(ctx: EffectStackComponent, block: Effect): EffectStackComponent {
-  if (block.id == null) {
-    block.id = ToolFn.getUUID("addDestroyEffect")
-  }
-  if (block.text.id == "") {
-    block.text.id = ToolFn.getUUID("addDestroyEffect")
+  // 破壞效果不必重復加入
+  if (ctx.effects[block.id]) {
+    console.warn(`破壞效果不必重復加入: ${block.id}`)
+    return ctx
   }
   return {
     ...ctx,

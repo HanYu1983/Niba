@@ -4,15 +4,16 @@ import { ToolFn } from "../tool"
 import { EffectStackComponent, addDestroyEffect } from "./EffectStackComponent"
 import { GameState } from "./GameState"
 import { getItemStateValues } from "./ItemStateComponent"
-import { getItemController } from "./ItemTableComponent"
+import { getItemController, getItemPrototype } from "./ItemTableComponent"
 import { getSetGroupBattlePoint } from "./setGroup"
 
 export function createDestroyEffect(ctx: GameState, reason: DestroyReason, cardId: string): Effect {
+  // 破壞效果的effectId必須是唯一但又不是亂數, 因為會重復叫用
   const effect: Effect = {
-    id: ToolFn.getUUID("createDestroyEffect"),
+    id: `createDestroyEffect_${cardId}`,
     reason: ["Destroy", reason.playerID, cardId, reason],
     text: {
-      id: `Destroy_card_${cardId}`,
+      id: `createDestroyEffect_text_${cardId}`,
       title: [],
       logicTreeActions: [
         {
@@ -22,6 +23,12 @@ export function createDestroyEffect(ctx: GameState, reason: DestroyReason, cardI
                 const cardId = DefineFn.EffectFn.getCardID(effect)
                 const cardOwner = GameStateFn.getItemOwner(ctx, cardId)
                 ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardOwner, "ジャンクヤード"), [cardId, GameStateFn.getItemBaSyou(ctx, cardId)], { isSkipTargetMissing: true })
+                ctx = GameStateFn.mapItemState(ctx, cardId, is => {
+                  return {
+                    ...is,
+                    damage: 0,
+                  }
+                }) as GameState
                 return ctx
               }.toString(),
             }

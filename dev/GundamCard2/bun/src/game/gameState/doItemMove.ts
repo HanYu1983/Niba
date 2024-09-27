@@ -2,7 +2,7 @@ import { TableFns } from "../../tool/table"
 import { AbsoluteBaSyou, AbsoluteBaSyouFn, BaSyouKeyword, BaSyouKeywordFn } from "../define/BaSyou"
 import { GameEvent } from "../define/GameEvent"
 import { StrBaSyouPair } from "../define/Tip"
-import { getCard, setCard } from "./CardTableComponent"
+import { getCard, mapCard, setCard } from "./CardTableComponent"
 import { EventCenterFn } from "./EventCenter"
 import { GameState } from "./GameState"
 import { clearGlobalEffects, getGlobalEffects, setGlobalEffects } from "./globalEffects"
@@ -77,22 +77,32 @@ export function onMoveItem(ctx: GameState, to: AbsoluteBaSyou, [cardId, from]: S
             cardIds: [cardId]
         } as GameEvent)
     }
+    // 相反從場所到非場所
+    if (BaSyouKeywordFn.isBa(AbsoluteBaSyouFn.getBaSyouKeyword(from)) == true && BaSyouKeywordFn.isBa(AbsoluteBaSyouFn.getBaSyouKeyword(to)) == false) {
+        // 剛出場的回合
+        ctx = mapItemState(ctx, cardId, is => {
+            return {
+                ...is,
+                damage: 0,
+            }
+        }) as GameState
+    }
     if ((["捨て山", "本国", "手札"] as BaSyouKeyword[]).includes(AbsoluteBaSyouFn.getBaSyouKeyword(to))) {
-        let card = getCard(ctx, cardId)
-        card = {
-            ...card,
-            isRoll: false,
-            isFaceDown: true,
-        }
-        ctx = setCard(ctx, cardId, card) as GameState
+        ctx = mapCard(ctx, cardId, card=>{
+            return {
+                ...card,
+                isRoll: false,
+                isFaceDown: true,
+            }
+        }) as GameState
     } else if ((["ジャンクヤード", "Gゾーン", "ハンガー", "プレイされているカード", "取り除かれたカード"] as BaSyouKeyword[]).includes(AbsoluteBaSyouFn.getBaSyouKeyword(to))) {
-        let card = getCard(ctx, cardId)
-        card = {
-            ...card,
-            isRoll: false,
-            isFaceDown: false,
-        }
-        ctx = setCard(ctx, cardId, card) as GameState
+        ctx = mapCard(ctx, cardId, card=>{
+            return {
+                ...card,
+                isRoll: false,
+                isFaceDown: false,
+            }
+        }) as GameState
     }
     ctx = doTriggerEvent(ctx, {
         title: ["GameEventOnMove", from, to],

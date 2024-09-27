@@ -38,6 +38,9 @@ import { test179028_10D_C_BL070N_blue } from "./test179028_10D_C_BL070N_blue";
 import { test179003_01A_U_BK008U_black } from "./test179003_01A_U_BK008U_black";
 import { test179025_07D_U_RD158C_red } from "./test179025_07D_U_RD158C_red";
 import { testGetPlayEffects } from "./testGetPlayEffects";
+import { TableFns } from "../tool/table";
+import { Flow } from "../game/gameStateWithFlowMemory/Flow";
+import { logCategory } from "../tool/logger";
 const fs = require('fs').promises;
 
 export async function tests() {
@@ -154,14 +157,19 @@ async function testCompress() {
                     const flows = queryFlow(ctx, playerId)
                     if (flows.length) {
                         try {
+                            let flow: Flow | null = null
                             const aiChoiseList = flows.flatMap(flow => createAIChoiseList(ctx, flow))
                             if (aiChoiseList.length > 0) {
                                 aiChoiseList.sort((a, b) => b.weight - a.weight)
-                                const flow = aiChoiseList[0].flow
-                                ctx = applyFlow(ctx, playerId, flow)
-                                continue
+                                flow = aiChoiseList[0].flow
                             }
-                            ctx = applyFlow(ctx, playerId, flows[0])
+                            if (flow == null) {
+                                flow = flows[0]
+                            }
+                            ctx = applyFlow(ctx, playerId, flow)
+                            logCategory("testCompress", "after applyFlow stackEffect length", ctx.stackEffect.length)
+                            logCategory("testCompress", "after applyFlow destroyEffect length", ctx.destroyEffect.length)
+                            TableFns.assertDup(ctx.table)
                         } catch (e) {
                             if (e instanceof TargetMissingError) {
                                 console.log(e.message)

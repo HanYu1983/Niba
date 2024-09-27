@@ -10,11 +10,13 @@ import { getEffects, isStackEffect, getEffect, getCutInDestroyEffects, removeEff
 import { EventCenterFn } from "./EventCenter"
 import { GameState } from "./GameState"
 import { clearGlobalEffects, getGlobalEffects, setGlobalEffects } from "./globalEffects"
-import { getItemStateValues, mapItemState } from "./ItemStateComponent"
-import { ItemTableComponent, isCard, isChip, getItemBaSyou, isCoin, getItemController, assertTargetMissingError } from "./ItemTableComponent"
+import { getItemState, getItemStateValues, mapItemState } from "./ItemStateComponent"
+import { ItemTableComponent, isCard, isChip, getItemBaSyou, isCoin, getItemController, assertTargetMissingError, getItemIdsByBasyou } from "./ItemTableComponent"
 import { getSetGroupBattlePoint } from "./setGroup"
-import { getSetGroupChildren } from "./SetGroupComponent"
+import { getSetGroupChildren, getSetGroupRoot } from "./SetGroupComponent"
 import { doTriggerEvent } from "./doTriggerEvent"
+import { getRuntimeBattleArea } from "./RuntimeBattleAreaComponent"
+import { getItemRuntimeCategory } from "./card"
 
 export function doItemSetDestroy(ctx: GameState, reason: DestroyReason | null, [itemId, from]: StrBaSyouPair, options?: { isSkipTargetMissing?: boolean }): GameState {
     if (options?.isSkipTargetMissing) {
@@ -32,6 +34,7 @@ export function doItemSetDestroy(ctx: GameState, reason: DestroyReason | null, [
             ctx = mapItemState(ctx, itemId, is => {
                 return { ...is, destroyReason: reason }
             }) as GameState
+            ctx = addDestroyEffect(ctx, createDestroyEffect(ctx, reason, itemId)) as GameState
         } else {
             if (isDestroyEffect == null) {
                 throw new GameError(`not destroy: ${itemId}`, { flags: [] })
@@ -58,16 +61,21 @@ export function createDestroyEffectAndPush(ctx: GameState): GameState {
     // 將所有破壞效果加入破壞用堆疊
     // 加入破壞用堆疊後，主動玩家就必須決定解決順序
     // 決定後，依順序將所有效果移到正在解決中的堆疊，並重設切入的旗標，讓玩家可以在堆疊解決中可以再次切入
-    return getItemStateValues(ctx).reduce((ctx, cs) => {
-        if (EffectFn.isFakeCardID(cs.id)) {
+    AbsoluteBaSyouFn.getBaAll().flatMap(basyou => getItemIdsByBasyou(ctx, basyou)).forEach(cardId => {
+        if (EffectFn.isFakeCardID(cardId)) {
             return ctx
         }
-        if (cs.destroyReason) {
-            const effect: Effect = createDestroyEffect(ctx, cs.destroyReason, cs.id)
-            ctx = addDestroyEffect(ctx, effect) as GameState
-            return ctx
+        const cs = getItemState(ctx, cardId)
+        if (getSetGroupRoot(ctx, cardId) == cardId) {
+            return
         }
-        const [_, _2, hp] = getSetGroupBattlePoint(ctx, cs.id)
+        const runtimeCate = getItemRuntimeCategory(ctx, cardId)
+        if (runtimeCate == "ACE" || runtimeCate == "ユニット") {
+
+        } else {
+            return
+        }
+        const [_, _2, hp] = getSetGroupBattlePoint(ctx, cardId)
         if (hp <= cs.damage) {
             const destroyReason: DestroyReason = {
                 id: "マイナスの戦闘修正",
@@ -78,6 +86,7 @@ export function createDestroyEffectAndPush(ctx: GameState): GameState {
             return ctx
         }
         return ctx
-    }, ctx)
+    })
+    return ctx
 }
 

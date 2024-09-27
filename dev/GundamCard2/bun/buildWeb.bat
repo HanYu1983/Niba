@@ -1,0 +1,1 @@
+bun build src\web.tsx --outdir public

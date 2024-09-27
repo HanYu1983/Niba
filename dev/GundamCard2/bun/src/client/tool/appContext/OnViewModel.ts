@@ -12,6 +12,7 @@ import { logCategory } from "../../../tool/logger";
 import { createGameContext, GameContext } from "../../define/GameContext";
 import { OnEvent, OnError } from "./eventCenter";
 import * as rxjs from "rxjs"
+import { TableFns } from "../../../tool/table";
 
 export type Selection = string[];
 
@@ -54,11 +55,12 @@ export const OnViewModel = OnEvent.pipe(
           Promise.all(TMP_DECK.concat(TMP_DECK2).map(loadPrototype))
           ctx.gameState = initState(ctx.gameState, TMP_DECK, TMP_DECK2);
           //ctx.gameState = createCardWithProtoIds(ctx.gameState, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), TMP_DECK.slice(0, 6)) as GameStateWithFlowMemory
-          ctx.gameState = updateCommand(ctx.gameState);
+          //ctx.gameState = updateCommand(ctx.gameState) as GameStateWithFlowMemory;
           return { ...DEFAULT_VIEW_MODEL, model: ctx };
         }
         case "OnClickFlowConfirm": {
           const gameState = applyFlow(viewModel.model.gameState, evt.clientID, evt.flow);
+          TableFns.assertDup(gameState.table)
           return {
             ...viewModel,
             model: {

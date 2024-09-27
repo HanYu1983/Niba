@@ -1,3 +1,5 @@
+import { includes } from "ramda";
+
 export type Table = {
     cardStack: { [key: string]: string[] },
 }
@@ -14,17 +16,16 @@ function addCard(table: Table, position: string, cardId: string): Table {
 
 function getCardsByPosition(table: Table, position: string): string[] {
     if (table.cardStack[position] == null) {
-        //console.log(`table.cardStack[${position}] not found`)
         return []
     }
     return table.cardStack[position]
 }
 
 function moveCard(table: Table, fromPosition: string, toPosition: string, cardId: string): Table {
-    if (!table.cardStack[fromPosition] || !table.cardStack[fromPosition].includes(cardId)) {
-        throw new Error(`Card not found in the specified position:${fromPosition} ${toPosition} ${cardId}`);
+    if (table.cardStack[fromPosition]?.includes(cardId) != true) {
+        throw new Error(`table from ${fromPosition} not exist ${cardId}`)
     }
-    const updatedFromStack = table.cardStack[fromPosition].filter(id => id !== cardId);
+    const updatedFromStack = (table.cardStack[fromPosition]?.filter(id => id !== cardId) || [])
     const updatedToStack = table.cardStack[toPosition] ? [...table.cardStack[toPosition], cardId] : [cardId];
     return {
         ...table,
@@ -63,5 +64,17 @@ export const DEFAULT_TABLE: Table = {
 }
 
 export const TableFns = {
-    addCard, moveCard, getCardPosition, getCardsByPosition, shuffleCards
+    addCard, moveCard, getCardPosition, getCardsByPosition, shuffleCards,
+    assertDup(table: Table) {
+        for (const key in table.cardStack) {
+            const cardIdSets: any = {}
+            const cs = table.cardStack[key]
+            for (const cardId of cs) {
+                if (cardIdSets[cardId]) {
+                    throw new Error(`dup !! ${cardId} in ${key}`)
+                }
+                cardIdSets[cardId] = true
+            }
+        }
+    }
 }

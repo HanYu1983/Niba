@@ -60,7 +60,7 @@ export async function test179028_10D_C_BL070N_blue() {
                 throw new Error()
             }
             // 這裡模擬破壞效果進了堆疊了
-            ctx = createDestroyEffectAndPush(ctx)
+            //ctx = createDestroyEffectAndPush(ctx)
             ctx = doCutInDestroyEffectsAndClear(ctx) as GameState
             if (getCutInDestroyEffects(ctx).find(e => EffectFn.getCardID(e) == destroyUnit.id) == null) {
                 throw new Error()
@@ -137,7 +137,7 @@ export async function test179028_10D_C_BL070N_blue() {
                 throw new Error()
             }
             // 這裡模擬破壞效果進了堆疊了
-            ctx = createDestroyEffectAndPush(ctx)
+            //ctx = createDestroyEffectAndPush(ctx)
             ctx = doCutInDestroyEffectsAndClear(ctx) as GameState
             if (getCutInDestroyEffects(ctx).find(e => EffectFn.getCardID(e) == destroyUnit.id) == null) {
                 throw new Error()

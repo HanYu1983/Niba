@@ -13,7 +13,9 @@ import { getSetGroupBattlePoint } from "./setGroup";
 import { doTriggerEvent } from "./doTriggerEvent";
 import { StrBaSyouPair } from "../define/Tip";
 import { doItemMove } from "./doItemMove";
-import { getItemIdsByBasyou } from "./ItemTableComponent";
+import { createStrBaSyouPair, getItemIdsByBasyou } from "./ItemTableComponent";
+import { doItemSetDestroy } from "./doItemSetDestroy";
+import { getCardTipStrBaSyouPairs } from "./doEffect";
 
 // player
 export function isPlayerHasBattleGroup(
@@ -75,11 +77,8 @@ function doDamage(
               id: "戦闘ダメージ",
               playerID: currentAttackPlayerID,
             };
-            const gameEvent: GameEvent = {
-              title: ["破壊された場合", reason],
-              cardIds: [cs.id]
-            };
-            ctx = doTriggerEvent(ctx, gameEvent)
+            // 這裡不發送破壞事件, 因為破壞比較等到破壞效果進堆疊才算數
+            ctx = doItemSetDestroy(ctx, reason, createStrBaSyouPair(ctx, cardID), {isSkipTargetMissing: true})
             return {
               ...cs,
               damage: hp,
