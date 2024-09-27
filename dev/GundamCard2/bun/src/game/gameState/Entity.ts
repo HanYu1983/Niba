@@ -69,7 +69,7 @@ export function createEntityIterator(ctx: GameState) {
     return rets
 }
 
-export function createTipByEntitySearch(ctx: GameState, cardId: string, options: EntitySearchOptions): Tip | null {
+export function createTipByEntitySearch(ctx: GameState, cardId: string, options: EntitySearchOptions): Tip {
     let entityList = createEntityIterator(ctx).filter(EntityFn.filterIsBattle(ctx, null, options.isBattle || false))
     if (options.isCanSetCharacter != null) {
         entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx, true)).filter(EntityFn.filterCanSetCharacter(ctx))

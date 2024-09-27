@@ -1,12 +1,12 @@
 import { repeat, lift } from "ramda"
-import { AbsoluteBaSyouFn, AbsoluteBaSyou } from "../define/BaSyou"
+import { AbsoluteBaSyouFn, AbsoluteBaSyou, RelatedBaSyou, BaSyou } from "../define/BaSyou"
 import { Action, ActionTitleFn, ActionFn } from "../define/CardText"
 import { CoinFn } from "../define/Coin"
 import { Effect, EffectFn } from "../define/Effect"
 import { TipError } from "../define/GameError"
 import { GlobalEffect } from "../define/GlobalEffect"
 import { ItemStateFn } from "../define/ItemState"
-import { PlayerIDFn } from "../define/PlayerID"
+import { PlayerID, PlayerIDFn } from "../define/PlayerID"
 import { StrBaSyouPair } from "../define/Tip"
 import { getCardIdsCanPayRollCost, getItemRuntimeCategory } from "./card"
 import { mapCard } from "./CardTableComponent"
@@ -14,7 +14,7 @@ import { getCardTipStrBaSyouPairs } from "./doEffect"
 import { addStackEffect } from "./EffectStackComponent"
 import { GameState } from "./GameState"
 import { mapItemState, getItemState, setItemState } from "./ItemStateComponent"
-import { getItemController, getItemBaSyou, assertTargetMissingError, getItemIdsByBasyou, addCoinsToCard, getItemIdsByPlayerId, getItemPrototype } from "./ItemTableComponent"
+import { getItemController, getItemBaSyou, assertTargetMissingError, getItemIdsByBasyou, addCoinsToCard, getItemIdsByPlayerId, getItemPrototype, getItemOwner } from "./ItemTableComponent"
 import { doItemMove } from "./doItemMove"
 import { doItemSwap } from "./doItemSwap"
 import { doTriggerEvent } from "./doTriggerEvent"
@@ -24,12 +24,49 @@ import { doCountryDamage } from "./doCountryDamage"
 import { logCategory } from "../../tool/logger"
 import { doItemSetDestroy } from "./doItemSetDestroy"
 import { doItemSetGlobalEffectsUntilEndOfTurn } from "./doItemSetGlobalEffectsUntilEndOfTurn"
+import { RelatedPlayerSideKeyword } from "../define"
+
+export function createPlayerIdFromRelated(ctx: GameState, cardId: string, re: RelatedPlayerSideKeyword): PlayerID {
+  switch (re) {
+    case "自軍":
+      return getItemController(ctx, cardId)
+    case "敵軍":
+      return PlayerIDFn.getOpponent(getItemController(ctx, cardId))
+    case "持ち主":
+      return getItemOwner(ctx, cardId)
+  }
+}
+
+export function createAbsoluteBaSyouFromBaSyou(ctx: GameState, cardId: string, re: BaSyou): AbsoluteBaSyou {
+  if (re.id == "AbsoluteBaSyou") {
+    return re
+  }
+  return AbsoluteBaSyouFn.of(createPlayerIdFromRelated(ctx, cardId, re.value[0]), re.value[1])
+}
 
 export function createActionTitleFn(action: Action): ActionTitleFn {
   if (typeof action.title == "string") {
     return ActionFn.getTitleFn(action)
   }
   switch (action.title[0]) {
+    case "Action": {
+      const [_, options] = action.title
+      const varNames = action.vars
+      return function (ctx: GameState, effect: Effect): GameState {
+        const cardId = EffectFn.getCardID(effect)
+        const pairs = varNames == null ?
+          [[cardId, getItemBaSyou(ctx, cardId)] as StrBaSyouPair] :
+          varNames.flatMap(varName => {
+            return getCardTipStrBaSyouPairs(ctx, varName, cardId)
+          })
+        for (const pair of pairs) {
+          if(options.move){
+            ctx = doItemMove(ctx, createAbsoluteBaSyouFromBaSyou(ctx, cardId, options.move), pair)
+          }
+        }
+        return ctx
+      }
+    }
     case "triggerEvent": {
       const [_, event] = action.title
       return function (ctx: GameState, effect: Effect): GameState {
@@ -198,7 +235,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
       return function (ctx: GameState, effect: Effect): GameState {
         const cardId = EffectFn.getCardID(effect)
         const pairs = getCardTipStrBaSyouPairs(ctx, varNames[0], cardId)
-        if(pairs.length == 0){
+        if (pairs.length == 0) {
           throw new Error(`pairs must not 0: ${action.title} ${action.vars}`)
         }
         const [targetCardId, targetBasyou] = pairs[0]

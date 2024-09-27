@@ -35,12 +35,14 @@ export const BaSyouKeywordFn = {
         return ["本国", "捨て山", "Gゾーン", "ジャンクヤード", "手札", "ハンガー", "取り除かれたカード", "戦闘エリア1", "戦闘エリア2", "配備エリア"]
     },
     getBaAll(): BaSyouKeyword[] {
-        return this.getAll().filter(this.isBa)
+        return BaSyouKeywordFn.getAll().filter(BaSyouKeywordFn.isBa)
     },
-    // TODO: refactor
-    getScriptAll(): BaSyouKeyword[] {
-        return ["捨て山", "Gゾーン", "ジャンクヤード", "手札", "ハンガー", "戦闘エリア1", "戦闘エリア2", "配備エリア"]
+    getTextOn(): BaSyouKeyword[] {
+        return BaSyouKeywordFn.getAll().filter(kw => ["本国", "取り除かれたカード", "捨て山"].includes(kw) == false)
     },
+    getBattleArea(): BaSyouKeyword[] {
+        return ["戦闘エリア1", "戦闘エリア2"]
+    }
 }
 
 export type AbsoluteBaSyou = {
@@ -68,34 +70,46 @@ export const AbsoluteBaSyouFn = {
         return baSyou.value[1]
     },
     setBaSyouKeyword(baSyou: AbsoluteBaSyou, kw: BaSyouKeyword): AbsoluteBaSyou {
-        return this.of(baSyou.value[0], kw);
+        return AbsoluteBaSyouFn.of(baSyou.value[0], kw);
     },
     setPlayerID(baSyou: AbsoluteBaSyou, p: PlayerID): AbsoluteBaSyou {
-        return this.of(p, baSyou.value[1]);
+        return AbsoluteBaSyouFn.of(p, baSyou.value[1]);
     },
     getPlayerID(baSyou: AbsoluteBaSyou): PlayerID {
         return baSyou.value[0]
     },
     setOpponentPlayerID(baSyou: AbsoluteBaSyou): AbsoluteBaSyou {
-        return this.of(PlayerIDFn.getOpponent(baSyou.value[0]), baSyou.value[1]);
+        return AbsoluteBaSyouFn.of(PlayerIDFn.getOpponent(baSyou.value[0]), baSyou.value[1]);
     },
     getAll(): AbsoluteBaSyou[] {
-        return lift(this.of)(PlayerIDFn.getAll(), BaSyouKeywordFn.getAll())
+        return lift(AbsoluteBaSyouFn.of)(PlayerIDFn.getAll(), BaSyouKeywordFn.getAll())
     },
     getBaAll(): AbsoluteBaSyou[] {
-        return lift(this.of)(PlayerIDFn.getAll(), BaSyouKeywordFn.getBaAll())
+        return lift(AbsoluteBaSyouFn.of)(PlayerIDFn.getAll(), BaSyouKeywordFn.getBaAll())
     },
-    getScriptAll(): AbsoluteBaSyou[] {
-        return lift(this.of)(PlayerIDFn.getAll(), BaSyouKeywordFn.getScriptAll())
+    getTextOn(): AbsoluteBaSyou[] {
+        return lift(AbsoluteBaSyouFn.of)(PlayerIDFn.getAll(), BaSyouKeywordFn.getTextOn())
+    },
+    getBattleArea(): AbsoluteBaSyou[] {
+        return lift(AbsoluteBaSyouFn.of)(PlayerIDFn.getAll(), BaSyouKeywordFn.getBattleArea())
     },
     eq(left: AbsoluteBaSyou, right: AbsoluteBaSyou): boolean {
-        return this.toString(left) == this.toString(right)
+        return AbsoluteBaSyouFn.toString(left) == AbsoluteBaSyouFn.toString(right)
     }
 }
 
 export type RelatedBaSyou = {
     id: "RelatedBaSyou";
-    value: [RelatedPlayerSideKeyword | "持ち主", BaSyouKeyword];
+    value: [RelatedPlayerSideKeyword, BaSyouKeyword];
 };
+
+export const RelatedBaSyouFn = {
+    of(side: RelatedPlayerSideKeyword, kw: BaSyouKeyword): RelatedBaSyou {
+        return {
+            id: "RelatedBaSyou",
+            value: [side, kw]
+        }
+    }
+}
 
 export type BaSyou = AbsoluteBaSyou | RelatedBaSyou;

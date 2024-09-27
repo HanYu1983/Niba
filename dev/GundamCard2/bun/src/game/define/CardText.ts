@@ -1,7 +1,7 @@
 import { always, ifElse, map, pipe, zipObj } from "ramda";
 import { RelatedPlayerSideKeyword } from ".";
 import { LogicTree, LogicTreeFn } from "../../tool/logicTree";
-import { BaSyouKeyword } from "./BaSyou";
+import { BaSyou, BaSyouKeyword } from "./BaSyou";
 import { CardColor, CardCategory } from "./CardPrototype";
 import { Effect } from "./Effect";
 import { GameEvent } from "./GameEvent";
@@ -56,6 +56,7 @@ export type ActionTitle =
     | ["_２ダメージを与える", number]
     | ["_敵軍本国に_１ダメージ", RelatedPlayerSideKeyword, number]
     | ["_黒のGサインを持つ_自軍_Gが_５枚以上ある場合", CardColor, RelatedPlayerSideKeyword, CardCategory, number]
+    | ["Action", { move?: BaSyou }]
 
 export type Action = {
     title: ActionTitle,
@@ -190,7 +191,8 @@ export type CardText = {
     logicTreeActions?: LogicTreeAction[]
     onEvent?: OnEventTitle
     onSituation?: string
-    isEnabledWhileG?: boolean
+    isEnabledWhileG?: boolean,
+    isEachTime?: boolean,
 }
 
 function getCondition(ctx: CardText, conditionId: string): Condition {

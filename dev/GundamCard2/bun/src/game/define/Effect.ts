@@ -96,10 +96,10 @@ export const EffectFn = {
         }
     },
 
-    fromEffectBasic(e: Effect, options?: { conditions?: { [key: string]: Condition }, logicTreeAction?: LogicTreeAction, isOption?: boolean }): Effect {
+    fromEffectBasic(e: Effect, options?: { reason?: EffectReason, conditions?: { [key: string]: Condition }, logicTreeAction?: LogicTreeAction, isOption?: boolean }): Effect {
         return {
             id: "",
-            reason: e.reason,
+            reason: options?.reason || e.reason,
             description: e.description,
             isOption: options?.isOption,
             text: {

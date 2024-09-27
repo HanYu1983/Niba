@@ -65,7 +65,7 @@ function getSituationEffects(ctx: GameState, situation: Situation | null): Globa
   )
   // 恒常 & 使用型
   const getTextGroup2 = pipe(
-    always(AbsoluteBaSyouFn.getScriptAll()),
+    always(AbsoluteBaSyouFn.getTextOn()),
     map(basyou => getItemIdsByBasyou(ctx, basyou)),
     flatten,
     itemIds => itemIds.filter(itemId => isCard(ctx, itemId) || isChip(ctx, itemId)),

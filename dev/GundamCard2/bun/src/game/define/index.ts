@@ -1,4 +1,4 @@
-export type RelatedPlayerSideKeyword = "自軍" | "敵軍";
+export type RelatedPlayerSideKeyword = "自軍" | "敵軍" | "持ち主";
 export type UnitPropertyKeyword = "攻撃力" | "防御力";
 export type FlagKeyword = "破壊" | "プレイされたカード";
 export type AttackSpeed = 1 | 2;

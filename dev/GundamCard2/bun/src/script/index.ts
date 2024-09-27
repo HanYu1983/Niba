@@ -39,8 +39,8 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
       const bp3 = data.info_9
       const area = data.info_10
       const characteristic = data.info_11
-      // 只取前20個文字判斷特殊技能比較準
-      const textstr = data.info_12.substr(0, 20)
+      // 只取前文字判斷特殊技能比較準
+      const textstr = data.info_12.substr(0, 50)
       const description = data.info_15
       const prod = data.info_16
       const rarity = data.info_17
@@ -99,6 +99,11 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
           title: ["特殊型", ["高機動"]]
         })
       }
+      const textBlackList = ["179001_01A_CH_WT007R_white"]
+      if(textBlackList.includes(imgID)){
+        texts.length = 0
+      }
+
       const category = categoryMapping[categoryStr]
       if (category == null) {
         throw new Error(`unknown categoryStr: ${categoryStr}`)
@@ -273,12 +278,17 @@ function getKaiSo(gainStr: string): CardText[] {
   ]
 }
 
+// 〔黒１毎〕：クロスウェポン［T3部隊］
 function getCrossWeapon(gainStr: string): CardText[] {
-  const match = gainStr.match(/〔(０|１|２|３|４|５|６|７|８|９+)〕：クロスウェポン［(.+)］/);
+  let match = gainStr.match(/〔(.?)(０|１|２|３|４|５|６|７|８|９+)(毎?)〕：クロスウェポン［(.+)］/);
   if (match == null) {
     return []
   }
-  const [matchstr, rollcoststr, char] = match
+  const [matchstr, colorstr, rollcoststr, every, char] = match
+  if (colorstr != "" && CardColorFn.getAll().includes(colorstr as CardColor) == false) {
+    throw new Error(`getCrossWeapon ${gainStr}`)
+  }
+  const color: CardColor | null = colorstr == "" ? null : (colorstr as CardColor)
   const rollcost = uppercaseDigits.indexOf(rollcoststr)
   if (rollcost == -1) {
     throw new Error(`getGainTexts error: ${matchstr}`)
@@ -287,7 +297,8 @@ function getCrossWeapon(gainStr: string): CardText[] {
     {
       id: "",
       title: ["特殊型", ["クロスウェポン", char]],
-      conditions: createRollCostRequire(rollcost, null)
+      isEachTime: every == "毎",
+      conditions: createRollCostRequire(rollcost, color)
     }
   ]
 }
