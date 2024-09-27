@@ -28750,7 +28750,7 @@ function getPlayCardEffects(ctx2, cardId) {
                   const from2 = GameStateFn.getItemBaSyou(ctx3, cardId3);
                   const to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from2, "G\u30BE\u30FC\u30F3");
                   ctx3 = GameStateFn.doItemMove(ctx3, to, [cardId3, from2]);
-                  ctx3 = GameStateFn.triggerEvent(ctx3, { title: ["\u30D7\u30EC\u30A4\u3055\u308C\u3066\u5834\u306B\u51FA\u305F\u5834\u5408"], cardIds: [cardId3] });
+                  ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: ["\u30D7\u30EC\u30A4\u3055\u308C\u3066\u5834\u306B\u51FA\u305F\u5834\u5408"], cardIds: [cardId3] });
                   return ctx3;
                 }
                 if (prototype2.category == "\u30AA\u30DA\u30EC\u30FC\u30B7\u30E7\u30F3") {
@@ -28758,7 +28758,7 @@ function getPlayCardEffects(ctx2, cardId) {
                   const from2 = GameStateFn.getItemBaSyou(ctx3, cardId3);
                   const to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from2, "\u914D\u5099\u30A8\u30EA\u30A2");
                   ctx3 = GameStateFn.doItemMove(ctx3, to, [cardId3, from2]);
-                  ctx3 = GameStateFn.triggerEvent(ctx3, { title: ["\u30D7\u30EC\u30A4\u3055\u308C\u3066\u5834\u306B\u51FA\u305F\u5834\u5408"], cardIds: [cardId3] });
+                  ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: ["\u30D7\u30EC\u30A4\u3055\u308C\u3066\u5834\u306B\u51FA\u305F\u5834\u5408"], cardIds: [cardId3] });
                   return ctx3;
                 }
                 if (prototype2.category == "ACE") {
@@ -28834,7 +28834,7 @@ function getPlayCardEffects(ctx2, cardId) {
                   const from = GameStateFn.getItemBaSyou(ctx3, cardId2);
                   const to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "\u914D\u5099\u30A8\u30EA\u30A2");
                   ctx3 = GameStateFn.doItemMove(ctx3, to, [cardId2, from]);
-                  ctx3 = GameStateFn.triggerEvent(ctx3, { title: ["\u30D7\u30EC\u30A4\u3055\u308C\u3066\u5834\u306B\u51FA\u305F\u5834\u5408"], cardIds: [cardId2] });
+                  ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: ["\u30D7\u30EC\u30A4\u3055\u308C\u3066\u5834\u306B\u51FA\u305F\u5834\u5408"], cardIds: [cardId2] });
                   return ctx3;
                 }.toString()
               }

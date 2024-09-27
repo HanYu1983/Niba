@@ -19,7 +19,7 @@ import { getItemState, setItemState } from "../game/gameState/ItemStateComponent
 import { getItemIdsByBasyou, getItemBaSyou } from "../game/gameState/ItemTableComponent"
 import { doItemMove } from "../game/gameState/doItemMove"
 import { setPhase } from "../game/gameState/PhaseComponent"
-import { triggerEvent } from "../game/gameState/triggerEvent"
+import { doTriggerEvent } from "../game/gameState/doTriggerEvent"
 import { loadPrototype } from "../script"
 
 export async function test179024_03B_U_WT042U_white() {
@@ -89,7 +89,7 @@ export async function test179024_03B_U_WT042U_white() {
     }
     {
         // 將同一個切入的旗標清除, 因為同樣的切入中1個技能只能使用1次
-        ctx = triggerEvent(ctx, { title: ["カット終了時", []] })
+        ctx = doTriggerEvent(ctx, { title: ["カット終了時", []] })
          // 重置G
         ctx = mapCard(ctx, unit.id, card => {
             return {
@@ -124,7 +124,7 @@ export async function test179024_03B_U_WT042U_white() {
         if (BattlePointFn.eq(getCardBattlePoint(ctx, cardA.id), [6, 1, 5]) == false) {
             throw new Error(`BattlePointFn.eq(getCardBattlePoint(ctx, cardA.id), [6,1,5]) == false`)
         }
-        ctx = triggerEvent(ctx, { title: ["GameEventOnTiming", PhaseFn.getLast()] })
+        ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", PhaseFn.getLast()] })
         ges = getGlobalEffects(ctx, null)
         if (ges.length != 0) {
             throw new Error(`ges.length != 0`)

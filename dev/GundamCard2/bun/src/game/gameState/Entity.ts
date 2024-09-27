@@ -5,7 +5,7 @@ import { ItemState } from "../define/ItemState";
 import { PlayerID, PlayerA, PlayerB } from "../define/PlayerID";
 import { getCardColor, getItemRuntimeCategory } from "./card";
 import { getCoinIds, getCoin, getCoinOwner } from "./CoinTableComponent";
-import { getDestroyEffects, getEffect, getEffects, isStackEffect } from "./EffectStackComponent";
+import { getCutInDestroyEffects, getEffect, getEffects, isStackEffect } from "./EffectStackComponent";
 import { GameState } from "./GameState";
 import { isBattle } from "./IsBattleComponent";
 import { getItemState } from "./ItemStateComponent";
@@ -25,7 +25,7 @@ export type Entity = {
 }
 
 export function createEntityIterator(ctx: GameState) {
-    const destroyEffects = getDestroyEffects(ctx)
+    const destroyEffects = getCutInDestroyEffects(ctx)
     const rets: Entity[] = [];
     [PlayerA, PlayerB].map(playerId => {
         BaSyouKeywordFn.getAll().map(basyouKw => {

@@ -1,14 +1,14 @@
 import { logCategory } from "../../tool/logger";
 import { PlayerA, PlayerB, PlayerID, PlayerIDFn } from "../define/PlayerID";
 import { AbsoluteBaSyou, AbsoluteBaSyouFn, BaSyouKeyword, BaSyouKeywordFn } from "../define/BaSyou";
-import { addImmediateEffect, addStackEffect, clearDestroyEffects, pushDestroyEffectsToStackAndClear } from "../gameState/EffectStackComponent";
+import { addImmediateEffect } from "../gameState/EffectStackComponent";
 import { checkIsBattle } from "../gameState/IsBattleComponent";
 import { Flow } from "./Flow";
 import { GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
 import { setActiveEffectID, cancelActiveEffectID, doActiveEffect, deleteImmediateEffect, getEffectIncludePlayerCommand, setActiveLogicID } from "./effect";
 import { PhaseFn } from "../define/Timing";
 import { doPlayerAttack } from "../gameState/player";
-import { triggerEvent } from "../gameState/triggerEvent";
+import { doTriggerEvent } from "../gameState/doTriggerEvent";
 import { ToolFn } from "../tool";
 import { updateCommand } from "../gameState/updateCommand";
 import { getItem, getItemController, getItemIdsByBasyou, isCard, isCardLike, isChip, isCoin, Item, shuffleItems } from "../gameState/ItemTableComponent";
@@ -23,6 +23,7 @@ import { getCard } from "../gameState/CardTableComponent";
 import { getCoin, getCoinIds, getCoinOwner } from "../gameState/CoinTableComponent";
 import { createEntityIterator, EntityFn } from "../gameState/Entity";
 import { createDestroyEffectAndPush } from "../gameState/doItemSetDestroy";
+import { doCutInDestroyEffectsAndClear } from "../gameState/doCutInDestroyEffectsAndClear";
 
 export function applyFlow(
     ctx: GameStateWithFlowMemory,
@@ -147,7 +148,7 @@ export function applyFlow(
                 logCategory("applyFlow", "已經執行過triggerTextEvent");
                 return ctx;
             }
-            ctx = triggerEvent(ctx, flow.event) as GameStateWithFlowMemory;
+            ctx = doTriggerEvent(ctx, flow.event) as GameStateWithFlowMemory;
             // set hasTriggerEvent
             ctx = {
                 ...ctx,
@@ -301,7 +302,7 @@ export function applyFlow(
             return ctx;
         }
         case "FlowHandleStackEffectFinished": {
-            ctx = triggerEvent(ctx, {
+            ctx = doTriggerEvent(ctx, {
                 title: ["カット終了時", ctx.stackEffectMemory]
             }) as GameStateWithFlowMemory;
             ctx = {
@@ -340,7 +341,7 @@ export function applyFlow(
                 throw new Error("長度不符合");
             }
             // 移除破壞效果，全部移到堆疊
-            ctx = pushDestroyEffectsToStackAndClear(ctx, flow.destroyEffect.map(e=>e.id)) as GameStateWithFlowMemory
+            ctx = doCutInDestroyEffectsAndClear(ctx, flow.destroyEffect.map(e=>e.id)) as GameStateWithFlowMemory
             return {
                 ...ctx,
                 // 重設切入旗標，讓玩家再次切入

@@ -43,10 +43,12 @@ import { testIssue } from "./testIssue";
 import { test179015_04B_U_BK058R_black } from "./test179015_04B_U_BK058R_black";
 import { testGain } from "./testGain";
 import { test179028_10D_C_BL070N_blue } from "./test179028_10D_C_BL070N_blue";
+import { test179003_01A_U_BK008U_black } from "./test179003_01A_U_BK008U_black";
 const fs = require('fs').promises;
 
 export async function tests() {
     return [
+        test179003_01A_U_BK008U_black,
         test179030_11E_C_BL079R_blue,
         test179028_10D_C_BL070N_blue,
         testGain,

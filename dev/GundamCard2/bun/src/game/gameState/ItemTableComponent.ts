@@ -142,6 +142,13 @@ export function getItemBaSyou(
   throw new Error(`getItemBaSyou unknown item: ${id}`)
 }
 
+export function createStrBaSyouPair(
+  ctx: ItemTableComponent,
+  id: string
+): StrBaSyouPair {
+  return [id, getItemBaSyou(ctx, id)]
+}
+
 export function getItemPrototype(ctx: ItemTableComponent, itemId: string): CardPrototype {
   if (isCard(ctx, itemId)) {
     return getPrototype(getCard(ctx, itemId).protoID || "unknown")

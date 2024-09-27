@@ -6,7 +6,7 @@ import { GameEvent } from "../define/GameEvent"
 import { StrBaSyouPair } from "../define/Tip"
 import { getCard, setCard } from "./CardTableComponent"
 import { createDestroyEffect } from "./createDestroyEffect"
-import { getEffects, isStackEffect, getEffect, getDestroyEffects, removeEffect, addDestroyEffect } from "./EffectStackComponent"
+import { getEffects, isStackEffect, getEffect, getCutInDestroyEffects, removeEffect, addDestroyEffect } from "./EffectStackComponent"
 import { EventCenterFn } from "./EventCenter"
 import { GameState } from "./GameState"
 import { clearGlobalEffects, getGlobalEffects, setGlobalEffects } from "./globalEffects"
@@ -14,7 +14,7 @@ import { getItemStateValues, mapItemState } from "./ItemStateComponent"
 import { ItemTableComponent, isCard, isChip, getItemBaSyou, isCoin, getItemController, assertTargetMissingError } from "./ItemTableComponent"
 import { getSetGroupBattlePoint } from "./setGroup"
 import { getSetGroupChildren } from "./SetGroupComponent"
-import { triggerEvent } from "./triggerEvent"
+import { doTriggerEvent } from "./doTriggerEvent"
 
 export function doItemSetDestroy(ctx: GameState, reason: DestroyReason | null, [itemId, from]: StrBaSyouPair, options?: { isSkipTargetMissing?: boolean }): GameState {
     if (options?.isSkipTargetMissing) {
@@ -23,7 +23,7 @@ export function doItemSetDestroy(ctx: GameState, reason: DestroyReason | null, [
         assertTargetMissingError(ctx, [itemId, from])
     }
     if (isCard(ctx, itemId) || isChip(ctx, itemId)) {
-        const isDestroyEffect = getDestroyEffects(ctx).find(e => EffectFn.getCardID(e) == itemId)
+        const isDestroyEffect = getCutInDestroyEffects(ctx).find(e => EffectFn.getCardID(e) == itemId)
         if (reason) {
             if (isDestroyEffect) {
                 throw new GameError(`already destroy: ${itemId}`, { flags: [] })

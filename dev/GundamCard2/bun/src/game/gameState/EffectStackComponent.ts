@@ -120,30 +120,11 @@ export function clearDestroyEffects(ctx: EffectStackComponent): EffectStackCompo
   }
 }
 
-export function getDestroyEffects(ctx: EffectStackComponent): Effect[] {
+export function getCutInDestroyEffects(ctx: EffectStackComponent): Effect[] {
   return Object.keys(getEffects(ctx))
     .filter(id => isStackEffect(ctx, id))
     .map(id => getEffect(ctx, id))
     .filter(e => e.reason[0] == "Destroy")
-}
-
-// 移除破壞效果，全部移到堆疊
-export function pushDestroyEffectsToStackAndClear(ctx: EffectStackComponent, ordered?: string[]): EffectStackComponent {
-  if (ordered) {
-    ctx = {
-      ...ctx,
-      destroyEffect: [],
-      stackEffect: [...ordered, ...ctx.stackEffect]
-    }
-    return ctx
-  }
-  const destryEffectIds = ctx.destroyEffect
-  ctx = {
-    ...ctx,
-    destroyEffect: [],
-    stackEffect: [...destryEffectIds, ...ctx.stackEffect]
-  }
-  return ctx
 }
 
 export function setCommandEffects(ctx: EffectStackComponent, addeds: Effect[]): EffectStackComponent {

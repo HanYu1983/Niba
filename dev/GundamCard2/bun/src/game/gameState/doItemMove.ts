@@ -9,7 +9,7 @@ import { clearGlobalEffects, getGlobalEffects, setGlobalEffects } from "./global
 import { mapItemState } from "./ItemStateComponent"
 import { ItemTableComponent, isCard, isChip, getItemBaSyou, isCoin, getItemController, assertTargetMissingError } from "./ItemTableComponent"
 import { getSetGroupChildren } from "./SetGroupComponent"
-import { triggerEvent } from "./triggerEvent"
+import { doTriggerEvent } from "./doTriggerEvent"
 
 export function doItemMove(ctx: GameState, to: AbsoluteBaSyou, [itemId, from]: StrBaSyouPair, options?: { isSkipTargetMissing?: boolean }): GameState {
     if (options?.isSkipTargetMissing) {
@@ -57,7 +57,7 @@ export function onMoveItem(ctx: GameState, to: AbsoluteBaSyou, [cardId, from]: S
     ctx = clearGlobalEffects(ctx)
     if (AbsoluteBaSyouFn.getBaSyouKeyword(from) == "手札") {
         if (AbsoluteBaSyouFn.getBaSyouKeyword(to) == "プレイされているカード") {
-            ctx = triggerEvent(ctx, {
+            ctx = doTriggerEvent(ctx, {
                 title: ["プレイした場合"],
                 cardIds: [cardId]
             } as GameEvent)
@@ -72,7 +72,7 @@ export function onMoveItem(ctx: GameState, to: AbsoluteBaSyou, [cardId, from]: S
                 isFirstTurn: true
             }
         }) as GameState
-        ctx = triggerEvent(ctx, {
+        ctx = doTriggerEvent(ctx, {
             title: ["場に出た場合"],
             cardIds: [cardId]
         } as GameEvent)
@@ -94,7 +94,7 @@ export function onMoveItem(ctx: GameState, to: AbsoluteBaSyou, [cardId, from]: S
         }
         ctx = setCard(ctx, cardId, card) as GameState
     }
-    ctx = triggerEvent(ctx, {
+    ctx = doTriggerEvent(ctx, {
         title: ["GameEventOnMove", from, to],
         cardIds: [cardId]
     })

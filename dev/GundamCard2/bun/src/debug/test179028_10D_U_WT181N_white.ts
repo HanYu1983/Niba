@@ -12,7 +12,7 @@ import { createPlayCardEffects } from "../game/gameState/createPlayCardEffects"
 import { getGlobalEffects, setGlobalEffects, clearGlobalEffects } from "../game/gameState/globalEffects"
 import { getItemState } from "../game/gameState/ItemStateComponent"
 import { getItemIdsByBasyou, getItemIds } from "../game/gameState/ItemTableComponent"
-import { triggerEvent } from "../game/gameState/triggerEvent"
+import { doTriggerEvent } from "../game/gameState/doTriggerEvent"
 import { loadPrototype } from "../script"
 import { setActivePlayerID } from "../game/gameState/ActivePlayerComponent"
 
@@ -74,7 +74,7 @@ export async function test179028_10D_U_WT181N_white() {
     if (getItemState(ctx, cardId).flags["bonus"] == null) {
         throw new Error(`getItemState(ctx, cardId).flags["bonus"] == null`)
     }
-    ctx = triggerEvent(ctx, { title: ["GameEventOnTiming", PhaseFn.getLast()] })
+    ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", PhaseFn.getLast()] })
     if (getItemState(ctx, cardId).flags["bonus"] != null) {
         throw new Error(`getItemState(ctx, cardId).flags["bonus"] != null`)
     }

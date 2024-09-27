@@ -14,7 +14,7 @@ import { createPlayGEffects } from "../game/gameState/createPlayGEffects";
 import { getItemBaSyou } from "../game/gameState/ItemTableComponent";
 import { setPhase } from "../game/gameState/PhaseComponent";
 import { getSetGroupChildren, getSetGroupRoot } from "../game/gameState/SetGroupComponent";
-import { triggerEvent } from "../game/gameState/triggerEvent";
+import { doTriggerEvent } from "../game/gameState/doTriggerEvent";
 import { loadPrototype } from "../script";
 
 export async function testPlayChar() {

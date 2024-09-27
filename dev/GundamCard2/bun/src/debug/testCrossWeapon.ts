@@ -7,12 +7,12 @@ import { setActivePlayerID } from "../game/gameState/ActivePlayerComponent";
 import { getCardTexts, getItemCharacteristic } from "../game/gameState/card";
 import { addCards, getCard } from "../game/gameState/CardTableComponent";
 import { addChips, setChipPrototype } from "../game/gameState/ChipTableComponent";
-import { assertEffectCanPass, doEffect, onMoveItem, setTipSelectionForUser } from "../game/gameState/doEffect";
+import { assertEffectCanPass, doEffect, setTipSelectionForUser } from "../game/gameState/doEffect";
 import { getTopEffect } from "../game/gameState/EffectStackComponent";
 import { createGameState, GameState } from "../game/gameState/GameState";
 import { createPlayEffects } from "../game/gameState/createPlayEffects";
 import { setPhase } from "../game/gameState/PhaseComponent";
-import { triggerEvent } from "../game/gameState/triggerEvent";
+import { doTriggerEvent } from "../game/gameState/doTriggerEvent";
 import { loadPrototype } from "../script";
 
 export async function testCrossWeapon() {
@@ -65,7 +65,7 @@ export async function testCrossWeapon() {
         } else{
             throw new Error()
         }
-        ctx = triggerEvent(ctx, {title: ["GameEventOnTiming", PhaseFn.getLast()]})
+        ctx = doTriggerEvent(ctx, {title: ["GameEventOnTiming", PhaseFn.getLast()]})
         if(getCardTexts(ctx, unit2.id).find(text=>text.title[0] == "特殊型" && text.title[1][0] == "高機動")){
             throw new Error()
         }

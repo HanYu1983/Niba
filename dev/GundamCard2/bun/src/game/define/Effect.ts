@@ -1,6 +1,6 @@
 import { GameEvent } from "./GameEvent";
 import { PlayerID } from "./PlayerID";
-import { Situation, CardText } from "./CardText";
+import { Situation, CardText, Condition, Action, LogicTreeAction } from "./CardText";
 
 export type DestroyReason1 = {
     id: "通常ダメージ" | "戦闘ダメージ" | "破壊する" | "マイナスの戦闘修正";
@@ -93,6 +93,21 @@ export const EffectFn = {
                 return ctx.reason[3]
             default:
                 throw new Error(`${ctx.reason[0]} no Event`)
+        }
+    },
+
+    fromEffectBasic(e: Effect, options?: { conditions?: { [key: string]: Condition }, logicTreeAction?: LogicTreeAction }): Effect {
+        return {
+            id: "",
+            reason: e.reason,
+            description: e.description,
+            text: {
+                id: e.text.id,
+                title: e.text.title,
+                description: e.text.description,
+                conditions: options?.conditions || undefined,
+                logicTreeActions: options?.logicTreeAction ? [options.logicTreeAction] : []
+            }
         }
     }
 }

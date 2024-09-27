@@ -17,7 +17,7 @@ import { mapItemState, getItemState, setItemState } from "./ItemStateComponent"
 import { getItemController, getItemBaSyou, assertTargetMissingError, getItemIdsByBasyou, addCoinsToCard, getItemIdsByPlayerId, getItemPrototype } from "./ItemTableComponent"
 import { doItemMove } from "./doItemMove"
 import { doItemSwap } from "./doItemSwap"
-import { triggerEvent } from "./triggerEvent"
+import { doTriggerEvent } from "./doTriggerEvent"
 import { doItemDamage } from "./doItemDamage"
 import { doItemSetRollState } from "./doItemSetRollState"
 import { doCountryDamage } from "./doCountryDamage"
@@ -33,7 +33,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
     case "triggerEvent": {
       const [_, event] = action.title
       return function (ctx: GameState, effect: Effect): GameState {
-        ctx = triggerEvent(ctx, { ...event, effect: effect })
+        ctx = doTriggerEvent(ctx, { ...event, effect: effect })
         return ctx
       }
     }

@@ -10,7 +10,7 @@ import { GameState } from "./GameState";
 import { getItemState, setItemState } from "./ItemStateComponent";
 import { GameEvent } from "../define/GameEvent";
 import { getSetGroupBattlePoint } from "./setGroup";
-import { triggerEvent } from "./triggerEvent";
+import { doTriggerEvent } from "./doTriggerEvent";
 import { StrBaSyouPair } from "../define/Tip";
 import { doItemMove } from "./doItemMove";
 import { getItemIdsByBasyou } from "./ItemTableComponent";
@@ -79,7 +79,7 @@ function doDamage(
               title: ["破壊された場合", reason],
               cardIds: [cs.id]
             };
-            ctx = triggerEvent(ctx, gameEvent)
+            ctx = doTriggerEvent(ctx, gameEvent)
             return {
               ...cs,
               damage: hp,
@@ -95,7 +95,7 @@ function doDamage(
             title: ["戦闘ダメージを受けた場合"],
             cardIds: [cs.id],
           };
-          ctx = triggerEvent(ctx, gameEvent)
+          ctx = doTriggerEvent(ctx, gameEvent)
           return {
             ...cs,
             damage: nextDamage,

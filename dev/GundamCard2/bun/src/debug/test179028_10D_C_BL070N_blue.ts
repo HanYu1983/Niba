@@ -9,13 +9,13 @@ import { setActivePlayerID } from "../game/gameState/ActivePlayerComponent"
 import { getCardRollCostLength, getCardBattlePoint, getCardHasSpeicalEffect } from "../game/gameState/card"
 import { addCards, createCardWithProtoIds } from "../game/gameState/CardTableComponent"
 import { createCommandEffectTips, createEffectTips, doEffect, setTipSelectionForUser } from "../game/gameState/doEffect"
-import { addStackEffect, getDestroyEffects, getTopEffect, pushDestroyEffectsToStackAndClear } from "../game/gameState/EffectStackComponent"
+import { addStackEffect, getCutInDestroyEffects, getTopEffect } from "../game/gameState/EffectStackComponent"
 import { createGameState, GameState } from "../game/gameState/GameState"
 import { createPlayEffects } from "../game/gameState/createPlayEffects"
 import { getItemState, mapItemState, setItemState } from "../game/gameState/ItemStateComponent"
 import { getItemBaSyou, getItemPrototype } from "../game/gameState/ItemTableComponent"
 import { setPhase } from "../game/gameState/PhaseComponent"
-import { triggerEvent } from "../game/gameState/triggerEvent"
+import { doTriggerEvent } from "../game/gameState/doTriggerEvent"
 import { loadPrototype } from "../script"
 import { CommandEffecTipFn } from "../game/define/CommandEffectTip"
 import { doItemSetDestroy, createDestroyEffectAndPush } from "../game/gameState/doItemSetDestroy"
@@ -23,6 +23,7 @@ import { checkIsBattle } from "../game/gameState/IsBattleComponent"
 import { getSetGroupBattlePoint } from "../game/gameState/setGroup"
 import { createDestroyEffect } from "../game/gameState/createDestroyEffect"
 import { DestroyReason, EffectFn } from "../game/define/Effect"
+import { doCutInDestroyEffectsAndClear } from "../game/gameState/doCutInDestroyEffectsAndClear"
 
 export async function test179028_10D_C_BL070N_blue() {
     await loadPrototype("179028_10D_C_BL070N_blue")
@@ -60,13 +61,12 @@ export async function test179028_10D_C_BL070N_blue() {
             }
             // 這裡模擬破壞效果進了堆疊了
             ctx = createDestroyEffectAndPush(ctx)
-            ctx = pushDestroyEffectsToStackAndClear(ctx) as GameState
-            if (getDestroyEffects(ctx).find(e => EffectFn.getCardID(e) == destroyUnit.id) == null) {
+            ctx = doCutInDestroyEffectsAndClear(ctx) as GameState
+            if (getCutInDestroyEffects(ctx).find(e => EffectFn.getCardID(e) == destroyUnit.id) == null) {
                 throw new Error()
             }
             // 
             const cets = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)
-            console.log(cets.map(cet => cet.tipOrErrors.map(toe => toe.conditionKey)))
             if (cets.length != 1) {
                 throw new Error()
             }
@@ -82,7 +82,7 @@ export async function test179028_10D_C_BL070N_blue() {
                 if (getItemState(ctx, destroyUnit.id).destroyReason != null) {
                     throw new Error()
                 }
-                if (getDestroyEffects(ctx).find(e => EffectFn.getCardID(e) == destroyUnit.id) != null) {
+                if (getCutInDestroyEffects(ctx).find(e => EffectFn.getCardID(e) == destroyUnit.id) != null) {
                     throw new Error()
                 }
             }
@@ -139,8 +139,8 @@ export async function test179028_10D_C_BL070N_blue() {
             }
             // 這裡模擬破壞效果進了堆疊了
             ctx = createDestroyEffectAndPush(ctx)
-            ctx = pushDestroyEffectsToStackAndClear(ctx) as GameState
-            if (getDestroyEffects(ctx).find(e => EffectFn.getCardID(e) == destroyUnit.id) == null) {
+            ctx = doCutInDestroyEffectsAndClear(ctx) as GameState
+            if (getCutInDestroyEffects(ctx).find(e => EffectFn.getCardID(e) == destroyUnit.id) == null) {
                 throw new Error()
             }
             const enemyUnit: Card = {

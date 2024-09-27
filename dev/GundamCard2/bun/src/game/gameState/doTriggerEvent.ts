@@ -22,11 +22,11 @@ import { createOnEventTitleFn } from "./createOnEventTitleFn"
 // 觸發事件腳本
 // 在每次事件發生時都要呼叫
 // 起動型技能
-export function triggerEvent(
+export function doTriggerEvent(
     ctx: GameState,
     event: GameEvent
 ): GameState {
-    logCategory("triggerEvent", event.title, event.cardIds)
+    logCategory("doTriggerEvent", event.title, event.cardIds)
     const bridge = createBridge()
     // command
     const commands = pipe(

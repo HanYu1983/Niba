@@ -4,7 +4,7 @@ import { PlayerA } from "../game/define/PlayerID";
 import { PhaseFn } from "../game/define/Timing";
 import { setActivePlayerID } from "../game/gameState/ActivePlayerComponent";
 import { addCards, getCard } from "../game/gameState/CardTableComponent";
-import { doEffect, onMoveItem, setTipSelectionForUser } from "../game/gameState/doEffect";
+import { doEffect, setTipSelectionForUser } from "../game/gameState/doEffect";
 import { getTopEffect } from "../game/gameState/EffectStackComponent";
 import { createGameState, GameState } from "../game/gameState/GameState";
 import { createPlayEffects } from "../game/gameState/createPlayEffects";
@@ -12,7 +12,7 @@ import { getItemState } from "../game/gameState/ItemStateComponent";
 import { getItemBaSyou } from "../game/gameState/ItemTableComponent";
 import { doItemMove } from "../game/gameState/doItemMove";
 import { setPhase } from "../game/gameState/PhaseComponent";
-import { triggerEvent } from "../game/gameState/triggerEvent";
+import { doTriggerEvent } from "../game/gameState/doTriggerEvent";
 import { loadPrototype } from "../script";
 
 export async function testPS() {
@@ -62,7 +62,7 @@ export async function testPS() {
             throw new Error("")
         }
         let ctx2 = JSON.parse(JSON.stringify(ctx))
-        ctx2 = triggerEvent(ctx2, {
+        ctx2 = doTriggerEvent(ctx2, {
             title: ["GameEventOnTiming", PhaseFn.getFirst()]
         })
         if (getItemState(ctx2, unitHasPS.id).flags["return"]) {
@@ -81,7 +81,7 @@ export async function testPS() {
             throw new Error("")
         }
         let ctx2 = JSON.parse(JSON.stringify(ctx))
-        ctx2 = triggerEvent(ctx2, {
+        ctx2 = doTriggerEvent(ctx2, {
             title: ["GameEventOnTiming", PhaseFn.getFirst()]
         })
         if (AbsoluteBaSyouFn.getBaSyouKeyword(getItemBaSyou(ctx2, unitHasPS.id)) != "戦闘エリア1") {

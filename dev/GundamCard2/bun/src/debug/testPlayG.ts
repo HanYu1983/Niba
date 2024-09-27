@@ -11,7 +11,7 @@ import { createPlayEffects } from "../game/gameState/createPlayEffects";
 import { createPlayGEffects } from "../game/gameState/createPlayGEffects";
 import { getItemBaSyou } from "../game/gameState/ItemTableComponent";
 import { setPhase } from "../game/gameState/PhaseComponent";
-import { triggerEvent } from "../game/gameState/triggerEvent";
+import { doTriggerEvent } from "../game/gameState/doTriggerEvent";
 import { loadPrototype } from "../script";
 
 export async function testPlayG() {
@@ -69,7 +69,7 @@ export async function testPlayG() {
         }
     }
     {
-        ctx = triggerEvent(ctx, { title: ["GameEventOnTiming", PhaseFn.getLast()] })
+        ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", PhaseFn.getLast()] })
         const effect = createPlayGEffects(ctx, unitBlue2.id)
         ctx = doEffect(ctx, effect, 0, 0)
         if (AbsoluteBaSyouFn.getBaSyouKeyword(getItemBaSyou(ctx, unitBlue2.id)) == "Gゾーン") {

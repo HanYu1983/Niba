@@ -9,7 +9,7 @@ import { setActivePlayerID } from "../game/gameState/ActivePlayerComponent"
 import { getCardRollCostLength, getCardBattlePoint } from "../game/gameState/card"
 import { addCards, createCardWithProtoIds, getCard, mapCard } from "../game/gameState/CardTableComponent"
 import { getCardIdByCoinId, getCoins } from "../game/gameState/CoinTableComponent"
-import { createEffectTips, doEffect, onMoveItem, setTipSelectionForUser, createCommandEffectTips } from "../game/gameState/doEffect"
+import { createEffectTips, doEffect, setTipSelectionForUser, createCommandEffectTips } from "../game/gameState/doEffect"
 import { getEffect, getTopEffect } from "../game/gameState/EffectStackComponent"
 import { createGameState, GameState } from "../game/gameState/GameState"
 import { createPlayCardEffects } from "../game/gameState/createPlayCardEffects"
@@ -19,7 +19,7 @@ import { checkIsBattle, isBattle } from "../game/gameState/IsBattleComponent"
 import { getItemState, setItemState } from "../game/gameState/ItemStateComponent"
 import { getItemIdsByBasyou } from "../game/gameState/ItemTableComponent"
 import { setPhase } from "../game/gameState/PhaseComponent"
-import { triggerEvent } from "../game/gameState/triggerEvent"
+import { doTriggerEvent } from "../game/gameState/doTriggerEvent"
 import { loadPrototype } from "../script"
 
 export async function test179015_04B_U_BK061C_black() {
@@ -37,7 +37,7 @@ export async function test179015_04B_U_BK061C_black() {
     ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア"), [cardA]) as GameState
     ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerB, "本国"), [unit]) as GameState
     ctx = setActivePlayerID(ctx, PlayerA) as GameState
-    ctx = triggerEvent(ctx, { title: ["場に出た場合"], cardIds: [cardA.id] })
+    ctx = doTriggerEvent(ctx, { title: ["場に出た場合"], cardIds: [cardA.id] })
     if (ctx.immediateEffect.length != 1) {
         throw new Error()
     }
