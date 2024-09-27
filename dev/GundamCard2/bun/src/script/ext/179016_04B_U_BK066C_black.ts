@@ -22,6 +22,21 @@ export const prototype: CardPrototype = {
         const cardId = DefineFn.EffectFn.getCardID(effect)
         const evt = DefineFn.EffectFn.getEvent(effect)
         if (evt.title[0] == "場に出た場合" && evt.cardIds?.includes(cardId)) {
+          const cardProto = GameStateFn.getItemPrototype(ctx, cardId)
+          const playerId = GameStateFn.getItemController(ctx, cardId)
+          const from = DefineFn.AbsoluteBaSyouFn.of(DefineFn.PlayerIDFn.getOpponent(playerId), "配備エリア")
+          const payColorKey = GameStateFn.createConditionKeyOfPayColorX(cardProto)
+          const x = GameStateFn.getCardTipStrBaSyouPairs(ctx, payColorKey, cardId).length
+          const targetIds = GameStateFn.getItemIdsByBasyou(ctx, from)
+            .filter(itemId => GameStateFn.getItemRuntimeCategory(ctx, itemId) == "ユニット")
+            .filter(itemId => GameStateFn.getSetGroupBattlePoint(ctx, itemId)[2] < x)
+          const pairs = targetIds.map(tid => {
+            return [tid, from] as StrBaSyouPair
+          })
+          const count = 1
+          if (targetIds.length < count) {
+            return ctx
+          }
           ctx = GameStateFn.addImmediateEffect(ctx, {
             id: "",
             reason: effect.reason,
@@ -33,24 +48,15 @@ export const prototype: CardPrototype = {
               conditions: {
                 "配備エリアにいる、X以下の防御力を持つ敵軍ユニット１枚": {
                   title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip | null {
-                    const cardId = DefineFn.EffectFn.getCardID(effect)
-                    const cardProto = GameStateFn.getItemPrototype(ctx, cardId)
-                    const playerId = GameStateFn.getItemController(ctx, cardId)
-                    const from = DefineFn.AbsoluteBaSyouFn.of(DefineFn.PlayerIDFn.getOpponent(playerId), "配備エリア")
-                    const payColorKey = GameStateFn.createConditionKeyOfPayColorX(cardProto)
-                    const x = GameStateFn.getCardTipStrBaSyouPairs(ctx, payColorKey, cardId).length
-                    const targetIds = GameStateFn.getItemIdsByBasyou(ctx, from)
-                      .filter(itemId => GameStateFn.getItemRuntimeCategory(ctx, itemId) == "ユニット")
-                      .filter(itemId => GameStateFn.getSetGroupBattlePoint(ctx, itemId)[2] < x)
-                    const pairs = targetIds.map(tid => {
-                      return [tid, from] as StrBaSyouPair
-                    })
-                    const count = 1
+                    const { pairs, count } = { pairs: [], count: 0 }
+                    if (pairs.length == 0) {
+                      return null
+                    }
                     return {
-                      title: ["カード", pairs, pairs.slice(0, 1)],
+                      title: ["カード", pairs, pairs.slice(0, count)],
                       count: count
                     }
-                  }.toString(),
+                  }.toString().replace("{ pairs: [], count: 0 }", `{ pairs: ${JSON.stringify(pairs)}, count: ${count} }`),
                 },
               },
               logicTreeActions: [

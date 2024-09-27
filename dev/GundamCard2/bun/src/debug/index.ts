@@ -167,8 +167,6 @@ async function testCompress() {
                                 flow = flows[0]
                             }
                             ctx = applyFlow(ctx, playerId, flow)
-                            logCategory("testCompress", "after applyFlow stackEffect length", ctx.stackEffect.length)
-                            logCategory("testCompress", "after applyFlow destroyEffect length", ctx.destroyEffect.length)
                             TableFns.assertDup(ctx.table)
                         } catch (e) {
                             if (e instanceof TargetMissingError) {

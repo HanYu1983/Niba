@@ -26,18 +26,15 @@ import { loadPrototype } from "../script"
 export async function test179016_04B_U_BK066C_black() {
     await loadPrototype("179016_04B_U_BK066C_black")
     await loadPrototype("unitBlack")
+    await loadPrototype("unit10hp")
     const cardA: Card = {
         id: "cardA",
         protoID: "179016_04B_U_BK066C_black"
     }
-    const unit: Card = {
-        id: "unit",
-        protoID: "unitBlack"
-    }
+
     let ctx = createGameState()
     ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア"), [cardA]) as GameState
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), ["unitBlack", "unitBlack", "unitBlack"]) as GameState
-    ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerB, "配備エリア"), [unit]) as GameState
     ctx = setActivePlayerID(ctx, PlayerA) as GameState
     ctx = setPhase(ctx, ["配備フェイズ", "フリータイミング"]) as GameState
     const myGLength = getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン")).length
@@ -64,23 +61,50 @@ export async function test179016_04B_U_BK066C_black() {
         }
         ctx = doEffect(ctx, effect, 0, 0)
     }
+    let originCtx = JSON.parse(JSON.stringify(ctx))
+    // 血量低於X的發動
     {
-        const effect = getTopEffect(ctx)
-        if (effect == null) {
-            throw new Error()
+        const unit: Card = {
+            id: "unit",
+            protoID: "unitBlack"
         }
-        ctx = doEffect(ctx, effect, 0, 0)
-
+        ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerB, "配備エリア"), [unit]) as GameState
+        {
+            const effect = getTopEffect(ctx)
+            if (effect == null) {
+                throw new Error()
+            }
+            ctx = doEffect(ctx, effect, 0, 0)
+        }
+        {
+            if (ctx.immediateEffect.length == 0) {
+                throw new Error()
+            }
+            const effect = getEffect(ctx, ctx.immediateEffect[0])
+            ctx = setTipSelectionForUser(ctx, effect, 0, 0)
+            ctx = doEffect(ctx, effect, 0, 0)
+            if (getItemState(ctx, unit.id).destroyReason == null) {
+                throw new Error()
+            }
+        }
     }
+    // 血量超過X的不發動
+    ctx = originCtx
     {
-        if (ctx.immediateEffect.length == 0) {
-            throw new Error()
+        const unit10hp: Card = {
+            id: "unit",
+            protoID: "unit10hp"
         }
-        const effect = getEffect(ctx, ctx.immediateEffect[0])
-        ctx = setTipSelectionForUser(ctx, effect, 0, 0)
-        ctx = doEffect(ctx, effect, 0, 0)
-        if (getItemState(ctx, unit.id).destroyReason == null) {
-            throw new Error()
+        ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerB, "配備エリア"), [unit10hp]) as GameState
+        {
+            const effect = getTopEffect(ctx)
+            if (effect == null) {
+                throw new Error()
+            }
+            ctx = doEffect(ctx, effect, 0, 0)
+            if (ctx.immediateEffect.length != 0) {
+                throw new Error()
+            }
         }
     }
 }
