@@ -53,7 +53,7 @@ export const OnViewModel = OnEvent.pipe(
             versionID: viewModel.model.versionID,
           };
           Promise.all(TMP_DECK.concat(TMP_DECK2).map(loadPrototype))
-          ctx.gameState = initState(ctx.gameState, TMP_DECK, TMP_DECK2);
+          ctx.gameState = initState(ctx.gameState, TMP_DECK, TMP_DECK);
           //ctx.gameState = createCardWithProtoIds(ctx.gameState, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), TMP_DECK.slice(0, 6)) as GameStateWithFlowMemory
           //ctx.gameState = updateCommand(ctx.gameState) as GameStateWithFlowMemory;
           return { ...DEFAULT_VIEW_MODEL, model: ctx };

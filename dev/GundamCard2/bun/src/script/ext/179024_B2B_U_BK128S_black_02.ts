@@ -32,7 +32,7 @@ export const prototype: CardPrototype = {
             at: ["戦闘エリア1", "戦闘エリア2"],
             is: ["ユニット"],
           })
-          const pairs = DefineFn.TipFn.getSelection(tip) as StrBaSyouPair[]
+          const pairs = DefineFn.TipFn.getWant(tip) as StrBaSyouPair[]
           return [
             {
               title: ["＋x／＋x／＋xを得る", [-1, -1, -1]],

@@ -1812,9 +1812,10 @@ var require_react_development = __commonJS((exports, module) => {
 
 // node_modules/react/index.js
 var require_react = __commonJS((exports, module) => {
+  var react_development = __toESM(require_react_development(), 1);
   if (false) {
   } else {
-    module.exports = require_react_development();
+    module.exports = react_development;
   }
 });
 
@@ -2266,9 +2267,10 @@ var require_scheduler_development = __commonJS((exports) => {
 
 // node_modules/scheduler/index.js
 var require_scheduler = __commonJS((exports, module) => {
+  var scheduler_development = __toESM(require_scheduler_development(), 1);
   if (false) {
   } else {
-    module.exports = require_scheduler_development();
+    module.exports = scheduler_development;
   }
 });
 
@@ -22621,9 +22623,10 @@ var require_react_dom_development = __commonJS((exports) => {
 
 // node_modules/react-dom/index.js
 var require_react_dom = __commonJS((exports, module) => {
+  var react_dom_development = __toESM(require_react_dom_development(), 1);
   if (false) {
   } else {
-    module.exports = require_react_dom_development();
+    module.exports = react_dom_development;
   }
 });
 
@@ -22718,15 +22721,15 @@ var require_react_jsx_dev_runtime_development = __commonJS((exports) => {
       {
         REACT_MODULE_REFERENCE = Symbol.for("react.module.reference");
       }
-      function isValidElementType(type4) {
-        if (typeof type4 === "string" || typeof type4 === "function") {
+      function isValidElementType(type3) {
+        if (typeof type3 === "string" || typeof type3 === "function") {
           return true;
         }
-        if (type4 === REACT_FRAGMENT_TYPE || type4 === REACT_PROFILER_TYPE || enableDebugTracing || type4 === REACT_STRICT_MODE_TYPE || type4 === REACT_SUSPENSE_TYPE || type4 === REACT_SUSPENSE_LIST_TYPE || enableLegacyHidden || type4 === REACT_OFFSCREEN_TYPE || enableScopeAPI || enableCacheElement || enableTransitionTracing) {
+        if (type3 === REACT_FRAGMENT_TYPE || type3 === REACT_PROFILER_TYPE || enableDebugTracing || type3 === REACT_STRICT_MODE_TYPE || type3 === REACT_SUSPENSE_TYPE || type3 === REACT_SUSPENSE_LIST_TYPE || enableLegacyHidden || type3 === REACT_OFFSCREEN_TYPE || enableScopeAPI || enableCacheElement || enableTransitionTracing) {
           return true;
         }
-        if (typeof type4 === "object" && type4 !== null) {
-          if (type4.$$typeof === REACT_LAZY_TYPE || type4.$$typeof === REACT_MEMO_TYPE || type4.$$typeof === REACT_PROVIDER_TYPE || type4.$$typeof === REACT_CONTEXT_TYPE || type4.$$typeof === REACT_FORWARD_REF_TYPE || type4.$$typeof === REACT_MODULE_REFERENCE || type4.getModuleId !== undefined) {
+        if (typeof type3 === "object" && type3 !== null) {
+          if (type3.$$typeof === REACT_LAZY_TYPE || type3.$$typeof === REACT_MEMO_TYPE || type3.$$typeof === REACT_PROVIDER_TYPE || type3.$$typeof === REACT_CONTEXT_TYPE || type3.$$typeof === REACT_FORWARD_REF_TYPE || type3.$$typeof === REACT_MODULE_REFERENCE || type3.getModuleId !== undefined) {
             return true;
           }
         }
@@ -22740,25 +22743,25 @@ var require_react_jsx_dev_runtime_development = __commonJS((exports) => {
         var functionName = innerType.displayName || innerType.name || "";
         return functionName !== "" ? wrapperName + "(" + functionName + ")" : wrapperName;
       }
-      function getContextName(type4) {
-        return type4.displayName || "Context";
+      function getContextName(type3) {
+        return type3.displayName || "Context";
       }
-      function getComponentNameFromType(type4) {
-        if (type4 == null) {
+      function getComponentNameFromType(type3) {
+        if (type3 == null) {
           return null;
         }
         {
-          if (typeof type4.tag === "number") {
+          if (typeof type3.tag === "number") {
             error("Received an unexpected object in getComponentNameFromType(). " + "This is likely a bug in React. Please file an issue.");
           }
         }
-        if (typeof type4 === "function") {
-          return type4.displayName || type4.name || null;
+        if (typeof type3 === "function") {
+          return type3.displayName || type3.name || null;
         }
-        if (typeof type4 === "string") {
-          return type4;
+        if (typeof type3 === "string") {
+          return type3;
         }
-        switch (type4) {
+        switch (type3) {
           case REACT_FRAGMENT_TYPE:
             return "Fragment";
           case REACT_PORTAL_TYPE:
@@ -22772,24 +22775,24 @@ var require_react_jsx_dev_runtime_development = __commonJS((exports) => {
           case REACT_SUSPENSE_LIST_TYPE:
             return "SuspenseList";
         }
-        if (typeof type4 === "object") {
-          switch (type4.$$typeof) {
+        if (typeof type3 === "object") {
+          switch (type3.$$typeof) {
             case REACT_CONTEXT_TYPE:
-              var context2 = type4;
+              var context2 = type3;
               return getContextName(context2) + ".Consumer";
             case REACT_PROVIDER_TYPE:
-              var provider = type4;
+              var provider = type3;
               return getContextName(provider._context) + ".Provider";
             case REACT_FORWARD_REF_TYPE:
-              return getWrappedName(type4, type4.render, "ForwardRef");
+              return getWrappedName(type3, type3.render, "ForwardRef");
             case REACT_MEMO_TYPE:
-              var outerName = type4.displayName || null;
+              var outerName = type3.displayName || null;
               if (outerName !== null) {
                 return outerName;
               }
-              return getComponentNameFromType(type4.type) || "Memo";
+              return getComponentNameFromType(type3.type) || "Memo";
             case REACT_LAZY_TYPE: {
-              var lazyComponent = type4;
+              var lazyComponent = type3;
               var payload = lazyComponent._payload;
               var init = lazyComponent._init;
               try {
@@ -23014,32 +23017,32 @@ var require_react_jsx_dev_runtime_development = __commonJS((exports) => {
         var prototype = Component.prototype;
         return !!(prototype && prototype.isReactComponent);
       }
-      function describeUnknownElementTypeFrameInDEV(type4, source, ownerFn) {
-        if (type4 == null) {
+      function describeUnknownElementTypeFrameInDEV(type3, source, ownerFn) {
+        if (type3 == null) {
           return "";
         }
-        if (typeof type4 === "function") {
+        if (typeof type3 === "function") {
           {
-            return describeNativeComponentFrame(type4, shouldConstruct(type4));
+            return describeNativeComponentFrame(type3, shouldConstruct(type3));
           }
         }
-        if (typeof type4 === "string") {
-          return describeBuiltInComponentFrame(type4);
+        if (typeof type3 === "string") {
+          return describeBuiltInComponentFrame(type3);
         }
-        switch (type4) {
+        switch (type3) {
           case REACT_SUSPENSE_TYPE:
             return describeBuiltInComponentFrame("Suspense");
           case REACT_SUSPENSE_LIST_TYPE:
             return describeBuiltInComponentFrame("SuspenseList");
         }
-        if (typeof type4 === "object") {
-          switch (type4.$$typeof) {
+        if (typeof type3 === "object") {
+          switch (type3.$$typeof) {
             case REACT_FORWARD_REF_TYPE:
-              return describeFunctionComponentFrame(type4.render);
+              return describeFunctionComponentFrame(type3.render);
             case REACT_MEMO_TYPE:
-              return describeUnknownElementTypeFrameInDEV(type4.type, source, ownerFn);
+              return describeUnknownElementTypeFrameInDEV(type3.type, source, ownerFn);
             case REACT_LAZY_TYPE: {
-              var lazyComponent = type4;
+              var lazyComponent = type3;
               var payload = lazyComponent._payload;
               var init = lazyComponent._init;
               try {
@@ -23103,8 +23106,8 @@ var require_react_jsx_dev_runtime_development = __commonJS((exports) => {
       function typeName(value) {
         {
           var hasToStringTag = typeof Symbol === "function" && Symbol.toStringTag;
-          var type4 = hasToStringTag && value[Symbol.toStringTag] || value.constructor.name || "Object";
-          return type4;
+          var type3 = hasToStringTag && value[Symbol.toStringTag] || value.constructor.name || "Object";
+          return type3;
         }
       }
       function willCoercionThrow(value) {
@@ -23141,34 +23144,34 @@ var require_react_jsx_dev_runtime_development = __commonJS((exports) => {
       {
         didWarnAboutStringRefs = {};
       }
-      function hasValidRef(config6) {
+      function hasValidRef(config2) {
         {
-          if (hasOwnProperty.call(config6, "ref")) {
-            var getter = Object.getOwnPropertyDescriptor(config6, "ref").get;
+          if (hasOwnProperty.call(config2, "ref")) {
+            var getter = Object.getOwnPropertyDescriptor(config2, "ref").get;
             if (getter && getter.isReactWarning) {
               return false;
             }
           }
         }
-        return config6.ref !== undefined;
+        return config2.ref !== undefined;
       }
-      function hasValidKey(config6) {
+      function hasValidKey(config2) {
         {
-          if (hasOwnProperty.call(config6, "key")) {
-            var getter = Object.getOwnPropertyDescriptor(config6, "key").get;
+          if (hasOwnProperty.call(config2, "key")) {
+            var getter = Object.getOwnPropertyDescriptor(config2, "key").get;
             if (getter && getter.isReactWarning) {
               return false;
             }
           }
         }
-        return config6.key !== undefined;
+        return config2.key !== undefined;
       }
-      function warnIfStringRefCannotBeAutoConverted(config6, self) {
+      function warnIfStringRefCannotBeAutoConverted(config2, self) {
         {
-          if (typeof config6.ref === "string" && ReactCurrentOwner.current && self && ReactCurrentOwner.current.stateNode !== self) {
+          if (typeof config2.ref === "string" && ReactCurrentOwner.current && self && ReactCurrentOwner.current.stateNode !== self) {
             var componentName = getComponentNameFromType(ReactCurrentOwner.current.type);
             if (!didWarnAboutStringRefs[componentName]) {
-              error('Component "%s" contains the string ref "%s". ' + "Support for string refs will be removed in a future major release. " + "This case cannot be automatically converted to an arrow function. " + "We ask you to manually fix this case by using useRef() or createRef() instead. " + "Learn more about using refs safely here: " + "https://reactjs.org/link/strict-mode-string-ref", getComponentNameFromType(ReactCurrentOwner.current.type), config6.ref);
+              error('Component "%s" contains the string ref "%s". ' + "Support for string refs will be removed in a future major release. " + "This case cannot be automatically converted to an arrow function. " + "We ask you to manually fix this case by using useRef() or createRef() instead. " + "Learn more about using refs safely here: " + "https://reactjs.org/link/strict-mode-string-ref", getComponentNameFromType(ReactCurrentOwner.current.type), config2.ref);
               didWarnAboutStringRefs[componentName] = true;
             }
           }
@@ -23204,10 +23207,10 @@ var require_react_jsx_dev_runtime_development = __commonJS((exports) => {
           });
         }
       }
-      var ReactElement = function(type4, key, ref, self, source, owner, props) {
+      var ReactElement = function(type3, key, ref, self, source, owner, props) {
         var element = {
           $$typeof: REACT_ELEMENT_TYPE,
-          type: type4,
+          type: type3,
           key,
           ref,
           props,
@@ -23240,7 +23243,7 @@ var require_react_jsx_dev_runtime_development = __commonJS((exports) => {
         }
         return element;
       };
-      function jsxDEV(type4, config6, maybeKey, source, self) {
+      function jsxDEV(type3, config2, maybeKey, source, self) {
         {
           var propName;
           var props = {};
@@ -23252,23 +23255,23 @@ var require_react_jsx_dev_runtime_development = __commonJS((exports) => {
             }
             key = "" + maybeKey;
           }
-          if (hasValidKey(config6)) {
+          if (hasValidKey(config2)) {
             {
-              checkKeyStringCoercion(config6.key);
+              checkKeyStringCoercion(config2.key);
             }
-            key = "" + config6.key;
+            key = "" + config2.key;
           }
-          if (hasValidRef(config6)) {
-            ref = config6.ref;
-            warnIfStringRefCannotBeAutoConverted(config6, self);
+          if (hasValidRef(config2)) {
+            ref = config2.ref;
+            warnIfStringRefCannotBeAutoConverted(config2, self);
           }
-          for (propName in config6) {
-            if (hasOwnProperty.call(config6, propName) && !RESERVED_PROPS.hasOwnProperty(propName)) {
-              props[propName] = config6[propName];
+          for (propName in config2) {
+            if (hasOwnProperty.call(config2, propName) && !RESERVED_PROPS.hasOwnProperty(propName)) {
+              props[propName] = config2[propName];
             }
           }
-          if (type4 && type4.defaultProps) {
-            var defaultProps = type4.defaultProps;
+          if (type3 && type3.defaultProps) {
+            var defaultProps = type3.defaultProps;
             for (propName in defaultProps) {
               if (props[propName] === undefined) {
                 props[propName] = defaultProps[propName];
@@ -23276,7 +23279,7 @@ var require_react_jsx_dev_runtime_development = __commonJS((exports) => {
             }
           }
           if (key || ref) {
-            var displayName = typeof type4 === "function" ? type4.displayName || type4.name || "Unknown" : type4;
+            var displayName = typeof type3 === "function" ? type3.displayName || type3.name || "Unknown" : type3;
             if (key) {
               defineKeyPropWarningGetter(props, displayName);
             }
@@ -23284,7 +23287,7 @@ var require_react_jsx_dev_runtime_development = __commonJS((exports) => {
               defineRefPropWarningGetter(props, displayName);
             }
           }
-          return ReactElement(type4, key, ref, self, source, ReactCurrentOwner.current, props);
+          return ReactElement(type3, key, ref, self, source, ReactCurrentOwner.current, props);
         }
       }
       var ReactCurrentOwner$1 = ReactSharedInternals.ReactCurrentOwner;
@@ -23397,36 +23400,36 @@ var require_react_jsx_dev_runtime_development = __commonJS((exports) => {
       }
       function validatePropTypes(element) {
         {
-          var type4 = element.type;
-          if (type4 === null || type4 === undefined || typeof type4 === "string") {
+          var type3 = element.type;
+          if (type3 === null || type3 === undefined || typeof type3 === "string") {
             return;
           }
           var propTypes;
-          if (typeof type4 === "function") {
-            propTypes = type4.propTypes;
-          } else if (typeof type4 === "object" && (type4.$$typeof === REACT_FORWARD_REF_TYPE || type4.$$typeof === REACT_MEMO_TYPE)) {
-            propTypes = type4.propTypes;
+          if (typeof type3 === "function") {
+            propTypes = type3.propTypes;
+          } else if (typeof type3 === "object" && (type3.$$typeof === REACT_FORWARD_REF_TYPE || type3.$$typeof === REACT_MEMO_TYPE)) {
+            propTypes = type3.propTypes;
           } else {
             return;
           }
           if (propTypes) {
-            var name = getComponentNameFromType(type4);
+            var name = getComponentNameFromType(type3);
             checkPropTypes(propTypes, element.props, "prop", name, element);
-          } else if (type4.PropTypes !== undefined && !propTypesMisspellWarningShown) {
+          } else if (type3.PropTypes !== undefined && !propTypesMisspellWarningShown) {
             propTypesMisspellWarningShown = true;
-            var _name = getComponentNameFromType(type4);
+            var _name = getComponentNameFromType(type3);
             error("Component %s declared `PropTypes` instead of `propTypes`. Did you misspell the property assignment?", _name || "Unknown");
           }
-          if (typeof type4.getDefaultProps === "function" && !type4.getDefaultProps.isReactClassApproved) {
+          if (typeof type3.getDefaultProps === "function" && !type3.getDefaultProps.isReactClassApproved) {
             error("getDefaultProps is only used on classic React.createClass " + "definitions. Use a static property named `defaultProps` instead.");
           }
         }
       }
       function validateFragmentProps(fragment) {
         {
-          var keys8 = Object.keys(fragment.props);
-          for (var i = 0;i < keys8.length; i++) {
-            var key = keys8[i];
+          var keys4 = Object.keys(fragment.props);
+          for (var i = 0;i < keys4.length; i++) {
+            var key = keys4[i];
             if (key !== "children" && key !== "key") {
               setCurrentlyValidatingElement$1(fragment);
               error("Invalid prop `%s` supplied to `React.Fragment`. " + "React.Fragment can only have `key` and `children` props.", key);
@@ -23442,12 +23445,12 @@ var require_react_jsx_dev_runtime_development = __commonJS((exports) => {
         }
       }
       var didWarnAboutKeySpread = {};
-      function jsxWithValidation(type4, props, key, isStaticChildren, source, self) {
+      function jsxWithValidation(type3, props, key, isStaticChildren, source, self) {
         {
-          var validType = isValidElementType(type4);
+          var validType = isValidElementType(type3);
           if (!validType) {
             var info = "";
-            if (type4 === undefined || typeof type4 === "object" && type4 !== null && Object.keys(type4).length === 0) {
+            if (type3 === undefined || typeof type3 === "object" && type3 !== null && Object.keys(type3).length === 0) {
               info += " You likely forgot to export your component from the file " + "it's defined in, or you might have mixed up default and named imports.";
             }
             var sourceInfo = getSourceInfoErrorAddendum(source);
@@ -23457,19 +23460,19 @@ var require_react_jsx_dev_runtime_development = __commonJS((exports) => {
               info += getDeclarationErrorAddendum();
             }
             var typeString;
-            if (type4 === null) {
+            if (type3 === null) {
               typeString = "null";
-            } else if (isArray(type4)) {
+            } else if (isArray(type3)) {
               typeString = "array";
-            } else if (type4 !== undefined && type4.$$typeof === REACT_ELEMENT_TYPE) {
-              typeString = "<" + (getComponentNameFromType(type4.type) || "Unknown") + " />";
+            } else if (type3 !== undefined && type3.$$typeof === REACT_ELEMENT_TYPE) {
+              typeString = "<" + (getComponentNameFromType(type3.type) || "Unknown") + " />";
               info = " Did you accidentally export a JSX literal instead of a component?";
             } else {
-              typeString = typeof type4;
+              typeString = typeof type3;
             }
             error("React.jsx: type is invalid -- expected a string (for " + "built-in components) or a class/function (for composite " + "components) but got: %s.%s", typeString, info);
           }
-          var element = jsxDEV(type4, props, key, source, self);
+          var element = jsxDEV(type3, props, key, source, self);
           if (element == null) {
             return element;
           }
@@ -23479,7 +23482,7 @@ var require_react_jsx_dev_runtime_development = __commonJS((exports) => {
               if (isStaticChildren) {
                 if (isArray(children2)) {
                   for (var i = 0;i < children2.length; i++) {
-                    validateChildKeys(children2[i], type4);
+                    validateChildKeys(children2[i], type3);
                   }
                   if (Object.freeze) {
                     Object.freeze(children2);
@@ -23488,25 +23491,25 @@ var require_react_jsx_dev_runtime_development = __commonJS((exports) => {
                   error("React.jsx: Static children should always be an array. " + "You are likely explicitly calling React.jsxs or React.jsxDEV. " + "Use the Babel transform instead.");
                 }
               } else {
-                validateChildKeys(children2, type4);
+                validateChildKeys(children2, type3);
               }
             }
           }
           {
             if (hasOwnProperty.call(props, "key")) {
-              var componentName = getComponentNameFromType(type4);
-              var keys8 = Object.keys(props).filter(function(k) {
+              var componentName = getComponentNameFromType(type3);
+              var keys4 = Object.keys(props).filter(function(k) {
                 return k !== "key";
               });
-              var beforeExample = keys8.length > 0 ? "{key: someKey, " + keys8.join(": ..., ") + ": ...}" : "{key: someKey}";
+              var beforeExample = keys4.length > 0 ? "{key: someKey, " + keys4.join(": ..., ") + ": ...}" : "{key: someKey}";
               if (!didWarnAboutKeySpread[componentName + beforeExample]) {
-                var afterExample = keys8.length > 0 ? "{" + keys8.join(": ..., ") + ": ...}" : "{}";
+                var afterExample = keys4.length > 0 ? "{" + keys4.join(": ..., ") + ": ...}" : "{}";
                 error('A props object containing a "key" prop is being spread into JSX:\n' + "  let props = %s;\n" + "  <%s {...props} />\n" + "React keys must be passed directly to JSX without using spread:\n" + "  let props = %s;\n" + "  <%s key={someKey} {...props} />", beforeExample, componentName, afterExample, componentName);
                 didWarnAboutKeySpread[componentName + beforeExample] = true;
               }
             }
           }
-          if (type4 === REACT_FRAGMENT_TYPE) {
+          if (type3 === REACT_FRAGMENT_TYPE) {
             validateFragmentProps(element);
           } else {
             validatePropTypes(element);
@@ -23523,9 +23526,10 @@ var require_react_jsx_dev_runtime_development = __commonJS((exports) => {
 
 // node_modules/react/jsx-dev-runtime.js
 var require_jsx_dev_runtime = __commonJS((exports, module) => {
+  var react_jsx_dev_runtime_development = __toESM(require_react_jsx_dev_runtime_development(), 1);
   if (false) {
   } else {
-    module.exports = require_react_jsx_dev_runtime_development();
+    module.exports = react_jsx_dev_runtime_development;
   }
 });
 
@@ -23852,6 +23856,7 @@ var logCategory = (category, ...msg) => {
 // src/game/define/BaSyou.ts
 var exports_BaSyou = {};
 __export(exports_BaSyou, {
+  RelatedBaSyouFn: () => RelatedBaSyouFn,
   BaSyouKeywordFn: () => BaSyouKeywordFn,
   AbsoluteBaSyouFn: () => AbsoluteBaSyouFn
 });
@@ -24472,10 +24477,10 @@ function _toString(x, seen) {
     var xs = seen.concat([x]);
     return _includes(y, xs) ? "<Circular>" : _toString(y, xs);
   };
-  var mapPairs = function(obj, keys7) {
+  var mapPairs = function(obj, keys4) {
     return _map(function(k) {
       return _quote(k) + ": " + recur(obj[k]);
-    }, keys7.slice().sort());
+    }, keys4.slice().sort());
   };
   switch (Object.prototype.toString.call(x)) {
     case "[object Arguments]":
@@ -24757,8 +24762,8 @@ var assoc = /* @__PURE__ */ _curry3(function assoc2(prop, val, obj) {
 var assoc_default = assoc;
 // node_modules/ramda/es/internal/_isFunction.js
 function _isFunction(x) {
-  var type4 = Object.prototype.toString.call(x);
-  return type4 === "[object Function]" || type4 === "[object AsyncFunction]" || type4 === "[object GeneratorFunction]" || type4 === "[object AsyncGeneratorFunction]";
+  var type3 = Object.prototype.toString.call(x);
+  return type3 === "[object Function]" || type3 === "[object AsyncFunction]" || type3 === "[object GeneratorFunction]" || type3 === "[object AsyncGeneratorFunction]";
 }
 
 // node_modules/ramda/es/liftN.js
@@ -24907,11 +24912,11 @@ var dissocPath = /* @__PURE__ */ _curry2(function dissocPath2(path, obj) {
       return _dissoc(path[0], obj);
     default:
       var head = path[0];
-      var tail3 = Array.prototype.slice.call(path, 1);
+      var tail2 = Array.prototype.slice.call(path, 1);
       if (obj[head] == null) {
         return _shallowCloneObject(head, obj);
       } else {
-        return assoc_default(head, dissocPath2(tail3, obj[head]), obj);
+        return assoc_default(head, dissocPath2(tail2, obj[head]), obj);
       }
   }
 });
@@ -24979,12 +24984,12 @@ var toPairs = /* @__PURE__ */ _curry1(function toPairs2(obj) {
 });
 var toPairs_default = toPairs;
 // node_modules/ramda/es/zipObj.js
-var zipObj = /* @__PURE__ */ _curry2(function zipObj2(keys8, values) {
+var zipObj = /* @__PURE__ */ _curry2(function zipObj2(keys4, values) {
   var idx = 0;
-  var len = Math.min(keys8.length, values.length);
+  var len = Math.min(keys4.length, values.length);
   var out = {};
   while (idx < len) {
-    out[keys8[idx]] = values[idx];
+    out[keys4[idx]] = values[idx];
     idx += 1;
   }
   return out;
@@ -25006,10 +25011,13 @@ var BaSyouKeywordFn = {
     return ["\u672C\u56FD", "\u6368\u3066\u5C71", "G\u30BE\u30FC\u30F3", "\u30B8\u30E3\u30F3\u30AF\u30E4\u30FC\u30C9", "\u624B\u672D", "\u30CF\u30F3\u30AC\u30FC", "\u53D6\u308A\u9664\u304B\u308C\u305F\u30AB\u30FC\u30C9", "\u6226\u95D8\u30A8\u30EA\u30A21", "\u6226\u95D8\u30A8\u30EA\u30A22", "\u914D\u5099\u30A8\u30EA\u30A2"];
   },
   getBaAll() {
-    return this.getAll().filter(this.isBa);
+    return BaSyouKeywordFn.getAll().filter(BaSyouKeywordFn.isBa);
   },
-  getScriptAll() {
-    return ["\u6368\u3066\u5C71", "G\u30BE\u30FC\u30F3", "\u30B8\u30E3\u30F3\u30AF\u30E4\u30FC\u30C9", "\u624B\u672D", "\u30CF\u30F3\u30AC\u30FC", "\u6226\u95D8\u30A8\u30EA\u30A21", "\u6226\u95D8\u30A8\u30EA\u30A22", "\u914D\u5099\u30A8\u30EA\u30A2"];
+  getTextOn() {
+    return BaSyouKeywordFn.getAll().filter((kw) => ["\u672C\u56FD", "\u53D6\u308A\u9664\u304B\u308C\u305F\u30AB\u30FC\u30C9", "\u6368\u3066\u5C71"].includes(kw) == false);
+  },
+  getBattleArea() {
+    return ["\u6226\u95D8\u30A8\u30EA\u30A21", "\u6226\u95D8\u30A8\u30EA\u30A22"];
   }
 };
 var AbsoluteBaSyouFn = {
@@ -25032,28 +25040,39 @@ var AbsoluteBaSyouFn = {
     return baSyou.value[1];
   },
   setBaSyouKeyword(baSyou, kw) {
-    return this.of(baSyou.value[0], kw);
+    return AbsoluteBaSyouFn.of(baSyou.value[0], kw);
   },
   setPlayerID(baSyou, p) {
-    return this.of(p, baSyou.value[1]);
+    return AbsoluteBaSyouFn.of(p, baSyou.value[1]);
   },
   getPlayerID(baSyou) {
     return baSyou.value[0];
   },
   setOpponentPlayerID(baSyou) {
-    return this.of(PlayerIDFn.getOpponent(baSyou.value[0]), baSyou.value[1]);
+    return AbsoluteBaSyouFn.of(PlayerIDFn.getOpponent(baSyou.value[0]), baSyou.value[1]);
   },
   getAll() {
-    return lift_default(this.of)(PlayerIDFn.getAll(), BaSyouKeywordFn.getAll());
+    return lift_default(AbsoluteBaSyouFn.of)(PlayerIDFn.getAll(), BaSyouKeywordFn.getAll());
   },
   getBaAll() {
-    return lift_default(this.of)(PlayerIDFn.getAll(), BaSyouKeywordFn.getBaAll());
+    return lift_default(AbsoluteBaSyouFn.of)(PlayerIDFn.getAll(), BaSyouKeywordFn.getBaAll());
   },
-  getScriptAll() {
-    return lift_default(this.of)(PlayerIDFn.getAll(), BaSyouKeywordFn.getScriptAll());
+  getTextOn() {
+    return lift_default(AbsoluteBaSyouFn.of)(PlayerIDFn.getAll(), BaSyouKeywordFn.getTextOn());
+  },
+  getBattleArea() {
+    return lift_default(AbsoluteBaSyouFn.of)(PlayerIDFn.getAll(), BaSyouKeywordFn.getBattleArea());
   },
   eq(left, right) {
-    return this.toString(left) == this.toString(right);
+    return AbsoluteBaSyouFn.toString(left) == AbsoluteBaSyouFn.toString(right);
+  }
+};
+var RelatedBaSyouFn = {
+  of(side, kw) {
+    return {
+      id: "RelatedBaSyou",
+      value: [side, kw]
+    };
   }
 };
 
@@ -25563,10 +25582,10 @@ function addCards(ctx2, basyou, addedCards) {
     if (newCard.ownerID == null) {
       newCard.ownerID = ownerID;
     }
-    const table4 = TableFns.addCard(ctx3.table, AbsoluteBaSyouFn.toString(basyou), newCard.id);
+    const table = TableFns.addCard(ctx3.table, AbsoluteBaSyouFn.toString(basyou), newCard.id);
     return {
       ...ctx3,
-      table: table4,
+      table,
       cards: {
         ...ctx3.cards,
         [newCard.id]: newCard
@@ -25708,8 +25727,25 @@ class TargetMissingError extends GameError {
 // src/game/define/CardPrototype.ts
 var exports_CardPrototype = {};
 __export(exports_CardPrototype, {
-  CardColorFn: () => CardColorFn
+  CardColorFn: () => CardColorFn,
+  CardCategoryFn: () => CardCategoryFn
 });
+var CardCategoryFn = {
+  createAll() {
+    return [
+      "\u30E6\u30CB\u30C3\u30C8",
+      "\u30AD\u30E3\u30E9\u30AF\u30BF\u30FC",
+      "\u30B3\u30DE\u30F3\u30C9",
+      "\u30AA\u30DA\u30EC\u30FC\u30B7\u30E7\u30F3",
+      "\u30AA\u30DA\u30EC\u30FC\u30B7\u30E7\u30F3(\u30E6\u30CB\u30C3\u30C8)",
+      "ACE",
+      "\u30B0\u30E9\u30D5\u30A3\u30C3\u30AF"
+    ];
+  },
+  createRemaining(values) {
+    return CardCategoryFn.createAll().filter((category) => !values.includes(category));
+  }
+};
 var CardColorFn = {
   getAll() {
     return ["\u7DD1", "\u8336", "\u9752", "\u767D", "\u7D2B", "\u9ED2", "\u8D64"];
@@ -25755,8 +25791,8 @@ function enumerateAll(tree) {
     return [[tree.value]];
   throw new Error(`Unknown tree structure ${tree}`);
 }
-function has(tree, keys8) {
-  return enumerateAll(tree).some((set) => keys8.length === set.length && keys8.every((key) => set.includes(key)));
+function has(tree, keys4) {
+  return enumerateAll(tree).some((set) => keys4.length === set.length && keys4.every((key) => set.includes(key)));
 }
 function testEnumerateAll() {
   const tree1 = {
@@ -26118,7 +26154,7 @@ async function loadPrototype(imgID) {
       const bp3 = data.info_9;
       const area = data.info_10;
       const characteristic = data.info_11;
-      const textstr = data.info_12.substr(0, 20);
+      const textstr = data.info_12.substr(0, 50);
       const description = data.info_15;
       const prod = data.info_16;
       const rarity = data.info_17;
@@ -26168,6 +26204,10 @@ async function loadPrototype(imgID) {
           id: "",
           title: ["\u7279\u6B8A\u578B", ["\u9AD8\u6A5F\u52D5"]]
         });
+      }
+      const textBlackList = ["179001_01A_CH_WT007R_white"];
+      if (textBlackList.includes(imgID)) {
+        texts.length = 0;
       }
       const category = categoryMapping[categoryStr];
       if (category == null) {
@@ -26333,11 +26373,15 @@ function getKaiSo(gainStr) {
   ];
 }
 function getCrossWeapon(gainStr) {
-  const match = gainStr.match(/〔(０|１|２|３|４|５|６|７|８|９+)〕：クロスウェポン［(.+)］/);
+  let match = gainStr.match(/〔(.?)(０|１|２|３|４|５|６|７|８|９+)(毎?)〕：クロスウェポン［(.+)］/);
   if (match == null) {
     return [];
   }
-  const [matchstr, rollcoststr, char] = match;
+  const [matchstr, colorstr, rollcoststr, every, char] = match;
+  if (colorstr != "" && CardColorFn.getAll().includes(colorstr) == false) {
+    throw new Error(`getCrossWeapon ${gainStr}`);
+  }
+  const color = colorstr == "" ? null : colorstr;
   const rollcost = uppercaseDigits.indexOf(rollcoststr);
   if (rollcost == -1) {
     throw new Error(`getGainTexts error: ${matchstr}`);
@@ -26346,7 +26390,8 @@ function getCrossWeapon(gainStr) {
     {
       id: "",
       title: ["\u7279\u6B8A\u578B", ["\u30AF\u30ED\u30B9\u30A6\u30A7\u30DD\u30F3", char]],
-      conditions: createRollCostRequire(rollcost, null)
+      isEachTime: every == "\u6BCE",
+      conditions: createRollCostRequire(rollcost, color)
     }
   ];
 }
@@ -26492,7 +26537,7 @@ function getCardLikeItemIds(ctx2) {
   ];
 }
 function getItemIdsByPlayerId(ctx2, isBa, playerId) {
-  const basyous = isBa ? lift_default(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getBaAll()) : lift_default(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getScriptAll());
+  const basyous = isBa ? lift_default(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getBaAll()) : lift_default(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getTextOn());
   return basyous.flatMap((basyou) => getItemIdsByBasyou(ctx2, basyou));
 }
 function getItemIdsByBasyou(ctx2, basyou) {
@@ -26690,7 +26735,7 @@ var EffectFn = {
   fromEffectBasic(e, options) {
     return {
       id: "",
-      reason: e.reason,
+      reason: options?.reason || e.reason,
       description: e.description,
       isOption: options?.isOption,
       text: {
@@ -26717,11 +26762,12 @@ __export(exports_doEffect, {
   setCardTipStrBaSyouPairs: () => setCardTipStrBaSyouPairs,
   getCardTipTextRefs: () => getCardTipTextRefs,
   getCardTipStrBaSyouPairs: () => getCardTipStrBaSyouPairs,
-  doEffect: () => doEffect2,
+  doEffect: () => doEffect,
   createEffectTips: () => createEffectTips,
   createCommandEffectTips: () => createCommandEffectTips,
   clearTipSelectionForUser: () => clearTipSelectionForUser,
-  assertEffectCanPass: () => assertEffectCanPass
+  assertEffectCanPass: () => assertEffectCanPass,
+  addImmediateEffectIfCanPayCost: () => addImmediateEffectIfCanPayCost
 });
 
 // src/game/gameState/ItemStateComponent.ts
@@ -26913,7 +26959,7 @@ function getValue(v) {
   }
   return v;
 }
-function add4([x, y, z], [x2, y2, z2]) {
+function add3([x, y, z], [x2, y2, z2]) {
   return [
     Math.max(0, getValue(x) + getValue(x2)),
     Math.max(0, getValue(y) + getValue(y2)),
@@ -26922,7 +26968,7 @@ function add4([x, y, z], [x2, y2, z2]) {
 }
 var BattlePointFn = {
   getAllStar: () => ["*", "*", "*"],
-  add: add4,
+  add: add3,
   getValue,
   toBattleBonus(v) {
     return [getValue(v[0]), getValue(v[1]), getValue(v[2])];
@@ -27404,7 +27450,7 @@ function getSituationEffects(ctx2, situation) {
     texts = texts.filter((text) => text.title[0] == "\u81EA\u52D5\u578B" && (text.title[1] == "\u5E38\u99D0" || text.title[1] == "\u8D77\u52D5"));
     return [item, texts];
   }));
-  const getTextGroup2 = pipe(always_default(AbsoluteBaSyouFn.getScriptAll()), map_default((basyou) => getItemIdsByBasyou(ctx2, basyou)), flatten_default, (itemIds) => itemIds.filter((itemId) => isCard(ctx2, itemId) || isChip(ctx2, itemId)), map_default((itemId) => getItem(ctx2, itemId)), map_default((item) => {
+  const getTextGroup2 = pipe(always_default(AbsoluteBaSyouFn.getTextOn()), map_default((basyou) => getItemIdsByBasyou(ctx2, basyou)), flatten_default, (itemIds) => itemIds.filter((itemId) => isCard(ctx2, itemId) || isChip(ctx2, itemId)), map_default((itemId) => getItem(ctx2, itemId)), map_default((item) => {
     const proto = getItemPrototype(ctx2, item.id);
     let texts = (proto.texts || []).flatMap((text) => {
       if (text.title[0] == "\u7279\u6B8A\u578B") {
@@ -27434,7 +27480,7 @@ function getSituationEffects(ctx2, situation) {
     return null;
   }), (infos) => infos.filter((v) => v));
   const allCardTexts = [...getTextGroup1(), ...getTextGroup2(), ...getTextGroup3(), ...getTextGroup4()];
-  const bridge = createBridge2();
+  const bridge = createBridge();
   const ges = allCardTexts.flatMap(([item, texts]) => {
     const globalEffects = texts.map((text, i) => {
       const cardController = getItemController(ctx2, item.id);
@@ -27577,10 +27623,10 @@ function getCardIdsCanPayRollCost(ctx2, playerId, situation) {
 }
 function getCardBattlePoint(ctx2, cardID) {
   ctx2 = clearGlobalEffects(ctx2);
-  const globalEffects2 = getGlobalEffects(ctx2, null);
-  ctx2 = setGlobalEffects(ctx2, null, globalEffects2);
+  const globalEffects = getGlobalEffects(ctx2, null);
+  ctx2 = setGlobalEffects(ctx2, null, globalEffects);
   const card = getCard(ctx2, cardID);
-  const bonusFromGlobalEffects = globalEffects2.map((ge) => {
+  const bonusFromGlobalEffects = globalEffects.map((ge) => {
     if (ge.title[0] == "AddText" && ge.cardIds.includes(cardID) && ge.title[1].title[0] == "TextBattleBonus") {
       return ge.title[1].title[1];
     }
@@ -27685,7 +27731,6 @@ function getCardIdsCanPayRollColor(ctx2, situation, playerId, color) {
 var exports_battleGroup = {};
 __export(exports_battleGroup, {
   isBattleGroupHasA: () => isBattleGroupHasA,
-  isABattleGroup: () => isABattleGroup,
   getBattleGroupBattlePoint: () => getBattleGroupBattlePoint,
   getBattleGroup: () => getBattleGroup
 });
@@ -27693,10 +27738,15 @@ __export(exports_battleGroup, {
 // src/game/gameState/setGroup.ts
 var exports_setGroup = {};
 __export(exports_setGroup, {
+  isSetGroupHasA: () => isSetGroupHasA,
   getSetGroupBattlePoint: () => getSetGroupBattlePoint
 });
 function getSetGroupBattlePoint(ctx2, cardId) {
   return pipe(always_default(getSetGroupChildren(ctx2, cardId)), map_default((setGroupCardID) => getCardBattlePoint(ctx2, setGroupCardID)), reduce_default(BattlePointFn.add, BattlePointFn.getAllStar()), BattlePointFn.toBattleBonus)();
+}
+function isSetGroupHasA(ctx2, a, cardId) {
+  const setGroupCards = getSetGroupChildren(ctx2, cardId);
+  return setGroupCards.some((cardId2) => getCardHasSpeicalEffect(ctx2, a, cardId2));
 }
 
 // src/game/gameState/battleGroup.ts
@@ -27711,11 +27761,11 @@ function getBattleGroupBattlePoint(ctx2, unitCardIDs) {
     if (cs.destroyReason != null) {
       return 0;
     }
-    const card3 = getCard(ctx2, cardID);
-    if (card3 == null) {
+    const card = getCard(ctx2, cardID);
+    if (card == null) {
       throw new Error("card not found");
     }
-    if (card3.isRoll) {
+    if (card.isRoll) {
       return 0;
     }
     const [melee, range, _] = getSetGroupBattlePoint(ctx2, cardID);
@@ -27726,35 +27776,10 @@ function getBattleGroupBattlePoint(ctx2, unitCardIDs) {
   }).reduce((acc, c) => acc + c, 0);
   return attackPower;
 }
-function isABattleGroup(ctx2, a, cardID) {
-  const baSyou = getItemBaSyou(ctx2, cardID);
-  const battleGroup = getBattleGroup(ctx2, baSyou);
-  return battleGroup.map((cardID2) => {
-    const setGroupCards = getSetGroupChildren(ctx2, cardID2);
-    for (const cardGroupCardID of setGroupCards) {
-      if (getCardHasSpeicalEffect(ctx2, a, cardGroupCardID)) {
-        return true;
-      }
-    }
-    return false;
-  }).reduce((acc, c) => {
-    return acc && c;
-  }) || false;
-}
 function isBattleGroupHasA(ctx2, a, cardID) {
   const baSyou = getItemBaSyou(ctx2, cardID);
   const battleGroup = getBattleGroup(ctx2, baSyou);
-  return battleGroup.map((cardID2) => {
-    const setGroupCards = getSetGroupChildren(ctx2, cardID2);
-    for (const cardGroupCardID of setGroupCards) {
-      if (getCardHasSpeicalEffect(ctx2, a, cardGroupCardID)) {
-        return true;
-      }
-    }
-    return false;
-  }).reduce((acc, c) => {
-    return acc || c;
-  }) || false;
+  return battleGroup.some((bg) => isSetGroupHasA(ctx2, a, bg));
 }
 
 // src/game/gameState/player.ts
@@ -27767,7 +27792,7 @@ __export(exports_player, {
 // src/game/gameState/doTriggerEvent.ts
 var exports_doTriggerEvent = {};
 __export(exports_doTriggerEvent, {
-  doTriggerEvent: () => doTriggerEvent2
+  doTriggerEvent: () => doTriggerEvent
 });
 
 // src/game/gameState/PlayerStateComponent.ts
@@ -27841,7 +27866,9 @@ __export(exports_createOnEventTitleFn, {
 // src/game/gameState/createActionTitleFn.ts
 var exports_createActionTitleFn = {};
 __export(exports_createActionTitleFn, {
-  createActionTitleFn: () => createActionTitleFn
+  createPlayerIdFromRelated: () => createPlayerIdFromRelated,
+  createActionTitleFn: () => createActionTitleFn,
+  createAbsoluteBaSyouFromBaSyou: () => createAbsoluteBaSyouFromBaSyou
 });
 
 // src/game/define/Coin.ts
@@ -27902,7 +27929,7 @@ function onMoveItem(ctx2, to, [cardId, from]) {
   ctx2 = clearGlobalEffects(ctx2);
   if (AbsoluteBaSyouFn.getBaSyouKeyword(from) == "\u624B\u672D") {
     if (AbsoluteBaSyouFn.getBaSyouKeyword(to) == "\u30D7\u30EC\u30A4\u3055\u308C\u3066\u3044\u308B\u30AB\u30FC\u30C9") {
-      ctx2 = doTriggerEvent2(ctx2, {
+      ctx2 = doTriggerEvent(ctx2, {
         title: ["\u30D7\u30EC\u30A4\u3057\u305F\u5834\u5408"],
         cardIds: [cardId]
       });
@@ -27915,7 +27942,7 @@ function onMoveItem(ctx2, to, [cardId, from]) {
         isFirstTurn: true
       };
     });
-    ctx2 = doTriggerEvent2(ctx2, {
+    ctx2 = doTriggerEvent(ctx2, {
       title: ["\u5834\u306B\u51FA\u305F\u5834\u5408"],
       cardIds: [cardId]
     });
@@ -27929,23 +27956,23 @@ function onMoveItem(ctx2, to, [cardId, from]) {
     });
   }
   if (["\u6368\u3066\u5C71", "\u672C\u56FD", "\u624B\u672D"].includes(AbsoluteBaSyouFn.getBaSyouKeyword(to))) {
-    ctx2 = mapCard(ctx2, cardId, (card3) => {
+    ctx2 = mapCard(ctx2, cardId, (card) => {
       return {
-        ...card3,
+        ...card,
         isRoll: false,
         isFaceDown: true
       };
     });
   } else if (["\u30B8\u30E3\u30F3\u30AF\u30E4\u30FC\u30C9", "G\u30BE\u30FC\u30F3", "\u30CF\u30F3\u30AC\u30FC", "\u30D7\u30EC\u30A4\u3055\u308C\u3066\u3044\u308B\u30AB\u30FC\u30C9", "\u53D6\u308A\u9664\u304B\u308C\u305F\u30AB\u30FC\u30C9"].includes(AbsoluteBaSyouFn.getBaSyouKeyword(to))) {
-    ctx2 = mapCard(ctx2, cardId, (card3) => {
+    ctx2 = mapCard(ctx2, cardId, (card) => {
       return {
-        ...card3,
+        ...card,
         isRoll: false,
         isFaceDown: false
       };
     });
   }
-  ctx2 = doTriggerEvent2(ctx2, {
+  ctx2 = doTriggerEvent(ctx2, {
     title: ["GameEventOnMove", from, to],
     cardIds: [cardId]
   });
@@ -27967,9 +27994,9 @@ function doItemSwap(ctx2, pair1, pair2, options) {
   const [itemId2] = pair2;
   if (isCard(ctx2, itemId1) && isCard(ctx2, itemId2)) {
     const card1 = getCard(ctx2, itemId1);
-    const card22 = getCard(ctx2, itemId2);
-    ctx2 = setCard(ctx2, card1.id, { ...card22, id: card1.id });
-    ctx2 = setCard(ctx2, card22.id, { ...card1, id: card22.id });
+    const card2 = getCard(ctx2, itemId2);
+    ctx2 = setCard(ctx2, card1.id, { ...card2, id: card1.id });
+    ctx2 = setCard(ctx2, card2.id, { ...card1, id: card2.id });
     const is1 = getItemState(ctx2, itemId1);
     const is2 = getItemState(ctx2, itemId2);
     ctx2 = setItemState(ctx2, is1.id, { ...is2, id: is1.id });
@@ -28197,15 +28224,47 @@ function doItemSetGlobalEffectsUntilEndOfTurn(ctx2, egs, [itemId, originBasyou],
 }
 
 // src/game/gameState/createActionTitleFn.ts
+function createPlayerIdFromRelated(ctx2, cardId, re) {
+  switch (re) {
+    case "\u81EA\u8ECD":
+      return getItemController(ctx2, cardId);
+    case "\u6575\u8ECD":
+      return PlayerIDFn.getOpponent(getItemController(ctx2, cardId));
+    case "\u6301\u3061\u4E3B":
+      return getItemOwner(ctx2, cardId);
+  }
+}
+function createAbsoluteBaSyouFromBaSyou(ctx2, cardId, re) {
+  if (re.id == "AbsoluteBaSyou") {
+    return re;
+  }
+  return AbsoluteBaSyouFn.of(createPlayerIdFromRelated(ctx2, cardId, re.value[0]), re.value[1]);
+}
 function createActionTitleFn(action) {
   if (typeof action.title == "string") {
     return ActionFn.getTitleFn(action);
   }
   switch (action.title[0]) {
+    case "Action": {
+      const [_, options] = action.title;
+      const varNames2 = action.vars;
+      return function(ctx2, effect) {
+        const cardId = EffectFn.getCardID(effect);
+        const pairs = varNames2 == null ? [[cardId, getItemBaSyou(ctx2, cardId)]] : varNames2.flatMap((varName) => {
+          return getCardTipStrBaSyouPairs(ctx2, varName, cardId);
+        });
+        for (const pair2 of pairs) {
+          if (options.move) {
+            ctx2 = doItemMove(ctx2, createAbsoluteBaSyouFromBaSyou(ctx2, cardId, options.move), pair2);
+          }
+        }
+        return ctx2;
+      };
+    }
     case "triggerEvent": {
       const [_, event] = action.title;
       return function(ctx2, effect) {
-        ctx2 = doTriggerEvent2(ctx2, { ...event, effect });
+        ctx2 = doTriggerEvent(ctx2, { ...event, effect });
         return ctx2;
       };
     }
@@ -28269,13 +28328,19 @@ function createActionTitleFn(action) {
           }
           case "\u5EC3\u68C4": {
             for (const pair2 of pairs) {
-              ctx2 = doItemMove(ctx2, AbsoluteBaSyouFn.of(cardController, "\u30B8\u30E3\u30F3\u30AF\u30E4\u30FC\u30C9"), pair2);
+              ctx2 = doItemMove(ctx2, AbsoluteBaSyouFn.setBaSyouKeyword(pair2[1], "\u30B8\u30E3\u30F3\u30AF\u30E4\u30FC\u30C9"), pair2);
             }
             return ctx2;
           }
           case "\u7834\u58CA\u3092\u7121\u52B9": {
             for (const pair2 of pairs) {
               ctx2 = doItemSetDestroy(ctx2, null, pair2);
+            }
+            return ctx2;
+          }
+          case "\u898B": {
+            for (const pair2 of pairs) {
+              ctx2 = mapItemState(ctx2, pair2[0], (is) => ({ ...is, isCheat: true }));
             }
             return ctx2;
           }
@@ -28510,9 +28575,9 @@ function createOnEventTitleFn(text) {
 }
 
 // src/game/gameState/doTriggerEvent.ts
-function doTriggerEvent2(ctx2, event) {
+function doTriggerEvent(ctx2, event) {
   logCategory("doTriggerEvent", event.title, event.cardIds);
-  const bridge = createBridge2();
+  const bridge = createBridge();
   const commands = pipe(always_default(getCardLikeItemIds(ctx2)), map_default((cardId) => {
     const proto = getItemPrototype(ctx2, cardId);
     if (proto.commandText?.onEvent) {
@@ -28562,7 +28627,7 @@ function doDamage(ctx2, speedPhase, currentAttackPlayerID, currentGuardPlayerID,
   logCategory("handleAttackDamage", "willGuardUnits", willGuardUnits);
   logCategory("handleAttackDamage", "willAttackPower", willAttackPower);
   if (willAttackUnits.length) {
-    const hasSpeedAttack = isABattleGroup(ctx2, ["\u901F\u653B"], willAttackUnits[0]);
+    const hasSpeedAttack = isBattleGroupHasA(ctx2, ["\u901F\u653B"], willAttackUnits[0]);
     if (hasSpeedAttack && speedPhase == 1 || hasSpeedAttack == false && speedPhase == 2) {
       let currentAttackPower = willAttackPower;
       logCategory("handleAttackDamage", "attack", currentAttackPower);
@@ -28597,7 +28662,7 @@ function doDamage(ctx2, speedPhase, currentAttackPlayerID, currentGuardPlayerID,
             title: ["\u6226\u95D8\u30C0\u30E1\u30FC\u30B8\u3092\u53D7\u3051\u305F\u5834\u5408"],
             cardIds: [cs.id]
           };
-          ctx2 = doTriggerEvent2(ctx2, gameEvent);
+          ctx2 = doTriggerEvent(ctx2, gameEvent);
           return {
             ...cs,
             damage: nextDamage
@@ -28607,13 +28672,13 @@ function doDamage(ctx2, speedPhase, currentAttackPlayerID, currentGuardPlayerID,
           return setItemState(ctx3, cs.id, cs);
         }, ctx2);
       }
-      if (willGuardUnits.length == 0 || isABattleGroup(ctx2, ["\u5F37\u8972"], willAttackUnits[0])) {
+      if (willGuardUnits.length == 0 || isBattleGroupHasA(ctx2, ["\u5F37\u8972"], willAttackUnits[0])) {
         ctx2 = doCountryDamage(ctx2, currentGuardPlayerID, currentAttackPower);
         const gameEvent = {
           title: ["\u3053\u306E\u30AB\u30FC\u30C9\u306E\u90E8\u968A\u304C\u6575\u8ECD\u672C\u56FD\u306B\u6226\u95D8\u30C0\u30E1\u30FC\u30B8\u3092\u4E0E\u3048\u305F\u5834\u5408"],
           cardIds: willAttackUnits
         };
-        ctx2 = doTriggerEvent2(ctx2, gameEvent);
+        ctx2 = doTriggerEvent(ctx2, gameEvent);
       }
     }
   }
@@ -28688,7 +28753,7 @@ function createPlayCardEffects(ctx2, cardId) {
   } : {};
   const characterConditions = prototype.category == "\u30AD\u30E3\u30E9\u30AF\u30BF\u30FC" || prototype.category == "\u30AA\u30DA\u30EC\u30FC\u30B7\u30E7\u30F3(\u30E6\u30CB\u30C3\u30C8)" ? {
     "\u4E00\u500B\u81EA\u8ECD\u6A5F\u9AD4": {
-      title: ["Entity", { isCanSetCharacter: true, side: "\u81EA\u8ECD", runtimeItemCategory: ["\u30E6\u30CB\u30C3\u30C8"], count: 1 }]
+      title: ["Entity", { isCanSetCharacter: true, side: "\u81EA\u8ECD", is: ["\u30E6\u30CB\u30C3\u30C8"], count: 1 }]
     }
   } : {};
   const rollCostConditions = createRollCostConditions(ctx2, prototype, prototype.rollCost || []);
@@ -29000,32 +29065,41 @@ function createEntityIterator(ctx2) {
 }
 function createTipByEntitySearch(ctx2, cardId, options) {
   let entityList = createEntityIterator(ctx2).filter(EntityFn.filterIsBattle(ctx2, null, options.isBattle || false));
-  if (options.baSyouKeywords?.length) {
-    entityList = entityList.filter(EntityFn.filterAtBaSyous(options.baSyouKeywords));
-  } else {
-    entityList = entityList.filter((e) => e.isCard || e.isChip);
+  if (options.isCanSetCharacter != null) {
+    entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx2, true)).filter(EntityFn.filterCanSetCharacter(ctx2));
+  } else if (options.is?.includes("\u30E6\u30CB\u30C3\u30C8")) {
+    entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx2, true));
+  } else if (options.isSetGroup != null) {
+    entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx2, options.isSetGroup));
+  }
+  if (options.at?.length) {
+    entityList = entityList.filter(EntityFn.filterAtBaSyous(options.at));
   }
   if (options.side) {
     const cardController = getItemController(ctx2, cardId);
     const playerId = PlayerIDFn.fromRelatedPlayerSideKeyword(options.side || "\u81EA\u8ECD", cardController);
     entityList = entityList.filter(EntityFn.filterController(playerId));
   }
-  if (options.runtimeItemCategory?.length) {
-    entityList = entityList.filter(EntityFn.filterRuntimeCategory(ctx2, options.runtimeItemCategory));
+  if (options.is?.length) {
+    entityList = entityList.filter(EntityFn.filterRuntimeCategory(ctx2, options.is));
   }
-  if (options.itemCategory?.length) {
-    entityList = entityList.filter(EntityFn.filterCategory(ctx2, options.itemCategory));
+  if (options.cardCategory?.length) {
+    entityList = entityList.filter(EntityFn.filterCategory(ctx2, options.cardCategory));
   }
-  if (options.itemColor?.length) {
-    entityList = entityList.filter(EntityFn.filterItemColor(ctx2, options.itemColor));
+  if (options.color?.length) {
+    entityList = entityList.filter(EntityFn.filterItemColor(ctx2, options.color));
   }
-  if (options.isCanSetCharacter != null) {
-    entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx2, true)).filter(EntityFn.filterCanSetCharacter(ctx2));
-  } else if (options.isSetGroup != null) {
-    entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx2, options.isSetGroup));
+  if (options.hasSetCard != null) {
+    entityList = entityList.filter(EntityFn.filterHasSetCard(ctx2, options.hasSetCard));
   }
   if (options.isDestroy != null) {
     entityList = entityList.filter(EntityFn.filterIsDestroy(options.isDestroy));
+  }
+  if (options.hasSpecialEffect != null) {
+    entityList = entityList.filter(EntityFn.filterHasSpecialEffect(ctx2, options.hasSpecialEffect));
+  }
+  if (options.hasChar != null) {
+    entityList = entityList.filter(EntityFn.filterHasChar(ctx2, options.hasChar));
   }
   entityList = entityList.filter(EntityFn.filterDistinct);
   const pairs = entityList.map((entity) => {
@@ -29124,6 +29198,21 @@ var EntityFn = {
     return (entity) => {
       const charLen = getSetGroup(ctx2, entity.itemId).filter((itemId) => getItemRuntimeCategory(ctx2, itemId) == "\u30AD\u30E3\u30E9\u30AF\u30BF\u30FC").length;
       return charLen == 0;
+    };
+  },
+  filterHasSetCard(ctx2, v) {
+    return (entity) => {
+      return getSetGroup(ctx2, entity.itemId).length == 1 == v;
+    };
+  },
+  filterHasSpecialEffect(ctx2, vs) {
+    return (entity) => {
+      return vs.some((v) => isSetGroupHasA(ctx2, v, entity.itemId));
+    };
+  },
+  filterHasChar(ctx2, vs) {
+    return (entity) => {
+      return vs.some((v) => getItemCharacteristic(ctx2, entity.itemId).indexOf(v) != -1);
     };
   },
   filterDistinct(cet, index, self) {
@@ -29547,6 +29636,9 @@ var TipOrErrorsFn = {
   filterNoError(cet) {
     return cet.errors.length == 0;
   },
+  filterError(cet) {
+    return cet.errors.length > 0;
+  },
   filterPlayerId(playerID) {
     return (cet) => {
       const condition = cet.effect.text.conditions?.[cet.conditionKey];
@@ -29597,7 +29689,7 @@ var DefineFn = {
 };
 
 // src/game/bridge/createBridge.ts
-function createBridge2() {
+function createBridge() {
   const bridge = {
     GameStateFn,
     DefineFn,
@@ -29607,7 +29699,7 @@ function createBridge2() {
 }
 
 // src/game/gameState/doEffect.ts
-function doEffect2(ctx2, effect, logicId, logicSubId) {
+function doEffect(ctx2, effect, logicId, logicSubId) {
   logCategory("doEffect", effect.text.description);
   ctx2 = EventCenterFn.onEffectStart(ctx2, effect);
   assertEffectCanPass(ctx2, effect, logicId, logicSubId);
@@ -29615,7 +29707,7 @@ function doEffect2(ctx2, effect, logicId, logicSubId) {
   if (ltacs == null) {
     throw new Error(`ltasc not found: ${logicId}/${logicSubId}`);
   }
-  const bridge = createBridge2();
+  const bridge = createBridge();
   const conditionIds = Object.keys(ltacs);
   const cardId = EffectFn.getCardID(effect);
   conditionIds.forEach((conditionKey) => {
@@ -29638,7 +29730,7 @@ function createEffectTips(ctx2, effect, logicId, logicSubId, options) {
   if (ltacs == null) {
     throw new Error(`ltasc not found: ${logicId}/${logicSubId}`);
   }
-  const bridge = createBridge2();
+  const bridge = createBridge();
   return Object.keys(ltacs).map((key) => {
     const con = ltacs[key];
     logCategory("createEffectTips", key, con.title);
@@ -29735,7 +29827,7 @@ function clearTipSelectionForUser(ctx2, effect, logicId, logicSubId) {
   if (ltacs == null) {
     throw new Error(`ltasc not found: ${logicId}/${logicSubId}`);
   }
-  const bridge = createBridge2();
+  const bridge = createBridge();
   Object.keys(ltacs).forEach((key) => {
     const con = ltacs[key];
     const tip = createConditionTitleFn(con, {})(ctx2, effect, bridge);
@@ -29806,6 +29898,13 @@ function setCardTipStrBaSyouPairs(ctx2, varName, pairs, cardId) {
   ctx2 = setItemState(ctx2, cardId, cs);
   return ctx2;
 }
+function addImmediateEffectIfCanPayCost(ctx2, effect) {
+  const cets = createEffectTips(ctx2, effect, 0, 0).filter(TipOrErrorsFn.filterError);
+  if (cets.length) {
+    return ctx2;
+  }
+  return addImmediateEffect(ctx2, effect);
+}
 
 // src/game/gameStateWithFlowMemory/effect.ts
 function doActiveEffect(ctx2, playerID, effectID, logicId, logicSubId) {
@@ -29819,7 +29918,7 @@ function doActiveEffect(ctx2, playerID, effectID, logicId, logicSubId) {
   }
   const isStackEffect_ = isStackEffect(ctx2, effectID);
   try {
-    ctx2 = doEffect2(ctx2, effect, logicId, logicSubId);
+    ctx2 = doEffect(ctx2, effect, logicId, logicSubId);
   } catch (e) {
     if (e instanceof TargetMissingError) {
       logCategory("doActiveEffect", `=======================`);
@@ -30045,8 +30144,8 @@ function createPlayEffects(ctx2, playerId) {
     return [];
   }), flatten_default), always_default([])));
   const getPlayGF = ifElse_default(always_default(PhaseFn.eq(getPhase(ctx2), ["\u914D\u5099\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"]) && ctx2.activePlayerID == playerId), pipe(always_default([AbsoluteBaSyouFn.of(playerId, "\u624B\u672D"), AbsoluteBaSyouFn.of(playerId, "\u30CF\u30F3\u30AC\u30FC")]), map_default((basyou) => getItemIdsByBasyou(ctx2, basyou)), flatten_default, concat_default(canPlayByText), map_default((cardId) => {
-    const card10 = getCard(ctx2, cardId);
-    return createPlayGEffects(ctx2, card10.id);
+    const card = getCard(ctx2, cardId);
+    return createPlayGEffects(ctx2, card.id);
   })), always_default([]));
   const getPlayTextF = pipe(always_default(lift_default(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getBaAll())), map_default((basyou) => getItemIdsByBasyou(ctx2, basyou)), flatten_default, map_default((cardId) => {
     return getCardTexts(ctx2, cardId).flatMap((text) => {
@@ -30098,10 +30197,10 @@ function createPlayEffects(ctx2, playerId) {
     });
   }), flatten_default);
   const getPlayCommandF = ifElse_default(always_default(PhaseFn.isFreeTiming(getPhase(ctx2)) && ctx2.activePlayerID == playerId), pipe(always_default([AbsoluteBaSyouFn.of(playerId, "\u624B\u672D"), AbsoluteBaSyouFn.of(playerId, "\u30CF\u30F3\u30AC\u30FC")]), map_default((basyou) => getItemIdsByBasyou(ctx2, basyou)), flatten_default, concat_default(canPlayByText), map_default((cardId) => {
-    const card10 = getCard(ctx2, cardId);
-    const proto = getItemPrototype(ctx2, card10.id);
+    const card = getCard(ctx2, cardId);
+    const proto = getItemPrototype(ctx2, card.id);
     if (proto.commandText && inTiming(proto.commandText)) {
-      return createPlayCardEffects(ctx2, card10.id);
+      return createPlayCardEffects(ctx2, card.id);
     }
     return [];
   }), flatten_default), always_default([]));
@@ -30212,7 +30311,7 @@ function doCutInDestroyEffectsAndClear(ctx2, ordered) {
     }
     const reason = e.reason[3];
     const itemId = EffectFn.getCardID(e);
-    ctx2 = doTriggerEvent2(ctx2, { title: ["\u7834\u58CA\u3055\u308C\u305F\u5834\u5408", reason], cardIds: [itemId] });
+    ctx2 = doTriggerEvent(ctx2, { title: ["\u7834\u58CA\u3055\u308C\u305F\u5834\u5408", reason], cardIds: [itemId] });
   });
   return ctx2;
 }
@@ -30329,7 +30428,7 @@ function applyFlow(ctx2, playerID, flow) {
         logCategory("applyFlow", "\u5DF2\u7D93\u57F7\u884C\u904EtriggerTextEvent");
         return ctx2;
       }
-      ctx2 = doTriggerEvent2(ctx2, flow.event);
+      ctx2 = doTriggerEvent(ctx2, flow.event);
       ctx2 = {
         ...ctx2,
         flowMemory: {
@@ -30456,7 +30555,7 @@ function applyFlow(ctx2, playerID, flow) {
       return ctx2;
     }
     case "FlowHandleStackEffectFinished": {
-      ctx2 = doTriggerEvent2(ctx2, {
+      ctx2 = doTriggerEvent(ctx2, {
         title: ["\u30AB\u30C3\u30C8\u7D42\u4E86\u6642", ctx2.stackEffectMemory]
       });
       ctx2 = {
@@ -30470,8 +30569,8 @@ function applyFlow(ctx2, playerID, flow) {
       return ctx2;
     }
     case "FlowPassPayCost": {
-      const effect2 = getEffectIncludePlayerCommand(ctx2, flow.effectID);
-      if (effect2 == null) {
+      const effect = getEffectIncludePlayerCommand(ctx2, flow.effectID);
+      if (effect == null) {
         throw new Error(`effectID not found:${flow.effectID}`);
       }
       ctx2 = {
@@ -30497,8 +30596,8 @@ function applyFlow(ctx2, playerID, flow) {
       };
     }
     case "FlowSetTipSelection": {
-      const effect2 = getEffectIncludePlayerCommand(ctx2, flow.effectID);
-      const cardId = EffectFn.getCardID(effect2);
+      const effect = getEffectIncludePlayerCommand(ctx2, flow.effectID);
+      const cardId = EffectFn.getCardID(effect);
       ctx2 = mapItemState(ctx2, cardId, (is) => ItemStateFn.setTip(is, flow.conditionKey, flow.tip));
       return ctx2;
     }
@@ -30564,18 +30663,18 @@ function initState(ctx2, deckA, deckB) {
   return ctx2;
 }
 function initCardFace(ctx2) {
-  return mapCardsWithBasyou(ctx2, (baSyou, card10) => {
+  return mapCardsWithBasyou(ctx2, (baSyou, card) => {
     switch (baSyou.value[1]) {
       case "\u672C\u56FD":
       case "\u6368\u3066\u5C71":
       case "\u624B\u672D":
         return {
-          ...card10,
+          ...card,
           isFaceDown: true
         };
       default:
         return {
-          ...card10,
+          ...card,
           isFaceDown: false
         };
     }
@@ -30934,7 +31033,7 @@ function captureError(err) {
 var context = null;
 
 // node_modules/rxjs/dist/esm5/internal/Subscriber.js
-function bind4(fn, thisArg) {
+function bind3(fn, thisArg) {
   return _bind.call(fn, thisArg);
 }
 function handleUnhandledError(error) {
@@ -31078,9 +31177,9 @@ var SafeSubscriber = function(_super) {
           return _this.unsubscribe();
         };
         partialObserver = {
-          next: observerOrNext.next && bind4(observerOrNext.next, context_1),
-          error: observerOrNext.error && bind4(observerOrNext.error, context_1),
-          complete: observerOrNext.complete && bind4(observerOrNext.complete, context_1)
+          next: observerOrNext.next && bind3(observerOrNext.next, context_1),
+          error: observerOrNext.error && bind3(observerOrNext.error, context_1),
+          complete: observerOrNext.complete && bind3(observerOrNext.complete, context_1)
         };
       } else {
         partialObserver = observerOrNext;
@@ -31141,10 +31240,10 @@ var Observable = function() {
     }
   }
   Observable2.prototype.lift = function(operator) {
-    var observable3 = new Observable2;
-    observable3.source = this;
-    observable3.operator = operator;
-    return observable3;
+    var observable2 = new Observable2;
+    observable2.source = this;
+    observable2.operator = operator;
+    return observable2;
   };
   Observable2.prototype.subscribe = function(observerOrNext, error, complete) {
     var _this = this;
@@ -31165,17 +31264,17 @@ var Observable = function() {
   Observable2.prototype.forEach = function(next, promiseCtor) {
     var _this = this;
     promiseCtor = getPromiseCtor(promiseCtor);
-    return new promiseCtor(function(resolve, reject4) {
+    return new promiseCtor(function(resolve, reject3) {
       var subscriber = new SafeSubscriber({
         next: function(value) {
           try {
             next(value);
           } catch (err) {
-            reject4(err);
+            reject3(err);
             subscriber.unsubscribe();
           }
         },
-        error: reject4,
+        error: reject3,
         complete: resolve
       });
       _this.subscribe(subscriber);
@@ -31198,12 +31297,12 @@ var Observable = function() {
   Observable2.prototype.toPromise = function(promiseCtor) {
     var _this = this;
     promiseCtor = getPromiseCtor(promiseCtor);
-    return new promiseCtor(function(resolve, reject4) {
+    return new promiseCtor(function(resolve, reject3) {
       var value;
       _this.subscribe(function(x) {
         return value = x;
       }, function(err) {
-        return reject4(err);
+        return reject3(err);
       }, function() {
         return resolve(value);
       });
@@ -31412,9 +31511,9 @@ var Subject = function(_super) {
     }
   };
   Subject2.prototype.asObservable = function() {
-    var observable3 = new Observable;
-    observable3.source = this;
-    return observable3;
+    var observable2 = new Observable;
+    observable2.source = this;
+    return observable2;
   };
   Subject2.create = function(destination, source) {
     return new AnonymousSubject(destination, source);
@@ -31496,22 +31595,22 @@ var OnViewModel = OnEvent.pipe(scan((viewModel, evt) => {
           versionID: viewModel.model.versionID
         };
         Promise.all(TMP_DECK.concat(TMP_DECK2).map(loadPrototype));
-        ctx2.gameState = initState(ctx2.gameState, TMP_DECK, TMP_DECK2);
+        ctx2.gameState = initState(ctx2.gameState, TMP_DECK, TMP_DECK);
         return { ...DEFAULT_VIEW_MODEL, model: ctx2 };
       }
       case "OnClickFlowConfirm": {
-        const gameState2 = applyFlow(viewModel.model.gameState, evt.clientID, evt.flow);
-        TableFns.assertDup(gameState2.table);
+        const gameState = applyFlow(viewModel.model.gameState, evt.clientID, evt.flow);
+        TableFns.assertDup(gameState.table);
         return {
           ...viewModel,
           model: {
             ...viewModel.model,
-            gameState: gameState2
+            gameState
           },
           localMemory: {
             clientID: evt.clientID,
-            timing: getPhase(gameState2),
-            lastPassPhase: gameState2.flowMemory.hasPlayerPassPhase[evt.clientID] || false
+            timing: getPhase(gameState),
+            lastPassPhase: gameState.flowMemory.hasPlayerPassPhase[evt.clientID] || false
           }
         };
       }
@@ -31587,20 +31686,20 @@ function createAttackPhaseRuleEffect(ctx2, playerId) {
       title: [],
       conditions: {
         "\u53BB\u5730\u7403": {
-          title: function _(ctx3, effect2, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {
+          title: function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {
             const currentBaKw = "\u6226\u95D8\u30A8\u30EA\u30A21";
             const runtimeBattleArea = GameStateFn2.getRuntimeBattleArea(ctx3, currentBaKw);
             if (runtimeBattleArea == "\u5B87\u5B99\u30A8\u30EA\u30A2") {
               return null;
             }
-            const playerId2 = DefineFn2.EffectFn.getPlayerID(effect2);
+            const playerId2 = DefineFn2.EffectFn.getPlayerID(effect);
             const opponentPlayerId = DefineFn2.PlayerIDFn.getOpponent(playerId2);
             const cardIds = GameStateFn2.getItemIdsByBasyou(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, "\u914D\u5099\u30A8\u30EA\u30A2"));
             let unitIds = cardIds.filter((cardId) => GameStateFn2.getSetGroupRoot(ctx3, cardId) == cardId).filter((cardId) => GameStateFn2.getCardBattleArea(ctx3, cardId).includes(runtimeBattleArea)).filter((cardId) => GameStateFn2.getCard(ctx3, cardId).isRoll != true);
             const opponentUnitIds = GameStateFn2.getBattleGroup(ctx3, DefineFn2.AbsoluteBaSyouFn.of(opponentPlayerId, currentBaKw));
             if (opponentUnitIds.length) {
-              if (GameStateFn2.isABattleGroup(ctx3, ["\u9AD8\u6A5F\u52D5"], opponentUnitIds[0])) {
-                unitIds = unitIds.filter((id) => GameStateFn2.isABattleGroup(ctx3, ["\u9AD8\u6A5F\u52D5"], id));
+              if (GameStateFn2.isBattleGroupHasA(ctx3, ["\u9AD8\u6A5F\u52D5"], opponentUnitIds[0])) {
+                unitIds = unitIds.filter((id) => GameStateFn2.isBattleGroupHasA(ctx3, ["\u9AD8\u6A5F\u52D5"], id));
               }
             }
             const pairs = unitIds.map((id) => {
@@ -31612,9 +31711,9 @@ function createAttackPhaseRuleEffect(ctx2, playerId) {
           }.toString(),
           actions: [
             {
-              title: function _(ctx3, effect2, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {
-                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect2);
-                const fackCardId = DefineFn2.EffectFn.getCardID(effect2);
+              title: function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {
+                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect);
+                const fackCardId = DefineFn2.EffectFn.getCardID(effect);
                 const earthPairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, "\u53BB\u5730\u7403", fackCardId);
                 for (const pair3 of earthPairs) {
                   ctx3 = GameStateFn2.doItemMove(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, "\u6226\u95D8\u30A8\u30EA\u30A21"), pair3);
@@ -31625,20 +31724,20 @@ function createAttackPhaseRuleEffect(ctx2, playerId) {
           ]
         },
         "\u53BB\u5B87\u5B99": {
-          title: function _(ctx3, effect2, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {
+          title: function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {
             const currentBaKw = "\u6226\u95D8\u30A8\u30EA\u30A22";
             const runtimeBattleArea = GameStateFn2.getRuntimeBattleArea(ctx3, currentBaKw);
             if (runtimeBattleArea == "\u5730\u7403\u30A8\u30EA\u30A2") {
               return null;
             }
-            const playerId2 = DefineFn2.EffectFn.getPlayerID(effect2);
+            const playerId2 = DefineFn2.EffectFn.getPlayerID(effect);
             const opponentPlayerId = DefineFn2.PlayerIDFn.getOpponent(playerId2);
             const cardIds = GameStateFn2.getItemIdsByBasyou(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, "\u914D\u5099\u30A8\u30EA\u30A2"));
             let unitIds = cardIds.filter((cardId) => GameStateFn2.getSetGroupRoot(ctx3, cardId) == cardId).filter((cardId) => GameStateFn2.getCardBattleArea(ctx3, cardId).includes(runtimeBattleArea)).filter((cardId) => GameStateFn2.getCard(ctx3, cardId).isRoll != true);
             const opponentUnitIds = GameStateFn2.getBattleGroup(ctx3, DefineFn2.AbsoluteBaSyouFn.of(opponentPlayerId, currentBaKw));
             if (opponentUnitIds.length) {
-              if (GameStateFn2.isABattleGroup(ctx3, ["\u9AD8\u6A5F\u52D5"], opponentUnitIds[0])) {
-                unitIds = unitIds.filter((id) => GameStateFn2.isABattleGroup(ctx3, ["\u9AD8\u6A5F\u52D5"], id));
+              if (GameStateFn2.isBattleGroupHasA(ctx3, ["\u9AD8\u6A5F\u52D5"], opponentUnitIds[0])) {
+                unitIds = unitIds.filter((id) => GameStateFn2.isBattleGroupHasA(ctx3, ["\u9AD8\u6A5F\u52D5"], id));
               }
             }
             const pairs = unitIds.map((id) => {
@@ -31650,14 +31749,13 @@ function createAttackPhaseRuleEffect(ctx2, playerId) {
           }.toString(),
           actions: [
             {
-              title: function _(ctx3, effect2, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {
-                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect2);
-                const fackCardId = DefineFn2.EffectFn.getCardID(effect2);
+              title: function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {
+                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect);
+                const fackCardId = DefineFn2.EffectFn.getCardID(effect);
                 const spacePairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, "\u53BB\u5B87\u5B99", fackCardId);
                 for (const pair3 of spacePairs) {
                   ctx3 = GameStateFn2.doItemMove(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, "\u6226\u95D8\u30A8\u30EA\u30A22"), pair3);
                 }
-                ctx3 = GameStateFn2.setNextPhase(ctx3);
                 return ctx3;
               }.toString()
             }
@@ -31668,7 +31766,17 @@ function createAttackPhaseRuleEffect(ctx2, playerId) {
         {
           actions: [
             {
-              title: function _(ctx3, effect2, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {
+              title: function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {
+                const fackCardId = DefineFn2.EffectFn.getCardID(effect);
+                const phase = GameStateFn2.getPhase(ctx3);
+                const pairs1 = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, "\u53BB\u5730\u7403", fackCardId);
+                const pairs2 = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, "\u53BB\u5B87\u5B99", fackCardId);
+                if (DefineFn2.PhaseFn.eq(phase, ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u653B\u6483\u30B9\u30C6\u30C3\u30D7", "\u898F\u5B9A\u306E\u52B9\u679C"])) {
+                  ctx3 = GameStateFn2.doTriggerEvent(ctx3, {
+                    title: ["\u3053\u306E\u30AB\u30FC\u30C9\u304C\u653B\u6483\u306B\u51FA\u6483\u3057\u305F\u5834\u5408"],
+                    cardIds: [...pairs1, ...pairs2].map((p) => p[0])
+                  });
+                }
                 return ctx3;
               }.toString()
             }
@@ -31692,9 +31800,9 @@ function createDrawPhaseRuleEffect(ctx2, playerId) {
         {
           actions: [
             {
-              title: function _(ctx3, effect2, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {
+              title: function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {
                 const drawCount = 1;
-                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect2);
+                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect);
                 const from = DefineFn2.AbsoluteBaSyouFn.of(playerId2, "\u672C\u56FD");
                 const cardIds = GameStateFn2.getItemIdsByBasyou(ctx3, from).slice(0, drawCount);
                 for (const cardId of cardIds) {
@@ -31723,8 +31831,8 @@ function createRerollPhaseRuleEffect(ctx2, playerId) {
         {
           actions: [
             {
-              title: function _(ctx3, effect2, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {
-                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect2);
+              title: function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {
+                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect);
                 const pairs = ["\u914D\u5099\u30A8\u30EA\u30A2", "G\u30BE\u30FC\u30F3"].flatMap((kw) => {
                   const basyou = DefineFn2.AbsoluteBaSyouFn.of(playerId2, kw);
                   return GameStateFn2.getItemIdsByBasyou(ctx3, basyou).filter((cardId) => GameStateFn2.getItemIsCanReroll(ctx3, cardId)).map((cardId) => {
@@ -31757,8 +31865,8 @@ function createDamageRuleEffect(ctx2, playerId) {
         {
           actions: [
             {
-              title: function _(ctx3, effect2, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {
-                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect2);
+              title: function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {
+                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect);
                 ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, "\u6226\u95D8\u30A8\u30EA\u30A21", 1);
                 ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, "\u6226\u95D8\u30A8\u30EA\u30A22", 1);
                 ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, "\u6226\u95D8\u30A8\u30EA\u30A21", 2);
@@ -31786,8 +31894,8 @@ function createReturnRuleEffect(ctx2, playerId) {
         {
           actions: [
             {
-              title: function _(ctx3, effect2, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {
-                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect2);
+              title: function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {
+                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect);
                 const opponentId = DefineFn2.PlayerIDFn.getOpponent(playerId2);
                 ctx3 = _processKw(ctx3, playerId2, "\u6226\u95D8\u30A8\u30EA\u30A21");
                 ctx3 = _processKw(ctx3, playerId2, "\u6226\u95D8\u30A8\u30EA\u30A22");
@@ -31983,12 +32091,12 @@ function queryFlow(ctx2, playerID) {
     const myEffect = [];
     const opponentEffect = [];
     ctx2.immediateEffect.forEach((effectID) => {
-      const effect4 = getEffect(ctx2, effectID);
-      const controller = EffectFn.getPlayerID(effect4);
+      const effect2 = getEffect(ctx2, effectID);
+      const controller = EffectFn.getPlayerID(effect2);
       if (controller == playerID) {
-        myEffect.push(effect4);
+        myEffect.push(effect2);
       } else {
-        opponentEffect.push(effect4);
+        opponentEffect.push(effect2);
       }
     });
     if (isActivePlayer == false) {
@@ -32009,17 +32117,17 @@ function queryFlow(ctx2, playerID) {
         }
       ];
     }
-    const effect3 = myEffect[0];
+    const effect = myEffect[0];
     {
-      const cets = createCommandEffectTips(ctx2, effect3).filter(CommandEffecTipFn.filterNoError);
+      const cets = createCommandEffectTips(ctx2, effect).filter(CommandEffecTipFn.filterNoError);
       if (cets.length == 0) {
         throw new Error(`cets.length must not 0`);
       }
     }
     const optionEffect = myEffect.filter((v) => v.isOption == true);
     if (optionEffect.length) {
-      const effect4 = optionEffect[0];
-      const cets = createCommandEffectTips(ctx2, effect4).filter(CommandEffecTipFn.filterNoError);
+      const effect2 = optionEffect[0];
+      const cets = createCommandEffectTips(ctx2, effect2).filter(CommandEffecTipFn.filterNoError);
       if (cets.length == 0) {
         throw new Error(`cets.length must not 0`);
       }
@@ -32028,7 +32136,7 @@ function queryFlow(ctx2, playerID) {
       ...myEffect.length ? [
         {
           id: "FlowSetActiveEffectID",
-          effectID: effect3.id,
+          effectID: effect.id,
           description: "\u9078\u64C7\u4E00\u500B\u8D77\u52D5\u6548\u679C",
           tips: myEffect
         }
@@ -32093,14 +32201,14 @@ function queryFlow(ctx2, playerID) {
   }
   const myCommandList = getPlayerCommandsFilterNoErrorDistinct(ctx2, playerID).map((tip) => tip.effect);
   if (ctx2.stackEffect.length) {
-    const effect3 = getTopEffect(ctx2);
-    if (effect3 == null) {
+    const effect = getTopEffect(ctx2);
+    if (effect == null) {
       throw new Error("effect not found");
     }
-    if (effect3.id == null) {
+    if (effect.id == null) {
       throw new Error("effect.id not found");
     }
-    const controller = EffectFn.getPlayerID(effect3);
+    const controller = EffectFn.getPlayerID(effect);
     const isAllPassCut = !!ctx2.flowMemory.hasPlayerPassCut[PlayerA] && !!ctx2.flowMemory.hasPlayerPassCut[PlayerB];
     if (isAllPassCut == false) {
       const isPassCut = ctx2.flowMemory.hasPlayerPassCut[playerID];
@@ -32128,9 +32236,9 @@ function queryFlow(ctx2, playerID) {
           if (myCommandList.length == 0) {
             return [];
           }
-          const effect4 = myCommandList[0];
+          const effect2 = myCommandList[0];
           {
-            const cets = createCommandEffectTips(ctx2, effect4).filter(CommandEffecTipFn.filterNoError);
+            const cets = createCommandEffectTips(ctx2, effect2).filter(CommandEffecTipFn.filterNoError);
             if (cets.length == 0) {
               throw new Error(`cets.length must not 0`);
             }
@@ -32138,7 +32246,7 @@ function queryFlow(ctx2, playerID) {
           return [
             {
               id: "FlowSetActiveEffectID",
-              effectID: effect4.id,
+              effectID: effect2.id,
               tips: myCommandList,
               description: "\u4F60\u53EF\u4EE5\u5207\u5165"
             }
@@ -32160,9 +32268,9 @@ function queryFlow(ctx2, playerID) {
     return [
       {
         id: "FlowSetActiveEffectID",
-        effectID: effect3.id,
+        effectID: effect.id,
         description: "\u652F\u4ED8\u6700\u4E0A\u65B9\u7684\u5806\u758A\u6548\u679C",
-        tips: [effect3]
+        tips: [effect]
       }
     ];
   }
@@ -32186,9 +32294,9 @@ function queryFlow(ctx2, playerID) {
           if (myCommandList.length == 0) {
             return [];
           }
-          const effect3 = myCommandList[0];
+          const effect = myCommandList[0];
           {
-            const cets = createCommandEffectTips(ctx2, effect3).filter(CommandEffecTipFn.filterNoError);
+            const cets = createCommandEffectTips(ctx2, effect).filter(CommandEffecTipFn.filterNoError);
             if (cets.length == 0) {
               throw new Error(`cets.length must not 0`);
             }
@@ -32196,7 +32304,7 @@ function queryFlow(ctx2, playerID) {
           return [
             {
               id: "FlowSetActiveEffectID",
-              effectID: effect3.id,
+              effectID: effect.id,
               description: "\u9078\u64C7\u4E00\u500B\u6307\u4EE4",
               tips: myCommandList
             }
@@ -32427,16 +32535,16 @@ var import_react2 = __toESM(require_react(), 1);
 var jsx_dev_runtime2 = __toESM(require_jsx_dev_runtime(), 1);
 var CARD_SIZE = 100;
 var CardView = (props) => {
-  const appContext2 = import_react2.useContext(AppContext);
-  const card10 = import_react2.useMemo(() => {
-    return getCard(appContext2.viewModel.model.gameState, props.cardID);
-  }, [props.cardID, appContext2.viewModel.model.gameState]);
+  const appContext = import_react2.useContext(AppContext);
+  const card = import_react2.useMemo(() => {
+    return getCard(appContext.viewModel.model.gameState, props.cardID);
+  }, [props.cardID, appContext.viewModel.model.gameState]);
   const isVisible = import_react2.useMemo(() => {
-    if (card10.isFaceDown) {
-      const baSyou = getItemBaSyou(appContext2.viewModel.model.gameState, card10.id);
+    if (card.isFaceDown) {
+      const baSyou = getItemBaSyou(appContext.viewModel.model.gameState, card.id);
       switch (baSyou.value[1]) {
         case "\u624B\u672D": {
-          const controller = getItemController(appContext2.viewModel.model.gameState, card10.id);
+          const controller = getItemController(appContext.viewModel.model.gameState, card.id);
           if (controller == props.clientID) {
             return true;
           }
@@ -32446,22 +32554,22 @@ var CardView = (props) => {
           break;
       }
     }
-    return card10.isFaceDown != true;
-  }, [props.clientID, card10, appContext2.viewModel.model.gameState]);
+    return card.isFaceDown != true;
+  }, [props.clientID, card, appContext.viewModel.model.gameState]);
   const render = import_react2.useMemo(() => {
-    const imgSrc = isVisible ? getImgSrc(card10.protoID || "unknown") : "https://particle-979.appspot.com/common/images/card/cardback_0.jpg";
-    const isSelect = appContext2.viewModel.cardSelection.includes(card10.id);
+    const imgSrc = isVisible ? getImgSrc(card.protoID || "unknown") : "https://particle-979.appspot.com/common/images/card/cardback_0.jpg";
+    const isSelect = appContext.viewModel.cardSelection.includes(card.id);
     return /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
       style: {
         border: "2px solid black",
         ...isSelect ? { border: "2px solid red" } : null,
-        ...card10.isRoll ? { transform: "rotate(90deg)" } : null
+        ...card.isRoll ? { transform: "rotate(90deg)" } : null
       },
       onClick: () => {
         if (props.enabled == false) {
           return;
         }
-        OnEvent.next({ id: "OnClickCardEvent", card: card10 });
+        OnEvent.next({ id: "OnClickCardEvent", card });
       },
       children: [
         /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("img", {
@@ -32470,15 +32578,15 @@ var CardView = (props) => {
         }, undefined, false, undefined, this),
         /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
           hidden: true,
-          children: card10.id
+          children: card.id
         }, undefined, false, undefined, this),
         /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
           hidden: true,
-          children: card10.isFaceDown ? "O" : "X"
+          children: card.isFaceDown ? "O" : "X"
         }, undefined, false, undefined, this)
       ]
     }, undefined, true, undefined, this);
-  }, [card10, isVisible, appContext2.viewModel.cardSelection, props.enabled]);
+  }, [card, isVisible, appContext.viewModel.cardSelection, props.enabled]);
   return render;
 };
 
@@ -32519,9 +32627,9 @@ var TargetTypeView = (props) => {
 // src/client/component/RequireView.tsx
 var jsx_dev_runtime4 = __toESM(require_jsx_dev_runtime(), 1);
 var RequireView = (props) => {
-  const appContext3 = import_react4.useContext(AppContext);
+  const appContext = import_react4.useContext(AppContext);
   const render = import_react4.useMemo(() => {
-    const tipOrEs = createEffectTips(appContext3.viewModel.model.gameState, props.effect, 0, 0);
+    const tipOrEs = createEffectTips(appContext.viewModel.model.gameState, props.effect, 0, 0);
     return /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("div", {
       style: { border: "1px solid black" },
       children: tipOrEs.map((tipOrE, i) => {
@@ -32557,7 +32665,7 @@ var RequireView = (props) => {
       })
     }, undefined, false, undefined, this);
   }, [
-    appContext3.viewModel.model.gameState,
+    appContext.viewModel.model.gameState,
     props
   ]);
   return /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("div", {
@@ -32572,15 +32680,15 @@ var RequireView = (props) => {
 // src/client/component/EffectView.tsx
 var jsx_dev_runtime5 = __toESM(require_jsx_dev_runtime(), 1);
 var EffectView = (props) => {
-  const appContext4 = import_react5.useContext(AppContext);
+  const appContext = import_react5.useContext(AppContext);
   const block = import_react5.useMemo(() => {
     try {
-      return getEffectIncludePlayerCommand(appContext4.viewModel.model.gameState, props.effectID);
+      return getEffectIncludePlayerCommand(appContext.viewModel.model.gameState, props.effectID);
     } catch (e) {
       console.error(e);
       return e.message;
     }
-  }, [appContext4.viewModel.model.gameState, props.effectID]);
+  }, [appContext.viewModel.model.gameState, props.effectID]);
   if (typeof block == "string") {
     return /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
       children: block
@@ -32644,10 +32752,10 @@ var EffectView = (props) => {
 // src/client/component/FlowListView.tsx
 var jsx_dev_runtime6 = __toESM(require_jsx_dev_runtime(), 1);
 var FlowListView = (props) => {
-  const appContext5 = import_react6.useContext(AppContext);
+  const appContext = import_react6.useContext(AppContext);
   const flows = import_react6.useMemo(() => {
-    return queryFlow(appContext5.viewModel.model.gameState, props.clientID);
-  }, [appContext5.viewModel.model.gameState, props.clientID]);
+    return queryFlow(appContext.viewModel.model.gameState, props.clientID);
+  }, [appContext.viewModel.model.gameState, props.clientID]);
   import_react6.useEffect(() => {
     const speed = 50;
     const isPlayerControl = true;
@@ -32685,7 +32793,7 @@ var FlowListView = (props) => {
       return;
     }
     if (flows.length) {
-      const aiChoiseList = flows.flatMap((flow) => createAIChoiseList(appContext5.viewModel.model.gameState, flow));
+      const aiChoiseList = flows.flatMap((flow) => createAIChoiseList(appContext.viewModel.model.gameState, flow));
       if (aiChoiseList.length > 0) {
         aiChoiseList.sort((a, b) => b.weight - a.weight);
         const flow = aiChoiseList[0].flow;
@@ -32698,7 +32806,7 @@ var FlowListView = (props) => {
         }, speed);
       }
     }
-  }, [appContext5.viewModel.model.gameState, props.clientID, flows]);
+  }, [appContext.viewModel.model.gameState, props.clientID, flows]);
   const renderControlPanel = import_react6.useMemo(() => {
     return /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
       children: flows.map((flow, i) => {
@@ -32786,25 +32894,25 @@ var import_react8 = __toESM(require_react(), 1);
 var import_react7 = __toESM(require_react(), 1);
 var jsx_dev_runtime7 = __toESM(require_jsx_dev_runtime(), 1);
 var CardStackView = (props) => {
-  const appContext6 = import_react7.useContext(AppContext);
+  const appContext = import_react7.useContext(AppContext);
   const cards = import_react7.useMemo(() => {
-    return appContext6.viewModel.model.gameState.table.cardStack[AbsoluteBaSyouFn.toString(props.cardPosition)] || [];
+    return appContext.viewModel.model.gameState.table.cardStack[AbsoluteBaSyouFn.toString(props.cardPosition)] || [];
   }, [
     props.cardPosition,
-    appContext6.viewModel.model.gameState.table.cardStack
+    appContext.viewModel.model.gameState.table.cardStack
   ]);
   const cardsOnlySetGroupRoot = import_react7.useMemo(() => {
     return cards.filter((cardId) => {
-      return appContext6.viewModel.model.gameState.setGroup.itemGroupParent[cardId] == null;
+      return appContext.viewModel.model.gameState.setGroup.itemGroupParent[cardId] == null;
     });
-  }, [cards, appContext6.viewModel.model.gameState.setGroup.itemGroupParent]);
+  }, [cards, appContext.viewModel.model.gameState.setGroup.itemGroupParent]);
   const render = import_react7.useMemo(() => {
     const _cardPositionID = AbsoluteBaSyouFn.toString(props.cardPosition);
     return /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("div", {
       style: {
         display: "flex",
         border: "2px solid black",
-        ...appContext6.viewModel.cardPositionSelection.includes(_cardPositionID) ? { border: "2px solid red" } : null
+        ...appContext.viewModel.cardPositionSelection.includes(_cardPositionID) ? { border: "2px solid red" } : null
       },
       children: [
         /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("div", {
@@ -32820,8 +32928,8 @@ var CardStackView = (props) => {
         cardsOnlySetGroupRoot.map((rootCardId) => {
           const cardsInSetGroup = [
             rootCardId,
-            ...Object.keys(appContext6.viewModel.model.gameState.setGroup.itemGroupParent).filter((setCardID) => {
-              return appContext6.viewModel.model.gameState.setGroup.itemGroupParent[setCardID] == rootCardId;
+            ...Object.keys(appContext.viewModel.model.gameState.setGroup.itemGroupParent).filter((setCardID) => {
+              return appContext.viewModel.model.gameState.setGroup.itemGroupParent[setCardID] == rootCardId;
             })
           ];
           return /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("div", {
@@ -32841,8 +32949,8 @@ var CardStackView = (props) => {
     props.cardPosition,
     props.clinetID,
     cardsOnlySetGroupRoot,
-    appContext6.viewModel.cardPositionSelection,
-    appContext6.viewModel.model.gameState.setGroup.itemGroupParent
+    appContext.viewModel.cardPositionSelection,
+    appContext.viewModel.model.gameState.setGroup.itemGroupParent
   ]);
   return render;
 };
@@ -33002,44 +33110,44 @@ var TableView = (props) => {
 // src/client/component/ClientView.tsx
 var jsx_dev_runtime9 = __toESM(require_jsx_dev_runtime(), 1);
 function ClientView(props) {
-  const appContext7 = import_react9.useContext(AppContext);
+  const appContext = import_react9.useContext(AppContext);
   const render = import_react9.useMemo(() => {
     return /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
       children: [
         /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
           children: [
             "localMemory:",
-            JSON.stringify(appContext7.viewModel.localMemory)
+            JSON.stringify(appContext.viewModel.localMemory)
           ]
         }, undefined, true, undefined, this),
         /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
           children: [
             "version:",
-            JSON.stringify(appContext7.viewModel.model.versionID)
+            JSON.stringify(appContext.viewModel.model.versionID)
           ]
         }, undefined, true, undefined, this),
         /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
           children: [
             "timing:",
-            JSON.stringify(appContext7.viewModel.model.gameState.phase)
+            JSON.stringify(appContext.viewModel.model.gameState.phase)
           ]
         }, undefined, true, undefined, this),
         /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
           children: [
             "flowMemory:",
-            JSON.stringify(appContext7.viewModel.model.gameState.flowMemory)
+            JSON.stringify(appContext.viewModel.model.gameState.flowMemory)
           ]
         }, undefined, true, undefined, this),
         /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
           children: [
             "activePlayerID: ",
-            appContext7.viewModel.model.gameState.activePlayerID
+            appContext.viewModel.model.gameState.activePlayerID
           ]
         }, undefined, true, undefined, this),
         /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
           children: [
             "turn: ",
-            appContext7.viewModel.model.gameState.turn
+            appContext.viewModel.model.gameState.turn
           ]
         }, undefined, true, undefined, this),
         /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("h1", {
@@ -33053,7 +33161,7 @@ function ClientView(props) {
         }, undefined, false, undefined, this)
       ]
     }, undefined, true, undefined, this);
-  }, [appContext7.viewModel.model, appContext7.viewModel.localMemory, appContext7.viewModel.model.gameState, props.clientID]);
+  }, [appContext.viewModel.model, appContext.viewModel.localMemory, appContext.viewModel.model.gameState, props.clientID]);
   return render;
 }
 
