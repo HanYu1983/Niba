@@ -22,7 +22,7 @@ import { flow, lift } from "ramda";
 import { getCard } from "../gameState/CardTableComponent";
 import { getCoin, getCoinIds, getCoinOwner } from "../gameState/CoinTableComponent";
 import { createEntityIterator, EntityFn } from "../gameState/Entity";
-import { createDestroyEffectAndPush } from "../gameState/doItemSetDestroy";
+import { createMinusDestroyEffectAndPush } from "../gameState/doItemSetDestroy";
 import { doCutInDestroyEffectsAndClear } from "../gameState/doCutInDestroyEffectsAndClear";
 
 export function applyFlow(
@@ -228,16 +228,6 @@ export function applyFlow(
                     return ctx;
                 }
             }
-            // 傷判的規定效果一結束就收集所有破壞的卡並建立破壞而廢棄的效果
-            // if (
-            //     ctx.phase[0] == "戦闘フェイズ" &&
-            //     ctx.phase[1] == "ダメージ判定ステップ" &&
-            //     ctx.phase[2] == "規定の効果"
-            // ) {
-            //     // 更新所有破壞而廢棄的效果
-            //     // 若有產生值，在下一步時主動玩家就要拿到決定解決順序的指令
-            //     ctx = createDestroyEffectAndPush(ctx) as GameStateWithFlowMemory
-            // }
             // 回合結束時切換主動玩家
             if (
                 ctx.phase[0] == "戦闘フェイズ" &&
@@ -289,7 +279,7 @@ export function applyFlow(
             ctx = updateCommand(ctx) as GameStateWithFlowMemory;
             // 更新所有破壞而廢棄的效果
             // 若有產生值，在下一步時主動玩家就要拿到決定解決順序的指令
-            ctx = createDestroyEffectAndPush(ctx) as GameStateWithFlowMemory;
+            ctx = createMinusDestroyEffectAndPush(ctx) as GameStateWithFlowMemory;
             return ctx;
         }
         case "FlowAddBlock": {

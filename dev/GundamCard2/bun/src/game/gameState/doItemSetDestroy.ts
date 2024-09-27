@@ -57,7 +57,7 @@ export function doItemSetDestroy(ctx: GameState, reason: DestroyReason | null, [
     throw new Error(`moveItem unknown item: ${itemId}`)
 }
 
-export function createDestroyEffectAndPush(ctx: GameState): GameState {
+export function createMinusDestroyEffectAndPush(ctx: GameState): GameState {
     // 將所有破壞效果加入破壞用堆疊
     // 加入破壞用堆疊後，主動玩家就必須決定解決順序
     // 決定後，依順序將所有效果移到正在解決中的堆疊，並重設切入的旗標，讓玩家可以在堆疊解決中可以再次切入
