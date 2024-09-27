@@ -88,9 +88,11 @@ export type EntitySearchOptions = {
     isDestroy?: boolean,
     isSetGroup?: boolean,
     isCanSetCharacter?: boolean,
+    hasSetCard?: boolean,
     count?: number,
     min?: number,
-    max?: number
+    max?: number,
+    asMuchAsPossible?: boolean,
 }
 
 export type ConditionTitle =

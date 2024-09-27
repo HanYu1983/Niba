@@ -12,6 +12,23 @@ export type CardCategory =
   | "ACE"
   | "グラフィック";
 
+export const CardCategoryFn = {
+  createAll(): CardCategory[] {
+    return [
+      "ユニット",
+      "キャラクター",
+      "コマンド",
+      "オペレーション",
+      "オペレーション(ユニット)",
+      "ACE",
+      "グラフィック"
+    ];
+  },
+  createRemaining(values: CardCategory[]): CardCategory[] {
+    return CardCategoryFn.createAll().filter(category => !values.includes(category));
+  }
+}
+
 export type CardRole = "未指定" | CardCategory;
 
 export type CardColor =

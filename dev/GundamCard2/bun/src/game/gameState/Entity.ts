@@ -75,7 +75,7 @@ export function createTipByEntitySearch(ctx: GameState, cardId: string, options:
     } else {
         entityList = entityList.filter(e => e.isCard || e.isChip)
     }
-    
+
     if (options.side) {
         const cardController = getItemController(ctx, cardId)
         const playerId = PlayerIDFn.fromRelatedPlayerSideKeyword(options.side || "自軍", cardController)
@@ -94,6 +94,9 @@ export function createTipByEntitySearch(ctx: GameState, cardId: string, options:
         entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx, true)).filter(EntityFn.filterCanSetCharacter(ctx))
     } else if (options.isSetGroup != null) {
         entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx, options.isSetGroup))
+    }
+    if (options.hasSetCard != null) {
+        entityList = entityList.filter(EntityFn.filterHasSetCard(ctx, options.hasSetCard))
     }
     if (options.isDestroy != null) {
         entityList = entityList.filter(EntityFn.filterIsDestroy(options.isDestroy))
@@ -197,6 +200,11 @@ export const EntityFn = {
             // 有些機體可以設置2個駕駛
             const charLen = getSetGroup(ctx, entity.itemId).filter(itemId => getItemRuntimeCategory(ctx, itemId) == "キャラクター").length
             return charLen == 0
+        }
+    },
+    filterHasSetCard(ctx: GameState, v: boolean) {
+        return (entity: Entity) => {
+            return (getSetGroup(ctx, entity.itemId).length == 1) == v
         }
     },
     filterDistinct(cet: Entity, index: number, self: Entity[]): boolean {

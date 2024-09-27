@@ -36,12 +36,7 @@ export const prototype: CardPrototype = {
               }
             },
           })
-          // 檢看能不能滿足支付
-          const cets = GameStateFn.createEffectTips(ctx, newE, 0, 0).filter(DefineFn.TipOrErrorsFn.filterError)
-          if (cets.length) {
-            return ctx
-          }
-          ctx = GameStateFn.addImmediateEffect(ctx, newE) as GameState
+          ctx = GameStateFn.addImmediateEffectIfCanPayCost(ctx, newE) as GameState
           return ctx
         }
         return ctx

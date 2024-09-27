@@ -3,7 +3,7 @@ import { logCategory } from "../../tool/logger"
 import { createBridge } from "../bridge/createBridge"
 import { AbsoluteBaSyouFn } from "../define/BaSyou"
 import { CardTextFn, ConditionFn, LogicTreeActionFn } from "../define/CardText"
-import { TipOrErrors, CommandEffectTip } from "../define/CommandEffectTip"
+import { TipOrErrors, CommandEffectTip, TipOrErrorsFn } from "../define/CommandEffectTip"
 import { Effect, EffectFn } from "../define/Effect"
 import { TipError, TargetMissingError } from "../define/GameError"
 import { GlobalEffect } from "../define/GlobalEffect"
@@ -14,6 +14,7 @@ import { GameState } from "./GameState"
 import { createActionTitleFn } from "./createActionTitleFn"
 import { createConditionTitleFn } from "./createConditionTitleFn"
 import { getItemState, mapItemState, setItemState } from "./ItemStateComponent"
+import { addImmediateEffect } from "./EffectStackComponent"
 
 export function doEffect(
   ctx: GameState,
@@ -297,4 +298,12 @@ export function setCardTipStrBaSyouPairs(ctx: GameState, varName: string, pairs:
   cs = ItemStateFn.setTip(cs, varName, { title: ["カード", [], pairs] })
   ctx = setItemState(ctx, cardId, cs) as GameState
   return ctx
+}
+
+export function addImmediateEffectIfCanPayCost(ctx: GameState, effect: Effect): GameState {
+  const cets = createEffectTips(ctx, effect, 0, 0).filter(TipOrErrorsFn.filterError)
+  if (cets.length) {
+    return ctx
+  }
+  return addImmediateEffect(ctx, effect) as GameState
 }
