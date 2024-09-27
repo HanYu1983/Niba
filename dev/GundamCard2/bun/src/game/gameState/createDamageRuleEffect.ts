@@ -6,12 +6,12 @@ import { StrBaSyouPair } from "../define/Tip";
 import { ToolFn } from "../tool";
 import { GameState } from "./GameState";
 
-export function getDamageRuleEffect(ctx: GameState, playerId: PlayerID): Effect {
+export function createDamageRuleEffect(ctx: GameState, playerId: PlayerID): Effect {
     return {
-        id: ToolFn.getUUID("getDamageRuleEffect"),
+        id: `createDamageRuleEffect_${playerId}`,
         reason: ["GameRule", playerId],
         text: {
-            id: ToolFn.getUUID("getDamageRuleEffect"),
+            id: `createDamageRuleEffect_text_${playerId}`,
             title: [],
             description: "getDamageRuleEffect",
             logicTreeActions: [

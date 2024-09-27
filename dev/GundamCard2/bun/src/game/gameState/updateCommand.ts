@@ -3,12 +3,12 @@ import { PlayerA, PlayerB } from "../define/PlayerID"
 import { createCommandEffectTips } from "./doEffect"
 import { setCommandEffects, setCommandEffectTips } from "./EffectStackComponent"
 import { GameState } from "./GameState"
-import { getPlayEffects } from "./getPlayEffects"
+import { createPlayEffects } from "./createPlayEffects"
 
 // 使用型技能
 export function updateCommand(ctx: GameState): GameState {
-    const playerAEffects = getPlayEffects(ctx, PlayerA)
-    const playerBEffects = getPlayEffects(ctx, PlayerB)
+    const playerAEffects = createPlayEffects(ctx, PlayerA)
+    const playerBEffects = createPlayEffects(ctx, PlayerB)
     const allEffects = [...playerAEffects, ...playerBEffects]
     const testedEffects = allEffects.flatMap(e => createCommandEffectTips(ctx, e))
     const effects = testedEffects.filter(CommandEffecTipFn.filterEffectDistinct).map(tip => tip.effect)

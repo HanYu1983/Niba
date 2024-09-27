@@ -2,9 +2,9 @@ import { CardText, OnEventFn, CardTextFn } from "../define/CardText";
 import { Effect, EffectFn } from "../define/Effect";
 import { PhaseFn } from "../define/Timing";
 import { GameState } from "./GameState";
-import { getActionTitleFn } from "./getActionTitleFn";
+import { createActionTitleFn } from "./createActionTitleFn";
 
-export function getOnEventTitleFn(text: CardText): OnEventFn {
+export function createOnEventTitleFn(text: CardText): OnEventFn {
     if (text.onEvent == null || typeof text.onEvent == "string") {
       return CardTextFn.getOnEventFn(text)
     }
@@ -14,7 +14,7 @@ export function getOnEventTitleFn(text: CardText): OnEventFn {
         return function (ctx: GameState, effect: Effect): GameState {
           const event = EffectFn.getEvent(effect)
           if (event.title[0] == "GameEventOnTiming" && PhaseFn.eq(event.title[1], timing)) {
-            return getActionTitleFn(action)(ctx, effect, null)
+            return createActionTitleFn(action)(ctx, effect, null)
           }
           return ctx
         }

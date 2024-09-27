@@ -13,8 +13,8 @@ import { getCardIdByCoinId, getCoins } from "../game/gameState/CoinTableComponen
 import { createEffectTips, doEffect, onMoveItem, setTipSelectionForUser, createCommandEffectTips, setEffectTips } from "../game/gameState/doEffect"
 import { getEffect, getTopEffect } from "../game/gameState/EffectStackComponent"
 import { createGameState, GameState } from "../game/gameState/GameState"
-import { createConditionKeyOfPayColorX, getPlayCardEffects } from "../game/gameState/getPlayCardEffect"
-import { getPlayEffects } from "../game/gameState/getPlayEffects"
+import { createConditionKeyOfPayColorX, createPlayCardEffects } from "../game/gameState/createPlayCardEffects"
+import { createPlayEffects } from "../game/gameState/createPlayEffects"
 import { getGlobalEffects, setGlobalEffects, clearGlobalEffects } from "../game/gameState/globalEffects"
 import { checkIsBattle, isBattle } from "../game/gameState/IsBattleComponent"
 import { getItemState, mapItemState, setItemState } from "../game/gameState/ItemStateComponent"
@@ -42,7 +42,7 @@ export async function test179016_04B_U_BK066C_black() {
     ctx = setPhase(ctx, ["配備フェイズ", "フリータイミング"]) as GameState
     const myGLength = getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン")).length
     {
-        const effects = getPlayCardEffects(ctx, cardA.id)
+        const effects = createPlayCardEffects(ctx, cardA.id)
         if (effects.length == 0) {
             throw new Error()
         }

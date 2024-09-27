@@ -4,7 +4,7 @@ import { Effect } from "../define/Effect";
 import { Tip } from "../define/Tip";
 import { GameState } from "./GameState";
 
-export function getTextsFromSpecialEffect(ctx: GameState, text: CardText): CardText[] {
+export function createTextsFromSpecialEffect(ctx: GameState, text: CardText): CardText[] {
     if (text.title[0] != "特殊型") {
         throw new Error(`text not 特殊型`)
     }
@@ -162,7 +162,7 @@ export function getTextsFromSpecialEffect(ctx: GameState, text: CardText): CardT
                                                             const cardId = DefineFn.EffectFn.getCardID(effect)
                                                             const from = GameStateFn.getItemBaSyou(ctx, cardId)
                                                             if (["戦闘エリア1", "戦闘エリア2"].includes(DefineFn.AbsoluteBaSyouFn.getBaSyouKeyword(from))) {
-                                                                return GameStateFn.getConditionTitleFn({
+                                                                return GameStateFn.createConditionTitleFn({
                                                                     title: ["_自軍_本國上的_1張卡", "自軍", "本国", 1],
                                                                     actions: [
                                                                         {
@@ -437,7 +437,7 @@ export function getTextsFromSpecialEffect(ctx: GameState, text: CardText): CardT
                                 const cardId = DefineFn.EffectFn.getCardID(effect)
                                 const cardController = GameStateFn.getItemController(ctx, cardId)
                                 const gCount = GameStateFn.getItemIdsByBasyou(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "Gゾーン")).length
-                                return GameStateFn.getConditionTitleFn({
+                                return GameStateFn.createConditionTitleFn({
                                     title: ["打開自軍手裡或指定HANGER中特徵_A並合計國力_x以下的_1張卡", A, gCount, 1]
                                 }, {})(ctx, effect, bridge)
                             }.toString().replace(`{ A: "" }`, JSON.stringify({ A: A })),

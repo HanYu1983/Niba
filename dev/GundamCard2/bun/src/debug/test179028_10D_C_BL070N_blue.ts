@@ -11,7 +11,7 @@ import { addCards, createCardWithProtoIds } from "../game/gameState/CardTableCom
 import { createCommandEffectTips, createEffectTips, doEffect, setTipSelectionForUser } from "../game/gameState/doEffect"
 import { addStackEffect, getDestroyEffects, getTopEffect, pushDestroyEffectsToStackAndClear } from "../game/gameState/EffectStackComponent"
 import { createGameState, GameState } from "../game/gameState/GameState"
-import { getPlayEffects } from "../game/gameState/getPlayEffects"
+import { createPlayEffects } from "../game/gameState/createPlayEffects"
 import { getItemState, mapItemState, setItemState } from "../game/gameState/ItemStateComponent"
 import { getItemBaSyou, getItemPrototype } from "../game/gameState/ItemTableComponent"
 import { setPhase } from "../game/gameState/PhaseComponent"
@@ -36,7 +36,7 @@ export async function test179028_10D_C_BL070N_blue() {
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), repeat("unitBlue", 2)) as GameState
     ctx = setActivePlayerID(ctx, PlayerA) as GameState
     ctx = setPhase(ctx, ["戦闘フェイズ", "攻撃ステップ", "フリータイミング"]) as GameState
-    const effects = getPlayEffects(ctx, PlayerA)
+    const effects = createPlayEffects(ctx, PlayerA)
     if (effects.length == 0) {
         throw new Error()
     }

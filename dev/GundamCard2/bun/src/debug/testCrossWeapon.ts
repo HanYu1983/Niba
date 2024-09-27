@@ -10,7 +10,7 @@ import { addChips, setChipPrototype } from "../game/gameState/ChipTableComponent
 import { assertEffectCanPass, doEffect, onMoveItem, setTipSelectionForUser } from "../game/gameState/doEffect";
 import { getTopEffect } from "../game/gameState/EffectStackComponent";
 import { createGameState, GameState } from "../game/gameState/GameState";
-import { getPlayEffects } from "../game/gameState/getPlayEffects";
+import { createPlayEffects } from "../game/gameState/createPlayEffects";
 import { setPhase } from "../game/gameState/PhaseComponent";
 import { triggerEvent } from "../game/gameState/triggerEvent";
 import { loadPrototype } from "../script";
@@ -43,7 +43,7 @@ export async function testCrossWeapon() {
     ctx = setPhase(ctx, ["戦闘フェイズ", "攻撃ステップ", "フリータイミング"]) as GameState
 
 
-    const playEffects = getPlayEffects(ctx, PlayerA)
+    const playEffects = createPlayEffects(ctx, PlayerA)
     if (playEffects.length == 0) {
         throw new Error("")
     }

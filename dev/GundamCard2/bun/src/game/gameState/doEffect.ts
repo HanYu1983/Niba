@@ -11,8 +11,8 @@ import { ItemStateFn } from "../define/ItemState"
 import { TipFn, TipTitleTextRef, StrBaSyouPair } from "../define/Tip"
 import { EventCenterFn } from "./EventCenter"
 import { GameState } from "./GameState"
-import { getActionTitleFn } from "./getActionTitleFn"
-import { getConditionTitleFn } from "./getConditionTitleFn"
+import { createActionTitleFn } from "./createActionTitleFn"
+import { createConditionTitleFn } from "./createConditionTitleFn"
 import { getItemState, mapItemState, setItemState } from "./ItemStateComponent"
 
 export function doEffect(
@@ -34,7 +34,7 @@ export function doEffect(
   conditionIds.forEach(conditionKey => {
     logCategory("doEffect", "conditionKey", conditionKey)
     const condition = CardTextFn.getCondition(effect.text, conditionKey)
-    const actionFns = ConditionFn.getActionTitleFns(condition, getActionTitleFn)
+    const actionFns = ConditionFn.getActionTitleFns(condition, createActionTitleFn)
     for (const actionFn of actionFns) {
       ctx = actionFn(ctx, effect, bridge)
       //ctx = clearGlobalEffects(ctx)
@@ -51,7 +51,7 @@ export function doEffect(
     // }
   })
   const lta = CardTextFn.getLogicTreeAction(effect.text, logicId)
-  for (const actionFn of LogicTreeActionFn.getActionTitleFns(lta, getActionTitleFn)) {
+  for (const actionFn of LogicTreeActionFn.getActionTitleFns(lta, createActionTitleFn)) {
     ctx = actionFn(ctx, effect, bridge)
     //ctx = clearGlobalEffects(ctx)
   }
@@ -82,7 +82,7 @@ export function createEffectTips(
   return Object.keys(ltacs).map(key => {
     const con = ltacs[key]
     logCategory("createEffectTips", key, con.title)
-    const tip = getConditionTitleFn(con, {})(ctx, effect, bridge)
+    const tip = createConditionTitleFn(con, {})(ctx, effect, bridge)
     const errors: string[] = []
     if (tip) {
       // 一開始找可用指令時不需要包含[對象有沒有被使用者選擇]
@@ -121,7 +121,7 @@ export function createEffectTips(
         }
       }
     }
-    ctx = ConditionFn.getActionTitleFns(con, getActionTitleFn).reduce((ctx, fn): GameState => {
+    ctx = ConditionFn.getActionTitleFns(con, createActionTitleFn).reduce((ctx, fn): GameState => {
       try {
         ctx = fn(ctx, effect, bridge)
         //ctx = clearGlobalEffects(ctx)
@@ -189,7 +189,7 @@ export function clearTipSelectionForUser(
   const bridge = createBridge()
   Object.keys(ltacs).forEach(key => {
     const con = ltacs[key]
-    const tip = getConditionTitleFn(con, {})(ctx, effect, bridge)
+    const tip = createConditionTitleFn(con, {})(ctx, effect, bridge)
     if (tip) {
       const cardId = EffectFn.getCardID(effect)
       if (getItemState(ctx, cardId).tips[key]) {

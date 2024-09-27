@@ -8,7 +8,7 @@ import { createCardWithProtoIds } from "../game/gameState/CardTableComponent"
 import { createEffectTips, doEffect, setTipSelectionForUser } from "../game/gameState/doEffect"
 import { getTopEffect } from "../game/gameState/EffectStackComponent"
 import { createGameState, GameState } from "../game/gameState/GameState"
-import { getPlayCardEffects } from "../game/gameState/getPlayCardEffect"
+import { createPlayCardEffects } from "../game/gameState/createPlayCardEffects"
 import { getGlobalEffects, setGlobalEffects, clearGlobalEffects } from "../game/gameState/globalEffects"
 import { getItemState } from "../game/gameState/ItemStateComponent"
 import { getItemIdsByBasyou, getItemIds } from "../game/gameState/ItemTableComponent"
@@ -30,7 +30,7 @@ export async function test179028_10D_U_WT181N_white() {
         throw new Error('must has one card')
     }
     const cardId = cardIds[0]
-    const playCardEffects = getPlayCardEffects(ctx, cardId)
+    const playCardEffects = createPlayCardEffects(ctx, cardId)
     if (playCardEffects.length != 2) {
         throw new Error(`playCardEffects.length != 2`)
     }

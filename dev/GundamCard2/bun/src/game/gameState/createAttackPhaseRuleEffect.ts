@@ -6,13 +6,13 @@ import { StrBaSyouPair, Tip } from "../define/Tip";
 import { ToolFn } from "../tool";
 import { GameState } from "./GameState";
 
-export function getAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID): Effect {
+export function createAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID): Effect {
     return {
-        id: ToolFn.getUUID("getAttackPhaseRuleEffect"),
+        id: `createAttackPhaseRuleEffect_${playerId}`,
         reason: ["GameRule", playerId],
         isOption: true,
         text: {
-            id: ToolFn.getUUID("getAttackPhaseRuleEffect"),
+            id: `createAttackPhaseRuleEffect_text_${playerId}`,
             title: [],
             conditions: {
                 "去地球": {

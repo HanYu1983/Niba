@@ -11,9 +11,9 @@ import { doEffect, createEffectTips, createCommandEffectTips } from "../game/gam
 import { doItemMove } from "../game/gameState/doItemMove";
 import { getTopEffect } from "../game/gameState/EffectStackComponent";
 import { createGameState, GameState } from "../game/gameState/GameState";
-import { getPlayEffects } from "../game/gameState/getPlayEffects";
-import { getPlayGEffects } from "../game/gameState/getPlayGEffect";
-import { getTextsFromSpecialEffect } from "../game/gameState/getTextsFromSpecialEffect";
+import { createPlayEffects } from "../game/gameState/createPlayEffects";
+import { createPlayGEffects } from "../game/gameState/createPlayGEffects";
+import { createTextsFromSpecialEffect } from "../game/gameState/createTextsFromSpecialEffect";
 import { getItemBaSyou } from "../game/gameState/ItemTableComponent";
 import { setPhase } from "../game/gameState/PhaseComponent";
 import { triggerEvent } from "../game/gameState/triggerEvent";
@@ -27,7 +27,7 @@ export async function testGain() {
         protoID: "unitBlue"
     }
     ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア"), [cardA]) as GameState
-    const texts = getTextsFromSpecialEffect(ctx, { title: ["特殊型", ["ゲイン"]], id: "" })
+    const texts = createTextsFromSpecialEffect(ctx, { title: ["特殊型", ["ゲイン"]], id: "" })
     if (texts.length == 0) {
         throw new Error()
     }

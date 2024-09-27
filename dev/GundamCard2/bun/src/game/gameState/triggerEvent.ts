@@ -11,13 +11,13 @@ import { getCardLikeItemIds, getItemController, getItemPrototype } from "./ItemT
 import { ItemStateFn } from "../define/ItemState"
 import { PhaseFn } from "../define/Timing"
 import { getItemState, mapItemState, mapItemStateValues, setItemState } from "./ItemStateComponent"
-import { getTextsFromSpecialEffect } from "./getTextsFromSpecialEffect"
+import { createTextsFromSpecialEffect } from "./createTextsFromSpecialEffect"
 import { logCategory } from "../../tool/logger"
 import { mapPlayerState } from "./PlayerStateComponent"
 import { PlayerStateFn } from "../define/PlayerState"
 import { getActivePlayerID } from "./ActivePlayerComponent"
 import { AbsoluteBaSyouFn, BaSyouKeywordFn } from "../define/BaSyou"
-import { getOnEventTitleFn } from "./getOnEventTitleFn"
+import { createOnEventTitleFn } from "./createOnEventTitleFn"
 
 // 觸發事件腳本
 // 在每次事件發生時都要呼叫
@@ -47,7 +47,7 @@ export function triggerEvent(
         reduce((ctx, { cardId, texts }) => {
             logCategory("triggerEvent", "找到卡和內文", cardId, texts)
             return texts
-                .flatMap(text => text.title[0] == "特殊型" ? getTextsFromSpecialEffect(ctx, text) : [text])
+                .flatMap(text => text.title[0] == "特殊型" ? createTextsFromSpecialEffect(ctx, text) : [text])
                 .reduce((ctx, text) => {
                     logCategory("triggerEvent", "處理單個內文", text.title, text.description)
                     const effect: Effect = {
@@ -55,7 +55,7 @@ export function triggerEvent(
                         reason: ["Event", getItemController(ctx, cardId), cardId, event],
                         text: text
                     }
-                    return getOnEventTitleFn(text)(ctx, effect, bridge)
+                    return createOnEventTitleFn(text)(ctx, effect, bridge)
                 }, ctx)
         }, ctx)
     )()

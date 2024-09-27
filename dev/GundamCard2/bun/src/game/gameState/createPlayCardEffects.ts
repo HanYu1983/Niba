@@ -34,7 +34,7 @@ export function createRollCostConditions(ctx: GameState, proto: CardPrototype, r
     return rollCostConditions
 }
 
-export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
+export function createPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
     const prototype = getItemPrototype(ctx, cardId)
     const playerId = getItemOwner(ctx, cardId)
     const cardRollCostLength = getCardRollCostLength(ctx, cardId)
@@ -67,11 +67,11 @@ export function getPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
     })
     // 注意, 這裡的effect.id是用函數名為前綴+卡片ID, 必須是唯一的
     const playCardEffect: Effect = {
-        id: `getPlayCardEffects_${cardId}`,
+        id: `createPlayCardEffects_${cardId}`,
         reason: ["PlayCard", playerId, cardId],
         description: "從手中即將出牌, 出牌後會產生場出的效果",
         text: {
-            id: `getPlayCardEffects_text_${cardId}`,
+            id: `createPlayCardEffects_text_${cardId}`,
             title: ["使用型", ["配備フェイズ"]],
             description: "從手中即將出牌, 出牌後會產生場出的效果",
             conditions: {

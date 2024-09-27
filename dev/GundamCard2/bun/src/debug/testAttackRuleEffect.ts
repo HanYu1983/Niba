@@ -6,8 +6,8 @@ import { getBattleGroup, isABattleGroup } from "../game/gameState/battleGroup";
 import { addCards } from "../game/gameState/CardTableComponent";
 import { createCommandEffectTips, createEffectTips, doEffect, setCardTipStrBaSyouPairs, setTipSelectionForUser } from "../game/gameState/doEffect";
 import { createGameState, GameState } from "../game/gameState/GameState";
-import { getAttackPhaseRuleEffect } from "../game/gameState/getAttackPhaseRuleEffect";
-import { getConditionTitleFn } from "../game/gameState/getConditionTitleFn";
+import { createAttackPhaseRuleEffect } from "../game/gameState/createAttackPhaseRuleEffect";
+import { createConditionTitleFn } from "../game/gameState/createConditionTitleFn";
 import { getItem, getItemBaSyou } from "../game/gameState/ItemTableComponent";
 import { Flow } from "../game/gameStateWithFlowMemory/Flow";
 import { loadPrototype } from "../script";
@@ -16,7 +16,7 @@ export async function testAttackRuleEffect() {
     await loadPrototype("earthUnit")
     await loadPrototype("spaceUnit")
     let ctx = createGameState()
-    const attackEffect = getAttackPhaseRuleEffect(ctx, PlayerA)
+    const attackEffect = createAttackPhaseRuleEffect(ctx, PlayerA)
     const earthUnit: Card = {
         id: "earthUnit",
         protoID: "earthUnit"
@@ -41,7 +41,7 @@ export async function testAttackRuleEffect2() {
     await loadPrototype("earthUnit")
     await loadPrototype("unitHasHigh")
     let ctx = createGameState()
-    const attackEffect = getAttackPhaseRuleEffect(ctx, PlayerA)
+    const attackEffect = createAttackPhaseRuleEffect(ctx, PlayerA)
     const earthUnit: Card = {
         id: "earthUnit",
         protoID: "earthUnit"
@@ -75,7 +75,7 @@ export async function testAttackRuleEffect3() {
     await loadPrototype("earthUnit")
     await loadPrototype("unitHasHigh")
     let ctx = createGameState()
-    const attackEffect = getAttackPhaseRuleEffect(ctx, PlayerA)
+    const attackEffect = createAttackPhaseRuleEffect(ctx, PlayerA)
     const tipOrErrors = createEffectTips(ctx, attackEffect, 0, 0, { isCheckUserSelection: true })
     const toes = tipOrErrors.filter(toe => toe.errors.length != 0)
     const tipInfos = toes.map(toe => {
@@ -83,7 +83,7 @@ export async function testAttackRuleEffect3() {
         if (con == null) {
             throw new Error(`con must exist`)
         }
-        const tip = getConditionTitleFn(con, {})(ctx, attackEffect, createBridge())
+        const tip = createConditionTitleFn(con, {})(ctx, attackEffect, createBridge())
         return {
             conditionKey: toe.conditionKey,
             condition: con,

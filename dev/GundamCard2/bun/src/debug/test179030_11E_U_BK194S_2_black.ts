@@ -8,14 +8,14 @@ import { addCards, createCardWithProtoIds } from "../game/gameState/CardTableCom
 import { createEffectTips, doEffect, setTipSelectionForUser, createCommandEffectTips } from "../game/gameState/doEffect"
 import { getEffect, getTopEffect } from "../game/gameState/EffectStackComponent"
 import { createGameState, GameState } from "../game/gameState/GameState"
-import { getPlayCardEffects } from "../game/gameState/getPlayCardEffect"
+import { createPlayCardEffects } from "../game/gameState/createPlayCardEffects"
 import { getGlobalEffects, setGlobalEffects, clearGlobalEffects } from "../game/gameState/globalEffects"
 import { getItemState } from "../game/gameState/ItemStateComponent"
 import { getItemIdsByBasyou, getItemIds, getItemBaSyou, getItemPrototype } from "../game/gameState/ItemTableComponent"
 import { loadPrototype } from "../script"
 import { setActivePlayerID } from "../game/gameState/ActivePlayerComponent"
 import { setPhase } from "../game/gameState/PhaseComponent"
-import { getPlayEffects } from "../game/gameState/getPlayEffects"
+import { createPlayEffects } from "../game/gameState/createPlayEffects"
 import { Card } from "../game/define/Card"
 import { doItemMove } from "../game/gameState/doItemMove"
 
@@ -37,7 +37,7 @@ export async function test179030_11E_U_BK194S_2_black() {
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), repeat("unitBlack", 5)) as GameState
     ctx = setActivePlayerID(ctx, PlayerA) as GameState
     ctx = setPhase(ctx, ["ドローフェイズ", "フリータイミング"]) as GameState
-    const effects = getPlayEffects(ctx, PlayerA)
+    const effects = createPlayEffects(ctx, PlayerA)
     {
         if (effects.length == 0) {
             throw new Error()
@@ -82,7 +82,7 @@ export async function test179030_11E_U_BK194S_2_black() {
     }
     {
         ctx = setPhase(ctx, ["配備フェイズ", "フリータイミング"]) as GameState
-        const effects = getPlayEffects(ctx, PlayerA)
+        const effects = createPlayEffects(ctx, PlayerA)
         if (effects.length == 0) {
             throw new Error()
         }
@@ -120,7 +120,7 @@ export async function test179030_11E_U_BK194S_2_black_2() {
         console.log(getItemPrototype(ctx, cardA.id))
         throw new Error()
     }
-    const effects = getPlayCardEffects(ctx, cardA.id)
+    const effects = createPlayCardEffects(ctx, cardA.id)
     if (effects.length == 0) {
         throw new Error()
     }

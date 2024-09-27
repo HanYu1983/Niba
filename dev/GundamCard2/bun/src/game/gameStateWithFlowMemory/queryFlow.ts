@@ -6,11 +6,11 @@ import { PlayerA, PlayerB, PlayerIDFn } from "../define/PlayerID";
 import { AbsoluteBaSyouFn } from "../define/BaSyou";
 import { Effect, EffectFn } from "../define/Effect";
 import { getPlayerCommandsFilterNoErrorDistinct } from "../gameState/updateCommand";
-import { getAttackPhaseRuleEffect } from "../gameState/getAttackPhaseRuleEffect";
-import { getDrawPhaseRuleEffect } from "../gameState/getDrawPhaseRuleEffect";
-import { getRerollPhaseRuleEffect } from "../gameState/getRerollPhaseRuleEffect";
-import { getDamageRuleEffect } from "../gameState/getDamageRuleEffect";
-import { getReturnRuleEffect } from "../gameState/getReturnRuleEffect";
+import { createAttackPhaseRuleEffect } from "../gameState/createAttackPhaseRuleEffect";
+import { createDrawPhaseRuleEffect } from "../gameState/createDrawPhaseRuleEffect";
+import { createRerollPhaseRuleEffect } from "../gameState/createRerollPhaseRuleEffect";
+import { createDamageRuleEffect } from "../gameState/createDamageRuleEffect";
+import { createReturnRuleEffect } from "../gameState/createReturnRuleEffect";
 import { clearTipSelectionForUser, createCommandEffectTips, createEffectTips } from "../gameState/doEffect";
 import { CommandEffecTipFn, TipOrErrorsFn } from "../define/CommandEffectTip";
 
@@ -582,7 +582,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                                 {
                                     id: "FlowAddBlock",
                                     description: `${phase[0]}規定效果`,
-                                    block: getDrawPhaseRuleEffect(ctx, playerID),
+                                    block: createDrawPhaseRuleEffect(ctx, playerID),
                                 },
                             ];
                         case "リロールフェイズ":
@@ -590,7 +590,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                                 {
                                     id: "FlowAddBlock",
                                     description: `${phase[0]}規定效果`,
-                                    block: getRerollPhaseRuleEffect(ctx, playerID),
+                                    block: createRerollPhaseRuleEffect(ctx, playerID),
                                 },
                             ];
                     }
@@ -629,7 +629,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                                         {
                                             id: "FlowAddBlock",
                                             description: `${phase[1]}規定效果`,
-                                            block: getAttackPhaseRuleEffect(ctx, ctx.activePlayerID),
+                                            block: createAttackPhaseRuleEffect(ctx, ctx.activePlayerID),
                                         },
                                     ];
                                 case "防御ステップ": {
@@ -637,7 +637,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                                         {
                                             id: "FlowAddBlock",
                                             description: `${phase[1]}規定效果`,
-                                            block: getAttackPhaseRuleEffect(ctx, PlayerIDFn.getOpponent(ctx.activePlayerID)),
+                                            block: createAttackPhaseRuleEffect(ctx, PlayerIDFn.getOpponent(ctx.activePlayerID)),
                                         },
                                     ];
                                 }
@@ -646,7 +646,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                                         {
                                             id: "FlowAddBlock",
                                             description: `${phase[1]}規定效果`,
-                                            block: getDamageRuleEffect(ctx, ctx.activePlayerID),
+                                            block: createDamageRuleEffect(ctx, ctx.activePlayerID),
                                         },
                                     ];
                                 case "帰還ステップ":
@@ -654,7 +654,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                                         {
                                             id: "FlowAddBlock",
                                             description: `${phase[1]}規定效果`,
-                                            block: getReturnRuleEffect(ctx, playerID),
+                                            block: createReturnRuleEffect(ctx, playerID),
                                         },
                                     ];
                                 default:

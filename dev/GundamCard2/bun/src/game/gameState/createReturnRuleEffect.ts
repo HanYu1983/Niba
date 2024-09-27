@@ -6,12 +6,12 @@ import { StrBaSyouPair } from "../define/Tip";
 import { ToolFn } from "../tool";
 import { GameState } from "./GameState";
 
-export function getReturnRuleEffect(ctx: GameState, playerId: PlayerID): Effect {
+export function createReturnRuleEffect(ctx: GameState, playerId: PlayerID): Effect {
     return {
-        id: ToolFn.getUUID("getReturnRuleEffect"),
+        id: `createReturnRuleEffect_${playerId}`,
         reason: ["GameRule", playerId],
         text: {
-            id: ToolFn.getUUID("getReturnRuleEffect"),
+            id: `createReturnRuleEffect_text_${playerId}`,
             title: [],
             description: "getReturnRuleEffect",
             logicTreeActions: [

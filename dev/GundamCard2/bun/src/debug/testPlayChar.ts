@@ -8,9 +8,9 @@ import { addCards } from "../game/gameState/CardTableComponent";
 import { doEffect, createEffectTips, setTipSelectionForUser } from "../game/gameState/doEffect";
 import { getTopEffect } from "../game/gameState/EffectStackComponent";
 import { createGameState, GameState } from "../game/gameState/GameState";
-import { getPlayCardEffects } from "../game/gameState/getPlayCardEffect";
-import { getPlayEffects } from "../game/gameState/getPlayEffects";
-import { getPlayGEffects } from "../game/gameState/getPlayGEffect";
+import { createPlayCardEffects } from "../game/gameState/createPlayCardEffects";
+import { createPlayEffects } from "../game/gameState/createPlayEffects";
+import { createPlayGEffects } from "../game/gameState/createPlayGEffects";
 import { getItemBaSyou } from "../game/gameState/ItemTableComponent";
 import { setPhase } from "../game/gameState/PhaseComponent";
 import { getSetGroupChildren, getSetGroupRoot } from "../game/gameState/SetGroupComponent";
@@ -35,7 +35,7 @@ export async function testPlayChar() {
     ctx = setActivePlayerID(ctx, PlayerA) as GameState
     ctx = setPhase(ctx, ["配備フェイズ", "フリータイミング"]) as GameState
     {
-        const effects = getPlayCardEffects(ctx, charBlue.id)
+        const effects = createPlayCardEffects(ctx, charBlue.id)
         if (effects.length != 1) {
             throw new Error()
         }

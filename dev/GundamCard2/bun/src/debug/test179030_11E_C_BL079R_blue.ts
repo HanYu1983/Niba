@@ -11,7 +11,7 @@ import { addCards, createCardWithProtoIds, getCard } from "../game/gameState/Car
 import { createEffectTips, doEffect, assertEffectCanPass, setTipSelectionForUser } from "../game/gameState/doEffect"
 import { getEffect, getTopEffect, removeEffect } from "../game/gameState/EffectStackComponent"
 import { createGameState, GameState } from "../game/gameState/GameState"
-import { getPlayEffects } from "../game/gameState/getPlayEffects"
+import { createPlayEffects } from "../game/gameState/createPlayEffects"
 import { getItemIdsByBasyou, getItem, getItemBaSyou } from "../game/gameState/ItemTableComponent"
 import { setPhase } from "../game/gameState/PhaseComponent"
 import { loadPrototype } from "../script"
@@ -57,7 +57,7 @@ export async function test179030_11E_C_BL079R_blue() {
         const originBasyouD = AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア1")
         ctx = addCards(ctx, originBasyouD, [cardD]) as GameState
         console.log("取得出牌指令")
-        const playCardEffects = getPlayEffects(ctx, PlayerA)
+        const playCardEffects = createPlayEffects(ctx, PlayerA)
         if (playCardEffects.length != 1) {
             throw new Error(`playCardEffects.length != 1`)
         }

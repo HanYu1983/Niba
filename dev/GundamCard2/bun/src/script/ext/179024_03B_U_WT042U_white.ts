@@ -25,7 +25,7 @@ export const prototype: CardPrototype = {
           if (GameStateFn.isBattle(ctx, cardId, null)) {
             return null
           }
-          return GameStateFn.getConditionTitleFn({
+          return GameStateFn.createConditionTitleFn({
             title: ["_交戦中の_自軍_ユニット_１枚", null, "敵軍", "ユニット", 1]
           }, {})(ctx, effect, null)
         }.toString()
@@ -58,7 +58,7 @@ export const prototype: CardPrototype = {
                               ctx = GameStateFn.setItemState(ctx, cardId, cardState) as GameState
                               return ctx
                             }
-                            return GameStateFn.getActionTitleFn({
+                            return GameStateFn.createActionTitleFn({
                               title: ["_－１／－１／－１コイン_１個を乗せる", [-1, -1, -1], 1],
                               vars: ["このカードが非交戦中の場合、敵軍ユニット１枚"]
                             })(ctx, effect, null)

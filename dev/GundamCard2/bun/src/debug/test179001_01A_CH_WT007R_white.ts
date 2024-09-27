@@ -10,7 +10,7 @@ import { addCards, createCardWithProtoIds } from "../game/gameState/CardTableCom
 import { createEffectTips, doEffect, setTipSelectionForUser } from "../game/gameState/doEffect"
 import { getTopEffect } from "../game/gameState/EffectStackComponent"
 import { createGameState, GameState } from "../game/gameState/GameState"
-import { getPlayEffects } from "../game/gameState/getPlayEffects"
+import { createPlayEffects } from "../game/gameState/createPlayEffects"
 import { getItemState, setItemState } from "../game/gameState/ItemStateComponent"
 import { getItemBaSyou } from "../game/gameState/ItemTableComponent"
 import { setPhase } from "../game/gameState/PhaseComponent"
@@ -32,7 +32,7 @@ export async function test179001_01A_CH_WT007R_white() {
         let cs = getItemState(ctx, cardA.id)
         cs = ItemStateFn.setTip(cs, "このセットグループのユニットは", { title: ["カード", [], [[cardA.id, getItemBaSyou(ctx, cardA.id)]]] })
         ctx = setItemState(ctx, cardA.id, cs) as GameState
-        const playCardEffects = getPlayEffects(ctx, PlayerA)
+        const playCardEffects = createPlayEffects(ctx, PlayerA)
         if (playCardEffects.length != 1) {
             throw new Error(`playCardEffects.length != 1`)
         }

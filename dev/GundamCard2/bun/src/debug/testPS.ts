@@ -7,7 +7,7 @@ import { addCards, getCard } from "../game/gameState/CardTableComponent";
 import { doEffect, onMoveItem, setTipSelectionForUser } from "../game/gameState/doEffect";
 import { getTopEffect } from "../game/gameState/EffectStackComponent";
 import { createGameState, GameState } from "../game/gameState/GameState";
-import { getPlayEffects } from "../game/gameState/getPlayEffects";
+import { createPlayEffects } from "../game/gameState/createPlayEffects";
 import { getItemState } from "../game/gameState/ItemStateComponent";
 import { getItemBaSyou } from "../game/gameState/ItemTableComponent";
 import { doItemMove } from "../game/gameState/doItemMove";
@@ -31,7 +31,7 @@ export async function testPS() {
     ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "手札"), [unitHasSupply]) as GameState
     ctx = setActivePlayerID(ctx, PlayerA) as GameState
     ctx = setPhase(ctx, ["配備フェイズ", "フリータイミング"]) as GameState
-    const playEffects = getPlayEffects(ctx, PlayerA)
+    const playEffects = createPlayEffects(ctx, PlayerA)
     if (playEffects.length == 0) {
         throw new Error("")
     }

@@ -6,12 +6,12 @@ import { StrBaSyouPair } from "../define/Tip";
 import { ToolFn } from "../tool";
 import { GameState } from "./GameState";
 
-export function getRerollPhaseRuleEffect(ctx: GameState, playerId: PlayerID): Effect {
+export function createRerollPhaseRuleEffect(ctx: GameState, playerId: PlayerID): Effect {
     return {
-        id: "getRerollPhaseRuleEffect",
+        id: `createRerollPhaseRuleEffect_${playerId}`,
         reason: ["GameRule", playerId],
         text: {
-            id: "getRerollPhaseRuleEffect",
+            id: `createRerollPhaseRuleEffect_text_${playerId}`,
             title: [],
             description: "getRerollPhaseRuleEffect",
             logicTreeActions: [
@@ -29,7 +29,7 @@ export function getRerollPhaseRuleEffect(ctx: GameState, playerId: PlayerID): Ef
                                         })
                                 })
                                 for (const pair of pairs) {
-                                    ctx = GameStateFn.doItemSetRollState(ctx, false, pair, {isSkipTargetMissing: true})
+                                    ctx = GameStateFn.doItemSetRollState(ctx, false, pair, { isSkipTargetMissing: true })
                                 }
                                 return ctx
                             }.toString()

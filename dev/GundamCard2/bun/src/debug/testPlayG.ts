@@ -7,8 +7,8 @@ import { setActivePlayerID } from "../game/gameState/ActivePlayerComponent";
 import { addCards } from "../game/gameState/CardTableComponent";
 import { doEffect, createEffectTips } from "../game/gameState/doEffect";
 import { createGameState, GameState } from "../game/gameState/GameState";
-import { getPlayEffects } from "../game/gameState/getPlayEffects";
-import { getPlayGEffects } from "../game/gameState/getPlayGEffect";
+import { createPlayEffects } from "../game/gameState/createPlayEffects";
+import { createPlayGEffects } from "../game/gameState/createPlayGEffects";
 import { getItemBaSyou } from "../game/gameState/ItemTableComponent";
 import { setPhase } from "../game/gameState/PhaseComponent";
 import { triggerEvent } from "../game/gameState/triggerEvent";
@@ -32,13 +32,13 @@ export async function testPlayG() {
     ctx = setPhase(ctx, ["配備フェイズ", "フリータイミング"]) as GameState
     {
 
-        const effects = getPlayEffects(ctx, PlayerA)
+        const effects = createPlayEffects(ctx, PlayerA)
         if (effects.length != 4) {
             throw new Error()
         }
     }
     {
-        const effect = getPlayGEffects(ctx, unitBlue.id)
+        const effect = createPlayGEffects(ctx, unitBlue.id)
         ctx = doEffect(ctx, effect, 0, 0)
         console.log(ctx.table)
         if (AbsoluteBaSyouFn.getBaSyouKeyword(getItemBaSyou(ctx, unitBlue.id)) == "Gゾーン") {
@@ -48,7 +48,7 @@ export async function testPlayG() {
         }
     }
     {
-        const effect = getPlayGEffects(ctx, unitBlue2.id)
+        const effect = createPlayGEffects(ctx, unitBlue2.id)
         const toes = createEffectTips(ctx, effect, 0, 0)
         if(toes.flatMap(toe=>toe.errors).length == 0){
             throw new Error()
@@ -70,7 +70,7 @@ export async function testPlayG() {
     }
     {
         ctx = triggerEvent(ctx, { title: ["GameEventOnTiming", PhaseFn.getLast()] })
-        const effect = getPlayGEffects(ctx, unitBlue2.id)
+        const effect = createPlayGEffects(ctx, unitBlue2.id)
         ctx = doEffect(ctx, effect, 0, 0)
         if (AbsoluteBaSyouFn.getBaSyouKeyword(getItemBaSyou(ctx, unitBlue2.id)) == "Gゾーン") {
 

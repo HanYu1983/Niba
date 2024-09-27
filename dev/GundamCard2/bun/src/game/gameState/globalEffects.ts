@@ -12,7 +12,7 @@ import { GameState } from "./GameState"
 import { getItemIdsByBasyou, isCard, isChip, getItem, getItemPrototype, Item, getItemController } from "./ItemTableComponent"
 import { getItemState, getItemStateValues } from "./ItemStateComponent"
 import { ItemStateFn } from "../define/ItemState"
-import { getTextsFromSpecialEffect } from "./getTextsFromSpecialEffect"
+import { createTextsFromSpecialEffect } from "./createTextsFromSpecialEffect"
 
 export function getGlobalEffects(ctx: GameState, situation: Situation | null): GlobalEffect[] {
   const key = JSON.stringify(situation)
@@ -55,7 +55,7 @@ function getSituationEffects(ctx: GameState, situation: Situation | null): Globa
       const proto = getItemPrototype(ctx, item.id)
       let texts = (proto.texts || []).flatMap(text => {
         if (text.title[0] == "特殊型") {
-          return getTextsFromSpecialEffect(ctx, text)
+          return createTextsFromSpecialEffect(ctx, text)
         }
         return [text]
       })
@@ -74,7 +74,7 @@ function getSituationEffects(ctx: GameState, situation: Situation | null): Globa
       const proto = getItemPrototype(ctx, item.id)
       let texts = (proto.texts || []).flatMap(text => {
         if (text.title[0] == "特殊型") {
-          return getTextsFromSpecialEffect(ctx, text)
+          return createTextsFromSpecialEffect(ctx, text)
         }
         return [text]
       })
@@ -93,7 +93,7 @@ function getSituationEffects(ctx: GameState, situation: Situation | null): Globa
       const proto = getItemPrototype(ctx, item.id)
       let texts = (proto.texts || []).flatMap(text => {
         if (text.isEnabledWhileG && text.title[0] == "特殊型") {
-          return getTextsFromSpecialEffect(ctx, text)
+          return createTextsFromSpecialEffect(ctx, text)
         }
         return [text]
       })
@@ -144,7 +144,7 @@ function getSituationEffects(ctx: GameState, situation: Situation | null): Globa
       return itemIds
         .flatMap(itemId => {
           const cardController = getItemController(ctx, itemId)
-          const texts = text.title[0] == "特殊型" ? getTextsFromSpecialEffect(ctx, text) : [text]
+          const texts = text.title[0] == "特殊型" ? createTextsFromSpecialEffect(ctx, text) : [text]
           return texts.map(text => {
             const fn = getOnSituationFn(text)
             const effect: Effect = {

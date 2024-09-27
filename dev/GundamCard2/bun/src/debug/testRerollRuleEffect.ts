@@ -4,13 +4,13 @@ import { PlayerA, PlayerB } from "../game/define/PlayerID";
 import { addCards, createCardWithProtoIds, getCard } from "../game/gameState/CardTableComponent";
 import { doEffect, setCardTipStrBaSyouPairs, setTipSelectionForUser } from "../game/gameState/doEffect";
 import { createGameState, GameState } from "../game/gameState/GameState";
-import { getRerollPhaseRuleEffect } from "../game/gameState/getRerollPhaseRuleEffect";
+import { createRerollPhaseRuleEffect } from "../game/gameState/createRerollPhaseRuleEffect";
 import { loadPrototype } from "../script";
 
 export async function testReollRuleEffect() {
     await loadPrototype("empty")
     let ctx = createGameState()
-    const attackEffect = getRerollPhaseRuleEffect(ctx, PlayerA)
+    const attackEffect = createRerollPhaseRuleEffect(ctx, PlayerA)
     const empty: Card = {
         id: "empty",
         protoID: "empty",

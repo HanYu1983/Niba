@@ -8,11 +8,11 @@ import { setActivePlayerID } from "../game/gameState/ActivePlayerComponent"
 import { getCardRollCostLength, getCardBattlePoint } from "../game/gameState/card"
 import { addCards, createCardWithProtoIds, getCard, mapCard } from "../game/gameState/CardTableComponent"
 import { getCardIdByCoinId, getCoins } from "../game/gameState/CoinTableComponent"
-import { createEffectTips, doEffect, onMoveItem, setTipSelectionForUser } from "../game/gameState/doEffect"
+import { createEffectTips, doEffect, setTipSelectionForUser } from "../game/gameState/doEffect"
 import { getTopEffect } from "../game/gameState/EffectStackComponent"
 import { createGameState, GameState } from "../game/gameState/GameState"
-import { getPlayCardEffects } from "../game/gameState/getPlayCardEffect"
-import { getPlayEffects } from "../game/gameState/getPlayEffects"
+import { createPlayCardEffects } from "../game/gameState/createPlayCardEffects"
+import { createPlayEffects } from "../game/gameState/createPlayEffects"
 import { getGlobalEffects, setGlobalEffects, clearGlobalEffects } from "../game/gameState/globalEffects"
 import { checkIsBattle, isBattle } from "../game/gameState/IsBattleComponent"
 import { getItemState, setItemState } from "../game/gameState/ItemStateComponent"
@@ -52,7 +52,7 @@ export async function test179024_03B_U_WT042U_white() {
         cs = ItemStateFn.setTip(cs, "このカードが非交戦中の場合、敵軍ユニット１枚", { title: ["カード", [], [[cardB.id, getItemBaSyou(ctx, cardB.id)]]] })
         ctx = setItemState(ctx, cardA.id, cs) as GameState
 
-        const playCardEffects = getPlayEffects(ctx, PlayerA)
+        const playCardEffects = createPlayEffects(ctx, PlayerA)
         if (playCardEffects.length != 1) {
             throw new Error(`playCardEffects.length != 1`)
         }
@@ -101,7 +101,7 @@ export async function test179024_03B_U_WT042U_white() {
         if (isBattle(ctx, cardA.id, null) != true) {
             throw new Error(`isBattle(ctx, cardA.id, null) != true`)
         }
-        const playCardEffects = getPlayEffects(ctx, PlayerA)
+        const playCardEffects = createPlayEffects(ctx, PlayerA)
         if (playCardEffects.length != 1) {
             throw new Error(`playCardEffects.length != 1`)
         }

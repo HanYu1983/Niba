@@ -5,7 +5,7 @@ import { PlayerA, PlayerB, PlayerID } from "../define/PlayerID";
 import { AbsoluteBaSyouFn, BaSyouKeywordFn } from "../define/BaSyou";
 import { addCards, createCardWithProtoIds, getCard } from "./CardTableComponent";
 import { Effect } from "../define/Effect";
-import { getPlayCardEffects } from "./getPlayCardEffect";
+import { createPlayCardEffects } from "./createPlayCardEffects";
 import { getItemBaSyou, getItemIdsByBasyou, getItemPrototype } from "./ItemTableComponent";
 import { getPrototype, loadPrototype } from "../../script";
 import { always, concat, flatten, ifElse, lift, map, pipe } from "ramda";
@@ -14,12 +14,12 @@ import { getPhase, setPhase } from "./PhaseComponent";
 import { getCardHasSpeicalEffect, getCardTexts } from "./card";
 import { Card } from "../define/Card";
 import { setActivePlayerID } from "./ActivePlayerComponent";
-import { getTextsFromSpecialEffect } from "./getTextsFromSpecialEffect";
-import { getPlayGEffects } from "./getPlayGEffect";
+import { createTextsFromSpecialEffect } from "./createTextsFromSpecialEffect";
+import { createPlayGEffects } from "./createPlayGEffects";
 import { Bridge } from "../../script/bridge";
 import { getGlobalEffects, setGlobalEffects } from "./globalEffects";
 
-export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
+export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
     const ges = getGlobalEffects(ctx, null)
     ctx = setGlobalEffects(ctx, null, ges)
     const canPlayByText = ges
@@ -31,7 +31,7 @@ export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
             always([AbsoluteBaSyouFn.of(playerId, "手札"), AbsoluteBaSyouFn.of(playerId, "ハンガー")]),
             map(basyou => getItemIdsByBasyou(ctx, basyou)), flatten,
             concat(canPlayByText),
-            map(cardId => getPlayCardEffects(ctx, cardId)), flatten,
+            map(cardId => createPlayCardEffects(ctx, cardId)), flatten,
         ),
         // クイック
         ifElse(
@@ -42,7 +42,7 @@ export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
                 concat(canPlayByText),
                 map(cardId => {
                     if (getCardHasSpeicalEffect(ctx, ["クイック"], cardId)) {
-                        return getPlayCardEffects(ctx, cardId)
+                        return createPlayCardEffects(ctx, cardId)
                     }
                     return []
                 }),
@@ -60,7 +60,7 @@ export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
             concat(canPlayByText),
             map(cardId => {
                 const card = getCard(ctx, cardId)
-                return getPlayGEffects(ctx, card.id)
+                return createPlayGEffects(ctx, card.id)
             })
         ),
         always([] as Effect[])
@@ -75,7 +75,7 @@ export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
                     case "使用型":
                         return [text]
                     case "特殊型":
-                        return getTextsFromSpecialEffect(ctx, text).filter(text => text.title[0] == "使用型")
+                        return createTextsFromSpecialEffect(ctx, text).filter(text => text.title[0] == "使用型")
                 }
                 return []
             }).filter(inTiming).map(text => {
@@ -130,7 +130,7 @@ export function getPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
                 const card = getCard(ctx, cardId)
                 const proto = getItemPrototype(ctx, card.id)
                 if (proto.commandText && inTiming(proto.commandText)) {
-                    return getPlayCardEffects(ctx, card.id)
+                    return createPlayCardEffects(ctx, card.id)
                 }
                 return []
             }), flatten
@@ -265,14 +265,14 @@ export async function testGetPlayEffects() {
     ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "ハンガー"), [cardB]) as GameState
     ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア"), [cardC]) as GameState
     {
-        const playEffects = getPlayEffects(ctx, PlayerA)
+        const playEffects = createPlayEffects(ctx, PlayerA)
         if (playEffects.length != 0) {
             throw new Error(`playEffects.length != 0`)
         }
     }
     ctx = setPhase(ctx, ["配備フェイズ", "フリータイミング"]) as GameState
     {
-        const playEffects = getPlayEffects(ctx, PlayerA)
+        const playEffects = createPlayEffects(ctx, PlayerA)
         if (playEffects.length != 4) {
             throw new Error()
         }
@@ -290,7 +290,7 @@ export async function testGetPlayEffects() {
     ctx = setPhase(ctx, ["戦闘フェイズ", "ダメージ判定ステップ", "フリータイミング"]) as GameState
     ctx = setActivePlayerID(ctx, PlayerA) as GameState
     {
-        const playEffects = getPlayEffects(ctx, PlayerA)
+        const playEffects = createPlayEffects(ctx, PlayerA)
         if (playEffects.length != 1) {
             throw new Error(`playEffects.length != 1`)
         }

@@ -8,7 +8,7 @@ import { setActivePlayerID } from "../game/gameState/ActivePlayerComponent";
 import { addCards, createCardWithProtoIds, getCard } from "../game/gameState/CardTableComponent";
 import { createEffectTips, doEffect, setTipSelectionForUser } from "../game/gameState/doEffect";
 import { createGameState, GameState } from "../game/gameState/GameState";
-import { getPlayCardEffects } from "../game/gameState/getPlayCardEffect";
+import { createPlayCardEffects } from "../game/gameState/createPlayCardEffects";
 import { mapItemState } from "../game/gameState/ItemStateComponent";
 import { getItemIdsByBasyou } from "../game/gameState/ItemTableComponent";
 import { setPhase } from "../game/gameState/PhaseComponent";
@@ -26,7 +26,7 @@ export async function test179015_04B_U_BK058R_black() {
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), ["unitBlack", "unitBlack", "unitBlack", "unitBlack"]) as GameState
     ctx = setActivePlayerID(ctx, PlayerA) as GameState
     ctx = setPhase(ctx, ["配備フェイズ", "フリータイミング"]) as GameState
-    const effects = getPlayCardEffects(ctx, cardA.id)
+    const effects = createPlayCardEffects(ctx, cardA.id)
     if (effects.length == 0) {
         throw new Error()
     }

@@ -25,7 +25,7 @@ import { logCategory } from "../../tool/logger"
 import { doItemSetDestroy } from "./doItemSetDestroy"
 import { doItemSetGlobalEffectsUntilEndOfTurn } from "./doItemSetGlobalEffectsUntilEndOfTurn"
 
-export function getActionTitleFn(action: Action): ActionTitleFn {
+export function createActionTitleFn(action: Action): ActionTitleFn {
   if (typeof action.title == "string") {
     return ActionFn.getTitleFn(action)
   }

@@ -4,15 +4,15 @@ import { PlayerA, PlayerB } from "../game/define/PlayerID";
 import { addCards, createCardWithProtoIds, getCard } from "../game/gameState/CardTableComponent";
 import { doEffect, setCardTipStrBaSyouPairs, setTipSelectionForUser } from "../game/gameState/doEffect";
 import { createGameState, GameState } from "../game/gameState/GameState";
-import { getRerollPhaseRuleEffect } from "../game/gameState/getRerollPhaseRuleEffect";
-import { getReturnRuleEffect } from "../game/gameState/getReturnRuleEffect";
+import { createRerollPhaseRuleEffect } from "../game/gameState/createRerollPhaseRuleEffect";
+import { createReturnRuleEffect } from "../game/gameState/createReturnRuleEffect";
 import { getItemBaSyou } from "../game/gameState/ItemTableComponent";
 import { loadPrototype } from "../script";
 
 export async function testReturnRuleEffect() {
     await loadPrototype("earthUnit")
     let ctx = createGameState()
-    const attackEffect = getReturnRuleEffect(ctx, PlayerA)
+    const attackEffect = createReturnRuleEffect(ctx, PlayerA)
     const earth: Card = {
         id: "earth",
         protoID: "earthUnit"

@@ -16,7 +16,7 @@ import { getSetGroupRoot } from "./SetGroupComponent"
 import { logCategory } from "../../tool/logger"
 import { createEntityIterator, EntityFn } from "./Entity"
 
-export function getConditionTitleFn(condition: Condition, options: { isPlay?: boolean }): ConditionTitleFn {
+export function createConditionTitleFn(condition: Condition, options: { isPlay?: boolean }): ConditionTitleFn {
     if (condition.title == null || typeof condition.title == "string") {
         return ConditionFn.getTitleFn(condition)
     }

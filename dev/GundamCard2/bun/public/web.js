@@ -27297,7 +27297,7 @@ function getTextsFromSpecialEffect(ctx2, text) {
                 const cardId = DefineFn.EffectFn.getCardID(effect);
                 const cardController = GameStateFn.getItemController(ctx3, cardId);
                 const gCount = GameStateFn.getItemIdsByBasyou(ctx3, DefineFn.AbsoluteBaSyouFn.of(cardController, "G\u30BE\u30FC\u30F3")).length;
-                return GameStateFn.getConditionTitleFn({
+                return GameStateFn.createConditionTitleFn({
                   title: ["\u6253\u958B\u81EA\u8ECD\u624B\u88E1\u6216\u6307\u5B9AHANGER\u4E2D\u7279\u5FB5_A\u4E26\u5408\u8A08\u570B\u529B_x\u4EE5\u4E0B\u7684_1\u5F35\u5361", A2, gCount, 1]
                 }, {})(ctx3, effect, bridge);
               }.toString().replace(`{ A: "" }`, JSON.stringify({ A })),

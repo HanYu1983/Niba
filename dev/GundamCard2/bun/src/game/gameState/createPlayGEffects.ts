@@ -5,16 +5,16 @@ import { GameState } from "./GameState"
 import { getItemPrototype, getItemOwner, getItemController } from "./ItemTableComponent"
 import { TargetMissingError } from "../define/GameError"
 
-export function getPlayGEffects(ctx: GameState, cardId: string): Effect {
+export function createPlayGEffects(ctx: GameState, cardId: string): Effect {
     const playerId = getItemOwner(ctx, cardId)
     // 注意, 這裡的effect.id是用函數名為前綴+卡片ID, 必須是唯一的
     const effect: Effect = {
-        id: `getPlayGEffects_${cardId}`,
+        id: `createPlayGEffects_${cardId}`,
         reason: ["PlayCard", playerId, cardId],
         description: "PlayG",
         isPlayG: true,
         text: {
-            id: `getPlayGEffects_text_${cardId}`,
+            id: `createPlayGEffects_text_${cardId}`,
             title: [],
             conditions: {
                 "出G上限": {

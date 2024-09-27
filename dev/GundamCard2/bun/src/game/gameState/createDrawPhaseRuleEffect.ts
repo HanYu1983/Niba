@@ -4,12 +4,12 @@ import { PlayerID } from "../define/PlayerID";
 import { ToolFn } from "../tool";
 import { GameState } from "./GameState";
 
-export function getDrawPhaseRuleEffect(ctx: GameState, playerId: PlayerID): Effect {
+export function createDrawPhaseRuleEffect(ctx: GameState, playerId: PlayerID): Effect {
     return {
-        id: ToolFn.getUUID("getDrawPhaseRuleEffect"),
+        id: `createDrawPhaseRuleEffect_${playerId}`,
         reason: ["GameRule", playerId],
         text: {
-            id: ToolFn.getUUID("getDrawPhaseRuleEffect"),
+            id: `createDrawPhaseRuleEffect_text_${playerId}`,
             title: [],
             description: "抽牌階段規定效果",
             logicTreeActions: [
