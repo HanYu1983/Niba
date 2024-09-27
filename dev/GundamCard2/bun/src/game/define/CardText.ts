@@ -104,6 +104,7 @@ export type ConditionTitle =
         itemColor?: CardColor,
         isDestroy?: boolean,
         isSetGroup?: boolean,
+        isCanSetCharacter?: boolean,
         count?: number,
         min?: number,
         max?: number

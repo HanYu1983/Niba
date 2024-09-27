@@ -37,6 +37,7 @@ export const BaSyouKeywordFn = {
     getBaAll(): BaSyouKeyword[] {
         return this.getAll().filter(this.isBa)
     },
+    // TODO: refactor
     getScriptAll(): BaSyouKeyword[] {
         return ["捨て山", "Gゾーン", "ジャンクヤード", "手札", "ハンガー", "戦闘エリア1", "戦闘エリア2", "配備エリア"]
     },

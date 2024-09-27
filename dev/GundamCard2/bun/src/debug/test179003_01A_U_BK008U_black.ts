@@ -61,7 +61,6 @@ export async function test179003_01A_U_BK008U_black() {
             }
             // 
             const cets = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)
-            console.log(cets.map(cet => cet.tipOrErrors.map(toe => toe.conditionKey)))
             if (cets.length != 1) {
                 throw new Error()
             }

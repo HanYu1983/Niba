@@ -106,7 +106,6 @@ export async function test179028_10D_C_BL070N_blue() {
             ctx = checkIsBattle(ctx) as GameState
             {
                 const cets = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)
-                console.log(cets.map(cet => cet.tipOrErrors.map(toe => toe.conditionKey)))
                 if (cets.length != 1) {
                     throw new Error()
                 }

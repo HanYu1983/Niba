@@ -39,7 +39,8 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
       const bp3 = data.info_9
       const area = data.info_10
       const characteristic = data.info_11
-      const textstr = data.info_12
+      // 只取前20個文字判斷特殊技能比較準
+      const textstr = data.info_12.substr(0, 20)
       const description = data.info_15
       const prod = data.info_16
       const rarity = data.info_17
@@ -134,7 +135,11 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
     })).prototype as CardPrototype;
     proto = {
       ...proto,
-      ...scriptProto
+      ...scriptProto,
+      texts: [
+        ...proto.texts || [],
+        ...scriptProto.texts || []
+      ]
     }
   }
   if (proto.texts) {

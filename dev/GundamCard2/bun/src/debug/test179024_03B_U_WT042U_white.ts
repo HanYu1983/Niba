@@ -5,7 +5,7 @@ import { ItemStateFn } from "../game/define/ItemState"
 import { PlayerA, PlayerB } from "../game/define/PlayerID"
 import { PhaseFn } from "../game/define/Timing"
 import { setActivePlayerID } from "../game/gameState/ActivePlayerComponent"
-import { getCardRollCostLength, getCardBattlePoint } from "../game/gameState/card"
+import { getCardRollCostLength, getCardBattlePoint, getCardTexts } from "../game/gameState/card"
 import { addCards, createCardWithProtoIds, getCard, mapCard } from "../game/gameState/CardTableComponent"
 import { getCardIdByCoinId, getCoins } from "../game/gameState/CoinTableComponent"
 import { createEffectTips, doEffect, setTipSelectionForUser } from "../game/gameState/doEffect"
@@ -53,30 +53,36 @@ export async function test179024_03B_U_WT042U_white() {
         ctx = setItemState(ctx, cardA.id, cs) as GameState
 
         const playCardEffects = createPlayEffects(ctx, PlayerA)
-        if (playCardEffects.length != 1) {
-            throw new Error(`playCardEffects.length != 1`)
+        if (playCardEffects.length != 2) {
+            throw new Error()
         }
-        ctx = setTipSelectionForUser(ctx, playCardEffects[0], 0, 0)
-        ctx = doEffect(ctx, playCardEffects[0], 0, 0)
+        const effect = playCardEffects.find(e => e.reason[0] == "PlayText" && e.reason[3] == getCardTexts(ctx, cardA.id)[1].id)
+        if (effect == null) {
+            throw new Error()
+        }
+        ctx = setTipSelectionForUser(ctx, effect, 0, 0)
+        ctx = doEffect(ctx, effect, 0, 0)
         if (getCard(ctx, unit.id).isRoll != true) {
             throw new Error()
         }
-        const effect = getTopEffect(ctx)
-        if (effect == null) {
-            throw new Error(`effect == null`)
-        }
-        if (effect.reason[0] != "PlayText") {
-            throw new Error(`effect.reason[0]!="PlayText`)
-        }
-        ctx = doEffect(ctx, effect, 0, 0)
-        const coins = getCoins(ctx)
-        if (coins.length == 1 && getCardIdByCoinId(ctx, coins[0].id) == cardB.id) {
+        {
+            const effect = getTopEffect(ctx)
+            if (effect == null) {
+                throw new Error(`effect == null`)
+            }
+            if (effect.reason[0] != "PlayText") {
+                throw new Error(`effect.reason[0]!="PlayText`)
+            }
+            ctx = doEffect(ctx, effect, 0, 0)
+            const coins = getCoins(ctx)
+            if (coins.length == 1 && getCardIdByCoinId(ctx, coins[0].id) == cardB.id) {
 
-        } else {
-            throw new Error(`coins.length == 1 && getCardIdByCoinId(ctx, coins[0].id) == cardB.id`)
-        }
-        if (BattlePointFn.eq(getCardBattlePoint(ctx, cardB.id), [4, 0, 3]) == false) {
-            throw new Error(`BattlePointFn.eq(getCardBattlePoint(ctx, cardB.id), [4,0,3]) == false`)
+            } else {
+                throw new Error(`coins.length == 1 && getCardIdByCoinId(ctx, coins[0].id) == cardB.id`)
+            }
+            if (BattlePointFn.eq(getCardBattlePoint(ctx, cardB.id), [4, 0, 3]) == false) {
+                throw new Error(`BattlePointFn.eq(getCardBattlePoint(ctx, cardB.id), [4,0,3]) == false`)
+            }
         }
     }
     // battle
@@ -90,7 +96,7 @@ export async function test179024_03B_U_WT042U_white() {
     {
         // 將同一個切入的旗標清除, 因為同樣的切入中1個技能只能使用1次
         ctx = doTriggerEvent(ctx, { title: ["カット終了時", []] })
-         // 重置G
+        // 重置G
         ctx = mapCard(ctx, unit.id, card => {
             return {
                 ...card,
@@ -102,35 +108,41 @@ export async function test179024_03B_U_WT042U_white() {
             throw new Error(`isBattle(ctx, cardA.id, null) != true`)
         }
         const playCardEffects = createPlayEffects(ctx, PlayerA)
-        if (playCardEffects.length != 1) {
-            throw new Error(`playCardEffects.length != 1`)
+        if (playCardEffects.length != 2) {
+            throw new Error(`playCardEffects.length != 2`)
         }
-        ctx = setTipSelectionForUser(ctx, playCardEffects[0], 0, 0)
-        ctx = doEffect(ctx, playCardEffects[0], 0, 0)
-        const effect = getTopEffect(ctx)
+        const effect = playCardEffects.find(e => e.reason[0] == "PlayText" && e.reason[3] == getCardTexts(ctx, cardA.id)[1].id)
         if (effect == null) {
-            throw new Error(`effect == null`)
+            throw new Error()
         }
-        if (effect.reason[0] != "PlayText") {
-            throw new Error(`effect.reason[0]!="PlayText`)
-        }
+        ctx = setTipSelectionForUser(ctx, effect, 0, 0)
         ctx = doEffect(ctx, effect, 0, 0)
-        let ges = getGlobalEffects(ctx, null)
-        if (ges.length == 1 && ges[0].cardIds.includes(cardA.id)) {
+        {
+            const effect = getTopEffect(ctx)
+            if (effect == null) {
+                throw new Error(`effect == null`)
+            }
+            if (effect.reason[0] != "PlayText") {
+                throw new Error(`effect.reason[0]!="PlayText`)
+            }
+            ctx = doEffect(ctx, effect, 0, 0)
+            let ges = getGlobalEffects(ctx, null)
+            if (ges.length == 1 && ges[0].cardIds.includes(cardA.id)) {
 
-        } else {
-            throw new Error(`ges.length == 1 && ges[0].cardIds.includes(cardA.id)`)
-        }
-        if (BattlePointFn.eq(getCardBattlePoint(ctx, cardA.id), [6, 1, 5]) == false) {
-            throw new Error(`BattlePointFn.eq(getCardBattlePoint(ctx, cardA.id), [6,1,5]) == false`)
-        }
-        ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", PhaseFn.getLast()] })
-        ges = getGlobalEffects(ctx, null)
-        if (ges.length != 0) {
-            throw new Error(`ges.length != 0`)
-        }
-        if (BattlePointFn.eq(getCardBattlePoint(ctx, cardA.id), [5, 0, 4]) == false) {
-            throw new Error(`BattlePointFn.eq(getCardBattlePoint(ctx, cardA.id), [5,0,4]) == false`)
+            } else {
+                throw new Error(`ges.length == 1 && ges[0].cardIds.includes(cardA.id)`)
+            }
+            if (BattlePointFn.eq(getCardBattlePoint(ctx, cardA.id), [6, 1, 5]) == false) {
+                throw new Error(`BattlePointFn.eq(getCardBattlePoint(ctx, cardA.id), [6,1,5]) == false`)
+            }
+            ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", PhaseFn.getLast()] })
+            ges = getGlobalEffects(ctx, null)
+            if (ges.length != 0) {
+                throw new Error(`ges.length != 0`)
+            }
+            if (BattlePointFn.eq(getCardBattlePoint(ctx, cardA.id), [5, 0, 4]) == false) {
+                throw new Error(`BattlePointFn.eq(getCardBattlePoint(ctx, cardA.id), [5,0,4]) == false`)
+            }
         }
     }
 }

@@ -49,7 +49,7 @@ export function createPlayCardEffects(ctx: GameState, cardId: string): Effect[] 
     } : {}
     const characterConditions: { [key: string]: Condition } = (prototype.category == "キャラクター" || prototype.category == "オペレーション(ユニット)") ? {
         "一個自軍機體": {
-            title: ["_自軍_ユニット_１枚", "自軍", "ユニット", 1],
+            title: ["Entity", { isCanSetCharacter: true, side: "自軍", runtimeItemCategory: "ユニット" }],
         }
     } : {}
     const rollCostConditions = createRollCostConditions(ctx, prototype, prototype.rollCost || [])
@@ -72,7 +72,7 @@ export function createPlayCardEffects(ctx: GameState, cardId: string): Effect[] 
         description: "從手中即將出牌, 出牌後會產生場出的效果",
         text: {
             id: `createPlayCardEffects_text_${cardId}`,
-            title: ["使用型", ["配備フェイズ"]],
+            title: [],
             description: "從手中即將出牌, 出牌後會產生場出的效果",
             conditions: {
                 ...conditions,
@@ -220,6 +220,7 @@ export function createPlayCardEffects(ctx: GameState, cardId: string): Effect[] 
         }
     }
     const ret = [playCardEffect]
+    logCategory("createPlayCardEffects", "getGlobalEffects start")
     const ges = getGlobalEffects(ctx, null)
     ctx = setGlobalEffects(ctx, null, ges)
     {

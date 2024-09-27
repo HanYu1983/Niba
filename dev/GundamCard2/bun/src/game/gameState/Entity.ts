@@ -10,7 +10,7 @@ import { GameState } from "./GameState";
 import { isBattle } from "./IsBattleComponent";
 import { getItemState } from "./ItemStateComponent";
 import { Item, getItemIdsByBasyou, getItem, isCard, isChip, getItemController, getItemPrototype } from "./ItemTableComponent";
-import { getSetGroupRoot } from "./SetGroupComponent";
+import { getSetGroup, getSetGroupRoot } from "./SetGroupComponent";
 
 export type Entity = {
     itemController: PlayerID,
@@ -123,9 +123,16 @@ export const EntityFn = {
             return getCardColor(ctx, entity.itemId) == color
         }
     },
-    filterIsSetGroup(ctx: GameState, v: boolean) {
+    filterIsSetGroupRoot(ctx: GameState, v: boolean) {
         return (entity: Entity) => {
             return (getSetGroupRoot(ctx, entity.itemId) == entity.itemId) == v
+        }
+    },
+    filterCanSetCharacter(ctx: GameState) {
+        return (entity: Entity) => {
+            // 有些機體可以設置2個駕駛
+            const charLen = getSetGroup(ctx, entity.itemId).filter(itemId => getItemRuntimeCategory(ctx, itemId) == "キャラクター").length
+            return charLen == 0
         }
     },
     filterDistinct(cet: Entity, index: number, self: Entity[]): boolean {

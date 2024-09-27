@@ -15,14 +15,14 @@ import { type GameState } from "../../game/gameState/GameState";
 
 export const prototype: CardPrototype = {
   texts: [
-    {
-      id: "",
-      title: ["特殊型", ["戦闘配備"]]
-    },
-    {
-      id: "",
-      title: ["特殊型", ["改装", "シェンロン系"]]
-    },
+    // {
+    //   id: "",
+    //   title: ["特殊型", ["戦闘配備"]]
+    // },
+    // {
+    //   id: "",
+    //   title: ["特殊型", ["改装", "シェンロン系"]]
+    // },
     {
       id: "",
       description: "『恒常』：このカードは、合計国力＋１してプレイできる。その場合、このカードは、ターン終了時まで合計国力＋１を得る。",

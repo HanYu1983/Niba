@@ -1,4 +1,3 @@
-import { createPlayEffects, testGetPlayEffects } from "../game/gameState/createPlayEffects";
 import { testBattleBonus, testFlow1, testFlow2 } from "./testFlow";
 import { tests as itemGroupTests } from "../tool/ItemGroup"
 import { test179028_10D_U_WT181N_white } from "./test179028_10D_U_WT181N_white";
@@ -33,21 +32,17 @@ import { swap } from "ramda";
 import { doItemSwap } from "../game/gameState/doItemSwap";
 import { getItemBaSyou, getItemIdsByBasyou } from "../game/gameState/ItemTableComponent";
 import { test179030_11E_U_BK194S_2_black, test179030_11E_U_BK194S_2_black_2 } from "./test179030_11E_U_BK194S_2_black";
-import { createCommandEffectTips, createEffectTips, doEffect, setTipSelectionForUser } from "../game/gameState/doEffect";
-import { CommandEffecTipFn } from "../game/define/CommandEffectTip";
-import { StrBaSyouPair, TipFn } from "../game/define/Tip";
-import { getCardIdsCanPayRollColor } from "../game/gameState/card";
-import { EffectFn } from "../game/define/Effect";
-import { ItemStateFn } from "../game/define/ItemState";
-import { testIssue } from "./testIssue";
 import { test179015_04B_U_BK058R_black } from "./test179015_04B_U_BK058R_black";
 import { testGain } from "./testGain";
 import { test179028_10D_C_BL070N_blue } from "./test179028_10D_C_BL070N_blue";
 import { test179003_01A_U_BK008U_black } from "./test179003_01A_U_BK008U_black";
+import { test179025_07D_U_RD158C_red } from "./test179025_07D_U_RD158C_red";
+import { testGetPlayEffects } from "./testGetPlayEffects";
 const fs = require('fs').promises;
 
 export async function tests() {
     return [
+        test179025_07D_U_RD158C_red,
         test179003_01A_U_BK008U_black,
         test179030_11E_C_BL079R_blue,
         test179028_10D_C_BL070N_blue,

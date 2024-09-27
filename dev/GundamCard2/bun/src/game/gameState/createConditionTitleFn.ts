@@ -396,8 +396,10 @@ export function createConditionTitleFn(condition: Condition, options: { isPlay?:
                 if (options.itemColor) {
                     entityList = entityList.filter(EntityFn.filterItemColor(ctx, options.itemColor))
                 }
-                if (options.isSetGroup != null) {
-                    entityList = entityList.filter(EntityFn.filterIsSetGroup(ctx, options.isSetGroup))
+                if (options.isCanSetCharacter != null) {
+                    entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx, true)).filter(EntityFn.filterCanSetCharacter(ctx))
+                } else if (options.isSetGroup != null) {
+                    entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx, options.isSetGroup))
                 }
                 if (options.isDestroy != null) {
                     entityList = entityList.filter(EntityFn.filterIsDestroy(options.isDestroy))
