@@ -340,7 +340,7 @@ export function applyFlow(
                 throw new Error("長度不符合");
             }
             // 移除破壞效果，全部移到堆疊
-            ctx = pushDestroyEffectsToStackAndClear(ctx, flow.destroyEffect) as GameStateWithFlowMemory
+            ctx = pushDestroyEffectsToStackAndClear(ctx, flow.destroyEffect.map(e=>e.id)) as GameStateWithFlowMemory
             return {
                 ...ctx,
                 // 重設切入旗標，讓玩家再次切入

@@ -27,6 +27,7 @@ import * as getOnEventTitleFn from "./getOnEventTitleFn"
 import * as doSetItemRollState from "./doItemSetRollState"
 import * as doCountryDamage from "./doCountryDamage"
 import * as doItemSetDestroy from "./doItemSetDestroy"
+import * as doItemSetGlobalEffectsUntilEndOfTurn from "./doItemSetGlobalEffectsUntilEndOfTurn"
 
 export const GameStateFn = {
     ...GameState,
@@ -57,5 +58,6 @@ export const GameStateFn = {
     ...getOnEventTitleFn,
     ...doSetItemRollState,
     ...doCountryDamage,
-    ...doItemSetDestroy
+    ...doItemSetDestroy,
+    ...doItemSetGlobalEffectsUntilEndOfTurn
 }

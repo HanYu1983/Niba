@@ -48,7 +48,7 @@ export const prototype: CardPrototype = {
               if (enable1) {
                 const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "交戦中の自軍ユニット１枚は", cardId)
                 for (const pair of pairs) {
-                  ctx = GameStateFn.setItemGlobalEffectsUntilEndOfTurn(ctx, [{ title: ["＋x／＋x／＋xを得る", [3, 3, 3]], cardIds: [pair[0]] }], pair)
+                  ctx = GameStateFn.doItemSetGlobalEffectsUntilEndOfTurn(ctx, [{ title: ["＋x／＋x／＋xを得る", [3, 3, 3]], cardIds: [pair[0]] }], pair)
                 }
                 ctx = GameStateFn.mapItemState(ctx, cardId, is => DefineFn.ItemStateFn.clearTip(is, "交戦中の自軍ユニット１枚は")) as GameState
               }

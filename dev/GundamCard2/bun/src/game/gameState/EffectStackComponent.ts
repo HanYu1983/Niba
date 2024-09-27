@@ -128,11 +128,12 @@ export function getDestroyEffects(ctx: EffectStackComponent): Effect[] {
 }
 
 // 移除破壞效果，全部移到堆疊
-export function pushDestroyEffectsToStackAndClear(ctx: EffectStackComponent, ordered?: Effect[]): EffectStackComponent {
+export function pushDestroyEffectsToStackAndClear(ctx: EffectStackComponent, ordered?: string[]): EffectStackComponent {
   if (ordered) {
-    ctx = clearDestroyEffects(ctx)
-    for (const effect of ordered) {
-      ctx = addStackEffect(ctx, effect)
+    ctx = {
+      ...ctx,
+      destroyEffect: [],
+      stackEffect: [...ordered, ...ctx.stackEffect]
     }
     return ctx
   }

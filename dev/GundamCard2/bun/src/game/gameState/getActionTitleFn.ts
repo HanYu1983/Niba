@@ -10,7 +10,7 @@ import { PlayerIDFn } from "../define/PlayerID"
 import { StrBaSyouPair } from "../define/Tip"
 import { getCardIdsCanPayRollCost, getItemRuntimeCategory } from "./card"
 import { mapCard } from "./CardTableComponent"
-import { getCardTipStrBaSyouPairs, setItemGlobalEffectsUntilEndOfTurn } from "./doEffect"
+import { getCardTipStrBaSyouPairs } from "./doEffect"
 import { addStackEffect } from "./EffectStackComponent"
 import { GameState } from "./GameState"
 import { mapItemState, getItemState, setItemState } from "./ItemStateComponent"
@@ -23,6 +23,7 @@ import { doItemSetRollState } from "./doItemSetRollState"
 import { doCountryDamage } from "./doCountryDamage"
 import { logCategory } from "../../tool/logger"
 import { doItemSetDestroy } from "./doItemSetDestroy"
+import { doItemSetGlobalEffectsUntilEndOfTurn } from "./doItemSetGlobalEffectsUntilEndOfTurn"
 
 export function getActionTitleFn(action: Action): ActionTitleFn {
   if (typeof action.title == "string") {
@@ -229,7 +230,7 @@ export function getActionTitleFn(action: Action): ActionTitleFn {
               cardIds: [targetCardId],
             } as GlobalEffect
           })
-          ctx = setItemGlobalEffectsUntilEndOfTurn(ctx, gesForCard, [targetCardId, targetBaSyou])
+          ctx = doItemSetGlobalEffectsUntilEndOfTurn(ctx, gesForCard, [targetCardId, targetBaSyou])
         }
         return ctx
       }

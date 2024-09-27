@@ -3,7 +3,6 @@ import { Effect } from "../define/Effect";
 import { PlayerID } from "../define/PlayerID";
 import { ToolFn } from "../tool";
 import { GameState } from "./GameState";
-import { setNextPhase } from "./PhaseComponent";
 
 export function getDrawPhaseRuleEffect(ctx: GameState, playerId: PlayerID): Effect {
     return {
