@@ -16,6 +16,7 @@ import { doItemMove } from "./doItemMove";
 import { createStrBaSyouPair, getItemIdsByBasyou } from "./ItemTableComponent";
 import { doItemSetDestroy } from "./doItemSetDestroy";
 import { getCardTipStrBaSyouPairs } from "./doEffect";
+import { doCountryDamage } from "./doCountryDamage";
 
 // player
 export function isPlayerHasBattleGroup(
@@ -78,7 +79,7 @@ function doDamage(
               playerID: currentAttackPlayerID,
             };
             // 這裡不發送破壞事件, 因為破壞比較等到破壞效果進堆疊才算數
-            ctx = doItemSetDestroy(ctx, reason, createStrBaSyouPair(ctx, cardID), {isSkipTargetMissing: true})
+            ctx = doItemSetDestroy(ctx, reason, createStrBaSyouPair(ctx, cardID), { isSkipTargetMissing: true })
             return {
               ...cs,
               damage: hp,
@@ -105,24 +106,33 @@ function doDamage(
           return setItemState(ctx, cs.id, cs) as GameState
         }, ctx)
       }
+
+      if (willGuardUnits.length == 0 || isABattleGroup(ctx, ["強襲"], willAttackUnits[0])) {
+        ctx = doCountryDamage(ctx, currentGuardPlayerID, currentAttackPower)
+        const gameEvent: GameEvent = {
+          title: ["このカードの部隊が敵軍本国に戦闘ダメージを与えた場合"],
+          cardIds: willAttackUnits,
+        };
+        ctx = doTriggerEvent(ctx, gameEvent)
+      }
       // 攻擊方可以攻擊本國
       // 若傷害沒有用完, 攻擊本國
-      if (
-        currentAttackPower > 0 ||
-        // 對方有防禦機體的情況, 有強襲就攻擊本國
-        (willGuardUnits.length && isABattleGroup(ctx, ["強襲"], willAttackUnits[0]))
-      ) {
-        // 本國傷害
-        logCategory("handleAttackDamage", "attack 本国", currentAttackPower);
-        const from = AbsoluteBaSyouFn.of(currentGuardPlayerID, "本国")
-        const pairs = getItemIdsByBasyou(ctx, from).map(itemId => {
-          return [itemId, from] as StrBaSyouPair
-        }).slice(0, currentAttackPower)
-        const to = AbsoluteBaSyouFn.of(currentGuardPlayerID, "捨て山")
-        for (const pair of pairs) {
-          ctx = doItemMove(ctx, to, pair)
-        }
-      }
+      // if (
+      //   currentAttackPower > 0 ||
+      //   // 對方有防禦機體的情況, 有強襲就攻擊本國
+      //   (willGuardUnits.length && isABattleGroup(ctx, ["強襲"], willAttackUnits[0]))
+      // ) {
+      //   // 本國傷害
+      //   logCategory("handleAttackDamage", "attack 本国", currentAttackPower);
+      //   const from = AbsoluteBaSyouFn.of(currentGuardPlayerID, "本国")
+      //   const pairs = getItemIdsByBasyou(ctx, from).map(itemId => {
+      //     return [itemId, from] as StrBaSyouPair
+      //   }).slice(0, currentAttackPower)
+      //   const to = AbsoluteBaSyouFn.of(currentGuardPlayerID, "捨て山")
+      //   for (const pair of pairs) {
+      //     ctx = doItemMove(ctx, to, pair)
+      //   }
+      // }
     }
   }
   return ctx

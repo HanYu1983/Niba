@@ -12,6 +12,9 @@ export const TipOrErrorsFn = {
     filterNoError(cet: TipOrErrors): boolean {
         return cet.errors.length == 0
     },
+    filterError(cet: TipOrErrors): boolean {
+        return cet.errors.length > 0
+    },
     filterPlayerId(playerID: string) {
         return (cet: TipOrErrors): boolean => {
             const condition = cet.effect.text.conditions?.[cet.conditionKey]

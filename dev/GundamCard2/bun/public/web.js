@@ -26692,12 +26692,17 @@ var EffectFn = {
       id: "",
       reason: e.reason,
       description: e.description,
+      isOption: options?.isOption,
       text: {
         id: e.text.id,
         title: e.text.title,
         description: e.text.description,
         conditions: options?.conditions || undefined,
-        logicTreeActions: options?.logicTreeAction ? [options.logicTreeAction] : []
+        logicTreeActions: options?.logicTreeAction ? [options.logicTreeAction] : [
+          {
+            actions: []
+          }
+        ]
       }
     };
   }
@@ -28602,16 +28607,13 @@ function doDamage(ctx2, speedPhase, currentAttackPlayerID, currentGuardPlayerID,
           return setItemState(ctx3, cs.id, cs);
         }, ctx2);
       }
-      if (currentAttackPower > 0 || willGuardUnits.length && isABattleGroup(ctx2, ["\u5F37\u8972"], willAttackUnits[0])) {
-        logCategory("handleAttackDamage", "attack \u672C\u56FD", currentAttackPower);
-        const from = AbsoluteBaSyouFn.of(currentGuardPlayerID, "\u672C\u56FD");
-        const pairs = getItemIdsByBasyou(ctx2, from).map((itemId) => {
-          return [itemId, from];
-        }).slice(0, currentAttackPower);
-        const to = AbsoluteBaSyouFn.of(currentGuardPlayerID, "\u6368\u3066\u5C71");
-        for (const pair2 of pairs) {
-          ctx2 = doItemMove(ctx2, to, pair2);
-        }
+      if (willGuardUnits.length == 0 || isABattleGroup(ctx2, ["\u5F37\u8972"], willAttackUnits[0])) {
+        ctx2 = doCountryDamage(ctx2, currentGuardPlayerID, currentAttackPower);
+        const gameEvent = {
+          title: ["\u3053\u306E\u30AB\u30FC\u30C9\u306E\u90E8\u968A\u304C\u6575\u8ECD\u672C\u56FD\u306B\u6226\u95D8\u30C0\u30E1\u30FC\u30B8\u3092\u4E0E\u3048\u305F\u5834\u5408"],
+          cardIds: willAttackUnits
+        };
+        ctx2 = doTriggerEvent2(ctx2, gameEvent);
       }
     }
   }
@@ -28949,6 +28951,12 @@ __export(exports_createConditionTitleFn, {
 });
 
 // src/game/gameState/Entity.ts
+var exports_Entity = {};
+__export(exports_Entity, {
+  createTipByEntitySearch: () => createTipByEntitySearch,
+  createEntityIterator: () => createEntityIterator,
+  EntityFn: () => EntityFn
+});
 function createEntityIterator(ctx2) {
   const destroyEffects = getCutInDestroyEffects(ctx2);
   const rets = [];
@@ -28989,6 +28997,62 @@ function createEntityIterator(ctx2) {
     rets.push(entity);
   });
   return rets;
+}
+function createTipByEntitySearch(ctx2, cardId, options) {
+  let entityList = createEntityIterator(ctx2).filter(EntityFn.filterIsBattle(ctx2, null, options.isBattle || false));
+  if (options.baSyouKeywords?.length) {
+    entityList = entityList.filter(EntityFn.filterAtBaSyous(options.baSyouKeywords));
+  } else {
+    entityList = entityList.filter((e) => e.isCard || e.isChip);
+  }
+  if (options.side) {
+    const cardController = getItemController(ctx2, cardId);
+    const playerId = PlayerIDFn.fromRelatedPlayerSideKeyword(options.side || "\u81EA\u8ECD", cardController);
+    entityList = entityList.filter(EntityFn.filterController(playerId));
+  }
+  if (options.runtimeItemCategory?.length) {
+    entityList = entityList.filter(EntityFn.filterRuntimeCategory(ctx2, options.runtimeItemCategory));
+  }
+  if (options.itemCategory?.length) {
+    entityList = entityList.filter(EntityFn.filterCategory(ctx2, options.itemCategory));
+  }
+  if (options.itemColor?.length) {
+    entityList = entityList.filter(EntityFn.filterItemColor(ctx2, options.itemColor));
+  }
+  if (options.isCanSetCharacter != null) {
+    entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx2, true)).filter(EntityFn.filterCanSetCharacter(ctx2));
+  } else if (options.isSetGroup != null) {
+    entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx2, options.isSetGroup));
+  }
+  if (options.isDestroy != null) {
+    entityList = entityList.filter(EntityFn.filterIsDestroy(options.isDestroy));
+  }
+  entityList = entityList.filter(EntityFn.filterDistinct);
+  const pairs = entityList.map((entity) => {
+    if (entity.baSyouKeyword == null) {
+      throw new Error;
+    }
+    return [entity.itemId, AbsoluteBaSyouFn.of(entity.itemController, entity.baSyouKeyword)];
+  });
+  let tipPairs = pairs;
+  if (options.max != null) {
+    tipPairs = tipPairs.slice(0, options.max);
+  } else if (options.min != null) {
+    tipPairs = tipPairs.slice(0, options.min);
+  }
+  const tip = {
+    title: ["\u30AB\u30FC\u30C9", pairs, tipPairs]
+  };
+  if (options.min != null) {
+    tip.min = options.min;
+  }
+  if (options.max != null) {
+    tip.max = options.max;
+  }
+  if (options.count != null) {
+    tip.count = options.count;
+  }
+  return tip;
 }
 var EntityFn = {
   filterAtBaSyous(kws) {
@@ -29366,61 +29430,7 @@ function createConditionTitleFn(condition, options) {
       }
       return function(ctx2, effect) {
         const cardId = EffectFn.getCardID(effect);
-        let entityList = createEntityIterator(ctx2).filter(EntityFn.filterIsBattle(ctx2, null, options2.isBattle || false));
-        entityList = entityList.filter(EntityFn.filterAtBa(true));
-        if (options2.baSyouKeywords?.length) {
-          entityList = entityList.filter(EntityFn.filterAtBaSyous(options2.baSyouKeywords));
-        } else {
-          entityList = entityList.filter((e) => e.isCard || e.isChip);
-        }
-        if (options2.side) {
-          const cardController = getItemController(ctx2, cardId);
-          const playerId = PlayerIDFn.fromRelatedPlayerSideKeyword(options2.side || "\u81EA\u8ECD", cardController);
-          entityList = entityList.filter(EntityFn.filterController(playerId));
-        }
-        if (options2.runtimeItemCategory?.length) {
-          entityList = entityList.filter(EntityFn.filterRuntimeCategory(ctx2, options2.runtimeItemCategory));
-        }
-        if (options2.itemCategory?.length) {
-          entityList = entityList.filter(EntityFn.filterCategory(ctx2, options2.itemCategory));
-        }
-        if (options2.itemColor?.length) {
-          entityList = entityList.filter(EntityFn.filterItemColor(ctx2, options2.itemColor));
-        }
-        if (options2.isCanSetCharacter != null) {
-          entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx2, true)).filter(EntityFn.filterCanSetCharacter(ctx2));
-        } else if (options2.isSetGroup != null) {
-          entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx2, options2.isSetGroup));
-        }
-        if (options2.isDestroy != null) {
-          entityList = entityList.filter(EntityFn.filterIsDestroy(options2.isDestroy));
-        }
-        entityList = entityList.filter(EntityFn.filterDistinct);
-        const pairs = entityList.map((entity) => {
-          if (entity.baSyouKeyword == null) {
-            throw new Error;
-          }
-          return [entity.itemId, AbsoluteBaSyouFn.of(entity.itemController, entity.baSyouKeyword)];
-        });
-        let tipPairs = pairs;
-        if (options2.max != null) {
-          tipPairs = tipPairs.slice(0, options2.max);
-        } else if (options2.min != null) {
-          tipPairs = tipPairs.slice(0, options2.min);
-        }
-        const tip = {
-          title: ["\u30AB\u30FC\u30C9", pairs, tipPairs]
-        };
-        if (options2.min != null) {
-          tip.min = options2.min;
-        }
-        if (options2.max != null) {
-          tip.max = options2.max;
-        }
-        if (options2.count != null) {
-          tip.count = options2.count;
-        }
-        return tip;
+        return createTipByEntitySearch(ctx2, cardId, options2);
       };
     }
   }
@@ -29457,7 +29467,8 @@ var GameStateFn = {
   ...exports_doItemSetRollState,
   ...exports_doCountryDamage,
   ...exports_doItemSetDestroy,
-  ...exports_doItemSetGlobalEffectsUntilEndOfTurn
+  ...exports_doItemSetGlobalEffectsUntilEndOfTurn,
+  ...exports_Entity
 };
 
 // src/game/define/GameEvent.ts
@@ -29526,6 +29537,45 @@ var TipFn = {
   }
 };
 
+// src/game/define/CommandEffectTip.ts
+var exports_CommandEffectTip = {};
+__export(exports_CommandEffectTip, {
+  TipOrErrorsFn: () => TipOrErrorsFn,
+  CommandEffecTipFn: () => CommandEffecTipFn
+});
+var TipOrErrorsFn = {
+  filterNoError(cet) {
+    return cet.errors.length == 0;
+  },
+  filterPlayerId(playerID) {
+    return (cet) => {
+      const condition = cet.effect.text.conditions?.[cet.conditionKey];
+      if (condition?.relatedPlayerSideKeyword == "\u6575\u8ECD") {
+        return playerID != playerID;
+      }
+      return playerID == playerID;
+    };
+  }
+};
+var CommandEffecTipFn = {
+  filterPlayerId(playerID) {
+    return (cet) => {
+      return EffectFn.getPlayerID(cet.effect) == playerID;
+    };
+  },
+  not(fn) {
+    return (cet) => {
+      return !fn(cet);
+    };
+  },
+  filterNoError(cet) {
+    return cet.tipOrErrors.every((toes) => toes.errors.length == 0);
+  },
+  filterEffectDistinct(cet, index, self) {
+    return index === self.findIndex((c) => c.effect.id === cet.effect.id);
+  }
+};
+
 // src/game/define/index.ts
 var DefineFn = {
   ...exports_BaSyou,
@@ -29542,7 +29592,8 @@ var DefineFn = {
   ...exports_Tip,
   ...exports_ItemState,
   ...exports_GameError,
-  ...exports_Card
+  ...exports_Card,
+  ...exports_CommandEffectTip
 };
 
 // src/game/bridge/createBridge.ts
@@ -29755,40 +29806,6 @@ function setCardTipStrBaSyouPairs(ctx2, varName, pairs, cardId) {
   ctx2 = setItemState(ctx2, cardId, cs);
   return ctx2;
 }
-
-// src/game/define/CommandEffectTip.ts
-var TipOrErrorsFn = {
-  filterNoError(cet) {
-    return cet.errors.length == 0;
-  },
-  filterPlayerId(playerID) {
-    return (cet) => {
-      const condition = cet.effect.text.conditions?.[cet.conditionKey];
-      if (condition?.relatedPlayerSideKeyword == "\u6575\u8ECD") {
-        return playerID != playerID;
-      }
-      return playerID == playerID;
-    };
-  }
-};
-var CommandEffecTipFn = {
-  filterPlayerId(playerID) {
-    return (cet) => {
-      return EffectFn.getPlayerID(cet.effect) == playerID;
-    };
-  },
-  not(fn) {
-    return (cet) => {
-      return !fn(cet);
-    };
-  },
-  filterNoError(cet) {
-    return cet.tipOrErrors.every((toes) => toes.errors.length == 0);
-  },
-  filterEffectDistinct(cet, index, self) {
-    return index === self.findIndex((c) => c.effect.id === cet.effect.id);
-  }
-};
 
 // src/game/gameStateWithFlowMemory/effect.ts
 function doActiveEffect(ctx2, playerID, effectID, logicId, logicSubId) {

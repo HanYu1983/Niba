@@ -99,7 +99,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
           }
           case "廃棄": {
             for (const pair of pairs) {
-              ctx = doItemMove(ctx, AbsoluteBaSyouFn.of(cardController, "ジャンクヤード"), pair)
+              ctx = doItemMove(ctx, AbsoluteBaSyouFn.setBaSyouKeyword(pair[1], "ジャンクヤード"), pair)
             }
             return ctx
           }

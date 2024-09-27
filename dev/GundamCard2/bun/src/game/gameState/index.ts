@@ -28,6 +28,7 @@ import * as doSetItemRollState from "./doItemSetRollState"
 import * as doCountryDamage from "./doCountryDamage"
 import * as doItemSetDestroy from "./doItemSetDestroy"
 import * as doItemSetGlobalEffectsUntilEndOfTurn from "./doItemSetGlobalEffectsUntilEndOfTurn"
+import * as Entity from "./Entity"
 
 export const GameStateFn = {
     ...GameState,
@@ -59,5 +60,6 @@ export const GameStateFn = {
     ...doSetItemRollState,
     ...doCountryDamage,
     ...doItemSetDestroy,
-    ...doItemSetGlobalEffectsUntilEndOfTurn
+    ...doItemSetGlobalEffectsUntilEndOfTurn,
+    ...Entity
 }

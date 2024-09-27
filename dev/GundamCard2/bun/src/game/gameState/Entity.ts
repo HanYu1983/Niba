@@ -1,8 +1,10 @@
 import { BaSyouKeyword, BaSyouKeywordFn, AbsoluteBaSyouFn } from "../define/BaSyou";
 import { CardCategory, CardColor } from "../define/CardPrototype";
-import { DestroyReason, EffectFn } from "../define/Effect";
+import { EntitySearchOptions } from "../define/CardText";
+import { DestroyReason, Effect, EffectFn } from "../define/Effect";
 import { ItemState } from "../define/ItemState";
-import { PlayerID, PlayerA, PlayerB } from "../define/PlayerID";
+import { PlayerID, PlayerA, PlayerB, PlayerIDFn } from "../define/PlayerID";
+import { Tip, StrBaSyouPair } from "../define/Tip";
 import { getCardColor, getItemRuntimeCategory } from "./card";
 import { getCoinIds, getCoin, getCoinOwner } from "./CoinTableComponent";
 import { getCutInDestroyEffects, getEffect, getEffects, isStackEffect } from "./EffectStackComponent";
@@ -66,6 +68,64 @@ export function createEntityIterator(ctx: GameState) {
     return rets
 }
 
+export function createTipByEntitySearch(ctx: GameState, cardId: string, options: EntitySearchOptions): Tip | null {
+    let entityList = createEntityIterator(ctx).filter(EntityFn.filterIsBattle(ctx, null, options.isBattle || false))
+    if (options.baSyouKeywords?.length) {
+        entityList = entityList.filter(EntityFn.filterAtBaSyous(options.baSyouKeywords))
+    } else {
+        entityList = entityList.filter(e => e.isCard || e.isChip)
+    }
+    
+    if (options.side) {
+        const cardController = getItemController(ctx, cardId)
+        const playerId = PlayerIDFn.fromRelatedPlayerSideKeyword(options.side || "自軍", cardController)
+        entityList = entityList.filter(EntityFn.filterController(playerId))
+    }
+    if (options.runtimeItemCategory?.length) {
+        entityList = entityList.filter(EntityFn.filterRuntimeCategory(ctx, options.runtimeItemCategory))
+    }
+    if (options.itemCategory?.length) {
+        entityList = entityList.filter(EntityFn.filterCategory(ctx, options.itemCategory))
+    }
+    if (options.itemColor?.length) {
+        entityList = entityList.filter(EntityFn.filterItemColor(ctx, options.itemColor))
+    }
+    if (options.isCanSetCharacter != null) {
+        entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx, true)).filter(EntityFn.filterCanSetCharacter(ctx))
+    } else if (options.isSetGroup != null) {
+        entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx, options.isSetGroup))
+    }
+    if (options.isDestroy != null) {
+        entityList = entityList.filter(EntityFn.filterIsDestroy(options.isDestroy))
+    }
+    entityList = entityList.filter(EntityFn.filterDistinct)
+    const pairs = entityList.map(entity => {
+        if (entity.baSyouKeyword == null) {
+            throw new Error()
+        }
+        return [entity.itemId, AbsoluteBaSyouFn.of(entity.itemController, entity.baSyouKeyword)] as StrBaSyouPair
+    })
+    let tipPairs = pairs
+    if (options.max != null) {
+        tipPairs = tipPairs.slice(0, options.max)
+    } else if (options.min != null) {
+        tipPairs = tipPairs.slice(0, options.min)
+    }
+    const tip: Tip = {
+        title: ["カード", pairs, tipPairs]
+    }
+    if (options.min != null) {
+        tip.min = options.min
+    }
+    if (options.max != null) {
+        tip.max = options.max
+    }
+    if (options.count != null) {
+        tip.count = options.count
+    }
+    return tip
+}
+
 export const EntityFn = {
     filterAtBaSyous(kws: BaSyouKeyword[]) {
         return (entity: Entity) => {
@@ -111,7 +171,7 @@ export const EntityFn = {
     filterCategory(ctx: GameState, category: CardCategory[]) {
         return (entity: Entity) => {
             const targetCate = getItemPrototype(ctx, entity.itemId).category
-            if(targetCate == null){
+            if (targetCate == null) {
                 return false
             }
             return category.includes(targetCate)

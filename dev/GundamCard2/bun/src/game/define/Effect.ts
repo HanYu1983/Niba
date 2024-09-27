@@ -96,17 +96,22 @@ export const EffectFn = {
         }
     },
 
-    fromEffectBasic(e: Effect, options?: { conditions?: { [key: string]: Condition }, logicTreeAction?: LogicTreeAction }): Effect {
+    fromEffectBasic(e: Effect, options?: { conditions?: { [key: string]: Condition }, logicTreeAction?: LogicTreeAction, isOption?: boolean }): Effect {
         return {
             id: "",
             reason: e.reason,
             description: e.description,
+            isOption: options?.isOption,
             text: {
                 id: e.text.id,
                 title: e.text.title,
                 description: e.text.description,
                 conditions: options?.conditions || undefined,
-                logicTreeActions: options?.logicTreeAction ? [options.logicTreeAction] : []
+                logicTreeActions: options?.logicTreeAction ? [options.logicTreeAction] : [
+                    {
+                        actions: []
+                    }
+                ]
             }
         }
     }
