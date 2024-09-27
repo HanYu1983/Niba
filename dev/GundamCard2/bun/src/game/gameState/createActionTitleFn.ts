@@ -198,6 +198,9 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
       return function (ctx: GameState, effect: Effect): GameState {
         const cardId = EffectFn.getCardID(effect)
         const pairs = getCardTipStrBaSyouPairs(ctx, varNames[0], cardId)
+        if(pairs.length == 0){
+          throw new Error(`pairs must not 0: ${action.title} ${action.vars}`)
+        }
         const [targetCardId, targetBasyou] = pairs[0]
         const coins = repeat(CoinFn.battleBonus(bonus))(x)
         ctx = addCoinsToCard(ctx, [targetCardId, targetBasyou], coins) as GameState
