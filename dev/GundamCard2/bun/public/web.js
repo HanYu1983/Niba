@@ -28067,7 +28067,7 @@ function doCountryDamage(ctx2, playerId, damage, options) {
 var exports_doItemSetDestroy = {};
 __export(exports_doItemSetDestroy, {
   doItemSetDestroy: () => doItemSetDestroy,
-  createDestroyEffectAndPush: () => createDestroyEffectAndPush
+  createMinusDestroyEffectAndPush: () => createMinusDestroyEffectAndPush
 });
 
 // src/game/gameState/createDestroyEffect.ts
@@ -28085,10 +28085,6 @@ function createDestroyEffect(ctx2, reason, cardId) {
               title: function _(ctx3, effect2, { DefineFn, GameStateFn }) {
                 const cardId2 = DefineFn.EffectFn.getCardID(effect2);
                 const cardOwner = GameStateFn.getItemOwner(ctx3, cardId2);
-                console.log("XXXXXXX");
-                console.log(effect2.reason);
-                console.log(cardId2);
-                console.log(getItemPrototype(ctx3, cardId2));
                 ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.of(cardOwner, "\u30B8\u30E3\u30F3\u30AF\u30E4\u30FC\u30C9"), [cardId2, GameStateFn.getItemBaSyou(ctx3, cardId2)], { isSkipTargetMissing: true });
                 ctx3 = GameStateFn.mapItemState(ctx3, cardId2, (is) => {
                   return {
@@ -28142,7 +28138,7 @@ function doItemSetDestroy(ctx2, reason, [itemId, from], options) {
   }
   throw new Error(`moveItem unknown item: ${itemId}`);
 }
-function createDestroyEffectAndPush(ctx2) {
+function createMinusDestroyEffectAndPush(ctx2) {
   AbsoluteBaSyouFn.getBaAll().flatMap((basyou) => getItemIdsByBasyou(ctx2, basyou)).forEach((cardId) => {
     if (EffectFn.isFakeCardID(cardId)) {
       return ctx2;
@@ -30428,7 +30424,7 @@ function applyFlow(ctx2, playerID, flow) {
         }
       };
       ctx2 = updateCommand(ctx2);
-      ctx2 = createDestroyEffectAndPush(ctx2);
+      ctx2 = createMinusDestroyEffectAndPush(ctx2);
       return ctx2;
     }
     case "FlowAddBlock": {
@@ -31583,7 +31579,7 @@ function createAttackPhaseRuleEffect(ctx2, playerId) {
             const playerId2 = DefineFn2.EffectFn.getPlayerID(effect2);
             const opponentPlayerId = DefineFn2.PlayerIDFn.getOpponent(playerId2);
             const cardIds = GameStateFn2.getItemIdsByBasyou(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, "\u914D\u5099\u30A8\u30EA\u30A2"));
-            let unitIds = cardIds.filter((cardId) => GameStateFn2.getSetGroupRoot(ctx3, cardId)).filter((cardId) => GameStateFn2.getCardBattleArea(ctx3, cardId).includes(runtimeBattleArea));
+            let unitIds = cardIds.filter((cardId) => GameStateFn2.getSetGroupRoot(ctx3, cardId) == cardId).filter((cardId) => GameStateFn2.getCardBattleArea(ctx3, cardId).includes(runtimeBattleArea)).filter((cardId) => GameStateFn2.getCard(ctx3, cardId).isRoll != true);
             const opponentUnitIds = GameStateFn2.getBattleGroup(ctx3, DefineFn2.AbsoluteBaSyouFn.of(opponentPlayerId, currentBaKw));
             if (opponentUnitIds.length) {
               if (GameStateFn2.isABattleGroup(ctx3, ["\u9AD8\u6A5F\u52D5"], opponentUnitIds[0])) {
@@ -31621,7 +31617,7 @@ function createAttackPhaseRuleEffect(ctx2, playerId) {
             const playerId2 = DefineFn2.EffectFn.getPlayerID(effect2);
             const opponentPlayerId = DefineFn2.PlayerIDFn.getOpponent(playerId2);
             const cardIds = GameStateFn2.getItemIdsByBasyou(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, "\u914D\u5099\u30A8\u30EA\u30A2"));
-            let unitIds = cardIds.filter((cardId) => GameStateFn2.getSetGroupRoot(ctx3, cardId)).filter((cardId) => GameStateFn2.getCardBattleArea(ctx3, cardId).includes(runtimeBattleArea));
+            let unitIds = cardIds.filter((cardId) => GameStateFn2.getSetGroupRoot(ctx3, cardId) == cardId).filter((cardId) => GameStateFn2.getCardBattleArea(ctx3, cardId).includes(runtimeBattleArea)).filter((cardId) => GameStateFn2.getCard(ctx3, cardId).isRoll != true);
             const opponentUnitIds = GameStateFn2.getBattleGroup(ctx3, DefineFn2.AbsoluteBaSyouFn.of(opponentPlayerId, currentBaKw));
             if (opponentUnitIds.length) {
               if (GameStateFn2.isABattleGroup(ctx3, ["\u9AD8\u6A5F\u52D5"], opponentUnitIds[0])) {
@@ -32637,6 +32633,40 @@ var FlowListView = (props) => {
   }, [appContext5.viewModel.model.gameState, props.clientID]);
   import_react6.useEffect(() => {
     const speed = 50;
+    const isPlayerControl = true;
+    if (isPlayerControl && props.clientID == PlayerA) {
+      const payCost = flows.find((flow) => flow.id == "FlowPassPayCost");
+      if (payCost) {
+        setTimeout(() => {
+          OnEvent.next({
+            id: "OnClickFlowConfirm",
+            clientID: props.clientID,
+            flow: payCost
+          });
+        }, speed);
+        return;
+      }
+      if (flows.length == 1) {
+        const flow = flows[0];
+        if (flow.id == "FlowCancelPassPhase") {
+          return;
+        }
+        if (flow.id == "FlowCancelPassCut") {
+          return;
+        }
+        if (flow.id == "FlowWaitPlayer") {
+          return;
+        }
+        setTimeout(() => {
+          OnEvent.next({
+            id: "OnClickFlowConfirm",
+            clientID: props.clientID,
+            flow
+          });
+        }, speed);
+      }
+      return;
+    }
     if (flows.length) {
       const aiChoiseList = flows.flatMap((flow) => createAIChoiseList(appContext5.viewModel.model.gameState, flow));
       if (aiChoiseList.length > 0) {

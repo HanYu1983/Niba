@@ -26,8 +26,9 @@ export function createAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID):
                         const opponentPlayerId = DefineFn.PlayerIDFn.getOpponent(playerId)
                         const cardIds = GameStateFn.getItemIdsByBasyou(ctx, DefineFn.AbsoluteBaSyouFn.of(playerId, "配備エリア"))
                         let unitIds = cardIds
-                            .filter(cardId => GameStateFn.getSetGroupRoot(ctx, cardId))
+                            .filter(cardId => GameStateFn.getSetGroupRoot(ctx, cardId) == cardId)
                             .filter(cardId => GameStateFn.getCardBattleArea(ctx, cardId).includes(runtimeBattleArea))
+                            .filter(cardId => GameStateFn.getCard(ctx, cardId).isRoll != true)
                         const opponentUnitIds = GameStateFn.getBattleGroup(ctx, DefineFn.AbsoluteBaSyouFn.of(opponentPlayerId, currentBaKw));
                         if (opponentUnitIds.length) {
                             if (GameStateFn.isABattleGroup(ctx, ["高機動"], opponentUnitIds[0])) {
@@ -66,8 +67,9 @@ export function createAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID):
                         const opponentPlayerId = DefineFn.PlayerIDFn.getOpponent(playerId)
                         const cardIds = GameStateFn.getItemIdsByBasyou(ctx, DefineFn.AbsoluteBaSyouFn.of(playerId, "配備エリア"))
                         let unitIds = cardIds
-                            .filter(cardId => GameStateFn.getSetGroupRoot(ctx, cardId))
+                            .filter(cardId => GameStateFn.getSetGroupRoot(ctx, cardId) == cardId)
                             .filter(cardId => GameStateFn.getCardBattleArea(ctx, cardId).includes(runtimeBattleArea))
+                            .filter(cardId => GameStateFn.getCard(ctx, cardId).isRoll != true)
                         const opponentUnitIds = GameStateFn.getBattleGroup(ctx, DefineFn.AbsoluteBaSyouFn.of(opponentPlayerId, currentBaKw));
                         if (opponentUnitIds.length) {
                             if (GameStateFn.isABattleGroup(ctx, ["高機動"], opponentUnitIds[0])) {

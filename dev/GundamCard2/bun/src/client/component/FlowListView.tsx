@@ -20,39 +20,40 @@ export const FlowListView = (props: { clientID: string }) => {
   }, [appContext.viewModel.model.gameState, props.clientID]);
   useEffect(() => {
     const speed = 50
-    // if (props.clientID == PlayerA) {
-    //   const payCost = flows.find((flow) => flow.id == "FlowPassPayCost");
-    //   if (payCost) {
-    //     setTimeout(() => {
-    //       OnEvent.next({
-    //         id: "OnClickFlowConfirm",
-    //         clientID: props.clientID,
-    //         flow: payCost,
-    //       });
-    //     }, speed)
-    //     return
-    //   }
-    //   if (flows.length == 1) {
-    //     const flow = flows[0]
-    //     if (flow.id == "FlowCancelPassPhase") {
-    //       return
-    //     }
-    //     if (flow.id == "FlowCancelPassCut") {
-    //       return
-    //     }
-    //     if (flow.id == "FlowWaitPlayer") {
-    //       return
-    //     }
-    //     setTimeout(() => {
-    //       OnEvent.next({
-    //         id: "OnClickFlowConfirm",
-    //         clientID: props.clientID,
-    //         flow: flow,
-    //       });
-    //     }, speed)
-    //   }
-    //   return
-    // }
+    const isPlayerControl = true
+    if (isPlayerControl && props.clientID == PlayerA) {
+      const payCost = flows.find((flow) => flow.id == "FlowPassPayCost");
+      if (payCost) {
+        setTimeout(() => {
+          OnEvent.next({
+            id: "OnClickFlowConfirm",
+            clientID: props.clientID,
+            flow: payCost,
+          });
+        }, speed)
+        return
+      }
+      if (flows.length == 1) {
+        const flow = flows[0]
+        if (flow.id == "FlowCancelPassPhase") {
+          return
+        }
+        if (flow.id == "FlowCancelPassCut") {
+          return
+        }
+        if (flow.id == "FlowWaitPlayer") {
+          return
+        }
+        setTimeout(() => {
+          OnEvent.next({
+            id: "OnClickFlowConfirm",
+            clientID: props.clientID,
+            flow: flow,
+          });
+        }, speed)
+      }
+      return
+    }
     if (flows.length) {
       const aiChoiseList = flows.flatMap(flow => createAIChoiseList(appContext.viewModel.model.gameState, flow))
       if (aiChoiseList.length > 0) {
