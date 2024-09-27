@@ -2,7 +2,7 @@ import { createBridge } from "../game/bridge/createBridge";
 import { AbsoluteBaSyouFn } from "../game/define/BaSyou";
 import { Card } from "../game/define/Card";
 import { PlayerA, PlayerB } from "../game/define/PlayerID";
-import { getBattleGroup, isABattleGroup } from "../game/gameState/battleGroup";
+import { getBattleGroup, isBattleGroupHasA } from "../game/gameState/battleGroup";
 import { addCards } from "../game/gameState/CardTableComponent";
 import { createCommandEffectTips, createEffectTips, doEffect, setCardTipStrBaSyouPairs, setTipSelectionForUser } from "../game/gameState/doEffect";
 import { createGameState, GameState } from "../game/gameState/GameState";
@@ -50,7 +50,7 @@ export async function testAttackRuleEffect2() {
     if (getBattleGroup(ctx, getItemBaSyou(ctx, earthUnit.id)).length != 1) {
         throw new Error()
     }
-    if (isABattleGroup(ctx, ["高機動"], earthUnit.id)) {
+    if (isBattleGroupHasA(ctx, ["高機動"], earthUnit.id)) {
         throw new Error()
     }
     const unitHasHigh: Card = {
@@ -61,7 +61,7 @@ export async function testAttackRuleEffect2() {
     if (getBattleGroup(ctx, getItemBaSyou(ctx, unitHasHigh.id)).length != 1) {
         throw new Error()
     }
-    if (isABattleGroup(ctx, ["高機動"], unitHasHigh.id) == false) {
+    if (isBattleGroupHasA(ctx, ["高機動"], unitHasHigh.id) == false) {
         throw new Error()
     }
     ctx = setTipSelectionForUser(ctx, attackEffect, 0, 0)

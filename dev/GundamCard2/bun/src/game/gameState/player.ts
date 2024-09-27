@@ -5,7 +5,7 @@ import { AbsoluteBaSyouFn, BaSyouKeyword } from "../define/BaSyou";
 import { DestroyReason } from "../define/Effect";
 import { ItemState } from "../define/ItemState";
 import { PlayerID, PlayerIDFn } from "../define/PlayerID";
-import { isABattleGroup, getBattleGroup, getBattleGroupBattlePoint } from "./battleGroup";
+import { isBattleGroupHasA, getBattleGroup, getBattleGroupBattlePoint } from "./battleGroup";
 import { GameState } from "./GameState";
 import { getItemState, setItemState } from "./ItemStateComponent";
 import { GameEvent } from "../define/GameEvent";
@@ -50,7 +50,7 @@ function doDamage(
   logCategory("handleAttackDamage", "willAttackPower", willAttackPower);
   if (willAttackUnits.length) {
     // 判斷速度1速度2是否可攻擊
-    const hasSpeedAttack = isABattleGroup(ctx, ["速攻"], willAttackUnits[0]);
+    const hasSpeedAttack = isBattleGroupHasA(ctx, ["速攻"], willAttackUnits[0]);
     if (
       // 有速攻的情況在速度1
       (hasSpeedAttack && speedPhase == 1) ||
@@ -107,7 +107,7 @@ function doDamage(
         }, ctx)
       }
 
-      if (willGuardUnits.length == 0 || isABattleGroup(ctx, ["強襲"], willAttackUnits[0])) {
+      if (willGuardUnits.length == 0 || isBattleGroupHasA(ctx, ["強襲"], willAttackUnits[0])) {
         ctx = doCountryDamage(ctx, currentGuardPlayerID, currentAttackPower)
         const gameEvent: GameEvent = {
           title: ["このカードの部隊が敵軍本国に戦闘ダメージを与えた場合"],
@@ -120,7 +120,7 @@ function doDamage(
       // if (
       //   currentAttackPower > 0 ||
       //   // 對方有防禦機體的情況, 有強襲就攻擊本國
-      //   (willGuardUnits.length && isABattleGroup(ctx, ["強襲"], willAttackUnits[0]))
+      //   (willGuardUnits.length && isBattleGroupHasA(ctx, ["強襲"], willAttackUnits[0]))
       // ) {
       //   // 本國傷害
       //   logCategory("handleAttackDamage", "attack 本国", currentAttackPower);

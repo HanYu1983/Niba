@@ -48,31 +48,6 @@ export function getBattleGroupBattlePoint(
   return attackPower;
 }
 
-export function isABattleGroup(
-  ctx: GameState,
-  a: TextSpeicalEffect,
-  cardID: string
-): boolean {
-  const baSyou = getItemBaSyou(ctx, cardID);
-  const battleGroup = getBattleGroup(ctx, baSyou);
-  return (
-    battleGroup
-      .map((cardID) => {
-        // 其中一張卡有就行了
-        const setGroupCards = getSetGroupChildren(ctx, cardID);
-        for (const cardGroupCardID of setGroupCards) {
-          if (getCardHasSpeicalEffect(ctx, a, cardGroupCardID)) {
-            return true;
-          }
-        }
-        return false;
-      })
-      .reduce((acc, c) => {
-        return acc && c;
-      }) || false
-  );
-}
-
 export function isBattleGroupHasA(
   ctx: GameState,
   a: TextSpeicalEffect,
@@ -81,20 +56,4 @@ export function isBattleGroupHasA(
   const baSyou = getItemBaSyou(ctx, cardID);
   const battleGroup = getBattleGroup(ctx, baSyou);
   return battleGroup.some(bg => isSetGroupHasA(ctx, a, bg))
-  // return (
-  //   battleGroup
-  //     .map((cardID) => {
-  //       // 其中一張卡有就行了
-  //       const setGroupCards = getSetGroupChildren(ctx, cardID);
-  //       for (const cardGroupCardID of setGroupCards) {
-  //         if (getCardHasSpeicalEffect(ctx, a, cardGroupCardID)) {
-  //           return true;
-  //         }
-  //       }
-  //       return false;
-  //     })
-  //     .reduce((acc, c) => {
-  //       return acc || c;
-  //     }) || false
-  // );
 }

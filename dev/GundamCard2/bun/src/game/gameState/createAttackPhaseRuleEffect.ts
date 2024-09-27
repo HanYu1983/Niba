@@ -31,8 +31,8 @@ export function createAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID):
                             .filter(cardId => GameStateFn.getCard(ctx, cardId).isRoll != true)
                         const opponentUnitIds = GameStateFn.getBattleGroup(ctx, DefineFn.AbsoluteBaSyouFn.of(opponentPlayerId, currentBaKw));
                         if (opponentUnitIds.length) {
-                            if (GameStateFn.isABattleGroup(ctx, ["高機動"], opponentUnitIds[0])) {
-                                unitIds = unitIds.filter(id => GameStateFn.isABattleGroup(ctx, ["高機動"], id))
+                            if (GameStateFn.isBattleGroupHasA(ctx, ["高機動"], opponentUnitIds[0])) {
+                                unitIds = unitIds.filter(id => GameStateFn.isBattleGroupHasA(ctx, ["高機動"], id))
                             }
                         }
                         const pairs = unitIds.map(id => {
@@ -72,8 +72,8 @@ export function createAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID):
                             .filter(cardId => GameStateFn.getCard(ctx, cardId).isRoll != true)
                         const opponentUnitIds = GameStateFn.getBattleGroup(ctx, DefineFn.AbsoluteBaSyouFn.of(opponentPlayerId, currentBaKw));
                         if (opponentUnitIds.length) {
-                            if (GameStateFn.isABattleGroup(ctx, ["高機動"], opponentUnitIds[0])) {
-                                unitIds = unitIds.filter(id => GameStateFn.isABattleGroup(ctx, ["高機動"], id))
+                            if (GameStateFn.isBattleGroupHasA(ctx, ["高機動"], opponentUnitIds[0])) {
+                                unitIds = unitIds.filter(id => GameStateFn.isBattleGroupHasA(ctx, ["高機動"], id))
                             }
                         }
                         const pairs = unitIds.map(id => {
