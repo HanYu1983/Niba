@@ -92,7 +92,6 @@ export function createAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID):
                                 for (const pair of spacePairs) {
                                     ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(playerId, "戦闘エリア2"), pair) as GameState
                                 }
-                                ctx = GameStateFn.setNextPhase(ctx) as GameState
                                 return ctx
                             }.toString()
                         }
@@ -104,7 +103,16 @@ export function createAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID):
                     actions: [
                         {
                             title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
-                                //ctx = GameStateFn.setNextPhase(ctx) as GameState
+                                const fackCardId = DefineFn.EffectFn.getCardID(effect)
+                                const phase = GameStateFn.getPhase(ctx)
+                                const pairs1 = GameStateFn.getCardTipStrBaSyouPairs(ctx, "去地球", fackCardId)
+                                const pairs2 = GameStateFn.getCardTipStrBaSyouPairs(ctx, "去宇宙", fackCardId)
+                                if (DefineFn.PhaseFn.eq(phase, ["戦闘フェイズ", "攻撃ステップ", "規定の効果"])) {
+                                    ctx = GameStateFn.doTriggerEvent(ctx, {
+                                        title: ["このカードが攻撃に出撃した場合"],
+                                        cardIds: [...pairs1, ...pairs2].map(p => p[0])
+                                    })
+                                }
                                 return ctx
                             }.toString()
                         }

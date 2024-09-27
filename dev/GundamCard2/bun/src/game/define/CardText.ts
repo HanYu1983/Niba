@@ -38,7 +38,7 @@ export const TextSpeicalEffectFn = {
 
 export type ActionTitle =
     | string
-    | ["_ロールする", "ロール" | "リロール" | "打開" | "リロール" | "破壞" | "廃棄" | "破壊を無効"]
+    | ["_ロールする", "ロール" | "リロール" | "打開" | "リロール" | "破壞" | "廃棄" | "破壊を無効" | "見"]
     | ["_１ダメージを与える", number]
     | ["_－１／－１／－１コイン_１個を乗せる", BattleBonus, number]
     | ["移除卡狀態_旗標", string]
@@ -82,6 +82,7 @@ export const ActionFn = {
 export type EntitySearchOptions = {
     isBattle?: boolean,
     side?: RelatedPlayerSideKeyword,
+    see?: [BaSyouKeyword, number, number],
     is?: CardCategory[],
     cardCategory?: CardCategory[],
     at?: BaSyouKeyword[],

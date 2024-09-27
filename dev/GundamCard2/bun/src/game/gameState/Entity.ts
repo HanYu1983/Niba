@@ -80,8 +80,6 @@ export function createTipByEntitySearch(ctx: GameState, cardId: string, options:
     }
     if (options.at?.length) {
         entityList = entityList.filter(EntityFn.filterAtBaSyous(options.at))
-    } else {
-        entityList = entityList.filter(e => e.isCard || e.isChip)
     }
     if (options.side) {
         const cardController = getItemController(ctx, cardId)

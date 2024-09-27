@@ -60,7 +60,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
             return getCardTipStrBaSyouPairs(ctx, varName, cardId)
           })
         for (const pair of pairs) {
-          if(options.move){
+          if (options.move) {
             ctx = doItemMove(ctx, createAbsoluteBaSyouFromBaSyou(ctx, cardId, options.move), pair)
           }
         }
@@ -143,6 +143,12 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
           case "破壊を無効": {
             for (const pair of pairs) {
               ctx = doItemSetDestroy(ctx, null, pair)
+            }
+            return ctx
+          }
+          case "見": {
+            for (const pair of pairs) {
+              ctx = mapItemState(ctx, pair[0], is => ({ ...is, isCheat: true })) as GameState
             }
             return ctx
           }
