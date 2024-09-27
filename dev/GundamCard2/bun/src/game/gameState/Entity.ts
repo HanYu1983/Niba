@@ -1,17 +1,18 @@
 import { BaSyouKeyword, BaSyouKeywordFn, AbsoluteBaSyouFn } from "../define/BaSyou";
 import { CardCategory, CardColor } from "../define/CardPrototype";
-import { EntitySearchOptions } from "../define/CardText";
+import { EntitySearchOptions, TextSpeicalEffect } from "../define/CardText";
 import { DestroyReason, Effect, EffectFn } from "../define/Effect";
 import { ItemState } from "../define/ItemState";
 import { PlayerID, PlayerA, PlayerB, PlayerIDFn } from "../define/PlayerID";
 import { Tip, StrBaSyouPair } from "../define/Tip";
-import { getCardColor, getItemRuntimeCategory } from "./card";
+import { getCardColor, getCardHasSpeicalEffect, getItemCharacteristic, getItemRuntimeCategory } from "./card";
 import { getCoinIds, getCoin, getCoinOwner } from "./CoinTableComponent";
 import { getCutInDestroyEffects, getEffect, getEffects, isStackEffect } from "./EffectStackComponent";
 import { GameState } from "./GameState";
 import { isBattle } from "./IsBattleComponent";
 import { getItemState } from "./ItemStateComponent";
 import { Item, getItemIdsByBasyou, getItem, isCard, isChip, getItemController, getItemPrototype } from "./ItemTableComponent";
+import { isSetGroupHasA } from "./setGroup";
 import { getSetGroup, getSetGroupRoot } from "./SetGroupComponent";
 
 export type Entity = {
@@ -70,36 +71,43 @@ export function createEntityIterator(ctx: GameState) {
 
 export function createTipByEntitySearch(ctx: GameState, cardId: string, options: EntitySearchOptions): Tip | null {
     let entityList = createEntityIterator(ctx).filter(EntityFn.filterIsBattle(ctx, null, options.isBattle || false))
-    if (options.baSyouKeywords?.length) {
-        entityList = entityList.filter(EntityFn.filterAtBaSyous(options.baSyouKeywords))
+    if (options.isCanSetCharacter != null) {
+        entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx, true)).filter(EntityFn.filterCanSetCharacter(ctx))
+    } else if (options.is?.includes("ユニット")) {
+        entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx, true))
+    } else if (options.isSetGroup != null) {
+        entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx, options.isSetGroup))
+    }
+    if (options.at?.length) {
+        entityList = entityList.filter(EntityFn.filterAtBaSyous(options.at))
     } else {
         entityList = entityList.filter(e => e.isCard || e.isChip)
     }
-
     if (options.side) {
         const cardController = getItemController(ctx, cardId)
         const playerId = PlayerIDFn.fromRelatedPlayerSideKeyword(options.side || "自軍", cardController)
         entityList = entityList.filter(EntityFn.filterController(playerId))
     }
-    if (options.runtimeItemCategory?.length) {
-        entityList = entityList.filter(EntityFn.filterRuntimeCategory(ctx, options.runtimeItemCategory))
+    if (options.is?.length) {
+        entityList = entityList.filter(EntityFn.filterRuntimeCategory(ctx, options.is))
     }
-    if (options.itemCategory?.length) {
-        entityList = entityList.filter(EntityFn.filterCategory(ctx, options.itemCategory))
+    if (options.cardCategory?.length) {
+        entityList = entityList.filter(EntityFn.filterCategory(ctx, options.cardCategory))
     }
-    if (options.itemColor?.length) {
-        entityList = entityList.filter(EntityFn.filterItemColor(ctx, options.itemColor))
-    }
-    if (options.isCanSetCharacter != null) {
-        entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx, true)).filter(EntityFn.filterCanSetCharacter(ctx))
-    } else if (options.isSetGroup != null) {
-        entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx, options.isSetGroup))
+    if (options.color?.length) {
+        entityList = entityList.filter(EntityFn.filterItemColor(ctx, options.color))
     }
     if (options.hasSetCard != null) {
         entityList = entityList.filter(EntityFn.filterHasSetCard(ctx, options.hasSetCard))
     }
     if (options.isDestroy != null) {
         entityList = entityList.filter(EntityFn.filterIsDestroy(options.isDestroy))
+    }
+    if (options.hasSpecialEffect != null) {
+        entityList = entityList.filter(EntityFn.filterHasSpecialEffect(ctx, options.hasSpecialEffect))
+    }
+    if (options.hasChar != null) {
+        entityList = entityList.filter(EntityFn.filterHasChar(ctx, options.hasChar))
     }
     entityList = entityList.filter(EntityFn.filterDistinct)
     const pairs = entityList.map(entity => {
@@ -205,6 +213,16 @@ export const EntityFn = {
     filterHasSetCard(ctx: GameState, v: boolean) {
         return (entity: Entity) => {
             return (getSetGroup(ctx, entity.itemId).length == 1) == v
+        }
+    },
+    filterHasSpecialEffect(ctx: GameState, vs: TextSpeicalEffect[]) {
+        return (entity: Entity) => {
+            return vs.some(v => isSetGroupHasA(ctx, v, entity.itemId))
+        }
+    },
+    filterHasChar(ctx: GameState, vs: string[]) {
+        return (entity: Entity) => {
+            return vs.some(v => getItemCharacteristic(ctx, entity.itemId).indexOf(v) != -1)
         }
     },
     filterDistinct(cet: Entity, index: number, self: Entity[]): boolean {

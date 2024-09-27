@@ -25,7 +25,7 @@ export const prototype: CardPrototype = {
             conditions: {
               ...DefineFn.createRollCostRequire(1, "黒"),
               "自分の手札２枚": {
-                title: ["Entity", { side: "敵軍", baSyouKeywords: ["手札"], count: 2 }],
+                title: ["Entity", { side: "敵軍", at: ["手札"], count: 2 }],
                 relatedPlayerSideKeyword: "敵軍",
                 actions: [
                   {

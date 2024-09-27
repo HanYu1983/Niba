@@ -30,7 +30,7 @@ export const prototype: CardPrototype = {
                       const x = GameStateFn.getCardTipStrBaSyouPairs(ctx, payColorKey, cardId).length
                       const tip = GameStateFn.createTipByEntitySearch(ctx, cardId, {
                         side: "自軍",
-                        baSyouKeywords: ["手札"],
+                        at: ["手札"],
                         max: x,
                         asMuchAsPossible: true
                       })
@@ -46,7 +46,7 @@ export const prototype: CardPrototype = {
                       const x = GameStateFn.getCardTipStrBaSyouPairs(ctx, payColorKey, cardId).length
                       const tip = GameStateFn.createTipByEntitySearch(ctx, cardId, {
                         side: "敵軍",
-                        baSyouKeywords: ["手札"],
+                        at: ["手札"],
                         max: x,
                         asMuchAsPossible: true
                       })

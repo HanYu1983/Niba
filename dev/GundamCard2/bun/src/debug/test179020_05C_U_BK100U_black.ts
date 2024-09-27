@@ -29,7 +29,7 @@ export async function test179020_05C_U_BK100U_black() {
     // 一開始敵人沒手牌, 無法發動能力
     ctx = doTriggerEvent(ctx, { title: ["このカードの部隊が敵軍本国に戦闘ダメージを与えた場合"], cardIds: [cardA.id] })
     {
-        const tip = createTipByEntitySearch(ctx, cardA.id, { side: "敵軍", baSyouKeywords: ["手札"], count: 2 })
+        const tip = createTipByEntitySearch(ctx, cardA.id, { side: "敵軍", at: ["手札"], count: 2 })
         if (tip == null) {
             throw new Error()
         }
@@ -45,7 +45,7 @@ export async function test179020_05C_U_BK100U_black() {
      // 敵人加入足夠的手牌, 發動能力
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerB, "手札"), ["unitBlack", "unitBlack"]) as GameState
     {
-        const tip = createTipByEntitySearch(ctx, cardA.id, { side: "敵軍", baSyouKeywords: ["手札"], count: 2 })
+        const tip = createTipByEntitySearch(ctx, cardA.id, { side: "敵軍", at: ["手札"], count: 2 })
         if (tip == null) {
             throw new Error()
         }

@@ -54,7 +54,7 @@ export const prototype: CardPrototype = {
           ctx = GameStateFn.addImmediateEffect(ctx, DefineFn.EffectFn.fromEffectBasic(effect, {
             conditions: {
               "戦闘エリアにいる敵軍ユニット１～２枚を": {
-                title: ["Entity", { baSyouKeywords: ["戦闘エリア1", "戦闘エリア2"], side: "敵軍", runtimeItemCategory: ["ユニット"], min: 1, max: 2 }],
+                title: ["Entity", { at: ["戦闘エリア1", "戦闘エリア2"], side: "敵軍", is: ["ユニット"], min: 1, max: 2 }],
               }
             },
             logicTreeAction: {

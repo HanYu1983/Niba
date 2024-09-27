@@ -18,10 +18,10 @@ export const prototype: CardPrototype = {
     description: "（常時）：交戦中の自軍ユニット１枚は、ターン終了時まで＋３／＋３／＋３を得る。または、非交戦中の自軍ユニット１枚の破壊を無効にする。",
     conditions: {
       "交戦中の自軍ユニット１枚は": {
-        title: ["Entity", { isBattle: true, side: "自軍", runtimeItemCategory: ["ユニット"], count: 1 }]
+        title: ["Entity", { isBattle: true, side: "自軍", is: ["ユニット"], count: 1 }]
       },
       "非交戦中の自軍ユニット１枚の破壊": {
-        title: ["Entity", { isBattle: false, side: "自軍", runtimeItemCategory: ["ユニット"], count: 1, isDestroy: true }]
+        title: ["Entity", { isBattle: false, side: "自軍", is: ["ユニット"], count: 1, isDestroy: true }]
       }
     },
     // logicTreeActions只能支援一個元素, 不能多個

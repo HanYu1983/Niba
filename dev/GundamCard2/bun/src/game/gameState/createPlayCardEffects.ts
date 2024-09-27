@@ -49,7 +49,7 @@ export function createPlayCardEffects(ctx: GameState, cardId: string): Effect[] 
     } : {}
     const characterConditions: { [key: string]: Condition } = (prototype.category == "キャラクター" || prototype.category == "オペレーション(ユニット)") ? {
         "一個自軍機體": {
-            title: ["Entity", { isCanSetCharacter: true, side: "自軍", runtimeItemCategory: ["ユニット"], count: 1 }],
+            title: ["Entity", { isCanSetCharacter: true, side: "自軍", is: ["ユニット"], count: 1 }],
         }
     } : {}
     const rollCostConditions = createRollCostConditions(ctx, prototype, prototype.rollCost || [])

@@ -5,7 +5,7 @@ import { getCard } from "./CardTableComponent";
 import { GameState } from "./GameState";
 import { getItemState } from "./ItemStateComponent";
 import { getItemIdsByBasyou, getItemBaSyou } from "./ItemTableComponent";
-import { getSetGroupBattlePoint } from "./setGroup";
+import { getSetGroupBattlePoint, isSetGroupHasA } from "./setGroup";
 import { getSetGroupRoot, getSetGroupChildren } from "./SetGroupComponent";
 
 // battleGroup
@@ -80,20 +80,21 @@ export function isBattleGroupHasA(
 ): boolean {
   const baSyou = getItemBaSyou(ctx, cardID);
   const battleGroup = getBattleGroup(ctx, baSyou);
-  return (
-    battleGroup
-      .map((cardID) => {
-        // 其中一張卡有就行了
-        const setGroupCards = getSetGroupChildren(ctx, cardID);
-        for (const cardGroupCardID of setGroupCards) {
-          if (getCardHasSpeicalEffect(ctx, a, cardGroupCardID)) {
-            return true;
-          }
-        }
-        return false;
-      })
-      .reduce((acc, c) => {
-        return acc || c;
-      }) || false
-  );
+  return battleGroup.some(bg => isSetGroupHasA(ctx, a, bg))
+  // return (
+  //   battleGroup
+  //     .map((cardID) => {
+  //       // 其中一張卡有就行了
+  //       const setGroupCards = getSetGroupChildren(ctx, cardID);
+  //       for (const cardGroupCardID of setGroupCards) {
+  //         if (getCardHasSpeicalEffect(ctx, a, cardGroupCardID)) {
+  //           return true;
+  //         }
+  //       }
+  //       return false;
+  //     })
+  //     .reduce((acc, c) => {
+  //       return acc || c;
+  //     }) || false
+  // );
 }

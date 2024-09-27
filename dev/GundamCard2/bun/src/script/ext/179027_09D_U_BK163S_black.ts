@@ -30,7 +30,7 @@ export const prototype: CardPrototype = {
                 const cardId = DefineFn.EffectFn.getCardID(effect)
                 const tip = GameStateFn.createTipByEntitySearch(ctx, cardId, {
                   side: "敵軍",
-                  baSyouKeywords: ["手札"],
+                  at: ["手札"],
                   count: 1,
                 })
                 return tip
@@ -64,7 +64,7 @@ export const prototype: CardPrototype = {
             "セットカードがセットされていない、G以外の敵軍カード": {
               title: ["Entity", {
                 side: "敵軍",
-                runtimeItemCategory: DefineFn.CardCategoryFn.createRemaining(["グラフィック"]),
+                is: DefineFn.CardCategoryFn.createRemaining(["グラフィック"]),
                 hasSetCard: false,
                 count: 1,
               }]

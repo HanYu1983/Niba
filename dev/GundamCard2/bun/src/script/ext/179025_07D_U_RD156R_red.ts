@@ -52,9 +52,9 @@ export const prototype: CardPrototype = {
             conditions: {
               "ユニットとキャラ以外の敵軍カード１枚のプレイ": {
                 title: ["Entity", {
-                  baSyouKeywords: ["プレイされているカード"],
+                  at: ["プレイされているカード"],
                   side: "敵軍",
-                  runtimeItemCategory: ["ACE", "オペレーション", "オペレーション(ユニット)", "グラフィック", "コマンド"],
+                  is: ["ACE", "オペレーション", "オペレーション(ユニット)", "グラフィック", "コマンド"],
                   count: 1,
                 }],
               }
