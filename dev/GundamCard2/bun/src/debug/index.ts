@@ -150,9 +150,12 @@ async function testCompress() {
         ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerB, "Gゾーン"), whiteSpeed.slice(0, 6)) as GameStateWithFlowMemory
         for (let i = 0; i < 1000; ++i) {
             console.log(`${i} > ${getPhase(ctx)} > ${getActivePlayerID(ctx)}`)
+            console.log(`${i} > PlayerA: ${getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国")).length}`)
+            console.log(`${i} > PlayerB: ${getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerB, "本国")).length}`)
+            console.log(`${i} > turn: ${ctx.turn}`)
             const playerId = PlayerIDFn.getAll()[Math.round(Math.random() * 1000) % 2]
             {
-                const clickTime = Math.round(Math.random() * 1000) % 3
+                const clickTime = Math.round(Math.random() * 1000) % 5
                 for (let t = 0; t < clickTime; ++t) {
                     const flows = queryFlow(ctx, playerId)
                     if (flows.length) {
@@ -179,9 +182,6 @@ async function testCompress() {
                 }
             }
         }
-        console.log(`PlayerA: ${getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国")).length}`)
-        console.log(`PlayerB: ${getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerB, "本国")).length}`)
-        console.log(`turn: ${ctx.turn}`)
     } catch (e) {
         ctx.globalEffectPool = {}
         await fs.writeFile('__gameState_bug.json', JSON.stringify(ctx));
