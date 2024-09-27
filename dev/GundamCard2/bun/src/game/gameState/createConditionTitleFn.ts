@@ -373,6 +373,9 @@ export function createConditionTitleFn(condition: Condition, options: { isPlay?:
             }
         case "Entity": {
             const [_, options] = condition.title
+            if ([options.max, options.min, options.count].every(v => v == null)) {
+                throw new Error(`Entity search must has one of min, max, count`)
+            }
             return function (ctx: GameState, effect: Effect): Tip | null {
                 const cardId = EffectFn.getCardID(effect)
                 let entityList = createEntityIterator(ctx).filter(EntityFn.filterIsBattle(ctx, null, options.isBattle || false))
