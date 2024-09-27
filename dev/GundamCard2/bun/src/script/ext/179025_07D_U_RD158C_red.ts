@@ -24,10 +24,9 @@ export const prototype: CardPrototype = {
         if (situation != null) {
           return []
         }
-        
         const phase = GameStateFn.getPhase(ctx)
         if (phase[0] == "戦闘フェイズ" && phase[1] == "ダメージ判定ステップ") {
-         
+
         } else {
           return []
         }
@@ -37,11 +36,9 @@ export const prototype: CardPrototype = {
         const cardId = DefineFn.EffectFn.getCardID(effect)
         const cardController = GameStateFn.getItemController(ctx, cardId)
         const evt = DefineFn.EffectFn.getEvent(effect)
-        if (evt.title[0] == "カット終了時" && evt.title[1].find(e => e.text.id == effect.text.id)) {
-          const hasSpecialPlayX = DefineFn.ItemStateFn.getMoreTotalRollCostLengthPlay(GameStateFn.getItemState(ctx, cardId))
-          if (hasSpecialPlayX) {
-            ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "ジャンクヤード"), GameStateFn.createStrBaSyouPair(ctx, cardId))
-          }
+        const hasSpecialPlayX = DefineFn.ItemStateFn.getMoreTotalRollCostLengthPlay(GameStateFn.getItemState(ctx, cardId))
+        if (evt.title[0] == "カット終了時" && hasSpecialPlayX) {
+          ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "ジャンクヤード"), GameStateFn.createStrBaSyouPair(ctx, cardId))
         }
         return ctx
       }.toString()
@@ -57,7 +54,7 @@ export const prototype: CardPrototype = {
           ctx = GameStateFn.addImmediateEffect(ctx, DefineFn.EffectFn.fromEffectBasic(effect, {
             conditions: {
               "戦闘エリアにいる敵軍ユニット１～２枚を": {
-                title: ["Entity", { isBattle: true, side: "敵軍", runtimeItemCategory: "ユニット", min: 1, max: 2 }],
+                title: ["Entity", { baSyouKeywords: ["戦闘エリア1", "戦闘エリア2"], side: "敵軍", runtimeItemCategory: ["ユニット"], min: 1, max: 2 }],
               }
             },
             logicTreeAction: {

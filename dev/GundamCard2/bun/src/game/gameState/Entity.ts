@@ -103,14 +103,18 @@ export const EntityFn = {
             return isBattle(ctx, entity.itemId, targetId) == v
         }
     },
-    filterRuntimeCategory(ctx: GameState, category: CardCategory) {
+    filterRuntimeCategory(ctx: GameState, category: CardCategory[]) {
         return (entity: Entity) => {
-            return getItemRuntimeCategory(ctx, entity.itemId) == category
+            return category.includes(getItemRuntimeCategory(ctx, entity.itemId))
         }
     },
-    filterCategory(ctx: GameState, category: CardCategory) {
+    filterCategory(ctx: GameState, category: CardCategory[]) {
         return (entity: Entity) => {
-            return getItemPrototype(ctx, entity.itemId).category == category
+            const targetCate = getItemPrototype(ctx, entity.itemId).category
+            if(targetCate == null){
+                return false
+            }
+            return category.includes(targetCate)
         }
     },
     filterItemController(ctx: GameState, playerId: string) {
@@ -118,9 +122,9 @@ export const EntityFn = {
             return getItemController(ctx, entity.itemId) == playerId
         }
     },
-    filterItemColor(ctx: GameState, color: CardColor) {
+    filterItemColor(ctx: GameState, color: CardColor[]) {
         return (entity: Entity) => {
-            return getCardColor(ctx, entity.itemId) == color
+            return color.includes(getCardColor(ctx, entity.itemId))
         }
     },
     filterIsSetGroupRoot(ctx: GameState, v: boolean) {

@@ -49,7 +49,7 @@ export function createPlayCardEffects(ctx: GameState, cardId: string): Effect[] 
     } : {}
     const characterConditions: { [key: string]: Condition } = (prototype.category == "キャラクター" || prototype.category == "オペレーション(ユニット)") ? {
         "一個自軍機體": {
-            title: ["Entity", { isCanSetCharacter: true, side: "自軍", runtimeItemCategory: "ユニット" }],
+            title: ["Entity", { isCanSetCharacter: true, side: "自軍", runtimeItemCategory: ["ユニット"], count: 1 }],
         }
     } : {}
     const rollCostConditions = createRollCostConditions(ctx, prototype, prototype.rollCost || [])
@@ -143,6 +143,9 @@ export function createPlayCardEffects(ctx: GameState, cardId: string): Effect[] 
                                                             title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
                                                                 const cardId = DefineFn.EffectFn.getCardID(effect)
                                                                 const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "一個自軍機體", cardId)
+                                                                if (pairs.length == 0) {
+                                                                    throw new Error(`pairs must not 0: ${effect.text.description}`)
+                                                                }
                                                                 const [targetCardId, targetBasyou] = pairs[0]
                                                                 const from = GameStateFn.getItemBaSyou(ctx, cardId)
                                                                 const to = targetBasyou

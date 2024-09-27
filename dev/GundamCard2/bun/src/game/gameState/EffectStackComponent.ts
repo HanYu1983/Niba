@@ -91,6 +91,14 @@ export function addImmediateEffect(ctx: EffectStackComponent, block: Effect): Ef
   };
 }
 
+export function getStackEffects(ctx: EffectStackComponent): Effect[] {
+  return ctx.stackEffect.map(id => getEffect(ctx, id))
+}
+
+export function getImmediateEffects(ctx: EffectStackComponent): Effect[] {
+  return ctx.immediateEffect.map(id => getEffect(ctx, id))
+}
+
 export function addDestroyEffect(ctx: EffectStackComponent, block: Effect): EffectStackComponent {
   if (block.id == null) {
     block.id = ToolFn.getUUID("addDestroyEffect")

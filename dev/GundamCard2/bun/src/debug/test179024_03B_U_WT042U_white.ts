@@ -56,7 +56,7 @@ export async function test179024_03B_U_WT042U_white() {
         if (playCardEffects.length != 2) {
             throw new Error()
         }
-        const effect = playCardEffects.find(e => e.reason[0] == "PlayText" && e.reason[3] == getCardTexts(ctx, cardA.id)[1].id)
+        const effect = playCardEffects.find(e => e.reason[0] == "PlayText" && e.reason[3] == getCardTexts(ctx, cardA.id)[0].id)
         if (effect == null) {
             throw new Error()
         }
@@ -111,7 +111,7 @@ export async function test179024_03B_U_WT042U_white() {
         if (playCardEffects.length != 2) {
             throw new Error(`playCardEffects.length != 2`)
         }
-        const effect = playCardEffects.find(e => e.reason[0] == "PlayText" && e.reason[3] == getCardTexts(ctx, cardA.id)[1].id)
+        const effect = playCardEffects.find(e => e.reason[0] == "PlayText" && e.reason[3] == getCardTexts(ctx, cardA.id)[0].id)
         if (effect == null) {
             throw new Error()
         }

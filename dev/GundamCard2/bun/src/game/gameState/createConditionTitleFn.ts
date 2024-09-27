@@ -387,13 +387,13 @@ export function createConditionTitleFn(condition: Condition, options: { isPlay?:
                     const playerId = PlayerIDFn.fromRelatedPlayerSideKeyword(options.side || "自軍", cardController)
                     entityList = entityList.filter(EntityFn.filterController(playerId))
                 }
-                if (options.runtimeItemCategory) {
+                if (options.runtimeItemCategory?.length) {
                     entityList = entityList.filter(EntityFn.filterRuntimeCategory(ctx, options.runtimeItemCategory))
                 }
-                if (options.itemCategory) {
+                if (options.itemCategory?.length) {
                     entityList = entityList.filter(EntityFn.filterCategory(ctx, options.itemCategory))
                 }
-                if (options.itemColor) {
+                if (options.itemColor?.length) {
                     entityList = entityList.filter(EntityFn.filterItemColor(ctx, options.itemColor))
                 }
                 if (options.isCanSetCharacter != null) {
@@ -412,7 +412,9 @@ export function createConditionTitleFn(condition: Condition, options: { isPlay?:
                     return [entity.itemId, AbsoluteBaSyouFn.of(entity.itemController, entity.baSyouKeyword)] as StrBaSyouPair
                 })
                 let tipPairs = pairs
-                if (options.min != null) {
+                if (options.max != null) {
+                    tipPairs = tipPairs.slice(0, options.max)
+                } else if (options.min != null) {
                     tipPairs = tipPairs.slice(0, options.min)
                 }
                 const tip: Tip = {

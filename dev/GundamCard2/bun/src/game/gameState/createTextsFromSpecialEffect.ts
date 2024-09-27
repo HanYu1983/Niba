@@ -204,7 +204,7 @@ export function createTextsFromSpecialEffect(ctx: GameState, text: CardText): Ca
                                                                     }
                                                                     const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, tipKey, cardId)
                                                                     if (pairs.length == 0) {
-                                                                        throw new Error()
+                                                                        throw new Error(`pairs must not 0: ${effect.text.description}`)
                                                                     }
                                                                     const [openCardId] = pairs[0]
                                                                     const hasSameGSighProperty = GameStateFn.getCardGSignProperty(ctx, openCardId) == GameStateFn.getCardGSignProperty(ctx, cardId)
@@ -449,7 +449,7 @@ export function createTextsFromSpecialEffect(ctx: GameState, text: CardText): Ca
                                         const basyou = GameStateFn.getItemBaSyou(ctx, cardId)
                                         const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "打開自軍手裡或指定HANGER中特徵A並合計國力x以下的1張卡", cardId)
                                         if (pairs.length == 0) {
-                                            throw new Error()
+                                            throw new Error(`pairs must not 0: ${effect.text.description}`)
                                         }
                                         const targetPair = pairs[0]
                                         GameStateFn.assertTargetMissingError(ctx, targetPair)

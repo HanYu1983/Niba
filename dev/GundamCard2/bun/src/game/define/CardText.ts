@@ -98,10 +98,10 @@ export type ConditionTitle =
     | ["Entity", {
         isBattle?: boolean,
         side?: RelatedPlayerSideKeyword,
-        runtimeItemCategory?: CardCategory,
-        itemCategory?: CardCategory,
+        runtimeItemCategory?: CardCategory[],
+        itemCategory?: CardCategory[],
         baSyouKeywords?: BaSyouKeyword[],
-        itemColor?: CardColor,
+        itemColor?: CardColor[],
         isDestroy?: boolean,
         isSetGroup?: boolean,
         isCanSetCharacter?: boolean,

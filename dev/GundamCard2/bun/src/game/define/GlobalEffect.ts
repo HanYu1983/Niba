@@ -17,4 +17,6 @@ export type GlobalEffectTitle =
 export type GlobalEffect = {
     title: GlobalEffectTitle,
     cardIds: string[],
+    // 保留, 暫時沒有用到
+    textIds?: {[key:string]: string}
 }

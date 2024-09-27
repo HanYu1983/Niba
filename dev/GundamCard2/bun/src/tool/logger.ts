@@ -11,7 +11,10 @@ const hideCategory: string[] = [
   "getActionTitleFn",
   "getLogicTreeActionConditions",
   "createCommandEffectTips",
-  "setEffectTips"
+  "setEffectTips",
+  "doTriggerEvent",
+  "createPlayEffects",
+  "createPlayCardEffects"
 ];
 let filterCategory = true;
 

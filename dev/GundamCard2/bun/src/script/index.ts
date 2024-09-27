@@ -137,8 +137,8 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
       ...proto,
       ...scriptProto,
       texts: [
+        ...scriptProto.texts || [],
         ...proto.texts || [],
-        ...scriptProto.texts || []
       ]
     }
   }
@@ -252,9 +252,12 @@ function getGainTexts(gainStr: string): CardText[] {
   ]
 }
 function getKaiSo(gainStr: string): CardText[] {
-  const match = gainStr.match(/〔(０|１|２|３|４|５|６|７|８|９+)〕：改装［(.+)］/);
+  let match = gainStr.match(/〔(０|１|２|３|４|５|６|７|８|９+)〕：改装［(.+)］/);
   if (match == null) {
-    return []
+    match = gainStr.match(/〔(０|１|２|３|４|５|６|７|８|９+)〕：改装〔(.+)〕/);
+    if (match == null) {
+      return []
+    }
   }
   const [matchstr, rollcoststr, char] = match
   const rollcost = uppercaseDigits.indexOf(rollcoststr)
