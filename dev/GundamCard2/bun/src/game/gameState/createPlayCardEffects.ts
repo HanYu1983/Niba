@@ -9,6 +9,7 @@ import { getGlobalEffects, setGlobalEffects } from "./globalEffects"
 import { getItemPrototype, getItemOwner } from "./ItemTableComponent"
 import { logCategory } from "../../tool/logger"
 import { LogicTree } from "../../tool/logicTree"
+import { getCard } from "./CardTableComponent"
 
 export function createConditionKeyOfPayColorX(proto: CardPrototype): string {
     if (proto.color == null) {
@@ -17,7 +18,7 @@ export function createConditionKeyOfPayColorX(proto: CardPrototype): string {
     return `${proto.color}X`
 }
 
-export function createRollCostConditions(ctx: GameState, proto: CardPrototype, rollCost: CardPrototypeRollCost, cardId: string): { [key: string]: Condition } {
+export function createRollCostConditions(ctx: GameState, proto: CardPrototype, rollCost: CardPrototypeRollCost, bonus: number): { [key: string]: Condition } {
     if (rollCost == "X") {
         if (proto.color == null) {
             throw new Error()
@@ -28,16 +29,8 @@ export function createRollCostConditions(ctx: GameState, proto: CardPrototype, r
             }
         }
     }
-    // const bonus = getGlobalEffects(ctx, null).map(ge => {
-    //     if (ge.title[0] == "合計国力＋_、ロールコスト＋_してプレイできる" && ge.cardIds.includes(cardId)) {
-    //         return ge.title[2]
-    //     }
-    //     return 0
-    // }).reduce((a, b) => a + b)
-
-    // TODO rollCost bonus
     const rollCostConditions = CardColorFn.getAll()
-        .map(tc => createRollCostRequire(rollCost.filter(c => c == tc).length, tc))
+        .map(tc => createRollCostRequire(Math.max(0, rollCost.filter(c => c == tc).length - bonus), tc))
         .reduce((ctx, cons) => ({ ...ctx, ...cons }))
     return rollCostConditions
 }
@@ -60,7 +53,7 @@ export function createPlayCardEffects(ctx: GameState, cardId: string): Effect[] 
             title: ["Entity", { isCanSetCharacter: true, side: "自軍", is: ["ユニット"], count: 1 }],
         }
     } : {}
-    const rollCostConditions = createRollCostConditions(ctx, prototype, prototype.rollCost || [], cardId)
+    const rollCostConditions = createRollCostConditions(ctx, prototype, prototype.rollCost || [], 0)
     const conditions: { [key: string]: Condition } = {
         ...costConditions,
         ...characterConditions,
@@ -235,28 +228,52 @@ export function createPlayCardEffects(ctx: GameState, cardId: string): Effect[] 
     const ges = getGlobalEffects(ctx, null)
     ctx = setGlobalEffects(ctx, null, ges)
     {
-        const morePlayEfs = ges.filter(g => g.title[0] == "合計国力＋(１)してプレイできる" && g.cardIds.includes(cardId))
+        const morePlayEfs = ges.filter(g => (g.title[0] == "合計国力＋(１)してプレイできる" || g.title[0] == "合計国力＋_、ロールコスト＋_してプレイできる") && g.cardIds.includes(cardId))
         const hasTotolCostPlusPlay = morePlayEfs.length > 0
-        const addedLength = pipe(always(morePlayEfs), map(g => g.title[0] == "合計国力＋(１)してプレイできる" ? g.title[1] : 0), sum)()
         if (hasTotolCostPlusPlay) {
+            // 取得原始條件
+            let originConditions = playCardEffect.text.conditions || {}
+            // 179027_09D_C_BK063R_black這張卡特殊處理
+            if(getCard(ctx, cardId).protoID == "179027_09D_C_BK063R_black"){
+                const rollCostBonus = getGlobalEffects(ctx, null).map(ge => {
+                    if (ge.title[0] == "合計国力＋_、ロールコスト＋_してプレイできる" && ge.cardIds.includes(cardId)) {
+                        return ge.title[2]
+                    }
+                    return 0
+                }).reduce((a, b) => a + b, 0)
+                // 將原始條件的橫置費用清除
+                for (const rollCostKey of Object.keys(rollCostConditions)) {
+                    delete originConditions[rollCostKey]
+                }
+                // 重新計算加入減免橫置費用紅利
+                const newRollCostConditions = createRollCostConditions(ctx, prototype, prototype.rollCost || [], rollCostBonus)
+                originConditions = {
+                    ...newRollCostConditions,
+                }
+            }
+            // 重新計算合計國力紅利
+            const addedLength = pipe(always(morePlayEfs), map(g => (g.title[0] == "合計国力＋(１)してプレイできる" || g.title[0] == "合計国力＋_、ロールコスト＋_してプレイできる") ? g.title[1] : 0), sum)()
+            originConditions = {
+                ...originConditions,
+                "合計国力〔x〕": {
+                    actions: [
+                        {
+                            title: ["合計国力〔x〕", cardRollCostLength + addedLength]
+                        }
+                    ]
+                }
+            }
+            // 重寫條件
             const totalCostPlusPlayEffect: Effect = {
                 ...playCardEffect,
                 id: `totalCostPlusPlayEffect_${cardId}`,
                 text: {
                     ...playCardEffect.text,
                     id: `totalCostPlusPlayEffect_text_${cardId}`,
-                    conditions: {
-                        ...playCardEffect.text.conditions,
-                        "合計国力〔x〕": {
-                            actions: [
-                                {
-                                    title: ["合計国力〔x〕", cardRollCostLength + addedLength]
-                                }
-                            ]
-                        }
-                    },
+                    conditions: originConditions,
                 }
             }
+            // 加入新的action, 用這個能力出場的要標記
             totalCostPlusPlayEffect.text.logicTreeActions = JSON.parse(JSON.stringify(playCardEffect.text.logicTreeActions))
             if (totalCostPlusPlayEffect.text.logicTreeActions?.[0] == null) {
                 throw new Error(`morePlayCardEffect.text.logicTreeActions?.[0] == null`)
