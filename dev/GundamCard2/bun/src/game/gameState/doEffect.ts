@@ -8,7 +8,7 @@ import { Effect, EffectFn, EffectReason } from "../define/Effect"
 import { TipError, TargetMissingError } from "../define/GameError"
 import { GlobalEffect } from "../define/GlobalEffect"
 import { ItemStateFn } from "../define/ItemState"
-import { TipFn, TipTitleTextRef, StrBaSyouPair } from "../define/Tip"
+import { TipFn, TipTitleTextRef, StrBaSyouPair, Tip } from "../define/Tip"
 import { EventCenterFn } from "./EventCenter"
 import { GameState } from "./GameState"
 import { createActionTitleFn } from "./createActionTitleFn"
@@ -84,8 +84,20 @@ export function createEffectTips(
   return Object.keys(ltacs).map(key => {
     const con = ltacs[key]
     logCategory("createEffectTips", key, con.title)
-    const tip = createConditionTitleFn(con, {})(ctx, effect, bridge)
     const errors: string[] = []
+    let tip: Tip | null = null
+    try {
+      tip = createConditionTitleFn(con, {})(ctx, effect, bridge)
+    } catch (e) {
+      if (e instanceof TipError) {
+        if (options?.isAssert) {
+          throw e
+        }
+        errors.push(e.message)
+      } else {
+        throw e
+      }
+    }
     if (tip) {
       // 一開始找可用指令時不需要包含[對象有沒有被使用者選擇]
       // 等到確定要用這個指令時, 再用這個選項來找出[哪一個對象還沒有被使用者選擇]

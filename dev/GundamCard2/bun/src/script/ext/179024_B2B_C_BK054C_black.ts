@@ -20,6 +20,7 @@ export const prototype: CardPrototype = {
       "破壊されているカード１枚": {
         title: ["Entity", {
           isDestroy: true,
+          count: 1,
         }],
       }
     },

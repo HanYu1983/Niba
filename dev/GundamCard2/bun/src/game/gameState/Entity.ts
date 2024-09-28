@@ -85,6 +85,11 @@ export function createTipByEntitySearch(ctx: GameState, cardId: string, options:
         entityList = entityList.filter(EntityFn.filterController(AbsoluteBaSyouFn.getPlayerID(absoluteBasyou)))
         entityList = entityList.filter(EntityFn.filterController(AbsoluteBaSyouFn.getBaSyouKeyword(absoluteBasyou)))
         if (entityList.length < min) {
+            // const tip: Tip = {
+            //     title: ["カード", [], []],
+            //     min: min
+            // }
+            // return tip
             throw new TipError(`must at least ${min} for see`)
         }
         cheatCardIds.push(...entityList.map(e=>e.itemId).slice(0, max))

@@ -29,9 +29,10 @@ export const prototype: CardPrototype = {
               // },
               "自軍本国の上のカード１～４枚を見て、その中にある、「特徴：ヘイズル系」を持つユニット１枚": {
                 title: ["Entity", {
-                  see: [RelatedBaSyouFn.of("自軍", "本国"), 1, 4],
+                  see: [DefineFn.RelatedBaSyouFn.of("自軍", "本国"), 1, 4],
                   hasChar: ["ヘイズル系"],
-                  cardCategory: ["ユニット"]
+                  cardCategory: ["ユニット"],
+                  count: 1,
                 }]
               }
             },
