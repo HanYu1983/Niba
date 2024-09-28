@@ -23664,12 +23664,24 @@ function getCardsByPosition(table, position) {
   }
   return table.cardStack[position];
 }
-function moveCard(table, fromPosition, toPosition, cardId) {
+function moveCard(table, fromPosition, toPosition, cardId, options) {
   if (table.cardStack[fromPosition]?.includes(cardId) != true) {
     throw new Error(`table from ${fromPosition} not exist ${cardId}`);
   }
   const updatedFromStack = table.cardStack[fromPosition]?.filter((id) => id !== cardId) || [];
-  const updatedToStack = table.cardStack[toPosition] ? [...table.cardStack[toPosition], cardId] : [cardId];
+  let updatedToStack = table.cardStack[toPosition] || [];
+  if (options?.insertId != null) {
+    if (options.insertId < 0) {
+      throw new Error(`insertId not < 0: ${options.insertId}`);
+    }
+    if (options.insertId == 0) {
+      updatedToStack = [cardId, ...updatedToStack];
+    } else {
+      updatedToStack = [...updatedToStack.slice(0, options.insertId), cardId, ...updatedToStack.slice(options.insertId)];
+    }
+  } else {
+    updatedToStack = [...updatedToStack, cardId];
+  }
   return {
     ...table,
     cardStack: {
@@ -27929,7 +27941,7 @@ function doItemMove(ctx2, to, [itemId, from], options) {
     itemIds.forEach((itemId2) => {
       ctx2 = {
         ...ctx2,
-        table: TableFns.moveCard(ctx2.table, AbsoluteBaSyouFn.toString(getItemBaSyou(ctx2, itemId2)), AbsoluteBaSyouFn.toString(to), itemId2)
+        table: TableFns.moveCard(ctx2.table, AbsoluteBaSyouFn.toString(getItemBaSyou(ctx2, itemId2)), AbsoluteBaSyouFn.toString(to), itemId2, { insertId: options?.insertId })
       };
     });
     ctx2 = onMoveItem(ctx2, to, [itemId, from]);
@@ -29081,6 +29093,23 @@ function createEntityIterator(ctx2) {
 }
 function createTipByEntitySearch(ctx2, cardId, options) {
   let entityList = createEntityIterator(ctx2).filter(EntityFn.filterIsBattle(ctx2, null, options.isBattle || false));
+  const cheatCardIds = [];
+  if (options.hasSelfCardId != null) {
+    const absoluteBasyou = getItemBaSyou(ctx2, cardId);
+    entityList = entityList.filter(EntityFn.filterController(AbsoluteBaSyouFn.getPlayerID(absoluteBasyou)));
+    entityList = entityList.filter(EntityFn.filterController(AbsoluteBaSyouFn.getBaSyouKeyword(absoluteBasyou)));
+  }
+  if (options.see) {
+    const [basyou, min, max] = options.see;
+    const absoluteBasyou = createAbsoluteBaSyouFromBaSyou(ctx2, cardId, basyou);
+    entityList = entityList.filter(EntityFn.filterController(AbsoluteBaSyouFn.getPlayerID(absoluteBasyou)));
+    entityList = entityList.filter(EntityFn.filterController(AbsoluteBaSyouFn.getBaSyouKeyword(absoluteBasyou)));
+    if (entityList.length < min) {
+      throw new TipError(`must at least ${min} for see`);
+    }
+    cheatCardIds.push(...entityList.map((e) => e.itemId).slice(0, max));
+    entityList = entityList.slice(0, max);
+  }
   if (options.isCanSetCharacter != null) {
     entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx2, true)).filter(EntityFn.filterCanSetCharacter(ctx2));
   } else if (options.is?.includes("\u30E6\u30CB\u30C3\u30C8")) {
@@ -29141,6 +29170,9 @@ function createTipByEntitySearch(ctx2, cardId, options) {
   }
   if (options.count != null) {
     tip.count = options.count;
+  }
+  if (cheatCardIds.length) {
+    tip.cheatCardIds = cheatCardIds;
   }
   return tip;
 }
@@ -29661,11 +29693,12 @@ var TipOrErrorsFn = {
       if (effect == null) {
         throw new Error;
       }
+      const effectCreator = EffectFn.getPlayerID(effect);
       const condition = effect.text.conditions?.[cet.conditionKey];
       if (condition?.relatedPlayerSideKeyword == "\u6575\u8ECD") {
-        return playerID != playerID;
+        return effectCreator != playerID;
       }
-      return playerID == playerID;
+      return effectCreator == playerID;
     };
   }
 };
@@ -31995,7 +32028,7 @@ function queryFlow(ctx2, playerID) {
     const enablePayCost = true;
     if (enablePayCost) {
       const effectCreator = EffectFn.getPlayerID(currentActiveEffect);
-      const playerTips = createEffectTips(ctx2, currentActiveEffect, activeLogicID, activeLogicSubID, { isCheckUserSelection: true }).filter((toe) => toe.errors.length != 0).filter(TipOrErrorsFn.filterPlayerId(getEffects(ctx2), effectCreator)).map((info) => {
+      const playerTips = createEffectTips(ctx2, currentActiveEffect, activeLogicID, activeLogicSubID, { isCheckUserSelection: true }).filter((toe) => toe.errors.length != 0).filter(TipOrErrorsFn.filterPlayerId(getEffects(ctx2), playerID)).map((info) => {
         if (info.tip == null) {
           throw new Error(`\u9019\u88E1\u6642\u5019\u6709\u932F\u8AA4\u7684\u53EA\u80FD\u662FTIP\u5B58\u5728\u7684\u5834\u5408, \u5176\u5B83\u7684\u60C5\u6CC1\u61C9\u8A72\u5728\u4F7F\u7528\u8005\u53D6\u5F97\u6307\u4EE4\u6642\u5C31\u904E\u6FFE\u6389\u4E86`);
         }

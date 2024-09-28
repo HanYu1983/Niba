@@ -42,10 +42,12 @@ import { TableFns } from "../tool/table";
 import { Flow } from "../game/gameStateWithFlowMemory/Flow";
 import { logCategory } from "../tool/logger";
 import { test179020_05C_U_BK100U_black } from "./test179020_05C_U_BK100U_black";
+import { test179901_B2B_C_BK005P_black } from "./test179901_B2B_C_BK005P_black";
 const fs = require('fs').promises;
 
 export async function tests() {
     return [
+        test179901_B2B_C_BK005P_black,
         test179015_04B_U_BK061C_black_2,
         test179020_05C_U_BK100U_black,
         test179025_07D_U_RD158C_red,

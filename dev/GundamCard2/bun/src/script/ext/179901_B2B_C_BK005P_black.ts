@@ -54,6 +54,14 @@ export const prototype: CardPrototype = {
                     }.toString()
                   }
                 },
+                logicTreeAction: {
+                  actions: [
+                    {
+                      title: ["_ロールする", "廃棄"],
+                      vars: ["全ての軍は、自分の手札X枚を可能な限り選ん1", "全ての軍は、自分の手札X枚を可能な限り選ん2"]
+                    }
+                  ]
+                }
               })
               ctx = GameStateFn.addImmediateEffect(ctx, newE) as GameState
               return ctx

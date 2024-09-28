@@ -21,11 +21,12 @@ export const TipOrErrorsFn = {
             if(effect == null){
                 throw new Error()
             }
+            const effectCreator = EffectFn.getPlayerID(effect)
             const condition = effect.text.conditions?.[cet.conditionKey]
             if (condition?.relatedPlayerSideKeyword == "敵軍") {
-                return playerID != playerID
+                return effectCreator != playerID
             }
-            return playerID == playerID
+            return effectCreator == playerID
         }
     },
 }
