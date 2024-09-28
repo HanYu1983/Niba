@@ -26761,6 +26761,7 @@ __export(exports_doEffect, {
   getCardTipTextRefs: () => getCardTipTextRefs,
   getCardTipStrBaSyouPairs: () => getCardTipStrBaSyouPairs,
   doEffect: () => doEffect,
+  createPlayTextEffectFromEffect: () => createPlayTextEffectFromEffect,
   createEffectTips: () => createEffectTips,
   createCommandEffectTips: () => createCommandEffectTips,
   clearTipSelectionForUser: () => clearTipSelectionForUser,
@@ -29654,9 +29655,13 @@ var TipOrErrorsFn = {
   filterError(cet) {
     return cet.errors.length > 0;
   },
-  filterPlayerId(playerID) {
+  filterPlayerId(effects, playerID) {
     return (cet) => {
-      const condition = cet.effect.text.conditions?.[cet.conditionKey];
+      const effect = effects[cet.effectId];
+      if (effect == null) {
+        throw new Error;
+      }
+      const condition = effect.text.conditions?.[cet.conditionKey];
       if (condition?.relatedPlayerSideKeyword == "\u6575\u8ECD") {
         return playerID != playerID;
       }
@@ -29665,9 +29670,13 @@ var TipOrErrorsFn = {
   }
 };
 var CommandEffecTipFn = {
-  filterPlayerId(playerID) {
+  filterPlayerId(effects, playerID) {
     return (cet) => {
-      return EffectFn.getPlayerID(cet.effect) == playerID;
+      const effect = effects[cet.effectId];
+      if (effect == null) {
+        throw new Error;
+      }
+      return EffectFn.getPlayerID(effect) == playerID;
     };
   },
   not(fn) {
@@ -29679,7 +29688,7 @@ var CommandEffecTipFn = {
     return cet.tipOrErrors.every((toes) => toes.errors.length == 0);
   },
   filterEffectDistinct(cet, index, self) {
-    return index === self.findIndex((c) => c.effect.id === cet.effect.id);
+    return index === self.findIndex((c) => c.effectId === cet.effectId);
   }
 };
 
@@ -29802,7 +29811,7 @@ function createEffectTips(ctx2, effect, logicId, logicSubId, options) {
         }
       }
     }, ctx2);
-    return { effect, conditionKey: key, tip, errors };
+    return { effectId: effect.id, conditionKey: key, tip, errors };
   });
 }
 function setEffectTips(ctx2, e, toes) {
@@ -29867,7 +29876,7 @@ function createCommandEffectTips(ctx2, effect) {
         logCategory("createCommandEffectTips", "createEffectTips", logicId, logicSubId, Object.keys(conditions));
         const conTipErrors = createEffectTips(ctx2, effect, logicId, logicSubId);
         return {
-          effect,
+          effectId: effect.id,
           logicID: logicId,
           logicSubID: logicSubId,
           tipOrErrors: conTipErrors
@@ -29912,6 +29921,11 @@ function setCardTipStrBaSyouPairs(ctx2, varName, pairs, cardId) {
   cs = ItemStateFn.setTip(cs, varName, { title: ["\u30AB\u30FC\u30C9", [], pairs] });
   ctx2 = setItemState(ctx2, cardId, cs);
   return ctx2;
+}
+function createPlayTextEffectFromEffect(ctx2, e, options) {
+  const cardId = EffectFn.getCardID(e);
+  const cardController = getItemController(ctx2, cardId);
+  return EffectFn.fromEffectBasic(e, { ...options, reason: ["PlayText", cardController, cardId, e.text.id] });
 }
 function addImmediateEffectIfCanPayCost(ctx2, effect) {
   const cetsNoErr = createCommandEffectTips(ctx2, effect).filter(CommandEffecTipFn.filterNoError);
@@ -30285,14 +30299,13 @@ function updateCommand(ctx2) {
   const playerAEffects = createPlayEffects(ctx2, PlayerA);
   const playerBEffects = createPlayEffects(ctx2, PlayerB);
   const allEffects = [...playerAEffects, ...playerBEffects];
+  ctx2 = setCommandEffects(ctx2, allEffects);
   const testedEffects = allEffects.flatMap((e) => createCommandEffectTips(ctx2, e));
-  const effects = testedEffects.filter(CommandEffecTipFn.filterEffectDistinct).map((tip) => tip.effect);
   ctx2 = setCommandEffectTips(ctx2, testedEffects);
-  ctx2 = setCommandEffects(ctx2, effects);
   return ctx2;
 }
 function getPlayerCommands(ctx2, playerID) {
-  return ctx2.commandEffectTips.filter(CommandEffecTipFn.filterPlayerId(playerID));
+  return ctx2.commandEffectTips.filter(CommandEffecTipFn.filterPlayerId(getEffects(ctx2), playerID));
 }
 function getPlayerCommandsFilterNoError(ctx2, playerID) {
   return getPlayerCommands(ctx2, playerID).filter(CommandEffecTipFn.filterNoError);
@@ -31982,7 +31995,7 @@ function queryFlow(ctx2, playerID) {
     const enablePayCost = true;
     if (enablePayCost) {
       const effectCreator = EffectFn.getPlayerID(currentActiveEffect);
-      const playerTips = createEffectTips(ctx2, currentActiveEffect, activeLogicID, activeLogicSubID, { isCheckUserSelection: true }).filter((toe) => toe.errors.length != 0).filter(TipOrErrorsFn.filterPlayerId(effectCreator)).map((info) => {
+      const playerTips = createEffectTips(ctx2, currentActiveEffect, activeLogicID, activeLogicSubID, { isCheckUserSelection: true }).filter((toe) => toe.errors.length != 0).filter(TipOrErrorsFn.filterPlayerId(getEffects(ctx2), effectCreator)).map((info) => {
         if (info.tip == null) {
           throw new Error(`\u9019\u88E1\u6642\u5019\u6709\u932F\u8AA4\u7684\u53EA\u80FD\u662FTIP\u5B58\u5728\u7684\u5834\u5408, \u5176\u5B83\u7684\u60C5\u6CC1\u61C9\u8A72\u5728\u4F7F\u7528\u8005\u53D6\u5F97\u6307\u4EE4\u6642\u5C31\u904E\u6FFE\u6389\u4E86`);
         }
@@ -32202,7 +32215,7 @@ function queryFlow(ctx2, playerID) {
         }
     }
   }
-  const myCommandList = getPlayerCommandsFilterNoErrorDistinct(ctx2, playerID).map((tip) => tip.effect);
+  const myCommandList = getPlayerCommandsFilterNoErrorDistinct(ctx2, playerID).map((tip) => tip.effectId).map((id) => getEffect(ctx2, id));
   if (ctx2.stackEffect.length) {
     const effect = getTopEffect(ctx2);
     if (effect == null) {

@@ -71,8 +71,8 @@ export async function test179028_10D_C_BL070N_blue() {
                 throw new Error()
             }
             const cet = cets[0]
-            ctx = setTipSelectionForUser(ctx, cet.effect, cet.logicID, cet.logicSubID)
-            ctx = doEffect(ctx, cet.effect, cet.logicID, cet.logicSubID)
+            ctx = setTipSelectionForUser(ctx, effect, cet.logicID, cet.logicSubID)
+            ctx = doEffect(ctx, effect, cet.logicID, cet.logicSubID)
             {
                 const effect = getTopEffect(ctx)
                 if (effect == null) {
@@ -110,8 +110,8 @@ export async function test179028_10D_C_BL070N_blue() {
                     throw new Error()
                 }
                 const cet = cets[0]
-                ctx = setTipSelectionForUser(ctx, cet.effect, cet.logicID, cet.logicSubID)
-                ctx = doEffect(ctx, cet.effect, cet.logicID, cet.logicSubID)
+                ctx = setTipSelectionForUser(ctx, effect, cet.logicID, cet.logicSubID)
+                ctx = doEffect(ctx, effect, cet.logicID, cet.logicSubID)
                 {
                     const effect = getTopEffect(ctx)
                     if (effect == null) {

@@ -1,4 +1,4 @@
-import { getEffect, getTopEffect } from "../gameState/EffectStackComponent";
+import { getEffect, getEffects, getTopEffect } from "../gameState/EffectStackComponent";
 import { Flow } from "./Flow";
 import { getActiveEffectID, getActiveLogicID, getActiveLogicSubID, getEffectIncludePlayerCommand } from "./effect";
 import { GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
@@ -76,7 +76,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
             const effectCreator = EffectFn.getPlayerID(currentActiveEffect);
             const playerTips = createEffectTips(ctx, currentActiveEffect, activeLogicID, activeLogicSubID, { isCheckUserSelection: true })
                 .filter(toe => toe.errors.length != 0)
-                .filter(TipOrErrorsFn.filterPlayerId(effectCreator))
+                .filter(TipOrErrorsFn.filterPlayerId(getEffects(ctx), effectCreator))
                 .map(info => {
                     if (info.tip == null) {
                         throw new Error(`這裡時候有錯誤的只能是TIP存在的場合, 其它的情況應該在使用者取得指令時就過濾掉了`)
@@ -317,7 +317,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                 }
         }
     }
-    const myCommandList = getPlayerCommandsFilterNoErrorDistinct(ctx, playerID).map(tip => tip.effect)
+    const myCommandList = getPlayerCommandsFilterNoErrorDistinct(ctx, playerID).map(tip => tip.effectId).map(id=>getEffect(ctx, id))
     // 處理堆疊效果，從最上方開始處理
     if (ctx.stackEffect.length) {
         // 取得最上方的效果

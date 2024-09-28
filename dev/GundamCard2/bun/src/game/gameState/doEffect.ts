@@ -140,7 +140,7 @@ export function createEffectTips(
         }
       }
     }, ctx)
-    return { effect: effect, conditionKey: key, tip: tip, errors: errors }
+    return { effectId: effect.id, conditionKey: key, tip: tip, errors: errors }
   })
 }
 
@@ -209,35 +209,6 @@ export function assertEffectCanPass(
   logicSubId: number,
 ) {
   createEffectTips(ctx, effect, logicId, logicSubId, { isCheckUserSelection: true, isAssert: true })
-  // const ltacs = CardTextFn.getLogicTreeActionConditions(effect.text, CardTextFn.getLogicTreeAction(effect.text, logicId))[logicSubId]
-  // if (ltacs == null) {
-  //   throw new Error(`ltasc not found: ${logicId}/${logicSubId}`)
-  // }
-  // const bridge = createBridge()
-  // switch (effect.reason[0]) {
-  //   case "GameRule":
-  //   case "PlayCard":
-  //   case "PlayText":
-  //     log("assertEffectCanPass", effect.reason[0])
-  //     Object.keys(ltacs).forEach(key => {
-  //       log("assertEffectCanPass", "conditionKey", key)
-  //       const con = ltacs[key]
-  //       const tip = getConditionTitleFn(con, {})(ctx, effect, bridge)
-  //       // 可選對象滿足
-  //       if (tip) {
-  //         TipFn.checkTipSatisfies(tip)
-  //         // 玩家是否已選擇
-  //         const selection = ItemStateFn.getTip(getItemState(ctx, EffectFn.getCardID(effect)), key)
-  //         log("assertEffectCanPass", "selection", selection)
-  //         log("assertEffectCanPass", "cardId", EffectFn.getCardID(effect))
-  //         log("assertEffectCanPass", "itemState", getItemState(ctx, EffectFn.getCardID(effect)).tips)
-  //       }
-  //       ConditionFn.getActionTitleFns(con, getActionTitleFn).reduce((ctx, fn) => {
-  //         log("assertEffectCanPass", "doActionTitle")
-  //         return fn(ctx, effect, bridge)
-  //       }, ctx)
-  //     })
-  // }
 }
 
 export function createCommandEffectTips(ctx: GameState, effect: Effect): CommandEffectTip[] {
@@ -249,7 +220,7 @@ export function createCommandEffectTips(ctx: GameState, effect: Effect): Command
         logCategory("createCommandEffectTips", "createEffectTips", logicId, logicSubId, Object.keys(conditions))
         const conTipErrors = createEffectTips(ctx, effect, logicId, logicSubId)
         return {
-          effect: effect,
+          effectId: effect.id,
           logicID: logicId,
           logicSubID: logicSubId,
           tipOrErrors: conTipErrors
@@ -301,12 +272,12 @@ export function setCardTipStrBaSyouPairs(ctx: GameState, varName: string, pairs:
   return ctx
 }
 
-export function createPlayTextEffectFromEffect(ctx:GameState, e:Effect,  options?: { conditions?: { [key: string]: Condition }, logicTreeAction?: LogicTreeAction, isOption?: boolean }): Effect {
+export function createPlayTextEffectFromEffect(ctx: GameState, e: Effect, options?: { conditions?: { [key: string]: Condition }, logicTreeAction?: LogicTreeAction, isOption?: boolean }): Effect {
   const cardId = EffectFn.getCardID(e)
   const cardController = getItemController(ctx, cardId)
-  return EffectFn.fromEffectBasic(e, {...options, reason: ["PlayText", cardController, cardId, e.text.id] })
+  return EffectFn.fromEffectBasic(e, { ...options, reason: ["PlayText", cardController, cardId, e.text.id] })
 }
-  
+
 export function addImmediateEffectIfCanPayCost(ctx: GameState, effect: Effect): GameState {
   const cetsNoErr = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)
   if (cetsNoErr.length == 0) {

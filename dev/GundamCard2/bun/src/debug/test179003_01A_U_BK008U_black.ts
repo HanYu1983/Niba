@@ -9,7 +9,7 @@ import { setActivePlayerID } from "../game/gameState/ActivePlayerComponent"
 import { getCardRollCostLength, getCardBattlePoint, getCardHasSpeicalEffect } from "../game/gameState/card"
 import { addCards, createCardWithProtoIds } from "../game/gameState/CardTableComponent"
 import { createCommandEffectTips, createEffectTips, doEffect, setTipSelectionForUser } from "../game/gameState/doEffect"
-import { addStackEffect, getCutInDestroyEffects, getTopEffect } from "../game/gameState/EffectStackComponent"
+import { addStackEffect, getCutInDestroyEffects, getEffect, getTopEffect } from "../game/gameState/EffectStackComponent"
 import { createGameState, GameState } from "../game/gameState/GameState"
 import { createPlayEffects } from "../game/gameState/createPlayEffects"
 import { getItemState, mapItemState, setItemState } from "../game/gameState/ItemStateComponent"
@@ -65,8 +65,8 @@ export async function test179003_01A_U_BK008U_black() {
                 throw new Error()
             }
             const cet = cets[0]
-            ctx = setTipSelectionForUser(ctx, cet.effect, cet.logicID, cet.logicSubID)
-            ctx = doEffect(ctx, cet.effect, cet.logicID, cet.logicSubID)
+            ctx = setTipSelectionForUser(ctx, effect, cet.logicID, cet.logicSubID)
+            ctx = doEffect(ctx, effect, cet.logicID, cet.logicSubID)
             {
                 const effect = getTopEffect(ctx)
                 if (effect == null) {
