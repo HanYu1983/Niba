@@ -18,6 +18,20 @@ export const prototype: CardPrototype = {
       title: ["使用型", ["戦闘フェイズ"]],
       conditions: {
         ...createRollCostRequire(2, null),
+        "このセットグループのユニットは": {
+          actions: [
+            {
+              title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+                const cardId = DefineFn.EffectFn.getCardID(effect)
+                const rootId = GameStateFn.getSetGroupRoot(ctx, cardId)
+                if (GameStateFn.isSetGroupHasA(ctx, ["速攻"], rootId)) {
+                  throw new DefineFn.TipError(`速攻已有了:${cardId}:${effect.text.description}`)
+                }
+                return ctx
+              }.toString()
+            }
+          ]
+        }
       },
       logicTreeActions: [
         {

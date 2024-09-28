@@ -28,36 +28,32 @@ export const prototype: CardPrototype = {
           event.effect.text.id == "179030_11E_C_BL079R_blue__2" &&
           DefineFn.EffectFn.getCardID(event.effect) == cardId
         ) {
-          const newEffect: Effect = {
-            id: "",
-            reason: ["PlayText", cardController, cardId, effect.text.id],
+          const newE = GameStateFn.createPlayTextEffectFromEffect(ctx, effect, {
             isOption: true,
-            description: effect.text.description,
-            text: {
-              id: effect.text.id,
-              title: [],
-              description: effect.text.description,
-              conditions: {
-                "本来の記述に｢特徴：装弾｣を持つ自軍G１枚": {
-                  title: ["_本来の記述に｢特徴：_装弾｣を持つ_自軍_G_１枚", true, "装弾", "自軍", "グラフィック", 1],
-                },
+            conditions: {
+              "本来の記述に｢特徴：装弾｣を持つ自軍G１枚": {
+                title: ["Entity", {
+                  at: ["Gゾーン"],
+                  hasChar: ["装弾"],
+                  side: "自軍",
+                  count: 1
+                }]
+                //title2: ["_本来の記述に｢特徴：_装弾｣を持つ_自軍_G_１枚", true, "装弾", "自軍", "グラフィック", 1],
               },
-              logicTreeActions: [
+            },
+            logicTreeAction: {
+              actions: [
                 {
-                  actions: [
-                    {
-                      title: ["_ロールする", "ロール"],
-                      vars: ["本来の記述に｢特徴：装弾｣を持つ自軍G１枚"]
-                    },
-                    {
-                      title: ["カード_１枚を引く", 1]
-                    }
-                  ]
+                  title: ["_ロールする", "ロール"],
+                  vars: ["本来の記述に｢特徴：装弾｣を持つ自軍G１枚"]
+                },
+                {
+                  title: ["カード_１枚を引く", 1]
                 }
               ]
             }
-          }
-          ctx = GameStateFn.addImmediateEffect(ctx, newEffect) as GameState
+          })
+          ctx = GameStateFn.addImmediateEffectIfCanPayCost(ctx, newE)
         }
         return ctx
       }.toString(),

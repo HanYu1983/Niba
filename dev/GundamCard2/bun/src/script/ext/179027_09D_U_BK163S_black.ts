@@ -23,7 +23,7 @@ export const prototype: CardPrototype = {
         } else {
           return ctx
         }
-        const newE = DefineFn.EffectFn.fromEffectBasic(effect, {
+        const newE = GameStateFn.createPlayTextEffectFromEffect(ctx, effect, {
           conditions: {
             "敵軍手札１枚": {
               title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip | null {
@@ -37,6 +37,14 @@ export const prototype: CardPrototype = {
               }.toString()
             },
           },
+          logicTreeAction: {
+            actions: [
+              {
+                title: ["_ロールする", "廃棄"],
+                vars: ["敵軍手札１枚"]
+              }
+            ]
+          }
         })
         ctx = GameStateFn.addImmediateEffectIfCanPayCost(ctx, newE)
         return ctx
@@ -59,7 +67,7 @@ export const prototype: CardPrototype = {
         } else {
           return ctx
         }
-        const newE = DefineFn.EffectFn.fromEffectBasic(effect, {
+        const newE = GameStateFn.createPlayTextEffectFromEffect(ctx, effect, {
           conditions: {
             "セットカードがセットされていない、G以外の敵軍カード": {
               title: ["Entity", {
@@ -70,10 +78,10 @@ export const prototype: CardPrototype = {
               }]
             }
           },
-          logicTreeAction:{
-            actions:[
+          logicTreeAction: {
+            actions: [
               {
-                title:["_ロールする", "破壞"],
+                title: ["_ロールする", "破壞"],
                 vars: ["セットカードがセットされていない、G以外の敵軍カード"]
               }
             ]

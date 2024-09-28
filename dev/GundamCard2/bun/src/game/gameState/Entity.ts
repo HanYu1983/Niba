@@ -2,16 +2,18 @@ import { BaSyouKeyword, BaSyouKeywordFn, AbsoluteBaSyouFn } from "../define/BaSy
 import { CardCategory, CardColor } from "../define/CardPrototype";
 import { EntitySearchOptions, TextSpeicalEffect } from "../define/CardText";
 import { DestroyReason, Effect, EffectFn } from "../define/Effect";
+import { TipError } from "../define/GameError";
 import { ItemState } from "../define/ItemState";
 import { PlayerID, PlayerA, PlayerB, PlayerIDFn } from "../define/PlayerID";
 import { Tip, StrBaSyouPair } from "../define/Tip";
 import { getCardColor, getCardHasSpeicalEffect, getItemCharacteristic, getItemRuntimeCategory } from "./card";
 import { getCoinIds, getCoin, getCoinOwner } from "./CoinTableComponent";
+import { createAbsoluteBaSyouFromBaSyou, createPlayerIdFromRelated } from "./createActionTitleFn";
 import { getCutInDestroyEffects, getEffect, getEffects, isStackEffect } from "./EffectStackComponent";
 import { GameState } from "./GameState";
 import { isBattle } from "./IsBattleComponent";
 import { getItemState } from "./ItemStateComponent";
-import { Item, getItemIdsByBasyou, getItem, isCard, isChip, getItemController, getItemPrototype } from "./ItemTableComponent";
+import { Item, getItemIdsByBasyou, getItem, isCard, isChip, getItemController, getItemPrototype, getItemBaSyou } from "./ItemTableComponent";
 import { isSetGroupHasA } from "./setGroup";
 import { getSetGroup, getSetGroupRoot } from "./SetGroupComponent";
 
@@ -71,6 +73,23 @@ export function createEntityIterator(ctx: GameState) {
 
 export function createTipByEntitySearch(ctx: GameState, cardId: string, options: EntitySearchOptions): Tip {
     let entityList = createEntityIterator(ctx).filter(EntityFn.filterIsBattle(ctx, null, options.isBattle || false))
+    const cheatCardIds: string[] = []
+    if(options.hasSelfCardId != null){
+        const absoluteBasyou = getItemBaSyou(ctx, cardId)
+        entityList = entityList.filter(EntityFn.filterController(AbsoluteBaSyouFn.getPlayerID(absoluteBasyou)))
+        entityList = entityList.filter(EntityFn.filterController(AbsoluteBaSyouFn.getBaSyouKeyword(absoluteBasyou)))
+    }
+    if (options.see) {
+        const [basyou, min, max] = options.see
+        const absoluteBasyou = createAbsoluteBaSyouFromBaSyou(ctx, cardId, basyou)
+        entityList = entityList.filter(EntityFn.filterController(AbsoluteBaSyouFn.getPlayerID(absoluteBasyou)))
+        entityList = entityList.filter(EntityFn.filterController(AbsoluteBaSyouFn.getBaSyouKeyword(absoluteBasyou)))
+        if (entityList.length < min) {
+            throw new TipError(`must at least ${min} for see`)
+        }
+        cheatCardIds.push(...entityList.map(e=>e.itemId).slice(0, max))
+        entityList = entityList.slice(0, max)
+    }
     if (options.isCanSetCharacter != null) {
         entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx, true)).filter(EntityFn.filterCanSetCharacter(ctx))
     } else if (options.is?.includes("ユニット")) {
@@ -131,6 +150,9 @@ export function createTipByEntitySearch(ctx: GameState, cardId: string, options:
     }
     if (options.count != null) {
         tip.count = options.count
+    }
+    if (cheatCardIds.length) {
+        tip.cheatCardIds = cheatCardIds
     }
     return tip
 }

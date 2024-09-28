@@ -25,21 +25,32 @@ export const prototype: CardPrototype = {
         } else {
           return ctx
         }
-        const newE = DefineFn.EffectFn.fromEffectBasic(effect, {
+        const newE = GameStateFn.createPlayTextEffectFromEffect(ctx, effect, {
           isOption: true,
           conditions: {
-            "自軍本国の上のカード１～３枚": {
-              title: ["Entity", { side: "自軍", see: ["本国", 1, 3], hasChar: ["ヘイズル系"], is: ["ユニット"], min: 1, max: 3 }],
+            "自軍本国の上のカード１～３枚を見て、その中にある、「特徴：ヘイズル系」を持つユニット１枚": {
+              title: ["Entity", { see: [DefineFn.RelatedBaSyouFn.of("自軍", "本国"), 1, 3], hasChar: ["ヘイズル系"], cardCategory: ["ユニット"], count: 1 }],
             },
-            // TODO
             "このカードの部隊の任意の順番": {
-              title: ["Entity", {}]
+              title: ["Entity", { hasSelfCardId: true, isSetGroup: true, max: 1 }]
             }
           },
           logicTreeAction: {
             actions: [
               {
                 title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+                  const cardId = DefineFn.EffectFn.getCardID(effect)
+                  const pairs1 = GameStateFn.getCardTipStrBaSyouPairs(ctx, "自軍本国の上のカード１～３枚を見て、その中にある、「特徴：ヘイズル系」を持つユニット１枚", cardId)
+                  const pairs2 = GameStateFn.getCardTipStrBaSyouPairs(ctx, "このカードの部隊の任意の順番", cardId)
+                  const cardBasyou = GameStateFn.getItemBaSyou(ctx, cardId)
+                  //const battleGroup = GameStateFn.getBattleGroup(ctx, cardBasyou)
+                  // 沒有選擇就是最後面
+                  const insertId = pairs2.length == 0 ?
+                    undefined :
+                    pairs2.map(p => p[0]).indexOf(pairs1[0][0])
+                  for (const pair of pairs1) {
+                    ctx = GameStateFn.doItemMove(ctx, cardBasyou, pair, { insertId: insertId })
+                  }
                   return ctx
                 }.toString()
               }

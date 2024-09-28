@@ -51,7 +51,7 @@ export const prototype: CardPrototype = {
         const cardId = DefineFn.EffectFn.getCardID(effect)
         const evt = DefineFn.EffectFn.getEvent(effect)
         if (evt.title[0] == "場に出た場合" && evt.cardIds?.includes(cardId)) {
-          ctx = GameStateFn.addImmediateEffect(ctx, DefineFn.EffectFn.fromEffectBasic(effect, {
+          const newE = GameStateFn.createPlayTextEffectFromEffect(ctx, effect, {
             conditions: {
               "戦闘エリアにいる敵軍ユニット１～２枚を": {
                 title: ["Entity", { at: ["戦闘エリア1", "戦闘エリア2"], side: "敵軍", is: ["ユニット"], min: 1, max: 2 }],
@@ -65,8 +65,8 @@ export const prototype: CardPrototype = {
                 },
               ]
             }
-          })) as GameState
-          return ctx
+          })
+          ctx = GameStateFn.addImmediateEffectIfCanPayCost(ctx, newE)
         }
         return ctx
       }.toString()

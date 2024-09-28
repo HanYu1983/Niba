@@ -21,12 +21,24 @@ function getCardsByPosition(table: Table, position: string): string[] {
     return table.cardStack[position]
 }
 
-function moveCard(table: Table, fromPosition: string, toPosition: string, cardId: string): Table {
+function moveCard(table: Table, fromPosition: string, toPosition: string, cardId: string, options?:{insertId?: number}): Table {
     if (table.cardStack[fromPosition]?.includes(cardId) != true) {
         throw new Error(`table from ${fromPosition} not exist ${cardId}`)
     }
     const updatedFromStack = (table.cardStack[fromPosition]?.filter(id => id !== cardId) || [])
-    const updatedToStack = table.cardStack[toPosition] ? [...table.cardStack[toPosition], cardId] : [cardId];
+    let updatedToStack = table.cardStack[toPosition] || []
+    if(options?.insertId != null){
+        if(options.insertId < 0){
+            throw new Error(`insertId not < 0: ${options.insertId}`)
+        }
+        if(options.insertId == 0){
+            updatedToStack = [cardId, ...updatedToStack]
+        } else {
+            updatedToStack = [...updatedToStack.slice(0, options.insertId), cardId, ...updatedToStack.slice(options.insertId)]
+        }
+    } else {
+        updatedToStack = [...updatedToStack, cardId]
+    }
     return {
         ...table,
         cardStack: {

@@ -74,6 +74,12 @@ export async function test179030_11E_C_BL079R_blue() {
             if (effect.reason[0] != "場に出る") {
                 throw new Error(`effect.reason[0]!="場に出る`)
             }
+            console.log("建立效果對象")
+            const cardForRollG: Card = {
+                id: "cardForRollG",
+                protoID: "179030_11E_C_BL079R_blue",
+            }
+            ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), [cardForRollG]) as GameState
             console.log(`執行效果: ${effect.description}`)
             if (getCard(ctx, cardC.id).isRoll != true) {
                 throw new Error()
@@ -98,50 +104,38 @@ export async function test179030_11E_C_BL079R_blue() {
             if (getCard(ctx, cardC.id).isRoll != false) {
                 throw new Error()
             }
-            // 以下應不需要, 置換只有換protoID和狀態, 這樣才能繼承所有對象
-            // if (AbsoluteBaSyouFn.eq(getItemBaSyou(ctx, cardB.id), originBasyouC) != true) {
-            //     throw new Error(`AbsoluteBaSyouFn.eq(getItemBaSyou(ctx, cardB.id),originBasyouC) != true`)
-            // }
-            // if (AbsoluteBaSyouFn.eq(getItemBaSyou(ctx, cardC.id), originBasyouB) != true) {
-            //     throw new Error(`AbsoluteBaSyouFn.eq(getItemBaSyou(ctx, cardC.id),originBasyouB) != true`)
-            // }
+            if (ctx.immediateEffect.length) {
+                const effect = getEffect(ctx, ctx.immediateEffect[0])
+                if (effect == null) {
+                    throw new Error(`effect == null`)
+                }
+                console.log(`得到效果:${effect.text.description}`)
+                if (effect.isOption != true) {
+                    throw new Error(`effect.isOption != true`)
+                }
+                if (effect.reason[0] != "PlayText") {
+                    throw new Error(`effect.reason[0]!="PlayText`)
+                }
+                console.log("選擇對象")
+                ctx = setTipSelectionForUser(ctx, effect, 0, 0)
+                console.log(`執行效果: ${effect.text.description}`)
+                if (getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国")).length != 2) {
+                    throw new Error(`getCardLiketemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国")).length != 2`)
+                }
+                if (getCard(ctx, cardForRollG.id).isRoll) {
+                    throw new Error(`getCard(ctx, cardForRollG.id).isRoll`)
+                }
+                ctx = doEffect(ctx, effect, 0, 0)
+                if (getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国")).length != 1) {
+                    throw new Error(`getCardLiketemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国")).length != 1`)
+                }
+                if (getCard(ctx, cardForRollG.id).isRoll != true) {
+                    throw new Error(`getCard(ctx, cardForRollG.id).isRoll != true`)
+                }
+            } else {
+                throw new Error(`ctx.immediateEffect.length`)
+            }
         }
-        if (ctx.immediateEffect.length) {
-            const effect = getEffect(ctx, ctx.immediateEffect[0])
-            if (effect == null) {
-                throw new Error(`effect == null`)
-            }
-            console.log(`得到效果:${effect.text.description}`)
-            if (effect.isOption != true) {
-                throw new Error(`effect.isOption != true`)
-            }
-            if (effect.reason[0] != "PlayText") {
-                throw new Error(`effect.reason[0]!="PlayText`)
-            }
-            console.log("建立效果對象")
-            const cardForRollG: Card = {
-                id: "cardForRollG",
-                protoID: "179030_11E_C_BL079R_blue",
-            }
-            ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), [cardForRollG]) as GameState
-            console.log("選擇對象")
-            ctx = setTipSelectionForUser(ctx, effect, 0, 0)
-            console.log(`執行效果: ${effect.text.description}`)
-            if (getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国")).length != 2) {
-                throw new Error(`getCardLiketemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国")).length != 2`)
-            }
-            if (getCard(ctx, cardForRollG.id).isRoll) {
-                throw new Error(`getCard(ctx, cardForRollG.id).isRoll`)
-            }
-            ctx = doEffect(ctx, effect, 0, 0)
-            if (getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国")).length != 1) {
-                throw new Error(`getCardLiketemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国")).length != 1`)
-            }
-            if (getCard(ctx, cardForRollG.id).isRoll != true) {
-                throw new Error(`getCard(ctx, cardForRollG.id).isRoll != true`)
-            }
-        } else {
-            throw new Error(`ctx.immediateEffect.length`)
-        }
+
     }
 }

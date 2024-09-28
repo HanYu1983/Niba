@@ -53,20 +53,20 @@ export async function test179025_07D_U_RD158C_red() {
         if (effect == null) {
             throw new Error()
         }
+        ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア2"), repeat("179025_07D_U_RD158C_red", 2)) as GameState
         ctx = doEffect(ctx, effect, 0, 0)
-        ctx = doTriggerEvent(ctx, { title: ["カット終了時", [effect]] })
     }
     {
         const effect = getImmediateEffects(ctx)?.[0]
         if (effect == null) {
             throw new Error()
         }
-        ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア2"), repeat("179025_07D_U_RD158C_red", 2)) as GameState
         ctx = setTipSelectionForUser(ctx, effect, 0, 0)
         ctx = doEffect(ctx, effect, 0, 0)
         if (getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア2")).every(itemId => getCard(ctx, itemId).isRoll) != true) {
             throw new Error()
         }
+        ctx = doTriggerEvent(ctx, { title: ["カット終了時", [effect]] })
         if (AbsoluteBaSyouFn.getBaSyouKeyword(getItemBaSyou(ctx, cardA.id)) != "ジャンクヤード") {
             throw new Error()
         }

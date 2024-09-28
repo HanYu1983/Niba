@@ -20,8 +20,7 @@ export const prototype: CardPrototype = {
         const cardController = GameStateFn.getItemController(ctx, cardId)
         const evt = DefineFn.EffectFn.getEvent(effect)
         if (evt.title[0] == "場に出た場合" && evt.cardIds?.includes(cardId)) {
-          const newE = DefineFn.EffectFn.fromEffectBasic(effect, {
-            reason: ["PlayText", cardController, cardId, effect.text.id],
+          const newE = GameStateFn.createPlayTextEffectFromEffect(ctx, effect, {
             conditions: {
               "「特徴：T3部隊」を持つ自軍ユニット１枚": {
                 title: ["Entity", {

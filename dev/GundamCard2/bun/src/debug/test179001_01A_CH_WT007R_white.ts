@@ -7,7 +7,7 @@ import { PhaseFn } from "../game/define/Timing"
 import { setActivePlayerID } from "../game/gameState/ActivePlayerComponent"
 import { getCardRollCostLength, getCardBattlePoint, getCardHasSpeicalEffect } from "../game/gameState/card"
 import { addCards, createCardWithProtoIds } from "../game/gameState/CardTableComponent"
-import { createEffectTips, doEffect, setTipSelectionForUser } from "../game/gameState/doEffect"
+import { createCommandEffectTips, createEffectTips, doEffect, setTipSelectionForUser } from "../game/gameState/doEffect"
 import { getTopEffect } from "../game/gameState/EffectStackComponent"
 import { createGameState, GameState } from "../game/gameState/GameState"
 import { createPlayEffects } from "../game/gameState/createPlayEffects"
@@ -17,6 +17,7 @@ import { setPhase } from "../game/gameState/PhaseComponent"
 import { doTriggerEvent } from "../game/gameState/doTriggerEvent"
 import { loadPrototype } from "../script"
 import { getGlobalEffects } from "../game/gameState/globalEffects"
+import { CommandEffecTipFn } from "../game/define/CommandEffectTip"
 
 export async function test179001_01A_CH_WT007R_white() {
     await loadPrototype("179001_01A_CH_WT007R_white")
@@ -40,8 +41,9 @@ export async function test179001_01A_CH_WT007R_white() {
         if (playCardEffects.length != 1) {
             throw new Error(`playCardEffects.length != 1`)
         }
-        ctx = setTipSelectionForUser(ctx, playCardEffects[0], 0, 0)
-        ctx = doEffect(ctx, playCardEffects[0], 0, 0)
+        const playCardEffect = playCardEffects[0]
+        ctx = setTipSelectionForUser(ctx, playCardEffect, 0, 0)
+        ctx = doEffect(ctx, playCardEffect, 0, 0)
         const effect = getTopEffect(ctx)
         if (effect == null) {
             throw new Error(`effect == null`)
@@ -53,6 +55,14 @@ export async function test179001_01A_CH_WT007R_white() {
         if (getCardHasSpeicalEffect(ctx, ["速攻"], cardA.id) != true) {
             throw new Error()
         }
+        // 避開同切上限
+        ctx = doTriggerEvent(ctx, { title: ["カット終了時", [playCardEffect]] })
+        // 已有速攻了，不能再加速攻
+        const cetsNoErr = createCommandEffectTips(ctx, playCardEffect).filter(CommandEffecTipFn.not(CommandEffecTipFn.filterNoError))
+        if(cetsNoErr.length == 0){
+            throw new Error()
+        }
+
         ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", PhaseFn.getLast()] })
         if (getCardHasSpeicalEffect(ctx, ["速攻"], cardA.id) != false) {
             throw new Error()

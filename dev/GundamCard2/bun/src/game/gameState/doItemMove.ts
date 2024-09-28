@@ -11,7 +11,7 @@ import { ItemTableComponent, isCard, isChip, getItemBaSyou, isCoin, getItemContr
 import { getSetGroupChildren } from "./SetGroupComponent"
 import { doTriggerEvent } from "./doTriggerEvent"
 
-export function doItemMove(ctx: GameState, to: AbsoluteBaSyou, [itemId, from]: StrBaSyouPair, options?: { isSkipTargetMissing?: boolean }): GameState {
+export function doItemMove(ctx: GameState, to: AbsoluteBaSyou, [itemId, from]: StrBaSyouPair, options?: { isSkipTargetMissing?: boolean, insertId?: number }): GameState {
     if (options?.isSkipTargetMissing) {
 
     } else {
@@ -40,7 +40,7 @@ export function doItemMove(ctx: GameState, to: AbsoluteBaSyou, [itemId, from]: S
         itemIds.forEach(itemId => {
             ctx = {
                 ...ctx,
-                table: TableFns.moveCard(ctx.table, AbsoluteBaSyouFn.toString(getItemBaSyou(ctx, itemId)), AbsoluteBaSyouFn.toString(to), itemId)
+                table: TableFns.moveCard(ctx.table, AbsoluteBaSyouFn.toString(getItemBaSyou(ctx, itemId)), AbsoluteBaSyouFn.toString(to), itemId, { insertId: options?.insertId })
             }
         })
         ctx = onMoveItem(ctx, to, [itemId, from])
@@ -88,7 +88,7 @@ export function onMoveItem(ctx: GameState, to: AbsoluteBaSyou, [cardId, from]: S
         }) as GameState
     }
     if ((["捨て山", "本国", "手札"] as BaSyouKeyword[]).includes(AbsoluteBaSyouFn.getBaSyouKeyword(to))) {
-        ctx = mapCard(ctx, cardId, card=>{
+        ctx = mapCard(ctx, cardId, card => {
             return {
                 ...card,
                 isRoll: false,
@@ -96,7 +96,7 @@ export function onMoveItem(ctx: GameState, to: AbsoluteBaSyou, [cardId, from]: S
             }
         }) as GameState
     } else if ((["ジャンクヤード", "Gゾーン", "ハンガー", "プレイされているカード", "取り除かれたカード"] as BaSyouKeyword[]).includes(AbsoluteBaSyouFn.getBaSyouKeyword(to))) {
-        ctx = mapCard(ctx, cardId, card=>{
+        ctx = mapCard(ctx, cardId, card => {
             return {
                 ...card,
                 isRoll: false,

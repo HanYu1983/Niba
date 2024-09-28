@@ -46,31 +46,22 @@ export const prototype: CardPrototype = {
           event.effect != null &&
           event.effect.text.id != effect.text.id
         ) {
-          const newEffect: Effect = {
-            id: "",
-            reason: ["PlayText", cardController, cardId, effect.text.id || "unknown"],
-            text: {
-              id: "",
-              title: [],
-              description: "",
-              conditions: {
-                "戦闘エリアにいる敵軍ユニット１枚": {
-                  title: ["_戦闘エリアにいる_敵軍_ユニット_１～_２枚", ["戦闘エリア1", "戦闘エリア2"], "敵軍", "ユニット", 1, 1]
-                },
+          const newE = GameStateFn.createPlayTextEffectFromEffect(ctx, effect, {
+            conditions: {
+              "戦闘エリアにいる敵軍ユニット１枚": {
+                title: ["_戦闘エリアにいる_敵軍_ユニット_１～_２枚", ["戦闘エリア1", "戦闘エリア2"], "敵軍", "ユニット", 1, 1]
               },
-              logicTreeActions: [
+            },
+            logicTreeAction:{
+              actions: [
                 {
-                  actions: [
-                    {
-                      title: ["_１ダメージを与える", 1],
-                      vars: ["戦闘エリアにいる敵軍ユニット１枚"]
-                    }
-                  ]
+                  title: ["_１ダメージを与える", 1],
+                  vars: ["戦闘エリアにいる敵軍ユニット１枚"]
                 }
               ]
             }
-          }
-          ctx = GameStateFn.addImmediateEffect(ctx, newEffect) as GameState
+          })
+          ctx = GameStateFn.addImmediateEffectIfCanPayCost(ctx, newE)
         }
         return ctx
       }.toString(),

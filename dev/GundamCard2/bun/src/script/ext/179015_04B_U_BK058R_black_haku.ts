@@ -24,45 +24,41 @@ export const prototype: CardPrototype = {
         const cardId = DefineFn.EffectFn.getCardID(effect)
         const evt = DefineFn.EffectFn.getEvent(effect)
         if (evt.title[0] == "場に出た場合" && evt.cardIds?.includes(cardId)) {
-          ctx = GameStateFn.addImmediateEffect(ctx, {
-            id: "",
-            reason: effect.reason,
-            description: effect.description,
-            text: {
-              id: effect.text.id,
-              description: effect.text.description,
-              title: [],
-              conditions: {
-                "敵軍ユニット１枚": {
-                  title: ["_自軍_ユニット_１枚", "敵軍", "ユニット", 1],
-                }
-              },
-              logicTreeActions: [
+          const newE = GameStateFn.createPlayTextEffectFromEffect(ctx, effect, {
+            conditions: {
+              "敵軍ユニット１枚": {
+                title: ["Entity", {
+                  at: DefineFn.BaSyouKeywordFn.getBaAll(),
+                  side: "敵軍",
+                  is: ["ユニット"],
+                  count: 1,
+                }],
+              }
+            },
+            logicTreeAction:{
+              actions: [
                 {
-                  actions: [
-                    {
-                      title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
-                        const cardId = DefineFn.EffectFn.getCardID(effect)
-                        const cardController = GameStateFn.getItemController(ctx, cardId)
-                        const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "敵軍ユニット１枚", cardId)
-                        const count = GameStateFn.getItemIdsByPlayerId(ctx, true, cardController).filter(cardId => getItemCharacteristic(ctx, cardId).indexOf("T3部隊") != -1).length
-                        const bonusV = count + 1
-                        const bonus: BattleBonus = [-bonusV, -bonusV, -bonusV]
-                        for (const pair of pairs) {
-                          GameStateFn.assertTargetMissingError(ctx, pair)
-                          ctx = GameStateFn.mapItemState(ctx, cardId, is => ItemStateFn.setGlobalEffect(is, null, {
-                            title: ["＋x／＋x／＋xを得る", bonus],
-                            cardIds: [cardId]
-                          }, {isRemoveOnTurnEnd: true})) as GameState
-                        }
-                        return ctx
-                      }.toString()
+                  title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+                    const cardId = DefineFn.EffectFn.getCardID(effect)
+                    const cardController = GameStateFn.getItemController(ctx, cardId)
+                    const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "敵軍ユニット１枚", cardId)
+                    const count = GameStateFn.getItemIdsByPlayerId(ctx, true, cardController).filter(cardId => getItemCharacteristic(ctx, cardId).indexOf("T3部隊") != -1).length
+                    const bonusV = count + 1
+                    const bonus: BattleBonus = [-bonusV, -bonusV, -bonusV]
+                    for (const pair of pairs) {
+                      GameStateFn.assertTargetMissingError(ctx, pair)
+                      ctx = GameStateFn.doItemSetGlobalEffectsUntilEndOfTurn(ctx, [{
+                        title: ["＋x／＋x／＋xを得る", bonus],
+                        cardIds: [pair[0]]
+                      }], pair)
                     }
-                  ]
+                    return ctx
+                  }.toString()
                 }
               ]
             }
-          }) as GameState
+          })
+          ctx = GameStateFn.addImmediateEffectIfCanPayCost(ctx, newE)
           return ctx
         }
         return ctx

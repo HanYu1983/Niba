@@ -20,7 +20,7 @@ export const prototype: CardPrototype = {
         const cardId = DefineFn.EffectFn.getCardID(effect)
         const evt = DefineFn.EffectFn.getEvent(effect)
         if (evt.title[0] == "場に出た場合" && evt.cardIds?.includes(cardId)) {
-          const newE = DefineFn.EffectFn.fromEffectBasic(effect,{
+          const newE = GameStateFn.createPlayTextEffectFromEffect(ctx, effect,{
             conditions: {
               "敵軍ユニット１枚": {
                 title: ["_自軍_ユニット_１枚", "敵軍", "ユニット", 1],
@@ -57,52 +57,6 @@ export const prototype: CardPrototype = {
             }
           })
           ctx = GameStateFn.addImmediateEffectIfCanPayCost(ctx, newE)
-          // ctx = GameStateFn.addImmediateEffect(ctx, {
-          //   id: "",
-          //   reason: effect.reason,
-          //   description: effect.description,
-          //   text: {
-          //     id: effect.text.id,
-          //     description: effect.text.description,
-          //     title: [],
-          //     conditions: {
-          //       "敵軍ユニット１枚": {
-          //         title: ["_自軍_ユニット_１枚", "敵軍", "ユニット", 1],
-          //         actions: [
-          //           {
-          //             title: ["_２ダメージを与える", 2],
-          //             vars: ["敵軍ユニット１枚"]
-          //           }
-          //         ]
-          //       },
-          //       "敵軍本国": {
-          //         actions: [
-          //           {
-          //             title: ["_敵軍本国に_１ダメージ", "敵軍", 1]
-          //           }
-          //         ]
-          //       }
-          //     },
-          //     logicTreeActions: [
-          //       {
-          //         logicTree: {
-          //           type: "Or",
-          //           children: [
-          //             {
-          //               type: "Leaf",
-          //               value: "敵軍ユニット１枚"
-          //             },
-          //             {
-          //               type: "Leaf",
-          //               value: "敵軍本国"
-          //             }
-          //           ]
-          //         },
-          //         actions: []
-          //       }
-          //     ]
-          //   }
-          // }) as GameState
           return ctx
         }
         return ctx

@@ -17,10 +17,9 @@ export const prototype: CardPrototype = {
       title: ["自動型", "起動"],
       onEvent: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
         const cardId = DefineFn.EffectFn.getCardID(effect)
-        const cardController = GameStateFn.getItemController(ctx, cardId)
         const evt = DefineFn.EffectFn.getEvent(effect)
         if (evt.title[0] == "このカードの部隊が敵軍本国に戦闘ダメージを与えた場合" && evt.cardIds?.includes(cardId)) {
-          const newE = DefineFn.EffectFn.fromEffectBasic(effect, {
+          const newE = GameStateFn.createPlayTextEffectFromEffect(ctx, effect, {
             isOption: true,
             conditions: {
               ...DefineFn.createRollCostRequire(1, "黒"),

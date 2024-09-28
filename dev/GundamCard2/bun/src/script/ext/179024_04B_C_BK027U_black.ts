@@ -20,15 +20,13 @@ export const prototype: CardPrototype = {
       onEvent: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
         const event = DefineFn.EffectFn.getEvent(effect)
         const cardId = DefineFn.EffectFn.getCardID(effect)
-        const cardController = GameStateFn.getItemController(ctx, cardId)
         if (
           event.title[0] == "解決直後" &&
           event.effect != null &&
           event.effect.text.id == "179024_04B_C_BK027U_black__2" &&
           DefineFn.EffectFn.getCardID(event.effect) == cardId
         ) {
-          const newE = DefineFn.EffectFn.fromEffectBasic(effect, {
-            reason: ["PlayText", cardController, cardId, effect.text.id],
+          const newE = GameStateFn.createPlayTextEffectFromEffect(ctx, effect, {
             isOption: true,
             conditions: {
               "本来の記述に｢特徴：装弾｣を持つ自軍G１枚": {
@@ -48,36 +46,6 @@ export const prototype: CardPrototype = {
             }
           })
           ctx = addImmediateEffectIfCanPayCost(ctx, newE)
-          // const newEffect: Effect = {
-          //   id: "",
-          //   reason: ["PlayText", cardController, cardId, effect.text.id],
-          //   isOption: true,
-          //   description: effect.text.description,
-          //   text: {
-          //     id: effect.text.id,
-          //     title: [],
-          //     description: effect.text.description,
-          //     conditions: {
-          //       "本来の記述に｢特徴：装弾｣を持つ自軍G１枚": {
-          //         title: ["_本来の記述に｢特徴：_装弾｣を持つ_自軍_G_１枚", true, "装弾", "自軍", "グラフィック", 1],
-          //       },
-          //     },
-          //     logicTreeActions: [
-          //       {
-          //         actions: [
-          //           {
-          //             title: ["_ロールする", "ロール"],
-          //             vars: ["本来の記述に｢特徴：装弾｣を持つ自軍G１枚"]
-          //           },
-          //           {
-          //             title: ["カード_１枚を引く", 1]
-          //           }
-          //         ]
-          //       }
-          //     ]
-          //   }
-          // }
-          // ctx = GameStateFn.addImmediateEffect(ctx, newEffect) as GameState
         }
         return ctx
       }.toString(),

@@ -1,7 +1,7 @@
 import { always, ifElse, map, pipe, zipObj } from "ramda";
 import { RelatedPlayerSideKeyword } from ".";
 import { LogicTree, LogicTreeFn } from "../../tool/logicTree";
-import { BaSyou, BaSyouKeyword } from "./BaSyou";
+import { AbsoluteBaSyou, BaSyou, BaSyouKeyword } from "./BaSyou";
 import { CardColor, CardCategory } from "./CardPrototype";
 import { Effect } from "./Effect";
 import { GameEvent } from "./GameEvent";
@@ -82,7 +82,7 @@ export const ActionFn = {
 export type EntitySearchOptions = {
     isBattle?: boolean,
     side?: RelatedPlayerSideKeyword,
-    see?: [BaSyouKeyword, number, number],
+    see?: [BaSyou, number, number],
     is?: CardCategory[],
     cardCategory?: CardCategory[],
     at?: BaSyouKeyword[],
@@ -93,6 +93,7 @@ export type EntitySearchOptions = {
     hasSetCard?: boolean,
     hasSpecialEffect?: TextSpeicalEffect[],
     hasChar?: string[],
+    hasSelfCardId?: boolean,
     count?: number,
     min?: number,
     max?: number,

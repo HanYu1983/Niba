@@ -20,7 +20,7 @@ export const prototype: CardPrototype = {
         actions: [
           {
             title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
-              const newE = DefineFn.EffectFn.fromEffectBasic(effect, {
+              const newE = GameStateFn.createPlayTextEffectFromEffect(ctx, effect, {
                 conditions: {
                   "全ての軍は、自分の手札X枚を可能な限り選ん1": {
                     title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip | null {
