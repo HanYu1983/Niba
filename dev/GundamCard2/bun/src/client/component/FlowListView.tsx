@@ -20,7 +20,7 @@ export const FlowListView = (props: { clientID: string }) => {
   }, [appContext.viewModel.model.gameState, props.clientID]);
   useEffect(() => {
     const speed = 50
-    const isPlayerControl = true
+    const isPlayerControl = false
     if (isPlayerControl && props.clientID == PlayerA) {
       const payCost = flows.find((flow) => flow.id == "FlowPassPayCost");
       if (payCost) {
@@ -55,29 +55,10 @@ export const FlowListView = (props: { clientID: string }) => {
       return
     }
     if (flows.length) {
-      const aiChoiseList = flows.flatMap(flow => createAIChoiseList(appContext.viewModel.model.gameState, flow))
-      if (aiChoiseList.length > 0) {
-        aiChoiseList.sort((a, b) => b.weight - a.weight)
-        const flow = aiChoiseList[0].flow
-        setTimeout(() => {
-          OnEvent.next({
-            id: "OnClickFlowConfirm",
-            clientID: props.clientID,
-            flow: flow,
-          });
-        }, speed)
-      }
-      // let flow: Flow | undefined = flows.find((flow) => flow.id == "FlowPassPayCost")
-      // if (flow == null) {
-      //   flow = flows[Math.round(Math.random() * 1000) % flows.length]
-      // }
-      // if (flow.id == "FlowCancelPassPhase") {
-      //   return
-      // }
-      // if (flow.id == "FlowCancelPassCut") {
-      //   return
-      // }
-      // if (flow) {
+      //const aiChoiseList = flows.flatMap(flow => createAIChoiseList(appContext.viewModel.model.gameState, flow))
+      // if (aiChoiseList.length > 0) {
+      //   aiChoiseList.sort((a, b) => b.weight - a.weight)
+      //   const flow = aiChoiseList[0].flow
       //   setTimeout(() => {
       //     OnEvent.next({
       //       id: "OnClickFlowConfirm",
@@ -86,6 +67,25 @@ export const FlowListView = (props: { clientID: string }) => {
       //     });
       //   }, speed)
       // }
+      let flow: Flow | undefined = flows.find((flow) => flow.id == "FlowPassPayCost")
+      if (flow == null) {
+        flow = flows[Math.round(Math.random() * 1000) % flows.length]
+      }
+      if (flow.id == "FlowCancelPassPhase") {
+        return
+      }
+      if (flow.id == "FlowCancelPassCut") {
+        return
+      }
+      if (flow) {
+        setTimeout(() => {
+          OnEvent.next({
+            id: "OnClickFlowConfirm",
+            clientID: props.clientID,
+            flow: flow,
+          });
+        }, speed)
+      }
     }
   }, [appContext.viewModel.model.gameState, props.clientID, flows]);
   // ============== control panel ============= //

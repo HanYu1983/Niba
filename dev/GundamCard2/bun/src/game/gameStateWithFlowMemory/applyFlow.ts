@@ -356,21 +356,6 @@ export type AIChoise = {
 export function createAIChoiseList(ctx: GameStateWithFlowMemory, flow: Flow): AIChoise[] {
     switch (flow.id) {
         case "FlowSetActiveEffectID": {
-            // const playGTips = flow.tips.filter(tip => tip.isPlayG)
-            // if (playGTips.length < 6) {
-            //     const flows: Flow[] = playGTips.map(tip => {
-            //         return {
-            //             ...flow,
-            //             effectID: tip.id
-            //         }
-            //     })
-            //     return flows.map(flow => {
-            //         return {
-            //             weight: 100,
-            //             flow: flow,
-            //         }
-            //     })
-            // }
             return flow.tips.map(tip => {
                 return {
                     weight: 95,
@@ -380,41 +365,6 @@ export function createAIChoiseList(ctx: GameStateWithFlowMemory, flow: Flow): AI
                     },
                 }
             })
-            // const playTips = flow.tips.filter(tip => tip.isPlayG != true)
-            // const flows: Flow[] = []
-            // const myGcnt = createEntityIterator(ctx)
-            //     .filter(EntityFn.filterController(playerId))
-            //     .filter(EntityFn.filterAtBaSyou(ctx, "Gゾーン"))
-            //     .length
-            // if (playGTips.length) {
-            //     if (myGcnt <= 10) {
-            //         flows.push(...playGTips.map(tip => {
-            //             return {
-            //                 ...flow,
-            //                 effectID: tip.id
-            //             }
-            //         }))
-            //     } else {
-            //         flows.push(...playTips.map(tip => {
-            //             return {
-            //                 ...flow,
-            //                 effectID: tip.id
-            //             }
-            //         }))
-            //     }
-            // } else {
-            //     flows.push(...playTips.map(tip => {
-            //         return {
-            //             ...flow,
-            //             effectID: tip.id
-            //         }
-            //     }))
-            // }
-            // const useFlow = flows[Math.round(Math.random() * 1000) % flows.length]
-            // return {
-            //     weight: 100,
-            //     flow: useFlow
-            // }
         }
         case "FlowSetTipSelection":
             return [{
@@ -430,6 +380,17 @@ export function createAIChoiseList(ctx: GameStateWithFlowMemory, flow: Flow): AI
             }]
         case "FlowPassPayCost":
         case "FlowPassPhase":
+        case "FlowPassCut":
+            return [{
+                weight: 50,
+                flow: flow
+            }]
+        case "FlowNextTiming":
+        case "FlowTriggerTextEvent":
+        case "FlowHandleStackEffectFinished":
+        case "FlowMakeDestroyOrder":
+        case "FlowUpdateCommand":
+        case "FlowDeleteImmediateEffect":
             return [{
                 weight: 50,
                 flow: flow
@@ -438,10 +399,8 @@ export function createAIChoiseList(ctx: GameStateWithFlowMemory, flow: Flow): AI
         case "FlowCancelActiveEffectID":
         case "FlowCancelActiveLogicID":
         case "FlowCancelPassPhase":
+        case "FlowObserveEffect":
+        case "FlowWaitPlayer":
             return []
     }
-    return [{
-        weight: 0,
-        flow: flow
-    }]
 }

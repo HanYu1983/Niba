@@ -43,10 +43,12 @@ import { Flow } from "../game/gameStateWithFlowMemory/Flow";
 import { logCategory } from "../tool/logger";
 import { test179020_05C_U_BK100U_black } from "./test179020_05C_U_BK100U_black";
 import { test179901_B2B_C_BK005P_black } from "./test179901_B2B_C_BK005P_black";
+import { testIssue } from "./testIssue";
 const fs = require('fs').promises;
 
 export async function tests() {
     return [
+        //testIssue,
         test179901_B2B_C_BK005P_black,
         test179015_04B_U_BK061C_black_2,
         test179020_05C_U_BK100U_black,
@@ -166,14 +168,15 @@ async function testCompress() {
                     if (flows.length) {
                         try {
                             let flow: Flow | null = null
-                            const aiChoiseList = flows.flatMap(flow => createAIChoiseList(ctx, flow))
-                            if (aiChoiseList.length > 0) {
-                                aiChoiseList.sort((a, b) => b.weight - a.weight)
-                                flow = aiChoiseList[0].flow
-                            }
-                            if (flow == null) {
-                                flow = flows[0]
-                            }
+                            // const aiChoiseList = flows.flatMap(flow => createAIChoiseList(ctx, flow))
+                            // if (aiChoiseList.length > 0) {
+                            //     aiChoiseList.sort((a, b) => b.weight - a.weight)
+                            //     flow = aiChoiseList[0].flow
+                            // }
+                            // if (flow == null) {
+                            //     flow = flows[0]
+                            // }
+                            flow = flows[Math.round(Math.random()*1000)%flows.length]
                             ctx = applyFlow(ctx, playerId, flow)
                             TableFns.assertDup(ctx.table)
                         } catch (e) {

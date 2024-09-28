@@ -29791,8 +29791,20 @@ function createEffectTips(ctx2, effect, logicId, logicSubId, options) {
   return Object.keys(ltacs).map((key) => {
     const con = ltacs[key];
     logCategory("createEffectTips", key, con.title);
-    const tip = createConditionTitleFn(con, {})(ctx2, effect, bridge);
     const errors = [];
+    let tip = null;
+    try {
+      tip = createConditionTitleFn(con, {})(ctx2, effect, bridge);
+    } catch (e) {
+      if (e instanceof TipError) {
+        if (options?.isAssert) {
+          throw e;
+        }
+        errors.push(e.message);
+      } else {
+        throw e;
+      }
+    }
     if (tip) {
       if (options?.isCheckUserSelection) {
         try {
@@ -30653,48 +30665,6 @@ function applyFlow(ctx2, playerID, flow) {
     }
   }
   return ctx2;
-}
-function createAIChoiseList(ctx2, flow) {
-  switch (flow.id) {
-    case "FlowSetActiveEffectID": {
-      return flow.tips.map((tip) => {
-        return {
-          weight: 95,
-          flow: {
-            ...flow,
-            effectID: tip.id
-          }
-        };
-      });
-    }
-    case "FlowSetTipSelection":
-      return [{
-        weight: 100,
-        flow
-      }];
-    case "FlowAddBlock":
-    case "FlowDoEffect":
-    case "FlowSetActiveLogicID":
-      return [{
-        weight: 90,
-        flow
-      }];
-    case "FlowPassPayCost":
-    case "FlowPassPhase":
-      return [{
-        weight: 50,
-        flow
-      }];
-    case "FlowCancelPassCut":
-    case "FlowCancelActiveEffectID":
-    case "FlowCancelActiveLogicID":
-    case "FlowCancelPassPhase":
-      return [];
-  }
-  return [{
-    weight: 0,
-    flow
-  }];
 }
 
 // src/game/gameStateWithFlowMemory/GameStateWithFlowMemory.ts
@@ -32807,7 +32777,7 @@ var FlowListView = (props) => {
   }, [appContext.viewModel.model.gameState, props.clientID]);
   import_react6.useEffect(() => {
     const speed = 50;
-    const isPlayerControl = true;
+    const isPlayerControl = false;
     if (isPlayerControl && props.clientID == PlayerA) {
       const payCost = flows.find((flow) => flow.id == "FlowPassPayCost");
       if (payCost) {
@@ -32842,10 +32812,17 @@ var FlowListView = (props) => {
       return;
     }
     if (flows.length) {
-      const aiChoiseList = flows.flatMap((flow) => createAIChoiseList(appContext.viewModel.model.gameState, flow));
-      if (aiChoiseList.length > 0) {
-        aiChoiseList.sort((a, b) => b.weight - a.weight);
-        const flow = aiChoiseList[0].flow;
+      let flow = flows.find((flow2) => flow2.id == "FlowPassPayCost");
+      if (flow == null) {
+        flow = flows[Math.round(Math.random() * 1000) % flows.length];
+      }
+      if (flow.id == "FlowCancelPassPhase") {
+        return;
+      }
+      if (flow.id == "FlowCancelPassCut") {
+        return;
+      }
+      if (flow) {
         setTimeout(() => {
           OnEvent.next({
             id: "OnClickFlowConfirm",
