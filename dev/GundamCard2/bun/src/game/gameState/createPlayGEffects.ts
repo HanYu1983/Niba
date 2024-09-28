@@ -25,7 +25,7 @@ export function createPlayGEffects(ctx: GameState, cardId: string): Effect {
                                 const cardController = GameStateFn.getItemController(ctx, cardId)
                                 const ps = GameStateFn.getPlayerState(ctx, cardController)
                                 if (ps.playGCount > 0) {
-                                    throw new DefineFn.TipError(`出G上限: ${ps.playGCount}`, { flags: ["出G上限"] })
+                                    throw new DefineFn.TipError(`出G上限: ${ps.playGCount}`, { isPlayGLimit: true })
                                 }
                                 ctx = GameStateFn.mapPlayerState(ctx, cardController, ps => {
                                     return {

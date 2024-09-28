@@ -1,6 +1,7 @@
 import { Bridge } from "../../script/bridge";
 import { TextSpeicalEffect, CardText } from "../define/CardText";
 import { Effect } from "../define/Effect";
+import { TipError } from "../define/GameError";
 import { Tip } from "../define/Tip";
 import { GameState } from "./GameState";
 
@@ -81,13 +82,30 @@ export function createTextsFromSpecialEffect(ctx: GameState, text: CardText): Ca
                     description: "（戦闘フェイズ）：［ ］の特徴を持つ自軍ユニット１枚は、ターン終了時まで、このカードの本来のテキスト１つと同じテキストを得る。ただし同じテキストは得られない）",
                     conditions: {
                         ...text.conditions,
+                        "このカードの本来のテキスト１つ": {
+                            title: ["このカードの_本来のテキスト１つ", true, 1]
+                        },
                         "［ ］の特徴を持つ自軍ユニット１枚は": {
                             title: ["_本来の記述に｢特徴：_装弾｣を持つ_自軍_G_１枚", false, A, "自軍", "ユニット", 1],
                             exceptItemSelf: true,
+                            actions: [
+                                {
+                                    title: function _(ctx: GameState, effect: Effect, { GameStateFn, DefineFn }: Bridge): GameState {
+                                        const cardId = DefineFn.EffectFn.getCardID(effect)
+                                        const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "［ ］の特徴を持つ自軍ユニット１枚は", cardId)
+                                        const textRefs = GameStateFn.getCardTipTextRefs(ctx, "このカードの本来のテキスト１つ", cardId)
+                                        const textRefIds = textRefs.map(tr => tr.textId)
+                                        for (const pair of pairs) {
+                                            const hasSameText = GameStateFn.getCardTexts(ctx, pair[0]).find(text => textRefIds.includes(text.id))
+                                            if (hasSameText) {
+                                                throw new DefineFn.TipError(`已有同樣的內文: ${JSON.stringify(textRefIds)}`, {hasSameText: true})
+                                            }
+                                        }
+                                        return ctx
+                                    }.toString()
+                                }
+                            ]
                         },
-                        "このカードの本来のテキスト１つ": {
-                            title: ["このカードの_本来のテキスト１つ", true, 1]
-                        }
                     },
                     logicTreeActions: [
                         {

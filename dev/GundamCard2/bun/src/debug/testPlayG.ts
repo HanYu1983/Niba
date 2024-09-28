@@ -58,7 +58,7 @@ export async function testPlayG() {
             throw new Error()
         } catch (e) {
             if (e instanceof TipError) {
-                if (e.info.flags.includes("出G上限")) {
+                if (e.info.isPlayGLimit) {
 
                 } else {
                     throw e
