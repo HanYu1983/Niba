@@ -1,6 +1,7 @@
 import { logCategory } from "../../tool/logger"
 import { Table, TableFns } from "../../tool/table"
 import { Card } from "../define/Card"
+import { Action } from "../define/CardText"
 import { Effect } from "../define/Effect"
 import { ItemState } from "../define/ItemState"
 import { PlayerState } from "../define/PlayerState"
@@ -24,6 +25,18 @@ export const EventCenterFn = {
     },
     onEffectEnd(_ctx: any, effect: Effect): any {
         logCategory(`onEffectEnd: ${effect.text.description}`)
+        let ctx = getGameStateAndAssert(_ctx)
+        ctx = setMessageCurrentEffect(ctx, null) as GameState
+        return ctx
+    },
+    onActionStart(_ctx: any, effect: Effect, action:Action): any {
+        logCategory(`onActionStart: ${action.description}`)
+        let ctx = getGameStateAndAssert(_ctx)
+        ctx = setMessageCurrentEffect(ctx, effect) as GameState
+        return ctx
+    },
+    onActionEnd(_ctx: any, effect: Effect, action:Action): any {
+        logCategory(`onActionEnd: ${action.description}`)
         let ctx = getGameStateAndAssert(_ctx)
         ctx = setMessageCurrentEffect(ctx, null) as GameState
         return ctx

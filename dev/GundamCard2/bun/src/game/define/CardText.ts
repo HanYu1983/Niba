@@ -57,10 +57,12 @@ export type ActionTitle =
     | ["_敵軍本国に_１ダメージ", RelatedPlayerSideKeyword, number]
     | ["_黒のGサインを持つ_自軍_Gが_５枚以上ある場合", CardColor, RelatedPlayerSideKeyword, CardCategory, number]
     | ["Action", { move?: BaSyou }]
+    | ["_自軍_本国をシャッフルする", RelatedPlayerSideKeyword, BaSyouKeyword]
 
 export type Action = {
     title: ActionTitle,
     vars?: string[],
+    description?: string,
 }
 
 export type ActionTitleFn = (ctx: any, effect: Effect, lib: any) => any;
@@ -140,6 +142,12 @@ export const ConditionFn = {
         }
         return eval(ctx.title + ";_")
     },
+    getActions(ctx: Condition): Action[] {
+        if (ctx.actions == null) {
+            return []
+        }
+        return ctx.actions
+    },
     getActionTitleFns(ctx: Condition, genActionFn: (title: Action) => ActionTitleFn): ActionTitleFn[] {
         if (ctx.actions == null) {
             return []
@@ -171,6 +179,12 @@ export type LogicTreeAction = {
 }
 
 export const LogicTreeActionFn = {
+    getActions(ctx: LogicTreeAction): Action[] {
+        if (ctx.actions == null) {
+            return []
+        }
+        return ctx.actions
+    },
     getActionTitleFns(ctx: LogicTreeAction, genActionFn: (title: Action) => ActionTitleFn): ActionTitleFn[] {
         if (ctx.actions == null) {
             return []

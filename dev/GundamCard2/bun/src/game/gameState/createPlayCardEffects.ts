@@ -17,7 +17,7 @@ export function createConditionKeyOfPayColorX(proto: CardPrototype): string {
     return `${proto.color}X`
 }
 
-export function createRollCostConditions(ctx: GameState, proto: CardPrototype, rollCost: CardPrototypeRollCost): { [key: string]: Condition } {
+export function createRollCostConditions(ctx: GameState, proto: CardPrototype, rollCost: CardPrototypeRollCost, cardId: string): { [key: string]: Condition } {
     if (rollCost == "X") {
         if (proto.color == null) {
             throw new Error()
@@ -28,6 +28,14 @@ export function createRollCostConditions(ctx: GameState, proto: CardPrototype, r
             }
         }
     }
+    // const bonus = getGlobalEffects(ctx, null).map(ge => {
+    //     if (ge.title[0] == "合計国力＋_、ロールコスト＋_してプレイできる" && ge.cardIds.includes(cardId)) {
+    //         return ge.title[2]
+    //     }
+    //     return 0
+    // }).reduce((a, b) => a + b)
+
+    // TODO rollCost bonus
     const rollCostConditions = CardColorFn.getAll()
         .map(tc => createRollCostRequire(rollCost.filter(c => c == tc).length, tc))
         .reduce((ctx, cons) => ({ ...ctx, ...cons }))
@@ -52,7 +60,7 @@ export function createPlayCardEffects(ctx: GameState, cardId: string): Effect[] 
             title: ["Entity", { isCanSetCharacter: true, side: "自軍", is: ["ユニット"], count: 1 }],
         }
     } : {}
-    const rollCostConditions = createRollCostConditions(ctx, prototype, prototype.rollCost || [])
+    const rollCostConditions = createRollCostConditions(ctx, prototype, prototype.rollCost || [], cardId)
     const conditions: { [key: string]: Condition } = {
         ...costConditions,
         ...characterConditions,

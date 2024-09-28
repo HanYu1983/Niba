@@ -15,8 +15,8 @@ const hideCategory: string[] = [
   "doTriggerEvent",
   "createPlayEffects",
   "createPlayCardEffects",
-  //"testCompress",
-  //"applyFlow"
+  "testCompress",
+  "applyFlow"
 ];
 let filterCategory = true;
 

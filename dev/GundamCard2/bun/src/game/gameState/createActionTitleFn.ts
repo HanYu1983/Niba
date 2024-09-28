@@ -14,7 +14,7 @@ import { getCardTipStrBaSyouPairs } from "./doEffect"
 import { addStackEffect } from "./EffectStackComponent"
 import { GameState } from "./GameState"
 import { mapItemState, getItemState, setItemState } from "./ItemStateComponent"
-import { getItemController, getItemBaSyou, assertTargetMissingError, getItemIdsByBasyou, addCoinsToCard, getItemIdsByPlayerId, getItemPrototype, getItemOwner } from "./ItemTableComponent"
+import { getItemController, getItemBaSyou, assertTargetMissingError, getItemIdsByBasyou, addCoinsToCard, getItemIdsByPlayerId, getItemPrototype, getItemOwner, shuffleItems } from "./ItemTableComponent"
 import { doItemMove } from "./doItemMove"
 import { doItemSwap } from "./doItemSwap"
 import { doTriggerEvent } from "./doTriggerEvent"
@@ -49,6 +49,16 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
     return ActionFn.getTitleFn(action)
   }
   switch (action.title[0]) {
+    case "_自軍_本国をシャッフルする":{
+      const [_, side, basyouKw] = action.title
+      return function (ctx: GameState, effect: Effect): GameState {
+        const cardId = EffectFn.getCardID(effect)
+        const playerId = createPlayerIdFromRelated(ctx, cardId, side)
+        const basyou = AbsoluteBaSyouFn.of(playerId, basyouKw)
+        ctx = shuffleItems(ctx, basyou) as GameState
+        return ctx
+      }
+    }
     case "Action": {
       const [_, options] = action.title
       const varNames = action.vars

@@ -36,9 +36,12 @@ export function doEffect(
   conditionIds.forEach(conditionKey => {
     logCategory("doEffect", "conditionKey", conditionKey)
     const condition = CardTextFn.getCondition(effect.text, conditionKey)
-    const actionFns = ConditionFn.getActionTitleFns(condition, createActionTitleFn)
-    for (const actionFn of actionFns) {
+    const actions = ConditionFn.getActions(condition)
+    for (const action of actions) {
+      EventCenterFn.onActionStart(ctx, effect, action)
+      const actionFn = createActionTitleFn(action)
       ctx = actionFn(ctx, effect, bridge)
+      EventCenterFn.onActionEnd(ctx, effect, action)
       //ctx = clearGlobalEffects(ctx)
     }
     // if (condition.actions) {
@@ -53,8 +56,11 @@ export function doEffect(
     // }
   })
   const lta = CardTextFn.getLogicTreeAction(effect.text, logicId)
-  for (const actionFn of LogicTreeActionFn.getActionTitleFns(lta, createActionTitleFn)) {
+  for (const action of LogicTreeActionFn.getActions(lta)) {
+    EventCenterFn.onActionStart(ctx, effect, action)
+    const actionFn = createActionTitleFn(action)
     ctx = actionFn(ctx, effect, bridge)
+    EventCenterFn.onActionEnd(ctx, effect, action)
     //ctx = clearGlobalEffects(ctx)
   }
   // for (const action of lta.actions) {

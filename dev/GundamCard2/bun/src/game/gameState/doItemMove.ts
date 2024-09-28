@@ -87,6 +87,7 @@ export function onMoveItem(ctx: GameState, to: AbsoluteBaSyou, [cardId, from]: S
             }
         }) as GameState
     }
+    // 到以下的場所
     if ((["捨て山", "本国", "手札"] as BaSyouKeyword[]).includes(AbsoluteBaSyouFn.getBaSyouKeyword(to))) {
         ctx = mapCard(ctx, cardId, card => {
             return {
