@@ -183,6 +183,7 @@ export async function testFlow2() {
     if (flowsB.length == 0) {
       throw new Error("必須有flow");
     }
+    console.log(flowsB)
     if (flowsB[0].id != "FlowWaitPlayer") {
       throw new Error("玩家B必須拿到等待");
     }

@@ -28,7 +28,6 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                     return cards.length == 0;
                 }).length > 0;
         if (hasSomeoneLiveIsZero) {
-            console.log(ctx);
             return [{ id: "FlowWaitPlayer", description: "遊戲結束" }];
         }
     }

@@ -21,6 +21,10 @@ import { getItemIdsByBasyou } from "../game/gameState/ItemTableComponent"
 import { setPhase } from "../game/gameState/PhaseComponent"
 import { doTriggerEvent } from "../game/gameState/doTriggerEvent"
 import { loadPrototype } from "../script"
+import { createGameStateWithFlowMemory, GameStateWithFlowMemory } from "../game/gameStateWithFlowMemory/GameStateWithFlowMemory"
+import { queryFlow } from "../game/gameStateWithFlowMemory/queryFlow"
+import { applyFlow } from "../game/gameStateWithFlowMemory/applyFlow"
+import { getActiveEffectID, getActiveLogicID, getActiveLogicSubID } from "../game/gameStateWithFlowMemory/effect"
 
 export async function test179015_04B_U_BK061C_black() {
     await loadPrototype("179015_04B_U_BK061C_black")
@@ -81,5 +85,57 @@ export async function test179015_04B_U_BK061C_black() {
         if (getItemState(ctx, unit2.id).damage != 2) {
             throw new Error()
         }
+    }
+}
+
+export async function test179015_04B_U_BK061C_black_2() {
+    await loadPrototype("179015_04B_U_BK061C_black")
+    await loadPrototype("unit")
+    const cardA: Card = {
+        id: "cardA",
+        protoID: "179015_04B_U_BK061C_black"
+    }
+    const unit: Card = {
+        id: "unit",
+        protoID: "unit"
+    }
+    let ctx = createGameStateWithFlowMemory()
+    ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア"), [cardA]) as GameStateWithFlowMemory
+    ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国"), ["unit"]) as GameStateWithFlowMemory
+    ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerB, "本国"), ["unit"]) as GameStateWithFlowMemory
+    ctx = setActivePlayerID(ctx, PlayerA) as GameStateWithFlowMemory
+    ctx = doTriggerEvent(ctx, { title: ["場に出た場合"], cardIds: [cardA.id] }) as GameStateWithFlowMemory
+    if (ctx.immediateEffect.length != 1) {
+        throw new Error()
+    }
+    let flows = queryFlow(ctx, PlayerA)
+    if(flows.length == 1 && flows[0].id == "FlowSetActiveEffectID"){
+        
+
+    } else {
+        throw new Error()
+    }
+    if(getActiveLogicID(ctx) != null){
+        throw new Error()
+    }
+    const effect = getEffect(ctx, flows[0].effectID)
+    const cetsNoErr = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)
+    if(cetsNoErr.length == 1 && cetsNoErr[0].logicID == 0 && cetsNoErr[0].logicSubID == 1){
+        
+    } else {
+        throw new Error()
+    }
+    ctx = applyFlow(ctx, PlayerA, flows[0])
+    if(getActiveEffectID(ctx) == null){
+        throw new Error()
+    }
+    if(getActiveLogicID(ctx) == cetsNoErr[0].logicID && getActiveLogicSubID(ctx) == cetsNoErr[0].logicSubID){
+        
+    } else {
+        throw new Error()
+    }
+    flows = queryFlow(ctx, PlayerA)
+    if(flows.find(flow=>flow.id=="FlowCancelActiveEffectID") == null){
+        throw new Error()
     }
 }

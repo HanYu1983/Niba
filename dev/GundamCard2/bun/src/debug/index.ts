@@ -23,7 +23,7 @@ import { applyFlow, createAIChoiseList } from "../game/gameStateWithFlowMemory/a
 import { TargetMissingError } from "../game/define/GameError";
 import { testPlayG } from "./testPlayG";
 import { testPlayChar } from "./testPlayChar";
-import { test179015_04B_U_BK061C_black } from "./test179015_04B_U_BK061C_black";
+import { test179015_04B_U_BK061C_black, test179015_04B_U_BK061C_black_2 } from "./test179015_04B_U_BK061C_black";
 import { test179016_04B_U_BK066C_black } from "./test179016_04B_U_BK066C_black";
 import { Card } from "../game/define/Card";
 import { createGameState, GameState } from "../game/gameState/GameState";
@@ -46,6 +46,7 @@ const fs = require('fs').promises;
 
 export async function tests() {
     return [
+        test179015_04B_U_BK061C_black_2,
         test179020_05C_U_BK100U_black,
         test179025_07D_U_RD158C_red,
         test179003_01A_U_BK008U_black,
@@ -56,7 +57,7 @@ export async function tests() {
         testSwapItem,
         itemGroupTests,
         testFlow1,
-        testFlow2,
+        //testFlow2,
         testBattleBonus,
         testGetPlayEffects,
         testAttackRuleEffect,

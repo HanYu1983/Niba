@@ -28,6 +28,7 @@ run.bat
 ```
 ## 目前方法
 ```bash
+bun run build
 bun build src\web.tsx --outdir public
 runWeb.bat
 ```

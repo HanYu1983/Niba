@@ -3,7 +3,7 @@ import { logCategory } from "../../tool/logger"
 import { createBridge } from "../bridge/createBridge"
 import { AbsoluteBaSyouFn } from "../define/BaSyou"
 import { CardTextFn, ConditionFn, LogicTreeActionFn } from "../define/CardText"
-import { TipOrErrors, CommandEffectTip, TipOrErrorsFn } from "../define/CommandEffectTip"
+import { TipOrErrors, CommandEffectTip, TipOrErrorsFn, CommandEffecTipFn } from "../define/CommandEffectTip"
 import { Effect, EffectFn } from "../define/Effect"
 import { TipError, TargetMissingError } from "../define/GameError"
 import { GlobalEffect } from "../define/GlobalEffect"
@@ -301,9 +301,13 @@ export function setCardTipStrBaSyouPairs(ctx: GameState, varName: string, pairs:
 }
 
 export function addImmediateEffectIfCanPayCost(ctx: GameState, effect: Effect): GameState {
-  const cets = createEffectTips(ctx, effect, 0, 0).filter(TipOrErrorsFn.filterError)
-  if (cets.length) {
+  const cetsNoErr = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)
+  if (cetsNoErr.length == 0) {
     return ctx
   }
+  // const cets = createEffectTips(ctx, effect, 0, 0).filter(TipOrErrorsFn.filterError)
+  // if (cets.length) {
+  //   return ctx
+  // }
   return addImmediateEffect(ctx, effect) as GameState
 }

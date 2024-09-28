@@ -98,35 +98,50 @@ export function setActiveEffectID(
   }
   const cetsNoErr = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)
   // temp test
-  // if (cetsNoErr.length == 0) {
-  //   console.log(JSON.stringify(effect, null, 2))
-  //   throw new Error(`cets.length must not 0`)
-  // }
-  if (cetsNoErr.length) {
-    const activeLogicID = cetsNoErr[0].logicID
-    const activeLogicSubID = cetsNoErr[0].logicSubID
-    ctx = {
-      ...ctx,
-      flowMemory: {
-        ...ctx.flowMemory,
-        activeLogicID: activeLogicID,
-        activeLogicSubID: activeLogicSubID,
-      }
-    };
-    for (const cet of cetsNoErr) {
-      ctx = clearTipSelectionForUser(ctx, effect, cet.logicID, cet.logicSubID) as GameStateWithFlowMemory
-    }
+  if (cetsNoErr.length == 0) {
+    console.log(JSON.stringify(effect, null, 2))
+    throw new Error(`cets.length must not 0`)
   }
+  const activeLogicID = cetsNoErr[0].logicID
+  const activeLogicSubID = cetsNoErr[0].logicSubID
   ctx = {
     ...ctx,
     flowMemory: {
       ...ctx.flowMemory,
       activeEffectID: effectID,
-      activeLogicID: 0,
-      activeLogicSubID: 0,
+      activeLogicID: activeLogicID,
+      activeLogicSubID: activeLogicSubID,
     }
   };
+  for (const cet of cetsNoErr) {
+    ctx = clearTipSelectionForUser(ctx, effect, cet.logicID, cet.logicSubID) as GameStateWithFlowMemory
+  }
   return ctx
+  // if (cetsNoErr.length) {
+  //   const activeLogicID = cetsNoErr[0].logicID
+  //   const activeLogicSubID = cetsNoErr[0].logicSubID
+  //   ctx = {
+  //     ...ctx,
+  //     flowMemory: {
+  //       ...ctx.flowMemory,
+  //       activeLogicID: activeLogicID,
+  //       activeLogicSubID: activeLogicSubID,
+  //     }
+  //   };
+  //   for (const cet of cetsNoErr) {
+  //     ctx = clearTipSelectionForUser(ctx, effect, cet.logicID, cet.logicSubID) as GameStateWithFlowMemory
+  //   }
+  // }
+  // ctx = {
+  //   ...ctx,
+  //   flowMemory: {
+  //     ...ctx.flowMemory,
+  //     activeEffectID: effectID,
+  //     activeLogicID: null,
+  //     activeLogicSubID: null,
+  //   }
+  // };
+  // return ctx
 }
 
 export function cancelActiveEffectID(
@@ -148,13 +163,8 @@ export function cancelActiveEffectID(
   if (effect.requirePassed) {
     throw new Error("[cancelEffectID] 已經處理需求的不能取消");
   }
-  return {
-    ...ctx,
-    flowMemory: {
-      ...ctx.flowMemory,
-      activeEffectID: null,
-    }
-  };
+  ctx = clearActiveEffectID(ctx)
+  return ctx
 }
 
 export function getActiveEffectID(ctx: GameStateWithFlowMemory): string | null {

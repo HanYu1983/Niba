@@ -25704,9 +25704,7 @@ class GameError extends Error {
   constructor(message, info) {
     super(message);
     this.name = "GameError";
-    this.info = info || {
-      flags: []
-    };
+    this.info = info || {};
   }
 }
 
@@ -27046,12 +27044,29 @@ function createTextsFromSpecialEffect(ctx2, text) {
           description: "\uFF08\u6226\u95D8\u30D5\u30A7\u30A4\u30BA\uFF09\uFF1A\uFF3B \uFF3D\u306E\u7279\u5FB4\u3092\u6301\u3064\u81EA\u8ECD\u30E6\u30CB\u30C3\u30C8\uFF11\u679A\u306F\u3001\u30BF\u30FC\u30F3\u7D42\u4E86\u6642\u307E\u3067\u3001\u3053\u306E\u30AB\u30FC\u30C9\u306E\u672C\u6765\u306E\u30C6\u30AD\u30B9\u30C8\uFF11\u3064\u3068\u540C\u3058\u30C6\u30AD\u30B9\u30C8\u3092\u5F97\u308B\u3002\u305F\u3060\u3057\u540C\u3058\u30C6\u30AD\u30B9\u30C8\u306F\u5F97\u3089\u308C\u306A\u3044\uFF09",
           conditions: {
             ...text.conditions,
-            "\uFF3B \uFF3D\u306E\u7279\u5FB4\u3092\u6301\u3064\u81EA\u8ECD\u30E6\u30CB\u30C3\u30C8\uFF11\u679A\u306F": {
-              title: ["_\u672C\u6765\u306E\u8A18\u8FF0\u306B\uFF62\u7279\u5FB4\uFF1A_\u88C5\u5F3E\uFF63\u3092\u6301\u3064_\u81EA\u8ECD_G_\uFF11\u679A", false, A, "\u81EA\u8ECD", "\u30E6\u30CB\u30C3\u30C8", 1],
-              exceptItemSelf: true
-            },
             "\u3053\u306E\u30AB\u30FC\u30C9\u306E\u672C\u6765\u306E\u30C6\u30AD\u30B9\u30C8\uFF11\u3064": {
               title: ["\u3053\u306E\u30AB\u30FC\u30C9\u306E_\u672C\u6765\u306E\u30C6\u30AD\u30B9\u30C8\uFF11\u3064", true, 1]
+            },
+            "\uFF3B \uFF3D\u306E\u7279\u5FB4\u3092\u6301\u3064\u81EA\u8ECD\u30E6\u30CB\u30C3\u30C8\uFF11\u679A\u306F": {
+              title: ["_\u672C\u6765\u306E\u8A18\u8FF0\u306B\uFF62\u7279\u5FB4\uFF1A_\u88C5\u5F3E\uFF63\u3092\u6301\u3064_\u81EA\u8ECD_G_\uFF11\u679A", false, A, "\u81EA\u8ECD", "\u30E6\u30CB\u30C3\u30C8", 1],
+              exceptItemSelf: true,
+              actions: [
+                {
+                  title: function _(ctx3, effect, { GameStateFn, DefineFn }) {
+                    const cardId = DefineFn.EffectFn.getCardID(effect);
+                    const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx3, "\uFF3B \uFF3D\u306E\u7279\u5FB4\u3092\u6301\u3064\u81EA\u8ECD\u30E6\u30CB\u30C3\u30C8\uFF11\u679A\u306F", cardId);
+                    const textRefs = GameStateFn.getCardTipTextRefs(ctx3, "\u3053\u306E\u30AB\u30FC\u30C9\u306E\u672C\u6765\u306E\u30C6\u30AD\u30B9\u30C8\uFF11\u3064", cardId);
+                    const textRefIds = textRefs.map((tr) => tr.textId);
+                    for (const pair2 of pairs) {
+                      const hasSameText = GameStateFn.getCardTexts(ctx3, pair2[0]).find((text2) => textRefIds.includes(text2.id));
+                      if (hasSameText) {
+                        throw new DefineFn.TipError(`\u5DF2\u6709\u540C\u6A23\u7684\u5167\u6587: ${JSON.stringify(textRefIds)}`, { hasSameText: true });
+                      }
+                    }
+                    return ctx3;
+                  }.toString()
+                }
+              ]
             }
           },
           logicTreeActions: [
@@ -30091,7 +30106,7 @@ function createPlayGEffects(ctx2, cardId) {
                 const cardController = GameStateFn2.getItemController(ctx3, cardId2);
                 const ps = GameStateFn2.getPlayerState(ctx3, cardController);
                 if (ps.playGCount > 0) {
-                  throw new DefineFn2.TipError(`\u51FAG\u4E0A\u9650: ${ps.playGCount}`, { flags: ["\u51FAG\u4E0A\u9650"] });
+                  throw new DefineFn2.TipError(`\u51FAG\u4E0A\u9650: ${ps.playGCount}`, { isPlayGLimit: true });
                 }
                 ctx3 = GameStateFn2.mapPlayerState(ctx3, cardController, (ps2) => {
                   return {
