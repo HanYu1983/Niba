@@ -1,3 +1,4 @@
+import { logCategory } from "../../tool/logger"
 import { Table, TableFns } from "../../tool/table"
 import { Card } from "../define/Card"
 import { Effect } from "../define/Effect"
@@ -16,11 +17,13 @@ function getGameStateAndAssert(ctx: any): GameState {
 
 export const EventCenterFn = {
     onEffectStart(_ctx: any, effect: Effect): any {
+        logCategory(`onEffectStart: ${effect.text.description}`)
         let ctx = getGameStateAndAssert(_ctx)
         ctx = setMessageCurrentEffect(ctx, effect) as GameState
         return ctx
     },
     onEffectEnd(_ctx: any, effect: Effect): any {
+        logCategory(`onEffectEnd: ${effect.text.description}`)
         let ctx = getGameStateAndAssert(_ctx)
         ctx = setMessageCurrentEffect(ctx, null) as GameState
         return ctx
@@ -44,18 +47,22 @@ export const EventCenterFn = {
         return ctx
     },
     onSetPhase(_ctx: any, old: Phase, curr: Phase): any {
+        logCategory(`onSetPhase: ${curr}`)
         let ctx = getGameStateAndAssert(_ctx)
         return ctx
     },
     onItemAdd(_ctx: any, itemId: string): any {
+        logCategory(`onItemAdd: ${itemId}`)
         let ctx = getGameStateAndAssert(_ctx)
         return ctx
     },
     onItemMove(_ctx: any, from: string, to: string, itemId: string): any {
+        logCategory(`onItemMove: ${itemId} = ${from} => ${to}`)
         let ctx = getGameStateAndAssert(_ctx)
         return ctx
     },
     onItemDelete(_ctx: any, itemId: string): any {
+        logCategory(`onItemDelete: ${itemId}`)
         let ctx = getGameStateAndAssert(_ctx)
         return ctx
     },
@@ -64,19 +71,19 @@ export const EventCenterFn = {
             for (const itemId of old.cardStack[oldBasyouStr]) {
                 const newBasyouStr = TableFns.getCardPosition(curr, itemId)
                 if (newBasyouStr == null) {
-                    _ctx = this.onItemDelete(_ctx, itemId)
+                    _ctx = EventCenterFn.onItemDelete(_ctx, itemId)
                 } else if (newBasyouStr != oldBasyouStr) {
-                    _ctx = this.onItemMove(_ctx, oldBasyouStr, newBasyouStr, itemId)
+                   
                 }
             }
         }
         for (const newBasyouStr in curr.cardStack) {
             for (const itemId of curr.cardStack[newBasyouStr]) {
-                const oldBasyouStr = TableFns.getCardPosition(curr, itemId)
+                const oldBasyouStr = TableFns.getCardPosition(old, itemId)
                 if (oldBasyouStr == null) {
-                    _ctx = this.onItemAdd(_ctx, itemId)
+                    _ctx = EventCenterFn.onItemAdd(_ctx, itemId)
                 } else if (newBasyouStr != oldBasyouStr) {
-                    _ctx = this.onItemMove(_ctx, oldBasyouStr, newBasyouStr, itemId)
+                    _ctx = EventCenterFn.onItemMove(_ctx, oldBasyouStr, newBasyouStr, itemId)
                 }
             }
         }

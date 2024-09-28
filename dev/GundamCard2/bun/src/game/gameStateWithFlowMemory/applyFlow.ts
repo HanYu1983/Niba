@@ -24,6 +24,7 @@ import { getCoin, getCoinIds, getCoinOwner } from "../gameState/CoinTableCompone
 import { createEntityIterator, EntityFn } from "../gameState/Entity";
 import { createMinusDestroyEffectAndPush } from "../gameState/doItemSetDestroy";
 import { doCutInDestroyEffectsAndClear } from "../gameState/doCutInDestroyEffectsAndClear";
+import { setNextPhase } from "../gameState/getNextPhase";
 
 export function applyFlow(
     ctx: GameStateWithFlowMemory,
@@ -245,11 +246,7 @@ export function applyFlow(
             }
             // 下一步
             {
-                const nextTiming = PhaseFn.getNext(ctx.phase);
-                ctx = {
-                    ...ctx,
-                    phase: nextTiming,
-                };
+                ctx = setNextPhase(ctx) as GameStateWithFlowMemory
             }
             // p34
             // 戰鬥階段的每個步驟開始時，確認是否交戰中
