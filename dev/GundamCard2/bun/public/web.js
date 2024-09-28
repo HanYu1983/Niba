@@ -29914,8 +29914,8 @@ function setCardTipStrBaSyouPairs(ctx2, varName, pairs, cardId) {
   return ctx2;
 }
 function addImmediateEffectIfCanPayCost(ctx2, effect) {
-  const cets = createEffectTips(ctx2, effect, 0, 0).filter(TipOrErrorsFn.filterError);
-  if (cets.length) {
+  const cetsNoErr = createCommandEffectTips(ctx2, effect).filter(CommandEffecTipFn.filterNoError);
+  if (cetsNoErr.length == 0) {
     return ctx2;
   }
   return addImmediateEffect(ctx2, effect);
@@ -29991,30 +29991,24 @@ function setActiveEffectID(ctx2, playerID, effectID) {
     throw new Error("[cancelCommand] \u4F60\u4E0D\u662F\u63A7\u5236\u8005");
   }
   const cetsNoErr = createCommandEffectTips(ctx2, effect).filter(CommandEffecTipFn.filterNoError);
-  if (cetsNoErr.length) {
-    const activeLogicID = cetsNoErr[0].logicID;
-    const activeLogicSubID = cetsNoErr[0].logicSubID;
-    ctx2 = {
-      ...ctx2,
-      flowMemory: {
-        ...ctx2.flowMemory,
-        activeLogicID,
-        activeLogicSubID
-      }
-    };
-    for (const cet of cetsNoErr) {
-      ctx2 = clearTipSelectionForUser(ctx2, effect, cet.logicID, cet.logicSubID);
-    }
+  if (cetsNoErr.length == 0) {
+    console.log(JSON.stringify(effect, null, 2));
+    throw new Error(`cets.length must not 0`);
   }
+  const activeLogicID = cetsNoErr[0].logicID;
+  const activeLogicSubID = cetsNoErr[0].logicSubID;
   ctx2 = {
     ...ctx2,
     flowMemory: {
       ...ctx2.flowMemory,
       activeEffectID: effectID,
-      activeLogicID: 0,
-      activeLogicSubID: 0
+      activeLogicID,
+      activeLogicSubID
     }
   };
+  for (const cet of cetsNoErr) {
+    ctx2 = clearTipSelectionForUser(ctx2, effect, cet.logicID, cet.logicSubID);
+  }
   return ctx2;
 }
 function cancelActiveEffectID(ctx2, playerID) {
@@ -30033,13 +30027,8 @@ function cancelActiveEffectID(ctx2, playerID) {
   if (effect.requirePassed) {
     throw new Error("[cancelEffectID] \u5DF2\u7D93\u8655\u7406\u9700\u6C42\u7684\u4E0D\u80FD\u53D6\u6D88");
   }
-  return {
-    ...ctx2,
-    flowMemory: {
-      ...ctx2.flowMemory,
-      activeEffectID: null
-    }
-  };
+  ctx2 = clearActiveEffectID(ctx2);
+  return ctx2;
 }
 function getActiveEffectID(ctx2) {
   return ctx2.flowMemory.activeEffectID;
@@ -31952,7 +31941,6 @@ function queryFlow(ctx2, playerID) {
       return cards.length == 0;
     }).length > 0;
     if (hasSomeoneLiveIsZero) {
-      console.log(ctx2);
       return [{ id: "FlowWaitPlayer", description: "\u904A\u6232\u7D50\u675F" }];
     }
   }

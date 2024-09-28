@@ -63,6 +63,7 @@ export function removeEffect(ctx: EffectStackComponent, id: string): EffectStack
   }
 }
 
+// 這個方法之前為先用了updateCommand確認了可支付性，所以不必檢查
 export function addStackEffect(ctx: EffectStackComponent, block: Effect): EffectStackComponent {
   if (block.id == "") {
     block.id = ToolFn.getUUID("addStackEffect")
@@ -77,6 +78,9 @@ export function addStackEffect(ctx: EffectStackComponent, block: Effect): Effect
   };
 }
 
+// 和addStackEffect不一樣
+// 這是內文產生的立即效果，沒有做可支付性的檢查
+// 所以改用addImmediateEffectIfCanPayCost，才會先檢查效果可支付性
 export function addImmediateEffect(ctx: EffectStackComponent, block: Effect): EffectStackComponent {
   if (block.id == "") {
     block.id = ToolFn.getUUID("addImmediateEffect")

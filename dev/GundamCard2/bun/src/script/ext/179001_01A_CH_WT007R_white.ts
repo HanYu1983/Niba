@@ -24,35 +24,55 @@ export const prototype: CardPrototype = {
           actions: [
             {
               title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
-                ctx = GameStateFn.addStackEffect(ctx, {
-                  id: "",
-                  reason: effect.reason,
-                  description: effect.description,
-                  text: {
-                    id: effect.text.id,
-                    title: effect.text.title,
-                    description: effect.text.description,
-                    logicTreeActions: [
+                const newE = GameStateFn.createPlayTextEffectFromEffect(ctx, effect, {
+                  logicTreeAction: {
+                    actions: [
                       {
-                        actions: [
-                          {
-                            title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
-                              const cardId = DefineFn.EffectFn.getCardID(effect)
-                              const targetId = GameStateFn.getSetGroupRoot(ctx, cardId)
-                              ctx = GameStateFn.mapItemState(ctx, targetId, is =>
-                                DefineFn.ItemStateFn.setGlobalEffect(is, null,
-                                  { title: ["AddText", { id: "", title: ["特殊型", ["速攻"]] }], cardIds: [targetId] },
-                                  { isRemoveOnTurnEnd: true }
-                                )
-                              ) as GameState
-                              return ctx
-                            }.toString()
-                          }
-                        ]
+                        title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+                          const cardId = DefineFn.EffectFn.getCardID(effect)
+                          const targetId = GameStateFn.getSetGroupRoot(ctx, cardId)
+                          ctx = GameStateFn.mapItemState(ctx, targetId, is =>
+                            DefineFn.ItemStateFn.setGlobalEffect(is, null,
+                              { title: ["AddText", { id: "", title: ["特殊型", ["速攻"]] }], cardIds: [targetId] },
+                              { isRemoveOnTurnEnd: true }
+                            )
+                          ) as GameState
+                          return ctx
+                        }.toString()
                       }
                     ]
                   }
-                }) as GameState
+                })
+                ctx = GameStateFn.addStackEffect(ctx, newE) as GameState
+                // ctx = GameStateFn.addStackEffect(ctx, {
+                //   id: "",
+                //   reason: effect.reason,
+                //   description: effect.description,
+                //   text: {
+                //     id: effect.text.id,
+                //     title: effect.text.title,
+                //     description: effect.text.description,
+                //     logicTreeActions: [
+                //       {
+                //         actions: [
+                //           {
+                //             title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+                //               const cardId = DefineFn.EffectFn.getCardID(effect)
+                //               const targetId = GameStateFn.getSetGroupRoot(ctx, cardId)
+                //               ctx = GameStateFn.mapItemState(ctx, targetId, is =>
+                //                 DefineFn.ItemStateFn.setGlobalEffect(is, null,
+                //                   { title: ["AddText", { id: "", title: ["特殊型", ["速攻"]] }], cardIds: [targetId] },
+                //                   { isRemoveOnTurnEnd: true }
+                //                 )
+                //               ) as GameState
+                //               return ctx
+                //             }.toString()
+                //           }
+                //         ]
+                //       }
+                //     ]
+                //   }
+                // }) as GameState
                 return ctx
               }.toString()
             },

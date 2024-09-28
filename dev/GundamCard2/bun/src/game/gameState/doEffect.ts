@@ -2,9 +2,9 @@
 import { logCategory } from "../../tool/logger"
 import { createBridge } from "../bridge/createBridge"
 import { AbsoluteBaSyouFn } from "../define/BaSyou"
-import { CardTextFn, ConditionFn, LogicTreeActionFn } from "../define/CardText"
+import { CardTextFn, Condition, ConditionFn, LogicTreeAction, LogicTreeActionFn } from "../define/CardText"
 import { TipOrErrors, CommandEffectTip, TipOrErrorsFn, CommandEffecTipFn } from "../define/CommandEffectTip"
-import { Effect, EffectFn } from "../define/Effect"
+import { Effect, EffectFn, EffectReason } from "../define/Effect"
 import { TipError, TargetMissingError } from "../define/GameError"
 import { GlobalEffect } from "../define/GlobalEffect"
 import { ItemStateFn } from "../define/ItemState"
@@ -15,6 +15,7 @@ import { createActionTitleFn } from "./createActionTitleFn"
 import { createConditionTitleFn } from "./createConditionTitleFn"
 import { getItemState, mapItemState, setItemState } from "./ItemStateComponent"
 import { addImmediateEffect } from "./EffectStackComponent"
+import { getItemController } from "./ItemTableComponent"
 
 export function doEffect(
   ctx: GameState,
@@ -300,6 +301,12 @@ export function setCardTipStrBaSyouPairs(ctx: GameState, varName: string, pairs:
   return ctx
 }
 
+export function createPlayTextEffectFromEffect(ctx:GameState, e:Effect,  options?: { conditions?: { [key: string]: Condition }, logicTreeAction?: LogicTreeAction, isOption?: boolean }): Effect {
+  const cardId = EffectFn.getCardID(e)
+  const cardController = getItemController(ctx, cardId)
+  return EffectFn.fromEffectBasic(e, {...options, reason: ["PlayText", cardController, cardId, e.text.id] })
+}
+  
 export function addImmediateEffectIfCanPayCost(ctx: GameState, effect: Effect): GameState {
   const cetsNoErr = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)
   if (cetsNoErr.length == 0) {
