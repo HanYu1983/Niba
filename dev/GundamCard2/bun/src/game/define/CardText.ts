@@ -38,7 +38,7 @@ export const TextSpeicalEffectFn = {
 
 export type ActionTitle =
     | string
-    | ["_ロールする", "ロール" | "リロール" | "打開" | "リロール" | "破壞" | "廃棄" | "破壊を無効" | "見"]
+    | ["_ロールする", "ロールCost" | "ロール" | "リロール" | "打開" | "リロール" | "破壞" | "廃棄" | "破壊を無効" | "見"]
     | ["_１ダメージを与える", number]
     | ["_－１／－１／－１コイン_１個を乗せる", BattleBonus, number]
     | ["移除卡狀態_旗標", string]
@@ -294,7 +294,7 @@ export function createRollCostRequire(
                 title: ["RollColor", color],
                 actions: [
                     {
-                        title: ["_ロールする", "ロール"],
+                        title: ["_ロールする", "ロールCost"],
                         vars: [key]
                     }
                 ]

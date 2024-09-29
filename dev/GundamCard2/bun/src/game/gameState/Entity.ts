@@ -77,13 +77,13 @@ export function createTipByEntitySearch(ctx: GameState, cardId: string, options:
     if (options.hasSelfCardId != null) {
         const absoluteBasyou = getItemBaSyou(ctx, cardId)
         entityList = entityList.filter(EntityFn.filterController(AbsoluteBaSyouFn.getPlayerID(absoluteBasyou)))
-        entityList = entityList.filter(EntityFn.filterController(AbsoluteBaSyouFn.getBaSyouKeyword(absoluteBasyou)))
+        entityList = entityList.filter(EntityFn.filterAtBaSyous([AbsoluteBaSyouFn.getBaSyouKeyword(absoluteBasyou)]))
     }
     if (options.see) {
         const [basyou, min, max] = options.see
         const absoluteBasyou = createAbsoluteBaSyouFromBaSyou(ctx, cardId, basyou)
         entityList = entityList.filter(EntityFn.filterController(AbsoluteBaSyouFn.getPlayerID(absoluteBasyou)))
-        entityList = entityList.filter(EntityFn.filterController(AbsoluteBaSyouFn.getBaSyouKeyword(absoluteBasyou)))
+        entityList = entityList.filter(EntityFn.filterAtBaSyous([AbsoluteBaSyouFn.getBaSyouKeyword(absoluteBasyou)]))
         if (entityList.length < min) {
             // const tip: Tip = {
             //     title: ["カード", [], []],
@@ -143,6 +143,8 @@ export function createTipByEntitySearch(ctx: GameState, cardId: string, options:
         tipPairs = tipPairs.slice(0, options.max)
     } else if (options.min != null) {
         tipPairs = tipPairs.slice(0, options.min)
+    } else if (options.count != null) {
+        tipPairs = tipPairs.slice(0, options.count)
     }
     const tip: Tip = {
         title: ["カード", pairs, tipPairs]
@@ -158,6 +160,12 @@ export function createTipByEntitySearch(ctx: GameState, cardId: string, options:
     }
     if (cheatCardIds.length) {
         tip.cheatCardIds = cheatCardIds
+    }
+    if (options.asMuchAsPossible) {
+        if (options.max == null) {
+            throw new Error()
+        }
+        tip.min = Math.min(pairs.length, options.max)
     }
     return tip
 }

@@ -17,8 +17,8 @@ import { FlowSetTipSelectionView } from "./FlowSetTipSelectionView";
 export const FlowListView = (props: { clientId: string }) => {
   const appContext = useContext(AppContext);
   const flows = useMemo(() => {
-    return queryFlow(appContext.viewModel.model.gameState, props.clientId);
-  }, [appContext.viewModel.model.gameState, props.clientId]);
+    return appContext.viewModel.playerCommands[props.clientId] || []
+  }, [appContext.viewModel.playerCommands[props.clientId]]);
   useEffect(() => {
     const speed = 50
     const isPlayerControl = true
@@ -45,7 +45,7 @@ export const FlowListView = (props: { clientId: string }) => {
         if (flow.id == "FlowWaitPlayer") {
           return
         }
-        if (flow.id == "FlowCancelActiveEffectID") {
+        if (flow.id == "FlowSetTipSelection") {
           return
         }
         setTimeout(() => {

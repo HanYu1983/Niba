@@ -7,6 +7,7 @@ import { getItemStateValues } from "./ItemStateComponent";
 import { getItemController } from "./ItemTableComponent";
 import { getSetGroupBattlePoint } from "./setGroup";
 import { CommandEffectTip } from "../define/CommandEffectTip";
+import { EventCenterFn } from "./EventCenter";
 
 export type EffectStackComponent = {
   // 立即效果。玩家必須立即一個一個進行處理
@@ -88,6 +89,7 @@ export function addImmediateEffect(ctx: EffectStackComponent, block: Effect): Ef
   if (block.text.id == "") {
     block.text.id = ToolFn.getUUID("addImmediateEffect")
   }
+  ctx = EventCenterFn.onAddImmediateEffect(ctx, block)
   return {
     ...ctx,
     immediateEffect: [block.id, ...ctx.immediateEffect],

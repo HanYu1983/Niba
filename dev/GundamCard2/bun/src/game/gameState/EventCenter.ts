@@ -18,8 +18,13 @@ function getGameStateAndAssert(ctx: any): GameState {
 }
 
 export const EventCenterFn = {
+    onAddImmediateEffect(_ctx: any, effect:Effect):any{
+        logCategory(`onAddImmediateEffect: ${effect.description}`, effect)
+        let ctx = getGameStateAndAssert(_ctx)
+        return ctx
+    },
     onEvent(_ctx: any, evt:GameEvent):any{
-        logCategory(`onEvent: ${evt.title}`)
+        logCategory(`onEvent: ${JSON.stringify(evt.title)} ${JSON.stringify(evt.cardIds)}`, evt.title, evt.cardIds)
         let ctx = getGameStateAndAssert(_ctx)
         return ctx
     },

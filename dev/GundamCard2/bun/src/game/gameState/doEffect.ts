@@ -297,13 +297,11 @@ export function createPlayTextEffectFromEffect(ctx: GameState, e: Effect, option
 }
 
 export function addImmediateEffectIfCanPayCost(ctx: GameState, effect: Effect): GameState {
-  const cetsNoErr = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)
+  const cets = createCommandEffectTips(ctx, effect)
+  const cetsNoErr = cets.filter(CommandEffecTipFn.filterNoError)
   if (cetsNoErr.length == 0) {
+    logCategory("addImmediateEffectIfCanPayCost", `將發動起動效果但條件不足: ${effect.text.description}`, cets)
     return ctx
   }
-  // const cets = createEffectTips(ctx, effect, 0, 0).filter(TipOrErrorsFn.filterError)
-  // if (cets.length) {
-  //   return ctx
-  // }
   return addImmediateEffect(ctx, effect) as GameState
 }

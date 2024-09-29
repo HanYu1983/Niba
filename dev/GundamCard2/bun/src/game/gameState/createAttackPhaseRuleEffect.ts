@@ -39,7 +39,7 @@ export function createAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID):
                             return [id, GameStateFn.getItemBaSyou(ctx, id)] as StrBaSyouPair
                         })
                         return {
-                            title: ["カード", pairs, pairs],
+                            title: ["カード", pairs, []],
                         }
                     }.toString(),
                     actions: [
@@ -80,7 +80,7 @@ export function createAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID):
                             return [id, GameStateFn.getItemBaSyou(ctx, id)] as StrBaSyouPair
                         })
                         return {
-                            title: ["カード", pairs, pairs],
+                            title: ["カード", pairs, []],
                         }
                     }.toString(),
                     actions: [

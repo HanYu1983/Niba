@@ -23,7 +23,7 @@ function createRollCostRequire(
               title: ["RollColor", color],
               actions: [
                   {
-                      title: ["_ロールする", "ロール"],
+                    title: ["_ロールする", "ロールCost"],
                       vars: [key]
                   }
               ]

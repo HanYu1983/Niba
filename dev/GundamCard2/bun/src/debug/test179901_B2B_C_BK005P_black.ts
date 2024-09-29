@@ -42,13 +42,18 @@ export async function test179901_B2B_C_BK005P_black() {
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerB, "本国"), ["unitBlack"]) as GameStateWithFlowMemory
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerB, "手札"), ["unitBlack", "unitBlack"]) as GameStateWithFlowMemory
     ctx = setActivePlayerID(ctx, PlayerA) as GameStateWithFlowMemory
-    ctx = setPhase(ctx, ["戦闘フェイズ", "攻撃ステップ", "フリータイミング"]) as GameStateWithFlowMemory
-
-    const playEffects = createPlayCardEffects(ctx, cardA.id)
-    if (playEffects.length != 1) {
+    ctx = setPhase(ctx, ["配備フェイズ", "フリータイミング"]) as GameStateWithFlowMemory
+    let playEffects = createPlayEffects(ctx, PlayerA)
+    let playEffect = playEffects.find(e=>e.isPlayG != true && e.reason[0] == "PlayCard" && e.reason[2] == cardA.id)
+    if(playEffect != null){
         throw new Error()
     }
-    const playEffect = playEffects[0]
+    ctx = setPhase(ctx, ["戦闘フェイズ", "攻撃ステップ", "フリータイミング"]) as GameStateWithFlowMemory
+    playEffects = createPlayEffects(ctx, PlayerA)
+    playEffect = playEffects.find(e=>e.isPlayG != true && e.reason[0] == "PlayCard" && e.reason[2] == cardA.id)
+    if(playEffect == null){
+        throw new Error()
+    }
     ctx = setTipSelectionForUser(ctx, playEffect, 0, 0) as GameStateWithFlowMemory
     ctx = doEffect(ctx, playEffect, 0, 0) as GameStateWithFlowMemory
     let effect = getTopEffect(ctx)
@@ -67,7 +72,6 @@ export async function test179901_B2B_C_BK005P_black() {
     if (playerASetTip == null) {
         throw new Error()
     }
-    console.log(playerASetTip)
     ctx = applyFlow(ctx, PlayerA, playerASetTip)
     //======
     flows = queryFlow(ctx, PlayerA)
@@ -113,7 +117,7 @@ export async function test179901_B2B_C_BK005P_black() {
     }
     ctx = applyFlow(ctx, PlayerB, playerBFlowPassPayCost)
     //=========
-    if(ctx.flowMemory.hasPlayerPassPayCost[PlayerA] && ctx.flowMemory.hasPlayerPassPayCost[PlayerB]){
+    if (ctx.flowMemory.hasPlayerPassPayCost[PlayerA] && ctx.flowMemory.hasPlayerPassPayCost[PlayerB]) {
 
     } else {
         throw new Error()
@@ -126,10 +130,10 @@ export async function test179901_B2B_C_BK005P_black() {
     }
     ctx = applyFlow(ctx, PlayerA, playerADoEffect)
     // =========
-    if(getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "ジャンクヤード")).length != 2){
+    if (getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "ジャンクヤード")).length != 2) {
         throw new Error()
     }
-    if(getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerB, "ジャンクヤード")).length != 1){
+    if (getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerB, "ジャンクヤード")).length != 1) {
         throw new Error()
     }
 }

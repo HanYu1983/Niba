@@ -49,7 +49,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
     return ActionFn.getTitleFn(action)
   }
   switch (action.title[0]) {
-    case "_自軍_本国をシャッフルする":{
+    case "_自軍_本国をシャッフルする": {
       const [_, side, basyouKw] = action.title
       return function (ctx: GameState, effect: Effect): GameState {
         const cardId = EffectFn.getCardID(effect)
@@ -118,6 +118,13 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
             return getCardTipStrBaSyouPairs(ctx, varName, cardId)
           })
         switch (whatToDo) {
+          case "ロールCost": {
+            logCategory("getActionTitleFn", whatToDo, varNames, pairs)
+            for (const pair of pairs) {
+              ctx = doItemSetRollState(ctx, true, pair, { isSkipTargetMissing: true, isNoSkipTipError: true }) as GameState
+            }
+            return ctx
+          }
           case "ロール": {
             logCategory("getActionTitleFn", whatToDo, varNames, pairs)
             for (const pair of pairs) {
@@ -245,13 +252,18 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
     case "_－１／－１／－１コイン_１個を乗せる": {
       const [_, bonus, x] = action.title
       const varNames = action.vars
-      if (varNames == null) {
-        throw new Error(`action.var not found: ${action.title[0]}`)
-      }
+      // if (varNames == null) {
+      //   throw new Error(`action.var not found: ${action.title[0]}`)
+      // }
       return function (ctx: GameState, effect: Effect): GameState {
         const cardId = EffectFn.getCardID(effect)
         const playerId = EffectFn.getPlayerID(effect)
-        const pairs = getCardTipStrBaSyouPairs(ctx, varNames[0], cardId)
+        const pairs = varNames == null ?
+          [[cardId, getItemBaSyou(ctx, cardId)] as StrBaSyouPair] :
+          varNames.flatMap(varName => {
+            return getCardTipStrBaSyouPairs(ctx, varName, cardId)
+          })
+        //const pairs = getCardTipStrBaSyouPairs(ctx, varNames[0], cardId)
         if (pairs.length == 0) {
           throw new Error(`pairs must not 0: ${action.title} ${action.vars}`)
         }
@@ -274,12 +286,17 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
     case "ターン終了時まで「速攻」を得る。": {
       const [_, ges] = action.title
       const varNames = action.vars
-      if (varNames == null) {
-        throw new Error(`action.var not found: ${action.title[0]}`)
-      }
+      // if (varNames == null) {
+      //   throw new Error(`action.var not found: ${action.title[0]}`)
+      // }
       return function (ctx: GameState, effect: Effect): GameState {
         const cardId = EffectFn.getCardID(effect)
-        const pairs = getCardTipStrBaSyouPairs(ctx, varNames[0], cardId)
+        const pairs = varNames == null ?
+          [[cardId, getItemBaSyou(ctx, cardId)] as StrBaSyouPair] :
+          varNames.flatMap(varName => {
+            return getCardTipStrBaSyouPairs(ctx, varName, cardId)
+          })
+        //const pairs = getCardTipStrBaSyouPairs(ctx, varNames[0], cardId)
         for (const [targetCardId, targetBaSyou] of pairs) {
           const gesForCard = ges.map(ge => {
             return {

@@ -6,20 +6,18 @@ import { EffectView } from "./EffectView";
 
 export function ClientView(props: { clientId: string }) {
   const appContext = useContext(AppContext);
-  const renderStackEffects = useMemo(()=>{
-    return appContext.viewModel.model.gameState.stackEffect.map(effectId=>{
+  const renderStackEffects = useMemo(() => {
+    return appContext.viewModel.model.gameState.stackEffect.map(effectId => {
       return <EffectView key={effectId} enabled={false} clientId={props.clientId} effectID={effectId}></EffectView>
     })
   }, [appContext.viewModel.model.gameState])
   const render = useMemo(() => {
     return <div>
-      <div>localMemory:{JSON.stringify(appContext.viewModel.localMemory)}</div>
-      <div>version:{JSON.stringify(appContext.viewModel.model.versionID)}</div>
-      <div>timing:{JSON.stringify(appContext.viewModel.model.gameState.phase)}</div>
-      <div>flowMemory:{JSON.stringify(appContext.viewModel.model.gameState.flowMemory)}</div>
+      <h1>clientId: {props.clientId}</h1>
       <div>activePlayerID: {appContext.viewModel.model.gameState.activePlayerID}</div>
+      <div>timing:{JSON.stringify(appContext.viewModel.model.gameState.phase)}</div>
       <div>turn: {appContext.viewModel.model.gameState.turn}</div>
-      <h1>{props.clientId}</h1>
+      <div>flowMemory:{JSON.stringify(appContext.viewModel.model.gameState.flowMemory)}</div>
       {renderStackEffects}
       <FlowListView clientId={props.clientId}></FlowListView>
       <TableView clientId={props.clientId}></TableView>

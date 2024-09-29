@@ -15,6 +15,7 @@ import * as rxjs from "rxjs"
 import { TableFns } from "../../../tool/table";
 import { queryFlow } from "../../../game/gameStateWithFlowMemory/queryFlow";
 import { shuffleItems } from "../../../game/gameState/ItemTableComponent";
+import { Flow } from "../../../game/gameStateWithFlowMemory/Flow";
 
 export type Selection = string[];
 
@@ -27,10 +28,12 @@ export type ViewModel = {
     timing: Phase;
     lastPassPhase: boolean;
   };
+  playerCommands: { [key: string]: Flow[] }
 };
 
 export const DEFAULT_VIEW_MODEL: ViewModel = {
   model: createGameContext(),
+  playerCommands: {},
   cardSelection: [],
   cardPositionSelection: [],
   localMemory: {
@@ -56,7 +59,8 @@ export const OnViewModel = OnEvent.pipe(
           ctx.gameState = initState(ctx.gameState, deckA, deckB);
           // ctx.gameState = initState(ctx.gameState, TMP_DECK.slice(12), TMP_DECK.slice(12));
           // ctx.gameState = createCardWithProtoIds(ctx.gameState, AbsoluteBaSyouFn.of(PlayerA, "手札"), TMP_DECK.slice(0, 6)) as GameStateWithFlowMemory
-          // ctx.gameState = createCardWithProtoIds(ctx.gameState, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), TMP_DECK.slice(6, 12)) as GameStateWithFlowMemory
+          ctx.gameState = createCardWithProtoIds(ctx.gameState, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), deckA.slice(0,6)) as GameStateWithFlowMemory
+          ctx.gameState = createCardWithProtoIds(ctx.gameState, AbsoluteBaSyouFn.of(PlayerA, "配備エリア"), deckA.slice(0,3)) as GameStateWithFlowMemory
           // ctx.gameState = createCardWithProtoIds(ctx.gameState, AbsoluteBaSyouFn.of(PlayerB, "手札"), TMP_DECK.slice(0, 6)) as GameStateWithFlowMemory
           // ctx.gameState = createCardWithProtoIds(ctx.gameState, AbsoluteBaSyouFn.of(PlayerB, "Gゾーン"), TMP_DECK.slice(6, 12)) as GameStateWithFlowMemory
           // ctx.gameState = {
@@ -68,16 +72,30 @@ export const OnViewModel = OnEvent.pipe(
           //   }
           // }
           // ctx.gameState = updateCommand(ctx.gameState) as GameStateWithFlowMemory;
-          return { ...DEFAULT_VIEW_MODEL, model: ctx };
+          const playerAFlow = queryFlow(ctx.gameState, PlayerA)
+          const playerBFlow = queryFlow(ctx.gameState, PlayerB)
+          return {
+            ...DEFAULT_VIEW_MODEL,
+            model: ctx, playerCommands: {
+              [PlayerA]: playerAFlow,
+              [PlayerB]: playerBFlow,
+            },
+          };
         }
         case "OnClickFlowConfirm": {
           const gameState = applyFlow(viewModel.model.gameState, evt.clientId, evt.flow);
-          //TableFns.assertDup(gameState.table)
+          const playerAFlow = queryFlow(gameState, PlayerA)
+          logCategory("OnViewModel", "PlayerA", playerAFlow)
+          const playerBFlow = queryFlow(gameState, PlayerB)
           return {
             ...viewModel,
             model: {
               ...viewModel.model,
               gameState: gameState,
+            },
+            playerCommands: {
+              [PlayerA]: playerAFlow,
+              [PlayerB]: playerBFlow,
             },
             cardSelection: [],
             localMemory: {

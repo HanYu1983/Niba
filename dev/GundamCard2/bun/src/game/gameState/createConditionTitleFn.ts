@@ -312,7 +312,7 @@ export function createConditionTitleFn(condition: Condition, options: { isPlay?:
                 const pairs = colorIds.map(colorId => [colorId, getItemBaSyou(ctx, colorId)] as StrBaSyouPair)
                 return {
                     title: ["カード", cardIdColorsPairs, pairs],
-                    min: pairs.length,
+                    min: Math.max(1, pairs.length),
                 }
             }
         }

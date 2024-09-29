@@ -9,11 +9,12 @@ import { Effect } from "../../game/define/Effect";
 import { Tip } from "../../game/define/Tip";
 import { GameState } from "../../game/gameState/GameState";
 import { Bridge } from "../bridge";
-
+// TODO 驗証效果
 export const prototype: CardPrototype = {
   commandText: {
     id: "",
     description: "（自軍攻撃ステップ）：全ての軍は、自分の手札X枚を可能な限り選んで廃棄する。",
+    // TODO 驗証使用phase
     title: ["使用型", ["自軍", "攻撃ステップ"]],
     logicTreeActions: [
       {

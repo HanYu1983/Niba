@@ -21,15 +21,17 @@ export const FlowSetTipSelectionView = (props: { clientId: string, flow: FlowSet
           overflow: "scroll",
         }}>
           {
-            cardIds.map(cardId => (
-              <CardView
+            cardIds.map(cardId => {
+              const isCheat = props.flow.tip.cheatCardIds?.includes(cardId)
+              return <CardView
                 key={cardId}
                 enabled={true}
                 clientId={props.clientId}
                 cardID={cardId}
                 size={200}
-              ></CardView>)
-            )
+                isCheat={isCheat}
+              ></CardView>
+            })
           }
         </div>
       }
@@ -48,7 +50,7 @@ export const FlowSetTipSelectionView = (props: { clientId: string, flow: FlowSet
       }
     }
     return []
-  }, [props, appContext.viewModel.cardSelection])
+  }, [props.flow.tip, appContext.viewModel.cardSelection])
   // const renderSelection = useMemo(() => {
   //   return userSelection.map(cardId => (
   //     <CardView
@@ -70,15 +72,12 @@ export const FlowSetTipSelectionView = (props: { clientId: string, flow: FlowSet
       ],
     }
     return tip
-  }, [props, userSelection, appContext.viewModel.model.gameState])
-  const renderCheckTip = useMemo(() => {
+  }, [props.flow.tip, userSelection, appContext.viewModel.model.gameState])
+  const renderButton = useMemo(() => {
     const error = TipFn.checkTipSatisfies(userTip)
     if (error) {
       return <div>{error.message}</div>
     }
-    return <>OK</>
-  }, [userTip])
-  const renderButton = useMemo(() => {
     const flow = {
       ...props.flow,
       tip: userTip,
@@ -91,10 +90,9 @@ export const FlowSetTipSelectionView = (props: { clientId: string, flow: FlowSet
           flow: flow,
         });
       }}
-    >
-      {renderCheckTip}
+    >OK
     </button>
-  }, [renderCheckTip, userTip])
+  }, [props.flow, userTip])
   const render = useMemo(() => {
     return <div>
       <div>
@@ -102,6 +100,6 @@ export const FlowSetTipSelectionView = (props: { clientId: string, flow: FlowSet
         {renderButton}
       </div>
     </div>
-  }, [renderWant, renderCheckTip])
+  }, [renderWant, renderButton])
   return render
 }

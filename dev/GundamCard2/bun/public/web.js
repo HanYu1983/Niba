@@ -23562,333 +23562,6 @@ var PlayerIDFn = {
 // src/client/tool/appContext/index.tsx
 var import_react = __toESM(require_react(), 1);
 
-// src/game/define/Timing.ts
-var exports_Timing = {};
-__export(exports_Timing, {
-  PhaseFn: () => PhaseFn
-});
-var PhaseFn = {
-  eq(l, r) {
-    return l[0] === r[0] && l[1] === r[1] && l[2] === r[2];
-  },
-  isFreeTiming(phase) {
-    switch (phase[0]) {
-      case "\u30C9\u30ED\u30FC\u30D5\u30A7\u30A4\u30BA":
-        return phase[1] == "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0";
-      case "\u30EA\u30ED\u30FC\u30EB\u30D5\u30A7\u30A4\u30BA":
-      case "\u914D\u5099\u30D5\u30A7\u30A4\u30BA":
-        return phase[1] == "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0";
-      case "\u6226\u95D8\u30D5\u30A7\u30A4\u30BA":
-        return phase[2] == "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0" || phase[2] == "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02";
-    }
-  },
-  getAll() {
-    return [
-      ["\u30EA\u30ED\u30FC\u30EB\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30A7\u30A4\u30BA\u958B\u59CB"],
-      ["\u30EA\u30ED\u30FC\u30EB\u30D5\u30A7\u30A4\u30BA", "\u898F\u5B9A\u306E\u52B9\u679C"],
-      ["\u30EA\u30ED\u30FC\u30EB\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
-      ["\u30EA\u30ED\u30FC\u30EB\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30A7\u30A4\u30BA\u7D42\u4E86"],
-      ["\u30C9\u30ED\u30FC\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30A7\u30A4\u30BA\u958B\u59CB"],
-      ["\u30C9\u30ED\u30FC\u30D5\u30A7\u30A4\u30BA", "\u898F\u5B9A\u306E\u52B9\u679C"],
-      ["\u30C9\u30ED\u30FC\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
-      ["\u30C9\u30ED\u30FC\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30A7\u30A4\u30BA\u7D42\u4E86"],
-      ["\u914D\u5099\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30A7\u30A4\u30BA\u958B\u59CB"],
-      ["\u914D\u5099\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
-      ["\u914D\u5099\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30A7\u30A4\u30BA\u7D42\u4E86"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u653B\u6483\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u958B\u59CB"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u653B\u6483\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u653B\u6483\u30B9\u30C6\u30C3\u30D7", "\u898F\u5B9A\u306E\u52B9\u679C"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u653B\u6483\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u653B\u6483\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u7D42\u4E86"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u958B\u59CB"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7", "\u898F\u5B9A\u306E\u52B9\u679C"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u7D42\u4E86"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u958B\u59CB"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7", "\u898F\u5B9A\u306E\u52B9\u679C"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u7D42\u4E86"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u5E30\u9084\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u958B\u59CB"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u5E30\u9084\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u5E30\u9084\u30B9\u30C6\u30C3\u30D7", "\u898F\u5B9A\u306E\u52B9\u679C"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u5E30\u9084\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u5E30\u9084\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u7D42\u4E86"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30BF\u30FC\u30F3\u7D42\u4E86\u6642", "\u30C0\u30E1\u30FC\u30B8\u30EA\u30BB\u30C3\u30C8"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30BF\u30FC\u30F3\u7D42\u4E86\u6642", "\u52B9\u679C\u89E3\u6C7A"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30BF\u30FC\u30F3\u7D42\u4E86\u6642", "\u624B\u672D\u8ABF\u6574"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30BF\u30FC\u30F3\u7D42\u4E86\u6642", "\u52B9\u679C\u7D42\u4E86\u3002\u30BF\u30FC\u30F3\u7D42\u4E86"]
-    ];
-  },
-  getFirst() {
-    const all = this.getAll();
-    return all[0];
-  },
-  getLast() {
-    const all = this.getAll();
-    return all[all.length - 1];
-  },
-  getNext(timing) {
-    const all = this.getAll();
-    const idx = (this.getSeqId(timing) + 1) % all.length;
-    return all[idx];
-  },
-  getSeqId(timing) {
-    const all = this.getAll();
-    const idx = all.findIndex((t) => this.eq(t, timing));
-    return idx;
-  }
-};
-
-// src/game/gameState/PhaseComponent.ts
-var exports_PhaseComponent = {};
-__export(exports_PhaseComponent, {
-  setPhase: () => setPhase,
-  getPhase: () => getPhase
-});
-
-// src/tool/logger.ts
-var hideCategory = [
-  "triggerEvent",
-  "getPlayEffects",
-  "getConditionTitleFn",
-  "doEffect",
-  "handleAttackDamage",
-  "getGlobalEffects",
-  "getEffectTips",
-  "createEffectTips",
-  "getActionTitleFn",
-  "getLogicTreeActionConditions",
-  "createCommandEffectTips",
-  "setEffectTips",
-  "doTriggerEvent",
-  "createPlayEffects",
-  "createPlayCardEffects",
-  "testCompress",
-  "applyFlow"
-];
-var filterCategory = true;
-var logCategory = (category, ...msg) => {
-  if (filterCategory) {
-    if (hideCategory.find((c) => c == category)) {
-      return;
-    }
-  }
-  console.log(`[${new Date().toLocaleTimeString()}][${category}]`, ...msg);
-};
-
-// src/tool/table/index.ts
-function addCard(table, position, cardId) {
-  return {
-    ...table,
-    cardStack: {
-      ...table.cardStack,
-      [position]: [...table.cardStack[position] || [], cardId]
-    }
-  };
-}
-function getCardsByPosition(table, position) {
-  if (table.cardStack[position] == null) {
-    return [];
-  }
-  return table.cardStack[position];
-}
-function moveCard(table, fromPosition, toPosition, cardId, options) {
-  if (table.cardStack[fromPosition]?.includes(cardId) != true) {
-    throw new Error(`table from ${fromPosition} not exist ${cardId}`);
-  }
-  const updatedFromStack = table.cardStack[fromPosition]?.filter((id) => id !== cardId) || [];
-  let updatedToStack = table.cardStack[toPosition] || [];
-  if (options?.insertId != null) {
-    if (options.insertId < 0) {
-      throw new Error(`insertId not < 0: ${options.insertId}`);
-    }
-    if (options.insertId == 0) {
-      updatedToStack = [cardId, ...updatedToStack];
-    } else {
-      updatedToStack = [...updatedToStack.slice(0, options.insertId), cardId, ...updatedToStack.slice(options.insertId)];
-    }
-  } else {
-    updatedToStack = [...updatedToStack, cardId];
-  }
-  return {
-    ...table,
-    cardStack: {
-      ...table.cardStack,
-      [fromPosition]: updatedFromStack,
-      [toPosition]: updatedToStack
-    }
-  };
-}
-function getCardPosition(table, cardId) {
-  for (const [key, value] of Object.entries(table.cardStack)) {
-    if (value.includes(cardId)) {
-      return key;
-    }
-  }
-  return null;
-}
-function shuffleCards(ctx2, position) {
-  const cards = ctx2.cardStack[position];
-  if (!cards)
-    return ctx2;
-  const shuffledCards = [...cards].sort(() => Math.random() - 0.5);
-  return {
-    ...ctx2,
-    cardStack: {
-      ...ctx2.cardStack,
-      [position]: shuffledCards
-    }
-  };
-}
-var DEFAULT_TABLE = {
-  cardStack: {}
-};
-var TableFns = {
-  addCard,
-  moveCard,
-  getCardPosition,
-  getCardsByPosition,
-  shuffleCards,
-  assertDup(table) {
-    for (const key in table.cardStack) {
-      const cardIdSets = {};
-      const cs = table.cardStack[key];
-      for (const cardId of cs) {
-        if (cardIdSets[cardId]) {
-          throw new Error(`dup !! ${cardId} in ${key}`);
-        }
-        cardIdSets[cardId] = true;
-      }
-    }
-  }
-};
-
-// src/game/gameState/MessageComponent.ts
-function setMessageCurrentEffect(ctx2, effect) {
-  return {
-    ...ctx2,
-    messagesCurrentEffect: effect
-  };
-}
-function getMessageCurrentEffect(ctx2) {
-  return ctx2.messagesCurrentEffect;
-}
-
-// src/game/gameState/EventCenter.ts
-function getGameStateAndAssert(ctx2) {
-  if (ctx2.isGameState != true) {
-    throw new Error(`must is gameState`);
-  }
-  return ctx2;
-}
-var EventCenterFn = {
-  onEvent(_ctx, evt) {
-    logCategory(`onEvent: ${evt.title}`);
-    let ctx2 = getGameStateAndAssert(_ctx);
-    return ctx2;
-  },
-  onEffectStart(_ctx, effect) {
-    logCategory(`onEffectStart: ${effect.text.description}`);
-    let ctx2 = getGameStateAndAssert(_ctx);
-    ctx2 = setMessageCurrentEffect(ctx2, effect);
-    return ctx2;
-  },
-  onEffectEnd(_ctx, effect) {
-    logCategory(`onEffectEnd: ${effect.text.description}`);
-    let ctx2 = getGameStateAndAssert(_ctx);
-    ctx2 = setMessageCurrentEffect(ctx2, null);
-    return ctx2;
-  },
-  onActionStart(_ctx, effect, action) {
-    logCategory(`onActionStart: ${action.description}`);
-    let ctx2 = getGameStateAndAssert(_ctx);
-    ctx2 = setMessageCurrentEffect(ctx2, effect);
-    return ctx2;
-  },
-  onActionEnd(_ctx, effect, action) {
-    logCategory(`onActionEnd: ${action.description}`);
-    let ctx2 = getGameStateAndAssert(_ctx);
-    ctx2 = setMessageCurrentEffect(ctx2, null);
-    return ctx2;
-  },
-  onItemStateChange(_ctx, old, curr) {
-    let ctx2 = getGameStateAndAssert(_ctx);
-    let effect = getMessageCurrentEffect(ctx2);
-    return ctx2;
-  },
-  onCardChange(_ctx, old, curr) {
-    let ctx2 = getGameStateAndAssert(_ctx);
-    let effect = getMessageCurrentEffect(ctx2);
-    return ctx2;
-  },
-  onPlayerStateChange(_ctx, old, curr) {
-    let ctx2 = getGameStateAndAssert(_ctx);
-    return ctx2;
-  },
-  onSetSetGroupParent(_ctx, parentId, itemId) {
-    let ctx2 = getGameStateAndAssert(_ctx);
-    return ctx2;
-  },
-  onSetPhase(_ctx, old, curr) {
-    logCategory(`onSetPhase: ${curr}`);
-    let ctx2 = getGameStateAndAssert(_ctx);
-    return ctx2;
-  },
-  onItemAdd(_ctx, itemId) {
-    logCategory(`onItemAdd: ${itemId}`);
-    let ctx2 = getGameStateAndAssert(_ctx);
-    return ctx2;
-  },
-  onItemMove(_ctx, from, to, itemId) {
-    logCategory(`onItemMove: ${itemId} = ${from} => ${to}`);
-    let ctx2 = getGameStateAndAssert(_ctx);
-    return ctx2;
-  },
-  onItemDelete(_ctx, itemId) {
-    logCategory(`onItemDelete: ${itemId}`);
-    let ctx2 = getGameStateAndAssert(_ctx);
-    return ctx2;
-  },
-  onTableChange(_ctx, old, curr) {
-    for (const oldBasyouStr in old.cardStack) {
-      for (const itemId of old.cardStack[oldBasyouStr]) {
-        const newBasyouStr = TableFns.getCardPosition(curr, itemId);
-        if (newBasyouStr == null) {
-          _ctx = EventCenterFn.onItemDelete(_ctx, itemId);
-        } else if (newBasyouStr != oldBasyouStr) {
-        }
-      }
-    }
-    for (const newBasyouStr in curr.cardStack) {
-      for (const itemId of curr.cardStack[newBasyouStr]) {
-        const oldBasyouStr = TableFns.getCardPosition(old, itemId);
-        if (oldBasyouStr == null) {
-          _ctx = EventCenterFn.onItemAdd(_ctx, itemId);
-        } else if (newBasyouStr != oldBasyouStr) {
-          _ctx = EventCenterFn.onItemMove(_ctx, oldBasyouStr, newBasyouStr, itemId);
-        }
-      }
-    }
-    return _ctx;
-  }
-};
-
-// src/game/gameState/PhaseComponent.ts
-function setPhase(ctx2, timing) {
-  const old = ctx2.phase;
-  ctx2 = {
-    ...ctx2,
-    phase: timing
-  };
-  ctx2 = EventCenterFn.onSetPhase(ctx2, old, ctx2.phase);
-  return ctx2;
-}
-function getPhase(ctx2) {
-  return ctx2.phase;
-}
-
 // src/game/define/BaSyou.ts
 var exports_BaSyou = {};
 __export(exports_BaSyou, {
@@ -25112,6 +24785,435 @@ var RelatedBaSyouFn = {
   }
 };
 
+// src/game/define/Timing.ts
+var exports_Timing = {};
+__export(exports_Timing, {
+  PhaseFn: () => PhaseFn
+});
+var PhaseFn = {
+  eq(l, r) {
+    return l[0] === r[0] && l[1] === r[1] && l[2] === r[2];
+  },
+  isFreeTiming(phase) {
+    switch (phase[0]) {
+      case "\u30C9\u30ED\u30FC\u30D5\u30A7\u30A4\u30BA":
+        return phase[1] == "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0";
+      case "\u30EA\u30ED\u30FC\u30EB\u30D5\u30A7\u30A4\u30BA":
+      case "\u914D\u5099\u30D5\u30A7\u30A4\u30BA":
+        return phase[1] == "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0";
+      case "\u6226\u95D8\u30D5\u30A7\u30A4\u30BA":
+        return phase[2] == "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0" || phase[2] == "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02";
+    }
+  },
+  getAll() {
+    return [
+      ["\u30EA\u30ED\u30FC\u30EB\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30A7\u30A4\u30BA\u958B\u59CB"],
+      ["\u30EA\u30ED\u30FC\u30EB\u30D5\u30A7\u30A4\u30BA", "\u898F\u5B9A\u306E\u52B9\u679C"],
+      ["\u30EA\u30ED\u30FC\u30EB\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
+      ["\u30EA\u30ED\u30FC\u30EB\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30A7\u30A4\u30BA\u7D42\u4E86"],
+      ["\u30C9\u30ED\u30FC\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30A7\u30A4\u30BA\u958B\u59CB"],
+      ["\u30C9\u30ED\u30FC\u30D5\u30A7\u30A4\u30BA", "\u898F\u5B9A\u306E\u52B9\u679C"],
+      ["\u30C9\u30ED\u30FC\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
+      ["\u30C9\u30ED\u30FC\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30A7\u30A4\u30BA\u7D42\u4E86"],
+      ["\u914D\u5099\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30A7\u30A4\u30BA\u958B\u59CB"],
+      ["\u914D\u5099\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
+      ["\u914D\u5099\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30A7\u30A4\u30BA\u7D42\u4E86"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u653B\u6483\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u958B\u59CB"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u653B\u6483\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u653B\u6483\u30B9\u30C6\u30C3\u30D7", "\u898F\u5B9A\u306E\u52B9\u679C"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u653B\u6483\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u653B\u6483\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u7D42\u4E86"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u958B\u59CB"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7", "\u898F\u5B9A\u306E\u52B9\u679C"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u7D42\u4E86"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u958B\u59CB"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7", "\u898F\u5B9A\u306E\u52B9\u679C"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u7D42\u4E86"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u5E30\u9084\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u958B\u59CB"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u5E30\u9084\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u5E30\u9084\u30B9\u30C6\u30C3\u30D7", "\u898F\u5B9A\u306E\u52B9\u679C"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u5E30\u9084\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u5E30\u9084\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u7D42\u4E86"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30BF\u30FC\u30F3\u7D42\u4E86\u6642", "\u30C0\u30E1\u30FC\u30B8\u30EA\u30BB\u30C3\u30C8"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30BF\u30FC\u30F3\u7D42\u4E86\u6642", "\u52B9\u679C\u89E3\u6C7A"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30BF\u30FC\u30F3\u7D42\u4E86\u6642", "\u624B\u672D\u8ABF\u6574"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30BF\u30FC\u30F3\u7D42\u4E86\u6642", "\u52B9\u679C\u7D42\u4E86\u3002\u30BF\u30FC\u30F3\u7D42\u4E86"]
+    ];
+  },
+  getFirst() {
+    const all = this.getAll();
+    return all[0];
+  },
+  getLast() {
+    const all = this.getAll();
+    return all[all.length - 1];
+  },
+  getNext(timing) {
+    const all = this.getAll();
+    const idx = (this.getSeqId(timing) + 1) % all.length;
+    return all[idx];
+  },
+  getSeqId(timing) {
+    const all = this.getAll();
+    const idx = all.findIndex((t) => this.eq(t, timing));
+    return idx;
+  }
+};
+
+// src/game/gameState/CardTableComponent.ts
+var exports_CardTableComponent = {};
+__export(exports_CardTableComponent, {
+  setCard: () => setCard,
+  mapCardsWithBasyou: () => mapCardsWithBasyou,
+  mapCard: () => mapCard,
+  getCards: () => getCards,
+  getCardOwner: () => getCardOwner,
+  getCardIds: () => getCardIds,
+  getCard: () => getCard,
+  createCardWithProtoIds: () => createCardWithProtoIds,
+  addCards: () => addCards
+});
+
+// src/tool/table/index.ts
+function addCard(table, position, cardId) {
+  return {
+    ...table,
+    cardStack: {
+      ...table.cardStack,
+      [position]: [...table.cardStack[position] || [], cardId]
+    }
+  };
+}
+function getCardsByPosition(table, position) {
+  if (table.cardStack[position] == null) {
+    return [];
+  }
+  return table.cardStack[position];
+}
+function moveCard(table, fromPosition, toPosition, cardId, options) {
+  if (table.cardStack[fromPosition]?.includes(cardId) != true) {
+    throw new Error(`table from ${fromPosition} not exist ${cardId}`);
+  }
+  const updatedFromStack = table.cardStack[fromPosition]?.filter((id) => id !== cardId) || [];
+  let updatedToStack = table.cardStack[toPosition] || [];
+  if (options?.insertId != null) {
+    if (options.insertId < 0) {
+      throw new Error(`insertId not < 0: ${options.insertId}`);
+    }
+    if (options.insertId == 0) {
+      updatedToStack = [cardId, ...updatedToStack];
+    } else {
+      updatedToStack = [...updatedToStack.slice(0, options.insertId), cardId, ...updatedToStack.slice(options.insertId)];
+    }
+  } else {
+    updatedToStack = [...updatedToStack, cardId];
+  }
+  return {
+    ...table,
+    cardStack: {
+      ...table.cardStack,
+      [fromPosition]: updatedFromStack,
+      [toPosition]: updatedToStack
+    }
+  };
+}
+function getCardPosition(table, cardId) {
+  for (const [key, value] of Object.entries(table.cardStack)) {
+    if (value.includes(cardId)) {
+      return key;
+    }
+  }
+  return null;
+}
+function shuffleCards(ctx2, position) {
+  const cards = ctx2.cardStack[position];
+  if (!cards)
+    return ctx2;
+  const shuffledCards = [...cards].sort(() => Math.random() - 0.5);
+  return {
+    ...ctx2,
+    cardStack: {
+      ...ctx2.cardStack,
+      [position]: shuffledCards
+    }
+  };
+}
+var DEFAULT_TABLE = {
+  cardStack: {}
+};
+var TableFns = {
+  addCard,
+  moveCard,
+  getCardPosition,
+  getCardsByPosition,
+  shuffleCards,
+  assertDup(table) {
+    for (const key in table.cardStack) {
+      const cardIdSets = {};
+      const cs = table.cardStack[key];
+      for (const cardId of cs) {
+        if (cardIdSets[cardId]) {
+          throw new Error(`dup !! ${cardId} in ${key}`);
+        }
+        cardIdSets[cardId] = true;
+      }
+    }
+  }
+};
+
+// src/tool/logger.ts
+var hideCategory = [
+  "triggerEvent",
+  "getPlayEffects",
+  "getConditionTitleFn",
+  "doEffect",
+  "handleAttackDamage",
+  "getGlobalEffects",
+  "getEffectTips",
+  "createEffectTips",
+  "getActionTitleFn",
+  "getLogicTreeActionConditions",
+  "createCommandEffectTips",
+  "setEffectTips",
+  "doTriggerEvent",
+  "createPlayEffects",
+  "createPlayCardEffects",
+  "testCompress"
+];
+var filterCategory = true;
+var logCategory = (category, ...msg) => {
+  if (filterCategory) {
+    if (hideCategory.find((c) => c == category)) {
+      return;
+    }
+  }
+  console.log(`[${new Date().toLocaleTimeString()}][${category}]`, ...msg);
+};
+
+// src/game/gameState/MessageComponent.ts
+function setMessageCurrentEffect(ctx2, effect) {
+  return {
+    ...ctx2,
+    messagesCurrentEffect: effect
+  };
+}
+function getMessageCurrentEffect(ctx2) {
+  return ctx2.messagesCurrentEffect;
+}
+
+// src/game/gameState/EventCenter.ts
+function getGameStateAndAssert(ctx2) {
+  if (ctx2.isGameState != true) {
+    throw new Error(`must is gameState`);
+  }
+  return ctx2;
+}
+var EventCenterFn = {
+  onAddImmediateEffect(_ctx, effect) {
+    logCategory(`onAddImmediateEffect: ${effect.description}`, effect);
+    let ctx2 = getGameStateAndAssert(_ctx);
+    return ctx2;
+  },
+  onEvent(_ctx, evt) {
+    logCategory(`onEvent: ${JSON.stringify(evt.title)} ${JSON.stringify(evt.cardIds)}`, evt.title, evt.cardIds);
+    let ctx2 = getGameStateAndAssert(_ctx);
+    return ctx2;
+  },
+  onEffectStart(_ctx, effect) {
+    logCategory(`onEffectStart: ${effect.text.description}`);
+    let ctx2 = getGameStateAndAssert(_ctx);
+    ctx2 = setMessageCurrentEffect(ctx2, effect);
+    return ctx2;
+  },
+  onEffectEnd(_ctx, effect) {
+    logCategory(`onEffectEnd: ${effect.text.description}`);
+    let ctx2 = getGameStateAndAssert(_ctx);
+    ctx2 = setMessageCurrentEffect(ctx2, null);
+    return ctx2;
+  },
+  onActionStart(_ctx, effect, action) {
+    logCategory(`onActionStart: ${action.description}`);
+    let ctx2 = getGameStateAndAssert(_ctx);
+    ctx2 = setMessageCurrentEffect(ctx2, effect);
+    return ctx2;
+  },
+  onActionEnd(_ctx, effect, action) {
+    logCategory(`onActionEnd: ${action.description}`);
+    let ctx2 = getGameStateAndAssert(_ctx);
+    ctx2 = setMessageCurrentEffect(ctx2, null);
+    return ctx2;
+  },
+  onItemStateChange(_ctx, old, curr) {
+    let ctx2 = getGameStateAndAssert(_ctx);
+    let effect = getMessageCurrentEffect(ctx2);
+    return ctx2;
+  },
+  onCardChange(_ctx, old, curr) {
+    let ctx2 = getGameStateAndAssert(_ctx);
+    let effect = getMessageCurrentEffect(ctx2);
+    return ctx2;
+  },
+  onPlayerStateChange(_ctx, old, curr) {
+    let ctx2 = getGameStateAndAssert(_ctx);
+    return ctx2;
+  },
+  onSetSetGroupParent(_ctx, parentId, itemId) {
+    let ctx2 = getGameStateAndAssert(_ctx);
+    return ctx2;
+  },
+  onSetPhase(_ctx, old, curr) {
+    logCategory(`onSetPhase: ${curr}`);
+    let ctx2 = getGameStateAndAssert(_ctx);
+    return ctx2;
+  },
+  onItemAdd(_ctx, itemId) {
+    logCategory(`onItemAdd: ${itemId}`);
+    let ctx2 = getGameStateAndAssert(_ctx);
+    return ctx2;
+  },
+  onItemMove(_ctx, from, to, itemId) {
+    logCategory(`onItemMove: ${itemId} = ${from} => ${to}`);
+    let ctx2 = getGameStateAndAssert(_ctx);
+    return ctx2;
+  },
+  onItemDelete(_ctx, itemId) {
+    logCategory(`onItemDelete: ${itemId}`);
+    let ctx2 = getGameStateAndAssert(_ctx);
+    return ctx2;
+  },
+  onTableChange(_ctx, old, curr) {
+    for (const oldBasyouStr in old.cardStack) {
+      for (const itemId of old.cardStack[oldBasyouStr]) {
+        const newBasyouStr = TableFns.getCardPosition(curr, itemId);
+        if (newBasyouStr == null) {
+          _ctx = EventCenterFn.onItemDelete(_ctx, itemId);
+        } else if (newBasyouStr != oldBasyouStr) {
+        }
+      }
+    }
+    for (const newBasyouStr in curr.cardStack) {
+      for (const itemId of curr.cardStack[newBasyouStr]) {
+        const oldBasyouStr = TableFns.getCardPosition(old, itemId);
+        if (oldBasyouStr == null) {
+          _ctx = EventCenterFn.onItemAdd(_ctx, itemId);
+        } else if (newBasyouStr != oldBasyouStr) {
+          _ctx = EventCenterFn.onItemMove(_ctx, oldBasyouStr, newBasyouStr, itemId);
+        }
+      }
+    }
+    return _ctx;
+  }
+};
+
+// src/game/gameState/CardTableComponent.ts
+function getCard(ctx2, cardId) {
+  if (ctx2.cards[cardId] == null) {
+    throw new Error(`card not found: ${cardId}`);
+  }
+  return ctx2.cards[cardId];
+}
+function setCard(ctx2, id, card) {
+  const oldCard = getCard(ctx2, id);
+  ctx2 = {
+    ...ctx2,
+    cards: {
+      ...ctx2.cards,
+      [id]: card
+    }
+  };
+  ctx2 = EventCenterFn.onCardChange(ctx2, oldCard, getCard(ctx2, id));
+  return ctx2;
+}
+function mapCard(ctx2, id, f) {
+  return setCard(ctx2, id, f(getCard(ctx2, id)));
+}
+function getCardIds(ctx2) {
+  return Object.keys(ctx2.cards);
+}
+function getCards(ctx2) {
+  return Object.values(ctx2.cards);
+}
+function mapCardsWithBasyou(ctx2, f) {
+  return toPairs_default(ctx2.table.cardStack).map(([k, cardIds]) => {
+    const basyou = AbsoluteBaSyouFn.fromString(k);
+    const cards = cardIds.map((cardId) => getCard(ctx2, cardId));
+    return [basyou, cards];
+  }).reduce((ctx3, [basyou, cards]) => {
+    return cards.map((card) => f(basyou, card)).reduce((ctx4, card) => setCard(ctx4, card.id, card), ctx3);
+  }, ctx2);
+}
+function createCardWithProtoIds(ctx2, basyou, cardProtoIds) {
+  const cardLen = Object.keys(ctx2.cards).length;
+  ctx2 = addCards(ctx2, basyou, cardProtoIds.map((protoId, i) => {
+    const ownerID = AbsoluteBaSyouFn.getPlayerID(basyou);
+    const cardId = `${ownerID}_${cardLen + i}`;
+    return {
+      id: cardId,
+      protoID: protoId,
+      ownerID
+    };
+  }));
+  return ctx2;
+}
+function addCards(ctx2, basyou, addedCards) {
+  const old = ctx2.table;
+  ctx2 = addedCards.reduce((ctx3, newCard) => {
+    const ownerID = AbsoluteBaSyouFn.getPlayerID(basyou);
+    if (newCard.id == "") {
+      const cardLen = Object.keys(ctx3.cards).length;
+      const cardId = `${ownerID}_${cardLen}`;
+      newCard.id = cardId;
+    }
+    if (newCard.ownerID == null) {
+      newCard.ownerID = ownerID;
+    }
+    const table = TableFns.addCard(ctx3.table, AbsoluteBaSyouFn.toString(basyou), newCard.id);
+    return {
+      ...ctx3,
+      table,
+      cards: {
+        ...ctx3.cards,
+        [newCard.id]: newCard
+      }
+    };
+  }, ctx2);
+  ctx2 = EventCenterFn.onTableChange(ctx2, old, ctx2.table);
+  return ctx2;
+}
+function getCardOwner(ctx2, cardID) {
+  const card = getCard(ctx2, cardID);
+  if (card == null) {
+    throw new Error("[getCardOwner] card not found");
+  }
+  if (card.ownerID == null) {
+    throw new Error("[getCardOwner] card.ownerID not found");
+  }
+  return card.ownerID;
+}
+
+// src/game/gameState/PhaseComponent.ts
+var exports_PhaseComponent = {};
+__export(exports_PhaseComponent, {
+  setPhase: () => setPhase,
+  getPhase: () => getPhase
+});
+function setPhase(ctx2, timing) {
+  const old = ctx2.phase;
+  ctx2 = {
+    ...ctx2,
+    phase: timing
+  };
+  ctx2 = EventCenterFn.onSetPhase(ctx2, old, ctx2.phase);
+  return ctx2;
+}
+function getPhase(ctx2) {
+  return ctx2.phase;
+}
+
 // src/game/gameState/EffectStackComponent.ts
 var exports_EffectStackComponent = {};
 __export(exports_EffectStackComponent, {
@@ -25281,6 +25383,7 @@ function addImmediateEffect(ctx2, block) {
   if (block.text.id == "") {
     block.text.id = ToolFn.getUUID("addImmediateEffect");
   }
+  ctx2 = EventCenterFn.onAddImmediateEffect(ctx2, block);
   return {
     ...ctx2,
     immediateEffect: [block.id, ...ctx2.immediateEffect],
@@ -25543,104 +25646,6 @@ __export(exports_ItemTableComponent, {
   assertTargetMissingError: () => assertTargetMissingError,
   addCoinsToCard: () => addCoinsToCard
 });
-
-// src/game/gameState/CardTableComponent.ts
-var exports_CardTableComponent = {};
-__export(exports_CardTableComponent, {
-  setCard: () => setCard,
-  mapCardsWithBasyou: () => mapCardsWithBasyou,
-  mapCard: () => mapCard,
-  getCards: () => getCards,
-  getCardOwner: () => getCardOwner,
-  getCardIds: () => getCardIds,
-  getCard: () => getCard,
-  createCardWithProtoIds: () => createCardWithProtoIds,
-  addCards: () => addCards
-});
-function getCard(ctx2, cardId) {
-  if (ctx2.cards[cardId] == null) {
-    throw new Error(`card not found: ${cardId}`);
-  }
-  return ctx2.cards[cardId];
-}
-function setCard(ctx2, id, card) {
-  const oldCard = getCard(ctx2, id);
-  ctx2 = {
-    ...ctx2,
-    cards: {
-      ...ctx2.cards,
-      [id]: card
-    }
-  };
-  ctx2 = EventCenterFn.onCardChange(ctx2, oldCard, getCard(ctx2, id));
-  return ctx2;
-}
-function mapCard(ctx2, id, f) {
-  return setCard(ctx2, id, f(getCard(ctx2, id)));
-}
-function getCardIds(ctx2) {
-  return Object.keys(ctx2.cards);
-}
-function getCards(ctx2) {
-  return Object.values(ctx2.cards);
-}
-function mapCardsWithBasyou(ctx2, f) {
-  return toPairs_default(ctx2.table.cardStack).map(([k, cardIds]) => {
-    const basyou = AbsoluteBaSyouFn.fromString(k);
-    const cards = cardIds.map((cardId) => getCard(ctx2, cardId));
-    return [basyou, cards];
-  }).reduce((ctx3, [basyou, cards]) => {
-    return cards.map((card) => f(basyou, card)).reduce((ctx4, card) => setCard(ctx4, card.id, card), ctx3);
-  }, ctx2);
-}
-function createCardWithProtoIds(ctx2, basyou, cardProtoIds) {
-  const cardLen = Object.keys(ctx2.cards).length;
-  ctx2 = addCards(ctx2, basyou, cardProtoIds.map((protoId, i) => {
-    const ownerID = AbsoluteBaSyouFn.getPlayerID(basyou);
-    const cardId = `${ownerID}_${cardLen + i}`;
-    return {
-      id: cardId,
-      protoID: protoId,
-      ownerID
-    };
-  }));
-  return ctx2;
-}
-function addCards(ctx2, basyou, addedCards) {
-  const old = ctx2.table;
-  ctx2 = addedCards.reduce((ctx3, newCard) => {
-    const ownerID = AbsoluteBaSyouFn.getPlayerID(basyou);
-    if (newCard.id == "") {
-      const cardLen = Object.keys(ctx3.cards).length;
-      const cardId = `${ownerID}_${cardLen}`;
-      newCard.id = cardId;
-    }
-    if (newCard.ownerID == null) {
-      newCard.ownerID = ownerID;
-    }
-    const table = TableFns.addCard(ctx3.table, AbsoluteBaSyouFn.toString(basyou), newCard.id);
-    return {
-      ...ctx3,
-      table,
-      cards: {
-        ...ctx3.cards,
-        [newCard.id]: newCard
-      }
-    };
-  }, ctx2);
-  ctx2 = EventCenterFn.onTableChange(ctx2, old, ctx2.table);
-  return ctx2;
-}
-function getCardOwner(ctx2, cardID) {
-  const card = getCard(ctx2, cardID);
-  if (card == null) {
-    throw new Error("[getCardOwner] card not found");
-  }
-  if (card.ownerID == null) {
-    throw new Error("[getCardOwner] card.ownerID not found");
-  }
-  return card.ownerID;
-}
 
 // src/game/gameState/CoinTableComponent.ts
 var exports_CoinTableComponent = {};
@@ -26059,7 +26064,7 @@ function createRollCostRequire(costNum, color) {
         title: ["RollColor", color],
         actions: [
           {
-            title: ["_\u30ED\u30FC\u30EB\u3059\u308B", "\u30ED\u30FC\u30EB"],
+            title: ["_\u30ED\u30FC\u30EB\u3059\u308B", "\u30ED\u30FC\u30EBCost"],
             vars: [key]
           }
         ]
@@ -28132,10 +28137,9 @@ function doItemSetRollState(ctx2, isRoll, [itemId, originBasyou], options) {
   ctx2 = itemIds.reduce((ctx3, itemId2) => {
     if (isCard(ctx3, itemId2)) {
       let item = getCard(ctx3, itemId2);
-      if (options?.isSkipTargetMissing) {
-      } else {
+      if (options?.isNoSkipTipError) {
         if (item.isRoll == isRoll) {
-          throw new TargetMissingError(`card already roll: ${item.id}`);
+          throw new TipError(`card already roll: ${item.id}`);
         }
       }
       item = CardFn.setIsRoll(item, isRoll);
@@ -28144,10 +28148,9 @@ function doItemSetRollState(ctx2, isRoll, [itemId, originBasyou], options) {
     }
     if (isChip(ctx3, itemId2)) {
       let item = getChip(ctx3, itemId2);
-      if (options?.isSkipTargetMissing) {
-      } else {
+      if (options?.isNoSkipTipError) {
         if (item.isRoll == isRoll) {
-          throw new TargetMissingError(`chip already roll: ${item.id}`);
+          throw new TipError(`chip already roll: ${item.id}`);
         }
       }
       item = ChipFn.setIsRoll(item, isRoll);
@@ -28391,6 +28394,13 @@ function createActionTitleFn(action) {
           return getCardTipStrBaSyouPairs(ctx2, varName, cardId);
         });
         switch (whatToDo) {
+          case "\u30ED\u30FC\u30EBCost": {
+            logCategory("getActionTitleFn", whatToDo, varNames2, pairs);
+            for (const pair2 of pairs) {
+              ctx2 = doItemSetRollState(ctx2, true, pair2, { isSkipTargetMissing: true, isNoSkipTipError: true });
+            }
+            return ctx2;
+          }
           case "\u30ED\u30FC\u30EB": {
             logCategory("getActionTitleFn", whatToDo, varNames2, pairs);
             for (const pair2 of pairs) {
@@ -28513,13 +28523,12 @@ function createActionTitleFn(action) {
     case "_\uFF0D\uFF11\uFF0F\uFF0D\uFF11\uFF0F\uFF0D\uFF11\u30B3\u30A4\u30F3_\uFF11\u500B\u3092\u4E57\u305B\u308B": {
       const [_, bonus, x] = action.title;
       const varNames2 = action.vars;
-      if (varNames2 == null) {
-        throw new Error(`action.var not found: ${action.title[0]}`);
-      }
       return function(ctx2, effect) {
         const cardId = EffectFn.getCardID(effect);
         const playerId = EffectFn.getPlayerID(effect);
-        const pairs = getCardTipStrBaSyouPairs(ctx2, varNames2[0], cardId);
+        const pairs = varNames2 == null ? [[cardId, getItemBaSyou(ctx2, cardId)]] : varNames2.flatMap((varName) => {
+          return getCardTipStrBaSyouPairs(ctx2, varName, cardId);
+        });
         if (pairs.length == 0) {
           throw new Error(`pairs must not 0: ${action.title} ${action.vars}`);
         }
@@ -28542,12 +28551,11 @@ function createActionTitleFn(action) {
     case "\u30BF\u30FC\u30F3\u7D42\u4E86\u6642\u307E\u3067\u300C\u901F\u653B\u300D\u3092\u5F97\u308B\u3002": {
       const [_, ges] = action.title;
       const varNames2 = action.vars;
-      if (varNames2 == null) {
-        throw new Error(`action.var not found: ${action.title[0]}`);
-      }
       return function(ctx2, effect) {
         const cardId = EffectFn.getCardID(effect);
-        const pairs = getCardTipStrBaSyouPairs(ctx2, varNames2[0], cardId);
+        const pairs = varNames2 == null ? [[cardId, getItemBaSyou(ctx2, cardId)]] : varNames2.flatMap((varName) => {
+          return getCardTipStrBaSyouPairs(ctx2, varName, cardId);
+        });
         for (const [targetCardId, targetBaSyou] of pairs) {
           const gesForCard = ges.map((ge) => {
             return {
@@ -28862,6 +28870,10 @@ function createPlayCardEffects(ctx2, cardId) {
     };
     return ret2;
   });
+  const logicTree = {
+    type: "And",
+    children: prototype.commandText?.logicTreeActions?.[0] ? [...logicLeafs, ...CardTextFn.getLogicTreeTreeLeafs(prototype.commandText, prototype.commandText.logicTreeActions[0])] : logicLeafs
+  };
   const playCardEffect = {
     id: `createPlayCardEffects_${cardId}`,
     reason: ["PlayCard", playerId, cardId],
@@ -28876,10 +28888,7 @@ function createPlayCardEffects(ctx2, cardId) {
       },
       logicTreeActions: [
         {
-          logicTree: {
-            type: "And",
-            children: prototype.commandText?.logicTreeActions?.[0] ? [...logicLeafs, ...CardTextFn.getLogicTreeTreeLeafs(prototype.commandText, prototype.commandText.logicTreeActions[0])] : logicLeafs
-          },
+          logicTree,
           actions: [
             {
               title: function _(ctx3, effect, { DefineFn, GameStateFn, ToolFn: ToolFn2 }) {
@@ -29019,7 +29028,7 @@ function createPlayCardEffects(ctx2, cardId) {
     const morePlayEfs = ges.filter((g) => (g.title[0] == "\u5408\u8A08\u56FD\u529B\uFF0B(\uFF11)\u3057\u3066\u30D7\u30EC\u30A4\u3067\u304D\u308B" || g.title[0] == "\u5408\u8A08\u56FD\u529B\uFF0B_\u3001\u30ED\u30FC\u30EB\u30B3\u30B9\u30C8\uFF0B_\u3057\u3066\u30D7\u30EC\u30A4\u3067\u304D\u308B") && g.cardIds.includes(cardId));
     const hasTotolCostPlusPlay = morePlayEfs.length > 0;
     if (hasTotolCostPlusPlay) {
-      let originConditions = playCardEffect.text.conditions || {};
+      let copyOriginCondition = playCardEffect.text.conditions || {};
       if (getCard(ctx2, cardId).protoID == "179027_09D_C_BK063R_black") {
         const rollCostBonus = getGlobalEffects(ctx2, null).map((ge) => {
           if (ge.title[0] == "\u5408\u8A08\u56FD\u529B\uFF0B_\u3001\u30ED\u30FC\u30EB\u30B3\u30B9\u30C8\uFF0B_\u3057\u3066\u30D7\u30EC\u30A4\u3067\u304D\u308B" && ge.cardIds.includes(cardId)) {
@@ -29028,16 +29037,16 @@ function createPlayCardEffects(ctx2, cardId) {
           return 0;
         }).reduce((a, b) => a + b, 0);
         for (const rollCostKey of Object.keys(rollCostConditions)) {
-          delete originConditions[rollCostKey];
+          delete copyOriginCondition[rollCostKey];
         }
         const newRollCostConditions = createRollCostConditions(ctx2, prototype, prototype.rollCost || [], rollCostBonus);
-        originConditions = {
+        copyOriginCondition = {
           ...newRollCostConditions
         };
       }
       const addedLength = pipe(always_default(morePlayEfs), map_default((g) => g.title[0] == "\u5408\u8A08\u56FD\u529B\uFF0B(\uFF11)\u3057\u3066\u30D7\u30EC\u30A4\u3067\u304D\u308B" || g.title[0] == "\u5408\u8A08\u56FD\u529B\uFF0B_\u3001\u30ED\u30FC\u30EB\u30B3\u30B9\u30C8\uFF0B_\u3057\u3066\u30D7\u30EC\u30A4\u3067\u304D\u308B" ? g.title[1] : 0), sum_default)();
-      originConditions = {
-        ...originConditions,
+      copyOriginCondition = {
+        ...copyOriginCondition,
         "\u5408\u8A08\u56FD\u529B\u3014x\u3015": {
           actions: [
             {
@@ -29046,19 +29055,32 @@ function createPlayCardEffects(ctx2, cardId) {
           ]
         }
       };
+      const logicLeafs2 = Object.keys(copyOriginCondition).map((k) => {
+        const ret2 = {
+          type: "Leaf",
+          value: k
+        };
+        return ret2;
+      });
+      const logicTree2 = {
+        type: "And",
+        children: prototype.commandText?.logicTreeActions?.[0] ? [...logicLeafs2, ...CardTextFn.getLogicTreeTreeLeafs(prototype.commandText, prototype.commandText.logicTreeActions[0])] : logicLeafs2
+      };
       const totalCostPlusPlayEffect = {
         ...playCardEffect,
         id: `totalCostPlusPlayEffect_${cardId}`,
+        description: "\u5408\u8A08\u56FD\u529B\uFF0B(\uFF11)\u3057\u3066\u30D7\u30EC\u30A4\u3067\u304D\u308B",
         text: {
           ...playCardEffect.text,
           id: `totalCostPlusPlayEffect_text_${cardId}`,
-          conditions: originConditions
+          conditions: copyOriginCondition
         }
       };
       totalCostPlusPlayEffect.text.logicTreeActions = JSON.parse(JSON.stringify(playCardEffect.text.logicTreeActions));
       if (totalCostPlusPlayEffect.text.logicTreeActions?.[0] == null) {
         throw new Error(`morePlayCardEffect.text.logicTreeActions?.[0] == null`);
       }
+      totalCostPlusPlayEffect.text.logicTreeActions[0].logicTree = logicTree2;
       totalCostPlusPlayEffect.text.logicTreeActions[0].actions.push({
         title: function _(ctx3, effect, { GameStateFn, DefineFn }) {
           const { addedLength: addedLength2 } = { addedLength: 0 };
@@ -29076,6 +29098,7 @@ function createPlayCardEffects(ctx2, cardId) {
     const stayPlayEffect = {
       ...playCardEffect,
       id: `stayPlayEffect_${cardId}`,
+      description: "\u30B9\u30C6\u30A4",
       text: {
         ...playCardEffect.text,
         id: `stayPlayEffect_text_${cardId}`,
@@ -29179,13 +29202,13 @@ function createTipByEntitySearch(ctx2, cardId, options) {
   if (options.hasSelfCardId != null) {
     const absoluteBasyou = getItemBaSyou(ctx2, cardId);
     entityList = entityList.filter(EntityFn.filterController(AbsoluteBaSyouFn.getPlayerID(absoluteBasyou)));
-    entityList = entityList.filter(EntityFn.filterController(AbsoluteBaSyouFn.getBaSyouKeyword(absoluteBasyou)));
+    entityList = entityList.filter(EntityFn.filterAtBaSyous([AbsoluteBaSyouFn.getBaSyouKeyword(absoluteBasyou)]));
   }
   if (options.see) {
     const [basyou, min, max] = options.see;
     const absoluteBasyou = createAbsoluteBaSyouFromBaSyou(ctx2, cardId, basyou);
     entityList = entityList.filter(EntityFn.filterController(AbsoluteBaSyouFn.getPlayerID(absoluteBasyou)));
-    entityList = entityList.filter(EntityFn.filterController(AbsoluteBaSyouFn.getBaSyouKeyword(absoluteBasyou)));
+    entityList = entityList.filter(EntityFn.filterAtBaSyous([AbsoluteBaSyouFn.getBaSyouKeyword(absoluteBasyou)]));
     if (entityList.length < min) {
       throw new TipError(`must at least ${min} for see`);
     }
@@ -29240,6 +29263,8 @@ function createTipByEntitySearch(ctx2, cardId, options) {
     tipPairs = tipPairs.slice(0, options.max);
   } else if (options.min != null) {
     tipPairs = tipPairs.slice(0, options.min);
+  } else if (options.count != null) {
+    tipPairs = tipPairs.slice(0, options.count);
   }
   const tip = {
     title: ["\u30AB\u30FC\u30C9", pairs, tipPairs]
@@ -29255,6 +29280,12 @@ function createTipByEntitySearch(ctx2, cardId, options) {
   }
   if (cheatCardIds.length) {
     tip.cheatCardIds = cheatCardIds;
+  }
+  if (options.asMuchAsPossible) {
+    if (options.max == null) {
+      throw new Error;
+    }
+    tip.min = Math.min(pairs.length, options.max);
   }
   return tip;
 }
@@ -29616,7 +29647,7 @@ function createConditionTitleFn(condition, options) {
         const pairs = colorIds.map((colorId) => [colorId, getItemBaSyou(ctx2, colorId)]);
         return {
           title: ["\u30AB\u30FC\u30C9", cardIdColorsPairs, pairs],
-          min: pairs.length
+          min: Math.max(1, pairs.length)
         };
       };
     }
@@ -30089,8 +30120,10 @@ function createPlayTextEffectFromEffect(ctx2, e, options) {
   return EffectFn.fromEffectBasic(e, { ...options, reason: ["PlayText", cardController, cardId, e.text.id] });
 }
 function addImmediateEffectIfCanPayCost(ctx2, effect) {
-  const cetsNoErr = createCommandEffectTips(ctx2, effect).filter(CommandEffecTipFn.filterNoError);
+  const cets = createCommandEffectTips(ctx2, effect);
+  const cetsNoErr = cets.filter(CommandEffecTipFn.filterNoError);
   if (cetsNoErr.length == 0) {
+    logCategory("addImmediateEffectIfCanPayCost", `\u5C07\u767C\u52D5\u8D77\u52D5\u6548\u679C\u4F46\u689D\u4EF6\u4E0D\u8DB3: ${effect.text.description}`, cets);
     return ctx2;
   }
   return addImmediateEffect(ctx2, effect);
@@ -30314,7 +30347,15 @@ function createPlayEffects(ctx2, playerId) {
   const ges = getGlobalEffects(ctx2, null);
   ctx2 = setGlobalEffects(ctx2, null, ges);
   const canPlayByText = ges.filter((ge) => ge.title[0] == "\u81EA\u8ECD\u624B\u672D\u306B\u3042\u308B\u304B\u306E\u3088\u3046\u306B\u30D7\u30EC\u30A4\u3067\u304D\u308B").flatMap((ge) => ge.cardIds).filter((itemId) => AbsoluteBaSyouFn.getPlayerID(getItemBaSyou(ctx2, itemId)) == playerId);
-  const getPlayCardEffectsF = ifElse_default(always_default(PhaseFn.eq(getPhase(ctx2), ["\u914D\u5099\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"]) && ctx2.activePlayerID == playerId), pipe(always_default([AbsoluteBaSyouFn.of(playerId, "\u624B\u672D"), AbsoluteBaSyouFn.of(playerId, "\u30CF\u30F3\u30AC\u30FC")]), map_default((basyou) => getItemIdsByBasyou(ctx2, basyou)), flatten_default, concat_default(canPlayByText), map_default((cardId) => createPlayCardEffects(ctx2, cardId)), flatten_default), ifElse_default(always_default(PhaseFn.isFreeTiming(getPhase(ctx2))), pipe(always_default([AbsoluteBaSyouFn.of(playerId, "\u624B\u672D"), AbsoluteBaSyouFn.of(playerId, "\u30CF\u30F3\u30AC\u30FC")]), map_default((basyou) => getItemIdsByBasyou(ctx2, basyou)), flatten_default, concat_default(canPlayByText), map_default((cardId) => {
+  const getPlayCardEffectsF = ifElse_default(always_default(PhaseFn.eq(getPhase(ctx2), ["\u914D\u5099\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"]) && ctx2.activePlayerID == playerId), pipe(always_default([AbsoluteBaSyouFn.of(playerId, "\u624B\u672D"), AbsoluteBaSyouFn.of(playerId, "\u30CF\u30F3\u30AC\u30FC")]), map_default((basyou) => getItemIdsByBasyou(ctx2, basyou)), flatten_default, concat_default(canPlayByText), map_default((cardId) => {
+    if (getItemPrototype(ctx2, cardId).category == "\u30B3\u30DE\u30F3\u30C9") {
+      return [];
+    }
+    return createPlayCardEffects(ctx2, cardId);
+  }), flatten_default), ifElse_default(always_default(PhaseFn.isFreeTiming(getPhase(ctx2))), pipe(always_default([AbsoluteBaSyouFn.of(playerId, "\u624B\u672D"), AbsoluteBaSyouFn.of(playerId, "\u30CF\u30F3\u30AC\u30FC")]), map_default((basyou) => getItemIdsByBasyou(ctx2, basyou)), flatten_default, concat_default(canPlayByText), map_default((cardId) => {
+    if (getItemPrototype(ctx2, cardId).category == "\u30B3\u30DE\u30F3\u30C9") {
+      return [];
+    }
     logCategory("createPlayEffects", "check \u30AF\u30A4\u30C3\u30AF start", cardId);
     if (getCardHasSpeicalEffect(ctx2, ["\u30AF\u30A4\u30C3\u30AF"], cardId)) {
       logCategory("createPlayEffects", "check \u30AF\u30A4\u30C3\u30AF createPlayCardEffects", cardId);
@@ -30362,7 +30403,7 @@ function createPlayEffects(ctx2, playerId) {
         }
       };
       return {
-        id: `getPlayEffects_${playerId}_${cardId}_${text.id}`,
+        id: `createPlayEffects_${playerId}_${cardId}_${text.id}`,
         reason: ["PlayText", playerId, cardId, text.id],
         description: text.description,
         text: {
@@ -30393,19 +30434,19 @@ function createPlayEffects(ctx2, playerId) {
     switch (siYouTiming[0]) {
       case "\u81EA\u8ECD":
         if (ctx2.activePlayerID != playerId) {
-          logCategory("getPlayEffects", `ctx.activePlayerID != ${playerId}`, text.title, text.description);
+          logCategory("createPlayEffects", `ctx.activePlayerID != ${playerId}`, text.title, text.description);
           return false;
         }
         break;
       case "\u6575\u8ECD":
         if (ctx2.activePlayerID == playerId) {
-          logCategory("getPlayEffects", `ctx.activePlayerID == ${playerId}`, text.title, text.description);
+          logCategory("createPlayEffects", `ctx.activePlayerID == ${playerId}`, text.title, text.description);
           return false;
         }
         break;
       case "\u6226\u95D8\u30D5\u30A7\u30A4\u30BA":
         if (ctx2.phase[0] != "\u6226\u95D8\u30D5\u30A7\u30A4\u30BA") {
-          logCategory("getPlayEffects", `ctx.timing[0] != "\u6226\u95D8\u30D5\u30A7\u30A4\u30BA"`, text.title, text.description);
+          logCategory("createPlayEffects", `ctx.timing[0] != "\u6226\u95D8\u30D5\u30A7\u30A4\u30BA"`, text.title, text.description);
           return false;
         }
         break;
@@ -30414,11 +30455,11 @@ function createPlayEffects(ctx2, playerId) {
       case "\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7":
       case "\u5E30\u9084\u30B9\u30C6\u30C3\u30D7":
         if (ctx2.phase[0] != "\u6226\u95D8\u30D5\u30A7\u30A4\u30BA") {
-          logCategory("getPlayEffects", `ctx.timing[0] != "\u6226\u95D8\u30D5\u30A7\u30A4\u30BA"`, text.title, text.description);
+          logCategory("createPlayEffects", `ctx.timing[0] != "\u6226\u95D8\u30D5\u30A7\u30A4\u30BA"`, text.title, text.description);
           return false;
         }
         if (ctx2.phase[1] != siYouTiming[0]) {
-          logCategory("getPlayEffects", `ctx.timing[1] != ${siYouTiming[0]}`, text.title, text.description);
+          logCategory("createPlayEffects", `ctx.timing[1] != ${siYouTiming[0]}`, text.title, text.description);
           return false;
         }
         break;
@@ -30430,7 +30471,7 @@ function createPlayEffects(ctx2, playerId) {
           case "\u914D\u5099\u30D5\u30A7\u30A4\u30BA":
           case "\u6226\u95D8\u30D5\u30A7\u30A4\u30BA":
             if (ctx2.phase[0] != siYouTiming[1]) {
-              logCategory("getPlayEffects", `ctx.timing[0] != ${siYouTiming[1]}`, text.title, text.description);
+              logCategory("createPlayEffects", `ctx.timing[0] != ${siYouTiming[1]}`, text.title, text.description);
               return false;
             }
             break;
@@ -30439,11 +30480,11 @@ function createPlayEffects(ctx2, playerId) {
           case "\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7":
           case "\u5E30\u9084\u30B9\u30C6\u30C3\u30D7":
             if (ctx2.phase[0] != "\u6226\u95D8\u30D5\u30A7\u30A4\u30BA") {
-              logCategory("getPlayEffects", `ctx.timing[0] != "\u6226\u95D8\u30D5\u30A7\u30A4\u30BA"`, text.title, text.description);
+              logCategory("createPlayEffects", `ctx.timing[0] != "\u6226\u95D8\u30D5\u30A7\u30A4\u30BA"`, ctx2.phase, text.title, text.description);
               return false;
             }
             if (ctx2.phase[1] != siYouTiming[1]) {
-              logCategory("getPlayEffects", `ctx.timing[1] != ${siYouTiming[1]}`, text.title, text.description);
+              logCategory("createPlayEffects", `ctx.timing[1] != ${siYouTiming[1]}`, ctx2.phase, text.title, text.description);
               return false;
             }
             break;
@@ -30496,7 +30537,7 @@ function doCutInDestroyEffectsAndClear(ctx2, ordered) {
 
 // src/game/gameStateWithFlowMemory/applyFlow.ts
 function applyFlow(ctx2, playerID, flow) {
-  logCategory("applyFlow", playerID, flow.id);
+  logCategory(`applyFlow: ${playerID} ${flow.id} ${flow.description}`, playerID, flow);
   switch (flow.id) {
     case "FlowSetActiveEffectID": {
       if (flow.effectID == null) {
@@ -31709,109 +31750,6 @@ function scan(accumulator, seed) {
 var OnEvent = new Subject;
 var OnError = new Subject;
 
-// src/client/tool/appContext/OnViewModel.ts
-var DEFAULT_VIEW_MODEL = {
-  model: createGameContext(),
-  cardSelection: [],
-  cardPositionSelection: [],
-  localMemory: {
-    clientId: null,
-    timing: PhaseFn.getFirst(),
-    lastPassPhase: false
-  }
-};
-var OnViewModel = OnEvent.pipe(scan((viewModel, evt) => {
-  logCategory("OnViewModel", "evt", evt);
-  try {
-    switch (evt.id) {
-      case "OnClickNewGame": {
-        let ctx2 = createGameContext();
-        ctx2 = {
-          ...ctx2,
-          versionID: viewModel.model.versionID
-        };
-        const deckA = evt.deckA;
-        const deckB = evt.deckB;
-        ctx2.gameState = initState(ctx2.gameState, deckA, deckB);
-        return { ...DEFAULT_VIEW_MODEL, model: ctx2 };
-      }
-      case "OnClickFlowConfirm": {
-        const gameState = applyFlow(viewModel.model.gameState, evt.clientId, evt.flow);
-        return {
-          ...viewModel,
-          model: {
-            ...viewModel.model,
-            gameState
-          },
-          cardSelection: [],
-          localMemory: {
-            clientId: evt.clientId,
-            timing: getPhase(gameState),
-            lastPassPhase: gameState.flowMemory.hasPlayerPassPhase[evt.clientId] || false
-          }
-        };
-      }
-      case "OnClickRequireTargetConfirm": {
-        return { ...viewModel, cardSelection: [] };
-      }
-      case "OnClickChangeClient": {
-        return viewModel;
-      }
-      case "OnModelFromFirebase":
-        return viewModel;
-      case "OnClickCardEvent":
-        if (viewModel.cardSelection.includes(evt.card.id)) {
-          return {
-            ...viewModel,
-            cardSelection: viewModel.cardSelection.filter((v) => v != evt.card.id)
-          };
-        }
-        return {
-          ...viewModel,
-          cardSelection: [...viewModel.cardSelection, evt.card.id]
-        };
-      default:
-        console.log(`unknown evt ${evt}`);
-        return viewModel;
-    }
-  } catch (e) {
-    OnError.next(e);
-  }
-  return viewModel;
-}, DEFAULT_VIEW_MODEL));
-
-// src/client/tool/appContext/index.tsx
-var jsx_dev_runtime = __toESM(require_jsx_dev_runtime(), 1);
-var AppContext = import_react.createContext({
-  viewModel: DEFAULT_VIEW_MODEL
-});
-var AppContextProvider = (props) => {
-  const [viewModel, setViewModel] = import_react.useState(DEFAULT_VIEW_MODEL);
-  import_react.useEffect(() => {
-    const subscriber = OnViewModel.subscribe((model) => {
-      logCategory("AppContextProvider", "OnViewModel", model);
-      setViewModel(model);
-    });
-    return () => {
-      subscriber.unsubscribe();
-    };
-  }, []);
-  import_react.useEffect(() => {
-  }, []);
-  return /* @__PURE__ */ jsx_dev_runtime.jsxDEV(AppContext.Provider, {
-    value: {
-      viewModel
-    },
-    children: props.children
-  }, undefined, false, undefined, this);
-};
-
-// src/client/component/ClientView.tsx
-var import_react8 = __toESM(require_react(), 1);
-
-// src/client/component/FlowListView.tsx
-var import_react5 = __toESM(require_react(), 1);
-
 // src/game/gameState/createAttackPhaseRuleEffect.ts
 function createAttackPhaseRuleEffect(ctx2, playerId) {
   return {
@@ -31843,7 +31781,7 @@ function createAttackPhaseRuleEffect(ctx2, playerId) {
               return [id, GameStateFn2.getItemBaSyou(ctx3, id)];
             });
             return {
-              title: ["\u30AB\u30FC\u30C9", pairs, pairs]
+              title: ["\u30AB\u30FC\u30C9", pairs, []]
             };
           }.toString(),
           actions: [
@@ -31881,7 +31819,7 @@ function createAttackPhaseRuleEffect(ctx2, playerId) {
               return [id, GameStateFn2.getItemBaSyou(ctx3, id)];
             });
             return {
-              title: ["\u30AB\u30FC\u30C9", pairs, pairs]
+              title: ["\u30AB\u30FC\u30C9", pairs, []]
             };
           }.toString(),
           actions: [
@@ -32663,6 +32601,128 @@ function queryFlow(ctx2, playerID) {
   }
 }
 
+// src/client/tool/appContext/OnViewModel.ts
+var DEFAULT_VIEW_MODEL = {
+  model: createGameContext(),
+  playerCommands: {},
+  cardSelection: [],
+  cardPositionSelection: [],
+  localMemory: {
+    clientId: null,
+    timing: PhaseFn.getFirst(),
+    lastPassPhase: false
+  }
+};
+var OnViewModel = OnEvent.pipe(scan((viewModel, evt) => {
+  logCategory("OnViewModel", "evt", evt);
+  try {
+    switch (evt.id) {
+      case "OnClickNewGame": {
+        let ctx2 = createGameContext();
+        ctx2 = {
+          ...ctx2,
+          versionID: viewModel.model.versionID
+        };
+        const deckA = evt.deckA;
+        const deckB = evt.deckB;
+        ctx2.gameState = initState(ctx2.gameState, deckA, deckB);
+        ctx2.gameState = createCardWithProtoIds(ctx2.gameState, AbsoluteBaSyouFn.of(PlayerA, "G\u30BE\u30FC\u30F3"), deckA.slice(0, 6));
+        ctx2.gameState = createCardWithProtoIds(ctx2.gameState, AbsoluteBaSyouFn.of(PlayerA, "\u914D\u5099\u30A8\u30EA\u30A2"), deckA.slice(0, 3));
+        const playerAFlow = queryFlow(ctx2.gameState, PlayerA);
+        const playerBFlow = queryFlow(ctx2.gameState, PlayerB);
+        return {
+          ...DEFAULT_VIEW_MODEL,
+          model: ctx2,
+          playerCommands: {
+            [PlayerA]: playerAFlow,
+            [PlayerB]: playerBFlow
+          }
+        };
+      }
+      case "OnClickFlowConfirm": {
+        const gameState = applyFlow(viewModel.model.gameState, evt.clientId, evt.flow);
+        const playerAFlow = queryFlow(gameState, PlayerA);
+        logCategory("OnViewModel", "PlayerA", playerAFlow);
+        const playerBFlow = queryFlow(gameState, PlayerB);
+        return {
+          ...viewModel,
+          model: {
+            ...viewModel.model,
+            gameState
+          },
+          playerCommands: {
+            [PlayerA]: playerAFlow,
+            [PlayerB]: playerBFlow
+          },
+          cardSelection: [],
+          localMemory: {
+            clientId: evt.clientId,
+            timing: getPhase(gameState),
+            lastPassPhase: gameState.flowMemory.hasPlayerPassPhase[evt.clientId] || false
+          }
+        };
+      }
+      case "OnClickRequireTargetConfirm": {
+        return { ...viewModel, cardSelection: [] };
+      }
+      case "OnClickChangeClient": {
+        return viewModel;
+      }
+      case "OnModelFromFirebase":
+        return viewModel;
+      case "OnClickCardEvent":
+        if (viewModel.cardSelection.includes(evt.card.id)) {
+          return {
+            ...viewModel,
+            cardSelection: viewModel.cardSelection.filter((v) => v != evt.card.id)
+          };
+        }
+        return {
+          ...viewModel,
+          cardSelection: [...viewModel.cardSelection, evt.card.id]
+        };
+      default:
+        console.log(`unknown evt ${evt}`);
+        return viewModel;
+    }
+  } catch (e) {
+    OnError.next(e);
+  }
+  return viewModel;
+}, DEFAULT_VIEW_MODEL));
+
+// src/client/tool/appContext/index.tsx
+var jsx_dev_runtime = __toESM(require_jsx_dev_runtime(), 1);
+var AppContext = import_react.createContext({
+  viewModel: DEFAULT_VIEW_MODEL
+});
+var AppContextProvider = (props) => {
+  const [viewModel, setViewModel] = import_react.useState(DEFAULT_VIEW_MODEL);
+  import_react.useEffect(() => {
+    const subscriber = OnViewModel.subscribe((model) => {
+      logCategory("AppContextProvider", "OnViewModel", model);
+      setViewModel(model);
+    });
+    return () => {
+      subscriber.unsubscribe();
+    };
+  }, []);
+  import_react.useEffect(() => {
+  }, []);
+  return /* @__PURE__ */ jsx_dev_runtime.jsxDEV(AppContext.Provider, {
+    value: {
+      viewModel
+    },
+    children: props.children
+  }, undefined, false, undefined, this);
+};
+
+// src/client/component/ClientView.tsx
+var import_react8 = __toESM(require_react(), 1);
+
+// src/client/component/FlowListView.tsx
+var import_react5 = __toESM(require_react(), 1);
+
 // src/client/component/EffectView.tsx
 var import_react3 = __toESM(require_react(), 1);
 
@@ -32673,8 +32733,8 @@ var CARD_SIZE = 100;
 var CardView = (props) => {
   const appContext = import_react2.useContext(AppContext);
   const flows = import_react2.useMemo(() => {
-    return queryFlow(appContext.viewModel.model.gameState, props.clientId);
-  }, [appContext.viewModel.model.gameState, props.clientId]);
+    return appContext.viewModel.playerCommands[props.clientId] || [];
+  }, [appContext.viewModel.playerCommands[props.clientId]]);
   const flow = import_react2.useMemo(() => {
     return flows.find((flow2) => {
       switch (flow2.id) {
@@ -32710,9 +32770,9 @@ var CardView = (props) => {
       children: [
         bp[0],
         "/",
-        bp[0],
+        bp[1],
         "/",
-        bp[0]
+        bp[2]
       ]
     }, undefined, true, undefined, this);
   }, [appContext.viewModel.model.gameState, props.cardID]);
@@ -32727,6 +32787,20 @@ var CardView = (props) => {
         return /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
           children: JSON.stringify(coin.title)
         }, coin.id, false, undefined, this);
+      })
+    }, undefined, false, undefined, this);
+  }, [appContext.viewModel.model.gameState, props.cardID]);
+  const renderGlobalEffects = import_react2.useMemo(() => {
+    const isRoot = getSetGroupRoot(appContext.viewModel.model.gameState, props.cardID) == props.cardID;
+    if (isRoot == false) {
+      return /* @__PURE__ */ jsx_dev_runtime2.jsxDEV(jsx_dev_runtime2.Fragment, {}, undefined, false, undefined, this);
+    }
+    const ges = getGlobalEffects(appContext.viewModel.model.gameState, null).filter((ge) => ge.cardIds.includes(props.cardID));
+    return /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
+      children: ges.map((ge, i) => {
+        return /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
+          children: JSON.stringify(ge.title)
+        }, i, false, undefined, this);
       })
     }, undefined, false, undefined, this);
   }, [appContext.viewModel.model.gameState, props.cardID]);
@@ -32750,6 +32824,9 @@ var CardView = (props) => {
             }, undefined, false, undefined, this)
           }, text.id, false, undefined, this);
         }),
+        /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
+          children: proto.characteristic
+        }, undefined, false, undefined, this),
         /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
           style: { color: "grey" },
           children: proto.description
@@ -32808,18 +32885,21 @@ var CardView = (props) => {
             }, undefined, false, undefined, this),
             /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
               hidden: true,
-              children: card.id
-            }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
-              hidden: true,
               children: card.isFaceDown ? "O" : "X"
             }, undefined, false, undefined, this)
           ]
         }, undefined, true, undefined, this),
-        renderCmds,
-        renderBp,
-        renderCoin,
-        renderText
+        isVisible ? /* @__PURE__ */ jsx_dev_runtime2.jsxDEV(jsx_dev_runtime2.Fragment, {
+          children: [
+            /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
+              children: card.id
+            }, undefined, false, undefined, this),
+            renderCmds,
+            renderBp,
+            renderCoin,
+            renderText
+          ]
+        }, undefined, true, undefined, this) : /* @__PURE__ */ jsx_dev_runtime2.jsxDEV(jsx_dev_runtime2.Fragment, {}, undefined, false, undefined, this)
       ]
     }, undefined, true, undefined, this);
   }, [card, isVisible, appContext.viewModel.cardSelection, props, flow]);
@@ -32938,7 +33018,7 @@ var FlowSetTipSelectionView = (props) => {
       }
     }
     return [];
-  }, [props, appContext.viewModel.cardSelection]);
+  }, [props.flow.tip, appContext.viewModel.cardSelection]);
   const userTip = import_react4.useMemo(() => {
     const tip = {
       ...props.flow.tip,
@@ -32949,19 +33029,14 @@ var FlowSetTipSelectionView = (props) => {
       ]
     };
     return tip;
-  }, [props, userSelection, appContext.viewModel.model.gameState]);
-  const renderCheckTip = import_react4.useMemo(() => {
+  }, [props.flow.tip, userSelection, appContext.viewModel.model.gameState]);
+  const renderButton = import_react4.useMemo(() => {
     const error = TipFn.checkTipSatisfies(userTip);
     if (error) {
       return /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("div", {
         children: error.message
       }, undefined, false, undefined, this);
     }
-    return /* @__PURE__ */ jsx_dev_runtime4.jsxDEV(jsx_dev_runtime4.Fragment, {
-      children: "OK"
-    }, undefined, false, undefined, this);
-  }, [userTip]);
-  const renderButton = import_react4.useMemo(() => {
     const flow = {
       ...props.flow,
       tip: userTip
@@ -32974,9 +33049,9 @@ var FlowSetTipSelectionView = (props) => {
           flow
         });
       },
-      children: renderCheckTip
+      children: "OK"
     }, undefined, false, undefined, this);
-  }, [renderCheckTip, userTip]);
+  }, [props.flow, userTip]);
   const render = import_react4.useMemo(() => {
     return /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("div", {
       children: /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("div", {
@@ -32986,7 +33061,7 @@ var FlowSetTipSelectionView = (props) => {
         ]
       }, undefined, true, undefined, this)
     }, undefined, false, undefined, this);
-  }, [renderWant, renderCheckTip]);
+  }, [renderWant, renderButton]);
   return render;
 };
 
@@ -32995,8 +33070,8 @@ var jsx_dev_runtime5 = __toESM(require_jsx_dev_runtime(), 1);
 var FlowListView = (props) => {
   const appContext = import_react5.useContext(AppContext);
   const flows = import_react5.useMemo(() => {
-    return queryFlow(appContext.viewModel.model.gameState, props.clientId);
-  }, [appContext.viewModel.model.gameState, props.clientId]);
+    return appContext.viewModel.playerCommands[props.clientId] || [];
+  }, [appContext.viewModel.playerCommands[props.clientId]]);
   import_react5.useEffect(() => {
     const speed = 50;
     const isPlayerControl = true;
@@ -33023,7 +33098,7 @@ var FlowListView = (props) => {
         if (flow.id == "FlowWaitPlayer") {
           return;
         }
-        if (flow.id == "FlowCancelActiveEffectID") {
+        if (flow.id == "FlowSetTipSelection") {
           return;
         }
         setTimeout(() => {

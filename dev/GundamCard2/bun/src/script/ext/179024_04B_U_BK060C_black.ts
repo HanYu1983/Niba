@@ -25,6 +25,7 @@ export const prototype: CardPrototype = {
               "「特徴：T3部隊」を持つ自軍ユニット１枚": {
                 title: ["Entity", {
                   hasChar: ["T3部隊"],
+                  at: DefineFn.BaSyouKeywordFn.getBaAll(),
                   side: "自軍",
                   is: ["ユニット"],
                   count: 1

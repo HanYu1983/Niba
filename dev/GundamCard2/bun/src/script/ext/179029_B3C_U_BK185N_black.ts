@@ -22,7 +22,7 @@ export const prototype: CardPrototype = {
         if (evt.title[0] == "場に出た場合" && evt.cardIds?.includes(cardId)) {
           const newE = GameStateFn.createPlayTextEffectFromEffect(ctx, effect, {
             conditions: {
-              "自軍ユニット１枚の上": {
+              "自軍ユニット１枚": {
                 title: ["Entity", {
                   at: DefineFn.BaSyouKeywordFn.getBaAll(),
                   side: "自軍",
@@ -35,7 +35,7 @@ export const prototype: CardPrototype = {
               actions: [
                 {
                   title: ["_－１／－１／－１コイン_１個を乗せる", [0, 0, -1], 2],
-                  vars: ["自軍ユニット１枚の上"],
+                  vars: ["自軍ユニット１枚"],
                   description: "自軍ユニット１枚の上に±０／±０／－１コイン２個を乗せる事ができる",
                 },
                 {

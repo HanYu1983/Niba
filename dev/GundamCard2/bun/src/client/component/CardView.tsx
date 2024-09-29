@@ -12,6 +12,7 @@ import { getSetGroupBattlePoint } from "../../game/gameState/setGroup";
 import { getSetGroup, getSetGroupRoot } from "../../game/gameState/SetGroupComponent";
 import { getCardIdByCoinId, getCoin, getCoinIdsByCardId } from "../../game/gameState/CoinTableComponent";
 import { getCardTexts } from "../../game/gameState/card";
+import { getGlobalEffects } from "../../game/gameState/globalEffects";
 
 const CARD_SIZE = 100;
 
@@ -22,11 +23,12 @@ export const CardView = (props: {
   size?: number,
   isShowCmd?: boolean,
   isShowInfo?: boolean,
+  isCheat?: boolean
 }) => {
   const appContext = useContext(AppContext);
   const flows = useMemo(() => {
-    return queryFlow(appContext.viewModel.model.gameState, props.clientId);
-  }, [appContext.viewModel.model.gameState, props.clientId]);
+    return appContext.viewModel.playerCommands[props.clientId] || []
+  }, [appContext.viewModel.playerCommands[props.clientId]]);
   const flow = useMemo(() => {
     return flows.find(flow => {
       switch (flow.id) {
@@ -40,6 +42,9 @@ export const CardView = (props: {
     return getCard(appContext.viewModel.model.gameState, props.cardID);
   }, [props.cardID, appContext.viewModel.model.gameState]);
   const isVisible = useMemo(() => {
+    if(props.isCheat){
+      return true
+    }
     if (card.isFaceDown) {
       const baSyou = getItemBaSyou(appContext.viewModel.model.gameState, card.id);
       switch (baSyou.value[1]) {
@@ -55,10 +60,10 @@ export const CardView = (props: {
       }
     }
     return card.isFaceDown != true
-  }, [props.clientId, card, appContext.viewModel.model.gameState]);
+  }, [props.clientId, props.isCheat, card, appContext.viewModel.model.gameState]);
   const renderBp = useMemo(() => {
     const bp = getSetGroupBattlePoint(appContext.viewModel.model.gameState, props.cardID)
-    return <div>{bp[0]}/{bp[0]}/{bp[0]}</div>
+    return <div>{bp[0]}/{bp[1]}/{bp[2]}</div>
   }, [appContext.viewModel.model.gameState, props.cardID])
   const renderCoin = useMemo(() => {
     const isRoot = getSetGroupRoot(appContext.viewModel.model.gameState, props.cardID) == props.cardID
@@ -70,6 +75,20 @@ export const CardView = (props: {
       {
         coins.map(coin => {
           return <div key={coin.id}>{JSON.stringify(coin.title)}</div>
+        })
+      }
+    </div>
+  }, [appContext.viewModel.model.gameState, props.cardID])
+  const renderGlobalEffects = useMemo(() => {
+    const isRoot = getSetGroupRoot(appContext.viewModel.model.gameState, props.cardID) == props.cardID
+    if (isRoot == false) {
+      return <></>
+    }
+    const ges = getGlobalEffects(appContext.viewModel.model.gameState, null).filter(ge => ge.cardIds.includes(props.cardID))
+    return <div>
+      {
+        ges.map((ge, i) => {
+          return <div key={i}>{JSON.stringify(ge.title)}</div>
         })
       }
     </div>
@@ -92,7 +111,8 @@ export const CardView = (props: {
           </div>
         })
       }
-      <div style={{color: "grey"}}>{proto.description}</div>
+      <div>{proto.characteristic}</div>
+      <div style={{ color: "grey" }}>{proto.description}</div>
     </div>
   }, [appContext.viewModel.model.gameState, props.cardID, props.isShowInfo])
   const renderCmds = useMemo(() => {
@@ -141,13 +161,18 @@ export const CardView = (props: {
           }}
         >
           <img src={imgSrc} style={{ height: props.size || CARD_SIZE }}></img>
-          <div hidden>{card.id}</div>
           <div hidden>{card.isFaceDown ? "O" : "X"}</div>
         </div>
-        {renderCmds}
-        {renderBp}
-        {renderCoin}
-        {renderText}
+        {
+          isVisible ? <>
+            <div>{card.id}</div>
+            {renderCmds}
+            {renderBp}
+            {renderCoin}
+            {renderGlobalEffects}
+            {renderText}
+          </> : <></>
+        }
       </div>
 
     );

@@ -3,7 +3,7 @@ const hideCategory: string[] = [
   "getPlayEffects",
   "getConditionTitleFn",
   "doEffect",
-//"applyFlow",
+//""applyFlow,
   "handleAttackDamage",
   "getGlobalEffects",
   "getEffectTips",
@@ -16,7 +16,6 @@ const hideCategory: string[] = [
   "createPlayEffects",
   "createPlayCardEffects",
   "testCompress",
-  "applyFlow"
 ];
 let filterCategory = true;
 

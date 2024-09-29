@@ -14,19 +14,19 @@ function createRollCostRequire(
 ): { [key: string]: Condition } {
   let ret: { [key: string]: Condition } = {}
   for (let i = 0; i < costNum; ++i) {
-      const key = `${i}[${color}]`
-      ret = {
-          ...ret,
-          [key]: {
-              title: ["RollColor", color],
-              actions: [
-                  {
-                      title: ["_ロールする", "ロール"],
-                      vars: [key]
-                  }
-              ]
+    const key = `${i}[${color}]`
+    ret = {
+      ...ret,
+      [key]: {
+        title: ["RollColor", color],
+        actions: [
+          {
+            title: ["_ロールする", "ロールCost"],
+            vars: [key]
           }
-      };
+        ]
+      }
+    };
   }
   return ret
 }

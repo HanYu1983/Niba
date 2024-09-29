@@ -17,7 +17,7 @@ export const prototype: CardPrototype = {
         "〔R〕": {
           actions: [
             {
-              title: ["_ロールする", "ロール"],
+              title: ["_ロールする", "ロールCost"],
             }
           ]
         },

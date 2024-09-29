@@ -32,7 +32,13 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
                 always([AbsoluteBaSyouFn.of(playerId, "手札"), AbsoluteBaSyouFn.of(playerId, "ハンガー")]),
                 map(basyou => getItemIdsByBasyou(ctx, basyou)), flatten,
                 concat(canPlayByText),
-                map(cardId => createPlayCardEffects(ctx, cardId)), flatten,
+                map(cardId => {
+                    // 指令在一個部分計算
+                    if(getItemPrototype(ctx, cardId).category == "コマンド"){
+                        return []
+                    }
+                    return createPlayCardEffects(ctx, cardId)
+                }), flatten,
             ),
             // クイック
             ifElse(
@@ -42,6 +48,10 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
                     map(basyou => getItemIdsByBasyou(ctx, basyou)), flatten,
                     concat(canPlayByText),
                     map(cardId => {
+                        // 指令在一個部分計算
+                        if(getItemPrototype(ctx, cardId).category == "コマンド"){
+                            return []
+                        }
                         logCategory("createPlayEffects", "check クイック start", cardId)
                         if (getCardHasSpeicalEffect(ctx, ["クイック"], cardId)) {
                             logCategory("createPlayEffects", "check クイック createPlayCardEffects", cardId)
@@ -110,7 +120,7 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
                     }
                 }
                 return {
-                    id: `getPlayEffects_${playerId}_${cardId}_${text.id}`,
+                    id: `createPlayEffects_${playerId}_${cardId}_${text.id}`,
                     reason: ["PlayText", playerId, cardId, text.id],
                     description: text.description,
                     text: {
@@ -153,7 +163,7 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
             case "自軍":
                 if (ctx.activePlayerID != playerId) {
                     logCategory(
-                        "getPlayEffects",
+                        "createPlayEffects",
                         `ctx.activePlayerID != ${playerId}`,
                         text.title, text.description
                     );
@@ -163,7 +173,7 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
             case "敵軍":
                 if (ctx.activePlayerID == playerId) {
                     logCategory(
-                        "getPlayEffects",
+                        "createPlayEffects",
                         `ctx.activePlayerID == ${playerId}`,
                         text.title, text.description
                     );
@@ -173,7 +183,7 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
             case "戦闘フェイズ":
                 if (ctx.phase[0] != "戦闘フェイズ") {
                     logCategory(
-                        "getPlayEffects",
+                        "createPlayEffects",
                         `ctx.timing[0] != "戦闘フェイズ"`,
                         text.title, text.description
                     );
@@ -186,7 +196,7 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
             case "帰還ステップ":
                 if (ctx.phase[0] != "戦闘フェイズ") {
                     logCategory(
-                        "getPlayEffects",
+                        "createPlayEffects",
                         `ctx.timing[0] != "戦闘フェイズ"`,
                         text.title, text.description
                     );
@@ -194,7 +204,7 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
                 }
                 if (ctx.phase[1] != siYouTiming[0]) {
                     logCategory(
-                        "getPlayEffects",
+                        "createPlayEffects",
                         `ctx.timing[1] != ${siYouTiming[0]}`,
                         text.title, text.description
                     );
@@ -210,7 +220,7 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
                     case "戦闘フェイズ":
                         if (ctx.phase[0] != siYouTiming[1]) {
                             logCategory(
-                                "getPlayEffects",
+                                "createPlayEffects",
                                 `ctx.timing[0] != ${siYouTiming[1]}`,
                                 text.title, text.description
                             );
@@ -223,17 +233,17 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
                     case "帰還ステップ":
                         if (ctx.phase[0] != "戦闘フェイズ") {
                             logCategory(
-                                "getPlayEffects",
+                                "createPlayEffects",
                                 `ctx.timing[0] != "戦闘フェイズ"`,
-                                text.title, text.description
+                                ctx.phase, text.title, text.description
                             );
                             return false;
                         }
                         if (ctx.phase[1] != siYouTiming[1]) {
                             logCategory(
-                                "getPlayEffects",
+                                "createPlayEffects",
                                 `ctx.timing[1] != ${siYouTiming[1]}`,
-                                text.title, text.description
+                                ctx.phase, text.title, text.description
                             );
                             return false;
                         }
