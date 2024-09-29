@@ -9,8 +9,6 @@
 import { CardPrototype } from "../../game/define/CardPrototype";
 import { BattleBonus } from "../../game/define/CardText";
 import { Effect } from "../../game/define/Effect";
-import { ItemStateFn } from "../../game/define/ItemState";
-import { getItemCharacteristic } from "../../game/gameState/card";
 import { GameState } from "../../game/gameState/GameState";
 import { Bridge } from "../bridge";
 
@@ -42,7 +40,7 @@ export const prototype: CardPrototype = {
                     const cardId = DefineFn.EffectFn.getCardID(effect)
                     const cardController = GameStateFn.getItemController(ctx, cardId)
                     const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "敵軍ユニット１枚", cardId)
-                    const count = GameStateFn.getItemIdsByPlayerId(ctx, true, cardController).filter(cardId => getItemCharacteristic(ctx, cardId).indexOf("T3部隊") != -1).length
+                    const count = GameStateFn.getItemIdsByPlayerId(ctx, true, cardController).filter(cardId => GameStateFn.getItemCharacteristic(ctx, cardId).indexOf("T3部隊") != -1).length
                     const bonusV = count + 1
                     const bonus: BattleBonus = [-bonusV, -bonusV, -bonusV]
                     for (const pair of pairs) {
