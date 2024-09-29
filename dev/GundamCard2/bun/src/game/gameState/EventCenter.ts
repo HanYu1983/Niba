@@ -3,6 +3,7 @@ import { Table, TableFns } from "../../tool/table"
 import { Card } from "../define/Card"
 import { Action } from "../define/CardText"
 import { Effect } from "../define/Effect"
+import { GameEvent } from "../define/GameEvent"
 import { ItemState } from "../define/ItemState"
 import { PlayerState } from "../define/PlayerState"
 import { Phase } from "../define/Timing"
@@ -17,6 +18,11 @@ function getGameStateAndAssert(ctx: any): GameState {
 }
 
 export const EventCenterFn = {
+    onEvent(_ctx: any, evt:GameEvent):any{
+        logCategory(`onEvent: ${evt.title}`)
+        let ctx = getGameStateAndAssert(_ctx)
+        return ctx
+    },
     onEffectStart(_ctx: any, effect: Effect): any {
         logCategory(`onEffectStart: ${effect.text.description}`)
         let ctx = getGameStateAndAssert(_ctx)

@@ -7,6 +7,7 @@ export const CardStackView = (props: {
   clientId: string;
   cardPosition: AbsoluteBaSyou;
   cardSize?: number;
+  isShowCardInfo?: boolean,
 }) => {
   const appContext = useContext(AppContext);
   const cards = useMemo(() => {
@@ -70,6 +71,7 @@ export const CardStackView = (props: {
                     cardID={cardID}
                     size={props.cardSize}
                     isShowCmd={true}
+                    isShowInfo={props.isShowCardInfo}
                   ></CardView>
                 );
               })}

@@ -3,15 +3,11 @@
 // 破壊
 // 『恒常』：自軍セットカードがある場合、このカードは、合計国力－２、ロールコスト－２してプレイできる。
 // （ダメージ判定ステップ）：戦闘エリアにいる、セットカードがセットされていない敵軍ユニット１枚を破壊する。その場合、カード１枚を引く。
-
-import { title } from "process";
 import { CardPrototype } from "../../game/define/CardPrototype";
 import { Effect } from "../../game/define/Effect";
 import { GameState } from "../../game/gameState/GameState";
 import { Bridge } from "../bridge";
 import { GlobalEffect } from "../../game/define/GlobalEffect";
-import { StrBaSyouPair } from "../../game/define/Tip";
-import { BaSyouKeywordFn } from "../../game/define/BaSyou";
 
 export const prototype: CardPrototype = {
   commandText: {
@@ -21,7 +17,7 @@ export const prototype: CardPrototype = {
     conditions: {
       "戦闘エリアにいる、セットカードがセットされていない敵軍ユニット１枚": {
         title: ["Entity", {
-          at: BaSyouKeywordFn.getBattleArea(),
+          at: ["戦闘エリア1", "戦闘エリア2"],
           hasSetCard: false,
           side: "敵軍",
           is: ["ユニット"],

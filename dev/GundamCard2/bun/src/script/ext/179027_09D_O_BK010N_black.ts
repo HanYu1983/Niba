@@ -43,7 +43,7 @@ export const prototype: CardPrototype = {
         const cardController = GameStateFn.getItemController(ctx, cardId)
         const evt = DefineFn.EffectFn.getEvent(effect)
         if (evt.title[0] == "GameEventOnTiming" &&
-          DefineFn.PhaseFn.eq(DefineFn.PhaseFn.getFirst(), GameStateFn.getPhase(ctx)) &&
+          DefineFn.PhaseFn.eq(DefineFn.PhaseFn.getFirst(), evt.title[1]) &&
           GameStateFn.getActivePlayerID(ctx) == cardController
         ) {
 

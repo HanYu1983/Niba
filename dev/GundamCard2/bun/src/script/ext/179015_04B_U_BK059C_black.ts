@@ -6,10 +6,8 @@
 // 強襲　〔０〕：改装［ヘイズル系］
 // 『起動』：このカードが場に出た場合、自軍本国の上のカード１～４枚を見て、その中にある、「特徴：ヘイズル系」を持つユニット１枚を、自軍ハンガーに移す事ができる。
 
-import { RelatedBaSyouFn } from "../../game/define/BaSyou";
 import { CardPrototype } from "../../game/define/CardPrototype";
 import { Effect } from "../../game/define/Effect";
-import { StrBaSyouPair } from "../../game/define/Tip";
 import { GameState } from "../../game/gameState/GameState";
 import { Bridge } from "../bridge";
 

@@ -4,7 +4,6 @@
 // <『起動』：このカードがGとして場に出た場合、〔黒２〕を支払う事ができる。その場合、自軍本国のカードを全て見て、その中にあるグラフィック１枚を、自軍ハンガーに移す事ができる。その後、自軍本国をシャッフルする>
 // （自軍ターン）：セットカード以外の敵軍オペ１枚を破壊する。
 
-import { BaSyouKeywordFn } from "../../game/define/BaSyou";
 import { CardPrototype } from "../../game/define/CardPrototype";
 import { Effect } from "../../game/define/Effect";
 import { GameState } from "../../game/gameState/GameState";
@@ -59,7 +58,7 @@ export const prototype: CardPrototype = {
       "セットカード以外の敵軍オペ１枚": {
         title: ["Entity", {
           isSetGroup: true,
-          at: BaSyouKeywordFn.getBaAll(),
+          at: ["戦闘エリア1", "戦闘エリア2", "配備エリア"],
           side: "敵軍",
           is: ["オペレーション"],
           count: 1,

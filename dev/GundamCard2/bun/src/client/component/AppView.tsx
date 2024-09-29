@@ -25,7 +25,7 @@ export function AppView() {
           <ClientView clientId={PlayerA}></ClientView>
           <ClientView clientId={PlayerB}></ClientView>
         </div>
-        <div style={{ border: "1px solid red", flex: 1 }}>
+        <div style={{ border: "1px solid red", flex: 1}}>
           <CardSelectionView clientId={PlayerA}></CardSelectionView>
         </div>
       </div>

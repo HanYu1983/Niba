@@ -18,6 +18,7 @@ import { PlayerStateFn } from "../define/PlayerState"
 import { getActivePlayerID } from "./ActivePlayerComponent"
 import { AbsoluteBaSyouFn, BaSyouKeywordFn } from "../define/BaSyou"
 import { createOnEventTitleFn } from "./createOnEventTitleFn"
+import { EventCenterFn } from "./EventCenter"
 
 // 觸發事件腳本
 // 在每次事件發生時都要呼叫
@@ -96,5 +97,6 @@ export function doTriggerEvent(
             return PlayerStateFn.onTurnEnd(ps)
         }) as GameState
     }
+    ctx = EventCenterFn.onEvent(ctx, event)
     return ctx
 }

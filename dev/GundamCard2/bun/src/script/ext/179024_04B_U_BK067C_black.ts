@@ -5,10 +5,6 @@
 // （敵軍帰還ステップ）〔黒１〕：「特徴：T3部隊」を持つ自軍ユニット１枚を持ち主の手札に移す。
 
 import { CardColor, CardPrototype } from "../../game/define/CardPrototype";
-import { Effect } from "../../game/define/Effect";
-import { GameState } from "../../game/gameState/GameState";
-import { Bridge } from "../bridge";
-import { RelatedBaSyou, RelatedBaSyouFn } from "../../game/define/BaSyou";
 import { Condition } from "../../game/define/CardText";
 
 function createRollCostRequire(
@@ -17,19 +13,19 @@ function createRollCostRequire(
 ): { [key: string]: Condition } {
   let ret: { [key: string]: Condition } = {}
   for (let i = 0; i < costNum; ++i) {
-      const key = `${i}[${color}]`
-      ret = {
-          ...ret,
-          [key]: {
-              title: ["RollColor", color],
-              actions: [
-                  {
-                      title: ["_ロールする", "ロール"],
-                      vars: [key]
-                  }
-              ]
+    const key = `${i}[${color}]`
+    ret = {
+      ...ret,
+      [key]: {
+        title: ["RollColor", color],
+        actions: [
+          {
+            title: ["_ロールする", "ロール"],
+            vars: [key]
           }
-      };
+        ]
+      }
+    };
   }
   return ret
 }
@@ -55,7 +51,7 @@ export const prototype: CardPrototype = {
         {
           actions: [
             {
-              title: ["Action", { move: RelatedBaSyouFn.of("持ち主", "手札") }],
+              title: ["Action", { move: { id: "RelatedBaSyou", value: ["持ち主", "手札"] } }],
               vars: ["「特徴：T3部隊」を持つ自軍ユニット１枚"]
             }
           ]

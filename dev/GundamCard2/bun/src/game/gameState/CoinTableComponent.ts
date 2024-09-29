@@ -44,6 +44,10 @@ export function getCardIdByCoinId(ctx: CoinTableComponent, id: string): string {
   return ctx.coinId2cardId[id]
 }
 
+export function getCoinIdsByCardId(ctx: CoinTableComponent, cardId: string): string[] {
+  return Object.keys(ctx.coinId2cardId).filter(coinId => ctx.coinId2cardId[coinId] == cardId)
+}
+
 export function getCoinOwner(ctx: CoinTableComponent, id: string): PlayerID {
   const item = getCoin(ctx, id);
   if (item.ownerID == null) {

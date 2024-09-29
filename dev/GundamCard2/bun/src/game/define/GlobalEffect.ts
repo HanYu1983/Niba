@@ -14,6 +14,7 @@ export type GlobalEffectTitle =
     | ["SpecialEffectBonus", TextSpeicalEffect, number]
     | ["場、または手札から、自軍ジャンクヤードにカードが移る場合、ジャンクヤードに移る代わりにゲームから取り除かれる"]
     | ["自軍手札にあるかのようにプレイできる"]
+    | ["3以下の合計国力を持つ敵軍コマンドの効果では無効にならない"]
 
 export type GlobalEffect = {
     title: GlobalEffectTitle,

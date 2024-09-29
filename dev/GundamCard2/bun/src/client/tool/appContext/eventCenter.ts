@@ -17,6 +17,8 @@ export type OnModelFromFirebase = {
 
 export type OnClickNewGame = {
   id: "OnClickNewGame";
+  deckA: string[],
+  deckB: string[]
 };
 
 export type OnClickChangeClient = {

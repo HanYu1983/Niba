@@ -25,6 +25,7 @@ import { createEntityIterator, EntityFn } from "../gameState/Entity";
 import { createMinusDestroyEffectAndPush } from "../gameState/doItemSetDestroy";
 import { doCutInDestroyEffectsAndClear } from "../gameState/doCutInDestroyEffectsAndClear";
 import { setNextPhase } from "../gameState/getNextPhase";
+import { getPhase } from "../gameState/PhaseComponent";
 
 export function applyFlow(
     ctx: GameStateWithFlowMemory,
@@ -149,7 +150,12 @@ export function applyFlow(
                 logCategory("applyFlow", "已經執行過triggerTextEvent");
                 return ctx;
             }
-            ctx = doTriggerEvent(ctx, flow.event) as GameStateWithFlowMemory;
+            switch(flow.event.title[0]){
+                case "GameEventOnTiming":{
+                    
+                }
+            }
+            // ctx = doTriggerEvent(ctx, flow.event) as GameStateWithFlowMemory;
             // set hasTriggerEvent
             ctx = {
                 ...ctx,
@@ -277,6 +283,7 @@ export function applyFlow(
             // 更新所有破壞而廢棄的效果
             // 若有產生值，在下一步時主動玩家就要拿到決定解決順序的指令
             ctx = createMinusDestroyEffectAndPush(ctx) as GameStateWithFlowMemory;
+            ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", getPhase(ctx)] }) as GameStateWithFlowMemory;
             return ctx;
         }
         case "FlowAddBlock": {

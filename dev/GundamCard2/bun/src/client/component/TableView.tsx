@@ -14,6 +14,7 @@ export const TableView = (props: { clientId: string }) => {
             value: [PlayerA, "手札"],
           }}
           cardSize={250}
+          isShowCardInfo={true}
         ></CardStackView>
         <CardStackView
           clientId={props.clientId}
