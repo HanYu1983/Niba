@@ -2,14 +2,31 @@
 // ロング・ブレードライフル
 // 移動　補強
 // （戦闘フェイズ）：破壊されているカード１枚を廃棄する。その場合、カード２枚を引く。
+import { CardColor, CardPrototype } from "../../game/define/CardPrototype";
+import { Condition } from "../../game/define/CardText";
 
-import { title } from "process";
-import { CardPrototype } from "../../game/define/CardPrototype";
-import { Effect } from "../../game/define/Effect";
-import { GameState } from "../../game/gameState/GameState";
-import { Bridge } from "../bridge";
-import { createRollCostRequire } from "../../game/define/CardText";
-import { RelatedBaSyou, RelatedBaSyouFn } from "../../game/define/BaSyou";
+function createRollCostRequire(
+  costNum: number,
+  color: CardColor | null
+): { [key: string]: Condition } {
+  let ret: { [key: string]: Condition } = {}
+  for (let i = 0; i < costNum; ++i) {
+      const key = `${i}[${color}]`
+      ret = {
+          ...ret,
+          [key]: {
+              title: ["RollColor", color],
+              actions: [
+                  {
+                      title: ["_ロールする", "ロール"],
+                      vars: [key]
+                  }
+              ]
+          }
+      };
+  }
+  return ret
+}
 
 export const prototype: CardPrototype = {
   commandText: {

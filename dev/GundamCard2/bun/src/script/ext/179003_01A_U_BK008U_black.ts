@@ -4,11 +4,34 @@
 // シャッコー
 // シャッコー系　MS
 // （ダメージ判定ステップ）〔２〕：このカードが戦闘ダメージで破壊されている場合、このカードを、破壊を無効にした上で自軍Gにする。
-import { CardPrototype } from "../../game/define/CardPrototype";
-import { createRollCostRequire } from "../../game/define/CardText";
+import { CardColor, CardPrototype } from "../../game/define/CardPrototype";
+import { Condition } from "../../game/define/CardText";
 import { Effect } from "../../game/define/Effect";
 import { GameState } from "../../game/gameState/GameState";
 import { Bridge } from "../bridge";
+
+function createRollCostRequire(
+  costNum: number,
+  color: CardColor | null
+): { [key: string]: Condition } {
+  let ret: { [key: string]: Condition } = {}
+  for (let i = 0; i < costNum; ++i) {
+      const key = `${i}[${color}]`
+      ret = {
+          ...ret,
+          [key]: {
+              title: ["RollColor", color],
+              actions: [
+                  {
+                      title: ["_ロールする", "ロール"],
+                      vars: [key]
+                  }
+              ]
+          }
+      };
+  }
+  return ret
+}
 
 export const prototype: CardPrototype = {
   texts: [

@@ -28818,7 +28818,7 @@ function createRollCostConditions(ctx2, proto, rollCost, bonus) {
       }
     };
   }
-  const rollCostConditions = CardColorFn.getAll().map((tc) => createRollCostRequire(Math.max(0, rollCost.filter((c) => c == tc).length - bonus), tc)).reduce((ctx3, cons) => ({ ...ctx3, ...cons }));
+  const rollCostConditions = CardColorFn.getAll().map((tc) => createRollCostRequire(Math.max(0, rollCost.filter((c) => c == tc).length + bonus), tc)).reduce((ctx3, cons) => ({ ...ctx3, ...cons }));
   return rollCostConditions;
 }
 function createPlayCardEffects(ctx2, cardId) {

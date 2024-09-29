@@ -5,7 +5,6 @@
 import { CardPrototype } from "../../game/define/CardPrototype";
 import { Effect } from "../../game/define/Effect";
 import { GlobalEffect } from "../../game/define/GlobalEffect";
-import { PhaseFn } from "../../game/define/Timing";
 import { StrBaSyouPair, Tip } from "../../game/define/Tip";
 import { GameState } from "../../game/gameState/GameState";
 import { Bridge } from "../bridge";
@@ -53,7 +52,7 @@ export const prototype: CardPrototype = {
         ]
       }
     ],
-    onEvent: ["GameEventOnTimingDoAction", PhaseFn.getLast(), { title: ["移除卡狀態_旗標", "enabled"] }],
+    onEvent: ["GameEventOnTimingDoAction", ["戦闘フェイズ", "ターン終了時", "効果終了。ターン終了"], { title: ["移除卡狀態_旗標", "enabled"] }],
     onSituation: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GlobalEffect[] {
       const cardId = DefineFn.EffectFn.getCardID(effect)
       const cs = GameStateFn.getItemState(ctx, cardId)

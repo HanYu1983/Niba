@@ -4,13 +4,35 @@
 // 強襲　〔０〕：改装［ヘイズル系］
 // （敵軍帰還ステップ）〔黒１〕：「特徴：T3部隊」を持つ自軍ユニット１枚を持ち主の手札に移す。
 
-import { title } from "process";
-import { CardPrototype } from "../../game/define/CardPrototype";
+import { CardColor, CardPrototype } from "../../game/define/CardPrototype";
 import { Effect } from "../../game/define/Effect";
 import { GameState } from "../../game/gameState/GameState";
 import { Bridge } from "../bridge";
-import { createRollCostRequire } from "../../game/define/CardText";
 import { RelatedBaSyou, RelatedBaSyouFn } from "../../game/define/BaSyou";
+import { Condition } from "../../game/define/CardText";
+
+function createRollCostRequire(
+  costNum: number,
+  color: CardColor | null
+): { [key: string]: Condition } {
+  let ret: { [key: string]: Condition } = {}
+  for (let i = 0; i < costNum; ++i) {
+      const key = `${i}[${color}]`
+      ret = {
+          ...ret,
+          [key]: {
+              title: ["RollColor", color],
+              actions: [
+                  {
+                      title: ["_ロールする", "ロール"],
+                      vars: [key]
+                  }
+              ]
+          }
+      };
+  }
+  return ret
+}
 
 export const prototype: CardPrototype = {
   texts: [

@@ -30,7 +30,7 @@ export function createRollCostConditions(ctx: GameState, proto: CardPrototype, r
         }
     }
     const rollCostConditions = CardColorFn.getAll()
-        .map(tc => createRollCostRequire(Math.max(0, rollCost.filter(c => c == tc).length - bonus), tc))
+        .map(tc => createRollCostRequire(Math.max(0, rollCost.filter(c => c == tc).length + bonus), tc))
         .reduce((ctx, cons) => ({ ...ctx, ...cons }))
     return rollCostConditions
 }

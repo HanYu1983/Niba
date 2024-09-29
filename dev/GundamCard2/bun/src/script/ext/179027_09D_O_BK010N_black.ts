@@ -3,11 +3,35 @@
 // 破壊　再生
 // 『起動』：自軍ターン開始時に、自軍本国の上のカード１枚を見て、そのカードを廃棄できる。
 // （常時）〔１〕：このカードを廃棄する。その場合、自軍ジャンクヤードにあるユニット１枚を、持ち主のハンガーに移す。
-import { CardPrototype } from "../../game/define/CardPrototype";
-import { createRollCostRequire } from "../../game/define/CardText";
+import { CardColor, CardPrototype } from "../../game/define/CardPrototype";
+import { Condition } from "../../game/define/CardText";
 import { Effect } from "../../game/define/Effect";
 import { GameState } from "../../game/gameState/GameState";
 import { Bridge } from "../bridge";
+
+function createRollCostRequire(
+  costNum: number,
+  color: CardColor | null
+): { [key: string]: Condition } {
+  let ret: { [key: string]: Condition } = {}
+  for (let i = 0; i < costNum; ++i) {
+      const key = `${i}[${color}]`
+      ret = {
+          ...ret,
+          [key]: {
+              title: ["RollColor", color],
+              actions: [
+                  {
+                      title: ["_ロールする", "ロール"],
+                      vars: [key]
+                  }
+              ]
+          }
+      };
+  }
+  return ret
+}
+
 export const prototype: CardPrototype = {
   texts: [
     {

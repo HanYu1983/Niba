@@ -1,14 +1,35 @@
-
 // 179001_01A_CH_WT007R_white
 // キラ・ヤマト
 // 男性　子供　CO
 // （戦闘フェイズ）〔２〕：このセットグループのユニットは、ターン終了時まで「速攻」を得る。
-import { title } from "process";
-import type { CardPrototype } from "../../game/define/CardPrototype";
-import { createRollCostRequire } from "../../game/define/CardText";
+import type { CardColor, CardPrototype } from "../../game/define/CardPrototype";
+import { Condition } from "../../game/define/CardText";
 import type { Effect } from "../../game/define/Effect";
 import type { GameState } from "../../game/gameState/GameState";
 import type { Bridge } from "../bridge";
+
+function createRollCostRequire(
+  costNum: number,
+  color: CardColor | null
+): { [key: string]: Condition } {
+  let ret: { [key: string]: Condition } = {}
+  for (let i = 0; i < costNum; ++i) {
+      const key = `${i}[${color}]`
+      ret = {
+          ...ret,
+          [key]: {
+              title: ["RollColor", color],
+              actions: [
+                  {
+                      title: ["_ロールする", "ロール"],
+                      vars: [key]
+                  }
+              ]
+          }
+      };
+  }
+  return ret
+}
 
 export const prototype: CardPrototype = {
   texts: [

@@ -6,8 +6,6 @@
 
 import { CardPrototype } from "../../game/define/CardPrototype";
 import { Effect } from "../../game/define/Effect";
-import { StrBaSyouPair, Tip } from "../../game/define/Tip";
-import { addImmediateEffectIfCanPayCost } from "../../game/gameState/doEffect";
 import { GameState } from "../../game/gameState/GameState";
 import { Bridge } from "../bridge";
 
@@ -45,7 +43,7 @@ export const prototype: CardPrototype = {
               ]
             }
           })
-          ctx = addImmediateEffectIfCanPayCost(ctx, newE)
+          ctx = GameStateFn.addImmediateEffectIfCanPayCost(ctx, newE)
         }
         return ctx
       }.toString(),
