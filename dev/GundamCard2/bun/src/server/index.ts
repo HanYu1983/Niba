@@ -174,7 +174,7 @@ export async function createServer() {
         } else {
             res.statusCode = 404;
             res.setHeader('Content-Type', 'text/plain; charset=utf-8'); // Added charset=utf-8 for UTF-8 support
-            res.end('Not Found\n');
+            res.end('2 Not Found\n');
         }
     });
 
