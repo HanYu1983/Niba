@@ -9,6 +9,7 @@
 import { RelatedBaSyouFn } from "../../game/define/BaSyou";
 import { CardPrototype } from "../../game/define/CardPrototype";
 import { Effect } from "../../game/define/Effect";
+import { StrBaSyouPair } from "../../game/define/Tip";
 import { GameState } from "../../game/gameState/GameState";
 import { Bridge } from "../bridge";
 
@@ -33,7 +34,25 @@ export const prototype: CardPrototype = {
                   hasChar: ["ヘイズル系"],
                   cardCategory: ["ユニット"],
                   count: 1,
-                }]
+                }],
+                // actions: [
+                //   {
+                //     title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+                //       const cardId = DefineFn.EffectFn.getCardID(effect)
+                //       const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "自軍本国の上のカード１～４枚を見て、その中にある、「特徴：ヘイズル系」を持つユニット１枚", cardId)
+                //       const validPairs = DefineFn.TipFn.getWant(GameStateFn.createTipByEntitySearch(ctx, cardId, {
+                //         see: [DefineFn.RelatedBaSyouFn.of("自軍", "本国"), 1, 4],
+                //         hasChar: ["ヘイズル系"],
+                //         cardCategory: ["ユニット"],
+                //       })) as StrBaSyouPair[]
+                //       const isValid = pairs.every(pair=> validPairs.find(vp=> pair[0] == vp[0]))
+                //       if(isValid == false){
+                //         throw new DefineFn.TipError(`select not right`)
+                //       }
+                //       return ctx
+                //     }.toString()
+                //   }
+                // ]
               }
             },
             logicTreeAction: {

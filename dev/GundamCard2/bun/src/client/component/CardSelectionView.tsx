@@ -20,14 +20,15 @@ export const CardSelectionView = (props: {
               enabled={true}
               clientId={props.clientId}
               cardID={cardID}
-              size={100}
+              size={300}
             ></CardView>
             <div>{proto.title}</div>
+            <div>{proto.description}</div>
             {
               texts.map((text, i) => {
-                return <>
+                return <div key={text.id}>
                   <div style={{border: "1px solid black"}}>{text.description}</div>
-                </>
+                </div>
               })
             }
           </div>

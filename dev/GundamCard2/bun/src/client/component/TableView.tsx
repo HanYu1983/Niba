@@ -11,13 +11,6 @@ export const TableView = (props: { clientId: string }) => {
           clientId={props.clientId}
           cardPosition={{
             id: "AbsoluteBaSyou",
-            value: [PlayerA, "本国"],
-          }}
-        ></CardStackView>
-        <CardStackView
-          clientId={props.clientId}
-          cardPosition={{
-            id: "AbsoluteBaSyou",
             value: [PlayerA, "手札"],
           }}
           cardSize={250}
@@ -28,12 +21,21 @@ export const TableView = (props: { clientId: string }) => {
             id: "AbsoluteBaSyou",
             value: [PlayerA, "ハンガー"],
           }}
+          cardSize={250}
         ></CardStackView>
         <CardStackView
           clientId={props.clientId}
           cardPosition={{
             id: "AbsoluteBaSyou",
             value: [PlayerA, "プレイされているカード"],
+          }}
+        ></CardStackView>
+        
+        <CardStackView
+          clientId={props.clientId}
+          cardPosition={{
+            id: "AbsoluteBaSyou",
+            value: [PlayerA, "Gゾーン"],
           }}
         ></CardStackView>
         <CardStackView
@@ -61,7 +63,7 @@ export const TableView = (props: { clientId: string }) => {
           clientId={props.clientId}
           cardPosition={{
             id: "AbsoluteBaSyou",
-            value: [PlayerA, "Gゾーン"],
+            value: [PlayerA, "本国"],
           }}
         ></CardStackView>
         <CardStackView

@@ -5,6 +5,7 @@ import { StrBaSyouPair, Tip, TipFn } from "../../game/define/Tip";
 import { CardView } from "./CardView";
 import { createStrBaSyouPair } from "../../game/gameState/ItemTableComponent";
 import { OnEvent } from "../tool/appContext/eventCenter";
+import { getEffect } from "../../game/gameState/EffectStackComponent";
 
 export const FlowSetTipSelectionView = (props: { clientId: string, flow: FlowSetTipSelection }) => {
   const appContext = useContext(AppContext);

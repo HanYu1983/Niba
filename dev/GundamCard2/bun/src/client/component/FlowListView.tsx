@@ -59,34 +59,29 @@ export const FlowListView = (props: { clientId: string }) => {
       return
     }
     if (flows.length) {
-      let flow: Flow | undefined = flows.find((flow) => flow.id == "FlowPassPayCost")
-      if (flow == null) {
-        flow = flows[Math.round(Math.random() * 1000) % flows.length]
-      }
-      if (flow.id == "FlowCancelPassPhase") {
+      const useFlows = flows.filter(flow => {
+        switch (flow.id) {
+          case "FlowCancelActiveEffectID":
+          case "FlowCancelActiveLogicID":
+          case "FlowCancelPassCut":
+          case "FlowCancelPassPhase":
+          case "FlowWaitPlayer":
+          case "FlowObserveEffect":
+            return false
+        }
+        return true
+      })
+      if (useFlows.length == 0) {
         return
       }
-      if (flow.id == "FlowCancelPassCut") {
-        return
-      }
-      if (flow.id == "FlowCancelActiveEffectID") {
-        return
-      }
-      if (flow.id == "FlowWaitPlayer") {
-        return
-      }
-      if (flow.id == "FlowObserveEffect") {
-        return
-      }
-      if (flow) {
-        setTimeout(() => {
-          OnEvent.next({
-            id: "OnClickFlowConfirm",
-            clientId: props.clientId,
-            flow: flow,
-          });
-        }, speed)
-      }
+      let flow = useFlows[Math.round(Math.random() * 1000) % useFlows.length]
+      setTimeout(() => {
+        OnEvent.next({
+          id: "OnClickFlowConfirm",
+          clientId: props.clientId,
+          flow: flow,
+        });
+      }, speed)
     }
   }, [appContext.viewModel.model.gameState, props.clientId, flows]);
   // ============== control panel ============= //
@@ -127,7 +122,11 @@ export const FlowListView = (props: { clientId: string }) => {
                       ></EffectView>
                     );
                   case "FlowSetTipSelection":
-                    return <FlowSetTipSelectionView clientId={props.clientId} flow={flow}></FlowSetTipSelectionView>
+                    const effect = getEffect(appContext.viewModel.model.gameState, flow.effectID)
+                    return <>
+                      <div>{effect.text.description || effect.description}</div>
+                      <FlowSetTipSelectionView clientId={props.clientId} flow={flow}></FlowSetTipSelectionView>
+                    </>
                   case "FlowSetActiveEffectID":
                     return flow.tips.map((tip) => {
                       if (tip.id == null) {

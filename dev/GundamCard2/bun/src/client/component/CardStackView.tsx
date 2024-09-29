@@ -69,6 +69,7 @@ export const CardStackView = (props: {
                     clientId={props.clientId}
                     cardID={cardID}
                     size={props.cardSize}
+                    isShowCmd={true}
                   ></CardView>
                 );
               })}

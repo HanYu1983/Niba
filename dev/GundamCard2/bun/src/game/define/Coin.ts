@@ -14,10 +14,11 @@ export type Coin = {
 }
 
 export const CoinFn = {
-    battleBonus(v: BattleBonus): Coin {
+    battleBonus(playerId:PlayerID, v: BattleBonus): Coin {
         return {
             id: ToolFn.getUUID("coin"),
-            title: ["BattleBonus", v]
+            title: ["BattleBonus", v],
+            ownerID: playerId
         }
     }
 }

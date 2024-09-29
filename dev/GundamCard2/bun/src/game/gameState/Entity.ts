@@ -13,7 +13,7 @@ import { getCutInDestroyEffects, getEffect, getEffects, isStackEffect } from "./
 import { GameState } from "./GameState";
 import { isBattle } from "./IsBattleComponent";
 import { getItemState } from "./ItemStateComponent";
-import { Item, getItemIdsByBasyou, getItem, isCard, isChip, getItemController, getItemPrototype, getItemBaSyou } from "./ItemTableComponent";
+import { Item, getItemIdsByBasyou, getItem, isCard, isChip, getItemController, getItemPrototype, getItemBaSyou, isCardLike } from "./ItemTableComponent";
 import { isSetGroupHasA } from "./setGroup";
 import { getSetGroup, getSetGroupRoot } from "./SetGroupComponent";
 
@@ -74,7 +74,7 @@ export function createEntityIterator(ctx: GameState) {
 export function createTipByEntitySearch(ctx: GameState, cardId: string, options: EntitySearchOptions): Tip {
     let entityList = createEntityIterator(ctx).filter(EntityFn.filterIsBattle(ctx, null, options.isBattle || false))
     const cheatCardIds: string[] = []
-    if(options.hasSelfCardId != null){
+    if (options.hasSelfCardId != null) {
         const absoluteBasyou = getItemBaSyou(ctx, cardId)
         entityList = entityList.filter(EntityFn.filterController(AbsoluteBaSyouFn.getPlayerID(absoluteBasyou)))
         entityList = entityList.filter(EntityFn.filterController(AbsoluteBaSyouFn.getBaSyouKeyword(absoluteBasyou)))
@@ -92,7 +92,7 @@ export function createTipByEntitySearch(ctx: GameState, cardId: string, options:
             // return tip
             throw new TipError(`must at least ${min} for see`)
         }
-        cheatCardIds.push(...entityList.map(e=>e.itemId).slice(0, max))
+        cheatCardIds.push(...entityList.map(e => e.itemId).slice(0, max))
         entityList = entityList.slice(0, max)
     }
     if (options.isCanSetCharacter != null) {
@@ -196,16 +196,25 @@ export const EntityFn = {
     },
     filterIsBattle(ctx: GameState, targetId: string | null, v: boolean) {
         return (entity: Entity) => {
+            if (isCardLike(ctx)(entity.itemId) == false) {
+                return false
+            }
             return isBattle(ctx, entity.itemId, targetId) == v
         }
     },
     filterRuntimeCategory(ctx: GameState, category: CardCategory[]) {
         return (entity: Entity) => {
+            if (isCardLike(ctx)(entity.itemId) == false) {
+                return false
+            }
             return category.includes(getItemRuntimeCategory(ctx, entity.itemId))
         }
     },
     filterCategory(ctx: GameState, category: CardCategory[]) {
         return (entity: Entity) => {
+            if (isCardLike(ctx)(entity.itemId) == false) {
+                return false
+            }
             const targetCate = getItemPrototype(ctx, entity.itemId).category
             if (targetCate == null) {
                 return false
@@ -220,16 +229,25 @@ export const EntityFn = {
     },
     filterItemColor(ctx: GameState, color: CardColor[]) {
         return (entity: Entity) => {
+            if (isCardLike(ctx)(entity.itemId) == false) {
+                return false
+            }
             return color.includes(getCardColor(ctx, entity.itemId))
         }
     },
     filterIsSetGroupRoot(ctx: GameState, v: boolean) {
         return (entity: Entity) => {
+            if (isCardLike(ctx)(entity.itemId) == false) {
+                return false
+            }
             return (getSetGroupRoot(ctx, entity.itemId) == entity.itemId) == v
         }
     },
     filterCanSetCharacter(ctx: GameState) {
         return (entity: Entity) => {
+            if (isCardLike(ctx)(entity.itemId) == false) {
+                return false
+            }
             // 有些機體可以設置2個駕駛
             const charLen = getSetGroup(ctx, entity.itemId).filter(itemId => getItemRuntimeCategory(ctx, itemId) == "キャラクター").length
             return charLen == 0
@@ -237,16 +255,25 @@ export const EntityFn = {
     },
     filterHasSetCard(ctx: GameState, v: boolean) {
         return (entity: Entity) => {
+            if (isCardLike(ctx)(entity.itemId) == false) {
+                return false
+            }
             return (getSetGroup(ctx, entity.itemId).length == 1) == v
         }
     },
     filterHasSpecialEffect(ctx: GameState, vs: TextSpeicalEffect[]) {
         return (entity: Entity) => {
+            if (isCardLike(ctx)(entity.itemId) == false) {
+                return false
+            }
             return vs.some(v => isSetGroupHasA(ctx, v, entity.itemId))
         }
     },
     filterHasChar(ctx: GameState, vs: string[]) {
         return (entity: Entity) => {
+            if (isCardLike(ctx)(entity.itemId) == false) {
+                return false
+            }
             return vs.some(v => getItemCharacteristic(ctx, entity.itemId).indexOf(v) != -1)
         }
     },

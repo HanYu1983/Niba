@@ -9,6 +9,7 @@ import { Tip, TipFn } from "../define/Tip";
 import { setActivePlayerID } from "../gameState/ActivePlayerComponent";
 import { createCardWithProtoIds, mapCardsWithBasyou } from "../gameState/CardTableComponent";
 import { createGameState, GameState } from "../gameState/GameState";
+import { shuffleItems } from "../gameState/ItemTableComponent";
 
 export type FlowMemoryComponent = {
     state: "prepareDeck" | "whoFirst" | "draw6AndConfirm" | "playing";
@@ -53,6 +54,8 @@ export function createGameStateWithFlowMemory(): GameStateWithFlowMemory {
 export function initState(ctx: GameStateWithFlowMemory, deckA: string[], deckB: string[]): GameStateWithFlowMemory {
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国"), deckA) as GameStateWithFlowMemory
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerB, "本国"), deckB) as GameStateWithFlowMemory
+    ctx = shuffleItems(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国")) as GameStateWithFlowMemory
+    ctx = shuffleItems(ctx, AbsoluteBaSyouFn.of(PlayerB, "本国")) as GameStateWithFlowMemory
     ctx = initCardFace(ctx);
     ctx = setActivePlayerID(ctx, PlayerA) as GameStateWithFlowMemory
     return ctx;

@@ -23537,7 +23537,7 @@ var require_jsx_dev_runtime = __commonJS((exports, module) => {
 var ReactDom = __toESM(require_client(), 1);
 
 // src/client/component/AppView.tsx
-var import_react13 = __toESM(require_react(), 1);
+var import_react11 = __toESM(require_react(), 1);
 
 // src/game/define/PlayerID.ts
 var exports_PlayerID = {};
@@ -23561,6 +23561,328 @@ var PlayerIDFn = {
 
 // src/client/tool/appContext/index.tsx
 var import_react = __toESM(require_react(), 1);
+
+// src/game/define/Timing.ts
+var exports_Timing = {};
+__export(exports_Timing, {
+  PhaseFn: () => PhaseFn
+});
+var PhaseFn = {
+  eq(l, r) {
+    return l[0] === r[0] && l[1] === r[1] && l[2] === r[2];
+  },
+  isFreeTiming(phase) {
+    switch (phase[0]) {
+      case "\u30C9\u30ED\u30FC\u30D5\u30A7\u30A4\u30BA":
+        return phase[1] == "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0";
+      case "\u30EA\u30ED\u30FC\u30EB\u30D5\u30A7\u30A4\u30BA":
+      case "\u914D\u5099\u30D5\u30A7\u30A4\u30BA":
+        return phase[1] == "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0";
+      case "\u6226\u95D8\u30D5\u30A7\u30A4\u30BA":
+        return phase[2] == "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0" || phase[2] == "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02";
+    }
+  },
+  getAll() {
+    return [
+      ["\u30EA\u30ED\u30FC\u30EB\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30A7\u30A4\u30BA\u958B\u59CB"],
+      ["\u30EA\u30ED\u30FC\u30EB\u30D5\u30A7\u30A4\u30BA", "\u898F\u5B9A\u306E\u52B9\u679C"],
+      ["\u30EA\u30ED\u30FC\u30EB\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
+      ["\u30EA\u30ED\u30FC\u30EB\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30A7\u30A4\u30BA\u7D42\u4E86"],
+      ["\u30C9\u30ED\u30FC\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30A7\u30A4\u30BA\u958B\u59CB"],
+      ["\u30C9\u30ED\u30FC\u30D5\u30A7\u30A4\u30BA", "\u898F\u5B9A\u306E\u52B9\u679C"],
+      ["\u30C9\u30ED\u30FC\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
+      ["\u30C9\u30ED\u30FC\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30A7\u30A4\u30BA\u7D42\u4E86"],
+      ["\u914D\u5099\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30A7\u30A4\u30BA\u958B\u59CB"],
+      ["\u914D\u5099\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
+      ["\u914D\u5099\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30A7\u30A4\u30BA\u7D42\u4E86"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u653B\u6483\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u958B\u59CB"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u653B\u6483\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u653B\u6483\u30B9\u30C6\u30C3\u30D7", "\u898F\u5B9A\u306E\u52B9\u679C"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u653B\u6483\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u653B\u6483\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u7D42\u4E86"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u958B\u59CB"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7", "\u898F\u5B9A\u306E\u52B9\u679C"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u7D42\u4E86"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u958B\u59CB"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7", "\u898F\u5B9A\u306E\u52B9\u679C"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u7D42\u4E86"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u5E30\u9084\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u958B\u59CB"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u5E30\u9084\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u5E30\u9084\u30B9\u30C6\u30C3\u30D7", "\u898F\u5B9A\u306E\u52B9\u679C"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u5E30\u9084\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u5E30\u9084\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u7D42\u4E86"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30BF\u30FC\u30F3\u7D42\u4E86\u6642", "\u30C0\u30E1\u30FC\u30B8\u30EA\u30BB\u30C3\u30C8"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30BF\u30FC\u30F3\u7D42\u4E86\u6642", "\u52B9\u679C\u89E3\u6C7A"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30BF\u30FC\u30F3\u7D42\u4E86\u6642", "\u624B\u672D\u8ABF\u6574"],
+      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30BF\u30FC\u30F3\u7D42\u4E86\u6642", "\u52B9\u679C\u7D42\u4E86\u3002\u30BF\u30FC\u30F3\u7D42\u4E86"]
+    ];
+  },
+  getFirst() {
+    const all = this.getAll();
+    return all[0];
+  },
+  getLast() {
+    const all = this.getAll();
+    return all[all.length - 1];
+  },
+  getNext(timing) {
+    const all = this.getAll();
+    const idx = (this.getSeqId(timing) + 1) % all.length;
+    return all[idx];
+  },
+  getSeqId(timing) {
+    const all = this.getAll();
+    const idx = all.findIndex((t) => this.eq(t, timing));
+    return idx;
+  }
+};
+
+// src/game/gameState/PhaseComponent.ts
+var exports_PhaseComponent = {};
+__export(exports_PhaseComponent, {
+  setPhase: () => setPhase,
+  getPhase: () => getPhase
+});
+
+// src/tool/logger.ts
+var hideCategory = [
+  "triggerEvent",
+  "getPlayEffects",
+  "getConditionTitleFn",
+  "doEffect",
+  "handleAttackDamage",
+  "getGlobalEffects",
+  "getEffectTips",
+  "createEffectTips",
+  "getActionTitleFn",
+  "getLogicTreeActionConditions",
+  "createCommandEffectTips",
+  "setEffectTips",
+  "doTriggerEvent",
+  "createPlayEffects",
+  "createPlayCardEffects",
+  "testCompress",
+  "applyFlow"
+];
+var filterCategory = true;
+var logCategory = (category, ...msg) => {
+  if (filterCategory) {
+    if (hideCategory.find((c) => c == category)) {
+      return;
+    }
+  }
+  console.log(`[${new Date().toLocaleTimeString()}][${category}]`, ...msg);
+};
+
+// src/tool/table/index.ts
+function addCard(table, position, cardId) {
+  return {
+    ...table,
+    cardStack: {
+      ...table.cardStack,
+      [position]: [...table.cardStack[position] || [], cardId]
+    }
+  };
+}
+function getCardsByPosition(table, position) {
+  if (table.cardStack[position] == null) {
+    return [];
+  }
+  return table.cardStack[position];
+}
+function moveCard(table, fromPosition, toPosition, cardId, options) {
+  if (table.cardStack[fromPosition]?.includes(cardId) != true) {
+    throw new Error(`table from ${fromPosition} not exist ${cardId}`);
+  }
+  const updatedFromStack = table.cardStack[fromPosition]?.filter((id) => id !== cardId) || [];
+  let updatedToStack = table.cardStack[toPosition] || [];
+  if (options?.insertId != null) {
+    if (options.insertId < 0) {
+      throw new Error(`insertId not < 0: ${options.insertId}`);
+    }
+    if (options.insertId == 0) {
+      updatedToStack = [cardId, ...updatedToStack];
+    } else {
+      updatedToStack = [...updatedToStack.slice(0, options.insertId), cardId, ...updatedToStack.slice(options.insertId)];
+    }
+  } else {
+    updatedToStack = [...updatedToStack, cardId];
+  }
+  return {
+    ...table,
+    cardStack: {
+      ...table.cardStack,
+      [fromPosition]: updatedFromStack,
+      [toPosition]: updatedToStack
+    }
+  };
+}
+function getCardPosition(table, cardId) {
+  for (const [key, value] of Object.entries(table.cardStack)) {
+    if (value.includes(cardId)) {
+      return key;
+    }
+  }
+  return null;
+}
+function shuffleCards(ctx2, position) {
+  const cards = ctx2.cardStack[position];
+  if (!cards)
+    return ctx2;
+  const shuffledCards = [...cards].sort(() => Math.random() - 0.5);
+  return {
+    ...ctx2,
+    cardStack: {
+      ...ctx2.cardStack,
+      [position]: shuffledCards
+    }
+  };
+}
+var DEFAULT_TABLE = {
+  cardStack: {}
+};
+var TableFns = {
+  addCard,
+  moveCard,
+  getCardPosition,
+  getCardsByPosition,
+  shuffleCards,
+  assertDup(table) {
+    for (const key in table.cardStack) {
+      const cardIdSets = {};
+      const cs = table.cardStack[key];
+      for (const cardId of cs) {
+        if (cardIdSets[cardId]) {
+          throw new Error(`dup !! ${cardId} in ${key}`);
+        }
+        cardIdSets[cardId] = true;
+      }
+    }
+  }
+};
+
+// src/game/gameState/MessageComponent.ts
+function setMessageCurrentEffect(ctx2, effect) {
+  return {
+    ...ctx2,
+    messagesCurrentEffect: effect
+  };
+}
+function getMessageCurrentEffect(ctx2) {
+  return ctx2.messagesCurrentEffect;
+}
+
+// src/game/gameState/EventCenter.ts
+function getGameStateAndAssert(ctx2) {
+  if (ctx2.isGameState != true) {
+    throw new Error(`must is gameState`);
+  }
+  return ctx2;
+}
+var EventCenterFn = {
+  onEffectStart(_ctx, effect) {
+    logCategory(`onEffectStart: ${effect.text.description}`);
+    let ctx2 = getGameStateAndAssert(_ctx);
+    ctx2 = setMessageCurrentEffect(ctx2, effect);
+    return ctx2;
+  },
+  onEffectEnd(_ctx, effect) {
+    logCategory(`onEffectEnd: ${effect.text.description}`);
+    let ctx2 = getGameStateAndAssert(_ctx);
+    ctx2 = setMessageCurrentEffect(ctx2, null);
+    return ctx2;
+  },
+  onActionStart(_ctx, effect, action) {
+    logCategory(`onActionStart: ${action.description}`);
+    let ctx2 = getGameStateAndAssert(_ctx);
+    ctx2 = setMessageCurrentEffect(ctx2, effect);
+    return ctx2;
+  },
+  onActionEnd(_ctx, effect, action) {
+    logCategory(`onActionEnd: ${action.description}`);
+    let ctx2 = getGameStateAndAssert(_ctx);
+    ctx2 = setMessageCurrentEffect(ctx2, null);
+    return ctx2;
+  },
+  onItemStateChange(_ctx, old, curr) {
+    let ctx2 = getGameStateAndAssert(_ctx);
+    let effect = getMessageCurrentEffect(ctx2);
+    return ctx2;
+  },
+  onCardChange(_ctx, old, curr) {
+    let ctx2 = getGameStateAndAssert(_ctx);
+    let effect = getMessageCurrentEffect(ctx2);
+    return ctx2;
+  },
+  onPlayerStateChange(_ctx, old, curr) {
+    let ctx2 = getGameStateAndAssert(_ctx);
+    return ctx2;
+  },
+  onSetSetGroupParent(_ctx, parentId, itemId) {
+    let ctx2 = getGameStateAndAssert(_ctx);
+    return ctx2;
+  },
+  onSetPhase(_ctx, old, curr) {
+    logCategory(`onSetPhase: ${curr}`);
+    let ctx2 = getGameStateAndAssert(_ctx);
+    return ctx2;
+  },
+  onItemAdd(_ctx, itemId) {
+    logCategory(`onItemAdd: ${itemId}`);
+    let ctx2 = getGameStateAndAssert(_ctx);
+    return ctx2;
+  },
+  onItemMove(_ctx, from, to, itemId) {
+    logCategory(`onItemMove: ${itemId} = ${from} => ${to}`);
+    let ctx2 = getGameStateAndAssert(_ctx);
+    return ctx2;
+  },
+  onItemDelete(_ctx, itemId) {
+    logCategory(`onItemDelete: ${itemId}`);
+    let ctx2 = getGameStateAndAssert(_ctx);
+    return ctx2;
+  },
+  onTableChange(_ctx, old, curr) {
+    for (const oldBasyouStr in old.cardStack) {
+      for (const itemId of old.cardStack[oldBasyouStr]) {
+        const newBasyouStr = TableFns.getCardPosition(curr, itemId);
+        if (newBasyouStr == null) {
+          _ctx = EventCenterFn.onItemDelete(_ctx, itemId);
+        } else if (newBasyouStr != oldBasyouStr) {
+        }
+      }
+    }
+    for (const newBasyouStr in curr.cardStack) {
+      for (const itemId of curr.cardStack[newBasyouStr]) {
+        const oldBasyouStr = TableFns.getCardPosition(old, itemId);
+        if (oldBasyouStr == null) {
+          _ctx = EventCenterFn.onItemAdd(_ctx, itemId);
+        } else if (newBasyouStr != oldBasyouStr) {
+          _ctx = EventCenterFn.onItemMove(_ctx, oldBasyouStr, newBasyouStr, itemId);
+        }
+      }
+    }
+    return _ctx;
+  }
+};
+
+// src/game/gameState/PhaseComponent.ts
+function setPhase(ctx2, timing) {
+  const old = ctx2.phase;
+  ctx2 = {
+    ...ctx2,
+    phase: timing
+  };
+  ctx2 = EventCenterFn.onSetPhase(ctx2, old, ctx2.phase);
+  return ctx2;
+}
+function getPhase(ctx2) {
+  return ctx2.phase;
+}
 
 // src/game/define/BaSyou.ts
 var exports_BaSyou = {};
@@ -24785,426 +25107,6 @@ var RelatedBaSyouFn = {
   }
 };
 
-// src/game/define/Timing.ts
-var exports_Timing = {};
-__export(exports_Timing, {
-  PhaseFn: () => PhaseFn
-});
-var PhaseFn = {
-  eq(l, r) {
-    return l[0] === r[0] && l[1] === r[1] && l[2] === r[2];
-  },
-  isFreeTiming(phase) {
-    switch (phase[0]) {
-      case "\u30C9\u30ED\u30FC\u30D5\u30A7\u30A4\u30BA":
-        return phase[1] == "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0";
-      case "\u30EA\u30ED\u30FC\u30EB\u30D5\u30A7\u30A4\u30BA":
-      case "\u914D\u5099\u30D5\u30A7\u30A4\u30BA":
-        return phase[1] == "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0";
-      case "\u6226\u95D8\u30D5\u30A7\u30A4\u30BA":
-        return phase[2] == "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0" || phase[2] == "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02";
-    }
-  },
-  getAll() {
-    return [
-      ["\u30EA\u30ED\u30FC\u30EB\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30A7\u30A4\u30BA\u958B\u59CB"],
-      ["\u30EA\u30ED\u30FC\u30EB\u30D5\u30A7\u30A4\u30BA", "\u898F\u5B9A\u306E\u52B9\u679C"],
-      ["\u30EA\u30ED\u30FC\u30EB\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
-      ["\u30EA\u30ED\u30FC\u30EB\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30A7\u30A4\u30BA\u7D42\u4E86"],
-      ["\u30C9\u30ED\u30FC\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30A7\u30A4\u30BA\u958B\u59CB"],
-      ["\u30C9\u30ED\u30FC\u30D5\u30A7\u30A4\u30BA", "\u898F\u5B9A\u306E\u52B9\u679C"],
-      ["\u30C9\u30ED\u30FC\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
-      ["\u30C9\u30ED\u30FC\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30A7\u30A4\u30BA\u7D42\u4E86"],
-      ["\u914D\u5099\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30A7\u30A4\u30BA\u958B\u59CB"],
-      ["\u914D\u5099\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
-      ["\u914D\u5099\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30A7\u30A4\u30BA\u7D42\u4E86"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u653B\u6483\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u958B\u59CB"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u653B\u6483\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u653B\u6483\u30B9\u30C6\u30C3\u30D7", "\u898F\u5B9A\u306E\u52B9\u679C"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u653B\u6483\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u653B\u6483\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u7D42\u4E86"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u958B\u59CB"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7", "\u898F\u5B9A\u306E\u52B9\u679C"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u7D42\u4E86"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u958B\u59CB"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7", "\u898F\u5B9A\u306E\u52B9\u679C"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u7D42\u4E86"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u5E30\u9084\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u958B\u59CB"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u5E30\u9084\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u5E30\u9084\u30B9\u30C6\u30C3\u30D7", "\u898F\u5B9A\u306E\u52B9\u679C"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u5E30\u9084\u30B9\u30C6\u30C3\u30D7", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u5E30\u9084\u30B9\u30C6\u30C3\u30D7", "\u30B9\u30C6\u30C3\u30D7\u7D42\u4E86"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30BF\u30FC\u30F3\u7D42\u4E86\u6642", "\u30C0\u30E1\u30FC\u30B8\u30EA\u30BB\u30C3\u30C8"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30BF\u30FC\u30F3\u7D42\u4E86\u6642", "\u52B9\u679C\u89E3\u6C7A"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30BF\u30FC\u30F3\u7D42\u4E86\u6642", "\u624B\u672D\u8ABF\u6574"],
-      ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u30BF\u30FC\u30F3\u7D42\u4E86\u6642", "\u52B9\u679C\u7D42\u4E86\u3002\u30BF\u30FC\u30F3\u7D42\u4E86"]
-    ];
-  },
-  getFirst() {
-    const all = this.getAll();
-    return all[0];
-  },
-  getLast() {
-    const all = this.getAll();
-    return all[all.length - 1];
-  },
-  getNext(timing) {
-    const all = this.getAll();
-    const idx = (this.getSeqId(timing) + 1) % all.length;
-    return all[idx];
-  },
-  getSeqId(timing) {
-    const all = this.getAll();
-    const idx = all.findIndex((t) => this.eq(t, timing));
-    return idx;
-  }
-};
-
-// src/game/gameState/CardTableComponent.ts
-var exports_CardTableComponent = {};
-__export(exports_CardTableComponent, {
-  setCard: () => setCard,
-  mapCardsWithBasyou: () => mapCardsWithBasyou,
-  mapCard: () => mapCard,
-  getCards: () => getCards,
-  getCardOwner: () => getCardOwner,
-  getCardIds: () => getCardIds,
-  getCard: () => getCard,
-  createCardWithProtoIds: () => createCardWithProtoIds,
-  addCards: () => addCards
-});
-
-// src/tool/table/index.ts
-function addCard(table, position, cardId) {
-  return {
-    ...table,
-    cardStack: {
-      ...table.cardStack,
-      [position]: [...table.cardStack[position] || [], cardId]
-    }
-  };
-}
-function getCardsByPosition(table, position) {
-  if (table.cardStack[position] == null) {
-    return [];
-  }
-  return table.cardStack[position];
-}
-function moveCard(table, fromPosition, toPosition, cardId, options) {
-  if (table.cardStack[fromPosition]?.includes(cardId) != true) {
-    throw new Error(`table from ${fromPosition} not exist ${cardId}`);
-  }
-  const updatedFromStack = table.cardStack[fromPosition]?.filter((id) => id !== cardId) || [];
-  let updatedToStack = table.cardStack[toPosition] || [];
-  if (options?.insertId != null) {
-    if (options.insertId < 0) {
-      throw new Error(`insertId not < 0: ${options.insertId}`);
-    }
-    if (options.insertId == 0) {
-      updatedToStack = [cardId, ...updatedToStack];
-    } else {
-      updatedToStack = [...updatedToStack.slice(0, options.insertId), cardId, ...updatedToStack.slice(options.insertId)];
-    }
-  } else {
-    updatedToStack = [...updatedToStack, cardId];
-  }
-  return {
-    ...table,
-    cardStack: {
-      ...table.cardStack,
-      [fromPosition]: updatedFromStack,
-      [toPosition]: updatedToStack
-    }
-  };
-}
-function getCardPosition(table, cardId) {
-  for (const [key, value] of Object.entries(table.cardStack)) {
-    if (value.includes(cardId)) {
-      return key;
-    }
-  }
-  return null;
-}
-function shuffleCards(ctx2, position) {
-  const cards = ctx2.cardStack[position];
-  if (!cards)
-    return ctx2;
-  const shuffledCards = [...cards].sort(() => Math.random() - 0.5);
-  return {
-    ...ctx2,
-    cardStack: {
-      ...ctx2.cardStack,
-      [position]: shuffledCards
-    }
-  };
-}
-var DEFAULT_TABLE = {
-  cardStack: {}
-};
-var TableFns = {
-  addCard,
-  moveCard,
-  getCardPosition,
-  getCardsByPosition,
-  shuffleCards,
-  assertDup(table) {
-    for (const key in table.cardStack) {
-      const cardIdSets = {};
-      const cs = table.cardStack[key];
-      for (const cardId of cs) {
-        if (cardIdSets[cardId]) {
-          throw new Error(`dup !! ${cardId} in ${key}`);
-        }
-        cardIdSets[cardId] = true;
-      }
-    }
-  }
-};
-
-// src/tool/logger.ts
-var hideCategory = [
-  "triggerEvent",
-  "getPlayEffects",
-  "getConditionTitleFn",
-  "doEffect",
-  "handleAttackDamage",
-  "getGlobalEffects",
-  "getEffectTips",
-  "createEffectTips",
-  "getActionTitleFn",
-  "getLogicTreeActionConditions",
-  "createCommandEffectTips",
-  "setEffectTips",
-  "doTriggerEvent",
-  "createPlayEffects",
-  "createPlayCardEffects",
-  "testCompress",
-  "applyFlow"
-];
-var filterCategory = true;
-var logCategory = (category, ...msg) => {
-  if (filterCategory) {
-    if (hideCategory.find((c) => c == category)) {
-      return;
-    }
-  }
-  console.log(`[${new Date().toLocaleTimeString()}][${category}]`, ...msg);
-};
-
-// src/game/gameState/MessageComponent.ts
-function setMessageCurrentEffect(ctx2, effect) {
-  return {
-    ...ctx2,
-    messagesCurrentEffect: effect
-  };
-}
-function getMessageCurrentEffect(ctx2) {
-  return ctx2.messagesCurrentEffect;
-}
-
-// src/game/gameState/EventCenter.ts
-function getGameStateAndAssert(ctx2) {
-  if (ctx2.isGameState != true) {
-    throw new Error(`must is gameState`);
-  }
-  return ctx2;
-}
-var EventCenterFn = {
-  onEffectStart(_ctx, effect) {
-    logCategory(`onEffectStart: ${effect.text.description}`);
-    let ctx2 = getGameStateAndAssert(_ctx);
-    ctx2 = setMessageCurrentEffect(ctx2, effect);
-    return ctx2;
-  },
-  onEffectEnd(_ctx, effect) {
-    logCategory(`onEffectEnd: ${effect.text.description}`);
-    let ctx2 = getGameStateAndAssert(_ctx);
-    ctx2 = setMessageCurrentEffect(ctx2, null);
-    return ctx2;
-  },
-  onActionStart(_ctx, effect, action) {
-    logCategory(`onActionStart: ${action.description}`);
-    let ctx2 = getGameStateAndAssert(_ctx);
-    ctx2 = setMessageCurrentEffect(ctx2, effect);
-    return ctx2;
-  },
-  onActionEnd(_ctx, effect, action) {
-    logCategory(`onActionEnd: ${action.description}`);
-    let ctx2 = getGameStateAndAssert(_ctx);
-    ctx2 = setMessageCurrentEffect(ctx2, null);
-    return ctx2;
-  },
-  onItemStateChange(_ctx, old, curr) {
-    let ctx2 = getGameStateAndAssert(_ctx);
-    let effect = getMessageCurrentEffect(ctx2);
-    return ctx2;
-  },
-  onCardChange(_ctx, old, curr) {
-    let ctx2 = getGameStateAndAssert(_ctx);
-    let effect = getMessageCurrentEffect(ctx2);
-    return ctx2;
-  },
-  onPlayerStateChange(_ctx, old, curr) {
-    let ctx2 = getGameStateAndAssert(_ctx);
-    return ctx2;
-  },
-  onSetSetGroupParent(_ctx, parentId, itemId) {
-    let ctx2 = getGameStateAndAssert(_ctx);
-    return ctx2;
-  },
-  onSetPhase(_ctx, old, curr) {
-    logCategory(`onSetPhase: ${curr}`);
-    let ctx2 = getGameStateAndAssert(_ctx);
-    return ctx2;
-  },
-  onItemAdd(_ctx, itemId) {
-    logCategory(`onItemAdd: ${itemId}`);
-    let ctx2 = getGameStateAndAssert(_ctx);
-    return ctx2;
-  },
-  onItemMove(_ctx, from, to, itemId) {
-    logCategory(`onItemMove: ${itemId} = ${from} => ${to}`);
-    let ctx2 = getGameStateAndAssert(_ctx);
-    return ctx2;
-  },
-  onItemDelete(_ctx, itemId) {
-    logCategory(`onItemDelete: ${itemId}`);
-    let ctx2 = getGameStateAndAssert(_ctx);
-    return ctx2;
-  },
-  onTableChange(_ctx, old, curr) {
-    for (const oldBasyouStr in old.cardStack) {
-      for (const itemId of old.cardStack[oldBasyouStr]) {
-        const newBasyouStr = TableFns.getCardPosition(curr, itemId);
-        if (newBasyouStr == null) {
-          _ctx = EventCenterFn.onItemDelete(_ctx, itemId);
-        } else if (newBasyouStr != oldBasyouStr) {
-        }
-      }
-    }
-    for (const newBasyouStr in curr.cardStack) {
-      for (const itemId of curr.cardStack[newBasyouStr]) {
-        const oldBasyouStr = TableFns.getCardPosition(old, itemId);
-        if (oldBasyouStr == null) {
-          _ctx = EventCenterFn.onItemAdd(_ctx, itemId);
-        } else if (newBasyouStr != oldBasyouStr) {
-          _ctx = EventCenterFn.onItemMove(_ctx, oldBasyouStr, newBasyouStr, itemId);
-        }
-      }
-    }
-    return _ctx;
-  }
-};
-
-// src/game/gameState/CardTableComponent.ts
-function getCard(ctx2, cardId) {
-  if (ctx2.cards[cardId] == null) {
-    throw new Error(`card not found: ${cardId}`);
-  }
-  return ctx2.cards[cardId];
-}
-function setCard(ctx2, id, card) {
-  const oldCard = getCard(ctx2, id);
-  ctx2 = {
-    ...ctx2,
-    cards: {
-      ...ctx2.cards,
-      [id]: card
-    }
-  };
-  ctx2 = EventCenterFn.onCardChange(ctx2, oldCard, getCard(ctx2, id));
-  return ctx2;
-}
-function mapCard(ctx2, id, f) {
-  return setCard(ctx2, id, f(getCard(ctx2, id)));
-}
-function getCardIds(ctx2) {
-  return Object.keys(ctx2.cards);
-}
-function getCards(ctx2) {
-  return Object.values(ctx2.cards);
-}
-function mapCardsWithBasyou(ctx2, f) {
-  return toPairs_default(ctx2.table.cardStack).map(([k, cardIds]) => {
-    const basyou = AbsoluteBaSyouFn.fromString(k);
-    const cards = cardIds.map((cardId) => getCard(ctx2, cardId));
-    return [basyou, cards];
-  }).reduce((ctx3, [basyou, cards]) => {
-    return cards.map((card) => f(basyou, card)).reduce((ctx4, card) => setCard(ctx4, card.id, card), ctx3);
-  }, ctx2);
-}
-function createCardWithProtoIds(ctx2, basyou, cardProtoIds) {
-  const cardLen = Object.keys(ctx2.cards).length;
-  ctx2 = addCards(ctx2, basyou, cardProtoIds.map((protoId, i) => {
-    const ownerID = AbsoluteBaSyouFn.getPlayerID(basyou);
-    const cardId = `${ownerID}_${cardLen + i}`;
-    return {
-      id: cardId,
-      protoID: protoId,
-      ownerID
-    };
-  }));
-  return ctx2;
-}
-function addCards(ctx2, basyou, addedCards) {
-  const old = ctx2.table;
-  ctx2 = addedCards.reduce((ctx3, newCard) => {
-    const ownerID = AbsoluteBaSyouFn.getPlayerID(basyou);
-    if (newCard.id == "") {
-      const cardLen = Object.keys(ctx3.cards).length;
-      const cardId = `${ownerID}_${cardLen}`;
-      newCard.id = cardId;
-    }
-    if (newCard.ownerID == null) {
-      newCard.ownerID = ownerID;
-    }
-    const table = TableFns.addCard(ctx3.table, AbsoluteBaSyouFn.toString(basyou), newCard.id);
-    return {
-      ...ctx3,
-      table,
-      cards: {
-        ...ctx3.cards,
-        [newCard.id]: newCard
-      }
-    };
-  }, ctx2);
-  ctx2 = EventCenterFn.onTableChange(ctx2, old, ctx2.table);
-  return ctx2;
-}
-function getCardOwner(ctx2, cardID) {
-  const card = getCard(ctx2, cardID);
-  if (card == null) {
-    throw new Error("[getCardOwner] card not found");
-  }
-  if (card.ownerID == null) {
-    throw new Error("[getCardOwner] card.ownerID not found");
-  }
-  return card.ownerID;
-}
-
-// src/game/gameState/PhaseComponent.ts
-var exports_PhaseComponent = {};
-__export(exports_PhaseComponent, {
-  setPhase: () => setPhase,
-  getPhase: () => getPhase
-});
-function setPhase(ctx2, timing) {
-  const old = ctx2.phase;
-  ctx2 = {
-    ...ctx2,
-    phase: timing
-  };
-  ctx2 = EventCenterFn.onSetPhase(ctx2, old, ctx2.phase);
-  return ctx2;
-}
-function getPhase(ctx2) {
-  return ctx2.phase;
-}
-
 // src/game/gameState/EffectStackComponent.ts
 var exports_EffectStackComponent = {};
 __export(exports_EffectStackComponent, {
@@ -25637,6 +25539,104 @@ __export(exports_ItemTableComponent, {
   addCoinsToCard: () => addCoinsToCard
 });
 
+// src/game/gameState/CardTableComponent.ts
+var exports_CardTableComponent = {};
+__export(exports_CardTableComponent, {
+  setCard: () => setCard,
+  mapCardsWithBasyou: () => mapCardsWithBasyou,
+  mapCard: () => mapCard,
+  getCards: () => getCards,
+  getCardOwner: () => getCardOwner,
+  getCardIds: () => getCardIds,
+  getCard: () => getCard,
+  createCardWithProtoIds: () => createCardWithProtoIds,
+  addCards: () => addCards
+});
+function getCard(ctx2, cardId) {
+  if (ctx2.cards[cardId] == null) {
+    throw new Error(`card not found: ${cardId}`);
+  }
+  return ctx2.cards[cardId];
+}
+function setCard(ctx2, id, card) {
+  const oldCard = getCard(ctx2, id);
+  ctx2 = {
+    ...ctx2,
+    cards: {
+      ...ctx2.cards,
+      [id]: card
+    }
+  };
+  ctx2 = EventCenterFn.onCardChange(ctx2, oldCard, getCard(ctx2, id));
+  return ctx2;
+}
+function mapCard(ctx2, id, f) {
+  return setCard(ctx2, id, f(getCard(ctx2, id)));
+}
+function getCardIds(ctx2) {
+  return Object.keys(ctx2.cards);
+}
+function getCards(ctx2) {
+  return Object.values(ctx2.cards);
+}
+function mapCardsWithBasyou(ctx2, f) {
+  return toPairs_default(ctx2.table.cardStack).map(([k, cardIds]) => {
+    const basyou = AbsoluteBaSyouFn.fromString(k);
+    const cards = cardIds.map((cardId) => getCard(ctx2, cardId));
+    return [basyou, cards];
+  }).reduce((ctx3, [basyou, cards]) => {
+    return cards.map((card) => f(basyou, card)).reduce((ctx4, card) => setCard(ctx4, card.id, card), ctx3);
+  }, ctx2);
+}
+function createCardWithProtoIds(ctx2, basyou, cardProtoIds) {
+  const cardLen = Object.keys(ctx2.cards).length;
+  ctx2 = addCards(ctx2, basyou, cardProtoIds.map((protoId, i) => {
+    const ownerID = AbsoluteBaSyouFn.getPlayerID(basyou);
+    const cardId = `${ownerID}_${cardLen + i}`;
+    return {
+      id: cardId,
+      protoID: protoId,
+      ownerID
+    };
+  }));
+  return ctx2;
+}
+function addCards(ctx2, basyou, addedCards) {
+  const old = ctx2.table;
+  ctx2 = addedCards.reduce((ctx3, newCard) => {
+    const ownerID = AbsoluteBaSyouFn.getPlayerID(basyou);
+    if (newCard.id == "") {
+      const cardLen = Object.keys(ctx3.cards).length;
+      const cardId = `${ownerID}_${cardLen}`;
+      newCard.id = cardId;
+    }
+    if (newCard.ownerID == null) {
+      newCard.ownerID = ownerID;
+    }
+    const table = TableFns.addCard(ctx3.table, AbsoluteBaSyouFn.toString(basyou), newCard.id);
+    return {
+      ...ctx3,
+      table,
+      cards: {
+        ...ctx3.cards,
+        [newCard.id]: newCard
+      }
+    };
+  }, ctx2);
+  ctx2 = EventCenterFn.onTableChange(ctx2, old, ctx2.table);
+  return ctx2;
+}
+function getCardOwner(ctx2, cardID) {
+  const card = getCard(ctx2, cardID);
+  if (card == null) {
+    throw new Error("[getCardOwner] card not found");
+  }
+  if (card.ownerID == null) {
+    throw new Error("[getCardOwner] card.ownerID not found");
+  }
+  return card.ownerID;
+}
+
 // src/game/gameState/CoinTableComponent.ts
 var exports_CoinTableComponent = {};
 __export(exports_CoinTableComponent, {
@@ -25681,7 +25681,7 @@ function getCardIdByCoinId(ctx2, id) {
 function getCoinOwner(ctx2, id) {
   const item = getCoin(ctx2, id);
   if (item.ownerID == null) {
-    throw new Error("[getChipOwner] Chip.ownerID not found");
+    throw new Error("[getChipOwner] Coin.ownerID not found");
   }
   return item.ownerID;
 }
@@ -27936,10 +27936,11 @@ __export(exports_Coin, {
   CoinFn: () => CoinFn
 });
 var CoinFn = {
-  battleBonus(v) {
+  battleBonus(playerId, v) {
     return {
       id: ToolFn.getUUID("coin"),
-      title: ["BattleBonus", v]
+      title: ["BattleBonus", v],
+      ownerID: playerId
     };
   }
 };
@@ -28122,12 +28123,24 @@ function doItemSetRollState(ctx2, isRoll, [itemId, originBasyou], options) {
   ctx2 = itemIds.reduce((ctx3, itemId2) => {
     if (isCard(ctx3, itemId2)) {
       let item = getCard(ctx3, itemId2);
+      if (options?.isSkipTargetMissing) {
+      } else {
+        if (item.isRoll == isRoll) {
+          throw new TargetMissingError(`card already roll: ${item.id}`);
+        }
+      }
       item = CardFn.setIsRoll(item, isRoll);
       ctx3 = setCard(ctx3, itemId2, item);
       return ctx3;
     }
     if (isChip(ctx3, itemId2)) {
       let item = getChip(ctx3, itemId2);
+      if (options?.isSkipTargetMissing) {
+      } else {
+        if (item.isRoll == isRoll) {
+          throw new TargetMissingError(`chip already roll: ${item.id}`);
+        }
+      }
       item = ChipFn.setIsRoll(item, isRoll);
       ctx3 = setChip(ctx3, itemId2, item);
       return ctx3;
@@ -28496,12 +28509,13 @@ function createActionTitleFn(action) {
       }
       return function(ctx2, effect) {
         const cardId = EffectFn.getCardID(effect);
+        const playerId = EffectFn.getPlayerID(effect);
         const pairs = getCardTipStrBaSyouPairs(ctx2, varNames2[0], cardId);
         if (pairs.length == 0) {
           throw new Error(`pairs must not 0: ${action.title} ${action.vars}`);
         }
         const [targetCardId, targetBasyou] = pairs[0];
-        const coins = repeat_default(CoinFn.battleBonus(bonus))(x);
+        const coins = repeat_default(CoinFn.battleBonus(playerId, bonus))(x);
         ctx2 = addCoinsToCard(ctx2, [targetCardId, targetBasyou], coins);
         return ctx2;
       };
@@ -29268,16 +29282,25 @@ var EntityFn = {
   },
   filterIsBattle(ctx2, targetId, v) {
     return (entity) => {
+      if (isCardLike(ctx2)(entity.itemId) == false) {
+        return false;
+      }
       return isBattle(ctx2, entity.itemId, targetId) == v;
     };
   },
   filterRuntimeCategory(ctx2, category) {
     return (entity) => {
+      if (isCardLike(ctx2)(entity.itemId) == false) {
+        return false;
+      }
       return category.includes(getItemRuntimeCategory(ctx2, entity.itemId));
     };
   },
   filterCategory(ctx2, category) {
     return (entity) => {
+      if (isCardLike(ctx2)(entity.itemId) == false) {
+        return false;
+      }
       const targetCate = getItemPrototype(ctx2, entity.itemId).category;
       if (targetCate == null) {
         return false;
@@ -29292,32 +29315,50 @@ var EntityFn = {
   },
   filterItemColor(ctx2, color) {
     return (entity) => {
+      if (isCardLike(ctx2)(entity.itemId) == false) {
+        return false;
+      }
       return color.includes(getCardColor(ctx2, entity.itemId));
     };
   },
   filterIsSetGroupRoot(ctx2, v) {
     return (entity) => {
+      if (isCardLike(ctx2)(entity.itemId) == false) {
+        return false;
+      }
       return getSetGroupRoot(ctx2, entity.itemId) == entity.itemId == v;
     };
   },
   filterCanSetCharacter(ctx2) {
     return (entity) => {
+      if (isCardLike(ctx2)(entity.itemId) == false) {
+        return false;
+      }
       const charLen = getSetGroup(ctx2, entity.itemId).filter((itemId) => getItemRuntimeCategory(ctx2, itemId) == "\u30AD\u30E3\u30E9\u30AF\u30BF\u30FC").length;
       return charLen == 0;
     };
   },
   filterHasSetCard(ctx2, v) {
     return (entity) => {
+      if (isCardLike(ctx2)(entity.itemId) == false) {
+        return false;
+      }
       return getSetGroup(ctx2, entity.itemId).length == 1 == v;
     };
   },
   filterHasSpecialEffect(ctx2, vs) {
     return (entity) => {
+      if (isCardLike(ctx2)(entity.itemId) == false) {
+        return false;
+      }
       return vs.some((v) => isSetGroupHasA(ctx2, v, entity.itemId));
     };
   },
   filterHasChar(ctx2, vs) {
     return (entity) => {
+      if (isCardLike(ctx2)(entity.itemId) == false) {
+        return false;
+      }
       return vs.some((v) => getItemCharacteristic(ctx2, entity.itemId).indexOf(v) != -1);
     };
   },
@@ -29543,6 +29584,7 @@ function createConditionTitleFn(condition, options) {
         const cardId = EffectFn.getCardID(effect);
         const cardController = getItemController(ctx2, cardId);
         const cardIdColors = getCardIdsCanPayRollColor(ctx2, null, cardController, color);
+        const extInfo = {};
         let colorIds = [];
         if (color == null) {
           colorIds = cardIdColors.map((gId) => gId.cardId).slice(0, 1);
@@ -30738,6 +30780,8 @@ function createGameStateWithFlowMemory() {
 function initState(ctx2, deckA, deckB) {
   ctx2 = createCardWithProtoIds(ctx2, AbsoluteBaSyouFn.of(PlayerA, "\u672C\u56FD"), deckA);
   ctx2 = createCardWithProtoIds(ctx2, AbsoluteBaSyouFn.of(PlayerB, "\u672C\u56FD"), deckB);
+  ctx2 = shuffleItems(ctx2, AbsoluteBaSyouFn.of(PlayerA, "\u672C\u56FD"));
+  ctx2 = shuffleItems(ctx2, AbsoluteBaSyouFn.of(PlayerB, "\u672C\u56FD"));
   ctx2 = initCardFace(ctx2);
   ctx2 = setActivePlayerID(ctx2, PlayerA);
   return ctx2;
@@ -31675,20 +31719,7 @@ var OnViewModel = OnEvent.pipe(scan((viewModel, evt) => {
           versionID: viewModel.model.versionID
         };
         Promise.all(TMP_DECK.concat(TMP_DECK2).map(loadPrototype));
-        ctx2.gameState = initState(ctx2.gameState, TMP_DECK.slice(12), TMP_DECK.slice(12));
-        ctx2.gameState = createCardWithProtoIds(ctx2.gameState, AbsoluteBaSyouFn.of(PlayerA, "\u624B\u672D"), TMP_DECK.slice(0, 6));
-        ctx2.gameState = createCardWithProtoIds(ctx2.gameState, AbsoluteBaSyouFn.of(PlayerA, "G\u30BE\u30FC\u30F3"), TMP_DECK.slice(6, 12));
-        ctx2.gameState = createCardWithProtoIds(ctx2.gameState, AbsoluteBaSyouFn.of(PlayerB, "\u624B\u672D"), TMP_DECK.slice(0, 6));
-        ctx2.gameState = createCardWithProtoIds(ctx2.gameState, AbsoluteBaSyouFn.of(PlayerB, "G\u30BE\u30FC\u30F3"), TMP_DECK.slice(6, 12));
-        ctx2.gameState = {
-          ...ctx2.gameState,
-          phase: ["\u914D\u5099\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"],
-          flowMemory: {
-            ...ctx2.gameState.flowMemory,
-            state: "playing"
-          }
-        };
-        ctx2.gameState = updateCommand(ctx2.gameState);
+        ctx2.gameState = initState(ctx2.gameState, TMP_DECK, TMP_DECK);
         return { ...DEFAULT_VIEW_MODEL, model: ctx2 };
       }
       case "OnClickFlowConfirm": {
@@ -31699,6 +31730,7 @@ var OnViewModel = OnEvent.pipe(scan((viewModel, evt) => {
             ...viewModel.model,
             gameState
           },
+          cardSelection: [],
           localMemory: {
             clientId: evt.clientId,
             timing: getPhase(gameState),
@@ -31762,10 +31794,10 @@ var AppContextProvider = (props) => {
 };
 
 // src/client/component/ClientView.tsx
-var import_react10 = __toESM(require_react(), 1);
+var import_react8 = __toESM(require_react(), 1);
 
 // src/client/component/FlowListView.tsx
-var import_react7 = __toESM(require_react(), 1);
+var import_react5 = __toESM(require_react(), 1);
 
 // src/game/gameState/createAttackPhaseRuleEffect.ts
 function createAttackPhaseRuleEffect(ctx2, playerId) {
@@ -32619,7 +32651,7 @@ function queryFlow(ctx2, playerID) {
 }
 
 // src/client/component/EffectView.tsx
-var import_react5 = __toESM(require_react(), 1);
+var import_react3 = __toESM(require_react(), 1);
 
 // src/client/component/CardView.tsx
 var import_react2 = __toESM(require_react(), 1);
@@ -32663,23 +32695,35 @@ var CardView = (props) => {
     const imgSrc = isVisible ? getImgSrc(card.protoID || "unknown") : "https://particle-979.appspot.com/common/images/card/cardback_0.jpg";
     const isSelect = appContext.viewModel.cardSelection.includes(card.id);
     return /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
-      style: {
-        border: "2px solid black",
-        ...isSelect ? { border: "2px solid red" } : null,
-        ...card.isRoll ? { transform: "rotate(90deg)" } : null
-      },
-      onClick: () => {
-        if (props.enabled == false) {
-          return;
-        }
-        OnEvent.next({ id: "OnClickCardEvent", card });
-      },
       children: [
-        /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("img", {
-          src: imgSrc,
-          style: { height: props.size || CARD_SIZE }
-        }, undefined, false, undefined, this),
-        flow?.id == "FlowSetActiveEffectID" ? flow.tips.filter((e) => EffectFn.getCardID(e) == props.cardID).map((tip) => {
+        /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
+          style: {
+            border: "2px solid black",
+            ...isSelect ? { border: "2px solid red" } : null,
+            ...card.isRoll ? { transform: "rotate(90deg)" } : null
+          },
+          onClick: () => {
+            if (props.enabled == false) {
+              return;
+            }
+            OnEvent.next({ id: "OnClickCardEvent", card });
+          },
+          children: [
+            /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("img", {
+              src: imgSrc,
+              style: { height: props.size || CARD_SIZE }
+            }, undefined, false, undefined, this),
+            /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
+              hidden: true,
+              children: card.id
+            }, undefined, false, undefined, this),
+            /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
+              hidden: true,
+              children: card.isFaceDown ? "O" : "X"
+            }, undefined, false, undefined, this)
+          ]
+        }, undefined, true, undefined, this),
+        props.isShowCmd && flow?.id == "FlowSetActiveEffectID" ? flow.tips.filter((e) => EffectFn.getCardID(e) == props.cardID).map((tip) => {
           if (tip.id == null) {
             return /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
               children: "hide"
@@ -32700,113 +32744,18 @@ var CardView = (props) => {
               }, undefined, false, undefined, this)
             }, undefined, false, undefined, this)
           }, tip.id, false, undefined, this);
-        }) : /* @__PURE__ */ jsx_dev_runtime2.jsxDEV(jsx_dev_runtime2.Fragment, {}, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
-          hidden: true,
-          children: card.id
-        }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
-          hidden: true,
-          children: card.isFaceDown ? "O" : "X"
-        }, undefined, false, undefined, this)
+        }) : /* @__PURE__ */ jsx_dev_runtime2.jsxDEV(jsx_dev_runtime2.Fragment, {}, undefined, false, undefined, this)
       ]
     }, undefined, true, undefined, this);
-  }, [card, isVisible, appContext.viewModel.cardSelection, props.enabled, flow]);
+  }, [card, isVisible, appContext.viewModel.cardSelection, props, flow]);
   return render;
-};
-
-// src/client/component/RequireView.tsx
-var import_react4 = __toESM(require_react(), 1);
-
-// src/client/component/TargetTypeView.tsx
-var import_react3 = __toESM(require_react(), 1);
-var jsx_dev_runtime3 = __toESM(require_jsx_dev_runtime(), 1);
-var TargetTypeView = (props) => {
-  const render = import_react3.useMemo(() => {
-    switch (props.target.title[0]) {
-      case "\u30AB\u30FC\u30C9": {
-        const pairs = TipFn.getSelection(props.target);
-        return pairs.map((pair3, i) => {
-          const [cardId, _] = pair3;
-          return /* @__PURE__ */ jsx_dev_runtime3.jsxDEV(CardView, {
-            enabled: false,
-            cardID: cardId,
-            clientId: props.clientId
-          }, i, false, undefined, this);
-        });
-      }
-      case "\u30C6\u30AD\u30B9\u30C8":
-      case "StringOptions": {
-        const values = TipFn.getSelection(props.target);
-        return values.map((v, i) => {
-          return /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("div", {
-            children: JSON.stringify(v)
-          }, i, false, undefined, this);
-        });
-      }
-    }
-  }, [props]);
-  return render;
-};
-
-// src/client/component/RequireView.tsx
-var jsx_dev_runtime4 = __toESM(require_jsx_dev_runtime(), 1);
-var RequireView = (props) => {
-  const appContext = import_react4.useContext(AppContext);
-  const render = import_react4.useMemo(() => {
-    const tipOrEs = createEffectTips(appContext.viewModel.model.gameState, props.effect, 0, 0);
-    return /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("div", {
-      style: { border: "1px solid black" },
-      children: tipOrEs.map((tipOrE, i) => {
-        const responsePlayer = EffectFn.getPlayerID(props.effect);
-        const isTargetOwner = responsePlayer == props.clientId;
-        return /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("div", {
-          style: { border: "1px solid black" },
-          children: [
-            isTargetOwner ? /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("button", {
-              onClick: () => {
-                OnEvent.next({
-                  id: "OnClickRequireTargetConfirm",
-                  clientId: props.clientId,
-                  effect: props.effect,
-                  condition: props.conditions[tipOrE.conditionKey],
-                  conditionKey: tipOrE.conditionKey
-                });
-              },
-              children: [
-                "\u8A2D\u5B9A",
-                tipOrE.conditionKey
-              ]
-            }, undefined, true, undefined, this) : null,
-            tipOrE.tip == null ? /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("div", {
-              children: "tip not found"
-            }, undefined, false, undefined, this) : /* @__PURE__ */ jsx_dev_runtime4.jsxDEV(TargetTypeView, {
-              clientId: props.clientId,
-              effect: props.effect,
-              target: tipOrE.tip
-            }, undefined, false, undefined, this)
-          ]
-        }, i, true, undefined, this);
-      })
-    }, undefined, false, undefined, this);
-  }, [
-    appContext.viewModel.model.gameState,
-    props
-  ]);
-  return /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("div", {
-    style: { border: "1px solid black" },
-    children: [
-      props.effect.id,
-      render
-    ]
-  }, undefined, true, undefined, this);
 };
 
 // src/client/component/EffectView.tsx
-var jsx_dev_runtime5 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime3 = __toESM(require_jsx_dev_runtime(), 1);
 var EffectView = (props) => {
-  const appContext = import_react5.useContext(AppContext);
-  const block = import_react5.useMemo(() => {
+  const appContext = import_react3.useContext(AppContext);
+  const block = import_react3.useMemo(() => {
     try {
       return getEffectIncludePlayerCommand(appContext.viewModel.model.gameState, props.effectID);
     } catch (e) {
@@ -32815,11 +32764,11 @@ var EffectView = (props) => {
     }
   }, [appContext.viewModel.model.gameState, props.effectID]);
   if (typeof block == "string") {
-    return /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
+    return /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("div", {
       children: block
     }, undefined, false, undefined, this);
   }
-  const cardID = import_react5.useMemo(() => {
+  const cardID = import_react3.useMemo(() => {
     switch (block.reason[0]) {
       case "Destroy":
       case "Event":
@@ -32832,40 +32781,36 @@ var EffectView = (props) => {
         return null;
     }
   }, [block]);
-  const render = import_react5.useMemo(() => {
-    return /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
+  const render = import_react3.useMemo(() => {
+    return /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("div", {
       style: { display: "flex" },
       children: [
-        /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
+        /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("div", {
           style: { flex: 1 },
           children: block.isOption ? "\u53EF\u53D6\u6D88" : "\u4E0D\u53EF\u53D6\u6D88"
         }, undefined, false, undefined, this),
-        cardID != null ? /* @__PURE__ */ jsx_dev_runtime5.jsxDEV(CardView, {
+        cardID != null ? /* @__PURE__ */ jsx_dev_runtime3.jsxDEV(CardView, {
           enabled: false,
           clientId: props.clientId,
-          cardID
-        }, undefined, false, undefined, this) : /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
+          cardID,
+          isShowCmd: false
+        }, undefined, false, undefined, this) : /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("div", {
           children: JSON.stringify(block.reason)
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
+        /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("div", {
           style: { flex: 4 },
           children: [
-            /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
+            /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("div", {
               children: block.id
             }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
+            /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("div", {
               children: [
                 block.description,
                 "(",
                 cardID,
                 ")"
               ]
-            }, undefined, true, undefined, this),
-            props.enabled && block.text.conditions ? /* @__PURE__ */ jsx_dev_runtime5.jsxDEV(RequireView, {
-              clientId: props.clientId,
-              effect: block,
-              conditions: block.text.conditions
-            }, undefined, false, undefined, this) : null
+            }, undefined, true, undefined, this)
           ]
         }, undefined, true, undefined, this)
       ]
@@ -32875,23 +32820,23 @@ var EffectView = (props) => {
 };
 
 // src/client/component/FlowSetTipSelectionView.tsx
-var import_react6 = __toESM(require_react(), 1);
-var jsx_dev_runtime6 = __toESM(require_jsx_dev_runtime(), 1);
+var import_react4 = __toESM(require_react(), 1);
+var jsx_dev_runtime4 = __toESM(require_jsx_dev_runtime(), 1);
 var FlowSetTipSelectionView = (props) => {
-  const appContext = import_react6.useContext(AppContext);
-  const renderWant = import_react6.useMemo(() => {
+  const appContext = import_react4.useContext(AppContext);
+  const renderWant = import_react4.useMemo(() => {
     const wants = TipFn.getWant(props.flow.tip);
     switch (props.flow.tip.title[0]) {
       case "\u30AB\u30FC\u30C9": {
         const pairs = wants;
         const cardIds = pairs.map((p) => p[0]);
-        return /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
+        return /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("div", {
           style: {
             display: "flex",
             border: "2px solid black",
             overflow: "scroll"
           },
-          children: cardIds.map((cardId) => /* @__PURE__ */ jsx_dev_runtime6.jsxDEV(CardView, {
+          children: cardIds.map((cardId) => /* @__PURE__ */ jsx_dev_runtime4.jsxDEV(CardView, {
             enabled: true,
             clientId: props.clientId,
             cardID: cardId,
@@ -32900,14 +32845,14 @@ var FlowSetTipSelectionView = (props) => {
         }, undefined, false, undefined, this);
       }
     }
-    return /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
+    return /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("div", {
       children: [
         "not support ",
         props.flow.tip.title[0]
       ]
     }, undefined, true, undefined, this);
   }, [props]);
-  const userSelection = import_react6.useMemo(() => {
+  const userSelection = import_react4.useMemo(() => {
     const wants = TipFn.getWant(props.flow.tip);
     switch (props.flow.tip.title[0]) {
       case "\u30AB\u30FC\u30C9": {
@@ -32919,7 +32864,7 @@ var FlowSetTipSelectionView = (props) => {
     }
     return [];
   }, [props, appContext.viewModel.cardSelection]);
-  const userTip = import_react6.useMemo(() => {
+  const userTip = import_react4.useMemo(() => {
     const tip = {
       ...props.flow.tip,
       title: [
@@ -32930,23 +32875,23 @@ var FlowSetTipSelectionView = (props) => {
     };
     return tip;
   }, [props, userSelection, appContext.viewModel.model.gameState]);
-  const renderCheckTip = import_react6.useMemo(() => {
+  const renderCheckTip = import_react4.useMemo(() => {
     const error = TipFn.checkTipSatisfies(userTip);
     if (error) {
-      return /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
+      return /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("div", {
         children: error.message
       }, undefined, false, undefined, this);
     }
-    return /* @__PURE__ */ jsx_dev_runtime6.jsxDEV(jsx_dev_runtime6.Fragment, {
+    return /* @__PURE__ */ jsx_dev_runtime4.jsxDEV(jsx_dev_runtime4.Fragment, {
       children: "OK"
     }, undefined, false, undefined, this);
   }, [userTip]);
-  const renderButton = import_react6.useMemo(() => {
+  const renderButton = import_react4.useMemo(() => {
     const flow = {
       ...props.flow,
       tip: userTip
     };
-    return /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("button", {
+    return /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("button", {
       onClick: () => {
         OnEvent.next({
           id: "OnClickFlowConfirm",
@@ -32957,9 +32902,9 @@ var FlowSetTipSelectionView = (props) => {
       children: renderCheckTip
     }, undefined, false, undefined, this);
   }, [renderCheckTip, userTip]);
-  const render = import_react6.useMemo(() => {
-    return /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
-      children: /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
+  const render = import_react4.useMemo(() => {
+    return /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("div", {
+      children: /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("div", {
         children: [
           renderWant,
           renderButton
@@ -32971,13 +32916,13 @@ var FlowSetTipSelectionView = (props) => {
 };
 
 // src/client/component/FlowListView.tsx
-var jsx_dev_runtime7 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime5 = __toESM(require_jsx_dev_runtime(), 1);
 var FlowListView = (props) => {
-  const appContext = import_react7.useContext(AppContext);
-  const flows = import_react7.useMemo(() => {
+  const appContext = import_react5.useContext(AppContext);
+  const flows = import_react5.useMemo(() => {
     return queryFlow(appContext.viewModel.model.gameState, props.clientId);
   }, [appContext.viewModel.model.gameState, props.clientId]);
-  import_react7.useEffect(() => {
+  import_react5.useEffect(() => {
     const speed = 50;
     const isPlayerControl = true;
     if (isPlayerControl && props.clientId == PlayerA) {
@@ -33017,43 +32962,38 @@ var FlowListView = (props) => {
       return;
     }
     if (flows.length) {
-      let flow = flows.find((flow2) => flow2.id == "FlowPassPayCost");
-      if (flow == null) {
-        flow = flows[Math.round(Math.random() * 1000) % flows.length];
-      }
-      if (flow.id == "FlowCancelPassPhase") {
+      const useFlows = flows.filter((flow2) => {
+        switch (flow2.id) {
+          case "FlowCancelActiveEffectID":
+          case "FlowCancelActiveLogicID":
+          case "FlowCancelPassCut":
+          case "FlowCancelPassPhase":
+          case "FlowWaitPlayer":
+          case "FlowObserveEffect":
+            return false;
+        }
+        return true;
+      });
+      if (useFlows.length == 0) {
         return;
       }
-      if (flow.id == "FlowCancelPassCut") {
-        return;
-      }
-      if (flow.id == "FlowCancelActiveEffectID") {
-        return;
-      }
-      if (flow.id == "FlowWaitPlayer") {
-        return;
-      }
-      if (flow.id == "FlowObserveEffect") {
-        return;
-      }
-      if (flow) {
-        setTimeout(() => {
-          OnEvent.next({
-            id: "OnClickFlowConfirm",
-            clientId: props.clientId,
-            flow
-          });
-        }, speed);
-      }
+      let flow = useFlows[Math.round(Math.random() * 1000) % useFlows.length];
+      setTimeout(() => {
+        OnEvent.next({
+          id: "OnClickFlowConfirm",
+          clientId: props.clientId,
+          flow
+        });
+      }, speed);
     }
   }, [appContext.viewModel.model.gameState, props.clientId, flows]);
-  const renderControlPanel = import_react7.useMemo(() => {
-    return /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("div", {
+  const renderControlPanel = import_react5.useMemo(() => {
+    return /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
       children: flows.map((flow, i) => {
-        return /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("div", {
+        return /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
           style: { border: "1px solid black" },
           children: [
-            /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("button", {
+            /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("button", {
               onClick: () => {
                 OnEvent.next({
                   id: "OnClickFlowConfirm",
@@ -33071,33 +33011,41 @@ var FlowListView = (props) => {
             (() => {
               switch (flow.id) {
                 case "FlowPassPayCost":
-                  return /* @__PURE__ */ jsx_dev_runtime7.jsxDEV(EffectView, {
+                  return /* @__PURE__ */ jsx_dev_runtime5.jsxDEV(EffectView, {
                     enabled: true,
                     clientId: props.clientId,
                     effectID: flow.effectID
                   }, undefined, false, undefined, this);
                 case "FlowDoEffect":
                 case "FlowObserveEffect":
-                  return /* @__PURE__ */ jsx_dev_runtime7.jsxDEV(EffectView, {
+                  return /* @__PURE__ */ jsx_dev_runtime5.jsxDEV(EffectView, {
                     enabled: false,
                     clientId: props.clientId,
                     effectID: flow.effectID
                   }, undefined, false, undefined, this);
                 case "FlowSetTipSelection":
-                  return /* @__PURE__ */ jsx_dev_runtime7.jsxDEV(FlowSetTipSelectionView, {
-                    clientId: props.clientId,
-                    flow
-                  }, undefined, false, undefined, this);
+                  const effect = getEffect(appContext.viewModel.model.gameState, flow.effectID);
+                  return /* @__PURE__ */ jsx_dev_runtime5.jsxDEV(jsx_dev_runtime5.Fragment, {
+                    children: [
+                      /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
+                        children: effect.text.description || effect.description
+                      }, undefined, false, undefined, this),
+                      /* @__PURE__ */ jsx_dev_runtime5.jsxDEV(FlowSetTipSelectionView, {
+                        clientId: props.clientId,
+                        flow
+                      }, undefined, false, undefined, this)
+                    ]
+                  }, undefined, true, undefined, this);
                 case "FlowSetActiveEffectID":
                   return flow.tips.map((tip) => {
                     if (tip.id == null) {
-                      return /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("div", {
+                      return /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
                         children: "hide"
                       }, undefined, false, undefined, this);
                     }
-                    return /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("div", {
-                      children: tip.reason[0] == "GameRule" ? /* @__PURE__ */ jsx_dev_runtime7.jsxDEV(jsx_dev_runtime7.Fragment, {
-                        children: /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("button", {
+                    return /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
+                      children: tip.reason[0] == "GameRule" ? /* @__PURE__ */ jsx_dev_runtime5.jsxDEV(jsx_dev_runtime5.Fragment, {
+                        children: /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("button", {
                           onClick: () => {
                             OnEvent.next({
                               id: "OnClickFlowConfirm",
@@ -33112,11 +33060,11 @@ var FlowListView = (props) => {
                             ")"
                           ]
                         }, undefined, true, undefined, this)
-                      }, undefined, false, undefined, this) : /* @__PURE__ */ jsx_dev_runtime7.jsxDEV(jsx_dev_runtime7.Fragment, {}, undefined, false, undefined, this)
+                      }, undefined, false, undefined, this) : /* @__PURE__ */ jsx_dev_runtime5.jsxDEV(jsx_dev_runtime5.Fragment, {}, undefined, false, undefined, this)
                     }, tip.id, false, undefined, this);
                   });
                 default:
-                  return /* @__PURE__ */ jsx_dev_runtime7.jsxDEV(jsx_dev_runtime7.Fragment, {}, undefined, false, undefined, this);
+                  return /* @__PURE__ */ jsx_dev_runtime5.jsxDEV(jsx_dev_runtime5.Fragment, {}, undefined, false, undefined, this);
               }
             })()
           ]
@@ -33128,27 +33076,27 @@ var FlowListView = (props) => {
 };
 
 // src/client/component/TableView.tsx
-var import_react9 = __toESM(require_react(), 1);
+var import_react7 = __toESM(require_react(), 1);
 
 // src/client/component/CardStackView.tsx
-var import_react8 = __toESM(require_react(), 1);
-var jsx_dev_runtime8 = __toESM(require_jsx_dev_runtime(), 1);
+var import_react6 = __toESM(require_react(), 1);
+var jsx_dev_runtime6 = __toESM(require_jsx_dev_runtime(), 1);
 var CardStackView = (props) => {
-  const appContext = import_react8.useContext(AppContext);
-  const cards = import_react8.useMemo(() => {
+  const appContext = import_react6.useContext(AppContext);
+  const cards = import_react6.useMemo(() => {
     return appContext.viewModel.model.gameState.table.cardStack[AbsoluteBaSyouFn.toString(props.cardPosition)] || [];
   }, [
     props.cardPosition,
     appContext.viewModel.model.gameState.table.cardStack
   ]);
-  const cardsOnlySetGroupRoot = import_react8.useMemo(() => {
+  const cardsOnlySetGroupRoot = import_react6.useMemo(() => {
     return cards.filter((cardId) => {
       return appContext.viewModel.model.gameState.setGroup.itemGroupParent[cardId] == null;
     });
   }, [cards, appContext.viewModel.model.gameState.setGroup.itemGroupParent]);
-  const render = import_react8.useMemo(() => {
+  const render = import_react6.useMemo(() => {
     const _cardPositionID = AbsoluteBaSyouFn.toString(props.cardPosition);
-    return /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
+    return /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
       style: {
         display: "flex",
         border: "2px solid black",
@@ -33156,8 +33104,8 @@ var CardStackView = (props) => {
         ...appContext.viewModel.cardPositionSelection.includes(_cardPositionID) ? { border: "2px solid red" } : null
       },
       children: [
-        /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
-          children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("button", {
+        /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
+          children: /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("button", {
             onClick: () => {
             },
             children: [
@@ -33173,14 +33121,15 @@ var CardStackView = (props) => {
               return appContext.viewModel.model.gameState.setGroup.itemGroupParent[setCardID] == rootCardId;
             })
           ];
-          return /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
+          return /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
             style: { border: "3px solid blue", display: "flex" },
             children: cardsInSetGroup.map((cardID, i) => {
-              return /* @__PURE__ */ jsx_dev_runtime8.jsxDEV(CardView, {
+              return /* @__PURE__ */ jsx_dev_runtime6.jsxDEV(CardView, {
                 enabled: true,
                 clientId: props.clientId,
                 cardID,
-                size: props.cardSize
+                size: props.cardSize,
+                isShowCmd: true
               }, cardID, false, undefined, this);
             })
           }, rootCardId, false, undefined, this);
@@ -33197,19 +33146,12 @@ var CardStackView = (props) => {
 };
 
 // src/client/component/TableView.tsx
-var jsx_dev_runtime9 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime7 = __toESM(require_jsx_dev_runtime(), 1);
 var TableView = (props) => {
-  const renderGame = import_react9.useMemo(() => {
-    return /* @__PURE__ */ jsx_dev_runtime9.jsxDEV(jsx_dev_runtime9.Fragment, {
+  const renderGame = import_react7.useMemo(() => {
+    return /* @__PURE__ */ jsx_dev_runtime7.jsxDEV(jsx_dev_runtime7.Fragment, {
       children: [
-        /* @__PURE__ */ jsx_dev_runtime9.jsxDEV(CardStackView, {
-          clientId: props.clientId,
-          cardPosition: {
-            id: "AbsoluteBaSyou",
-            value: [PlayerA, "\u672C\u56FD"]
-          }
-        }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime9.jsxDEV(CardStackView, {
+        /* @__PURE__ */ jsx_dev_runtime7.jsxDEV(CardStackView, {
           clientId: props.clientId,
           cardPosition: {
             id: "AbsoluteBaSyou",
@@ -33217,126 +33159,134 @@ var TableView = (props) => {
           },
           cardSize: 250
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime9.jsxDEV(CardStackView, {
+        /* @__PURE__ */ jsx_dev_runtime7.jsxDEV(CardStackView, {
           clientId: props.clientId,
           cardPosition: {
             id: "AbsoluteBaSyou",
             value: [PlayerA, "\u30CF\u30F3\u30AC\u30FC"]
-          }
+          },
+          cardSize: 250
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime9.jsxDEV(CardStackView, {
+        /* @__PURE__ */ jsx_dev_runtime7.jsxDEV(CardStackView, {
           clientId: props.clientId,
           cardPosition: {
             id: "AbsoluteBaSyou",
             value: [PlayerA, "\u30D7\u30EC\u30A4\u3055\u308C\u3066\u3044\u308B\u30AB\u30FC\u30C9"]
           }
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime9.jsxDEV(CardStackView, {
-          clientId: props.clientId,
-          cardPosition: {
-            id: "AbsoluteBaSyou",
-            value: [PlayerA, "\u914D\u5099\u30A8\u30EA\u30A2"]
-          }
-        }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime9.jsxDEV(CardStackView, {
-          clientId: props.clientId,
-          cardPosition: {
-            id: "AbsoluteBaSyou",
-            value: [PlayerA, "\u6226\u95D8\u30A8\u30EA\u30A21"]
-          }
-        }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime9.jsxDEV(CardStackView, {
-          clientId: props.clientId,
-          cardPosition: {
-            id: "AbsoluteBaSyou",
-            value: [PlayerA, "\u6226\u95D8\u30A8\u30EA\u30A22"]
-          }
-        }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime9.jsxDEV(CardStackView, {
+        /* @__PURE__ */ jsx_dev_runtime7.jsxDEV(CardStackView, {
           clientId: props.clientId,
           cardPosition: {
             id: "AbsoluteBaSyou",
             value: [PlayerA, "G\u30BE\u30FC\u30F3"]
           }
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime9.jsxDEV(CardStackView, {
+        /* @__PURE__ */ jsx_dev_runtime7.jsxDEV(CardStackView, {
+          clientId: props.clientId,
+          cardPosition: {
+            id: "AbsoluteBaSyou",
+            value: [PlayerA, "\u914D\u5099\u30A8\u30EA\u30A2"]
+          }
+        }, undefined, false, undefined, this),
+        /* @__PURE__ */ jsx_dev_runtime7.jsxDEV(CardStackView, {
+          clientId: props.clientId,
+          cardPosition: {
+            id: "AbsoluteBaSyou",
+            value: [PlayerA, "\u6226\u95D8\u30A8\u30EA\u30A21"]
+          }
+        }, undefined, false, undefined, this),
+        /* @__PURE__ */ jsx_dev_runtime7.jsxDEV(CardStackView, {
+          clientId: props.clientId,
+          cardPosition: {
+            id: "AbsoluteBaSyou",
+            value: [PlayerA, "\u6226\u95D8\u30A8\u30EA\u30A22"]
+          }
+        }, undefined, false, undefined, this),
+        /* @__PURE__ */ jsx_dev_runtime7.jsxDEV(CardStackView, {
+          clientId: props.clientId,
+          cardPosition: {
+            id: "AbsoluteBaSyou",
+            value: [PlayerA, "\u672C\u56FD"]
+          }
+        }, undefined, false, undefined, this),
+        /* @__PURE__ */ jsx_dev_runtime7.jsxDEV(CardStackView, {
           clientId: props.clientId,
           cardPosition: {
             id: "AbsoluteBaSyou",
             value: [PlayerA, "\u6368\u3066\u5C71"]
           }
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime9.jsxDEV(CardStackView, {
+        /* @__PURE__ */ jsx_dev_runtime7.jsxDEV(CardStackView, {
           clientId: props.clientId,
           cardPosition: {
             id: "AbsoluteBaSyou",
             value: [PlayerA, "\u30B8\u30E3\u30F3\u30AF\u30E4\u30FC\u30C9"]
           }
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime9.jsxDEV(CardStackView, {
+        /* @__PURE__ */ jsx_dev_runtime7.jsxDEV(CardStackView, {
           clientId: props.clientId,
           cardPosition: {
             id: "AbsoluteBaSyou",
             value: [PlayerB, "\u672C\u56FD"]
           }
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime9.jsxDEV(CardStackView, {
+        /* @__PURE__ */ jsx_dev_runtime7.jsxDEV(CardStackView, {
           clientId: props.clientId,
           cardPosition: {
             id: "AbsoluteBaSyou",
             value: [PlayerB, "\u624B\u672D"]
           }
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime9.jsxDEV(CardStackView, {
+        /* @__PURE__ */ jsx_dev_runtime7.jsxDEV(CardStackView, {
           clientId: props.clientId,
           cardPosition: {
             id: "AbsoluteBaSyou",
             value: [PlayerB, "\u30CF\u30F3\u30AC\u30FC"]
           }
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime9.jsxDEV(CardStackView, {
+        /* @__PURE__ */ jsx_dev_runtime7.jsxDEV(CardStackView, {
           clientId: props.clientId,
           cardPosition: {
             id: "AbsoluteBaSyou",
             value: [PlayerB, "\u30D7\u30EC\u30A4\u3055\u308C\u3066\u3044\u308B\u30AB\u30FC\u30C9"]
           }
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime9.jsxDEV(CardStackView, {
+        /* @__PURE__ */ jsx_dev_runtime7.jsxDEV(CardStackView, {
           clientId: props.clientId,
           cardPosition: {
             id: "AbsoluteBaSyou",
             value: [PlayerB, "\u914D\u5099\u30A8\u30EA\u30A2"]
           }
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime9.jsxDEV(CardStackView, {
+        /* @__PURE__ */ jsx_dev_runtime7.jsxDEV(CardStackView, {
           clientId: props.clientId,
           cardPosition: {
             id: "AbsoluteBaSyou",
             value: [PlayerB, "\u6226\u95D8\u30A8\u30EA\u30A21"]
           }
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime9.jsxDEV(CardStackView, {
+        /* @__PURE__ */ jsx_dev_runtime7.jsxDEV(CardStackView, {
           clientId: props.clientId,
           cardPosition: {
             id: "AbsoluteBaSyou",
             value: [PlayerB, "\u6226\u95D8\u30A8\u30EA\u30A22"]
           }
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime9.jsxDEV(CardStackView, {
+        /* @__PURE__ */ jsx_dev_runtime7.jsxDEV(CardStackView, {
           clientId: props.clientId,
           cardPosition: {
             id: "AbsoluteBaSyou",
             value: [PlayerB, "G\u30BE\u30FC\u30F3"]
           }
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime9.jsxDEV(CardStackView, {
+        /* @__PURE__ */ jsx_dev_runtime7.jsxDEV(CardStackView, {
           clientId: props.clientId,
           cardPosition: {
             id: "AbsoluteBaSyou",
             value: [PlayerB, "\u6368\u3066\u5C71"]
           }
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime9.jsxDEV(CardStackView, {
+        /* @__PURE__ */ jsx_dev_runtime7.jsxDEV(CardStackView, {
           clientId: props.clientId,
           cardPosition: {
             id: "AbsoluteBaSyou",
@@ -33350,55 +33300,65 @@ var TableView = (props) => {
 };
 
 // src/client/component/ClientView.tsx
-var jsx_dev_runtime10 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime8 = __toESM(require_jsx_dev_runtime(), 1);
 function ClientView(props) {
-  const appContext = import_react10.useContext(AppContext);
-  const render = import_react10.useMemo(() => {
-    return /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
+  const appContext = import_react8.useContext(AppContext);
+  const renderStackEffects = import_react8.useMemo(() => {
+    return appContext.viewModel.model.gameState.stackEffect.map((effectId) => {
+      return /* @__PURE__ */ jsx_dev_runtime8.jsxDEV(EffectView, {
+        enabled: false,
+        clientId: props.clientId,
+        effectID: effectId
+      }, effectId, false, undefined, this);
+    });
+  }, [appContext.viewModel.model.gameState]);
+  const render = import_react8.useMemo(() => {
+    return /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
       children: [
-        /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
+        /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
           children: [
             "localMemory:",
             JSON.stringify(appContext.viewModel.localMemory)
           ]
         }, undefined, true, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
+        /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
           children: [
             "version:",
             JSON.stringify(appContext.viewModel.model.versionID)
           ]
         }, undefined, true, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
+        /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
           children: [
             "timing:",
             JSON.stringify(appContext.viewModel.model.gameState.phase)
           ]
         }, undefined, true, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
+        /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
           children: [
             "flowMemory:",
             JSON.stringify(appContext.viewModel.model.gameState.flowMemory)
           ]
         }, undefined, true, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
+        /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
           children: [
             "activePlayerID: ",
             appContext.viewModel.model.gameState.activePlayerID
           ]
         }, undefined, true, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
+        /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
           children: [
             "turn: ",
             appContext.viewModel.model.gameState.turn
           ]
         }, undefined, true, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("h1", {
+        /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("h1", {
           children: props.clientId
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime10.jsxDEV(FlowListView, {
+        renderStackEffects,
+        /* @__PURE__ */ jsx_dev_runtime8.jsxDEV(FlowListView, {
           clientId: props.clientId
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime10.jsxDEV(TableView, {
+        /* @__PURE__ */ jsx_dev_runtime8.jsxDEV(TableView, {
           clientId: props.clientId
         }, undefined, false, undefined, this)
       ]
@@ -33408,22 +33368,22 @@ function ClientView(props) {
 }
 
 // src/client/component/ControlView.tsx
-var import_react11 = __toESM(require_react(), 1);
-var jsx_dev_runtime11 = __toESM(require_jsx_dev_runtime(), 1);
+var import_react9 = __toESM(require_react(), 1);
+var jsx_dev_runtime9 = __toESM(require_jsx_dev_runtime(), 1);
 var ControlView = () => {
-  const onClickTest = import_react11.useCallback(() => {
+  const onClickTest = import_react9.useCallback(() => {
   }, []);
-  const onClickNewGame = import_react11.useCallback(() => {
+  const onClickNewGame = import_react9.useCallback(() => {
     OnEvent.next({ id: "OnClickNewGame" });
   }, []);
-  const renderControlPanel = import_react11.useMemo(() => {
-    return /* @__PURE__ */ jsx_dev_runtime11.jsxDEV("div", {
+  const renderControlPanel = import_react9.useMemo(() => {
+    return /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
       children: [
-        /* @__PURE__ */ jsx_dev_runtime11.jsxDEV("button", {
+        /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("button", {
           onClick: onClickNewGame,
           children: "onClickNewGame"
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime11.jsxDEV("button", {
+        /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("button", {
           onClick: onClickTest,
           children: "onClickTest"
         }, undefined, false, undefined, this)
@@ -33434,33 +33394,36 @@ var ControlView = () => {
 };
 
 // src/client/component/CardSelectionView.tsx
-var import_react12 = __toESM(require_react(), 1);
-var jsx_dev_runtime12 = __toESM(require_jsx_dev_runtime(), 1);
+var import_react10 = __toESM(require_react(), 1);
+var jsx_dev_runtime10 = __toESM(require_jsx_dev_runtime(), 1);
 var CardSelectionView = (props) => {
-  const appContext = import_react12.useContext(AppContext);
-  const selection = import_react12.useMemo(() => {
-    return /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
+  const appContext = import_react10.useContext(AppContext);
+  const selection = import_react10.useMemo(() => {
+    return /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
       children: appContext.viewModel.cardSelection.map((cardID) => {
         const proto = getItemPrototype(appContext.viewModel.model.gameState, cardID);
         const texts = [...proto.commandText ? [proto.commandText] : [], ...proto.texts || []];
-        return /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
+        return /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
           children: [
-            /* @__PURE__ */ jsx_dev_runtime12.jsxDEV(CardView, {
+            /* @__PURE__ */ jsx_dev_runtime10.jsxDEV(CardView, {
               enabled: true,
               clientId: props.clientId,
               cardID,
-              size: 100
+              size: 300
             }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
+            /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
               children: proto.title
             }, undefined, false, undefined, this),
+            /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
+              children: proto.description
+            }, undefined, false, undefined, this),
             texts.map((text, i) => {
-              return /* @__PURE__ */ jsx_dev_runtime12.jsxDEV(jsx_dev_runtime12.Fragment, {
-                children: /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
+              return /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
+                children: /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
                   style: { border: "1px solid black" },
                   children: text.description
                 }, undefined, false, undefined, this)
-              }, undefined, false, undefined, this);
+              }, text.id, false, undefined, this);
             })
           ]
         }, cardID, true, undefined, this);
@@ -33471,9 +33434,9 @@ var CardSelectionView = (props) => {
 };
 
 // src/client/component/AppView.tsx
-var jsx_dev_runtime13 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime11 = __toESM(require_jsx_dev_runtime(), 1);
 function AppView() {
-  import_react13.useEffect(() => {
+  import_react11.useEffect(() => {
     const subscriber = OnError.subscribe((e) => {
       console.error(e);
     });
@@ -33481,26 +33444,26 @@ function AppView() {
       subscriber.unsubscribe();
     };
   }, []);
-  return /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(AppContextProvider, {
+  return /* @__PURE__ */ jsx_dev_runtime11.jsxDEV(AppContextProvider, {
     children: [
-      /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(ControlView, {}, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime11.jsxDEV(ControlView, {}, undefined, false, undefined, this),
+      /* @__PURE__ */ jsx_dev_runtime11.jsxDEV("div", {
         style: { border: "1px solid blue", display: "flex" },
         children: [
-          /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime11.jsxDEV("div", {
             style: { border: "1px solid red", flex: 1, width: 1200 },
             children: [
-              /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(ClientView, {
+              /* @__PURE__ */ jsx_dev_runtime11.jsxDEV(ClientView, {
                 clientId: PlayerA
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(ClientView, {
+              /* @__PURE__ */ jsx_dev_runtime11.jsxDEV(ClientView, {
                 clientId: PlayerB
               }, undefined, false, undefined, this)
             ]
           }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime11.jsxDEV("div", {
             style: { border: "1px solid red", flex: 1 },
-            children: /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(CardSelectionView, {
+            children: /* @__PURE__ */ jsx_dev_runtime11.jsxDEV(CardSelectionView, {
               clientId: PlayerA
             }, undefined, false, undefined, this)
           }, undefined, false, undefined, this)
@@ -33511,10 +33474,10 @@ function AppView() {
 }
 
 // src/web.tsx
-var jsx_dev_runtime14 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime12 = __toESM(require_jsx_dev_runtime(), 1);
 var rootDom = document.getElementById("root");
 if (rootDom == null) {
   throw new Error(`div root not found`);
 }
 var root = ReactDom.createRoot(rootDom);
-root.render(/* @__PURE__ */ jsx_dev_runtime14.jsxDEV(AppView, {}, undefined, false, undefined, this));
+root.render(/* @__PURE__ */ jsx_dev_runtime12.jsxDEV(AppView, {}, undefined, false, undefined, this));

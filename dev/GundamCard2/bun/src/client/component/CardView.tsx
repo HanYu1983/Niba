@@ -15,6 +15,7 @@ export const CardView = (props: {
   cardID: string;
   enabled: boolean;
   size?: number,
+  isShowCmd?: boolean,
 }) => {
   const appContext = useContext(AppContext);
   const flows = useMemo(() => {
@@ -55,46 +56,49 @@ export const CardView = (props: {
       : "https://particle-979.appspot.com/common/images/card/cardback_0.jpg";
     const isSelect = appContext.viewModel.cardSelection.includes(card.id);
     return (
-      <div
-        style={{
-          border: "2px solid black",
-          ...(isSelect ? { border: "2px solid red" } : null),
-          ...(card.isRoll ? { transform: "rotate(90deg)" } : null),
-        }}
-        onClick={() => {
-          if (props.enabled == false) {
-            return;
-          }
-          OnEvent.next({ id: "OnClickCardEvent", card: card });
-        }}
-      >
-        <img src={imgSrc} style={{ height: props.size || CARD_SIZE }}></img>
-        {
-          flow?.id == "FlowSetActiveEffectID" ? flow.tips.filter(e=>EffectFn.getCardID(e) == props.cardID).map((tip) => {
-            if (tip.id == null) {
-              return <div>hide</div>;
+      <div>
+        <div
+          style={{
+            border: "2px solid black",
+            ...(isSelect ? { border: "2px solid red" } : null),
+            ...(card.isRoll ? { transform: "rotate(90deg)" } : null),
+          }}
+          onClick={() => {
+            if (props.enabled == false) {
+              return;
             }
-            return (
-              <div key={tip.id}>
-                <button style={{width: "100%"}}
-                  onClick={() => {
-                    OnEvent.next({
-                      id: "OnClickFlowConfirm",
-                      clientId: props.clientId,
-                      flow: { ...flow, effectID: tip.id },
-                    });
-                  }}
-                >
-                  <div>{tip.text.description || tip.description}</div>
-                </button>
-              </div>
-            );
-          }) : <></>
-        }
-        <div hidden>{card.id}</div>
-        <div hidden>{card.isFaceDown ? "O" : "X"}</div>
+            OnEvent.next({ id: "OnClickCardEvent", card: card });
+          }}
+        >
+          <img src={imgSrc} style={{ height: props.size || CARD_SIZE }}></img>
+          <div hidden>{card.id}</div>
+          <div hidden>{card.isFaceDown ? "O" : "X"}</div>
+        </div>
+        {
+            (props.isShowCmd && flow?.id == "FlowSetActiveEffectID") ? flow.tips.filter(e => EffectFn.getCardID(e) == props.cardID).map((tip) => {
+              if (tip.id == null) {
+                return <div>hide</div>;
+              }
+              return (
+                <div key={tip.id}>
+                  <button style={{ width: "100%" }}
+                    onClick={() => {
+                      OnEvent.next({
+                        id: "OnClickFlowConfirm",
+                        clientId: props.clientId,
+                        flow: { ...flow, effectID: tip.id },
+                      });
+                    }}
+                  >
+                    <div>{tip.text.description || tip.description}</div>
+                  </button>
+                </div>
+              );
+            }) : <></>
+          }
       </div>
+
     );
-  }, [card, isVisible, appContext.viewModel.cardSelection, props.enabled, flow]);
+  }, [card, isVisible, appContext.viewModel.cardSelection, props, flow]);
   return render
 };

@@ -283,6 +283,7 @@ export function createConditionTitleFn(condition: Condition, options: { isPlay?:
                 const cardId = EffectFn.getCardID(effect)
                 const cardController = getItemController(ctx, cardId)
                 const cardIdColors = getCardIdsCanPayRollColor(ctx, null, cardController, color)
+                const extInfo: {min?: number, max?: number, count?: number} = {}
                 let colorIds = []
                 if (color == null) {
                     colorIds = cardIdColors.map(gId => gId.cardId).slice(0, 1)

@@ -44,6 +44,7 @@ export const EffectView = (props: {
           enabled={false}
           clientId={props.clientId}
           cardID={cardID}
+          isShowCmd={false}
         ></CardView>
       ) : (
         <div>{JSON.stringify(block.reason)}</div>
@@ -53,13 +54,13 @@ export const EffectView = (props: {
         <div>
           {block.description}({cardID})
         </div>
-        {props.enabled && block.text.conditions ? (
+        {/*props.enabled && block.text.conditions ? (
           <RequireView
             clientId={props.clientId}
             effect={block}
             conditions={block.text.conditions}
           ></RequireView>
-        ) : null}
+        ) : null*/}
       </div>
     </div>
   }, [props, cardID, block])

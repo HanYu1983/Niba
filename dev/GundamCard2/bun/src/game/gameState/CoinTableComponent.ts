@@ -47,7 +47,7 @@ export function getCardIdByCoinId(ctx: CoinTableComponent, id: string): string {
 export function getCoinOwner(ctx: CoinTableComponent, id: string): PlayerID {
   const item = getCoin(ctx, id);
   if (item.ownerID == null) {
-    throw new Error("[getChipOwner] Chip.ownerID not found");
+    throw new Error("[getChipOwner] Coin.ownerID not found");
   }
   return item.ownerID;
 }
