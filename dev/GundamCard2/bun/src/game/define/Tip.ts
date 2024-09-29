@@ -1,3 +1,4 @@
+import { title } from "process";
 import { AbsoluteBaSyou } from "./BaSyou";
 import { TipError, TargetMissingError } from "./GameError";
 

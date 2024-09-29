@@ -4,8 +4,9 @@ import { AppContext } from "../tool/appContext";
 import { CardView } from "./CardView";
 
 export const CardStackView = (props: {
-  clinetID: string;
+  clientId: string;
   cardPosition: AbsoluteBaSyou;
+  cardSize?: number;
 }) => {
   const appContext = useContext(AppContext);
   const cards = useMemo(() => {
@@ -32,6 +33,7 @@ export const CardStackView = (props: {
           //height: CARD_SIZE,
           display: "flex",
           border: "2px solid black",
+          overflow: "scroll",
           ...(appContext.viewModel.cardPositionSelection.includes(_cardPositionID) ? { border: "2px solid red" } : null),
         }}
       >
@@ -62,10 +64,11 @@ export const CardStackView = (props: {
               {cardsInSetGroup.map((cardID, i) => {
                 return (
                   <CardView
-                    key={`${rootCardId}_${cardID}_${i}`}
+                    key={cardID}
                     enabled={true}
-                    clientID={props.clinetID}
+                    clientId={props.clientId}
                     cardID={cardID}
+                    size={props.cardSize}
                   ></CardView>
                 );
               })}
@@ -78,7 +81,7 @@ export const CardStackView = (props: {
           //     <CardView
           //       key={card.id}
           //       enabled={true}
-          //       clientID={props.clinetID}
+          //       clientId={props.clientId}
           //       cardID={card.id}
           //     ></CardView>
           //   );
@@ -87,8 +90,7 @@ export const CardStackView = (props: {
       </div>
     );
   }, [
-    props.cardPosition,
-    props.clinetID,
+    props,
     cardsOnlySetGroupRoot,
     appContext.viewModel.cardPositionSelection,
     appContext.viewModel.model.gameState.setGroup.itemGroupParent,

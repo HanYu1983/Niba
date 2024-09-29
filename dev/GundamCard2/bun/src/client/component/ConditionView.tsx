@@ -7,7 +7,7 @@ import { createEffectTips } from "../../game/gameState/doEffect";
 import { PlayerID } from "../../game/define/PlayerID";
 
 export const ConditionView = (props: {
-  clientID: PlayerID,
+  clientId: PlayerID,
   effect: Effect;
   targets: { [key: string]: Condition };
 }) => {
@@ -26,7 +26,7 @@ export const ConditionView = (props: {
             }
             return <TargetTypeView
               key={i}
-              clientID={props.clientID}
+              clientId={props.clientId}
               effect={props.effect}
               target={tipOrE.tip}
             ></TargetTypeView>

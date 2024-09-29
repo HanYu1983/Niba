@@ -12,22 +12,23 @@ import { applyFlow, createAIChoiseList } from "../../game/gameStateWithFlowMemor
 import { GameStateWithFlowMemory } from "../../game/gameStateWithFlowMemory/GameStateWithFlowMemory";
 import { Flow } from "../../game/gameStateWithFlowMemory/Flow";
 import { PlayerA, PlayerB } from "../../game/define/PlayerID";
+import { FlowSetTipSelectionView } from "./FlowSetTipSelectionView";
 
-export const FlowListView = (props: { clientID: string }) => {
+export const FlowListView = (props: { clientId: string }) => {
   const appContext = useContext(AppContext);
   const flows = useMemo(() => {
-    return queryFlow(appContext.viewModel.model.gameState, props.clientID);
-  }, [appContext.viewModel.model.gameState, props.clientID]);
+    return queryFlow(appContext.viewModel.model.gameState, props.clientId);
+  }, [appContext.viewModel.model.gameState, props.clientId]);
   useEffect(() => {
     const speed = 50
-    const isPlayerControl = false
-    if (isPlayerControl && props.clientID == PlayerA) {
+    const isPlayerControl = true
+    if (isPlayerControl && props.clientId == PlayerA) {
       const payCost = flows.find((flow) => flow.id == "FlowPassPayCost");
       if (payCost) {
         setTimeout(() => {
           OnEvent.next({
             id: "OnClickFlowConfirm",
-            clientID: props.clientID,
+            clientId: props.clientId,
             flow: payCost,
           });
         }, speed)
@@ -44,10 +45,13 @@ export const FlowListView = (props: { clientID: string }) => {
         if (flow.id == "FlowWaitPlayer") {
           return
         }
+        if (flow.id == "FlowCancelActiveEffectID") {
+          return
+        }
         setTimeout(() => {
           OnEvent.next({
             id: "OnClickFlowConfirm",
-            clientID: props.clientID,
+            clientId: props.clientId,
             flow: flow,
           });
         }, speed)
@@ -55,18 +59,6 @@ export const FlowListView = (props: { clientID: string }) => {
       return
     }
     if (flows.length) {
-      //const aiChoiseList = flows.flatMap(flow => createAIChoiseList(appContext.viewModel.model.gameState, flow))
-      // if (aiChoiseList.length > 0) {
-      //   aiChoiseList.sort((a, b) => b.weight - a.weight)
-      //   const flow = aiChoiseList[0].flow
-      //   setTimeout(() => {
-      //     OnEvent.next({
-      //       id: "OnClickFlowConfirm",
-      //       clientID: props.clientID,
-      //       flow: flow,
-      //     });
-      //   }, speed)
-      // }
       let flow: Flow | undefined = flows.find((flow) => flow.id == "FlowPassPayCost")
       if (flow == null) {
         flow = flows[Math.round(Math.random() * 1000) % flows.length]
@@ -77,17 +69,26 @@ export const FlowListView = (props: { clientID: string }) => {
       if (flow.id == "FlowCancelPassCut") {
         return
       }
+      if (flow.id == "FlowCancelActiveEffectID") {
+        return
+      }
+      if (flow.id == "FlowWaitPlayer") {
+        return
+      }
+      if (flow.id == "FlowObserveEffect") {
+        return
+      }
       if (flow) {
         setTimeout(() => {
           OnEvent.next({
             id: "OnClickFlowConfirm",
-            clientID: props.clientID,
+            clientId: props.clientId,
             flow: flow,
           });
         }, speed)
       }
     }
-  }, [appContext.viewModel.model.gameState, props.clientID, flows]);
+  }, [appContext.viewModel.model.gameState, props.clientId, flows]);
   // ============== control panel ============= //
   const renderControlPanel = useMemo(() => {
     return (
@@ -99,7 +100,7 @@ export const FlowListView = (props: { clientID: string }) => {
                 onClick={() => {
                   OnEvent.next({
                     id: "OnClickFlowConfirm",
-                    clientID: props.clientID,
+                    clientId: props.clientId,
                     flow: flow,
                   });
                 }}
@@ -112,7 +113,7 @@ export const FlowListView = (props: { clientID: string }) => {
                     return (
                       <EffectView
                         enabled={true}
-                        clientID={props.clientID}
+                        clientId={props.clientId}
                         effectID={flow.effectID}
                       ></EffectView>
                     );
@@ -121,10 +122,12 @@ export const FlowListView = (props: { clientID: string }) => {
                     return (
                       <EffectView
                         enabled={false}
-                        clientID={props.clientID}
+                        clientId={props.clientId}
                         effectID={flow.effectID}
                       ></EffectView>
                     );
+                  case "FlowSetTipSelection":
+                    return <FlowSetTipSelectionView clientId={props.clientId} flow={flow}></FlowSetTipSelectionView>
                   case "FlowSetActiveEffectID":
                     return flow.tips.map((tip) => {
                       if (tip.id == null) {
@@ -132,22 +135,28 @@ export const FlowListView = (props: { clientID: string }) => {
                       }
                       return (
                         <div key={tip.id}>
-                          <button
-                            onClick={() => {
-                              OnEvent.next({
-                                id: "OnClickFlowConfirm",
-                                clientID: props.clientID,
-                                flow: { ...flow, effectID: tip.id },
-                              });
-                            }}
-                          >
-                            {flow.description}({tip.id})
-                          </button>
+                          {
+                            tip.reason[0] == "GameRule" ? <>
+                              <button
+                                onClick={() => {
+                                  OnEvent.next({
+                                    id: "OnClickFlowConfirm",
+                                    clientId: props.clientId,
+                                    flow: { ...flow, effectID: tip.id },
+                                  });
+                                }}
+                              >
+                                {flow.description}({tip.id})
+                              </button>
+                            </> : <></>
+                          }
+                          {/*
                           <EffectView
                             enabled={false}
-                            clientID={props.clientID}
+                            clientId={props.clientId}
                             effectID={tip.id}
                           ></EffectView>
+                          */}
                         </div>
                       );
                     });
@@ -160,6 +169,6 @@ export const FlowListView = (props: { clientID: string }) => {
         })}
       </div>
     );
-  }, [flows, props.clientID]);
+  }, [flows, props.clientId]);
   return renderControlPanel;
 };

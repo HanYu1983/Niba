@@ -25,13 +25,13 @@ export type OnClickChangeClient = {
 
 export type OnClickFlowConfirm = {
   id: "OnClickFlowConfirm";
-  clientID: string;
+  clientId: string;
   flow: Flow;
 };
 
 export type OnClickRequireTargetConfirm = {
   id: "OnClickRequireTargetConfirm";
-  clientID: string;
+  clientId: string;
   effect: Effect;
   condition: Condition;
   conditionKey: string;

@@ -11,7 +11,7 @@ import { createEffectTips } from "../../game/gameState/doEffect";
 import { prop } from "ramda";
 
 export const RequireView = (props: {
-  clientID: string;
+  clientId: string;
   effect: Effect;
   conditions: {[key:string]:Condition}
 }) => {
@@ -22,7 +22,7 @@ export const RequireView = (props: {
       <div style={{ border: "1px solid black" }}>
         {tipOrEs.map((tipOrE, i) => {
           const responsePlayer = EffectFn.getPlayerID(props.effect)
-          const isTargetOwner = responsePlayer == props.clientID;
+          const isTargetOwner = responsePlayer == props.clientId;
           return (
             <div key={i} style={{ border: "1px solid black" }}>
               {isTargetOwner ? (
@@ -30,7 +30,7 @@ export const RequireView = (props: {
                   onClick={() => {
                     OnEvent.next({
                       id: "OnClickRequireTargetConfirm",
-                      clientID: props.clientID,
+                      clientId: props.clientId,
                       effect: props.effect,
                       condition: props.conditions[tipOrE.conditionKey],
                       conditionKey: tipOrE.conditionKey,
@@ -44,7 +44,7 @@ export const RequireView = (props: {
                 tipOrE.tip == null ?
                   <div>tip not found</div> :
                   <TargetTypeView
-                    clientID={props.clientID}
+                    clientId={props.clientId}
                     effect={props.effect}
                     target={tipOrE.tip}
                   ></TargetTypeView>

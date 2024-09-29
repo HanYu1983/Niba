@@ -25,7 +25,7 @@ type FlowWaitPlayer = {
     id: "FlowWaitPlayer";
     description?: string;
 };
-type FlowSetActiveEffectID = {
+export type FlowSetActiveEffectID = {
     id: "FlowSetActiveEffectID";
     effectID: string;
     tips: Effect[];
@@ -84,7 +84,7 @@ type FlowHandleStackEffectFinished = {
     id: "FlowHandleStackEffectFinished";
     description?: string;
 };
-type FlowSetTipSelection = {
+export type FlowSetTipSelection = {
     id: "FlowSetTipSelection";
     effectID: string;
     conditionKey: string;

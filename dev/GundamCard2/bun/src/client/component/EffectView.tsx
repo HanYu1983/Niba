@@ -7,7 +7,7 @@ import { getEffectIncludePlayerCommand } from "../../game/gameStateWithFlowMemor
 
 export const EffectView = (props: {
   enabled: boolean;
-  clientID: string;
+  clientId: string;
   effectID: string;
 }) => {
   const appContext = useContext(AppContext);
@@ -42,7 +42,7 @@ export const EffectView = (props: {
       {cardID != null ? (
         <CardView
           enabled={false}
-          clientID={props.clientID}
+          clientId={props.clientId}
           cardID={cardID}
         ></CardView>
       ) : (
@@ -55,7 +55,7 @@ export const EffectView = (props: {
         </div>
         {props.enabled && block.text.conditions ? (
           <RequireView
-            clientID={props.clientID}
+            clientId={props.clientId}
             effect={block}
             conditions={block.text.conditions}
           ></RequireView>
