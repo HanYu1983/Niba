@@ -4,15 +4,31 @@ import { getImgSrc } from "../../script";
 import { AppContext } from "../tool/appContext";
 import { OnEvent } from "../tool/appContext/eventCenter";
 import { getItemBaSyou, getItemController } from "../../game/gameState/ItemTableComponent";
+import { queryFlow } from "../../game/gameStateWithFlowMemory/queryFlow";
+import { EffectFn } from "../../game/define/Effect";
+import { EffectView } from "./EffectView";
 
 const CARD_SIZE = 100;
 
 export const CardView = (props: {
-  clientID: string;
+  clientId: string;
   cardID: string;
   enabled: boolean;
+  size?: number,
 }) => {
   const appContext = useContext(AppContext);
+  const flows = useMemo(() => {
+    return queryFlow(appContext.viewModel.model.gameState, props.clientId);
+  }, [appContext.viewModel.model.gameState, props.clientId]);
+  const flow = useMemo(() => {
+    return flows.find(flow => {
+      switch (flow.id) {
+        case "FlowSetActiveEffectID":
+          return true
+      }
+      return false
+    })
+  }, [flows])
   const card = useMemo(() => {
     return getCard(appContext.viewModel.model.gameState, props.cardID);
   }, [props.cardID, appContext.viewModel.model.gameState]);
@@ -22,7 +38,7 @@ export const CardView = (props: {
       switch (baSyou.value[1]) {
         case "手札": {
           const controller = getItemController(appContext.viewModel.model.gameState, card.id);
-          if (controller == props.clientID) {
+          if (controller == props.clientId) {
             return true;
           }
           break
@@ -32,7 +48,7 @@ export const CardView = (props: {
       }
     }
     return card.isFaceDown != true
-  }, [props.clientID, card, appContext.viewModel.model.gameState]);
+  }, [props.clientId, card, appContext.viewModel.model.gameState]);
   const render = useMemo(() => {
     const imgSrc = isVisible
       ? getImgSrc(card.protoID || "unknown")
@@ -52,11 +68,33 @@ export const CardView = (props: {
           OnEvent.next({ id: "OnClickCardEvent", card: card });
         }}
       >
-        <img src={imgSrc} style={{ height: CARD_SIZE }}></img>
+        <img src={imgSrc} style={{ height: props.size || CARD_SIZE }}></img>
+        {
+          flow?.id == "FlowSetActiveEffectID" ? flow.tips.filter(e=>EffectFn.getCardID(e) == props.cardID).map((tip) => {
+            if (tip.id == null) {
+              return <div>hide</div>;
+            }
+            return (
+              <div key={tip.id}>
+                <button style={{width: "100%"}}
+                  onClick={() => {
+                    OnEvent.next({
+                      id: "OnClickFlowConfirm",
+                      clientId: props.clientId,
+                      flow: { ...flow, effectID: tip.id },
+                    });
+                  }}
+                >
+                  <div>{tip.text.description || tip.description}</div>
+                </button>
+              </div>
+            );
+          }) : <></>
+        }
         <div hidden>{card.id}</div>
         <div hidden>{card.isFaceDown ? "O" : "X"}</div>
       </div>
     );
-  }, [card, isVisible, appContext.viewModel.cardSelection, props.enabled]);
+  }, [card, isVisible, appContext.viewModel.cardSelection, props.enabled, flow]);
   return render
 };

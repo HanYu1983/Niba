@@ -1,5 +1,5 @@
 import { AbsoluteBaSyouFn } from "../../../game/define/BaSyou";
-import { PlayerA } from "../../../game/define/PlayerID";
+import { PlayerA, PlayerB } from "../../../game/define/PlayerID";
 import { Phase, PhaseFn } from "../../../game/define/Timing";
 import { createCardWithProtoIds } from "../../../game/gameState/CardTableComponent";
 import { GameState } from "../../../game/gameState/GameState";
@@ -13,6 +13,7 @@ import { createGameContext, GameContext } from "../../define/GameContext";
 import { OnEvent, OnError } from "./eventCenter";
 import * as rxjs from "rxjs"
 import { TableFns } from "../../../tool/table";
+import { queryFlow } from "../../../game/gameStateWithFlowMemory/queryFlow";
 
 export type Selection = string[];
 
@@ -21,7 +22,7 @@ export type ViewModel = {
   cardSelection: Selection;
   cardPositionSelection: Selection;
   localMemory: {
-    clientID: string | null;
+    clientId: string | null;
     timing: Phase;
     lastPassPhase: boolean;
   };
@@ -32,7 +33,7 @@ export const DEFAULT_VIEW_MODEL: ViewModel = {
   cardSelection: [],
   cardPositionSelection: [],
   localMemory: {
-    clientID: null,
+    clientId: null,
     timing: PhaseFn.getFirst(),
     lastPassPhase: false,
   },
@@ -53,14 +54,25 @@ export const OnViewModel = OnEvent.pipe(
             versionID: viewModel.model.versionID,
           };
           Promise.all(TMP_DECK.concat(TMP_DECK2).map(loadPrototype))
-          ctx.gameState = initState(ctx.gameState, TMP_DECK, TMP_DECK);
-          //ctx.gameState = createCardWithProtoIds(ctx.gameState, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), TMP_DECK.slice(0, 6)) as GameStateWithFlowMemory
-          //ctx.gameState = updateCommand(ctx.gameState) as GameStateWithFlowMemory;
+          ctx.gameState = initState(ctx.gameState, TMP_DECK.slice(12), TMP_DECK.slice(12));
+          ctx.gameState = createCardWithProtoIds(ctx.gameState, AbsoluteBaSyouFn.of(PlayerA, "手札"), TMP_DECK.slice(0, 6)) as GameStateWithFlowMemory
+          ctx.gameState = createCardWithProtoIds(ctx.gameState, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), TMP_DECK.slice(6, 12)) as GameStateWithFlowMemory
+          ctx.gameState = createCardWithProtoIds(ctx.gameState, AbsoluteBaSyouFn.of(PlayerB, "手札"), TMP_DECK.slice(0, 6)) as GameStateWithFlowMemory
+          ctx.gameState = createCardWithProtoIds(ctx.gameState, AbsoluteBaSyouFn.of(PlayerB, "Gゾーン"), TMP_DECK.slice(6, 12)) as GameStateWithFlowMemory
+          ctx.gameState = {
+            ...ctx.gameState,
+            phase: ["配備フェイズ", "フリータイミング"],
+            flowMemory: {
+              ...ctx.gameState.flowMemory,
+              state: "playing",
+            }
+          }
+          ctx.gameState = updateCommand(ctx.gameState) as GameStateWithFlowMemory;
           return { ...DEFAULT_VIEW_MODEL, model: ctx };
         }
         case "OnClickFlowConfirm": {
-          const gameState = applyFlow(viewModel.model.gameState, evt.clientID, evt.flow);
-          TableFns.assertDup(gameState.table)
+          const gameState = applyFlow(viewModel.model.gameState, evt.clientId, evt.flow);
+          //TableFns.assertDup(gameState.table)
           return {
             ...viewModel,
             model: {
@@ -68,9 +80,9 @@ export const OnViewModel = OnEvent.pipe(
               gameState: gameState,
             },
             localMemory: {
-              clientID: evt.clientID,
+              clientId: evt.clientId,
               timing: getPhase(gameState),
-              lastPassPhase: gameState.flowMemory.hasPlayerPassPhase[evt.clientID] || false,
+              lastPassPhase: gameState.flowMemory.hasPlayerPassPhase[evt.clientId] || false,
             },
           };
         }
