@@ -8,7 +8,7 @@ const hideCategory: string[] = [
   "getGlobalEffects",
   "getEffectTips",
   //"createEffectTips",
-  "getActionTitleFn",
+  //"getActionTitleFn",
   "getLogicTreeActionConditions",
   "createCommandEffectTips",
   "setEffectTips",

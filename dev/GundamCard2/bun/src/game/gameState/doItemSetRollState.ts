@@ -9,9 +9,9 @@ import { GameState } from "./GameState"
 import { ItemTableComponent, assertTargetMissingError, isCard, isChip, getItemBaSyou } from "./ItemTableComponent"
 import { getSetGroup, getSetGroupChildren } from "./SetGroupComponent"
 
-export function doItemSetRollState(ctx: GameState, isRoll: boolean, [itemId, originBasyou]: StrBaSyouPair, options?: { isSkipTargetMissing?: boolean, isNoSkipTipError?: boolean }): GameState {
-  if (options?.isSkipTargetMissing) {
-
+export function doItemSetRollState(ctx: GameState, isRoll: boolean, [itemId, originBasyou]: StrBaSyouPair, options?: { isSkipTargetMissing?: boolean }): GameState {
+  if(options?.isSkipTargetMissing){
+    
   } else {
     assertTargetMissingError(ctx, [itemId, originBasyou])
   }
@@ -19,9 +19,11 @@ export function doItemSetRollState(ctx: GameState, isRoll: boolean, [itemId, ori
   ctx = itemIds.reduce((ctx, itemId) => {
     if (isCard(ctx, itemId)) {
       let item = getCard(ctx, itemId)
-      if (options?.isNoSkipTipError) {
+      if(options?.isSkipTargetMissing){
+    
+      } else {
         if (item.isRoll == isRoll) {
-          throw new TipError(`card already roll: ${item.id}`)
+          throw new TargetMissingError(`card already isRoll: ${item.isRoll}: ${item.id}`)
         }
       }
       item = CardFn.setIsRoll(item, isRoll)
@@ -30,9 +32,11 @@ export function doItemSetRollState(ctx: GameState, isRoll: boolean, [itemId, ori
     }
     if (isChip(ctx, itemId)) {
       let item = getChip(ctx, itemId)
-      if (options?.isNoSkipTipError) {
+      if(options?.isSkipTargetMissing){
+    
+      } else {
         if (item.isRoll == isRoll) {
-          throw new TipError(`chip already roll: ${item.id}`)
+          throw new TargetMissingError(`chip already isRoll: ${item.isRoll}: ${item.id}`)
         }
       }
       item = ChipFn.setIsRoll(item, isRoll)

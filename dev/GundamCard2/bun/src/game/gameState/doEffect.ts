@@ -147,8 +147,7 @@ export function createEffectTips(
         //ctx = clearGlobalEffects(ctx)
         return ctx
       } catch (e) {
-        // TODO 到底這時要不要抓TargetMissingError？
-        if (e instanceof TipError || e instanceof TargetMissingError) {
+        if (e instanceof TipError) {
           if (options?.isAssert) {
             throw e
           }
@@ -237,6 +236,8 @@ export function createCommandEffectTips(ctx: GameState, effect: Effect): Command
     const testedEffects = effect.text.logicTreeActions.flatMap((lta, logicId) => {
       const conditionsList = CardTextFn.getLogicTreeActionConditions(effect.text, lta)
       const allTest = conditionsList.map((conditions, logicSubId) => {
+        // 先將之前選的對象刪除，避免拿到舊值
+        ctx = clearTipSelectionForUser(ctx, effect, logicId, logicSubId)
         logCategory("createCommandEffectTips", "createEffectTips", logicId, logicSubId, Object.keys(conditions))
         const conTipErrors = createEffectTips(ctx, effect, logicId, logicSubId)
         return {

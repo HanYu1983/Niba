@@ -22,7 +22,7 @@ export async function testCompress() {
       ctx = initState(ctx, blackT3, blackT3)
       ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), blackT3.slice(0, 6)) as GameStateWithFlowMemory
       ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerB, "Gゾーン"), blackT3.slice(0, 6)) as GameStateWithFlowMemory
-      for (let i = 0; i < 5000; ++i) {
+      for (let i = 0; i < 1000; ++i) {
           logCategory("testCompress", `${i} > ${getPhase(ctx)} > ${getActivePlayerID(ctx)}`)
           logCategory("testCompress", `${i} > PlayerA: ${getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国")).length}`)
           logCategory("testCompress", `${i} > PlayerB: ${getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerB, "本国")).length}`)

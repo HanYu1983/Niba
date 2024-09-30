@@ -48,6 +48,9 @@ export async function testPS() {
         if (effect == null) {
             throw new Error("")
         }
+        if(getCard(ctx, unitHasPS.id).isRoll == true){
+            throw new Error()
+        }
         ctx = doEffect(ctx, effect, 0, 0)
         if (AbsoluteBaSyouFn.getBaSyouKeyword(getItemBaSyou(ctx, unitHasPS.id)) != "配備エリア") {
             throw new Error("")

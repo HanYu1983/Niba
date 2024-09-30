@@ -3,7 +3,7 @@ import { AbsoluteBaSyouFn, AbsoluteBaSyou, RelatedBaSyou, BaSyou } from "../defi
 import { Action, ActionTitleFn, ActionFn } from "../define/CardText"
 import { CoinFn } from "../define/Coin"
 import { Effect, EffectFn } from "../define/Effect"
-import { TipError } from "../define/GameError"
+import { TargetMissingError, TipError } from "../define/GameError"
 import { GlobalEffect } from "../define/GlobalEffect"
 import { ItemStateFn } from "../define/ItemState"
 import { PlayerID, PlayerIDFn } from "../define/PlayerID"
@@ -112,19 +112,14 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
       return function (ctx: GameState, effect: Effect): GameState {
         const cardId = EffectFn.getCardID(effect)
         const cardController = getItemController(ctx, cardId)
+        console.log(cardId, cardController)
+        console.log(ctx.table)
         const pairs = varNames == null ?
           [[cardId, getItemBaSyou(ctx, cardId)] as StrBaSyouPair] :
           varNames.flatMap(varName => {
             return getCardTipStrBaSyouPairs(ctx, varName, cardId)
           })
         switch (whatToDo) {
-          case "ロールCost": {
-            logCategory("getActionTitleFn", whatToDo, varNames, pairs)
-            for (const pair of pairs) {
-              ctx = doItemSetRollState(ctx, true, pair, { isSkipTargetMissing: true, isNoSkipTipError: true }) as GameState
-            }
-            return ctx
-          }
           case "ロール": {
             logCategory("getActionTitleFn", whatToDo, varNames, pairs)
             for (const pair of pairs) {
@@ -354,7 +349,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
         const cardController = getItemController(ctx, cardId)
         const cardIdsCanPay = getCardIdsCanPayRollCost(ctx, cardController, null)
         if (cardIdsCanPay.length < x) {
-          throw new TipError(`合計国力〔x〕:${cardIdsCanPay.length} < ${x}. ${effect.text.description}`)
+          throw new TargetMissingError(`合計国力〔x〕:${cardIdsCanPay.length} < ${x}. ${effect.text.description}`)
         }
         return ctx
       }
@@ -372,7 +367,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
             .map(cardId => [cardId, basyou] as StrBaSyouPair)
         )
         if (pairs.length == 0) {
-          throw new TipError(`${action.title[0]} ${pairs.length}`)
+          throw new TargetMissingError(`${action.title[0]} ${pairs.length}`)
         }
         return ctx
       }
@@ -385,7 +380,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
         if (areas.includes(AbsoluteBaSyouFn.getBaSyouKeyword(from))) {
 
         } else {
-          throw new TipError(`${action.title} ${cardId} not in ${JSON.stringify(areas)}`)
+          throw new TargetMissingError(`${action.title} ${cardId} not in ${JSON.stringify(areas)}`)
         }
         return ctx
       }
@@ -400,7 +395,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
           .filter(itemId => getItemPrototype(ctx, itemId).gsign?.[0].includes(color))
           .filter(itemId => getItemRuntimeCategory(ctx, itemId) == category).length
         if (gsignCount < count) {
-          throw new TipError(`you have ${gsignCount}. must ${count}: ${action.title[0]}`)
+          throw new TargetMissingError(`you have ${gsignCount}. must ${count}: ${action.title[0]}`)
         }
         return ctx
       }

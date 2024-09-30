@@ -7,7 +7,7 @@ import { PhaseFn } from "../game/define/Timing"
 import { setActivePlayerID } from "../game/gameState/ActivePlayerComponent"
 import { getCardRollCostLength, getCardBattlePoint, getCardHasSpeicalEffect } from "../game/gameState/card"
 import { addCards, createCardWithProtoIds } from "../game/gameState/CardTableComponent"
-import { createCommandEffectTips, createEffectTips, doEffect, setTipSelectionForUser } from "../game/gameState/doEffect"
+import { clearTipSelectionForUser, createCommandEffectTips, createEffectTips, doEffect, setTipSelectionForUser } from "../game/gameState/doEffect"
 import { getTopEffect } from "../game/gameState/EffectStackComponent"
 import { createGameState, GameState } from "../game/gameState/GameState"
 import { createPlayEffects } from "../game/gameState/createPlayEffects"
@@ -18,6 +18,7 @@ import { doTriggerEvent } from "../game/gameState/doTriggerEvent"
 import { loadPrototype } from "../script"
 import { getGlobalEffects } from "../game/gameState/globalEffects"
 import { CommandEffecTipFn } from "../game/define/CommandEffectTip"
+import { TargetMissingError, TipError } from "../game/define/GameError"
 
 export async function test179001_01A_CH_WT007R_white() {
     await loadPrototype("179001_01A_CH_WT007R_white")
@@ -57,9 +58,19 @@ export async function test179001_01A_CH_WT007R_white() {
         }
         // 避開同切上限
         ctx = doTriggerEvent(ctx, { title: ["カット終了時", [playCardEffect]] })
+        // 確認繼承關係
+        // TipError包含TargetMissingError
+        if ((new TipError("") instanceof TargetMissingError) != true) {
+            throw new Error()
+        }
+        // TargetMissingError不包含TipError
+        if ((new TargetMissingError("") instanceof TipError) == true) {
+            throw new Error()
+        }
         // 已有速攻了，不能再加速攻
+        //ctx = clearTipSelectionForUser(ctx, playCardEffect, 0, 0)
         const cetsNoErr = createCommandEffectTips(ctx, playCardEffect).filter(CommandEffecTipFn.not(CommandEffecTipFn.filterNoError))
-        if(cetsNoErr.length == 0){
+        if (cetsNoErr.length == 0) {
             throw new Error()
         }
 
