@@ -19,35 +19,35 @@ function getGameStateAndAssert(ctx: any): GameState {
 
 export const EventCenterFn = {
     onAddImmediateEffect(_ctx: any, effect:Effect):any{
-        logCategory(`onAddImmediateEffect: ${effect.description}`, effect)
+        logCategory(`onAddImmediateEffect`,`${effect.description}`, effect)
         let ctx = getGameStateAndAssert(_ctx)
         return ctx
     },
     onEvent(_ctx: any, evt:GameEvent):any{
-        logCategory(`onEvent: ${JSON.stringify(evt.title)} ${JSON.stringify(evt.cardIds)}`, evt.title, evt.cardIds)
+        logCategory(`onEvent`, `${JSON.stringify(evt.title)} ${JSON.stringify(evt.cardIds)}`, evt.title, evt.cardIds)
         let ctx = getGameStateAndAssert(_ctx)
         return ctx
     },
     onEffectStart(_ctx: any, effect: Effect): any {
-        logCategory(`onEffectStart: ${effect.text.description}`)
+        logCategory(`onEffectStart`, `${effect.text.description}`)
         let ctx = getGameStateAndAssert(_ctx)
         ctx = setMessageCurrentEffect(ctx, effect) as GameState
         return ctx
     },
     onEffectEnd(_ctx: any, effect: Effect): any {
-        logCategory(`onEffectEnd: ${effect.text.description}`)
+        logCategory(`onEffectEnd`, `${effect.text.description}`)
         let ctx = getGameStateAndAssert(_ctx)
         ctx = setMessageCurrentEffect(ctx, null) as GameState
         return ctx
     },
     onActionStart(_ctx: any, effect: Effect, action:Action): any {
-        logCategory(`onActionStart: ${action.description}`)
+        logCategory(`onActionStart`, `${action.description}`)
         let ctx = getGameStateAndAssert(_ctx)
         ctx = setMessageCurrentEffect(ctx, effect) as GameState
         return ctx
     },
     onActionEnd(_ctx: any, effect: Effect, action:Action): any {
-        logCategory(`onActionEnd: ${action.description}`)
+        logCategory(`onActionEnd`, `${action.description}`)
         let ctx = getGameStateAndAssert(_ctx)
         ctx = setMessageCurrentEffect(ctx, null) as GameState
         return ctx
@@ -71,22 +71,22 @@ export const EventCenterFn = {
         return ctx
     },
     onSetPhase(_ctx: any, old: Phase, curr: Phase): any {
-        logCategory(`onSetPhase: ${curr}`)
+        logCategory(`onSetPhase`, `${curr}`)
         let ctx = getGameStateAndAssert(_ctx)
         return ctx
     },
     onItemAdd(_ctx: any, itemId: string): any {
-        logCategory(`onItemAdd: ${itemId}`)
+        logCategory(`onItemAdd`, `${itemId}`)
         let ctx = getGameStateAndAssert(_ctx)
         return ctx
     },
     onItemMove(_ctx: any, from: string, to: string, itemId: string): any {
-        logCategory(`onItemMove: ${itemId} = ${from} => ${to}`)
+        logCategory(`onItemMove`, `${itemId} = ${from} => ${to}`)
         let ctx = getGameStateAndAssert(_ctx)
         return ctx
     },
     onItemDelete(_ctx: any, itemId: string): any {
-        logCategory(`onItemDelete: ${itemId}`)
+        logCategory(`onItemDelete`, `${itemId}`)
         let ctx = getGameStateAndAssert(_ctx)
         return ctx
     },

@@ -32,7 +32,7 @@ export function applyFlow(
     playerID: string,
     flow: Flow
 ): GameStateWithFlowMemory {
-    logCategory(`applyFlow: ${playerID} ${flow.id} ${flow.description}`, playerID, flow);
+    logCategory("applyFlow", `${playerID} ${flow.id} ${flow.description}`, playerID, flow);
     switch (flow.id) {
         case "FlowSetActiveEffectID": {
             if (flow.effectID == null) {

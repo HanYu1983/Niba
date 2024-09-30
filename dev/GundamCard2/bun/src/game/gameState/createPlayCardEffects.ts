@@ -79,7 +79,8 @@ export function createPlayCardEffects(ctx: GameState, cardId: string): Effect[] 
         description: "從手中即將出牌, 出牌後會產生場出的效果",
         text: {
             id: `createPlayCardEffects_text_${cardId}`,
-            title: [],
+            // 以下的title只是為了log，沒有實際作用
+            title: prototype.commandText?.title || ["使用型", ["自軍", "配備フェイズ"]],
             description: "從手中即將出牌, 出牌後會產生場出的效果",
             conditions: {
                 ...conditions,
@@ -225,7 +226,6 @@ export function createPlayCardEffects(ctx: GameState, cardId: string): Effect[] 
         }
     }
     const ret = [playCardEffect]
-    logCategory("createPlayCardEffects", "getGlobalEffects start")
     const ges = getGlobalEffects(ctx, null)
     ctx = setGlobalEffects(ctx, null, ges)
     {
@@ -234,8 +234,9 @@ export function createPlayCardEffects(ctx: GameState, cardId: string): Effect[] 
         if (hasTotolCostPlusPlay) {
             // 取得原始條件
             let copyOriginCondition = playCardEffect.text.conditions || {}
+            logCategory("createPlayCardEffects", "copyOriginCondition start", Object.keys(copyOriginCondition))
             // 179027_09D_C_BK063R_black這張卡特殊處理
-            if(getCard(ctx, cardId).protoID == "179027_09D_C_BK063R_black"){
+            if (getCard(ctx, cardId).protoID == "179027_09D_C_BK063R_black") {
                 const rollCostBonus = getGlobalEffects(ctx, null).map(ge => {
                     if (ge.title[0] == "合計国力＋_、ロールコスト＋_してプレイできる" && ge.cardIds.includes(cardId)) {
                         return ge.title[2]
@@ -246,9 +247,11 @@ export function createPlayCardEffects(ctx: GameState, cardId: string): Effect[] 
                 for (const rollCostKey of Object.keys(rollCostConditions)) {
                     delete copyOriginCondition[rollCostKey]
                 }
+                logCategory("createPlayCardEffects", "copyOriginCondition step 2", Object.keys(copyOriginCondition))
                 // 重新計算加入減免橫置費用紅利
                 const newRollCostConditions = createRollCostConditions(ctx, prototype, prototype.rollCost || [], rollCostBonus)
                 copyOriginCondition = {
+                    ...copyOriginCondition,
                     ...newRollCostConditions,
                 }
             }
@@ -264,38 +267,46 @@ export function createPlayCardEffects(ctx: GameState, cardId: string): Effect[] 
                     ]
                 }
             }
-            // 重算LogicTree
-            const logicLeafs: LogicTree[] = Object.keys(copyOriginCondition).map(k => {
-                const ret: LogicTree = {
-                    type: "Leaf",
-                    value: k
-                }
-                return ret
-            })
-            const logicTree: LogicTree = {
-                type: "And",
-                children: prototype.commandText?.logicTreeActions?.[0] ?
-                    [...logicLeafs, ...CardTextFn.getLogicTreeTreeLeafs(prototype.commandText, prototype.commandText.logicTreeActions[0])] :
-                    logicLeafs
-            }
+
             // 重寫條件
-            const totalCostPlusPlayEffect: Effect = {
-                ...playCardEffect,
+            let totalCostPlusPlayEffect: Effect = JSON.parse(JSON.stringify(playCardEffect))
+            totalCostPlusPlayEffect = {
+                ...totalCostPlusPlayEffect,
                 id: `totalCostPlusPlayEffect_${cardId}`,
                 description: "合計国力＋(１)してプレイできる",
                 text: {
-                    ...playCardEffect.text,
+                    ...totalCostPlusPlayEffect.text,
                     id: `totalCostPlusPlayEffect_text_${cardId}`,
                     conditions: copyOriginCondition,
                 }
             }
             
-            // 加入新的action, 用這個能力出場的要標記
-            totalCostPlusPlayEffect.text.logicTreeActions = JSON.parse(JSON.stringify(playCardEffect.text.logicTreeActions))
             if (totalCostPlusPlayEffect.text.logicTreeActions?.[0] == null) {
                 throw new Error(`morePlayCardEffect.text.logicTreeActions?.[0] == null`)
             }
-            totalCostPlusPlayEffect.text.logicTreeActions[0].logicTree = logicTree
+            // 179027_09D_C_BK063R_black這張卡特殊處理
+            if (getCard(ctx, cardId).protoID == "179027_09D_C_BK063R_black") {
+                // 重算LogicTree
+                const logicLeafs: LogicTree[] = Object.keys(copyOriginCondition).map(k => {
+                    const ret: LogicTree = {
+                        type: "Leaf",
+                        value: k
+                    }
+                    return ret
+                })
+                const logicTree: LogicTree = {
+                    type: "And",
+                    children: prototype.commandText?.logicTreeActions?.[0] ?
+                        [...logicLeafs, ...CardTextFn.getLogicTreeTreeLeafs(prototype.commandText, prototype.commandText.logicTreeActions[0])] :
+                        logicLeafs
+                }
+                // logCategory("createPlayCardEffects", "totalCostPlusPlayEffect.id", totalCostPlusPlayEffect.id)
+                // logCategory("createPlayCardEffects", "totalCostPlusPlayEffect.text.id", totalCostPlusPlayEffect.text.id)
+                logCategory("createPlayCardEffects", "copyOriginCondition after", Object.keys(copyOriginCondition))
+                //logCategory("createPlayCardEffects", "logicTree", logicTree)
+                totalCostPlusPlayEffect.text.logicTreeActions[0].logicTree = logicTree
+            }
+            // 加入新的action, 用這個能力出場的要標記
             totalCostPlusPlayEffect.text.logicTreeActions[0].actions.push({
                 title: function _(ctx: GameState, effect: Effect, { GameStateFn, DefineFn }: Bridge): GameState {
                     const { addedLength } = { addedLength: 0 }
@@ -310,12 +321,13 @@ export function createPlayCardEffects(ctx: GameState, cardId: string): Effect[] 
         }
     }
     if (prototype.category == "キャラクター" && getCardHasSpeicalEffect(ctx, ["ステイ"], cardId)) {
-        const stayPlayEffect: Effect = {
-            ...playCardEffect,
+        let stayPlayEffect: Effect = JSON.parse(JSON.stringify(playCardEffect))
+        stayPlayEffect = {
+            ...stayPlayEffect,
             id: `stayPlayEffect_${cardId}`,
             description: "ステイ",
             text: {
-                ...playCardEffect.text,
+                ...stayPlayEffect.text,
                 id: `stayPlayEffect_text_${cardId}`,
                 conditions: {
                     ...dissoc("一個自軍機體", playCardEffect.text.conditions || {})

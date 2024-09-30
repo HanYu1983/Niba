@@ -29,7 +29,7 @@ export async function testCompress() {
           logCategory("testCompress", `${i} > turn: ${ctx.turn}`)
           const playerId = PlayerIDFn.getAll()[Math.round(Math.random() * 1000) % 2]
           {
-              const clickTime = Math.round(Math.random() * 1000) % 5
+              const clickTime = Math.round(Math.random() * 1000) % 3
               for (let t = 0; t < clickTime; ++t) {
                   const flows = queryFlow(ctx, playerId)
                   if (flows.length) {

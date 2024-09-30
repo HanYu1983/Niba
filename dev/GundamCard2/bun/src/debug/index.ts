@@ -45,11 +45,13 @@ import { test179020_05C_U_BK100U_black } from "./test179020_05C_U_BK100U_black";
 import { test179901_B2B_C_BK005P_black } from "./test179901_B2B_C_BK005P_black";
 import { testIssue } from "./testIssue";
 import { testCompress } from "./testCompress";
+import { test179027_09D_C_BK063R_black } from "./test179027_09D_C_BK063R_black";
 const fs = require('fs').promises;
 
 export async function tests() {
     return [
         //testIssue,
+        test179027_09D_C_BK063R_black,
         test179901_B2B_C_BK005P_black,
         test179015_04B_U_BK061C_black_2,
         test179020_05C_U_BK100U_black,

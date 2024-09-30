@@ -23,7 +23,7 @@ export function doEffect(
   logicId: number,
   logicSubId: number,
 ): GameState {
-  logCategory("doEffect", effect.text.description)
+  logCategory("doEffect", effect.id, effect.text.id, effect.text.description)
   ctx = EventCenterFn.onEffectStart(ctx, effect)
   assertEffectCanPass(ctx, effect, logicId, logicSubId)
   const ltacs = CardTextFn.getLogicTreeActionConditions(effect.text, CardTextFn.getLogicTreeAction(effect.text, logicId))[logicSubId]
@@ -230,8 +230,9 @@ export function assertEffectCanPass(
 }
 
 export function createCommandEffectTips(ctx: GameState, effect: Effect): CommandEffectTip[] {
+  logCategory("createCommandEffectTips", "effect.id", effect.id)
+  logCategory("createCommandEffectTips", "effect.text.id", effect.text.id, effect.description)
   if (effect.text.logicTreeActions) {
-    logCategory("createCommandEffectTips", effect.text.logicTreeActions.length)
     const testedEffects = effect.text.logicTreeActions.flatMap((lta, logicId) => {
       const conditionsList = CardTextFn.getLogicTreeActionConditions(effect.text, lta)
       const allTest = conditionsList.map((conditions, logicSubId) => {

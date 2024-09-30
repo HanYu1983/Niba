@@ -266,7 +266,7 @@ export const EntityFn = {
             if (isCardLike(ctx)(entity.itemId) == false) {
                 return false
             }
-            return (getSetGroup(ctx, entity.itemId).length == 1) == v
+            return (getSetGroup(ctx, entity.itemId).length > 1) == v
         }
     },
     filterHasSpecialEffect(ctx: GameState, vs: TextSpeicalEffect[]) {

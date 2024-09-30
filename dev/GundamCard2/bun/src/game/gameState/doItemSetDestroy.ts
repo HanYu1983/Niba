@@ -1,7 +1,7 @@
 import { TableFns } from "../../tool/table"
 import { AbsoluteBaSyou, AbsoluteBaSyouFn, BaSyouKeyword, BaSyouKeywordFn } from "../define/BaSyou"
 import { DestroyReason, Effect, EffectFn } from "../define/Effect"
-import { GameError } from "../define/GameError"
+import { GameError, TargetMissingError } from "../define/GameError"
 import { GameEvent } from "../define/GameEvent"
 import { StrBaSyouPair } from "../define/Tip"
 import { getCard, setCard } from "./CardTableComponent"
@@ -28,7 +28,11 @@ export function doItemSetDestroy(ctx: GameState, reason: DestroyReason | null, [
         const isDestroyEffect = getCutInDestroyEffects(ctx).find(e => EffectFn.getCardID(e) == itemId)
         if (reason) {
             if (isDestroyEffect) {
-                throw new GameError(`already destroy: ${itemId}`, { flags: [] })
+                if (options?.isSkipTargetMissing) {
+
+                } else {
+                    throw new TargetMissingError(`already destroy: ${itemId}`, {})
+                }
             }
             // 設定為破壞狀態, 破壞而廢棄的效果還沒進堆疊
             ctx = mapItemState(ctx, itemId, is => {
@@ -37,7 +41,7 @@ export function doItemSetDestroy(ctx: GameState, reason: DestroyReason | null, [
             ctx = addDestroyEffect(ctx, createDestroyEffect(ctx, reason, itemId)) as GameState
         } else {
             if (isDestroyEffect == null) {
-                throw new GameError(`not destroy: ${itemId}`, { flags: [] })
+                throw new TargetMissingError(`not destroy: ${itemId}`, {})
             }
             // 破壞無效要將堆疊中的破壞而廢棄效果移除
             ctx = removeEffect(ctx, isDestroyEffect.id) as GameState

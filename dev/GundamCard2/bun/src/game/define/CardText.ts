@@ -250,7 +250,9 @@ export const CardTextFn = {
             return [zipObj(conditionIds, conditions)]
         }
         const conditionIdsList = LogicTreeFn.enumerateAll(logicTreeCommand.logicTree) as string[][]
-        logCategory("getLogicTreeActionConditions", logicTreeCommand.logicTree, conditionIdsList)
+        logCategory("getLogicTreeActionConditions", "text.id", ctx.id)
+        logCategory("getLogicTreeActionConditions", "logicTree", logicTreeCommand.logicTree, conditionIdsList)
+        logCategory("getLogicTreeActionConditions", "text.conditions", ctx.conditions)
         return conditionIdsList.map(conditionIds => {
             const conditions = conditionIds.map(conditionId => getCondition(ctx, conditionId))
             return zipObj(conditionIds, conditions)

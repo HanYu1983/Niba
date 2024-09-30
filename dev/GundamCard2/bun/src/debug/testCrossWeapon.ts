@@ -66,7 +66,7 @@ export async function testCrossWeapon() {
                 throw new Error()
             } catch (e) {
                 if (e instanceof TipError && e.info.hasSameText) {
-                    console.log(e)
+                    console.log(e.message)
                 } else {
                     throw e
                 }
