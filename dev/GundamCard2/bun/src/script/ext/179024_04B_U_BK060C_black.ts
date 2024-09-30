@@ -35,7 +35,8 @@ export const prototype: CardPrototype = {
             logicTreeAction: {
               actions: [
                 {
-                  title: ["ターン終了時まで「速攻」を得る。", [{ title: ["＋x／＋x／＋xを得る", [2, 2, 2]], cardIds: [] }]]
+                  title: ["ターン終了時まで「速攻」を得る。", [{ title: ["＋x／＋x／＋xを得る", [2, 2, 2]], cardIds: [] }]],
+                  vars: ["「特徴：T3部隊」を持つ自軍ユニット１枚"]
                 }
               ]
             }

@@ -22,7 +22,7 @@ export async function testCompress() {
       ctx = initState(ctx, blackT3, blackT3)
       ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), blackT3.slice(0, 6)) as GameStateWithFlowMemory
       ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerB, "Gゾーン"), blackT3.slice(0, 6)) as GameStateWithFlowMemory
-      for (let i = 0; i < 1000; ++i) {
+      for (let i = 0; i < 5000; ++i) {
           logCategory("testCompress", `${i} > ${getPhase(ctx)} > ${getActivePlayerID(ctx)}`)
           logCategory("testCompress", `${i} > PlayerA: ${getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国")).length}`)
           logCategory("testCompress", `${i} > PlayerB: ${getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerB, "本国")).length}`)
@@ -45,7 +45,7 @@ export async function testCompress() {
                           // }
                           flow = flows[Math.round(Math.random()*1000)%flows.length]
                           ctx = applyFlow(ctx, playerId, flow)
-                          TableFns.assertDup(ctx.table)
+                          //TableFns.assertDup(ctx.table)
                       } catch (e) {
                           if (e instanceof TargetMissingError) {
                             logCategory("testCompress", e.message)

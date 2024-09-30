@@ -23,7 +23,6 @@ export const CardSelectionView = (props: {
               size={300}
             ></CardView>
             <div>{proto.title}</div>
-            <div>{proto.description}</div>
             {
               texts.map((text, i) => {
                 return <div key={text.id}>
@@ -31,6 +30,8 @@ export const CardSelectionView = (props: {
                 </div>
               })
             }
+            <div>{proto.characteristic}</div>
+            <div style={{ color: "grey" }}>{proto.description}</div>
           </div>
         })
       }

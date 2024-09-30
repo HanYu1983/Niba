@@ -29,10 +29,19 @@ export const prototype: CardPrototype = {
           isOption: true,
           conditions: {
             "自軍本国の上のカード１～３枚を見て、その中にある、「特徴：ヘイズル系」を持つユニット１枚": {
-              title: ["Entity", { see: [DefineFn.RelatedBaSyouFn.of("自軍", "本国"), 1, 3], hasChar: ["ヘイズル系"], cardCategory: ["ユニット"], count: 1 }],
+              title: ["Entity", { 
+                see: [DefineFn.RelatedBaSyouFn.of("自軍", "本国"), 1, 3], 
+                hasChar: ["ヘイズル系"], 
+                cardCategory: ["ユニット"], 
+                count: 1 
+              }],
             },
             "このカードの部隊の任意の順番": {
-              title: ["Entity", { hasSelfCardId: true, isSetGroup: true, max: 1 }]
+              title: ["Entity", { 
+                hasSelfCardId: true, 
+                isSetGroup: true, 
+                max: 1
+              }]
             }
           },
           logicTreeAction: {

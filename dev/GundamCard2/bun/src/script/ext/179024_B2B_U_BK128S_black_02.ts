@@ -31,6 +31,8 @@ export const prototype: CardPrototype = {
             side: "敵軍",
             at: ["戦闘エリア1", "戦闘エリア2"],
             is: ["ユニット"],
+            max: 50,
+            asMuchAsPossible: true
           })
           const pairs = DefineFn.TipFn.getWant(tip) as StrBaSyouPair[]
           return [

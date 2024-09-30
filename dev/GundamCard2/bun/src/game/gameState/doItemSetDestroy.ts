@@ -70,7 +70,7 @@ export function createMinusDestroyEffectAndPush(ctx: GameState): GameState {
             return ctx
         }
         const cs = getItemState(ctx, cardId)
-        if (getSetGroupRoot(ctx, cardId) == cardId) {
+        if (getSetGroupRoot(ctx, cardId) != cardId) {
             return
         }
         const runtimeCate = getItemRuntimeCategory(ctx, cardId)
@@ -80,7 +80,7 @@ export function createMinusDestroyEffectAndPush(ctx: GameState): GameState {
             return
         }
         const [_, _2, hp] = getSetGroupBattlePoint(ctx, cardId)
-        if (hp <= cs.damage) {
+        if (hp <= 0) {
             const destroyReason: DestroyReason = {
                 id: "マイナスの戦闘修正",
                 playerID: getItemController(ctx, cs.id)

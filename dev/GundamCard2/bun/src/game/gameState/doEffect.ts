@@ -147,7 +147,8 @@ export function createEffectTips(
         //ctx = clearGlobalEffects(ctx)
         return ctx
       } catch (e) {
-        if (e instanceof TipError) {
+        // TODO 到底這時要不要抓TargetMissingError？
+        if (e instanceof TipError || e instanceof TargetMissingError) {
           if (options?.isAssert) {
             throw e
           }

@@ -1,4 +1,4 @@
-import { repeat, lift } from "ramda"
+import { repeat, lift, range } from "ramda"
 import { AbsoluteBaSyouFn, AbsoluteBaSyou, RelatedBaSyou, BaSyou } from "../define/BaSyou"
 import { Action, ActionTitleFn, ActionFn } from "../define/CardText"
 import { CoinFn } from "../define/Coin"
@@ -268,7 +268,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
           throw new Error(`pairs must not 0: ${action.title} ${action.vars}`)
         }
         const [targetCardId, targetBasyou] = pairs[0]
-        const coins = repeat(CoinFn.battleBonus(playerId, bonus))(x)
+        const coins = range(0, x).map(i => CoinFn.battleBonus(playerId, bonus))
         ctx = addCoinsToCard(ctx, [targetCardId, targetBasyou], coins) as GameState
         return ctx
       }
