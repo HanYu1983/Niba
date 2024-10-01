@@ -7,10 +7,6 @@
 import { CardColor, CardPrototype } from "../../game/define/CardPrototype";
 import { Condition } from "../../game/define/CardText";
 import { Effect } from "../../game/define/Effect";
-import { TargetMissingError } from "../../game/define/GameError";
-import { GlobalEffect } from "../../game/define/GlobalEffect";
-import { StrBaSyouPair, Tip } from "../../game/define/Tip";
-import { getCardGSign, getCardGSignProperty } from "../../game/gameState/card";
 import { GameState } from "../../game/gameState/GameState";
 import { Bridge } from "../bridge";
 
@@ -46,7 +42,7 @@ export const prototype: CardPrototype = {
                 const cardId = DefineFn.EffectFn.getCardID(effect)
                 const cardController = GameStateFn.getItemController(ctx, cardId)
                 if (GameStateFn.getItemIdsByBasyou(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "Gゾーン"))
-                  .filter(itemId => getCardGSign(ctx, itemId)[0].includes("白")).length >= 2) {
+                  .filter(itemId => GameStateFn.getCardGSign(ctx, itemId)[0].includes("白")).length >= 2) {
 
                 } else {
                   throw new DefineFn.TargetMissingError(`白のGサインを持つ自軍Gが２枚以上ある場合`)

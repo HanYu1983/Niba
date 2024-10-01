@@ -6,9 +6,7 @@
 
 import type { CardColor, CardPrototype } from "../../game/define/CardPrototype";
 import { Condition } from "../../game/define/CardText";
-
 import { EffectFn, type Effect } from "../../game/define/Effect";
-import { TargetMissingError } from "../../game/define/GameError";
 import type { GameState } from "../../game/gameState/GameState";
 import type { Bridge } from "../bridge";
 
@@ -29,7 +27,7 @@ export const prototype: CardPrototype = {
             }).title[1].length) {
 
             } else {
-              throw new TargetMissingError(`自軍ユニットの「専用機のセット」が成立している場合`)
+              throw new DefineFn.TargetMissingError(`自軍ユニットの「専用機のセット」が成立している場合`)
             }
             return ctx
           }.toString()

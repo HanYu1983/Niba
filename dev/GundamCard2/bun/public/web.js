@@ -32754,8 +32754,8 @@ var OnViewModel = OnEvent.pipe(scan((viewModel, evt) => {
         const deckA = evt.deckA;
         const deckB = evt.deckB;
         ctx2.gameState = initState(ctx2.gameState, deckA, deckB);
-        ctx2.gameState = createCardWithProtoIds(ctx2.gameState, AbsoluteBaSyouFn.of(PlayerA, "G\u30BE\u30FC\u30F3"), deckA.slice(0, 6));
-        ctx2.gameState = createCardWithProtoIds(ctx2.gameState, AbsoluteBaSyouFn.of(PlayerA, "\u914D\u5099\u30A8\u30EA\u30A2"), deckA.slice(0, 3));
+        ctx2.gameState = createCardWithProtoIds(ctx2.gameState, AbsoluteBaSyouFn.of(PlayerA, "G\u30BE\u30FC\u30F3"), deckA.slice(6, 12));
+        ctx2.gameState = createCardWithProtoIds(ctx2.gameState, AbsoluteBaSyouFn.of(PlayerA, "\u914D\u5099\u30A8\u30EA\u30A2"), deckA.slice(12, 6));
         const playerAFlow = queryFlow(ctx2.gameState, PlayerA);
         const playerBFlow = queryFlow(ctx2.gameState, PlayerB);
         return {
