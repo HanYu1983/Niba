@@ -25,6 +25,7 @@ export const prototype: CardPrototype = {
           evt.cardIds?.every(cid => GameStateFn.getItemCharacteristic(ctx, cid).includes("アストレイ系"))
         ) {
           const newE = GameStateFn.createPlayTextEffectFromEffect(ctx, effect, {
+            isOption: true,
             conditions: DefineFn.createRollCostRequire(2, null),
             logicTreeAction: {
               actions: [

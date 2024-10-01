@@ -62,7 +62,7 @@ export const CardStackView = (props: {
           return (
             <div
               key={rootCardId}
-              style={{ display: "flex", border: "1px solid yellow" }}
+              style={{ display: "flex", border: "2px solid yellow" }}
             >
               {cardsInSetGroup.map((cardID, i) => {
                 return (

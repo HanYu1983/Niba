@@ -26,6 +26,7 @@ export const prototype: CardPrototype = {
           evt.cardIds?.every(cid => GameStateFn.getItemCharacteristic(ctx, cid).includes("アストレイ系"))
         ) {
           const newE = GameStateFn.createPlayTextEffectFromEffect(ctx, effect, {
+            isOption: true,
             conditions: {
               ...DefineFn.createRollCostRequire(2, "白"),
               "５以下の防御力を持つ敵軍ユニット１枚": {

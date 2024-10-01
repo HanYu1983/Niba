@@ -228,23 +228,25 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                 },
             ];
         }
+        // 起動效果有可能雖然在堆疊中但可支付性消失了，比如上面的卡有3張在場上，3張都起動的情況G可能就不夠用了
+        // 所以這類的起動效果應當就是可以不使用的(isOption = true)
+        // 179016_04B_U_WT074C_white
+        // M1アストレイ
+        // アストレイ系　MS
+        // 『起動』：「特徴：アストレイ系」を持つ自軍ユニットが、プレイされて場に出た場合、〔２〕を支払う事ができる。その場合、カード１枚を引く。
+        // （注：このカードが場に出た時にも起動する）
+        myEffect.forEach(e => {
+            if (e.isOption) {
+                return
+            }
+            // 非options的效果要做可支付性斷言，若斷言代表流程有誤
+            const cets = createCommandEffectTips(ctx, e).filter(CommandEffecTipFn.filterNoError)
+            if (cets.length == 0) {
+                throw new Error(`cets.length must > 0`)
+            }
+        })
         const effect = myEffect[0]
-        // temp test
-        {
-            const cets = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)
-            if (cets.length == 0) {
-                throw new Error(`cets.length must not 0`)
-            }
-        }
         const optionEffect = myEffect.filter((v) => v.isOption == true);
-        // temp test
-        if (optionEffect.length) {
-            const effect = optionEffect[0]
-            const cets = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)
-            if (cets.length == 0) {
-                throw new Error(`cets.length must not 0`)
-            }
-        }
         return [
             ...(myEffect.length
                 ? [
@@ -317,7 +319,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                 }
         }
     }
-    const myCommandList = getPlayerCommandsFilterNoErrorDistinct(ctx, playerID).map(tip => tip.effectId).map(id=>getEffect(ctx, id))
+    const myCommandList = getPlayerCommandsFilterNoErrorDistinct(ctx, playerID).map(tip => tip.effectId).map(id => getEffect(ctx, id))
     // 處理堆疊效果，從最上方開始處理
     if (ctx.stackEffect.length) {
         // 取得最上方的效果
@@ -367,14 +369,18 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                     if (myCommandList.length == 0) {
                         return [];
                     }
-                    const effect = myCommandList[0]
                     // temp test
-                    {
-                        const cets = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)
-                        if (cets.length == 0) {
-                            throw new Error(`cets.length must not 0`)
+                    myCommandList.forEach(e => {
+                        if (e.isOption) {
+                            return
                         }
-                    }
+                        // 非options的效果要做可支付性斷言，若斷言代表流程有誤
+                        const cets = createCommandEffectTips(ctx, e).filter(CommandEffecTipFn.filterNoError)
+                        if (cets.length == 0) {
+                            throw new Error(`cets.length must > 0`)
+                        }
+                    })
+                    const effect = myCommandList[0]
                     return [
                         {
                             id: "FlowSetActiveEffectID",
@@ -399,14 +405,6 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                 },
             ];
         }
-        // temp test 
-        // {
-        //     const cets = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)
-        //     if (cets.length == 0) {
-        //         console.log(JSON.stringify(effect, null, 2))
-        //         throw new Error(`cets.length must not 0`)
-        //     }
-        // }
         return [
             {
                 id: "FlowSetActiveEffectID",
@@ -440,14 +438,18 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                     if (myCommandList.length == 0) {
                         return [];
                     }
-                    const effect = myCommandList[0]
                     // temp test
-                    {
-                        const cets = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)
-                        if (cets.length == 0) {
-                            throw new Error(`cets.length must not 0`)
+                    myCommandList.forEach(e => {
+                        if (e.isOption) {
+                            return
                         }
-                    }
+                        // 非options的效果要做可支付性斷言，若斷言代表流程有誤
+                        const cets = createCommandEffectTips(ctx, e).filter(CommandEffecTipFn.filterNoError)
+                        if (cets.length == 0) {
+                            throw new Error(`cets.length must > 0`)
+                        }
+                    })
+                    const effect = myCommandList[0]
                     return [
                         {
                             id: "FlowSetActiveEffectID",

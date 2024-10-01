@@ -30266,7 +30266,7 @@ function doActiveEffect(ctx2, playerID, effectID, logicId, logicSubId) {
   } catch (e) {
     if (e instanceof TargetMissingError) {
       logCategory("doActiveEffect", `=======================`);
-      logCategory("doActiveEffect", `\u5C0D\u8C61\u907A\u5931: ${e.message}`);
+      logCategory("doActiveEffect", `\u5C0D\u8C61\u907A\u5931: ${e.message}:${effect.text.description}`);
     } else {
       throw e;
     }
@@ -32755,7 +32755,9 @@ var OnViewModel = OnEvent.pipe(scan((viewModel, evt) => {
         const deckB = evt.deckB;
         ctx2.gameState = initState(ctx2.gameState, deckA, deckB);
         ctx2.gameState = createCardWithProtoIds(ctx2.gameState, AbsoluteBaSyouFn.of(PlayerA, "G\u30BE\u30FC\u30F3"), deckA.slice(6, 12));
-        ctx2.gameState = createCardWithProtoIds(ctx2.gameState, AbsoluteBaSyouFn.of(PlayerA, "\u914D\u5099\u30A8\u30EA\u30A2"), deckA.slice(12, 6));
+        ctx2.gameState = createCardWithProtoIds(ctx2.gameState, AbsoluteBaSyouFn.of(PlayerA, "\u914D\u5099\u30A8\u30EA\u30A2"), deckA.slice(12, 18));
+        ctx2.gameState = createCardWithProtoIds(ctx2.gameState, AbsoluteBaSyouFn.of(PlayerB, "G\u30BE\u30FC\u30F3"), deckB.slice(0, 6));
+        ctx2.gameState = createCardWithProtoIds(ctx2.gameState, AbsoluteBaSyouFn.of(PlayerB, "\u914D\u5099\u30A8\u30EA\u30A2"), deckB.slice(12, 18));
         const playerAFlow = queryFlow(ctx2.gameState, PlayerA);
         const playerBFlow = queryFlow(ctx2.gameState, PlayerB);
         return {
@@ -33450,7 +33452,7 @@ var CardStackView = (props) => {
         cardsOnlySetGroupRoot.map((rootCardId) => {
           const cardsInSetGroup = getSetGroup(appContext.viewModel.model.gameState, rootCardId);
           return /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
-            style: { display: "flex", border: "1px solid yellow" },
+            style: { display: "flex", border: "2px solid yellow" },
             children: cardsInSetGroup.map((cardID, i) => {
               return /* @__PURE__ */ jsx_dev_runtime6.jsxDEV(CardView, {
                 enabled: true,
