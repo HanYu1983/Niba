@@ -8,29 +8,6 @@ import type { Effect } from "../../game/define/Effect";
 import type { GameState } from "../../game/gameState/GameState";
 import type { Bridge } from "../bridge";
 
-function createRollCostRequire(
-  costNum: number,
-  color: CardColor | null
-): { [key: string]: Condition } {
-  let ret: { [key: string]: Condition } = {}
-  for (let i = 0; i < costNum; ++i) {
-    const key = `${i}[${color}]`
-    ret = {
-      ...ret,
-      [key]: {
-        title: ["RollColor", color],
-        actions: [
-          {
-            title: ["_ロールする", "ロール"],
-            vars: [key]
-          }
-        ]
-      }
-    };
-  }
-  return ret
-}
-
 export const prototype: CardPrototype = {
   texts: [
     {
@@ -45,6 +22,9 @@ export const prototype: CardPrototype = {
               title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
                 const cardId = DefineFn.EffectFn.getCardID(effect)
                 const rootId = GameStateFn.getSetGroupRoot(ctx, cardId)
+                if (rootId == cardId) {
+                  throw new DefineFn.TipError(`このセットグループのユニットは不存在`)
+                }
                 if (GameStateFn.isSetGroupHasA(ctx, ["速攻"], rootId)) {
                   throw new DefineFn.TipError(`速攻已有了:${cardId}:${effect.text.description}`)
                 }
@@ -88,3 +68,26 @@ export const prototype: CardPrototype = {
     }
   ],
 };
+
+function createRollCostRequire(
+  costNum: number,
+  color: CardColor | null
+): { [key: string]: Condition } {
+  let ret: { [key: string]: Condition } = {}
+  for (let i = 0; i < costNum; ++i) {
+    const key = `${i}[${color}]`
+    ret = {
+      ...ret,
+      [key]: {
+        title: ["RollColor", color],
+        actions: [
+          {
+            title: ["_ロールする", "ロール"],
+            vars: [key]
+          }
+        ]
+      }
+    };
+  }
+  return ret
+}

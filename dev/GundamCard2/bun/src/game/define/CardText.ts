@@ -1,5 +1,5 @@
 import { always, ifElse, map, pipe, zipObj } from "ramda";
-import { RelatedPlayerSideKeyword } from ".";
+import { RelatedPlayerSideKeyword, UnitPropertyKeyword } from ".";
 import { LogicTree, LogicTreeFn } from "../../tool/logicTree";
 import { AbsoluteBaSyou, BaSyou, BaSyouKeyword } from "./BaSyou";
 import { CardColor, CardCategory } from "./CardPrototype";
@@ -89,6 +89,7 @@ export type EntitySearchOptions = {
     cardCategory?: CardCategory[],
     at?: BaSyouKeyword[],
     color?: CardColor[],
+    compareBattlePoint?: [UnitPropertyKeyword, "<=" | ">=" | "==", number],
     isDestroy?: boolean,
     isSetGroup?: boolean,
     isCanSetCharacter?: boolean,
@@ -96,10 +97,12 @@ export type EntitySearchOptions = {
     hasSpecialEffect?: TextSpeicalEffect[],
     hasChar?: string[],
     hasSelfCardId?: boolean,
+    isMaster?: boolean,
     count?: number,
     min?: number,
     max?: number,
     asMuchAsPossible?: boolean,
+    exceptCardIds?: string[],
 }
 
 export type ConditionTitle =

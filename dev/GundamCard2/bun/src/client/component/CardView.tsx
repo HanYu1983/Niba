@@ -14,6 +14,7 @@ import { getCardIdByCoinId, getCoin, getCoinIdsByCardId } from "../../game/gameS
 import { getCardTexts } from "../../game/gameState/card";
 import { getGlobalEffects } from "../../game/gameState/globalEffects";
 import { TipFn } from "../../game/define/Tip";
+import { getItemState } from "../../game/gameState/ItemStateComponent";
 
 const CARD_SIZE = 100;
 
@@ -34,7 +35,7 @@ export const CardView = (props: {
     return appContext.viewModel.playerCommands[props.clientId || "unknown"] || []
   }, [appContext.viewModel.playerCommands]);
   const tipTargetCardIds = useMemo(() => {
-    return flows.filter(flow => flow.id == "FlowSetTipSelection").flatMap(flow=>{
+    return flows.filter(flow => flow.id == "FlowSetTipSelection").flatMap(flow => {
       switch (flow.tip.title[0]) {
         case "カード":
           return flow.tip.title[1].map(i => i[0])
@@ -54,6 +55,13 @@ export const CardView = (props: {
   const card = useMemo(() => {
     return getCard(appContext.viewModel.model.gameState, props.cardID || "unknown");
   }, [props.cardID, appContext.viewModel.model.gameState]);
+  const renderItemState = useMemo(() => {
+    const itemState = getItemState(appContext.viewModel.model.gameState, props.cardID || "unknown")
+    return <div>
+      <div>damage: {itemState.damage}</div>
+      <div>destroy: {itemState.destroyReason?.id}</div>
+    </div>
+  }, [props.cardID, appContext.viewModel.model.gameState])
   const isVisible = useMemo(() => {
     if (props.isCheat) {
       return true
@@ -188,6 +196,7 @@ export const CardView = (props: {
               {renderBp}
               {renderCoin}
               {renderGlobalEffects}
+              {renderItemState}
               {renderText}
             </> : <></>
           }
@@ -196,6 +205,6 @@ export const CardView = (props: {
       </div>
 
     );
-  }, [props, card, isVisible, appContext.viewModel.cardSelection, renderCmds, renderBp, renderCoin, renderGlobalEffects, tipTargetCardIds]);
+  }, [props, card, isVisible, appContext.viewModel.cardSelection, renderCmds, renderBp, renderCoin, renderGlobalEffects, tipTargetCardIds, renderItemState]);
   return render
 };

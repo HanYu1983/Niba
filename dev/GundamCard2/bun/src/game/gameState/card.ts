@@ -2,7 +2,7 @@ import { pipe, always, map, sum } from "ramda"
 import { AbsoluteBaSyouFn, BattleAreaKeyword } from "../define/BaSyou"
 import { BattlePoint, BattlePointFn } from "../define/BattlePoint"
 import { Card } from "../define/Card"
-import { CardCategory, CardColor, GSignProperty, RollCostColor } from "../define/CardPrototype"
+import { CardCategory, CardColor, GSign, GSignProperty, RollCostColor } from "../define/CardPrototype"
 import { PlayerID } from "../define/PlayerID"
 import { Situation, BattleBonus, TextSpeicalEffect, TextSpeicalEffectFn, CardText } from "../define/CardText"
 import { getCard } from "./CardTableComponent"
@@ -91,6 +91,15 @@ export function getCardColor(ctx: GameState, cardID: string): CardColor {
     throw new Error(`color not define: ${prototype.id}`)
   }
   return prototype.color;
+}
+
+
+export function getCardGSign(ctx: GameState, cardID: string): GSign {
+  const prototype = getItemPrototype(ctx, cardID)
+  if (prototype.gsign == null) {
+    throw new Error(`gsign not define: ${prototype.id}`)
+  }
+  return prototype.gsign;
 }
 
 export function getCardGSignProperty(ctx: GameState, cardID: string): GSignProperty {

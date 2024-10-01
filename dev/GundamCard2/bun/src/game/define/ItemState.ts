@@ -129,7 +129,8 @@ export const ItemStateFn = {
             isCheat: false,
             isFirstTurn: false,
             textIdsUseThisCut: {},
-            textIdsUseThisTurn: {}
+            textIdsUseThisTurn: {},
+            damage: 0,
         }
         return ctx
     }

@@ -18,16 +18,23 @@ import { doTriggerEvent } from "../game/gameState/doTriggerEvent"
 import { loadPrototype } from "../script"
 import { getGlobalEffects } from "../game/gameState/globalEffects"
 import { CommandEffecTipFn } from "../game/define/CommandEffectTip"
-import { TargetMissingError, TipError } from "../game/define/GameError"
+import { GameError, TargetMissingError, TipError } from "../game/define/GameError"
+import { setSetGroupParent } from "../game/gameState/SetGroupComponent"
 
 export async function test179001_01A_CH_WT007R_white() {
     await loadPrototype("179001_01A_CH_WT007R_white")
+    await loadPrototype("unit")
     const cardA: Card = {
         id: "cardA",
         protoID: "179001_01A_CH_WT007R_white"
     }
+    const unit: Card = {
+        id: "unit",
+        protoID: "unit"
+    }
     let ctx = createGameState()
-    ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1"), [cardA]) as GameState
+    ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1"), [cardA, unit]) as GameState
+    ctx = setSetGroupParent(ctx, unit.id, cardA.id) as GameState
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), ["179001_01A_CH_WT007R_white", "179001_01A_CH_WT007R_white"]) as GameState
     ctx = setActivePlayerID(ctx, PlayerA) as GameState
     ctx = setPhase(ctx, ["戦闘フェイズ", "ダメージ判定ステップ", "フリータイミング"]) as GameState
@@ -53,7 +60,7 @@ export async function test179001_01A_CH_WT007R_white() {
             throw new Error(`effect.reason[0]!="PlayText`)
         }
         ctx = doEffect(ctx, effect, 0, 0)
-        if (getCardHasSpeicalEffect(ctx, ["速攻"], cardA.id) != true) {
+        if (getCardHasSpeicalEffect(ctx, ["速攻"], unit.id) != true) {
             throw new Error()
         }
         // 避開同切上限
@@ -66,7 +73,7 @@ export async function test179001_01A_CH_WT007R_white() {
         }
 
         ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", PhaseFn.getLast()] })
-        if (getCardHasSpeicalEffect(ctx, ["速攻"], cardA.id) != false) {
+        if (getCardHasSpeicalEffect(ctx, ["速攻"], unit.id) != false) {
             throw new Error()
         }
     }

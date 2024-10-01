@@ -6,7 +6,7 @@ import { TipError } from "../define/GameError";
 import { ItemState } from "../define/ItemState";
 import { PlayerID, PlayerA, PlayerB, PlayerIDFn } from "../define/PlayerID";
 import { Tip, StrBaSyouPair } from "../define/Tip";
-import { getCardColor, getCardHasSpeicalEffect, getItemCharacteristic, getItemRuntimeCategory } from "./card";
+import { getCardColor, getCardHasSpeicalEffect, getItemCharacteristic, getItemRuntimeCategory, isCardMaster } from "./card";
 import { getCoinIds, getCoin, getCoinOwner } from "./CoinTableComponent";
 import { createAbsoluteBaSyouFromBaSyou, createPlayerIdFromRelated } from "./createActionTitleFn";
 import { getCutInDestroyEffects, getEffect, getEffects, isStackEffect } from "./EffectStackComponent";
@@ -14,7 +14,7 @@ import { GameState } from "./GameState";
 import { isBattle } from "./IsBattleComponent";
 import { getItemState } from "./ItemStateComponent";
 import { Item, getItemIdsByBasyou, getItem, isCard, isChip, getItemController, getItemPrototype, getItemBaSyou, isCardLike } from "./ItemTableComponent";
-import { isSetGroupHasA } from "./setGroup";
+import { getSetGroupBattlePoint, isSetGroupHasA } from "./setGroup";
 import { getSetGroup, getSetGroupRoot } from "./SetGroupComponent";
 
 export type Entity = {
@@ -102,6 +102,37 @@ export function createTipByEntitySearch(ctx: GameState, cardId: string, options:
     } else if (options.isSetGroup != null) {
         entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx, options.isSetGroup))
     }
+    if (options.compareBattlePoint) {
+        entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx, true))
+        const [kw, op, value] = options.compareBattlePoint
+        entityList = entityList.filter(entity => {
+            const [atk, de, hp] = getSetGroupBattlePoint(ctx, entity.itemId)
+            switch (kw) {
+                case "攻撃力":
+                    switch (op) {
+                        case "<=":
+                            return atk <= value
+                        case ">=":
+                            return atk >= value
+                        case "==":
+                            return atk == value
+                    }
+                case "防御力":
+                    switch (op) {
+                        case "<=":
+                            return de <= value
+                        case ">=":
+                            return de >= value
+                        case "==":
+                            return de == value
+                    }
+            }
+            return false
+        })
+    }
+    if (options.isMaster != null) {
+        entityList = entityList.filter(entity => isCardMaster(ctx, getSetGroupRoot(ctx, entity.itemId), entity.itemId))
+    }
     if (options.at?.length) {
         entityList = entityList.filter(EntityFn.filterAtBaSyous(options.at))
     }
@@ -130,6 +161,9 @@ export function createTipByEntitySearch(ctx: GameState, cardId: string, options:
     }
     if (options.hasChar != null) {
         entityList = entityList.filter(EntityFn.filterHasChar(ctx, options.hasChar))
+    }
+    if (options.exceptCardIds?.length) {
+        entityList = entityList.filter(entity => options.exceptCardIds?.includes(entity.itemId) != true)
     }
     entityList = entityList.filter(EntityFn.filterDistinct)
     const pairs = entityList.map(entity => {

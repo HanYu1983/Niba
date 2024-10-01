@@ -26985,7 +26985,8 @@ var ItemStateFn = {
       isCheat: false,
       isFirstTurn: false,
       textIdsUseThisCut: {},
-      textIdsUseThisTurn: {}
+      textIdsUseThisTurn: {},
+      damage: 0
     };
     return ctx2;
   }
@@ -32830,6 +32831,25 @@ var CardView = (props) => {
   const card = import_react2.useMemo(() => {
     return getCard(appContext.viewModel.model.gameState, props.cardID || "unknown");
   }, [props.cardID, appContext.viewModel.model.gameState]);
+  const renderItemState = import_react2.useMemo(() => {
+    const itemState = getItemState(appContext.viewModel.model.gameState, props.cardID || "unknown");
+    return /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
+      children: [
+        /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
+          children: [
+            "damage: ",
+            itemState.damage
+          ]
+        }, undefined, true, undefined, this),
+        /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
+          children: [
+            "destroy: ",
+            itemState.destroyReason?.id
+          ]
+        }, undefined, true, undefined, this)
+      ]
+    }, undefined, true, undefined, this);
+  }, [props.cardID, appContext.viewModel.model.gameState]);
   const isVisible = import_react2.useMemo(() => {
     if (props.isCheat) {
       return true;
@@ -32986,13 +33006,14 @@ var CardView = (props) => {
               renderBp,
               renderCoin,
               renderGlobalEffects,
+              renderItemState,
               renderText
             ]
           }, undefined, true, undefined, this) : /* @__PURE__ */ jsx_dev_runtime2.jsxDEV(jsx_dev_runtime2.Fragment, {}, undefined, false, undefined, this)
         ]
       }, undefined, true, undefined, this)
     }, undefined, false, undefined, this);
-  }, [props, card, isVisible, appContext.viewModel.cardSelection, renderCmds, renderBp, renderCoin, renderGlobalEffects, tipTargetCardIds]);
+  }, [props, card, isVisible, appContext.viewModel.cardSelection, renderCmds, renderBp, renderCoin, renderGlobalEffects, tipTargetCardIds, renderItemState]);
   return render;
 };
 
