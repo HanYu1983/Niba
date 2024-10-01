@@ -26531,11 +26531,15 @@ function getPao(gainStr) {
   ];
 }
 function getHave(gainStr) {
-  const match = gainStr.match(/〔(０|１|２|３|４|５|６|７|８|９+)〕：共有［(.+)］/);
+  let match = gainStr.match(/〔(.?)(０|１|２|３|４|５|６|７|８|９+)(毎?)〕：クロスウェポン［(.+)］/);
   if (match == null) {
     return [];
   }
-  const [matchstr, rollcoststr, char] = match;
+  const [matchstr, colorstr, rollcoststr, every, char] = match;
+  if (colorstr != "" && CardColorFn.getAll().includes(colorstr) == false) {
+    throw new Error(`getCrossWeapon ${gainStr}`);
+  }
+  const color = colorstr == "" ? null : colorstr;
   const rollcost = uppercaseDigits.indexOf(rollcoststr);
   if (rollcost == -1) {
     throw new Error(`getGainTexts error: ${matchstr}`);
@@ -26544,7 +26548,7 @@ function getHave(gainStr) {
     {
       id: "",
       title: ["\u7279\u6B8A\u578B", ["\u5171\u6709", char]],
-      conditions: createRollCostRequire(rollcost, null)
+      conditions: createRollCostRequire(rollcost, color)
     }
   ];
 }
@@ -27036,6 +27040,7 @@ __export(exports_card, {
   getCardIdsCanPayRollColor: () => getCardIdsCanPayRollColor,
   getCardHasSpeicalEffect: () => getCardHasSpeicalEffect,
   getCardGSignProperty: () => getCardGSignProperty,
+  getCardGSign: () => getCardGSign,
   getCardColor: () => getCardColor,
   getCardBattlePoint: () => getCardBattlePoint,
   getCardBattleArea: () => getCardBattleArea
@@ -27224,7 +27229,7 @@ function createTextsFromSpecialEffect(ctx2, text) {
               actions: [
                 {
                   title: function _(ctx3, effect, { GameStateFn, DefineFn }) {
-                    const newE = GameStateFn.createPlayTextEffectFromEffect(ctx3, effect, {
+                    const newE = DefineFn.EffectFn.fromEffectBasic(effect, {
                       conditions: {
                         "\u9019\u5F35\u5361\u5728\u6230\u5340\u7684\u5834\u5408, \u6253\u958B\u81EA\u8ECD\u672C\u570B\u4E0A\u76841\u5F35\u5361": {
                           title: function _(ctx4, effect2, bridge) {
@@ -27249,7 +27254,7 @@ function createTextsFromSpecialEffect(ctx2, text) {
                       logicTreeAction: {
                         actions: [
                           {
-                            title: function _(ctx4, effect2, { GameStateFn: GameStateFn2, DefineFn: DefineFn2 }) {
+                            title: function _(ctx4, effect2, { GameStateFn: GameStateFn2, DefineFn: DefineFn2, ToolFn: ToolFn2 }) {
                               const cardId = DefineFn2.EffectFn.getCardID(effect2);
                               const tipKey = "\u9019\u5F35\u5361\u5728\u6230\u5340\u7684\u5834\u5408, \u6253\u958B\u81EA\u8ECD\u672C\u570B\u4E0A\u76841\u5F35\u5361";
                               const hasTip = DefineFn2.ItemStateFn.hasTip(GameStateFn2.getItemState(ctx4, cardId), tipKey);
@@ -27264,10 +27269,21 @@ function createTextsFromSpecialEffect(ctx2, text) {
                               const hasSameGSighProperty = GameStateFn2.getCardGSignProperty(ctx4, openCardId) == GameStateFn2.getCardGSignProperty(ctx4, cardId);
                               if (hasSameGSighProperty) {
                                 const bonus = GameStateFn2.getCardRollCostLength(ctx4, openCardId);
-                                ctx4 = GameStateFn2.mapItemState(ctx4, cardId, (is) => DefineFn2.ItemStateFn.setGlobalEffect(is, null, {
-                                  title: ["\uFF0Bx\uFF0F\uFF0Bx\uFF0F\uFF0Bx\u3092\u5F97\u308B", [bonus, bonus, bonus]],
-                                  cardIds: [cardId]
-                                }, { isRemoveOnTurnEnd: true }));
+                                const gainBonus = [bonus, bonus, bonus];
+                                ctx4 = GameStateFn2.doTriggerEvent(ctx4, { title: ["\u300C\u30B2\u30A4\u30F3\u300D\u306E\u52B9\u679C\u3067\u6226\u95D8\u4FEE\u6B63\u3092\u5F97\u308B\u5834\u5408", gainBonus], cardIds: [cardId] });
+                                const hasCase1 = GameStateFn2.getCardTexts(ctx4, cardId).find((text2) => text2.description == "\u300E\u8D77\u52D5\u300F\uFF1A\u3053\u306E\u30AB\u30FC\u30C9\u306F\u3001\u300C\u30B2\u30A4\u30F3\u300D\u306E\u52B9\u679C\u3067\u6226\u95D8\u4FEE\u6B63\u3092\u5F97\u308B\u5834\u5408\u3001\u305D\u306E\u6226\u95D8\u4FEE\u6B63\u306E\u4EE3\u308F\u308A\u306B\u3001\u30BF\u30FC\u30F3\u7D42\u4E86\u6642\u307E\u3067\uFF0B\uFF14\uFF0F\xB1\uFF10\uFF0F\xB1\uFF10\u3092\u5F97\u308B\u4E8B\u304C\u3067\u304D\u308B\u3002") != null;
+                                const hasCase2 = GameStateFn2.getCardTexts(ctx4, cardId).find((text2) => text2.description == "\u300E\u8D77\u52D5\u300F\uFF1A\u3053\u306E\u30AB\u30FC\u30C9\u306F\u3001\u300C\u30B2\u30A4\u30F3\u300D\u306E\u52B9\u679C\u3067\u6226\u95D8\u4FEE\u6B63\u3092\u5F97\u308B\u5834\u5408\u3001\u305D\u306E\u6226\u95D8\u4FEE\u6B63\u3092\u5F97\u308B\u4EE3\u308F\u308A\u306B\u3001\u30BF\u30FC\u30F3\u7D42\u4E86\u6642\u307E\u3067\u3001\u300C\u901F\u653B\u300D\u3092\u5F97\u308B\u4E8B\u304C\u3067\u304D\u308B\u3002") != null;
+                                if (hasCase1) {
+                                  ctx4 = GameStateFn2.doItemSetGlobalEffectsUntilEndOfTurn(ctx4, [{ title: ["\uFF0Bx\uFF0F\uFF0Bx\uFF0F\uFF0Bx\u3092\u5F97\u308B", [4, 0, 0]], cardIds: [cardId] }], GameStateFn2.createStrBaSyouPair(ctx4, cardId));
+                                } else if (hasCase2) {
+                                  ctx4 = GameStateFn2.doItemSetGlobalEffectsUntilEndOfTurn(ctx4, [{ title: ["AddText", { id: ToolFn2.getUUID("hasCase2"), title: ["\u7279\u6B8A\u578B", ["\u901F\u653B"]] }], cardIds: [cardId] }], GameStateFn2.createStrBaSyouPair(ctx4, cardId));
+                                } else {
+                                  ctx4 = GameStateFn2.mapItemState(ctx4, cardId, (is) => DefineFn2.ItemStateFn.setGlobalEffect(is, null, {
+                                    title: ["\uFF0Bx\uFF0F\uFF0Bx\uFF0F\uFF0Bx\u3092\u5F97\u308B", gainBonus],
+                                    cardIds: [cardId]
+                                  }, { isRemoveOnTurnEnd: true }));
+                                  ctx4 = GameStateFn2.doTriggerEvent(ctx4, { title: ["\u300C\u30B2\u30A4\u30F3\u300D\u306E\u52B9\u679C\u3067\u6226\u95D8\u4FEE\u6B63\u3092\u5F97\u305F\u5834\u5408", gainBonus], cardIds: [cardId] });
+                                }
                               }
                               return ctx4;
                             }.toString()
@@ -27501,6 +27517,8 @@ function createTextsFromSpecialEffect(ctx2, text) {
                     ctx3 = GameStateFn.doItemSwap(ctx3, [cardId, basyou], targetPair);
                     ctx3 = GameStateFn.doItemSetRollState(ctx3, false, [cardId, basyou], { isSkipTargetMissing: true });
                     ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(basyou, "\u30B8\u30E3\u30F3\u30AF\u30E4\u30FC\u30C9"), targetPair);
+                    ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: ["\u300C\u6539\u88C5\u300D\u306E\u52B9\u679C\u3067\u5EC3\u68C4\u3055\u308C\u308B\u5834\u5408"], cardIds: [targetPair[0]] });
+                    ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: ["\u300C\u6539\u88C5\u300D\u306E\u52B9\u679C\u3067\u5834\u306B\u51FA\u305F\u5834\u5408"], cardIds: [cardId] });
                     return ctx3;
                   }.toString()
                 }
@@ -27698,6 +27716,13 @@ function getCardColor(ctx2, cardID) {
     throw new Error(`color not define: ${prototype.id}`);
   }
   return prototype.color;
+}
+function getCardGSign(ctx2, cardID) {
+  const prototype = getItemPrototype(ctx2, cardID);
+  if (prototype.gsign == null) {
+    throw new Error(`gsign not define: ${prototype.id}`);
+  }
+  return prototype.gsign;
 }
 function getCardGSignProperty(ctx2, cardID) {
   const prototype = getItemPrototype(ctx2, cardID);
@@ -29282,6 +29307,37 @@ function createTipByEntitySearch(ctx2, cardId, options) {
   } else if (options.isSetGroup != null) {
     entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx2, options.isSetGroup));
   }
+  if (options.compareBattlePoint) {
+    entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx2, true));
+    const [kw, op, value] = options.compareBattlePoint;
+    entityList = entityList.filter((entity) => {
+      const [atk, de, hp] = getSetGroupBattlePoint(ctx2, entity.itemId);
+      switch (kw) {
+        case "\u653B\u6483\u529B":
+          switch (op) {
+            case "<=":
+              return atk <= value;
+            case ">=":
+              return atk >= value;
+            case "==":
+              return atk == value;
+          }
+        case "\u9632\u5FA1\u529B":
+          switch (op) {
+            case "<=":
+              return de <= value;
+            case ">=":
+              return de >= value;
+            case "==":
+              return de == value;
+          }
+      }
+      return false;
+    });
+  }
+  if (options.isMaster != null) {
+    entityList = entityList.filter((entity) => isCardMaster(ctx2, getSetGroupRoot(ctx2, entity.itemId), entity.itemId));
+  }
   if (options.at?.length) {
     entityList = entityList.filter(EntityFn.filterAtBaSyous(options.at));
   }
@@ -29310,6 +29366,9 @@ function createTipByEntitySearch(ctx2, cardId, options) {
   }
   if (options.hasChar != null) {
     entityList = entityList.filter(EntityFn.filterHasChar(ctx2, options.hasChar));
+  }
+  if (options.exceptCardIds?.length) {
+    entityList = entityList.filter((entity) => options.exceptCardIds?.includes(entity.itemId) != true);
   }
   entityList = entityList.filter(EntityFn.filterDistinct);
   const pairs = entityList.map((entity) => {
