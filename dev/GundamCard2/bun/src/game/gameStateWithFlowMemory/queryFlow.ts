@@ -196,14 +196,14 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
     // 處理立即效果
     if (ctx.immediateEffect.length) {
         const isActivePlayer = ctx.activePlayerID == playerID;
-        const myEffect: Effect[] = [];
+        const myEffects: Effect[] = [];
         const opponentEffect: Effect[] = [];
         ctx.immediateEffect.forEach((effectID) => {
             const effect = getEffect(ctx, effectID) as Effect
             // Event no playerID
             const controller = EffectFn.getPlayerID(effect);
             if (controller == playerID) {
-                myEffect.push(effect);
+                myEffects.push(effect);
             } else {
                 opponentEffect.push(effect);
             }
@@ -220,7 +220,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
             }
         }
         // 主動玩家
-        if (myEffect.length == 0) {
+        if (myEffects.length == 0) {
             return [
                 {
                     id: "FlowWaitPlayer",
@@ -235,36 +235,39 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
         // アストレイ系　MS
         // 『起動』：「特徴：アストレイ系」を持つ自軍ユニットが、プレイされて場に出た場合、〔２〕を支払う事ができる。その場合、カード１枚を引く。
         // （注：このカードが場に出た時にも起動する）
-        myEffect.forEach(e => {
+        const myEffectsOK = myEffects.filter(e => {
             if (e.isOption) {
-                return
+                return true
             }
-            // 非options的效果要做可支付性斷言，若斷言代表流程有誤
             const cets = createCommandEffectTips(ctx, e).filter(CommandEffecTipFn.filterNoError)
             if (cets.length == 0) {
-                throw new Error(`cets.length must > 0`)
+                return false
             }
+            return true
         })
-        const effect = myEffect[0]
-        const optionEffect = myEffect.filter((v) => v.isOption == true);
+        if (myEffectsOK.length == 0) {
+            throw new Error(`起動的效果必須至小有其中一個可行，不然程式有誤`)
+        }
+        const effect = myEffectsOK[0]
+        const optionEffects = myEffectsOK.filter((v) => v.isOption);
         return [
-            ...(myEffect.length
+            ...(myEffects.length
                 ? [
                     {
                         id: "FlowSetActiveEffectID",
                         effectID: effect.id,
                         description: "選擇一個起動效果",
-                        tips: myEffect,
+                        tips: myEffects,
                     } as Flow,
                 ]
                 : []),
-            ...(optionEffect.length
+            ...(optionEffects.length
                 ? [
                     {
                         id: "FlowDeleteImmediateEffect",
-                        effectID: optionEffect[0].id,
+                        effectID: optionEffects[0].id,
                         description: "你可以放棄這些效果",
-                        tips: optionEffect,
+                        tips: optionEffects,
                     } as Flow,
                 ]
                 : []),
@@ -369,7 +372,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                     if (myCommandList.length == 0) {
                         return [];
                     }
-                    // temp test
+                    // 暫時性代碼，這段不應存在 temp test
                     myCommandList.forEach(e => {
                         if (e.isOption) {
                             return
@@ -438,7 +441,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                     if (myCommandList.length == 0) {
                         return [];
                     }
-                    // temp test
+                    // 暫時性代碼，這段不應存在 temp test
                     myCommandList.forEach(e => {
                         if (e.isOption) {
                             return
