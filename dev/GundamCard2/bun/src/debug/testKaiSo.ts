@@ -9,7 +9,7 @@ import { setActivePlayerID } from "../game/gameState/ActivePlayerComponent";
 import { addCards, createCardWithProtoIds, getCard } from "../game/gameState/CardTableComponent";
 import { doEffect, createEffectTips, createCommandEffectTips, setTipSelectionForUser } from "../game/gameState/doEffect";
 import { doItemMove } from "../game/gameState/doItemMove";
-import { getTopEffect } from "../game/gameState/EffectStackComponent";
+import { getEffect, getTopEffect } from "../game/gameState/EffectStackComponent";
 import { createGameState, GameState } from "../game/gameState/GameState";
 import { createPlayEffects } from "../game/gameState/createPlayEffects";
 import { createPlayGEffects } from "../game/gameState/createPlayGEffects";
@@ -18,6 +18,7 @@ import { getItemBaSyou, getItemIdsByBasyou } from "../game/gameState/ItemTableCo
 import { setPhase } from "../game/gameState/PhaseComponent";
 import { doTriggerEvent } from "../game/gameState/doTriggerEvent";
 import { loadPrototype } from "../script";
+import { getPlayerCommands, getPlayerCommandsFilterNoErrorDistinct, updateCommand } from "../game/gameState/updateCommand";
 
 export async function testKaiSo() {
     await loadPrototype("unitHasKaiSo")
@@ -39,6 +40,13 @@ export async function testKaiSo() {
         throw new Error()
     }
     let effect = effects[0]
+    // 必須是場上的卡發動的能力
+    if (effect.reason[0] == "PlayText" && effect.reason[2] == cardA.id) {
+
+    } else {
+        throw new Error()
+    }
+    let originCtx = JSON.parse(JSON.stringify(ctx))
     ctx = setTipSelectionForUser(ctx, effect, 0, 0)
     ctx = doEffect(ctx, effect, 0, 0)
     let top = getTopEffect(ctx)
@@ -60,6 +68,20 @@ export async function testKaiSo() {
     }
     // cardB被廢棄
     if (getItemBaSyou(ctx, cardB.id).value[1] != "ジャンクヤード") {
+        throw new Error()
+    }
+    // =============
+    ctx = originCtx
+    ctx = updateCommand(ctx)
+    effects = getPlayerCommandsFilterNoErrorDistinct(ctx, PlayerA).map(cet => getEffect(ctx, cet.effectId))
+    if (effects.length == 0) {
+        throw new Error()
+    }
+    effect = effects[0]
+    // 必須是場上的卡發動的能力
+    if (effect.reason[0] == "PlayText" && effect.reason[2] == cardA.id) {
+
+    } else {
         throw new Error()
     }
 }
