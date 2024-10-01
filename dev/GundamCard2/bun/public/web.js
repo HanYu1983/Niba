@@ -30880,6 +30880,10 @@ function initState(ctx2, deckA, deckB) {
   ctx2 = shuffleItems(ctx2, AbsoluteBaSyouFn.of(PlayerB, "\u672C\u56FD"));
   ctx2 = initCardFace(ctx2);
   ctx2 = setActivePlayerID(ctx2, PlayerA);
+  ctx2 = {
+    ...ctx2,
+    flowMemory: DEFAULT_FLOW_MEMORY
+  };
   return ctx2;
 }
 function initCardFace(ctx2) {
@@ -32781,18 +32785,16 @@ var CardView = (props) => {
   const appContext = import_react2.useContext(AppContext);
   const flows = import_react2.useMemo(() => {
     return appContext.viewModel.playerCommands[props.clientId || "unknown"] || [];
-  }, [appContext.viewModel.playerCommands[props.clientId]]);
+  }, [appContext.viewModel.playerCommands]);
   const tipTargetCardIds = import_react2.useMemo(() => {
-    const tipFlow = flows.find((flow2) => flow2.id == "FlowSetTipSelection");
-    if (tipFlow == null) {
+    return flows.filter((flow2) => flow2.id == "FlowSetTipSelection").flatMap((flow2) => {
+      switch (flow2.tip.title[0]) {
+        case "\u30AB\u30FC\u30C9":
+          return flow2.tip.title[1].map((i) => i[0]);
+      }
       return [];
-    }
-    switch (tipFlow.tip.title[0]) {
-      case "\u30AB\u30FC\u30C9":
-        return tipFlow.tip.title[1].map((i) => i[0]);
-    }
-    return [];
-  }, flows);
+    });
+  }, [flows]);
   const flow = import_react2.useMemo(() => {
     return flows.find((flow2) => {
       switch (flow2.id) {
@@ -32883,7 +32885,7 @@ var CardView = (props) => {
               style: { border: "1px solid black" },
               children: text.title[0] == "\u7279\u6B8A\u578B" ? JSON.stringify(text.title[1]) : text.description
             }, undefined, false, undefined, this)
-          }, text.id, false, undefined, this);
+          }, i, false, undefined, this);
         }),
         /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
           children: proto.characteristic
@@ -32967,7 +32969,7 @@ var CardView = (props) => {
         ]
       }, undefined, true, undefined, this)
     }, undefined, false, undefined, this);
-  }, [card, isVisible, appContext.viewModel.cardSelection, props, flow, tipTargetCardIds]);
+  }, [props, card, isVisible, appContext.viewModel.cardSelection, renderCmds, renderBp, renderCoin, renderGlobalEffects, tipTargetCardIds]);
   return render;
 };
 
@@ -33316,7 +33318,7 @@ var CardStackView = (props) => {
     return appContext.viewModel.model.gameState.table.cardStack[AbsoluteBaSyouFn.toString(props.cardPosition)] || [];
   }, [
     props.cardPosition,
-    appContext.viewModel.model.gameState.table.cardStack
+    appContext.viewModel.model.gameState
   ]);
   const cardsOnlySetGroupRoot = import_react6.useMemo(() => {
     return cards.filter((cardId) => {
@@ -33380,7 +33382,8 @@ var CardStackView = (props) => {
     props,
     cardsOnlySetGroupRoot,
     appContext.viewModel.cardPositionSelection,
-    appContext.viewModel.model.gameState.setGroup.itemGroupParent
+    appContext.viewModel.model,
+    cards
   ]);
   return render;
 };
@@ -33408,7 +33411,13 @@ var TableView = (props) => {
                   cardPosition: AbsoluteBaSyouFn.of(clientId, "\u30CF\u30F3\u30AC\u30FC")
                 }, undefined, false, undefined, this)
               }, clientId + "\u30CF\u30F3\u30AC\u30FC", false, undefined, this),
-              BaSyouKeywordFn.getAll().filter((basyouKw) => basyouKw != "\u624B\u672D" && basyouKw != "\u30CF\u30F3\u30AC\u30FC").map((basyouKw) => {
+              /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("div", {
+                children: /* @__PURE__ */ jsx_dev_runtime7.jsxDEV(CardStackView, {
+                  clientId: props.clientId,
+                  cardPosition: AbsoluteBaSyouFn.of(clientId, "\u914D\u5099\u30A8\u30EA\u30A2")
+                }, undefined, false, undefined, this)
+              }, clientId + "\u30CF\u30F3\u30AC\u30FC", false, undefined, this),
+              BaSyouKeywordFn.getAll().filter((basyouKw) => basyouKw != "\u624B\u672D" && basyouKw != "\u30CF\u30F3\u30AC\u30FC" && basyouKw != "\u914D\u5099\u30A8\u30EA\u30A2").map((basyouKw) => {
                 return /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("div", {
                   children: /* @__PURE__ */ jsx_dev_runtime7.jsxDEV(CardStackView, {
                     clientId: props.clientId,
@@ -33436,7 +33445,7 @@ function ClientView(props) {
         return /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
           style: { border: "1px solid black" },
           children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV(EffectView, {
-            enabled: false,
+            enabled: true,
             clientId: props.clientId,
             effectID: effectId
           }, undefined, false, undefined, this)
@@ -33459,6 +33468,12 @@ function ClientView(props) {
           children: [
             "clientId: ",
             props.clientId
+          ]
+        }, undefined, true, undefined, this),
+        /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
+          children: [
+            "state: ",
+            appContext.viewModel.model.gameState.flowMemory.state
           ]
         }, undefined, true, undefined, this),
         /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
@@ -33488,7 +33503,11 @@ function ClientView(props) {
         }, undefined, false, undefined, this)
       ]
     }, undefined, true, undefined, this);
-  }, [appContext.viewModel.model, appContext.viewModel.localMemory, appContext.viewModel.model.gameState, props.clientId]);
+  }, [
+    appContext.viewModel.model.gameState,
+    props.clientId,
+    renderStackEffects
+  ]);
   return render;
 }
 
@@ -33530,39 +33549,19 @@ var CardSelectionView = (props) => {
     return /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
       style: props.style,
       children: appContext.viewModel.cardSelection.map((cardID) => {
-        const proto = getItemPrototype(appContext.viewModel.model.gameState, cardID);
-        const texts = [...proto.commandText ? [proto.commandText] : [], ...proto.texts || []];
         return /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
-          children: [
-            /* @__PURE__ */ jsx_dev_runtime10.jsxDEV(CardView, {
-              enabled: true,
-              clientId: props.clientId,
-              cardID,
-              size: 300
-            }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
-              children: proto.title
-            }, undefined, false, undefined, this),
-            texts.map((text, i) => {
-              return /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
-                children: /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
-                  style: { border: "1px solid black" },
-                  children: text.description
-                }, undefined, false, undefined, this)
-              }, text.id, false, undefined, this);
-            }),
-            /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
-              children: proto.characteristic
-            }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
-              style: { color: "grey" },
-              children: proto.description
-            }, undefined, false, undefined, this)
-          ]
-        }, cardID, true, undefined, this);
+          children: /* @__PURE__ */ jsx_dev_runtime10.jsxDEV(CardView, {
+            enabled: true,
+            clientId: props.clientId,
+            cardID,
+            size: 300,
+            isShowInfo: true,
+            isShowCmd: true
+          }, undefined, false, undefined, this)
+        }, cardID, false, undefined, this);
       })
     }, undefined, false, undefined, this);
-  }, [appContext.viewModel.cardSelection]);
+  }, [props, appContext.viewModel.cardSelection]);
   return selection;
 };
 

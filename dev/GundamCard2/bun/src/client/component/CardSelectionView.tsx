@@ -14,29 +14,19 @@ export const CardSelectionView = (props: {
     return <div style={props.style}>
       {
         appContext.viewModel.cardSelection.map(cardID => {
-          const proto = getItemPrototype(appContext.viewModel.model.gameState, cardID)
-          const texts = [...(proto.commandText ? [proto.commandText] : []), ...(proto.texts || [])]
           return <div key={cardID}>
             <CardView
               enabled={true}
               clientId={props.clientId}
               cardID={cardID}
               size={300}
+              isShowInfo={true}
+              isShowCmd={true}
             ></CardView>
-            <div>{proto.title}</div>
-            {
-              texts.map((text, i) => {
-                return <div key={text.id}>
-                  <div style={{ border: "1px solid black" }}>{text.description}</div>
-                </div>
-              })
-            }
-            <div>{proto.characteristic}</div>
-            <div style={{ color: "grey" }}>{proto.description}</div>
           </div>
         })
       }
     </div>
-  }, [appContext.viewModel.cardSelection])
+  }, [props, appContext.viewModel.cardSelection])
   return selection
 }

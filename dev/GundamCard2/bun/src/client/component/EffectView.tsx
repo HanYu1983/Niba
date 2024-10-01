@@ -1,7 +1,6 @@
 import { useContext, useMemo } from "react";
 import { AppContext } from "../tool/appContext";
 import { CardView } from "./CardView";
-import { RequireView } from "./RequireView";
 import { Effect, EffectFn } from "../../game/define/Effect";
 import { getEffectIncludePlayerCommand } from "../../game/gameStateWithFlowMemory/effect";
 

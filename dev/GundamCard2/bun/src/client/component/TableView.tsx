@@ -24,8 +24,14 @@ export const TableView = (props: { clientId: string }) => {
                     cardPosition={AbsoluteBaSyouFn.of(clientId, "ハンガー")}
                   ></CardStackView>
                 </div>
+                <div key={clientId + "ハンガー"}>
+                  <CardStackView
+                    clientId={props.clientId}
+                    cardPosition={AbsoluteBaSyouFn.of(clientId, "配備エリア")}
+                  ></CardStackView>
+                </div>
                 {
-                  BaSyouKeywordFn.getAll().filter(basyouKw => basyouKw != "手札" && basyouKw != "ハンガー").map(basyouKw => {
+                  BaSyouKeywordFn.getAll().filter(basyouKw => basyouKw != "手札" && basyouKw != "ハンガー" && basyouKw != "配備エリア").map(basyouKw => {
                     return <div key={clientId + basyouKw}>
                       <CardStackView
                         clientId={props.clientId}

@@ -58,6 +58,10 @@ export function initState(ctx: GameStateWithFlowMemory, deckA: string[], deckB: 
     ctx = shuffleItems(ctx, AbsoluteBaSyouFn.of(PlayerB, "本国")) as GameStateWithFlowMemory
     ctx = initCardFace(ctx);
     ctx = setActivePlayerID(ctx, PlayerA) as GameStateWithFlowMemory
+    ctx = {
+        ...ctx,
+        flowMemory: DEFAULT_FLOW_MEMORY
+    }
     return ctx;
 }
 

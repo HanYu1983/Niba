@@ -19,7 +19,7 @@ export const CardStackView = (props: {
     );
   }, [
     props.cardPosition,
-    appContext.viewModel.model.gameState.table.cardStack,
+    appContext.viewModel.model.gameState,
   ]);
   // 整個setGroup一起移動
   const cardsOnlySetGroupRoot = useMemo(() => {
@@ -90,7 +90,8 @@ export const CardStackView = (props: {
     props,
     cardsOnlySetGroupRoot,
     appContext.viewModel.cardPositionSelection,
-    appContext.viewModel.model.gameState.setGroup.itemGroupParent,
+    appContext.viewModel.model,
+    cards
   ]);
   return render;
 };

@@ -32,18 +32,16 @@ export const CardView = (props: {
   const appContext = useContext(AppContext);
   const flows = useMemo(() => {
     return appContext.viewModel.playerCommands[props.clientId || "unknown"] || []
-  }, [appContext.viewModel.playerCommands[props.clientId]]);
+  }, [appContext.viewModel.playerCommands]);
   const tipTargetCardIds = useMemo(() => {
-    const tipFlow = flows.find(flow => flow.id == "FlowSetTipSelection")
-    if (tipFlow == null) {
+    return flows.filter(flow => flow.id == "FlowSetTipSelection").flatMap(flow=>{
+      switch (flow.tip.title[0]) {
+        case "カード":
+          return flow.tip.title[1].map(i => i[0])
+      }
       return []
-    }
-    switch (tipFlow.tip.title[0]) {
-      case "カード":
-        return tipFlow.tip.title[1].map(i => i[0])
-    }
-    return []
-  }, flows)
+    })
+  }, [flows])
   const flow = useMemo(() => {
     return flows.find(flow => {
       switch (flow.id) {
@@ -119,7 +117,7 @@ export const CardView = (props: {
       <div>{proto.title}</div>
       {
         texts.map((text, i) => {
-          return <div key={text.id}>
+          return <div key={i}>
             <div style={{ border: "1px solid black" }}>{
               text.title[0] == "特殊型" ? JSON.stringify(text.title[1]) : text.description
             }</div>
@@ -198,6 +196,6 @@ export const CardView = (props: {
       </div>
 
     );
-  }, [card, isVisible, appContext.viewModel.cardSelection, props, flow, tipTargetCardIds]);
+  }, [props, card, isVisible, appContext.viewModel.cardSelection, renderCmds, renderBp, renderCoin, renderGlobalEffects, tipTargetCardIds]);
   return render
 };
