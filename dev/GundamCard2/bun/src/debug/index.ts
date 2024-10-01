@@ -20,7 +20,7 @@ import { getGlobalEffects } from "../game/gameState/globalEffects";
 import { createGameStateWithFlowMemory, GameStateWithFlowMemory, initState } from "../game/gameStateWithFlowMemory/GameStateWithFlowMemory";
 import { queryFlow } from "../game/gameStateWithFlowMemory/queryFlow";
 import { applyFlow, createAIChoiseList } from "../game/gameStateWithFlowMemory/applyFlow";
-import { TargetMissingError } from "../game/define/GameError";
+import { TargetMissingError, testGameError } from "../game/define/GameError";
 import { testPlayG } from "./testPlayG";
 import { testPlayChar } from "./testPlayChar";
 import { test179015_04B_U_BK061C_black, test179015_04B_U_BK061C_black_2 } from "./test179015_04B_U_BK061C_black";
@@ -51,6 +51,7 @@ const fs = require('fs').promises;
 export async function tests() {
     return [
         //testIssue,
+        testGameError,
         test179027_09D_C_BK063R_black,
         test179901_B2B_C_BK005P_black,
         test179015_04B_U_BK061C_black_2,

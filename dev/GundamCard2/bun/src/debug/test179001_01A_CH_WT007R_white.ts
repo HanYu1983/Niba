@@ -58,15 +58,6 @@ export async function test179001_01A_CH_WT007R_white() {
         }
         // 避開同切上限
         ctx = doTriggerEvent(ctx, { title: ["カット終了時", [playCardEffect]] })
-        // 確認繼承關係
-        // TipError包含TargetMissingError
-        if ((new TipError("") instanceof TargetMissingError) != true) {
-            throw new Error()
-        }
-        // TargetMissingError不包含TipError
-        if ((new TargetMissingError("") instanceof TipError) == true) {
-            throw new Error()
-        }
         // 已有速攻了，不能再加速攻
         //ctx = clearTipSelectionForUser(ctx, playCardEffect, 0, 0)
         const cetsNoErr = createCommandEffectTips(ctx, playCardEffect).filter(CommandEffecTipFn.not(CommandEffecTipFn.filterNoError))
