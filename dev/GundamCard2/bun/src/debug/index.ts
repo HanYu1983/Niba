@@ -46,11 +46,13 @@ import { test179901_B2B_C_BK005P_black } from "./test179901_B2B_C_BK005P_black";
 import { testIssue } from "./testIssue";
 import { testCompress } from "./testCompress";
 import { test179027_09D_C_BK063R_black } from "./test179027_09D_C_BK063R_black";
+import { testSupply } from "./testSupply";
 const fs = require('fs').promises;
 
 export async function tests() {
     return [
         //testIssue,
+        testSupply,
         testGameError,
         test179027_09D_C_BK063R_black,
         test179901_B2B_C_BK005P_black,

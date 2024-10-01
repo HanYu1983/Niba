@@ -28432,14 +28432,11 @@ function createActionTitleFn(action) {
       return function(ctx2, effect) {
         const cardId = EffectFn.getCardID(effect);
         const cardController = getItemController(ctx2, cardId);
-        console.log(cardId, cardController);
-        console.log(ctx2.table);
         const pairs = varNames2 == null ? [[cardId, getItemBaSyou(ctx2, cardId)]] : varNames2.flatMap((varName) => {
           return getCardTipStrBaSyouPairs(ctx2, varName, cardId);
         });
         switch (whatToDo) {
           case "\u30ED\u30FC\u30EB": {
-            logCategory("getActionTitleFn", whatToDo, varNames2, pairs);
             for (const pair2 of pairs) {
               ctx2 = doItemSetRollState(ctx2, true, pair2);
             }
