@@ -211,7 +211,7 @@ export function createConditionTitleFn(condition: Condition, options: { isPlay?:
                     )
                     return {
                         title: ["カード", pairs, pairs.slice(0, count)],
-                        min: count,
+                        count: count,
                     }
                 }
             }

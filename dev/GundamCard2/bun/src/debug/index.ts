@@ -47,11 +47,13 @@ import { testIssue } from "./testIssue";
 import { testCompress } from "./testCompress";
 import { test179027_09D_C_BK063R_black } from "./test179027_09D_C_BK063R_black";
 import { testSupply } from "./testSupply";
+import { testKaiSo } from "./testKaiSo";
 const fs = require('fs').promises;
 
 export async function tests() {
     return [
         //testIssue,
+        testKaiSo,
         testSupply,
         testGameError,
         test179027_09D_C_BK063R_black,

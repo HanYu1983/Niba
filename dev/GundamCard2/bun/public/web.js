@@ -27434,48 +27434,40 @@ function createTextsFromSpecialEffect(ctx2, text) {
               actions: [
                 {
                   title: function _(ctx3, effect, { GameStateFn, DefineFn }) {
-                    ctx3 = GameStateFn.addStackEffect(ctx3, {
-                      id: "",
-                      reason: effect.reason,
-                      description: effect.description,
-                      text: {
-                        id: effect.text.id,
-                        description: effect.text.description,
-                        title: [],
-                        conditions: {
-                          "\u770B\u81EA\u5DF1\u672C\u570B\u5168\u90E8\u7684\u5361,\u53EF\u4EE5\u5F9E\u4E2D\u627E\u51FA\u7279\u5FB5A\u76841\u5F35\u5361\u79FB\u5230HANGER,\u90A3\u500B\u6642\u5019\u672C\u570B\u6D17\u724C": {
-                            title: ["_\u81EA\u8ECD_\u672C\u570B\u627E\u51FA\u7279\u5FB5_A\u7684_1\u5F35\u5361", "\u81EA\u8ECD", "\u672C\u56FD", A, 1],
-                            actions: [
-                              {
-                                title: ["\u770B\u81EA\u5DF1_\u672C\u570B\u5168\u90E8\u7684\u5361", "\u672C\u56FD"]
-                              }
-                            ]
-                          }
-                        },
-                        logicTreeActions: [
+                    const { A: A2 } = { A: "" };
+                    const newE = DefineFn.EffectFn.fromEffectBasic(effect, {
+                      conditions: {
+                        "\u770B\u81EA\u5DF1\u672C\u570B\u5168\u90E8\u7684\u5361,\u53EF\u4EE5\u5F9E\u4E2D\u627E\u51FA\u7279\u5FB5A\u76841\u5F35\u5361\u79FB\u5230HANGER,\u90A3\u500B\u6642\u5019\u672C\u570B\u6D17\u724C": {
+                          title: ["_\u81EA\u8ECD_\u672C\u570B\u627E\u51FA\u7279\u5FB5_A\u7684_1\u5F35\u5361", "\u81EA\u8ECD", "\u672C\u56FD", A2, 1],
+                          actions: [
+                            {
+                              title: ["\u770B\u81EA\u5DF1_\u672C\u570B\u5168\u90E8\u7684\u5361", "\u672C\u56FD"]
+                            }
+                          ]
+                        }
+                      },
+                      logicTreeAction: {
+                        actions: [
                           {
-                            actions: [
-                              {
-                                title: function _(ctx4, effect2, { GameStateFn: GameStateFn2, DefineFn: DefineFn2 }) {
-                                  const cardId = DefineFn2.EffectFn.getCardID(effect2);
-                                  const cardController = GameStateFn2.getItemController(ctx4, cardId);
-                                  const pairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx4, "\u770B\u81EA\u5DF1\u672C\u570B\u5168\u90E8\u7684\u5361,\u53EF\u4EE5\u5F9E\u4E2D\u627E\u51FA\u7279\u5FB5A\u76841\u5F35\u5361\u79FB\u5230HANGER,\u90A3\u500B\u6642\u5019\u672C\u570B\u6D17\u724C", cardId);
-                                  if (pairs.length) {
-                                    for (const pair2 of pairs) {
-                                      ctx4 = GameStateFn2.doItemMove(ctx4, DefineFn2.AbsoluteBaSyouFn.of(cardController, "\u30CF\u30F3\u30AC\u30FC"), pair2);
-                                    }
-                                    ctx4 = GameStateFn2.shuffleItems(ctx4, DefineFn2.AbsoluteBaSyouFn.of(cardController, "\u672C\u56FD"));
-                                  }
-                                  return ctx4;
-                                }.toString()
+                            title: function _(ctx4, effect2, { GameStateFn: GameStateFn2, DefineFn: DefineFn2 }) {
+                              const cardId = DefineFn2.EffectFn.getCardID(effect2);
+                              const cardController = GameStateFn2.getItemController(ctx4, cardId);
+                              const pairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx4, "\u770B\u81EA\u5DF1\u672C\u570B\u5168\u90E8\u7684\u5361,\u53EF\u4EE5\u5F9E\u4E2D\u627E\u51FA\u7279\u5FB5A\u76841\u5F35\u5361\u79FB\u5230HANGER,\u90A3\u500B\u6642\u5019\u672C\u570B\u6D17\u724C", cardId);
+                              if (pairs.length) {
+                                for (const pair2 of pairs) {
+                                  ctx4 = GameStateFn2.doItemMove(ctx4, DefineFn2.AbsoluteBaSyouFn.of(cardController, "\u30CF\u30F3\u30AC\u30FC"), pair2);
+                                }
+                                ctx4 = GameStateFn2.shuffleItems(ctx4, DefineFn2.AbsoluteBaSyouFn.of(cardController, "\u672C\u56FD"));
                               }
-                            ]
+                              return ctx4;
+                            }.toString()
                           }
                         ]
                       }
                     });
+                    ctx3 = GameStateFn.addStackEffect(ctx3, newE);
                     return ctx3;
-                  }.toString()
+                  }.toString().replace(`{ A: "" }`, JSON.stringify({ A }))
                 }
               ]
             }
@@ -32319,21 +32311,17 @@ function queryFlow(ctx2, playerID) {
         }
       ];
     }
+    myEffect.forEach((e) => {
+      if (e.isOption) {
+        return;
+      }
+      const cets = createCommandEffectTips(ctx2, e).filter(CommandEffecTipFn.filterNoError);
+      if (cets.length == 0) {
+        throw new Error(`cets.length must > 0`);
+      }
+    });
     const effect = myEffect[0];
-    {
-      const cets = createCommandEffectTips(ctx2, effect).filter(CommandEffecTipFn.filterNoError);
-      if (cets.length == 0) {
-        throw new Error(`cets.length must not 0`);
-      }
-    }
     const optionEffect = myEffect.filter((v) => v.isOption == true);
-    if (optionEffect.length) {
-      const effect2 = optionEffect[0];
-      const cets = createCommandEffectTips(ctx2, effect2).filter(CommandEffecTipFn.filterNoError);
-      if (cets.length == 0) {
-        throw new Error(`cets.length must not 0`);
-      }
-    }
     return [
       ...myEffect.length ? [
         {
@@ -32438,13 +32426,16 @@ function queryFlow(ctx2, playerID) {
           if (myCommandList.length == 0) {
             return [];
           }
-          const effect2 = myCommandList[0];
-          {
-            const cets = createCommandEffectTips(ctx2, effect2).filter(CommandEffecTipFn.filterNoError);
-            if (cets.length == 0) {
-              throw new Error(`cets.length must not 0`);
+          myCommandList.forEach((e) => {
+            if (e.isOption) {
+              return;
             }
-          }
+            const cets = createCommandEffectTips(ctx2, e).filter(CommandEffecTipFn.filterNoError);
+            if (cets.length == 0) {
+              throw new Error(`cets.length must > 0`);
+            }
+          });
+          const effect2 = myCommandList[0];
           return [
             {
               id: "FlowSetActiveEffectID",
@@ -32496,13 +32487,16 @@ function queryFlow(ctx2, playerID) {
           if (myCommandList.length == 0) {
             return [];
           }
-          const effect = myCommandList[0];
-          {
-            const cets = createCommandEffectTips(ctx2, effect).filter(CommandEffecTipFn.filterNoError);
-            if (cets.length == 0) {
-              throw new Error(`cets.length must not 0`);
+          myCommandList.forEach((e) => {
+            if (e.isOption) {
+              return;
             }
-          }
+            const cets = createCommandEffectTips(ctx2, e).filter(CommandEffecTipFn.filterNoError);
+            if (cets.length == 0) {
+              throw new Error(`cets.length must > 0`);
+            }
+          });
+          const effect = myCommandList[0];
           return [
             {
               id: "FlowSetActiveEffectID",
@@ -32872,21 +32866,12 @@ var CardView = (props) => {
     return appContext.viewModel.playerCommands[props.clientId || "unknown"] || [];
   }, [appContext.viewModel.playerCommands]);
   const tipTargetCardIds = import_react2.useMemo(() => {
-    return flows.filter((flow2) => flow2.id == "FlowSetTipSelection").flatMap((flow2) => {
-      switch (flow2.tip.title[0]) {
+    return flows.filter((flow) => flow.id == "FlowSetTipSelection").flatMap((flow) => {
+      switch (flow.tip.title[0]) {
         case "\u30AB\u30FC\u30C9":
-          return flow2.tip.title[1].map((i) => i[0]);
+          return flow.tip.title[1].map((i) => i[0]);
       }
       return [];
-    });
-  }, [flows]);
-  const flow = import_react2.useMemo(() => {
-    return flows.find((flow2) => {
-      switch (flow2.id) {
-        case "FlowSetActiveEffectID":
-          return true;
-      }
-      return false;
     });
   }, [flows]);
   const card = import_react2.useMemo(() => {
@@ -33002,32 +32987,55 @@ var CardView = (props) => {
     }, undefined, true, undefined, this);
   }, [appContext.viewModel.model.gameState, props.cardID, props.isShowInfo]);
   const renderCmds = import_react2.useMemo(() => {
-    if (props.isShowCmd && flow?.id == "FlowSetActiveEffectID") {
-      return flow.tips.filter((e) => EffectFn.getCardID(e) == props.cardID).map((tip) => {
-        if (tip.id == null) {
-          return /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
-            children: "hide"
-          }, undefined, false, undefined, this);
+    if (props.isShowCmd) {
+      const cmds = flows.flatMap((flow) => {
+        if (flow?.id == "FlowSetActiveEffectID") {
+          return flow.tips.filter((e) => EffectFn.getCardID(e) == props.cardID).map((tip) => {
+            return /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
+              children: /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("button", {
+                style: { width: "100%" },
+                onClick: () => {
+                  OnEvent.next({
+                    id: "OnClickFlowConfirm",
+                    clientId: props.clientId || "unknown",
+                    flow: { ...flow, effectID: tip.id }
+                  });
+                },
+                children: /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
+                  children: tip.text.description || tip.description
+                }, undefined, false, undefined, this)
+              }, undefined, false, undefined, this)
+            }, tip.id, false, undefined, this);
+          });
         }
-        return /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
-          children: /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("button", {
-            style: { width: "100%" },
-            onClick: () => {
-              OnEvent.next({
-                id: "OnClickFlowConfirm",
-                clientId: props.clientId || "unknown",
-                flow: { ...flow, effectID: tip.id }
-              });
-            },
-            children: /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
-              children: tip.text.description || tip.description
-            }, undefined, false, undefined, this)
-          }, undefined, false, undefined, this)
-        }, tip.id, false, undefined, this);
+        if (flow?.id == "FlowDeleteImmediateEffect") {
+          return flow.tips.filter((e) => EffectFn.getCardID(e) == props.cardID).map((tip) => {
+            return /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
+              children: /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("button", {
+                style: { width: "100%" },
+                onClick: () => {
+                  OnEvent.next({
+                    id: "OnClickFlowConfirm",
+                    clientId: props.clientId || "unknown",
+                    flow: { ...flow, effectID: tip.id }
+                  });
+                },
+                children: /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
+                  children: [
+                    "\u53D6\u6D88\u6548\u679C\uFF1A",
+                    tip.text.description || tip.description
+                  ]
+                }, undefined, true, undefined, this)
+              }, undefined, false, undefined, this)
+            }, tip.id, false, undefined, this);
+          });
+        }
+        return [];
       });
+      return cmds;
     }
     return /* @__PURE__ */ jsx_dev_runtime2.jsxDEV(jsx_dev_runtime2.Fragment, {}, undefined, false, undefined, this);
-  }, [props.isShowCmd, flow]);
+  }, [props.isShowCmd, flows]);
   const render = import_react2.useMemo(() => {
     const imgSrc = isVisible ? getImgSrc(card.protoID || "unknown") : "https://particle-979.appspot.com/common/images/card/cardback_0.jpg";
     const isSelect = appContext.viewModel.cardSelection.includes(card.id);
@@ -33117,7 +33125,7 @@ var EffectView = (props) => {
           children: block.isOption ? "\u53EF\u53D6\u6D88" : "\u4E0D\u53EF\u53D6\u6D88"
         }, undefined, false, undefined, this),
         cardID != null ? /* @__PURE__ */ jsx_dev_runtime3.jsxDEV(CardView, {
-          enabled: false,
+          enabled: true,
           clientId: props.clientId,
           cardID,
           isShowCmd: false
@@ -33452,7 +33460,7 @@ var CardStackView = (props) => {
         cardsOnlySetGroupRoot.map((rootCardId) => {
           const cardsInSetGroup = getSetGroup(appContext.viewModel.model.gameState, rootCardId);
           return /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
-            style: { display: "flex", border: "2px solid yellow" },
+            style: { display: "flex", border: "2px solid blue" },
             children: cardsInSetGroup.map((cardID, i) => {
               return /* @__PURE__ */ jsx_dev_runtime6.jsxDEV(CardView, {
                 enabled: true,

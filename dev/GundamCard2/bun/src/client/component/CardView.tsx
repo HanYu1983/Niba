@@ -43,15 +43,6 @@ export const CardView = (props: {
       return []
     })
   }, [flows])
-  const flow = useMemo(() => {
-    return flows.find(flow => {
-      switch (flow.id) {
-        case "FlowSetActiveEffectID":
-          return true
-      }
-      return false
-    })
-  }, [flows])
   const card = useMemo(() => {
     return getCard(appContext.viewModel.model.gameState, props.cardID || "unknown");
   }, [props.cardID, appContext.viewModel.model.gameState]);
@@ -137,30 +128,52 @@ export const CardView = (props: {
     </div>
   }, [appContext.viewModel.model.gameState, props.cardID, props.isShowInfo])
   const renderCmds = useMemo(() => {
-    if (props.isShowCmd && flow?.id == "FlowSetActiveEffectID") {
-      return flow.tips.filter(e => EffectFn.getCardID(e) == props.cardID).map((tip) => {
-        if (tip.id == null) {
-          return <div>hide</div>;
+    if (props.isShowCmd) {
+      const cmds = flows.flatMap(flow => {
+        if (flow?.id == "FlowSetActiveEffectID") {
+          return flow.tips.filter(e => EffectFn.getCardID(e) == props.cardID).map((tip) => {
+            return (
+              <div key={tip.id}>
+                <button style={{ width: "100%" }}
+                  onClick={() => {
+                    OnEvent.next({
+                      id: "OnClickFlowConfirm",
+                      clientId: props.clientId || "unknown",
+                      flow: { ...flow, effectID: tip.id },
+                    });
+                  }}
+                >
+                  <div>{tip.text.description || tip.description}</div>
+                </button>
+              </div>
+            );
+          })
         }
-        return (
-          <div key={tip.id}>
-            <button style={{ width: "100%" }}
-              onClick={() => {
-                OnEvent.next({
-                  id: "OnClickFlowConfirm",
-                  clientId: props.clientId || "unknown",
-                  flow: { ...flow, effectID: tip.id },
-                });
-              }}
-            >
-              <div>{tip.text.description || tip.description}</div>
-            </button>
-          </div>
-        );
+        if (flow?.id == "FlowDeleteImmediateEffect") {
+          return flow.tips.filter(e => EffectFn.getCardID(e) == props.cardID).map((tip) => {
+            return (
+              <div key={tip.id}>
+                <button style={{ width: "100%" }}
+                  onClick={() => {
+                    OnEvent.next({
+                      id: "OnClickFlowConfirm",
+                      clientId: props.clientId || "unknown",
+                      flow: { ...flow, effectID: tip.id },
+                    });
+                  }}
+                >
+                  <div>取消效果：{tip.text.description || tip.description}</div>
+                </button>
+              </div>
+            );
+          })
+        }
+        return []
       })
+      return cmds
     }
     return <></>
-  }, [props.isShowCmd, flow])
+  }, [props.isShowCmd, flows])
   const render = useMemo(() => {
     const imgSrc = isVisible
       ? getImgSrc(card.protoID || "unknown")

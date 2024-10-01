@@ -40,7 +40,7 @@ export const EffectView = (props: {
       <div style={{ flex: 1 }}>{block.isOption ? "可取消" : "不可取消"}</div>
       {cardID != null ? (
         <CardView
-          enabled={false}
+          enabled={true}
           clientId={props.clientId}
           cardID={cardID}
           isShowCmd={false}

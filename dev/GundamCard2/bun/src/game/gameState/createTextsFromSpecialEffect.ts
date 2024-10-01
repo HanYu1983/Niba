@@ -390,48 +390,40 @@ export function createTextsFromSpecialEffect(ctx: GameState, text: CardText): Ca
                             actions: [
                                 {
                                     title: function _(ctx: GameState, effect: Effect, { GameStateFn, DefineFn }: Bridge): GameState {
-                                        ctx = GameStateFn.addStackEffect(ctx, {
-                                            id: "",
-                                            reason: effect.reason,
-                                            description: effect.description,
-                                            text: {
-                                                id: effect.text.id,
-                                                description: effect.text.description,
-                                                title: [],
-                                                conditions: {
-                                                    "看自己本國全部的卡,可以從中找出特徵A的1張卡移到HANGER,那個時候本國洗牌": {
-                                                        title: ["_自軍_本國找出特徵_A的_1張卡", "自軍", "本国", A, 1],
-                                                        actions: [
-                                                            {
-                                                                title: ["看自己_本國全部的卡", "本国"]
-                                                            },
-                                                        ]
-                                                    },
+                                        const { A } = { A: "" }
+                                        const newE = DefineFn.EffectFn.fromEffectBasic(effect, {
+                                            conditions: {
+                                                "看自己本國全部的卡,可以從中找出特徵A的1張卡移到HANGER,那個時候本國洗牌": {
+                                                    title: ["_自軍_本國找出特徵_A的_1張卡", "自軍", "本国", A, 1],
+                                                    actions: [
+                                                        {
+                                                            title: ["看自己_本國全部的卡", "本国"]
+                                                        },
+                                                    ]
                                                 },
-                                                logicTreeActions: [
+                                            },
+                                            logicTreeAction: {
+                                                actions: [
                                                     {
-                                                        actions: [
-                                                            {
-                                                                title: function _(ctx: GameState, effect: Effect, { GameStateFn, DefineFn }: Bridge): GameState {
-                                                                    const cardId = DefineFn.EffectFn.getCardID(effect)
-                                                                    const cardController = GameStateFn.getItemController(ctx, cardId)
-                                                                    const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "看自己本國全部的卡,可以從中找出特徵A的1張卡移到HANGER,那個時候本國洗牌", cardId)
-                                                                    if (pairs.length) {
-                                                                        for (const pair of pairs) {
-                                                                            ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "ハンガー"), pair) as GameState
-                                                                        }
-                                                                        ctx = GameStateFn.shuffleItems(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "本国")) as GameState
-                                                                    }
-                                                                    return ctx
-                                                                }.toString()
+                                                        title: function _(ctx: GameState, effect: Effect, { GameStateFn, DefineFn }: Bridge): GameState {
+                                                            const cardId = DefineFn.EffectFn.getCardID(effect)
+                                                            const cardController = GameStateFn.getItemController(ctx, cardId)
+                                                            const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "看自己本國全部的卡,可以從中找出特徵A的1張卡移到HANGER,那個時候本國洗牌", cardId)
+                                                            if (pairs.length) {
+                                                                for (const pair of pairs) {
+                                                                    ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "ハンガー"), pair) as GameState
+                                                                }
+                                                                ctx = GameStateFn.shuffleItems(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "本国")) as GameState
                                                             }
-                                                        ]
+                                                            return ctx
+                                                        }.toString()
                                                     }
                                                 ]
                                             }
-                                        }) as GameState
+                                        })
+                                        ctx = GameStateFn.addStackEffect(ctx, newE) as GameState
                                         return ctx
-                                    }.toString()
+                                    }.toString().replace(`{ A: "" }`, JSON.stringify({ A: A }))
                                 }
                             ]
                         }
@@ -459,31 +451,47 @@ export function createTextsFromSpecialEffect(ctx: GameState, text: CardText): Ca
                                     title: ["打開自軍手裡或指定HANGER中特徵_A並合計國力_x以下的_1張卡", A, gCount, 1]
                                 }, {})(ctx, effect, bridge)
                             }.toString().replace(`{ A: "" }`, JSON.stringify({ A: A })),
+                        }
+                    },
+                    logicTreeActions: [
+                        {
                             actions: [
                                 {
                                     title: function _(ctx: GameState, effect: Effect, { GameStateFn, DefineFn }: Bridge): GameState {
-                                        const cardId = DefineFn.EffectFn.getCardID(effect)
-                                        const basyou = GameStateFn.getItemBaSyou(ctx, cardId)
-                                        const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "打開自軍手裡或指定HANGER中特徵A並合計國力x以下的1張卡", cardId)
-                                        if (pairs.length == 0) {
-                                            throw new Error(`pairs must not 0: ${effect.text.description}`)
-                                        }
-                                        const targetPair = pairs[0]
-                                        GameStateFn.assertTargetMissingError(ctx, targetPair)
-                                        ctx = GameStateFn.doItemSwap(ctx, [cardId, basyou], targetPair)
-                                        ctx = GameStateFn.doItemSetRollState(ctx, false, [cardId, basyou], { isSkipTargetMissing: true })
-                                        ctx = GameStateFn.doItemMove(ctx,
-                                            DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(basyou, "ジャンクヤード"),
-                                            targetPair
-                                        ) as GameState
-                                        ctx = GameStateFn.doTriggerEvent(ctx, { title: ["「改装」の効果で廃棄される場合"], cardIds: [targetPair[0]] })
-                                        ctx = GameStateFn.doTriggerEvent(ctx, { title: ["「改装」の効果で場に出た場合"], cardIds: [cardId] })
+                                        const newE = DefineFn.EffectFn.fromEffectBasic(effect, {
+                                            logicTreeAction: {
+                                                actions: [
+                                                    {
+                                                        title: function _(ctx: GameState, effect: Effect, { GameStateFn, DefineFn }: Bridge): GameState {
+                                                            const cardId = DefineFn.EffectFn.getCardID(effect)
+                                                            const basyou = GameStateFn.getItemBaSyou(ctx, cardId)
+                                                            const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "打開自軍手裡或指定HANGER中特徵A並合計國力x以下的1張卡", cardId)
+                                                            if (pairs.length == 0) {
+                                                                throw new Error(`pairs must not 0: ${effect.text.description}`)
+                                                            }
+                                                            const targetPair = pairs[0]
+                                                            GameStateFn.assertTargetMissingError(ctx, targetPair)
+                                                            ctx = GameStateFn.doItemSwap(ctx, [cardId, basyou], targetPair)
+                                                            ctx = GameStateFn.doItemSetRollState(ctx, false, [cardId, basyou], { isSkipTargetMissing: true })
+                                                            ctx = GameStateFn.doItemMove(ctx,
+                                                                DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(basyou, "ジャンクヤード"),
+                                                                targetPair
+                                                            ) as GameState
+                                                            ctx = GameStateFn.doTriggerEvent(ctx, { title: ["「改装」の効果で廃棄される場合"], cardIds: [targetPair[0]] })
+                                                            ctx = GameStateFn.doTriggerEvent(ctx, { title: ["「改装」の効果で場に出た場合"], cardIds: [cardId] })
+                                                            return ctx
+                                                        }.toString()
+                                                    }
+                                                ]
+                                            }
+                                        })
+                                        ctx = GameStateFn.addStackEffect(ctx, newE) as GameState
                                         return ctx
                                     }.toString()
                                 }
                             ]
                         }
-                    }
+                    ]
                 }
             ]
         }
