@@ -228,7 +228,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                 },
             ];
         }
-        // 起動效果有可能雖然在堆疊中但可支付性消失了，比如上面的卡有3張在場上，3張都起動的情況G可能就不夠用了
+        // 起動效果有可能雖然在堆疊中但可支付性消失了，比如以下的卡有3張在場上，3張都起動的情況G可能就不夠用了
         // 所以這類的起動效果應當就是可以不使用的(isOption = true)
         // 179016_04B_U_WT074C_white
         // M1アストレイ
