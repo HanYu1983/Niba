@@ -76,12 +76,12 @@ export function createPlayCardEffects(ctx: GameState, cardId: string): Effect[] 
     const playCardEffect: Effect = {
         id: `createPlayCardEffects_${cardId}`,
         reason: ["PlayCard", playerId, cardId],
-        description: "從手中即將出牌, 出牌後會產生場出的效果",
+        description: "Play",
         text: {
             id: `createPlayCardEffects_text_${cardId}`,
             // 以下的title只是為了log，沒有實際作用
             title: prototype.commandText?.title || ["使用型", ["自軍", "配備フェイズ"]],
-            description: "從手中即將出牌, 出牌後會產生場出的效果",
+            description: "Play",
             conditions: {
                 ...conditions,
                 ...prototype.commandText?.conditions

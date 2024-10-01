@@ -1,4 +1,4 @@
-import { useContext, useMemo, useEffect } from "react";
+import { useContext, useMemo, useEffect, CSSProperties } from "react";
 import { queryFlow } from "../../game/gameStateWithFlowMemory/queryFlow";
 import { AppContext } from "../tool/appContext";
 import { OnEvent } from "../tool/appContext/eventCenter";
@@ -13,14 +13,16 @@ import { GameStateWithFlowMemory } from "../../game/gameStateWithFlowMemory/Game
 import { Flow } from "../../game/gameStateWithFlowMemory/Flow";
 import { PlayerA, PlayerB } from "../../game/define/PlayerID";
 import { FlowSetTipSelectionView } from "./FlowSetTipSelectionView";
+import { CardView } from "./CardView";
+import { EffectFn } from "../../game/define/Effect";
 
-export const FlowListView = (props: { clientId: string }) => {
+export const FlowListView = (props: { clientId: string, style?: CSSProperties }) => {
   const appContext = useContext(AppContext);
   const flows = useMemo(() => {
     return appContext.viewModel.playerCommands[props.clientId] || []
   }, [appContext.viewModel.playerCommands[props.clientId]]);
   useEffect(() => {
-    const speed = 50
+    const speed = 10
     const isPlayerControl = true
     if (isPlayerControl && props.clientId == PlayerA) {
       const payCost = flows.find((flow) => flow.id == "FlowPassPayCost");
@@ -87,19 +89,23 @@ export const FlowListView = (props: { clientId: string }) => {
   // ============== control panel ============= //
   const renderControlPanel = useMemo(() => {
     return (
-      <div>
+      <div style={props.style}>
         {flows.map((flow, i) => {
           return (
-            <div key={i} style={{ border: "1px solid black" }}>
-              <button
+            <div key={i}
+              style={{ border: "1px solid black" }}
+            >
+              <button style={{
+                height: 50
+
+              }}
                 onClick={() => {
                   OnEvent.next({
                     id: "OnClickFlowConfirm",
                     clientId: props.clientId,
                     flow: flow,
                   });
-                }}
-              >
+                }}>
                 {flow.id}({flow.description})
               </button>
               {(() => {
@@ -123,20 +129,20 @@ export const FlowListView = (props: { clientId: string }) => {
                     );
                   case "FlowSetTipSelection":
                     const effect = getEffect(appContext.viewModel.model.gameState, flow.effectID)
-                    return <>
-                      <div>{effect.text.description || effect.description}</div>
+                    return <div style={{ border: "1px solid black" }}>
                       <FlowSetTipSelectionView clientId={props.clientId} flow={flow}></FlowSetTipSelectionView>
-                    </>
+                    </div>
                   case "FlowSetActiveEffectID":
-                    return flow.tips.map((tip) => {
+                    return flow.tips.filter(tip => tip.reason[0] == "GameRule").map((tip) => {
                       if (tip.id == null) {
                         return <div>hide</div>;
                       }
                       return (
-                        <div key={tip.id}>
+                        <div key={tip.id} style={{ display: "flex", width: "100%" }}>
                           {
                             tip.reason[0] == "GameRule" ? <>
                               <button
+                                style={{ flex: 1, height: 50 }}
                                 onClick={() => {
                                   OnEvent.next({
                                     id: "OnClickFlowConfirm",
@@ -149,13 +155,6 @@ export const FlowListView = (props: { clientId: string }) => {
                               </button>
                             </> : <></>
                           }
-                          {/*
-                          <EffectView
-                            enabled={false}
-                            clientId={props.clientId}
-                            effectID={tip.id}
-                          ></EffectView>
-                          */}
                         </div>
                       );
                     });

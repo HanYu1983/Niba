@@ -8,6 +8,7 @@ export const CardStackView = (props: {
   cardPosition: AbsoluteBaSyou;
   cardSize?: number;
   isShowCardInfo?: boolean,
+  isShowStack?: boolean,
 }) => {
   const appContext = useContext(AppContext);
   const cards = useMemo(() => {
@@ -28,10 +29,15 @@ export const CardStackView = (props: {
   }, [cards, appContext.viewModel.model.gameState.setGroup.itemGroupParent]);
   const render = useMemo(() => {
     const _cardPositionID = AbsoluteBaSyouFn.toString(props.cardPosition);
+    if (props.isShowStack) {
+      return <div>
+        <CardView></CardView>
+        <div>{cards.length} cards</div>
+      </div>
+    }
     return (
       <div
         style={{
-          //height: CARD_SIZE,
           display: "flex",
           border: "2px solid black",
           overflow: "scroll",
@@ -47,7 +53,7 @@ export const CardStackView = (props: {
               // });
             }}
           >
-            select {_cardPositionID}
+            {_cardPositionID}
           </button>
         </div>
         {cardsOnlySetGroupRoot.map((rootCardId) => {
@@ -60,7 +66,7 @@ export const CardStackView = (props: {
           return (
             <div
               key={rootCardId}
-              style={{ border: "3px solid blue", display: "flex" }}
+              style={{ display: "flex" }}
             >
               {cardsInSetGroup.map((cardID, i) => {
                 return (
@@ -78,18 +84,6 @@ export const CardStackView = (props: {
             </div>
           );
         })}
-        {
-          // cards.map((card) => {
-          //   return (
-          //     <CardView
-          //       key={card.id}
-          //       enabled={true}
-          //       clientId={props.clientId}
-          //       cardID={card.id}
-          //     ></CardView>
-          //   );
-          // })
-        }
       </div>
     );
   }, [

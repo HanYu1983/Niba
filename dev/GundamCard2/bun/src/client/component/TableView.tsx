@@ -2,156 +2,42 @@ import { useMemo } from "react";
 import { PlayerA, PlayerB } from "../../game/define/PlayerID";
 import { CardStackView } from "./CardStackView";
 import { HandView } from "./HandView";
+import { AbsoluteBaSyouFn, BaSyouKeywordFn } from "../../game/define/BaSyou";
 
 export const TableView = (props: { clientId: string }) => {
   const renderGame = useMemo(() => {
     return (
       <>
-        <CardStackView
-          clientId={props.clientId}
-          cardPosition={{
-            id: "AbsoluteBaSyou",
-            value: [PlayerA, "手札"],
-          }}
-          cardSize={250}
-          isShowCardInfo={true}
-        ></CardStackView>
-        <CardStackView
-          clientId={props.clientId}
-          cardPosition={{
-            id: "AbsoluteBaSyou",
-            value: [PlayerA, "ハンガー"],
-          }}
-          cardSize={250}
-        ></CardStackView>
-        <CardStackView
-          clientId={props.clientId}
-          cardPosition={{
-            id: "AbsoluteBaSyou",
-            value: [PlayerA, "プレイされているカード"],
-          }}
-        ></CardStackView>
-        
-        <CardStackView
-          clientId={props.clientId}
-          cardPosition={{
-            id: "AbsoluteBaSyou",
-            value: [PlayerA, "Gゾーン"],
-          }}
-        ></CardStackView>
-        <CardStackView
-          clientId={props.clientId}
-          cardPosition={{
-            id: "AbsoluteBaSyou",
-            value: [PlayerA, "配備エリア"],
-          }}
-        ></CardStackView>
-        <CardStackView
-          clientId={props.clientId}
-          cardPosition={{
-            id: "AbsoluteBaSyou",
-            value: [PlayerA, "戦闘エリア1"],
-          }}
-        ></CardStackView>
-        <CardStackView
-          clientId={props.clientId}
-          cardPosition={{
-            id: "AbsoluteBaSyou",
-            value: [PlayerA, "戦闘エリア2"],
-          }}
-        ></CardStackView>
-        <CardStackView
-          clientId={props.clientId}
-          cardPosition={{
-            id: "AbsoluteBaSyou",
-            value: [PlayerA, "本国"],
-          }}
-        ></CardStackView>
-        <CardStackView
-          clientId={props.clientId}
-          cardPosition={{
-            id: "AbsoluteBaSyou",
-            value: [PlayerA, "捨て山"],
-          }}
-        ></CardStackView>
-        <CardStackView
-          clientId={props.clientId}
-          cardPosition={{
-            id: "AbsoluteBaSyou",
-            value: [PlayerA, "ジャンクヤード"],
-          }}
-        ></CardStackView>
-
-        <CardStackView
-          clientId={props.clientId}
-          cardPosition={{
-            id: "AbsoluteBaSyou",
-            value: [PlayerB, "本国"],
-          }}
-        ></CardStackView>
-        <CardStackView
-          clientId={props.clientId}
-          cardPosition={{
-            id: "AbsoluteBaSyou",
-            value: [PlayerB, "手札"],
-          }}
-        ></CardStackView>
-        <CardStackView
-          clientId={props.clientId}
-          cardPosition={{
-            id: "AbsoluteBaSyou",
-            value: [PlayerB, "ハンガー"],
-          }}
-        ></CardStackView>
-        <CardStackView
-          clientId={props.clientId}
-          cardPosition={{
-            id: "AbsoluteBaSyou",
-            value: [PlayerB, "プレイされているカード"],
-          }}
-        ></CardStackView>
-        <CardStackView
-          clientId={props.clientId}
-          cardPosition={{
-            id: "AbsoluteBaSyou",
-            value: [PlayerB, "配備エリア"],
-          }}
-        ></CardStackView>
-        <CardStackView
-          clientId={props.clientId}
-          cardPosition={{
-            id: "AbsoluteBaSyou",
-            value: [PlayerB, "戦闘エリア1"],
-          }}
-        ></CardStackView>
-        <CardStackView
-          clientId={props.clientId}
-          cardPosition={{
-            id: "AbsoluteBaSyou",
-            value: [PlayerB, "戦闘エリア2"],
-          }}
-        ></CardStackView>
-        <CardStackView
-          clientId={props.clientId}
-          cardPosition={{
-            id: "AbsoluteBaSyou",
-            value: [PlayerB, "Gゾーン"],
-          }}
-        ></CardStackView>
-        <CardStackView
-          clientId={props.clientId}
-          cardPosition={{
-            id: "AbsoluteBaSyou",
-            value: [PlayerB, "捨て山"],
-          }}
-        ></CardStackView>
-        <CardStackView
-          clientId={props.clientId}
-          cardPosition={{
-            id: "AbsoluteBaSyou",
-            value: [PlayerB, "ジャンクヤード"],
-          }}
-        ></CardStackView>
+        <div style={{ display: "flex", width: "100%" }}>
+          {
+            [PlayerA, PlayerB].map(clientId => {
+              return <div key={clientId} style={{ flex: 1, overflow: "scroll" }}>
+                <div key={clientId + "手札"}>
+                  <CardStackView
+                    clientId={props.clientId}
+                    cardPosition={AbsoluteBaSyouFn.of(clientId, "手札")}
+                  ></CardStackView>
+                </div>
+                <div key={clientId + "ハンガー"}>
+                  <CardStackView
+                    clientId={props.clientId}
+                    cardPosition={AbsoluteBaSyouFn.of(clientId, "ハンガー")}
+                  ></CardStackView>
+                </div>
+                {
+                  BaSyouKeywordFn.getAll().filter(basyouKw => basyouKw != "手札" && basyouKw != "ハンガー").map(basyouKw => {
+                    return <div key={clientId + basyouKw}>
+                      <CardStackView
+                        clientId={props.clientId}
+                        cardPosition={AbsoluteBaSyouFn.of(clientId, basyouKw)}
+                      ></CardStackView>
+                    </div>
+                  })
+                }
+              </div>
+            })
+          }
+        </div>
       </>
     );
   }, [props.clientId]);

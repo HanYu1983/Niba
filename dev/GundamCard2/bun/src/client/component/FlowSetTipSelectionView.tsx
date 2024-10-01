@@ -1,4 +1,4 @@
-import { useContext, useMemo, useState } from "react";
+import { CSSProperties, useContext, useMemo, useState } from "react";
 import { AppContext } from "../tool/appContext";
 import { Flow, FlowSetTipSelection } from "../../game/gameStateWithFlowMemory/Flow";
 import { StrBaSyouPair, Tip, TipFn } from "../../game/define/Tip";
@@ -6,8 +6,9 @@ import { CardView } from "./CardView";
 import { createStrBaSyouPair } from "../../game/gameState/ItemTableComponent";
 import { OnEvent } from "../tool/appContext/eventCenter";
 import { getEffect } from "../../game/gameState/EffectStackComponent";
+import { EffectFn } from "../../game/define/Effect";
 
-export const FlowSetTipSelectionView = (props: { clientId: string, flow: FlowSetTipSelection }) => {
+export const FlowSetTipSelectionView = (props: { clientId: string, flow: FlowSetTipSelection, style?: CSSProperties }) => {
   const appContext = useContext(AppContext);
   const renderWant = useMemo(() => {
     const wants = TipFn.getWant(props.flow.tip)
@@ -74,15 +75,17 @@ export const FlowSetTipSelectionView = (props: { clientId: string, flow: FlowSet
     return tip
   }, [props.flow.tip, userSelection, appContext.viewModel.model.gameState])
   const renderButton = useMemo(() => {
+    const effect = getEffect(appContext.viewModel.model.gameState, props.flow.effectID)
     const error = TipFn.checkTipSatisfies(userTip)
     if (error) {
-      return <div>{error.message}</div>
+      return <div>{error.message}:{effect.description}</div>
     }
     const flow = {
       ...props.flow,
       tip: userTip,
     }
     return <button
+      style={{ height: 50 }}
       onClick={() => {
         OnEvent.next({
           id: "OnClickFlowConfirm",
@@ -90,16 +93,17 @@ export const FlowSetTipSelectionView = (props: { clientId: string, flow: FlowSet
           flow: flow,
         });
       }}
-    >OK
+    >{effect.description}
     </button>
   }, [props.flow, userTip])
   const render = useMemo(() => {
-    return <div>
+    const effect = getEffect(appContext.viewModel.model.gameState, props.flow.effectID)
+    return <div style={props.style}>
       <div>
-        {renderWant}
         {renderButton}
+        {renderWant}
       </div>
     </div>
-  }, [renderWant, renderButton])
+  }, [props, renderWant, renderButton])
   return render
 }
