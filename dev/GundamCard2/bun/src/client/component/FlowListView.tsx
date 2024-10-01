@@ -128,15 +128,11 @@ export const FlowListView = (props: { clientId: string, style?: CSSProperties })
                       ></EffectView>
                     );
                   case "FlowSetTipSelection":
-                    const effect = getEffect(appContext.viewModel.model.gameState, flow.effectID)
                     return <div style={{ border: "1px solid black" }}>
                       <FlowSetTipSelectionView clientId={props.clientId} flow={flow}></FlowSetTipSelectionView>
                     </div>
                   case "FlowSetActiveEffectID":
-                    return flow.tips.filter(tip => tip.reason[0] == "GameRule").map((tip) => {
-                      if (tip.id == null) {
-                        return <div>hide</div>;
-                      }
+                    return flow.tips.filter(tip => tip.reason[0] == "GameRule").map((tip, i) => {
                       return (
                         <div key={tip.id} style={{ display: "flex", width: "100%" }}>
                           {
@@ -151,7 +147,7 @@ export const FlowListView = (props: { clientId: string, style?: CSSProperties })
                                   });
                                 }}
                               >
-                                {flow.description}({tip.id})
+                                {tip.text.description || tip.description}
                               </button>
                             </> : <></>
                           }

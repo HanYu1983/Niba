@@ -10,6 +10,7 @@ import { getItemPrototype, getItemOwner } from "./ItemTableComponent"
 import { logCategory } from "../../tool/logger"
 import { LogicTree } from "../../tool/logicTree"
 import { getCard } from "./CardTableComponent"
+import { BaSyouKeywordFn } from "../define/BaSyou"
 
 export function createConditionKeyOfPayColorX(proto: CardPrototype): string {
     if (proto.color == null) {
@@ -50,7 +51,7 @@ export function createPlayCardEffects(ctx: GameState, cardId: string): Effect[] 
     } : {}
     const characterConditions: { [key: string]: Condition } = (prototype.category == "キャラクター" || prototype.category == "オペレーション(ユニット)") ? {
         "一個自軍機體": {
-            title: ["Entity", { isCanSetCharacter: true, side: "自軍", is: ["ユニット"], count: 1 }],
+            title: ["Entity", { at: ["配備エリア"], isCanSetCharacter: true, side: "自軍", is: ["ユニット"], count: 1 }],
         }
     } : {}
     const rollCostConditions = createRollCostConditions(ctx, prototype, prototype.rollCost || [], 0)
@@ -280,7 +281,7 @@ export function createPlayCardEffects(ctx: GameState, cardId: string): Effect[] 
                     conditions: copyOriginCondition,
                 }
             }
-            
+
             if (totalCostPlusPlayEffect.text.logicTreeActions?.[0] == null) {
                 throw new Error(`morePlayCardEffect.text.logicTreeActions?.[0] == null`)
             }
@@ -329,8 +330,9 @@ export function createPlayCardEffects(ctx: GameState, cardId: string): Effect[] 
             text: {
                 ...stayPlayEffect.text,
                 id: `stayPlayEffect_text_${cardId}`,
+                description: "ステイ",
                 conditions: {
-                    ...dissoc("一個自軍機體", playCardEffect.text.conditions || {})
+                    ...dissoc("一個自軍機體", stayPlayEffect.text.conditions || {})
                 },
                 logicTreeActions: [
                     {
@@ -339,9 +341,33 @@ export function createPlayCardEffects(ctx: GameState, cardId: string): Effect[] 
                                 title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, ToolFn }: Bridge): GameState {
                                     const cardId = DefineFn.EffectFn.getCardID(effect)
                                     const from = GameStateFn.getItemBaSyou(ctx, cardId)
-                                    const to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "配備エリア")
-                                    ctx = GameStateFn.doItemMove(ctx, to, [cardId, from]) as GameState
-                                    ctx = GameStateFn.doTriggerEvent(ctx, { title: ["プレイされて場に出た場合"], cardIds: [cardId] })
+                                    ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "プレイされているカード"), [cardId, from]) as GameState
+                                    return GameStateFn.addStackEffect(ctx, {
+                                        id: ToolFn.getUUID("getPlayCardEffects"),
+                                        reason: ["場に出る", DefineFn.EffectFn.getPlayerID(effect), DefineFn.EffectFn.getCardID(effect)],
+                                        description: effect.text.description,
+                                        text: {
+                                            id: effect.text.id,
+                                            description: effect.text.description,
+                                            title: [],
+                                            logicTreeActions: [
+                                                {
+                                                    actions: [
+                                                        {
+                                                            title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+                                                                const cardId = DefineFn.EffectFn.getCardID(effect)
+                                                                const from = GameStateFn.getItemBaSyou(ctx, cardId)
+                                                                const to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "配備エリア")
+                                                                ctx = GameStateFn.doItemMove(ctx, to, [cardId, from]) as GameState
+                                                                ctx = GameStateFn.doTriggerEvent(ctx, { title: ["プレイされて場に出た場合"], cardIds: [cardId] })
+                                                                return ctx
+                                                            }.toString()
+                                                        },
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    }) as GameState
                                     return ctx
                                 }.toString()
                             }

@@ -99,6 +99,12 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
           title: ["特殊型", ["高機動"]]
         })
       }
+      if (textstr.indexOf("ステイ") != -1) {
+        texts.push({
+          id: "",
+          title: ["特殊型", ["ステイ"]]
+        })
+      }
       // 自動解特殊效果的黑名單
       // 在名單內的要手動設置
       const textBlackList = ["179001_01A_CH_WT007R_white"]

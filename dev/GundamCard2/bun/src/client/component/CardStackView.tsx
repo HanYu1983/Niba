@@ -2,6 +2,7 @@ import { useContext, useMemo } from "react";
 import { AbsoluteBaSyou, AbsoluteBaSyouFn } from "../../game/define/BaSyou";
 import { AppContext } from "../tool/appContext";
 import { CardView } from "./CardView";
+import { getSetGroup, getSetGroupChildren, getSetGroupRoot } from "../../game/gameState/SetGroupComponent";
 
 export const CardStackView = (props: {
   clientId: string;
@@ -24,9 +25,9 @@ export const CardStackView = (props: {
   // 整個setGroup一起移動
   const cardsOnlySetGroupRoot = useMemo(() => {
     return cards.filter((cardId) => {
-      return appContext.viewModel.model.gameState.setGroup.itemGroupParent[cardId] == null
+      return getSetGroupRoot(appContext.viewModel.model.gameState, cardId) == cardId
     });
-  }, [cards, appContext.viewModel.model.gameState.setGroup.itemGroupParent]);
+  }, [cards, appContext.viewModel.model.gameState]);
   const render = useMemo(() => {
     const _cardPositionID = AbsoluteBaSyouFn.toString(props.cardPosition);
     if (props.isShowStack) {
@@ -57,16 +58,11 @@ export const CardStackView = (props: {
           </button>
         </div>
         {cardsOnlySetGroupRoot.map((rootCardId) => {
-          const cardsInSetGroup = [
-            rootCardId,
-            ...Object.keys(appContext.viewModel.model.gameState.setGroup.itemGroupParent).filter((setCardID) => {
-              return appContext.viewModel.model.gameState.setGroup.itemGroupParent[setCardID] == rootCardId
-            }),
-          ];
+          const cardsInSetGroup = getSetGroup(appContext.viewModel.model.gameState, rootCardId)
           return (
             <div
               key={rootCardId}
-              style={{ display: "flex" }}
+              style={{ display: "flex", border: "1px solid yellow" }}
             >
               {cardsInSetGroup.map((cardID, i) => {
                 return (
@@ -91,6 +87,7 @@ export const CardStackView = (props: {
     cardsOnlySetGroupRoot,
     appContext.viewModel.cardPositionSelection,
     appContext.viewModel.model,
+    appContext.viewModel.model.gameState,
     cards
   ]);
   return render;

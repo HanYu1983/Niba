@@ -86,7 +86,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                         effectID: currentActiveEffect.id,
                         conditionKey: info.conditionKey,
                         tip: info.tip,
-                        description: `select ${info.conditionKey}`
+                        description: `${info.conditionKey}`
                     } as Flow
                 })
             // ======

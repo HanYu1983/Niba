@@ -136,7 +136,7 @@ export const CardView = (props: {
         }
         return (
           <div key={tip.id}>
-            <button style={{ width: "100%", height: "100px" }}
+            <button style={{ width: "100%" }}
               onClick={() => {
                 OnEvent.next({
                   id: "OnClickFlowConfirm",

@@ -10,10 +10,12 @@ export function createAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID):
     return {
         id: `createAttackPhaseRuleEffect_${playerId}`,
         reason: ["GameRule", playerId],
+        description: "出擊",
         isOption: true,
         text: {
             id: `createAttackPhaseRuleEffect_text_${playerId}`,
             title: [],
+            description: "出擊",
             conditions: {
                 "去地球": {
                     title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip | null {

@@ -24,7 +24,7 @@ export const TableView = (props: { clientId: string }) => {
                     cardPosition={AbsoluteBaSyouFn.of(clientId, "ハンガー")}
                   ></CardStackView>
                 </div>
-                <div key={clientId + "ハンガー"}>
+                <div key={clientId + "配備エリア"}>
                   <CardStackView
                     clientId={props.clientId}
                     cardPosition={AbsoluteBaSyouFn.of(clientId, "配備エリア")}

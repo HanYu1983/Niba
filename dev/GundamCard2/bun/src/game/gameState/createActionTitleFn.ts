@@ -112,8 +112,6 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
       return function (ctx: GameState, effect: Effect): GameState {
         const cardId = EffectFn.getCardID(effect)
         const cardController = getItemController(ctx, cardId)
-        console.log(cardId, cardController)
-        console.log(ctx.table)
         const pairs = varNames == null ?
           [[cardId, getItemBaSyou(ctx, cardId)] as StrBaSyouPair] :
           varNames.flatMap(varName => {
@@ -121,7 +119,6 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
           })
         switch (whatToDo) {
           case "ロール": {
-            logCategory("getActionTitleFn", whatToDo, varNames, pairs)
             for (const pair of pairs) {
               ctx = doItemSetRollState(ctx, true, pair) as GameState
             }

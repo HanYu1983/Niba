@@ -9,9 +9,11 @@ export const ControlView = () => {
   const onClickTest = useCallback(() => {}, []);
 
   const onClickNewGame = useCallback(async () => {
-    const prototypeIds = [...TMP_DECK]
+    const deckA = TMP_DECK2
+    const deckB = TMP_DECK
+    const prototypeIds = [...deckA, ...deckB]
     await Promise.all(prototypeIds.map(loadPrototype)).then(()=>console.log("loadOK")).catch(console.error)
-    OnEvent.next({ id: "OnClickNewGame", deckA: TMP_DECK, deckB: TMP_DECK });
+    OnEvent.next({ id: "OnClickNewGame", deckA: deckA, deckB: deckB });
   }, []);
   // ============== control panel ============= //
   const renderControlPanel = useMemo(() => {

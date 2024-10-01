@@ -1,7 +1,7 @@
 import { Bridge } from "../../script/bridge";
 import { TextSpeicalEffect, CardText } from "../define/CardText";
 import { Effect } from "../define/Effect";
-import { TipError } from "../define/GameError";
+import { TargetMissingError, TipError } from "../define/GameError";
 import { Tip } from "../define/Tip";
 import { GameState } from "./GameState";
 
@@ -98,7 +98,7 @@ export function createTextsFromSpecialEffect(ctx: GameState, text: CardText): Ca
                                         for (const pair of pairs) {
                                             const hasSameText = GameStateFn.getCardTexts(ctx, pair[0]).find(text => textRefIds.includes(text.id))
                                             if (hasSameText) {
-                                                throw new DefineFn.TipError(`已有同樣的內文: ${JSON.stringify(textRefIds)}`, {hasSameText: true})
+                                                throw new DefineFn.TipError(`已有同樣的內文: ${JSON.stringify(textRefIds)}`, { hasSameText: true })
                                             }
                                         }
                                         return ctx
@@ -159,96 +159,173 @@ export function createTextsFromSpecialEffect(ctx: GameState, text: CardText): Ca
                                     title: ["這個效果1回合只能用1次"]
                                 }
                             ]
-                        }
+                        },
+                        // "這張卡在戰區的場合": {
+                        //     actions: [
+                        //         {
+                        //             title: function _(ctx: GameState, effect: Effect, { GameStateFn, DefineFn }: Bridge): GameState {
+                        //                 const cardId = DefineFn.EffectFn.getCardID(effect)
+                        //                 const from = GameStateFn.getItemBaSyou(ctx, cardId)
+                        //                 if (["戦闘エリア1", "戦闘エリア2"].includes(DefineFn.AbsoluteBaSyouFn.getBaSyouKeyword(from))) {
+
+                        //                 } else {
+                        //                     throw new DefineFn.TargetMissingError("這張卡在戰區的場合")
+                        //                 }
+                        //                 return ctx
+                        //             }.toString()
+                        //         }
+                        //     ]
+                        // }
                     },
                     logicTreeActions: [
                         {
                             actions: [
                                 {
                                     title: function _(ctx: GameState, effect: Effect, { GameStateFn, DefineFn }: Bridge): GameState {
-                                        ctx = GameStateFn.addStackEffect(ctx, {
-                                            id: "",
-                                            reason: effect.reason,
-                                            description: effect.description,
-                                            text: {
-                                                id: effect.text.id,
-                                                description: effect.text.description,
-                                                title: [],
-                                                conditions: {
-                                                    "這張卡在戰區的場合, 打開自軍本國上的1張卡": {
-                                                        title: function _(ctx: GameState, effect: Effect, bridge: Bridge): Tip | null {
-                                                            const { GameStateFn, DefineFn } = bridge
-                                                            const cardId = DefineFn.EffectFn.getCardID(effect)
-                                                            const from = GameStateFn.getItemBaSyou(ctx, cardId)
-                                                            if (["戦闘エリア1", "戦闘エリア2"].includes(DefineFn.AbsoluteBaSyouFn.getBaSyouKeyword(from))) {
-                                                                return GameStateFn.createConditionTitleFn({
-                                                                    title: ["_自軍_本國上的_1張卡", "自軍", "本国", 1],
-                                                                    actions: [
-                                                                        {
-                                                                            title: ["_ロールする", "打開"],
-                                                                            vars: ["這張卡在戰區的場合, 打開自軍本國上的1張卡"]
-                                                                        }
-                                                                    ]
-                                                                }, {})(ctx, effect, bridge)
-                                                            }
-                                                            return null
-                                                        }.toString(),
-                                                        // actions: [
-                                                        //     {
-                                                        //         title: ["這張卡在_戰區的場合", ["戦闘エリア1", "戦闘エリア2"]]
-                                                        //     }
-                                                        // ]
-                                                    },
-                                                    // "自軍本國上的1張卡": {
-                                                    //     title: ["_自軍_本國上的_1張卡", "自軍", "本国", 1],
-                                                    //     actions: [
-                                                    //         {
-                                                    //             title: ["_ロールする", "打開"],
-                                                    //             vars: ["自軍本國上的1張卡"]
-                                                    //         }
-                                                    //     ]
-                                                    // },
+                                        const newE = GameStateFn.createPlayTextEffectFromEffect(ctx, effect, {
+                                            conditions: {
+                                                "這張卡在戰區的場合, 打開自軍本國上的1張卡": {
+                                                    title: function _(ctx: GameState, effect: Effect, bridge: Bridge): Tip | null {
+                                                        const { GameStateFn, DefineFn } = bridge
+                                                        const cardId = DefineFn.EffectFn.getCardID(effect)
+                                                        const from = GameStateFn.getItemBaSyou(ctx, cardId)
+                                                        if (["戦闘エリア1", "戦闘エリア2"].includes(DefineFn.AbsoluteBaSyouFn.getBaSyouKeyword(from))) {
+                                                            return GameStateFn.createConditionTitleFn({
+                                                                title: ["_自軍_本國上的_1張卡", "自軍", "本国", 1],
+                                                                actions: [
+                                                                    {
+                                                                        title: ["_ロールする", "打開"],
+                                                                        vars: ["這張卡在戰區的場合, 打開自軍本國上的1張卡"]
+                                                                    }
+                                                                ]
+                                                            }, {})(ctx, effect, bridge)
+                                                        }
+                                                        return null
+                                                    }.toString(),
                                                 },
-                                                logicTreeActions: [
+                                            },
+                                            logicTreeAction: {
+                                                actions: [
                                                     {
-                                                        actions: [
-                                                            {
-                                                                title: function _(ctx: GameState, effect: Effect, { GameStateFn, DefineFn }: Bridge): GameState {
-                                                                    const cardId = DefineFn.EffectFn.getCardID(effect)
-                                                                    const tipKey = "這張卡在戰區的場合, 打開自軍本國上的1張卡"
-                                                                    const hasTip = DefineFn.ItemStateFn.hasTip(GameStateFn.getItemState(ctx, cardId), tipKey)
-                                                                    if (hasTip == false) {
-                                                                        return ctx
-                                                                    }
-                                                                    const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, tipKey, cardId)
-                                                                    if (pairs.length == 0) {
-                                                                        throw new Error(`pairs must not 0: ${effect.text.description}`)
-                                                                    }
-                                                                    const [openCardId] = pairs[0]
-                                                                    const hasSameGSighProperty = GameStateFn.getCardGSignProperty(ctx, openCardId) == GameStateFn.getCardGSignProperty(ctx, cardId)
-                                                                    if (hasSameGSighProperty) {
-                                                                        const bonus = GameStateFn.getCardRollCostLength(ctx, openCardId)
-                                                                        // 以下參照p69切入的適用
-                                                                        // 這張卡會把紅利改成速攻
-                                                                        // 179029_05C_CH_BN040U_brown
-                                                                        // U
-                                                                        // G
-                                                                        // ドモン・カッシュ［∞］
-                                                                        // 男性　大人　GF
-                                                                        // （戦闘フェイズ）〔１〕：ゲイン
-                                                                        // 『起動』：このカードは、「ゲイン」の効果で戦闘修正を得る場合、その戦闘修正を得る代わりに、ターン終了時まで、「速攻」を得る事ができる。
-                                                                        ctx = GameStateFn.mapItemState(ctx, cardId, is => DefineFn.ItemStateFn.setGlobalEffect(is, null, {
-                                                                            title: ["＋x／＋x／＋xを得る", [bonus, bonus, bonus]], cardIds: [cardId]
-                                                                        }, { isRemoveOnTurnEnd: true })) as GameState
-                                                                    }
-                                                                    return ctx
-                                                                }.toString()
+                                                        title: function _(ctx: GameState, effect: Effect, { GameStateFn, DefineFn }: Bridge): GameState {
+                                                            const cardId = DefineFn.EffectFn.getCardID(effect)
+                                                            const tipKey = "這張卡在戰區的場合, 打開自軍本國上的1張卡"
+                                                            const hasTip = DefineFn.ItemStateFn.hasTip(GameStateFn.getItemState(ctx, cardId), tipKey)
+                                                            if (hasTip == false) {
+                                                                return ctx
                                                             }
-                                                        ]
+                                                            const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, tipKey, cardId)
+                                                            if (pairs.length == 0) {
+                                                                throw new Error(`pairs must not 0: ${effect.text.description}`)
+                                                            }
+                                                            const [openCardId] = pairs[0]
+                                                            const hasSameGSighProperty = GameStateFn.getCardGSignProperty(ctx, openCardId) == GameStateFn.getCardGSignProperty(ctx, cardId)
+                                                            if (hasSameGSighProperty) {
+                                                                const bonus = GameStateFn.getCardRollCostLength(ctx, openCardId)
+                                                                // 以下參照p69切入的適用
+                                                                // 這張卡會把紅利改成速攻
+                                                                // 179029_05C_CH_BN040U_brown
+                                                                // U
+                                                                // G
+                                                                // ドモン・カッシュ［∞］
+                                                                // 男性　大人　GF
+                                                                // （戦闘フェイズ）〔１〕：ゲイン
+                                                                // 『起動』：このカードは、「ゲイン」の効果で戦闘修正を得る場合、その戦闘修正を得る代わりに、ターン終了時まで、「速攻」を得る事ができる。
+                                                                ctx = GameStateFn.mapItemState(ctx, cardId, is => DefineFn.ItemStateFn.setGlobalEffect(is, null, {
+                                                                    title: ["＋x／＋x／＋xを得る", [bonus, bonus, bonus]], cardIds: [cardId]
+                                                                }, { isRemoveOnTurnEnd: true })) as GameState
+                                                            }
+                                                            return ctx
+                                                        }.toString()
                                                     }
                                                 ]
                                             }
-                                        }) as GameState
+                                        })
+                                        ctx = GameStateFn.addStackEffect(ctx, newE) as GameState
+
+                                        // ctx = GameStateFn.addStackEffect(ctx, {
+                                        //     id: "",
+                                        //     reason: effect.reason,
+                                        //     description: effect.description,
+                                        //     text: {
+                                        //         id: effect.text.id,
+                                        //         description: effect.text.description,
+                                        //         title: [],
+                                        //         conditions: {
+                                        //             "這張卡在戰區的場合, 打開自軍本國上的1張卡": {
+                                        //                 title: function _(ctx: GameState, effect: Effect, bridge: Bridge): Tip | null {
+                                        //                     const { GameStateFn, DefineFn } = bridge
+                                        //                     const cardId = DefineFn.EffectFn.getCardID(effect)
+                                        //                     const from = GameStateFn.getItemBaSyou(ctx, cardId)
+                                        //                     if (["戦闘エリア1", "戦闘エリア2"].includes(DefineFn.AbsoluteBaSyouFn.getBaSyouKeyword(from))) {
+                                        //                         return GameStateFn.createConditionTitleFn({
+                                        //                             title: ["_自軍_本國上的_1張卡", "自軍", "本国", 1],
+                                        //                             actions: [
+                                        //                                 {
+                                        //                                     title: ["_ロールする", "打開"],
+                                        //                                     vars: ["這張卡在戰區的場合, 打開自軍本國上的1張卡"]
+                                        //                                 }
+                                        //                             ]
+                                        //                         }, {})(ctx, effect, bridge)
+                                        //                     }
+                                        //                     return null
+                                        //                 }.toString(),
+                                        //                 // actions: [
+                                        //                 //     {
+                                        //                 //         title: ["這張卡在_戰區的場合", ["戦闘エリア1", "戦闘エリア2"]]
+                                        //                 //     }
+                                        //                 // ]
+                                        //             },
+                                        //             // "自軍本國上的1張卡": {
+                                        //             //     title: ["_自軍_本國上的_1張卡", "自軍", "本国", 1],
+                                        //             //     actions: [
+                                        //             //         {
+                                        //             //             title: ["_ロールする", "打開"],
+                                        //             //             vars: ["自軍本國上的1張卡"]
+                                        //             //         }
+                                        //             //     ]
+                                        //             // },
+                                        //         },
+                                        //         logicTreeActions: [
+                                        //             {
+                                        //                 actions: [
+                                        //                     {
+                                        //                         title: function _(ctx: GameState, effect: Effect, { GameStateFn, DefineFn }: Bridge): GameState {
+                                        //                             const cardId = DefineFn.EffectFn.getCardID(effect)
+                                        //                             const tipKey = "這張卡在戰區的場合, 打開自軍本國上的1張卡"
+                                        //                             const hasTip = DefineFn.ItemStateFn.hasTip(GameStateFn.getItemState(ctx, cardId), tipKey)
+                                        //                             if (hasTip == false) {
+                                        //                                 return ctx
+                                        //                             }
+                                        //                             const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, tipKey, cardId)
+                                        //                             if (pairs.length == 0) {
+                                        //                                 throw new Error(`pairs must not 0: ${effect.text.description}`)
+                                        //                             }
+                                        //                             const [openCardId] = pairs[0]
+                                        //                             const hasSameGSighProperty = GameStateFn.getCardGSignProperty(ctx, openCardId) == GameStateFn.getCardGSignProperty(ctx, cardId)
+                                        //                             if (hasSameGSighProperty) {
+                                        //                                 const bonus = GameStateFn.getCardRollCostLength(ctx, openCardId)
+                                        //                                 // 以下參照p69切入的適用
+                                        //                                 // 這張卡會把紅利改成速攻
+                                        //                                 // 179029_05C_CH_BN040U_brown
+                                        //                                 // U
+                                        //                                 // G
+                                        //                                 // ドモン・カッシュ［∞］
+                                        //                                 // 男性　大人　GF
+                                        //                                 // （戦闘フェイズ）〔１〕：ゲイン
+                                        //                                 // 『起動』：このカードは、「ゲイン」の効果で戦闘修正を得る場合、その戦闘修正を得る代わりに、ターン終了時まで、「速攻」を得る事ができる。
+                                        //                                 ctx = GameStateFn.mapItemState(ctx, cardId, is => DefineFn.ItemStateFn.setGlobalEffect(is, null, {
+                                        //                                     title: ["＋x／＋x／＋xを得る", [bonus, bonus, bonus]], cardIds: [cardId]
+                                        //                                 }, { isRemoveOnTurnEnd: true })) as GameState
+                                        //                             }
+                                        //                             return ctx
+                                        //                         }.toString()
+                                        //                     }
+                                        //                 ]
+                                        //             }
+                                        //         ]
+                                        //     }
+                                        // }) as GameState
                                         return ctx
                                     }.toString()
                                 }
