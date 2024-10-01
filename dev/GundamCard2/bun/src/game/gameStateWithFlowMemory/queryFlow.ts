@@ -236,28 +236,22 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
         // 『起動』：「特徴：アストレイ系」を持つ自軍ユニットが、プレイされて場に出た場合、〔２〕を支払う事ができる。その場合、カード１枚を引く。
         // （注：このカードが場に出た時にも起動する）
         const myEffectsOK = myEffects.filter(e => {
-            if (e.isOption) {
-                return true
-            }
             const cets = createCommandEffectTips(ctx, e).filter(CommandEffecTipFn.filterNoError)
             if (cets.length == 0) {
                 return false
             }
             return true
         })
-        if (myEffectsOK.length == 0) {
-            throw new Error(`起動的效果必須至小有其中一個可行，不然程式有誤`)
-        }
-        const effect = myEffectsOK[0]
-        const optionEffects = myEffectsOK.filter((v) => v.isOption);
+        // 可支付性測試失敗都變成可取消效果
+        const optionEffects = myEffects.filter((v) => myEffectsOK.map(e => e.id).includes(v.id) == false);
         return [
-            ...(myEffects.length
+            ...(myEffectsOK.length
                 ? [
                     {
                         id: "FlowSetActiveEffectID",
-                        effectID: effect.id,
+                        effectID: myEffectsOK[0].id,
                         description: "選擇一個起動效果",
-                        tips: myEffects,
+                        tips: myEffectsOK,
                     } as Flow,
                 ]
                 : []),
