@@ -28978,6 +28978,8 @@ function createPlayCardEffects(ctx2, cardId) {
                                 const from2 = GameStateFn2.getItemBaSyou(ctx4, cardId3);
                                 const to = targetBasyou;
                                 ctx4 = GameStateFn2.doItemMove(ctx4, to, [cardId3, from2]);
+                                const isRoll = GameStateFn2.getCard(ctx4, targetCardId).isRoll || false;
+                                ctx4 = GameStateFn2.mapCard(ctx4, cardId3, (is) => ({ ...is, isRoll }));
                                 ctx4 = GameStateFn2.setSetGroupParent(ctx4, targetCardId, cardId3);
                                 ctx4 = GameStateFn2.doTriggerEvent(ctx4, { title: ["\u30D7\u30EC\u30A4\u3055\u308C\u3066\u5834\u306B\u51FA\u305F\u5834\u5408"], cardIds: [cardId3] });
                                 ctx4 = GameStateFn2.doTriggerEvent(ctx4, { title: ["\u30D7\u30EC\u30A4\u3055\u308C\u3066\u5834\u306B\u30BB\u30C3\u30C8\u3055\u308C\u305F\u5834\u5408"], cardIds: [cardId3] });

@@ -154,6 +154,8 @@ export function createPlayCardEffects(ctx: GameState, cardId: string): Effect[] 
                                                                 const from = GameStateFn.getItemBaSyou(ctx, cardId)
                                                                 const to = targetBasyou
                                                                 ctx = GameStateFn.doItemMove(ctx, to, [cardId, from]) as GameState
+                                                                const isRoll = GameStateFn.getCard(ctx, targetCardId).isRoll || false
+                                                                ctx = GameStateFn.mapCard(ctx, cardId, is => ({ ...is, isRoll: isRoll })) as GameState
                                                                 ctx = GameStateFn.setSetGroupParent(ctx, targetCardId, cardId) as GameState
                                                                 ctx = GameStateFn.doTriggerEvent(ctx, { title: ["プレイされて場に出た場合"], cardIds: [cardId] })
                                                                 ctx = GameStateFn.doTriggerEvent(ctx, { title: ["プレイされて場にセットされた場合"], cardIds: [cardId] })
