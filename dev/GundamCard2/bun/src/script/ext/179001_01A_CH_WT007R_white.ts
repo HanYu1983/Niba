@@ -43,12 +43,12 @@ export const prototype: CardPrototype = {
                   logicTreeAction: {
                     actions: [
                       {
-                        title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+                        title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, ToolFn }: Bridge): GameState {
                           const cardId = DefineFn.EffectFn.getCardID(effect)
                           const targetId = GameStateFn.getSetGroupRoot(ctx, cardId)
                           ctx = GameStateFn.mapItemState(ctx, targetId, is =>
                             DefineFn.ItemStateFn.setGlobalEffect(is, null,
-                              { title: ["AddText", { id: "", title: ["特殊型", ["速攻"]] }], cardIds: [targetId] },
+                              { title: ["AddText", { id: ToolFn.getUUID(), title: ["特殊型", ["速攻"]] }], cardIds: [targetId] },
                               { isRemoveOnTurnEnd: true }
                             )
                           ) as GameState

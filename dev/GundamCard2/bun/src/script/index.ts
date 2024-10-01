@@ -358,11 +358,15 @@ function getPao(gainStr: string): CardText[] {
 }
 
 function getHave(gainStr: string): CardText[] {
-  const match = gainStr.match(/〔(０|１|２|３|４|５|６|７|８|９+)〕：共有［(.+)］/);
+  let match = gainStr.match(/〔(.?)(０|１|２|３|４|５|６|７|８|９+)(毎?)〕：クロスウェポン［(.+)］/);
   if (match == null) {
     return []
   }
-  const [matchstr, rollcoststr, char] = match
+  const [matchstr, colorstr, rollcoststr, every, char] = match
+  if (colorstr != "" && CardColorFn.getAll().includes(colorstr as CardColor) == false) {
+    throw new Error(`getCrossWeapon ${gainStr}`)
+  }
+  const color: CardColor | null = colorstr == "" ? null : (colorstr as CardColor)
   const rollcost = uppercaseDigits.indexOf(rollcoststr)
   if (rollcost == -1) {
     throw new Error(`getGainTexts error: ${matchstr}`)
@@ -371,7 +375,7 @@ function getHave(gainStr: string): CardText[] {
     {
       id: "",
       title: ["特殊型", ["共有", char]],
-      conditions: createRollCostRequire(rollcost, null)
+      conditions: createRollCostRequire(rollcost, color)
     }
   ]
 }

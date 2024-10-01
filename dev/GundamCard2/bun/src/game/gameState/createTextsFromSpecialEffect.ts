@@ -3,6 +3,7 @@ import { TextSpeicalEffect, CardText, BattleBonus } from "../define/CardText";
 import { Effect } from "../define/Effect";
 import { TargetMissingError, TipError } from "../define/GameError";
 import { Tip } from "../define/Tip";
+import { getCardTexts } from "./card";
 import { GameState } from "./GameState";
 
 export function createTextsFromSpecialEffect(ctx: GameState, text: CardText): CardText[] {
@@ -207,7 +208,7 @@ export function createTextsFromSpecialEffect(ctx: GameState, text: CardText): Ca
                                             logicTreeAction: {
                                                 actions: [
                                                     {
-                                                        title: function _(ctx: GameState, effect: Effect, { GameStateFn, DefineFn }: Bridge): GameState {
+                                                        title: function _(ctx: GameState, effect: Effect, { GameStateFn, DefineFn, ToolFn }: Bridge): GameState {
                                                             const cardId = DefineFn.EffectFn.getCardID(effect)
                                                             const tipKey = "這張卡在戰區的場合, 打開自軍本國上的1張卡"
                                                             const hasTip = DefineFn.ItemStateFn.hasTip(GameStateFn.getItemState(ctx, cardId), tipKey)
@@ -223,20 +224,22 @@ export function createTextsFromSpecialEffect(ctx: GameState, text: CardText): Ca
                                                             if (hasSameGSighProperty) {
                                                                 const bonus = GameStateFn.getCardRollCostLength(ctx, openCardId)
                                                                 // 以下參照p69切入的適用
-                                                                // 這張卡會把紅利改成速攻
-                                                                // 179029_05C_CH_BN040U_brown
-                                                                // U
-                                                                // G
-                                                                // ドモン・カッシュ［∞］
-                                                                // 男性　大人　GF
-                                                                // （戦闘フェイズ）〔１〕：ゲイン
-                                                                // 『起動』：このカードは、「ゲイン」の効果で戦闘修正を得る場合、その戦闘修正を得る代わりに、ターン終了時まで、「速攻」を得る事ができる。
                                                                 const gainBonus: BattleBonus = [bonus, bonus, bonus]
                                                                 ctx = GameStateFn.doTriggerEvent(ctx, { title: ["「ゲイン」の効果で戦闘修正を得る場合", gainBonus], cardIds: [cardId] })
-                                                                ctx = GameStateFn.mapItemState(ctx, cardId, is => DefineFn.ItemStateFn.setGlobalEffect(is, null, {
-                                                                    title: ["＋x／＋x／＋xを得る", gainBonus], cardIds: [cardId]
-                                                                }, { isRemoveOnTurnEnd: true })) as GameState
-                                                                ctx = GameStateFn.doTriggerEvent(ctx, { title: ["「ゲイン」の効果で戦闘修正を得た場合", gainBonus], cardIds: [cardId] })
+                                                                const hasCase1 = GameStateFn.getCardTexts(ctx, cardId)
+                                                                    .find(text => text.description == "『起動』：このカードは、「ゲイン」の効果で戦闘修正を得る場合、その戦闘修正の代わりに、ターン終了時まで＋４／±０／±０を得る事ができる。") != null
+                                                                const hasCase2 = GameStateFn.getCardTexts(ctx, cardId)
+                                                                    .find(text => text.description == "『起動』：このカードは、「ゲイン」の効果で戦闘修正を得る場合、その戦闘修正を得る代わりに、ターン終了時まで、「速攻」を得る事ができる。") != null
+                                                                if (hasCase1) {
+                                                                    ctx = GameStateFn.doItemSetGlobalEffectsUntilEndOfTurn(ctx, [{ title: ["＋x／＋x／＋xを得る", [4, 0, 0]], cardIds: [cardId] }], GameStateFn.createStrBaSyouPair(ctx, cardId))
+                                                                } else if (hasCase2) {
+                                                                    ctx = GameStateFn.doItemSetGlobalEffectsUntilEndOfTurn(ctx, [{ title: ["AddText", { id: ToolFn.getUUID("hasCase2"), title: ["特殊型", ["速攻"]] }], cardIds: [cardId] }], GameStateFn.createStrBaSyouPair(ctx, cardId))
+                                                                } else {
+                                                                    ctx = GameStateFn.mapItemState(ctx, cardId, is => DefineFn.ItemStateFn.setGlobalEffect(is, null, {
+                                                                        title: ["＋x／＋x／＋xを得る", gainBonus], cardIds: [cardId]
+                                                                    }, { isRemoveOnTurnEnd: true })) as GameState
+                                                                    ctx = GameStateFn.doTriggerEvent(ctx, { title: ["「ゲイン」の効果で戦闘修正を得た場合", gainBonus], cardIds: [cardId] })
+                                                                }
                                                             }
                                                             return ctx
                                                         }.toString()
