@@ -53,11 +53,12 @@ export type ActionTitle =
     | ["看自己_本國全部的卡", BaSyouKeyword]
     | ["triggerEvent", GameEvent]
     | ["_の_ハンガーに移す", RelatedPlayerSideKeyword, BaSyouKeyword]
-    | ["_２ダメージを与える", number]
     | ["_敵軍本国に_１ダメージ", RelatedPlayerSideKeyword, number]
     | ["_黒のGサインを持つ_自軍_Gが_５枚以上ある場合", CardColor, RelatedPlayerSideKeyword, CardCategory, number]
     | ["Action", { move?: BaSyou }]
     | ["_自軍_本国をシャッフルする", RelatedPlayerSideKeyword, BaSyouKeyword]
+    | ["この記述の効果は、プレイヤー毎に１ターンに１回まで解決できる"]
+    | ["Entity", EntitySearchOptions]
 
 export type Action = {
     title: ActionTitle,
@@ -85,9 +86,11 @@ export type EntitySearchOptions = {
     isBattle?: boolean,
     side?: RelatedPlayerSideKeyword,
     see?: [BaSyou, number, number],
+    title?: string[],
     is?: CardCategory[],
     cardCategory?: CardCategory[],
     at?: BaSyouKeyword[],
+    atBa?: boolean,
     color?: CardColor[],
     compareBattlePoint?: [UnitPropertyKeyword, "<=" | ">=" | "==", number],
     isDestroy?: boolean,
@@ -103,6 +106,7 @@ export type EntitySearchOptions = {
     max?: number,
     asMuchAsPossible?: boolean,
     exceptCardIds?: string[],
+    isRepeat?: boolean
 }
 
 export type ConditionTitle =
@@ -124,7 +128,6 @@ export type ConditionTitle =
     | ["_自軍_ジャンクヤードにある、_黒のGサインを持つ全てのカードは", RelatedPlayerSideKeyword, BaSyouKeyword, CardColor]
     | ["_敵軍部隊がいる場合", RelatedPlayerSideKeyword]
     | ["_敵軍_ユニットが_３枚以上いる場合", RelatedPlayerSideKeyword, CardCategory, number]
-    | ["この記述の効果は、プレイヤー毎に１ターンに１回まで解決できる"]
     | ["Entity", EntitySearchOptions]
 
 export type Condition = {

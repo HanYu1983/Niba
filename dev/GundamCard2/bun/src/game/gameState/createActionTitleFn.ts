@@ -7,7 +7,7 @@ import { TargetMissingError, TipError } from "../define/GameError"
 import { GlobalEffect } from "../define/GlobalEffect"
 import { ItemStateFn } from "../define/ItemState"
 import { PlayerID, PlayerIDFn } from "../define/PlayerID"
-import { StrBaSyouPair } from "../define/Tip"
+import { StrBaSyouPair, Tip, TipFn } from "../define/Tip"
 import { getCardIdsCanPayRollCost, getItemRuntimeCategory } from "./card"
 import { mapCard } from "./CardTableComponent"
 import { getCardTipStrBaSyouPairs } from "./doEffect"
@@ -26,6 +26,8 @@ import { doItemSetDestroy } from "./doItemSetDestroy"
 import { doItemSetGlobalEffectsUntilEndOfTurn } from "./doItemSetGlobalEffectsUntilEndOfTurn"
 import { RelatedPlayerSideKeyword } from "../define"
 import { doPlayerDrawCard } from "./doPlayerDrawCard"
+import { getPlayerState, mapPlayerState } from "./PlayerStateComponent"
+import { createTipByEntitySearch } from "./Entity"
 
 export function createPlayerIdFromRelated(ctx: GameState, cardId: string, re: RelatedPlayerSideKeyword): PlayerID {
   switch (re) {
@@ -50,6 +52,37 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
     return ActionFn.getTitleFn(action)
   }
   switch (action.title[0]) {
+    case "Entity": {
+      const [_, options] = action.title
+      if ([options.max, options.min, options.count].every(v => v == null)) {
+        throw new Error(`Entity search must has one of min, max, count`)
+      }
+      return function (ctx: GameState, effect: Effect): GameState {
+        const cardId = EffectFn.getCardID(effect)
+        const tip = createTipByEntitySearch(ctx, cardId, options)
+        const error = TipFn.checkTipSatisfies(tip)
+        if (error) {
+          throw error
+        }
+        return ctx
+      }
+    }
+    case "この記述の効果は、プレイヤー毎に１ターンに１回まで解決できる": {
+      return function (ctx: GameState, effect: Effect): GameState {
+        const cardId = EffectFn.getCardID(effect)
+        const cardController = getItemController(ctx, cardId)
+        if (getPlayerState(ctx, cardController).textIdsUseThisTurn[effect.text.id]) {
+          throw new TargetMissingError(`この記述の効果は、プレイヤー毎に１ターンに１回まで解決できる`)
+        }
+        ctx = mapPlayerState(ctx, cardController, ps => ({
+          ...ps, textIdsUseThisTurn: {
+            ...ps.textIdsUseThisTurn,
+            [effect.text.id]: true
+          }
+        })) as GameState
+        return ctx
+      }
+    }
     case "_自軍_本国をシャッフルする": {
       const [_, side, basyouKw] = action.title
       return function (ctx: GameState, effect: Effect): GameState {
@@ -165,30 +198,30 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
         }
       }
     }
-    case "_２ダメージを与える": {
-      const [_, damage] = action.title
-      const varNames = action.vars
-      return function (ctx: GameState, effect: Effect): GameState {
-        const cardId = EffectFn.getCardID(effect)
-        const pairs = varNames == null ?
-          [[cardId, getItemBaSyou(ctx, cardId)] as StrBaSyouPair] :
-          varNames.flatMap(varName => {
-            return getCardTipStrBaSyouPairs(ctx, varName, cardId)
-          })
+    // case "_２ダメージを与える": {
+    //   const [_, damage] = action.title
+    //   const varNames = action.vars
+    //   return function (ctx: GameState, effect: Effect): GameState {
+    //     const cardId = EffectFn.getCardID(effect)
+    //     const pairs = varNames == null ?
+    //       [[cardId, getItemBaSyou(ctx, cardId)] as StrBaSyouPair] :
+    //       varNames.flatMap(varName => {
+    //         return getCardTipStrBaSyouPairs(ctx, varName, cardId)
+    //       })
 
-        for (const pair of pairs) {
-          assertTargetMissingError(ctx, pair)
-          const [targetId, _] = pair
-          ctx = mapItemState(ctx, targetId, is => {
-            return {
-              ...is,
-              damage: is.damage + damage
-            }
-          }) as GameState
-        }
-        return ctx
-      }
-    }
+    //     for (const pair of pairs) {
+    //       assertTargetMissingError(ctx, pair)
+    //       const [targetId, _] = pair
+    //       ctx = mapItemState(ctx, targetId, is => {
+    //         return {
+    //           ...is,
+    //           damage: is.damage + damage
+    //         }
+    //       }) as GameState
+    //     }
+    //     return ctx
+    //   }
+    // }
     case "_敵軍本国に_１ダメージ": {
       const [_, side, damage] = action.title
       return function (ctx: GameState, effect: Effect): GameState {
@@ -230,14 +263,17 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
       }
     }
     case "_１ダメージを与える": {
+      const [_, damage] = action.title
+      const varNames = action.vars
       return function (ctx: GameState, effect: Effect): GameState {
-        if (action.vars == null) {
-          throw new Error(`action.var not found: ${action.title[0]}`)
-        }
         const cardId = EffectFn.getCardID(effect)
-        const targetPairs = getCardTipStrBaSyouPairs(ctx, action.vars[0], cardId)
-        ctx = targetPairs.reduce((ctx, pair) => {
-          return doItemDamage(ctx, 1, pair)
+        const pairs = varNames == null ?
+          [[cardId, getItemBaSyou(ctx, cardId)] as StrBaSyouPair] :
+          varNames.flatMap(varName => {
+            return getCardTipStrBaSyouPairs(ctx, varName, cardId)
+          })
+        ctx = pairs.reduce((ctx, pair) => {
+          return doItemDamage(ctx, damage, pair)
         }, ctx)
         return ctx
       }

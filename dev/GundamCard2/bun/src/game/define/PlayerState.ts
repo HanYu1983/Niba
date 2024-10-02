@@ -4,6 +4,7 @@ export type PlayerState = {
     turn: number;
     playGCount: number;
     confirmPhase: boolean;
+    textIdsUseThisTurn: { [key: string]: any }
 };
 
 export const PlayerStateFn = {
@@ -13,12 +14,14 @@ export const PlayerStateFn = {
             turn: 0,
             playGCount: 0,
             confirmPhase: false,
+            textIdsUseThisTurn: {}
         }
     },
     onTurnEnd(ps: PlayerState): PlayerState {
         return {
             ...ps,
-            playGCount: 0
+            playGCount: 0,
+            textIdsUseThisTurn: {}
         }
     }
 }

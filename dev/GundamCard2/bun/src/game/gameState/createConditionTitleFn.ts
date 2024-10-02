@@ -15,6 +15,7 @@ import { getSetGroupBattlePoint } from "./setGroup"
 import { getSetGroupRoot } from "./SetGroupComponent"
 import { logCategory } from "../../tool/logger"
 import { createEntityIterator, createTipByEntitySearch, EntityFn } from "./Entity"
+import { getPlayerState, mapPlayerState } from "./PlayerStateComponent"
 
 export function createConditionTitleFn(condition: Condition, options: { isPlay?: boolean }): ConditionTitleFn {
     if (condition.title == null || typeof condition.title == "string") {
@@ -22,11 +23,6 @@ export function createConditionTitleFn(condition: Condition, options: { isPlay?:
     }
     logCategory("getConditionTitleFn", condition.title)
     switch (condition.title[0]) {
-        case "この記述の効果は、プレイヤー毎に１ターンに１回まで解決できる":{
-            return function (ctx: GameState, effect: Effect): Tip | null {
-                return null
-            }
-        }
         case "_敵軍_ユニットが_３枚以上いる場合": {
             const [_, side, category, count] = condition.title
             return function (ctx: GameState, effect: Effect): Tip | null {
@@ -415,61 +411,6 @@ export function createConditionTitleFn(condition: Condition, options: { isPlay?:
             return function (ctx: GameState, effect: Effect): Tip | null {
                 const cardId = EffectFn.getCardID(effect)
                 return createTipByEntitySearch(ctx, cardId, options)
-                // let entityList = createEntityIterator(ctx).filter(EntityFn.filterIsBattle(ctx, null, options.isBattle || false))
-                // entityList = entityList.filter(EntityFn.filterAtBa(true))
-                // if (options.baSyouKeywords?.length) {
-                //     entityList = entityList.filter(EntityFn.filterAtBaSyous(options.baSyouKeywords))
-                // } else {
-                //     entityList = entityList.filter(e => e.isCard || e.isChip)
-                // }
-                // if (options.side) {
-                //     const cardController = getItemController(ctx, cardId)
-                //     const playerId = PlayerIDFn.fromRelatedPlayerSideKeyword(options.side || "自軍", cardController)
-                //     entityList = entityList.filter(EntityFn.filterController(playerId))
-                // }
-                // if (options.runtimeItemCategory?.length) {
-                //     entityList = entityList.filter(EntityFn.filterRuntimeCategory(ctx, options.runtimeItemCategory))
-                // }
-                // if (options.itemCategory?.length) {
-                //     entityList = entityList.filter(EntityFn.filterCategory(ctx, options.itemCategory))
-                // }
-                // if (options.itemColor?.length) {
-                //     entityList = entityList.filter(EntityFn.filterItemColor(ctx, options.itemColor))
-                // }
-                // if (options.isCanSetCharacter != null) {
-                //     entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx, true)).filter(EntityFn.filterCanSetCharacter(ctx))
-                // } else if (options.isSetGroup != null) {
-                //     entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx, options.isSetGroup))
-                // }
-                // if (options.isDestroy != null) {
-                //     entityList = entityList.filter(EntityFn.filterIsDestroy(options.isDestroy))
-                // }
-                // entityList = entityList.filter(EntityFn.filterDistinct)
-                // const pairs = entityList.map(entity => {
-                //     if (entity.baSyouKeyword == null) {
-                //         throw new Error()
-                //     }
-                //     return [entity.itemId, AbsoluteBaSyouFn.of(entity.itemController, entity.baSyouKeyword)] as StrBaSyouPair
-                // })
-                // let tipPairs = pairs
-                // if (options.max != null) {
-                //     tipPairs = tipPairs.slice(0, options.max)
-                // } else if (options.min != null) {
-                //     tipPairs = tipPairs.slice(0, options.min)
-                // }
-                // const tip: Tip = {
-                //     title: ["カード", pairs, tipPairs]
-                // }
-                // if (options.min != null) {
-                //     tip.min = options.min
-                // }
-                // if (options.max != null) {
-                //     tip.max = options.max
-                // }
-                // if (options.count != null) {
-                //     tip.count = options.count
-                // }
-                // return tip
             }
         }
     }

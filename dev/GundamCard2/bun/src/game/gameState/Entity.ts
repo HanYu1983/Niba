@@ -1,11 +1,11 @@
 import { BaSyouKeyword, BaSyouKeywordFn, AbsoluteBaSyouFn } from "../define/BaSyou";
-import { CardCategory, CardColor } from "../define/CardPrototype";
+import { CardCategory, CardColor, CardPrototype } from "../define/CardPrototype";
 import { EntitySearchOptions, TextSpeicalEffect } from "../define/CardText";
 import { DestroyReason, Effect, EffectFn } from "../define/Effect";
 import { TipError } from "../define/GameError";
 import { ItemState } from "../define/ItemState";
 import { PlayerID, PlayerA, PlayerB, PlayerIDFn } from "../define/PlayerID";
-import { Tip, StrBaSyouPair } from "../define/Tip";
+import { Tip, StrBaSyouPair, TipFn } from "../define/Tip";
 import { getCardColor, getCardHasSpeicalEffect, getItemCharacteristic, getItemRuntimeCategory, isCardMaster } from "./card";
 import { getCoinIds, getCoin, getCoinOwner } from "./CoinTableComponent";
 import { createAbsoluteBaSyouFromBaSyou, createPlayerIdFromRelated } from "./createActionTitleFn";
@@ -26,7 +26,8 @@ export type Entity = {
     isCoin: boolean,
     isCard: boolean,
     baSyouKeyword: BaSyouKeyword | null,
-    destroyReason: DestroyReason | null
+    destroyReason: DestroyReason | null,
+    prototype: CardPrototype | null
 }
 
 export function createEntityIterator(ctx: GameState) {
@@ -47,7 +48,8 @@ export function createEntityIterator(ctx: GameState) {
                     isCoin: false,
                     isChip: isChip(ctx, item.id),
                     baSyouKeyword: basyouKw,
-                    destroyReason: destroyEffect?.reason[0] == "Destroy" ? destroyEffect.reason[3] : null
+                    destroyReason: destroyEffect?.reason[0] == "Destroy" ? destroyEffect.reason[3] : null,
+                    prototype: getItemPrototype(ctx, itemId)
                 }
                 rets.push(entity)
             })
@@ -64,7 +66,8 @@ export function createEntityIterator(ctx: GameState) {
             isCoin: true,
             isChip: false,
             baSyouKeyword: null,
-            destroyReason: null
+            destroyReason: null,
+            prototype: null
         }
         rets.push(entity)
     })
@@ -133,8 +136,14 @@ export function createTipByEntitySearch(ctx: GameState, cardId: string, options:
     if (options.isMaster != null) {
         entityList = entityList.filter(entity => isCardMaster(ctx, getSetGroupRoot(ctx, entity.itemId), entity.itemId))
     }
+    if (options.title) {
+        entityList = entityList.filter(entity => options.title?.includes(entity.prototype?.title || ""))
+    }
     if (options.at?.length) {
         entityList = entityList.filter(EntityFn.filterAtBaSyous(options.at))
+    }
+    if (options.atBa != null) {
+        entityList = entityList.filter(EntityFn.filterAtBaSyous(BaSyouKeywordFn.getBaAll()))
     }
     if (options.side) {
         const cardController = getItemController(ctx, cardId)
@@ -180,8 +189,20 @@ export function createTipByEntitySearch(ctx: GameState, cardId: string, options:
     } else if (options.count != null) {
         tipPairs = tipPairs.slice(0, options.count)
     }
+    if (options.isRepeat) {
+        if (options.count == null) {
+            throw new Error()
+        }
+        if (tipPairs.length > 0) {
+            while (tipPairs.length < options.count) {
+                tipPairs = [...tipPairs, ...tipPairs]
+            }
+            tipPairs = tipPairs.slice(0, options.count)
+        }
+    }
     const tip: Tip = {
-        title: ["カード", pairs, tipPairs]
+        title: ["カード", pairs, tipPairs],
+        isRepeat: options.isRepeat,
     }
     if (options.min != null) {
         tip.min = options.min

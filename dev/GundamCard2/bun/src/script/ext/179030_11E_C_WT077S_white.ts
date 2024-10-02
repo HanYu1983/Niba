@@ -54,7 +54,7 @@ export const prototype: CardPrototype = {
         }]
       },
       "この記述の効果は、プレイヤー毎に１ターンに１回まで解決できる": {
-        title: ["この記述の効果は、プレイヤー毎に１ターンに１回まで解決できる"]
+        actions: [{ title: "この記述の効果は、プレイヤー毎に１ターンに１回まで解決できる" }]
       }
     },
     logicTreeActions: [
@@ -66,14 +66,14 @@ export const prototype: CardPrototype = {
                 title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, ToolFn }: Bridge): GameState {
                   const cardId = DefineFn.EffectFn.getCardID(effect)
                   const cardController = GameStateFn.getItemController(ctx, cardId)
+                  // この記述の効果は、プレイヤー毎に１ターンに１回まで解決できる
+                  if (GameStateFn.getPlayerState(ctx, cardController).textIdsUseThisTurn[effect.text.id]) {
+                    return ctx
+                  }
                   const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "自軍捨て山の上のカード１枚", cardId)
                   for (const pair of pairs) {
                     ctx = GameStateFn.doItemSetRollState(ctx, true, pair, { isSkipTargetMissing: true })
                     ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "Gゾーン"), pair)
-                  }
-                  // TODO この記述の効果は、プレイヤー毎に１ターンに１回まで解決できる
-                  if (false) {
-                    return ctx
                   }
                   ctx = GameStateFn.doPlayerDrawCard(ctx, 2, cardController)
                   return ctx

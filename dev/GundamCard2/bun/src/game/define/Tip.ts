@@ -22,6 +22,7 @@ export type Tip = {
     min?: number,
     max?: number,
     cheatCardIds?: string[],
+    isRepeat?: boolean,
 };
 
 export const TipFn = {
@@ -67,7 +68,7 @@ export const TipFn = {
                 }
         }
     },
-    checkTipSatisfies(tip: Tip): TargetMissingError | null {
+    checkTipSatisfies(tip: Tip): TipError | null {
         const selection = this.getSelection(tip)
         if (tip.count != null && tip.count != selection.length) {
             return new TipError(`count ${selection.length} not right: ${tip.title[0]}/${tip.count}`)

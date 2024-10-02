@@ -26,7 +26,7 @@ export const prototype: CardPrototype = {
                 title: ["_自軍_ユニット_１枚", "敵軍", "ユニット", 1],
                 actions: [
                   {
-                    title: ["_２ダメージを与える", 2],
+                    title: ["_１ダメージを与える", 2],
                     vars: ["敵軍ユニット１枚"]
                   }
                 ]
