@@ -27956,13 +27956,15 @@ var PlayerStateFn = {
       id: "",
       turn: 0,
       playGCount: 0,
-      confirmPhase: false
+      confirmPhase: false,
+      textIdsUseThisTurn: {}
     };
   },
   onTurnEnd(ps) {
     return {
       ...ps,
-      playGCount: 0
+      playGCount: 0,
+      textIdsUseThisTurn: {}
     };
   }
 };
@@ -28012,7 +28014,7 @@ __export(exports_createOnEventTitleFn, {
 // src/game/gameState/createActionTitleFn.ts
 var exports_createActionTitleFn = {};
 __export(exports_createActionTitleFn, {
-  createPlayerIdFromRelated: () => createPlayerIdFromRelated,
+  createPlayerIdFromRelated: () => createPlayerIdFromRelated2,
   createActionTitleFn: () => createActionTitleFn,
   createAbsoluteBaSyouFromBaSyou: () => createAbsoluteBaSyouFromBaSyou
 });
@@ -28029,6 +28031,69 @@ var CoinFn = {
       title: ["BattleBonus", v],
       ownerID: playerId
     };
+  }
+};
+
+// src/game/define/Tip.ts
+var exports_Tip = {};
+__export(exports_Tip, {
+  TipFn: () => TipFn
+});
+var TipFn = {
+  getWant(tip) {
+    switch (tip.title[0]) {
+      case "\u30AB\u30FC\u30C9":
+      case "\u30C6\u30AD\u30B9\u30C8":
+      case "StringOptions":
+      case "BattleBonus":
+        return tip.title[1];
+    }
+  },
+  getSelection(tip) {
+    switch (tip.title[0]) {
+      case "\u30AB\u30FC\u30C9":
+      case "\u30C6\u30AD\u30B9\u30C8":
+      case "StringOptions":
+      case "BattleBonus":
+        return tip.title[2];
+    }
+  },
+  passWantToSelection(tip) {
+    switch (tip.title[0]) {
+      case "\u30AB\u30FC\u30C9":
+        return {
+          ...tip,
+          title: [tip.title[0], tip.title[1], tip.title[1]]
+        };
+      case "\u30C6\u30AD\u30B9\u30C8":
+        return {
+          ...tip,
+          title: [tip.title[0], tip.title[1], tip.title[1]]
+        };
+      case "StringOptions":
+        return {
+          ...tip,
+          title: [tip.title[0], tip.title[1], tip.title[1]]
+        };
+      case "BattleBonus":
+        return {
+          ...tip,
+          title: [tip.title[0], tip.title[1], tip.title[1]]
+        };
+    }
+  },
+  checkTipSatisfies(tip) {
+    const selection = this.getSelection(tip);
+    if (tip.count != null && tip.count != selection.length) {
+      return new TipError(`count ${selection.length} not right: ${tip.title[0]}/${tip.count}`);
+    }
+    if (tip.min != null && selection.length < tip.min) {
+      return new TipError(`min ${selection.length} not right: ${tip.title[0]}/${tip.min}`);
+    }
+    if (tip.max != null && selection.length > tip.max) {
+      return new TipError(`max ${selection.length} not right: ${tip.title[0]}/${tip.max}`);
+    }
+    return null;
   }
 };
 
@@ -28402,8 +28467,322 @@ function doPlayerDrawCard(ctx2, count, playerId) {
   return ctx2;
 }
 
+// src/game/gameState/Entity.ts
+var exports_Entity = {};
+__export(exports_Entity, {
+  createTipByEntitySearch: () => createTipByEntitySearch,
+  createEntityIterator: () => createEntityIterator,
+  EntityFn: () => EntityFn
+});
+function createEntityIterator(ctx2) {
+  const destroyEffects = getCutInDestroyEffects(ctx2);
+  const rets = [];
+  [PlayerA, PlayerB].map((playerId) => {
+    BaSyouKeywordFn.getAll().map((basyouKw) => {
+      const basyou = AbsoluteBaSyouFn.of(playerId, basyouKw);
+      getItemIdsByBasyou(ctx2, basyou).map((itemId) => {
+        const item = getItem(ctx2, itemId);
+        const destroyEffect = destroyEffects.find((e) => EffectFn.getCardID(e) == itemId);
+        const entity = {
+          itemController: playerId,
+          itemId,
+          itemState: getItemState(ctx2, itemId),
+          item,
+          isCard: isCard(ctx2, item.id),
+          isCoin: false,
+          isChip: isChip(ctx2, item.id),
+          baSyouKeyword: basyouKw,
+          destroyReason: destroyEffect?.reason[0] == "Destroy" ? destroyEffect.reason[3] : null,
+          prototype: getItemPrototype(ctx2, itemId)
+        };
+        rets.push(entity);
+      });
+    });
+  });
+  getCoinIds(ctx2).map((coinId) => {
+    const coin = getCoin(ctx2, coinId);
+    const entity = {
+      itemController: getCoinOwner(ctx2, coin.id),
+      itemId: coin.id,
+      itemState: getItemState(ctx2, coin.id),
+      item: coin,
+      isCard: false,
+      isCoin: true,
+      isChip: false,
+      baSyouKeyword: null,
+      destroyReason: null,
+      prototype: null
+    };
+    rets.push(entity);
+  });
+  return rets;
+}
+function createTipByEntitySearch(ctx2, cardId, options) {
+  let entityList = createEntityIterator(ctx2).filter(EntityFn.filterIsBattle(ctx2, null, options.isBattle || false));
+  const cheatCardIds = [];
+  if (options.hasSelfCardId != null) {
+    const absoluteBasyou = getItemBaSyou(ctx2, cardId);
+    entityList = entityList.filter(EntityFn.filterController(AbsoluteBaSyouFn.getPlayerID(absoluteBasyou)));
+    entityList = entityList.filter(EntityFn.filterAtBaSyous([AbsoluteBaSyouFn.getBaSyouKeyword(absoluteBasyou)]));
+  }
+  if (options.see) {
+    const [basyou, min, max] = options.see;
+    const absoluteBasyou = createAbsoluteBaSyouFromBaSyou(ctx2, cardId, basyou);
+    entityList = entityList.filter(EntityFn.filterController(AbsoluteBaSyouFn.getPlayerID(absoluteBasyou)));
+    entityList = entityList.filter(EntityFn.filterAtBaSyous([AbsoluteBaSyouFn.getBaSyouKeyword(absoluteBasyou)]));
+    if (entityList.length < min) {
+      throw new TipError(`must at least ${min} for see`);
+    }
+    cheatCardIds.push(...entityList.map((e) => e.itemId).slice(0, max));
+    entityList = entityList.slice(0, max);
+  }
+  if (options.isCanSetCharacter != null) {
+    entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx2, true)).filter(EntityFn.filterCanSetCharacter(ctx2));
+  } else if (options.is?.includes("\u30E6\u30CB\u30C3\u30C8")) {
+    entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx2, true));
+  } else if (options.isSetGroup != null) {
+    entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx2, options.isSetGroup));
+  }
+  if (options.compareBattlePoint) {
+    entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx2, true));
+    const [kw, op, value] = options.compareBattlePoint;
+    entityList = entityList.filter((entity) => {
+      const [atk, de, hp] = getSetGroupBattlePoint(ctx2, entity.itemId);
+      switch (kw) {
+        case "\u653B\u6483\u529B":
+          switch (op) {
+            case "<=":
+              return atk <= value;
+            case ">=":
+              return atk >= value;
+            case "==":
+              return atk == value;
+          }
+        case "\u9632\u5FA1\u529B":
+          switch (op) {
+            case "<=":
+              return de <= value;
+            case ">=":
+              return de >= value;
+            case "==":
+              return de == value;
+          }
+      }
+      return false;
+    });
+  }
+  if (options.isMaster != null) {
+    entityList = entityList.filter((entity) => isCardMaster(ctx2, getSetGroupRoot(ctx2, entity.itemId), entity.itemId));
+  }
+  if (options.title) {
+    entityList = entityList.filter((entity) => options.title?.includes(entity.prototype?.title || ""));
+  }
+  if (options.at?.length) {
+    entityList = entityList.filter(EntityFn.filterAtBaSyous(options.at));
+  }
+  if (options.atBa != null) {
+    entityList = entityList.filter(EntityFn.filterAtBaSyous(BaSyouKeywordFn.getBaAll()));
+  }
+  if (options.side) {
+    const cardController = getItemController(ctx2, cardId);
+    const playerId = PlayerIDFn.fromRelatedPlayerSideKeyword(options.side || "\u81EA\u8ECD", cardController);
+    entityList = entityList.filter(EntityFn.filterController(playerId));
+  }
+  if (options.is?.length) {
+    entityList = entityList.filter(EntityFn.filterRuntimeCategory(ctx2, options.is));
+  }
+  if (options.cardCategory?.length) {
+    entityList = entityList.filter(EntityFn.filterCategory(ctx2, options.cardCategory));
+  }
+  if (options.color?.length) {
+    entityList = entityList.filter(EntityFn.filterItemColor(ctx2, options.color));
+  }
+  if (options.hasSetCard != null) {
+    entityList = entityList.filter(EntityFn.filterHasSetCard(ctx2, options.hasSetCard));
+  }
+  if (options.isDestroy != null) {
+    entityList = entityList.filter(EntityFn.filterIsDestroy(options.isDestroy));
+  }
+  if (options.hasSpecialEffect != null) {
+    entityList = entityList.filter(EntityFn.filterHasSpecialEffect(ctx2, options.hasSpecialEffect));
+  }
+  if (options.hasChar != null) {
+    entityList = entityList.filter(EntityFn.filterHasChar(ctx2, options.hasChar));
+  }
+  if (options.exceptCardIds?.length) {
+    entityList = entityList.filter((entity) => options.exceptCardIds?.includes(entity.itemId) != true);
+  }
+  entityList = entityList.filter(EntityFn.filterDistinct);
+  const pairs = entityList.map((entity) => {
+    if (entity.baSyouKeyword == null) {
+      throw new Error;
+    }
+    return [entity.itemId, AbsoluteBaSyouFn.of(entity.itemController, entity.baSyouKeyword)];
+  });
+  let tipPairs = pairs;
+  if (options.max != null) {
+    tipPairs = tipPairs.slice(0, options.max);
+  } else if (options.min != null) {
+    tipPairs = tipPairs.slice(0, options.min);
+  } else if (options.count != null) {
+    tipPairs = tipPairs.slice(0, options.count);
+  }
+  if (options.isRepeat) {
+    if (options.count == null) {
+      throw new Error;
+    }
+    if (tipPairs.length > 0) {
+      while (tipPairs.length < options.count) {
+        tipPairs = [...tipPairs, ...tipPairs];
+      }
+      tipPairs = tipPairs.slice(0, options.count);
+    }
+  }
+  const tip = {
+    title: ["\u30AB\u30FC\u30C9", pairs, tipPairs],
+    isRepeat: options.isRepeat
+  };
+  if (options.min != null) {
+    tip.min = options.min;
+  }
+  if (options.max != null) {
+    tip.max = options.max;
+  }
+  if (options.count != null) {
+    tip.count = options.count;
+  }
+  if (cheatCardIds.length) {
+    tip.cheatCardIds = cheatCardIds;
+  }
+  if (options.asMuchAsPossible) {
+    if (options.max == null) {
+      throw new Error;
+    }
+    tip.min = Math.min(pairs.length, options.max);
+  }
+  return tip;
+}
+var EntityFn = {
+  filterAtBaSyous(kws) {
+    return (entity) => {
+      if (entity.baSyouKeyword == null) {
+        return false;
+      }
+      return kws.includes(entity.baSyouKeyword);
+    };
+  },
+  filterAtBattleArea(v) {
+    return (entity) => {
+      return (entity.baSyouKeyword == "\u6226\u95D8\u30A8\u30EA\u30A21" || entity.baSyouKeyword == "\u6226\u95D8\u30A8\u30EA\u30A22") == v;
+    };
+  },
+  filterAtBa(v) {
+    return (entity) => {
+      if (entity.baSyouKeyword == null) {
+        return false;
+      }
+      return BaSyouKeywordFn.isBa(entity.baSyouKeyword) == v;
+    };
+  },
+  filterController(playerId) {
+    return (entity) => {
+      return entity.itemController == playerId;
+    };
+  },
+  filterIsDestroy(v) {
+    return (entity) => {
+      return entity.destroyReason != null == v;
+    };
+  },
+  filterIsBattle(ctx2, targetId, v) {
+    return (entity) => {
+      if (isCardLike(ctx2)(entity.itemId) == false) {
+        return false;
+      }
+      return isBattle(ctx2, entity.itemId, targetId) == v;
+    };
+  },
+  filterRuntimeCategory(ctx2, category) {
+    return (entity) => {
+      if (isCardLike(ctx2)(entity.itemId) == false) {
+        return false;
+      }
+      return category.includes(getItemRuntimeCategory(ctx2, entity.itemId));
+    };
+  },
+  filterCategory(ctx2, category) {
+    return (entity) => {
+      if (isCardLike(ctx2)(entity.itemId) == false) {
+        return false;
+      }
+      const targetCate = getItemPrototype(ctx2, entity.itemId).category;
+      if (targetCate == null) {
+        return false;
+      }
+      return category.includes(targetCate);
+    };
+  },
+  filterItemController(ctx2, playerId) {
+    return (entity) => {
+      return getItemController(ctx2, entity.itemId) == playerId;
+    };
+  },
+  filterItemColor(ctx2, color) {
+    return (entity) => {
+      if (isCardLike(ctx2)(entity.itemId) == false) {
+        return false;
+      }
+      return color.includes(getCardColor(ctx2, entity.itemId));
+    };
+  },
+  filterIsSetGroupRoot(ctx2, v) {
+    return (entity) => {
+      if (isCardLike(ctx2)(entity.itemId) == false) {
+        return false;
+      }
+      return getSetGroupRoot(ctx2, entity.itemId) == entity.itemId == v;
+    };
+  },
+  filterCanSetCharacter(ctx2) {
+    return (entity) => {
+      if (isCardLike(ctx2)(entity.itemId) == false) {
+        return false;
+      }
+      const charLen = getSetGroup(ctx2, entity.itemId).filter((itemId) => getItemRuntimeCategory(ctx2, itemId) == "\u30AD\u30E3\u30E9\u30AF\u30BF\u30FC").length;
+      return charLen == 0;
+    };
+  },
+  filterHasSetCard(ctx2, v) {
+    return (entity) => {
+      if (isCardLike(ctx2)(entity.itemId) == false) {
+        return false;
+      }
+      return getSetGroup(ctx2, entity.itemId).length > 1 == v;
+    };
+  },
+  filterHasSpecialEffect(ctx2, vs) {
+    return (entity) => {
+      if (isCardLike(ctx2)(entity.itemId) == false) {
+        return false;
+      }
+      return vs.some((v) => isSetGroupHasA(ctx2, v, entity.itemId));
+    };
+  },
+  filterHasChar(ctx2, vs) {
+    return (entity) => {
+      if (isCardLike(ctx2)(entity.itemId) == false) {
+        return false;
+      }
+      return vs.some((v) => getItemCharacteristic(ctx2, entity.itemId).indexOf(v) != -1);
+    };
+  },
+  filterDistinct(cet, index, self) {
+    return index === self.findIndex((c) => c.itemId === cet.itemId);
+  }
+};
+
 // src/game/gameState/createActionTitleFn.ts
-function createPlayerIdFromRelated(ctx2, cardId, re) {
+function createPlayerIdFromRelated2(ctx2, cardId, re) {
   switch (re) {
     case "\u81EA\u8ECD":
       return getItemController(ctx2, cardId);
@@ -28417,18 +28796,50 @@ function createAbsoluteBaSyouFromBaSyou(ctx2, cardId, re) {
   if (re.id == "AbsoluteBaSyou") {
     return re;
   }
-  return AbsoluteBaSyouFn.of(createPlayerIdFromRelated(ctx2, cardId, re.value[0]), re.value[1]);
+  return AbsoluteBaSyouFn.of(createPlayerIdFromRelated2(ctx2, cardId, re.value[0]), re.value[1]);
 }
 function createActionTitleFn(action) {
   if (typeof action.title == "string") {
     return ActionFn.getTitleFn(action);
   }
   switch (action.title[0]) {
+    case "Entity": {
+      const [_, options] = action.title;
+      if ([options.max, options.min, options.count].every((v) => v == null)) {
+        throw new Error(`Entity search must has one of min, max, count`);
+      }
+      return function(ctx2, effect) {
+        const cardId = EffectFn.getCardID(effect);
+        const tip = createTipByEntitySearch(ctx2, cardId, options);
+        const error = TipFn.checkTipSatisfies(tip);
+        if (error) {
+          throw error;
+        }
+        return ctx2;
+      };
+    }
+    case "\u3053\u306E\u8A18\u8FF0\u306E\u52B9\u679C\u306F\u3001\u30D7\u30EC\u30A4\u30E4\u30FC\u6BCE\u306B\uFF11\u30BF\u30FC\u30F3\u306B\uFF11\u56DE\u307E\u3067\u89E3\u6C7A\u3067\u304D\u308B": {
+      return function(ctx2, effect) {
+        const cardId = EffectFn.getCardID(effect);
+        const cardController = getItemController(ctx2, cardId);
+        if (getPlayerState(ctx2, cardController).textIdsUseThisTurn[effect.text.id]) {
+          throw new TargetMissingError(`\u3053\u306E\u8A18\u8FF0\u306E\u52B9\u679C\u306F\u3001\u30D7\u30EC\u30A4\u30E4\u30FC\u6BCE\u306B\uFF11\u30BF\u30FC\u30F3\u306B\uFF11\u56DE\u307E\u3067\u89E3\u6C7A\u3067\u304D\u308B`);
+        }
+        ctx2 = mapPlayerState(ctx2, cardController, (ps) => ({
+          ...ps,
+          textIdsUseThisTurn: {
+            ...ps.textIdsUseThisTurn,
+            [effect.text.id]: true
+          }
+        }));
+        return ctx2;
+      };
+    }
     case "_\u81EA\u8ECD_\u672C\u56FD\u3092\u30B7\u30E3\u30C3\u30D5\u30EB\u3059\u308B": {
       const [_, side, basyouKw] = action.title;
       return function(ctx2, effect) {
         const cardId = EffectFn.getCardID(effect);
-        const playerId = createPlayerIdFromRelated(ctx2, cardId, side);
+        const playerId = createPlayerIdFromRelated2(ctx2, cardId, side);
         const basyou = AbsoluteBaSyouFn.of(playerId, basyouKw);
         ctx2 = shuffleItems(ctx2, basyou);
         return ctx2;
@@ -28535,27 +28946,6 @@ function createActionTitleFn(action) {
         }
       };
     }
-    case "_\uFF12\u30C0\u30E1\u30FC\u30B8\u3092\u4E0E\u3048\u308B": {
-      const [_, damage] = action.title;
-      const varNames2 = action.vars;
-      return function(ctx2, effect) {
-        const cardId = EffectFn.getCardID(effect);
-        const pairs = varNames2 == null ? [[cardId, getItemBaSyou(ctx2, cardId)]] : varNames2.flatMap((varName) => {
-          return getCardTipStrBaSyouPairs(ctx2, varName, cardId);
-        });
-        for (const pair2 of pairs) {
-          assertTargetMissingError(ctx2, pair2);
-          const [targetId, _2] = pair2;
-          ctx2 = mapItemState(ctx2, targetId, (is) => {
-            return {
-              ...is,
-              damage: is.damage + damage
-            };
-          });
-        }
-        return ctx2;
-      };
-    }
     case "_\u6575\u8ECD\u672C\u56FD\u306B_\uFF11\u30C0\u30E1\u30FC\u30B8": {
       const [_, side, damage] = action.title;
       return function(ctx2, effect) {
@@ -28595,14 +28985,15 @@ function createActionTitleFn(action) {
       };
     }
     case "_\uFF11\u30C0\u30E1\u30FC\u30B8\u3092\u4E0E\u3048\u308B": {
+      const [_, damage] = action.title;
+      const varNames2 = action.vars;
       return function(ctx2, effect) {
-        if (action.vars == null) {
-          throw new Error(`action.var not found: ${action.title[0]}`);
-        }
         const cardId = EffectFn.getCardID(effect);
-        const targetPairs = getCardTipStrBaSyouPairs(ctx2, action.vars[0], cardId);
-        ctx2 = targetPairs.reduce((ctx3, pair2) => {
-          return doItemDamage(ctx3, 1, pair2);
+        const pairs = varNames2 == null ? [[cardId, getItemBaSyou(ctx2, cardId)]] : varNames2.flatMap((varName) => {
+          return getCardTipStrBaSyouPairs(ctx2, varName, cardId);
+        });
+        ctx2 = pairs.reduce((ctx3, pair2) => {
+          return doItemDamage(ctx3, damage, pair2);
         }, ctx2);
         return ctx2;
       };
@@ -29262,313 +29653,12 @@ var exports_createConditionTitleFn = {};
 __export(exports_createConditionTitleFn, {
   createConditionTitleFn: () => createConditionTitleFn
 });
-
-// src/game/gameState/Entity.ts
-var exports_Entity = {};
-__export(exports_Entity, {
-  createTipByEntitySearch: () => createTipByEntitySearch,
-  createEntityIterator: () => createEntityIterator,
-  EntityFn: () => EntityFn
-});
-function createEntityIterator(ctx2) {
-  const destroyEffects = getCutInDestroyEffects(ctx2);
-  const rets = [];
-  [PlayerA, PlayerB].map((playerId) => {
-    BaSyouKeywordFn.getAll().map((basyouKw) => {
-      const basyou = AbsoluteBaSyouFn.of(playerId, basyouKw);
-      getItemIdsByBasyou(ctx2, basyou).map((itemId) => {
-        const item = getItem(ctx2, itemId);
-        const destroyEffect = destroyEffects.find((e) => EffectFn.getCardID(e) == itemId);
-        const entity = {
-          itemController: playerId,
-          itemId,
-          itemState: getItemState(ctx2, itemId),
-          item,
-          isCard: isCard(ctx2, item.id),
-          isCoin: false,
-          isChip: isChip(ctx2, item.id),
-          baSyouKeyword: basyouKw,
-          destroyReason: destroyEffect?.reason[0] == "Destroy" ? destroyEffect.reason[3] : null
-        };
-        rets.push(entity);
-      });
-    });
-  });
-  getCoinIds(ctx2).map((coinId) => {
-    const coin = getCoin(ctx2, coinId);
-    const entity = {
-      itemController: getCoinOwner(ctx2, coin.id),
-      itemId: coin.id,
-      itemState: getItemState(ctx2, coin.id),
-      item: coin,
-      isCard: false,
-      isCoin: true,
-      isChip: false,
-      baSyouKeyword: null,
-      destroyReason: null
-    };
-    rets.push(entity);
-  });
-  return rets;
-}
-function createTipByEntitySearch(ctx2, cardId, options) {
-  let entityList = createEntityIterator(ctx2).filter(EntityFn.filterIsBattle(ctx2, null, options.isBattle || false));
-  const cheatCardIds = [];
-  if (options.hasSelfCardId != null) {
-    const absoluteBasyou = getItemBaSyou(ctx2, cardId);
-    entityList = entityList.filter(EntityFn.filterController(AbsoluteBaSyouFn.getPlayerID(absoluteBasyou)));
-    entityList = entityList.filter(EntityFn.filterAtBaSyous([AbsoluteBaSyouFn.getBaSyouKeyword(absoluteBasyou)]));
-  }
-  if (options.see) {
-    const [basyou, min, max] = options.see;
-    const absoluteBasyou = createAbsoluteBaSyouFromBaSyou(ctx2, cardId, basyou);
-    entityList = entityList.filter(EntityFn.filterController(AbsoluteBaSyouFn.getPlayerID(absoluteBasyou)));
-    entityList = entityList.filter(EntityFn.filterAtBaSyous([AbsoluteBaSyouFn.getBaSyouKeyword(absoluteBasyou)]));
-    if (entityList.length < min) {
-      throw new TipError(`must at least ${min} for see`);
-    }
-    cheatCardIds.push(...entityList.map((e) => e.itemId).slice(0, max));
-    entityList = entityList.slice(0, max);
-  }
-  if (options.isCanSetCharacter != null) {
-    entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx2, true)).filter(EntityFn.filterCanSetCharacter(ctx2));
-  } else if (options.is?.includes("\u30E6\u30CB\u30C3\u30C8")) {
-    entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx2, true));
-  } else if (options.isSetGroup != null) {
-    entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx2, options.isSetGroup));
-  }
-  if (options.compareBattlePoint) {
-    entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx2, true));
-    const [kw, op, value] = options.compareBattlePoint;
-    entityList = entityList.filter((entity) => {
-      const [atk, de, hp] = getSetGroupBattlePoint(ctx2, entity.itemId);
-      switch (kw) {
-        case "\u653B\u6483\u529B":
-          switch (op) {
-            case "<=":
-              return atk <= value;
-            case ">=":
-              return atk >= value;
-            case "==":
-              return atk == value;
-          }
-        case "\u9632\u5FA1\u529B":
-          switch (op) {
-            case "<=":
-              return de <= value;
-            case ">=":
-              return de >= value;
-            case "==":
-              return de == value;
-          }
-      }
-      return false;
-    });
-  }
-  if (options.isMaster != null) {
-    entityList = entityList.filter((entity) => isCardMaster(ctx2, getSetGroupRoot(ctx2, entity.itemId), entity.itemId));
-  }
-  if (options.at?.length) {
-    entityList = entityList.filter(EntityFn.filterAtBaSyous(options.at));
-  }
-  if (options.side) {
-    const cardController = getItemController(ctx2, cardId);
-    const playerId = PlayerIDFn.fromRelatedPlayerSideKeyword(options.side || "\u81EA\u8ECD", cardController);
-    entityList = entityList.filter(EntityFn.filterController(playerId));
-  }
-  if (options.is?.length) {
-    entityList = entityList.filter(EntityFn.filterRuntimeCategory(ctx2, options.is));
-  }
-  if (options.cardCategory?.length) {
-    entityList = entityList.filter(EntityFn.filterCategory(ctx2, options.cardCategory));
-  }
-  if (options.color?.length) {
-    entityList = entityList.filter(EntityFn.filterItemColor(ctx2, options.color));
-  }
-  if (options.hasSetCard != null) {
-    entityList = entityList.filter(EntityFn.filterHasSetCard(ctx2, options.hasSetCard));
-  }
-  if (options.isDestroy != null) {
-    entityList = entityList.filter(EntityFn.filterIsDestroy(options.isDestroy));
-  }
-  if (options.hasSpecialEffect != null) {
-    entityList = entityList.filter(EntityFn.filterHasSpecialEffect(ctx2, options.hasSpecialEffect));
-  }
-  if (options.hasChar != null) {
-    entityList = entityList.filter(EntityFn.filterHasChar(ctx2, options.hasChar));
-  }
-  if (options.exceptCardIds?.length) {
-    entityList = entityList.filter((entity) => options.exceptCardIds?.includes(entity.itemId) != true);
-  }
-  entityList = entityList.filter(EntityFn.filterDistinct);
-  const pairs = entityList.map((entity) => {
-    if (entity.baSyouKeyword == null) {
-      throw new Error;
-    }
-    return [entity.itemId, AbsoluteBaSyouFn.of(entity.itemController, entity.baSyouKeyword)];
-  });
-  let tipPairs = pairs;
-  if (options.max != null) {
-    tipPairs = tipPairs.slice(0, options.max);
-  } else if (options.min != null) {
-    tipPairs = tipPairs.slice(0, options.min);
-  } else if (options.count != null) {
-    tipPairs = tipPairs.slice(0, options.count);
-  }
-  const tip = {
-    title: ["\u30AB\u30FC\u30C9", pairs, tipPairs]
-  };
-  if (options.min != null) {
-    tip.min = options.min;
-  }
-  if (options.max != null) {
-    tip.max = options.max;
-  }
-  if (options.count != null) {
-    tip.count = options.count;
-  }
-  if (cheatCardIds.length) {
-    tip.cheatCardIds = cheatCardIds;
-  }
-  if (options.asMuchAsPossible) {
-    if (options.max == null) {
-      throw new Error;
-    }
-    tip.min = Math.min(pairs.length, options.max);
-  }
-  return tip;
-}
-var EntityFn = {
-  filterAtBaSyous(kws) {
-    return (entity) => {
-      if (entity.baSyouKeyword == null) {
-        return false;
-      }
-      return kws.includes(entity.baSyouKeyword);
-    };
-  },
-  filterAtBattleArea(v) {
-    return (entity) => {
-      return (entity.baSyouKeyword == "\u6226\u95D8\u30A8\u30EA\u30A21" || entity.baSyouKeyword == "\u6226\u95D8\u30A8\u30EA\u30A22") == v;
-    };
-  },
-  filterAtBa(v) {
-    return (entity) => {
-      if (entity.baSyouKeyword == null) {
-        return false;
-      }
-      return BaSyouKeywordFn.isBa(entity.baSyouKeyword) == v;
-    };
-  },
-  filterController(playerId) {
-    return (entity) => {
-      return entity.itemController == playerId;
-    };
-  },
-  filterIsDestroy(v) {
-    return (entity) => {
-      return entity.destroyReason != null == v;
-    };
-  },
-  filterIsBattle(ctx2, targetId, v) {
-    return (entity) => {
-      if (isCardLike(ctx2)(entity.itemId) == false) {
-        return false;
-      }
-      return isBattle(ctx2, entity.itemId, targetId) == v;
-    };
-  },
-  filterRuntimeCategory(ctx2, category) {
-    return (entity) => {
-      if (isCardLike(ctx2)(entity.itemId) == false) {
-        return false;
-      }
-      return category.includes(getItemRuntimeCategory(ctx2, entity.itemId));
-    };
-  },
-  filterCategory(ctx2, category) {
-    return (entity) => {
-      if (isCardLike(ctx2)(entity.itemId) == false) {
-        return false;
-      }
-      const targetCate = getItemPrototype(ctx2, entity.itemId).category;
-      if (targetCate == null) {
-        return false;
-      }
-      return category.includes(targetCate);
-    };
-  },
-  filterItemController(ctx2, playerId) {
-    return (entity) => {
-      return getItemController(ctx2, entity.itemId) == playerId;
-    };
-  },
-  filterItemColor(ctx2, color) {
-    return (entity) => {
-      if (isCardLike(ctx2)(entity.itemId) == false) {
-        return false;
-      }
-      return color.includes(getCardColor(ctx2, entity.itemId));
-    };
-  },
-  filterIsSetGroupRoot(ctx2, v) {
-    return (entity) => {
-      if (isCardLike(ctx2)(entity.itemId) == false) {
-        return false;
-      }
-      return getSetGroupRoot(ctx2, entity.itemId) == entity.itemId == v;
-    };
-  },
-  filterCanSetCharacter(ctx2) {
-    return (entity) => {
-      if (isCardLike(ctx2)(entity.itemId) == false) {
-        return false;
-      }
-      const charLen = getSetGroup(ctx2, entity.itemId).filter((itemId) => getItemRuntimeCategory(ctx2, itemId) == "\u30AD\u30E3\u30E9\u30AF\u30BF\u30FC").length;
-      return charLen == 0;
-    };
-  },
-  filterHasSetCard(ctx2, v) {
-    return (entity) => {
-      if (isCardLike(ctx2)(entity.itemId) == false) {
-        return false;
-      }
-      return getSetGroup(ctx2, entity.itemId).length > 1 == v;
-    };
-  },
-  filterHasSpecialEffect(ctx2, vs) {
-    return (entity) => {
-      if (isCardLike(ctx2)(entity.itemId) == false) {
-        return false;
-      }
-      return vs.some((v) => isSetGroupHasA(ctx2, v, entity.itemId));
-    };
-  },
-  filterHasChar(ctx2, vs) {
-    return (entity) => {
-      if (isCardLike(ctx2)(entity.itemId) == false) {
-        return false;
-      }
-      return vs.some((v) => getItemCharacteristic(ctx2, entity.itemId).indexOf(v) != -1);
-    };
-  },
-  filterDistinct(cet, index, self) {
-    return index === self.findIndex((c) => c.itemId === cet.itemId);
-  }
-};
-
-// src/game/gameState/createConditionTitleFn.ts
 function createConditionTitleFn(condition, options) {
   if (condition.title == null || typeof condition.title == "string") {
     return ConditionFn.getTitleFn(condition);
   }
   logCategory("getConditionTitleFn", condition.title);
   switch (condition.title[0]) {
-    case "\u3053\u306E\u8A18\u8FF0\u306E\u52B9\u679C\u306F\u3001\u30D7\u30EC\u30A4\u30E4\u30FC\u6BCE\u306B\uFF11\u30BF\u30FC\u30F3\u306B\uFF11\u56DE\u307E\u3067\u89E3\u6C7A\u3067\u304D\u308B": {
-      return function(ctx2, effect) {
-        return null;
-      };
-    }
     case "_\u6575\u8ECD_\u30E6\u30CB\u30C3\u30C8\u304C_\uFF13\u679A\u4EE5\u4E0A\u3044\u308B\u5834\u5408": {
       const [_2, side, category2, count] = condition.title;
       return function(ctx2, effect) {
@@ -29937,69 +30027,6 @@ var exports_GameEvent = {};
 
 // src/game/define/GlobalEffect.ts
 var exports_GlobalEffect = {};
-
-// src/game/define/Tip.ts
-var exports_Tip = {};
-__export(exports_Tip, {
-  TipFn: () => TipFn
-});
-var TipFn = {
-  getWant(tip) {
-    switch (tip.title[0]) {
-      case "\u30AB\u30FC\u30C9":
-      case "\u30C6\u30AD\u30B9\u30C8":
-      case "StringOptions":
-      case "BattleBonus":
-        return tip.title[1];
-    }
-  },
-  getSelection(tip) {
-    switch (tip.title[0]) {
-      case "\u30AB\u30FC\u30C9":
-      case "\u30C6\u30AD\u30B9\u30C8":
-      case "StringOptions":
-      case "BattleBonus":
-        return tip.title[2];
-    }
-  },
-  passWantToSelection(tip) {
-    switch (tip.title[0]) {
-      case "\u30AB\u30FC\u30C9":
-        return {
-          ...tip,
-          title: [tip.title[0], tip.title[1], tip.title[1]]
-        };
-      case "\u30C6\u30AD\u30B9\u30C8":
-        return {
-          ...tip,
-          title: [tip.title[0], tip.title[1], tip.title[1]]
-        };
-      case "StringOptions":
-        return {
-          ...tip,
-          title: [tip.title[0], tip.title[1], tip.title[1]]
-        };
-      case "BattleBonus":
-        return {
-          ...tip,
-          title: [tip.title[0], tip.title[1], tip.title[1]]
-        };
-    }
-  },
-  checkTipSatisfies(tip) {
-    const selection = this.getSelection(tip);
-    if (tip.count != null && tip.count != selection.length) {
-      return new TipError(`count ${selection.length} not right: ${tip.title[0]}/${tip.count}`);
-    }
-    if (tip.min != null && selection.length < tip.min) {
-      return new TipError(`min ${selection.length} not right: ${tip.title[0]}/${tip.min}`);
-    }
-    if (tip.max != null && selection.length > tip.max) {
-      return new TipError(`max ${selection.length} not right: ${tip.title[0]}/${tip.max}`);
-    }
-    return null;
-  }
-};
 
 // src/game/define/CommandEffectTip.ts
 var exports_CommandEffectTip = {};
