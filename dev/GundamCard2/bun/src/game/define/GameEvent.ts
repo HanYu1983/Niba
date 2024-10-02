@@ -25,6 +25,7 @@ export type GameEventTitle =
     | ["「ゲイン」の効果で戦闘修正を得る場合", BattleBonus]
     | ["「ゲイン」の効果で戦闘修正を得た場合", BattleBonus]
     | ["(敵軍)(ユニット)がダメージを受けた場合", PlayerID, CardCategory]
+    | ["自軍本国に戦闘ダメージが与えられた場合"]
     // "解決直後"為處理特殊狀況, 不是常規事件. 也可以去掉它改用別的方式實作, 但先保留
     | ["解決直後"]
 
@@ -32,4 +33,5 @@ export type GameEvent = {
     title: GameEventTitle;
     cardIds?: string[];
     effect?: Effect;
+    playerId?: PlayerID;
 }

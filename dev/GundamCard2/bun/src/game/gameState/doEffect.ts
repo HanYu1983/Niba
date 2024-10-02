@@ -2,7 +2,7 @@
 import { logCategory } from "../../tool/logger"
 import { createBridge } from "../bridge/createBridge"
 import { AbsoluteBaSyouFn } from "../define/BaSyou"
-import { CardTextFn, Condition, ConditionFn, LogicTreeAction, LogicTreeActionFn } from "../define/CardText"
+import { BattleBonus, CardTextFn, Condition, ConditionFn, LogicTreeAction, LogicTreeActionFn } from "../define/CardText"
 import { TipOrErrors, CommandEffectTip, TipOrErrorsFn, CommandEffecTipFn } from "../define/CommandEffectTip"
 import { Effect, EffectFn, EffectReason } from "../define/Effect"
 import { TipError, TargetMissingError } from "../define/GameError"
@@ -291,6 +291,14 @@ export function setCardTipStrBaSyouPairs(ctx: GameState, varName: string, pairs:
   cs = ItemStateFn.setTip(cs, varName, { title: ["カード", [], pairs] })
   ctx = setItemState(ctx, cardId, cs) as GameState
   return ctx
+}
+
+export function getCardTipBattleBonus(ctx: GameState, varName: string, cardId: string): BattleBonus[] {
+  return getCardTipSelection(ctx, varName, cardId) as BattleBonus[]
+}
+
+export function getCardTipStrings(ctx: GameState, varName: string, cardId: string): string[] {
+  return getCardTipSelection(ctx, varName, cardId) as string[]
 }
 
 export function createPlayTextEffectFromEffect(ctx: GameState, e: Effect, options?: { conditions?: { [key: string]: Condition }, logicTreeAction?: LogicTreeAction, isOption?: boolean }): Effect {

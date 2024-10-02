@@ -122,6 +122,7 @@ export type ConditionTitle =
     | ["_配備エリアにいる、「特徴：_T3部隊」を持つ_自軍_ユニット_１枚", BaSyouKeyword, string, RelatedPlayerSideKeyword, CardCategory, number]
     | ["_自軍_本国の上のカード_１～_４枚を見て、その中にある、「特徴：_ヘイズル系」を持つ_ユニット_１枚", RelatedPlayerSideKeyword, BaSyouKeyword, number, number, string, CardCategory, number]
     | ["_自軍_ジャンクヤードにある、_黒のGサインを持つ全てのカードは", RelatedPlayerSideKeyword, BaSyouKeyword, CardColor]
+    | ["_敵軍部隊がいる場合", RelatedPlayerSideKeyword]
     | ["Entity", EntitySearchOptions]
 
 export type Condition = {

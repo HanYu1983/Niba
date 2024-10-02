@@ -1,6 +1,7 @@
 import { title } from "process";
 import { AbsoluteBaSyou } from "./BaSyou";
 import { TipError, TargetMissingError } from "./GameError";
+import { BattleBonus } from "./CardText";
 
 export type StrBaSyouPair = [string, AbsoluteBaSyou]
 
@@ -12,6 +13,7 @@ export type TipTitleTextRef = {
 export type TipTitle =
     | ["カード", StrBaSyouPair[], StrBaSyouPair[]]
     | ["テキスト", TipTitleTextRef[], TipTitleTextRef[]]
+    | ["BattleBonus", BattleBonus[], BattleBonus[]]
     | ["StringOptions", string[], string[]]
 
 export type Tip = {
@@ -26,20 +28,18 @@ export const TipFn = {
     getWant(tip: Tip) {
         switch (tip.title[0]) {
             case "カード":
-                return tip.title[1]
             case "テキスト":
-                return tip.title[1]
             case "StringOptions":
+            case "BattleBonus":
                 return tip.title[1]
         }
     },
     getSelection(tip: Tip) {
         switch (tip.title[0]) {
             case "カード":
-                return tip.title[2]
             case "テキスト":
-                return tip.title[2]
             case "StringOptions":
+            case "BattleBonus":
                 return tip.title[2]
         }
     },
@@ -56,6 +56,11 @@ export const TipFn = {
                     title: [tip.title[0], tip.title[1], tip.title[1]]
                 }
             case "StringOptions":
+                return {
+                    ...tip,
+                    title: [tip.title[0], tip.title[1], tip.title[1]]
+                }
+            case "BattleBonus":
                 return {
                     ...tip,
                     title: [tip.title[0], tip.title[1], tip.title[1]]

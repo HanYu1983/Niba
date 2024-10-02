@@ -25,6 +25,7 @@ import { logCategory } from "../../tool/logger"
 import { doItemSetDestroy } from "./doItemSetDestroy"
 import { doItemSetGlobalEffectsUntilEndOfTurn } from "./doItemSetGlobalEffectsUntilEndOfTurn"
 import { RelatedPlayerSideKeyword } from "../define"
+import { doPlayerDrawCard } from "./doPlayerDrawCard"
 
 export function createPlayerIdFromRelated(ctx: GameState, cardId: string, re: RelatedPlayerSideKeyword): PlayerID {
   switch (re) {
@@ -306,13 +307,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
       return function (ctx: GameState, effect: Effect): GameState {
         const cardId = EffectFn.getCardID(effect)
         const cardController = getItemController(ctx, cardId)
-        const fromBasyou = AbsoluteBaSyouFn.of(cardController, "本国")
-        const pairs = getItemIdsByBasyou(ctx, fromBasyou).slice(0, count).map(cardId => {
-          return [cardId, fromBasyou] as StrBaSyouPair
-        })
-        for (const pair of pairs) {
-          ctx = doItemMove(ctx, AbsoluteBaSyouFn.of(cardController, "手札"), pair)
-        }
+        ctx = doPlayerDrawCard(ctx, count, cardController)
         return ctx
       }
     }

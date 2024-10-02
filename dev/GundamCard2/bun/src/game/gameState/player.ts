@@ -109,11 +109,20 @@ function doDamage(
 
       if (willGuardUnits.length == 0 || isBattleGroupHasA(ctx, ["強襲"], willAttackUnits[0])) {
         ctx = doCountryDamage(ctx, currentGuardPlayerID, currentAttackPower)
-        const gameEvent: GameEvent = {
-          title: ["このカードの部隊が敵軍本国に戦闘ダメージを与えた場合"],
-          cardIds: willAttackUnits,
-        };
-        ctx = doTriggerEvent(ctx, gameEvent)
+        {
+          const gameEvent: GameEvent = {
+            title: ["このカードの部隊が敵軍本国に戦闘ダメージを与えた場合"],
+            cardIds: willAttackUnits,
+          };
+          ctx = doTriggerEvent(ctx, gameEvent)
+        }
+        {
+          const gameEvent: GameEvent = {
+            title: ["自軍本国に戦闘ダメージが与えられた場合"],
+            playerId: currentGuardPlayerID
+          };
+          ctx = doTriggerEvent(ctx, gameEvent)
+        }
       }
       // 攻擊方可以攻擊本國
       // 若傷害沒有用完, 攻擊本國

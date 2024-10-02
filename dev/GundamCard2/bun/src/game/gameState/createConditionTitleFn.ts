@@ -3,7 +3,7 @@ import { lift, pair } from "ramda"
 import { AbsoluteBaSyou, AbsoluteBaSyouFn, BaSyouKeywordFn } from "../define/BaSyou"
 import { Condition, ConditionTitleFn, ConditionFn } from "../define/CardText"
 import { Effect, EffectFn } from "../define/Effect"
-import { TargetMissingError } from "../define/GameError"
+import { TargetMissingError, TipError } from "../define/GameError"
 import { PlayerIDFn } from "../define/PlayerID"
 import { Tip, StrBaSyouPair, TipTitleTextRef } from "../define/Tip"
 import { getItemCharacteristic, getItemRuntimeCategory, getCardTexts, getCardRollCostLength, getCardIdsCanPayRollColor } from "./card"
@@ -22,6 +22,20 @@ export function createConditionTitleFn(condition: Condition, options: { isPlay?:
     }
     logCategory("getConditionTitleFn", condition.title)
     switch (condition.title[0]) {
+        case "_敵軍部隊がいる場合": {
+            const [_, side] = condition.title
+            return function (ctx: GameState, effect: Effect): Tip | null {
+                const cardId = EffectFn.getCardID(effect)
+                const cardController = getItemController(ctx, cardId);
+                const playerId = PlayerIDFn.fromRelatedPlayerSideKeyword(side, cardController)
+                const basyous: AbsoluteBaSyou[] = (lift(AbsoluteBaSyouFn.of)([playerId], ["戦闘エリア1", "戦闘エリア2"]))
+                const pairs = basyous.flatMap(basyou => getItemIdsByBasyou(ctx, basyou))
+                if (pairs.length == 0) {
+                    throw new TipError("_敵軍部隊がいる場合")
+                }
+                return null
+            }
+        }
         case "_自軍_ジャンクヤードにある、_黒のGサインを持つ全てのカードは": {
             const [_, side, basyouKw, color] = condition.title
             return function (ctx: GameState, effect: Effect): Tip | null {
@@ -283,7 +297,7 @@ export function createConditionTitleFn(condition: Condition, options: { isPlay?:
                 const cardId = EffectFn.getCardID(effect)
                 const cardController = getItemController(ctx, cardId)
                 const cardIdColors = getCardIdsCanPayRollColor(ctx, null, cardController, color)
-                const extInfo: {min?: number, max?: number, count?: number} = {}
+                const extInfo: { min?: number, max?: number, count?: number } = {}
                 let colorIds = []
                 if (color == null) {
                     colorIds = cardIdColors.map(gId => gId.cardId).slice(0, 1)

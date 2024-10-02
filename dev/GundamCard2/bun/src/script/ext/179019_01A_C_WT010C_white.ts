@@ -4,10 +4,10 @@
 // （戦闘フェイズ）：自軍ユニット１枚は、ターン終了時まで「速攻」または「高機動」を得る。
 import { CardPrototype } from "../../game/define/CardPrototype";
 import { Effect } from "../../game/define/Effect";
-import { GlobalEffect } from "../../game/define/GlobalEffect";
 import { StrBaSyouPair, Tip } from "../../game/define/Tip";
 import { GameState } from "../../game/gameState/GameState";
 import { Bridge } from "../bridge";
+
 export const prototype: CardPrototype = {
   commandText: {
     id: "",
@@ -30,47 +30,31 @@ export const prototype: CardPrototype = {
       {
         actions: [
           {
-            title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
-              const cardId = DefineFn.EffectFn.getCardID(effect)
-              let cs = GameStateFn.getItemState(ctx, cardId)
-              const tip1 = DefineFn.ItemStateFn.getTip(cs, "自軍ユニット１枚")
-              const tip1Error = DefineFn.TipFn.checkTipSatisfies(tip1)
-              if (tip1Error) throw tip1Error
-              const pairs1 = DefineFn.TipFn.getSelection(tip1) as StrBaSyouPair[]
-              const [targetCardId, targetBasyou] = pairs1[0]
-              // check targetMission
-              const tip2 = DefineFn.ItemStateFn.getTip(cs, "「速攻」または「高機動」")
-              const tip2Error = DefineFn.TipFn.checkTipSatisfies(tip2)
-              if (tip2Error) throw tip2Error
-              const str2 = DefineFn.TipFn.getSelection(tip2) as string[]
-              const strOption = str2[0]
-              cs = DefineFn.ItemStateFn.setFlag(cs, "enabled", [targetCardId, strOption])
-              ctx = GameStateFn.setItemState(ctx, cardId, cs) as GameState
-              return ctx
-            }.toString()
+            title: ["cutIn", [
+              {
+                title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, ToolFn }: Bridge): GameState {
+                  const cardId = DefineFn.EffectFn.getCardID(effect)
+                  const pairs1 = GameStateFn.getCardTipStrBaSyouPairs(ctx, "自軍ユニット１枚", cardId)
+                  const str2 = GameStateFn.getCardTipStrings(ctx, "「速攻」または「高機動」", cardId)
+                  switch (str2[0]) {
+                    case "速攻":
+                      for (const pair of pairs1) {
+                        ctx = GameStateFn.doItemSetGlobalEffectsUntilEndOfTurn(ctx, [{ title: ["AddText", { id: ToolFn.getUUID(), title: ["特殊型", ["速攻"]] }], cardIds: [pair[0]] }], pair)
+                      }
+                      break
+                    case "高機動":
+                      for (const pair of pairs1) {
+                        ctx = GameStateFn.doItemSetGlobalEffectsUntilEndOfTurn(ctx, [{ title: ["AddText", { id: ToolFn.getUUID(), title: ["特殊型", ["高機動"]] }], cardIds: [pair[0]] }], pair)
+                      }
+                      break
+                  }
+                  return ctx
+                }.toString()
+              }
+            ]]
           }
         ]
       }
     ],
-    onEvent: ["GameEventOnTimingDoAction", ["戦闘フェイズ", "ターン終了時", "効果終了。ターン終了"], { title: ["移除卡狀態_旗標", "enabled"] }],
-    onSituation: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GlobalEffect[] {
-      const cardId = DefineFn.EffectFn.getCardID(effect)
-      const cs = GameStateFn.getItemState(ctx, cardId)
-      const enabledOption = cs.flags["enabled"]
-      if (enabledOption) {
-        const [targetCardId, strOption] = enabledOption
-        switch (strOption) {
-          case "速攻":
-            return [
-              { title: ["AddText", { id: "", title: ["特殊型", ["速攻"]] }], cardIds: [targetCardId] }
-            ]
-          case "高機動":
-            return [
-              { title: ["AddText", { id: "", title: ["特殊型", ["高機動"]] }], cardIds: [targetCardId] }
-            ]
-        }
-      }
-      return []
-    }.toString()
   },
 };
