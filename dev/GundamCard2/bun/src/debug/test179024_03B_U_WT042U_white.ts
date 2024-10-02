@@ -115,9 +115,9 @@ export async function test179024_03B_U_WT042U_white() {
         if (effect == null) {
             throw new Error()
         }
-        ctx = setTipSelectionForUser(ctx, effect, 0, 0)
         // 將一回合用一次的旗標清除
         ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", PhaseFn.getLast()] })
+        ctx = setTipSelectionForUser(ctx, effect, 0, 0)
         ctx = doEffect(ctx, effect, 0, 0)
         {
             const effect = getTopEffect(ctx)

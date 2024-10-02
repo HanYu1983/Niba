@@ -175,7 +175,7 @@ export function setEffectTips(ctx: GameState, e: Effect, toes: TipOrErrors[]): G
       logCategory("setEffectTips", "cardId", cardId)
       toes.forEach(toe => {
         if (toe.errors.length) {
-          return
+          throw new Error(toe.errors.join("|"))
         }
         const tip = toe.tip
         if (tip == null) {
@@ -208,13 +208,19 @@ export function clearTipSelectionForUser(
   }
   const bridge = createBridge()
   Object.keys(ltacs).forEach(key => {
-    const con = ltacs[key]
-    const tip = createConditionTitleFn(con, {})(ctx, effect, bridge)
-    if (tip) {
-      const cardId = EffectFn.getCardID(effect)
-      if (getItemState(ctx, cardId).tips[key]) {
-        ctx = mapItemState(ctx, cardId, is => ItemStateFn.clearTip(is, key)) as GameState
-      }
+    //const con = ltacs[key]
+    // try {
+    //   createConditionTitleFn(con, {})(ctx, effect, bridge)
+    // } catch (e) {
+    //   if (e instanceof TipError) {
+    //     console.warn(`將要刪除tip selection的鍵，但發生TipError，這是正常的，忽略錯誤，照常刪除鍵:${key}`)
+    //   } else {
+    //     throw e
+    //   }
+    // }
+    const cardId = EffectFn.getCardID(effect)
+    if (getItemState(ctx, cardId).tips[key]) {
+      ctx = mapItemState(ctx, cardId, is => ItemStateFn.clearTip(is, key)) as GameState
     }
   })
   return ctx

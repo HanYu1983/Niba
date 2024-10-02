@@ -54,7 +54,7 @@ export const prototype: CardPrototype = {
         }]
       },
       "この記述の効果は、プレイヤー毎に１ターンに１回まで解決できる": {
-        actions: [{ title: "この記述の効果は、プレイヤー毎に１ターンに１回まで解決できる" }]
+        actions: [{ title: ["この記述の効果は、プレイヤー毎に１ターンに１回まで解決できる"] }]
       }
     },
     logicTreeActions: [

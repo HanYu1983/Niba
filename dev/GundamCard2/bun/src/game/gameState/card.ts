@@ -269,6 +269,9 @@ export function getItemIsCanRoll(ctx: GameState, itemId: string): boolean {
 
 export function getCardIdsCanPayRollColor(ctx: GameState, situation: Situation | null, playerId: PlayerID, color: CardColor | null): { cardId: string, colors: CardColor[] }[] {
   return getGlobalEffects(ctx, situation).filter(ge => {
+    if (ge.cardIds.length == 0) {
+      return false
+    }
     if (getItemController(ctx, ge.cardIds[0]) != playerId) {
       return false
     }

@@ -26,6 +26,7 @@ export type Tip = {
 };
 
 export const TipFn = {
+    createTotalCostKey: ()=>"合計国力〔x〕",
     getWant(tip: Tip) {
         switch (tip.title[0]) {
             case "カード":

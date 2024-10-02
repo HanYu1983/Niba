@@ -10,11 +10,11 @@ import { PlayerID, PlayerIDFn } from "../define/PlayerID"
 import { StrBaSyouPair, Tip, TipFn } from "../define/Tip"
 import { getCardIdsCanPayRollCost, getItemRuntimeCategory } from "./card"
 import { mapCard } from "./CardTableComponent"
-import { getCardTipStrBaSyouPairs } from "./doEffect"
+import { getCardTipStrBaSyouPairs, setCardTipStrBaSyouPairs } from "./doEffect"
 import { addStackEffect } from "./EffectStackComponent"
 import { GameState } from "./GameState"
 import { mapItemState, getItemState, setItemState } from "./ItemStateComponent"
-import { getItemController, getItemBaSyou, assertTargetMissingError, getItemIdsByBasyou, addCoinsToCard, getItemIdsByPlayerId, getItemPrototype, getItemOwner, shuffleItems } from "./ItemTableComponent"
+import { getItemController, getItemBaSyou, assertTargetMissingError, getItemIdsByBasyou, addCoinsToCard, getItemIdsByPlayerId, getItemPrototype, getItemOwner, shuffleItems, createStrBaSyouPair } from "./ItemTableComponent"
 import { doItemMove } from "./doItemMove"
 import { doItemSwap } from "./doItemSwap"
 import { doTriggerEvent } from "./doTriggerEvent"
@@ -379,6 +379,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
         if (cardIdsCanPay.length < x) {
           throw new TargetMissingError(`合計国力〔x〕:${cardIdsCanPay.length} < ${x}. ${effect.text.description}`)
         }
+        ctx = setCardTipStrBaSyouPairs(ctx, TipFn.createTotalCostKey(), cardIdsCanPay.map(cardId=>createStrBaSyouPair(ctx, cardId)), cardId)
         return ctx
       }
     }
