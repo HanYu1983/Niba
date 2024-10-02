@@ -24993,6 +24993,8 @@ var hideCategory = [
   "handleAttackDamage",
   "getGlobalEffects",
   "getEffectTips",
+  "createEffectTips",
+  "getActionTitleFn",
   "getLogicTreeActionConditions",
   "createCommandEffectTips",
   "setEffectTips",
@@ -27854,6 +27856,9 @@ function getItemIsCanRoll(ctx2, itemId) {
 }
 function getCardIdsCanPayRollColor(ctx2, situation, playerId, color) {
   return getGlobalEffects(ctx2, situation).filter((ge) => {
+    if (ge.cardIds.length == 0) {
+      return false;
+    }
     if (getItemController(ctx2, ge.cardIds[0]) != playerId) {
       return false;
     }
@@ -28040,6 +28045,13 @@ __export(exports_Tip, {
   TipFn: () => TipFn
 });
 var TipFn = {
+  createTotalCostKey: () => "\u5408\u8A08\u56FD\u529B\u3014x\u3015",
+  createConditionKeyOfPayColorX(proto) {
+    if (proto.color == null) {
+      throw new Error;
+    }
+    return `${proto.color}X`;
+  },
   getWant(tip) {
     switch (tip.title[0]) {
       case "\u30AB\u30FC\u30C9":
@@ -29077,6 +29089,7 @@ function createActionTitleFn(action) {
         if (cardIdsCanPay.length < x) {
           throw new TargetMissingError(`\u5408\u8A08\u56FD\u529B\u3014x\u3015:${cardIdsCanPay.length} < ${x}. ${effect.text.description}`);
         }
+        ctx2 = setCardTipStrBaSyouPairs(ctx2, TipFn.createTotalCostKey(), cardIdsCanPay.map((cardId2) => createStrBaSyouPair(ctx2, cardId2)), cardId);
         return ctx2;
       };
     }
@@ -29289,22 +29302,15 @@ function getRuntimeBattleArea(ctx2, kw) {
 var exports_createPlayCardEffects = {};
 __export(exports_createPlayCardEffects, {
   createRollCostConditions: () => createRollCostConditions,
-  createPlayCardEffects: () => createPlayCardEffects,
-  createConditionKeyOfPayColorX: () => createConditionKeyOfPayColorX
+  createPlayCardEffects: () => createPlayCardEffects
 });
-function createConditionKeyOfPayColorX(proto) {
-  if (proto.color == null) {
-    throw new Error;
-  }
-  return `${proto.color}X`;
-}
 function createRollCostConditions(ctx2, proto, rollCost, bonus) {
   if (rollCost == "X") {
     if (proto.color == null) {
       throw new Error;
     }
     return {
-      [createConditionKeyOfPayColorX(proto)]: {
+      [TipFn.createConditionKeyOfPayColorX(proto)]: {
         title: ["RollColor", proto.color]
       }
     };
@@ -30232,7 +30238,7 @@ function setEffectTips(ctx2, e, toes) {
       logCategory("setEffectTips", "cardId", cardId);
       toes.forEach((toe) => {
         if (toe.errors.length) {
-          return;
+          throw new Error(toe.errors.join("|"));
         }
         const tip = toe.tip;
         if (tip == null) {
@@ -30258,13 +30264,9 @@ function clearTipSelectionForUser(ctx2, effect, logicId, logicSubId) {
   }
   const bridge = createBridge();
   Object.keys(ltacs).forEach((key) => {
-    const con = ltacs[key];
-    const tip = createConditionTitleFn(con, {})(ctx2, effect, bridge);
-    if (tip) {
-      const cardId = EffectFn.getCardID(effect);
-      if (getItemState(ctx2, cardId).tips[key]) {
-        ctx2 = mapItemState(ctx2, cardId, (is) => ItemStateFn.clearTip(is, key));
-      }
+    const cardId = EffectFn.getCardID(effect);
+    if (getItemState(ctx2, cardId).tips[key]) {
+      ctx2 = mapItemState(ctx2, cardId, (is) => ItemStateFn.clearTip(is, key));
     }
   });
   return ctx2;
@@ -30306,9 +30308,8 @@ function getCardTipSelection(ctx2, varName, cardId) {
     case "\u30AB\u30FC\u30C9":
     case "\u30C6\u30AD\u30B9\u30C8":
     case "StringOptions":
+    case "BattleBonus":
       return TipFn.getSelection(tip);
-    default:
-      throw new Error(`unknown tip title: ${tip.title[0]}`);
   }
 }
 function getCardTipTextRefs(ctx2, varName, cardId) {
@@ -32840,10 +32841,10 @@ var OnViewModel = OnEvent.pipe(scan((viewModel, evt) => {
         const deckA = evt.deckA;
         const deckB = evt.deckB;
         ctx2.gameState = initState(ctx2.gameState, deckA, deckB);
-        ctx2.gameState = createCardWithProtoIds(ctx2.gameState, AbsoluteBaSyouFn.of(PlayerA, "G\u30BE\u30FC\u30F3"), deckA.slice(6, 12));
-        ctx2.gameState = createCardWithProtoIds(ctx2.gameState, AbsoluteBaSyouFn.of(PlayerA, "\u914D\u5099\u30A8\u30EA\u30A2"), deckA.slice(12, 18));
-        ctx2.gameState = createCardWithProtoIds(ctx2.gameState, AbsoluteBaSyouFn.of(PlayerB, "G\u30BE\u30FC\u30F3"), deckB.slice(0, 6));
-        ctx2.gameState = createCardWithProtoIds(ctx2.gameState, AbsoluteBaSyouFn.of(PlayerB, "\u914D\u5099\u30A8\u30EA\u30A2"), deckB.slice(12, 18));
+        ctx2.gameState = createCardWithProtoIds(ctx2.gameState, AbsoluteBaSyouFn.of(PlayerA, "G\u30BE\u30FC\u30F3"), deckA.slice(6, 9));
+        ctx2.gameState = createCardWithProtoIds(ctx2.gameState, AbsoluteBaSyouFn.of(PlayerA, "\u914D\u5099\u30A8\u30EA\u30A2"), deckA.slice(12, 13));
+        ctx2.gameState = createCardWithProtoIds(ctx2.gameState, AbsoluteBaSyouFn.of(PlayerB, "G\u30BE\u30FC\u30F3"), deckB.slice(6, 9));
+        ctx2.gameState = createCardWithProtoIds(ctx2.gameState, AbsoluteBaSyouFn.of(PlayerB, "\u914D\u5099\u30A8\u30EA\u30A2"), deckB.slice(12, 13));
         const playerAFlow = queryFlow(ctx2.gameState, PlayerA);
         const playerBFlow = queryFlow(ctx2.gameState, PlayerB);
         return {

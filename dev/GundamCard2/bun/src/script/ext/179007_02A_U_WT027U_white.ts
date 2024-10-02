@@ -38,18 +38,12 @@ export const prototype: CardPrototype = {
         "白のGサインを持つ自軍Gが２枚以上ある場合": {
           actions: [
             {
-              title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
-                const cardId = DefineFn.EffectFn.getCardID(effect)
-                const cardController = GameStateFn.getItemController(ctx, cardId)
-                if (GameStateFn.getItemIdsByBasyou(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "Gゾーン"))
-                  .filter(itemId => GameStateFn.getCardGSign(ctx, itemId)[0].includes("白")).length >= 2) {
-
-                } else {
-                  throw new DefineFn.TargetMissingError(`白のGサインを持つ自軍Gが２枚以上ある場合`)
-                }
-                return ctx
-              }.toString()
-            }
+              title: ["Entity", {
+                side: "自軍",
+                at: ["Gゾーン"],
+                min: 2,
+              }]
+            },
           ]
         }
       },
@@ -64,7 +58,7 @@ export const prototype: CardPrototype = {
                     const cardId = DefineFn.EffectFn.getCardID(effect)
                     const cardController = GameStateFn.getItemController(ctx, cardId)
                     ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "配備エリア"), GameStateFn.createStrBaSyouPair(ctx, cardId))
-                    ctx = GameStateFn.doItemSetRollState(ctx, false, GameStateFn.createStrBaSyouPair(ctx, cardId))
+                    ctx = GameStateFn.doItemSetRollState(ctx, false, GameStateFn.createStrBaSyouPair(ctx, cardId), { isSkipTargetMissing: true })
                     return ctx
                   }.toString()
                 }

@@ -49,11 +49,13 @@ import { test179027_09D_C_BK063R_black } from "./test179027_09D_C_BK063R_black";
 import { testSupply } from "./testSupply";
 import { testKaiSo } from "./testKaiSo";
 import { test179027_09D_C_WT067R_white } from "./test179027_09D_C_WT067R_white";
+import { test179007_02A_U_WT027U_white } from "./test179007_02A_U_WT027U_white";
 const fs = require('fs').promises;
 
 export async function tests() {
     return [
         //testIssue,
+        test179007_02A_U_WT027U_white,
         test179027_09D_C_WT067R_white,
         testKaiSo,
         testSupply,

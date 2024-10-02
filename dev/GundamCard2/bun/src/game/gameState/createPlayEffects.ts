@@ -34,7 +34,7 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
                 concat(canPlayByText),
                 map(cardId => {
                     // 指令在一個部分計算
-                    if(getItemPrototype(ctx, cardId).category == "コマンド"){
+                    if (getItemPrototype(ctx, cardId).category == "コマンド") {
                         return []
                     }
                     return createPlayCardEffects(ctx, cardId)
@@ -49,7 +49,7 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
                     concat(canPlayByText),
                     map(cardId => {
                         // 指令在一個部分計算
-                        if(getItemPrototype(ctx, cardId).category == "コマンド"){
+                        if (getItemPrototype(ctx, cardId).category == "コマンド") {
                             return []
                         }
                         logCategory("createPlayEffects", "check クイック start", cardId)
@@ -81,81 +81,89 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
         )
 
     const getPlayTextF = pipe(
-        always(lift(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getBaAll())),
-        map(basyou => getItemIdsByBasyou(ctx, basyou)), flatten,
-        map(cardId => {
-            return (getCardTexts(ctx, cardId)).flatMap(text => {
-                switch (text.title[0]) {
-                    case "使用型":
-                        return [text]
-                    case "特殊型":
-                        return createTextsFromSpecialEffect(ctx, text).filter(text => text.title[0] == "使用型")
-                }
-                return []
-            }).filter(inTiming).map(text => {
-                const playTextConditions: { [key: string]: Condition } = {
-                    "同切上限": {
-                        actions: [
-                            {
-                                title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, ToolFn }: Bridge): GameState {
-                                    // 使用了卡牌後, 同一個切入不能再使用. 以下記錄使用過的卡片, 會在切入結束後清除
-                                    const cardId = DefineFn.EffectFn.getCardID(effect)
-                                    const ps = GameStateFn.getItemState(ctx, cardId)
-                                    if (ps.textIdsUseThisCut?.[effect.text.id]) {
-                                        throw new DefineFn.TipError(`同切上限: ${effect.text.description}`)
-                                    }
-                                    ctx = GameStateFn.mapItemState(ctx, cardId, ps => {
-                                        return {
-                                            ...ps,
-                                            textIdsUseThisCut: {
-                                                ...ps.textIdsUseThisCut,
-                                                [effect.text.id]: true
-                                            }
-                                        }
-                                    }) as GameState
-                                    return ctx
-                                }.toString()
+        always(lift(AbsoluteBaSyouFn.of)([playerId], [...BaSyouKeywordFn.getBaAll(), "Gゾーン"])),
+        map(basyou => {
+            const cardIds = getItemIdsByBasyou(ctx, basyou)
+            return cardIds.flatMap(
+                cardId => getCardTexts(ctx, cardId)
+                    .flatMap(text => {
+                        if (AbsoluteBaSyouFn.getBaSyouKeyword(basyou) == "Gゾーン") {
+                            if (text.isEnabledWhileG != true) {
+                                return []
                             }
-                        ]
-                    },
-                    "同回合上限": {
-                        actions: [
-                            {
-                                title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, ToolFn }: Bridge): GameState {
-                                    // 使用了卡牌後, 同一個切入不能再使用. 以下記錄使用過的卡片, 會在切入結束後清除
-                                    const cardId = DefineFn.EffectFn.getCardID(effect)
-                                    const ps = GameStateFn.getItemState(ctx, cardId)
-                                    if (ps.textIdsUseThisTurn?.[effect.text.id]) {
-                                        throw new DefineFn.TipError(`同回合上限: ${effect.text.description}`)
-                                    }
-                                    ctx = GameStateFn.mapItemState(ctx, cardId, ps => {
-                                        return {
-                                            ...ps,
-                                            textIdsUseThisTurn: {
-                                                ...ps.textIdsUseThisTurn,
-                                                [effect.text.id]: true
-                                            }
-                                        }
-                                    }) as GameState
-                                    return ctx
-                                }.toString()
-                            }
-                        ]
-                    }
-                }
-                return {
-                    id: `createPlayEffects_${playerId}_${cardId}_${text.id}`,
-                    reason: ["PlayText", playerId, cardId, text.id],
-                    description: text.description,
-                    text: {
-                        ...text,
-                        conditions: {
-                            ...text.conditions,
-                            ...playTextConditions
                         }
-                    }
-                } as Effect
-            })
+                        switch (text.title[0]) {
+                            case "使用型":
+                                return [text]
+                            case "特殊型":
+                                return createTextsFromSpecialEffect(ctx, text).filter(text => text.title[0] == "使用型")
+                        }
+                        return []
+                    }).filter(inTiming).map(text => {
+                        const playTextConditions: { [key: string]: Condition } = {
+                            "同切上限": {
+                                actions: [
+                                    {
+                                        title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, ToolFn }: Bridge): GameState {
+                                            // 使用了卡牌後, 同一個切入不能再使用. 以下記錄使用過的卡片, 會在切入結束後清除
+                                            const cardId = DefineFn.EffectFn.getCardID(effect)
+                                            const ps = GameStateFn.getItemState(ctx, cardId)
+                                            if (ps.textIdsUseThisCut?.[effect.text.id]) {
+                                                throw new DefineFn.TipError(`同切上限: ${effect.text.description}`)
+                                            }
+                                            ctx = GameStateFn.mapItemState(ctx, cardId, ps => {
+                                                return {
+                                                    ...ps,
+                                                    textIdsUseThisCut: {
+                                                        ...ps.textIdsUseThisCut,
+                                                        [effect.text.id]: true
+                                                    }
+                                                }
+                                            }) as GameState
+                                            return ctx
+                                        }.toString()
+                                    }
+                                ]
+                            },
+                            "同回合上限": {
+                                actions: [
+                                    {
+                                        title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, ToolFn }: Bridge): GameState {
+                                            // 使用了卡牌後, 同一個切入不能再使用. 以下記錄使用過的卡片, 會在切入結束後清除
+                                            const cardId = DefineFn.EffectFn.getCardID(effect)
+                                            const ps = GameStateFn.getItemState(ctx, cardId)
+                                            if (ps.textIdsUseThisTurn?.[effect.text.id]) {
+                                                throw new DefineFn.TipError(`同回合上限: ${effect.text.description}`)
+                                            }
+                                            ctx = GameStateFn.mapItemState(ctx, cardId, ps => {
+                                                return {
+                                                    ...ps,
+                                                    textIdsUseThisTurn: {
+                                                        ...ps.textIdsUseThisTurn,
+                                                        [effect.text.id]: true
+                                                    }
+                                                }
+                                            }) as GameState
+                                            return ctx
+                                        }.toString()
+                                    }
+                                ]
+                            }
+                        }
+                        return {
+                            id: `createPlayEffects_${playerId}_${cardId}_${text.id}`,
+                            reason: ["PlayText", playerId, cardId, text.id],
+                            description: text.description,
+                            text: {
+                                ...text,
+                                conditions: {
+                                    ...text.conditions,
+                                    ...playTextConditions
+                                }
+                            }
+                        } as Effect
+                    })
+            )
         }), flatten
     )
     const getPlayCommandF = ifElse(
