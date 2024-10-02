@@ -51,9 +51,9 @@ export function createPlayGEffects(ctx: GameState, cardId: string): Effect {
                                 return ctx
                             }.toString()
                         },
-                        {
-                            title: ["triggerEvent", { title: ["プレイされて場に出た場合"] }]
-                        },
+                        // {
+                        //     title: ["triggerEvent", { title: ["プレイされて場に出た場合"] }]
+                        // },
                         {
                             title: ["triggerEvent", { title: ["このカードがGとして場に出た場合"] }]
                         }

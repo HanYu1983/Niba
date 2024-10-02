@@ -88,6 +88,10 @@ export function setActiveEffectID(
     console.log(JSON.stringify(effect, null, 2))
     throw new Error(`輸入的效果無法支付，流程有誤`)
   }
+  // 刪掉之前選的對象
+  for (const cet of cetsNoErr) {
+    ctx = clearTipSelectionForUser(ctx, effect, cet.logicID, cet.logicSubID) as GameStateWithFlowMemory
+  }
   // 填入預設可支付的項目
   const activeLogicID = cetsNoErr[0].logicID
   const activeLogicSubID = cetsNoErr[0].logicSubID
@@ -100,9 +104,6 @@ export function setActiveEffectID(
       activeLogicSubID: activeLogicSubID,
     }
   };
-  // for (const cet of cetsNoErr) {
-  //   ctx = clearTipSelectionForUser(ctx, effect, cet.logicID, cet.logicSubID) as GameStateWithFlowMemory
-  // }
   return ctx
 }
 

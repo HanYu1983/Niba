@@ -28231,18 +28231,55 @@ function doItemSwap(ctx2, pair1, pair2, options) {
   throw new Error(`swapCard not yet support`);
 }
 
+// src/game/gameState/createDestroyEffect.ts
+function createDestroyEffect(ctx2, reason, cardId) {
+  const effect = {
+    id: `createDestroyEffect_${cardId}`,
+    reason: ["Destroy", reason.playerID, cardId, reason],
+    text: {
+      id: `createDestroyEffect_text_${cardId}`,
+      title: [],
+      logicTreeActions: [
+        {
+          actions: [
+            {
+              title: function _(ctx3, effect2, { DefineFn, GameStateFn }) {
+                const cardId2 = DefineFn.EffectFn.getCardID(effect2);
+                const cardOwner = GameStateFn.getItemOwner(ctx3, cardId2);
+                ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.of(cardOwner, "\u30B8\u30E3\u30F3\u30AF\u30E4\u30FC\u30C9"), [cardId2, GameStateFn.getItemBaSyou(ctx3, cardId2)], { isSkipTargetMissing: true });
+                ctx3 = GameStateFn.mapItemState(ctx3, cardId2, (is) => {
+                  return {
+                    ...is,
+                    damage: 0
+                  };
+                });
+                return ctx3;
+              }.toString()
+            }
+          ]
+        }
+      ]
+    }
+  };
+  return effect;
+}
+
 // src/game/gameState/doItemDamage.ts
-function doItemDamage(ctx2, damage, target, options) {
+function doItemDamage(ctx2, playerId, damage, target, options) {
   if (options?.isSkipTargetMissing) {
   } else {
     assertTargetMissingError(ctx2, target);
   }
   const [targetItemId, targetOriginBasyou] = target;
   if (isCard(ctx2, targetItemId) || isChip(ctx2, targetItemId)) {
-    const nowBasyou = getItemBaSyou(ctx2, targetItemId);
     let cardState = getItemState(ctx2, targetItemId);
     cardState = ItemStateFn.damage(cardState, damage);
     ctx2 = setItemState(ctx2, targetItemId, cardState);
+    const [_, _2, hp] = getSetGroupBattlePoint(ctx2, targetItemId);
+    if (hp <= cardState.damage) {
+      const effect = createDestroyEffect(ctx2, { id: "\u901A\u5E38\u30C0\u30E1\u30FC\u30B8", playerID: playerId }, targetItemId);
+      ctx2 = addDestroyEffect(ctx2, effect);
+    }
     return ctx2;
   }
   throw new Error(`doItemDamage unknown item: ${targetItemId}`);
@@ -28338,41 +28375,6 @@ __export(exports_doItemSetDestroy, {
   doItemSetDestroy: () => doItemSetDestroy,
   createMinusDestroyEffectAndPush: () => createMinusDestroyEffectAndPush
 });
-
-// src/game/gameState/createDestroyEffect.ts
-function createDestroyEffect(ctx2, reason, cardId) {
-  const effect = {
-    id: `createDestroyEffect_${cardId}`,
-    reason: ["Destroy", reason.playerID, cardId, reason],
-    text: {
-      id: `createDestroyEffect_text_${cardId}`,
-      title: [],
-      logicTreeActions: [
-        {
-          actions: [
-            {
-              title: function _(ctx3, effect2, { DefineFn, GameStateFn }) {
-                const cardId2 = DefineFn.EffectFn.getCardID(effect2);
-                const cardOwner = GameStateFn.getItemOwner(ctx3, cardId2);
-                ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.of(cardOwner, "\u30B8\u30E3\u30F3\u30AF\u30E4\u30FC\u30C9"), [cardId2, GameStateFn.getItemBaSyou(ctx3, cardId2)], { isSkipTargetMissing: true });
-                ctx3 = GameStateFn.mapItemState(ctx3, cardId2, (is) => {
-                  return {
-                    ...is,
-                    damage: 0
-                  };
-                });
-                return ctx3;
-              }.toString()
-            }
-          ]
-        }
-      ]
-    }
-  };
-  return effect;
-}
-
-// src/game/gameState/doItemSetDestroy.ts
 function doItemSetDestroy(ctx2, reason, [itemId, from], options) {
   if (options?.isSkipTargetMissing) {
   } else {
@@ -28876,7 +28878,8 @@ function createActionTitleFn(action) {
     case "triggerEvent": {
       const [_, event] = action.title;
       return function(ctx2, effect) {
-        ctx2 = doTriggerEvent(ctx2, { ...event, effect });
+        const cardId = EffectFn.getCardID(effect);
+        ctx2 = doTriggerEvent(ctx2, { ...event, effect, cardIds: [cardId] });
         return ctx2;
       };
     }
@@ -29001,11 +29004,12 @@ function createActionTitleFn(action) {
       const varNames2 = action.vars;
       return function(ctx2, effect) {
         const cardId = EffectFn.getCardID(effect);
+        const cardController = getItemController(ctx2, cardId);
         const pairs = varNames2 == null ? [[cardId, getItemBaSyou(ctx2, cardId)]] : varNames2.flatMap((varName) => {
           return getCardTipStrBaSyouPairs(ctx2, varName, cardId);
         });
         ctx2 = pairs.reduce((ctx3, pair2) => {
-          return doItemDamage(ctx3, damage, pair2);
+          return doItemDamage(ctx3, cardController, damage, pair2);
         }, ctx2);
         return ctx2;
       };
@@ -29279,6 +29283,13 @@ function doPlayerAttack(ctx2, attackPlayerID, where, speedPhase) {
   const guardPower = getBattleGroupBattlePoint(ctx2, guardUnits);
   ctx2 = doDamage(ctx2, speedPhase, attackPlayerID, guardPlayerID, attackUnits, guardUnits, attackPower);
   ctx2 = doDamage(ctx2, speedPhase, guardPlayerID, attackPlayerID, guardUnits, attackUnits, guardPower);
+  [...attackUnits, ...guardUnits].forEach((cardId) => {
+    const itemState = getItemState(ctx2, cardId);
+    const [_, _2, hp] = getSetGroupBattlePoint(ctx2, cardId);
+    if (hp <= itemState.damage) {
+      ctx2 = addDestroyEffect(ctx2, createDestroyEffect(ctx2, { id: "\u6226\u95D8\u30C0\u30E1\u30FC\u30B8", playerID: PlayerIDFn.getOpponent(getItemController(ctx2, cardId)) }, cardId));
+    }
+  });
   return ctx2;
 }
 
@@ -30262,7 +30273,6 @@ function clearTipSelectionForUser(ctx2, effect, logicId, logicSubId) {
   if (ltacs == null) {
     throw new Error(`ltasc not found: ${logicId}/${logicSubId}`);
   }
-  const bridge = createBridge();
   Object.keys(ltacs).forEach((key) => {
     const cardId = EffectFn.getCardID(effect);
     if (getItemState(ctx2, cardId).tips[key]) {
@@ -30413,6 +30423,9 @@ function setActiveEffectID(ctx2, playerID, effectID) {
     console.log(JSON.stringify(effect, null, 2));
     throw new Error(`\u8F38\u5165\u7684\u6548\u679C\u7121\u6CD5\u652F\u4ED8\uFF0C\u6D41\u7A0B\u6709\u8AA4`);
   }
+  for (const cet of cetsNoErr) {
+    ctx2 = clearTipSelectionForUser(ctx2, effect, cet.logicID, cet.logicSubID);
+  }
   const activeLogicID = cetsNoErr[0].logicID;
   const activeLogicSubID = cetsNoErr[0].logicSubID;
   ctx2 = {
@@ -30534,9 +30547,6 @@ function createPlayGEffects(ctx2, cardId) {
               }.toString()
             },
             {
-              title: ["triggerEvent", { title: ["\u30D7\u30EC\u30A4\u3055\u308C\u3066\u5834\u306B\u51FA\u305F\u5834\u5408"] }]
-            },
-            {
               title: ["triggerEvent", { title: ["\u3053\u306E\u30AB\u30FC\u30C9\u304CG\u3068\u3057\u3066\u5834\u306B\u51FA\u305F\u5834\u5408"] }]
             }
           ]
@@ -30572,8 +30582,14 @@ function createPlayEffects(ctx2, playerId) {
     const card = getCard(ctx2, cardId);
     return createPlayGEffects(ctx2, card.id);
   })), always_default([]));
-  const getPlayTextF = pipe(always_default(lift_default(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getBaAll())), map_default((basyou) => getItemIdsByBasyou(ctx2, basyou)), flatten_default, map_default((cardId) => {
-    return getCardTexts(ctx2, cardId).flatMap((text) => {
+  const getPlayTextF = pipe(always_default(lift_default(AbsoluteBaSyouFn.of)([playerId], [...BaSyouKeywordFn.getBaAll(), "G\u30BE\u30FC\u30F3"])), map_default((basyou) => {
+    const cardIds = getItemIdsByBasyou(ctx2, basyou);
+    return cardIds.flatMap((cardId) => getCardTexts(ctx2, cardId).flatMap((text) => {
+      if (AbsoluteBaSyouFn.getBaSyouKeyword(basyou) == "G\u30BE\u30FC\u30F3") {
+        if (text.isEnabledWhileG != true) {
+          return [];
+        }
+      }
       switch (text.title[0]) {
         case "\u4F7F\u7528\u578B":
           return [text];
@@ -30642,7 +30658,7 @@ function createPlayEffects(ctx2, playerId) {
           }
         }
       };
-    });
+    }));
   }), flatten_default);
   const getPlayCommandF = ifElse_default(always_default(PhaseFn.isFreeTiming(getPhase(ctx2)) && ctx2.activePlayerID == playerId), pipe(always_default([AbsoluteBaSyouFn.of(playerId, "\u624B\u672D"), AbsoluteBaSyouFn.of(playerId, "\u30CF\u30F3\u30AC\u30FC")]), map_default((basyou) => getItemIdsByBasyou(ctx2, basyou)), flatten_default, concat_default(canPlayByText), map_default((cardId) => {
     const card = getCard(ctx2, cardId);
@@ -33028,10 +33044,10 @@ var CardView = (props) => {
     }
     const coins = getCoinIdsByCardId(appContext.viewModel.model.gameState, props.cardID || "unknown").map((id) => getCoin(appContext.viewModel.model.gameState, id));
     return /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
-      children: coins.map((coin) => {
+      children: coins.map((coin, i) => {
         return /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
           children: JSON.stringify(coin.title)
-        }, coin.id, false, undefined, this);
+        }, i, false, undefined, this);
       })
     }, undefined, false, undefined, this);
   }, [appContext.viewModel.model.gameState, props.cardID]);
@@ -33083,7 +33099,7 @@ var CardView = (props) => {
     if (props.isShowCmd) {
       const cmds = flows.flatMap((flow) => {
         if (flow?.id == "FlowSetActiveEffectID") {
-          return flow.tips.filter((e) => EffectFn.getCardID(e) == props.cardID).map((tip) => {
+          return flow.tips.filter((e) => EffectFn.getCardID(e) == props.cardID).map((tip, i) => {
             return /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
               children: /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("button", {
                 style: { width: "100%" },
@@ -33098,11 +33114,11 @@ var CardView = (props) => {
                   children: tip.text.description || tip.description
                 }, undefined, false, undefined, this)
               }, undefined, false, undefined, this)
-            }, tip.id, false, undefined, this);
+            }, `FlowSetActiveEffectID_${i}`, false, undefined, this);
           });
         }
         if (flow?.id == "FlowDeleteImmediateEffect") {
-          return flow.tips.filter((e) => EffectFn.getCardID(e) == props.cardID).map((tip) => {
+          return flow.tips.filter((e) => EffectFn.getCardID(e) == props.cardID).map((tip, i) => {
             return /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
               children: /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("button", {
                 style: { width: "100%" },
@@ -33120,7 +33136,7 @@ var CardView = (props) => {
                   ]
                 }, undefined, true, undefined, this)
               }, undefined, false, undefined, this)
-            }, tip.id, false, undefined, this);
+            }, `FlowDeleteImmediateEffect_${i}`, false, undefined, this);
           });
         }
         return [];
@@ -33376,6 +33392,9 @@ var FlowListView = (props) => {
           return;
         }
         if (flow.id == "FlowDeleteImmediateEffect") {
+          return;
+        }
+        if (flow.id == "FlowSetActiveEffectID") {
           return;
         }
         setTimeout(() => {

@@ -85,8 +85,8 @@ export const CardView = (props: {
     const coins = getCoinIdsByCardId(appContext.viewModel.model.gameState, props.cardID || "unknown").map(id => getCoin(appContext.viewModel.model.gameState, id))
     return <div>
       {
-        coins.map(coin => {
-          return <div key={coin.id}>{JSON.stringify(coin.title)}</div>
+        coins.map((coin, i) => {
+          return <div key={i}>{JSON.stringify(coin.title)}</div>
         })
       }
     </div>
@@ -131,9 +131,9 @@ export const CardView = (props: {
     if (props.isShowCmd) {
       const cmds = flows.flatMap(flow => {
         if (flow?.id == "FlowSetActiveEffectID") {
-          return flow.tips.filter(e => EffectFn.getCardID(e) == props.cardID).map((tip) => {
+          return flow.tips.filter(e => EffectFn.getCardID(e) == props.cardID).map((tip, i) => {
             return (
-              <div key={tip.id}>
+              <div key={`FlowSetActiveEffectID_${i}`}>
                 <button style={{ width: "100%" }}
                   onClick={() => {
                     OnEvent.next({
@@ -150,9 +150,9 @@ export const CardView = (props: {
           })
         }
         if (flow?.id == "FlowDeleteImmediateEffect") {
-          return flow.tips.filter(e => EffectFn.getCardID(e) == props.cardID).map((tip) => {
+          return flow.tips.filter(e => EffectFn.getCardID(e) == props.cardID).map((tip, i) => {
             return (
-              <div key={tip.id}>
+              <div key={`FlowDeleteImmediateEffect_${i}`}>
                 <button style={{ width: "100%" }}
                   onClick={() => {
                     OnEvent.next({

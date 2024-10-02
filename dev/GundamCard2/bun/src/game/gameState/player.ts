@@ -13,10 +13,12 @@ import { getSetGroupBattlePoint } from "./setGroup";
 import { doTriggerEvent } from "./doTriggerEvent";
 import { StrBaSyouPair } from "../define/Tip";
 import { doItemMove } from "./doItemMove";
-import { createStrBaSyouPair, getItemIdsByBasyou } from "./ItemTableComponent";
+import { createStrBaSyouPair, getItemController, getItemIdsByBasyou } from "./ItemTableComponent";
 import { doItemSetDestroy } from "./doItemSetDestroy";
 import { getCardTipStrBaSyouPairs } from "./doEffect";
 import { doCountryDamage } from "./doCountryDamage";
+import { addDestroyEffect } from "./EffectStackComponent";
+import { createDestroyEffect } from "./createDestroyEffect";
 
 // player
 export function isPlayerHasBattleGroup(
@@ -159,6 +161,13 @@ export function doPlayerAttack(
   const guardUnits = getBattleGroup(ctx, AbsoluteBaSyouFn.of(guardPlayerID, where));
   const guardPower = getBattleGroupBattlePoint(ctx, guardUnits);
   ctx = doDamage(ctx, speedPhase, attackPlayerID, guardPlayerID, attackUnits, guardUnits, attackPower)
-  ctx = doDamage(ctx, speedPhase, guardPlayerID, attackPlayerID, guardUnits, attackUnits, guardPower)
+  ctx = doDamage(ctx, speedPhase, guardPlayerID, attackPlayerID, guardUnits, attackUnits, guardPower);
+  [...attackUnits, ...guardUnits].forEach(cardId => {
+    const itemState = getItemState(ctx, cardId)
+    const [_, _2, hp] = getSetGroupBattlePoint(ctx, cardId)
+    if (hp <= itemState.damage) {
+      ctx = addDestroyEffect(ctx, createDestroyEffect(ctx, {id:"戦闘ダメージ", playerID: PlayerIDFn.getOpponent(getItemController(ctx, cardId))}, cardId)) as GameState
+    }
+  })
   return ctx;
 }

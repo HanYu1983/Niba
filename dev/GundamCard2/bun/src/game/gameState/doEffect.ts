@@ -206,18 +206,7 @@ export function clearTipSelectionForUser(
   if (ltacs == null) {
     throw new Error(`ltasc not found: ${logicId}/${logicSubId}`)
   }
-  const bridge = createBridge()
   Object.keys(ltacs).forEach(key => {
-    //const con = ltacs[key]
-    // try {
-    //   createConditionTitleFn(con, {})(ctx, effect, bridge)
-    // } catch (e) {
-    //   if (e instanceof TipError) {
-    //     console.warn(`將要刪除tip selection的鍵，但發生TipError，這是正常的，忽略錯誤，照常刪除鍵:${key}`)
-    //   } else {
-    //     throw e
-    //   }
-    // }
     const cardId = EffectFn.getCardID(effect)
     if (getItemState(ctx, cardId).tips[key]) {
       ctx = mapItemState(ctx, cardId, is => ItemStateFn.clearTip(is, key)) as GameState

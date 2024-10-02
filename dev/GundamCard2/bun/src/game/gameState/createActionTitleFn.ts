@@ -114,7 +114,8 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
     case "triggerEvent": {
       const [_, event] = action.title
       return function (ctx: GameState, effect: Effect): GameState {
-        ctx = doTriggerEvent(ctx, { ...event, effect: effect })
+        const cardId = EffectFn.getCardID(effect)
+        ctx = doTriggerEvent(ctx, { ...event, effect: effect, cardIds: [cardId] })
         return ctx
       }
     }
@@ -267,13 +268,14 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
       const varNames = action.vars
       return function (ctx: GameState, effect: Effect): GameState {
         const cardId = EffectFn.getCardID(effect)
+        const cardController = getItemController(ctx, cardId)
         const pairs = varNames == null ?
           [[cardId, getItemBaSyou(ctx, cardId)] as StrBaSyouPair] :
           varNames.flatMap(varName => {
             return getCardTipStrBaSyouPairs(ctx, varName, cardId)
           })
         ctx = pairs.reduce((ctx, pair) => {
-          return doItemDamage(ctx, damage, pair)
+          return doItemDamage(ctx, cardController, damage, pair)
         }, ctx)
         return ctx
       }
@@ -379,7 +381,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
         if (cardIdsCanPay.length < x) {
           throw new TargetMissingError(`合計国力〔x〕:${cardIdsCanPay.length} < ${x}. ${effect.text.description}`)
         }
-        ctx = setCardTipStrBaSyouPairs(ctx, TipFn.createTotalCostKey(), cardIdsCanPay.map(cardId=>createStrBaSyouPair(ctx, cardId)), cardId)
+        ctx = setCardTipStrBaSyouPairs(ctx, TipFn.createTotalCostKey(), cardIdsCanPay.map(cardId => createStrBaSyouPair(ctx, cardId)), cardId)
         return ctx
       }
     }

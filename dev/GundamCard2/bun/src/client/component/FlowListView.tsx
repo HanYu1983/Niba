@@ -53,6 +53,9 @@ export const FlowListView = (props: { clientId: string, style?: CSSProperties })
         if (flow.id == "FlowDeleteImmediateEffect") {
           return
         }
+        if (flow.id == "FlowSetActiveEffectID") {
+          return
+        }
         setTimeout(() => {
           OnEvent.next({
             id: "OnClickFlowConfirm",

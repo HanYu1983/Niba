@@ -18,16 +18,20 @@ export const prototype: CardPrototype = {
       onEvent: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
         const evt = DefineFn.EffectFn.getEvent(effect)
         const cardId = DefineFn.EffectFn.getCardID(effect)
-        if ((evt.title[0] == "場に出た場合" &&
-          evt.cardIds?.some(cardId => GameStateFn.getItemPrototype(ctx, cardId).title == "マニィ・アンバサダ")) ||
-          (DefineFn.TipFn.checkTipSatisfies(GameStateFn.createTipByEntitySearch(ctx, cardId, {
-            at: ["戦闘エリア1", "戦闘エリア2", "配備エリア"],
-            side: "自軍",
-            title: ["マニィ・アンバサダ"],
-            min: 1
-          })) &&
-            evt.cardIds?.includes(cardId))
-        ) {
+        if ((
+          evt.title[0] == "場に出た場合"
+          && (
+            evt.cardIds?.some(cardId => GameStateFn.getItemPrototype(ctx, cardId).title == "マニィ・アンバサダ"))
+          || (
+            DefineFn.TipFn.checkTipSatisfies(GameStateFn.createTipByEntitySearch(ctx, cardId, {
+              at: ["戦闘エリア1", "戦闘エリア2", "配備エリア"],
+              side: "自軍",
+              title: ["マニィ・アンバサダ"],
+              min: 1
+            })) == null
+            && evt.cardIds?.includes(cardId)
+          )
+        )) {
           const newE = GameStateFn.createPlayTextEffectFromEffect(ctx, effect, {
             conditions: {
               "G以外の敵軍カード１枚": {
