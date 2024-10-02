@@ -27,11 +27,13 @@ export async function testKaiSo() {
         id: "cardA",
         protoID: "unitHasKaiSo",
         isRoll: true,
+        isFaceDown: false,
     }
     ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア"), [cardA]) as GameState
     const cardB: Card = {
         id: "cardB",
-        protoID: "unitHasKaiSo"
+        protoID: "unitHasKaiSo",
+        isFaceDown: true,
     }
     ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "手札"), [cardB]) as GameState
     ctx = setPhase(ctx, ["戦闘フェイズ", "攻撃ステップ", "フリータイミング"]) as GameState
@@ -64,6 +66,10 @@ export async function testKaiSo() {
     }
     // cardA被重置
     if (getCard(ctx, cardA.id).isRoll != false) {
+        throw new Error()
+    }
+    // 牌面還是朝上
+    if (getCard(ctx, cardA.id).isFaceDown != false) {
         throw new Error()
     }
     // cardB被廢棄

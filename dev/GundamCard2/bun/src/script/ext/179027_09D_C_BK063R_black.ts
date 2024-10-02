@@ -50,6 +50,7 @@ export const prototype: CardPrototype = {
           side: "自軍",
           at: DefineFn.BaSyouKeywordFn.getBaAll(),
           hasSetCard: true,
+          min: 1
         })
         const enabled = DefineFn.TipFn.getWant(tip).length > 0
         if (enabled) {

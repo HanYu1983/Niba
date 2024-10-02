@@ -18,8 +18,9 @@ export function doItemSwap(ctx: GameState, pair1: StrBaSyouPair, pair2: StrBaSyo
     if (isCard(ctx, itemId1) && isCard(ctx, itemId2)) {
         const card1 = getCard(ctx, itemId1)
         const card2 = getCard(ctx, itemId2)
-        ctx = setCard(ctx, card1.id, { ...card2, id: card1.id }) as GameState
-        ctx = setCard(ctx, card2.id, { ...card1, id: card2.id }) as GameState
+        // 只換protoID
+        ctx = setCard(ctx, card1.id, { ...card1, protoID: card2.protoID, isRoll: card2.isRoll }) as GameState
+        ctx = setCard(ctx, card2.id, { ...card2, protoID: card1.protoID, isRoll: card1.isRoll }) as GameState
 
         const is1 = getItemState(ctx, itemId1)
         const is2 = getItemState(ctx, itemId2)

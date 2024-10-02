@@ -24,6 +24,7 @@ export const prototype: CardPrototype = {
             if (GameStateFn.createTipByEntitySearch(ctx, cardId, {
               side: "自軍",
               isMaster: true,
+              min: 1
             }).title[1].length) {
 
             } else {

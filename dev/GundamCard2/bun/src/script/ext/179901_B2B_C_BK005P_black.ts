@@ -33,7 +33,7 @@ export const prototype: CardPrototype = {
                         side: "自軍",
                         at: ["手札"],
                         max: x,
-                        asMuchAsPossible: true
+                        asMuchAsPossible: true,
                       })
                       return tip
                     }.toString()
