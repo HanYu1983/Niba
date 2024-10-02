@@ -30577,6 +30577,29 @@ function createPlayEffects(ctx2, playerId) {
               }.toString()
             }
           ]
+        },
+        "\u540C\u56DE\u5408\u4E0A\u9650": {
+          actions: [
+            {
+              title: function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2, ToolFn: ToolFn2 }) {
+                const cardId2 = DefineFn2.EffectFn.getCardID(effect);
+                const ps = GameStateFn2.getItemState(ctx3, cardId2);
+                if (ps.textIdsUseThisTurn?.[effect.text.id]) {
+                  throw new DefineFn2.TipError(`\u540C\u56DE\u5408\u4E0A\u9650: ${effect.text.description}`);
+                }
+                ctx3 = GameStateFn2.mapItemState(ctx3, cardId2, (ps2) => {
+                  return {
+                    ...ps2,
+                    textIdsUseThisTurn: {
+                      ...ps2.textIdsUseThisTurn,
+                      [effect.text.id]: true
+                    }
+                  };
+                });
+                return ctx3;
+              }.toString()
+            }
+          ]
         }
       };
       return {
