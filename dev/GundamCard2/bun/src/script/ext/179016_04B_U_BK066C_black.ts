@@ -30,7 +30,7 @@ export const prototype: CardPrototype = {
                   const cardProto = GameStateFn.getItemPrototype(ctx, cardId)
                   const playerId = GameStateFn.getItemController(ctx, cardId)
                   const from = DefineFn.AbsoluteBaSyouFn.of(DefineFn.PlayerIDFn.getOpponent(playerId), "配備エリア")
-                  const payColorKey = GameStateFn.createConditionKeyOfPayColorX(cardProto)
+                  const payColorKey = DefineFn.TipFn.createConditionKeyOfPayColorX(cardProto)
                   const x = GameStateFn.getCardTipStrBaSyouPairs(ctx, payColorKey, cardId).length
                   const targetIds = GameStateFn.getItemIdsByBasyou(ctx, from)
                     .filter(itemId => GameStateFn.getItemRuntimeCategory(ctx, itemId) == "ユニット")
@@ -56,55 +56,6 @@ export const prototype: CardPrototype = {
             }
           })
           ctx = GameStateFn.addImmediateEffectIfCanPayCost(ctx, newE)
-          // const cardProto = GameStateFn.getItemPrototype(ctx, cardId)
-          // const playerId = GameStateFn.getItemController(ctx, cardId)
-          // const from = DefineFn.AbsoluteBaSyouFn.of(DefineFn.PlayerIDFn.getOpponent(playerId), "配備エリア")
-          // const payColorKey = GameStateFn.createConditionKeyOfPayColorX(cardProto)
-          // const x = GameStateFn.getCardTipStrBaSyouPairs(ctx, payColorKey, cardId).length
-          // const targetIds = GameStateFn.getItemIdsByBasyou(ctx, from)
-          //   .filter(itemId => GameStateFn.getItemRuntimeCategory(ctx, itemId) == "ユニット")
-          //   .filter(itemId => GameStateFn.getSetGroupBattlePoint(ctx, itemId)[2] < x)
-          // const pairs = targetIds.map(tid => {
-          //   return [tid, from] as StrBaSyouPair
-          // })
-          // const count = 1
-          // if (targetIds.length < count) {
-          //   return ctx
-          // }
-          // ctx = GameStateFn.addImmediateEffect(ctx, {
-          //   id: "",
-          //   reason: effect.reason,
-          //   description: effect.description,
-          //   text: {
-          //     id: effect.text.id,
-          //     description: effect.text.description,
-          //     title: [],
-          //     conditions: {
-          //       "配備エリアにいる、X以下の防御力を持つ敵軍ユニット１枚": {
-          //         title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip | null {
-          //           const { pairs, count } = { pairs: [], count: 0 }
-          //           if (pairs.length == 0) {
-          //             return null
-          //           }
-          //           return {
-          //             title: ["カード", pairs, pairs.slice(0, count)],
-          //             count: count
-          //           }
-          //         }.toString().replace("{ pairs: [], count: 0 }", `{ pairs: ${JSON.stringify(pairs)}, count: ${count} }`),
-          //       },
-          //     },
-          //     logicTreeActions: [
-          //       {
-          //         actions: [
-          //           {
-          //             title: ["_ロールする", "破壞"],
-          //             vars: ["配備エリアにいる、X以下の防御力を持つ敵軍ユニット１枚"]
-          //           }
-          //         ]
-          //       }
-          //     ]
-          //   }
-          // }) as GameState
           return ctx
         }
         return ctx

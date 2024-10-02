@@ -271,9 +271,8 @@ function getCardTipSelection(ctx: GameState, varName: string, cardId: string) {
     case "カード":
     case "テキスト":
     case "StringOptions":
+    case "BattleBonus":
       return TipFn.getSelection(tip)
-    default:
-      throw new Error(`unknown tip title: ${tip.title[0]}`)
   }
 }
 

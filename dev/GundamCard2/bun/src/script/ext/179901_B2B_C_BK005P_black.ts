@@ -27,7 +27,7 @@ export const prototype: CardPrototype = {
                     title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip | null {
                       const cardId = DefineFn.EffectFn.getCardID(effect)
                       const cardProto = GameStateFn.getItemPrototype(ctx, cardId)
-                      const payColorKey = GameStateFn.createConditionKeyOfPayColorX(cardProto)
+                      const payColorKey = DefineFn.TipFn.createConditionKeyOfPayColorX(cardProto)
                       const x = GameStateFn.getCardTipStrBaSyouPairs(ctx, payColorKey, cardId).length
                       const tip = GameStateFn.createTipByEntitySearch(ctx, cardId, {
                         side: "自軍",
@@ -43,7 +43,7 @@ export const prototype: CardPrototype = {
                     title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip | null {
                       const cardId = DefineFn.EffectFn.getCardID(effect)
                       const cardProto = GameStateFn.getItemPrototype(ctx, cardId)
-                      const payColorKey = GameStateFn.createConditionKeyOfPayColorX(cardProto)
+                      const payColorKey = DefineFn.TipFn.createConditionKeyOfPayColorX(cardProto)
                       const x = GameStateFn.getCardTipStrBaSyouPairs(ctx, payColorKey, cardId).length
                       const tip = GameStateFn.createTipByEntitySearch(ctx, cardId, {
                         side: "敵軍",

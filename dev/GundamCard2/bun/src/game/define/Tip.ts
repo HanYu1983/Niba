@@ -2,6 +2,7 @@ import { title } from "process";
 import { AbsoluteBaSyou } from "./BaSyou";
 import { TipError, TargetMissingError } from "./GameError";
 import { BattleBonus } from "./CardText";
+import { CardPrototype } from "./CardPrototype";
 
 export type StrBaSyouPair = [string, AbsoluteBaSyou]
 
@@ -27,6 +28,12 @@ export type Tip = {
 
 export const TipFn = {
     createTotalCostKey: ()=>"合計国力〔x〕",
+    createConditionKeyOfPayColorX(proto: CardPrototype): string {
+        if (proto.color == null) {
+            throw new Error()
+        }
+        return `${proto.color}X`
+    },
     getWant(tip: Tip) {
         switch (tip.title[0]) {
             case "カード":

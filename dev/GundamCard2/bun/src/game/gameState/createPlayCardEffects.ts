@@ -11,13 +11,7 @@ import { logCategory } from "../../tool/logger"
 import { LogicTree } from "../../tool/logicTree"
 import { getCard } from "./CardTableComponent"
 import { BaSyouKeywordFn } from "../define/BaSyou"
-
-export function createConditionKeyOfPayColorX(proto: CardPrototype): string {
-    if (proto.color == null) {
-        throw new Error()
-    }
-    return `${proto.color}X`
-}
+import { TipFn } from "../define/Tip"
 
 export function createRollCostConditions(ctx: GameState, proto: CardPrototype, rollCost: CardPrototypeRollCost, bonus: number): { [key: string]: Condition } {
     if (rollCost == "X") {
@@ -25,7 +19,7 @@ export function createRollCostConditions(ctx: GameState, proto: CardPrototype, r
             throw new Error()
         }
         return {
-            [createConditionKeyOfPayColorX(proto)]: {
+            [TipFn.createConditionKeyOfPayColorX(proto)]: {
                 title: ["RollColor", proto.color]
             }
         }
