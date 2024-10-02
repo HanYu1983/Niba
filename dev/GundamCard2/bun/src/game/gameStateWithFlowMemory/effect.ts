@@ -75,33 +75,20 @@ export function setActiveEffectID(
   if (activeEffectID != null) {
     throw new Error("有人在執行其它指令");
   }
-  if (activeEffectID != null) {
-    const currentActiveEffect = getEffectIncludePlayerCommand(ctx, activeEffectID)
-    if (currentActiveEffect != null) {
-      const controller = EffectFn.getPlayerID(currentActiveEffect);
-      if (controller != playerID) {
-        throw new Error("[cancelCommand] 你不是控制者");
-      }
-      if (currentActiveEffect.requirePassed) {
-        throw new Error("[cancelCommand] 已經處理需求的不能取消");
-      }
-    }
-  }
   const effect = getEffectIncludePlayerCommand(ctx, effectID)
   if (effect == null) {
-    throw new Error("effect not found");
+    throw new Error("輸入的效果不存在，流程有誤");
   }
-
   const controller = EffectFn.getPlayerID(effect);
   if (controller != playerID) {
-    throw new Error("[cancelCommand] 你不是控制者");
+    throw new Error("你不是控制者");
   }
   const cetsNoErr = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)
-  // temp test
   if (cetsNoErr.length == 0) {
     console.log(JSON.stringify(effect, null, 2))
-    throw new Error(`cets.length must not 0`)
+    throw new Error(`輸入的效果無法支付，流程有誤`)
   }
+  // 填入預設可支付的項目
   const activeLogicID = cetsNoErr[0].logicID
   const activeLogicSubID = cetsNoErr[0].logicSubID
   ctx = {
@@ -113,35 +100,10 @@ export function setActiveEffectID(
       activeLogicSubID: activeLogicSubID,
     }
   };
-  for (const cet of cetsNoErr) {
-    ctx = clearTipSelectionForUser(ctx, effect, cet.logicID, cet.logicSubID) as GameStateWithFlowMemory
-  }
-  return ctx
-  // if (cetsNoErr.length) {
-  //   const activeLogicID = cetsNoErr[0].logicID
-  //   const activeLogicSubID = cetsNoErr[0].logicSubID
-  //   ctx = {
-  //     ...ctx,
-  //     flowMemory: {
-  //       ...ctx.flowMemory,
-  //       activeLogicID: activeLogicID,
-  //       activeLogicSubID: activeLogicSubID,
-  //     }
-  //   };
-  //   for (const cet of cetsNoErr) {
-  //     ctx = clearTipSelectionForUser(ctx, effect, cet.logicID, cet.logicSubID) as GameStateWithFlowMemory
-  //   }
+  // for (const cet of cetsNoErr) {
+  //   ctx = clearTipSelectionForUser(ctx, effect, cet.logicID, cet.logicSubID) as GameStateWithFlowMemory
   // }
-  // ctx = {
-  //   ...ctx,
-  //   flowMemory: {
-  //     ...ctx.flowMemory,
-  //     activeEffectID: effectID,
-  //     activeLogicID: null,
-  //     activeLogicSubID: null,
-  //   }
-  // };
-  // return ctx
+  return ctx
 }
 
 export function cancelActiveEffectID(
@@ -159,9 +121,6 @@ export function cancelActiveEffectID(
   const controller = EffectFn.getPlayerID(effect);
   if (controller != playerID) {
     throw new Error("[cancelEffectID] 你不是控制者");
-  }
-  if (effect.requirePassed) {
-    throw new Error("[cancelEffectID] 已經處理需求的不能取消");
   }
   ctx = clearActiveEffectID(ctx)
   return ctx

@@ -366,17 +366,6 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                     if (myCommandList.length == 0) {
                         return [];
                     }
-                    // 暫時性代碼，這段不應存在 temp test
-                    myCommandList.forEach(e => {
-                        if (e.isOption) {
-                            return
-                        }
-                        // 非options的效果要做可支付性斷言，若斷言代表流程有誤
-                        const cets = createCommandEffectTips(ctx, e).filter(CommandEffecTipFn.filterNoError)
-                        if (cets.length == 0) {
-                            throw new Error(`cets.length must > 0`)
-                        }
-                    })
                     const effect = myCommandList[0]
                     return [
                         {
@@ -435,17 +424,6 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                     if (myCommandList.length == 0) {
                         return [];
                     }
-                    // 暫時性代碼，這段不應存在 temp test
-                    myCommandList.forEach(e => {
-                        if (e.isOption) {
-                            return
-                        }
-                        // 非options的效果要做可支付性斷言，若斷言代表流程有誤
-                        const cets = createCommandEffectTips(ctx, e).filter(CommandEffecTipFn.filterNoError)
-                        if (cets.length == 0) {
-                            throw new Error(`cets.length must > 0`)
-                        }
-                    })
                     const effect = myCommandList[0]
                     return [
                         {

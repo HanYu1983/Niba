@@ -27,8 +27,6 @@ export type Effect = {
     text: CardText
     description?: string
     isOption?: boolean
-    // TODO: delete
-    requirePassed?: boolean,
     isPlayG?: boolean
 }
 
