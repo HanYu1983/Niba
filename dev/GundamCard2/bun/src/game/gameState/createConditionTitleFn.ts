@@ -22,6 +22,27 @@ export function createConditionTitleFn(condition: Condition, options: { isPlay?:
     }
     logCategory("getConditionTitleFn", condition.title)
     switch (condition.title[0]) {
+        case "この記述の効果は、プレイヤー毎に１ターンに１回まで解決できる":{
+            return function (ctx: GameState, effect: Effect): Tip | null {
+                return null
+            }
+        }
+        case "_敵軍_ユニットが_３枚以上いる場合": {
+            const [_, side, category, count] = condition.title
+            return function (ctx: GameState, effect: Effect): Tip | null {
+                const cardId = EffectFn.getCardID(effect)
+                const cardController = getItemController(ctx, cardId);
+                const playerId = PlayerIDFn.fromRelatedPlayerSideKeyword(side, cardController)
+                const basyous: AbsoluteBaSyou[] = (lift(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getBaAll()))
+                const pairs = basyous
+                    .flatMap(basyou => getItemIdsByBasyou(ctx, basyou))
+                    .filter(cardId => getItemRuntimeCategory(ctx, cardId) == category)
+                if (pairs.length < count) {
+                    throw new TipError("_敵軍_ユニットが_３枚以上いる場合")
+                }
+                return null
+            }
+        }
         case "_敵軍部隊がいる場合": {
             const [_, side] = condition.title
             return function (ctx: GameState, effect: Effect): Tip | null {
