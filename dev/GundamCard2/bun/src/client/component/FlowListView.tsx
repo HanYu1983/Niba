@@ -25,17 +25,17 @@ export const FlowListView = (props: { clientId: string, style?: CSSProperties })
     const speed = 10
     const isPlayerControl = true
     if (isPlayerControl && props.clientId == PlayerA) {
-      const payCost = flows.find((flow) => flow.id == "FlowPassPayCost");
-      if (payCost) {
-        setTimeout(() => {
-          OnEvent.next({
-            id: "OnClickFlowConfirm",
-            clientId: props.clientId,
-            flow: payCost,
-          });
-        }, speed)
-        return
-      }
+      // const payCost = flows.find((flow) => flow.id == "FlowPassPayCost");
+      // if (payCost) {
+      //   setTimeout(() => {
+      //     OnEvent.next({
+      //       id: "OnClickFlowConfirm",
+      //       clientId: props.clientId,
+      //       flow: payCost,
+      //     });
+      //   }, speed)
+      //   return
+      // }
       if (flows.length == 1) {
         const flow = flows[0]
         if (flow.id == "FlowCancelPassPhase") {
@@ -48,6 +48,9 @@ export const FlowListView = (props: { clientId: string, style?: CSSProperties })
           return
         }
         if (flow.id == "FlowSetTipSelection") {
+          return
+        }
+        if (flow.id == "FlowDeleteImmediateEffect") {
           return
         }
         setTimeout(() => {

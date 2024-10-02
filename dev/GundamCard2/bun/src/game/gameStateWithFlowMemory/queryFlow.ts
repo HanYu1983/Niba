@@ -243,7 +243,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
             return true
         })
         // 可支付性測試失敗都變成可取消效果
-        const optionEffects = myEffects.filter((v) => myEffectsOK.map(e => e.id).includes(v.id) == false);
+        const optionEffects = myEffects.filter((v) => v.isOption || myEffectsOK.map(e => e.id).includes(v.id) == false);
         return [
             ...(myEffectsOK.length
                 ? [

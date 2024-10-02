@@ -84,6 +84,7 @@ export function onMoveItem(ctx: GameState, to: AbsoluteBaSyou, [cardId, from]: S
             return {
                 ...is,
                 damage: 0,
+                destroyReason: null,
             }
         }) as GameState
     }

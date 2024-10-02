@@ -28098,7 +28098,8 @@ function onMoveItem(ctx2, to, [cardId, from]) {
     ctx2 = mapItemState(ctx2, cardId, (is) => {
       return {
         ...is,
-        damage: 0
+        damage: 0,
+        destroyReason: null
       };
     });
   }
@@ -28142,8 +28143,8 @@ function doItemSwap(ctx2, pair1, pair2, options) {
   if (isCard(ctx2, itemId1) && isCard(ctx2, itemId2)) {
     const card1 = getCard(ctx2, itemId1);
     const card2 = getCard(ctx2, itemId2);
-    ctx2 = setCard(ctx2, card1.id, { ...card2, id: card1.id });
-    ctx2 = setCard(ctx2, card2.id, { ...card1, id: card2.id });
+    ctx2 = setCard(ctx2, card1.id, { ...card1, protoID: card2.protoID, isRoll: card2.isRoll });
+    ctx2 = setCard(ctx2, card2.id, { ...card2, protoID: card1.protoID, isRoll: card1.isRoll });
     const is1 = getItemState(ctx2, itemId1);
     const is2 = getItemState(ctx2, itemId2);
     ctx2 = setItemState(ctx2, is1.id, { ...is2, id: is1.id });
@@ -32380,7 +32381,7 @@ function queryFlow(ctx2, playerID) {
       }
       return true;
     });
-    const optionEffects = myEffects.filter((v) => myEffectsOK.map((e) => e.id).includes(v.id) == false);
+    const optionEffects = myEffects.filter((v) => v.isOption || myEffectsOK.map((e) => e.id).includes(v.id) == false);
     return [
       ...myEffectsOK.length ? [
         {
@@ -33309,17 +33310,6 @@ var FlowListView = (props) => {
     const speed = 10;
     const isPlayerControl = true;
     if (isPlayerControl && props.clientId == PlayerA) {
-      const payCost = flows.find((flow) => flow.id == "FlowPassPayCost");
-      if (payCost) {
-        setTimeout(() => {
-          OnEvent.next({
-            id: "OnClickFlowConfirm",
-            clientId: props.clientId,
-            flow: payCost
-          });
-        }, speed);
-        return;
-      }
       if (flows.length == 1) {
         const flow = flows[0];
         if (flow.id == "FlowCancelPassPhase") {
@@ -33332,6 +33322,9 @@ var FlowListView = (props) => {
           return;
         }
         if (flow.id == "FlowSetTipSelection") {
+          return;
+        }
+        if (flow.id == "FlowDeleteImmediateEffect") {
           return;
         }
         setTimeout(() => {
