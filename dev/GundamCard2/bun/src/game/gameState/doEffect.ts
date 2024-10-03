@@ -93,7 +93,11 @@ export function createEffectTips(
     const errors: string[] = []
     let tip: Tip | null = null
     try {
-      tip = createConditionTitleFn(con, {})(ctx, effect, bridge)
+      tip = createConditionTitleFn(con, {})(ctx, effect, bridge) 
+      if ((tip as any)?.isGameState) {
+        console.log(`快速檢查是不寫錯回傳成GameState, 應該要回傳Tip|null:`, key, con.title)
+        throw new Error()
+      }
     } catch (e) {
       if (e instanceof TipError) {
         if (options?.isAssert) {
@@ -123,7 +127,7 @@ export function createEffectTips(
         }
       }
       try {
-        logCategory("createEffectTips", "tip", tip)
+        logCategory("createEffectTips", "tip")
         const error = TipFn.checkTipSatisfies(tip)
         if (error) {
           throw error
@@ -233,7 +237,7 @@ export function createCommandEffectTips(ctx: GameState, effect: Effect): Command
       const allTest = conditionsList.map((conditions, logicSubId) => {
         // 先將之前選的對象刪除，避免拿到舊值
         ctx = clearTipSelectionForUser(ctx, effect, logicId, logicSubId)
-        logCategory("createCommandEffectTips", "createEffectTips", logicId, logicSubId, Object.keys(conditions))
+        //logCategory("createCommandEffectTips", "createEffectTips", logicId, logicSubId, Object.keys(conditions))
         const conTipErrors = createEffectTips(ctx, effect, logicId, logicSubId)
         return {
           effectId: effect.id,

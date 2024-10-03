@@ -34,6 +34,7 @@ export const prototype: CardPrototype = {
               "敵軍ユニット１枚": {
                 title: ["Entity", {
                   atBa: true,
+                  side: "敵軍",
                   is: ["ユニット"],
                   count: 1,
                 }],

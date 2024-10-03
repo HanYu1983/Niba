@@ -295,25 +295,25 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                                 break SelectDestroyOrder;
                         }
                 }
-                const willAddedDestroyEffects = ctx.destroyEffect.map(aid => getEffect(ctx, aid));
-                if (willAddedDestroyEffects.length) {
-                    const isActivePlayer = ctx.activePlayerID == playerID;
-                    if (isActivePlayer == false) {
-                        return [
-                            {
-                                id: "FlowWaitPlayer",
-                                description: "等待主動玩家決定破壞廢棄效果的順序",
-                            },
-                        ];
-                    }
-                    return [
-                        {
-                            id: "FlowMakeDestroyOrder",
-                            destroyEffect: willAddedDestroyEffects,
-                            description: "決定破壞廢棄效果的順序",
-                        },
-                    ];
-                }
+        }
+        const willAddedDestroyEffects = ctx.destroyEffect.map(aid => getEffect(ctx, aid));
+        if (willAddedDestroyEffects.length) {
+            const isActivePlayer = ctx.activePlayerID == playerID;
+            if (isActivePlayer == false) {
+                return [
+                    {
+                        id: "FlowWaitPlayer",
+                        description: "等待主動玩家決定破壞廢棄效果的順序",
+                    },
+                ];
+            }
+            return [
+                {
+                    id: "FlowMakeDestroyOrder",
+                    destroyEffect: willAddedDestroyEffects,
+                    description: "決定破壞廢棄效果的順序",
+                },
+            ];
         }
     }
     const myCommandList = getPlayerCommandsFilterNoErrorDistinct(ctx, playerID).map(tip => tip.effectId).map(id => getEffect(ctx, id))

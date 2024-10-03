@@ -32,6 +32,7 @@ export function createReturnRuleEffect(ctx: GameState, playerId: PlayerID): Effe
                                     for (const cardId of unitIdsAtArea1) {
                                         const target = [cardId, from] as StrBaSyouPair
                                         if (GameStateFn.getCardBattleArea(ctx, cardId).includes(runtimeArea1)) {
+                                            // TODO 測試為可回家時駕駛不會橫置
                                             ctx = GameStateFn.doItemSetRollState(ctx, true, target, { isSkipTargetMissing: true })
                                             ctx = GameStateFn.doItemMove(
                                                 ctx,

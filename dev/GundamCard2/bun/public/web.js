@@ -32495,25 +32495,25 @@ function queryFlow(ctx2, playerID) {
                 break SelectDestroyOrder;
             }
         }
-        const willAddedDestroyEffects = ctx2.destroyEffect.map((aid) => getEffect(ctx2, aid));
-        if (willAddedDestroyEffects.length) {
-          const isActivePlayer = ctx2.activePlayerID == playerID;
-          if (isActivePlayer == false) {
-            return [
-              {
-                id: "FlowWaitPlayer",
-                description: "\u7B49\u5F85\u4E3B\u52D5\u73A9\u5BB6\u6C7A\u5B9A\u7834\u58DE\u5EE2\u68C4\u6548\u679C\u7684\u9806\u5E8F"
-              }
-            ];
+    }
+    const willAddedDestroyEffects = ctx2.destroyEffect.map((aid) => getEffect(ctx2, aid));
+    if (willAddedDestroyEffects.length) {
+      const isActivePlayer = ctx2.activePlayerID == playerID;
+      if (isActivePlayer == false) {
+        return [
+          {
+            id: "FlowWaitPlayer",
+            description: "\u7B49\u5F85\u4E3B\u52D5\u73A9\u5BB6\u6C7A\u5B9A\u7834\u58DE\u5EE2\u68C4\u6548\u679C\u7684\u9806\u5E8F"
           }
-          return [
-            {
-              id: "FlowMakeDestroyOrder",
-              destroyEffect: willAddedDestroyEffects,
-              description: "\u6C7A\u5B9A\u7834\u58DE\u5EE2\u68C4\u6548\u679C\u7684\u9806\u5E8F"
-            }
-          ];
+        ];
+      }
+      return [
+        {
+          id: "FlowMakeDestroyOrder",
+          destroyEffect: willAddedDestroyEffects,
+          description: "\u6C7A\u5B9A\u7834\u58DE\u5EE2\u68C4\u6548\u679C\u7684\u9806\u5E8F"
         }
+      ];
     }
   }
   const myCommandList = getPlayerCommandsFilterNoErrorDistinct(ctx2, playerID).map((tip) => tip.effectId).map((id) => getEffect(ctx2, id));
