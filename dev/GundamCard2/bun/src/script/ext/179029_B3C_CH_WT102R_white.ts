@@ -36,7 +36,7 @@ export const prototype: CardPrototype = {
             conditions: {
               "G以外の敵軍カード１枚": {
                 title: ["Entity", {
-                  at: ["戦闘エリア1", "戦闘エリア2", "配備エリア"],
+                  atBa: true,
                   side: "敵軍",
                   is: DefineFn.CardCategoryFn.createRemaining(["グラフィック"]),
                   count: 1,

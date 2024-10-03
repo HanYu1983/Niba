@@ -71,6 +71,7 @@ export const prototype: CardPrototype = {
           conditions: {
             "セットカードがセットされていない、G以外の敵軍カード": {
               title: ["Entity", {
+                atBa: true,
                 side: "敵軍",
                 is: DefineFn.CardCategoryFn.createRemaining(["グラフィック"]),
                 hasSetCard: false,

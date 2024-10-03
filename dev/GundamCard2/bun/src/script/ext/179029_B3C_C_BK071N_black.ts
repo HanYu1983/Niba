@@ -13,7 +13,7 @@ export const prototype: CardPrototype = {
       "自軍カード１枚": {
         title: ["Entity", {
           side: "自軍",
-          at: ["戦闘エリア1", "戦闘エリア2", "配備エリア"],
+          atBa: true,
           count: 1,
         }],
         actions: [
