@@ -6,11 +6,6 @@ import { PlayerA, PlayerB, PlayerIDFn } from "../define/PlayerID";
 import { AbsoluteBaSyouFn } from "../define/BaSyou";
 import { Effect, EffectFn } from "../define/Effect";
 import { getPlayerCommandsFilterNoErrorDistinct } from "../gameState/updateCommand";
-import { createAttackPhaseRuleEffect } from "../gameState/createAttackPhaseRuleEffect";
-import { createDrawPhaseRuleEffect } from "../gameState/createDrawPhaseRuleEffect";
-import { createRerollPhaseRuleEffect } from "../gameState/createRerollPhaseRuleEffect";
-import { createDamageRuleEffect } from "../gameState/createDamageRuleEffect";
-import { createReturnRuleEffect } from "../gameState/createReturnRuleEffect";
 import { clearTipSelectionForUser, createCommandEffectTips, createEffectTips } from "../gameState/doEffect";
 import { CommandEffecTipFn, TipOrErrorsFn } from "../define/CommandEffectTip";
 
@@ -450,69 +445,34 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
             },
         ];
     };
-    {
-        // 處理遊戲開始的效果
-        // 在FlowNextTiming處理
-        if (ctx.flowMemory.state == "prepareDeck") {
-            if (playerID != PlayerA) {
-                return [
-                    {
-                        id: "FlowWaitPlayer",
-                        description: "等待伺服器處理",
-                    },
-                ];
-            }
-            return [{ id: "FlowNextTiming", description: "準備卡組" }];
-        }
-        if (ctx.flowMemory.state == "whoFirst") {
-            if (playerID != PlayerA) {
-                return [
-                    {
-                        id: "FlowWaitPlayer",
-                        description: "等待伺服器處理",
-                    },
-                ];
-            }
-            return [{ id: "FlowNextTiming", description: "PlayerA先攻" }];
-        }
-        if (ctx.flowMemory.state == "draw6AndConfirm") {
-            if (playerID != PlayerA) {
-                return [
-                    {
-                        id: "FlowWaitPlayer",
-                        description: "等待伺服器處理",
-                    },
-                ];
-            }
-            return [{ id: "FlowNextTiming", description: "抽6張" }];
-        }
-    }
-    const phase = ctx.phase;
-    // 處理自由時間，必須雙方都宣告結束才能進行到下一步
-    switch (phase[0]) {
-        case "ドローフェイズ":
-        case "リロールフェイズ":
-        case "配備フェイズ":
-            switch (phase[1]) {
-                case "フリータイミング": {
-                    return handleFreeTiming();
-                }
-            }
-            break;
-        case "戦闘フェイズ":
-            switch (phase[1]) {
-                case "攻撃ステップ":
-                case "防御ステップ":
-                case "帰還ステップ":
-                case "ダメージ判定ステップ":
-                    switch (phase[2]) {
-                        case "フリータイミング":
-                        case "フリータイミング2": {
-                            return handleFreeTiming();
-                        }
+    if (ctx.flowMemory.state == "playing") {
+        const phase = ctx.phase;
+        // 處理自由時間，必須雙方都宣告結束才能進行到下一步
+        switch (phase[0]) {
+            case "ドローフェイズ":
+            case "リロールフェイズ":
+            case "配備フェイズ":
+                switch (phase[1]) {
+                    case "フリータイミング": {
+                        return handleFreeTiming();
                     }
-            }
-            break;
+                }
+                break;
+            case "戦闘フェイズ":
+                switch (phase[1]) {
+                    case "攻撃ステップ":
+                    case "防御ステップ":
+                    case "帰還ステップ":
+                    case "ダメージ判定ステップ":
+                        switch (phase[2]) {
+                            case "フリータイミング":
+                            case "フリータイミング2": {
+                                return handleFreeTiming();
+                            }
+                        }
+                }
+                break;
+        }
     }
     // 之後的都是系統事件，由主動玩家呼叫
     if (playerID != ctx.activePlayerID) {
@@ -523,140 +483,15 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
             },
         ];
     }
-    switch (phase[0]) {
-        case "ドローフェイズ":
-        case "リロールフェイズ":
-        case "配備フェイズ":
-            switch (phase[1]) {
-                case "フェイズ開始":
-                case "フェイズ終了":
-                    // 如果已經觸發事件
-                    if (ctx.flowMemory.hasTriggerEvent) {
-                        return [{ id: "FlowNextTiming" }];
-                    }
-                    return [
-                        {
-                            id: "FlowTriggerTextEvent",
-                            event: {
-                                title: ["GameEventOnTiming", ctx.phase]
-                            },
-                        },
-                    ];
-                case "規定の効果":
-                    // 如果已經觸發規定の効果
-                    if (ctx.flowMemory.hasTriggerEvent) {
-                        return [{ id: "FlowNextTiming" }];
-                    }
-                    switch (phase[0]) {
-                        case "ドローフェイズ":
-                            return [
-                                {
-                                    id: "FlowAddBlock",
-                                    description: `${phase[0]}規定效果`,
-                                    block: createDrawPhaseRuleEffect(ctx, playerID),
-                                },
-                            ];
-                        case "リロールフェイズ":
-                            return [
-                                {
-                                    id: "FlowAddBlock",
-                                    description: `${phase[0]}規定效果`,
-                                    block: createRerollPhaseRuleEffect(ctx, playerID),
-                                },
-                            ];
-                    }
-                    break;
-            }
-            break;
-        case "戦闘フェイズ":
-            switch (phase[1]) {
-                case "攻撃ステップ":
-                case "防御ステップ":
-                case "帰還ステップ":
-                case "ダメージ判定ステップ":
-                    switch (phase[2]) {
-                        case "ステップ開始":
-                        case "ステップ終了":
-                            // 如果已經觸發事件
-                            if (ctx.flowMemory.hasTriggerEvent) {
-                                return [{ id: "FlowNextTiming" }];
-                            }
-                            return [
-                                {
-                                    id: "FlowTriggerTextEvent",
-                                    event: {
-                                        title: ["GameEventOnTiming", ctx.phase]
-                                    },
-                                },
-                            ];
-                        case "規定の効果":
-                            // 如果已經觸發規定の効果
-                            if (ctx.flowMemory.hasTriggerEvent) {
-                                return [{ id: "FlowNextTiming" }];
-                            }
-                            switch (phase[1]) {
-                                case "攻撃ステップ":
-                                    return [
-                                        {
-                                            id: "FlowAddBlock",
-                                            description: `${phase[1]}規定效果`,
-                                            block: createAttackPhaseRuleEffect(ctx, ctx.activePlayerID),
-                                        },
-                                    ];
-                                case "防御ステップ": {
-                                    return [
-                                        {
-                                            id: "FlowAddBlock",
-                                            description: `${phase[1]}規定效果`,
-                                            block: createAttackPhaseRuleEffect(ctx, PlayerIDFn.getOpponent(ctx.activePlayerID)),
-                                        },
-                                    ];
-                                }
-                                case "ダメージ判定ステップ":
-                                    return [
-                                        {
-                                            id: "FlowAddBlock",
-                                            description: `${phase[1]}規定效果`,
-                                            block: createDamageRuleEffect(ctx, ctx.activePlayerID),
-                                        },
-                                    ];
-                                case "帰還ステップ":
-                                    return [
-                                        {
-                                            id: "FlowAddBlock",
-                                            description: `${phase[1]}規定效果`,
-                                            block: createReturnRuleEffect(ctx, playerID),
-                                        },
-                                    ];
-                                default:
-                                    throw new Error("unknown phase:" + phase[1]);
-                            }
-                            break;
-                    }
-                case "ターン終了時":
-                    switch (phase[2]) {
-                        case "ダメージリセット":
-                        case "効果解決":
-                        case "手札調整":
-                            // 如果玩家手牌超過6張，丟到剩下6張
-                            return [
-                                { id: "FlowNextTiming", description: `執行${phase[2]}` },
-                            ];
-                        case "効果終了。ターン終了":
-                            // 如果已經觸發事件
-                            if (ctx.flowMemory.hasTriggerEvent) {
-                                return [{ id: "FlowNextTiming" }];
-                            }
-                            return [
-                                {
-                                    id: "FlowTriggerTextEvent",
-                                    event: {
-                                        title: ["GameEventOnTiming", ctx.phase]
-                                    },
-                                },
-                            ];
-                    }
-            }
-            break;
+    if (ctx.flowMemory.hasTriggerEvent) {
+        return [{ id: "FlowNextTiming" }];
     }
+    return [
+        {
+            id: "FlowTriggerTextEvent",
+            event: {
+                title: ["GameEventOnTiming", ctx.phase]
+            },
+        },
+    ];
 }

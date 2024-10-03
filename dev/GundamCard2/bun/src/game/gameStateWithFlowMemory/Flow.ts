@@ -16,11 +16,11 @@ type FlowNextTiming = {
     id: "FlowNextTiming";
     description?: string;
 };
-type FlowAddBlock = {
-    id: "FlowAddBlock";
-    description?: string;
-    block: Effect;
-};
+// type FlowAddBlock = {
+//     id: "FlowAddBlock";
+//     description?: string;
+//     block: Effect;
+// };
 type FlowWaitPlayer = {
     id: "FlowWaitPlayer";
     description?: string;
@@ -103,7 +103,7 @@ type FlowMakeDestroyOrder = {
 };
 
 export type Flow =
-    | FlowAddBlock
+    //| FlowAddBlock
     | FlowTriggerTextEvent
     | FlowUpdateCommand
     | FlowNextTiming

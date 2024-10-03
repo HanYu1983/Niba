@@ -27,6 +27,10 @@ import { doCutInDestroyEffectsAndClear } from "../gameState/doCutInDestroyEffect
 import { setNextPhase } from "../gameState/getNextPhase";
 import { getPhase } from "../gameState/PhaseComponent";
 import { createAttackPhaseRuleEffect } from "../gameState/createAttackPhaseRuleEffect";
+import { createDamageRuleEffect } from "../gameState/createDamageRuleEffect";
+import { createReturnRuleEffect } from "../gameState/createReturnRuleEffect";
+import { createDrawPhaseRuleEffect } from "../gameState/createDrawPhaseRuleEffect";
+import { createRerollPhaseRuleEffect } from "../gameState/createRerollPhaseRuleEffect";
 
 export function applyFlow(
     ctx: GameStateWithFlowMemory,
@@ -151,8 +155,168 @@ export function applyFlow(
                 logCategory("applyFlow", "已經執行過triggerTextEvent");
                 return ctx;
             }
-            // 這裡不做任何事，只修改hasTriggerEvent旗標
-            // doTriggerEvent在FlowNextTiming中做
+            // 處理遊戲開始的效果
+            if (ctx.flowMemory.state != "playing") {
+                switch (ctx.flowMemory.state) {
+                    case "prepareDeck": {
+                        ctx = shuffleItems(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国")) as GameStateWithFlowMemory
+                        ctx = shuffleItems(ctx, AbsoluteBaSyouFn.of(PlayerB, "本国")) as GameStateWithFlowMemory
+                        ctx = {
+                            ...ctx,
+                            flowMemory: {
+                                ...ctx.flowMemory,
+                                state: "whoFirst",
+                            },
+                        };
+                        break;
+                    }
+                    case "whoFirst": {
+                        ctx = {
+                            ...ctx,
+                            flowMemory: {
+                                ...ctx.flowMemory,
+                                state: "draw6AndConfirm",
+                            },
+                        };
+                        break;
+                    }
+                    case "draw6AndConfirm": {
+                        {
+                            const from = AbsoluteBaSyouFn.toString(AbsoluteBaSyouFn.of(PlayerA, "本国"))
+                            const to = AbsoluteBaSyouFn.toString(AbsoluteBaSyouFn.of(PlayerA, "手札"))
+                            const cards = ctx.table.cardStack[from].slice(0, 6)
+                            ctx.table.cardStack[from] = ctx.table.cardStack[from].slice(6)
+                            ctx.table.cardStack[to] = [...cards, ...(ctx.table.cardStack[to] || [])]
+                        }
+                        {
+                            const from = AbsoluteBaSyouFn.toString(AbsoluteBaSyouFn.of(PlayerB, "本国"))
+                            const to = AbsoluteBaSyouFn.toString(AbsoluteBaSyouFn.of(PlayerB, "手札"))
+                            const cards = ctx.table.cardStack[from].slice(0, 6)
+                            ctx.table.cardStack[from] = ctx.table.cardStack[from].slice(6)
+                            ctx.table.cardStack[to] = [...cards, ...(ctx.table.cardStack[to] || [])]
+                        }
+                        ctx = {
+                            ...ctx,
+                            phase: ["リロールフェイズ", "フェイズ開始"],
+                        };
+                        ctx = {
+                            ...ctx,
+                            flowMemory: {
+                                ...ctx.flowMemory,
+                                state: "playing",
+                            },
+                        };
+                        break;
+                    }
+                }
+                return ctx;
+            }
+            if (flow.event.title[0] == "GameEventOnTiming" && PhaseFn.eq(flow.event.title[1], ctx.phase)) {
+
+            } else {
+                throw new Error(`你要觸發的階段和現階段不符: ${flow.event.title[1]} != ${ctx.phase}`)
+            }
+            ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
+            if (ctx.activePlayerID == null) {
+                throw new Error("activePlayerID not found");
+            }
+            switch (ctx.phase[0]) {
+                case "ドローフェイズ": {
+                    switch (ctx.phase[1]) {
+                        case "規定の効果": {
+                            ctx = addImmediateEffect(ctx, createDrawPhaseRuleEffect(ctx, ctx.activePlayerID)) as GameStateWithFlowMemory
+                            break
+                        }
+                    }
+                    break
+                }
+                case "リロールフェイズ": {
+                    switch (ctx.phase[1]) {
+                        case "規定の効果": {
+                            ctx = addImmediateEffect(ctx, createRerollPhaseRuleEffect(ctx, ctx.activePlayerID)) as GameStateWithFlowMemory
+                            break
+                        }
+                    }
+                    break
+                }
+                case "戦闘フェイズ": {
+                    switch (ctx.phase[1]) {
+                        case "攻撃ステップ": {
+                            switch (ctx.phase[2]) {
+                                case "規定の効果": {
+                                    ctx = addImmediateEffect(ctx, createAttackPhaseRuleEffect(ctx, ctx.activePlayerID)) as GameStateWithFlowMemory
+                                    break
+                                }
+                                // p34
+                                // 戰鬥階段的每個步驟開始時，確認是否交戰中
+                                case "ステップ開始": {
+                                    ctx = checkIsBattle(ctx) as GameStateWithFlowMemory
+                                    break
+                                }
+                            }
+                            break
+                        }
+                        case "防御ステップ": {
+                            switch (ctx.phase[2]) {
+                                case "規定の効果": {
+                                    ctx = addImmediateEffect(ctx, createAttackPhaseRuleEffect(ctx, PlayerIDFn.getOpponent(ctx.activePlayerID))) as GameStateWithFlowMemory
+                                    break
+                                }
+                                case "ステップ開始": {
+                                    ctx = checkIsBattle(ctx) as GameStateWithFlowMemory
+                                    break
+                                }
+                            }
+                            break
+                        }
+                        case "ダメージ判定ステップ": {
+                            switch (ctx.phase[2]) {
+                                case "規定の効果": {
+                                    ctx = addImmediateEffect(ctx, createDamageRuleEffect(ctx, ctx.activePlayerID)) as GameStateWithFlowMemory
+                                    break
+                                }
+                                case "ステップ開始": {
+                                    ctx = checkIsBattle(ctx) as GameStateWithFlowMemory
+                                    break
+                                }
+                            }
+                            break
+                        }
+                        case "帰還ステップ": {
+                            switch (ctx.phase[2]) {
+                                case "規定の効果": {
+                                    ctx = addImmediateEffect(ctx, createReturnRuleEffect(ctx, ctx.activePlayerID)) as GameStateWithFlowMemory
+                                    break
+                                }
+                                case "ステップ開始": {
+                                    ctx = checkIsBattle(ctx) as GameStateWithFlowMemory
+                                    break
+                                }
+                            }
+                            break
+                        }
+                        case "ターン終了時": {
+                            switch (ctx.phase[2]) {
+                                case "ダメージリセット":
+                                case "効果解決":
+                                case "手札調整":
+                                    break
+                                case "効果終了。ターン終了": {
+                                    if (ctx.activePlayerID == null) {
+                                        throw new Error("activePlayerID not found");
+                                    }
+                                    // 回合結束時切換主動玩家
+                                    ctx = {
+                                        ...ctx,
+                                        activePlayerID: PlayerIDFn.getOpponent(ctx.activePlayerID),
+                                        turn: ctx.turn + 1
+                                    };
+                                }
+                            }
+                        }
+                    }
+                }
+            }
             ctx = {
                 ...ctx,
                 flowMemory: {
@@ -173,108 +337,13 @@ export function applyFlow(
             };
             return ctx;
         case "FlowNextTiming": {
-            {
-                // 處理遊戲開始的效果
-                if (ctx.flowMemory.state != "playing") {
-                    switch (ctx.flowMemory.state) {
-                        case "prepareDeck": {
-                            ctx = shuffleItems(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国")) as GameStateWithFlowMemory
-                            ctx = shuffleItems(ctx, AbsoluteBaSyouFn.of(PlayerB, "本国")) as GameStateWithFlowMemory
-                            ctx = {
-                                ...ctx,
-                                flowMemory: {
-                                    ...ctx.flowMemory,
-                                    state: "whoFirst",
-                                },
-                            };
-                            break;
-                        }
-                        case "whoFirst": {
-                            ctx = {
-                                ...ctx,
-                                flowMemory: {
-                                    ...ctx.flowMemory,
-                                    state: "draw6AndConfirm",
-                                },
-                            };
-                            break;
-                        }
-                        case "draw6AndConfirm": {
-                            {
-                                const from = AbsoluteBaSyouFn.toString(AbsoluteBaSyouFn.of(PlayerA, "本国"))
-                                const to = AbsoluteBaSyouFn.toString(AbsoluteBaSyouFn.of(PlayerA, "手札"))
-                                const cards = ctx.table.cardStack[from].slice(0, 6)
-                                ctx.table.cardStack[from] = ctx.table.cardStack[from].slice(6)
-                                ctx.table.cardStack[to] = [...cards, ...(ctx.table.cardStack[to] || [])]
-                            }
-                            {
-                                const from = AbsoluteBaSyouFn.toString(AbsoluteBaSyouFn.of(PlayerB, "本国"))
-                                const to = AbsoluteBaSyouFn.toString(AbsoluteBaSyouFn.of(PlayerB, "手札"))
-                                const cards = ctx.table.cardStack[from].slice(0, 6)
-                                ctx.table.cardStack[from] = ctx.table.cardStack[from].slice(6)
-                                ctx.table.cardStack[to] = [...cards, ...(ctx.table.cardStack[to] || [])]
-                            }
-                            ctx = {
-                                ...ctx,
-                                phase: ["リロールフェイズ", "フェイズ開始"],
-                            };
-                            ctx = {
-                                ...ctx,
-                                flowMemory: {
-                                    ...ctx.flowMemory,
-                                    state: "playing",
-                                },
-                            };
-                            break;
-                        }
-                    }
-                    return ctx;
-                }
-            }
-            if (ctx.activePlayerID == null) {
-                throw new Error("activePlayerID not found");
-            }
-            switch (ctx.phase[0]) {
-                case "戦闘フェイズ": {
-                    switch (ctx.phase[1]) {
-                        // case "攻撃ステップ": {
-                        //     switch (ctx.phase[2]) {
-                        //         case "規定の効果": {
-                        //             ctx = addImmediateEffect(ctx, createAttackPhaseRuleEffect(ctx, ctx.activePlayerID)) as GameStateWithFlowMemory
-                        //         }
-                        //     }
-                        //     break
-                        // }
-                        case "ターン終了時": {
-                            switch (ctx.phase[2]) {
-                                case "ダメージリセット":
-                                case "効果解決":
-                                case "手札調整":
-                                case "効果終了。ターン終了": {
-                                    // 回合結束時切換主動玩家
-                                    ctx = {
-                                        ...ctx,
-                                        activePlayerID: PlayerIDFn.getOpponent(ctx.activePlayerID),
-                                        turn: ctx.turn + 1
-                                    };
-                                }
-                            }
-                        }
-                    }
-                }
-            }
             // 下一步
-            {
-                ctx = setNextPhase(ctx) as GameStateWithFlowMemory
-            }
-            // p34
-            // 戰鬥階段的每個步驟開始時，確認是否交戰中
-            if (
-                ctx.phase[0] == "戦闘フェイズ" &&
-                ctx.phase[2] == "ステップ開始"
-            ) {
-                ctx = checkIsBattle(ctx) as GameStateWithFlowMemory
-            }
+            ctx = setNextPhase(ctx) as GameStateWithFlowMemory
+            // 自動更新指令
+            ctx = updateCommand(ctx) as GameStateWithFlowMemory;
+            // 更新所有破壞而廢棄的效果
+            // 若有產生值，在下一步時主動玩家就要拿到決定解決順序的指令
+            ctx = createMinusDestroyEffectAndPush(ctx) as GameStateWithFlowMemory;
             // 重設觸發flag
             ctx = {
                 ...ctx,
@@ -291,26 +360,20 @@ export function applyFlow(
                     hasPlayerPassPhase: {},
                 }
             };
-            // 自動更新指令
-            ctx = updateCommand(ctx) as GameStateWithFlowMemory;
-            // 更新所有破壞而廢棄的效果
-            // 若有產生值，在下一步時主動玩家就要拿到決定解決順序的指令
-            ctx = createMinusDestroyEffectAndPush(ctx) as GameStateWithFlowMemory;
-            ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", getPhase(ctx)] }) as GameStateWithFlowMemory;
             return ctx;
         }
-        case "FlowAddBlock": {
-            ctx = addImmediateEffect(ctx, flow.block) as GameStateWithFlowMemory
-            // set hasTriggerEvent
-            ctx = {
-                ...ctx,
-                flowMemory: {
-                    ...ctx.flowMemory,
-                    hasTriggerEvent: true,
-                }
-            };
-            return ctx;
-        }
+        // case "FlowAddBlock": {
+        //     ctx = addImmediateEffect(ctx, flow.block) as GameStateWithFlowMemory
+        //     // set hasTriggerEvent
+        //     ctx = {
+        //         ...ctx,
+        //         flowMemory: {
+        //             ...ctx.flowMemory,
+        //             hasTriggerEvent: true,
+        //         }
+        //     };
+        //     return ctx;
+        // }
         case "FlowHandleStackEffectFinished": {
             ctx = doTriggerEvent(ctx, {
                 title: ["カット終了時", ctx.stackEffectMemory]
@@ -388,7 +451,7 @@ export function createAIChoiseList(ctx: GameStateWithFlowMemory, flow: Flow): AI
                 weight: 100,
                 flow: flow
             }]
-        case "FlowAddBlock":
+        //case "FlowAddBlock":
         case "FlowDoEffect":
         case "FlowSetActiveLogicID":
             return [{
