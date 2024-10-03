@@ -1,0 +1,16 @@
+{
+  "name": "LayaProject3",
+  "minifyJS": true,
+  "sourcemap": true,
+  "sourcesContent": true,
+  "startupScene": "res://2feb6ef3-8b12-4723-ad29-92586b6f42a2",
+  "android": {
+    "targetArchitectures": {
+      "ARMv7": true,
+      "ARM64": false,
+      "x86": false,
+      "x86-64": false
+    },
+    "exportFormat": "APK"
+  }
+}

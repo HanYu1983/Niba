@@ -2,7 +2,15 @@
     <head>
         <meta charset="UTF-8">
     </head>
+    <style>
+        .full{
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
     <body>
+        <iframe id="laya" src="laya/layaIndex.html" class="full"></iframe>
         <div id="root"></div>
         <script src="./web.js"></script>
         <!--
@@ -10,5 +18,47 @@
         -->
         <script src="replace.js"></script>
     </body>
+    <script>
+
+        function callLaya(method, msg) {
+            iframe.postMessage({
+                method: method,
+                msg: msg
+            }, '*');
+        }
+
+        function receiveMessage(e) {
+            // 來源網址（e.origin）不是指定的網域時
+            // if (e.origin !== 'https://xxxxxxx.tw') {
+            //     alert('資料來源錯誤');
+            //     return false;
+            // }
+            // // 來源網址是指定的網域時
+            // else {
+            //     // 拿傳來的參數（e.data）
+            //     const data = e.data;
+            // }
+
+            const data = e.data;
+
+            const method = data.method;
+            const msg = data.msg;
+
+            switch (method) {
+                case 'onLayaReady':
+                    console.log("laya準備完成");
+
+                    // 測試通知laya
+                    callLaya('init', 'hello');
+                    break;
+            }
+        }
+
+        // 監聽 message 事件
+        window.addEventListener('message', receiveMessage, false);
+        
+        var iframe = document.getElementById('laya').contentWindow;
+        
+    </script>
 </html>
 
