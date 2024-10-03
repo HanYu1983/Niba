@@ -25001,7 +25001,6 @@ var hideCategory = [
   "triggerEvent",
   "getPlayEffects",
   "getConditionTitleFn",
-  "doEffect",
   "handleAttackDamage",
   "getGlobalEffects",
   "getEffectTips",
@@ -26109,7 +26108,8 @@ function createRollCostRequire(costNum, color) {
             title: ["_\u30ED\u30FC\u30EB\u3059\u308B", "\u30ED\u30FC\u30EB"],
             vars: [key]
           }
-        ]
+        ],
+        groupKey: "\u652F\u4ED8\u6A6B\u7F6E\u570B\u529B"
       }
     };
   }
@@ -26878,6 +26878,7 @@ __export(exports_doEffect, {
   createEffectTips: () => createEffectTips,
   createCommandEffectTips: () => createCommandEffectTips,
   clearTipSelectionForUser: () => clearTipSelectionForUser,
+  assertTipForUserSelection: () => assertTipForUserSelection,
   assertEffectCanPass: () => assertEffectCanPass,
   addImmediateEffectIfCanPayCost: () => addImmediateEffectIfCanPayCost
 });
@@ -28339,29 +28340,30 @@ function doItemSetRollState(ctx2, isRoll, [itemId, originBasyou], options) {
     assertTargetMissingError(ctx2, [itemId, originBasyou]);
   }
   const itemIds = getSetGroup(ctx2, itemId);
-  ctx2 = itemIds.reduce((ctx3, itemId2) => {
-    if (isCard(ctx3, itemId2)) {
-      let item = getCard(ctx3, itemId2);
+  logCategory("doItemSetRollState", isRoll, itemIds);
+  ctx2 = itemIds.reduce((ctx3, willRollItemId) => {
+    if (isCard(ctx3, willRollItemId)) {
+      let willRollItem = getCard(ctx3, willRollItemId);
       if (options?.isSkipTargetMissing) {
       } else {
-        if (item.isRoll == isRoll) {
-          throw new TargetMissingError(`card already isRoll: ${item.isRoll}: ${item.id}`);
+        if (willRollItem.id == itemId && willRollItem.isRoll == isRoll) {
+          throw new TargetMissingError(`card already isRoll: ${willRollItem.isRoll}: ${willRollItem.id}`);
         }
       }
-      item = CardFn.setIsRoll(item, isRoll);
-      ctx3 = setCard(ctx3, itemId2, item);
+      willRollItem = CardFn.setIsRoll(willRollItem, isRoll);
+      ctx3 = setCard(ctx3, willRollItemId, willRollItem);
       return ctx3;
     }
-    if (isChip(ctx3, itemId2)) {
-      let item = getChip(ctx3, itemId2);
+    if (isChip(ctx3, willRollItemId)) {
+      let willRollItem = getChip(ctx3, willRollItemId);
       if (options?.isSkipTargetMissing) {
       } else {
-        if (item.isRoll == isRoll) {
-          throw new TargetMissingError(`chip already isRoll: ${item.isRoll}: ${item.id}`);
+        if (willRollItem.id == itemId && willRollItem.isRoll == isRoll) {
+          throw new TargetMissingError(`chip already isRoll: ${willRollItem.isRoll}: ${willRollItem.id}`);
         }
       }
-      item = ChipFn.setIsRoll(item, isRoll);
-      ctx3 = setChip(ctx3, itemId2, item);
+      willRollItem = ChipFn.setIsRoll(willRollItem, isRoll);
+      ctx3 = setChip(ctx3, willRollItemId, willRollItem);
       return ctx3;
     }
     return ctx3;
@@ -30192,6 +30194,35 @@ function doEffect(ctx2, effect, logicId, logicSubId) {
   ctx2 = EventCenterFn.onEffectEnd(ctx2, effect);
   return ctx2;
 }
+function assertTipForUserSelection(ctx2, effect, cardId) {
+  const userTips = getItemState(ctx2, cardId).tips;
+  const groupSets = {};
+  Object.entries(effect.text.conditions || {}).forEach(([conditionKey, con]) => {
+    if (con.groupKey) {
+      const userTip = userTips[conditionKey];
+      if (userTip == null) {
+        return;
+      }
+      if (userTip.isRepeat) {
+        return;
+      }
+      switch (userTip.title[0]) {
+        case "\u30AB\u30FC\u30C9": {
+          const userCardIds = userTip.title[2].map((p) => p[0]);
+          let groupSetsWithKey = groupSets[con.groupKey] || [];
+          groupSetsWithKey = [...userCardIds, ...groupSetsWithKey];
+          groupSetsWithKey.forEach((gid) => {
+            if (groupSetsWithKey.filter((gid2) => gid2 == gid).length > 1) {
+              console.warn(con.groupKey, groupSetsWithKey);
+              throw new TipError(`\u6709\u91CD\u5FA9\u7684\u5C0D\u8C61: ${con.groupKey} ${JSON.stringify(groupSetsWithKey)}`);
+            }
+          });
+          groupSets[con.groupKey] = groupSetsWithKey;
+        }
+      }
+    }
+  });
+}
 function createEffectTips(ctx2, effect, logicId, logicSubId, options) {
   const ltacs = CardTextFn.getLogicTreeActionConditions(effect.text, CardTextFn.getLogicTreeAction(effect.text, logicId))[logicSubId];
   if (ltacs == null) {
@@ -30224,6 +30255,7 @@ function createEffectTips(ctx2, effect, logicId, logicSubId, options) {
         try {
           const cardId = EffectFn.getCardID(effect);
           ItemStateFn.getTip(getItemState(ctx2, cardId), key);
+          assertTipForUserSelection(ctx2, effect, cardId);
         } catch (e) {
           if (e instanceof TipError) {
             if (options.isAssert) {
@@ -31423,6 +31455,7 @@ function applyFlow(ctx2, playerID, flow) {
       const effect = getEffectIncludePlayerCommand(ctx2, flow.effectID);
       const cardId = EffectFn.getCardID(effect);
       ctx2 = mapItemState(ctx2, cardId, (is) => ItemStateFn.setTip(is, flow.conditionKey, flow.tip));
+      assertTipForUserSelection(ctx2, effect, cardId);
       return ctx2;
     }
   }
@@ -33828,6 +33861,7 @@ function AppView() {
   import_react11.useEffect(() => {
     const subscriber = OnError.subscribe((e) => {
       console.error(e);
+      alert(e);
     });
     return () => {
       subscriber.unsubscribe();

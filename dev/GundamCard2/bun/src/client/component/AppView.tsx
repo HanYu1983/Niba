@@ -11,7 +11,7 @@ export function AppView() {
   useEffect(() => {
     const subscriber = OnError.subscribe((e) => {
       console.error(e)
-      //alert(e);
+      alert(e);
     });
     return () => {
       subscriber.unsubscribe();

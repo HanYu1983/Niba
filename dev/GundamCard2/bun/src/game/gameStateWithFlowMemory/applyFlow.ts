@@ -13,7 +13,7 @@ import { ToolFn } from "../tool";
 import { updateCommand } from "../gameState/updateCommand";
 import { getItem, getItemController, getItemIdsByBasyou, isCard, isCardLike, isChip, isCoin, Item, shuffleItems } from "../gameState/ItemTableComponent";
 import { TableFns } from "../../tool/table";
-import { setCardTipStrBaSyouPairs, setTipSelectionForUser } from "../gameState/doEffect";
+import { assertTipForUserSelection, setCardTipStrBaSyouPairs, setTipSelectionForUser } from "../gameState/doEffect";
 import { EffectFn } from "../define/Effect";
 import { mapItemState } from "../gameState/ItemStateComponent";
 import { ItemStateFn } from "../define/ItemState";
@@ -422,6 +422,7 @@ export function applyFlow(
             const effect = getEffectIncludePlayerCommand(ctx, flow.effectID)
             const cardId = EffectFn.getCardID(effect)
             ctx = mapItemState(ctx, cardId, is => ItemStateFn.setTip(is, flow.conditionKey, flow.tip)) as GameStateWithFlowMemory
+            assertTipForUserSelection(ctx, effect, cardId)
             return ctx
         }
     }

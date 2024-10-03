@@ -75,6 +75,36 @@ export function doEffect(
   return ctx;
 }
 
+export function assertTipForUserSelection(ctx: GameState, effect: Effect, cardId: string) {
+  const userTips = getItemState(ctx, cardId).tips
+  const groupSets: { [key: string]: string[] } = {}
+  Object.entries(effect.text.conditions || {}).forEach(([conditionKey, con]) => {
+    if (con.groupKey) {
+      const userTip = userTips[conditionKey]
+      if (userTip == null) {
+        return
+      }
+      if (userTip.isRepeat) {
+        return
+      }
+      switch (userTip.title[0]) {
+        case "カード": {
+          const userCardIds = userTip.title[2].map(p => p[0]);
+          let groupSetsWithKey = groupSets[con.groupKey] || []
+          groupSetsWithKey = [...userCardIds, ...groupSetsWithKey];
+          groupSetsWithKey.forEach(gid => {
+            if (groupSetsWithKey.filter(gid2 => gid2 == gid).length > 1) {
+              console.warn(con.groupKey, groupSetsWithKey)
+              throw new TipError(`有重復的對象: ${con.groupKey} ${JSON.stringify(groupSetsWithKey)}`)
+            }
+          })
+          groupSets[con.groupKey] = groupSetsWithKey
+        }
+      }
+    }
+  })
+}
+
 export function createEffectTips(
   ctx: GameState,
   effect: Effect,
@@ -93,7 +123,7 @@ export function createEffectTips(
     const errors: string[] = []
     let tip: Tip | null = null
     try {
-      tip = createConditionTitleFn(con, {})(ctx, effect, bridge) 
+      tip = createConditionTitleFn(con, {})(ctx, effect, bridge)
       if ((tip as any)?.isGameState) {
         console.log(`快速檢查是不寫錯回傳成GameState, 應該要回傳Tip|null:`, key, con.title)
         throw new Error()
@@ -115,6 +145,7 @@ export function createEffectTips(
         try {
           const cardId = EffectFn.getCardID(effect)
           ItemStateFn.getTip(getItemState(ctx, cardId), key)
+          assertTipForUserSelection(ctx, effect, cardId)
         } catch (e) {
           if (e instanceof TipError) {
             if (options.isAssert) {
