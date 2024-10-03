@@ -29,6 +29,7 @@ export const prototype: CardPrototype = {
     conditions: {
       "G以外の、セットカードがセットされていない敵軍カード１枚": {
         title: ["Entity", {
+          atBa: true,
           is: ["ACE", "オペレーション", "オペレーション(ユニット)", "キャラクター", "コマンド", "ユニット"],
           hasSetCard: false,
           side: "敵軍",

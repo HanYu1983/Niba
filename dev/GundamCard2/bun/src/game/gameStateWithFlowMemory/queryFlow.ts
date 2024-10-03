@@ -279,7 +279,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
             },
         ];
     }
-    // 破壞效果，如果效果多於1個，則讓主動玩家選擇順序
+    // 破壞效果，如果效果多於0個，則讓主動玩家選擇順序
     SelectDestroyOrder: {
         switch (ctx.phase[0]) {
             case "戦闘フェイズ":

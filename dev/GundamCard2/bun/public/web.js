@@ -28398,25 +28398,15 @@ function doItemSetDestroy(ctx2, reason, [itemId, from], options) {
   if (options?.isSkipTargetMissing) {
   } else {
     assertTargetMissingError(ctx2, [itemId, from]);
-  }
-  if (isCard(ctx2, itemId) || isChip(ctx2, itemId)) {
     const isDestroyEffect = getCutInDestroyEffects(ctx2).find((e) => EffectFn.getCardID(e) == itemId);
     if (reason) {
       if (isDestroyEffect) {
-        if (options?.isSkipTargetMissing) {
-        } else {
-          throw new TargetMissingError(`already destroy: ${itemId}`, {});
-        }
+        throw new TargetMissingError(`already destroy: ${itemId}`, {});
       }
-      ctx2 = mapItemState(ctx2, itemId, (is) => {
-        return { ...is, destroyReason: reason };
-      });
-      ctx2 = addDestroyEffect(ctx2, createDestroyEffect(ctx2, reason, itemId));
     } else {
       if (isDestroyEffect == null) {
         throw new TargetMissingError(`not destroy: ${itemId}`, {});
       }
-      ctx2 = removeEffect(ctx2, isDestroyEffect.id);
       ctx2 = mapItemState(ctx2, itemId, (is) => {
         if (is.destroyReason?.id == "\u30DE\u30A4\u30CA\u30B9\u306E\u6226\u95D8\u4FEE\u6B63") {
           throw new Error(`\u30DE\u30A4\u30CA\u30B9\u306E\u6226\u95D8\u4FEE\u6B63\u7684\u7834\u58DE\u4E0D\u80FD\u88AB\u9078\u5230`);
@@ -28424,6 +28414,31 @@ function doItemSetDestroy(ctx2, reason, [itemId, from], options) {
         return { ...is, destroyReason: null };
       });
     }
+  }
+  if (isCard(ctx2, itemId) || isChip(ctx2, itemId)) {
+    getSetGroupChildren(ctx2, itemId).forEach((setGroupId) => {
+      const isDestroyEffect = getCutInDestroyEffects(ctx2).find((e) => EffectFn.getCardID(e) == setGroupId);
+      if (reason) {
+        if (isDestroyEffect) {
+          return;
+        }
+        ctx2 = mapItemState(ctx2, setGroupId, (is) => {
+          return { ...is, destroyReason: reason };
+        });
+        ctx2 = addDestroyEffect(ctx2, createDestroyEffect(ctx2, reason, setGroupId));
+      } else {
+        if (isDestroyEffect) {
+          if (getItemState(ctx2, setGroupId).destroyReason?.id == "\u30DE\u30A4\u30CA\u30B9\u306E\u6226\u95D8\u4FEE\u6B63") {
+            return;
+          }
+          ctx2 = mapItemState(ctx2, setGroupId, (is) => {
+            return { ...is, destroyReason: null };
+          });
+          ctx2 = removeEffect(ctx2, isDestroyEffect.id);
+        } else {
+        }
+      }
+    });
     return ctx2;
   }
   if (isCoin(ctx2, itemId)) {
