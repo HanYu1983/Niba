@@ -44,12 +44,21 @@ export const PhaseFn = {
     isFreeTiming(phase: Phase): boolean {
         switch (phase[0]) {
             case "ドローフェイズ":
-                return phase[1] == "フリータイミング";
             case "リロールフェイズ":
             case "配備フェイズ":
                 return phase[1] == "フリータイミング";
             case "戦闘フェイズ":
                 return phase[2] == "フリータイミング" || phase[2] == "フリータイミング2";
+        }
+    },
+    isRuleEffect(phase: Phase): boolean {
+        switch (phase[0]) {
+            case "ドローフェイズ":
+            case "リロールフェイズ":
+            case "配備フェイズ":
+                return phase[1] == "規定の効果";
+            case "戦闘フェイズ":
+                return phase[2] == "規定の効果";
         }
     },
     getAll(): Phase[] {
@@ -101,7 +110,7 @@ export const PhaseFn = {
     },
     getNext(timing: Phase): Phase {
         const all = this.getAll()
-        const idx = (this.getSeqId(timing)+1) % all.length
+        const idx = (this.getSeqId(timing) + 1) % all.length
         return all[idx]
     },
     getSeqId(timing: Phase): number {

@@ -23,7 +23,6 @@ export const prototype: CardPrototype = {
             }
           ]
         },
-        // TODO check this tip
         "自軍キャラ１枚": {
           title: ["Entity", {
             atBa: true,

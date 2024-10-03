@@ -24816,12 +24816,21 @@ var PhaseFn = {
   isFreeTiming(phase) {
     switch (phase[0]) {
       case "\u30C9\u30ED\u30FC\u30D5\u30A7\u30A4\u30BA":
-        return phase[1] == "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0";
       case "\u30EA\u30ED\u30FC\u30EB\u30D5\u30A7\u30A4\u30BA":
       case "\u914D\u5099\u30D5\u30A7\u30A4\u30BA":
         return phase[1] == "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0";
       case "\u6226\u95D8\u30D5\u30A7\u30A4\u30BA":
         return phase[2] == "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0" || phase[2] == "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02";
+    }
+  },
+  isRuleEffect(phase) {
+    switch (phase[0]) {
+      case "\u30C9\u30ED\u30FC\u30D5\u30A7\u30A4\u30BA":
+      case "\u30EA\u30ED\u30FC\u30EB\u30D5\u30A7\u30A4\u30BA":
+      case "\u914D\u5099\u30D5\u30A7\u30A4\u30BA":
+        return phase[1] == "\u898F\u5B9A\u306E\u52B9\u679C";
+      case "\u6226\u95D8\u30D5\u30A7\u30A4\u30BA":
+        return phase[2] == "\u898F\u5B9A\u306E\u52B9\u679C";
     }
   },
   getAll() {
@@ -32037,7 +32046,7 @@ function createAttackPhaseRuleEffect(ctx2, playerId) {
               return [id, GameStateFn2.getItemBaSyou(ctx3, id)];
             });
             return {
-              title: ["\u30AB\u30FC\u30C9", pairs, pairs]
+              title: ["\u30AB\u30FC\u30C9", pairs, []]
             };
           }.toString(),
           actions: [
@@ -32075,7 +32084,7 @@ function createAttackPhaseRuleEffect(ctx2, playerId) {
               return [id, GameStateFn2.getItemBaSyou(ctx3, id)];
             });
             return {
-              title: ["\u30AB\u30FC\u30C9", pairs, pairs]
+              title: ["\u30AB\u30FC\u30C9", pairs, []]
             };
           }.toString(),
           actions: [
@@ -33298,6 +33307,69 @@ var FlowSetTipSelectionView = (props) => {
           })
         }, undefined, false, undefined, this);
       }
+      case "StringOptions":
+      case "BattleBonus": {
+        const values = wants;
+        return /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("div", {
+          style: {
+            display: "flex",
+            border: "2px solid black",
+            overflow: "scroll"
+          },
+          children: values.map((value, i) => {
+            return /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("div", {
+              children: /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("button", {
+                onClick: () => {
+                  const tip = {
+                    title: [
+                      props.flow.tip.title[0],
+                      TipFn.getWant(props.flow.tip),
+                      [value]
+                    ]
+                  };
+                  OnEvent.next({
+                    id: "OnClickFlowConfirm",
+                    clientId: props.clientId,
+                    flow: { ...props.flow, tip }
+                  });
+                },
+                children: JSON.stringify(value)
+              }, undefined, false, undefined, this)
+            }, i, false, undefined, this);
+          })
+        }, undefined, false, undefined, this);
+      }
+      case "\u30C6\u30AD\u30B9\u30C8": {
+        const values = wants;
+        return /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("div", {
+          style: {
+            display: "flex",
+            border: "2px solid black",
+            overflow: "scroll"
+          },
+          children: values.map((value, i) => {
+            return /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("div", {
+              children: /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("button", {
+                onClick: () => {
+                  const tip = {
+                    title: [
+                      "\u30C6\u30AD\u30B9\u30C8",
+                      TipFn.getWant(props.flow.tip),
+                      [value]
+                    ]
+                  };
+                  OnEvent.next({
+                    id: "OnClickFlowConfirm",
+                    clientId: props.clientId,
+                    flow: { ...props.flow, tip }
+                  });
+                },
+                children: getCardTextFromCardTextRef(appContext.viewModel.model.gameState, value).description
+              }, undefined, false, undefined, this)
+            }, i, false, undefined, this);
+          })
+        }, undefined, false, undefined, this);
+      }
     }
     return /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("div", {
       children: [
@@ -33305,7 +33377,7 @@ var FlowSetTipSelectionView = (props) => {
         props.flow.tip.title[0]
       ]
     }, undefined, true, undefined, this);
-  }, [props]);
+  }, [props, appContext.viewModel.model.gameState]);
   const userSelection = import_react4.useMemo(() => {
     const wants = TipFn.getWant(props.flow.tip);
     switch (props.flow.tip.title[0]) {
@@ -33383,6 +33455,36 @@ var FlowListView = (props) => {
     const speed = 10;
     const isPlayerControl = true;
     if (isPlayerControl && props.clientId == PlayerA) {
+      const phase = getPhase(appContext.viewModel.model.gameState);
+      if (PhaseFn.isRuleEffect(phase)) {
+        let flow = flows.find((flow2) => flow2.id == "FlowPassPayCost");
+        if (flow == null) {
+          flows.find((flow2) => flow2.id == "FlowSetActiveEffectID" && phase[0] == "\u6226\u95D8\u30D5\u30A7\u30A4\u30BA" && (phase[1] != "\u653B\u6483\u30B9\u30C6\u30C3\u30D7" && phase[1] != "\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7"));
+        }
+        if (flow != null) {
+          setTimeout(() => {
+            OnEvent.next({
+              id: "OnClickFlowConfirm",
+              clientId: props.clientId,
+              flow
+            });
+          }, speed);
+          return;
+        }
+      }
+      {
+        const flow = flows.find((flow2) => flow2.id == "FlowPassPayCost");
+        if (flow && isImmediateEffect(appContext.viewModel.model.gameState, flow.effectID)) {
+          setTimeout(() => {
+            OnEvent.next({
+              id: "OnClickFlowConfirm",
+              clientId: props.clientId,
+              flow
+            });
+          }, speed);
+          return;
+        }
+      }
       if (flows.length == 1) {
         const flow = flows[0];
         if (flow.id == "FlowCancelPassPhase") {
@@ -33394,13 +33496,10 @@ var FlowListView = (props) => {
         if (flow.id == "FlowWaitPlayer") {
           return;
         }
-        if (flow.id == "FlowSetTipSelection") {
-          return;
-        }
         if (flow.id == "FlowDeleteImmediateEffect") {
           return;
         }
-        if (flow.id == "FlowSetActiveEffectID") {
+        if (flow.id == "FlowSetTipSelection") {
           return;
         }
         setTimeout(() => {
@@ -33430,6 +33529,12 @@ var FlowListView = (props) => {
         return;
       }
       let flow = useFlows[Math.round(Math.random() * 1000) % useFlows.length];
+      if (flow.id == "FlowSetTipSelection") {
+        const phase = getPhase(appContext.viewModel.model.gameState);
+        if (phase[0] == "\u6226\u95D8\u30D5\u30A7\u30A4\u30BA" && phase[1] == "\u653B\u6483\u30B9\u30C6\u30C3\u30D7" && phase[2] == "\u898F\u5B9A\u306E\u52B9\u679C") {
+          flow.tip = TipFn.passWantToSelection(flow.tip);
+        }
+      }
       setTimeout(() => {
         OnEvent.next({
           id: "OnClickFlowConfirm",

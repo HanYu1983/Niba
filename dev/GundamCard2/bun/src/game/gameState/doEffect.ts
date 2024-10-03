@@ -309,7 +309,7 @@ export function addImmediateEffectIfCanPayCost(ctx: GameState, effect: Effect): 
   const cets = createCommandEffectTips(ctx, effect)
   const cetsNoErr = cets.filter(CommandEffecTipFn.filterNoError)
   if (cetsNoErr.length == 0) {
-    logCategory("addImmediateEffectIfCanPayCost", `將發動起動效果但條件不足: ${effect.text.description}`, cets)
+    console.warn("addImmediateEffectIfCanPayCost", `將發動起動效果但條件不足: ${effect.text.description}`, cets)
     return ctx
   }
   return addImmediateEffect(ctx, effect) as GameState

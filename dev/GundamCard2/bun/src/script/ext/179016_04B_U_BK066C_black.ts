@@ -22,28 +22,20 @@ export const prototype: CardPrototype = {
         const cardId = DefineFn.EffectFn.getCardID(effect)
         const evt = DefineFn.EffectFn.getEvent(effect)
         if (evt.title[0] == "場に出た場合" && evt.cardIds?.includes(cardId)) {
+          const cardId = DefineFn.EffectFn.getCardID(effect)
+          const cardProto = GameStateFn.getItemPrototype(ctx, cardId)
+          const payColorKey = DefineFn.TipFn.createConditionKeyOfPayColorX(cardProto)
+          const x = GameStateFn.getCardTipStrBaSyouPairs(ctx, payColorKey, cardId).length
           const newE = GameStateFn.createPlayTextEffectFromEffect(ctx, effect, {
             conditions: {
               "配備エリアにいる、X以下の防御力を持つ敵軍ユニット１枚": {
-                title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip | null {
-                  const cardId = DefineFn.EffectFn.getCardID(effect)
-                  const cardProto = GameStateFn.getItemPrototype(ctx, cardId)
-                  const playerId = GameStateFn.getItemController(ctx, cardId)
-                  const from = DefineFn.AbsoluteBaSyouFn.of(DefineFn.PlayerIDFn.getOpponent(playerId), "配備エリア")
-                  const payColorKey = DefineFn.TipFn.createConditionKeyOfPayColorX(cardProto)
-                  const x = GameStateFn.getCardTipStrBaSyouPairs(ctx, payColorKey, cardId).length
-                  const targetIds = GameStateFn.getItemIdsByBasyou(ctx, from)
-                    .filter(itemId => GameStateFn.getItemRuntimeCategory(ctx, itemId) == "ユニット")
-                    .filter(itemId => GameStateFn.getSetGroupBattlePoint(ctx, itemId)[2] < x)
-                  const pairs = targetIds.map(tid => {
-                    return [tid, from] as StrBaSyouPair
-                  })
-                  const count = 1
-                  return {
-                    title: ["カード", pairs, pairs.slice(0, count)],
-                    count: count
-                  }
-                }.toString()
+                title: ["Entity", {
+                  at: ["配備エリア"],
+                  compareBattlePoint: ["防御力", "<=", x],
+                  side: "敵軍",
+                  is: ["ユニット"],
+                  count: 1
+                }]
               },
             },
             logicTreeAction: {

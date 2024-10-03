@@ -3,7 +3,7 @@ import { queryFlow } from "../../game/gameStateWithFlowMemory/queryFlow";
 import { AppContext } from "../tool/appContext";
 import { OnEvent } from "../tool/appContext/eventCenter";
 import { EffectView } from "./EffectView";
-import { getEffect } from "../../game/gameState/EffectStackComponent";
+import { getEffect, isImmediateEffect } from "../../game/gameState/EffectStackComponent";
 import { getEffectIncludePlayerCommand } from "../../game/gameStateWithFlowMemory/effect";
 import { CommandEffecTipFn } from "../../game/define/CommandEffectTip";
 import { TargetMissingError } from "../../game/define/GameError";
@@ -15,6 +15,9 @@ import { PlayerA, PlayerB } from "../../game/define/PlayerID";
 import { FlowSetTipSelectionView } from "./FlowSetTipSelectionView";
 import { CardView } from "./CardView";
 import { EffectFn } from "../../game/define/Effect";
+import { TipFn } from "../../game/define/Tip";
+import { getPhase } from "../../game/gameState/PhaseComponent";
+import { PhaseFn } from "../../game/define/Timing";
 
 export const FlowListView = (props: { clientId: string, style?: CSSProperties }) => {
   const appContext = useContext(AppContext);
@@ -25,17 +28,39 @@ export const FlowListView = (props: { clientId: string, style?: CSSProperties })
     const speed = 10
     const isPlayerControl = true
     if (isPlayerControl && props.clientId == PlayerA) {
-      // const payCost = flows.find((flow) => flow.id == "FlowPassPayCost");
-      // if (payCost) {
-      //   setTimeout(() => {
-      //     OnEvent.next({
-      //       id: "OnClickFlowConfirm",
-      //       clientId: props.clientId,
-      //       flow: payCost,
-      //     });
-      //   }, speed)
-      //   return
-      // }
+      // 規定效果自動按
+      const phase = getPhase(appContext.viewModel.model.gameState)
+      if (PhaseFn.isRuleEffect(phase)) {
+        let flow = flows.find(flow => flow.id == "FlowPassPayCost")
+        if (flow == null) {
+          flows.find(flow => flow.id == "FlowSetActiveEffectID" && phase[0] == "戦闘フェイズ" && (phase[1] != "攻撃ステップ" && phase[1] != "防御ステップ"))
+        }
+        if (flow != null) {
+          setTimeout(() => {
+            OnEvent.next({
+              id: "OnClickFlowConfirm",
+              clientId: props.clientId,
+              flow: flow,
+            });
+          }, speed)
+          return
+        }
+      }
+      {
+        // 立即效果自動按
+        const flow = flows.find(flow => flow.id == "FlowPassPayCost")
+        if (flow && isImmediateEffect(appContext.viewModel.model.gameState, flow.effectID)) {
+          setTimeout(() => {
+            OnEvent.next({
+              id: "OnClickFlowConfirm",
+              clientId: props.clientId,
+              flow: flow,
+            });
+          }, speed)
+          return
+        }
+      }
+      // 只剩下一個命令時自動按，一些狀況除外
       if (flows.length == 1) {
         const flow = flows[0]
         if (flow.id == "FlowCancelPassPhase") {
@@ -47,15 +72,13 @@ export const FlowListView = (props: { clientId: string, style?: CSSProperties })
         if (flow.id == "FlowWaitPlayer") {
           return
         }
-        if (flow.id == "FlowSetTipSelection") {
-          return
-        }
         if (flow.id == "FlowDeleteImmediateEffect") {
           return
         }
-        if (flow.id == "FlowSetActiveEffectID") {
+        if (flow.id == "FlowSetTipSelection") {
           return
         }
+
         setTimeout(() => {
           OnEvent.next({
             id: "OnClickFlowConfirm",
@@ -83,6 +106,12 @@ export const FlowListView = (props: { clientId: string, style?: CSSProperties })
         return
       }
       let flow = useFlows[Math.round(Math.random() * 1000) % useFlows.length]
+      if (flow.id == "FlowSetTipSelection") {
+        const phase = getPhase(appContext.viewModel.model.gameState)
+        if (phase[0] == "戦闘フェイズ" && phase[1] == "攻撃ステップ" && phase[2] == "規定の効果") {
+          flow.tip = TipFn.passWantToSelection(flow.tip)
+        }
+      }
       setTimeout(() => {
         OnEvent.next({
           id: "OnClickFlowConfirm",
