@@ -30172,6 +30172,10 @@ function createEffectTips(ctx2, effect, logicId, logicSubId, options) {
     let tip = null;
     try {
       tip = createConditionTitleFn(con, {})(ctx2, effect, bridge);
+      if (tip?.isGameState) {
+        console.log(`\u5FEB\u901F\u6AA2\u67E5\u662F\u4E0D\u5BEB\u932F\u56DE\u50B3\u6210GameState, \u61C9\u8A72\u8981\u56DE\u50B3Tip|null:`, key, con.title);
+        throw new Error;
+      }
     } catch (e) {
       if (e instanceof TipError) {
         if (options?.isAssert) {
@@ -30199,7 +30203,7 @@ function createEffectTips(ctx2, effect, logicId, logicSubId, options) {
         }
       }
       try {
-        logCategory("createEffectTips", "tip", tip);
+        logCategory("createEffectTips", "tip");
         const error = TipFn.checkTipSatisfies(tip);
         if (error) {
           throw error;
@@ -30292,7 +30296,6 @@ function createCommandEffectTips(ctx2, effect) {
       const conditionsList = CardTextFn.getLogicTreeActionConditions(effect.text, lta);
       const allTest = conditionsList.map((conditions, logicSubId) => {
         ctx2 = clearTipSelectionForUser(ctx2, effect, logicId, logicSubId);
-        logCategory("createCommandEffectTips", "createEffectTips", logicId, logicSubId, Object.keys(conditions));
         const conTipErrors = createEffectTips(ctx2, effect, logicId, logicSubId);
         return {
           effectId: effect.id,
