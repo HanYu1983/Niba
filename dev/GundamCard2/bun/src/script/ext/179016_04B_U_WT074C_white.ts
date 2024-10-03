@@ -22,6 +22,7 @@ export const prototype: CardPrototype = {
         const cardController = GameStateFn.getItemController(ctx, cardId)
         if (evt.title[0] == "プレイされて場に出た場合" &&
           evt.cardIds?.every(cid => GameStateFn.getItemController(ctx, cid) == cardController) &&
+          evt.cardIds?.every(cid => GameStateFn.getItemRuntimeCategory(ctx, cid) == "ユニット") &&
           evt.cardIds?.every(cid => GameStateFn.getItemCharacteristic(ctx, cid).includes("アストレイ系"))
         ) {
           const newE = GameStateFn.createPlayTextEffectFromEffect(ctx, effect, {

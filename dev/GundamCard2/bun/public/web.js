@@ -30550,6 +30550,9 @@ function createPlayGEffects(ctx2, cardId) {
               }.toString()
             },
             {
+              title: ["triggerEvent", { title: ["\u30D7\u30EC\u30A4\u3055\u308C\u3066\u5834\u306B\u51FA\u305F\u5834\u5408"] }]
+            },
+            {
               title: ["triggerEvent", { title: ["\u3053\u306E\u30AB\u30FC\u30C9\u304CG\u3068\u3057\u3066\u5834\u306B\u51FA\u305F\u5834\u5408"] }]
             }
           ]
