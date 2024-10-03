@@ -135,6 +135,7 @@ export type Condition = {
     actions?: Action[],
     exceptItemSelf?: boolean,
     relatedPlayerSideKeyword?: RelatedPlayerSideKeyword,
+    groupKey?: string,
 }
 
 export type ConditionTitleFn = (ctx: any, effect: Effect, lib: any) => Tip | null;
@@ -308,7 +309,8 @@ export function createRollCostRequire(
                         title: ["_ロールする", "ロール"],
                         vars: [key]
                     }
-                ]
+                ],
+                groupKey: "支付橫置國力"
             }
         };
     }
