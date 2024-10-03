@@ -640,7 +640,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                         case "手札調整":
                             // 如果玩家手牌超過6張，丟到剩下6張
                             return [
-                                { id: "FlowNextTiming", description: `TODO:執行${phase[2]}` },
+                                { id: "FlowNextTiming", description: `執行${phase[2]}` },
                             ];
                         case "効果終了。ターン終了":
                             // 如果已經觸發事件

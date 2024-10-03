@@ -11,7 +11,7 @@ import { getCardRollCostLength, getCardBattlePoint } from "../game/gameState/car
 import { addCards, createCardWithProtoIds, getCard, mapCard } from "../game/gameState/CardTableComponent"
 import { getCardIdByCoinId, getCoins } from "../game/gameState/CoinTableComponent"
 import { createEffectTips, doEffect, setTipSelectionForUser, createCommandEffectTips, setEffectTips } from "../game/gameState/doEffect"
-import { getEffect, getTopEffect } from "../game/gameState/EffectStackComponent"
+import { getEffect, getImmediateEffects, getTopEffect } from "../game/gameState/EffectStackComponent"
 import { createGameState, GameState } from "../game/gameState/GameState"
 import { createPlayCardEffects } from "../game/gameState/createPlayCardEffects"
 import { createPlayEffects } from "../game/gameState/createPlayEffects"
@@ -102,6 +102,7 @@ export async function test179016_04B_U_BK066C_black() {
                 throw new Error()
             }
             ctx = doEffect(ctx, effect, 0, 0)
+            console.log(getImmediateEffects(ctx))
             if (ctx.immediateEffect.length != 0) {
                 throw new Error()
             }

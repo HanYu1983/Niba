@@ -27,12 +27,16 @@ export async function testReturnRuleEffect() {
     ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア2"), [earth2]) as GameState
     const charBlue: Card = {
         id: "charBlue",
-        protoID: "charBlue"
+        protoID: "charBlue",
+        isRoll: false
     }
     ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア2"), [charBlue]) as GameState
     ctx = setSetGroupParent(ctx, earth.id, charBlue.id) as GameState
     ctx = setTipSelectionForUser(ctx, attackEffect, 0, 0)
     if (getCard(ctx, earth.id).isRoll) {
+        throw new Error()
+    }
+    if (getCard(ctx, charBlue.id).isRoll != false) {
         throw new Error()
     }
     ctx = doEffect(ctx, attackEffect, 0, 0)

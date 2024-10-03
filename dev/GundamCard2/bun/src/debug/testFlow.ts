@@ -20,6 +20,7 @@ export function testFlow1() {
       ...ctx.flowMemory,
       state: "playing",
     },
+    activePlayerID: PlayerA
   };
   const firstTiming = ctx.phase;
   if (PhaseFn.getSeqId(firstTiming) != 0) {

@@ -26,6 +26,7 @@ import { createMinusDestroyEffectAndPush } from "../gameState/doItemSetDestroy";
 import { doCutInDestroyEffectsAndClear } from "../gameState/doCutInDestroyEffectsAndClear";
 import { setNextPhase } from "../gameState/getNextPhase";
 import { getPhase } from "../gameState/PhaseComponent";
+import { createAttackPhaseRuleEffect } from "../gameState/createAttackPhaseRuleEffect";
 
 export function applyFlow(
     ctx: GameStateWithFlowMemory,
@@ -150,13 +151,8 @@ export function applyFlow(
                 logCategory("applyFlow", "已經執行過triggerTextEvent");
                 return ctx;
             }
-            switch(flow.event.title[0]){
-                case "GameEventOnTiming":{
-                    
-                }
-            }
-            // ctx = doTriggerEvent(ctx, flow.event) as GameStateWithFlowMemory;
-            // set hasTriggerEvent
+            // 這裡不做任何事，只修改hasTriggerEvent旗標
+            // doTriggerEvent在FlowNextTiming中做
             ctx = {
                 ...ctx,
                 flowMemory: {
@@ -235,20 +231,37 @@ export function applyFlow(
                     return ctx;
                 }
             }
-            // 回合結束時切換主動玩家
-            if (
-                ctx.phase[0] == "戦闘フェイズ" &&
-                ctx.phase[1] == "ターン終了時" &&
-                ctx.phase[2] == "効果終了。ターン終了"
-            ) {
-                if (ctx.activePlayerID == null) {
-                    throw new Error("activePlayerID not found");
+            if (ctx.activePlayerID == null) {
+                throw new Error("activePlayerID not found");
+            }
+            switch (ctx.phase[0]) {
+                case "戦闘フェイズ": {
+                    switch (ctx.phase[1]) {
+                        // case "攻撃ステップ": {
+                        //     switch (ctx.phase[2]) {
+                        //         case "規定の効果": {
+                        //             ctx = addImmediateEffect(ctx, createAttackPhaseRuleEffect(ctx, ctx.activePlayerID)) as GameStateWithFlowMemory
+                        //         }
+                        //     }
+                        //     break
+                        // }
+                        case "ターン終了時": {
+                            switch (ctx.phase[2]) {
+                                case "ダメージリセット":
+                                case "効果解決":
+                                case "手札調整":
+                                case "効果終了。ターン終了": {
+                                    // 回合結束時切換主動玩家
+                                    ctx = {
+                                        ...ctx,
+                                        activePlayerID: PlayerIDFn.getOpponent(ctx.activePlayerID),
+                                        turn: ctx.turn + 1
+                                    };
+                                }
+                            }
+                        }
+                    }
                 }
-                ctx = {
-                    ...ctx,
-                    activePlayerID: PlayerIDFn.getOpponent(ctx.activePlayerID),
-                    turn: ctx.turn + 1
-                };
             }
             // 下一步
             {

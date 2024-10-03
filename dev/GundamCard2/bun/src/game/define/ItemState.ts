@@ -114,6 +114,12 @@ export const ItemStateFn = {
         }
         return ctx
     },
+    onDamageReset(ctx:ItemState):ItemState {
+        return {
+            ...ctx,
+            damage: 0,
+        }
+    },
     onTurnEnd(ctx: ItemState): ItemState {
         for (const varName in ctx.varNamesRemoveOnTurnEnd) {
             ctx = {
@@ -130,7 +136,6 @@ export const ItemStateFn = {
             isFirstTurn: false,
             textIdsUseThisCut: {},
             textIdsUseThisTurn: {},
-            damage: 0,
         }
         return ctx
     }
