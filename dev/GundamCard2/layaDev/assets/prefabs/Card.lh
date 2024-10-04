@@ -1,0 +1,62 @@
+{
+  "_$ver": 1,
+  "_$id": "pnpehaf0",
+  "_$type": "Sprite3D",
+  "name": "Card",
+  "transform": {
+    "localPosition": {
+      "_$type": "Vector3",
+      "y": 1.5032808238671265,
+      "z": -0.17631047772689537
+    },
+    "localRotation": {
+      "_$type": "Quaternion",
+      "x": 0.5841168263399799,
+      "w": 0.8116695960712769
+    }
+  },
+  "_$comp": [
+    {
+      "_$type": "0bfa2143-34dc-4cbe-913b-62d13a82f96d",
+      "scriptPath": "scripts/CardController.ts",
+      "mesh": {
+        "_$ref": "1r4dv5r1",
+        "_$type": "MeshRenderer"
+      },
+      "model": null
+    }
+  ],
+  "_$child": [
+    {
+      "_$id": "1r4dv5r1",
+      "_$type": "Sprite3D",
+      "name": "Mesh",
+      "transform": {
+        "localScale": {
+          "_$type": "Vector3",
+          "x": 1,
+          "y": 1,
+          "z": 1.4
+        }
+      },
+      "_$comp": [
+        {
+          "_$type": "MeshFilter",
+          "sharedMesh": {
+            "_$uuid": "4a4afb22-ef83-40a2-a6a8-212a2d20c52f",
+            "_$type": "Mesh"
+          }
+        },
+        {
+          "_$type": "MeshRenderer",
+          "sharedMaterials": [
+            {
+              "_$uuid": "a1bf4dea-0aaf-4c55-9a9e-de04f67af2d2",
+              "_$type": "Material"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "_$ver": 1,
+  "_$id": "be2saiht",
+  "_$type": "Sprite3D",
+  "name": "MyHand",
+  "_$comp": [
+    {
+      "_$type": "34f240bb-4fd0-4d63-97df-8527d7e36f2a",
+      "scriptPath": "scripts/DeckController.ts",
+      "preCard": null,
+      "proxy": {
+        "_$ref": "ah17igrz"
+      }
+    }
+  ],
+  "_$child": [
+    {
+      "_$id": "ah17igrz",
+      "_$type": "Sprite3D",
+      "name": "Sphere",
+      "_$comp": [
+        {
+          "_$type": "MeshFilter",
+          "sharedMesh": {
+            "_$uuid": "f1e48cc9-d67d-4196-92dd-77d9ee2f076c",
+            "_$type": "Mesh"
+          }
+        },
+        {
+          "_$type": "MeshRenderer",
+          "lightmapScaleOffset": {
+            "_$type": "Vector4"
+          },
+          "sharedMaterials": [
+            {
+              "_$uuid": "6f90bbb0-bcb2-4311-8a9d-3d8277522098",
+              "_$type": "Material"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
