@@ -1,0 +1,1 @@
+gcloud storage cp --recursive ../bun/public gs://particle-resources/tmp/testGundam
