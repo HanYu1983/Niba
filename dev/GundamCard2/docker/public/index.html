@@ -1,58 +1,85 @@
 <html>
-    <head>
-        <meta charset="UTF-8">
-    </head>
-    <style>
-        .full{
-            width: 100%;
-            height: 100%;
-            border: none;
+
+<head>
+    <meta charset="UTF-8">
+</head>
+<style>
+    .full {
+        width: 100%;
+        height: 100%;
+        border: none;
+    }
+</style>
+
+<body>
+    <iframe id="laya" src="laya/layaIndex.html" class="full"></iframe>
+</body>
+<script>
+
+    function callLaya(method, msg) {
+        iframe.postMessage({
+            method: method,
+            msg: msg
+        }, '*');
+    }
+
+    function receiveMessage(e) {
+        // 來源網址（e.origin）不是指定的網域時
+        // if (e.origin !== 'https://xxxxxxx.tw') {
+        //     alert('資料來源錯誤');
+        //     return false;
+        // }
+        // // 來源網址是指定的網域時
+        // else {
+        //     // 拿傳來的參數（e.data）
+        //     const data = e.data;
+        // }
+
+        const data = e.data;
+
+        const method = data.method;
+        const msg = data.msg;
+
+        switch (method) {
+            case 'onLayaReady':
+                console.log("laya準備完成");
+
+                // 測試通知laya
+                callLaya('init', 'hello');
+                break;
         }
-    </style>
-    <body>
-        <iframe id="laya" src="laya/layaIndex.html" class="full"></iframe>
-    </body>
-    <script>
+    }
 
-        function callLaya(method, msg) {
-            iframe.postMessage({
-                method: method,
-                msg: msg
-            }, '*');
-        }
+    // 監聽 message 事件
+    window.addEventListener('message', receiveMessage, false);
 
-        function receiveMessage(e) {
-            // 來源網址（e.origin）不是指定的網域時
-            // if (e.origin !== 'https://xxxxxxx.tw') {
-            //     alert('資料來源錯誤');
-            //     return false;
-            // }
-            // // 來源網址是指定的網域時
-            // else {
-            //     // 拿傳來的參數（e.data）
-            //     const data = e.data;
-            // }
+    var iframe = document.getElementById('laya').contentWindow;
 
-            const data = e.data;
+</script>
 
-            const method = data.method;
-            const msg = data.msg;
+<script>
+    var socket = new WebSocket('ws://localhost:8081');
 
-            switch (method) {
-                case 'onLayaReady':
-                    console.log("laya準備完成");
+    socket.onopen = function (event) {
+        console.log('已連接到WebSocket服務器');
+        socket.send("PlayerB")
+    };
 
-                    // 測試通知laya
-                    callLaya('init', 'hello');
-                    break;
-            }
-        }
+    socket.onmessage = function (event) {
+        const flow = JSON.parse(event.data)
+        console.log('收到消息: ', flow);
+        setTimeout(()=>{
+            socket.send(JSON.stringify(flow))
+        }, 3000)
+    };
 
-        // 監聽 message 事件
-        window.addEventListener('message', receiveMessage, false);
-        
-        var iframe = document.getElementById('laya').contentWindow;
-        
-    </script>
+    socket.onerror = function (error) {
+        console.log('WebSocket錯誤: ' + error);
+    };
+
+    socket.onclose = function (event) {
+        console.log('WebSocket連接已關閉');
+    };
+</script>
+
 </html>
-

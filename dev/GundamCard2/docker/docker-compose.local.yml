@@ -7,3 +7,11 @@ services:
       - ./public:/www/data
     ports:
       - 8080:8080
+  ws:
+    image: oven/bun:latest
+    working_dir: /app
+    command: bun run ./src/ws.ts
+    volumes:
+      - ../bun/:/app
+    ports:
+      - 8081:8080
