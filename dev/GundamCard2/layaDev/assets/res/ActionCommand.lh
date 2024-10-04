@@ -1,0 +1,33 @@
+{
+  "_$ver": 1,
+  "_$id": "shmflsrg",
+  "_$type": "Sprite",
+  "name": "ActionCommand",
+  "width": 0,
+  "height": 0,
+  "_mouseState": 2,
+  "_$comp": [
+    {
+      "_$type": "2d3039f1-bc9f-4182-8878-0f1510bce878",
+      "scriptPath": "scripts/ActionController.ts",
+      "btnAction": {
+        "_$ref": "z8to8uz5"
+      }
+    }
+  ],
+  "_$child": [
+    {
+      "_$id": "z8to8uz5",
+      "_$type": "Button",
+      "name": "BtnAction",
+      "width": 120,
+      "height": 40,
+      "_mouseState": 2,
+      "skin": "res://d4cfd6a8-0d0a-475b-ac93-d85eaa646936",
+      "label": "Title",
+      "labelSize": 20,
+      "labelAlign": "center",
+      "labelVAlign": "middle"
+    }
+  ]
+}

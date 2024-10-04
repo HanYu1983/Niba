@@ -205,6 +205,74 @@
               "w": 0.8116695960712769
             }
           }
+        },
+        {
+          "_$id": "pvhac880",
+          "_$type": "Sprite3D",
+          "name": "Cone",
+          "transform": {
+            "localPosition": {
+              "_$type": "Vector3",
+              "y": 1.7773765450064927
+            }
+          },
+          "_$comp": [
+            {
+              "_$type": "MeshFilter",
+              "sharedMesh": {
+                "_$uuid": "51cd3a71-c75c-42b4-ae4e-dd493b26290b",
+                "_$type": "Mesh"
+              }
+            },
+            {
+              "_$type": "MeshRenderer",
+              "lightmapScaleOffset": {
+                "_$type": "Vector4"
+              },
+              "sharedMaterials": [
+                {
+                  "_$uuid": "6f90bbb0-bcb2-4311-8a9d-3d8277522098",
+                  "_$type": "Material"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_$id": "utalguk4",
+      "_$prefab": "e00293cc-2b02-4f3e-a1c8-a9aaae216e53",
+      "name": "ActionCommand",
+      "active": true,
+      "x": 0,
+      "y": 0,
+      "visible": true,
+      "_$comp": [
+        {
+          "_$type": "33c0aa30-75f5-4738-bd19-03a344daecbe",
+          "scriptPath": "scripts/UIFollow3D.ts",
+          "camera": {
+            "_$ref": "6jx8h8bvc6"
+          },
+          "follow": {
+            "_$ref": "pvhac880"
+          }
+        }
+      ]
+    },
+    {
+      "_$id": "7820ensi",
+      "_$type": "Sprite",
+      "name": "ActionCommandContainer",
+      "x": 205,
+      "y": -24,
+      "width": 100,
+      "height": 100,
+      "_$comp": [
+        {
+          "_$type": "44449177-7b69-4425-9241-42502386172c",
+          "scriptPath": "scripts/ActionCommandContainer.ts"
         }
       ]
     }
