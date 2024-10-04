@@ -56,21 +56,38 @@
     var iframe = document.getElementById('laya').contentWindow;
 
 </script>
-
 <script>
+    async function loadGundamCardInfo() {
+        return import("./assets/GundamCard.json", { with: { type: "json" } }).then(json => {
+            window.GundamCardInfos = json.default.data
+        })
+    }
+    function getGundamCardInfo(imgID) {
+        if (GundamCardInfos == null) {
+            throw new Error(`GundamCardInfo not yet ready`)
+        }
+        return window.GundamCardInfos.find(info => info.imgID == imgID)
+    }
+    function clearGundamCardInfo(){
+        delete window.GundamCardInfos
+    }
+</script>
+<script>
+
     var socket = new WebSocket('ws://localhost:8081');
 
     socket.onopen = function (event) {
         console.log('已連接到WebSocket服務器');
         socket.send("PlayerB")
+        console.log(getGundamCardInfo("179017_01A_U_BL013R_blue"))
     };
 
     socket.onmessage = function (event) {
         const flow = JSON.parse(event.data)
         console.log('收到消息: ', flow);
-        setTimeout(()=>{
-            socket.send(JSON.stringify(flow))
-        }, 3000)
+        // setTimeout(() => {
+        //     socket.send(JSON.stringify(flow))
+        // }, 3000)
     };
 
     socket.onerror = function (error) {

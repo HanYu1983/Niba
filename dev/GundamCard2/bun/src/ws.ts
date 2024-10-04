@@ -7,7 +7,8 @@ import { applyFlow } from './game/gameStateWithFlowMemory/applyFlow';
 import { Flow } from './game/gameStateWithFlowMemory/Flow';
 import { createGameStateWithFlowMemory, GameStateWithFlowMemory } from './game/gameStateWithFlowMemory/GameStateWithFlowMemory';
 import { queryFlow } from './game/gameStateWithFlowMemory/queryFlow';
-import { loadPrototype } from './script';
+import { getPrototype, loadPrototype } from './script';
+import { getImmediateEffects, getStackEffects } from './game/gameState/EffectStackComponent';
 const fs = require('fs').promises;
 
 async function createWS() {
@@ -16,6 +17,27 @@ async function createWS() {
   let ctx = (await loadGameStateFromDesk()) || createGameStateWithFlowMemory()
   function getGameState() {
     return ctx
+  }
+  function getSimpleGameState() {
+    const cards = ctx.cards
+    const stackEffects = getStackEffects(ctx)
+    const immediateEffects = getImmediateEffects(ctx)
+    const coins = ctx.coins
+    const table = ctx.table
+    const itemStates = ctx.itemStates
+    const activePlayerId = ctx.activePlayerID
+    const phase = ctx.phase
+    const protos = Object.values(cards).map(card=>getPrototype(card.protoID || "unknown"))
+    return {
+      cards, 
+      stackEffects, 
+      immediateEffects, 
+      coins, 
+      table, 
+      itemStates,
+      activePlayerId,
+      phase,
+    }
   }
   function newGameState() {
     ctx = createGameStateWithFlowMemory()
@@ -51,6 +73,7 @@ async function createWS() {
   wss.on('connection', (ws: WebSocket) => {
     console.log('New client connected');
     ws.once("message", (message: string) => {
+      // 將message轉成本地串，不然相等性會失效
       const playerId = `${message}`
       console.log(`player try enter: ${playerId}`);
       if (PlayerIDFn.getAll().includes(playerId as PlayerID) != true) {
@@ -64,8 +87,9 @@ async function createWS() {
       ws.on("message", (message: string) => {
         const flow = JSON.parse(message) as Flow
         applyCommand(playerId, flow)
-        Object.values(wsPool).forEach(ws => {
-          ws.send(JSON.stringify(queryCommand(playerId)))
+        Object.keys(wsPool).forEach(playerId => {
+          wsPool[playerId].send(JSON.stringify(queryCommand(playerId)))
+          wsPool[playerId].send(JSON.stringify(getGameState()))
         })
       })
       ws.on('close', () => {
