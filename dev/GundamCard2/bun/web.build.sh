@@ -1,1 +1,1 @@
-bun build src/web.tsx --outdir public
+bun build src/web.tsx --outdir public --minify-syntax --minify-whitespace

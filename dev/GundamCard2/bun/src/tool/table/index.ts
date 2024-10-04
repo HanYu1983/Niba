@@ -22,6 +22,10 @@ function getCardsByPosition(table: Table, position: string): string[] {
 }
 
 function moveCard(table: Table, fromPosition: string, toPosition: string, cardId: string, options?:{insertId?: number}): Table {
+    if(fromPosition == toPosition){
+        console.warn(`moveCard from ${fromPosition} to ${toPosition}. ignore`)
+        return table
+    }
     if (table.cardStack[fromPosition]?.includes(cardId) != true) {
         throw new Error(`table from ${fromPosition} not exist ${cardId}`)
     }
