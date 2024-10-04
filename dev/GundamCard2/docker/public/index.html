@@ -63,7 +63,7 @@
         })
     }
     function getGundamCardInfo(imgID) {
-        if (GundamCardInfos == null) {
+        if (window.GundamCardInfos == null) {
             throw new Error(`GundamCardInfo not yet ready`)
         }
         return window.GundamCardInfos.find(info => info.imgID == imgID)
