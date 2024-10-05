@@ -1,0 +1,1 @@
+bun build src/web2.tsx --outdir public --minify-syntax --minify-whitespace

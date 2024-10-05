@@ -9,6 +9,15 @@ import { createGameStateWithFlowMemory, GameStateWithFlowMemory } from './game/g
 import { queryFlow } from './game/gameStateWithFlowMemory/queryFlow';
 import { getPrototype, loadPrototype } from './script';
 import { getImmediateEffects, getStackEffects } from './game/gameState/EffectStackComponent';
+import { Effect, EffectFn } from './game/define/Effect';
+import { always, fromPairs, map, pipe } from 'ramda';
+import { CardPrototype } from './game/define/CardPrototype';
+import { getCardTexts } from './game/gameState/card';
+import { BattleBonus, CardText } from './game/define/CardText';
+import { getSetGroupBattlePoint } from './game/gameState/setGroup';
+import { getCardLikeItemIds, getItemBaSyou, getItemPrototype } from './game/gameState/ItemTableComponent';
+import { getGlobalEffects } from './game/gameState/globalEffects';
+import { GlobalEffect } from './game/define/GlobalEffect';
 const fs = require('fs').promises;
 
 async function createWS() {
@@ -18,25 +27,64 @@ async function createWS() {
   function getGameState() {
     return ctx
   }
-  function getSimpleGameState() {
+  function getGameStateViewModel() {
     const cards = ctx.cards
-    const stackEffects = getStackEffects(ctx)
-    const immediateEffects = getImmediateEffects(ctx)
+    const stackEffects = getStackEffects(ctx).map(effectToView)
+    const immediateEffects = getImmediateEffects(ctx).map(effectToView)
     const coins = ctx.coins
     const table = ctx.table
     const itemStates = ctx.itemStates
     const activePlayerId = ctx.activePlayerID
     const phase = ctx.phase
-    const protos = Object.values(cards).map(card=>getPrototype(card.protoID || "unknown"))
+    const protos = pipe(
+      always(getCardLikeItemIds(ctx)),
+      map(itemId => [itemId, getItemPrototype(ctx, itemId)] as [string, CardPrototype]),
+      fromPairs
+    )()
+    const texts = pipe(
+      always(getCardLikeItemIds(ctx)),
+      map(itemId => [itemId, getCardTexts(ctx, itemId).map(t => t.description)] as [string, string[]]),
+      fromPairs
+    )()
+    const battlePoints = pipe(
+      always(getCardLikeItemIds(ctx)),
+      map(itemId => [itemId, getSetGroupBattlePoint(ctx, itemId)] as [string, BattleBonus]),
+      fromPairs
+    )()
+    const globalEffects = pipe(
+      always(getCardLikeItemIds(ctx)),
+      map(itemId => [itemId, getGlobalEffects(ctx, null).filter(ge => ge.cardIds.includes(itemId))] as [string, GlobalEffect[]]),
+      fromPairs
+    )()
+    const positions = pipe(
+      always(getCardLikeItemIds(ctx)),
+      map(itemId => [itemId, getItemBaSyou(ctx, itemId).value] as [string, any]),
+      fromPairs
+    )()
+
+    function effectToView(e: Effect) {
+      return {
+        type: e.reason[0],
+        cardId: EffectFn.getCardID(e),
+        playerId: e.reason[0] != "GameRule" ? EffectFn.getPlayerID(e) : null,
+        description: e.text.description || e.description,
+      }
+    }
+
     return {
-      cards, 
-      stackEffects, 
-      immediateEffects, 
-      coins, 
-      table, 
+      cards,
+      stackEffects,
+      immediateEffects,
+      coins,
+      table,
       itemStates,
       activePlayerId,
       phase,
+      protos,
+      texts,
+      battlePoints,
+      globalEffects,
+      positions
     }
   }
   function newGameState() {
