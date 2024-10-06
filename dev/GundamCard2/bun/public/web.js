@@ -25812,6 +25812,8 @@ var jsx_dev_runtime5 = __toESM(require_react_jsx_dev_runtime_development(), 1), 
           return;
         if (flow.id == "FlowObserveEffect")
           return;
+        if (flow.id == "FlowSetActiveLogicID")
+          return;
         setTimeout(() => {
           OnEvent.next({
             id: "OnClickFlowConfirm",

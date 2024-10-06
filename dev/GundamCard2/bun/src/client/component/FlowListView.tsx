@@ -74,6 +74,9 @@ export const FlowListView = (props: { clientId: string, style?: CSSProperties })
         if (flow.id == "FlowObserveEffect") {
           return
         }
+        if (flow.id == "FlowSetActiveLogicID") {
+          return
+        }
 
         setTimeout(() => {
           OnEvent.next({
