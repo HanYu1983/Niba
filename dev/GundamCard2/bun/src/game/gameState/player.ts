@@ -21,6 +21,8 @@ import { addDestroyEffect, getCutInDestroyEffects } from "./EffectStackComponent
 import { createDestroyEffect } from "./createDestroyEffect";
 import { getCard } from "./CardTableComponent";
 import { getCardHasSpeicalEffect } from "./card";
+import { getActivePlayerID } from "./ActivePlayerComponent";
+import { isBattle } from "./IsBattleComponent";
 
 // player
 export function isPlayerHasBattleGroup(
@@ -111,25 +113,27 @@ function doDamage(
         }, ctx)
       }
 
-      if (willGuardUnits.length == 0 || isBattleGroupHasA(ctx, ["強襲"], willAttackUnits[0])) {
-        ctx = doCountryDamage(ctx, currentGuardPlayerID, currentAttackPower)
-        {
-          const gameEvent: GameEvent = {
-            title: ["このカードの部隊が敵軍本国に戦闘ダメージを与えた場合"],
-            cardIds: willAttackUnits,
-          };
-          ctx = doTriggerEvent(ctx, gameEvent)
-        }
-        {
-          const gameEvent: GameEvent = {
-            title: ["自軍本国に戦闘ダメージが与えられた場合"],
-            playerId: currentGuardPlayerID
-          };
-          ctx = doTriggerEvent(ctx, gameEvent)
+      // 若傷害沒有用完, 攻擊方可以攻擊本國
+      if (currentAttackPlayerID == getActivePlayerID(ctx) && currentAttackPower > 0) {
+        // 非交戰中或有強襲才能打本國(p35)
+        if (isBattle(ctx, willAttackUnits[0], null) == false || isBattleGroupHasA(ctx, ["強襲"], willAttackUnits[0])) {
+          ctx = doCountryDamage(ctx, currentGuardPlayerID, currentAttackPower)
+          {
+            const gameEvent: GameEvent = {
+              title: ["このカードの部隊が敵軍本国に戦闘ダメージを与えた場合"],
+              cardIds: willAttackUnits,
+            };
+            ctx = doTriggerEvent(ctx, gameEvent)
+          }
+          {
+            const gameEvent: GameEvent = {
+              title: ["自軍本国に戦闘ダメージが与えられた場合"],
+              playerId: currentGuardPlayerID
+            };
+            ctx = doTriggerEvent(ctx, gameEvent)
+          }
         }
       }
-      // 攻擊方可以攻擊本國
-      // 若傷害沒有用完, 攻擊本國
       // if (
       //   currentAttackPower > 0 ||
       //   // 對方有防禦機體的情況, 有強襲就攻擊本國

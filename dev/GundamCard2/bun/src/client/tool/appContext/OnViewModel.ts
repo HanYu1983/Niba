@@ -52,7 +52,7 @@ export const OnViewModel = OnEvent.pipe(
           let ctx = createGameContext();
           ctx = {
             ...ctx,
-            versionID: viewModel.model.versionID,
+            versionID: 0,
           };
           const deckA = evt.deckA
           const deckB = evt.deckB
@@ -85,6 +85,18 @@ export const OnViewModel = OnEvent.pipe(
         case "OnClickFlowConfirm": {
           if (evt.versionID != viewModel.model.versionID) {
             console.warn(`versionID not match, ignore this changes: ${evt.versionID} != origin ${viewModel.model.versionID}`)
+            // const gameState = viewModel.model.gameState
+            // const flows = queryFlow(gameState, evt.clientId)
+            // return {
+            //   ...viewModel,
+            //   model: {
+            //     ...viewModel.model,
+            //   },
+            //   playerCommands: {
+            //     ...viewModel.playerCommands,
+            //     [evt.clientId]: flows,
+            //   },
+            // }
             return viewModel
           }
           const gameState = applyFlow(viewModel.model.gameState, evt.clientId, evt.flow);

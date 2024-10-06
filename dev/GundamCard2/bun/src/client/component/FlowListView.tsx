@@ -40,18 +40,18 @@ export const FlowListView = (props: { clientId: string, style?: CSSProperties })
       }
       {
         // 立即效果自動按
-        const flow = flows.find(flow => flow.id == "FlowPassPayCost")
-        if (flow && isImmediateEffect(appContext.viewModel.model.gameState, flow.effectID)) {
-          setTimeout(() => {
-            OnEvent.next({
-              id: "OnClickFlowConfirm",
-              clientId: props.clientId,
-              flow: flow,
-              versionID: appContext.viewModel.model.versionID
-            });
-          }, speed)
-          return
-        }
+        // const flow = flows.find(flow => flow.id == "FlowPassPayCost")
+        // if (flow && isImmediateEffect(appContext.viewModel.model.gameState, flow.effectID)) {
+        //   setTimeout(() => {
+        //     OnEvent.next({
+        //       id: "OnClickFlowConfirm",
+        //       clientId: props.clientId,
+        //       flow: flow,
+        //       versionID: appContext.viewModel.model.versionID
+        //     });
+        //   }, speed)
+        //   return
+        // }
       }
       // 只剩下一個命令時自動按，一些狀況除外
       if (flows.length == 1) {
@@ -71,6 +71,9 @@ export const FlowListView = (props: { clientId: string, style?: CSSProperties })
         if (flow.id == "FlowSetTipSelection") {
           return
         }
+        if (flow.id == "FlowObserveEffect") {
+          return
+        }
 
         setTimeout(() => {
           OnEvent.next({
@@ -85,6 +88,7 @@ export const FlowListView = (props: { clientId: string, style?: CSSProperties })
     }
     if (flows.length) {
       const flow = thinkVer1(appContext.viewModel.model.gameState, props.clientId, flows)
+     
       if (flow) {
         setTimeout(() => {
           OnEvent.next({

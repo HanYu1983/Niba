@@ -19612,7 +19612,9 @@ async function loadPrototype(imgID) {
           id: "",
           title: ["\u7279\u6B8A\u578B", ["\u30B9\u30C6\u30A4"]]
         });
-      if (["179001_01A_CH_WT007R_white"].includes(imgID))
+      if (texts.forEach((text) => {
+        text.description = JSON.stringify(text.title);
+      }), ["179001_01A_CH_WT007R_white"].includes(imgID))
         texts.length = 0;
       const category = categoryMapping[categoryStr];
       if (category == null)
@@ -22185,14 +22187,16 @@ function doDamage(ctx2, speedPhase, currentAttackPlayerID, currentGuardPlayerID,
         }).reduce((ctx3, cs) => {
           return setItemState(ctx3, cs.id, cs);
         }, ctx2);
-      if (willGuardUnits.length == 0 || isBattleGroupHasA(ctx2, ["\u5F37\u8972"], willAttackUnits[0]))
-        ctx2 = doCountryDamage(ctx2, currentGuardPlayerID, currentAttackPower), ctx2 = doTriggerEvent(ctx2, {
-          title: ["\u3053\u306E\u30AB\u30FC\u30C9\u306E\u90E8\u968A\u304C\u6575\u8ECD\u672C\u56FD\u306B\u6226\u95D8\u30C0\u30E1\u30FC\u30B8\u3092\u4E0E\u3048\u305F\u5834\u5408"],
-          cardIds: willAttackUnits
-        }), ctx2 = doTriggerEvent(ctx2, {
-          title: ["\u81EA\u8ECD\u672C\u56FD\u306B\u6226\u95D8\u30C0\u30E1\u30FC\u30B8\u304C\u4E0E\u3048\u3089\u308C\u305F\u5834\u5408"],
-          playerId: currentGuardPlayerID
-        });
+      if (currentAttackPlayerID == getActivePlayerID(ctx2) && currentAttackPower > 0) {
+        if (isBattle(ctx2, willAttackUnits[0], null) == !1 || isBattleGroupHasA(ctx2, ["\u5F37\u8972"], willAttackUnits[0]))
+          ctx2 = doCountryDamage(ctx2, currentGuardPlayerID, currentAttackPower), ctx2 = doTriggerEvent(ctx2, {
+            title: ["\u3053\u306E\u30AB\u30FC\u30C9\u306E\u90E8\u968A\u304C\u6575\u8ECD\u672C\u56FD\u306B\u6226\u95D8\u30C0\u30E1\u30FC\u30B8\u3092\u4E0E\u3048\u305F\u5834\u5408"],
+            cardIds: willAttackUnits
+          }), ctx2 = doTriggerEvent(ctx2, {
+            title: ["\u81EA\u8ECD\u672C\u56FD\u306B\u6226\u95D8\u30C0\u30E1\u30FC\u30B8\u304C\u4E0E\u3048\u3089\u308C\u305F\u5834\u5408"],
+            playerId: currentGuardPlayerID
+          });
+      }
     }
   }
   return ctx2;
@@ -25112,7 +25116,7 @@ var DEFAULT_VIEW_MODEL = {
         let ctx2 = createGameContext();
         ctx2 = {
           ...ctx2,
-          versionID: viewModel.model.versionID
+          versionID: 0
         };
         const { deckA, deckB } = evt;
         ctx2.gameState = initState(ctx2.gameState, deckA, deckB), ctx2.gameState = createCardWithProtoIds(ctx2.gameState, AbsoluteBaSyouFn.of(PlayerA, "G\u30BE\u30FC\u30F3"), deckA.slice(6, 9)), ctx2.gameState = createCardWithProtoIds(ctx2.gameState, AbsoluteBaSyouFn.of(PlayerA, "\u914D\u5099\u30A8\u30EA\u30A2"), deckA.slice(12, 13)), ctx2.gameState = createCardWithProtoIds(ctx2.gameState, AbsoluteBaSyouFn.of(PlayerB, "G\u30BE\u30FC\u30F3"), deckB.slice(6, 9)), ctx2.gameState = createCardWithProtoIds(ctx2.gameState, AbsoluteBaSyouFn.of(PlayerB, "\u914D\u5099\u30A8\u30EA\u30A2"), deckB.slice(12, 13));
@@ -25758,20 +25762,6 @@ var jsx_dev_runtime5 = __toESM(require_react_jsx_dev_runtime_development(), 1), 
           return;
         }
       }
-      {
-        const flow = flows.find((flow2) => flow2.id == "FlowPassPayCost");
-        if (flow && isImmediateEffect(appContext.viewModel.model.gameState, flow.effectID)) {
-          setTimeout(() => {
-            OnEvent.next({
-              id: "OnClickFlowConfirm",
-              clientId: props.clientId,
-              flow,
-              versionID: appContext.viewModel.model.versionID
-            });
-          }, 10);
-          return;
-        }
-      }
       if (flows.length == 1) {
         const flow = flows[0];
         if (flow.id == "FlowCancelPassPhase")
@@ -25783,6 +25773,8 @@ var jsx_dev_runtime5 = __toESM(require_react_jsx_dev_runtime_development(), 1), 
         if (flow.id == "FlowDeleteImmediateEffect")
           return;
         if (flow.id == "FlowSetTipSelection")
+          return;
+        if (flow.id == "FlowObserveEffect")
           return;
         setTimeout(() => {
           OnEvent.next({

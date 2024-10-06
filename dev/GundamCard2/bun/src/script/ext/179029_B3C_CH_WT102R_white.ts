@@ -24,7 +24,7 @@ export const prototype: CardPrototype = {
             evt.cardIds?.some(cardId => GameStateFn.getItemPrototype(ctx, cardId).title == "マニィ・アンバサダ"))
           || (
             DefineFn.TipFn.checkTipSatisfies(GameStateFn.createTipByEntitySearch(ctx, cardId, {
-              at: ["戦闘エリア1", "戦闘エリア2", "配備エリア"],
+              atBa: true,
               side: "自軍",
               title: ["マニィ・アンバサダ"],
               min: 1
