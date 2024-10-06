@@ -22224,8 +22224,13 @@ function getPlayerOperationIds(ctx2, playerId) {
   return lift_default(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getBaAll()).flatMap((basyou) => getItemIdsByBasyou(ctx2, basyou)).filter((itemId) => getItemPrototype(ctx2, itemId).category == "\u30AA\u30DA\u30EC\u30FC\u30B7\u30E7\u30F3");
 }
 function createPlayerScore(ctx2, playerId) {
-  const units = getPlayerUnitIds(ctx2, playerId), chars = getPlayerCharacterIds(ctx2, playerId), gs = getPlayerGIds(ctx2, playerId), ops = getPlayerOperationIds(ctx2, playerId), hands = getPlayerHandIds(ctx2, playerId), destroyIds = getPlayerDestroyIds(ctx2, playerId), gScore = gs.length * 3, unitScore = units.length * 5, charScore = chars.length, opScore = Math.max(2, ops.length) * 3, handScore = hands.length * 3, destroyScore = destroyIds.length * 10 * -1, rollScore = [...gs, ...units].filter((itemId) => getCard(ctx2, itemId).isRoll).length * -5;
-  return gScore + unitScore + charScore + opScore + handScore + destroyScore + rollScore;
+  const units = getPlayerUnitIds(ctx2, playerId), chars = getPlayerCharacterIds(ctx2, playerId), gs = getPlayerGIds(ctx2, playerId), ops = getPlayerOperationIds(ctx2, playerId), hands = getPlayerHandIds(ctx2, playerId), destroyIds = getPlayerDestroyIds(ctx2, playerId), gScore = gs.length * 3, unitScore = units.length * 5, charScore = chars.length, opScore = Math.max(2, ops.length) * 3, handScore = hands.length * 3, destroyScore = destroyIds.length * 10 * -1, rollScore = [...gs, ...units].filter((itemId) => getCard(ctx2, itemId).isRoll).length * -5, bpScore = units.map((id) => {
+    if (getCard(ctx2, id).isRoll)
+      return 0;
+    const [atk, range3, hp] = getSetGroupBattlePoint(ctx2, id);
+    return atk + range3 + hp;
+  }).reduce((acc, c) => acc + c, 0);
+  return gScore + unitScore + charScore + opScore + handScore + destroyScore + rollScore + bpScore;
 }
 
 // src/game/gameState/RuntimeBattleAreaComponent.ts
@@ -25703,9 +25708,7 @@ function thinkVer1(ctx2, playerId, flows, options) {
   const shouldUseTexts = effectScorePairs.filter(([eff, score]) => score > originScore);
   if (shouldUseTexts.length)
     return { id: "FlowSetActiveEffectID", effectID: shouldUseTexts[0][0].id, tips: [] };
-  if (playGs.length < 10 && playGs.length)
-    return { id: "FlowSetActiveEffectID", effectID: playGs[0].id, tips: [] };
-  if (myUnits.length < 6 && playUnits.length)
+  if (myUnits.length < 8 && playUnits.length)
     return { id: "FlowSetActiveEffectID", effectID: playUnits[0].id, tips: [] };
   const useFlows = flows.filter((flow) => {
     switch (flow.id) {

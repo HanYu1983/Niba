@@ -211,5 +211,12 @@ export function createPlayerScore(ctx: GameState, playerId: string): number {
   const handScore = hands.length * 3
   const destroyScore = destroyIds.length * 10 * -1
   const rollScore = [...gs, ...units].filter(itemId => getCard(ctx, itemId).isRoll).length * -5
-  return gScore + unitScore + charScore + opScore + handScore + destroyScore + rollScore
+  const bpScore = units.map(id => {
+    if(getCard(ctx, id).isRoll){
+      return 0
+    }
+    const [atk, range, hp] = getSetGroupBattlePoint(ctx, id)
+    return atk + range + hp
+  }).reduce((acc, c) => acc + c, 0)
+  return gScore + unitScore + charScore + opScore + handScore + destroyScore + rollScore + bpScore
 }

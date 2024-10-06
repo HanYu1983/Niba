@@ -111,12 +111,8 @@ export function thinkVer1(ctx: GameStateWithFlowMemory, playerId: PlayerID, flow
   if (shouldUseTexts.length) {
     return { id: "FlowSetActiveEffectID", effectID: shouldUseTexts[0][0].id, tips: [] }
   }
-  // 小於10張G就出G
-  if (playGs.length < 10 && playGs.length) {
-    return { id: "FlowSetActiveEffectID", effectID: playGs[0].id, tips: [] }
-  }
-  // 機體小於6張下機體
-  if (myUnits.length < 6 && playUnits.length) {
+  // 機體小於8張下機體
+  if (myUnits.length < 8 && playUnits.length) {
     return { id: "FlowSetActiveEffectID", effectID: playUnits[0].id, tips: [] }
   }
   // 其它就隨意
