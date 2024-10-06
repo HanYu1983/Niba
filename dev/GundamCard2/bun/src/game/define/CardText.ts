@@ -150,7 +150,12 @@ export const ConditionFn = {
         if (typeof ctx.title != "string") {
             throw new Error("condition.title must be string")
         }
-        return eval(ctx.title + ";_")
+        try {
+            return eval(ctx.title + ";_")
+        } catch (e) {
+            console.log(`原字串:[${ctx.title}]`)
+            throw e
+        }
     },
     getActions(ctx: Condition): Action[] {
         if (ctx.actions == null) {

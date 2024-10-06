@@ -34,7 +34,7 @@ export async function testCompress() {
             const playerId = PlayerIDFn.getAll()[Math.round(Math.random() * 1000) % 2]
             {
                 const clickTime = Math.round(Math.random() * 1000) % 3
-                for (let t = 0; t < 1; ++t) {
+                for (let t = 0; t < clickTime; ++t) {
                     const flows = queryFlow(ctx, playerId)
                     if (flows.length) {
                         try {

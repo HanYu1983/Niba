@@ -140,6 +140,7 @@ export const CardView = (props: {
                       id: "OnClickFlowConfirm",
                       clientId: props.clientId || "unknown",
                       flow: { ...flow, effectID: tip.id },
+                      versionID: appContext.viewModel.model.versionID
                     });
                   }}
                 >
@@ -159,6 +160,7 @@ export const CardView = (props: {
                       id: "OnClickFlowConfirm",
                       clientId: props.clientId || "unknown",
                       flow: { ...flow, effectID: tip.id },
+                      versionID: appContext.viewModel.model.versionID
                     });
                   }}
                 >

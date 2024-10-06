@@ -83,15 +83,19 @@ export const OnViewModel = OnEvent.pipe(
           };
         }
         case "OnClickFlowConfirm": {
+          if (evt.versionID != viewModel.model.versionID) {
+            console.warn(`versionID not match, ignore this changes: ${evt.versionID} != origin ${viewModel.model.versionID}`)
+            return viewModel
+          }
           const gameState = applyFlow(viewModel.model.gameState, evt.clientId, evt.flow);
           const playerAFlow = queryFlow(gameState, PlayerA)
-          logCategory("OnViewModel", "PlayerA", playerAFlow)
           const playerBFlow = queryFlow(gameState, PlayerB)
           return {
             ...viewModel,
             model: {
               ...viewModel.model,
               gameState: gameState,
+              versionID: viewModel.model.versionID + 1
             },
             playerCommands: {
               [PlayerA]: playerAFlow,

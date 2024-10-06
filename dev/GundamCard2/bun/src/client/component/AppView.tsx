@@ -12,6 +12,7 @@ export function AppView() {
     const subscriber = OnError.subscribe((e) => {
       console.error(e)
       alert(e);
+      throw e
     });
     return () => {
       subscriber.unsubscribe();

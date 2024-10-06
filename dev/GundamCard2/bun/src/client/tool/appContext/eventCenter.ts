@@ -29,6 +29,7 @@ export type OnClickFlowConfirm = {
   id: "OnClickFlowConfirm";
   clientId: string;
   flow: Flow;
+  versionID: number;
 };
 
 export type OnClickRequireTargetConfirm = {
