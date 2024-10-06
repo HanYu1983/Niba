@@ -20,6 +20,7 @@ import { doCountryDamage } from "./doCountryDamage";
 import { addDestroyEffect, getCutInDestroyEffects } from "./EffectStackComponent";
 import { createDestroyEffect } from "./createDestroyEffect";
 import { getCard } from "./CardTableComponent";
+import { getCardHasSpeicalEffect } from "./card";
 
 // player
 export function isPlayerHasBattleGroup(
@@ -212,11 +213,14 @@ export function createPlayerScore(ctx: GameState, playerId: string): number {
   const destroyScore = destroyIds.length * 10 * -1
   const rollScore = [...gs, ...units].filter(itemId => getCard(ctx, itemId).isRoll).length * -5
   const bpScore = units.map(id => {
-    if(getCard(ctx, id).isRoll){
+    if (getCard(ctx, id).isRoll) {
       return 0
     }
     const [atk, range, hp] = getSetGroupBattlePoint(ctx, id)
     return atk + range + hp
   }).reduce((acc, c) => acc + c, 0)
-  return gScore + unitScore + charScore + opScore + handScore + destroyScore + rollScore + bpScore
+  const specialScore1 = units.filter(id => getCardHasSpeicalEffect(ctx, ["速攻"], id)).length * 2
+  const specialScore2 = units.filter(id => getCardHasSpeicalEffect(ctx, ["高機動"], id)).length * 2
+  const specialScore3 = units.filter(id => getCardHasSpeicalEffect(ctx, ["強襲"], id)).length * 2
+  return gScore + unitScore + charScore + opScore + handScore + destroyScore + rollScore + bpScore + specialScore1 + specialScore2 + specialScore3
 }

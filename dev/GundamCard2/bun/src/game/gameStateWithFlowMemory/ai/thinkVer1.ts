@@ -1,6 +1,8 @@
+import { BattlePointFn } from "../../define/BattlePoint";
 import { Effect, EffectFn } from "../../define/Effect";
 import { PlayerID, PlayerIDFn } from "../../define/PlayerID";
 import { StrBaSyouPair, TipFn } from "../../define/Tip";
+import { getCardHasSpeicalEffect } from "../../gameState/card";
 import { doEffect, getCardTipStrBaSyouPairs, setTipSelectionForUser } from "../../gameState/doEffect";
 import { getEffect, getImmediateEffects, getStackEffects, getTopEffect } from "../../gameState/EffectStackComponent";
 import { GameState } from "../../gameState/GameState";
@@ -30,8 +32,24 @@ export function thinkVer1(ctx: GameStateWithFlowMemory, playerId: PlayerID, flow
         const meleeUnits = canAttackUnits.filter(pair => isMeleeUnit(ctx, pair[0]))
         const rangeUnits = canAttackUnits.filter(pair => isRangeUnit(ctx, pair[0]))
         let willAttackPairs: StrBaSyouPair[] = []
-        // 只有一個格鬥機，就全上同一路
-        if (meleeUnits.length == 1) {
+
+        const hasMeleeHighUnits = meleeUnits.filter(pair => getCardHasSpeicalEffect(ctx, ["高機動"], pair[0]))
+        const hasMeleeSpeed = meleeUnits.filter(pair => getCardHasSpeicalEffect(ctx, ["速攻"], pair[0]))
+        const hasMeleeStrongUnits = meleeUnits.filter(pair => getCardHasSpeicalEffect(ctx, ["強襲"], pair[0]))
+        const hasRangeStrongHighUnits = rangeUnits.filter(pair => getCardHasSpeicalEffect(ctx, ["強襲"], pair[0]))
+        if (hasMeleeSpeed.length) {
+          // 速攻
+          const hasRangeSpeedUnits = rangeUnits.filter(pair => getCardHasSpeicalEffect(ctx, ["速攻"], pair[0]))
+          willAttackPairs = [hasMeleeSpeed[0], ...hasRangeSpeedUnits]
+        } else if (hasMeleeHighUnits.length) {
+          // 高機動
+          const hasRangeHighUnits = rangeUnits.filter(pair => getCardHasSpeicalEffect(ctx, ["高機動"], pair[0]))
+          willAttackPairs = [meleeUnits[0], ...hasRangeHighUnits]
+        } else if (hasMeleeStrongUnits.length > 0 && hasRangeStrongHighUnits.length >= 1) {
+          // 最少1格鬥1射擊才組強襲
+          willAttackPairs = [hasMeleeStrongUnits[0], ...hasRangeStrongHighUnits]
+        } else if (meleeUnits.length == 1) {
+          // 只有一個格鬥機，就全上同一路
           willAttackPairs = [meleeUnits[0], ...rangeUnits]
         } else if (meleeUnits.length >= 1) {
           // 有多個格鬥機就各配一個射擊機
@@ -59,6 +77,7 @@ export function thinkVer1(ctx: GameStateWithFlowMemory, playerId: PlayerID, flow
   }
   const plays = flows.flatMap(flow => flow.id == "FlowSetActiveEffectID" ? flow.tips : [])
   const playGs = plays.filter(p => p.reason[0] == "PlayCard" && p.reason[3].isPlayG)
+  const playChars = plays.filter(p => p.reason[0] == "PlayCard" && p.reason[3].isPlayCharacter)
   const mygs = getPlayerGIds(ctx, playerId)
   // G小於7張優先下G
   if (mygs.length < 7 && playGs.length) {
@@ -71,6 +90,20 @@ export function thinkVer1(ctx: GameStateWithFlowMemory, playerId: PlayerID, flow
   // 機體小於4張優先下機體
   if (myUnits.length < 4 && playUnits.length) {
     return { id: "FlowSetActiveEffectID", effectID: playUnits[0].id, tips: [] }
+  }
+  if (playChars.length) {
+    // 0,0,0 的角色不下到機體上
+    const shouldSetCharEffs = playChars.filter(eff => {
+      const [atk, range, hp] = getItemPrototype(ctx, EffectFn.getCardID(eff)).battlePoint || BattlePointFn.getAllStar()
+      if (BattlePointFn.getValue(atk) + BattlePointFn.getValue(range) + BattlePointFn.getValue(hp) == 0) {
+        return false
+      }
+      return true
+    })
+    if (shouldSetCharEffs.length) {
+      let eff = shouldSetCharEffs[Math.round(Math.random() * 1000) % shouldSetCharEffs.length]
+      return { id: "FlowSetActiveEffectID", effectID: eff.id, tips: [] }
+    }
   }
   // play內文時計算績分
   const playTexts = plays.filter(p => p.reason[0] == "PlayText")

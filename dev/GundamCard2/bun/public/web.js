@@ -22229,8 +22229,8 @@ function createPlayerScore(ctx2, playerId) {
       return 0;
     const [atk, range3, hp] = getSetGroupBattlePoint(ctx2, id);
     return atk + range3 + hp;
-  }).reduce((acc, c) => acc + c, 0);
-  return gScore + unitScore + charScore + opScore + handScore + destroyScore + rollScore + bpScore;
+  }).reduce((acc, c) => acc + c, 0), specialScore1 = units.filter((id) => getCardHasSpeicalEffect(ctx2, ["\u901F\u653B"], id)).length * 2, specialScore2 = units.filter((id) => getCardHasSpeicalEffect(ctx2, ["\u9AD8\u6A5F\u52D5"], id)).length * 2, specialScore3 = units.filter((id) => getCardHasSpeicalEffect(ctx2, ["\u5F37\u8972"], id)).length * 2;
+  return gScore + unitScore + charScore + opScore + handScore + destroyScore + rollScore + bpScore + specialScore1 + specialScore2 + specialScore3;
 }
 
 // src/game/gameState/RuntimeBattleAreaComponent.ts
@@ -23301,26 +23301,6 @@ function createPlayEffects(ctx2, playerId) {
       return [];
     }).filter(inTiming).map((text) => {
       const playTextConditions = {
-        "\u540C\u5207\u4E0A\u9650": {
-          actions: [
-            {
-              title: function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2, ToolFn: ToolFn2 }) {
-                const cardId2 = DefineFn2.EffectFn.getCardID(effect);
-                if (GameStateFn2.getItemState(ctx3, cardId2).textIdsUseThisCut?.[effect.text.id])
-                  throw new DefineFn2.TipError(`\u540C\u5207\u4E0A\u9650: ${effect.text.description}`);
-                return ctx3 = GameStateFn2.mapItemState(ctx3, cardId2, (ps2) => {
-                  return {
-                    ...ps2,
-                    textIdsUseThisCut: {
-                      ...ps2.textIdsUseThisCut,
-                      [effect.text.id]: !0
-                    }
-                  };
-                }), ctx3;
-              }.toString()
-            }
-          ]
-        },
         "\u540C\u56DE\u5408\u4E0A\u9650": {
           actions: [
             {
@@ -25304,6 +25284,14 @@ var jsx_dev_runtime2 = __toESM(require_react_jsx_dev_runtime_development(), 1), 
     const ges = getGlobalEffects(appContext.viewModel.model.gameState, null).filter((ge) => ge.cardIds.includes(props.cardID || "unknown"));
     return /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
       children: ges.map((ge, i) => {
+        if (ge.title[0] == "AddTextRef")
+          return /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
+            children: getCardTextFromCardTextRef(appContext.viewModel.model.gameState, ge.title[1]).description
+          }, i, !1, void 0, this);
+        if (ge.title[0] == "AddText")
+          return /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
+            children: ge.title[1].description
+          }, i, !1, void 0, this);
         return /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
           children: JSON.stringify(ge.title)
         }, i, !1, void 0, this);
@@ -25655,7 +25643,16 @@ function thinkVer1(ctx2, playerId, flows, options) {
       if (effect.reason[0] == "GameRule" && (effect.reason[2].isAttack || effect.reason[2].isDefence)) {
         const hasEarthIds = (getItemState(ctx2, EffectFn.getCardID(effect)).tips[TipFn.createGoEarthKey()]?.title[2] || []).map((pair3) => pair3[0]), hasSpaceIds = (getItemState(ctx2, EffectFn.getCardID(effect)).tips[TipFn.createGoSpaceKey()]?.title[2] || []).map((pair3) => pair3[0]), hasIds = [...hasEarthIds, ...hasSpaceIds], canAttackUnits = TipFn.getWant(flow.tip).filter((pair3) => hasIds.includes(pair3[0]) == !1), meleeUnits = canAttackUnits.filter((pair3) => isMeleeUnit(ctx2, pair3[0])), rangeUnits = canAttackUnits.filter((pair3) => isRangeUnit(ctx2, pair3[0]));
         let willAttackPairs = [];
-        if (meleeUnits.length == 1)
+        const hasMeleeHighUnits = meleeUnits.filter((pair3) => getCardHasSpeicalEffect(ctx2, ["\u9AD8\u6A5F\u52D5"], pair3[0])), hasMeleeSpeed = meleeUnits.filter((pair3) => getCardHasSpeicalEffect(ctx2, ["\u901F\u653B"], pair3[0])), hasMeleeStrongUnits = meleeUnits.filter((pair3) => getCardHasSpeicalEffect(ctx2, ["\u5F37\u8972"], pair3[0])), hasRangeStrongHighUnits = rangeUnits.filter((pair3) => getCardHasSpeicalEffect(ctx2, ["\u5F37\u8972"], pair3[0]));
+        if (hasMeleeSpeed.length) {
+          const hasRangeSpeedUnits = rangeUnits.filter((pair3) => getCardHasSpeicalEffect(ctx2, ["\u901F\u653B"], pair3[0]));
+          willAttackPairs = [hasMeleeSpeed[0], ...hasRangeSpeedUnits];
+        } else if (hasMeleeHighUnits.length) {
+          const hasRangeHighUnits = rangeUnits.filter((pair3) => getCardHasSpeicalEffect(ctx2, ["\u9AD8\u6A5F\u52D5"], pair3[0]));
+          willAttackPairs = [meleeUnits[0], ...hasRangeHighUnits];
+        } else if (hasMeleeStrongUnits.length > 0 && hasRangeStrongHighUnits.length >= 1)
+          willAttackPairs = [hasMeleeStrongUnits[0], ...hasRangeStrongHighUnits];
+        else if (meleeUnits.length == 1)
           willAttackPairs = [meleeUnits[0], ...rangeUnits];
         else if (meleeUnits.length >= 1)
           willAttackPairs = [meleeUnits[0], ...rangeUnits.slice(0, 1)];
@@ -25675,12 +25672,22 @@ function thinkVer1(ctx2, playerId, flows, options) {
   });
   if (attackFlow.length)
     return attackFlow[0];
-  const plays = flows.flatMap((flow) => flow.id == "FlowSetActiveEffectID" ? flow.tips : []), playGs = plays.filter((p) => p.reason[0] == "PlayCard" && p.reason[3].isPlayG);
+  const plays = flows.flatMap((flow) => flow.id == "FlowSetActiveEffectID" ? flow.tips : []), playGs = plays.filter((p) => p.reason[0] == "PlayCard" && p.reason[3].isPlayG), playChars = plays.filter((p) => p.reason[0] == "PlayCard" && p.reason[3].isPlayCharacter);
   if (getPlayerGIds(ctx2, playerId).length < 7 && playGs.length)
     return { id: "FlowSetActiveEffectID", effectID: playGs[0].id, tips: [] };
   const playUnits = plays.filter((p) => p.reason[0] == "PlayCard" && getItemPrototype(ctx2, p.reason[2]).category == "\u30E6\u30CB\u30C3\u30C8"), myUnits = getPlayerUnitIds(ctx2, playerId);
   if (myUnits.length < 4 && playUnits.length)
     return { id: "FlowSetActiveEffectID", effectID: playUnits[0].id, tips: [] };
+  if (playChars.length) {
+    const shouldSetCharEffs = playChars.filter((eff) => {
+      const [atk, range3, hp] = getItemPrototype(ctx2, EffectFn.getCardID(eff)).battlePoint || BattlePointFn.getAllStar();
+      if (BattlePointFn.getValue(atk) + BattlePointFn.getValue(range3) + BattlePointFn.getValue(hp) == 0)
+        return !1;
+      return !0;
+    });
+    if (shouldSetCharEffs.length)
+      return { id: "FlowSetActiveEffectID", effectID: shouldSetCharEffs[Math.round(Math.random() * 1000) % shouldSetCharEffs.length].id, tips: [] };
+  }
   const effectScorePairs = plays.filter((p) => p.reason[0] == "PlayText").map((pt) => {
     try {
       const originStackLength = getStackEffects(ctx2).length, originImmediateLength = getImmediateEffects(ctx2).length;
@@ -25733,6 +25740,61 @@ var jsx_dev_runtime5 = __toESM(require_react_jsx_dev_runtime_development(), 1), 
     return appContext.viewModel.playerCommands[props.clientId] || [];
   }, [appContext.viewModel.playerCommands[props.clientId]]);
   return import_react5.useEffect(() => {
+    if (props.clientId == PlayerA) {
+      const phase = getPhase(appContext.viewModel.model.gameState);
+      if (PhaseFn.isRuleEffect(phase)) {
+        let flow = flows.find((flow2) => flow2.id == "FlowPassPayCost");
+        if (flow == null)
+          flows.find((flow2) => flow2.id == "FlowSetActiveEffectID" && phase[0] == "\u6226\u95D8\u30D5\u30A7\u30A4\u30BA" && (phase[1] != "\u653B\u6483\u30B9\u30C6\u30C3\u30D7" && phase[1] != "\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7"));
+        if (flow != null) {
+          setTimeout(() => {
+            OnEvent.next({
+              id: "OnClickFlowConfirm",
+              clientId: props.clientId,
+              flow,
+              versionID: appContext.viewModel.model.versionID
+            });
+          }, 10);
+          return;
+        }
+      }
+      {
+        const flow = flows.find((flow2) => flow2.id == "FlowPassPayCost");
+        if (flow && isImmediateEffect(appContext.viewModel.model.gameState, flow.effectID)) {
+          setTimeout(() => {
+            OnEvent.next({
+              id: "OnClickFlowConfirm",
+              clientId: props.clientId,
+              flow,
+              versionID: appContext.viewModel.model.versionID
+            });
+          }, 10);
+          return;
+        }
+      }
+      if (flows.length == 1) {
+        const flow = flows[0];
+        if (flow.id == "FlowCancelPassPhase")
+          return;
+        if (flow.id == "FlowCancelPassCut")
+          return;
+        if (flow.id == "FlowWaitPlayer")
+          return;
+        if (flow.id == "FlowDeleteImmediateEffect")
+          return;
+        if (flow.id == "FlowSetTipSelection")
+          return;
+        setTimeout(() => {
+          OnEvent.next({
+            id: "OnClickFlowConfirm",
+            clientId: props.clientId,
+            flow,
+            versionID: appContext.viewModel.model.versionID
+          });
+        }, 10);
+      }
+      return;
+    }
     if (flows.length) {
       const flow = thinkVer1(appContext.viewModel.model.gameState, props.clientId, flows);
       if (flow)
