@@ -304,7 +304,7 @@ export function createConditionTitleFn(condition: Condition, options: { isPlay?:
                 const pairs = targetIds.map(targetId => [targetId, from] as StrBaSyouPair)
                 return {
                     title: ["カード", pairs, pairs.slice(0, count)],
-                    min: count,
+                    max: count,
                     cheatCardIds: itemIdAtBasyou
                 }
             }

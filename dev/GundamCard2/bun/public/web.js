@@ -20986,6 +20986,8 @@ __export(exports_battleGroup, {
 var exports_setGroup = {};
 __export(exports_setGroup, {
   isSetGroupHasA: () => isSetGroupHasA,
+  isRangeUnit: () => isRangeUnit,
+  isMeleeUnit: () => isMeleeUnit,
   getSetGroupBattlePoint: () => getSetGroupBattlePoint
 });
 function getSetGroupBattlePoint(ctx2, cardId) {
@@ -20993,6 +20995,20 @@ function getSetGroupBattlePoint(ctx2, cardId) {
 }
 function isSetGroupHasA(ctx2, a, cardId) {
   return getSetGroupChildren(ctx2, cardId).some((cardId2) => getCardHasSpeicalEffect(ctx2, a, cardId2));
+}
+function isMeleeUnit(ctx2, itemId) {
+  const [atk, range3, hp] = getSetGroupBattlePoint(ctx2, itemId);
+  if (range3 == 0 && atk > 0)
+    return !0;
+  if (atk - range3 >= 3)
+    return !0;
+  return !1;
+}
+function isRangeUnit(ctx2, itemId) {
+  const [atk, range3, hp] = getSetGroupBattlePoint(ctx2, itemId);
+  if (range3 == 0)
+    return !1;
+  return isMeleeUnit(ctx2, itemId) == !1;
 }
 
 // src/game/gameState/battleGroup.ts
@@ -21141,6 +21157,8 @@ var TipFn = {
       throw new Error;
     return `${proto.color}X`;
   },
+  createGoEarthKey: () => "\u53BB\u5730\u7403",
+  createGoSpaceKey: () => "\u53BB\u5B87\u5B99",
   getWant(tip) {
     switch (tip.title[0]) {
       case "\u30AB\u30FC\u30C9":
@@ -22688,7 +22706,7 @@ function createConditionTitleFn(condition, options) {
         }).map((targetId) => [targetId, from]);
         return {
           title: ["\u30AB\u30FC\u30C9", pairs, pairs.slice(0, count)],
-          min: count,
+          max: count,
           cheatCardIds: itemIdAtBasyou
         };
       };
@@ -23438,7 +23456,7 @@ function createAttackPhaseRuleEffect(ctx2, playerId) {
       title: [],
       description: "\u51FA\u64CA",
       conditions: {
-        "\u53BB\u5730\u7403": {
+        [TipFn.createGoEarthKey()]: {
           title: function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {
             const runtimeBattleArea = GameStateFn2.getRuntimeBattleArea(ctx3, "\u6226\u95D8\u30A8\u30EA\u30A21");
             if (runtimeBattleArea == "\u5B87\u5B99\u30A8\u30EA\u30A2")
@@ -23466,9 +23484,10 @@ function createAttackPhaseRuleEffect(ctx2, playerId) {
                 return ctx3;
               }.toString()
             }
-          ]
+          ],
+          groupKey: "\u51FA\u64CA"
         },
-        "\u53BB\u5B87\u5B99": {
+        [TipFn.createGoSpaceKey()]: {
           title: function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {
             const runtimeBattleArea = GameStateFn2.getRuntimeBattleArea(ctx3, "\u6226\u95D8\u30A8\u30EA\u30A22");
             if (runtimeBattleArea == "\u5730\u7403\u30A8\u30EA\u30A2")
@@ -23496,7 +23515,8 @@ function createAttackPhaseRuleEffect(ctx2, playerId) {
                 return ctx3;
               }.toString()
             }
-          ]
+          ],
+          groupKey: "\u51FA\u64CA"
         }
       },
       logicTreeActions: [
@@ -25623,32 +25643,12 @@ var jsx_dev_runtime4 = __toESM(require_react_jsx_dev_runtime_development(), 1), 
 };
 
 // src/game/gameStateWithFlowMemory/ai/thinkVer1.ts
-function isMeleeUnit(ctx2, itemId) {
-  const [atk, range3, hp] = getSetGroupBattlePoint(ctx2, itemId);
-  if (range3 == 0 && atk > 0)
-    return !0;
-  if (atk - range3 >= 3)
-    return !0;
-  return !1;
-}
-function isRangeUnit(ctx2, itemId) {
-  const [atk, range3, hp] = getSetGroupBattlePoint(ctx2, itemId);
-  if (range3 == 0)
-    return !1;
-  return isMeleeUnit(ctx2, itemId) == !1;
-}
 function thinkVer1(ctx2, playerId, flows, options) {
-  const plays = flows.flatMap((flow) => flow.id == "FlowSetActiveEffectID" ? flow.tips : []), playGs = plays.filter((p) => p.reason[0] == "PlayCard" && p.reason[3].isPlayG);
-  if (getPlayerGIds(ctx2, playerId).length < 7 && playGs.length)
-    return { id: "FlowSetActiveEffectID", effectID: playGs[0].id, tips: [] };
-  const playUnits = plays.filter((p) => p.reason[0] == "PlayCard" && getItemPrototype(ctx2, p.reason[2]).category == "\u30E6\u30CB\u30C3\u30C8"), myUnits = getPlayerUnitIds(ctx2, playerId);
-  if (myUnits.length < 4 && playUnits.length)
-    return { id: "FlowSetActiveEffectID", effectID: playUnits[0].id, tips: [] };
-  const hasAttacked = {}, attackFlow = flows.flatMap((flow) => {
+  const attackFlow = flows.flatMap((flow) => {
     if (flow.id == "FlowSetTipSelection") {
       const effect = getEffect(ctx2, flow.effectID);
       if (effect.reason[0] == "GameRule" && (effect.reason[2].isAttack || effect.reason[2].isDefence)) {
-        const canAttackUnits = TipFn.getWant(flow.tip).filter((pair3) => hasAttacked[pair3[0]] != !0), meleeUnits = canAttackUnits.filter((pair3) => isMeleeUnit(ctx2, pair3[0])), rangeUnits = canAttackUnits.filter((pair3) => isRangeUnit(ctx2, pair3[0]));
+        const hasEarthIds = (getItemState(ctx2, EffectFn.getCardID(effect)).tips[TipFn.createGoEarthKey()]?.title[2] || []).map((pair3) => pair3[0]), hasSpaceIds = (getItemState(ctx2, EffectFn.getCardID(effect)).tips[TipFn.createGoSpaceKey()]?.title[2] || []).map((pair3) => pair3[0]), hasIds = [...hasEarthIds, ...hasSpaceIds], canAttackUnits = TipFn.getWant(flow.tip).filter((pair3) => hasIds.includes(pair3[0]) == !1), meleeUnits = canAttackUnits.filter((pair3) => isMeleeUnit(ctx2, pair3[0])), rangeUnits = canAttackUnits.filter((pair3) => isRangeUnit(ctx2, pair3[0]));
         let willAttackPairs = [];
         if (meleeUnits.length == 1)
           willAttackPairs = [meleeUnits[0], ...rangeUnits];
@@ -25656,9 +25656,7 @@ function thinkVer1(ctx2, playerId, flows, options) {
           willAttackPairs = [meleeUnits[0], ...rangeUnits.slice(0, 1)];
         else if (rangeUnits.length >= 3)
           willAttackPairs = rangeUnits;
-        if (willAttackPairs.length) {
-          for (let pair3 of willAttackPairs)
-            hasAttacked[pair3[0]] = !0;
+        if (willAttackPairs.length)
           return flow = {
             ...flow,
             tip: {
@@ -25666,13 +25664,18 @@ function thinkVer1(ctx2, playerId, flows, options) {
               title: ["\u30AB\u30FC\u30C9", [], willAttackPairs]
             }
           }, [flow];
-        }
       }
     }
     return [];
   });
   if (attackFlow.length)
     return attackFlow[0];
+  const plays = flows.flatMap((flow) => flow.id == "FlowSetActiveEffectID" ? flow.tips : []), playGs = plays.filter((p) => p.reason[0] == "PlayCard" && p.reason[3].isPlayG);
+  if (getPlayerGIds(ctx2, playerId).length < 7 && playGs.length)
+    return { id: "FlowSetActiveEffectID", effectID: playGs[0].id, tips: [] };
+  const playUnits = plays.filter((p) => p.reason[0] == "PlayCard" && getItemPrototype(ctx2, p.reason[2]).category == "\u30E6\u30CB\u30C3\u30C8"), myUnits = getPlayerUnitIds(ctx2, playerId);
+  if (myUnits.length < 4 && playUnits.length)
+    return { id: "FlowSetActiveEffectID", effectID: playUnits[0].id, tips: [] };
   const effectScorePairs = plays.filter((p) => p.reason[0] == "PlayText").map((pt) => {
     try {
       const originStackLength = getStackEffects(ctx2).length, originImmediateLength = getImmediateEffects(ctx2).length;

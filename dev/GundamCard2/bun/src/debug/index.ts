@@ -51,8 +51,8 @@ const fs = require('fs').promises;
 
 export async function tests() {
     return [
-        testThinkVer1,
         testIssue,
+        testThinkVer1,
         test179007_02A_U_WT027U_white,
         test179027_09D_C_WT067R_white,
         testKaiSo,
