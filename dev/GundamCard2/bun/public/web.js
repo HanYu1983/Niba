@@ -19041,6 +19041,7 @@ __export(exports_ItemTableComponent, {
 // src/game/gameState/CoinTableComponent.ts
 var exports_CoinTableComponent = {};
 __export(exports_CoinTableComponent, {
+  removeCoinIds: () => removeCoinIds,
   getCoins: () => getCoins,
   getCoinOwner: () => getCoinOwner,
   getCoinIdsByCardId: () => getCoinIdsByCardId,
@@ -19080,6 +19081,16 @@ function getCardIdByCoinId(ctx2, id) {
 }
 function getCoinIdsByCardId(ctx2, cardId) {
   return Object.keys(ctx2.coinId2cardId).filter((coinId) => ctx2.coinId2cardId[coinId] == cardId);
+}
+function removeCoinIds(ctx2, ids) {
+  const coinId2cardId = { ...ctx2.coinId2cardId }, coins = { ...ctx2.coins };
+  for (let id of ids)
+    delete coinId2cardId[id], delete coins[id];
+  return {
+    ...ctx2,
+    coinId2cardId,
+    coins
+  };
 }
 function getCoinOwner(ctx2, id) {
   const item = getCoin(ctx2, id);
@@ -21243,7 +21254,7 @@ function onMoveItem(ctx2, to, [cardId, from]) {
         damage: 0,
         destroyReason: null
       };
-    });
+    }), ctx2 = removeCoinIds(ctx2, getCoinIdsByCardId(ctx2, cardId));
   if (["\u6368\u3066\u5C71", "\u672C\u56FD", "\u624B\u672D"].includes(AbsoluteBaSyouFn.getBaSyouKeyword(to)))
     ctx2 = mapCard(ctx2, cardId, (card) => {
       return {
@@ -25112,7 +25123,7 @@ var DEFAULT_VIEW_MODEL = {
       }
       case "OnClickFlowConfirm": {
         if (evt.versionID != viewModel.model.versionID)
-          return console.warn(`versionID not found: ${evt.versionID} != origin ${viewModel.model.versionID}`), viewModel;
+          return console.warn(`versionID not match, ignore this changes: ${evt.versionID} != origin ${viewModel.model.versionID}`), viewModel;
         const gameState = applyFlow(viewModel.model.gameState, evt.clientId, evt.flow), playerAFlow = queryFlow(gameState, PlayerA), playerBFlow = queryFlow(gameState, PlayerB);
         return {
           ...viewModel,
@@ -25552,7 +25563,7 @@ var jsx_dev_runtime4 = __toESM(require_react_jsx_dev_runtime_development(), 1), 
         props.flow.tip.title[0]
       ]
     }, void 0, !0, void 0, this);
-  }, [props, appContext.viewModel.model]), userSelection = import_react4.useMemo(() => {
+  }, [props, appContext.viewModel.model.gameState]), userSelection = import_react4.useMemo(() => {
     const wants = TipFn.getWant(props.flow.tip);
     switch (props.flow.tip.title[0]) {
       case "\u30AB\u30FC\u30C9": {

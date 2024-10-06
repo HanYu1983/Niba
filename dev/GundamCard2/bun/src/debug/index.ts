@@ -16,10 +16,6 @@ import { getActivePlayerID, setActivePlayerID } from "../game/gameState/ActivePl
 import { getPhase, setPhase } from "../game/gameState/PhaseComponent";
 import { AbsoluteBaSyouFn } from "../game/define/BaSyou";
 import { addCards, createCardWithProtoIds, getCard, mapCard } from "../game/gameState/CardTableComponent";
-import { getGlobalEffects } from "../game/gameState/globalEffects";
-import { createGameStateWithFlowMemory, GameStateWithFlowMemory, initState } from "../game/gameStateWithFlowMemory/GameStateWithFlowMemory";
-import { queryFlow } from "../game/gameStateWithFlowMemory/queryFlow";
-import { applyFlow, createAIChoiseList } from "../game/gameStateWithFlowMemory/applyFlow";
 import { TargetMissingError, testGameError } from "../game/define/GameError";
 import { testPlayG } from "./testPlayG";
 import { testPlayChar } from "./testPlayChar";
@@ -50,10 +46,12 @@ import { testSupply } from "./testSupply";
 import { testKaiSo } from "./testKaiSo";
 import { test179027_09D_C_WT067R_white } from "./test179027_09D_C_WT067R_white";
 import { test179007_02A_U_WT027U_white } from "./test179007_02A_U_WT027U_white";
+import { testThinkVer1 } from "./testThinkVer1";
 const fs = require('fs').promises;
 
 export async function tests() {
     return [
+        testThinkVer1,
         testIssue,
         test179007_02A_U_WT027U_white,
         test179027_09D_C_WT067R_white,

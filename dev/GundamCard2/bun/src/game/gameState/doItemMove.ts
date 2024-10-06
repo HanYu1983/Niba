@@ -10,6 +10,7 @@ import { mapItemState } from "./ItemStateComponent"
 import { ItemTableComponent, isCard, isChip, getItemBaSyou, isCoin, getItemController, assertTargetMissingError } from "./ItemTableComponent"
 import { getSetGroupChildren } from "./SetGroupComponent"
 import { doTriggerEvent } from "./doTriggerEvent"
+import { getCoinIdsByCardId, removeCoinIds } from "./CoinTableComponent"
 
 export function doItemMove(ctx: GameState, to: AbsoluteBaSyou, [itemId, from]: StrBaSyouPair, options?: { isSkipTargetMissing?: boolean, insertId?: number }): GameState {
     if (options?.isSkipTargetMissing) {
@@ -87,6 +88,8 @@ export function onMoveItem(ctx: GameState, to: AbsoluteBaSyou, [cardId, from]: S
                 destroyReason: null,
             }
         }) as GameState
+        // 清掉coin
+        ctx = removeCoinIds(ctx, getCoinIdsByCardId(ctx, cardId)) as GameState
     }
     // 到以下的場所
     if ((["捨て山", "本国", "手札"] as BaSyouKeyword[]).includes(AbsoluteBaSyouFn.getBaSyouKeyword(to))) {

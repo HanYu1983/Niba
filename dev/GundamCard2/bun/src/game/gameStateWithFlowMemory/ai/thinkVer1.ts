@@ -1,33 +1,16 @@
-import { Effect } from "../../define/Effect";
+import { Effect, EffectFn } from "../../define/Effect";
 import { PlayerID, PlayerIDFn } from "../../define/PlayerID";
 import { StrBaSyouPair, TipFn } from "../../define/Tip";
-import { doEffect, setTipSelectionForUser } from "../../gameState/doEffect";
+import { doEffect, getCardTipStrBaSyouPairs, setTipSelectionForUser } from "../../gameState/doEffect";
 import { getEffect, getImmediateEffects, getStackEffects, getTopEffect } from "../../gameState/EffectStackComponent";
+import { GameState } from "../../gameState/GameState";
+import { getItemState } from "../../gameState/ItemStateComponent";
 import { getItemPrototype } from "../../gameState/ItemTableComponent";
 import { getPhase } from "../../gameState/PhaseComponent";
 import { createPlayerScore, getPlayerGIds, getPlayerUnitIds } from "../../gameState/player";
-import { getSetGroupBattlePoint } from "../../gameState/setGroup";
+import { getSetGroupBattlePoint, isMeleeUnit, isRangeUnit } from "../../gameState/setGroup";
 import { Flow } from "../Flow";
 import { GameStateWithFlowMemory } from "../GameStateWithFlowMemory";
-
-export function isMeleeUnit(ctx: GameStateWithFlowMemory, itemId: string): boolean {
-  const [atk, range, hp] = getSetGroupBattlePoint(ctx, itemId)
-  if (range == 0 && atk > 0) {
-    return true
-  }
-  if (atk - range >= 3) {
-    return true
-  }
-  return false
-}
-
-export function isRangeUnit(ctx: GameStateWithFlowMemory, itemId: string): boolean {
-  const [atk, range, hp] = getSetGroupBattlePoint(ctx, itemId)
-  if (range == 0) {
-    return false
-  }
-  return isMeleeUnit(ctx, itemId) == false
-}
 
 export function thinkRandom(ctx: GameStateWithFlowMemory, playerId: PlayerID, flows: Flow[], options?: {}): Flow | null {
   const flow = flows[Math.round(Math.random() * 1000) % flows.length]
@@ -35,28 +18,15 @@ export function thinkRandom(ctx: GameStateWithFlowMemory, playerId: PlayerID, fl
 }
 
 export function thinkVer1(ctx: GameStateWithFlowMemory, playerId: PlayerID, flows: Flow[], options?: {}): Flow | null {
-  const plays = flows.flatMap(flow => flow.id == "FlowSetActiveEffectID" ? flow.tips : [])
-  const playGs = plays.filter(p => p.reason[0] == "PlayCard" && p.reason[3].isPlayG)
-  const mygs = getPlayerGIds(ctx, playerId)
-  // G小於7張優先下G
-  if (mygs.length < 7 && playGs.length) {
-    return { id: "FlowSetActiveEffectID", effectID: playGs[0].id, tips: [] }
-  }
-  const playUnits = plays.filter(p =>
-    p.reason[0] == "PlayCard"
-    && getItemPrototype(ctx, p.reason[2]).category == "ユニット")
-  const myUnits = getPlayerUnitIds(ctx, playerId)
-  // 機體小於4張優先下機體
-  if (myUnits.length < 4 && playUnits.length) {
-    return { id: "FlowSetActiveEffectID", effectID: playUnits[0].id, tips: [] }
-  }
   // 出擊分配部隊
-  const hasAttacked: { [key: string]: boolean } = {}
   const attackFlow: Flow[] = flows.flatMap(flow => {
     if (flow.id == "FlowSetTipSelection") {
       const effect = getEffect(ctx, flow.effectID)
       if (effect.reason[0] == "GameRule" && (effect.reason[2].isAttack || effect.reason[2].isDefence)) {
-        const canAttackUnits = (TipFn.getWant(flow.tip) as StrBaSyouPair[]).filter(pair => hasAttacked[pair[0]] != true)
+        const hasEarthIds = ((getItemState(ctx, EffectFn.getCardID(effect)).tips[TipFn.createGoEarthKey()]?.title[2] || []) as StrBaSyouPair[]).map(pair => pair[0])
+        const hasSpaceIds = ((getItemState(ctx, EffectFn.getCardID(effect)).tips[TipFn.createGoSpaceKey()]?.title[2] || []) as StrBaSyouPair[]).map(pair => pair[0])
+        const hasIds = [...hasEarthIds, ...hasSpaceIds]
+        const canAttackUnits = (TipFn.getWant(flow.tip) as StrBaSyouPair[]).filter(pair => hasIds.includes(pair[0]) == false)
         const meleeUnits = canAttackUnits.filter(pair => isMeleeUnit(ctx, pair[0]))
         const rangeUnits = canAttackUnits.filter(pair => isRangeUnit(ctx, pair[0]))
         let willAttackPairs: StrBaSyouPair[] = []
@@ -71,9 +41,6 @@ export function thinkVer1(ctx: GameStateWithFlowMemory, playerId: PlayerID, flow
           willAttackPairs = rangeUnits
         }
         if (willAttackPairs.length) {
-          for (const pair of willAttackPairs) {
-            hasAttacked[pair[0]] = true
-          }
           flow = {
             ...flow,
             tip: {
@@ -89,6 +56,21 @@ export function thinkVer1(ctx: GameStateWithFlowMemory, playerId: PlayerID, flow
   })
   if (attackFlow.length) {
     return attackFlow[0]
+  }
+  const plays = flows.flatMap(flow => flow.id == "FlowSetActiveEffectID" ? flow.tips : [])
+  const playGs = plays.filter(p => p.reason[0] == "PlayCard" && p.reason[3].isPlayG)
+  const mygs = getPlayerGIds(ctx, playerId)
+  // G小於7張優先下G
+  if (mygs.length < 7 && playGs.length) {
+    return { id: "FlowSetActiveEffectID", effectID: playGs[0].id, tips: [] }
+  }
+  const playUnits = plays.filter(p =>
+    p.reason[0] == "PlayCard"
+    && getItemPrototype(ctx, p.reason[2]).category == "ユニット")
+  const myUnits = getPlayerUnitIds(ctx, playerId)
+  // 機體小於4張優先下機體
+  if (myUnits.length < 4 && playUnits.length) {
+    return { id: "FlowSetActiveEffectID", effectID: playUnits[0].id, tips: [] }
   }
   // play內文時計算績分
   const playTexts = plays.filter(p => p.reason[0] == "PlayText")

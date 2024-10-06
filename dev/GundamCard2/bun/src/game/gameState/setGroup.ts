@@ -25,3 +25,22 @@ export function isSetGroupHasA(
     const setGroupCards = getSetGroupChildren(ctx, cardId);
     return setGroupCards.some(cardId => getCardHasSpeicalEffect(ctx, a, cardId))
 }
+
+export function isMeleeUnit(ctx: GameState, itemId: string): boolean {
+    const [atk, range, hp] = getSetGroupBattlePoint(ctx, itemId)
+    if (range == 0 && atk > 0) {
+        return true
+    }
+    if (atk - range >= 3) {
+        return true
+    }
+    return false
+}
+
+export function isRangeUnit(ctx: GameState, itemId: string): boolean {
+    const [atk, range, hp] = getSetGroupBattlePoint(ctx, itemId)
+    if (range == 0) {
+        return false
+    }
+    return isMeleeUnit(ctx, itemId) == false
+}
