@@ -81,23 +81,25 @@ export function thinkVer1(ctx: GameStateWithFlowMemory, playerId: PlayerID, flow
         let willAttackPairs: StrBaSyouPair[] = []
         const battleArea: AbsoluteBaSyou = flow.tip.flags?.isGoBattleArea1 ? AbsoluteBaSyouFn.of(PlayerIDFn.getOpponent(playerId), "戦闘エリア1") : AbsoluteBaSyouFn.of(PlayerIDFn.getOpponent(playerId), "戦闘エリア2")
         const opponentPower = getBattleGroupBattlePoint(ctx, getBattleGroup(ctx, battleArea))
-        if(opponentPower == 0){
+        if (opponentPower == 0) {
           return [flow]
         }
-        const myUnits = [meleeUnits[0], ...rangeUnits]
-        const myPower = getBattleGroupBattlePoint(ctx, myUnits.map(pair => pair[0]))
-        if (myPower >= opponentPower) {
-          willAttackPairs = myUnits
-        }
-        if (willAttackPairs.length) {
-          flow = {
-            ...flow,
-            tip: {
-              ...flow.tip,
-              title: ["カード", [], willAttackPairs]
-            }
+        if (meleeUnits.length >= 1) {
+          const myUnits = [meleeUnits[0], ...rangeUnits]
+          const myPower = getBattleGroupBattlePoint(ctx, myUnits.map(pair => pair[0]))
+          if (myPower >= opponentPower) {
+            willAttackPairs = myUnits
           }
-          return [flow]
+          if (willAttackPairs.length) {
+            flow = {
+              ...flow,
+              tip: {
+                ...flow.tip,
+                title: ["カード", [], willAttackPairs]
+              }
+            }
+            return [flow]
+          }
         }
       }
     }

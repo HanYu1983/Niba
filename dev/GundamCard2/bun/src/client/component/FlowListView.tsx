@@ -17,7 +17,7 @@ export const FlowListView = (props: { clientId: string, style?: CSSProperties })
   }, [appContext.viewModel.playerCommands[props.clientId]]);
   useEffect(() => {
     const speed = 10
-    const isPlayerControl = true
+    const isPlayerControl = false
     if (isPlayerControl && props.clientId == PlayerA) {
       // 規定效果自動按
       const phase = getPhase(appContext.viewModel.model.gameState)

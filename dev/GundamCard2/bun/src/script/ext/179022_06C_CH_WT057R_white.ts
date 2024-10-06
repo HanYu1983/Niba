@@ -17,7 +17,6 @@ export const prototype: CardPrototype = {
       description: "『常駐』：このカードは、「専用機のセット」が成立するユニットにセットされている場合、「速攻」「強襲」を得る。",
       title: ["自動型", "常駐"],
       onSituation: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, ToolFn }: Bridge): GlobalEffect[] {
-        console.log("XXX")
         const cardId = DefineFn.EffectFn.getCardID(effect)
         const situation = DefineFn.EffectFn.getSituation(effect)
         if (situation != null) {

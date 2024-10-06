@@ -20,7 +20,7 @@ export const CardStackView = (props: {
     );
   }, [
     props.cardPosition,
-    appContext.viewModel.model.gameState,
+    appContext.viewModel.model.gameState.table.cardStack,
   ]);
   // 整個setGroup一起移動
   const cardsOnlySetGroupRoot = useMemo(() => {
