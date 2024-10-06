@@ -24,6 +24,10 @@ export type Tip = {
     max?: number,
     cheatCardIds?: string[],
     isRepeat?: boolean,
+    flags?: {
+        earth?: boolean,
+        space?: boolean
+    }
 };
 
 export const TipFn = {

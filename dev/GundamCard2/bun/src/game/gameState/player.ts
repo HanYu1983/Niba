@@ -1,8 +1,8 @@
-import { pipe, always, map, sum } from "ramda";
+import { pipe, always, map, sum, lift } from "ramda";
 import { logCategory } from "../../tool/logger";
 import { AttackSpeed } from "../define";
-import { AbsoluteBaSyouFn, BaSyouKeyword } from "../define/BaSyou";
-import { DestroyReason } from "../define/Effect";
+import { AbsoluteBaSyouFn, BaSyouKeyword, BaSyouKeywordFn } from "../define/BaSyou";
+import { DestroyReason, EffectFn } from "../define/Effect";
 import { ItemState } from "../define/ItemState";
 import { PlayerID, PlayerIDFn } from "../define/PlayerID";
 import { isBattleGroupHasA, getBattleGroup, getBattleGroupBattlePoint } from "./battleGroup";
@@ -13,12 +13,13 @@ import { getSetGroupBattlePoint } from "./setGroup";
 import { doTriggerEvent } from "./doTriggerEvent";
 import { StrBaSyouPair } from "../define/Tip";
 import { doItemMove } from "./doItemMove";
-import { createStrBaSyouPair, getItemController, getItemIdsByBasyou } from "./ItemTableComponent";
+import { createStrBaSyouPair, getItemController, getItemIdsByBasyou, getItemPrototype } from "./ItemTableComponent";
 import { doItemSetDestroy } from "./doItemSetDestroy";
 import { getCardTipStrBaSyouPairs } from "./doEffect";
 import { doCountryDamage } from "./doCountryDamage";
-import { addDestroyEffect } from "./EffectStackComponent";
+import { addDestroyEffect, getCutInDestroyEffects } from "./EffectStackComponent";
 import { createDestroyEffect } from "./createDestroyEffect";
+import { getCard } from "./CardTableComponent";
 
 // player
 export function isPlayerHasBattleGroup(
@@ -166,8 +167,49 @@ export function doPlayerAttack(
     const itemState = getItemState(ctx, cardId)
     const [_, _2, hp] = getSetGroupBattlePoint(ctx, cardId)
     if (hp <= itemState.damage) {
-      ctx = addDestroyEffect(ctx, createDestroyEffect(ctx, {id:"戦闘ダメージ", playerID: PlayerIDFn.getOpponent(getItemController(ctx, cardId))}, cardId)) as GameState
+      ctx = addDestroyEffect(ctx, createDestroyEffect(ctx, { id: "戦闘ダメージ", playerID: PlayerIDFn.getOpponent(getItemController(ctx, cardId)) }, cardId)) as GameState
     }
   })
   return ctx;
+}
+
+export function getPlayerGIds(ctx: GameState, playerId: PlayerID): string[] {
+  return getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(playerId, "Gゾーン"))
+}
+
+export function getPlayerHandIds(ctx: GameState, playerId: PlayerID): string[] {
+  return getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(playerId, "手札"))
+}
+
+export function getPlayerDestroyIds(ctx: GameState, playerId: PlayerID): string[] {
+  return getCutInDestroyEffects(ctx).map(e => EffectFn.getCardID(e)).filter(itemId => getItemController(ctx, itemId) == playerId)
+}
+
+export function getPlayerUnitIds(ctx: GameState, playerId: PlayerID): string[] {
+  return lift(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getBaAll()).flatMap(basyou => getItemIdsByBasyou(ctx, basyou)).filter(itemId => getItemPrototype(ctx, itemId).category == "ユニット")
+}
+
+export function getPlayerCharacterIds(ctx: GameState, playerId: PlayerID): string[] {
+  return lift(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getBaAll()).flatMap(basyou => getItemIdsByBasyou(ctx, basyou)).filter(itemId => getItemPrototype(ctx, itemId).category == "キャラクター")
+}
+
+export function getPlayerOperationIds(ctx: GameState, playerId: PlayerID): string[] {
+  return lift(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getBaAll()).flatMap(basyou => getItemIdsByBasyou(ctx, basyou)).filter(itemId => getItemPrototype(ctx, itemId).category == "オペレーション")
+}
+
+export function createPlayerScore(ctx: GameState, playerId: string): number {
+  const units = getPlayerUnitIds(ctx, playerId)
+  const chars = getPlayerCharacterIds(ctx, playerId)
+  const gs = getPlayerGIds(ctx, playerId)
+  const ops = getPlayerOperationIds(ctx, playerId)
+  const hands = getPlayerHandIds(ctx, playerId)
+  const destroyIds = getPlayerDestroyIds(ctx, playerId)
+  const gScore = gs.length * 3
+  const unitScore = units.length * 5
+  const charScore = chars.length
+  const opScore = Math.max(2, ops.length) * 3
+  const handScore = hands.length * 3
+  const destroyScore = destroyIds.length * 10 * -1
+  const rollScore = [...gs, ...units].filter(itemId => getCard(ctx, itemId).isRoll).length * -5
+  return gScore + unitScore + charScore + opScore + handScore + destroyScore + rollScore
 }

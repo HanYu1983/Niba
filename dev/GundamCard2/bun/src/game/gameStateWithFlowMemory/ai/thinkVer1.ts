@@ -1,0 +1,158 @@
+import { Effect } from "../../define/Effect";
+import { PlayerID, PlayerIDFn } from "../../define/PlayerID";
+import { StrBaSyouPair, TipFn } from "../../define/Tip";
+import { doEffect, setTipSelectionForUser } from "../../gameState/doEffect";
+import { getEffect, getImmediateEffects, getStackEffects, getTopEffect } from "../../gameState/EffectStackComponent";
+import { getItemPrototype } from "../../gameState/ItemTableComponent";
+import { getPhase } from "../../gameState/PhaseComponent";
+import { createPlayerScore, getPlayerGIds, getPlayerUnitIds } from "../../gameState/player";
+import { getSetGroupBattlePoint } from "../../gameState/setGroup";
+import { Flow } from "../Flow";
+import { GameStateWithFlowMemory } from "../GameStateWithFlowMemory";
+
+export function isMeleeUnit(ctx: GameStateWithFlowMemory, itemId: string): boolean {
+  const [atk, range, hp] = getSetGroupBattlePoint(ctx, itemId)
+  if (range == 0 && atk > 0) {
+    return true
+  }
+  if (atk - range >= 3) {
+    return true
+  }
+  return false
+}
+
+export function isRangeUnit(ctx: GameStateWithFlowMemory, itemId: string): boolean {
+  const [atk, range, hp] = getSetGroupBattlePoint(ctx, itemId)
+  if (range == 0) {
+    return false
+  }
+  return isMeleeUnit(ctx, itemId) == false
+}
+
+export function thinkRandom(ctx: GameStateWithFlowMemory, playerId: PlayerID, flows: Flow[], options?: {}): Flow | null {
+  const flow = flows[Math.round(Math.random() * 1000) % flows.length]
+  return flow
+}
+
+export function thinkVer1(ctx: GameStateWithFlowMemory, playerId: PlayerID, flows: Flow[], options?: {}): Flow | null {
+  const plays = flows.flatMap(flow => flow.id == "FlowSetActiveEffectID" ? flow.tips : [])
+  const playGs = plays.filter(p => p.reason[0] == "PlayCard" && p.reason[3].isPlayG)
+  const mygs = getPlayerGIds(ctx, playerId)
+  // G小於7張優先下G
+  if (mygs.length < 7 && playGs.length) {
+    return { id: "FlowSetActiveEffectID", effectID: playGs[0].id, tips: [] }
+  }
+  const playUnits = plays.filter(p =>
+    p.reason[0] == "PlayCard"
+    && getItemPrototype(ctx, p.reason[2]).category == "ユニット")
+  const myUnits = getPlayerUnitIds(ctx, playerId)
+  // 機體小於4張優先下機體
+  if (myUnits.length < 4 && playUnits.length) {
+    return { id: "FlowSetActiveEffectID", effectID: playUnits[0].id, tips: [] }
+  }
+  // 出擊分配部隊
+  const hasAttacked: { [key: string]: boolean } = {}
+  const attackFlow: Flow[] = flows.flatMap(flow => {
+    if (flow.id == "FlowSetTipSelection") {
+      const effect = getEffect(ctx, flow.effectID)
+      if (effect.reason[0] == "GameRule" && (effect.reason[2].isAttack || effect.reason[2].isDefence)) {
+        const canAttackUnits = (TipFn.getWant(flow.tip) as StrBaSyouPair[]).filter(pair => hasAttacked[pair[0]] != true)
+        const meleeUnits = canAttackUnits.filter(pair => isMeleeUnit(ctx, pair[0]))
+        const rangeUnits = canAttackUnits.filter(pair => isRangeUnit(ctx, pair[0]))
+        let willAttackPairs: StrBaSyouPair[] = []
+        // 只有一個格鬥機，就全上同一路
+        if (meleeUnits.length == 1) {
+          willAttackPairs = [meleeUnits[0], ...rangeUnits]
+        } else if (meleeUnits.length >= 1) {
+          // 有多個格鬥機就各配一個射擊機
+          willAttackPairs = [meleeUnits[0], ...rangeUnits.slice(0, 1)]
+        } else if (rangeUnits.length >= 3) {
+          // 沒格鬥機的情況若射擊機3個以上就全上
+          willAttackPairs = rangeUnits
+        }
+        if (willAttackPairs.length) {
+          for (const pair of willAttackPairs) {
+            hasAttacked[pair[0]] = true
+          }
+          flow = {
+            ...flow,
+            tip: {
+              ...flow.tip,
+              title: ["カード", [], willAttackPairs]
+            }
+          }
+          return [flow]
+        }
+      }
+    }
+    return []
+  })
+  if (attackFlow.length) {
+    return attackFlow[0]
+  }
+  // play內文時計算績分
+  const playTexts = plays.filter(p => p.reason[0] == "PlayText")
+  const effectScorePairs: [Effect, number][] = playTexts.map(pt => {
+    try {
+      const originStackLength = getStackEffects(ctx).length
+      const originImmediateLength = getImmediateEffects(ctx).length
+      let ctx2: GameStateWithFlowMemory = JSON.parse(JSON.stringify(ctx))
+      ctx2 = setTipSelectionForUser(ctx2, pt, 0, 0) as GameStateWithFlowMemory
+      ctx2 = doEffect(ctx2, pt, 0, 0) as GameStateWithFlowMemory
+      if (getStackEffects(ctx2).length > originStackLength) {
+        const eff = getTopEffect(ctx2)
+        if (eff == null) {
+          throw new Error()
+        }
+        ctx2 = setTipSelectionForUser(ctx2, pt, 0, 0) as GameStateWithFlowMemory
+        ctx2 = doEffect(ctx2, eff, 0, 0) as GameStateWithFlowMemory
+      }
+      if (getImmediateEffects(ctx2).length > originImmediateLength) {
+        const eff = getImmediateEffects(ctx2)[0]
+        if (eff == null) {
+          throw new Error()
+        }
+        ctx2 = setTipSelectionForUser(ctx2, pt, 0, 0) as GameStateWithFlowMemory
+        ctx2 = doEffect(ctx2, eff, 0, 0) as GameStateWithFlowMemory
+      }
+      const score = createPlayerScore(ctx2, playerId) - createPlayerScore(ctx2, PlayerIDFn.getOpponent(playerId))
+      return [pt, score]
+    } catch (e: any) {
+      console.warn(`AI計算時例外，忽略:${e.message}`)
+    }
+    return [pt, 0]
+  })
+  // 如果使用後盤面分數比本來的差距還大就使用
+  const originScore = createPlayerScore(ctx, playerId) - createPlayerScore(ctx, PlayerIDFn.getOpponent(playerId))
+  effectScorePairs.sort(([_, s1], [_2, s2]) => s2 - s1)
+  const shouldUseTexts = effectScorePairs.filter(([eff, score]) => score > originScore)
+  if (shouldUseTexts.length) {
+    return { id: "FlowSetActiveEffectID", effectID: shouldUseTexts[0][0].id, tips: [] }
+  }
+  // 小於10張G就出G
+  if (playGs.length < 10 && playGs.length) {
+    return { id: "FlowSetActiveEffectID", effectID: playGs[0].id, tips: [] }
+  }
+  // 機體小於6張下機體
+  if (myUnits.length < 6 && playUnits.length) {
+    return { id: "FlowSetActiveEffectID", effectID: playUnits[0].id, tips: [] }
+  }
+  // 其它就隨意
+  const useFlows = flows.filter(flow => {
+    switch (flow.id) {
+      case "FlowCancelActiveEffectID":
+      case "FlowCancelActiveLogicID":
+      case "FlowCancelPassCut":
+      case "FlowCancelPassPhase":
+      case "FlowWaitPlayer":
+      case "FlowObserveEffect":
+        return false
+    }
+    return true
+  })
+  if (useFlows.length) {
+    let flow = useFlows[Math.round(Math.random() * 1000) % useFlows.length]
+    return flow
+  }
+  return null
+}

@@ -5,11 +5,13 @@ import { PlayerID } from "../define/PlayerID";
 import { StrBaSyouPair, Tip } from "../define/Tip";
 import { ToolFn } from "../tool";
 import { GameState } from "./GameState";
+import { getPhase } from "./PhaseComponent";
 
 export function createAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID): Effect {
+    const phase = getPhase(ctx)
     return {
         id: `createAttackPhaseRuleEffect_${playerId}`,
-        reason: ["GameRule", playerId],
+        reason: ["GameRule", playerId, { isAttack: phase[1] == "攻撃ステップ", isDefence: phase[1] == "防御ステップ" }],
         description: "出擊",
         isOption: true,
         text: {
@@ -42,6 +44,7 @@ export function createAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID):
                         })
                         return {
                             title: ["カード", pairs, []],
+                            flags: { earth: true }
                         }
                     }.toString(),
                     actions: [
@@ -83,6 +86,7 @@ export function createAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID):
                         })
                         return {
                             title: ["カード", pairs, []],
+                            flags: { space: true }
                         }
                     }.toString(),
                     actions: [

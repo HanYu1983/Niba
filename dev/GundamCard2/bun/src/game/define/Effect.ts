@@ -12,10 +12,10 @@ export type DestroyReason = DestroyReason1
 
 export type EffectReason =
     | ["場に出る", PlayerID, string]
-    | ["PlayCard", PlayerID, string]
+    | ["PlayCard", PlayerID, string, { isPlayG?: boolean, isPlayUnit?: boolean, isPlayCharacter?: boolean }]
     | ["PlayText", PlayerID, string, string]
     // null代表系統負責
-    | ["GameRule", PlayerID | null]
+    | ["GameRule", PlayerID | null, { isAttack?: boolean, isDefence?: boolean }]
     // 只要破壞狀態沒有被取消的話就會產生廢棄的效果, 這個移動效果不能被防止(p40, p72)
     | ["Destroy", PlayerID, string, DestroyReason]
     | ["Situation", PlayerID, string, Situation | null]
@@ -27,7 +27,6 @@ export type Effect = {
     text: CardText
     description?: string
     isOption?: boolean
-    isPlayG?: boolean
 }
 
 export const EffectFn = {
