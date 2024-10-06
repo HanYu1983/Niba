@@ -41,12 +41,13 @@ import { testPS } from "./testPS";
 import { testReollRuleEffect } from "./testRerollRuleEffect";
 import { testReturnRuleEffect } from "./testReturnRuleEffect";
 import { testSupply } from "./testSupply";
-import { testThinkVer1 } from "./testThinkVer1";
+import { testThinkVer1, testThinkVer1_2 } from "./testThinkVer1";
 
 const fs = require('fs').promises;
 
 export async function tests() {
     return [
+        testThinkVer1_2,
         test179029_B3C_CH_WT102R_white,
         testIssue,
         testThinkVer1,

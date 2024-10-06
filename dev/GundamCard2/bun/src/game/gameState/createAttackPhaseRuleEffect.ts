@@ -44,7 +44,7 @@ export function createAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID):
                         })
                         return {
                             title: ["カード", pairs, []],
-                            flags: { earth: true }
+                            flags: { isGoBattleArea1: true }
                         }
                     }.toString(),
                     actions: [
@@ -87,7 +87,7 @@ export function createAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID):
                         })
                         return {
                             title: ["カード", pairs, []],
-                            flags: { space: true }
+                            flags: { isGoBattleArea2: true }
                         }
                     }.toString(),
                     actions: [

@@ -1,7 +1,9 @@
+import { AbsoluteBaSyou, AbsoluteBaSyouFn } from "../../define/BaSyou";
 import { BattlePointFn } from "../../define/BattlePoint";
 import { Effect, EffectFn } from "../../define/Effect";
 import { PlayerID, PlayerIDFn } from "../../define/PlayerID";
 import { StrBaSyouPair, TipFn } from "../../define/Tip";
+import { getBattleGroup, getBattleGroupBattlePoint } from "../../gameState/battleGroup";
 import { getCardHasSpeicalEffect } from "../../gameState/card";
 import { doEffect, getCardTipStrBaSyouPairs, setTipSelectionForUser } from "../../gameState/doEffect";
 import { getEffect, getImmediateEffects, getStackEffects, getTopEffect } from "../../gameState/EffectStackComponent";
@@ -24,7 +26,7 @@ export function thinkVer1(ctx: GameStateWithFlowMemory, playerId: PlayerID, flow
   const attackFlow: Flow[] = flows.flatMap(flow => {
     if (flow.id == "FlowSetTipSelection") {
       const effect = getEffect(ctx, flow.effectID)
-      if (effect.reason[0] == "GameRule" && (effect.reason[2].isAttack || effect.reason[2].isDefence)) {
+      if (effect.reason[0] == "GameRule" && (effect.reason[2].isAttack)) {
         const hasEarthIds = ((getItemState(ctx, EffectFn.getCardID(effect)).tips[TipFn.createGoEarthKey()]?.title[2] || []) as StrBaSyouPair[]).map(pair => pair[0])
         const hasSpaceIds = ((getItemState(ctx, EffectFn.getCardID(effect)).tips[TipFn.createGoSpaceKey()]?.title[2] || []) as StrBaSyouPair[]).map(pair => pair[0])
         const hasIds = [...hasEarthIds, ...hasSpaceIds]
@@ -44,7 +46,7 @@ export function thinkVer1(ctx: GameStateWithFlowMemory, playerId: PlayerID, flow
         } else if (hasMeleeHighUnits.length) {
           // 高機動
           const hasRangeHighUnits = rangeUnits.filter(pair => getCardHasSpeicalEffect(ctx, ["高機動"], pair[0]))
-          willAttackPairs = [meleeUnits[0], ...hasRangeHighUnits]
+          willAttackPairs = [hasMeleeHighUnits[0], ...hasRangeHighUnits]
         } else if (hasMeleeStrongUnits.length > 0 && hasRangeStrongHighUnits.length >= 1) {
           // 最少1格鬥1射擊才組強襲
           willAttackPairs = [hasMeleeStrongUnits[0], ...hasRangeStrongHighUnits]
@@ -57,6 +59,35 @@ export function thinkVer1(ctx: GameStateWithFlowMemory, playerId: PlayerID, flow
         } else if (rangeUnits.length >= 3) {
           // 沒格鬥機的情況若射擊機3個以上就全上
           willAttackPairs = rangeUnits
+        }
+        if (willAttackPairs.length) {
+          flow = {
+            ...flow,
+            tip: {
+              ...flow.tip,
+              title: ["カード", [], willAttackPairs]
+            }
+          }
+          return [flow]
+        }
+      }
+      if (effect.reason[0] == "GameRule" && (effect.reason[2].isDefence)) {
+        const hasEarthIds = ((getItemState(ctx, EffectFn.getCardID(effect)).tips[TipFn.createGoEarthKey()]?.title[2] || []) as StrBaSyouPair[]).map(pair => pair[0])
+        const hasSpaceIds = ((getItemState(ctx, EffectFn.getCardID(effect)).tips[TipFn.createGoSpaceKey()]?.title[2] || []) as StrBaSyouPair[]).map(pair => pair[0])
+        const hasIds = [...hasEarthIds, ...hasSpaceIds]
+        const canAttackUnits = (TipFn.getWant(flow.tip) as StrBaSyouPair[]).filter(pair => hasIds.includes(pair[0]) == false)
+        const meleeUnits = canAttackUnits.filter(pair => isMeleeUnit(ctx, pair[0]))
+        const rangeUnits = canAttackUnits.filter(pair => isRangeUnit(ctx, pair[0]))
+        let willAttackPairs: StrBaSyouPair[] = []
+        const battleArea: AbsoluteBaSyou = flow.tip.flags?.isGoBattleArea1 ? AbsoluteBaSyouFn.of(PlayerIDFn.getOpponent(playerId), "戦闘エリア1") : AbsoluteBaSyouFn.of(PlayerIDFn.getOpponent(playerId), "戦闘エリア2")
+        const opponentPower = getBattleGroupBattlePoint(ctx, getBattleGroup(ctx, battleArea))
+        if(opponentPower == 0){
+          return [flow]
+        }
+        const myUnits = [meleeUnits[0], ...rangeUnits]
+        const myPower = getBattleGroupBattlePoint(ctx, myUnits.map(pair => pair[0]))
+        if (myPower >= opponentPower) {
+          willAttackPairs = myUnits
         }
         if (willAttackPairs.length) {
           flow = {

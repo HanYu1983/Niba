@@ -25,8 +25,8 @@ export type Tip = {
     cheatCardIds?: string[],
     isRepeat?: boolean,
     flags?: {
-        earth?: boolean,
-        space?: boolean
+        isGoBattleArea1?: boolean,
+        isGoBattleArea2?: boolean
     }
 };
 

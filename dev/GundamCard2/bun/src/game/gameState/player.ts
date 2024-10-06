@@ -214,7 +214,7 @@ export function createPlayerScore(ctx: GameState, playerId: string): number {
   const charScore = chars.length
   const opScore = Math.max(2, ops.length) * 3
   const handScore = hands.length * 3
-  const destroyScore = destroyIds.length * 10 * -1
+  const destroyScore = destroyIds.length * -20
   const rollScore = [...gs, ...units].filter(itemId => getCard(ctx, itemId).isRoll).length * -5
   const bpScore = units.map(id => {
     if (getCard(ctx, id).isRoll) {

@@ -18866,6 +18866,7 @@ __export(exports_GameState, {
 var exports_SetGroupComponent = {};
 __export(exports_SetGroupComponent, {
   setSetGroupParent: () => setSetGroupParent,
+  removeSetGroupParent: () => removeSetGroupParent,
   getSetGroupRoot: () => getSetGroupRoot,
   getSetGroupChildren: () => getSetGroupChildren,
   getSetGroup: () => getSetGroup,
@@ -18984,6 +18985,12 @@ function setSetGroupParent(ctx2, parentCardId, cardId) {
     ...ctx2,
     setGroup: ItemGroupFn.setItemGroupParent(ctx2.setGroup, cardId, parentCardId)
   }, ctx2 = EventCenterFn.onSetSetGroupParent(ctx2, parentCardId, cardId), ctx2;
+}
+function removeSetGroupParent(ctx2, cardId) {
+  return ctx2 = {
+    ...ctx2,
+    setGroup: ItemGroupFn.deleteItemGroup(ctx2.setGroup, cardId)
+  }, ctx2;
 }
 
 // src/game/gameState/GameState.ts
@@ -21274,7 +21281,7 @@ function onMoveItem(ctx2, to, [cardId, from]) {
         damage: 0,
         destroyReason: null
       };
-    }), ctx2 = removeCoinIds(ctx2, getCoinIdsByCardId(ctx2, cardId));
+    }), ctx2 = removeCoinIds(ctx2, getCoinIdsByCardId(ctx2, cardId)), ctx2 = removeSetGroupParent(ctx2, cardId);
   if (["\u6368\u3066\u5C71", "\u672C\u56FD", "\u624B\u672D"].includes(AbsoluteBaSyouFn.getBaSyouKeyword(to)))
     ctx2 = mapCard(ctx2, cardId, (card) => {
       return {
@@ -22228,7 +22235,7 @@ function getPlayerOperationIds(ctx2, playerId) {
   return lift_default(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getBaAll()).flatMap((basyou) => getItemIdsByBasyou(ctx2, basyou)).filter((itemId) => getItemPrototype(ctx2, itemId).category == "\u30AA\u30DA\u30EC\u30FC\u30B7\u30E7\u30F3");
 }
 function createPlayerScore(ctx2, playerId) {
-  const units = getPlayerUnitIds(ctx2, playerId), chars = getPlayerCharacterIds(ctx2, playerId), gs = getPlayerGIds(ctx2, playerId), ops = getPlayerOperationIds(ctx2, playerId), hands = getPlayerHandIds(ctx2, playerId), destroyIds = getPlayerDestroyIds(ctx2, playerId), gScore = gs.length * 3, unitScore = units.length * 5, charScore = chars.length, opScore = Math.max(2, ops.length) * 3, handScore = hands.length * 3, destroyScore = destroyIds.length * 10 * -1, rollScore = [...gs, ...units].filter((itemId) => getCard(ctx2, itemId).isRoll).length * -5, bpScore = units.map((id) => {
+  const units = getPlayerUnitIds(ctx2, playerId), chars = getPlayerCharacterIds(ctx2, playerId), gs = getPlayerGIds(ctx2, playerId), ops = getPlayerOperationIds(ctx2, playerId), hands = getPlayerHandIds(ctx2, playerId), destroyIds = getPlayerDestroyIds(ctx2, playerId), gScore = gs.length * 3, unitScore = units.length * 5, charScore = chars.length, opScore = Math.max(2, ops.length) * 3, handScore = hands.length * 3, destroyScore = destroyIds.length * -20, rollScore = [...gs, ...units].filter((itemId) => getCard(ctx2, itemId).isRoll).length * -5, bpScore = units.map((id) => {
     if (getCard(ctx2, id).isRoll)
       return 0;
     const [atk, range3, hp] = getSetGroupBattlePoint(ctx2, id);
@@ -23558,7 +23565,7 @@ function createDamageRuleEffect(ctx2, playerId) {
 function createReturnRuleEffect(ctx2, playerId) {
   return {
     id: `createReturnRuleEffect_${playerId}`,
-    reason: ["GameRule", playerId],
+    reason: ["GameRule", playerId, { isReturn: !0 }],
     text: {
       id: `createReturnRuleEffect_text_${playerId}`,
       title: [],
@@ -23574,6 +23581,8 @@ function createReturnRuleEffect(ctx2, playerId) {
                   const from = DefineFn2.AbsoluteBaSyouFn.of(playerId3, fromKw), runtimeArea1 = GameStateFn2.getRuntimeBattleArea(ctx4, fromKw), unitIdsAtArea1 = GameStateFn2.getItemIdsByBasyou(ctx4, from);
                   for (let cardId of unitIdsAtArea1) {
                     const target = [cardId, from];
+                    if (GameStateFn2.getSetGroupRoot(ctx4, cardId) != cardId)
+                      continue;
                     if (GameStateFn2.getCardBattleArea(ctx4, cardId).includes(runtimeArea1))
                       ctx4 = GameStateFn2.doItemSetRollState(ctx4, !0, target, { isSkipTargetMissing: !0 }), ctx4 = GameStateFn2.doItemMove(ctx4, DefineFn2.AbsoluteBaSyouFn.of(playerId3, "\u914D\u5099\u30A8\u30EA\u30A2"), target, { isSkipTargetMissing: !0 });
                     else
@@ -25653,7 +25662,7 @@ function thinkVer1(ctx2, playerId, flows, options) {
           willAttackPairs = [hasMeleeSpeed[0], ...hasRangeSpeedUnits];
         } else if (hasMeleeHighUnits.length) {
           const hasRangeHighUnits = rangeUnits.filter((pair3) => getCardHasSpeicalEffect(ctx2, ["\u9AD8\u6A5F\u52D5"], pair3[0]));
-          willAttackPairs = [meleeUnits[0], ...hasRangeHighUnits];
+          willAttackPairs = [hasMeleeHighUnits[0], ...hasRangeHighUnits];
         } else if (hasMeleeStrongUnits.length > 0 && hasRangeStrongHighUnits.length >= 1)
           willAttackPairs = [hasMeleeStrongUnits[0], ...hasRangeStrongHighUnits];
         else if (meleeUnits.length == 1)
