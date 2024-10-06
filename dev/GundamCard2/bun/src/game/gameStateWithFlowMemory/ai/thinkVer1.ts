@@ -32,6 +32,8 @@ export function thinkVer1(ctx: GameStateWithFlowMemory, playerId: PlayerID, flow
         const hasIds = [...hasEarthIds, ...hasSpaceIds]
         const canAttackUnits = (TipFn.getWant(flow.tip) as StrBaSyouPair[]).filter(pair => hasIds.includes(pair[0]) == false)
         const meleeUnits = canAttackUnits.filter(pair => isMeleeUnit(ctx, pair[0]))
+        // 對格鬥力排序
+        meleeUnits.sort(([id1, _], [id2, _2])=> getSetGroupBattlePoint(ctx, id2)[0] - getSetGroupBattlePoint(ctx, id1)[0])
         const rangeUnits = canAttackUnits.filter(pair => isRangeUnit(ctx, pair[0]))
         let willAttackPairs: StrBaSyouPair[] = []
 
@@ -77,6 +79,8 @@ export function thinkVer1(ctx: GameStateWithFlowMemory, playerId: PlayerID, flow
         const hasIds = [...hasEarthIds, ...hasSpaceIds]
         const canAttackUnits = (TipFn.getWant(flow.tip) as StrBaSyouPair[]).filter(pair => hasIds.includes(pair[0]) == false)
         const meleeUnits = canAttackUnits.filter(pair => isMeleeUnit(ctx, pair[0]))
+        // 對格鬥力排序
+        meleeUnits.sort(([id1, _], [id2, _2])=> getSetGroupBattlePoint(ctx, id2)[0] - getSetGroupBattlePoint(ctx, id1)[0])
         const rangeUnits = canAttackUnits.filter(pair => isRangeUnit(ctx, pair[0]))
         let willAttackPairs: StrBaSyouPair[] = []
         const battleArea: AbsoluteBaSyou = flow.tip.flags?.isGoBattleArea1 ? AbsoluteBaSyouFn.of(PlayerIDFn.getOpponent(playerId), "戦闘エリア1") : AbsoluteBaSyouFn.of(PlayerIDFn.getOpponent(playerId), "戦闘エリア2")

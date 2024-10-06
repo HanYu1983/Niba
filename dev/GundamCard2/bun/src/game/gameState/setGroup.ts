@@ -31,7 +31,7 @@ export function isMeleeUnit(ctx: GameState, itemId: string): boolean {
     if (range == 0 && atk > 0) {
         return true
     }
-    if (atk - range >= 3) {
+    if (atk - range >= 2) {
         return true
     }
     return false

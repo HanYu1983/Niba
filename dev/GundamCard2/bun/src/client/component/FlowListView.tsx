@@ -17,7 +17,7 @@ export const FlowListView = (props: { clientId: string, style?: CSSProperties })
   }, [appContext.viewModel.playerCommands[props.clientId]]);
   useEffect(() => {
     const speed = 10
-    const isPlayerControl = false
+    const isPlayerControl = true
     if (isPlayerControl && props.clientId == PlayerA) {
       // 規定效果自動按
       const phase = getPhase(appContext.viewModel.model.gameState)
@@ -88,7 +88,7 @@ export const FlowListView = (props: { clientId: string, style?: CSSProperties })
     }
     if (flows.length) {
       const flow = thinkVer1(appContext.viewModel.model.gameState, props.clientId, flows)
-     
+
       if (flow) {
         setTimeout(() => {
           OnEvent.next({
@@ -143,6 +143,27 @@ export const FlowListView = (props: { clientId: string, style?: CSSProperties })
                         effectID={flow.effectID}
                       ></EffectView>
                     );
+                  case "FlowSetActiveLogicID":
+                    return <div>
+                      <div>選擇一個行為</div>
+                      {
+                        flow.tips.map((tip, i) => {
+                          return <button
+                            key={i}
+                            onClick={() => {
+                              OnEvent.next({
+                                id: "OnClickFlowConfirm",
+                                clientId: props.clientId,
+                                flow: { ...flow, logicID: tip.logicID, logicSubID: tip.logicSubID },
+                                versionID: appContext.viewModel.model.versionID
+                              });
+                            }}
+                          >
+                            {JSON.stringify(tip.conditionKeys)}
+                          </button>
+                        })
+                      }
+                    </div>
                   case "FlowSetTipSelection":
                     return <div style={{ border: "1px solid black" }}>
                       <FlowSetTipSelectionView clientId={props.clientId} flow={flow}></FlowSetTipSelectionView>

@@ -21009,7 +21009,7 @@ function isMeleeUnit(ctx2, itemId) {
   const [atk, range3, hp] = getSetGroupBattlePoint(ctx2, itemId);
   if (range3 == 0 && atk > 0)
     return !0;
-  if (atk - range3 >= 3)
+  if (atk - range3 >= 2)
     return !0;
   return !1;
 }
@@ -23067,6 +23067,7 @@ function createCommandEffectTips(ctx2, effect) {
         const conTipErrors = createEffectTips(ctx2, effect, logicId, logicSubId);
         return {
           effectId: effect.id,
+          conditionKeys: Object.keys(conditions),
           logicID: logicId,
           logicSubID: logicSubId,
           tipOrErrors: conTipErrors
@@ -23165,14 +23166,13 @@ function setActiveEffectID(ctx2, playerID, effectID) {
     throw console.log(JSON.stringify(effect, null, 2)), new Error("\u8F38\u5165\u7684\u6548\u679C\u7121\u6CD5\u652F\u4ED8\uFF0C\u6D41\u7A0B\u6709\u8AA4");
   for (let cet of cetsNoErr)
     ctx2 = clearTipSelectionForUser(ctx2, effect, cet.logicID, cet.logicSubID);
-  const activeLogicID = cetsNoErr[0].logicID, activeLogicSubID = cetsNoErr[0].logicSubID;
   return ctx2 = {
     ...ctx2,
     flowMemory: {
       ...ctx2.flowMemory,
       activeEffectID: effectID,
-      activeLogicID,
-      activeLogicSubID
+      activeLogicID: cetsNoErr.length == 1 ? cetsNoErr[0].logicID : null,
+      activeLogicSubID: cetsNoErr.length == 1 ? cetsNoErr[0].logicSubID : null
     }
   }, ctx2;
 }
@@ -25654,7 +25654,9 @@ function thinkVer1(ctx2, playerId, flows, options) {
     if (flow.id == "FlowSetTipSelection") {
       const effect = getEffect(ctx2, flow.effectID);
       if (effect.reason[0] == "GameRule" && effect.reason[2].isAttack) {
-        const hasEarthIds = (getItemState(ctx2, EffectFn.getCardID(effect)).tips[TipFn.createGoEarthKey()]?.title[2] || []).map((pair3) => pair3[0]), hasSpaceIds = (getItemState(ctx2, EffectFn.getCardID(effect)).tips[TipFn.createGoSpaceKey()]?.title[2] || []).map((pair3) => pair3[0]), hasIds = [...hasEarthIds, ...hasSpaceIds], canAttackUnits = TipFn.getWant(flow.tip).filter((pair3) => hasIds.includes(pair3[0]) == !1), meleeUnits = canAttackUnits.filter((pair3) => isMeleeUnit(ctx2, pair3[0])), rangeUnits = canAttackUnits.filter((pair3) => isRangeUnit(ctx2, pair3[0]));
+        const hasEarthIds = (getItemState(ctx2, EffectFn.getCardID(effect)).tips[TipFn.createGoEarthKey()]?.title[2] || []).map((pair3) => pair3[0]), hasSpaceIds = (getItemState(ctx2, EffectFn.getCardID(effect)).tips[TipFn.createGoSpaceKey()]?.title[2] || []).map((pair3) => pair3[0]), hasIds = [...hasEarthIds, ...hasSpaceIds], canAttackUnits = TipFn.getWant(flow.tip).filter((pair3) => hasIds.includes(pair3[0]) == !1), meleeUnits = canAttackUnits.filter((pair3) => isMeleeUnit(ctx2, pair3[0]));
+        meleeUnits.sort(([id1, _], [id2, _2]) => getSetGroupBattlePoint(ctx2, id2)[0] - getSetGroupBattlePoint(ctx2, id1)[0]);
+        const rangeUnits = canAttackUnits.filter((pair3) => isRangeUnit(ctx2, pair3[0]));
         let willAttackPairs = [];
         const hasMeleeHighUnits = meleeUnits.filter((pair3) => getCardHasSpeicalEffect(ctx2, ["\u9AD8\u6A5F\u52D5"], pair3[0])), hasMeleeSpeed = meleeUnits.filter((pair3) => getCardHasSpeicalEffect(ctx2, ["\u901F\u653B"], pair3[0])), hasMeleeStrongUnits = meleeUnits.filter((pair3) => getCardHasSpeicalEffect(ctx2, ["\u5F37\u8972"], pair3[0])), hasRangeStrongHighUnits = rangeUnits.filter((pair3) => getCardHasSpeicalEffect(ctx2, ["\u5F37\u8972"], pair3[0]));
         if (hasMeleeSpeed.length) {
@@ -25681,7 +25683,9 @@ function thinkVer1(ctx2, playerId, flows, options) {
           }, [flow];
       }
       if (effect.reason[0] == "GameRule" && effect.reason[2].isDefence) {
-        const hasEarthIds = (getItemState(ctx2, EffectFn.getCardID(effect)).tips[TipFn.createGoEarthKey()]?.title[2] || []).map((pair3) => pair3[0]), hasSpaceIds = (getItemState(ctx2, EffectFn.getCardID(effect)).tips[TipFn.createGoSpaceKey()]?.title[2] || []).map((pair3) => pair3[0]), hasIds = [...hasEarthIds, ...hasSpaceIds], canAttackUnits = TipFn.getWant(flow.tip).filter((pair3) => hasIds.includes(pair3[0]) == !1), meleeUnits = canAttackUnits.filter((pair3) => isMeleeUnit(ctx2, pair3[0])), rangeUnits = canAttackUnits.filter((pair3) => isRangeUnit(ctx2, pair3[0]));
+        const hasEarthIds = (getItemState(ctx2, EffectFn.getCardID(effect)).tips[TipFn.createGoEarthKey()]?.title[2] || []).map((pair3) => pair3[0]), hasSpaceIds = (getItemState(ctx2, EffectFn.getCardID(effect)).tips[TipFn.createGoSpaceKey()]?.title[2] || []).map((pair3) => pair3[0]), hasIds = [...hasEarthIds, ...hasSpaceIds], canAttackUnits = TipFn.getWant(flow.tip).filter((pair3) => hasIds.includes(pair3[0]) == !1), meleeUnits = canAttackUnits.filter((pair3) => isMeleeUnit(ctx2, pair3[0]));
+        meleeUnits.sort(([id1, _], [id2, _2]) => getSetGroupBattlePoint(ctx2, id2)[0] - getSetGroupBattlePoint(ctx2, id1)[0]);
+        const rangeUnits = canAttackUnits.filter((pair3) => isRangeUnit(ctx2, pair3[0]));
         let willAttackPairs = [];
         const battleArea = flow.tip.flags?.isGoBattleArea1 ? AbsoluteBaSyouFn.of(PlayerIDFn.getOpponent(playerId), "\u6226\u95D8\u30A8\u30EA\u30A21") : AbsoluteBaSyouFn.of(PlayerIDFn.getOpponent(playerId), "\u6226\u95D8\u30A8\u30EA\u30A22"), opponentPower = getBattleGroupBattlePoint(ctx2, getBattleGroup(ctx2, battleArea));
         if (opponentPower == 0)
@@ -25776,6 +25780,49 @@ var jsx_dev_runtime5 = __toESM(require_react_jsx_dev_runtime_development(), 1), 
     return appContext.viewModel.playerCommands[props.clientId] || [];
   }, [appContext.viewModel.playerCommands[props.clientId]]);
   return import_react5.useEffect(() => {
+    if (props.clientId == PlayerA) {
+      const phase = getPhase(appContext.viewModel.model.gameState);
+      if (PhaseFn.isRuleEffect(phase)) {
+        let flow = flows.find((flow2) => flow2.id == "FlowPassPayCost");
+        if (flow == null)
+          flows.find((flow2) => flow2.id == "FlowSetActiveEffectID" && phase[0] == "\u6226\u95D8\u30D5\u30A7\u30A4\u30BA" && (phase[1] != "\u653B\u6483\u30B9\u30C6\u30C3\u30D7" && phase[1] != "\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7"));
+        if (flow != null) {
+          setTimeout(() => {
+            OnEvent.next({
+              id: "OnClickFlowConfirm",
+              clientId: props.clientId,
+              flow,
+              versionID: appContext.viewModel.model.versionID
+            });
+          }, 10);
+          return;
+        }
+      }
+      if (flows.length == 1) {
+        const flow = flows[0];
+        if (flow.id == "FlowCancelPassPhase")
+          return;
+        if (flow.id == "FlowCancelPassCut")
+          return;
+        if (flow.id == "FlowWaitPlayer")
+          return;
+        if (flow.id == "FlowDeleteImmediateEffect")
+          return;
+        if (flow.id == "FlowSetTipSelection")
+          return;
+        if (flow.id == "FlowObserveEffect")
+          return;
+        setTimeout(() => {
+          OnEvent.next({
+            id: "OnClickFlowConfirm",
+            clientId: props.clientId,
+            flow,
+            versionID: appContext.viewModel.model.versionID
+          });
+        }, 10);
+      }
+      return;
+    }
     if (flows.length) {
       const flow = thinkVer1(appContext.viewModel.model.gameState, props.clientId, flows);
       if (flow)
@@ -25829,6 +25876,27 @@ var jsx_dev_runtime5 = __toESM(require_react_jsx_dev_runtime_development(), 1), 
                     clientId: props.clientId,
                     effectID: flow.effectID
                   }, void 0, !1, void 0, this);
+                case "FlowSetActiveLogicID":
+                  return /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
+                    children: [
+                      /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
+                        children: "\u9078\u64C7\u4E00\u500B\u884C\u70BA"
+                      }, void 0, !1, void 0, this),
+                      flow.tips.map((tip, i2) => {
+                        return /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("button", {
+                          onClick: () => {
+                            OnEvent.next({
+                              id: "OnClickFlowConfirm",
+                              clientId: props.clientId,
+                              flow: { ...flow, logicID: tip.logicID, logicSubID: tip.logicSubID },
+                              versionID: appContext.viewModel.model.versionID
+                            });
+                          },
+                          children: JSON.stringify(tip.conditionKeys)
+                        }, i2, !1, void 0, this);
+                      })
+                    ]
+                  }, void 0, !0, void 0, this);
                 case "FlowSetTipSelection":
                   return /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
                     style: { border: "1px solid black" },
@@ -26061,11 +26129,12 @@ function ClientView(props) {
 
 // src/client/component/ControlView.tsx
 var import_react9 = __toESM(require_react_development(), 1);
-var jsx_dev_runtime9 = __toESM(require_react_jsx_dev_runtime_development(), 1);
-var TMP_DECK3 = ["179003_01A_C_BN003C_brown", "179003_01A_C_BN003C_brown", "179003_01A_C_BN003C_brown", "179003_01A_U_BN006R_brown_02", "179003_01A_U_BN006R_brown_02", "179003_01A_U_BN006R_brown_02", "179004_01A_O_BN005U_brown", "179004_01A_O_BN005U_brown", "179014_03B_U_BN046R_brown_haku", "179014_03B_U_BN046R_brown_haku", "179014_03B_U_BN046R_brown_haku", "179015_04B_U_BN057C_brown", "179015_04B_U_BN057C_brown", "179015_04B_U_BN057C_brown", "179016_04B_U_BN066C_brown", "179018_05C_C_BN027C_brown", "179018_05C_C_BN027C_brown", "179018_05C_C_BN027C_brown", "179018_05C_C_BN029R_brown", "179018_05C_C_BN029R_brown", "179022_06C_C_BN036U_brown", "179022_06C_C_BN036U_brown", "179022_06C_C_BN036U_brown", "179022_06C_CH_BN052R_brown", "179022_06C_U_BN101R_brown", "179022_06C_U_BN101R_brown", "179022_06C_U_BN101R_brown", "179024_B2B_C_BN041C_brown", "179024_B2B_C_BN041C_brown", "179024_B2B_C_BN041C_brown", "179025_07D_CH_BN066R_brown", "179025_07D_U_BN138R_brown", "179025_07D_U_BN138R_brown", "179025_07D_U_BN138R_brown", "179028_10D_U_BN164N_brown", "179028_10D_U_BN164N_brown", "179028_10D_U_BN164N_brown", "179029_05C_U_BN077R_brown", "179029_05C_U_BN077R_brown", "179029_05C_U_BN077R_brown", "179029_06C_C_BN039R_brown", "179029_06C_C_BN039R_brown", "179029_06C_C_BN039R_brown", "179029_B3C_CH_BN088R_brown", "179030_11E_U_BN188N_brown", "179030_11E_U_BN188N_brown", "179030_11E_U_BN188N_brown", "179901_09D_C_BN007P_brown", "179901_09D_C_BN007P_brown", "179901_09D_C_BN007P_brown"], ControlView = () => {
+var jsx_dev_runtime9 = __toESM(require_react_jsx_dev_runtime_development(), 1), TMP_DECK = ["179015_04B_O_BK010C_black", "179015_04B_O_BK010C_black", "179015_04B_U_BK058R_black", "179015_04B_U_BK058R_black", "179015_04B_U_BK059C_black", "179015_04B_U_BK059C_black", "179015_04B_U_BK061C_black", "179015_04B_U_BK061C_black", "179016_04B_U_BK066C_black", "179016_04B_U_BK066C_black", "179019_02A_C_BK015S_black", "179019_02A_C_BK015S_black", "179020_05C_U_BK100U_black", "179020_05C_U_BK100U_black", "179023_06C_C_BK048R_black", "179023_06C_C_BK048R_black", "179023_06C_C_BK049U_black", "179023_06C_C_BK049U_black", "179024_04B_C_BK027U_black", "179024_04B_C_BK027U_black", "179024_04B_U_BK060C_black", "179024_04B_U_BK060C_black", "179024_04B_U_BK067C_black", "179024_04B_U_BK067C_black", "179024_B2B_C_BK054C_black", "179024_B2B_C_BK054C_black", "179024_B2B_U_BK128S_black_02", "179024_B2B_U_BK128S_black_02", "179024_B2B_U_BK129R_black", "179024_B2B_U_BK129R_black", "179027_09D_C_BK063R_black", "179027_09D_C_BK063R_black", "179027_09D_O_BK010N_black", "179027_09D_O_BK010N_black", "179027_09D_U_BK163S_black", "179027_09D_U_BK163S_black", "179027_09D_U_BK163S_black", "179029_06C_C_BK045U_black", "179029_06C_C_BK045U_black", "179029_B3C_C_BK071N_black", "179029_B3C_C_BK071N_black", "179029_B3C_U_BK184N_black", "179029_B3C_U_BK184N_black", "179029_B3C_U_BK184N_black", "179029_B3C_U_BK185N_black", "179029_B3C_U_BK185N_black", "179030_11E_U_BK194S_2_black", "179030_11E_U_BK194S_2_black", "179030_11E_U_BK194S_2_black", "179901_B2B_C_BK005P_black"];
+var TMP_DECK3 = ["179003_01A_C_BN003C_brown", "179003_01A_C_BN003C_brown", "179003_01A_C_BN003C_brown", "179003_01A_U_BN006R_brown_02", "179003_01A_U_BN006R_brown_02", "179003_01A_U_BN006R_brown_02", "179004_01A_O_BN005U_brown", "179004_01A_O_BN005U_brown", "179014_03B_U_BN046R_brown_haku", "179014_03B_U_BN046R_brown_haku", "179014_03B_U_BN046R_brown_haku", "179015_04B_U_BN057C_brown", "179015_04B_U_BN057C_brown", "179015_04B_U_BN057C_brown", "179016_04B_U_BN066C_brown", "179018_05C_C_BN027C_brown", "179018_05C_C_BN027C_brown", "179018_05C_C_BN027C_brown", "179018_05C_C_BN029R_brown", "179018_05C_C_BN029R_brown", "179022_06C_C_BN036U_brown", "179022_06C_C_BN036U_brown", "179022_06C_C_BN036U_brown", "179022_06C_CH_BN052R_brown", "179022_06C_U_BN101R_brown", "179022_06C_U_BN101R_brown", "179022_06C_U_BN101R_brown", "179024_B2B_C_BN041C_brown", "179024_B2B_C_BN041C_brown", "179024_B2B_C_BN041C_brown", "179025_07D_CH_BN066R_brown", "179025_07D_U_BN138R_brown", "179025_07D_U_BN138R_brown", "179025_07D_U_BN138R_brown", "179028_10D_U_BN164N_brown", "179028_10D_U_BN164N_brown", "179028_10D_U_BN164N_brown", "179029_05C_U_BN077R_brown", "179029_05C_U_BN077R_brown", "179029_05C_U_BN077R_brown", "179029_06C_C_BN039R_brown", "179029_06C_C_BN039R_brown", "179029_06C_C_BN039R_brown", "179029_B3C_CH_BN088R_brown", "179030_11E_U_BN188N_brown", "179030_11E_U_BN188N_brown", "179030_11E_U_BN188N_brown", "179901_09D_C_BN007P_brown", "179901_09D_C_BN007P_brown", "179901_09D_C_BN007P_brown"];
+var ControlView = () => {
   const onClickTest = import_react9.useCallback(() => {
   }, []), onClickNewGame = import_react9.useCallback(async () => {
-    const deckA = TMP_DECK3, deckB = TMP_DECK3, prototypeIds = [...deckA, ...deckB];
+    const deckA = TMP_DECK, deckB = TMP_DECK3, prototypeIds = [...deckA, ...deckB];
     await Promise.all(prototypeIds.map(loadPrototype)).then(() => console.log("loadOK")).catch(console.error), OnEvent.next({ id: "OnClickNewGame", deckA, deckB });
   }, []);
   return import_react9.useMemo(() => {
