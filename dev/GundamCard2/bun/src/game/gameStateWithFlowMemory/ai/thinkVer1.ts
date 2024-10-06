@@ -109,6 +109,11 @@ export function thinkVer1(ctx: GameStateWithFlowMemory, playerId: PlayerID, flow
     return attackFlow[0]
   }
   const plays = flows.flatMap(flow => flow.id == "FlowSetActiveEffectID" ? flow.tips : [])
+  // 規定效果就直接選
+  const ruleEffect = plays.find(p => p.reason[0] == "GameRule" && (p.reason[2].isAttack || p.reason[2].isDefence || p.reason[2].isReturn || p.reason[2].isDamageCheck || p.reason[2].isReroll || p.reason[2].isDraw))
+  if (ruleEffect) {
+    return { id: "FlowSetActiveEffectID", effectID: ruleEffect.id, tips: [] }
+  }
   const playGs = plays.filter(p => p.reason[0] == "PlayCard" && p.reason[3].isPlayG)
   const playChars = plays.filter(p => p.reason[0] == "PlayCard" && p.reason[3].isPlayCharacter)
   const mygs = getPlayerGIds(ctx, playerId)
@@ -170,6 +175,8 @@ export function thinkVer1(ctx: GameStateWithFlowMemory, playerId: PlayerID, flow
     }
     return [pt, 0]
   })
+
+
   // 如果使用後盤面分數比本來的差距還大就使用
   const originScore = createPlayerScore(ctx, playerId) - createPlayerScore(ctx, PlayerIDFn.getOpponent(playerId))
   effectScorePairs.sort(([_, s1], [_2, s2]) => s2 - s1)

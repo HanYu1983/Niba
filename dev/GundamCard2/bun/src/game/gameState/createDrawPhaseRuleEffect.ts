@@ -7,7 +7,7 @@ import { GameState } from "./GameState";
 export function createDrawPhaseRuleEffect(ctx: GameState, playerId: PlayerID): Effect {
     return {
         id: `createDrawPhaseRuleEffect_${playerId}`,
-        reason: ["GameRule", playerId],
+        reason: ["GameRule", playerId, {isDraw: true}],
         text: {
             id: `createDrawPhaseRuleEffect_text_${playerId}`,
             title: [],
