@@ -1,56 +1,53 @@
-import { testBattleBonus, testFlow1, testFlow2 } from "./testFlow";
-import { tests as itemGroupTests } from "../tool/ItemGroup"
-import { test179028_10D_U_WT181N_white } from "./test179028_10D_U_WT181N_white";
-import { test179024_03B_U_WT042U_white } from "./test179024_03B_U_WT042U_white";
+import { AbsoluteBaSyouFn } from "../game/define/BaSyou";
+import { Card } from "../game/define/Card";
+import { testGameError } from "../game/define/GameError";
+import { PlayerA } from "../game/define/PlayerID";
+import { addCards, mapCard, getCard } from "../game/gameState/CardTableComponent";
+import { doItemSwap } from "../game/gameState/doItemSwap";
+import { createGameState, GameState } from "../game/gameState/GameState";
+import { mapItemState, getItemState } from "../game/gameState/ItemStateComponent";
+import { getItemBaSyou } from "../game/gameState/ItemTableComponent";
+import { loadPrototype } from "../script";
+import { testItemGroup } from "../tool/ItemGroup";
 import { test179001_01A_CH_WT007R_white } from "./test179001_01A_CH_WT007R_white";
+import { test179003_01A_U_BK008U_black } from "./test179003_01A_U_BK008U_black";
+import { test179007_02A_U_WT027U_white } from "./test179007_02A_U_WT027U_white";
+import { test179015_04B_U_BK058R_black } from "./test179015_04B_U_BK058R_black";
+import { test179015_04B_U_BK061C_black_2, test179015_04B_U_BK061C_black } from "./test179015_04B_U_BK061C_black";
+import { test179016_04B_U_BK066C_black } from "./test179016_04B_U_BK066C_black";
+import { test179020_05C_U_BK100U_black } from "./test179020_05C_U_BK100U_black";
+import { test179024_03B_U_WT042U_white } from "./test179024_03B_U_WT042U_white";
+import { test179025_07D_U_RD158C_red } from "./test179025_07D_U_RD158C_red";
+import { test179027_09D_C_BK063R_black } from "./test179027_09D_C_BK063R_black";
+import { test179027_09D_C_WT067R_white } from "./test179027_09D_C_WT067R_white";
+import { test179028_10D_C_BL070N_blue } from "./test179028_10D_C_BL070N_blue";
+import { test179028_10D_U_WT181N_white } from "./test179028_10D_U_WT181N_white";
+import { test179029_B3C_CH_WT102R_white } from "./test179029_B3C_CH_WT102R_white";
 import { test179030_11E_C_BL079R_blue } from "./test179030_11E_C_BL079R_blue";
+import { test179030_11E_U_BK194S_2_black, test179030_11E_U_BK194S_2_black_2 } from "./test179030_11E_U_BK194S_2_black";
+import { test179901_B2B_C_BK005P_black } from "./test179901_B2B_C_BK005P_black";
 import { testAttackRuleEffect, testAttackRuleEffect2, testAttackRuleEffect3 } from "./testAttackRuleEffect";
+import { testCompress } from "./testCompress";
+import { testCrossWeapon } from "./testCrossWeapon";
 import { testDrawRuleEffect } from "./testDrawRuleEffect";
+import { testFlow1, testBattleBonus } from "./testFlow";
+import { testGain } from "./testGain";
+import { testGetPlayEffects } from "./testGetPlayEffects";
+import { testIssue } from "./testIssue";
+import { testKaiSo } from "./testKaiSo";
+import { testPlayChar } from "./testPlayChar";
+import { testPlayG } from "./testPlayG";
+import { testPS } from "./testPS";
 import { testReollRuleEffect } from "./testRerollRuleEffect";
 import { testReturnRuleEffect } from "./testReturnRuleEffect";
-import { testPS } from "./testPS";
-import { testCrossWeapon } from "./testCrossWeapon";
-import { getPrototype, loadPrototype } from "../script";
-import { PlayerA, PlayerB, PlayerIDFn } from "../game/define/PlayerID";
-import { getActivePlayerID, setActivePlayerID } from "../game/gameState/ActivePlayerComponent";
-import { getPhase, setPhase } from "../game/gameState/PhaseComponent";
-import { AbsoluteBaSyouFn } from "../game/define/BaSyou";
-import { addCards, createCardWithProtoIds, getCard, mapCard } from "../game/gameState/CardTableComponent";
-import { TargetMissingError, testGameError } from "../game/define/GameError";
-import { testPlayG } from "./testPlayG";
-import { testPlayChar } from "./testPlayChar";
-import { test179015_04B_U_BK061C_black, test179015_04B_U_BK061C_black_2 } from "./test179015_04B_U_BK061C_black";
-import { test179016_04B_U_BK066C_black } from "./test179016_04B_U_BK066C_black";
-import { Card } from "../game/define/Card";
-import { createGameState, GameState } from "../game/gameState/GameState";
-import { getItemState, mapItemState } from "../game/gameState/ItemStateComponent";
-import { swap } from "ramda";
-import { doItemSwap } from "../game/gameState/doItemSwap";
-import { getItemBaSyou, getItemIdsByBasyou } from "../game/gameState/ItemTableComponent";
-import { test179030_11E_U_BK194S_2_black, test179030_11E_U_BK194S_2_black_2 } from "./test179030_11E_U_BK194S_2_black";
-import { test179015_04B_U_BK058R_black } from "./test179015_04B_U_BK058R_black";
-import { testGain } from "./testGain";
-import { test179028_10D_C_BL070N_blue } from "./test179028_10D_C_BL070N_blue";
-import { test179003_01A_U_BK008U_black } from "./test179003_01A_U_BK008U_black";
-import { test179025_07D_U_RD158C_red } from "./test179025_07D_U_RD158C_red";
-import { testGetPlayEffects } from "./testGetPlayEffects";
-import { TableFns } from "../tool/table";
-import { Flow } from "../game/gameStateWithFlowMemory/Flow";
-import { logCategory } from "../tool/logger";
-import { test179020_05C_U_BK100U_black } from "./test179020_05C_U_BK100U_black";
-import { test179901_B2B_C_BK005P_black } from "./test179901_B2B_C_BK005P_black";
-import { testIssue } from "./testIssue";
-import { testCompress } from "./testCompress";
-import { test179027_09D_C_BK063R_black } from "./test179027_09D_C_BK063R_black";
 import { testSupply } from "./testSupply";
-import { testKaiSo } from "./testKaiSo";
-import { test179027_09D_C_WT067R_white } from "./test179027_09D_C_WT067R_white";
-import { test179007_02A_U_WT027U_white } from "./test179007_02A_U_WT027U_white";
 import { testThinkVer1 } from "./testThinkVer1";
+
 const fs = require('fs').promises;
 
 export async function tests() {
     return [
+        test179029_B3C_CH_WT102R_white,
         testIssue,
         testThinkVer1,
         test179007_02A_U_WT027U_white,
@@ -69,7 +66,7 @@ export async function tests() {
         testGain,
         testLoadPrototype,
         testSwapItem,
-        itemGroupTests,
+        testItemGroup,
         testFlow1,
         //testFlow2,
         testBattleBonus,

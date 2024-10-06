@@ -18,10 +18,11 @@ export const prototype: CardPrototype = {
       onEvent: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
         const evt = DefineFn.EffectFn.getEvent(effect)
         const cardId = DefineFn.EffectFn.getCardID(effect)
+        const cardController = GameStateFn.getItemController(ctx, cardId)
         if ((
           evt.title[0] == "場に出た場合"
           && (
-            evt.cardIds?.some(cardId => GameStateFn.getItemPrototype(ctx, cardId).title == "マニィ・アンバサダ"))
+            evt.cardIds?.some(cardId => GameStateFn.getItemController(ctx, cardId) == cardController && GameStateFn.getItemPrototype(ctx, cardId).title == "マニィ・アンバサダ"))
           || (
             DefineFn.TipFn.checkTipSatisfies(GameStateFn.createTipByEntitySearch(ctx, cardId, {
               atBa: true,
