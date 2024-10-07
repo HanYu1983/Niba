@@ -11,7 +11,7 @@ import { GameState } from "../../gameState/GameState";
 import { getItemState } from "../../gameState/ItemStateComponent";
 import { getItemPrototype } from "../../gameState/ItemTableComponent";
 import { getPhase } from "../../gameState/PhaseComponent";
-import { createPlayerScore, getPlayerGIds, getPlayerUnitIds } from "../../gameState/player";
+import { createPlayerScore, createPreviewEffectScore, getPlayerGIds, getPlayerUnitIds } from "../../gameState/player";
 import { getSetGroupBattlePoint, isMeleeUnit, isRangeUnit } from "../../gameState/setGroup";
 import { Flow } from "../Flow";
 import { GameStateWithFlowMemory } from "../GameStateWithFlowMemory";
@@ -33,7 +33,7 @@ export function thinkVer1(ctx: GameStateWithFlowMemory, playerId: PlayerID, flow
         const canAttackUnits = (TipFn.getWant(flow.tip) as StrBaSyouPair[]).filter(pair => hasIds.includes(pair[0]) == false)
         const meleeUnits = canAttackUnits.filter(pair => isMeleeUnit(ctx, pair[0]))
         // 對格鬥力排序
-        meleeUnits.sort(([id1, _], [id2, _2])=> getSetGroupBattlePoint(ctx, id2)[0] - getSetGroupBattlePoint(ctx, id1)[0])
+        meleeUnits.sort(([id1, _], [id2, _2]) => getSetGroupBattlePoint(ctx, id2)[0] - getSetGroupBattlePoint(ctx, id1)[0])
         const rangeUnits = canAttackUnits.filter(pair => isRangeUnit(ctx, pair[0]))
         let willAttackPairs: StrBaSyouPair[] = []
 
@@ -80,7 +80,7 @@ export function thinkVer1(ctx: GameStateWithFlowMemory, playerId: PlayerID, flow
         const canAttackUnits = (TipFn.getWant(flow.tip) as StrBaSyouPair[]).filter(pair => hasIds.includes(pair[0]) == false)
         const meleeUnits = canAttackUnits.filter(pair => isMeleeUnit(ctx, pair[0]))
         // 對格鬥力排序
-        meleeUnits.sort(([id1, _], [id2, _2])=> getSetGroupBattlePoint(ctx, id2)[0] - getSetGroupBattlePoint(ctx, id1)[0])
+        meleeUnits.sort(([id1, _], [id2, _2]) => getSetGroupBattlePoint(ctx, id2)[0] - getSetGroupBattlePoint(ctx, id1)[0])
         const rangeUnits = canAttackUnits.filter(pair => isRangeUnit(ctx, pair[0]))
         let willAttackPairs: StrBaSyouPair[] = []
         const battleArea: AbsoluteBaSyou = flow.tip.flags?.isGoBattleArea1 ? AbsoluteBaSyouFn.of(PlayerIDFn.getOpponent(playerId), "戦闘エリア1") : AbsoluteBaSyouFn.of(PlayerIDFn.getOpponent(playerId), "戦闘エリア2")
@@ -149,44 +149,9 @@ export function thinkVer1(ctx: GameStateWithFlowMemory, playerId: PlayerID, flow
   }
   // play內文時計算績分
   const playTexts = plays.filter(p => p.reason[0] == "PlayText")
-  const effectScorePairs: [Effect, number][] = playTexts.map(pt => {
-    try {
-      const originStackLength = getStackEffects(ctx).length
-      const originImmediateLength = getImmediateEffects(ctx).length
-      let ctx2: GameStateWithFlowMemory = JSON.parse(JSON.stringify(ctx))
-      ctx2 = setTipSelectionForUser(ctx2, pt, 0, 0) as GameStateWithFlowMemory
-      ctx2 = doEffect(ctx2, pt, 0, 0) as GameStateWithFlowMemory
-      if (getStackEffects(ctx2).length > originStackLength) {
-        const eff = getTopEffect(ctx2)
-        if (eff == null) {
-          throw new Error()
-        }
-        ctx2 = setTipSelectionForUser(ctx2, pt, 0, 0) as GameStateWithFlowMemory
-        ctx2 = doEffect(ctx2, eff, 0, 0) as GameStateWithFlowMemory
-      }
-      if (getImmediateEffects(ctx2).length > originImmediateLength) {
-        const eff = getImmediateEffects(ctx2)[0]
-        if (eff == null) {
-          throw new Error()
-        }
-        ctx2 = setTipSelectionForUser(ctx2, pt, 0, 0) as GameStateWithFlowMemory
-        ctx2 = doEffect(ctx2, eff, 0, 0) as GameStateWithFlowMemory
-      }
-      const score = createPlayerScore(ctx2, playerId) - createPlayerScore(ctx2, PlayerIDFn.getOpponent(playerId))
-      return [pt, score]
-    } catch (e: any) {
-      console.warn(`AI計算時例外，忽略:${e.message}`)
-    }
-    return [pt, 0]
-  })
-
-
-  // 如果使用後盤面分數比本來的差距還大就使用
-  const originScore = createPlayerScore(ctx, playerId) - createPlayerScore(ctx, PlayerIDFn.getOpponent(playerId))
-  effectScorePairs.sort(([_, s1], [_2, s2]) => s2 - s1)
-  const shouldUseTexts = effectScorePairs.filter(([eff, score]) => score > originScore)
+  const shouldUseTexts = createPreviewEffectScore(ctx, playerId, playTexts, { isMoreThenOrigin: true })
   if (shouldUseTexts.length) {
-    return { id: "FlowSetActiveEffectID", effectID: shouldUseTexts[0][0].id, tips: [] }
+    return { id: "FlowSetActiveEffectID", effectID: shouldUseTexts[0][0], tips: [] }
   }
   // 機體小於8張下機體
   if (myUnits.length < 8 && playUnits.length) {

@@ -18468,6 +18468,7 @@ var hideCategory = [
   "triggerEvent",
   "getPlayEffects",
   "getConditionTitleFn",
+  "doEffect",
   "applyFlow",
   "handleAttackDamage",
   "getGlobalEffects",
@@ -18481,7 +18482,22 @@ var hideCategory = [
   "createPlayEffects",
   "getConditionTitleFn",
   "createPlayCardEffects",
-  "addImmediateEffectIfCanPayCost"
+  "addImmediateEffectIfCanPayCost",
+  "doItemSetRollState",
+  "doActiveEffect",
+  "testCompress",
+  "createPlayerScore",
+  "onAddImmediateEffect",
+  "onSetPhase",
+  "onCardChange",
+  "onItemStateChange",
+  "onEvent",
+  "onEffectStart",
+  "onEffectEnd",
+  "onActionStart",
+  "onActionEnd",
+  "onItemMove",
+  "onItemAdd"
 ], filterCategory = !0, logCategory = (category, ...msg) => {
   if (filterCategory) {
     if (hideCategory.find((c) => c == category))
@@ -18536,11 +18552,11 @@ var EventCenterFn = {
   },
   onItemStateChange(_ctx, old, curr) {
     let ctx2 = getGameStateAndAssert(_ctx), effect = getMessageCurrentEffect(ctx2);
-    return ctx2;
+    return logCategory("onItemStateChange", old, curr), ctx2;
   },
   onCardChange(_ctx, old, curr) {
     let ctx2 = getGameStateAndAssert(_ctx), effect = getMessageCurrentEffect(ctx2);
-    return ctx2;
+    return logCategory("onCardChange", old, curr), ctx2;
   },
   onPlayerStateChange(_ctx, old, curr) {
     return getGameStateAndAssert(_ctx);
@@ -21052,11 +21068,13 @@ __export(exports_player, {
   isPlayerHasBattleGroup: () => isPlayerHasBattleGroup,
   getPlayerUnitIds: () => getPlayerUnitIds,
   getPlayerOperationIds: () => getPlayerOperationIds,
+  getPlayerJunkyardIds: () => getPlayerJunkyardIds,
   getPlayerHandIds: () => getPlayerHandIds,
   getPlayerGIds: () => getPlayerGIds,
   getPlayerDestroyIds: () => getPlayerDestroyIds,
   getPlayerCharacterIds: () => getPlayerCharacterIds,
   doPlayerAttack: () => doPlayerAttack,
+  createPreviewEffectScore: () => createPreviewEffectScore,
   createPlayerScore: () => createPlayerScore
 });
 
@@ -22222,6 +22240,9 @@ function getPlayerGIds(ctx2, playerId) {
 function getPlayerHandIds(ctx2, playerId) {
   return getItemIdsByBasyou(ctx2, AbsoluteBaSyouFn.of(playerId, "\u624B\u672D"));
 }
+function getPlayerJunkyardIds(ctx2, playerId) {
+  return getItemIdsByBasyou(ctx2, AbsoluteBaSyouFn.of(playerId, "\u30B8\u30E3\u30F3\u30AF\u30E4\u30FC\u30C9"));
+}
 function getPlayerDestroyIds(ctx2, playerId) {
   return getCutInDestroyEffects(ctx2).map((e) => EffectFn.getCardID(e)).filter((itemId) => getItemController(ctx2, itemId) == playerId);
 }
@@ -22235,13 +22256,42 @@ function getPlayerOperationIds(ctx2, playerId) {
   return lift_default(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getBaAll()).flatMap((basyou) => getItemIdsByBasyou(ctx2, basyou)).filter((itemId) => getItemPrototype(ctx2, itemId).category == "\u30AA\u30DA\u30EC\u30FC\u30B7\u30E7\u30F3");
 }
 function createPlayerScore(ctx2, playerId) {
-  const units = getPlayerUnitIds(ctx2, playerId), chars = getPlayerCharacterIds(ctx2, playerId), gs = getPlayerGIds(ctx2, playerId), ops = getPlayerOperationIds(ctx2, playerId), hands = getPlayerHandIds(ctx2, playerId), destroyIds = getPlayerDestroyIds(ctx2, playerId), gScore = gs.length * 3, unitScore = units.length * 5, charScore = chars.length, opScore = Math.max(2, ops.length) * 3, handScore = hands.length * 3, destroyScore = destroyIds.length * -20, rollScore = [...gs, ...units].filter((itemId) => getCard(ctx2, itemId).isRoll).length * -5, bpScore = units.map((id) => {
+  const units = getPlayerUnitIds(ctx2, playerId), chars = getPlayerCharacterIds(ctx2, playerId), gs = getPlayerGIds(ctx2, playerId), ops = getPlayerOperationIds(ctx2, playerId), hands = getPlayerHandIds(ctx2, playerId), destroyIds = ctx2.destroyEffect.filter((eid) => getItemController(ctx2, EffectFn.getCardID(getEffect(ctx2, eid))) == playerId), junkyardIds = getPlayerJunkyardIds(ctx2, playerId), gScore = gs.length * 3, unitScore = units.length * 5, charScore = chars.length, opScore = Math.max(3, ops.length) * 3, handScore = hands.length * 3, destroyScore = destroyIds.length * -10, junkyardScore = junkyardIds.length * -1, rollScore = [...gs, ...units].filter((itemId) => getCard(ctx2, itemId).isRoll).length * -5, bpScore = units.map((id) => {
     if (getCard(ctx2, id).isRoll)
       return 0;
     const [atk, range3, hp] = getSetGroupBattlePoint(ctx2, id);
     return atk + range3 + hp;
-  }).reduce((acc, c) => acc + c, 0), specialScore1 = units.filter((id) => getCardHasSpeicalEffect(ctx2, ["\u901F\u653B"], id)).length * 2, specialScore2 = units.filter((id) => getCardHasSpeicalEffect(ctx2, ["\u9AD8\u6A5F\u52D5"], id)).length * 2, specialScore3 = units.filter((id) => getCardHasSpeicalEffect(ctx2, ["\u5F37\u8972"], id)).length * 2;
-  return gScore + unitScore + charScore + opScore + handScore + destroyScore + rollScore + bpScore + specialScore1 + specialScore2 + specialScore3;
+  }).reduce((acc, c) => acc + c, 0), specialScore1 = units.filter((id) => getCardHasSpeicalEffect(ctx2, ["\u901F\u653B"], id)).length * 2, specialScore2 = units.filter((id) => getCardHasSpeicalEffect(ctx2, ["\u9AD8\u6A5F\u52D5"], id)).length * 2, specialScore3 = units.filter((id) => getCardHasSpeicalEffect(ctx2, ["\u5F37\u8972"], id)).length * 2, total = gScore + unitScore + charScore + opScore + handScore + destroyScore + junkyardScore + rollScore + bpScore + specialScore1 + specialScore2 + specialScore3;
+  return logCategory("createPlayerScore", "=======", playerId), logCategory("createPlayerScore", "gScore:", gScore), logCategory("createPlayerScore", "unitScore:", unitScore), logCategory("createPlayerScore", "charScore:", charScore), logCategory("createPlayerScore", "opScore:", opScore), logCategory("createPlayerScore", "handScore:", handScore), logCategory("createPlayerScore", "destroyScore:", destroyScore), logCategory("createPlayerScore", "junkyardScore:", junkyardScore), logCategory("createPlayerScore", "rollScore:", rollScore), logCategory("createPlayerScore", "bpScore:", bpScore), logCategory("createPlayerScore", "specialScore1:", specialScore1), logCategory("createPlayerScore", "specialScore2:", specialScore2), logCategory("createPlayerScore", "specialScore3:", specialScore3), logCategory("createPlayerScore", "total:", total), total;
+}
+function createPreviewEffectScore(ctx2, playerId, effects, options) {
+  const opponentId = PlayerIDFn.getOpponent(playerId), scoreA = createPlayerScore(ctx2, playerId), scoreB = createPlayerScore(ctx2, opponentId), score = scoreA - scoreB;
+  let effectScorePairs = effects.map((eff) => {
+    try {
+      let ctx22 = JSON.parse(JSON.stringify(ctx2));
+      ctx22.stackEffect = [], ctx22.immediateEffect = [], ctx22 = setTipSelectionForUser(ctx22, eff, 0, 0), ctx22 = doEffect(ctx22, eff, 0, 0);
+      for (let i = 0;i < 99; ++i) {
+        let eff2 = getTopEffect(ctx22);
+        if (eff2 == null)
+          break;
+        ctx22 = setTipSelectionForUser(ctx22, eff2, 0, 0), ctx22 = doEffect(ctx22, eff2, 0, 0), ctx22 = removeEffect(ctx22, eff2.id);
+      }
+      for (let i = 0;i < 99; ++i) {
+        const eff2 = getImmediateEffects(ctx22)[0];
+        if (eff2 == null)
+          break;
+        ctx22 = setTipSelectionForUser(ctx22, eff2, 0, 0), ctx22 = doEffect(ctx22, eff2, 0, 0), ctx22 = removeEffect(ctx22, eff2.id);
+      }
+      const scoreA2 = createPlayerScore(ctx22, playerId), scoreB2 = createPlayerScore(ctx22, opponentId), score2 = scoreA2 - scoreB2;
+      return [eff.id, score2];
+    } catch (e) {
+      console.warn(`AI\u8A08\u7B97\u6642\u4F8B\u5916\uFF0C\u5FFD\u7565:${e.message}`);
+    }
+    return [eff.id, 0];
+  });
+  if (effectScorePairs.sort(([_, s1], [_2, s2]) => s2 - s1), options?.isMoreThenOrigin)
+    effectScorePairs = effectScorePairs.filter(([_, s]) => s >= score);
+  return effectScorePairs;
 }
 
 // src/game/gameState/RuntimeBattleAreaComponent.ts
@@ -25728,33 +25778,9 @@ function thinkVer1(ctx2, playerId, flows, options) {
     if (shouldSetCharEffs.length)
       return { id: "FlowSetActiveEffectID", effectID: shouldSetCharEffs[Math.round(Math.random() * 1000) % shouldSetCharEffs.length].id, tips: [] };
   }
-  const effectScorePairs = plays.filter((p) => p.reason[0] == "PlayText").map((pt) => {
-    try {
-      const originStackLength = getStackEffects(ctx2).length, originImmediateLength = getImmediateEffects(ctx2).length;
-      let ctx22 = JSON.parse(JSON.stringify(ctx2));
-      if (ctx22 = setTipSelectionForUser(ctx22, pt, 0, 0), ctx22 = doEffect(ctx22, pt, 0, 0), getStackEffects(ctx22).length > originStackLength) {
-        const eff = getTopEffect(ctx22);
-        if (eff == null)
-          throw new Error;
-        ctx22 = setTipSelectionForUser(ctx22, pt, 0, 0), ctx22 = doEffect(ctx22, eff, 0, 0);
-      }
-      if (getImmediateEffects(ctx22).length > originImmediateLength) {
-        const eff = getImmediateEffects(ctx22)[0];
-        if (eff == null)
-          throw new Error;
-        ctx22 = setTipSelectionForUser(ctx22, pt, 0, 0), ctx22 = doEffect(ctx22, eff, 0, 0);
-      }
-      const score = createPlayerScore(ctx22, playerId) - createPlayerScore(ctx22, PlayerIDFn.getOpponent(playerId));
-      return [pt, score];
-    } catch (e) {
-      console.warn(`AI\u8A08\u7B97\u6642\u4F8B\u5916\uFF0C\u5FFD\u7565:${e.message}`);
-    }
-    return [pt, 0];
-  }), originScore = createPlayerScore(ctx2, playerId) - createPlayerScore(ctx2, PlayerIDFn.getOpponent(playerId));
-  effectScorePairs.sort(([_, s1], [_2, s2]) => s2 - s1);
-  const shouldUseTexts = effectScorePairs.filter(([eff, score]) => score > originScore);
+  const playTexts = plays.filter((p) => p.reason[0] == "PlayText"), shouldUseTexts = createPreviewEffectScore(ctx2, playerId, playTexts, { isMoreThenOrigin: !0 });
   if (shouldUseTexts.length)
-    return { id: "FlowSetActiveEffectID", effectID: shouldUseTexts[0][0].id, tips: [] };
+    return { id: "FlowSetActiveEffectID", effectID: shouldUseTexts[0][0], tips: [] };
   if (myUnits.length < 8 && playUnits.length)
     return { id: "FlowSetActiveEffectID", effectID: playUnits[0].id, tips: [] };
   const useFlows = flows.filter((flow) => {

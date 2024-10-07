@@ -36,6 +36,7 @@ import { testGetPlayEffects } from "./testGetPlayEffects";
 import { testIssue } from "./testIssue";
 import { testKaiSo } from "./testKaiSo";
 import { testPlayChar } from "./testPlayChar";
+import { testPlayerScore } from "./testPlayerScore";
 import { testPlayG } from "./testPlayG";
 import { testPS } from "./testPS";
 import { testReollRuleEffect } from "./testRerollRuleEffect";
@@ -47,6 +48,7 @@ const fs = require('fs').promises;
 
 export async function tests() {
     return [
+        testPlayerScore,
         testThinkVer1_2,
         test179029_B3C_CH_WT102R_white,
         testIssue,

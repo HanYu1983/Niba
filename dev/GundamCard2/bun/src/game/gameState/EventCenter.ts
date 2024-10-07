@@ -55,11 +55,13 @@ export const EventCenterFn = {
     onItemStateChange(_ctx: any, old: ItemState, curr: ItemState): any {
         let ctx = getGameStateAndAssert(_ctx)
         let effect = getMessageCurrentEffect(ctx)
+        logCategory(`onItemStateChange`, old, curr)
         return ctx
     },
     onCardChange(_ctx: any, old: Card, curr: Card): any {
         let ctx = getGameStateAndAssert(_ctx)
         let effect = getMessageCurrentEffect(ctx)
+        logCategory(`onCardChange`, old, curr)
         return ctx
     },
     onPlayerStateChange(_ctx: any, old: PlayerState, curr: PlayerState): any {

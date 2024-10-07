@@ -2,9 +2,9 @@ import { pipe, always, map, sum, lift } from "ramda";
 import { logCategory } from "../../tool/logger";
 import { AttackSpeed } from "../define";
 import { AbsoluteBaSyouFn, BaSyouKeyword, BaSyouKeywordFn } from "../define/BaSyou";
-import { DestroyReason, EffectFn } from "../define/Effect";
+import { DestroyReason, Effect, EffectFn } from "../define/Effect";
 import { ItemState } from "../define/ItemState";
-import { PlayerID, PlayerIDFn } from "../define/PlayerID";
+import { PlayerA, PlayerB, PlayerID, PlayerIDFn } from "../define/PlayerID";
 import { isBattleGroupHasA, getBattleGroup, getBattleGroupBattlePoint } from "./battleGroup";
 import { GameState } from "./GameState";
 import { getItemState, setItemState } from "./ItemStateComponent";
@@ -15,9 +15,9 @@ import { StrBaSyouPair } from "../define/Tip";
 import { doItemMove } from "./doItemMove";
 import { createStrBaSyouPair, getItemController, getItemIdsByBasyou, getItemPrototype } from "./ItemTableComponent";
 import { doItemSetDestroy } from "./doItemSetDestroy";
-import { getCardTipStrBaSyouPairs } from "./doEffect";
+import { doEffect, getCardTipStrBaSyouPairs, setTipSelectionForUser } from "./doEffect";
 import { doCountryDamage } from "./doCountryDamage";
-import { addDestroyEffect, getCutInDestroyEffects } from "./EffectStackComponent";
+import { addDestroyEffect, getCutInDestroyEffects, getEffect, getImmediateEffects, getTopEffect, removeEffect } from "./EffectStackComponent";
 import { createDestroyEffect } from "./createDestroyEffect";
 import { getCard } from "./CardTableComponent";
 import { getCardHasSpeicalEffect } from "./card";
@@ -186,6 +186,10 @@ export function getPlayerHandIds(ctx: GameState, playerId: PlayerID): string[] {
   return getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(playerId, "手札"))
 }
 
+export function getPlayerJunkyardIds(ctx: GameState, playerId: PlayerID): string[] {
+  return getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(playerId, "ジャンクヤード"))
+}
+
 export function getPlayerDestroyIds(ctx: GameState, playerId: PlayerID): string[] {
   return getCutInDestroyEffects(ctx).map(e => EffectFn.getCardID(e)).filter(itemId => getItemController(ctx, itemId) == playerId)
 }
@@ -208,13 +212,17 @@ export function createPlayerScore(ctx: GameState, playerId: string): number {
   const gs = getPlayerGIds(ctx, playerId)
   const ops = getPlayerOperationIds(ctx, playerId)
   const hands = getPlayerHandIds(ctx, playerId)
-  const destroyIds = getPlayerDestroyIds(ctx, playerId)
+  // 從未處理的破壞陣列取得
+  const destroyIds = ctx.destroyEffect.filter(eid => getItemController(ctx, EffectFn.getCardID(getEffect(ctx, eid))) == playerId)
+  const junkyardIds = getPlayerJunkyardIds(ctx, playerId)
   const gScore = gs.length * 3
   const unitScore = units.length * 5
   const charScore = chars.length
-  const opScore = Math.max(2, ops.length) * 3
+  // op再多也沒什麼分
+  const opScore = Math.max(3, ops.length) * 3
   const handScore = hands.length * 3
-  const destroyScore = destroyIds.length * -20
+  const destroyScore = destroyIds.length * -10
+  const junkyardScore = junkyardIds.length * -1
   const rollScore = [...gs, ...units].filter(itemId => getCard(ctx, itemId).isRoll).length * -5
   const bpScore = units.map(id => {
     if (getCard(ctx, id).isRoll) {
@@ -226,5 +234,66 @@ export function createPlayerScore(ctx: GameState, playerId: string): number {
   const specialScore1 = units.filter(id => getCardHasSpeicalEffect(ctx, ["速攻"], id)).length * 2
   const specialScore2 = units.filter(id => getCardHasSpeicalEffect(ctx, ["高機動"], id)).length * 2
   const specialScore3 = units.filter(id => getCardHasSpeicalEffect(ctx, ["強襲"], id)).length * 2
-  return gScore + unitScore + charScore + opScore + handScore + destroyScore + rollScore + bpScore + specialScore1 + specialScore2 + specialScore3
+  const total = gScore + unitScore + charScore + opScore + handScore + destroyScore + junkyardScore + rollScore + bpScore + specialScore1 + specialScore2 + specialScore3
+  logCategory("createPlayerScore", "=======", playerId)
+  logCategory("createPlayerScore", "gScore:", gScore)
+  logCategory("createPlayerScore", "unitScore:", unitScore)
+  logCategory("createPlayerScore", "charScore:", charScore)
+  logCategory("createPlayerScore", "opScore:", opScore)
+  logCategory("createPlayerScore", "handScore:", handScore)
+  logCategory("createPlayerScore", "destroyScore:", destroyScore)
+  logCategory("createPlayerScore", "junkyardScore:", junkyardScore)
+  logCategory("createPlayerScore", "rollScore:", rollScore)
+  logCategory("createPlayerScore", "bpScore:", bpScore)
+  logCategory("createPlayerScore", "specialScore1:", specialScore1)
+  logCategory("createPlayerScore", "specialScore2:", specialScore2)
+  logCategory("createPlayerScore", "specialScore3:", specialScore3)
+  logCategory("createPlayerScore", "total:", total)
+  return total
+}
+
+export function createPreviewEffectScore(ctx: GameState, playerId: string, effects: Effect[], options?: { isMoreThenOrigin?: boolean }): [string, number][] {
+  const opponentId = PlayerIDFn.getOpponent(playerId)
+  const scoreA = createPlayerScore(ctx, playerId)
+  const scoreB = createPlayerScore(ctx, opponentId)
+  const score = scoreA - scoreB
+  let effectScorePairs: [string, number][] = effects.map(eff => {
+    try {
+      let ctx2: GameState = JSON.parse(JSON.stringify(ctx))
+      ctx2.stackEffect = []
+      ctx2.immediateEffect = []
+      ctx2 = setTipSelectionForUser(ctx2, eff, 0, 0) as GameState
+      ctx2 = doEffect(ctx2, eff, 0, 0) as GameState
+      for (let i = 0; i < 99; ++i) {
+        let eff = getTopEffect(ctx2)
+        if (eff == null) {
+          break
+        }
+        ctx2 = setTipSelectionForUser(ctx2, eff, 0, 0) as GameState
+        ctx2 = doEffect(ctx2, eff, 0, 0) as GameState
+        ctx2 = removeEffect(ctx2, eff.id) as GameState
+      }
+      for (let i = 0; i < 99; ++i) {
+        const eff = getImmediateEffects(ctx2)[0]
+        if (eff == null) {
+          break
+        }
+        ctx2 = setTipSelectionForUser(ctx2, eff, 0, 0) as GameState
+        ctx2 = doEffect(ctx2, eff, 0, 0) as GameState
+        ctx2 = removeEffect(ctx2, eff.id) as GameState
+      }
+      const scoreA = createPlayerScore(ctx2, playerId)
+      const scoreB = createPlayerScore(ctx2, opponentId)
+      const score = scoreA - scoreB
+      return [eff.id, score]
+    } catch (e: any) {
+      console.warn(`AI計算時例外，忽略:${e.message}`)
+    }
+    return [eff.id, 0]
+  })
+  effectScorePairs.sort(([_, s1], [_2, s2]) => s2 - s1)
+  if (options?.isMoreThenOrigin) {
+    effectScorePairs = effectScorePairs.filter(([_, s]) => s >= score)
+  }
+  return effectScorePairs
 }

@@ -40,7 +40,7 @@ export async function testCompress() {
                         try {
                             let flow: Flow | null = thinkVer1(ctx, playerId, flows)
                             if (flow) {
-                                logCategory("logCategory", "think", playerId, flow.id)
+                                logCategory("testCompress", "think", playerId, flow.id)
                             }
                             if (flow == null) {
                                 flow = flows[Math.round(Math.random() * 1000) % flows.length]
