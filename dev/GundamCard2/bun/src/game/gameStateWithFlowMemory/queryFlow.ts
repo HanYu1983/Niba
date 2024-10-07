@@ -279,38 +279,6 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
             },
         ];
     }
-    // 破壞效果，如果效果多於0個，則讓主動玩家選擇順序
-    SelectDestroyOrder: {
-        switch (ctx.phase[0]) {
-            case "戦闘フェイズ":
-                switch (ctx.phase[1]) {
-                    case "ダメージ判定ステップ":
-                        switch (ctx.phase[2]) {
-                            case "規定の効果":
-                                break SelectDestroyOrder;
-                        }
-                }
-        }
-        const willAddedDestroyEffects = ctx.destroyEffect.map(aid => getEffect(ctx, aid));
-        if (willAddedDestroyEffects.length) {
-            const isActivePlayer = ctx.activePlayerID == playerID;
-            if (isActivePlayer == false) {
-                return [
-                    {
-                        id: "FlowWaitPlayer",
-                        description: "等待主動玩家決定破壞廢棄效果的順序",
-                    },
-                ];
-            }
-            return [
-                {
-                    id: "FlowMakeDestroyOrder",
-                    destroyEffect: willAddedDestroyEffects,
-                    description: "決定破壞廢棄效果的順序",
-                },
-            ];
-        }
-    }
     const myCommandList = getPlayerCommandsFilterNoErrorDistinct(ctx, playerID).map(tip => tip.effectId).map(id => getEffect(ctx, id))
     // 處理堆疊效果，從最上方開始處理
     if (ctx.stackEffect.length) {
@@ -394,6 +362,39 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
                 tips: [effect],
             },
         ];
+    }
+
+    // 破壞效果，如果效果多於0個，則讓主動玩家選擇順序
+    SelectDestroyOrder: {
+        switch (ctx.phase[0]) {
+            case "戦闘フェイズ":
+                switch (ctx.phase[1]) {
+                    case "ダメージ判定ステップ":
+                        switch (ctx.phase[2]) {
+                            case "規定の効果":
+                                break SelectDestroyOrder;
+                        }
+                }
+        }
+        const willAddedDestroyEffects = ctx.destroyEffect.map(aid => getEffect(ctx, aid));
+        if (willAddedDestroyEffects.length) {
+            const isActivePlayer = ctx.activePlayerID == playerID;
+            if (isActivePlayer == false) {
+                return [
+                    {
+                        id: "FlowWaitPlayer",
+                        description: "等待主動玩家決定破壞廢棄效果的順序",
+                    },
+                ];
+            }
+            return [
+                {
+                    id: "FlowMakeDestroyOrder",
+                    destroyEffect: willAddedDestroyEffects,
+                    description: "決定破壞廢棄效果的順序",
+                },
+            ];
+        }
     }
 
     const handleFreeTiming = (): Flow[] => {

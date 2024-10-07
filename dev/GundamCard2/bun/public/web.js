@@ -21312,6 +21312,13 @@ function onMoveItem(ctx2, to, [cardId, from]) {
         isFaceDown: !1
       };
     });
+  else if (["G\u30BE\u30FC\u30F3"].includes(AbsoluteBaSyouFn.getBaSyouKeyword(to)))
+    ctx2 = mapCard(ctx2, cardId, (card) => {
+      return {
+        ...card,
+        isFaceDown: !1
+      };
+    });
   return ctx2 = doTriggerEvent(ctx2, {
     title: ["GameEventOnMove", from, to],
     cardIds: [cardId]
@@ -24976,35 +24983,6 @@ function queryFlow(ctx2, playerID) {
       }
     ];
   }
-  SelectDestroyOrder: {
-    switch (ctx2.phase[0]) {
-      case "\u6226\u95D8\u30D5\u30A7\u30A4\u30BA":
-        switch (ctx2.phase[1]) {
-          case "\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7":
-            switch (ctx2.phase[2]) {
-              case "\u898F\u5B9A\u306E\u52B9\u679C":
-                break SelectDestroyOrder;
-            }
-        }
-    }
-    const willAddedDestroyEffects = ctx2.destroyEffect.map((aid) => getEffect(ctx2, aid));
-    if (willAddedDestroyEffects.length) {
-      if (ctx2.activePlayerID == playerID == !1)
-        return [
-          {
-            id: "FlowWaitPlayer",
-            description: "\u7B49\u5F85\u4E3B\u52D5\u73A9\u5BB6\u6C7A\u5B9A\u7834\u58DE\u5EE2\u68C4\u6548\u679C\u7684\u9806\u5E8F"
-          }
-        ];
-      return [
-        {
-          id: "FlowMakeDestroyOrder",
-          destroyEffect: willAddedDestroyEffects,
-          description: "\u6C7A\u5B9A\u7834\u58DE\u5EE2\u68C4\u6548\u679C\u7684\u9806\u5E8F"
-        }
-      ];
-    }
-  }
   const myCommandList = getPlayerCommandsFilterNoErrorDistinct(ctx2, playerID).map((tip) => tip.effectId).map((id) => getEffect(ctx2, id));
   if (ctx2.stackEffect.length) {
     const effect = getTopEffect(ctx2);
@@ -25063,6 +25041,35 @@ function queryFlow(ctx2, playerID) {
         tips: [effect]
       }
     ];
+  }
+  SelectDestroyOrder: {
+    switch (ctx2.phase[0]) {
+      case "\u6226\u95D8\u30D5\u30A7\u30A4\u30BA":
+        switch (ctx2.phase[1]) {
+          case "\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7":
+            switch (ctx2.phase[2]) {
+              case "\u898F\u5B9A\u306E\u52B9\u679C":
+                break SelectDestroyOrder;
+            }
+        }
+    }
+    const willAddedDestroyEffects = ctx2.destroyEffect.map((aid) => getEffect(ctx2, aid));
+    if (willAddedDestroyEffects.length) {
+      if (ctx2.activePlayerID == playerID == !1)
+        return [
+          {
+            id: "FlowWaitPlayer",
+            description: "\u7B49\u5F85\u4E3B\u52D5\u73A9\u5BB6\u6C7A\u5B9A\u7834\u58DE\u5EE2\u68C4\u6548\u679C\u7684\u9806\u5E8F"
+          }
+        ];
+      return [
+        {
+          id: "FlowMakeDestroyOrder",
+          destroyEffect: willAddedDestroyEffects,
+          description: "\u6C7A\u5B9A\u7834\u58DE\u5EE2\u68C4\u6548\u679C\u7684\u9806\u5E8F"
+        }
+      ];
+    }
   }
   const handleFreeTiming = () => {
     if ((!!ctx2.flowMemory.hasPlayerPassPhase[PlayerA] && !!ctx2.flowMemory.hasPlayerPassPhase[PlayerB]) == !1) {

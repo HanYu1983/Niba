@@ -110,6 +110,13 @@ export function onMoveItem(ctx: GameState, to: AbsoluteBaSyou, [cardId, from]: S
                 isFaceDown: false,
             }
         }) as GameState
+    } else if ((["Gゾーン"] as BaSyouKeyword[]).includes(AbsoluteBaSyouFn.getBaSyouKeyword(to))) {
+        ctx = mapCard(ctx, cardId, card => {
+            return {
+                ...card,
+                isFaceDown: false,
+            }
+        }) as GameState
     }
     ctx = doTriggerEvent(ctx, {
         title: ["GameEventOnMove", from, to],
