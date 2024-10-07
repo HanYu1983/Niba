@@ -83,6 +83,7 @@ export const ActionFn = {
 }
 
 export type EntitySearchOptions = {
+    isThisBattleGroup?:boolean,
     isBattle?: boolean,
     side?: RelatedPlayerSideKeyword,
     see?: [BaSyou, number, number],

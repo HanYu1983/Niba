@@ -6,6 +6,7 @@ import { TipError } from "../define/GameError";
 import { ItemState } from "../define/ItemState";
 import { PlayerID, PlayerA, PlayerB, PlayerIDFn } from "../define/PlayerID";
 import { Tip, StrBaSyouPair, TipFn } from "../define/Tip";
+import { getBattleGroup } from "./battleGroup";
 import { getCardColor, getCardHasSpeicalEffect, getItemCharacteristic, getItemRuntimeCategory, isCardMaster } from "./card";
 import { getCoinIds, getCoin, getCoinOwner } from "./CoinTableComponent";
 import { createAbsoluteBaSyouFromBaSyou, createPlayerIdFromRelated } from "./createActionTitleFn";
@@ -77,6 +78,16 @@ export function createEntityIterator(ctx: GameState) {
 export function createTipByEntitySearch(ctx: GameState, cardId: string, options: EntitySearchOptions): Tip {
     let entityList = createEntityIterator(ctx).filter(EntityFn.filterIsBattle(ctx, null, options.isBattle || false))
     const cheatCardIds: string[] = []
+    if (options.isThisBattleGroup) {
+        const basyou = getItemBaSyou(ctx, cardId)
+        if (basyou.value[1] == "戦闘エリア1" || basyou.value[1] == "戦闘エリア2") {
+            const battleGroupIds = getBattleGroup(ctx, getItemBaSyou(ctx, cardId))
+            entityList = entityList.filter(entity => battleGroupIds.includes(entity.itemId))
+        } else {
+            // 如果沒在戰區無法組成部隊
+            entityList = []
+        }
+    }
     if (options.hasSelfCardId != null) {
         const absoluteBasyou = getItemBaSyou(ctx, cardId)
         entityList = entityList.filter(EntityFn.filterController(AbsoluteBaSyouFn.getPlayerID(absoluteBasyou)))

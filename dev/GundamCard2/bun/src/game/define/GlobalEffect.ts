@@ -11,10 +11,12 @@ export type GlobalEffectTitle =
     | ["自軍Gとしてロール"]
     | ["＋x／＋x／＋xを得る", BattleBonus]
     | ["發生國力", CardColor[]]
-    | ["SpecialEffectBonus", TextSpeicalEffect, number]
+    | ["SpecialEffectBonus", TextSpeicalEffect]
     | ["場、または手札から、自軍ジャンクヤードにカードが移る場合、ジャンクヤードに移る代わりにゲームから取り除かれる"]
     | ["自軍手札にあるかのようにプレイできる"]
     | ["3以下の合計国力を持つ敵軍コマンドの効果では無効にならない"]
+    | ["このカードの部隊の部隊戦闘力を_＋３する", number]
+    | ["このカードと交戦中の敵軍部隊の部隊戦闘力を_－３する", number]
 
 export type GlobalEffect = {
     title: GlobalEffectTitle,

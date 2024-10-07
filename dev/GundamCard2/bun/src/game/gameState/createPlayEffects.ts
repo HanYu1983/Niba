@@ -133,9 +133,13 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
                                             // 使用了卡牌後, 同一個回合不能再使用. 以下記錄使用過的卡片, 會在切入結束後清除
                                             const cardId = DefineFn.EffectFn.getCardID(effect)
                                             const ps = GameStateFn.getItemState(ctx, cardId)
-                                            // TODO 有些效果一回合能用2次以上
-                                            if ((ps.textIdsUseThisTurn || []).filter(tid=> tid == effect.text.id).length > 0) {
-                                                throw new DefineFn.TipError(`同回合上限: ${effect.text.description}`)
+                                            // 有"每"字的一回內可以無限使用
+                                            if (effect.text.isEachTime) {
+
+                                            } else {
+                                                if ((ps.textIdsUseThisTurn || []).filter(tid => tid == effect.text.id).length > 0) {
+                                                    throw new DefineFn.TipError(`同回合上限: ${effect.text.description}`)
+                                                }
                                             }
                                             ctx = GameStateFn.mapItemState(ctx, cardId, ps => {
                                                 return {

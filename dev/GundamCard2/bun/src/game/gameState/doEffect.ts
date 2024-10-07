@@ -285,7 +285,7 @@ export function createCommandEffectTips(ctx: GameState, effect: Effect): Command
   return []
 }
 
-function getCardTipSelection(ctx: GameState, varName: string, cardId: string) {
+export function getCardTipSelection(ctx: GameState, varName: string, cardId: string) {
   const cardState = getItemState(ctx, cardId);
   const tip = ItemStateFn.getTip(cardState, varName)
   const tipError = TipFn.checkTipSatisfies(tip)
@@ -297,6 +297,7 @@ function getCardTipSelection(ctx: GameState, varName: string, cardId: string) {
     case "テキスト":
     case "StringOptions":
     case "BattleBonus":
+    case "GlobalEffects":
       return TipFn.getSelection(tip)
   }
 }

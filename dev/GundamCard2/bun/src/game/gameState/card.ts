@@ -34,7 +34,7 @@ export function getCardSpecialText(ctx: GameState, cardID: string, text: CardTex
       ctx = setGlobalEffects(ctx, null, ges)
       const bonus = ges.filter(ge => ge.cardIds.includes(cardID)).map(ge => {
         if (ge.title[0] == "SpecialEffectBonus" && ge.title[1][0] == name) {
-          return ge.title[2]
+          return ge.title[1][1]
         }
         return 0
       }).reduce((a, b) => a + b)
