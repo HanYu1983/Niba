@@ -35,6 +35,14 @@ export function setSetGroupParent(ctx: SetGroupComponent, parentCardId: string, 
   return ctx
 }
 
+export function removeSetGroupParent(ctx: SetGroupComponent, cardId: string): SetGroupComponent {
+  ctx = {
+    ...ctx,
+    setGroup: ItemGroupFn.deleteItemGroup(ctx.setGroup, cardId)
+  }
+  return ctx
+}
+
 // TODO
 // P67 SetGroup的破壞和移動
 // SetGroup移到本國或捨山時, 使用者可以決定順序

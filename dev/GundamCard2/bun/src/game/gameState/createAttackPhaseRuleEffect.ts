@@ -2,14 +2,16 @@ import { Bridge } from "../../script/bridge";
 import { BaKeyword } from "../define/BaSyou";
 import { Effect } from "../define/Effect";
 import { PlayerID } from "../define/PlayerID";
-import { StrBaSyouPair, Tip } from "../define/Tip";
+import { StrBaSyouPair, Tip, TipFn } from "../define/Tip";
 import { ToolFn } from "../tool";
 import { GameState } from "./GameState";
+import { getPhase } from "./PhaseComponent";
 
 export function createAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID): Effect {
+    const phase = getPhase(ctx)
     return {
         id: `createAttackPhaseRuleEffect_${playerId}`,
-        reason: ["GameRule", playerId],
+        reason: ["GameRule", playerId, { isAttack: phase[1] == "攻撃ステップ", isDefence: phase[1] == "防御ステップ" }],
         description: "出擊",
         isOption: true,
         text: {
@@ -17,7 +19,7 @@ export function createAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID):
             title: [],
             description: "出擊",
             conditions: {
-                "去地球": {
+                [TipFn.createGoEarthKey()]: {
                     title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip | null {
                         const currentBaKw: BaKeyword = "戦闘エリア1"
                         const runtimeBattleArea = GameStateFn.getRuntimeBattleArea(ctx, currentBaKw)
@@ -42,6 +44,7 @@ export function createAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID):
                         })
                         return {
                             title: ["カード", pairs, []],
+                            flags: { isGoBattleArea1: true }
                         }
                     }.toString(),
                     actions: [
@@ -56,9 +59,10 @@ export function createAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID):
                                 return ctx
                             }.toString()
                         }
-                    ]
+                    ],
+                    groupKey: "出擊"
                 },
-                "去宇宙": {
+                [TipFn.createGoSpaceKey()]: {
                     title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip | null {
                         const currentBaKw: BaKeyword = "戦闘エリア2"
                         const runtimeBattleArea = GameStateFn.getRuntimeBattleArea(ctx, currentBaKw)
@@ -83,6 +87,7 @@ export function createAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID):
                         })
                         return {
                             title: ["カード", pairs, []],
+                            flags: { isGoBattleArea2: true }
                         }
                     }.toString(),
                     actions: [
@@ -97,7 +102,8 @@ export function createAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID):
                                 return ctx
                             }.toString()
                         }
-                    ]
+                    ],
+                    groupKey: "出擊"
                 }
             },
             logicTreeActions: [

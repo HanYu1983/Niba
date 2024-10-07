@@ -31,7 +31,7 @@ export const prototype: CardPrototype = {
                   see: [DefineFn.RelatedBaSyouFn.of("自軍", "本国"), 1, 4],
                   hasChar: ["ヘイズル系"],
                   cardCategory: ["ユニット"],
-                  count: 1,
+                  max: 1,
                 }],
                 // actions: [
                 //   {

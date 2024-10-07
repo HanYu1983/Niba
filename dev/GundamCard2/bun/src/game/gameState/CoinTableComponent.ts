@@ -38,7 +38,7 @@ export function addCoins(ctx: CoinTableComponent, cardId: string, added: Coin[])
 }
 
 export function getCardIdByCoinId(ctx: CoinTableComponent, id: string): string {
-  if(ctx.coinId2cardId[id] == null){
+  if (ctx.coinId2cardId[id] == null) {
     throw new Error(`coin cardId not found: ${id}`)
   }
   return ctx.coinId2cardId[id]
@@ -46,6 +46,20 @@ export function getCardIdByCoinId(ctx: CoinTableComponent, id: string): string {
 
 export function getCoinIdsByCardId(ctx: CoinTableComponent, cardId: string): string[] {
   return Object.keys(ctx.coinId2cardId).filter(coinId => ctx.coinId2cardId[coinId] == cardId)
+}
+
+export function removeCoinIds(ctx: CoinTableComponent, ids: string[]): CoinTableComponent {
+  const coinId2cardId = { ...ctx.coinId2cardId }
+  const coins = { ...ctx.coins }
+  for (const id of ids) {
+    delete coinId2cardId[id]
+    delete coins[id]
+  }
+  return {
+    ...ctx,
+    coinId2cardId: coinId2cardId,
+    coins: coins
+  }
 }
 
 export function getCoinOwner(ctx: CoinTableComponent, id: string): PlayerID {

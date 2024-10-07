@@ -1,8 +1,8 @@
-import { pipe, always, map, sum } from "ramda";
+import { pipe, always, map, sum, lift } from "ramda";
 import { logCategory } from "../../tool/logger";
 import { AttackSpeed } from "../define";
-import { AbsoluteBaSyouFn, BaSyouKeyword } from "../define/BaSyou";
-import { DestroyReason } from "../define/Effect";
+import { AbsoluteBaSyouFn, BaSyouKeyword, BaSyouKeywordFn } from "../define/BaSyou";
+import { DestroyReason, EffectFn } from "../define/Effect";
 import { ItemState } from "../define/ItemState";
 import { PlayerID, PlayerIDFn } from "../define/PlayerID";
 import { isBattleGroupHasA, getBattleGroup, getBattleGroupBattlePoint } from "./battleGroup";
@@ -13,12 +13,16 @@ import { getSetGroupBattlePoint } from "./setGroup";
 import { doTriggerEvent } from "./doTriggerEvent";
 import { StrBaSyouPair } from "../define/Tip";
 import { doItemMove } from "./doItemMove";
-import { createStrBaSyouPair, getItemController, getItemIdsByBasyou } from "./ItemTableComponent";
+import { createStrBaSyouPair, getItemController, getItemIdsByBasyou, getItemPrototype } from "./ItemTableComponent";
 import { doItemSetDestroy } from "./doItemSetDestroy";
 import { getCardTipStrBaSyouPairs } from "./doEffect";
 import { doCountryDamage } from "./doCountryDamage";
-import { addDestroyEffect } from "./EffectStackComponent";
+import { addDestroyEffect, getCutInDestroyEffects } from "./EffectStackComponent";
 import { createDestroyEffect } from "./createDestroyEffect";
+import { getCard } from "./CardTableComponent";
+import { getCardHasSpeicalEffect } from "./card";
+import { getActivePlayerID } from "./ActivePlayerComponent";
+import { isBattle } from "./IsBattleComponent";
 
 // player
 export function isPlayerHasBattleGroup(
@@ -109,25 +113,27 @@ function doDamage(
         }, ctx)
       }
 
-      if (willGuardUnits.length == 0 || isBattleGroupHasA(ctx, ["強襲"], willAttackUnits[0])) {
-        ctx = doCountryDamage(ctx, currentGuardPlayerID, currentAttackPower)
-        {
-          const gameEvent: GameEvent = {
-            title: ["このカードの部隊が敵軍本国に戦闘ダメージを与えた場合"],
-            cardIds: willAttackUnits,
-          };
-          ctx = doTriggerEvent(ctx, gameEvent)
-        }
-        {
-          const gameEvent: GameEvent = {
-            title: ["自軍本国に戦闘ダメージが与えられた場合"],
-            playerId: currentGuardPlayerID
-          };
-          ctx = doTriggerEvent(ctx, gameEvent)
+      // 若傷害沒有用完, 攻擊方可以攻擊本國
+      if (currentAttackPlayerID == getActivePlayerID(ctx) && currentAttackPower > 0) {
+        // 非交戰中或有強襲才能打本國(p35)
+        if (isBattle(ctx, willAttackUnits[0], null) == false || isBattleGroupHasA(ctx, ["強襲"], willAttackUnits[0])) {
+          ctx = doCountryDamage(ctx, currentGuardPlayerID, currentAttackPower)
+          {
+            const gameEvent: GameEvent = {
+              title: ["このカードの部隊が敵軍本国に戦闘ダメージを与えた場合"],
+              cardIds: willAttackUnits,
+            };
+            ctx = doTriggerEvent(ctx, gameEvent)
+          }
+          {
+            const gameEvent: GameEvent = {
+              title: ["自軍本国に戦闘ダメージが与えられた場合"],
+              playerId: currentGuardPlayerID
+            };
+            ctx = doTriggerEvent(ctx, gameEvent)
+          }
         }
       }
-      // 攻擊方可以攻擊本國
-      // 若傷害沒有用完, 攻擊本國
       // if (
       //   currentAttackPower > 0 ||
       //   // 對方有防禦機體的情況, 有強襲就攻擊本國
@@ -166,8 +172,59 @@ export function doPlayerAttack(
     const itemState = getItemState(ctx, cardId)
     const [_, _2, hp] = getSetGroupBattlePoint(ctx, cardId)
     if (hp <= itemState.damage) {
-      ctx = addDestroyEffect(ctx, createDestroyEffect(ctx, {id:"戦闘ダメージ", playerID: PlayerIDFn.getOpponent(getItemController(ctx, cardId))}, cardId)) as GameState
+      ctx = addDestroyEffect(ctx, createDestroyEffect(ctx, { id: "戦闘ダメージ", playerID: PlayerIDFn.getOpponent(getItemController(ctx, cardId)) }, cardId)) as GameState
     }
   })
   return ctx;
+}
+
+export function getPlayerGIds(ctx: GameState, playerId: PlayerID): string[] {
+  return getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(playerId, "Gゾーン"))
+}
+
+export function getPlayerHandIds(ctx: GameState, playerId: PlayerID): string[] {
+  return getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(playerId, "手札"))
+}
+
+export function getPlayerDestroyIds(ctx: GameState, playerId: PlayerID): string[] {
+  return getCutInDestroyEffects(ctx).map(e => EffectFn.getCardID(e)).filter(itemId => getItemController(ctx, itemId) == playerId)
+}
+
+export function getPlayerUnitIds(ctx: GameState, playerId: PlayerID): string[] {
+  return lift(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getBaAll()).flatMap(basyou => getItemIdsByBasyou(ctx, basyou)).filter(itemId => getItemPrototype(ctx, itemId).category == "ユニット")
+}
+
+export function getPlayerCharacterIds(ctx: GameState, playerId: PlayerID): string[] {
+  return lift(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getBaAll()).flatMap(basyou => getItemIdsByBasyou(ctx, basyou)).filter(itemId => getItemPrototype(ctx, itemId).category == "キャラクター")
+}
+
+export function getPlayerOperationIds(ctx: GameState, playerId: PlayerID): string[] {
+  return lift(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getBaAll()).flatMap(basyou => getItemIdsByBasyou(ctx, basyou)).filter(itemId => getItemPrototype(ctx, itemId).category == "オペレーション")
+}
+
+export function createPlayerScore(ctx: GameState, playerId: string): number {
+  const units = getPlayerUnitIds(ctx, playerId)
+  const chars = getPlayerCharacterIds(ctx, playerId)
+  const gs = getPlayerGIds(ctx, playerId)
+  const ops = getPlayerOperationIds(ctx, playerId)
+  const hands = getPlayerHandIds(ctx, playerId)
+  const destroyIds = getPlayerDestroyIds(ctx, playerId)
+  const gScore = gs.length * 3
+  const unitScore = units.length * 5
+  const charScore = chars.length
+  const opScore = Math.max(2, ops.length) * 3
+  const handScore = hands.length * 3
+  const destroyScore = destroyIds.length * -20
+  const rollScore = [...gs, ...units].filter(itemId => getCard(ctx, itemId).isRoll).length * -5
+  const bpScore = units.map(id => {
+    if (getCard(ctx, id).isRoll) {
+      return 0
+    }
+    const [atk, range, hp] = getSetGroupBattlePoint(ctx, id)
+    return atk + range + hp
+  }).reduce((acc, c) => acc + c, 0)
+  const specialScore1 = units.filter(id => getCardHasSpeicalEffect(ctx, ["速攻"], id)).length * 2
+  const specialScore2 = units.filter(id => getCardHasSpeicalEffect(ctx, ["高機動"], id)).length * 2
+  const specialScore3 = units.filter(id => getCardHasSpeicalEffect(ctx, ["強襲"], id)).length * 2
+  return gScore + unitScore + charScore + opScore + handScore + destroyScore + rollScore + bpScore + specialScore1 + specialScore2 + specialScore3
 }

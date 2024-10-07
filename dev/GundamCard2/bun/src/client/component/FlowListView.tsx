@@ -4,20 +4,11 @@ import { AppContext } from "../tool/appContext";
 import { OnEvent } from "../tool/appContext/eventCenter";
 import { EffectView } from "./EffectView";
 import { getEffect, isImmediateEffect } from "../../game/gameState/EffectStackComponent";
-import { getEffectIncludePlayerCommand } from "../../game/gameStateWithFlowMemory/effect";
-import { CommandEffecTipFn } from "../../game/define/CommandEffectTip";
-import { TargetMissingError } from "../../game/define/GameError";
-import { createCommandEffectTips, setTipSelectionForUser } from "../../game/gameState/doEffect";
-import { applyFlow, createAIChoiseList } from "../../game/gameStateWithFlowMemory/applyFlow";
-import { GameStateWithFlowMemory } from "../../game/gameStateWithFlowMemory/GameStateWithFlowMemory";
-import { Flow } from "../../game/gameStateWithFlowMemory/Flow";
 import { PlayerA, PlayerB } from "../../game/define/PlayerID";
 import { FlowSetTipSelectionView } from "./FlowSetTipSelectionView";
-import { CardView } from "./CardView";
-import { EffectFn } from "../../game/define/Effect";
-import { TipFn } from "../../game/define/Tip";
 import { getPhase } from "../../game/gameState/PhaseComponent";
 import { PhaseFn } from "../../game/define/Timing";
+import { thinkVer1 } from "../../game/gameStateWithFlowMemory/ai/thinkVer1";
 
 export const FlowListView = (props: { clientId: string, style?: CSSProperties }) => {
   const appContext = useContext(AppContext);
@@ -41,6 +32,7 @@ export const FlowListView = (props: { clientId: string, style?: CSSProperties })
               id: "OnClickFlowConfirm",
               clientId: props.clientId,
               flow: flow,
+              versionID: appContext.viewModel.model.versionID
             });
           }, speed)
           return
@@ -48,17 +40,18 @@ export const FlowListView = (props: { clientId: string, style?: CSSProperties })
       }
       {
         // 立即效果自動按
-        const flow = flows.find(flow => flow.id == "FlowPassPayCost")
-        if (flow && isImmediateEffect(appContext.viewModel.model.gameState, flow.effectID)) {
-          setTimeout(() => {
-            OnEvent.next({
-              id: "OnClickFlowConfirm",
-              clientId: props.clientId,
-              flow: flow,
-            });
-          }, speed)
-          return
-        }
+        // const flow = flows.find(flow => flow.id == "FlowPassPayCost")
+        // if (flow && isImmediateEffect(appContext.viewModel.model.gameState, flow.effectID)) {
+        //   setTimeout(() => {
+        //     OnEvent.next({
+        //       id: "OnClickFlowConfirm",
+        //       clientId: props.clientId,
+        //       flow: flow,
+        //       versionID: appContext.viewModel.model.versionID
+        //     });
+        //   }, speed)
+        //   return
+        // }
       }
       // 只剩下一個命令時自動按，一些狀況除外
       if (flows.length == 1) {
@@ -78,47 +71,37 @@ export const FlowListView = (props: { clientId: string, style?: CSSProperties })
         if (flow.id == "FlowSetTipSelection") {
           return
         }
+        if (flow.id == "FlowObserveEffect") {
+          return
+        }
+        if (flow.id == "FlowSetActiveLogicID") {
+          return
+        }
 
         setTimeout(() => {
           OnEvent.next({
             id: "OnClickFlowConfirm",
             clientId: props.clientId,
             flow: flow,
+            versionID: appContext.viewModel.model.versionID
           });
         }, speed)
       }
       return
     }
     if (flows.length) {
-      const useFlows = flows.filter(flow => {
-        switch (flow.id) {
-          case "FlowCancelActiveEffectID":
-          case "FlowCancelActiveLogicID":
-          case "FlowCancelPassCut":
-          case "FlowCancelPassPhase":
-          case "FlowWaitPlayer":
-          case "FlowObserveEffect":
-            return false
-        }
-        return true
-      })
-      if (useFlows.length == 0) {
-        return
+      const flow = thinkVer1(appContext.viewModel.model.gameState, props.clientId, flows)
+
+      if (flow) {
+        setTimeout(() => {
+          OnEvent.next({
+            id: "OnClickFlowConfirm",
+            clientId: props.clientId,
+            flow: flow,
+            versionID: appContext.viewModel.model.versionID
+          });
+        }, speed)
       }
-      let flow = useFlows[Math.round(Math.random() * 1000) % useFlows.length]
-      if (flow.id == "FlowSetTipSelection") {
-        const phase = getPhase(appContext.viewModel.model.gameState)
-        if (phase[0] == "戦闘フェイズ" && phase[1] == "攻撃ステップ" && phase[2] == "規定の効果") {
-          flow.tip = TipFn.passWantToSelection(flow.tip)
-        }
-      }
-      setTimeout(() => {
-        OnEvent.next({
-          id: "OnClickFlowConfirm",
-          clientId: props.clientId,
-          flow: flow,
-        });
-      }, speed)
     }
   }, [appContext.viewModel.model.gameState, props.clientId, flows]);
   // ============== control panel ============= //
@@ -139,6 +122,7 @@ export const FlowListView = (props: { clientId: string, style?: CSSProperties })
                     id: "OnClickFlowConfirm",
                     clientId: props.clientId,
                     flow: flow,
+                    versionID: appContext.viewModel.model.versionID
                   });
                 }}>
                 {flow.id}({flow.description})
@@ -162,6 +146,27 @@ export const FlowListView = (props: { clientId: string, style?: CSSProperties })
                         effectID={flow.effectID}
                       ></EffectView>
                     );
+                  case "FlowSetActiveLogicID":
+                    return <div>
+                      <div>選擇一個行為</div>
+                      {
+                        flow.tips.map((tip, i) => {
+                          return <button
+                            key={i}
+                            onClick={() => {
+                              OnEvent.next({
+                                id: "OnClickFlowConfirm",
+                                clientId: props.clientId,
+                                flow: { ...flow, logicID: tip.logicID, logicSubID: tip.logicSubID },
+                                versionID: appContext.viewModel.model.versionID
+                              });
+                            }}
+                          >
+                            {JSON.stringify(tip.conditionKeys)}
+                          </button>
+                        })
+                      }
+                    </div>
                   case "FlowSetTipSelection":
                     return <div style={{ border: "1px solid black" }}>
                       <FlowSetTipSelectionView clientId={props.clientId} flow={flow}></FlowSetTipSelectionView>
@@ -179,6 +184,7 @@ export const FlowListView = (props: { clientId: string, style?: CSSProperties })
                                     id: "OnClickFlowConfirm",
                                     clientId: props.clientId,
                                     flow: { ...flow, effectID: tip.id },
+                                    versionID: appContext.viewModel.model.versionID
                                   });
                                 }}
                               >

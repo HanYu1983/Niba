@@ -105,10 +105,13 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
           title: ["特殊型", ["ステイ"]]
         })
       }
+      texts.forEach(text => {
+        text.description = JSON.stringify(text.title)
+      })
       // 自動解特殊效果的黑名單
       // 在名單內的要手動設置
       const textBlackList = ["179001_01A_CH_WT007R_white"]
-      if(textBlackList.includes(imgID)){
+      if (textBlackList.includes(imgID)) {
         texts.length = 0
       }
 
@@ -260,7 +263,7 @@ function getGainTexts(gainStr: string): CardText[] {
     {
       id: "",
       title: ["特殊型", ["ゲイン"]],
-      conditions: createRollCostRequire(rollcost, null)
+      conditions: createRollCostRequire(rollcost, null),
     }
   ]
 }

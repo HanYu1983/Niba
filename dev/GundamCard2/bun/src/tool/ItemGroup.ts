@@ -113,7 +113,7 @@ export const ItemGroupFn = {
     deleteItemGroup,
 }
 
-export function tests() {
+export function testItemGroup() {
     let ctx = createItemGroup();
     ctx = setItemGroupParent(ctx, "child", "parent");
     if (getItemGroupParent(ctx, "child") !== "parent") throw new Error("set-item-group-parent failed");

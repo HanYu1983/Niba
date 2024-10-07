@@ -24,6 +24,10 @@ export type Tip = {
     max?: number,
     cheatCardIds?: string[],
     isRepeat?: boolean,
+    flags?: {
+        isGoBattleArea1?: boolean,
+        isGoBattleArea2?: boolean
+    }
 };
 
 export const TipFn = {
@@ -34,6 +38,8 @@ export const TipFn = {
         }
         return `${proto.color}X`
     },
+    createGoEarthKey: ()=>"去地球",
+    createGoSpaceKey: ()=>"去宇宙",
     getWant(tip: Tip) {
         switch (tip.title[0]) {
             case "カード":

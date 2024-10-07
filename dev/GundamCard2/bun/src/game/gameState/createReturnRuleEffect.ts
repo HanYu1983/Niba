@@ -3,13 +3,12 @@ import { AbsoluteBaSyouFn, BaKeyword, BaSyouKeyword } from "../define/BaSyou";
 import { Effect } from "../define/Effect";
 import { PlayerID } from "../define/PlayerID";
 import { StrBaSyouPair } from "../define/Tip";
-import { ToolFn } from "../tool";
 import { GameState } from "./GameState";
 
 export function createReturnRuleEffect(ctx: GameState, playerId: PlayerID): Effect {
     return {
         id: `createReturnRuleEffect_${playerId}`,
-        reason: ["GameRule", playerId],
+        reason: ["GameRule", playerId, { isReturn: true }],
         text: {
             id: `createReturnRuleEffect_text_${playerId}`,
             title: [],
@@ -31,6 +30,10 @@ export function createReturnRuleEffect(ctx: GameState, playerId: PlayerID): Effe
                                     const unitIdsAtArea1 = GameStateFn.getItemIdsByBasyou(ctx, from)
                                     for (const cardId of unitIdsAtArea1) {
                                         const target = [cardId, from] as StrBaSyouPair
+                                        // 只移動SetGroup
+                                        if (GameStateFn.getSetGroupRoot(ctx, cardId) != cardId) {
+                                            continue
+                                        }
                                         if (GameStateFn.getCardBattleArea(ctx, cardId).includes(runtimeArea1)) {
                                             ctx = GameStateFn.doItemSetRollState(ctx, true, target, { isSkipTargetMissing: true })
                                             ctx = GameStateFn.doItemMove(

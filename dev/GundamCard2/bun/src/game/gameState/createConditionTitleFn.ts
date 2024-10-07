@@ -236,6 +236,7 @@ export function createConditionTitleFn(condition: Condition, options: { isPlay?:
                     const basyous: AbsoluteBaSyou[] = (lift(AbsoluteBaSyouFn.of)([playerId], ["手札", "ハンガー"]))
                     const pairs = basyous.flatMap(basyou =>
                         getItemIdsByBasyou(ctx, basyou)
+                            .filter(cardId => getItemPrototype(ctx, cardId).category == "ユニット")
                             .filter(cardId => getItemCharacteristic(ctx, cardId).includes(char))
                             .filter(cardId => getCardRollCostLength(ctx, cardId) <= x)
                             .map(cardId => [cardId, basyou] as StrBaSyouPair)
@@ -303,7 +304,7 @@ export function createConditionTitleFn(condition: Condition, options: { isPlay?:
                 const pairs = targetIds.map(targetId => [targetId, from] as StrBaSyouPair)
                 return {
                     title: ["カード", pairs, pairs.slice(0, count)],
-                    min: count,
+                    max: count,
                     cheatCardIds: itemIdAtBasyou
                 }
             }

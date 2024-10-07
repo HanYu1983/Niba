@@ -33,6 +33,7 @@ export const TipOrErrorsFn = {
 
 export type CommandEffectTip = {
     effectId: string,
+    conditionKeys: string[],
     logicID: number,
     logicSubID: number,
     tipOrErrors: TipOrErrors[]

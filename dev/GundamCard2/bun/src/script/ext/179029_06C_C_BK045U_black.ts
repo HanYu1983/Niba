@@ -27,7 +27,7 @@ export const prototype: CardPrototype = {
                 title: ["Entity", {
                   see: [DefineFn.RelatedBaSyouFn.of("自軍", "本国"), 1, 50],
                   cardCategory: ["グラフィック"],
-                  count: 1,
+                  max: 1,
                 }],
                 actions: [
                   {

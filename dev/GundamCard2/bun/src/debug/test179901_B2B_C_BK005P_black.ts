@@ -44,14 +44,14 @@ export async function test179901_B2B_C_BK005P_black() {
     ctx = setActivePlayerID(ctx, PlayerA) as GameStateWithFlowMemory
     ctx = setPhase(ctx, ["配備フェイズ", "フリータイミング"]) as GameStateWithFlowMemory
     let playEffects = createPlayEffects(ctx, PlayerA)
-    let playEffect = playEffects.find(e=>e.isPlayG != true && e.reason[0] == "PlayCard" && e.reason[2] == cardA.id)
-    if(playEffect != null){
+    let playEffect = playEffects.find(e => e.reason[0] == "PlayCard" && e.reason[2] == cardA.id && e.reason[3].isPlayG != true)
+    if (playEffect != null) {
         throw new Error()
     }
     ctx = setPhase(ctx, ["戦闘フェイズ", "攻撃ステップ", "フリータイミング"]) as GameStateWithFlowMemory
     playEffects = createPlayEffects(ctx, PlayerA)
-    playEffect = playEffects.find(e=>e.isPlayG != true && e.reason[0] == "PlayCard" && e.reason[2] == cardA.id)
-    if(playEffect == null){
+    playEffect = playEffects.find(e => e.reason[0] == "PlayCard" && e.reason[2] == cardA.id && e.reason[3].isPlayG != true)
+    if (playEffect == null) {
         throw new Error()
     }
     ctx = setTipSelectionForUser(ctx, playEffect, 0, 0) as GameStateWithFlowMemory

@@ -443,6 +443,9 @@ export function createTextsFromSpecialEffect(ctx: GameState, text: CardText): Ca
                         "打開自軍手裡或指定HANGER中特徵A並合計國力x以下的1張卡": {
                             title: function _(ctx: GameState, effect: Effect, bridge: Bridge): Tip | null {
                                 const { A } = { A: "" }
+                                if (A == "") {
+                                    throw new Error("A沒有被字串置換")
+                                }
                                 const { GameStateFn, DefineFn } = bridge
                                 const cardId = DefineFn.EffectFn.getCardID(effect)
                                 const cardController = GameStateFn.getItemController(ctx, cardId)

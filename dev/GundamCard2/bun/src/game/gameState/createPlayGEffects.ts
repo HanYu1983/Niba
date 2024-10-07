@@ -10,9 +10,8 @@ export function createPlayGEffects(ctx: GameState, cardId: string): Effect {
     // 注意, 這裡的effect.id是用函數名為前綴+卡片ID, 必須是唯一的
     const effect: Effect = {
         id: `createPlayGEffects_${cardId}`,
-        reason: ["PlayCard", playerId, cardId],
+        reason: ["PlayCard", playerId, cardId, { isPlayG: true }],
         description: "PlayG",
-        isPlayG: true,
         text: {
             id: `createPlayGEffects_text_${cardId}`,
             title: [],

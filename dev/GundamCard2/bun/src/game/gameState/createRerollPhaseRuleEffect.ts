@@ -9,7 +9,7 @@ import { GameState } from "./GameState";
 export function createRerollPhaseRuleEffect(ctx: GameState, playerId: PlayerID): Effect {
     return {
         id: `createRerollPhaseRuleEffect_${playerId}`,
-        reason: ["GameRule", playerId],
+        reason: ["GameRule", playerId, {isReroll: true}],
         text: {
             id: `createRerollPhaseRuleEffect_text_${playerId}`,
             title: [],

@@ -11,7 +11,7 @@ import { prototype } from "events";
 import { getSetGroupBattlePoint } from "../../game/gameState/setGroup";
 import { getSetGroup, getSetGroupRoot } from "../../game/gameState/SetGroupComponent";
 import { getCardIdByCoinId, getCoin, getCoinIdsByCardId } from "../../game/gameState/CoinTableComponent";
-import { getCardTexts } from "../../game/gameState/card";
+import { getCardTextFromCardTextRef, getCardTexts } from "../../game/gameState/card";
 import { getGlobalEffects } from "../../game/gameState/globalEffects";
 import { TipFn } from "../../game/define/Tip";
 import { getItemState } from "../../game/gameState/ItemStateComponent";
@@ -100,6 +100,16 @@ export const CardView = (props: {
     return <div>
       {
         ges.map((ge, i) => {
+          if (ge.title[0] == "AddTextRef") {
+            return <div key={i}>
+              {getCardTextFromCardTextRef(appContext.viewModel.model.gameState, ge.title[1]).description}
+            </div>
+          }
+          if (ge.title[0] == "AddText") {
+            return <div key={i}>
+              {ge.title[1].description}
+            </div>
+          }
           return <div key={i}>{JSON.stringify(ge.title)}</div>
         })
       }
@@ -140,6 +150,7 @@ export const CardView = (props: {
                       id: "OnClickFlowConfirm",
                       clientId: props.clientId || "unknown",
                       flow: { ...flow, effectID: tip.id },
+                      versionID: appContext.viewModel.model.versionID
                     });
                   }}
                 >
@@ -159,6 +170,7 @@ export const CardView = (props: {
                       id: "OnClickFlowConfirm",
                       clientId: props.clientId || "unknown",
                       flow: { ...flow, effectID: tip.id },
+                      versionID: appContext.viewModel.model.versionID
                     });
                   }}
                 >

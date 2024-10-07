@@ -62,6 +62,7 @@ export const FlowSetTipSelectionView = (props: { clientId: string, flow: FlowSet
                     id: "OnClickFlowConfirm",
                     clientId: props.clientId,
                     flow: {...props.flow, tip: tip},
+                    versionID: appContext.viewModel.model.versionID
                   });
                 }}
               >{JSON.stringify(value)}</button>
@@ -93,6 +94,7 @@ export const FlowSetTipSelectionView = (props: { clientId: string, flow: FlowSet
                     id: "OnClickFlowConfirm",
                     clientId: props.clientId,
                     flow: {...props.flow, tip: tip},
+                    versionID: appContext.viewModel.model.versionID
                   });
                 }}
               >{getCardTextFromCardTextRef(appContext.viewModel.model.gameState, value).description}</button>
@@ -156,6 +158,7 @@ const renderButton = useMemo(() => {
         id: "OnClickFlowConfirm",
         clientId: props.clientId,
         flow: flow,
+        versionID: appContext.viewModel.model.versionID
       });
     }}
   >{effect.description}

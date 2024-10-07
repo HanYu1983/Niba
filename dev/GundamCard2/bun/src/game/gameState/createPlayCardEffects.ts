@@ -70,7 +70,7 @@ export function createPlayCardEffects(ctx: GameState, cardId: string): Effect[] 
     // 注意, 這裡的effect.id是用函數名為前綴+卡片ID, 必須是唯一的
     const playCardEffect: Effect = {
         id: `createPlayCardEffects_${cardId}`,
-        reason: ["PlayCard", playerId, cardId],
+        reason: ["PlayCard", playerId, cardId, { isPlayUnit: prototype.category == "ユニット", isPlayCharacter: prototype.category == "キャラクター" }],
         description: "Play",
         text: {
             id: `createPlayCardEffects_text_${cardId}`,

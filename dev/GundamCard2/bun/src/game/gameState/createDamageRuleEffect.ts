@@ -9,7 +9,7 @@ import { GameState } from "./GameState";
 export function createDamageRuleEffect(ctx: GameState, playerId: PlayerID): Effect {
     return {
         id: `createDamageRuleEffect_${playerId}`,
-        reason: ["GameRule", playerId],
+        reason: ["GameRule", playerId, {isDamageCheck: true}],
         text: {
             id: `createDamageRuleEffect_text_${playerId}`,
             title: [],

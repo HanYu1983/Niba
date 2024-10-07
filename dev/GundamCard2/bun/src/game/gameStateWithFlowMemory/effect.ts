@@ -92,16 +92,14 @@ export function setActiveEffectID(
   for (const cet of cetsNoErr) {
     ctx = clearTipSelectionForUser(ctx, effect, cet.logicID, cet.logicSubID) as GameStateWithFlowMemory
   }
-  // 填入預設可支付的項目
-  const activeLogicID = cetsNoErr[0].logicID
-  const activeLogicSubID = cetsNoErr[0].logicSubID
   ctx = {
     ...ctx,
     flowMemory: {
       ...ctx.flowMemory,
       activeEffectID: effectID,
-      activeLogicID: activeLogicID,
-      activeLogicSubID: activeLogicSubID,
+      // 只有一選項才預填值
+      activeLogicID: cetsNoErr.length == 1 ? cetsNoErr[0].logicID : null,
+      activeLogicSubID: cetsNoErr.length == 1 ? cetsNoErr[0].logicSubID : null,
     }
   };
   return ctx

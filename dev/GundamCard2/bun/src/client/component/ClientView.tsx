@@ -16,7 +16,7 @@ export function ClientView(props: { clientId: string }) {
         })
       }
     </div>
-  }, [appContext.viewModel.model.gameState])
+  }, [appContext.viewModel.model.gameState.stackEffect])
   const renderDebug = useMemo(() => {
     return <div>flowMemory:{JSON.stringify(appContext.viewModel.model.gameState.flowMemory)}</div>
   }, [appContext.viewModel.model.gameState.flowMemory])

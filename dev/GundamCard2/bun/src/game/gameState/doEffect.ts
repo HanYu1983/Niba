@@ -272,6 +272,7 @@ export function createCommandEffectTips(ctx: GameState, effect: Effect): Command
         const conTipErrors = createEffectTips(ctx, effect, logicId, logicSubId)
         return {
           effectId: effect.id,
+          conditionKeys: Object.keys(conditions),
           logicID: logicId,
           logicSubID: logicSubId,
           tipOrErrors: conTipErrors
