@@ -56,13 +56,7 @@ export async function test179027_09D_C_WT067R_white() {
     if (effect == null) {
         throw new Error()
     }
-    // 出場效果
-    ctx = doEffect(ctx, effect, 0, 0)
-    effect = getTopEffect(ctx)
-    if (effect == null) {
-        throw new Error()
-    }
-    // 指令效果
+    // 出場效果, 指令效果
     ctx = doEffect(ctx, effect, 0, 0)
     if (getItemStateValues(ctx).filter(is => is.damage == 2).length != 2) {
         throw new Error()

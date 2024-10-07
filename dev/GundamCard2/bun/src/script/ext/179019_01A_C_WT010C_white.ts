@@ -30,28 +30,24 @@ export const prototype: CardPrototype = {
       {
         actions: [
           {
-            title: ["cutIn", [
-              {
-                title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, ToolFn }: Bridge): GameState {
-                  const cardId = DefineFn.EffectFn.getCardID(effect)
-                  const pairs1 = GameStateFn.getCardTipStrBaSyouPairs(ctx, "自軍ユニット１枚", cardId)
-                  const str2 = GameStateFn.getCardTipStrings(ctx, "「速攻」または「高機動」", cardId)
-                  switch (str2[0]) {
-                    case "速攻":
-                      for (const pair of pairs1) {
-                        ctx = GameStateFn.doItemSetGlobalEffectsUntilEndOfTurn(ctx, [{ title: ["AddText", { id: ToolFn.getUUID(), title: ["特殊型", ["速攻"]] }], cardIds: [pair[0]] }], pair)
-                      }
-                      break
-                    case "高機動":
-                      for (const pair of pairs1) {
-                        ctx = GameStateFn.doItemSetGlobalEffectsUntilEndOfTurn(ctx, [{ title: ["AddText", { id: ToolFn.getUUID(), title: ["特殊型", ["高機動"]] }], cardIds: [pair[0]] }], pair)
-                      }
-                      break
+            title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, ToolFn }: Bridge): GameState {
+              const cardId = DefineFn.EffectFn.getCardID(effect)
+              const pairs1 = GameStateFn.getCardTipStrBaSyouPairs(ctx, "自軍ユニット１枚", cardId)
+              const str2 = GameStateFn.getCardTipStrings(ctx, "「速攻」または「高機動」", cardId)
+              switch (str2[0]) {
+                case "速攻":
+                  for (const pair of pairs1) {
+                    ctx = GameStateFn.doItemSetGlobalEffectsUntilEndOfTurn(ctx, [{ title: ["AddText", { id: ToolFn.getUUID(), title: ["特殊型", ["速攻"]] }], cardIds: [pair[0]] }], pair)
                   }
-                  return ctx
-                }.toString()
+                  break
+                case "高機動":
+                  for (const pair of pairs1) {
+                    ctx = GameStateFn.doItemSetGlobalEffectsUntilEndOfTurn(ctx, [{ title: ["AddText", { id: ToolFn.getUUID(), title: ["特殊型", ["高機動"]] }], cardIds: [pair[0]] }], pair)
+                  }
+                  break
               }
-            ]]
+              return ctx
+            }.toString()
           }
         ]
       }

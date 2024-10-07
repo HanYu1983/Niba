@@ -74,12 +74,8 @@ export const prototype: CardPrototype = {
       {
         actions: [
           {
-            title: ["cutIn", [
-              {
-                title: ["_ロールする", "破壞"],
-                vars: ["戦闘エリアにいる、４以下の防御力を持つ敵軍ユニット１枚"]
-              }
-            ]]
+            title: ["_ロールする", "破壞"],
+            vars: ["戦闘エリアにいる、４以下の防御力を持つ敵軍ユニット１枚"]
           }
         ]
       }
