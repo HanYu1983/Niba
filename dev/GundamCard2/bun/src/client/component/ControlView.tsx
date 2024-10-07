@@ -8,11 +8,17 @@ const TMP_DECK3 = ["179003_01A_C_BN003C_brown","179003_01A_C_BN003C_brown","1790
 const TMP_DECK4 = ["179001_01A_U_WT007C_white", "179001_01A_U_WT007C_white", "179003_01A_U_WT001R_white_02", "179003_01A_U_WT005R_white_02", "179003_01A_U_WT005R_white_02", "179003_01A_U_WT005R_white_02", "179007_02A_CH_WT016C_white", "179009_03B_CH_WT020R_white", "179009_03B_CH_WT024C_white", "179011_03B_U_WT040C_white", "179011_03B_U_WT040C_white", "179011_03B_U_WT040C_white", "179015_04B_CH_WT030C_white", "179015_04B_U_WT065C_white", "179019_01A_CH_WT008U_white", "179019_01A_CH_WT008U_white", "179019_01A_CH_WT008U_white", "179019_01A_U_WT006R_white", "179019_01A_U_WT006R_white", "179019_01A_U_WT006R_white", "179020_05C_CH_WT054C_white", "179024_03B_U_WT042U_white", "179024_03B_U_WT042U_white", "179024_03B_U_WT042U_white", "179025_07D_C_WT061C_white", "179025_07D_C_WT061C_white", "179025_07D_C_WT061C_white", "179026_08D_U_WT158C_white", "179026_08D_U_WT158C_white", "179026_08D_U_WT159U_white", "179026_08D_U_WT162C_white", "179026_08D_U_WT162C_white", "179026_08D_U_WT162C_white", "179027_09D_C_WT067R_white", "179028_10D_C_WT073N_white", "179028_10D_C_WT073N_white", "179028_10D_C_WT073N_white", "179029_05C_C_WT047U_white", "179029_05C_CH_WT043U_white", "179029_05C_CH_WT043U_white", "179029_06C_U_WT112C_white", "179029_06C_U_WT112C_white", "179030_11E_C_WT077S_white", "179030_11E_C_WT078R_white", "179901_CG_C_WT001P_white", "179901_CG_C_WT001P_white", "179901_CG_C_WT001P_white", "179901_CG_CH_WT002P_white", "179901_CG_U_WT009P_white", "179901_UN_WT003P_white"];
 
 export const ControlView = () => {
-  const onClickTest = useCallback(() => {}, []);
-
   const onClickNewGame = useCallback(async () => {
+    const deckA = TMP_DECK2
+    const deckB = TMP_DECK
+    const prototypeIds = [...deckA, ...deckB]
+    await Promise.all(prototypeIds.map(loadPrototype)).then(()=>console.log("loadOK")).catch(console.error)
+    OnEvent.next({ id: "OnClickNewGame", deckA: deckA, deckB: deckB });
+  }, []);
+
+  const onClickTest = useCallback(async () => {
     const deckA = TMP_DECK
-    const deckB = TMP_DECK3
+    const deckB = TMP_DECK2
     const prototypeIds = [...deckA, ...deckB]
     await Promise.all(prototypeIds.map(loadPrototype)).then(()=>console.log("loadOK")).catch(console.error)
     OnEvent.next({ id: "OnClickNewGame", deckA: deckA, deckB: deckB });

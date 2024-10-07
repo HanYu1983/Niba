@@ -24,6 +24,7 @@ import { test179028_10D_C_BL070N_blue } from "./test179028_10D_C_BL070N_blue";
 import { test179028_10D_U_WT181N_white } from "./test179028_10D_U_WT181N_white";
 import { test179029_B3C_CH_WT102R_white } from "./test179029_B3C_CH_WT102R_white";
 import { test179030_11E_C_BL079R_blue } from "./test179030_11E_C_BL079R_blue";
+import { test179030_11E_C_WT077S_white } from "./test179030_11E_C_WT077S_white";
 import { test179030_11E_U_BK194S_2_black, test179030_11E_U_BK194S_2_black_2 } from "./test179030_11E_U_BK194S_2_black";
 import { test179901_B2B_C_BK005P_black } from "./test179901_B2B_C_BK005P_black";
 import { testAttackRuleEffect, testAttackRuleEffect2, testAttackRuleEffect3 } from "./testAttackRuleEffect";
@@ -48,6 +49,7 @@ const fs = require('fs').promises;
 
 export async function tests() {
     return [
+        test179030_11E_C_WT077S_white,
         testPlayerScore,
         testThinkVer1_2,
         test179029_B3C_CH_WT102R_white,

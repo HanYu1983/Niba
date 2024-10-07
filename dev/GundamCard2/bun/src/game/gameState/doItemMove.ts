@@ -102,7 +102,7 @@ export function onMoveItem(ctx: GameState, to: AbsoluteBaSyou, [cardId, from]: S
                 isFaceDown: true,
             }
         }) as GameState
-    } else if ((["ジャンクヤード", "Gゾーン", "ハンガー", "プレイされているカード", "取り除かれたカード"] as BaSyouKeyword[]).includes(AbsoluteBaSyouFn.getBaSyouKeyword(to))) {
+    } else if ((["ジャンクヤード", "ハンガー", "プレイされているカード", "取り除かれたカード"] as BaSyouKeyword[]).includes(AbsoluteBaSyouFn.getBaSyouKeyword(to))) {
         ctx = mapCard(ctx, cardId, card => {
             return {
                 ...card,

@@ -68,15 +68,16 @@ export function createPlayCardEffects(ctx: GameState, cardId: string): Effect[] 
             logicLeafs
     }
     // 注意, 這裡的effect.id是用函數名為前綴+卡片ID, 必須是唯一的
+    const description = `Play ${prototype.title}`
     const playCardEffect: Effect = {
         id: `createPlayCardEffects_${cardId}`,
         reason: ["PlayCard", playerId, cardId, { isPlayUnit: prototype.category == "ユニット", isPlayCharacter: prototype.category == "キャラクター" }],
-        description: "Play",
+        description: description,
         text: {
-            id: `createPlayCardEffects_text_${cardId}`,
+            id: prototype.commandText?.id || `createPlayCardEffects_text_${cardId}`,
             // 以下的title只是為了log，沒有實際作用
             title: prototype.commandText?.title || ["使用型", ["自軍", "配備フェイズ"]],
-            description: "Play",
+            description: description,
             conditions: {
                 ...conditions,
                 ...prototype.commandText?.conditions
@@ -273,7 +274,8 @@ export function createPlayCardEffects(ctx: GameState, cardId: string): Effect[] 
                 description: "合計国力＋(１)してプレイできる",
                 text: {
                     ...totalCostPlusPlayEffect.text,
-                    id: `totalCostPlusPlayEffect_text_${cardId}`,
+                    id: prototype.commandText?.id || `totalCostPlusPlayEffect_text_${cardId}`,
+                    description: "合計国力＋(１)してプレイできる",
                     conditions: copyOriginCondition,
                 }
             }

@@ -18487,16 +18487,16 @@ var hideCategory = [
   "doActiveEffect",
   "testCompress",
   "createPlayerScore",
+  "AppContextProvider",
+  "OnViewModel",
   "onAddImmediateEffect",
   "onSetPhase",
-  "onCardChange",
   "onItemStateChange",
   "onEvent",
   "onEffectStart",
   "onEffectEnd",
   "onActionStart",
   "onActionEnd",
-  "onItemMove",
   "onItemAdd"
 ], filterCategory = !0, logCategory = (category, ...msg) => {
   if (filterCategory) {
@@ -20224,10 +20224,7 @@ var ItemStateFn = {
     return ctx2;
   },
   onCutEnd(ctx2) {
-    return ctx2 = {
-      ...ctx2,
-      textIdsUseThisCut: {}
-    }, ctx2;
+    return ctx2;
   },
   onDamageReset(ctx2) {
     return {
@@ -20248,8 +20245,7 @@ var ItemStateFn = {
       isOpenForGain: !1,
       isCheat: !1,
       isFirstTurn: !1,
-      textIdsUseThisCut: {},
-      textIdsUseThisTurn: {}
+      textIdsUseThisTurn: []
     }, ctx2;
   }
 };
@@ -21308,7 +21304,7 @@ function onMoveItem(ctx2, to, [cardId, from]) {
         isFaceDown: !0
       };
     });
-  else if (["\u30B8\u30E3\u30F3\u30AF\u30E4\u30FC\u30C9", "G\u30BE\u30FC\u30F3", "\u30CF\u30F3\u30AC\u30FC", "\u30D7\u30EC\u30A4\u3055\u308C\u3066\u3044\u308B\u30AB\u30FC\u30C9", "\u53D6\u308A\u9664\u304B\u308C\u305F\u30AB\u30FC\u30C9"].includes(AbsoluteBaSyouFn.getBaSyouKeyword(to)))
+  else if (["\u30B8\u30E3\u30F3\u30AF\u30E4\u30FC\u30C9", "\u30CF\u30F3\u30AC\u30FC", "\u30D7\u30EC\u30A4\u3055\u308C\u3066\u3044\u308B\u30AB\u30FC\u30C9", "\u53D6\u308A\u9664\u304B\u308C\u305F\u30AB\u30FC\u30C9"].includes(AbsoluteBaSyouFn.getBaSyouKeyword(to)))
     ctx2 = mapCard(ctx2, cardId, (card) => {
       return {
         ...card,
@@ -22353,14 +22349,14 @@ function createPlayCardEffects(ctx2, cardId) {
   }), logicTree = {
     type: "And",
     children: prototype.commandText?.logicTreeActions?.[0] ? [...logicLeafs, ...CardTextFn.getLogicTreeTreeLeafs(prototype.commandText, prototype.commandText.logicTreeActions[0])] : logicLeafs
-  }, playCardEffect = {
+  }, description = `Play ${prototype.title}`, playCardEffect = {
     id: `createPlayCardEffects_${cardId}`,
     reason: ["PlayCard", playerId, cardId, { isPlayUnit: prototype.category == "\u30E6\u30CB\u30C3\u30C8", isPlayCharacter: prototype.category == "\u30AD\u30E3\u30E9\u30AF\u30BF\u30FC" }],
-    description: "Play",
+    description,
     text: {
-      id: `createPlayCardEffects_text_${cardId}`,
+      id: prototype.commandText?.id || `createPlayCardEffects_text_${cardId}`,
       title: prototype.commandText?.title || ["\u4F7F\u7528\u578B", ["\u81EA\u8ECD", "\u914D\u5099\u30D5\u30A7\u30A4\u30BA"]],
-      description: "Play",
+      description,
       conditions: {
         ...conditions,
         ...prototype.commandText?.conditions
@@ -22505,7 +22501,8 @@ function createPlayCardEffects(ctx2, cardId) {
         description: "\u5408\u8A08\u56FD\u529B\uFF0B(\uFF11)\u3057\u3066\u30D7\u30EC\u30A4\u3067\u304D\u308B",
         text: {
           ...totalCostPlusPlayEffect.text,
-          id: `totalCostPlusPlayEffect_text_${cardId}`,
+          id: prototype.commandText?.id || `totalCostPlusPlayEffect_text_${cardId}`,
+          description: "\u5408\u8A08\u56FD\u529B\uFF0B(\uFF11)\u3057\u3066\u30D7\u30EC\u30A4\u3067\u304D\u308B",
           conditions: copyOriginCondition
         }
       }, totalCostPlusPlayEffect.text.logicTreeActions?.[0] == null)
@@ -23367,15 +23364,12 @@ function createPlayEffects(ctx2, playerId) {
             {
               title: function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2, ToolFn: ToolFn2 }) {
                 const cardId2 = DefineFn2.EffectFn.getCardID(effect);
-                if (GameStateFn2.getItemState(ctx3, cardId2).textIdsUseThisTurn?.[effect.text.id])
+                if ((GameStateFn2.getItemState(ctx3, cardId2).textIdsUseThisTurn || []).filter((tid) => tid == effect.text.id).length > 0)
                   throw new DefineFn2.TipError(`\u540C\u56DE\u5408\u4E0A\u9650: ${effect.text.description}`);
                 return ctx3 = GameStateFn2.mapItemState(ctx3, cardId2, (ps2) => {
                   return {
                     ...ps2,
-                    textIdsUseThisTurn: {
-                      ...ps2.textIdsUseThisTurn,
-                      [effect.text.id]: !0
-                    }
+                    textIdsUseThisTurn: [effect.text.id, ...ps2.textIdsUseThisTurn || []]
                   };
                 }), ctx3;
               }.toString()
@@ -26157,12 +26151,13 @@ function ClientView(props) {
 
 // src/client/component/ControlView.tsx
 var import_react9 = __toESM(require_react_development(), 1);
-var jsx_dev_runtime9 = __toESM(require_react_jsx_dev_runtime_development(), 1), TMP_DECK = ["179015_04B_O_BK010C_black", "179015_04B_O_BK010C_black", "179015_04B_U_BK058R_black", "179015_04B_U_BK058R_black", "179015_04B_U_BK059C_black", "179015_04B_U_BK059C_black", "179015_04B_U_BK061C_black", "179015_04B_U_BK061C_black", "179016_04B_U_BK066C_black", "179016_04B_U_BK066C_black", "179019_02A_C_BK015S_black", "179019_02A_C_BK015S_black", "179020_05C_U_BK100U_black", "179020_05C_U_BK100U_black", "179023_06C_C_BK048R_black", "179023_06C_C_BK048R_black", "179023_06C_C_BK049U_black", "179023_06C_C_BK049U_black", "179024_04B_C_BK027U_black", "179024_04B_C_BK027U_black", "179024_04B_U_BK060C_black", "179024_04B_U_BK060C_black", "179024_04B_U_BK067C_black", "179024_04B_U_BK067C_black", "179024_B2B_C_BK054C_black", "179024_B2B_C_BK054C_black", "179024_B2B_U_BK128S_black_02", "179024_B2B_U_BK128S_black_02", "179024_B2B_U_BK129R_black", "179024_B2B_U_BK129R_black", "179027_09D_C_BK063R_black", "179027_09D_C_BK063R_black", "179027_09D_O_BK010N_black", "179027_09D_O_BK010N_black", "179027_09D_U_BK163S_black", "179027_09D_U_BK163S_black", "179027_09D_U_BK163S_black", "179029_06C_C_BK045U_black", "179029_06C_C_BK045U_black", "179029_B3C_C_BK071N_black", "179029_B3C_C_BK071N_black", "179029_B3C_U_BK184N_black", "179029_B3C_U_BK184N_black", "179029_B3C_U_BK184N_black", "179029_B3C_U_BK185N_black", "179029_B3C_U_BK185N_black", "179030_11E_U_BK194S_2_black", "179030_11E_U_BK194S_2_black", "179030_11E_U_BK194S_2_black", "179901_B2B_C_BK005P_black"];
-var TMP_DECK3 = ["179003_01A_C_BN003C_brown", "179003_01A_C_BN003C_brown", "179003_01A_C_BN003C_brown", "179003_01A_U_BN006R_brown_02", "179003_01A_U_BN006R_brown_02", "179003_01A_U_BN006R_brown_02", "179004_01A_O_BN005U_brown", "179004_01A_O_BN005U_brown", "179014_03B_U_BN046R_brown_haku", "179014_03B_U_BN046R_brown_haku", "179014_03B_U_BN046R_brown_haku", "179015_04B_U_BN057C_brown", "179015_04B_U_BN057C_brown", "179015_04B_U_BN057C_brown", "179016_04B_U_BN066C_brown", "179018_05C_C_BN027C_brown", "179018_05C_C_BN027C_brown", "179018_05C_C_BN027C_brown", "179018_05C_C_BN029R_brown", "179018_05C_C_BN029R_brown", "179022_06C_C_BN036U_brown", "179022_06C_C_BN036U_brown", "179022_06C_C_BN036U_brown", "179022_06C_CH_BN052R_brown", "179022_06C_U_BN101R_brown", "179022_06C_U_BN101R_brown", "179022_06C_U_BN101R_brown", "179024_B2B_C_BN041C_brown", "179024_B2B_C_BN041C_brown", "179024_B2B_C_BN041C_brown", "179025_07D_CH_BN066R_brown", "179025_07D_U_BN138R_brown", "179025_07D_U_BN138R_brown", "179025_07D_U_BN138R_brown", "179028_10D_U_BN164N_brown", "179028_10D_U_BN164N_brown", "179028_10D_U_BN164N_brown", "179029_05C_U_BN077R_brown", "179029_05C_U_BN077R_brown", "179029_05C_U_BN077R_brown", "179029_06C_C_BN039R_brown", "179029_06C_C_BN039R_brown", "179029_06C_C_BN039R_brown", "179029_B3C_CH_BN088R_brown", "179030_11E_U_BN188N_brown", "179030_11E_U_BN188N_brown", "179030_11E_U_BN188N_brown", "179901_09D_C_BN007P_brown", "179901_09D_C_BN007P_brown", "179901_09D_C_BN007P_brown"];
+var jsx_dev_runtime9 = __toESM(require_react_jsx_dev_runtime_development(), 1), TMP_DECK = ["179015_04B_O_BK010C_black", "179015_04B_O_BK010C_black", "179015_04B_U_BK058R_black", "179015_04B_U_BK058R_black", "179015_04B_U_BK059C_black", "179015_04B_U_BK059C_black", "179015_04B_U_BK061C_black", "179015_04B_U_BK061C_black", "179016_04B_U_BK066C_black", "179016_04B_U_BK066C_black", "179019_02A_C_BK015S_black", "179019_02A_C_BK015S_black", "179020_05C_U_BK100U_black", "179020_05C_U_BK100U_black", "179023_06C_C_BK048R_black", "179023_06C_C_BK048R_black", "179023_06C_C_BK049U_black", "179023_06C_C_BK049U_black", "179024_04B_C_BK027U_black", "179024_04B_C_BK027U_black", "179024_04B_U_BK060C_black", "179024_04B_U_BK060C_black", "179024_04B_U_BK067C_black", "179024_04B_U_BK067C_black", "179024_B2B_C_BK054C_black", "179024_B2B_C_BK054C_black", "179024_B2B_U_BK128S_black_02", "179024_B2B_U_BK128S_black_02", "179024_B2B_U_BK129R_black", "179024_B2B_U_BK129R_black", "179027_09D_C_BK063R_black", "179027_09D_C_BK063R_black", "179027_09D_O_BK010N_black", "179027_09D_O_BK010N_black", "179027_09D_U_BK163S_black", "179027_09D_U_BK163S_black", "179027_09D_U_BK163S_black", "179029_06C_C_BK045U_black", "179029_06C_C_BK045U_black", "179029_B3C_C_BK071N_black", "179029_B3C_C_BK071N_black", "179029_B3C_U_BK184N_black", "179029_B3C_U_BK184N_black", "179029_B3C_U_BK184N_black", "179029_B3C_U_BK185N_black", "179029_B3C_U_BK185N_black", "179030_11E_U_BK194S_2_black", "179030_11E_U_BK194S_2_black", "179030_11E_U_BK194S_2_black", "179901_B2B_C_BK005P_black"], TMP_DECK2 = ["179001_01A_CH_WT007R_white", "179004_01A_CH_WT009R_white", "179004_01A_CH_WT010C_white", "179007_02A_U_WT027U_white", "179007_02A_U_WT027U_white", "179008_02A_U_WT034U_white", "179008_02A_U_WT034U_white", "179008_02A_U_WT034U_white", "179014_03B_CH_WT027R_white", "179015_04B_U_WT067C_white", "179015_04B_U_WT067C_white", "179015_04B_U_WT067C_white", "179016_04B_U_WT074C_white", "179016_04B_U_WT074C_white", "179016_04B_U_WT074C_white", "179016_04B_U_WT075C_white", "179016_04B_U_WT075C_white", "179016_04B_U_WT075C_white", "179019_01A_C_WT010C_white", "179019_01A_C_WT010C_white", "179019_02A_U_WT028R_white", "179019_02A_U_WT028R_white", "179022_06C_CH_WT057R_white", "179022_06C_CH_WT057R_white", "179022_06C_CH_WT057R_white", "179022_06C_U_WT113R_white", "179022_06C_U_WT113R_white", "179022_06C_U_WT113R_white", "179023_06C_CH_WT067C_white", "179024_03B_U_WT057U_white", "179024_03B_U_WT057U_white", "179025_07D_C_WT060U_white", "179025_07D_CH_WT075C_white", "179025_07D_CH_WT075C_white", "179025_07D_CH_WT075C_white", "179027_09D_C_WT067R_white", "179027_09D_C_WT067R_white", "179029_B3C_CH_WT102R_white", "179029_B3C_CH_WT103N_white", "179029_B3C_U_WT196R_white", "179030_11E_C_WT077S_white", "179030_11E_C_WT077S_white", "179030_11E_C_WT077S_white", "179030_11E_CH_WT108N_white", "179901_00_C_WT003P_white", "179901_00_C_WT003P_white", "179901_00_C_WT003P_white", "179901_CG_C_WT001P_white", "179901_CG_C_WT001P_white", "179901_CG_CH_WT002P_white"];
 var ControlView = () => {
-  const onClickTest = import_react9.useCallback(() => {
-  }, []), onClickNewGame = import_react9.useCallback(async () => {
-    const deckA = TMP_DECK, deckB = TMP_DECK3, prototypeIds = [...deckA, ...deckB];
+  const onClickNewGame = import_react9.useCallback(async () => {
+    const deckA = TMP_DECK2, deckB = TMP_DECK, prototypeIds = [...deckA, ...deckB];
+    await Promise.all(prototypeIds.map(loadPrototype)).then(() => console.log("loadOK")).catch(console.error), OnEvent.next({ id: "OnClickNewGame", deckA, deckB });
+  }, []), onClickTest = import_react9.useCallback(async () => {
+    const deckA = TMP_DECK, deckB = TMP_DECK2, prototypeIds = [...deckA, ...deckB];
     await Promise.all(prototypeIds.map(loadPrototype)).then(() => console.log("loadOK")).catch(console.error), OnEvent.next({ id: "OnClickNewGame", deckA, deckB });
   }, []);
   return import_react9.useMemo(() => {
