@@ -52,6 +52,7 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
         "COMMAND": "コマンド",
         "OPERATION": "オペレーション",
         "OPERATION(UNIT)": "オペレーション(ユニット)",
+        "OPERATION（UNIT）": "オペレーション(ユニット)",
         "ACE": "ACE",
         "GRAPHIC": "グラフィック",
       }

@@ -19597,6 +19597,7 @@ async function loadPrototype(imgID) {
         COMMAND: "\u30B3\u30DE\u30F3\u30C9",
         OPERATION: "\u30AA\u30DA\u30EC\u30FC\u30B7\u30E7\u30F3",
         "OPERATION(UNIT)": "\u30AA\u30DA\u30EC\u30FC\u30B7\u30E7\u30F3(\u30E6\u30CB\u30C3\u30C8)",
+        "OPERATION\uFF08UNIT\uFF09": "\u30AA\u30DA\u30EC\u30FC\u30B7\u30E7\u30F3(\u30E6\u30CB\u30C3\u30C8)",
         ACE: "ACE",
         GRAPHIC: "\u30B0\u30E9\u30D5\u30A3\u30C3\u30AF"
       }, texts = getGainTexts(textstr).concat(getKaiSo(textstr)).concat(getSupply(textstr)).concat(getCrossWeapon(textstr)).concat(getPao(textstr)).concat(getHave(textstr)).concat(getRange(textstr));
@@ -20119,6 +20120,7 @@ __export(exports_doEffect, {
   getCardTipTextRefs: () => getCardTipTextRefs,
   getCardTipStrings: () => getCardTipStrings,
   getCardTipStrBaSyouPairs: () => getCardTipStrBaSyouPairs,
+  getCardTipSelection: () => getCardTipSelection,
   getCardTipBattleBonus: () => getCardTipBattleBonus,
   doEffect: () => doEffect,
   createPlayTextEffectFromEffect: () => createPlayTextEffectFromEffect,
@@ -20835,9 +20837,9 @@ function getCardSpecialText(ctx2, cardID, text) {
       ctx2 = setGlobalEffects(ctx2, null, ges);
       const bonus = ges.filter((ge) => ge.cardIds.includes(cardID)).map((ge) => {
         if (ge.title[0] == "SpecialEffectBonus" && ge.title[1][0] == name)
-          return ge.title[2];
+          return ge.title[1][1];
         return 0;
-      }).reduce((a, b) => a + b);
+      }).reduce((a, b) => a + b, 0);
       return {
         ...text,
         title: ["\u7279\u6B8A\u578B", [name, value + bonus]]
@@ -21039,7 +21041,9 @@ function getBattleGroup(ctx2, baSyou) {
   });
 }
 function getBattleGroupBattlePoint(ctx2, unitCardIDs) {
-  return unitCardIDs.map((cardID, i) => {
+  if (unitCardIDs.length == 0)
+    return 0;
+  const attackPower = unitCardIDs.map((cardID, i) => {
     if (getItemState(ctx2, cardID).destroyReason != null)
       return 0;
     const card = getCard(ctx2, cardID);
@@ -21051,7 +21055,20 @@ function getBattleGroupBattlePoint(ctx2, unitCardIDs) {
     if (i == 0)
       return melee;
     return range3;
+  }).reduce((acc, c) => acc + c, 0), bonus = getGlobalEffects(ctx2, null).map((ge) => {
+    if (ge.title[0] == "\u3053\u306E\u30AB\u30FC\u30C9\u306E\u90E8\u968A\u306E\u90E8\u968A\u6226\u95D8\u529B\u3092_\uFF0B\uFF13\u3059\u308B") {
+      const times3 = unitCardIDs.filter((unitId) => ge.cardIds.includes(unitId)).length;
+      return ge.title[1] * times3;
+    }
+    return 0;
+  }).reduce((acc, c) => acc + c, 0), opponentBasyou = AbsoluteBaSyouFn.setOpponentPlayerID(getItemBaSyou(ctx2, unitCardIDs[0])), opponentBattleGroup = getBattleGroup(ctx2, opponentBasyou), bonus2 = getGlobalEffects(ctx2, null).map((ge) => {
+    if (ge.title[0] == "\u3053\u306E\u30AB\u30FC\u30C9\u3068\u4EA4\u6226\u4E2D\u306E\u6575\u8ECD\u90E8\u968A\u306E\u90E8\u968A\u6226\u95D8\u529B\u3092_\uFF0D\uFF13\u3059\u308B") {
+      const times3 = opponentBattleGroup.filter((unitId) => ge.cardIds.includes(unitId)).length;
+      return ge.title[1] * times3;
+    }
+    return 0;
   }).reduce((acc, c) => acc + c, 0);
+  return attackPower + bonus + bonus2;
 }
 function isBattleGroupHasA(ctx2, a, cardID) {
   const baSyou = getItemBaSyou(ctx2, cardID);
@@ -21188,6 +21205,7 @@ var TipFn = {
       case "\u30C6\u30AD\u30B9\u30C8":
       case "StringOptions":
       case "BattleBonus":
+      case "GlobalEffects":
         return tip.title[1];
     }
   },
@@ -21197,6 +21215,7 @@ var TipFn = {
       case "\u30C6\u30AD\u30B9\u30C8":
       case "StringOptions":
       case "BattleBonus":
+      case "GlobalEffects":
         return tip.title[2];
     }
   },
@@ -21218,6 +21237,11 @@ var TipFn = {
           title: [tip.title[0], tip.title[1], tip.title[1]]
         };
       case "BattleBonus":
+        return {
+          ...tip,
+          title: [tip.title[0], tip.title[1], tip.title[1]]
+        };
+      case "GlobalEffects":
         return {
           ...tip,
           title: [tip.title[0], tip.title[1], tip.title[1]]
@@ -21618,6 +21642,14 @@ function createEntityIterator(ctx2) {
 function createTipByEntitySearch(ctx2, cardId, options) {
   let entityList = createEntityIterator(ctx2).filter(EntityFn.filterIsBattle(ctx2, null, options.isBattle || !1));
   const cheatCardIds = [];
+  if (options.isThisBattleGroup) {
+    const basyou = getItemBaSyou(ctx2, cardId);
+    if (basyou.value[1] == "\u6226\u95D8\u30A8\u30EA\u30A21" || basyou.value[1] == "\u6226\u95D8\u30A8\u30EA\u30A22") {
+      const battleGroupIds = getBattleGroup(ctx2, getItemBaSyou(ctx2, cardId));
+      entityList = entityList.filter((entity) => battleGroupIds.includes(entity.itemId));
+    } else
+      entityList = [];
+  }
   if (options.hasSelfCardId != null) {
     const absoluteBasyou = getItemBaSyou(ctx2, cardId);
     entityList = entityList.filter(EntityFn.filterController(AbsoluteBaSyouFn.getPlayerID(absoluteBasyou))), entityList = entityList.filter(EntityFn.filterAtBaSyous([AbsoluteBaSyouFn.getBaSyouKeyword(absoluteBasyou)]));
@@ -23139,6 +23171,7 @@ function getCardTipSelection(ctx2, varName, cardId) {
     case "\u30C6\u30AD\u30B9\u30C8":
     case "StringOptions":
     case "BattleBonus":
+    case "GlobalEffects":
       return TipFn.getSelection(tip);
   }
 }
@@ -23370,8 +23403,10 @@ function createPlayEffects(ctx2, playerId) {
           actions: [
             {
               title: function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2, ToolFn: ToolFn2 }) {
-                const cardId2 = DefineFn2.EffectFn.getCardID(effect);
-                if ((GameStateFn2.getItemState(ctx3, cardId2).textIdsUseThisTurn || []).filter((tid) => tid == effect.text.id).length > 0)
+                const cardId2 = DefineFn2.EffectFn.getCardID(effect), ps = GameStateFn2.getItemState(ctx3, cardId2);
+                if (effect.text.isEachTime)
+                  ;
+                else if ((ps.textIdsUseThisTurn || []).filter((tid) => tid == effect.text.id).length > 0)
                   throw new DefineFn2.TipError(`\u540C\u56DE\u5408\u4E0A\u9650: ${effect.text.description}`);
                 return ctx3 = GameStateFn2.mapItemState(ctx3, cardId2, (ps2) => {
                   return {
@@ -26159,9 +26194,9 @@ function ClientView(props) {
 // src/client/component/ControlView.tsx
 var import_react9 = __toESM(require_react_development(), 1);
 var jsx_dev_runtime9 = __toESM(require_react_jsx_dev_runtime_development(), 1), TMP_DECK = ["179015_04B_O_BK010C_black", "179015_04B_O_BK010C_black", "179015_04B_U_BK058R_black", "179015_04B_U_BK058R_black", "179015_04B_U_BK059C_black", "179015_04B_U_BK059C_black", "179015_04B_U_BK061C_black", "179015_04B_U_BK061C_black", "179016_04B_U_BK066C_black", "179016_04B_U_BK066C_black", "179019_02A_C_BK015S_black", "179019_02A_C_BK015S_black", "179020_05C_U_BK100U_black", "179020_05C_U_BK100U_black", "179023_06C_C_BK048R_black", "179023_06C_C_BK048R_black", "179023_06C_C_BK049U_black", "179023_06C_C_BK049U_black", "179024_04B_C_BK027U_black", "179024_04B_C_BK027U_black", "179024_04B_U_BK060C_black", "179024_04B_U_BK060C_black", "179024_04B_U_BK067C_black", "179024_04B_U_BK067C_black", "179024_B2B_C_BK054C_black", "179024_B2B_C_BK054C_black", "179024_B2B_U_BK128S_black_02", "179024_B2B_U_BK128S_black_02", "179024_B2B_U_BK129R_black", "179024_B2B_U_BK129R_black", "179027_09D_C_BK063R_black", "179027_09D_C_BK063R_black", "179027_09D_O_BK010N_black", "179027_09D_O_BK010N_black", "179027_09D_U_BK163S_black", "179027_09D_U_BK163S_black", "179027_09D_U_BK163S_black", "179029_06C_C_BK045U_black", "179029_06C_C_BK045U_black", "179029_B3C_C_BK071N_black", "179029_B3C_C_BK071N_black", "179029_B3C_U_BK184N_black", "179029_B3C_U_BK184N_black", "179029_B3C_U_BK184N_black", "179029_B3C_U_BK185N_black", "179029_B3C_U_BK185N_black", "179030_11E_U_BK194S_2_black", "179030_11E_U_BK194S_2_black", "179030_11E_U_BK194S_2_black", "179901_B2B_C_BK005P_black"], TMP_DECK2 = ["179001_01A_CH_WT007R_white", "179004_01A_CH_WT009R_white", "179004_01A_CH_WT010C_white", "179007_02A_U_WT027U_white", "179007_02A_U_WT027U_white", "179008_02A_U_WT034U_white", "179008_02A_U_WT034U_white", "179008_02A_U_WT034U_white", "179014_03B_CH_WT027R_white", "179015_04B_U_WT067C_white", "179015_04B_U_WT067C_white", "179015_04B_U_WT067C_white", "179016_04B_U_WT074C_white", "179016_04B_U_WT074C_white", "179016_04B_U_WT074C_white", "179016_04B_U_WT075C_white", "179016_04B_U_WT075C_white", "179016_04B_U_WT075C_white", "179019_01A_C_WT010C_white", "179019_01A_C_WT010C_white", "179019_02A_U_WT028R_white", "179019_02A_U_WT028R_white", "179022_06C_CH_WT057R_white", "179022_06C_CH_WT057R_white", "179022_06C_CH_WT057R_white", "179022_06C_U_WT113R_white", "179022_06C_U_WT113R_white", "179022_06C_U_WT113R_white", "179023_06C_CH_WT067C_white", "179024_03B_U_WT057U_white", "179024_03B_U_WT057U_white", "179025_07D_C_WT060U_white", "179025_07D_CH_WT075C_white", "179025_07D_CH_WT075C_white", "179025_07D_CH_WT075C_white", "179027_09D_C_WT067R_white", "179027_09D_C_WT067R_white", "179029_B3C_CH_WT102R_white", "179029_B3C_CH_WT103N_white", "179029_B3C_U_WT196R_white", "179030_11E_C_WT077S_white", "179030_11E_C_WT077S_white", "179030_11E_C_WT077S_white", "179030_11E_CH_WT108N_white", "179901_00_C_WT003P_white", "179901_00_C_WT003P_white", "179901_00_C_WT003P_white", "179901_CG_C_WT001P_white", "179901_CG_C_WT001P_white", "179901_CG_CH_WT002P_white"];
-var ControlView = () => {
+var DECK_W_RANGE = ["179001_01A_CH_WT006C_white", "179001_01A_CH_WT006C_white", "179001_01A_CH_WT006C_white", "179001_01A_CH_WT006C_white", "179003_01A_O_WT001C_white", "179003_01A_O_WT001C_white", "179003_01A_O_WT001C_white", "179003_01A_O_WT001C_white", "179003_01A_O_WT001C_white", "179003_01A_O_WT001C_white", "179003_01A_O_WT001C_white", "179003_01A_U_WT011C_white", "179003_01A_U_WT011C_white", "179003_01A_U_WT011C_white", "179003_01A_U_WT011C_white", "179009_03B_U_WT044U_white", "179009_03B_U_WT044U_white", "179009_03B_U_WT044U_white", "179009_03B_U_WT044U_white", "179009_03B_U_WT044U_white", "179009_03B_U_WT045U_white", "179009_03B_U_WT045U_white", "179009_03B_U_WT045U_white", "179009_03B_U_WT045U_white", "179015_04B_O_WT005U_white", "179015_04B_O_WT005U_white", "179015_04B_O_WT005U_white", "179019_01A_U_WT003C_white", "179019_01A_U_WT003C_white", "179019_01A_U_WT003C_white", "179019_02A_C_WT012U_white", "179019_02A_C_WT012U_white", "179019_02A_C_WT012U_white", "179019_02A_U_WT031C_white", "179019_02A_U_WT031C_white", "179019_02A_U_WT031C_white", "179023_06C_C_WT055C_white", "179023_06C_C_WT055C_white", "179023_06C_C_WT055C_white", "179024_03B_U_WT039R_white", "179024_03B_U_WT039R_white", "179024_03B_U_WT039R_white", "179024_03B_U_WT042U_white", "179024_03B_U_WT042U_white", "179024_03B_U_WT042U_white", "179025_07D_CH_WT075C_white", "179025_07D_CH_WT075C_white", "179027_09D_O_WT014N_white", "179027_09D_O_WT014N_white", "179027_09D_O_WT014N_white", "179028_10D_CH_WT095_white", "179028_10D_U_WT177R_white", "179030_11E_C_WT077S_white", "179030_11E_C_WT077S_white", "179030_11E_C_WT077S_white", "179030_11E_C_WT078R_white", "179030_11E_C_WT078R_white", "179030_11E_C_WT078R_white", "179901_00_U_WT001P_white_02", "179901_00_U_WT001P_white_02", "179901_00_U_WT001P_white_02"], ControlView = () => {
   const onClickNewGame = import_react9.useCallback(async () => {
-    const deckA = TMP_DECK2, deckB = TMP_DECK, prototypeIds = [...deckA, ...deckB];
+    const deckA = DECK_W_RANGE, deckB = DECK_W_RANGE, prototypeIds = [...deckA, ...deckB];
     await Promise.all(prototypeIds.map(loadPrototype)).then(() => console.log("loadOK")).catch(console.error), OnEvent.next({ id: "OnClickNewGame", deckA, deckB });
   }, []), onClickTest = import_react9.useCallback(async () => {
     const deckA = TMP_DECK, deckB = TMP_DECK2, prototypeIds = [...deckA, ...deckB];

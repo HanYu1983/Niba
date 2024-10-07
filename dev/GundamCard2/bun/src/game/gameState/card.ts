@@ -37,7 +37,7 @@ export function getCardSpecialText(ctx: GameState, cardID: string, text: CardTex
           return ge.title[1][1]
         }
         return 0
-      }).reduce((a, b) => a + b)
+      }).reduce((a, b) => a + b, 0)
       return {
         ...text,
         title: ["特殊型", [name, value + bonus]]
