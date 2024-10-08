@@ -54,6 +54,29 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
     return ActionFn.getTitleFn(action)
   }
   switch (action.title[0]) {
+    case "同回合上限": {
+      const [_, times] = action.title
+      return function (ctx: GameState, effect: Effect): GameState {
+        // 使用了卡牌後, 同一個回合不能再使用. 以下記錄使用過的卡片, 會在切入結束後清除
+        const cardId = EffectFn.getCardID(effect)
+        const ps = getItemState(ctx, cardId)
+        // 有"每"字的一回內可以無限使用
+        if (effect.text.isEachTime) {
+
+        } else {
+          if ((ps.textIdsUseThisTurn || []).filter(tid => tid == effect.text.id).length >= times) {
+            throw new TipError(`同回合上限: ${effect.text.description}`)
+          }
+        }
+        ctx = mapItemState(ctx, cardId, ps => {
+          return {
+            ...ps,
+            textIdsUseThisTurn: [effect.text.id, ...(ps.textIdsUseThisTurn || [])]
+          }
+        }) as GameState
+        return ctx
+      }
+    }
     case "Entity": {
       const [_, options] = action.title
       if ([options.max, options.min, options.count].every(v => v == null)) {

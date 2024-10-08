@@ -59,6 +59,7 @@ export type ActionTitle =
     | ["_自軍_本国をシャッフルする", RelatedPlayerSideKeyword, BaSyouKeyword]
     | ["この記述の効果は、プレイヤー毎に１ターンに１回まで解決できる"]
     | ["Entity", EntitySearchOptions]
+    | ["同回合上限", number]
 
 export type Action = {
     title: ActionTitle,

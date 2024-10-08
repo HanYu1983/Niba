@@ -18,19 +18,19 @@ function createRollCostRequire(
 ): { [key: string]: Condition } {
   let ret: { [key: string]: Condition } = {}
   for (let i = 0; i < costNum; ++i) {
-      const key = `${i}[${color}]`
-      ret = {
-          ...ret,
-          [key]: {
-              title: ["RollColor", color],
-              actions: [
-                  {
-                    title: ["_ロールする", "ロール"],
-                      vars: [key]
-                  }
-              ]
+    const key = `${i}[${color}]`
+    ret = {
+      ...ret,
+      [key]: {
+        title: ["RollColor", color],
+        actions: [
+          {
+            title: ["_ロールする", "ロール"],
+            vars: [key]
           }
-      };
+        ]
+      }
+    };
   }
   return ret
 }
@@ -59,7 +59,7 @@ export const prototype: CardPrototype = {
         actions: [
           {
             title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, ToolFn }: Bridge): GameState {
-              const newE = GameStateFn.createPlayTextEffectFromEffect(ctx, effect, {
+              const newE = DefineFn.EffectFn.fromEffectBasic(effect, {
                 logicTreeAction: {
                   actions: [
                     {
@@ -84,39 +84,6 @@ export const prototype: CardPrototype = {
                 }
               })
               ctx = GameStateFn.addStackEffect(ctx, newE) as GameState
-              // const cardId = DefineFn.EffectFn.getCardID(effect)
-              // ctx = GameStateFn.addStackEffect(ctx, {
-              //   id: "",
-              //   reason: ["PlayText", DefineFn.EffectFn.getPlayerID(effect), cardId, effect.text.id || "unknown"],
-              //   text: {
-              //     id: "",
-              //     title: [],
-              //     logicTreeActions: [
-              //       {
-              //         actions: [
-              //           {
-              //             title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, ToolFn }: Bridge): GameState {
-              //               const cardId = DefineFn.EffectFn.getCardID(effect)
-              //               if (GameStateFn.isBattle(ctx, cardId, null)) {
-              //                 let cardState = GameStateFn.getItemState(ctx, cardId);
-              //                 cardState = DefineFn.ItemStateFn.setGlobalEffect(cardState, null, {
-              //                   title: ["AddText", { id: ToolFn.getUUID("179024_03B_U_WT042U_white"), title: ["TextBattleBonus", [1, 1, 1]] }],
-              //                   cardIds: [cardId]
-              //                 }, {isRemoveOnTurnEnd: true})
-              //                 ctx = GameStateFn.setItemState(ctx, cardId, cardState) as GameState
-              //                 return ctx
-              //               }
-              //               return GameStateFn.createActionTitleFn({
-              //                 title: ["_－１／－１／－１コイン_１個を乗せる", [-1, -1, -1], 1],
-              //                 vars: ["このカードが非交戦中の場合、敵軍ユニット１枚"]
-              //               })(ctx, effect, null)
-              //             }.toString()
-              //           }
-              //         ]
-              //       }
-              //     ]
-              //   }
-              // }) as GameState
               return ctx
             }.toString()
           }

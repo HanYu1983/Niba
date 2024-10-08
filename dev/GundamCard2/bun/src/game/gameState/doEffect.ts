@@ -339,7 +339,20 @@ export function getCardTipStrings(ctx: GameState, varName: string, cardId: strin
 export function createPlayTextEffectFromEffect(ctx: GameState, e: Effect, options?: { conditions?: { [key: string]: Condition }, logicTreeAction?: LogicTreeAction, isOption?: boolean }): Effect {
   const cardId = EffectFn.getCardID(e)
   const cardController = getItemController(ctx, cardId)
-  return EffectFn.fromEffectBasic(e, { ...options, reason: ["PlayText", cardController, cardId, e.text.id] })
+  return EffectFn.fromEffectBasic(e, {
+    ...options,
+    conditions: {
+      ...options?.conditions,
+      "同回合上限": {
+        actions: [
+          {
+            title: ["同回合上限", 1]
+          }
+        ]
+      }
+    },
+    reason: ["PlayText", cardController, cardId, e.text.id]
+  })
 }
 
 export function addImmediateEffectIfCanPayCost(ctx: GameState, effect: Effect): GameState {

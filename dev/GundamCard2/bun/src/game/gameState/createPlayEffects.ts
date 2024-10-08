@@ -129,26 +129,7 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
                             "同回合上限": {
                                 actions: [
                                     {
-                                        title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, ToolFn }: Bridge): GameState {
-                                            // 使用了卡牌後, 同一個回合不能再使用. 以下記錄使用過的卡片, 會在切入結束後清除
-                                            const cardId = DefineFn.EffectFn.getCardID(effect)
-                                            const ps = GameStateFn.getItemState(ctx, cardId)
-                                            // 有"每"字的一回內可以無限使用
-                                            if (effect.text.isEachTime) {
-
-                                            } else {
-                                                if ((ps.textIdsUseThisTurn || []).filter(tid => tid == effect.text.id).length > 0) {
-                                                    throw new DefineFn.TipError(`同回合上限: ${effect.text.description}`)
-                                                }
-                                            }
-                                            ctx = GameStateFn.mapItemState(ctx, cardId, ps => {
-                                                return {
-                                                    ...ps,
-                                                    textIdsUseThisTurn: [effect.text.id, ...(ps.textIdsUseThisTurn || [])]
-                                                }
-                                            }) as GameState
-                                            return ctx
-                                        }.toString()
+                                        title: ["同回合上限", 1]
                                     }
                                 ]
                             }

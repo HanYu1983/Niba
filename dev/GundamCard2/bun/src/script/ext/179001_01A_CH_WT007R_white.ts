@@ -39,7 +39,7 @@ export const prototype: CardPrototype = {
           actions: [
             {
               title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
-                const newE = GameStateFn.createPlayTextEffectFromEffect(ctx, effect, {
+                const newE = DefineFn.EffectFn.fromEffectBasic(effect, {
                   logicTreeAction: {
                     actions: [
                       {
