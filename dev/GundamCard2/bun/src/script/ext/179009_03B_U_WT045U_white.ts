@@ -26,7 +26,7 @@ export const prototype: CardPrototype = {
         if (situation != null) {
           return []
         }
-        if (GameStateFn.isCardMaster(ctx, GameStateFn.getSetGroupRoot(ctx, cardId), cardId)) {
+        if (DefineFn.BaSyouKeywordFn.getBattleArea().includes(GameStateFn.getItemBaSyou(ctx, cardId).value[1])) {
           return [
             {
               title: ["このカードと交戦中の敵軍部隊の部隊戦闘力を_－３する", -3],
