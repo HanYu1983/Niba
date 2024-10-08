@@ -41,7 +41,61 @@ export function isPlayerHasBattleGroup(
   )() > 0
 }
 
-export function doBattleDamage(
+export function doBattleDamage(ctx: GameState, playerId: string, guardUnits: string[], attackPower: number, options?: { isNotRule?: boolean }): [GameState, number] {
+  // 敵方機體存在, 攻擊機體
+  if (guardUnits.length) {
+    const changedCardState = guardUnits.map((cardID): ItemState => {
+      const cs = getItemState(ctx, cardID);
+      if (attackPower <= 0) {
+        return cs;
+      }
+      const [_, _2, hp] = getSetGroupBattlePoint(ctx, cardID);
+
+      const live = hp - cs.damage;
+      if (live <= 0) {
+        return cs;
+      }
+      attackPower -= live;
+      if (attackPower >= 0) {
+        const reason: DestroyReason = {
+          id: "戦闘ダメージ",
+          playerID: playerId,
+        };
+        // 這裡不發送破壞事件, 因為破壞比較等到破壞效果進堆疊才算數
+        ctx = doItemSetDestroy(ctx, reason, createStrBaSyouPair(ctx, cardID), { isSkipTargetMissing: true })
+        return {
+          ...cs,
+          damage: hp,
+          destroyReason: reason,
+        };
+      }
+      // 剩餘血量
+      const nextLive = -attackPower;
+      const nextDamage = hp - nextLive;
+      // 傷害用完了, 重設為0
+      attackPower = 0;
+      const gameEvent: GameEvent = {
+        // p71
+        // 如果非規定效果的時候，這個傷害效果才算是敵軍效果
+        title: ["戦闘ダメージを受けた場合", { isNotRule: options?.isNotRule }],
+        cardIds: [cs.id],
+        playerId: playerId
+      };
+      ctx = doTriggerEvent(ctx, gameEvent)
+      return {
+        ...cs,
+        damage: nextDamage,
+      };
+    });
+    // 套用傷害
+    ctx = changedCardState.reduce((ctx, cs) => {
+      return setItemState(ctx, cs.id, cs) as GameState
+    }, ctx)
+  }
+  return [ctx, attackPower]
+}
+
+export function doRuleBattleDamage(
   ctx: GameState,
   speedPhase: number,
   currentAttackPlayerID: PlayerID,
@@ -67,50 +121,51 @@ export function doBattleDamage(
       logCategory("handleAttackDamage", "attack", currentAttackPower);
       // 敵方機體存在, 攻擊機體
       if (willGuardUnits.length) {
-        const changedCardState = willGuardUnits.map((cardID): ItemState => {
-          const cs = getItemState(ctx, cardID);
-          if (currentAttackPower <= 0) {
-            return cs;
-          }
-          const [_, _2, hp] = getSetGroupBattlePoint(ctx, cardID);
+        [ctx, currentAttackPower] = doBattleDamage(ctx, currentAttackPlayerID, willGuardUnits, currentAttackPower)
+        // const changedCardState = willGuardUnits.map((cardID): ItemState => {
+        //   const cs = getItemState(ctx, cardID);
+        //   if (currentAttackPower <= 0) {
+        //     return cs;
+        //   }
+        //   const [_, _2, hp] = getSetGroupBattlePoint(ctx, cardID);
 
-          const live = hp - cs.damage;
-          if (live <= 0) {
-            return cs;
-          }
-          currentAttackPower -= live;
-          if (currentAttackPower >= 0) {
-            const reason: DestroyReason = {
-              id: "戦闘ダメージ",
-              playerID: currentAttackPlayerID,
-            };
-            // 這裡不發送破壞事件, 因為破壞比較等到破壞效果進堆疊才算數
-            ctx = doItemSetDestroy(ctx, reason, createStrBaSyouPair(ctx, cardID), { isSkipTargetMissing: true })
-            return {
-              ...cs,
-              damage: hp,
-              destroyReason: reason,
-            };
-          }
-          // 剩餘血量
-          const nextLive = -currentAttackPower;
-          const nextDamage = hp - nextLive;
-          // 傷害用完了, 重設為0
-          currentAttackPower = 0;
-          const gameEvent: GameEvent = {
-            title: ["戦闘ダメージを受けた場合"],
-            cardIds: [cs.id],
-          };
-          ctx = doTriggerEvent(ctx, gameEvent)
-          return {
-            ...cs,
-            damage: nextDamage,
-          };
-        });
-        // 套用傷害
-        ctx = changedCardState.reduce((ctx, cs) => {
-          return setItemState(ctx, cs.id, cs) as GameState
-        }, ctx)
+        //   const live = hp - cs.damage;
+        //   if (live <= 0) {
+        //     return cs;
+        //   }
+        //   currentAttackPower -= live;
+        //   if (currentAttackPower >= 0) {
+        //     const reason: DestroyReason = {
+        //       id: "戦闘ダメージ",
+        //       playerID: currentAttackPlayerID,
+        //     };
+        //     // 這裡不發送破壞事件, 因為破壞比較等到破壞效果進堆疊才算數
+        //     ctx = doItemSetDestroy(ctx, reason, createStrBaSyouPair(ctx, cardID), { isSkipTargetMissing: true })
+        //     return {
+        //       ...cs,
+        //       damage: hp,
+        //       destroyReason: reason,
+        //     };
+        //   }
+        //   // 剩餘血量
+        //   const nextLive = -currentAttackPower;
+        //   const nextDamage = hp - nextLive;
+        //   // 傷害用完了, 重設為0
+        //   currentAttackPower = 0;
+        //   const gameEvent: GameEvent = {
+        //     title: ["戦闘ダメージを受けた場合"],
+        //     cardIds: [cs.id],
+        //   };
+        //   ctx = doTriggerEvent(ctx, gameEvent)
+        //   return {
+        //     ...cs,
+        //     damage: nextDamage,
+        //   };
+        // });
+        // // 套用傷害
+        // ctx = changedCardState.reduce((ctx, cs) => {
+        //   return setItemState(ctx, cs.id, cs) as GameState
+        // }, ctx)
       }
 
       // 若傷害沒有用完, 攻擊方可以攻擊本國
@@ -134,22 +189,6 @@ export function doBattleDamage(
           }
         }
       }
-      // if (
-      //   currentAttackPower > 0 ||
-      //   // 對方有防禦機體的情況, 有強襲就攻擊本國
-      //   (willGuardUnits.length && isBattleGroupHasA(ctx, ["強襲"], willAttackUnits[0]))
-      // ) {
-      //   // 本國傷害
-      //   logCategory("handleAttackDamage", "attack 本国", currentAttackPower);
-      //   const from = AbsoluteBaSyouFn.of(currentGuardPlayerID, "本国")
-      //   const pairs = getItemIdsByBasyou(ctx, from).map(itemId => {
-      //     return [itemId, from] as StrBaSyouPair
-      //   }).slice(0, currentAttackPower)
-      //   const to = AbsoluteBaSyouFn.of(currentGuardPlayerID, "捨て山")
-      //   for (const pair of pairs) {
-      //     ctx = doItemMove(ctx, to, pair)
-      //   }
-      // }
     }
   }
   return ctx
@@ -166,8 +205,8 @@ export function doPlayerAttack(
   const attackPower = getBattleGroupBattlePoint(ctx, attackUnits);
   const guardUnits = getBattleGroup(ctx, AbsoluteBaSyouFn.of(guardPlayerID, where));
   const guardPower = getBattleGroupBattlePoint(ctx, guardUnits);
-  ctx = doBattleDamage(ctx, speedPhase, attackPlayerID, guardPlayerID, attackUnits, guardUnits, attackPower)
-  ctx = doBattleDamage(ctx, speedPhase, guardPlayerID, attackPlayerID, guardUnits, attackUnits, guardPower);
+  ctx = doRuleBattleDamage(ctx, speedPhase, attackPlayerID, guardPlayerID, attackUnits, guardUnits, attackPower)
+  ctx = doRuleBattleDamage(ctx, speedPhase, guardPlayerID, attackPlayerID, guardUnits, attackUnits, guardPower);
   [...attackUnits, ...guardUnits].forEach(cardId => {
     const itemState = getItemState(ctx, cardId)
     const [_, _2, hp] = getSetGroupBattlePoint(ctx, cardId)

@@ -28,7 +28,7 @@ import { RelatedPlayerSideKeyword } from "../define"
 import { doPlayerDrawCard } from "./doPlayerDrawCard"
 import { getPlayerState, mapPlayerState } from "./PlayerStateComponent"
 import { createTipByEntitySearch } from "./Entity"
-import { doBattleDamage } from "./player"
+import { doBattleDamage, doRuleBattleDamage } from "./player"
 import { getBattleGroup } from "./battleGroup"
 
 export function createPlayerIdFromRelated(ctx: GameState, cardId: string, re: RelatedPlayerSideKeyword): PlayerID {
@@ -293,11 +293,12 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
           varNames.flatMap(varName => {
             return getCardTipSelection(ctx, varName, cardId, { assertTitle: ["BaSyou", [], []] }) as AbsoluteBaSyou[]
           })
-        ctx = doBattleDamage(ctx, 2,
-          cardController, PlayerIDFn.getOpponent(cardController),
-          [cardId], basyous.flatMap(basyou => getBattleGroup(ctx, basyou)),
-          damage
+        const [nextCtx, _] = doBattleDamage(ctx,
+          cardController,
+          basyous.flatMap(basyou => getBattleGroup(ctx, basyou)),
+          damage, { isNotRule: true }
         )
+        ctx = nextCtx
         return ctx
       }
     }
