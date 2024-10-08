@@ -16,7 +16,7 @@ export const prototype: CardPrototype = {
       id: "",
       description: "＜（戦闘フェイズ）〔１〕：このカードが、Gである状態で、白のGサインを持つ自軍Gが２枚以上ある場合、このカードを、ユニットとして自軍配備エリアにリロール状態で出す＞",
       title: ["使用型", ["戦闘フェイズ"]],
-      isEnabledWhileG: true,
+      protectLevel: 2,
       conditions: {
         ...createRollCostRequire(1, null),
         "Gである状態": {

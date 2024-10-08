@@ -113,7 +113,7 @@ export async function test179027_09D_C_BK063R_black() {
             throw new Error()
         }
         let effect = effects[1]
-        if(effect.text.id != "totalCostPlusPlayEffect_text_cardA"){
+        if(effect.text.id != "179027_09D_C_BK063R_black_text_command"){
             throw new Error()
         }
         let tipOrErrors = createEffectTips(ctx, effect, 0, 0)

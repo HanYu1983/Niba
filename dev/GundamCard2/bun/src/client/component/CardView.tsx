@@ -128,7 +128,7 @@ export const CardView = (props: {
         texts.map((text, i) => {
           return <div key={i}>
             <div style={{ border: "1px solid black" }}>{
-              text.title[0] == "特殊型" ? JSON.stringify(text.title[1]) : text.description
+              /*text.title[0] == "特殊型" ? JSON.stringify(text.title[1]) : */text.description
             }</div>
           </div>
         })

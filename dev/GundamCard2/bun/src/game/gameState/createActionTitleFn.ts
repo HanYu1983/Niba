@@ -10,7 +10,7 @@ import { PlayerID, PlayerIDFn } from "../define/PlayerID"
 import { StrBaSyouPair, Tip, TipFn } from "../define/Tip"
 import { getCardIdsCanPayRollCost, getItemRuntimeCategory } from "./card"
 import { mapCard } from "./CardTableComponent"
-import { getCardTipStrBaSyouPairs, setCardTipStrBaSyouPairs } from "./doEffect"
+import { getCardTipSelection, getCardTipStrBaSyouPairs, setCardTipStrBaSyouPairs } from "./doEffect"
 import { addStackEffect } from "./EffectStackComponent"
 import { GameState } from "./GameState"
 import { mapItemState, getItemState, setItemState } from "./ItemStateComponent"
@@ -28,6 +28,8 @@ import { RelatedPlayerSideKeyword } from "../define"
 import { doPlayerDrawCard } from "./doPlayerDrawCard"
 import { getPlayerState, mapPlayerState } from "./PlayerStateComponent"
 import { createTipByEntitySearch } from "./Entity"
+import { doBattleDamage, doRuleBattleDamage } from "./player"
+import { getBattleGroup } from "./battleGroup"
 
 export function createPlayerIdFromRelated(ctx: GameState, cardId: string, re: RelatedPlayerSideKeyword): PlayerID {
   switch (re) {
@@ -280,6 +282,26 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
         return ctx
       }
     }
+    case "_１貫通ダメージを与える": {
+      const [_, damage] = action.title
+      const varNames = action.vars
+      return function (ctx: GameState, effect: Effect): GameState {
+        const cardId = EffectFn.getCardID(effect)
+        const cardController = getItemController(ctx, cardId)
+        const basyous = varNames == null ?
+          [getItemBaSyou(ctx, cardId)] :
+          varNames.flatMap(varName => {
+            return getCardTipSelection(ctx, varName, cardId, { assertTitle: ["BaSyou", [], []] }) as AbsoluteBaSyou[]
+          })
+        const [nextCtx, _] = doBattleDamage(ctx,
+          cardController,
+          basyous.flatMap(basyou => getBattleGroup(ctx, basyou)),
+          damage, { isNotRule: true }
+        )
+        ctx = nextCtx
+        return ctx
+      }
+    }
     case "_－１／－１／－１コイン_１個を乗せる": {
       const [_, bonus, x] = action.title
       const varNames = action.vars
@@ -428,11 +450,6 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
         if (gsignCount < count) {
           throw new TargetMissingError(`you have ${gsignCount}. must ${count}: ${action.title[0]}`)
         }
-        return ctx
-      }
-    }
-    case "這個效果1回合只能用1次": {
-      return function (ctx: GameState, effect: Effect): GameState {
         return ctx
       }
     }

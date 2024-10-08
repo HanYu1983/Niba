@@ -11,6 +11,8 @@ import { ItemTableComponent, isCard, isChip, getItemBaSyou, isCoin, getItemContr
 import { getSetGroupChildren, removeSetGroupParent } from "./SetGroupComponent"
 import { doTriggerEvent } from "./doTriggerEvent"
 import { getCoinIdsByCardId, removeCoinIds } from "./CoinTableComponent"
+import { getCutInDestroyEffects, removeEffect } from "./EffectStackComponent"
+import { EffectFn } from "../define/Effect"
 
 export function doItemMove(ctx: GameState, to: AbsoluteBaSyou, [itemId, from]: StrBaSyouPair, options?: { isSkipTargetMissing?: boolean, insertId?: number }): GameState {
     if (options?.isSkipTargetMissing) {
@@ -90,8 +92,14 @@ export function onMoveItem(ctx: GameState, to: AbsoluteBaSyou, [cardId, from]: S
         }) as GameState
         // 清掉coin
         ctx = removeCoinIds(ctx, getCoinIdsByCardId(ctx, cardId)) as GameState
-
+        // 移除SetGroup
         ctx = removeSetGroupParent(ctx, cardId) as GameState
+        // 移除堆疊中的破壞效果
+        for (const effect of getCutInDestroyEffects(ctx)) {
+            if (EffectFn.getCardID(effect) == cardId) {
+                ctx = removeEffect(ctx, effect.id) as GameState
+            }
+        }
     }
     // 到以下的場所
     if ((["捨て山", "本国", "手札"] as BaSyouKeyword[]).includes(AbsoluteBaSyouFn.getBaSyouKeyword(to))) {
@@ -102,11 +110,18 @@ export function onMoveItem(ctx: GameState, to: AbsoluteBaSyou, [cardId, from]: S
                 isFaceDown: true,
             }
         }) as GameState
-    } else if ((["ジャンクヤード", "Gゾーン", "ハンガー", "プレイされているカード", "取り除かれたカード"] as BaSyouKeyword[]).includes(AbsoluteBaSyouFn.getBaSyouKeyword(to))) {
+    } else if ((["ジャンクヤード", "ハンガー", "プレイされているカード", "取り除かれたカード"] as BaSyouKeyword[]).includes(AbsoluteBaSyouFn.getBaSyouKeyword(to))) {
         ctx = mapCard(ctx, cardId, card => {
             return {
                 ...card,
                 isRoll: false,
+                isFaceDown: false,
+            }
+        }) as GameState
+    } else if ((["Gゾーン"] as BaSyouKeyword[]).includes(AbsoluteBaSyouFn.getBaSyouKeyword(to))) {
+        ctx = mapCard(ctx, cardId, card => {
+            return {
+                ...card,
                 isFaceDown: false,
             }
         }) as GameState

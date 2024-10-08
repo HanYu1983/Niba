@@ -88,7 +88,7 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
                 cardId => getCardTexts(ctx, cardId)
                     .flatMap(text => {
                         if (AbsoluteBaSyouFn.getBaSyouKeyword(basyou) == "Gゾーン") {
-                            if (text.isEnabledWhileG != true) {
+                            if (text.protectLevel != 2) {
                                 return []
                             }
                         }
@@ -133,16 +133,18 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
                                             // 使用了卡牌後, 同一個回合不能再使用. 以下記錄使用過的卡片, 會在切入結束後清除
                                             const cardId = DefineFn.EffectFn.getCardID(effect)
                                             const ps = GameStateFn.getItemState(ctx, cardId)
-                                            if (ps.textIdsUseThisTurn?.[effect.text.id]) {
-                                                throw new DefineFn.TipError(`同回合上限: ${effect.text.description}`)
+                                            // 有"每"字的一回內可以無限使用
+                                            if (effect.text.isEachTime) {
+
+                                            } else {
+                                                if ((ps.textIdsUseThisTurn || []).filter(tid => tid == effect.text.id).length > 0) {
+                                                    throw new DefineFn.TipError(`同回合上限: ${effect.text.description}`)
+                                                }
                                             }
                                             ctx = GameStateFn.mapItemState(ctx, cardId, ps => {
                                                 return {
                                                     ...ps,
-                                                    textIdsUseThisTurn: {
-                                                        ...ps.textIdsUseThisTurn,
-                                                        [effect.text.id]: true
-                                                    }
+                                                    textIdsUseThisTurn: [effect.text.id, ...(ps.textIdsUseThisTurn || [])]
                                                 }
                                             }) as GameState
                                             return ctx

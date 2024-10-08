@@ -3,7 +3,7 @@ import { AbsoluteBaSyouFn } from "../game/define/BaSyou"
 import { BattlePointFn } from "../game/define/BattlePoint"
 import { PlayerA } from "../game/define/PlayerID"
 import { PhaseFn } from "../game/define/Timing"
-import { getCardRollCostLength, getCardBattlePoint, getCardIdsCanPayRollCost } from "../game/gameState/card"
+import { getCardTotalCostLength, getCardBattlePoint, getCardIdsCanPayRollCost } from "../game/gameState/card"
 import { createCardWithProtoIds } from "../game/gameState/CardTableComponent"
 import { createEffectTips, doEffect, setTipSelectionForUser } from "../game/gameState/doEffect"
 import { getTopEffect } from "../game/gameState/EffectStackComponent"
@@ -53,7 +53,7 @@ export async function test179028_10D_U_WT181N_white() {
     if (getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア")).length != 0) {
         throw new Error(`getCardLiketemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア")).length != 0`)
     }
-    if (getCardRollCostLength(ctx, cardId) != 4) {
+    if (getCardTotalCostLength(ctx, cardId) != 4) {
         throw new Error(`getCardRollCostLength(ctx, cardId) != 4`)
     }
     ctx = doEffect(ctx, effect, 0, 0)
@@ -68,7 +68,7 @@ export async function test179028_10D_U_WT181N_white() {
     if (BattlePointFn.eq(getCardBattlePoint(ctx, cardId), [8, 0, 8]) == false) {
         throw new Error(`BattlePointFn.eq(bp, [8,0,8]) == false`)
     }
-    if (getCardRollCostLength(ctx, cardId) != 5) {
+    if (getCardTotalCostLength(ctx, cardId) != 5) {
         throw new Error(`getCardRollCostLength(ctx, cardId) != 5`)
     }
     if (getItemState(ctx, cardId).flags["bonus"] == null) {

@@ -1,8 +1,9 @@
 import { title } from "process";
-import { AbsoluteBaSyou } from "./BaSyou";
+import { AbsoluteBaSyou, BaSyou } from "./BaSyou";
 import { TipError, TargetMissingError } from "./GameError";
 import { BattleBonus } from "./CardText";
-import { CardPrototype } from "./CardPrototype";
+import { CardColor, CardPrototype } from "./CardPrototype";
+import { GlobalEffect } from "./GlobalEffect";
 
 export type StrBaSyouPair = [string, AbsoluteBaSyou]
 
@@ -16,6 +17,8 @@ export type TipTitle =
     | ["テキスト", TipTitleTextRef[], TipTitleTextRef[]]
     | ["BattleBonus", BattleBonus[], BattleBonus[]]
     | ["StringOptions", string[], string[]]
+    | ["GlobalEffects", GlobalEffect[], GlobalEffect[]]
+    | ["BaSyou", AbsoluteBaSyou[], AbsoluteBaSyou[]]
 
 export type Tip = {
     title: TipTitle,
@@ -31,21 +34,26 @@ export type Tip = {
 };
 
 export const TipFn = {
-    createTotalCostKey: ()=>"合計国力〔x〕",
+    createTotalCostKey: () => "合計国力〔x〕",
+    createRollColorKey(i: number, color: CardColor | null): string {
+        return `橫置支付${i}[${color}]`
+    },
     createConditionKeyOfPayColorX(proto: CardPrototype): string {
         if (proto.color == null) {
             throw new Error()
         }
         return `${proto.color}X`
     },
-    createGoEarthKey: ()=>"去地球",
-    createGoSpaceKey: ()=>"去宇宙",
+    createGoEarthKey: () => "去地球",
+    createGoSpaceKey: () => "去宇宙",
     getWant(tip: Tip) {
         switch (tip.title[0]) {
             case "カード":
             case "テキスト":
             case "StringOptions":
             case "BattleBonus":
+            case "GlobalEffects":
+            case "BaSyou":
                 return tip.title[1]
         }
     },
@@ -55,6 +63,8 @@ export const TipFn = {
             case "テキスト":
             case "StringOptions":
             case "BattleBonus":
+            case "GlobalEffects":
+            case "BaSyou":
                 return tip.title[2]
         }
     },
@@ -76,6 +86,16 @@ export const TipFn = {
                     title: [tip.title[0], tip.title[1], tip.title[1]]
                 }
             case "BattleBonus":
+                return {
+                    ...tip,
+                    title: [tip.title[0], tip.title[1], tip.title[1]]
+                }
+            case "GlobalEffects":
+                return {
+                    ...tip,
+                    title: [tip.title[0], tip.title[1], tip.title[1]]
+                }
+            case "BaSyou":
                 return {
                     ...tip,
                     title: [tip.title[0], tip.title[1], tip.title[1]]

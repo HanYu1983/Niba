@@ -2,12 +2,12 @@ import { always, ifElse, map, pipe, zipObj } from "ramda";
 import { RelatedPlayerSideKeyword, UnitPropertyKeyword } from ".";
 import { LogicTree, LogicTreeFn } from "../../tool/logicTree";
 import { AbsoluteBaSyou, BaSyou, BaSyouKeyword } from "./BaSyou";
-import { CardColor, CardCategory } from "./CardPrototype";
+import { CardColor, CardCategory, GSignProperty } from "./CardPrototype";
 import { Effect } from "./Effect";
 import { GameEvent } from "./GameEvent";
 import { GlobalEffect } from "./GlobalEffect";
 import { Phase, SiYouTiming } from "./Timing";
-import { StrBaSyouPair, Tip } from "./Tip";
+import { StrBaSyouPair, Tip, TipFn } from "./Tip";
 import { PlayerID } from "./PlayerID";
 import { logCategory } from "../../tool/logger";
 
@@ -40,6 +40,7 @@ export type ActionTitle =
     | string
     | ["_ロールする", "ロール" | "リロール" | "打開" | "リロール" | "破壞" | "廃棄" | "破壊を無効" | "見"]
     | ["_１ダメージを与える", number]
+    | ["_１貫通ダメージを与える", number]
     | ["_－１／－１／－１コイン_１個を乗せる", BattleBonus, number]
     | ["移除卡狀態_旗標", string]
     | ["ターン終了時まで「速攻」を得る。", GlobalEffect[]]
@@ -49,7 +50,6 @@ export type ActionTitle =
     | ["合計国力〔x〕", number]
     | ["_敵軍_ユニットが_戦闘エリアにいる場合", RelatedPlayerSideKeyword, CardCategory, BaSyouKeyword[]]
     | ["這張卡在_戰區的場合", BaSyouKeyword[]]
-    | ["這個效果1回合只能用1次"]
     | ["看自己_本國全部的卡", BaSyouKeyword]
     | ["triggerEvent", GameEvent]
     | ["_の_ハンガーに移す", RelatedPlayerSideKeyword, BaSyouKeyword]
@@ -83,7 +83,10 @@ export const ActionFn = {
 }
 
 export type EntitySearchOptions = {
+    isThisBattleGroup?: boolean,
+    isThisCard?: boolean,
     isBattle?: boolean,
+    isBattleWithThis?: boolean,
     side?: RelatedPlayerSideKeyword,
     see?: [BaSyou, number, number],
     title?: string[],
@@ -92,14 +95,16 @@ export type EntitySearchOptions = {
     at?: BaSyouKeyword[],
     atBa?: boolean,
     color?: CardColor[],
-    compareBattlePoint?: [UnitPropertyKeyword, "<=" | ">=" | "==", number],
+    compareBattlePoint?: [UnitPropertyKeyword | "合計国力", "<=" | ">=" | "==", number],
     isDestroy?: boolean,
     isSetGroup?: boolean,
+    isBattleGroupFirst?: boolean,
     isCanSetCharacter?: boolean,
     hasSetCard?: boolean,
     hasSpecialEffect?: TextSpeicalEffect[],
     hasChar?: string[],
     hasSelfCardId?: boolean,
+    hasGSignProperty?: GSignProperty[],
     isMaster?: boolean,
     count?: number,
     min?: number,
@@ -129,6 +134,7 @@ export type ConditionTitle =
     | ["_敵軍部隊がいる場合", RelatedPlayerSideKeyword]
     | ["_敵軍_ユニットが_３枚以上いる場合", RelatedPlayerSideKeyword, CardCategory, number]
     | ["Entity", EntitySearchOptions]
+    | ["_敵軍部隊_１つ", RelatedPlayerSideKeyword, number]
 
 export type Condition = {
     title?: ConditionTitle,
@@ -171,7 +177,9 @@ export const ConditionFn = {
     }
 }
 
-export type SituationTitle = ["「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合"]
+export type SituationTitle =
+    | ["「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合"]
+    | ["ロールコストの支払いにおいて"]
 
 // 『常駐』：「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合、このカードを自軍Gとしてロールできる。
 export type Situation = {
@@ -222,7 +230,8 @@ export type CardText = {
     logicTreeActions?: LogicTreeAction[]
     onEvent?: OnEventTitle
     onSituation?: string
-    isEnabledWhileG?: boolean,
+    // 1為非G時不能被洗，2為G時也不能被洗
+    protectLevel?: 1 | 2,
     isEachTime?: boolean,
 }
 
@@ -304,7 +313,7 @@ export function createRollCostRequire(
 ): { [key: string]: Condition } {
     let ret: { [key: string]: Condition } = {}
     for (let i = 0; i < costNum; ++i) {
-        const key = `${i}[${color}]`
+        const key = TipFn.createRollColorKey(i, color)
         ret = {
             ...ret,
             [key]: {

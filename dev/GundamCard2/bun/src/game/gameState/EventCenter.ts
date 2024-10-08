@@ -18,12 +18,12 @@ function getGameStateAndAssert(ctx: any): GameState {
 }
 
 export const EventCenterFn = {
-    onAddImmediateEffect(_ctx: any, effect:Effect):any{
-        logCategory(`onAddImmediateEffect`,`${effect.description}`, effect)
+    onAddImmediateEffect(_ctx: any, effect: Effect): any {
+        logCategory(`onAddImmediateEffect`, `${effect.description}`, effect)
         let ctx = getGameStateAndAssert(_ctx)
         return ctx
     },
-    onEvent(_ctx: any, evt:GameEvent):any{
+    onEvent(_ctx: any, evt: GameEvent): any {
         logCategory(`onEvent`, `${JSON.stringify(evt.title)} ${JSON.stringify(evt.cardIds)}`, evt.title, evt.cardIds)
         let ctx = getGameStateAndAssert(_ctx)
         return ctx
@@ -40,26 +40,39 @@ export const EventCenterFn = {
         ctx = setMessageCurrentEffect(ctx, null) as GameState
         return ctx
     },
-    onActionStart(_ctx: any, effect: Effect, action:Action): any {
+    onActionStart(_ctx: any, effect: Effect, action: Action): any {
         logCategory(`onActionStart`, `${action.description}`)
         let ctx = getGameStateAndAssert(_ctx)
         ctx = setMessageCurrentEffect(ctx, effect) as GameState
         return ctx
     },
-    onActionEnd(_ctx: any, effect: Effect, action:Action): any {
+    onActionEnd(_ctx: any, effect: Effect, action: Action): any {
         logCategory(`onActionEnd`, `${action.description}`)
         let ctx = getGameStateAndAssert(_ctx)
         ctx = setMessageCurrentEffect(ctx, null) as GameState
         return ctx
     },
+    onItemStateDestroyReasonChange(_ctx: any, old: ItemState, curr: ItemState):any {
+        if (old.destroyReason == null && curr.destroyReason) {
+            logCategory("onItemStateDestroyReasonChange", `被破壞尚未進入堆疊:${curr.id}`)
+        } else if (old.destroyReason && curr.destroyReason == null) {
+            logCategory("onItemStateDestroyReasonChange", `破壞被取消:${curr.id}`)
+        }
+        return _ctx
+    },
     onItemStateChange(_ctx: any, old: ItemState, curr: ItemState): any {
         let ctx = getGameStateAndAssert(_ctx)
         let effect = getMessageCurrentEffect(ctx)
+        logCategory(`onItemStateChange`, old, curr)
+        if (old.destroyReason != curr.destroyReason) {
+            ctx = EventCenterFn.onItemStateDestroyReasonChange(ctx, old, curr)
+        }
         return ctx
     },
     onCardChange(_ctx: any, old: Card, curr: Card): any {
         let ctx = getGameStateAndAssert(_ctx)
         let effect = getMessageCurrentEffect(ctx)
+        logCategory(`onCardChange`, old, curr)
         return ctx
     },
     onPlayerStateChange(_ctx: any, old: PlayerState, curr: PlayerState): any {
@@ -97,7 +110,7 @@ export const EventCenterFn = {
                 if (newBasyouStr == null) {
                     _ctx = EventCenterFn.onItemDelete(_ctx, itemId)
                 } else if (newBasyouStr != oldBasyouStr) {
-                   
+
                 }
             }
         }

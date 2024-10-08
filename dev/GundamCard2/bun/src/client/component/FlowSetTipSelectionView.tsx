@@ -38,6 +38,8 @@ export const FlowSetTipSelectionView = (props: { clientId: string, flow: FlowSet
           }
         </div>
     }
+    case "GlobalEffects":
+    case "BaSyou":
     case "StringOptions":
     case "BattleBonus":{
       const values = wants as any[]

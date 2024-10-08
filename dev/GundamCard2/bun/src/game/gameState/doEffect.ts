@@ -8,7 +8,7 @@ import { Effect, EffectFn, EffectReason } from "../define/Effect"
 import { TipError, TargetMissingError } from "../define/GameError"
 import { GlobalEffect } from "../define/GlobalEffect"
 import { ItemStateFn } from "../define/ItemState"
-import { TipFn, TipTitleTextRef, StrBaSyouPair, Tip } from "../define/Tip"
+import { TipFn, TipTitleTextRef, StrBaSyouPair, Tip, TipTitle } from "../define/Tip"
 import { EventCenterFn } from "./EventCenter"
 import { GameState } from "./GameState"
 import { createActionTitleFn } from "./createActionTitleFn"
@@ -123,7 +123,7 @@ export function createEffectTips(
     const errors: string[] = []
     let tip: Tip | null = null
     try {
-      tip = createConditionTitleFn(con, {})(ctx, effect, bridge)
+      tip = createConditionTitleFn(con)(ctx, effect, bridge)
       if ((tip as any)?.isGameState) {
         console.log(`快速檢查是不寫錯回傳成GameState, 應該要回傳Tip|null:`, key, con.title)
         throw new Error()
@@ -285,24 +285,29 @@ export function createCommandEffectTips(ctx: GameState, effect: Effect): Command
   return []
 }
 
-function getCardTipSelection(ctx: GameState, varName: string, cardId: string) {
+export function getCardTipSelection(ctx: GameState, varName: string, cardId: string, options?: { assertTitle?: TipTitle }) {
   const cardState = getItemState(ctx, cardId);
   const tip = ItemStateFn.getTip(cardState, varName)
   const tipError = TipFn.checkTipSatisfies(tip)
   if (tipError) {
     throw tipError
   }
+  if (options?.assertTitle && options.assertTitle[0] != tip.title[0]) {
+    throw new Error(`tip title not right: ${tip.title[0]} != ${options.assertTitle[0]}`)
+  }
   switch (tip.title[0]) {
     case "カード":
     case "テキスト":
     case "StringOptions":
     case "BattleBonus":
+    case "GlobalEffects":
+    case "BaSyou":
       return TipFn.getSelection(tip)
   }
 }
 
 export function getCardTipTextRefs(ctx: GameState, varName: string, cardId: string): TipTitleTextRef[] {
-  return getCardTipSelection(ctx, varName, cardId) as TipTitleTextRef[]
+  return getCardTipSelection(ctx, varName, cardId, { assertTitle: ["テキスト", [], []] }) as TipTitleTextRef[]
 }
 
 export function setCardTipTextRefs(ctx: GameState, varName: string, pairs: TipTitleTextRef[], cardId: string): GameState {
@@ -313,7 +318,7 @@ export function setCardTipTextRefs(ctx: GameState, varName: string, pairs: TipTi
 }
 
 export function getCardTipStrBaSyouPairs(ctx: GameState, varName: string, cardId: string): StrBaSyouPair[] {
-  return getCardTipSelection(ctx, varName, cardId) as StrBaSyouPair[]
+  return getCardTipSelection(ctx, varName, cardId, { assertTitle: ["カード", [], []] }) as StrBaSyouPair[]
 }
 
 export function setCardTipStrBaSyouPairs(ctx: GameState, varName: string, pairs: StrBaSyouPair[], cardId: string): GameState {
@@ -324,11 +329,11 @@ export function setCardTipStrBaSyouPairs(ctx: GameState, varName: string, pairs:
 }
 
 export function getCardTipBattleBonus(ctx: GameState, varName: string, cardId: string): BattleBonus[] {
-  return getCardTipSelection(ctx, varName, cardId) as BattleBonus[]
+  return getCardTipSelection(ctx, varName, cardId, { assertTitle: ["BattleBonus", [], []] }) as BattleBonus[]
 }
 
 export function getCardTipStrings(ctx: GameState, varName: string, cardId: string): string[] {
-  return getCardTipSelection(ctx, varName, cardId) as string[]
+  return getCardTipSelection(ctx, varName, cardId, { assertTitle: ["テキスト", [], []] }) as string[]
 }
 
 export function createPlayTextEffectFromEffect(ctx: GameState, e: Effect, options?: { conditions?: { [key: string]: Condition }, logicTreeAction?: LogicTreeAction, isOption?: boolean }): Effect {

@@ -59,10 +59,10 @@ export const OnViewModel = OnEvent.pipe(
           ctx.gameState = initState(ctx.gameState, deckA, deckB);
           // ctx.gameState = initState(ctx.gameState, TMP_DECK.slice(12), TMP_DECK.slice(12));
           // ctx.gameState = createCardWithProtoIds(ctx.gameState, AbsoluteBaSyouFn.of(PlayerA, "手札"), TMP_DECK.slice(0, 6)) as GameStateWithFlowMemory
-          ctx.gameState = createCardWithProtoIds(ctx.gameState, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), deckA.slice(6, 9)) as GameStateWithFlowMemory
-          ctx.gameState = createCardWithProtoIds(ctx.gameState, AbsoluteBaSyouFn.of(PlayerA, "配備エリア"), deckA.slice(12, 13)) as GameStateWithFlowMemory
-          ctx.gameState = createCardWithProtoIds(ctx.gameState, AbsoluteBaSyouFn.of(PlayerB, "Gゾーン"), deckB.slice(6, 9)) as GameStateWithFlowMemory
-          ctx.gameState = createCardWithProtoIds(ctx.gameState, AbsoluteBaSyouFn.of(PlayerB, "配備エリア"), deckB.slice(12, 13)) as GameStateWithFlowMemory
+          // ctx.gameState = createCardWithProtoIds(ctx.gameState, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), deckA.slice(6, 9)) as GameStateWithFlowMemory
+          // ctx.gameState = createCardWithProtoIds(ctx.gameState, AbsoluteBaSyouFn.of(PlayerA, "配備エリア"), deckA.slice(12, 13)) as GameStateWithFlowMemory
+          // ctx.gameState = createCardWithProtoIds(ctx.gameState, AbsoluteBaSyouFn.of(PlayerB, "Gゾーン"), deckB.slice(6, 9)) as GameStateWithFlowMemory
+          // ctx.gameState = createCardWithProtoIds(ctx.gameState, AbsoluteBaSyouFn.of(PlayerB, "配備エリア"), deckB.slice(12, 13)) as GameStateWithFlowMemory
           // ctx.gameState = {
           //   ...ctx.gameState,
           //   phase: ["配備フェイズ", "フリータイミング"],

@@ -1,3 +1,4 @@
+import { lift } from "ramda";
 import { BaSyouKeyword, BaSyouKeywordFn, AbsoluteBaSyouFn } from "../define/BaSyou";
 import { CardCategory, CardColor, CardPrototype } from "../define/CardPrototype";
 import { EntitySearchOptions, TextSpeicalEffect } from "../define/CardText";
@@ -6,7 +7,8 @@ import { TipError } from "../define/GameError";
 import { ItemState } from "../define/ItemState";
 import { PlayerID, PlayerA, PlayerB, PlayerIDFn } from "../define/PlayerID";
 import { Tip, StrBaSyouPair, TipFn } from "../define/Tip";
-import { getCardColor, getCardHasSpeicalEffect, getItemCharacteristic, getItemRuntimeCategory, isCardMaster } from "./card";
+import { getBattleGroup } from "./battleGroup";
+import { getCardColor, getCardGSignProperty, getCardHasSpeicalEffect, getCardTotalCostLength, getItemCharacteristic, getItemRuntimeCategory, isCardMaster } from "./card";
 import { getCoinIds, getCoin, getCoinOwner } from "./CoinTableComponent";
 import { createAbsoluteBaSyouFromBaSyou, createPlayerIdFromRelated } from "./createActionTitleFn";
 import { getCutInDestroyEffects, getEffect, getEffects, isStackEffect } from "./EffectStackComponent";
@@ -75,8 +77,40 @@ export function createEntityIterator(ctx: GameState) {
 }
 
 export function createTipByEntitySearch(ctx: GameState, cardId: string, options: EntitySearchOptions): Tip {
-    let entityList = createEntityIterator(ctx).filter(EntityFn.filterIsBattle(ctx, null, options.isBattle || false))
+    let entityList = createEntityIterator(ctx)
+    if (options.isBattle != null) {
+        entityList = entityList.filter(EntityFn.filterIsBattle(ctx, null, options.isBattle))
+    }
+    if (options.isBattleWithThis != null) {
+        entityList = entityList.filter(EntityFn.filterIsBattle(ctx, cardId, options.isBattleWithThis))
+    }
     const cheatCardIds: string[] = []
+    if (options.isThisCard) {
+        entityList = entityList.filter(entity => entity.itemId == cardId)
+    }
+    if (options.isBattleGroupFirst) {
+        const basyou = getItemBaSyou(ctx, cardId)
+        if (basyou.value[1] == "戦闘エリア1" || basyou.value[1] == "戦闘エリア2") {
+            // 各戰區的第一隻
+            const ids = lift(AbsoluteBaSyouFn.of)(PlayerIDFn.getAll(), ["戦闘エリア1", "戦闘エリア2"]).flatMap(basyou => {
+                return getItemIdsByBasyou(ctx, basyou).slice(0, 1)
+            })
+            entityList = entityList.filter(entity => ids.includes(entity.itemId))
+        } else {
+            // 如果沒在戰區無法組成部隊
+            entityList = []
+        }
+    }
+    if (options.isThisBattleGroup) {
+        const basyou = getItemBaSyou(ctx, cardId)
+        if (basyou.value[1] == "戦闘エリア1" || basyou.value[1] == "戦闘エリア2") {
+            const battleGroupIds = getBattleGroup(ctx, getItemBaSyou(ctx, cardId))
+            entityList = entityList.filter(entity => battleGroupIds.includes(entity.itemId))
+        } else {
+            // 如果沒在戰區無法組成部隊
+            entityList = []
+        }
+    }
     if (options.hasSelfCardId != null) {
         const absoluteBasyou = getItemBaSyou(ctx, cardId)
         entityList = entityList.filter(EntityFn.filterController(AbsoluteBaSyouFn.getPlayerID(absoluteBasyou)))
@@ -129,6 +163,17 @@ export function createTipByEntitySearch(ctx: GameState, cardId: string, options:
                         case "==":
                             return hp == value
                     }
+                case "合計国力": {
+                    const totalCost = getCardTotalCostLength(ctx, entity.itemId)
+                    switch (op) {
+                        case "<=":
+                            return totalCost <= value
+                        case ">=":
+                            return totalCost >= value
+                        case "==":
+                            return totalCost == value
+                    }
+                }
             }
             return false
         })
@@ -170,6 +215,9 @@ export function createTipByEntitySearch(ctx: GameState, cardId: string, options:
     }
     if (options.hasChar != null) {
         entityList = entityList.filter(EntityFn.filterHasChar(ctx, options.hasChar))
+    }
+    if (options.hasGSignProperty) {
+        entityList = entityList.filter(entity => isCardLike(ctx)(entity.itemId) && options.hasGSignProperty?.includes(getCardGSignProperty(ctx, entity.itemId)))
     }
     if (options.exceptCardIds?.length) {
         entityList = entityList.filter(entity => options.exceptCardIds?.includes(entity.itemId) != true)
@@ -254,7 +302,7 @@ export const EntityFn = {
     },
     filterIsDestroy(v: boolean) {
         return (entity: Entity) => {
-            return (entity.destroyReason != null) == v
+            return (entity.destroyReason != null && entity.destroyReason.id != "マイナスの戦闘修正") == v
         }
     },
     filterIsBattle(ctx: GameState, targetId: string | null, v: boolean) {

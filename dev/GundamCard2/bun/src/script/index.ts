@@ -52,6 +52,7 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
         "COMMAND": "コマンド",
         "OPERATION": "オペレーション",
         "OPERATION(UNIT)": "オペレーション(ユニット)",
+        "OPERATION（UNIT）": "オペレーション(ユニット)",
         "ACE": "ACE",
         "GRAPHIC": "グラフィック",
       }
@@ -263,6 +264,7 @@ function getGainTexts(gainStr: string): CardText[] {
     {
       id: "",
       title: ["特殊型", ["ゲイン"]],
+      description: `(${rollcost})ゲイン`,
       conditions: createRollCostRequire(rollcost, null),
     }
   ]
@@ -284,6 +286,7 @@ function getKaiSo(gainStr: string): CardText[] {
     {
       id: "",
       title: ["特殊型", ["改装", char]],
+      description: `(${rollcost})改装[${char}]`,
       conditions: createRollCostRequire(rollcost, null)
     }
   ]
@@ -309,6 +312,7 @@ function getCrossWeapon(gainStr: string): CardText[] {
       id: "",
       title: ["特殊型", ["クロスウェポン", char]],
       isEachTime: every == "毎",
+      description: `(${color}${rollcost}${every})クロスウェポン[${char}]`,
       conditions: createRollCostRequire(rollcost, color)
     }
   ]
@@ -331,6 +335,7 @@ function getRange(gainStr: string): CardText[] {
     {
       id: "",
       title: ["特殊型", ["範囲兵器", num]],
+      description: `(${rollcost})範囲兵器[${num}]`,
       conditions: createRollCostRequire(rollcost, null)
     }
   ]
@@ -355,6 +360,7 @@ function getPao(gainStr: string): CardText[] {
     {
       id: "",
       title: ["特殊型", ["サイコミュ", num]],
+      description: `(${rollcost})サイコミュ[${num}]`,
       conditions: createRollCostRequire(rollcost, null)
     }
   ]
@@ -378,6 +384,7 @@ function getHave(gainStr: string): CardText[] {
     {
       id: "",
       title: ["特殊型", ["共有", char]],
+      description: `(${rollcost})共有[${char}]`,
       conditions: createRollCostRequire(rollcost, color)
     }
   ]
@@ -388,7 +395,7 @@ function getSupply(gainStr: string): CardText[] {
   if (match == null) {
     return []
   }
-  const [matchstr, rollcoststr, char] = match
+  const [matchstr, rollcoststr] = match
   const rollcost = uppercaseDigits.indexOf(rollcoststr)
   if (rollcost == -1) {
     throw new Error(`getGainTexts error: ${matchstr}`)
@@ -397,6 +404,7 @@ function getSupply(gainStr: string): CardText[] {
     {
       id: "",
       title: ["特殊型", ["供給"]],
+      description: `(${rollcost})供給`,
       conditions: createRollCostRequire(rollcost, null)
     }
   ]

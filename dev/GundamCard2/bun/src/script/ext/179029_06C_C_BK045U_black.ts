@@ -14,7 +14,7 @@ export const prototype: CardPrototype = {
     {
       id: "",
       description: " <『起動』：このカードがGとして場に出た場合、〔黒２〕を支払う事ができる。その場合、自軍本国のカードを全て見て、その中にあるグラフィック１枚を、自軍ハンガーに移す事ができる。その後、自軍本国をシャッフルする>",
-      isEnabledWhileG: true,
+      protectLevel: 2,
       title: ["自動型", "起動"],
       onEvent: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
         const event = DefineFn.EffectFn.getEvent(effect)

@@ -10,6 +10,7 @@ import { getItemBaSyou } from "../game/gameState/ItemTableComponent";
 import { loadPrototype } from "../script";
 import { testItemGroup } from "../tool/ItemGroup";
 import { test179001_01A_CH_WT007R_white } from "./test179001_01A_CH_WT007R_white";
+import { test179019_01A_U_WT003C_white } from "./test179019_01A_U_WT003C_white";
 import { test179003_01A_U_BK008U_black } from "./test179003_01A_U_BK008U_black";
 import { test179007_02A_U_WT027U_white } from "./test179007_02A_U_WT027U_white";
 import { test179015_04B_U_BK058R_black } from "./test179015_04B_U_BK058R_black";
@@ -24,6 +25,7 @@ import { test179028_10D_C_BL070N_blue } from "./test179028_10D_C_BL070N_blue";
 import { test179028_10D_U_WT181N_white } from "./test179028_10D_U_WT181N_white";
 import { test179029_B3C_CH_WT102R_white } from "./test179029_B3C_CH_WT102R_white";
 import { test179030_11E_C_BL079R_blue } from "./test179030_11E_C_BL079R_blue";
+import { test179030_11E_C_WT077S_white } from "./test179030_11E_C_WT077S_white";
 import { test179030_11E_U_BK194S_2_black, test179030_11E_U_BK194S_2_black_2 } from "./test179030_11E_U_BK194S_2_black";
 import { test179901_B2B_C_BK005P_black } from "./test179901_B2B_C_BK005P_black";
 import { testAttackRuleEffect, testAttackRuleEffect2, testAttackRuleEffect3 } from "./testAttackRuleEffect";
@@ -36,17 +38,25 @@ import { testGetPlayEffects } from "./testGetPlayEffects";
 import { testIssue } from "./testIssue";
 import { testKaiSo } from "./testKaiSo";
 import { testPlayChar } from "./testPlayChar";
+import { testPlayerScore } from "./testPlayerScore";
 import { testPlayG } from "./testPlayG";
 import { testPS } from "./testPS";
 import { testReollRuleEffect } from "./testRerollRuleEffect";
 import { testReturnRuleEffect } from "./testReturnRuleEffect";
 import { testSupply } from "./testSupply";
 import { testThinkVer1, testThinkVer1_2 } from "./testThinkVer1";
+import { test179901_00_U_WT001P_white_02 } from "./test179901_00_U_WT001P_white_02";
+import { test179028_10D_CH_WT095_white } from "./test179028_10D_CH_WT095_white";
 
 const fs = require('fs').promises;
 
 export async function tests() {
     return [
+        test179028_10D_CH_WT095_white,
+        test179901_00_U_WT001P_white_02,
+        test179019_01A_U_WT003C_white,
+        test179030_11E_C_WT077S_white,
+        testPlayerScore,
         testThinkVer1_2,
         test179029_B3C_CH_WT102R_white,
         testIssue,

@@ -16,7 +16,7 @@ export const prototype: CardPrototype = {
       id: "",
       description: "＜『起動』：このカードは、Gとして場に出た場合、〔Ｒ〕を支払う事ができる。その場合、敵軍ユニット１枚に３ダメージを与える＞",
       title: ["自動型", "起動"],
-      isEnabledWhileG: true,
+      protectLevel: 2,
       onEvent: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
         const event = DefineFn.EffectFn.getEvent(effect)
         const cardId = DefineFn.EffectFn.getCardID(effect)
@@ -74,12 +74,8 @@ export const prototype: CardPrototype = {
       {
         actions: [
           {
-            title: ["cutIn", [
-              {
-                title: ["_ロールする", "破壞"],
-                vars: ["戦闘エリアにいる、４以下の防御力を持つ敵軍ユニット１枚"]
-              }
-            ]]
+            title: ["_ロールする", "破壞"],
+            vars: ["戦闘エリアにいる、４以下の防御力を持つ敵軍ユニット１枚"]
           }
         ]
       }

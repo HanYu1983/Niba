@@ -32,13 +32,9 @@ export const prototype: CardPrototype = {
       {
         actions: [
           {
-            title: ["cutIn", [
-              {
-                title: ["_１ダメージを与える", 1],
-                vars: ["任意の枚数の敵軍ユニット"],
-                description: "任意の枚数の敵軍ユニット"
-              }
-            ]]
+            title: ["_１ダメージを与える", 1],
+            vars: ["任意の枚数の敵軍ユニット"],
+            description: "任意の枚数の敵軍ユニット"
           },
         ]
       }

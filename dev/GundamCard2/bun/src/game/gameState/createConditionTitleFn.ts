@@ -1,12 +1,12 @@
 
 import { lift, pair } from "ramda"
 import { AbsoluteBaSyou, AbsoluteBaSyouFn, BaSyouKeywordFn } from "../define/BaSyou"
-import { Condition, ConditionTitleFn, ConditionFn } from "../define/CardText"
+import { Condition, ConditionTitleFn, ConditionFn, Situation } from "../define/CardText"
 import { Effect, EffectFn } from "../define/Effect"
 import { TargetMissingError, TipError } from "../define/GameError"
 import { PlayerIDFn } from "../define/PlayerID"
 import { Tip, StrBaSyouPair, TipTitleTextRef } from "../define/Tip"
-import { getItemCharacteristic, getItemRuntimeCategory, getCardTexts, getCardRollCostLength, getCardIdsCanPayRollColor } from "./card"
+import { getItemCharacteristic, getItemRuntimeCategory, getCardTexts, getCardTotalCostLength, getCardIdsCanPayRollColor } from "./card"
 import { getCard } from "./CardTableComponent"
 import { GameState } from "./GameState"
 import { isBattle } from "./IsBattleComponent"
@@ -17,12 +17,25 @@ import { logCategory } from "../../tool/logger"
 import { createEntityIterator, createTipByEntitySearch, EntityFn } from "./Entity"
 import { getPlayerState, mapPlayerState } from "./PlayerStateComponent"
 
-export function createConditionTitleFn(condition: Condition, options: { isPlay?: boolean }): ConditionTitleFn {
+export function createConditionTitleFn(condition: Condition, options?: { isPlay?: boolean }): ConditionTitleFn {
     if (condition.title == null || typeof condition.title == "string") {
         return ConditionFn.getTitleFn(condition)
     }
     logCategory("getConditionTitleFn", condition.title)
     switch (condition.title[0]) {
+        case "_敵軍部隊_１つ": {
+            const [_, side, count] = condition.title
+            return function (ctx: GameState, effect: Effect): Tip | null {
+                const cardId = EffectFn.getCardID(effect)
+                const cardController = getItemController(ctx, cardId);
+                const playerId = PlayerIDFn.fromRelatedPlayerSideKeyword(side, cardController)
+                const basyous = lift(AbsoluteBaSyouFn.of)([playerId], ["戦闘エリア1", "戦闘エリア2"]).filter(basyou => getItemIdsByBasyou(ctx, basyou).length)
+                return {
+                    title: ["BaSyou", basyous, basyous.slice(0, count)],
+                    count: count,
+                }
+            }
+        }
         case "_敵軍_ユニットが_３枚以上いる場合": {
             const [_, side, category, count] = condition.title
             return function (ctx: GameState, effect: Effect): Tip | null {
@@ -218,7 +231,7 @@ export function createConditionTitleFn(condition: Condition, options: { isPlay?:
                 const pairs = basyous.flatMap(basyou =>
                     getItemIdsByBasyou(ctx, basyou)
                         .filter(cardId => getItemRuntimeCategory(ctx, cardId) == category)
-                        .filter(cardId => getCardRollCostLength(ctx, cardId) <= totalCost)
+                        .filter(cardId => getCardTotalCostLength(ctx, cardId) <= totalCost)
                         .map(cardId => [cardId, basyou] as StrBaSyouPair)
                 )
                 return {
@@ -238,7 +251,7 @@ export function createConditionTitleFn(condition: Condition, options: { isPlay?:
                         getItemIdsByBasyou(ctx, basyou)
                             .filter(cardId => getItemPrototype(ctx, cardId).category == "ユニット")
                             .filter(cardId => getItemCharacteristic(ctx, cardId).includes(char))
-                            .filter(cardId => getCardRollCostLength(ctx, cardId) <= x)
+                            .filter(cardId => getCardTotalCostLength(ctx, cardId) <= x)
                             .map(cardId => [cardId, basyou] as StrBaSyouPair)
                     )
                     return {
@@ -314,8 +327,13 @@ export function createConditionTitleFn(condition: Condition, options: { isPlay?:
             return function (ctx: GameState, effect: Effect): Tip | null {
                 const cardId = EffectFn.getCardID(effect)
                 const cardController = getItemController(ctx, cardId)
-                const cardIdColors = getCardIdsCanPayRollColor(ctx, null, cardController, color)
-                const extInfo: { min?: number, max?: number, count?: number } = {}
+                let situation: Situation = { title: ["ロールコストの支払いにおいて"] }
+                if (effect.reason[0] == "PlayCard" && effect.reason[3].isPlayCommand) {
+                    if (getItemPrototype(ctx, cardId).category?.includes("装弾")) {
+                        situation = { title: ["「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合"] }
+                    }
+                }
+                const cardIdColors = getCardIdsCanPayRollColor(ctx, situation, cardController, color)
                 let colorIds = []
                 if (color == null) {
                     colorIds = cardIdColors.map(gId => gId.cardId).slice(0, 1)

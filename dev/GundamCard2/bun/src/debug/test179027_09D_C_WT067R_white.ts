@@ -5,7 +5,7 @@ import { ItemStateFn } from "../game/define/ItemState"
 import { PlayerA, PlayerB } from "../game/define/PlayerID"
 import { PhaseFn } from "../game/define/Timing"
 import { setActivePlayerID } from "../game/gameState/ActivePlayerComponent"
-import { getCardRollCostLength, getCardBattlePoint, getCardHasSpeicalEffect, getCardIdsCanPayRollCost } from "../game/gameState/card"
+import { getCardTotalCostLength, getCardBattlePoint, getCardHasSpeicalEffect, getCardIdsCanPayRollCost } from "../game/gameState/card"
 import { addCards, createCardWithProtoIds } from "../game/gameState/CardTableComponent"
 import { clearTipSelectionForUser, createCommandEffectTips, createEffectTips, doEffect, getCardTipStrBaSyouPairs, setTipSelectionForUser } from "../game/gameState/doEffect"
 import { getImmediateEffects, getTopEffect } from "../game/gameState/EffectStackComponent"
@@ -23,6 +23,7 @@ import { setSetGroupParent } from "../game/gameState/SetGroupComponent"
 import { createRollCostConditions } from "../game/gameState/createPlayCardEffects"
 import { repeat } from "ramda"
 import { Effect } from "../game/define/Effect"
+import { TipFn } from "../game/define/Tip"
 
 export async function test179027_09D_C_WT067R_white() {
     await loadPrototype("179027_09D_C_WT067R_white")
@@ -43,7 +44,7 @@ export async function test179027_09D_C_WT067R_white() {
         throw new Error()
     }
     const conds = createRollCostConditions(ctx, getPrototype(cardA.protoID || ""), ["白"], 0)
-    if (conds["0[白]"] == null) {
+    if (conds[TipFn.createRollColorKey(0, "白")] == null) {
         throw new Error()
     }
     if (getCardIdsCanPayRollCost(ctx, PlayerA, null).length != 4) {
@@ -56,13 +57,7 @@ export async function test179027_09D_C_WT067R_white() {
     if (effect == null) {
         throw new Error()
     }
-    // 出場效果
-    ctx = doEffect(ctx, effect, 0, 0)
-    effect = getTopEffect(ctx)
-    if (effect == null) {
-        throw new Error()
-    }
-    // 指令效果
+    // 出場效果, 指令效果
     ctx = doEffect(ctx, effect, 0, 0)
     if (getItemStateValues(ctx).filter(is => is.damage == 2).length != 2) {
         throw new Error()

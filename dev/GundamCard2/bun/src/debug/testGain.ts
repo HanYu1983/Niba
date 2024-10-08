@@ -47,7 +47,7 @@ export async function testGain() {
         if (effect == null) {
             throw new Error()
         }
-        // 推入堆疊的效果有可能需要玩家選對象, 所有會有未選對象錯誤才是正確
+        // 推入堆疊的效果有可能需要玩家選對象, 所以會有未選對象錯誤才是正確
         const cets = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.not(CommandEffecTipFn.filterNoError))
         if (cets.length != 0) {
             throw new Error()

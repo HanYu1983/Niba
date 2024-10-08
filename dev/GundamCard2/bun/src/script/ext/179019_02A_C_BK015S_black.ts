@@ -7,7 +7,6 @@
 import { CardPrototype } from "../../game/define/CardPrototype";
 import { Effect } from "../../game/define/Effect";
 import { GlobalEffect } from "../../game/define/GlobalEffect";
-import { StrBaSyouPair, Tip } from "../../game/define/Tip";
 import { GameState } from "../../game/gameState/GameState";
 import { Bridge } from "../bridge";
 export const prototype: CardPrototype = {
