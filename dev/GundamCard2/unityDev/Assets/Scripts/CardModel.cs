@@ -1,22 +1,46 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public struct Prototype
+{
+    public string uid;
+    public string url;
+}
+
 public class CardModel
 {
 
-    public string uid = "model";
-    
-    public string url = "https://storage.googleapis.com/particle-resources/cardPackage/gundamWarN/179030_11E_U_BL209R_blue.jpg";
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public string uid = "";
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    //public Action<Vector3> OnPositionChange;
+
+    string areaUID = "";
+
+    public Prototype prototype = new Prototype();
+
+    public Vector3 pos = Vector3.zero;
+
+    public float rotZ = 0.0f;
+    public float rotY = 0.0f;
+
+
+    //public CardModel Duplicate()
+    //{
+    //    CardModel model = new CardModel();
+    //    model.prototype = prototype;
+    //    model.uid = uid;
+    //    return this;
+    //}
+
+    //public void SetPosition(Vector3 newPos)
+    //{
+    //    if (currentPos != newPos)
+    //    {
+    //        //OnPositionChange.Invoke(currentPos);
+    //        currentPos = newPos;
+    //    }
+    //}
+
 }

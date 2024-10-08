@@ -12,11 +12,13 @@
 </style>
 
 <body>
-    <iframe id="laya" src="laya/layaIndex.html" class="full"></iframe>
+    <!-- <iframe id="laya" src="laya/layaIndex.html" class="full"></iframe> -->
+    <iframe id="laya" src="unity/index.html" class="full"></iframe>
 </body>
 <script>
 
-    function callLaya(method, msg) {
+    function callUnity(method, msg) {
+        // console.log("從web呼叫unity", method, msg);
         iframe.postMessage({
             method: method,
             msg: msg
@@ -40,12 +42,11 @@
         const method = data.method;
         const msg = data.msg;
 
-        switch (method) {
-            case 'onLayaReady':
-                console.log("laya準備完成");
+        console.log("從unity接收到", method, msg);
 
-                // 測試通知laya
-                callLaya('init', 'hello');
+        switch (method) {
+            case 'onUnityReady':
+                callUnity('SyncModel', 'json字串');
                 break;
         }
     }
