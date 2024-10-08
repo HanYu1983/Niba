@@ -23,6 +23,19 @@ export function createConditionTitleFn(condition: Condition, options?: { isPlay?
     }
     logCategory("getConditionTitleFn", condition.title)
     switch (condition.title[0]) {
+        case "_敵軍部隊_１つ": {
+            const [_, side, count] = condition.title
+            return function (ctx: GameState, effect: Effect): Tip | null {
+                const cardId = EffectFn.getCardID(effect)
+                const cardController = getItemController(ctx, cardId);
+                const playerId = PlayerIDFn.fromRelatedPlayerSideKeyword(side, cardController)
+                const basyous = lift(AbsoluteBaSyouFn.of)([playerId], ["戦闘エリア1", "戦闘エリア2"]).filter(basyou => getItemIdsByBasyou(ctx, basyou).length)
+                return {
+                    title: ["BaSyou", basyous, basyous.slice(0, count)],
+                    count: count,
+                }
+            }
+        }
         case "_敵軍_ユニットが_３枚以上いる場合": {
             const [_, side, category, count] = condition.title
             return function (ctx: GameState, effect: Effect): Tip | null {

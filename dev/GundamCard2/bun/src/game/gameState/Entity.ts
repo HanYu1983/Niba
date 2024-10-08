@@ -1,3 +1,4 @@
+import { lift } from "ramda";
 import { BaSyouKeyword, BaSyouKeywordFn, AbsoluteBaSyouFn } from "../define/BaSyou";
 import { CardCategory, CardColor, CardPrototype } from "../define/CardPrototype";
 import { EntitySearchOptions, TextSpeicalEffect } from "../define/CardText";
@@ -7,7 +8,7 @@ import { ItemState } from "../define/ItemState";
 import { PlayerID, PlayerA, PlayerB, PlayerIDFn } from "../define/PlayerID";
 import { Tip, StrBaSyouPair, TipFn } from "../define/Tip";
 import { getBattleGroup } from "./battleGroup";
-import { getCardColor, getCardHasSpeicalEffect, getItemCharacteristic, getItemRuntimeCategory, isCardMaster } from "./card";
+import { getCardColor, getCardGSignProperty, getCardHasSpeicalEffect, getItemCharacteristic, getItemRuntimeCategory, isCardMaster } from "./card";
 import { getCoinIds, getCoin, getCoinOwner } from "./CoinTableComponent";
 import { createAbsoluteBaSyouFromBaSyou, createPlayerIdFromRelated } from "./createActionTitleFn";
 import { getCutInDestroyEffects, getEffect, getEffects, isStackEffect } from "./EffectStackComponent";
@@ -80,6 +81,19 @@ export function createTipByEntitySearch(ctx: GameState, cardId: string, options:
     const cheatCardIds: string[] = []
     if (options.isThisCard) {
         entityList = entityList.filter(entity => entity.itemId == cardId)
+    }
+    if (options.isBattleGroupFirst) {
+        const basyou = getItemBaSyou(ctx, cardId)
+        if (basyou.value[1] == "戦闘エリア1" || basyou.value[1] == "戦闘エリア2") {
+            // 各戰區的第一隻
+            const ids = lift(AbsoluteBaSyouFn.of)(PlayerIDFn.getAll(), ["戦闘エリア1", "戦闘エリア2"]).flatMap(basyou => {
+                return getItemIdsByBasyou(ctx, basyou).slice(0, 1)
+            })
+            entityList = entityList.filter(entity => ids.includes(entity.itemId))
+        } else {
+            // 如果沒在戰區無法組成部隊
+            entityList = []
+        }
     }
     if (options.isThisBattleGroup) {
         const basyou = getItemBaSyou(ctx, cardId)
@@ -184,6 +198,9 @@ export function createTipByEntitySearch(ctx: GameState, cardId: string, options:
     }
     if (options.hasChar != null) {
         entityList = entityList.filter(EntityFn.filterHasChar(ctx, options.hasChar))
+    }
+    if (options.hasGSignProperty) {
+        entityList = entityList.filter(entity => isCardLike(ctx)(entity.itemId) && options.hasGSignProperty?.includes(getCardGSignProperty(ctx, entity.itemId)))
     }
     if (options.exceptCardIds?.length) {
         entityList = entityList.filter(entity => options.exceptCardIds?.includes(entity.itemId) != true)

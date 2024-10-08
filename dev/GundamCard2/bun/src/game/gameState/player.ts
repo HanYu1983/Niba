@@ -41,7 +41,7 @@ export function isPlayerHasBattleGroup(
   )() > 0
 }
 
-function doDamage(
+export function doBattleDamage(
   ctx: GameState,
   speedPhase: number,
   currentAttackPlayerID: PlayerID,
@@ -166,8 +166,8 @@ export function doPlayerAttack(
   const attackPower = getBattleGroupBattlePoint(ctx, attackUnits);
   const guardUnits = getBattleGroup(ctx, AbsoluteBaSyouFn.of(guardPlayerID, where));
   const guardPower = getBattleGroupBattlePoint(ctx, guardUnits);
-  ctx = doDamage(ctx, speedPhase, attackPlayerID, guardPlayerID, attackUnits, guardUnits, attackPower)
-  ctx = doDamage(ctx, speedPhase, guardPlayerID, attackPlayerID, guardUnits, attackUnits, guardPower);
+  ctx = doBattleDamage(ctx, speedPhase, attackPlayerID, guardPlayerID, attackUnits, guardUnits, attackPower)
+  ctx = doBattleDamage(ctx, speedPhase, guardPlayerID, attackPlayerID, guardUnits, attackUnits, guardPower);
   [...attackUnits, ...guardUnits].forEach(cardId => {
     const itemState = getItemState(ctx, cardId)
     const [_, _2, hp] = getSetGroupBattlePoint(ctx, cardId)

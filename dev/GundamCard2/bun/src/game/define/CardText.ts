@@ -2,7 +2,7 @@ import { always, ifElse, map, pipe, zipObj } from "ramda";
 import { RelatedPlayerSideKeyword, UnitPropertyKeyword } from ".";
 import { LogicTree, LogicTreeFn } from "../../tool/logicTree";
 import { AbsoluteBaSyou, BaSyou, BaSyouKeyword } from "./BaSyou";
-import { CardColor, CardCategory } from "./CardPrototype";
+import { CardColor, CardCategory, GSignProperty } from "./CardPrototype";
 import { Effect } from "./Effect";
 import { GameEvent } from "./GameEvent";
 import { GlobalEffect } from "./GlobalEffect";
@@ -40,6 +40,7 @@ export type ActionTitle =
     | string
     | ["_ロールする", "ロール" | "リロール" | "打開" | "リロール" | "破壞" | "廃棄" | "破壊を無効" | "見"]
     | ["_１ダメージを与える", number]
+    | ["_１貫通ダメージを与える", number]
     | ["_－１／－１／－１コイン_１個を乗せる", BattleBonus, number]
     | ["移除卡狀態_旗標", string]
     | ["ターン終了時まで「速攻」を得る。", GlobalEffect[]]
@@ -97,11 +98,13 @@ export type EntitySearchOptions = {
     compareBattlePoint?: [UnitPropertyKeyword, "<=" | ">=" | "==", number],
     isDestroy?: boolean,
     isSetGroup?: boolean,
+    isBattleGroupFirst?: boolean,
     isCanSetCharacter?: boolean,
     hasSetCard?: boolean,
     hasSpecialEffect?: TextSpeicalEffect[],
     hasChar?: string[],
     hasSelfCardId?: boolean,
+    hasGSignProperty?: GSignProperty[],
     isMaster?: boolean,
     count?: number,
     min?: number,
@@ -131,6 +134,7 @@ export type ConditionTitle =
     | ["_敵軍部隊がいる場合", RelatedPlayerSideKeyword]
     | ["_敵軍_ユニットが_３枚以上いる場合", RelatedPlayerSideKeyword, CardCategory, number]
     | ["Entity", EntitySearchOptions]
+    | ["_敵軍部隊_１つ", RelatedPlayerSideKeyword, number]
 
 export type Condition = {
     title?: ConditionTitle,

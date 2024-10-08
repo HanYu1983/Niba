@@ -1,5 +1,5 @@
 import { title } from "process";
-import { AbsoluteBaSyou } from "./BaSyou";
+import { AbsoluteBaSyou, BaSyou } from "./BaSyou";
 import { TipError, TargetMissingError } from "./GameError";
 import { BattleBonus } from "./CardText";
 import { CardColor, CardPrototype } from "./CardPrototype";
@@ -18,6 +18,7 @@ export type TipTitle =
     | ["BattleBonus", BattleBonus[], BattleBonus[]]
     | ["StringOptions", string[], string[]]
     | ["GlobalEffects", GlobalEffect[], GlobalEffect[]]
+    | ["BaSyou", AbsoluteBaSyou[], AbsoluteBaSyou[]]
 
 export type Tip = {
     title: TipTitle,
@@ -52,6 +53,7 @@ export const TipFn = {
             case "StringOptions":
             case "BattleBonus":
             case "GlobalEffects":
+            case "BaSyou":
                 return tip.title[1]
         }
     },
@@ -62,6 +64,7 @@ export const TipFn = {
             case "StringOptions":
             case "BattleBonus":
             case "GlobalEffects":
+            case "BaSyou":
                 return tip.title[2]
         }
     },
@@ -88,6 +91,11 @@ export const TipFn = {
                     title: [tip.title[0], tip.title[1], tip.title[1]]
                 }
             case "GlobalEffects":
+                return {
+                    ...tip,
+                    title: [tip.title[0], tip.title[1], tip.title[1]]
+                }
+            case "BaSyou":
                 return {
                     ...tip,
                     title: [tip.title[0], tip.title[1], tip.title[1]]
