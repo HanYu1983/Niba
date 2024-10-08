@@ -117,6 +117,11 @@ export function getCardTitle(ctx: GameState, cardID: string): string {
 
 export function getCardRollCostLength(ctx: GameState, cardID: string): number {
   const prototype = getItemPrototype(ctx, cardID)
+  return prototype.rollCost?.length || 0
+}
+
+export function getCardTotalCostLength(ctx: GameState, cardID: string): number {
+  const prototype = getItemPrototype(ctx, cardID)
   const gEffects = getGlobalEffects(ctx, null)
   ctx = setGlobalEffects(ctx, null, gEffects)
   const added = pipe(

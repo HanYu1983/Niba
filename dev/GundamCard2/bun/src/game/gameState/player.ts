@@ -50,7 +50,6 @@ export function doBattleDamage(ctx: GameState, playerId: string, guardUnits: str
         return cs;
       }
       const [_, _2, hp] = getSetGroupBattlePoint(ctx, cardID);
-
       const live = hp - cs.damage;
       if (live <= 0) {
         return cs;

@@ -157,7 +157,7 @@ export function createTextsFromSpecialEffect(ctx: GameState, text: CardText): Ca
                         "這個效果1回合只能用1次": {
                             actions: [
                                 {
-                                    title: ["這個效果1回合只能用1次"]
+                                    title: ["この記述の効果は、プレイヤー毎に１ターンに１回まで解決できる"]
                                 }
                             ]
                         },
@@ -341,8 +341,15 @@ export function createTextsFromSpecialEffect(ctx: GameState, text: CardText): Ca
                     description: "和這張卡交戰的防禦力x以下的敵軍機體1張破壞",
                     conditions: {
                         ...text.conditions,
-                        "這張卡交戰的防禦力_x以下的敵軍機體1張": {
-                            title: ["這張卡交戰的防禦力_x以下的敵軍機體_1張", x, 1]
+                        "這張卡交戰的防禦力x以下的敵軍機體1張": {
+                            title: ["Entity", {
+                                isBattleWithThis: true,
+                                compareBattlePoint: ["防御力", "<=", x],
+                                isDestroy: false,
+                                side: "敵軍",
+                                is: ["ユニット"],
+                                count: 1,
+                            }]
                         }
                     },
                     logicTreeActions: [

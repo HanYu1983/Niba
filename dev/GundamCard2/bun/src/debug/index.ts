@@ -45,11 +45,13 @@ import { testReollRuleEffect } from "./testRerollRuleEffect";
 import { testReturnRuleEffect } from "./testReturnRuleEffect";
 import { testSupply } from "./testSupply";
 import { testThinkVer1, testThinkVer1_2 } from "./testThinkVer1";
+import { test179901_00_U_WT001P_white_02 } from "./test179901_00_U_WT001P_white_02";
 
 const fs = require('fs').promises;
 
 export async function tests() {
     return [
+        test179901_00_U_WT001P_white_02,
         test179019_01A_U_WT003C_white,
         test179030_11E_C_WT077S_white,
         testPlayerScore,

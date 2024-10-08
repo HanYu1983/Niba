@@ -25,15 +25,16 @@ const hideCategory: string[] = [
   "OnViewModel",
   "onAddImmediateEffect",
   "onSetPhase",
-  //"onCardChange",
+  "onCardChange",
   "onItemStateChange",
   "onEvent",
-  "onEffectStart",
-  "onEffectEnd",
+  //"onEffectStart",
+  //"onEffectEnd",
   "onActionStart",
   "onActionEnd",
   //"onItemMove",
   "onItemAdd",
+  //"onItemStateDestroyReasonChange",
 ];
 let filterCategory = true;
 

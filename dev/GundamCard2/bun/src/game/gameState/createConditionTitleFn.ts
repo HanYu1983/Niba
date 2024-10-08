@@ -6,7 +6,7 @@ import { Effect, EffectFn } from "../define/Effect"
 import { TargetMissingError, TipError } from "../define/GameError"
 import { PlayerIDFn } from "../define/PlayerID"
 import { Tip, StrBaSyouPair, TipTitleTextRef } from "../define/Tip"
-import { getItemCharacteristic, getItemRuntimeCategory, getCardTexts, getCardRollCostLength, getCardIdsCanPayRollColor } from "./card"
+import { getItemCharacteristic, getItemRuntimeCategory, getCardTexts, getCardTotalCostLength, getCardIdsCanPayRollColor } from "./card"
 import { getCard } from "./CardTableComponent"
 import { GameState } from "./GameState"
 import { isBattle } from "./IsBattleComponent"
@@ -231,7 +231,7 @@ export function createConditionTitleFn(condition: Condition, options?: { isPlay?
                 const pairs = basyous.flatMap(basyou =>
                     getItemIdsByBasyou(ctx, basyou)
                         .filter(cardId => getItemRuntimeCategory(ctx, cardId) == category)
-                        .filter(cardId => getCardRollCostLength(ctx, cardId) <= totalCost)
+                        .filter(cardId => getCardTotalCostLength(ctx, cardId) <= totalCost)
                         .map(cardId => [cardId, basyou] as StrBaSyouPair)
                 )
                 return {
@@ -251,7 +251,7 @@ export function createConditionTitleFn(condition: Condition, options?: { isPlay?
                         getItemIdsByBasyou(ctx, basyou)
                             .filter(cardId => getItemPrototype(ctx, cardId).category == "ユニット")
                             .filter(cardId => getItemCharacteristic(ctx, cardId).includes(char))
-                            .filter(cardId => getCardRollCostLength(ctx, cardId) <= x)
+                            .filter(cardId => getCardTotalCostLength(ctx, cardId) <= x)
                             .map(cardId => [cardId, basyou] as StrBaSyouPair)
                     )
                     return {

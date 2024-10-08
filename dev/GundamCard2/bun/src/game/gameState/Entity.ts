@@ -77,7 +77,13 @@ export function createEntityIterator(ctx: GameState) {
 }
 
 export function createTipByEntitySearch(ctx: GameState, cardId: string, options: EntitySearchOptions): Tip {
-    let entityList = createEntityIterator(ctx).filter(EntityFn.filterIsBattle(ctx, null, options.isBattle || false))
+    let entityList = createEntityIterator(ctx)
+    if (options.isBattle != null) {
+        entityList = entityList.filter(EntityFn.filterIsBattle(ctx, null, options.isBattle))
+    }
+    if (options.isBattleWithThis != null) {
+        entityList = entityList.filter(EntityFn.filterIsBattle(ctx, cardId, options.isBattleWithThis))
+    }
     const cheatCardIds: string[] = []
     if (options.isThisCard) {
         entityList = entityList.filter(entity => entity.itemId == cardId)

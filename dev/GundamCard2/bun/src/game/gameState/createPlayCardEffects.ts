@@ -3,7 +3,7 @@ import { Bridge } from "../../script/bridge"
 import { CardColorFn, CardColor, CardPrototypeRollCost, CardPrototype } from "../define/CardPrototype"
 import { CardTextFn, Condition, createRollCostRequire } from "../define/CardText"
 import { Effect } from "../define/Effect"
-import { getCardHasSpeicalEffect, getCardRollCostLength } from "./card"
+import { getCardHasSpeicalEffect, getCardTotalCostLength } from "./card"
 import { GameState } from "./GameState"
 import { getGlobalEffects, setGlobalEffects } from "./globalEffects"
 import { getItemPrototype, getItemOwner } from "./ItemTableComponent"
@@ -33,7 +33,7 @@ export function createRollCostConditions(ctx: GameState, proto: CardPrototype, r
 export function createPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
     const prototype = getItemPrototype(ctx, cardId)
     const playerId = getItemOwner(ctx, cardId)
-    const cardRollCostLength = getCardRollCostLength(ctx, cardId)
+    const cardRollCostLength = getCardTotalCostLength(ctx, cardId)
     const costConditions: { [key: string]: Condition } = (prototype.category != "グラフィック") ? {
         "合計国力〔x〕": {
             actions: [

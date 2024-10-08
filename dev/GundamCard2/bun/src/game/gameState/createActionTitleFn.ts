@@ -453,10 +453,5 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
         return ctx
       }
     }
-    case "這個效果1回合只能用1次": {
-      return function (ctx: GameState, effect: Effect): GameState {
-        return ctx
-      }
-    }
   }
 }

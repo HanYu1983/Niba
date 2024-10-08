@@ -18,7 +18,6 @@ export const prototype: CardPrototype = {
       id: "",
       description: "（自軍戦闘フェイズ）〔２〕：このカードの部隊にいる、「PS装甲」を持つ自軍ユニット１枚は、ターン終了時まで±０／＋２／±０を得る。",
       title: ["使用型", ["自軍", "戦闘フェイズ"]],
-      isEnabledWhileG: true,
       conditions: {
         ...createRollCostRequire(2, null),
         "このカードの部隊にいる、「PS装甲」を持つ自軍ユニット１枚": {
