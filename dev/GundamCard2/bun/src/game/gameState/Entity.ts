@@ -291,7 +291,7 @@ export const EntityFn = {
     },
     filterIsDestroy(v: boolean) {
         return (entity: Entity) => {
-            return (entity.destroyReason != null) == v
+            return (entity.destroyReason != null && entity.destroyReason.id != "マイナスの戦闘修正") == v
         }
     },
     filterIsBattle(ctx: GameState, targetId: string | null, v: boolean) {

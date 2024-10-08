@@ -23,22 +23,34 @@ export function doItemSetDestroy(ctx: GameState, reason: DestroyReason | null, [
 
     } else {
         assertTargetMissingError(ctx, [itemId, from])
-        const isDestroyEffect = getCutInDestroyEffects(ctx).find(e => EffectFn.getCardID(e) == itemId)
         if (reason) {
-            if (isDestroyEffect) {
+            if (getItemState(ctx, itemId).destroyReason) {
                 throw new TargetMissingError(`already destroy: ${itemId}`, {})
             }
         } else {
-            if (isDestroyEffect == null) {
+            if (getItemState(ctx, itemId).destroyReason == null) {
                 throw new TargetMissingError(`not destroy: ${itemId}`, {})
             }
-            ctx = mapItemState(ctx, itemId, is => {
-                if (is.destroyReason?.id == "マイナスの戦闘修正") {
-                    throw new Error(`マイナスの戦闘修正的破壞不能被選到`)
-                }
-                return { ...is, destroyReason: null }
-            }) as GameState
+            if (getItemState(ctx, itemId).destroyReason?.id == "マイナスの戦闘修正") {
+                throw new Error(`マイナスの戦闘修正的破壞不能被選到`)
+            }
         }
+        // const isDestroyEffect = getCutInDestroyEffects(ctx).find(e => EffectFn.getCardID(e) == itemId)
+        // if (reason) {
+        //     if (isDestroyEffect) {
+        //         throw new TargetMissingError(`already destroy: ${itemId}`, {})
+        //     }
+        // } else {
+        //     if (isDestroyEffect == null) {
+        //         throw new TargetMissingError(`not destroy: ${itemId}`, {})
+        //     }
+        //     ctx = mapItemState(ctx, itemId, is => {
+        //         if (is.destroyReason?.id == "マイナスの戦闘修正") {
+        //             throw new Error(`マイナスの戦闘修正的破壞不能被選到`)
+        //         }
+        //         return { ...is, destroyReason: null }
+        //     }) as GameState
+        // }
     }
 
     if (isCard(ctx, itemId) || isChip(ctx, itemId)) {
@@ -48,7 +60,10 @@ export function doItemSetDestroy(ctx: GameState, reason: DestroyReason | null, [
             const isDestroyEffect = getCutInDestroyEffects(ctx).find(e => EffectFn.getCardID(e) == setGroupId)
             if (reason) {
                 // 略過已被破壞的
-                if (isDestroyEffect) {
+                // if (isDestroyEffect) {
+                //     return
+                // }
+                if (getItemState(ctx, setGroupId).destroyReason) {
                     return
                 }
                 // 設定為破壞狀態
@@ -58,19 +73,21 @@ export function doItemSetDestroy(ctx: GameState, reason: DestroyReason | null, [
                 // 先將效果放入破壞陣列(destroyEffects)，會在流程中將破壞陣列切入到堆疊中(stackEffects)
                 ctx = addDestroyEffect(ctx, createDestroyEffect(ctx, reason, setGroupId)) as GameState
             } else {
+                // if (isDestroyEffect) {
+                // 略過マイナスの戦闘修正，不能破壞無效，但因為在子樹裡，不必理會這種情況
+                if (getItemState(ctx, setGroupId).destroyReason?.id == "マイナスの戦闘修正") {
+                    return
+                }
+                ctx = mapItemState(ctx, setGroupId, is => {
+                    return { ...is, destroyReason: null }
+                }) as GameState
                 if (isDestroyEffect) {
-                    // 略過マイナスの戦闘修正，不能破壞無效，但因為在子樹裡，不必理會這種情況
-                    if (getItemState(ctx, setGroupId).destroyReason?.id == "マイナスの戦闘修正") {
-                        return
-                    }
-                    ctx = mapItemState(ctx, setGroupId, is => {
-                        return { ...is, destroyReason: null }
-                    }) as GameState
                     // 將切入堆疊(stackEffects)中的「破壞而廢棄」效果移除
                     ctx = removeEffect(ctx, isDestroyEffect.id) as GameState
-                } else {
-                    // 本來就沒被破壞，不做任何事
                 }
+                // } else {
+                //     // 本來就沒被破壞，不做任何事
+                // }
             }
         })
         return ctx
