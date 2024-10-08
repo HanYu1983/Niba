@@ -216,7 +216,6 @@ export function applyFlow(
             } else {
                 throw new Error(`你要觸發的階段和現階段不符: ${flow.event.title[1]} != ${ctx.phase}`)
             }
-            ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
             if (ctx.activePlayerID == null) {
                 throw new Error("activePlayerID not found");
             }
@@ -227,6 +226,9 @@ export function applyFlow(
                             ctx = addImmediateEffect(ctx, createDrawPhaseRuleEffect(ctx, ctx.activePlayerID)) as GameStateWithFlowMemory
                             break
                         }
+                        default: {
+                            ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
+                        }
                     }
                     break
                 }
@@ -235,6 +237,9 @@ export function applyFlow(
                         case "規定の効果": {
                             ctx = addImmediateEffect(ctx, createRerollPhaseRuleEffect(ctx, ctx.activePlayerID)) as GameStateWithFlowMemory
                             break
+                        }
+                        default: {
+                            ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
                         }
                     }
                     break
@@ -251,7 +256,11 @@ export function applyFlow(
                                 // 戰鬥階段的每個步驟開始時，確認是否交戰中
                                 case "ステップ開始": {
                                     ctx = checkIsBattle(ctx) as GameStateWithFlowMemory
+                                    ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
                                     break
+                                }
+                                default: {
+                                    ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
                                 }
                             }
                             break
@@ -264,7 +273,11 @@ export function applyFlow(
                                 }
                                 case "ステップ開始": {
                                     ctx = checkIsBattle(ctx) as GameStateWithFlowMemory
+                                    ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
                                     break
+                                }
+                                default: {
+                                    ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
                                 }
                             }
                             break
@@ -277,7 +290,11 @@ export function applyFlow(
                                 }
                                 case "ステップ開始": {
                                     ctx = checkIsBattle(ctx) as GameStateWithFlowMemory
+                                    ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
                                     break
+                                }
+                                default: {
+                                    ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
                                 }
                             }
                             break
@@ -290,7 +307,11 @@ export function applyFlow(
                                 }
                                 case "ステップ開始": {
                                     ctx = checkIsBattle(ctx) as GameStateWithFlowMemory
+                                    ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
                                     break
+                                }
+                                default: {
+                                    ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
                                 }
                             }
                             break
@@ -298,10 +319,15 @@ export function applyFlow(
                         case "ターン終了時": {
                             switch (ctx.phase[2]) {
                                 case "ダメージリセット":
-                                case "効果解決":
+                                    break
+                                case "効果解決": {
+                                    ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
+                                    break
+                                }
                                 case "手札調整":
                                     break
                                 case "効果終了。ターン終了": {
+                                    ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
                                     if (ctx.activePlayerID == null) {
                                         throw new Error("activePlayerID not found");
                                     }
@@ -311,10 +337,18 @@ export function applyFlow(
                                         activePlayerID: PlayerIDFn.getOpponent(ctx.activePlayerID),
                                         turn: ctx.turn + 1
                                     };
+                                    break
+                                }
+                                default: {
+                                    ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
                                 }
                             }
                         }
                     }
+                    break
+                }
+                default: {
+                    ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
                 }
             }
             ctx = {

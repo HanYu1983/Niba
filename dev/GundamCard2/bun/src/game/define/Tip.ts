@@ -2,7 +2,7 @@ import { title } from "process";
 import { AbsoluteBaSyou } from "./BaSyou";
 import { TipError, TargetMissingError } from "./GameError";
 import { BattleBonus } from "./CardText";
-import { CardPrototype } from "./CardPrototype";
+import { CardColor, CardPrototype } from "./CardPrototype";
 import { GlobalEffect } from "./GlobalEffect";
 
 export type StrBaSyouPair = [string, AbsoluteBaSyou]
@@ -34,6 +34,9 @@ export type Tip = {
 
 export const TipFn = {
     createTotalCostKey: () => "合計国力〔x〕",
+    createRollColorKey(i: number, color: CardColor | null): string {
+        return `橫置支付${i}[${color}]`
+    },
     createConditionKeyOfPayColorX(proto: CardPrototype): string {
         if (proto.color == null) {
             throw new Error()

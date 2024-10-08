@@ -12,7 +12,7 @@ export type DestroyReason = DestroyReason1
 
 export type EffectReason =
     | ["場に出る", PlayerID, string]
-    | ["PlayCard", PlayerID, string, { isPlayG?: boolean, isPlayUnit?: boolean, isPlayCharacter?: boolean }]
+    | ["PlayCard", PlayerID, string, { isPlayG?: boolean, isPlayUnit?: boolean, isPlayCharacter?: boolean, isPlayCommand?: boolean }]
     | ["PlayText", PlayerID, string, string]
     // null代表系統負責
     | ["GameRule", PlayerID | null, { isAttack?: boolean, isDefence?: boolean, isReturn?: boolean, isDamageCheck?: boolean, isDraw?:boolean, isReroll?:boolean }]

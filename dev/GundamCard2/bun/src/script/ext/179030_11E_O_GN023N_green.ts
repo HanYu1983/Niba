@@ -21,11 +21,8 @@ export const prototype: CardPrototype = {
       onSituation: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GlobalEffect[] {
         const cardId = DefineFn.EffectFn.getCardID(effect)
         const situation = DefineFn.EffectFn.getSituation(effect)
-        if (situation == null) {
-          return []
-        }
-        if (situation.title[0] == "「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合") {
-          return [{ title: ["自軍Gとしてロール"], cardIds: [cardId] }]
+        if (situation?.title[0] == "「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合") {
+          return [{ title: ["このカードを自軍Gとしてロールできる"], cardIds: [cardId] }]
         }
         return []
       }.toString()
@@ -52,7 +49,7 @@ export const prototype: CardPrototype = {
                 title: ["_戦闘エリアにいる_敵軍_ユニット_１～_２枚", ["戦闘エリア1", "戦闘エリア2"], "敵軍", "ユニット", 1, 1]
               },
             },
-            logicTreeAction:{
+            logicTreeAction: {
               actions: [
                 {
                   title: ["_１ダメージを与える", 1],

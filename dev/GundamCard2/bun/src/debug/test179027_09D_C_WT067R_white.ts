@@ -23,6 +23,7 @@ import { setSetGroupParent } from "../game/gameState/SetGroupComponent"
 import { createRollCostConditions } from "../game/gameState/createPlayCardEffects"
 import { repeat } from "ramda"
 import { Effect } from "../game/define/Effect"
+import { TipFn } from "../game/define/Tip"
 
 export async function test179027_09D_C_WT067R_white() {
     await loadPrototype("179027_09D_C_WT067R_white")
@@ -43,7 +44,7 @@ export async function test179027_09D_C_WT067R_white() {
         throw new Error()
     }
     const conds = createRollCostConditions(ctx, getPrototype(cardA.protoID || ""), ["白"], 0)
-    if (conds["0[白]"] == null) {
+    if (conds[TipFn.createRollColorKey(0, "白")] == null) {
         throw new Error()
     }
     if (getCardIdsCanPayRollCost(ctx, PlayerA, null).length != 4) {

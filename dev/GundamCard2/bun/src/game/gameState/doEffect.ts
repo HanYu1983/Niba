@@ -123,7 +123,7 @@ export function createEffectTips(
     const errors: string[] = []
     let tip: Tip | null = null
     try {
-      tip = createConditionTitleFn(con, {})(ctx, effect, bridge)
+      tip = createConditionTitleFn(con)(ctx, effect, bridge)
       if ((tip as any)?.isGameState) {
         console.log(`快速檢查是不寫錯回傳成GameState, 應該要回傳Tip|null:`, key, con.title)
         throw new Error()

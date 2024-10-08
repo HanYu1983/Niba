@@ -10,6 +10,7 @@ import { getItemBaSyou } from "../game/gameState/ItemTableComponent";
 import { loadPrototype } from "../script";
 import { testItemGroup } from "../tool/ItemGroup";
 import { test179001_01A_CH_WT007R_white } from "./test179001_01A_CH_WT007R_white";
+import { test179019_01A_U_WT003C_white } from "./test179019_01A_U_WT003C_white";
 import { test179003_01A_U_BK008U_black } from "./test179003_01A_U_BK008U_black";
 import { test179007_02A_U_WT027U_white } from "./test179007_02A_U_WT027U_white";
 import { test179015_04B_U_BK058R_black } from "./test179015_04B_U_BK058R_black";
@@ -49,6 +50,7 @@ const fs = require('fs').promises;
 
 export async function tests() {
     return [
+        test179019_01A_U_WT003C_white,
         test179030_11E_C_WT077S_white,
         testPlayerScore,
         testThinkVer1_2,

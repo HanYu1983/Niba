@@ -268,25 +268,57 @@ export function getItemIsCanRoll(ctx: GameState, itemId: string): boolean {
 }
 
 export function getCardIdsCanPayRollColor(ctx: GameState, situation: Situation | null, playerId: PlayerID, color: CardColor | null): { cardId: string, colors: CardColor[] }[] {
-  return getGlobalEffects(ctx, situation).filter(ge => {
+  // return getGlobalEffects(ctx, situation).filter(ge => {
+  //   if (ge.cardIds.length == 0) {
+  //     return false
+  //   }
+  //   if (getItemController(ctx, ge.cardIds[0]) != playerId) {
+  //     return false
+  //   }
+  //   if (ge.title[0] == "發生國力") {
+  //     const gainColors = ge.title[1]
+  //     if (color == null) {
+  //       return true
+  //     }
+  //     switch (color) {
+  //       case "紫":
+  //         return true
+  //       default:
+  //         return gainColors.includes(color)
+  //     }
+  //   }
+  //   return false
+  // }).map(ge => ({ cardId: ge.cardIds[0], colors: ge.title[1] as CardColor[] }))
+  const ges = getGlobalEffects(ctx, situation)
+  ctx = setGlobalEffects(ctx, situation, ges)
+  return ges.flatMap(ge => {
     if (ge.cardIds.length == 0) {
-      return false
+      return []
     }
     if (getItemController(ctx, ge.cardIds[0]) != playerId) {
-      return false
+      return []
     }
     if (ge.title[0] == "發生國力") {
       const gainColors = ge.title[1]
-      if (color == null) {
-        return true
-      }
-      switch (color) {
-        case "紫":
-          return true
-        default:
-          return gainColors.includes(color)
+      if (color == null || color == "紫" || gainColors.includes(color)) {
+        return ge.cardIds.map(cardId => ({ cardId: cardId, colors: gainColors }))
       }
     }
-    return false
-  }).map(ge => ({ cardId: ge.cardIds[0], colors: ge.title[1] as CardColor[] }))
+    if (ge.title[0] == "このカードを自軍Gとしてロールできる") {
+      return ge.cardIds.filter(cardId => getCard(ctx, cardId).isRoll != true).map(cardId => {
+        const colors = getItemPrototype(ctx, cardId).gsign?.[0] || []
+        return { cardId: cardId, colors: colors }
+      })
+    }
+    if (ge.title[0] == "_白のGサインを持つ_自軍_Gとして扱う事ができる" && ge.title[2] == "自軍" && ge.title[3] == "グラフィック") {
+      const cardIds = ge.cardIds
+        .filter(cardId => getItemController(ctx, cardId) == playerId)
+        .filter(cardId => getCard(ctx, cardId).isRoll != true)
+      const colors = ge.title[1]
+      return cardIds.map(cardId => {
+        return { cardId: cardId, colors: colors }
+      })
+    }
+    return []
+  })
 }

@@ -7,7 +7,7 @@ import { Effect } from "./Effect";
 import { GameEvent } from "./GameEvent";
 import { GlobalEffect } from "./GlobalEffect";
 import { Phase, SiYouTiming } from "./Timing";
-import { StrBaSyouPair, Tip } from "./Tip";
+import { StrBaSyouPair, Tip, TipFn } from "./Tip";
 import { PlayerID } from "./PlayerID";
 import { logCategory } from "../../tool/logger";
 
@@ -83,7 +83,8 @@ export const ActionFn = {
 }
 
 export type EntitySearchOptions = {
-    isThisBattleGroup?:boolean,
+    isThisBattleGroup?: boolean,
+    isThisCard?: boolean,
     isBattle?: boolean,
     side?: RelatedPlayerSideKeyword,
     see?: [BaSyou, number, number],
@@ -172,7 +173,9 @@ export const ConditionFn = {
     }
 }
 
-export type SituationTitle = ["「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合"]
+export type SituationTitle =
+    | ["「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合"]
+    | ["ロールコストの支払いにおいて"]
 
 // 『常駐』：「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合、このカードを自軍Gとしてロールできる。
 export type Situation = {
@@ -305,7 +308,7 @@ export function createRollCostRequire(
 ): { [key: string]: Condition } {
     let ret: { [key: string]: Condition } = {}
     for (let i = 0; i < costNum; ++i) {
-        const key = `${i}[${color}]`
+        const key = TipFn.createRollColorKey(i, color)
         ret = {
             ...ret,
             [key]: {

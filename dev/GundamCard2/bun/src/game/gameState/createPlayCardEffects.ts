@@ -71,7 +71,11 @@ export function createPlayCardEffects(ctx: GameState, cardId: string): Effect[] 
     const description = `Play ${prototype.title}`
     const playCardEffect: Effect = {
         id: `createPlayCardEffects_${cardId}`,
-        reason: ["PlayCard", playerId, cardId, { isPlayUnit: prototype.category == "ユニット", isPlayCharacter: prototype.category == "キャラクター" }],
+        reason: ["PlayCard", playerId, cardId, { 
+            isPlayUnit: prototype.category == "ユニット", 
+            isPlayCharacter: prototype.category == "キャラクター",
+            isPlayCommand: prototype.category == "コマンド"
+        }],
         description: description,
         text: {
             id: prototype.commandText?.id || `createPlayCardEffects_text_${cardId}`,

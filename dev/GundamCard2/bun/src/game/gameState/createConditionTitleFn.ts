@@ -1,7 +1,7 @@
 
 import { lift, pair } from "ramda"
 import { AbsoluteBaSyou, AbsoluteBaSyouFn, BaSyouKeywordFn } from "../define/BaSyou"
-import { Condition, ConditionTitleFn, ConditionFn } from "../define/CardText"
+import { Condition, ConditionTitleFn, ConditionFn, Situation } from "../define/CardText"
 import { Effect, EffectFn } from "../define/Effect"
 import { TargetMissingError, TipError } from "../define/GameError"
 import { PlayerIDFn } from "../define/PlayerID"
@@ -17,7 +17,7 @@ import { logCategory } from "../../tool/logger"
 import { createEntityIterator, createTipByEntitySearch, EntityFn } from "./Entity"
 import { getPlayerState, mapPlayerState } from "./PlayerStateComponent"
 
-export function createConditionTitleFn(condition: Condition, options: { isPlay?: boolean }): ConditionTitleFn {
+export function createConditionTitleFn(condition: Condition, options?: { isPlay?: boolean }): ConditionTitleFn {
     if (condition.title == null || typeof condition.title == "string") {
         return ConditionFn.getTitleFn(condition)
     }
@@ -314,8 +314,13 @@ export function createConditionTitleFn(condition: Condition, options: { isPlay?:
             return function (ctx: GameState, effect: Effect): Tip | null {
                 const cardId = EffectFn.getCardID(effect)
                 const cardController = getItemController(ctx, cardId)
-                const cardIdColors = getCardIdsCanPayRollColor(ctx, null, cardController, color)
-                const extInfo: { min?: number, max?: number, count?: number } = {}
+                let situation: Situation = { title: ["ロールコストの支払いにおいて"] }
+                if (effect.reason[0] == "PlayCard" && effect.reason[3].isPlayCommand) {
+                    if (getItemPrototype(ctx, cardId).category?.includes("装弾")) {
+                        situation = { title: ["「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合"] }
+                    }
+                }
+                const cardIdColors = getCardIdsCanPayRollColor(ctx, situation, cardController, color)
                 let colorIds = []
                 if (color == null) {
                     colorIds = cardIdColors.map(gId => gId.cardId).slice(0, 1)

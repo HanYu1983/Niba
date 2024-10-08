@@ -78,6 +78,9 @@ export function createEntityIterator(ctx: GameState) {
 export function createTipByEntitySearch(ctx: GameState, cardId: string, options: EntitySearchOptions): Tip {
     let entityList = createEntityIterator(ctx).filter(EntityFn.filterIsBattle(ctx, null, options.isBattle || false))
     const cheatCardIds: string[] = []
+    if (options.isThisCard) {
+        entityList = entityList.filter(entity => entity.itemId == cardId)
+    }
     if (options.isThisBattleGroup) {
         const basyou = getItemBaSyou(ctx, cardId)
         if (basyou.value[1] == "戦闘エリア1" || basyou.value[1] == "戦闘エリア2") {
