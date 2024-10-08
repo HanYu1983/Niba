@@ -21974,6 +21974,22 @@ function createActionTitleFn(action) {
   if (typeof action.title == "string")
     return ActionFn.getTitleFn(action);
   switch (action.title[0]) {
+    case "\u540C\u56DE\u5408\u4E0A\u9650": {
+      const [_, times3] = action.title;
+      return function(ctx2, effect) {
+        const cardId = EffectFn.getCardID(effect), ps = getItemState(ctx2, cardId);
+        if (effect.text.isEachTime)
+          ;
+        else if ((ps.textIdsUseThisTurn || []).filter((tid) => tid == effect.text.id).length >= times3)
+          throw new TipError(`\u540C\u56DE\u5408\u4E0A\u9650: ${effect.text.description}`);
+        return ctx2 = mapItemState(ctx2, cardId, (ps2) => {
+          return {
+            ...ps2,
+            textIdsUseThisTurn: [effect.text.id, ...ps2.textIdsUseThisTurn || []]
+          };
+        }), ctx2;
+      };
+    }
     case "Entity": {
       const [_, options] = action.title;
       if ([options.max, options.min, options.count].every((v) => v == null))
@@ -23411,7 +23427,32 @@ function getCardTipStrings(ctx2, varName, cardId) {
 }
 function createPlayTextEffectFromEffect(ctx2, e, options) {
   const cardId = EffectFn.getCardID(e), cardController = getItemController(ctx2, cardId);
-  return EffectFn.fromEffectBasic(e, { ...options, reason: ["PlayText", cardController, cardId, e.text.id] });
+  if (options?.logicTreeAction?.logicTree)
+    options.logicTreeAction.logicTree = {
+      type: "And",
+      children: [
+        {
+          type: "Leaf",
+          value: "\u540C\u56DE\u5408\u4E0A\u9650"
+        },
+        options.logicTreeAction.logicTree
+      ]
+    };
+  if (options?.conditions)
+    options.conditions = {
+      ...options.conditions,
+      "\u540C\u56DE\u5408\u4E0A\u9650": {
+        actions: [
+          {
+            title: ["\u540C\u56DE\u5408\u4E0A\u9650", 1]
+          }
+        ]
+      }
+    };
+  return EffectFn.fromEffectBasic(e, {
+    ...options,
+    reason: ["PlayText", cardController, cardId, e.text.id]
+  });
 }
 function addImmediateEffectIfCanPayCost(ctx2, effect) {
   const cets = createCommandEffectTips(ctx2, effect);
@@ -23616,19 +23657,7 @@ function createPlayEffects(ctx2, playerId) {
         "\u540C\u56DE\u5408\u4E0A\u9650": {
           actions: [
             {
-              title: function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2, ToolFn: ToolFn2 }) {
-                const cardId2 = DefineFn2.EffectFn.getCardID(effect), ps = GameStateFn2.getItemState(ctx3, cardId2);
-                if (effect.text.isEachTime)
-                  ;
-                else if ((ps.textIdsUseThisTurn || []).filter((tid) => tid == effect.text.id).length > 0)
-                  throw new DefineFn2.TipError(`\u540C\u56DE\u5408\u4E0A\u9650: ${effect.text.description}`);
-                return ctx3 = GameStateFn2.mapItemState(ctx3, cardId2, (ps2) => {
-                  return {
-                    ...ps2,
-                    textIdsUseThisTurn: [effect.text.id, ...ps2.textIdsUseThisTurn || []]
-                  };
-                }), ctx3;
-              }.toString()
+              title: ["\u540C\u56DE\u5408\u4E0A\u9650", 1]
             }
           ]
         }
