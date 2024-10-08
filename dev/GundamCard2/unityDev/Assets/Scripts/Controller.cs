@@ -1,5 +1,6 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -14,29 +15,34 @@ public class Controller : MonoBehaviour
 
     Dictionary<string, Texture2D> cardTextures = new Dictionary<string, Texture2D>();
     Dictionary<string, CardController> Cards = new Dictionary<string, CardController>();
-    
+
+    //[DllImport("__Internal")]
+    //static extern void callFromUnity(string method, string jsonString);
+
     // Start is called before the first frame update
     void Start()
     {
-        // ±q«áºİsync©Ò¦³¸ê®Æ¹L¨Ó¨ì«eºİªºmodel
-        SyncModel();
+        // å¾å¾Œç«¯syncæ‰€æœ‰è³‡æ–™éä¾†åˆ°å‰ç«¯çš„model
+        SyncModel("");
         CreateCards();
-
         
+        CallWeb("onUnityReady", null);
     }
 
-    void SyncModel()
+    public void SyncModel(string jsonString)
     {
+        Debug.Log("å¾webæ¥æ”¶åˆ°:" + jsonString);
+
         for (int i = 0; i < 120; ++i)
         {
             CardModel cardModel = new CardModel();
 
-            // ³oùØ¥Ø«e³£¬O°²¸ê®Æ
+            // é€™è£ç›®å‰éƒ½æ˜¯å‡è³‡æ–™
             cardModel.uid = i.ToString();
             cardModel.prototype.uid = "R01";
             cardModel.prototype.url = "https://storage.googleapis.com/particle-resources/cardPackage/gundamWarN/179030_11E_U_BL209R_blue.jpg";
 
-            // ¤w¸g·s¼W¹Lªº´N·|ÅÜ¦¨­×§ï
+            // å·²ç¶“æ–°å¢éçš„å°±æœƒè®Šæˆä¿®æ”¹
             Models.AddCard(cardModel);
         }
     }
@@ -53,6 +59,16 @@ public class Controller : MonoBehaviour
         Models.GetModelByUID("5").pos = new Vector3(0.1f, 1f, .3f);
         Models.GetModelByUID("10").rotY = 90;
         Models.GetModelByUID("12").rotZ = 180;
+    }
+
+    public void TestCallWeb()
+    {
+        CallWeb("play G", "test json string");
+    }
+
+    void CallWeb(string method, string jsonString)
+    {
+        Application.ExternalCall("callFromUnity", method, jsonString);
     }
 
     async Task<CardController> AddCard(CardModel model)
@@ -75,7 +91,7 @@ public class Controller : MonoBehaviour
             await AddCard(model);
         }
 
-        // ´ú¸Õ¥Î¥N½X
+        // æ¸¬è©¦ç”¨ä»£ç¢¼
         GameObject tempCommand = Instantiate(PreCommand, CommandContainer.transform);
         tempCommand.GetComponent<UIFollow3D>().target = Cards["10"].gameObject.transform;
         tempCommand.SetActive(true);

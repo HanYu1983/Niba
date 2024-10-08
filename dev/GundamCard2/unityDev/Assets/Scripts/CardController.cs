@@ -15,8 +15,8 @@ public class CardController : MonoBehaviour
     {
         CardModel = model;
 
-        Texture2D texture = await Controller.GetCardTexture(model);
-        Mesh.material.SetTexture("_AlbedoTex", texture);
+        //Texture2D texture = await Controller.GetCardTexture(model);
+        //Mesh.material.SetTexture("_AlbedoTex", texture);
 
         return true;
     }
