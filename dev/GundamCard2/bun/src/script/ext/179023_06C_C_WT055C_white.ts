@@ -37,7 +37,7 @@ export const prototype: CardPrototype = {
                 ctx = GameStateFn.doItemDamage(ctx, cardController, 5, pair)
                 // 対象が破壊されなかった場合
                 if (GameStateFn.getItemState(ctx, pair[0]).destroyReason == null) {
-                  ctx = GameStateFn.mapItemState(ctx, cardId, is => ({ ...is, flags: { ...is.flags, enabled: true } })) as GameState
+                  ctx = GameStateFn.mapItemState(ctx, cardId, is => ({ ...is, flags: { ...is.flags, enabled: true, varNamesRemoveOnTurnEnd:{...is.varNamesRemoveOnTurnEnd, ["enabled"]: true} } })) as GameState
                 }
               }
               return ctx

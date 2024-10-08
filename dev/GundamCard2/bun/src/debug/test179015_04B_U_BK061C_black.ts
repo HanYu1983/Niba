@@ -65,6 +65,8 @@ export async function test179015_04B_U_BK061C_black() {
         }
     }
     {
+        // 避開同回合上限
+        ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", PhaseFn.getLast()] })
         const unit2: Card = {
             id: "unit2",
             protoID: "unit"
@@ -109,33 +111,33 @@ export async function test179015_04B_U_BK061C_black_2() {
         throw new Error()
     }
     let flows = queryFlow(ctx, PlayerA)
-    if(flows.length == 1 && flows[0].id == "FlowSetActiveEffectID"){
-        
+    if (flows.length == 1 && flows[0].id == "FlowSetActiveEffectID") {
+
 
     } else {
         throw new Error()
     }
-    if(getActiveLogicID(ctx) != null){
+    if (getActiveLogicID(ctx) != null) {
         throw new Error()
     }
     const effect = getEffect(ctx, flows[0].effectID)
     const cetsNoErr = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)
-    if(cetsNoErr.length == 1 && cetsNoErr[0].logicID == 0 && cetsNoErr[0].logicSubID == 1){
-        
+    if (cetsNoErr.length == 1 && cetsNoErr[0].logicID == 0 && cetsNoErr[0].logicSubID == 1) {
+
     } else {
         throw new Error()
     }
     ctx = applyFlow(ctx, PlayerA, flows[0])
-    if(getActiveEffectID(ctx) == null){
+    if (getActiveEffectID(ctx) == null) {
         throw new Error()
     }
-    if(getActiveLogicID(ctx) == cetsNoErr[0].logicID && getActiveLogicSubID(ctx) == cetsNoErr[0].logicSubID){
-        
+    if (getActiveLogicID(ctx) == cetsNoErr[0].logicID && getActiveLogicSubID(ctx) == cetsNoErr[0].logicSubID) {
+
     } else {
         throw new Error()
     }
     flows = queryFlow(ctx, PlayerA)
-    if(flows.find(flow=>flow.id=="FlowCancelActiveEffectID") == null){
+    if (flows.find(flow => flow.id == "FlowCancelActiveEffectID") == null) {
         throw new Error()
     }
 }

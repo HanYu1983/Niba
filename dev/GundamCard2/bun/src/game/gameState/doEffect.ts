@@ -339,10 +339,21 @@ export function getCardTipStrings(ctx: GameState, varName: string, cardId: strin
 export function createPlayTextEffectFromEffect(ctx: GameState, e: Effect, options?: { conditions?: { [key: string]: Condition }, logicTreeAction?: LogicTreeAction, isOption?: boolean }): Effect {
   const cardId = EffectFn.getCardID(e)
   const cardController = getItemController(ctx, cardId)
-  return EffectFn.fromEffectBasic(e, {
-    ...options,
-    conditions: {
-      ...options?.conditions,
+  if (options?.logicTreeAction?.logicTree) {
+    options.logicTreeAction.logicTree = {
+      type: "And",
+      children: [
+        {
+          type: "Leaf",
+          value: "同回合上限"
+        },
+        options.logicTreeAction.logicTree
+      ]
+    }
+  }
+  if (options?.conditions) {
+    options.conditions = {
+      ...options.conditions,
       "同回合上限": {
         actions: [
           {
@@ -350,7 +361,10 @@ export function createPlayTextEffectFromEffect(ctx: GameState, e: Effect, option
           }
         ]
       }
-    },
+    }
+  }
+  return EffectFn.fromEffectBasic(e, {
+    ...options,
     reason: ["PlayText", cardController, cardId, e.text.id]
   })
 }
