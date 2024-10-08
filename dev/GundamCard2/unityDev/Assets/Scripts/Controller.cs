@@ -7,6 +7,8 @@ using UnityEngine.Networking;
 public class Controller : MonoBehaviour
 {
     public GameObject PreCard = null;
+    public GameObject PreCommand = null;
+    public GameObject CommandContainer = null;
 
     public Model Models = null;
 
@@ -18,6 +20,9 @@ public class Controller : MonoBehaviour
     {
         // 從後端sync所有資料過來到前端的model
         SyncModel();
+        CreateCards();
+
+        
     }
 
     void SyncModel()
@@ -34,7 +39,6 @@ public class Controller : MonoBehaviour
             // 已經新增過的就會變成修改
             Models.AddCard(cardModel);
         }
-        UpdateCardViews();
     }
 
     public void TestSync()
@@ -64,12 +68,17 @@ public class Controller : MonoBehaviour
         return cardController;
     }
 
-    async void UpdateCardViews()
+    async void CreateCards()
     {
         foreach (var model in Models.GetModels())
         {
             await AddCard(model);
         }
+
+        // 測試用代碼
+        GameObject tempCommand = Instantiate(PreCommand, CommandContainer.transform);
+        tempCommand.GetComponent<UIFollow3D>().target = Cards["10"].gameObject.transform;
+        tempCommand.SetActive(true);
     }
 
     public async Task<Texture2D> GetCardTexture(CardModel model)

@@ -32,7 +32,7 @@ public class Model : MonoBehaviour
 
     public CardModel GetModelByUID(string uid)
     {
-        return Models[uid].Duplicate();
+        return Models[uid];
     }
 
     public CardModel EditModel(CardModel editCard)

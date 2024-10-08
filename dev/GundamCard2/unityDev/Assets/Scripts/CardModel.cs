@@ -26,13 +26,13 @@ public class CardModel
     public float rotY = 0.0f;
 
 
-    public CardModel Duplicate()
-    {
-        CardModel model = new CardModel();
-        model.prototype = prototype;
-        model.uid = uid;
-        return this;
-    }
+    //public CardModel Duplicate()
+    //{
+    //    CardModel model = new CardModel();
+    //    model.prototype = prototype;
+    //    model.uid = uid;
+    //    return this;
+    //}
 
     //public void SetPosition(Vector3 newPos)
     //{
