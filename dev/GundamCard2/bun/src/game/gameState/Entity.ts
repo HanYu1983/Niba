@@ -8,7 +8,7 @@ import { ItemState } from "../define/ItemState";
 import { PlayerID, PlayerA, PlayerB, PlayerIDFn } from "../define/PlayerID";
 import { Tip, StrBaSyouPair, TipFn } from "../define/Tip";
 import { getBattleGroup } from "./battleGroup";
-import { getCardColor, getCardGSignProperty, getCardHasSpeicalEffect, getItemCharacteristic, getItemRuntimeCategory, isCardMaster } from "./card";
+import { getCardColor, getCardGSignProperty, getCardHasSpeicalEffect, getCardTotalCostLength, getItemCharacteristic, getItemRuntimeCategory, isCardMaster } from "./card";
 import { getCoinIds, getCoin, getCoinOwner } from "./CoinTableComponent";
 import { createAbsoluteBaSyouFromBaSyou, createPlayerIdFromRelated } from "./createActionTitleFn";
 import { getCutInDestroyEffects, getEffect, getEffects, isStackEffect } from "./EffectStackComponent";
@@ -163,6 +163,17 @@ export function createTipByEntitySearch(ctx: GameState, cardId: string, options:
                         case "==":
                             return hp == value
                     }
+                case "合計国力": {
+                    const totalCost = getCardTotalCostLength(ctx, entity.itemId)
+                    switch (op) {
+                        case "<=":
+                            return totalCost <= value
+                        case ">=":
+                            return totalCost >= value
+                        case "==":
+                            return totalCost == value
+                    }
+                }
             }
             return false
         })

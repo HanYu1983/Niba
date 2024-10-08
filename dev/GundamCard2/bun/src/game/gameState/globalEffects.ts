@@ -252,12 +252,12 @@ export function createAllCardTexts(ctx: GameState, situation: Situation | null):
     map(item => {
       const proto = getItemPrototype(ctx, item.id)
       let texts = (proto.texts || []).flatMap(text => {
-        if (text.isEnabledWhileG && text.title[0] == "特殊型") {
+        if (text.protectLevel == 2 && text.title[0] == "特殊型") {
           return createTextsFromSpecialEffect(ctx, text)
         }
         return [text]
       })
-      texts = texts.filter(text => text.isEnabledWhileG && text.title[0] == "自動型" && (text.title[1] == "常駐" || text.title[1] == "起動"))
+      texts = texts.filter(text => text.protectLevel == 2 && text.title[0] == "自動型" && (text.title[1] == "常駐" || text.title[1] == "起動"))
       return [item, texts] as [Item, CardText[]]
     })
   )

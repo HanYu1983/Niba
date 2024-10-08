@@ -88,7 +88,7 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
                 cardId => getCardTexts(ctx, cardId)
                     .flatMap(text => {
                         if (AbsoluteBaSyouFn.getBaSyouKeyword(basyou) == "Gゾーン") {
-                            if (text.isEnabledWhileG != true) {
+                            if (text.protectLevel != 2) {
                                 return []
                             }
                         }

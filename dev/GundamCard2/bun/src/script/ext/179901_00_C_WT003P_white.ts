@@ -16,7 +16,7 @@ export const prototype: CardPrototype = {
       id: "",
       description: "＜『起動』：このカードは、Gとして場に出た場合、〔Ｒ〕を支払う事ができる。その場合、敵軍ユニット１枚に３ダメージを与える＞",
       title: ["自動型", "起動"],
-      isEnabledWhileG: true,
+      protectLevel: 2,
       onEvent: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
         const event = DefineFn.EffectFn.getEvent(effect)
         const cardId = DefineFn.EffectFn.getCardID(effect)

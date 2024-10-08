@@ -95,7 +95,7 @@ export type EntitySearchOptions = {
     at?: BaSyouKeyword[],
     atBa?: boolean,
     color?: CardColor[],
-    compareBattlePoint?: [UnitPropertyKeyword, "<=" | ">=" | "==", number],
+    compareBattlePoint?: [UnitPropertyKeyword | "合計国力", "<=" | ">=" | "==", number],
     isDestroy?: boolean,
     isSetGroup?: boolean,
     isBattleGroupFirst?: boolean,
@@ -230,7 +230,8 @@ export type CardText = {
     logicTreeActions?: LogicTreeAction[]
     onEvent?: OnEventTitle
     onSituation?: string
-    isEnabledWhileG?: boolean,
+    // 1為非G時不能被洗，2為G時也不能被洗
+    protectLevel?: 1 | 2,
     isEachTime?: boolean,
 }
 
