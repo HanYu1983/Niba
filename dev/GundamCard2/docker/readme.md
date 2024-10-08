@@ -2,5 +2,5 @@
     https://docs.docker.com/get-started/get-docker/
     
 # run
-    docker-compose up
+    docker-compose -f docker-compose.local.yml up
     localhost:8080
