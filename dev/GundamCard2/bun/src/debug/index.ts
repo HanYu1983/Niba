@@ -47,12 +47,14 @@ import { testSupply } from "./testSupply";
 import { testThinkVer1, testThinkVer1_2 } from "./testThinkVer1";
 import { test179901_00_U_WT001P_white_02 } from "./test179901_00_U_WT001P_white_02";
 import { test179028_10D_CH_WT095_white } from "./test179028_10D_CH_WT095_white";
+import { test179009_03B_U_WT045U_white } from "./test179009_03B_U_WT045U_white";
 
 const fs = require('fs').promises;
 
 export async function tests() {
     return [
         testLoadPrototype,
+        test179009_03B_U_WT045U_white,
         testIssue,
         test179028_10D_CH_WT095_white,
         test179901_00_U_WT001P_white_02,

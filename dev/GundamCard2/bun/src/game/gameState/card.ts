@@ -148,8 +148,9 @@ export function getCardTotalCostLength(ctx: GameState, cardID: string): number {
 }
 
 export function getCardIdsCanPayRollCost(ctx: GameState, playerId: PlayerID, situation: Situation | null): string[] {
-  return getGlobalEffects(ctx, situation)
-    .filter(ge => ge.title[0] == "發生國力")
+  const ges = getGlobalEffects(ctx, situation)
+  ctx = setGlobalEffects(ctx, situation, ges)
+  return ges.filter(ge => ge.title[0] == "發生國力")
     .flatMap(ge => ge.cardIds)
     .filter(cardId => getCard(ctx, cardId).isRoll != true)
     .filter(cardId => getItemController(ctx, cardId) == playerId)

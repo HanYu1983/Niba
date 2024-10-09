@@ -3,7 +3,7 @@ import { TextSpeicalEffect } from "../define/CardText";
 import { getCardHasSpeicalEffect } from "./card";
 import { getCard } from "./CardTableComponent";
 import { GameState } from "./GameState";
-import { getGlobalEffects } from "./globalEffects";
+import { getGlobalEffects, setGlobalEffects } from "./globalEffects";
 import { getItemState } from "./ItemStateComponent";
 import { getItemIdsByBasyou, getItemBaSyou } from "./ItemTableComponent";
 import { getSetGroupBattlePoint, isSetGroupHasA } from "./setGroup";
@@ -49,7 +49,9 @@ export function getBattleGroupBattlePoint(
       // 其它的是射擊力
       return range
     }).reduce((acc, c) => acc + c, 0);
-  const bonus = getGlobalEffects(ctx, null).map(ge => {
+  const ges = getGlobalEffects(ctx, null)
+  ctx = setGlobalEffects(ctx, null, ges)
+  const bonus = ges.map(ge => {
     if (ge.title[0] == "このカードの部隊の部隊戦闘力を_＋３する") {
       const times = unitCardIDs.filter(unitId => ge.cardIds.includes(unitId)).length
       return ge.title[1] * times
@@ -58,14 +60,15 @@ export function getBattleGroupBattlePoint(
   }).reduce((acc, c) => acc + c, 0)
   const opponentBasyou = AbsoluteBaSyouFn.setOpponentPlayerID(getItemBaSyou(ctx, unitCardIDs[0]))
   const opponentBattleGroup = getBattleGroup(ctx, opponentBasyou)
-  const bonus2 = getGlobalEffects(ctx, null).map(ge => {
+  const bonus2 = ges.map(ge => {
     if (ge.title[0] == "このカードと交戦中の敵軍部隊の部隊戦闘力を_－３する") {
+
       const times = opponentBattleGroup.filter(unitId => ge.cardIds.includes(unitId)).length
+      console.log("XXX", times, ge.cardIds, opponentBattleGroup)
       return ge.title[1] * times
     }
     return 0
   }).reduce((acc, c) => acc + c, 0)
-
   return attackPower + bonus + bonus2;
 }
 
