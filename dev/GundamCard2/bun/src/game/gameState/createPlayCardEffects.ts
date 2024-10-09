@@ -49,13 +49,13 @@ export function createPlayCardEffects(ctx: GameState, cardId: string): Effect[] 
         const text = prototype.texts?.find(text => text.description == "『恒常』：このカードは、自軍ジャンクヤードにある状態でプレイする場合、セット先として、自軍ジャンクヤードにある、このカードと同じ属性のGサインを持つユニット１枚を、自軍配備エリアにロール状態で出し、このカードをセットできる。")
         if (text && getItemBaSyou(ctx, cardId).value[1] == "ジャンクヤード") {
             const effect: Effect = {
-                id: `createPlayCardEffects_${cardId}`,
+                id: `createPlayCardEffects_${cardId}_『恒常』：このカードは、自軍ジャンクヤードにある状態でプレイする場合、セット先として、自軍ジャンクヤードにある、このカードと同じ属性のGサインを持つユニット１枚を、自軍配備エリアにロール状態で出し、このカードをセットできる。`,
                 reason: ["PlayCard", playerId, cardId, { isPlayCharacter: true }],
                 description: text.description,
                 isOption: true,
                 text: {
                     id: text.id,
-                    title: text.title,
+                    title: ["使用型", ["自軍", "配備フェイズ"]],
                     description: text.description,
                     conditions: {
                         ...costConditions,
@@ -79,7 +79,9 @@ export function createPlayCardEffects(ctx: GameState, cardId: string): Effect[] 
                                         const from = GameStateFn.getItemBaSyou(ctx, cardId)
                                         ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "プレイされているカード"), [cardId, from]) as GameState
                                         return GameStateFn.addStackEffect(ctx, {
-                                            id: `createPlayCardEffects_${cardId}`,
+                                            // 注意：id必須是唯一的，如果不使用亂數請確保你的id不會重復
+                                            // 否則有可能應該在ctx.effects中的效果被同id的效果刪除
+                                            id: `${effect.id}_場に出る`,
                                             reason: ["場に出る", DefineFn.EffectFn.getPlayerID(effect), DefineFn.EffectFn.getCardID(effect)],
                                             description: effect.text.description,
                                             text: {
@@ -162,7 +164,6 @@ export function createPlayCardEffects(ctx: GameState, cardId: string): Effect[] 
         description: description,
         text: {
             id: prototype.commandText?.id || `createPlayCardEffects_text_${cardId}`,
-            // 以下的title只是為了log，沒有實際作用
             title: prototype.commandText?.title || ["使用型", ["自軍", "配備フェイズ"]],
             description: description,
             conditions: {
@@ -191,7 +192,7 @@ export function createPlayCardEffects(ctx: GameState, cardId: string): Effect[] 
 
                                 if (prototype.category == "コマンド") {
                                     return GameStateFn.addStackEffect(ctx, {
-                                        id: ToolFn.getUUID("getPlayCardEffects"),
+                                        id: `${effect.id}_場に出る`,
                                         reason: ["場に出る", DefineFn.EffectFn.getPlayerID(effect), DefineFn.EffectFn.getCardID(effect)],
                                         description: effect.text.description,
                                         text: {

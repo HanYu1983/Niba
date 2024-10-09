@@ -11,7 +11,7 @@ const DECK_W_RANGE = ["179001_01A_CH_WT006C_white","179001_01A_CH_WT006C_white",
 export const ControlView = () => {
   const onClickNewGame = useCallback(async () => {
     const deckA = DECK_W_RANGE
-    const deckB = DECK_W_RANGE
+    const deckB = TMP_DECK2
     const prototypeIds = [...deckA, ...deckB]
     await Promise.all(prototypeIds.map(loadPrototype)).then(()=>console.log("loadOK")).catch(console.error)
     OnEvent.next({ id: "OnClickNewGame", deckA: deckA, deckB: deckB });

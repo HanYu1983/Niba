@@ -5,14 +5,13 @@
 // 男性　子供　CO
 // （ダメージ判定ステップ）〔２〕：このセットグループのユニットは、ターン終了時まで、「〔０〕：範囲兵器（３）」、または「範囲兵器」＋１を得る。
 
-import { create } from "domain";
-import type { CardColor, CardPrototype } from "../../game/define/CardPrototype";
-import { CardText, Condition } from "../../game/define/CardText";
-import { EffectFn, type Effect } from "../../game/define/Effect";
-import type { GameState } from "../../game/gameState/GameState";
-import type { Bridge } from "../bridge";
-import { Tip } from "../../game/define/Tip";
+import { CardPrototype, CardColor } from "../../game/define/CardPrototype";
+import { Condition } from "../../game/define/CardText";
+import { Effect } from "../../game/define/Effect";
 import { GlobalEffect } from "../../game/define/GlobalEffect";
+import { Tip } from "../../game/define/Tip";
+import { GameState } from "../../game/gameState/GameState";
+import { Bridge } from "../bridge";
 
 export const prototype: CardPrototype = {
   texts: [

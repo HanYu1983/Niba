@@ -9,6 +9,9 @@ import { FlowSetTipSelectionView } from "./FlowSetTipSelectionView";
 import { getPhase } from "../../game/gameState/PhaseComponent";
 import { PhaseFn } from "../../game/define/Timing";
 import { thinkVer1 } from "../../game/gameStateWithFlowMemory/ai/thinkVer1";
+import { getPlayerUnitIds } from "../../game/gameState/player";
+import { getCard } from "../../game/gameState/CardTableComponent";
+import { Flow } from "../../game/gameStateWithFlowMemory/Flow";
 
 export const FlowListView = (props: { clientId: string, style?: CSSProperties }) => {
   const appContext = useContext(AppContext);
@@ -16,15 +19,29 @@ export const FlowListView = (props: { clientId: string, style?: CSSProperties })
     return appContext.viewModel.playerCommands[props.clientId] || []
   }, [appContext.viewModel.playerCommands[props.clientId]]);
   useEffect(() => {
-    const speed = 50
     const isPlayerControl = false
+    const speed = isPlayerControl ? 50 : 10
     if (isPlayerControl && props.clientId == PlayerA) {
       // 規定效果自動按
       const phase = getPhase(appContext.viewModel.model.gameState)
       if (PhaseFn.isRuleEffect(phase)) {
-        let flow = flows.find(flow => flow.id == "FlowPassPayCost")
+        let flow: Flow | undefined = flows.find(flow => flow.id == "FlowPassPayCost")
         if (flow == null) {
+          // 規定效果非出擊一律自動按
           flows.find(flow => flow.id == "FlowSetActiveEffectID" && phase[0] == "戦闘フェイズ" && (phase[1] != "攻撃ステップ" && phase[1] != "防御ステップ"))
+        }
+        if (flow == null) {
+          // 若是出擊則額外判斷有沒有兵可以出
+          const deleteFlow = flows.find(flow => flow.id == "FlowDeleteImmediateEffect" && phase[0] == "戦闘フェイズ" && (phase[1] == "攻撃ステップ" || phase[1] == "防御ステップ"))
+          if (deleteFlow?.id == "FlowDeleteImmediateEffect") {
+            const atkDefEf = deleteFlow.tips.find(e => e.reason[0] == "GameRule" && (e.reason[2].isAttack || e.reason[2].isDefence))
+            if (atkDefEf) {
+              const isAllRoll = getPlayerUnitIds(appContext.viewModel.model.gameState, props.clientId).every(itemId => getCard(appContext.viewModel.model.gameState, itemId).isRoll)
+              if (isAllRoll) {
+                flow = deleteFlow
+              }
+            }
+          }
         }
         if (flow != null) {
           setTimeout(() => {

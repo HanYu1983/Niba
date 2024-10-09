@@ -4,7 +4,7 @@ import { BattlePoint, BattlePointFn } from "../define/BattlePoint"
 import { Card } from "../define/Card"
 import { CardCategory, CardColor, GSign, GSignProperty, RollCostColor } from "../define/CardPrototype"
 import { PlayerID } from "../define/PlayerID"
-import { Situation, BattleBonus, TextSpeicalEffect, TextSpeicalEffectFn, CardText } from "../define/CardText"
+import { Situation, BattleBonus, TextSpeicalEffect, TextSpeicalEffectFn, CardText, TextTitle } from "../define/CardText"
 import { getCard } from "./CardTableComponent"
 import { getCoins, getCardIdByCoinId } from "./CoinTableComponent"
 import { GameState } from "./GameState"
@@ -38,9 +38,11 @@ export function getCardSpecialText(ctx: GameState, cardID: string, text: CardTex
         }
         return 0
       }).reduce((a, b) => a + b, 0)
+      const title: TextTitle = ["特殊型", [name, value + bonus]]
       return {
         ...text,
-        title: ["特殊型", [name, value + bonus]]
+        title: title,
+        description: JSON.stringify(title[1]),
       }
     }
     default:

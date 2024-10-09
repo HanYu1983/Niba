@@ -45,6 +45,7 @@ export const DEFAULT_VIEW_MODEL: ViewModel = {
 
 export const OnViewModel = OnEvent.pipe(
   rxjs.scan((viewModel, evt): ViewModel => {
+    (window as any).__gameState__ = viewModel.model.gameState
     logCategory("OnViewModel", "evt", evt);
     try {
       switch (evt.id) {
@@ -99,7 +100,9 @@ export const OnViewModel = OnEvent.pipe(
             // }
             return viewModel
           }
+          logCategory("OnClickFlowConfirm", "before applyFlow", viewModel.model.gameState)
           const gameState = applyFlow(viewModel.model.gameState, evt.clientId, evt.flow);
+          logCategory("OnClickFlowConfirm", "after applyFlow", viewModel.model.gameState)
           const playerAFlow = queryFlow(gameState, PlayerA)
           const playerBFlow = queryFlow(gameState, PlayerB)
           return {
@@ -147,6 +150,7 @@ export const OnViewModel = OnEvent.pipe(
           return viewModel;
       }
     } catch (e: any) {
+      console.log(viewModel.model.gameState)
       OnError.next(e);
     }
     return viewModel;

@@ -161,6 +161,17 @@ export function createTextsFromSpecialEffect(ctx: GameState, text: CardText): Ca
                                 }
                             ]
                         },
+                        "這張卡在戰區的場合": {
+                            actions: [
+                                {
+                                    title: ["Entity", {
+                                        isThisCard: true,
+                                        at: ["戦闘エリア1", "戦闘エリア2"],
+                                        count: 1,
+                                    }]
+                                }
+                            ]
+                        }
                         // "這張卡在戰區的場合": {
                         //     actions: [
                         //         {

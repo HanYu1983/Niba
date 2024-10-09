@@ -333,7 +333,7 @@ export function getCardTipBattleBonus(ctx: GameState, varName: string, cardId: s
 }
 
 export function getCardTipStrings(ctx: GameState, varName: string, cardId: string): string[] {
-  return getCardTipSelection(ctx, varName, cardId, { assertTitle: ["テキスト", [], []] }) as string[]
+  return getCardTipSelection(ctx, varName, cardId, { assertTitle: ["StringOptions", [], []] }) as string[]
 }
 
 export function createPlayTextEffectFromEffect(ctx: GameState, e: Effect, options?: { conditions?: { [key: string]: Condition }, logicTreeAction?: LogicTreeAction, isOption?: boolean }): Effect {

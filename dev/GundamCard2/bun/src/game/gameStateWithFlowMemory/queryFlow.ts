@@ -285,7 +285,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
         // 取得最上方的效果
         const effect = getTopEffect(ctx);
         if (effect == null) {
-            throw new Error("effect not found")
+            throw new Error(`effect not found: ${ctx.stackEffect.length}`)
         }
 
         if (effect.id == null) {

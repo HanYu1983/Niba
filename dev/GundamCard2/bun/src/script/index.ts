@@ -317,6 +317,7 @@ function getCrossWeapon(gainStr: string): CardText[] {
     }
   ]
 }
+
 function getRange(gainStr: string): CardText[] {
   const match = gainStr.match(/〔(０|１|２|３|４|５|６|７|８|９+)〕：範囲兵器（(０|１|２|３|４|５|６|７|８|９+)）/);
   if (match == null) {
@@ -325,11 +326,11 @@ function getRange(gainStr: string): CardText[] {
   const [matchstr, rollcoststr, numstr] = match
   const rollcost = uppercaseDigits.indexOf(rollcoststr)
   if (rollcost == -1) {
-    throw new Error(`getGainTexts error: ${matchstr}`)
+    throw new Error(`getRange error: ${matchstr}`)
   }
   const num = uppercaseDigits.indexOf(numstr)
   if (num == -1) {
-    throw new Error(`getGainTexts error: ${numstr}`)
+    throw new Error(`getRange error: ${numstr}`)
   }
   return [
     {
@@ -350,11 +351,11 @@ function getPao(gainStr: string): CardText[] {
   const [matchstr, rollcoststr, numstr] = match
   const rollcost = uppercaseDigits.indexOf(rollcoststr)
   if (rollcost == -1) {
-    throw new Error(`getGainTexts error: ${matchstr}`)
+    throw new Error(`getPao error: ${matchstr}`)
   }
   const num = uppercaseDigits.indexOf(numstr)
   if (num == -1) {
-    throw new Error(`getGainTexts error: ${numstr}`)
+    throw new Error(`getPao error: ${numstr}`)
   }
   return [
     {
@@ -367,18 +368,18 @@ function getPao(gainStr: string): CardText[] {
 }
 
 function getHave(gainStr: string): CardText[] {
-  let match = gainStr.match(/〔(.?)(０|１|２|３|４|５|６|７|８|９+)(毎?)〕：クロスウェポン［(.+)］/);
+  let match = gainStr.match(/〔(.?)(０|１|２|３|４|５|６|７|８|９+)(毎?)〕：共有(〔|［)(.+)(］|〕)/);
   if (match == null) {
     return []
   }
-  const [matchstr, colorstr, rollcoststr, every, char] = match
+  const [matchstr, colorstr, rollcoststr, every, _, char, _2] = match
   if (colorstr != "" && CardColorFn.getAll().includes(colorstr as CardColor) == false) {
-    throw new Error(`getCrossWeapon ${gainStr}`)
+    throw new Error(`getHave ${gainStr}`)
   }
   const color: CardColor | null = colorstr == "" ? null : (colorstr as CardColor)
   const rollcost = uppercaseDigits.indexOf(rollcoststr)
   if (rollcost == -1) {
-    throw new Error(`getGainTexts error: ${matchstr}`)
+    throw new Error(`getHave error: ${matchstr}`)
   }
   return [
     {

@@ -32,6 +32,7 @@ export const prototype: CardPrototype = {
                   at: [DefineFn.AbsoluteBaSyouFn.getBaSyouKeyword(GameStateFn.getItemBaSyou(ctx, cardId))],
                   is: ["ユニット"],
                   max: 50,
+                  asMuchAsPossible: true,
                 }]
               }
             },

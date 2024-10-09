@@ -14,7 +14,7 @@ export function createPlayGEffects(ctx: GameState, cardId: string): Effect {
         description: "PlayG",
         text: {
             id: `createPlayGEffects_text_${cardId}`,
-            title: [],
+            title: ["使用型", ["自軍", "配備フェイズ"]],
             description: "PlayG",
             conditions: {
                 "出G上限": {

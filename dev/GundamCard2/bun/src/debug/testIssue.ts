@@ -15,23 +15,43 @@ import { getPhase, setPhase } from "../game/gameState/PhaseComponent"
 import { Flow } from "../game/gameStateWithFlowMemory/Flow"
 import { TableFns } from "../tool/table"
 import { getCard, mapCard } from "../game/gameState/CardTableComponent"
-import { getCardIdsCanPayRollCost, isCardMaster } from "../game/gameState/card"
+import { getCardIdsCanPayRollCost, getCardTexts, isCardMaster } from "../game/gameState/card"
 import { clearGlobalEffects, getGlobalEffects } from "../game/gameState/globalEffects"
 import { applyFlow } from "../game/gameStateWithFlowMemory/applyFlow"
 import { createPlayCardEffects } from "../game/gameState/createPlayCardEffects"
+import { updateCommand } from "../game/gameState/updateCommand"
 
 export async function testIssue() {
     const whiteSpeed = ["179001_01A_CH_WT007R_white", "179004_01A_CH_WT009R_white", "179004_01A_CH_WT010C_white", "179007_02A_U_WT027U_white", "179007_02A_U_WT027U_white", "179008_02A_U_WT034U_white", "179008_02A_U_WT034U_white", "179008_02A_U_WT034U_white", "179014_03B_CH_WT027R_white", "179015_04B_U_WT067C_white", "179015_04B_U_WT067C_white", "179015_04B_U_WT067C_white", "179016_04B_U_WT074C_white", "179016_04B_U_WT074C_white", "179016_04B_U_WT074C_white", "179016_04B_U_WT075C_white", "179016_04B_U_WT075C_white", "179016_04B_U_WT075C_white", "179019_01A_C_WT010C_white", "179019_01A_C_WT010C_white", "179019_02A_U_WT028R_white", "179019_02A_U_WT028R_white", "179022_06C_CH_WT057R_white", "179022_06C_CH_WT057R_white", "179022_06C_CH_WT057R_white", "179022_06C_U_WT113R_white", "179022_06C_U_WT113R_white", "179022_06C_U_WT113R_white", "179023_06C_CH_WT067C_white", "179024_03B_U_WT057U_white", "179024_03B_U_WT057U_white", "179025_07D_C_WT060U_white", "179025_07D_CH_WT075C_white", "179025_07D_CH_WT075C_white", "179025_07D_CH_WT075C_white", "179027_09D_C_WT067R_white", "179027_09D_C_WT067R_white", "179029_B3C_CH_WT102R_white", "179029_B3C_CH_WT103N_white", "179029_B3C_U_WT196R_white", "179030_11E_C_WT077S_white", "179030_11E_C_WT077S_white", "179030_11E_C_WT077S_white", "179030_11E_CH_WT108N_white", "179901_00_C_WT003P_white", "179901_00_C_WT003P_white", "179901_00_C_WT003P_white", "179901_CG_C_WT001P_white", "179901_CG_C_WT001P_white", "179901_CG_CH_WT002P_white"]
     const blackT3 = ["179015_04B_O_BK010C_black", "179015_04B_O_BK010C_black", "179015_04B_U_BK058R_black", "179015_04B_U_BK058R_black", "179015_04B_U_BK059C_black", "179015_04B_U_BK059C_black", "179015_04B_U_BK061C_black", "179015_04B_U_BK061C_black", "179016_04B_U_BK066C_black", "179016_04B_U_BK066C_black", "179019_02A_C_BK015S_black", "179019_02A_C_BK015S_black", "179020_05C_U_BK100U_black", "179020_05C_U_BK100U_black", "179023_06C_C_BK048R_black", "179023_06C_C_BK048R_black", "179023_06C_C_BK049U_black", "179023_06C_C_BK049U_black", "179024_04B_C_BK027U_black", "179024_04B_C_BK027U_black", "179024_04B_U_BK060C_black", "179024_04B_U_BK060C_black", "179024_04B_U_BK067C_black", "179024_04B_U_BK067C_black", "179024_B2B_C_BK054C_black", "179024_B2B_C_BK054C_black", "179024_B2B_U_BK128S_black_02", "179024_B2B_U_BK128S_black_02", "179024_B2B_U_BK129R_black", "179024_B2B_U_BK129R_black", "179027_09D_C_BK063R_black", "179027_09D_C_BK063R_black", "179027_09D_O_BK010N_black", "179027_09D_O_BK010N_black", "179027_09D_U_BK163S_black", "179027_09D_U_BK163S_black", "179027_09D_U_BK163S_black", "179029_06C_C_BK045U_black", "179029_06C_C_BK045U_black", "179029_B3C_C_BK071N_black", "179029_B3C_C_BK071N_black", "179029_B3C_U_BK184N_black", "179029_B3C_U_BK184N_black", "179029_B3C_U_BK184N_black", "179029_B3C_U_BK185N_black", "179029_B3C_U_BK185N_black", "179030_11E_U_BK194S_2_black", "179030_11E_U_BK194S_2_black", "179030_11E_U_BK194S_2_black", "179901_B2B_C_BK005P_black"]
     await Promise.all([...blackT3, ...whiteSpeed].map(loadPrototype))
     let ctx = TMP_CTX
-    if(createPlayCardEffects(ctx, "PlayerA_41").length != 2){
+    // if(createPlayCardEffects(ctx, "PlayerA_32").length != 1){
+    //     throw new Error()
+    // }
+    // ctx = setPhase(ctx, ["戦闘フェイズ", "ダメージ判定ステップ", "フリータイミング"]) as GameStateWithFlowMemory
+    // if(createPlayEffects(ctx, PlayerA).filter(eff=>EffectFn.getCardID(eff) == "PlayerA_32").length != 1){
+    //     throw new Error()
+    // }
+
+    // const ges = getGlobalEffects(ctx, null)
+    // if(ges.find(ge=>ge.title[0] == "SpecialEffectBonus" && ge.cardIds.includes("PlayerA_13"))== null){
+    //     throw new Error()
+    // }
+    // const ts = getCardTexts(ctx, "PlayerA_13")
+    ctx = updateCommand(ctx) as GameStateWithFlowMemory
+    let flows = queryFlow(ctx, PlayerA)
+    const flow = flows[0]
+    console.log(flow)
+    if(flow == null){
         throw new Error()
     }
-    ctx = setPhase(ctx, ["戦闘フェイズ", "ダメージ判定ステップ", "フリータイミング"]) as GameStateWithFlowMemory
-    if(createPlayEffects(ctx, PlayerA).filter(eff=>EffectFn.getCardID(eff) == "PlayerA_41").length != 2){
-        throw new Error()
-    }
+    //console.log("===", ctx.stackEffect)
+    ctx = applyFlow(ctx, PlayerA, flow)
+    //console.log("===", ctx.stackEffect)
+
+    flows = queryFlow(ctx, PlayerA)
+
 }
 
 const TMP_CTX: GameStateWithFlowMemory = {
@@ -39,691 +59,720 @@ const TMP_CTX: GameStateWithFlowMemory = {
     "cards": {
         "PlayerA_0": {
             "id": "PlayerA_0",
-            "protoID": "179001_01A_CH_WT007R_white",
+            "protoID": "179001_01A_CH_WT006C_white",
             "ownerID": "PlayerA",
             "isFaceDown": true
         },
         "PlayerA_1": {
             "id": "PlayerA_1",
-            "protoID": "179004_01A_CH_WT009R_white",
+            "protoID": "179001_01A_CH_WT006C_white",
             "ownerID": "PlayerA",
             "isFaceDown": true
         },
         "PlayerA_2": {
             "id": "PlayerA_2",
-            "protoID": "179004_01A_CH_WT010C_white",
+            "protoID": "179001_01A_CH_WT006C_white",
             "ownerID": "PlayerA",
-            "isFaceDown": false,
-            "isRoll": false
+            "isFaceDown": true
         },
         "PlayerA_3": {
             "id": "PlayerA_3",
-            "protoID": "179007_02A_U_WT027U_white",
+            "protoID": "179001_01A_CH_WT006C_white",
             "ownerID": "PlayerA",
             "isFaceDown": true
         },
         "PlayerA_4": {
             "id": "PlayerA_4",
-            "protoID": "179007_02A_U_WT027U_white",
+            "protoID": "179003_01A_O_WT001C_white",
+            "ownerID": "PlayerA",
+            "isFaceDown": true
+        },
+        "PlayerA_5": {
+            "id": "PlayerA_5",
+            "protoID": "179003_01A_O_WT001C_white",
             "ownerID": "PlayerA",
             "isFaceDown": true,
             "isRoll": false
         },
-        "PlayerA_5": {
-            "id": "PlayerA_5",
-            "protoID": "179008_02A_U_WT034U_white",
-            "ownerID": "PlayerA",
-            "isFaceDown": true
-        },
         "PlayerA_6": {
             "id": "PlayerA_6",
-            "protoID": "179008_02A_U_WT034U_white",
+            "protoID": "179003_01A_O_WT001C_white",
             "ownerID": "PlayerA",
             "isFaceDown": true
         },
         "PlayerA_7": {
             "id": "PlayerA_7",
-            "protoID": "179008_02A_U_WT034U_white",
+            "protoID": "179003_01A_O_WT001C_white",
             "ownerID": "PlayerA",
-            "isFaceDown": true
+            "isFaceDown": true,
+            "isRoll": false
         },
         "PlayerA_8": {
             "id": "PlayerA_8",
-            "protoID": "179014_03B_CH_WT027R_white",
+            "protoID": "179003_01A_O_WT001C_white",
             "ownerID": "PlayerA",
             "isFaceDown": true
         },
         "PlayerA_9": {
             "id": "PlayerA_9",
-            "protoID": "179015_04B_U_WT067C_white",
+            "protoID": "179003_01A_O_WT001C_white",
             "ownerID": "PlayerA",
-            "isFaceDown": true
+            "isFaceDown": true,
+            "isRoll": false
         },
         "PlayerA_10": {
             "id": "PlayerA_10",
-            "protoID": "179015_04B_U_WT067C_white",
+            "protoID": "179003_01A_O_WT001C_white",
             "ownerID": "PlayerA",
             "isFaceDown": true
         },
         "PlayerA_11": {
             "id": "PlayerA_11",
-            "protoID": "179015_04B_U_WT067C_white",
-            "ownerID": "PlayerA",
-            "isFaceDown": true,
-            "isRoll": false
-        },
-        "PlayerA_12": {
-            "id": "PlayerA_12",
-            "protoID": "179016_04B_U_WT074C_white",
-            "ownerID": "PlayerA",
-            "isFaceDown": true
-        },
-        "PlayerA_13": {
-            "id": "PlayerA_13",
-            "protoID": "179016_04B_U_WT074C_white",
-            "ownerID": "PlayerA",
-            "isFaceDown": true,
-            "isRoll": false
-        },
-        "PlayerA_14": {
-            "id": "PlayerA_14",
-            "protoID": "179016_04B_U_WT074C_white",
+            "protoID": "179003_01A_U_WT011C_white",
             "ownerID": "PlayerA",
             "isFaceDown": false,
             "isRoll": false
         },
+        "PlayerA_12": {
+            "id": "PlayerA_12",
+            "protoID": "179003_01A_U_WT011C_white",
+            "ownerID": "PlayerA",
+            "isFaceDown": true,
+            "isRoll": false
+        },
+        "PlayerA_13": {
+            "id": "PlayerA_13",
+            "protoID": "179003_01A_U_WT011C_white",
+            "ownerID": "PlayerA",
+            "isFaceDown": true
+        },
+        "PlayerA_14": {
+            "id": "PlayerA_14",
+            "protoID": "179003_01A_U_WT011C_white",
+            "ownerID": "PlayerA",
+            "isFaceDown": true,
+            "isRoll": false
+        },
         "PlayerA_15": {
             "id": "PlayerA_15",
-            "protoID": "179016_04B_U_WT075C_white",
+            "protoID": "179009_03B_U_WT044U_white",
             "ownerID": "PlayerA",
             "isFaceDown": true
         },
         "PlayerA_16": {
             "id": "PlayerA_16",
-            "protoID": "179016_04B_U_WT075C_white",
+            "protoID": "179009_03B_U_WT044U_white",
             "ownerID": "PlayerA",
-            "isFaceDown": true
+            "isFaceDown": false,
+            "isRoll": false
         },
         "PlayerA_17": {
             "id": "PlayerA_17",
-            "protoID": "179016_04B_U_WT075C_white",
+            "protoID": "179009_03B_U_WT044U_white",
             "ownerID": "PlayerA",
-            "isFaceDown": true,
-            "isRoll": false
+            "isFaceDown": true
         },
         "PlayerA_18": {
             "id": "PlayerA_18",
-            "protoID": "179019_01A_C_WT010C_white",
+            "protoID": "179009_03B_U_WT044U_white",
             "ownerID": "PlayerA",
-            "isFaceDown": true,
-            "isRoll": false
+            "isFaceDown": true
         },
         "PlayerA_19": {
             "id": "PlayerA_19",
-            "protoID": "179019_01A_C_WT010C_white",
+            "protoID": "179009_03B_U_WT044U_white",
             "ownerID": "PlayerA",
             "isFaceDown": true
         },
         "PlayerA_20": {
             "id": "PlayerA_20",
-            "protoID": "179019_02A_U_WT028R_white",
+            "protoID": "179009_03B_U_WT045U_white",
             "ownerID": "PlayerA",
             "isFaceDown": true
         },
         "PlayerA_21": {
             "id": "PlayerA_21",
-            "protoID": "179019_02A_U_WT028R_white",
+            "protoID": "179009_03B_U_WT045U_white",
             "ownerID": "PlayerA",
             "isFaceDown": true
         },
         "PlayerA_22": {
             "id": "PlayerA_22",
-            "protoID": "179022_06C_CH_WT057R_white",
+            "protoID": "179009_03B_U_WT045U_white",
             "ownerID": "PlayerA",
-            "isFaceDown": true,
-            "isRoll": false
+            "isFaceDown": true
         },
         "PlayerA_23": {
             "id": "PlayerA_23",
-            "protoID": "179022_06C_CH_WT057R_white",
+            "protoID": "179009_03B_U_WT045U_white",
             "ownerID": "PlayerA",
             "isFaceDown": true
         },
         "PlayerA_24": {
             "id": "PlayerA_24",
-            "protoID": "179022_06C_CH_WT057R_white",
+            "protoID": "179015_04B_O_WT005U_white",
             "ownerID": "PlayerA",
             "isFaceDown": true
         },
         "PlayerA_25": {
             "id": "PlayerA_25",
-            "protoID": "179022_06C_U_WT113R_white",
+            "protoID": "179015_04B_O_WT005U_white",
             "ownerID": "PlayerA",
             "isFaceDown": true
         },
         "PlayerA_26": {
             "id": "PlayerA_26",
-            "protoID": "179022_06C_U_WT113R_white",
+            "protoID": "179015_04B_O_WT005U_white",
             "ownerID": "PlayerA",
-            "isFaceDown": true,
+            "isFaceDown": false,
             "isRoll": false
         },
         "PlayerA_27": {
             "id": "PlayerA_27",
-            "protoID": "179022_06C_U_WT113R_white",
+            "protoID": "179019_01A_U_WT003C_white",
             "ownerID": "PlayerA",
-            "isFaceDown": true
+            "isFaceDown": false,
+            "isRoll": false
         },
         "PlayerA_28": {
             "id": "PlayerA_28",
-            "protoID": "179023_06C_CH_WT067C_white",
+            "protoID": "179019_01A_U_WT003C_white",
             "ownerID": "PlayerA",
             "isFaceDown": true
         },
         "PlayerA_29": {
             "id": "PlayerA_29",
-            "protoID": "179024_03B_U_WT057U_white",
+            "protoID": "179019_01A_U_WT003C_white",
             "ownerID": "PlayerA",
-            "isFaceDown": true
+            "isFaceDown": false,
+            "isRoll": false
         },
         "PlayerA_30": {
             "id": "PlayerA_30",
-            "protoID": "179024_03B_U_WT057U_white",
+            "protoID": "179019_02A_C_WT012U_white",
             "ownerID": "PlayerA",
             "isFaceDown": true
         },
         "PlayerA_31": {
             "id": "PlayerA_31",
-            "protoID": "179025_07D_C_WT060U_white",
+            "protoID": "179019_02A_C_WT012U_white",
             "ownerID": "PlayerA",
             "isFaceDown": true
         },
         "PlayerA_32": {
             "id": "PlayerA_32",
-            "protoID": "179025_07D_CH_WT075C_white",
-            "ownerID": "PlayerA",
-            "isFaceDown": false,
-            "isRoll": false
-        },
-        "PlayerA_33": {
-            "id": "PlayerA_33",
-            "protoID": "179025_07D_CH_WT075C_white",
-            "ownerID": "PlayerA",
-            "isFaceDown": false,
-            "isRoll": false
-        },
-        "PlayerA_34": {
-            "id": "PlayerA_34",
-            "protoID": "179025_07D_CH_WT075C_white",
+            "protoID": "179019_02A_C_WT012U_white",
             "ownerID": "PlayerA",
             "isFaceDown": true
         },
+        "PlayerA_33": {
+            "id": "PlayerA_33",
+            "protoID": "179019_02A_U_WT031C_white",
+            "ownerID": "PlayerA",
+            "isFaceDown": true
+        },
+        "PlayerA_34": {
+            "id": "PlayerA_34",
+            "protoID": "179019_02A_U_WT031C_white",
+            "ownerID": "PlayerA",
+            "isFaceDown": true,
+            "isRoll": false
+        },
         "PlayerA_35": {
             "id": "PlayerA_35",
-            "protoID": "179027_09D_C_WT067R_white",
+            "protoID": "179019_02A_U_WT031C_white",
             "ownerID": "PlayerA",
             "isFaceDown": true
         },
         "PlayerA_36": {
             "id": "PlayerA_36",
-            "protoID": "179027_09D_C_WT067R_white",
+            "protoID": "179023_06C_C_WT055C_white",
             "ownerID": "PlayerA",
             "isFaceDown": true,
             "isRoll": false
         },
         "PlayerA_37": {
             "id": "PlayerA_37",
-            "protoID": "179029_B3C_CH_WT102R_white",
+            "protoID": "179023_06C_C_WT055C_white",
             "ownerID": "PlayerA",
             "isFaceDown": true
         },
         "PlayerA_38": {
             "id": "PlayerA_38",
-            "protoID": "179029_B3C_CH_WT103N_white",
+            "protoID": "179023_06C_C_WT055C_white",
             "ownerID": "PlayerA",
             "isFaceDown": true
         },
         "PlayerA_39": {
             "id": "PlayerA_39",
-            "protoID": "179029_B3C_U_WT196R_white",
+            "protoID": "179024_03B_U_WT039R_white",
             "ownerID": "PlayerA",
             "isFaceDown": true
         },
         "PlayerA_40": {
             "id": "PlayerA_40",
-            "protoID": "179030_11E_C_WT077S_white",
+            "protoID": "179024_03B_U_WT039R_white",
             "ownerID": "PlayerA",
-            "isFaceDown": true,
+            "isFaceDown": false,
             "isRoll": false
         },
         "PlayerA_41": {
             "id": "PlayerA_41",
-            "protoID": "179030_11E_C_WT077S_white",
+            "protoID": "179024_03B_U_WT039R_white",
             "ownerID": "PlayerA",
             "isFaceDown": true
         },
         "PlayerA_42": {
             "id": "PlayerA_42",
-            "protoID": "179030_11E_C_WT077S_white",
+            "protoID": "179024_03B_U_WT042U_white",
             "ownerID": "PlayerA",
             "isFaceDown": true
         },
         "PlayerA_43": {
             "id": "PlayerA_43",
-            "protoID": "179030_11E_CH_WT108N_white",
+            "protoID": "179024_03B_U_WT042U_white",
             "ownerID": "PlayerA",
-            "isFaceDown": false,
-            "isRoll": false
+            "isFaceDown": true
         },
         "PlayerA_44": {
             "id": "PlayerA_44",
-            "protoID": "179901_00_C_WT003P_white",
+            "protoID": "179024_03B_U_WT042U_white",
             "ownerID": "PlayerA",
-            "isFaceDown": true,
-            "isRoll": false
+            "isFaceDown": true
         },
         "PlayerA_45": {
             "id": "PlayerA_45",
-            "protoID": "179901_00_C_WT003P_white",
+            "protoID": "179025_07D_CH_WT075C_white",
             "ownerID": "PlayerA",
             "isFaceDown": true
         },
         "PlayerA_46": {
             "id": "PlayerA_46",
-            "protoID": "179901_00_C_WT003P_white",
+            "protoID": "179025_07D_CH_WT075C_white",
             "ownerID": "PlayerA",
-            "isFaceDown": true
+            "isFaceDown": false,
+            "isRoll": false
         },
         "PlayerA_47": {
             "id": "PlayerA_47",
-            "protoID": "179901_CG_C_WT001P_white",
+            "protoID": "179027_09D_O_WT014N_white",
             "ownerID": "PlayerA",
             "isFaceDown": true
         },
         "PlayerA_48": {
             "id": "PlayerA_48",
-            "protoID": "179901_CG_C_WT001P_white",
+            "protoID": "179027_09D_O_WT014N_white",
             "ownerID": "PlayerA",
             "isFaceDown": true
         },
         "PlayerA_49": {
             "id": "PlayerA_49",
-            "protoID": "179901_CG_CH_WT002P_white",
+            "protoID": "179027_09D_O_WT014N_white",
             "ownerID": "PlayerA",
             "isFaceDown": true
         },
-        "PlayerB_50": {
-            "id": "PlayerB_50",
-            "protoID": "179015_04B_O_BK010C_black",
-            "ownerID": "PlayerB",
-            "isFaceDown": true
-        },
-        "PlayerB_51": {
-            "id": "PlayerB_51",
-            "protoID": "179015_04B_O_BK010C_black",
-            "ownerID": "PlayerB",
-            "isFaceDown": true
-        },
-        "PlayerB_52": {
-            "id": "PlayerB_52",
-            "protoID": "179015_04B_U_BK058R_black",
-            "ownerID": "PlayerB",
-            "isFaceDown": true
-        },
-        "PlayerB_53": {
-            "id": "PlayerB_53",
-            "protoID": "179015_04B_U_BK058R_black",
-            "ownerID": "PlayerB",
-            "isFaceDown": true
-        },
-        "PlayerB_54": {
-            "id": "PlayerB_54",
-            "protoID": "179015_04B_U_BK059C_black",
-            "ownerID": "PlayerB",
+        "PlayerA_50": {
+            "id": "PlayerA_50",
+            "protoID": "179028_10D_CH_WT095_white",
+            "ownerID": "PlayerA",
             "isFaceDown": false,
             "isRoll": false
         },
-        "PlayerB_55": {
-            "id": "PlayerB_55",
-            "protoID": "179015_04B_U_BK059C_black",
-            "ownerID": "PlayerB",
+        "PlayerA_51": {
+            "id": "PlayerA_51",
+            "protoID": "179028_10D_U_WT177R_white",
+            "ownerID": "PlayerA",
+            "isFaceDown": true
+        },
+        "PlayerA_52": {
+            "id": "PlayerA_52",
+            "protoID": "179030_11E_C_WT077S_white",
+            "ownerID": "PlayerA",
+            "isFaceDown": true
+        },
+        "PlayerA_53": {
+            "id": "PlayerA_53",
+            "protoID": "179030_11E_C_WT077S_white",
+            "ownerID": "PlayerA",
+            "isFaceDown": true
+        },
+        "PlayerA_54": {
+            "id": "PlayerA_54",
+            "protoID": "179030_11E_C_WT077S_white",
+            "ownerID": "PlayerA",
             "isFaceDown": false,
-            "isRoll": true
+            "isRoll": false
         },
-        "PlayerB_56": {
-            "id": "PlayerB_56",
-            "protoID": "179015_04B_U_BK061C_black",
-            "ownerID": "PlayerB",
+        "PlayerA_55": {
+            "id": "PlayerA_55",
+            "protoID": "179030_11E_C_WT078R_white",
+            "ownerID": "PlayerA",
             "isFaceDown": true
         },
-        "PlayerB_57": {
-            "id": "PlayerB_57",
-            "protoID": "179015_04B_U_BK061C_black",
-            "ownerID": "PlayerB",
+        "PlayerA_56": {
+            "id": "PlayerA_56",
+            "protoID": "179030_11E_C_WT078R_white",
+            "ownerID": "PlayerA",
+            "isFaceDown": true,
+            "isRoll": false
+        },
+        "PlayerA_57": {
+            "id": "PlayerA_57",
+            "protoID": "179030_11E_C_WT078R_white",
+            "ownerID": "PlayerA",
+            "isFaceDown": true,
+            "isRoll": false
+        },
+        "PlayerA_58": {
+            "id": "PlayerA_58",
+            "protoID": "179901_00_U_WT001P_white_02",
+            "ownerID": "PlayerA",
             "isFaceDown": true
         },
-        "PlayerB_58": {
-            "id": "PlayerB_58",
-            "protoID": "179016_04B_U_BK066C_black",
-            "ownerID": "PlayerB",
+        "PlayerA_59": {
+            "id": "PlayerA_59",
+            "protoID": "179901_00_U_WT001P_white_02",
+            "ownerID": "PlayerA",
             "isFaceDown": true
         },
-        "PlayerB_59": {
-            "id": "PlayerB_59",
-            "protoID": "179016_04B_U_BK066C_black",
-            "ownerID": "PlayerB",
-            "isFaceDown": true
-        },
-        "PlayerB_60": {
-            "id": "PlayerB_60",
-            "protoID": "179019_02A_C_BK015S_black",
-            "ownerID": "PlayerB",
+        "PlayerA_60": {
+            "id": "PlayerA_60",
+            "protoID": "179901_00_U_WT001P_white_02",
+            "ownerID": "PlayerA",
             "isFaceDown": true
         },
         "PlayerB_61": {
             "id": "PlayerB_61",
-            "protoID": "179019_02A_C_BK015S_black",
+            "protoID": "179001_01A_CH_WT007R_white",
             "ownerID": "PlayerB",
             "isFaceDown": true
         },
         "PlayerB_62": {
             "id": "PlayerB_62",
-            "protoID": "179020_05C_U_BK100U_black",
+            "protoID": "179004_01A_CH_WT009R_white",
             "ownerID": "PlayerB",
             "isFaceDown": true
         },
         "PlayerB_63": {
             "id": "PlayerB_63",
-            "protoID": "179020_05C_U_BK100U_black",
+            "protoID": "179004_01A_CH_WT010C_white",
             "ownerID": "PlayerB",
             "isFaceDown": true
         },
         "PlayerB_64": {
             "id": "PlayerB_64",
-            "protoID": "179023_06C_C_BK048R_black",
+            "protoID": "179007_02A_U_WT027U_white",
             "ownerID": "PlayerB",
             "isFaceDown": true
         },
         "PlayerB_65": {
             "id": "PlayerB_65",
-            "protoID": "179023_06C_C_BK048R_black",
+            "protoID": "179007_02A_U_WT027U_white",
             "ownerID": "PlayerB",
             "isFaceDown": true
         },
         "PlayerB_66": {
             "id": "PlayerB_66",
-            "protoID": "179023_06C_C_BK049U_black",
+            "protoID": "179008_02A_U_WT034U_white",
             "ownerID": "PlayerB",
-            "isFaceDown": true
+            "isFaceDown": false,
+            "isRoll": false
         },
         "PlayerB_67": {
             "id": "PlayerB_67",
-            "protoID": "179023_06C_C_BK049U_black",
+            "protoID": "179008_02A_U_WT034U_white",
             "ownerID": "PlayerB",
             "isFaceDown": true
         },
         "PlayerB_68": {
             "id": "PlayerB_68",
-            "protoID": "179024_04B_C_BK027U_black",
+            "protoID": "179008_02A_U_WT034U_white",
             "ownerID": "PlayerB",
-            "isFaceDown": true
+            "isFaceDown": false,
+            "isRoll": true
         },
         "PlayerB_69": {
             "id": "PlayerB_69",
-            "protoID": "179024_04B_C_BK027U_black",
+            "protoID": "179014_03B_CH_WT027R_white",
             "ownerID": "PlayerB",
-            "isFaceDown": true
+            "isFaceDown": false,
+            "isRoll": true
         },
         "PlayerB_70": {
             "id": "PlayerB_70",
-            "protoID": "179024_04B_U_BK060C_black",
+            "protoID": "179015_04B_U_WT067C_white",
             "ownerID": "PlayerB",
             "isFaceDown": true
         },
         "PlayerB_71": {
             "id": "PlayerB_71",
-            "protoID": "179024_04B_U_BK060C_black",
-            "ownerID": "PlayerB",
-            "isFaceDown": false,
-            "isRoll": false
-        },
-        "PlayerB_72": {
-            "id": "PlayerB_72",
-            "protoID": "179024_04B_U_BK067C_black",
+            "protoID": "179015_04B_U_WT067C_white",
             "ownerID": "PlayerB",
             "isFaceDown": false,
             "isRoll": true
         },
+        "PlayerB_72": {
+            "id": "PlayerB_72",
+            "protoID": "179015_04B_U_WT067C_white",
+            "ownerID": "PlayerB",
+            "isFaceDown": true
+        },
         "PlayerB_73": {
             "id": "PlayerB_73",
-            "protoID": "179024_04B_U_BK067C_black",
+            "protoID": "179016_04B_U_WT074C_white",
             "ownerID": "PlayerB",
             "isFaceDown": true
         },
         "PlayerB_74": {
             "id": "PlayerB_74",
-            "protoID": "179024_B2B_C_BK054C_black",
+            "protoID": "179016_04B_U_WT074C_white",
             "ownerID": "PlayerB",
             "isFaceDown": true
         },
         "PlayerB_75": {
             "id": "PlayerB_75",
-            "protoID": "179024_B2B_C_BK054C_black",
+            "protoID": "179016_04B_U_WT074C_white",
             "ownerID": "PlayerB",
             "isFaceDown": true
         },
         "PlayerB_76": {
             "id": "PlayerB_76",
-            "protoID": "179024_B2B_U_BK128S_black_02",
+            "protoID": "179016_04B_U_WT075C_white",
             "ownerID": "PlayerB",
             "isFaceDown": true
         },
         "PlayerB_77": {
             "id": "PlayerB_77",
-            "protoID": "179024_B2B_U_BK128S_black_02",
+            "protoID": "179016_04B_U_WT075C_white",
             "ownerID": "PlayerB",
-            "isFaceDown": true
+            "isFaceDown": true,
+            "isRoll": false
         },
         "PlayerB_78": {
             "id": "PlayerB_78",
-            "protoID": "179024_B2B_U_BK129R_black",
+            "protoID": "179016_04B_U_WT075C_white",
             "ownerID": "PlayerB",
             "isFaceDown": true
         },
         "PlayerB_79": {
             "id": "PlayerB_79",
-            "protoID": "179024_B2B_U_BK129R_black",
+            "protoID": "179019_01A_C_WT010C_white",
             "ownerID": "PlayerB",
             "isFaceDown": true
         },
         "PlayerB_80": {
             "id": "PlayerB_80",
-            "protoID": "179027_09D_C_BK063R_black",
+            "protoID": "179019_01A_C_WT010C_white",
             "ownerID": "PlayerB",
             "isFaceDown": true
         },
         "PlayerB_81": {
             "id": "PlayerB_81",
-            "protoID": "179027_09D_C_BK063R_black",
+            "protoID": "179019_02A_U_WT028R_white",
             "ownerID": "PlayerB",
-            "isFaceDown": true
+            "isFaceDown": true,
+            "isRoll": false
         },
         "PlayerB_82": {
             "id": "PlayerB_82",
-            "protoID": "179027_09D_O_BK010N_black",
+            "protoID": "179019_02A_U_WT028R_white",
             "ownerID": "PlayerB",
             "isFaceDown": true
         },
         "PlayerB_83": {
             "id": "PlayerB_83",
-            "protoID": "179027_09D_O_BK010N_black",
+            "protoID": "179022_06C_CH_WT057R_white",
             "ownerID": "PlayerB",
             "isFaceDown": true
         },
         "PlayerB_84": {
             "id": "PlayerB_84",
-            "protoID": "179027_09D_U_BK163S_black",
+            "protoID": "179022_06C_CH_WT057R_white",
             "ownerID": "PlayerB",
             "isFaceDown": true
         },
         "PlayerB_85": {
             "id": "PlayerB_85",
-            "protoID": "179027_09D_U_BK163S_black",
+            "protoID": "179022_06C_CH_WT057R_white",
             "ownerID": "PlayerB",
-            "isFaceDown": true
+            "isFaceDown": false,
+            "isRoll": true
         },
         "PlayerB_86": {
             "id": "PlayerB_86",
-            "protoID": "179027_09D_U_BK163S_black",
-            "ownerID": "PlayerB",
-            "isFaceDown": true
-        },
-        "PlayerB_87": {
-            "id": "PlayerB_87",
-            "protoID": "179029_06C_C_BK045U_black",
+            "protoID": "179022_06C_U_WT113R_white",
             "ownerID": "PlayerB",
             "isFaceDown": true,
             "isRoll": false
         },
+        "PlayerB_87": {
+            "id": "PlayerB_87",
+            "protoID": "179022_06C_U_WT113R_white",
+            "ownerID": "PlayerB",
+            "isFaceDown": true
+        },
         "PlayerB_88": {
             "id": "PlayerB_88",
-            "protoID": "179029_06C_C_BK045U_black",
+            "protoID": "179022_06C_U_WT113R_white",
             "ownerID": "PlayerB",
             "isFaceDown": true
         },
         "PlayerB_89": {
             "id": "PlayerB_89",
-            "protoID": "179029_B3C_C_BK071N_black",
+            "protoID": "179023_06C_CH_WT067C_white",
             "ownerID": "PlayerB",
-            "isFaceDown": false,
-            "isRoll": true
+            "isFaceDown": true
         },
         "PlayerB_90": {
             "id": "PlayerB_90",
-            "protoID": "179029_B3C_C_BK071N_black",
+            "protoID": "179024_03B_U_WT057U_white",
             "ownerID": "PlayerB",
             "isFaceDown": true
         },
         "PlayerB_91": {
             "id": "PlayerB_91",
-            "protoID": "179029_B3C_U_BK184N_black",
+            "protoID": "179024_03B_U_WT057U_white",
             "ownerID": "PlayerB",
             "isFaceDown": false,
             "isRoll": true
         },
         "PlayerB_92": {
             "id": "PlayerB_92",
-            "protoID": "179029_B3C_U_BK184N_black",
+            "protoID": "179025_07D_C_WT060U_white",
             "ownerID": "PlayerB",
             "isFaceDown": true
         },
         "PlayerB_93": {
             "id": "PlayerB_93",
-            "protoID": "179029_B3C_U_BK184N_black",
+            "protoID": "179025_07D_CH_WT075C_white",
             "ownerID": "PlayerB",
             "isFaceDown": true
         },
         "PlayerB_94": {
             "id": "PlayerB_94",
-            "protoID": "179029_B3C_U_BK185N_black",
+            "protoID": "179025_07D_CH_WT075C_white",
             "ownerID": "PlayerB",
             "isFaceDown": true
         },
         "PlayerB_95": {
             "id": "PlayerB_95",
-            "protoID": "179029_B3C_U_BK185N_black",
+            "protoID": "179025_07D_CH_WT075C_white",
             "ownerID": "PlayerB",
             "isFaceDown": true
         },
         "PlayerB_96": {
             "id": "PlayerB_96",
-            "protoID": "179030_11E_U_BK194S_2_black",
+            "protoID": "179027_09D_C_WT067R_white",
             "ownerID": "PlayerB",
-            "isFaceDown": true
+            "isFaceDown": false,
+            "isRoll": false
         },
         "PlayerB_97": {
             "id": "PlayerB_97",
-            "protoID": "179030_11E_U_BK194S_2_black",
+            "protoID": "179027_09D_C_WT067R_white",
             "ownerID": "PlayerB",
             "isFaceDown": true
         },
         "PlayerB_98": {
             "id": "PlayerB_98",
-            "protoID": "179030_11E_U_BK194S_2_black",
+            "protoID": "179029_B3C_CH_WT102R_white",
             "ownerID": "PlayerB",
-            "isFaceDown": true
+            "isFaceDown": false,
+            "isRoll": true
         },
         "PlayerB_99": {
             "id": "PlayerB_99",
-            "protoID": "179901_B2B_C_BK005P_black",
+            "protoID": "179029_B3C_CH_WT103N_white",
+            "ownerID": "PlayerB",
+            "isFaceDown": false,
+            "isRoll": true
+        },
+        "PlayerB_100": {
+            "id": "PlayerB_100",
+            "protoID": "179029_B3C_U_WT196R_white",
             "ownerID": "PlayerB",
             "isFaceDown": true
         },
-        "PlayerA_100": {
-            "id": "PlayerA_100",
-            "protoID": "179008_02A_U_WT034U_white",
-            "ownerID": "PlayerA",
+        "PlayerB_101": {
+            "id": "PlayerB_101",
+            "protoID": "179030_11E_C_WT077S_white",
+            "ownerID": "PlayerB",
+            "isFaceDown": true,
             "isRoll": false
         },
-        "PlayerA_101": {
-            "id": "PlayerA_101",
-            "protoID": "179008_02A_U_WT034U_white",
-            "ownerID": "PlayerA",
-            "isRoll": false
+        "PlayerB_102": {
+            "id": "PlayerB_102",
+            "protoID": "179030_11E_C_WT077S_white",
+            "ownerID": "PlayerB",
+            "isFaceDown": true
         },
-        "PlayerA_102": {
-            "id": "PlayerA_102",
-            "protoID": "179014_03B_CH_WT027R_white",
-            "ownerID": "PlayerA",
-            "isRoll": false
-        },
-        "PlayerA_103": {
-            "id": "PlayerA_103",
-            "protoID": "179016_04B_U_WT074C_white",
-            "ownerID": "PlayerA",
-            "isRoll": false,
-            "isFaceDown": false
+        "PlayerB_103": {
+            "id": "PlayerB_103",
+            "protoID": "179030_11E_C_WT077S_white",
+            "ownerID": "PlayerB",
+            "isFaceDown": true
         },
         "PlayerB_104": {
             "id": "PlayerB_104",
-            "protoID": "179015_04B_U_BK061C_black",
+            "protoID": "179030_11E_CH_WT108N_white",
             "ownerID": "PlayerB",
-            "isRoll": true
+            "isFaceDown": true
         },
         "PlayerB_105": {
             "id": "PlayerB_105",
-            "protoID": "179015_04B_U_BK061C_black",
+            "protoID": "179901_00_C_WT003P_white",
             "ownerID": "PlayerB",
-            "isRoll": true
+            "isFaceDown": true,
+            "isRoll": false
         },
         "PlayerB_106": {
             "id": "PlayerB_106",
-            "protoID": "179016_04B_U_BK066C_black",
+            "protoID": "179901_00_C_WT003P_white",
             "ownerID": "PlayerB",
+            "isFaceDown": false,
             "isRoll": true
         },
         "PlayerB_107": {
             "id": "PlayerB_107",
-            "protoID": "179020_05C_U_BK100U_black",
+            "protoID": "179901_00_C_WT003P_white",
             "ownerID": "PlayerB",
-            "isRoll": true
+            "isFaceDown": true
+        },
+        "PlayerB_108": {
+            "id": "PlayerB_108",
+            "protoID": "179901_CG_C_WT001P_white",
+            "ownerID": "PlayerB",
+            "isFaceDown": true
+        },
+        "PlayerB_109": {
+            "id": "PlayerB_109",
+            "protoID": "179901_CG_C_WT001P_white",
+            "ownerID": "PlayerB",
+            "isFaceDown": true
+        },
+        "PlayerB_110": {
+            "id": "PlayerB_110",
+            "protoID": "179901_CG_CH_WT002P_white",
+            "ownerID": "PlayerB",
+            "isFaceDown": false,
+            "isRoll": false
         }
     },
     "effects": {
-        "createPlayCardEffects_PlayerA_37": {
-            "id": "createPlayCardEffects_PlayerA_37",
+        "createPlayCardEffects_PlayerA_50_『恒常』：このカードは、自軍ジャンクヤードにある状態でプレイする場合、セット先として、自軍ジャンクヤードにある、このカードと同じ属性のGサインを持つユニット１枚を、自軍配備エリアにロール状態で出し、このカードをセットできる。": {
+            "id": "createPlayCardEffects_PlayerA_50_『恒常』：このカードは、自軍ジャンクヤードにある状態でプレイする場合、セット先として、自軍ジャンクヤードにある、このカードと同じ属性のGサインを持つユニット１枚を、自軍配備エリアにロール状態で出し、このカードをセットできる。",
             "reason": [
                 "PlayCard",
                 "PlayerA",
-                "PlayerA_37",
+                "PlayerA_50",
                 {
-                    "isPlayUnit": false,
                     "isPlayCharacter": true
                 }
             ],
-            "description": "Play",
+            "description": "『恒常』：このカードは、自軍ジャンクヤードにある状態でプレイする場合、セット先として、自軍ジャンクヤードにある、このカードと同じ属性のGサインを持つユニット１枚を、自軍配備エリアにロール状態で出し、このカードをセットできる。",
+            "isOption": true,
             "text": {
-                "id": "createPlayCardEffects_text_PlayerA_37",
+                "id": "loadPrototype_179028_10D_CH_WT095_white_text_1",
                 "title": [
                     "使用型",
                     [
@@ -731,7 +780,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
                         "配備フェイズ"
                     ]
                 ],
-                "description": "Play",
+                "description": "『恒常』：このカードは、自軍ジャンクヤードにある状態でプレイする場合、セット先として、自軍ジャンクヤードにある、このカードと同じ属性のGサインを持つユニット１枚を、自軍配備エリアにロール状態で出し、このカードをセットできる。",
                 "conditions": {
                     "合計国力〔x〕": {
                         "actions": [
@@ -742,6 +791,178 @@ const TMP_CTX: GameStateWithFlowMemory = {
                                 ]
                             }
                         ]
+                    },
+                    "橫置支付0[白]": {
+                        "title": [
+                            "RollColor",
+                            "白"
+                        ],
+                        "actions": [
+                            {
+                                "title": [
+                                    "_ロールする",
+                                    "ロール"
+                                ],
+                                "vars": [
+                                    "橫置支付0[白]"
+                                ]
+                            }
+                        ],
+                        "groupKey": "支付橫置國力"
+                    },
+                    "橫置支付1[白]": {
+                        "title": [
+                            "RollColor",
+                            "白"
+                        ],
+                        "actions": [
+                            {
+                                "title": [
+                                    "_ロールする",
+                                    "ロール"
+                                ],
+                                "vars": [
+                                    "橫置支付1[白]"
+                                ]
+                            }
+                        ],
+                        "groupKey": "支付橫置國力"
+                    },
+                    "橫置支付2[白]": {
+                        "title": [
+                            "RollColor",
+                            "白"
+                        ],
+                        "actions": [
+                            {
+                                "title": [
+                                    "_ロールする",
+                                    "ロール"
+                                ],
+                                "vars": [
+                                    "橫置支付2[白]"
+                                ]
+                            }
+                        ],
+                        "groupKey": "支付橫置國力"
+                    },
+                    "自軍ジャンクヤードにある、このカードと同じ属性のGサインを持つユニット１枚": {
+                        "title": [
+                            "Entity",
+                            {
+                                "side": "自軍",
+                                "at": [
+                                    "ジャンクヤード"
+                                ],
+                                "hasGSignProperty": [
+                                    "W"
+                                ],
+                                "is": [
+                                    "ユニット"
+                                ],
+                                "count": 1
+                            }
+                        ]
+                    }
+                },
+                "logicTreeActions": [
+                    {
+                        "actions": [
+                            {
+                                "title": "function _(ctx3, effect2, { DefineFn, GameStateFn, ToolFn: ToolFn2 }) {\n                    const cardId2 = DefineFn.EffectFn.getCardID(effect2), from = GameStateFn.getItemBaSyou(ctx3, cardId2);\n                    return ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, \"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u3044\\u308B\\u30AB\\u30FC\\u30C9\"), [cardId2, from]), GameStateFn.addStackEffect(ctx3, {\n                      id: `createPlayCardEffects_${cardId2}`,\n                      reason: [\"\\u5834\\u306B\\u51FA\\u308B\", DefineFn.EffectFn.getPlayerID(effect2), DefineFn.EffectFn.getCardID(effect2)],\n                      description: effect2.text.description,\n                      text: {\n                        id: effect2.text.id,\n                        description: effect2.text.description,\n                        title: [],\n                        logicTreeActions: [\n                          {\n                            actions: [\n                              {\n                                title: function _(ctx4, effect3, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                                  const cardId3 = DefineFn2.EffectFn.getCardID(effect3), cardController = GameStateFn2.getItemController(ctx4, cardId3);\n                                  ctx4 = GameStateFn2.doItemSetRollState(ctx4, !1, GameStateFn2.createStrBaSyouPair(ctx4, cardId3), { isSkipTargetMissing: !0 }), ctx4 = GameStateFn2.doItemMove(ctx4, DefineFn2.AbsoluteBaSyouFn.of(cardController, \"\\u914D\\u5099\\u30A8\\u30EA\\u30A2\"), GameStateFn2.createStrBaSyouPair(ctx4, cardId3));\n                                  const unitPairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx4, \"\\u81EA\\u8ECD\\u30B8\\u30E3\\u30F3\\u30AF\\u30E4\\u30FC\\u30C9\\u306B\\u3042\\u308B\\u3001\\u3053\\u306E\\u30AB\\u30FC\\u30C9\\u3068\\u540C\\u3058\\u5C5E\\u6027\\u306EG\\u30B5\\u30A4\\u30F3\\u3092\\u6301\\u3064\\u30E6\\u30CB\\u30C3\\u30C8\\uFF11\\u679A\", cardId3);\n                                  for (let pair2 of unitPairs) {\n                                    ctx4 = GameStateFn2.doItemSetRollState(ctx4, !1, pair2, { isSkipTargetMissing: !0 }), ctx4 = GameStateFn2.doItemMove(ctx4, DefineFn2.AbsoluteBaSyouFn.of(cardController, \"\\u914D\\u5099\\u30A8\\u30EA\\u30A2\"), pair2), ctx4 = GameStateFn2.setSetGroupParent(ctx4, pair2[0], cardId3);\n                                    break;\n                                  }\n                                  return ctx4;\n                                }.toString()\n                              }\n                            ]\n                          }\n                        ]\n                      }\n                    });\n                  }"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "createPlayCardEffects_PlayerA_50": {
+            "id": "createPlayCardEffects_PlayerA_50",
+            "reason": [
+                "PlayCard",
+                "PlayerA",
+                "PlayerA_50",
+                {
+                    "isPlayUnit": false,
+                    "isPlayCharacter": true,
+                    "isPlayCommand": false
+                }
+            ],
+            "description": "Play ヒイロ・ユイ",
+            "text": {
+                "id": "createPlayCardEffects_text_PlayerA_50",
+                "title": [
+                    "使用型",
+                    [
+                        "自軍",
+                        "配備フェイズ"
+                    ]
+                ],
+                "description": "Play ヒイロ・ユイ",
+                "conditions": {
+                    "合計国力〔x〕": {
+                        "actions": [
+                            {
+                                "title": [
+                                    "合計国力〔x〕",
+                                    5
+                                ]
+                            }
+                        ]
+                    },
+                    "橫置支付0[白]": {
+                        "title": [
+                            "RollColor",
+                            "白"
+                        ],
+                        "actions": [
+                            {
+                                "title": [
+                                    "_ロールする",
+                                    "ロール"
+                                ],
+                                "vars": [
+                                    "橫置支付0[白]"
+                                ]
+                            }
+                        ],
+                        "groupKey": "支付橫置國力"
+                    },
+                    "橫置支付1[白]": {
+                        "title": [
+                            "RollColor",
+                            "白"
+                        ],
+                        "actions": [
+                            {
+                                "title": [
+                                    "_ロールする",
+                                    "ロール"
+                                ],
+                                "vars": [
+                                    "橫置支付1[白]"
+                                ]
+                            }
+                        ],
+                        "groupKey": "支付橫置國力"
+                    },
+                    "橫置支付2[白]": {
+                        "title": [
+                            "RollColor",
+                            "白"
+                        ],
+                        "actions": [
+                            {
+                                "title": [
+                                    "_ロールする",
+                                    "ロール"
+                                ],
+                                "vars": [
+                                    "橫置支付2[白]"
+                                ]
+                            }
+                        ],
+                        "groupKey": "支付橫置國力"
                     },
                     "一個自軍機體": {
                         "title": [
@@ -758,24 +979,6 @@ const TMP_CTX: GameStateWithFlowMemory = {
                                 "count": 1
                             }
                         ]
-                    },
-                    "0[白]": {
-                        "title": [
-                            "RollColor",
-                            "白"
-                        ],
-                        "actions": [
-                            {
-                                "title": [
-                                    "_ロールする",
-                                    "ロール"
-                                ],
-                                "vars": [
-                                    "0[白]"
-                                ]
-                            }
-                        ],
-                        "groupKey": "支付橫置國力"
                     }
                 },
                 "logicTreeActions": [
@@ -789,37 +992,46 @@ const TMP_CTX: GameStateWithFlowMemory = {
                                 },
                                 {
                                     "type": "Leaf",
-                                    "value": "一個自軍機體"
+                                    "value": "橫置支付0[白]"
                                 },
                                 {
                                     "type": "Leaf",
-                                    "value": "0[白]"
+                                    "value": "橫置支付1[白]"
+                                },
+                                {
+                                    "type": "Leaf",
+                                    "value": "橫置支付2[白]"
+                                },
+                                {
+                                    "type": "Leaf",
+                                    "value": "一個自軍機體"
                                 }
                             ]
                         },
                         "actions": [
                             {
-                                "title": "function _(ctx3, effect, { DefineFn, GameStateFn, ToolFn: ToolFn2 }) {\n                const cardId2 = DefineFn.EffectFn.getCardID(effect), prototype2 = GameStateFn.getItemPrototype(ctx3, cardId2), from = GameStateFn.getItemBaSyou(ctx3, cardId2);\n                if (ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, \"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u3044\\u308B\\u30AB\\u30FC\\u30C9\"), [cardId2, from]), prototype2.category == \"\\u30E6\\u30CB\\u30C3\\u30C8\")\n                  return GameStateFn.addStackEffect(ctx3, {\n                    id: ToolFn2.getUUID(\"getPlayCardEffects\"),\n                    reason: [\"\\u5834\\u306B\\u51FA\\u308B\", DefineFn.EffectFn.getPlayerID(effect), DefineFn.EffectFn.getCardID(effect)],\n                    description: effect.text.description,\n                    text: {\n                      id: effect.text.id,\n                      description: effect.text.description,\n                      title: [],\n                      logicTreeActions: [\n                        {\n                          actions: [\n                            {\n                              title: function _(ctx4, effect2, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                                const cardId3 = DefineFn2.EffectFn.getCardID(effect2), from2 = GameStateFn2.getItemBaSyou(ctx4, cardId3), to = DefineFn2.AbsoluteBaSyouFn.setBaSyouKeyword(from2, \"\\u914D\\u5099\\u30A8\\u30EA\\u30A2\");\n                                ctx4 = GameStateFn2.doItemMove(ctx4, to, [cardId3, from2]);\n                                const hasHigh = GameStateFn2.getCardHasSpeicalEffect(ctx4, [\"\\u6226\\u95D8\\u914D\\u5099\"], cardId3), hasPS = GameStateFn2.getCardHasSpeicalEffect(ctx4, [\"PS\\u88C5\\u7532\"], cardId3), isRoll = (hasHigh || hasPS) == !1;\n                                return ctx4 = GameStateFn2.doItemSetRollState(ctx4, isRoll, [cardId3, GameStateFn2.getItemBaSyou(ctx4, cardId3)], { isSkipTargetMissing: !0 }), ctx4 = GameStateFn2.doTriggerEvent(ctx4, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId3] }), ctx4;\n                              }.toString()\n                            }\n                          ]\n                        }\n                      ]\n                    }\n                  });\n                if (prototype2.category == \"\\u30AD\\u30E3\\u30E9\\u30AF\\u30BF\\u30FC\" || prototype2.category == \"\\u30AA\\u30DA\\u30EC\\u30FC\\u30B7\\u30E7\\u30F3(\\u30E6\\u30CB\\u30C3\\u30C8)\")\n                  return GameStateFn.addStackEffect(ctx3, {\n                    id: ToolFn2.getUUID(\"getPlayCardEffects\"),\n                    reason: [\"\\u5834\\u306B\\u51FA\\u308B\", DefineFn.EffectFn.getPlayerID(effect), DefineFn.EffectFn.getCardID(effect)],\n                    description: effect.text.description,\n                    text: {\n                      id: effect.text.id,\n                      description: effect.text.description,\n                      title: [],\n                      logicTreeActions: [\n                        {\n                          actions: [\n                            {\n                              title: function _(ctx4, effect2, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                                const cardId3 = DefineFn2.EffectFn.getCardID(effect2), pairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx4, \"\\u4E00\\u500B\\u81EA\\u8ECD\\u6A5F\\u9AD4\", cardId3);\n                                if (pairs.length == 0)\n                                  throw new Error(`pairs must not 0: ${effect2.text.description}`);\n                                const [targetCardId, targetBasyou] = pairs[0], from2 = GameStateFn2.getItemBaSyou(ctx4, cardId3), to = targetBasyou;\n                                ctx4 = GameStateFn2.doItemMove(ctx4, to, [cardId3, from2]);\n                                const isRoll = GameStateFn2.getCard(ctx4, targetCardId).isRoll || !1;\n                                return ctx4 = GameStateFn2.mapCard(ctx4, cardId3, (is) => ({ ...is, isRoll })), ctx4 = GameStateFn2.setSetGroupParent(ctx4, targetCardId, cardId3), ctx4 = GameStateFn2.doTriggerEvent(ctx4, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId3] }), ctx4 = GameStateFn2.doTriggerEvent(ctx4, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u30BB\\u30C3\\u30C8\\u3055\\u308C\\u305F\\u5834\\u5408\"], cardIds: [cardId3] }), ctx4;\n                              }.toString()\n                            }\n                          ]\n                        }\n                      ]\n                    }\n                  });\n                if (prototype2.category == \"\\u30B3\\u30DE\\u30F3\\u30C9\")\n                  return GameStateFn.addStackEffect(ctx3, {\n                    id: ToolFn2.getUUID(\"getPlayCardEffects\"),\n                    reason: [\"\\u5834\\u306B\\u51FA\\u308B\", DefineFn.EffectFn.getPlayerID(effect), DefineFn.EffectFn.getCardID(effect)],\n                    description: effect.text.description,\n                    text: {\n                      id: prototype2.commandText?.id || `getPlayCardEffects_commentText_${cardId2}`,\n                      description: prototype2.commandText?.description || \"unknown\",\n                      title: [],\n                      logicTreeActions: [\n                        {\n                          actions: [\n                            {\n                              title: function _(ctx4, effect2, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                                const cardId3 = DefineFn2.EffectFn.getCardID(effect2), from2 = GameStateFn2.getItemBaSyou(ctx4, cardId3), to = DefineFn2.AbsoluteBaSyouFn.setBaSyouKeyword(from2, \"\\u30B8\\u30E3\\u30F3\\u30AF\\u30E4\\u30FC\\u30C9\");\n                                return ctx4 = GameStateFn2.doItemMove(ctx4, to, [cardId3, from2]), ctx4 = GameStateFn2.doTriggerEvent(ctx4, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId3] }), ctx4;\n                              }.toString()\n                            },\n                            ...prototype2.commandText?.logicTreeActions?.[0]?.actions || []\n                          ]\n                        }\n                      ]\n                    }\n                  });\n                if (prototype2.category == \"\\u30B0\\u30E9\\u30D5\\u30A3\\u30C3\\u30AF\") {\n                  const cardId3 = DefineFn.EffectFn.getCardID(effect), from2 = GameStateFn.getItemBaSyou(ctx3, cardId3), to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from2, \"G\\u30BE\\u30FC\\u30F3\");\n                  return ctx3 = GameStateFn.doItemMove(ctx3, to, [cardId3, from2]), ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId3] }), ctx3;\n                }\n                if (prototype2.category == \"\\u30AA\\u30DA\\u30EC\\u30FC\\u30B7\\u30E7\\u30F3\") {\n                  const cardId3 = DefineFn.EffectFn.getCardID(effect), from2 = GameStateFn.getItemBaSyou(ctx3, cardId3), to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from2, \"\\u914D\\u5099\\u30A8\\u30EA\\u30A2\");\n                  return ctx3 = GameStateFn.doItemMove(ctx3, to, [cardId3, from2]), ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId3] }), ctx3;\n                }\n                if (prototype2.category == \"ACE\")\n                  throw new Error(`not support category: ${prototype2.category}`);\n                return ctx3;\n              }"
+                                "title": "function _(ctx3, effect, { DefineFn, GameStateFn, ToolFn: ToolFn2 }) {\n                const cardId2 = DefineFn.EffectFn.getCardID(effect), prototype2 = GameStateFn.getItemPrototype(ctx3, cardId2), from = GameStateFn.getItemBaSyou(ctx3, cardId2);\n                if (ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, \"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u3044\\u308B\\u30AB\\u30FC\\u30C9\"), [cardId2, from]), prototype2.category == \"\\u30E6\\u30CB\\u30C3\\u30C8\") {\n                  const newE = GameStateFn.createUnitGoStageEffectFromPlayEffect(ctx3, effect);\n                  return GameStateFn.addStackEffect(ctx3, newE);\n                }\n                if (prototype2.category == \"\\u30AD\\u30E3\\u30E9\\u30AF\\u30BF\\u30FC\" || prototype2.category == \"\\u30AA\\u30DA\\u30EC\\u30FC\\u30B7\\u30E7\\u30F3(\\u30E6\\u30CB\\u30C3\\u30C8)\") {\n                  const newE = GameStateFn.createCharOpUnitGoStageEffectFromPlayEffect(ctx3, effect);\n                  return GameStateFn.addStackEffect(ctx3, newE);\n                }\n                if (prototype2.category == \"\\u30B3\\u30DE\\u30F3\\u30C9\")\n                  return GameStateFn.addStackEffect(ctx3, {\n                    id: ToolFn2.getUUID(\"getPlayCardEffects\"),\n                    reason: [\"\\u5834\\u306B\\u51FA\\u308B\", DefineFn.EffectFn.getPlayerID(effect), DefineFn.EffectFn.getCardID(effect)],\n                    description: effect.text.description,\n                    text: {\n                      id: prototype2.commandText?.id || `getPlayCardEffects_commentText_${cardId2}`,\n                      description: prototype2.commandText?.description || \"unknown\",\n                      title: [],\n                      logicTreeActions: [\n                        {\n                          actions: [\n                            {\n                              title: function _(ctx4, effect2, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                                const cardId3 = DefineFn2.EffectFn.getCardID(effect2), from2 = GameStateFn2.getItemBaSyou(ctx4, cardId3), to = DefineFn2.AbsoluteBaSyouFn.setBaSyouKeyword(from2, \"\\u30B8\\u30E3\\u30F3\\u30AF\\u30E4\\u30FC\\u30C9\");\n                                return ctx4 = GameStateFn2.doItemMove(ctx4, to, [cardId3, from2]), ctx4 = GameStateFn2.doTriggerEvent(ctx4, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId3] }), ctx4;\n                              }.toString()\n                            },\n                            ...prototype2.commandText?.logicTreeActions?.[0]?.actions || []\n                          ]\n                        }\n                      ]\n                    }\n                  });\n                if (prototype2.category == \"\\u30B0\\u30E9\\u30D5\\u30A3\\u30C3\\u30AF\") {\n                  const cardId3 = DefineFn.EffectFn.getCardID(effect), from2 = GameStateFn.getItemBaSyou(ctx3, cardId3), to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from2, \"G\\u30BE\\u30FC\\u30F3\");\n                  return ctx3 = GameStateFn.doItemMove(ctx3, to, [cardId3, from2]), ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId3] }), ctx3;\n                }\n                if (prototype2.category == \"\\u30AA\\u30DA\\u30EC\\u30FC\\u30B7\\u30E7\\u30F3\") {\n                  const cardId3 = DefineFn.EffectFn.getCardID(effect), from2 = GameStateFn.getItemBaSyou(ctx3, cardId3), to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from2, \"\\u914D\\u5099\\u30A8\\u30EA\\u30A2\");\n                  return ctx3 = GameStateFn.doItemMove(ctx3, to, [cardId3, from2]), ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId3] }), ctx3;\n                }\n                if (prototype2.category == \"ACE\")\n                  throw new Error(`not support category: ${prototype2.category}`);\n                return ctx3;\n              }"
                             }
                         ]
                     }
                 ]
             }
         },
-        "createPlayCardEffects_PlayerA_30": {
-            "id": "createPlayCardEffects_PlayerA_30",
+        "createPlayCardEffects_PlayerA_0": {
+            "id": "createPlayCardEffects_PlayerA_0",
             "reason": [
                 "PlayCard",
                 "PlayerA",
-                "PlayerA_30",
+                "PlayerA_0",
                 {
-                    "isPlayUnit": true,
-                    "isPlayCharacter": false
+                    "isPlayUnit": false,
+                    "isPlayCharacter": true,
+                    "isPlayCommand": false
                 }
             ],
-            "description": "Play",
+            "description": "Play ディアッカ・エルスマン",
             "text": {
-                "id": "createPlayCardEffects_text_PlayerA_30",
+                "id": "createPlayCardEffects_text_PlayerA_0",
                 "title": [
                     "使用型",
                     [
@@ -827,19 +1039,19 @@ const TMP_CTX: GameStateWithFlowMemory = {
                         "配備フェイズ"
                     ]
                 ],
-                "description": "Play",
+                "description": "Play ディアッカ・エルスマン",
                 "conditions": {
                     "合計国力〔x〕": {
                         "actions": [
                             {
                                 "title": [
                                     "合計国力〔x〕",
-                                    5
+                                    4
                                 ]
                             }
                         ]
                     },
-                    "0[白]": {
+                    "橫置支付0[白]": {
                         "title": [
                             "RollColor",
                             "白"
@@ -851,13 +1063,92 @@ const TMP_CTX: GameStateWithFlowMemory = {
                                     "ロール"
                                 ],
                                 "vars": [
-                                    "0[白]"
+                                    "橫置支付0[白]"
                                 ]
                             }
                         ],
                         "groupKey": "支付橫置國力"
                     },
-                    "1[白]": {
+                    "一個自軍機體": {
+                        "title": [
+                            "Entity",
+                            {
+                                "at": [
+                                    "配備エリア"
+                                ],
+                                "isCanSetCharacter": true,
+                                "side": "自軍",
+                                "is": [
+                                    "ユニット"
+                                ],
+                                "count": 1
+                            }
+                        ]
+                    }
+                },
+                "logicTreeActions": [
+                    {
+                        "logicTree": {
+                            "type": "And",
+                            "children": [
+                                {
+                                    "type": "Leaf",
+                                    "value": "合計国力〔x〕"
+                                },
+                                {
+                                    "type": "Leaf",
+                                    "value": "橫置支付0[白]"
+                                },
+                                {
+                                    "type": "Leaf",
+                                    "value": "一個自軍機體"
+                                }
+                            ]
+                        },
+                        "actions": [
+                            {
+                                "title": "function _(ctx3, effect, { DefineFn, GameStateFn, ToolFn: ToolFn2 }) {\n                const cardId2 = DefineFn.EffectFn.getCardID(effect), prototype2 = GameStateFn.getItemPrototype(ctx3, cardId2), from = GameStateFn.getItemBaSyou(ctx3, cardId2);\n                if (ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, \"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u3044\\u308B\\u30AB\\u30FC\\u30C9\"), [cardId2, from]), prototype2.category == \"\\u30E6\\u30CB\\u30C3\\u30C8\") {\n                  const newE = GameStateFn.createUnitGoStageEffectFromPlayEffect(ctx3, effect);\n                  return GameStateFn.addStackEffect(ctx3, newE);\n                }\n                if (prototype2.category == \"\\u30AD\\u30E3\\u30E9\\u30AF\\u30BF\\u30FC\" || prototype2.category == \"\\u30AA\\u30DA\\u30EC\\u30FC\\u30B7\\u30E7\\u30F3(\\u30E6\\u30CB\\u30C3\\u30C8)\") {\n                  const newE = GameStateFn.createCharOpUnitGoStageEffectFromPlayEffect(ctx3, effect);\n                  return GameStateFn.addStackEffect(ctx3, newE);\n                }\n                if (prototype2.category == \"\\u30B3\\u30DE\\u30F3\\u30C9\")\n                  return GameStateFn.addStackEffect(ctx3, {\n                    id: ToolFn2.getUUID(\"getPlayCardEffects\"),\n                    reason: [\"\\u5834\\u306B\\u51FA\\u308B\", DefineFn.EffectFn.getPlayerID(effect), DefineFn.EffectFn.getCardID(effect)],\n                    description: effect.text.description,\n                    text: {\n                      id: prototype2.commandText?.id || `getPlayCardEffects_commentText_${cardId2}`,\n                      description: prototype2.commandText?.description || \"unknown\",\n                      title: [],\n                      logicTreeActions: [\n                        {\n                          actions: [\n                            {\n                              title: function _(ctx4, effect2, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                                const cardId3 = DefineFn2.EffectFn.getCardID(effect2), from2 = GameStateFn2.getItemBaSyou(ctx4, cardId3), to = DefineFn2.AbsoluteBaSyouFn.setBaSyouKeyword(from2, \"\\u30B8\\u30E3\\u30F3\\u30AF\\u30E4\\u30FC\\u30C9\");\n                                return ctx4 = GameStateFn2.doItemMove(ctx4, to, [cardId3, from2]), ctx4 = GameStateFn2.doTriggerEvent(ctx4, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId3] }), ctx4;\n                              }.toString()\n                            },\n                            ...prototype2.commandText?.logicTreeActions?.[0]?.actions || []\n                          ]\n                        }\n                      ]\n                    }\n                  });\n                if (prototype2.category == \"\\u30B0\\u30E9\\u30D5\\u30A3\\u30C3\\u30AF\") {\n                  const cardId3 = DefineFn.EffectFn.getCardID(effect), from2 = GameStateFn.getItemBaSyou(ctx3, cardId3), to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from2, \"G\\u30BE\\u30FC\\u30F3\");\n                  return ctx3 = GameStateFn.doItemMove(ctx3, to, [cardId3, from2]), ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId3] }), ctx3;\n                }\n                if (prototype2.category == \"\\u30AA\\u30DA\\u30EC\\u30FC\\u30B7\\u30E7\\u30F3\") {\n                  const cardId3 = DefineFn.EffectFn.getCardID(effect), from2 = GameStateFn.getItemBaSyou(ctx3, cardId3), to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from2, \"\\u914D\\u5099\\u30A8\\u30EA\\u30A2\");\n                  return ctx3 = GameStateFn.doItemMove(ctx3, to, [cardId3, from2]), ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId3] }), ctx3;\n                }\n                if (prototype2.category == \"ACE\")\n                  throw new Error(`not support category: ${prototype2.category}`);\n                return ctx3;\n              }"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "createPlayCardEffects_PlayerA_12": {
+            "id": "createPlayCardEffects_PlayerA_12",
+            "reason": [
+                "PlayCard",
+                "PlayerA",
+                "PlayerA_12",
+                {
+                    "isPlayUnit": true,
+                    "isPlayCharacter": false,
+                    "isPlayCommand": false
+                }
+            ],
+            "description": "Play バスターガンダム",
+            "text": {
+                "id": "createPlayCardEffects_text_PlayerA_12",
+                "title": [
+                    "使用型",
+                    [
+                        "自軍",
+                        "配備フェイズ"
+                    ]
+                ],
+                "description": "Play バスターガンダム",
+                "conditions": {
+                    "合計国力〔x〕": {
+                        "actions": [
+                            {
+                                "title": [
+                                    "合計国力〔x〕",
+                                    4
+                                ]
+                            }
+                        ]
+                    },
+                    "橫置支付0[白]": {
                         "title": [
                             "RollColor",
                             "白"
@@ -869,7 +1160,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
                                     "ロール"
                                 ],
                                 "vars": [
-                                    "1[白]"
+                                    "橫置支付0[白]"
                                 ]
                             }
                         ],
@@ -887,37 +1178,39 @@ const TMP_CTX: GameStateWithFlowMemory = {
                                 },
                                 {
                                     "type": "Leaf",
-                                    "value": "0[白]"
-                                },
-                                {
-                                    "type": "Leaf",
-                                    "value": "1[白]"
+                                    "value": "橫置支付0[白]"
                                 }
                             ]
                         },
                         "actions": [
                             {
-                                "title": "function _(ctx3, effect, { DefineFn, GameStateFn, ToolFn: ToolFn2 }) {\n                const cardId2 = DefineFn.EffectFn.getCardID(effect), prototype2 = GameStateFn.getItemPrototype(ctx3, cardId2), from = GameStateFn.getItemBaSyou(ctx3, cardId2);\n                if (ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, \"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u3044\\u308B\\u30AB\\u30FC\\u30C9\"), [cardId2, from]), prototype2.category == \"\\u30E6\\u30CB\\u30C3\\u30C8\")\n                  return GameStateFn.addStackEffect(ctx3, {\n                    id: ToolFn2.getUUID(\"getPlayCardEffects\"),\n                    reason: [\"\\u5834\\u306B\\u51FA\\u308B\", DefineFn.EffectFn.getPlayerID(effect), DefineFn.EffectFn.getCardID(effect)],\n                    description: effect.text.description,\n                    text: {\n                      id: effect.text.id,\n                      description: effect.text.description,\n                      title: [],\n                      logicTreeActions: [\n                        {\n                          actions: [\n                            {\n                              title: function _(ctx4, effect2, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                                const cardId3 = DefineFn2.EffectFn.getCardID(effect2), from2 = GameStateFn2.getItemBaSyou(ctx4, cardId3), to = DefineFn2.AbsoluteBaSyouFn.setBaSyouKeyword(from2, \"\\u914D\\u5099\\u30A8\\u30EA\\u30A2\");\n                                ctx4 = GameStateFn2.doItemMove(ctx4, to, [cardId3, from2]);\n                                const hasHigh = GameStateFn2.getCardHasSpeicalEffect(ctx4, [\"\\u6226\\u95D8\\u914D\\u5099\"], cardId3), hasPS = GameStateFn2.getCardHasSpeicalEffect(ctx4, [\"PS\\u88C5\\u7532\"], cardId3), isRoll = (hasHigh || hasPS) == !1;\n                                return ctx4 = GameStateFn2.doItemSetRollState(ctx4, isRoll, [cardId3, GameStateFn2.getItemBaSyou(ctx4, cardId3)], { isSkipTargetMissing: !0 }), ctx4 = GameStateFn2.doTriggerEvent(ctx4, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId3] }), ctx4;\n                              }.toString()\n                            }\n                          ]\n                        }\n                      ]\n                    }\n                  });\n                if (prototype2.category == \"\\u30AD\\u30E3\\u30E9\\u30AF\\u30BF\\u30FC\" || prototype2.category == \"\\u30AA\\u30DA\\u30EC\\u30FC\\u30B7\\u30E7\\u30F3(\\u30E6\\u30CB\\u30C3\\u30C8)\")\n                  return GameStateFn.addStackEffect(ctx3, {\n                    id: ToolFn2.getUUID(\"getPlayCardEffects\"),\n                    reason: [\"\\u5834\\u306B\\u51FA\\u308B\", DefineFn.EffectFn.getPlayerID(effect), DefineFn.EffectFn.getCardID(effect)],\n                    description: effect.text.description,\n                    text: {\n                      id: effect.text.id,\n                      description: effect.text.description,\n                      title: [],\n                      logicTreeActions: [\n                        {\n                          actions: [\n                            {\n                              title: function _(ctx4, effect2, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                                const cardId3 = DefineFn2.EffectFn.getCardID(effect2), pairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx4, \"\\u4E00\\u500B\\u81EA\\u8ECD\\u6A5F\\u9AD4\", cardId3);\n                                if (pairs.length == 0)\n                                  throw new Error(`pairs must not 0: ${effect2.text.description}`);\n                                const [targetCardId, targetBasyou] = pairs[0], from2 = GameStateFn2.getItemBaSyou(ctx4, cardId3), to = targetBasyou;\n                                ctx4 = GameStateFn2.doItemMove(ctx4, to, [cardId3, from2]);\n                                const isRoll = GameStateFn2.getCard(ctx4, targetCardId).isRoll || !1;\n                                return ctx4 = GameStateFn2.mapCard(ctx4, cardId3, (is) => ({ ...is, isRoll })), ctx4 = GameStateFn2.setSetGroupParent(ctx4, targetCardId, cardId3), ctx4 = GameStateFn2.doTriggerEvent(ctx4, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId3] }), ctx4 = GameStateFn2.doTriggerEvent(ctx4, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u30BB\\u30C3\\u30C8\\u3055\\u308C\\u305F\\u5834\\u5408\"], cardIds: [cardId3] }), ctx4;\n                              }.toString()\n                            }\n                          ]\n                        }\n                      ]\n                    }\n                  });\n                if (prototype2.category == \"\\u30B3\\u30DE\\u30F3\\u30C9\")\n                  return GameStateFn.addStackEffect(ctx3, {\n                    id: ToolFn2.getUUID(\"getPlayCardEffects\"),\n                    reason: [\"\\u5834\\u306B\\u51FA\\u308B\", DefineFn.EffectFn.getPlayerID(effect), DefineFn.EffectFn.getCardID(effect)],\n                    description: effect.text.description,\n                    text: {\n                      id: prototype2.commandText?.id || `getPlayCardEffects_commentText_${cardId2}`,\n                      description: prototype2.commandText?.description || \"unknown\",\n                      title: [],\n                      logicTreeActions: [\n                        {\n                          actions: [\n                            {\n                              title: function _(ctx4, effect2, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                                const cardId3 = DefineFn2.EffectFn.getCardID(effect2), from2 = GameStateFn2.getItemBaSyou(ctx4, cardId3), to = DefineFn2.AbsoluteBaSyouFn.setBaSyouKeyword(from2, \"\\u30B8\\u30E3\\u30F3\\u30AF\\u30E4\\u30FC\\u30C9\");\n                                return ctx4 = GameStateFn2.doItemMove(ctx4, to, [cardId3, from2]), ctx4 = GameStateFn2.doTriggerEvent(ctx4, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId3] }), ctx4;\n                              }.toString()\n                            },\n                            ...prototype2.commandText?.logicTreeActions?.[0]?.actions || []\n                          ]\n                        }\n                      ]\n                    }\n                  });\n                if (prototype2.category == \"\\u30B0\\u30E9\\u30D5\\u30A3\\u30C3\\u30AF\") {\n                  const cardId3 = DefineFn.EffectFn.getCardID(effect), from2 = GameStateFn.getItemBaSyou(ctx3, cardId3), to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from2, \"G\\u30BE\\u30FC\\u30F3\");\n                  return ctx3 = GameStateFn.doItemMove(ctx3, to, [cardId3, from2]), ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId3] }), ctx3;\n                }\n                if (prototype2.category == \"\\u30AA\\u30DA\\u30EC\\u30FC\\u30B7\\u30E7\\u30F3\") {\n                  const cardId3 = DefineFn.EffectFn.getCardID(effect), from2 = GameStateFn.getItemBaSyou(ctx3, cardId3), to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from2, \"\\u914D\\u5099\\u30A8\\u30EA\\u30A2\");\n                  return ctx3 = GameStateFn.doItemMove(ctx3, to, [cardId3, from2]), ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId3] }), ctx3;\n                }\n                if (prototype2.category == \"ACE\")\n                  throw new Error(`not support category: ${prototype2.category}`);\n                return ctx3;\n              }"
+                                "title": "function _(ctx3, effect, { DefineFn, GameStateFn, ToolFn: ToolFn2 }) {\n                const cardId2 = DefineFn.EffectFn.getCardID(effect), prototype2 = GameStateFn.getItemPrototype(ctx3, cardId2), from = GameStateFn.getItemBaSyou(ctx3, cardId2);\n                if (ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, \"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u3044\\u308B\\u30AB\\u30FC\\u30C9\"), [cardId2, from]), prototype2.category == \"\\u30E6\\u30CB\\u30C3\\u30C8\") {\n                  const newE = GameStateFn.createUnitGoStageEffectFromPlayEffect(ctx3, effect);\n                  return GameStateFn.addStackEffect(ctx3, newE);\n                }\n                if (prototype2.category == \"\\u30AD\\u30E3\\u30E9\\u30AF\\u30BF\\u30FC\" || prototype2.category == \"\\u30AA\\u30DA\\u30EC\\u30FC\\u30B7\\u30E7\\u30F3(\\u30E6\\u30CB\\u30C3\\u30C8)\") {\n                  const newE = GameStateFn.createCharOpUnitGoStageEffectFromPlayEffect(ctx3, effect);\n                  return GameStateFn.addStackEffect(ctx3, newE);\n                }\n                if (prototype2.category == \"\\u30B3\\u30DE\\u30F3\\u30C9\")\n                  return GameStateFn.addStackEffect(ctx3, {\n                    id: ToolFn2.getUUID(\"getPlayCardEffects\"),\n                    reason: [\"\\u5834\\u306B\\u51FA\\u308B\", DefineFn.EffectFn.getPlayerID(effect), DefineFn.EffectFn.getCardID(effect)],\n                    description: effect.text.description,\n                    text: {\n                      id: prototype2.commandText?.id || `getPlayCardEffects_commentText_${cardId2}`,\n                      description: prototype2.commandText?.description || \"unknown\",\n                      title: [],\n                      logicTreeActions: [\n                        {\n                          actions: [\n                            {\n                              title: function _(ctx4, effect2, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                                const cardId3 = DefineFn2.EffectFn.getCardID(effect2), from2 = GameStateFn2.getItemBaSyou(ctx4, cardId3), to = DefineFn2.AbsoluteBaSyouFn.setBaSyouKeyword(from2, \"\\u30B8\\u30E3\\u30F3\\u30AF\\u30E4\\u30FC\\u30C9\");\n                                return ctx4 = GameStateFn2.doItemMove(ctx4, to, [cardId3, from2]), ctx4 = GameStateFn2.doTriggerEvent(ctx4, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId3] }), ctx4;\n                              }.toString()\n                            },\n                            ...prototype2.commandText?.logicTreeActions?.[0]?.actions || []\n                          ]\n                        }\n                      ]\n                    }\n                  });\n                if (prototype2.category == \"\\u30B0\\u30E9\\u30D5\\u30A3\\u30C3\\u30AF\") {\n                  const cardId3 = DefineFn.EffectFn.getCardID(effect), from2 = GameStateFn.getItemBaSyou(ctx3, cardId3), to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from2, \"G\\u30BE\\u30FC\\u30F3\");\n                  return ctx3 = GameStateFn.doItemMove(ctx3, to, [cardId3, from2]), ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId3] }), ctx3;\n                }\n                if (prototype2.category == \"\\u30AA\\u30DA\\u30EC\\u30FC\\u30B7\\u30E7\\u30F3\") {\n                  const cardId3 = DefineFn.EffectFn.getCardID(effect), from2 = GameStateFn.getItemBaSyou(ctx3, cardId3), to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from2, \"\\u914D\\u5099\\u30A8\\u30EA\\u30A2\");\n                  return ctx3 = GameStateFn.doItemMove(ctx3, to, [cardId3, from2]), ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId3] }), ctx3;\n                }\n                if (prototype2.category == \"ACE\")\n                  throw new Error(`not support category: ${prototype2.category}`);\n                return ctx3;\n              }"
                             }
                         ]
                     }
                 ]
             }
         },
-        "createPlayGEffects_PlayerA_37": {
-            "id": "createPlayGEffects_PlayerA_37",
+        "createPlayGEffects_PlayerA_50": {
+            "id": "createPlayGEffects_PlayerA_50",
             "reason": [
                 "PlayCard",
                 "PlayerA",
-                "PlayerA_37",
+                "PlayerA_50",
                 {
                     "isPlayG": true
                 }
             ],
             "description": "PlayG",
             "text": {
-                "id": "createPlayGEffects_text_PlayerA_37",
-                "title": [],
+                "id": "createPlayGEffects_text_PlayerA_50",
+                "title": [
+                    "使用型",
+                    [
+                        "自軍",
+                        "配備フェイズ"
+                    ]
+                ],
                 "description": "PlayG",
                 "conditions": {
                     "出G上限": {
@@ -959,20 +1252,26 @@ const TMP_CTX: GameStateWithFlowMemory = {
                 ]
             }
         },
-        "createPlayGEffects_PlayerA_41": {
-            "id": "createPlayGEffects_PlayerA_41",
+        "createPlayGEffects_PlayerA_0": {
+            "id": "createPlayGEffects_PlayerA_0",
             "reason": [
                 "PlayCard",
                 "PlayerA",
-                "PlayerA_41",
+                "PlayerA_0",
                 {
                     "isPlayG": true
                 }
             ],
             "description": "PlayG",
             "text": {
-                "id": "createPlayGEffects_text_PlayerA_41",
-                "title": [],
+                "id": "createPlayGEffects_text_PlayerA_0",
+                "title": [
+                    "使用型",
+                    [
+                        "自軍",
+                        "配備フェイズ"
+                    ]
+                ],
                 "description": "PlayG",
                 "conditions": {
                     "出G上限": {
@@ -1014,20 +1313,26 @@ const TMP_CTX: GameStateWithFlowMemory = {
                 ]
             }
         },
-        "createPlayGEffects_PlayerA_30": {
-            "id": "createPlayGEffects_PlayerA_30",
+        "createPlayGEffects_PlayerA_56": {
+            "id": "createPlayGEffects_PlayerA_56",
             "reason": [
                 "PlayCard",
                 "PlayerA",
-                "PlayerA_30",
+                "PlayerA_56",
                 {
                     "isPlayG": true
                 }
             ],
             "description": "PlayG",
             "text": {
-                "id": "createPlayGEffects_text_PlayerA_30",
-                "title": [],
+                "id": "createPlayGEffects_text_PlayerA_56",
+                "title": [
+                    "使用型",
+                    [
+                        "自軍",
+                        "配備フェイズ"
+                    ]
+                ],
                 "description": "PlayG",
                 "conditions": {
                     "出G上限": {
@@ -1069,20 +1374,26 @@ const TMP_CTX: GameStateWithFlowMemory = {
                 ]
             }
         },
-        "createPlayGEffects_PlayerA_18": {
-            "id": "createPlayGEffects_PlayerA_18",
+        "createPlayGEffects_PlayerA_12": {
+            "id": "createPlayGEffects_PlayerA_12",
             "reason": [
                 "PlayCard",
                 "PlayerA",
-                "PlayerA_18",
+                "PlayerA_12",
                 {
                     "isPlayG": true
                 }
             ],
             "description": "PlayG",
             "text": {
-                "id": "createPlayGEffects_text_PlayerA_18",
-                "title": [],
+                "id": "createPlayGEffects_text_PlayerA_12",
+                "title": [
+                    "使用型",
+                    [
+                        "自軍",
+                        "配備フェイズ"
+                    ]
+                ],
                 "description": "PlayG",
                 "conditions": {
                     "出G上限": {
@@ -1118,6 +1429,150 @@ const TMP_CTX: GameStateWithFlowMemory = {
                                         ]
                                     }
                                 ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "createPlayCardEffects_PlayerA_56": {
+            "id": "createPlayCardEffects_PlayerA_56",
+            "reason": [
+                "PlayCard",
+                "PlayerA",
+                "PlayerA_56",
+                {
+                    "isPlayUnit": false,
+                    "isPlayCharacter": false,
+                    "isPlayCommand": true
+                }
+            ],
+            "description": "Play ガンダム奪取作戦",
+            "text": {
+                "id": "179030_11E_C_WT078R_white_text_command",
+                "title": [
+                    "使用型",
+                    [
+                        "自軍",
+                        "配備フェイズ"
+                    ]
+                ],
+                "description": "Play ガンダム奪取作戦",
+                "conditions": {
+                    "合計国力〔x〕": {
+                        "actions": [
+                            {
+                                "title": [
+                                    "合計国力〔x〕",
+                                    4
+                                ]
+                            }
+                        ]
+                    },
+                    "橫置支付0[白]": {
+                        "title": [
+                            "RollColor",
+                            "白"
+                        ],
+                        "actions": [
+                            {
+                                "title": [
+                                    "_ロールする",
+                                    "ロール"
+                                ],
+                                "vars": [
+                                    "橫置支付0[白]"
+                                ]
+                            }
+                        ],
+                        "groupKey": "支付橫置國力"
+                    },
+                    "橫置支付1[白]": {
+                        "title": [
+                            "RollColor",
+                            "白"
+                        ],
+                        "actions": [
+                            {
+                                "title": [
+                                    "_ロールする",
+                                    "ロール"
+                                ],
+                                "vars": [
+                                    "橫置支付1[白]"
+                                ]
+                            }
+                        ],
+                        "groupKey": "支付橫置國力"
+                    },
+                    "橫置支付2[白]": {
+                        "title": [
+                            "RollColor",
+                            "白"
+                        ],
+                        "actions": [
+                            {
+                                "title": [
+                                    "_ロールする",
+                                    "ロール"
+                                ],
+                                "vars": [
+                                    "橫置支付2[白]"
+                                ]
+                            }
+                        ],
+                        "groupKey": "支付橫置國力"
+                    },
+                    "４以下の合計国力を持つ、キャラがセットされていない敵軍ユニット１枚": {
+                        "title": [
+                            "Entity",
+                            {
+                                "compareBattlePoint": [
+                                    "合計国力",
+                                    "<=",
+                                    4
+                                ],
+                                "atBa": true,
+                                "hasSetCard": false,
+                                "side": "敵軍",
+                                "is": [
+                                    "ユニット"
+                                ],
+                                "count": 1
+                            }
+                        ]
+                    }
+                },
+                "logicTreeActions": [
+                    {
+                        "logicTree": {
+                            "type": "And",
+                            "children": [
+                                {
+                                    "type": "Leaf",
+                                    "value": "合計国力〔x〕"
+                                },
+                                {
+                                    "type": "Leaf",
+                                    "value": "橫置支付0[白]"
+                                },
+                                {
+                                    "type": "Leaf",
+                                    "value": "橫置支付1[白]"
+                                },
+                                {
+                                    "type": "Leaf",
+                                    "value": "橫置支付2[白]"
+                                },
+                                {
+                                    "type": "Leaf",
+                                    "value": "４以下の合計国力を持つ、キャラがセットされていない敵軍ユニット１枚"
+                                }
+                            ]
+                        },
+                        "actions": [
+                            {
+                                "title": "function _(ctx3, effect, { DefineFn, GameStateFn, ToolFn: ToolFn2 }) {\n                const cardId2 = DefineFn.EffectFn.getCardID(effect), prototype2 = GameStateFn.getItemPrototype(ctx3, cardId2), from = GameStateFn.getItemBaSyou(ctx3, cardId2);\n                if (ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, \"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u3044\\u308B\\u30AB\\u30FC\\u30C9\"), [cardId2, from]), prototype2.category == \"\\u30E6\\u30CB\\u30C3\\u30C8\") {\n                  const newE = GameStateFn.createUnitGoStageEffectFromPlayEffect(ctx3, effect);\n                  return GameStateFn.addStackEffect(ctx3, newE);\n                }\n                if (prototype2.category == \"\\u30AD\\u30E3\\u30E9\\u30AF\\u30BF\\u30FC\" || prototype2.category == \"\\u30AA\\u30DA\\u30EC\\u30FC\\u30B7\\u30E7\\u30F3(\\u30E6\\u30CB\\u30C3\\u30C8)\") {\n                  const newE = GameStateFn.createCharOpUnitGoStageEffectFromPlayEffect(ctx3, effect);\n                  return GameStateFn.addStackEffect(ctx3, newE);\n                }\n                if (prototype2.category == \"\\u30B3\\u30DE\\u30F3\\u30C9\")\n                  return GameStateFn.addStackEffect(ctx3, {\n                    id: ToolFn2.getUUID(\"getPlayCardEffects\"),\n                    reason: [\"\\u5834\\u306B\\u51FA\\u308B\", DefineFn.EffectFn.getPlayerID(effect), DefineFn.EffectFn.getCardID(effect)],\n                    description: effect.text.description,\n                    text: {\n                      id: prototype2.commandText?.id || `getPlayCardEffects_commentText_${cardId2}`,\n                      description: prototype2.commandText?.description || \"unknown\",\n                      title: [],\n                      logicTreeActions: [\n                        {\n                          actions: [\n                            {\n                              title: function _(ctx4, effect2, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                                const cardId3 = DefineFn2.EffectFn.getCardID(effect2), from2 = GameStateFn2.getItemBaSyou(ctx4, cardId3), to = DefineFn2.AbsoluteBaSyouFn.setBaSyouKeyword(from2, \"\\u30B8\\u30E3\\u30F3\\u30AF\\u30E4\\u30FC\\u30C9\");\n                                return ctx4 = GameStateFn2.doItemMove(ctx4, to, [cardId3, from2]), ctx4 = GameStateFn2.doTriggerEvent(ctx4, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId3] }), ctx4;\n                              }.toString()\n                            },\n                            ...prototype2.commandText?.logicTreeActions?.[0]?.actions || []\n                          ]\n                        }\n                      ]\n                    }\n                  });\n                if (prototype2.category == \"\\u30B0\\u30E9\\u30D5\\u30A3\\u30C3\\u30AF\") {\n                  const cardId3 = DefineFn.EffectFn.getCardID(effect), from2 = GameStateFn.getItemBaSyou(ctx3, cardId3), to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from2, \"G\\u30BE\\u30FC\\u30F3\");\n                  return ctx3 = GameStateFn.doItemMove(ctx3, to, [cardId3, from2]), ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId3] }), ctx3;\n                }\n                if (prototype2.category == \"\\u30AA\\u30DA\\u30EC\\u30FC\\u30B7\\u30E7\\u30F3\") {\n                  const cardId3 = DefineFn.EffectFn.getCardID(effect), from2 = GameStateFn.getItemBaSyou(ctx3, cardId3), to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from2, \"\\u914D\\u5099\\u30A8\\u30EA\\u30A2\");\n                  return ctx3 = GameStateFn.doItemMove(ctx3, to, [cardId3, from2]), ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId3] }), ctx3;\n                }\n                if (prototype2.category == \"ACE\")\n                  throw new Error(`not support category: ${prototype2.category}`);\n                return ctx3;\n              }"
                             }
                         ]
                     }
@@ -1128,178 +1583,216 @@ const TMP_CTX: GameStateWithFlowMemory = {
     "table": {
         "cardStack": {
             "[\"PlayerA\",\"本国\"]": [
+                "PlayerA_52",
                 "PlayerA_42",
-                "PlayerA_7",
-                "PlayerA_25",
                 "PlayerA_8",
-                "PlayerA_3",
-                "PlayerA_31",
-                "PlayerA_16",
-                "PlayerA_38",
-                "PlayerA_24",
-                "PlayerA_6",
-                "PlayerA_47",
-                "PlayerA_46",
-                "PlayerA_20",
-                "PlayerA_27",
-                "PlayerA_9",
-                "PlayerA_15",
+                "PlayerA_2",
+                "PlayerA_23",
+                "PlayerA_51",
+                "PlayerA_33",
                 "PlayerA_10",
+                "PlayerA_6",
                 "PlayerA_28",
-                "PlayerA_29",
-                "PlayerA_21",
+                "PlayerA_37",
+                "PlayerA_31",
+                "PlayerA_32",
+                "PlayerA_30",
                 "PlayerA_48",
+                "PlayerA_18",
+                "PlayerA_47",
+                "PlayerA_22",
+                "PlayerA_3",
+                "PlayerA_60",
+                "PlayerA_4",
+                "PlayerA_59",
                 "PlayerA_49",
-                "PlayerA_1",
+                "PlayerA_25",
+                "PlayerA_38",
                 "PlayerA_39",
-                "PlayerA_5",
-                "PlayerA_19",
-                "PlayerA_0",
+                "PlayerA_41",
+                "PlayerA_44",
+                "PlayerA_1",
+                "PlayerA_55",
+                "PlayerA_17",
+                "PlayerA_53",
                 "PlayerA_45",
-                "PlayerA_12",
-                "PlayerA_34",
+                "PlayerA_13",
+                "PlayerA_58",
+                "PlayerA_43",
+                "PlayerA_19",
+                "PlayerA_20",
+                "PlayerA_24",
+                "PlayerA_15",
                 "PlayerA_35",
-                "PlayerA_23"
+                "PlayerA_21"
             ],
             "[\"PlayerB\",\"本国\"]": [
-                "PlayerB_51",
-                "PlayerB_56",
-                "PlayerB_95",
-                "PlayerB_86",
-                "PlayerB_84",
-                "PlayerB_63",
-                "PlayerB_50",
-                "PlayerB_79",
-                "PlayerB_75",
-                "PlayerB_64",
-                "PlayerB_94",
-                "PlayerB_77",
-                "PlayerB_93",
-                "PlayerB_52",
-                "PlayerB_83",
-                "PlayerB_82",
-                "PlayerB_60",
-                "PlayerB_76",
-                "PlayerB_73",
-                "PlayerB_88",
+                "PlayerB_108",
+                "PlayerB_100",
+                "PlayerB_80",
                 "PlayerB_92",
-                "PlayerB_67",
-                "PlayerB_59",
-                "PlayerB_90",
-                "PlayerB_85",
-                "PlayerB_53",
-                "PlayerB_70",
-                "PlayerB_62",
-                "PlayerB_97",
-                "PlayerB_68",
-                "PlayerB_98",
-                "PlayerB_61",
-                "PlayerB_81",
-                "PlayerB_69",
-                "PlayerB_99",
+                "PlayerB_102",
+                "PlayerB_73",
+                "PlayerB_87",
+                "PlayerB_103",
+                "PlayerB_89",
+                "PlayerB_93",
                 "PlayerB_65",
                 "PlayerB_78",
-                "PlayerB_57",
-                "PlayerB_66",
-                "PlayerB_58",
-                "PlayerB_80"
-            ],
-            "[\"PlayerA\",\"Gゾーン\"]": [
-                "PlayerA_100",
-                "PlayerA_101",
-                "PlayerA_102",
-                "PlayerA_32"
-            ],
-            "[\"PlayerA\",\"配備エリア\"]": [
-                "PlayerA_14"
-            ],
-            "[\"PlayerB\",\"Gゾーン\"]": [
-                "PlayerB_104",
-                "PlayerB_105",
-                "PlayerB_106",
-                "PlayerB_89"
-            ],
-            "[\"PlayerB\",\"配備エリア\"]": [
                 "PlayerB_72",
-                "PlayerB_91",
+                "PlayerB_74",
+                "PlayerB_83",
+                "PlayerB_95",
+                "PlayerB_79",
+                "PlayerB_75",
+                "PlayerB_67",
+                "PlayerB_97",
+                "PlayerB_104",
+                "PlayerB_82",
+                "PlayerB_88",
+                "PlayerB_90",
+                "PlayerB_84",
+                "PlayerB_109",
+                "PlayerB_94",
+                "PlayerB_63",
+                "PlayerB_64",
+                "PlayerB_62",
+                "PlayerB_70",
                 "PlayerB_107",
-                "PlayerB_55"
+                "PlayerB_76",
+                "PlayerB_61"
             ],
             "[\"PlayerA\",\"手札\"]": [
-                "PlayerA_37",
-                "PlayerA_41",
-                "PlayerA_30",
-                "PlayerA_18"
+                "PlayerA_0",
+                "PlayerA_56",
+                "PlayerA_12"
             ],
             "[\"PlayerB\",\"手札\"]": [
-                "PlayerB_96",
-                "PlayerB_74",
-                "PlayerB_87"
+                "PlayerB_105"
+            ],
+            "[\"PlayerA\",\"Gゾーン\"]": [
+                "PlayerA_27",
+                "PlayerA_54",
+                "PlayerA_29",
+                "PlayerA_11",
+                "PlayerA_46"
+            ],
+            "[\"PlayerB\",\"Gゾーン\"]": [
+                "PlayerB_99",
+                "PlayerB_85",
+                "PlayerB_106",
+                "PlayerB_71",
+                "PlayerB_98"
             ],
             "[\"PlayerB\",\"プレイされているカード\"]": [],
+            "[\"PlayerB\",\"配備エリア\"]": [
+                "PlayerB_91",
+                "PlayerB_68",
+                "PlayerB_69"
+            ],
             "[\"PlayerA\",\"プレイされているカード\"]": [],
-            "[\"PlayerA\",\"戦闘エリア1\"]": [],
-            "[\"PlayerB\",\"戦闘エリア1\"]": [],
-            "[\"PlayerA\",\"ジャンクヤード\"]": [
-                "PlayerA_2",
-                "PlayerA_103",
-                "PlayerA_43",
-                "PlayerA_33"
-            ],
-            "[\"PlayerB\",\"ハンガー\"]": [],
+            "[\"PlayerA\",\"配備エリア\"]": [],
             "[\"PlayerB\",\"ジャンクヤード\"]": [
-                "PlayerB_71",
-                "PlayerB_54"
+                "PlayerB_96",
+                "PlayerB_110",
+                "PlayerB_66"
             ],
-            "[\"PlayerB\",\"戦闘エリア2\"]": [],
-            "[\"PlayerA\",\"捨て山\"]": [
-                "PlayerA_36",
-                "PlayerA_11",
-                "PlayerA_13",
-                "PlayerA_40",
-                "PlayerA_4",
+            "[\"PlayerA\",\"ジャンクヤード\"]": [
+                "PlayerA_16",
+                "PlayerA_50",
                 "PlayerA_26",
-                "PlayerA_22",
-                "PlayerA_44",
-                "PlayerA_17"
+                "PlayerA_40"
+            ],
+            "[\"PlayerA\",\"戦闘エリア1\"]": [],
+            "[\"PlayerB\",\"捨て山\"]": [
+                "PlayerB_81",
+                "PlayerB_101",
+                "PlayerB_86",
+                "PlayerB_77"
+            ],
+            "[\"PlayerB\",\"戦闘エリア1\"]": [],
+            "[\"PlayerA\",\"捨て山\"]": [
+                "PlayerA_9",
+                "PlayerA_57",
+                "PlayerA_5",
+                "PlayerA_7",
+                "PlayerA_34",
+                "PlayerA_14",
+                "PlayerA_36"
             ]
         }
     },
     "chips": {},
     "chipProtos": {},
     "itemStates": {
-        "PlayerB_71": {
-            "id": "PlayerB_71",
+        "SystemFakeCardID_createAttackPhaseRuleEffect_text_PlayerB": {
+            "id": "SystemFakeCardID_createAttackPhaseRuleEffect_text_PlayerB",
             "damage": 0,
             "destroyReason": null,
             "flags": {},
             "tips": {
-                "0[黒]": {
+                "去地球": {
+                    "title": [
+                        "カード",
+                        [],
+                        [
+                            [
+                                "PlayerB_68",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "配備エリア"
+                                    ]
+                                }
+                            ]
+                        ]
+                    ],
+                    "flags": {
+                        "isGoBattleArea1": true
+                    }
+                },
+                "去宇宙": {
                     "title": [
                         "カード",
                         [
                             [
-                                "PlayerB_104",
+                                "PlayerB_68",
                                 {
                                     "id": "AbsoluteBaSyou",
                                     "value": [
                                         "PlayerB",
-                                        "Gゾーン"
+                                        "配備エリア"
                                     ]
                                 }
-                            ],
+                            ]
+                        ],
+                        []
+                    ],
+                    "flags": {
+                        "isGoBattleArea2": true
+                    }
+                }
+            },
+            "globalEffects": {},
+            "varNamesRemoveOnTurnEnd": {},
+            "isOpenForGain": false,
+            "isCheat": false,
+            "isFirstTurn": false,
+            "textIdsUseThisTurn": []
+        },
+        "PlayerB_110": {
+            "id": "PlayerB_110",
+            "damage": 0,
+            "destroyReason": null,
+            "flags": {},
+            "tips": {
+                "橫置支付0[白]": {
+                    "title": [
+                        "カード",
+                        [
                             [
-                                "PlayerB_105",
-                                {
-                                    "id": "AbsoluteBaSyou",
-                                    "value": [
-                                        "PlayerB",
-                                        "Gゾーン"
-                                    ]
-                                }
-                            ],
-                            [
-                                "PlayerB_106",
+                                "PlayerB_99",
                                 {
                                     "id": "AbsoluteBaSyou",
                                     "value": [
@@ -1311,7 +1804,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
                         ],
                         [
                             [
-                                "PlayerB_104",
+                                "PlayerB_99",
                                 {
                                     "id": "AbsoluteBaSyou",
                                     "value": [
@@ -1330,27 +1823,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
                         [],
                         [
                             [
-                                "PlayerB_104",
-                                {
-                                    "id": "AbsoluteBaSyou",
-                                    "value": [
-                                        "PlayerB",
-                                        "Gゾーン"
-                                    ]
-                                }
-                            ],
-                            [
-                                "PlayerB_105",
-                                {
-                                    "id": "AbsoluteBaSyou",
-                                    "value": [
-                                        "PlayerB",
-                                        "Gゾーン"
-                                    ]
-                                }
-                            ],
-                            [
-                                "PlayerB_106",
+                                "PlayerB_99",
                                 {
                                     "id": "AbsoluteBaSyou",
                                     "value": [
@@ -1362,22 +1835,12 @@ const TMP_CTX: GameStateWithFlowMemory = {
                         ]
                     ]
                 },
-                "「特徴：T3部隊」を持つ自軍ユニット１枚": {
+                "自軍キャラ１枚": {
                     "title": [
                         "カード",
                         [
                             [
-                                "PlayerB_107",
-                                {
-                                    "id": "AbsoluteBaSyou",
-                                    "value": [
-                                        "PlayerB",
-                                        "配備エリア"
-                                    ]
-                                }
-                            ],
-                            [
-                                "PlayerB_71",
+                                "PlayerB_110",
                                 {
                                     "id": "AbsoluteBaSyou",
                                     "value": [
@@ -1389,7 +1852,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
                         ],
                         [
                             [
-                                "PlayerB_107",
+                                "PlayerB_110",
                                 {
                                     "id": "AbsoluteBaSyou",
                                     "value": [
@@ -1406,23 +1869,245 @@ const TMP_CTX: GameStateWithFlowMemory = {
             "globalEffects": {},
             "varNamesRemoveOnTurnEnd": {},
             "isFirstTurn": false,
-            "textIdsUseThisCut": {},
+            "textIdsUseThisTurn": [],
             "isOpenForGain": false,
-            "isCheat": false,
-            "textIdsUseThisTurn": {}
+            "isCheat": false
         },
-        "PlayerB_107": {
-            "id": "PlayerB_107",
+        "PlayerA_16": {
+            "id": "PlayerA_16",
             "damage": 0,
             "destroyReason": null,
             "flags": {},
             "tips": {
-                "0[黒]": {
+                "橫置支付0[白]": {
                     "title": [
                         "カード",
                         [
                             [
-                                "PlayerB_89",
+                                "PlayerA_27",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerA_54",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerA_29",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ]
+                        ],
+                        [
+                            [
+                                "PlayerA_27",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ]
+                        ]
+                    ],
+                    "min": 1
+                },
+                "橫置支付1[白]": {
+                    "title": [
+                        "カード",
+                        [
+                            [
+                                "PlayerA_54",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerA_29",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ]
+                        ],
+                        [
+                            [
+                                "PlayerA_54",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ]
+                        ]
+                    ],
+                    "min": 1
+                },
+                "橫置支付2[白]": {
+                    "title": [
+                        "カード",
+                        [
+                            [
+                                "PlayerA_29",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ]
+                        ],
+                        [
+                            [
+                                "PlayerA_29",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ]
+                        ]
+                    ],
+                    "min": 1
+                },
+                "合計国力〔x〕": {
+                    "title": [
+                        "カード",
+                        [],
+                        [
+                            [
+                                "PlayerA_27",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerA_54",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerA_29",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ]
+                        ]
+                    ]
+                }
+            },
+            "globalEffects": {},
+            "varNamesRemoveOnTurnEnd": {},
+            "isFirstTurn": false,
+            "isOpenForGain": false,
+            "isCheat": false,
+            "textIdsUseThisTurn": []
+        },
+        "PlayerB_96": {
+            "id": "PlayerB_96",
+            "damage": 0,
+            "destroyReason": null,
+            "flags": {},
+            "tips": {
+                "任意の枚数の敵軍ユニット": {
+                    "title": [
+                        "カード",
+                        [
+                            [
+                                "PlayerA_16",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "配備エリア"
+                                    ]
+                                }
+                            ]
+                        ],
+                        [
+                            [
+                                "PlayerA_16",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "配備エリア"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerA_16",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "配備エリア"
+                                    ]
+                                }
+                            ]
+                        ]
+                    ],
+                    "isRepeat": true,
+                    "count": 2
+                },
+                "橫置支付0[白]": {
+                    "title": [
+                        "カード",
+                        [
+                            [
+                                "PlayerB_99",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerB_85",
                                 {
                                     "id": "AbsoluteBaSyou",
                                     "value": [
@@ -1434,7 +2119,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
                         ],
                         [
                             [
-                                "PlayerB_89",
+                                "PlayerB_99",
                                 {
                                     "id": "AbsoluteBaSyou",
                                     "value": [
@@ -1447,107 +2132,300 @@ const TMP_CTX: GameStateWithFlowMemory = {
                     ],
                     "min": 1
                 },
-                "自分の手札２枚": {
+                "合計国力〔x〕": {
+                    "title": [
+                        "カード",
+                        [],
+                        [
+                            [
+                                "PlayerB_99",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerB_85",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ]
+                        ]
+                    ]
+                }
+            },
+            "globalEffects": {},
+            "varNamesRemoveOnTurnEnd": {},
+            "isOpenForGain": false,
+            "isCheat": false,
+            "isFirstTurn": false,
+            "textIdsUseThisTurn": []
+        },
+        "PlayerB_106": {
+            "id": "PlayerB_106",
+            "damage": 0,
+            "destroyReason": null,
+            "flags": {},
+            "tips": {
+                "敵軍ユニット１枚": {
                     "title": [
                         "カード",
                         [
                             [
-                                "PlayerA_43",
+                                "PlayerA_16",
                                 {
                                     "id": "AbsoluteBaSyou",
                                     "value": [
                                         "PlayerA",
-                                        "手札"
-                                    ]
-                                }
-                            ],
-                            [
-                                "PlayerA_37",
-                                {
-                                    "id": "AbsoluteBaSyou",
-                                    "value": [
-                                        "PlayerA",
-                                        "手札"
-                                    ]
-                                }
-                            ],
-                            [
-                                "PlayerA_41",
-                                {
-                                    "id": "AbsoluteBaSyou",
-                                    "value": [
-                                        "PlayerA",
-                                        "手札"
-                                    ]
-                                }
-                            ],
-                            [
-                                "PlayerA_30",
-                                {
-                                    "id": "AbsoluteBaSyou",
-                                    "value": [
-                                        "PlayerA",
-                                        "手札"
-                                    ]
-                                }
-                            ],
-                            [
-                                "PlayerA_33",
-                                {
-                                    "id": "AbsoluteBaSyou",
-                                    "value": [
-                                        "PlayerA",
-                                        "手札"
+                                        "配備エリア"
                                     ]
                                 }
                             ]
                         ],
                         [
                             [
-                                "PlayerA_43",
+                                "PlayerA_16",
                                 {
                                     "id": "AbsoluteBaSyou",
                                     "value": [
                                         "PlayerA",
-                                        "手札"
-                                    ]
-                                }
-                            ],
-                            [
-                                "PlayerA_33",
-                                {
-                                    "id": "AbsoluteBaSyou",
-                                    "value": [
-                                        "PlayerA",
-                                        "手札"
+                                        "配備エリア"
                                     ]
                                 }
                             ]
                         ]
                     ],
-                    "count": 2
+                    "count": 1
                 }
             },
             "globalEffects": {},
             "varNamesRemoveOnTurnEnd": {},
-            "textIdsUseThisCut": {},
+            "textIdsUseThisTurn": [],
             "isOpenForGain": false,
             "isCheat": false,
-            "isFirstTurn": false,
-            "textIdsUseThisTurn": {}
+            "isFirstTurn": false
         },
-        "PlayerA_2": {
-            "id": "PlayerA_2",
+        "PlayerA_40": {
+            "id": "PlayerA_40",
             "damage": 0,
             "destroyReason": null,
             "flags": {},
             "tips": {
+                "橫置支付0[白]": {
+                    "title": [
+                        "カード",
+                        [
+                            [
+                                "PlayerA_27",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerA_54",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerA_29",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerA_11",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ]
+                        ],
+                        [
+                            [
+                                "PlayerA_27",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ]
+                        ]
+                    ],
+                    "min": 1
+                },
+                "合計国力〔x〕": {
+                    "title": [
+                        "カード",
+                        [],
+                        [
+                            [
+                                "PlayerA_27",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerA_54",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerA_29",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerA_11",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ]
+                        ]
+                    ]
+                },
+                "４以下の合計国力を持つ、敵軍キャラ": {
+                    "title": [
+                        "カード",
+                        [
+                            [
+                                "PlayerB_110",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "配備エリア"
+                                    ]
+                                }
+                            ]
+                        ],
+                        [
+                            [
+                                "PlayerB_110",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "配備エリア"
+                                    ]
+                                }
+                            ]
+                        ]
+                    ],
+                    "count": 1
+                }
+            },
+            "globalEffects": {},
+            "varNamesRemoveOnTurnEnd": {},
+            "isFirstTurn": false,
+            "textIdsUseThisTurn": [],
+            "isOpenForGain": false,
+            "isCheat": false
+        },
+        "PlayerA_26": {
+            "id": "PlayerA_26",
+            "damage": 0,
+            "destroyReason": null,
+            "flags": {},
+            "tips": {
+                "橫置支付0[白]": {
+                    "title": [
+                        "カード",
+                        [
+                            [
+                                "PlayerA_54",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerA_29",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerA_11",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ]
+                        ],
+                        [
+                            [
+                                "PlayerA_54",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ]
+                        ]
+                    ],
+                    "min": 1
+                },
                 "一個自軍機體": {
                     "title": [
                         "カード",
                         [
                             [
-                                "PlayerA_103",
+                                "PlayerA_40",
                                 {
                                     "id": "AbsoluteBaSyou",
                                     "value": [
@@ -1559,7 +2437,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
                         ],
                         [
                             [
-                                "PlayerA_103",
+                                "PlayerA_40",
                                 {
                                     "id": "AbsoluteBaSyou",
                                     "value": [
@@ -1572,73 +2450,13 @@ const TMP_CTX: GameStateWithFlowMemory = {
                     ],
                     "count": 1
                 },
-                "0[白]": {
-                    "title": [
-                        "カード",
-                        [
-                            [
-                                "PlayerA_100",
-                                {
-                                    "id": "AbsoluteBaSyou",
-                                    "value": [
-                                        "PlayerA",
-                                        "Gゾーン"
-                                    ]
-                                }
-                            ],
-                            [
-                                "PlayerA_101",
-                                {
-                                    "id": "AbsoluteBaSyou",
-                                    "value": [
-                                        "PlayerA",
-                                        "Gゾーン"
-                                    ]
-                                }
-                            ],
-                            [
-                                "PlayerA_102",
-                                {
-                                    "id": "AbsoluteBaSyou",
-                                    "value": [
-                                        "PlayerA",
-                                        "Gゾーン"
-                                    ]
-                                }
-                            ],
-                            [
-                                "PlayerA_32",
-                                {
-                                    "id": "AbsoluteBaSyou",
-                                    "value": [
-                                        "PlayerA",
-                                        "Gゾーン"
-                                    ]
-                                }
-                            ]
-                        ],
-                        [
-                            [
-                                "PlayerA_100",
-                                {
-                                    "id": "AbsoluteBaSyou",
-                                    "value": [
-                                        "PlayerA",
-                                        "Gゾーン"
-                                    ]
-                                }
-                            ]
-                        ]
-                    ],
-                    "min": 1
-                },
                 "合計国力〔x〕": {
                     "title": [
                         "カード",
                         [],
                         [
                             [
-                                "PlayerA_100",
+                                "PlayerA_54",
                                 {
                                     "id": "AbsoluteBaSyou",
                                     "value": [
@@ -1648,7 +2466,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
                                 }
                             ],
                             [
-                                "PlayerA_101",
+                                "PlayerA_29",
                                 {
                                     "id": "AbsoluteBaSyou",
                                     "value": [
@@ -1658,17 +2476,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
                                 }
                             ],
                             [
-                                "PlayerA_102",
-                                {
-                                    "id": "AbsoluteBaSyou",
-                                    "value": [
-                                        "PlayerA",
-                                        "Gゾーン"
-                                    ]
-                                }
-                            ],
-                            [
-                                "PlayerA_32",
+                                "PlayerA_11",
                                 {
                                     "id": "AbsoluteBaSyou",
                                     "value": [
@@ -1679,203 +2487,54 @@ const TMP_CTX: GameStateWithFlowMemory = {
                             ]
                         ]
                     ]
-                }
-            },
-            "globalEffects": {},
-            "varNamesRemoveOnTurnEnd": {},
-            "isFirstTurn": false,
-            "textIdsUseThisCut": {},
-            "isOpenForGain": false,
-            "isCheat": false,
-            "textIdsUseThisTurn": {}
-        },
-        "PlayerA_14": {
-            "id": "PlayerA_14",
-            "damage": 0,
-            "destroyReason": null,
-            "flags": {},
-            "tips": {
-                "0[白]": {
-                    "title": [
-                        "カード",
-                        [
-                            [
-                                "PlayerA_101",
-                                {
-                                    "id": "AbsoluteBaSyou",
-                                    "value": [
-                                        "PlayerA",
-                                        "Gゾーン"
-                                    ]
-                                }
-                            ],
-                            [
-                                "PlayerA_102",
-                                {
-                                    "id": "AbsoluteBaSyou",
-                                    "value": [
-                                        "PlayerA",
-                                        "Gゾーン"
-                                    ]
-                                }
-                            ],
-                            [
-                                "PlayerA_32",
-                                {
-                                    "id": "AbsoluteBaSyou",
-                                    "value": [
-                                        "PlayerA",
-                                        "Gゾーン"
-                                    ]
-                                }
-                            ]
-                        ],
-                        [
-                            [
-                                "PlayerA_101",
-                                {
-                                    "id": "AbsoluteBaSyou",
-                                    "value": [
-                                        "PlayerA",
-                                        "Gゾーン"
-                                    ]
-                                }
-                            ]
-                        ]
-                    ],
-                    "min": 1
                 },
-                "合計国力〔x〕": {
-                    "title": [
-                        "カード",
-                        [],
-                        [
-                            [
-                                "PlayerA_101",
-                                {
-                                    "id": "AbsoluteBaSyou",
-                                    "value": [
-                                        "PlayerA",
-                                        "Gゾーン"
-                                    ]
-                                }
-                            ],
-                            [
-                                "PlayerA_102",
-                                {
-                                    "id": "AbsoluteBaSyou",
-                                    "value": [
-                                        "PlayerA",
-                                        "Gゾーン"
-                                    ]
-                                }
-                            ],
-                            [
-                                "PlayerA_32",
-                                {
-                                    "id": "AbsoluteBaSyou",
-                                    "value": [
-                                        "PlayerA",
-                                        "Gゾーン"
-                                    ]
-                                }
-                            ]
-                        ]
-                    ]
-                }
-            },
-            "globalEffects": {},
-            "varNamesRemoveOnTurnEnd": {},
-            "isFirstTurn": false,
-            "textIdsUseThisCut": {},
-            "isOpenForGain": false,
-            "isCheat": false,
-            "textIdsUseThisTurn": {}
-        },
-        "PlayerA_103": {
-            "id": "PlayerA_103",
-            "damage": 0,
-            "destroyReason": null,
-            "flags": {},
-            "tips": {
-                "0[null]": {
+                "このカードと同じ戦闘エリアにいる全てのユニット": {
                     "title": [
                         "カード",
                         [
                             [
-                                "PlayerA_102",
+                                "PlayerA_40",
                                 {
                                     "id": "AbsoluteBaSyou",
                                     "value": [
                                         "PlayerA",
-                                        "Gゾーン"
+                                        "戦闘エリア1"
                                     ]
                                 }
                             ],
                             [
-                                "PlayerA_32",
+                                "PlayerB_68",
                                 {
                                     "id": "AbsoluteBaSyou",
                                     "value": [
-                                        "PlayerA",
-                                        "Gゾーン"
+                                        "PlayerB",
+                                        "戦闘エリア1"
                                     ]
                                 }
                             ]
                         ],
                         [
                             [
-                                "PlayerA_102",
+                                "PlayerB_68",
                                 {
                                     "id": "AbsoluteBaSyou",
                                     "value": [
-                                        "PlayerA",
-                                        "Gゾーン"
+                                        "PlayerB",
+                                        "戦闘エリア1"
                                     ]
                                 }
                             ]
                         ]
                     ],
-                    "min": 1
-                },
-                "1[null]": {
-                    "title": [
-                        "カード",
-                        [
-                            [
-                                "PlayerA_32",
-                                {
-                                    "id": "AbsoluteBaSyou",
-                                    "value": [
-                                        "PlayerA",
-                                        "Gゾーン"
-                                    ]
-                                }
-                            ]
-                        ],
-                        [
-                            [
-                                "PlayerA_32",
-                                {
-                                    "id": "AbsoluteBaSyou",
-                                    "value": [
-                                        "PlayerA",
-                                        "Gゾーン"
-                                    ]
-                                }
-                            ]
-                        ]
-                    ],
-                    "min": 1
+                    "max": 50
                 }
             },
             "globalEffects": {},
             "varNamesRemoveOnTurnEnd": {},
-            "textIdsUseThisCut": {},
+            "isFirstTurn": false,
             "isOpenForGain": false,
             "isCheat": false,
-            "isFirstTurn": false,
-            "textIdsUseThisTurn": {}
+            "textIdsUseThisTurn": []
         },
         "SystemFakeCardID_createAttackPhaseRuleEffect_text_PlayerA": {
             "id": "SystemFakeCardID_createAttackPhaseRuleEffect_text_PlayerA",
@@ -1888,7 +2547,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
                         "カード",
                         [
                             [
-                                "PlayerA_103",
+                                "PlayerA_40",
                                 {
                                     "id": "AbsoluteBaSyou",
                                     "value": [
@@ -1900,7 +2559,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
                         ],
                         [
                             [
-                                "PlayerA_103",
+                                "PlayerA_40",
                                 {
                                     "id": "AbsoluteBaSyou",
                                     "value": [
@@ -1920,7 +2579,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
                         "カード",
                         [
                             [
-                                "PlayerA_103",
+                                "PlayerA_40",
                                 {
                                     "id": "AbsoluteBaSyou",
                                     "value": [
@@ -1939,95 +2598,36 @@ const TMP_CTX: GameStateWithFlowMemory = {
             },
             "globalEffects": {},
             "varNamesRemoveOnTurnEnd": {},
-            "textIdsUseThisCut": {},
             "isOpenForGain": false,
             "isCheat": false,
             "isFirstTurn": false,
-            "textIdsUseThisTurn": {}
+            "textIdsUseThisTurn": []
         },
-        "SystemFakeCardID_createAttackPhaseRuleEffect_text_PlayerB": {
-            "id": "SystemFakeCardID_createAttackPhaseRuleEffect_text_PlayerB",
-            "damage": 0,
-            "destroyReason": null,
-            "flags": {},
-            "tips": {
-                "去地球": {
-                    "title": [
-                        "カード",
-                        [],
-                        [
-                            [
-                                "PlayerB_107",
-                                {
-                                    "id": "AbsoluteBaSyou",
-                                    "value": [
-                                        "PlayerB",
-                                        "配備エリア"
-                                    ]
-                                }
-                            ]
-                        ]
-                    ],
-                    "flags": {
-                        "isGoBattleArea1": true
-                    }
-                },
-                "去宇宙": {
-                    "title": [
-                        "カード",
-                        [],
-                        [
-                            [
-                                "PlayerB_55",
-                                {
-                                    "id": "AbsoluteBaSyou",
-                                    "value": [
-                                        "PlayerB",
-                                        "配備エリア"
-                                    ]
-                                }
-                            ]
-                        ]
-                    ],
-                    "flags": {
-                        "isGoBattleArea2": true
-                    }
-                }
-            },
-            "globalEffects": {},
-            "varNamesRemoveOnTurnEnd": {},
-            "textIdsUseThisCut": {},
-            "isOpenForGain": false,
-            "isCheat": false,
-            "isFirstTurn": false,
-            "textIdsUseThisTurn": {}
-        },
-        "PlayerB_55": {
-            "id": "PlayerB_55",
-            "damage": 0,
+        "PlayerB_68": {
+            "id": "PlayerB_68",
+            "damage": 5,
             "destroyReason": null,
             "flags": {},
             "tips": {},
             "globalEffects": {},
             "varNamesRemoveOnTurnEnd": {},
-            "textIdsUseThisCut": {},
             "isOpenForGain": false,
             "isCheat": false,
             "isFirstTurn": false,
-            "textIdsUseThisTurn": {}
+            "textIdsUseThisTurn": []
         },
-        "PlayerB_72": {
-            "id": "PlayerB_72",
+        "PlayerB_69": {
+            "id": "PlayerB_69",
             "damage": 0,
             "destroyReason": null,
             "flags": {},
             "tips": {
-                "0[黒]": {
+                "橫置支付0[白]": {
                     "title": [
                         "カード",
                         [
                             [
-                                "PlayerB_105",
+                                "PlayerB_85",
                                 {
                                     "id": "AbsoluteBaSyou",
                                     "value": [
@@ -2047,7 +2647,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
                                 }
                             ],
                             [
-                                "PlayerB_89",
+                                "PlayerB_71",
                                 {
                                     "id": "AbsoluteBaSyou",
                                     "value": [
@@ -2059,7 +2659,189 @@ const TMP_CTX: GameStateWithFlowMemory = {
                         ],
                         [
                             [
-                                "PlayerB_105",
+                                "PlayerB_85",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ]
+                        ]
+                    ],
+                    "min": 1
+                },
+                "橫置支付1[白]": {
+                    "title": [
+                        "カード",
+                        [
+                            [
+                                "PlayerB_106",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerB_71",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ]
+                        ],
+                        [
+                            [
+                                "PlayerB_106",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ]
+                        ]
+                    ],
+                    "min": 1
+                },
+                "一個自軍機體": {
+                    "title": [
+                        "カード",
+                        [
+                            [
+                                "PlayerB_68",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "配備エリア"
+                                    ]
+                                }
+                            ]
+                        ],
+                        [
+                            [
+                                "PlayerB_68",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "配備エリア"
+                                    ]
+                                }
+                            ]
+                        ]
+                    ],
+                    "count": 1
+                },
+                "合計国力〔x〕": {
+                    "title": [
+                        "カード",
+                        [],
+                        [
+                            [
+                                "PlayerB_85",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerB_106",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerB_71",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ]
+                        ]
+                    ]
+                }
+            },
+            "globalEffects": {},
+            "varNamesRemoveOnTurnEnd": {},
+            "isFirstTurn": false,
+            "isOpenForGain": false,
+            "isCheat": false,
+            "textIdsUseThisTurn": []
+        },
+        "PlayerB_66": {
+            "id": "PlayerB_66",
+            "damage": 0,
+            "destroyReason": null,
+            "flags": {},
+            "tips": {
+                "橫置支付0[白]": {
+                    "title": [
+                        "カード",
+                        [
+                            [
+                                "PlayerB_99",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerB_85",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerB_106",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerB_71",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ]
+                        ],
+                        [
+                            [
+                                "PlayerB_99",
                                 {
                                     "id": "AbsoluteBaSyou",
                                     "value": [
@@ -2078,7 +2860,17 @@ const TMP_CTX: GameStateWithFlowMemory = {
                         [],
                         [
                             [
-                                "PlayerB_105",
+                                "PlayerB_99",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerB_85",
                                 {
                                     "id": "AbsoluteBaSyou",
                                     "value": [
@@ -2098,7 +2890,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
                                 }
                             ],
                             [
-                                "PlayerB_89",
+                                "PlayerB_71",
                                 {
                                     "id": "AbsoluteBaSyou",
                                     "value": [
@@ -2109,15 +2901,308 @@ const TMP_CTX: GameStateWithFlowMemory = {
                             ]
                         ]
                     ]
+                },
+                "打開自軍手裡或指定HANGER中特徵A並合計國力x以下的1張卡": {
+                    "title": [
+                        "カード",
+                        [
+                            [
+                                "PlayerB_66",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "手札"
+                                    ]
+                                }
+                            ]
+                        ],
+                        [
+                            [
+                                "PlayerB_66",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "手札"
+                                    ]
+                                }
+                            ]
+                        ]
+                    ],
+                    "count": 1
                 }
             },
             "globalEffects": {},
             "varNamesRemoveOnTurnEnd": {},
             "isFirstTurn": false,
-            "textIdsUseThisCut": {},
+            "textIdsUseThisTurn": [],
+            "isOpenForGain": false,
+            "isCheat": false
+        },
+        "PlayerA_50": {
+            "id": "PlayerA_50",
+            "damage": 0,
+            "destroyReason": null,
+            "flags": {},
+            "tips": {
+                "一個自軍機體": {
+                    "title": [
+                        "カード",
+                        [
+                            [
+                                "PlayerA_40",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "配備エリア"
+                                    ]
+                                }
+                            ]
+                        ],
+                        [
+                            [
+                                "PlayerA_40",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "配備エリア"
+                                    ]
+                                }
+                            ]
+                        ]
+                    ],
+                    "count": 1
+                },
+                "橫置支付1[白]": {
+                    "title": [
+                        "カード",
+                        [
+                            [
+                                "PlayerA_54",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerA_29",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerA_11",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerA_46",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ]
+                        ],
+                        [
+                            [
+                                "PlayerA_54",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ]
+                        ]
+                    ],
+                    "min": 1
+                },
+                "橫置支付2[白]": {
+                    "title": [
+                        "カード",
+                        [
+                            [
+                                "PlayerA_29",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerA_11",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerA_46",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ]
+                        ],
+                        [
+                            [
+                                "PlayerA_29",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ]
+                        ]
+                    ],
+                    "min": 1
+                },
+                "自軍ジャンクヤードにある、このカードと同じ属性のGサインを持つユニット１枚": {
+                    "title": [
+                        "カード",
+                        [
+                            [
+                                "PlayerA_16",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "ジャンクヤード"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerA_40",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "ジャンクヤード"
+                                    ]
+                                }
+                            ]
+                        ],
+                        [
+                            [
+                                "PlayerA_40",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "ジャンクヤード"
+                                    ]
+                                }
+                            ]
+                        ]
+                    ],
+                    "count": 1
+                },
+                "橫置支付0[白]": {
+                    "title": [
+                        "カード",
+                        [
+                            [
+                                "PlayerA_27",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerA_54",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerA_29",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerA_11",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerA_46",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ]
+                        ],
+                        [
+                            [
+                                "PlayerA_27",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ]
+                        ]
+                    ],
+                    "min": 1
+                }
+            },
+            "globalEffects": {},
+            "varNamesRemoveOnTurnEnd": {},
+            "isFirstTurn": false,
             "isOpenForGain": false,
             "isCheat": false,
-            "textIdsUseThisTurn": {}
+            "textIdsUseThisTurn": []
         },
         "PlayerB_91": {
             "id": "PlayerB_91",
@@ -2125,10 +3210,20 @@ const TMP_CTX: GameStateWithFlowMemory = {
             "destroyReason": null,
             "flags": {},
             "tips": {
-                "0[黒]": {
+                "橫置支付1[白]": {
                     "title": [
                         "カード",
                         [
+                            [
+                                "PlayerB_85",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
                             [
                                 "PlayerB_106",
                                 {
@@ -2140,7 +3235,17 @@ const TMP_CTX: GameStateWithFlowMemory = {
                                 }
                             ],
                             [
-                                "PlayerB_89",
+                                "PlayerB_71",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerB_98",
                                 {
                                     "id": "AbsoluteBaSyou",
                                     "value": [
@@ -2152,7 +3257,77 @@ const TMP_CTX: GameStateWithFlowMemory = {
                         ],
                         [
                             [
+                                "PlayerB_85",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ]
+                        ]
+                    ],
+                    "min": 1
+                },
+                "橫置支付0[白]": {
+                    "title": [
+                        "カード",
+                        [
+                            [
+                                "PlayerB_99",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerB_85",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
                                 "PlayerB_106",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerB_71",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerB_98",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ]
+                        ],
+                        [
+                            [
+                                "PlayerB_99",
                                 {
                                     "id": "AbsoluteBaSyou",
                                     "value": [
@@ -2171,6 +3346,26 @@ const TMP_CTX: GameStateWithFlowMemory = {
                         [],
                         [
                             [
+                                "PlayerB_99",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerB_85",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
                                 "PlayerB_106",
                                 {
                                     "id": "AbsoluteBaSyou",
@@ -2181,7 +3376,17 @@ const TMP_CTX: GameStateWithFlowMemory = {
                                 }
                             ],
                             [
-                                "PlayerB_89",
+                                "PlayerB_71",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerB_98",
                                 {
                                     "id": "AbsoluteBaSyou",
                                     "value": [
@@ -2193,47 +3398,17 @@ const TMP_CTX: GameStateWithFlowMemory = {
                         ]
                     ]
                 },
-                "自軍ユニット１枚": {
+                "「特徴：アストレイ系」を持つ自軍ユニット１枚": {
                     "title": [
                         "カード",
                         [
                             [
-                                "PlayerB_71",
+                                "PlayerB_68",
                                 {
                                     "id": "AbsoluteBaSyou",
                                     "value": [
                                         "PlayerB",
-                                        "配備エリア"
-                                    ]
-                                }
-                            ],
-                            [
-                                "PlayerB_107",
-                                {
-                                    "id": "AbsoluteBaSyou",
-                                    "value": [
-                                        "PlayerB",
-                                        "配備エリア"
-                                    ]
-                                }
-                            ],
-                            [
-                                "PlayerB_55",
-                                {
-                                    "id": "AbsoluteBaSyou",
-                                    "value": [
-                                        "PlayerB",
-                                        "配備エリア"
-                                    ]
-                                }
-                            ],
-                            [
-                                "PlayerB_72",
-                                {
-                                    "id": "AbsoluteBaSyou",
-                                    "value": [
-                                        "PlayerB",
-                                        "配備エリア"
+                                        "戦闘エリア1"
                                     ]
                                 }
                             ],
@@ -2250,58 +3425,23 @@ const TMP_CTX: GameStateWithFlowMemory = {
                         ],
                         [
                             [
-                                "PlayerB_71",
+                                "PlayerB_68",
                                 {
                                     "id": "AbsoluteBaSyou",
                                     "value": [
                                         "PlayerB",
-                                        "配備エリア"
+                                        "戦闘エリア1"
                                     ]
                                 }
                             ]
                         ]
                     ],
                     "count": 1
-                }
-            },
-            "globalEffects": {},
-            "varNamesRemoveOnTurnEnd": {},
-            "isFirstTurn": false,
-            "textIdsUseThisCut": {},
-            "isOpenForGain": false,
-            "isCheat": false,
-            "textIdsUseThisTurn": {}
-        },
-        "PlayerB_54": {
-            "id": "PlayerB_54",
-            "damage": 0,
-            "destroyReason": null,
-            "flags": {},
-            "tips": {
-                "0[黒]": {
+                },
+                "0[null]": {
                     "title": [
                         "カード",
                         [
-                            [
-                                "PlayerB_104",
-                                {
-                                    "id": "AbsoluteBaSyou",
-                                    "value": [
-                                        "PlayerB",
-                                        "Gゾーン"
-                                    ]
-                                }
-                            ],
-                            [
-                                "PlayerB_105",
-                                {
-                                    "id": "AbsoluteBaSyou",
-                                    "value": [
-                                        "PlayerB",
-                                        "Gゾーン"
-                                    ]
-                                }
-                            ],
                             [
                                 "PlayerB_106",
                                 {
@@ -2313,7 +3453,17 @@ const TMP_CTX: GameStateWithFlowMemory = {
                                 }
                             ],
                             [
-                                "PlayerB_89",
+                                "PlayerB_71",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerB_98",
                                 {
                                     "id": "AbsoluteBaSyou",
                                     "value": [
@@ -2325,7 +3475,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
                         ],
                         [
                             [
-                                "PlayerB_104",
+                                "PlayerB_106",
                                 {
                                     "id": "AbsoluteBaSyou",
                                     "value": [
@@ -2338,113 +3488,141 @@ const TMP_CTX: GameStateWithFlowMemory = {
                     ],
                     "min": 1
                 },
-                "合計国力〔x〕": {
-                    "title": [
-                        "カード",
-                        [],
-                        [
-                            [
-                                "PlayerB_104",
-                                {
-                                    "id": "AbsoluteBaSyou",
-                                    "value": [
-                                        "PlayerB",
-                                        "Gゾーン"
-                                    ]
-                                }
-                            ],
-                            [
-                                "PlayerB_105",
-                                {
-                                    "id": "AbsoluteBaSyou",
-                                    "value": [
-                                        "PlayerB",
-                                        "Gゾーン"
-                                    ]
-                                }
-                            ],
-                            [
-                                "PlayerB_106",
-                                {
-                                    "id": "AbsoluteBaSyou",
-                                    "value": [
-                                        "PlayerB",
-                                        "Gゾーン"
-                                    ]
-                                }
-                            ],
-                            [
-                                "PlayerB_89",
-                                {
-                                    "id": "AbsoluteBaSyou",
-                                    "value": [
-                                        "PlayerB",
-                                        "Gゾーン"
-                                    ]
-                                }
-                            ]
-                        ]
-                    ]
-                },
-                "自軍本国の上のカード１～４枚を見て、その中にある、「特徴：ヘイズル系」を持つユニット１枚": {
+                "1[null]": {
                     "title": [
                         "カード",
                         [
                             [
-                                "PlayerB_54",
+                                "PlayerB_71",
                                 {
                                     "id": "AbsoluteBaSyou",
                                     "value": [
                                         "PlayerB",
-                                        "本国"
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerB_98",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
                                     ]
                                 }
                             ]
                         ],
                         [
                             [
-                                "PlayerB_54",
+                                "PlayerB_71",
                                 {
                                     "id": "AbsoluteBaSyou",
                                     "value": [
                                         "PlayerB",
-                                        "本国"
+                                        "Gゾーン"
                                     ]
                                 }
                             ]
                         ]
                     ],
-                    "max": 1,
-                    "cheatCardIds": [
-                        "PlayerB_87",
-                        "PlayerB_51",
-                        "PlayerB_54",
-                        "PlayerB_56"
-                    ]
+                    "min": 1
                 },
-                "打開自軍手裡或指定HANGER中特徵A並合計國力x以下的1張卡": {
+                "戦闘力に＋４を振り分けて": {
+                    "title": [
+                        "BattleBonus",
+                        [
+                            [
+                                4,
+                                0,
+                                0
+                            ]
+                        ],
+                        [
+                            [
+                                4,
+                                0,
+                                0
+                            ]
+                        ]
+                    ],
+                    "count": 1
+                },
+                "橫置支付0[null]": {
                     "title": [
                         "カード",
                         [
                             [
-                                "PlayerB_54",
+                                "PlayerB_98",
                                 {
                                     "id": "AbsoluteBaSyou",
                                     "value": [
                                         "PlayerB",
-                                        "ハンガー"
+                                        "Gゾーン"
                                     ]
                                 }
                             ]
                         ],
                         [
                             [
-                                "PlayerB_54",
+                                "PlayerB_98",
                                 {
                                     "id": "AbsoluteBaSyou",
                                     "value": [
                                         "PlayerB",
-                                        "ハンガー"
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ]
+                        ]
+                    ],
+                    "min": 1
+                },
+                "このカードの本来のテキスト１つ": {
+                    "title": [
+                        "テキスト",
+                        [
+                            {
+                                "cardId": "PlayerB_91",
+                                "textId": "loadPrototype_179024_03B_U_WT057U_white_text_0"
+                            },
+                            {
+                                "cardId": "PlayerB_91",
+                                "textId": "loadPrototype_179024_03B_U_WT057U_white_text_1"
+                            }
+                        ],
+                        [
+                            {
+                                "cardId": "PlayerB_91",
+                                "textId": "loadPrototype_179024_03B_U_WT057U_white_text_0"
+                            }
+                        ]
+                    ],
+                    "count": 1
+                },
+                "［ ］の特徴を持つ自軍ユニット１枚は": {
+                    "title": [
+                        "カード",
+                        [
+                            [
+                                "PlayerB_68",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "戦闘エリア1"
+                                    ]
+                                }
+                            ]
+                        ],
+                        [
+                            [
+                                "PlayerB_68",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "戦闘エリア1"
                                     ]
                                 }
                             ]
@@ -2456,8 +3634,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
             "globalEffects": {},
             "varNamesRemoveOnTurnEnd": {},
             "isFirstTurn": false,
-            "textIdsUseThisCut": {},
-            "textIdsUseThisTurn": {},
+            "textIdsUseThisTurn": [],
             "isOpenForGain": false,
             "isCheat": false
         }
@@ -2487,58 +3664,266 @@ const TMP_CTX: GameStateWithFlowMemory = {
     "stackEffect": [],
     "destroyEffect": [],
     "commandEffects": [
-        "createPlayCardEffects_PlayerA_37",
-        "createPlayCardEffects_PlayerA_30",
-        "createPlayGEffects_PlayerA_37",
-        "createPlayGEffects_PlayerA_41",
-        "createPlayGEffects_PlayerA_30",
-        "createPlayGEffects_PlayerA_18"
+        "createPlayCardEffects_PlayerA_50_『恒常』：このカードは、自軍ジャンクヤードにある状態でプレイする場合、セット先として、自軍ジャンクヤードにある、このカードと同じ属性のGサインを持つユニット１枚を、自軍配備エリアにロール状態で出し、このカードをセットできる。",
+        "createPlayCardEffects_PlayerA_50",
+        "createPlayCardEffects_PlayerA_0",
+        "createPlayCardEffects_PlayerA_12",
+        "createPlayGEffects_PlayerA_50",
+        "createPlayGEffects_PlayerA_0",
+        "createPlayGEffects_PlayerA_56",
+        "createPlayGEffects_PlayerA_12",
+        "createPlayCardEffects_PlayerA_56"
     ],
     "commandEffectTips": [
         {
-            "effectId": "createPlayCardEffects_PlayerA_37",
+            "effectId": "createPlayCardEffects_PlayerA_50_『恒常』：このカードは、自軍ジャンクヤードにある状態でプレイする場合、セット先として、自軍ジャンクヤードにある、このカードと同じ属性のGサインを持つユニット１枚を、自軍配備エリアにロール状態で出し、このカードをセットできる。",
             "conditionKeys": [
                 "合計国力〔x〕",
-                "一個自軍機體",
-                "0[白]"
+                "橫置支付0[白]",
+                "橫置支付1[白]",
+                "橫置支付2[白]",
+                "自軍ジャンクヤードにある、このカードと同じ属性のGサインを持つユニット１枚"
             ],
             "logicID": 0,
             "logicSubID": 0,
             "tipOrErrors": [
                 {
-                    "effectId": "createPlayCardEffects_PlayerA_37",
+                    "effectId": "createPlayCardEffects_PlayerA_50_『恒常』：このカードは、自軍ジャンクヤードにある状態でプレイする場合、セット先として、自軍ジャンクヤードにある、このカードと同じ属性のGサインを持つユニット１枚を、自軍配備エリアにロール状態で出し、このカードをセットできる。",
                     "conditionKey": "合計国力〔x〕",
                     "tip": null,
-                    "errors": [
-                        "合計国力〔x〕:4 < 5. Play"
-                    ]
+                    "errors": []
                 },
                 {
-                    "effectId": "createPlayCardEffects_PlayerA_37",
-                    "conditionKey": "一個自軍機體",
+                    "effectId": "createPlayCardEffects_PlayerA_50_『恒常』：このカードは、自軍ジャンクヤードにある状態でプレイする場合、セット先として、自軍ジャンクヤードにある、このカードと同じ属性のGサインを持つユニット１枚を、自軍配備エリアにロール状態で出し、このカードをセットできる。",
+                    "conditionKey": "橫置支付0[白]",
                     "tip": {
                         "title": [
                             "カード",
                             [
                                 [
-                                    "PlayerA_14",
+                                    "PlayerA_27",
                                     {
                                         "id": "AbsoluteBaSyou",
                                         "value": [
                                             "PlayerA",
-                                            "配備エリア"
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_54",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_29",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_11",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_46",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
                                         ]
                                     }
                                 ]
                             ],
                             [
                                 [
-                                    "PlayerA_14",
+                                    "PlayerA_27",
                                     {
                                         "id": "AbsoluteBaSyou",
                                         "value": [
                                             "PlayerA",
-                                            "配備エリア"
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ]
+                            ]
+                        ],
+                        "min": 1
+                    },
+                    "errors": []
+                },
+                {
+                    "effectId": "createPlayCardEffects_PlayerA_50_『恒常』：このカードは、自軍ジャンクヤードにある状態でプレイする場合、セット先として、自軍ジャンクヤードにある、このカードと同じ属性のGサインを持つユニット１枚を、自軍配備エリアにロール状態で出し、このカードをセットできる。",
+                    "conditionKey": "橫置支付1[白]",
+                    "tip": {
+                        "title": [
+                            "カード",
+                            [
+                                [
+                                    "PlayerA_54",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_29",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_11",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_46",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ]
+                            ],
+                            [
+                                [
+                                    "PlayerA_54",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ]
+                            ]
+                        ],
+                        "min": 1
+                    },
+                    "errors": []
+                },
+                {
+                    "effectId": "createPlayCardEffects_PlayerA_50_『恒常』：このカードは、自軍ジャンクヤードにある状態でプレイする場合、セット先として、自軍ジャンクヤードにある、このカードと同じ属性のGサインを持つユニット１枚を、自軍配備エリアにロール状態で出し、このカードをセットできる。",
+                    "conditionKey": "橫置支付2[白]",
+                    "tip": {
+                        "title": [
+                            "カード",
+                            [
+                                [
+                                    "PlayerA_29",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_11",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_46",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ]
+                            ],
+                            [
+                                [
+                                    "PlayerA_29",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ]
+                            ]
+                        ],
+                        "min": 1
+                    },
+                    "errors": []
+                },
+                {
+                    "effectId": "createPlayCardEffects_PlayerA_50_『恒常』：このカードは、自軍ジャンクヤードにある状態でプレイする場合、セット先として、自軍ジャンクヤードにある、このカードと同じ属性のGサインを持つユニット１枚を、自軍配備エリアにロール状態で出し、このカードをセットできる。",
+                    "conditionKey": "自軍ジャンクヤードにある、このカードと同じ属性のGサインを持つユニット１枚",
+                    "tip": {
+                        "title": [
+                            "カード",
+                            [
+                                [
+                                    "PlayerA_16",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "ジャンクヤード"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_40",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "ジャンクヤード"
+                                        ]
+                                    }
+                                ]
+                            ],
+                            [
+                                [
+                                    "PlayerA_16",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "ジャンクヤード"
                                         ]
                                     }
                                 ]
@@ -2547,101 +3932,264 @@ const TMP_CTX: GameStateWithFlowMemory = {
                         "count": 1
                     },
                     "errors": []
-                },
-                {
-                    "effectId": "createPlayCardEffects_PlayerA_37",
-                    "conditionKey": "0[白]",
-                    "tip": {
-                        "title": [
-                            "カード",
-                            [
-                                [
-                                    "PlayerA_100",
-                                    {
-                                        "id": "AbsoluteBaSyou",
-                                        "value": [
-                                            "PlayerA",
-                                            "Gゾーン"
-                                        ]
-                                    }
-                                ],
-                                [
-                                    "PlayerA_101",
-                                    {
-                                        "id": "AbsoluteBaSyou",
-                                        "value": [
-                                            "PlayerA",
-                                            "Gゾーン"
-                                        ]
-                                    }
-                                ],
-                                [
-                                    "PlayerA_102",
-                                    {
-                                        "id": "AbsoluteBaSyou",
-                                        "value": [
-                                            "PlayerA",
-                                            "Gゾーン"
-                                        ]
-                                    }
-                                ],
-                                [
-                                    "PlayerA_32",
-                                    {
-                                        "id": "AbsoluteBaSyou",
-                                        "value": [
-                                            "PlayerA",
-                                            "Gゾーン"
-                                        ]
-                                    }
-                                ]
-                            ],
-                            [
-                                [
-                                    "PlayerA_100",
-                                    {
-                                        "id": "AbsoluteBaSyou",
-                                        "value": [
-                                            "PlayerA",
-                                            "Gゾーン"
-                                        ]
-                                    }
-                                ]
-                            ]
-                        ],
-                        "min": 1
-                    },
-                    "errors": []
                 }
             ]
         },
         {
-            "effectId": "createPlayCardEffects_PlayerA_30",
+            "effectId": "createPlayCardEffects_PlayerA_50",
             "conditionKeys": [
                 "合計国力〔x〕",
-                "0[白]",
-                "1[白]"
+                "橫置支付0[白]",
+                "橫置支付1[白]",
+                "橫置支付2[白]",
+                "一個自軍機體"
             ],
             "logicID": 0,
             "logicSubID": 0,
             "tipOrErrors": [
                 {
-                    "effectId": "createPlayCardEffects_PlayerA_30",
+                    "effectId": "createPlayCardEffects_PlayerA_50",
                     "conditionKey": "合計国力〔x〕",
                     "tip": null,
+                    "errors": []
+                },
+                {
+                    "effectId": "createPlayCardEffects_PlayerA_50",
+                    "conditionKey": "橫置支付0[白]",
+                    "tip": {
+                        "title": [
+                            "カード",
+                            [
+                                [
+                                    "PlayerA_27",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_54",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_29",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_11",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_46",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ]
+                            ],
+                            [
+                                [
+                                    "PlayerA_27",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ]
+                            ]
+                        ],
+                        "min": 1
+                    },
+                    "errors": []
+                },
+                {
+                    "effectId": "createPlayCardEffects_PlayerA_50",
+                    "conditionKey": "橫置支付1[白]",
+                    "tip": {
+                        "title": [
+                            "カード",
+                            [
+                                [
+                                    "PlayerA_54",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_29",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_11",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_46",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ]
+                            ],
+                            [
+                                [
+                                    "PlayerA_54",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ]
+                            ]
+                        ],
+                        "min": 1
+                    },
+                    "errors": []
+                },
+                {
+                    "effectId": "createPlayCardEffects_PlayerA_50",
+                    "conditionKey": "橫置支付2[白]",
+                    "tip": {
+                        "title": [
+                            "カード",
+                            [
+                                [
+                                    "PlayerA_29",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_11",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_46",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ]
+                            ],
+                            [
+                                [
+                                    "PlayerA_29",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ]
+                            ]
+                        ],
+                        "min": 1
+                    },
+                    "errors": []
+                },
+                {
+                    "effectId": "createPlayCardEffects_PlayerA_50",
+                    "conditionKey": "一個自軍機體",
+                    "tip": {
+                        "title": [
+                            "カード",
+                            [],
+                            []
+                        ],
+                        "count": 1
+                    },
                     "errors": [
-                        "合計国力〔x〕:4 < 5. Play"
+                        "count 0 not right: カード/1"
                     ]
+                }
+            ]
+        },
+        {
+            "effectId": "createPlayCardEffects_PlayerA_0",
+            "conditionKeys": [
+                "合計国力〔x〕",
+                "橫置支付0[白]",
+                "一個自軍機體"
+            ],
+            "logicID": 0,
+            "logicSubID": 0,
+            "tipOrErrors": [
+                {
+                    "effectId": "createPlayCardEffects_PlayerA_0",
+                    "conditionKey": "合計国力〔x〕",
+                    "tip": null,
+                    "errors": []
                 },
                 {
-                    "effectId": "createPlayCardEffects_PlayerA_30",
-                    "conditionKey": "0[白]",
+                    "effectId": "createPlayCardEffects_PlayerA_0",
+                    "conditionKey": "橫置支付0[白]",
                     "tip": {
                         "title": [
                             "カード",
                             [
                                 [
-                                    "PlayerA_100",
+                                    "PlayerA_27",
                                     {
                                         "id": "AbsoluteBaSyou",
                                         "value": [
@@ -2651,7 +4199,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
                                     }
                                 ],
                                 [
-                                    "PlayerA_101",
+                                    "PlayerA_54",
                                     {
                                         "id": "AbsoluteBaSyou",
                                         "value": [
@@ -2661,7 +4209,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
                                     }
                                 ],
                                 [
-                                    "PlayerA_102",
+                                    "PlayerA_29",
                                     {
                                         "id": "AbsoluteBaSyou",
                                         "value": [
@@ -2671,7 +4219,17 @@ const TMP_CTX: GameStateWithFlowMemory = {
                                     }
                                 ],
                                 [
-                                    "PlayerA_32",
+                                    "PlayerA_11",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_46",
                                     {
                                         "id": "AbsoluteBaSyou",
                                         "value": [
@@ -2683,7 +4241,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
                             ],
                             [
                                 [
-                                    "PlayerA_100",
+                                    "PlayerA_27",
                                     {
                                         "id": "AbsoluteBaSyou",
                                         "value": [
@@ -2699,14 +4257,46 @@ const TMP_CTX: GameStateWithFlowMemory = {
                     "errors": []
                 },
                 {
-                    "effectId": "createPlayCardEffects_PlayerA_30",
-                    "conditionKey": "1[白]",
+                    "effectId": "createPlayCardEffects_PlayerA_0",
+                    "conditionKey": "一個自軍機體",
+                    "tip": {
+                        "title": [
+                            "カード",
+                            [],
+                            []
+                        ],
+                        "count": 1
+                    },
+                    "errors": [
+                        "count 0 not right: カード/1"
+                    ]
+                }
+            ]
+        },
+        {
+            "effectId": "createPlayCardEffects_PlayerA_12",
+            "conditionKeys": [
+                "合計国力〔x〕",
+                "橫置支付0[白]"
+            ],
+            "logicID": 0,
+            "logicSubID": 0,
+            "tipOrErrors": [
+                {
+                    "effectId": "createPlayCardEffects_PlayerA_12",
+                    "conditionKey": "合計国力〔x〕",
+                    "tip": null,
+                    "errors": []
+                },
+                {
+                    "effectId": "createPlayCardEffects_PlayerA_12",
+                    "conditionKey": "橫置支付0[白]",
                     "tip": {
                         "title": [
                             "カード",
                             [
                                 [
-                                    "PlayerA_101",
+                                    "PlayerA_27",
                                     {
                                         "id": "AbsoluteBaSyou",
                                         "value": [
@@ -2716,7 +4306,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
                                     }
                                 ],
                                 [
-                                    "PlayerA_102",
+                                    "PlayerA_54",
                                     {
                                         "id": "AbsoluteBaSyou",
                                         "value": [
@@ -2726,7 +4316,27 @@ const TMP_CTX: GameStateWithFlowMemory = {
                                     }
                                 ],
                                 [
-                                    "PlayerA_32",
+                                    "PlayerA_29",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_11",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_46",
                                     {
                                         "id": "AbsoluteBaSyou",
                                         "value": [
@@ -2738,7 +4348,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
                             ],
                             [
                                 [
-                                    "PlayerA_101",
+                                    "PlayerA_27",
                                     {
                                         "id": "AbsoluteBaSyou",
                                         "value": [
@@ -2756,7 +4366,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
             ]
         },
         {
-            "effectId": "createPlayGEffects_PlayerA_37",
+            "effectId": "createPlayGEffects_PlayerA_50",
             "conditionKeys": [
                 "出G上限"
             ],
@@ -2764,7 +4374,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
             "logicSubID": 0,
             "tipOrErrors": [
                 {
-                    "effectId": "createPlayGEffects_PlayerA_37",
+                    "effectId": "createPlayGEffects_PlayerA_50",
                     "conditionKey": "出G上限",
                     "tip": null,
                     "errors": []
@@ -2772,7 +4382,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
             ]
         },
         {
-            "effectId": "createPlayGEffects_PlayerA_41",
+            "effectId": "createPlayGEffects_PlayerA_0",
             "conditionKeys": [
                 "出G上限"
             ],
@@ -2780,7 +4390,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
             "logicSubID": 0,
             "tipOrErrors": [
                 {
-                    "effectId": "createPlayGEffects_PlayerA_41",
+                    "effectId": "createPlayGEffects_PlayerA_0",
                     "conditionKey": "出G上限",
                     "tip": null,
                     "errors": []
@@ -2788,7 +4398,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
             ]
         },
         {
-            "effectId": "createPlayGEffects_PlayerA_30",
+            "effectId": "createPlayGEffects_PlayerA_56",
             "conditionKeys": [
                 "出G上限"
             ],
@@ -2796,7 +4406,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
             "logicSubID": 0,
             "tipOrErrors": [
                 {
-                    "effectId": "createPlayGEffects_PlayerA_30",
+                    "effectId": "createPlayGEffects_PlayerA_56",
                     "conditionKey": "出G上限",
                     "tip": null,
                     "errors": []
@@ -2804,7 +4414,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
             ]
         },
         {
-            "effectId": "createPlayGEffects_PlayerA_18",
+            "effectId": "createPlayGEffects_PlayerA_12",
             "conditionKeys": [
                 "出G上限"
             ],
@@ -2812,10 +4422,240 @@ const TMP_CTX: GameStateWithFlowMemory = {
             "logicSubID": 0,
             "tipOrErrors": [
                 {
-                    "effectId": "createPlayGEffects_PlayerA_18",
+                    "effectId": "createPlayGEffects_PlayerA_12",
                     "conditionKey": "出G上限",
                     "tip": null,
                     "errors": []
+                }
+            ]
+        },
+        {
+            "effectId": "createPlayCardEffects_PlayerA_56",
+            "conditionKeys": [
+                "合計国力〔x〕",
+                "橫置支付0[白]",
+                "橫置支付1[白]",
+                "橫置支付2[白]",
+                "４以下の合計国力を持つ、キャラがセットされていない敵軍ユニット１枚"
+            ],
+            "logicID": 0,
+            "logicSubID": 0,
+            "tipOrErrors": [
+                {
+                    "effectId": "createPlayCardEffects_PlayerA_56",
+                    "conditionKey": "合計国力〔x〕",
+                    "tip": null,
+                    "errors": []
+                },
+                {
+                    "effectId": "createPlayCardEffects_PlayerA_56",
+                    "conditionKey": "橫置支付0[白]",
+                    "tip": {
+                        "title": [
+                            "カード",
+                            [
+                                [
+                                    "PlayerA_27",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_54",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_29",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_11",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_46",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ]
+                            ],
+                            [
+                                [
+                                    "PlayerA_27",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ]
+                            ]
+                        ],
+                        "min": 1
+                    },
+                    "errors": []
+                },
+                {
+                    "effectId": "createPlayCardEffects_PlayerA_56",
+                    "conditionKey": "橫置支付1[白]",
+                    "tip": {
+                        "title": [
+                            "カード",
+                            [
+                                [
+                                    "PlayerA_54",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_29",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_11",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_46",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ]
+                            ],
+                            [
+                                [
+                                    "PlayerA_54",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ]
+                            ]
+                        ],
+                        "min": 1
+                    },
+                    "errors": []
+                },
+                {
+                    "effectId": "createPlayCardEffects_PlayerA_56",
+                    "conditionKey": "橫置支付2[白]",
+                    "tip": {
+                        "title": [
+                            "カード",
+                            [
+                                [
+                                    "PlayerA_29",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_11",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_46",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ]
+                            ],
+                            [
+                                [
+                                    "PlayerA_29",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ]
+                            ]
+                        ],
+                        "min": 1
+                    },
+                    "errors": []
+                },
+                {
+                    "effectId": "createPlayCardEffects_PlayerA_56",
+                    "conditionKey": "４以下の合計国力を持つ、キャラがセットされていない敵軍ユニット１枚",
+                    "tip": {
+                        "title": [
+                            "カード",
+                            [],
+                            []
+                        ],
+                        "count": 1
+                    },
+                    "errors": [
+                        "count 0 not right: カード/1"
+                    ]
                 }
             ]
         }
@@ -2831,10 +4671,16 @@ const TMP_CTX: GameStateWithFlowMemory = {
     "globalEffectPool": {},
     "messages": [],
     "messagesCurrentEffect": null,
-    "turn": 2,
+    "turn": 10,
     "setGroup": {
-        "itemGroupParent": {},
-        "itemGroupChildren": {}
+        "itemGroupParent": {
+            "PlayerB_69": "PlayerB_68"
+        },
+        "itemGroupChildren": {
+            "PlayerB_68": [
+                "PlayerB_69"
+            ]
+        }
     },
     "stackEffectMemory": [],
     "flowMemory": {
@@ -2847,10 +4693,13 @@ const TMP_CTX: GameStateWithFlowMemory = {
             "PlayerA": true,
             "PlayerB": true
         },
-        "hasPlayerPassPayCost": {},
+        "hasPlayerPassPayCost": {
+            "PlayerA": true,
+            "PlayerB": true
+        },
         "shouldTriggerStackEffectFinishedEvent": false,
-        "activeEffectID": null,
-        "activeLogicID": null,
-        "activeLogicSubID": null
+        "activeEffectID": "createPlayCardEffects_PlayerA_50_『恒常』：このカードは、自軍ジャンクヤードにある状態でプレイする場合、セット先として、自軍ジャンクヤードにある、このカードと同じ属性のGサインを持つユニット１枚を、自軍配備エリアにロール状態で出し、このカードをセットできる。",
+        "activeLogicID": 0,
+        "activeLogicSubID": 0
     }
 }

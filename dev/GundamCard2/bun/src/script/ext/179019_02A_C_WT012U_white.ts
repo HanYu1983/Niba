@@ -7,10 +7,6 @@
 // （注：貫通ダメージは、部隊への戦闘ダメージと同様に処理する）
 
 import { CardPrototype } from "../../game/define/CardPrototype";
-import { Effect } from "../../game/define/Effect";
-import { StrBaSyouPair, Tip } from "../../game/define/Tip";
-import { GameState } from "../../game/gameState/GameState";
-import { Bridge } from "../bridge";
 
 export const prototype: CardPrototype = {
   commandText: {

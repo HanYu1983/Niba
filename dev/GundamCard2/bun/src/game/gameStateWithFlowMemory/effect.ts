@@ -30,8 +30,8 @@ export function doActiveEffect(ctx: GameStateWithFlowMemory, playerID: string, e
     ctx = doEffect(ctx, effect, logicId, logicSubId) as GameStateWithFlowMemory;
   } catch (e) {
     if (e instanceof TargetMissingError) {
-      logCategory("doActiveEffect", `=======================`)
-      logCategory("doActiveEffect", `對象遺失: ${e.message}:${effect.text.description}`)
+      console.warn(`=======================`)
+      console.warn(`對象遺失: ${e.message}:${effect.text.description}`)
     } else {
       throw e
     }

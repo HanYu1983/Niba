@@ -27,7 +27,7 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
         .flatMap(ge => ge.cardIds).filter(itemId => AbsoluteBaSyouFn.getPlayerID(getItemBaSyou(ctx, itemId)) == playerId)
     const getPlayCardEffectsF =
         ifElse(
-            always(PhaseFn.eq(getPhase(ctx), ["配備フェイズ", "フリータイミング"]) && ctx.activePlayerID == playerId),
+            always(PhaseFn.eq(getPhase(ctx), ["配備フェイズ", "フリータイミング"])),
             pipe(
                 always([AbsoluteBaSyouFn.of(playerId, "手札"), AbsoluteBaSyouFn.of(playerId, "ハンガー")]),
                 map(basyou => getItemIdsByBasyou(ctx, basyou)), flatten,
@@ -37,7 +37,7 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
                     if (getItemPrototype(ctx, cardId).category == "コマンド") {
                         return []
                     }
-                    return createPlayCardEffects(ctx, cardId)
+                    return createPlayCardEffects(ctx, cardId).filter(eff => inTiming(eff.text))
                 }), flatten,
             ),
             // クイック
@@ -52,9 +52,8 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
                         if (getItemPrototype(ctx, cardId).category == "コマンド") {
                             return []
                         }
-                        logCategory("createPlayEffects", "check クイック start", cardId)
                         if (getCardHasSpeicalEffect(ctx, ["クイック"], cardId)) {
-                            logCategory("createPlayEffects", "check クイック createPlayCardEffects", cardId)
+                            // クイック不判斷使用時機inTiming
                             return createPlayCardEffects(ctx, cardId)
                         }
                         return []
@@ -67,15 +66,19 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
 
     const getPlayGF =
         ifElse(
-            always(PhaseFn.eq(getPhase(ctx), ["配備フェイズ", "フリータイミング"]) && ctx.activePlayerID == playerId),
+            always(PhaseFn.eq(getPhase(ctx), ["配備フェイズ", "フリータイミング"])),
             pipe(
                 always([AbsoluteBaSyouFn.of(playerId, "手札"), AbsoluteBaSyouFn.of(playerId, "ハンガー")]),
                 map(basyou => getItemIdsByBasyou(ctx, basyou)), flatten,
                 concat(canPlayByText),
                 map(cardId => {
                     const card = getCard(ctx, cardId)
-                    return createPlayGEffects(ctx, card.id)
-                })
+                    const eff = createPlayGEffects(ctx, card.id)
+                    if (inTiming(eff.text)) {
+                        return [eff]
+                    }
+                    return []
+                }), flatten
             ),
             always([] as Effect[])
         )
@@ -151,7 +154,7 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
         }), flatten
     )
     const getPlayCommandF = ifElse(
-        always(PhaseFn.isFreeTiming(getPhase(ctx)) && ctx.activePlayerID == playerId),
+        always(PhaseFn.isFreeTiming(getPhase(ctx))),
         pipe(
             always([AbsoluteBaSyouFn.of(playerId, "手札"), AbsoluteBaSyouFn.of(playerId, "ハンガー")]),
             map(basyou => getItemIdsByBasyou(ctx, basyou)), flatten,

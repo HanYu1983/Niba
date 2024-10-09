@@ -39,8 +39,7 @@ export function getTopEffect(ctx: EffectStackComponent): Effect | null {
   if (ctx.stackEffect.length === 0) {
     return null;
   }
-  const topEffectId = ctx.stackEffect[0];
-  return ctx.effects[topEffectId];
+  return getEffect(ctx, ctx.stackEffect[0])
 }
 
 export function getEffect(ctx: EffectStackComponent, id: string): Effect {
