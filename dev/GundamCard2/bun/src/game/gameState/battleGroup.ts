@@ -62,9 +62,7 @@ export function getBattleGroupBattlePoint(
   const opponentBattleGroup = getBattleGroup(ctx, opponentBasyou)
   const bonus2 = ges.map(ge => {
     if (ge.title[0] == "このカードと交戦中の敵軍部隊の部隊戦闘力を_－３する") {
-
       const times = opponentBattleGroup.filter(unitId => ge.cardIds.includes(unitId)).length
-      console.log("XXX", times, ge.cardIds, opponentBattleGroup)
       return ge.title[1] * times
     }
     return 0

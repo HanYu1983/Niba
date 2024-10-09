@@ -21,6 +21,7 @@ import { CommandEffecTipFn } from "../game/define/CommandEffectTip"
 import { GameError, TargetMissingError, TipError } from "../game/define/GameError"
 import { setSetGroupParent } from "../game/gameState/SetGroupComponent"
 import { getBattleGroup, getBattleGroupBattlePoint } from "../game/gameState/battleGroup"
+import { doPlayerAttack } from "../game/gameState/player"
 
 export async function test179009_03B_U_WT045U_white() {
     await loadPrototype("179009_03B_U_WT045U_white")
@@ -32,6 +33,7 @@ export async function test179009_03B_U_WT045U_white() {
     let ctx = createGameState()
     ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1"), [cardA]) as GameState
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア1"), ["179009_03B_U_WT045U_white", "179009_03B_U_WT045U_white"]) as GameState
+    ctx = setActivePlayerID(ctx, PlayerA) as GameState
     if (getGlobalEffects(ctx, null).find(ge => ge.title[0] == "このカードと交戦中の敵軍部隊の部隊戦闘力を_－３する") == null) {
         throw new Error()
     }
@@ -39,6 +41,10 @@ export async function test179009_03B_U_WT045U_white() {
         throw new Error()
     }
     if (getBattleGroupBattlePoint(ctx, getBattleGroup(ctx, AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア1"))) != 1) {
+        throw new Error()
+    }
+    ctx = doPlayerAttack(ctx, PlayerB, "戦闘エリア1", 2)
+    if (getItemState(ctx, cardA.id).damage != 1) {
         throw new Error()
     }
 }
