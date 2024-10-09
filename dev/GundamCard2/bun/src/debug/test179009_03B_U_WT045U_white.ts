@@ -43,7 +43,7 @@ export async function test179009_03B_U_WT045U_white() {
     if (getBattleGroupBattlePoint(ctx, getBattleGroup(ctx, AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア1"))) != 1) {
         throw new Error()
     }
-    ctx = doPlayerAttack(ctx, PlayerB, "戦闘エリア1", 2)
+    ctx = doPlayerAttack(ctx, PlayerA, "戦闘エリア1", 2)
     if (getItemState(ctx, cardA.id).damage != 1) {
         throw new Error()
     }
