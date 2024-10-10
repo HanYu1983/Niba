@@ -121,52 +121,7 @@ export function doRuleBattleDamage(
       // 敵方機體存在, 攻擊機體
       if (willGuardUnits.length) {
         [ctx, currentAttackPower] = doBattleDamage(ctx, currentAttackPlayerID, willGuardUnits, currentAttackPower)
-        // const changedCardState = willGuardUnits.map((cardID): ItemState => {
-        //   const cs = getItemState(ctx, cardID);
-        //   if (currentAttackPower <= 0) {
-        //     return cs;
-        //   }
-        //   const [_, _2, hp] = getSetGroupBattlePoint(ctx, cardID);
-
-        //   const live = hp - cs.damage;
-        //   if (live <= 0) {
-        //     return cs;
-        //   }
-        //   currentAttackPower -= live;
-        //   if (currentAttackPower >= 0) {
-        //     const reason: DestroyReason = {
-        //       id: "戦闘ダメージ",
-        //       playerID: currentAttackPlayerID,
-        //     };
-        //     // 這裡不發送破壞事件, 因為破壞比較等到破壞效果進堆疊才算數
-        //     ctx = doItemSetDestroy(ctx, reason, createStrBaSyouPair(ctx, cardID), { isSkipTargetMissing: true })
-        //     return {
-        //       ...cs,
-        //       damage: hp,
-        //       destroyReason: reason,
-        //     };
-        //   }
-        //   // 剩餘血量
-        //   const nextLive = -currentAttackPower;
-        //   const nextDamage = hp - nextLive;
-        //   // 傷害用完了, 重設為0
-        //   currentAttackPower = 0;
-        //   const gameEvent: GameEvent = {
-        //     title: ["戦闘ダメージを受けた場合"],
-        //     cardIds: [cs.id],
-        //   };
-        //   ctx = doTriggerEvent(ctx, gameEvent)
-        //   return {
-        //     ...cs,
-        //     damage: nextDamage,
-        //   };
-        // });
-        // // 套用傷害
-        // ctx = changedCardState.reduce((ctx, cs) => {
-        //   return setItemState(ctx, cs.id, cs) as GameState
-        // }, ctx)
       }
-
       // 若傷害沒有用完, 攻擊方可以攻擊本國
       if (currentAttackPlayerID == getActivePlayerID(ctx) && currentAttackPower > 0) {
         // 非交戰中或有強襲才能打本國(p35)
@@ -176,13 +131,6 @@ export function doRuleBattleDamage(
             const gameEvent: GameEvent = {
               title: ["このカードの部隊が敵軍本国に戦闘ダメージを与えた場合"],
               cardIds: willAttackUnits,
-            };
-            ctx = doTriggerEvent(ctx, gameEvent)
-          }
-          {
-            const gameEvent: GameEvent = {
-              title: ["自軍本国に戦闘ダメージが与えられた場合"],
-              playerId: currentGuardPlayerID
             };
             ctx = doTriggerEvent(ctx, gameEvent)
           }

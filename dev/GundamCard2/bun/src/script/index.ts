@@ -270,31 +270,34 @@ function getGainTexts(gainStr: string): CardText[] {
   ]
 }
 function getKaiSo(gainStr: string): CardText[] {
-  let match = gainStr.match(/〔(０|１|２|３|４|５|６|７|８|９+)〕：改装［(.+)］/);
+  const match = gainStr.match(/〔(.?)(０|１|２|３|４|５|６|７|８|９+)(毎?)〕：改装(〔|［)(.+)(］|〕)/);
   if (match == null) {
-    match = gainStr.match(/〔(０|１|２|３|４|５|６|７|８|９+)〕：改装〔(.+)〕/);
     if (match == null) {
       return []
     }
   }
-  const [matchstr, rollcoststr, char] = match
+  const [matchstr, colorstr, rollcoststr, every, _, char, _2] = match
+  if (colorstr != "" && CardColorFn.getAll().includes(colorstr as CardColor) == false) {
+    throw new Error(`getKaiSo ${gainStr}`)
+  }
+  const color: CardColor | null = colorstr == "" ? null : (colorstr as CardColor)
   const rollcost = uppercaseDigits.indexOf(rollcoststr)
   if (rollcost == -1) {
-    throw new Error(`getGainTexts error: ${matchstr}`)
+    throw new Error(`getKaiSo error: ${matchstr}`)
   }
   return [
     {
       id: "",
       title: ["特殊型", ["改装", char]],
       description: `(${rollcost})改装[${char}]`,
-      conditions: createRollCostRequire(rollcost, null)
+      conditions: createRollCostRequire(rollcost, color)
     }
   ]
 }
 
 // 〔黒１毎〕：クロスウェポン［T3部隊］
 function getCrossWeapon(gainStr: string): CardText[] {
-  let match = gainStr.match(/〔(.?)(０|１|２|３|４|５|６|７|８|９+)(毎?)〕：クロスウェポン［(.+)］/);
+  const match = gainStr.match(/〔(.?)(０|１|２|３|４|５|６|７|８|９+)(毎?)〕：クロスウェポン(〔|［)(.+)(］|〕)/);
   if (match == null) {
     return []
   }

@@ -57,11 +57,13 @@ export const prototype: CardPrototype = {
       onEvent: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
         const cardId = DefineFn.EffectFn.getCardID(effect)
         const cardController = GameStateFn.getItemController(ctx, cardId)
+        const opponentPlayerId = DefineFn.PlayerIDFn.getOpponent(cardController)
         const evt = DefineFn.EffectFn.getEvent(effect)
-        if (evt.title[0] == "GameEventOnMove" &&
-          (DefineFn.BaSyouKeywordFn.isBa(DefineFn.AbsoluteBaSyouFn.getBaSyouKeyword(evt.title[1])) ||
-            DefineFn.AbsoluteBaSyouFn.getBaSyouKeyword(evt.title[1]) == "手札") &&
-          DefineFn.AbsoluteBaSyouFn.eq(evt.title[2], DefineFn.AbsoluteBaSyouFn.of(cardController, "ジャンクヤード"))
+        if (evt.title[0] == "GameEventOnMove"
+          && (DefineFn.BaSyouKeywordFn.isBa(DefineFn.AbsoluteBaSyouFn.getBaSyouKeyword(evt.title[1]))
+            || DefineFn.AbsoluteBaSyouFn.getBaSyouKeyword(evt.title[1]) == "手札")
+          && DefineFn.AbsoluteBaSyouFn.eq(evt.title[2], DefineFn.AbsoluteBaSyouFn.of(opponentPlayerId, "ジャンクヤード"))
+          && evt.cardIds?.some(itemId => GameStateFn.getItemRuntimeCategory(ctx, itemId) == "ユニット")
         ) {
 
         } else {

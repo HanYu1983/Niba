@@ -1,8 +1,9 @@
 import { useContext, useMemo } from "react";
-import { AbsoluteBaSyou, AbsoluteBaSyouFn } from "../../game/define/BaSyou";
+import { AbsoluteBaSyou, AbsoluteBaSyouFn, BaSyouKeywordFn } from "../../game/define/BaSyou";
 import { AppContext } from "../tool/appContext";
 import { CardView } from "./CardView";
 import { getSetGroup, getSetGroupChildren, getSetGroupRoot } from "../../game/gameState/SetGroupComponent";
+import { getBattleGroupBattlePoint } from "../../game/gameState/battleGroup";
 
 export const CardStackView = (props: {
   clientId: string;
@@ -28,6 +29,15 @@ export const CardStackView = (props: {
       return getSetGroupRoot(appContext.viewModel.model.gameState, cardId) == cardId
     });
   }, [cards, appContext.viewModel.model.gameState]);
+  const renderBattlePoint = useMemo(() => {
+    if (BaSyouKeywordFn.getBattleArea().includes(props.cardPosition.value[1]) != true) {
+      return <></>
+    }
+    const bp = getBattleGroupBattlePoint(appContext.viewModel.model.gameState, cardsOnlySetGroupRoot)
+    return <>
+      <div>部隊戰鬥力:{bp}</div>
+    </>
+  }, [props.cardPosition, appContext.viewModel.model.gameState, cardsOnlySetGroupRoot])
   const render = useMemo(() => {
     const _cardPositionID = AbsoluteBaSyouFn.toString(props.cardPosition);
     if (props.isShowStack) {
@@ -47,7 +57,7 @@ export const CardStackView = (props: {
               // });
             }}
           >
-            {_cardPositionID}
+            {_cardPositionID}:{renderBattlePoint}
           </button>
         </div>
         <div
@@ -90,7 +100,8 @@ export const CardStackView = (props: {
     appContext.viewModel.cardPositionSelection,
     appContext.viewModel.model,
     appContext.viewModel.model.gameState,
-    cards
+    cards,
+    renderBattlePoint
   ]);
   return render;
 };

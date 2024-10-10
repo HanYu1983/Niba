@@ -8,6 +8,7 @@ import { Effect } from "../define/Effect"
 import { TargetMissingError } from "../define/GameError"
 import { GameEvent } from "../define/GameEvent"
 import { ItemState } from "../define/ItemState"
+import { PlayerID } from "../define/PlayerID"
 import { PlayerState } from "../define/PlayerState"
 import { Phase } from "../define/Timing"
 import { GameState } from "./GameState"
@@ -84,7 +85,7 @@ export const EventCenterFn = {
     },
     onItemDamageChange(ctx: any, old: ItemState, curr: ItemState): any {
         assertIsGameState(ctx)
-        const msg = `傷害變化: ${curr.id} ${old.damage} => ${old.damage}`
+        const msg = `傷害變化: ${curr.id} ${old.damage} => ${curr.damage}`
         logCategory(`onItemDamageChange`, msg)
         ctx = addMessage(ctx, { id: 0, description: msg })
         return ctx
@@ -111,13 +112,13 @@ export const EventCenterFn = {
         assertIsGameState(ctx)
         let msg: string | null = null
         if (old.isFaceDown != curr.isFaceDown) {
-            msg = `${curr.id}.isFaceDown ${old.isFaceDown} => ${old.isFaceDown}`
+            msg = `${curr.id}.isFaceDown ${old.isFaceDown} => ${curr.isFaceDown}`
         }
         if (old.isRoll != curr.isRoll) {
-            msg = `${curr.id}.isRoll ${old.isRoll} => ${old.isRoll}`
+            msg = `${curr.id}.isRoll ${old.isRoll} => ${curr.isRoll}`
         }
         if (old.protoID != curr.protoID) {
-            msg = `${curr.id}.protoID ${old.protoID} => ${old.protoID}`
+            msg = `${curr.id}.protoID ${old.protoID} => ${curr.protoID}`
         }
         if (msg) {
             ctx = addMessage(ctx, { id: 0, description: msg })
@@ -146,11 +147,11 @@ export const EventCenterFn = {
         logCategory(`onItemAdd`, `${itemId}`)
         return ctx
     },
-    onItemMoveFromCountryToSuTeYaMa(ctx: any, guessDamageCountryItemIds: string[]): any {
+    onCountryDamage(ctx: any, playerId: PlayerID, damage: number): any {
         assertIsGameState(ctx)
-        const msg = `本國受到傷害: ${guessDamageCountryItemIds.length}`
-        logCategory(`onItemMoveFromCountryToSuTeYaMa`, msg)
+        const msg = `本國受到傷害: ${playerId} => ${damage} damage`
         ctx = addMessage(ctx, { id: 0, description: msg })
+        logCategory(`onCountryDamage`, msg)
         return ctx
     },
     onItemMove(ctx: any, from: string, to: string, itemId: string): any {
@@ -176,7 +177,6 @@ export const EventCenterFn = {
                 }
             }
         }
-        const guessDamageCountryItemIds: string[] = []
         for (const newBasyouStr in curr.cardStack) {
             for (const itemId of curr.cardStack[newBasyouStr]) {
                 const oldBasyouStr = TableFns.getCardPosition(old, itemId)
@@ -184,14 +184,8 @@ export const EventCenterFn = {
                     ctx = EventCenterFn.onItemAdd(ctx, itemId)
                 } else if (newBasyouStr != oldBasyouStr) {
                     ctx = EventCenterFn.onItemMove(ctx, oldBasyouStr, newBasyouStr, itemId)
-                    if (AbsoluteBaSyouFn.fromString(oldBasyouStr).value[1] == "本国" && AbsoluteBaSyouFn.fromString(newBasyouStr).value[1] == "捨て山") {
-                        guessDamageCountryItemIds.push(itemId)
-                    }
                 }
             }
-        }
-        if (guessDamageCountryItemIds.length) {
-            ctx = EventCenterFn.onItemMoveFromCountryToSuTeYaMa(ctx, guessDamageCountryItemIds)
         }
         return ctx
     },
