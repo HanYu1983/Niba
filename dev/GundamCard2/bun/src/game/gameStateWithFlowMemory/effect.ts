@@ -21,7 +21,7 @@ export function doActiveEffect(ctx: GameStateWithFlowMemory, playerID: string, e
     throw new Error("activeEffectID != effectID");
   }
   // 處理事件
-  const effect = getEffectIncludePlayerCommand(ctx, effectID)
+  const effect = getEffect(ctx, effectID)
   if (effect == null) {
     throw new Error("effect not found")
   }
@@ -63,9 +63,6 @@ export function doActiveEffect(ctx: GameStateWithFlowMemory, playerID: string, e
   return ctx;
 }
 
-export function getEffectIncludePlayerCommand(ctx: GameStateWithFlowMemory, effectId: string): Effect {
-  return getEffect(ctx, effectId)
-}
 export function setActiveEffectID(
   ctx: GameStateWithFlowMemory,
   playerID: string,
@@ -75,7 +72,7 @@ export function setActiveEffectID(
   if (activeEffectID != null) {
     throw new Error("有人在執行其它指令");
   }
-  const effect = getEffectIncludePlayerCommand(ctx, effectID)
+  const effect = getEffect(ctx, effectID)
   if (effect == null) {
     throw new Error("輸入的效果不存在，流程有誤");
   }
@@ -113,7 +110,7 @@ export function cancelActiveEffectID(
   if (activeEffectID == null) {
     throw new Error("[cancelEffectID] activeEffectID not exist");
   }
-  const effect = getEffectIncludePlayerCommand(ctx, activeEffectID)
+  const effect = getEffect(ctx, activeEffectID)
   if (effect == null) {
     return ctx;
   }

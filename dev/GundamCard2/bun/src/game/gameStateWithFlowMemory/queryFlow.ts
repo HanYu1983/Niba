@@ -1,6 +1,6 @@
 import { getEffect, getEffects, getTopEffect } from "../gameState/EffectStackComponent";
 import { Flow } from "./Flow";
-import { getActiveEffectID, getActiveLogicID, getActiveLogicSubID, getEffectIncludePlayerCommand } from "./effect";
+import { getActiveEffectID, getActiveLogicID, getActiveLogicSubID } from "./effect";
 import { GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
 import { PlayerA, PlayerB, PlayerIDFn } from "../define/PlayerID";
 import { AbsoluteBaSyouFn } from "../define/BaSyou";
@@ -29,7 +29,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
     // 有玩家在支付卡片
     const activeEffectID = getActiveEffectID(ctx)
     if (activeEffectID != null) {
-        const currentActiveEffect = getEffectIncludePlayerCommand(ctx, activeEffectID)
+        const currentActiveEffect = getEffect(ctx, activeEffectID)
         if (currentActiveEffect == null) {
             throw new Error("activeEffectID not found");
         }

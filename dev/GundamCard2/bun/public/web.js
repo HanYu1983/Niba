@@ -23485,7 +23485,7 @@ function addImmediateEffectIfCanPayCost(ctx2, effect) {
 function doActiveEffect(ctx2, playerID, effectID, logicId, logicSubId) {
   if (logCategory("doEffect", effectID), getActiveEffectID(ctx2) != effectID)
     throw new Error("activeEffectID != effectID");
-  const effect = getEffectIncludePlayerCommand(ctx2, effectID);
+  const effect = getEffect(ctx2, effectID);
   if (effect == null)
     throw new Error("effect not found");
   const isStackEffect_ = isStackEffect(ctx2, effectID);
@@ -23512,13 +23512,10 @@ function doActiveEffect(ctx2, playerID, effectID, logicId, logicSubId) {
     };
   return ctx2;
 }
-function getEffectIncludePlayerCommand(ctx2, effectId) {
-  return getEffect(ctx2, effectId);
-}
 function setActiveEffectID(ctx2, playerID, effectID) {
   if (getActiveEffectID(ctx2) != null)
     throw new Error("\u6709\u4EBA\u5728\u57F7\u884C\u5176\u5B83\u6307\u4EE4");
-  const effect = getEffectIncludePlayerCommand(ctx2, effectID);
+  const effect = getEffect(ctx2, effectID);
   if (effect == null)
     throw new Error("\u8F38\u5165\u7684\u6548\u679C\u4E0D\u5B58\u5728\uFF0C\u6D41\u7A0B\u6709\u8AA4");
   if (EffectFn.getPlayerID(effect) != playerID)
@@ -23542,7 +23539,7 @@ function cancelActiveEffectID(ctx2, playerID) {
   const activeEffectID = getActiveEffectID(ctx2);
   if (activeEffectID == null)
     throw new Error("[cancelEffectID] activeEffectID not exist");
-  const effect = getEffectIncludePlayerCommand(ctx2, activeEffectID);
+  const effect = getEffect(ctx2, activeEffectID);
   if (effect == null)
     return ctx2;
   if (EffectFn.getPlayerID(effect) != playerID)
@@ -24310,7 +24307,7 @@ function applyFlow(ctx2, playerID, flow) {
         }
       }, ctx2;
     case "FlowPassPayCost": {
-      if (getEffectIncludePlayerCommand(ctx2, flow.effectID) == null)
+      if (getEffect(ctx2, flow.effectID) == null)
         throw new Error(`effectID not found:${flow.effectID}`);
       return ctx2 = {
         ...ctx2,
@@ -24332,7 +24329,7 @@ function applyFlow(ctx2, playerID, flow) {
         }
       };
     case "FlowSetTipSelection": {
-      const effect = getEffectIncludePlayerCommand(ctx2, flow.effectID), cardId = EffectFn.getCardID(effect);
+      const effect = getEffect(ctx2, flow.effectID), cardId = EffectFn.getCardID(effect);
       return ctx2 = mapItemState(ctx2, cardId, (is) => ItemStateFn.setTip(is, flow.conditionKey, flow.tip)), assertTipForUserSelection(ctx2, effect, cardId), ctx2;
     }
   }
@@ -25117,7 +25114,7 @@ function queryFlow(ctx2, playerID) {
     return [{ id: "FlowWaitPlayer", description: "\u904A\u6232\u7D50\u675F" }];
   const activeEffectID = getActiveEffectID(ctx2);
   if (activeEffectID != null) {
-    const currentActiveEffect = getEffectIncludePlayerCommand(ctx2, activeEffectID);
+    const currentActiveEffect = getEffect(ctx2, activeEffectID);
     if (currentActiveEffect == null)
       throw new Error("activeEffectID not found");
     const activeLogicID = getActiveLogicID(ctx2);
@@ -25811,65 +25808,58 @@ var jsx_dev_runtime2 = __toESM(require_react_jsx_dev_runtime_development(), 1), 
 
 // src/client/component/EffectView.tsx
 var jsx_dev_runtime3 = __toESM(require_react_jsx_dev_runtime_development(), 1), EffectView = (props) => {
-  const appContext = import_react3.useContext(AppContext), block = import_react3.useMemo(() => {
+  const appContext = import_react3.useContext(AppContext), effect = import_react3.useMemo(() => {
     try {
-      return getEffectIncludePlayerCommand(appContext.viewModel.model.gameState, props.effectID);
+      return getEffect(appContext.viewModel.model.gameState, props.effectID);
     } catch (e) {
       return console.error(e), e.message;
     }
   }, [appContext.viewModel.model.gameState, props.effectID]);
-  if (typeof block == "string")
+  if (typeof effect == "string")
     return /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("div", {
-      children: block
-    }, void 0, !1, void 0, this);
+      children: [
+        props.effectID,
+        ":",
+        effect
+      ]
+    }, void 0, !0, void 0, this);
   const cardID = import_react3.useMemo(() => {
-    switch (block.reason[0]) {
+    switch (effect.reason[0]) {
       case "Destroy":
       case "Event":
       case "PlayCard":
       case "PlayText":
       case "Situation":
       case "\u5834\u306B\u51FA\u308B":
-        return EffectFn.getCardID(block);
+        return EffectFn.getCardID(effect);
       case "GameRule":
         return null;
     }
-  }, [block]);
+  }, [effect]);
   return import_react3.useMemo(() => {
     return /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("div", {
-      style: { display: "flex" },
       children: [
         /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("div", {
-          style: { flex: 1 },
-          children: block.isOption ? "\u53EF\u53D6\u6D88" : "\u4E0D\u53EF\u53D6\u6D88"
-        }, void 0, !1, void 0, this),
-        cardID != null ? /* @__PURE__ */ jsx_dev_runtime3.jsxDEV(CardView, {
-          enabled: !0,
-          clientId: props.clientId,
-          cardID,
-          isShowCmd: !1
-        }, void 0, !1, void 0, this) : /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("div", {
-          children: JSON.stringify(block.reason)
+          children: effect.id
         }, void 0, !1, void 0, this),
         /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("div", {
-          style: { flex: 4 },
-          children: [
-            /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("div", {
-              children: block.id
-            }, void 0, !1, void 0, this),
-            /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("div", {
-              children: [
-                block.description,
-                "(",
-                cardID,
-                ")"
-              ]
-            }, void 0, !0, void 0, this)
-          ]
-        }, void 0, !0, void 0, this)
+          children: JSON.stringify(effect.reason)
+        }, void 0, !1, void 0, this),
+        /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("div", {
+          children: effect.isOption ? "\u53EF\u53D6\u6D88" : "\u4E0D\u53EF\u53D6\u6D88"
+        }, void 0, !1, void 0, this),
+        /* @__PURE__ */ jsx_dev_runtime3.jsxDEV(CardView, {
+          enabled: !0,
+          clientId: props.clientId,
+          cardID: cardID || void 0,
+          isShowCmd: !1
+        }, void 0, !1, void 0, this),
+        /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("div", {
+          children: effect.text.description || effect.description
+        }, void 0, !1, void 0, this)
       ]
     }, void 0, !0, void 0, this);
-  }, [props, cardID, block]);
+  }, [props, cardID, effect]);
 };
 
 // src/client/component/FlowSetTipSelectionView.tsx
@@ -26010,7 +26000,7 @@ var jsx_dev_runtime4 = __toESM(require_react_jsx_dev_runtime_development(), 1), 
           versionID: appContext.viewModel.model.versionID
         });
       },
-      children: effect.description
+      children: "OK"
     }, void 0, !1, void 0, this);
   }, [props.flow, userTip]);
   return import_react4.useMemo(() => {
@@ -26257,19 +26247,39 @@ var jsx_dev_runtime8 = __toESM(require_react_jsx_dev_runtime_development(), 1);
 function ClientView(props) {
   const appContext = import_react8.useContext(AppContext), renderStackEffects = import_react8.useMemo(() => {
     return /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
-      style: { display: "flex" },
-      children: appContext.viewModel.model.gameState.stackEffect.map((effectId) => {
+      style: { display: "flex", overflow: "scroll" },
+      children: appContext.viewModel.model.gameState.stackEffect.map((effectId, i) => {
         return /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
           style: { border: "1px solid black" },
-          children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV(EffectView, {
-            enabled: !0,
-            clientId: props.clientId,
-            effectID: effectId
-          }, void 0, !1, void 0, this)
-        }, effectId, !1, void 0, this);
+          children: [
+            i,
+            /* @__PURE__ */ jsx_dev_runtime8.jsxDEV(EffectView, {
+              enabled: !0,
+              clientId: props.clientId,
+              effectID: effectId
+            }, void 0, !1, void 0, this)
+          ]
+        }, i, !0, void 0, this);
       })
     }, void 0, !1, void 0, this);
-  }, [appContext.viewModel.model.gameState.stackEffect]), renderDebug = import_react8.useMemo(() => {
+  }, [appContext.viewModel.model.gameState.stackEffect]), renderImmediateEffects = import_react8.useMemo(() => {
+    return /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
+      style: { display: "flex", overflow: "scroll" },
+      children: appContext.viewModel.model.gameState.immediateEffect.map((effectId, i) => {
+        return /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
+          style: { border: "1px solid black" },
+          children: [
+            i,
+            /* @__PURE__ */ jsx_dev_runtime8.jsxDEV(EffectView, {
+              enabled: !0,
+              clientId: props.clientId,
+              effectID: effectId
+            }, void 0, !1, void 0, this)
+          ]
+        }, i, !0, void 0, this);
+      })
+    }, void 0, !1, void 0, this);
+  }, [appContext.viewModel.model.gameState.immediateEffect]), renderDebug = import_react8.useMemo(() => {
     return /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
       children: [
         "flowMemory:",
@@ -26310,7 +26320,17 @@ function ClientView(props) {
             appContext.viewModel.model.gameState.turn
           ]
         }, void 0, !0, void 0, this),
+        /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
+          children: "\u7ACB\u5373\u6548\u679C"
+        }, void 0, !1, void 0, this),
+        renderImmediateEffects,
+        /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
+          children: "\u5806\u758A\u6548\u679C"
+        }, void 0, !1, void 0, this),
         renderStackEffects,
+        /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
+          children: "\u6307\u4EE4"
+        }, void 0, !1, void 0, this),
         /* @__PURE__ */ jsx_dev_runtime8.jsxDEV(FlowListView, {
           clientId: props.clientId
         }, void 0, !1, void 0, this),
@@ -26561,10 +26581,12 @@ function AppView() {
     children: [
       /* @__PURE__ */ jsx_dev_runtime12.jsxDEV(ControlView, {}, void 0, !1, void 0, this),
       /* @__PURE__ */ jsx_dev_runtime12.jsxDEV(PlayerController, {
-        clientId: PlayerA
+        clientId: PlayerA,
+        isPlayer: !1
       }, void 0, !1, void 0, this),
       /* @__PURE__ */ jsx_dev_runtime12.jsxDEV(PlayerController, {
-        clientId: PlayerB
+        clientId: PlayerB,
+        isPlayer: !1
       }, void 0, !1, void 0, this),
       /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
         style: { border: "1px solid blue", display: "flex" },

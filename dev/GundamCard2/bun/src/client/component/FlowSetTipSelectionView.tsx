@@ -163,7 +163,7 @@ const renderButton = useMemo(() => {
         versionID: appContext.viewModel.model.versionID
       });
     }}
-  >{effect.description}
+  >OK
   </button>
 }, [props.flow, userTip])
 const render = useMemo(() => {

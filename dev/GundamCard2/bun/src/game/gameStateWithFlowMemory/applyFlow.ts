@@ -1,11 +1,11 @@
 import { logCategory } from "../../tool/logger";
 import { PlayerA, PlayerB, PlayerID, PlayerIDFn } from "../define/PlayerID";
 import { AbsoluteBaSyou, AbsoluteBaSyouFn, BaSyouKeyword, BaSyouKeywordFn } from "../define/BaSyou";
-import { addImmediateEffect } from "../gameState/EffectStackComponent";
+import { addImmediateEffect, getEffect } from "../gameState/EffectStackComponent";
 import { checkIsBattle } from "../gameState/IsBattleComponent";
 import { Flow } from "./Flow";
 import { GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
-import { setActiveEffectID, cancelActiveEffectID, doActiveEffect, deleteImmediateEffect, getEffectIncludePlayerCommand, setActiveLogicID } from "./effect";
+import { setActiveEffectID, cancelActiveEffectID, doActiveEffect, deleteImmediateEffect, setActiveLogicID } from "./effect";
 import { PhaseFn } from "../define/Timing";
 import { doPlayerAttack } from "../gameState/player";
 import { doTriggerEvent } from "../gameState/doTriggerEvent";
@@ -423,7 +423,7 @@ export function applyFlow(
             return ctx;
         }
         case "FlowPassPayCost": {
-            const effect = getEffectIncludePlayerCommand(ctx, flow.effectID)
+            const effect = getEffect(ctx, flow.effectID)
             if (effect == null) {
                 throw new Error(`effectID not found:${flow.effectID}`);
             }
@@ -453,7 +453,7 @@ export function applyFlow(
             };
         }
         case "FlowSetTipSelection": {
-            const effect = getEffectIncludePlayerCommand(ctx, flow.effectID)
+            const effect = getEffect(ctx, flow.effectID)
             const cardId = EffectFn.getCardID(effect)
             ctx = mapItemState(ctx, cardId, is => ItemStateFn.setTip(is, flow.conditionKey, flow.tip)) as GameStateWithFlowMemory
             assertTipForUserSelection(ctx, effect, cardId)
