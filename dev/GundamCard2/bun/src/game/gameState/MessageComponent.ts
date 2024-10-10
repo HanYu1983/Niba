@@ -2,15 +2,23 @@ import { Effect } from "../define/Effect"
 import { ItemState } from "../define/ItemState"
 import { Message } from "../define/Message"
 import { PlayerState } from "../define/PlayerState"
+import { ToolFn } from "../tool"
 
 export type MessageComponent = {
+    messageTopId: number,
     messages: Message[],
-    messagesCurrentEffect: Effect | null
+    messagesCurrentEffect: Effect | null,
+    messagesIsPlayerRead: { [key: string]: string[] }
 }
 
 export function addMessage(ctx: MessageComponent, msg: Message): MessageComponent {
+    if (msg.id == 0) {
+        msg.id = ctx.messageTopId
+    }
+    msg.effect = ctx.messagesCurrentEffect || undefined
     return {
         ...ctx,
+        messageTopId: ctx.messageTopId + 1,
         messages: [...ctx.messages, msg]
     }
 }
@@ -28,4 +36,16 @@ export function setMessageCurrentEffect(ctx: MessageComponent, effect: Effect | 
 }
 export function getMessageCurrentEffect(ctx: MessageComponent): Effect | null {
     return ctx.messagesCurrentEffect
+}
+export function setMessageIsRead(ctx: MessageComponent, playerId: string, messageId: string): MessageComponent {
+    return {
+        ...ctx,
+        messagesIsPlayerRead: {
+            ...ctx.messagesIsPlayerRead,
+            [playerId]: {
+                ...ctx.messagesIsPlayerRead[playerId],
+                [messageId]: true
+            }
+        }
+    }
 }

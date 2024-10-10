@@ -1,8 +1,11 @@
+import { Effect } from "./Effect"
+
 export type MessageTitle =
     | []
 
 export type Message = {
-    id: string,
-    title: MessageTitle,
-    isPlayerRead: { [key: string]: boolean }
+    id: number,
+    title?: MessageTitle,
+    description?: string,
+    effect?: Effect,
 }

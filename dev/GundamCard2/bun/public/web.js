@@ -17209,7 +17209,7 @@ var require_react_jsx_dev_runtime_development = __commonJS((exports) => {
 var ReactDom = __toESM(require_client(), 1);
 
 // src/client/component/AppView.tsx
-var import_react12 = __toESM(require_react_development(), 1);
+var import_react13 = __toESM(require_react_development(), 1);
 
 // src/game/define/PlayerID.ts
 var exports_PlayerID = {};
@@ -17453,6 +17453,15 @@ var DEFAULT_TABLE = {
 };
 
 // src/game/gameState/MessageComponent.ts
+function addMessage(ctx2, msg) {
+  if (msg.id == 0)
+    msg.id = ctx2.messageTopId;
+  return msg.effect = ctx2.messagesCurrentEffect || void 0, {
+    ...ctx2,
+    messageTopId: ctx2.messageTopId + 1,
+    messages: [...ctx2.messages, msg]
+  };
+}
 function setMessageCurrentEffect(ctx2, effect) {
   return {
     ...ctx2,
@@ -17464,79 +17473,72 @@ function getMessageCurrentEffect(ctx2) {
 }
 
 // src/game/gameState/EventCenter.ts
-function getGameStateAndAssert(ctx2) {
+function assertIsGameState(ctx2) {
   if (ctx2.isGameState != !0)
     throw new Error("must is gameState");
-  return ctx2;
 }
 var EventCenterFn = {
-  onAddImmediateEffect(_ctx, effect) {
-    return logCategory("onAddImmediateEffect", `${effect.description}`, effect), getGameStateAndAssert(_ctx);
+  onAddImmediateEffect(ctx2, effect) {
+    return logCategory("onAddImmediateEffect", `${effect.description}`, effect), assertIsGameState(ctx2), ctx2;
   },
-  onEvent(_ctx, evt) {
-    return logCategory("onEvent", `${JSON.stringify(evt.title)} ${JSON.stringify(evt.cardIds)}`, evt.title, evt.cardIds), getGameStateAndAssert(_ctx);
+  onEvent(ctx2, evt) {
+    return logCategory("onEvent", `${JSON.stringify(evt.title)} ${JSON.stringify(evt.cardIds)}`, evt.title, evt.cardIds), assertIsGameState(ctx2), ctx2 = addMessage(ctx2, { id: 0, description: `onEvent: ${evt.title[0]} ${JSON.stringify(evt.cardIds)}` }), ctx2;
   },
-  onEffectStart(_ctx, effect) {
-    logCategory("onEffectStart", `${effect.text.description}`);
-    let ctx2 = getGameStateAndAssert(_ctx);
-    return ctx2 = setMessageCurrentEffect(ctx2, effect), ctx2;
+  onEffectStart(ctx2, effect) {
+    return logCategory("onEffectStart", `${effect.text.description}`), assertIsGameState(ctx2), ctx2 = setMessageCurrentEffect(ctx2, effect), ctx2 = addMessage(ctx2, { id: 0, description: `onEffectStart: ${effect.text.description}` }), ctx2;
   },
-  onEffectEnd(_ctx, effect) {
-    logCategory("onEffectEnd", `${effect.text.description}`);
-    let ctx2 = getGameStateAndAssert(_ctx);
-    return ctx2 = setMessageCurrentEffect(ctx2, null), ctx2;
+  onEffectEnd(ctx2, effect) {
+    return logCategory("onEffectEnd", `${effect.text.description}`), assertIsGameState(ctx2), ctx2 = setMessageCurrentEffect(ctx2, null), ctx2 = addMessage(ctx2, { id: 0, description: `onEffectEnd: ${effect.text.description}` }), ctx2;
   },
-  onActionStart(_ctx, effect, action) {
-    logCategory("onActionStart", `${action.description}`);
-    let ctx2 = getGameStateAndAssert(_ctx);
-    return ctx2 = setMessageCurrentEffect(ctx2, effect), ctx2;
+  onActionStart(ctx2, effect, action) {
+    return logCategory("onActionStart", `${action.description}`), assertIsGameState(ctx2), ctx2;
   },
-  onActionEnd(_ctx, effect, action) {
-    logCategory("onActionEnd", `${action.description}`);
-    let ctx2 = getGameStateAndAssert(_ctx);
-    return ctx2 = setMessageCurrentEffect(ctx2, null), ctx2;
+  onActionEnd(ctx2, effect, action) {
+    return logCategory("onActionEnd", `${action.description}`), assertIsGameState(ctx2), ctx2;
   },
-  onItemStateDestroyReasonChange(_ctx, old, curr) {
+  onItemStateDestroyReasonChange(ctx2, old, curr) {
     if (old.destroyReason == null && curr.destroyReason)
-      logCategory("onItemStateDestroyReasonChange", `\u88AB\u7834\u58DE\u5C1A\u672A\u9032\u5165\u5806\u758A:${curr.id}`);
+      logCategory("onItemStateDestroyReasonChange", `\u88AB\u7834\u58DE\u5C1A\u672A\u9032\u5165\u5806\u758A:${curr.id}`), ctx2 = addMessage(ctx2, { id: 0, description: `\u88AB\u7834\u58DE\u5C1A\u672A\u9032\u5165\u5806\u758A:${curr.id}` });
     else if (old.destroyReason && curr.destroyReason == null)
-      logCategory("onItemStateDestroyReasonChange", `\u7834\u58DE\u88AB\u53D6\u6D88:${curr.id}`);
-    return _ctx;
+      logCategory("onItemStateDestroyReasonChange", `\u7834\u58DE\u88AB\u53D6\u6D88:${curr.id}`), ctx2 = addMessage(ctx2, { id: 0, description: `\u7834\u58DE\u88AB\u53D6\u6D88:${curr.id}` });
+    return ctx2;
   },
-  onItemStateChange(_ctx, old, curr) {
-    let ctx2 = getGameStateAndAssert(_ctx), effect = getMessageCurrentEffect(ctx2);
+  onItemStateChange(ctx2, old, curr) {
+    assertIsGameState(ctx2);
+    let effect = getMessageCurrentEffect(ctx2);
     if (logCategory("onItemStateChange", old, curr), old.destroyReason != curr.destroyReason)
       ctx2 = EventCenterFn.onItemStateDestroyReasonChange(ctx2, old, curr);
     return ctx2;
   },
-  onCardChange(_ctx, old, curr) {
-    let ctx2 = getGameStateAndAssert(_ctx), effect = getMessageCurrentEffect(ctx2);
-    return logCategory("onCardChange", old, curr), ctx2;
+  onCardChange(ctx2, old, curr) {
+    assertIsGameState(ctx2);
+    let effect = getMessageCurrentEffect(ctx2);
+    return logCategory("onCardChange", old, curr), ctx2 = addMessage(ctx2, { id: 0, description: `onCardChange:${curr.id}` }), ctx2;
   },
-  onPlayerStateChange(_ctx, old, curr) {
-    return getGameStateAndAssert(_ctx);
+  onPlayerStateChange(ctx2, old, curr) {
+    return assertIsGameState(ctx2), ctx2 = addMessage(ctx2, { id: 0, description: `onPlayerStateChange:${curr.id}` }), ctx2;
   },
-  onSetSetGroupParent(_ctx, parentId, itemId) {
-    return getGameStateAndAssert(_ctx);
+  onSetSetGroupParent(ctx2, parentId, itemId) {
+    return assertIsGameState(ctx2), ctx2 = addMessage(ctx2, { id: 0, description: `onSetSetGroupParent:${parentId} ${itemId}` }), ctx2;
   },
-  onSetPhase(_ctx, old, curr) {
-    return logCategory("onSetPhase", `${curr}`), getGameStateAndAssert(_ctx);
+  onSetPhase(ctx2, old, curr) {
+    return logCategory("onSetPhase", `${curr}`), assertIsGameState(ctx2), ctx2 = addMessage(ctx2, { id: 0, description: `onSetPhase:${curr}` }), ctx2;
   },
-  onItemAdd(_ctx, itemId) {
-    return logCategory("onItemAdd", `${itemId}`), getGameStateAndAssert(_ctx);
+  onItemAdd(ctx2, itemId) {
+    return logCategory("onItemAdd", `${itemId}`), assertIsGameState(ctx2), ctx2;
   },
-  onItemMove(_ctx, from, to, itemId) {
-    return logCategory("onItemMove", `${itemId} = ${from} => ${to}`), getGameStateAndAssert(_ctx);
+  onItemMove(ctx2, from, to, itemId) {
+    return logCategory("onItemMove", `${itemId} = ${from} => ${to}`), assertIsGameState(ctx2), ctx2 = addMessage(ctx2, { id: 0, description: `onItemMove:${itemId} = ${from} => ${to}` }), ctx2;
   },
-  onItemDelete(_ctx, itemId) {
-    return logCategory("onItemDelete", `${itemId}`), getGameStateAndAssert(_ctx);
+  onItemDelete(ctx2, itemId) {
+    return logCategory("onItemDelete", `${itemId}`), assertIsGameState(ctx2), ctx2;
   },
-  onTableChange(_ctx, old, curr) {
+  onTableChange(ctx2, old, curr) {
     for (let oldBasyouStr in old.cardStack)
       for (let itemId of old.cardStack[oldBasyouStr]) {
         const newBasyouStr = TableFns.getCardPosition(curr, itemId);
         if (newBasyouStr == null)
-          _ctx = EventCenterFn.onItemDelete(_ctx, itemId);
+          ctx2 = EventCenterFn.onItemDelete(ctx2, itemId);
         else if (newBasyouStr != oldBasyouStr)
           ;
       }
@@ -17544,11 +17546,11 @@ var EventCenterFn = {
       for (let itemId of curr.cardStack[newBasyouStr]) {
         const oldBasyouStr = TableFns.getCardPosition(old, itemId);
         if (oldBasyouStr == null)
-          _ctx = EventCenterFn.onItemAdd(_ctx, itemId);
+          ctx2 = EventCenterFn.onItemAdd(ctx2, itemId);
         else if (newBasyouStr != oldBasyouStr)
-          _ctx = EventCenterFn.onItemMove(_ctx, oldBasyouStr, newBasyouStr, itemId);
+          ctx2 = EventCenterFn.onItemMove(ctx2, oldBasyouStr, newBasyouStr, itemId);
       }
-    return _ctx;
+    return ctx2;
   }
 };
 
@@ -18957,8 +18959,10 @@ function createGameState() {
     coins: {},
     coinId2cardId: {},
     globalEffectPool: {},
+    messageTopId: 0,
     messages: [],
     messagesCurrentEffect: null,
+    messagesIsPlayerRead: {},
     turn: 0,
     ...createSetGroupComponent()
   };
@@ -26567,51 +26571,75 @@ function PlayerController(props) {
   }, [appContext.viewModel.model.gameState, props, flows]), /* @__PURE__ */ jsx_dev_runtime11.jsxDEV(jsx_dev_runtime11.Fragment, {}, void 0, !1, void 0, this);
 }
 
-// src/client/component/AppView.tsx
+// src/client/component/MessagesView.tsx
+var import_react12 = __toESM(require_react_development(), 1);
 var jsx_dev_runtime12 = __toESM(require_react_jsx_dev_runtime_development(), 1);
+function MessagesView(props) {
+  const appContext = import_react12.useContext(AppContext);
+  return import_react12.useMemo(() => {
+    let msgs = appContext.viewModel.model.gameState.messages;
+    return msgs = msgs.slice(), msgs.reverse(), /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
+      style: { overflow: "scroll", height: 300 },
+      children: msgs.map((msg) => {
+        return /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
+          style: { border: "1px solid black" },
+          children: [
+            msg.id,
+            ":",
+            msg.description
+          ]
+        }, msg.id, !0, void 0, this);
+      })
+    }, void 0, !1, void 0, this);
+  }, [appContext.viewModel.model.gameState.messages]);
+}
+
+// src/client/component/AppView.tsx
+var jsx_dev_runtime13 = __toESM(require_react_jsx_dev_runtime_development(), 1);
 function AppView() {
-  return import_react12.useEffect(() => {
+  return import_react13.useEffect(() => {
     const subscriber = OnError.subscribe((e) => {
       throw console.error(e), alert(e), e;
     });
     return () => {
       subscriber.unsubscribe();
     };
-  }, []), /* @__PURE__ */ jsx_dev_runtime12.jsxDEV(AppContextProvider, {
+  }, []), /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(AppContextProvider, {
     children: [
-      /* @__PURE__ */ jsx_dev_runtime12.jsxDEV(ControlView, {}, void 0, !1, void 0, this),
-      /* @__PURE__ */ jsx_dev_runtime12.jsxDEV(PlayerController, {
+      /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(ControlView, {}, void 0, !1, void 0, this),
+      /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(PlayerController, {
         clientId: PlayerA,
         isPlayer: !1
       }, void 0, !1, void 0, this),
-      /* @__PURE__ */ jsx_dev_runtime12.jsxDEV(PlayerController, {
+      /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(PlayerController, {
         clientId: PlayerB,
         isPlayer: !1
       }, void 0, !1, void 0, this),
-      /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
         style: { border: "1px solid blue", display: "flex" },
         children: [
-          /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
             style: { border: "1px solid red", flex: 1, width: 1200 },
-            children: /* @__PURE__ */ jsx_dev_runtime12.jsxDEV(ClientView, {
+            children: /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(ClientView, {
               clientId: PlayerA
             }, void 0, !1, void 0, this)
           }, void 0, !1, void 0, this),
-          /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
             style: { border: "1px solid red", flex: 1 },
-            children: /* @__PURE__ */ jsx_dev_runtime12.jsxDEV(CardSelectionView, {
+            children: /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(CardSelectionView, {
               clientId: PlayerA
             }, void 0, !1, void 0, this)
           }, void 0, !1, void 0, this)
         ]
-      }, void 0, !0, void 0, this)
+      }, void 0, !0, void 0, this),
+      /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(MessagesView, {}, void 0, !1, void 0, this)
     ]
   }, void 0, !0, void 0, this);
 }
 
 // src/web.tsx
-var jsx_dev_runtime13 = __toESM(require_react_jsx_dev_runtime_development(), 1), rootDom = document.getElementById("root");
+var jsx_dev_runtime14 = __toESM(require_react_jsx_dev_runtime_development(), 1), rootDom = document.getElementById("root");
 if (rootDom == null)
   throw new Error("div root not found");
 var root = ReactDom.createRoot(rootDom);
-root.render(/* @__PURE__ */ jsx_dev_runtime13.jsxDEV(AppView, {}, void 0, !1, void 0, this));
+root.render(/* @__PURE__ */ jsx_dev_runtime14.jsxDEV(AppView, {}, void 0, !1, void 0, this));

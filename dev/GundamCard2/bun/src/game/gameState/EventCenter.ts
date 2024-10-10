@@ -8,60 +8,62 @@ import { ItemState } from "../define/ItemState"
 import { PlayerState } from "../define/PlayerState"
 import { Phase } from "../define/Timing"
 import { GameState } from "./GameState"
-import { getMessageCurrentEffect, setMessageCurrentEffect } from "./MessageComponent"
+import { addMessage, getMessageCurrentEffect, setMessageCurrentEffect } from "./MessageComponent"
 
-function getGameStateAndAssert(ctx: any): GameState {
+function assertIsGameState(ctx: any) {
     if (ctx.isGameState != true) {
         throw new Error(`must is gameState`)
     }
-    return ctx as GameState
 }
 
 export const EventCenterFn = {
-    onAddImmediateEffect(_ctx: any, effect: Effect): any {
+    onAddImmediateEffect(ctx: any, effect: Effect): any {
         logCategory(`onAddImmediateEffect`, `${effect.description}`, effect)
-        let ctx = getGameStateAndAssert(_ctx)
+        assertIsGameState(ctx)
         return ctx
     },
-    onEvent(_ctx: any, evt: GameEvent): any {
+    onEvent(ctx: any, evt: GameEvent): any {
         logCategory(`onEvent`, `${JSON.stringify(evt.title)} ${JSON.stringify(evt.cardIds)}`, evt.title, evt.cardIds)
-        let ctx = getGameStateAndAssert(_ctx)
+        assertIsGameState(ctx)
+        ctx = addMessage(ctx, { id: 0, description: `onEvent: ${evt.title[0]} ${JSON.stringify(evt.cardIds)}` })
         return ctx
     },
-    onEffectStart(_ctx: any, effect: Effect): any {
+    onEffectStart(ctx: any, effect: Effect): any {
         logCategory(`onEffectStart`, `${effect.text.description}`)
-        let ctx = getGameStateAndAssert(_ctx)
+        assertIsGameState(ctx)
         ctx = setMessageCurrentEffect(ctx, effect) as GameState
+        ctx = addMessage(ctx, { id: 0, description: `onEffectStart: ${effect.text.description}` })
         return ctx
     },
-    onEffectEnd(_ctx: any, effect: Effect): any {
+    onEffectEnd(ctx: any, effect: Effect): any {
         logCategory(`onEffectEnd`, `${effect.text.description}`)
-        let ctx = getGameStateAndAssert(_ctx)
+        assertIsGameState(ctx)
         ctx = setMessageCurrentEffect(ctx, null) as GameState
+        ctx = addMessage(ctx, { id: 0, description: `onEffectEnd: ${effect.text.description}` })
         return ctx
     },
-    onActionStart(_ctx: any, effect: Effect, action: Action): any {
+    onActionStart(ctx: any, effect: Effect, action: Action): any {
         logCategory(`onActionStart`, `${action.description}`)
-        let ctx = getGameStateAndAssert(_ctx)
-        ctx = setMessageCurrentEffect(ctx, effect) as GameState
+        assertIsGameState(ctx)
         return ctx
     },
-    onActionEnd(_ctx: any, effect: Effect, action: Action): any {
+    onActionEnd(ctx: any, effect: Effect, action: Action): any {
         logCategory(`onActionEnd`, `${action.description}`)
-        let ctx = getGameStateAndAssert(_ctx)
-        ctx = setMessageCurrentEffect(ctx, null) as GameState
+        assertIsGameState(ctx)
         return ctx
     },
-    onItemStateDestroyReasonChange(_ctx: any, old: ItemState, curr: ItemState):any {
+    onItemStateDestroyReasonChange(ctx: any, old: ItemState, curr: ItemState): any {
         if (old.destroyReason == null && curr.destroyReason) {
             logCategory("onItemStateDestroyReasonChange", `被破壞尚未進入堆疊:${curr.id}`)
+            ctx = addMessage(ctx, { id: 0, description: `被破壞尚未進入堆疊:${curr.id}` })
         } else if (old.destroyReason && curr.destroyReason == null) {
             logCategory("onItemStateDestroyReasonChange", `破壞被取消:${curr.id}`)
+            ctx = addMessage(ctx, { id: 0, description: `破壞被取消:${curr.id}` })
         }
-        return _ctx
+        return ctx
     },
-    onItemStateChange(_ctx: any, old: ItemState, curr: ItemState): any {
-        let ctx = getGameStateAndAssert(_ctx)
+    onItemStateChange(ctx: any, old: ItemState, curr: ItemState): any {
+        assertIsGameState(ctx)
         let effect = getMessageCurrentEffect(ctx)
         logCategory(`onItemStateChange`, old, curr)
         if (old.destroyReason != curr.destroyReason) {
@@ -69,46 +71,51 @@ export const EventCenterFn = {
         }
         return ctx
     },
-    onCardChange(_ctx: any, old: Card, curr: Card): any {
-        let ctx = getGameStateAndAssert(_ctx)
+    onCardChange(ctx: any, old: Card, curr: Card): any {
+        assertIsGameState(ctx)
         let effect = getMessageCurrentEffect(ctx)
         logCategory(`onCardChange`, old, curr)
+        ctx = addMessage(ctx, { id: 0, description: `onCardChange:${curr.id}` })
         return ctx
     },
-    onPlayerStateChange(_ctx: any, old: PlayerState, curr: PlayerState): any {
-        let ctx = getGameStateAndAssert(_ctx)
+    onPlayerStateChange(ctx: any, old: PlayerState, curr: PlayerState): any {
+        assertIsGameState(ctx)
+        ctx = addMessage(ctx, { id: 0, description: `onPlayerStateChange:${curr.id}` })
         return ctx
     },
-    onSetSetGroupParent(_ctx: any, parentId: string, itemId: string): any {
-        let ctx = getGameStateAndAssert(_ctx)
+    onSetSetGroupParent(ctx: any, parentId: string, itemId: string): any {
+        assertIsGameState(ctx)
+        ctx = addMessage(ctx, { id: 0, description: `onSetSetGroupParent:${parentId} ${itemId}` })
         return ctx
     },
-    onSetPhase(_ctx: any, old: Phase, curr: Phase): any {
+    onSetPhase(ctx: any, old: Phase, curr: Phase): any {
         logCategory(`onSetPhase`, `${curr}`)
-        let ctx = getGameStateAndAssert(_ctx)
+        assertIsGameState(ctx)
+        ctx = addMessage(ctx, { id: 0, description: `onSetPhase:${curr}` })
         return ctx
     },
-    onItemAdd(_ctx: any, itemId: string): any {
+    onItemAdd(ctx: any, itemId: string): any {
         logCategory(`onItemAdd`, `${itemId}`)
-        let ctx = getGameStateAndAssert(_ctx)
+        assertIsGameState(ctx)
         return ctx
     },
-    onItemMove(_ctx: any, from: string, to: string, itemId: string): any {
+    onItemMove(ctx: any, from: string, to: string, itemId: string): any {
         logCategory(`onItemMove`, `${itemId} = ${from} => ${to}`)
-        let ctx = getGameStateAndAssert(_ctx)
+        assertIsGameState(ctx)
+        ctx = addMessage(ctx, { id: 0, description: `onItemMove:${itemId} = ${from} => ${to}` })
         return ctx
     },
-    onItemDelete(_ctx: any, itemId: string): any {
+    onItemDelete(ctx: any, itemId: string): any {
         logCategory(`onItemDelete`, `${itemId}`)
-        let ctx = getGameStateAndAssert(_ctx)
+        assertIsGameState(ctx)
         return ctx
     },
-    onTableChange(_ctx: any, old: Table, curr: Table): any {
+    onTableChange(ctx: any, old: Table, curr: Table): any {
         for (const oldBasyouStr in old.cardStack) {
             for (const itemId of old.cardStack[oldBasyouStr]) {
                 const newBasyouStr = TableFns.getCardPosition(curr, itemId)
                 if (newBasyouStr == null) {
-                    _ctx = EventCenterFn.onItemDelete(_ctx, itemId)
+                    ctx = EventCenterFn.onItemDelete(ctx, itemId)
                 } else if (newBasyouStr != oldBasyouStr) {
 
                 }
@@ -118,12 +125,12 @@ export const EventCenterFn = {
             for (const itemId of curr.cardStack[newBasyouStr]) {
                 const oldBasyouStr = TableFns.getCardPosition(old, itemId)
                 if (oldBasyouStr == null) {
-                    _ctx = EventCenterFn.onItemAdd(_ctx, itemId)
+                    ctx = EventCenterFn.onItemAdd(ctx, itemId)
                 } else if (newBasyouStr != oldBasyouStr) {
-                    _ctx = EventCenterFn.onItemMove(_ctx, oldBasyouStr, newBasyouStr, itemId)
+                    ctx = EventCenterFn.onItemMove(ctx, oldBasyouStr, newBasyouStr, itemId)
                 }
             }
         }
-        return _ctx
+        return ctx
     },
 }

@@ -6,6 +6,7 @@ import { ClientView } from "./ClientView";
 import { ControlView } from "./ControlView";
 import { CardSelectionView } from "./CardSelectionView";
 import { PlayerController } from "./PlayerController";
+import { MessagesView } from "./MessagesView";
 
 export function AppView() {
   // error handle
@@ -32,6 +33,7 @@ export function AppView() {
           <CardSelectionView clientId={PlayerA}></CardSelectionView>
         </div>
       </div>
+      <MessagesView></MessagesView>
     </AppContextProvider>
   );
 }
