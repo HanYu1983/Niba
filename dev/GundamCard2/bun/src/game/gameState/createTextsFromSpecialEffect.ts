@@ -201,9 +201,12 @@ export function createTextsFromSpecialEffect(ctx: GameState, text: CardText): Ca
                                                         const { GameStateFn, DefineFn } = bridge
                                                         const cardId = DefineFn.EffectFn.getCardID(effect)
                                                         const from = GameStateFn.getItemBaSyou(ctx, cardId)
-                                                        if (["戦闘エリア1", "戦闘エリア2"].includes(DefineFn.AbsoluteBaSyouFn.getBaSyouKeyword(from))) {
+                                                        if (DefineFn.BaSyouKeywordFn.getBattleArea().includes(DefineFn.AbsoluteBaSyouFn.getBaSyouKeyword(from))) {
                                                             return GameStateFn.createConditionTitleFn({
-                                                                title: ["_自軍_本國上的_1張卡", "自軍", "本国", 1],
+                                                                title: ["Entity", {
+                                                                    see: [DefineFn.RelatedBaSyouFn.of("自軍", "本国"), 1, 1],
+                                                                    count: 1,
+                                                                }],
                                                                 actions: [
                                                                     {
                                                                         title: ["_ロールする", "打開"],
