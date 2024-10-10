@@ -20981,13 +20981,18 @@ function createAllCardTexts(ctx2, situation) {
     }).flatMap(([fn, effect]) => {
       return fn(ctx2, effect, bridge);
     });
-  }), itemStateGes = getItemStateValues(ctx2).flatMap(ItemStateFn.getGlobalEffects), textsLayer2 = [...ges, ...itemStateGes].filter((ge) => ge.title[0] == "AddText").map((ge) => [ge.cardIds, ge.title[1]]).flatMap(([itemIds, text]) => {
+  }), itemStateGes = getItemStateValues(ctx2).flatMap(ItemStateFn.getGlobalEffects), gesLayer1 = [...ges, ...itemStateGes], textsLayer2 = gesLayer1.filter((ge) => ge.title[0] == "AddText").map((ge) => [ge.cardIds, ge.title[1]]).flatMap(([itemIds, text]) => {
     return itemIds.flatMap((itemId) => {
       const texts = text.title[0] == "\u7279\u6B8A\u578B" ? createTextsFromSpecialEffect(ctx2, text) : [text];
       return [[getItem(ctx2, itemId), texts]];
     });
+  }), textsLayer2_2 = gesLayer1.filter((ge) => ge.title[0] == "AddTextRef").map((ge) => [ge.cardIds, ge.title[1]]).flatMap(([itemIds, textRef]) => {
+    return itemIds.flatMap((itemId) => {
+      const text = getCardTextFromCardTextRef(ctx2, textRef), texts = text.title[0] == "\u7279\u6B8A\u578B" ? createTextsFromSpecialEffect(ctx2, text) : [text];
+      return [[getItem(ctx2, itemId), texts]];
+    });
   });
-  return [...allCardTexts, ...textsLayer2];
+  return [...allCardTexts, ...textsLayer2, ...textsLayer2_2];
 }
 
 // src/game/gameState/card.ts

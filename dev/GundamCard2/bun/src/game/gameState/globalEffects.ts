@@ -13,6 +13,8 @@ import { getItemIdsByBasyou, isCard, isChip, getItem, getItemPrototype, Item, ge
 import { getItemState, getItemStateValues } from "./ItemStateComponent"
 import { ItemStateFn } from "../define/ItemState"
 import { createTextsFromSpecialEffect } from "./createTextsFromSpecialEffect"
+import { TipTitleTextRef } from "../define/Tip"
+import { getCardTextFromCardTextRef } from "./card"
 
 export function getGlobalEffects(ctx: GameState, situation: Situation | null): GlobalEffect[] {
   const key = JSON.stringify(situation)
@@ -306,5 +308,15 @@ export function createAllCardTexts(ctx: GameState, situation: Situation | null):
         return [[getItem(ctx, itemId), texts]] as [Item, CardText[]][]
       })
     })
-  return [...allCardTexts, ...textsLayer2]
+
+  const textsLayer2_2 = gesLayer1.filter(ge => ge.title[0] == "AddTextRef")
+    .map(ge => [ge.cardIds, ge.title[1]] as [string[], TipTitleTextRef])
+    .flatMap(([itemIds, textRef]) => {
+      return itemIds.flatMap(itemId => {
+        const text = getCardTextFromCardTextRef(ctx, textRef)
+        const texts = text.title[0] == "特殊型" ? createTextsFromSpecialEffect(ctx, text) : [text]
+        return [[getItem(ctx, itemId), texts]] as [Item, CardText[]][]
+      })
+    })
+  return [...allCardTexts, ...textsLayer2, ...textsLayer2_2]
 }
