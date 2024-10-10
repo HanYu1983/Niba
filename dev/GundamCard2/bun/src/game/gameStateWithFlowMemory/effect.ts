@@ -13,6 +13,7 @@ import { TargetMissingError } from "../define/GameError";
 import { Bridge } from "../../script/bridge";
 import { GameState } from "../gameState/GameState";
 import { createDestroyEffect } from "../gameState/createDestroyEffect";
+import { EventCenterFn } from "../gameState/EventCenter";
 
 export function doActiveEffect(ctx: GameStateWithFlowMemory, playerID: string, effectID: string, logicId: number, logicSubId: number): GameStateWithFlowMemory {
   logCategory("doEffect", effectID);
@@ -30,8 +31,7 @@ export function doActiveEffect(ctx: GameStateWithFlowMemory, playerID: string, e
     ctx = doEffect(ctx, effect, logicId, logicSubId) as GameStateWithFlowMemory;
   } catch (e) {
     if (e instanceof TargetMissingError) {
-      console.warn(`=======================`)
-      console.warn(`對象遺失: ${e.message}:${effect.text.description}`)
+      ctx = EventCenterFn.onTargetMessingError(ctx, effect, e)
     } else {
       throw e
     }

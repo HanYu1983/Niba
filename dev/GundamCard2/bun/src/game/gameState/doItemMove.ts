@@ -73,7 +73,13 @@ export function onMoveItem(ctx: GameState, to: AbsoluteBaSyou, [cardId, from]: S
         ctx = mapItemState(ctx, cardId, is => {
             return {
                 ...is,
-                isFirstTurn: true
+                isFirstTurn: true,
+            }
+        }) as GameState
+        ctx = mapCard(ctx, cardId, card => {
+            return {
+                ...card,
+                isFaceDown: false,
             }
         }) as GameState
         ctx = doTriggerEvent(ctx, {

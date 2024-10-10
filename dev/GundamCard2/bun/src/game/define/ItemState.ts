@@ -82,8 +82,13 @@ export const ItemStateFn = {
             damage: ctx.damage + v
         }
     },
-    setMoreTotalRollCostLengthPlay(ctx: ItemState, x: number) {
-        return this.setFlag(ctx, "合計国力＋(１)してプレイ", x)
+    setMoreTotalRollCostLengthPlay(ctx: ItemState, x: number): ItemState {
+        ctx = ItemStateFn.setFlag(ctx, "合計国力＋(１)してプレイ", x)
+        ctx = {
+            ...ctx,
+            varNamesRemoveOnTurnEnd: assoc("合計国力＋(１)してプレイ", true, ctx.varNamesRemoveOnTurnEnd)
+        }
+        return ctx
     },
     getMoreTotalRollCostLengthPlay(ctx: ItemState): number {
         return ctx.flags["合計国力＋(１)してプレイ"] || 0
@@ -114,7 +119,7 @@ export const ItemStateFn = {
         // }
         return ctx
     },
-    onDamageReset(ctx:ItemState):ItemState {
+    onDamageReset(ctx: ItemState): ItemState {
         return {
             ...ctx,
             damage: 0,

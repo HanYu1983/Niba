@@ -4,9 +4,7 @@ import { AppContext } from "../tool/appContext";
 export function MessagesView(props: {}) {
   const appContext = useContext(AppContext);
   const render = useMemo(() => {
-    let msgs = appContext.viewModel.model.gameState.messages
-    msgs = msgs.slice()
-    msgs.reverse()
+    const msgs = appContext.viewModel.model.gameState.messages
     return <div style={{overflow: "scroll", height: 300}}>
       {
         msgs.map((msg) => {

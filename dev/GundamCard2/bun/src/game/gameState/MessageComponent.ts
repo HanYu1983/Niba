@@ -16,10 +16,14 @@ export function addMessage(ctx: MessageComponent, msg: Message): MessageComponen
         msg.id = ctx.messageTopId
     }
     msg.effect = ctx.messagesCurrentEffect || undefined
+    let nextMsgs = [msg, ...ctx.messages]
+    if (nextMsgs.length > 200) {
+        nextMsgs = nextMsgs.slice(0, 200)
+    }
     return {
         ...ctx,
         messageTopId: ctx.messageTopId + 1,
-        messages: [...ctx.messages, msg]
+        messages: nextMsgs
     }
 }
 export function mapMessage(ctx: MessageComponent, fn: (msg: Message) => Message): MessageComponent {

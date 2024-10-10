@@ -17452,120 +17452,6 @@ var DEFAULT_TABLE = {
   }
 };
 
-// src/game/gameState/MessageComponent.ts
-function addMessage(ctx2, msg) {
-  if (msg.id == 0)
-    msg.id = ctx2.messageTopId;
-  return msg.effect = ctx2.messagesCurrentEffect || void 0, {
-    ...ctx2,
-    messageTopId: ctx2.messageTopId + 1,
-    messages: [...ctx2.messages, msg]
-  };
-}
-function setMessageCurrentEffect(ctx2, effect) {
-  return {
-    ...ctx2,
-    messagesCurrentEffect: effect
-  };
-}
-function getMessageCurrentEffect(ctx2) {
-  return ctx2.messagesCurrentEffect;
-}
-
-// src/game/gameState/EventCenter.ts
-function assertIsGameState(ctx2) {
-  if (ctx2.isGameState != !0)
-    throw new Error("must is gameState");
-}
-var EventCenterFn = {
-  onAddImmediateEffect(ctx2, effect) {
-    return logCategory("onAddImmediateEffect", `${effect.description}`, effect), assertIsGameState(ctx2), ctx2;
-  },
-  onEvent(ctx2, evt) {
-    return logCategory("onEvent", `${JSON.stringify(evt.title)} ${JSON.stringify(evt.cardIds)}`, evt.title, evt.cardIds), assertIsGameState(ctx2), ctx2 = addMessage(ctx2, { id: 0, description: `onEvent: ${evt.title[0]} ${JSON.stringify(evt.cardIds)}` }), ctx2;
-  },
-  onEffectStart(ctx2, effect) {
-    return logCategory("onEffectStart", `${effect.text.description}`), assertIsGameState(ctx2), ctx2 = setMessageCurrentEffect(ctx2, effect), ctx2 = addMessage(ctx2, { id: 0, description: `onEffectStart: ${effect.text.description}` }), ctx2;
-  },
-  onEffectEnd(ctx2, effect) {
-    return logCategory("onEffectEnd", `${effect.text.description}`), assertIsGameState(ctx2), ctx2 = setMessageCurrentEffect(ctx2, null), ctx2 = addMessage(ctx2, { id: 0, description: `onEffectEnd: ${effect.text.description}` }), ctx2;
-  },
-  onActionStart(ctx2, effect, action) {
-    return logCategory("onActionStart", `${action.description}`), assertIsGameState(ctx2), ctx2;
-  },
-  onActionEnd(ctx2, effect, action) {
-    return logCategory("onActionEnd", `${action.description}`), assertIsGameState(ctx2), ctx2;
-  },
-  onItemStateDestroyReasonChange(ctx2, old, curr) {
-    if (old.destroyReason == null && curr.destroyReason)
-      logCategory("onItemStateDestroyReasonChange", `\u88AB\u7834\u58DE\u5C1A\u672A\u9032\u5165\u5806\u758A:${curr.id}`), ctx2 = addMessage(ctx2, { id: 0, description: `\u88AB\u7834\u58DE\u5C1A\u672A\u9032\u5165\u5806\u758A:${curr.id}` });
-    else if (old.destroyReason && curr.destroyReason == null)
-      logCategory("onItemStateDestroyReasonChange", `\u7834\u58DE\u88AB\u53D6\u6D88:${curr.id}`), ctx2 = addMessage(ctx2, { id: 0, description: `\u7834\u58DE\u88AB\u53D6\u6D88:${curr.id}` });
-    return ctx2;
-  },
-  onItemStateChange(ctx2, old, curr) {
-    assertIsGameState(ctx2);
-    let effect = getMessageCurrentEffect(ctx2);
-    if (logCategory("onItemStateChange", old, curr), old.destroyReason != curr.destroyReason)
-      ctx2 = EventCenterFn.onItemStateDestroyReasonChange(ctx2, old, curr);
-    return ctx2;
-  },
-  onCardChange(ctx2, old, curr) {
-    assertIsGameState(ctx2);
-    let effect = getMessageCurrentEffect(ctx2);
-    return logCategory("onCardChange", old, curr), ctx2 = addMessage(ctx2, { id: 0, description: `onCardChange:${curr.id}` }), ctx2;
-  },
-  onPlayerStateChange(ctx2, old, curr) {
-    return assertIsGameState(ctx2), ctx2 = addMessage(ctx2, { id: 0, description: `onPlayerStateChange:${curr.id}` }), ctx2;
-  },
-  onSetSetGroupParent(ctx2, parentId, itemId) {
-    return assertIsGameState(ctx2), ctx2 = addMessage(ctx2, { id: 0, description: `onSetSetGroupParent:${parentId} ${itemId}` }), ctx2;
-  },
-  onSetPhase(ctx2, old, curr) {
-    return logCategory("onSetPhase", `${curr}`), assertIsGameState(ctx2), ctx2 = addMessage(ctx2, { id: 0, description: `onSetPhase:${curr}` }), ctx2;
-  },
-  onItemAdd(ctx2, itemId) {
-    return logCategory("onItemAdd", `${itemId}`), assertIsGameState(ctx2), ctx2;
-  },
-  onItemMove(ctx2, from, to, itemId) {
-    return logCategory("onItemMove", `${itemId} = ${from} => ${to}`), assertIsGameState(ctx2), ctx2 = addMessage(ctx2, { id: 0, description: `onItemMove:${itemId} = ${from} => ${to}` }), ctx2;
-  },
-  onItemDelete(ctx2, itemId) {
-    return logCategory("onItemDelete", `${itemId}`), assertIsGameState(ctx2), ctx2;
-  },
-  onTableChange(ctx2, old, curr) {
-    for (let oldBasyouStr in old.cardStack)
-      for (let itemId of old.cardStack[oldBasyouStr]) {
-        const newBasyouStr = TableFns.getCardPosition(curr, itemId);
-        if (newBasyouStr == null)
-          ctx2 = EventCenterFn.onItemDelete(ctx2, itemId);
-        else if (newBasyouStr != oldBasyouStr)
-          ;
-      }
-    for (let newBasyouStr in curr.cardStack)
-      for (let itemId of curr.cardStack[newBasyouStr]) {
-        const oldBasyouStr = TableFns.getCardPosition(old, itemId);
-        if (oldBasyouStr == null)
-          ctx2 = EventCenterFn.onItemAdd(ctx2, itemId);
-        else if (newBasyouStr != oldBasyouStr)
-          ctx2 = EventCenterFn.onItemMove(ctx2, oldBasyouStr, newBasyouStr, itemId);
-      }
-    return ctx2;
-  }
-};
-
-// src/game/gameState/PhaseComponent.ts
-function setPhase(ctx2, timing) {
-  const old = ctx2.phase;
-  return ctx2 = {
-    ...ctx2,
-    phase: timing
-  }, ctx2 = EventCenterFn.onSetPhase(ctx2, old, ctx2.phase), ctx2;
-}
-function getPhase(ctx2) {
-  return ctx2.phase;
-}
-
 // src/game/define/BaSyou.ts
 var exports_BaSyou = {};
 __export(exports_BaSyou, {
@@ -18616,6 +18502,160 @@ var BaSyouKeywordFn = {
     };
   }
 };
+
+// src/game/gameState/MessageComponent.ts
+function addMessage(ctx2, msg) {
+  if (msg.id == 0)
+    msg.id = ctx2.messageTopId;
+  msg.effect = ctx2.messagesCurrentEffect || void 0;
+  let nextMsgs = [msg, ...ctx2.messages];
+  if (nextMsgs.length > 200)
+    nextMsgs = nextMsgs.slice(0, 200);
+  return {
+    ...ctx2,
+    messageTopId: ctx2.messageTopId + 1,
+    messages: nextMsgs
+  };
+}
+function setMessageCurrentEffect(ctx2, effect) {
+  return {
+    ...ctx2,
+    messagesCurrentEffect: effect
+  };
+}
+
+// src/game/gameState/EventCenter.ts
+function assertIsGameState(ctx2) {
+  if (ctx2.isGameState != !0)
+    throw new Error("must is gameState");
+}
+var EventCenterFn = {
+  onTargetMessingError(ctx2, effect, e) {
+    assertIsGameState(ctx2);
+    const msg = `\u5C0D\u8C61\u907A\u5931: ${e.message}:${effect.text.description}`;
+    return ctx2 = addMessage(ctx2, { id: 0, description: msg }), console.warn("======================="), console.warn(msg), ctx2;
+  },
+  onAddImmediateEffectButConditionFail(ctx2, effect, cets) {
+    assertIsGameState(ctx2);
+    const msg = `\u5C07\u767C\u52D5\u8D77\u52D5\u6548\u679C\u4F46\u689D\u4EF6\u4E0D\u8DB3: ${cets.flatMap((cet) => cet.tipOrErrors.flatMap((toe) => toe.errors)).join("|")}: ${effect.text.description}`;
+    return ctx2 = addMessage(ctx2, { id: 0, description: msg }), console.warn("======================="), console.warn(msg), ctx2;
+  },
+  onAddImmediateEffect(ctx2, effect) {
+    return assertIsGameState(ctx2), logCategory("onAddImmediateEffect", `${effect.description}`, effect), ctx2;
+  },
+  onEvent(ctx2, evt) {
+    return assertIsGameState(ctx2), logCategory("onEvent", `${JSON.stringify(evt.title)} ${JSON.stringify(evt.cardIds)}`, evt.title, evt.cardIds), ctx2 = addMessage(ctx2, { id: 0, description: `onEvent: ${evt.title[0]} ${JSON.stringify(evt.cardIds)}` }), ctx2;
+  },
+  onEffectStart(ctx2, effect) {
+    return assertIsGameState(ctx2), logCategory("onEffectStart", `${effect.text.description}`), ctx2 = setMessageCurrentEffect(ctx2, effect), ctx2 = addMessage(ctx2, { id: 0, description: `onEffectStart: ${effect.text.description}` }), ctx2;
+  },
+  onEffectEnd(ctx2, effect) {
+    return assertIsGameState(ctx2), logCategory("onEffectEnd", `${effect.text.description}`), ctx2 = setMessageCurrentEffect(ctx2, null), ctx2 = addMessage(ctx2, { id: 0, description: `onEffectEnd: ${effect.text.description}` }), ctx2;
+  },
+  onActionStart(ctx2, effect, action) {
+    return assertIsGameState(ctx2), logCategory("onActionStart", `${action.description}`), ctx2;
+  },
+  onActionEnd(ctx2, effect, action) {
+    return assertIsGameState(ctx2), logCategory("onActionEnd", `${action.description}`), ctx2;
+  },
+  onItemStateDestroyReasonChange(ctx2, old, curr) {
+    if (assertIsGameState(ctx2), old.destroyReason == null && curr.destroyReason)
+      logCategory("onItemStateDestroyReasonChange", `\u88AB\u7834\u58DE\u5C1A\u672A\u9032\u5165\u5806\u758A:${curr.id}`), ctx2 = addMessage(ctx2, { id: 0, description: `\u88AB\u7834\u58DE\u5C1A\u672A\u9032\u5165\u5806\u758A:${curr.id}` });
+    else if (old.destroyReason && curr.destroyReason == null)
+      logCategory("onItemStateDestroyReasonChange", `\u7834\u58DE\u88AB\u53D6\u6D88:${curr.id}`), ctx2 = addMessage(ctx2, { id: 0, description: `\u7834\u58DE\u88AB\u53D6\u6D88:${curr.id}` });
+    return ctx2;
+  },
+  onItemDamageChange(ctx2, old, curr) {
+    assertIsGameState(ctx2);
+    const msg = `\u50B7\u5BB3\u8B8A\u5316: ${curr.id} ${old.damage} => ${old.damage}`;
+    return logCategory("onItemDamageChange", msg), ctx2 = addMessage(ctx2, { id: 0, description: msg }), ctx2;
+  },
+  onItemStateChange(ctx2, old, curr) {
+    if (assertIsGameState(ctx2), old.destroyReason != curr.destroyReason)
+      ctx2 = EventCenterFn.onItemStateDestroyReasonChange(ctx2, old, curr);
+    if (old.damage != curr.damage)
+      ctx2 = EventCenterFn.onItemDamageChange(ctx2, old, curr);
+    let msg = null;
+    if (old.globalEffects.length != curr.globalEffects.length)
+      msg = `${curr.id}.globalEffects.length ${old.globalEffects.length} => ${curr.globalEffects.length}`;
+    if (msg)
+      ctx2 = addMessage(ctx2, { id: 0, description: msg }), logCategory("onItemStateChange", msg);
+    return ctx2;
+  },
+  onCardChange(ctx2, old, curr) {
+    assertIsGameState(ctx2);
+    let msg = null;
+    if (old.isFaceDown != curr.isFaceDown)
+      msg = `${curr.id}.isFaceDown ${old.isFaceDown} => ${old.isFaceDown}`;
+    if (old.isRoll != curr.isRoll)
+      msg = `${curr.id}.isRoll ${old.isRoll} => ${old.isRoll}`;
+    if (old.protoID != curr.protoID)
+      msg = `${curr.id}.protoID ${old.protoID} => ${old.protoID}`;
+    if (msg)
+      ctx2 = addMessage(ctx2, { id: 0, description: msg }), logCategory("onCardChange", msg);
+    return ctx2;
+  },
+  onPlayerStateChange(ctx2, old, curr) {
+    return assertIsGameState(ctx2), ctx2 = addMessage(ctx2, { id: 0, description: `onPlayerStateChange:${curr.id}` }), ctx2;
+  },
+  onSetSetGroupParent(ctx2, parentId, itemId) {
+    return assertIsGameState(ctx2), ctx2 = addMessage(ctx2, { id: 0, description: `onSetSetGroupParent:${parentId} ${itemId}` }), ctx2;
+  },
+  onSetPhase(ctx2, old, curr) {
+    return assertIsGameState(ctx2), logCategory("onSetPhase", `${curr}`), ctx2 = addMessage(ctx2, { id: 0, description: `onSetPhase:${curr}` }), ctx2;
+  },
+  onItemAdd(ctx2, itemId) {
+    return assertIsGameState(ctx2), logCategory("onItemAdd", `${itemId}`), ctx2;
+  },
+  onItemMoveFromCountryToSuTeYaMa(ctx2, guessDamageCountryItemIds) {
+    assertIsGameState(ctx2);
+    const msg = `\u672C\u570B\u53D7\u5230\u50B7\u5BB3: ${guessDamageCountryItemIds.length}`;
+    return logCategory("onItemMoveFromCountryToSuTeYaMa", msg), ctx2 = addMessage(ctx2, { id: 0, description: msg }), ctx2;
+  },
+  onItemMove(ctx2, from, to, itemId) {
+    return assertIsGameState(ctx2), logCategory("onItemMove", `${itemId} = ${from} => ${to}`), ctx2 = addMessage(ctx2, { id: 0, description: `onItemMove:${itemId} = ${from} => ${to}` }), ctx2;
+  },
+  onItemDelete(ctx2, itemId) {
+    return assertIsGameState(ctx2), logCategory("onItemDelete", `${itemId}`), ctx2;
+  },
+  onTableChange(ctx2, old, curr) {
+    assertIsGameState(ctx2);
+    for (let oldBasyouStr in old.cardStack)
+      for (let itemId of old.cardStack[oldBasyouStr]) {
+        const newBasyouStr = TableFns.getCardPosition(curr, itemId);
+        if (newBasyouStr == null)
+          ctx2 = EventCenterFn.onItemDelete(ctx2, itemId);
+        else if (newBasyouStr != oldBasyouStr)
+          ;
+      }
+    const guessDamageCountryItemIds = [];
+    for (let newBasyouStr in curr.cardStack)
+      for (let itemId of curr.cardStack[newBasyouStr]) {
+        const oldBasyouStr = TableFns.getCardPosition(old, itemId);
+        if (oldBasyouStr == null)
+          ctx2 = EventCenterFn.onItemAdd(ctx2, itemId);
+        else if (newBasyouStr != oldBasyouStr) {
+          if (ctx2 = EventCenterFn.onItemMove(ctx2, oldBasyouStr, newBasyouStr, itemId), AbsoluteBaSyouFn.fromString(oldBasyouStr).value[1] == "\u672C\u56FD" && AbsoluteBaSyouFn.fromString(newBasyouStr).value[1] == "\u6368\u3066\u5C71")
+            guessDamageCountryItemIds.push(itemId);
+        }
+      }
+    if (guessDamageCountryItemIds.length)
+      ctx2 = EventCenterFn.onItemMoveFromCountryToSuTeYaMa(ctx2, guessDamageCountryItemIds);
+    return ctx2;
+  }
+};
+
+// src/game/gameState/PhaseComponent.ts
+function setPhase(ctx2, timing) {
+  const old = ctx2.phase;
+  return ctx2 = {
+    ...ctx2,
+    phase: timing
+  }, ctx2 = EventCenterFn.onSetPhase(ctx2, old, ctx2.phase), ctx2;
+}
+function getPhase(ctx2) {
+  return ctx2.phase;
+}
 
 // src/game/gameState/EffectStackComponent.ts
 var exports_EffectStackComponent = {};
@@ -20312,7 +20352,10 @@ var ItemStateFn = {
     };
   },
   setMoreTotalRollCostLengthPlay(ctx2, x) {
-    return this.setFlag(ctx2, "\u5408\u8A08\u56FD\u529B\uFF0B(\uFF11)\u3057\u3066\u30D7\u30EC\u30A4", x);
+    return ctx2 = ItemStateFn.setFlag(ctx2, "\u5408\u8A08\u56FD\u529B\uFF0B(\uFF11)\u3057\u3066\u30D7\u30EC\u30A4", x), ctx2 = {
+      ...ctx2,
+      varNamesRemoveOnTurnEnd: assoc_default("\u5408\u8A08\u56FD\u529B\uFF0B(\uFF11)\u3057\u3066\u30D7\u30EC\u30A4", !0, ctx2.varNamesRemoveOnTurnEnd)
+    }, ctx2;
   },
   getMoreTotalRollCostLengthPlay(ctx2) {
     return ctx2.flags["\u5408\u8A08\u56FD\u529B\uFF0B(\uFF11)\u3057\u3066\u30D7\u30EC\u30A4"] || 0;
@@ -21375,6 +21418,11 @@ function onMoveItem(ctx2, to, [cardId, from]) {
       return {
         ...is,
         isFirstTurn: !0
+      };
+    }), ctx2 = mapCard(ctx2, cardId, (card) => {
+      return {
+        ...card,
+        isFaceDown: !1
       };
     }), ctx2 = doTriggerEvent(ctx2, {
       title: ["\u5834\u306B\u51FA\u305F\u5834\u5408"],
@@ -23481,7 +23529,7 @@ function createPlayTextEffectFromEffect(ctx2, e, options) {
 function addImmediateEffectIfCanPayCost(ctx2, effect) {
   const cets = createCommandEffectTips(ctx2, effect);
   if (cets.filter(CommandEffecTipFn.filterNoError).length == 0)
-    return console.warn("addImmediateEffectIfCanPayCost", `\u5C07\u767C\u52D5\u8D77\u52D5\u6548\u679C\u4F46\u689D\u4EF6\u4E0D\u8DB3: ${effect.text.description}`, cets), ctx2;
+    return ctx2 = EventCenterFn.onAddImmediateEffectButConditionFail(ctx2, effect, cets), ctx2;
   return addImmediateEffect(ctx2, effect);
 }
 
@@ -23497,7 +23545,7 @@ function doActiveEffect(ctx2, playerID, effectID, logicId, logicSubId) {
     ctx2 = doEffect(ctx2, effect, logicId, logicSubId);
   } catch (e) {
     if (e instanceof TargetMissingError)
-      console.warn("======================="), console.warn(`\u5C0D\u8C61\u907A\u5931: ${e.message}:${effect.text.description}`);
+      ctx2 = EventCenterFn.onTargetMessingError(ctx2, effect, e);
     else
       throw e;
   }
@@ -26577,8 +26625,8 @@ var jsx_dev_runtime12 = __toESM(require_react_jsx_dev_runtime_development(), 1);
 function MessagesView(props) {
   const appContext = import_react12.useContext(AppContext);
   return import_react12.useMemo(() => {
-    let msgs = appContext.viewModel.model.gameState.messages;
-    return msgs = msgs.slice(), msgs.reverse(), /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
+    const msgs = appContext.viewModel.model.gameState.messages;
+    return /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
       style: { overflow: "scroll", height: 300 },
       children: msgs.map((msg) => {
         return /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
@@ -26609,7 +26657,7 @@ function AppView() {
       /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(ControlView, {}, void 0, !1, void 0, this),
       /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(PlayerController, {
         clientId: PlayerA,
-        isPlayer: !1
+        isPlayer: !0
       }, void 0, !1, void 0, this),
       /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(PlayerController, {
         clientId: PlayerB,
