@@ -37,14 +37,7 @@ export const CardStackView = (props: {
       </div>
     }
     return (
-      <div
-        style={{
-          display: "flex",
-          border: "2px solid black",
-          overflow: "scroll",
-          ...(appContext.viewModel.cardPositionSelection.includes(_cardPositionID) ? { border: "2px solid red" } : null),
-        }}
-      >
+      <>
         <div>
           <button
             onClick={() => {
@@ -57,30 +50,39 @@ export const CardStackView = (props: {
             {_cardPositionID}
           </button>
         </div>
-        {cardsOnlySetGroupRoot.map((rootCardId) => {
-          const cardsInSetGroup = getSetGroup(appContext.viewModel.model.gameState, rootCardId)
-          return (
-            <div
-              key={rootCardId}
-              style={{ display: "flex", border: "2px solid blue" }}
-            >
-              {cardsInSetGroup.map((cardID, i) => {
-                return (
-                  <CardView
-                    key={cardID}
-                    enabled={true}
-                    clientId={props.clientId}
-                    cardID={cardID}
-                    size={props.cardSize}
-                    isShowCmd={true}
-                    isShowInfo={props.isShowCardInfo}
-                  ></CardView>
-                );
-              })}
-            </div>
-          );
-        })}
-      </div>
+        <div
+          style={{
+            display: "flex",
+            border: "2px solid black",
+            overflow: "scroll",
+            ...(appContext.viewModel.cardPositionSelection.includes(_cardPositionID) ? { border: "2px solid red" } : null),
+          }}
+        >
+          {cardsOnlySetGroupRoot.map((rootCardId) => {
+            const cardsInSetGroup = getSetGroup(appContext.viewModel.model.gameState, rootCardId)
+            return (
+              <div
+                key={rootCardId}
+                style={{ display: "flex", border: "2px solid blue" }}
+              >
+                {cardsInSetGroup.map((cardID, i) => {
+                  return (
+                    <CardView
+                      key={cardID}
+                      enabled={true}
+                      clientId={props.clientId}
+                      cardID={cardID}
+                      size={props.cardSize}
+                      isShowCmd={true}
+                      isShowInfo={props.isShowCardInfo}
+                    ></CardView>
+                  );
+                })}
+              </div>
+            );
+          })}
+        </div>
+      </>
     );
   }, [
     props,

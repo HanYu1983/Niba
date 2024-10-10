@@ -17209,7 +17209,7 @@ var require_react_jsx_dev_runtime_development = __commonJS((exports) => {
 var ReactDom = __toESM(require_client(), 1);
 
 // src/client/component/AppView.tsx
-var import_react11 = __toESM(require_react_development(), 1);
+var import_react12 = __toESM(require_react_development(), 1);
 
 // src/game/define/PlayerID.ts
 var exports_PlayerID = {};
@@ -21034,7 +21034,8 @@ function getCardTotalCostLength(ctx2, cardID) {
   return totalCost + added;
 }
 function getCardIdsCanPayRollCost(ctx2, playerId, situation) {
-  return getGlobalEffects(ctx2, situation).filter((ge) => ge.title[0] == "\u767C\u751F\u570B\u529B").flatMap((ge) => ge.cardIds).filter((cardId) => getCard(ctx2, cardId).isRoll != !0).filter((cardId) => getItemController(ctx2, cardId) == playerId);
+  const ges = getGlobalEffects(ctx2, situation);
+  return ctx2 = setGlobalEffects(ctx2, situation, ges), ges.filter((ge) => ge.title[0] == "\u767C\u751F\u570B\u529B").flatMap((ge) => ge.cardIds).filter((cardId) => getCard(ctx2, cardId).isRoll != !0).filter((cardId) => getItemController(ctx2, cardId) == playerId);
 }
 function getCardBattlePoint(ctx2, cardID) {
   ctx2 = clearGlobalEffects(ctx2);
@@ -21188,13 +21189,15 @@ function getBattleGroupBattlePoint(ctx2, unitCardIDs) {
     if (i == 0)
       return melee;
     return range3;
-  }).reduce((acc, c) => acc + c, 0), bonus = getGlobalEffects(ctx2, null).map((ge) => {
+  }).reduce((acc, c) => acc + c, 0), ges = getGlobalEffects(ctx2, null);
+  ctx2 = setGlobalEffects(ctx2, null, ges);
+  const bonus = ges.map((ge) => {
     if (ge.title[0] == "\u3053\u306E\u30AB\u30FC\u30C9\u306E\u90E8\u968A\u306E\u90E8\u968A\u6226\u95D8\u529B\u3092_\uFF0B\uFF13\u3059\u308B") {
       const times3 = unitCardIDs.filter((unitId) => ge.cardIds.includes(unitId)).length;
       return ge.title[1] * times3;
     }
     return 0;
-  }).reduce((acc, c) => acc + c, 0), opponentBasyou = AbsoluteBaSyouFn.setOpponentPlayerID(getItemBaSyou(ctx2, unitCardIDs[0])), opponentBattleGroup = getBattleGroup(ctx2, opponentBasyou), bonus2 = getGlobalEffects(ctx2, null).map((ge) => {
+  }).reduce((acc, c) => acc + c, 0), opponentBasyou = AbsoluteBaSyouFn.setOpponentPlayerID(getItemBaSyou(ctx2, unitCardIDs[0])), opponentBattleGroup = getBattleGroup(ctx2, opponentBasyou), bonus2 = ges.map((ge) => {
     if (ge.title[0] == "\u3053\u306E\u30AB\u30FC\u30C9\u3068\u4EA4\u6226\u4E2D\u306E\u6575\u8ECD\u90E8\u968A\u306E\u90E8\u968A\u6226\u95D8\u529B\u3092_\uFF0D\uFF13\u3059\u308B") {
       const times3 = opponentBattleGroup.filter((unitId) => ge.cardIds.includes(unitId)).length;
       return ge.title[1] * times3;
@@ -26024,127 +26027,12 @@ var jsx_dev_runtime4 = __toESM(require_react_jsx_dev_runtime_development(), 1), 
   }, [props, renderWant, renderButton]);
 };
 
-// src/game/gameStateWithFlowMemory/ai/thinkVer1.ts
-function thinkVer1(ctx2, playerId, flows, options) {
-  const attackFlow = flows.flatMap((flow) => {
-    if (flow.id == "FlowSetTipSelection") {
-      const effect = getEffect(ctx2, flow.effectID);
-      if (effect.reason[0] == "GameRule" && effect.reason[2].isAttack) {
-        const hasEarthIds = (getItemState(ctx2, EffectFn.getCardID(effect)).tips[TipFn.createGoEarthKey()]?.title[2] || []).map((pair3) => pair3[0]), hasSpaceIds = (getItemState(ctx2, EffectFn.getCardID(effect)).tips[TipFn.createGoSpaceKey()]?.title[2] || []).map((pair3) => pair3[0]), hasIds = [...hasEarthIds, ...hasSpaceIds], canAttackUnits = TipFn.getWant(flow.tip).filter((pair3) => hasIds.includes(pair3[0]) == !1), meleeUnits = canAttackUnits.filter((pair3) => isMeleeUnit(ctx2, pair3[0]));
-        meleeUnits.sort(([id1, _], [id2, _2]) => getSetGroupBattlePoint(ctx2, id2)[0] - getSetGroupBattlePoint(ctx2, id1)[0]);
-        const rangeUnits = canAttackUnits.filter((pair3) => isRangeUnit(ctx2, pair3[0]));
-        let willAttackPairs = [];
-        const hasMeleeHighUnits = meleeUnits.filter((pair3) => getCardHasSpeicalEffect(ctx2, ["\u9AD8\u6A5F\u52D5"], pair3[0])), hasMeleeSpeed = meleeUnits.filter((pair3) => getCardHasSpeicalEffect(ctx2, ["\u901F\u653B"], pair3[0])), hasMeleeStrongUnits = meleeUnits.filter((pair3) => getCardHasSpeicalEffect(ctx2, ["\u5F37\u8972"], pair3[0])), hasRangeStrongHighUnits = rangeUnits.filter((pair3) => getCardHasSpeicalEffect(ctx2, ["\u5F37\u8972"], pair3[0]));
-        if (hasMeleeSpeed.length) {
-          const hasRangeSpeedUnits = rangeUnits.filter((pair3) => getCardHasSpeicalEffect(ctx2, ["\u901F\u653B"], pair3[0]));
-          willAttackPairs = [hasMeleeSpeed[0], ...hasRangeSpeedUnits];
-        } else if (hasMeleeHighUnits.length) {
-          const hasRangeHighUnits = rangeUnits.filter((pair3) => getCardHasSpeicalEffect(ctx2, ["\u9AD8\u6A5F\u52D5"], pair3[0]));
-          willAttackPairs = [hasMeleeHighUnits[0], ...hasRangeHighUnits];
-        } else if (hasMeleeStrongUnits.length > 0 && hasRangeStrongHighUnits.length >= 1)
-          willAttackPairs = [hasMeleeStrongUnits[0], ...hasRangeStrongHighUnits];
-        else if (meleeUnits.length == 1)
-          willAttackPairs = [meleeUnits[0], ...rangeUnits];
-        else if (meleeUnits.length >= 1)
-          willAttackPairs = [meleeUnits[0], ...rangeUnits.slice(0, 1)];
-        else if (rangeUnits.length >= 3)
-          willAttackPairs = rangeUnits;
-        if (willAttackPairs.length)
-          return flow = {
-            ...flow,
-            tip: {
-              ...flow.tip,
-              title: ["\u30AB\u30FC\u30C9", [], willAttackPairs]
-            }
-          }, [flow];
-      }
-      if (effect.reason[0] == "GameRule" && effect.reason[2].isDefence) {
-        const hasEarthIds = (getItemState(ctx2, EffectFn.getCardID(effect)).tips[TipFn.createGoEarthKey()]?.title[2] || []).map((pair3) => pair3[0]), hasSpaceIds = (getItemState(ctx2, EffectFn.getCardID(effect)).tips[TipFn.createGoSpaceKey()]?.title[2] || []).map((pair3) => pair3[0]), hasIds = [...hasEarthIds, ...hasSpaceIds], canAttackUnits = TipFn.getWant(flow.tip).filter((pair3) => hasIds.includes(pair3[0]) == !1), meleeUnits = canAttackUnits.filter((pair3) => isMeleeUnit(ctx2, pair3[0]));
-        meleeUnits.sort(([id1, _], [id2, _2]) => getSetGroupBattlePoint(ctx2, id2)[0] - getSetGroupBattlePoint(ctx2, id1)[0]);
-        const rangeUnits = canAttackUnits.filter((pair3) => isRangeUnit(ctx2, pair3[0]));
-        let willAttackPairs = [];
-        const battleArea = flow.tip.flags?.isGoBattleArea1 ? AbsoluteBaSyouFn.of(PlayerIDFn.getOpponent(playerId), "\u6226\u95D8\u30A8\u30EA\u30A21") : AbsoluteBaSyouFn.of(PlayerIDFn.getOpponent(playerId), "\u6226\u95D8\u30A8\u30EA\u30A22"), opponentPower = getBattleGroupBattlePoint(ctx2, getBattleGroup(ctx2, battleArea));
-        if (opponentPower == 0)
-          return [flow];
-        if (meleeUnits.length >= 1) {
-          const myUnits2 = [meleeUnits[0], ...rangeUnits];
-          if (getBattleGroupBattlePoint(ctx2, myUnits2.map((pair3) => pair3[0])) >= opponentPower)
-            willAttackPairs = myUnits2;
-          if (willAttackPairs.length)
-            return flow = {
-              ...flow,
-              tip: {
-                ...flow.tip,
-                title: ["\u30AB\u30FC\u30C9", [], willAttackPairs]
-              }
-            }, [flow];
-        }
-      }
-    }
-    return [];
-  });
-  if (attackFlow.length)
-    return attackFlow[0];
-  const plays = flows.flatMap((flow) => flow.id == "FlowSetActiveEffectID" ? flow.tips : []), ruleEffect = plays.find((p) => p.reason[0] == "GameRule" && (p.reason[2].isAttack || p.reason[2].isDefence || p.reason[2].isReturn || p.reason[2].isDamageCheck || p.reason[2].isReroll || p.reason[2].isDraw));
-  if (ruleEffect)
-    return { id: "FlowSetActiveEffectID", effectID: ruleEffect.id, tips: [] };
-  const playGs = plays.filter((p) => p.reason[0] == "PlayCard" && p.reason[3].isPlayG), playChars = plays.filter((p) => p.reason[0] == "PlayCard" && p.reason[3].isPlayCharacter);
-  if (getPlayerGIds(ctx2, playerId).length < 7 && playGs.length)
-    return { id: "FlowSetActiveEffectID", effectID: playGs[0].id, tips: [] };
-  const playUnits = plays.filter((p) => p.reason[0] == "PlayCard" && getItemPrototype(ctx2, p.reason[2]).category == "\u30E6\u30CB\u30C3\u30C8"), myUnits = getPlayerUnitIds(ctx2, playerId);
-  if (myUnits.length < 4 && playUnits.length)
-    return { id: "FlowSetActiveEffectID", effectID: playUnits[0].id, tips: [] };
-  if (playChars.length) {
-    const shouldSetCharEffs = playChars.filter((eff) => {
-      const [atk, range3, hp] = getItemPrototype(ctx2, EffectFn.getCardID(eff)).battlePoint || BattlePointFn.getAllStar();
-      if (BattlePointFn.getValue(atk) + BattlePointFn.getValue(range3) + BattlePointFn.getValue(hp) == 0)
-        return !1;
-      return !0;
-    });
-    if (shouldSetCharEffs.length)
-      return { id: "FlowSetActiveEffectID", effectID: shouldSetCharEffs[Math.round(Math.random() * 1000) % shouldSetCharEffs.length].id, tips: [] };
-  }
-  const playTexts = plays.filter((p) => p.reason[0] == "PlayText"), shouldUseTexts = createPreviewEffectScore(ctx2, playerId, playTexts, { isMoreThenOrigin: !0 });
-  if (shouldUseTexts.length)
-    return { id: "FlowSetActiveEffectID", effectID: shouldUseTexts[0][0], tips: [] };
-  if (myUnits.length < 8 && playUnits.length)
-    return { id: "FlowSetActiveEffectID", effectID: playUnits[0].id, tips: [] };
-  const useFlows = flows.filter((flow) => {
-    switch (flow.id) {
-      case "FlowCancelActiveEffectID":
-      case "FlowCancelActiveLogicID":
-      case "FlowCancelPassCut":
-      case "FlowCancelPassPhase":
-      case "FlowWaitPlayer":
-      case "FlowObserveEffect":
-        return !1;
-    }
-    return !0;
-  });
-  if (useFlows.length)
-    return useFlows[Math.round(Math.random() * 1000) % useFlows.length];
-  return null;
-}
-
 // src/client/component/FlowListView.tsx
 var jsx_dev_runtime5 = __toESM(require_react_jsx_dev_runtime_development(), 1), FlowListView = (props) => {
   const appContext = import_react5.useContext(AppContext), flows = import_react5.useMemo(() => {
     return appContext.viewModel.playerCommands[props.clientId] || [];
   }, [appContext.viewModel.playerCommands[props.clientId]]);
-  return import_react5.useEffect(() => {
-    if (flows.length) {
-      const flow = thinkVer1(appContext.viewModel.model.gameState, props.clientId, flows);
-      if (flow)
-        setTimeout(() => {
-          OnEvent.next({
-            id: "OnClickFlowConfirm",
-            clientId: props.clientId,
-            flow,
-            versionID: appContext.viewModel.model.versionID
-          });
-        }, 10);
-    }
-  }, [appContext.viewModel.model.gameState, props.clientId, flows]), import_react5.useMemo(() => {
+  return import_react5.useMemo(() => {
     return /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
       style: props.style,
       children: flows.map((flow, i) => {
@@ -26275,13 +26163,7 @@ var jsx_dev_runtime6 = __toESM(require_react_jsx_dev_runtime_development(), 1), 
           }, void 0, !0, void 0, this)
         ]
       }, void 0, !0, void 0, this);
-    return /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
-      style: {
-        display: "flex",
-        border: "2px solid black",
-        overflow: "scroll",
-        ...appContext.viewModel.cardPositionSelection.includes(_cardPositionID) ? { border: "2px solid red" } : null
-      },
+    return /* @__PURE__ */ jsx_dev_runtime6.jsxDEV(jsx_dev_runtime6.Fragment, {
       children: [
         /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
           children: /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("button", {
@@ -26290,22 +26172,30 @@ var jsx_dev_runtime6 = __toESM(require_react_jsx_dev_runtime_development(), 1), 
             children: _cardPositionID
           }, void 0, !1, void 0, this)
         }, void 0, !1, void 0, this),
-        cardsOnlySetGroupRoot.map((rootCardId) => {
-          const cardsInSetGroup = getSetGroup(appContext.viewModel.model.gameState, rootCardId);
-          return /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
-            style: { display: "flex", border: "2px solid blue" },
-            children: cardsInSetGroup.map((cardID, i) => {
-              return /* @__PURE__ */ jsx_dev_runtime6.jsxDEV(CardView, {
-                enabled: !0,
-                clientId: props.clientId,
-                cardID,
-                size: props.cardSize,
-                isShowCmd: !0,
-                isShowInfo: props.isShowCardInfo
-              }, cardID, !1, void 0, this);
-            })
-          }, rootCardId, !1, void 0, this);
-        })
+        /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
+          style: {
+            display: "flex",
+            border: "2px solid black",
+            overflow: "scroll",
+            ...appContext.viewModel.cardPositionSelection.includes(_cardPositionID) ? { border: "2px solid red" } : null
+          },
+          children: cardsOnlySetGroupRoot.map((rootCardId) => {
+            const cardsInSetGroup = getSetGroup(appContext.viewModel.model.gameState, rootCardId);
+            return /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
+              style: { display: "flex", border: "2px solid blue" },
+              children: cardsInSetGroup.map((cardID, i) => {
+                return /* @__PURE__ */ jsx_dev_runtime6.jsxDEV(CardView, {
+                  enabled: !0,
+                  clientId: props.clientId,
+                  cardID,
+                  size: props.cardSize,
+                  isShowCmd: !0,
+                  isShowInfo: props.isShowCardInfo
+                }, cardID, !1, void 0, this);
+              })
+            }, rootCardId, !1, void 0, this);
+          })
+        }, void 0, !1, void 0, this)
       ]
     }, void 0, !0, void 0, this);
   }, [
@@ -26486,36 +26376,208 @@ var jsx_dev_runtime10 = __toESM(require_react_jsx_dev_runtime_development(), 1),
   }, [props, appContext.viewModel.cardSelection]);
 };
 
-// src/client/component/AppView.tsx
+// src/client/component/PlayerController.tsx
+var import_react11 = __toESM(require_react_development(), 1);
+
+// src/game/gameStateWithFlowMemory/ai/getPlayerFlowAuto.ts
+function getPlayerFlowAuto(ctx2, playerId, flows, options) {
+  const phase = getPhase(ctx2);
+  if (PhaseFn.isRuleEffect(phase)) {
+    let flow = flows.find((flow2) => flow2.id == "FlowPassPayCost");
+    if (flow == null)
+      flows.find((flow2) => flow2.id == "FlowSetActiveEffectID" && phase[0] == "\u6226\u95D8\u30D5\u30A7\u30A4\u30BA" && (phase[1] != "\u653B\u6483\u30B9\u30C6\u30C3\u30D7" && phase[1] != "\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7"));
+    if (flow == null) {
+      const deleteFlow = flows.find((flow2) => flow2.id == "FlowDeleteImmediateEffect" && phase[0] == "\u6226\u95D8\u30D5\u30A7\u30A4\u30BA" && (phase[1] == "\u653B\u6483\u30B9\u30C6\u30C3\u30D7" || phase[1] == "\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7"));
+      if (deleteFlow?.id == "FlowDeleteImmediateEffect") {
+        if (deleteFlow.tips.find((e) => e.reason[0] == "GameRule" && (e.reason[2].isAttack || e.reason[2].isDefence))) {
+          if (getPlayerUnitIds(ctx2, playerId).every((itemId) => getCard(ctx2, itemId).isRoll))
+            flow = deleteFlow;
+        }
+      }
+    }
+    if (flow != null)
+      return flow;
+  }
+  if (flows.length == 1) {
+    const flow = flows[0];
+    if (flow.id == "FlowCancelPassPhase")
+      return null;
+    if (flow.id == "FlowCancelPassCut")
+      return null;
+    if (flow.id == "FlowWaitPlayer")
+      return null;
+    if (flow.id == "FlowDeleteImmediateEffect")
+      return null;
+    if (flow.id == "FlowSetTipSelection")
+      return null;
+    if (flow.id == "FlowObserveEffect")
+      return null;
+    if (flow.id == "FlowSetActiveLogicID")
+      return null;
+    return flow;
+  }
+  return null;
+}
+
+// src/game/gameStateWithFlowMemory/ai/thinkVer1.ts
+function thinkVer1(ctx2, playerId, flows, options) {
+  const attackFlow = flows.flatMap((flow) => {
+    if (flow.id == "FlowSetTipSelection") {
+      const effect = getEffect(ctx2, flow.effectID);
+      if (effect.reason[0] == "GameRule" && effect.reason[2].isAttack) {
+        const hasEarthIds = (getItemState(ctx2, EffectFn.getCardID(effect)).tips[TipFn.createGoEarthKey()]?.title[2] || []).map((pair3) => pair3[0]), hasSpaceIds = (getItemState(ctx2, EffectFn.getCardID(effect)).tips[TipFn.createGoSpaceKey()]?.title[2] || []).map((pair3) => pair3[0]), hasIds = [...hasEarthIds, ...hasSpaceIds], canAttackUnits = TipFn.getWant(flow.tip).filter((pair3) => hasIds.includes(pair3[0]) == !1), meleeUnits = canAttackUnits.filter((pair3) => isMeleeUnit(ctx2, pair3[0]));
+        meleeUnits.sort(([id1, _], [id2, _2]) => getSetGroupBattlePoint(ctx2, id2)[0] - getSetGroupBattlePoint(ctx2, id1)[0]);
+        const rangeUnits = canAttackUnits.filter((pair3) => isRangeUnit(ctx2, pair3[0]));
+        let willAttackPairs = [];
+        const hasMeleeHighUnits = meleeUnits.filter((pair3) => getCardHasSpeicalEffect(ctx2, ["\u9AD8\u6A5F\u52D5"], pair3[0])), hasMeleeSpeed = meleeUnits.filter((pair3) => getCardHasSpeicalEffect(ctx2, ["\u901F\u653B"], pair3[0])), hasMeleeStrongUnits = meleeUnits.filter((pair3) => getCardHasSpeicalEffect(ctx2, ["\u5F37\u8972"], pair3[0])), hasRangeStrongHighUnits = rangeUnits.filter((pair3) => getCardHasSpeicalEffect(ctx2, ["\u5F37\u8972"], pair3[0]));
+        if (hasMeleeSpeed.length) {
+          const hasRangeSpeedUnits = rangeUnits.filter((pair3) => getCardHasSpeicalEffect(ctx2, ["\u901F\u653B"], pair3[0]));
+          willAttackPairs = [hasMeleeSpeed[0], ...hasRangeSpeedUnits];
+        } else if (hasMeleeHighUnits.length) {
+          const hasRangeHighUnits = rangeUnits.filter((pair3) => getCardHasSpeicalEffect(ctx2, ["\u9AD8\u6A5F\u52D5"], pair3[0]));
+          willAttackPairs = [hasMeleeHighUnits[0], ...hasRangeHighUnits];
+        } else if (hasMeleeStrongUnits.length > 0 && hasRangeStrongHighUnits.length >= 1)
+          willAttackPairs = [hasMeleeStrongUnits[0], ...hasRangeStrongHighUnits];
+        else if (meleeUnits.length == 1)
+          willAttackPairs = [meleeUnits[0], ...rangeUnits];
+        else if (meleeUnits.length >= 1)
+          willAttackPairs = [meleeUnits[0], ...rangeUnits.slice(0, 1)];
+        else if (rangeUnits.length >= 3)
+          willAttackPairs = rangeUnits;
+        if (willAttackPairs.length)
+          return flow = {
+            ...flow,
+            tip: {
+              ...flow.tip,
+              title: ["\u30AB\u30FC\u30C9", [], willAttackPairs]
+            }
+          }, [flow];
+      }
+      if (effect.reason[0] == "GameRule" && effect.reason[2].isDefence) {
+        const hasEarthIds = (getItemState(ctx2, EffectFn.getCardID(effect)).tips[TipFn.createGoEarthKey()]?.title[2] || []).map((pair3) => pair3[0]), hasSpaceIds = (getItemState(ctx2, EffectFn.getCardID(effect)).tips[TipFn.createGoSpaceKey()]?.title[2] || []).map((pair3) => pair3[0]), hasIds = [...hasEarthIds, ...hasSpaceIds], canAttackUnits = TipFn.getWant(flow.tip).filter((pair3) => hasIds.includes(pair3[0]) == !1), meleeUnits = canAttackUnits.filter((pair3) => isMeleeUnit(ctx2, pair3[0]));
+        meleeUnits.sort(([id1, _], [id2, _2]) => getSetGroupBattlePoint(ctx2, id2)[0] - getSetGroupBattlePoint(ctx2, id1)[0]);
+        const rangeUnits = canAttackUnits.filter((pair3) => isRangeUnit(ctx2, pair3[0]));
+        let willAttackPairs = [];
+        const battleArea = flow.tip.flags?.isGoBattleArea1 ? AbsoluteBaSyouFn.of(PlayerIDFn.getOpponent(playerId), "\u6226\u95D8\u30A8\u30EA\u30A21") : AbsoluteBaSyouFn.of(PlayerIDFn.getOpponent(playerId), "\u6226\u95D8\u30A8\u30EA\u30A22"), opponentPower = getBattleGroupBattlePoint(ctx2, getBattleGroup(ctx2, battleArea));
+        if (opponentPower == 0)
+          return [flow];
+        if (meleeUnits.length >= 1) {
+          const myUnits2 = [meleeUnits[0], ...rangeUnits];
+          if (getBattleGroupBattlePoint(ctx2, myUnits2.map((pair3) => pair3[0])) >= opponentPower)
+            willAttackPairs = myUnits2;
+          if (willAttackPairs.length)
+            return flow = {
+              ...flow,
+              tip: {
+                ...flow.tip,
+                title: ["\u30AB\u30FC\u30C9", [], willAttackPairs]
+              }
+            }, [flow];
+        }
+      }
+    }
+    return [];
+  });
+  if (attackFlow.length)
+    return attackFlow[0];
+  const plays = flows.flatMap((flow) => flow.id == "FlowSetActiveEffectID" ? flow.tips : []), ruleEffect = plays.find((p) => p.reason[0] == "GameRule" && (p.reason[2].isAttack || p.reason[2].isDefence || p.reason[2].isReturn || p.reason[2].isDamageCheck || p.reason[2].isReroll || p.reason[2].isDraw));
+  if (ruleEffect)
+    return { id: "FlowSetActiveEffectID", effectID: ruleEffect.id, tips: [] };
+  const playGs = plays.filter((p) => p.reason[0] == "PlayCard" && p.reason[3].isPlayG), playChars = plays.filter((p) => p.reason[0] == "PlayCard" && p.reason[3].isPlayCharacter);
+  if (getPlayerGIds(ctx2, playerId).length < 7 && playGs.length)
+    return { id: "FlowSetActiveEffectID", effectID: playGs[0].id, tips: [] };
+  const playUnits = plays.filter((p) => p.reason[0] == "PlayCard" && getItemPrototype(ctx2, p.reason[2]).category == "\u30E6\u30CB\u30C3\u30C8"), myUnits = getPlayerUnitIds(ctx2, playerId);
+  if (myUnits.length < 4 && playUnits.length)
+    return { id: "FlowSetActiveEffectID", effectID: playUnits[0].id, tips: [] };
+  if (playChars.length) {
+    const shouldSetCharEffs = playChars.filter((eff) => {
+      const [atk, range3, hp] = getItemPrototype(ctx2, EffectFn.getCardID(eff)).battlePoint || BattlePointFn.getAllStar();
+      if (BattlePointFn.getValue(atk) + BattlePointFn.getValue(range3) + BattlePointFn.getValue(hp) == 0)
+        return !1;
+      return !0;
+    });
+    if (shouldSetCharEffs.length)
+      return { id: "FlowSetActiveEffectID", effectID: shouldSetCharEffs[Math.round(Math.random() * 1000) % shouldSetCharEffs.length].id, tips: [] };
+  }
+  const playTexts = plays.filter((p) => p.reason[0] == "PlayText"), shouldUseTexts = createPreviewEffectScore(ctx2, playerId, playTexts, { isMoreThenOrigin: !0 });
+  if (shouldUseTexts.length)
+    return { id: "FlowSetActiveEffectID", effectID: shouldUseTexts[0][0], tips: [] };
+  if (myUnits.length < 8 && playUnits.length)
+    return { id: "FlowSetActiveEffectID", effectID: playUnits[0].id, tips: [] };
+  const useFlows = flows.filter((flow) => {
+    switch (flow.id) {
+      case "FlowCancelActiveEffectID":
+      case "FlowCancelActiveLogicID":
+      case "FlowCancelPassCut":
+      case "FlowCancelPassPhase":
+      case "FlowWaitPlayer":
+      case "FlowObserveEffect":
+        return !1;
+    }
+    return !0;
+  });
+  if (useFlows.length)
+    return useFlows[Math.round(Math.random() * 1000) % useFlows.length];
+  return null;
+}
+
+// src/client/component/PlayerController.tsx
 var jsx_dev_runtime11 = __toESM(require_react_jsx_dev_runtime_development(), 1);
-function AppView() {
+function PlayerController(props) {
+  const appContext = import_react11.useContext(AppContext), flows = import_react11.useMemo(() => {
+    return appContext.viewModel.playerCommands[props.clientId] || [];
+  }, [appContext.viewModel.playerCommands[props.clientId]]);
   return import_react11.useEffect(() => {
+    if (flows.length) {
+      let flow = null;
+      if (props.isPlayer)
+        flow = getPlayerFlowAuto(appContext.viewModel.model.gameState, props.clientId, flows);
+      else
+        flow = thinkVer1(appContext.viewModel.model.gameState, props.clientId, flows);
+      if (flow)
+        setTimeout(() => {
+          OnEvent.next({
+            id: "OnClickFlowConfirm",
+            clientId: props.clientId,
+            flow,
+            versionID: appContext.viewModel.model.versionID
+          });
+        }, 50);
+    }
+  }, [appContext.viewModel.model.gameState, props, flows]), /* @__PURE__ */ jsx_dev_runtime11.jsxDEV(jsx_dev_runtime11.Fragment, {}, void 0, !1, void 0, this);
+}
+
+// src/client/component/AppView.tsx
+var jsx_dev_runtime12 = __toESM(require_react_jsx_dev_runtime_development(), 1);
+function AppView() {
+  return import_react12.useEffect(() => {
     const subscriber = OnError.subscribe((e) => {
       throw console.error(e), alert(e), e;
     });
     return () => {
       subscriber.unsubscribe();
     };
-  }, []), /* @__PURE__ */ jsx_dev_runtime11.jsxDEV(AppContextProvider, {
+  }, []), /* @__PURE__ */ jsx_dev_runtime12.jsxDEV(AppContextProvider, {
     children: [
-      /* @__PURE__ */ jsx_dev_runtime11.jsxDEV(ControlView, {}, void 0, !1, void 0, this),
-      /* @__PURE__ */ jsx_dev_runtime11.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime12.jsxDEV(ControlView, {}, void 0, !1, void 0, this),
+      /* @__PURE__ */ jsx_dev_runtime12.jsxDEV(PlayerController, {
+        clientId: PlayerA
+      }, void 0, !1, void 0, this),
+      /* @__PURE__ */ jsx_dev_runtime12.jsxDEV(PlayerController, {
+        clientId: PlayerB
+      }, void 0, !1, void 0, this),
+      /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
         style: { border: "1px solid blue", display: "flex" },
         children: [
-          /* @__PURE__ */ jsx_dev_runtime11.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
             style: { border: "1px solid red", flex: 1, width: 1200 },
-            children: [
-              /* @__PURE__ */ jsx_dev_runtime11.jsxDEV(ClientView, {
-                clientId: PlayerA
-              }, void 0, !1, void 0, this),
-              /* @__PURE__ */ jsx_dev_runtime11.jsxDEV(ClientView, {
-                clientId: PlayerB
-              }, void 0, !1, void 0, this)
-            ]
-          }, void 0, !0, void 0, this),
-          /* @__PURE__ */ jsx_dev_runtime11.jsxDEV("div", {
+            children: /* @__PURE__ */ jsx_dev_runtime12.jsxDEV(ClientView, {
+              clientId: PlayerA
+            }, void 0, !1, void 0, this)
+          }, void 0, !1, void 0, this),
+          /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
             style: { border: "1px solid red", flex: 1 },
-            children: /* @__PURE__ */ jsx_dev_runtime11.jsxDEV(CardSelectionView, {
+            children: /* @__PURE__ */ jsx_dev_runtime12.jsxDEV(CardSelectionView, {
               clientId: PlayerA
             }, void 0, !1, void 0, this)
           }, void 0, !1, void 0, this)
@@ -26526,8 +26588,8 @@ function AppView() {
 }
 
 // src/web.tsx
-var jsx_dev_runtime12 = __toESM(require_react_jsx_dev_runtime_development(), 1), rootDom = document.getElementById("root");
+var jsx_dev_runtime13 = __toESM(require_react_jsx_dev_runtime_development(), 1), rootDom = document.getElementById("root");
 if (rootDom == null)
   throw new Error("div root not found");
 var root = ReactDom.createRoot(rootDom);
-root.render(/* @__PURE__ */ jsx_dev_runtime12.jsxDEV(AppView, {}, void 0, !1, void 0, this));
+root.render(/* @__PURE__ */ jsx_dev_runtime13.jsxDEV(AppView, {}, void 0, !1, void 0, this));

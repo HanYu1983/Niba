@@ -53,13 +53,6 @@ export const EffectView = (props: {
         <div>
           {block.description}({cardID})
         </div>
-        {/*props.enabled && block.text.conditions ? (
-          <RequireView
-            clientId={props.clientId}
-            effect={block}
-            conditions={block.text.conditions}
-          ></RequireView>
-        ) : null*/}
       </div>
     </div>
   }, [props, cardID, block])

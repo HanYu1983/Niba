@@ -1,126 +1,14 @@
 import { useContext, useMemo, useEffect, CSSProperties } from "react";
-import { queryFlow } from "../../game/gameStateWithFlowMemory/queryFlow";
 import { AppContext } from "../tool/appContext";
 import { OnEvent } from "../tool/appContext/eventCenter";
 import { EffectView } from "./EffectView";
-import { getEffect, isImmediateEffect } from "../../game/gameState/EffectStackComponent";
-import { PlayerA, PlayerB } from "../../game/define/PlayerID";
 import { FlowSetTipSelectionView } from "./FlowSetTipSelectionView";
-import { getPhase } from "../../game/gameState/PhaseComponent";
-import { PhaseFn } from "../../game/define/Timing";
-import { thinkVer1 } from "../../game/gameStateWithFlowMemory/ai/thinkVer1";
-import { getPlayerUnitIds } from "../../game/gameState/player";
-import { getCard } from "../../game/gameState/CardTableComponent";
-import { Flow } from "../../game/gameStateWithFlowMemory/Flow";
 
 export const FlowListView = (props: { clientId: string, style?: CSSProperties }) => {
   const appContext = useContext(AppContext);
   const flows = useMemo(() => {
     return appContext.viewModel.playerCommands[props.clientId] || []
   }, [appContext.viewModel.playerCommands[props.clientId]]);
-  useEffect(() => {
-    const isPlayerControl = false
-    const speed = isPlayerControl ? 50 : 10
-    if (isPlayerControl && props.clientId == PlayerA) {
-      // 規定效果自動按
-      const phase = getPhase(appContext.viewModel.model.gameState)
-      if (PhaseFn.isRuleEffect(phase)) {
-        let flow: Flow | undefined = flows.find(flow => flow.id == "FlowPassPayCost")
-        if (flow == null) {
-          // 規定效果非出擊一律自動按
-          flows.find(flow => flow.id == "FlowSetActiveEffectID" && phase[0] == "戦闘フェイズ" && (phase[1] != "攻撃ステップ" && phase[1] != "防御ステップ"))
-        }
-        if (flow == null) {
-          // 若是出擊則額外判斷有沒有兵可以出
-          const deleteFlow = flows.find(flow => flow.id == "FlowDeleteImmediateEffect" && phase[0] == "戦闘フェイズ" && (phase[1] == "攻撃ステップ" || phase[1] == "防御ステップ"))
-          if (deleteFlow?.id == "FlowDeleteImmediateEffect") {
-            const atkDefEf = deleteFlow.tips.find(e => e.reason[0] == "GameRule" && (e.reason[2].isAttack || e.reason[2].isDefence))
-            if (atkDefEf) {
-              const isAllRoll = getPlayerUnitIds(appContext.viewModel.model.gameState, props.clientId).every(itemId => getCard(appContext.viewModel.model.gameState, itemId).isRoll)
-              if (isAllRoll) {
-                flow = deleteFlow
-              }
-            }
-          }
-        }
-        if (flow != null) {
-          setTimeout(() => {
-            OnEvent.next({
-              id: "OnClickFlowConfirm",
-              clientId: props.clientId,
-              flow: flow,
-              versionID: appContext.viewModel.model.versionID
-            });
-          }, speed)
-          return
-        }
-      }
-      {
-        // 立即效果自動按
-        // const flow = flows.find(flow => flow.id == "FlowPassPayCost")
-        // if (flow && isImmediateEffect(appContext.viewModel.model.gameState, flow.effectID)) {
-        //   setTimeout(() => {
-        //     OnEvent.next({
-        //       id: "OnClickFlowConfirm",
-        //       clientId: props.clientId,
-        //       flow: flow,
-        //       versionID: appContext.viewModel.model.versionID
-        //     });
-        //   }, speed)
-        //   return
-        // }
-      }
-      // 只剩下一個命令時自動按，一些狀況除外
-      if (flows.length == 1) {
-        const flow = flows[0]
-        if (flow.id == "FlowCancelPassPhase") {
-          return
-        }
-        if (flow.id == "FlowCancelPassCut") {
-          return
-        }
-        if (flow.id == "FlowWaitPlayer") {
-          return
-        }
-        if (flow.id == "FlowDeleteImmediateEffect") {
-          return
-        }
-        if (flow.id == "FlowSetTipSelection") {
-          return
-        }
-        if (flow.id == "FlowObserveEffect") {
-          return
-        }
-        if (flow.id == "FlowSetActiveLogicID") {
-          return
-        }
-
-        setTimeout(() => {
-          OnEvent.next({
-            id: "OnClickFlowConfirm",
-            clientId: props.clientId,
-            flow: flow,
-            versionID: appContext.viewModel.model.versionID
-          });
-        }, speed)
-      }
-      return
-    }
-    if (flows.length) {
-      const flow = thinkVer1(appContext.viewModel.model.gameState, props.clientId, flows)
-
-      if (flow) {
-        setTimeout(() => {
-          OnEvent.next({
-            id: "OnClickFlowConfirm",
-            clientId: props.clientId,
-            flow: flow,
-            versionID: appContext.viewModel.model.versionID
-          });
-        }, speed)
-      }
-    }
-  }, [appContext.viewModel.model.gameState, props.clientId, flows]);
   // ============== control panel ============= //
   const renderControlPanel = useMemo(() => {
     return (
