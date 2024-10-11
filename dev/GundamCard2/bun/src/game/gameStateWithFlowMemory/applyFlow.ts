@@ -443,6 +443,9 @@ export function applyFlow(
         case "FlowMakeDestroyOrder": {
             // 移除破壞效果，全部移到堆疊
             ctx = doCutInDestroyEffectsAndClear(ctx, flow.destroyEffect.map(i => i.id)) as GameStateWithFlowMemory
+            // 試著解決以下效果成立時，玩家指令列表卻不能使用
+            // （戦闘フェイズ）：破壊されているカード１枚を廃棄する。その場合、カード２枚を引く。
+            ctx = updateCommand(ctx) as GameStateWithFlowMemory;
             return {
                 ...ctx,
                 // 重設切入旗標，讓玩家再次切入

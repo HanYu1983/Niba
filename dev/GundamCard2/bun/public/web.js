@@ -19736,15 +19736,18 @@ async function loadPrototype(imgID) {
         "OPERATION\uFF08UNIT\uFF09": "\u30AA\u30DA\u30EC\u30FC\u30B7\u30E7\u30F3(\u30E6\u30CB\u30C3\u30C8)",
         ACE: "ACE",
         GRAPHIC: "\u30B0\u30E9\u30D5\u30A3\u30C3\u30AF"
-      }, texts = [], matches = textstr.matchAll(/([^：　［］（）〔〕]+)/g);
+      };
+      logCategory("loadPrototype", "textstr", textstr);
+      const matches = textstr.matchAll(/([^：　［］（）〔〕]+)/g), texts = [];
       let allSp = [], currSp = [];
       for (let match of matches) {
         const curr = match[0];
-        if (curr.length >= 10)
-          continue;
-        if (["\u9AD8\u6A5F\u52D5", "\u901F\u653B", "\u5F37\u8972", "\u3010PS\u88C5\u7532\u3011", "\u30AF\u30A4\u30C3\u30AF", "\u6226\u95D8\u914D\u5099", "\u30B9\u30C6\u30A4", "1\u679A\u5236\u9650"].includes(curr)) {
-          allSp.push(curr);
-          continue;
+        if (curr.length < 20) {
+          const kw = ["\u9AD8\u6A5F\u52D5", "\u901F\u653B", "\u5F37\u8972", "\u3010PS\u88C5\u7532\u3011", "\u30AF\u30A4\u30C3\u30AF", "\u6226\u95D8\u914D\u5099", "\u3010\u30B9\u30C6\u30A4\u3011", "1\u679A\u5236\u9650"].find((kw2) => curr.indexOf(kw2) != -1);
+          if (kw) {
+            allSp.push(kw);
+            continue;
+          }
         }
         if (currSp.length == 0) {
           const match2 = curr.match(/(.?)(０|１|２|３|４|５|６|７|８|９|R+)(毎?)/);
@@ -19779,7 +19782,7 @@ async function loadPrototype(imgID) {
             case "\u3010PS\u88C5\u7532\u3011":
             case "\u30AF\u30A4\u30C3\u30AF":
             case "\u6226\u95D8\u914D\u5099":
-            case "\u30B9\u30C6\u30A4":
+            case "\u3010\u30B9\u30C6\u30A4\u3011":
             case "1\u679A\u5236\u9650":
               texts.push({ id: "", title: ["\u7279\u6B8A\u578B", [sp]], description: sp });
               break;
@@ -22733,16 +22736,16 @@ function createPlayCardEffects(ctx2, cardId) {
       }), ret.push(totalCostPlusPlayEffect);
     }
   }
-  if (prototype.category == "\u30AD\u30E3\u30E9\u30AF\u30BF\u30FC" && getCardHasSpeicalEffect(ctx2, ["\u30B9\u30C6\u30A4"], cardId)) {
+  if (prototype.category == "\u30AD\u30E3\u30E9\u30AF\u30BF\u30FC" && getCardHasSpeicalEffect(ctx2, ["\u3010\u30B9\u30C6\u30A4\u3011"], cardId)) {
     let stayPlayEffect = JSON.parse(JSON.stringify(playCardEffect));
     stayPlayEffect = {
       ...stayPlayEffect,
       id: `stayPlayEffect_${cardId}`,
-      description: "\u30B9\u30C6\u30A4",
+      description: "\u3010\u30B9\u30C6\u30A4\u3011",
       text: {
         ...stayPlayEffect.text,
         id: `stayPlayEffect_text_${cardId}`,
-        description: "\u30B9\u30C6\u30A4",
+        description: "\u3010\u30B9\u30C6\u30A4\u3011",
         conditions: {
           ...dissoc_default("\u4E00\u500B\u81EA\u8ECD\u6A5F\u9AD4", stayPlayEffect.text.conditions || {})
         },
