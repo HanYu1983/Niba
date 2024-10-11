@@ -339,16 +339,16 @@ export function createPlayCardEffects(ctx: GameState, cardId: string): Effect[] 
             ret.push(totalCostPlusPlayEffect)
         }
     }
-    if (prototype.category == "キャラクター" && getCardHasSpeicalEffect(ctx, ["ステイ"], cardId)) {
+    if (prototype.category == "キャラクター" && getCardHasSpeicalEffect(ctx, ["【ステイ】"], cardId)) {
         let stayPlayEffect: Effect = JSON.parse(JSON.stringify(playCardEffect))
         stayPlayEffect = {
             ...stayPlayEffect,
             id: `stayPlayEffect_${cardId}`,
-            description: "ステイ",
+            description: "【ステイ】",
             text: {
                 ...stayPlayEffect.text,
                 id: `stayPlayEffect_text_${cardId}`,
-                description: "ステイ",
+                description: "【ステイ】",
                 conditions: {
                     ...dissoc("一個自軍機體", stayPlayEffect.text.conditions || {})
                 },
@@ -420,7 +420,7 @@ export function createUnitGoStageEffectFromPlayEffect(ctx: GameState, effect: Ef
                                     const to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "配備エリア")
                                     ctx = GameStateFn.doItemMove(ctx, to, [cardId, from]) as GameState
                                     const hasHigh = GameStateFn.getCardHasSpeicalEffect(ctx, ["戦闘配備"], cardId)
-                                    const hasPS = GameStateFn.getCardHasSpeicalEffect(ctx, ["PS装甲"], cardId)
+                                    const hasPS = GameStateFn.getCardHasSpeicalEffect(ctx, ["【PS装甲】"], cardId)
                                     const isNoNeedRoll = (hasHigh || hasPS)
                                     const isRoll = isNoNeedRoll == false
                                     ctx = GameStateFn.doItemSetRollState(ctx, isRoll, [cardId, GameStateFn.getItemBaSyou(ctx, cardId)], { isSkipTargetMissing: true })

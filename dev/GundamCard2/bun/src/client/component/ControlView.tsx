@@ -24,12 +24,21 @@ export const ControlView = () => {
     await Promise.all(prototypeIds.map(loadPrototype)).then(()=>console.log("loadOK")).catch(console.error)
     OnEvent.next({ id: "OnClickNewGame", deckA: deckA, deckB: deckB });
   }, []);
+
+  const onClickStart3 = useCallback(async () => {
+    const deckA = DECK_BLACK_T3
+    const deckB = DECK_W_RANGE
+    const prototypeIds = [...deckA, ...deckB]
+    await Promise.all(prototypeIds.map(loadPrototype)).then(()=>console.log("loadOK")).catch(console.error)
+    OnEvent.next({ id: "OnClickNewGame", deckA: deckA, deckB: deckB });
+  }, []);
   // ============== control panel ============= //
   const renderControlPanel = useMemo(() => {
     return (
       <div>
         <button onClick={onClickStart1}>白範兵對白速攻</button>
         <button onClick={onClickStart2}>黑T3對白速攻</button>
+        <button onClick={onClickStart3}>黑T3對白範兵</button>
       </div>
     );
   }, [onClickStart2, onClickStart1]);

@@ -24,10 +24,10 @@ export type TextSpeicalEffect =
     | ["共有", string]
     | ["供給"]
     | ["クロスウェポン", string]
-    | ["PS装甲"]
+    | ["【PS装甲】"]
     | ["クイック"]
     | ["戦闘配備"]
-    | ["ステイ"]
+    | ["【ステイ】"]
     | ["1枚制限"];
 
 export const TextSpeicalEffectFn = {

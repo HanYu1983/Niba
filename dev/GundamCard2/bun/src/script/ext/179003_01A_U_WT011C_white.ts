@@ -23,7 +23,7 @@ export const prototype: CardPrototype = {
         "このカードの部隊にいる、「PS装甲」を持つ自軍ユニット１枚": {
           title: ["Entity", {
             isThisBattleGroup: true,
-            hasSpecialEffect: [["PS装甲"]],
+            hasSpecialEffect: [["【PS装甲】"]],
             side: "自軍",
             is: ["ユニット"],
             count: 1,

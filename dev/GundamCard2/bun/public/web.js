@@ -19727,7 +19727,7 @@ async function loadPrototype(imgID) {
       return d.info_25 == info_25;
     });
     if (data) {
-      const { id, info_2: title, info_3: categoryStr, info_4: totalCostLengthStr, info_5: colorCost, info_6: gsignProperty, info_7: bp1, info_8: bp2, info_9: bp3, info_10: area, info_11: characteristic } = data, textstr = data.info_12.substr(0, 50), description = data.info_15, prod = data.info_16, rarity = data.info_17, color = data.info_18, categoryMapping = {
+      const { id, info_2: title, info_3: categoryStr, info_4: totalCostLengthStr, info_5: colorCost, info_6: gsignProperty, info_7: bp1, info_8: bp2, info_9: bp3, info_10: area, info_11: characteristic } = data, textstr = data.info_12.substr(0, 60), description = data.info_15, prod = data.info_16, rarity = data.info_17, color = data.info_18, categoryMapping = {
         UNIT: "\u30E6\u30CB\u30C3\u30C8",
         CHARACTER: "\u30AD\u30E3\u30E9\u30AF\u30BF\u30FC",
         COMMAND: "\u30B3\u30DE\u30F3\u30C9",
@@ -19736,46 +19736,112 @@ async function loadPrototype(imgID) {
         "OPERATION\uFF08UNIT\uFF09": "\u30AA\u30DA\u30EC\u30FC\u30B7\u30E7\u30F3(\u30E6\u30CB\u30C3\u30C8)",
         ACE: "ACE",
         GRAPHIC: "\u30B0\u30E9\u30D5\u30A3\u30C3\u30AF"
-      }, texts = getGainTexts(textstr).concat(getKaiSo(textstr)).concat(getSupply(textstr)).concat(getCrossWeapon(textstr)).concat(getPao(textstr)).concat(getHave(textstr)).concat(getRange(textstr));
-      if (textstr.indexOf("\u5F37\u8972") != -1)
-        texts.push({
-          id: "",
-          title: ["\u7279\u6B8A\u578B", ["\u5F37\u8972"]]
-        });
-      if (textstr.indexOf("\u6226\u95D8\u914D\u5099") != -1)
-        texts.push({
-          id: "",
-          title: ["\u7279\u6B8A\u578B", ["\u6226\u95D8\u914D\u5099"]]
-        });
-      if (textstr.indexOf("\u3010PS\u88C5\u7532\u3011") != -1)
-        texts.push({
-          id: "",
-          title: ["\u7279\u6B8A\u578B", ["PS\u88C5\u7532"]]
-        });
-      if (textstr.indexOf("\u901F\u653B") != -1)
-        texts.push({
-          id: "",
-          title: ["\u7279\u6B8A\u578B", ["\u901F\u653B"]]
-        });
-      if (textstr.indexOf("\u30AF\u30A4\u30C3\u30AF") != -1)
-        texts.push({
-          id: "",
-          title: ["\u7279\u6B8A\u578B", ["\u30AF\u30A4\u30C3\u30AF"]]
-        });
-      if (textstr.indexOf("\u9AD8\u6A5F\u52D5") != -1)
-        texts.push({
-          id: "",
-          title: ["\u7279\u6B8A\u578B", ["\u9AD8\u6A5F\u52D5"]]
-        });
-      if (textstr.indexOf("\u30B9\u30C6\u30A4") != -1)
-        texts.push({
-          id: "",
-          title: ["\u7279\u6B8A\u578B", ["\u30B9\u30C6\u30A4"]]
-        });
-      if (texts.forEach((text) => {
-        text.description = JSON.stringify(text.title);
-      }), ["179001_01A_CH_WT007R_white"].includes(imgID))
-        texts.length = 0;
+      }, texts = [], matches = textstr.matchAll(/([^：　［］（）〔〕]+)/g);
+      let allSp = [], currSp = [];
+      for (let match of matches) {
+        const curr = match[0];
+        if (curr.length >= 10)
+          continue;
+        if (["\u9AD8\u6A5F\u52D5", "\u901F\u653B", "\u5F37\u8972", "\u3010PS\u88C5\u7532\u3011", "\u30AF\u30A4\u30C3\u30AF", "\u6226\u95D8\u914D\u5099", "\u30B9\u30C6\u30A4", "1\u679A\u5236\u9650"].includes(curr)) {
+          allSp.push(curr);
+          continue;
+        }
+        if (currSp.length == 0) {
+          const match2 = curr.match(/(.?)(０|１|２|３|４|５|６|７|８|９|R+)(毎?)/);
+          if (match2) {
+            const [_, colorstr, rollcoststr, every] = match2;
+            currSp.push([colorstr, rollcoststr, every]);
+            continue;
+          }
+        }
+        if (currSp.length == 1) {
+          if (["\u4F9B\u7D66", "\u30B2\u30A4\u30F3"].includes(curr))
+            currSp.push(curr), allSp.push(currSp.slice()), currSp.length = 0;
+          else if (["\u30B5\u30A4\u30B3\u30DF\u30E5", "\u7BC4\u56F2\u5175\u5668", "\u30B2\u30A4\u30F3", "\u6539\u88C5", "\u5171\u6709", "\u30AF\u30ED\u30B9\u30A6\u30A7\u30DD\u30F3"].includes(curr))
+            currSp.push(curr);
+          else
+            currSp.shift();
+          continue;
+        }
+        if (currSp.length == 2) {
+          currSp.push(curr), allSp.push(currSp.slice()), currSp.length = 0;
+          continue;
+        }
+      }
+      if (currSp.length > 1)
+        throw console.log(currSp), new Error;
+      allSp.forEach((sp) => {
+        if (typeof sp == "string") {
+          switch (sp) {
+            case "\u9AD8\u6A5F\u52D5":
+            case "\u901F\u653B":
+            case "\u5F37\u8972":
+            case "\u3010PS\u88C5\u7532\u3011":
+            case "\u30AF\u30A4\u30C3\u30AF":
+            case "\u6226\u95D8\u914D\u5099":
+            case "\u30B9\u30C6\u30A4":
+            case "1\u679A\u5236\u9650":
+              texts.push({ id: "", title: ["\u7279\u6B8A\u578B", [sp]], description: sp });
+              break;
+            default:
+              throw new Error;
+          }
+          return;
+        }
+        if (Array.isArray(sp) && Array.isArray(sp[0])) {
+          const [[colorstr, rollcoststr, every], titlestr, char] = sp, color2 = colorstr == "" ? null : colorstr;
+          let conditions = {};
+          if (rollcoststr == "R")
+            conditions.R = {
+              actions: [
+                {
+                  title: ["_\u30ED\u30FC\u30EB\u3059\u308B", "\u30ED\u30FC\u30EB"]
+                }
+              ]
+            };
+          else {
+            const rollcost = "\uFF10\uFF11\uFF12\uFF13\uFF14\uFF15\uFF16\uFF17\uFF18\uFF19".indexOf(rollcoststr);
+            if (rollcost == -1)
+              throw new Error;
+            conditions = {
+              ...conditions,
+              ...createRollCostRequire(rollcost, color2)
+            };
+          }
+          let title2 = null;
+          switch (titlestr) {
+            case "\u4F9B\u7D66":
+            case "\u30B2\u30A4\u30F3": {
+              title2 = ["\u7279\u6B8A\u578B", titlestr];
+              break;
+            }
+            case "\u30B5\u30A4\u30B3\u30DF\u30E5":
+            case "\u7BC4\u56F2\u5175\u5668": {
+              const num = "\uFF10\uFF11\uFF12\uFF13\uFF14\uFF15\uFF16\uFF17\uFF18\uFF19".indexOf(char);
+              title2 = ["\u7279\u6B8A\u578B", [titlestr, num]];
+              break;
+            }
+            case "\u30B2\u30A4\u30F3":
+            case "\u6539\u88C5":
+            case "\u5171\u6709":
+            case "\u30AF\u30ED\u30B9\u30A6\u30A7\u30DD\u30F3":
+              title2 = ["\u7279\u6B8A\u578B", [titlestr, char]];
+              break;
+          }
+          if (title2 == null)
+            throw new Error;
+          const text = {
+            id: "",
+            title: title2,
+            isEachTime: every == "\u6BCE",
+            description: `\u3014${colorstr}${rollcoststr}${every}\u3015${titlestr}[${char}]`,
+            conditions
+          };
+          texts.push(text);
+          return;
+        }
+        throw new Error;
+      });
       const category = categoryMapping[categoryStr];
       if (category == null)
         throw new Error(`unknown categoryStr: ${categoryStr}`);
@@ -19880,137 +19946,7 @@ function parseArea(a) {
     return ["\u5730\u7403\u30A8\u30EA\u30A2"];
   return [];
 }
-function getGainTexts(gainStr) {
-  const match = gainStr.match(/〔(０|１|２|３|４|５|６|７|８|９+)〕：ゲイン/);
-  if (match == null)
-    return [];
-  const [matchstr, rollcoststr, char] = match, rollcost = uppercaseDigits.indexOf(rollcoststr);
-  if (rollcost == -1)
-    throw new Error(`getGainTexts error: ${matchstr}`);
-  return [
-    {
-      id: "",
-      title: ["\u7279\u6B8A\u578B", ["\u30B2\u30A4\u30F3"]],
-      description: `(${rollcost})\u30B2\u30A4\u30F3`,
-      conditions: createRollCostRequire(rollcost, null)
-    }
-  ];
-}
-function getKaiSo(gainStr) {
-  const match = gainStr.match(/〔(.?)(０|１|２|３|４|５|６|７|８|９+)(毎?)〕：改装(〔|［)(.+)(］|〕)/);
-  if (match == null) {
-    if (match == null)
-      return [];
-  }
-  const [matchstr, colorstr, rollcoststr, every, _, char, _2] = match;
-  if (colorstr != "" && CardColorFn.getAll().includes(colorstr) == !1)
-    throw new Error(`getKaiSo ${gainStr}`);
-  const color = colorstr == "" ? null : colorstr, rollcost = uppercaseDigits.indexOf(rollcoststr);
-  if (rollcost == -1)
-    throw new Error(`getKaiSo error: ${matchstr}`);
-  return [
-    {
-      id: "",
-      title: ["\u7279\u6B8A\u578B", ["\u6539\u88C5", char]],
-      description: `(${rollcost})\u6539\u88C5[${char}]`,
-      conditions: createRollCostRequire(rollcost, color)
-    }
-  ];
-}
-function getCrossWeapon(gainStr) {
-  const match = gainStr.match(/〔(.?)(０|１|２|３|４|５|６|７|８|９+)(毎?)〕：クロスウェポン(〔|［)(.+)(］|〕)/);
-  if (match == null)
-    return [];
-  const [matchstr, colorstr, rollcoststr, every, char] = match;
-  if (colorstr != "" && CardColorFn.getAll().includes(colorstr) == !1)
-    throw new Error(`getCrossWeapon ${gainStr}`);
-  const color = colorstr == "" ? null : colorstr, rollcost = uppercaseDigits.indexOf(rollcoststr);
-  if (rollcost == -1)
-    throw new Error(`getGainTexts error: ${matchstr}`);
-  return [
-    {
-      id: "",
-      title: ["\u7279\u6B8A\u578B", ["\u30AF\u30ED\u30B9\u30A6\u30A7\u30DD\u30F3", char]],
-      isEachTime: every == "\u6BCE",
-      description: `(${color}${rollcost}${every})\u30AF\u30ED\u30B9\u30A6\u30A7\u30DD\u30F3[${char}]`,
-      conditions: createRollCostRequire(rollcost, color)
-    }
-  ];
-}
-function getRange(gainStr) {
-  const match = gainStr.match(/〔(０|１|２|３|４|５|６|７|８|９+)〕：範囲兵器（(０|１|２|３|４|５|６|７|８|９+)）/);
-  if (match == null)
-    return [];
-  const [matchstr, rollcoststr, numstr] = match, rollcost = uppercaseDigits.indexOf(rollcoststr);
-  if (rollcost == -1)
-    throw new Error(`getRange error: ${matchstr}`);
-  const num = uppercaseDigits.indexOf(numstr);
-  if (num == -1)
-    throw new Error(`getRange error: ${numstr}`);
-  return [
-    {
-      id: "",
-      title: ["\u7279\u6B8A\u578B", ["\u7BC4\u56F2\u5175\u5668", num]],
-      description: `(${rollcost})\u7BC4\u56F2\u5175\u5668[${num}]`,
-      conditions: createRollCostRequire(rollcost, null)
-    }
-  ];
-}
-function getPao(gainStr) {
-  const match = gainStr.match(/〔(０|１|２|３|４|５|６|７|８|９+)〕：サイコミュ（(０|１|２|３|４|５|６|７|８|９+)）/);
-  if (match == null)
-    return [];
-  const [matchstr, rollcoststr, numstr] = match, rollcost = uppercaseDigits.indexOf(rollcoststr);
-  if (rollcost == -1)
-    throw new Error(`getPao error: ${matchstr}`);
-  const num = uppercaseDigits.indexOf(numstr);
-  if (num == -1)
-    throw new Error(`getPao error: ${numstr}`);
-  return [
-    {
-      id: "",
-      title: ["\u7279\u6B8A\u578B", ["\u30B5\u30A4\u30B3\u30DF\u30E5", num]],
-      description: `(${rollcost})\u30B5\u30A4\u30B3\u30DF\u30E5[${num}]`,
-      conditions: createRollCostRequire(rollcost, null)
-    }
-  ];
-}
-function getHave(gainStr) {
-  let match = gainStr.match(/〔(.?)(０|１|２|３|４|５|６|７|８|９+)(毎?)〕：共有(〔|［)(.+)(］|〕)/);
-  if (match == null)
-    return [];
-  const [matchstr, colorstr, rollcoststr, every, _, char, _2] = match;
-  if (colorstr != "" && CardColorFn.getAll().includes(colorstr) == !1)
-    throw new Error(`getHave ${gainStr}`);
-  const color = colorstr == "" ? null : colorstr, rollcost = uppercaseDigits.indexOf(rollcoststr);
-  if (rollcost == -1)
-    throw new Error(`getHave error: ${matchstr}`);
-  return [
-    {
-      id: "",
-      title: ["\u7279\u6B8A\u578B", ["\u5171\u6709", char]],
-      description: `(${rollcost})\u5171\u6709[${char}]`,
-      conditions: createRollCostRequire(rollcost, color)
-    }
-  ];
-}
-function getSupply(gainStr) {
-  const match = gainStr.match(/〔(０|１|２|３|４|５|６|７|８|９+)〕：供給/);
-  if (match == null)
-    return [];
-  const [matchstr, rollcoststr] = match, rollcost = uppercaseDigits.indexOf(rollcoststr);
-  if (rollcost == -1)
-    throw new Error(`getGainTexts error: ${matchstr}`);
-  return [
-    {
-      id: "",
-      title: ["\u7279\u6B8A\u578B", ["\u4F9B\u7D66"]],
-      description: `(${rollcost})\u4F9B\u7D66`,
-      conditions: createRollCostRequire(rollcost, null)
-    }
-  ];
-}
-var _preloadPrototype = {}, uppercaseDigits = "\uFF10\uFF11\uFF12\uFF13\uFF14\uFF15\uFF16\uFF17\uFF18\uFF19";
+var _preloadPrototype = {};
 
 // src/game/gameState/ItemTableComponent.ts
 function isCard(ctx2, id) {
@@ -20491,7 +20427,7 @@ function createTextsFromSpecialEffect(ctx2, text) {
     throw new Error("text not \u7279\u6B8A\u578B");
   const specialEffect = text.title[1];
   switch (specialEffect[0]) {
-    case "PS\u88C5\u7532":
+    case "\u3010PS\u88C5\u7532\u3011":
       return [
         {
           id: text.id,
@@ -20623,9 +20559,12 @@ function createTextsFromSpecialEffect(ctx2, text) {
                         "\u9019\u5F35\u5361\u5728\u6230\u5340\u7684\u5834\u5408, \u6253\u958B\u81EA\u8ECD\u672C\u570B\u4E0A\u76841\u5F35\u5361": {
                           title: function _(ctx4, effect2, bridge) {
                             const { GameStateFn: GameStateFn2, DefineFn: DefineFn2 } = bridge, cardId = DefineFn2.EffectFn.getCardID(effect2), from = GameStateFn2.getItemBaSyou(ctx4, cardId);
-                            if (["\u6226\u95D8\u30A8\u30EA\u30A21", "\u6226\u95D8\u30A8\u30EA\u30A22"].includes(DefineFn2.AbsoluteBaSyouFn.getBaSyouKeyword(from)))
+                            if (DefineFn2.BaSyouKeywordFn.getBattleArea().includes(DefineFn2.AbsoluteBaSyouFn.getBaSyouKeyword(from)))
                               return GameStateFn2.createConditionTitleFn({
-                                title: ["_\u81EA\u8ECD_\u672C\u570B\u4E0A\u7684_1\u5F35\u5361", "\u81EA\u8ECD", "\u672C\u56FD", 1],
+                                title: ["Entity", {
+                                  see: [DefineFn2.RelatedBaSyouFn.of("\u81EA\u8ECD", "\u672C\u56FD"), 1, 1],
+                                  count: 1
+                                }],
                                 actions: [
                                   {
                                     title: ["_\u30ED\u30FC\u30EB\u3059\u308B", "\u6253\u958B"],
@@ -22863,7 +22802,7 @@ function createUnitGoStageEffectFromPlayEffect(ctx2, effect) {
                 title: function _(ctx3, effect2, { DefineFn, GameStateFn }) {
                   const cardId2 = DefineFn.EffectFn.getCardID(effect2), from = GameStateFn.getItemBaSyou(ctx3, cardId2), to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "\u914D\u5099\u30A8\u30EA\u30A2");
                   ctx3 = GameStateFn.doItemMove(ctx3, to, [cardId2, from]);
-                  const hasHigh = GameStateFn.getCardHasSpeicalEffect(ctx3, ["\u6226\u95D8\u914D\u5099"], cardId2), hasPS = GameStateFn.getCardHasSpeicalEffect(ctx3, ["PS\u88C5\u7532"], cardId2), isRoll = (hasHigh || hasPS) == !1;
+                  const hasHigh = GameStateFn.getCardHasSpeicalEffect(ctx3, ["\u6226\u95D8\u914D\u5099"], cardId2), hasPS = GameStateFn.getCardHasSpeicalEffect(ctx3, ["\u3010PS\u88C5\u7532\u3011"], cardId2), isRoll = (hasHigh || hasPS) == !1;
                   return ctx3 = GameStateFn.doItemSetRollState(ctx3, isRoll, [cardId2, GameStateFn.getItemBaSyou(ctx3, cardId2)], { isSkipTargetMissing: !0 }), ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: ["\u30D7\u30EC\u30A4\u3055\u308C\u3066\u5834\u306B\u51FA\u305F\u5834\u5408"], cardIds: [cardId2] }), ctx3;
                 }.toString()
               }
@@ -26430,6 +26369,9 @@ var DECK_W_RANGE = ["179001_01A_CH_WT006C_white", "179001_01A_CH_WT006C_white", 
   }, []), onClickStart2 = import_react9.useCallback(async () => {
     const deckA = DECK_BLACK_T3, deckB = DECK_WHITE_SPEED, prototypeIds = [...deckA, ...deckB];
     await Promise.all(prototypeIds.map(loadPrototype)).then(() => console.log("loadOK")).catch(console.error), OnEvent.next({ id: "OnClickNewGame", deckA, deckB });
+  }, []), onClickStart3 = import_react9.useCallback(async () => {
+    const deckA = DECK_BLACK_T3, deckB = DECK_W_RANGE, prototypeIds = [...deckA, ...deckB];
+    await Promise.all(prototypeIds.map(loadPrototype)).then(() => console.log("loadOK")).catch(console.error), OnEvent.next({ id: "OnClickNewGame", deckA, deckB });
   }, []);
   return import_react9.useMemo(() => {
     return /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
@@ -26441,6 +26383,10 @@ var DECK_W_RANGE = ["179001_01A_CH_WT006C_white", "179001_01A_CH_WT006C_white", 
         /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("button", {
           onClick: onClickStart2,
           children: "\u9ED1T3\u5C0D\u767D\u901F\u653B"
+        }, void 0, !1, void 0, this),
+        /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("button", {
+          onClick: onClickStart3,
+          children: "\u9ED1T3\u5C0D\u767D\u7BC4\u5175"
         }, void 0, !1, void 0, this)
       ]
     }, void 0, !0, void 0, this);

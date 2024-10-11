@@ -13,7 +13,7 @@ export function createTextsFromSpecialEffect(ctx: GameState, text: CardText): Ca
     // 等殊型的內文id是不可被選擇的, 所以可以使用未轉換前的id
     const specialEffect = text.title[1]
     switch (specialEffect[0]) {
-        case "PS装甲": {
+        case "【PS装甲】": {
             return [
                 {
                     id: text.id,

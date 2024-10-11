@@ -33,6 +33,7 @@ export const prototype: CardPrototype = {
           )
         )) {
           const newE = GameStateFn.createPlayTextEffectFromEffect(ctx, effect, {
+            isOption: true,
             logicTreeAction: {
               actions: [
                 {

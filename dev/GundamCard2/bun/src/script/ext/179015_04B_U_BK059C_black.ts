@@ -22,6 +22,7 @@ export const prototype: CardPrototype = {
         const evt = DefineFn.EffectFn.getEvent(effect)
         if (evt.title[0] == "場に出た場合" && evt.cardIds?.includes(cardId)) {
           const newE = GameStateFn.createPlayTextEffectFromEffect(ctx, effect, {
+            isOption: true,
             conditions: {
               // "_自軍_本国の上のカード_１～_４枚を見て、その中にある、「特徴：_ヘイズル系」を持つ_ユニット_１枚": {
               //   title: ["_自軍_本国の上のカード_１～_４枚を見て、その中にある、「特徴：_ヘイズル系」を持つ_ユニット_１枚", "敵軍", "本国", 1, 4, "ヘイズル系", "ユニット", 1],

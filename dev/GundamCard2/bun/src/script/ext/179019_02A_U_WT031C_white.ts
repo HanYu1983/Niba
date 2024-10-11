@@ -25,6 +25,7 @@ export const prototype: CardPrototype = {
           && evt.cardIds?.includes(cardId)
         ) {
           const newE = GameStateFn.createPlayTextEffectFromEffect(ctx, effect, {
+            isOption: true,
             conditions: {
               "自軍本国の上のカード４枚までを見て、その中にある、このカードと同じ属性のGサインを持つユニット１枚": {
                 title: ["Entity", {
