@@ -24050,7 +24050,7 @@ function applyFlow(ctx2, playerID, flow) {
           ...ctx2.flowMemory,
           hasPlayerPassPayCost: {}
         }
-      }, ctx2 = updateCommand(ctx2), ctx2;
+      }, ctx2 = createMinusDestroyEffectAndPush(ctx2), ctx2 = updateCommand(ctx2), ctx2;
     }
     case "FlowPassPhase":
       return {
@@ -24281,7 +24281,7 @@ function applyFlow(ctx2, playerID, flow) {
         }
       }, ctx2;
     case "FlowNextTiming":
-      return ctx2 = setNextPhase(ctx2), ctx2 = updateCommand(ctx2), ctx2 = createMinusDestroyEffectAndPush(ctx2), ctx2 = {
+      return ctx2 = setNextPhase(ctx2), ctx2 = updateCommand(ctx2), ctx2 = {
         ...ctx2,
         flowMemory: {
           ...ctx2.flowMemory,

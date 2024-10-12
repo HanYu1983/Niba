@@ -33,7 +33,7 @@ export const prototype: CardPrototype = {
                 see: [DefineFn.RelatedBaSyouFn.of("自軍", "本国"), 1, 3], 
                 hasChar: ["ヘイズル系"], 
                 cardCategory: ["ユニット"], 
-                max: 1 
+                count: 1 
               }],
             },
             "このカードの部隊の任意の順番": {
