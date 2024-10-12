@@ -99,6 +99,8 @@ export function applyFlow(
                     hasPlayerPassPayCost: {},
                 },
             };
+            // 負數修正破壞
+            ctx = createMinusDestroyEffectAndPush(ctx) as GameStateWithFlowMemory;
             // 每執行完一次效果，就更新指令
             ctx = updateCommand(ctx) as GameStateWithFlowMemory;
             return ctx;
@@ -375,9 +377,6 @@ export function applyFlow(
             ctx = setNextPhase(ctx) as GameStateWithFlowMemory
             // 自動更新指令
             ctx = updateCommand(ctx) as GameStateWithFlowMemory;
-            // 更新所有破壞而廢棄的效果
-            // 若有產生值，在下一步時主動玩家就要拿到決定解決順序的指令
-            ctx = createMinusDestroyEffectAndPush(ctx) as GameStateWithFlowMemory;
             // 重設觸發flag
             ctx = {
                 ...ctx,
@@ -443,9 +442,6 @@ export function applyFlow(
         case "FlowMakeDestroyOrder": {
             // 移除破壞效果，全部移到堆疊
             ctx = doCutInDestroyEffectsAndClear(ctx, flow.destroyEffect.map(i => i.id)) as GameStateWithFlowMemory
-            // 試著解決以下效果成立時，玩家指令列表卻不能使用
-            // （戦闘フェイズ）：破壊されているカード１枚を廃棄する。その場合、カード２枚を引く。
-            ctx = updateCommand(ctx) as GameStateWithFlowMemory;
             return {
                 ...ctx,
                 // 重設切入旗標，讓玩家再次切入

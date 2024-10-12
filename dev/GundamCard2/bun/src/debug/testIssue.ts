@@ -68,7 +68,7 @@ export async function testIssue() {
     //console.log("===", ctx.stackEffect)
 
     //flows = queryFlow(ctx, PlayerA)
-    throw new Error()
+    //throw new Error()
 }
 
 const TMP_CTX: GameStateWithFlowMemory = {
