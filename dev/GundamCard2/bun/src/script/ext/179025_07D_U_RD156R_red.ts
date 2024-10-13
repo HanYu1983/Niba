@@ -20,6 +20,26 @@ export const prototype: CardPrototype = {
       id: "",
       title: ["自動型", "恒常"],
       description: "『恒常』：このカードは、合計国力－３してプレイできる。その場合、カット終了時に、このカードを廃棄する。",
+      // createPlayEffect: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Effect[] {
+      //   const cardId = DefineFn.EffectFn.getCardID(effect)
+      //   const prototype = GameStateFn.getItemPrototype(ctx, cardId)
+      //   const cardRollCostLength = prototype.totalCost != "X" ? (prototype.totalCost || 0) : 0
+      //   const newE = GameStateFn.createPlayCardText(ctx, cardId)
+      //   newE.text.conditions = {
+      //     ...newE.text.conditions,
+      //     [DefineFn.TipFn.createTotalCostKey()]: {
+      //       actions: [
+      //         {
+      //           title: ["合計国力〔x〕", cardRollCostLength - 3]
+      //         }
+      //       ]
+      //     },
+      //   }
+      //   newE.text.logicTreeActions?.[0].actions.push({
+      //     title: 
+      //   })
+      //   return [newE]
+      // }.toString(),
       onSituation: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GlobalEffect[] {
         const cardId = DefineFn.EffectFn.getCardID(effect)
         const situation = DefineFn.EffectFn.getSituation(effect)

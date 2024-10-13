@@ -75,7 +75,7 @@ export const prototype: CardPrototype = {
           ...newRollCostConditions,
         }
         // 重新計算合計國力減免
-        const originCardRollCostLength = GameStateFn.getCardTotalCostLength(ctx, cardId)
+        const originCardRollCostLength = prototype.totalCost != "X" ? (prototype.totalCost || 0) : 0
         copyOriginCondition = {
           ...copyOriginCondition,
           [DefineFn.TipFn.createTotalCostKey()]: {
