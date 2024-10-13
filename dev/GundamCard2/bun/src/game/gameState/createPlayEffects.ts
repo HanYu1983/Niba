@@ -12,13 +12,7 @@ import { always, concat, flatten, ifElse, lift, map, pipe } from "ramda";
 import { createGameState, GameState } from "./GameState";
 import { getPhase, setPhase } from "./PhaseComponent";
 import { getCardHasSpeicalEffect, getCardTexts } from "./card";
-import { Card } from "../define/Card";
-import { setActivePlayerID } from "./ActivePlayerComponent";
 import { createTextsFromSpecialEffect } from "./createTextsFromSpecialEffect";
-import { createPlayGEffects } from "./createPlayGEffects";
-import { Bridge } from "../../script/bridge";
-import { getGlobalEffects, setGlobalEffects } from "./globalEffects";
-
 export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
     const getPlayCardEffectsF =
         ifElse(

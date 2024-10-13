@@ -12,7 +12,6 @@ import { doItemMove } from "../game/gameState/doItemMove";
 import { getEffect, getTopEffect } from "../game/gameState/EffectStackComponent";
 import { createGameState, GameState } from "../game/gameState/GameState";
 import { createPlayEffects } from "../game/gameState/createPlayEffects";
-import { createPlayGEffects } from "../game/gameState/createPlayGEffects";
 import { createTextsFromSpecialEffect } from "../game/gameState/createTextsFromSpecialEffect";
 import { getItemBaSyou, getItemIdsByBasyou } from "../game/gameState/ItemTableComponent";
 import { setPhase } from "../game/gameState/PhaseComponent";
