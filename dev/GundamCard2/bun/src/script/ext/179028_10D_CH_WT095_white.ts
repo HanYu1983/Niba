@@ -9,7 +9,6 @@
 import { CardPrototype } from "../../game/define/CardPrototype";
 import { CardText, Condition } from "../../game/define/CardText";
 import { Effect } from "../../game/define/Effect";
-import { GlobalEffect } from "../../game/define/GlobalEffect";
 import { GameState } from "../../game/gameState/GameState";
 import { Bridge } from "../bridge";
 
@@ -24,27 +23,10 @@ export const prototype: CardPrototype = {
         if (GameStateFn.getItemBaSyou(ctx, cardId).value[1] != "ジャンクヤード") {
           return []
         }
-        const playText = GameStateFn.createPlayCharacterOperationText(ctx, cardId)
-        const playGText = GameStateFn.createPlayGText(ctx, cardId)
+        const playText = GameStateFn.createPlayCharacterOperationEffect(ctx, cardId)
+        const playGText = GameStateFn.createPlayGEffect(ctx, cardId)
         return [playText, playGText]
       },
-      //   onSituation: function _(ctx: GameState, effect: Effect, bridge: Bridge): GlobalEffect[] {
-      //     const { DefineFn, GameStateFn } = bridge
-      //     const situation = DefineFn.EffectFn.getSituation(effect)
-      //     if (situation != null) {
-      //       return []
-      //     }
-      //     const cardId = DefineFn.EffectFn.getCardID(effect)
-      //     if (GameStateFn.getItemBaSyou(ctx, cardId).value[1] == "ジャンクヤード") {
-      //       return [
-      //         {
-      //           title: ["自軍手札にあるかのようにプレイできる"],
-      //           cardIds: [cardId]
-      //         }
-      //       ]
-      //     }
-      //     return []
-      //   }.toString()
     },
     {
       id: "",

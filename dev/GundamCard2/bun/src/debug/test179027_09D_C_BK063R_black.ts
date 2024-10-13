@@ -37,7 +37,7 @@ export async function test179027_09D_C_BK063R_black() {
     let originCtx = JSON.parse(JSON.stringify(ctx))
     let effects = createPlayEffects(ctx, PlayerA)
     {
-        if (effects.length != 2) {
+        if (effects.length != 1) {
             console.log(effects)
             throw new Error()
         }
@@ -112,7 +112,7 @@ export async function test179027_09D_C_BK063R_black() {
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア1"), repeat("unitBlack", 1)) as GameState
     {
         effects = createPlayEffects(ctx, PlayerA)
-        if (effects.length != 3) {
+        if (effects.length != 2) {
             console.log(effects)
             throw new Error()
         }

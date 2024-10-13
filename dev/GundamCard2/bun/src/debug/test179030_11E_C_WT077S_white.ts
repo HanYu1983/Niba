@@ -40,7 +40,7 @@ export async function test179030_11E_C_WT077S_white() {
     ctx = setActivePlayerID(ctx, PlayerA) as GameState
     ctx = setPhase(ctx, ["戦闘フェイズ", "ダメージ判定ステップ", "フリータイミング"]) as GameState
     let effects = createPlayEffects(ctx, PlayerA)
-    if (effects.length != 3) {
+    if (effects.length != 2) {
         console.log(effects)
         throw new Error()
     }

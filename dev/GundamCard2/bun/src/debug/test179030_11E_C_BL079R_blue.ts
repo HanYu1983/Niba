@@ -59,7 +59,7 @@ export async function test179030_11E_C_BL079R_blue() {
         ctx = addCards(ctx, originBasyouD, [cardD]) as GameState
         console.log("取得出牌指令")
         const playCardEffects = createPlayEffects(ctx, PlayerA)
-        if (playCardEffects.length != 2) {
+        if (playCardEffects.length != 1) {
             console.log(playCardEffects)
             throw new Error()
         }

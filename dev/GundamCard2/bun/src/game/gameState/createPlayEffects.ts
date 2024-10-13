@@ -6,7 +6,7 @@ import { AbsoluteBaSyouFn, BaSyouKeywordFn } from "../define/BaSyou";
 import { addCards, createCardWithProtoIds, getCard } from "./CardTableComponent";
 import { Effect } from "../define/Effect";
 import { createPlayCardEffects } from "./createPlayCardEffects";
-import { getItemBaSyou, getItemIdsByBasyou, getItemPrototype } from "./ItemTableComponent";
+import { getItem, getItemBaSyou, getItemIdsByBasyou, getItemPrototype } from "./ItemTableComponent";
 import { getPrototype, loadPrototype } from "../../script";
 import { always, concat, flatten, ifElse, lift, map, pipe } from "ramda";
 import { createGameState, GameState } from "./GameState";
@@ -20,18 +20,12 @@ import { Bridge } from "../../script/bridge";
 import { getGlobalEffects, setGlobalEffects } from "./globalEffects";
 
 export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
-    const ges = getGlobalEffects(ctx, null)
-    ctx = setGlobalEffects(ctx, null, ges)
-    const canPlayByText = ges
-        .filter(ge => ge.title[0] == "自軍手札にあるかのようにプレイできる")
-        .flatMap(ge => ge.cardIds).filter(itemId => AbsoluteBaSyouFn.getPlayerID(getItemBaSyou(ctx, itemId)) == playerId)
     const getPlayCardEffectsF =
         ifElse(
             always(PhaseFn.eq(getPhase(ctx), ["配備フェイズ", "フリータイミング"])),
             pipe(
                 always(AbsoluteBaSyouFn.getTextOn()),
                 map(basyou => getItemIdsByBasyou(ctx, basyou)), flatten,
-                concat(canPlayByText),
                 map(cardId => {
                     // 指令在一個部分計算
                     if (getItemPrototype(ctx, cardId).category == "コマンド") {
@@ -44,9 +38,8 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
             ifElse(
                 always(PhaseFn.isFreeTiming(getPhase(ctx))),
                 pipe(
-                    always([AbsoluteBaSyouFn.of(playerId, "手札"), AbsoluteBaSyouFn.of(playerId, "ハンガー")]),
+                    always(AbsoluteBaSyouFn.getTextOn()),
                     map(basyou => getItemIdsByBasyou(ctx, basyou)), flatten,
-                    concat(canPlayByText),
                     map(cardId => {
                         // 指令在一個部分計算
                         if (getItemPrototype(ctx, cardId).category == "コマンド") {
@@ -63,25 +56,6 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
                 always([] as Effect[])
             )
         )
-
-    // const getPlayGF =
-    //     ifElse(
-    //         always(PhaseFn.eq(getPhase(ctx), ["配備フェイズ", "フリータイミング"])),
-    //         pipe(
-    //             always([AbsoluteBaSyouFn.of(playerId, "手札"), AbsoluteBaSyouFn.of(playerId, "ハンガー")]),
-    //             map(basyou => getItemIdsByBasyou(ctx, basyou)), flatten,
-    //             concat(canPlayByText),
-    //             map(cardId => {
-    //                 const card = getCard(ctx, cardId)
-    //                 const eff = createPlayGEffects(ctx, card.id)
-    //                 if (inTiming(eff.text)) {
-    //                     return [eff]
-    //                 }
-    //                 return []
-    //             }), flatten
-    //         ),
-    //         always([] as Effect[])
-    //     )
 
     const getPlayTextF = pipe(
         always(lift(AbsoluteBaSyouFn.of)([playerId], [...BaSyouKeywordFn.getBaAll(), "Gゾーン"])),
@@ -153,20 +127,21 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
             )
         }), flatten
     )
+
     const getPlayCommandF = ifElse(
         always(PhaseFn.isFreeTiming(getPhase(ctx))),
         pipe(
-            always([AbsoluteBaSyouFn.of(playerId, "手札"), AbsoluteBaSyouFn.of(playerId, "ハンガー")]),
+            always(AbsoluteBaSyouFn.getTextOn()),
             map(basyou => getItemIdsByBasyou(ctx, basyou)), flatten,
-            concat(canPlayByText),
             map(cardId => {
-                const card = getCard(ctx, cardId)
-                const proto = getItemPrototype(ctx, card.id)
-                if (proto.commandText && inTiming(proto.commandText)) {
-                    return createPlayCardEffects(ctx, card.id)
+                const item = getItem(ctx, cardId)
+                const proto = getItemPrototype(ctx, item.id)
+                if (proto.category != "コマンド") {
+                    return []
                 }
-                return []
-            }), flatten
+                return createPlayCardEffects(ctx, item.id)
+            }), flatten,
+            effs => effs.filter(eff => inTiming(eff.text))
         ),
         always([] as Effect[])
     )
@@ -273,5 +248,5 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
         return true;
     }
 
-    return [...getPlayCardEffectsF()/*, ...getPlayGF()*/, ...getPlayCommandF(), ...getPlayTextF()]
+    return [...getPlayCardEffectsF(), ...getPlayCommandF(), ...getPlayTextF()]
 }

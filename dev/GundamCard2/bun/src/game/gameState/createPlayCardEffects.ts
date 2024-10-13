@@ -38,186 +38,31 @@ export function createPlayCardEffects(ctx: GameState, cardId: string): Effect[] 
         .filter(ge => ge.title[0] == "自軍手札にあるかのようにプレイできる")
         .find(ge => ge.cardIds.includes(cardId))
     if (canPlayByText) {
-        const playGText = createPlayGText(ctx, cardId)
+        const playGText = createPlayGEffect(ctx, cardId)
         const playText = createPlayCardText(ctx, cardId)
         return [playGText, playText]
     }
+    // 以下正常從手牌打出
     const basyou = getItemBaSyou(ctx, cardId)
     if (basyou.value[1] == "手札" || basyou.value[1] == "ハンガー") {
 
     } else {
         return ret
     }
-    // const cardRollCostLength = getCardTotalCostLength(ctx, cardId)
-    // const costConditions: { [key: string]: Condition } = (prototype.category != "グラフィック") ? {
-    //     "合計国力〔x〕": {
-    //         actions: [
-    //             {
-    //                 title: ["合計国力〔x〕", cardRollCostLength]
-    //             }
-    //         ]
-    //     },
-    // } : {}
-    // const rollCostConditions = createRollCostConditions(ctx, prototype, prototype.rollCost || [], 0)
-    // const characterConditions: { [key: string]: Condition } = (prototype.category == "キャラクター" || prototype.category == "オペレーション(ユニット)") ? {
-    //     [TipFn.createCharacterTargetUnitKey()]: {
-    //         title: ["Entity", {
-    //             at: ["配備エリア"],
-    //             isCanSetCharacter: true,
-    //             side: "自軍",
-    //             is: ["ユニット"],
-    //             count: 1
-    //         }],
-    //     }
-    // } : {}
-    // const conditions: { [key: string]: Condition } = {
-    //     ...costConditions,
-    //     ...rollCostConditions,
-    //     ...characterConditions,
-    // }
-    // const logicLeafs: LogicTree[] = Object.keys(conditions).map(k => {
-    //     const ret: LogicTree = {
-    //         type: "Leaf",
-    //         value: k
-    //     }
-    //     return ret
-    // })
-    // const logicTree: LogicTree = {
-    //     type: "And",
-    //     children: prototype.commandText?.logicTreeActions?.[0] ?
-    //         [...logicLeafs, ...CardTextFn.getLogicTreeTreeLeafs(prototype.commandText, prototype.commandText.logicTreeActions[0])] :
-    //         logicLeafs
-    // }
-    // // 注意, 這裡的effect.id是用函數名為前綴+卡片ID, 必須是唯一的
-    // const description = `Play ${prototype.title}`
-    // const playCardEffect: Effect = {
-    //     id: `createPlayCardEffects_${cardId}`,
-    //     reason: ["PlayCard", playerId, cardId, {
-    //         isPlayUnit: prototype.category == "ユニット",
-    //         isPlayCharacter: prototype.category == "キャラクター",
-    //         isPlayCommand: prototype.category == "コマンド",
-    //     }],
-    //     description: description,
-    //     text: {
-    //         id: prototype.commandText?.id || `createPlayCardEffects_text_${cardId}`,
-    //         title: prototype.commandText?.title || ["使用型", ["自軍", "配備フェイズ"]],
-    //         description: description,
-    //         conditions: {
-    //             ...conditions,
-    //             ...prototype.commandText?.conditions
-    //         },
-    //         logicTreeActions: [
-    //             {
-    //                 logicTree: logicTree,
-    //                 actions: [
-    //                     {
-    //                         title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, ToolFn }: Bridge): GameState {
-    //                             const cardId = DefineFn.EffectFn.getCardID(effect)
-    //                             const prototype = GameStateFn.getItemPrototype(ctx, cardId)
-    //                             const from = GameStateFn.getItemBaSyou(ctx, cardId)
-    //                             ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "プレイされているカード"), [cardId, from]) as GameState
-    //                             if (prototype.category == "ユニット") {
-    //                                 const newE = GameStateFn.createUnitGoStageEffectFromPlayEffect(ctx, effect)
-    //                                 return GameStateFn.addStackEffect(ctx, newE) as GameState
-    //                             }
-
-    //                             if (prototype.category == "キャラクター" || prototype.category == "オペレーション(ユニット)") {
-    //                                 const newE = GameStateFn.createCharOpUnitGoStageEffectFromPlayEffect(ctx, effect)
-    //                                 return GameStateFn.addStackEffect(ctx, newE) as GameState
-    //                             }
-
-    //                             if (prototype.category == "コマンド") {
-    //                                 return GameStateFn.addStackEffect(ctx, {
-    //                                     id: `${effect.id}_場に出る`,
-    //                                     reason: ["場に出る", DefineFn.EffectFn.getPlayerID(effect), DefineFn.EffectFn.getCardID(effect)],
-    //                                     description: effect.text.description,
-    //                                     text: {
-    //                                         id: prototype.commandText?.id || `getPlayCardEffects_commentText_${cardId}`,
-    //                                         description: prototype.commandText?.description || "unknown",
-    //                                         title: [],
-    //                                         logicTreeActions: [
-    //                                             {
-    //                                                 actions: [
-    //                                                     {
-    //                                                         title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
-    //                                                             const cardId = DefineFn.EffectFn.getCardID(effect)
-    //                                                             const from = GameStateFn.getItemBaSyou(ctx, cardId)
-    //                                                             const to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "ジャンクヤード")
-    //                                                             ctx = GameStateFn.doItemMove(ctx, to, [cardId, from]) as GameState
-    //                                                             ctx = GameStateFn.doTriggerEvent(ctx, { title: ["プレイされて場に出た場合"], cardIds: [cardId] })
-    //                                                             return ctx
-    //                                                         }.toString()
-    //                                                     },
-    //                                                     ...(prototype.commandText?.logicTreeActions?.[0]?.actions || [])
-    //                                                 ]
-    //                                             },
-    //                                         ]
-    //                                     }
-    //                                 }) as GameState
-    //                             }
-
-    //                             if (prototype.category == "グラフィック") {
-    //                                 const cardId = DefineFn.EffectFn.getCardID(effect)
-    //                                 const from = GameStateFn.getItemBaSyou(ctx, cardId)
-    //                                 const to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "Gゾーン")
-    //                                 ctx = GameStateFn.doItemMove(ctx, to, [cardId, from]) as GameState
-    //                                 ctx = GameStateFn.doTriggerEvent(ctx, { title: ["プレイされて場に出た場合"], cardIds: [cardId] })
-    //                                 return ctx
-    //                             }
-
-    //                             if (prototype.category == "オペレーション") {
-    //                                 const cardId = DefineFn.EffectFn.getCardID(effect)
-    //                                 const from = GameStateFn.getItemBaSyou(ctx, cardId)
-    //                                 const to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "配備エリア")
-    //                                 ctx = GameStateFn.doItemMove(ctx, to, [cardId, from]) as GameState
-    //                                 ctx = GameStateFn.doTriggerEvent(ctx, { title: ["プレイされて場に出た場合"], cardIds: [cardId] })
-    //                                 return ctx
-    //                             }
-
-    //                             if (prototype.category == "ACE") {
-    //                                 throw new Error(`not support category: ${prototype.category}`)
-    //                             }
-    //                             return ctx
-    //                         }.toString()
-    //                     }
-    //                 ]
-    //             },
-    //         ]
-    //     }
-    // }
-    const playG = createPlayGText(ctx, cardId)
+    const playG = createPlayGEffect(ctx, cardId)
     ret.push(playG)
+    
     const playCardEffect = createPlayCardText(ctx, cardId)
     ret.push(playCardEffect)
     {
-        const morePlayEfs = ges.filter(g => (g.title[0] == "合計国力＋(１)してプレイできる" || g.title[0] == "合計国力＋_、ロールコスト＋_してプレイできる") && g.cardIds.includes(cardId))
+        const morePlayEfs = ges.filter(g => g.title[0] == "合計国力＋(１)してプレイできる" && g.cardIds.includes(cardId))
         const hasTotolCostPlusPlay = morePlayEfs.length > 0
         if (hasTotolCostPlusPlay) {
             // 取得原始條件
             let copyOriginCondition = playCardEffect.text.conditions || {}
-            // 179027_09D_C_BK063R_black這張卡特殊處理
-            if (getCard(ctx, cardId).protoID == "179027_09D_C_BK063R_black") {
-                const rollCostBonus = getGlobalEffects(ctx, null).map(ge => {
-                    if (ge.title[0] == "合計国力＋_、ロールコスト＋_してプレイできる" && ge.cardIds.includes(cardId)) {
-                        return ge.title[2]
-                    }
-                    return 0
-                }).reduce((a, b) => a + b, 0)
-                // 將原始條件的橫置費用清除
-                const rollCostConditions = createRollCostConditions(ctx, prototype, prototype.rollCost || [], 0)
-                for (const rollCostKey of Object.keys(rollCostConditions)) {
-                    delete copyOriginCondition[rollCostKey]
-                }
-                // 重新計算加入減免橫置費用紅利
-                const newRollCostConditions = createRollCostConditions(ctx, prototype, prototype.rollCost || [], rollCostBonus)
-                copyOriginCondition = {
-                    ...copyOriginCondition,
-                    ...newRollCostConditions,
-                }
-            }
             // 重新計算合計國力紅利
             const cardRollCostLength = getCardTotalCostLength(ctx, cardId)
-            const addedLength = pipe(always(morePlayEfs), map(g => (g.title[0] == "合計国力＋(１)してプレイできる" || g.title[0] == "合計国力＋_、ロールコスト＋_してプレイできる") ? g.title[1] : 0), sum)()
+            const addedLength = pipe(always(morePlayEfs), map(g => g.title[0] == "合計国力＋(１)してプレイできる" ? g.title[1] : 0), sum)()
             copyOriginCondition = {
                 ...copyOriginCondition,
                 "合計国力〔x〕": {
@@ -245,24 +90,6 @@ export function createPlayCardEffects(ctx: GameState, cardId: string): Effect[] 
 
             if (totalCostPlusPlayEffect.text.logicTreeActions?.[0] == null) {
                 throw new Error(`morePlayCardEffect.text.logicTreeActions?.[0] == null`)
-            }
-            // 179027_09D_C_BK063R_black這張卡特殊處理
-            if (getCard(ctx, cardId).protoID == "179027_09D_C_BK063R_black") {
-                // 重算LogicTree
-                const logicLeafs: LogicTree[] = Object.keys(copyOriginCondition).map(k => {
-                    const ret: LogicTree = {
-                        type: "Leaf",
-                        value: k
-                    }
-                    return ret
-                })
-                const logicTree: LogicTree = {
-                    type: "And",
-                    children: prototype.commandText?.logicTreeActions?.[0] ?
-                        [...logicLeafs, ...CardTextFn.getLogicTreeTreeLeafs(prototype.commandText, prototype.commandText.logicTreeActions[0])] :
-                        logicLeafs
-                }
-                totalCostPlusPlayEffect.text.logicTreeActions[0].logicTree = logicTree
             }
             // 加入新的action, 用這個能力出場的要標記
             totalCostPlusPlayEffect.text.logicTreeActions[0].actions.push({
@@ -344,22 +171,22 @@ export function createPlayCardText(ctx: GameState, cardId: string): Effect {
             return createPlayCommandText(ctx, cardId)
         case "キャラクター":
         case "オペレーション(ユニット)":
-            return createPlayCharacterOperationText(ctx, cardId)
+            return createPlayCharacterOperationEffect(ctx, cardId)
         case "グラフィック":
-            return createPlayGText(ctx, cardId)
+            return createPlayGEffect(ctx, cardId)
         case "ユニット":
-            return createPlayUnitText(ctx, cardId)
+            return createPlayUnitEffect(ctx, cardId)
         case "オペレーション":
         case "ACE":
-            return createPlayOperationText(ctx, cardId)
+            return createPlayOperationEffect(ctx, cardId)
     }
     throw new Error()
 }
 
-export function createPlayGText(ctx: GameState, cardId: string): Effect {
+export function createPlayGEffect(ctx: GameState, cardId: string): Effect {
     // 注意, 這裡的effect.id是用函數名為前綴+卡片ID, 必須是唯一的
     const text: CardText = {
-        id: `createPlayGEffects_text_${cardId}`,
+        id: `createPlayGEffect_${cardId}`,
         title: ["使用型", ["自軍", "配備フェイズ"]],
         description: "PlayG",
         conditions: {
@@ -407,14 +234,14 @@ export function createPlayGText(ctx: GameState, cardId: string): Effect {
         ]
     }
     return {
-        id: `createPlayGText_${cardId}`,
+        id: text.id,
         reason: ["PlayCard", getItemOwner(ctx, cardId), cardId, { isPlayG: true }],
         description: `Play G`,
         text: text
     }
 }
 
-export function createPlayUnitText(ctx: GameState, cardId: string): Effect {
+export function createPlayUnitEffect(ctx: GameState, cardId: string): Effect {
     const prototype = getItemPrototype(ctx, cardId)
     if (prototype.category == "ユニット") {
 
@@ -424,7 +251,7 @@ export function createPlayUnitText(ctx: GameState, cardId: string): Effect {
     const conditions = createPlayCardConditions(ctx, cardId)
     const description = `Play ${prototype.title}`
     const text: CardText = {
-        id: `createPlayUnitText_${cardId}`,
+        id: `createPlayUnitEffect_${cardId}`,
         title: ["使用型", ["自軍", "配備フェイズ"]],
         description: description,
         conditions: conditions,
@@ -445,14 +272,14 @@ export function createPlayUnitText(ctx: GameState, cardId: string): Effect {
         ]
     }
     return {
-        id: `createPlayUnitText_${cardId}`,
+        id: text.id,
         reason: ["PlayCard", getItemOwner(ctx, cardId), cardId, { isPlayUnit: true }],
         description: `Play ${prototype.title}`,
         text: text
     }
 }
 
-export function createPlayOperationText(ctx: GameState, cardId: string): Effect {
+export function createPlayOperationEffect(ctx: GameState, cardId: string): Effect {
     const prototype = getItemPrototype(ctx, cardId)
     if (prototype.category == "オペレーション") {
 
@@ -462,7 +289,7 @@ export function createPlayOperationText(ctx: GameState, cardId: string): Effect 
     const conditions = createPlayCardConditions(ctx, cardId)
     const description = `Play ${prototype.title}`
     const text: CardText = {
-        id: `createPlayOperationText_${cardId}`,
+        id: `createPlayOperationEffect_${cardId}`,
         title: ["使用型", ["自軍", "配備フェイズ"]],
         description: description,
         conditions: conditions,
@@ -483,14 +310,14 @@ export function createPlayOperationText(ctx: GameState, cardId: string): Effect 
         ]
     }
     return {
-        id: `createPlayOperationText_${cardId}`,
+        id: text.id,
         reason: ["PlayCard", getItemOwner(ctx, cardId), cardId, { isPlayOperation: true }],
         description: `Play ${prototype.title}`,
         text: text
     }
 }
 
-export function createPlayCharacterOperationText(ctx: GameState, cardId: string): Effect {
+export function createPlayCharacterOperationEffect(ctx: GameState, cardId: string): Effect {
     const prototype = getItemPrototype(ctx, cardId)
     if (prototype.category == "キャラクター" || prototype.category == "オペレーション(ユニット)") {
 
@@ -500,7 +327,7 @@ export function createPlayCharacterOperationText(ctx: GameState, cardId: string)
     const conditions = createPlayCardConditions(ctx, cardId)
     const description = `Play ${prototype.title}`
     const text: CardText = {
-        id: `createPlayCharacterOperationText_${cardId}`,
+        id: `createPlayCharacterOperationEffect_${cardId}`,
         title: ["使用型", ["自軍", "配備フェイズ"]],
         description: description,
         conditions: conditions,
@@ -522,7 +349,7 @@ export function createPlayCharacterOperationText(ctx: GameState, cardId: string)
         ]
     }
     return {
-        id: `createPlayCharacterOperationText_${cardId}`,
+        id: text.id,
         reason: ["PlayCard", getItemOwner(ctx, cardId), cardId, {
             isPlayCharacter: prototype.category == "キャラクター",
             isPlayOperation: prototype.category == "オペレーション(ユニット)",
@@ -559,7 +386,7 @@ export function createPlayCommandText(ctx: GameState, cardId: string): Effect {
             logicLeafs
     }
     const playCardEffect: CardText = {
-        id: commandText.id || `createPlayCommandEffect_${cardId}`,
+        id: commandText.id || `createPlayCommandText_${cardId}`,
         title: commandText.title || ["使用型", ["自軍", "配備フェイズ"]],
         description: description,
         conditions: {
@@ -572,12 +399,17 @@ export function createPlayCommandText(ctx: GameState, cardId: string): Effect {
                 actions: [
                     {
                         title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, ToolFn }: Bridge): GameState {
-                            const { commandText }: any = { commandText: null }
-                            if (commandText == null) {
-                                throw new Error(`commandText must replace`)
-                            }
                             const cardId = DefineFn.EffectFn.getCardID(effect)
                             const prototype = GameStateFn.getItemPrototype(ctx, cardId)
+                            if (prototype.category == "コマンド") {
+
+                            } else {
+                                throw new Error()
+                            }
+                            const commandText = prototype.commandText
+                            if (commandText == null) {
+                                throw new Error()
+                            }
                             const from = GameStateFn.getItemBaSyou(ctx, cardId)
                             ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "プレイされているカード"), [cardId, from]) as GameState
                             return GameStateFn.addStackEffect(ctx, {
@@ -607,16 +439,14 @@ export function createPlayCommandText(ctx: GameState, cardId: string): Effect {
                                     ]
                                 }
                             }) as GameState
-                        }.toString().replace("{ commandText: null }", JSON.stringify({
-                            commandText: commandText
-                        }))
+                        }.toString()
                     }
                 ]
             },
         ]
     }
     return {
-        id: `createPlayCommandText_${cardId}`,
+        id: playCardEffect.id,
         reason: ["PlayCard", getItemOwner(ctx, cardId), cardId, { isPlayCommand: true }],
         description: `Play ${prototype.title}`,
         text: playCardEffect
