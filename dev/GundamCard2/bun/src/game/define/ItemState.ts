@@ -11,6 +11,8 @@ export type ItemState = {
     destroyReason: DestroyReason | null;
     flags: { [key: string]: any };
     tips: { [key: string]: Tip },
+    isAttack?: boolean,
+    isDefence?: boolean,
     globalEffects: { [key: string]: GlobalEffect },
     varNamesRemoveOnTurnEnd: { [key: string]: any },
     isOpenForGain?: boolean,
@@ -141,6 +143,8 @@ export const ItemStateFn = {
             isFirstTurn: false,
             //textIdsUseThisCut: {},
             textIdsUseThisTurn: [],
+            isAttack: false,
+            isDefence: false,
         }
         return ctx
     }

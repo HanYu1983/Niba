@@ -30,6 +30,7 @@ import { getPlayerState, mapPlayerState } from "./PlayerStateComponent"
 import { createTipByEntitySearch } from "./Entity"
 import { doBattleDamage, doRuleBattleDamage } from "./player"
 import { getBattleGroup } from "./battleGroup"
+import { isBattle } from "./IsBattleComponent"
 
 export function createPlayerIdFromRelated(ctx: GameState, cardId: string, re: RelatedPlayerSideKeyword): PlayerID {
   switch (re) {
@@ -54,6 +55,25 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
     return ActionFn.getTitleFn(action)
   }
   switch (action.title[0]) {
+    case "このカードが攻撃に出撃している":
+      return function (ctx: GameState, effect: Effect): GameState {
+        // 使用了卡牌後, 同一個回合不能再使用. 以下記錄使用過的卡片, 會在切入結束後清除
+        const cardId = EffectFn.getCardID(effect)
+        if (getItemState(ctx, cardId).isAttack) {
+          throw new TargetMissingError("このカードが攻撃に出撃している")
+        }
+        return ctx
+      }
+    case "このカードが交戦中の場合": {
+      return function (ctx: GameState, effect: Effect): GameState {
+        // 使用了卡牌後, 同一個回合不能再使用. 以下記錄使用過的卡片, 會在切入結束後清除
+        const cardId = EffectFn.getCardID(effect)
+        if (isBattle(ctx, cardId, null) == false) {
+          throw new TargetMissingError("このカードが交戦中の場合")
+        }
+        return ctx
+      }
+    }
     case "同回合上限": {
       const [_, times] = action.title
       return function (ctx: GameState, effect: Effect): GameState {
@@ -65,7 +85,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
 
         } else {
           if ((ps.textIdsUseThisTurn || []).filter(tid => tid == effect.text.id).length >= times) {
-            throw new TipError(`同回合上限: ${effect.text.description}`)
+            throw new TargetMissingError(`同回合上限: ${effect.text.description}`)
           }
         }
         ctx = mapItemState(ctx, cardId, ps => {
@@ -224,30 +244,6 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
         }
       }
     }
-    // case "_２ダメージを与える": {
-    //   const [_, damage] = action.title
-    //   const varNames = action.vars
-    //   return function (ctx: GameState, effect: Effect): GameState {
-    //     const cardId = EffectFn.getCardID(effect)
-    //     const pairs = varNames == null ?
-    //       [[cardId, getItemBaSyou(ctx, cardId)] as StrBaSyouPair] :
-    //       varNames.flatMap(varName => {
-    //         return getCardTipStrBaSyouPairs(ctx, varName, cardId)
-    //       })
-
-    //     for (const pair of pairs) {
-    //       assertTargetMissingError(ctx, pair)
-    //       const [targetId, _] = pair
-    //       ctx = mapItemState(ctx, targetId, is => {
-    //         return {
-    //           ...is,
-    //           damage: is.damage + damage
-    //         }
-    //       }) as GameState
-    //     }
-    //     return ctx
-    //   }
-    // }
     case "_敵軍本国に_１ダメージ": {
       const [_, side, damage] = action.title
       return function (ctx: GameState, effect: Effect): GameState {

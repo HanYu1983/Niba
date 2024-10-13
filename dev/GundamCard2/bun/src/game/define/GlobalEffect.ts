@@ -1,6 +1,7 @@
 import { RelatedPlayerSideKeyword } from ".";
 import { CardCategory, CardColor } from "./CardPrototype";
 import { BattleBonus, CardText, TextSpeicalEffect } from "./CardText";
+import { DamageTypeKeyword } from "./Effect";
 import { TipTitleTextRef } from "./Tip";
 
 export type GlobalEffectTitle =
@@ -18,6 +19,7 @@ export type GlobalEffectTitle =
     | ["このカードの部隊の部隊戦闘力を_＋３する", number]
     | ["このカードと交戦中の敵軍部隊の部隊戦闘力を_－３する", number]
     | ["_白のGサインを持つ_自軍_Gとして扱う事ができる", CardColor[], RelatedPlayerSideKeyword, CardCategory]
+    | ["このカードが受ける全ての_通常ダメージは、_２減殺される", DamageTypeKeyword, number]
 
 export type GlobalEffect = {
     title: GlobalEffectTitle,

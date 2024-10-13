@@ -60,6 +60,8 @@ export type ActionTitle =
     | ["この記述の効果は、プレイヤー毎に１ターンに１回まで解決できる"]
     | ["Entity", EntitySearchOptions]
     | ["同回合上限", number]
+    | ["このカードが攻撃に出撃している"]
+    | ["このカードが交戦中の場合"]
 
 export type Action = {
     title: ActionTitle,

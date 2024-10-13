@@ -2,8 +2,10 @@ import { GameEvent } from "./GameEvent";
 import { PlayerID } from "./PlayerID";
 import { Situation, CardText, Condition, Action, LogicTreeAction } from "./CardText";
 
+export type DamageTypeKeyword = "通常ダメージ" | "戦闘ダメージ" 
+
 export type DestroyReason1 = {
-    id: "通常ダメージ" | "戦闘ダメージ" | "破壊する" | "マイナスの戦闘修正";
+    id: DamageTypeKeyword | "破壊する" | "マイナスの戦闘修正";
     // 誰造成的
     playerID: string;
 };
