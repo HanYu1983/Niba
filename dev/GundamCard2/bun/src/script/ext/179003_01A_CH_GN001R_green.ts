@@ -19,7 +19,7 @@ export const prototype: CardPrototype = {
       id: "",
       description: "『恒常』：このカードは、「専用機のセット」が成立するユニットにセットする場合、合計国力２としてプレイできる。",
       title: ["自動型", "恒常"],
-      createPlayEffect(ctx: any, effect: Effect, { DefineFn, GameStateFn }: Bridge): Effect[] {
+      createPlayEffect: function _(ctx: any, effect: Effect, { DefineFn, GameStateFn }: Bridge): Effect[] {
         const cardId = DefineFn.EffectFn.getCardID(effect)
         const prototype = GameStateFn.getItemPrototype(ctx, cardId)
         const tip = GameStateFn.createTipByEntitySearch(ctx, cardId, {
@@ -81,7 +81,7 @@ export const prototype: CardPrototype = {
           ]
         }
         return [{ ...effect, isOption: true, text: text }]
-      }
+      }.toString()
     },
     {
       id: "",

@@ -223,6 +223,8 @@ export type OnEventTitle =
     | string
     | ["GameEventOnTimingDoAction", Phase, Action]
 
+export type CreatePlayEffectFn = (ctx: any, effect: Effect, bridge: any) => Effect[]
+
 export type CardText = {
     id: string,
     title: TextTitle,
@@ -234,7 +236,7 @@ export type CardText = {
     // 1為非G時不能被洗，2為G時也不能被洗
     protectLevel?: 1 | 2,
     isEachTime?: boolean,
-    createPlayEffect?: (ctx: any, effect: Effect, bridge: any) => Effect[],
+    createPlayEffect?: string
 }
 
 function getCondition(ctx: CardText, conditionId: string): Condition {
@@ -295,6 +297,15 @@ export const CardTextFn = {
             throw new Error("condition.title must be string")
         }
         return eval(ctx.onEvent + ";_")
+    },
+
+    getCreatePlayEffectFn(ctx: CardText): CreatePlayEffectFn {
+        if (ctx.createPlayEffect == null) {
+            return function (a) {
+                return []
+            }
+        }
+        return eval(ctx.createPlayEffect + ";_")
     }
 }
 

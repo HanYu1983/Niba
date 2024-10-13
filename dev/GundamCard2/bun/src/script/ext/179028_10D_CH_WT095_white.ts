@@ -18,7 +18,7 @@ export const prototype: CardPrototype = {
       id: "",
       description: "『恒常』：このカードは、自軍ジャンクヤードにある場合、自軍手札にあるカードのようにプレイできる。",
       title: ["自動型", "恒常"],
-      createPlayEffect(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Effect[] {
+      createPlayEffect: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Effect[] {
         const cardId = DefineFn.EffectFn.getCardID(effect)
         if (GameStateFn.getItemBaSyou(ctx, cardId).value[1] != "ジャンクヤード") {
           return []
@@ -26,13 +26,13 @@ export const prototype: CardPrototype = {
         const playText = GameStateFn.createPlayCharacterOperationEffect(ctx, cardId)
         const playGText = GameStateFn.createPlayGEffect(ctx, cardId)
         return [playText, playGText]
-      },
+      }.toString(),
     },
     {
       id: "",
       description: "『恒常』：このカードは、自軍ジャンクヤードにある状態でプレイする場合、セット先として、自軍ジャンクヤードにある、このカードと同じ属性のGサインを持つユニット１枚を、自軍配備エリアにロール状態で出し、このカードをセットできる。",
       title: ["自動型", "恒常"],
-      createPlayEffect(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Effect[] {
+      createPlayEffect: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Effect[] {
         const cardId = DefineFn.EffectFn.getCardID(effect)
         if (GameStateFn.getItemBaSyou(ctx, cardId).value[1] != "ジャンクヤード") {
           return []
@@ -108,7 +108,7 @@ export const prototype: CardPrototype = {
           ...effect,
           text: text
         }]
-      },
+      }.toString(),
     }
   ],
 };

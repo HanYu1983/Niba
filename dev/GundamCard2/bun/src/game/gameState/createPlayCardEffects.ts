@@ -19,7 +19,7 @@ export function createPlayCardEffects(ctx: GameState, cardId: string): Effect[] 
     const prototype = getItemPrototype(ctx, cardId)
     const playerId = getItemOwner(ctx, cardId)
     prototype.texts?.forEach((text, i) => {
-        const effs = text.createPlayEffect?.(ctx, {
+        const effs = CardTextFn.getCreatePlayEffectFn(text)(ctx, {
             id: ToolFn.getUUID("createPlayEffect"),
             reason: ["PlayCard", playerId, cardId, {}],
             text: text,

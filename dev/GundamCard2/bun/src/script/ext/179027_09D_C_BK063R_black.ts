@@ -45,7 +45,7 @@ export const prototype: CardPrototype = {
       id: "",
       description: "『恒常』：自軍セットカードがある場合、このカードは、合計国力－２、ロールコスト－２してプレイできる。",
       title: ["自動型", "恒常"],
-      createPlayEffect(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Effect[] {
+      createPlayEffect: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Effect[] {
         const cardId = DefineFn.EffectFn.getCardID(effect)
         const tip = GameStateFn.createTipByEntitySearch(ctx, cardId, {
           side: "自軍",
@@ -115,7 +115,7 @@ export const prototype: CardPrototype = {
           description: effect.text.description,
           text: totalCostPlusPlayText
         }]
-      }
+      }.toString()
     }
   ]
 };
