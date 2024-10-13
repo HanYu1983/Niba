@@ -31,10 +31,13 @@ export async function test179028_10D_U_WT181N_white() {
     }
     const cardId = cardIds[0]
     const playCardEffects = createPlayCardEffects(ctx, cardId)
-    if (playCardEffects.length != 2) {
-        throw new Error(`playCardEffects.length != 2`)
+    if (playCardEffects.length != 3) {
+        throw new Error(`playCardEffects.length != 3`)
     }
-    const useEffect = playCardEffects[1]
+    const useEffect = playCardEffects.find(eff=>eff.reason[0]=="PlayCard" && eff.reason[3].isPlayUnit && eff.description == "合計国力＋(１)してプレイできる")
+    if (useEffect == null) {
+        throw new Error()
+    }
     if (getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "プレイされているカード")).length != 0) {
         throw new Error(`getCardLiketemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "プレイされているカード")).length != 0`)
     }
@@ -65,11 +68,11 @@ export async function test179028_10D_U_WT181N_white() {
     if (ges.filter(ge => ge.title[0] == "＋x／＋x／＋xを得る").length != 1) {
         throw new Error(`ges.filter(ge=>ge.title[0]=="＋x／＋x／＋xを得る").length != 1`)
     }
-    if (BattlePointFn.eq(getCardBattlePoint(ctx, cardId), [8, 0, 8]) == false) {
-        throw new Error(`BattlePointFn.eq(bp, [8,0,8]) == false`)
-    }
     if (getCardTotalCostLength(ctx, cardId) != 5) {
         throw new Error(`getCardRollCostLength(ctx, cardId) != 5`)
+    }
+    if (BattlePointFn.eq(getCardBattlePoint(ctx, cardId), [8, 0, 8]) == false) {
+        throw new Error(`BattlePointFn.eq(bp, [8,0,8]) == false`)
     }
     if (getItemState(ctx, cardId).flags["bonus"] == null) {
         throw new Error(`getItemState(ctx, cardId).flags["bonus"] == null`)

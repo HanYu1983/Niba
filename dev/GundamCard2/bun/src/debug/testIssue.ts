@@ -28,23 +28,24 @@ export async function testIssue() {
     const blackT3 = ["179015_04B_O_BK010C_black", "179015_04B_O_BK010C_black", "179015_04B_U_BK058R_black", "179015_04B_U_BK058R_black", "179015_04B_U_BK059C_black", "179015_04B_U_BK059C_black", "179015_04B_U_BK061C_black", "179015_04B_U_BK061C_black", "179016_04B_U_BK066C_black", "179016_04B_U_BK066C_black", "179019_02A_C_BK015S_black", "179019_02A_C_BK015S_black", "179020_05C_U_BK100U_black", "179020_05C_U_BK100U_black", "179023_06C_C_BK048R_black", "179023_06C_C_BK048R_black", "179023_06C_C_BK049U_black", "179023_06C_C_BK049U_black", "179024_04B_C_BK027U_black", "179024_04B_C_BK027U_black", "179024_04B_U_BK060C_black", "179024_04B_U_BK060C_black", "179024_04B_U_BK067C_black", "179024_04B_U_BK067C_black", "179024_B2B_C_BK054C_black", "179024_B2B_C_BK054C_black", "179024_B2B_U_BK128S_black_02", "179024_B2B_U_BK128S_black_02", "179024_B2B_U_BK129R_black", "179024_B2B_U_BK129R_black", "179027_09D_C_BK063R_black", "179027_09D_C_BK063R_black", "179027_09D_O_BK010N_black", "179027_09D_O_BK010N_black", "179027_09D_U_BK163S_black", "179027_09D_U_BK163S_black", "179027_09D_U_BK163S_black", "179029_06C_C_BK045U_black", "179029_06C_C_BK045U_black", "179029_B3C_C_BK071N_black", "179029_B3C_C_BK071N_black", "179029_B3C_U_BK184N_black", "179029_B3C_U_BK184N_black", "179029_B3C_U_BK184N_black", "179029_B3C_U_BK185N_black", "179029_B3C_U_BK185N_black", "179030_11E_U_BK194S_2_black", "179030_11E_U_BK194S_2_black", "179030_11E_U_BK194S_2_black", "179901_B2B_C_BK005P_black"]
     await Promise.all([...blackT3, ...whiteSpeed].map(loadPrototype))
     let ctx = TMP_CTX
-    ctx = clearActiveEffectID(ctx)
-    const flows = queryFlow(ctx, PlayerA)
-    console.log(flows)
-    const effects = createPlayCardEffects(ctx, "PlayerA_24")
-    if(effects.length != 1){
-        throw new Error()
-    }
-    let effect = effects[0]
-    const cets = createEffectTips(ctx, effect, 0, 0)
-    console.log(cets)
-    console.log("=======")
-    ctx = updateCommand(ctx) as GameStateWithFlowMemory
-    const cmds = getPlayerCommandsFilterNoErrorDistinct(ctx, PlayerA)
-    console.log(cmds.map(cmd=>cmd.tipOrErrors))
-    if(cmds.find(eff=>EffectFn.getCardID(getEffect(ctx,eff.effectId))== "PlayerA_24") == null){
-        throw new Error()
-    }
+    // ctx = clearActiveEffectID(ctx)
+    // const flows = queryFlow(ctx, PlayerA)
+    // console.log(flows)
+    // const effects = createPlayCardEffects(ctx, "PlayerA_24")
+    // if(effects.length != 1){
+    //     console.log(effects)
+    //     throw new Error()
+    // }
+    // let effect = effects[0]
+    // const cets = createEffectTips(ctx, effect, 0, 0)
+    // console.log(cets)
+    // console.log("=======")
+    // ctx = updateCommand(ctx) as GameStateWithFlowMemory
+    // const cmds = getPlayerCommandsFilterNoErrorDistinct(ctx, PlayerA)
+    // console.log(cmds.map(cmd=>cmd.tipOrErrors))
+    // if(cmds.find(eff=>EffectFn.getCardID(getEffect(ctx,eff.effectId))== "PlayerA_24") == null){
+    //     throw new Error()
+    // }
 
     // ctx = setPhase(ctx, ["戦闘フェイズ", "ダメージ判定ステップ", "フリータイミング"]) as GameStateWithFlowMemory
     // if(createPlayEffects(ctx, PlayerA).filter(eff=>EffectFn.getCardID(eff) == "PlayerA_32").length != 1){

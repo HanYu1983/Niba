@@ -36,10 +36,14 @@ export async function testPlayChar() {
     ctx = setPhase(ctx, ["配備フェイズ", "フリータイミング"]) as GameState
     {
         const effects = createPlayCardEffects(ctx, charBlue.id)
-        if (effects.length != 1) {
+        if (effects.length != 2) {
+            console.log(effects)
             throw new Error()
         }
-        const effect =effects[0]
+        const effect =effects.find(eff=>eff.reason[0] == "PlayCard" && eff.reason[3].isPlayCharacter)
+        if(effect == null){
+            throw new Error()
+        }
         ctx = setTipSelectionForUser(ctx, effect, 0, 0)
         ctx = doEffect(ctx, effect, 0, 0)
     }

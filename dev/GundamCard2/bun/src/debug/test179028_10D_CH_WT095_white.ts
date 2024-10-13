@@ -42,6 +42,7 @@ export async function test179028_10D_CH_WT095_white() {
     ctx = setPhase(ctx, ["配備フェイズ", "フリータイミング"]) as GameState
     let effects = createPlayEffects(ctx, PlayerA)
     if (effects.length != 3) {
+        console.log(effects)
         throw new Error()
     }
     let effect = effects.find(e => e.text.description == "『恒常』：このカードは、自軍ジャンクヤードにある状態でプレイする場合、セット先として、自軍ジャンクヤードにある、このカードと同じ属性のGサインを持つユニット１枚を、自軍配備エリアにロール状態で出し、このカードをセットできる。")

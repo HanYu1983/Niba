@@ -39,7 +39,7 @@ export async function test179027_09D_C_WT067R_white() {
     ctx = setActivePlayerID(ctx, PlayerA) as GameState
     ctx = setPhase(ctx, ["ドローフェイズ", "フリータイミング"]) as GameState
     let effects = createPlayEffects(ctx, PlayerA)
-    let effect: Effect | null = effects[0]
+    let effect: Effect | null = effects.find(eff=>eff.reason[0]=="PlayCard" && eff.reason[3].isPlayCommand) || null
     if (effect == null) {
         throw new Error()
     }

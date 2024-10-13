@@ -12,6 +12,7 @@ import { getGlobalEffects, setGlobalEffects, clearGlobalEffects } from "./global
 import { getItemPrototype, getItemBaSyou, isChip, isCard, getItemController } from "./ItemTableComponent"
 import { getSetGroupChildren } from "./SetGroupComponent"
 import { TipTitleTextRef } from "../define/Tip"
+import { createBridge } from "../bridge/createBridge"
 
 export function getCardTextFromCardTextRef(ctx: GameState, textRef: TipTitleTextRef): CardText {
   const { cardId, textId } = textRef
@@ -63,7 +64,8 @@ export function getCardTexts(ctx: GameState, cardID: string): CardText[] {
     return []
   }).filter(v => v)
   const prototype = getItemPrototype(ctx, cardID)
-  const texts = [...prototype.texts || [], ...addedTexts].map(text => {
+  const additionalPlayTexts = prototype.dynamicPlayCardTexts?.(ctx, cardID, createBridge()) || []
+  const texts = [...prototype.texts || [], ...addedTexts, ...additionalPlayTexts].map(text => {
     if (text.title[0] == "特殊型") {
       return getCardSpecialText(ctx, cardID, text)
     }

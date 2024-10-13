@@ -225,7 +225,7 @@ export type OnEventTitle =
 
 export type CardText = {
     id: string,
-    title: TextTitle
+    title: TextTitle,
     description?: string
     conditions?: { [key: string]: Condition }
     logicTreeActions?: LogicTreeAction[]
@@ -234,6 +234,7 @@ export type CardText = {
     // 1為非G時不能被洗，2為G時也不能被洗
     protectLevel?: 1 | 2,
     isEachTime?: boolean,
+    createPlayEffect?: (ctx: any, effect: Effect, bridge: any) => Effect[],
 }
 
 function getCondition(ctx: CardText, conditionId: string): Condition {

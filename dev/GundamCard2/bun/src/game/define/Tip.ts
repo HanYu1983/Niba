@@ -35,6 +35,7 @@ export type Tip = {
 
 export const TipFn = {
     createTotalCostKey: () => "合計国力〔x〕",
+    createCharacterTargetUnitKey: () => "一個自軍機體",
     createRollColorKey(i: number, color: CardColor | null): string {
         return `橫置支付${i}[${color}]`
     },

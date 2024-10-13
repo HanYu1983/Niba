@@ -36,7 +36,11 @@ export async function testPS() {
         throw new Error("")
     }
     {
-        const effect = playEffects[0]
+        const effect = playEffects.find(eff => eff.reason[0] == "PlayCard" && eff.reason[2] == unitHasPS.id && eff.reason[3].isPlayUnit)
+        if (effect == null) {
+            console.log(playEffects)
+            throw new Error()
+        }
         console.log(`do: ${effect.description}`)
         ctx = doEffect(ctx, effect, 0, 0)
         if (AbsoluteBaSyouFn.getBaSyouKeyword(getItemBaSyou(ctx, unitHasPS.id)) != "プレイされているカード") {
@@ -48,7 +52,7 @@ export async function testPS() {
         if (effect == null) {
             throw new Error("")
         }
-        if(getCard(ctx, unitHasPS.id).isRoll == true){
+        if (getCard(ctx, unitHasPS.id).isRoll == true) {
             throw new Error()
         }
         ctx = doEffect(ctx, effect, 0, 0)

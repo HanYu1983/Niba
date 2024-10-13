@@ -6,6 +6,7 @@ import { TipTitleTextRef } from "./Tip";
 export type GlobalEffectTitle =
     | ["合計国力＋(１)してプレイできる", number]
     | ["合計国力＋_、ロールコスト＋_してプレイできる", number, number]
+    | ["合計国力_２としてプレイできる。", number]
     | ["合計国力＋(１)", number]
     | ["AddText", CardText]
     | ["AddTextRef", TipTitleTextRef]

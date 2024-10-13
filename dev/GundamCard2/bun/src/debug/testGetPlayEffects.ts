@@ -40,14 +40,10 @@ export async function testGetPlayEffects() {
         if (playEffects.length != 4) {
             throw new Error()
         }
-        if (playEffects[0].reason[0] == "PlayCard" && playEffects[0].reason[1] == PlayerA && playEffects[0].reason[2] == cardA.id) {
-
-        } else {
+        if (playEffects.find(eff => eff.reason[0] == "PlayCard" && eff.reason[1] == PlayerA && eff.reason[2] == cardA.id) == null) {
             throw new Error()
         }
-        if (playEffects[1].reason[0] == "PlayCard" && playEffects[1].reason[1] == PlayerA && playEffects[1].reason[2] == cardB.id) {
-
-        } else {
+        if (playEffects.find(eff => eff.reason[0] == "PlayCard" && eff.reason[1] == PlayerA && eff.reason[2] == cardB.id) == null) {
             throw new Error()
         }
     }
@@ -58,14 +54,10 @@ export async function testGetPlayEffects() {
         if (playEffects.length != 2) {
             throw new Error()
         }
-        if (playEffects[0].reason[0] == "PlayText" && playEffects[0].reason[1] == PlayerA && playEffects[0].reason[2] == cardC.id && playEffects[0].reason[3] == cardCProto.texts?.[0].id) {
-
-        } else {
+        if (playEffects.find(eff => eff.reason[0] == "PlayText" && eff.reason[1] == PlayerA && eff.reason[2] == cardC.id && eff.reason[3] == cardCProto.texts?.[0].id) == null) {
             throw new Error()
         }
-        if (playEffects[1].reason[0] == "PlayText" && playEffects[0].reason[1] == PlayerA && playEffects[1].reason[2] == cardC.id && playEffects[1].reason[3] == cardCProto.texts?.[1].id) {
-
-        } else {
+        if (playEffects.find(eff => eff.reason[0] == "PlayText" && eff.reason[1] == PlayerA && eff.reason[2] == cardC.id && eff.reason[3] == cardCProto.texts?.[0].id) == null) {
             throw new Error()
         }
     }

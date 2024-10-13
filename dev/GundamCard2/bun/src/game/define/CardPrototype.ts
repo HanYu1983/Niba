@@ -73,6 +73,7 @@ export type CardPrototype = {
   battlePoint?: BattlePoint;
   battleArea?: BattleAreaKeyword[];
   texts?: CardText[];
+  dynamicPlayCardTexts?: (ctx: any, cardId: string, bridge: any) => CardText[],
   commandText?: CardText;
   originCardId?: string;
   description?: string;

@@ -40,11 +40,15 @@ export async function test179025_07D_U_RD158C_red() {
         throw new Error()
     }
     const effects = createPlayEffects(ctx, PlayerA)
-    if (effects.length != 2) {
+    if (effects.length != 3) {
+        console.log(effects)
         throw new Error()
     }
     {
-        const effect = effects[1]
+        const effect = effects.find(eff => eff.reason[0] == "PlayCard" && eff.description == "合計国力＋(１)してプレイできる")
+        if (effect == null) {
+            throw new Error()
+        }
         ctx = setTipSelectionForUser(ctx, effect, 0, 0)
         ctx = doEffect(ctx, effect, 0, 0)
     }

@@ -7,7 +7,8 @@ import { CardPrototype } from "../../game/define/CardPrototype";
 import { Effect } from "../../game/define/Effect";
 import { GameState } from "../../game/gameState/GameState";
 import { Bridge } from "../bridge";
-import { GlobalEffect } from "../../game/define/GlobalEffect";
+import { CardText, CardTextFn } from "../../game/define/CardText";
+import { LogicTree } from "../../tool/logicTree";
 
 export const prototype: CardPrototype = {
   commandText: {
@@ -44,7 +45,7 @@ export const prototype: CardPrototype = {
       id: "",
       description: "『恒常』：自軍セットカードがある場合、このカードは、合計国力－２、ロールコスト－２してプレイできる。",
       title: ["自動型", "恒常"],
-      onSituation: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GlobalEffect[] {
+      createPlayEffect(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Effect[] {
         const cardId = DefineFn.EffectFn.getCardID(effect)
         const tip = GameStateFn.createTipByEntitySearch(ctx, cardId, {
           side: "自軍",
@@ -53,11 +54,68 @@ export const prototype: CardPrototype = {
           min: 1
         })
         const enabled = DefineFn.TipFn.getWant(tip).length > 0
-        if (enabled) {
-          return [{ title: ["合計国力＋_、ロールコスト＋_してプレイできる", -2, -2], cardIds: [cardId] }]
+        if (enabled == false) {
+          return []
         }
-        return []
-      }.toString()
+        const prototype = GameStateFn.getItemPrototype(ctx, cardId)
+        const playEffect = GameStateFn.createPlayCommandText(ctx, cardId)
+        const playText = playEffect.text
+        let originRollCostConditions = GameStateFn.createRollCostConditions(ctx, prototype, prototype.rollCost || [], 0)
+        // 取得原始條件
+        let copyOriginCondition = { ...playText.conditions }
+
+        // 將原始條件的橫置費用清除
+        for (const rollCostKey of Object.keys(originRollCostConditions)) {
+          delete copyOriginCondition[rollCostKey]
+        }
+        // 重新計算橫置費用減免
+        const newRollCostConditions = GameStateFn.createRollCostConditions(ctx, prototype, prototype.rollCost || [], -2)
+        copyOriginCondition = {
+          ...copyOriginCondition,
+          ...newRollCostConditions,
+        }
+        // 重新計算合計國力減免
+        const originCardRollCostLength = GameStateFn.getCardTotalCostLength(ctx, cardId)
+        copyOriginCondition = {
+          ...copyOriginCondition,
+          [DefineFn.TipFn.createTotalCostKey()]: {
+            actions: [
+              {
+                title: ["合計国力〔x〕", originCardRollCostLength - 2]
+              }
+            ]
+          }
+        }
+        // 重寫條件
+        let totalCostPlusPlayText: CardText = JSON.parse(JSON.stringify(playText))
+        totalCostPlusPlayText = {
+          ...totalCostPlusPlayText,
+          conditions: copyOriginCondition,
+        }
+
+        if (totalCostPlusPlayText.logicTreeActions?.[0] == null) {
+          throw new Error(`morePlayCardEffect.text.logicTreeActions?.[0] == null`)
+        }
+
+        // 重算LogicTree
+        const logicLeafs: LogicTree[] = Object.keys(copyOriginCondition).map(k => {
+          const ret: LogicTree = {
+            type: "Leaf",
+            value: k
+          }
+          return ret
+        })
+        const logicTree: LogicTree = {
+          type: "And",
+          children: logicLeafs
+        }
+        totalCostPlusPlayText.logicTreeActions[0].logicTree = logicTree
+        return [{
+          ...playEffect,
+          description: effect.text.description,
+          text: totalCostPlusPlayText
+        }]
+      }
     }
   ]
 };

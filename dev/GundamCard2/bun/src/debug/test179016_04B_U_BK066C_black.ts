@@ -33,7 +33,7 @@ export async function test179016_04B_U_BK066C_black() {
     }
 
     let ctx = createGameState()
-    ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア"), [cardA]) as GameState
+    ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "手札"), [cardA]) as GameState
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), ["unitBlack", "unitBlack", "unitBlack"]) as GameState
     ctx = setActivePlayerID(ctx, PlayerA) as GameState
     ctx = setPhase(ctx, ["配備フェイズ", "フリータイミング"]) as GameState
@@ -41,9 +41,13 @@ export async function test179016_04B_U_BK066C_black() {
     {
         const effects = createPlayCardEffects(ctx, cardA.id)
         if (effects.length == 0) {
+            console.log(effects)
             throw new Error()
         }
-        const effect = effects[0]
+        const effect = effects.find(eff => eff.reason[0] == "PlayCard" && eff.reason[3].isPlayUnit)
+        if(effect == null){
+            throw new Error()
+        }
         const toes = createEffectTips(ctx, effect, 0, 0)
         const payKey = TipFn.createConditionKeyOfPayColorX(getItemPrototype(ctx, cardA.id))
         for (const toe of toes) {

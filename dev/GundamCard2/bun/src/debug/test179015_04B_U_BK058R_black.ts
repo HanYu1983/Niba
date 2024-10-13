@@ -31,7 +31,10 @@ export async function test179015_04B_U_BK058R_black() {
         throw new Error()
     }
     {
-        const effect = effects[0]
+        const effect = effects.find(eff => eff.reason[0] == "PlayCard" && eff.reason[3].isPlayUnit)
+        if(effect == null){
+            throw new Error()
+        }
         const tipOrErrors = createEffectTips(ctx, effect, 0, 0, { isCheckUserSelection: true })
         const toes = tipOrErrors.filter(toe => toe.errors.length != 0)
         toes.forEach(info => {

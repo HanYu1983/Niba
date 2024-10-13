@@ -27,21 +27,22 @@ export async function testPlayerScore() {
         id: "cardB",
         protoID: "179019_02A_C_BK015S_black"
     }
-    ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア"), [cardA, cardB]) as GameState
+    ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "手札"), [cardA, cardB]) as GameState
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア"), repeat("unitBlack", 2)) as GameState
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), repeat("unitBlack", 6)) as GameState
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国"), repeat("unitBlack", 2)) as GameState
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア1"), repeat("unitBlack", 2)) as GameState
-    let playA = createPlayCardEffects(ctx, cardA.id)[0]
+    let playA = createPlayCardEffects(ctx, cardA.id).find(eff=>eff.reason[0]=="PlayCard" && eff.reason[3].isPlayCommand)
     if (playA == null) {
         throw new Error()
     }
-    let playB = createPlayCardEffects(ctx, cardB.id)[0]
+    let playB = createPlayCardEffects(ctx, cardB.id).find(eff=>eff.reason[0]=="PlayCard" && eff.reason[3].isPlayCommand)
     if (playB == null) {
         throw new Error()
     }
     const effectScorePairs = createPreviewEffectScore(ctx, PlayerA, [playA, playB], { isMoreThenOrigin: true })
     if (effectScorePairs.length != 1) {
+        console.log(effectScorePairs)
         throw new Error()
     }
     // 必須選第2個效果較好

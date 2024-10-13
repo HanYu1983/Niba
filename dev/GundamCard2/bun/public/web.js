@@ -19510,6 +19510,7 @@ __export(exports_Tip, {
 });
 var TipFn = {
   createTotalCostKey: () => "\u5408\u8A08\u56FD\u529B\u3014x\u3015",
+  createCharacterTargetUnitKey: () => "\u4E00\u500B\u81EA\u8ECD\u6A5F\u9AD4",
   createRollColorKey(i, color) {
     return `\u6A6B\u7F6E\u652F\u4ED8${i}[${color}]`;
   },
@@ -20974,8 +20975,8 @@ function getCardTexts(ctx2, cardID) {
     if (e.cardIds.includes(cardID) && e.title[0] == "AddTextRef")
       return [getCardTextFromCardTextRef(ctx2, e.title[1])];
     return [];
-  }).filter((v) => v);
-  return [...getItemPrototype(ctx2, cardID).texts || [], ...addedTexts].map((text) => {
+  }).filter((v) => v), prototype = getItemPrototype(ctx2, cardID), additionalPlayTexts = prototype.dynamicPlayCardTexts?.(ctx2, cardID, createBridge()) || [];
+  return [...prototype.texts || [], ...addedTexts, ...additionalPlayTexts].map((text) => {
     if (text.title[0] == "\u7279\u6B8A\u578B")
       return getCardSpecialText(ctx2, cardID, text);
     return text;
@@ -22481,198 +22482,44 @@ var exports_createPlayCardEffects = {};
 __export(exports_createPlayCardEffects, {
   createUnitGoStageEffectFromPlayEffect: () => createUnitGoStageEffectFromPlayEffect,
   createRollCostConditions: () => createRollCostConditions,
+  createPlayUnitText: () => createPlayUnitText,
+  createPlayOperationText: () => createPlayOperationText,
+  createPlayGText: () => createPlayGText,
+  createPlayCommandText: () => createPlayCommandText,
+  createPlayCharacterOperationText: () => createPlayCharacterOperationText,
+  createPlayCardText: () => createPlayCardText,
   createPlayCardEffects: () => createPlayCardEffects,
+  createPlayCardConditions: () => createPlayCardConditions,
+  createOperationGoStageEffectFromPlayEffect: () => createOperationGoStageEffectFromPlayEffect,
   createCharOpUnitGoStageEffectFromPlayEffect: () => createCharOpUnitGoStageEffectFromPlayEffect
 });
-function createRollCostConditions(ctx2, proto, rollCost, bonus) {
-  if (rollCost == "X") {
-    if (proto.color == null)
-      throw new Error;
-    return {
-      [TipFn.createConditionKeyOfPayColorX(proto)]: {
-        title: ["RollColor", proto.color]
-      }
-    };
-  }
-  return CardColorFn.getAll().map((tc) => createRollCostRequire(Math.max(0, rollCost.filter((c) => c == tc).length + bonus), tc)).reduce((ctx3, cons) => ({ ...ctx3, ...cons }));
-}
 function createPlayCardEffects(ctx2, cardId) {
-  const ret = [], prototype = getItemPrototype(ctx2, cardId), playerId = getItemOwner(ctx2, cardId), cardRollCostLength = getCardTotalCostLength(ctx2, cardId), costConditions = prototype.category != "\u30B0\u30E9\u30D5\u30A3\u30C3\u30AF" ? {
-    "\u5408\u8A08\u56FD\u529B\u3014x\u3015": {
-      actions: [
-        {
-          title: ["\u5408\u8A08\u56FD\u529B\u3014x\u3015", cardRollCostLength]
-        }
-      ]
-    }
-  } : {}, rollCostConditions = createRollCostConditions(ctx2, prototype, prototype.rollCost || [], 0);
-  {
-    const text = prototype.texts?.find((text2) => text2.description == "\u300E\u6052\u5E38\u300F\uFF1A\u3053\u306E\u30AB\u30FC\u30C9\u306F\u3001\u81EA\u8ECD\u30B8\u30E3\u30F3\u30AF\u30E4\u30FC\u30C9\u306B\u3042\u308B\u72B6\u614B\u3067\u30D7\u30EC\u30A4\u3059\u308B\u5834\u5408\u3001\u30BB\u30C3\u30C8\u5148\u3068\u3057\u3066\u3001\u81EA\u8ECD\u30B8\u30E3\u30F3\u30AF\u30E4\u30FC\u30C9\u306B\u3042\u308B\u3001\u3053\u306E\u30AB\u30FC\u30C9\u3068\u540C\u3058\u5C5E\u6027\u306EG\u30B5\u30A4\u30F3\u3092\u6301\u3064\u30E6\u30CB\u30C3\u30C8\uFF11\u679A\u3092\u3001\u81EA\u8ECD\u914D\u5099\u30A8\u30EA\u30A2\u306B\u30ED\u30FC\u30EB\u72B6\u614B\u3067\u51FA\u3057\u3001\u3053\u306E\u30AB\u30FC\u30C9\u3092\u30BB\u30C3\u30C8\u3067\u304D\u308B\u3002");
-    if (text && getItemBaSyou(ctx2, cardId).value[1] == "\u30B8\u30E3\u30F3\u30AF\u30E4\u30FC\u30C9") {
-      const effect = {
-        id: `createPlayCardEffects_${cardId}_\u300E\u6052\u5E38\u300F\uFF1A\u3053\u306E\u30AB\u30FC\u30C9\u306F\u3001\u81EA\u8ECD\u30B8\u30E3\u30F3\u30AF\u30E4\u30FC\u30C9\u306B\u3042\u308B\u72B6\u614B\u3067\u30D7\u30EC\u30A4\u3059\u308B\u5834\u5408\u3001\u30BB\u30C3\u30C8\u5148\u3068\u3057\u3066\u3001\u81EA\u8ECD\u30B8\u30E3\u30F3\u30AF\u30E4\u30FC\u30C9\u306B\u3042\u308B\u3001\u3053\u306E\u30AB\u30FC\u30C9\u3068\u540C\u3058\u5C5E\u6027\u306EG\u30B5\u30A4\u30F3\u3092\u6301\u3064\u30E6\u30CB\u30C3\u30C8\uFF11\u679A\u3092\u3001\u81EA\u8ECD\u914D\u5099\u30A8\u30EA\u30A2\u306B\u30ED\u30FC\u30EB\u72B6\u614B\u3067\u51FA\u3057\u3001\u3053\u306E\u30AB\u30FC\u30C9\u3092\u30BB\u30C3\u30C8\u3067\u304D\u308B\u3002`,
-        reason: ["PlayCard", playerId, cardId, { isPlayCharacter: !0 }],
-        description: text.description,
-        isOption: !0,
-        text: {
-          id: text.id,
-          title: ["\u4F7F\u7528\u578B", ["\u81EA\u8ECD", "\u914D\u5099\u30D5\u30A7\u30A4\u30BA"]],
-          description: text.description,
-          conditions: {
-            ...costConditions,
-            ...rollCostConditions,
-            "\u81EA\u8ECD\u30B8\u30E3\u30F3\u30AF\u30E4\u30FC\u30C9\u306B\u3042\u308B\u3001\u3053\u306E\u30AB\u30FC\u30C9\u3068\u540C\u3058\u5C5E\u6027\u306EG\u30B5\u30A4\u30F3\u3092\u6301\u3064\u30E6\u30CB\u30C3\u30C8\uFF11\u679A": {
-              title: ["Entity", {
-                side: "\u81EA\u8ECD",
-                at: ["\u30B8\u30E3\u30F3\u30AF\u30E4\u30FC\u30C9"],
-                hasGSignProperty: [getCardGSignProperty(ctx2, cardId)],
-                is: ["\u30E6\u30CB\u30C3\u30C8"],
-                count: 1
-              }]
-            }
-          },
-          logicTreeActions: [
-            {
-              actions: [
-                {
-                  title: function _(ctx3, effect2, { DefineFn, GameStateFn, ToolFn: ToolFn2 }) {
-                    const cardId2 = DefineFn.EffectFn.getCardID(effect2), from = GameStateFn.getItemBaSyou(ctx3, cardId2);
-                    return ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "\u30D7\u30EC\u30A4\u3055\u308C\u3066\u3044\u308B\u30AB\u30FC\u30C9"), [cardId2, from]), GameStateFn.addStackEffect(ctx3, {
-                      id: `${effect2.id}_\u5834\u306B\u51FA\u308B`,
-                      reason: ["\u5834\u306B\u51FA\u308B", DefineFn.EffectFn.getPlayerID(effect2), DefineFn.EffectFn.getCardID(effect2)],
-                      description: effect2.text.description,
-                      text: {
-                        id: effect2.text.id,
-                        description: effect2.text.description,
-                        title: [],
-                        logicTreeActions: [
-                          {
-                            actions: [
-                              {
-                                title: function _(ctx4, effect3, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {
-                                  const cardId3 = DefineFn2.EffectFn.getCardID(effect3), cardController = GameStateFn2.getItemController(ctx4, cardId3);
-                                  ctx4 = GameStateFn2.doItemSetRollState(ctx4, !1, GameStateFn2.createStrBaSyouPair(ctx4, cardId3), { isSkipTargetMissing: !0 }), ctx4 = GameStateFn2.doItemMove(ctx4, DefineFn2.AbsoluteBaSyouFn.of(cardController, "\u914D\u5099\u30A8\u30EA\u30A2"), GameStateFn2.createStrBaSyouPair(ctx4, cardId3));
-                                  const unitPairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx4, "\u81EA\u8ECD\u30B8\u30E3\u30F3\u30AF\u30E4\u30FC\u30C9\u306B\u3042\u308B\u3001\u3053\u306E\u30AB\u30FC\u30C9\u3068\u540C\u3058\u5C5E\u6027\u306EG\u30B5\u30A4\u30F3\u3092\u6301\u3064\u30E6\u30CB\u30C3\u30C8\uFF11\u679A", cardId3);
-                                  for (let pair2 of unitPairs) {
-                                    ctx4 = GameStateFn2.doItemSetRollState(ctx4, !1, pair2, { isSkipTargetMissing: !0 }), ctx4 = GameStateFn2.doItemMove(ctx4, DefineFn2.AbsoluteBaSyouFn.of(cardController, "\u914D\u5099\u30A8\u30EA\u30A2"), pair2), ctx4 = GameStateFn2.setSetGroupParent(ctx4, pair2[0], cardId3);
-                                    break;
-                                  }
-                                  return ctx4;
-                                }.toString()
-                              }
-                            ]
-                          }
-                        ]
-                      }
-                    });
-                  }.toString()
-                }
-              ]
-            }
-          ]
-        }
-      };
-      ret.push(effect);
-    }
-  }
-  const characterConditions = prototype.category == "\u30AD\u30E3\u30E9\u30AF\u30BF\u30FC" || prototype.category == "\u30AA\u30DA\u30EC\u30FC\u30B7\u30E7\u30F3(\u30E6\u30CB\u30C3\u30C8)" ? {
-    "\u4E00\u500B\u81EA\u8ECD\u6A5F\u9AD4": {
-      title: ["Entity", {
-        at: ["\u914D\u5099\u30A8\u30EA\u30A2"],
-        isCanSetCharacter: !0,
-        side: "\u81EA\u8ECD",
-        is: ["\u30E6\u30CB\u30C3\u30C8"],
-        count: 1
-      }]
-    }
-  } : {}, conditions = {
-    ...costConditions,
-    ...rollCostConditions,
-    ...characterConditions
-  }, logicLeafs = Object.keys(conditions).map((k) => {
-    return {
-      type: "Leaf",
-      value: k
-    };
-  }), logicTree = {
-    type: "And",
-    children: prototype.commandText?.logicTreeActions?.[0] ? [...logicLeafs, ...CardTextFn.getLogicTreeTreeLeafs(prototype.commandText, prototype.commandText.logicTreeActions[0])] : logicLeafs
-  }, description = `Play ${prototype.title}`, playCardEffect = {
-    id: `createPlayCardEffects_${cardId}`,
-    reason: ["PlayCard", playerId, cardId, {
-      isPlayUnit: prototype.category == "\u30E6\u30CB\u30C3\u30C8",
-      isPlayCharacter: prototype.category == "\u30AD\u30E3\u30E9\u30AF\u30BF\u30FC",
-      isPlayCommand: prototype.category == "\u30B3\u30DE\u30F3\u30C9"
-    }],
-    description,
-    text: {
-      id: prototype.commandText?.id || `createPlayCardEffects_text_${cardId}`,
-      title: prototype.commandText?.title || ["\u4F7F\u7528\u578B", ["\u81EA\u8ECD", "\u914D\u5099\u30D5\u30A7\u30A4\u30BA"]],
-      description,
-      conditions: {
-        ...conditions,
-        ...prototype.commandText?.conditions
-      },
-      logicTreeActions: [
-        {
-          logicTree,
-          actions: [
-            {
-              title: function _(ctx3, effect, { DefineFn, GameStateFn, ToolFn: ToolFn2 }) {
-                const cardId2 = DefineFn.EffectFn.getCardID(effect), prototype2 = GameStateFn.getItemPrototype(ctx3, cardId2), from = GameStateFn.getItemBaSyou(ctx3, cardId2);
-                if (ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "\u30D7\u30EC\u30A4\u3055\u308C\u3066\u3044\u308B\u30AB\u30FC\u30C9"), [cardId2, from]), prototype2.category == "\u30E6\u30CB\u30C3\u30C8") {
-                  const newE = GameStateFn.createUnitGoStageEffectFromPlayEffect(ctx3, effect);
-                  return GameStateFn.addStackEffect(ctx3, newE);
-                }
-                if (prototype2.category == "\u30AD\u30E3\u30E9\u30AF\u30BF\u30FC" || prototype2.category == "\u30AA\u30DA\u30EC\u30FC\u30B7\u30E7\u30F3(\u30E6\u30CB\u30C3\u30C8)") {
-                  const newE = GameStateFn.createCharOpUnitGoStageEffectFromPlayEffect(ctx3, effect);
-                  return GameStateFn.addStackEffect(ctx3, newE);
-                }
-                if (prototype2.category == "\u30B3\u30DE\u30F3\u30C9")
-                  return GameStateFn.addStackEffect(ctx3, {
-                    id: `${effect.id}_\u5834\u306B\u51FA\u308B`,
-                    reason: ["\u5834\u306B\u51FA\u308B", DefineFn.EffectFn.getPlayerID(effect), DefineFn.EffectFn.getCardID(effect)],
-                    description: effect.text.description,
-                    text: {
-                      id: prototype2.commandText?.id || `getPlayCardEffects_commentText_${cardId2}`,
-                      description: prototype2.commandText?.description || "unknown",
-                      title: [],
-                      logicTreeActions: [
-                        {
-                          actions: [
-                            {
-                              title: function _(ctx4, effect2, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {
-                                const cardId3 = DefineFn2.EffectFn.getCardID(effect2), from2 = GameStateFn2.getItemBaSyou(ctx4, cardId3), to = DefineFn2.AbsoluteBaSyouFn.setBaSyouKeyword(from2, "\u30B8\u30E3\u30F3\u30AF\u30E4\u30FC\u30C9");
-                                return ctx4 = GameStateFn2.doItemMove(ctx4, to, [cardId3, from2]), ctx4 = GameStateFn2.doTriggerEvent(ctx4, { title: ["\u30D7\u30EC\u30A4\u3055\u308C\u3066\u5834\u306B\u51FA\u305F\u5834\u5408"], cardIds: [cardId3] }), ctx4;
-                              }.toString()
-                            },
-                            ...prototype2.commandText?.logicTreeActions?.[0]?.actions || []
-                          ]
-                        }
-                      ]
-                    }
-                  });
-                if (prototype2.category == "\u30B0\u30E9\u30D5\u30A3\u30C3\u30AF") {
-                  const cardId3 = DefineFn.EffectFn.getCardID(effect), from2 = GameStateFn.getItemBaSyou(ctx3, cardId3), to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from2, "G\u30BE\u30FC\u30F3");
-                  return ctx3 = GameStateFn.doItemMove(ctx3, to, [cardId3, from2]), ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: ["\u30D7\u30EC\u30A4\u3055\u308C\u3066\u5834\u306B\u51FA\u305F\u5834\u5408"], cardIds: [cardId3] }), ctx3;
-                }
-                if (prototype2.category == "\u30AA\u30DA\u30EC\u30FC\u30B7\u30E7\u30F3") {
-                  const cardId3 = DefineFn.EffectFn.getCardID(effect), from2 = GameStateFn.getItemBaSyou(ctx3, cardId3), to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from2, "\u914D\u5099\u30A8\u30EA\u30A2");
-                  return ctx3 = GameStateFn.doItemMove(ctx3, to, [cardId3, from2]), ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: ["\u30D7\u30EC\u30A4\u3055\u308C\u3066\u5834\u306B\u51FA\u305F\u5834\u5408"], cardIds: [cardId3] }), ctx3;
-                }
-                if (prototype2.category == "ACE")
-                  throw new Error(`not support category: ${prototype2.category}`);
-                return ctx3;
-              }.toString()
-            }
-          ]
-        }
-      ]
-    }
-  };
-  ret.push(playCardEffect);
+  const ret = [], prototype = getItemPrototype(ctx2, cardId), playerId = getItemOwner(ctx2, cardId);
+  prototype.texts?.forEach((text, i) => {
+    text.createPlayEffect?.(ctx2, {
+      id: ToolFn.getUUID("createPlayEffect"),
+      reason: ["PlayCard", playerId, cardId, {}],
+      text
+    }, createBridge())?.forEach((eff) => {
+      if (eff.text.title[0] != "\u4F7F\u7528\u578B")
+        throw console.log(eff?.text.description), new Error;
+      ret.push(eff);
+    });
+  });
   const ges = getGlobalEffects(ctx2, null);
-  ctx2 = setGlobalEffects(ctx2, null, ges);
+  if (ctx2 = setGlobalEffects(ctx2, null, ges), ges.filter((ge) => ge.title[0] == "\u81EA\u8ECD\u624B\u672D\u306B\u3042\u308B\u304B\u306E\u3088\u3046\u306B\u30D7\u30EC\u30A4\u3067\u304D\u308B").find((ge) => ge.cardIds.includes(cardId))) {
+    const playGText = createPlayGText(ctx2, cardId), playText = createPlayCardText(ctx2, cardId);
+    return [playGText, playText];
+  }
+  const basyou = getItemBaSyou(ctx2, cardId);
+  if (basyou.value[1] == "\u624B\u672D" || basyou.value[1] == "\u30CF\u30F3\u30AC\u30FC")
+    ;
+  else
+    return ret;
+  const playG = createPlayGText(ctx2, cardId);
+  ret.push(playG);
+  const playCardEffect = createPlayCardText(ctx2, cardId);
+  ret.push(playCardEffect);
   {
     const morePlayEfs = ges.filter((g) => (g.title[0] == "\u5408\u8A08\u56FD\u529B\uFF0B(\uFF11)\u3057\u3066\u30D7\u30EC\u30A4\u3067\u304D\u308B" || g.title[0] == "\u5408\u8A08\u56FD\u529B\uFF0B_\u3001\u30ED\u30FC\u30EB\u30B3\u30B9\u30C8\uFF0B_\u3057\u3066\u30D7\u30EC\u30A4\u3067\u304D\u308B") && g.cardIds.includes(cardId));
     if (morePlayEfs.length > 0) {
@@ -22682,7 +22529,7 @@ function createPlayCardEffects(ctx2, cardId) {
           if (ge.title[0] == "\u5408\u8A08\u56FD\u529B\uFF0B_\u3001\u30ED\u30FC\u30EB\u30B3\u30B9\u30C8\uFF0B_\u3057\u3066\u30D7\u30EC\u30A4\u3067\u304D\u308B" && ge.cardIds.includes(cardId))
             return ge.title[2];
           return 0;
-        }).reduce((a, b) => a + b, 0);
+        }).reduce((a, b) => a + b, 0), rollCostConditions = createRollCostConditions(ctx2, prototype, prototype.rollCost || [], 0);
         for (let rollCostKey of Object.keys(rollCostConditions))
           delete copyOriginCondition[rollCostKey];
         const newRollCostConditions = createRollCostConditions(ctx2, prototype, prototype.rollCost || [], rollCostBonus);
@@ -22691,7 +22538,7 @@ function createPlayCardEffects(ctx2, cardId) {
           ...newRollCostConditions
         };
       }
-      const addedLength = pipe(always_default(morePlayEfs), map_default((g) => g.title[0] == "\u5408\u8A08\u56FD\u529B\uFF0B(\uFF11)\u3057\u3066\u30D7\u30EC\u30A4\u3067\u304D\u308B" || g.title[0] == "\u5408\u8A08\u56FD\u529B\uFF0B_\u3001\u30ED\u30FC\u30EB\u30B3\u30B9\u30C8\uFF0B_\u3057\u3066\u30D7\u30EC\u30A4\u3067\u304D\u308B" ? g.title[1] : 0), sum_default)();
+      const cardRollCostLength = getCardTotalCostLength(ctx2, cardId), addedLength = pipe(always_default(morePlayEfs), map_default((g) => g.title[0] == "\u5408\u8A08\u56FD\u529B\uFF0B(\uFF11)\u3057\u3066\u30D7\u30EC\u30A4\u3067\u304D\u308B" || g.title[0] == "\u5408\u8A08\u56FD\u529B\uFF0B_\u3001\u30ED\u30FC\u30EB\u30B3\u30B9\u30C8\uFF0B_\u3057\u3066\u30D7\u30EC\u30A4\u3067\u304D\u308B" ? g.title[1] : 0), sum_default)();
       copyOriginCondition = {
         ...copyOriginCondition,
         "\u5408\u8A08\u56FD\u529B\u3014x\u3015": {
@@ -22716,16 +22563,16 @@ function createPlayCardEffects(ctx2, cardId) {
       }, totalCostPlusPlayEffect.text.logicTreeActions?.[0] == null)
         throw new Error("morePlayCardEffect.text.logicTreeActions?.[0] == null");
       if (getCard(ctx2, cardId).protoID == "179027_09D_C_BK063R_black") {
-        const logicLeafs2 = Object.keys(copyOriginCondition).map((k) => {
+        const logicLeafs = Object.keys(copyOriginCondition).map((k) => {
           return {
             type: "Leaf",
             value: k
           };
-        }), logicTree2 = {
+        }), logicTree = {
           type: "And",
-          children: prototype.commandText?.logicTreeActions?.[0] ? [...logicLeafs2, ...CardTextFn.getLogicTreeTreeLeafs(prototype.commandText, prototype.commandText.logicTreeActions[0])] : logicLeafs2
+          children: prototype.commandText?.logicTreeActions?.[0] ? [...logicLeafs, ...CardTextFn.getLogicTreeTreeLeafs(prototype.commandText, prototype.commandText.logicTreeActions[0])] : logicLeafs
         };
-        totalCostPlusPlayEffect.text.logicTreeActions[0].logicTree = logicTree2;
+        totalCostPlusPlayEffect.text.logicTreeActions[0].logicTree = logicTree;
       }
       totalCostPlusPlayEffect.text.logicTreeActions[0].actions.push({
         title: function _(ctx3, effect, { GameStateFn, DefineFn }) {
@@ -22747,7 +22594,7 @@ function createPlayCardEffects(ctx2, cardId) {
         id: `stayPlayEffect_text_${cardId}`,
         description: "\u3010\u30B9\u30C6\u30A4\u3011",
         conditions: {
-          ...dissoc_default("\u4E00\u500B\u81EA\u8ECD\u6A5F\u9AD4", stayPlayEffect.text.conditions || {})
+          ...dissoc_default(TipFn.createCharacterTargetUnitKey(), stayPlayEffect.text.conditions || {})
         },
         logicTreeActions: [
           {
@@ -22787,6 +22634,248 @@ function createPlayCardEffects(ctx2, cardId) {
   }
   return ret;
 }
+function createPlayCardText(ctx2, cardId) {
+  switch (getItemPrototype(ctx2, cardId).category) {
+    case "\u30B3\u30DE\u30F3\u30C9":
+      return createPlayCommandText(ctx2, cardId);
+    case "\u30AD\u30E3\u30E9\u30AF\u30BF\u30FC":
+    case "\u30AA\u30DA\u30EC\u30FC\u30B7\u30E7\u30F3(\u30E6\u30CB\u30C3\u30C8)":
+      return createPlayCharacterOperationText(ctx2, cardId);
+    case "\u30B0\u30E9\u30D5\u30A3\u30C3\u30AF":
+      return createPlayGText(ctx2, cardId);
+    case "\u30E6\u30CB\u30C3\u30C8":
+      return createPlayUnitText(ctx2, cardId);
+    case "\u30AA\u30DA\u30EC\u30FC\u30B7\u30E7\u30F3":
+    case "ACE":
+      return createPlayOperationText(ctx2, cardId);
+  }
+  throw new Error;
+}
+function createPlayGText(ctx2, cardId) {
+  const text = {
+    id: `createPlayGEffects_text_${cardId}`,
+    title: ["\u4F7F\u7528\u578B", ["\u81EA\u8ECD", "\u914D\u5099\u30D5\u30A7\u30A4\u30BA"]],
+    description: "PlayG",
+    conditions: {
+      "\u51FAG\u4E0A\u9650": {
+        actions: [
+          {
+            title: function _(ctx3, effect, { DefineFn, GameStateFn, ToolFn: ToolFn2 }) {
+              const cardId2 = DefineFn.EffectFn.getCardID(effect), cardController = GameStateFn.getItemController(ctx3, cardId2), ps = GameStateFn.getPlayerState(ctx3, cardController);
+              if (ps.playGCount > 0)
+                throw new DefineFn.TipError(`\u51FAG\u4E0A\u9650: ${ps.playGCount}`, { isPlayGLimit: !0 });
+              return ctx3 = GameStateFn.mapPlayerState(ctx3, cardController, (ps2) => {
+                return {
+                  ...ps2,
+                  playGCount: ps2.playGCount + 1
+                };
+              }), ctx3;
+            }.toString()
+          }
+        ]
+      }
+    },
+    logicTreeActions: [
+      {
+        actions: [
+          {
+            title: function _(ctx3, effect, { DefineFn, GameStateFn, ToolFn: ToolFn2 }) {
+              const cardId2 = DefineFn.EffectFn.getCardID(effect), from = GameStateFn.getItemBaSyou(ctx3, cardId2);
+              return ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "G\u30BE\u30FC\u30F3"), [cardId2, from]), ctx3;
+            }.toString()
+          },
+          {
+            title: ["triggerEvent", { title: ["\u30D7\u30EC\u30A4\u3055\u308C\u3066\u5834\u306B\u51FA\u305F\u5834\u5408"] }]
+          },
+          {
+            title: ["triggerEvent", { title: ["\u3053\u306E\u30AB\u30FC\u30C9\u304CG\u3068\u3057\u3066\u5834\u306B\u51FA\u305F\u5834\u5408"] }]
+          }
+        ]
+      }
+    ]
+  };
+  return {
+    id: `createPlayGText_${cardId}`,
+    reason: ["PlayCard", getItemOwner(ctx2, cardId), cardId, { isPlayG: !0 }],
+    description: "Play G",
+    text
+  };
+}
+function createPlayUnitText(ctx2, cardId) {
+  const prototype = getItemPrototype(ctx2, cardId);
+  if (prototype.category == "\u30E6\u30CB\u30C3\u30C8")
+    ;
+  else
+    throw new Error;
+  const conditions = createPlayCardConditions(ctx2, cardId), description = `Play ${prototype.title}`, text = {
+    id: `createPlayUnitText_${cardId}`,
+    title: ["\u4F7F\u7528\u578B", ["\u81EA\u8ECD", "\u914D\u5099\u30D5\u30A7\u30A4\u30BA"]],
+    description,
+    conditions,
+    logicTreeActions: [
+      {
+        actions: [
+          {
+            title: function _(ctx3, effect, { DefineFn, GameStateFn, ToolFn: ToolFn2 }) {
+              const cardId2 = DefineFn.EffectFn.getCardID(effect), from = GameStateFn.getItemBaSyou(ctx3, cardId2);
+              ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "\u30D7\u30EC\u30A4\u3055\u308C\u3066\u3044\u308B\u30AB\u30FC\u30C9"), [cardId2, from]);
+              const newE = GameStateFn.createUnitGoStageEffectFromPlayEffect(ctx3, effect);
+              return GameStateFn.addStackEffect(ctx3, newE);
+            }.toString()
+          }
+        ]
+      }
+    ]
+  };
+  return {
+    id: `createPlayUnitText_${cardId}`,
+    reason: ["PlayCard", getItemOwner(ctx2, cardId), cardId, { isPlayUnit: !0 }],
+    description: `Play ${prototype.title}`,
+    text
+  };
+}
+function createPlayOperationText(ctx2, cardId) {
+  const prototype = getItemPrototype(ctx2, cardId);
+  if (prototype.category == "\u30AA\u30DA\u30EC\u30FC\u30B7\u30E7\u30F3")
+    ;
+  else
+    throw new Error;
+  const conditions = createPlayCardConditions(ctx2, cardId), description = `Play ${prototype.title}`, text = {
+    id: `createPlayOperationText_${cardId}`,
+    title: ["\u4F7F\u7528\u578B", ["\u81EA\u8ECD", "\u914D\u5099\u30D5\u30A7\u30A4\u30BA"]],
+    description,
+    conditions,
+    logicTreeActions: [
+      {
+        actions: [
+          {
+            title: function _(ctx3, effect, { DefineFn, GameStateFn, ToolFn: ToolFn2 }) {
+              const cardId2 = DefineFn.EffectFn.getCardID(effect), from = GameStateFn.getItemBaSyou(ctx3, cardId2);
+              ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "\u30D7\u30EC\u30A4\u3055\u308C\u3066\u3044\u308B\u30AB\u30FC\u30C9"), [cardId2, from]);
+              const newE = GameStateFn.createOperationGoStageEffectFromPlayEffect(ctx3, effect);
+              return GameStateFn.addStackEffect(ctx3, newE);
+            }.toString()
+          }
+        ]
+      }
+    ]
+  };
+  return {
+    id: `createPlayOperationText_${cardId}`,
+    reason: ["PlayCard", getItemOwner(ctx2, cardId), cardId, { isPlayOperation: !0 }],
+    description: `Play ${prototype.title}`,
+    text
+  };
+}
+function createPlayCharacterOperationText(ctx2, cardId) {
+  const prototype = getItemPrototype(ctx2, cardId);
+  if (prototype.category == "\u30AD\u30E3\u30E9\u30AF\u30BF\u30FC" || prototype.category == "\u30AA\u30DA\u30EC\u30FC\u30B7\u30E7\u30F3(\u30E6\u30CB\u30C3\u30C8)")
+    ;
+  else
+    throw new Error;
+  const conditions = createPlayCardConditions(ctx2, cardId), description = `Play ${prototype.title}`, text = {
+    id: `createPlayCharacterOperationText_${cardId}`,
+    title: ["\u4F7F\u7528\u578B", ["\u81EA\u8ECD", "\u914D\u5099\u30D5\u30A7\u30A4\u30BA"]],
+    description,
+    conditions,
+    logicTreeActions: [
+      {
+        actions: [
+          {
+            title: function _(ctx3, effect, { DefineFn, GameStateFn, ToolFn: ToolFn2 }) {
+              const cardId2 = DefineFn.EffectFn.getCardID(effect), prototype2 = GameStateFn.getItemPrototype(ctx3, cardId2), from = GameStateFn.getItemBaSyou(ctx3, cardId2);
+              ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "\u30D7\u30EC\u30A4\u3055\u308C\u3066\u3044\u308B\u30AB\u30FC\u30C9"), [cardId2, from]);
+              const newE = GameStateFn.createCharOpUnitGoStageEffectFromPlayEffect(ctx3, effect);
+              return GameStateFn.addStackEffect(ctx3, newE);
+            }.toString()
+          }
+        ]
+      }
+    ]
+  };
+  return {
+    id: `createPlayCharacterOperationText_${cardId}`,
+    reason: ["PlayCard", getItemOwner(ctx2, cardId), cardId, {
+      isPlayCharacter: prototype.category == "\u30AD\u30E3\u30E9\u30AF\u30BF\u30FC",
+      isPlayOperation: prototype.category == "\u30AA\u30DA\u30EC\u30FC\u30B7\u30E7\u30F3(\u30E6\u30CB\u30C3\u30C8)"
+    }],
+    description: `Play ${prototype.title}`,
+    text
+  };
+}
+function createPlayCommandText(ctx2, cardId) {
+  const prototype = getItemPrototype(ctx2, cardId);
+  if (prototype.category == "\u30B3\u30DE\u30F3\u30C9")
+    ;
+  else
+    throw new Error;
+  const commandText = prototype.commandText;
+  if (commandText == null)
+    throw new Error;
+  const conditions = createPlayCardConditions(ctx2, cardId), description = `Play ${prototype.title}`, logicLeafs = Object.keys(conditions).map((k) => {
+    return {
+      type: "Leaf",
+      value: k
+    };
+  }), logicTree = {
+    type: "And",
+    children: commandText.logicTreeActions?.[0] ? [...logicLeafs, ...CardTextFn.getLogicTreeTreeLeafs(commandText, commandText.logicTreeActions[0])] : logicLeafs
+  }, playCardEffect = {
+    id: commandText.id || `createPlayCommandEffect_${cardId}`,
+    title: commandText.title || ["\u4F7F\u7528\u578B", ["\u81EA\u8ECD", "\u914D\u5099\u30D5\u30A7\u30A4\u30BA"]],
+    description,
+    conditions: {
+      ...conditions,
+      ...commandText?.conditions
+    },
+    logicTreeActions: [
+      {
+        logicTree,
+        actions: [
+          {
+            title: function _(ctx3, effect, { DefineFn, GameStateFn, ToolFn: ToolFn2 }) {
+              const { commandText: commandText2 } = { commandText: null };
+              if (commandText2 == null)
+                throw new Error("commandText must replace");
+              const cardId2 = DefineFn.EffectFn.getCardID(effect), prototype2 = GameStateFn.getItemPrototype(ctx3, cardId2), from = GameStateFn.getItemBaSyou(ctx3, cardId2);
+              return ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "\u30D7\u30EC\u30A4\u3055\u308C\u3066\u3044\u308B\u30AB\u30FC\u30C9"), [cardId2, from]), GameStateFn.addStackEffect(ctx3, {
+                id: `${effect.id}_\u5834\u306B\u51FA\u308B`,
+                reason: ["\u5834\u306B\u51FA\u308B", DefineFn.EffectFn.getPlayerID(effect), DefineFn.EffectFn.getCardID(effect)],
+                description: effect.text.description,
+                text: {
+                  id: commandText2.id || `getPlayCardEffects_commentText_${cardId2}`,
+                  description: commandText2.description || "unknown",
+                  title: [],
+                  logicTreeActions: [
+                    {
+                      actions: [
+                        {
+                          title: function _(ctx4, effect2, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {
+                            const cardId3 = DefineFn2.EffectFn.getCardID(effect2), from2 = GameStateFn2.getItemBaSyou(ctx4, cardId3), to = DefineFn2.AbsoluteBaSyouFn.setBaSyouKeyword(from2, "\u30B8\u30E3\u30F3\u30AF\u30E4\u30FC\u30C9");
+                            return ctx4 = GameStateFn2.doItemMove(ctx4, to, [cardId3, from2]), ctx4 = GameStateFn2.doTriggerEvent(ctx4, { title: ["\u30D7\u30EC\u30A4\u3055\u308C\u3066\u5834\u306B\u51FA\u305F\u5834\u5408"], cardIds: [cardId3] }), ctx4;
+                          }.toString()
+                        },
+                        ...commandText2.logicTreeActions?.[0]?.actions || []
+                      ]
+                    }
+                  ]
+                }
+              });
+            }.toString().replace("{ commandText: null }", JSON.stringify({
+              commandText
+            }))
+          }
+        ]
+      }
+    ]
+  };
+  return {
+    id: `createPlayCommandText_${cardId}`,
+    reason: ["PlayCard", getItemOwner(ctx2, cardId), cardId, { isPlayCommand: !0 }],
+    description: `Play ${prototype.title}`,
+    text: playCardEffect
+  };
+}
 function createUnitGoStageEffectFromPlayEffect(ctx2, effect) {
   const cardId = EffectFn.getCardID(effect);
   if (getItemPrototype(ctx2, cardId).category == "\u30E6\u30CB\u30C3\u30C8")
@@ -22816,6 +22905,33 @@ function createUnitGoStageEffectFromPlayEffect(ctx2, effect) {
     };
   throw new Error;
 }
+function createOperationGoStageEffectFromPlayEffect(ctx2, effect) {
+  const cardId = EffectFn.getCardID(effect);
+  if (getItemPrototype(ctx2, cardId).category == "\u30AA\u30DA\u30EC\u30FC\u30B7\u30E7\u30F3")
+    return {
+      id: `createOperationGoStageEffectFromPlayEffect_${cardId}`,
+      reason: ["\u5834\u306B\u51FA\u308B", EffectFn.getPlayerID(effect), EffectFn.getCardID(effect)],
+      description: effect.text.description,
+      text: {
+        id: effect.text.id,
+        description: effect.text.description,
+        title: [],
+        logicTreeActions: [
+          {
+            actions: [
+              {
+                title: function _(ctx3, effect2, { DefineFn, GameStateFn }) {
+                  const cardId2 = DefineFn.EffectFn.getCardID(effect2), from = GameStateFn.getItemBaSyou(ctx3, cardId2), to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "\u914D\u5099\u30A8\u30EA\u30A2");
+                  return ctx3 = GameStateFn.doItemMove(ctx3, to, [cardId2, from]), ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: ["\u30D7\u30EC\u30A4\u3055\u308C\u3066\u5834\u306B\u51FA\u305F\u5834\u5408"], cardIds: [cardId2] }), ctx3;
+                }.toString()
+              }
+            ]
+          }
+        ]
+      }
+    };
+  throw new Error;
+}
 function createCharOpUnitGoStageEffectFromPlayEffect(ctx2, effect) {
   const cardId = EffectFn.getCardID(effect), prototype = getItemPrototype(ctx2, cardId);
   if (prototype.category == "\u30AD\u30E3\u30E9\u30AF\u30BF\u30FC" || prototype.category == "\u30AA\u30DA\u30EC\u30FC\u30B7\u30E7\u30F3(\u30E6\u30CB\u30C3\u30C8)")
@@ -22832,7 +22948,7 @@ function createCharOpUnitGoStageEffectFromPlayEffect(ctx2, effect) {
             actions: [
               {
                 title: function _(ctx3, effect2, { DefineFn, GameStateFn }) {
-                  const cardId2 = DefineFn.EffectFn.getCardID(effect2), pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx3, "\u4E00\u500B\u81EA\u8ECD\u6A5F\u9AD4", cardId2);
+                  const cardId2 = DefineFn.EffectFn.getCardID(effect2), pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx3, DefineFn.TipFn.createCharacterTargetUnitKey(), cardId2);
                   if (pairs.length == 0)
                     throw new Error(`pairs must not 0: ${effect2.text.description}`);
                   const [targetCardId, targetBasyou] = pairs[0], from = GameStateFn.getItemBaSyou(ctx3, cardId2), to = targetBasyou;
@@ -22847,6 +22963,44 @@ function createCharOpUnitGoStageEffectFromPlayEffect(ctx2, effect) {
       }
     };
   throw new Error;
+}
+function createRollCostConditions(ctx2, proto, rollCost, bonus) {
+  if (rollCost == "X") {
+    if (proto.color == null)
+      throw new Error;
+    return {
+      [TipFn.createConditionKeyOfPayColorX(proto)]: {
+        title: ["RollColor", proto.color]
+      }
+    };
+  }
+  return CardColorFn.getAll().map((tc) => createRollCostRequire(Math.max(0, rollCost.filter((c) => c == tc).length + bonus), tc)).reduce((ctx3, cons) => ({ ...ctx3, ...cons }));
+}
+function createPlayCardConditions(ctx2, cardId) {
+  const prototype = getItemPrototype(ctx2, cardId), cardRollCostLength = getCardTotalCostLength(ctx2, cardId), costConditions = prototype.category != "\u30B0\u30E9\u30D5\u30A3\u30C3\u30AF" ? {
+    [TipFn.createTotalCostKey()]: {
+      actions: [
+        {
+          title: ["\u5408\u8A08\u56FD\u529B\u3014x\u3015", cardRollCostLength]
+        }
+      ]
+    }
+  } : {}, rollCostConditions = createRollCostConditions(ctx2, prototype, prototype.rollCost || [], 0), characterConditions = prototype.category == "\u30AD\u30E3\u30E9\u30AF\u30BF\u30FC" || prototype.category == "\u30AA\u30DA\u30EC\u30FC\u30B7\u30E7\u30F3(\u30E6\u30CB\u30C3\u30C8)" ? {
+    [TipFn.createCharacterTargetUnitKey()]: {
+      title: ["Entity", {
+        at: ["\u914D\u5099\u30A8\u30EA\u30A2"],
+        isCanSetCharacter: !0,
+        side: "\u81EA\u8ECD",
+        is: ["\u30E6\u30CB\u30C3\u30C8"],
+        count: 1
+      }]
+    }
+  } : {};
+  return {
+    ...costConditions,
+    ...rollCostConditions,
+    ...characterConditions
+  };
 }
 
 // src/game/gameState/getNextPhase.ts
@@ -23363,7 +23517,7 @@ function setEffectTips(ctx2, e, toes) {
       const cardId = EffectFn.getCardID(e);
       return logCategory("setEffectTips", "cardId", cardId), toes.forEach((toe) => {
         if (toe.errors.length)
-          throw new Error(toe.errors.join("|"));
+          throw new Error(`${toe.errors.join("|")}:${toe.conditionKey}`);
         const tip = toe.tip;
         if (tip == null)
           return;
@@ -23586,63 +23740,11 @@ function deleteImmediateEffect(ctx2, playerID, effectID) {
   return removeEffect(ctx2, effectID);
 }
 
-// src/game/gameState/createPlayGEffects.ts
-function createPlayGEffects(ctx2, cardId) {
-  const playerId = getItemOwner(ctx2, cardId);
-  return {
-    id: `createPlayGEffects_${cardId}`,
-    reason: ["PlayCard", playerId, cardId, { isPlayG: !0 }],
-    description: "PlayG",
-    text: {
-      id: `createPlayGEffects_text_${cardId}`,
-      title: ["\u4F7F\u7528\u578B", ["\u81EA\u8ECD", "\u914D\u5099\u30D5\u30A7\u30A4\u30BA"]],
-      description: "PlayG",
-      conditions: {
-        "\u51FAG\u4E0A\u9650": {
-          actions: [
-            {
-              title: function _(ctx3, effect2, { DefineFn: DefineFn2, GameStateFn: GameStateFn2, ToolFn: ToolFn2 }) {
-                const cardId2 = DefineFn2.EffectFn.getCardID(effect2), cardController = GameStateFn2.getItemController(ctx3, cardId2), ps = GameStateFn2.getPlayerState(ctx3, cardController);
-                if (ps.playGCount > 0)
-                  throw new DefineFn2.TipError(`\u51FAG\u4E0A\u9650: ${ps.playGCount}`, { isPlayGLimit: !0 });
-                return ctx3 = GameStateFn2.mapPlayerState(ctx3, cardController, (ps2) => {
-                  return {
-                    ...ps2,
-                    playGCount: ps2.playGCount + 1
-                  };
-                }), ctx3;
-              }.toString()
-            }
-          ]
-        }
-      },
-      logicTreeActions: [
-        {
-          actions: [
-            {
-              title: function _(ctx3, effect2, { DefineFn: DefineFn2, GameStateFn: GameStateFn2, ToolFn: ToolFn2 }) {
-                const cardId2 = DefineFn2.EffectFn.getCardID(effect2), from = GameStateFn2.getItemBaSyou(ctx3, cardId2);
-                return ctx3 = GameStateFn2.doItemMove(ctx3, DefineFn2.AbsoluteBaSyouFn.setBaSyouKeyword(from, "G\u30BE\u30FC\u30F3"), [cardId2, from]), ctx3;
-              }.toString()
-            },
-            {
-              title: ["triggerEvent", { title: ["\u30D7\u30EC\u30A4\u3055\u308C\u3066\u5834\u306B\u51FA\u305F\u5834\u5408"] }]
-            },
-            {
-              title: ["triggerEvent", { title: ["\u3053\u306E\u30AB\u30FC\u30C9\u304CG\u3068\u3057\u3066\u5834\u306B\u51FA\u305F\u5834\u5408"] }]
-            }
-          ]
-        }
-      ]
-    }
-  };
-}
-
 // src/game/gameState/createPlayEffects.ts
 function createPlayEffects(ctx2, playerId) {
   const ges = getGlobalEffects(ctx2, null);
   ctx2 = setGlobalEffects(ctx2, null, ges);
-  const canPlayByText = ges.filter((ge) => ge.title[0] == "\u81EA\u8ECD\u624B\u672D\u306B\u3042\u308B\u304B\u306E\u3088\u3046\u306B\u30D7\u30EC\u30A4\u3067\u304D\u308B").flatMap((ge) => ge.cardIds).filter((itemId) => AbsoluteBaSyouFn.getPlayerID(getItemBaSyou(ctx2, itemId)) == playerId), getPlayCardEffectsF = ifElse_default(always_default(PhaseFn.eq(getPhase(ctx2), ["\u914D\u5099\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"])), pipe(always_default([AbsoluteBaSyouFn.of(playerId, "\u624B\u672D"), AbsoluteBaSyouFn.of(playerId, "\u30CF\u30F3\u30AC\u30FC")]), map_default((basyou) => getItemIdsByBasyou(ctx2, basyou)), flatten_default, concat_default(canPlayByText), map_default((cardId) => {
+  const canPlayByText = ges.filter((ge) => ge.title[0] == "\u81EA\u8ECD\u624B\u672D\u306B\u3042\u308B\u304B\u306E\u3088\u3046\u306B\u30D7\u30EC\u30A4\u3067\u304D\u308B").flatMap((ge) => ge.cardIds).filter((itemId) => AbsoluteBaSyouFn.getPlayerID(getItemBaSyou(ctx2, itemId)) == playerId), getPlayCardEffectsF = ifElse_default(always_default(PhaseFn.eq(getPhase(ctx2), ["\u914D\u5099\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"])), pipe(always_default(AbsoluteBaSyouFn.getTextOn()), map_default((basyou) => getItemIdsByBasyou(ctx2, basyou)), flatten_default, concat_default(canPlayByText), map_default((cardId) => {
     if (getItemPrototype(ctx2, cardId).category == "\u30B3\u30DE\u30F3\u30C9")
       return [];
     return createPlayCardEffects(ctx2, cardId).filter((eff) => inTiming(eff.text));
@@ -23652,12 +23754,7 @@ function createPlayEffects(ctx2, playerId) {
     if (getCardHasSpeicalEffect(ctx2, ["\u30AF\u30A4\u30C3\u30AF"], cardId))
       return createPlayCardEffects(ctx2, cardId);
     return [];
-  }), flatten_default), always_default([]))), getPlayGF = ifElse_default(always_default(PhaseFn.eq(getPhase(ctx2), ["\u914D\u5099\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"])), pipe(always_default([AbsoluteBaSyouFn.of(playerId, "\u624B\u672D"), AbsoluteBaSyouFn.of(playerId, "\u30CF\u30F3\u30AC\u30FC")]), map_default((basyou) => getItemIdsByBasyou(ctx2, basyou)), flatten_default, concat_default(canPlayByText), map_default((cardId) => {
-    const card = getCard(ctx2, cardId), eff = createPlayGEffects(ctx2, card.id);
-    if (inTiming(eff.text))
-      return [eff];
-    return [];
-  }), flatten_default), always_default([])), getPlayTextF = pipe(always_default(lift_default(AbsoluteBaSyouFn.of)([playerId], [...BaSyouKeywordFn.getBaAll(), "G\u30BE\u30FC\u30F3"])), map_default((basyou) => {
+  }), flatten_default), always_default([]))), getPlayTextF = pipe(always_default(lift_default(AbsoluteBaSyouFn.of)([playerId], [...BaSyouKeywordFn.getBaAll(), "G\u30BE\u30FC\u30F3"])), map_default((basyou) => {
     return getItemIdsByBasyou(ctx2, basyou).flatMap((cardId) => getCardTexts(ctx2, cardId).flatMap((text) => {
       if (AbsoluteBaSyouFn.getBaSyouKeyword(basyou) == "G\u30BE\u30FC\u30F3") {
         if (text.protectLevel != 2)
@@ -23751,7 +23848,7 @@ function createPlayEffects(ctx2, playerId) {
     }
     return !0;
   }
-  return [...getPlayCardEffectsF(), ...getPlayGF(), ...getPlayCommandF(), ...getPlayTextF()];
+  return [...getPlayCardEffectsF(), ...getPlayCommandF(), ...getPlayTextF()];
 }
 
 // src/game/gameState/updateCommand.ts

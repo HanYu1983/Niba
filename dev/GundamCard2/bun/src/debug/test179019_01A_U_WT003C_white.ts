@@ -43,7 +43,7 @@ export async function test179019_01A_U_WT003C_white() {
     ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), [unitBlack]) as GameState
     ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "手札"), [cardHand]) as GameState
     let effects = createPlayCardEffects(ctx, cardHand.id)
-    let effect = effects[0]
+    let effect = effects.find(eff => eff.reason[0] == "PlayCard" && eff.reason[3].isPlayUnit == true)
     if (effect == null) {
         throw new Error()
     }

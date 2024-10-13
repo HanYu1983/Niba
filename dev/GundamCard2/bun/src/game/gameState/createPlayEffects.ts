@@ -29,7 +29,7 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
         ifElse(
             always(PhaseFn.eq(getPhase(ctx), ["配備フェイズ", "フリータイミング"])),
             pipe(
-                always([AbsoluteBaSyouFn.of(playerId, "手札"), AbsoluteBaSyouFn.of(playerId, "ハンガー")]),
+                always(AbsoluteBaSyouFn.getTextOn()),
                 map(basyou => getItemIdsByBasyou(ctx, basyou)), flatten,
                 concat(canPlayByText),
                 map(cardId => {
@@ -64,24 +64,24 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
             )
         )
 
-    const getPlayGF =
-        ifElse(
-            always(PhaseFn.eq(getPhase(ctx), ["配備フェイズ", "フリータイミング"])),
-            pipe(
-                always([AbsoluteBaSyouFn.of(playerId, "手札"), AbsoluteBaSyouFn.of(playerId, "ハンガー")]),
-                map(basyou => getItemIdsByBasyou(ctx, basyou)), flatten,
-                concat(canPlayByText),
-                map(cardId => {
-                    const card = getCard(ctx, cardId)
-                    const eff = createPlayGEffects(ctx, card.id)
-                    if (inTiming(eff.text)) {
-                        return [eff]
-                    }
-                    return []
-                }), flatten
-            ),
-            always([] as Effect[])
-        )
+    // const getPlayGF =
+    //     ifElse(
+    //         always(PhaseFn.eq(getPhase(ctx), ["配備フェイズ", "フリータイミング"])),
+    //         pipe(
+    //             always([AbsoluteBaSyouFn.of(playerId, "手札"), AbsoluteBaSyouFn.of(playerId, "ハンガー")]),
+    //             map(basyou => getItemIdsByBasyou(ctx, basyou)), flatten,
+    //             concat(canPlayByText),
+    //             map(cardId => {
+    //                 const card = getCard(ctx, cardId)
+    //                 const eff = createPlayGEffects(ctx, card.id)
+    //                 if (inTiming(eff.text)) {
+    //                     return [eff]
+    //                 }
+    //                 return []
+    //             }), flatten
+    //         ),
+    //         always([] as Effect[])
+    //     )
 
     const getPlayTextF = pipe(
         always(lift(AbsoluteBaSyouFn.of)([playerId], [...BaSyouKeywordFn.getBaAll(), "Gゾーン"])),
@@ -273,5 +273,5 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
         return true;
     }
 
-    return [...getPlayCardEffectsF(), ...getPlayGF(), ...getPlayCommandF(), ...getPlayTextF()]
+    return [...getPlayCardEffectsF()/*, ...getPlayGF()*/, ...getPlayCommandF(), ...getPlayTextF()]
 }

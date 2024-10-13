@@ -210,7 +210,7 @@ export function setEffectTips(ctx: GameState, e: Effect, toes: TipOrErrors[]): G
       logCategory("setEffectTips", "cardId", cardId)
       toes.forEach(toe => {
         if (toe.errors.length) {
-          throw new Error(toe.errors.join("|"))
+          throw new Error(`${toe.errors.join("|")}:${toe.conditionKey}`)
         }
         const tip = toe.tip
         if (tip == null) {

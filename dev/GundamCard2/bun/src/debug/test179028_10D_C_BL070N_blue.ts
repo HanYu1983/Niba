@@ -42,7 +42,10 @@ export async function test179028_10D_C_BL070N_blue() {
         throw new Error()
     }
     {
-        const effect = effects[0]
+        const effect = effects.find(eff => eff.reason[0] == "PlayCard" && eff.reason[3].isPlayCommand)
+        if(effect == null){
+            throw new Error()
+        }
         const cets = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)
         if (cets.length != 0) {
             throw new Error()
