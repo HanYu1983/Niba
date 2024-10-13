@@ -64,8 +64,7 @@ export function getCardTexts(ctx: GameState, cardID: string): CardText[] {
     return []
   }).filter(v => v)
   const prototype = getItemPrototype(ctx, cardID)
-  const additionalPlayTexts = prototype.dynamicPlayCardTexts?.(ctx, cardID, createBridge()) || []
-  const texts = [...prototype.texts || [], ...addedTexts, ...additionalPlayTexts].map(text => {
+  const texts = [...prototype.texts || [], ...addedTexts].map(text => {
     if (text.title[0] == "特殊型") {
       return getCardSpecialText(ctx, cardID, text)
     }

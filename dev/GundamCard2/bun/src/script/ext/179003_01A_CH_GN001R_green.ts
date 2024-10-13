@@ -14,73 +14,75 @@ import { GameState } from "../../game/gameState/GameState";
 import { Bridge } from "../bridge";
 
 export const prototype: CardPrototype = {
-  dynamicPlayCardTexts(ctx: GameState, cardId: string, bridge: Bridge): CardText[] {
-    const { DefineFn, GameStateFn } = bridge
-    const prototype = GameStateFn.getItemPrototype(ctx, cardId)
-    const playerId = GameStateFn.getItemOwner(ctx, cardId)
-    const cardRollCostLength = GameStateFn.getCardTotalCostLength(ctx, cardId)
-    const costConditions: { [key: string]: Condition } = {
-      [DefineFn.TipFn.createTotalCostKey()]: {
-        actions: [
-          {
-            title: ["合計国力〔x〕", cardRollCostLength]
-          }
-        ]
-      },
-    }
-    const rollCostConditions = GameStateFn.createRollCostConditions(ctx, prototype, prototype.rollCost || [], 0)
-    return [
-      {
-        id: "",
-        description: "『恒常』：このカードは、「専用機のセット」が成立するユニットにセットする場合、合計国力２としてプレイできる。",
-        title: ["使用型", ["自軍", "配備フェイズ"]],
-        conditions: {
-          ...costConditions,
-          ...rollCostConditions,
-          [DefineFn.TipFn.createCharacterTargetUnitKey()]: {
-            title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip | null {
-              const cardId = DefineFn.EffectFn.getCardID(effect)
-              const prototype = GameStateFn.getItemPrototype(ctx, cardId)
-              const tip = GameStateFn.createTipByEntitySearch(ctx, cardId, {
-                hasChar: [prototype.title || ""],
-                side: "自軍",
-                at: ["配備エリア"],
-                is: ["ユニット"],
-                count: 1
-              })
-              if (DefineFn.TipFn.checkTipSatisfies(tip)) {
-                return tip
-              }
-              return {
-                title: ["カード", [], []],
-                count: 1
-              }
-            }.toString(),
-          },
-          "合計国力２": {
-            actions: [
-              {
-                title: ["合計国力〔x〕", 2]
-              }
-            ]
-          },
-        },
-        logicTreeActions: [
-          {
-            actions: [
-              {
-                title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
-                  const newE = GameStateFn.createCharOpUnitGoStageEffectFromPlayEffect(ctx, effect)
-                  return GameStateFn.addStackEffect(ctx, newE) as GameState
-                }.toString()
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
   texts: [
+    {
+      id: "",
+      description: "『恒常』：このカードは、「専用機のセット」が成立するユニットにセットする場合、合計国力２としてプレイできる。",
+      title: ["自動型", "恒常"],
+      createPlayEffect(ctx: any, effect: Effect, { DefineFn, GameStateFn }: Bridge): Effect[] {
+        const cardId = DefineFn.EffectFn.getCardID(effect)
+        const prototype = GameStateFn.getItemPrototype(ctx, cardId)
+        const tip = GameStateFn.createTipByEntitySearch(ctx, cardId, {
+          hasChar: [prototype.title || ""],
+          side: "自軍",
+          at: ["配備エリア"],
+          is: ["ユニット"],
+          count: 1
+        })
+        if (DefineFn.TipFn.checkTipSatisfies(tip) != null) {
+          return []
+        }
+        const text: CardText = {
+          id: effect.text.id,
+          description: "『恒常』：このカードは、「専用機のセット」が成立するユニットにセットする場合、合計国力２としてプレイできる。",
+          title: ["使用型", ["自軍", "配備フェイズ"]],
+          conditions: {
+            ...GameStateFn.createPlayCardConditions(ctx, cardId),
+            // 覆寫以下兩個鍵
+            [DefineFn.TipFn.createCharacterTargetUnitKey()]: {
+              title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip | null {
+                const cardId = DefineFn.EffectFn.getCardID(effect)
+                const prototype = GameStateFn.getItemPrototype(ctx, cardId)
+                const tip = GameStateFn.createTipByEntitySearch(ctx, cardId, {
+                  hasChar: [prototype.title || ""],
+                  side: "自軍",
+                  at: ["配備エリア"],
+                  is: ["ユニット"],
+                  count: 1
+                })
+                if (DefineFn.TipFn.checkTipSatisfies(tip)) {
+                  return tip
+                }
+                return {
+                  title: ["カード", [], []],
+                  count: 1
+                }
+              }.toString(),
+            },
+            [DefineFn.TipFn.createTotalCostKey()]: {
+              actions: [
+                {
+                  title: ["合計国力〔x〕", 2]
+                }
+              ]
+            },
+          },
+          logicTreeActions: [
+            {
+              actions: [
+                {
+                  title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+                    const newE = GameStateFn.createCharOpUnitGoStageEffectFromPlayEffect(ctx, effect)
+                    return GameStateFn.addStackEffect(ctx, newE) as GameState
+                  }.toString()
+                }
+              ]
+            }
+          ]
+        }
+        return [{ ...effect, isOption: true, text: text }]
+      }
+    },
     {
       id: "",
       description: "（自軍攻撃ステップ）〔２〕：このカードが戦闘エリアにいる場合、敵軍ユニット１枚に３ダメージを与える。",
