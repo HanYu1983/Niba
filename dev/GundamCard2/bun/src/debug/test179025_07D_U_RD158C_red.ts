@@ -36,7 +36,7 @@ export async function test179025_07D_U_RD158C_red() {
     if (getCardHasSpeicalEffect(ctx, ["クイック"], cardA.id) != true) {
         throw new Error()
     }
-    if (getGlobalEffects(ctx, null).find(ge => ge.title[0] == "合計国力＋(１)してプレイできる") == null) {
+    if (getGlobalEffects(ctx, null).find(ge => ge.title[0] == "合計国力_＋１してプレイできる") == null) {
         throw new Error()
     }
     const effects = createPlayEffects(ctx, PlayerA)
@@ -45,7 +45,7 @@ export async function test179025_07D_U_RD158C_red() {
         throw new Error()
     }
     {
-        const effect = effects.find(eff => eff.reason[0] == "PlayCard" && eff.description == "合計国力＋(１)してプレイできる")
+        const effect = effects.find(eff => eff.reason[0] == "PlayCard" && eff.description == "合計国力_＋１してプレイできる")
         if (effect == null) {
             throw new Error()
         }

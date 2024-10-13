@@ -130,7 +130,7 @@ export function getCardTotalCostLength(ctx: GameState, cardID: string): number {
   const added = pipe(
     always(gEffects),
     map(ge => {
-      if (ge.title[0] == "合計国力＋(１)" && ge.cardIds.includes(cardID)) {
+      if (ge.title[0] == "合計国力_＋１" && ge.cardIds.includes(cardID)) {
         return ge.title[1]
       }
       return 0

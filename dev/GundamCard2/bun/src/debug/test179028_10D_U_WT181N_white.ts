@@ -34,7 +34,7 @@ export async function test179028_10D_U_WT181N_white() {
     if (playCardEffects.length != 3) {
         throw new Error(`playCardEffects.length != 3`)
     }
-    const useEffect = playCardEffects.find(eff=>eff.reason[0]=="PlayCard" && eff.reason[3].isPlayUnit && eff.description == "合計国力＋(１)してプレイできる")
+    const useEffect = playCardEffects.find(eff=>eff.reason[0]=="PlayCard" && eff.reason[3].isPlayUnit && eff.description == "合計国力_＋１してプレイできる")
     if (useEffect == null) {
         throw new Error()
     }

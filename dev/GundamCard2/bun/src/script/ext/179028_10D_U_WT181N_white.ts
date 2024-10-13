@@ -24,9 +24,9 @@ export const prototype: CardPrototype = {
         const hasSpecialPlayX = DefineFn.ItemStateFn.getMoreTotalRollCostLengthPlay(GameStateFn.getItemState(ctx, cardId))
         const ret: GlobalEffect[] = []
         if (hasSpecialPlayX) {
-          ret.push({ title: ["合計国力＋(１)", hasSpecialPlayX], cardIds: [cardId] })
+          ret.push({ title: ["合計国力_＋１", hasSpecialPlayX], cardIds: [cardId] })
         }
-        ret.push({ title: ["合計国力＋(１)してプレイできる", 1], cardIds: [cardId] })
+        ret.push({ title: ["合計国力_＋１してプレイできる", 1], cardIds: [cardId] })
         return ret
       }.toString()
     },

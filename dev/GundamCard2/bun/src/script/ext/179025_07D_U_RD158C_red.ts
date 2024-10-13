@@ -30,7 +30,7 @@ export const prototype: CardPrototype = {
         } else {
           return []
         }
-        return [{ title: ["合計国力＋(１)してプレイできる", -3], cardIds: [cardId] }]
+        return [{ title: ["合計国力_＋１してプレイできる", -3], cardIds: [cardId] }]
       }.toString(),
       onEvent: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
         const cardId = DefineFn.EffectFn.getCardID(effect)

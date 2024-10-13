@@ -100,14 +100,14 @@ export function createPlayCardEffect(ctx: GameState, cardId: string): Effect[] {
     if (basicEff) {
         const ges = getGlobalEffects(ctx, null)
         ctx = setGlobalEffects(ctx, null, ges)
-        const morePlayEfs = ges.filter(g => g.title[0] == "合計国力＋(１)してプレイできる" && g.cardIds.includes(cardId))
+        const morePlayEfs = ges.filter(g => g.title[0] == "合計国力_＋１してプレイできる" && g.cardIds.includes(cardId))
         const hasTotolCostPlusPlay = morePlayEfs.length > 0
         if (hasTotolCostPlusPlay) {
             // 取得原始條件
             let copyOriginCondition = basicEff.text.conditions || {}
             // 重新計算合計國力紅利
             const cardRollCostLength = getCardTotalCostLength(ctx, cardId)
-            const addedLength = pipe(always(morePlayEfs), map(g => g.title[0] == "合計国力＋(１)してプレイできる" ? g.title[1] : 0), sum)()
+            const addedLength = pipe(always(morePlayEfs), map(g => g.title[0] == "合計国力_＋１してプレイできる" ? g.title[1] : 0), sum)()
             copyOriginCondition = {
                 ...copyOriginCondition,
                 "合計国力〔x〕": {
@@ -124,11 +124,11 @@ export function createPlayCardEffect(ctx: GameState, cardId: string): Effect[] {
             totalCostPlusPlayEffect = {
                 ...totalCostPlusPlayEffect,
                 id: `totalCostPlusPlayEffect_${cardId}`,
-                description: "合計国力＋(１)してプレイできる",
+                description: "合計国力_＋１してプレイできる",
                 text: {
                     ...totalCostPlusPlayEffect.text,
                     id: prototype.commandText?.id || `totalCostPlusPlayEffect_text_${cardId}`,
-                    description: "合計国力＋(１)してプレイできる",
+                    description: "合計国力_＋１してプレイできる",
                     conditions: copyOriginCondition,
                 }
             }

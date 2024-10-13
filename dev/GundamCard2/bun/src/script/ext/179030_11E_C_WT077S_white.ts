@@ -32,7 +32,7 @@ export const prototype: CardPrototype = {
         if (pairs.length >= 3) {
           return [
             {
-              title: ["合計国力＋(１)してプレイできる", -2],
+              title: ["合計国力_＋１してプレイできる", -2],
               cardIds: [cardId]
             },
           ]

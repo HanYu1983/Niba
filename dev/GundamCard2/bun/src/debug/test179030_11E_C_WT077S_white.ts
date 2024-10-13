@@ -44,7 +44,7 @@ export async function test179030_11E_C_WT077S_white() {
         console.log(effects)
         throw new Error()
     }
-    let effect: Effect | null = effects.find(eff=>eff.reason[0] == "PlayCard" && eff.description == "合計国力＋(１)してプレイできる") || null
+    let effect: Effect | null = effects.find(eff=>eff.reason[0] == "PlayCard" && eff.description == "合計国力_＋１してプレイできる") || null
     if(effect == null){
         throw new Error()
     }

@@ -83,15 +83,15 @@ export const ItemStateFn = {
         }
     },
     setMoreTotalRollCostLengthPlay(ctx: ItemState, x: number): ItemState {
-        ctx = ItemStateFn.setFlag(ctx, "合計国力＋(１)してプレイ", x)
+        ctx = ItemStateFn.setFlag(ctx, "合計国力_＋１してプレイ", x)
         ctx = {
             ...ctx,
-            varNamesRemoveOnTurnEnd: assoc("合計国力＋(１)してプレイ", true, ctx.varNamesRemoveOnTurnEnd)
+            varNamesRemoveOnTurnEnd: assoc("合計国力_＋１してプレイ", true, ctx.varNamesRemoveOnTurnEnd)
         }
         return ctx
     },
     getMoreTotalRollCostLengthPlay(ctx: ItemState): number {
-        return ctx.flags["合計国力＋(１)してプレイ"] || 0
+        return ctx.flags["合計国力_＋１してプレイ"] || 0
     },
     getGlobalEffects(ctx: ItemState): GlobalEffect[] {
         return Object.values(ctx.globalEffects)
