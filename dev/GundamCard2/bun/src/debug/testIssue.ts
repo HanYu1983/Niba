@@ -32,7 +32,7 @@ export async function testIssue() {
     const flows = queryFlow(ctx, PlayerA)
     console.log(flows)
     ctx = applyFlow(ctx, PlayerA, flows[0])
-    throw new Error()
+    //throw new Error()
     // ctx = clearActiveEffectID(ctx)
     // const flows = queryFlow(ctx, PlayerA)
     // console.log(flows)

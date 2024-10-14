@@ -38,6 +38,7 @@ export async function test179029_B3C_CH_WT102R_white() {
     let ctx2 = doTriggerEvent(ctx, { title: ["このカードが場に出た場合"], cardIds: [cardA.id] })
     let effects = getImmediateEffects(ctx2)
     if (effects.length != 2) {
+        console.log(effects)
         throw new Error()
     }
     ctx2 = doTriggerEvent(ctx, { title: ["このカードが場に出た場合"], cardIds: [cardB.id] })

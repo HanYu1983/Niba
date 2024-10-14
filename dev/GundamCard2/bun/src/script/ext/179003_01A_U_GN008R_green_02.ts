@@ -86,7 +86,12 @@ export const prototype: CardPrototype = {
         const cardId = DefineFn.EffectFn.getCardID(effect)
         if (event.title[0] == "GameEventOnTiming" && DefineFn.PhaseFn.eq(event.title[1], DefineFn.PhaseFn.getLast())) {
           const cardOwner = GameStateFn.getItemOwner(ctx, cardId)
-          const pairs = DefineFn.TipFn.getSelection(GameStateFn.getItemState(ctx, cardId).tips["自軍本国の上のカードX枚を見て、その中にあるユニット１枚"]) as StrBaSyouPair[]
+          const tip = GameStateFn.getItemState(ctx, cardId).tips["自軍本国の上のカードX枚を見て、その中にあるユニット１枚"]
+          if (tip == null) {
+            console.warn(`沒有選擇對象，忽略效果: ${effect.description}`)
+            return ctx
+          }
+          const pairs = DefineFn.TipFn.getSelection(tip) as StrBaSyouPair[]
           if (pairs.length == 0) {
             return ctx
           }

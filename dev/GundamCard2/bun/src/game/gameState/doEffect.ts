@@ -319,6 +319,7 @@ export function getCardTipStrings(ctx: GameState, varName: string, cardId: strin
 export function createPlayTextEffectFromEffect(ctx: GameState, e: Effect, options?: { conditions?: { [key: string]: Condition }, logicTreeAction?: LogicTreeAction, isOption?: boolean }): Effect {
   const cardId = EffectFn.getCardID(e)
   const cardController = getItemController(ctx, cardId)
+  /* 改在addImmediateEffectIfCanPayCost時判斷，未驗証
   if (options?.logicTreeAction?.logicTree) {
     options.logicTreeAction.logicTree = {
       type: "And",
@@ -342,7 +343,7 @@ export function createPlayTextEffectFromEffect(ctx: GameState, e: Effect, option
         ]
       }
     }
-  }
+  }*/
   return EffectFn.fromEffectBasic(e, {
     ...options,
     reason: ["PlayText", cardController, cardId, e.text.id]
@@ -350,21 +351,26 @@ export function createPlayTextEffectFromEffect(ctx: GameState, e: Effect, option
 }
 
 export function addImmediateEffectIfCanPayCost(ctx: GameState, effect: Effect): GameState {
-  if (effect.text.conditions) {
-    effect.text.conditions = {
-      ...effect.text.conditions,
-      "同回合上限": {
-        actions: [{
-          title: ["同回合上限", 1]
-        }]
-      }
-    }
-  }
   const cets = createCommandEffectTips(ctx, effect)
   const cetsNoErr = cets.filter(CommandEffecTipFn.filterNoError)
   if (cetsNoErr.length == 0) {
     ctx = EventCenterFn.onAddImmediateEffectButConditionFail(ctx, effect, cets)
     return ctx
+  }
+  {
+    // TODO 未驗証
+    // 起動一回合只能用一次
+    const cardId = EffectFn.getCardID(effect)
+    let itemState = getItemState(ctx, cardId)
+    if (itemState.textIdsUseThisTurn?.includes(effect.text.id)) {
+      console.warn(`這個起動效果這回合已發動過: ${effect.text.description}`)
+      return ctx
+    }
+    itemState = {
+      ...itemState,
+      textIdsUseThisTurn: [...(itemState.textIdsUseThisTurn || []), effect.text.id]
+    }
+    ctx = setItemState(ctx, cardId, itemState) as GameState
   }
   return addImmediateEffect(ctx, effect) as GameState
 }
