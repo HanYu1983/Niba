@@ -24336,7 +24336,7 @@ function applyFlow(ctx2, playerID, flow) {
       }, ctx2;
     }
     case "FlowMakeDestroyOrder":
-      return ctx2 = doCutInDestroyEffectsAndClear(ctx2, flow.destroyEffect.map((i) => i.id)), {
+      return ctx2 = doCutInDestroyEffectsAndClear(ctx2, flow.destroyEffect.map((i) => i.id)), ctx2 = updateCommand(ctx2), {
         ...ctx2,
         flowMemory: {
           ...ctx2.flowMemory,
@@ -26586,7 +26586,7 @@ function thinkVer1(ctx2, playerId, flows, options) {
     return !0;
   }), myHand = getPlayerHandIds(ctx2, playerId);
   if (mygs.length >= 6 && myHand.length <= 2) {
-    const flow = flows.find((flow2) => flow2.id == "FlowNextTiming");
+    const flow = flows.find((flow2) => flow2.id == "FlowPassCut");
     if (flow)
       return flow;
   }
