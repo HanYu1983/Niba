@@ -17556,6 +17556,11 @@ var EventCenterFn = {
   onItemAdd(ctx2, itemId) {
     return assertIsGameState(ctx2), logCategory("onItemAdd", `${itemId}`), ctx2;
   },
+  onCountryHeal(ctx2, playerId, value) {
+    assertIsGameState(ctx2);
+    const msg = `\u672C\u570B\u56DE\u8840: ${playerId} => ${value}`;
+    return ctx2 = addMessage(ctx2, { id: 0, description: msg }), logCategory("onCountryHeal", msg), ctx2;
+  },
   onCountryDamage(ctx2, playerId, damage) {
     assertIsGameState(ctx2);
     const msg = `\u672C\u570B\u53D7\u5230\u50B7\u5BB3: ${playerId} => ${damage} damage`;
@@ -21288,6 +21293,10 @@ function onMoveItem(ctx2, to, [cardId, from]) {
     for (let effect of getCutInDestroyEffects(ctx2))
       if (EffectFn.getCardID(effect) == cardId)
         ctx2 = removeEffect(ctx2, effect.id);
+    ctx2 = doTriggerEvent(ctx2, {
+      title: ["\u30AB\u30FC\u30C9\u304C\u5834\u304B\u3089\u96E2\u308C\u305F\u5834\u5408"],
+      cardIds: [cardId]
+    });
   }
   if (["\u6368\u3066\u5C71", "\u672C\u56FD", "\u624B\u672D"].includes(AbsoluteBaSyouFn.getBaSyouKeyword(to)))
     ctx2 = mapCard(ctx2, cardId, (card) => {
@@ -21471,7 +21480,7 @@ function doCountryDamage(ctx2, playerId, damage, options) {
     }).slice(0, damage), to2 = AbsoluteBaSyouFn.of(playerId, "\u672C\u56FD");
     for (let pair2 of pairs2)
       ctx2 = doItemMove(ctx2, to2, pair2, { isSkipTargetMissing: !0 });
-    return ctx2;
+    return ctx2 = EventCenterFn.onCountryHeal(ctx2, playerId, -damage), ctx2;
   }
   const from = AbsoluteBaSyouFn.of(playerId, "\u672C\u56FD"), pairs = getItemIdsByBasyou(ctx2, from).map((itemId) => {
     return [itemId, from];
@@ -21671,7 +21680,6 @@ function createTipByEntitySearch(ctx2, cardId, options) {
   else if (options.isSetGroup != null)
     entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx2, options.isSetGroup));
   if (options.compareBattlePoint) {
-    entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx2, !0));
     const [kw, op, value] = options.compareBattlePoint;
     entityList = entityList.filter((entity) => {
       const [atk, range3, hp] = getSetGroupBattlePoint(ctx2, entity.itemId);
@@ -25718,7 +25726,7 @@ var jsx_dev_runtime2 = __toESM(require_react_jsx_dev_runtime_development(), 1), 
           return /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
             children: /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
               style: { border: "1px solid black" },
-              children: text.description
+              children: text.description || JSON.stringify(text.title)
             }, void 0, !1, void 0, this)
           }, i, !1, void 0, this);
         }),
@@ -26193,6 +26201,8 @@ var jsx_dev_runtime6 = __toESM(require_react_jsx_dev_runtime_development(), 1), 
             },
             children: [
               _cardPositionID,
+              ":",
+              cards.length,
               ":",
               renderBattlePoint
             ]
