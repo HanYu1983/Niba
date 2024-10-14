@@ -14,6 +14,7 @@ import { GameState } from "../../game/gameState/GameState";
 import { Bridge } from "../bridge";
 
 export const prototype: CardPrototype = {
+  __ignoreAutoTexts: true,
   texts: [
     {
       id: "",

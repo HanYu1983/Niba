@@ -78,5 +78,6 @@ export type CardPrototype = {
   description?: string;
   isCross?: boolean,
   rarity?: string,
+  __ignoreAutoTexts?: boolean
 };
 

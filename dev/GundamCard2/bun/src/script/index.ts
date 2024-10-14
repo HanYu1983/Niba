@@ -57,7 +57,6 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
         "ACE": "ACE",
         "GRAPHIC": "グラフィック",
       }
-      logCategory("loadPrototype", "textstr", textstr)
       // 先去掉這些字元並以這行字元分割字串
       const matches = textstr.matchAll(/([^：　［］（）〔〕]+)/g);
       const texts: CardText[] = []
@@ -65,7 +64,7 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
       let currSp = []
       for (const match of matches) {
         const curr = match[0]
-        if(curr.length < 20){
+        if (curr.length < 20) {
           const kw = ["高機動", "速攻", "強襲", "【PS装甲】", "クイック", "戦闘配備", "【ステイ】", "1枚制限"].find(kw => curr.indexOf(kw) != -1)
           if (kw) {
             allSp.push(kw)
@@ -104,10 +103,7 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
         console.log(currSp)
         throw new Error()
       }
-      // if (imgID == "179001_01A_CH_WT007R_white") {
-      //   console.log(allSp)
-      //   throw new Error()
-      // }
+
       allSp.forEach(sp => {
         if (typeof sp == "string") {
           switch (sp) {
@@ -224,6 +220,13 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
         ...scriptProto.texts || [],
         ...proto.texts || [],
       ]
+    }
+    if (scriptProto.__ignoreAutoTexts) {
+      // 不使用解析出來的內文，因為某些情況會解析錯誤
+      proto = {
+        ...proto,
+        texts: scriptProto.texts
+      }
     }
   }
   if (proto.texts) {

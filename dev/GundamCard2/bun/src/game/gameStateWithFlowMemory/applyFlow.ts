@@ -321,12 +321,13 @@ export function applyFlow(
                         case "ターン終了時": {
                             switch (ctx.phase[2]) {
                                 case "ダメージリセット":
-                                    break
-                                case "効果解決": {
                                     ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
                                     break
-                                }
+                                case "効果解決":
+                                    ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
+                                    break
                                 case "手札調整":
+                                    ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
                                     break
                                 case "効果終了。ターン終了": {
                                     ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;

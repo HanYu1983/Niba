@@ -341,7 +341,7 @@ export function createPlayStayEffect(ctx: GameState, cardId: string): Effect | n
         id: text.id,
         reason: ["PlayCard", getItemOwner(ctx, cardId), cardId, { isPlayOperation: true }],
         description: `Play 【ステイ】 ${prototype.title}`,
-        text: text
+        text: {...text, description: `【ステイ】${text.description}`}
     }
 }
 
@@ -519,7 +519,8 @@ export function createUnitGoStageEffectFromPlayEffect(ctx: GameState, effect: Ef
 export function createOperationGoStageEffectFromPlayEffect(ctx: GameState, effect: Effect): Effect {
     const cardId = EffectFn.getCardID(effect)
     const prototype = getItemPrototype(ctx, cardId)
-    if (prototype.category == "オペレーション") {
+    // character for stay
+    if (prototype.category == "オペレーション" || prototype.category == "キャラクター") {
         return {
             id: `createOperationGoStageEffectFromPlayEffect_${cardId}`,
             reason: ["場に出る", EffectFn.getPlayerID(effect), EffectFn.getCardID(effect)],

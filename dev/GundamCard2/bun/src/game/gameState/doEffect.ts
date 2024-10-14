@@ -350,6 +350,16 @@ export function createPlayTextEffectFromEffect(ctx: GameState, e: Effect, option
 }
 
 export function addImmediateEffectIfCanPayCost(ctx: GameState, effect: Effect): GameState {
+  if (effect.text.conditions) {
+    effect.text.conditions = {
+      ...effect.text.conditions,
+      "同回合上限": {
+        actions: [{
+          title: ["同回合上限", 1]
+        }]
+      }
+    }
+  }
   const cets = createCommandEffectTips(ctx, effect)
   const cetsNoErr = cets.filter(CommandEffecTipFn.filterNoError)
   if (cetsNoErr.length == 0) {

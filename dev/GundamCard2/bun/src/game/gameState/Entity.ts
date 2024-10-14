@@ -58,22 +58,23 @@ export function createEntityIterator(ctx: GameState) {
             })
         })
     })
-    getCoinIds(ctx).map(coinId => {
-        const coin = getCoin(ctx, coinId)
-        const entity: Entity = {
-            itemController: getCoinOwner(ctx, coin.id),
-            itemId: coin.id,
-            itemState: getItemState(ctx, coin.id),
-            item: coin,
-            isCard: false,
-            isCoin: true,
-            isChip: false,
-            baSyouKeyword: null,
-            destroyReason: null,
-            prototype: null
-        }
-        rets.push(entity)
-    })
+    // TODO coin換到別的地方SEARCH好了
+    // getCoinIds(ctx).map(coinId => {
+    //     const coin = getCoin(ctx, coinId)
+    //     const entity: Entity = {
+    //         itemController: getCoinOwner(ctx, coin.id),
+    //         itemId: coin.id,
+    //         itemState: getItemState(ctx, coin.id),
+    //         item: coin,
+    //         isCard: false,
+    //         isCoin: true,
+    //         isChip: false,
+    //         baSyouKeyword: null,
+    //         destroyReason: null,
+    //         prototype: null
+    //     }
+    //     rets.push(entity)
+    // })
     return rets
 }
 
@@ -144,9 +145,9 @@ export function createTipByEntitySearch(ctx: GameState, cardId: string, options:
         //entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx, true))
         const [kw, op, value] = options.compareBattlePoint
         entityList = entityList.filter(entity => {
-            const [atk, range, hp] = getSetGroupBattlePoint(ctx, entity.itemId)
             switch (kw) {
-                case "攻撃力":
+                case "攻撃力": {
+                    const [atk, range, hp] = getSetGroupBattlePoint(ctx, entity.itemId)
                     switch (op) {
                         case "<=":
                             return atk <= value
@@ -155,7 +156,9 @@ export function createTipByEntitySearch(ctx: GameState, cardId: string, options:
                         case "==":
                             return atk == value
                     }
-                case "防御力":
+                }
+                case "防御力": {
+                    const [atk, range, hp] = getSetGroupBattlePoint(ctx, entity.itemId)
                     switch (op) {
                         case "<=":
                             return hp <= value
@@ -164,6 +167,7 @@ export function createTipByEntitySearch(ctx: GameState, cardId: string, options:
                         case "==":
                             return hp == value
                     }
+                }
                 case "合計国力": {
                     const totalCost = getCardTotalCostLength(ctx, entity.itemId)
                     switch (op) {
