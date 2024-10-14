@@ -14,13 +14,17 @@ import { TipFn } from "../define/Tip"
 import { createBridge } from "../bridge/createBridge"
 import { ToolFn } from "../tool"
 
-export function createPlayCardEffects(ctx: GameState, cardId: string): Effect[] {
+export function createPlayCardEffects(ctx: GameState, cardId: string, options?: { isQuick?: boolean }): Effect[] {
     const ret: Effect[] = []
     const prototype = getItemPrototype(ctx, cardId)
     const basyou = getItemBaSyou(ctx, cardId)
     if (basyou.value[1] == "手札" || basyou.value[1] == "ハンガー") {
         // 正常從手牌打出
-        ret.push(createPlayGEffect(ctx, cardId))
+        if(options?.isQuick) {
+
+        } else {
+            ret.push(createPlayGEffect(ctx, cardId))
+        }
         ret.push(...createPlayCardEffect(ctx, cardId))
     } else {
         // 不在手牌的情況
@@ -30,7 +34,11 @@ export function createPlayCardEffects(ctx: GameState, cardId: string): Effect[] 
             .filter(ge => ge.title[0] == "自軍手札にあるかのようにプレイできる")
             .find(ge => ge.cardIds.includes(cardId))
         if (canPlayByText) {
-            ret.push(createPlayGEffect(ctx, cardId))
+            if(options?.isQuick) {
+
+            } else {
+                ret.push(createPlayGEffect(ctx, cardId))
+            }
             ret.push(...createPlayCardEffect(ctx, cardId))
         }
     }

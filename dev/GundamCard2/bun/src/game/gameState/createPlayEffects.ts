@@ -44,7 +44,7 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
                         }
                         if (getCardHasSpeicalEffect(ctx, ["クイック"], cardId)) {
                             // クイック不判斷使用時機inTiming
-                            return createPlayCardEffects(ctx, cardId)
+                            return createPlayCardEffects(ctx, cardId, {isQuick: true})
                         }
                         return []
                     }),

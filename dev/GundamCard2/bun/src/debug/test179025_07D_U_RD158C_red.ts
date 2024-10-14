@@ -40,7 +40,7 @@ export async function test179025_07D_U_RD158C_red() {
         throw new Error()
     }
     const effects = createPlayEffects(ctx, PlayerA)
-    if (effects.length != 3) {
+    if (effects.length != 2) {
         console.log(effects)
         throw new Error()
     }

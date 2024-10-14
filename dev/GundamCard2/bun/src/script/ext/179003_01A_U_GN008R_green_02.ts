@@ -9,6 +9,7 @@
 import { CardColor, CardPrototype } from "../../game/define/CardPrototype";
 import { Condition } from "../../game/define/CardText";
 import { Effect } from "../../game/define/Effect";
+import { TargetMissingError } from "../../game/define/GameError";
 import { StrBaSyouPair } from "../../game/define/Tip";
 import { GameState } from "../../game/gameState/GameState";
 import { Bridge } from "../bridge";
@@ -22,6 +23,13 @@ export const prototype: CardPrototype = {
       conditions: {
         "〔緑X〕": {
           title: ["RollColor", "緑"]
+        },
+        "このカードの部隊": {
+          actions: [
+            {
+              title: ["このカードが_戦闘エリアにいる場合", ["戦闘エリア1", "戦闘エリア2"]]
+            }
+          ]
         },
       },
       logicTreeActions: [
@@ -49,6 +57,11 @@ export const prototype: CardPrototype = {
                           {
                             title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
                               const cardId = DefineFn.EffectFn.getCardID(effect)
+                              if (GameStateFn.getItemBaSyou(ctx, cardId).value[1] == "戦闘エリア1" || GameStateFn.getItemBaSyou(ctx, cardId).value[1] == "戦闘エリア2") {
+
+                              } else {
+                                throw new TargetMissingError(`必須在戰區`)
+                              }
                               const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "自軍本国の上のカードX枚を見て、その中にあるユニット１枚", cardId)
                               for (const pair of pairs) {
                                 ctx = GameStateFn.doItemMove(ctx, GameStateFn.getItemBaSyou(ctx, cardId), pair, { insertId: 0 })
@@ -71,28 +84,15 @@ export const prototype: CardPrototype = {
       onEvent: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
         const event = DefineFn.EffectFn.getEvent(effect)
         const cardId = DefineFn.EffectFn.getCardID(effect)
-        if (event.title[0] == "GameEventOnTiming" && DefineFn.PhaseFn.eq(event.title[1], DefineFn.PhaseFn.getLast()) && event.cardIds?.includes(cardId)) {
-          const newE = GameStateFn.createPlayTextEffectFromEffect(ctx, effect, {
-            logicTreeAction: {
-              actions: [
-                {
-                  title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
-                    const cardId = DefineFn.EffectFn.getCardID(effect)
-                    const cardController = GameStateFn.getItemController(ctx, cardId)
-                    const pairs = DefineFn.TipFn.getSelection(GameStateFn.getItemState(ctx, cardId).tips["自軍本国の上のカードX枚を見て、その中にあるユニット１枚"]) as StrBaSyouPair[]
-                    if (pairs.length == 0) {
-                      return ctx
-                    }
-                    for (const pair of pairs) {
-                      ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "手札"), GameStateFn.createStrBaSyouPair(ctx, pair[0]))
-                    }
-                    return ctx
-                  }.toString()
-                }
-              ]
-            }
-          })
-          ctx = GameStateFn.addImmediateEffectIfCanPayCost(ctx, newE)
+        if (event.title[0] == "GameEventOnTiming" && DefineFn.PhaseFn.eq(event.title[1], DefineFn.PhaseFn.getLast())) {
+          const cardOwner = GameStateFn.getItemOwner(ctx, cardId)
+          const pairs = DefineFn.TipFn.getSelection(GameStateFn.getItemState(ctx, cardId).tips["自軍本国の上のカードX枚を見て、その中にあるユニット１枚"]) as StrBaSyouPair[]
+          if (pairs.length == 0) {
+            return ctx
+          }
+          for (const pair of pairs) {
+            ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardOwner, "手札"), GameStateFn.createStrBaSyouPair(ctx, pair[0]))
+          }
         }
         return ctx
       }.toString(),

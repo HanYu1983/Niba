@@ -341,7 +341,7 @@ export function createTextsFromSpecialEffect(ctx: GameState, cardId: string, tex
                                     title: ["カード", wants, wants.slice(0, 1)],
                                     count: 1
                                 }
-                            }.toString().replace("{ addCardIds: [] }", JSON.stringify({ addCardIds: addCardIds }))
+                            }.toString().replace("{ addCardIds: null }", JSON.stringify({ addCardIds: addCardIds }))
                         },
                         "同區中有NT才能使用": {
                             actions: [

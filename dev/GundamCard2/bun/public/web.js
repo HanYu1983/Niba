@@ -20561,7 +20561,7 @@ function createTextsFromSpecialEffect(ctx2, cardId, text, options) {
                   title: ["\u30AB\u30FC\u30C9", wants, wants.slice(0, 1)],
                   count: 1
                 };
-              }.toString().replace("{ addCardIds: [] }", JSON.stringify({ addCardIds }))
+              }.toString().replace("{ addCardIds: null }", JSON.stringify({ addCardIds }))
             },
             "\u540C\u5340\u4E2D\u6709NT\u624D\u80FD\u4F7F\u7528": {
               actions: [
@@ -22419,14 +22419,23 @@ __export(exports_createPlayCardEffects, {
   createOperationGoStageEffectFromPlayEffect: () => createOperationGoStageEffectFromPlayEffect,
   createCharOpUnitGoStageEffectFromPlayEffect: () => createCharOpUnitGoStageEffectFromPlayEffect
 });
-function createPlayCardEffects(ctx2, cardId) {
+function createPlayCardEffects(ctx2, cardId, options) {
   const ret = [], prototype = getItemPrototype(ctx2, cardId), basyou = getItemBaSyou(ctx2, cardId);
-  if (basyou.value[1] == "\u624B\u672D" || basyou.value[1] == "\u30CF\u30F3\u30AC\u30FC")
-    ret.push(createPlayGEffect(ctx2, cardId)), ret.push(...createPlayCardEffect(ctx2, cardId));
-  else {
+  if (basyou.value[1] == "\u624B\u672D" || basyou.value[1] == "\u30CF\u30F3\u30AC\u30FC") {
+    if (options?.isQuick)
+      ;
+    else
+      ret.push(createPlayGEffect(ctx2, cardId));
+    ret.push(...createPlayCardEffect(ctx2, cardId));
+  } else {
     const ges = getGlobalEffects(ctx2, null);
-    if (ctx2 = setGlobalEffects(ctx2, null, ges), ges.filter((ge) => ge.title[0] == "\u81EA\u8ECD\u624B\u672D\u306B\u3042\u308B\u304B\u306E\u3088\u3046\u306B\u30D7\u30EC\u30A4\u3067\u304D\u308B").find((ge) => ge.cardIds.includes(cardId)))
-      ret.push(createPlayGEffect(ctx2, cardId)), ret.push(...createPlayCardEffect(ctx2, cardId));
+    if (ctx2 = setGlobalEffects(ctx2, null, ges), ges.filter((ge) => ge.title[0] == "\u81EA\u8ECD\u624B\u672D\u306B\u3042\u308B\u304B\u306E\u3088\u3046\u306B\u30D7\u30EC\u30A4\u3067\u304D\u308B").find((ge) => ge.cardIds.includes(cardId))) {
+      if (options?.isQuick)
+        ;
+      else
+        ret.push(createPlayGEffect(ctx2, cardId));
+      ret.push(...createPlayCardEffect(ctx2, cardId));
+    }
   }
   const playerId = getItemOwner(ctx2, cardId);
   return prototype.texts?.forEach((text) => {
@@ -23662,7 +23671,7 @@ function createPlayEffects(ctx2, playerId) {
     if (getItemPrototype(ctx2, cardId).category == "\u30B3\u30DE\u30F3\u30C9")
       return [];
     if (getCardHasSpeicalEffect(ctx2, ["\u30AF\u30A4\u30C3\u30AF"], cardId))
-      return createPlayCardEffects(ctx2, cardId);
+      return createPlayCardEffects(ctx2, cardId, { isQuick: !0 });
     return [];
   }), flatten_default), always_default([]))), getPlayTextF = pipe(always_default(lift_default(AbsoluteBaSyouFn.of)([playerId], [...BaSyouKeywordFn.getBaAll(), "G\u30BE\u30FC\u30F3"])), map_default((basyou) => {
     return getItemIdsByBasyou(ctx2, basyou).flatMap((cardId) => getCardTexts(ctx2, cardId).flatMap((text) => {
@@ -25700,6 +25709,9 @@ var jsx_dev_runtime2 = __toESM(require_react_jsx_dev_runtime_development(), 1), 
         /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
           children: proto.title
         }, void 0, !1, void 0, this),
+        /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
+          children: JSON.stringify(proto.battleArea)
+        }, void 0, !1, void 0, this),
         texts.map((text, i) => {
           return /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
             children: /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
@@ -25710,9 +25722,6 @@ var jsx_dev_runtime2 = __toESM(require_react_jsx_dev_runtime_development(), 1), 
         }),
         /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
           children: proto.characteristic
-        }, void 0, !1, void 0, this),
-        /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
-          children: JSON.stringify(proto.battleArea)
         }, void 0, !1, void 0, this),
         /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
           style: { color: "grey" },
@@ -26645,7 +26654,7 @@ function AppView() {
       /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(ControlView, {}, void 0, !1, void 0, this),
       /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(PlayerController, {
         clientId: PlayerA,
-        isPlayer: !0
+        isPlayer: !1
       }, void 0, !1, void 0, this),
       /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(PlayerController, {
         clientId: PlayerB,

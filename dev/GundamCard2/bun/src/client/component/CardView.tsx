@@ -124,6 +124,7 @@ export const CardView = (props: {
     texts = [...(proto.commandText ? [proto.commandText] : []), ...texts]
     return <div>
       <div>{proto.title}</div>
+      <div>{JSON.stringify(proto.battleArea)}</div>
       {
         texts.map((text, i) => {
           return <div key={i}>
@@ -134,7 +135,6 @@ export const CardView = (props: {
         })
       }
       <div>{proto.characteristic}</div>
-      <div>{JSON.stringify(proto.battleArea)}</div>
       <div style={{ color: "grey" }}>{proto.description}</div>
     </div>
   }, [appContext.viewModel.model.gameState, props.cardID, props.isShowInfo])
