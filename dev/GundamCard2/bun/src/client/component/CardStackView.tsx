@@ -57,7 +57,7 @@ export const CardStackView = (props: {
               // });
             }}
           >
-            {_cardPositionID}:{renderBattlePoint}
+            {_cardPositionID}:{cards.length}:{renderBattlePoint}
           </button>
         </div>
         <div

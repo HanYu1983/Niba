@@ -129,7 +129,7 @@ export const CardView = (props: {
         texts.map((text, i) => {
           return <div key={i}>
             <div style={{ border: "1px solid black" }}>{
-              text.description
+              text.description || JSON.stringify(text.title)
             }</div>
           </div>
         })

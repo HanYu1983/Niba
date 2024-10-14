@@ -22659,7 +22659,9 @@ function createPlayStayEffect(ctx2, cardId) {
     ;
   else
     return null;
-  const conditions = createPlayCardConditions(ctx2, cardId), description = `Play ${prototype.title}`, text = {
+  const conditions = createPlayCardConditions(ctx2, cardId);
+  delete conditions[TipFn.createCharacterTargetUnitKey()];
+  const description = `Play ${prototype.title}`, text = {
     id: `createPlayStayEffect_${cardId}`,
     title: ["\u4F7F\u7528\u578B", ["\u81EA\u8ECD", "\u914D\u5099\u30D5\u30A7\u30A4\u30BA"]],
     description,

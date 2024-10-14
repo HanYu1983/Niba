@@ -29,7 +29,7 @@ export const prototype: CardPrototype = {
                 atBa: true,
                 compareBattlePoint: ["合計国力", "<=", 4],
                 side: "敵軍",
-                is: ["キャラクター"],
+                is: ["キャラクター", "オペレーション", "オペレーション(ユニット)"],
                 count: 1
               }],
               actions: [

@@ -141,7 +141,7 @@ export function createTipByEntitySearch(ctx: GameState, cardId: string, options:
         entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx, options.isSetGroup))
     }
     if (options.compareBattlePoint) {
-        entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx, true))
+        //entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx, true))
         const [kw, op, value] = options.compareBattlePoint
         entityList = entityList.filter(entity => {
             const [atk, range, hp] = getSetGroupBattlePoint(ctx, entity.itemId)

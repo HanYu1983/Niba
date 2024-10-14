@@ -147,6 +147,13 @@ export const EventCenterFn = {
         logCategory(`onItemAdd`, `${itemId}`)
         return ctx
     },
+    onCountryHeal(ctx: any, playerId: PlayerID, value: number): any {
+        assertIsGameState(ctx)
+        const msg = `本國回血: ${playerId} => ${value}`
+        ctx = addMessage(ctx, { id: 0, description: msg })
+        logCategory(`onCountryHeal`, msg)
+        return ctx
+    },
     onCountryDamage(ctx: any, playerId: PlayerID, damage: number): any {
         assertIsGameState(ctx)
         const msg = `本國受到傷害: ${playerId} => ${damage} damage`

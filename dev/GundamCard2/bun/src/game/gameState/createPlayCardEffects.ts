@@ -314,6 +314,7 @@ export function createPlayStayEffect(ctx: GameState, cardId: string): Effect | n
         return null
     }
     const conditions = createPlayCardConditions(ctx, cardId)
+    delete conditions[TipFn.createCharacterTargetUnitKey()]
     const description = `Play ${prototype.title}`
     const text: CardText = {
         id: `createPlayStayEffect_${cardId}`,

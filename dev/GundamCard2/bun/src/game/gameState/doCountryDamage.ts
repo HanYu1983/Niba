@@ -22,6 +22,7 @@ export function doCountryDamage(ctx: GameState, playerId: PlayerID, damage: numb
         for (const pair of pairs) {
             ctx = doItemMove(ctx, to, pair, { isSkipTargetMissing: true })
         }
+        ctx = EventCenterFn.onCountryHeal(ctx, playerId, -damage)
         return ctx
     }
     const from = AbsoluteBaSyouFn.of(playerId, "本国")

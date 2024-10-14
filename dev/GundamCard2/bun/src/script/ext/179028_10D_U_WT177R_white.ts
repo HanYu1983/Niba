@@ -67,7 +67,7 @@ export const prototype: CardPrototype = {
                     return ctx
                   }.toString()
                 }],
-                cardIds: []
+                cardIds: [cardId]
               }
             ],
             [cardId, GameStateFn.getItemBaSyou(ctx, cardId)]
