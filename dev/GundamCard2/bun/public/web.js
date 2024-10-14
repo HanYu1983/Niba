@@ -19456,7 +19456,7 @@ var TipFn = {
     }
   },
   createTipErrorWhenCheckFail(tip) {
-    const selection = this.getSelection(tip);
+    const selection = TipFn.getSelection(tip);
     if (tip.count != null && tip.count != selection.length)
       return new TipError(`count ${selection.length} not right: ${tip.title[0]}/${tip.count}`);
     if (tip.min != null && selection.length < tip.min)
@@ -21038,6 +21038,7 @@ function getCardIdsCanPayRollColor(ctx2, situation, playerId, color) {
 var exports_battleGroup = {};
 __export(exports_battleGroup, {
   isBattleGroupHasA: () => isBattleGroupHasA,
+  isABattleGroup: () => isABattleGroup,
   getBattleGroupBattlePoint: () => getBattleGroupBattlePoint,
   getBattleGroup: () => getBattleGroup
 });
@@ -21112,6 +21113,10 @@ function getBattleGroupBattlePoint(ctx2, unitCardIDs) {
 function isBattleGroupHasA(ctx2, a, cardID) {
   const baSyou = getItemBaSyou(ctx2, cardID);
   return getBattleGroup(ctx2, baSyou).some((bg) => isSetGroupHasA(ctx2, a, bg));
+}
+function isABattleGroup(ctx2, a, cardID) {
+  const baSyou = getItemBaSyou(ctx2, cardID);
+  return getBattleGroup(ctx2, baSyou).every((bg) => isSetGroupHasA(ctx2, a, bg));
 }
 
 // src/game/gameState/player.ts
@@ -22301,13 +22306,13 @@ function doBattleDamage(ctx2, playerId, guardUnits, attackPower, options) {
 }
 function doRuleBattleDamage2(ctx2, speedPhase, currentAttackPlayerID, currentGuardPlayerID, willAttackUnits, willGuardUnits, willAttackPower) {
   if (logCategory("handleAttackDamage", "speed", speedPhase), logCategory("handleAttackDamage", "willAttackUnits", willAttackUnits), logCategory("handleAttackDamage", "willGuardUnits", willGuardUnits), logCategory("handleAttackDamage", "willAttackPower", willAttackPower), willAttackUnits.length) {
-    const hasSpeedAttack = isBattleGroupHasA(ctx2, ["\u901F\u653B"], willAttackUnits[0]);
+    const hasSpeedAttack = isABattleGroup(ctx2, ["\u901F\u653B"], willAttackUnits[0]);
     if (hasSpeedAttack && speedPhase == 1 || hasSpeedAttack == !1 && speedPhase == 2) {
       let currentAttackPower = willAttackPower;
       if (logCategory("handleAttackDamage", "attack", currentAttackPower), willGuardUnits.length)
         [ctx2, currentAttackPower] = doBattleDamage(ctx2, currentAttackPlayerID, willGuardUnits, currentAttackPower);
       if (currentAttackPlayerID == getActivePlayerID(ctx2) && currentAttackPower > 0) {
-        if (isBattle(ctx2, willAttackUnits[0], null) == !1 || isBattleGroupHasA(ctx2, ["\u5F37\u8972"], willAttackUnits[0]))
+        if (isBattle(ctx2, willAttackUnits[0], null) == !1 || isABattleGroup(ctx2, ["\u5F37\u8972"], willAttackUnits[0]))
           ctx2 = doCountryDamage(ctx2, currentGuardPlayerID, currentAttackPower), ctx2 = doTriggerEvent(ctx2, {
             title: ["\u3053\u306E\u30AB\u30FC\u30C9\u306E\u90E8\u968A\u304C\u6575\u8ECD\u672C\u56FD\u306B\u6226\u95D8\u30C0\u30E1\u30FC\u30B8\u3092\u4E0E\u3048\u305F\u5834\u5408"],
             cardIds: willAttackUnits
@@ -22576,7 +22581,7 @@ function createPlayGEffect(ctx2, cardId) {
     ]
   };
   return {
-    id: text.id,
+    id: `createPlayGEffect_${cardId}`,
     reason: ["PlayCard", getItemOwner(ctx2, cardId), cardId, { isPlayG: !0 }],
     description: "Play G",
     text
@@ -22609,7 +22614,7 @@ function createPlayUnitEffect(ctx2, cardId) {
     ]
   };
   return {
-    id: text.id,
+    id: `createPlayUnitEffect_${cardId}`,
     reason: ["PlayCard", getItemOwner(ctx2, cardId), cardId, { isPlayUnit: !0 }],
     description: `Play ${prototype.title}`,
     text
@@ -22642,7 +22647,7 @@ function createPlayOperationEffect(ctx2, cardId) {
     ]
   };
   return {
-    id: text.id,
+    id: `createPlayOperationEffect_${cardId}`,
     reason: ["PlayCard", getItemOwner(ctx2, cardId), cardId, { isPlayOperation: !0 }],
     description: `Play ${prototype.title}`,
     text
@@ -22681,7 +22686,7 @@ function createPlayStayEffect(ctx2, cardId) {
     ]
   };
   return {
-    id: text.id,
+    id: `createPlayStayEffect_${cardId}`,
     reason: ["PlayCard", getItemOwner(ctx2, cardId), cardId, { isPlayOperation: !0 }],
     description: `Play \u3010\u30B9\u30C6\u30A4\u3011 ${prototype.title}`,
     text: { ...text, description: `\u3010\u30B9\u30C6\u30A4\u3011${text.description}` }
@@ -22714,7 +22719,7 @@ function createPlayCharacterOperationEffect(ctx2, cardId) {
     ]
   };
   return {
-    id: text.id,
+    id: `createPlayCharacterOperationEffect_${cardId}`,
     reason: ["PlayCard", getItemOwner(ctx2, cardId), cardId, {
       isPlayCharacter: prototype.category == "\u30AD\u30E3\u30E9\u30AF\u30BF\u30FC",
       isPlayOperation: prototype.category == "\u30AA\u30DA\u30EC\u30FC\u30B7\u30E7\u30F3(\u30E6\u30CB\u30C3\u30C8)"
@@ -22737,7 +22742,7 @@ function createPlayCommandText(ctx2, cardId) {
   }), logicTree = {
     type: "And",
     children: commandText?.logicTreeActions?.[0] ? [...logicLeafs, ...CardTextFn.getLogicTreeTreeLeafs(commandText, commandText.logicTreeActions[0])] : logicLeafs
-  }, playCardEffect = {
+  }, text = {
     id: commandText?.id || `createPlayCommandText_${cardId}`,
     title: commandText?.title || ["\u4F7F\u7528\u578B", ["\u81EA\u8ECD", "\u914D\u5099\u30D5\u30A7\u30A4\u30BA"]],
     description,
@@ -22787,10 +22792,10 @@ function createPlayCommandText(ctx2, cardId) {
     ]
   };
   return {
-    id: playCardEffect.id,
+    id: `createPlayCommandText_${cardId}`,
     reason: ["PlayCard", getItemOwner(ctx2, cardId), cardId, { isPlayCommand: !0 }],
     description: `Play ${prototype.title}`,
-    text: playCardEffect
+    text
   };
 }
 function createUnitGoStageEffectFromPlayEffect(ctx2, effect) {
@@ -23520,46 +23525,25 @@ function getCardTipStrings(ctx2, varName, cardId) {
 }
 function createPlayTextEffectFromEffect(ctx2, e, options) {
   const cardId = EffectFn.getCardID(e), cardController = getItemController(ctx2, cardId);
-  if (options?.logicTreeAction?.logicTree)
-    options.logicTreeAction.logicTree = {
-      type: "And",
-      children: [
-        {
-          type: "Leaf",
-          value: "\u540C\u56DE\u5408\u4E0A\u9650"
-        },
-        options.logicTreeAction.logicTree
-      ]
-    };
-  if (options?.conditions)
-    options.conditions = {
-      ...options.conditions,
-      "\u540C\u56DE\u5408\u4E0A\u9650": {
-        actions: [
-          {
-            title: ["\u540C\u56DE\u5408\u4E0A\u9650", 1]
-          }
-        ]
-      }
-    };
   return EffectFn.fromEffectBasic(e, {
     ...options,
     reason: ["PlayText", cardController, cardId, e.text.id]
   });
 }
 function addImmediateEffectIfCanPayCost(ctx2, effect) {
-  if (effect.text.conditions)
-    effect.text.conditions = {
-      ...effect.text.conditions,
-      "\u540C\u56DE\u5408\u4E0A\u9650": {
-        actions: [{
-          title: ["\u540C\u56DE\u5408\u4E0A\u9650", 1]
-        }]
-      }
-    };
   const cets = createCommandEffectTips(ctx2, effect);
   if (cets.filter(CommandEffecTipFn.filterNoError).length == 0)
     return ctx2 = EventCenterFn.onAddImmediateEffectButConditionFail(ctx2, effect, cets), ctx2;
+  {
+    const cardId = EffectFn.getCardID(effect);
+    let itemState = getItemState(ctx2, cardId);
+    if (itemState.textIdsUseThisTurn?.includes(effect.text.id))
+      return console.warn(`\u9019\u500B\u8D77\u52D5\u6548\u679C\u9019\u56DE\u5408\u5DF2\u767C\u52D5\u904E: ${effect.text.description}`), ctx2;
+    itemState = {
+      ...itemState,
+      textIdsUseThisTurn: [...itemState.textIdsUseThisTurn || [], effect.text.id]
+    }, ctx2 = setItemState(ctx2, cardId, itemState);
+  }
   return addImmediateEffect(ctx2, effect);
 }
 
@@ -23834,8 +23818,8 @@ function createAttackPhaseRuleEffect(ctx2, playerId) {
             let unitIds = GameStateFn2.getItemIdsByBasyou(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, "\u914D\u5099\u30A8\u30EA\u30A2")).filter((cardId) => GameStateFn2.getSetGroupRoot(ctx3, cardId) == cardId).filter((cardId) => GameStateFn2.getCardBattleArea(ctx3, cardId).includes(runtimeBattleArea)).filter((cardId) => GameStateFn2.getCard(ctx3, cardId).isRoll != !0);
             const opponentUnitIds = GameStateFn2.getBattleGroup(ctx3, DefineFn2.AbsoluteBaSyouFn.of(opponentPlayerId, "\u6226\u95D8\u30A8\u30EA\u30A21"));
             if (opponentUnitIds.length) {
-              if (GameStateFn2.isBattleGroupHasA(ctx3, ["\u9AD8\u6A5F\u52D5"], opponentUnitIds[0]))
-                unitIds = unitIds.filter((id) => GameStateFn2.isBattleGroupHasA(ctx3, ["\u9AD8\u6A5F\u52D5"], id));
+              if (GameStateFn2.isABattleGroup(ctx3, ["\u9AD8\u6A5F\u52D5"], opponentUnitIds[0]))
+                unitIds = unitIds.filter((id) => GameStateFn2.isSetGroupHasA(ctx3, ["\u9AD8\u6A5F\u52D5"], id));
             }
             return {
               title: ["\u30AB\u30FC\u30C9", unitIds.map((id) => {
@@ -23865,8 +23849,8 @@ function createAttackPhaseRuleEffect(ctx2, playerId) {
             let unitIds = GameStateFn2.getItemIdsByBasyou(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, "\u914D\u5099\u30A8\u30EA\u30A2")).filter((cardId) => GameStateFn2.getSetGroupRoot(ctx3, cardId) == cardId).filter((cardId) => GameStateFn2.getCardBattleArea(ctx3, cardId).includes(runtimeBattleArea)).filter((cardId) => GameStateFn2.getCard(ctx3, cardId).isRoll != !0);
             const opponentUnitIds = GameStateFn2.getBattleGroup(ctx3, DefineFn2.AbsoluteBaSyouFn.of(opponentPlayerId, "\u6226\u95D8\u30A8\u30EA\u30A22"));
             if (opponentUnitIds.length) {
-              if (GameStateFn2.isBattleGroupHasA(ctx3, ["\u9AD8\u6A5F\u52D5"], opponentUnitIds[0]))
-                unitIds = unitIds.filter((id) => GameStateFn2.isBattleGroupHasA(ctx3, ["\u9AD8\u6A5F\u52D5"], id));
+              if (GameStateFn2.isABattleGroup(ctx3, ["\u9AD8\u6A5F\u52D5"], opponentUnitIds[0]))
+                unitIds = unitIds.filter((id) => GameStateFn2.isSetGroupHasA(ctx3, ["\u9AD8\u6A5F\u52D5"], id));
             }
             return {
               title: ["\u30AB\u30FC\u30C9", unitIds.map((id) => {
@@ -26509,6 +26493,8 @@ function getPlayerFlowAuto(ctx2, playerId, flows, options) {
     if (flow.id == "FlowObserveEffect")
       return null;
     if (flow.id == "FlowSetActiveLogicID")
+      return null;
+    if (flow.id == "FlowPassCut")
       return null;
     return flow;
   }

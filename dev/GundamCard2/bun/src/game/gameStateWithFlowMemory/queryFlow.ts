@@ -5,7 +5,7 @@ import { GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
 import { PlayerA, PlayerB, PlayerIDFn } from "../define/PlayerID";
 import { AbsoluteBaSyouFn } from "../define/BaSyou";
 import { Effect, EffectFn } from "../define/Effect";
-import { getPlayerCommandsFilterNoErrorDistinct } from "../gameState/updateCommand";
+import { getPlayerCommands, getPlayerCommandsFilterNoError, getPlayerCommandsFilterNoErrorDistinct } from "../gameState/updateCommand";
 import { clearTipSelectionForUser, createCommandEffectTips, createEffectTips } from "../gameState/doEffect";
 import { CommandEffecTipFn, TipOrErrorsFn } from "../define/CommandEffectTip";
 
@@ -280,6 +280,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
         ];
     }
     const myCommandList = getPlayerCommandsFilterNoErrorDistinct(ctx, playerID).map(tip => tip.effectId).map(id => getEffect(ctx, id))
+    //console.log("myCommandList", getPlayerCommandsFilterNoError(ctx, playerID))
     // 處理堆疊效果，從最上方開始處理
     if (ctx.stackEffect.length) {
         // 取得最上方的效果

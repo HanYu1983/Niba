@@ -79,3 +79,13 @@ export function isBattleGroupHasA(
   const battleGroup = getBattleGroup(ctx, baSyou);
   return battleGroup.some(bg => isSetGroupHasA(ctx, a, bg))
 }
+
+export function isABattleGroup(
+  ctx: GameState,
+  a: TextSpeicalEffect,
+  cardID: string
+): boolean {
+  const baSyou = getItemBaSyou(ctx, cardID);
+  const battleGroup = getBattleGroup(ctx, baSyou);
+  return battleGroup.every(bg => isSetGroupHasA(ctx, a, bg))
+}

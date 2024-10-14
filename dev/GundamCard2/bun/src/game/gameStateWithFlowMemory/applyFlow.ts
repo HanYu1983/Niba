@@ -81,7 +81,6 @@ export function applyFlow(
             if (flow.logicSubID == null) {
                 throw new Error("logicSubID not found");
             }
-            //ctx = setTipSelectionForUser(ctx, getEffectIncludePlayerCommand(ctx, flow.effectID), flow.logicID, flow.logicSubID) as GameStateWithFlowMemory
             ctx = doActiveEffect(ctx, playerID, flow.effectID, flow.logicID, flow.logicSubID);
             // 執行完效果時自動取消其中一方的結束宣告
             ctx = {
@@ -417,6 +416,7 @@ export function applyFlow(
                 stackEffectMemory: [],
                 flowMemory: {
                     ...ctx.flowMemory,
+                    //hasPlayerPassCut: {},
                     shouldTriggerStackEffectFinishedEvent: false,
                 },
             };

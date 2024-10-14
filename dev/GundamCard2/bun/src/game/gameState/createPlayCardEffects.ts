@@ -218,7 +218,7 @@ export function createPlayGEffect(ctx: GameState, cardId: string): Effect {
         ]
     }
     return {
-        id: text.id,
+        id: `createPlayGEffect_${cardId}`,
         reason: ["PlayCard", getItemOwner(ctx, cardId), cardId, { isPlayG: true }],
         description: `Play G`,
         text: text
@@ -256,7 +256,7 @@ export function createPlayUnitEffect(ctx: GameState, cardId: string): Effect {
         ]
     }
     return {
-        id: text.id,
+        id: `createPlayUnitEffect_${cardId}`,
         reason: ["PlayCard", getItemOwner(ctx, cardId), cardId, { isPlayUnit: true }],
         description: `Play ${prototype.title}`,
         text: text
@@ -294,7 +294,7 @@ export function createPlayOperationEffect(ctx: GameState, cardId: string): Effec
         ]
     }
     return {
-        id: text.id,
+        id: `createPlayOperationEffect_${cardId}`,
         reason: ["PlayCard", getItemOwner(ctx, cardId), cardId, { isPlayOperation: true }],
         description: `Play ${prototype.title}`,
         text: text
@@ -338,7 +338,7 @@ export function createPlayStayEffect(ctx: GameState, cardId: string): Effect | n
         ]
     }
     return {
-        id: text.id,
+        id: `createPlayStayEffect_${cardId}`,
         reason: ["PlayCard", getItemOwner(ctx, cardId), cardId, { isPlayOperation: true }],
         description: `Play 【ステイ】 ${prototype.title}`,
         text: {...text, description: `【ステイ】${text.description}`}
@@ -378,7 +378,7 @@ export function createPlayCharacterOperationEffect(ctx: GameState, cardId: strin
     }
 
     const eff: Effect = {
-        id: text.id,
+        id: `createPlayCharacterOperationEffect_${cardId}`,
         reason: ["PlayCard", getItemOwner(ctx, cardId), cardId, {
             isPlayCharacter: prototype.category == "キャラクター",
             isPlayOperation: prototype.category == "オペレーション(ユニット)",
@@ -412,7 +412,7 @@ export function createPlayCommandText(ctx: GameState, cardId: string): Effect {
             [...logicLeafs, ...CardTextFn.getLogicTreeTreeLeafs(commandText, commandText.logicTreeActions[0])] :
             logicLeafs
     }
-    const playCardEffect: CardText = {
+    const text: CardText = {
         id: commandText?.id || `createPlayCommandText_${cardId}`,
         title: commandText?.title || ["使用型", ["自軍", "配備フェイズ"]],
         description: description,
@@ -470,10 +470,10 @@ export function createPlayCommandText(ctx: GameState, cardId: string): Effect {
         ]
     }
     return {
-        id: playCardEffect.id,
+        id: `createPlayCommandText_${cardId}`,
         reason: ["PlayCard", getItemOwner(ctx, cardId), cardId, { isPlayCommand: true }],
         description: `Play ${prototype.title}`,
-        text: playCardEffect
+        text: text
     }
 }
 

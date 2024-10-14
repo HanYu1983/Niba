@@ -5,7 +5,7 @@ import { AbsoluteBaSyouFn, BaSyouKeyword, BaSyouKeywordFn } from "../define/BaSy
 import { DestroyReason, Effect, EffectFn } from "../define/Effect";
 import { ItemState } from "../define/ItemState";
 import { PlayerA, PlayerB, PlayerID, PlayerIDFn } from "../define/PlayerID";
-import { isBattleGroupHasA, getBattleGroup, getBattleGroupBattlePoint } from "./battleGroup";
+import { isBattleGroupHasA, getBattleGroup, getBattleGroupBattlePoint, isABattleGroup } from "./battleGroup";
 import { GameState } from "./GameState";
 import { getItemState, setItemState } from "./ItemStateComponent";
 import { GameEvent } from "../define/GameEvent";
@@ -109,7 +109,7 @@ export function doRuleBattleDamage(
   logCategory("handleAttackDamage", "willAttackPower", willAttackPower);
   if (willAttackUnits.length) {
     // 判斷速度1速度2是否可攻擊
-    const hasSpeedAttack = isBattleGroupHasA(ctx, ["速攻"], willAttackUnits[0]);
+    const hasSpeedAttack = isABattleGroup(ctx, ["速攻"], willAttackUnits[0]);
     if (
       // 有速攻的情況在速度1
       (hasSpeedAttack && speedPhase == 1) ||
@@ -125,7 +125,7 @@ export function doRuleBattleDamage(
       // 若傷害沒有用完, 攻擊方可以攻擊本國
       if (currentAttackPlayerID == getActivePlayerID(ctx) && currentAttackPower > 0) {
         // 非交戰中或有強襲才能打本國(p35)
-        if (isBattle(ctx, willAttackUnits[0], null) == false || isBattleGroupHasA(ctx, ["強襲"], willAttackUnits[0])) {
+        if (isBattle(ctx, willAttackUnits[0], null) == false || isABattleGroup(ctx, ["強襲"], willAttackUnits[0])) {
           ctx = doCountryDamage(ctx, currentGuardPlayerID, currentAttackPower)
           {
             const gameEvent: GameEvent = {

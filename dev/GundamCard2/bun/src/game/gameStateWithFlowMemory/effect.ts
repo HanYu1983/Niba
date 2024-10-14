@@ -26,6 +26,9 @@ export function doActiveEffect(ctx: GameStateWithFlowMemory, playerID: string, e
   if (effect == null) {
     throw new Error("effect not found")
   }
+  if(EffectFn.getPlayerID(effect) != playerID){
+    throw new Error("你不是效果控制者")
+  }
   const isStackEffect_ = isStackEffect(ctx, effectID)
   try {
     ctx = doEffect(ctx, effect, logicId, logicSubId) as GameStateWithFlowMemory;
