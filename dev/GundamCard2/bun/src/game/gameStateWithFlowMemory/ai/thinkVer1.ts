@@ -11,7 +11,7 @@ import { GameState } from "../../gameState/GameState";
 import { getItemState } from "../../gameState/ItemStateComponent";
 import { getItemPrototype } from "../../gameState/ItemTableComponent";
 import { getPhase } from "../../gameState/PhaseComponent";
-import { createPlayerScore, createPreviewEffectScore, getPlayerGIds, getPlayerUnitIds } from "../../gameState/player";
+import { createPlayerScore, createPreviewEffectScore, getPlayerGIds, getPlayerHandIds, getPlayerUnitIds } from "../../gameState/player";
 import { getSetGroupBattlePoint, isMeleeUnit, isRangeUnit } from "../../gameState/setGroup";
 import { Flow } from "../Flow";
 import { GameStateWithFlowMemory } from "../GameStateWithFlowMemory";
@@ -125,9 +125,7 @@ export function thinkVer1(ctx: GameStateWithFlowMemory, playerId: PlayerID, flow
   if (mygs.length < 7 && playGs.length) {
     return { id: "FlowSetActiveEffectID", effectID: playGs[0].id, tips: [] }
   }
-  const playUnits = plays.filter(p =>
-    p.reason[0] == "PlayCard"
-    && getItemPrototype(ctx, p.reason[2]).category == "ユニット")
+  const playUnits = plays.filter(p => p.reason[0] == "PlayCard" && p.reason[3].isPlayUnit)
   const myUnits = getPlayerUnitIds(ctx, playerId)
   // 機體小於4張優先下機體
   if (myUnits.length < 4 && playUnits.length) {
@@ -170,6 +168,14 @@ export function thinkVer1(ctx: GameStateWithFlowMemory, playerId: PlayerID, flow
     }
     return true
   })
+  const myHand = getPlayerHandIds(ctx, playerId)
+  if (mygs.length >= 6 && myHand.length <= 2) {
+    const flow = flows.find(flow => flow.id == "FlowNextTiming")
+    if (flow) {
+      return flow
+    }
+  }
+
   if (useFlows.length) {
     let flow = useFlows[Math.round(Math.random() * 1000) % useFlows.length]
     return flow

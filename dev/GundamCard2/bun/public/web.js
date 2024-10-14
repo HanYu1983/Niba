@@ -18458,7 +18458,7 @@ var BaSyouKeywordFn = {
     }
   },
   getAll() {
-    return ["\u672C\u56FD", "\u6368\u3066\u5C71", "G\u30BE\u30FC\u30F3", "\u30B8\u30E3\u30F3\u30AF\u30E4\u30FC\u30C9", "\u624B\u672D", "\u30CF\u30F3\u30AC\u30FC", "\u53D6\u308A\u9664\u304B\u308C\u305F\u30AB\u30FC\u30C9", "\u6226\u95D8\u30A8\u30EA\u30A21", "\u6226\u95D8\u30A8\u30EA\u30A22", "\u914D\u5099\u30A8\u30EA\u30A2"];
+    return ["\u672C\u56FD", "\u6368\u3066\u5C71", "\u53D6\u308A\u9664\u304B\u308C\u305F\u30AB\u30FC\u30C9", "G\u30BE\u30FC\u30F3", "\u30B8\u30E3\u30F3\u30AF\u30E4\u30FC\u30C9", "\u624B\u672D", "\u30CF\u30F3\u30AC\u30FC", "\u6226\u95D8\u30A8\u30EA\u30A21", "\u6226\u95D8\u30A8\u30EA\u30A22", "\u914D\u5099\u30A8\u30EA\u30A2"];
   },
   getBaAll() {
     return BaSyouKeywordFn.getAll().filter(BaSyouKeywordFn.isBa);
@@ -23663,17 +23663,22 @@ function deleteImmediateEffect(ctx2, playerID, effectID) {
 function createPlayEffects(ctx2, playerId) {
   const ges = getGlobalEffects(ctx2, null);
   ctx2 = setGlobalEffects(ctx2, null, ges);
-  const getPlayCardEffectsF = ifElse_default(always_default(PhaseFn.eq(getPhase(ctx2), ["\u914D\u5099\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"])), pipe(always_default(AbsoluteBaSyouFn.getTextOn()), map_default((basyou) => getItemIdsByBasyou(ctx2, basyou)), flatten_default, map_default((cardId) => {
+  const myTextOn = lift_default(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getTextOn()), getPlayCardEffectsF = ifElse_default(always_default(PhaseFn.eq(getPhase(ctx2), ["\u914D\u5099\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"])), pipe(always_default(myTextOn), map_default((basyou) => getItemIdsByBasyou(ctx2, basyou)), flatten_default, map_default((cardId) => {
     if (getItemPrototype(ctx2, cardId).category == "\u30B3\u30DE\u30F3\u30C9")
       return [];
     return createPlayCardEffects(ctx2, cardId).filter((eff) => inTiming(eff.text));
-  }), flatten_default), ifElse_default(always_default(PhaseFn.isFreeTiming(getPhase(ctx2))), pipe(always_default(AbsoluteBaSyouFn.getTextOn()), map_default((basyou) => getItemIdsByBasyou(ctx2, basyou)), flatten_default, map_default((cardId) => {
+  }), flatten_default), ifElse_default(always_default(PhaseFn.isFreeTiming(getPhase(ctx2))), pipe(always_default(myTextOn), map_default((basyou) => getItemIdsByBasyou(ctx2, basyou)), flatten_default, map_default((cardId) => {
     if (getItemPrototype(ctx2, cardId).category == "\u30B3\u30DE\u30F3\u30C9")
       return [];
     if (getCardHasSpeicalEffect(ctx2, ["\u30AF\u30A4\u30C3\u30AF"], cardId))
       return createPlayCardEffects(ctx2, cardId, { isQuick: !0 });
     return [];
-  }), flatten_default), always_default([]))), getPlayTextF = pipe(always_default(lift_default(AbsoluteBaSyouFn.of)([playerId], [...BaSyouKeywordFn.getBaAll(), "G\u30BE\u30FC\u30F3"])), map_default((basyou) => {
+  }), flatten_default), always_default([]))), getPlayCommandF = ifElse_default(always_default(PhaseFn.isFreeTiming(getPhase(ctx2))), pipe(always_default(myTextOn), map_default((basyou) => getItemIdsByBasyou(ctx2, basyou)), flatten_default, map_default((cardId) => {
+    const item = getItem(ctx2, cardId);
+    if (getItemPrototype(ctx2, item.id).category != "\u30B3\u30DE\u30F3\u30C9")
+      return [];
+    return createPlayCardEffects(ctx2, item.id);
+  }), flatten_default, (effs) => effs.filter((eff) => inTiming(eff.text))), always_default([])), getPlayTextF = pipe(always_default(lift_default(AbsoluteBaSyouFn.of)([playerId], [...BaSyouKeywordFn.getBaAll(), "G\u30BE\u30FC\u30F3"])), map_default((basyou) => {
     return getItemIdsByBasyou(ctx2, basyou).flatMap((cardId) => getCardTexts(ctx2, cardId).flatMap((text) => {
       if (AbsoluteBaSyouFn.getBaSyouKeyword(basyou) == "G\u30BE\u30FC\u30F3") {
         if (text.protectLevel != 2)
@@ -23709,12 +23714,7 @@ function createPlayEffects(ctx2, playerId) {
         }
       };
     }));
-  }), flatten_default), getPlayCommandF = ifElse_default(always_default(PhaseFn.isFreeTiming(getPhase(ctx2))), pipe(always_default(AbsoluteBaSyouFn.getTextOn()), map_default((basyou) => getItemIdsByBasyou(ctx2, basyou)), flatten_default, map_default((cardId) => {
-    const item = getItem(ctx2, cardId);
-    if (getItemPrototype(ctx2, item.id).category != "\u30B3\u30DE\u30F3\u30C9")
-      return [];
-    return createPlayCardEffects(ctx2, item.id);
-  }), flatten_default, (effs) => effs.filter((eff) => inTiming(eff.text))), always_default([]));
+  }), flatten_default);
   function inTiming(text) {
     const siYouTiming = (() => {
       if (text.title[0] == "\u4F7F\u7528\u578B")
@@ -26552,10 +26552,10 @@ function thinkVer1(ctx2, playerId, flows, options) {
   const plays = flows.flatMap((flow) => flow.id == "FlowSetActiveEffectID" ? flow.tips : []), ruleEffect = plays.find((p) => p.reason[0] == "GameRule" && (p.reason[2].isAttack || p.reason[2].isDefence || p.reason[2].isReturn || p.reason[2].isDamageCheck || p.reason[2].isReroll || p.reason[2].isDraw));
   if (ruleEffect)
     return { id: "FlowSetActiveEffectID", effectID: ruleEffect.id, tips: [] };
-  const playGs = plays.filter((p) => p.reason[0] == "PlayCard" && p.reason[3].isPlayG), playChars = plays.filter((p) => p.reason[0] == "PlayCard" && p.reason[3].isPlayCharacter);
-  if (getPlayerGIds(ctx2, playerId).length < 7 && playGs.length)
+  const playGs = plays.filter((p) => p.reason[0] == "PlayCard" && p.reason[3].isPlayG), playChars = plays.filter((p) => p.reason[0] == "PlayCard" && p.reason[3].isPlayCharacter), mygs = getPlayerGIds(ctx2, playerId);
+  if (mygs.length < 7 && playGs.length)
     return { id: "FlowSetActiveEffectID", effectID: playGs[0].id, tips: [] };
-  const playUnits = plays.filter((p) => p.reason[0] == "PlayCard" && getItemPrototype(ctx2, p.reason[2]).category == "\u30E6\u30CB\u30C3\u30C8"), myUnits = getPlayerUnitIds(ctx2, playerId);
+  const playUnits = plays.filter((p) => p.reason[0] == "PlayCard" && p.reason[3].isPlayUnit), myUnits = getPlayerUnitIds(ctx2, playerId);
   if (myUnits.length < 4 && playUnits.length)
     return { id: "FlowSetActiveEffectID", effectID: playUnits[0].id, tips: [] };
   if (playChars.length) {
@@ -26584,7 +26584,12 @@ function thinkVer1(ctx2, playerId, flows, options) {
         return !1;
     }
     return !0;
-  });
+  }), myHand = getPlayerHandIds(ctx2, playerId);
+  if (mygs.length >= 6 && myHand.length <= 2) {
+    const flow = flows.find((flow2) => flow2.id == "FlowNextTiming");
+    if (flow)
+      return flow;
+  }
   if (useFlows.length)
     return useFlows[Math.round(Math.random() * 1000) % useFlows.length];
   return null;
@@ -26654,7 +26659,7 @@ function AppView() {
       /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(ControlView, {}, void 0, !1, void 0, this),
       /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(PlayerController, {
         clientId: PlayerA,
-        isPlayer: !1
+        isPlayer: !0
       }, void 0, !1, void 0, this),
       /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(PlayerController, {
         clientId: PlayerB,

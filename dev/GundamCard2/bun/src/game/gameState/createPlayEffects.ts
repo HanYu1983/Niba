@@ -17,11 +17,13 @@ import { getGlobalEffects, setGlobalEffects } from "./globalEffects";
 export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
     const ges = getGlobalEffects(ctx, null)
     ctx = setGlobalEffects(ctx, null, ges)
+    const myTextOn = lift(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getTextOn())
+
     const getPlayCardEffectsF =
         ifElse(
             always(PhaseFn.eq(getPhase(ctx), ["配備フェイズ", "フリータイミング"])),
             pipe(
-                always(AbsoluteBaSyouFn.getTextOn()),
+                always(myTextOn),
                 map(basyou => getItemIdsByBasyou(ctx, basyou)), flatten,
                 map(cardId => {
                     // 指令在一個部分計算
@@ -35,7 +37,7 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
             ifElse(
                 always(PhaseFn.isFreeTiming(getPhase(ctx))),
                 pipe(
-                    always(AbsoluteBaSyouFn.getTextOn()),
+                    always(myTextOn),
                     map(basyou => getItemIdsByBasyou(ctx, basyou)), flatten,
                     map(cardId => {
                         // 指令在一個部分計算
@@ -44,7 +46,7 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
                         }
                         if (getCardHasSpeicalEffect(ctx, ["クイック"], cardId)) {
                             // クイック不判斷使用時機inTiming
-                            return createPlayCardEffects(ctx, cardId, {isQuick: true})
+                            return createPlayCardEffects(ctx, cardId, { isQuick: true })
                         }
                         return []
                     }),
@@ -53,6 +55,24 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
                 always([] as Effect[])
             )
         )
+
+    const getPlayCommandF = ifElse(
+        always(PhaseFn.isFreeTiming(getPhase(ctx))),
+        pipe(
+            always(myTextOn),
+            map(basyou => getItemIdsByBasyou(ctx, basyou)), flatten,
+            map(cardId => {
+                const item = getItem(ctx, cardId)
+                const proto = getItemPrototype(ctx, item.id)
+                if (proto.category != "コマンド") {
+                    return []
+                }
+                return createPlayCardEffects(ctx, item.id)
+            }), flatten,
+            effs => effs.filter(eff => inTiming(eff.text))
+        ),
+        always([] as Effect[])
+    )
 
     const getPlayTextF = pipe(
         always(lift(AbsoluteBaSyouFn.of)([playerId], [...BaSyouKeywordFn.getBaAll(), "Gゾーン"])),
@@ -70,7 +90,7 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
                             case "使用型":
                                 return [text]
                             case "特殊型":
-                                return createTextsFromSpecialEffect(ctx, cardId, text, {ges: ges}).filter(text => text.title[0] == "使用型")
+                                return createTextsFromSpecialEffect(ctx, cardId, text, { ges: ges }).filter(text => text.title[0] == "使用型")
                         }
                         return []
                     }).filter(inTiming).map(text => {
@@ -123,24 +143,6 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
                     })
             )
         }), flatten
-    )
-
-    const getPlayCommandF = ifElse(
-        always(PhaseFn.isFreeTiming(getPhase(ctx))),
-        pipe(
-            always(AbsoluteBaSyouFn.getTextOn()),
-            map(basyou => getItemIdsByBasyou(ctx, basyou)), flatten,
-            map(cardId => {
-                const item = getItem(ctx, cardId)
-                const proto = getItemPrototype(ctx, item.id)
-                if (proto.category != "コマンド") {
-                    return []
-                }
-                return createPlayCardEffects(ctx, item.id)
-            }), flatten,
-            effs => effs.filter(eff => inTiming(eff.text))
-        ),
-        always([] as Effect[])
     )
 
     function inTiming(text: CardText): boolean {

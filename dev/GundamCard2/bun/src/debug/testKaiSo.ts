@@ -38,6 +38,7 @@ export async function testKaiSo() {
     ctx = setPhase(ctx, ["戦闘フェイズ", "攻撃ステップ", "フリータイミング"]) as GameState
     let effects = createPlayEffects(ctx, PlayerA)
     if (effects.length != 1) {
+        console.log(effects)
         throw new Error()
     }
     let effect = effects[0]

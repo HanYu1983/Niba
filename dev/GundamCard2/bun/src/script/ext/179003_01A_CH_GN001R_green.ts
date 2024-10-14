@@ -24,6 +24,7 @@ export const prototype: CardPrototype = {
         const prototype = GameStateFn.getItemPrototype(ctx, cardId)
         const tip = GameStateFn.createTipByEntitySearch(ctx, cardId, {
           hasChar: [prototype.title || ""],
+          hasSetCard: false,
           side: "自軍",
           at: ["配備エリア"],
           is: ["ユニット"],
@@ -45,6 +46,7 @@ export const prototype: CardPrototype = {
                 const prototype = GameStateFn.getItemPrototype(ctx, cardId)
                 const tip = GameStateFn.createTipByEntitySearch(ctx, cardId, {
                   hasChar: [prototype.title || ""],
+                  hasSetCard: false,
                   side: "自軍",
                   at: ["配備エリア"],
                   is: ["ユニット"],
