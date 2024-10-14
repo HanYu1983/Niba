@@ -15,7 +15,7 @@ export class GameError extends Error {
 }
 
 // 只能在提示對象時補捉，其中包含TargetMissingError
-// TipFn.checkTipSatisfies
+// TipFn.createTipErrorWhenCheckFail
 // ItemStateFn.getTip
 // ConditionTitleFn中就丟TipError，非預期錯誤則丟Error
 export class TipError extends GameError {

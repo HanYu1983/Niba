@@ -42,7 +42,13 @@ export function createPlayCardEffects(ctx: GameState, cardId: string): Effect[] 
         }
         const effs = CardTextFn.getCreatePlayEffectFn(text)(ctx, {
             id: `createPlayCardEffects_${cardId}`,
-            reason: ["PlayCard", playerId, cardId, {}],
+            reason: ["PlayCard", playerId, cardId, {
+                isPlayUnit: prototype.category == "ユニット",
+                isPlayCommand: prototype.category == "コマンド",
+                isPlayCharacter: prototype.category == "キャラクター",
+                isPlayOperationUnit: prototype.category == "オペレーション(ユニット)",
+                isPlayOperation: prototype.category == "オペレーション",
+            }],
             text: text,
         }, createBridge())
         effs?.forEach(eff => {

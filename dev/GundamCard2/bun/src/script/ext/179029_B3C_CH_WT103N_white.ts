@@ -23,7 +23,7 @@ export const prototype: CardPrototype = {
           && (
             evt.cardIds?.some(cardId => GameStateFn.getItemController(ctx, cardId) == cardController && GameStateFn.getItemPrototype(ctx, cardId).title == "ルイン・リー"))
           || (
-            DefineFn.TipFn.checkTipSatisfies(GameStateFn.createTipByEntitySearch(ctx, cardId, {
+            DefineFn.TipFn.createTipErrorWhenCheckFail(GameStateFn.createTipByEntitySearch(ctx, cardId, {
               atBa: true,
               side: "自軍",
               title: ["ルイン・リー"],

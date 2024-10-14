@@ -108,6 +108,7 @@ export type EntitySearchOptions = {
     hasChar?: string[],
     hasSelfCardId?: boolean,
     hasGSignProperty?: GSignProperty[],
+    hasDamage?: boolean,
     isMaster?: boolean,
     count?: number,
     min?: number,

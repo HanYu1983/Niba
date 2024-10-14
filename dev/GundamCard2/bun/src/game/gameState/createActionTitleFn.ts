@@ -105,7 +105,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
       return function (ctx: GameState, effect: Effect): GameState {
         const cardId = EffectFn.getCardID(effect)
         const tip = createTipByEntitySearch(ctx, cardId, options)
-        const error = TipFn.checkTipSatisfies(tip)
+        const error = TipFn.createTipErrorWhenCheckFail(tip)
         if (error) {
           throw error
         }

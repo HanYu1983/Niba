@@ -159,7 +159,7 @@ export function createEffectTips(
       }
       try {
         logCategory("createEffectTips", "tip")
-        const error = TipFn.checkTipSatisfies(tip)
+        const error = TipFn.createTipErrorWhenCheckFail(tip)
         if (error) {
           throw error
         }
@@ -288,7 +288,7 @@ export function createCommandEffectTips(ctx: GameState, effect: Effect): Command
 export function getCardTipSelection(ctx: GameState, varName: string, cardId: string, options?: { assertTitle?: TipTitle }) {
   const cardState = getItemState(ctx, cardId);
   const tip = ItemStateFn.getTip(cardState, varName)
-  const tipError = TipFn.checkTipSatisfies(tip)
+  const tipError = TipFn.createTipErrorWhenCheckFail(tip)
   if (tipError) {
     throw tipError
   }

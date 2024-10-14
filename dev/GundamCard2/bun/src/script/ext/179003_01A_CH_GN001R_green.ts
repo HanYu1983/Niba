@@ -29,7 +29,7 @@ export const prototype: CardPrototype = {
           is: ["ユニット"],
           count: 1
         })
-        if (DefineFn.TipFn.checkTipSatisfies(tip) != null) {
+        if (DefineFn.TipFn.createTipErrorWhenCheckFail(tip) != null) {
           return []
         }
         const text: CardText = {
@@ -50,7 +50,7 @@ export const prototype: CardPrototype = {
                   is: ["ユニット"],
                   count: 1
                 })
-                if (DefineFn.TipFn.checkTipSatisfies(tip)) {
+                if (DefineFn.TipFn.createTipErrorWhenCheckFail(tip) == null) {
                   return tip
                 }
                 return {

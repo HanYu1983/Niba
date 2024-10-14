@@ -103,7 +103,7 @@ export const TipFn = {
                 }
         }
     },
-    checkTipSatisfies(tip: Tip): TipError | null {
+    createTipErrorWhenCheckFail(tip: Tip): TipError | null {
         const selection = this.getSelection(tip)
         if (tip.count != null && tip.count != selection.length) {
             return new TipError(`count ${selection.length} not right: ${tip.title[0]}/${tip.count}`)

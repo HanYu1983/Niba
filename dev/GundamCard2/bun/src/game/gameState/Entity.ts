@@ -219,6 +219,9 @@ export function createTipByEntitySearch(ctx: GameState, cardId: string, options:
     if (options.hasGSignProperty) {
         entityList = entityList.filter(entity => isCardLike(ctx)(entity.itemId) && options.hasGSignProperty?.includes(getCardGSignProperty(ctx, entity.itemId)))
     }
+    if (options.hasDamage) {
+        entityList = entityList.filter(entity => entity.itemState.damage > 0 && entity.itemState.destroyReason == null)
+    }
     if (options.exceptCardIds?.length) {
         entityList = entityList.filter(entity => options.exceptCardIds?.includes(entity.itemId) != true)
     }

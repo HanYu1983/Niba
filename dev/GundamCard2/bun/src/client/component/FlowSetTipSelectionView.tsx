@@ -145,7 +145,7 @@ const userTip = useMemo(() => {
 }, [props.flow.tip, userSelection, appContext.viewModel.model.gameState])
 const renderButton = useMemo(() => {
   const effect = getEffect(appContext.viewModel.model.gameState, props.flow.effectID)
-  const error = TipFn.checkTipSatisfies(userTip)
+  const error = TipFn.createTipErrorWhenCheckFail(userTip)
   if (error) {
     return <div>{error.message}:{effect.description}</div>
   }
