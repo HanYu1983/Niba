@@ -49,9 +49,10 @@ export async function test179009_03B_U_GN036U_green() {
     ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1"), [cardA]) as GameState
     ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア"), [masterUnit, char]) as GameState
     ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア1"), [unit]) as GameState
+    // 交戰中受傷的敵軍存在
     ctx = mapItemState(ctx, unit.id, is => ({ ...is, damage: 1 })) as GameState
+    // 自軍專用機成立存在
     ctx = setSetGroupParent(ctx, masterUnit.id, char.id) as GameState
-    //ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), repeat("179003_01A_CH_GN001R_green", 2)) as GameState
     ctx = setPhase(ctx, ["戦闘フェイズ", "防御ステップ", "フリータイミング"]) as GameState
     ctx = setActivePlayerID(ctx, PlayerA) as GameState
     let effects = createPlayEffects(ctx, PlayerA)
@@ -59,6 +60,7 @@ export async function test179009_03B_U_GN036U_green() {
         console.log(effects)
         throw new Error()
     }
+    // 沒有國力可以橫置也可以使用
     let effect: Effect | null = effects.find(eff => eff.reason[0] == "PlayText" && eff.text.description == "（戦闘フェイズ）〔R+１〕：このカードと交戦中の、ダメージを受けている敵軍ユニット１枚を持ち主の本国の上に移す。自軍ユニットの「専用機のセット」が成立している場合、この効果のコストは〔０〕に変更される。") || null
     if (effect == null) {
         console.log(effects)
