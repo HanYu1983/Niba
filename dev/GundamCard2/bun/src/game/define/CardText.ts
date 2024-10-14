@@ -138,7 +138,7 @@ export type ConditionTitle =
     | ["_敵軍部隊がいる場合", RelatedPlayerSideKeyword]
     | ["_敵軍_ユニットが_３枚以上いる場合", RelatedPlayerSideKeyword, CardCategory, number]
     | ["Entity", EntitySearchOptions]
-    | ["_敵軍部隊_１つ", RelatedPlayerSideKeyword, number]
+    | ["_交戦中の_敵軍部隊_１つ", boolean | null, RelatedPlayerSideKeyword, number]
 
 export type Condition = {
     title?: ConditionTitle,

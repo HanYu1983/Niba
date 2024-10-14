@@ -15,7 +15,7 @@ export const prototype: CardPrototype = {
     title: ["使用型", ["ダメージ判定ステップ"]],
     conditions: {
       "敵軍部隊１つ": {
-        title: ["_敵軍部隊_１つ", "敵軍", 1]
+        title: ["_交戦中の_敵軍部隊_１つ", null, "敵軍", 1]
       }
     },
     logicTreeActions: [

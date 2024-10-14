@@ -9,7 +9,7 @@ import { Tip, StrBaSyouPair, TipTitleTextRef } from "../define/Tip"
 import { getItemCharacteristic, getItemRuntimeCategory, getCardTexts, getCardTotalCostLength, getCardIdsCanPayRollColor } from "./card"
 import { getCard } from "./CardTableComponent"
 import { GameState } from "./GameState"
-import { isBattle } from "./IsBattleComponent"
+import { isBattle, isBattleAtBasyou } from "./IsBattleComponent"
 import { getItemController, getItemIdsByBasyou, getItemPrototype, getItemBaSyou } from "./ItemTableComponent"
 import { getSetGroupBattlePoint } from "./setGroup"
 import { getSetGroupRoot } from "./SetGroupComponent"
@@ -23,13 +23,17 @@ export function createConditionTitleFn(condition: Condition, options?: { isPlay?
     }
     logCategory("getConditionTitleFn", condition.title)
     switch (condition.title[0]) {
-        case "_敵軍部隊_１つ": {
-            const [_, side, count] = condition.title
+        case "_交戦中の_敵軍部隊_１つ": {
+            const [_, isBattleV, side, count] = condition.title
             return function (ctx: GameState, effect: Effect): Tip | null {
                 const cardId = EffectFn.getCardID(effect)
                 const cardController = getItemController(ctx, cardId);
                 const playerId = PlayerIDFn.fromRelatedPlayerSideKeyword(side, cardController)
-                const basyous = lift(AbsoluteBaSyouFn.of)([playerId], ["戦闘エリア1", "戦闘エリア2"]).filter(basyou => getItemIdsByBasyou(ctx, basyou).length)
+                let basyous = lift(AbsoluteBaSyouFn.of)([playerId], ["戦闘エリア1", "戦闘エリア2"])
+                    .filter(basyou => getItemIdsByBasyou(ctx, basyou).length)
+                if(isBattleV != null){
+                    basyous = basyous.filter(basyou => isBattleAtBasyou(ctx, basyou) == isBattleV)
+                }
                 return {
                     title: ["BaSyou", basyous, basyous.slice(0, count)],
                     count: count,
