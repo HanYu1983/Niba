@@ -416,7 +416,7 @@ export function applyFlow(
                 stackEffectMemory: [],
                 flowMemory: {
                     ...ctx.flowMemory,
-                    //hasPlayerPassCut: {},
+                    hasPlayerPassCut: {},
                     shouldTriggerStackEffectFinishedEvent: false,
                 },
             };
