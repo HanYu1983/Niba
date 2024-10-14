@@ -129,19 +129,37 @@ export async function testIssue() {
     console.log("getPlayerCommands", getPlayerCommands(ctx, PlayerA).length)
     console.log("getPlayerCommandsFilterNoError", getPlayerCommandsFilterNoError(ctx, PlayerA).length)
     console.log("getPlayerCommandsFilterNoErrorDistinct", getPlayerCommandsFilterNoErrorDistinct(ctx, PlayerA).length)
+    console.log("phase", getPhase(ctx))
+    flows = queryFlow(ctx, PlayerA)
+    flow = flows.find(flow => flow.id == "FlowSetActiveEffectID")
+    if (flow == null) {
+        throw new Error()
+    }
+    ctx = applyFlow(ctx, PlayerA, flow)
+
+
+
+
+
+
+
+    flows = queryFlow(ctx, PlayerA).filter(flow => flow.id == "FlowSetTipSelection")
+    flows.forEach(flow=>{
+        ctx = applyFlow(ctx, PlayerA, flow)
+    })
+    console.log("getPlayerCommands", getPlayerCommands(ctx, PlayerA).length)
+    console.log("getPlayerCommandsFilterNoError", getPlayerCommandsFilterNoError(ctx, PlayerA).length)
 
     flows = queryFlow(ctx, PlayerA)
-    // flow = flows.find(flow => flow.id == "FlowPassPhase")
-    // if (flow == null) {
-    //     throw new Error()
-    // }
-    // ctx = applyFlow(ctx, PlayerA, flow)
+    flow = flows.find(flow => flow.id == "FlowPassPayCost")
+    if (flow == null) {
+        throw new Error()
+    }
+    ctx = applyFlow(ctx, PlayerA, flow)
+    flows = queryFlow(ctx, PlayerA)
     console.log(flows)
 
-    
-
-
-    throw new Error()
+    //throw new Error()
 }
 
 const TMP_CTX: GameStateWithFlowMemory = {
