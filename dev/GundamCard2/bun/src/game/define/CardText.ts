@@ -49,7 +49,7 @@ export type ActionTitle =
     | ["リロール状態で置き換える"]
     | ["合計国力〔x〕", number]
     | ["_敵軍_ユニットが_戦闘エリアにいる場合", RelatedPlayerSideKeyword, CardCategory, BaSyouKeyword[]]
-    | ["這張卡在_戰區的場合", BaSyouKeyword[]]
+    | ["このカードが_戦闘エリアにいる場合", BaSyouKeyword[]]
     | ["看自己_本國全部的卡", BaSyouKeyword]
     | ["triggerEvent", GameEvent]
     | ["_の_ハンガーに移す", RelatedPlayerSideKeyword, BaSyouKeyword]

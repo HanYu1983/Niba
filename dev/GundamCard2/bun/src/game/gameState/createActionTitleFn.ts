@@ -444,7 +444,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
         return ctx
       }
     }
-    case "這張卡在_戰區的場合": {
+    case "このカードが_戦闘エリアにいる場合": {
       const [_, areas] = action.title
       return function (ctx: GameState, effect: Effect): GameState {
         const cardId = EffectFn.getCardID(effect)

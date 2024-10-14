@@ -25,7 +25,7 @@ export async function testGain() {
         protoID: "unitBlue"
     }
     ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア"), [cardA]) as GameState
-    const texts = createTextsFromSpecialEffect(ctx, { title: ["特殊型", ["ゲイン"]], id: "" })
+    const texts = createTextsFromSpecialEffect(ctx, cardA.id, { title: ["特殊型", ["ゲイン"]], id: "" })
     if (texts.length == 0) {
         throw new Error()
     }

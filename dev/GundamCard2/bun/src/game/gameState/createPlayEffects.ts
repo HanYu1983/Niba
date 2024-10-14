@@ -13,7 +13,10 @@ import { createGameState, GameState } from "./GameState";
 import { getPhase, setPhase } from "./PhaseComponent";
 import { getCardHasSpeicalEffect, getCardTexts } from "./card";
 import { createTextsFromSpecialEffect } from "./createTextsFromSpecialEffect";
+import { getGlobalEffects, setGlobalEffects } from "./globalEffects";
 export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
+    const ges = getGlobalEffects(ctx, null)
+    ctx = setGlobalEffects(ctx, null, ges)
     const getPlayCardEffectsF =
         ifElse(
             always(PhaseFn.eq(getPhase(ctx), ["配備フェイズ", "フリータイミング"])),
@@ -67,7 +70,7 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
                             case "使用型":
                                 return [text]
                             case "特殊型":
-                                return createTextsFromSpecialEffect(ctx, text).filter(text => text.title[0] == "使用型")
+                                return createTextsFromSpecialEffect(ctx, cardId, text, {ges: ges}).filter(text => text.title[0] == "使用型")
                         }
                         return []
                     }).filter(inTiming).map(text => {

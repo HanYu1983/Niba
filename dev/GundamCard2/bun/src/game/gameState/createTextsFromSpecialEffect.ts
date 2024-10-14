@@ -1,12 +1,17 @@
+import { dropRepeatsBy } from "ramda";
 import { Bridge } from "../../script/bridge";
 import { TextSpeicalEffect, CardText, BattleBonus } from "../define/CardText";
 import { Effect } from "../define/Effect";
 import { TargetMissingError, TipError } from "../define/GameError";
-import { Tip } from "../define/Tip";
+import { GlobalEffect } from "../define/GlobalEffect";
+import { StrBaSyouPair, Tip } from "../define/Tip";
 import { getCardTexts } from "./card";
 import { GameState } from "./GameState";
+import { getGlobalEffects, setGlobalEffects } from "./globalEffects";
 
-export function createTextsFromSpecialEffect(ctx: GameState, text: CardText): CardText[] {
+// 這個函式裡不能使用getGlobalEffects, 只能用參數的方式帶入
+// 因為getGlobalEffects中也使用了這個函式，會造成無限循環
+export function createTextsFromSpecialEffect(ctx: GameState, cardId: string, text: CardText, options?: { ges: GlobalEffect[] }): CardText[] {
     if (text.title[0] != "特殊型") {
         throw new Error(`text not 特殊型`)
     }
@@ -303,6 +308,12 @@ export function createTextsFromSpecialEffect(ctx: GameState, text: CardText): Ca
         }
         case "サイコミュ": {
             const [_, x] = specialEffect
+            const addCardIds = (options?.ges?.flatMap(ge => {
+                if (ge.title[0] == "_ユニットは、「サイコミュ」の効果において、交戦中として扱う。" && ge.cardIds.includes(cardId)) {
+                    return ge.title[1]
+                }
+                return []
+            }) || [])
             return [
                 {
                     id: text.id,
@@ -311,7 +322,26 @@ export function createTextsFromSpecialEffect(ctx: GameState, text: CardText): Ca
                     conditions: {
                         ...text.conditions,
                         "交戰中的敵軍機體1張": {
-                            title: ["_交戦中の_自軍_ユニット_１枚", "交戦中", "敵軍", "ユニット", 1]
+                            title: function _(ctx: GameState, effect: Effect, { GameStateFn, DefineFn }: Bridge): Tip | null {
+                                const { addCardIds }: { addCardIds: string[] | null } = { addCardIds: null } as any
+                                if (addCardIds == null) {
+                                    throw new Error(`addCardIds must replace`)
+                                }
+                                const cardId = DefineFn.EffectFn.getCardID(effect)
+                                const tip = GameStateFn.createTipByEntitySearch(ctx, cardId, {
+                                    isBattle: true,
+                                    side: "敵軍",
+                                    is: ["ユニット"],
+                                    count: 1
+                                })
+                                let wants = DefineFn.TipFn.getWant(tip) as StrBaSyouPair[]
+                                wants = [...wants, ...(addCardIds.map(itemId => GameStateFn.createStrBaSyouPair(ctx, itemId)))]
+                                wants = dropRepeatsBy(pair => pair[0], wants)
+                                return {
+                                    title: ["カード", wants, wants.slice(0, 1)],
+                                    count: 1
+                                }
+                            }.toString().replace("{ addCardIds: [] }", JSON.stringify({ addCardIds: addCardIds }))
                         },
                         "同區中有NT才能使用": {
                             actions: [
@@ -321,7 +351,7 @@ export function createTextsFromSpecialEffect(ctx: GameState, text: CardText): Ca
                                         const from = GameStateFn.getItemBaSyou(ctx, cardId)
                                         const hasNT = GameStateFn.getItemIdsByBasyou(ctx, from).filter(itemId => GameStateFn.getItemCharacteristic(ctx, itemId).indexOf("NT")).length > 0
                                         if (hasNT == false) {
-                                            throw new Error(`no NT in the same area`)
+                                            throw new TipError(`no NT in the same area`)
                                         }
                                         return ctx
                                     }.toString()
@@ -348,6 +378,7 @@ export function createTextsFromSpecialEffect(ctx: GameState, text: CardText): Ca
         }
         case "範囲兵器": {
             const [_, x] = specialEffect
+            const hasCase1 = (options?.ges?.filter(ge => ge.title[0] == "「範囲兵器」の対象部分は、『X以下の防御力を持つ敵軍ユニット１枚』に変更される" && ge.cardIds.includes(cardId)) || []).length > 0
             return [
                 {
                     id: text.id,
@@ -357,7 +388,7 @@ export function createTextsFromSpecialEffect(ctx: GameState, text: CardText): Ca
                         ...text.conditions,
                         "這張卡交戰的防禦力x以下的敵軍機體1張": {
                             title: ["Entity", {
-                                isBattleWithThis: true,
+                                isBattleWithThis: hasCase1 ? undefined : true,
                                 compareBattlePoint: ["防御力", "<=", x],
                                 isDestroy: false,
                                 side: "敵軍",

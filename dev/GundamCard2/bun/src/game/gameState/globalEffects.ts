@@ -89,7 +89,7 @@ export function createAllCardTexts(ctx: GameState, situation: Situation | null):
       const proto = getItemPrototype(ctx, item.id)
       let texts = (proto.texts || []).flatMap(text => {
         if (text.title[0] == "特殊型") {
-          return createTextsFromSpecialEffect(ctx, text)
+          return createTextsFromSpecialEffect(ctx, item.id, text)
         }
         return [text]
       })
@@ -108,7 +108,7 @@ export function createAllCardTexts(ctx: GameState, situation: Situation | null):
       const proto = getItemPrototype(ctx, item.id)
       let texts = (proto.texts || []).flatMap(text => {
         if (text.title[0] == "特殊型") {
-          return createTextsFromSpecialEffect(ctx, text)
+          return createTextsFromSpecialEffect(ctx, item.id, text)
         }
         return [text]
       })
@@ -127,7 +127,7 @@ export function createAllCardTexts(ctx: GameState, situation: Situation | null):
       const proto = getItemPrototype(ctx, item.id)
       let texts = (proto.texts || []).flatMap(text => {
         if (text.protectLevel == 2 && text.title[0] == "特殊型") {
-          return createTextsFromSpecialEffect(ctx, text)
+          return createTextsFromSpecialEffect(ctx, item.id, text)
         }
         return [text]
       })
@@ -176,7 +176,7 @@ export function createAllCardTexts(ctx: GameState, situation: Situation | null):
     .map(ge => [ge.cardIds, ge.title[1]] as [string[], CardText])
     .flatMap(([itemIds, text]) => {
       return itemIds.flatMap(itemId => {
-        const texts = text.title[0] == "特殊型" ? createTextsFromSpecialEffect(ctx, text) : [text]
+        const texts = text.title[0] == "特殊型" ? createTextsFromSpecialEffect(ctx, itemId, text) : [text]
         return [[getItem(ctx, itemId), texts]] as [Item, CardText[]][]
       })
     })
@@ -186,7 +186,7 @@ export function createAllCardTexts(ctx: GameState, situation: Situation | null):
     .flatMap(([itemIds, textRef]) => {
       return itemIds.flatMap(itemId => {
         const text = getCardTextFromCardTextRef(ctx, textRef)
-        const texts = text.title[0] == "特殊型" ? createTextsFromSpecialEffect(ctx, text) : [text]
+        const texts = text.title[0] == "特殊型" ? createTextsFromSpecialEffect(ctx, itemId, text) : [text]
         return [[getItem(ctx, itemId), texts]] as [Item, CardText[]][]
       })
     })

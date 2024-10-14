@@ -20,6 +20,8 @@ export type GlobalEffectTitle =
     | ["このカードと交戦中の敵軍部隊の部隊戦闘力を_－３する", number]
     | ["_白のGサインを持つ_自軍_Gとして扱う事ができる", CardColor[], RelatedPlayerSideKeyword, CardCategory]
     | ["このカードが受ける全ての_通常ダメージは、_２減殺される", DamageTypeKeyword, number]
+    | ["「範囲兵器」の対象部分は、『X以下の防御力を持つ敵軍ユニット１枚』に変更される"]
+    | ["_ユニットは、「サイコミュ」の効果において、交戦中として扱う。", string[]]
 
 export type GlobalEffect = {
     title: GlobalEffectTitle,
