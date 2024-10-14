@@ -42,18 +42,7 @@ export function doEffect(
       const actionFn = createActionTitleFn(action)
       ctx = actionFn(ctx, effect, bridge)
       EventCenterFn.onActionEnd(ctx, effect, action)
-      //ctx = clearGlobalEffects(ctx)
     }
-    // if (condition.actions) {
-    //   for (const action of condition.actions) {
-    //     if (action.vars) {
-    //       for (const name of action.vars) {
-    //         log("doEffect", "clearTip", name)
-    //         ctx = mapItemState(ctx, cardId, is => ItemStateFn.clearTip(is, name)) as GameState
-    //       }
-    //     }
-    //   }
-    // }
   })
   const lta = CardTextFn.getLogicTreeAction(effect.text, logicId)
   for (const action of LogicTreeActionFn.getActions(lta)) {
@@ -61,16 +50,7 @@ export function doEffect(
     const actionFn = createActionTitleFn(action)
     ctx = actionFn(ctx, effect, bridge)
     EventCenterFn.onActionEnd(ctx, effect, action)
-    //ctx = clearGlobalEffects(ctx)
   }
-  // for (const action of lta.actions) {
-  //   if (action.vars) {
-  //     for (const name of action.vars) {
-  //       log("doEffect", "clearTip", name)
-  //       ctx = mapItemState(ctx, cardId, is => ItemStateFn.clearTip(is, name)) as GameState
-  //     }
-  //   }
-  // }
   ctx = EventCenterFn.onEffectEnd(ctx, effect)
   return ctx;
 }

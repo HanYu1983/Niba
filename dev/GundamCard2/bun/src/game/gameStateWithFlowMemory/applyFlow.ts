@@ -442,6 +442,7 @@ export function applyFlow(
         case "FlowMakeDestroyOrder": {
             // 移除破壞效果，全部移到堆疊
             ctx = doCutInDestroyEffectsAndClear(ctx, flow.destroyEffect.map(i => i.id)) as GameStateWithFlowMemory
+            ctx = updateCommand(ctx) as GameStateWithFlowMemory
             return {
                 ...ctx,
                 // 重設切入旗標，讓玩家再次切入

@@ -52,6 +52,13 @@ export const prototype: CardPrototype = {
             title: ["_交戦中の_自軍_ユニット_１枚", null, "敵軍", "ユニット", 1]
           }, {})(ctx, effect, null)
         }.toString()
+      },
+      "このカードは交戦中の場合|または、このカードが非交戦中の場合": {
+        actions: [
+          {
+            title: ["このカードが_戦闘エリアにいる場合", ["戦闘エリア1", "戦闘エリア2"]]
+          }
+        ]
       }
     },
     logicTreeActions: [

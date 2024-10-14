@@ -170,7 +170,7 @@ export function thinkVer1(ctx: GameStateWithFlowMemory, playerId: PlayerID, flow
   })
   const myHand = getPlayerHandIds(ctx, playerId)
   if (mygs.length >= 6 && myHand.length <= 2) {
-    const flow = flows.find(flow => flow.id == "FlowNextTiming")
+    const flow = flows.find(flow => flow.id == "FlowPassCut")
     if (flow) {
       return flow
     }
