@@ -32,15 +32,15 @@ export const prototype: CardPrototype = {
       },
       onSituation: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GlobalEffect[] {
         const cardId = DefineFn.EffectFn.getCardID(effect)
-        const pairs = DefineFn.TipFn.getWant(GameStateFn.createTipByEntitySearch(ctx, cardId, {
-          at: ["戦闘エリア1", "戦闘エリア2"],
-          side: "自軍",
-          is: ["ユニット"],
-          max: 50,
-          asMuchAsPossible: true,
-        })) as StrBaSyouPair[]
-        const targets = GameStateFn.getCardTipStrBaSyouPairs(ctx, "敵軍ユニット１枚", cardId)
         if (GameStateFn.getItemState(ctx, cardId).textIdsUseThisTurn?.includes(effect.text.id)) {
+          const targets = GameStateFn.getCardTipStrBaSyouPairs(ctx, "敵軍ユニット１枚", cardId)
+          const pairs = DefineFn.TipFn.getWant(GameStateFn.createTipByEntitySearch(ctx, cardId, {
+            at: ["戦闘エリア1", "戦闘エリア2"],
+            side: "自軍",
+            is: ["ユニット"],
+            max: 50,
+            asMuchAsPossible: true,
+          })) as StrBaSyouPair[]
           return [{ title: ["_ユニットは、「サイコミュ」の効果において、交戦中として扱う。", targets.map(pair => pair[0])], cardIds: pairs.map(pair => pair[0]) }]
         }
         return []

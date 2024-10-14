@@ -32,15 +32,15 @@ export const prototype: CardPrototype = {
       },
       onSituation: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GlobalEffect[] {
         const cardId = DefineFn.EffectFn.getCardID(effect)
-        const pairs = DefineFn.TipFn.getWant(GameStateFn.createTipByEntitySearch(ctx, cardId, {
-          atBa: true,
-          side: "自軍",
-          is: ["ユニット"],
-          max: 50,
-          asMuchAsPossible: true,
-        })) as StrBaSyouPair[]
         if (GameStateFn.getItemState(ctx, cardId).textIdsUseThisTurn?.includes(effect.text.id)) {
-          return [{ title: ["「範囲兵器」の対象部分は、『X以下の防御力を持つ敵軍ユニット１枚』に変更される", ], cardIds: pairs.map(pair => pair[0]) }]
+          const pairs = DefineFn.TipFn.getWant(GameStateFn.createTipByEntitySearch(ctx, cardId, {
+            atBa: true,
+            side: "自軍",
+            is: ["ユニット"],
+            max: 50,
+            asMuchAsPossible: true,
+          })) as StrBaSyouPair[]
+          return [{ title: ["「範囲兵器」の対象部分は、『X以下の防御力を持つ敵軍ユニット１枚』に変更される",], cardIds: pairs.map(pair => pair[0]) }]
         }
         return []
       }.toString(),

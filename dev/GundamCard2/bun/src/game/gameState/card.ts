@@ -43,7 +43,7 @@ export function getCardSpecialText(ctx: GameState, cardID: string, text: CardTex
       return {
         ...text,
         title: title,
-        description: JSON.stringify(title[1]),
+        description: `${text.description} => ${JSON.stringify(title[1])}`,
       }
     }
     default:

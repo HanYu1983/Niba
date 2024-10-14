@@ -21,7 +21,7 @@ export const prototype: CardPrototype = {
       const evt = DefineFn.EffectFn.getEvent(effect)
       const cardId = DefineFn.EffectFn.getCardID(effect)
       const cardController = GameStateFn.getItemController(ctx, cardId)
-      if (evt.title[0] == "場に出た場合" && evt.cardIds?.includes(cardId)) {
+      if (evt.title[0] == "このカードが場に出た場合" && evt.cardIds?.includes(cardId)) {
         const newE = GameStateFn.createPlayTextEffectFromEffect(ctx, effect, {
           conditions: {
             "４以下の合計国力を持つ、敵軍キャラ": {

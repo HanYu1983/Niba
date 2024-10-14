@@ -10,7 +10,7 @@ export type GameEventTitle =
     | ["GameEventOnTiming", Phase]
     | ["GameEventOnMove", AbsoluteBaSyou, AbsoluteBaSyou]
     | ["カット終了時", Effect[]]
-    | ["場に出た場合"]  // このカードが場に出た場合
+    | ["このカードが場に出た場合"]  // このカードが場に出た場合
     | ["プレイされて場に出た場合"]
     | ["プレイされて場にセットされた場合"]
     | ["戦闘ダメージを受けた場合", {isNotRule?: boolean}]

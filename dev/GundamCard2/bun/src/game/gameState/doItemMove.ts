@@ -83,7 +83,7 @@ export function onMoveItem(ctx: GameState, to: AbsoluteBaSyou, [cardId, from]: S
             }
         }) as GameState
         ctx = doTriggerEvent(ctx, {
-            title: ["場に出た場合"],
+            title: ["このカードが場に出た場合"],
             cardIds: [cardId]
         } as GameEvent)
     }

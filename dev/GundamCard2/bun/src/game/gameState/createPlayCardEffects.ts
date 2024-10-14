@@ -388,9 +388,6 @@ export function createPlayCommandText(ctx: GameState, cardId: string): Effect {
         throw new Error()
     }
     const commandText = prototype.commandText
-    if (commandText == null) {
-        throw new Error()
-    }
     const conditions = createPlayCardConditions(ctx, cardId)
     const description = `Play ${prototype.title}`
     const logicLeafs: LogicTree[] = Object.keys(conditions).map(k => {
@@ -402,13 +399,13 @@ export function createPlayCommandText(ctx: GameState, cardId: string): Effect {
     })
     const logicTree: LogicTree = {
         type: "And",
-        children: commandText.logicTreeActions?.[0] ?
+        children: commandText?.logicTreeActions?.[0] ?
             [...logicLeafs, ...CardTextFn.getLogicTreeTreeLeafs(commandText, commandText.logicTreeActions[0])] :
             logicLeafs
     }
     const playCardEffect: CardText = {
-        id: commandText.id || `createPlayCommandText_${cardId}`,
-        title: commandText.title || ["使用型", ["自軍", "配備フェイズ"]],
+        id: commandText?.id || `createPlayCommandText_${cardId}`,
+        title: commandText?.title || ["使用型", ["自軍", "配備フェイズ"]],
         description: description,
         conditions: {
             ...conditions,
@@ -428,9 +425,6 @@ export function createPlayCommandText(ctx: GameState, cardId: string): Effect {
                                 throw new Error()
                             }
                             const commandText = prototype.commandText
-                            if (commandText == null) {
-                                throw new Error()
-                            }
                             const from = GameStateFn.getItemBaSyou(ctx, cardId)
                             ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "プレイされているカード"), [cardId, from]) as GameState
                             return GameStateFn.addStackEffect(ctx, {
@@ -438,8 +432,8 @@ export function createPlayCommandText(ctx: GameState, cardId: string): Effect {
                                 reason: ["場に出る", DefineFn.EffectFn.getPlayerID(effect), DefineFn.EffectFn.getCardID(effect)],
                                 description: effect.text.description,
                                 text: {
-                                    id: commandText.id || `getPlayCardEffects_commentText_${cardId}`,
-                                    description: commandText.description || "unknown",
+                                    id: commandText?.id || `getPlayCardEffects_commentText_${cardId}`,
+                                    description: commandText?.description || "unknown",
                                     title: [],
                                     logicTreeActions: [
                                         {
@@ -454,7 +448,7 @@ export function createPlayCommandText(ctx: GameState, cardId: string): Effect {
                                                         return ctx
                                                     }.toString()
                                                 },
-                                                ...(commandText.logicTreeActions?.[0]?.actions || [])
+                                                ...(commandText?.logicTreeActions?.[0]?.actions || [])
                                             ]
                                         },
                                     ]

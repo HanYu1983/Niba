@@ -162,7 +162,6 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
               title = ["特殊型", [titlestr, num]]
               break
             }
-            case "ゲイン":
             case "改装":
             case "共有":
             case "クロスウェポン":
@@ -176,7 +175,7 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
             id: "",
             title: title,
             isEachTime: every == "毎",
-            description: `〔${colorstr}${rollcoststr}${every}〕${titlestr}[${char}]`,
+            description: `〔${colorstr}${rollcoststr}${every}〕${titlestr}[${char || ""}]`,
             conditions: conditions
           }
           texts.push(text)

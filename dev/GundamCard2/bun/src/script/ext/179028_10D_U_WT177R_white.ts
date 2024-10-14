@@ -47,7 +47,7 @@ export const prototype: CardPrototype = {
       onEvent: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
         const event = DefineFn.EffectFn.getEvent(effect)
         const cardId = DefineFn.EffectFn.getCardID(effect)
-        if (event.title[0] == "場に出た場合" && event.cardIds?.includes(cardId)) {
+        if (event.title[0] == "このカードが場に出た場合" && event.cardIds?.includes(cardId)) {
           ctx = GameStateFn.doItemSetGlobalEffectsUntilEndOfTurn(ctx,
             [
               {

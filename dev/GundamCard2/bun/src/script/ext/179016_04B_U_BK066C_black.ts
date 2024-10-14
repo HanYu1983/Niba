@@ -21,7 +21,7 @@ export const prototype: CardPrototype = {
       onEvent: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
         const cardId = DefineFn.EffectFn.getCardID(effect)
         const evt = DefineFn.EffectFn.getEvent(effect)
-        if (evt.title[0] == "場に出た場合" && evt.cardIds?.includes(cardId)) {
+        if (evt.title[0] == "このカードが場に出た場合" && evt.cardIds?.includes(cardId)) {
           const cardId = DefineFn.EffectFn.getCardID(effect)
           const cardProto = GameStateFn.getItemPrototype(ctx, cardId)
           const payColorKey = DefineFn.TipFn.createConditionKeyOfPayColorX(cardProto)

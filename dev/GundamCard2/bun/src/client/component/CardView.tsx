@@ -128,12 +128,13 @@ export const CardView = (props: {
         texts.map((text, i) => {
           return <div key={i}>
             <div style={{ border: "1px solid black" }}>{
-              /*text.title[0] == "特殊型" ? JSON.stringify(text.title[1]) : */text.description
+              text.description
             }</div>
           </div>
         })
       }
       <div>{proto.characteristic}</div>
+      <div>{JSON.stringify(proto.battleArea)}</div>
       <div style={{ color: "grey" }}>{proto.description}</div>
     </div>
   }, [appContext.viewModel.model.gameState, props.cardID, props.isShowInfo])
