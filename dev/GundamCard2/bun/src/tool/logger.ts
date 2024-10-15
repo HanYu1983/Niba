@@ -19,7 +19,7 @@ const hideCategory: string[] = [
   "addImmediateEffectIfCanPayCost",
   "doItemSetRollState",
   "doActiveEffect",
-  "testCompress",
+  //"testCompress",
   "createPlayerScore",
   "AppContextProvider",
   "OnClickFlowConfirm",

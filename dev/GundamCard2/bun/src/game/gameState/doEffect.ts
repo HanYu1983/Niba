@@ -277,7 +277,7 @@ export function createCommandEffectTips(ctx: GameState, effect: Effect): Command
     })
     return testedEffects
   }
-  throw new Error(`effect.text.logicTreeActions not found: ${effect.text.description}`)
+  return []
 }
 
 export function getCardTipSelection(ctx: GameState, varName: string, cardId: string, options?: { assertTitle?: TipTitle }) {

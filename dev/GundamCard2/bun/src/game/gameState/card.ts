@@ -18,8 +18,11 @@ import { logCategory } from "../../tool/logger"
 
 export function getCardTextFromCardTextRef(ctx: ItemTableComponent, textRef: TipTitleTextRef): CardText {
   const { cardId, textId } = textRef
-  const text = getItemPrototype(ctx, cardId).texts?.find(text => text.id == textId)
+  const proto = getItemPrototype(ctx, cardId)
+  const text = proto.texts?.find(text => text.id == textId)
   if (text == null) {
+    console.log(proto)
+    console.log(textRef)
     throw new Error(`textRef not found: ${cardId} => ${textId}`)
   }
   return text
