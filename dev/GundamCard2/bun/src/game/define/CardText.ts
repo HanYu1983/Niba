@@ -88,6 +88,7 @@ export const ActionFn = {
 export type EntitySearchOptions = {
     isThisBattleGroup?: boolean,
     isThisCard?: boolean,
+    isThisSetGroup?: boolean,
     isBattle?: boolean,
     isBattleWithThis?: boolean,
     side?: RelatedPlayerSideKeyword,
@@ -228,6 +229,10 @@ export type OnEventTitle =
 
 export type CreatePlayEffectFn = (ctx: any, effect: Effect, bridge: any) => Effect[]
 
+export type TestEnv = {
+    basicCards?: [RelatedPlayerSideKeyword, BaSyouKeyword, [string, number][]][]
+}
+
 export type CardText = {
     id: string,
     title: TextTitle,
@@ -239,7 +244,8 @@ export type CardText = {
     // 1為非G時不能被洗，2為G時也不能被洗
     protectLevel?: 1 | 2,
     isEachTime?: boolean,
-    createPlayEffect?: string
+    createPlayEffect?: string,
+    testEnv?: TestEnv
 }
 
 function getCondition(ctx: CardText, conditionId: string): Condition {

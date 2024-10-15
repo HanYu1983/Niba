@@ -87,8 +87,8 @@ export function createTipByEntitySearch(ctx: GameState, cardId: string, options:
         entityList = entityList.filter(EntityFn.filterIsBattle(ctx, cardId, options.isBattleWithThis))
     }
     const cheatCardIds: string[] = []
-    if (options.isThisCard) {
-        entityList = entityList.filter(entity => entity.itemId == cardId)
+    if (options.isThisCard != null) {
+        entityList = entityList.filter(entity => (entity.itemId == cardId) == options.isThisCard)
     }
     if (options.isBattleGroupFirst) {
         const basyou = getItemBaSyou(ctx, cardId)
@@ -103,11 +103,15 @@ export function createTipByEntitySearch(ctx: GameState, cardId: string, options:
             entityList = []
         }
     }
-    if (options.isThisBattleGroup) {
+    if (options.isThisSetGroup != null) {
+        const setGroupIds = getSetGroup(ctx, cardId)
+        entityList = entityList.filter(entity => setGroupIds.includes(entity.itemId) == options.isThisSetGroup)
+    }
+    if (options.isThisBattleGroup != null) {
         const basyou = getItemBaSyou(ctx, cardId)
         if (basyou.value[1] == "戦闘エリア1" || basyou.value[1] == "戦闘エリア2") {
             const battleGroupIds = getBattleGroup(ctx, getItemBaSyou(ctx, cardId))
-            entityList = entityList.filter(entity => battleGroupIds.includes(entity.itemId))
+            entityList = entityList.filter(entity => battleGroupIds.includes(entity.itemId) == options.isThisBattleGroup)
         } else {
             // 如果沒在戰區無法組成部隊
             entityList = []
@@ -115,8 +119,7 @@ export function createTipByEntitySearch(ctx: GameState, cardId: string, options:
     }
     if (options.hasSelfCardId != null) {
         const absoluteBasyou = getItemBaSyou(ctx, cardId)
-        entityList = entityList.filter(EntityFn.filterController(AbsoluteBaSyouFn.getPlayerID(absoluteBasyou)))
-        entityList = entityList.filter(EntityFn.filterAtBaSyous([AbsoluteBaSyouFn.getBaSyouKeyword(absoluteBasyou)]))
+        entityList = entityList.filter(entity => (entity.itemController == absoluteBasyou.value[0] && entity.baSyouKeyword == absoluteBasyou.value[1]) == options.hasSelfCardId)
     }
     if (options.see) {
         const [basyou, min, max] = options.see
@@ -136,8 +139,6 @@ export function createTipByEntitySearch(ctx: GameState, cardId: string, options:
     }
     if (options.isCanSetCharacter != null) {
         entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx, true)).filter(EntityFn.filterCanSetCharacter(ctx))
-    } else if (options.is?.includes("ユニット")) {
-        entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx, true))
     } else if (options.isSetGroup != null) {
         entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx, options.isSetGroup))
     }
@@ -222,6 +223,9 @@ export function createTipByEntitySearch(ctx: GameState, cardId: string, options:
         entityList = entityList.filter(EntityFn.filterHasChar(ctx, options.hasChar))
     }
     if (options.hasGSignProperty) {
+        if (options.hasGSignProperty.length == 0) {
+            options.hasGSignProperty.push(getCardGSignProperty(ctx, cardId))
+        }
         entityList = entityList.filter(entity => isCardLike(ctx)(entity.itemId) && options.hasGSignProperty?.includes(getCardGSignProperty(ctx, entity.itemId)))
     }
     if (options.hasDamage) {
