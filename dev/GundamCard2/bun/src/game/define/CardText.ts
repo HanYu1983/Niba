@@ -3,7 +3,7 @@ import { RelatedPlayerSideKeyword, UnitPropertyKeyword } from ".";
 import { LogicTree, LogicTreeFn } from "../../tool/logicTree";
 import { AbsoluteBaSyou, BaSyou, BaSyouKeyword } from "./BaSyou";
 import { CardColor, CardCategory, GSignProperty } from "./CardPrototype";
-import { Effect } from "./Effect";
+import { DestroyReason, Effect } from "./Effect";
 import { GameEvent, GameEventTitle } from "./GameEvent";
 import { GlobalEffect } from "./GlobalEffect";
 import { Phase, SiYouTiming } from "./Timing";
@@ -11,6 +11,7 @@ import { StrBaSyouPair, Tip, TipFn } from "./Tip";
 import { PlayerID } from "./PlayerID";
 import { logCategory } from "../../tool/logger";
 import { Card } from "./Card";
+import { ItemState } from "./ItemState";
 
 export type BattleBonus = [number, number, number]
 
@@ -233,7 +234,7 @@ export type CreatePlayEffectFn = (ctx: any, effect: Effect, bridge: any) => Effe
 
 export type TestEnv = {
     eventTitle?: GameEventTitle,
-    thisCard?: [RelatedPlayerSideKeyword, BaSyouKeyword, Card],
+    thisCard?: [RelatedPlayerSideKeyword, BaSyouKeyword, Card, { destroyReason?: DestroyReason } | null],
     cards?: [RelatedPlayerSideKeyword, BaSyouKeyword, Card[]][]
     basicCards?: [RelatedPlayerSideKeyword, BaSyouKeyword, [string, number][]][]
 }

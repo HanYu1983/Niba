@@ -72,6 +72,9 @@ export function doItemSetDestroy(ctx: GameState, reason: DestroyReason | null, [
                 }) as GameState
                 // 先將效果放入破壞陣列(destroyEffects)，會在流程中將破壞陣列切入到堆疊中(stackEffects)
                 ctx = addDestroyEffect(ctx, createDestroyEffect(ctx, reason, setGroupId)) as GameState
+                if (setGroupId != itemId) {
+                    ctx = doTriggerEvent(ctx, { title: ["このカードのセットグループのユニットが破壊された場合"], cardIds: [setGroupId] })
+                }
             } else {
                 // if (isDestroyEffect) {
                 // 略過マイナスの戦闘修正，不能破壞無效，但因為在子樹裡，不必理會這種情況

@@ -14,6 +14,7 @@ import { logCategory } from "../../tool/logger";
 import { GameEvent } from "../define/GameEvent";
 import { doTriggerEvent } from "./doTriggerEvent";
 import { CommandEffecTipFn } from "../define/CommandEffectTip";
+import { mapItemState, setItemState } from "./ItemStateComponent";
 
 export async function testAllCardTextTestEnv() {
   const all = createDecks().flatMap(v => v).concat(...["unit", "unitHasPhy", "charBlue"])
@@ -29,9 +30,12 @@ export async function testAllCardTextTestEnv() {
         ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "手札"), [proto.id || "unknown"]) as GameState
         ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), repeat(proto.id || "unknown", 9)) as GameState
         if (testEnv.thisCard) {
-          const [side, kw, card] = testEnv.thisCard
+          const [side, kw, card, state] = testEnv.thisCard
           card.id = "TestCard"
           ctx = addCards(ctx, AbsoluteBaSyouFn.of(side == "自軍" ? PlayerA : PlayerB, kw), [card]) as GameState
+          if (state) {
+            ctx = mapItemState(ctx, card.id, is => ({ ...is, ...state })) as GameState
+          }
         }
         if (testEnv.cards) {
           for (const [side, kw, cards] of testEnv.cards) {
@@ -96,9 +100,12 @@ export async function testAllCardTextTestEnv() {
           let ctx = createGameState()
           ctx = setActivePlayerID(ctx, PlayerA) as GameState
           if (testEnv.thisCard) {
-            const [side, kw, card] = testEnv.thisCard
+            const [side, kw, card, state] = testEnv.thisCard
             card.id = "TestCard"
             ctx = addCards(ctx, AbsoluteBaSyouFn.of(side == "自軍" ? PlayerA : PlayerB, kw), [card]) as GameState
+            if (state) {
+              ctx = mapItemState(ctx, card.id, is => ({ ...is, ...state })) as GameState
+            }
           }
           if (testEnv.cards) {
             for (const [side, kw, cards] of testEnv.cards) {

@@ -26,7 +26,7 @@ export const prototype: CardPrototype = {
         if (
           event.title[0] == "解決直後" &&
           event.effect != null &&
-          event.effect.text.id == "179030_11E_C_BL079R_blue__2" &&
+          event.effect.text.id == "179030_11E_C_GN074R_green__2" &&
           DefineFn.EffectFn.getCardID(event.effect) == cardId
         ) {
           const newE = GameStateFn.createPlayTextEffectFromEffect(ctx, effect, {
@@ -39,7 +39,6 @@ export const prototype: CardPrototype = {
                   side: "自軍",
                   count: 1
                 }]
-                //title2: ["_本来の記述に｢特徴：_装弾｣を持つ_自軍_G_１枚", true, "装弾", "自軍", "グラフィック", 1],
               },
             },
             logicTreeAction: {
@@ -61,7 +60,7 @@ export const prototype: CardPrototype = {
     }
   ],
   commandText: {
-    id: "",
+    id: "179030_11E_C_GN074R_green__2",
     description: "（戦闘フェイズ）：ロール状態の敵軍ユニット１枚を、持ち主の手札に移す。",
     title: ["使用型", ["戦闘フェイズ"]],
     testEnvs: [
@@ -90,6 +89,9 @@ export const prototype: CardPrototype = {
               {
                 title: ["_の_ハンガーに移す", "持ち主", "手札"],
                 vars: ["ロール状態の敵軍ユニット１枚"]
+              },
+              {
+                title: ["triggerEvent", {title: ["解決直後"]}]
               }
             ]]
           }

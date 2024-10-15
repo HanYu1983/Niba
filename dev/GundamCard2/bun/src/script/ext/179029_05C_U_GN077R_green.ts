@@ -20,7 +20,7 @@ export const prototype: CardPrototype = {
       title: ["自動型", "起動"],
       testEnvs: [{
         eventTitle: ["このカードが場に出た場合"],
-        thisCard: ["自軍", "配備エリア", { id: "", protoID: "179029_05C_U_GN077R_green" }],
+        thisCard: ["自軍", "配備エリア", { id: "", protoID: "179029_05C_U_GN077R_green" }, null],
         basicCards: [
           ["敵軍", "戦闘エリア1", [["unit", 1]]]
         ]

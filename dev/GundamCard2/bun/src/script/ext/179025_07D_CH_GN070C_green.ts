@@ -20,7 +20,7 @@ export const prototype: CardPrototype = {
       description: "『起動』：このカードが場に出た場合、敵軍手札を全て見る。",
       title: ["自動型", "起動"],
       testEnvs: [{
-        thisCard: ["自軍", "配備エリア", { id: "", protoID: "179025_07D_CH_GN070C_green" }],
+        thisCard: ["自軍", "配備エリア", { id: "", protoID: "179025_07D_CH_GN070C_green" }, null],
         eventTitle: ["このカードが場に出た場合"]
       }],
       onEvent: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
