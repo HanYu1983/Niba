@@ -17,6 +17,13 @@ export const prototype: CardPrototype = {
       id: "",
       description: "『起動』：このカードが場に出た場合、セットカードがセットされていない、Ｇ以外の敵軍カード１枚を、持ち主の手札に移すことが出来る。",
       title: ["自動型", "起動"],
+      testEnv: {
+        eventTitle: ["このカードが場に出た場合"],
+        thisCard: ["自軍", "配備エリア", { id: "", protoID: "179015_04B_U_GN053U_green" }],
+        basicCards: [
+          ["敵軍", "戦闘エリア1", [["unit", 1]]]
+        ]
+      },
       onEvent: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
         const event = DefineFn.EffectFn.getEvent(effect)
         const cardId = DefineFn.EffectFn.getCardID(effect)
