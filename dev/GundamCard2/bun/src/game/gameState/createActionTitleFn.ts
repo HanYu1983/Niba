@@ -32,6 +32,7 @@ import { doBattleDamage, doRuleBattleDamage } from "./player"
 import { getBattleGroup } from "./battleGroup"
 import { isBattle } from "./IsBattleComponent"
 import { getGlobalEffects, setGlobalEffects } from "./globalEffects"
+import { Bridge } from "../../script/bridge"
 
 export function createPlayerIdFromRelated(ctx: GameState, cardId: string, re: RelatedPlayerSideKeyword): PlayerID {
   switch (re) {
@@ -51,7 +52,7 @@ export function createAbsoluteBaSyouFromBaSyou(ctx: GameState, cardId: string, r
   return AbsoluteBaSyouFn.of(createPlayerIdFromRelated(ctx, cardId, re.value[0]), re.value[1])
 }
 
-export function createActionTitleFn(action: Action, options: { ges?: GlobalEffect[] }): ActionTitleFn {
+export function createActionTitleFn(action: Action): ActionTitleFn {
   if (typeof action.title == "string") {
     return ActionFn.getTitleFn(action)
   }
@@ -103,8 +104,8 @@ export function createActionTitleFn(action: Action, options: { ges?: GlobalEffec
       if ([actionOptions.max, actionOptions.min, actionOptions.count].every(v => v == null)) {
         throw new Error(`Entity search must has one of min, max, count`)
       }
-      return function (ctx: GameState, effect: Effect): GameState {
-        const tip = createTipByEntitySearch(ctx, effect, actionOptions, { ges: options.ges })
+      return function (ctx: GameState, effect: Effect, { Options }: Bridge): GameState {
+        const tip = createTipByEntitySearch(ctx, effect, actionOptions, { ges: Options.ges })
         const error = TipFn.createTipErrorWhenCheckFail(tip)
         if (error) {
           throw error

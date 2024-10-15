@@ -43,14 +43,14 @@ export const prototype: CardPrototype = {
     conditions: {
       ...createRollCostRequire(1, null),
       "このカードが非交戦中の場合、敵軍ユニット１枚": {
-        title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip | null {
+        title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): Tip | null {
           const cardId = DefineFn.EffectFn.getCardID(effect)
           if (GameStateFn.isBattle(ctx, cardId, null)) {
             return null
           }
           return GameStateFn.createConditionTitleFn({
             title: ["_交戦中の_自軍_ユニット_１枚", null, "敵軍", "ユニット", 1]
-          }, {})(ctx, effect, null)
+          })(ctx, effect, { Options })
         }.toString()
       },
       "このカードは交戦中の場合|または、このカードが非交戦中の場合": {
@@ -84,7 +84,7 @@ export const prototype: CardPrototype = {
                         return GameStateFn.createActionTitleFn({
                           title: ["_－１／－１／－１コイン_１個を乗せる", [-1, -1, -1], 1],
                           vars: ["このカードが非交戦中の場合、敵軍ユニット１枚"]
-                        }, {ges: Options.ges})(ctx, effect, null)
+                        })(ctx, effect, { Options })
                       }.toString()
                     }
                   ]

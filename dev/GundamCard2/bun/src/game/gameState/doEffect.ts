@@ -42,7 +42,7 @@ export function doEffect(
       EventCenterFn.onActionStart(ctx, effect, action)
       const ges = getGlobalEffects(ctx, null)
       ctx = setGlobalEffects(ctx, null, ges)
-      const actionFn = createActionTitleFn(action, { ges: ges })
+      const actionFn = createActionTitleFn(action)
       ctx = actionFn(ctx, effect, createBridge({ ges: ges }))
       ctx = clearGlobalEffects(ctx)
       EventCenterFn.onActionEnd(ctx, effect, action)
@@ -54,7 +54,7 @@ export function doEffect(
     EventCenterFn.onActionStart(ctx, effect, action)
     const ges = getGlobalEffects(ctx, null)
     ctx = setGlobalEffects(ctx, null, ges)
-    const actionFn = createActionTitleFn(action, { ges: ges })
+    const actionFn = createActionTitleFn(action)
     ctx = actionFn(ctx, effect, createBridge({ ges: ges }))
     ctx = clearGlobalEffects(ctx)
     EventCenterFn.onActionEnd(ctx, effect, action)
@@ -114,7 +114,7 @@ export function createEffectTips(
     try {
       const ges = getGlobalEffects(ctx, null)
       ctx = setGlobalEffects(ctx, null, ges)
-      tip = createConditionTitleFn(con, { ges: ges })(ctx, effect, createBridge({ ges: ges }))
+      tip = createConditionTitleFn(con)(ctx, effect, createBridge({ ges: ges }))
       if ((tip as any)?.isGameState) {
         console.log(`快速檢查是不寫錯回傳成GameState, 應該要回傳Tip|null:`, key, con.title)
         throw new Error()
@@ -169,7 +169,7 @@ export function createEffectTips(
     }
     const ges = getGlobalEffects(ctx, null)
     ctx = setGlobalEffects(ctx, null, ges)
-    ctx = ConditionFn.getActionTitleFns(con, action => createActionTitleFn(action, { ges: ges })).reduce((ctx, fn): GameState => {
+    ctx = ConditionFn.getActionTitleFns(con, action => createActionTitleFn(action)).reduce((ctx, fn): GameState => {
       try {
         const ges = getGlobalEffects(ctx, null)
         ctx = setGlobalEffects(ctx, null, ges)

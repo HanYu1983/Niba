@@ -221,7 +221,7 @@ export function createTextsFromSpecialEffect(text: CardText, options: { ges?: Gl
                                                                         vars: ["這張卡在戰區的場合, 打開自軍本國上的1張卡"]
                                                                     }
                                                                 ]
-                                                            }, {})(ctx, effect, bridge)
+                                                            })(ctx, effect, bridge)
                                                         }
                                                         return null
                                                     }.toString(),
@@ -512,7 +512,7 @@ export function createTextsFromSpecialEffect(text: CardText, options: { ges?: Gl
                                 const gCount = GameStateFn.getItemIdsByBasyou(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "Gゾーン")).length
                                 return GameStateFn.createConditionTitleFn({
                                     title: ["打開自軍手裡或指定HANGER中特徵_A並合計國力_x以下的_1張卡", A, gCount, 1]
-                                }, {})(ctx, effect, bridge)
+                                })(ctx, effect, bridge)
                             }.toString().replace(`{ A: "" }`, JSON.stringify({ A: A })),
                         }
                     },

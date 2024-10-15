@@ -20,7 +20,7 @@ import { clearGlobalEffects, getGlobalEffects, setGlobalEffects } from "./global
 import { GlobalEffect } from "../define/GlobalEffect"
 import { Bridge } from "../../script/bridge"
 
-export function createConditionTitleFn(condition: Condition, options: { ges?: GlobalEffect[] }): ConditionTitleFn {
+export function createConditionTitleFn(condition: Condition): ConditionTitleFn {
     if (condition.title == null || typeof condition.title == "string") {
         return ConditionFn.getTitleFn(condition)
     }
@@ -292,7 +292,7 @@ export function createConditionTitleFn(condition: Condition, options: { ges?: Gl
         }
         case "這張卡交戰的防禦力_x以下的敵軍機體_1張": {
             const [_, x, count] = condition.title
-            return function (ctx: GameState, effect: Effect): Tip | null {
+            return function (ctx: GameState, effect: Effect, { Options }: Bridge): Tip | null {
                 const cardId = EffectFn.getCardID(effect)
                 if (AbsoluteBaSyouFn.getBaSyouKeyword(getItemBaSyou(ctx, cardId)) == "戦闘エリア1" || AbsoluteBaSyouFn.getBaSyouKeyword(getItemBaSyou(ctx, cardId)) == "戦闘エリア2") {
 
@@ -306,7 +306,7 @@ export function createConditionTitleFn(condition: Condition, options: { ges?: Gl
                 const targetIds = getItemIdsByBasyou(ctx, from)
                     .map(itemId => getSetGroupRoot(ctx, itemId))
                     .filter(itemId => {
-                        const [_, def, _2] = getSetGroupBattlePoint(ctx, itemId, { ges: options.ges })
+                        const [_, def, _2] = getSetGroupBattlePoint(ctx, itemId, { ges: Options.ges })
                         return def <= x
                     })
                 const pairs = targetIds.map(itemId => [itemId, from] as StrBaSyouPair)
@@ -337,7 +337,7 @@ export function createConditionTitleFn(condition: Condition, options: { ges?: Gl
         }
         case "RollColor": {
             const [_, color] = condition.title
-            return function (ctx: GameState, effect: Effect, {Options}:Bridge): Tip | null {
+            return function (ctx: GameState, effect: Effect, { Options }: Bridge): Tip | null {
                 const cardId = EffectFn.getCardID(effect)
                 const cardController = getItemController(ctx, cardId)
                 let situation: Situation = { title: ["ロールコストの支払いにおいて"] }
@@ -448,8 +448,8 @@ export function createConditionTitleFn(condition: Condition, options: { ges?: Gl
             if ([searchOptions.max, searchOptions.min, searchOptions.count].every(v => v == null)) {
                 throw new Error(`Entity search must has one of min, max, count`)
             }
-            return function (ctx: GameState, effect: Effect): Tip | null {
-                return createTipByEntitySearch(ctx, effect, searchOptions, { ges: options.ges })
+            return function (ctx: GameState, effect: Effect, { Options }: Bridge): Tip | null {
+                return createTipByEntitySearch(ctx, effect, searchOptions, { ges: Options.ges })
             }
         }
     }

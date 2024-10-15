@@ -1,3 +1,4 @@
+import { Bridge } from "../../script/bridge";
 import { CardText, OnEventFn, CardTextFn } from "../define/CardText";
 import { Effect, EffectFn } from "../define/Effect";
 import { GlobalEffect } from "../define/GlobalEffect";
@@ -12,10 +13,10 @@ export function createOnEventTitleFn(text: CardText, options: { ges?: GlobalEffe
   switch (text.onEvent[0]) {
     case "GameEventOnTimingDoAction": {
       const [_, timing, action] = text.onEvent;
-      return function (ctx: GameState, effect: Effect): GameState {
+      return function (ctx: GameState, effect: Effect, bridge: Bridge): GameState {
         const event = EffectFn.getEvent(effect)
         if (event.title[0] == "GameEventOnTiming" && PhaseFn.eq(event.title[1], timing)) {
-          return createActionTitleFn(action, { ges: options.ges })(ctx, effect, null)
+          return createActionTitleFn(action)(ctx, effect, bridge)
         }
         return ctx
       }
