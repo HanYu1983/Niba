@@ -62,7 +62,7 @@ export const prototype: CardPrototype = {
         if (situation != null) {
           return []
         }
-        const pairs = DefineFn.TipFn.getWant(GameStateFn.createTipByEntitySearch(ctx, cardId, {
+        const pairs = DefineFn.TipFn.getWant(GameStateFn.createTipByEntitySearch(ctx, effect, {
           at: ["戦闘エリア1", "戦闘エリア2", "配備エリア"],
           is: ["キャラクター"],
           side: "自軍",

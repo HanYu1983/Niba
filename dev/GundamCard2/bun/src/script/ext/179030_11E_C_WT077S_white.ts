@@ -23,7 +23,7 @@ export const prototype: CardPrototype = {
         if (situation != null) {
           return []
         }
-        const pairs = DefineFn.TipFn.getWant(GameStateFn.createTipByEntitySearch(ctx, cardId, {
+        const pairs = DefineFn.TipFn.getWant(GameStateFn.createTipByEntitySearch(ctx, effect, {
           at: DefineFn.BaSyouKeywordFn.getBaAll(),
           side: "敵軍",
           is: ["ユニット"],

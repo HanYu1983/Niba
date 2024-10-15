@@ -18,7 +18,7 @@ export const prototype: CardPrototype = {
         title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, ToolFn }: Bridge): Tip | null {
           const cardId = DefineFn.EffectFn.getCardID(effect)
           const count = GameStateFn.getCardTipStrBaSyouPairs(ctx, DefineFn.TipFn.createTotalCostKey(), cardId).length
-          return GameStateFn.createTipByEntitySearch(ctx, cardId, {
+          return GameStateFn.createTipByEntitySearch(ctx, effect, {
             atBa: true,
             side: "敵軍",
             is: ["ユニット"],

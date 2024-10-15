@@ -277,27 +277,6 @@ export function getItemIsCanRoll(ctx: GameState, itemId: string): boolean {
 }
 
 export function getCardIdsCanPayRollColor(ctx: GameState, situation: Situation | null, playerId: PlayerID, color: CardColor | null): { cardId: string, colors: CardColor[] }[] {
-  // return getGlobalEffects(ctx, situation).filter(ge => {
-  //   if (ge.cardIds.length == 0) {
-  //     return false
-  //   }
-  //   if (getItemController(ctx, ge.cardIds[0]) != playerId) {
-  //     return false
-  //   }
-  //   if (ge.title[0] == "發生國力") {
-  //     const gainColors = ge.title[1]
-  //     if (color == null) {
-  //       return true
-  //     }
-  //     switch (color) {
-  //       case "紫":
-  //         return true
-  //       default:
-  //         return gainColors.includes(color)
-  //     }
-  //   }
-  //   return false
-  // }).map(ge => ({ cardId: ge.cardIds[0], colors: ge.title[1] as CardColor[] }))
   const ges = getGlobalEffects(ctx, situation)
   ctx = setGlobalEffects(ctx, situation, ges)
   return ges.flatMap(ge => {

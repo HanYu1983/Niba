@@ -71,7 +71,7 @@ export async function test179901_00_U_WT001P_white_02() {
     if (isBattle(ctx, cardA.id, cardB.id) != true) {
         throw new Error()
     }
-    const tip = createTipByEntitySearch(ctx, cardA.id, {
+    const tip = createTipByEntitySearch(ctx, EffectFn.createEmptyPlayCard(PlayerA, cardA.id), {
         isBattleWithThis: true,
         isDestroy: true,
         side: "敵軍",

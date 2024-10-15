@@ -27,7 +27,7 @@ export const prototype: CardPrototype = {
         }
         const basyou = GameStateFn.getItemBaSyou(ctx, cardId)
         if (DefineFn.BaSyouKeywordFn.getBattleArea().includes(DefineFn.AbsoluteBaSyouFn.getBaSyouKeyword(basyou))) {
-          const tip = GameStateFn.createTipByEntitySearch(ctx, cardId, {
+          const tip = GameStateFn.createTipByEntitySearch(ctx, effect, {
             side: "敵軍",
             at: ["戦闘エリア1", "戦闘エリア2"],
             is: ["ユニット"],

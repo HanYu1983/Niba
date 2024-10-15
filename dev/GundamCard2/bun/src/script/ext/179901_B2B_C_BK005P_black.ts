@@ -28,7 +28,7 @@ export const prototype: CardPrototype = {
                       const cardProto = GameStateFn.getItemPrototype(ctx, cardId)
                       const payColorKey = DefineFn.TipFn.createConditionKeyOfPayColorX(cardProto)
                       const x = GameStateFn.getCardTipStrBaSyouPairs(ctx, payColorKey, cardId).length
-                      const tip = GameStateFn.createTipByEntitySearch(ctx, cardId, {
+                      const tip = GameStateFn.createTipByEntitySearch(ctx, effect, {
                         side: "自軍",
                         at: ["手札"],
                         max: x,
@@ -44,7 +44,7 @@ export const prototype: CardPrototype = {
                       const cardProto = GameStateFn.getItemPrototype(ctx, cardId)
                       const payColorKey = DefineFn.TipFn.createConditionKeyOfPayColorX(cardProto)
                       const x = GameStateFn.getCardTipStrBaSyouPairs(ctx, payColorKey, cardId).length
-                      const tip = GameStateFn.createTipByEntitySearch(ctx, cardId, {
+                      const tip = GameStateFn.createTipByEntitySearch(ctx, effect, {
                         side: "敵軍",
                         at: ["手札"],
                         max: x,

@@ -103,8 +103,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
         throw new Error(`Entity search must has one of min, max, count`)
       }
       return function (ctx: GameState, effect: Effect): GameState {
-        const cardId = EffectFn.getCardID(effect)
-        const tip = createTipByEntitySearch(ctx, cardId, options)
+        const tip = createTipByEntitySearch(ctx, effect, options)
         const error = TipFn.createTipErrorWhenCheckFail(tip)
         if (error) {
           throw error
@@ -296,7 +295,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
             return getCardTipStrBaSyouPairs(ctx, varName, cardId)
           })
         ctx = pairs.reduce((ctx, pair) => {
-          return doItemDamage(ctx, cardController, damage, pair)
+          return doItemDamage(ctx, effect, damage, pair)
         }, ctx)
         return ctx
       }

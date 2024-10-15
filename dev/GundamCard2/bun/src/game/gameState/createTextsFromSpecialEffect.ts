@@ -328,7 +328,7 @@ export function createTextsFromSpecialEffect(ctx: GameState, cardId: string, tex
                                     throw new Error(`addCardIds must replace`)
                                 }
                                 const cardId = DefineFn.EffectFn.getCardID(effect)
-                                const tip = GameStateFn.createTipByEntitySearch(ctx, cardId, {
+                                const tip = GameStateFn.createTipByEntitySearch(ctx, effect, {
                                     isBattle: true,
                                     side: "敵軍",
                                     is: ["ユニット"],

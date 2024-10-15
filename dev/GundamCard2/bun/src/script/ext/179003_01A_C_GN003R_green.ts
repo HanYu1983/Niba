@@ -22,7 +22,7 @@ export const prototype: CardPrototype = {
           const cardId = DefineFn.EffectFn.getCardID(effect)
           const cardController = GameStateFn.getItemController(ctx, cardId)
           const gLen = GameStateFn.getPlayerGIds(ctx, cardController).length
-          return GameStateFn.createTipByEntitySearch(ctx, cardId, {
+          return GameStateFn.createTipByEntitySearch(ctx, effect, {
             at: ["配備エリア"],
             compareBattlePoint: ["合計国力", "<=", gLen],
             side: "敵軍",

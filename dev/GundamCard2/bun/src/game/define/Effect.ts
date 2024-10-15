@@ -2,7 +2,7 @@ import { GameEvent } from "./GameEvent";
 import { PlayerID } from "./PlayerID";
 import { Situation, CardText, Condition, Action, LogicTreeAction } from "./CardText";
 
-export type DamageTypeKeyword = "通常ダメージ" | "戦闘ダメージ" 
+export type DamageTypeKeyword = "通常ダメージ" | "戦闘ダメージ"
 
 export type DestroyReason1 = {
     id: DamageTypeKeyword | "破壊する" | "マイナスの戦闘修正";
@@ -32,6 +32,10 @@ export type Effect = {
 }
 
 export const EffectFn = {
+    createEmptyPlayCard(playerId: PlayerID, cardId: string): Effect {
+        return { id: "", reason: ["PlayCard", playerId, cardId, {}], text: { id: "", title: [] } }
+    },
+
     isFakeCardID(string: string): boolean {
         return string.startsWith("SystemFakeCardID_")
     },

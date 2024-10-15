@@ -34,7 +34,7 @@ export const prototype: CardPrototype = {
         const cardId = DefineFn.EffectFn.getCardID(effect)
         if (GameStateFn.getItemState(ctx, cardId).textIdsUseThisTurn?.includes(effect.text.id)) {
           const targets = GameStateFn.getCardTipStrBaSyouPairs(ctx, "敵軍ユニット１枚", cardId)
-          const pairs = DefineFn.TipFn.getWant(GameStateFn.createTipByEntitySearch(ctx, cardId, {
+          const pairs = DefineFn.TipFn.getWant(GameStateFn.createTipByEntitySearch(ctx, effect, {
             at: ["戦闘エリア1", "戦闘エリア2"],
             side: "自軍",
             is: ["ユニット"],

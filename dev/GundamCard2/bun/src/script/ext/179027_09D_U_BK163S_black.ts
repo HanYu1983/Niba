@@ -28,7 +28,7 @@ export const prototype: CardPrototype = {
             "敵軍手札１枚": {
               title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip | null {
                 const cardId = DefineFn.EffectFn.getCardID(effect)
-                const tip = GameStateFn.createTipByEntitySearch(ctx, cardId, {
+                const tip = GameStateFn.createTipByEntitySearch(ctx, effect, {
                   side: "敵軍",
                   at: ["手札"],
                   count: 1,

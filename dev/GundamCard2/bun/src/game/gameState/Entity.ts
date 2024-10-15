@@ -20,6 +20,7 @@ import { getSetGroupBattlePoint, isSetGroupHasA } from "./setGroup";
 import { getSetGroup, getSetGroupRoot } from "./SetGroupComponent";
 import { getCard } from "./CardTableComponent";
 import { getChip } from "./ChipTableComponent";
+import { getGlobalEffects } from "./globalEffects";
 
 export type Entity = {
     itemController: PlayerID,
@@ -80,8 +81,31 @@ export function createEntityIterator(ctx: GameState) {
     return rets
 }
 
-export function createTipByEntitySearch(ctx: GameState, cardId: string, options: EntitySearchOptions): Tip {
+export function createTipByEntitySearch(ctx: GameState, effect: Effect, options: EntitySearchOptions): Tip {
+    const cardId = EffectFn.getCardID(effect)
     let entityList = createEntityIterator(ctx)
+    //const ges = getGlobalEffects(ctx, null)
+    // {
+    //     const opponentEffectNotTargetIds = ges.filter(ge => ge.title[0] == "敵軍効果の対象にならない").flatMap(ge => ge.cardIds)
+    //     if (opponentEffectNotTargetIds.length) {
+    //         const effectController = EffectFn.getPlayerID(effect)
+    //         entityList = entityList.filter(entity => {
+    //             return getItemController(ctx, entity.itemId) == effectController
+    //         })
+    //     }
+    // }
+    // {
+    //     if (getItemRuntimeCategory(ctx, cardId) == "ユニット") {
+    //         const opponentUnitEffectNotTargetIds = ges.filter(ge => ge.title[0] == "敵軍ユニットの効果の対象にならない").flatMap(ge => ge.cardIds)
+    //         if (opponentUnitEffectNotTargetIds.length) {
+    //             const effectController = EffectFn.getPlayerID(effect)
+    //             entityList = entityList.filter(entity => {
+    //                 return getItemController(ctx, entity.itemId) == effectController
+    //             })
+    //         }
+    //     }
+    // }
+
     if (options.isBattle != null) {
         entityList = entityList.filter(EntityFn.filterIsBattle(ctx, null, options.isBattle))
     }

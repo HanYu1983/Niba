@@ -47,7 +47,7 @@ export const prototype: CardPrototype = {
       title: ["自動型", "恒常"],
       createPlayEffect: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Effect[] {
         const cardId = DefineFn.EffectFn.getCardID(effect)
-        const tip = GameStateFn.createTipByEntitySearch(ctx, cardId, {
+        const tip = GameStateFn.createTipByEntitySearch(ctx, effect, {
           side: "自軍",
           at: DefineFn.BaSyouKeywordFn.getBaAll(),
           hasSetCard: true,

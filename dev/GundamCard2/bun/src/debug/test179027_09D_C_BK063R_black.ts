@@ -52,7 +52,7 @@ export async function test179027_09D_C_BK063R_black() {
         }
 
         ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア1"), repeat("unitBlack", 1)) as GameState
-        let tip = createTipByEntitySearch(ctx, cardA.id, {
+        let tip = createTipByEntitySearch(ctx, EffectFn.createEmptyPlayCard(PlayerA, cardA.id), {
             at: ["戦闘エリア1", "戦闘エリア2"],
             hasSetCard: false,
             side: "敵軍",

@@ -89,7 +89,7 @@ export const prototype: CardPrototype = {
                   title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
                     const cardId = DefineFn.EffectFn.getCardID(effect)
                     const x = GameStateFn.getCardTipStrBaSyouPairs(ctx, "〔X〕", cardId).length
-                    const pairs = DefineFn.TipFn.getSelection(GameStateFn.createTipByEntitySearch(ctx, cardId, {
+                    const pairs = DefineFn.TipFn.getSelection(GameStateFn.createTipByEntitySearch(ctx, effect, {
                       atBa: true,
                       side: "敵軍",
                       is: ["ユニット"],
@@ -97,7 +97,7 @@ export const prototype: CardPrototype = {
                       asMuchAsPossible: true,
                     })) as StrBaSyouPair[]
                     for (const pair of pairs) {
-                      ctx = GameStateFn.doItemDamage(ctx, GameStateFn.getItemController(ctx, cardId), x, pair)
+                      ctx = GameStateFn.doItemDamage(ctx, effect, x, pair)
                     }
                     return ctx
                   }.toString()

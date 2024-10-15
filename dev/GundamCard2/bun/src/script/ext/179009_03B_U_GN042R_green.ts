@@ -62,7 +62,7 @@ export const prototype: CardPrototype = {
       onSituation: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GlobalEffect[] {
         const cardId = DefineFn.EffectFn.getCardID(effect)
         if (GameStateFn.getItemState(ctx, cardId).flags.enabled) {
-          const pairs = DefineFn.TipFn.getWant(GameStateFn.createTipByEntitySearch(ctx, cardId, {
+          const pairs = DefineFn.TipFn.getWant(GameStateFn.createTipByEntitySearch(ctx, effect, {
             atBa: true,
             side: "自軍",
             is: ["ユニット"],

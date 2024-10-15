@@ -438,8 +438,7 @@ export function createConditionTitleFn(condition: Condition, options?: { isPlay?
                 throw new Error(`Entity search must has one of min, max, count`)
             }
             return function (ctx: GameState, effect: Effect): Tip | null {
-                const cardId = EffectFn.getCardID(effect)
-                return createTipByEntitySearch(ctx, cardId, options)
+                return createTipByEntitySearch(ctx, effect, options)
             }
         }
     }

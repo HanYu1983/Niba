@@ -22,7 +22,7 @@ export const prototype: CardPrototype = {
       createPlayEffect: function _(ctx: any, effect: Effect, { DefineFn, GameStateFn }: Bridge): Effect[] {
         const cardId = DefineFn.EffectFn.getCardID(effect)
         const prototype = GameStateFn.getItemPrototype(ctx, cardId)
-        const tip = GameStateFn.createTipByEntitySearch(ctx, cardId, {
+        const tip = GameStateFn.createTipByEntitySearch(ctx, effect, {
           hasChar: [prototype.title || ""],
           hasSetCard: false,
           side: "自軍",
@@ -44,7 +44,7 @@ export const prototype: CardPrototype = {
               title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip | null {
                 const cardId = DefineFn.EffectFn.getCardID(effect)
                 const prototype = GameStateFn.getItemPrototype(ctx, cardId)
-                const tip = GameStateFn.createTipByEntitySearch(ctx, cardId, {
+                const tip = GameStateFn.createTipByEntitySearch(ctx, effect, {
                   hasChar: [prototype.title || ""],
                   hasSetCard: false,
                   side: "自軍",
