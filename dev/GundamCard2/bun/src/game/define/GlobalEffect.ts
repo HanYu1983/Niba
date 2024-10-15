@@ -22,6 +22,8 @@ export type GlobalEffectTitle =
     | ["このカードが受ける全ての_通常ダメージは、_２減殺される", DamageTypeKeyword, number]
     | ["「範囲兵器」の対象部分は、『X以下の防御力を持つ敵軍ユニット１枚』に変更される"]
     | ["_ユニットは、「サイコミュ」の効果において、交戦中として扱う。", string[]]
+    | ["敵軍効果の対象にならない"]
+    | ["敵軍ユニットの効果の対象にならない"]
 
 export type GlobalEffect = {
     title: GlobalEffectTitle,
