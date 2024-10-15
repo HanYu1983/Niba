@@ -20,6 +20,7 @@ import { TipFn } from "../game/define/Tip";
 import { getTopEffect } from "../game/gameState/EffectStackComponent";
 import { setSetGroupParent } from "../game/gameState/SetGroupComponent";
 import { TipError } from "../game/define/GameError";
+import { getGlobalEffects } from "../game/gameState/globalEffects";
 
 export async function test179027_09D_C_BK063R_black() {
     await loadPrototype("179027_09D_C_BK063R_black")
@@ -58,7 +59,7 @@ export async function test179027_09D_C_BK063R_black() {
             side: "敵軍",
             is: ["ユニット"],
             count: 1
-        })
+        }, {ges: getGlobalEffects(ctx, null)})
         let selection = TipFn.getSelection(tip)
         if (selection.length != 1) {
             console.log(tip)

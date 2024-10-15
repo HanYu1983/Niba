@@ -20486,7 +20486,7 @@ function createTextsFromSpecialEffect(text, options) {
                                     vars: ["\u9019\u5F35\u5361\u5728\u6230\u5340\u7684\u5834\u5408, \u6253\u958B\u81EA\u8ECD\u672C\u570B\u4E0A\u76841\u5F35\u5361"]
                                   }
                                 ]
-                              }, {})(ctx3, effect2, bridge);
+                              })(ctx3, effect2, bridge);
                             return null;
                           }.toString()
                         }
@@ -20575,7 +20575,7 @@ function createTextsFromSpecialEffect(text, options) {
           conditions: {
             ...text.conditions,
             "\u4EA4\u6230\u4E2D\u7684\u6575\u8ECD\u6A5F\u9AD41\u5F35": {
-              title: function _(ctx2, effect, { GameStateFn, DefineFn }) {
+              title: function _(ctx2, effect, { GameStateFn, DefineFn, Options }) {
                 const { addCardIds: addCardIds2 } = { addCardIds: null };
                 if (addCardIds2 == null)
                   throw new Error("addCardIds must replace");
@@ -20584,7 +20584,7 @@ function createTextsFromSpecialEffect(text, options) {
                   side: "\u6575\u8ECD",
                   is: ["\u30E6\u30CB\u30C3\u30C8"],
                   count: 1
-                });
+                }, { ges: Options.ges });
                 let wants = DefineFn.TipFn.getWant(tip);
                 return wants = [...wants, ...addCardIds2.map((itemId) => GameStateFn.createStrBaSyouPair(ctx2, itemId))], {
                   title: ["\u30AB\u30FC\u30C9", wants, wants.slice(0, 1)],
@@ -20741,7 +20741,7 @@ function createTextsFromSpecialEffect(text, options) {
                 const { GameStateFn, DefineFn } = bridge, cardId = DefineFn.EffectFn.getCardID(effect), cardController = GameStateFn.getItemController(ctx2, cardId), gCount = GameStateFn.getItemIdsByBasyou(ctx2, DefineFn.AbsoluteBaSyouFn.of(cardController, "G\u30BE\u30FC\u30F3")).length;
                 return GameStateFn.createConditionTitleFn({
                   title: ["\u6253\u958B\u81EA\u8ECD\u624B\u88E1\u6216\u6307\u5B9AHANGER\u4E2D\u7279\u5FB5_A\u4E26\u5408\u8A08\u570B\u529B_x\u4EE5\u4E0B\u7684_1\u5F35\u5361", A2, gCount, 1]
-                }, {})(ctx2, effect, bridge);
+                })(ctx2, effect, bridge);
               }.toString().replace('{ A: "" }', JSON.stringify({ A }))
             }
           },
@@ -20806,7 +20806,7 @@ function clearGlobalEffects(ctx2) {
   };
 }
 function getSituationEffects(ctx2, situation) {
-  const bridge = createBridge(), ges = createAllCardTexts(ctx2).flatMap(([item, texts]) => {
+  const bridge = createBridge({}), ges = createAllCardTexts(ctx2).flatMap(([item, texts]) => {
     return texts.map((text, i) => {
       const cardController = getItemController(ctx2, item.id), fn = getOnSituationFn(text), effect = {
         id: ToolFn.getUUID("getSituationEffects"),
@@ -20849,7 +20849,7 @@ function createAllCardTexts(ctx2) {
     if (proto.commandText?.onSituation)
       return [getCard(ctx2, cardId), [proto.commandText]];
     return null;
-  }), (infos) => infos.filter((v) => v)), allCardTexts = [...getTextGroup1(), ...getTextGroup2(), ...getTextGroup3(), ...getTextGroup4()], bridge = createBridge(), ges = allCardTexts.flatMap(([item, texts]) => {
+  }), (infos) => infos.filter((v) => v)), allCardTexts = [...getTextGroup1(), ...getTextGroup2(), ...getTextGroup3(), ...getTextGroup4()], bridge = createBridge({}), ges = allCardTexts.flatMap(([item, texts]) => {
     return texts.map((text, i) => {
       const cardController = getItemController(ctx2, item.id);
       logCategory("createAllCardTexts", "getOnSituationFn", text.onSituation);
@@ -21836,8 +21836,8 @@ function createActionTitleFn(action) {
       const [_, actionOptions] = action.title;
       if ([actionOptions.max, actionOptions.min, actionOptions.count].every((v) => v == null))
         throw new Error("Entity search must has one of min, max, count");
-      return function(ctx2, effect) {
-        const tip = createTipByEntitySearch(ctx2, effect, actionOptions), error = TipFn.createTipErrorWhenCheckFail(tip);
+      return function(ctx2, effect, { Options }) {
+        const tip = createTipByEntitySearch(ctx2, effect, actionOptions, { ges: Options.ges }), error = TipFn.createTipErrorWhenCheckFail(tip);
         if (error)
           throw error;
         return ctx2;
@@ -22092,16 +22092,16 @@ function createActionTitleFn(action) {
 }
 
 // src/game/gameState/createOnEventTitleFn.ts
-function createOnEventTitleFn(text) {
+function createOnEventTitleFn(text, options) {
   if (text.onEvent == null || typeof text.onEvent == "string")
     return CardTextFn.getOnEventFn(text);
   switch (text.onEvent[0]) {
     case "GameEventOnTimingDoAction": {
       const [_, timing, action] = text.onEvent;
-      return function(ctx2, effect) {
+      return function(ctx2, effect, bridge) {
         const event = EffectFn.getEvent(effect);
         if (event.title[0] == "GameEventOnTiming" && PhaseFn.eq(event.title[1], timing))
-          return createActionTitleFn(action)(ctx2, effect, null);
+          return createActionTitleFn(action)(ctx2, effect, bridge);
         return ctx2;
       };
     }
@@ -22110,9 +22110,7 @@ function createOnEventTitleFn(text) {
 
 // src/game/gameState/doTriggerEvent.ts
 function doTriggerEvent(ctx2, event) {
-  logCategory("doTriggerEvent", event.title, event.cardIds);
-  const bridge = createBridge();
-  if (createAllCardTexts(ctx2).forEach((info) => {
+  if (logCategory("doTriggerEvent", event.title, event.cardIds), createAllCardTexts(ctx2).forEach((info) => {
     const [item, texts] = info;
     texts.forEach((text) => {
       const effect = {
@@ -22120,7 +22118,9 @@ function doTriggerEvent(ctx2, event) {
         reason: ["Event", getItemController(ctx2, item.id), item.id, event],
         text
       };
-      logCategory("doTriggerEvent", "eventTitle", text.onEvent), ctx2 = createOnEventTitleFn(text)(ctx2, effect, bridge);
+      logCategory("doTriggerEvent", "eventTitle", text.onEvent);
+      const ges = getGlobalEffects(ctx2, null);
+      ctx2 = setGlobalEffects(ctx2, null, ges), ctx2 = createOnEventTitleFn(text, { ges })(ctx2, effect, createBridge({ ges }));
     });
   }), event.title[0] == "\u30AB\u30C3\u30C8\u7D42\u4E86\u6642")
     ctx2 = mapItemStateValues(ctx2, (cs) => {
@@ -22350,7 +22350,7 @@ function createPlayCardEffects(ctx2, cardId, options) {
         isPlayOperation: prototype.category == "\u30AA\u30DA\u30EC\u30FC\u30B7\u30E7\u30F3"
       }],
       text
-    }, createBridge())?.forEach((eff) => {
+    }, createBridge({ ges: getGlobalEffects(ctx2, null) }))?.forEach((eff) => {
       if (eff.text.title[0] != "\u4F7F\u7528\u578B")
         throw console.log(eff?.text.description), new Error;
       ret.push(eff);
@@ -22845,7 +22845,7 @@ var exports_createConditionTitleFn = {};
 __export(exports_createConditionTitleFn, {
   createConditionTitleFn: () => createConditionTitleFn
 });
-function createConditionTitleFn(condition, options) {
+function createConditionTitleFn(condition) {
   if (condition.title == null || typeof condition.title == "string")
     return ConditionFn.getTitleFn(condition);
   switch (logCategory("getConditionTitleFn", condition.title), condition.title[0]) {
@@ -23010,14 +23010,14 @@ function createConditionTitleFn(condition, options) {
     }
     case "\u9019\u5F35\u5361\u4EA4\u6230\u7684\u9632\u79A6\u529B_x\u4EE5\u4E0B\u7684\u6575\u8ECD\u6A5F\u9AD4_1\u5F35": {
       const [_2, x, count] = condition.title;
-      return function(ctx2, effect) {
+      return function(ctx2, effect, { Options }) {
         const cardId = EffectFn.getCardID(effect);
         if (AbsoluteBaSyouFn.getBaSyouKeyword(getItemBaSyou(ctx2, cardId)) == "\u6226\u95D8\u30A8\u30EA\u30A21" || AbsoluteBaSyouFn.getBaSyouKeyword(getItemBaSyou(ctx2, cardId)) == "\u6226\u95D8\u30A8\u30EA\u30A22")
           ;
         else
           return null;
         const cardController = getItemController(ctx2, cardId), opponentId = PlayerIDFn.getOpponent(cardController), from = AbsoluteBaSyouFn.setPlayerID(getItemBaSyou(ctx2, cardId), opponentId), pairs = getItemIdsByBasyou(ctx2, from).map((itemId) => getSetGroupRoot(ctx2, itemId)).filter((itemId) => {
-          const [_3, def, _22] = getSetGroupBattlePoint(ctx2, itemId, { ges: options.ges });
+          const [_3, def, _22] = getSetGroupBattlePoint(ctx2, itemId, { ges: Options.ges });
           return def <= x;
         }).map((itemId) => [itemId, from]);
         return {
@@ -23041,16 +23041,16 @@ function createConditionTitleFn(condition, options) {
     }
     case "RollColor": {
       const [_2, color] = condition.title;
-      return function(ctx2, effect) {
+      return function(ctx2, effect, { Options }) {
         const cardId = EffectFn.getCardID(effect), cardController = getItemController(ctx2, cardId);
         let situation = { title: ["\u30ED\u30FC\u30EB\u30B3\u30B9\u30C8\u306E\u652F\u6255\u3044\u306B\u304A\u3044\u3066"] };
         if (effect.reason[0] == "PlayCard" && effect.reason[3].isPlayCommand) {
           if (getItemPrototype(ctx2, cardId).category?.includes("\u88C5\u5F3E"))
             situation = { title: ["\u300C\u7279\u5FB4\uFF1A\u88C5\u5F3E\u300D\u3092\u6301\u3064\u81EA\u8ECD\u30B3\u30DE\u30F3\u30C9\u306E\u52B9\u679C\u3067\u81EA\u8ECDG\u3092\u30ED\u30FC\u30EB\u3059\u308B\u5834\u5408"] };
         }
-        const ges = getGlobalEffects(ctx2, situation);
-        ctx2 = setGlobalEffects(ctx2, situation, ges);
-        const cardIdColors = getCardIdsCanPayRollColor(ctx2, cardController, color, { ges });
+        const gesForAskRollCost = getGlobalEffects(ctx2, situation);
+        ctx2 = setGlobalEffects(ctx2, situation, gesForAskRollCost);
+        const cardIdColors = getCardIdsCanPayRollColor(ctx2, cardController, color, { ges: gesForAskRollCost });
         let colorIds = [];
         if (color == null)
           colorIds = cardIdColors.map((gId) => gId.cardId).slice(0, 1);
@@ -23114,11 +23114,11 @@ function createConditionTitleFn(condition, options) {
         }
       };
     case "Entity": {
-      const [_2, options2] = condition.title;
-      if ([options2.max, options2.min, options2.count].every((v) => v == null))
+      const [_2, searchOptions] = condition.title;
+      if ([searchOptions.max, searchOptions.min, searchOptions.count].every((v) => v == null))
         throw new Error("Entity search must has one of min, max, count");
-      return function(ctx2, effect) {
-        return createTipByEntitySearch(ctx2, effect, options2);
+      return function(ctx2, effect, { Options }) {
+        return createTipByEntitySearch(ctx2, effect, searchOptions, { ges: Options.ges });
       };
     }
   }
@@ -23234,11 +23234,12 @@ var DefineFn = {
 };
 
 // src/game/bridge/createBridge.ts
-function createBridge() {
+function createBridge(options) {
   return {
     GameStateFn,
     DefineFn,
-    ToolFn
+    ToolFn,
+    Options: options
   };
 }
 
@@ -23248,16 +23249,22 @@ function doEffect(ctx2, effect, logicId, logicSubId) {
   const ltacs = CardTextFn.getLogicTreeActionConditions(effect.text, CardTextFn.getLogicTreeAction(effect.text, logicId))[logicSubId];
   if (ltacs == null)
     throw new Error(`ltasc not found: ${logicId}/${logicSubId}`);
-  const bridge = createBridge(), conditionIds = Object.keys(ltacs), cardId = EffectFn.getCardID(effect);
+  const conditionIds = Object.keys(ltacs), cardId = EffectFn.getCardID(effect);
   conditionIds.forEach((conditionKey) => {
     logCategory("doEffect", "conditionKey", conditionKey);
     const condition = CardTextFn.getCondition(effect.text, conditionKey), actions = ConditionFn.getActions(condition);
-    for (let action of actions)
-      EventCenterFn.onActionStart(ctx2, effect, action), ctx2 = createActionTitleFn(action)(ctx2, effect, bridge), ctx2 = clearGlobalEffects(ctx2), EventCenterFn.onActionEnd(ctx2, effect, action);
+    for (let action of actions) {
+      EventCenterFn.onActionStart(ctx2, effect, action);
+      const ges = getGlobalEffects(ctx2, null);
+      ctx2 = setGlobalEffects(ctx2, null, ges), ctx2 = createActionTitleFn(action)(ctx2, effect, createBridge({ ges })), ctx2 = clearGlobalEffects(ctx2), EventCenterFn.onActionEnd(ctx2, effect, action);
+    }
   });
   const lta = CardTextFn.getLogicTreeAction(effect.text, logicId);
-  for (let action of LogicTreeActionFn.getActions(lta))
-    logCategory("doEffect", "lta.actions", lta.actions.map((a) => a.title)), EventCenterFn.onActionStart(ctx2, effect, action), ctx2 = createActionTitleFn(action)(ctx2, effect, bridge), ctx2 = clearGlobalEffects(ctx2), EventCenterFn.onActionEnd(ctx2, effect, action);
+  for (let action of LogicTreeActionFn.getActions(lta)) {
+    logCategory("doEffect", "lta.actions", lta.actions.map((a) => a.title)), EventCenterFn.onActionStart(ctx2, effect, action);
+    const ges = getGlobalEffects(ctx2, null);
+    ctx2 = setGlobalEffects(ctx2, null, ges), ctx2 = createActionTitleFn(action)(ctx2, effect, createBridge({ ges })), ctx2 = clearGlobalEffects(ctx2), EventCenterFn.onActionEnd(ctx2, effect, action);
+  }
   return ctx2 = EventCenterFn.onEffectEnd(ctx2, effect), ctx2 = clearGlobalEffects(ctx2), ctx2;
 }
 function assertTipForUserSelection(ctx2, effect, cardId) {
@@ -23286,15 +23293,14 @@ function createEffectTips(ctx2, effect, logicId, logicSubId, options) {
   const ltacs = CardTextFn.getLogicTreeActionConditions(effect.text, CardTextFn.getLogicTreeAction(effect.text, logicId))[logicSubId];
   if (ltacs == null)
     throw new Error(`ltasc not found: ${logicId}/${logicSubId}`);
-  const bridge = createBridge();
   return Object.keys(ltacs).map((key) => {
     const con = ltacs[key];
     logCategory("createEffectTips", key, con.title);
     const errors = [];
     let tip = null;
     try {
-      const ges = getGlobalEffects(ctx2, null);
-      if (ctx2 = setGlobalEffects(ctx2, null, ges), tip = createConditionTitleFn(con, { ges })(ctx2, effect, bridge), tip?.isGameState)
+      const ges2 = getGlobalEffects(ctx2, null);
+      if (ctx2 = setGlobalEffects(ctx2, null, ges2), tip = createConditionTitleFn(con)(ctx2, effect, createBridge({ ges: ges2 })), tip?.isGameState)
         throw console.log("\u5FEB\u901F\u6AA2\u67E5\u662F\u4E0D\u5BEB\u932F\u56DE\u50B3\u6210GameState, \u61C9\u8A72\u8981\u56DE\u50B3Tip|null:", key, con.title), new Error;
     } catch (e) {
       if (e instanceof TipError) {
@@ -23333,9 +23339,11 @@ function createEffectTips(ctx2, effect, logicId, logicSubId, options) {
           throw e;
       }
     }
-    return ctx2 = ConditionFn.getActionTitleFns(con, createActionTitleFn).reduce((ctx3, fn) => {
+    const ges = getGlobalEffects(ctx2, null);
+    return ctx2 = setGlobalEffects(ctx2, null, ges), ctx2 = ConditionFn.getActionTitleFns(con, (action) => createActionTitleFn(action)).reduce((ctx3, fn) => {
       try {
-        return ctx3 = fn(ctx3, effect, bridge), ctx3 = clearGlobalEffects(ctx3), ctx3;
+        const ges2 = getGlobalEffects(ctx3, null);
+        return ctx3 = setGlobalEffects(ctx3, null, ges2), ctx3 = fn(ctx3, effect, createBridge({ ges: ges2 })), ctx3 = clearGlobalEffects(ctx3), ctx3;
       } catch (e) {
         if (e instanceof TipError) {
           if (options?.isAssert)

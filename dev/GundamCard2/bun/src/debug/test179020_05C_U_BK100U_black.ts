@@ -11,6 +11,7 @@ import { doTriggerEvent } from "../game/gameState/doTriggerEvent"
 import { getImmediateEffects } from "../game/gameState/EffectStackComponent"
 import { createTipByEntitySearch } from "../game/gameState/Entity"
 import { createGameState, GameState } from "../game/gameState/GameState"
+import { getGlobalEffects } from "../game/gameState/globalEffects"
 import { getItemIdsByBasyou } from "../game/gameState/ItemTableComponent"
 import { setPhase } from "../game/gameState/PhaseComponent"
 import { loadPrototype } from "../script"
@@ -29,7 +30,7 @@ export async function test179020_05C_U_BK100U_black() {
     // 一開始敵人沒手牌, 無法發動能力
     ctx = doTriggerEvent(ctx, { title: ["このカードの部隊が敵軍本国に戦闘ダメージを与えた場合"], cardIds: [cardA.id] })
     {
-        const tip = createTipByEntitySearch(ctx, EffectFn.createEmptyPlayCard(PlayerA, cardA.id), { side: "敵軍", at: ["手札"], count: 2 })
+        const tip = createTipByEntitySearch(ctx, EffectFn.createEmptyPlayCard(PlayerA, cardA.id), { side: "敵軍", at: ["手札"], count: 2 }, { ges: getGlobalEffects(ctx, null) })
         if (tip == null) {
             throw new Error()
         }
@@ -45,7 +46,7 @@ export async function test179020_05C_U_BK100U_black() {
     // 敵人加入足夠的手牌, 發動能力
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerB, "手札"), ["unitBlack", "unitBlack"]) as GameState
     {
-        const tip = createTipByEntitySearch(ctx, EffectFn.createEmptyPlayCard(PlayerA, cardA.id), { side: "敵軍", at: ["手札"], count: 2 })
+        const tip = createTipByEntitySearch(ctx, EffectFn.createEmptyPlayCard(PlayerA, cardA.id), { side: "敵軍", at: ["手札"], count: 2 }, { ges: getGlobalEffects(ctx, null) })
         if (tip == null) {
             throw new Error()
         }
