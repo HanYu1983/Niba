@@ -188,6 +188,7 @@ export const ConditionFn = {
 }
 
 export type SituationTitle =
+    | ["有沒有新增內文"]
     | ["「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合"]
     | ["ロールコストの支払いにおいて"]
 

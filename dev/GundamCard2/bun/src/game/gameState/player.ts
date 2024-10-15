@@ -23,6 +23,7 @@ import { getCard } from "./CardTableComponent";
 import { getCardHasSpeicalEffect } from "./card";
 import { getActivePlayerID } from "./ActivePlayerComponent";
 import { isBattle } from "./IsBattleComponent";
+import { GlobalEffect } from "../define/GlobalEffect";
 
 // player
 export function isPlayerHasBattleGroup(
@@ -41,7 +42,7 @@ export function isPlayerHasBattleGroup(
   )() > 0
 }
 
-export function doBattleDamage(ctx: GameState, playerId: string, guardUnits: string[], attackPower: number, options?: { isNotRule?: boolean }): [GameState, number] {
+export function doBattleDamage(ctx: GameState, playerId: string, guardUnits: string[], attackPower: number, options: { isNotRule?: boolean, ges?:GlobalEffect[] }): [GameState, number] {
   // 敵方機體存在, 攻擊機體
   if (guardUnits.length) {
     const changedCardState = guardUnits.map((cardID): ItemState => {
@@ -49,7 +50,7 @@ export function doBattleDamage(ctx: GameState, playerId: string, guardUnits: str
       if (attackPower <= 0) {
         return cs;
       }
-      const [_, _2, hp] = getSetGroupBattlePoint(ctx, cardID);
+      const [_, _2, hp] = getSetGroupBattlePoint(ctx, cardID, {ges: options?.ges});
       const live = hp - cs.damage;
       if (live <= 0) {
         return cs;
@@ -101,7 +102,8 @@ export function doRuleBattleDamage(
   currentGuardPlayerID: PlayerID,
   willAttackUnits: string[],
   willGuardUnits: string[],
-  willAttackPower: number
+  willAttackPower: number,
+  options: { ges?: GlobalEffect[] }
 ): GameState {
   logCategory("handleAttackDamage", "speed", speedPhase);
   logCategory("handleAttackDamage", "willAttackUnits", willAttackUnits);
@@ -109,7 +111,7 @@ export function doRuleBattleDamage(
   logCategory("handleAttackDamage", "willAttackPower", willAttackPower);
   if (willAttackUnits.length) {
     // 判斷速度1速度2是否可攻擊
-    const hasSpeedAttack = isABattleGroup(ctx, ["速攻"], willAttackUnits[0]);
+    const hasSpeedAttack = isABattleGroup(ctx, ["速攻"], willAttackUnits[0], { ges: options.ges });
     if (
       // 有速攻的情況在速度1
       (hasSpeedAttack && speedPhase == 1) ||
@@ -120,12 +122,12 @@ export function doRuleBattleDamage(
       logCategory("handleAttackDamage", "attack", currentAttackPower);
       // 敵方機體存在, 攻擊機體
       if (willGuardUnits.length) {
-        [ctx, currentAttackPower] = doBattleDamage(ctx, currentAttackPlayerID, willGuardUnits, currentAttackPower)
+        [ctx, currentAttackPower] = doBattleDamage(ctx, currentAttackPlayerID, willGuardUnits, currentAttackPower, {ges: options?.ges})
       }
       // 若傷害沒有用完, 攻擊方可以攻擊本國
       if (currentAttackPlayerID == getActivePlayerID(ctx) && currentAttackPower > 0) {
         // 非交戰中或有強襲才能打本國(p35)
-        if (isBattle(ctx, willAttackUnits[0], null) == false || isABattleGroup(ctx, ["強襲"], willAttackUnits[0])) {
+        if (isBattle(ctx, willAttackUnits[0], null) == false || isABattleGroup(ctx, ["強襲"], willAttackUnits[0], { ges: options.ges })) {
           ctx = doCountryDamage(ctx, currentGuardPlayerID, currentAttackPower)
           {
             const gameEvent: GameEvent = {
@@ -145,18 +147,19 @@ export function doPlayerAttack(
   ctx: GameState,
   attackPlayerID: PlayerID,
   where: BaSyouKeyword,
-  speedPhase: AttackSpeed
+  speedPhase: AttackSpeed,
+  options: { ges?: GlobalEffect[] }
 ): GameState {
   const guardPlayerID = PlayerIDFn.getOpponent(attackPlayerID)
   const attackUnits = getBattleGroup(ctx, AbsoluteBaSyouFn.of(attackPlayerID, where));
-  const attackPower = getBattleGroupBattlePoint(ctx, attackUnits);
+  const attackPower = getBattleGroupBattlePoint(ctx, attackUnits, { ges: options.ges });
   const guardUnits = getBattleGroup(ctx, AbsoluteBaSyouFn.of(guardPlayerID, where));
-  const guardPower = getBattleGroupBattlePoint(ctx, guardUnits);
-  ctx = doRuleBattleDamage(ctx, speedPhase, attackPlayerID, guardPlayerID, attackUnits, guardUnits, attackPower)
-  ctx = doRuleBattleDamage(ctx, speedPhase, guardPlayerID, attackPlayerID, guardUnits, attackUnits, guardPower);
+  const guardPower = getBattleGroupBattlePoint(ctx, guardUnits, { ges: options.ges });
+  ctx = doRuleBattleDamage(ctx, speedPhase, attackPlayerID, guardPlayerID, attackUnits, guardUnits, attackPower, {ges: options?.ges})
+  ctx = doRuleBattleDamage(ctx, speedPhase, guardPlayerID, attackPlayerID, guardUnits, attackUnits, guardPower, {ges: options?.ges});
   [...attackUnits, ...guardUnits].forEach(cardId => {
     const itemState = getItemState(ctx, cardId)
-    const [_, _2, hp] = getSetGroupBattlePoint(ctx, cardId)
+    const [_, _2, hp] = getSetGroupBattlePoint(ctx, cardId, { ges: options.ges })
     if (hp <= itemState.damage) {
       ctx = addDestroyEffect(ctx, createDestroyEffect(ctx, { id: "戦闘ダメージ", playerID: PlayerIDFn.getOpponent(getItemController(ctx, cardId)) }, cardId)) as GameState
     }
@@ -192,7 +195,7 @@ export function getPlayerOperationIds(ctx: GameState, playerId: PlayerID): strin
   return lift(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getBaAll()).flatMap(basyou => getItemIdsByBasyou(ctx, basyou)).filter(itemId => getItemPrototype(ctx, itemId).category == "オペレーション")
 }
 
-export function createPlayerScore(ctx: GameState, playerId: string): number {
+export function createPlayerScore(ctx: GameState, playerId: string, options: { ges?: GlobalEffect[] }): number {
   const units = getPlayerUnitIds(ctx, playerId)
   const chars = getPlayerCharacterIds(ctx, playerId)
   const gs = getPlayerGIds(ctx, playerId)
@@ -214,12 +217,12 @@ export function createPlayerScore(ctx: GameState, playerId: string): number {
     if (getCard(ctx, id).isRoll) {
       return 0
     }
-    const [atk, range, hp] = getSetGroupBattlePoint(ctx, id)
+    const [atk, range, hp] = getSetGroupBattlePoint(ctx, id, { ges: options.ges })
     return atk + range + hp
   }).reduce((acc, c) => acc + c, 0)
-  const specialScore1 = units.filter(id => getCardHasSpeicalEffect(ctx, ["速攻"], id)).length * 2
-  const specialScore2 = units.filter(id => getCardHasSpeicalEffect(ctx, ["高機動"], id)).length * 2
-  const specialScore3 = units.filter(id => getCardHasSpeicalEffect(ctx, ["強襲"], id)).length * 2
+  const specialScore1 = units.filter(id => getCardHasSpeicalEffect(ctx, ["速攻"], id, { ges: options.ges })).length * 2
+  const specialScore2 = units.filter(id => getCardHasSpeicalEffect(ctx, ["高機動"], id, { ges: options.ges })).length * 2
+  const specialScore3 = units.filter(id => getCardHasSpeicalEffect(ctx, ["強襲"], id, { ges: options.ges })).length * 2
   const total = gScore + unitScore + charScore + opScore + handScore + destroyScore + junkyardScore + rollScore + bpScore + specialScore1 + specialScore2 + specialScore3
   logCategory("createPlayerScore", "=======", playerId)
   logCategory("createPlayerScore", "gScore:", gScore)
@@ -238,10 +241,10 @@ export function createPlayerScore(ctx: GameState, playerId: string): number {
   return total
 }
 
-export function createPreviewEffectScore(ctx: GameState, playerId: string, effects: Effect[], options?: { isMoreThenOrigin?: boolean }): [string, number][] {
+export function createPreviewEffectScore(ctx: GameState, playerId: string, effects: Effect[], options: { isMoreThenOrigin?: boolean, ges?:GlobalEffect[] }): [string, number][] {
   const opponentId = PlayerIDFn.getOpponent(playerId)
-  const scoreA = createPlayerScore(ctx, playerId)
-  const scoreB = createPlayerScore(ctx, opponentId)
+  const scoreA = createPlayerScore(ctx, playerId, {ges: options?.ges})
+  const scoreB = createPlayerScore(ctx, opponentId, {ges: options?.ges})
   const score = scoreA - scoreB
   let effectScorePairs: [string, number][] = effects.map(eff => {
     try {
@@ -268,8 +271,8 @@ export function createPreviewEffectScore(ctx: GameState, playerId: string, effec
         ctx2 = doEffect(ctx2, eff, 0, 0) as GameState
         ctx2 = removeEffect(ctx2, eff.id) as GameState
       }
-      const scoreA = createPlayerScore(ctx2, playerId)
-      const scoreB = createPlayerScore(ctx2, opponentId)
+      const scoreA = createPlayerScore(ctx2, playerId, {ges: options?.ges})
+      const scoreB = createPlayerScore(ctx2, opponentId, {ges: options?.ges})
       const score = scoreA - scoreB
       return [eff.id, score]
     } catch (e: any) {

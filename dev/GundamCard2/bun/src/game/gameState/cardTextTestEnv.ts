@@ -18,6 +18,7 @@ import { mapItemState, setItemState } from "./ItemStateComponent";
 import { CardPrototype } from "../define/CardPrototype";
 import { CardText } from "../define/CardText";
 import { setSetGroupParent } from "./SetGroupComponent";
+import { getGlobalEffects, setGlobalEffects } from "./globalEffects";
 
 export async function testAllCardTextTestEnv() {
   const all = createDecks().flatMap(v => v).concat(...["unit", "unitHasPhy", "charBlue"])
@@ -73,6 +74,8 @@ export function testText(proto: CardPrototype, text: CardText) {
         switch (text.title[0]) {
           case "使用型": {
             ctx = setGameStateWithUseTiming(ctx, text.title[1])
+            const ges = getGlobalEffects(ctx, null)
+            ctx = setGlobalEffects(ctx, null, ges)
             let effects = createPlayEffects(ctx, PlayerA)
             const effect: any = effects.find(eff => eff.text.id == text.id)
             if (effect == null) {
@@ -80,7 +83,7 @@ export function testText(proto: CardPrototype, text: CardText) {
             }
             const cets = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)
             if (cets.length == 0) {
-              console.log(createCommandEffectTips(ctx, effect))
+              console.log(createCommandEffectTips(ctx, effect).map(toe => toe.tipOrErrors))
               throw new Error()
             }
             let successCount = 0

@@ -119,7 +119,9 @@ export function createMinusDestroyEffectAndPush(ctx: GameState): GameState {
         } else {
             return
         }
-        const [_, _2, hp] = getSetGroupBattlePoint(ctx, cardId)
+        const ges = getGlobalEffects(ctx, null)
+        ctx = setGlobalEffects(ctx, null, ges)
+        const [_, _2, hp] = getSetGroupBattlePoint(ctx, cardId, {ges: ges})
         if (hp <= 0) {
             const destroyReason: DestroyReason = {
                 id: "マイナスの戦闘修正",

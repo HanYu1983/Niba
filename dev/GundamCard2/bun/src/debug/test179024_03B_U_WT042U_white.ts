@@ -56,7 +56,9 @@ export async function test179024_03B_U_WT042U_white() {
         if (playCardEffects.length != 2) {
             throw new Error()
         }
-        const effect = playCardEffects.find(e => e.reason[0] == "PlayText" && e.reason[3] == getCardTexts(ctx, cardA.id)[0].id)
+        const ges = getGlobalEffects(ctx, null)
+        ctx = setGlobalEffects(ctx, null, ges)
+        const effect = playCardEffects.find(e => e.reason[0] == "PlayText" && e.reason[3] == getCardTexts(ctx, cardA.id, { ges: ges })[0].id)
         if (effect == null) {
             throw new Error()
         }
@@ -80,7 +82,9 @@ export async function test179024_03B_U_WT042U_white() {
             } else {
                 throw new Error(`coins.length == 1 && getCardIdByCoinId(ctx, coins[0].id) == cardB.id`)
             }
-            if (BattlePointFn.eq(getCardBattlePoint(ctx, cardB.id), [4, 0, 3]) == false) {
+            const ges = getGlobalEffects(ctx, null)
+            ctx = setGlobalEffects(ctx, null, ges)
+            if (BattlePointFn.eq(getCardBattlePoint(ctx, cardB.id, { ges: ges }), [4, 0, 3]) == false) {
                 throw new Error(`BattlePointFn.eq(getCardBattlePoint(ctx, cardB.id), [4,0,3]) == false`)
             }
         }
@@ -111,7 +115,7 @@ export async function test179024_03B_U_WT042U_white() {
         if (playCardEffects.length != 2) {
             throw new Error(`playCardEffects.length != 2`)
         }
-        const effect = playCardEffects.find(e => e.reason[0] == "PlayText" && e.reason[3] == getCardTexts(ctx, cardA.id)[0].id)
+        const effect = playCardEffects.find(e => e.reason[0] == "PlayText" && e.reason[3] == getCardTexts(ctx, cardA.id, {})[0].id)
         if (effect == null) {
             throw new Error()
         }
@@ -129,12 +133,14 @@ export async function test179024_03B_U_WT042U_white() {
             }
             ctx = doEffect(ctx, effect, 0, 0)
             let ges = getGlobalEffects(ctx, null)
+            ctx = setGlobalEffects(ctx, null, ges)
             if (ges.length == 1 && ges[0].cardIds.includes(cardA.id)) {
 
             } else {
                 throw new Error(`ges.length == 1 && ges[0].cardIds.includes(cardA.id)`)
             }
-            if (BattlePointFn.eq(getCardBattlePoint(ctx, cardA.id), [6, 1, 5]) == false) {
+
+            if (BattlePointFn.eq(getCardBattlePoint(ctx, cardA.id, { ges: ges }), [6, 1, 5]) == false) {
                 throw new Error(`BattlePointFn.eq(getCardBattlePoint(ctx, cardA.id), [6,1,5]) == false`)
             }
             ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", PhaseFn.getLast()] })
@@ -142,7 +148,7 @@ export async function test179024_03B_U_WT042U_white() {
             if (ges.length != 0) {
                 throw new Error(`ges.length != 0`)
             }
-            if (BattlePointFn.eq(getCardBattlePoint(ctx, cardA.id), [5, 0, 4]) == false) {
+            if (BattlePointFn.eq(getCardBattlePoint(ctx, cardA.id, { ges: ges }), [5, 0, 4]) == false) {
                 throw new Error(`BattlePointFn.eq(getCardBattlePoint(ctx, cardA.id), [5,0,4]) == false`)
             }
         }

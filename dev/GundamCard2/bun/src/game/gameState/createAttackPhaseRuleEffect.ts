@@ -34,8 +34,9 @@ export function createAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID):
                             .filter(cardId => GameStateFn.getCard(ctx, cardId).isRoll != true)
                         const opponentUnitIds = GameStateFn.getBattleGroup(ctx, DefineFn.AbsoluteBaSyouFn.of(opponentPlayerId, currentBaKw));
                         if (opponentUnitIds.length) {
-                            if (GameStateFn.isABattleGroup(ctx, ["高機動"], opponentUnitIds[0])) {
-                                unitIds = unitIds.filter(id => GameStateFn.isSetGroupHasA(ctx, ["高機動"], id))
+                            const ges = GameStateFn.getGlobalEffects(ctx, null)
+                            if (GameStateFn.isABattleGroup(ctx, ["高機動"], opponentUnitIds[0], { ges: ges })) {
+                                unitIds = unitIds.filter(id => GameStateFn.isSetGroupHasA(ctx, ["高機動"], id, { ges: ges }))
                             }
                         }
                         const pairs = unitIds.map(id => {
@@ -79,8 +80,9 @@ export function createAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID):
                             .filter(cardId => GameStateFn.getCard(ctx, cardId).isRoll != true)
                         const opponentUnitIds = GameStateFn.getBattleGroup(ctx, DefineFn.AbsoluteBaSyouFn.of(opponentPlayerId, currentBaKw));
                         if (opponentUnitIds.length) {
-                            if (GameStateFn.isABattleGroup(ctx, ["高機動"], opponentUnitIds[0])) {
-                                unitIds = unitIds.filter(id => GameStateFn.isSetGroupHasA(ctx, ["高機動"], id))
+                            const ges = GameStateFn.getGlobalEffects(ctx, null)
+                            if (GameStateFn.isABattleGroup(ctx, ["高機動"], opponentUnitIds[0], { ges: ges })) {
+                                unitIds = unitIds.filter(id => GameStateFn.isSetGroupHasA(ctx, ["高機動"], id, { ges: ges }))
                             }
                         }
                         const pairs = unitIds.map(id => {

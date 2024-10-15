@@ -14,11 +14,12 @@ import { getPhase, setPhase } from "./PhaseComponent";
 import { getCardHasSpeicalEffect, getCardTexts } from "./card";
 import { createTextsFromSpecialEffect } from "./createTextsFromSpecialEffect";
 import { getGlobalEffects, setGlobalEffects } from "./globalEffects";
+
 export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
+    logCategory("createPlayEffects", "")
     const ges = getGlobalEffects(ctx, null)
     ctx = setGlobalEffects(ctx, null, ges)
     const myTextOn = lift(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getTextOn())
-
     const getPlayCardEffectsF =
         ifElse(
             always(PhaseFn.eq(getPhase(ctx), ["配備フェイズ", "フリータイミング"])),
@@ -44,7 +45,7 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
                         if (getItemPrototype(ctx, cardId).category == "コマンド") {
                             return []
                         }
-                        if (getCardHasSpeicalEffect(ctx, ["クイック"], cardId)) {
+                        if (getCardHasSpeicalEffect(ctx, ["クイック"], cardId, {ges: ges})) {
                             // クイック不判斷使用時機inTiming
                             return createPlayCardEffects(ctx, cardId, { isQuick: true })
                         }
@@ -79,7 +80,7 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
         map(basyou => {
             const cardIds = getItemIdsByBasyou(ctx, basyou)
             return cardIds.flatMap(
-                cardId => getCardTexts(ctx, cardId)
+                cardId => getCardTexts(ctx, cardId, {ges: ges})
                     .flatMap(text => {
                         if (AbsoluteBaSyouFn.getBaSyouKeyword(basyou) == "Gゾーン") {
                             if (text.protectLevel != 2) {
@@ -90,7 +91,7 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
                             case "使用型":
                                 return [text]
                             case "特殊型":
-                                return createTextsFromSpecialEffect(ctx, cardId, text, { ges: ges }).filter(text => text.title[0] == "使用型")
+                                return createTextsFromSpecialEffect(text, { ges: ges, cardId: cardId }).filter(text => text.title[0] == "使用型")
                         }
                         return []
                     }).filter(inTiming).map(text => {

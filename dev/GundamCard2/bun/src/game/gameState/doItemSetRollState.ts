@@ -11,7 +11,6 @@ import { ItemTableComponent, assertTargetMissingError, isCard, isChip, getItemBa
 import { getSetGroup, getSetGroupChildren } from "./SetGroupComponent"
 
 export function doItemSetRollState(ctx: GameState, isRoll: boolean, [itemId, originBasyou]: StrBaSyouPair, options?: { isSkipTargetMissing?: boolean }): GameState {
-  
   if(options?.isSkipTargetMissing){
     
   } else {

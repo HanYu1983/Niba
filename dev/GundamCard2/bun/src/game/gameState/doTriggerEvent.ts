@@ -20,7 +20,7 @@ import { AbsoluteBaSyouFn, BaSyouKeywordFn } from "../define/BaSyou"
 import { createOnEventTitleFn } from "./createOnEventTitleFn"
 import { EventCenterFn } from "./EventCenter"
 import { PlayerA, PlayerB } from "../define/PlayerID"
-import { createAllCardTexts } from "./globalEffects"
+import { clearGlobalEffects, createAllCardTexts } from "./globalEffects"
 import { addImmediateEffect } from "./EffectStackComponent"
 import { createAttackPhaseRuleEffect } from "./createAttackPhaseRuleEffect"
 
@@ -33,7 +33,7 @@ export function doTriggerEvent(
 ): GameState {
     logCategory("doTriggerEvent", event.title, event.cardIds)
     const bridge = createBridge()
-    createAllCardTexts(ctx, null).forEach(info => {
+    createAllCardTexts(ctx).forEach(info => {
         const [item, texts] = info
         texts.forEach(text => {
             const effect: Effect = {
@@ -41,6 +41,7 @@ export function doTriggerEvent(
                 reason: ["Event", getItemController(ctx, item.id), item.id, event],
                 text: text
             }
+            logCategory("doTriggerEvent", "eventTitle", text.onEvent)
             ctx = createOnEventTitleFn(text)(ctx, effect, bridge)
         })
     })
@@ -83,6 +84,7 @@ export function doTriggerEvent(
                     ctx = mapPlayerState(ctx, activePlayerId, ps => {
                         return PlayerStateFn.onTurnEnd(ps)
                     }) as GameState
+                    ctx = clearGlobalEffects(ctx)
                     break
                 }
             }

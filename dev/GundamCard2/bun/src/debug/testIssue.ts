@@ -29,113 +29,113 @@ export async function testIssue() {
     const blackT3 = ["179015_04B_O_BK010C_black", "179015_04B_O_BK010C_black", "179015_04B_U_BK058R_black", "179015_04B_U_BK058R_black", "179015_04B_U_BK059C_black", "179015_04B_U_BK059C_black", "179015_04B_U_BK061C_black", "179015_04B_U_BK061C_black", "179016_04B_U_BK066C_black", "179016_04B_U_BK066C_black", "179019_02A_C_BK015S_black", "179019_02A_C_BK015S_black", "179020_05C_U_BK100U_black", "179020_05C_U_BK100U_black", "179023_06C_C_BK048R_black", "179023_06C_C_BK048R_black", "179023_06C_C_BK049U_black", "179023_06C_C_BK049U_black", "179024_04B_C_BK027U_black", "179024_04B_C_BK027U_black", "179024_04B_U_BK060C_black", "179024_04B_U_BK060C_black", "179024_04B_U_BK067C_black", "179024_04B_U_BK067C_black", "179024_B2B_C_BK054C_black", "179024_B2B_C_BK054C_black", "179024_B2B_U_BK128S_black_02", "179024_B2B_U_BK128S_black_02", "179024_B2B_U_BK129R_black", "179024_B2B_U_BK129R_black", "179027_09D_C_BK063R_black", "179027_09D_C_BK063R_black", "179027_09D_O_BK010N_black", "179027_09D_O_BK010N_black", "179027_09D_U_BK163S_black", "179027_09D_U_BK163S_black", "179027_09D_U_BK163S_black", "179029_06C_C_BK045U_black", "179029_06C_C_BK045U_black", "179029_B3C_C_BK071N_black", "179029_B3C_C_BK071N_black", "179029_B3C_U_BK184N_black", "179029_B3C_U_BK184N_black", "179029_B3C_U_BK184N_black", "179029_B3C_U_BK185N_black", "179029_B3C_U_BK185N_black", "179030_11E_U_BK194S_2_black", "179030_11E_U_BK194S_2_black", "179030_11E_U_BK194S_2_black", "179901_B2B_C_BK005P_black"]
     await Promise.all([...blackT3, ...whiteSpeed].map(loadPrototype))
     let ctx = TMP_CTX
-    ctx = setPhase(ctx, ["戦闘フェイズ", "防御ステップ", "フリータイミング"]) as GameStateWithFlowMemory
-    ctx = updateCommand(ctx) as GameStateWithFlowMemory
-    console.log("getPlayerCommands", getPlayerCommands(ctx, PlayerA).length)
-    console.log("getPlayerCommandsFilterNoError", getPlayerCommandsFilterNoError(ctx, PlayerA).length)
-    let flows = queryFlow(ctx, PlayerA)
-    let flow: any = flows.find(flow => flow.id == "FlowSetActiveEffectID")
-    if (flow == null) {
-        throw new Error()
-    }
-    ctx = applyFlow(ctx, PlayerA, flow)
+    // ctx = setPhase(ctx, ["戦闘フェイズ", "防御ステップ", "フリータイミング"]) as GameStateWithFlowMemory
+    // ctx = updateCommand(ctx) as GameStateWithFlowMemory
+    // console.log("getPlayerCommands", getPlayerCommands(ctx, PlayerA).length)
+    // console.log("getPlayerCommandsFilterNoError", getPlayerCommandsFilterNoError(ctx, PlayerA).length)
+    // let flows = queryFlow(ctx, PlayerA)
+    // let flow: any = flows.find(flow => flow.id == "FlowSetActiveEffectID")
+    // if (flow == null) {
+    //     throw new Error()
+    // }
+    // ctx = applyFlow(ctx, PlayerA, flow)
 
-    flows = queryFlow(ctx, PlayerA).filter(flow => flow.id == "FlowSetTipSelection")
-    flows.forEach(flow=>{
-        ctx = applyFlow(ctx, PlayerA, flow)
-    })
-    console.log("getPlayerCommands", getPlayerCommands(ctx, PlayerA).length)
-    console.log("getPlayerCommandsFilterNoError", getPlayerCommandsFilterNoError(ctx, PlayerA).length)
+    // flows = queryFlow(ctx, PlayerA).filter(flow => flow.id == "FlowSetTipSelection")
+    // flows.forEach(flow=>{
+    //     ctx = applyFlow(ctx, PlayerA, flow)
+    // })
+    // console.log("getPlayerCommands", getPlayerCommands(ctx, PlayerA).length)
+    // console.log("getPlayerCommandsFilterNoError", getPlayerCommandsFilterNoError(ctx, PlayerA).length)
 
-    flows = queryFlow(ctx, PlayerA)
-    flow = flows.find(flow => flow.id == "FlowPassPayCost")
-    if (flow == null) {
-        throw new Error()
-    }
-    ctx = applyFlow(ctx, PlayerA, flow)
-
-
-    flows = queryFlow(ctx, PlayerA)
-    flow = flows.find(flow => flow.id == "FlowObserveEffect")
-    if (flow == null) {
-        throw new Error()
-    }
-
-    flows = queryFlow(ctx, PlayerB)
-    flow = flows.find(flow => flow.id == "FlowPassPayCost")
-    if (flow == null) {
-        throw new Error()
-    }
-    ctx = applyFlow(ctx, PlayerB, flow)
-
-    flows = queryFlow(ctx, PlayerA)
-    flow = flows.find(flow => flow.id == "FlowDoEffect")
-    if (flow == null) {
-        throw new Error()
-    }
-    ctx = applyFlow(ctx, PlayerA, flow)
-    console.log("getPlayerCommands", getPlayerCommands(ctx, PlayerA).length)
-    console.log("getPlayerCommandsFilterNoError", getPlayerCommandsFilterNoError(ctx, PlayerA).length)
-
-    flows = queryFlow(ctx, PlayerA)
-    flow = flows.find(flow => flow.id == "FlowSetActiveEffectID")
-    if (flow == null) {
-        throw new Error()
-    }
-    ctx = applyFlow(ctx, PlayerA, flow)
-
-    flows = queryFlow(ctx, PlayerA)
-    flow = flows.find(flow => flow.id == "FlowPassPayCost")
-    if (flow == null) {
-        throw new Error()
-    }
-    ctx = applyFlow(ctx, PlayerA, flow)
-    flows = queryFlow(ctx, PlayerA)
-
-    flows = queryFlow(ctx, PlayerB)
-    flow = flows.find(flow => flow.id == "FlowPassPayCost")
-    if (flow == null) {
-        throw new Error()
-    }
-    ctx = applyFlow(ctx, PlayerB, flow)
-    console.log("=========", ctx.flowMemory.hasPlayerPassCut)
-    console.log("getPlayerCommandsFilterNoError", getPlayerCommandsFilterNoError(ctx, PlayerA).length)
-
-    flows = queryFlow(ctx, PlayerA)
-    flow = flows.find(flow => flow.id == "FlowDoEffect")
-    if (flow == null) {
-        throw new Error()
-    }
-    ctx = applyFlow(ctx, PlayerA, flow)
-    console.log("=========", ctx.flowMemory.hasPlayerPassCut)
-    console.log("getPlayerCommandsFilterNoError", getPlayerCommandsFilterNoError(ctx, PlayerA).length)
+    // flows = queryFlow(ctx, PlayerA)
+    // flow = flows.find(flow => flow.id == "FlowPassPayCost")
+    // if (flow == null) {
+    //     throw new Error()
+    // }
+    // ctx = applyFlow(ctx, PlayerA, flow)
 
 
-    flows = queryFlow(ctx, PlayerB)
-    flow = flows.find(flow => flow.id == "FlowHandleStackEffectFinished")
-    if (flow == null) {
-        throw new Error()
-    }
-    ctx = applyFlow(ctx, PlayerB, flow)
+    // flows = queryFlow(ctx, PlayerA)
+    // flow = flows.find(flow => flow.id == "FlowObserveEffect")
+    // if (flow == null) {
+    //     throw new Error()
+    // }
+
+    // flows = queryFlow(ctx, PlayerB)
+    // flow = flows.find(flow => flow.id == "FlowPassPayCost")
+    // if (flow == null) {
+    //     throw new Error()
+    // }
+    // ctx = applyFlow(ctx, PlayerB, flow)
+
+    // flows = queryFlow(ctx, PlayerA)
+    // flow = flows.find(flow => flow.id == "FlowDoEffect")
+    // if (flow == null) {
+    //     throw new Error()
+    // }
+    // ctx = applyFlow(ctx, PlayerA, flow)
+    // console.log("getPlayerCommands", getPlayerCommands(ctx, PlayerA).length)
+    // console.log("getPlayerCommandsFilterNoError", getPlayerCommandsFilterNoError(ctx, PlayerA).length)
+
+    // flows = queryFlow(ctx, PlayerA)
+    // flow = flows.find(flow => flow.id == "FlowSetActiveEffectID")
+    // if (flow == null) {
+    //     throw new Error()
+    // }
+    // ctx = applyFlow(ctx, PlayerA, flow)
+
+    // flows = queryFlow(ctx, PlayerA)
+    // flow = flows.find(flow => flow.id == "FlowPassPayCost")
+    // if (flow == null) {
+    //     throw new Error()
+    // }
+    // ctx = applyFlow(ctx, PlayerA, flow)
+    // flows = queryFlow(ctx, PlayerA)
+
+    // flows = queryFlow(ctx, PlayerB)
+    // flow = flows.find(flow => flow.id == "FlowPassPayCost")
+    // if (flow == null) {
+    //     throw new Error()
+    // }
+    // ctx = applyFlow(ctx, PlayerB, flow)
+    // console.log("=========", ctx.flowMemory.hasPlayerPassCut)
+    // console.log("getPlayerCommandsFilterNoError", getPlayerCommandsFilterNoError(ctx, PlayerA).length)
+
+    // flows = queryFlow(ctx, PlayerA)
+    // flow = flows.find(flow => flow.id == "FlowDoEffect")
+    // if (flow == null) {
+    //     throw new Error()
+    // }
+    // ctx = applyFlow(ctx, PlayerA, flow)
+    // console.log("=========", ctx.flowMemory.hasPlayerPassCut)
+    // console.log("getPlayerCommandsFilterNoError", getPlayerCommandsFilterNoError(ctx, PlayerA).length)
+
+
+    // flows = queryFlow(ctx, PlayerB)
+    // flow = flows.find(flow => flow.id == "FlowHandleStackEffectFinished")
+    // if (flow == null) {
+    //     throw new Error()
+    // }
+    // ctx = applyFlow(ctx, PlayerB, flow)
     
 
-    flows = queryFlow(ctx, PlayerB)
-    flow = flows.find(flow => flow.id == "FlowPassPhase")
-    if (flow == null) {
-        throw new Error()
-    }
-    ctx = applyFlow(ctx, PlayerB, flow)
-    console.log("=========", ctx.flowMemory.hasPlayerPassCut)
-    console.log("getPlayerCommands", getPlayerCommands(ctx, PlayerA).length)
-    console.log("getPlayerCommandsFilterNoError", getPlayerCommandsFilterNoError(ctx, PlayerA).length)
-    console.log("getPlayerCommandsFilterNoErrorDistinct", getPlayerCommandsFilterNoErrorDistinct(ctx, PlayerA).length)
-    console.log("phase", getPhase(ctx))
-    flows = queryFlow(ctx, PlayerA)
-    flow = flows.find(flow => flow.id == "FlowSetActiveEffectID")
-    if (flow == null) {
-        throw new Error()
-    }
-    ctx = applyFlow(ctx, PlayerA, flow)
+    // flows = queryFlow(ctx, PlayerB)
+    // flow = flows.find(flow => flow.id == "FlowPassPhase")
+    // if (flow == null) {
+    //     throw new Error()
+    // }
+    // ctx = applyFlow(ctx, PlayerB, flow)
+    // console.log("=========", ctx.flowMemory.hasPlayerPassCut)
+    // console.log("getPlayerCommands", getPlayerCommands(ctx, PlayerA).length)
+    // console.log("getPlayerCommandsFilterNoError", getPlayerCommandsFilterNoError(ctx, PlayerA).length)
+    // console.log("getPlayerCommandsFilterNoErrorDistinct", getPlayerCommandsFilterNoErrorDistinct(ctx, PlayerA).length)
+    // console.log("phase", getPhase(ctx))
+    // flows = queryFlow(ctx, PlayerA)
+    // flow = flows.find(flow => flow.id == "FlowSetActiveEffectID")
+    // if (flow == null) {
+    //     throw new Error()
+    // }
+    // ctx = applyFlow(ctx, PlayerA, flow)
 
 
 
@@ -143,21 +143,21 @@ export async function testIssue() {
 
 
 
-    flows = queryFlow(ctx, PlayerA).filter(flow => flow.id == "FlowSetTipSelection")
-    flows.forEach(flow=>{
-        ctx = applyFlow(ctx, PlayerA, flow)
-    })
-    console.log("getPlayerCommands", getPlayerCommands(ctx, PlayerA).length)
-    console.log("getPlayerCommandsFilterNoError", getPlayerCommandsFilterNoError(ctx, PlayerA).length)
+    // flows = queryFlow(ctx, PlayerA).filter(flow => flow.id == "FlowSetTipSelection")
+    // flows.forEach(flow=>{
+    //     ctx = applyFlow(ctx, PlayerA, flow)
+    // })
+    // console.log("getPlayerCommands", getPlayerCommands(ctx, PlayerA).length)
+    // console.log("getPlayerCommandsFilterNoError", getPlayerCommandsFilterNoError(ctx, PlayerA).length)
 
-    flows = queryFlow(ctx, PlayerA)
-    flow = flows.find(flow => flow.id == "FlowPassPayCost")
-    if (flow == null) {
-        throw new Error()
-    }
-    ctx = applyFlow(ctx, PlayerA, flow)
-    flows = queryFlow(ctx, PlayerA)
-    console.log(flows)
+    // flows = queryFlow(ctx, PlayerA)
+    // flow = flows.find(flow => flow.id == "FlowPassPayCost")
+    // if (flow == null) {
+    //     throw new Error()
+    // }
+    // ctx = applyFlow(ctx, PlayerA, flow)
+    // flows = queryFlow(ctx, PlayerA)
+    // console.log(flows)
 
     //throw new Error()
 }

@@ -18,6 +18,7 @@ import { loadPrototype } from "../script"
 import { getItemState, setItemState } from "../game/gameState/ItemStateComponent"
 import { StrBaSyouPair } from "../game/define/Tip"
 import { Effect } from "../game/define/Effect"
+import { getGlobalEffects } from "../game/gameState/globalEffects"
 
 export async function test179030_11E_C_BL079R_blue() {
     await loadPrototype("179030_11E_C_BL079R_blue")
@@ -31,7 +32,8 @@ export async function test179030_11E_C_BL079R_blue() {
     ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "手札"), [cardA]) as GameState
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), repeat("unitBlue", 2)) as GameState
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国"), repeat("unit", 2)) as GameState
-    if (getCardIdsCanPayRollCost(ctx, PlayerA, null).length != 2) {
+    let ges = getGlobalEffects(ctx, null)
+    if (getCardIdsCanPayRollCost(ctx, PlayerA, {ges: ges}).length != 2) {
         throw new Error(`getCardIdsCanPayRollCost(ctx, PlayerA, null).length !=2`)
     }
     ctx = setActivePlayerID(ctx, PlayerA) as GameState

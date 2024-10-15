@@ -28,7 +28,7 @@ export type Effect = {
     reason: EffectReason
     text: CardText
     description?: string
-    isOption?: boolean
+    isOption?: boolean,
 }
 
 export const EffectFn = {

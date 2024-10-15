@@ -16,6 +16,7 @@ import { doTriggerEvent } from "../game/gameState/doTriggerEvent";
 import { loadPrototype } from "../script";
 import { TipError } from "../game/define/GameError";
 import { TipOrErrorsFn } from "../game/define/CommandEffectTip";
+import { getGlobalEffects, setGlobalEffects } from "../game/gameState/globalEffects";
 
 export async function testCrossWeapon() {
     await loadPrototype("unitHasCrossWeaponABC")
@@ -45,7 +46,7 @@ export async function testCrossWeapon() {
     }
     {
         const playEffect = playEffects[0]
-        if(playEffect.text.description != "（戦闘フェイズ）：［ ］の特徴を持つ自軍ユニット１枚は、ターン終了時まで、このカードの本来のテキスト１つと同じテキストを得る。ただし同じテキストは得られない）"){
+        if (playEffect.text.description != "（戦闘フェイズ）：［ ］の特徴を持つ自軍ユニット１枚は、ターン終了時まで、このカードの本来のテキスト１つと同じテキストを得る。ただし同じテキストは得られない）") {
             throw new Error()
         }
         ctx = setTipSelectionForUser(ctx, playEffect, 0, 0)
@@ -56,7 +57,9 @@ export async function testCrossWeapon() {
                 throw new Error()
             }
             ctx = doEffect(ctx, effect, 0, 0)
-            if (getCardTexts(ctx, unit2.id).find(text => text.title[0] == "特殊型" && text.title[1][0] == "高機動")) {
+            let ges = getGlobalEffects(ctx, null)
+            ctx = setGlobalEffects(ctx, null, ges)
+            if (getCardTexts(ctx, unit2.id, { ges: ges }).find(text => text.title[0] == "特殊型" && text.title[1][0] == "高機動")) {
 
             } else {
                 throw new Error()
@@ -77,16 +80,20 @@ export async function testCrossWeapon() {
             }
             {
                 const playEffect = playEffects[0]
-                if(playEffect.text.description != "（戦闘フェイズ）：［ ］の特徴を持つ自軍ユニット１枚は、ターン終了時まで、このカードの本来のテキスト１つと同じテキストを得る。ただし同じテキストは得られない）"){
+                if (playEffect.text.description != "（戦闘フェイズ）：［ ］の特徴を持つ自軍ユニット１枚は、ターン終了時まで、このカードの本来のテキスト１つと同じテキストを得る。ただし同じテキストは得られない）") {
                     throw new Error()
                 }
-                const cets = createEffectTips(ctx ,playEffect,0,0)
-                if(cets.filter(TipOrErrorsFn.filterError).length == 0){
+                const cets = createEffectTips(ctx, playEffect, 0, 0)
+                if (cets.filter(TipOrErrorsFn.filterError).length == 0) {
                     throw new Error()
                 }
             }
             ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", PhaseFn.getLast()] })
-            if (getCardTexts(ctx, unit2.id).find(text => text.title[0] == "特殊型" && text.title[1][0] == "高機動")) {
+            ges = getGlobalEffects(ctx, null)
+            ctx = setGlobalEffects(ctx, null, ges)
+            const texts = getCardTexts(ctx, unit2.id, { ges: ges })
+            if (texts.find(text => text.title[0] == "特殊型" && text.title[1][0] == "高機動")) {
+                console.log(texts)
                 throw new Error()
             }
         }

@@ -23,7 +23,8 @@ export const prototype: CardPrototype = {
         if (GameStateFn.getItemBaSyou(ctx, cardId).value[1] != "ジャンクヤード") {
           return []
         }
-        const playText = GameStateFn.createPlayCharacterOperationEffect(ctx, cardId)
+        const ges = GameStateFn.getGlobalEffects(ctx, null)
+        const playText = GameStateFn.createPlayCharacterOperationEffect(ctx, cardId, {ges: ges})
         const playGText = GameStateFn.createPlayGEffect(ctx, cardId)
         return [playText, playGText]
       }.toString(),
@@ -37,7 +38,8 @@ export const prototype: CardPrototype = {
         if (GameStateFn.getItemBaSyou(ctx, cardId).value[1] != "ジャンクヤード") {
           return []
         }
-        const conditions = GameStateFn.createPlayCardConditions(ctx, cardId)
+        const ges = GameStateFn.getGlobalEffects(ctx, null)
+        const conditions = GameStateFn.createPlayCardConditions(ctx, cardId, {ges: ges})
         delete conditions[DefineFn.TipFn.createCharacterTargetUnitKey()]
         const text: CardText = {
           id: effect.text.id,

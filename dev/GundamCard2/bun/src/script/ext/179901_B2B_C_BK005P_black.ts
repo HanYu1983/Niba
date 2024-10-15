@@ -33,7 +33,7 @@ export const prototype: CardPrototype = {
                         at: ["手札"],
                         max: x,
                         asMuchAsPossible: true,
-                      })
+                      }, {})
                       return tip
                     }.toString()
                   },
@@ -49,7 +49,7 @@ export const prototype: CardPrototype = {
                         at: ["手札"],
                         max: x,
                         asMuchAsPossible: true
-                      })
+                      }, {})
                       return tip
                     }.toString()
                   }

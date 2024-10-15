@@ -39,6 +39,8 @@ export async function test179016_04B_U_BK066C_black() {
     ctx = setPhase(ctx, ["配備フェイズ", "フリータイミング"]) as GameState
     const myGLength = getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン")).length
     {
+        const ges = getGlobalEffects(ctx, null)
+        ctx = setGlobalEffects(ctx, null, ges)
         const effects = createPlayCardEffects(ctx, cardA.id)
         if (effects.length == 0) {
             console.log(effects)

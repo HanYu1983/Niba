@@ -33,12 +33,13 @@ export const prototype: CardPrototype = {
         if (DefineFn.TipFn.createTipErrorWhenCheckFail(tip) != null) {
           return []
         }
+        const ges = GameStateFn.getGlobalEffects(ctx, null)
         const text: CardText = {
           id: effect.text.id,
           description: "『恒常』：このカードは、「専用機のセット」が成立するユニットにセットする場合、合計国力２としてプレイできる。",
           title: ["使用型", ["自軍", "配備フェイズ"]],
           conditions: {
-            ...GameStateFn.createPlayCardConditions(ctx, cardId),
+            ...GameStateFn.createPlayCardConditions(ctx, cardId, {ges: ges}),
             // 覆寫以下兩個鍵
             [DefineFn.TipFn.createCharacterTargetUnitKey()]: {
               title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip | null {

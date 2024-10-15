@@ -28,7 +28,7 @@ export const prototype: CardPrototype = {
           side: "敵軍",
           is: ["ユニット"],
           count: 3,
-        })) as StrBaSyouPair[]
+        }, {})) as StrBaSyouPair[]
         if (pairs.length >= 3) {
           return [
             {

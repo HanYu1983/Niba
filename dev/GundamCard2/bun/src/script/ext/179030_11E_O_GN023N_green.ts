@@ -19,9 +19,9 @@ export const prototype: CardPrototype = {
       description: "『常駐』：「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合、このカードを自軍Gとしてロールできる。",
       title: ["自動型", "常駐"],
       onSituation: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GlobalEffect[] {
-        const cardId = DefineFn.EffectFn.getCardID(effect)
         const situation = DefineFn.EffectFn.getSituation(effect)
-        if (situation?.title[0] == "「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合") {
+        const cardId = DefineFn.EffectFn.getCardID(effect)
+        if (situation && situation.title[0] == "「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合") {
           return [{ title: ["このカードを自軍Gとしてロールできる"], cardIds: [cardId] }]
         }
         return []

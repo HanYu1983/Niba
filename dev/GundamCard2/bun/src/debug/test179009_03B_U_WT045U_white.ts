@@ -16,7 +16,7 @@ import { getItemBaSyou } from "../game/gameState/ItemTableComponent"
 import { setPhase } from "../game/gameState/PhaseComponent"
 import { doTriggerEvent } from "../game/gameState/doTriggerEvent"
 import { loadPrototype } from "../script"
-import { getGlobalEffects } from "../game/gameState/globalEffects"
+import { getGlobalEffects, setGlobalEffects } from "../game/gameState/globalEffects"
 import { CommandEffecTipFn } from "../game/define/CommandEffectTip"
 import { GameError, TargetMissingError, TipError } from "../game/define/GameError"
 import { setSetGroupParent } from "../game/gameState/SetGroupComponent"
@@ -34,16 +34,18 @@ export async function test179009_03B_U_WT045U_white() {
     ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1"), [cardA]) as GameState
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア1"), ["179009_03B_U_WT045U_white", "179009_03B_U_WT045U_white"]) as GameState
     ctx = setActivePlayerID(ctx, PlayerA) as GameState
-    if (getGlobalEffects(ctx, null).find(ge => ge.title[0] == "このカードと交戦中の敵軍部隊の部隊戦闘力を_－３する") == null) {
+    let ges = getGlobalEffects(ctx, null)
+    ctx = setGlobalEffects(ctx, null, ges)
+    if (ges.find(ge => ge.title[0] == "このカードと交戦中の敵軍部隊の部隊戦闘力を_－３する") == null) {
         throw new Error()
     }
-    if (getBattleGroupBattlePoint(ctx, getBattleGroup(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1"))) != -2) {
+    if (getBattleGroupBattlePoint(ctx, getBattleGroup(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1")), {ges: ges}) != -2) {
         throw new Error()
     }
-    if (getBattleGroupBattlePoint(ctx, getBattleGroup(ctx, AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア1"))) != 1) {
+    if (getBattleGroupBattlePoint(ctx, getBattleGroup(ctx, AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア1")), {ges: ges}) != 1) {
         throw new Error()
     }
-    ctx = doPlayerAttack(ctx, PlayerA, "戦闘エリア1", 2)
+    ctx = doPlayerAttack(ctx, PlayerA, "戦闘エリア1", 2, {ges: ges})
     if (getItemState(ctx, cardA.id).damage != 1) {
         throw new Error()
     }

@@ -16,8 +16,10 @@ import { getSetGroupRoot } from "./SetGroupComponent"
 import { logCategory } from "../../tool/logger"
 import { createEntityIterator, createTipByEntitySearch, EntityFn } from "./Entity"
 import { getPlayerState, mapPlayerState } from "./PlayerStateComponent"
+import { clearGlobalEffects, getGlobalEffects, setGlobalEffects } from "./globalEffects"
+import { GlobalEffect } from "../define/GlobalEffect"
 
-export function createConditionTitleFn(condition: Condition, options?: { isPlay?: boolean }): ConditionTitleFn {
+export function createConditionTitleFn(condition: Condition, options: { ges?: GlobalEffect[] }): ConditionTitleFn {
     if (condition.title == null || typeof condition.title == "string") {
         return ConditionFn.getTitleFn(condition)
     }
@@ -112,10 +114,12 @@ export function createConditionTitleFn(condition: Condition, options?: { isPlay?
         case "このカードの_本来のテキスト１つ": {
             const [_, isOrigin, count] = condition.title
             return function (ctx: GameState, effect: Effect): Tip | null {
+                const ges = getGlobalEffects(ctx, null)
+                ctx = setGlobalEffects(ctx, null, ges)
                 const cardId = EffectFn.getCardID(effect)
                 const texts = isOrigin ?
                     (getItemPrototype(ctx, cardId).texts || []) :
-                    getCardTexts(ctx, cardId)
+                    getCardTexts(ctx, cardId, { ges: ges })
                 const textRefs: TipTitleTextRef[] = texts.filter(text => (text.title[0] == "特殊型" && text.title[1][0] == "クロスウェポン") == false).map(text => {
                     return {
                         cardId: cardId,
@@ -232,10 +236,12 @@ export function createConditionTitleFn(condition: Condition, options?: { isPlay?
                 const playerId = getItemController(ctx, cardId);
                 const targetPlayerId = PlayerIDFn.fromRelatedPlayerSideKeyword(side, playerId)
                 const basyous: AbsoluteBaSyou[] = (lift(AbsoluteBaSyouFn.of)([targetPlayerId], ["手札", "ハンガー"]))
+                const ges = getGlobalEffects(ctx, null)
+                ctx = setGlobalEffects(ctx, null, ges)
                 const pairs = basyous.flatMap(basyou =>
                     getItemIdsByBasyou(ctx, basyou)
                         .filter(cardId => getItemRuntimeCategory(ctx, cardId) == category)
-                        .filter(cardId => getCardTotalCostLength(ctx, cardId) <= totalCost)
+                        .filter(cardId => getCardTotalCostLength(ctx, cardId, { ges: ges }) <= totalCost)
                         .map(cardId => [cardId, basyou] as StrBaSyouPair)
                 )
                 return {
@@ -251,11 +257,13 @@ export function createConditionTitleFn(condition: Condition, options?: { isPlay?
                     const cardId = EffectFn.getCardID(effect)
                     const playerId = getItemController(ctx, cardId);
                     const basyous: AbsoluteBaSyou[] = (lift(AbsoluteBaSyouFn.of)([playerId], ["手札", "ハンガー"]))
+                    const ges = getGlobalEffects(ctx, null)
+                    ctx = setGlobalEffects(ctx, null, ges)
                     const pairs = basyous.flatMap(basyou =>
                         getItemIdsByBasyou(ctx, basyou)
                             .filter(cardId => getItemPrototype(ctx, cardId).category == "ユニット")
                             .filter(cardId => getItemCharacteristic(ctx, cardId).includes(char))
-                            .filter(cardId => getCardTotalCostLength(ctx, cardId) <= x)
+                            .filter(cardId => getCardTotalCostLength(ctx, cardId, { ges: ges }) <= x)
                             .map(cardId => [cardId, basyou] as StrBaSyouPair)
                     )
                     return {
@@ -297,7 +305,7 @@ export function createConditionTitleFn(condition: Condition, options?: { isPlay?
                 const targetIds = getItemIdsByBasyou(ctx, from)
                     .map(itemId => getSetGroupRoot(ctx, itemId))
                     .filter(itemId => {
-                        const [_, def, _2] = getSetGroupBattlePoint(ctx, itemId)
+                        const [_, def, _2] = getSetGroupBattlePoint(ctx, itemId, {ges: options.ges})
                         return def <= x
                     })
                 const pairs = targetIds.map(itemId => [itemId, from] as StrBaSyouPair)
@@ -337,7 +345,10 @@ export function createConditionTitleFn(condition: Condition, options?: { isPlay?
                         situation = { title: ["「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合"] }
                     }
                 }
-                const cardIdColors = getCardIdsCanPayRollColor(ctx, situation, cardController, color)
+                //ctx = clearGlobalEffects(ctx)
+                const ges = getGlobalEffects(ctx, situation)
+                ctx = setGlobalEffects(ctx, situation, ges)
+                const cardIdColors = getCardIdsCanPayRollColor(ctx, cardController, color, { ges: ges })
                 let colorIds = []
                 if (color == null) {
                     colorIds = cardIdColors.map(gId => gId.cardId).slice(0, 1)

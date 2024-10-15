@@ -4,6 +4,7 @@ import { AppContext } from "../tool/appContext";
 import { CardView } from "./CardView";
 import { getSetGroup, getSetGroupChildren, getSetGroupRoot } from "../../game/gameState/SetGroupComponent";
 import { getBattleGroupBattlePoint } from "../../game/gameState/battleGroup";
+import { getGlobalEffects } from "../../game/gameState/globalEffects";
 
 export const CardStackView = (props: {
   clientId: string;
@@ -33,7 +34,7 @@ export const CardStackView = (props: {
     if (BaSyouKeywordFn.getBattleArea().includes(props.cardPosition.value[1]) != true) {
       return <></>
     }
-    const bp = getBattleGroupBattlePoint(appContext.viewModel.model.gameState, cardsOnlySetGroupRoot)
+    const bp = getBattleGroupBattlePoint(appContext.viewModel.model.gameState, cardsOnlySetGroupRoot, { ges: getGlobalEffects(appContext.viewModel.model.gameState, null) })
     return <>
       <div>部隊戰鬥力:{bp}</div>
     </>

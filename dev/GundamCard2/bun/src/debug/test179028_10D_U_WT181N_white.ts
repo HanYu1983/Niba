@@ -22,7 +22,9 @@ export async function test179028_10D_U_WT181N_white() {
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "手札"), ["179028_10D_U_WT181N_white"]) as GameState
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), repeat("179028_10D_U_WT181N_white", 5)) as GameState
     ctx = setActivePlayerID(ctx, PlayerA) as GameState
-    if (getCardIdsCanPayRollCost(ctx, PlayerA, null).length != 5) {
+    let ges = getGlobalEffects(ctx, null)
+    ctx = setGlobalEffects(ctx, null, ges)
+    if (getCardIdsCanPayRollCost(ctx, PlayerA, { ges: ges }).length != 5) {
         throw new Error(`getCardIdsCanPayRollCost(ctx, PlayerA, null).length !=5`)
     }
     const cardIds = getItemIds(ctx)
@@ -34,7 +36,7 @@ export async function test179028_10D_U_WT181N_white() {
     if (playCardEffects.length != 3) {
         throw new Error(`playCardEffects.length != 3`)
     }
-    const useEffect = playCardEffects.find(eff=>eff.reason[0]=="PlayCard" && eff.reason[3].isPlayUnit && eff.description == "合計国力_＋１してプレイできる")
+    const useEffect = playCardEffects.find(eff => eff.reason[0] == "PlayCard" && eff.reason[3].isPlayUnit && eff.description == "合計国力_＋１してプレイできる")
     if (useEffect == null) {
         throw new Error()
     }
@@ -56,33 +58,36 @@ export async function test179028_10D_U_WT181N_white() {
     if (getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア")).length != 0) {
         throw new Error(`getCardLiketemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア")).length != 0`)
     }
-    if (getCardTotalCostLength(ctx, cardId) != 4) {
-        throw new Error(`getCardRollCostLength(ctx, cardId) != 4`)
+    if (getCardTotalCostLength(ctx, cardId, { ges: ges }) != 4) {
+        throw new Error()
     }
     ctx = doEffect(ctx, effect, 0, 0)
     if (getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア")).length != 1) {
-        throw new Error(`getCardLiketemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア")).length != 1`)
+        throw new Error()
     }
-    const ges = getGlobalEffects(ctx, null)
+    ges = getGlobalEffects(ctx, null)
     ctx = setGlobalEffects(ctx, null, ges)
-    if (ges.filter(ge => ge.title[0] == "＋x／＋x／＋xを得る").length != 1) {
-        throw new Error(`ges.filter(ge=>ge.title[0]=="＋x／＋x／＋xを得る").length != 1`)
+    if (ges.filter(ge => ge.title[0] == "＋x／＋x／＋xを得る" && ge.title[1][0] == 4).length != 1) {
+        throw new Error()
     }
-    if (getCardTotalCostLength(ctx, cardId) != 5) {
-        throw new Error(`getCardRollCostLength(ctx, cardId) != 5`)
+    if (getCardTotalCostLength(ctx, cardId, { ges: ges }) != 5) {
+        throw new Error()
     }
-    if (BattlePointFn.eq(getCardBattlePoint(ctx, cardId), [8, 0, 8]) == false) {
-        throw new Error(`BattlePointFn.eq(bp, [8,0,8]) == false`)
+    if (BattlePointFn.eq(getCardBattlePoint(ctx, cardId, { ges: ges }), [8, 0, 8]) == false) {
+        console.log(getCardBattlePoint(ctx, cardId, { ges: ges }))
+        throw new Error()
     }
     if (getItemState(ctx, cardId).flags["bonus"] == null) {
-        throw new Error(`getItemState(ctx, cardId).flags["bonus"] == null`)
+        throw new Error()
     }
     ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", PhaseFn.getLast()] })
     if (getItemState(ctx, cardId).flags["bonus"] != null) {
-        throw new Error(`getItemState(ctx, cardId).flags["bonus"] != null`)
+        throw new Error()
     }
     ctx = clearGlobalEffects(ctx)
-    if (BattlePointFn.eq(getCardBattlePoint(ctx, cardId), [4, 0, 4]) == false) {
-        throw new Error(`BattlePointFn.eq(bp, [4,0,4]) == false`)
+    ges = getGlobalEffects(ctx, null)
+    ctx = setGlobalEffects(ctx, null, ges)
+    if (BattlePointFn.eq(getCardBattlePoint(ctx, cardId, { ges: ges }), [4, 0, 4]) == false) {
+        throw new Error()
     }
 }

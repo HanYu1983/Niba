@@ -8,6 +8,7 @@ import { getCardHasSpeicalEffect } from "../../gameState/card";
 import { doEffect, getCardTipStrBaSyouPairs, setTipSelectionForUser } from "../../gameState/doEffect";
 import { getEffect, getImmediateEffects, getStackEffects, getTopEffect } from "../../gameState/EffectStackComponent";
 import { GameState } from "../../gameState/GameState";
+import { getGlobalEffects, setGlobalEffects } from "../../gameState/globalEffects";
 import { getItemState } from "../../gameState/ItemStateComponent";
 import { getItemPrototype } from "../../gameState/ItemTableComponent";
 import { getPhase } from "../../gameState/PhaseComponent";
@@ -24,6 +25,7 @@ export function thinkRandom(ctx: GameStateWithFlowMemory, playerId: PlayerID, fl
 export function thinkVer1(ctx: GameStateWithFlowMemory, playerId: PlayerID, flows: Flow[], options?: {}): Flow | null {
   // 出擊分配部隊
   const attackFlow: Flow[] = flows.flatMap(flow => {
+    const ges = getGlobalEffects(ctx, null)
     if (flow.id == "FlowSetTipSelection") {
       const effect = getEffect(ctx, flow.effectID)
       if (effect.reason[0] == "GameRule" && (effect.reason[2].isAttack)) {
@@ -31,23 +33,23 @@ export function thinkVer1(ctx: GameStateWithFlowMemory, playerId: PlayerID, flow
         const hasSpaceIds = ((getItemState(ctx, EffectFn.getCardID(effect)).tips[TipFn.createGoSpaceKey()]?.title[2] || []) as StrBaSyouPair[]).map(pair => pair[0])
         const hasIds = [...hasEarthIds, ...hasSpaceIds]
         const canAttackUnits = (TipFn.getWant(flow.tip) as StrBaSyouPair[]).filter(pair => hasIds.includes(pair[0]) == false)
-        const meleeUnits = canAttackUnits.filter(pair => isMeleeUnit(ctx, pair[0]))
+        const meleeUnits = canAttackUnits.filter(pair => isMeleeUnit(ctx, pair[0], {ges: ges}))
         // 對格鬥力排序
-        meleeUnits.sort(([id1, _], [id2, _2]) => getSetGroupBattlePoint(ctx, id2)[0] - getSetGroupBattlePoint(ctx, id1)[0])
-        const rangeUnits = canAttackUnits.filter(pair => isRangeUnit(ctx, pair[0]))
+        meleeUnits.sort(([id1, _], [id2, _2]) => getSetGroupBattlePoint(ctx, id2, {ges: ges})[0] - getSetGroupBattlePoint(ctx, id1, {ges: ges})[0])
+        const rangeUnits = canAttackUnits.filter(pair => isRangeUnit(ctx, pair[0], {ges: ges}))
         let willAttackPairs: StrBaSyouPair[] = []
 
-        const hasMeleeHighUnits = meleeUnits.filter(pair => getCardHasSpeicalEffect(ctx, ["高機動"], pair[0]))
-        const hasMeleeSpeed = meleeUnits.filter(pair => getCardHasSpeicalEffect(ctx, ["速攻"], pair[0]))
-        const hasMeleeStrongUnits = meleeUnits.filter(pair => getCardHasSpeicalEffect(ctx, ["強襲"], pair[0]))
-        const hasRangeStrongHighUnits = rangeUnits.filter(pair => getCardHasSpeicalEffect(ctx, ["強襲"], pair[0]))
+        const hasMeleeHighUnits = meleeUnits.filter(pair => getCardHasSpeicalEffect(ctx, ["高機動"], pair[0], {ges: ges}))
+        const hasMeleeSpeed = meleeUnits.filter(pair => getCardHasSpeicalEffect(ctx, ["速攻"], pair[0], {ges: ges}))
+        const hasMeleeStrongUnits = meleeUnits.filter(pair => getCardHasSpeicalEffect(ctx, ["強襲"], pair[0], {ges: ges}))
+        const hasRangeStrongHighUnits = rangeUnits.filter(pair => getCardHasSpeicalEffect(ctx, ["強襲"], pair[0], {ges: ges}))
         if (hasMeleeSpeed.length) {
           // 速攻
-          const hasRangeSpeedUnits = rangeUnits.filter(pair => getCardHasSpeicalEffect(ctx, ["速攻"], pair[0]))
+          const hasRangeSpeedUnits = rangeUnits.filter(pair => getCardHasSpeicalEffect(ctx, ["速攻"], pair[0], {ges: ges}))
           willAttackPairs = [hasMeleeSpeed[0], ...hasRangeSpeedUnits]
         } else if (hasMeleeHighUnits.length) {
           // 高機動
-          const hasRangeHighUnits = rangeUnits.filter(pair => getCardHasSpeicalEffect(ctx, ["高機動"], pair[0]))
+          const hasRangeHighUnits = rangeUnits.filter(pair => getCardHasSpeicalEffect(ctx, ["高機動"], pair[0], {ges: ges}))
           willAttackPairs = [hasMeleeHighUnits[0], ...hasRangeHighUnits]
         } else if (hasMeleeStrongUnits.length > 0 && hasRangeStrongHighUnits.length >= 1) {
           // 最少1格鬥1射擊才組強襲
@@ -78,19 +80,19 @@ export function thinkVer1(ctx: GameStateWithFlowMemory, playerId: PlayerID, flow
         const hasSpaceIds = ((getItemState(ctx, EffectFn.getCardID(effect)).tips[TipFn.createGoSpaceKey()]?.title[2] || []) as StrBaSyouPair[]).map(pair => pair[0])
         const hasIds = [...hasEarthIds, ...hasSpaceIds]
         const canAttackUnits = (TipFn.getWant(flow.tip) as StrBaSyouPair[]).filter(pair => hasIds.includes(pair[0]) == false)
-        const meleeUnits = canAttackUnits.filter(pair => isMeleeUnit(ctx, pair[0]))
+        const meleeUnits = canAttackUnits.filter(pair => isMeleeUnit(ctx, pair[0], {ges: ges}))
         // 對格鬥力排序
-        meleeUnits.sort(([id1, _], [id2, _2]) => getSetGroupBattlePoint(ctx, id2)[0] - getSetGroupBattlePoint(ctx, id1)[0])
-        const rangeUnits = canAttackUnits.filter(pair => isRangeUnit(ctx, pair[0]))
+        meleeUnits.sort(([id1, _], [id2, _2]) => getSetGroupBattlePoint(ctx, id2, {ges: ges})[0] - getSetGroupBattlePoint(ctx, id1, {ges: ges})[0])
+        const rangeUnits = canAttackUnits.filter(pair => isRangeUnit(ctx, pair[0], {ges: ges}))
         let willAttackPairs: StrBaSyouPair[] = []
         const battleArea: AbsoluteBaSyou = flow.tip.flags?.isGoBattleArea1 ? AbsoluteBaSyouFn.of(PlayerIDFn.getOpponent(playerId), "戦闘エリア1") : AbsoluteBaSyouFn.of(PlayerIDFn.getOpponent(playerId), "戦闘エリア2")
-        const opponentPower = getBattleGroupBattlePoint(ctx, getBattleGroup(ctx, battleArea))
+        const opponentPower = getBattleGroupBattlePoint(ctx, getBattleGroup(ctx, battleArea), {ges: ges})
         if (opponentPower == 0) {
           return [flow]
         }
         if (meleeUnits.length >= 1) {
           const myUnits = [meleeUnits[0], ...rangeUnits]
-          const myPower = getBattleGroupBattlePoint(ctx, myUnits.map(pair => pair[0]))
+          const myPower = getBattleGroupBattlePoint(ctx, myUnits.map(pair => pair[0]), {ges: ges})
           if (myPower >= opponentPower) {
             willAttackPairs = myUnits
           }

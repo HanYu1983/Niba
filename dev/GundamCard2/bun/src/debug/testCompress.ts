@@ -3,6 +3,8 @@ import { TargetMissingError } from "../game/define/GameError"
 import { PlayerA, PlayerB, PlayerIDFn } from "../game/define/PlayerID"
 import { getActivePlayerID } from "../game/gameState/ActivePlayerComponent"
 import { createCardWithProtoIds } from "../game/gameState/CardTableComponent"
+import { GameState } from "../game/gameState/GameState"
+import { getGlobalEffects, setGlobalEffects } from "../game/gameState/globalEffects"
 import { getItemIdsByBasyou } from "../game/gameState/ItemTableComponent"
 import { getPhase } from "../game/gameState/PhaseComponent"
 import { createPlayerScore } from "../game/gameState/player"
@@ -26,11 +28,13 @@ export async function testCompress() {
         ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), whiteSpeed.slice(0, 6)) as GameStateWithFlowMemory
         ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerB, "Gゾーン"), whiteSpeed.slice(0, 6)) as GameStateWithFlowMemory
         for (let i = 0; i < 1000; ++i) {
+            const ges = getGlobalEffects(ctx, null)
+            ctx = setGlobalEffects(ctx, null, ges) as GameStateWithFlowMemory
             logCategory("testCompress", `${i} > ${getPhase(ctx)} > ${getActivePlayerID(ctx)}`)
             logCategory("testCompress", `${i} > PlayerA: ${getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国")).length}`)
-            logCategory("testCompress", `${i} > PlayerA Score: ${createPlayerScore(ctx, PlayerA)}`)
+            logCategory("testCompress", `${i} > PlayerA Score: ${createPlayerScore(ctx, PlayerA, {ges: ges})}`)
             logCategory("testCompress", `${i} > PlayerB: ${getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerB, "本国")).length}`)
-            logCategory("testCompress", `${i} > PlayerB Score: ${createPlayerScore(ctx, PlayerB)}`)
+            logCategory("testCompress", `${i} > PlayerB Score: ${createPlayerScore(ctx, PlayerB, {ges: ges})}`)
             logCategory("testCompress", `${i} > turn: ${ctx.turn}`)
             const playerId = PlayerIDFn.getAll()[Math.round(Math.random() * 1000) % 2]
             {

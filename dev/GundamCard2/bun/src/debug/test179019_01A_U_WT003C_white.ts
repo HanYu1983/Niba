@@ -16,7 +16,7 @@ import { getItemBaSyou } from "../game/gameState/ItemTableComponent"
 import { setPhase } from "../game/gameState/PhaseComponent"
 import { doTriggerEvent } from "../game/gameState/doTriggerEvent"
 import { loadPrototype } from "../script"
-import { getGlobalEffects } from "../game/gameState/globalEffects"
+import { getGlobalEffects, setGlobalEffects } from "../game/gameState/globalEffects"
 import { CommandEffecTipFn } from "../game/define/CommandEffectTip"
 import { GameError, TargetMissingError, TipError } from "../game/define/GameError"
 import { setSetGroupParent } from "../game/gameState/SetGroupComponent"
@@ -42,13 +42,20 @@ export async function test179019_01A_U_WT003C_white() {
     ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア"), [cardA]) as GameState
     ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), [unitBlack]) as GameState
     ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "手札"), [cardHand]) as GameState
+    const ges = getGlobalEffects(ctx, null)
+    ctx = setGlobalEffects(ctx, null, ges)
     let effects = createPlayCardEffects(ctx, cardHand.id)
     let effect = effects.find(eff => eff.reason[0] == "PlayCard" && eff.reason[3].isPlayUnit == true)
     if (effect == null) {
         throw new Error()
     }
     let toes = createEffectTips(ctx, effect, 0, 0)
-    let hasCardAcanPayCost = toes.find(toe => toe.conditionKey == TipFn.createRollColorKey(0, "白") && toe.tip && (TipFn.getWant(toe.tip) as StrBaSyouPair[])[0][0] == cardA.id) != null
+    let hasCardAcanPayCost = toes.find(toe =>
+        toe.conditionKey == TipFn.createRollColorKey(0, "白")
+        && toe.tip 
+        && (TipFn.getWant(toe.tip) as StrBaSyouPair[]).length > 0
+        && (TipFn.getWant(toe.tip) as StrBaSyouPair[])[0][0] == cardA.id
+    ) != null
     if (hasCardAcanPayCost != true) {
         throw new Error()
     }

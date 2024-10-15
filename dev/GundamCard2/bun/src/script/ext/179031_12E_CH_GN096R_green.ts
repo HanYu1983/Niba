@@ -74,6 +74,10 @@ export const prototype: CardPrototype = {
         return ctx
       }.toString(),
       onSituation: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GlobalEffect[] {
+        const situation = DefineFn.EffectFn.getSituation(effect)
+        if (situation != null) {
+          return []
+        }
         const cardId = DefineFn.EffectFn.getCardID(effect)
         const targetIds = GameStateFn.getItemState(ctx, cardId).flags.enabled || []
         if (targetIds) {

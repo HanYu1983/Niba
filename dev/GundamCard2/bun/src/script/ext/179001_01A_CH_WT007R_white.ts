@@ -20,12 +20,13 @@ export const prototype: CardPrototype = {
           actions: [
             {
               title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+                const ges = GameStateFn.getGlobalEffects(ctx, null)
                 const cardId = DefineFn.EffectFn.getCardID(effect)
                 const rootId = GameStateFn.getSetGroupRoot(ctx, cardId)
                 if (rootId == cardId) {
                   throw new DefineFn.TipError(`このセットグループのユニットは不存在`)
                 }
-                if (GameStateFn.isSetGroupHasA(ctx, ["速攻"], rootId)) {
+                if (GameStateFn.isSetGroupHasA(ctx, ["速攻"], rootId, {ges: ges})) {
                   throw new DefineFn.TipError(`速攻已有了:${cardId}:${effect.text.description}`)
                 }
                 return ctx

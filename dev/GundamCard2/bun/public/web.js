@@ -16595,13 +16595,13 @@ var require_react_jsx_dev_runtime_development = __commonJS((exports) => {
     }
     var enableScopeAPI = !1, enableCacheElement = !1, enableTransitionTracing = !1, enableLegacyHidden = !1, enableDebugTracing = !1, REACT_MODULE_REFERENCE;
     REACT_MODULE_REFERENCE = Symbol.for("react.module.reference");
-    function isValidElementType(type3) {
-      if (typeof type3 === "string" || typeof type3 === "function")
+    function isValidElementType(type) {
+      if (typeof type === "string" || typeof type === "function")
         return !0;
-      if (type3 === REACT_FRAGMENT_TYPE || type3 === REACT_PROFILER_TYPE || enableDebugTracing || type3 === REACT_STRICT_MODE_TYPE || type3 === REACT_SUSPENSE_TYPE || type3 === REACT_SUSPENSE_LIST_TYPE || enableLegacyHidden || type3 === REACT_OFFSCREEN_TYPE || enableScopeAPI || enableCacheElement || enableTransitionTracing)
+      if (type === REACT_FRAGMENT_TYPE || type === REACT_PROFILER_TYPE || enableDebugTracing || type === REACT_STRICT_MODE_TYPE || type === REACT_SUSPENSE_TYPE || type === REACT_SUSPENSE_LIST_TYPE || enableLegacyHidden || type === REACT_OFFSCREEN_TYPE || enableScopeAPI || enableCacheElement || enableTransitionTracing)
         return !0;
-      if (typeof type3 === "object" && type3 !== null) {
-        if (type3.$$typeof === REACT_LAZY_TYPE || type3.$$typeof === REACT_MEMO_TYPE || type3.$$typeof === REACT_PROVIDER_TYPE || type3.$$typeof === REACT_CONTEXT_TYPE || type3.$$typeof === REACT_FORWARD_REF_TYPE || type3.$$typeof === REACT_MODULE_REFERENCE || type3.getModuleId !== void 0)
+      if (typeof type === "object" && type !== null) {
+        if (type.$$typeof === REACT_LAZY_TYPE || type.$$typeof === REACT_MEMO_TYPE || type.$$typeof === REACT_PROVIDER_TYPE || type.$$typeof === REACT_CONTEXT_TYPE || type.$$typeof === REACT_FORWARD_REF_TYPE || type.$$typeof === REACT_MODULE_REFERENCE || type.getModuleId !== void 0)
           return !0;
       }
       return !1;
@@ -16613,19 +16613,19 @@ var require_react_jsx_dev_runtime_development = __commonJS((exports) => {
       var functionName = innerType.displayName || innerType.name || "";
       return functionName !== "" ? wrapperName + "(" + functionName + ")" : wrapperName;
     }
-    function getContextName(type3) {
-      return type3.displayName || "Context";
+    function getContextName(type) {
+      return type.displayName || "Context";
     }
-    function getComponentNameFromType(type3) {
-      if (type3 == null)
+    function getComponentNameFromType(type) {
+      if (type == null)
         return null;
-      if (typeof type3.tag === "number")
+      if (typeof type.tag === "number")
         error("Received an unexpected object in getComponentNameFromType(). This is likely a bug in React. Please file an issue.");
-      if (typeof type3 === "function")
-        return type3.displayName || type3.name || null;
-      if (typeof type3 === "string")
-        return type3;
-      switch (type3) {
+      if (typeof type === "function")
+        return type.displayName || type.name || null;
+      if (typeof type === "string")
+        return type;
+      switch (type) {
         case REACT_FRAGMENT_TYPE:
           return "Fragment";
         case REACT_PORTAL_TYPE:
@@ -16639,23 +16639,23 @@ var require_react_jsx_dev_runtime_development = __commonJS((exports) => {
         case REACT_SUSPENSE_LIST_TYPE:
           return "SuspenseList";
       }
-      if (typeof type3 === "object")
-        switch (type3.$$typeof) {
+      if (typeof type === "object")
+        switch (type.$$typeof) {
           case REACT_CONTEXT_TYPE:
-            var context2 = type3;
+            var context2 = type;
             return getContextName(context2) + ".Consumer";
           case REACT_PROVIDER_TYPE:
-            var provider = type3;
+            var provider = type;
             return getContextName(provider._context) + ".Provider";
           case REACT_FORWARD_REF_TYPE:
-            return getWrappedName(type3, type3.render, "ForwardRef");
+            return getWrappedName(type, type.render, "ForwardRef");
           case REACT_MEMO_TYPE:
-            var outerName = type3.displayName || null;
+            var outerName = type.displayName || null;
             if (outerName !== null)
               return outerName;
-            return getComponentNameFromType(type3.type) || "Memo";
+            return getComponentNameFromType(type.type) || "Memo";
           case REACT_LAZY_TYPE: {
-            var lazyComponent = type3, payload = lazyComponent._payload, init = lazyComponent._init;
+            var lazyComponent = type, payload = lazyComponent._payload, init = lazyComponent._init;
             try {
               return getComponentNameFromType(init(payload));
             } catch (x) {
@@ -16828,27 +16828,27 @@ var require_react_jsx_dev_runtime_development = __commonJS((exports) => {
       var prototype = Component.prototype;
       return !!(prototype && prototype.isReactComponent);
     }
-    function describeUnknownElementTypeFrameInDEV(type3, source, ownerFn) {
-      if (type3 == null)
+    function describeUnknownElementTypeFrameInDEV(type, source, ownerFn) {
+      if (type == null)
         return "";
-      if (typeof type3 === "function")
-        return describeNativeComponentFrame(type3, shouldConstruct(type3));
-      if (typeof type3 === "string")
-        return describeBuiltInComponentFrame(type3);
-      switch (type3) {
+      if (typeof type === "function")
+        return describeNativeComponentFrame(type, shouldConstruct(type));
+      if (typeof type === "string")
+        return describeBuiltInComponentFrame(type);
+      switch (type) {
         case REACT_SUSPENSE_TYPE:
           return describeBuiltInComponentFrame("Suspense");
         case REACT_SUSPENSE_LIST_TYPE:
           return describeBuiltInComponentFrame("SuspenseList");
       }
-      if (typeof type3 === "object")
-        switch (type3.$$typeof) {
+      if (typeof type === "object")
+        switch (type.$$typeof) {
           case REACT_FORWARD_REF_TYPE:
-            return describeFunctionComponentFrame(type3.render);
+            return describeFunctionComponentFrame(type.render);
           case REACT_MEMO_TYPE:
-            return describeUnknownElementTypeFrameInDEV(type3.type, source, ownerFn);
+            return describeUnknownElementTypeFrameInDEV(type.type, source, ownerFn);
           case REACT_LAZY_TYPE: {
-            var lazyComponent = type3, payload = lazyComponent._payload, init = lazyComponent._init;
+            var lazyComponent = type, payload = lazyComponent._payload, init = lazyComponent._init;
             try {
               return describeUnknownElementTypeFrameInDEV(init(payload), source, ownerFn);
             } catch (x) {
@@ -16893,8 +16893,8 @@ var require_react_jsx_dev_runtime_development = __commonJS((exports) => {
     }
     function typeName(value) {
       {
-        var hasToStringTag = typeof Symbol === "function" && Symbol.toStringTag, type3 = hasToStringTag && value[Symbol.toStringTag] || value.constructor.name || "Object";
-        return type3;
+        var hasToStringTag = typeof Symbol === "function" && Symbol.toStringTag, type = hasToStringTag && value[Symbol.toStringTag] || value.constructor.name || "Object";
+        return type;
       }
     }
     function willCoercionThrow(value) {
@@ -16965,10 +16965,10 @@ var require_react_jsx_dev_runtime_development = __commonJS((exports) => {
         });
       }
     }
-    var ReactElement = function(type3, key, ref, self, source, owner, props) {
+    var ReactElement = function(type, key, ref, self, source, owner, props) {
       var element = {
         $$typeof: REACT_ELEMENT_TYPE,
-        type: type3,
+        type,
         key,
         ref,
         props,
@@ -16993,7 +16993,7 @@ var require_react_jsx_dev_runtime_development = __commonJS((exports) => {
         Object.freeze(element.props), Object.freeze(element);
       return element;
     };
-    function jsxDEV(type3, config2, maybeKey, source, self) {
+    function jsxDEV(type, config2, maybeKey, source, self) {
       {
         var propName, props = {}, key = null, ref = null;
         if (maybeKey !== void 0)
@@ -17005,20 +17005,20 @@ var require_react_jsx_dev_runtime_development = __commonJS((exports) => {
         for (propName in config2)
           if (hasOwnProperty.call(config2, propName) && !RESERVED_PROPS.hasOwnProperty(propName))
             props[propName] = config2[propName];
-        if (type3 && type3.defaultProps) {
-          var defaultProps = type3.defaultProps;
+        if (type && type.defaultProps) {
+          var defaultProps = type.defaultProps;
           for (propName in defaultProps)
             if (props[propName] === void 0)
               props[propName] = defaultProps[propName];
         }
         if (key || ref) {
-          var displayName = typeof type3 === "function" ? type3.displayName || type3.name || "Unknown" : type3;
+          var displayName = typeof type === "function" ? type.displayName || type.name || "Unknown" : type;
           if (key)
             defineKeyPropWarningGetter(props, displayName);
           if (ref)
             defineRefPropWarningGetter(props, displayName);
         }
-        return ReactElement(type3, key, ref, self, source, ReactCurrentOwner.current, props);
+        return ReactElement(type, key, ref, self, source, ReactCurrentOwner.current, props);
       }
     }
     var { ReactCurrentOwner: ReactCurrentOwner$1, ReactDebugCurrentFrame: ReactDebugCurrentFrame$1 } = ReactSharedInternals;
@@ -17107,25 +17107,25 @@ var require_react_jsx_dev_runtime_development = __commonJS((exports) => {
     }
     function validatePropTypes(element) {
       {
-        var type3 = element.type;
-        if (type3 === null || type3 === void 0 || typeof type3 === "string")
+        var type = element.type;
+        if (type === null || type === void 0 || typeof type === "string")
           return;
         var propTypes;
-        if (typeof type3 === "function")
-          propTypes = type3.propTypes;
-        else if (typeof type3 === "object" && (type3.$$typeof === REACT_FORWARD_REF_TYPE || type3.$$typeof === REACT_MEMO_TYPE))
-          propTypes = type3.propTypes;
+        if (typeof type === "function")
+          propTypes = type.propTypes;
+        else if (typeof type === "object" && (type.$$typeof === REACT_FORWARD_REF_TYPE || type.$$typeof === REACT_MEMO_TYPE))
+          propTypes = type.propTypes;
         else
           return;
         if (propTypes) {
-          var name = getComponentNameFromType(type3);
+          var name = getComponentNameFromType(type);
           checkPropTypes(propTypes, element.props, "prop", name, element);
-        } else if (type3.PropTypes !== void 0 && !propTypesMisspellWarningShown) {
+        } else if (type.PropTypes !== void 0 && !propTypesMisspellWarningShown) {
           propTypesMisspellWarningShown = !0;
-          var _name = getComponentNameFromType(type3);
+          var _name = getComponentNameFromType(type);
           error("Component %s declared `PropTypes` instead of `propTypes`. Did you misspell the property assignment?", _name || "Unknown");
         }
-        if (typeof type3.getDefaultProps === "function" && !type3.getDefaultProps.isReactClassApproved)
+        if (typeof type.getDefaultProps === "function" && !type.getDefaultProps.isReactClassApproved)
           error("getDefaultProps is only used on classic React.createClass definitions. Use a static property named `defaultProps` instead.");
       }
     }
@@ -17144,12 +17144,12 @@ var require_react_jsx_dev_runtime_development = __commonJS((exports) => {
       }
     }
     var didWarnAboutKeySpread = {};
-    function jsxWithValidation(type3, props, key, isStaticChildren, source, self) {
+    function jsxWithValidation(type, props, key, isStaticChildren, source, self) {
       {
-        var validType = isValidElementType(type3);
+        var validType = isValidElementType(type);
         if (!validType) {
           var info = "";
-          if (type3 === void 0 || typeof type3 === "object" && type3 !== null && Object.keys(type3).length === 0)
+          if (type === void 0 || typeof type === "object" && type !== null && Object.keys(type).length === 0)
             info += " You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.";
           var sourceInfo = getSourceInfoErrorAddendum(source);
           if (sourceInfo)
@@ -17157,17 +17157,17 @@ var require_react_jsx_dev_runtime_development = __commonJS((exports) => {
           else
             info += getDeclarationErrorAddendum();
           var typeString;
-          if (type3 === null)
+          if (type === null)
             typeString = "null";
-          else if (isArray(type3))
+          else if (isArray(type))
             typeString = "array";
-          else if (type3 !== void 0 && type3.$$typeof === REACT_ELEMENT_TYPE)
-            typeString = "<" + (getComponentNameFromType(type3.type) || "Unknown") + " />", info = " Did you accidentally export a JSX literal instead of a component?";
+          else if (type !== void 0 && type.$$typeof === REACT_ELEMENT_TYPE)
+            typeString = "<" + (getComponentNameFromType(type.type) || "Unknown") + " />", info = " Did you accidentally export a JSX literal instead of a component?";
           else
-            typeString = typeof type3;
+            typeString = typeof type;
           error("React.jsx: type is invalid -- expected a string (for built-in components) or a class/function (for composite components) but got: %s.%s", typeString, info);
         }
-        var element = jsxDEV(type3, props, key, source, self);
+        var element = jsxDEV(type, props, key, source, self);
         if (element == null)
           return element;
         if (validType) {
@@ -17176,16 +17176,16 @@ var require_react_jsx_dev_runtime_development = __commonJS((exports) => {
             if (isStaticChildren)
               if (isArray(children2)) {
                 for (var i = 0;i < children2.length; i++)
-                  validateChildKeys(children2[i], type3);
+                  validateChildKeys(children2[i], type);
                 if (Object.freeze)
                   Object.freeze(children2);
               } else
                 error("React.jsx: Static children should always be an array. You are likely explicitly calling React.jsxs or React.jsxDEV. Use the Babel transform instead.");
             else
-              validateChildKeys(children2, type3);
+              validateChildKeys(children2, type);
         }
         if (hasOwnProperty.call(props, "key")) {
-          var componentName = getComponentNameFromType(type3), keys4 = Object.keys(props).filter(function(k) {
+          var componentName = getComponentNameFromType(type), keys4 = Object.keys(props).filter(function(k) {
             return k !== "key";
           }), beforeExample = keys4.length > 0 ? "{key: someKey, " + keys4.join(": ..., ") + ": ...}" : "{key: someKey}";
           if (!didWarnAboutKeySpread[componentName + beforeExample]) {
@@ -17193,7 +17193,7 @@ var require_react_jsx_dev_runtime_development = __commonJS((exports) => {
             error('A props object containing a "key" prop is being spread into JSX:\n  let props = %s;\n  <%s {...props} />\nReact keys must be passed directly to JSX without using spread:\n  let props = %s;\n  <%s key={someKey} {...props} />', beforeExample, componentName, afterExample, componentName), didWarnAboutKeySpread[componentName + beforeExample] = !0;
           }
         }
-        if (type3 === REACT_FRAGMENT_TYPE)
+        if (type === REACT_FRAGMENT_TYPE)
           validateFragmentProps(element);
         else
           validatePropTypes(element);
@@ -17364,7 +17364,24 @@ var hideCategory = [
   "onEvent",
   "onEffectStart",
   "onEffectEnd",
-  "onItemMove"
+  "onItemMove",
+  "createTextsFromSpecialEffect",
+  "getCardIdsCanPayRollCost",
+  "getCardIdsCanPayRollColor",
+  "getCardHasSpeicalEffect",
+  "getCardTexts",
+  "getCardSpecialText",
+  "getCardBattlePoint",
+  "getCardTotalCostLength",
+  "createPlayCommandText",
+  "createPlayCardConditions",
+  "createPlayCardEffect",
+  "doItemMove",
+  "createPlayCharacterOperationEffect",
+  "createPlayStayEffect",
+  "createPlayUnitEffect",
+  "getGlobalEffects",
+  "createAllCardTexts"
 ], filterCategory = !0, logCategory = (category, ...msg) => {
   if (filterCategory) {
     if (hideCategory.find((c) => c == category))
@@ -17824,44 +17841,10 @@ var _xfBase_default = {
   }
 };
 
-// node_modules/ramda/es/internal/_arrayFromIterator.js
-function _arrayFromIterator(iter) {
-  var list = [], next;
-  while (!(next = iter.next()).done)
-    list.push(next.value);
-  return list;
-}
-
-// node_modules/ramda/es/internal/_includesWith.js
-function _includesWith(pred, x, list) {
-  var idx = 0, len = list.length;
-  while (idx < len) {
-    if (pred(x, list[idx]))
-      return !0;
-    idx += 1;
-  }
-  return !1;
-}
-
-// node_modules/ramda/es/internal/_functionName.js
-function _functionName(f) {
-  var match = String(f).match(/^function (\w*)/);
-  return match == null ? "" : match[1];
-}
-
 // node_modules/ramda/es/internal/_has.js
 function _has(prop, obj) {
   return Object.prototype.hasOwnProperty.call(obj, prop);
 }
-
-// node_modules/ramda/es/internal/_objectIs.js
-function _objectIs(a, b) {
-  if (a === b)
-    return a !== 0 || 1 / a === 1 / b;
-  else
-    return a !== a && b !== b;
-}
-var _objectIs_default = typeof Object.is === "function" ? Object.is : _objectIs;
 
 // node_modules/ramda/es/internal/_isArguments.js
 var toString = Object.prototype.toString, _isArguments = /* @__PURE__ */ function() {
@@ -17904,112 +17887,6 @@ var hasEnumBug = !/* @__PURE__ */ {
   }
   return ks;
 }), keys_default = keys;
-
-// node_modules/ramda/es/type.js
-var type = /* @__PURE__ */ _curry1(function type2(val) {
-  return val === null ? "Null" : val === void 0 ? "Undefined" : Object.prototype.toString.call(val).slice(8, -1);
-}), type_default = type;
-
-// node_modules/ramda/es/internal/_equals.js
-function _uniqContentEquals(aIterator, bIterator, stackA, stackB) {
-  var a = _arrayFromIterator(aIterator), b = _arrayFromIterator(bIterator);
-  function eq(_a, _b) {
-    return _equals(_a, _b, stackA.slice(), stackB.slice());
-  }
-  return !_includesWith(function(b2, aItem) {
-    return !_includesWith(eq, aItem, b2);
-  }, b, a);
-}
-function _equals(a, b, stackA, stackB) {
-  if (_objectIs_default(a, b))
-    return !0;
-  var typeA = type_default(a);
-  if (typeA !== type_default(b))
-    return !1;
-  if (typeof a["fantasy-land/equals"] === "function" || typeof b["fantasy-land/equals"] === "function")
-    return typeof a["fantasy-land/equals"] === "function" && a["fantasy-land/equals"](b) && typeof b["fantasy-land/equals"] === "function" && b["fantasy-land/equals"](a);
-  if (typeof a.equals === "function" || typeof b.equals === "function")
-    return typeof a.equals === "function" && a.equals(b) && typeof b.equals === "function" && b.equals(a);
-  switch (typeA) {
-    case "Arguments":
-    case "Array":
-    case "Object":
-      if (typeof a.constructor === "function" && _functionName(a.constructor) === "Promise")
-        return a === b;
-      break;
-    case "Boolean":
-    case "Number":
-    case "String":
-      if (!(typeof a === typeof b && _objectIs_default(a.valueOf(), b.valueOf())))
-        return !1;
-      break;
-    case "Date":
-      if (!_objectIs_default(a.valueOf(), b.valueOf()))
-        return !1;
-      break;
-    case "Error":
-      return a.name === b.name && a.message === b.message;
-    case "RegExp":
-      if (!(a.source === b.source && a.global === b.global && a.ignoreCase === b.ignoreCase && a.multiline === b.multiline && a.sticky === b.sticky && a.unicode === b.unicode))
-        return !1;
-      break;
-  }
-  var idx = stackA.length - 1;
-  while (idx >= 0) {
-    if (stackA[idx] === a)
-      return stackB[idx] === b;
-    idx -= 1;
-  }
-  switch (typeA) {
-    case "Map":
-      if (a.size !== b.size)
-        return !1;
-      return _uniqContentEquals(a.entries(), b.entries(), stackA.concat([a]), stackB.concat([b]));
-    case "Set":
-      if (a.size !== b.size)
-        return !1;
-      return _uniqContentEquals(a.values(), b.values(), stackA.concat([a]), stackB.concat([b]));
-    case "Arguments":
-    case "Array":
-    case "Object":
-    case "Boolean":
-    case "Number":
-    case "String":
-    case "Date":
-    case "Error":
-    case "RegExp":
-    case "Int8Array":
-    case "Uint8Array":
-    case "Uint8ClampedArray":
-    case "Int16Array":
-    case "Uint16Array":
-    case "Int32Array":
-    case "Uint32Array":
-    case "Float32Array":
-    case "Float64Array":
-    case "ArrayBuffer":
-      break;
-    default:
-      return !1;
-  }
-  var keysA = keys_default(a);
-  if (keysA.length !== keys_default(b).length)
-    return !1;
-  var extendedStackA = stackA.concat([a]), extendedStackB = stackB.concat([b]);
-  idx = keysA.length - 1;
-  while (idx >= 0) {
-    var key = keysA[idx];
-    if (!(_has(key, b) && _equals(b[key], a[key], extendedStackA, extendedStackB)))
-      return !1;
-    idx -= 1;
-  }
-  return !0;
-}
-
-// node_modules/ramda/es/equals.js
-var equals = /* @__PURE__ */ _curry2(function equals2(a, b) {
-  return _equals(a, b, [], []);
-}), equals_default = equals;
 
 // node_modules/ramda/es/internal/_map.js
 function _map(fn, functor) {
@@ -18065,12 +17942,6 @@ var _isInteger_default = Number.isInteger || function _isInteger(n) {
 // node_modules/ramda/es/internal/_isString.js
 function _isString(x) {
   return Object.prototype.toString.call(x) === "[object String]";
-}
-
-// node_modules/ramda/es/internal/_nth.js
-function _nth(offset, list) {
-  var idx = offset < 0 ? list.length + offset : offset;
-  return _isString(list) ? list.charAt(idx) : list[idx];
 }
 
 // node_modules/ramda/es/internal/_isArrayLike.js
@@ -18340,56 +18211,6 @@ var dissocPath = /* @__PURE__ */ _curry2(function dissocPath2(path, obj) {
 var dissoc = /* @__PURE__ */ _curry2(function dissoc2(prop, obj) {
   return dissocPath_default([prop], obj);
 }), dissoc_default = dissoc;
-// node_modules/ramda/es/internal/_xdropRepeatsWith.js
-var XDropRepeatsWith = /* @__PURE__ */ function() {
-  function XDropRepeatsWith2(pred, xf) {
-    this.xf = xf, this.pred = pred, this.lastValue = void 0, this.seenFirstValue = !1;
-  }
-  return XDropRepeatsWith2.prototype["@@transducer/init"] = _xfBase_default.init, XDropRepeatsWith2.prototype["@@transducer/result"] = _xfBase_default.result, XDropRepeatsWith2.prototype["@@transducer/step"] = function(result, input) {
-    var sameAsLast = !1;
-    if (!this.seenFirstValue)
-      this.seenFirstValue = !0;
-    else if (this.pred(this.lastValue, input))
-      sameAsLast = !0;
-    return this.lastValue = input, sameAsLast ? result : this.xf["@@transducer/step"](result, input);
-  }, XDropRepeatsWith2;
-}();
-function _xdropRepeatsWith(pred) {
-  return function(xf) {
-    return new XDropRepeatsWith(pred, xf);
-  };
-}
-
-// node_modules/ramda/es/last.js
-var last = /* @__PURE__ */ _curry1(function(list) {
-  return _nth(-1, list);
-}), last_default = last;
-
-// node_modules/ramda/es/dropRepeatsWith.js
-var dropRepeatsWith = /* @__PURE__ */ _curry2(/* @__PURE__ */ _dispatchable([], _xdropRepeatsWith, function dropRepeatsWith2(pred, list) {
-  var result = [], idx = 1, len = list.length;
-  if (len !== 0) {
-    result[0] = list[0];
-    while (idx < len) {
-      if (!pred(last_default(result), list[idx]))
-        result[result.length] = list[idx];
-      idx += 1;
-    }
-  }
-  return result;
-})), dropRepeatsWith_default = dropRepeatsWith;
-
-// node_modules/ramda/es/eqBy.js
-var eqBy = /* @__PURE__ */ _curry3(function eqBy2(f, x, y) {
-  return equals_default(f(x), f(y));
-}), eqBy_default = eqBy;
-
-// node_modules/ramda/es/dropRepeatsBy.js
-var dropRepeatsBy = /* @__PURE__ */ _curry2(function(fn, list) {
-  return _dispatchable([], function() {
-    return _xdropRepeatsWith(eqBy_default(fn));
-  }, dropRepeatsWith_default(eqBy_default(fn)))(list);
-}), dropRepeatsBy_default = dropRepeatsBy;
 // node_modules/ramda/es/flatten.js
 var flatten = /* @__PURE__ */ _curry1(/* @__PURE__ */ _makeFlat(!0)), flatten_default = flatten;
 // node_modules/ramda/es/fromPairs.js
@@ -20014,6 +19835,9 @@ __export(exports_Effect, {
   EffectFn: () => EffectFn
 });
 var EffectFn = {
+  createEmptyPlayCard(playerId, cardId) {
+    return { id: "", reason: ["PlayCard", playerId, cardId, {}], text: { id: "", title: [] } };
+  },
   isFakeCardID(string) {
     return string.startsWith("SystemFakeCardID_");
   },
@@ -20312,545 +20136,6 @@ var BattlePointFn = {
   }
 };
 
-// src/game/gameState/globalEffects.ts
-var exports_globalEffects = {};
-__export(exports_globalEffects, {
-  setGlobalEffects: () => setGlobalEffects,
-  getGlobalEffects: () => getGlobalEffects,
-  createAllCardTexts: () => createAllCardTexts,
-  clearGlobalEffects: () => clearGlobalEffects
-});
-
-// src/game/gameState/createTextsFromSpecialEffect.ts
-function createTextsFromSpecialEffect(ctx2, cardId, text, options) {
-  if (text.title[0] != "\u7279\u6B8A\u578B")
-    throw new Error("text not \u7279\u6B8A\u578B");
-  const specialEffect = text.title[1];
-  switch (specialEffect[0]) {
-    case "\u3010PS\u88C5\u7532\u3011":
-      return [
-        {
-          id: text.id,
-          title: ["\u81EA\u52D5\u578B", "\u8D77\u52D5"],
-          description: "\u51FA\u5834\u6642\u76F4\u7ACB\u51FA\u5834"
-        },
-        {
-          id: text.id,
-          title: ["\u81EA\u52D5\u578B", "\u8D77\u52D5"],
-          description: "\u9019\u5F35\u5361\u51FA\u73FE\u5728\u6230\u5340\u6642, \u4E0B\u56DE\u5408\u958B\u59CB\u6642\u56DE\u5230\u6301\u6709\u8005\u624B\u4E0A. \u4F46\u5982\u679C\u548C\u6301\u6709\u88DC\u7D66\u6216\u4F9B\u7D66\u7684\u5361\u7D44\u5408\u90E8\u968A\u7684\u6642\u5019, \u4E0A\u8FF0\u7684\u6548\u679C\u4E0D\u767C\u52D5.",
-          onEvent: function _(ctx3, effect, { GameStateFn, DefineFn }) {
-            const cardId2 = DefineFn.EffectFn.getCardID(effect), evt = DefineFn.EffectFn.getEvent(effect);
-            if (evt.title[0] == "GameEventOnMove" && (DefineFn.AbsoluteBaSyouFn.getBaSyouKeyword(evt.title[2]) == "\u6226\u95D8\u30A8\u30EA\u30A21" || DefineFn.AbsoluteBaSyouFn.getBaSyouKeyword(evt.title[2]) == "\u6226\u95D8\u30A8\u30EA\u30A22")) {
-              if (evt.cardIds?.includes(cardId2))
-                if (GameStateFn.isBattleGroupHasA(ctx3, ["\u4F9B\u7D66"], cardId2))
-                  ;
-                else
-                  ctx3 = GameStateFn.mapItemState(ctx3, cardId2, (is) => DefineFn.ItemStateFn.setFlag(is, "return", !0));
-              else if (DefineFn.AbsoluteBaSyouFn.eq(GameStateFn.getItemBaSyou(ctx3, cardId2), evt.title[2])) {
-                if (GameStateFn.isBattleGroupHasA(ctx3, ["\u4F9B\u7D66"], cardId2))
-                  ctx3 = GameStateFn.mapItemState(ctx3, cardId2, (is) => DefineFn.ItemStateFn.removeFlag(is, "return"));
-              }
-            }
-            if (evt.title[0] == "GameEventOnTiming" && DefineFn.PhaseFn.eq(evt.title[1], DefineFn.PhaseFn.getFirst())) {
-              const cardId3 = DefineFn.EffectFn.getCardID(effect), cardController = GameStateFn.getItemController(ctx3, cardId3);
-              if (GameStateFn.getItemState(ctx3, cardId3).flags.return)
-                ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.of(cardController, "\u624B\u672D"), [cardId3, GameStateFn.getItemBaSyou(ctx3, cardId3)]), ctx3 = GameStateFn.mapItemState(ctx3, cardId3, (is) => DefineFn.ItemStateFn.removeFlag(is, "return"));
-            }
-            return ctx3;
-          }.toString()
-        }
-      ];
-    case "\u30AF\u30ED\u30B9\u30A6\u30A7\u30DD\u30F3": {
-      const [_, A] = specialEffect;
-      return [
-        {
-          id: text.id,
-          title: ["\u4F7F\u7528\u578B", ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA"]],
-          description: "\uFF08\u6226\u95D8\u30D5\u30A7\u30A4\u30BA\uFF09\uFF1A\uFF3B \uFF3D\u306E\u7279\u5FB4\u3092\u6301\u3064\u81EA\u8ECD\u30E6\u30CB\u30C3\u30C8\uFF11\u679A\u306F\u3001\u30BF\u30FC\u30F3\u7D42\u4E86\u6642\u307E\u3067\u3001\u3053\u306E\u30AB\u30FC\u30C9\u306E\u672C\u6765\u306E\u30C6\u30AD\u30B9\u30C8\uFF11\u3064\u3068\u540C\u3058\u30C6\u30AD\u30B9\u30C8\u3092\u5F97\u308B\u3002\u305F\u3060\u3057\u540C\u3058\u30C6\u30AD\u30B9\u30C8\u306F\u5F97\u3089\u308C\u306A\u3044\uFF09",
-          conditions: {
-            ...text.conditions,
-            "\u3053\u306E\u30AB\u30FC\u30C9\u306E\u672C\u6765\u306E\u30C6\u30AD\u30B9\u30C8\uFF11\u3064": {
-              title: ["\u3053\u306E\u30AB\u30FC\u30C9\u306E_\u672C\u6765\u306E\u30C6\u30AD\u30B9\u30C8\uFF11\u3064", !0, 1]
-            },
-            "\uFF3B \uFF3D\u306E\u7279\u5FB4\u3092\u6301\u3064\u81EA\u8ECD\u30E6\u30CB\u30C3\u30C8\uFF11\u679A\u306F": {
-              title: ["_\u672C\u6765\u306E\u8A18\u8FF0\u306B\uFF62\u7279\u5FB4\uFF1A_\u88C5\u5F3E\uFF63\u3092\u6301\u3064_\u81EA\u8ECD_G_\uFF11\u679A", !1, A, "\u81EA\u8ECD", "\u30E6\u30CB\u30C3\u30C8", 1],
-              exceptItemSelf: !0,
-              actions: [
-                {
-                  title: function _(ctx3, effect, { GameStateFn, DefineFn }) {
-                    const cardId2 = DefineFn.EffectFn.getCardID(effect), pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx3, "\uFF3B \uFF3D\u306E\u7279\u5FB4\u3092\u6301\u3064\u81EA\u8ECD\u30E6\u30CB\u30C3\u30C8\uFF11\u679A\u306F", cardId2), textRefIds = GameStateFn.getCardTipTextRefs(ctx3, "\u3053\u306E\u30AB\u30FC\u30C9\u306E\u672C\u6765\u306E\u30C6\u30AD\u30B9\u30C8\uFF11\u3064", cardId2).map((tr) => tr.textId);
-                    for (let pair2 of pairs)
-                      if (GameStateFn.getCardTexts(ctx3, pair2[0]).find((text2) => textRefIds.includes(text2.id)))
-                        throw new DefineFn.TipError(`\u5DF2\u6709\u540C\u6A23\u7684\u5167\u6587: ${JSON.stringify(textRefIds)}`, { hasSameText: !0 });
-                    return ctx3;
-                  }.toString()
-                }
-              ]
-            }
-          },
-          logicTreeActions: [
-            {
-              actions: [
-                {
-                  title: ["cutIn", [
-                    {
-                      title: function _(ctx3, effect, { GameStateFn, DefineFn }) {
-                        const cardId2 = DefineFn.EffectFn.getCardID(effect), pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx3, "\uFF3B \uFF3D\u306E\u7279\u5FB4\u3092\u6301\u3064\u81EA\u8ECD\u30E6\u30CB\u30C3\u30C8\uFF11\u679A\u306F", cardId2), textRefs = GameStateFn.getCardTipTextRefs(ctx3, "\u3053\u306E\u30AB\u30FC\u30C9\u306E\u672C\u6765\u306E\u30C6\u30AD\u30B9\u30C8\uFF11\u3064", cardId2);
-                        for (let pair2 of pairs) {
-                          GameStateFn.assertTargetMissingError(ctx3, pair2);
-                          const [targetCardId, targetBasyou] = pair2;
-                          ctx3 = GameStateFn.mapItemState(ctx3, targetCardId, (targetItemState) => {
-                            for (let textRef of textRefs) {
-                              if (GameStateFn.getCardTexts(ctx3, targetItemState.id).find((text2) => text2.id == textRef.textId) != null)
-                                continue;
-                              targetItemState = DefineFn.ItemStateFn.setGlobalEffect(targetItemState, null, {
-                                title: ["AddTextRef", textRef],
-                                cardIds: [targetItemState.id]
-                              }, { isRemoveOnTurnEnd: !0 });
-                            }
-                            return targetItemState;
-                          });
-                        }
-                        return ctx3;
-                      }.toString()
-                    }
-                  ]]
-                }
-              ]
-            }
-          ]
-        }
-      ];
-    }
-    case "\u30B2\u30A4\u30F3":
-      return [
-        {
-          id: text.id,
-          title: ["\u4F7F\u7528\u578B", ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA"]],
-          description: "\u9019\u5F35\u5361\u5728\u6230\u5340\u7684\u5834\u5408, \u6253\u958B\u81EA\u8ECD\u672C\u570B\u4E0A\u76841\u5F35\u5361\u548C\u9019\u5F35\u5361\u540CGsignProperty\u7684\u60C5\u6CC1, \u9019\u5F35\u5361\u56DE\u5408\u7D50\u675F\u524D+x/+x/+x, x\u70BA\u6253\u958B\u7684\u5361\u7684\u6A2A\u7F6E\u8CBB\u7528\u6578\u91CF, \u9019\u500B\u6548\u679C1\u56DE\u5408\u53EA\u80FD\u75281\u6B21",
-          conditions: {
-            ...text.conditions,
-            "\u9019\u500B\u6548\u679C1\u56DE\u5408\u53EA\u80FD\u75281\u6B21": {
-              actions: [
-                {
-                  title: ["\u3053\u306E\u8A18\u8FF0\u306E\u52B9\u679C\u306F\u3001\u30D7\u30EC\u30A4\u30E4\u30FC\u6BCE\u306B\uFF11\u30BF\u30FC\u30F3\u306B\uFF11\u56DE\u307E\u3067\u89E3\u6C7A\u3067\u304D\u308B"]
-                }
-              ]
-            },
-            "\u9019\u5F35\u5361\u5728\u6230\u5340\u7684\u5834\u5408": {
-              actions: [
-                {
-                  title: ["Entity", {
-                    isThisCard: !0,
-                    at: ["\u6226\u95D8\u30A8\u30EA\u30A21", "\u6226\u95D8\u30A8\u30EA\u30A22"],
-                    count: 1
-                  }]
-                }
-              ]
-            }
-          },
-          logicTreeActions: [
-            {
-              actions: [
-                {
-                  title: function _(ctx3, effect, { GameStateFn, DefineFn }) {
-                    const newE = DefineFn.EffectFn.fromEffectBasic(effect, {
-                      conditions: {
-                        "\u9019\u5F35\u5361\u5728\u6230\u5340\u7684\u5834\u5408, \u6253\u958B\u81EA\u8ECD\u672C\u570B\u4E0A\u76841\u5F35\u5361": {
-                          title: function _(ctx4, effect2, bridge) {
-                            const { GameStateFn: GameStateFn2, DefineFn: DefineFn2 } = bridge, cardId2 = DefineFn2.EffectFn.getCardID(effect2), from = GameStateFn2.getItemBaSyou(ctx4, cardId2);
-                            if (DefineFn2.BaSyouKeywordFn.getBattleArea().includes(DefineFn2.AbsoluteBaSyouFn.getBaSyouKeyword(from)))
-                              return GameStateFn2.createConditionTitleFn({
-                                title: ["Entity", {
-                                  see: [DefineFn2.RelatedBaSyouFn.of("\u81EA\u8ECD", "\u672C\u56FD"), 1, 1],
-                                  count: 1
-                                }],
-                                actions: [
-                                  {
-                                    title: ["_\u30ED\u30FC\u30EB\u3059\u308B", "\u6253\u958B"],
-                                    vars: ["\u9019\u5F35\u5361\u5728\u6230\u5340\u7684\u5834\u5408, \u6253\u958B\u81EA\u8ECD\u672C\u570B\u4E0A\u76841\u5F35\u5361"]
-                                  }
-                                ]
-                              }, {})(ctx4, effect2, bridge);
-                            return null;
-                          }.toString()
-                        }
-                      },
-                      logicTreeAction: {
-                        actions: [
-                          {
-                            title: function _(ctx4, effect2, { GameStateFn: GameStateFn2, DefineFn: DefineFn2, ToolFn: ToolFn2 }) {
-                              const cardId2 = DefineFn2.EffectFn.getCardID(effect2);
-                              if (DefineFn2.ItemStateFn.hasTip(GameStateFn2.getItemState(ctx4, cardId2), "\u9019\u5F35\u5361\u5728\u6230\u5340\u7684\u5834\u5408, \u6253\u958B\u81EA\u8ECD\u672C\u570B\u4E0A\u76841\u5F35\u5361") == !1)
-                                return ctx4;
-                              const pairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx4, "\u9019\u5F35\u5361\u5728\u6230\u5340\u7684\u5834\u5408, \u6253\u958B\u81EA\u8ECD\u672C\u570B\u4E0A\u76841\u5F35\u5361", cardId2);
-                              if (pairs.length == 0)
-                                throw new Error(`pairs must not 0: ${effect2.text.description}`);
-                              const [openCardId] = pairs[0];
-                              if (GameStateFn2.getCardGSignProperty(ctx4, openCardId) == GameStateFn2.getCardGSignProperty(ctx4, cardId2)) {
-                                const bonus = GameStateFn2.getCardRollCostLength(ctx4, openCardId), gainBonus = [bonus, bonus, bonus];
-                                ctx4 = GameStateFn2.doTriggerEvent(ctx4, { title: ["\u300C\u30B2\u30A4\u30F3\u300D\u306E\u52B9\u679C\u3067\u6226\u95D8\u4FEE\u6B63\u3092\u5F97\u308B\u5834\u5408", gainBonus], cardIds: [cardId2] });
-                                const hasCase1 = GameStateFn2.getCardTexts(ctx4, cardId2).find((text2) => text2.description == "\u300E\u8D77\u52D5\u300F\uFF1A\u3053\u306E\u30AB\u30FC\u30C9\u306F\u3001\u300C\u30B2\u30A4\u30F3\u300D\u306E\u52B9\u679C\u3067\u6226\u95D8\u4FEE\u6B63\u3092\u5F97\u308B\u5834\u5408\u3001\u305D\u306E\u6226\u95D8\u4FEE\u6B63\u306E\u4EE3\u308F\u308A\u306B\u3001\u30BF\u30FC\u30F3\u7D42\u4E86\u6642\u307E\u3067\uFF0B\uFF14\uFF0F\xB1\uFF10\uFF0F\xB1\uFF10\u3092\u5F97\u308B\u4E8B\u304C\u3067\u304D\u308B\u3002") != null, hasCase2 = GameStateFn2.getCardTexts(ctx4, cardId2).find((text2) => text2.description == "\u300E\u8D77\u52D5\u300F\uFF1A\u3053\u306E\u30AB\u30FC\u30C9\u306F\u3001\u300C\u30B2\u30A4\u30F3\u300D\u306E\u52B9\u679C\u3067\u6226\u95D8\u4FEE\u6B63\u3092\u5F97\u308B\u5834\u5408\u3001\u305D\u306E\u6226\u95D8\u4FEE\u6B63\u3092\u5F97\u308B\u4EE3\u308F\u308A\u306B\u3001\u30BF\u30FC\u30F3\u7D42\u4E86\u6642\u307E\u3067\u3001\u300C\u901F\u653B\u300D\u3092\u5F97\u308B\u4E8B\u304C\u3067\u304D\u308B\u3002") != null;
-                                if (hasCase1)
-                                  ctx4 = GameStateFn2.doItemSetGlobalEffectsUntilEndOfTurn(ctx4, [{ title: ["\uFF0Bx\uFF0F\uFF0Bx\uFF0F\uFF0Bx\u3092\u5F97\u308B", [4, 0, 0]], cardIds: [cardId2] }], GameStateFn2.createStrBaSyouPair(ctx4, cardId2));
-                                else if (hasCase2)
-                                  ctx4 = GameStateFn2.doItemSetGlobalEffectsUntilEndOfTurn(ctx4, [{ title: ["AddText", { id: ToolFn2.getUUID("hasCase2"), title: ["\u7279\u6B8A\u578B", ["\u901F\u653B"]] }], cardIds: [cardId2] }], GameStateFn2.createStrBaSyouPair(ctx4, cardId2));
-                                else
-                                  ctx4 = GameStateFn2.mapItemState(ctx4, cardId2, (is) => DefineFn2.ItemStateFn.setGlobalEffect(is, null, {
-                                    title: ["\uFF0Bx\uFF0F\uFF0Bx\uFF0F\uFF0Bx\u3092\u5F97\u308B", gainBonus],
-                                    cardIds: [cardId2]
-                                  }, { isRemoveOnTurnEnd: !0 })), ctx4 = GameStateFn2.doTriggerEvent(ctx4, { title: ["\u300C\u30B2\u30A4\u30F3\u300D\u306E\u52B9\u679C\u3067\u6226\u95D8\u4FEE\u6B63\u3092\u5F97\u305F\u5834\u5408", gainBonus], cardIds: [cardId2] });
-                              }
-                              return ctx4;
-                            }.toString()
-                          }
-                        ]
-                      }
-                    });
-                    return ctx3 = GameStateFn.addStackEffect(ctx3, newE), ctx3;
-                  }.toString()
-                }
-              ]
-            }
-          ]
-        }
-      ];
-    case "\u4F9B\u7D66":
-      return [
-        {
-          id: text.id,
-          title: ["\u4F7F\u7528\u578B", ["\u81EA\u8ECD", "\u653B\u6483\u30B9\u30C6\u30C3\u30D7"]],
-          description: "\u9019\u5F35\u5361\u4EE5\u5916\u7684\u81EA\u8ECD\u6A5F\u9AD41\u5F35\u91CD\u7F6E",
-          conditions: {
-            ...text.conditions,
-            "\u9019\u5F35\u5361\u4EE5\u5916\u7684\u81EA\u8ECD\u6A5F\u9AD41\u5F35": {
-              title: ["_\u81EA\u8ECD_\u30E6\u30CB\u30C3\u30C8_\uFF11\u679A", "\u81EA\u8ECD", "\u30E6\u30CB\u30C3\u30C8", 1],
-              exceptItemSelf: !0
-            }
-          },
-          logicTreeActions: [
-            {
-              actions: [
-                {
-                  title: ["cutIn", [
-                    {
-                      title: ["_\u30ED\u30FC\u30EB\u3059\u308B", "\u30EA\u30ED\u30FC\u30EB"],
-                      vars: ["\u9019\u5F35\u5361\u4EE5\u5916\u7684\u81EA\u8ECD\u6A5F\u9AD41\u5F35"]
-                    }
-                  ]]
-                }
-              ]
-            }
-          ]
-        }
-      ];
-    case "\u30B5\u30A4\u30B3\u30DF\u30E5": {
-      const [_, x] = specialEffect, addCardIds = options?.ges?.flatMap((ge) => {
-        if (ge.title[0] == "_\u30E6\u30CB\u30C3\u30C8\u306F\u3001\u300C\u30B5\u30A4\u30B3\u30DF\u30E5\u300D\u306E\u52B9\u679C\u306B\u304A\u3044\u3066\u3001\u4EA4\u6226\u4E2D\u3068\u3057\u3066\u6271\u3046\u3002" && ge.cardIds.includes(cardId))
-          return ge.title[1];
-        return [];
-      }) || [];
-      return [
-        {
-          id: text.id,
-          title: ["\u4F7F\u7528\u578B", ["\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7"]],
-          description: "\u4EA4\u6230\u4E2D\u7684\u6575\u8ECD\u6A5F\u9AD41\u5F35x\u50B7\u5BB3. \u9019\u500B\u6548\u679C\u53EA\u6709\u5728\u540C\u5340\u4E2D\u6709NT\u624D\u80FD\u4F7F\u7528.",
-          conditions: {
-            ...text.conditions,
-            "\u4EA4\u6230\u4E2D\u7684\u6575\u8ECD\u6A5F\u9AD41\u5F35": {
-              title: function _(ctx3, effect, { GameStateFn, DefineFn }) {
-                const { addCardIds: addCardIds2 } = { addCardIds: null };
-                if (addCardIds2 == null)
-                  throw new Error("addCardIds must replace");
-                const cardId2 = DefineFn.EffectFn.getCardID(effect), tip = GameStateFn.createTipByEntitySearch(ctx3, cardId2, {
-                  isBattle: !0,
-                  side: "\u6575\u8ECD",
-                  is: ["\u30E6\u30CB\u30C3\u30C8"],
-                  count: 1
-                });
-                let wants = DefineFn.TipFn.getWant(tip);
-                return wants = [...wants, ...addCardIds2.map((itemId) => GameStateFn.createStrBaSyouPair(ctx3, itemId))], wants = dropRepeatsBy_default((pair2) => pair2[0], wants), {
-                  title: ["\u30AB\u30FC\u30C9", wants, wants.slice(0, 1)],
-                  count: 1
-                };
-              }.toString().replace("{ addCardIds: null }", JSON.stringify({ addCardIds }))
-            },
-            "\u540C\u5340\u4E2D\u6709NT\u624D\u80FD\u4F7F\u7528": {
-              actions: [
-                {
-                  title: function _(ctx3, effect, { GameStateFn, DefineFn }) {
-                    const cardId2 = DefineFn.EffectFn.getCardID(effect), from = GameStateFn.getItemBaSyou(ctx3, cardId2);
-                    if (GameStateFn.getItemIdsByBasyou(ctx3, from).filter((itemId) => GameStateFn.getItemCharacteristic(ctx3, itemId).indexOf("NT")).length > 0 == !1)
-                      throw new TipError("no NT in the same area");
-                    return ctx3;
-                  }.toString()
-                }
-              ]
-            }
-          },
-          logicTreeActions: [
-            {
-              actions: [
-                {
-                  title: ["cutIn", [
-                    {
-                      title: ["_\uFF11\u30C0\u30E1\u30FC\u30B8\u3092\u4E0E\u3048\u308B", x],
-                      vars: ["\u4EA4\u6230\u4E2D\u7684\u6575\u8ECD\u6A5F\u9AD41\u5F35"]
-                    }
-                  ]]
-                }
-              ]
-            }
-          ]
-        }
-      ];
-    }
-    case "\u7BC4\u56F2\u5175\u5668": {
-      const [_, x] = specialEffect, hasCase1 = (options?.ges?.filter((ge) => ge.title[0] == "\u300C\u7BC4\u56F2\u5175\u5668\u300D\u306E\u5BFE\u8C61\u90E8\u5206\u306F\u3001\u300EX\u4EE5\u4E0B\u306E\u9632\u5FA1\u529B\u3092\u6301\u3064\u6575\u8ECD\u30E6\u30CB\u30C3\u30C8\uFF11\u679A\u300F\u306B\u5909\u66F4\u3055\u308C\u308B" && ge.cardIds.includes(cardId)) || []).length > 0;
-      return [
-        {
-          id: text.id,
-          title: ["\u4F7F\u7528\u578B", ["\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7"]],
-          description: "\u548C\u9019\u5F35\u5361\u4EA4\u6230\u7684\u9632\u79A6\u529Bx\u4EE5\u4E0B\u7684\u6575\u8ECD\u6A5F\u9AD41\u5F35\u7834\u58DE",
-          conditions: {
-            ...text.conditions,
-            "\u9019\u5F35\u5361\u4EA4\u6230\u7684\u9632\u79A6\u529Bx\u4EE5\u4E0B\u7684\u6575\u8ECD\u6A5F\u9AD41\u5F35": {
-              title: ["Entity", {
-                isBattleWithThis: hasCase1 ? void 0 : !0,
-                compareBattlePoint: ["\u9632\u5FA1\u529B", "<=", x],
-                isDestroy: !1,
-                side: "\u6575\u8ECD",
-                is: ["\u30E6\u30CB\u30C3\u30C8"],
-                count: 1
-              }]
-            }
-          },
-          logicTreeActions: [
-            {
-              actions: [
-                {
-                  title: ["cutIn", [
-                    {
-                      title: ["_\u30ED\u30FC\u30EB\u3059\u308B", "\u7834\u58DE"],
-                      vars: ["\u9019\u5F35\u5361\u4EA4\u6230\u7684\u9632\u79A6\u529Bx\u4EE5\u4E0B\u7684\u6575\u8ECD\u6A5F\u9AD41\u5F35"]
-                    }
-                  ]]
-                }
-              ]
-            }
-          ]
-        }
-      ];
-    }
-    case "\u5171\u6709": {
-      const [_, A] = specialEffect;
-      return [
-        {
-          id: text.id,
-          title: ["\u4F7F\u7528\u578B", ["\u5E38\u6642"]],
-          description: "\u770B\u81EA\u5DF1\u672C\u570B\u5168\u90E8\u7684\u5361,\u53EF\u4EE5\u5F9E\u4E2D\u627E\u51FA\u7279\u5FB5A\u76841\u5F35\u5361\u79FB\u5230HANGER,\u90A3\u500B\u6642\u5019\u672C\u570B\u6D17\u724C.\u9019\u500B\u6548\u679C\u53EA\u6709\u9019\u5F35\u5361\u5F9E\u624B\u4E2D\u6253\u51FA\u7684\u56DE\u5408\u53EF\u4EE5\u4F7F\u7528",
-          conditions: {
-            ...text.conditions,
-            "\u9019\u500B\u6548\u679C\u53EA\u6709\u9019\u5F35\u5361\u5F9E\u624B\u4E2D\u6253\u51FA\u7684\u56DE\u5408\u53EF\u4EE5\u4F7F\u7528": {
-              actions: [
-                {
-                  title: function _(ctx3, effect, { GameStateFn, DefineFn }) {
-                    const cardId2 = DefineFn.EffectFn.getCardID(effect);
-                    if (GameStateFn.getItemState(ctx3, cardId2).isFirstTurn != !0)
-                      throw new DefineFn.TipError(`\u9019\u500B\u6548\u679C\u53EA\u6709\u9019\u5F35\u5361\u5F9E\u624B\u4E2D\u6253\u51FA\u7684\u56DE\u5408\u53EF\u4EE5\u4F7F\u7528:${effect.text.description}`);
-                    return ctx3;
-                  }.toString()
-                }
-              ]
-            }
-          },
-          logicTreeActions: [
-            {
-              actions: [
-                {
-                  title: function _(ctx3, effect, { GameStateFn, DefineFn }) {
-                    const { A: A2 } = { A: "" }, newE = DefineFn.EffectFn.fromEffectBasic(effect, {
-                      conditions: {
-                        "\u770B\u81EA\u5DF1\u672C\u570B\u5168\u90E8\u7684\u5361,\u53EF\u4EE5\u5F9E\u4E2D\u627E\u51FA\u7279\u5FB5A\u76841\u5F35\u5361\u79FB\u5230HANGER,\u90A3\u500B\u6642\u5019\u672C\u570B\u6D17\u724C": {
-                          title: ["_\u81EA\u8ECD_\u672C\u570B\u627E\u51FA\u7279\u5FB5_A\u7684_1\u5F35\u5361", "\u81EA\u8ECD", "\u672C\u56FD", A2, 1],
-                          actions: [
-                            {
-                              title: ["\u770B\u81EA\u5DF1_\u672C\u570B\u5168\u90E8\u7684\u5361", "\u672C\u56FD"]
-                            }
-                          ]
-                        }
-                      },
-                      logicTreeAction: {
-                        actions: [
-                          {
-                            title: function _(ctx4, effect2, { GameStateFn: GameStateFn2, DefineFn: DefineFn2 }) {
-                              const cardId2 = DefineFn2.EffectFn.getCardID(effect2), cardController = GameStateFn2.getItemController(ctx4, cardId2), pairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx4, "\u770B\u81EA\u5DF1\u672C\u570B\u5168\u90E8\u7684\u5361,\u53EF\u4EE5\u5F9E\u4E2D\u627E\u51FA\u7279\u5FB5A\u76841\u5F35\u5361\u79FB\u5230HANGER,\u90A3\u500B\u6642\u5019\u672C\u570B\u6D17\u724C", cardId2);
-                              if (pairs.length) {
-                                for (let pair2 of pairs)
-                                  ctx4 = GameStateFn2.doItemMove(ctx4, DefineFn2.AbsoluteBaSyouFn.of(cardController, "\u30CF\u30F3\u30AC\u30FC"), pair2);
-                                ctx4 = GameStateFn2.shuffleItems(ctx4, DefineFn2.AbsoluteBaSyouFn.of(cardController, "\u672C\u56FD"));
-                              }
-                              return ctx4;
-                            }.toString()
-                          }
-                        ]
-                      }
-                    });
-                    return ctx3 = GameStateFn.addStackEffect(ctx3, newE), ctx3;
-                  }.toString().replace('{ A: "" }', JSON.stringify({ A }))
-                }
-              ]
-            }
-          ]
-        }
-      ];
-    }
-    case "\u6539\u88C5": {
-      const [_, A] = specialEffect;
-      return [
-        {
-          id: text.id,
-          title: ["\u4F7F\u7528\u578B", ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA"]],
-          description: "\u6253\u958B\u81EA\u8ECD\u624B\u88E1\u6216\u6307\u5B9AHANGER\u4E2D\u7279\u5FB5A\u4E26\u5408\u8A08\u570B\u529Bx\u4EE5\u4E0B\u76841\u5F35\u5361, \u548C\u9019\u5F35\u5361\u91CD\u7F6E\u72C0\u614B\u7F6E\u63DB, \u9019\u5F35\u5361\u7F6E\u63DB\u5F8C\u5EE2\u68C4. x\u70BA\u81EA\u8ECDG\u7684\u5F35\u6578",
-          conditions: {
-            ...text.conditions,
-            "\u6253\u958B\u81EA\u8ECD\u624B\u88E1\u6216\u6307\u5B9AHANGER\u4E2D\u7279\u5FB5A\u4E26\u5408\u8A08\u570B\u529Bx\u4EE5\u4E0B\u76841\u5F35\u5361": {
-              title: function _(ctx3, effect, bridge) {
-                const { A: A2 } = { A: "" };
-                if (A2 == "")
-                  throw new Error("A\u6C92\u6709\u88AB\u5B57\u4E32\u7F6E\u63DB");
-                const { GameStateFn, DefineFn } = bridge, cardId2 = DefineFn.EffectFn.getCardID(effect), cardController = GameStateFn.getItemController(ctx3, cardId2), gCount = GameStateFn.getItemIdsByBasyou(ctx3, DefineFn.AbsoluteBaSyouFn.of(cardController, "G\u30BE\u30FC\u30F3")).length;
-                return GameStateFn.createConditionTitleFn({
-                  title: ["\u6253\u958B\u81EA\u8ECD\u624B\u88E1\u6216\u6307\u5B9AHANGER\u4E2D\u7279\u5FB5_A\u4E26\u5408\u8A08\u570B\u529B_x\u4EE5\u4E0B\u7684_1\u5F35\u5361", A2, gCount, 1]
-                }, {})(ctx3, effect, bridge);
-              }.toString().replace('{ A: "" }', JSON.stringify({ A }))
-            }
-          },
-          logicTreeActions: [
-            {
-              actions: [
-                {
-                  title: function _(ctx3, effect, { GameStateFn, DefineFn }) {
-                    const newE = DefineFn.EffectFn.fromEffectBasic(effect, {
-                      logicTreeAction: {
-                        actions: [
-                          {
-                            title: function _(ctx4, effect2, { GameStateFn: GameStateFn2, DefineFn: DefineFn2 }) {
-                              const cardId2 = DefineFn2.EffectFn.getCardID(effect2), basyou = GameStateFn2.getItemBaSyou(ctx4, cardId2), pairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx4, "\u6253\u958B\u81EA\u8ECD\u624B\u88E1\u6216\u6307\u5B9AHANGER\u4E2D\u7279\u5FB5A\u4E26\u5408\u8A08\u570B\u529Bx\u4EE5\u4E0B\u76841\u5F35\u5361", cardId2);
-                              if (pairs.length == 0)
-                                throw new Error(`pairs must not 0: ${effect2.text.description}`);
-                              const targetPair = pairs[0];
-                              return GameStateFn2.assertTargetMissingError(ctx4, targetPair), ctx4 = GameStateFn2.doItemSwap(ctx4, [cardId2, basyou], targetPair), ctx4 = GameStateFn2.doItemSetRollState(ctx4, !1, [cardId2, basyou], { isSkipTargetMissing: !0 }), ctx4 = GameStateFn2.doItemMove(ctx4, DefineFn2.AbsoluteBaSyouFn.setBaSyouKeyword(basyou, "\u30B8\u30E3\u30F3\u30AF\u30E4\u30FC\u30C9"), targetPair), ctx4 = GameStateFn2.doTriggerEvent(ctx4, { title: ["\u300C\u6539\u88C5\u300D\u306E\u52B9\u679C\u3067\u5EC3\u68C4\u3055\u308C\u308B\u5834\u5408"], cardIds: [targetPair[0]] }), ctx4 = GameStateFn2.doTriggerEvent(ctx4, { title: ["\u300C\u6539\u88C5\u300D\u306E\u52B9\u679C\u3067\u5834\u306B\u51FA\u305F\u5834\u5408"], cardIds: [cardId2] }), ctx4;
-                            }.toString()
-                          }
-                        ]
-                      }
-                    });
-                    return ctx3 = GameStateFn.addStackEffect(ctx3, newE), ctx3;
-                  }.toString()
-                }
-              ]
-            }
-          ]
-        }
-      ];
-    }
-  }
-  return [];
-}
-
-// src/game/gameState/globalEffects.ts
-function getGlobalEffects(ctx2, situation) {
-  const key = JSON.stringify(situation), cached = ctx2.globalEffectPool[key];
-  if (cached)
-    return logCategory("getGlobalEffects", "useCache"), cached;
-  return getSituationEffects(ctx2, situation);
-}
-function setGlobalEffects(ctx2, situation, ges) {
-  const key = JSON.stringify(situation);
-  return {
-    ...ctx2,
-    globalEffectPool: {
-      ...ctx2.globalEffectPool,
-      [key]: ges
-    }
-  };
-}
-function clearGlobalEffects(ctx2) {
-  return {
-    ...ctx2,
-    globalEffectPool: {}
-  };
-}
-function getSituationEffects(ctx2, situation) {
-  const bridge = createBridge(), ges = createAllCardTexts(ctx2, situation).flatMap(([item, texts]) => {
-    return texts.map((text, i) => {
-      const cardController = getItemController(ctx2, item.id), fn = getOnSituationFn(text), effect = {
-        id: ToolFn.getUUID("getSituationEffects"),
-        reason: ["Situation", cardController, item.id, situation],
-        text
-      };
-      return [fn, effect];
-    }).flatMap(([fn, effect]) => {
-      return fn(ctx2, effect, bridge);
-    });
-  }), itemStateGes = getItemStateValues(ctx2).flatMap(ItemStateFn.getGlobalEffects), gGes = [AbsoluteBaSyouFn.of(PlayerA, "G\u30BE\u30FC\u30F3"), AbsoluteBaSyouFn.of(PlayerB, "G\u30BE\u30FC\u30F3")].flatMap((basyou) => getItemIdsByBasyou(ctx2, basyou)).filter((itemId) => getCard(ctx2, itemId).isRoll != !0).map((itemId) => {
-    return { title: ["\u767C\u751F\u570B\u529B", getItemPrototype(ctx2, itemId).gsign?.[0] || []], cardIds: [itemId] };
-  });
-  return [...ges, ...itemStateGes, ...gGes];
-}
-function createAllCardTexts(ctx2, situation) {
-  const getTextGroup1 = pipe(always_default(AbsoluteBaSyouFn.getBaAll()), map_default((basyou) => getItemIdsByBasyou(ctx2, basyou)), flatten_default, (itemIds) => itemIds.filter((itemId) => isCard(ctx2, itemId) || isChip(ctx2, itemId)), map_default((itemId) => getItem(ctx2, itemId)), map_default((item) => {
-    let texts = (getItemPrototype(ctx2, item.id).texts || []).flatMap((text) => {
-      if (text.title[0] == "\u7279\u6B8A\u578B")
-        return createTextsFromSpecialEffect(ctx2, item.id, text);
-      return [text];
-    });
-    return texts = texts.filter((text) => text.title[0] == "\u81EA\u52D5\u578B" && (text.title[1] == "\u5E38\u99D0" || text.title[1] == "\u8D77\u52D5")), [item, texts];
-  })), getTextGroup2 = pipe(always_default(AbsoluteBaSyouFn.getTextOn()), map_default((basyou) => getItemIdsByBasyou(ctx2, basyou)), flatten_default, (itemIds) => itemIds.filter((itemId) => isCard(ctx2, itemId) || isChip(ctx2, itemId)), map_default((itemId) => getItem(ctx2, itemId)), map_default((item) => {
-    let texts = (getItemPrototype(ctx2, item.id).texts || []).flatMap((text) => {
-      if (text.title[0] == "\u7279\u6B8A\u578B")
-        return createTextsFromSpecialEffect(ctx2, item.id, text);
-      return [text];
-    });
-    return texts = texts.filter((text) => text.title[0] == "\u81EA\u52D5\u578B" && text.title[1] == "\u6052\u5E38" || text.title[0] == "\u4F7F\u7528\u578B"), [item, texts];
-  })), getTextGroup3 = pipe(always_default([AbsoluteBaSyouFn.of(PlayerA, "G\u30BE\u30FC\u30F3"), AbsoluteBaSyouFn.of(PlayerB, "G\u30BE\u30FC\u30F3")]), map_default((basyou) => getItemIdsByBasyou(ctx2, basyou)), flatten_default, (itemIds) => itemIds.filter((itemId) => isCard(ctx2, itemId) || isChip(ctx2, itemId)), map_default((itemId) => getItem(ctx2, itemId)), map_default((item) => {
-    let texts = (getItemPrototype(ctx2, item.id).texts || []).flatMap((text) => {
-      if (text.protectLevel == 2 && text.title[0] == "\u7279\u6B8A\u578B")
-        return createTextsFromSpecialEffect(ctx2, item.id, text);
-      return [text];
-    });
-    return texts = texts.filter((text) => text.protectLevel == 2 && text.title[0] == "\u81EA\u52D5\u578B" && (text.title[1] == "\u5E38\u99D0" || text.title[1] == "\u8D77\u52D5")), [item, texts];
-  })), getTextGroup4 = pipe(always_default(getCardIds(ctx2)), map_default((cardId) => {
-    const proto = getItemPrototype(ctx2, cardId);
-    if (proto.commandText?.onSituation)
-      return [getCard(ctx2, cardId), [proto.commandText]];
-    return null;
-  }), (infos) => infos.filter((v) => v)), allCardTexts = [...getTextGroup1(), ...getTextGroup2(), ...getTextGroup3(), ...getTextGroup4()], bridge = createBridge(), ges = allCardTexts.flatMap(([item, texts]) => {
-    return texts.map((text, i) => {
-      const cardController = getItemController(ctx2, item.id), fn = getOnSituationFn(text), effect = {
-        id: ToolFn.getUUID("getSituationEffects"),
-        reason: ["Situation", cardController, item.id, situation],
-        text
-      };
-      return [fn, effect];
-    }).flatMap(([fn, effect]) => {
-      return fn(ctx2, effect, bridge);
-    });
-  }), itemStateGes = getItemStateValues(ctx2).flatMap(ItemStateFn.getGlobalEffects), gesLayer1 = [...ges, ...itemStateGes], textsLayer2 = gesLayer1.filter((ge) => ge.title[0] == "AddText").map((ge) => [ge.cardIds, ge.title[1]]).flatMap(([itemIds, text]) => {
-    return itemIds.flatMap((itemId) => {
-      const texts = text.title[0] == "\u7279\u6B8A\u578B" ? createTextsFromSpecialEffect(ctx2, itemId, text) : [text];
-      return [[getItem(ctx2, itemId), texts]];
-    });
-  }), textsLayer2_2 = gesLayer1.filter((ge) => ge.title[0] == "AddTextRef").map((ge) => [ge.cardIds, ge.title[1]]).flatMap(([itemIds, textRef]) => {
-    return itemIds.flatMap((itemId) => {
-      const text = getCardTextFromCardTextRef(ctx2, textRef), texts = text.title[0] == "\u7279\u6B8A\u578B" ? createTextsFromSpecialEffect(ctx2, itemId, text) : [text];
-      return [[getItem(ctx2, itemId), texts]];
-    });
-  });
-  return [...allCardTexts, ...textsLayer2, ...textsLayer2_2];
-}
-
 // src/game/gameState/card.ts
 function getCardTextFromCardTextRef(ctx2, textRef) {
   const { cardId, textId } = textRef, text = getItemPrototype(ctx2, cardId).texts?.find((text2) => text2.id == textId);
@@ -20858,19 +20143,17 @@ function getCardTextFromCardTextRef(ctx2, textRef) {
     throw new Error(`textRef not found: ${cardId} => ${textId}`);
   return text;
 }
-function getCardSpecialText(ctx2, cardID, text) {
-  if (text.title[0] != "\u7279\u6B8A\u578B")
+function getCardSpecialText(text, options) {
+  if (logCategory("getCardSpecialText", ""), text.title[0] != "\u7279\u6B8A\u578B")
     return text;
   switch (text.title[1][0]) {
     case "\u30B5\u30A4\u30B3\u30DF\u30E5":
     case "\u7BC4\u56F2\u5175\u5668": {
-      const [name, value] = text.title[1], ges = getGlobalEffects(ctx2, null);
-      ctx2 = setGlobalEffects(ctx2, null, ges);
-      const bonus = ges.filter((ge) => ge.cardIds.includes(cardID)).map((ge) => {
+      const [name, value] = text.title[1], bonus = options?.ges?.filter((ge) => ge.cardIds.includes(options.cardId || "")).map((ge) => {
         if (ge.title[0] == "SpecialEffectBonus" && ge.title[1][0] == name)
           return ge.title[1][1];
         return 0;
-      }).reduce((a, b) => a + b, 0), title = ["\u7279\u6B8A\u578B", [name, value + bonus]];
+      }).reduce((a, b) => a + b, 0) || 0, title = ["\u7279\u6B8A\u578B", [name, value + bonus]];
       return {
         ...text,
         title,
@@ -20881,19 +20164,18 @@ function getCardSpecialText(ctx2, cardID, text) {
       return text;
   }
 }
-function getCardTexts(ctx2, cardID) {
-  const ges = getGlobalEffects(ctx2, null);
-  ctx2 = setGlobalEffects(ctx2, null, ges);
-  const addedTexts = ges.flatMap((e) => {
+function getCardTexts(ctx2, cardID, options) {
+  logCategory("getCardTexts", "");
+  const addedTexts = options?.ges?.flatMap((e) => {
     if (e.cardIds.includes(cardID) && e.title[0] == "AddText")
       return [e.title[1]];
     if (e.cardIds.includes(cardID) && e.title[0] == "AddTextRef")
       return [getCardTextFromCardTextRef(ctx2, e.title[1])];
     return [];
-  }).filter((v) => v);
+  }).filter((v) => v) || [];
   return [...getItemPrototype(ctx2, cardID).texts || [], ...addedTexts].map((text) => {
     if (text.title[0] == "\u7279\u6B8A\u578B")
-      return getCardSpecialText(ctx2, cardID, text);
+      return getCardSpecialText(text, { cardId: cardID, ges: options?.ges });
     return text;
   });
 }
@@ -20924,10 +20206,9 @@ function getCardTitle(ctx2, cardID) {
 function getCardRollCostLength(ctx2, cardID) {
   return getItemPrototype(ctx2, cardID).rollCost?.length || 0;
 }
-function getCardTotalCostLength(ctx2, cardID) {
-  const prototype = getItemPrototype(ctx2, cardID), gEffects = getGlobalEffects(ctx2, null);
-  ctx2 = setGlobalEffects(ctx2, null, gEffects);
-  const added = pipe(always_default(gEffects), map_default((ge) => {
+function getCardTotalCostLength(ctx2, cardID, options) {
+  logCategory("getCardTotalCostLength", "");
+  const prototype = getItemPrototype(ctx2, cardID), added = pipe(always_default(options?.ges || []), map_default((ge) => {
     if (ge.title[0] == "\u5408\u8A08\u56FD\u529B_\uFF0B\uFF11" && ge.cardIds.includes(cardID))
       return ge.title[1];
     return 0;
@@ -20936,34 +20217,31 @@ function getCardTotalCostLength(ctx2, cardID) {
   if (prototype.totalCost == null)
     ;
   else if (prototype.totalCost == "X")
-    totalCost = getCardIdsCanPayRollCost(ctx2, getItemController(ctx2, cardID), null).length;
+    totalCost = getCardIdsCanPayRollCost(ctx2, getItemController(ctx2, cardID), { ges: options.ges }).length;
   else
     totalCost = prototype.totalCost;
   return totalCost + added;
 }
-function getCardIdsCanPayRollCost(ctx2, playerId, situation) {
-  const ges = getGlobalEffects(ctx2, situation);
-  return ctx2 = setGlobalEffects(ctx2, situation, ges), ges.filter((ge) => ge.title[0] == "\u767C\u751F\u570B\u529B").flatMap((ge) => ge.cardIds).filter((cardId) => getCard(ctx2, cardId).isRoll != !0).filter((cardId) => getItemController(ctx2, cardId) == playerId);
+function getCardIdsCanPayRollCost(ctx2, playerId, options) {
+  return logCategory("getCardIdsCanPayRollCost", ""), options?.ges?.filter((ge) => ge.title[0] == "\u767C\u751F\u570B\u529B").flatMap((ge) => ge.cardIds).filter((cardId) => getCard(ctx2, cardId).isRoll != !0).filter((cardId) => getItemController(ctx2, cardId) == playerId) || [];
 }
-function getCardBattlePoint(ctx2, cardID) {
-  ctx2 = clearGlobalEffects(ctx2);
-  const globalEffects = getGlobalEffects(ctx2, null);
-  ctx2 = setGlobalEffects(ctx2, null, globalEffects);
-  const card = getCard(ctx2, cardID), bonusFromGlobalEffects = globalEffects.map((ge) => {
+function getCardBattlePoint(ctx2, cardID, options) {
+  logCategory("getCardBattlePoint", "");
+  const card = getCard(ctx2, cardID), bonusFromGlobalEffects = options?.ges?.map((ge) => {
     if (ge.title[0] == "AddText" && ge.cardIds.includes(cardID) && ge.title[1].title[0] == "TextBattleBonus")
       return ge.title[1].title[1];
     if (ge.title[0] == "\uFF0Bx\uFF0F\uFF0Bx\uFF0F\uFF0Bx\u3092\u5F97\u308B" && ge.cardIds.includes(cardID))
       return ge.title[1];
     return [0, 0, 0];
-  }), bonusFormCoin = getCoins(ctx2).map((coin) => {
+  }) || [], bonusFormCoin = getCoins(ctx2).map((coin) => {
     if (coin.title[0] == "BattleBonus" && getCardIdByCoinId(ctx2, coin.id) == cardID)
       return coin.title[1];
     return [0, 0, 0];
   }), prototype = getItemPrototype(ctx2, card.id);
   return [...bonusFromGlobalEffects, ...bonusFormCoin].reduce(BattlePointFn.add, prototype.battlePoint || BattlePointFn.getAllStar());
 }
-function getCardHasSpeicalEffect(ctx2, a, cardID) {
-  return getCardTexts(ctx2, cardID).filter((e) => e.title[0] == "\u7279\u6B8A\u578B" && TextSpeicalEffectFn.isSameKeyword(e.title[1], a)).length > 0;
+function getCardHasSpeicalEffect(ctx2, a, cardID, options) {
+  return logCategory("getCardHasSpeicalEffect", ""), getCardTexts(ctx2, cardID, options).filter((e) => e.title[0] == "\u7279\u6B8A\u578B" && TextSpeicalEffectFn.isSameKeyword(e.title[1], a)).length > 0;
 }
 function isCardCanReroll(ctx2, cardID, situation) {
   switch (getItemBaSyou(ctx2, cardID).value[1]) {
@@ -21012,9 +20290,8 @@ function getItemIsCanReroll(ctx2, itemId) {
 function getItemIsCanRoll(ctx2, itemId) {
   return !0;
 }
-function getCardIdsCanPayRollColor(ctx2, situation, playerId, color) {
-  const ges = getGlobalEffects(ctx2, situation);
-  return ctx2 = setGlobalEffects(ctx2, situation, ges), ges.flatMap((ge) => {
+function getCardIdsCanPayRollColor(ctx2, playerId, color, options) {
+  return logCategory("getCardIdsCanPayRollColor", ""), options?.ges?.flatMap((ge) => {
     if (ge.cardIds.length == 0)
       return [];
     if (getItemController(ctx2, ge.cardIds[0]) != playerId)
@@ -21036,7 +20313,7 @@ function getCardIdsCanPayRollColor(ctx2, situation, playerId, color) {
       });
     }
     return [];
-  });
+  }) || [];
 }
 
 // src/game/gameState/battleGroup.ts
@@ -21048,6 +20325,558 @@ __export(exports_battleGroup, {
   getBattleGroup: () => getBattleGroup
 });
 
+// src/game/gameState/globalEffects.ts
+var exports_globalEffects = {};
+__export(exports_globalEffects, {
+  setGlobalEffects: () => setGlobalEffects,
+  getGlobalEffects: () => getGlobalEffects,
+  createAllCardTexts: () => createAllCardTexts,
+  clearGlobalEffects: () => clearGlobalEffects
+});
+
+// src/game/gameState/createTextsFromSpecialEffect.ts
+function createTextsFromSpecialEffect(text, options) {
+  if (logCategory("createTextsFromSpecialEffect", ""), text.title[0] != "\u7279\u6B8A\u578B")
+    throw new Error("text not \u7279\u6B8A\u578B");
+  const specialEffect = text.title[1];
+  switch (specialEffect[0]) {
+    case "\u3010PS\u88C5\u7532\u3011":
+      return [
+        {
+          id: text.id,
+          title: ["\u81EA\u52D5\u578B", "\u8D77\u52D5"],
+          description: "\u51FA\u5834\u6642\u76F4\u7ACB\u51FA\u5834"
+        },
+        {
+          id: text.id,
+          title: ["\u81EA\u52D5\u578B", "\u8D77\u52D5"],
+          description: "\u9019\u5F35\u5361\u51FA\u73FE\u5728\u6230\u5340\u6642, \u4E0B\u56DE\u5408\u958B\u59CB\u6642\u56DE\u5230\u6301\u6709\u8005\u624B\u4E0A. \u4F46\u5982\u679C\u548C\u6301\u6709\u88DC\u7D66\u6216\u4F9B\u7D66\u7684\u5361\u7D44\u5408\u90E8\u968A\u7684\u6642\u5019, \u4E0A\u8FF0\u7684\u6548\u679C\u4E0D\u767C\u52D5.",
+          onEvent: function _(ctx2, effect, { GameStateFn, DefineFn }) {
+            const ges = GameStateFn.getGlobalEffects(ctx2, null), cardId = DefineFn.EffectFn.getCardID(effect), evt = DefineFn.EffectFn.getEvent(effect);
+            if (evt.title[0] == "GameEventOnMove" && (DefineFn.AbsoluteBaSyouFn.getBaSyouKeyword(evt.title[2]) == "\u6226\u95D8\u30A8\u30EA\u30A21" || DefineFn.AbsoluteBaSyouFn.getBaSyouKeyword(evt.title[2]) == "\u6226\u95D8\u30A8\u30EA\u30A22")) {
+              if (evt.cardIds?.includes(cardId))
+                if (GameStateFn.isBattleGroupHasA(ctx2, ["\u4F9B\u7D66"], cardId, { ges }))
+                  ;
+                else
+                  ctx2 = GameStateFn.mapItemState(ctx2, cardId, (is) => DefineFn.ItemStateFn.setFlag(is, "return", !0));
+              else if (DefineFn.AbsoluteBaSyouFn.eq(GameStateFn.getItemBaSyou(ctx2, cardId), evt.title[2])) {
+                if (GameStateFn.isBattleGroupHasA(ctx2, ["\u4F9B\u7D66"], cardId, { ges }))
+                  ctx2 = GameStateFn.mapItemState(ctx2, cardId, (is) => DefineFn.ItemStateFn.removeFlag(is, "return"));
+              }
+            }
+            if (evt.title[0] == "GameEventOnTiming" && DefineFn.PhaseFn.eq(evt.title[1], DefineFn.PhaseFn.getFirst())) {
+              const cardId2 = DefineFn.EffectFn.getCardID(effect), cardController = GameStateFn.getItemController(ctx2, cardId2);
+              if (GameStateFn.getItemState(ctx2, cardId2).flags.return)
+                ctx2 = GameStateFn.doItemMove(ctx2, DefineFn.AbsoluteBaSyouFn.of(cardController, "\u624B\u672D"), [cardId2, GameStateFn.getItemBaSyou(ctx2, cardId2)], { ges }), ctx2 = GameStateFn.mapItemState(ctx2, cardId2, (is) => DefineFn.ItemStateFn.removeFlag(is, "return"));
+            }
+            return ctx2;
+          }.toString()
+        }
+      ];
+    case "\u30AF\u30ED\u30B9\u30A6\u30A7\u30DD\u30F3": {
+      const [_, A] = specialEffect;
+      return [
+        {
+          id: text.id,
+          title: ["\u4F7F\u7528\u578B", ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA"]],
+          description: "\uFF08\u6226\u95D8\u30D5\u30A7\u30A4\u30BA\uFF09\uFF1A\uFF3B \uFF3D\u306E\u7279\u5FB4\u3092\u6301\u3064\u81EA\u8ECD\u30E6\u30CB\u30C3\u30C8\uFF11\u679A\u306F\u3001\u30BF\u30FC\u30F3\u7D42\u4E86\u6642\u307E\u3067\u3001\u3053\u306E\u30AB\u30FC\u30C9\u306E\u672C\u6765\u306E\u30C6\u30AD\u30B9\u30C8\uFF11\u3064\u3068\u540C\u3058\u30C6\u30AD\u30B9\u30C8\u3092\u5F97\u308B\u3002\u305F\u3060\u3057\u540C\u3058\u30C6\u30AD\u30B9\u30C8\u306F\u5F97\u3089\u308C\u306A\u3044\uFF09",
+          conditions: {
+            ...text.conditions,
+            "\u3053\u306E\u30AB\u30FC\u30C9\u306E\u672C\u6765\u306E\u30C6\u30AD\u30B9\u30C8\uFF11\u3064": {
+              title: ["\u3053\u306E\u30AB\u30FC\u30C9\u306E_\u672C\u6765\u306E\u30C6\u30AD\u30B9\u30C8\uFF11\u3064", !0, 1]
+            },
+            "\uFF3B \uFF3D\u306E\u7279\u5FB4\u3092\u6301\u3064\u81EA\u8ECD\u30E6\u30CB\u30C3\u30C8\uFF11\u679A\u306F": {
+              title: ["_\u672C\u6765\u306E\u8A18\u8FF0\u306B\uFF62\u7279\u5FB4\uFF1A_\u88C5\u5F3E\uFF63\u3092\u6301\u3064_\u81EA\u8ECD_G_\uFF11\u679A", !1, A, "\u81EA\u8ECD", "\u30E6\u30CB\u30C3\u30C8", 1],
+              exceptItemSelf: !0,
+              actions: [
+                {
+                  title: function _(ctx2, effect, { GameStateFn, DefineFn }) {
+                    const cardId = DefineFn.EffectFn.getCardID(effect), pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx2, "\uFF3B \uFF3D\u306E\u7279\u5FB4\u3092\u6301\u3064\u81EA\u8ECD\u30E6\u30CB\u30C3\u30C8\uFF11\u679A\u306F", cardId), textRefIds = GameStateFn.getCardTipTextRefs(ctx2, "\u3053\u306E\u30AB\u30FC\u30C9\u306E\u672C\u6765\u306E\u30C6\u30AD\u30B9\u30C8\uFF11\u3064", cardId).map((tr) => tr.textId), ges = GameStateFn.getGlobalEffects(ctx2, null);
+                    ctx2 = GameStateFn.setGlobalEffects(ctx2, null, ges);
+                    for (let pair2 of pairs)
+                      if (GameStateFn.getCardTexts(ctx2, pair2[0], { ges }).find((text2) => textRefIds.includes(text2.id)))
+                        throw new DefineFn.TipError(`\u5DF2\u6709\u540C\u6A23\u7684\u5167\u6587: ${JSON.stringify(textRefIds)}`, { hasSameText: !0 });
+                    return ctx2;
+                  }.toString()
+                }
+              ]
+            }
+          },
+          logicTreeActions: [
+            {
+              actions: [
+                {
+                  title: ["cutIn", [
+                    {
+                      title: function _(ctx2, effect, { GameStateFn, DefineFn }) {
+                        const cardId = DefineFn.EffectFn.getCardID(effect), pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx2, "\uFF3B \uFF3D\u306E\u7279\u5FB4\u3092\u6301\u3064\u81EA\u8ECD\u30E6\u30CB\u30C3\u30C8\uFF11\u679A\u306F", cardId), textRefs = GameStateFn.getCardTipTextRefs(ctx2, "\u3053\u306E\u30AB\u30FC\u30C9\u306E\u672C\u6765\u306E\u30C6\u30AD\u30B9\u30C8\uFF11\u3064", cardId), ges = GameStateFn.getGlobalEffects(ctx2, null);
+                        ctx2 = GameStateFn.setGlobalEffects(ctx2, null, ges);
+                        for (let pair2 of pairs) {
+                          GameStateFn.assertTargetMissingError(ctx2, pair2);
+                          const [targetCardId, targetBasyou] = pair2;
+                          ctx2 = GameStateFn.mapItemState(ctx2, targetCardId, (targetItemState) => {
+                            for (let textRef of textRefs) {
+                              if (GameStateFn.getCardTexts(ctx2, targetItemState.id, { ges }).find((text2) => text2.id == textRef.textId) != null)
+                                continue;
+                              targetItemState = DefineFn.ItemStateFn.setGlobalEffect(targetItemState, null, {
+                                title: ["AddTextRef", textRef],
+                                cardIds: [targetItemState.id]
+                              }, { isRemoveOnTurnEnd: !0 });
+                            }
+                            return targetItemState;
+                          });
+                        }
+                        return ctx2;
+                      }.toString()
+                    }
+                  ]]
+                }
+              ]
+            }
+          ]
+        }
+      ];
+    }
+    case "\u30B2\u30A4\u30F3":
+      return [
+        {
+          id: text.id,
+          title: ["\u4F7F\u7528\u578B", ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA"]],
+          description: "\u9019\u5F35\u5361\u5728\u6230\u5340\u7684\u5834\u5408, \u6253\u958B\u81EA\u8ECD\u672C\u570B\u4E0A\u76841\u5F35\u5361\u548C\u9019\u5F35\u5361\u540CGsignProperty\u7684\u60C5\u6CC1, \u9019\u5F35\u5361\u56DE\u5408\u7D50\u675F\u524D+x/+x/+x, x\u70BA\u6253\u958B\u7684\u5361\u7684\u6A2A\u7F6E\u8CBB\u7528\u6578\u91CF, \u9019\u500B\u6548\u679C1\u56DE\u5408\u53EA\u80FD\u75281\u6B21",
+          conditions: {
+            ...text.conditions,
+            "\u9019\u500B\u6548\u679C1\u56DE\u5408\u53EA\u80FD\u75281\u6B21": {
+              actions: [
+                {
+                  title: ["\u3053\u306E\u8A18\u8FF0\u306E\u52B9\u679C\u306F\u3001\u30D7\u30EC\u30A4\u30E4\u30FC\u6BCE\u306B\uFF11\u30BF\u30FC\u30F3\u306B\uFF11\u56DE\u307E\u3067\u89E3\u6C7A\u3067\u304D\u308B"]
+                }
+              ]
+            },
+            "\u9019\u5F35\u5361\u5728\u6230\u5340\u7684\u5834\u5408": {
+              actions: [
+                {
+                  title: ["Entity", {
+                    isThisCard: !0,
+                    at: ["\u6226\u95D8\u30A8\u30EA\u30A21", "\u6226\u95D8\u30A8\u30EA\u30A22"],
+                    count: 1
+                  }]
+                }
+              ]
+            }
+          },
+          logicTreeActions: [
+            {
+              actions: [
+                {
+                  title: function _(ctx2, effect, { GameStateFn, DefineFn }) {
+                    const newE = DefineFn.EffectFn.fromEffectBasic(effect, {
+                      conditions: {
+                        "\u9019\u5F35\u5361\u5728\u6230\u5340\u7684\u5834\u5408, \u6253\u958B\u81EA\u8ECD\u672C\u570B\u4E0A\u76841\u5F35\u5361": {
+                          title: function _(ctx3, effect2, bridge) {
+                            const { GameStateFn: GameStateFn2, DefineFn: DefineFn2 } = bridge, cardId = DefineFn2.EffectFn.getCardID(effect2), from = GameStateFn2.getItemBaSyou(ctx3, cardId);
+                            if (DefineFn2.BaSyouKeywordFn.getBattleArea().includes(DefineFn2.AbsoluteBaSyouFn.getBaSyouKeyword(from)))
+                              return GameStateFn2.createConditionTitleFn({
+                                title: ["Entity", {
+                                  see: [DefineFn2.RelatedBaSyouFn.of("\u81EA\u8ECD", "\u672C\u56FD"), 1, 1],
+                                  count: 1
+                                }],
+                                actions: [
+                                  {
+                                    title: ["_\u30ED\u30FC\u30EB\u3059\u308B", "\u6253\u958B"],
+                                    vars: ["\u9019\u5F35\u5361\u5728\u6230\u5340\u7684\u5834\u5408, \u6253\u958B\u81EA\u8ECD\u672C\u570B\u4E0A\u76841\u5F35\u5361"]
+                                  }
+                                ]
+                              }, {})(ctx3, effect2, bridge);
+                            return null;
+                          }.toString()
+                        }
+                      },
+                      logicTreeAction: {
+                        actions: [
+                          {
+                            title: function _(ctx3, effect2, { GameStateFn: GameStateFn2, DefineFn: DefineFn2, ToolFn: ToolFn2 }) {
+                              const cardId = DefineFn2.EffectFn.getCardID(effect2);
+                              if (DefineFn2.ItemStateFn.hasTip(GameStateFn2.getItemState(ctx3, cardId), "\u9019\u5F35\u5361\u5728\u6230\u5340\u7684\u5834\u5408, \u6253\u958B\u81EA\u8ECD\u672C\u570B\u4E0A\u76841\u5F35\u5361") == !1)
+                                return ctx3;
+                              const pairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, "\u9019\u5F35\u5361\u5728\u6230\u5340\u7684\u5834\u5408, \u6253\u958B\u81EA\u8ECD\u672C\u570B\u4E0A\u76841\u5F35\u5361", cardId);
+                              if (pairs.length == 0)
+                                throw new Error(`pairs must not 0: ${effect2.text.description}`);
+                              const [openCardId] = pairs[0];
+                              if (GameStateFn2.getCardGSignProperty(ctx3, openCardId) == GameStateFn2.getCardGSignProperty(ctx3, cardId)) {
+                                const ges = GameStateFn2.getGlobalEffects(ctx3, null);
+                                ctx3 = GameStateFn2.setGlobalEffects(ctx3, null, ges);
+                                const bonus = GameStateFn2.getCardRollCostLength(ctx3, openCardId), gainBonus = [bonus, bonus, bonus];
+                                ctx3 = GameStateFn2.doTriggerEvent(ctx3, { title: ["\u300C\u30B2\u30A4\u30F3\u300D\u306E\u52B9\u679C\u3067\u6226\u95D8\u4FEE\u6B63\u3092\u5F97\u308B\u5834\u5408", gainBonus], cardIds: [cardId] });
+                                const hasCase1 = GameStateFn2.getCardTexts(ctx3, cardId, { ges }).find((text2) => text2.description == "\u300E\u8D77\u52D5\u300F\uFF1A\u3053\u306E\u30AB\u30FC\u30C9\u306F\u3001\u300C\u30B2\u30A4\u30F3\u300D\u306E\u52B9\u679C\u3067\u6226\u95D8\u4FEE\u6B63\u3092\u5F97\u308B\u5834\u5408\u3001\u305D\u306E\u6226\u95D8\u4FEE\u6B63\u306E\u4EE3\u308F\u308A\u306B\u3001\u30BF\u30FC\u30F3\u7D42\u4E86\u6642\u307E\u3067\uFF0B\uFF14\uFF0F\xB1\uFF10\uFF0F\xB1\uFF10\u3092\u5F97\u308B\u4E8B\u304C\u3067\u304D\u308B\u3002") != null, hasCase2 = GameStateFn2.getCardTexts(ctx3, cardId, { ges }).find((text2) => text2.description == "\u300E\u8D77\u52D5\u300F\uFF1A\u3053\u306E\u30AB\u30FC\u30C9\u306F\u3001\u300C\u30B2\u30A4\u30F3\u300D\u306E\u52B9\u679C\u3067\u6226\u95D8\u4FEE\u6B63\u3092\u5F97\u308B\u5834\u5408\u3001\u305D\u306E\u6226\u95D8\u4FEE\u6B63\u3092\u5F97\u308B\u4EE3\u308F\u308A\u306B\u3001\u30BF\u30FC\u30F3\u7D42\u4E86\u6642\u307E\u3067\u3001\u300C\u901F\u653B\u300D\u3092\u5F97\u308B\u4E8B\u304C\u3067\u304D\u308B\u3002") != null;
+                                if (hasCase1)
+                                  ctx3 = GameStateFn2.doItemSetGlobalEffectsUntilEndOfTurn(ctx3, [{ title: ["\uFF0Bx\uFF0F\uFF0Bx\uFF0F\uFF0Bx\u3092\u5F97\u308B", [4, 0, 0]], cardIds: [cardId] }], GameStateFn2.createStrBaSyouPair(ctx3, cardId));
+                                else if (hasCase2)
+                                  ctx3 = GameStateFn2.doItemSetGlobalEffectsUntilEndOfTurn(ctx3, [{ title: ["AddText", { id: ToolFn2.getUUID("hasCase2"), title: ["\u7279\u6B8A\u578B", ["\u901F\u653B"]] }], cardIds: [cardId] }], GameStateFn2.createStrBaSyouPair(ctx3, cardId));
+                                else
+                                  ctx3 = GameStateFn2.mapItemState(ctx3, cardId, (is) => DefineFn2.ItemStateFn.setGlobalEffect(is, null, {
+                                    title: ["\uFF0Bx\uFF0F\uFF0Bx\uFF0F\uFF0Bx\u3092\u5F97\u308B", gainBonus],
+                                    cardIds: [cardId]
+                                  }, { isRemoveOnTurnEnd: !0 })), ctx3 = GameStateFn2.doTriggerEvent(ctx3, { title: ["\u300C\u30B2\u30A4\u30F3\u300D\u306E\u52B9\u679C\u3067\u6226\u95D8\u4FEE\u6B63\u3092\u5F97\u305F\u5834\u5408", gainBonus], cardIds: [cardId] });
+                              }
+                              return ctx3;
+                            }.toString()
+                          }
+                        ]
+                      }
+                    });
+                    return ctx2 = GameStateFn.addStackEffect(ctx2, newE), ctx2;
+                  }.toString()
+                }
+              ]
+            }
+          ]
+        }
+      ];
+    case "\u4F9B\u7D66":
+      return [
+        {
+          id: text.id,
+          title: ["\u4F7F\u7528\u578B", ["\u81EA\u8ECD", "\u653B\u6483\u30B9\u30C6\u30C3\u30D7"]],
+          description: "\u9019\u5F35\u5361\u4EE5\u5916\u7684\u81EA\u8ECD\u6A5F\u9AD41\u5F35\u91CD\u7F6E",
+          conditions: {
+            ...text.conditions,
+            "\u9019\u5F35\u5361\u4EE5\u5916\u7684\u81EA\u8ECD\u6A5F\u9AD41\u5F35": {
+              title: ["_\u81EA\u8ECD_\u30E6\u30CB\u30C3\u30C8_\uFF11\u679A", "\u81EA\u8ECD", "\u30E6\u30CB\u30C3\u30C8", 1],
+              exceptItemSelf: !0
+            }
+          },
+          logicTreeActions: [
+            {
+              actions: [
+                {
+                  title: ["cutIn", [
+                    {
+                      title: ["_\u30ED\u30FC\u30EB\u3059\u308B", "\u30EA\u30ED\u30FC\u30EB"],
+                      vars: ["\u9019\u5F35\u5361\u4EE5\u5916\u7684\u81EA\u8ECD\u6A5F\u9AD41\u5F35"]
+                    }
+                  ]]
+                }
+              ]
+            }
+          ]
+        }
+      ];
+    case "\u30B5\u30A4\u30B3\u30DF\u30E5": {
+      const [_, x] = specialEffect, addCardIds = options?.ges?.flatMap((ge) => {
+        if (ge.title[0] == "_\u30E6\u30CB\u30C3\u30C8\u306F\u3001\u300C\u30B5\u30A4\u30B3\u30DF\u30E5\u300D\u306E\u52B9\u679C\u306B\u304A\u3044\u3066\u3001\u4EA4\u6226\u4E2D\u3068\u3057\u3066\u6271\u3046\u3002" && ge.cardIds.includes(options?.cardId || ""))
+          return ge.title[1];
+        return [];
+      }) || [];
+      return [
+        {
+          id: text.id,
+          title: ["\u4F7F\u7528\u578B", ["\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7"]],
+          description: "\u4EA4\u6230\u4E2D\u7684\u6575\u8ECD\u6A5F\u9AD41\u5F35x\u50B7\u5BB3. \u9019\u500B\u6548\u679C\u53EA\u6709\u5728\u540C\u5340\u4E2D\u6709NT\u624D\u80FD\u4F7F\u7528.",
+          conditions: {
+            ...text.conditions,
+            "\u4EA4\u6230\u4E2D\u7684\u6575\u8ECD\u6A5F\u9AD41\u5F35": {
+              title: function _(ctx2, effect, { GameStateFn, DefineFn }) {
+                const { addCardIds: addCardIds2 } = { addCardIds: null };
+                if (addCardIds2 == null)
+                  throw new Error("addCardIds must replace");
+                const cardId = DefineFn.EffectFn.getCardID(effect), tip = GameStateFn.createTipByEntitySearch(ctx2, effect, {
+                  isBattle: !0,
+                  side: "\u6575\u8ECD",
+                  is: ["\u30E6\u30CB\u30C3\u30C8"],
+                  count: 1
+                });
+                let wants = DefineFn.TipFn.getWant(tip);
+                return wants = [...wants, ...addCardIds2.map((itemId) => GameStateFn.createStrBaSyouPair(ctx2, itemId))], {
+                  title: ["\u30AB\u30FC\u30C9", wants, wants.slice(0, 1)],
+                  count: 1
+                };
+              }.toString().replace("{ addCardIds: null }", JSON.stringify({ addCardIds }))
+            },
+            "\u540C\u5340\u4E2D\u6709NT\u624D\u80FD\u4F7F\u7528": {
+              actions: [
+                {
+                  title: function _(ctx2, effect, { GameStateFn, DefineFn }) {
+                    const cardId = DefineFn.EffectFn.getCardID(effect), from = GameStateFn.getItemBaSyou(ctx2, cardId);
+                    if (GameStateFn.getItemIdsByBasyou(ctx2, from).filter((itemId) => GameStateFn.getItemCharacteristic(ctx2, itemId).indexOf("NT")).length > 0 == !1)
+                      throw new TipError("no NT in the same area");
+                    return ctx2;
+                  }.toString()
+                }
+              ]
+            }
+          },
+          logicTreeActions: [
+            {
+              actions: [
+                {
+                  title: ["cutIn", [
+                    {
+                      title: ["_\uFF11\u30C0\u30E1\u30FC\u30B8\u3092\u4E0E\u3048\u308B", x],
+                      vars: ["\u4EA4\u6230\u4E2D\u7684\u6575\u8ECD\u6A5F\u9AD41\u5F35"]
+                    }
+                  ]]
+                }
+              ]
+            }
+          ]
+        }
+      ];
+    }
+    case "\u7BC4\u56F2\u5175\u5668": {
+      const [_, x] = specialEffect, hasCase1 = (options?.ges?.filter((ge) => ge.title[0] == "\u300C\u7BC4\u56F2\u5175\u5668\u300D\u306E\u5BFE\u8C61\u90E8\u5206\u306F\u3001\u300EX\u4EE5\u4E0B\u306E\u9632\u5FA1\u529B\u3092\u6301\u3064\u6575\u8ECD\u30E6\u30CB\u30C3\u30C8\uFF11\u679A\u300F\u306B\u5909\u66F4\u3055\u308C\u308B" && ge.cardIds.includes(options?.cardId || "")) || []).length > 0;
+      return [
+        {
+          id: text.id,
+          title: ["\u4F7F\u7528\u578B", ["\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7"]],
+          description: "\u548C\u9019\u5F35\u5361\u4EA4\u6230\u7684\u9632\u79A6\u529Bx\u4EE5\u4E0B\u7684\u6575\u8ECD\u6A5F\u9AD41\u5F35\u7834\u58DE",
+          conditions: {
+            ...text.conditions,
+            "\u9019\u5F35\u5361\u4EA4\u6230\u7684\u9632\u79A6\u529Bx\u4EE5\u4E0B\u7684\u6575\u8ECD\u6A5F\u9AD41\u5F35": {
+              title: ["Entity", {
+                isBattleWithThis: hasCase1 ? void 0 : !0,
+                compareBattlePoint: ["\u9632\u5FA1\u529B", "<=", x],
+                isDestroy: !1,
+                side: "\u6575\u8ECD",
+                is: ["\u30E6\u30CB\u30C3\u30C8"],
+                count: 1
+              }]
+            }
+          },
+          logicTreeActions: [
+            {
+              actions: [
+                {
+                  title: ["cutIn", [
+                    {
+                      title: ["_\u30ED\u30FC\u30EB\u3059\u308B", "\u7834\u58DE"],
+                      vars: ["\u9019\u5F35\u5361\u4EA4\u6230\u7684\u9632\u79A6\u529Bx\u4EE5\u4E0B\u7684\u6575\u8ECD\u6A5F\u9AD41\u5F35"]
+                    }
+                  ]]
+                }
+              ]
+            }
+          ]
+        }
+      ];
+    }
+    case "\u5171\u6709": {
+      const [_, A] = specialEffect;
+      return [
+        {
+          id: text.id,
+          title: ["\u4F7F\u7528\u578B", ["\u5E38\u6642"]],
+          description: "\u770B\u81EA\u5DF1\u672C\u570B\u5168\u90E8\u7684\u5361,\u53EF\u4EE5\u5F9E\u4E2D\u627E\u51FA\u7279\u5FB5A\u76841\u5F35\u5361\u79FB\u5230HANGER,\u90A3\u500B\u6642\u5019\u672C\u570B\u6D17\u724C.\u9019\u500B\u6548\u679C\u53EA\u6709\u9019\u5F35\u5361\u5F9E\u624B\u4E2D\u6253\u51FA\u7684\u56DE\u5408\u53EF\u4EE5\u4F7F\u7528",
+          conditions: {
+            ...text.conditions,
+            "\u9019\u500B\u6548\u679C\u53EA\u6709\u9019\u5F35\u5361\u5F9E\u624B\u4E2D\u6253\u51FA\u7684\u56DE\u5408\u53EF\u4EE5\u4F7F\u7528": {
+              actions: [
+                {
+                  title: function _(ctx2, effect, { GameStateFn, DefineFn }) {
+                    const cardId = DefineFn.EffectFn.getCardID(effect);
+                    if (GameStateFn.getItemState(ctx2, cardId).isFirstTurn != !0)
+                      throw new DefineFn.TipError(`\u9019\u500B\u6548\u679C\u53EA\u6709\u9019\u5F35\u5361\u5F9E\u624B\u4E2D\u6253\u51FA\u7684\u56DE\u5408\u53EF\u4EE5\u4F7F\u7528:${effect.text.description}`);
+                    return ctx2;
+                  }.toString()
+                }
+              ]
+            }
+          },
+          logicTreeActions: [
+            {
+              actions: [
+                {
+                  title: function _(ctx2, effect, { GameStateFn, DefineFn }) {
+                    const { A: A2 } = { A: "" }, newE = DefineFn.EffectFn.fromEffectBasic(effect, {
+                      conditions: {
+                        "\u770B\u81EA\u5DF1\u672C\u570B\u5168\u90E8\u7684\u5361,\u53EF\u4EE5\u5F9E\u4E2D\u627E\u51FA\u7279\u5FB5A\u76841\u5F35\u5361\u79FB\u5230HANGER,\u90A3\u500B\u6642\u5019\u672C\u570B\u6D17\u724C": {
+                          title: ["_\u81EA\u8ECD_\u672C\u570B\u627E\u51FA\u7279\u5FB5_A\u7684_1\u5F35\u5361", "\u81EA\u8ECD", "\u672C\u56FD", A2, 1],
+                          actions: [
+                            {
+                              title: ["\u770B\u81EA\u5DF1_\u672C\u570B\u5168\u90E8\u7684\u5361", "\u672C\u56FD"]
+                            }
+                          ]
+                        }
+                      },
+                      logicTreeAction: {
+                        actions: [
+                          {
+                            title: function _(ctx3, effect2, { GameStateFn: GameStateFn2, DefineFn: DefineFn2 }) {
+                              const cardId = DefineFn2.EffectFn.getCardID(effect2), cardController = GameStateFn2.getItemController(ctx3, cardId), pairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, "\u770B\u81EA\u5DF1\u672C\u570B\u5168\u90E8\u7684\u5361,\u53EF\u4EE5\u5F9E\u4E2D\u627E\u51FA\u7279\u5FB5A\u76841\u5F35\u5361\u79FB\u5230HANGER,\u90A3\u500B\u6642\u5019\u672C\u570B\u6D17\u724C", cardId);
+                              if (pairs.length) {
+                                const ges = GameStateFn2.getGlobalEffects(ctx3, null);
+                                ctx3 = GameStateFn2.setGlobalEffects(ctx3, null, ges);
+                                for (let pair2 of pairs)
+                                  ctx3 = GameStateFn2.doItemMove(ctx3, DefineFn2.AbsoluteBaSyouFn.of(cardController, "\u30CF\u30F3\u30AC\u30FC"), pair2, { ges });
+                                ctx3 = GameStateFn2.shuffleItems(ctx3, DefineFn2.AbsoluteBaSyouFn.of(cardController, "\u672C\u56FD"));
+                              }
+                              return ctx3;
+                            }.toString()
+                          }
+                        ]
+                      }
+                    });
+                    return ctx2 = GameStateFn.addStackEffect(ctx2, newE), ctx2;
+                  }.toString().replace('{ A: "" }', JSON.stringify({ A }))
+                }
+              ]
+            }
+          ]
+        }
+      ];
+    }
+    case "\u6539\u88C5": {
+      const [_, A] = specialEffect;
+      return [
+        {
+          id: text.id,
+          title: ["\u4F7F\u7528\u578B", ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA"]],
+          description: "\u6253\u958B\u81EA\u8ECD\u624B\u88E1\u6216\u6307\u5B9AHANGER\u4E2D\u7279\u5FB5A\u4E26\u5408\u8A08\u570B\u529Bx\u4EE5\u4E0B\u76841\u5F35\u5361, \u548C\u9019\u5F35\u5361\u91CD\u7F6E\u72C0\u614B\u7F6E\u63DB, \u9019\u5F35\u5361\u7F6E\u63DB\u5F8C\u5EE2\u68C4. x\u70BA\u81EA\u8ECDG\u7684\u5F35\u6578",
+          conditions: {
+            ...text.conditions,
+            "\u6253\u958B\u81EA\u8ECD\u624B\u88E1\u6216\u6307\u5B9AHANGER\u4E2D\u7279\u5FB5A\u4E26\u5408\u8A08\u570B\u529Bx\u4EE5\u4E0B\u76841\u5F35\u5361": {
+              title: function _(ctx2, effect, bridge) {
+                const { A: A2 } = { A: "" };
+                if (A2 == "")
+                  throw new Error("A\u6C92\u6709\u88AB\u5B57\u4E32\u7F6E\u63DB");
+                const { GameStateFn, DefineFn } = bridge, cardId = DefineFn.EffectFn.getCardID(effect), cardController = GameStateFn.getItemController(ctx2, cardId), gCount = GameStateFn.getItemIdsByBasyou(ctx2, DefineFn.AbsoluteBaSyouFn.of(cardController, "G\u30BE\u30FC\u30F3")).length;
+                return GameStateFn.createConditionTitleFn({
+                  title: ["\u6253\u958B\u81EA\u8ECD\u624B\u88E1\u6216\u6307\u5B9AHANGER\u4E2D\u7279\u5FB5_A\u4E26\u5408\u8A08\u570B\u529B_x\u4EE5\u4E0B\u7684_1\u5F35\u5361", A2, gCount, 1]
+                }, {})(ctx2, effect, bridge);
+              }.toString().replace('{ A: "" }', JSON.stringify({ A }))
+            }
+          },
+          logicTreeActions: [
+            {
+              actions: [
+                {
+                  title: function _(ctx2, effect, { GameStateFn, DefineFn }) {
+                    const newE = DefineFn.EffectFn.fromEffectBasic(effect, {
+                      logicTreeAction: {
+                        actions: [
+                          {
+                            title: function _(ctx3, effect2, { GameStateFn: GameStateFn2, DefineFn: DefineFn2 }) {
+                              const cardId = DefineFn2.EffectFn.getCardID(effect2), basyou = GameStateFn2.getItemBaSyou(ctx3, cardId), pairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, "\u6253\u958B\u81EA\u8ECD\u624B\u88E1\u6216\u6307\u5B9AHANGER\u4E2D\u7279\u5FB5A\u4E26\u5408\u8A08\u570B\u529Bx\u4EE5\u4E0B\u76841\u5F35\u5361", cardId);
+                              if (pairs.length == 0)
+                                throw new Error(`pairs must not 0: ${effect2.text.description}`);
+                              const targetPair = pairs[0], ges = GameStateFn2.getGlobalEffects(ctx3, null);
+                              return ctx3 = GameStateFn2.setGlobalEffects(ctx3, null, ges), GameStateFn2.assertTargetMissingError(ctx3, targetPair), ctx3 = GameStateFn2.doItemSwap(ctx3, [cardId, basyou], targetPair), ctx3 = GameStateFn2.doItemSetRollState(ctx3, !1, [cardId, basyou], { isSkipTargetMissing: !0 }), ctx3 = GameStateFn2.doItemMove(ctx3, DefineFn2.AbsoluteBaSyouFn.setBaSyouKeyword(basyou, "\u30B8\u30E3\u30F3\u30AF\u30E4\u30FC\u30C9"), targetPair, { ges }), ctx3 = GameStateFn2.doTriggerEvent(ctx3, { title: ["\u300C\u6539\u88C5\u300D\u306E\u52B9\u679C\u3067\u5EC3\u68C4\u3055\u308C\u308B\u5834\u5408"], cardIds: [targetPair[0]] }), ctx3 = GameStateFn2.doTriggerEvent(ctx3, { title: ["\u300C\u6539\u88C5\u300D\u306E\u52B9\u679C\u3067\u5834\u306B\u51FA\u305F\u5834\u5408"], cardIds: [cardId] }), ctx3;
+                            }.toString()
+                          }
+                        ]
+                      }
+                    });
+                    return ctx2 = GameStateFn.addStackEffect(ctx2, newE), ctx2;
+                  }.toString()
+                }
+              ]
+            }
+          ]
+        }
+      ];
+    }
+  }
+  return [];
+}
+
+// src/game/gameState/globalEffects.ts
+function getGlobalEffects(ctx2, situation) {
+  if (logCategory("getGlobalEffects", ""), __callGlobal)
+    throw new Error;
+  __callGlobal = !0;
+  const key = JSON.stringify(situation), cached = ctx2.globalEffectPool[key];
+  if (cached)
+    return __callGlobal = null, logCategory("getGlobalEffects", "======="), cached;
+  const ret = getSituationEffects(ctx2, situation);
+  return __callGlobal = null, logCategory("getGlobalEffects", "======="), ret;
+}
+function setGlobalEffects(ctx2, situation, ges) {
+  const key = JSON.stringify(situation);
+  return {
+    ...ctx2,
+    globalEffectPool: {
+      ...ctx2.globalEffectPool,
+      [key]: ges
+    }
+  };
+}
+function clearGlobalEffects(ctx2) {
+  return {
+    ...ctx2,
+    globalEffectPool: {}
+  };
+}
+function getSituationEffects(ctx2, situation) {
+  const bridge = createBridge(), ges = createAllCardTexts(ctx2).flatMap(([item, texts]) => {
+    return texts.map((text, i) => {
+      const cardController = getItemController(ctx2, item.id), fn = getOnSituationFn(text), effect = {
+        id: ToolFn.getUUID("getSituationEffects"),
+        reason: ["Situation", cardController, item.id, situation],
+        text
+      };
+      return [fn, effect];
+    }).flatMap(([fn, effect]) => {
+      return fn(ctx2, effect, bridge);
+    });
+  }), itemStateGes = getItemStateValues(ctx2).flatMap(ItemStateFn.getGlobalEffects), gGes = [AbsoluteBaSyouFn.of(PlayerA, "G\u30BE\u30FC\u30F3"), AbsoluteBaSyouFn.of(PlayerB, "G\u30BE\u30FC\u30F3")].flatMap((basyou) => getItemIdsByBasyou(ctx2, basyou)).filter((itemId) => getCard(ctx2, itemId).isRoll != !0).map((itemId) => {
+    return { title: ["\u767C\u751F\u570B\u529B", getItemPrototype(ctx2, itemId).gsign?.[0] || []], cardIds: [itemId] };
+  });
+  return [...ges, ...itemStateGes, ...gGes];
+}
+function createAllCardTexts(ctx2) {
+  const getTextGroup1 = pipe(always_default(AbsoluteBaSyouFn.getBaAll()), map_default((basyou) => getItemIdsByBasyou(ctx2, basyou)), flatten_default, (itemIds) => itemIds.filter((itemId) => isCard(ctx2, itemId) || isChip(ctx2, itemId)), map_default((itemId) => getItem(ctx2, itemId)), map_default((item) => {
+    let texts = (getItemPrototype(ctx2, item.id).texts || []).flatMap((text) => {
+      if (text.title[0] == "\u7279\u6B8A\u578B")
+        return createTextsFromSpecialEffect(text, {});
+      return [text];
+    });
+    return texts = texts.filter((text) => text.title[0] == "\u81EA\u52D5\u578B" && (text.title[1] == "\u5E38\u99D0" || text.title[1] == "\u8D77\u52D5")), [item, texts];
+  })), getTextGroup2 = pipe(always_default(AbsoluteBaSyouFn.getTextOn()), map_default((basyou) => getItemIdsByBasyou(ctx2, basyou)), flatten_default, (itemIds) => itemIds.filter((itemId) => isCard(ctx2, itemId) || isChip(ctx2, itemId)), map_default((itemId) => getItem(ctx2, itemId)), map_default((item) => {
+    let texts = (getItemPrototype(ctx2, item.id).texts || []).flatMap((text) => {
+      if (text.title[0] == "\u7279\u6B8A\u578B")
+        return createTextsFromSpecialEffect(text, {});
+      return [text];
+    });
+    return texts = texts.filter((text) => text.title[0] == "\u81EA\u52D5\u578B" && text.title[1] == "\u6052\u5E38" || text.title[0] == "\u4F7F\u7528\u578B"), [item, texts];
+  })), getTextGroup3 = pipe(always_default([AbsoluteBaSyouFn.of(PlayerA, "G\u30BE\u30FC\u30F3"), AbsoluteBaSyouFn.of(PlayerB, "G\u30BE\u30FC\u30F3")]), map_default((basyou) => getItemIdsByBasyou(ctx2, basyou)), flatten_default, (itemIds) => itemIds.filter((itemId) => isCard(ctx2, itemId) || isChip(ctx2, itemId)), map_default((itemId) => getItem(ctx2, itemId)), map_default((item) => {
+    let texts = (getItemPrototype(ctx2, item.id).texts || []).flatMap((text) => {
+      if (text.protectLevel == 2 && text.title[0] == "\u7279\u6B8A\u578B")
+        return createTextsFromSpecialEffect(text, {});
+      return [text];
+    });
+    return texts = texts.filter((text) => text.protectLevel == 2 && text.title[0] == "\u81EA\u52D5\u578B" && (text.title[1] == "\u5E38\u99D0" || text.title[1] == "\u8D77\u52D5")), [item, texts];
+  })), getTextGroup4 = pipe(always_default(getCardIds(ctx2)), map_default((cardId) => {
+    const proto = getItemPrototype(ctx2, cardId);
+    if (proto.commandText?.onSituation)
+      return [getCard(ctx2, cardId), [proto.commandText]];
+    return null;
+  }), (infos) => infos.filter((v) => v)), allCardTexts = [...getTextGroup1(), ...getTextGroup2(), ...getTextGroup3(), ...getTextGroup4()], bridge = createBridge(), ges = allCardTexts.flatMap(([item, texts]) => {
+    return texts.map((text, i) => {
+      const cardController = getItemController(ctx2, item.id);
+      logCategory("createAllCardTexts", "getOnSituationFn", text.onSituation);
+      const fn = getOnSituationFn(text), effect = {
+        id: ToolFn.getUUID("getSituationEffects"),
+        reason: ["Situation", cardController, item.id, { title: ["\u6709\u6C92\u6709\u65B0\u589E\u5167\u6587"] }],
+        text
+      };
+      return [fn, effect];
+    }).flatMap(([fn, effect]) => {
+      return fn(ctx2, effect, bridge);
+    });
+  }), itemStateGes = getItemStateValues(ctx2).flatMap(ItemStateFn.getGlobalEffects), gesLayer1 = [...ges, ...itemStateGes], textsLayer2 = gesLayer1.filter((ge) => ge.title[0] == "AddText").map((ge) => [ge.cardIds, ge.title[1]]).flatMap(([itemIds, text]) => {
+    return itemIds.flatMap((itemId) => {
+      const texts = text.title[0] == "\u7279\u6B8A\u578B" ? createTextsFromSpecialEffect(text, {}) : [text];
+      return [[getItem(ctx2, itemId), texts]];
+    });
+  }), textsLayer2_2 = gesLayer1.filter((ge) => ge.title[0] == "AddTextRef").map((ge) => [ge.cardIds, ge.title[1]]).flatMap(([itemIds, textRef]) => {
+    return itemIds.flatMap((itemId) => {
+      const text = getCardTextFromCardTextRef(ctx2, textRef), texts = text.title[0] == "\u7279\u6B8A\u578B" ? createTextsFromSpecialEffect(text, {}) : [text];
+      return [[getItem(ctx2, itemId), texts]];
+    });
+  });
+  return [...allCardTexts, ...textsLayer2, ...textsLayer2_2];
+}
+var __callGlobal = null;
+
 // src/game/gameState/setGroup.ts
 var exports_setGroup = {};
 __export(exports_setGroup, {
@@ -21056,25 +20885,25 @@ __export(exports_setGroup, {
   isMeleeUnit: () => isMeleeUnit,
   getSetGroupBattlePoint: () => getSetGroupBattlePoint
 });
-function getSetGroupBattlePoint(ctx2, cardId) {
-  return pipe(always_default(getSetGroupChildren(ctx2, cardId)), map_default((setGroupCardID) => getCardBattlePoint(ctx2, setGroupCardID)), reduce_default(BattlePointFn.add, BattlePointFn.getAllStar()), BattlePointFn.toBattleBonus)();
+function getSetGroupBattlePoint(ctx2, cardId, options) {
+  return pipe(always_default(getSetGroupChildren(ctx2, cardId)), map_default((setGroupCardID) => getCardBattlePoint(ctx2, setGroupCardID, { ges: options.ges })), reduce_default(BattlePointFn.add, BattlePointFn.getAllStar()), BattlePointFn.toBattleBonus)();
 }
-function isSetGroupHasA(ctx2, a, cardId) {
-  return getSetGroupChildren(ctx2, cardId).some((cardId2) => getCardHasSpeicalEffect(ctx2, a, cardId2));
+function isSetGroupHasA(ctx2, a, cardId, options) {
+  return getSetGroupChildren(ctx2, cardId).some((cardId2) => getCardHasSpeicalEffect(ctx2, a, cardId2, { ges: options.ges }));
 }
-function isMeleeUnit(ctx2, itemId) {
-  const [atk, range3, hp] = getSetGroupBattlePoint(ctx2, itemId);
+function isMeleeUnit(ctx2, itemId, options) {
+  const [atk, range3, hp] = getSetGroupBattlePoint(ctx2, itemId, { ges: options.ges });
   if (range3 == 0 && atk > 0)
     return !0;
   if (atk - range3 >= 2)
     return !0;
   return !1;
 }
-function isRangeUnit(ctx2, itemId) {
-  const [atk, range3, hp] = getSetGroupBattlePoint(ctx2, itemId);
+function isRangeUnit(ctx2, itemId, options) {
+  const [atk, range3, hp] = getSetGroupBattlePoint(ctx2, itemId, { ges: options.ges });
   if (range3 == 0)
     return !1;
-  return isMeleeUnit(ctx2, itemId) == !1;
+  return isMeleeUnit(ctx2, itemId, { ges: options.ges }) == !1;
 }
 
 // src/game/gameState/battleGroup.ts
@@ -21083,7 +20912,7 @@ function getBattleGroup(ctx2, baSyou) {
     return getSetGroupRoot(ctx2, cardId) == cardId;
   });
 }
-function getBattleGroupBattlePoint(ctx2, unitCardIDs) {
+function getBattleGroupBattlePoint(ctx2, unitCardIDs, options) {
   if (unitCardIDs.length == 0)
     return 0;
   const attackPower = unitCardIDs.map((cardID, i) => {
@@ -21094,7 +20923,7 @@ function getBattleGroupBattlePoint(ctx2, unitCardIDs) {
       throw new Error("card not found");
     if (card.isRoll)
       return 0;
-    const [melee, range3, _] = getSetGroupBattlePoint(ctx2, cardID);
+    const [melee, range3, _] = getSetGroupBattlePoint(ctx2, cardID, { ges: options.ges });
     if (i == 0)
       return melee;
     return range3;
@@ -21115,13 +20944,13 @@ function getBattleGroupBattlePoint(ctx2, unitCardIDs) {
   }).reduce((acc, c) => acc + c, 0);
   return attackPower + bonus + bonus2;
 }
-function isBattleGroupHasA(ctx2, a, cardID) {
+function isBattleGroupHasA(ctx2, a, cardID, options) {
   const baSyou = getItemBaSyou(ctx2, cardID);
-  return getBattleGroup(ctx2, baSyou).some((bg) => isSetGroupHasA(ctx2, a, bg));
+  return getBattleGroup(ctx2, baSyou).some((bg) => isSetGroupHasA(ctx2, a, bg, { ges: options.ges }));
 }
-function isABattleGroup(ctx2, a, cardID) {
+function isABattleGroup(ctx2, a, cardID, options) {
   const baSyou = getItemBaSyou(ctx2, cardID);
-  return getBattleGroup(ctx2, baSyou).every((bg) => isSetGroupHasA(ctx2, a, bg));
+  return getBattleGroup(ctx2, baSyou).every((bg) => isSetGroupHasA(ctx2, a, bg, { ges: options.ges }));
 }
 
 // src/game/gameState/player.ts
@@ -21243,16 +21072,16 @@ __export(exports_doItemMove, {
   doItemMove: () => doItemMove
 });
 function doItemMove(ctx2, to, [itemId, from], options) {
-  if (options?.isSkipTargetMissing)
+  logCategory("doItemMove", "");
+  const ges = getGlobalEffects(ctx2, null);
+  if (ctx2 = setGlobalEffects(ctx2, null, ges), options?.isSkipTargetMissing)
     ;
   else
     assertTargetMissingError(ctx2, [itemId, from]);
   if (isCard(ctx2, itemId) || isChip(ctx2, itemId)) {
     const oldTable = ctx2.table;
     {
-      const ges = getGlobalEffects(ctx2, null);
-      ctx2 = setGlobalEffects(ctx2, null, ges);
-      const redirectEs = ges.filter((ge) => ge.title[0] == "\u5834\u3001\u307E\u305F\u306F\u624B\u672D\u304B\u3089\u3001\u81EA\u8ECD\u30B8\u30E3\u30F3\u30AF\u30E4\u30FC\u30C9\u306B\u30AB\u30FC\u30C9\u304C\u79FB\u308B\u5834\u5408\u3001\u30B8\u30E3\u30F3\u30AF\u30E4\u30FC\u30C9\u306B\u79FB\u308B\u4EE3\u308F\u308A\u306B\u30B2\u30FC\u30E0\u304B\u3089\u53D6\u308A\u9664\u304B\u308C\u308B");
+      const redirectEs = ges.filter((ge) => ge.title[0] == "\u5834\u3001\u307E\u305F\u306F\u624B\u672D\u304B\u3089\u3001\u81EA\u8ECD\u30B8\u30E3\u30F3\u30AF\u30E4\u30FC\u30C9\u306B\u30AB\u30FC\u30C9\u304C\u79FB\u308B\u5834\u5408\u3001\u30B8\u30E3\u30F3\u30AF\u30E4\u30FC\u30C9\u306B\u79FB\u308B\u4EE3\u308F\u308A\u306B\u30B2\u30FC\u30E0\u304B\u3089\u53D6\u308A\u9664\u304B\u308C\u308B") || [];
       if (redirectEs.length) {
         const textControllers = redirectEs.flatMap((e) => e.cardIds).map((id) => getItemController(ctx2, id));
         if (BaSyouKeywordFn.getBaAll().concat(["\u30CF\u30F3\u30AC\u30FC"]).includes(AbsoluteBaSyouFn.getBaSyouKeyword(from)) && AbsoluteBaSyouFn.getBaSyouKeyword(to) == "\u30B8\u30E3\u30F3\u30AF\u30E4\u30FC\u30C9" && textControllers.includes(AbsoluteBaSyouFn.getPlayerID(to)))
@@ -21365,6 +21194,20 @@ __export(exports_doItemDamage, {
   doItemDamage: () => doItemDamage
 });
 
+// src/game/gameState/assertTargetNoLongerValidAndUpdate.ts
+function assertTargetNoLongerValidAndUpdate(ctx2, effect, cardId) {
+  const ges = getGlobalEffects(ctx2, null);
+  if (ctx2 = setGlobalEffects(ctx2, null, ges), ges.find((ge) => ge.title[0] == "\u6575\u8ECD\u52B9\u679C\u306E\u5BFE\u8C61\u306B\u306A\u3089\u306A\u3044" && ge.cardIds.includes(cardId))) {
+    if (EffectFn.getPlayerID(effect) != getItemController(ctx2, cardId))
+      throw new TargetMissingError("\u6575\u8ECD\u52B9\u679C\u306E\u5BFE\u8C61\u306B\u306A\u3089\u306A\u3044");
+  }
+  if (ges.find((ge) => ge.title[0] == "\u6575\u8ECD\u30E6\u30CB\u30C3\u30C8\u306E\u52B9\u679C\u306E\u5BFE\u8C61\u306B\u306A\u3089\u306A\u3044" && ge.cardIds.includes(cardId))) {
+    if (EffectFn.getPlayerID(effect) != getItemController(ctx2, cardId) && getItemRuntimeCategory(ctx2, EffectFn.getCardID(effect)) == "\u30E6\u30CB\u30C3\u30C8")
+      throw new TargetMissingError("\u6575\u8ECD\u52B9\u679C\u306E\u5BFE\u8C61\u306B\u306A\u3089\u306A\u3044");
+  }
+  return ctx2;
+}
+
 // src/game/gameState/createDestroyEffect.ts
 function createDestroyEffect(ctx2, reason, cardId) {
   return {
@@ -21395,25 +21238,31 @@ function createDestroyEffect(ctx2, reason, cardId) {
 }
 
 // src/game/gameState/doItemDamage.ts
-function doItemDamage(ctx2, playerId, damage, target, options) {
+function doItemDamage(ctx2, effect, damage, target, options) {
+  const ges = getGlobalEffects(ctx2, null);
+  if (ctx2 = setGlobalEffects(ctx2, null, ges), options?.isSkipTargetMissing)
+    ;
+  else
+    ctx2 = assertTargetNoLongerValidAndUpdate(ctx2, effect, target[0]);
+  const effectController = EffectFn.getPlayerID(effect);
   if (options?.isSkipTargetMissing)
     ;
   else
     assertTargetMissingError(ctx2, target);
   {
-    const ges = getGlobalEffects(ctx2, null);
-    ctx2 = setGlobalEffects(ctx2, null, ges);
-    const adj = ges.map((ge) => ge.title[0] == "\u3053\u306E\u30AB\u30FC\u30C9\u304C\u53D7\u3051\u308B\u5168\u3066\u306E_\u901A\u5E38\u30C0\u30E1\u30FC\u30B8\u306F\u3001_\uFF12\u6E1B\u6BBA\u3055\u308C\u308B" && ge.title[1] == "\u901A\u5E38\u30C0\u30E1\u30FC\u30B8" ? -ge.title[2] : 0).reduce((a, b) => a + b, 0);
+    const ges2 = getGlobalEffects(ctx2, null);
+    ctx2 = setGlobalEffects(ctx2, null, ges2);
+    const adj = ges2.map((ge) => ge.title[0] == "\u3053\u306E\u30AB\u30FC\u30C9\u304C\u53D7\u3051\u308B\u5168\u3066\u306E_\u901A\u5E38\u30C0\u30E1\u30FC\u30B8\u306F\u3001_\uFF12\u6E1B\u6BBA\u3055\u308C\u308B" && ge.title[1] == "\u901A\u5E38\u30C0\u30E1\u30FC\u30B8" ? -ge.title[2] : 0).reduce((a, b) => a + b, 0);
     damage += adj, damage = Math.max(0, damage);
   }
   const [targetItemId, targetOriginBasyou] = target;
   if (isCard(ctx2, targetItemId) || isChip(ctx2, targetItemId)) {
     let cardState = getItemState(ctx2, targetItemId);
     cardState = ItemStateFn.damage(cardState, damage), ctx2 = setItemState(ctx2, targetItemId, cardState);
-    const [_, _2, hp] = getSetGroupBattlePoint(ctx2, targetItemId);
+    const [_, _2, hp] = getSetGroupBattlePoint(ctx2, targetItemId, { ges });
     if (hp <= cardState.damage) {
-      const effect = createDestroyEffect(ctx2, { id: "\u901A\u5E38\u30C0\u30E1\u30FC\u30B8", playerID: playerId }, targetItemId);
-      ctx2 = addDestroyEffect(ctx2, effect);
+      const effect2 = createDestroyEffect(ctx2, { id: "\u901A\u5E38\u30C0\u30E1\u30FC\u30B8", playerID: effectController }, targetItemId);
+      ctx2 = addDestroyEffect(ctx2, effect2);
     }
     return ctx2;
   }
@@ -21558,7 +21407,9 @@ function createMinusDestroyEffectAndPush(ctx2) {
       ;
     else
       return;
-    const [_, _2, hp] = getSetGroupBattlePoint(ctx2, cardId);
+    const ges = getGlobalEffects(ctx2, null);
+    ctx2 = setGlobalEffects(ctx2, null, ges);
+    const [_, _2, hp] = getSetGroupBattlePoint(ctx2, cardId, { ges });
     if (hp <= 0) {
       const destroyReason = {
         id: "\u30DE\u30A4\u30CA\u30B9\u306E\u6226\u95D8\u4FEE\u6B63",
@@ -21635,16 +21486,31 @@ function createEntityIterator(ctx2) {
     });
   }), rets;
 }
-function createTipByEntitySearch(ctx2, cardId, options) {
+function createTipByEntitySearch(ctx2, effect, searchOptions, options) {
+  const cardId = EffectFn.getCardID(effect);
   let entityList = createEntityIterator(ctx2);
-  if (options.isBattle != null)
-    entityList = entityList.filter(EntityFn.filterIsBattle(ctx2, null, options.isBattle));
-  if (options.isBattleWithThis != null)
-    entityList = entityList.filter(EntityFn.filterIsBattle(ctx2, cardId, options.isBattleWithThis));
+  if ((options?.ges?.filter((ge) => ge.title[0] == "\u6575\u8ECD\u52B9\u679C\u306E\u5BFE\u8C61\u306B\u306A\u3089\u306A\u3044").flatMap((ge) => ge.cardIds) || []).length) {
+    const effectController = EffectFn.getPlayerID(effect);
+    entityList = entityList.filter((entity) => {
+      return getItemController(ctx2, entity.itemId) == effectController;
+    });
+  }
+  if (getItemRuntimeCategory(ctx2, cardId) == "\u30E6\u30CB\u30C3\u30C8") {
+    if ((options?.ges?.filter((ge) => ge.title[0] == "\u6575\u8ECD\u30E6\u30CB\u30C3\u30C8\u306E\u52B9\u679C\u306E\u5BFE\u8C61\u306B\u306A\u3089\u306A\u3044").flatMap((ge) => ge.cardIds) || []).length) {
+      const effectController = EffectFn.getPlayerID(effect);
+      entityList = entityList.filter((entity) => {
+        return getItemController(ctx2, entity.itemId) == effectController;
+      });
+    }
+  }
+  if (searchOptions.isBattle != null)
+    entityList = entityList.filter(EntityFn.filterIsBattle(ctx2, null, searchOptions.isBattle));
+  if (searchOptions.isBattleWithThis != null)
+    entityList = entityList.filter(EntityFn.filterIsBattle(ctx2, cardId, searchOptions.isBattleWithThis));
   const cheatCardIds = [];
-  if (options.isThisCard != null)
-    entityList = entityList.filter((entity) => entity.itemId == cardId == options.isThisCard);
-  if (options.isBattleGroupFirst) {
+  if (searchOptions.isThisCard != null)
+    entityList = entityList.filter((entity) => entity.itemId == cardId == searchOptions.isThisCard);
+  if (searchOptions.isBattleGroupFirst) {
     const basyou = getItemBaSyou(ctx2, cardId);
     if (basyou.value[1] == "\u6226\u95D8\u30A8\u30EA\u30A21" || basyou.value[1] == "\u6226\u95D8\u30A8\u30EA\u30A22") {
       const ids = lift_default(AbsoluteBaSyouFn.of)(PlayerIDFn.getAll(), ["\u6226\u95D8\u30A8\u30EA\u30A21", "\u6226\u95D8\u30A8\u30EA\u30A22"]).flatMap((basyou2) => {
@@ -21654,38 +21520,38 @@ function createTipByEntitySearch(ctx2, cardId, options) {
     } else
       entityList = [];
   }
-  if (options.isThisSetGroup != null) {
+  if (searchOptions.isThisSetGroup != null) {
     const setGroupIds = getSetGroup(ctx2, cardId);
-    entityList = entityList.filter((entity) => setGroupIds.includes(entity.itemId) == options.isThisSetGroup);
+    entityList = entityList.filter((entity) => setGroupIds.includes(entity.itemId) == searchOptions.isThisSetGroup);
   }
-  if (options.isThisBattleGroup != null) {
+  if (searchOptions.isThisBattleGroup != null) {
     const basyou = getItemBaSyou(ctx2, cardId);
     if (basyou.value[1] == "\u6226\u95D8\u30A8\u30EA\u30A21" || basyou.value[1] == "\u6226\u95D8\u30A8\u30EA\u30A22") {
       const battleGroupIds = getBattleGroup(ctx2, getItemBaSyou(ctx2, cardId));
-      entityList = entityList.filter((entity) => battleGroupIds.includes(entity.itemId) == options.isThisBattleGroup);
+      entityList = entityList.filter((entity) => battleGroupIds.includes(entity.itemId) == searchOptions.isThisBattleGroup);
     } else
       entityList = [];
   }
-  if (options.hasSelfCardId != null) {
+  if (searchOptions.hasSelfCardId != null) {
     const absoluteBasyou = getItemBaSyou(ctx2, cardId);
-    entityList = entityList.filter((entity) => (entity.itemController == absoluteBasyou.value[0] && entity.baSyouKeyword == absoluteBasyou.value[1]) == options.hasSelfCardId);
+    entityList = entityList.filter((entity) => (entity.itemController == absoluteBasyou.value[0] && entity.baSyouKeyword == absoluteBasyou.value[1]) == searchOptions.hasSelfCardId);
   }
-  if (options.see) {
-    const [basyou, min, max] = options.see, absoluteBasyou = createAbsoluteBaSyouFromBaSyou(ctx2, cardId, basyou);
+  if (searchOptions.see) {
+    const [basyou, min, max] = searchOptions.see, absoluteBasyou = createAbsoluteBaSyouFromBaSyou(ctx2, cardId, basyou);
     if (entityList = entityList.filter(EntityFn.filterController(AbsoluteBaSyouFn.getPlayerID(absoluteBasyou))), entityList = entityList.filter(EntityFn.filterAtBaSyous([AbsoluteBaSyouFn.getBaSyouKeyword(absoluteBasyou)])), entityList.length < min)
       throw new TipError(`must at least ${min} for see`);
     cheatCardIds.push(...entityList.map((e) => e.itemId).slice(0, max)), entityList = entityList.slice(0, max);
   }
-  if (options.isCanSetCharacter != null)
+  if (searchOptions.isCanSetCharacter != null)
     entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx2, !0)).filter(EntityFn.filterCanSetCharacter(ctx2));
-  else if (options.isSetGroup != null)
-    entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx2, options.isSetGroup));
-  if (options.compareBattlePoint) {
-    const [kw, op, value] = options.compareBattlePoint;
+  else if (searchOptions.isSetGroup != null)
+    entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx2, searchOptions.isSetGroup));
+  if (searchOptions.compareBattlePoint) {
+    const [kw, op, value] = searchOptions.compareBattlePoint;
     entityList = entityList.filter((entity) => {
       switch (kw) {
         case "\u653B\u6483\u529B": {
-          const [atk, range3, hp] = getSetGroupBattlePoint(ctx2, entity.itemId);
+          const [atk, range3, hp] = getSetGroupBattlePoint(ctx2, entity.itemId, { ges: options?.ges });
           switch (op) {
             case "<=":
               return atk <= value;
@@ -21696,7 +21562,7 @@ function createTipByEntitySearch(ctx2, cardId, options) {
           }
         }
         case "\u9632\u5FA1\u529B": {
-          const [atk, range3, hp] = getSetGroupBattlePoint(ctx2, entity.itemId);
+          const [atk, range3, hp] = getSetGroupBattlePoint(ctx2, entity.itemId, { ges: options?.ges });
           switch (op) {
             case "<=":
               return hp <= value;
@@ -21707,7 +21573,7 @@ function createTipByEntitySearch(ctx2, cardId, options) {
           }
         }
         case "\u5408\u8A08\u56FD\u529B": {
-          const totalCost = getCardTotalCostLength(ctx2, entity.itemId);
+          const totalCost = getCardTotalCostLength(ctx2, entity.itemId, { ges: options?.ges });
           switch (op) {
             case "<=":
               return totalCost <= value;
@@ -21721,48 +21587,54 @@ function createTipByEntitySearch(ctx2, cardId, options) {
       return !1;
     });
   }
-  if (options.isMaster != null)
+  if (searchOptions.isMaster != null)
     entityList = entityList.filter((entity) => isCardMaster(ctx2, getSetGroupRoot(ctx2, entity.itemId), entity.itemId));
-  if (options.title)
-    entityList = entityList.filter((entity) => options.title?.includes(entity.prototype?.title || ""));
-  if (options.at?.length)
-    entityList = entityList.filter(EntityFn.filterAtBaSyous(options.at));
-  if (options.atBa != null)
+  if (searchOptions.title)
+    entityList = entityList.filter((entity) => searchOptions.title?.includes(entity.prototype?.title || ""));
+  if (searchOptions.at?.length)
+    entityList = entityList.filter(EntityFn.filterAtBaSyous(searchOptions.at));
+  if (searchOptions.atBa != null)
     entityList = entityList.filter(EntityFn.filterAtBaSyous(BaSyouKeywordFn.getBaAll()));
-  if (options.side) {
-    const cardController = getItemController(ctx2, cardId), playerId = PlayerIDFn.fromRelatedPlayerSideKeyword(options.side || "\u81EA\u8ECD", cardController);
+  if (searchOptions.side) {
+    const cardController = getItemController(ctx2, cardId), playerId = PlayerIDFn.fromRelatedPlayerSideKeyword(searchOptions.side || "\u81EA\u8ECD", cardController);
     entityList = entityList.filter(EntityFn.filterController(playerId));
   }
-  if (options.is?.length)
-    entityList = entityList.filter(EntityFn.filterRuntimeCategory(ctx2, options.is));
-  if (options.cardCategory?.length)
-    entityList = entityList.filter(EntityFn.filterCategory(ctx2, options.cardCategory));
-  if (options.color?.length)
-    entityList = entityList.filter(EntityFn.filterItemColor(ctx2, options.color));
-  if (options.hasSetCard != null)
-    entityList = entityList.filter(EntityFn.filterHasSetCard(ctx2, options.hasSetCard));
-  if (options.isDestroy != null)
-    entityList = entityList.filter(EntityFn.filterIsDestroy(options.isDestroy));
-  if (options.isRoll != null)
-    entityList = entityList.filter((entity) => entity.isCard && !!getCard(ctx2, entity.itemId).isRoll == options.isRoll || entity.isChip && !!getChip(ctx2, entity.itemId).isRoll == options.isRoll);
-  if (options.hasSpecialEffect != null)
-    entityList = entityList.filter(EntityFn.filterHasSpecialEffect(ctx2, options.hasSpecialEffect));
-  if (options.hasChar != null)
-    entityList = entityList.filter(EntityFn.filterHasChar(ctx2, options.hasChar));
-  if (options.hasGSign) {
-    if (options.hasGSign.length == 0)
-      options.hasGSign.push(getItemGSign(ctx2, cardId));
-    entityList = entityList.filter((entity) => isCardLike(ctx2)(entity.itemId) && options.hasGSign?.some((v) => GSignFn.eq(v, getItemGSign(ctx2, entity.itemId))));
+  if (searchOptions.is?.length)
+    entityList = entityList.filter(EntityFn.filterRuntimeCategory(ctx2, searchOptions.is));
+  if (searchOptions.cardCategory?.length)
+    entityList = entityList.filter(EntityFn.filterCategory(ctx2, searchOptions.cardCategory));
+  if (searchOptions.color?.length)
+    entityList = entityList.filter(EntityFn.filterItemColor(ctx2, searchOptions.color));
+  if (searchOptions.hasSetCard != null)
+    entityList = entityList.filter(EntityFn.filterHasSetCard(ctx2, searchOptions.hasSetCard));
+  if (searchOptions.isDestroy != null)
+    entityList = entityList.filter(EntityFn.filterIsDestroy(searchOptions.isDestroy));
+  if (searchOptions.isRoll != null)
+    entityList = entityList.filter((entity) => entity.isCard && !!getCard(ctx2, entity.itemId).isRoll == searchOptions.isRoll || entity.isChip && !!getChip(ctx2, entity.itemId).isRoll == searchOptions.isRoll);
+  if (searchOptions.hasSpecialEffect != null)
+    entityList = entityList.filter(EntityFn.filterHasSpecialEffect(ctx2, searchOptions.hasSpecialEffect));
+  if (searchOptions.hasChar != null)
+    entityList = entityList.filter(EntityFn.filterHasChar(ctx2, searchOptions.hasChar));
+  if (searchOptions.hasGSign) {
+    if (searchOptions.hasGSign.length == 0)
+      searchOptions.hasGSign.push(getItemGSign(ctx2, cardId));
+    entityList = entityList.filter((entity) => isCardLike(ctx2)(entity.itemId) && searchOptions.hasGSign?.some((v) => GSignFn.eq(v, getItemGSign(ctx2, entity.itemId))));
   }
-  if (options.hasGSignProperty) {
-    if (options.hasGSignProperty.length == 0)
-      options.hasGSignProperty.push(getCardGSignProperty(ctx2, cardId));
-    entityList = entityList.filter((entity) => isCardLike(ctx2)(entity.itemId) && options.hasGSignProperty?.includes(getCardGSignProperty(ctx2, entity.itemId)));
+  if (searchOptions.hasGSignProperty) {
+    if (searchOptions.hasGSignProperty.length == 0)
+      searchOptions.hasGSignProperty.push(getCardGSignProperty(ctx2, cardId));
+    entityList = entityList.filter((entity) => isCardLike(ctx2)(entity.itemId) && searchOptions.hasGSignProperty?.includes(getCardGSignProperty(ctx2, entity.itemId)));
   }
-  if (options.hasDamage)
+  if (searchOptions.hasDamage)
     entityList = entityList.filter((entity) => entity.itemState.damage > 0 && entity.itemState.destroyReason == null);
-  if (options.exceptCardIds?.length)
-    entityList = entityList.filter((entity) => options.exceptCardIds?.includes(entity.itemId) != !0);
+  if (searchOptions.hasRollCostColor)
+    entityList = entityList.filter((entity) => {
+      if (entity.prototype?.rollCost == "X")
+        return searchOptions.hasRollCostColor?.some((color) => color == entity.prototype?.color);
+      return searchOptions.hasRollCostColor?.some((color) => color == entity.prototype?.color);
+    });
+  if (searchOptions.exceptCardIds?.length)
+    entityList = entityList.filter((entity) => searchOptions.exceptCardIds?.includes(entity.itemId) != !0);
   entityList = entityList.filter(EntityFn.filterDistinct);
   const pairs = entityList.map((entity) => {
     if (entity.baSyouKeyword == null)
@@ -21770,37 +21642,37 @@ function createTipByEntitySearch(ctx2, cardId, options) {
     return [entity.itemId, AbsoluteBaSyouFn.of(entity.itemController, entity.baSyouKeyword)];
   });
   let tipPairs = pairs;
-  if (options.max != null)
-    tipPairs = tipPairs.slice(0, options.max);
-  else if (options.min != null)
-    tipPairs = tipPairs.slice(0, options.min);
-  else if (options.count != null)
-    tipPairs = tipPairs.slice(0, options.count);
-  if (options.isRepeat) {
-    if (options.count == null)
+  if (searchOptions.max != null)
+    tipPairs = tipPairs.slice(0, searchOptions.max);
+  else if (searchOptions.min != null)
+    tipPairs = tipPairs.slice(0, searchOptions.min);
+  else if (searchOptions.count != null)
+    tipPairs = tipPairs.slice(0, searchOptions.count);
+  if (searchOptions.isRepeat) {
+    if (searchOptions.count == null)
       throw new Error;
     if (tipPairs.length > 0) {
-      while (tipPairs.length < options.count)
+      while (tipPairs.length < searchOptions.count)
         tipPairs = [...tipPairs, ...tipPairs];
-      tipPairs = tipPairs.slice(0, options.count);
+      tipPairs = tipPairs.slice(0, searchOptions.count);
     }
   }
   const tip = {
     title: ["\u30AB\u30FC\u30C9", pairs, tipPairs],
-    isRepeat: options.isRepeat
+    isRepeat: searchOptions.isRepeat
   };
-  if (options.min != null)
-    tip.min = options.min;
-  if (options.max != null)
-    tip.max = options.max;
-  if (options.count != null)
-    tip.count = options.count;
+  if (searchOptions.min != null)
+    tip.min = searchOptions.min;
+  if (searchOptions.max != null)
+    tip.max = searchOptions.max;
+  if (searchOptions.count != null)
+    tip.count = searchOptions.count;
   if (cheatCardIds.length)
     tip.cheatCardIds = cheatCardIds;
-  if (options.asMuchAsPossible) {
-    if (options.max == null)
+  if (searchOptions.asMuchAsPossible) {
+    if (searchOptions.max == null)
       throw new Error;
-    tip.min = Math.min(pairs.length, options.max);
+    tip.min = Math.min(pairs.length, searchOptions.max);
   }
   return tip;
 }
@@ -21895,7 +21767,7 @@ var EntityFn = {
     return (entity) => {
       if (isCardLike(ctx2)(entity.itemId) == !1)
         return !1;
-      return vs.some((v) => isSetGroupHasA(ctx2, v, entity.itemId));
+      return vs.some((v) => isSetGroupHasA(ctx2, v, entity.itemId, { ges: getGlobalEffects(ctx2, null) }));
     };
   },
   filterHasChar(ctx2, vs) {
@@ -21961,11 +21833,11 @@ function createActionTitleFn(action) {
       };
     }
     case "Entity": {
-      const [_, options] = action.title;
-      if ([options.max, options.min, options.count].every((v) => v == null))
+      const [_, actionOptions] = action.title;
+      if ([actionOptions.max, actionOptions.min, actionOptions.count].every((v) => v == null))
         throw new Error("Entity search must has one of min, max, count");
       return function(ctx2, effect) {
-        const cardId = EffectFn.getCardID(effect), tip = createTipByEntitySearch(ctx2, cardId, options), error = TipFn.createTipErrorWhenCheckFail(tip);
+        const tip = createTipByEntitySearch(ctx2, effect, actionOptions), error = TipFn.createTipErrorWhenCheckFail(tip);
         if (error)
           throw error;
         return ctx2;
@@ -21992,14 +21864,14 @@ function createActionTitleFn(action) {
       };
     }
     case "Action": {
-      const [_, options] = action.title, varNames2 = action.vars;
+      const [_, actionOptions] = action.title, varNames2 = action.vars;
       return function(ctx2, effect) {
         const cardId = EffectFn.getCardID(effect), pairs = varNames2 == null ? [[cardId, getItemBaSyou(ctx2, cardId)]] : varNames2.flatMap((varName) => {
           return getCardTipStrBaSyouPairs(ctx2, varName, cardId);
         });
         for (let pair2 of pairs)
-          if (options.move)
-            ctx2 = doItemMove(ctx2, createAbsoluteBaSyouFromBaSyou(ctx2, cardId, options.move), pair2);
+          if (actionOptions.move)
+            ctx2 = doItemMove(ctx2, createAbsoluteBaSyouFromBaSyou(ctx2, cardId, actionOptions.move), pair2);
         return ctx2;
       };
     }
@@ -22110,7 +21982,7 @@ function createActionTitleFn(action) {
         return ctx2 = (varNames2 == null ? [[cardId, getItemBaSyou(ctx2, cardId)]] : varNames2.flatMap((varName) => {
           return getCardTipStrBaSyouPairs(ctx2, varName, cardId);
         })).reduce((ctx3, pair2) => {
-          return doItemDamage(ctx3, cardController, damage, pair2);
+          return doItemDamage(ctx3, effect, damage, pair2);
         }, ctx2), ctx2;
       };
     }
@@ -22179,7 +22051,9 @@ function createActionTitleFn(action) {
     case "\u5408\u8A08\u56FD\u529B\u3014x\u3015": {
       const [_, x] = action.title;
       return function(ctx2, effect) {
-        const cardId = EffectFn.getCardID(effect), cardController = getItemController(ctx2, cardId), cardIdsCanPay = getCardIdsCanPayRollCost(ctx2, cardController, null);
+        const ges = getGlobalEffects(ctx2, null);
+        ctx2 = setGlobalEffects(ctx2, null, ges);
+        const cardId = EffectFn.getCardID(effect), cardController = getItemController(ctx2, cardId), cardIdsCanPay = getCardIdsCanPayRollCost(ctx2, cardController, { ges });
         if (cardIdsCanPay.length < x)
           throw new TargetMissingError(`\u5408\u8A08\u56FD\u529B\u3014x\u3015:${cardIdsCanPay.length} < ${x}. ${effect.text.description}`);
         return ctx2 = setCardTipStrBaSyouPairs(ctx2, TipFn.createTotalCostKey(), cardIdsCanPay.map((cardId2) => createStrBaSyouPair(ctx2, cardId2)), cardId), ctx2;
@@ -22238,7 +22112,7 @@ function createOnEventTitleFn(text) {
 function doTriggerEvent(ctx2, event) {
   logCategory("doTriggerEvent", event.title, event.cardIds);
   const bridge = createBridge();
-  if (createAllCardTexts(ctx2, null).forEach((info) => {
+  if (createAllCardTexts(ctx2).forEach((info) => {
     const [item, texts] = info;
     texts.forEach((text) => {
       const effect = {
@@ -22246,7 +22120,7 @@ function doTriggerEvent(ctx2, event) {
         reason: ["Event", getItemController(ctx2, item.id), item.id, event],
         text
       };
-      ctx2 = createOnEventTitleFn(text)(ctx2, effect, bridge);
+      logCategory("doTriggerEvent", "eventTitle", text.onEvent), ctx2 = createOnEventTitleFn(text)(ctx2, effect, bridge);
     });
   }), event.title[0] == "\u30AB\u30C3\u30C8\u7D42\u4E86\u6642")
     ctx2 = mapItemStateValues(ctx2, (cs) => {
@@ -22271,7 +22145,7 @@ function doTriggerEvent(ctx2, event) {
           const activePlayerId = getActivePlayerID(ctx2);
           ctx2 = mapPlayerState(ctx2, activePlayerId, (ps) => {
             return PlayerStateFn.onTurnEnd(ps);
-          });
+          }), ctx2 = clearGlobalEffects(ctx2);
           break;
         }
       }
@@ -22292,7 +22166,7 @@ function doBattleDamage(ctx2, playerId, guardUnits, attackPower, options) {
       const cs = getItemState(ctx2, cardID);
       if (attackPower <= 0)
         return cs;
-      const [_, _2, hp] = getSetGroupBattlePoint(ctx2, cardID), live = hp - cs.damage;
+      const [_, _2, hp] = getSetGroupBattlePoint(ctx2, cardID, { ges: options?.ges }), live = hp - cs.damage;
       if (live <= 0)
         return cs;
       if (attackPower -= live, attackPower >= 0) {
@@ -22322,15 +22196,15 @@ function doBattleDamage(ctx2, playerId, guardUnits, attackPower, options) {
     }, ctx2);
   return [ctx2, attackPower];
 }
-function doRuleBattleDamage2(ctx2, speedPhase, currentAttackPlayerID, currentGuardPlayerID, willAttackUnits, willGuardUnits, willAttackPower) {
+function doRuleBattleDamage2(ctx2, speedPhase, currentAttackPlayerID, currentGuardPlayerID, willAttackUnits, willGuardUnits, willAttackPower, options) {
   if (logCategory("handleAttackDamage", "speed", speedPhase), logCategory("handleAttackDamage", "willAttackUnits", willAttackUnits), logCategory("handleAttackDamage", "willGuardUnits", willGuardUnits), logCategory("handleAttackDamage", "willAttackPower", willAttackPower), willAttackUnits.length) {
-    const hasSpeedAttack = isABattleGroup(ctx2, ["\u901F\u653B"], willAttackUnits[0]);
+    const hasSpeedAttack = isABattleGroup(ctx2, ["\u901F\u653B"], willAttackUnits[0], { ges: options.ges });
     if (hasSpeedAttack && speedPhase == 1 || hasSpeedAttack == !1 && speedPhase == 2) {
       let currentAttackPower = willAttackPower;
       if (logCategory("handleAttackDamage", "attack", currentAttackPower), willGuardUnits.length)
-        [ctx2, currentAttackPower] = doBattleDamage(ctx2, currentAttackPlayerID, willGuardUnits, currentAttackPower);
+        [ctx2, currentAttackPower] = doBattleDamage(ctx2, currentAttackPlayerID, willGuardUnits, currentAttackPower, { ges: options?.ges });
       if (currentAttackPlayerID == getActivePlayerID(ctx2) && currentAttackPower > 0) {
-        if (isBattle(ctx2, willAttackUnits[0], null) == !1 || isABattleGroup(ctx2, ["\u5F37\u8972"], willAttackUnits[0]))
+        if (isBattle(ctx2, willAttackUnits[0], null) == !1 || isABattleGroup(ctx2, ["\u5F37\u8972"], willAttackUnits[0], { ges: options.ges }))
           ctx2 = doCountryDamage(ctx2, currentGuardPlayerID, currentAttackPower), ctx2 = doTriggerEvent(ctx2, {
             title: ["\u3053\u306E\u30AB\u30FC\u30C9\u306E\u90E8\u968A\u304C\u6575\u8ECD\u672C\u56FD\u306B\u6226\u95D8\u30C0\u30E1\u30FC\u30B8\u3092\u4E0E\u3048\u305F\u5834\u5408"],
             cardIds: willAttackUnits
@@ -22340,10 +22214,10 @@ function doRuleBattleDamage2(ctx2, speedPhase, currentAttackPlayerID, currentGua
   }
   return ctx2;
 }
-function doPlayerAttack(ctx2, attackPlayerID, where, speedPhase) {
-  const guardPlayerID = PlayerIDFn.getOpponent(attackPlayerID), attackUnits = getBattleGroup(ctx2, AbsoluteBaSyouFn.of(attackPlayerID, where)), attackPower = getBattleGroupBattlePoint(ctx2, attackUnits), guardUnits = getBattleGroup(ctx2, AbsoluteBaSyouFn.of(guardPlayerID, where)), guardPower = getBattleGroupBattlePoint(ctx2, guardUnits);
-  return ctx2 = doRuleBattleDamage2(ctx2, speedPhase, attackPlayerID, guardPlayerID, attackUnits, guardUnits, attackPower), ctx2 = doRuleBattleDamage2(ctx2, speedPhase, guardPlayerID, attackPlayerID, guardUnits, attackUnits, guardPower), [...attackUnits, ...guardUnits].forEach((cardId) => {
-    const itemState = getItemState(ctx2, cardId), [_, _2, hp] = getSetGroupBattlePoint(ctx2, cardId);
+function doPlayerAttack(ctx2, attackPlayerID, where, speedPhase, options) {
+  const guardPlayerID = PlayerIDFn.getOpponent(attackPlayerID), attackUnits = getBattleGroup(ctx2, AbsoluteBaSyouFn.of(attackPlayerID, where)), attackPower = getBattleGroupBattlePoint(ctx2, attackUnits, { ges: options.ges }), guardUnits = getBattleGroup(ctx2, AbsoluteBaSyouFn.of(guardPlayerID, where)), guardPower = getBattleGroupBattlePoint(ctx2, guardUnits, { ges: options.ges });
+  return ctx2 = doRuleBattleDamage2(ctx2, speedPhase, attackPlayerID, guardPlayerID, attackUnits, guardUnits, attackPower, { ges: options?.ges }), ctx2 = doRuleBattleDamage2(ctx2, speedPhase, guardPlayerID, attackPlayerID, guardUnits, attackUnits, guardPower, { ges: options?.ges }), [...attackUnits, ...guardUnits].forEach((cardId) => {
+    const itemState = getItemState(ctx2, cardId), [_, _2, hp] = getSetGroupBattlePoint(ctx2, cardId, { ges: options.ges });
     if (hp <= itemState.damage)
       ctx2 = addDestroyEffect(ctx2, createDestroyEffect(ctx2, { id: "\u6226\u95D8\u30C0\u30E1\u30FC\u30B8", playerID: PlayerIDFn.getOpponent(getItemController(ctx2, cardId)) }, cardId));
   }), ctx2;
@@ -22369,17 +22243,17 @@ function getPlayerCharacterIds(ctx2, playerId) {
 function getPlayerOperationIds(ctx2, playerId) {
   return lift_default(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getBaAll()).flatMap((basyou) => getItemIdsByBasyou(ctx2, basyou)).filter((itemId) => getItemPrototype(ctx2, itemId).category == "\u30AA\u30DA\u30EC\u30FC\u30B7\u30E7\u30F3");
 }
-function createPlayerScore(ctx2, playerId) {
+function createPlayerScore(ctx2, playerId, options) {
   const units = getPlayerUnitIds(ctx2, playerId), chars = getPlayerCharacterIds(ctx2, playerId), gs = getPlayerGIds(ctx2, playerId), ops = getPlayerOperationIds(ctx2, playerId), hands = getPlayerHandIds(ctx2, playerId), destroyIds = ctx2.destroyEffect.filter((eid) => getItemController(ctx2, EffectFn.getCardID(getEffect(ctx2, eid))) == playerId), junkyardIds = getPlayerJunkyardIds(ctx2, playerId), gScore = gs.length * 3, unitScore = units.length * 5, charScore = chars.length, opScore = Math.max(3, ops.length) * 3, handScore = hands.length * 3, destroyScore = destroyIds.length * -10, junkyardScore = junkyardIds.length * -1, rollScore = [...gs, ...units].filter((itemId) => getCard(ctx2, itemId).isRoll).length * -5, bpScore = units.map((id) => {
     if (getCard(ctx2, id).isRoll)
       return 0;
-    const [atk, range3, hp] = getSetGroupBattlePoint(ctx2, id);
+    const [atk, range3, hp] = getSetGroupBattlePoint(ctx2, id, { ges: options.ges });
     return atk + range3 + hp;
-  }).reduce((acc, c) => acc + c, 0), specialScore1 = units.filter((id) => getCardHasSpeicalEffect(ctx2, ["\u901F\u653B"], id)).length * 2, specialScore2 = units.filter((id) => getCardHasSpeicalEffect(ctx2, ["\u9AD8\u6A5F\u52D5"], id)).length * 2, specialScore3 = units.filter((id) => getCardHasSpeicalEffect(ctx2, ["\u5F37\u8972"], id)).length * 2, total = gScore + unitScore + charScore + opScore + handScore + destroyScore + junkyardScore + rollScore + bpScore + specialScore1 + specialScore2 + specialScore3;
+  }).reduce((acc, c) => acc + c, 0), specialScore1 = units.filter((id) => getCardHasSpeicalEffect(ctx2, ["\u901F\u653B"], id, { ges: options.ges })).length * 2, specialScore2 = units.filter((id) => getCardHasSpeicalEffect(ctx2, ["\u9AD8\u6A5F\u52D5"], id, { ges: options.ges })).length * 2, specialScore3 = units.filter((id) => getCardHasSpeicalEffect(ctx2, ["\u5F37\u8972"], id, { ges: options.ges })).length * 2, total = gScore + unitScore + charScore + opScore + handScore + destroyScore + junkyardScore + rollScore + bpScore + specialScore1 + specialScore2 + specialScore3;
   return logCategory("createPlayerScore", "=======", playerId), logCategory("createPlayerScore", "gScore:", gScore), logCategory("createPlayerScore", "unitScore:", unitScore), logCategory("createPlayerScore", "charScore:", charScore), logCategory("createPlayerScore", "opScore:", opScore), logCategory("createPlayerScore", "handScore:", handScore), logCategory("createPlayerScore", "destroyScore:", destroyScore), logCategory("createPlayerScore", "junkyardScore:", junkyardScore), logCategory("createPlayerScore", "rollScore:", rollScore), logCategory("createPlayerScore", "bpScore:", bpScore), logCategory("createPlayerScore", "specialScore1:", specialScore1), logCategory("createPlayerScore", "specialScore2:", specialScore2), logCategory("createPlayerScore", "specialScore3:", specialScore3), logCategory("createPlayerScore", "total:", total), total;
 }
 function createPreviewEffectScore(ctx2, playerId, effects, options) {
-  const opponentId = PlayerIDFn.getOpponent(playerId), scoreA = createPlayerScore(ctx2, playerId), scoreB = createPlayerScore(ctx2, opponentId), score = scoreA - scoreB;
+  const opponentId = PlayerIDFn.getOpponent(playerId), scoreA = createPlayerScore(ctx2, playerId, { ges: options?.ges }), scoreB = createPlayerScore(ctx2, opponentId, { ges: options?.ges }), score = scoreA - scoreB;
   let effectScorePairs = effects.map((eff) => {
     try {
       let ctx22 = JSON.parse(JSON.stringify(ctx2));
@@ -22396,7 +22270,7 @@ function createPreviewEffectScore(ctx2, playerId, effects, options) {
           break;
         ctx22 = setTipSelectionForUser(ctx22, eff2, 0, 0), ctx22 = doEffect(ctx22, eff2, 0, 0), ctx22 = removeEffect(ctx22, eff2.id);
       }
-      const scoreA2 = createPlayerScore(ctx22, playerId), scoreB2 = createPlayerScore(ctx22, opponentId), score2 = scoreA2 - scoreB2;
+      const scoreA2 = createPlayerScore(ctx22, playerId, { ges: options?.ges }), scoreB2 = createPlayerScore(ctx22, opponentId, { ges: options?.ges }), score2 = scoreA2 - scoreB2;
       return [eff.id, score2];
     } catch (e) {
       console.warn(`AI\u8A08\u7B97\u6642\u4F8B\u5916\uFF0C\u5FFD\u7565:${e.message}`);
@@ -22442,21 +22316,24 @@ __export(exports_createPlayCardEffects, {
   createCharOpUnitGoStageEffectFromPlayEffect: () => createCharOpUnitGoStageEffectFromPlayEffect
 });
 function createPlayCardEffects(ctx2, cardId, options) {
+  logCategory("createPlayCardEffects", "");
+  let ges = getGlobalEffects(ctx2, null);
+  ctx2 = setGlobalEffects(ctx2, null, ges);
   const ret = [], prototype = getItemPrototype(ctx2, cardId), basyou = getItemBaSyou(ctx2, cardId);
   if (basyou.value[1] == "\u624B\u672D" || basyou.value[1] == "\u30CF\u30F3\u30AC\u30FC") {
     if (options?.isQuick)
       ;
     else
       ret.push(createPlayGEffect(ctx2, cardId));
-    ret.push(...createPlayCardEffect(ctx2, cardId));
+    ret.push(...createPlayCardEffect(ctx2, cardId, { ges }));
   } else {
-    const ges = getGlobalEffects(ctx2, null);
-    if (ctx2 = setGlobalEffects(ctx2, null, ges), ges.filter((ge) => ge.title[0] == "\u81EA\u8ECD\u624B\u672D\u306B\u3042\u308B\u304B\u306E\u3088\u3046\u306B\u30D7\u30EC\u30A4\u3067\u304D\u308B").find((ge) => ge.cardIds.includes(cardId))) {
+    const ges2 = getGlobalEffects(ctx2, null);
+    if (ctx2 = setGlobalEffects(ctx2, null, ges2), ges2.filter((ge) => ge.title[0] == "\u81EA\u8ECD\u624B\u672D\u306B\u3042\u308B\u304B\u306E\u3088\u3046\u306B\u30D7\u30EC\u30A4\u3067\u304D\u308B").find((ge) => ge.cardIds.includes(cardId))) {
       if (options?.isQuick)
         ;
       else
         ret.push(createPlayGEffect(ctx2, cardId));
-      ret.push(...createPlayCardEffect(ctx2, cardId));
+      ret.push(...createPlayCardEffect(ctx2, cardId, { ges: ges2 }));
     }
   }
   const playerId = getItemOwner(ctx2, cardId);
@@ -22480,33 +22357,34 @@ function createPlayCardEffects(ctx2, cardId, options) {
     });
   }), ret;
 }
-function createPlayCardEffect(ctx2, cardId) {
+function createPlayCardEffect(ctx2, cardId, options) {
+  logCategory("createPlayCardEffect", "");
   const prototype = getItemPrototype(ctx2, cardId);
   let basicEff = null;
   const ret = [];
   switch (prototype.category) {
     case "\u30B3\u30DE\u30F3\u30C9": {
-      basicEff = createPlayCommandText(ctx2, cardId), ret.push(basicEff);
+      basicEff = createPlayCommandText(ctx2, cardId, options), ret.push(basicEff);
       break;
     }
     case "\u30AD\u30E3\u30E9\u30AF\u30BF\u30FC": {
-      basicEff = createPlayCharacterOperationEffect(ctx2, cardId), ret.push(basicEff);
-      const stayEff = createPlayStayEffect(ctx2, cardId);
+      basicEff = createPlayCharacterOperationEffect(ctx2, cardId, options), ret.push(basicEff);
+      const stayEff = createPlayStayEffect(ctx2, cardId, options);
       if (stayEff)
         ret.push(stayEff);
       break;
     }
     case "\u30AA\u30DA\u30EC\u30FC\u30B7\u30E7\u30F3(\u30E6\u30CB\u30C3\u30C8)": {
-      basicEff = createPlayCharacterOperationEffect(ctx2, cardId), ret.push(basicEff);
+      basicEff = createPlayCharacterOperationEffect(ctx2, cardId, options), ret.push(basicEff);
       break;
     }
     case "\u30E6\u30CB\u30C3\u30C8": {
-      basicEff = createPlayUnitEffect(ctx2, cardId), ret.push(basicEff);
+      basicEff = createPlayUnitEffect(ctx2, cardId, options), ret.push(basicEff);
       break;
     }
     case "\u30AA\u30DA\u30EC\u30FC\u30B7\u30E7\u30F3":
     case "ACE": {
-      basicEff = createPlayOperationEffect(ctx2, cardId), ret.push(basicEff);
+      basicEff = createPlayOperationEffect(ctx2, cardId, options), ret.push(basicEff);
       break;
     }
     case "\u30B0\u30E9\u30D5\u30A3\u30C3\u30AF": {
@@ -22515,12 +22393,10 @@ function createPlayCardEffect(ctx2, cardId) {
     }
   }
   if (basicEff) {
-    const ges = getGlobalEffects(ctx2, null);
-    ctx2 = setGlobalEffects(ctx2, null, ges);
-    const morePlayEfs = ges.filter((g) => g.title[0] == "\u5408\u8A08\u56FD\u529B_\uFF0B\uFF11\u3057\u3066\u30D7\u30EC\u30A4\u3067\u304D\u308B" && g.cardIds.includes(cardId));
+    const morePlayEfs = options?.ges?.filter((g) => g.title[0] == "\u5408\u8A08\u56FD\u529B_\uFF0B\uFF11\u3057\u3066\u30D7\u30EC\u30A4\u3067\u304D\u308B" && g.cardIds.includes(cardId)) || [];
     if (morePlayEfs.length > 0) {
       let copyOriginCondition = basicEff.text.conditions || {};
-      const cardRollCostLength = getCardTotalCostLength(ctx2, cardId), addedLength = pipe(always_default(morePlayEfs), map_default((g) => g.title[0] == "\u5408\u8A08\u56FD\u529B_\uFF0B\uFF11\u3057\u3066\u30D7\u30EC\u30A4\u3067\u304D\u308B" ? g.title[1] : 0), sum_default)();
+      const cardRollCostLength = getCardTotalCostLength(ctx2, cardId, { ges: options.ges }), addedLength = pipe(always_default(morePlayEfs), map_default((g) => g.title[0] == "\u5408\u8A08\u56FD\u529B_\uFF0B\uFF11\u3057\u3066\u30D7\u30EC\u30A4\u3067\u304D\u308B" ? g.title[1] : 0), sum_default)();
       copyOriginCondition = {
         ...copyOriginCondition,
         "\u5408\u8A08\u56FD\u529B\u3014x\u3015": {
@@ -22605,13 +22481,14 @@ function createPlayGEffect(ctx2, cardId) {
     text
   };
 }
-function createPlayUnitEffect(ctx2, cardId) {
+function createPlayUnitEffect(ctx2, cardId, options) {
+  logCategory("createPlayUnitEffect", "");
   const prototype = getItemPrototype(ctx2, cardId);
   if (prototype.category == "\u30E6\u30CB\u30C3\u30C8")
     ;
   else
     throw new Error;
-  const conditions = createPlayCardConditions(ctx2, cardId), description = `Play ${prototype.title}`, text = {
+  const conditions = createPlayCardConditions(ctx2, cardId, options), description = `Play ${prototype.title}`, text = {
     id: `createPlayUnitEffect_${cardId}`,
     title: ["\u4F7F\u7528\u578B", ["\u81EA\u8ECD", "\u914D\u5099\u30D5\u30A7\u30A4\u30BA"]],
     description,
@@ -22621,9 +22498,11 @@ function createPlayUnitEffect(ctx2, cardId) {
         actions: [
           {
             title: function _(ctx3, effect, { DefineFn, GameStateFn, ToolFn: ToolFn2 }) {
+              let ges = GameStateFn.getGlobalEffects(ctx3, null);
+              ctx3 = GameStateFn.setGlobalEffects(ctx3, null, ges);
               const cardId2 = DefineFn.EffectFn.getCardID(effect), from = GameStateFn.getItemBaSyou(ctx3, cardId2);
               ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "\u30D7\u30EC\u30A4\u3055\u308C\u3066\u3044\u308B\u30AB\u30FC\u30C9"), [cardId2, from]);
-              const newE = GameStateFn.createUnitGoStageEffectFromPlayEffect(ctx3, effect);
+              const newE = GameStateFn.createUnitGoStageEffectFromPlayEffect(ctx3, effect, { ges });
               return GameStateFn.addStackEffect(ctx3, newE);
             }.toString()
           }
@@ -22638,13 +22517,14 @@ function createPlayUnitEffect(ctx2, cardId) {
     text
   };
 }
-function createPlayOperationEffect(ctx2, cardId) {
+function createPlayOperationEffect(ctx2, cardId, options) {
+  logCategory("createPlayOperationEffect", "");
   const prototype = getItemPrototype(ctx2, cardId);
   if (prototype.category == "\u30AA\u30DA\u30EC\u30FC\u30B7\u30E7\u30F3")
     ;
   else
     throw new Error;
-  const conditions = createPlayCardConditions(ctx2, cardId), description = `Play ${prototype.title}`, text = {
+  const conditions = createPlayCardConditions(ctx2, cardId, options), description = `Play ${prototype.title}`, text = {
     id: `createPlayOperationEffect_${cardId}`,
     title: ["\u4F7F\u7528\u578B", ["\u81EA\u8ECD", "\u914D\u5099\u30D5\u30A7\u30A4\u30BA"]],
     description,
@@ -22671,17 +22551,18 @@ function createPlayOperationEffect(ctx2, cardId) {
     text
   };
 }
-function createPlayStayEffect(ctx2, cardId) {
+function createPlayStayEffect(ctx2, cardId, options) {
+  logCategory("createPlayStayEffect", "");
   const prototype = getItemPrototype(ctx2, cardId);
   if (prototype.category == "\u30AD\u30E3\u30E9\u30AF\u30BF\u30FC")
     ;
   else
     throw new Error;
-  if (getCardHasSpeicalEffect(ctx2, ["\u3010\u30B9\u30C6\u30A4\u3011"], cardId))
+  if (getCardHasSpeicalEffect(ctx2, ["\u3010\u30B9\u30C6\u30A4\u3011"], cardId, options))
     ;
   else
     return null;
-  const conditions = createPlayCardConditions(ctx2, cardId);
+  const conditions = createPlayCardConditions(ctx2, cardId, options);
   delete conditions[TipFn.createCharacterTargetUnitKey()];
   const description = `Play ${prototype.title}`, text = {
     id: `createPlayStayEffect_${cardId}`,
@@ -22710,13 +22591,14 @@ function createPlayStayEffect(ctx2, cardId) {
     text: { ...text, description: `\u3010\u30B9\u30C6\u30A4\u3011${text.description}` }
   };
 }
-function createPlayCharacterOperationEffect(ctx2, cardId) {
+function createPlayCharacterOperationEffect(ctx2, cardId, options) {
+  logCategory("createPlayCharacterOperationEffect", "");
   const prototype = getItemPrototype(ctx2, cardId);
   if (prototype.category == "\u30AD\u30E3\u30E9\u30AF\u30BF\u30FC" || prototype.category == "\u30AA\u30DA\u30EC\u30FC\u30B7\u30E7\u30F3(\u30E6\u30CB\u30C3\u30C8)")
     ;
   else
     throw new Error;
-  const conditions = createPlayCardConditions(ctx2, cardId), description = `Play ${prototype.title}`, text = {
+  const conditions = createPlayCardConditions(ctx2, cardId, options), description = `Play ${prototype.title}`, text = {
     id: `createPlayCharacterOperationEffect_${cardId}`,
     title: ["\u4F7F\u7528\u578B", ["\u81EA\u8ECD", "\u914D\u5099\u30D5\u30A7\u30A4\u30BA"]],
     description,
@@ -22746,13 +22628,14 @@ function createPlayCharacterOperationEffect(ctx2, cardId) {
     text
   };
 }
-function createPlayCommandText(ctx2, cardId) {
+function createPlayCommandText(ctx2, cardId, options) {
+  logCategory("createPlayCommandText", "");
   const prototype = getItemPrototype(ctx2, cardId);
   if (prototype.category == "\u30B3\u30DE\u30F3\u30C9")
     ;
   else
     throw new Error;
-  const commandText = prototype.commandText, conditions = createPlayCardConditions(ctx2, cardId), description = `Play ${prototype.title}`, logicLeafs = Object.keys(conditions).map((k) => {
+  const commandText = prototype.commandText, conditions = createPlayCardConditions(ctx2, cardId, options), description = `Play ${prototype.title}`, logicLeafs = Object.keys(conditions).map((k) => {
     return {
       type: "Leaf",
       value: k
@@ -22816,7 +22699,7 @@ function createPlayCommandText(ctx2, cardId) {
     text
   };
 }
-function createUnitGoStageEffectFromPlayEffect(ctx2, effect) {
+function createUnitGoStageEffectFromPlayEffect(ctx2, effect, options) {
   const cardId = EffectFn.getCardID(effect);
   if (getItemPrototype(ctx2, cardId).category == "\u30E6\u30CB\u30C3\u30C8")
     return {
@@ -22832,9 +22715,9 @@ function createUnitGoStageEffectFromPlayEffect(ctx2, effect) {
             actions: [
               {
                 title: function _(ctx3, effect2, { DefineFn, GameStateFn }) {
-                  const cardId2 = DefineFn.EffectFn.getCardID(effect2), from = GameStateFn.getItemBaSyou(ctx3, cardId2), to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "\u914D\u5099\u30A8\u30EA\u30A2");
+                  const ges = GameStateFn.getGlobalEffects(ctx3, null), cardId2 = DefineFn.EffectFn.getCardID(effect2), from = GameStateFn.getItemBaSyou(ctx3, cardId2), to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "\u914D\u5099\u30A8\u30EA\u30A2");
                   ctx3 = GameStateFn.doItemMove(ctx3, to, [cardId2, from]);
-                  const hasHigh = GameStateFn.getCardHasSpeicalEffect(ctx3, ["\u6226\u95D8\u914D\u5099"], cardId2), hasPS = GameStateFn.getCardHasSpeicalEffect(ctx3, ["\u3010PS\u88C5\u7532\u3011"], cardId2), isRoll = (hasHigh || hasPS) == !1;
+                  const hasHigh = GameStateFn.getCardHasSpeicalEffect(ctx3, ["\u6226\u95D8\u914D\u5099"], cardId2, { ges }), hasPS = GameStateFn.getCardHasSpeicalEffect(ctx3, ["\u3010PS\u88C5\u7532\u3011"], cardId2, { ges }), isRoll = (hasHigh || hasPS) == !1;
                   return ctx3 = GameStateFn.doItemSetRollState(ctx3, isRoll, [cardId2, GameStateFn.getItemBaSyou(ctx3, cardId2)], { isSkipTargetMissing: !0 }), ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: ["\u30D7\u30EC\u30A4\u3055\u308C\u3066\u5834\u306B\u51FA\u305F\u5834\u5408"], cardIds: [cardId2] }), ctx3;
                 }.toString()
               }
@@ -22916,8 +22799,9 @@ function createRollCostConditions(ctx2, proto, rollCost, bonus) {
   }
   return CardColorFn.getAll().map((tc) => createRollCostRequire(Math.max(0, rollCost.filter((c) => c == tc).length + bonus), tc)).reduce((ctx3, cons) => ({ ...ctx3, ...cons }));
 }
-function createPlayCardConditions(ctx2, cardId) {
-  const prototype = getItemPrototype(ctx2, cardId), cardRollCostLength = getCardTotalCostLength(ctx2, cardId), costConditions = prototype.category != "\u30B0\u30E9\u30D5\u30A3\u30C3\u30AF" ? {
+function createPlayCardConditions(ctx2, cardId, options) {
+  logCategory("createPlayCardConditions", "");
+  const prototype = getItemPrototype(ctx2, cardId), cardRollCostLength = getCardTotalCostLength(ctx2, cardId, options), costConditions = prototype.category != "\u30B0\u30E9\u30D5\u30A3\u30C3\u30AF" ? {
     [TipFn.createTotalCostKey()]: {
       actions: [
         {
@@ -23020,7 +22904,9 @@ function createConditionTitleFn(condition, options) {
     case "\u3053\u306E\u30AB\u30FC\u30C9\u306E_\u672C\u6765\u306E\u30C6\u30AD\u30B9\u30C8\uFF11\u3064": {
       const [_2, isOrigin, count] = condition.title;
       return function(ctx2, effect) {
-        const cardId = EffectFn.getCardID(effect), textRefs = (isOrigin ? getItemPrototype(ctx2, cardId).texts || [] : getCardTexts(ctx2, cardId)).filter((text) => (text.title[0] == "\u7279\u6B8A\u578B" && text.title[1][0] == "\u30AF\u30ED\u30B9\u30A6\u30A7\u30DD\u30F3") == !1).map((text) => {
+        const ges = getGlobalEffects(ctx2, null);
+        ctx2 = setGlobalEffects(ctx2, null, ges);
+        const cardId = EffectFn.getCardID(effect), textRefs = (isOrigin ? getItemPrototype(ctx2, cardId).texts || [] : getCardTexts(ctx2, cardId, { ges })).filter((text) => (text.title[0] == "\u7279\u6B8A\u578B" && text.title[1][0] == "\u30AF\u30ED\u30B9\u30A6\u30A7\u30DD\u30F3") == !1).map((text) => {
           return {
             cardId,
             textId: text.id
@@ -23091,7 +22977,9 @@ function createConditionTitleFn(condition, options) {
     case "_\u81EA\u8ECD\u624B\u672D\u3001\u307E\u305F\u306F\u81EA\u8ECD\u30CF\u30F3\u30AC\u30FC\u306B\u3042\u308B\u3001_\uFF16\u4EE5\u4E0B\u306E\u5408\u8A08\u56FD\u529B\u3092\u6301\u3064_\u30E6\u30CB\u30C3\u30C8_\uFF11\u679A\u3092": {
       const [_2, side, totalCost, category2, count] = condition.title;
       return function(ctx2, effect) {
-        const cardId = EffectFn.getCardID(effect), playerId = getItemController(ctx2, cardId), targetPlayerId = PlayerIDFn.fromRelatedPlayerSideKeyword(side, playerId), pairs = lift_default(AbsoluteBaSyouFn.of)([targetPlayerId], ["\u624B\u672D", "\u30CF\u30F3\u30AC\u30FC"]).flatMap((basyou) => getItemIdsByBasyou(ctx2, basyou).filter((cardId2) => getItemRuntimeCategory(ctx2, cardId2) == category2).filter((cardId2) => getCardTotalCostLength(ctx2, cardId2) <= totalCost).map((cardId2) => [cardId2, basyou]));
+        const cardId = EffectFn.getCardID(effect), playerId = getItemController(ctx2, cardId), targetPlayerId = PlayerIDFn.fromRelatedPlayerSideKeyword(side, playerId), basyous = lift_default(AbsoluteBaSyouFn.of)([targetPlayerId], ["\u624B\u672D", "\u30CF\u30F3\u30AC\u30FC"]), ges = getGlobalEffects(ctx2, null);
+        ctx2 = setGlobalEffects(ctx2, null, ges);
+        const pairs = basyous.flatMap((basyou) => getItemIdsByBasyou(ctx2, basyou).filter((cardId2) => getItemRuntimeCategory(ctx2, cardId2) == category2).filter((cardId2) => getCardTotalCostLength(ctx2, cardId2, { ges }) <= totalCost).map((cardId2) => [cardId2, basyou]));
         return {
           title: ["\u30AB\u30FC\u30C9", pairs, pairs.slice(0, count)],
           min: count
@@ -23101,7 +22989,9 @@ function createConditionTitleFn(condition, options) {
     case "\u6253\u958B\u81EA\u8ECD\u624B\u88E1\u6216\u6307\u5B9AHANGER\u4E2D\u7279\u5FB5_A\u4E26\u5408\u8A08\u570B\u529B_x\u4EE5\u4E0B\u7684_1\u5F35\u5361": {
       const [_2, char, x, count] = condition.title;
       return function(ctx2, effect) {
-        const cardId = EffectFn.getCardID(effect), playerId = getItemController(ctx2, cardId), pairs = lift_default(AbsoluteBaSyouFn.of)([playerId], ["\u624B\u672D", "\u30CF\u30F3\u30AC\u30FC"]).flatMap((basyou) => getItemIdsByBasyou(ctx2, basyou).filter((cardId2) => getItemPrototype(ctx2, cardId2).category == "\u30E6\u30CB\u30C3\u30C8").filter((cardId2) => getItemCharacteristic(ctx2, cardId2).includes(char)).filter((cardId2) => getCardTotalCostLength(ctx2, cardId2) <= x).map((cardId2) => [cardId2, basyou]));
+        const cardId = EffectFn.getCardID(effect), playerId = getItemController(ctx2, cardId), basyous = lift_default(AbsoluteBaSyouFn.of)([playerId], ["\u624B\u672D", "\u30CF\u30F3\u30AC\u30FC"]), ges = getGlobalEffects(ctx2, null);
+        ctx2 = setGlobalEffects(ctx2, null, ges);
+        const pairs = basyous.flatMap((basyou) => getItemIdsByBasyou(ctx2, basyou).filter((cardId2) => getItemPrototype(ctx2, cardId2).category == "\u30E6\u30CB\u30C3\u30C8").filter((cardId2) => getItemCharacteristic(ctx2, cardId2).includes(char)).filter((cardId2) => getCardTotalCostLength(ctx2, cardId2, { ges }) <= x).map((cardId2) => [cardId2, basyou]));
         return {
           title: ["\u30AB\u30FC\u30C9", pairs, pairs.slice(0, count)],
           count
@@ -23127,7 +23017,7 @@ function createConditionTitleFn(condition, options) {
         else
           return null;
         const cardController = getItemController(ctx2, cardId), opponentId = PlayerIDFn.getOpponent(cardController), from = AbsoluteBaSyouFn.setPlayerID(getItemBaSyou(ctx2, cardId), opponentId), pairs = getItemIdsByBasyou(ctx2, from).map((itemId) => getSetGroupRoot(ctx2, itemId)).filter((itemId) => {
-          const [_3, def, _22] = getSetGroupBattlePoint(ctx2, itemId);
+          const [_3, def, _22] = getSetGroupBattlePoint(ctx2, itemId, { ges: options.ges });
           return def <= x;
         }).map((itemId) => [itemId, from]);
         return {
@@ -23158,7 +23048,9 @@ function createConditionTitleFn(condition, options) {
           if (getItemPrototype(ctx2, cardId).category?.includes("\u88C5\u5F3E"))
             situation = { title: ["\u300C\u7279\u5FB4\uFF1A\u88C5\u5F3E\u300D\u3092\u6301\u3064\u81EA\u8ECD\u30B3\u30DE\u30F3\u30C9\u306E\u52B9\u679C\u3067\u81EA\u8ECDG\u3092\u30ED\u30FC\u30EB\u3059\u308B\u5834\u5408"] };
         }
-        const cardIdColors = getCardIdsCanPayRollColor(ctx2, situation, cardController, color);
+        const ges = getGlobalEffects(ctx2, situation);
+        ctx2 = setGlobalEffects(ctx2, situation, ges);
+        const cardIdColors = getCardIdsCanPayRollColor(ctx2, cardController, color, { ges });
         let colorIds = [];
         if (color == null)
           colorIds = cardIdColors.map((gId) => gId.cardId).slice(0, 1);
@@ -23206,7 +23098,13 @@ function createConditionTitleFn(condition, options) {
         const cardId = EffectFn.getCardID(effect);
         switch (category) {
           case "\u30E6\u30CB\u30C3\u30C8":
-            const targetId = getSetGroupRoot(ctx2, cardId), pair3 = [targetId, getItemBaSyou(ctx2, targetId)];
+            const targetId = getSetGroupRoot(ctx2, cardId);
+            if (getItemRuntimeCategory(ctx2, targetId) != "\u30E6\u30CB\u30C3\u30C8")
+              return {
+                title: ["\u30AB\u30FC\u30C9", [], []],
+                min: 1
+              };
+            const pair3 = [targetId, getItemBaSyou(ctx2, targetId)];
             return {
               title: ["\u30AB\u30FC\u30C9", [pair3], [pair3]],
               min: 1
@@ -23220,8 +23118,7 @@ function createConditionTitleFn(condition, options) {
       if ([options2.max, options2.min, options2.count].every((v) => v == null))
         throw new Error("Entity search must has one of min, max, count");
       return function(ctx2, effect) {
-        const cardId = EffectFn.getCardID(effect);
-        return createTipByEntitySearch(ctx2, cardId, options2);
+        return createTipByEntitySearch(ctx2, effect, options2);
       };
     }
   }
@@ -23356,12 +23253,12 @@ function doEffect(ctx2, effect, logicId, logicSubId) {
     logCategory("doEffect", "conditionKey", conditionKey);
     const condition = CardTextFn.getCondition(effect.text, conditionKey), actions = ConditionFn.getActions(condition);
     for (let action of actions)
-      EventCenterFn.onActionStart(ctx2, effect, action), ctx2 = createActionTitleFn(action)(ctx2, effect, bridge), EventCenterFn.onActionEnd(ctx2, effect, action);
+      EventCenterFn.onActionStart(ctx2, effect, action), ctx2 = createActionTitleFn(action)(ctx2, effect, bridge), ctx2 = clearGlobalEffects(ctx2), EventCenterFn.onActionEnd(ctx2, effect, action);
   });
   const lta = CardTextFn.getLogicTreeAction(effect.text, logicId);
   for (let action of LogicTreeActionFn.getActions(lta))
-    EventCenterFn.onActionStart(ctx2, effect, action), ctx2 = createActionTitleFn(action)(ctx2, effect, bridge), EventCenterFn.onActionEnd(ctx2, effect, action);
-  return ctx2 = EventCenterFn.onEffectEnd(ctx2, effect), ctx2;
+    logCategory("doEffect", "lta.actions", lta.actions.map((a) => a.title)), EventCenterFn.onActionStart(ctx2, effect, action), ctx2 = createActionTitleFn(action)(ctx2, effect, bridge), ctx2 = clearGlobalEffects(ctx2), EventCenterFn.onActionEnd(ctx2, effect, action);
+  return ctx2 = EventCenterFn.onEffectEnd(ctx2, effect), ctx2 = clearGlobalEffects(ctx2), ctx2;
 }
 function assertTipForUserSelection(ctx2, effect, cardId) {
   const userTips = getItemState(ctx2, cardId).tips, groupSets = {};
@@ -23396,7 +23293,8 @@ function createEffectTips(ctx2, effect, logicId, logicSubId, options) {
     const errors = [];
     let tip = null;
     try {
-      if (tip = createConditionTitleFn(con)(ctx2, effect, bridge), tip?.isGameState)
+      const ges = getGlobalEffects(ctx2, null);
+      if (ctx2 = setGlobalEffects(ctx2, null, ges), tip = createConditionTitleFn(con, { ges })(ctx2, effect, bridge), tip?.isGameState)
         throw console.log("\u5FEB\u901F\u6AA2\u67E5\u662F\u4E0D\u5BEB\u932F\u56DE\u50B3\u6210GameState, \u61C9\u8A72\u8981\u56DE\u50B3Tip|null:", key, con.title), new Error;
     } catch (e) {
       if (e instanceof TipError) {
@@ -23437,7 +23335,7 @@ function createEffectTips(ctx2, effect, logicId, logicSubId, options) {
     }
     return ctx2 = ConditionFn.getActionTitleFns(con, createActionTitleFn).reduce((ctx3, fn) => {
       try {
-        return ctx3 = fn(ctx3, effect, bridge), ctx3;
+        return ctx3 = fn(ctx3, effect, bridge), ctx3 = clearGlobalEffects(ctx3), ctx3;
       } catch (e) {
         if (e instanceof TipError) {
           if (options?.isAssert)
@@ -23503,7 +23401,7 @@ function createCommandEffectTips(ctx2, effect) {
         };
       });
     });
-  return [];
+  throw new Error(`effect.text.logicTreeActions not found: ${effect.text.description}`);
 }
 function getCardTipSelection(ctx2, varName, cardId, options) {
   const cardState = getItemState(ctx2, cardId), tip = ItemStateFn.getTip(cardState, varName), tipError = TipFn.createTipErrorWhenCheckFail(tip);
@@ -23675,6 +23573,7 @@ function deleteImmediateEffect(ctx2, playerID, effectID) {
 
 // src/game/gameState/createPlayEffects.ts
 function createPlayEffects(ctx2, playerId) {
+  logCategory("createPlayEffects", "");
   const ges = getGlobalEffects(ctx2, null);
   ctx2 = setGlobalEffects(ctx2, null, ges);
   const myTextOn = lift_default(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getTextOn()), getPlayCardEffectsF = ifElse_default(always_default(PhaseFn.eq(getPhase(ctx2), ["\u914D\u5099\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"])), pipe(always_default(myTextOn), map_default((basyou) => getItemIdsByBasyou(ctx2, basyou)), flatten_default, map_default((cardId) => {
@@ -23684,7 +23583,7 @@ function createPlayEffects(ctx2, playerId) {
   }), flatten_default), ifElse_default(always_default(PhaseFn.isFreeTiming(getPhase(ctx2))), pipe(always_default(myTextOn), map_default((basyou) => getItemIdsByBasyou(ctx2, basyou)), flatten_default, map_default((cardId) => {
     if (getItemPrototype(ctx2, cardId).category == "\u30B3\u30DE\u30F3\u30C9")
       return [];
-    if (getCardHasSpeicalEffect(ctx2, ["\u30AF\u30A4\u30C3\u30AF"], cardId))
+    if (getCardHasSpeicalEffect(ctx2, ["\u30AF\u30A4\u30C3\u30AF"], cardId, { ges }))
       return createPlayCardEffects(ctx2, cardId, { isQuick: !0 });
     return [];
   }), flatten_default), always_default([]))), getPlayCommandF = ifElse_default(always_default(PhaseFn.isFreeTiming(getPhase(ctx2))), pipe(always_default(myTextOn), map_default((basyou) => getItemIdsByBasyou(ctx2, basyou)), flatten_default, map_default((cardId) => {
@@ -23693,7 +23592,7 @@ function createPlayEffects(ctx2, playerId) {
       return [];
     return createPlayCardEffects(ctx2, item.id);
   }), flatten_default, (effs) => effs.filter((eff) => inTiming(eff.text))), always_default([])), getPlayTextF = pipe(always_default(lift_default(AbsoluteBaSyouFn.of)([playerId], [...BaSyouKeywordFn.getBaAll(), "G\u30BE\u30FC\u30F3"])), map_default((basyou) => {
-    return getItemIdsByBasyou(ctx2, basyou).flatMap((cardId) => getCardTexts(ctx2, cardId).flatMap((text) => {
+    return getItemIdsByBasyou(ctx2, basyou).flatMap((cardId) => getCardTexts(ctx2, cardId, { ges }).flatMap((text) => {
       if (AbsoluteBaSyouFn.getBaSyouKeyword(basyou) == "G\u30BE\u30FC\u30F3") {
         if (text.protectLevel != 2)
           return [];
@@ -23702,7 +23601,7 @@ function createPlayEffects(ctx2, playerId) {
         case "\u4F7F\u7528\u578B":
           return [text];
         case "\u7279\u6B8A\u578B":
-          return createTextsFromSpecialEffect(ctx2, cardId, text, { ges }).filter((text2) => text2.title[0] == "\u4F7F\u7528\u578B");
+          return createTextsFromSpecialEffect(text, { ges, cardId }).filter((text2) => text2.title[0] == "\u4F7F\u7528\u578B");
       }
       return [];
     }).filter(inTiming).map((text) => {
@@ -23838,8 +23737,9 @@ function createAttackPhaseRuleEffect(ctx2, playerId) {
             let unitIds = GameStateFn2.getItemIdsByBasyou(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, "\u914D\u5099\u30A8\u30EA\u30A2")).filter((cardId) => GameStateFn2.getSetGroupRoot(ctx3, cardId) == cardId).filter((cardId) => GameStateFn2.getCardBattleArea(ctx3, cardId).includes(runtimeBattleArea)).filter((cardId) => GameStateFn2.getCard(ctx3, cardId).isRoll != !0);
             const opponentUnitIds = GameStateFn2.getBattleGroup(ctx3, DefineFn2.AbsoluteBaSyouFn.of(opponentPlayerId, "\u6226\u95D8\u30A8\u30EA\u30A21"));
             if (opponentUnitIds.length) {
-              if (GameStateFn2.isABattleGroup(ctx3, ["\u9AD8\u6A5F\u52D5"], opponentUnitIds[0]))
-                unitIds = unitIds.filter((id) => GameStateFn2.isSetGroupHasA(ctx3, ["\u9AD8\u6A5F\u52D5"], id));
+              const ges = GameStateFn2.getGlobalEffects(ctx3, null);
+              if (GameStateFn2.isABattleGroup(ctx3, ["\u9AD8\u6A5F\u52D5"], opponentUnitIds[0], { ges }))
+                unitIds = unitIds.filter((id) => GameStateFn2.isSetGroupHasA(ctx3, ["\u9AD8\u6A5F\u52D5"], id, { ges }));
             }
             return {
               title: ["\u30AB\u30FC\u30C9", unitIds.map((id) => {
@@ -23869,8 +23769,9 @@ function createAttackPhaseRuleEffect(ctx2, playerId) {
             let unitIds = GameStateFn2.getItemIdsByBasyou(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, "\u914D\u5099\u30A8\u30EA\u30A2")).filter((cardId) => GameStateFn2.getSetGroupRoot(ctx3, cardId) == cardId).filter((cardId) => GameStateFn2.getCardBattleArea(ctx3, cardId).includes(runtimeBattleArea)).filter((cardId) => GameStateFn2.getCard(ctx3, cardId).isRoll != !0);
             const opponentUnitIds = GameStateFn2.getBattleGroup(ctx3, DefineFn2.AbsoluteBaSyouFn.of(opponentPlayerId, "\u6226\u95D8\u30A8\u30EA\u30A22"));
             if (opponentUnitIds.length) {
-              if (GameStateFn2.isABattleGroup(ctx3, ["\u9AD8\u6A5F\u52D5"], opponentUnitIds[0]))
-                unitIds = unitIds.filter((id) => GameStateFn2.isSetGroupHasA(ctx3, ["\u9AD8\u6A5F\u52D5"], id));
+              const ges = GameStateFn2.getGlobalEffects(ctx3, null);
+              if (GameStateFn2.isABattleGroup(ctx3, ["\u9AD8\u6A5F\u52D5"], opponentUnitIds[0], { ges }))
+                unitIds = unitIds.filter((id) => GameStateFn2.isSetGroupHasA(ctx3, ["\u9AD8\u6A5F\u52D5"], id, { ges }));
             }
             return {
               title: ["\u30AB\u30FC\u30C9", unitIds.map((id) => {
@@ -23927,8 +23828,10 @@ function createDamageRuleEffect(ctx2, playerId) {
           actions: [
             {
               title: function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {
+                const ges = GameStateFn2.getGlobalEffects(ctx3, null);
+                ctx3 = GameStateFn2.setGlobalEffects(ctx3, null, ges);
                 const playerId2 = DefineFn2.EffectFn.getPlayerID(effect);
-                return ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, "\u6226\u95D8\u30A8\u30EA\u30A21", 1), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, "\u6226\u95D8\u30A8\u30EA\u30A22", 1), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, "\u6226\u95D8\u30A8\u30EA\u30A21", 2), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, "\u6226\u95D8\u30A8\u30EA\u30A22", 2), ctx3;
+                return ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, "\u6226\u95D8\u30A8\u30EA\u30A21", 1, { ges }), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, "\u6226\u95D8\u30A8\u30EA\u30A22", 1, { ges }), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, "\u6226\u95D8\u30A8\u30EA\u30A21", 2, { ges }), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, "\u6226\u95D8\u30A8\u30EA\u30A22", 2, { ges }), ctx3;
               }.toString()
             }
           ]
@@ -25675,7 +25578,7 @@ var jsx_dev_runtime2 = __toESM(require_react_jsx_dev_runtime_development(), 1), 
       }
     return card.isFaceDown != !0;
   }, [props.clientId, props.isCheat, card, appContext.viewModel.model.gameState]), renderBp = import_react2.useMemo(() => {
-    const bp = getSetGroupBattlePoint(appContext.viewModel.model.gameState, props.cardID || "unknown");
+    const bp = getSetGroupBattlePoint(appContext.viewModel.model.gameState, props.cardID || "unknown", { ges: getGlobalEffects(appContext.viewModel.model.gameState, null) });
     return /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
       children: [
         bp[0],
@@ -25719,7 +25622,7 @@ var jsx_dev_runtime2 = __toESM(require_react_jsx_dev_runtime_development(), 1), 
     const proto = getItemPrototype(appContext.viewModel.model.gameState, props.cardID || "unknown");
     if (props.isShowInfo != !0)
       return /* @__PURE__ */ jsx_dev_runtime2.jsxDEV(jsx_dev_runtime2.Fragment, {}, void 0, !1, void 0, this);
-    let texts = getCardTexts(appContext.viewModel.model.gameState, props.cardID || "unknown");
+    let texts = getCardTexts(appContext.viewModel.model.gameState, props.cardID || "unknown", { ges: getGlobalEffects(appContext.viewModel.model.gameState, null) });
     return texts = [...proto.commandText ? [proto.commandText] : [], ...texts], /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
       children: [
         /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
@@ -26175,7 +26078,7 @@ var jsx_dev_runtime6 = __toESM(require_react_jsx_dev_runtime_development(), 1), 
   }, [cards, appContext.viewModel.model.gameState]), renderBattlePoint = import_react6.useMemo(() => {
     if (BaSyouKeywordFn.getBattleArea().includes(props.cardPosition.value[1]) != !0)
       return /* @__PURE__ */ jsx_dev_runtime6.jsxDEV(jsx_dev_runtime6.Fragment, {}, void 0, !1, void 0, this);
-    const bp = getBattleGroupBattlePoint(appContext.viewModel.model.gameState, cardsOnlySetGroupRoot);
+    const bp = getBattleGroupBattlePoint(appContext.viewModel.model.gameState, cardsOnlySetGroupRoot, { ges: getGlobalEffects(appContext.viewModel.model.gameState, null) });
     return /* @__PURE__ */ jsx_dev_runtime6.jsxDEV(jsx_dev_runtime6.Fragment, {
       children: /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
         children: [
@@ -26523,19 +26426,20 @@ function getPlayerFlowAuto(ctx2, playerId, flows, options) {
 // src/game/gameStateWithFlowMemory/ai/thinkVer1.ts
 function thinkVer1(ctx2, playerId, flows, options) {
   const attackFlow = flows.flatMap((flow) => {
+    const ges = getGlobalEffects(ctx2, null);
     if (flow.id == "FlowSetTipSelection") {
       const effect = getEffect(ctx2, flow.effectID);
       if (effect.reason[0] == "GameRule" && effect.reason[2].isAttack) {
-        const hasEarthIds = (getItemState(ctx2, EffectFn.getCardID(effect)).tips[TipFn.createGoEarthKey()]?.title[2] || []).map((pair3) => pair3[0]), hasSpaceIds = (getItemState(ctx2, EffectFn.getCardID(effect)).tips[TipFn.createGoSpaceKey()]?.title[2] || []).map((pair3) => pair3[0]), hasIds = [...hasEarthIds, ...hasSpaceIds], canAttackUnits = TipFn.getWant(flow.tip).filter((pair3) => hasIds.includes(pair3[0]) == !1), meleeUnits = canAttackUnits.filter((pair3) => isMeleeUnit(ctx2, pair3[0]));
-        meleeUnits.sort(([id1, _], [id2, _2]) => getSetGroupBattlePoint(ctx2, id2)[0] - getSetGroupBattlePoint(ctx2, id1)[0]);
-        const rangeUnits = canAttackUnits.filter((pair3) => isRangeUnit(ctx2, pair3[0]));
+        const hasEarthIds = (getItemState(ctx2, EffectFn.getCardID(effect)).tips[TipFn.createGoEarthKey()]?.title[2] || []).map((pair3) => pair3[0]), hasSpaceIds = (getItemState(ctx2, EffectFn.getCardID(effect)).tips[TipFn.createGoSpaceKey()]?.title[2] || []).map((pair3) => pair3[0]), hasIds = [...hasEarthIds, ...hasSpaceIds], canAttackUnits = TipFn.getWant(flow.tip).filter((pair3) => hasIds.includes(pair3[0]) == !1), meleeUnits = canAttackUnits.filter((pair3) => isMeleeUnit(ctx2, pair3[0], { ges }));
+        meleeUnits.sort(([id1, _], [id2, _2]) => getSetGroupBattlePoint(ctx2, id2, { ges })[0] - getSetGroupBattlePoint(ctx2, id1, { ges })[0]);
+        const rangeUnits = canAttackUnits.filter((pair3) => isRangeUnit(ctx2, pair3[0], { ges }));
         let willAttackPairs = [];
-        const hasMeleeHighUnits = meleeUnits.filter((pair3) => getCardHasSpeicalEffect(ctx2, ["\u9AD8\u6A5F\u52D5"], pair3[0])), hasMeleeSpeed = meleeUnits.filter((pair3) => getCardHasSpeicalEffect(ctx2, ["\u901F\u653B"], pair3[0])), hasMeleeStrongUnits = meleeUnits.filter((pair3) => getCardHasSpeicalEffect(ctx2, ["\u5F37\u8972"], pair3[0])), hasRangeStrongHighUnits = rangeUnits.filter((pair3) => getCardHasSpeicalEffect(ctx2, ["\u5F37\u8972"], pair3[0]));
+        const hasMeleeHighUnits = meleeUnits.filter((pair3) => getCardHasSpeicalEffect(ctx2, ["\u9AD8\u6A5F\u52D5"], pair3[0], { ges })), hasMeleeSpeed = meleeUnits.filter((pair3) => getCardHasSpeicalEffect(ctx2, ["\u901F\u653B"], pair3[0], { ges })), hasMeleeStrongUnits = meleeUnits.filter((pair3) => getCardHasSpeicalEffect(ctx2, ["\u5F37\u8972"], pair3[0], { ges })), hasRangeStrongHighUnits = rangeUnits.filter((pair3) => getCardHasSpeicalEffect(ctx2, ["\u5F37\u8972"], pair3[0], { ges }));
         if (hasMeleeSpeed.length) {
-          const hasRangeSpeedUnits = rangeUnits.filter((pair3) => getCardHasSpeicalEffect(ctx2, ["\u901F\u653B"], pair3[0]));
+          const hasRangeSpeedUnits = rangeUnits.filter((pair3) => getCardHasSpeicalEffect(ctx2, ["\u901F\u653B"], pair3[0], { ges }));
           willAttackPairs = [hasMeleeSpeed[0], ...hasRangeSpeedUnits];
         } else if (hasMeleeHighUnits.length) {
-          const hasRangeHighUnits = rangeUnits.filter((pair3) => getCardHasSpeicalEffect(ctx2, ["\u9AD8\u6A5F\u52D5"], pair3[0]));
+          const hasRangeHighUnits = rangeUnits.filter((pair3) => getCardHasSpeicalEffect(ctx2, ["\u9AD8\u6A5F\u52D5"], pair3[0], { ges }));
           willAttackPairs = [hasMeleeHighUnits[0], ...hasRangeHighUnits];
         } else if (hasMeleeStrongUnits.length > 0 && hasRangeStrongHighUnits.length >= 1)
           willAttackPairs = [hasMeleeStrongUnits[0], ...hasRangeStrongHighUnits];
@@ -26555,16 +26459,16 @@ function thinkVer1(ctx2, playerId, flows, options) {
           }, [flow];
       }
       if (effect.reason[0] == "GameRule" && effect.reason[2].isDefence) {
-        const hasEarthIds = (getItemState(ctx2, EffectFn.getCardID(effect)).tips[TipFn.createGoEarthKey()]?.title[2] || []).map((pair3) => pair3[0]), hasSpaceIds = (getItemState(ctx2, EffectFn.getCardID(effect)).tips[TipFn.createGoSpaceKey()]?.title[2] || []).map((pair3) => pair3[0]), hasIds = [...hasEarthIds, ...hasSpaceIds], canAttackUnits = TipFn.getWant(flow.tip).filter((pair3) => hasIds.includes(pair3[0]) == !1), meleeUnits = canAttackUnits.filter((pair3) => isMeleeUnit(ctx2, pair3[0]));
-        meleeUnits.sort(([id1, _], [id2, _2]) => getSetGroupBattlePoint(ctx2, id2)[0] - getSetGroupBattlePoint(ctx2, id1)[0]);
-        const rangeUnits = canAttackUnits.filter((pair3) => isRangeUnit(ctx2, pair3[0]));
+        const hasEarthIds = (getItemState(ctx2, EffectFn.getCardID(effect)).tips[TipFn.createGoEarthKey()]?.title[2] || []).map((pair3) => pair3[0]), hasSpaceIds = (getItemState(ctx2, EffectFn.getCardID(effect)).tips[TipFn.createGoSpaceKey()]?.title[2] || []).map((pair3) => pair3[0]), hasIds = [...hasEarthIds, ...hasSpaceIds], canAttackUnits = TipFn.getWant(flow.tip).filter((pair3) => hasIds.includes(pair3[0]) == !1), meleeUnits = canAttackUnits.filter((pair3) => isMeleeUnit(ctx2, pair3[0], { ges }));
+        meleeUnits.sort(([id1, _], [id2, _2]) => getSetGroupBattlePoint(ctx2, id2, { ges })[0] - getSetGroupBattlePoint(ctx2, id1, { ges })[0]);
+        const rangeUnits = canAttackUnits.filter((pair3) => isRangeUnit(ctx2, pair3[0], { ges }));
         let willAttackPairs = [];
-        const battleArea = flow.tip.flags?.isGoBattleArea1 ? AbsoluteBaSyouFn.of(PlayerIDFn.getOpponent(playerId), "\u6226\u95D8\u30A8\u30EA\u30A21") : AbsoluteBaSyouFn.of(PlayerIDFn.getOpponent(playerId), "\u6226\u95D8\u30A8\u30EA\u30A22"), opponentPower = getBattleGroupBattlePoint(ctx2, getBattleGroup(ctx2, battleArea));
+        const battleArea = flow.tip.flags?.isGoBattleArea1 ? AbsoluteBaSyouFn.of(PlayerIDFn.getOpponent(playerId), "\u6226\u95D8\u30A8\u30EA\u30A21") : AbsoluteBaSyouFn.of(PlayerIDFn.getOpponent(playerId), "\u6226\u95D8\u30A8\u30EA\u30A22"), opponentPower = getBattleGroupBattlePoint(ctx2, getBattleGroup(ctx2, battleArea), { ges });
         if (opponentPower == 0)
           return [flow];
         if (meleeUnits.length >= 1) {
           const myUnits2 = [meleeUnits[0], ...rangeUnits];
-          if (getBattleGroupBattlePoint(ctx2, myUnits2.map((pair3) => pair3[0])) >= opponentPower)
+          if (getBattleGroupBattlePoint(ctx2, myUnits2.map((pair3) => pair3[0]), { ges }) >= opponentPower)
             willAttackPairs = myUnits2;
           if (willAttackPairs.length)
             return flow = {
@@ -26691,7 +26595,7 @@ function AppView() {
       /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(ControlView, {}, void 0, !1, void 0, this),
       /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(PlayerController, {
         clientId: PlayerA,
-        isPlayer: !0
+        isPlayer: !1
       }, void 0, !1, void 0, this),
       /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(PlayerController, {
         clientId: PlayerB,

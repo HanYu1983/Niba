@@ -9,12 +9,14 @@ import { getCard } from "./CardTableComponent"
 import { getCoins, getCardIdByCoinId } from "./CoinTableComponent"
 import { GameState } from "./GameState"
 import { getGlobalEffects, setGlobalEffects, clearGlobalEffects } from "./globalEffects"
-import { getItemPrototype, getItemBaSyou, isChip, isCard, getItemController } from "./ItemTableComponent"
+import { getItemPrototype, getItemBaSyou, isChip, isCard, getItemController, ItemTableComponent } from "./ItemTableComponent"
 import { getSetGroupChildren } from "./SetGroupComponent"
 import { TipTitleTextRef } from "../define/Tip"
 import { createBridge } from "../bridge/createBridge"
+import { GlobalEffect } from "../define/GlobalEffect"
+import { logCategory } from "../../tool/logger"
 
-export function getCardTextFromCardTextRef(ctx: GameState, textRef: TipTitleTextRef): CardText {
+export function getCardTextFromCardTextRef(ctx: ItemTableComponent, textRef: TipTitleTextRef): CardText {
   const { cardId, textId } = textRef
   const text = getItemPrototype(ctx, cardId).texts?.find(text => text.id == textId)
   if (text == null) {
@@ -23,7 +25,8 @@ export function getCardTextFromCardTextRef(ctx: GameState, textRef: TipTitleText
   return text
 }
 
-export function getCardSpecialText(ctx: GameState, cardID: string, text: CardText): CardText {
+export function getCardSpecialText(text: CardText, options: { ges?: GlobalEffect[], cardId?: string }): CardText {
+  logCategory("getCardSpecialText", "")
   if (text.title[0] != "特殊型") {
     return text
   }
@@ -31,14 +34,12 @@ export function getCardSpecialText(ctx: GameState, cardID: string, text: CardTex
     case "サイコミュ":
     case "範囲兵器": {
       const [name, value] = text.title[1]
-      const ges = getGlobalEffects(ctx, null)
-      ctx = setGlobalEffects(ctx, null, ges)
-      const bonus = ges.filter(ge => ge.cardIds.includes(cardID)).map(ge => {
+      const bonus = options?.ges?.filter(ge => ge.cardIds.includes(options.cardId || "")).map(ge => {
         if (ge.title[0] == "SpecialEffectBonus" && ge.title[1][0] == name) {
           return ge.title[1][1]
         }
         return 0
-      }).reduce((a, b) => a + b, 0)
+      }).reduce((a, b) => a + b, 0) || 0
       const title: TextTitle = ["特殊型", [name, value + bonus]]
       return {
         ...text,
@@ -51,10 +52,9 @@ export function getCardSpecialText(ctx: GameState, cardID: string, text: CardTex
   }
 }
 
-export function getCardTexts(ctx: GameState, cardID: string): CardText[] {
-  const ges = getGlobalEffects(ctx, null)
-  ctx = setGlobalEffects(ctx, null, ges)
-  const addedTexts = ges.flatMap(e => {
+export function getCardTexts(ctx: ItemTableComponent, cardID: string, options: { ges?: GlobalEffect[] }): CardText[] {
+  logCategory("getCardTexts", "")
+  const addedTexts = options?.ges?.flatMap(e => {
     if (e.cardIds.includes(cardID) && e.title[0] == "AddText") {
       return [e.title[1]]
     }
@@ -62,11 +62,11 @@ export function getCardTexts(ctx: GameState, cardID: string): CardText[] {
       return [getCardTextFromCardTextRef(ctx, e.title[1])]
     }
     return []
-  }).filter(v => v)
+  }).filter(v => v) || []
   const prototype = getItemPrototype(ctx, cardID)
   const texts = [...prototype.texts || [], ...addedTexts].map(text => {
     if (text.title[0] == "特殊型") {
-      return getCardSpecialText(ctx, cardID, text)
+      return getCardSpecialText(text, { cardId: cardID, ges: options?.ges })
     }
     return text
   })
@@ -123,12 +123,11 @@ export function getCardRollCostLength(ctx: GameState, cardID: string): number {
   return prototype.rollCost?.length || 0
 }
 
-export function getCardTotalCostLength(ctx: GameState, cardID: string): number {
+export function getCardTotalCostLength(ctx: GameState, cardID: string, options: { ges?: GlobalEffect[] }): number {
+  logCategory("getCardTotalCostLength", "")
   const prototype = getItemPrototype(ctx, cardID)
-  const gEffects = getGlobalEffects(ctx, null)
-  ctx = setGlobalEffects(ctx, null, gEffects)
   const added = pipe(
-    always(gEffects),
+    always(options?.ges || []),
     map(ge => {
       if (ge.title[0] == "合計国力_＋１" && ge.cardIds.includes(cardID)) {
         return ge.title[1]
@@ -141,31 +140,29 @@ export function getCardTotalCostLength(ctx: GameState, cardID: string): number {
   if (prototype.totalCost == null) {
 
   } else if (prototype.totalCost == "X") {
-    totalCost = getCardIdsCanPayRollCost(ctx, getItemController(ctx, cardID), null).length
+    totalCost = getCardIdsCanPayRollCost(ctx, getItemController(ctx, cardID), { ges: options.ges }).length
   } else {
     totalCost = prototype.totalCost
   }
   return totalCost + added;
 }
 
-export function getCardIdsCanPayRollCost(ctx: GameState, playerId: PlayerID, situation: Situation | null): string[] {
-  const ges = getGlobalEffects(ctx, situation)
-  ctx = setGlobalEffects(ctx, situation, ges)
-  return ges.filter(ge => ge.title[0] == "發生國力")
+export function getCardIdsCanPayRollCost(ctx: GameState, playerId: PlayerID, options: { ges?: GlobalEffect[] }): string[] {
+  logCategory("getCardIdsCanPayRollCost", "")
+  return options?.ges?.filter(ge => ge.title[0] == "發生國力")
     .flatMap(ge => ge.cardIds)
     .filter(cardId => getCard(ctx, cardId).isRoll != true)
-    .filter(cardId => getItemController(ctx, cardId) == playerId)
+    .filter(cardId => getItemController(ctx, cardId) == playerId) || []
 }
 
 export function getCardBattlePoint(
   ctx: GameState,
-  cardID: string
+  cardID: string,
+  options: { ges?: GlobalEffect[] }
 ): BattlePoint {
-  ctx = clearGlobalEffects(ctx)
-  const globalEffects = getGlobalEffects(ctx, null);
-  ctx = setGlobalEffects(ctx, null, globalEffects)
+  logCategory("getCardBattlePoint", "")
   const card = getCard(ctx, cardID);
-  const bonusFromGlobalEffects = globalEffects.map(ge => {
+  const bonusFromGlobalEffects = options?.ges?.map(ge => {
     if (ge.title[0] == "AddText" &&
       ge.cardIds.includes(cardID) &&
       ge.title[1].title[0] == "TextBattleBonus") {
@@ -175,7 +172,7 @@ export function getCardBattlePoint(
       return ge.title[1]
     }
     return [0, 0, 0] as BattleBonus
-  })
+  }) || []
   const bonusFormCoin = getCoins(ctx).map(coin => {
     if (coin.title[0] == "BattleBonus" && getCardIdByCoinId(ctx, coin.id) == cardID) {
       return coin.title[1]
@@ -191,11 +188,13 @@ export function getCardBattlePoint(
 }
 
 export function getCardHasSpeicalEffect(
-  ctx: GameState,
+  ctx: ItemTableComponent,
   a: TextSpeicalEffect,
-  cardID: string
+  cardID: string,
+  options: { ges?: GlobalEffect[] }
 ): boolean {
-  const texts = getCardTexts(ctx, cardID)
+  logCategory("getCardHasSpeicalEffect", "")
+  const texts = getCardTexts(ctx, cardID, options)
   const has = texts.filter(e =>
     e.title[0] == "特殊型" &&
     TextSpeicalEffectFn.isSameKeyword(e.title[1], a)
@@ -276,10 +275,9 @@ export function getItemIsCanRoll(ctx: GameState, itemId: string): boolean {
   return true
 }
 
-export function getCardIdsCanPayRollColor(ctx: GameState, situation: Situation | null, playerId: PlayerID, color: CardColor | null): { cardId: string, colors: CardColor[] }[] {
-  const ges = getGlobalEffects(ctx, situation)
-  ctx = setGlobalEffects(ctx, situation, ges)
-  return ges.flatMap(ge => {
+export function getCardIdsCanPayRollColor(ctx: GameState, playerId: PlayerID, color: CardColor | null, options: { ges?: GlobalEffect[] }): { cardId: string, colors: CardColor[] }[] {
+  logCategory("getCardIdsCanPayRollColor", "")
+  return options?.ges?.flatMap(ge => {
     if (ge.cardIds.length == 0) {
       return []
     }
@@ -308,5 +306,5 @@ export function getCardIdsCanPayRollColor(ctx: GameState, situation: Situation |
       })
     }
     return []
-  })
+  }) || []
 }

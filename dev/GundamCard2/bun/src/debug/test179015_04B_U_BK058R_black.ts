@@ -13,6 +13,7 @@ import { mapItemState } from "../game/gameState/ItemStateComponent";
 import { getItemIdsByBasyou } from "../game/gameState/ItemTableComponent";
 import { setPhase } from "../game/gameState/PhaseComponent";
 import { loadPrototype } from "../script";
+import { getGlobalEffects, setGlobalEffects } from "../game/gameState/globalEffects";
 
 export async function test179015_04B_U_BK058R_black() {
     await loadPrototype("179015_04B_U_BK058R_black")
@@ -26,13 +27,15 @@ export async function test179015_04B_U_BK058R_black() {
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), ["unitBlack", "unitBlack", "unitBlack", "unitBlack"]) as GameState
     ctx = setActivePlayerID(ctx, PlayerA) as GameState
     ctx = setPhase(ctx, ["配備フェイズ", "フリータイミング"]) as GameState
+    const ges = getGlobalEffects(ctx, null)
+    ctx = setGlobalEffects(ctx, null, ges)
     const effects = createPlayCardEffects(ctx, cardA.id)
     if (effects.length == 0) {
         throw new Error()
     }
     {
         const effect = effects.find(eff => eff.reason[0] == "PlayCard" && eff.reason[3].isPlayUnit)
-        if(effect == null){
+        if (effect == null) {
             throw new Error()
         }
         const tipOrErrors = createEffectTips(ctx, effect, 0, 0, { isCheckUserSelection: true })

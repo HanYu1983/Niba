@@ -33,7 +33,8 @@ export async function test179025_07D_U_RD158C_red() {
     ctx = setActivePlayerID(ctx, PlayerB) as GameState
     ctx = setPhase(ctx, ["戦闘フェイズ", "ダメージ判定ステップ", "フリータイミング"]) as GameState
     console.log(getItemPrototype(ctx, cardA.id))
-    if (getCardHasSpeicalEffect(ctx, ["クイック"], cardA.id) != true) {
+    let ges = getGlobalEffects(ctx, null)
+    if (getCardHasSpeicalEffect(ctx, ["クイック"], cardA.id, {ges: ges}) != true) {
         throw new Error()
     }
     if (getGlobalEffects(ctx, null).find(ge => ge.title[0] == "合計国力_＋１してプレイできる") == null) {

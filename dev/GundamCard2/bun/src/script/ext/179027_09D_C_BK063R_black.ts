@@ -57,8 +57,9 @@ export const prototype: CardPrototype = {
         if (enabled == false) {
           return []
         }
+        const ges = GameStateFn.getGlobalEffects(ctx, null)
         const prototype = GameStateFn.getItemPrototype(ctx, cardId)
-        const playEffect = GameStateFn.createPlayCommandText(ctx, cardId)
+        const playEffect = GameStateFn.createPlayCommandText(ctx, cardId, {ges: ges})
         const playText = playEffect.text
         let originRollCostConditions = GameStateFn.createRollCostConditions(ctx, prototype, prototype.rollCost || [], 0)
         // 取得原始條件

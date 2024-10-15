@@ -16,14 +16,24 @@ import { createTextsFromSpecialEffect } from "./createTextsFromSpecialEffect"
 import { TipTitleTextRef } from "../define/Tip"
 import { getCardTextFromCardTextRef } from "./card"
 
+var __callGlobal: any = null
 export function getGlobalEffects(ctx: GameState, situation: Situation | null): GlobalEffect[] {
+  logCategory("getGlobalEffects", "")
+  if (__callGlobal) {
+    throw new Error()
+  }
+  __callGlobal = true
   const key = JSON.stringify(situation)
   const cached = ctx.globalEffectPool[key]
   if (cached) {
-    logCategory("getGlobalEffects", "useCache")
+    __callGlobal = null
+    logCategory("getGlobalEffects", "=======")
     return cached
   }
-  return getSituationEffects(ctx, situation)
+  const ret = getSituationEffects(ctx, situation)
+  __callGlobal = null
+  logCategory("getGlobalEffects", "=======")
+  return ret
 }
 
 export function setGlobalEffects(ctx: GameState, situation: Situation | null, ges: GlobalEffect[]): GameState {
@@ -47,7 +57,7 @@ export function clearGlobalEffects(ctx: GameState): GameState {
 // globalEffects
 function getSituationEffects(ctx: GameState, situation: Situation | null): GlobalEffect[] {
   const bridge = createBridge()
-  const ges = createAllCardTexts(ctx, situation).flatMap(([item, texts]) => {
+  const ges = createAllCardTexts(ctx).flatMap(([item, texts]) => {
     const globalEffects = texts
       .map((text, i) => {
         const cardController = getItemController(ctx, item.id)
@@ -77,7 +87,7 @@ function getSituationEffects(ctx: GameState, situation: Situation | null): Globa
 }
 
 
-export function createAllCardTexts(ctx: GameState, situation: Situation | null): [Item, CardText[]][] {
+export function createAllCardTexts(ctx: GameState): [Item, CardText[]][] {
   // 常駐
   const getTextGroup1 = pipe(
     always(AbsoluteBaSyouFn.getBaAll()),
@@ -89,7 +99,7 @@ export function createAllCardTexts(ctx: GameState, situation: Situation | null):
       const proto = getItemPrototype(ctx, item.id)
       let texts = (proto.texts || []).flatMap(text => {
         if (text.title[0] == "特殊型") {
-          return createTextsFromSpecialEffect(ctx, item.id, text)
+          return createTextsFromSpecialEffect(text, {})
         }
         return [text]
       })
@@ -108,7 +118,7 @@ export function createAllCardTexts(ctx: GameState, situation: Situation | null):
       const proto = getItemPrototype(ctx, item.id)
       let texts = (proto.texts || []).flatMap(text => {
         if (text.title[0] == "特殊型") {
-          return createTextsFromSpecialEffect(ctx, item.id, text)
+          return createTextsFromSpecialEffect(text, {})
         }
         return [text]
       })
@@ -127,7 +137,7 @@ export function createAllCardTexts(ctx: GameState, situation: Situation | null):
       const proto = getItemPrototype(ctx, item.id)
       let texts = (proto.texts || []).flatMap(text => {
         if (text.protectLevel == 2 && text.title[0] == "特殊型") {
-          return createTextsFromSpecialEffect(ctx, item.id, text)
+          return createTextsFromSpecialEffect(text, {})
         }
         return [text]
       })
@@ -154,10 +164,11 @@ export function createAllCardTexts(ctx: GameState, situation: Situation | null):
     const globalEffects = texts
       .map((text, i) => {
         const cardController = getItemController(ctx, item.id)
+        logCategory("createAllCardTexts", "getOnSituationFn", text.onSituation)
         const fn = getOnSituationFn(text)
         const effect: Effect = {
           id: ToolFn.getUUID("getSituationEffects"),
-          reason: ["Situation", cardController, item.id, situation],
+          reason: ["Situation", cardController, item.id, { title: ["有沒有新增內文"] }],
           text: text
         }
         return [fn, effect] as [OnSituationFn, Effect]
@@ -176,7 +187,7 @@ export function createAllCardTexts(ctx: GameState, situation: Situation | null):
     .map(ge => [ge.cardIds, ge.title[1]] as [string[], CardText])
     .flatMap(([itemIds, text]) => {
       return itemIds.flatMap(itemId => {
-        const texts = text.title[0] == "特殊型" ? createTextsFromSpecialEffect(ctx, itemId, text) : [text]
+        const texts = text.title[0] == "特殊型" ? createTextsFromSpecialEffect(text, {}) : [text]
         return [[getItem(ctx, itemId), texts]] as [Item, CardText[]][]
       })
     })
@@ -186,7 +197,7 @@ export function createAllCardTexts(ctx: GameState, situation: Situation | null):
     .flatMap(([itemIds, textRef]) => {
       return itemIds.flatMap(itemId => {
         const text = getCardTextFromCardTextRef(ctx, textRef)
-        const texts = text.title[0] == "特殊型" ? createTextsFromSpecialEffect(ctx, itemId, text) : [text]
+        const texts = text.title[0] == "特殊型" ? createTextsFromSpecialEffect(text, {}) : [text]
         return [[getItem(ctx, itemId), texts]] as [Item, CardText[]][]
       })
     })

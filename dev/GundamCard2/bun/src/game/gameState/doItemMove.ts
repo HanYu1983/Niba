@@ -13,8 +13,13 @@ import { doTriggerEvent } from "./doTriggerEvent"
 import { getCoinIdsByCardId, removeCoinIds } from "./CoinTableComponent"
 import { getCutInDestroyEffects, removeEffect } from "./EffectStackComponent"
 import { EffectFn } from "../define/Effect"
+import { GlobalEffect } from "../define/GlobalEffect"
+import { logCategory } from "../../tool/logger"
 
-export function doItemMove(ctx: GameState, to: AbsoluteBaSyou, [itemId, from]: StrBaSyouPair, options?: { isSkipTargetMissing?: boolean, insertId?: number }): GameState {
+export function doItemMove(ctx: GameState, to: AbsoluteBaSyou, [itemId, from]: StrBaSyouPair, options?: { ges?: GlobalEffect[], isSkipTargetMissing?: boolean, insertId?: number }): GameState {
+    logCategory("doItemMove", "")
+    const ges = getGlobalEffects(ctx, null)
+    ctx = setGlobalEffects(ctx, null, ges)
     if (options?.isSkipTargetMissing) {
 
     } else {
@@ -23,9 +28,7 @@ export function doItemMove(ctx: GameState, to: AbsoluteBaSyou, [itemId, from]: S
     if (isCard(ctx, itemId) || isChip(ctx, itemId)) {
         const oldTable = ctx.table
         {
-            const ges = getGlobalEffects(ctx, null)
-            ctx = setGlobalEffects(ctx, null, ges)
-            const redirectEs = ges.filter(ge => ge.title[0] == "場、または手札から、自軍ジャンクヤードにカードが移る場合、ジャンクヤードに移る代わりにゲームから取り除かれる")
+            const redirectEs = ges.filter(ge => ge.title[0] == "場、または手札から、自軍ジャンクヤードにカードが移る場合、ジャンクヤードに移る代わりにゲームから取り除かれる") || []
             if (redirectEs.length) {
                 // 取得效果的擁有者
                 const textControllers = redirectEs.flatMap(e => e.cardIds).map(id => getItemController(ctx, id))

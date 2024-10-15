@@ -29,7 +29,7 @@ export const prototype: CardPrototype = {
               side: "自軍",
               title: ["マニィ・アンバサダ"],
               min: 1
-            })) == null
+            }, {})) == null
             && evt.cardIds?.includes(cardId)
           )
         )) {

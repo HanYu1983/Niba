@@ -24,6 +24,7 @@ import { getSetGroupBattlePoint } from "../game/gameState/setGroup"
 import { createDestroyEffect } from "../game/gameState/createDestroyEffect"
 import { DestroyReason, EffectFn } from "../game/define/Effect"
 import { doCutInDestroyEffectsAndClear } from "../game/gameState/doCutInDestroyEffectsAndClear"
+import { getGlobalEffects, setGlobalEffects } from "../game/gameState/globalEffects"
 
 export async function test179028_10D_C_BL070N_blue() {
     await loadPrototype("179028_10D_C_BL070N_blue")
@@ -121,7 +122,9 @@ export async function test179028_10D_C_BL070N_blue() {
                         throw new Error()
                     }
                     ctx = doEffect(ctx, effect, 0, 0)
-                    if (BattlePointFn.eq(getSetGroupBattlePoint(ctx, friendUnit.id), [3, 3, 3]) == false) {
+                    const ges = getGlobalEffects(ctx, null)
+                    ctx = setGlobalEffects(ctx, null, ges)
+                    if (BattlePointFn.eq(getSetGroupBattlePoint(ctx, friendUnit.id, {ges: ges}), [3, 3, 3]) == false) {
                         throw new Error()
                     }
                 }

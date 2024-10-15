@@ -28,6 +28,7 @@ import { doBattleDamage } from "../game/gameState/player"
 import { getBattleGroup } from "../game/gameState/battleGroup"
 import { createTipByEntitySearch } from "../game/gameState/Entity"
 import { TipFn } from "../game/define/Tip"
+import { getGlobalEffects, setGlobalEffects } from "../game/gameState/globalEffects"
 
 export async function test179901_00_U_WT001P_white_02() {
     await loadPrototype("179901_00_U_WT001P_white_02")
@@ -57,8 +58,10 @@ export async function test179901_00_U_WT001P_white_02() {
     ctx = setActivePlayerID(ctx, PlayerA) as GameState
     ctx = setPhase(ctx, ["戦闘フェイズ", "ダメージ判定ステップ", "フリータイミング"]) as GameState
     ctx = checkIsBattle(ctx) as GameState
+    const ges = getGlobalEffects(ctx, null)
+    ctx = setGlobalEffects(ctx, null, ges)
     // 制造破壞
-    let [newCtx, newPower] = doBattleDamage(ctx, PlayerA, getBattleGroup(ctx, AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア1")), 3)
+    let [newCtx, newPower] = doBattleDamage(ctx, PlayerA, getBattleGroup(ctx, AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア1")), 3, {ges: ges})
     ctx = newCtx
     ctx = doCutInDestroyEffectsAndClear(ctx)
     if (getCutInDestroyEffects(ctx).find(effect => EffectFn.getCardID(effect) != cardB.id)) {

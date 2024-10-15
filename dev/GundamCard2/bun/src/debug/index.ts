@@ -32,7 +32,6 @@ import { testAttackRuleEffect, testAttackRuleEffect2, testAttackRuleEffect3 } fr
 import { testCompress } from "./testCompress";
 import { testCrossWeapon } from "./testCrossWeapon";
 import { testDrawRuleEffect } from "./testDrawRuleEffect";
-import { testFlow1, testBattleBonus } from "./testFlow";
 import { testGain } from "./testGain";
 import { testGetPlayEffects } from "./testGetPlayEffects";
 import { testIssue } from "./testIssue";
@@ -51,20 +50,34 @@ import { test179009_03B_U_WT045U_white } from "./test179009_03B_U_WT045U_white";
 import { test179003_01A_CH_GN001R_green } from "./test179003_01A_CH_GN001R_green";
 import { test179009_03B_U_GN036U_green } from "./test179009_03B_U_GN036U_green";
 import { testAllCardTextTestEnv } from "../game/gameState/cardTextTestEnv";
+import { testBattleBonus } from "./testFlow";
 
 const fs = require('fs').promises;
 
 export async function tests() {
     return [
+        test179030_11E_C_WT077S_white,
         testAllCardTextTestEnv,
+        testBattleBonus,
+        testPS,
+        testCrossWeapon,
+        test179028_10D_U_WT181N_white,
+        test179024_03B_U_WT042U_white,
+        test179001_01A_CH_WT007R_white,
+        test179016_04B_U_BK066C_black,
+        test179030_11E_U_BK194S_2_black,
+        test179015_04B_U_BK058R_black,
+        test179030_11E_U_BK194S_2_black_2,
+        test179030_11E_C_BL079R_blue,
+        test179028_10D_C_BL070N_blue,
+        test179025_07D_U_RD158C_red,
+        test179019_01A_U_WT003C_white,
         test179009_03B_U_GN036U_green,
         test179003_01A_CH_GN001R_green,
         test179009_03B_U_WT045U_white,
         testIssue,
         test179028_10D_CH_WT095_white,
         test179901_00_U_WT001P_white_02,
-        test179019_01A_U_WT003C_white,
-        test179030_11E_C_WT077S_white,
         testPlayerScore,
         testThinkVer1_2,
         test179029_B3C_CH_WT102R_white,
@@ -78,16 +91,10 @@ export async function tests() {
         test179901_B2B_C_BK005P_black,
         test179015_04B_U_BK061C_black_2,
         test179020_05C_U_BK100U_black,
-        test179025_07D_U_RD158C_red,
         test179003_01A_U_BK008U_black,
-        test179030_11E_C_BL079R_blue,
-        test179028_10D_C_BL070N_blue,
         testGain,
         testSwapItem,
         testItemGroup,
-        testFlow1,
-        //testFlow2,
-        testBattleBonus,
         testGetPlayEffects,
         testAttackRuleEffect,
         testAttackRuleEffect2,
@@ -95,18 +102,9 @@ export async function tests() {
         testDrawRuleEffect,
         testReollRuleEffect,
         testReturnRuleEffect,
-        testPS,
-        testCrossWeapon,
         testPlayG,
         testPlayChar,
-        test179028_10D_U_WT181N_white,
-        test179024_03B_U_WT042U_white,
-        test179001_01A_CH_WT007R_white,
         test179015_04B_U_BK061C_black,
-        test179016_04B_U_BK066C_black,
-        test179030_11E_U_BK194S_2_black,
-        test179015_04B_U_BK058R_black,
-        test179030_11E_U_BK194S_2_black_2,
         testCompress,
     ].reduce((worker, testF) => {
         return worker.then(async () => {

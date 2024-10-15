@@ -74,7 +74,7 @@ export const CardView = (props: {
     return card.isFaceDown != true
   }, [props.clientId, props.isCheat, card, appContext.viewModel.model.gameState]);
   const renderBp = useMemo(() => {
-    const bp = getSetGroupBattlePoint(appContext.viewModel.model.gameState, props.cardID || "unknown")
+    const bp = getSetGroupBattlePoint(appContext.viewModel.model.gameState, props.cardID || "unknown", { ges: getGlobalEffects(appContext.viewModel.model.gameState, null) })
     return <div>{bp[0]}/{bp[1]}/{bp[2]}</div>
   }, [appContext.viewModel.model.gameState, props.cardID])
   const renderCoin = useMemo(() => {
@@ -120,7 +120,7 @@ export const CardView = (props: {
     if (props.isShowInfo != true) {
       return <></>
     }
-    let texts = getCardTexts(appContext.viewModel.model.gameState, props.cardID || "unknown")
+    let texts = getCardTexts(appContext.viewModel.model.gameState, props.cardID || "unknown", { ges: getGlobalEffects(appContext.viewModel.model.gameState, null) })
     texts = [...(proto.commandText ? [proto.commandText] : []), ...texts]
     return <div>
       <div>{proto.title}</div>

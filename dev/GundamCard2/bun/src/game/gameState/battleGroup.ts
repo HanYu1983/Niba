@@ -1,5 +1,6 @@
 import { AbsoluteBaSyou, AbsoluteBaSyouFn } from "../define/BaSyou";
 import { TextSpeicalEffect } from "../define/CardText";
+import { GlobalEffect } from "../define/GlobalEffect";
 import { getCardHasSpeicalEffect } from "./card";
 import { getCard } from "./CardTableComponent";
 import { GameState } from "./GameState";
@@ -21,7 +22,8 @@ export function getBattleGroup(
 
 export function getBattleGroupBattlePoint(
   ctx: GameState,
-  unitCardIDs: string[]
+  unitCardIDs: string[],
+  options: { ges?: GlobalEffect[] }
 ): number {
   if (unitCardIDs.length == 0) {
     return 0
@@ -41,7 +43,7 @@ export function getBattleGroupBattlePoint(
       if (card.isRoll) {
         return 0;
       }
-      const [melee, range, _] = getSetGroupBattlePoint(ctx, cardID)
+      const [melee, range, _] = getSetGroupBattlePoint(ctx, cardID, { ges: options.ges })
       // 第一位是格鬥力
       if (i == 0) {
         return melee
@@ -73,19 +75,21 @@ export function getBattleGroupBattlePoint(
 export function isBattleGroupHasA(
   ctx: GameState,
   a: TextSpeicalEffect,
-  cardID: string
+  cardID: string,
+  options: { ges?: GlobalEffect[] }
 ): boolean {
   const baSyou = getItemBaSyou(ctx, cardID);
   const battleGroup = getBattleGroup(ctx, baSyou);
-  return battleGroup.some(bg => isSetGroupHasA(ctx, a, bg))
+  return battleGroup.some(bg => isSetGroupHasA(ctx, a, bg, {ges: options.ges}))
 }
 
 export function isABattleGroup(
   ctx: GameState,
   a: TextSpeicalEffect,
-  cardID: string
+  cardID: string,
+  options: { ges?: GlobalEffect[] }
 ): boolean {
   const baSyou = getItemBaSyou(ctx, cardID);
   const battleGroup = getBattleGroup(ctx, baSyou);
-  return battleGroup.every(bg => isSetGroupHasA(ctx, a, bg))
+  return battleGroup.every(bg => isSetGroupHasA(ctx, a, bg, {ges: options.ges}))
 }

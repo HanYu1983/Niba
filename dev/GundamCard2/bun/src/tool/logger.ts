@@ -37,6 +37,24 @@ const hideCategory: string[] = [
   "onEffectStart",
   "onEffectEnd",
   "onItemMove",
+  // 
+  "createTextsFromSpecialEffect",
+  "getCardIdsCanPayRollCost",
+  "getCardIdsCanPayRollColor",
+  "getCardHasSpeicalEffect",
+  "getCardTexts",
+  "getCardSpecialText",
+  "getCardBattlePoint",
+  "getCardTotalCostLength",
+  "createPlayCommandText",
+  "createPlayCardConditions",
+  "createPlayCardEffect",
+  "doItemMove",
+  "createPlayCharacterOperationEffect",
+  "createPlayStayEffect",
+  "createPlayUnitEffect",
+  "getGlobalEffects",
+  "createAllCardTexts",
 ];
 let filterCategory = true;
 

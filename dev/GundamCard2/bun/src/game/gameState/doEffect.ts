@@ -16,6 +16,7 @@ import { createConditionTitleFn } from "./createConditionTitleFn"
 import { getItemState, mapItemState, setItemState } from "./ItemStateComponent"
 import { addImmediateEffect } from "./EffectStackComponent"
 import { getItemController } from "./ItemTableComponent"
+import { clearGlobalEffects, getGlobalEffects, setGlobalEffects } from "./globalEffects"
 
 export function doEffect(
   ctx: GameState,
@@ -41,17 +42,21 @@ export function doEffect(
       EventCenterFn.onActionStart(ctx, effect, action)
       const actionFn = createActionTitleFn(action)
       ctx = actionFn(ctx, effect, bridge)
+      ctx = clearGlobalEffects(ctx)
       EventCenterFn.onActionEnd(ctx, effect, action)
     }
   })
   const lta = CardTextFn.getLogicTreeAction(effect.text, logicId)
   for (const action of LogicTreeActionFn.getActions(lta)) {
+    logCategory("doEffect", "lta.actions", lta.actions.map(a=>a.title))
     EventCenterFn.onActionStart(ctx, effect, action)
     const actionFn = createActionTitleFn(action)
     ctx = actionFn(ctx, effect, bridge)
+    ctx = clearGlobalEffects(ctx)
     EventCenterFn.onActionEnd(ctx, effect, action)
   }
   ctx = EventCenterFn.onEffectEnd(ctx, effect)
+  ctx = clearGlobalEffects(ctx)
   return ctx;
 }
 
@@ -103,7 +108,9 @@ export function createEffectTips(
     const errors: string[] = []
     let tip: Tip | null = null
     try {
-      tip = createConditionTitleFn(con)(ctx, effect, bridge)
+      const ges = getGlobalEffects(ctx, null)
+      ctx = setGlobalEffects(ctx, null, ges)
+      tip = createConditionTitleFn(con, { ges: ges })(ctx, effect, bridge)
       if ((tip as any)?.isGameState) {
         console.log(`快速檢查是不寫錯回傳成GameState, 應該要回傳Tip|null:`, key, con.title)
         throw new Error()
@@ -159,7 +166,7 @@ export function createEffectTips(
     ctx = ConditionFn.getActionTitleFns(con, createActionTitleFn).reduce((ctx, fn): GameState => {
       try {
         ctx = fn(ctx, effect, bridge)
-        //ctx = clearGlobalEffects(ctx)
+        ctx = clearGlobalEffects(ctx)
         return ctx
       } catch (e) {
         if (e instanceof TipError) {

@@ -9,7 +9,11 @@ export const prototype: CardPrototype = {
     {
       id: "",
       title: ["自動型", "恒常"],
-      onSituation: function _(ctx: GameState, effect: Effect, { GameStateFn, ToolFn }: Bridge): GlobalEffect[] {
+      onSituation: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, ToolFn }: Bridge): GlobalEffect[] {
+        const situation = DefineFn.EffectFn.getSituation(effect)
+        if (situation != null) {
+          return []
+        }
         const cardIds = GameStateFn.getItemIds(ctx)
         const units = cardIds
         return [

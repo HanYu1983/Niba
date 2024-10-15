@@ -17,7 +17,7 @@ import { createStrBaSyouPair, getItemBaSyou, getItemIdsByBasyou, getItemPrototyp
 import { setPhase } from "../game/gameState/PhaseComponent"
 import { doTriggerEvent } from "../game/gameState/doTriggerEvent"
 import { loadPrototype } from "../script"
-import { clearGlobalEffects, getGlobalEffects } from "../game/gameState/globalEffects"
+import { clearGlobalEffects, getGlobalEffects, setGlobalEffects } from "../game/gameState/globalEffects"
 import { Effect } from "../game/define/Effect"
 import { createPlayCardEffect, createPlayCardEffects } from "../game/gameState/createPlayCardEffects"
 import { CommandEffecTipFn } from "../game/define/CommandEffectTip"
@@ -47,6 +47,8 @@ export async function test179003_01A_CH_GN001R_green() {
     ctx = setPhase(ctx, ["配備フェイズ", "フリータイミング"]) as GameState
     let storedCtx = JSON.parse(JSON.stringify(ctx))
     {
+        const ges = getGlobalEffects(ctx, null)
+        ctx = setGlobalEffects(ctx, null, ges)
         let effects = createPlayCardEffects(ctx, char.id)
         if (effects.length != 3) {
             console.log(effects)
@@ -108,6 +110,8 @@ export async function test179003_01A_CH_GN001R_green() {
     }
     ctx = storedCtx
     {
+        const ges = getGlobalEffects(ctx, null)
+        ctx = setGlobalEffects(ctx, null, ges)
         let effects = createPlayCardEffects(ctx, char.id)
         if (effects.length != 3) {
             console.log(effects)

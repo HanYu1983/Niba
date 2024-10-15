@@ -31,6 +31,7 @@ import { createTipByEntitySearch } from "./Entity"
 import { doBattleDamage, doRuleBattleDamage } from "./player"
 import { getBattleGroup } from "./battleGroup"
 import { isBattle } from "./IsBattleComponent"
+import { getGlobalEffects, setGlobalEffects } from "./globalEffects"
 
 export function createPlayerIdFromRelated(ctx: GameState, cardId: string, re: RelatedPlayerSideKeyword): PlayerID {
   switch (re) {
@@ -98,12 +99,12 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
       }
     }
     case "Entity": {
-      const [_, options] = action.title
-      if ([options.max, options.min, options.count].every(v => v == null)) {
+      const [_, actionOptions] = action.title
+      if ([actionOptions.max, actionOptions.min, actionOptions.count].every(v => v == null)) {
         throw new Error(`Entity search must has one of min, max, count`)
       }
       return function (ctx: GameState, effect: Effect): GameState {
-        const tip = createTipByEntitySearch(ctx, effect, options)
+        const tip = createTipByEntitySearch(ctx, effect, actionOptions)
         const error = TipFn.createTipErrorWhenCheckFail(tip)
         if (error) {
           throw error
@@ -138,7 +139,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
       }
     }
     case "Action": {
-      const [_, options] = action.title
+      const [_, actionOptions] = action.title
       const varNames = action.vars
       return function (ctx: GameState, effect: Effect): GameState {
         const cardId = EffectFn.getCardID(effect)
@@ -148,8 +149,8 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
             return getCardTipStrBaSyouPairs(ctx, varName, cardId)
           })
         for (const pair of pairs) {
-          if (options.move) {
-            ctx = doItemMove(ctx, createAbsoluteBaSyouFromBaSyou(ctx, cardId, options.move), pair)
+          if (actionOptions.move) {
+            ctx = doItemMove(ctx, createAbsoluteBaSyouFromBaSyou(ctx, cardId, actionOptions.move), pair)
           }
         }
         return ctx
@@ -415,9 +416,11 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
     case "合計国力〔x〕": {
       const [_, x] = action.title
       return function (ctx: GameState, effect: Effect): GameState {
+        const ges = getGlobalEffects(ctx, null)
+        ctx = setGlobalEffects(ctx, null, ges)
         const cardId = EffectFn.getCardID(effect)
         const cardController = getItemController(ctx, cardId)
-        const cardIdsCanPay = getCardIdsCanPayRollCost(ctx, cardController, null)
+        const cardIdsCanPay = getCardIdsCanPayRollCost(ctx, cardController, { ges: ges })
         if (cardIdsCanPay.length < x) {
           throw new TargetMissingError(`合計国力〔x〕:${cardIdsCanPay.length} < ${x}. ${effect.text.description}`)
         }
