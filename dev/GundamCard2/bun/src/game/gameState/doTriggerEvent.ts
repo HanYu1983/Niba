@@ -20,7 +20,7 @@ import { AbsoluteBaSyouFn, BaSyouKeywordFn } from "../define/BaSyou"
 import { createOnEventTitleFn } from "./createOnEventTitleFn"
 import { EventCenterFn } from "./EventCenter"
 import { PlayerA, PlayerB } from "../define/PlayerID"
-import { clearGlobalEffects, createAllCardTexts, getGlobalEffects } from "./globalEffects"
+import { clearGlobalEffects, createAllCardTexts, getGlobalEffects, setGlobalEffects } from "./globalEffects"
 import { addImmediateEffect } from "./EffectStackComponent"
 import { createAttackPhaseRuleEffect } from "./createAttackPhaseRuleEffect"
 
@@ -32,8 +32,7 @@ export function doTriggerEvent(
     event: GameEvent
 ): GameState {
     logCategory("doTriggerEvent", event.title, event.cardIds)
-    const ges = getGlobalEffects(ctx, null)
-    const bridge = createBridge({ ges: ges })
+
     createAllCardTexts(ctx).forEach(info => {
         const [item, texts] = info
         texts.forEach(text => {
@@ -43,7 +42,9 @@ export function doTriggerEvent(
                 text: text
             }
             logCategory("doTriggerEvent", "eventTitle", text.onEvent)
-            ctx = createOnEventTitleFn(text, {ges: ges})(ctx, effect, bridge)
+            const ges = getGlobalEffects(ctx, null)
+            ctx = setGlobalEffects(ctx, null, ges)
+            ctx = createOnEventTitleFn(text, { ges: ges })(ctx, effect, createBridge({ ges: ges }))
         })
     })
     if (event.title[0] == "カット終了時") {

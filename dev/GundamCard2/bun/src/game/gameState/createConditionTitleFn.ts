@@ -18,6 +18,7 @@ import { createEntityIterator, createTipByEntitySearch, EntityFn } from "./Entit
 import { getPlayerState, mapPlayerState } from "./PlayerStateComponent"
 import { clearGlobalEffects, getGlobalEffects, setGlobalEffects } from "./globalEffects"
 import { GlobalEffect } from "../define/GlobalEffect"
+import { Bridge } from "../../script/bridge"
 
 export function createConditionTitleFn(condition: Condition, options: { ges?: GlobalEffect[] }): ConditionTitleFn {
     if (condition.title == null || typeof condition.title == "string") {
@@ -336,7 +337,7 @@ export function createConditionTitleFn(condition: Condition, options: { ges?: Gl
         }
         case "RollColor": {
             const [_, color] = condition.title
-            return function (ctx: GameState, effect: Effect): Tip | null {
+            return function (ctx: GameState, effect: Effect, {Options}:Bridge): Tip | null {
                 const cardId = EffectFn.getCardID(effect)
                 const cardController = getItemController(ctx, cardId)
                 let situation: Situation = { title: ["ロールコストの支払いにおいて"] }
@@ -345,10 +346,9 @@ export function createConditionTitleFn(condition: Condition, options: { ges?: Gl
                         situation = { title: ["「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合"] }
                     }
                 }
-                //ctx = clearGlobalEffects(ctx)
-                const ges = getGlobalEffects(ctx, situation)
-                ctx = setGlobalEffects(ctx, situation, ges)
-                const cardIdColors = getCardIdsCanPayRollColor(ctx, cardController, color, { ges: ges })
+                const gesForAskRollCost = getGlobalEffects(ctx, situation)
+                ctx = setGlobalEffects(ctx, situation, gesForAskRollCost)
+                const cardIdColors = getCardIdsCanPayRollColor(ctx, cardController, color, { ges: gesForAskRollCost })
                 let colorIds = []
                 if (color == null) {
                     colorIds = cardIdColors.map(gId => gId.cardId).slice(0, 1)
