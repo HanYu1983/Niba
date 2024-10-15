@@ -175,7 +175,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
             "id": "PlayerA_1",
             "protoID": "179003_01A_O_WT001C_white",
             "ownerID": "PlayerA",
-            "isFaceDown": true,
+            "isFaceDown": false,
             "isRoll": false
         },
         "PlayerA_2": {
@@ -221,7 +221,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
             "protoID": "179009_03B_U_WT044U_white",
             "ownerID": "PlayerA",
             "isFaceDown": false,
-            "isRoll": true
+            "isRoll": false
         },
         "PlayerA_9": {
             "id": "PlayerA_9",
@@ -239,7 +239,8 @@ const TMP_CTX: GameStateWithFlowMemory = {
             "id": "PlayerA_11",
             "protoID": "179009_03B_U_WT045U_white",
             "ownerID": "PlayerA",
-            "isFaceDown": false
+            "isFaceDown": false,
+            "isRoll": false
         },
         "PlayerA_12": {
             "id": "PlayerA_12",
@@ -363,7 +364,8 @@ const TMP_CTX: GameStateWithFlowMemory = {
             "id": "PlayerA_31",
             "protoID": "179024_03B_U_WT042U_white",
             "ownerID": "PlayerA",
-            "isFaceDown": true
+            "isFaceDown": false,
+            "isRoll": false
         },
         "PlayerA_32": {
             "id": "PlayerA_32",
@@ -516,7 +518,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
             "id": "PlayerB_56",
             "protoID": "179003_01A_U_GN008R_green_02",
             "ownerID": "PlayerB",
-            "isFaceDown": true,
+            "isFaceDown": false,
             "isRoll": false
         },
         "PlayerB_57": {
@@ -561,7 +563,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
             "protoID": "179009_03B_U_GN037C_green",
             "ownerID": "PlayerB",
             "isFaceDown": false,
-            "isRoll": false
+            "isRoll": true
         },
         "PlayerB_64": {
             "id": "PlayerB_64",
@@ -617,7 +619,8 @@ const TMP_CTX: GameStateWithFlowMemory = {
             "id": "PlayerB_72",
             "protoID": "179016_04B_CH_GN035R_green",
             "ownerID": "PlayerB",
-            "isFaceDown": true
+            "isFaceDown": false,
+            "isRoll": false
         },
         "PlayerB_73": {
             "id": "PlayerB_73",
@@ -743,7 +746,8 @@ const TMP_CTX: GameStateWithFlowMemory = {
             "id": "PlayerB_92",
             "protoID": "179901_00_C_GN007P_green",
             "ownerID": "PlayerB",
-            "isFaceDown": true
+            "isFaceDown": false,
+            "isRoll": false
         },
         "PlayerB_93": {
             "id": "PlayerB_93",
@@ -769,14 +773,14 @@ const TMP_CTX: GameStateWithFlowMemory = {
             "protoID": "179901_CG_U_GN003P_green",
             "ownerID": "PlayerB",
             "isFaceDown": false,
-            "isRoll": true
+            "isRoll": false
         },
         "PlayerB_97": {
             "id": "PlayerB_97",
             "protoID": "179901_CG_U_GN003P_green",
             "ownerID": "PlayerB",
             "isFaceDown": false,
-            "isRoll": false
+            "isRoll": true
         },
         "PlayerB_98": {
             "id": "PlayerB_98",
@@ -792,29 +796,42 @@ const TMP_CTX: GameStateWithFlowMemory = {
         }
     },
     "effects": {
-        "createPlayEffects_PlayerA_PlayerA_7_loadPrototype_179009_03B_U_WT044U_white_text_1": {
-            "id": "createPlayEffects_PlayerA_PlayerA_7_loadPrototype_179009_03B_U_WT044U_white_text_1",
+        "createPlayUnitEffect_PlayerA_47": {
+            "id": "createPlayUnitEffect_PlayerA_47",
             "reason": [
-                "PlayText",
+                "PlayCard",
                 "PlayerA",
-                "PlayerA_7",
-                "loadPrototype_179009_03B_U_WT044U_white_text_1"
+                "PlayerA_47",
+                {
+                    "isPlayUnit": true
+                }
             ],
-            "description": "（常時）〔１〕：自軍手札、または自軍ハンガーにある「特徴：メリクリウス系」を持つユニット１枚を、自軍配備エリアにリロール状態で出す。",
+            "description": "Play ウイングガンダム（EW）",
             "text": {
-                "id": "loadPrototype_179009_03B_U_WT044U_white_text_1",
-                "description": "（常時）〔１〕：自軍手札、または自軍ハンガーにある「特徴：メリクリウス系」を持つユニット１枚を、自軍配備エリアにリロール状態で出す。",
+                "id": "createPlayUnitEffect_PlayerA_47",
                 "title": [
                     "使用型",
                     [
-                        "常時"
+                        "自軍",
+                        "配備フェイズ"
                     ]
                 ],
+                "description": "Play ウイングガンダム（EW）",
                 "conditions": {
-                    "0[null]": {
+                    "合計国力〔x〕": {
+                        "actions": [
+                            {
+                                "title": [
+                                    "合計国力〔x〕",
+                                    5
+                                ]
+                            }
+                        ]
+                    },
+                    "橫置支付0[白]": {
                         "title": [
                             "RollColor",
-                            null
+                            "白"
                         ],
                         "actions": [
                             {
@@ -823,167 +840,54 @@ const TMP_CTX: GameStateWithFlowMemory = {
                                     "ロール"
                                 ],
                                 "vars": [
-                                    "0[null]"
+                                    "橫置支付0[白]"
                                 ]
                             }
-                        ]
+                        ],
+                        "groupKey": "支付橫置國力"
                     },
-                    "自軍手札、または自軍ハンガーにある「特徴：メリクリウス系」を持つユニット１枚": {
+                    "橫置支付1[白]": {
                         "title": [
-                            "Entity",
-                            {
-                                "side": "自軍",
-                                "at": [
-                                    "手札",
-                                    "ハンガー"
-                                ],
-                                "hasChar": [
-                                    "メリクリウス系"
-                                ],
-                                "is": [
-                                    "ユニット"
-                                ],
-                                "count": 1
-                            }
-                        ]
-                    },
-                    "同回合上限": {
+                            "RollColor",
+                            "白"
+                        ],
                         "actions": [
                             {
                                 "title": [
-                                    "同回合上限",
-                                    1
+                                    "_ロールする",
+                                    "ロール"
+                                ],
+                                "vars": [
+                                    "橫置支付1[白]"
                                 ]
                             }
-                        ]
+                        ],
+                        "groupKey": "支付橫置國力"
+                    },
+                    "橫置支付2[白]": {
+                        "title": [
+                            "RollColor",
+                            "白"
+                        ],
+                        "actions": [
+                            {
+                                "title": [
+                                    "_ロールする",
+                                    "ロール"
+                                ],
+                                "vars": [
+                                    "橫置支付2[白]"
+                                ]
+                            }
+                        ],
+                        "groupKey": "支付橫置國力"
                     }
                 },
                 "logicTreeActions": [
                     {
                         "actions": [
                             {
-                                "title": [
-                                    "cutIn",
-                                    [
-                                        {
-                                            "title": [
-                                                "_の_ハンガーに移す",
-                                                "自軍",
-                                                "配備エリア"
-                                            ],
-                                            "vars": [
-                                                "自軍手札、または自軍ハンガーにある「特徴：メリクリウス系」を持つユニット１枚"
-                                            ]
-                                        }
-                                    ]
-                                ]
-                            }
-                        ]
-                    }
-                ]
-            }
-        },
-        "createPlayEffects_PlayerA_PlayerA_7_loadPrototype_179009_03B_U_WT044U_white_text_2": {
-            "id": "createPlayEffects_PlayerA_PlayerA_7_loadPrototype_179009_03B_U_WT044U_white_text_2",
-            "reason": [
-                "PlayText",
-                "PlayerA",
-                "PlayerA_7",
-                "loadPrototype_179009_03B_U_WT044U_white_text_2"
-            ],
-            "description": "（戦闘フェイズ）：［ ］の特徴を持つ自軍ユニット１枚は、ターン終了時まで、このカードの本来のテキスト１つと同じテキストを得る。ただし同じテキストは得られない）",
-            "text": {
-                "id": "loadPrototype_179009_03B_U_WT044U_white_text_2",
-                "title": [
-                    "使用型",
-                    [
-                        "戦闘フェイズ"
-                    ]
-                ],
-                "description": "（戦闘フェイズ）：［ ］の特徴を持つ自軍ユニット１枚は、ターン終了時まで、このカードの本来のテキスト１つと同じテキストを得る。ただし同じテキストは得られない）",
-                "conditions": {
-                    "橫置支付0[null]": {
-                        "title": [
-                            "RollColor",
-                            null
-                        ],
-                        "actions": [
-                            {
-                                "title": [
-                                    "_ロールする",
-                                    "ロール"
-                                ],
-                                "vars": [
-                                    "橫置支付0[null]"
-                                ]
-                            }
-                        ],
-                        "groupKey": "支付橫置國力"
-                    },
-                    "橫置支付1[null]": {
-                        "title": [
-                            "RollColor",
-                            null
-                        ],
-                        "actions": [
-                            {
-                                "title": [
-                                    "_ロールする",
-                                    "ロール"
-                                ],
-                                "vars": [
-                                    "橫置支付1[null]"
-                                ]
-                            }
-                        ],
-                        "groupKey": "支付橫置國力"
-                    },
-                    "このカードの本来のテキスト１つ": {
-                        "title": [
-                            "このカードの_本来のテキスト１つ",
-                            true,
-                            1
-                        ]
-                    },
-                    "［ ］の特徴を持つ自軍ユニット１枚は": {
-                        "title": [
-                            "_本来の記述に｢特徴：_装弾｣を持つ_自軍_G_１枚",
-                            false,
-                            "メリクリウス系",
-                            "自軍",
-                            "ユニット",
-                            1
-                        ],
-                        "exceptItemSelf": true,
-                        "actions": [
-                            {
-                                "title": "function _(ctx3, effect, { GameStateFn, DefineFn }) {\n                    const cardId2 = DefineFn.EffectFn.getCardID(effect), pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx3, \"\\uFF3B \\uFF3D\\u306E\\u7279\\u5FB4\\u3092\\u6301\\u3064\\u81EA\\u8ECD\\u30E6\\u30CB\\u30C3\\u30C8\\uFF11\\u679A\\u306F\", cardId2), textRefIds = GameStateFn.getCardTipTextRefs(ctx3, \"\\u3053\\u306E\\u30AB\\u30FC\\u30C9\\u306E\\u672C\\u6765\\u306E\\u30C6\\u30AD\\u30B9\\u30C8\\uFF11\\u3064\", cardId2).map((tr) => tr.textId);\n                    for (let pair2 of pairs)\n                      if (GameStateFn.getCardTexts(ctx3, pair2[0]).find((text2) => textRefIds.includes(text2.id)))\n                        throw new DefineFn.TipError(`\\u5DF2\\u6709\\u540C\\u6A23\\u7684\\u5167\\u6587: ${JSON.stringify(textRefIds)}`, { hasSameText: !0 });\n                    return ctx3;\n                  }"
-                            }
-                        ]
-                    },
-                    "同回合上限": {
-                        "actions": [
-                            {
-                                "title": [
-                                    "同回合上限",
-                                    1
-                                ]
-                            }
-                        ]
-                    }
-                },
-                "logicTreeActions": [
-                    {
-                        "actions": [
-                            {
-                                "title": [
-                                    "cutIn",
-                                    [
-                                        {
-                                            "title": "function _(ctx3, effect, { GameStateFn, DefineFn }) {\n                        const cardId2 = DefineFn.EffectFn.getCardID(effect), pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx3, \"\\uFF3B \\uFF3D\\u306E\\u7279\\u5FB4\\u3092\\u6301\\u3064\\u81EA\\u8ECD\\u30E6\\u30CB\\u30C3\\u30C8\\uFF11\\u679A\\u306F\", cardId2), textRefs = GameStateFn.getCardTipTextRefs(ctx3, \"\\u3053\\u306E\\u30AB\\u30FC\\u30C9\\u306E\\u672C\\u6765\\u306E\\u30C6\\u30AD\\u30B9\\u30C8\\uFF11\\u3064\", cardId2);\n                        for (let pair2 of pairs) {\n                          GameStateFn.assertTargetMissingError(ctx3, pair2);\n                          const [targetCardId, targetBasyou] = pair2;\n                          ctx3 = GameStateFn.mapItemState(ctx3, targetCardId, (targetItemState) => {\n                            for (let textRef of textRefs) {\n                              if (GameStateFn.getCardTexts(ctx3, targetItemState.id).find((text2) => text2.id == textRef.textId) != null)\n                                continue;\n                              targetItemState = DefineFn.ItemStateFn.setGlobalEffect(targetItemState, null, {\n                                title: [\"AddTextRef\", textRef],\n                                cardIds: [targetItemState.id]\n                              }, { isRemoveOnTurnEnd: !0 });\n                            }\n                            return targetItemState;\n                          });\n                        }\n                        return ctx3;\n                      }"
-                                        }
-                                    ]
-                                ]
+                                "title": "function _(ctx3, effect, { DefineFn, GameStateFn, ToolFn: ToolFn2 }) {\n              const cardId2 = DefineFn.EffectFn.getCardID(effect), from = GameStateFn.getItemBaSyou(ctx3, cardId2);\n              ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, \"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u3044\\u308B\\u30AB\\u30FC\\u30C9\"), [cardId2, from]);\n              const newE = GameStateFn.createUnitGoStageEffectFromPlayEffect(ctx3, effect);\n              return GameStateFn.addStackEffect(ctx3, newE);\n            }"
                             }
                         ]
                     }
@@ -1385,12 +1289,304 @@ const TMP_CTX: GameStateWithFlowMemory = {
                     }
                 ]
             }
+        },
+        "createPlayEffects_PlayerA_PlayerA_7_loadPrototype_179009_03B_U_WT044U_white_text_1": {
+            "id": "createPlayEffects_PlayerA_PlayerA_7_loadPrototype_179009_03B_U_WT044U_white_text_1",
+            "reason": [
+                "PlayText",
+                "PlayerA",
+                "PlayerA_7",
+                "loadPrototype_179009_03B_U_WT044U_white_text_1"
+            ],
+            "description": "（常時）〔１〕：自軍手札、または自軍ハンガーにある「特徴：メリクリウス系」を持つユニット１枚を、自軍配備エリアにリロール状態で出す。",
+            "text": {
+                "id": "loadPrototype_179009_03B_U_WT044U_white_text_1",
+                "description": "（常時）〔１〕：自軍手札、または自軍ハンガーにある「特徴：メリクリウス系」を持つユニット１枚を、自軍配備エリアにリロール状態で出す。",
+                "title": [
+                    "使用型",
+                    [
+                        "常時"
+                    ]
+                ],
+                "conditions": {
+                    "0[null]": {
+                        "title": [
+                            "RollColor",
+                            null
+                        ],
+                        "actions": [
+                            {
+                                "title": [
+                                    "_ロールする",
+                                    "ロール"
+                                ],
+                                "vars": [
+                                    "0[null]"
+                                ]
+                            }
+                        ]
+                    },
+                    "自軍手札、または自軍ハンガーにある「特徴：メリクリウス系」を持つユニット１枚": {
+                        "title": [
+                            "Entity",
+                            {
+                                "side": "自軍",
+                                "at": [
+                                    "手札",
+                                    "ハンガー"
+                                ],
+                                "hasChar": [
+                                    "メリクリウス系"
+                                ],
+                                "is": [
+                                    "ユニット"
+                                ],
+                                "count": 1
+                            }
+                        ]
+                    },
+                    "同回合上限": {
+                        "actions": [
+                            {
+                                "title": [
+                                    "同回合上限",
+                                    1
+                                ]
+                            }
+                        ]
+                    }
+                },
+                "logicTreeActions": [
+                    {
+                        "actions": [
+                            {
+                                "title": [
+                                    "cutIn",
+                                    [
+                                        {
+                                            "title": [
+                                                "_の_ハンガーに移す",
+                                                "自軍",
+                                                "配備エリア"
+                                            ],
+                                            "vars": [
+                                                "自軍手札、または自軍ハンガーにある「特徴：メリクリウス系」を持つユニット１枚"
+                                            ]
+                                        }
+                                    ]
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "createPlayEffects_PlayerA_PlayerA_7_loadPrototype_179009_03B_U_WT044U_white_text_2": {
+            "id": "createPlayEffects_PlayerA_PlayerA_7_loadPrototype_179009_03B_U_WT044U_white_text_2",
+            "reason": [
+                "PlayText",
+                "PlayerA",
+                "PlayerA_7",
+                "loadPrototype_179009_03B_U_WT044U_white_text_2"
+            ],
+            "description": "（戦闘フェイズ）：［ ］の特徴を持つ自軍ユニット１枚は、ターン終了時まで、このカードの本来のテキスト１つと同じテキストを得る。ただし同じテキストは得られない）",
+            "text": {
+                "id": "loadPrototype_179009_03B_U_WT044U_white_text_2",
+                "title": [
+                    "使用型",
+                    [
+                        "戦闘フェイズ"
+                    ]
+                ],
+                "description": "（戦闘フェイズ）：［ ］の特徴を持つ自軍ユニット１枚は、ターン終了時まで、このカードの本来のテキスト１つと同じテキストを得る。ただし同じテキストは得られない）",
+                "conditions": {
+                    "橫置支付0[null]": {
+                        "title": [
+                            "RollColor",
+                            null
+                        ],
+                        "actions": [
+                            {
+                                "title": [
+                                    "_ロールする",
+                                    "ロール"
+                                ],
+                                "vars": [
+                                    "橫置支付0[null]"
+                                ]
+                            }
+                        ],
+                        "groupKey": "支付橫置國力"
+                    },
+                    "橫置支付1[null]": {
+                        "title": [
+                            "RollColor",
+                            null
+                        ],
+                        "actions": [
+                            {
+                                "title": [
+                                    "_ロールする",
+                                    "ロール"
+                                ],
+                                "vars": [
+                                    "橫置支付1[null]"
+                                ]
+                            }
+                        ],
+                        "groupKey": "支付橫置國力"
+                    },
+                    "このカードの本来のテキスト１つ": {
+                        "title": [
+                            "このカードの_本来のテキスト１つ",
+                            true,
+                            1
+                        ]
+                    },
+                    "［ ］の特徴を持つ自軍ユニット１枚は": {
+                        "title": [
+                            "_本来の記述に｢特徴：_装弾｣を持つ_自軍_G_１枚",
+                            false,
+                            "メリクリウス系",
+                            "自軍",
+                            "ユニット",
+                            1
+                        ],
+                        "exceptItemSelf": true,
+                        "actions": [
+                            {
+                                "title": "function _(ctx3, effect, { GameStateFn, DefineFn }) {\n                    const cardId2 = DefineFn.EffectFn.getCardID(effect), pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx3, \"\\uFF3B \\uFF3D\\u306E\\u7279\\u5FB4\\u3092\\u6301\\u3064\\u81EA\\u8ECD\\u30E6\\u30CB\\u30C3\\u30C8\\uFF11\\u679A\\u306F\", cardId2), textRefIds = GameStateFn.getCardTipTextRefs(ctx3, \"\\u3053\\u306E\\u30AB\\u30FC\\u30C9\\u306E\\u672C\\u6765\\u306E\\u30C6\\u30AD\\u30B9\\u30C8\\uFF11\\u3064\", cardId2).map((tr) => tr.textId);\n                    for (let pair2 of pairs)\n                      if (GameStateFn.getCardTexts(ctx3, pair2[0]).find((text2) => textRefIds.includes(text2.id)))\n                        throw new DefineFn.TipError(`\\u5DF2\\u6709\\u540C\\u6A23\\u7684\\u5167\\u6587: ${JSON.stringify(textRefIds)}`, { hasSameText: !0 });\n                    return ctx3;\n                  }"
+                            }
+                        ]
+                    },
+                    "同回合上限": {
+                        "actions": [
+                            {
+                                "title": [
+                                    "同回合上限",
+                                    1
+                                ]
+                            }
+                        ]
+                    }
+                },
+                "logicTreeActions": [
+                    {
+                        "actions": [
+                            {
+                                "title": [
+                                    "cutIn",
+                                    [
+                                        {
+                                            "title": "function _(ctx3, effect, { GameStateFn, DefineFn }) {\n                        const cardId2 = DefineFn.EffectFn.getCardID(effect), pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx3, \"\\uFF3B \\uFF3D\\u306E\\u7279\\u5FB4\\u3092\\u6301\\u3064\\u81EA\\u8ECD\\u30E6\\u30CB\\u30C3\\u30C8\\uFF11\\u679A\\u306F\", cardId2), textRefs = GameStateFn.getCardTipTextRefs(ctx3, \"\\u3053\\u306E\\u30AB\\u30FC\\u30C9\\u306E\\u672C\\u6765\\u306E\\u30C6\\u30AD\\u30B9\\u30C8\\uFF11\\u3064\", cardId2);\n                        for (let pair2 of pairs) {\n                          GameStateFn.assertTargetMissingError(ctx3, pair2);\n                          const [targetCardId, targetBasyou] = pair2;\n                          ctx3 = GameStateFn.mapItemState(ctx3, targetCardId, (targetItemState) => {\n                            for (let textRef of textRefs) {\n                              if (GameStateFn.getCardTexts(ctx3, targetItemState.id).find((text2) => text2.id == textRef.textId) != null)\n                                continue;\n                              targetItemState = DefineFn.ItemStateFn.setGlobalEffect(targetItemState, null, {\n                                title: [\"AddTextRef\", textRef],\n                                cardIds: [targetItemState.id]\n                              }, { isRemoveOnTurnEnd: !0 });\n                            }\n                            return targetItemState;\n                          });\n                        }\n                        return ctx3;\n                      }"
+                                        }
+                                    ]
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "createPlayEffects_PlayerA_PlayerA_1_loadPrototype_179003_01A_O_WT001C_white_text_0": {
+            "id": "createPlayEffects_PlayerA_PlayerA_1_loadPrototype_179003_01A_O_WT001C_white_text_0",
+            "reason": [
+                "PlayText",
+                "PlayerA",
+                "PlayerA_1",
+                "loadPrototype_179003_01A_O_WT001C_white_text_0"
+            ],
+            "description": "（敵軍戦闘フェイズ）〔白２毎〕：自軍ユニット１枚は、ターン終了時まで「速攻」、または「高機動」１つを得る。",
+            "text": {
+                "id": "loadPrototype_179003_01A_O_WT001C_white_text_0",
+                "description": "（敵軍戦闘フェイズ）〔白２毎〕：自軍ユニット１枚は、ターン終了時まで「速攻」、または「高機動」１つを得る。",
+                "title": [
+                    "使用型",
+                    [
+                        "敵軍",
+                        "戦闘フェイズ"
+                    ]
+                ],
+                "isEachTime": true,
+                "conditions": {
+                    "0[白]": {
+                        "title": [
+                            "RollColor",
+                            "白"
+                        ],
+                        "actions": [
+                            {
+                                "title": [
+                                    "_ロールする",
+                                    "ロール"
+                                ],
+                                "vars": [
+                                    "0[白]"
+                                ]
+                            }
+                        ]
+                    },
+                    "1[白]": {
+                        "title": [
+                            "RollColor",
+                            "白"
+                        ],
+                        "actions": [
+                            {
+                                "title": [
+                                    "_ロールする",
+                                    "ロール"
+                                ],
+                                "vars": [
+                                    "1[白]"
+                                ]
+                            }
+                        ]
+                    },
+                    "自軍ユニット１枚": {
+                        "title": [
+                            "_自軍_ユニット_１枚",
+                            "自軍",
+                            "ユニット",
+                            1
+                        ]
+                    },
+                    "「速攻」、または「高機動」１つ": {
+                        "title": "function _(ctx, effect, { DefineFn, GameStateFn }) {\n                        const ge1 = {\n                            title: [\"AddText\", {\n                                    id: `179003_01A_O_WT001C_white_gain_1`,\n                                    title: [\"特殊型\", [\"速攻\"]],\n                                    description: \"速攻\"\n                                }],\n                            cardIds: []\n                        };\n                        const ge2 = {\n                            title: [\"AddText\", {\n                                    id: `179003_01A_O_WT001C_white_gain_2`,\n                                    title: [\"特殊型\", [\"高機動\"]],\n                                    description: \"高機動\"\n                                }],\n                            cardIds: []\n                        };\n                        return {\n                            title: [\"GlobalEffects\", [ge1, ge2], [ge1]],\n                            count: 1\n                        };\n                    }"
+                    },
+                    "同回合上限": {
+                        "actions": [
+                            {
+                                "title": [
+                                    "同回合上限",
+                                    1
+                                ]
+                            }
+                        ]
+                    }
+                },
+                "logicTreeActions": [
+                    {
+                        "actions": [
+                            {
+                                "title": [
+                                    "cutIn",
+                                    [
+                                        {
+                                            "title": "function _(ctx, effect, { DefineFn, GameStateFn }) {\n                                            const cardId = DefineFn.EffectFn.getCardID(effect);\n                                            const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, \"自軍ユニット１枚\", cardId);\n                                            const selections = GameStateFn.getCardTipSelection(ctx, \"「速攻」、または「高機動」１つ\", cardId);\n                                            pairs.forEach(pair => {\n                                                selections.forEach(ge => {\n                                                    ge.cardIds = [pair[0]];\n                                                    ctx = GameStateFn.doItemSetGlobalEffectsUntilEndOfTurn(ctx, [ge], pair);\n                                                });\n                                            });\n                                            return ctx;\n                                        }"
+                                        }
+                                    ]
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
         }
     },
     "table": {
         "cardStack": {
             "[\"PlayerA\",\"本国\"]": [
-                "PlayerA_31",
                 "PlayerA_10",
                 "PlayerA_43",
                 "PlayerA_13",
@@ -1428,7 +1624,6 @@ const TMP_CTX: GameStateWithFlowMemory = {
                 "PlayerA_35"
             ],
             "[\"PlayerB\",\"本国\"]": [
-                "PlayerB_72",
                 "PlayerB_59",
                 "PlayerB_62",
                 "PlayerB_61",
@@ -1465,39 +1660,36 @@ const TMP_CTX: GameStateWithFlowMemory = {
             ],
             "[\"PlayerA\",\"手札\"]": [
                 "PlayerA_47",
-                "PlayerA_33",
-                "PlayerA_1"
+                "PlayerA_33"
             ],
             "[\"PlayerB\",\"手札\"]": [
-                "PlayerB_92",
-                "PlayerB_91",
-                "PlayerB_56"
+                "PlayerB_91"
             ],
             "[\"PlayerA\",\"Gゾーン\"]": [
                 "PlayerA_5",
                 "PlayerA_46",
                 "PlayerA_14",
-                "PlayerA_25"
+                "PlayerA_25",
+                "PlayerA_31"
             ],
             "[\"PlayerB\",\"Gゾーン\"]": [
                 "PlayerB_74",
                 "PlayerB_85",
                 "PlayerB_63",
-                "PlayerB_97"
+                "PlayerB_97",
+                "PlayerB_56"
             ],
             "[\"PlayerB\",\"プレイされているカード\"]": [],
-            "[\"PlayerB\",\"配備エリア\"]": [
-                "PlayerB_75",
-                "PlayerB_96"
-            ],
+            "[\"PlayerB\",\"配備エリア\"]": [],
             "[\"PlayerA\",\"プレイされているカード\"]": [],
             "[\"PlayerA\",\"配備エリア\"]": [
                 "PlayerA_7",
-                "PlayerA_11",
-                "PlayerA_8"
+                "PlayerA_1"
             ],
             "[\"PlayerB\",\"戦闘エリア1\"]": [
-                "PlayerB_82"
+                "PlayerB_96",
+                "PlayerB_75",
+                "PlayerB_72"
             ],
             "[\"PlayerA\",\"捨て山\"]": [
                 "PlayerA_12",
@@ -1505,7 +1697,10 @@ const TMP_CTX: GameStateWithFlowMemory = {
                 "PlayerA_37",
                 "PlayerA_15"
             ],
-            "[\"PlayerA\",\"戦闘エリア1\"]": [],
+            "[\"PlayerA\",\"戦闘エリア1\"]": [
+                "PlayerA_11",
+                "PlayerA_8"
+            ],
             "[\"PlayerB\",\"捨て山\"]": [
                 "PlayerB_67",
                 "PlayerB_58",
@@ -1513,6 +1708,10 @@ const TMP_CTX: GameStateWithFlowMemory = {
                 "PlayerB_95",
                 "PlayerB_81",
                 "PlayerB_71"
+            ],
+            "[\"PlayerB\",\"ジャンクヤード\"]": [
+                "PlayerB_82",
+                "PlayerB_92"
             ]
         }
     },
@@ -1531,7 +1730,17 @@ const TMP_CTX: GameStateWithFlowMemory = {
                         [],
                         [
                             [
-                                "PlayerB_82",
+                                "PlayerB_96",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "配備エリア"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerB_75",
                                 {
                                     "id": "AbsoluteBaSyou",
                                     "value": [
@@ -1552,6 +1761,16 @@ const TMP_CTX: GameStateWithFlowMemory = {
                         [
                             [
                                 "PlayerB_75",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "配備エリア"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerB_96",
                                 {
                                     "id": "AbsoluteBaSyou",
                                     "value": [
@@ -1688,7 +1907,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
             "isOpenForGain": false,
             "isCheat": false,
             "textIdsUseThisTurn": [],
-            "isAttack": false,
+            "isAttack": true,
             "isDefence": false
         },
         "PlayerA_7": {
@@ -2062,9 +2281,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
             "isFirstTurn": false,
             "isOpenForGain": false,
             "isCheat": false,
-            "textIdsUseThisTurn": [
-                //"loadPrototype_179009_03B_U_WT044U_white_text_2"
-            ],
+            "textIdsUseThisTurn": [],
             "isAttack": false,
             "isDefence": false
         },
@@ -2206,7 +2423,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
             "globalEffects": {},
             "varNamesRemoveOnTurnEnd": {},
             "isFirstTurn": false,
-            "isAttack": true,
+            "isAttack": false,
             "isDefence": false,
             "isOpenForGain": false,
             "isCheat": false,
@@ -2289,29 +2506,14 @@ const TMP_CTX: GameStateWithFlowMemory = {
                     "count": 1
                 }
             },
-            "globalEffects": {
-                // "setGlobalEffect_01928bfd-03e7-700a-b204-bf46fcd8f123": {
-                //     "title": [
-                //         "AddTextRef",
-                //         {
-                //             "cardId": "PlayerA_7",
-                //             "textId": "loadPrototype_179009_03B_U_WT044U_white_text_0"
-                //         }
-                //     ],
-                //     "cardIds": [
-                //         "PlayerA_11"
-                //     ]
-                // }
-            },
-            "varNamesRemoveOnTurnEnd": {
-                "setGlobalEffect_01928bfd-03e7-700a-b204-bf46fcd8f123": true
-            },
+            "globalEffects": {},
+            "varNamesRemoveOnTurnEnd": {},
             "isFirstTurn": false,
             "textIdsUseThisTurn": [],
             "isOpenForGain": false,
             "isCheat": false,
             "isAttack": false,
-            "isDefence": false
+            "isDefence": true
         },
         "PlayerA_8": {
             "id": "PlayerA_8",
@@ -2323,7 +2525,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
             "varNamesRemoveOnTurnEnd": {},
             "isFirstTurn": false,
             "isAttack": false,
-            "isDefence": false,
+            "isDefence": true,
             "isOpenForGain": false,
             "isCheat": false,
             "textIdsUseThisTurn": []
@@ -2339,7 +2541,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
                         "カード",
                         [
                             [
-                                "PlayerA_7",
+                                "PlayerA_8",
                                 {
                                     "id": "AbsoluteBaSyou",
                                     "value": [
@@ -2359,7 +2561,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
                                 }
                             ],
                             [
-                                "PlayerA_8",
+                                "PlayerA_7",
                                 {
                                     "id": "AbsoluteBaSyou",
                                     "value": [
@@ -2370,6 +2572,16 @@ const TMP_CTX: GameStateWithFlowMemory = {
                             ]
                         ],
                         [
+                            [
+                                "PlayerA_11",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "配備エリア"
+                                    ]
+                                }
+                            ],
                             [
                                 "PlayerA_8",
                                 {
@@ -2391,7 +2603,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
                         "カード",
                         [
                             [
-                                "PlayerA_7",
+                                "PlayerA_8",
                                 {
                                     "id": "AbsoluteBaSyou",
                                     "value": [
@@ -2411,7 +2623,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
                                 }
                             ],
                             [
-                                "PlayerA_8",
+                                "PlayerA_7",
                                 {
                                     "id": "AbsoluteBaSyou",
                                     "value": [
@@ -2604,13 +2816,469 @@ const TMP_CTX: GameStateWithFlowMemory = {
             },
             "globalEffects": {},
             "varNamesRemoveOnTurnEnd": {},
+            "isFirstTurn": false,
+            "isOpenForGain": false,
+            "isCheat": false,
+            "textIdsUseThisTurn": [],
+            "isAttack": true,
+            "isDefence": false
+        },
+        "PlayerA_1": {
+            "id": "PlayerA_1",
+            "damage": 0,
+            "destroyReason": null,
+            "flags": {},
+            "tips": {
+                "合計国力〔x〕": {
+                    "title": [
+                        "カード",
+                        [],
+                        [
+                            [
+                                "PlayerA_5",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerA_46",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerA_14",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerA_25",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerA",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ]
+                        ]
+                    ]
+                }
+            },
+            "globalEffects": {},
+            "varNamesRemoveOnTurnEnd": {},
+            "isFirstTurn": false,
+            "isOpenForGain": false,
+            "isCheat": false,
+            "textIdsUseThisTurn": [],
+            "isAttack": false,
+            "isDefence": false
+        },
+        "PlayerB_72": {
+            "id": "PlayerB_72",
+            "damage": 0,
+            "destroyReason": null,
+            "flags": {},
+            "tips": {
+                "一個自軍機體": {
+                    "title": [
+                        "カード",
+                        [
+                            [
+                                "PlayerB_75",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "配備エリア"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerB_96",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "配備エリア"
+                                    ]
+                                }
+                            ]
+                        ],
+                        [
+                            [
+                                "PlayerB_75",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "配備エリア"
+                                    ]
+                                }
+                            ]
+                        ]
+                    ],
+                    "count": 1
+                },
+                "橫置支付0[緑]": {
+                    "title": [
+                        "カード",
+                        [
+                            [
+                                "PlayerB_74",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerB_85",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerB_63",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerB_97",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerB_56",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ]
+                        ],
+                        [
+                            [
+                                "PlayerB_74",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ]
+                        ]
+                    ],
+                    "min": 1
+                },
+                "合計国力〔x〕": {
+                    "title": [
+                        "カード",
+                        [],
+                        [
+                            [
+                                "PlayerB_74",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerB_85",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerB_63",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerB_97",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerB_56",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ]
+                        ]
+                    ]
+                }
+            },
+            "globalEffects": {},
+            "varNamesRemoveOnTurnEnd": {},
             "isFirstTurn": true
+        },
+        "PlayerB_92": {
+            "id": "PlayerB_92",
+            "damage": 0,
+            "destroyReason": null,
+            "flags": {},
+            "tips": {
+                "橫置支付0[緑]": {
+                    "title": [
+                        "カード",
+                        [
+                            [
+                                "PlayerB_85",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerB_63",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerB_97",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerB_56",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ]
+                        ],
+                        [
+                            [
+                                "PlayerB_85",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ]
+                        ]
+                    ],
+                    "min": 1
+                },
+                "橫置支付1[緑]": {
+                    "title": [
+                        "カード",
+                        [
+                            [
+                                "PlayerB_63",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerB_97",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerB_56",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ]
+                        ],
+                        [
+                            [
+                                "PlayerB_63",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ]
+                        ]
+                    ],
+                    "min": 1
+                },
+                "橫置支付2[緑]": {
+                    "title": [
+                        "カード",
+                        [
+                            [
+                                "PlayerB_97",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerB_56",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ]
+                        ],
+                        [
+                            [
+                                "PlayerB_97",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ]
+                        ]
+                    ],
+                    "min": 1
+                },
+                "合計国力〔x〕": {
+                    "title": [
+                        "カード",
+                        [],
+                        [
+                            [
+                                "PlayerB_85",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerB_63",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerB_97",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ],
+                            [
+                                "PlayerB_56",
+                                {
+                                    "id": "AbsoluteBaSyou",
+                                    "value": [
+                                        "PlayerB",
+                                        "Gゾーン"
+                                    ]
+                                }
+                            ]
+                        ]
+                    ]
+                }
+            },
+            "globalEffects": {},
+            "varNamesRemoveOnTurnEnd": {}
         }
     },
     "phase": [
         "戦闘フェイズ",
         "防御ステップ",
-        "規定の効果"
+        "フリータイミング2"
     ],
     "playerStates": {
         "PlayerA": {
@@ -2633,178 +3301,227 @@ const TMP_CTX: GameStateWithFlowMemory = {
     "stackEffect": [],
     "destroyEffect": [],
     "commandEffects": [
-        "createPlayEffects_PlayerA_PlayerA_7_loadPrototype_179009_03B_U_WT044U_white_text_1",
-        "createPlayEffects_PlayerA_PlayerA_7_loadPrototype_179009_03B_U_WT044U_white_text_2",
+        "createPlayUnitEffect_PlayerA_47",
         "createPlayEffects_PlayerA_PlayerA_11_loadPrototype_179009_03B_U_WT045U_white_text_1",
         "createPlayEffects_PlayerA_PlayerA_11_loadPrototype_179009_03B_U_WT045U_white_text_2",
         "createPlayEffects_PlayerA_PlayerA_8_loadPrototype_179009_03B_U_WT044U_white_text_1",
-        "createPlayEffects_PlayerA_PlayerA_8_loadPrototype_179009_03B_U_WT044U_white_text_2"
+        "createPlayEffects_PlayerA_PlayerA_8_loadPrototype_179009_03B_U_WT044U_white_text_2",
+        "createPlayEffects_PlayerA_PlayerA_7_loadPrototype_179009_03B_U_WT044U_white_text_1",
+        "createPlayEffects_PlayerA_PlayerA_7_loadPrototype_179009_03B_U_WT044U_white_text_2",
+        "createPlayEffects_PlayerA_PlayerA_1_loadPrototype_179003_01A_O_WT001C_white_text_0"
     ],
     "commandEffectTips": [
         {
-            "effectId": "createPlayEffects_PlayerA_PlayerA_7_loadPrototype_179009_03B_U_WT044U_white_text_1",
+            "effectId": "createPlayUnitEffect_PlayerA_47",
             "conditionKeys": [
-                "0[null]",
-                "自軍手札、または自軍ハンガーにある「特徴：メリクリウス系」を持つユニット１枚",
-                "同回合上限"
+                "合計国力〔x〕",
+                "橫置支付0[白]",
+                "橫置支付1[白]",
+                "橫置支付2[白]"
             ],
             "logicID": 0,
             "logicSubID": 0,
             "tipOrErrors": [
                 {
-                    "effectId": "createPlayEffects_PlayerA_PlayerA_7_loadPrototype_179009_03B_U_WT044U_white_text_1",
-                    "conditionKey": "0[null]",
-                    "tip": {
-                        "title": [
-                            "カード",
-                            [],
-                            []
-                        ],
-                        "min": 1
-                    },
-                    "errors": [
-                        "min 0 not right: カード/1",
-                        "cardId: PlayerA_7 target not set yet: 0[null]"
-                    ]
-                },
-                {
-                    "effectId": "createPlayEffects_PlayerA_PlayerA_7_loadPrototype_179009_03B_U_WT044U_white_text_1",
-                    "conditionKey": "自軍手札、または自軍ハンガーにある「特徴：メリクリウス系」を持つユニット１枚",
-                    "tip": {
-                        "title": [
-                            "カード",
-                            [],
-                            []
-                        ],
-                        "count": 1
-                    },
-                    "errors": [
-                        "count 0 not right: カード/1"
-                    ]
-                },
-                {
-                    "effectId": "createPlayEffects_PlayerA_PlayerA_7_loadPrototype_179009_03B_U_WT044U_white_text_1",
-                    "conditionKey": "同回合上限",
+                    "effectId": "createPlayUnitEffect_PlayerA_47",
+                    "conditionKey": "合計国力〔x〕",
                     "tip": null,
                     "errors": []
-                }
-            ]
-        },
-        {
-            "effectId": "createPlayEffects_PlayerA_PlayerA_7_loadPrototype_179009_03B_U_WT044U_white_text_2",
-            "conditionKeys": [
-                "橫置支付0[null]",
-                "橫置支付1[null]",
-                "このカードの本来のテキスト１つ",
-                "［ ］の特徴を持つ自軍ユニット１枚は",
-                "同回合上限"
-            ],
-            "logicID": 0,
-            "logicSubID": 0,
-            "tipOrErrors": [
-                {
-                    "effectId": "createPlayEffects_PlayerA_PlayerA_7_loadPrototype_179009_03B_U_WT044U_white_text_2",
-                    "conditionKey": "橫置支付0[null]",
-                    "tip": {
-                        "title": [
-                            "カード",
-                            [],
-                            []
-                        ],
-                        "min": 1
-                    },
-                    "errors": [
-                        "min 0 not right: カード/1",
-                        "cardId: PlayerA_7 target not set yet: 橫置支付0[null]"
-                    ]
                 },
                 {
-                    "effectId": "createPlayEffects_PlayerA_PlayerA_7_loadPrototype_179009_03B_U_WT044U_white_text_2",
-                    "conditionKey": "橫置支付1[null]",
-                    "tip": {
-                        "title": [
-                            "カード",
-                            [],
-                            []
-                        ],
-                        "min": 1
-                    },
-                    "errors": [
-                        "min 0 not right: カード/1",
-                        "cardId: PlayerA_7 target not set yet: 橫置支付1[null]"
-                    ]
-                },
-                {
-                    "effectId": "createPlayEffects_PlayerA_PlayerA_7_loadPrototype_179009_03B_U_WT044U_white_text_2",
-                    "conditionKey": "このカードの本来のテキスト１つ",
-                    "tip": {
-                        "title": [
-                            "テキスト",
-                            [
-                                {
-                                    "cardId": "PlayerA_7",
-                                    "textId": "loadPrototype_179009_03B_U_WT044U_white_text_0"
-                                },
-                                {
-                                    "cardId": "PlayerA_7",
-                                    "textId": "loadPrototype_179009_03B_U_WT044U_white_text_1"
-                                }
-                            ],
-                            [
-                                {
-                                    "cardId": "PlayerA_7",
-                                    "textId": "loadPrototype_179009_03B_U_WT044U_white_text_0"
-                                }
-                            ]
-                        ],
-                        "count": 1
-                    },
-                    "errors": []
-                },
-                {
-                    "effectId": "createPlayEffects_PlayerA_PlayerA_7_loadPrototype_179009_03B_U_WT044U_white_text_2",
-                    "conditionKey": "［ ］の特徴を持つ自軍ユニット１枚は",
+                    "effectId": "createPlayUnitEffect_PlayerA_47",
+                    "conditionKey": "橫置支付0[白]",
                     "tip": {
                         "title": [
                             "カード",
                             [
                                 [
-                                    "PlayerA_11",
+                                    "PlayerA_5",
                                     {
                                         "id": "AbsoluteBaSyou",
                                         "value": [
                                             "PlayerA",
-                                            "配備エリア"
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_46",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_14",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_25",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_31",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
                                         ]
                                     }
                                 ]
                             ],
                             [
                                 [
-                                    "PlayerA_11",
+                                    "PlayerA_5",
                                     {
                                         "id": "AbsoluteBaSyou",
                                         "value": [
                                             "PlayerA",
-                                            "配備エリア"
+                                            "Gゾーン"
                                         ]
                                     }
                                 ]
                             ]
                         ],
-                        "count": 1
+                        "min": 1
                     },
-                    "errors": [
-                        "已有同樣的內文: [\"loadPrototype_179009_03B_U_WT044U_white_text_0\"]"
-                    ]
+                    "errors": []
                 },
                 {
-                    "effectId": "createPlayEffects_PlayerA_PlayerA_7_loadPrototype_179009_03B_U_WT044U_white_text_2",
-                    "conditionKey": "同回合上限",
-                    "tip": null,
-                    "errors": [
-                        "同回合上限: （戦闘フェイズ）：［ ］の特徴を持つ自軍ユニット１枚は、ターン終了時まで、このカードの本来のテキスト１つと同じテキストを得る。ただし同じテキストは得られない）"
-                    ]
+                    "effectId": "createPlayUnitEffect_PlayerA_47",
+                    "conditionKey": "橫置支付1[白]",
+                    "tip": {
+                        "title": [
+                            "カード",
+                            [
+                                [
+                                    "PlayerA_46",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_14",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_25",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_31",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ]
+                            ],
+                            [
+                                [
+                                    "PlayerA_46",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ]
+                            ]
+                        ],
+                        "min": 1
+                    },
+                    "errors": []
+                },
+                {
+                    "effectId": "createPlayUnitEffect_PlayerA_47",
+                    "conditionKey": "橫置支付2[白]",
+                    "tip": {
+                        "title": [
+                            "カード",
+                            [
+                                [
+                                    "PlayerA_14",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_25",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_31",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ]
+                            ],
+                            [
+                                [
+                                    "PlayerA_14",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ]
+                            ]
+                        ],
+                        "min": 1
+                    },
+                    "errors": []
                 }
             ]
         },
@@ -2824,15 +3541,74 @@ const TMP_CTX: GameStateWithFlowMemory = {
                     "tip": {
                         "title": [
                             "カード",
-                            [],
-                            []
+                            [
+                                [
+                                    "PlayerA_5",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_46",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_14",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_25",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_31",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ]
+                            ],
+                            [
+                                [
+                                    "PlayerA_5",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ]
+                            ]
                         ],
                         "min": 1
                     },
-                    "errors": [
-                        "min 0 not right: カード/1",
-                        "cardId: PlayerA_11 target not set yet: 0[null]"
-                    ]
+                    "errors": []
                 },
                 {
                     "effectId": "createPlayEffects_PlayerA_PlayerA_11_loadPrototype_179009_03B_U_WT045U_white_text_1",
@@ -2875,15 +3651,74 @@ const TMP_CTX: GameStateWithFlowMemory = {
                     "tip": {
                         "title": [
                             "カード",
-                            [],
-                            []
+                            [
+                                [
+                                    "PlayerA_5",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_46",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_14",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_25",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_31",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ]
+                            ],
+                            [
+                                [
+                                    "PlayerA_5",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ]
+                            ]
                         ],
                         "min": 1
                     },
-                    "errors": [
-                        "min 0 not right: カード/1",
-                        "cardId: PlayerA_11 target not set yet: 橫置支付0[null]"
-                    ]
+                    "errors": []
                 },
                 {
                     "effectId": "createPlayEffects_PlayerA_PlayerA_11_loadPrototype_179009_03B_U_WT045U_white_text_2",
@@ -2891,15 +3726,64 @@ const TMP_CTX: GameStateWithFlowMemory = {
                     "tip": {
                         "title": [
                             "カード",
-                            [],
-                            []
+                            [
+                                [
+                                    "PlayerA_46",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_14",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_25",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_31",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ]
+                            ],
+                            [
+                                [
+                                    "PlayerA_46",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ]
+                            ]
                         ],
                         "min": 1
                     },
-                    "errors": [
-                        "min 0 not right: カード/1",
-                        "cardId: PlayerA_11 target not set yet: 橫置支付1[null]"
-                    ]
+                    "errors": []
                 },
                 {
                     "effectId": "createPlayEffects_PlayerA_PlayerA_11_loadPrototype_179009_03B_U_WT045U_white_text_2",
@@ -2936,17 +3820,17 @@ const TMP_CTX: GameStateWithFlowMemory = {
                             "カード",
                             [
                                 [
-                                    "PlayerA_7",
+                                    "PlayerA_8",
                                     {
                                         "id": "AbsoluteBaSyou",
                                         "value": [
                                             "PlayerA",
-                                            "配備エリア"
+                                            "戦闘エリア1"
                                         ]
                                     }
                                 ],
                                 [
-                                    "PlayerA_8",
+                                    "PlayerA_7",
                                     {
                                         "id": "AbsoluteBaSyou",
                                         "value": [
@@ -2958,12 +3842,12 @@ const TMP_CTX: GameStateWithFlowMemory = {
                             ],
                             [
                                 [
-                                    "PlayerA_7",
+                                    "PlayerA_8",
                                     {
                                         "id": "AbsoluteBaSyou",
                                         "value": [
                                             "PlayerA",
-                                            "配備エリア"
+                                            "戦闘エリア1"
                                         ]
                                     }
                                 ]
@@ -2997,15 +3881,74 @@ const TMP_CTX: GameStateWithFlowMemory = {
                     "tip": {
                         "title": [
                             "カード",
-                            [],
-                            []
+                            [
+                                [
+                                    "PlayerA_5",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_46",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_14",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_25",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_31",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ]
+                            ],
+                            [
+                                [
+                                    "PlayerA_5",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ]
+                            ]
                         ],
                         "min": 1
                     },
-                    "errors": [
-                        "min 0 not right: カード/1",
-                        "cardId: PlayerA_8 target not set yet: 0[null]"
-                    ]
+                    "errors": []
                 },
                 {
                     "effectId": "createPlayEffects_PlayerA_PlayerA_8_loadPrototype_179009_03B_U_WT044U_white_text_1",
@@ -3048,15 +3991,74 @@ const TMP_CTX: GameStateWithFlowMemory = {
                     "tip": {
                         "title": [
                             "カード",
-                            [],
-                            []
+                            [
+                                [
+                                    "PlayerA_5",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_46",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_14",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_25",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_31",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ]
+                            ],
+                            [
+                                [
+                                    "PlayerA_5",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ]
+                            ]
                         ],
                         "min": 1
                     },
-                    "errors": [
-                        "min 0 not right: カード/1",
-                        "cardId: PlayerA_8 target not set yet: 橫置支付0[null]"
-                    ]
+                    "errors": []
                 },
                 {
                     "effectId": "createPlayEffects_PlayerA_PlayerA_8_loadPrototype_179009_03B_U_WT044U_white_text_2",
@@ -3064,15 +4066,64 @@ const TMP_CTX: GameStateWithFlowMemory = {
                     "tip": {
                         "title": [
                             "カード",
-                            [],
-                            []
+                            [
+                                [
+                                    "PlayerA_46",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_14",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_25",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_31",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ]
+                            ],
+                            [
+                                [
+                                    "PlayerA_46",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ]
+                            ]
                         ],
                         "min": 1
                     },
-                    "errors": [
-                        "min 0 not right: カード/1",
-                        "cardId: PlayerA_8 target not set yet: 橫置支付1[null]"
-                    ]
+                    "errors": []
                 },
                 {
                     "effectId": "createPlayEffects_PlayerA_PlayerA_8_loadPrototype_179009_03B_U_WT044U_white_text_2",
@@ -3114,6 +4165,551 @@ const TMP_CTX: GameStateWithFlowMemory = {
                                         "id": "AbsoluteBaSyou",
                                         "value": [
                                             "PlayerA",
+                                            "戦闘エリア1"
+                                        ]
+                                    }
+                                ]
+                            ],
+                            [
+                                [
+                                    "PlayerA_11",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "戦闘エリア1"
+                                        ]
+                                    }
+                                ]
+                            ]
+                        ],
+                        "count": 1
+                    },
+                    "errors": []
+                },
+                {
+                    "effectId": "createPlayEffects_PlayerA_PlayerA_8_loadPrototype_179009_03B_U_WT044U_white_text_2",
+                    "conditionKey": "同回合上限",
+                    "tip": null,
+                    "errors": []
+                }
+            ]
+        },
+        {
+            "effectId": "createPlayEffects_PlayerA_PlayerA_7_loadPrototype_179009_03B_U_WT044U_white_text_1",
+            "conditionKeys": [
+                "0[null]",
+                "自軍手札、または自軍ハンガーにある「特徴：メリクリウス系」を持つユニット１枚",
+                "同回合上限"
+            ],
+            "logicID": 0,
+            "logicSubID": 0,
+            "tipOrErrors": [
+                {
+                    "effectId": "createPlayEffects_PlayerA_PlayerA_7_loadPrototype_179009_03B_U_WT044U_white_text_1",
+                    "conditionKey": "0[null]",
+                    "tip": {
+                        "title": [
+                            "カード",
+                            [
+                                [
+                                    "PlayerA_5",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_46",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_14",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_25",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_31",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ]
+                            ],
+                            [
+                                [
+                                    "PlayerA_5",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ]
+                            ]
+                        ],
+                        "min": 1
+                    },
+                    "errors": []
+                },
+                {
+                    "effectId": "createPlayEffects_PlayerA_PlayerA_7_loadPrototype_179009_03B_U_WT044U_white_text_1",
+                    "conditionKey": "自軍手札、または自軍ハンガーにある「特徴：メリクリウス系」を持つユニット１枚",
+                    "tip": {
+                        "title": [
+                            "カード",
+                            [],
+                            []
+                        ],
+                        "count": 1
+                    },
+                    "errors": [
+                        "count 0 not right: カード/1"
+                    ]
+                },
+                {
+                    "effectId": "createPlayEffects_PlayerA_PlayerA_7_loadPrototype_179009_03B_U_WT044U_white_text_1",
+                    "conditionKey": "同回合上限",
+                    "tip": null,
+                    "errors": []
+                }
+            ]
+        },
+        {
+            "effectId": "createPlayEffects_PlayerA_PlayerA_7_loadPrototype_179009_03B_U_WT044U_white_text_2",
+            "conditionKeys": [
+                "橫置支付0[null]",
+                "橫置支付1[null]",
+                "このカードの本来のテキスト１つ",
+                "［ ］の特徴を持つ自軍ユニット１枚は",
+                "同回合上限"
+            ],
+            "logicID": 0,
+            "logicSubID": 0,
+            "tipOrErrors": [
+                {
+                    "effectId": "createPlayEffects_PlayerA_PlayerA_7_loadPrototype_179009_03B_U_WT044U_white_text_2",
+                    "conditionKey": "橫置支付0[null]",
+                    "tip": {
+                        "title": [
+                            "カード",
+                            [
+                                [
+                                    "PlayerA_5",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_46",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_14",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_25",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_31",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ]
+                            ],
+                            [
+                                [
+                                    "PlayerA_5",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ]
+                            ]
+                        ],
+                        "min": 1
+                    },
+                    "errors": []
+                },
+                {
+                    "effectId": "createPlayEffects_PlayerA_PlayerA_7_loadPrototype_179009_03B_U_WT044U_white_text_2",
+                    "conditionKey": "橫置支付1[null]",
+                    "tip": {
+                        "title": [
+                            "カード",
+                            [
+                                [
+                                    "PlayerA_46",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_14",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_25",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_31",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ]
+                            ],
+                            [
+                                [
+                                    "PlayerA_46",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ]
+                            ]
+                        ],
+                        "min": 1
+                    },
+                    "errors": []
+                },
+                {
+                    "effectId": "createPlayEffects_PlayerA_PlayerA_7_loadPrototype_179009_03B_U_WT044U_white_text_2",
+                    "conditionKey": "このカードの本来のテキスト１つ",
+                    "tip": {
+                        "title": [
+                            "テキスト",
+                            [
+                                {
+                                    "cardId": "PlayerA_7",
+                                    "textId": "loadPrototype_179009_03B_U_WT044U_white_text_0"
+                                },
+                                {
+                                    "cardId": "PlayerA_7",
+                                    "textId": "loadPrototype_179009_03B_U_WT044U_white_text_1"
+                                }
+                            ],
+                            [
+                                {
+                                    "cardId": "PlayerA_7",
+                                    "textId": "loadPrototype_179009_03B_U_WT044U_white_text_0"
+                                }
+                            ]
+                        ],
+                        "count": 1
+                    },
+                    "errors": []
+                },
+                {
+                    "effectId": "createPlayEffects_PlayerA_PlayerA_7_loadPrototype_179009_03B_U_WT044U_white_text_2",
+                    "conditionKey": "［ ］の特徴を持つ自軍ユニット１枚は",
+                    "tip": {
+                        "title": [
+                            "カード",
+                            [
+                                [
+                                    "PlayerA_11",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "戦闘エリア1"
+                                        ]
+                                    }
+                                ]
+                            ],
+                            [
+                                [
+                                    "PlayerA_11",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "戦闘エリア1"
+                                        ]
+                                    }
+                                ]
+                            ]
+                        ],
+                        "count": 1
+                    },
+                    "errors": []
+                },
+                {
+                    "effectId": "createPlayEffects_PlayerA_PlayerA_7_loadPrototype_179009_03B_U_WT044U_white_text_2",
+                    "conditionKey": "同回合上限",
+                    "tip": null,
+                    "errors": []
+                }
+            ]
+        },
+        {
+            "effectId": "createPlayEffects_PlayerA_PlayerA_1_loadPrototype_179003_01A_O_WT001C_white_text_0",
+            "conditionKeys": [
+                "0[白]",
+                "1[白]",
+                "自軍ユニット１枚",
+                "「速攻」、または「高機動」１つ",
+                "同回合上限"
+            ],
+            "logicID": 0,
+            "logicSubID": 0,
+            "tipOrErrors": [
+                {
+                    "effectId": "createPlayEffects_PlayerA_PlayerA_1_loadPrototype_179003_01A_O_WT001C_white_text_0",
+                    "conditionKey": "0[白]",
+                    "tip": {
+                        "title": [
+                            "カード",
+                            [
+                                [
+                                    "PlayerA_5",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_46",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_14",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_25",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_31",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ]
+                            ],
+                            [
+                                [
+                                    "PlayerA_5",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ]
+                            ]
+                        ],
+                        "min": 1
+                    },
+                    "errors": []
+                },
+                {
+                    "effectId": "createPlayEffects_PlayerA_PlayerA_1_loadPrototype_179003_01A_O_WT001C_white_text_0",
+                    "conditionKey": "1[白]",
+                    "tip": {
+                        "title": [
+                            "カード",
+                            [
+                                [
+                                    "PlayerA_46",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_14",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_25",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_31",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ]
+                            ],
+                            [
+                                [
+                                    "PlayerA_46",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "Gゾーン"
+                                        ]
+                                    }
+                                ]
+                            ]
+                        ],
+                        "min": 1
+                    },
+                    "errors": []
+                },
+                {
+                    "effectId": "createPlayEffects_PlayerA_PlayerA_1_loadPrototype_179003_01A_O_WT001C_white_text_0",
+                    "conditionKey": "自軍ユニット１枚",
+                    "tip": {
+                        "title": [
+                            "カード",
+                            [
+                                [
+                                    "PlayerA_11",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "戦闘エリア1"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_8",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
+                                            "戦闘エリア1"
+                                        ]
+                                    }
+                                ],
+                                [
+                                    "PlayerA_7",
+                                    {
+                                        "id": "AbsoluteBaSyou",
+                                        "value": [
+                                            "PlayerA",
                                             "配備エリア"
                                         ]
                                     }
@@ -3126,7 +4722,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
                                         "id": "AbsoluteBaSyou",
                                         "value": [
                                             "PlayerA",
-                                            "配備エリア"
+                                            "戦闘エリア1"
                                         ]
                                     }
                                 ]
@@ -3134,12 +4730,73 @@ const TMP_CTX: GameStateWithFlowMemory = {
                         ],
                         "count": 1
                     },
-                    "errors": [
-                        "已有同樣的內文: [\"loadPrototype_179009_03B_U_WT044U_white_text_0\"]"
-                    ]
+                    "errors": []
                 },
                 {
-                    "effectId": "createPlayEffects_PlayerA_PlayerA_8_loadPrototype_179009_03B_U_WT044U_white_text_2",
+                    "effectId": "createPlayEffects_PlayerA_PlayerA_1_loadPrototype_179003_01A_O_WT001C_white_text_0",
+                    "conditionKey": "「速攻」、または「高機動」１つ",
+                    "tip": {
+                        "title": [
+                            "GlobalEffects",
+                            [
+                                {
+                                    "title": [
+                                        "AddText",
+                                        {
+                                            "id": "179003_01A_O_WT001C_white_gain_1",
+                                            "title": [
+                                                "特殊型",
+                                                [
+                                                    "速攻"
+                                                ]
+                                            ],
+                                            "description": "速攻"
+                                        }
+                                    ],
+                                    "cardIds": []
+                                },
+                                {
+                                    "title": [
+                                        "AddText",
+                                        {
+                                            "id": "179003_01A_O_WT001C_white_gain_2",
+                                            "title": [
+                                                "特殊型",
+                                                [
+                                                    "高機動"
+                                                ]
+                                            ],
+                                            "description": "高機動"
+                                        }
+                                    ],
+                                    "cardIds": []
+                                }
+                            ],
+                            [
+                                {
+                                    "title": [
+                                        "AddText",
+                                        {
+                                            "id": "179003_01A_O_WT001C_white_gain_1",
+                                            "title": [
+                                                "特殊型",
+                                                [
+                                                    "速攻"
+                                                ]
+                                            ],
+                                            "description": "速攻"
+                                        }
+                                    ],
+                                    "cardIds": []
+                                }
+                            ]
+                        ],
+                        "count": 1
+                    },
+                    "errors": []
+                },
+                {
+                    "effectId": "createPlayEffects_PlayerA_PlayerA_1_loadPrototype_179003_01A_O_WT001C_white_text_0",
                     "conditionKey": "同回合上限",
                     "tip": null,
                     "errors": []
@@ -3156,416 +4813,306 @@ const TMP_CTX: GameStateWithFlowMemory = {
     "coins": {},
     "coinId2cardId": {},
     "globalEffectPool": {},
-    "messageTopId": 828,
+    "messageTopId": 1075,
     "messages": [
         {
-            "id": 827,
-            "description": "onSetPhase:戦闘フェイズ,防御ステップ,規定の効果"
+            "id": 1074,
+            "description": "onSetPhase:戦闘フェイズ,防御ステップ,フリータイミング2"
         },
         {
-            "id": 826,
-            "description": "onEvent: カット終了時 undefined"
-        },
-        {
-            "id": 825,
-            "description": "onEffectEnd: （戦闘フェイズ）：［ ］の特徴を持つ自軍ユニット１枚は、ターン終了時まで、このカードの本来のテキスト１つと同じテキストを得る。ただし同じテキストは得られない）"
-        },
-        {
-            "id": 824,
-            "description": "onEffectStart: （戦闘フェイズ）：［ ］の特徴を持つ自軍ユニット１枚は、ターン終了時まで、このカードの本来のテキスト１つと同じテキストを得る。ただし同じテキストは得られない）",
-            "effect": {
-                "id": "addStackEffect_01928bfc-cfe1-700a-ad73-f4025dfe2405",
-                "description": "（戦闘フェイズ）：［ ］の特徴を持つ自軍ユニット１枚は、ターン終了時まで、このカードの本来のテキスト１つと同じテキストを得る。ただし同じテキストは得られない）",
-                "reason": [
-                    "PlayText",
-                    "PlayerA",
-                    "PlayerA_7",
-                    "loadPrototype_179009_03B_U_WT044U_white_text_2"
-                ],
-                "text": {
-                    "id": "loadPrototype_179009_03B_U_WT044U_white_text_2",
-                    "description": "（戦闘フェイズ）：［ ］の特徴を持つ自軍ユニット１枚は、ターン終了時まで、このカードの本来のテキスト１つと同じテキストを得る。ただし同じテキストは得られない）",
-                    "title": [],
-                    "logicTreeActions": [
-                        {
-                            "actions": [
-                                {
-                                    "title": "function _(ctx3, effect, { GameStateFn, DefineFn }) {\n                        const cardId2 = DefineFn.EffectFn.getCardID(effect), pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx3, \"\\uFF3B \\uFF3D\\u306E\\u7279\\u5FB4\\u3092\\u6301\\u3064\\u81EA\\u8ECD\\u30E6\\u30CB\\u30C3\\u30C8\\uFF11\\u679A\\u306F\", cardId2), textRefs = GameStateFn.getCardTipTextRefs(ctx3, \"\\u3053\\u306E\\u30AB\\u30FC\\u30C9\\u306E\\u672C\\u6765\\u306E\\u30C6\\u30AD\\u30B9\\u30C8\\uFF11\\u3064\", cardId2);\n                        for (let pair2 of pairs) {\n                          GameStateFn.assertTargetMissingError(ctx3, pair2);\n                          const [targetCardId, targetBasyou] = pair2;\n                          ctx3 = GameStateFn.mapItemState(ctx3, targetCardId, (targetItemState) => {\n                            for (let textRef of textRefs) {\n                              if (GameStateFn.getCardTexts(ctx3, targetItemState.id).find((text2) => text2.id == textRef.textId) != null)\n                                continue;\n                              targetItemState = DefineFn.ItemStateFn.setGlobalEffect(targetItemState, null, {\n                                title: [\"AddTextRef\", textRef],\n                                cardIds: [targetItemState.id]\n                              }, { isRemoveOnTurnEnd: !0 });\n                            }\n                            return targetItemState;\n                          });\n                        }\n                        return ctx3;\n                      }"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "id": 823,
-            "description": "onEffectEnd: （戦闘フェイズ）：［ ］の特徴を持つ自軍ユニット１枚は、ターン終了時まで、このカードの本来のテキスト１つと同じテキストを得る。ただし同じテキストは得られない）"
-        },
-        {
-            "id": 822,
-            "description": "PlayerA_25.isRoll false => true",
-            "effect": {
-                "id": "createPlayEffects_PlayerA_PlayerA_7_loadPrototype_179009_03B_U_WT044U_white_text_2",
-                "reason": [
-                    "PlayText",
-                    "PlayerA",
-                    "PlayerA_7",
-                    "loadPrototype_179009_03B_U_WT044U_white_text_2"
-                ],
-                "description": "（戦闘フェイズ）：［ ］の特徴を持つ自軍ユニット１枚は、ターン終了時まで、このカードの本来のテキスト１つと同じテキストを得る。ただし同じテキストは得られない）",
-                "text": {
-                    "id": "loadPrototype_179009_03B_U_WT044U_white_text_2",
-                    "title": [
-                        "使用型",
-                        [
-                            "戦闘フェイズ"
-                        ]
-                    ],
-                    "description": "（戦闘フェイズ）：［ ］の特徴を持つ自軍ユニット１枚は、ターン終了時まで、このカードの本来のテキスト１つと同じテキストを得る。ただし同じテキストは得られない）",
-                    "conditions": {
-                        "橫置支付0[null]": {
-                            "title": [
-                                "RollColor",
-                                null
-                            ],
-                            "actions": [
-                                {
-                                    "title": [
-                                        "_ロールする",
-                                        "ロール"
-                                    ],
-                                    "vars": [
-                                        "橫置支付0[null]"
-                                    ]
-                                }
-                            ],
-                            "groupKey": "支付橫置國力"
-                        },
-                        "橫置支付1[null]": {
-                            "title": [
-                                "RollColor",
-                                null
-                            ],
-                            "actions": [
-                                {
-                                    "title": [
-                                        "_ロールする",
-                                        "ロール"
-                                    ],
-                                    "vars": [
-                                        "橫置支付1[null]"
-                                    ]
-                                }
-                            ],
-                            "groupKey": "支付橫置國力"
-                        },
-                        "このカードの本来のテキスト１つ": {
-                            "title": [
-                                "このカードの_本来のテキスト１つ",
-                                true,
-                                1
-                            ]
-                        },
-                        "［ ］の特徴を持つ自軍ユニット１枚は": {
-                            "title": [
-                                "_本来の記述に｢特徴：_装弾｣を持つ_自軍_G_１枚",
-                                false,
-                                "メリクリウス系",
-                                "自軍",
-                                "ユニット",
-                                1
-                            ],
-                            "exceptItemSelf": true,
-                            "actions": [
-                                {
-                                    "title": "function _(ctx3, effect, { GameStateFn, DefineFn }) {\n                    const cardId2 = DefineFn.EffectFn.getCardID(effect), pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx3, \"\\uFF3B \\uFF3D\\u306E\\u7279\\u5FB4\\u3092\\u6301\\u3064\\u81EA\\u8ECD\\u30E6\\u30CB\\u30C3\\u30C8\\uFF11\\u679A\\u306F\", cardId2), textRefIds = GameStateFn.getCardTipTextRefs(ctx3, \"\\u3053\\u306E\\u30AB\\u30FC\\u30C9\\u306E\\u672C\\u6765\\u306E\\u30C6\\u30AD\\u30B9\\u30C8\\uFF11\\u3064\", cardId2).map((tr) => tr.textId);\n                    for (let pair2 of pairs)\n                      if (GameStateFn.getCardTexts(ctx3, pair2[0]).find((text2) => textRefIds.includes(text2.id)))\n                        throw new DefineFn.TipError(`\\u5DF2\\u6709\\u540C\\u6A23\\u7684\\u5167\\u6587: ${JSON.stringify(textRefIds)}`, { hasSameText: !0 });\n                    return ctx3;\n                  }"
-                                }
-                            ]
-                        },
-                        "同回合上限": {
-                            "actions": [
-                                {
-                                    "title": [
-                                        "同回合上限",
-                                        1
-                                    ]
-                                }
-                            ]
-                        }
-                    },
-                    "logicTreeActions": [
-                        {
-                            "actions": [
-                                {
-                                    "title": [
-                                        "cutIn",
-                                        [
-                                            {
-                                                "title": "function _(ctx3, effect, { GameStateFn, DefineFn }) {\n                        const cardId2 = DefineFn.EffectFn.getCardID(effect), pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx3, \"\\uFF3B \\uFF3D\\u306E\\u7279\\u5FB4\\u3092\\u6301\\u3064\\u81EA\\u8ECD\\u30E6\\u30CB\\u30C3\\u30C8\\uFF11\\u679A\\u306F\", cardId2), textRefs = GameStateFn.getCardTipTextRefs(ctx3, \"\\u3053\\u306E\\u30AB\\u30FC\\u30C9\\u306E\\u672C\\u6765\\u306E\\u30C6\\u30AD\\u30B9\\u30C8\\uFF11\\u3064\", cardId2);\n                        for (let pair2 of pairs) {\n                          GameStateFn.assertTargetMissingError(ctx3, pair2);\n                          const [targetCardId, targetBasyou] = pair2;\n                          ctx3 = GameStateFn.mapItemState(ctx3, targetCardId, (targetItemState) => {\n                            for (let textRef of textRefs) {\n                              if (GameStateFn.getCardTexts(ctx3, targetItemState.id).find((text2) => text2.id == textRef.textId) != null)\n                                continue;\n                              targetItemState = DefineFn.ItemStateFn.setGlobalEffect(targetItemState, null, {\n                                title: [\"AddTextRef\", textRef],\n                                cardIds: [targetItemState.id]\n                              }, { isRemoveOnTurnEnd: !0 });\n                            }\n                            return targetItemState;\n                          });\n                        }\n                        return ctx3;\n                      }"
-                                            }
-                                        ]
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "id": 821,
-            "description": "PlayerA_14.isRoll false => true",
-            "effect": {
-                "id": "createPlayEffects_PlayerA_PlayerA_7_loadPrototype_179009_03B_U_WT044U_white_text_2",
-                "reason": [
-                    "PlayText",
-                    "PlayerA",
-                    "PlayerA_7",
-                    "loadPrototype_179009_03B_U_WT044U_white_text_2"
-                ],
-                "description": "（戦闘フェイズ）：［ ］の特徴を持つ自軍ユニット１枚は、ターン終了時まで、このカードの本来のテキスト１つと同じテキストを得る。ただし同じテキストは得られない）",
-                "text": {
-                    "id": "loadPrototype_179009_03B_U_WT044U_white_text_2",
-                    "title": [
-                        "使用型",
-                        [
-                            "戦闘フェイズ"
-                        ]
-                    ],
-                    "description": "（戦闘フェイズ）：［ ］の特徴を持つ自軍ユニット１枚は、ターン終了時まで、このカードの本来のテキスト１つと同じテキストを得る。ただし同じテキストは得られない）",
-                    "conditions": {
-                        "橫置支付0[null]": {
-                            "title": [
-                                "RollColor",
-                                null
-                            ],
-                            "actions": [
-                                {
-                                    "title": [
-                                        "_ロールする",
-                                        "ロール"
-                                    ],
-                                    "vars": [
-                                        "橫置支付0[null]"
-                                    ]
-                                }
-                            ],
-                            "groupKey": "支付橫置國力"
-                        },
-                        "橫置支付1[null]": {
-                            "title": [
-                                "RollColor",
-                                null
-                            ],
-                            "actions": [
-                                {
-                                    "title": [
-                                        "_ロールする",
-                                        "ロール"
-                                    ],
-                                    "vars": [
-                                        "橫置支付1[null]"
-                                    ]
-                                }
-                            ],
-                            "groupKey": "支付橫置國力"
-                        },
-                        "このカードの本来のテキスト１つ": {
-                            "title": [
-                                "このカードの_本来のテキスト１つ",
-                                true,
-                                1
-                            ]
-                        },
-                        "［ ］の特徴を持つ自軍ユニット１枚は": {
-                            "title": [
-                                "_本来の記述に｢特徴：_装弾｣を持つ_自軍_G_１枚",
-                                false,
-                                "メリクリウス系",
-                                "自軍",
-                                "ユニット",
-                                1
-                            ],
-                            "exceptItemSelf": true,
-                            "actions": [
-                                {
-                                    "title": "function _(ctx3, effect, { GameStateFn, DefineFn }) {\n                    const cardId2 = DefineFn.EffectFn.getCardID(effect), pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx3, \"\\uFF3B \\uFF3D\\u306E\\u7279\\u5FB4\\u3092\\u6301\\u3064\\u81EA\\u8ECD\\u30E6\\u30CB\\u30C3\\u30C8\\uFF11\\u679A\\u306F\", cardId2), textRefIds = GameStateFn.getCardTipTextRefs(ctx3, \"\\u3053\\u306E\\u30AB\\u30FC\\u30C9\\u306E\\u672C\\u6765\\u306E\\u30C6\\u30AD\\u30B9\\u30C8\\uFF11\\u3064\", cardId2).map((tr) => tr.textId);\n                    for (let pair2 of pairs)\n                      if (GameStateFn.getCardTexts(ctx3, pair2[0]).find((text2) => textRefIds.includes(text2.id)))\n                        throw new DefineFn.TipError(`\\u5DF2\\u6709\\u540C\\u6A23\\u7684\\u5167\\u6587: ${JSON.stringify(textRefIds)}`, { hasSameText: !0 });\n                    return ctx3;\n                  }"
-                                }
-                            ]
-                        },
-                        "同回合上限": {
-                            "actions": [
-                                {
-                                    "title": [
-                                        "同回合上限",
-                                        1
-                                    ]
-                                }
-                            ]
-                        }
-                    },
-                    "logicTreeActions": [
-                        {
-                            "actions": [
-                                {
-                                    "title": [
-                                        "cutIn",
-                                        [
-                                            {
-                                                "title": "function _(ctx3, effect, { GameStateFn, DefineFn }) {\n                        const cardId2 = DefineFn.EffectFn.getCardID(effect), pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx3, \"\\uFF3B \\uFF3D\\u306E\\u7279\\u5FB4\\u3092\\u6301\\u3064\\u81EA\\u8ECD\\u30E6\\u30CB\\u30C3\\u30C8\\uFF11\\u679A\\u306F\", cardId2), textRefs = GameStateFn.getCardTipTextRefs(ctx3, \"\\u3053\\u306E\\u30AB\\u30FC\\u30C9\\u306E\\u672C\\u6765\\u306E\\u30C6\\u30AD\\u30B9\\u30C8\\uFF11\\u3064\", cardId2);\n                        for (let pair2 of pairs) {\n                          GameStateFn.assertTargetMissingError(ctx3, pair2);\n                          const [targetCardId, targetBasyou] = pair2;\n                          ctx3 = GameStateFn.mapItemState(ctx3, targetCardId, (targetItemState) => {\n                            for (let textRef of textRefs) {\n                              if (GameStateFn.getCardTexts(ctx3, targetItemState.id).find((text2) => text2.id == textRef.textId) != null)\n                                continue;\n                              targetItemState = DefineFn.ItemStateFn.setGlobalEffect(targetItemState, null, {\n                                title: [\"AddTextRef\", textRef],\n                                cardIds: [targetItemState.id]\n                              }, { isRemoveOnTurnEnd: !0 });\n                            }\n                            return targetItemState;\n                          });\n                        }\n                        return ctx3;\n                      }"
-                                            }
-                                        ]
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "id": 820,
-            "description": "onEffectStart: （戦闘フェイズ）：［ ］の特徴を持つ自軍ユニット１枚は、ターン終了時まで、このカードの本来のテキスト１つと同じテキストを得る。ただし同じテキストは得られない）",
-            "effect": {
-                "id": "createPlayEffects_PlayerA_PlayerA_7_loadPrototype_179009_03B_U_WT044U_white_text_2",
-                "reason": [
-                    "PlayText",
-                    "PlayerA",
-                    "PlayerA_7",
-                    "loadPrototype_179009_03B_U_WT044U_white_text_2"
-                ],
-                "description": "（戦闘フェイズ）：［ ］の特徴を持つ自軍ユニット１枚は、ターン終了時まで、このカードの本来のテキスト１つと同じテキストを得る。ただし同じテキストは得られない）",
-                "text": {
-                    "id": "loadPrototype_179009_03B_U_WT044U_white_text_2",
-                    "title": [
-                        "使用型",
-                        [
-                            "戦闘フェイズ"
-                        ]
-                    ],
-                    "description": "（戦闘フェイズ）：［ ］の特徴を持つ自軍ユニット１枚は、ターン終了時まで、このカードの本来のテキスト１つと同じテキストを得る。ただし同じテキストは得られない）",
-                    "conditions": {
-                        "橫置支付0[null]": {
-                            "title": [
-                                "RollColor",
-                                null
-                            ],
-                            "actions": [
-                                {
-                                    "title": [
-                                        "_ロールする",
-                                        "ロール"
-                                    ],
-                                    "vars": [
-                                        "橫置支付0[null]"
-                                    ]
-                                }
-                            ],
-                            "groupKey": "支付橫置國力"
-                        },
-                        "橫置支付1[null]": {
-                            "title": [
-                                "RollColor",
-                                null
-                            ],
-                            "actions": [
-                                {
-                                    "title": [
-                                        "_ロールする",
-                                        "ロール"
-                                    ],
-                                    "vars": [
-                                        "橫置支付1[null]"
-                                    ]
-                                }
-                            ],
-                            "groupKey": "支付橫置國力"
-                        },
-                        "このカードの本来のテキスト１つ": {
-                            "title": [
-                                "このカードの_本来のテキスト１つ",
-                                true,
-                                1
-                            ]
-                        },
-                        "［ ］の特徴を持つ自軍ユニット１枚は": {
-                            "title": [
-                                "_本来の記述に｢特徴：_装弾｣を持つ_自軍_G_１枚",
-                                false,
-                                "メリクリウス系",
-                                "自軍",
-                                "ユニット",
-                                1
-                            ],
-                            "exceptItemSelf": true,
-                            "actions": [
-                                {
-                                    "title": "function _(ctx3, effect, { GameStateFn, DefineFn }) {\n                    const cardId2 = DefineFn.EffectFn.getCardID(effect), pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx3, \"\\uFF3B \\uFF3D\\u306E\\u7279\\u5FB4\\u3092\\u6301\\u3064\\u81EA\\u8ECD\\u30E6\\u30CB\\u30C3\\u30C8\\uFF11\\u679A\\u306F\", cardId2), textRefIds = GameStateFn.getCardTipTextRefs(ctx3, \"\\u3053\\u306E\\u30AB\\u30FC\\u30C9\\u306E\\u672C\\u6765\\u306E\\u30C6\\u30AD\\u30B9\\u30C8\\uFF11\\u3064\", cardId2).map((tr) => tr.textId);\n                    for (let pair2 of pairs)\n                      if (GameStateFn.getCardTexts(ctx3, pair2[0]).find((text2) => textRefIds.includes(text2.id)))\n                        throw new DefineFn.TipError(`\\u5DF2\\u6709\\u540C\\u6A23\\u7684\\u5167\\u6587: ${JSON.stringify(textRefIds)}`, { hasSameText: !0 });\n                    return ctx3;\n                  }"
-                                }
-                            ]
-                        },
-                        "同回合上限": {
-                            "actions": [
-                                {
-                                    "title": [
-                                        "同回合上限",
-                                        1
-                                    ]
-                                }
-                            ]
-                        }
-                    },
-                    "logicTreeActions": [
-                        {
-                            "actions": [
-                                {
-                                    "title": [
-                                        "cutIn",
-                                        [
-                                            {
-                                                "title": "function _(ctx3, effect, { GameStateFn, DefineFn }) {\n                        const cardId2 = DefineFn.EffectFn.getCardID(effect), pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx3, \"\\uFF3B \\uFF3D\\u306E\\u7279\\u5FB4\\u3092\\u6301\\u3064\\u81EA\\u8ECD\\u30E6\\u30CB\\u30C3\\u30C8\\uFF11\\u679A\\u306F\", cardId2), textRefs = GameStateFn.getCardTipTextRefs(ctx3, \"\\u3053\\u306E\\u30AB\\u30FC\\u30C9\\u306E\\u672C\\u6765\\u306E\\u30C6\\u30AD\\u30B9\\u30C8\\uFF11\\u3064\", cardId2);\n                        for (let pair2 of pairs) {\n                          GameStateFn.assertTargetMissingError(ctx3, pair2);\n                          const [targetCardId, targetBasyou] = pair2;\n                          ctx3 = GameStateFn.mapItemState(ctx3, targetCardId, (targetItemState) => {\n                            for (let textRef of textRefs) {\n                              if (GameStateFn.getCardTexts(ctx3, targetItemState.id).find((text2) => text2.id == textRef.textId) != null)\n                                continue;\n                              targetItemState = DefineFn.ItemStateFn.setGlobalEffect(targetItemState, null, {\n                                title: [\"AddTextRef\", textRef],\n                                cardIds: [targetItemState.id]\n                              }, { isRemoveOnTurnEnd: !0 });\n                            }\n                            return targetItemState;\n                          });\n                        }\n                        return ctx3;\n                      }"
-                                            }
-                                        ]
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "id": 819,
-            "description": "onSetPhase:戦闘フェイズ,防御ステップ,フリータイミング"
-        },
-        {
-            "id": 818,
-            "description": "onEvent: GameEventOnTiming undefined"
-        },
-        {
-            "id": 817,
-            "description": "onSetPhase:戦闘フェイズ,防御ステップ,ステップ開始"
-        },
-        {
-            "id": 816,
-            "description": "onEvent: GameEventOnTiming undefined"
-        },
-        {
-            "id": 815,
-            "description": "onSetPhase:戦闘フェイズ,攻撃ステップ,ステップ終了"
-        },
-        {
-            "id": 814,
-            "description": "onSetPhase:戦闘フェイズ,攻撃ステップ,フリータイミング2"
-        },
-        {
-            "id": 813,
+            "id": 1073,
             "description": "onEffectEnd: 出擊"
         },
         {
-            "id": 812,
-            "description": "onEvent: このカードが攻撃に出撃した場合 [\"PlayerB_82\"]",
+            "id": 1072,
+            "description": "onItemMove:PlayerA_8 = [\"PlayerA\",\"配備エリア\"] => [\"PlayerA\",\"戦闘エリア1\"]",
+            "effect": {
+                "id": "createAttackPhaseRuleEffect_PlayerA",
+                "reason": [
+                    "GameRule",
+                    "PlayerA",
+                    {
+                        "isAttack": false,
+                        "isDefence": true
+                    }
+                ],
+                "description": "出擊",
+                "isOption": true,
+                "text": {
+                    "id": "createAttackPhaseRuleEffect_text_PlayerA",
+                    "title": [],
+                    "description": "出擊",
+                    "conditions": {
+                        "去地球": {
+                            "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n            const runtimeBattleArea = GameStateFn2.getRuntimeBattleArea(ctx3, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\");\n            if (runtimeBattleArea == \"\\u5B87\\u5B99\\u30A8\\u30EA\\u30A2\")\n              return null;\n            const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), opponentPlayerId = DefineFn2.PlayerIDFn.getOpponent(playerId2);\n            let unitIds = GameStateFn2.getItemIdsByBasyou(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, \"\\u914D\\u5099\\u30A8\\u30EA\\u30A2\")).filter((cardId) => GameStateFn2.getSetGroupRoot(ctx3, cardId) == cardId).filter((cardId) => GameStateFn2.getCardBattleArea(ctx3, cardId).includes(runtimeBattleArea)).filter((cardId) => GameStateFn2.getCard(ctx3, cardId).isRoll != !0);\n            const opponentUnitIds = GameStateFn2.getBattleGroup(ctx3, DefineFn2.AbsoluteBaSyouFn.of(opponentPlayerId, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\"));\n            if (opponentUnitIds.length) {\n              if (GameStateFn2.isABattleGroup(ctx3, [\"\\u9AD8\\u6A5F\\u52D5\"], opponentUnitIds[0]))\n                unitIds = unitIds.filter((id) => GameStateFn2.isSetGroupHasA(ctx3, [\"\\u9AD8\\u6A5F\\u52D5\"], id));\n            }\n            return {\n              title: [\"\\u30AB\\u30FC\\u30C9\", unitIds.map((id) => {\n                return [id, GameStateFn2.getItemBaSyou(ctx3, id)];\n              }), []],\n              flags: { isGoBattleArea1: !0 }\n            };\n          }",
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), fackCardId = DefineFn2.EffectFn.getCardID(effect), earthPairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, \"\\u53BB\\u5730\\u7403\", fackCardId), phase2 = GameStateFn2.getPhase(ctx3);\n                for (let pair3 of earthPairs)\n                  ctx3 = GameStateFn2.mapItemState(ctx3, pair3[0], (is) => ({ ...is, isAttack: phase2[1] == \"\\u653B\\u6483\\u30B9\\u30C6\\u30C3\\u30D7\", isDefence: phase2[1] == \"\\u9632\\u5FA1\\u30B9\\u30C6\\u30C3\\u30D7\" })), ctx3 = GameStateFn2.doItemMove(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\"), pair3);\n                return ctx3;\n              }"
+                                }
+                            ],
+                            "groupKey": "出擊"
+                        },
+                        "去宇宙": {
+                            "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n            const runtimeBattleArea = GameStateFn2.getRuntimeBattleArea(ctx3, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\");\n            if (runtimeBattleArea == \"\\u5730\\u7403\\u30A8\\u30EA\\u30A2\")\n              return null;\n            const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), opponentPlayerId = DefineFn2.PlayerIDFn.getOpponent(playerId2);\n            let unitIds = GameStateFn2.getItemIdsByBasyou(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, \"\\u914D\\u5099\\u30A8\\u30EA\\u30A2\")).filter((cardId) => GameStateFn2.getSetGroupRoot(ctx3, cardId) == cardId).filter((cardId) => GameStateFn2.getCardBattleArea(ctx3, cardId).includes(runtimeBattleArea)).filter((cardId) => GameStateFn2.getCard(ctx3, cardId).isRoll != !0);\n            const opponentUnitIds = GameStateFn2.getBattleGroup(ctx3, DefineFn2.AbsoluteBaSyouFn.of(opponentPlayerId, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\"));\n            if (opponentUnitIds.length) {\n              if (GameStateFn2.isABattleGroup(ctx3, [\"\\u9AD8\\u6A5F\\u52D5\"], opponentUnitIds[0]))\n                unitIds = unitIds.filter((id) => GameStateFn2.isSetGroupHasA(ctx3, [\"\\u9AD8\\u6A5F\\u52D5\"], id));\n            }\n            return {\n              title: [\"\\u30AB\\u30FC\\u30C9\", unitIds.map((id) => {\n                return [id, GameStateFn2.getItemBaSyou(ctx3, id)];\n              }), []],\n              flags: { isGoBattleArea2: !0 }\n            };\n          }",
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), fackCardId = DefineFn2.EffectFn.getCardID(effect), spacePairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, \"\\u53BB\\u5B87\\u5B99\", fackCardId), phase2 = GameStateFn2.getPhase(ctx3);\n                for (let pair3 of spacePairs)\n                  ctx3 = GameStateFn2.mapItemState(ctx3, pair3[0], (is) => ({ ...is, isAttack: phase2[1] == \"\\u653B\\u6483\\u30B9\\u30C6\\u30C3\\u30D7\", isDefence: phase2[1] == \"\\u9632\\u5FA1\\u30B9\\u30C6\\u30C3\\u30D7\" })), ctx3 = GameStateFn2.doItemMove(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\"), pair3);\n                return ctx3;\n              }"
+                                }
+                            ],
+                            "groupKey": "出擊"
+                        }
+                    },
+                    "logicTreeActions": [
+                        {
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const fackCardId = DefineFn2.EffectFn.getCardID(effect), phase2 = GameStateFn2.getPhase(ctx3), pairs1 = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, \"\\u53BB\\u5730\\u7403\", fackCardId), pairs2 = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, \"\\u53BB\\u5B87\\u5B99\", fackCardId);\n                if (DefineFn2.PhaseFn.eq(phase2, [\"\\u6226\\u95D8\\u30D5\\u30A7\\u30A4\\u30BA\", \"\\u653B\\u6483\\u30B9\\u30C6\\u30C3\\u30D7\", \"\\u898F\\u5B9A\\u306E\\u52B9\\u679C\"]))\n                  ctx3 = GameStateFn2.doTriggerEvent(ctx3, {\n                    title: [\"\\u3053\\u306E\\u30AB\\u30FC\\u30C9\\u304C\\u653B\\u6483\\u306B\\u51FA\\u6483\\u3057\\u305F\\u5834\\u5408\"],\n                    cardIds: [...pairs1, ...pairs2].map((p) => p[0])\n                  });\n                return ctx3;\n              }"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 1071,
+            "description": "onEvent: GameEventOnMove [\"PlayerA_8\"]",
+            "effect": {
+                "id": "createAttackPhaseRuleEffect_PlayerA",
+                "reason": [
+                    "GameRule",
+                    "PlayerA",
+                    {
+                        "isAttack": false,
+                        "isDefence": true
+                    }
+                ],
+                "description": "出擊",
+                "isOption": true,
+                "text": {
+                    "id": "createAttackPhaseRuleEffect_text_PlayerA",
+                    "title": [],
+                    "description": "出擊",
+                    "conditions": {
+                        "去地球": {
+                            "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n            const runtimeBattleArea = GameStateFn2.getRuntimeBattleArea(ctx3, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\");\n            if (runtimeBattleArea == \"\\u5B87\\u5B99\\u30A8\\u30EA\\u30A2\")\n              return null;\n            const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), opponentPlayerId = DefineFn2.PlayerIDFn.getOpponent(playerId2);\n            let unitIds = GameStateFn2.getItemIdsByBasyou(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, \"\\u914D\\u5099\\u30A8\\u30EA\\u30A2\")).filter((cardId) => GameStateFn2.getSetGroupRoot(ctx3, cardId) == cardId).filter((cardId) => GameStateFn2.getCardBattleArea(ctx3, cardId).includes(runtimeBattleArea)).filter((cardId) => GameStateFn2.getCard(ctx3, cardId).isRoll != !0);\n            const opponentUnitIds = GameStateFn2.getBattleGroup(ctx3, DefineFn2.AbsoluteBaSyouFn.of(opponentPlayerId, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\"));\n            if (opponentUnitIds.length) {\n              if (GameStateFn2.isABattleGroup(ctx3, [\"\\u9AD8\\u6A5F\\u52D5\"], opponentUnitIds[0]))\n                unitIds = unitIds.filter((id) => GameStateFn2.isSetGroupHasA(ctx3, [\"\\u9AD8\\u6A5F\\u52D5\"], id));\n            }\n            return {\n              title: [\"\\u30AB\\u30FC\\u30C9\", unitIds.map((id) => {\n                return [id, GameStateFn2.getItemBaSyou(ctx3, id)];\n              }), []],\n              flags: { isGoBattleArea1: !0 }\n            };\n          }",
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), fackCardId = DefineFn2.EffectFn.getCardID(effect), earthPairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, \"\\u53BB\\u5730\\u7403\", fackCardId), phase2 = GameStateFn2.getPhase(ctx3);\n                for (let pair3 of earthPairs)\n                  ctx3 = GameStateFn2.mapItemState(ctx3, pair3[0], (is) => ({ ...is, isAttack: phase2[1] == \"\\u653B\\u6483\\u30B9\\u30C6\\u30C3\\u30D7\", isDefence: phase2[1] == \"\\u9632\\u5FA1\\u30B9\\u30C6\\u30C3\\u30D7\" })), ctx3 = GameStateFn2.doItemMove(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\"), pair3);\n                return ctx3;\n              }"
+                                }
+                            ],
+                            "groupKey": "出擊"
+                        },
+                        "去宇宙": {
+                            "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n            const runtimeBattleArea = GameStateFn2.getRuntimeBattleArea(ctx3, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\");\n            if (runtimeBattleArea == \"\\u5730\\u7403\\u30A8\\u30EA\\u30A2\")\n              return null;\n            const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), opponentPlayerId = DefineFn2.PlayerIDFn.getOpponent(playerId2);\n            let unitIds = GameStateFn2.getItemIdsByBasyou(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, \"\\u914D\\u5099\\u30A8\\u30EA\\u30A2\")).filter((cardId) => GameStateFn2.getSetGroupRoot(ctx3, cardId) == cardId).filter((cardId) => GameStateFn2.getCardBattleArea(ctx3, cardId).includes(runtimeBattleArea)).filter((cardId) => GameStateFn2.getCard(ctx3, cardId).isRoll != !0);\n            const opponentUnitIds = GameStateFn2.getBattleGroup(ctx3, DefineFn2.AbsoluteBaSyouFn.of(opponentPlayerId, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\"));\n            if (opponentUnitIds.length) {\n              if (GameStateFn2.isABattleGroup(ctx3, [\"\\u9AD8\\u6A5F\\u52D5\"], opponentUnitIds[0]))\n                unitIds = unitIds.filter((id) => GameStateFn2.isSetGroupHasA(ctx3, [\"\\u9AD8\\u6A5F\\u52D5\"], id));\n            }\n            return {\n              title: [\"\\u30AB\\u30FC\\u30C9\", unitIds.map((id) => {\n                return [id, GameStateFn2.getItemBaSyou(ctx3, id)];\n              }), []],\n              flags: { isGoBattleArea2: !0 }\n            };\n          }",
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), fackCardId = DefineFn2.EffectFn.getCardID(effect), spacePairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, \"\\u53BB\\u5B87\\u5B99\", fackCardId), phase2 = GameStateFn2.getPhase(ctx3);\n                for (let pair3 of spacePairs)\n                  ctx3 = GameStateFn2.mapItemState(ctx3, pair3[0], (is) => ({ ...is, isAttack: phase2[1] == \"\\u653B\\u6483\\u30B9\\u30C6\\u30C3\\u30D7\", isDefence: phase2[1] == \"\\u9632\\u5FA1\\u30B9\\u30C6\\u30C3\\u30D7\" })), ctx3 = GameStateFn2.doItemMove(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\"), pair3);\n                return ctx3;\n              }"
+                                }
+                            ],
+                            "groupKey": "出擊"
+                        }
+                    },
+                    "logicTreeActions": [
+                        {
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const fackCardId = DefineFn2.EffectFn.getCardID(effect), phase2 = GameStateFn2.getPhase(ctx3), pairs1 = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, \"\\u53BB\\u5730\\u7403\", fackCardId), pairs2 = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, \"\\u53BB\\u5B87\\u5B99\", fackCardId);\n                if (DefineFn2.PhaseFn.eq(phase2, [\"\\u6226\\u95D8\\u30D5\\u30A7\\u30A4\\u30BA\", \"\\u653B\\u6483\\u30B9\\u30C6\\u30C3\\u30D7\", \"\\u898F\\u5B9A\\u306E\\u52B9\\u679C\"]))\n                  ctx3 = GameStateFn2.doTriggerEvent(ctx3, {\n                    title: [\"\\u3053\\u306E\\u30AB\\u30FC\\u30C9\\u304C\\u653B\\u6483\\u306B\\u51FA\\u6483\\u3057\\u305F\\u5834\\u5408\"],\n                    cardIds: [...pairs1, ...pairs2].map((p) => p[0])\n                  });\n                return ctx3;\n              }"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 1070,
+            "description": "onItemMove:PlayerA_11 = [\"PlayerA\",\"配備エリア\"] => [\"PlayerA\",\"戦闘エリア1\"]",
+            "effect": {
+                "id": "createAttackPhaseRuleEffect_PlayerA",
+                "reason": [
+                    "GameRule",
+                    "PlayerA",
+                    {
+                        "isAttack": false,
+                        "isDefence": true
+                    }
+                ],
+                "description": "出擊",
+                "isOption": true,
+                "text": {
+                    "id": "createAttackPhaseRuleEffect_text_PlayerA",
+                    "title": [],
+                    "description": "出擊",
+                    "conditions": {
+                        "去地球": {
+                            "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n            const runtimeBattleArea = GameStateFn2.getRuntimeBattleArea(ctx3, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\");\n            if (runtimeBattleArea == \"\\u5B87\\u5B99\\u30A8\\u30EA\\u30A2\")\n              return null;\n            const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), opponentPlayerId = DefineFn2.PlayerIDFn.getOpponent(playerId2);\n            let unitIds = GameStateFn2.getItemIdsByBasyou(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, \"\\u914D\\u5099\\u30A8\\u30EA\\u30A2\")).filter((cardId) => GameStateFn2.getSetGroupRoot(ctx3, cardId) == cardId).filter((cardId) => GameStateFn2.getCardBattleArea(ctx3, cardId).includes(runtimeBattleArea)).filter((cardId) => GameStateFn2.getCard(ctx3, cardId).isRoll != !0);\n            const opponentUnitIds = GameStateFn2.getBattleGroup(ctx3, DefineFn2.AbsoluteBaSyouFn.of(opponentPlayerId, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\"));\n            if (opponentUnitIds.length) {\n              if (GameStateFn2.isABattleGroup(ctx3, [\"\\u9AD8\\u6A5F\\u52D5\"], opponentUnitIds[0]))\n                unitIds = unitIds.filter((id) => GameStateFn2.isSetGroupHasA(ctx3, [\"\\u9AD8\\u6A5F\\u52D5\"], id));\n            }\n            return {\n              title: [\"\\u30AB\\u30FC\\u30C9\", unitIds.map((id) => {\n                return [id, GameStateFn2.getItemBaSyou(ctx3, id)];\n              }), []],\n              flags: { isGoBattleArea1: !0 }\n            };\n          }",
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), fackCardId = DefineFn2.EffectFn.getCardID(effect), earthPairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, \"\\u53BB\\u5730\\u7403\", fackCardId), phase2 = GameStateFn2.getPhase(ctx3);\n                for (let pair3 of earthPairs)\n                  ctx3 = GameStateFn2.mapItemState(ctx3, pair3[0], (is) => ({ ...is, isAttack: phase2[1] == \"\\u653B\\u6483\\u30B9\\u30C6\\u30C3\\u30D7\", isDefence: phase2[1] == \"\\u9632\\u5FA1\\u30B9\\u30C6\\u30C3\\u30D7\" })), ctx3 = GameStateFn2.doItemMove(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\"), pair3);\n                return ctx3;\n              }"
+                                }
+                            ],
+                            "groupKey": "出擊"
+                        },
+                        "去宇宙": {
+                            "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n            const runtimeBattleArea = GameStateFn2.getRuntimeBattleArea(ctx3, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\");\n            if (runtimeBattleArea == \"\\u5730\\u7403\\u30A8\\u30EA\\u30A2\")\n              return null;\n            const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), opponentPlayerId = DefineFn2.PlayerIDFn.getOpponent(playerId2);\n            let unitIds = GameStateFn2.getItemIdsByBasyou(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, \"\\u914D\\u5099\\u30A8\\u30EA\\u30A2\")).filter((cardId) => GameStateFn2.getSetGroupRoot(ctx3, cardId) == cardId).filter((cardId) => GameStateFn2.getCardBattleArea(ctx3, cardId).includes(runtimeBattleArea)).filter((cardId) => GameStateFn2.getCard(ctx3, cardId).isRoll != !0);\n            const opponentUnitIds = GameStateFn2.getBattleGroup(ctx3, DefineFn2.AbsoluteBaSyouFn.of(opponentPlayerId, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\"));\n            if (opponentUnitIds.length) {\n              if (GameStateFn2.isABattleGroup(ctx3, [\"\\u9AD8\\u6A5F\\u52D5\"], opponentUnitIds[0]))\n                unitIds = unitIds.filter((id) => GameStateFn2.isSetGroupHasA(ctx3, [\"\\u9AD8\\u6A5F\\u52D5\"], id));\n            }\n            return {\n              title: [\"\\u30AB\\u30FC\\u30C9\", unitIds.map((id) => {\n                return [id, GameStateFn2.getItemBaSyou(ctx3, id)];\n              }), []],\n              flags: { isGoBattleArea2: !0 }\n            };\n          }",
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), fackCardId = DefineFn2.EffectFn.getCardID(effect), spacePairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, \"\\u53BB\\u5B87\\u5B99\", fackCardId), phase2 = GameStateFn2.getPhase(ctx3);\n                for (let pair3 of spacePairs)\n                  ctx3 = GameStateFn2.mapItemState(ctx3, pair3[0], (is) => ({ ...is, isAttack: phase2[1] == \"\\u653B\\u6483\\u30B9\\u30C6\\u30C3\\u30D7\", isDefence: phase2[1] == \"\\u9632\\u5FA1\\u30B9\\u30C6\\u30C3\\u30D7\" })), ctx3 = GameStateFn2.doItemMove(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\"), pair3);\n                return ctx3;\n              }"
+                                }
+                            ],
+                            "groupKey": "出擊"
+                        }
+                    },
+                    "logicTreeActions": [
+                        {
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const fackCardId = DefineFn2.EffectFn.getCardID(effect), phase2 = GameStateFn2.getPhase(ctx3), pairs1 = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, \"\\u53BB\\u5730\\u7403\", fackCardId), pairs2 = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, \"\\u53BB\\u5B87\\u5B99\", fackCardId);\n                if (DefineFn2.PhaseFn.eq(phase2, [\"\\u6226\\u95D8\\u30D5\\u30A7\\u30A4\\u30BA\", \"\\u653B\\u6483\\u30B9\\u30C6\\u30C3\\u30D7\", \"\\u898F\\u5B9A\\u306E\\u52B9\\u679C\"]))\n                  ctx3 = GameStateFn2.doTriggerEvent(ctx3, {\n                    title: [\"\\u3053\\u306E\\u30AB\\u30FC\\u30C9\\u304C\\u653B\\u6483\\u306B\\u51FA\\u6483\\u3057\\u305F\\u5834\\u5408\"],\n                    cardIds: [...pairs1, ...pairs2].map((p) => p[0])\n                  });\n                return ctx3;\n              }"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 1069,
+            "description": "onEvent: GameEventOnMove [\"PlayerA_11\"]",
+            "effect": {
+                "id": "createAttackPhaseRuleEffect_PlayerA",
+                "reason": [
+                    "GameRule",
+                    "PlayerA",
+                    {
+                        "isAttack": false,
+                        "isDefence": true
+                    }
+                ],
+                "description": "出擊",
+                "isOption": true,
+                "text": {
+                    "id": "createAttackPhaseRuleEffect_text_PlayerA",
+                    "title": [],
+                    "description": "出擊",
+                    "conditions": {
+                        "去地球": {
+                            "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n            const runtimeBattleArea = GameStateFn2.getRuntimeBattleArea(ctx3, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\");\n            if (runtimeBattleArea == \"\\u5B87\\u5B99\\u30A8\\u30EA\\u30A2\")\n              return null;\n            const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), opponentPlayerId = DefineFn2.PlayerIDFn.getOpponent(playerId2);\n            let unitIds = GameStateFn2.getItemIdsByBasyou(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, \"\\u914D\\u5099\\u30A8\\u30EA\\u30A2\")).filter((cardId) => GameStateFn2.getSetGroupRoot(ctx3, cardId) == cardId).filter((cardId) => GameStateFn2.getCardBattleArea(ctx3, cardId).includes(runtimeBattleArea)).filter((cardId) => GameStateFn2.getCard(ctx3, cardId).isRoll != !0);\n            const opponentUnitIds = GameStateFn2.getBattleGroup(ctx3, DefineFn2.AbsoluteBaSyouFn.of(opponentPlayerId, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\"));\n            if (opponentUnitIds.length) {\n              if (GameStateFn2.isABattleGroup(ctx3, [\"\\u9AD8\\u6A5F\\u52D5\"], opponentUnitIds[0]))\n                unitIds = unitIds.filter((id) => GameStateFn2.isSetGroupHasA(ctx3, [\"\\u9AD8\\u6A5F\\u52D5\"], id));\n            }\n            return {\n              title: [\"\\u30AB\\u30FC\\u30C9\", unitIds.map((id) => {\n                return [id, GameStateFn2.getItemBaSyou(ctx3, id)];\n              }), []],\n              flags: { isGoBattleArea1: !0 }\n            };\n          }",
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), fackCardId = DefineFn2.EffectFn.getCardID(effect), earthPairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, \"\\u53BB\\u5730\\u7403\", fackCardId), phase2 = GameStateFn2.getPhase(ctx3);\n                for (let pair3 of earthPairs)\n                  ctx3 = GameStateFn2.mapItemState(ctx3, pair3[0], (is) => ({ ...is, isAttack: phase2[1] == \"\\u653B\\u6483\\u30B9\\u30C6\\u30C3\\u30D7\", isDefence: phase2[1] == \"\\u9632\\u5FA1\\u30B9\\u30C6\\u30C3\\u30D7\" })), ctx3 = GameStateFn2.doItemMove(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\"), pair3);\n                return ctx3;\n              }"
+                                }
+                            ],
+                            "groupKey": "出擊"
+                        },
+                        "去宇宙": {
+                            "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n            const runtimeBattleArea = GameStateFn2.getRuntimeBattleArea(ctx3, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\");\n            if (runtimeBattleArea == \"\\u5730\\u7403\\u30A8\\u30EA\\u30A2\")\n              return null;\n            const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), opponentPlayerId = DefineFn2.PlayerIDFn.getOpponent(playerId2);\n            let unitIds = GameStateFn2.getItemIdsByBasyou(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, \"\\u914D\\u5099\\u30A8\\u30EA\\u30A2\")).filter((cardId) => GameStateFn2.getSetGroupRoot(ctx3, cardId) == cardId).filter((cardId) => GameStateFn2.getCardBattleArea(ctx3, cardId).includes(runtimeBattleArea)).filter((cardId) => GameStateFn2.getCard(ctx3, cardId).isRoll != !0);\n            const opponentUnitIds = GameStateFn2.getBattleGroup(ctx3, DefineFn2.AbsoluteBaSyouFn.of(opponentPlayerId, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\"));\n            if (opponentUnitIds.length) {\n              if (GameStateFn2.isABattleGroup(ctx3, [\"\\u9AD8\\u6A5F\\u52D5\"], opponentUnitIds[0]))\n                unitIds = unitIds.filter((id) => GameStateFn2.isSetGroupHasA(ctx3, [\"\\u9AD8\\u6A5F\\u52D5\"], id));\n            }\n            return {\n              title: [\"\\u30AB\\u30FC\\u30C9\", unitIds.map((id) => {\n                return [id, GameStateFn2.getItemBaSyou(ctx3, id)];\n              }), []],\n              flags: { isGoBattleArea2: !0 }\n            };\n          }",
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), fackCardId = DefineFn2.EffectFn.getCardID(effect), spacePairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, \"\\u53BB\\u5B87\\u5B99\", fackCardId), phase2 = GameStateFn2.getPhase(ctx3);\n                for (let pair3 of spacePairs)\n                  ctx3 = GameStateFn2.mapItemState(ctx3, pair3[0], (is) => ({ ...is, isAttack: phase2[1] == \"\\u653B\\u6483\\u30B9\\u30C6\\u30C3\\u30D7\", isDefence: phase2[1] == \"\\u9632\\u5FA1\\u30B9\\u30C6\\u30C3\\u30D7\" })), ctx3 = GameStateFn2.doItemMove(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\"), pair3);\n                return ctx3;\n              }"
+                                }
+                            ],
+                            "groupKey": "出擊"
+                        }
+                    },
+                    "logicTreeActions": [
+                        {
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const fackCardId = DefineFn2.EffectFn.getCardID(effect), phase2 = GameStateFn2.getPhase(ctx3), pairs1 = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, \"\\u53BB\\u5730\\u7403\", fackCardId), pairs2 = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, \"\\u53BB\\u5B87\\u5B99\", fackCardId);\n                if (DefineFn2.PhaseFn.eq(phase2, [\"\\u6226\\u95D8\\u30D5\\u30A7\\u30A4\\u30BA\", \"\\u653B\\u6483\\u30B9\\u30C6\\u30C3\\u30D7\", \"\\u898F\\u5B9A\\u306E\\u52B9\\u679C\"]))\n                  ctx3 = GameStateFn2.doTriggerEvent(ctx3, {\n                    title: [\"\\u3053\\u306E\\u30AB\\u30FC\\u30C9\\u304C\\u653B\\u6483\\u306B\\u51FA\\u6483\\u3057\\u305F\\u5834\\u5408\"],\n                    cardIds: [...pairs1, ...pairs2].map((p) => p[0])\n                  });\n                return ctx3;\n              }"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 1068,
+            "description": "onEffectStart: 出擊",
+            "effect": {
+                "id": "createAttackPhaseRuleEffect_PlayerA",
+                "reason": [
+                    "GameRule",
+                    "PlayerA",
+                    {
+                        "isAttack": false,
+                        "isDefence": true
+                    }
+                ],
+                "description": "出擊",
+                "isOption": true,
+                "text": {
+                    "id": "createAttackPhaseRuleEffect_text_PlayerA",
+                    "title": [],
+                    "description": "出擊",
+                    "conditions": {
+                        "去地球": {
+                            "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n            const runtimeBattleArea = GameStateFn2.getRuntimeBattleArea(ctx3, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\");\n            if (runtimeBattleArea == \"\\u5B87\\u5B99\\u30A8\\u30EA\\u30A2\")\n              return null;\n            const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), opponentPlayerId = DefineFn2.PlayerIDFn.getOpponent(playerId2);\n            let unitIds = GameStateFn2.getItemIdsByBasyou(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, \"\\u914D\\u5099\\u30A8\\u30EA\\u30A2\")).filter((cardId) => GameStateFn2.getSetGroupRoot(ctx3, cardId) == cardId).filter((cardId) => GameStateFn2.getCardBattleArea(ctx3, cardId).includes(runtimeBattleArea)).filter((cardId) => GameStateFn2.getCard(ctx3, cardId).isRoll != !0);\n            const opponentUnitIds = GameStateFn2.getBattleGroup(ctx3, DefineFn2.AbsoluteBaSyouFn.of(opponentPlayerId, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\"));\n            if (opponentUnitIds.length) {\n              if (GameStateFn2.isABattleGroup(ctx3, [\"\\u9AD8\\u6A5F\\u52D5\"], opponentUnitIds[0]))\n                unitIds = unitIds.filter((id) => GameStateFn2.isSetGroupHasA(ctx3, [\"\\u9AD8\\u6A5F\\u52D5\"], id));\n            }\n            return {\n              title: [\"\\u30AB\\u30FC\\u30C9\", unitIds.map((id) => {\n                return [id, GameStateFn2.getItemBaSyou(ctx3, id)];\n              }), []],\n              flags: { isGoBattleArea1: !0 }\n            };\n          }",
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), fackCardId = DefineFn2.EffectFn.getCardID(effect), earthPairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, \"\\u53BB\\u5730\\u7403\", fackCardId), phase2 = GameStateFn2.getPhase(ctx3);\n                for (let pair3 of earthPairs)\n                  ctx3 = GameStateFn2.mapItemState(ctx3, pair3[0], (is) => ({ ...is, isAttack: phase2[1] == \"\\u653B\\u6483\\u30B9\\u30C6\\u30C3\\u30D7\", isDefence: phase2[1] == \"\\u9632\\u5FA1\\u30B9\\u30C6\\u30C3\\u30D7\" })), ctx3 = GameStateFn2.doItemMove(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\"), pair3);\n                return ctx3;\n              }"
+                                }
+                            ],
+                            "groupKey": "出擊"
+                        },
+                        "去宇宙": {
+                            "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n            const runtimeBattleArea = GameStateFn2.getRuntimeBattleArea(ctx3, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\");\n            if (runtimeBattleArea == \"\\u5730\\u7403\\u30A8\\u30EA\\u30A2\")\n              return null;\n            const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), opponentPlayerId = DefineFn2.PlayerIDFn.getOpponent(playerId2);\n            let unitIds = GameStateFn2.getItemIdsByBasyou(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, \"\\u914D\\u5099\\u30A8\\u30EA\\u30A2\")).filter((cardId) => GameStateFn2.getSetGroupRoot(ctx3, cardId) == cardId).filter((cardId) => GameStateFn2.getCardBattleArea(ctx3, cardId).includes(runtimeBattleArea)).filter((cardId) => GameStateFn2.getCard(ctx3, cardId).isRoll != !0);\n            const opponentUnitIds = GameStateFn2.getBattleGroup(ctx3, DefineFn2.AbsoluteBaSyouFn.of(opponentPlayerId, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\"));\n            if (opponentUnitIds.length) {\n              if (GameStateFn2.isABattleGroup(ctx3, [\"\\u9AD8\\u6A5F\\u52D5\"], opponentUnitIds[0]))\n                unitIds = unitIds.filter((id) => GameStateFn2.isSetGroupHasA(ctx3, [\"\\u9AD8\\u6A5F\\u52D5\"], id));\n            }\n            return {\n              title: [\"\\u30AB\\u30FC\\u30C9\", unitIds.map((id) => {\n                return [id, GameStateFn2.getItemBaSyou(ctx3, id)];\n              }), []],\n              flags: { isGoBattleArea2: !0 }\n            };\n          }",
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), fackCardId = DefineFn2.EffectFn.getCardID(effect), spacePairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, \"\\u53BB\\u5B87\\u5B99\", fackCardId), phase2 = GameStateFn2.getPhase(ctx3);\n                for (let pair3 of spacePairs)\n                  ctx3 = GameStateFn2.mapItemState(ctx3, pair3[0], (is) => ({ ...is, isAttack: phase2[1] == \"\\u653B\\u6483\\u30B9\\u30C6\\u30C3\\u30D7\", isDefence: phase2[1] == \"\\u9632\\u5FA1\\u30B9\\u30C6\\u30C3\\u30D7\" })), ctx3 = GameStateFn2.doItemMove(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\"), pair3);\n                return ctx3;\n              }"
+                                }
+                            ],
+                            "groupKey": "出擊"
+                        }
+                    },
+                    "logicTreeActions": [
+                        {
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const fackCardId = DefineFn2.EffectFn.getCardID(effect), phase2 = GameStateFn2.getPhase(ctx3), pairs1 = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, \"\\u53BB\\u5730\\u7403\", fackCardId), pairs2 = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, \"\\u53BB\\u5B87\\u5B99\", fackCardId);\n                if (DefineFn2.PhaseFn.eq(phase2, [\"\\u6226\\u95D8\\u30D5\\u30A7\\u30A4\\u30BA\", \"\\u653B\\u6483\\u30B9\\u30C6\\u30C3\\u30D7\", \"\\u898F\\u5B9A\\u306E\\u52B9\\u679C\"]))\n                  ctx3 = GameStateFn2.doTriggerEvent(ctx3, {\n                    title: [\"\\u3053\\u306E\\u30AB\\u30FC\\u30C9\\u304C\\u653B\\u6483\\u306B\\u51FA\\u6483\\u3057\\u305F\\u5834\\u5408\"],\n                    cardIds: [...pairs1, ...pairs2].map((p) => p[0])\n                  });\n                return ctx3;\n              }"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 1067,
+            "description": "onSetPhase:戦闘フェイズ,防御ステップ,規定の効果"
+        },
+        {
+            "id": 1066,
+            "description": "onSetPhase:戦闘フェイズ,防御ステップ,フリータイミング"
+        },
+        {
+            "id": 1065,
+            "description": "onEvent: GameEventOnTiming undefined"
+        },
+        {
+            "id": 1064,
+            "description": "onSetPhase:戦闘フェイズ,防御ステップ,ステップ開始"
+        },
+        {
+            "id": 1063,
+            "description": "onEvent: GameEventOnTiming undefined"
+        },
+        {
+            "id": 1062,
+            "description": "onSetPhase:戦闘フェイズ,攻撃ステップ,ステップ終了"
+        },
+        {
+            "id": 1061,
+            "description": "onSetPhase:戦闘フェイズ,攻撃ステップ,フリータイミング2"
+        },
+        {
+            "id": 1060,
+            "description": "onEffectEnd: 出擊"
+        },
+        {
+            "id": 1059,
+            "description": "onEvent: このカードが攻撃に出撃した場合 [\"PlayerB_96\",\"PlayerB_75\"]",
             "effect": {
                 "id": "createAttackPhaseRuleEffect_PlayerB",
                 "reason": [
@@ -3615,8 +5162,8 @@ const TMP_CTX: GameStateWithFlowMemory = {
             }
         },
         {
-            "id": 811,
-            "description": "onItemMove:PlayerB_82 = [\"PlayerB\",\"配備エリア\"] => [\"PlayerB\",\"戦闘エリア1\"]",
+            "id": 1058,
+            "description": "onItemMove:PlayerB_72 = [\"PlayerB\",\"配備エリア\"] => [\"PlayerB\",\"戦闘エリア1\"]",
             "effect": {
                 "id": "createAttackPhaseRuleEffect_PlayerB",
                 "reason": [
@@ -3666,8 +5213,8 @@ const TMP_CTX: GameStateWithFlowMemory = {
             }
         },
         {
-            "id": 810,
-            "description": "onEvent: GameEventOnMove [\"PlayerB_82\"]",
+            "id": 1057,
+            "description": "onItemMove:PlayerB_75 = [\"PlayerB\",\"配備エリア\"] => [\"PlayerB\",\"戦闘エリア1\"]",
             "effect": {
                 "id": "createAttackPhaseRuleEffect_PlayerB",
                 "reason": [
@@ -3717,7 +5264,211 @@ const TMP_CTX: GameStateWithFlowMemory = {
             }
         },
         {
-            "id": 809,
+            "id": 1056,
+            "description": "onEvent: GameEventOnMove [\"PlayerB_72\"]",
+            "effect": {
+                "id": "createAttackPhaseRuleEffect_PlayerB",
+                "reason": [
+                    "GameRule",
+                    "PlayerB",
+                    {
+                        "isAttack": true,
+                        "isDefence": false
+                    }
+                ],
+                "description": "出擊",
+                "isOption": true,
+                "text": {
+                    "id": "createAttackPhaseRuleEffect_text_PlayerB",
+                    "title": [],
+                    "description": "出擊",
+                    "conditions": {
+                        "去地球": {
+                            "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n            const runtimeBattleArea = GameStateFn2.getRuntimeBattleArea(ctx3, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\");\n            if (runtimeBattleArea == \"\\u5B87\\u5B99\\u30A8\\u30EA\\u30A2\")\n              return null;\n            const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), opponentPlayerId = DefineFn2.PlayerIDFn.getOpponent(playerId2);\n            let unitIds = GameStateFn2.getItemIdsByBasyou(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, \"\\u914D\\u5099\\u30A8\\u30EA\\u30A2\")).filter((cardId) => GameStateFn2.getSetGroupRoot(ctx3, cardId) == cardId).filter((cardId) => GameStateFn2.getCardBattleArea(ctx3, cardId).includes(runtimeBattleArea)).filter((cardId) => GameStateFn2.getCard(ctx3, cardId).isRoll != !0);\n            const opponentUnitIds = GameStateFn2.getBattleGroup(ctx3, DefineFn2.AbsoluteBaSyouFn.of(opponentPlayerId, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\"));\n            if (opponentUnitIds.length) {\n              if (GameStateFn2.isABattleGroup(ctx3, [\"\\u9AD8\\u6A5F\\u52D5\"], opponentUnitIds[0]))\n                unitIds = unitIds.filter((id) => GameStateFn2.isSetGroupHasA(ctx3, [\"\\u9AD8\\u6A5F\\u52D5\"], id));\n            }\n            return {\n              title: [\"\\u30AB\\u30FC\\u30C9\", unitIds.map((id) => {\n                return [id, GameStateFn2.getItemBaSyou(ctx3, id)];\n              }), []],\n              flags: { isGoBattleArea1: !0 }\n            };\n          }",
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), fackCardId = DefineFn2.EffectFn.getCardID(effect), earthPairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, \"\\u53BB\\u5730\\u7403\", fackCardId), phase2 = GameStateFn2.getPhase(ctx3);\n                for (let pair3 of earthPairs)\n                  ctx3 = GameStateFn2.mapItemState(ctx3, pair3[0], (is) => ({ ...is, isAttack: phase2[1] == \"\\u653B\\u6483\\u30B9\\u30C6\\u30C3\\u30D7\", isDefence: phase2[1] == \"\\u9632\\u5FA1\\u30B9\\u30C6\\u30C3\\u30D7\" })), ctx3 = GameStateFn2.doItemMove(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\"), pair3);\n                return ctx3;\n              }"
+                                }
+                            ],
+                            "groupKey": "出擊"
+                        },
+                        "去宇宙": {
+                            "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n            const runtimeBattleArea = GameStateFn2.getRuntimeBattleArea(ctx3, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\");\n            if (runtimeBattleArea == \"\\u5730\\u7403\\u30A8\\u30EA\\u30A2\")\n              return null;\n            const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), opponentPlayerId = DefineFn2.PlayerIDFn.getOpponent(playerId2);\n            let unitIds = GameStateFn2.getItemIdsByBasyou(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, \"\\u914D\\u5099\\u30A8\\u30EA\\u30A2\")).filter((cardId) => GameStateFn2.getSetGroupRoot(ctx3, cardId) == cardId).filter((cardId) => GameStateFn2.getCardBattleArea(ctx3, cardId).includes(runtimeBattleArea)).filter((cardId) => GameStateFn2.getCard(ctx3, cardId).isRoll != !0);\n            const opponentUnitIds = GameStateFn2.getBattleGroup(ctx3, DefineFn2.AbsoluteBaSyouFn.of(opponentPlayerId, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\"));\n            if (opponentUnitIds.length) {\n              if (GameStateFn2.isABattleGroup(ctx3, [\"\\u9AD8\\u6A5F\\u52D5\"], opponentUnitIds[0]))\n                unitIds = unitIds.filter((id) => GameStateFn2.isSetGroupHasA(ctx3, [\"\\u9AD8\\u6A5F\\u52D5\"], id));\n            }\n            return {\n              title: [\"\\u30AB\\u30FC\\u30C9\", unitIds.map((id) => {\n                return [id, GameStateFn2.getItemBaSyou(ctx3, id)];\n              }), []],\n              flags: { isGoBattleArea2: !0 }\n            };\n          }",
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), fackCardId = DefineFn2.EffectFn.getCardID(effect), spacePairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, \"\\u53BB\\u5B87\\u5B99\", fackCardId), phase2 = GameStateFn2.getPhase(ctx3);\n                for (let pair3 of spacePairs)\n                  ctx3 = GameStateFn2.mapItemState(ctx3, pair3[0], (is) => ({ ...is, isAttack: phase2[1] == \"\\u653B\\u6483\\u30B9\\u30C6\\u30C3\\u30D7\", isDefence: phase2[1] == \"\\u9632\\u5FA1\\u30B9\\u30C6\\u30C3\\u30D7\" })), ctx3 = GameStateFn2.doItemMove(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\"), pair3);\n                return ctx3;\n              }"
+                                }
+                            ],
+                            "groupKey": "出擊"
+                        }
+                    },
+                    "logicTreeActions": [
+                        {
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const fackCardId = DefineFn2.EffectFn.getCardID(effect), phase2 = GameStateFn2.getPhase(ctx3), pairs1 = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, \"\\u53BB\\u5730\\u7403\", fackCardId), pairs2 = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, \"\\u53BB\\u5B87\\u5B99\", fackCardId);\n                if (DefineFn2.PhaseFn.eq(phase2, [\"\\u6226\\u95D8\\u30D5\\u30A7\\u30A4\\u30BA\", \"\\u653B\\u6483\\u30B9\\u30C6\\u30C3\\u30D7\", \"\\u898F\\u5B9A\\u306E\\u52B9\\u679C\"]))\n                  ctx3 = GameStateFn2.doTriggerEvent(ctx3, {\n                    title: [\"\\u3053\\u306E\\u30AB\\u30FC\\u30C9\\u304C\\u653B\\u6483\\u306B\\u51FA\\u6483\\u3057\\u305F\\u5834\\u5408\"],\n                    cardIds: [...pairs1, ...pairs2].map((p) => p[0])\n                  });\n                return ctx3;\n              }"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 1055,
+            "description": "onEvent: GameEventOnMove [\"PlayerB_75\"]",
+            "effect": {
+                "id": "createAttackPhaseRuleEffect_PlayerB",
+                "reason": [
+                    "GameRule",
+                    "PlayerB",
+                    {
+                        "isAttack": true,
+                        "isDefence": false
+                    }
+                ],
+                "description": "出擊",
+                "isOption": true,
+                "text": {
+                    "id": "createAttackPhaseRuleEffect_text_PlayerB",
+                    "title": [],
+                    "description": "出擊",
+                    "conditions": {
+                        "去地球": {
+                            "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n            const runtimeBattleArea = GameStateFn2.getRuntimeBattleArea(ctx3, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\");\n            if (runtimeBattleArea == \"\\u5B87\\u5B99\\u30A8\\u30EA\\u30A2\")\n              return null;\n            const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), opponentPlayerId = DefineFn2.PlayerIDFn.getOpponent(playerId2);\n            let unitIds = GameStateFn2.getItemIdsByBasyou(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, \"\\u914D\\u5099\\u30A8\\u30EA\\u30A2\")).filter((cardId) => GameStateFn2.getSetGroupRoot(ctx3, cardId) == cardId).filter((cardId) => GameStateFn2.getCardBattleArea(ctx3, cardId).includes(runtimeBattleArea)).filter((cardId) => GameStateFn2.getCard(ctx3, cardId).isRoll != !0);\n            const opponentUnitIds = GameStateFn2.getBattleGroup(ctx3, DefineFn2.AbsoluteBaSyouFn.of(opponentPlayerId, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\"));\n            if (opponentUnitIds.length) {\n              if (GameStateFn2.isABattleGroup(ctx3, [\"\\u9AD8\\u6A5F\\u52D5\"], opponentUnitIds[0]))\n                unitIds = unitIds.filter((id) => GameStateFn2.isSetGroupHasA(ctx3, [\"\\u9AD8\\u6A5F\\u52D5\"], id));\n            }\n            return {\n              title: [\"\\u30AB\\u30FC\\u30C9\", unitIds.map((id) => {\n                return [id, GameStateFn2.getItemBaSyou(ctx3, id)];\n              }), []],\n              flags: { isGoBattleArea1: !0 }\n            };\n          }",
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), fackCardId = DefineFn2.EffectFn.getCardID(effect), earthPairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, \"\\u53BB\\u5730\\u7403\", fackCardId), phase2 = GameStateFn2.getPhase(ctx3);\n                for (let pair3 of earthPairs)\n                  ctx3 = GameStateFn2.mapItemState(ctx3, pair3[0], (is) => ({ ...is, isAttack: phase2[1] == \"\\u653B\\u6483\\u30B9\\u30C6\\u30C3\\u30D7\", isDefence: phase2[1] == \"\\u9632\\u5FA1\\u30B9\\u30C6\\u30C3\\u30D7\" })), ctx3 = GameStateFn2.doItemMove(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\"), pair3);\n                return ctx3;\n              }"
+                                }
+                            ],
+                            "groupKey": "出擊"
+                        },
+                        "去宇宙": {
+                            "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n            const runtimeBattleArea = GameStateFn2.getRuntimeBattleArea(ctx3, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\");\n            if (runtimeBattleArea == \"\\u5730\\u7403\\u30A8\\u30EA\\u30A2\")\n              return null;\n            const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), opponentPlayerId = DefineFn2.PlayerIDFn.getOpponent(playerId2);\n            let unitIds = GameStateFn2.getItemIdsByBasyou(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, \"\\u914D\\u5099\\u30A8\\u30EA\\u30A2\")).filter((cardId) => GameStateFn2.getSetGroupRoot(ctx3, cardId) == cardId).filter((cardId) => GameStateFn2.getCardBattleArea(ctx3, cardId).includes(runtimeBattleArea)).filter((cardId) => GameStateFn2.getCard(ctx3, cardId).isRoll != !0);\n            const opponentUnitIds = GameStateFn2.getBattleGroup(ctx3, DefineFn2.AbsoluteBaSyouFn.of(opponentPlayerId, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\"));\n            if (opponentUnitIds.length) {\n              if (GameStateFn2.isABattleGroup(ctx3, [\"\\u9AD8\\u6A5F\\u52D5\"], opponentUnitIds[0]))\n                unitIds = unitIds.filter((id) => GameStateFn2.isSetGroupHasA(ctx3, [\"\\u9AD8\\u6A5F\\u52D5\"], id));\n            }\n            return {\n              title: [\"\\u30AB\\u30FC\\u30C9\", unitIds.map((id) => {\n                return [id, GameStateFn2.getItemBaSyou(ctx3, id)];\n              }), []],\n              flags: { isGoBattleArea2: !0 }\n            };\n          }",
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), fackCardId = DefineFn2.EffectFn.getCardID(effect), spacePairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, \"\\u53BB\\u5B87\\u5B99\", fackCardId), phase2 = GameStateFn2.getPhase(ctx3);\n                for (let pair3 of spacePairs)\n                  ctx3 = GameStateFn2.mapItemState(ctx3, pair3[0], (is) => ({ ...is, isAttack: phase2[1] == \"\\u653B\\u6483\\u30B9\\u30C6\\u30C3\\u30D7\", isDefence: phase2[1] == \"\\u9632\\u5FA1\\u30B9\\u30C6\\u30C3\\u30D7\" })), ctx3 = GameStateFn2.doItemMove(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\"), pair3);\n                return ctx3;\n              }"
+                                }
+                            ],
+                            "groupKey": "出擊"
+                        }
+                    },
+                    "logicTreeActions": [
+                        {
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const fackCardId = DefineFn2.EffectFn.getCardID(effect), phase2 = GameStateFn2.getPhase(ctx3), pairs1 = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, \"\\u53BB\\u5730\\u7403\", fackCardId), pairs2 = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, \"\\u53BB\\u5B87\\u5B99\", fackCardId);\n                if (DefineFn2.PhaseFn.eq(phase2, [\"\\u6226\\u95D8\\u30D5\\u30A7\\u30A4\\u30BA\", \"\\u653B\\u6483\\u30B9\\u30C6\\u30C3\\u30D7\", \"\\u898F\\u5B9A\\u306E\\u52B9\\u679C\"]))\n                  ctx3 = GameStateFn2.doTriggerEvent(ctx3, {\n                    title: [\"\\u3053\\u306E\\u30AB\\u30FC\\u30C9\\u304C\\u653B\\u6483\\u306B\\u51FA\\u6483\\u3057\\u305F\\u5834\\u5408\"],\n                    cardIds: [...pairs1, ...pairs2].map((p) => p[0])\n                  });\n                return ctx3;\n              }"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 1054,
+            "description": "onItemMove:PlayerB_96 = [\"PlayerB\",\"配備エリア\"] => [\"PlayerB\",\"戦闘エリア1\"]",
+            "effect": {
+                "id": "createAttackPhaseRuleEffect_PlayerB",
+                "reason": [
+                    "GameRule",
+                    "PlayerB",
+                    {
+                        "isAttack": true,
+                        "isDefence": false
+                    }
+                ],
+                "description": "出擊",
+                "isOption": true,
+                "text": {
+                    "id": "createAttackPhaseRuleEffect_text_PlayerB",
+                    "title": [],
+                    "description": "出擊",
+                    "conditions": {
+                        "去地球": {
+                            "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n            const runtimeBattleArea = GameStateFn2.getRuntimeBattleArea(ctx3, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\");\n            if (runtimeBattleArea == \"\\u5B87\\u5B99\\u30A8\\u30EA\\u30A2\")\n              return null;\n            const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), opponentPlayerId = DefineFn2.PlayerIDFn.getOpponent(playerId2);\n            let unitIds = GameStateFn2.getItemIdsByBasyou(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, \"\\u914D\\u5099\\u30A8\\u30EA\\u30A2\")).filter((cardId) => GameStateFn2.getSetGroupRoot(ctx3, cardId) == cardId).filter((cardId) => GameStateFn2.getCardBattleArea(ctx3, cardId).includes(runtimeBattleArea)).filter((cardId) => GameStateFn2.getCard(ctx3, cardId).isRoll != !0);\n            const opponentUnitIds = GameStateFn2.getBattleGroup(ctx3, DefineFn2.AbsoluteBaSyouFn.of(opponentPlayerId, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\"));\n            if (opponentUnitIds.length) {\n              if (GameStateFn2.isABattleGroup(ctx3, [\"\\u9AD8\\u6A5F\\u52D5\"], opponentUnitIds[0]))\n                unitIds = unitIds.filter((id) => GameStateFn2.isSetGroupHasA(ctx3, [\"\\u9AD8\\u6A5F\\u52D5\"], id));\n            }\n            return {\n              title: [\"\\u30AB\\u30FC\\u30C9\", unitIds.map((id) => {\n                return [id, GameStateFn2.getItemBaSyou(ctx3, id)];\n              }), []],\n              flags: { isGoBattleArea1: !0 }\n            };\n          }",
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), fackCardId = DefineFn2.EffectFn.getCardID(effect), earthPairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, \"\\u53BB\\u5730\\u7403\", fackCardId), phase2 = GameStateFn2.getPhase(ctx3);\n                for (let pair3 of earthPairs)\n                  ctx3 = GameStateFn2.mapItemState(ctx3, pair3[0], (is) => ({ ...is, isAttack: phase2[1] == \"\\u653B\\u6483\\u30B9\\u30C6\\u30C3\\u30D7\", isDefence: phase2[1] == \"\\u9632\\u5FA1\\u30B9\\u30C6\\u30C3\\u30D7\" })), ctx3 = GameStateFn2.doItemMove(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\"), pair3);\n                return ctx3;\n              }"
+                                }
+                            ],
+                            "groupKey": "出擊"
+                        },
+                        "去宇宙": {
+                            "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n            const runtimeBattleArea = GameStateFn2.getRuntimeBattleArea(ctx3, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\");\n            if (runtimeBattleArea == \"\\u5730\\u7403\\u30A8\\u30EA\\u30A2\")\n              return null;\n            const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), opponentPlayerId = DefineFn2.PlayerIDFn.getOpponent(playerId2);\n            let unitIds = GameStateFn2.getItemIdsByBasyou(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, \"\\u914D\\u5099\\u30A8\\u30EA\\u30A2\")).filter((cardId) => GameStateFn2.getSetGroupRoot(ctx3, cardId) == cardId).filter((cardId) => GameStateFn2.getCardBattleArea(ctx3, cardId).includes(runtimeBattleArea)).filter((cardId) => GameStateFn2.getCard(ctx3, cardId).isRoll != !0);\n            const opponentUnitIds = GameStateFn2.getBattleGroup(ctx3, DefineFn2.AbsoluteBaSyouFn.of(opponentPlayerId, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\"));\n            if (opponentUnitIds.length) {\n              if (GameStateFn2.isABattleGroup(ctx3, [\"\\u9AD8\\u6A5F\\u52D5\"], opponentUnitIds[0]))\n                unitIds = unitIds.filter((id) => GameStateFn2.isSetGroupHasA(ctx3, [\"\\u9AD8\\u6A5F\\u52D5\"], id));\n            }\n            return {\n              title: [\"\\u30AB\\u30FC\\u30C9\", unitIds.map((id) => {\n                return [id, GameStateFn2.getItemBaSyou(ctx3, id)];\n              }), []],\n              flags: { isGoBattleArea2: !0 }\n            };\n          }",
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), fackCardId = DefineFn2.EffectFn.getCardID(effect), spacePairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, \"\\u53BB\\u5B87\\u5B99\", fackCardId), phase2 = GameStateFn2.getPhase(ctx3);\n                for (let pair3 of spacePairs)\n                  ctx3 = GameStateFn2.mapItemState(ctx3, pair3[0], (is) => ({ ...is, isAttack: phase2[1] == \"\\u653B\\u6483\\u30B9\\u30C6\\u30C3\\u30D7\", isDefence: phase2[1] == \"\\u9632\\u5FA1\\u30B9\\u30C6\\u30C3\\u30D7\" })), ctx3 = GameStateFn2.doItemMove(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\"), pair3);\n                return ctx3;\n              }"
+                                }
+                            ],
+                            "groupKey": "出擊"
+                        }
+                    },
+                    "logicTreeActions": [
+                        {
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const fackCardId = DefineFn2.EffectFn.getCardID(effect), phase2 = GameStateFn2.getPhase(ctx3), pairs1 = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, \"\\u53BB\\u5730\\u7403\", fackCardId), pairs2 = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, \"\\u53BB\\u5B87\\u5B99\", fackCardId);\n                if (DefineFn2.PhaseFn.eq(phase2, [\"\\u6226\\u95D8\\u30D5\\u30A7\\u30A4\\u30BA\", \"\\u653B\\u6483\\u30B9\\u30C6\\u30C3\\u30D7\", \"\\u898F\\u5B9A\\u306E\\u52B9\\u679C\"]))\n                  ctx3 = GameStateFn2.doTriggerEvent(ctx3, {\n                    title: [\"\\u3053\\u306E\\u30AB\\u30FC\\u30C9\\u304C\\u653B\\u6483\\u306B\\u51FA\\u6483\\u3057\\u305F\\u5834\\u5408\"],\n                    cardIds: [...pairs1, ...pairs2].map((p) => p[0])\n                  });\n                return ctx3;\n              }"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 1053,
+            "description": "onEvent: GameEventOnMove [\"PlayerB_96\"]",
+            "effect": {
+                "id": "createAttackPhaseRuleEffect_PlayerB",
+                "reason": [
+                    "GameRule",
+                    "PlayerB",
+                    {
+                        "isAttack": true,
+                        "isDefence": false
+                    }
+                ],
+                "description": "出擊",
+                "isOption": true,
+                "text": {
+                    "id": "createAttackPhaseRuleEffect_text_PlayerB",
+                    "title": [],
+                    "description": "出擊",
+                    "conditions": {
+                        "去地球": {
+                            "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n            const runtimeBattleArea = GameStateFn2.getRuntimeBattleArea(ctx3, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\");\n            if (runtimeBattleArea == \"\\u5B87\\u5B99\\u30A8\\u30EA\\u30A2\")\n              return null;\n            const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), opponentPlayerId = DefineFn2.PlayerIDFn.getOpponent(playerId2);\n            let unitIds = GameStateFn2.getItemIdsByBasyou(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, \"\\u914D\\u5099\\u30A8\\u30EA\\u30A2\")).filter((cardId) => GameStateFn2.getSetGroupRoot(ctx3, cardId) == cardId).filter((cardId) => GameStateFn2.getCardBattleArea(ctx3, cardId).includes(runtimeBattleArea)).filter((cardId) => GameStateFn2.getCard(ctx3, cardId).isRoll != !0);\n            const opponentUnitIds = GameStateFn2.getBattleGroup(ctx3, DefineFn2.AbsoluteBaSyouFn.of(opponentPlayerId, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\"));\n            if (opponentUnitIds.length) {\n              if (GameStateFn2.isABattleGroup(ctx3, [\"\\u9AD8\\u6A5F\\u52D5\"], opponentUnitIds[0]))\n                unitIds = unitIds.filter((id) => GameStateFn2.isSetGroupHasA(ctx3, [\"\\u9AD8\\u6A5F\\u52D5\"], id));\n            }\n            return {\n              title: [\"\\u30AB\\u30FC\\u30C9\", unitIds.map((id) => {\n                return [id, GameStateFn2.getItemBaSyou(ctx3, id)];\n              }), []],\n              flags: { isGoBattleArea1: !0 }\n            };\n          }",
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), fackCardId = DefineFn2.EffectFn.getCardID(effect), earthPairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, \"\\u53BB\\u5730\\u7403\", fackCardId), phase2 = GameStateFn2.getPhase(ctx3);\n                for (let pair3 of earthPairs)\n                  ctx3 = GameStateFn2.mapItemState(ctx3, pair3[0], (is) => ({ ...is, isAttack: phase2[1] == \"\\u653B\\u6483\\u30B9\\u30C6\\u30C3\\u30D7\", isDefence: phase2[1] == \"\\u9632\\u5FA1\\u30B9\\u30C6\\u30C3\\u30D7\" })), ctx3 = GameStateFn2.doItemMove(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\"), pair3);\n                return ctx3;\n              }"
+                                }
+                            ],
+                            "groupKey": "出擊"
+                        },
+                        "去宇宙": {
+                            "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n            const runtimeBattleArea = GameStateFn2.getRuntimeBattleArea(ctx3, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\");\n            if (runtimeBattleArea == \"\\u5730\\u7403\\u30A8\\u30EA\\u30A2\")\n              return null;\n            const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), opponentPlayerId = DefineFn2.PlayerIDFn.getOpponent(playerId2);\n            let unitIds = GameStateFn2.getItemIdsByBasyou(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, \"\\u914D\\u5099\\u30A8\\u30EA\\u30A2\")).filter((cardId) => GameStateFn2.getSetGroupRoot(ctx3, cardId) == cardId).filter((cardId) => GameStateFn2.getCardBattleArea(ctx3, cardId).includes(runtimeBattleArea)).filter((cardId) => GameStateFn2.getCard(ctx3, cardId).isRoll != !0);\n            const opponentUnitIds = GameStateFn2.getBattleGroup(ctx3, DefineFn2.AbsoluteBaSyouFn.of(opponentPlayerId, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\"));\n            if (opponentUnitIds.length) {\n              if (GameStateFn2.isABattleGroup(ctx3, [\"\\u9AD8\\u6A5F\\u52D5\"], opponentUnitIds[0]))\n                unitIds = unitIds.filter((id) => GameStateFn2.isSetGroupHasA(ctx3, [\"\\u9AD8\\u6A5F\\u52D5\"], id));\n            }\n            return {\n              title: [\"\\u30AB\\u30FC\\u30C9\", unitIds.map((id) => {\n                return [id, GameStateFn2.getItemBaSyou(ctx3, id)];\n              }), []],\n              flags: { isGoBattleArea2: !0 }\n            };\n          }",
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), fackCardId = DefineFn2.EffectFn.getCardID(effect), spacePairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, \"\\u53BB\\u5B87\\u5B99\", fackCardId), phase2 = GameStateFn2.getPhase(ctx3);\n                for (let pair3 of spacePairs)\n                  ctx3 = GameStateFn2.mapItemState(ctx3, pair3[0], (is) => ({ ...is, isAttack: phase2[1] == \"\\u653B\\u6483\\u30B9\\u30C6\\u30C3\\u30D7\", isDefence: phase2[1] == \"\\u9632\\u5FA1\\u30B9\\u30C6\\u30C3\\u30D7\" })), ctx3 = GameStateFn2.doItemMove(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\"), pair3);\n                return ctx3;\n              }"
+                                }
+                            ],
+                            "groupKey": "出擊"
+                        }
+                    },
+                    "logicTreeActions": [
+                        {
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const fackCardId = DefineFn2.EffectFn.getCardID(effect), phase2 = GameStateFn2.getPhase(ctx3), pairs1 = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, \"\\u53BB\\u5730\\u7403\", fackCardId), pairs2 = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, \"\\u53BB\\u5B87\\u5B99\", fackCardId);\n                if (DefineFn2.PhaseFn.eq(phase2, [\"\\u6226\\u95D8\\u30D5\\u30A7\\u30A4\\u30BA\", \"\\u653B\\u6483\\u30B9\\u30C6\\u30C3\\u30D7\", \"\\u898F\\u5B9A\\u306E\\u52B9\\u679C\"]))\n                  ctx3 = GameStateFn2.doTriggerEvent(ctx3, {\n                    title: [\"\\u3053\\u306E\\u30AB\\u30FC\\u30C9\\u304C\\u653B\\u6483\\u306B\\u51FA\\u6483\\u3057\\u305F\\u5834\\u5408\"],\n                    cardIds: [...pairs1, ...pairs2].map((p) => p[0])\n                  });\n                return ctx3;\n              }"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 1052,
             "description": "onEffectStart: 出擊",
             "effect": {
                 "id": "createAttackPhaseRuleEffect_PlayerB",
@@ -3768,57 +5519,57 @@ const TMP_CTX: GameStateWithFlowMemory = {
             }
         },
         {
-            "id": 808,
+            "id": 1051,
             "description": "onSetPhase:戦闘フェイズ,攻撃ステップ,規定の効果"
         },
         {
-            "id": 807,
+            "id": 1050,
             "description": "onSetPhase:戦闘フェイズ,攻撃ステップ,フリータイミング"
         },
         {
-            "id": 806,
+            "id": 1049,
             "description": "onEvent: GameEventOnTiming undefined"
         },
         {
-            "id": 805,
+            "id": 1048,
             "description": "onSetPhase:戦闘フェイズ,攻撃ステップ,ステップ開始"
         },
         {
-            "id": 804,
+            "id": 1047,
             "description": "onEvent: GameEventOnTiming undefined"
         },
         {
-            "id": 803,
+            "id": 1046,
             "description": "onSetPhase:配備フェイズ,フェイズ終了"
         },
         {
-            "id": 802,
+            "id": 1045,
             "description": "onEvent: カット終了時 undefined"
         },
         {
-            "id": 801,
-            "description": "onEffectEnd: Play ゲルググ"
+            "id": 1044,
+            "description": "onEffectEnd: unknown"
         },
         {
-            "id": 800,
-            "description": "onEvent: プレイされて場に出た場合 [\"PlayerB_96\"]",
+            "id": 1043,
+            "description": "onEvent: プレイされて場に出た場合 [\"PlayerB_92\"]",
             "effect": {
-                "id": "createUnitGoStageEffectFromPlayEffect_PlayerB_96",
+                "id": "createPlayCommandText_PlayerB_92_場に出る",
                 "reason": [
                     "場に出る",
                     "PlayerB",
-                    "PlayerB_96"
+                    "PlayerB_92"
                 ],
-                "description": "Play ゲルググ",
+                "description": "Play 狂気の落とし子",
                 "text": {
-                    "id": "createPlayUnitEffect_PlayerB_96",
-                    "description": "Play ゲルググ",
+                    "id": "getPlayCardEffects_commentText_PlayerB_92",
+                    "description": "unknown",
                     "title": [],
                     "logicTreeActions": [
                         {
                             "actions": [
                                 {
-                                    "title": "function _(ctx3, effect2, { DefineFn, GameStateFn }) {\n                  const cardId2 = DefineFn.EffectFn.getCardID(effect2), from = GameStateFn.getItemBaSyou(ctx3, cardId2), to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, \"\\u914D\\u5099\\u30A8\\u30EA\\u30A2\");\n                  ctx3 = GameStateFn.doItemMove(ctx3, to, [cardId2, from]);\n                  const hasHigh = GameStateFn.getCardHasSpeicalEffect(ctx3, [\"\\u6226\\u95D8\\u914D\\u5099\"], cardId2), hasPS = GameStateFn.getCardHasSpeicalEffect(ctx3, [\"\\u3010PS\\u88C5\\u7532\\u3011\"], cardId2), isRoll = (hasHigh || hasPS) == !1;\n                  return ctx3 = GameStateFn.doItemSetRollState(ctx3, isRoll, [cardId2, GameStateFn.getItemBaSyou(ctx3, cardId2)], { isSkipTargetMissing: !0 }), ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId2] }), ctx3;\n                }"
+                                    "title": "function _(ctx4, effect2, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                            const cardId3 = DefineFn2.EffectFn.getCardID(effect2), from2 = GameStateFn2.getItemBaSyou(ctx4, cardId3), to = DefineFn2.AbsoluteBaSyouFn.setBaSyouKeyword(from2, \"\\u30B8\\u30E3\\u30F3\\u30AF\\u30E4\\u30FC\\u30C9\");\n                            return ctx4 = GameStateFn2.doItemMove(ctx4, to, [cardId3, from2]), ctx4 = GameStateFn2.doTriggerEvent(ctx4, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId3] }), ctx4;\n                          }"
                                 }
                             ]
                         }
@@ -3827,25 +5578,25 @@ const TMP_CTX: GameStateWithFlowMemory = {
             }
         },
         {
-            "id": 799,
-            "description": "PlayerB_96.isRoll false => true",
+            "id": 1042,
+            "description": "onItemMove:PlayerB_92 = [\"PlayerB\",\"プレイされているカード\"] => [\"PlayerB\",\"ジャンクヤード\"]",
             "effect": {
-                "id": "createUnitGoStageEffectFromPlayEffect_PlayerB_96",
+                "id": "createPlayCommandText_PlayerB_92_場に出る",
                 "reason": [
                     "場に出る",
                     "PlayerB",
-                    "PlayerB_96"
+                    "PlayerB_92"
                 ],
-                "description": "Play ゲルググ",
+                "description": "Play 狂気の落とし子",
                 "text": {
-                    "id": "createPlayUnitEffect_PlayerB_96",
-                    "description": "Play ゲルググ",
+                    "id": "getPlayCardEffects_commentText_PlayerB_92",
+                    "description": "unknown",
                     "title": [],
                     "logicTreeActions": [
                         {
                             "actions": [
                                 {
-                                    "title": "function _(ctx3, effect2, { DefineFn, GameStateFn }) {\n                  const cardId2 = DefineFn.EffectFn.getCardID(effect2), from = GameStateFn.getItemBaSyou(ctx3, cardId2), to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, \"\\u914D\\u5099\\u30A8\\u30EA\\u30A2\");\n                  ctx3 = GameStateFn.doItemMove(ctx3, to, [cardId2, from]);\n                  const hasHigh = GameStateFn.getCardHasSpeicalEffect(ctx3, [\"\\u6226\\u95D8\\u914D\\u5099\"], cardId2), hasPS = GameStateFn.getCardHasSpeicalEffect(ctx3, [\"\\u3010PS\\u88C5\\u7532\\u3011\"], cardId2), isRoll = (hasHigh || hasPS) == !1;\n                  return ctx3 = GameStateFn.doItemSetRollState(ctx3, isRoll, [cardId2, GameStateFn.getItemBaSyou(ctx3, cardId2)], { isSkipTargetMissing: !0 }), ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId2] }), ctx3;\n                }"
+                                    "title": "function _(ctx4, effect2, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                            const cardId3 = DefineFn2.EffectFn.getCardID(effect2), from2 = GameStateFn2.getItemBaSyou(ctx4, cardId3), to = DefineFn2.AbsoluteBaSyouFn.setBaSyouKeyword(from2, \"\\u30B8\\u30E3\\u30F3\\u30AF\\u30E4\\u30FC\\u30C9\");\n                            return ctx4 = GameStateFn2.doItemMove(ctx4, to, [cardId3, from2]), ctx4 = GameStateFn2.doTriggerEvent(ctx4, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId3] }), ctx4;\n                          }"
                                 }
                             ]
                         }
@@ -3854,25 +5605,25 @@ const TMP_CTX: GameStateWithFlowMemory = {
             }
         },
         {
-            "id": 798,
-            "description": "onItemMove:PlayerB_96 = [\"PlayerB\",\"プレイされているカード\"] => [\"PlayerB\",\"配備エリア\"]",
+            "id": 1041,
+            "description": "onEvent: GameEventOnMove [\"PlayerB_92\"]",
             "effect": {
-                "id": "createUnitGoStageEffectFromPlayEffect_PlayerB_96",
+                "id": "createPlayCommandText_PlayerB_92_場に出る",
                 "reason": [
                     "場に出る",
                     "PlayerB",
-                    "PlayerB_96"
+                    "PlayerB_92"
                 ],
-                "description": "Play ゲルググ",
+                "description": "Play 狂気の落とし子",
                 "text": {
-                    "id": "createPlayUnitEffect_PlayerB_96",
-                    "description": "Play ゲルググ",
+                    "id": "getPlayCardEffects_commentText_PlayerB_92",
+                    "description": "unknown",
                     "title": [],
                     "logicTreeActions": [
                         {
                             "actions": [
                                 {
-                                    "title": "function _(ctx3, effect2, { DefineFn, GameStateFn }) {\n                  const cardId2 = DefineFn.EffectFn.getCardID(effect2), from = GameStateFn.getItemBaSyou(ctx3, cardId2), to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, \"\\u914D\\u5099\\u30A8\\u30EA\\u30A2\");\n                  ctx3 = GameStateFn.doItemMove(ctx3, to, [cardId2, from]);\n                  const hasHigh = GameStateFn.getCardHasSpeicalEffect(ctx3, [\"\\u6226\\u95D8\\u914D\\u5099\"], cardId2), hasPS = GameStateFn.getCardHasSpeicalEffect(ctx3, [\"\\u3010PS\\u88C5\\u7532\\u3011\"], cardId2), isRoll = (hasHigh || hasPS) == !1;\n                  return ctx3 = GameStateFn.doItemSetRollState(ctx3, isRoll, [cardId2, GameStateFn.getItemBaSyou(ctx3, cardId2)], { isSkipTargetMissing: !0 }), ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId2] }), ctx3;\n                }"
+                                    "title": "function _(ctx4, effect2, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                            const cardId3 = DefineFn2.EffectFn.getCardID(effect2), from2 = GameStateFn2.getItemBaSyou(ctx4, cardId3), to = DefineFn2.AbsoluteBaSyouFn.setBaSyouKeyword(from2, \"\\u30B8\\u30E3\\u30F3\\u30AF\\u30E4\\u30FC\\u30C9\");\n                            return ctx4 = GameStateFn2.doItemMove(ctx4, to, [cardId3, from2]), ctx4 = GameStateFn2.doTriggerEvent(ctx4, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId3] }), ctx4;\n                          }"
                                 }
                             ]
                         }
@@ -3881,25 +5632,25 @@ const TMP_CTX: GameStateWithFlowMemory = {
             }
         },
         {
-            "id": 797,
-            "description": "onEvent: GameEventOnMove [\"PlayerB_96\"]",
+            "id": 1040,
+            "description": "onEffectStart: unknown",
             "effect": {
-                "id": "createUnitGoStageEffectFromPlayEffect_PlayerB_96",
+                "id": "createPlayCommandText_PlayerB_92_場に出る",
                 "reason": [
                     "場に出る",
                     "PlayerB",
-                    "PlayerB_96"
+                    "PlayerB_92"
                 ],
-                "description": "Play ゲルググ",
+                "description": "Play 狂気の落とし子",
                 "text": {
-                    "id": "createPlayUnitEffect_PlayerB_96",
-                    "description": "Play ゲルググ",
+                    "id": "getPlayCardEffects_commentText_PlayerB_92",
+                    "description": "unknown",
                     "title": [],
                     "logicTreeActions": [
                         {
                             "actions": [
                                 {
-                                    "title": "function _(ctx3, effect2, { DefineFn, GameStateFn }) {\n                  const cardId2 = DefineFn.EffectFn.getCardID(effect2), from = GameStateFn.getItemBaSyou(ctx3, cardId2), to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, \"\\u914D\\u5099\\u30A8\\u30EA\\u30A2\");\n                  ctx3 = GameStateFn.doItemMove(ctx3, to, [cardId2, from]);\n                  const hasHigh = GameStateFn.getCardHasSpeicalEffect(ctx3, [\"\\u6226\\u95D8\\u914D\\u5099\"], cardId2), hasPS = GameStateFn.getCardHasSpeicalEffect(ctx3, [\"\\u3010PS\\u88C5\\u7532\\u3011\"], cardId2), isRoll = (hasHigh || hasPS) == !1;\n                  return ctx3 = GameStateFn.doItemSetRollState(ctx3, isRoll, [cardId2, GameStateFn.getItemBaSyou(ctx3, cardId2)], { isSkipTargetMissing: !0 }), ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId2] }), ctx3;\n                }"
+                                    "title": "function _(ctx4, effect2, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                            const cardId3 = DefineFn2.EffectFn.getCardID(effect2), from2 = GameStateFn2.getItemBaSyou(ctx4, cardId3), to = DefineFn2.AbsoluteBaSyouFn.setBaSyouKeyword(from2, \"\\u30B8\\u30E3\\u30F3\\u30AF\\u30E4\\u30FC\\u30C9\");\n                            return ctx4 = GameStateFn2.doItemMove(ctx4, to, [cardId3, from2]), ctx4 = GameStateFn2.doTriggerEvent(ctx4, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId3] }), ctx4;\n                          }"
                                 }
                             ]
                         }
@@ -3908,79 +5659,25 @@ const TMP_CTX: GameStateWithFlowMemory = {
             }
         },
         {
-            "id": 796,
-            "description": "onEvent: このカードが場に出た場合 [\"PlayerB_96\"]",
-            "effect": {
-                "id": "createUnitGoStageEffectFromPlayEffect_PlayerB_96",
-                "reason": [
-                    "場に出る",
-                    "PlayerB",
-                    "PlayerB_96"
-                ],
-                "description": "Play ゲルググ",
-                "text": {
-                    "id": "createPlayUnitEffect_PlayerB_96",
-                    "description": "Play ゲルググ",
-                    "title": [],
-                    "logicTreeActions": [
-                        {
-                            "actions": [
-                                {
-                                    "title": "function _(ctx3, effect2, { DefineFn, GameStateFn }) {\n                  const cardId2 = DefineFn.EffectFn.getCardID(effect2), from = GameStateFn.getItemBaSyou(ctx3, cardId2), to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, \"\\u914D\\u5099\\u30A8\\u30EA\\u30A2\");\n                  ctx3 = GameStateFn.doItemMove(ctx3, to, [cardId2, from]);\n                  const hasHigh = GameStateFn.getCardHasSpeicalEffect(ctx3, [\"\\u6226\\u95D8\\u914D\\u5099\"], cardId2), hasPS = GameStateFn.getCardHasSpeicalEffect(ctx3, [\"\\u3010PS\\u88C5\\u7532\\u3011\"], cardId2), isRoll = (hasHigh || hasPS) == !1;\n                  return ctx3 = GameStateFn.doItemSetRollState(ctx3, isRoll, [cardId2, GameStateFn.getItemBaSyou(ctx3, cardId2)], { isSkipTargetMissing: !0 }), ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId2] }), ctx3;\n                }"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
+            "id": 1039,
+            "description": "onEffectEnd: Play 狂気の落とし子"
         },
         {
-            "id": 795,
-            "description": "onEffectStart: Play ゲルググ",
+            "id": 1038,
+            "description": "onItemMove:PlayerB_92 = [\"PlayerB\",\"手札\"] => [\"PlayerB\",\"プレイされているカード\"]",
             "effect": {
-                "id": "createUnitGoStageEffectFromPlayEffect_PlayerB_96",
-                "reason": [
-                    "場に出る",
-                    "PlayerB",
-                    "PlayerB_96"
-                ],
-                "description": "Play ゲルググ",
-                "text": {
-                    "id": "createPlayUnitEffect_PlayerB_96",
-                    "description": "Play ゲルググ",
-                    "title": [],
-                    "logicTreeActions": [
-                        {
-                            "actions": [
-                                {
-                                    "title": "function _(ctx3, effect2, { DefineFn, GameStateFn }) {\n                  const cardId2 = DefineFn.EffectFn.getCardID(effect2), from = GameStateFn.getItemBaSyou(ctx3, cardId2), to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, \"\\u914D\\u5099\\u30A8\\u30EA\\u30A2\");\n                  ctx3 = GameStateFn.doItemMove(ctx3, to, [cardId2, from]);\n                  const hasHigh = GameStateFn.getCardHasSpeicalEffect(ctx3, [\"\\u6226\\u95D8\\u914D\\u5099\"], cardId2), hasPS = GameStateFn.getCardHasSpeicalEffect(ctx3, [\"\\u3010PS\\u88C5\\u7532\\u3011\"], cardId2), isRoll = (hasHigh || hasPS) == !1;\n                  return ctx3 = GameStateFn.doItemSetRollState(ctx3, isRoll, [cardId2, GameStateFn.getItemBaSyou(ctx3, cardId2)], { isSkipTargetMissing: !0 }), ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId2] }), ctx3;\n                }"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "id": 794,
-            "description": "onEffectEnd: Play ゲルググ"
-        },
-        {
-            "id": 793,
-            "description": "onItemMove:PlayerB_96 = [\"PlayerB\",\"手札\"] => [\"PlayerB\",\"プレイされているカード\"]",
-            "effect": {
-                "id": "createPlayUnitEffect_PlayerB_96",
+                "id": "createPlayCommandText_PlayerB_92",
                 "reason": [
                     "PlayCard",
                     "PlayerB",
-                    "PlayerB_96",
+                    "PlayerB_92",
                     {
-                        "isPlayUnit": true
+                        "isPlayCommand": true
                     }
                 ],
-                "description": "Play ゲルググ",
+                "description": "Play 狂気の落とし子",
                 "text": {
-                    "id": "createPlayUnitEffect_PlayerB_96",
+                    "id": "createPlayCommandText_PlayerB_92",
                     "title": [
                         "使用型",
                         [
@@ -3988,7 +5685,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
                             "配備フェイズ"
                         ]
                     ],
-                    "description": "Play ゲルググ",
+                    "description": "Play 狂気の落とし子",
                     "conditions": {
                         "合計国力〔x〕": {
                             "actions": [
@@ -4035,13 +5732,52 @@ const TMP_CTX: GameStateWithFlowMemory = {
                                 }
                             ],
                             "groupKey": "支付橫置國力"
+                        },
+                        "橫置支付2[緑]": {
+                            "title": [
+                                "RollColor",
+                                "緑"
+                            ],
+                            "actions": [
+                                {
+                                    "title": [
+                                        "_ロールする",
+                                        "ロール"
+                                    ],
+                                    "vars": [
+                                        "橫置支付2[緑]"
+                                    ]
+                                }
+                            ],
+                            "groupKey": "支付橫置國力"
                         }
                     },
                     "logicTreeActions": [
                         {
+                            "logicTree": {
+                                "type": "And",
+                                "children": [
+                                    {
+                                        "type": "Leaf",
+                                        "value": "合計国力〔x〕"
+                                    },
+                                    {
+                                        "type": "Leaf",
+                                        "value": "橫置支付0[緑]"
+                                    },
+                                    {
+                                        "type": "Leaf",
+                                        "value": "橫置支付1[緑]"
+                                    },
+                                    {
+                                        "type": "Leaf",
+                                        "value": "橫置支付2[緑]"
+                                    }
+                                ]
+                            },
                             "actions": [
                                 {
-                                    "title": "function _(ctx3, effect, { DefineFn, GameStateFn, ToolFn: ToolFn2 }) {\n              const cardId2 = DefineFn.EffectFn.getCardID(effect), from = GameStateFn.getItemBaSyou(ctx3, cardId2);\n              ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, \"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u3044\\u308B\\u30AB\\u30FC\\u30C9\"), [cardId2, from]);\n              const newE = GameStateFn.createUnitGoStageEffectFromPlayEffect(ctx3, effect);\n              return GameStateFn.addStackEffect(ctx3, newE);\n            }"
+                                    "title": "function _(ctx3, effect, { DefineFn, GameStateFn, ToolFn: ToolFn2 }) {\n              const cardId2 = DefineFn.EffectFn.getCardID(effect), prototype2 = GameStateFn.getItemPrototype(ctx3, cardId2);\n              if (prototype2.category == \"\\u30B3\\u30DE\\u30F3\\u30C9\")\n                ;\n              else\n                throw new Error;\n              const commandText2 = prototype2.commandText, from = GameStateFn.getItemBaSyou(ctx3, cardId2);\n              return ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, \"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u3044\\u308B\\u30AB\\u30FC\\u30C9\"), [cardId2, from]), GameStateFn.addStackEffect(ctx3, {\n                id: `${effect.id}_\\u5834\\u306B\\u51FA\\u308B`,\n                reason: [\"\\u5834\\u306B\\u51FA\\u308B\", DefineFn.EffectFn.getPlayerID(effect), DefineFn.EffectFn.getCardID(effect)],\n                description: effect.text.description,\n                text: {\n                  id: commandText2?.id || `getPlayCardEffects_commentText_${cardId2}`,\n                  description: commandText2?.description || \"unknown\",\n                  title: [],\n                  logicTreeActions: [\n                    {\n                      actions: [\n                        {\n                          title: function _(ctx4, effect2, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                            const cardId3 = DefineFn2.EffectFn.getCardID(effect2), from2 = GameStateFn2.getItemBaSyou(ctx4, cardId3), to = DefineFn2.AbsoluteBaSyouFn.setBaSyouKeyword(from2, \"\\u30B8\\u30E3\\u30F3\\u30AF\\u30E4\\u30FC\\u30C9\");\n                            return ctx4 = GameStateFn2.doItemMove(ctx4, to, [cardId3, from2]), ctx4 = GameStateFn2.doTriggerEvent(ctx4, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId3] }), ctx4;\n                          }.toString()\n                        },\n                        ...commandText2?.logicTreeActions?.[0]?.actions || []\n                      ]\n                    }\n                  ]\n                }\n              });\n            }"
                                 }
                             ]
                         }
@@ -4050,21 +5786,21 @@ const TMP_CTX: GameStateWithFlowMemory = {
             }
         },
         {
-            "id": 792,
-            "description": "onEvent: GameEventOnMove [\"PlayerB_96\"]",
+            "id": 1037,
+            "description": "onEvent: GameEventOnMove [\"PlayerB_92\"]",
             "effect": {
-                "id": "createPlayUnitEffect_PlayerB_96",
+                "id": "createPlayCommandText_PlayerB_92",
                 "reason": [
                     "PlayCard",
                     "PlayerB",
-                    "PlayerB_96",
+                    "PlayerB_92",
                     {
-                        "isPlayUnit": true
+                        "isPlayCommand": true
                     }
                 ],
-                "description": "Play ゲルググ",
+                "description": "Play 狂気の落とし子",
                 "text": {
-                    "id": "createPlayUnitEffect_PlayerB_96",
+                    "id": "createPlayCommandText_PlayerB_92",
                     "title": [
                         "使用型",
                         [
@@ -4072,7 +5808,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
                             "配備フェイズ"
                         ]
                     ],
-                    "description": "Play ゲルググ",
+                    "description": "Play 狂気の落とし子",
                     "conditions": {
                         "合計国力〔x〕": {
                             "actions": [
@@ -4119,13 +5855,52 @@ const TMP_CTX: GameStateWithFlowMemory = {
                                 }
                             ],
                             "groupKey": "支付橫置國力"
+                        },
+                        "橫置支付2[緑]": {
+                            "title": [
+                                "RollColor",
+                                "緑"
+                            ],
+                            "actions": [
+                                {
+                                    "title": [
+                                        "_ロールする",
+                                        "ロール"
+                                    ],
+                                    "vars": [
+                                        "橫置支付2[緑]"
+                                    ]
+                                }
+                            ],
+                            "groupKey": "支付橫置國力"
                         }
                     },
                     "logicTreeActions": [
                         {
+                            "logicTree": {
+                                "type": "And",
+                                "children": [
+                                    {
+                                        "type": "Leaf",
+                                        "value": "合計国力〔x〕"
+                                    },
+                                    {
+                                        "type": "Leaf",
+                                        "value": "橫置支付0[緑]"
+                                    },
+                                    {
+                                        "type": "Leaf",
+                                        "value": "橫置支付1[緑]"
+                                    },
+                                    {
+                                        "type": "Leaf",
+                                        "value": "橫置支付2[緑]"
+                                    }
+                                ]
+                            },
                             "actions": [
                                 {
-                                    "title": "function _(ctx3, effect, { DefineFn, GameStateFn, ToolFn: ToolFn2 }) {\n              const cardId2 = DefineFn.EffectFn.getCardID(effect), from = GameStateFn.getItemBaSyou(ctx3, cardId2);\n              ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, \"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u3044\\u308B\\u30AB\\u30FC\\u30C9\"), [cardId2, from]);\n              const newE = GameStateFn.createUnitGoStageEffectFromPlayEffect(ctx3, effect);\n              return GameStateFn.addStackEffect(ctx3, newE);\n            }"
+                                    "title": "function _(ctx3, effect, { DefineFn, GameStateFn, ToolFn: ToolFn2 }) {\n              const cardId2 = DefineFn.EffectFn.getCardID(effect), prototype2 = GameStateFn.getItemPrototype(ctx3, cardId2);\n              if (prototype2.category == \"\\u30B3\\u30DE\\u30F3\\u30C9\")\n                ;\n              else\n                throw new Error;\n              const commandText2 = prototype2.commandText, from = GameStateFn.getItemBaSyou(ctx3, cardId2);\n              return ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, \"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u3044\\u308B\\u30AB\\u30FC\\u30C9\"), [cardId2, from]), GameStateFn.addStackEffect(ctx3, {\n                id: `${effect.id}_\\u5834\\u306B\\u51FA\\u308B`,\n                reason: [\"\\u5834\\u306B\\u51FA\\u308B\", DefineFn.EffectFn.getPlayerID(effect), DefineFn.EffectFn.getCardID(effect)],\n                description: effect.text.description,\n                text: {\n                  id: commandText2?.id || `getPlayCardEffects_commentText_${cardId2}`,\n                  description: commandText2?.description || \"unknown\",\n                  title: [],\n                  logicTreeActions: [\n                    {\n                      actions: [\n                        {\n                          title: function _(ctx4, effect2, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                            const cardId3 = DefineFn2.EffectFn.getCardID(effect2), from2 = GameStateFn2.getItemBaSyou(ctx4, cardId3), to = DefineFn2.AbsoluteBaSyouFn.setBaSyouKeyword(from2, \"\\u30B8\\u30E3\\u30F3\\u30AF\\u30E4\\u30FC\\u30C9\");\n                            return ctx4 = GameStateFn2.doItemMove(ctx4, to, [cardId3, from2]), ctx4 = GameStateFn2.doTriggerEvent(ctx4, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId3] }), ctx4;\n                          }.toString()\n                        },\n                        ...commandText2?.logicTreeActions?.[0]?.actions || []\n                      ]\n                    }\n                  ]\n                }\n              });\n            }"
                                 }
                             ]
                         }
@@ -4134,21 +5909,21 @@ const TMP_CTX: GameStateWithFlowMemory = {
             }
         },
         {
-            "id": 791,
-            "description": "PlayerB_96.isFaceDown true => false",
+            "id": 1036,
+            "description": "PlayerB_92.isRoll undefined => false",
             "effect": {
-                "id": "createPlayUnitEffect_PlayerB_96",
+                "id": "createPlayCommandText_PlayerB_92",
                 "reason": [
                     "PlayCard",
                     "PlayerB",
-                    "PlayerB_96",
+                    "PlayerB_92",
                     {
-                        "isPlayUnit": true
+                        "isPlayCommand": true
                     }
                 ],
-                "description": "Play ゲルググ",
+                "description": "Play 狂気の落とし子",
                 "text": {
-                    "id": "createPlayUnitEffect_PlayerB_96",
+                    "id": "createPlayCommandText_PlayerB_92",
                     "title": [
                         "使用型",
                         [
@@ -4156,7 +5931,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
                             "配備フェイズ"
                         ]
                     ],
-                    "description": "Play ゲルググ",
+                    "description": "Play 狂気の落とし子",
                     "conditions": {
                         "合計国力〔x〕": {
                             "actions": [
@@ -4203,13 +5978,52 @@ const TMP_CTX: GameStateWithFlowMemory = {
                                 }
                             ],
                             "groupKey": "支付橫置國力"
+                        },
+                        "橫置支付2[緑]": {
+                            "title": [
+                                "RollColor",
+                                "緑"
+                            ],
+                            "actions": [
+                                {
+                                    "title": [
+                                        "_ロールする",
+                                        "ロール"
+                                    ],
+                                    "vars": [
+                                        "橫置支付2[緑]"
+                                    ]
+                                }
+                            ],
+                            "groupKey": "支付橫置國力"
                         }
                     },
                     "logicTreeActions": [
                         {
+                            "logicTree": {
+                                "type": "And",
+                                "children": [
+                                    {
+                                        "type": "Leaf",
+                                        "value": "合計国力〔x〕"
+                                    },
+                                    {
+                                        "type": "Leaf",
+                                        "value": "橫置支付0[緑]"
+                                    },
+                                    {
+                                        "type": "Leaf",
+                                        "value": "橫置支付1[緑]"
+                                    },
+                                    {
+                                        "type": "Leaf",
+                                        "value": "橫置支付2[緑]"
+                                    }
+                                ]
+                            },
                             "actions": [
                                 {
-                                    "title": "function _(ctx3, effect, { DefineFn, GameStateFn, ToolFn: ToolFn2 }) {\n              const cardId2 = DefineFn.EffectFn.getCardID(effect), from = GameStateFn.getItemBaSyou(ctx3, cardId2);\n              ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, \"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u3044\\u308B\\u30AB\\u30FC\\u30C9\"), [cardId2, from]);\n              const newE = GameStateFn.createUnitGoStageEffectFromPlayEffect(ctx3, effect);\n              return GameStateFn.addStackEffect(ctx3, newE);\n            }"
+                                    "title": "function _(ctx3, effect, { DefineFn, GameStateFn, ToolFn: ToolFn2 }) {\n              const cardId2 = DefineFn.EffectFn.getCardID(effect), prototype2 = GameStateFn.getItemPrototype(ctx3, cardId2);\n              if (prototype2.category == \"\\u30B3\\u30DE\\u30F3\\u30C9\")\n                ;\n              else\n                throw new Error;\n              const commandText2 = prototype2.commandText, from = GameStateFn.getItemBaSyou(ctx3, cardId2);\n              return ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, \"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u3044\\u308B\\u30AB\\u30FC\\u30C9\"), [cardId2, from]), GameStateFn.addStackEffect(ctx3, {\n                id: `${effect.id}_\\u5834\\u306B\\u51FA\\u308B`,\n                reason: [\"\\u5834\\u306B\\u51FA\\u308B\", DefineFn.EffectFn.getPlayerID(effect), DefineFn.EffectFn.getCardID(effect)],\n                description: effect.text.description,\n                text: {\n                  id: commandText2?.id || `getPlayCardEffects_commentText_${cardId2}`,\n                  description: commandText2?.description || \"unknown\",\n                  title: [],\n                  logicTreeActions: [\n                    {\n                      actions: [\n                        {\n                          title: function _(ctx4, effect2, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                            const cardId3 = DefineFn2.EffectFn.getCardID(effect2), from2 = GameStateFn2.getItemBaSyou(ctx4, cardId3), to = DefineFn2.AbsoluteBaSyouFn.setBaSyouKeyword(from2, \"\\u30B8\\u30E3\\u30F3\\u30AF\\u30E4\\u30FC\\u30C9\");\n                            return ctx4 = GameStateFn2.doItemMove(ctx4, to, [cardId3, from2]), ctx4 = GameStateFn2.doTriggerEvent(ctx4, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId3] }), ctx4;\n                          }.toString()\n                        },\n                        ...commandText2?.logicTreeActions?.[0]?.actions || []\n                      ]\n                    }\n                  ]\n                }\n              });\n            }"
                                 }
                             ]
                         }
@@ -4218,21 +6032,21 @@ const TMP_CTX: GameStateWithFlowMemory = {
             }
         },
         {
-            "id": 790,
-            "description": "onEvent: プレイした場合 [\"PlayerB_96\"]",
+            "id": 1035,
+            "description": "onEvent: プレイした場合 [\"PlayerB_92\"]",
             "effect": {
-                "id": "createPlayUnitEffect_PlayerB_96",
+                "id": "createPlayCommandText_PlayerB_92",
                 "reason": [
                     "PlayCard",
                     "PlayerB",
-                    "PlayerB_96",
+                    "PlayerB_92",
                     {
-                        "isPlayUnit": true
+                        "isPlayCommand": true
                     }
                 ],
-                "description": "Play ゲルググ",
+                "description": "Play 狂気の落とし子",
                 "text": {
-                    "id": "createPlayUnitEffect_PlayerB_96",
+                    "id": "createPlayCommandText_PlayerB_92",
                     "title": [
                         "使用型",
                         [
@@ -4240,7 +6054,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
                             "配備フェイズ"
                         ]
                     ],
-                    "description": "Play ゲルググ",
+                    "description": "Play 狂気の落とし子",
                     "conditions": {
                         "合計国力〔x〕": {
                             "actions": [
@@ -4287,13 +6101,52 @@ const TMP_CTX: GameStateWithFlowMemory = {
                                 }
                             ],
                             "groupKey": "支付橫置國力"
+                        },
+                        "橫置支付2[緑]": {
+                            "title": [
+                                "RollColor",
+                                "緑"
+                            ],
+                            "actions": [
+                                {
+                                    "title": [
+                                        "_ロールする",
+                                        "ロール"
+                                    ],
+                                    "vars": [
+                                        "橫置支付2[緑]"
+                                    ]
+                                }
+                            ],
+                            "groupKey": "支付橫置國力"
                         }
                     },
                     "logicTreeActions": [
                         {
+                            "logicTree": {
+                                "type": "And",
+                                "children": [
+                                    {
+                                        "type": "Leaf",
+                                        "value": "合計国力〔x〕"
+                                    },
+                                    {
+                                        "type": "Leaf",
+                                        "value": "橫置支付0[緑]"
+                                    },
+                                    {
+                                        "type": "Leaf",
+                                        "value": "橫置支付1[緑]"
+                                    },
+                                    {
+                                        "type": "Leaf",
+                                        "value": "橫置支付2[緑]"
+                                    }
+                                ]
+                            },
                             "actions": [
                                 {
-                                    "title": "function _(ctx3, effect, { DefineFn, GameStateFn, ToolFn: ToolFn2 }) {\n              const cardId2 = DefineFn.EffectFn.getCardID(effect), from = GameStateFn.getItemBaSyou(ctx3, cardId2);\n              ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, \"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u3044\\u308B\\u30AB\\u30FC\\u30C9\"), [cardId2, from]);\n              const newE = GameStateFn.createUnitGoStageEffectFromPlayEffect(ctx3, effect);\n              return GameStateFn.addStackEffect(ctx3, newE);\n            }"
+                                    "title": "function _(ctx3, effect, { DefineFn, GameStateFn, ToolFn: ToolFn2 }) {\n              const cardId2 = DefineFn.EffectFn.getCardID(effect), prototype2 = GameStateFn.getItemPrototype(ctx3, cardId2);\n              if (prototype2.category == \"\\u30B3\\u30DE\\u30F3\\u30C9\")\n                ;\n              else\n                throw new Error;\n              const commandText2 = prototype2.commandText, from = GameStateFn.getItemBaSyou(ctx3, cardId2);\n              return ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, \"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u3044\\u308B\\u30AB\\u30FC\\u30C9\"), [cardId2, from]), GameStateFn.addStackEffect(ctx3, {\n                id: `${effect.id}_\\u5834\\u306B\\u51FA\\u308B`,\n                reason: [\"\\u5834\\u306B\\u51FA\\u308B\", DefineFn.EffectFn.getPlayerID(effect), DefineFn.EffectFn.getCardID(effect)],\n                description: effect.text.description,\n                text: {\n                  id: commandText2?.id || `getPlayCardEffects_commentText_${cardId2}`,\n                  description: commandText2?.description || \"unknown\",\n                  title: [],\n                  logicTreeActions: [\n                    {\n                      actions: [\n                        {\n                          title: function _(ctx4, effect2, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                            const cardId3 = DefineFn2.EffectFn.getCardID(effect2), from2 = GameStateFn2.getItemBaSyou(ctx4, cardId3), to = DefineFn2.AbsoluteBaSyouFn.setBaSyouKeyword(from2, \"\\u30B8\\u30E3\\u30F3\\u30AF\\u30E4\\u30FC\\u30C9\");\n                            return ctx4 = GameStateFn2.doItemMove(ctx4, to, [cardId3, from2]), ctx4 = GameStateFn2.doTriggerEvent(ctx4, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId3] }), ctx4;\n                          }.toString()\n                        },\n                        ...commandText2?.logicTreeActions?.[0]?.actions || []\n                      ]\n                    }\n                  ]\n                }\n              });\n            }"
                                 }
                             ]
                         }
@@ -4302,21 +6155,267 @@ const TMP_CTX: GameStateWithFlowMemory = {
             }
         },
         {
-            "id": 789,
+            "id": 1034,
+            "description": "PlayerB_97.isRoll false => true",
+            "effect": {
+                "id": "createPlayCommandText_PlayerB_92",
+                "reason": [
+                    "PlayCard",
+                    "PlayerB",
+                    "PlayerB_92",
+                    {
+                        "isPlayCommand": true
+                    }
+                ],
+                "description": "Play 狂気の落とし子",
+                "text": {
+                    "id": "createPlayCommandText_PlayerB_92",
+                    "title": [
+                        "使用型",
+                        [
+                            "自軍",
+                            "配備フェイズ"
+                        ]
+                    ],
+                    "description": "Play 狂気の落とし子",
+                    "conditions": {
+                        "合計国力〔x〕": {
+                            "actions": [
+                                {
+                                    "title": [
+                                        "合計国力〔x〕",
+                                        4
+                                    ]
+                                }
+                            ]
+                        },
+                        "橫置支付0[緑]": {
+                            "title": [
+                                "RollColor",
+                                "緑"
+                            ],
+                            "actions": [
+                                {
+                                    "title": [
+                                        "_ロールする",
+                                        "ロール"
+                                    ],
+                                    "vars": [
+                                        "橫置支付0[緑]"
+                                    ]
+                                }
+                            ],
+                            "groupKey": "支付橫置國力"
+                        },
+                        "橫置支付1[緑]": {
+                            "title": [
+                                "RollColor",
+                                "緑"
+                            ],
+                            "actions": [
+                                {
+                                    "title": [
+                                        "_ロールする",
+                                        "ロール"
+                                    ],
+                                    "vars": [
+                                        "橫置支付1[緑]"
+                                    ]
+                                }
+                            ],
+                            "groupKey": "支付橫置國力"
+                        },
+                        "橫置支付2[緑]": {
+                            "title": [
+                                "RollColor",
+                                "緑"
+                            ],
+                            "actions": [
+                                {
+                                    "title": [
+                                        "_ロールする",
+                                        "ロール"
+                                    ],
+                                    "vars": [
+                                        "橫置支付2[緑]"
+                                    ]
+                                }
+                            ],
+                            "groupKey": "支付橫置國力"
+                        }
+                    },
+                    "logicTreeActions": [
+                        {
+                            "logicTree": {
+                                "type": "And",
+                                "children": [
+                                    {
+                                        "type": "Leaf",
+                                        "value": "合計国力〔x〕"
+                                    },
+                                    {
+                                        "type": "Leaf",
+                                        "value": "橫置支付0[緑]"
+                                    },
+                                    {
+                                        "type": "Leaf",
+                                        "value": "橫置支付1[緑]"
+                                    },
+                                    {
+                                        "type": "Leaf",
+                                        "value": "橫置支付2[緑]"
+                                    }
+                                ]
+                            },
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect, { DefineFn, GameStateFn, ToolFn: ToolFn2 }) {\n              const cardId2 = DefineFn.EffectFn.getCardID(effect), prototype2 = GameStateFn.getItemPrototype(ctx3, cardId2);\n              if (prototype2.category == \"\\u30B3\\u30DE\\u30F3\\u30C9\")\n                ;\n              else\n                throw new Error;\n              const commandText2 = prototype2.commandText, from = GameStateFn.getItemBaSyou(ctx3, cardId2);\n              return ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, \"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u3044\\u308B\\u30AB\\u30FC\\u30C9\"), [cardId2, from]), GameStateFn.addStackEffect(ctx3, {\n                id: `${effect.id}_\\u5834\\u306B\\u51FA\\u308B`,\n                reason: [\"\\u5834\\u306B\\u51FA\\u308B\", DefineFn.EffectFn.getPlayerID(effect), DefineFn.EffectFn.getCardID(effect)],\n                description: effect.text.description,\n                text: {\n                  id: commandText2?.id || `getPlayCardEffects_commentText_${cardId2}`,\n                  description: commandText2?.description || \"unknown\",\n                  title: [],\n                  logicTreeActions: [\n                    {\n                      actions: [\n                        {\n                          title: function _(ctx4, effect2, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                            const cardId3 = DefineFn2.EffectFn.getCardID(effect2), from2 = GameStateFn2.getItemBaSyou(ctx4, cardId3), to = DefineFn2.AbsoluteBaSyouFn.setBaSyouKeyword(from2, \"\\u30B8\\u30E3\\u30F3\\u30AF\\u30E4\\u30FC\\u30C9\");\n                            return ctx4 = GameStateFn2.doItemMove(ctx4, to, [cardId3, from2]), ctx4 = GameStateFn2.doTriggerEvent(ctx4, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId3] }), ctx4;\n                          }.toString()\n                        },\n                        ...commandText2?.logicTreeActions?.[0]?.actions || []\n                      ]\n                    }\n                  ]\n                }\n              });\n            }"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 1033,
+            "description": "PlayerB_63.isRoll false => true",
+            "effect": {
+                "id": "createPlayCommandText_PlayerB_92",
+                "reason": [
+                    "PlayCard",
+                    "PlayerB",
+                    "PlayerB_92",
+                    {
+                        "isPlayCommand": true
+                    }
+                ],
+                "description": "Play 狂気の落とし子",
+                "text": {
+                    "id": "createPlayCommandText_PlayerB_92",
+                    "title": [
+                        "使用型",
+                        [
+                            "自軍",
+                            "配備フェイズ"
+                        ]
+                    ],
+                    "description": "Play 狂気の落とし子",
+                    "conditions": {
+                        "合計国力〔x〕": {
+                            "actions": [
+                                {
+                                    "title": [
+                                        "合計国力〔x〕",
+                                        4
+                                    ]
+                                }
+                            ]
+                        },
+                        "橫置支付0[緑]": {
+                            "title": [
+                                "RollColor",
+                                "緑"
+                            ],
+                            "actions": [
+                                {
+                                    "title": [
+                                        "_ロールする",
+                                        "ロール"
+                                    ],
+                                    "vars": [
+                                        "橫置支付0[緑]"
+                                    ]
+                                }
+                            ],
+                            "groupKey": "支付橫置國力"
+                        },
+                        "橫置支付1[緑]": {
+                            "title": [
+                                "RollColor",
+                                "緑"
+                            ],
+                            "actions": [
+                                {
+                                    "title": [
+                                        "_ロールする",
+                                        "ロール"
+                                    ],
+                                    "vars": [
+                                        "橫置支付1[緑]"
+                                    ]
+                                }
+                            ],
+                            "groupKey": "支付橫置國力"
+                        },
+                        "橫置支付2[緑]": {
+                            "title": [
+                                "RollColor",
+                                "緑"
+                            ],
+                            "actions": [
+                                {
+                                    "title": [
+                                        "_ロールする",
+                                        "ロール"
+                                    ],
+                                    "vars": [
+                                        "橫置支付2[緑]"
+                                    ]
+                                }
+                            ],
+                            "groupKey": "支付橫置國力"
+                        }
+                    },
+                    "logicTreeActions": [
+                        {
+                            "logicTree": {
+                                "type": "And",
+                                "children": [
+                                    {
+                                        "type": "Leaf",
+                                        "value": "合計国力〔x〕"
+                                    },
+                                    {
+                                        "type": "Leaf",
+                                        "value": "橫置支付0[緑]"
+                                    },
+                                    {
+                                        "type": "Leaf",
+                                        "value": "橫置支付1[緑]"
+                                    },
+                                    {
+                                        "type": "Leaf",
+                                        "value": "橫置支付2[緑]"
+                                    }
+                                ]
+                            },
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect, { DefineFn, GameStateFn, ToolFn: ToolFn2 }) {\n              const cardId2 = DefineFn.EffectFn.getCardID(effect), prototype2 = GameStateFn.getItemPrototype(ctx3, cardId2);\n              if (prototype2.category == \"\\u30B3\\u30DE\\u30F3\\u30C9\")\n                ;\n              else\n                throw new Error;\n              const commandText2 = prototype2.commandText, from = GameStateFn.getItemBaSyou(ctx3, cardId2);\n              return ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, \"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u3044\\u308B\\u30AB\\u30FC\\u30C9\"), [cardId2, from]), GameStateFn.addStackEffect(ctx3, {\n                id: `${effect.id}_\\u5834\\u306B\\u51FA\\u308B`,\n                reason: [\"\\u5834\\u306B\\u51FA\\u308B\", DefineFn.EffectFn.getPlayerID(effect), DefineFn.EffectFn.getCardID(effect)],\n                description: effect.text.description,\n                text: {\n                  id: commandText2?.id || `getPlayCardEffects_commentText_${cardId2}`,\n                  description: commandText2?.description || \"unknown\",\n                  title: [],\n                  logicTreeActions: [\n                    {\n                      actions: [\n                        {\n                          title: function _(ctx4, effect2, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                            const cardId3 = DefineFn2.EffectFn.getCardID(effect2), from2 = GameStateFn2.getItemBaSyou(ctx4, cardId3), to = DefineFn2.AbsoluteBaSyouFn.setBaSyouKeyword(from2, \"\\u30B8\\u30E3\\u30F3\\u30AF\\u30E4\\u30FC\\u30C9\");\n                            return ctx4 = GameStateFn2.doItemMove(ctx4, to, [cardId3, from2]), ctx4 = GameStateFn2.doTriggerEvent(ctx4, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId3] }), ctx4;\n                          }.toString()\n                        },\n                        ...commandText2?.logicTreeActions?.[0]?.actions || []\n                      ]\n                    }\n                  ]\n                }\n              });\n            }"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 1032,
             "description": "PlayerB_85.isRoll false => true",
             "effect": {
-                "id": "createPlayUnitEffect_PlayerB_96",
+                "id": "createPlayCommandText_PlayerB_92",
                 "reason": [
                     "PlayCard",
                     "PlayerB",
-                    "PlayerB_96",
+                    "PlayerB_92",
                     {
-                        "isPlayUnit": true
+                        "isPlayCommand": true
                     }
                 ],
-                "description": "Play ゲルググ",
+                "description": "Play 狂気の落とし子",
                 "text": {
-                    "id": "createPlayUnitEffect_PlayerB_96",
+                    "id": "createPlayCommandText_PlayerB_92",
                     "title": [
                         "使用型",
                         [
@@ -4324,7 +6423,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
                             "配備フェイズ"
                         ]
                     ],
-                    "description": "Play ゲルググ",
+                    "description": "Play 狂気の落とし子",
                     "conditions": {
                         "合計国力〔x〕": {
                             "actions": [
@@ -4371,13 +6470,52 @@ const TMP_CTX: GameStateWithFlowMemory = {
                                 }
                             ],
                             "groupKey": "支付橫置國力"
+                        },
+                        "橫置支付2[緑]": {
+                            "title": [
+                                "RollColor",
+                                "緑"
+                            ],
+                            "actions": [
+                                {
+                                    "title": [
+                                        "_ロールする",
+                                        "ロール"
+                                    ],
+                                    "vars": [
+                                        "橫置支付2[緑]"
+                                    ]
+                                }
+                            ],
+                            "groupKey": "支付橫置國力"
                         }
                     },
                     "logicTreeActions": [
                         {
+                            "logicTree": {
+                                "type": "And",
+                                "children": [
+                                    {
+                                        "type": "Leaf",
+                                        "value": "合計国力〔x〕"
+                                    },
+                                    {
+                                        "type": "Leaf",
+                                        "value": "橫置支付0[緑]"
+                                    },
+                                    {
+                                        "type": "Leaf",
+                                        "value": "橫置支付1[緑]"
+                                    },
+                                    {
+                                        "type": "Leaf",
+                                        "value": "橫置支付2[緑]"
+                                    }
+                                ]
+                            },
                             "actions": [
                                 {
-                                    "title": "function _(ctx3, effect, { DefineFn, GameStateFn, ToolFn: ToolFn2 }) {\n              const cardId2 = DefineFn.EffectFn.getCardID(effect), from = GameStateFn.getItemBaSyou(ctx3, cardId2);\n              ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, \"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u3044\\u308B\\u30AB\\u30FC\\u30C9\"), [cardId2, from]);\n              const newE = GameStateFn.createUnitGoStageEffectFromPlayEffect(ctx3, effect);\n              return GameStateFn.addStackEffect(ctx3, newE);\n            }"
+                                    "title": "function _(ctx3, effect, { DefineFn, GameStateFn, ToolFn: ToolFn2 }) {\n              const cardId2 = DefineFn.EffectFn.getCardID(effect), prototype2 = GameStateFn.getItemPrototype(ctx3, cardId2);\n              if (prototype2.category == \"\\u30B3\\u30DE\\u30F3\\u30C9\")\n                ;\n              else\n                throw new Error;\n              const commandText2 = prototype2.commandText, from = GameStateFn.getItemBaSyou(ctx3, cardId2);\n              return ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, \"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u3044\\u308B\\u30AB\\u30FC\\u30C9\"), [cardId2, from]), GameStateFn.addStackEffect(ctx3, {\n                id: `${effect.id}_\\u5834\\u306B\\u51FA\\u308B`,\n                reason: [\"\\u5834\\u306B\\u51FA\\u308B\", DefineFn.EffectFn.getPlayerID(effect), DefineFn.EffectFn.getCardID(effect)],\n                description: effect.text.description,\n                text: {\n                  id: commandText2?.id || `getPlayCardEffects_commentText_${cardId2}`,\n                  description: commandText2?.description || \"unknown\",\n                  title: [],\n                  logicTreeActions: [\n                    {\n                      actions: [\n                        {\n                          title: function _(ctx4, effect2, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                            const cardId3 = DefineFn2.EffectFn.getCardID(effect2), from2 = GameStateFn2.getItemBaSyou(ctx4, cardId3), to = DefineFn2.AbsoluteBaSyouFn.setBaSyouKeyword(from2, \"\\u30B8\\u30E3\\u30F3\\u30AF\\u30E4\\u30FC\\u30C9\");\n                            return ctx4 = GameStateFn2.doItemMove(ctx4, to, [cardId3, from2]), ctx4 = GameStateFn2.doTriggerEvent(ctx4, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId3] }), ctx4;\n                          }.toString()\n                        },\n                        ...commandText2?.logicTreeActions?.[0]?.actions || []\n                      ]\n                    }\n                  ]\n                }\n              });\n            }"
                                 }
                             ]
                         }
@@ -4386,21 +6524,678 @@ const TMP_CTX: GameStateWithFlowMemory = {
             }
         },
         {
-            "id": 788,
+            "id": 1031,
+            "description": "onEffectStart: Play 狂気の落とし子",
+            "effect": {
+                "id": "createPlayCommandText_PlayerB_92",
+                "reason": [
+                    "PlayCard",
+                    "PlayerB",
+                    "PlayerB_92",
+                    {
+                        "isPlayCommand": true
+                    }
+                ],
+                "description": "Play 狂気の落とし子",
+                "text": {
+                    "id": "createPlayCommandText_PlayerB_92",
+                    "title": [
+                        "使用型",
+                        [
+                            "自軍",
+                            "配備フェイズ"
+                        ]
+                    ],
+                    "description": "Play 狂気の落とし子",
+                    "conditions": {
+                        "合計国力〔x〕": {
+                            "actions": [
+                                {
+                                    "title": [
+                                        "合計国力〔x〕",
+                                        4
+                                    ]
+                                }
+                            ]
+                        },
+                        "橫置支付0[緑]": {
+                            "title": [
+                                "RollColor",
+                                "緑"
+                            ],
+                            "actions": [
+                                {
+                                    "title": [
+                                        "_ロールする",
+                                        "ロール"
+                                    ],
+                                    "vars": [
+                                        "橫置支付0[緑]"
+                                    ]
+                                }
+                            ],
+                            "groupKey": "支付橫置國力"
+                        },
+                        "橫置支付1[緑]": {
+                            "title": [
+                                "RollColor",
+                                "緑"
+                            ],
+                            "actions": [
+                                {
+                                    "title": [
+                                        "_ロールする",
+                                        "ロール"
+                                    ],
+                                    "vars": [
+                                        "橫置支付1[緑]"
+                                    ]
+                                }
+                            ],
+                            "groupKey": "支付橫置國力"
+                        },
+                        "橫置支付2[緑]": {
+                            "title": [
+                                "RollColor",
+                                "緑"
+                            ],
+                            "actions": [
+                                {
+                                    "title": [
+                                        "_ロールする",
+                                        "ロール"
+                                    ],
+                                    "vars": [
+                                        "橫置支付2[緑]"
+                                    ]
+                                }
+                            ],
+                            "groupKey": "支付橫置國力"
+                        }
+                    },
+                    "logicTreeActions": [
+                        {
+                            "logicTree": {
+                                "type": "And",
+                                "children": [
+                                    {
+                                        "type": "Leaf",
+                                        "value": "合計国力〔x〕"
+                                    },
+                                    {
+                                        "type": "Leaf",
+                                        "value": "橫置支付0[緑]"
+                                    },
+                                    {
+                                        "type": "Leaf",
+                                        "value": "橫置支付1[緑]"
+                                    },
+                                    {
+                                        "type": "Leaf",
+                                        "value": "橫置支付2[緑]"
+                                    }
+                                ]
+                            },
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect, { DefineFn, GameStateFn, ToolFn: ToolFn2 }) {\n              const cardId2 = DefineFn.EffectFn.getCardID(effect), prototype2 = GameStateFn.getItemPrototype(ctx3, cardId2);\n              if (prototype2.category == \"\\u30B3\\u30DE\\u30F3\\u30C9\")\n                ;\n              else\n                throw new Error;\n              const commandText2 = prototype2.commandText, from = GameStateFn.getItemBaSyou(ctx3, cardId2);\n              return ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, \"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u3044\\u308B\\u30AB\\u30FC\\u30C9\"), [cardId2, from]), GameStateFn.addStackEffect(ctx3, {\n                id: `${effect.id}_\\u5834\\u306B\\u51FA\\u308B`,\n                reason: [\"\\u5834\\u306B\\u51FA\\u308B\", DefineFn.EffectFn.getPlayerID(effect), DefineFn.EffectFn.getCardID(effect)],\n                description: effect.text.description,\n                text: {\n                  id: commandText2?.id || `getPlayCardEffects_commentText_${cardId2}`,\n                  description: commandText2?.description || \"unknown\",\n                  title: [],\n                  logicTreeActions: [\n                    {\n                      actions: [\n                        {\n                          title: function _(ctx4, effect2, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                            const cardId3 = DefineFn2.EffectFn.getCardID(effect2), from2 = GameStateFn2.getItemBaSyou(ctx4, cardId3), to = DefineFn2.AbsoluteBaSyouFn.setBaSyouKeyword(from2, \"\\u30B8\\u30E3\\u30F3\\u30AF\\u30E4\\u30FC\\u30C9\");\n                            return ctx4 = GameStateFn2.doItemMove(ctx4, to, [cardId3, from2]), ctx4 = GameStateFn2.doTriggerEvent(ctx4, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId3] }), ctx4;\n                          }.toString()\n                        },\n                        ...commandText2?.logicTreeActions?.[0]?.actions || []\n                      ]\n                    }\n                  ]\n                }\n              });\n            }"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 1030,
+            "description": "onEvent: カット終了時 undefined"
+        },
+        {
+            "id": 1029,
+            "description": "onEffectEnd: Play クェス・パラヤ"
+        },
+        {
+            "id": 1028,
+            "description": "onEvent: プレイされて場にセットされた場合 [\"PlayerB_72\"]",
+            "effect": {
+                "id": "createCharOpUnitGoStageEffectFromPlayEffect_PlayerB_72",
+                "reason": [
+                    "場に出る",
+                    "PlayerB",
+                    "PlayerB_72"
+                ],
+                "description": "Play クェス・パラヤ",
+                "text": {
+                    "id": "createPlayCharacterOperationEffect_PlayerB_72",
+                    "description": "Play クェス・パラヤ",
+                    "title": [],
+                    "logicTreeActions": [
+                        {
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect2, { DefineFn, GameStateFn }) {\n                  const cardId2 = DefineFn.EffectFn.getCardID(effect2), pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx3, DefineFn.TipFn.createCharacterTargetUnitKey(), cardId2);\n                  if (pairs.length == 0)\n                    throw new Error(`pairs must not 0: ${effect2.text.description}`);\n                  const [targetCardId, targetBasyou] = pairs[0], from = GameStateFn.getItemBaSyou(ctx3, cardId2), to = targetBasyou;\n                  ctx3 = GameStateFn.doItemMove(ctx3, to, [cardId2, from]);\n                  const isRoll = GameStateFn.getCard(ctx3, targetCardId).isRoll || !1;\n                  return ctx3 = GameStateFn.mapCard(ctx3, cardId2, (is) => ({ ...is, isRoll })), ctx3 = GameStateFn.setSetGroupParent(ctx3, targetCardId, cardId2), ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId2] }), ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u30BB\\u30C3\\u30C8\\u3055\\u308C\\u305F\\u5834\\u5408\"], cardIds: [cardId2] }), ctx3;\n                }"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 1027,
+            "description": "onEvent: プレイされて場に出た場合 [\"PlayerB_72\"]",
+            "effect": {
+                "id": "createCharOpUnitGoStageEffectFromPlayEffect_PlayerB_72",
+                "reason": [
+                    "場に出る",
+                    "PlayerB",
+                    "PlayerB_72"
+                ],
+                "description": "Play クェス・パラヤ",
+                "text": {
+                    "id": "createPlayCharacterOperationEffect_PlayerB_72",
+                    "description": "Play クェス・パラヤ",
+                    "title": [],
+                    "logicTreeActions": [
+                        {
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect2, { DefineFn, GameStateFn }) {\n                  const cardId2 = DefineFn.EffectFn.getCardID(effect2), pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx3, DefineFn.TipFn.createCharacterTargetUnitKey(), cardId2);\n                  if (pairs.length == 0)\n                    throw new Error(`pairs must not 0: ${effect2.text.description}`);\n                  const [targetCardId, targetBasyou] = pairs[0], from = GameStateFn.getItemBaSyou(ctx3, cardId2), to = targetBasyou;\n                  ctx3 = GameStateFn.doItemMove(ctx3, to, [cardId2, from]);\n                  const isRoll = GameStateFn.getCard(ctx3, targetCardId).isRoll || !1;\n                  return ctx3 = GameStateFn.mapCard(ctx3, cardId2, (is) => ({ ...is, isRoll })), ctx3 = GameStateFn.setSetGroupParent(ctx3, targetCardId, cardId2), ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId2] }), ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u30BB\\u30C3\\u30C8\\u3055\\u308C\\u305F\\u5834\\u5408\"], cardIds: [cardId2] }), ctx3;\n                }"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 1026,
+            "description": "onSetSetGroupParent:PlayerB_75 PlayerB_72",
+            "effect": {
+                "id": "createCharOpUnitGoStageEffectFromPlayEffect_PlayerB_72",
+                "reason": [
+                    "場に出る",
+                    "PlayerB",
+                    "PlayerB_72"
+                ],
+                "description": "Play クェス・パラヤ",
+                "text": {
+                    "id": "createPlayCharacterOperationEffect_PlayerB_72",
+                    "description": "Play クェス・パラヤ",
+                    "title": [],
+                    "logicTreeActions": [
+                        {
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect2, { DefineFn, GameStateFn }) {\n                  const cardId2 = DefineFn.EffectFn.getCardID(effect2), pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx3, DefineFn.TipFn.createCharacterTargetUnitKey(), cardId2);\n                  if (pairs.length == 0)\n                    throw new Error(`pairs must not 0: ${effect2.text.description}`);\n                  const [targetCardId, targetBasyou] = pairs[0], from = GameStateFn.getItemBaSyou(ctx3, cardId2), to = targetBasyou;\n                  ctx3 = GameStateFn.doItemMove(ctx3, to, [cardId2, from]);\n                  const isRoll = GameStateFn.getCard(ctx3, targetCardId).isRoll || !1;\n                  return ctx3 = GameStateFn.mapCard(ctx3, cardId2, (is) => ({ ...is, isRoll })), ctx3 = GameStateFn.setSetGroupParent(ctx3, targetCardId, cardId2), ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId2] }), ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u30BB\\u30C3\\u30C8\\u3055\\u308C\\u305F\\u5834\\u5408\"], cardIds: [cardId2] }), ctx3;\n                }"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 1025,
+            "description": "onItemMove:PlayerB_72 = [\"PlayerB\",\"プレイされているカード\"] => [\"PlayerB\",\"配備エリア\"]",
+            "effect": {
+                "id": "createCharOpUnitGoStageEffectFromPlayEffect_PlayerB_72",
+                "reason": [
+                    "場に出る",
+                    "PlayerB",
+                    "PlayerB_72"
+                ],
+                "description": "Play クェス・パラヤ",
+                "text": {
+                    "id": "createPlayCharacterOperationEffect_PlayerB_72",
+                    "description": "Play クェス・パラヤ",
+                    "title": [],
+                    "logicTreeActions": [
+                        {
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect2, { DefineFn, GameStateFn }) {\n                  const cardId2 = DefineFn.EffectFn.getCardID(effect2), pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx3, DefineFn.TipFn.createCharacterTargetUnitKey(), cardId2);\n                  if (pairs.length == 0)\n                    throw new Error(`pairs must not 0: ${effect2.text.description}`);\n                  const [targetCardId, targetBasyou] = pairs[0], from = GameStateFn.getItemBaSyou(ctx3, cardId2), to = targetBasyou;\n                  ctx3 = GameStateFn.doItemMove(ctx3, to, [cardId2, from]);\n                  const isRoll = GameStateFn.getCard(ctx3, targetCardId).isRoll || !1;\n                  return ctx3 = GameStateFn.mapCard(ctx3, cardId2, (is) => ({ ...is, isRoll })), ctx3 = GameStateFn.setSetGroupParent(ctx3, targetCardId, cardId2), ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId2] }), ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u30BB\\u30C3\\u30C8\\u3055\\u308C\\u305F\\u5834\\u5408\"], cardIds: [cardId2] }), ctx3;\n                }"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 1024,
+            "description": "onEvent: GameEventOnMove [\"PlayerB_72\"]",
+            "effect": {
+                "id": "createCharOpUnitGoStageEffectFromPlayEffect_PlayerB_72",
+                "reason": [
+                    "場に出る",
+                    "PlayerB",
+                    "PlayerB_72"
+                ],
+                "description": "Play クェス・パラヤ",
+                "text": {
+                    "id": "createPlayCharacterOperationEffect_PlayerB_72",
+                    "description": "Play クェス・パラヤ",
+                    "title": [],
+                    "logicTreeActions": [
+                        {
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect2, { DefineFn, GameStateFn }) {\n                  const cardId2 = DefineFn.EffectFn.getCardID(effect2), pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx3, DefineFn.TipFn.createCharacterTargetUnitKey(), cardId2);\n                  if (pairs.length == 0)\n                    throw new Error(`pairs must not 0: ${effect2.text.description}`);\n                  const [targetCardId, targetBasyou] = pairs[0], from = GameStateFn.getItemBaSyou(ctx3, cardId2), to = targetBasyou;\n                  ctx3 = GameStateFn.doItemMove(ctx3, to, [cardId2, from]);\n                  const isRoll = GameStateFn.getCard(ctx3, targetCardId).isRoll || !1;\n                  return ctx3 = GameStateFn.mapCard(ctx3, cardId2, (is) => ({ ...is, isRoll })), ctx3 = GameStateFn.setSetGroupParent(ctx3, targetCardId, cardId2), ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId2] }), ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u30BB\\u30C3\\u30C8\\u3055\\u308C\\u305F\\u5834\\u5408\"], cardIds: [cardId2] }), ctx3;\n                }"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 1023,
+            "description": "onEvent: このカードが場に出た場合 [\"PlayerB_72\"]",
+            "effect": {
+                "id": "createCharOpUnitGoStageEffectFromPlayEffect_PlayerB_72",
+                "reason": [
+                    "場に出る",
+                    "PlayerB",
+                    "PlayerB_72"
+                ],
+                "description": "Play クェス・パラヤ",
+                "text": {
+                    "id": "createPlayCharacterOperationEffect_PlayerB_72",
+                    "description": "Play クェス・パラヤ",
+                    "title": [],
+                    "logicTreeActions": [
+                        {
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect2, { DefineFn, GameStateFn }) {\n                  const cardId2 = DefineFn.EffectFn.getCardID(effect2), pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx3, DefineFn.TipFn.createCharacterTargetUnitKey(), cardId2);\n                  if (pairs.length == 0)\n                    throw new Error(`pairs must not 0: ${effect2.text.description}`);\n                  const [targetCardId, targetBasyou] = pairs[0], from = GameStateFn.getItemBaSyou(ctx3, cardId2), to = targetBasyou;\n                  ctx3 = GameStateFn.doItemMove(ctx3, to, [cardId2, from]);\n                  const isRoll = GameStateFn.getCard(ctx3, targetCardId).isRoll || !1;\n                  return ctx3 = GameStateFn.mapCard(ctx3, cardId2, (is) => ({ ...is, isRoll })), ctx3 = GameStateFn.setSetGroupParent(ctx3, targetCardId, cardId2), ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId2] }), ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u30BB\\u30C3\\u30C8\\u3055\\u308C\\u305F\\u5834\\u5408\"], cardIds: [cardId2] }), ctx3;\n                }"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 1022,
+            "description": "onEffectStart: Play クェス・パラヤ",
+            "effect": {
+                "id": "createCharOpUnitGoStageEffectFromPlayEffect_PlayerB_72",
+                "reason": [
+                    "場に出る",
+                    "PlayerB",
+                    "PlayerB_72"
+                ],
+                "description": "Play クェス・パラヤ",
+                "text": {
+                    "id": "createPlayCharacterOperationEffect_PlayerB_72",
+                    "description": "Play クェス・パラヤ",
+                    "title": [],
+                    "logicTreeActions": [
+                        {
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect2, { DefineFn, GameStateFn }) {\n                  const cardId2 = DefineFn.EffectFn.getCardID(effect2), pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx3, DefineFn.TipFn.createCharacterTargetUnitKey(), cardId2);\n                  if (pairs.length == 0)\n                    throw new Error(`pairs must not 0: ${effect2.text.description}`);\n                  const [targetCardId, targetBasyou] = pairs[0], from = GameStateFn.getItemBaSyou(ctx3, cardId2), to = targetBasyou;\n                  ctx3 = GameStateFn.doItemMove(ctx3, to, [cardId2, from]);\n                  const isRoll = GameStateFn.getCard(ctx3, targetCardId).isRoll || !1;\n                  return ctx3 = GameStateFn.mapCard(ctx3, cardId2, (is) => ({ ...is, isRoll })), ctx3 = GameStateFn.setSetGroupParent(ctx3, targetCardId, cardId2), ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId2] }), ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u30BB\\u30C3\\u30C8\\u3055\\u308C\\u305F\\u5834\\u5408\"], cardIds: [cardId2] }), ctx3;\n                }"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 1021,
+            "description": "onEffectEnd: Play クェス・パラヤ"
+        },
+        {
+            "id": 1020,
+            "description": "onItemMove:PlayerB_72 = [\"PlayerB\",\"手札\"] => [\"PlayerB\",\"プレイされているカード\"]",
+            "effect": {
+                "id": "createPlayCharacterOperationEffect_PlayerB_72",
+                "reason": [
+                    "PlayCard",
+                    "PlayerB",
+                    "PlayerB_72",
+                    {
+                        "isPlayCharacter": true,
+                        "isPlayOperation": false
+                    }
+                ],
+                "description": "Play クェス・パラヤ",
+                "text": {
+                    "id": "createPlayCharacterOperationEffect_PlayerB_72",
+                    "title": [
+                        "使用型",
+                        [
+                            "自軍",
+                            "配備フェイズ"
+                        ]
+                    ],
+                    "description": "Play クェス・パラヤ",
+                    "conditions": {
+                        "合計国力〔x〕": {
+                            "actions": [
+                                {
+                                    "title": [
+                                        "合計国力〔x〕",
+                                        4
+                                    ]
+                                }
+                            ]
+                        },
+                        "橫置支付0[緑]": {
+                            "title": [
+                                "RollColor",
+                                "緑"
+                            ],
+                            "actions": [
+                                {
+                                    "title": [
+                                        "_ロールする",
+                                        "ロール"
+                                    ],
+                                    "vars": [
+                                        "橫置支付0[緑]"
+                                    ]
+                                }
+                            ],
+                            "groupKey": "支付橫置國力"
+                        },
+                        "一個自軍機體": {
+                            "title": [
+                                "Entity",
+                                {
+                                    "at": [
+                                        "配備エリア"
+                                    ],
+                                    "isCanSetCharacter": true,
+                                    "side": "自軍",
+                                    "is": [
+                                        "ユニット"
+                                    ],
+                                    "count": 1
+                                }
+                            ]
+                        }
+                    },
+                    "logicTreeActions": [
+                        {
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect, { DefineFn, GameStateFn, ToolFn: ToolFn2 }) {\n              const cardId2 = DefineFn.EffectFn.getCardID(effect), prototype2 = GameStateFn.getItemPrototype(ctx3, cardId2), from = GameStateFn.getItemBaSyou(ctx3, cardId2);\n              ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, \"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u3044\\u308B\\u30AB\\u30FC\\u30C9\"), [cardId2, from]);\n              const newE = GameStateFn.createCharOpUnitGoStageEffectFromPlayEffect(ctx3, effect);\n              return GameStateFn.addStackEffect(ctx3, newE);\n            }"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 1019,
+            "description": "onEvent: GameEventOnMove [\"PlayerB_72\"]",
+            "effect": {
+                "id": "createPlayCharacterOperationEffect_PlayerB_72",
+                "reason": [
+                    "PlayCard",
+                    "PlayerB",
+                    "PlayerB_72",
+                    {
+                        "isPlayCharacter": true,
+                        "isPlayOperation": false
+                    }
+                ],
+                "description": "Play クェス・パラヤ",
+                "text": {
+                    "id": "createPlayCharacterOperationEffect_PlayerB_72",
+                    "title": [
+                        "使用型",
+                        [
+                            "自軍",
+                            "配備フェイズ"
+                        ]
+                    ],
+                    "description": "Play クェス・パラヤ",
+                    "conditions": {
+                        "合計国力〔x〕": {
+                            "actions": [
+                                {
+                                    "title": [
+                                        "合計国力〔x〕",
+                                        4
+                                    ]
+                                }
+                            ]
+                        },
+                        "橫置支付0[緑]": {
+                            "title": [
+                                "RollColor",
+                                "緑"
+                            ],
+                            "actions": [
+                                {
+                                    "title": [
+                                        "_ロールする",
+                                        "ロール"
+                                    ],
+                                    "vars": [
+                                        "橫置支付0[緑]"
+                                    ]
+                                }
+                            ],
+                            "groupKey": "支付橫置國力"
+                        },
+                        "一個自軍機體": {
+                            "title": [
+                                "Entity",
+                                {
+                                    "at": [
+                                        "配備エリア"
+                                    ],
+                                    "isCanSetCharacter": true,
+                                    "side": "自軍",
+                                    "is": [
+                                        "ユニット"
+                                    ],
+                                    "count": 1
+                                }
+                            ]
+                        }
+                    },
+                    "logicTreeActions": [
+                        {
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect, { DefineFn, GameStateFn, ToolFn: ToolFn2 }) {\n              const cardId2 = DefineFn.EffectFn.getCardID(effect), prototype2 = GameStateFn.getItemPrototype(ctx3, cardId2), from = GameStateFn.getItemBaSyou(ctx3, cardId2);\n              ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, \"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u3044\\u308B\\u30AB\\u30FC\\u30C9\"), [cardId2, from]);\n              const newE = GameStateFn.createCharOpUnitGoStageEffectFromPlayEffect(ctx3, effect);\n              return GameStateFn.addStackEffect(ctx3, newE);\n            }"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 1018,
+            "description": "PlayerB_72.isFaceDown true => false",
+            "effect": {
+                "id": "createPlayCharacterOperationEffect_PlayerB_72",
+                "reason": [
+                    "PlayCard",
+                    "PlayerB",
+                    "PlayerB_72",
+                    {
+                        "isPlayCharacter": true,
+                        "isPlayOperation": false
+                    }
+                ],
+                "description": "Play クェス・パラヤ",
+                "text": {
+                    "id": "createPlayCharacterOperationEffect_PlayerB_72",
+                    "title": [
+                        "使用型",
+                        [
+                            "自軍",
+                            "配備フェイズ"
+                        ]
+                    ],
+                    "description": "Play クェス・パラヤ",
+                    "conditions": {
+                        "合計国力〔x〕": {
+                            "actions": [
+                                {
+                                    "title": [
+                                        "合計国力〔x〕",
+                                        4
+                                    ]
+                                }
+                            ]
+                        },
+                        "橫置支付0[緑]": {
+                            "title": [
+                                "RollColor",
+                                "緑"
+                            ],
+                            "actions": [
+                                {
+                                    "title": [
+                                        "_ロールする",
+                                        "ロール"
+                                    ],
+                                    "vars": [
+                                        "橫置支付0[緑]"
+                                    ]
+                                }
+                            ],
+                            "groupKey": "支付橫置國力"
+                        },
+                        "一個自軍機體": {
+                            "title": [
+                                "Entity",
+                                {
+                                    "at": [
+                                        "配備エリア"
+                                    ],
+                                    "isCanSetCharacter": true,
+                                    "side": "自軍",
+                                    "is": [
+                                        "ユニット"
+                                    ],
+                                    "count": 1
+                                }
+                            ]
+                        }
+                    },
+                    "logicTreeActions": [
+                        {
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect, { DefineFn, GameStateFn, ToolFn: ToolFn2 }) {\n              const cardId2 = DefineFn.EffectFn.getCardID(effect), prototype2 = GameStateFn.getItemPrototype(ctx3, cardId2), from = GameStateFn.getItemBaSyou(ctx3, cardId2);\n              ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, \"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u3044\\u308B\\u30AB\\u30FC\\u30C9\"), [cardId2, from]);\n              const newE = GameStateFn.createCharOpUnitGoStageEffectFromPlayEffect(ctx3, effect);\n              return GameStateFn.addStackEffect(ctx3, newE);\n            }"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 1017,
+            "description": "onEvent: プレイした場合 [\"PlayerB_72\"]",
+            "effect": {
+                "id": "createPlayCharacterOperationEffect_PlayerB_72",
+                "reason": [
+                    "PlayCard",
+                    "PlayerB",
+                    "PlayerB_72",
+                    {
+                        "isPlayCharacter": true,
+                        "isPlayOperation": false
+                    }
+                ],
+                "description": "Play クェス・パラヤ",
+                "text": {
+                    "id": "createPlayCharacterOperationEffect_PlayerB_72",
+                    "title": [
+                        "使用型",
+                        [
+                            "自軍",
+                            "配備フェイズ"
+                        ]
+                    ],
+                    "description": "Play クェス・パラヤ",
+                    "conditions": {
+                        "合計国力〔x〕": {
+                            "actions": [
+                                {
+                                    "title": [
+                                        "合計国力〔x〕",
+                                        4
+                                    ]
+                                }
+                            ]
+                        },
+                        "橫置支付0[緑]": {
+                            "title": [
+                                "RollColor",
+                                "緑"
+                            ],
+                            "actions": [
+                                {
+                                    "title": [
+                                        "_ロールする",
+                                        "ロール"
+                                    ],
+                                    "vars": [
+                                        "橫置支付0[緑]"
+                                    ]
+                                }
+                            ],
+                            "groupKey": "支付橫置國力"
+                        },
+                        "一個自軍機體": {
+                            "title": [
+                                "Entity",
+                                {
+                                    "at": [
+                                        "配備エリア"
+                                    ],
+                                    "isCanSetCharacter": true,
+                                    "side": "自軍",
+                                    "is": [
+                                        "ユニット"
+                                    ],
+                                    "count": 1
+                                }
+                            ]
+                        }
+                    },
+                    "logicTreeActions": [
+                        {
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect, { DefineFn, GameStateFn, ToolFn: ToolFn2 }) {\n              const cardId2 = DefineFn.EffectFn.getCardID(effect), prototype2 = GameStateFn.getItemPrototype(ctx3, cardId2), from = GameStateFn.getItemBaSyou(ctx3, cardId2);\n              ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, \"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u3044\\u308B\\u30AB\\u30FC\\u30C9\"), [cardId2, from]);\n              const newE = GameStateFn.createCharOpUnitGoStageEffectFromPlayEffect(ctx3, effect);\n              return GameStateFn.addStackEffect(ctx3, newE);\n            }"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 1016,
             "description": "PlayerB_74.isRoll false => true",
             "effect": {
-                "id": "createPlayUnitEffect_PlayerB_96",
+                "id": "createPlayCharacterOperationEffect_PlayerB_72",
                 "reason": [
                     "PlayCard",
                     "PlayerB",
-                    "PlayerB_96",
+                    "PlayerB_72",
                     {
-                        "isPlayUnit": true
+                        "isPlayCharacter": true,
+                        "isPlayOperation": false
                     }
                 ],
-                "description": "Play ゲルググ",
+                "description": "Play クェス・パラヤ",
                 "text": {
-                    "id": "createPlayUnitEffect_PlayerB_96",
+                    "id": "createPlayCharacterOperationEffect_PlayerB_72",
                     "title": [
                         "使用型",
                         [
@@ -4408,7 +7203,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
                             "配備フェイズ"
                         ]
                     ],
-                    "description": "Play ゲルググ",
+                    "description": "Play クェス・パラヤ",
                     "conditions": {
                         "合計国力〔x〕": {
                             "actions": [
@@ -4438,30 +7233,28 @@ const TMP_CTX: GameStateWithFlowMemory = {
                             ],
                             "groupKey": "支付橫置國力"
                         },
-                        "橫置支付1[緑]": {
+                        "一個自軍機體": {
                             "title": [
-                                "RollColor",
-                                "緑"
-                            ],
-                            "actions": [
+                                "Entity",
                                 {
-                                    "title": [
-                                        "_ロールする",
-                                        "ロール"
+                                    "at": [
+                                        "配備エリア"
                                     ],
-                                    "vars": [
-                                        "橫置支付1[緑]"
-                                    ]
+                                    "isCanSetCharacter": true,
+                                    "side": "自軍",
+                                    "is": [
+                                        "ユニット"
+                                    ],
+                                    "count": 1
                                 }
-                            ],
-                            "groupKey": "支付橫置國力"
+                            ]
                         }
                     },
                     "logicTreeActions": [
                         {
                             "actions": [
                                 {
-                                    "title": "function _(ctx3, effect, { DefineFn, GameStateFn, ToolFn: ToolFn2 }) {\n              const cardId2 = DefineFn.EffectFn.getCardID(effect), from = GameStateFn.getItemBaSyou(ctx3, cardId2);\n              ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, \"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u3044\\u308B\\u30AB\\u30FC\\u30C9\"), [cardId2, from]);\n              const newE = GameStateFn.createUnitGoStageEffectFromPlayEffect(ctx3, effect);\n              return GameStateFn.addStackEffect(ctx3, newE);\n            }"
+                                    "title": "function _(ctx3, effect, { DefineFn, GameStateFn, ToolFn: ToolFn2 }) {\n              const cardId2 = DefineFn.EffectFn.getCardID(effect), prototype2 = GameStateFn.getItemPrototype(ctx3, cardId2), from = GameStateFn.getItemBaSyou(ctx3, cardId2);\n              ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, \"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u3044\\u308B\\u30AB\\u30FC\\u30C9\"), [cardId2, from]);\n              const newE = GameStateFn.createCharOpUnitGoStageEffectFromPlayEffect(ctx3, effect);\n              return GameStateFn.addStackEffect(ctx3, newE);\n            }"
                                 }
                             ]
                         }
@@ -4470,21 +7263,22 @@ const TMP_CTX: GameStateWithFlowMemory = {
             }
         },
         {
-            "id": 787,
-            "description": "onEffectStart: Play ゲルググ",
+            "id": 1015,
+            "description": "onEffectStart: Play クェス・パラヤ",
             "effect": {
-                "id": "createPlayUnitEffect_PlayerB_96",
+                "id": "createPlayCharacterOperationEffect_PlayerB_72",
                 "reason": [
                     "PlayCard",
                     "PlayerB",
-                    "PlayerB_96",
+                    "PlayerB_72",
                     {
-                        "isPlayUnit": true
+                        "isPlayCharacter": true,
+                        "isPlayOperation": false
                     }
                 ],
-                "description": "Play ゲルググ",
+                "description": "Play クェス・パラヤ",
                 "text": {
-                    "id": "createPlayUnitEffect_PlayerB_96",
+                    "id": "createPlayCharacterOperationEffect_PlayerB_72",
                     "title": [
                         "使用型",
                         [
@@ -4492,7 +7286,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
                             "配備フェイズ"
                         ]
                     ],
-                    "description": "Play ゲルググ",
+                    "description": "Play クェス・パラヤ",
                     "conditions": {
                         "合計国力〔x〕": {
                             "actions": [
@@ -4522,30 +7316,28 @@ const TMP_CTX: GameStateWithFlowMemory = {
                             ],
                             "groupKey": "支付橫置國力"
                         },
-                        "橫置支付1[緑]": {
+                        "一個自軍機體": {
                             "title": [
-                                "RollColor",
-                                "緑"
-                            ],
-                            "actions": [
+                                "Entity",
                                 {
-                                    "title": [
-                                        "_ロールする",
-                                        "ロール"
+                                    "at": [
+                                        "配備エリア"
                                     ],
-                                    "vars": [
-                                        "橫置支付1[緑]"
-                                    ]
+                                    "isCanSetCharacter": true,
+                                    "side": "自軍",
+                                    "is": [
+                                        "ユニット"
+                                    ],
+                                    "count": 1
                                 }
-                            ],
-                            "groupKey": "支付橫置國力"
+                            ]
                         }
                     },
                     "logicTreeActions": [
                         {
                             "actions": [
                                 {
-                                    "title": "function _(ctx3, effect, { DefineFn, GameStateFn, ToolFn: ToolFn2 }) {\n              const cardId2 = DefineFn.EffectFn.getCardID(effect), from = GameStateFn.getItemBaSyou(ctx3, cardId2);\n              ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, \"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u3044\\u308B\\u30AB\\u30FC\\u30C9\"), [cardId2, from]);\n              const newE = GameStateFn.createUnitGoStageEffectFromPlayEffect(ctx3, effect);\n              return GameStateFn.addStackEffect(ctx3, newE);\n            }"
+                                    "title": "function _(ctx3, effect, { DefineFn, GameStateFn, ToolFn: ToolFn2 }) {\n              const cardId2 = DefineFn.EffectFn.getCardID(effect), prototype2 = GameStateFn.getItemPrototype(ctx3, cardId2), from = GameStateFn.getItemBaSyou(ctx3, cardId2);\n              ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, \"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u3044\\u308B\\u30AB\\u30FC\\u30C9\"), [cardId2, from]);\n              const newE = GameStateFn.createCharOpUnitGoStageEffectFromPlayEffect(ctx3, effect);\n              return GameStateFn.addStackEffect(ctx3, newE);\n            }"
                                 }
                             ]
                         }
@@ -4554,25 +7346,25 @@ const TMP_CTX: GameStateWithFlowMemory = {
             }
         },
         {
-            "id": 786,
+            "id": 1014,
             "description": "onEffectEnd: PlayG"
         },
         {
-            "id": 785,
-            "description": "onEvent: このカードがGとして場に出た場合 [\"PlayerB_97\"]",
+            "id": 1013,
+            "description": "onEvent: このカードがGとして場に出た場合 [\"PlayerB_56\"]",
             "effect": {
-                "id": "createPlayGEffect_PlayerB_97",
+                "id": "createPlayGEffect_PlayerB_56",
                 "reason": [
                     "PlayCard",
                     "PlayerB",
-                    "PlayerB_97",
+                    "PlayerB_56",
                     {
                         "isPlayG": true
                     }
                 ],
                 "description": "Play G",
                 "text": {
-                    "id": "createPlayGEffect_PlayerB_97",
+                    "id": "createPlayGEffect_PlayerB_56",
                     "title": [
                         "使用型",
                         [
@@ -4623,21 +7415,21 @@ const TMP_CTX: GameStateWithFlowMemory = {
             }
         },
         {
-            "id": 784,
-            "description": "onEvent: プレイされて場に出た場合 [\"PlayerB_97\"]",
+            "id": 1012,
+            "description": "onEvent: プレイされて場に出た場合 [\"PlayerB_56\"]",
             "effect": {
-                "id": "createPlayGEffect_PlayerB_97",
+                "id": "createPlayGEffect_PlayerB_56",
                 "reason": [
                     "PlayCard",
                     "PlayerB",
-                    "PlayerB_97",
+                    "PlayerB_56",
                     {
                         "isPlayG": true
                     }
                 ],
                 "description": "Play G",
                 "text": {
-                    "id": "createPlayGEffect_PlayerB_97",
+                    "id": "createPlayGEffect_PlayerB_56",
                     "title": [
                         "使用型",
                         [
@@ -4688,21 +7480,21 @@ const TMP_CTX: GameStateWithFlowMemory = {
             }
         },
         {
-            "id": 783,
-            "description": "onItemMove:PlayerB_97 = [\"PlayerB\",\"手札\"] => [\"PlayerB\",\"Gゾーン\"]",
+            "id": 1011,
+            "description": "onItemMove:PlayerB_56 = [\"PlayerB\",\"手札\"] => [\"PlayerB\",\"Gゾーン\"]",
             "effect": {
-                "id": "createPlayGEffect_PlayerB_97",
+                "id": "createPlayGEffect_PlayerB_56",
                 "reason": [
                     "PlayCard",
                     "PlayerB",
-                    "PlayerB_97",
+                    "PlayerB_56",
                     {
                         "isPlayG": true
                     }
                 ],
                 "description": "Play G",
                 "text": {
-                    "id": "createPlayGEffect_PlayerB_97",
+                    "id": "createPlayGEffect_PlayerB_56",
                     "title": [
                         "使用型",
                         [
@@ -4753,21 +7545,21 @@ const TMP_CTX: GameStateWithFlowMemory = {
             }
         },
         {
-            "id": 782,
-            "description": "onEvent: GameEventOnMove [\"PlayerB_97\"]",
+            "id": 1010,
+            "description": "onEvent: GameEventOnMove [\"PlayerB_56\"]",
             "effect": {
-                "id": "createPlayGEffect_PlayerB_97",
+                "id": "createPlayGEffect_PlayerB_56",
                 "reason": [
                     "PlayCard",
                     "PlayerB",
-                    "PlayerB_97",
+                    "PlayerB_56",
                     {
                         "isPlayG": true
                     }
                 ],
                 "description": "Play G",
                 "text": {
-                    "id": "createPlayGEffect_PlayerB_97",
+                    "id": "createPlayGEffect_PlayerB_56",
                     "title": [
                         "使用型",
                         [
@@ -4818,21 +7610,21 @@ const TMP_CTX: GameStateWithFlowMemory = {
             }
         },
         {
-            "id": 781,
-            "description": "PlayerB_97.isFaceDown true => false",
+            "id": 1009,
+            "description": "PlayerB_56.isFaceDown true => false",
             "effect": {
-                "id": "createPlayGEffect_PlayerB_97",
+                "id": "createPlayGEffect_PlayerB_56",
                 "reason": [
                     "PlayCard",
                     "PlayerB",
-                    "PlayerB_97",
+                    "PlayerB_56",
                     {
                         "isPlayG": true
                     }
                 ],
                 "description": "Play G",
                 "text": {
-                    "id": "createPlayGEffect_PlayerB_97",
+                    "id": "createPlayGEffect_PlayerB_56",
                     "title": [
                         "使用型",
                         [
@@ -4883,21 +7675,21 @@ const TMP_CTX: GameStateWithFlowMemory = {
             }
         },
         {
-            "id": 780,
+            "id": 1008,
             "description": "onPlayerStateChange:PlayerB",
             "effect": {
-                "id": "createPlayGEffect_PlayerB_97",
+                "id": "createPlayGEffect_PlayerB_56",
                 "reason": [
                     "PlayCard",
                     "PlayerB",
-                    "PlayerB_97",
+                    "PlayerB_56",
                     {
                         "isPlayG": true
                     }
                 ],
                 "description": "Play G",
                 "text": {
-                    "id": "createPlayGEffect_PlayerB_97",
+                    "id": "createPlayGEffect_PlayerB_56",
                     "title": [
                         "使用型",
                         [
@@ -4948,21 +7740,21 @@ const TMP_CTX: GameStateWithFlowMemory = {
             }
         },
         {
-            "id": 779,
+            "id": 1007,
             "description": "onEffectStart: PlayG",
             "effect": {
-                "id": "createPlayGEffect_PlayerB_97",
+                "id": "createPlayGEffect_PlayerB_56",
                 "reason": [
                     "PlayCard",
                     "PlayerB",
-                    "PlayerB_97",
+                    "PlayerB_56",
                     {
                         "isPlayG": true
                     }
                 ],
                 "description": "Play G",
                 "text": {
-                    "id": "createPlayGEffect_PlayerB_97",
+                    "id": "createPlayGEffect_PlayerB_56",
                     "title": [
                         "使用型",
                         [
@@ -5013,36 +7805,36 @@ const TMP_CTX: GameStateWithFlowMemory = {
             }
         },
         {
-            "id": 778,
+            "id": 1006,
             "description": "onSetPhase:配備フェイズ,フリータイミング"
         },
         {
-            "id": 777,
+            "id": 1005,
             "description": "onEvent: GameEventOnTiming undefined"
         },
         {
-            "id": 776,
+            "id": 1004,
             "description": "onSetPhase:配備フェイズ,フェイズ開始"
         },
         {
-            "id": 775,
+            "id": 1003,
             "description": "onEvent: GameEventOnTiming undefined"
         },
         {
-            "id": 774,
+            "id": 1002,
             "description": "onSetPhase:ドローフェイズ,フェイズ終了"
         },
         {
-            "id": 773,
+            "id": 1001,
             "description": "onSetPhase:ドローフェイズ,フリータイミング"
         },
         {
-            "id": 772,
+            "id": 1000,
             "description": "onEffectEnd: 抽牌階段規定效果"
         },
         {
-            "id": 771,
-            "description": "onItemMove:PlayerB_56 = [\"PlayerB\",\"本国\"] => [\"PlayerB\",\"手札\"]",
+            "id": 999,
+            "description": "onItemMove:PlayerB_72 = [\"PlayerB\",\"本国\"] => [\"PlayerB\",\"手札\"]",
             "effect": {
                 "id": "createDrawPhaseRuleEffect_PlayerB",
                 "reason": [
@@ -5069,8 +7861,8 @@ const TMP_CTX: GameStateWithFlowMemory = {
             }
         },
         {
-            "id": 770,
-            "description": "onEvent: GameEventOnMove [\"PlayerB_56\"]",
+            "id": 998,
+            "description": "onEvent: GameEventOnMove [\"PlayerB_72\"]",
             "effect": {
                 "id": "createDrawPhaseRuleEffect_PlayerB",
                 "reason": [
@@ -5097,8 +7889,8 @@ const TMP_CTX: GameStateWithFlowMemory = {
             }
         },
         {
-            "id": 769,
-            "description": "PlayerB_56.isRoll undefined => false",
+            "id": 997,
+            "description": "PlayerB_72.isRoll undefined => false",
             "effect": {
                 "id": "createDrawPhaseRuleEffect_PlayerB",
                 "reason": [
@@ -5125,7 +7917,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
             }
         },
         {
-            "id": 768,
+            "id": 996,
             "description": "onEffectStart: 抽牌階段規定效果",
             "effect": {
                 "id": "createDrawPhaseRuleEffect_PlayerB",
@@ -5153,63 +7945,35 @@ const TMP_CTX: GameStateWithFlowMemory = {
             }
         },
         {
-            "id": 767,
+            "id": 995,
             "description": "onSetPhase:ドローフェイズ,規定の効果"
         },
         {
-            "id": 766,
+            "id": 994,
             "description": "onEvent: GameEventOnTiming undefined"
         },
         {
-            "id": 765,
+            "id": 993,
             "description": "onSetPhase:ドローフェイズ,フェイズ開始"
         },
         {
-            "id": 764,
+            "id": 992,
             "description": "onEvent: GameEventOnTiming undefined"
         },
         {
-            "id": 763,
+            "id": 991,
             "description": "onSetPhase:リロールフェイズ,フェイズ終了"
         },
         {
-            "id": 762,
+            "id": 990,
             "description": "onSetPhase:リロールフェイズ,フリータイミング"
         },
         {
-            "id": 761,
+            "id": 989,
             "description": "onEffectEnd: getRerollPhaseRuleEffect"
         },
         {
-            "id": 760,
-            "description": "PlayerB_63.isRoll undefined => false",
-            "effect": {
-                "id": "createRerollPhaseRuleEffect_PlayerB",
-                "reason": [
-                    "GameRule",
-                    "PlayerB",
-                    {
-                        "isReroll": true
-                    }
-                ],
-                "text": {
-                    "id": "createRerollPhaseRuleEffect_text_PlayerB",
-                    "title": [],
-                    "description": "getRerollPhaseRuleEffect",
-                    "logicTreeActions": [
-                        {
-                            "actions": [
-                                {
-                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), pairs = [\"\\u914D\\u5099\\u30A8\\u30EA\\u30A2\", \"G\\u30BE\\u30FC\\u30F3\"].flatMap((kw) => {\n                  const basyou = DefineFn2.AbsoluteBaSyouFn.of(playerId2, kw);\n                  return GameStateFn2.getItemIdsByBasyou(ctx3, basyou).filter((cardId) => GameStateFn2.getItemIsCanReroll(ctx3, cardId)).map((cardId) => {\n                    return [cardId, basyou];\n                  });\n                });\n                for (let pair3 of pairs)\n                  ctx3 = GameStateFn2.doItemSetRollState(ctx3, !1, pair3, { isSkipTargetMissing: !0 });\n                return ctx3;\n              }"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "id": 759,
+            "id": 988,
             "description": "PlayerB_85.isRoll true => false",
             "effect": {
                 "id": "createRerollPhaseRuleEffect_PlayerB",
@@ -5237,7 +8001,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
             }
         },
         {
-            "id": 758,
+            "id": 987,
             "description": "PlayerB_74.isRoll true => false",
             "effect": {
                 "id": "createRerollPhaseRuleEffect_PlayerB",
@@ -5265,8 +8029,8 @@ const TMP_CTX: GameStateWithFlowMemory = {
             }
         },
         {
-            "id": 757,
-            "description": "PlayerB_82.isRoll true => false",
+            "id": 986,
+            "description": "PlayerB_96.isRoll true => false",
             "effect": {
                 "id": "createRerollPhaseRuleEffect_PlayerB",
                 "reason": [
@@ -5293,7 +8057,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
             }
         },
         {
-            "id": 756,
+            "id": 985,
             "description": "onEffectStart: getRerollPhaseRuleEffect",
             "effect": {
                 "id": "createRerollPhaseRuleEffect_PlayerB",
@@ -5321,155 +8085,71 @@ const TMP_CTX: GameStateWithFlowMemory = {
             }
         },
         {
-            "id": 755,
+            "id": 984,
             "description": "onSetPhase:リロールフェイズ,規定の効果"
         },
         {
-            "id": 754,
+            "id": 983,
             "description": "onEvent: GameEventOnTiming undefined"
         },
         {
-            "id": 753,
+            "id": 982,
             "description": "onSetPhase:リロールフェイズ,フェイズ開始"
         },
         {
-            "id": 752,
+            "id": 981,
             "description": "onEvent: GameEventOnTiming undefined"
         },
         {
-            "id": 751,
+            "id": 980,
             "description": "onPlayerStateChange:PlayerA"
         },
         {
-            "id": 750,
+            "id": 979,
             "description": "onSetPhase:戦闘フェイズ,ターン終了時,効果終了。ターン終了"
         },
         {
-            "id": 749,
+            "id": 978,
             "description": "onEvent: GameEventOnTiming undefined"
         },
         {
-            "id": 748,
+            "id": 977,
             "description": "onSetPhase:戦闘フェイズ,ターン終了時,手札調整"
         },
         {
-            "id": 747,
+            "id": 976,
             "description": "onEvent: GameEventOnTiming undefined"
         },
         {
-            "id": 746,
+            "id": 975,
             "description": "onSetPhase:戦闘フェイズ,ターン終了時,効果解決"
         },
         {
-            "id": 745,
+            "id": 974,
             "description": "onEvent: GameEventOnTiming undefined"
         },
         {
-            "id": 744,
+            "id": 973,
             "description": "onSetPhase:戦闘フェイズ,ターン終了時,ダメージリセット"
         },
         {
-            "id": 743,
+            "id": 972,
             "description": "onEvent: GameEventOnTiming undefined"
         },
         {
-            "id": 742,
+            "id": 971,
             "description": "onSetPhase:戦闘フェイズ,帰還ステップ,ステップ終了"
         },
         {
-            "id": 741,
+            "id": 970,
             "description": "onSetPhase:戦闘フェイズ,帰還ステップ,フリータイミング2"
         },
         {
-            "id": 740,
+            "id": 969,
             "description": "onEffectEnd: getReturnRuleEffect"
         },
         {
-            "id": 739,
-            "description": "onItemMove:PlayerA_8 = [\"PlayerA\",\"戦闘エリア1\"] => [\"PlayerA\",\"配備エリア\"]",
-            "effect": {
-                "id": "createReturnRuleEffect_PlayerA",
-                "reason": [
-                    "GameRule",
-                    "PlayerA",
-                    {
-                        "isReturn": true
-                    }
-                ],
-                "text": {
-                    "id": "createReturnRuleEffect_text_PlayerA",
-                    "title": [],
-                    "description": "getReturnRuleEffect",
-                    "logicTreeActions": [
-                        {
-                            "actions": [
-                                {
-                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), opponentId = DefineFn2.PlayerIDFn.getOpponent(playerId2);\n                ctx3 = _processKw(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\"), ctx3 = _processKw(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\"), ctx3 = _processKw(ctx3, opponentId, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\"), ctx3 = _processKw(ctx3, opponentId, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\");\n                function _processKw(ctx4, playerId3, fromKw) {\n                  const from = DefineFn2.AbsoluteBaSyouFn.of(playerId3, fromKw), runtimeArea1 = GameStateFn2.getRuntimeBattleArea(ctx4, fromKw), unitIdsAtArea1 = GameStateFn2.getItemIdsByBasyou(ctx4, from);\n                  for (let cardId of unitIdsAtArea1) {\n                    const target = [cardId, from];\n                    if (GameStateFn2.getSetGroupRoot(ctx4, cardId) != cardId)\n                      continue;\n                    if (GameStateFn2.getCardBattleArea(ctx4, cardId).includes(runtimeArea1))\n                      ctx4 = GameStateFn2.doItemSetRollState(ctx4, !0, target, { isSkipTargetMissing: !0 }), ctx4 = GameStateFn2.doItemMove(ctx4, DefineFn2.AbsoluteBaSyouFn.of(playerId3, \"\\u914D\\u5099\\u30A8\\u30EA\\u30A2\"), target, { isSkipTargetMissing: !0 });\n                    else\n                      ctx4 = GameStateFn2.doItemMove(ctx4, DefineFn2.AbsoluteBaSyouFn.of(playerId3, \"\\u30B8\\u30E3\\u30F3\\u30AF\\u30E4\\u30FC\\u30C9\"), target, { isSkipTargetMissing: !0 });\n                  }\n                  return ctx4;\n                }\n                return ctx3;\n              }"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "id": 738,
-            "description": "onEvent: GameEventOnMove [\"PlayerA_8\"]",
-            "effect": {
-                "id": "createReturnRuleEffect_PlayerA",
-                "reason": [
-                    "GameRule",
-                    "PlayerA",
-                    {
-                        "isReturn": true
-                    }
-                ],
-                "text": {
-                    "id": "createReturnRuleEffect_text_PlayerA",
-                    "title": [],
-                    "description": "getReturnRuleEffect",
-                    "logicTreeActions": [
-                        {
-                            "actions": [
-                                {
-                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), opponentId = DefineFn2.PlayerIDFn.getOpponent(playerId2);\n                ctx3 = _processKw(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\"), ctx3 = _processKw(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\"), ctx3 = _processKw(ctx3, opponentId, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\"), ctx3 = _processKw(ctx3, opponentId, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\");\n                function _processKw(ctx4, playerId3, fromKw) {\n                  const from = DefineFn2.AbsoluteBaSyouFn.of(playerId3, fromKw), runtimeArea1 = GameStateFn2.getRuntimeBattleArea(ctx4, fromKw), unitIdsAtArea1 = GameStateFn2.getItemIdsByBasyou(ctx4, from);\n                  for (let cardId of unitIdsAtArea1) {\n                    const target = [cardId, from];\n                    if (GameStateFn2.getSetGroupRoot(ctx4, cardId) != cardId)\n                      continue;\n                    if (GameStateFn2.getCardBattleArea(ctx4, cardId).includes(runtimeArea1))\n                      ctx4 = GameStateFn2.doItemSetRollState(ctx4, !0, target, { isSkipTargetMissing: !0 }), ctx4 = GameStateFn2.doItemMove(ctx4, DefineFn2.AbsoluteBaSyouFn.of(playerId3, \"\\u914D\\u5099\\u30A8\\u30EA\\u30A2\"), target, { isSkipTargetMissing: !0 });\n                    else\n                      ctx4 = GameStateFn2.doItemMove(ctx4, DefineFn2.AbsoluteBaSyouFn.of(playerId3, \"\\u30B8\\u30E3\\u30F3\\u30AF\\u30E4\\u30FC\\u30C9\"), target, { isSkipTargetMissing: !0 });\n                  }\n                  return ctx4;\n                }\n                return ctx3;\n              }"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "id": 737,
-            "description": "PlayerA_8.isRoll undefined => true",
-            "effect": {
-                "id": "createReturnRuleEffect_PlayerA",
-                "reason": [
-                    "GameRule",
-                    "PlayerA",
-                    {
-                        "isReturn": true
-                    }
-                ],
-                "text": {
-                    "id": "createReturnRuleEffect_text_PlayerA",
-                    "title": [],
-                    "description": "getReturnRuleEffect",
-                    "logicTreeActions": [
-                        {
-                            "actions": [
-                                {
-                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), opponentId = DefineFn2.PlayerIDFn.getOpponent(playerId2);\n                ctx3 = _processKw(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\"), ctx3 = _processKw(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\"), ctx3 = _processKw(ctx3, opponentId, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\"), ctx3 = _processKw(ctx3, opponentId, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\");\n                function _processKw(ctx4, playerId3, fromKw) {\n                  const from = DefineFn2.AbsoluteBaSyouFn.of(playerId3, fromKw), runtimeArea1 = GameStateFn2.getRuntimeBattleArea(ctx4, fromKw), unitIdsAtArea1 = GameStateFn2.getItemIdsByBasyou(ctx4, from);\n                  for (let cardId of unitIdsAtArea1) {\n                    const target = [cardId, from];\n                    if (GameStateFn2.getSetGroupRoot(ctx4, cardId) != cardId)\n                      continue;\n                    if (GameStateFn2.getCardBattleArea(ctx4, cardId).includes(runtimeArea1))\n                      ctx4 = GameStateFn2.doItemSetRollState(ctx4, !0, target, { isSkipTargetMissing: !0 }), ctx4 = GameStateFn2.doItemMove(ctx4, DefineFn2.AbsoluteBaSyouFn.of(playerId3, \"\\u914D\\u5099\\u30A8\\u30EA\\u30A2\"), target, { isSkipTargetMissing: !0 });\n                    else\n                      ctx4 = GameStateFn2.doItemMove(ctx4, DefineFn2.AbsoluteBaSyouFn.of(playerId3, \"\\u30B8\\u30E3\\u30F3\\u30AF\\u30E4\\u30FC\\u30C9\"), target, { isSkipTargetMissing: !0 });\n                  }\n                  return ctx4;\n                }\n                return ctx3;\n              }"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "id": 736,
+            "id": 968,
             "description": "onEffectStart: getReturnRuleEffect",
             "effect": {
                 "id": "createReturnRuleEffect_PlayerA",
@@ -5497,627 +8177,39 @@ const TMP_CTX: GameStateWithFlowMemory = {
             }
         },
         {
-            "id": 735,
+            "id": 967,
             "description": "onSetPhase:戦闘フェイズ,帰還ステップ,規定の効果"
         },
         {
-            "id": 734,
+            "id": 966,
             "description": "onSetPhase:戦闘フェイズ,帰還ステップ,フリータイミング"
         },
         {
-            "id": 733,
+            "id": 965,
             "description": "onEvent: GameEventOnTiming undefined"
         },
         {
-            "id": 732,
+            "id": 964,
             "description": "onSetPhase:戦闘フェイズ,帰還ステップ,ステップ開始"
         },
         {
-            "id": 731,
+            "id": 963,
             "description": "onEvent: GameEventOnTiming undefined"
         },
         {
-            "id": 730,
+            "id": 962,
             "description": "onSetPhase:戦闘フェイズ,ダメージ判定ステップ,ステップ終了"
         },
         {
-            "id": 729,
+            "id": 961,
             "description": "onSetPhase:戦闘フェイズ,ダメージ判定ステップ,フリータイミング2"
         },
         {
-            "id": 728,
+            "id": 960,
             "description": "onEffectEnd: getDamageRuleEffect"
         },
         {
-            "id": 727,
-            "description": "onEvent: このカードの部隊が敵軍本国に戦闘ダメージを与えた場合 [\"PlayerA_8\"]",
-            "effect": {
-                "id": "createDamageRuleEffect_PlayerA",
-                "reason": [
-                    "GameRule",
-                    "PlayerA",
-                    {
-                        "isDamageCheck": true
-                    }
-                ],
-                "text": {
-                    "id": "createDamageRuleEffect_text_PlayerA",
-                    "title": [],
-                    "description": "getDamageRuleEffect",
-                    "logicTreeActions": [
-                        {
-                            "actions": [
-                                {
-                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect);\n                return ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\", 1), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\", 1), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\", 2), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\", 2), ctx3;\n              }"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "id": 726,
-            "description": "本國受到傷害: PlayerB => 6 damage",
-            "effect": {
-                "id": "createDamageRuleEffect_PlayerA",
-                "reason": [
-                    "GameRule",
-                    "PlayerA",
-                    {
-                        "isDamageCheck": true
-                    }
-                ],
-                "text": {
-                    "id": "createDamageRuleEffect_text_PlayerA",
-                    "title": [],
-                    "description": "getDamageRuleEffect",
-                    "logicTreeActions": [
-                        {
-                            "actions": [
-                                {
-                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect);\n                return ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\", 1), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\", 1), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\", 2), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\", 2), ctx3;\n              }"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "id": 725,
-            "description": "onEvent: 自軍本国に戦闘ダメージが与えられた場合 undefined",
-            "effect": {
-                "id": "createDamageRuleEffect_PlayerA",
-                "reason": [
-                    "GameRule",
-                    "PlayerA",
-                    {
-                        "isDamageCheck": true
-                    }
-                ],
-                "text": {
-                    "id": "createDamageRuleEffect_text_PlayerA",
-                    "title": [],
-                    "description": "getDamageRuleEffect",
-                    "logicTreeActions": [
-                        {
-                            "actions": [
-                                {
-                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect);\n                return ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\", 1), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\", 1), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\", 2), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\", 2), ctx3;\n              }"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "id": 724,
-            "description": "onItemMove:PlayerB_71 = [\"PlayerB\",\"本国\"] => [\"PlayerB\",\"捨て山\"]",
-            "effect": {
-                "id": "createDamageRuleEffect_PlayerA",
-                "reason": [
-                    "GameRule",
-                    "PlayerA",
-                    {
-                        "isDamageCheck": true
-                    }
-                ],
-                "text": {
-                    "id": "createDamageRuleEffect_text_PlayerA",
-                    "title": [],
-                    "description": "getDamageRuleEffect",
-                    "logicTreeActions": [
-                        {
-                            "actions": [
-                                {
-                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect);\n                return ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\", 1), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\", 1), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\", 2), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\", 2), ctx3;\n              }"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "id": 723,
-            "description": "onEvent: GameEventOnMove [\"PlayerB_71\"]",
-            "effect": {
-                "id": "createDamageRuleEffect_PlayerA",
-                "reason": [
-                    "GameRule",
-                    "PlayerA",
-                    {
-                        "isDamageCheck": true
-                    }
-                ],
-                "text": {
-                    "id": "createDamageRuleEffect_text_PlayerA",
-                    "title": [],
-                    "description": "getDamageRuleEffect",
-                    "logicTreeActions": [
-                        {
-                            "actions": [
-                                {
-                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect);\n                return ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\", 1), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\", 1), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\", 2), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\", 2), ctx3;\n              }"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "id": 722,
-            "description": "PlayerB_71.isRoll undefined => false",
-            "effect": {
-                "id": "createDamageRuleEffect_PlayerA",
-                "reason": [
-                    "GameRule",
-                    "PlayerA",
-                    {
-                        "isDamageCheck": true
-                    }
-                ],
-                "text": {
-                    "id": "createDamageRuleEffect_text_PlayerA",
-                    "title": [],
-                    "description": "getDamageRuleEffect",
-                    "logicTreeActions": [
-                        {
-                            "actions": [
-                                {
-                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect);\n                return ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\", 1), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\", 1), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\", 2), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\", 2), ctx3;\n              }"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "id": 721,
-            "description": "onItemMove:PlayerB_81 = [\"PlayerB\",\"本国\"] => [\"PlayerB\",\"捨て山\"]",
-            "effect": {
-                "id": "createDamageRuleEffect_PlayerA",
-                "reason": [
-                    "GameRule",
-                    "PlayerA",
-                    {
-                        "isDamageCheck": true
-                    }
-                ],
-                "text": {
-                    "id": "createDamageRuleEffect_text_PlayerA",
-                    "title": [],
-                    "description": "getDamageRuleEffect",
-                    "logicTreeActions": [
-                        {
-                            "actions": [
-                                {
-                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect);\n                return ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\", 1), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\", 1), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\", 2), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\", 2), ctx3;\n              }"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "id": 720,
-            "description": "onEvent: GameEventOnMove [\"PlayerB_81\"]",
-            "effect": {
-                "id": "createDamageRuleEffect_PlayerA",
-                "reason": [
-                    "GameRule",
-                    "PlayerA",
-                    {
-                        "isDamageCheck": true
-                    }
-                ],
-                "text": {
-                    "id": "createDamageRuleEffect_text_PlayerA",
-                    "title": [],
-                    "description": "getDamageRuleEffect",
-                    "logicTreeActions": [
-                        {
-                            "actions": [
-                                {
-                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect);\n                return ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\", 1), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\", 1), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\", 2), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\", 2), ctx3;\n              }"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "id": 719,
-            "description": "PlayerB_81.isRoll undefined => false",
-            "effect": {
-                "id": "createDamageRuleEffect_PlayerA",
-                "reason": [
-                    "GameRule",
-                    "PlayerA",
-                    {
-                        "isDamageCheck": true
-                    }
-                ],
-                "text": {
-                    "id": "createDamageRuleEffect_text_PlayerA",
-                    "title": [],
-                    "description": "getDamageRuleEffect",
-                    "logicTreeActions": [
-                        {
-                            "actions": [
-                                {
-                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect);\n                return ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\", 1), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\", 1), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\", 2), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\", 2), ctx3;\n              }"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "id": 718,
-            "description": "onItemMove:PlayerB_95 = [\"PlayerB\",\"本国\"] => [\"PlayerB\",\"捨て山\"]",
-            "effect": {
-                "id": "createDamageRuleEffect_PlayerA",
-                "reason": [
-                    "GameRule",
-                    "PlayerA",
-                    {
-                        "isDamageCheck": true
-                    }
-                ],
-                "text": {
-                    "id": "createDamageRuleEffect_text_PlayerA",
-                    "title": [],
-                    "description": "getDamageRuleEffect",
-                    "logicTreeActions": [
-                        {
-                            "actions": [
-                                {
-                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect);\n                return ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\", 1), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\", 1), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\", 2), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\", 2), ctx3;\n              }"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "id": 717,
-            "description": "onEvent: GameEventOnMove [\"PlayerB_95\"]",
-            "effect": {
-                "id": "createDamageRuleEffect_PlayerA",
-                "reason": [
-                    "GameRule",
-                    "PlayerA",
-                    {
-                        "isDamageCheck": true
-                    }
-                ],
-                "text": {
-                    "id": "createDamageRuleEffect_text_PlayerA",
-                    "title": [],
-                    "description": "getDamageRuleEffect",
-                    "logicTreeActions": [
-                        {
-                            "actions": [
-                                {
-                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect);\n                return ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\", 1), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\", 1), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\", 2), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\", 2), ctx3;\n              }"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "id": 716,
-            "description": "PlayerB_95.isRoll undefined => false",
-            "effect": {
-                "id": "createDamageRuleEffect_PlayerA",
-                "reason": [
-                    "GameRule",
-                    "PlayerA",
-                    {
-                        "isDamageCheck": true
-                    }
-                ],
-                "text": {
-                    "id": "createDamageRuleEffect_text_PlayerA",
-                    "title": [],
-                    "description": "getDamageRuleEffect",
-                    "logicTreeActions": [
-                        {
-                            "actions": [
-                                {
-                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect);\n                return ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\", 1), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\", 1), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\", 2), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\", 2), ctx3;\n              }"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "id": 715,
-            "description": "onItemMove:PlayerB_77 = [\"PlayerB\",\"本国\"] => [\"PlayerB\",\"捨て山\"]",
-            "effect": {
-                "id": "createDamageRuleEffect_PlayerA",
-                "reason": [
-                    "GameRule",
-                    "PlayerA",
-                    {
-                        "isDamageCheck": true
-                    }
-                ],
-                "text": {
-                    "id": "createDamageRuleEffect_text_PlayerA",
-                    "title": [],
-                    "description": "getDamageRuleEffect",
-                    "logicTreeActions": [
-                        {
-                            "actions": [
-                                {
-                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect);\n                return ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\", 1), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\", 1), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\", 2), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\", 2), ctx3;\n              }"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "id": 714,
-            "description": "onEvent: GameEventOnMove [\"PlayerB_77\"]",
-            "effect": {
-                "id": "createDamageRuleEffect_PlayerA",
-                "reason": [
-                    "GameRule",
-                    "PlayerA",
-                    {
-                        "isDamageCheck": true
-                    }
-                ],
-                "text": {
-                    "id": "createDamageRuleEffect_text_PlayerA",
-                    "title": [],
-                    "description": "getDamageRuleEffect",
-                    "logicTreeActions": [
-                        {
-                            "actions": [
-                                {
-                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect);\n                return ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\", 1), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\", 1), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\", 2), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\", 2), ctx3;\n              }"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "id": 713,
-            "description": "PlayerB_77.isRoll undefined => false",
-            "effect": {
-                "id": "createDamageRuleEffect_PlayerA",
-                "reason": [
-                    "GameRule",
-                    "PlayerA",
-                    {
-                        "isDamageCheck": true
-                    }
-                ],
-                "text": {
-                    "id": "createDamageRuleEffect_text_PlayerA",
-                    "title": [],
-                    "description": "getDamageRuleEffect",
-                    "logicTreeActions": [
-                        {
-                            "actions": [
-                                {
-                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect);\n                return ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\", 1), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\", 1), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\", 2), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\", 2), ctx3;\n              }"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "id": 712,
-            "description": "onItemMove:PlayerB_58 = [\"PlayerB\",\"本国\"] => [\"PlayerB\",\"捨て山\"]",
-            "effect": {
-                "id": "createDamageRuleEffect_PlayerA",
-                "reason": [
-                    "GameRule",
-                    "PlayerA",
-                    {
-                        "isDamageCheck": true
-                    }
-                ],
-                "text": {
-                    "id": "createDamageRuleEffect_text_PlayerA",
-                    "title": [],
-                    "description": "getDamageRuleEffect",
-                    "logicTreeActions": [
-                        {
-                            "actions": [
-                                {
-                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect);\n                return ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\", 1), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\", 1), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\", 2), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\", 2), ctx3;\n              }"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "id": 711,
-            "description": "onEvent: GameEventOnMove [\"PlayerB_58\"]",
-            "effect": {
-                "id": "createDamageRuleEffect_PlayerA",
-                "reason": [
-                    "GameRule",
-                    "PlayerA",
-                    {
-                        "isDamageCheck": true
-                    }
-                ],
-                "text": {
-                    "id": "createDamageRuleEffect_text_PlayerA",
-                    "title": [],
-                    "description": "getDamageRuleEffect",
-                    "logicTreeActions": [
-                        {
-                            "actions": [
-                                {
-                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect);\n                return ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\", 1), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\", 1), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\", 2), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\", 2), ctx3;\n              }"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "id": 710,
-            "description": "PlayerB_58.isRoll undefined => false",
-            "effect": {
-                "id": "createDamageRuleEffect_PlayerA",
-                "reason": [
-                    "GameRule",
-                    "PlayerA",
-                    {
-                        "isDamageCheck": true
-                    }
-                ],
-                "text": {
-                    "id": "createDamageRuleEffect_text_PlayerA",
-                    "title": [],
-                    "description": "getDamageRuleEffect",
-                    "logicTreeActions": [
-                        {
-                            "actions": [
-                                {
-                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect);\n                return ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\", 1), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\", 1), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\", 2), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\", 2), ctx3;\n              }"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "id": 709,
-            "description": "onItemMove:PlayerB_67 = [\"PlayerB\",\"本国\"] => [\"PlayerB\",\"捨て山\"]",
-            "effect": {
-                "id": "createDamageRuleEffect_PlayerA",
-                "reason": [
-                    "GameRule",
-                    "PlayerA",
-                    {
-                        "isDamageCheck": true
-                    }
-                ],
-                "text": {
-                    "id": "createDamageRuleEffect_text_PlayerA",
-                    "title": [],
-                    "description": "getDamageRuleEffect",
-                    "logicTreeActions": [
-                        {
-                            "actions": [
-                                {
-                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect);\n                return ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\", 1), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\", 1), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\", 2), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\", 2), ctx3;\n              }"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "id": 708,
-            "description": "onEvent: GameEventOnMove [\"PlayerB_67\"]",
-            "effect": {
-                "id": "createDamageRuleEffect_PlayerA",
-                "reason": [
-                    "GameRule",
-                    "PlayerA",
-                    {
-                        "isDamageCheck": true
-                    }
-                ],
-                "text": {
-                    "id": "createDamageRuleEffect_text_PlayerA",
-                    "title": [],
-                    "description": "getDamageRuleEffect",
-                    "logicTreeActions": [
-                        {
-                            "actions": [
-                                {
-                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect);\n                return ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\", 1), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\", 1), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\", 2), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\", 2), ctx3;\n              }"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "id": 707,
-            "description": "PlayerB_67.isRoll undefined => false",
-            "effect": {
-                "id": "createDamageRuleEffect_PlayerA",
-                "reason": [
-                    "GameRule",
-                    "PlayerA",
-                    {
-                        "isDamageCheck": true
-                    }
-                ],
-                "text": {
-                    "id": "createDamageRuleEffect_text_PlayerA",
-                    "title": [],
-                    "description": "getDamageRuleEffect",
-                    "logicTreeActions": [
-                        {
-                            "actions": [
-                                {
-                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect);\n                return ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\", 1), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\", 1), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\", 2), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\", 2), ctx3;\n              }"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "id": 706,
+            "id": 959,
             "description": "onEffectStart: getDamageRuleEffect",
             "effect": {
                 "id": "createDamageRuleEffect_PlayerA",
@@ -6145,39 +8237,39 @@ const TMP_CTX: GameStateWithFlowMemory = {
             }
         },
         {
-            "id": 705,
+            "id": 958,
             "description": "onSetPhase:戦闘フェイズ,ダメージ判定ステップ,規定の効果"
         },
         {
-            "id": 704,
+            "id": 957,
             "description": "onSetPhase:戦闘フェイズ,ダメージ判定ステップ,フリータイミング"
         },
         {
-            "id": 703,
+            "id": 956,
             "description": "onEvent: GameEventOnTiming undefined"
         },
         {
-            "id": 702,
+            "id": 955,
             "description": "onSetPhase:戦闘フェイズ,ダメージ判定ステップ,ステップ開始"
         },
         {
-            "id": 701,
+            "id": 954,
             "description": "onEvent: GameEventOnTiming undefined"
         },
         {
-            "id": 700,
+            "id": 953,
             "description": "onSetPhase:戦闘フェイズ,防御ステップ,ステップ終了"
         },
         {
-            "id": 699,
+            "id": 952,
             "description": "onSetPhase:戦闘フェイズ,防御ステップ,フリータイミング2"
         },
         {
-            "id": 698,
+            "id": 951,
             "description": "onEffectEnd: 出擊"
         },
         {
-            "id": 697,
+            "id": 950,
             "description": "onEffectStart: 出擊",
             "effect": {
                 "id": "createAttackPhaseRuleEffect_PlayerB",
@@ -6228,40 +8320,40 @@ const TMP_CTX: GameStateWithFlowMemory = {
             }
         },
         {
-            "id": 696,
+            "id": 949,
             "description": "onSetPhase:戦闘フェイズ,防御ステップ,規定の効果"
         },
         {
-            "id": 695,
+            "id": 948,
             "description": "onSetPhase:戦闘フェイズ,防御ステップ,フリータイミング"
         },
         {
-            "id": 694,
+            "id": 947,
             "description": "onEvent: GameEventOnTiming undefined"
         },
         {
-            "id": 693,
+            "id": 946,
             "description": "onSetPhase:戦闘フェイズ,防御ステップ,ステップ開始"
         },
         {
-            "id": 692,
+            "id": 945,
             "description": "onEvent: GameEventOnTiming undefined"
         },
         {
-            "id": 691,
+            "id": 944,
             "description": "onSetPhase:戦闘フェイズ,攻撃ステップ,ステップ終了"
         },
         {
-            "id": 690,
+            "id": 943,
             "description": "onSetPhase:戦闘フェイズ,攻撃ステップ,フリータイミング2"
         },
         {
-            "id": 689,
+            "id": 942,
             "description": "onEffectEnd: 出擊"
         },
         {
-            "id": 688,
-            "description": "onEvent: このカードが攻撃に出撃した場合 [\"PlayerA_8\"]",
+            "id": 941,
+            "description": "onEvent: このカードが攻撃に出撃した場合 []",
             "effect": {
                 "id": "createAttackPhaseRuleEffect_PlayerA",
                 "reason": [
@@ -6311,109 +8403,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
             }
         },
         {
-            "id": 687,
-            "description": "onItemMove:PlayerA_8 = [\"PlayerA\",\"配備エリア\"] => [\"PlayerA\",\"戦闘エリア1\"]",
-            "effect": {
-                "id": "createAttackPhaseRuleEffect_PlayerA",
-                "reason": [
-                    "GameRule",
-                    "PlayerA",
-                    {
-                        "isAttack": true,
-                        "isDefence": false
-                    }
-                ],
-                "description": "出擊",
-                "isOption": true,
-                "text": {
-                    "id": "createAttackPhaseRuleEffect_text_PlayerA",
-                    "title": [],
-                    "description": "出擊",
-                    "conditions": {
-                        "去地球": {
-                            "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n            const runtimeBattleArea = GameStateFn2.getRuntimeBattleArea(ctx3, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\");\n            if (runtimeBattleArea == \"\\u5B87\\u5B99\\u30A8\\u30EA\\u30A2\")\n              return null;\n            const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), opponentPlayerId = DefineFn2.PlayerIDFn.getOpponent(playerId2);\n            let unitIds = GameStateFn2.getItemIdsByBasyou(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, \"\\u914D\\u5099\\u30A8\\u30EA\\u30A2\")).filter((cardId) => GameStateFn2.getSetGroupRoot(ctx3, cardId) == cardId).filter((cardId) => GameStateFn2.getCardBattleArea(ctx3, cardId).includes(runtimeBattleArea)).filter((cardId) => GameStateFn2.getCard(ctx3, cardId).isRoll != !0);\n            const opponentUnitIds = GameStateFn2.getBattleGroup(ctx3, DefineFn2.AbsoluteBaSyouFn.of(opponentPlayerId, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\"));\n            if (opponentUnitIds.length) {\n              if (GameStateFn2.isABattleGroup(ctx3, [\"\\u9AD8\\u6A5F\\u52D5\"], opponentUnitIds[0]))\n                unitIds = unitIds.filter((id) => GameStateFn2.isSetGroupHasA(ctx3, [\"\\u9AD8\\u6A5F\\u52D5\"], id));\n            }\n            return {\n              title: [\"\\u30AB\\u30FC\\u30C9\", unitIds.map((id) => {\n                return [id, GameStateFn2.getItemBaSyou(ctx3, id)];\n              }), []],\n              flags: { isGoBattleArea1: !0 }\n            };\n          }",
-                            "actions": [
-                                {
-                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), fackCardId = DefineFn2.EffectFn.getCardID(effect), earthPairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, \"\\u53BB\\u5730\\u7403\", fackCardId), phase2 = GameStateFn2.getPhase(ctx3);\n                for (let pair3 of earthPairs)\n                  ctx3 = GameStateFn2.mapItemState(ctx3, pair3[0], (is) => ({ ...is, isAttack: phase2[1] == \"\\u653B\\u6483\\u30B9\\u30C6\\u30C3\\u30D7\", isDefence: phase2[1] == \"\\u9632\\u5FA1\\u30B9\\u30C6\\u30C3\\u30D7\" })), ctx3 = GameStateFn2.doItemMove(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\"), pair3);\n                return ctx3;\n              }"
-                                }
-                            ],
-                            "groupKey": "出擊"
-                        },
-                        "去宇宙": {
-                            "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n            const runtimeBattleArea = GameStateFn2.getRuntimeBattleArea(ctx3, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\");\n            if (runtimeBattleArea == \"\\u5730\\u7403\\u30A8\\u30EA\\u30A2\")\n              return null;\n            const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), opponentPlayerId = DefineFn2.PlayerIDFn.getOpponent(playerId2);\n            let unitIds = GameStateFn2.getItemIdsByBasyou(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, \"\\u914D\\u5099\\u30A8\\u30EA\\u30A2\")).filter((cardId) => GameStateFn2.getSetGroupRoot(ctx3, cardId) == cardId).filter((cardId) => GameStateFn2.getCardBattleArea(ctx3, cardId).includes(runtimeBattleArea)).filter((cardId) => GameStateFn2.getCard(ctx3, cardId).isRoll != !0);\n            const opponentUnitIds = GameStateFn2.getBattleGroup(ctx3, DefineFn2.AbsoluteBaSyouFn.of(opponentPlayerId, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\"));\n            if (opponentUnitIds.length) {\n              if (GameStateFn2.isABattleGroup(ctx3, [\"\\u9AD8\\u6A5F\\u52D5\"], opponentUnitIds[0]))\n                unitIds = unitIds.filter((id) => GameStateFn2.isSetGroupHasA(ctx3, [\"\\u9AD8\\u6A5F\\u52D5\"], id));\n            }\n            return {\n              title: [\"\\u30AB\\u30FC\\u30C9\", unitIds.map((id) => {\n                return [id, GameStateFn2.getItemBaSyou(ctx3, id)];\n              }), []],\n              flags: { isGoBattleArea2: !0 }\n            };\n          }",
-                            "actions": [
-                                {
-                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), fackCardId = DefineFn2.EffectFn.getCardID(effect), spacePairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, \"\\u53BB\\u5B87\\u5B99\", fackCardId), phase2 = GameStateFn2.getPhase(ctx3);\n                for (let pair3 of spacePairs)\n                  ctx3 = GameStateFn2.mapItemState(ctx3, pair3[0], (is) => ({ ...is, isAttack: phase2[1] == \"\\u653B\\u6483\\u30B9\\u30C6\\u30C3\\u30D7\", isDefence: phase2[1] == \"\\u9632\\u5FA1\\u30B9\\u30C6\\u30C3\\u30D7\" })), ctx3 = GameStateFn2.doItemMove(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\"), pair3);\n                return ctx3;\n              }"
-                                }
-                            ],
-                            "groupKey": "出擊"
-                        }
-                    },
-                    "logicTreeActions": [
-                        {
-                            "actions": [
-                                {
-                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const fackCardId = DefineFn2.EffectFn.getCardID(effect), phase2 = GameStateFn2.getPhase(ctx3), pairs1 = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, \"\\u53BB\\u5730\\u7403\", fackCardId), pairs2 = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, \"\\u53BB\\u5B87\\u5B99\", fackCardId);\n                if (DefineFn2.PhaseFn.eq(phase2, [\"\\u6226\\u95D8\\u30D5\\u30A7\\u30A4\\u30BA\", \"\\u653B\\u6483\\u30B9\\u30C6\\u30C3\\u30D7\", \"\\u898F\\u5B9A\\u306E\\u52B9\\u679C\"]))\n                  ctx3 = GameStateFn2.doTriggerEvent(ctx3, {\n                    title: [\"\\u3053\\u306E\\u30AB\\u30FC\\u30C9\\u304C\\u653B\\u6483\\u306B\\u51FA\\u6483\\u3057\\u305F\\u5834\\u5408\"],\n                    cardIds: [...pairs1, ...pairs2].map((p) => p[0])\n                  });\n                return ctx3;\n              }"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "id": 686,
-            "description": "onEvent: GameEventOnMove [\"PlayerA_8\"]",
-            "effect": {
-                "id": "createAttackPhaseRuleEffect_PlayerA",
-                "reason": [
-                    "GameRule",
-                    "PlayerA",
-                    {
-                        "isAttack": true,
-                        "isDefence": false
-                    }
-                ],
-                "description": "出擊",
-                "isOption": true,
-                "text": {
-                    "id": "createAttackPhaseRuleEffect_text_PlayerA",
-                    "title": [],
-                    "description": "出擊",
-                    "conditions": {
-                        "去地球": {
-                            "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n            const runtimeBattleArea = GameStateFn2.getRuntimeBattleArea(ctx3, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\");\n            if (runtimeBattleArea == \"\\u5B87\\u5B99\\u30A8\\u30EA\\u30A2\")\n              return null;\n            const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), opponentPlayerId = DefineFn2.PlayerIDFn.getOpponent(playerId2);\n            let unitIds = GameStateFn2.getItemIdsByBasyou(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, \"\\u914D\\u5099\\u30A8\\u30EA\\u30A2\")).filter((cardId) => GameStateFn2.getSetGroupRoot(ctx3, cardId) == cardId).filter((cardId) => GameStateFn2.getCardBattleArea(ctx3, cardId).includes(runtimeBattleArea)).filter((cardId) => GameStateFn2.getCard(ctx3, cardId).isRoll != !0);\n            const opponentUnitIds = GameStateFn2.getBattleGroup(ctx3, DefineFn2.AbsoluteBaSyouFn.of(opponentPlayerId, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\"));\n            if (opponentUnitIds.length) {\n              if (GameStateFn2.isABattleGroup(ctx3, [\"\\u9AD8\\u6A5F\\u52D5\"], opponentUnitIds[0]))\n                unitIds = unitIds.filter((id) => GameStateFn2.isSetGroupHasA(ctx3, [\"\\u9AD8\\u6A5F\\u52D5\"], id));\n            }\n            return {\n              title: [\"\\u30AB\\u30FC\\u30C9\", unitIds.map((id) => {\n                return [id, GameStateFn2.getItemBaSyou(ctx3, id)];\n              }), []],\n              flags: { isGoBattleArea1: !0 }\n            };\n          }",
-                            "actions": [
-                                {
-                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), fackCardId = DefineFn2.EffectFn.getCardID(effect), earthPairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, \"\\u53BB\\u5730\\u7403\", fackCardId), phase2 = GameStateFn2.getPhase(ctx3);\n                for (let pair3 of earthPairs)\n                  ctx3 = GameStateFn2.mapItemState(ctx3, pair3[0], (is) => ({ ...is, isAttack: phase2[1] == \"\\u653B\\u6483\\u30B9\\u30C6\\u30C3\\u30D7\", isDefence: phase2[1] == \"\\u9632\\u5FA1\\u30B9\\u30C6\\u30C3\\u30D7\" })), ctx3 = GameStateFn2.doItemMove(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A21\"), pair3);\n                return ctx3;\n              }"
-                                }
-                            ],
-                            "groupKey": "出擊"
-                        },
-                        "去宇宙": {
-                            "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n            const runtimeBattleArea = GameStateFn2.getRuntimeBattleArea(ctx3, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\");\n            if (runtimeBattleArea == \"\\u5730\\u7403\\u30A8\\u30EA\\u30A2\")\n              return null;\n            const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), opponentPlayerId = DefineFn2.PlayerIDFn.getOpponent(playerId2);\n            let unitIds = GameStateFn2.getItemIdsByBasyou(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, \"\\u914D\\u5099\\u30A8\\u30EA\\u30A2\")).filter((cardId) => GameStateFn2.getSetGroupRoot(ctx3, cardId) == cardId).filter((cardId) => GameStateFn2.getCardBattleArea(ctx3, cardId).includes(runtimeBattleArea)).filter((cardId) => GameStateFn2.getCard(ctx3, cardId).isRoll != !0);\n            const opponentUnitIds = GameStateFn2.getBattleGroup(ctx3, DefineFn2.AbsoluteBaSyouFn.of(opponentPlayerId, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\"));\n            if (opponentUnitIds.length) {\n              if (GameStateFn2.isABattleGroup(ctx3, [\"\\u9AD8\\u6A5F\\u52D5\"], opponentUnitIds[0]))\n                unitIds = unitIds.filter((id) => GameStateFn2.isSetGroupHasA(ctx3, [\"\\u9AD8\\u6A5F\\u52D5\"], id));\n            }\n            return {\n              title: [\"\\u30AB\\u30FC\\u30C9\", unitIds.map((id) => {\n                return [id, GameStateFn2.getItemBaSyou(ctx3, id)];\n              }), []],\n              flags: { isGoBattleArea2: !0 }\n            };\n          }",
-                            "actions": [
-                                {
-                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), fackCardId = DefineFn2.EffectFn.getCardID(effect), spacePairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, \"\\u53BB\\u5B87\\u5B99\", fackCardId), phase2 = GameStateFn2.getPhase(ctx3);\n                for (let pair3 of spacePairs)\n                  ctx3 = GameStateFn2.mapItemState(ctx3, pair3[0], (is) => ({ ...is, isAttack: phase2[1] == \"\\u653B\\u6483\\u30B9\\u30C6\\u30C3\\u30D7\", isDefence: phase2[1] == \"\\u9632\\u5FA1\\u30B9\\u30C6\\u30C3\\u30D7\" })), ctx3 = GameStateFn2.doItemMove(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, \"\\u6226\\u95D8\\u30A8\\u30EA\\u30A22\"), pair3);\n                return ctx3;\n              }"
-                                }
-                            ],
-                            "groupKey": "出擊"
-                        }
-                    },
-                    "logicTreeActions": [
-                        {
-                            "actions": [
-                                {
-                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const fackCardId = DefineFn2.EffectFn.getCardID(effect), phase2 = GameStateFn2.getPhase(ctx3), pairs1 = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, \"\\u53BB\\u5730\\u7403\", fackCardId), pairs2 = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, \"\\u53BB\\u5B87\\u5B99\", fackCardId);\n                if (DefineFn2.PhaseFn.eq(phase2, [\"\\u6226\\u95D8\\u30D5\\u30A7\\u30A4\\u30BA\", \"\\u653B\\u6483\\u30B9\\u30C6\\u30C3\\u30D7\", \"\\u898F\\u5B9A\\u306E\\u52B9\\u679C\"]))\n                  ctx3 = GameStateFn2.doTriggerEvent(ctx3, {\n                    title: [\"\\u3053\\u306E\\u30AB\\u30FC\\u30C9\\u304C\\u653B\\u6483\\u306B\\u51FA\\u6483\\u3057\\u305F\\u5834\\u5408\"],\n                    cardIds: [...pairs1, ...pairs2].map((p) => p[0])\n                  });\n                return ctx3;\n              }"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "id": 685,
+            "id": 940,
             "description": "onEffectStart: 出擊",
             "effect": {
                 "id": "createAttackPhaseRuleEffect_PlayerA",
@@ -6464,49 +8454,49 @@ const TMP_CTX: GameStateWithFlowMemory = {
             }
         },
         {
-            "id": 684,
+            "id": 939,
             "description": "onSetPhase:戦闘フェイズ,攻撃ステップ,規定の効果"
         },
         {
-            "id": 683,
+            "id": 938,
             "description": "onSetPhase:戦闘フェイズ,攻撃ステップ,フリータイミング"
         },
         {
-            "id": 682,
+            "id": 937,
             "description": "onEvent: GameEventOnTiming undefined"
         },
         {
-            "id": 681,
+            "id": 936,
             "description": "onSetPhase:戦闘フェイズ,攻撃ステップ,ステップ開始"
         },
         {
-            "id": 680,
+            "id": 935,
             "description": "onEvent: GameEventOnTiming undefined"
         },
         {
-            "id": 679,
+            "id": 934,
             "description": "onSetPhase:配備フェイズ,フェイズ終了"
         },
         {
-            "id": 678,
+            "id": 933,
             "description": "onEffectEnd: PlayG"
         },
         {
-            "id": 677,
-            "description": "onEvent: このカードがGとして場に出た場合 [\"PlayerA_25\"]",
+            "id": 932,
+            "description": "onEvent: このカードがGとして場に出た場合 [\"PlayerA_31\"]",
             "effect": {
-                "id": "createPlayGEffect_PlayerA_25",
+                "id": "createPlayGEffect_PlayerA_31",
                 "reason": [
                     "PlayCard",
                     "PlayerA",
-                    "PlayerA_25",
+                    "PlayerA_31",
                     {
                         "isPlayG": true
                     }
                 ],
                 "description": "Play G",
                 "text": {
-                    "id": "createPlayGEffect_PlayerA_25",
+                    "id": "createPlayGEffect_PlayerA_31",
                     "title": [
                         "使用型",
                         [
@@ -6557,21 +8547,21 @@ const TMP_CTX: GameStateWithFlowMemory = {
             }
         },
         {
-            "id": 676,
-            "description": "onEvent: プレイされて場に出た場合 [\"PlayerA_25\"]",
+            "id": 931,
+            "description": "onEvent: プレイされて場に出た場合 [\"PlayerA_31\"]",
             "effect": {
-                "id": "createPlayGEffect_PlayerA_25",
+                "id": "createPlayGEffect_PlayerA_31",
                 "reason": [
                     "PlayCard",
                     "PlayerA",
-                    "PlayerA_25",
+                    "PlayerA_31",
                     {
                         "isPlayG": true
                     }
                 ],
                 "description": "Play G",
                 "text": {
-                    "id": "createPlayGEffect_PlayerA_25",
+                    "id": "createPlayGEffect_PlayerA_31",
                     "title": [
                         "使用型",
                         [
@@ -6622,21 +8612,21 @@ const TMP_CTX: GameStateWithFlowMemory = {
             }
         },
         {
-            "id": 675,
-            "description": "onItemMove:PlayerA_25 = [\"PlayerA\",\"手札\"] => [\"PlayerA\",\"Gゾーン\"]",
+            "id": 930,
+            "description": "onItemMove:PlayerA_31 = [\"PlayerA\",\"手札\"] => [\"PlayerA\",\"Gゾーン\"]",
             "effect": {
-                "id": "createPlayGEffect_PlayerA_25",
+                "id": "createPlayGEffect_PlayerA_31",
                 "reason": [
                     "PlayCard",
                     "PlayerA",
-                    "PlayerA_25",
+                    "PlayerA_31",
                     {
                         "isPlayG": true
                     }
                 ],
                 "description": "Play G",
                 "text": {
-                    "id": "createPlayGEffect_PlayerA_25",
+                    "id": "createPlayGEffect_PlayerA_31",
                     "title": [
                         "使用型",
                         [
@@ -6687,21 +8677,21 @@ const TMP_CTX: GameStateWithFlowMemory = {
             }
         },
         {
-            "id": 674,
-            "description": "onEvent: GameEventOnMove [\"PlayerA_25\"]",
+            "id": 929,
+            "description": "onEvent: GameEventOnMove [\"PlayerA_31\"]",
             "effect": {
-                "id": "createPlayGEffect_PlayerA_25",
+                "id": "createPlayGEffect_PlayerA_31",
                 "reason": [
                     "PlayCard",
                     "PlayerA",
-                    "PlayerA_25",
+                    "PlayerA_31",
                     {
                         "isPlayG": true
                     }
                 ],
                 "description": "Play G",
                 "text": {
-                    "id": "createPlayGEffect_PlayerA_25",
+                    "id": "createPlayGEffect_PlayerA_31",
                     "title": [
                         "使用型",
                         [
@@ -6752,21 +8742,21 @@ const TMP_CTX: GameStateWithFlowMemory = {
             }
         },
         {
-            "id": 673,
-            "description": "PlayerA_25.isFaceDown true => false",
+            "id": 928,
+            "description": "PlayerA_31.isFaceDown true => false",
             "effect": {
-                "id": "createPlayGEffect_PlayerA_25",
+                "id": "createPlayGEffect_PlayerA_31",
                 "reason": [
                     "PlayCard",
                     "PlayerA",
-                    "PlayerA_25",
+                    "PlayerA_31",
                     {
                         "isPlayG": true
                     }
                 ],
                 "description": "Play G",
                 "text": {
-                    "id": "createPlayGEffect_PlayerA_25",
+                    "id": "createPlayGEffect_PlayerA_31",
                     "title": [
                         "使用型",
                         [
@@ -6817,21 +8807,21 @@ const TMP_CTX: GameStateWithFlowMemory = {
             }
         },
         {
-            "id": 672,
+            "id": 927,
             "description": "onPlayerStateChange:PlayerA",
             "effect": {
-                "id": "createPlayGEffect_PlayerA_25",
+                "id": "createPlayGEffect_PlayerA_31",
                 "reason": [
                     "PlayCard",
                     "PlayerA",
-                    "PlayerA_25",
+                    "PlayerA_31",
                     {
                         "isPlayG": true
                     }
                 ],
                 "description": "Play G",
                 "text": {
-                    "id": "createPlayGEffect_PlayerA_25",
+                    "id": "createPlayGEffect_PlayerA_31",
                     "title": [
                         "使用型",
                         [
@@ -6882,21 +8872,21 @@ const TMP_CTX: GameStateWithFlowMemory = {
             }
         },
         {
-            "id": 671,
+            "id": 926,
             "description": "onEffectStart: PlayG",
             "effect": {
-                "id": "createPlayGEffect_PlayerA_25",
+                "id": "createPlayGEffect_PlayerA_31",
                 "reason": [
                     "PlayCard",
                     "PlayerA",
-                    "PlayerA_25",
+                    "PlayerA_31",
                     {
                         "isPlayG": true
                     }
                 ],
                 "description": "Play G",
                 "text": {
-                    "id": "createPlayGEffect_PlayerA_25",
+                    "id": "createPlayGEffect_PlayerA_31",
                     "title": [
                         "使用型",
                         [
@@ -6947,36 +8937,423 @@ const TMP_CTX: GameStateWithFlowMemory = {
             }
         },
         {
-            "id": 670,
+            "id": 925,
+            "description": "onEvent: カット終了時 undefined"
+        },
+        {
+            "id": 924,
+            "description": "onEffectEnd: Play OS改竄"
+        },
+        {
+            "id": 923,
+            "description": "onEvent: プレイされて場に出た場合 [\"PlayerA_1\"]",
+            "effect": {
+                "id": "createOperationGoStageEffectFromPlayEffect_PlayerA_1",
+                "reason": [
+                    "場に出る",
+                    "PlayerA",
+                    "PlayerA_1"
+                ],
+                "description": "Play OS改竄",
+                "text": {
+                    "id": "createPlayOperationEffect_PlayerA_1",
+                    "description": "Play OS改竄",
+                    "title": [],
+                    "logicTreeActions": [
+                        {
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect2, { DefineFn, GameStateFn }) {\n                  const cardId2 = DefineFn.EffectFn.getCardID(effect2), from = GameStateFn.getItemBaSyou(ctx3, cardId2), to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, \"\\u914D\\u5099\\u30A8\\u30EA\\u30A2\");\n                  return ctx3 = GameStateFn.doItemMove(ctx3, to, [cardId2, from]), ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId2] }), ctx3;\n                }"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 922,
+            "description": "onItemMove:PlayerA_1 = [\"PlayerA\",\"プレイされているカード\"] => [\"PlayerA\",\"配備エリア\"]",
+            "effect": {
+                "id": "createOperationGoStageEffectFromPlayEffect_PlayerA_1",
+                "reason": [
+                    "場に出る",
+                    "PlayerA",
+                    "PlayerA_1"
+                ],
+                "description": "Play OS改竄",
+                "text": {
+                    "id": "createPlayOperationEffect_PlayerA_1",
+                    "description": "Play OS改竄",
+                    "title": [],
+                    "logicTreeActions": [
+                        {
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect2, { DefineFn, GameStateFn }) {\n                  const cardId2 = DefineFn.EffectFn.getCardID(effect2), from = GameStateFn.getItemBaSyou(ctx3, cardId2), to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, \"\\u914D\\u5099\\u30A8\\u30EA\\u30A2\");\n                  return ctx3 = GameStateFn.doItemMove(ctx3, to, [cardId2, from]), ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId2] }), ctx3;\n                }"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 921,
+            "description": "onEvent: GameEventOnMove [\"PlayerA_1\"]",
+            "effect": {
+                "id": "createOperationGoStageEffectFromPlayEffect_PlayerA_1",
+                "reason": [
+                    "場に出る",
+                    "PlayerA",
+                    "PlayerA_1"
+                ],
+                "description": "Play OS改竄",
+                "text": {
+                    "id": "createPlayOperationEffect_PlayerA_1",
+                    "description": "Play OS改竄",
+                    "title": [],
+                    "logicTreeActions": [
+                        {
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect2, { DefineFn, GameStateFn }) {\n                  const cardId2 = DefineFn.EffectFn.getCardID(effect2), from = GameStateFn.getItemBaSyou(ctx3, cardId2), to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, \"\\u914D\\u5099\\u30A8\\u30EA\\u30A2\");\n                  return ctx3 = GameStateFn.doItemMove(ctx3, to, [cardId2, from]), ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId2] }), ctx3;\n                }"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 920,
+            "description": "onEvent: このカードが場に出た場合 [\"PlayerA_1\"]",
+            "effect": {
+                "id": "createOperationGoStageEffectFromPlayEffect_PlayerA_1",
+                "reason": [
+                    "場に出る",
+                    "PlayerA",
+                    "PlayerA_1"
+                ],
+                "description": "Play OS改竄",
+                "text": {
+                    "id": "createPlayOperationEffect_PlayerA_1",
+                    "description": "Play OS改竄",
+                    "title": [],
+                    "logicTreeActions": [
+                        {
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect2, { DefineFn, GameStateFn }) {\n                  const cardId2 = DefineFn.EffectFn.getCardID(effect2), from = GameStateFn.getItemBaSyou(ctx3, cardId2), to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, \"\\u914D\\u5099\\u30A8\\u30EA\\u30A2\");\n                  return ctx3 = GameStateFn.doItemMove(ctx3, to, [cardId2, from]), ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId2] }), ctx3;\n                }"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 919,
+            "description": "onEffectStart: Play OS改竄",
+            "effect": {
+                "id": "createOperationGoStageEffectFromPlayEffect_PlayerA_1",
+                "reason": [
+                    "場に出る",
+                    "PlayerA",
+                    "PlayerA_1"
+                ],
+                "description": "Play OS改竄",
+                "text": {
+                    "id": "createPlayOperationEffect_PlayerA_1",
+                    "description": "Play OS改竄",
+                    "title": [],
+                    "logicTreeActions": [
+                        {
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect2, { DefineFn, GameStateFn }) {\n                  const cardId2 = DefineFn.EffectFn.getCardID(effect2), from = GameStateFn.getItemBaSyou(ctx3, cardId2), to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, \"\\u914D\\u5099\\u30A8\\u30EA\\u30A2\");\n                  return ctx3 = GameStateFn.doItemMove(ctx3, to, [cardId2, from]), ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: [\"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u5834\\u306B\\u51FA\\u305F\\u5834\\u5408\"], cardIds: [cardId2] }), ctx3;\n                }"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 918,
+            "description": "onEffectEnd: Play OS改竄"
+        },
+        {
+            "id": 917,
+            "description": "onItemMove:PlayerA_1 = [\"PlayerA\",\"手札\"] => [\"PlayerA\",\"プレイされているカード\"]",
+            "effect": {
+                "id": "createPlayOperationEffect_PlayerA_1",
+                "reason": [
+                    "PlayCard",
+                    "PlayerA",
+                    "PlayerA_1",
+                    {
+                        "isPlayOperation": true
+                    }
+                ],
+                "description": "Play OS改竄",
+                "text": {
+                    "id": "createPlayOperationEffect_PlayerA_1",
+                    "title": [
+                        "使用型",
+                        [
+                            "自軍",
+                            "配備フェイズ"
+                        ]
+                    ],
+                    "description": "Play OS改竄",
+                    "conditions": {
+                        "合計国力〔x〕": {
+                            "actions": [
+                                {
+                                    "title": [
+                                        "合計国力〔x〕",
+                                        4
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "logicTreeActions": [
+                        {
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect, { DefineFn, GameStateFn, ToolFn: ToolFn2 }) {\n              const cardId2 = DefineFn.EffectFn.getCardID(effect), from = GameStateFn.getItemBaSyou(ctx3, cardId2);\n              ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, \"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u3044\\u308B\\u30AB\\u30FC\\u30C9\"), [cardId2, from]);\n              const newE = GameStateFn.createOperationGoStageEffectFromPlayEffect(ctx3, effect);\n              return GameStateFn.addStackEffect(ctx3, newE);\n            }"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 916,
+            "description": "onEvent: GameEventOnMove [\"PlayerA_1\"]",
+            "effect": {
+                "id": "createPlayOperationEffect_PlayerA_1",
+                "reason": [
+                    "PlayCard",
+                    "PlayerA",
+                    "PlayerA_1",
+                    {
+                        "isPlayOperation": true
+                    }
+                ],
+                "description": "Play OS改竄",
+                "text": {
+                    "id": "createPlayOperationEffect_PlayerA_1",
+                    "title": [
+                        "使用型",
+                        [
+                            "自軍",
+                            "配備フェイズ"
+                        ]
+                    ],
+                    "description": "Play OS改竄",
+                    "conditions": {
+                        "合計国力〔x〕": {
+                            "actions": [
+                                {
+                                    "title": [
+                                        "合計国力〔x〕",
+                                        4
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "logicTreeActions": [
+                        {
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect, { DefineFn, GameStateFn, ToolFn: ToolFn2 }) {\n              const cardId2 = DefineFn.EffectFn.getCardID(effect), from = GameStateFn.getItemBaSyou(ctx3, cardId2);\n              ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, \"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u3044\\u308B\\u30AB\\u30FC\\u30C9\"), [cardId2, from]);\n              const newE = GameStateFn.createOperationGoStageEffectFromPlayEffect(ctx3, effect);\n              return GameStateFn.addStackEffect(ctx3, newE);\n            }"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 915,
+            "description": "PlayerA_1.isFaceDown true => false",
+            "effect": {
+                "id": "createPlayOperationEffect_PlayerA_1",
+                "reason": [
+                    "PlayCard",
+                    "PlayerA",
+                    "PlayerA_1",
+                    {
+                        "isPlayOperation": true
+                    }
+                ],
+                "description": "Play OS改竄",
+                "text": {
+                    "id": "createPlayOperationEffect_PlayerA_1",
+                    "title": [
+                        "使用型",
+                        [
+                            "自軍",
+                            "配備フェイズ"
+                        ]
+                    ],
+                    "description": "Play OS改竄",
+                    "conditions": {
+                        "合計国力〔x〕": {
+                            "actions": [
+                                {
+                                    "title": [
+                                        "合計国力〔x〕",
+                                        4
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "logicTreeActions": [
+                        {
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect, { DefineFn, GameStateFn, ToolFn: ToolFn2 }) {\n              const cardId2 = DefineFn.EffectFn.getCardID(effect), from = GameStateFn.getItemBaSyou(ctx3, cardId2);\n              ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, \"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u3044\\u308B\\u30AB\\u30FC\\u30C9\"), [cardId2, from]);\n              const newE = GameStateFn.createOperationGoStageEffectFromPlayEffect(ctx3, effect);\n              return GameStateFn.addStackEffect(ctx3, newE);\n            }"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 914,
+            "description": "onEvent: プレイした場合 [\"PlayerA_1\"]",
+            "effect": {
+                "id": "createPlayOperationEffect_PlayerA_1",
+                "reason": [
+                    "PlayCard",
+                    "PlayerA",
+                    "PlayerA_1",
+                    {
+                        "isPlayOperation": true
+                    }
+                ],
+                "description": "Play OS改竄",
+                "text": {
+                    "id": "createPlayOperationEffect_PlayerA_1",
+                    "title": [
+                        "使用型",
+                        [
+                            "自軍",
+                            "配備フェイズ"
+                        ]
+                    ],
+                    "description": "Play OS改竄",
+                    "conditions": {
+                        "合計国力〔x〕": {
+                            "actions": [
+                                {
+                                    "title": [
+                                        "合計国力〔x〕",
+                                        4
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "logicTreeActions": [
+                        {
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect, { DefineFn, GameStateFn, ToolFn: ToolFn2 }) {\n              const cardId2 = DefineFn.EffectFn.getCardID(effect), from = GameStateFn.getItemBaSyou(ctx3, cardId2);\n              ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, \"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u3044\\u308B\\u30AB\\u30FC\\u30C9\"), [cardId2, from]);\n              const newE = GameStateFn.createOperationGoStageEffectFromPlayEffect(ctx3, effect);\n              return GameStateFn.addStackEffect(ctx3, newE);\n            }"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 913,
+            "description": "onEffectStart: Play OS改竄",
+            "effect": {
+                "id": "createPlayOperationEffect_PlayerA_1",
+                "reason": [
+                    "PlayCard",
+                    "PlayerA",
+                    "PlayerA_1",
+                    {
+                        "isPlayOperation": true
+                    }
+                ],
+                "description": "Play OS改竄",
+                "text": {
+                    "id": "createPlayOperationEffect_PlayerA_1",
+                    "title": [
+                        "使用型",
+                        [
+                            "自軍",
+                            "配備フェイズ"
+                        ]
+                    ],
+                    "description": "Play OS改竄",
+                    "conditions": {
+                        "合計国力〔x〕": {
+                            "actions": [
+                                {
+                                    "title": [
+                                        "合計国力〔x〕",
+                                        4
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "logicTreeActions": [
+                        {
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect, { DefineFn, GameStateFn, ToolFn: ToolFn2 }) {\n              const cardId2 = DefineFn.EffectFn.getCardID(effect), from = GameStateFn.getItemBaSyou(ctx3, cardId2);\n              ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, \"\\u30D7\\u30EC\\u30A4\\u3055\\u308C\\u3066\\u3044\\u308B\\u30AB\\u30FC\\u30C9\"), [cardId2, from]);\n              const newE = GameStateFn.createOperationGoStageEffectFromPlayEffect(ctx3, effect);\n              return GameStateFn.addStackEffect(ctx3, newE);\n            }"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 912,
             "description": "onSetPhase:配備フェイズ,フリータイミング"
         },
         {
-            "id": 669,
+            "id": 911,
             "description": "onEvent: GameEventOnTiming undefined"
         },
         {
-            "id": 668,
+            "id": 910,
             "description": "onSetPhase:配備フェイズ,フェイズ開始"
         },
         {
-            "id": 667,
+            "id": 909,
             "description": "onEvent: GameEventOnTiming undefined"
         },
         {
-            "id": 666,
+            "id": 908,
             "description": "onSetPhase:ドローフェイズ,フェイズ終了"
         },
         {
-            "id": 665,
+            "id": 907,
             "description": "onSetPhase:ドローフェイズ,フリータイミング"
         },
         {
-            "id": 664,
+            "id": 906,
             "description": "onEffectEnd: 抽牌階段規定效果"
         },
         {
-            "id": 663,
-            "description": "onItemMove:PlayerA_25 = [\"PlayerA\",\"本国\"] => [\"PlayerA\",\"手札\"]",
+            "id": 905,
+            "description": "onItemMove:PlayerA_31 = [\"PlayerA\",\"本国\"] => [\"PlayerA\",\"手札\"]",
             "effect": {
                 "id": "createDrawPhaseRuleEffect_PlayerA",
                 "reason": [
@@ -7003,8 +9380,8 @@ const TMP_CTX: GameStateWithFlowMemory = {
             }
         },
         {
-            "id": 662,
-            "description": "onEvent: GameEventOnMove [\"PlayerA_25\"]",
+            "id": 904,
+            "description": "onEvent: GameEventOnMove [\"PlayerA_31\"]",
             "effect": {
                 "id": "createDrawPhaseRuleEffect_PlayerA",
                 "reason": [
@@ -7031,8 +9408,8 @@ const TMP_CTX: GameStateWithFlowMemory = {
             }
         },
         {
-            "id": 661,
-            "description": "PlayerA_25.isRoll undefined => false",
+            "id": 903,
+            "description": "PlayerA_31.isRoll undefined => false",
             "effect": {
                 "id": "createDrawPhaseRuleEffect_PlayerA",
                 "reason": [
@@ -7059,7 +9436,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
             }
         },
         {
-            "id": 660,
+            "id": 902,
             "description": "onEffectStart: 抽牌階段規定效果",
             "effect": {
                 "id": "createDrawPhaseRuleEffect_PlayerA",
@@ -7087,789 +9464,63 @@ const TMP_CTX: GameStateWithFlowMemory = {
             }
         },
         {
-            "id": 659,
+            "id": 901,
             "description": "onSetPhase:ドローフェイズ,規定の効果"
         },
         {
-            "id": 658,
+            "id": 900,
             "description": "onEvent: GameEventOnTiming undefined"
         },
         {
-            "id": 657,
+            "id": 899,
             "description": "onSetPhase:ドローフェイズ,フェイズ開始"
         },
         {
-            "id": 656,
+            "id": 898,
             "description": "onEvent: GameEventOnTiming undefined"
         },
         {
-            "id": 655,
+            "id": 897,
             "description": "onSetPhase:リロールフェイズ,フェイズ終了"
         },
         {
-            "id": 654,
-            "description": "onEvent: カット終了時 undefined"
-        },
-        {
-            "id": 653,
-            "description": "onEffectEnd: （常時）〔１〕：自軍手札、または自軍ハンガーにある「特徴：ヴァイエイト系」を持つユニット１枚を、自軍配備エリアにリロール状態で出す。"
-        },
-        {
-            "id": 652,
-            "description": "onItemMove:PlayerA_8 = [\"PlayerA\",\"手札\"] => [\"PlayerA\",\"配備エリア\"]",
-            "effect": {
-                "id": "addStackEffect_01928bf7-16f8-7007-a0f3-9b8757af2770",
-                "description": "（常時）〔１〕：自軍手札、または自軍ハンガーにある「特徴：ヴァイエイト系」を持つユニット１枚を、自軍配備エリアにリロール状態で出す。",
-                "reason": [
-                    "PlayText",
-                    "PlayerA",
-                    "PlayerA_11",
-                    "loadPrototype_179009_03B_U_WT045U_white_text_1"
-                ],
-                "text": {
-                    "id": "loadPrototype_179009_03B_U_WT045U_white_text_1",
-                    "description": "（常時）〔１〕：自軍手札、または自軍ハンガーにある「特徴：ヴァイエイト系」を持つユニット１枚を、自軍配備エリアにリロール状態で出す。",
-                    "title": [],
-                    "logicTreeActions": [
-                        {
-                            "actions": [
-                                {
-                                    "title": [
-                                        "_の_ハンガーに移す",
-                                        "自軍",
-                                        "配備エリア"
-                                    ],
-                                    "vars": [
-                                        "自軍手札、または自軍ハンガーにある「特徴：ヴァイエイト系」を持つユニット１枚"
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "id": 651,
-            "description": "onEvent: GameEventOnMove [\"PlayerA_8\"]",
-            "effect": {
-                "id": "addStackEffect_01928bf7-16f8-7007-a0f3-9b8757af2770",
-                "description": "（常時）〔１〕：自軍手札、または自軍ハンガーにある「特徴：ヴァイエイト系」を持つユニット１枚を、自軍配備エリアにリロール状態で出す。",
-                "reason": [
-                    "PlayText",
-                    "PlayerA",
-                    "PlayerA_11",
-                    "loadPrototype_179009_03B_U_WT045U_white_text_1"
-                ],
-                "text": {
-                    "id": "loadPrototype_179009_03B_U_WT045U_white_text_1",
-                    "description": "（常時）〔１〕：自軍手札、または自軍ハンガーにある「特徴：ヴァイエイト系」を持つユニット１枚を、自軍配備エリアにリロール状態で出す。",
-                    "title": [],
-                    "logicTreeActions": [
-                        {
-                            "actions": [
-                                {
-                                    "title": [
-                                        "_の_ハンガーに移す",
-                                        "自軍",
-                                        "配備エリア"
-                                    ],
-                                    "vars": [
-                                        "自軍手札、または自軍ハンガーにある「特徴：ヴァイエイト系」を持つユニット１枚"
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "id": 650,
-            "description": "onEvent: このカードが場に出た場合 [\"PlayerA_8\"]",
-            "effect": {
-                "id": "addStackEffect_01928bf7-16f8-7007-a0f3-9b8757af2770",
-                "description": "（常時）〔１〕：自軍手札、または自軍ハンガーにある「特徴：ヴァイエイト系」を持つユニット１枚を、自軍配備エリアにリロール状態で出す。",
-                "reason": [
-                    "PlayText",
-                    "PlayerA",
-                    "PlayerA_11",
-                    "loadPrototype_179009_03B_U_WT045U_white_text_1"
-                ],
-                "text": {
-                    "id": "loadPrototype_179009_03B_U_WT045U_white_text_1",
-                    "description": "（常時）〔１〕：自軍手札、または自軍ハンガーにある「特徴：ヴァイエイト系」を持つユニット１枚を、自軍配備エリアにリロール状態で出す。",
-                    "title": [],
-                    "logicTreeActions": [
-                        {
-                            "actions": [
-                                {
-                                    "title": [
-                                        "_の_ハンガーに移す",
-                                        "自軍",
-                                        "配備エリア"
-                                    ],
-                                    "vars": [
-                                        "自軍手札、または自軍ハンガーにある「特徴：ヴァイエイト系」を持つユニット１枚"
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "id": 649,
-            "description": "PlayerA_8.isFaceDown true => false",
-            "effect": {
-                "id": "addStackEffect_01928bf7-16f8-7007-a0f3-9b8757af2770",
-                "description": "（常時）〔１〕：自軍手札、または自軍ハンガーにある「特徴：ヴァイエイト系」を持つユニット１枚を、自軍配備エリアにリロール状態で出す。",
-                "reason": [
-                    "PlayText",
-                    "PlayerA",
-                    "PlayerA_11",
-                    "loadPrototype_179009_03B_U_WT045U_white_text_1"
-                ],
-                "text": {
-                    "id": "loadPrototype_179009_03B_U_WT045U_white_text_1",
-                    "description": "（常時）〔１〕：自軍手札、または自軍ハンガーにある「特徴：ヴァイエイト系」を持つユニット１枚を、自軍配備エリアにリロール状態で出す。",
-                    "title": [],
-                    "logicTreeActions": [
-                        {
-                            "actions": [
-                                {
-                                    "title": [
-                                        "_の_ハンガーに移す",
-                                        "自軍",
-                                        "配備エリア"
-                                    ],
-                                    "vars": [
-                                        "自軍手札、または自軍ハンガーにある「特徴：ヴァイエイト系」を持つユニット１枚"
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "id": 648,
-            "description": "onEffectStart: （常時）〔１〕：自軍手札、または自軍ハンガーにある「特徴：ヴァイエイト系」を持つユニット１枚を、自軍配備エリアにリロール状態で出す。",
-            "effect": {
-                "id": "addStackEffect_01928bf7-16f8-7007-a0f3-9b8757af2770",
-                "description": "（常時）〔１〕：自軍手札、または自軍ハンガーにある「特徴：ヴァイエイト系」を持つユニット１枚を、自軍配備エリアにリロール状態で出す。",
-                "reason": [
-                    "PlayText",
-                    "PlayerA",
-                    "PlayerA_11",
-                    "loadPrototype_179009_03B_U_WT045U_white_text_1"
-                ],
-                "text": {
-                    "id": "loadPrototype_179009_03B_U_WT045U_white_text_1",
-                    "description": "（常時）〔１〕：自軍手札、または自軍ハンガーにある「特徴：ヴァイエイト系」を持つユニット１枚を、自軍配備エリアにリロール状態で出す。",
-                    "title": [],
-                    "logicTreeActions": [
-                        {
-                            "actions": [
-                                {
-                                    "title": [
-                                        "_の_ハンガーに移す",
-                                        "自軍",
-                                        "配備エリア"
-                                    ],
-                                    "vars": [
-                                        "自軍手札、または自軍ハンガーにある「特徴：ヴァイエイト系」を持つユニット１枚"
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "id": 647,
-            "description": "onEffectEnd: （常時）〔１〕：自軍手札、または自軍ハンガーにある「特徴：ヴァイエイト系」を持つユニット１枚を、自軍配備エリアにリロール状態で出す。"
-        },
-        {
-            "id": 646,
-            "description": "PlayerA_46.isRoll false => true",
-            "effect": {
-                "id": "createPlayEffects_PlayerA_PlayerA_11_loadPrototype_179009_03B_U_WT045U_white_text_1",
-                "reason": [
-                    "PlayText",
-                    "PlayerA",
-                    "PlayerA_11",
-                    "loadPrototype_179009_03B_U_WT045U_white_text_1"
-                ],
-                "description": "（常時）〔１〕：自軍手札、または自軍ハンガーにある「特徴：ヴァイエイト系」を持つユニット１枚を、自軍配備エリアにリロール状態で出す。",
-                "text": {
-                    "id": "loadPrototype_179009_03B_U_WT045U_white_text_1",
-                    "description": "（常時）〔１〕：自軍手札、または自軍ハンガーにある「特徴：ヴァイエイト系」を持つユニット１枚を、自軍配備エリアにリロール状態で出す。",
-                    "title": [
-                        "使用型",
-                        [
-                            "常時"
-                        ]
-                    ],
-                    "conditions": {
-                        "0[null]": {
-                            "title": [
-                                "RollColor",
-                                null
-                            ],
-                            "actions": [
-                                {
-                                    "title": [
-                                        "_ロールする",
-                                        "ロール"
-                                    ],
-                                    "vars": [
-                                        "0[null]"
-                                    ]
-                                }
-                            ]
-                        },
-                        "自軍手札、または自軍ハンガーにある「特徴：ヴァイエイト系」を持つユニット１枚": {
-                            "title": [
-                                "Entity",
-                                {
-                                    "side": "自軍",
-                                    "at": [
-                                        "手札",
-                                        "ハンガー"
-                                    ],
-                                    "hasChar": [
-                                        "ヴァイエイト系"
-                                    ],
-                                    "is": [
-                                        "ユニット"
-                                    ],
-                                    "count": 1
-                                }
-                            ]
-                        },
-                        "同回合上限": {
-                            "actions": [
-                                {
-                                    "title": [
-                                        "同回合上限",
-                                        1
-                                    ]
-                                }
-                            ]
-                        }
-                    },
-                    "logicTreeActions": [
-                        {
-                            "actions": [
-                                {
-                                    "title": [
-                                        "cutIn",
-                                        [
-                                            {
-                                                "title": [
-                                                    "_の_ハンガーに移す",
-                                                    "自軍",
-                                                    "配備エリア"
-                                                ],
-                                                "vars": [
-                                                    "自軍手札、または自軍ハンガーにある「特徴：ヴァイエイト系」を持つユニット１枚"
-                                                ]
-                                            }
-                                        ]
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "id": 645,
-            "description": "onEffectStart: （常時）〔１〕：自軍手札、または自軍ハンガーにある「特徴：ヴァイエイト系」を持つユニット１枚を、自軍配備エリアにリロール状態で出す。",
-            "effect": {
-                "id": "createPlayEffects_PlayerA_PlayerA_11_loadPrototype_179009_03B_U_WT045U_white_text_1",
-                "reason": [
-                    "PlayText",
-                    "PlayerA",
-                    "PlayerA_11",
-                    "loadPrototype_179009_03B_U_WT045U_white_text_1"
-                ],
-                "description": "（常時）〔１〕：自軍手札、または自軍ハンガーにある「特徴：ヴァイエイト系」を持つユニット１枚を、自軍配備エリアにリロール状態で出す。",
-                "text": {
-                    "id": "loadPrototype_179009_03B_U_WT045U_white_text_1",
-                    "description": "（常時）〔１〕：自軍手札、または自軍ハンガーにある「特徴：ヴァイエイト系」を持つユニット１枚を、自軍配備エリアにリロール状態で出す。",
-                    "title": [
-                        "使用型",
-                        [
-                            "常時"
-                        ]
-                    ],
-                    "conditions": {
-                        "0[null]": {
-                            "title": [
-                                "RollColor",
-                                null
-                            ],
-                            "actions": [
-                                {
-                                    "title": [
-                                        "_ロールする",
-                                        "ロール"
-                                    ],
-                                    "vars": [
-                                        "0[null]"
-                                    ]
-                                }
-                            ]
-                        },
-                        "自軍手札、または自軍ハンガーにある「特徴：ヴァイエイト系」を持つユニット１枚": {
-                            "title": [
-                                "Entity",
-                                {
-                                    "side": "自軍",
-                                    "at": [
-                                        "手札",
-                                        "ハンガー"
-                                    ],
-                                    "hasChar": [
-                                        "ヴァイエイト系"
-                                    ],
-                                    "is": [
-                                        "ユニット"
-                                    ],
-                                    "count": 1
-                                }
-                            ]
-                        },
-                        "同回合上限": {
-                            "actions": [
-                                {
-                                    "title": [
-                                        "同回合上限",
-                                        1
-                                    ]
-                                }
-                            ]
-                        }
-                    },
-                    "logicTreeActions": [
-                        {
-                            "actions": [
-                                {
-                                    "title": [
-                                        "cutIn",
-                                        [
-                                            {
-                                                "title": [
-                                                    "_の_ハンガーに移す",
-                                                    "自軍",
-                                                    "配備エリア"
-                                                ],
-                                                "vars": [
-                                                    "自軍手札、または自軍ハンガーにある「特徴：ヴァイエイト系」を持つユニット１枚"
-                                                ]
-                                            }
-                                        ]
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "id": 644,
-            "description": "onEvent: カット終了時 undefined"
-        },
-        {
-            "id": 643,
-            "description": "onEffectEnd: （常時）〔１〕：自軍手札、または自軍ハンガーにある「特徴：メリクリウス系」を持つユニット１枚を、自軍配備エリアにリロール状態で出す。"
-        },
-        {
-            "id": 642,
-            "description": "onItemMove:PlayerA_11 = [\"PlayerA\",\"手札\"] => [\"PlayerA\",\"配備エリア\"]",
-            "effect": {
-                "id": "addStackEffect_01928bf6-d196-7007-963d-ee6780a1fd43",
-                "description": "（常時）〔１〕：自軍手札、または自軍ハンガーにある「特徴：メリクリウス系」を持つユニット１枚を、自軍配備エリアにリロール状態で出す。",
-                "reason": [
-                    "PlayText",
-                    "PlayerA",
-                    "PlayerA_7",
-                    "loadPrototype_179009_03B_U_WT044U_white_text_1"
-                ],
-                "text": {
-                    "id": "loadPrototype_179009_03B_U_WT044U_white_text_1",
-                    "description": "（常時）〔１〕：自軍手札、または自軍ハンガーにある「特徴：メリクリウス系」を持つユニット１枚を、自軍配備エリアにリロール状態で出す。",
-                    "title": [],
-                    "logicTreeActions": [
-                        {
-                            "actions": [
-                                {
-                                    "title": [
-                                        "_の_ハンガーに移す",
-                                        "自軍",
-                                        "配備エリア"
-                                    ],
-                                    "vars": [
-                                        "自軍手札、または自軍ハンガーにある「特徴：メリクリウス系」を持つユニット１枚"
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "id": 641,
-            "description": "onEvent: GameEventOnMove [\"PlayerA_11\"]",
-            "effect": {
-                "id": "addStackEffect_01928bf6-d196-7007-963d-ee6780a1fd43",
-                "description": "（常時）〔１〕：自軍手札、または自軍ハンガーにある「特徴：メリクリウス系」を持つユニット１枚を、自軍配備エリアにリロール状態で出す。",
-                "reason": [
-                    "PlayText",
-                    "PlayerA",
-                    "PlayerA_7",
-                    "loadPrototype_179009_03B_U_WT044U_white_text_1"
-                ],
-                "text": {
-                    "id": "loadPrototype_179009_03B_U_WT044U_white_text_1",
-                    "description": "（常時）〔１〕：自軍手札、または自軍ハンガーにある「特徴：メリクリウス系」を持つユニット１枚を、自軍配備エリアにリロール状態で出す。",
-                    "title": [],
-                    "logicTreeActions": [
-                        {
-                            "actions": [
-                                {
-                                    "title": [
-                                        "_の_ハンガーに移す",
-                                        "自軍",
-                                        "配備エリア"
-                                    ],
-                                    "vars": [
-                                        "自軍手札、または自軍ハンガーにある「特徴：メリクリウス系」を持つユニット１枚"
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "id": 640,
-            "description": "onEvent: このカードが場に出た場合 [\"PlayerA_11\"]",
-            "effect": {
-                "id": "addStackEffect_01928bf6-d196-7007-963d-ee6780a1fd43",
-                "description": "（常時）〔１〕：自軍手札、または自軍ハンガーにある「特徴：メリクリウス系」を持つユニット１枚を、自軍配備エリアにリロール状態で出す。",
-                "reason": [
-                    "PlayText",
-                    "PlayerA",
-                    "PlayerA_7",
-                    "loadPrototype_179009_03B_U_WT044U_white_text_1"
-                ],
-                "text": {
-                    "id": "loadPrototype_179009_03B_U_WT044U_white_text_1",
-                    "description": "（常時）〔１〕：自軍手札、または自軍ハンガーにある「特徴：メリクリウス系」を持つユニット１枚を、自軍配備エリアにリロール状態で出す。",
-                    "title": [],
-                    "logicTreeActions": [
-                        {
-                            "actions": [
-                                {
-                                    "title": [
-                                        "_の_ハンガーに移す",
-                                        "自軍",
-                                        "配備エリア"
-                                    ],
-                                    "vars": [
-                                        "自軍手札、または自軍ハンガーにある「特徴：メリクリウス系」を持つユニット１枚"
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "id": 639,
-            "description": "PlayerA_11.isFaceDown true => false",
-            "effect": {
-                "id": "addStackEffect_01928bf6-d196-7007-963d-ee6780a1fd43",
-                "description": "（常時）〔１〕：自軍手札、または自軍ハンガーにある「特徴：メリクリウス系」を持つユニット１枚を、自軍配備エリアにリロール状態で出す。",
-                "reason": [
-                    "PlayText",
-                    "PlayerA",
-                    "PlayerA_7",
-                    "loadPrototype_179009_03B_U_WT044U_white_text_1"
-                ],
-                "text": {
-                    "id": "loadPrototype_179009_03B_U_WT044U_white_text_1",
-                    "description": "（常時）〔１〕：自軍手札、または自軍ハンガーにある「特徴：メリクリウス系」を持つユニット１枚を、自軍配備エリアにリロール状態で出す。",
-                    "title": [],
-                    "logicTreeActions": [
-                        {
-                            "actions": [
-                                {
-                                    "title": [
-                                        "_の_ハンガーに移す",
-                                        "自軍",
-                                        "配備エリア"
-                                    ],
-                                    "vars": [
-                                        "自軍手札、または自軍ハンガーにある「特徴：メリクリウス系」を持つユニット１枚"
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "id": 638,
-            "description": "onEffectStart: （常時）〔１〕：自軍手札、または自軍ハンガーにある「特徴：メリクリウス系」を持つユニット１枚を、自軍配備エリアにリロール状態で出す。",
-            "effect": {
-                "id": "addStackEffect_01928bf6-d196-7007-963d-ee6780a1fd43",
-                "description": "（常時）〔１〕：自軍手札、または自軍ハンガーにある「特徴：メリクリウス系」を持つユニット１枚を、自軍配備エリアにリロール状態で出す。",
-                "reason": [
-                    "PlayText",
-                    "PlayerA",
-                    "PlayerA_7",
-                    "loadPrototype_179009_03B_U_WT044U_white_text_1"
-                ],
-                "text": {
-                    "id": "loadPrototype_179009_03B_U_WT044U_white_text_1",
-                    "description": "（常時）〔１〕：自軍手札、または自軍ハンガーにある「特徴：メリクリウス系」を持つユニット１枚を、自軍配備エリアにリロール状態で出す。",
-                    "title": [],
-                    "logicTreeActions": [
-                        {
-                            "actions": [
-                                {
-                                    "title": [
-                                        "_の_ハンガーに移す",
-                                        "自軍",
-                                        "配備エリア"
-                                    ],
-                                    "vars": [
-                                        "自軍手札、または自軍ハンガーにある「特徴：メリクリウス系」を持つユニット１枚"
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "id": 637,
-            "description": "onEffectEnd: （常時）〔１〕：自軍手札、または自軍ハンガーにある「特徴：メリクリウス系」を持つユニット１枚を、自軍配備エリアにリロール状態で出す。"
-        },
-        {
-            "id": 636,
-            "description": "PlayerA_5.isRoll false => true",
-            "effect": {
-                "id": "createPlayEffects_PlayerA_PlayerA_7_loadPrototype_179009_03B_U_WT044U_white_text_1",
-                "reason": [
-                    "PlayText",
-                    "PlayerA",
-                    "PlayerA_7",
-                    "loadPrototype_179009_03B_U_WT044U_white_text_1"
-                ],
-                "description": "（常時）〔１〕：自軍手札、または自軍ハンガーにある「特徴：メリクリウス系」を持つユニット１枚を、自軍配備エリアにリロール状態で出す。",
-                "text": {
-                    "id": "loadPrototype_179009_03B_U_WT044U_white_text_1",
-                    "description": "（常時）〔１〕：自軍手札、または自軍ハンガーにある「特徴：メリクリウス系」を持つユニット１枚を、自軍配備エリアにリロール状態で出す。",
-                    "title": [
-                        "使用型",
-                        [
-                            "常時"
-                        ]
-                    ],
-                    "conditions": {
-                        "0[null]": {
-                            "title": [
-                                "RollColor",
-                                null
-                            ],
-                            "actions": [
-                                {
-                                    "title": [
-                                        "_ロールする",
-                                        "ロール"
-                                    ],
-                                    "vars": [
-                                        "0[null]"
-                                    ]
-                                }
-                            ]
-                        },
-                        "自軍手札、または自軍ハンガーにある「特徴：メリクリウス系」を持つユニット１枚": {
-                            "title": [
-                                "Entity",
-                                {
-                                    "side": "自軍",
-                                    "at": [
-                                        "手札",
-                                        "ハンガー"
-                                    ],
-                                    "hasChar": [
-                                        "メリクリウス系"
-                                    ],
-                                    "is": [
-                                        "ユニット"
-                                    ],
-                                    "count": 1
-                                }
-                            ]
-                        },
-                        "同回合上限": {
-                            "actions": [
-                                {
-                                    "title": [
-                                        "同回合上限",
-                                        1
-                                    ]
-                                }
-                            ]
-                        }
-                    },
-                    "logicTreeActions": [
-                        {
-                            "actions": [
-                                {
-                                    "title": [
-                                        "cutIn",
-                                        [
-                                            {
-                                                "title": [
-                                                    "_の_ハンガーに移す",
-                                                    "自軍",
-                                                    "配備エリア"
-                                                ],
-                                                "vars": [
-                                                    "自軍手札、または自軍ハンガーにある「特徴：メリクリウス系」を持つユニット１枚"
-                                                ]
-                                            }
-                                        ]
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "id": 635,
-            "description": "onEffectStart: （常時）〔１〕：自軍手札、または自軍ハンガーにある「特徴：メリクリウス系」を持つユニット１枚を、自軍配備エリアにリロール状態で出す。",
-            "effect": {
-                "id": "createPlayEffects_PlayerA_PlayerA_7_loadPrototype_179009_03B_U_WT044U_white_text_1",
-                "reason": [
-                    "PlayText",
-                    "PlayerA",
-                    "PlayerA_7",
-                    "loadPrototype_179009_03B_U_WT044U_white_text_1"
-                ],
-                "description": "（常時）〔１〕：自軍手札、または自軍ハンガーにある「特徴：メリクリウス系」を持つユニット１枚を、自軍配備エリアにリロール状態で出す。",
-                "text": {
-                    "id": "loadPrototype_179009_03B_U_WT044U_white_text_1",
-                    "description": "（常時）〔１〕：自軍手札、または自軍ハンガーにある「特徴：メリクリウス系」を持つユニット１枚を、自軍配備エリアにリロール状態で出す。",
-                    "title": [
-                        "使用型",
-                        [
-                            "常時"
-                        ]
-                    ],
-                    "conditions": {
-                        "0[null]": {
-                            "title": [
-                                "RollColor",
-                                null
-                            ],
-                            "actions": [
-                                {
-                                    "title": [
-                                        "_ロールする",
-                                        "ロール"
-                                    ],
-                                    "vars": [
-                                        "0[null]"
-                                    ]
-                                }
-                            ]
-                        },
-                        "自軍手札、または自軍ハンガーにある「特徴：メリクリウス系」を持つユニット１枚": {
-                            "title": [
-                                "Entity",
-                                {
-                                    "side": "自軍",
-                                    "at": [
-                                        "手札",
-                                        "ハンガー"
-                                    ],
-                                    "hasChar": [
-                                        "メリクリウス系"
-                                    ],
-                                    "is": [
-                                        "ユニット"
-                                    ],
-                                    "count": 1
-                                }
-                            ]
-                        },
-                        "同回合上限": {
-                            "actions": [
-                                {
-                                    "title": [
-                                        "同回合上限",
-                                        1
-                                    ]
-                                }
-                            ]
-                        }
-                    },
-                    "logicTreeActions": [
-                        {
-                            "actions": [
-                                {
-                                    "title": [
-                                        "cutIn",
-                                        [
-                                            {
-                                                "title": [
-                                                    "_の_ハンガーに移す",
-                                                    "自軍",
-                                                    "配備エリア"
-                                                ],
-                                                "vars": [
-                                                    "自軍手札、または自軍ハンガーにある「特徴：メリクリウス系」を持つユニット１枚"
-                                                ]
-                                            }
-                                        ]
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "id": 634,
+            "id": 896,
             "description": "onSetPhase:リロールフェイズ,フリータイミング"
         },
         {
-            "id": 633,
+            "id": 895,
             "description": "onEffectEnd: getRerollPhaseRuleEffect"
         },
         {
-            "id": 632,
+            "id": 894,
+            "description": "PlayerA_25.isRoll true => false",
+            "effect": {
+                "id": "createRerollPhaseRuleEffect_PlayerA",
+                "reason": [
+                    "GameRule",
+                    "PlayerA",
+                    {
+                        "isReroll": true
+                    }
+                ],
+                "text": {
+                    "id": "createRerollPhaseRuleEffect_text_PlayerA",
+                    "title": [],
+                    "description": "getRerollPhaseRuleEffect",
+                    "logicTreeActions": [
+                        {
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), pairs = [\"\\u914D\\u5099\\u30A8\\u30EA\\u30A2\", \"G\\u30BE\\u30FC\\u30F3\"].flatMap((kw) => {\n                  const basyou = DefineFn2.AbsoluteBaSyouFn.of(playerId2, kw);\n                  return GameStateFn2.getItemIdsByBasyou(ctx3, basyou).filter((cardId) => GameStateFn2.getItemIsCanReroll(ctx3, cardId)).map((cardId) => {\n                    return [cardId, basyou];\n                  });\n                });\n                for (let pair3 of pairs)\n                  ctx3 = GameStateFn2.doItemSetRollState(ctx3, !1, pair3, { isSkipTargetMissing: !0 });\n                return ctx3;\n              }"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 893,
             "description": "PlayerA_14.isRoll true => false",
             "effect": {
                 "id": "createRerollPhaseRuleEffect_PlayerA",
@@ -7897,7 +9548,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
             }
         },
         {
-            "id": 631,
+            "id": 892,
             "description": "PlayerA_46.isRoll true => false",
             "effect": {
                 "id": "createRerollPhaseRuleEffect_PlayerA",
@@ -7925,7 +9576,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
             }
         },
         {
-            "id": 630,
+            "id": 891,
             "description": "PlayerA_5.isRoll true => false",
             "effect": {
                 "id": "createRerollPhaseRuleEffect_PlayerA",
@@ -7953,7 +9604,7 @@ const TMP_CTX: GameStateWithFlowMemory = {
             }
         },
         {
-            "id": 629,
+            "id": 890,
             "description": "PlayerA_7.isRoll true => false",
             "effect": {
                 "id": "createRerollPhaseRuleEffect_PlayerA",
@@ -7981,7 +9632,63 @@ const TMP_CTX: GameStateWithFlowMemory = {
             }
         },
         {
-            "id": 628,
+            "id": 889,
+            "description": "PlayerA_11.isRoll true => false",
+            "effect": {
+                "id": "createRerollPhaseRuleEffect_PlayerA",
+                "reason": [
+                    "GameRule",
+                    "PlayerA",
+                    {
+                        "isReroll": true
+                    }
+                ],
+                "text": {
+                    "id": "createRerollPhaseRuleEffect_text_PlayerA",
+                    "title": [],
+                    "description": "getRerollPhaseRuleEffect",
+                    "logicTreeActions": [
+                        {
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), pairs = [\"\\u914D\\u5099\\u30A8\\u30EA\\u30A2\", \"G\\u30BE\\u30FC\\u30F3\"].flatMap((kw) => {\n                  const basyou = DefineFn2.AbsoluteBaSyouFn.of(playerId2, kw);\n                  return GameStateFn2.getItemIdsByBasyou(ctx3, basyou).filter((cardId) => GameStateFn2.getItemIsCanReroll(ctx3, cardId)).map((cardId) => {\n                    return [cardId, basyou];\n                  });\n                });\n                for (let pair3 of pairs)\n                  ctx3 = GameStateFn2.doItemSetRollState(ctx3, !1, pair3, { isSkipTargetMissing: !0 });\n                return ctx3;\n              }"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 888,
+            "description": "PlayerA_8.isRoll true => false",
+            "effect": {
+                "id": "createRerollPhaseRuleEffect_PlayerA",
+                "reason": [
+                    "GameRule",
+                    "PlayerA",
+                    {
+                        "isReroll": true
+                    }
+                ],
+                "text": {
+                    "id": "createRerollPhaseRuleEffect_text_PlayerA",
+                    "title": [],
+                    "description": "getRerollPhaseRuleEffect",
+                    "logicTreeActions": [
+                        {
+                            "actions": [
+                                {
+                                    "title": "function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {\n                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), pairs = [\"\\u914D\\u5099\\u30A8\\u30EA\\u30A2\", \"G\\u30BE\\u30FC\\u30F3\"].flatMap((kw) => {\n                  const basyou = DefineFn2.AbsoluteBaSyouFn.of(playerId2, kw);\n                  return GameStateFn2.getItemIdsByBasyou(ctx3, basyou).filter((cardId) => GameStateFn2.getItemIsCanReroll(ctx3, cardId)).map((cardId) => {\n                    return [cardId, basyou];\n                  });\n                });\n                for (let pair3 of pairs)\n                  ctx3 = GameStateFn2.doItemSetRollState(ctx3, !1, pair3, { isSkipTargetMissing: !0 });\n                return ctx3;\n              }"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 887,
             "description": "onEffectStart: getRerollPhaseRuleEffect",
             "effect": {
                 "id": "createRerollPhaseRuleEffect_PlayerA",
@@ -8007,14 +9714,68 @@ const TMP_CTX: GameStateWithFlowMemory = {
                     ]
                 }
             }
+        },
+        {
+            "id": 886,
+            "description": "onSetPhase:リロールフェイズ,規定の効果"
+        },
+        {
+            "id": 885,
+            "description": "onEvent: GameEventOnTiming undefined"
+        },
+        {
+            "id": 884,
+            "description": "onSetPhase:リロールフェイズ,フェイズ開始"
+        },
+        {
+            "id": 883,
+            "description": "onEvent: GameEventOnTiming undefined"
+        },
+        {
+            "id": 882,
+            "description": "onPlayerStateChange:PlayerB"
+        },
+        {
+            "id": 881,
+            "description": "onSetPhase:戦闘フェイズ,ターン終了時,効果終了。ターン終了"
+        },
+        {
+            "id": 880,
+            "description": "onEvent: GameEventOnTiming undefined"
+        },
+        {
+            "id": 879,
+            "description": "onSetPhase:戦闘フェイズ,ターン終了時,手札調整"
+        },
+        {
+            "id": 878,
+            "description": "onEvent: GameEventOnTiming undefined"
+        },
+        {
+            "id": 877,
+            "description": "onSetPhase:戦闘フェイズ,ターン終了時,効果解決"
+        },
+        {
+            "id": 876,
+            "description": "onEvent: GameEventOnTiming undefined"
+        },
+        {
+            "id": 875,
+            "description": "傷害變化: PlayerA_11 1 => 0"
         }
     ],
     "messagesCurrentEffect": null,
     "messagesIsPlayerRead": {},
-    "turn": 7,
+    "turn": 9,
     "setGroup": {
-        "itemGroupParent": {},
-        "itemGroupChildren": {}
+        "itemGroupParent": {
+            "PlayerB_72": "PlayerB_75"
+        },
+        "itemGroupChildren": {
+            "PlayerB_75": [
+                "PlayerB_72"
+            ]
+        }
     },
     "stackEffectMemory": [],
     "flowMemory": {
@@ -8022,8 +9783,8 @@ const TMP_CTX: GameStateWithFlowMemory = {
         "hasTriggerEvent": false,
         "hasPlayerPassPhase": {},
         "hasPlayerPassCut": {
-            "PlayerA": true,
-            "PlayerB": true
+            "PlayerB": true,
+            "PlayerA": true
         },
         "hasPlayerPassPayCost": {},
         "shouldTriggerStackEffectFinishedEvent": false,
