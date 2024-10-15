@@ -17348,7 +17348,6 @@ var hideCategory = [
   "addImmediateEffectIfCanPayCost",
   "doItemSetRollState",
   "doActiveEffect",
-  "testCompress",
   "createPlayerScore",
   "AppContextProvider",
   "OnClickFlowConfirm",
@@ -20138,9 +20137,9 @@ var BattlePointFn = {
 
 // src/game/gameState/card.ts
 function getCardTextFromCardTextRef(ctx2, textRef) {
-  const { cardId, textId } = textRef, text = getItemPrototype(ctx2, cardId).texts?.find((text2) => text2.id == textId);
+  const { cardId, textId } = textRef, proto = getItemPrototype(ctx2, cardId), text = proto.texts?.find((text2) => text2.id == textId);
   if (text == null)
-    throw new Error(`textRef not found: ${cardId} => ${textId}`);
+    throw console.log(proto), console.log(textRef), new Error(`textRef not found: ${cardId} => ${textId}`);
   return text;
 }
 function getCardSpecialText(text, options) {
@@ -20633,6 +20632,7 @@ function createTextsFromSpecialEffect(text, options) {
             ...text.conditions,
             "\u9019\u5F35\u5361\u4EA4\u6230\u7684\u9632\u79A6\u529Bx\u4EE5\u4E0B\u7684\u6575\u8ECD\u6A5F\u9AD41\u5F35": {
               title: ["Entity", {
+                atBa: !0,
                 isBattleWithThis: hasCase1 ? void 0 : !0,
                 compareBattlePoint: ["\u9632\u5FA1\u529B", "<=", x],
                 isDestroy: !1,
@@ -21183,7 +21183,31 @@ function doItemSwap(ctx2, pair1, pair2, options) {
     const card1 = getCard(ctx2, itemId1), card2 = getCard(ctx2, itemId2);
     ctx2 = setCard(ctx2, card1.id, { ...card1, protoID: card2.protoID, isRoll: card2.isRoll }), ctx2 = setCard(ctx2, card2.id, { ...card2, protoID: card1.protoID, isRoll: card1.isRoll });
     const is1 = getItemState(ctx2, itemId1), is2 = getItemState(ctx2, itemId2);
-    return ctx2 = setItemState(ctx2, is1.id, { ...is2, id: is1.id }), ctx2 = setItemState(ctx2, is2.id, { ...is1, id: is2.id }), ctx2;
+    return ctx2 = setItemState(ctx2, is1.id, { ...is2, id: is1.id }), ctx2 = setItemState(ctx2, is2.id, { ...is1, id: is2.id }), ctx2 = mapItemStateValues(ctx2, (is) => {
+      let nextGE = is.globalEffects;
+      return Object.keys(is.globalEffects).forEach((key) => {
+        const ge = is.globalEffects[key];
+        if (ge.title[0] == "AddTextRef" && ge.title[1].cardId == card1.id)
+          nextGE = {
+            ...nextGE,
+            [key]: {
+              ...ge,
+              title: ["AddTextRef", { ...ge.title[1], cardId: card2.id }]
+            }
+          };
+        else if (ge.title[0] == "AddTextRef" && ge.title[1].cardId == card2.id)
+          nextGE = {
+            ...nextGE,
+            [key]: {
+              ...ge,
+              title: ["AddTextRef", { ...ge.title[1], cardId: card1.id }]
+            }
+          };
+      }), {
+        ...is,
+        globalEffects: nextGE
+      };
+    }), ctx2;
   }
   throw new Error("swapCard not yet support");
 }
@@ -23409,7 +23433,7 @@ function createCommandEffectTips(ctx2, effect) {
         };
       });
     });
-  throw new Error(`effect.text.logicTreeActions not found: ${effect.text.description}`);
+  return [];
 }
 function getCardTipSelection(ctx2, varName, cardId, options) {
   const cardState = getItemState(ctx2, cardId), tip = ItemStateFn.getTip(cardState, varName), tipError = TipFn.createTipErrorWhenCheckFail(tip);
@@ -26603,7 +26627,7 @@ function AppView() {
       /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(ControlView, {}, void 0, !1, void 0, this),
       /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(PlayerController, {
         clientId: PlayerA,
-        isPlayer: !1
+        isPlayer: !0
       }, void 0, !1, void 0, this),
       /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(PlayerController, {
         clientId: PlayerB,

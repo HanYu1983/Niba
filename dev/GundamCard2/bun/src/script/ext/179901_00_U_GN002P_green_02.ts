@@ -26,6 +26,7 @@ export const prototype: CardPrototype = {
       }],
       conditions: {
         ...createRollCostRequire(1, null),
+        // TODO is roll
       },
       logicTreeActions: [
         {

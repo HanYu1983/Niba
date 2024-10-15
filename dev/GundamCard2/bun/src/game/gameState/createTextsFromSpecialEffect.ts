@@ -394,6 +394,7 @@ export function createTextsFromSpecialEffect(text: CardText, options: { ges?: Gl
                         ...text.conditions,
                         "這張卡交戰的防禦力x以下的敵軍機體1張": {
                             title: ["Entity", {
+                                atBa: true,
                                 isBattleWithThis: hasCase1 ? undefined : true,
                                 compareBattlePoint: ["防御力", "<=", x],
                                 isDestroy: false,
