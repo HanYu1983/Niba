@@ -30,7 +30,7 @@ export const prototype: CardPrototype = {
           }]
         }
       },
-      onSituation: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GlobalEffect[] {
+      onSituation: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GlobalEffect[] {
         const cardId = DefineFn.EffectFn.getCardID(effect)
         const situation = DefineFn.EffectFn.getSituation(effect)
         if (situation != null) {
@@ -44,7 +44,7 @@ export const prototype: CardPrototype = {
             is: ["ユニット"],
             max: 50,
             asMuchAsPossible: true,
-          }, {})) as StrBaSyouPair[]
+          }, {ges: Options.ges})) as StrBaSyouPair[]
           return [{ title: ["_ユニットは、「サイコミュ」の効果において、交戦中として扱う。", targets.map(pair => pair[0])], cardIds: pairs.map(pair => pair[0]) }]
         }
         return []

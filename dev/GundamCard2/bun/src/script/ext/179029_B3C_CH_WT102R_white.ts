@@ -15,7 +15,7 @@ export const prototype: CardPrototype = {
       id: "",
       description: "『起動』：自軍「マニィ・アンバサダ」が場に出た、または自軍「マニィ・アンバサダ」がいる状態で、このカードが場に出た場合、G以外の敵軍カード１枚を破壊する。",
       title: ["自動型", "起動"],
-      onEvent: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+      onEvent: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GameState {
         const evt = DefineFn.EffectFn.getEvent(effect)
         const cardId = DefineFn.EffectFn.getCardID(effect)
         const cardController = GameStateFn.getItemController(ctx, cardId)
@@ -29,7 +29,7 @@ export const prototype: CardPrototype = {
               side: "自軍",
               title: ["マニィ・アンバサダ"],
               min: 1
-            }, {})) == null
+            }, {ges: Options.ges})) == null
             && evt.cardIds?.includes(cardId)
           )
         )) {

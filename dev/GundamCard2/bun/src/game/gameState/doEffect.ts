@@ -31,7 +31,8 @@ export function doEffect(
   if (ltacs == null) {
     throw new Error(`ltasc not found: ${logicId}/${logicSubId}`)
   }
-  const bridge = createBridge()
+  const ges = getGlobalEffects(ctx, null)
+  const bridge = createBridge({ ges: ges })
   const conditionIds = Object.keys(ltacs)
   const cardId = EffectFn.getCardID(effect)
   conditionIds.forEach(conditionKey => {
@@ -40,7 +41,7 @@ export function doEffect(
     const actions = ConditionFn.getActions(condition)
     for (const action of actions) {
       EventCenterFn.onActionStart(ctx, effect, action)
-      const actionFn = createActionTitleFn(action)
+      const actionFn = createActionTitleFn(action, {ges: ges})
       ctx = actionFn(ctx, effect, bridge)
       ctx = clearGlobalEffects(ctx)
       EventCenterFn.onActionEnd(ctx, effect, action)
@@ -48,9 +49,9 @@ export function doEffect(
   })
   const lta = CardTextFn.getLogicTreeAction(effect.text, logicId)
   for (const action of LogicTreeActionFn.getActions(lta)) {
-    logCategory("doEffect", "lta.actions", lta.actions.map(a=>a.title))
+    logCategory("doEffect", "lta.actions", lta.actions.map(a => a.title))
     EventCenterFn.onActionStart(ctx, effect, action)
-    const actionFn = createActionTitleFn(action)
+    const actionFn = createActionTitleFn(action, {ges: ges})
     ctx = actionFn(ctx, effect, bridge)
     ctx = clearGlobalEffects(ctx)
     EventCenterFn.onActionEnd(ctx, effect, action)
@@ -101,15 +102,15 @@ export function createEffectTips(
   if (ltacs == null) {
     throw new Error(`ltasc not found: ${logicId}/${logicSubId}`)
   }
-  const bridge = createBridge()
+  const ges = getGlobalEffects(ctx, null)
+  ctx = setGlobalEffects(ctx, null, ges)
+  const bridge = createBridge({ ges: ges })
   return Object.keys(ltacs).map(key => {
     const con = ltacs[key]
     logCategory("createEffectTips", key, con.title)
     const errors: string[] = []
     let tip: Tip | null = null
     try {
-      const ges = getGlobalEffects(ctx, null)
-      ctx = setGlobalEffects(ctx, null, ges)
       tip = createConditionTitleFn(con, { ges: ges })(ctx, effect, bridge)
       if ((tip as any)?.isGameState) {
         console.log(`快速檢查是不寫錯回傳成GameState, 應該要回傳Tip|null:`, key, con.title)
@@ -163,7 +164,7 @@ export function createEffectTips(
         }
       }
     }
-    ctx = ConditionFn.getActionTitleFns(con, createActionTitleFn).reduce((ctx, fn): GameState => {
+    ctx = ConditionFn.getActionTitleFns(con, action => createActionTitleFn(action, { ges: ges })).reduce((ctx, fn): GameState => {
       try {
         ctx = fn(ctx, effect, bridge)
         ctx = clearGlobalEffects(ctx)

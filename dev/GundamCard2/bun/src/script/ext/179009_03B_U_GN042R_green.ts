@@ -59,7 +59,7 @@ export const prototype: CardPrototype = {
           ]
         }
       ],
-      onSituation: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GlobalEffect[] {
+      onSituation: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GlobalEffect[] {
         const cardId = DefineFn.EffectFn.getCardID(effect)
         const situation = DefineFn.EffectFn.getSituation(effect)
         if (situation != null) {
@@ -72,7 +72,7 @@ export const prototype: CardPrototype = {
             is: ["ユニット"],
             max: 50,
             asMuchAsPossible: true,
-          }, {})) as StrBaSyouPair[]
+          }, {ges: Options.ges })) as StrBaSyouPair[]
           return [{ title: ["「範囲兵器」の対象部分は、『X以下の防御力を持つ敵軍ユニット１枚』に変更される",], cardIds: pairs.map(pair => pair[0]) }]
         }
         return []

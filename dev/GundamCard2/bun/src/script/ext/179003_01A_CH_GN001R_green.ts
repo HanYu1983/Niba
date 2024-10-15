@@ -19,7 +19,7 @@ export const prototype: CardPrototype = {
       id: "",
       description: "『恒常』：このカードは、「専用機のセット」が成立するユニットにセットする場合、合計国力２としてプレイできる。",
       title: ["自動型", "恒常"],
-      createPlayEffect: function _(ctx: any, effect: Effect, { DefineFn, GameStateFn }: Bridge): Effect[] {
+      createPlayEffect: function _(ctx: any, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): Effect[] {
         const cardId = DefineFn.EffectFn.getCardID(effect)
         const prototype = GameStateFn.getItemPrototype(ctx, cardId)
         const tip = GameStateFn.createTipByEntitySearch(ctx, effect, {
@@ -29,7 +29,7 @@ export const prototype: CardPrototype = {
           at: ["配備エリア"],
           is: ["ユニット"],
           count: 1
-        })
+        }, {ges: Options.ges})
         if (DefineFn.TipFn.createTipErrorWhenCheckFail(tip) != null) {
           return []
         }
@@ -42,7 +42,7 @@ export const prototype: CardPrototype = {
             ...GameStateFn.createPlayCardConditions(ctx, cardId, {ges: ges}),
             // 覆寫以下兩個鍵
             [DefineFn.TipFn.createCharacterTargetUnitKey()]: {
-              title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip | null {
+              title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): Tip | null {
                 const cardId = DefineFn.EffectFn.getCardID(effect)
                 const prototype = GameStateFn.getItemPrototype(ctx, cardId)
                 const tip = GameStateFn.createTipByEntitySearch(ctx, effect, {
@@ -52,7 +52,7 @@ export const prototype: CardPrototype = {
                   at: ["配備エリア"],
                   is: ["ユニット"],
                   count: 1
-                })
+                }, {ges: Options.ges})
                 if (DefineFn.TipFn.createTipErrorWhenCheckFail(tip) == null) {
                   return tip
                 }

@@ -56,7 +56,7 @@ export const prototype: CardPrototype = {
       id: "",
       description: "『常駐』：全ての自軍キャラは、＋２／＋２／＋２を得る。",
       title: ["自動型", "常駐"],
-      onSituation: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GlobalEffect[] {
+      onSituation: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GlobalEffect[] {
         const situation = DefineFn.EffectFn.getSituation(effect)
         if (situation != null) {
           return []
@@ -67,7 +67,7 @@ export const prototype: CardPrototype = {
           is: ["キャラクター"],
           side: "自軍",
           max: 50
-        }, {})) as StrBaSyouPair[]
+        }, {ges: Options.ges})) as StrBaSyouPair[]
         return [{ title: ["＋x／＋x／＋xを得る", [2, 2, 2]], cardIds: pairs.map(pair => pair[0]) }]
       }.toString()
     }

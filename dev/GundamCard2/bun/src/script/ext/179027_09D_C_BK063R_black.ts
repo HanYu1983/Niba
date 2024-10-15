@@ -45,14 +45,14 @@ export const prototype: CardPrototype = {
       id: "",
       description: "『恒常』：自軍セットカードがある場合、このカードは、合計国力－２、ロールコスト－２してプレイできる。",
       title: ["自動型", "恒常"],
-      createPlayEffect: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Effect[] {
+      createPlayEffect: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): Effect[] {
         const cardId = DefineFn.EffectFn.getCardID(effect)
         const tip = GameStateFn.createTipByEntitySearch(ctx, effect, {
           side: "自軍",
           at: DefineFn.BaSyouKeywordFn.getBaAll(),
           hasSetCard: true,
           min: 1
-        })
+        }, {ges: Options.ges})
         const enabled = DefineFn.TipFn.getWant(tip).length > 0
         if (enabled == false) {
           return []

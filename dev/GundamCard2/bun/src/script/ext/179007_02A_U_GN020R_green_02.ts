@@ -86,7 +86,7 @@ export const prototype: CardPrototype = {
             {
               title: ["cutIn", [
                 {
-                  title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+                  title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GameState {
                     const cardId = DefineFn.EffectFn.getCardID(effect)
                     const x = GameStateFn.getCardTipStrBaSyouPairs(ctx, "〔X〕", cardId).length
                     const pairs = DefineFn.TipFn.getSelection(GameStateFn.createTipByEntitySearch(ctx, effect, {
@@ -95,7 +95,7 @@ export const prototype: CardPrototype = {
                       is: ["ユニット"],
                       max: 50,
                       asMuchAsPossible: true,
-                    })) as StrBaSyouPair[]
+                    }, {ges: Options.ges})) as StrBaSyouPair[]
                     for (const pair of pairs) {
                       ctx = GameStateFn.doItemDamage(ctx, effect, x, pair)
                     }

@@ -14,7 +14,7 @@ export const prototype: CardPrototype = {
       id: "",
       description: "『起動』：自軍「ルイン・リー」が場に出た、または自軍「ルイン・リー」がいる状態で、このカードが場に出た場合、カード２枚を引く事ができる。",
       title: ["自動型", "起動"],
-      onEvent: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+      onEvent: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GameState {
         const evt = DefineFn.EffectFn.getEvent(effect)
         const cardId = DefineFn.EffectFn.getCardID(effect)
         const cardController = GameStateFn.getItemController(ctx, cardId)
@@ -28,7 +28,7 @@ export const prototype: CardPrototype = {
               side: "自軍",
               title: ["ルイン・リー"],
               min: 1
-            })) == null
+            }, {ges: Options.ges})) == null
             && evt.cardIds?.includes(cardId)
           )
         )) {

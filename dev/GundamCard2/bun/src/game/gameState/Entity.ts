@@ -82,7 +82,7 @@ export function createEntityIterator(ctx: GameState) {
     return rets
 }
 
-export function createTipByEntitySearch(ctx: GameState, effect: Effect, searchOptions: EntitySearchOptions, options?: { ges?: GlobalEffect[] }): Tip {
+export function createTipByEntitySearch(ctx: GameState, effect: Effect, searchOptions: EntitySearchOptions, options: { ges?: GlobalEffect[] }): Tip {
     const cardId = EffectFn.getCardID(effect)
     let entityList = createEntityIterator(ctx)
     {

@@ -18,7 +18,7 @@ export const prototype: CardPrototype = {
     title: ["使用型", ["攻撃ステップ"]],
     conditions: {
       "配備エリアにいる、X以下の合計国力を持つ敵軍ユニット１枚": {
-        title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, ToolFn }: Bridge): Tip | null {
+        title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, ToolFn, Options }: Bridge): Tip | null {
           const cardId = DefineFn.EffectFn.getCardID(effect)
           const cardController = GameStateFn.getItemController(ctx, cardId)
           const gLen = GameStateFn.getPlayerGIds(ctx, cardController).length
@@ -28,7 +28,7 @@ export const prototype: CardPrototype = {
             side: "敵軍",
             is: ["ユニット"],
             count: 1,
-          })
+          }, {ges: Options.ges})
         }.toString()
       },
     },

@@ -305,7 +305,7 @@ export function createConditionTitleFn(condition: Condition, options: { ges?: Gl
                 const targetIds = getItemIdsByBasyou(ctx, from)
                     .map(itemId => getSetGroupRoot(ctx, itemId))
                     .filter(itemId => {
-                        const [_, def, _2] = getSetGroupBattlePoint(ctx, itemId, {ges: options.ges})
+                        const [_, def, _2] = getSetGroupBattlePoint(ctx, itemId, { ges: options.ges })
                         return def <= x
                     })
                 const pairs = targetIds.map(itemId => [itemId, from] as StrBaSyouPair)
@@ -444,12 +444,12 @@ export function createConditionTitleFn(condition: Condition, options: { ges?: Gl
                 }
             }
         case "Entity": {
-            const [_, options] = condition.title
-            if ([options.max, options.min, options.count].every(v => v == null)) {
+            const [_, searchOptions] = condition.title
+            if ([searchOptions.max, searchOptions.min, searchOptions.count].every(v => v == null)) {
                 throw new Error(`Entity search must has one of min, max, count`)
             }
             return function (ctx: GameState, effect: Effect): Tip | null {
-                return createTipByEntitySearch(ctx, effect, options)
+                return createTipByEntitySearch(ctx, effect, searchOptions, { ges: options.ges })
             }
         }
     }

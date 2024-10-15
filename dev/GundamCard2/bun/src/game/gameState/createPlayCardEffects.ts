@@ -62,7 +62,7 @@ export function createPlayCardEffects(ctx: GameState, cardId: string, options?: 
                 isPlayOperation: prototype.category == "オペレーション",
             }],
             text: text,
-        }, createBridge())
+        }, createBridge({ ges: getGlobalEffects(ctx, null) }))
         effs?.forEach(eff => {
             if (eff.text.title[0] != "使用型") {
                 console.log(eff?.text.description)

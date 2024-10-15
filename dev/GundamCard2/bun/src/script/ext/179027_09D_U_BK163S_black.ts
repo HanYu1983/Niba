@@ -26,13 +26,13 @@ export const prototype: CardPrototype = {
         const newE = GameStateFn.createPlayTextEffectFromEffect(ctx, effect, {
           conditions: {
             "敵軍手札１枚": {
-              title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip | null {
+              title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): Tip | null {
                 const cardId = DefineFn.EffectFn.getCardID(effect)
                 const tip = GameStateFn.createTipByEntitySearch(ctx, effect, {
                   side: "敵軍",
                   at: ["手札"],
                   count: 1,
-                })
+                }, {ges: Options.ges})
                 return tip
               }.toString()
             },

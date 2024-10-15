@@ -61,7 +61,7 @@ export async function test179901_00_U_WT001P_white_02() {
     const ges = getGlobalEffects(ctx, null)
     ctx = setGlobalEffects(ctx, null, ges)
     // 制造破壞
-    let [newCtx, newPower] = doBattleDamage(ctx, PlayerA, getBattleGroup(ctx, AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア1")), 3, {ges: ges})
+    let [newCtx, newPower] = doBattleDamage(ctx, PlayerA, getBattleGroup(ctx, AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア1")), 3, { ges: ges })
     ctx = newCtx
     ctx = doCutInDestroyEffectsAndClear(ctx)
     if (getCutInDestroyEffects(ctx).find(effect => EffectFn.getCardID(effect) != cardB.id)) {
@@ -80,7 +80,7 @@ export async function test179901_00_U_WT001P_white_02() {
         side: "敵軍",
         is: ["ユニット"],
         min: 1,
-    })
+    }, { ges: getGlobalEffects(ctx, null) })
     if (TipFn.getWant(tip).length != 1) {
         throw new Error()
     }

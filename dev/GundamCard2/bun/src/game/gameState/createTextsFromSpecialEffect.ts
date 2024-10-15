@@ -327,7 +327,7 @@ export function createTextsFromSpecialEffect(text: CardText, options: { ges?: Gl
                     conditions: {
                         ...text.conditions,
                         "交戰中的敵軍機體1張": {
-                            title: function _(ctx: GameState, effect: Effect, { GameStateFn, DefineFn }: Bridge): Tip | null {
+                            title: function _(ctx: GameState, effect: Effect, { GameStateFn, DefineFn, Options }: Bridge): Tip | null {
                                 const { addCardIds }: { addCardIds: string[] | null } = { addCardIds: null } as any
                                 if (addCardIds == null) {
                                     throw new Error(`addCardIds must replace`)
@@ -338,7 +338,7 @@ export function createTextsFromSpecialEffect(text: CardText, options: { ges?: Gl
                                     side: "敵軍",
                                     is: ["ユニット"],
                                     count: 1
-                                })
+                                }, {ges: Options.ges})
                                 let wants = DefineFn.TipFn.getWant(tip) as StrBaSyouPair[]
                                 wants = [...wants, ...(addCardIds.map(itemId => GameStateFn.createStrBaSyouPair(ctx, itemId)))]
                                 // TODO: dinstict

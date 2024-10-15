@@ -51,7 +51,7 @@ export function createAbsoluteBaSyouFromBaSyou(ctx: GameState, cardId: string, r
   return AbsoluteBaSyouFn.of(createPlayerIdFromRelated(ctx, cardId, re.value[0]), re.value[1])
 }
 
-export function createActionTitleFn(action: Action): ActionTitleFn {
+export function createActionTitleFn(action: Action, options: { ges?: GlobalEffect[] }): ActionTitleFn {
   if (typeof action.title == "string") {
     return ActionFn.getTitleFn(action)
   }
@@ -104,7 +104,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
         throw new Error(`Entity search must has one of min, max, count`)
       }
       return function (ctx: GameState, effect: Effect): GameState {
-        const tip = createTipByEntitySearch(ctx, effect, actionOptions)
+        const tip = createTipByEntitySearch(ctx, effect, actionOptions, { ges: options.ges })
         const error = TipFn.createTipErrorWhenCheckFail(tip)
         if (error) {
           throw error

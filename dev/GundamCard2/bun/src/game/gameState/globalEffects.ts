@@ -56,7 +56,7 @@ export function clearGlobalEffects(ctx: GameState): GameState {
 
 // globalEffects
 function getSituationEffects(ctx: GameState, situation: Situation | null): GlobalEffect[] {
-  const bridge = createBridge()
+  const bridge = createBridge({})
   const ges = createAllCardTexts(ctx).flatMap(([item, texts]) => {
     const globalEffects = texts
       .map((text, i) => {
@@ -159,7 +159,7 @@ export function createAllCardTexts(ctx: GameState): [Item, CardText[]][] {
   )
   const allCardTexts = [...getTextGroup1(), ...getTextGroup2(), ...getTextGroup3(), ...getTextGroup4()]
 
-  const bridge = createBridge()
+  const bridge = createBridge({})
   const ges = allCardTexts.flatMap(([item, texts]) => {
     const globalEffects = texts
       .map((text, i) => {

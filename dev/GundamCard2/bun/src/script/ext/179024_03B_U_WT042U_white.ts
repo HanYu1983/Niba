@@ -70,7 +70,7 @@ export const prototype: CardPrototype = {
                 logicTreeAction: {
                   actions: [
                     {
-                      title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, ToolFn }: Bridge): GameState {
+                      title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, ToolFn, Options }: Bridge): GameState {
                         const cardId = DefineFn.EffectFn.getCardID(effect)
                         if (GameStateFn.isBattle(ctx, cardId, null)) {
                           ctx = GameStateFn.doItemSetGlobalEffectsUntilEndOfTurn(ctx, [
@@ -84,7 +84,7 @@ export const prototype: CardPrototype = {
                         return GameStateFn.createActionTitleFn({
                           title: ["_－１／－１／－１コイン_１個を乗せる", [-1, -1, -1], 1],
                           vars: ["このカードが非交戦中の場合、敵軍ユニット１枚"]
-                        })(ctx, effect, null)
+                        }, {ges: Options.ges})(ctx, effect, null)
                       }.toString()
                     }
                   ]

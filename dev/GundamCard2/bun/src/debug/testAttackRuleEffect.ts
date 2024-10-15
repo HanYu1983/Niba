@@ -88,7 +88,7 @@ export async function testAttackRuleEffect3() {
         if (con == null) {
             throw new Error(`con must exist`)
         }
-        const tip = createConditionTitleFn(con, {})(ctx, attackEffect, createBridge())
+        const tip = createConditionTitleFn(con, {})(ctx, attackEffect, createBridge({ ges: getGlobalEffects(ctx, null) }))
         return {
             conditionKey: toe.conditionKey,
             condition: con,
