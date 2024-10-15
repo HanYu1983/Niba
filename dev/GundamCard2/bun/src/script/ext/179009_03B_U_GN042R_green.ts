@@ -22,7 +22,7 @@ export const prototype: CardPrototype = {
       title: ["使用型", ["自軍", "戦闘フェイズ"]],
       testEnvs: [
         {
-          basicCards: [
+          createCards: [
             ["自軍", "戦闘エリア1", [["179009_03B_U_GN042R_green", 1], ["unit", 2]]],
             ["自軍", "Gゾーン", [["179009_03B_U_GN042R_green", 1]]]
           ]

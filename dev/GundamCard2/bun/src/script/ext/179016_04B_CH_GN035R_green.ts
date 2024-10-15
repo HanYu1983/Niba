@@ -19,7 +19,7 @@ export const prototype: CardPrototype = {
       description: "（戦闘フェイズ）〔１〕：このカードを抜き出し、「サイコミュ」を持つ（別の）自軍ユニットにセットする。（注：場から離れた後、再度場に出る）",
       title: ["使用型", ["戦闘フェイズ"]],
       testEnvs: [{
-        basicCards: [
+        createCards: [
           ["自軍", "Gゾーン", [["unit", 1]]],
           ["自軍", "戦闘エリア1", [["unitHasPhy", 1]]],
           ["自軍", "配備エリア", [["179016_04B_CH_GN035R_green", 1]]],

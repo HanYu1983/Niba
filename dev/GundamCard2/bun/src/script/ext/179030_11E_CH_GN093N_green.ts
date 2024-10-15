@@ -21,7 +21,7 @@ export const prototype: CardPrototype = {
       testEnvs: [{
         thisCard: ["自軍", "配備エリア", { id: "", protoID: "179030_11E_CH_GN093N_green" }, { destroyReason: { id: "破壊する", playerID: "PlayerA" } }],
         eventTitle: ["このカードのセットグループのユニットが破壊された場合"],
-        basicCards: [
+        createCards: [
           ["自軍", "本国", [["unitHasPhy", 2]]]
         ]
       }],

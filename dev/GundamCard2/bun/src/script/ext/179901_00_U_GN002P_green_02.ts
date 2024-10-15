@@ -1,13 +1,13 @@
-// 179024_B2B_C_GN052C_green
-// C
-// CCA
-// スカウト
-// 移動
-// （戦闘フェイズ）：敵軍キャラ１枚を、自軍ハンガーに移す。
+// 179901_00_U_GN002P_green_02
+// P
+// GUNDAM
+// シャア専用ザクⅡ
+// ザク系　MS　専用「シャア・アズナブル」
+// 戦闘配備　速攻
+// （攻撃ステップ）〔１〕：このカードをリロールする。
 
-import { BaSyouKeyword } from "../../game/define/BaSyou";
 import { CardColor, CardPrototype } from "../../game/define/CardPrototype";
-import { CardText, Condition } from "../../game/define/CardText";
+import { Condition } from "../../game/define/CardText";
 import { Effect } from "../../game/define/Effect";
 import { GameState } from "../../game/gameState/GameState";
 import { Bridge } from "../bridge";
@@ -16,23 +16,16 @@ export const prototype: CardPrototype = {
   texts: [
     {
       id: "",
-      description: "（戦闘フェイズ）：敵軍キャラ１枚を、自軍ハンガーに移す。",
-      title: ["使用型", ["戦闘フェイズ"]],
+      description: "（攻撃ステップ）〔１〕：このカードをリロールする。",
+      title: ["使用型", ["攻撃ステップ"]],
       testEnvs: [{
         createCards: [
-          ["自軍", "配備エリア", [["179024_B2B_C_GN052C_green", 1]]],
-          ["敵軍", "配備エリア", [["charBlue", 1]]],
+          ["自軍", "戦闘エリア1", [["179901_00_U_GN002P_green_02", 1]]],
+          ["自軍", "Gゾーン", [["unit", 1]]]
         ]
       }],
       conditions: {
-        "敵軍キャラ１枚を": {
-          title: ["Entity", {
-            atBa: true,
-            side: "敵軍",
-            is: ["キャラクター"],
-            count: 1
-          }]
-        }
+        ...createRollCostRequire(1, null),
       },
       logicTreeActions: [
         {
@@ -40,18 +33,16 @@ export const prototype: CardPrototype = {
             {
               title: ["cutIn", [
                 {
-                  title: ["_の_ハンガーに移す", "自軍", "ハンガー"],
-                  vars: ["敵軍キャラ１枚を"]
+                  title: ["_ロールする", "リロール"]
                 }
               ]]
             }
           ]
         }
       ]
-    },
-  ],
+    }
+  ]
 };
-
 
 function createRollCostRequire(
   costNum: number,

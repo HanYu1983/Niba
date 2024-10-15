@@ -65,7 +65,7 @@ export const prototype: CardPrototype = {
     title: ["使用型", ["戦闘フェイズ"]],
     testEnvs: [
       {
-        cards: [
+        addCards: [
           ["敵軍", "戦闘エリア2", [{ id: "1", protoID: "unit", isRoll: true }]]
         ],
       }

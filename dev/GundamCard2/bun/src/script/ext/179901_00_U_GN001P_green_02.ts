@@ -1,10 +1,10 @@
-// 179029_05C_U_GN077R_green
-// R
+// 179901_00_U_GN001P_green_02
+// P
 // GUNDAM
-// シャア専用ズゴック［†］
-// ズゴック系　MS　水中用　専用「シャア・アズナブル」
+// シャア専用ゲルググ ［†］
+// ゲルググ系　MS　専用「シャア・アズナブル」
 // 戦闘配備　速攻
-// 『起動』：このカードが場に出た場合、３以下の合計国力を持つ敵軍カード１枚を、持ち主の手札に移す事ができる。
+// 『起動』：このカードがプレイされて場に出た場合、キャラがセットされていない敵軍ユニット１枚を持ち主の手札に移す。
 
 import { CardColor, CardPrototype } from "../../game/define/CardPrototype";
 import { Condition } from "../../game/define/CardText";
@@ -16,34 +16,33 @@ export const prototype: CardPrototype = {
   texts: [
     {
       id: "",
-      description: "『起動』：このカードが場に出た場合、３以下の合計国力を持つ敵軍カード１枚を、持ち主の手札に移す事ができる。",
+      description: "『起動』：このカードがプレイされて場に出た場合、キャラがセットされていない敵軍ユニット１枚を持ち主の手札に移す。",
       title: ["自動型", "起動"],
       testEnvs: [{
-        eventTitle: ["このカードが場に出た場合"],
-        thisCard: ["自軍", "配備エリア", { id: "", protoID: "179029_05C_U_GN077R_green" }, null],
+        thisCard: ["自軍", "配備エリア", { id: "", protoID: "179901_00_U_GN001P_green_02" }, null],
+        eventTitle: ["プレイされて場に出た場合"],
         createCards: [
-          ["敵軍", "戦闘エリア1", [["unit", 1]]]
+          ["敵軍", "戦闘エリア1", [["unit", 1]]],
         ]
       }],
       onEvent: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
         const event = DefineFn.EffectFn.getEvent(effect)
         const cardId = DefineFn.EffectFn.getCardID(effect)
-        if (event.title[0] == "このカードが場に出た場合" && event.cardIds?.includes(cardId)) {
+        if (event.title[0] == "プレイされて場に出た場合" && event.cardIds?.includes(cardId)) {
           const newE = GameStateFn.createPlayTextEffectFromEffect(ctx, effect, {
-            isOption: true,
             conditions: {
-              "３以下の合計国力を持つ敵軍カード１枚": {
+              "キャラがセットされていない敵軍ユニット１枚": {
                 title: ["Entity", {
                   atBa: true,
-                  compareBattlePoint: ["合計国力", "<=", 3],
                   side: "敵軍",
+                  hasSetCard: false,
                   is: ["ユニット"],
                   count: 1
                 }],
                 actions: [
                   {
                     title: ["_の_ハンガーに移す", "持ち主", "手札"],
-                    vars: ["３以下の合計国力を持つ敵軍カード１枚"]
+                    vars: ["キャラがセットされていない敵軍ユニット１枚"]
                   }
                 ]
               }

@@ -246,6 +246,14 @@ export function createTipByEntitySearch(ctx: GameState, cardId: string, options:
     if (options.hasDamage) {
         entityList = entityList.filter(entity => entity.itemState.damage > 0 && entity.itemState.destroyReason == null)
     }
+    if (options.hasRollCostColor) {
+        entityList = entityList.filter(entity => {
+            if (entity.prototype?.rollCost == "X") {
+                return options.hasRollCostColor?.some(color => color == entity.prototype?.color)
+            }
+            return options.hasRollCostColor?.some(color => color == entity.prototype?.color)
+        })
+    }
     if (options.exceptCardIds?.length) {
         entityList = entityList.filter(entity => options.exceptCardIds?.includes(entity.itemId) != true)
     }

@@ -113,6 +113,7 @@ export type EntitySearchOptions = {
     hasSelfCardId?: boolean,
     hasGSign?: GSign[],
     hasGSignProperty?: GSignProperty[],
+    hasRollCostColor?: CardColor[],
     hasDamage?: boolean,
     isMaster?: boolean,
     count?: number,
@@ -236,8 +237,9 @@ export type CreatePlayEffectFn = (ctx: any, effect: Effect, bridge: any) => Effe
 export type TestEnv = {
     eventTitle?: GameEventTitle,
     thisCard?: [RelatedPlayerSideKeyword, BaSyouKeyword, Card, { destroyReason?: DestroyReason } | null],
-    cards?: [RelatedPlayerSideKeyword, BaSyouKeyword, Card[]][]
-    basicCards?: [RelatedPlayerSideKeyword, BaSyouKeyword, [string, number][]][]
+    addCards?: [RelatedPlayerSideKeyword, BaSyouKeyword, Card[]][],
+    createCards?: [RelatedPlayerSideKeyword, BaSyouKeyword, [string, number][]][],
+    setGroupParent?: { [key: string]: string }
 }
 
 export type CardText = {

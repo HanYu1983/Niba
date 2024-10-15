@@ -17,10 +17,10 @@ export const prototype: CardPrototype = {
     title: ["使用型", ["自軍", "攻撃ステップ"]],
     testEnvs: [
       {
-        basicCards: [["敵軍", "戦闘エリア1", [["unit", 1]]]]
+        createCards: [["敵軍", "戦闘エリア1", [["unit", 1]]]]
       },
       {
-        basicCards: [["敵軍", "配備エリア", [["unit", 1]]]]
+        createCards: [["敵軍", "配備エリア", [["unit", 1]]]]
       }
     ],
     conditions: {

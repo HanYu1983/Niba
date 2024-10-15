@@ -19,7 +19,7 @@ export const prototype: CardPrototype = {
       description: "（攻撃ステップ）〔２〕：自軍手札にある、このカードと同じ属性のGサインと、「特徴：専用「シャア・アズナブル」」を持つユニット１枚を選んで、戦闘エリアにリロール状態で出す。その場合、カード１枚を引く。",
       title: ["使用型", ["攻撃ステップ"]],
       testEnvs: [{
-        basicCards: [
+        createCards: [
           ["自軍", "Gゾーン", [["unit", 2]]],
           ["自軍", "手札", [["179015_04B_U_GN053U_green", 1]]],
           ["自軍", "配備エリア", [["179015_04B_U_GN055R_green_haku", 1]]],

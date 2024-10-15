@@ -31,7 +31,7 @@ export function createConditionTitleFn(condition: Condition, options?: { isPlay?
                 const playerIds = side ? [PlayerIDFn.fromRelatedPlayerSideKeyword(side, cardController)] : [PlayerA, PlayerB]
                 let basyous = lift(AbsoluteBaSyouFn.of)(playerIds, ["戦闘エリア1", "戦闘エリア2"])
                     .filter(basyou => getItemIdsByBasyou(ctx, basyou).length)
-                if(isBattleV != null){
+                if (isBattleV != null) {
                     basyous = basyous.filter(basyou => isBattleAtBasyou(ctx, basyou) == isBattleV)
                 }
                 return {
@@ -417,6 +417,12 @@ export function createConditionTitleFn(condition: Condition, options?: { isPlay?
                 switch (category) {
                     case "ユニット":
                         const targetId = getSetGroupRoot(ctx, cardId)
+                        if (getItemRuntimeCategory(ctx, targetId) != "ユニット") {
+                            return {
+                                title: ["カード", [], []],
+                                min: 1
+                            }
+                        }
                         const pair: StrBaSyouPair = [targetId, getItemBaSyou(ctx, targetId)]
                         return {
                             title: ["カード", [pair], [pair]],

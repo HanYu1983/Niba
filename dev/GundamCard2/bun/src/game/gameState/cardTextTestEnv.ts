@@ -15,6 +15,9 @@ import { GameEvent } from "../define/GameEvent";
 import { doTriggerEvent } from "./doTriggerEvent";
 import { CommandEffecTipFn } from "../define/CommandEffectTip";
 import { mapItemState, setItemState } from "./ItemStateComponent";
+import { CardPrototype } from "../define/CardPrototype";
+import { CardText } from "../define/CardText";
+import { setSetGroupParent } from "./SetGroupComponent";
 
 export async function testAllCardTextTestEnv() {
   const all = createDecks().flatMap(v => v).concat(...["unit", "unitHasPhy", "charBlue"])
@@ -23,38 +26,94 @@ export async function testAllCardTextTestEnv() {
   }
   dropRepeats(all).map(getPrototype).forEach(proto => {
     if (proto.commandText) {
-      const text = proto.commandText
-      proto.commandText.testEnvs?.forEach(testEnv => {
-        let ctx = createGameState()
-        ctx = setActivePlayerID(ctx, PlayerA) as GameState
+      testText(proto, proto.commandText)
+    }
+    proto.texts?.forEach(text => {
+      testText(proto, text)
+    })
+  })
+}
+
+export function testText(proto: CardPrototype, text: CardText) {
+  if (text.testEnvs) {
+    text.testEnvs.forEach(testEnv => {
+      let ctx = createGameState()
+      if (proto.commandText) {
         ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "手札"), [proto.id || "unknown"]) as GameState
         ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), repeat(proto.id || "unknown", 9)) as GameState
-        if (testEnv.thisCard) {
-          const [side, kw, card, state] = testEnv.thisCard
-          card.id = "TestCard"
-          ctx = addCards(ctx, AbsoluteBaSyouFn.of(side == "自軍" ? PlayerA : PlayerB, kw), [card]) as GameState
-          if (state) {
-            ctx = mapItemState(ctx, card.id, is => ({ ...is, ...state })) as GameState
+      }
+      ctx = setActivePlayerID(ctx, PlayerA) as GameState
+      if (testEnv.thisCard) {
+        const [side, kw, card, state] = testEnv.thisCard
+        card.id = "TestCard"
+        ctx = addCards(ctx, AbsoluteBaSyouFn.of(side == "自軍" ? PlayerA : PlayerB, kw), [card]) as GameState
+        if (state) {
+          ctx = mapItemState(ctx, card.id, is => ({ ...is, ...state })) as GameState
+        }
+      }
+      if (testEnv.addCards) {
+        for (const [side, kw, cards] of testEnv.addCards) {
+          ctx = addCards(ctx, AbsoluteBaSyouFn.of(side == "自軍" ? PlayerA : PlayerB, kw), cards) as GameState
+        }
+      }
+      if (testEnv.createCards) {
+        for (const [side, kw, pairs] of testEnv.createCards) {
+          for (const [protoId, num] of pairs) {
+            ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(side == "自軍" ? PlayerA : PlayerB, kw), repeat(protoId, num)) as GameState
           }
         }
-        if (testEnv.cards) {
-          for (const [side, kw, cards] of testEnv.cards) {
-            ctx = addCards(ctx, AbsoluteBaSyouFn.of(side == "自軍" ? PlayerA : PlayerB, kw), cards) as GameState
-          }
+      }
+      if (testEnv.setGroupParent) {
+        for (const cardId in testEnv.setGroupParent) {
+          const parent = testEnv.setGroupParent[cardId]
+          ctx = setSetGroupParent(ctx, parent, cardId) as GameState
         }
-        if (testEnv.basicCards) {
-          for (const [side, kw, pairs] of testEnv.basicCards) {
-            for (const [protoId, num] of pairs) {
-              ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(side == "自軍" ? PlayerA : PlayerB, kw), repeat(protoId, num)) as GameState
+      }
+      try {
+        switch (text.title[0]) {
+          case "使用型": {
+            ctx = setGameStateWithUseTiming(ctx, text.title[1])
+            let effects = createPlayEffects(ctx, PlayerA)
+            const effect: any = effects.find(eff => eff.text.id == text.id)
+            if (effect == null) {
+              throw new Error()
             }
+            const cets = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)
+            if (cets.length == 0) {
+              console.log(createCommandEffectTips(ctx, effect))
+              throw new Error()
+            }
+            let successCount = 0
+            cets.forEach(cet => {
+              ctx = setTipSelectionForUser(ctx, effect, cet.logicID, cet.logicSubID)
+              ctx = doEffect(ctx, effect, cet.logicID, cet.logicSubID)
+              for (let i = 0; i < 99; ++i) {
+                const effect = getTopEffect(ctx)
+                if (effect) {
+                  ctx = doEffect(ctx, effect, 0, 0)
+                  ctx = removeEffect(ctx, effect.id) as GameState
+                }
+              }
+              successCount++
+            })
+            if (successCount != cets.length) {
+              throw new Error()
+            }
+            break
           }
-        }
-        try {
-          switch (text.title[0]) {
-            case "使用型": {
-              ctx = setGameStateWithUseTiming(ctx, text.title[1])
-              let effects = createPlayEffects(ctx, PlayerA)
-              const effect: any = effects.find(eff => eff.text.id == text.id)
+
+          case "自動型": {
+            if (testEnv.eventTitle) {
+              const card = testEnv.thisCard?.[2]
+              if (card == null) {
+                throw new Error()
+              }
+              const gameEvent: GameEvent = {
+                title: testEnv.eventTitle,
+                cardIds: [card.id]
+              }
+              ctx = doTriggerEvent(ctx, gameEvent)
+              const effect: any = getImmediateEffects(ctx).find(eff => eff.text.id == text.id)
               if (effect == null) {
                 throw new Error()
               }
@@ -79,132 +138,20 @@ export async function testAllCardTextTestEnv() {
               if (successCount != cets.length) {
                 throw new Error()
               }
-              break
             }
-            default:
-              throw new Error()
+            break
           }
-          logCategory("testAllCardTextTestEnv", `TestEnv Pass: ${proto.id} ${text.description}`)
-        } catch (e) {
-          console.log(e)
-          console.log(ctx.activePlayerID)
-          console.log(ctx.phase)
-          console.log(text.description)
-          throw new Error()
         }
-      })
-    }
-    proto.texts?.forEach(text => {
-      if (text.testEnvs) {
-        text.testEnvs.forEach(testEnv => {
-          let ctx = createGameState()
-          ctx = setActivePlayerID(ctx, PlayerA) as GameState
-          if (testEnv.thisCard) {
-            const [side, kw, card, state] = testEnv.thisCard
-            card.id = "TestCard"
-            ctx = addCards(ctx, AbsoluteBaSyouFn.of(side == "自軍" ? PlayerA : PlayerB, kw), [card]) as GameState
-            if (state) {
-              ctx = mapItemState(ctx, card.id, is => ({ ...is, ...state })) as GameState
-            }
-          }
-          if (testEnv.cards) {
-            for (const [side, kw, cards] of testEnv.cards) {
-              ctx = addCards(ctx, AbsoluteBaSyouFn.of(side == "自軍" ? PlayerA : PlayerB, kw), cards) as GameState
-            }
-          }
-          if (testEnv.basicCards) {
-            for (const [side, kw, pairs] of testEnv.basicCards) {
-              for (const [protoId, num] of pairs) {
-                ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(side == "自軍" ? PlayerA : PlayerB, kw), repeat(protoId, num)) as GameState
-              }
-            }
-          }
-
-          try {
-            switch (text.title[0]) {
-              case "使用型": {
-                ctx = setGameStateWithUseTiming(ctx, text.title[1])
-                let effects = createPlayEffects(ctx, PlayerA)
-                const effect: any = effects.find(eff => eff.text.id == text.id)
-                if (effect == null) {
-                  throw new Error()
-                }
-                const cets = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)
-                if (cets.length == 0) {
-                  console.log(createCommandEffectTips(ctx, effect))
-                  throw new Error()
-                }
-                let successCount = 0
-                cets.forEach(cet => {
-                  ctx = setTipSelectionForUser(ctx, effect, cet.logicID, cet.logicSubID)
-                  ctx = doEffect(ctx, effect, cet.logicID, cet.logicSubID)
-                  for (let i = 0; i < 99; ++i) {
-                    const effect = getTopEffect(ctx)
-                    if (effect) {
-                      ctx = doEffect(ctx, effect, 0, 0)
-                      ctx = removeEffect(ctx, effect.id) as GameState
-                    }
-                  }
-                  successCount++
-                })
-                if (successCount != cets.length) {
-                  throw new Error()
-                }
-                break
-              }
-
-              case "自動型": {
-                if (testEnv.eventTitle) {
-                  const card = testEnv.thisCard?.[2]
-                  if (card == null) {
-                    throw new Error()
-                  }
-                  const gameEvent: GameEvent = {
-                    title: testEnv.eventTitle,
-                    cardIds: [card.id]
-                  }
-                  ctx = doTriggerEvent(ctx, gameEvent)
-                  const effect: any = getImmediateEffects(ctx).find(eff => eff.text.id == text.id)
-                  if (effect == null) {
-                    throw new Error()
-                  }
-                  const cets = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)
-                  if (cets.length == 0) {
-                    console.log(createCommandEffectTips(ctx, effect).map(cet => cet.tipOrErrors))
-                    throw new Error()
-                  }
-                  let successCount = 0
-                  cets.forEach(cet => {
-                    ctx = setTipSelectionForUser(ctx, effect, cet.logicID, cet.logicSubID)
-                    ctx = doEffect(ctx, effect, cet.logicID, cet.logicSubID)
-                    for (let i = 0; i < 99; ++i) {
-                      const effect = getTopEffect(ctx)
-                      if (effect) {
-                        ctx = doEffect(ctx, effect, 0, 0)
-                        ctx = removeEffect(ctx, effect.id) as GameState
-                      }
-                    }
-                    successCount++
-                  })
-                  if (successCount != cets.length) {
-                    throw new Error()
-                  }
-                }
-                break
-              }
-            }
-            logCategory("testAllCardTextTestEnv", `TestEnv Pass: ${proto.id} ${text.description}`)
-          } catch (e) {
-            console.log(e)
-            console.log(ctx.activePlayerID)
-            console.log(ctx.phase)
-            console.log(text.description)
-            throw new Error()
-          }
-        })
+        logCategory("testAllCardTextTestEnv", `TestEnv Pass: ${proto.id} ${text.description}`)
+      } catch (e) {
+        console.log(e)
+        console.log(ctx.activePlayerID)
+        console.log(ctx.phase)
+        console.log(text.description)
+        throw new Error()
       }
     })
-  })
+  }
 }
 
 export function createDecks(): string[][] {
