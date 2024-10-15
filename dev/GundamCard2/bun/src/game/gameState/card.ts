@@ -97,7 +97,7 @@ export function getCardColor(ctx: GameState, cardID: string): CardColor {
 }
 
 
-export function getCardGSign(ctx: GameState, cardID: string): GSign {
+export function getItemGSign(ctx: GameState, cardID: string): GSign {
   const prototype = getItemPrototype(ctx, cardID)
   if (prototype.gsign == null) {
     throw new Error(`gsign not define: ${prototype.id}`)

@@ -56,6 +56,12 @@ export type GSignProperty =
   | "CCA"
 
 export type GSign = [CardColor[], GSignProperty]
+export const GSignFn = {
+  eq(left: GSign, right: GSign): boolean {
+    console.log(JSON.stringify(left), JSON.stringify(right), JSON.stringify(left) == JSON.stringify(right))
+    return JSON.stringify(left) == JSON.stringify(right)
+  }
+}
 
 export type RollCostColor = CardColor | null;
 export type CardPrototypeRollCost = "X" | RollCostColor[];

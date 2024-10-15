@@ -131,6 +131,7 @@ export async function testAllCardTextTestEnv() {
                 }
                 const cets = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)
                 if (cets.length == 0) {
+                  console.log(createCommandEffectTips(ctx, effect))
                   throw new Error()
                 }
                 let successCount = 0

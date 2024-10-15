@@ -20,6 +20,14 @@ export const prototype: CardPrototype = {
       id: "",
       description: "（自軍戦闘フェイズ）〔緑１〕：このカードが戦闘エリアにいる場合、全ての自軍ユニットが持つ「範囲兵器」の対象部分は、ターン終了時まで、『X以下の防御力を持つ敵軍ユニット１枚』に変更される。",
       title: ["使用型", ["自軍", "戦闘フェイズ"]],
+      testEnvs: [
+        {
+          basicCards: [
+            ["自軍", "戦闘エリア1", [["179009_03B_U_GN042R_green", 1], ["unit", 2]]],
+            ["自軍", "Gゾーン", [["179009_03B_U_GN042R_green", 1]]]
+          ]
+        }
+      ],
       conditions: {
         ...createRollCostRequire(1, "緑"),
         "このカードが戦闘エリアにいる場合": {
@@ -30,9 +38,30 @@ export const prototype: CardPrototype = {
           ]
         },
       },
+      logicTreeActions: [
+        {
+          actions: [
+            {
+              title: ["cutIn", [
+                {
+                  title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+                    const cardId = DefineFn.EffectFn.getCardID(effect)
+                    ctx = GameStateFn.mapItemState(ctx, cardId, is => ({
+                      ...is,
+                      flags: { ...is.flags, enabled: true },
+                      varNamesRemoveOnTurnEnd: { ...is.varNamesRemoveOnTurnEnd, enabled: true }
+                    })) as GameState
+                    return ctx
+                  }.toString()
+                }
+              ]]
+            }
+          ]
+        }
+      ],
       onSituation: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GlobalEffect[] {
         const cardId = DefineFn.EffectFn.getCardID(effect)
-        if (GameStateFn.getItemState(ctx, cardId).textIdsUseThisTurn?.includes(effect.text.id)) {
+        if (GameStateFn.getItemState(ctx, cardId).flags.enabled) {
           const pairs = DefineFn.TipFn.getWant(GameStateFn.createTipByEntitySearch(ctx, cardId, {
             atBa: true,
             side: "自軍",

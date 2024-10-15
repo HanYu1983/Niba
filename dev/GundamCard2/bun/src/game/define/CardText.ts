@@ -2,7 +2,7 @@ import { always, ifElse, map, pipe, zipObj } from "ramda";
 import { RelatedPlayerSideKeyword, UnitPropertyKeyword } from ".";
 import { LogicTree, LogicTreeFn } from "../../tool/logicTree";
 import { AbsoluteBaSyou, BaSyou, BaSyouKeyword } from "./BaSyou";
-import { CardColor, CardCategory, GSignProperty } from "./CardPrototype";
+import { CardColor, CardCategory, GSignProperty, GSign } from "./CardPrototype";
 import { DestroyReason, Effect } from "./Effect";
 import { GameEvent, GameEventTitle } from "./GameEvent";
 import { GlobalEffect } from "./GlobalEffect";
@@ -111,6 +111,7 @@ export type EntitySearchOptions = {
     hasSpecialEffect?: TextSpeicalEffect[],
     hasChar?: string[],
     hasSelfCardId?: boolean,
+    hasGSign?: GSign[],
     hasGSignProperty?: GSignProperty[],
     hasDamage?: boolean,
     isMaster?: boolean,

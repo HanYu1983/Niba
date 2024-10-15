@@ -1,6 +1,6 @@
 import { lift } from "ramda";
 import { BaSyouKeyword, BaSyouKeywordFn, AbsoluteBaSyouFn } from "../define/BaSyou";
-import { CardCategory, CardColor, CardPrototype } from "../define/CardPrototype";
+import { CardCategory, CardColor, CardPrototype, GSignFn } from "../define/CardPrototype";
 import { EntitySearchOptions, TextSpeicalEffect } from "../define/CardText";
 import { DestroyReason, Effect, EffectFn } from "../define/Effect";
 import { TipError } from "../define/GameError";
@@ -8,7 +8,7 @@ import { ItemState } from "../define/ItemState";
 import { PlayerID, PlayerA, PlayerB, PlayerIDFn } from "../define/PlayerID";
 import { Tip, StrBaSyouPair, TipFn } from "../define/Tip";
 import { getBattleGroup } from "./battleGroup";
-import { getCardColor, getCardGSignProperty, getCardHasSpeicalEffect, getCardTotalCostLength, getItemCharacteristic, getItemRuntimeCategory, isCardMaster } from "./card";
+import { getCardColor, getItemGSign, getCardGSignProperty, getCardHasSpeicalEffect, getCardTotalCostLength, getItemCharacteristic, getItemRuntimeCategory, isCardMaster } from "./card";
 import { getCoinIds, getCoin, getCoinOwner } from "./CoinTableComponent";
 import { createAbsoluteBaSyouFromBaSyou, createPlayerIdFromRelated } from "./createActionTitleFn";
 import { getCutInDestroyEffects, getEffect, getEffects, isStackEffect } from "./EffectStackComponent";
@@ -230,6 +230,12 @@ export function createTipByEntitySearch(ctx: GameState, cardId: string, options:
     }
     if (options.hasChar != null) {
         entityList = entityList.filter(EntityFn.filterHasChar(ctx, options.hasChar))
+    }
+    if (options.hasGSign) {
+        if (options.hasGSign.length == 0) {
+            options.hasGSign.push(getItemGSign(ctx, cardId))
+        }
+        entityList = entityList.filter(entity => isCardLike(ctx)(entity.itemId) && options.hasGSign?.some(v => GSignFn.eq(v, getItemGSign(ctx, entity.itemId))))
     }
     if (options.hasGSignProperty) {
         if (options.hasGSignProperty.length == 0) {
