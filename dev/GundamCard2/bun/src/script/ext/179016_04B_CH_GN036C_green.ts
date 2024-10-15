@@ -18,13 +18,13 @@ export const prototype: CardPrototype = {
       id: "",
       description: "（防御ステップ）〔１〕：「特徴：女性」を持つキャラがいる場合、このセットグループのユニットは、ターン終了時まで「サイコミュ」＋２を得る。",
       title: ["使用型", ["防御ステップ"]],
-      testEnv: {
+      testEnvs: [{
         basicCards: [
           ["自軍", "Gゾーン", [["unit", 1]]],
           ["自軍", "戦闘エリア1", [["179016_04B_CH_GN035R_green", 1]]],
           ["自軍", "配備エリア", [["179016_04B_CH_GN036C_green", 1]]],
         ]
-      },
+      }],
       conditions: {
         ...createRollCostRequire(1, null),
         "「特徴：女性」を持つキャラがいる場合": {

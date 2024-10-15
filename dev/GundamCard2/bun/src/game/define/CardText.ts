@@ -104,6 +104,7 @@ export type EntitySearchOptions = {
     isDestroy?: boolean,
     isSetGroup?: boolean,
     isBattleGroupFirst?: boolean,
+    isRoll?: boolean,
     isCanSetCharacter?: boolean,
     hasSetCard?: boolean,
     hasSpecialEffect?: TextSpeicalEffect[],
@@ -140,7 +141,7 @@ export type ConditionTitle =
     | ["_敵軍部隊がいる場合", RelatedPlayerSideKeyword]
     | ["_敵軍_ユニットが_３枚以上いる場合", RelatedPlayerSideKeyword, CardCategory, number]
     | ["Entity", EntitySearchOptions]
-    | ["_交戦中の_敵軍部隊_１つ", boolean | null, RelatedPlayerSideKeyword, number]
+    | ["_交戦中の_敵軍部隊_１つ", boolean | null, RelatedPlayerSideKeyword | null, number]
 
 export type Condition = {
     title?: ConditionTitle,
@@ -233,6 +234,7 @@ export type CreatePlayEffectFn = (ctx: any, effect: Effect, bridge: any) => Effe
 export type TestEnv = {
     eventTitle?: GameEventTitle,
     thisCard?: [RelatedPlayerSideKeyword, BaSyouKeyword, Card],
+    cards?: [RelatedPlayerSideKeyword, BaSyouKeyword, Card[]][]
     basicCards?: [RelatedPlayerSideKeyword, BaSyouKeyword, [string, number][]][]
 }
 
@@ -248,7 +250,7 @@ export type CardText = {
     protectLevel?: 1 | 2,
     isEachTime?: boolean,
     createPlayEffect?: string,
-    testEnv?: TestEnv
+    testEnvs?: TestEnv[]
 }
 
 function getCondition(ctx: CardText, conditionId: string): Condition {

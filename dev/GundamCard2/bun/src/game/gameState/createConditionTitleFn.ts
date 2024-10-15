@@ -4,7 +4,7 @@ import { AbsoluteBaSyou, AbsoluteBaSyouFn, BaSyouKeywordFn } from "../define/BaS
 import { Condition, ConditionTitleFn, ConditionFn, Situation } from "../define/CardText"
 import { Effect, EffectFn } from "../define/Effect"
 import { TargetMissingError, TipError } from "../define/GameError"
-import { PlayerIDFn } from "../define/PlayerID"
+import { PlayerA, PlayerB, PlayerIDFn } from "../define/PlayerID"
 import { Tip, StrBaSyouPair, TipTitleTextRef } from "../define/Tip"
 import { getItemCharacteristic, getItemRuntimeCategory, getCardTexts, getCardTotalCostLength, getCardIdsCanPayRollColor } from "./card"
 import { getCard } from "./CardTableComponent"
@@ -28,8 +28,8 @@ export function createConditionTitleFn(condition: Condition, options?: { isPlay?
             return function (ctx: GameState, effect: Effect): Tip | null {
                 const cardId = EffectFn.getCardID(effect)
                 const cardController = getItemController(ctx, cardId);
-                const playerId = PlayerIDFn.fromRelatedPlayerSideKeyword(side, cardController)
-                let basyous = lift(AbsoluteBaSyouFn.of)([playerId], ["戦闘エリア1", "戦闘エリア2"])
+                const playerIds = side ? [PlayerIDFn.fromRelatedPlayerSideKeyword(side, cardController)] : [PlayerA, PlayerB]
+                let basyous = lift(AbsoluteBaSyouFn.of)(playerIds, ["戦闘エリア1", "戦闘エリア2"])
                     .filter(basyou => getItemIdsByBasyou(ctx, basyou).length)
                 if(isBattleV != null){
                     basyous = basyous.filter(basyou => isBattleAtBasyou(ctx, basyou) == isBattleV)

@@ -18,6 +18,8 @@ import { getItemState } from "./ItemStateComponent";
 import { Item, getItemIdsByBasyou, getItem, isCard, isChip, getItemController, getItemPrototype, getItemBaSyou, isCardLike } from "./ItemTableComponent";
 import { getSetGroupBattlePoint, isSetGroupHasA } from "./setGroup";
 import { getSetGroup, getSetGroupRoot } from "./SetGroupComponent";
+import { getCard } from "./CardTableComponent";
+import { getChip } from "./ChipTableComponent";
 
 export type Entity = {
     itemController: PlayerID,
@@ -215,6 +217,13 @@ export function createTipByEntitySearch(ctx: GameState, cardId: string, options:
     }
     if (options.isDestroy != null) {
         entityList = entityList.filter(EntityFn.filterIsDestroy(options.isDestroy))
+    }
+    if (options.isRoll != null) {
+        entityList = entityList.filter(entity =>
+            (entity.isCard
+                && !!(getCard(ctx, entity.itemId).isRoll) == options.isRoll)
+            || (entity.isChip
+                && !!(getChip(ctx, entity.itemId).isRoll) == options.isRoll))
     }
     if (options.hasSpecialEffect != null) {
         entityList = entityList.filter(EntityFn.filterHasSpecialEffect(ctx, options.hasSpecialEffect))

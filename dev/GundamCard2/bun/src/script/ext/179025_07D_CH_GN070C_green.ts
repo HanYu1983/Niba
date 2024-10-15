@@ -1,12 +1,14 @@
-// 179015_04B_U_GN053U_green
-// U
+// 179025_07D_CH_GN070C_green
+// C
 // GUNDAM
-// シャア専用リック・ドム
-// ドム系　MS　専用「シャア・アズナブル」
-// 『起動』：このカードが場に出た場合、セットカードがセットされていない、Ｇ以外の敵軍カード１枚を、持ち主の手札に移すことが出来る。
+// シャリア・ブル
+// 男性　大人　NT
+// クイック
+// 『起動』：このカードが場に出た場合、敵軍手札を全て見る。
 
+import { BaSyouKeyword } from "../../game/define/BaSyou";
 import { CardColor, CardPrototype } from "../../game/define/CardPrototype";
-import { Condition } from "../../game/define/CardText";
+import { CardText, Condition } from "../../game/define/CardText";
 import { Effect } from "../../game/define/Effect";
 import { GameState } from "../../game/gameState/GameState";
 import { Bridge } from "../bridge";
@@ -15,34 +17,29 @@ export const prototype: CardPrototype = {
   texts: [
     {
       id: "",
-      description: "『起動』：このカードが場に出た場合、セットカードがセットされていない、Ｇ以外の敵軍カード１枚を、持ち主の手札に移すことが出来る。",
+      description: "『起動』：このカードが場に出た場合、敵軍手札を全て見る。",
       title: ["自動型", "起動"],
       testEnvs: [{
-        eventTitle: ["このカードが場に出た場合"],
-        thisCard: ["自軍", "配備エリア", { id: "", protoID: "179015_04B_U_GN053U_green" }],
-        basicCards: [
-          ["敵軍", "戦闘エリア1", [["unit", 1]]]
-        ]
+        thisCard: ["自軍", "配備エリア", { id: "", protoID: "179025_07D_CH_GN070C_green" }],
+        eventTitle: ["このカードが場に出た場合"]
       }],
       onEvent: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
         const event = DefineFn.EffectFn.getEvent(effect)
         const cardId = DefineFn.EffectFn.getCardID(effect)
         if (event.title[0] == "このカードが場に出た場合" && event.cardIds?.includes(cardId)) {
           const newE = GameStateFn.createPlayTextEffectFromEffect(ctx, effect, {
-            isOption: true,
             conditions: {
-              "セットカードがセットされていない、Ｇ以外の敵軍カード１枚": {
+              "敵軍手札を全て": {
                 title: ["Entity", {
-                  atBa: true,
-                  hasSetCard: false,
-                  is: DefineFn.CardCategoryFn.createRemaining(["グラフィック"]),
                   side: "敵軍",
-                  count: 1
+                  at: ["手札"],
+                  max: 50,
+                  asMuchAsPossible: true,
                 }],
                 actions: [
                   {
-                    title: ["_の_ハンガーに移す", "持ち主", "手札"],
-                    vars: ["セットカードがセットされていない、Ｇ以外の敵軍カード１枚"]
+                    title: ["_ロールする", "見"],
+                    vars: ["敵軍手札を全て"]
                   }
                 ]
               }
@@ -52,9 +49,10 @@ export const prototype: CardPrototype = {
         }
         return ctx
       }.toString(),
-    }
-  ]
+    },
+  ],
 };
+
 
 function createRollCostRequire(
   costNum: number,
