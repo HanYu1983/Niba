@@ -13,7 +13,7 @@ const hideCategory: string[] = [
   "createCommandEffectTips",
   "setEffectTips",
   "doTriggerEvent",
-  "createPlayEffects",
+  //"createPlayEffects",
   "getConditionTitleFn",
   "createPlayCardEffects",
   "addImmediateEffectIfCanPayCost",

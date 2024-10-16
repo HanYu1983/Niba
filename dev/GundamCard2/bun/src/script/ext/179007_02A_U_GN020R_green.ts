@@ -38,10 +38,15 @@ export const prototype: CardPrototype = {
     {
       id: "",
       description: "（ダメージ判定ステップ）〔X〕：このカードが攻撃に出撃している、または交戦中の場合、全ての敵軍ユニットにXダメージを与える。",
-      title: ["使用型", ["自軍", "戦闘フェイズ"]],
+      title: ["使用型", ["ダメージ判定ステップ"]],
       conditions: {
         "〔X〕": {
-          title: ["RollColor", null]
+          title: ["RollColor", null],
+          actions: [
+            {
+              title: ["_ロールする", "ロール"]
+            }
+          ]
         },
         "このカードが攻撃に出撃している": {
           actions: [
@@ -95,7 +100,7 @@ export const prototype: CardPrototype = {
                       is: ["ユニット"],
                       max: 50,
                       asMuchAsPossible: true,
-                    }, {ges: Options.ges})) as StrBaSyouPair[]
+                    }, { ges: Options.ges })) as StrBaSyouPair[]
                     for (const pair of pairs) {
                       ctx = GameStateFn.doItemDamage(ctx, effect, x, pair)
                     }

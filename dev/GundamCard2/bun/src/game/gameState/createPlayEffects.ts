@@ -83,6 +83,7 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
             return cardIds.flatMap(
                 cardId => getCardTexts(ctx, cardId, { ges: ges })
                     .flatMap(text => {
+                        logCategory("createPlayEffect", cardId, text.description)
                         if (AbsoluteBaSyouFn.getBaSyouKeyword(basyou) == "Gゾーン") {
                             if (text.protectLevel != 2) {
                                 return []
@@ -96,6 +97,8 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
                         }
                         return []
                     }).filter(inTiming).map(text => {
+                        logCategory("createPlayEffect", "====== after inTiming ======")
+                        logCategory("createPlayEffect", cardId, text.description)
                         const playTextConditions: { [key: string]: Condition } = {
                             // 沒有同切上限，只有一回合能用多少次，基本上是1次
                             // "同切上限": {

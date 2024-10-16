@@ -32,7 +32,14 @@ export function doItemDamage(ctx: GameState, effect: Effect, damage: number, tar
     const ges = getGlobalEffects(ctx, null)
     ctx = setGlobalEffects(ctx, null, ges)
     // damage修正
-    const adj = ges.map(ge => ge.title[0] == "このカードが受ける全ての_通常ダメージは、_２減殺される" && ge.title[1] == "通常ダメージ" ? -ge.title[2] : 0).reduce((a, b) => a + b, 0)
+    const adj = ges.map(ge => {
+      if (ge.title[0] == "このカードが受ける全ての_通常ダメージは、_２減殺される" && ge.title[1] == "通常ダメージ") {
+        if (ge.cardIds.includes(target[0])) {
+          return -ge.title[2]
+        }
+      }
+      return 0
+    }).reduce((a, b) => a + b, 0)
     damage += adj
     damage = Math.max(0, damage)
   }
@@ -42,7 +49,7 @@ export function doItemDamage(ctx: GameState, effect: Effect, damage: number, tar
     let cardState = getItemState(ctx, targetItemId);
     cardState = ItemStateFn.damage(cardState, damage)
     ctx = setItemState(ctx, targetItemId, cardState) as GameState
-    const [_, _2, hp] = getSetGroupBattlePoint(ctx, targetItemId, {ges: ges})
+    const [_, _2, hp] = getSetGroupBattlePoint(ctx, targetItemId, { ges: ges })
     if (hp <= cardState.damage) {
       const effect: Effect = createDestroyEffect(ctx, { id: "通常ダメージ", playerID: effectController }, targetItemId)
       ctx = addDestroyEffect(ctx, effect) as GameState

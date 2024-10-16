@@ -17342,7 +17342,6 @@ var hideCategory = [
   "createCommandEffectTips",
   "setEffectTips",
   "doTriggerEvent",
-  "createPlayEffects",
   "getConditionTitleFn",
   "createPlayCardEffects",
   "addImmediateEffectIfCanPayCost",
@@ -21322,7 +21321,13 @@ function doItemDamage(ctx2, effect, damage, target, options) {
   {
     const ges2 = getGlobalEffects(ctx2, null);
     ctx2 = setGlobalEffects(ctx2, null, ges2);
-    const adj = ges2.map((ge) => ge.title[0] == "\u3053\u306E\u30AB\u30FC\u30C9\u304C\u53D7\u3051\u308B\u5168\u3066\u306E_\u901A\u5E38\u30C0\u30E1\u30FC\u30B8\u306F\u3001_\uFF12\u6E1B\u6BBA\u3055\u308C\u308B" && ge.title[1] == "\u901A\u5E38\u30C0\u30E1\u30FC\u30B8" ? -ge.title[2] : 0).reduce((a, b) => a + b, 0);
+    const adj = ges2.map((ge) => {
+      if (ge.title[0] == "\u3053\u306E\u30AB\u30FC\u30C9\u304C\u53D7\u3051\u308B\u5168\u3066\u306E_\u901A\u5E38\u30C0\u30E1\u30FC\u30B8\u306F\u3001_\uFF12\u6E1B\u6BBA\u3055\u308C\u308B" && ge.title[1] == "\u901A\u5E38\u30C0\u30E1\u30FC\u30B8") {
+        if (ge.cardIds.includes(target[0]))
+          return -ge.title[2];
+      }
+      return 0;
+    }).reduce((a, b) => a + b, 0);
     damage += adj, damage = Math.max(0, damage);
   }
   const [targetItemId, targetOriginBasyou] = target;
@@ -23719,7 +23724,7 @@ function createPlayEffects(ctx2, playerId) {
     return createPlayCardEffects(ctx2, item.id);
   }), flatten_default, (effs) => effs.filter((eff) => inTiming(eff.text))), always_default([])), getPlayTextF = pipe(always_default(lift_default(AbsoluteBaSyouFn.of)([playerId], [...BaSyouKeywordFn.getBaAll(), "G\u30BE\u30FC\u30F3"])), map_default((basyou) => {
     return getItemIdsByBasyou(ctx2, basyou).flatMap((cardId) => getCardTexts(ctx2, cardId, { ges }).flatMap((text) => {
-      if (AbsoluteBaSyouFn.getBaSyouKeyword(basyou) == "G\u30BE\u30FC\u30F3") {
+      if (logCategory("createPlayEffect", cardId, text.description), AbsoluteBaSyouFn.getBaSyouKeyword(basyou) == "G\u30BE\u30FC\u30F3") {
         if (text.protectLevel != 2)
           return [];
       }
@@ -23731,6 +23736,7 @@ function createPlayEffects(ctx2, playerId) {
       }
       return [];
     }).filter(inTiming).map((text) => {
+      logCategory("createPlayEffect", "====== after inTiming ======"), logCategory("createPlayEffect", cardId, text.description);
       const playTextConditions = {
         "\u540C\u56DE\u5408\u4E0A\u9650": {
           actions: [
@@ -23739,6 +23745,14 @@ function createPlayEffects(ctx2, playerId) {
             }
           ]
         }
+      }, logicLeafs = Object.keys(playTextConditions).map((k) => {
+        return {
+          type: "Leaf",
+          value: k
+        };
+      }), logicTree = {
+        type: "And",
+        children: text.logicTreeActions?.[0] ? [...logicLeafs, ...CardTextFn.getLogicTreeTreeLeafs(text, text.logicTreeActions[0])] : logicLeafs
       };
       return {
         id: `createPlayEffects_${playerId}_${cardId}_${text.id}`,
@@ -23749,7 +23763,13 @@ function createPlayEffects(ctx2, playerId) {
           conditions: {
             ...text.conditions,
             ...playTextConditions
-          }
+          },
+          logicTreeActions: [
+            {
+              logicTree,
+              actions: text.logicTreeActions?.[0].actions || []
+            }
+          ]
         }
       };
     }));
