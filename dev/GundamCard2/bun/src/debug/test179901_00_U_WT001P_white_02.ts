@@ -68,7 +68,7 @@ export async function test179901_00_U_WT001P_white_02() {
         throw new Error()
     }
     let effects = createPlayEffects(ctx, PlayerA)
-    if (effects.length != 2) {
+    if (effects.length != 3) {
         throw new Error()
     }
     if (isBattle(ctx, cardA.id, cardB.id) != true) {

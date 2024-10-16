@@ -296,7 +296,12 @@ export function createTipByEntitySearch(ctx: GameState, effect: Effect, searchOp
         return [entity.itemId, AbsoluteBaSyouFn.of(entity.itemController, entity.baSyouKeyword)] as StrBaSyouPair
     })
     let tipPairs = pairs
-    if (searchOptions.max != null) {
+    if (searchOptions.asMuchAsPossible) {
+        if (searchOptions.max == null) {
+            throw new Error()
+        }
+        tipPairs = tipPairs.slice(0, Math.min(pairs.length, searchOptions.max))
+    } else if (searchOptions.max != null) {
         tipPairs = tipPairs.slice(0, searchOptions.max)
     } else if (searchOptions.min != null) {
         tipPairs = tipPairs.slice(0, searchOptions.min)

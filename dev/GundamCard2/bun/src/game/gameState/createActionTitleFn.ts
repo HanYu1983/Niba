@@ -61,7 +61,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
       return function (ctx: GameState, effect: Effect): GameState {
         // 使用了卡牌後, 同一個回合不能再使用. 以下記錄使用過的卡片, 會在切入結束後清除
         const cardId = EffectFn.getCardID(effect)
-        if (getItemState(ctx, cardId).isAttack) {
+        if (getItemState(ctx, cardId).isAttack != true) {
           throw new TargetMissingError("このカードが攻撃に出撃している")
         }
         return ctx

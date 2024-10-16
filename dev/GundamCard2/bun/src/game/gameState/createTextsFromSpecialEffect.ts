@@ -201,9 +201,14 @@ export function createTextsFromSpecialEffect(text: CardText, options: { ges?: Gl
                                                         "這張卡在戰區的場合, 打開自軍本國上的1張卡": {
                                                             title: ["Entity", {
                                                                 see: [DefineFn.RelatedBaSyouFn.of("自軍", "本国"), 1, 1],
-                                                                hasGSignProperty: [],
                                                                 count: 1,
-                                                            }]
+                                                            }],
+                                                            actions: [
+                                                                {
+                                                                    title: ["_ロールする", "見"],
+                                                                    vars: ["這張卡在戰區的場合, 打開自軍本國上的1張卡"]
+                                                                }
+                                                            ]
                                                         },
                                                         "這張卡在戰區的場合": {
                                                             actions: [
@@ -228,6 +233,11 @@ export function createTextsFromSpecialEffect(text: CardText, options: { ges?: Gl
                                                                         throw new Error(`pairs must not 0: ${effect.text.description}`)
                                                                     }
                                                                     const [openCardId] = pairs[0]
+                                                                    const enabled = GameStateFn.getCardGSignProperty(ctx, openCardId) == GameStateFn.getCardGSignProperty(ctx, cardId)
+                                                                    if (enabled == false) {
+                                                                        console.warn(`不同的GSignProperty，無法得到紅利`)
+                                                                        return ctx
+                                                                    }
                                                                     const ges = Options.ges
                                                                     const bonus = GameStateFn.getCardRollCostLength(ctx, openCardId)
                                                                     // 以下參照p69切入的適用
@@ -253,7 +263,7 @@ export function createTextsFromSpecialEffect(text: CardText, options: { ges?: Gl
                                                         ]
                                                     }
                                                 })
-                                                ctx = GameStateFn.addImmediateEffectIfCanPayCost(ctx, newE) as GameState
+                                                ctx = GameStateFn.addImmediateEffect(ctx, newE) as GameState
                                                 return ctx
                                             }.toString()
                                         }
@@ -547,6 +557,14 @@ export function createTextsFromSpecialEffect(text: CardText, options: { ges?: Gl
                 }
             ]
         }
+        case "1枚制限":
+        case "【ステイ】":
+        case "クイック":
+        case "強襲":
+        case "戦闘配備":
+        case "速攻":
+        case "高機動":
+            return []
     }
-    return []
+    throw new Error(`${text.title} not support`)
 }

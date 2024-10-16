@@ -104,6 +104,7 @@ export function createAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID):
                                     ctx = GameStateFn.mapItemState(ctx, pair[0], is => ({ ...is, isAttack: phase[1] == "攻撃ステップ", isDefence: phase[1] == "防御ステップ" })) as GameState
                                     ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(playerId, "戦闘エリア2"), pair) as GameState
                                 }
+                                ctx = GameStateFn.checkIsBattle(ctx) as GameState
                                 return ctx
                             }.toString()
                         }

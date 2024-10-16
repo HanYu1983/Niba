@@ -30,7 +30,6 @@ export const prototype: CardPrototype = {
         const cardId = DefineFn.EffectFn.getCardID(effect)
         if (event.title[0] == "このカードのセットグループのユニットが破壊された場合" && event.cardIds?.includes(cardId)) {
           const newE = GameStateFn.createPlayTextEffectFromEffect(ctx, effect, {
-            isOption: true,
             conditions: {
               "自軍本国の上のカード１～２枚を見て、その中にある「サイコミュ」を持つユニット１枚": {
                 title: ["Entity", {

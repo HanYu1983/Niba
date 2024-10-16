@@ -36,12 +36,12 @@ export async function testAllCardTextTestEnv() {
       testText(proto, text)
     })
     proto.texts?.flatMap(text => text.title[0] == "特殊型" ? createTextsFromSpecialEffect(text, {}) : []).forEach(text => {
-      testText(proto, text)
+      testText(proto, text, {isCheckDescription: true})
     })
   })
 }
 
-export function testText(proto: CardPrototype, text: CardText) {
+export function testText(proto: CardPrototype, text: CardText, options?: {isCheckDescription?: boolean}) {
   if (text.testEnvs) {
     text.testEnvs.forEach(testEnv => {
       let ctx = createGameState()
@@ -85,9 +85,14 @@ export function testText(proto: CardPrototype, text: CardText) {
             const ges = getGlobalEffects(ctx, null)
             ctx = setGlobalEffects(ctx, null, ges)
             let effects = createPlayEffects(ctx, PlayerA)
-            const effect: any = effects.find(eff => eff.text.id == text.id)
+            let effect: any = null
+            if(options?.isCheckDescription){
+              effect = effects.find(eff => eff.text.description == text.description)
+            } else {
+              effect = effects.find(eff => eff.text.id == text.id)
+            }
             if (effect == null) {
-              console.log(effects)
+              console.log(effects, text.id, text.description)
               throw new Error()
             }
             const cets = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)

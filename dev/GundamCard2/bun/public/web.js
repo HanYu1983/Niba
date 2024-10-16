@@ -19329,6 +19329,25 @@ function createRollCostRequire(costNum, color) {
 var TextSpeicalEffectFn = {
   isSameKeyword(left, right) {
     return left[0] == right[0];
+  },
+  createAll() {
+    return [
+      ["1\u679A\u5236\u9650"],
+      ["\u3010PS\u88C5\u7532\u3011"],
+      ["\u3010\u30B9\u30C6\u30A4\u3011"],
+      ["\u30AF\u30A4\u30C3\u30AF"],
+      ["\u30AF\u30ED\u30B9\u30A6\u30A7\u30DD\u30F3", ""],
+      ["\u30B2\u30A4\u30F3"],
+      ["\u30B5\u30A4\u30B3\u30DF\u30E5", 0],
+      ["\u4F9B\u7D66"],
+      ["\u5171\u6709", ""],
+      ["\u5F37\u8972"],
+      ["\u6226\u95D8\u914D\u5099"],
+      ["\u6539\u88C5", ""],
+      ["\u7BC4\u56F2\u5175\u5668", 0],
+      ["\u901F\u653B"],
+      ["\u9AD8\u6A5F\u52D5"]
+    ];
   }
 }, ActionFn = {
   getTitleFn(ctx) {
@@ -19494,6 +19513,7 @@ async function loadPrototype(imgID) {
             case "\u6226\u95D8\u914D\u5099":
             case "\u3010\u30B9\u30C6\u30A4\u3011":
             case "1\u679A\u5236\u9650":
+            case "\u30B2\u30A4\u30F3":
               texts.push({ id: "", title: ["\u7279\u6B8A\u578B", [sp]], description: sp });
               break;
             default:
@@ -19525,7 +19545,7 @@ async function loadPrototype(imgID) {
           switch (titlestr) {
             case "\u4F9B\u7D66":
             case "\u30B2\u30A4\u30F3": {
-              title2 = ["\u7279\u6B8A\u578B", titlestr];
+              title2 = ["\u7279\u6B8A\u578B", [titlestr]];
               break;
             }
             case "\u30B5\u30A4\u30B3\u30DF\u30E5":
@@ -20447,8 +20467,16 @@ function createTextsFromSpecialEffect(text, options) {
       return [
         {
           id: text.id,
-          title: ["\u4F7F\u7528\u578B", ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA"]],
+          title: ["\u4F7F\u7528\u578B", ["\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7"]],
           description: "\u9019\u5F35\u5361\u5728\u6230\u5340\u7684\u5834\u5408, \u6253\u958B\u81EA\u8ECD\u672C\u570B\u4E0A\u76841\u5F35\u5361\u548C\u9019\u5F35\u5361\u540CGsignProperty\u7684\u60C5\u6CC1, \u9019\u5F35\u5361\u56DE\u5408\u7D50\u675F\u524D+x/+x/+x, x\u70BA\u6253\u958B\u7684\u5361\u7684\u6A2A\u7F6E\u8CBB\u7528\u6578\u91CF, \u9019\u500B\u6548\u679C1\u56DE\u5408\u53EA\u80FD\u75281\u6B21",
+          testEnvs: [
+            {
+              createCards: [
+                ["\u81EA\u8ECD", "\u6226\u95D8\u30A8\u30EA\u30A21", [["unitHasGain", 1]]],
+                ["\u81EA\u8ECD", "\u672C\u56FD", [["unitHasGain", 1]]]
+              ]
+            }
+          ],
           conditions: {
             ...text.conditions,
             "\u9019\u500B\u6548\u679C1\u56DE\u5408\u53EA\u80FD\u75281\u6B21": {
@@ -20474,64 +20502,67 @@ function createTextsFromSpecialEffect(text, options) {
             {
               actions: [
                 {
-                  title: function _(ctx2, effect, { GameStateFn, DefineFn }) {
-                    const newE = DefineFn.EffectFn.fromEffectBasic(effect, {
-                      conditions: {
-                        "\u9019\u5F35\u5361\u5728\u6230\u5340\u7684\u5834\u5408, \u6253\u958B\u81EA\u8ECD\u672C\u570B\u4E0A\u76841\u5F35\u5361": {
-                          title: function _(ctx3, effect2, bridge) {
-                            const { GameStateFn: GameStateFn2, DefineFn: DefineFn2 } = bridge, cardId = DefineFn2.EffectFn.getCardID(effect2), from = GameStateFn2.getItemBaSyou(ctx3, cardId);
-                            if (DefineFn2.BaSyouKeywordFn.getBattleArea().includes(DefineFn2.AbsoluteBaSyouFn.getBaSyouKeyword(from)))
-                              return GameStateFn2.createConditionTitleFn({
-                                title: ["Entity", {
-                                  see: [DefineFn2.RelatedBaSyouFn.of("\u81EA\u8ECD", "\u672C\u56FD"), 1, 1],
-                                  count: 1
-                                }],
-                                actions: [
-                                  {
-                                    title: ["_\u30ED\u30FC\u30EB\u3059\u308B", "\u6253\u958B"],
-                                    vars: ["\u9019\u5F35\u5361\u5728\u6230\u5340\u7684\u5834\u5408, \u6253\u958B\u81EA\u8ECD\u672C\u570B\u4E0A\u76841\u5F35\u5361"]
-                                  }
-                                ]
-                              })(ctx3, effect2, bridge);
-                            return null;
-                          }.toString()
-                        }
-                      },
-                      logicTreeAction: {
-                        actions: [
-                          {
-                            title: function _(ctx3, effect2, { GameStateFn: GameStateFn2, DefineFn: DefineFn2, ToolFn: ToolFn2 }) {
-                              const cardId = DefineFn2.EffectFn.getCardID(effect2);
-                              if (DefineFn2.ItemStateFn.hasTip(GameStateFn2.getItemState(ctx3, cardId), "\u9019\u5F35\u5361\u5728\u6230\u5340\u7684\u5834\u5408, \u6253\u958B\u81EA\u8ECD\u672C\u570B\u4E0A\u76841\u5F35\u5361") == !1)
-                                return ctx3;
-                              const pairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, "\u9019\u5F35\u5361\u5728\u6230\u5340\u7684\u5834\u5408, \u6253\u958B\u81EA\u8ECD\u672C\u570B\u4E0A\u76841\u5F35\u5361", cardId);
-                              if (pairs.length == 0)
-                                throw new Error(`pairs must not 0: ${effect2.text.description}`);
-                              const [openCardId] = pairs[0];
-                              if (GameStateFn2.getCardGSignProperty(ctx3, openCardId) == GameStateFn2.getCardGSignProperty(ctx3, cardId)) {
-                                const ges = GameStateFn2.getGlobalEffects(ctx3, null);
-                                ctx3 = GameStateFn2.setGlobalEffects(ctx3, null, ges);
-                                const bonus = GameStateFn2.getCardRollCostLength(ctx3, openCardId), gainBonus = [bonus, bonus, bonus];
-                                ctx3 = GameStateFn2.doTriggerEvent(ctx3, { title: ["\u300C\u30B2\u30A4\u30F3\u300D\u306E\u52B9\u679C\u3067\u6226\u95D8\u4FEE\u6B63\u3092\u5F97\u308B\u5834\u5408", gainBonus], cardIds: [cardId] });
-                                const hasCase1 = GameStateFn2.getCardTexts(ctx3, cardId, { ges }).find((text2) => text2.description == "\u300E\u8D77\u52D5\u300F\uFF1A\u3053\u306E\u30AB\u30FC\u30C9\u306F\u3001\u300C\u30B2\u30A4\u30F3\u300D\u306E\u52B9\u679C\u3067\u6226\u95D8\u4FEE\u6B63\u3092\u5F97\u308B\u5834\u5408\u3001\u305D\u306E\u6226\u95D8\u4FEE\u6B63\u306E\u4EE3\u308F\u308A\u306B\u3001\u30BF\u30FC\u30F3\u7D42\u4E86\u6642\u307E\u3067\uFF0B\uFF14\uFF0F\xB1\uFF10\uFF0F\xB1\uFF10\u3092\u5F97\u308B\u4E8B\u304C\u3067\u304D\u308B\u3002") != null, hasCase2 = GameStateFn2.getCardTexts(ctx3, cardId, { ges }).find((text2) => text2.description == "\u300E\u8D77\u52D5\u300F\uFF1A\u3053\u306E\u30AB\u30FC\u30C9\u306F\u3001\u300C\u30B2\u30A4\u30F3\u300D\u306E\u52B9\u679C\u3067\u6226\u95D8\u4FEE\u6B63\u3092\u5F97\u308B\u5834\u5408\u3001\u305D\u306E\u6226\u95D8\u4FEE\u6B63\u3092\u5F97\u308B\u4EE3\u308F\u308A\u306B\u3001\u30BF\u30FC\u30F3\u7D42\u4E86\u6642\u307E\u3067\u3001\u300C\u901F\u653B\u300D\u3092\u5F97\u308B\u4E8B\u304C\u3067\u304D\u308B\u3002") != null;
-                                if (hasCase1)
-                                  ctx3 = GameStateFn2.doItemSetGlobalEffectsUntilEndOfTurn(ctx3, [{ title: ["\uFF0Bx\uFF0F\uFF0Bx\uFF0F\uFF0Bx\u3092\u5F97\u308B", [4, 0, 0]], cardIds: [cardId] }], GameStateFn2.createStrBaSyouPair(ctx3, cardId));
-                                else if (hasCase2)
-                                  ctx3 = GameStateFn2.doItemSetGlobalEffectsUntilEndOfTurn(ctx3, [{ title: ["AddText", { id: ToolFn2.getUUID("hasCase2"), title: ["\u7279\u6B8A\u578B", ["\u901F\u653B"]] }], cardIds: [cardId] }], GameStateFn2.createStrBaSyouPair(ctx3, cardId));
-                                else
-                                  ctx3 = GameStateFn2.mapItemState(ctx3, cardId, (is) => DefineFn2.ItemStateFn.setGlobalEffect(is, null, {
-                                    title: ["\uFF0Bx\uFF0F\uFF0Bx\uFF0F\uFF0Bx\u3092\u5F97\u308B", gainBonus],
-                                    cardIds: [cardId]
-                                  }, { isRemoveOnTurnEnd: !0 })), ctx3 = GameStateFn2.doTriggerEvent(ctx3, { title: ["\u300C\u30B2\u30A4\u30F3\u300D\u306E\u52B9\u679C\u3067\u6226\u95D8\u4FEE\u6B63\u3092\u5F97\u305F\u5834\u5408", gainBonus], cardIds: [cardId] });
+                  title: ["cutIn", [
+                    {
+                      title: function _(ctx2, effect, { GameStateFn, DefineFn }) {
+                        const newE = DefineFn.EffectFn.fromEffectBasic(effect, {
+                          conditions: {
+                            "\u9019\u5F35\u5361\u5728\u6230\u5340\u7684\u5834\u5408, \u6253\u958B\u81EA\u8ECD\u672C\u570B\u4E0A\u76841\u5F35\u5361": {
+                              title: ["Entity", {
+                                see: [DefineFn.RelatedBaSyouFn.of("\u81EA\u8ECD", "\u672C\u56FD"), 1, 1],
+                                count: 1
+                              }],
+                              actions: [
+                                {
+                                  title: ["_\u30ED\u30FC\u30EB\u3059\u308B", "\u898B"],
+                                  vars: ["\u9019\u5F35\u5361\u5728\u6230\u5340\u7684\u5834\u5408, \u6253\u958B\u81EA\u8ECD\u672C\u570B\u4E0A\u76841\u5F35\u5361"]
+                                }
+                              ]
+                            },
+                            "\u9019\u5F35\u5361\u5728\u6230\u5340\u7684\u5834\u5408": {
+                              actions: [
+                                {
+                                  title: ["Entity", {
+                                    isThisCard: !0,
+                                    at: ["\u6226\u95D8\u30A8\u30EA\u30A21", "\u6226\u95D8\u30A8\u30EA\u30A22"],
+                                    count: 1
+                                  }]
+                                }
+                              ]
+                            }
+                          },
+                          logicTreeAction: {
+                            actions: [
+                              {
+                                title: function _(ctx3, effect2, { GameStateFn: GameStateFn2, DefineFn: DefineFn2, ToolFn: ToolFn2, Options }) {
+                                  const cardId = DefineFn2.EffectFn.getCardID(effect2), pairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, "\u9019\u5F35\u5361\u5728\u6230\u5340\u7684\u5834\u5408, \u6253\u958B\u81EA\u8ECD\u672C\u570B\u4E0A\u76841\u5F35\u5361", cardId);
+                                  if (pairs.length == 0)
+                                    throw new Error(`pairs must not 0: ${effect2.text.description}`);
+                                  const [openCardId] = pairs[0];
+                                  if (GameStateFn2.getCardGSignProperty(ctx3, openCardId) == GameStateFn2.getCardGSignProperty(ctx3, cardId) == !1)
+                                    return console.warn("\u4E0D\u540C\u7684GSignProperty\uFF0C\u7121\u6CD5\u5F97\u5230\u7D05\u5229"), ctx3;
+                                  const ges = Options.ges, bonus = GameStateFn2.getCardRollCostLength(ctx3, openCardId), gainBonus = [bonus, bonus, bonus];
+                                  ctx3 = GameStateFn2.doTriggerEvent(ctx3, { title: ["\u300C\u30B2\u30A4\u30F3\u300D\u306E\u52B9\u679C\u3067\u6226\u95D8\u4FEE\u6B63\u3092\u5F97\u308B\u5834\u5408", gainBonus], cardIds: [cardId] });
+                                  const hasCase1 = GameStateFn2.getCardTexts(ctx3, cardId, { ges }).find((text2) => text2.description == "\u300E\u8D77\u52D5\u300F\uFF1A\u3053\u306E\u30AB\u30FC\u30C9\u306F\u3001\u300C\u30B2\u30A4\u30F3\u300D\u306E\u52B9\u679C\u3067\u6226\u95D8\u4FEE\u6B63\u3092\u5F97\u308B\u5834\u5408\u3001\u305D\u306E\u6226\u95D8\u4FEE\u6B63\u306E\u4EE3\u308F\u308A\u306B\u3001\u30BF\u30FC\u30F3\u7D42\u4E86\u6642\u307E\u3067\uFF0B\uFF14\uFF0F\xB1\uFF10\uFF0F\xB1\uFF10\u3092\u5F97\u308B\u4E8B\u304C\u3067\u304D\u308B\u3002") != null, hasCase2 = GameStateFn2.getCardTexts(ctx3, cardId, { ges }).find((text2) => text2.description == "\u300E\u8D77\u52D5\u300F\uFF1A\u3053\u306E\u30AB\u30FC\u30C9\u306F\u3001\u300C\u30B2\u30A4\u30F3\u300D\u306E\u52B9\u679C\u3067\u6226\u95D8\u4FEE\u6B63\u3092\u5F97\u308B\u5834\u5408\u3001\u305D\u306E\u6226\u95D8\u4FEE\u6B63\u3092\u5F97\u308B\u4EE3\u308F\u308A\u306B\u3001\u30BF\u30FC\u30F3\u7D42\u4E86\u6642\u307E\u3067\u3001\u300C\u901F\u653B\u300D\u3092\u5F97\u308B\u4E8B\u304C\u3067\u304D\u308B\u3002") != null;
+                                  if (hasCase1)
+                                    ctx3 = GameStateFn2.doItemSetGlobalEffectsUntilEndOfTurn(ctx3, [{ title: ["\uFF0Bx\uFF0F\uFF0Bx\uFF0F\uFF0Bx\u3092\u5F97\u308B", [4, 0, 0]], cardIds: [cardId] }], GameStateFn2.createStrBaSyouPair(ctx3, cardId));
+                                  else if (hasCase2)
+                                    ctx3 = GameStateFn2.doItemSetGlobalEffectsUntilEndOfTurn(ctx3, [{ title: ["AddText", { id: ToolFn2.getUUID("hasCase2"), title: ["\u7279\u6B8A\u578B", ["\u901F\u653B"]] }], cardIds: [cardId] }], GameStateFn2.createStrBaSyouPair(ctx3, cardId));
+                                  else
+                                    ctx3 = GameStateFn2.mapItemState(ctx3, cardId, (is) => DefineFn2.ItemStateFn.setGlobalEffect(is, null, {
+                                      title: ["\uFF0Bx\uFF0F\uFF0Bx\uFF0F\uFF0Bx\u3092\u5F97\u308B", gainBonus],
+                                      cardIds: [cardId]
+                                    }, { isRemoveOnTurnEnd: !0 })), ctx3 = GameStateFn2.doTriggerEvent(ctx3, { title: ["\u300C\u30B2\u30A4\u30F3\u300D\u306E\u52B9\u679C\u3067\u6226\u95D8\u4FEE\u6B63\u3092\u5F97\u305F\u5834\u5408", gainBonus], cardIds: [cardId] });
+                                  return ctx3;
+                                }.toString()
                               }
-                              return ctx3;
-                            }.toString()
+                            ]
                           }
-                        ]
-                      }
-                    });
-                    return ctx2 = GameStateFn.addStackEffect(ctx2, newE), ctx2;
-                  }.toString()
+                        });
+                        return ctx2 = GameStateFn.addImmediateEffect(ctx2, newE), ctx2;
+                      }.toString()
+                    }
+                  ]]
                 }
               ]
             }
@@ -20781,8 +20812,16 @@ function createTextsFromSpecialEffect(text, options) {
         }
       ];
     }
+    case "1\u679A\u5236\u9650":
+    case "\u3010\u30B9\u30C6\u30A4\u3011":
+    case "\u30AF\u30A4\u30C3\u30AF":
+    case "\u5F37\u8972":
+    case "\u6226\u95D8\u914D\u5099":
+    case "\u901F\u653B":
+    case "\u9AD8\u6A5F\u52D5":
+      return [];
   }
-  return [];
+  throw new Error(`${text.title} not support`);
 }
 
 // src/game/gameState/globalEffects.ts
@@ -21677,7 +21716,11 @@ function createTipByEntitySearch(ctx2, effect, searchOptions, options) {
     return [entity.itemId, AbsoluteBaSyouFn.of(entity.itemController, entity.baSyouKeyword)];
   });
   let tipPairs = pairs;
-  if (searchOptions.max != null)
+  if (searchOptions.asMuchAsPossible) {
+    if (searchOptions.max == null)
+      throw new Error;
+    tipPairs = tipPairs.slice(0, Math.min(pairs.length, searchOptions.max));
+  } else if (searchOptions.max != null)
     tipPairs = tipPairs.slice(0, searchOptions.max);
   else if (searchOptions.min != null)
     tipPairs = tipPairs.slice(0, searchOptions.min);
@@ -21840,7 +21883,7 @@ function createActionTitleFn(action) {
     case "\u3053\u306E\u30AB\u30FC\u30C9\u304C\u653B\u6483\u306B\u51FA\u6483\u3057\u3066\u3044\u308B":
       return function(ctx2, effect) {
         const cardId = EffectFn.getCardID(effect);
-        if (getItemState(ctx2, cardId).isAttack)
+        if (getItemState(ctx2, cardId).isAttack != !0)
           throw new TargetMissingError("\u3053\u306E\u30AB\u30FC\u30C9\u304C\u653B\u6483\u306B\u51FA\u6483\u3057\u3066\u3044\u308B");
         return ctx2;
       };

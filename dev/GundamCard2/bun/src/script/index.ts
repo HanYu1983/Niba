@@ -115,6 +115,7 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
             case "戦闘配備":
             case "【ステイ】":
             case "1枚制限":
+            case "ゲイン":
               texts.push({ id: "", title: ["特殊型", [sp]], description: sp })
               break
             default:
@@ -149,7 +150,7 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
           switch (titlestr) {
             case "供給":
             case "ゲイン": {
-              title = ["特殊型", titlestr]
+              title = ["特殊型", [titlestr]]
               break
             }
             case "サイコミュ":
