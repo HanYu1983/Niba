@@ -13,7 +13,7 @@ import { ToolFn } from "../tool";
 import { updateCommand } from "../gameState/updateCommand";
 import { getItem, getItemController, getItemIdsByBasyou, isCard, isCardLike, isChip, isCoin, Item, shuffleItems } from "../gameState/ItemTableComponent";
 import { TableFns } from "../../tool/table";
-import { assertTipForUserSelection, setCardTipStrBaSyouPairs, setTipSelectionForUser } from "../gameState/doEffect";
+import { addImmediateEffectIfCanPayCost, assertTipForUserSelection, setCardTipStrBaSyouPairs, setTipSelectionForUser } from "../gameState/doEffect";
 import { EffectFn } from "../define/Effect";
 import { mapItemState } from "../gameState/ItemStateComponent";
 import { ItemStateFn } from "../define/ItemState";
@@ -31,6 +31,7 @@ import { createDamageRuleEffect } from "../gameState/createDamageRuleEffect";
 import { createReturnRuleEffect } from "../gameState/createReturnRuleEffect";
 import { createDrawPhaseRuleEffect } from "../gameState/createDrawPhaseRuleEffect";
 import { createRerollPhaseRuleEffect } from "../gameState/createRerollPhaseRuleEffect";
+import { createDiscardRuleEffect } from "../gameState/createDiscardRuleEffect";
 
 export function applyFlow(
     ctx: GameStateWithFlowMemory,
@@ -326,6 +327,8 @@ export function applyFlow(
                                     ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
                                     break
                                 case "手札調整":
+                                    ctx = addImmediateEffectIfCanPayCost(ctx, createDiscardRuleEffect(ctx, PlayerA), { isSkipLimitCheck: true }) as GameStateWithFlowMemory
+                                    ctx = addImmediateEffectIfCanPayCost(ctx, createDiscardRuleEffect(ctx, PlayerB), { isSkipLimitCheck: true }) as GameStateWithFlowMemory
                                     ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
                                     break
                                 case "効果終了。ターン終了": {

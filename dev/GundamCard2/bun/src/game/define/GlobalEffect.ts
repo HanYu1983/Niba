@@ -24,6 +24,7 @@ export type GlobalEffectTitle =
     | ["_ユニットは、「サイコミュ」の効果において、交戦中として扱う。", string[]]
     | ["敵軍効果の対象にならない"]
     | ["敵軍ユニットの効果の対象にならない"]
+    | ["自軍の手札の上限枚数に＋_１", number]
 
 export type GlobalEffect = {
     title: GlobalEffectTitle,

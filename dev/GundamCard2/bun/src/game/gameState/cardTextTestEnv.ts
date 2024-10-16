@@ -44,6 +44,7 @@ export function testText(proto: CardPrototype, text: CardText) {
         ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), repeat(proto.id || "unknown", 9)) as GameState
       }
       ctx = setActivePlayerID(ctx, PlayerA) as GameState
+      const originGesLength = getGlobalEffects(ctx, null).length
       if (testEnv.thisCard) {
         const [side, kw, card, state] = testEnv.thisCard
         card.id = "TestCard"
@@ -106,40 +107,56 @@ export function testText(proto: CardPrototype, text: CardText) {
           }
 
           case "自動型": {
-            if (testEnv.eventTitle) {
-              const card = testEnv.thisCard?.[2]
-              if (card == null) {
-                throw new Error()
-              }
-              const gameEvent: GameEvent = {
-                title: testEnv.eventTitle,
-                cardIds: [card.id]
-              }
-              ctx = doTriggerEvent(ctx, gameEvent)
-              const effect: any = getImmediateEffects(ctx).find(eff => eff.text.id == text.id)
-              if (effect == null) {
-                throw new Error()
-              }
-              const cets = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)
-              if (cets.length == 0) {
-                console.log(createCommandEffectTips(ctx, effect).map(cet => cet.tipOrErrors))
-                throw new Error()
-              }
-              let successCount = 0
-              cets.forEach(cet => {
-                ctx = setTipSelectionForUser(ctx, effect, cet.logicID, cet.logicSubID)
-                ctx = doEffect(ctx, effect, cet.logicID, cet.logicSubID)
-                for (let i = 0; i < 99; ++i) {
-                  const effect = getTopEffect(ctx)
-                  if (effect) {
-                    ctx = doEffect(ctx, effect, 0, 0)
-                    ctx = removeEffect(ctx, effect.id) as GameState
+            const card = testEnv.thisCard?.[2]
+            if (card == null) {
+              throw new Error()
+            }
+            switch (text.title[1]) {
+              case "起動": {
+                if (testEnv.eventTitle) {
+                  const gameEvent: GameEvent = {
+                    title: testEnv.eventTitle,
+                    cardIds: [card.id]
                   }
+                  ctx = doTriggerEvent(ctx, gameEvent)
+                } else if (testEnv.event) {
+                  ctx = doTriggerEvent(ctx, testEnv.event)
+                } else {
+                  throw new Error("must has event")
                 }
-                successCount++
-              })
-              if (successCount != cets.length) {
-                throw new Error()
+                const effect: any = getImmediateEffects(ctx).find(eff => eff.text.id == text.id)
+                if (effect == null) {
+                  throw new Error()
+                }
+                const cets = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)
+                if (cets.length == 0) {
+                  console.log(createCommandEffectTips(ctx, effect).map(cet => cet.tipOrErrors))
+                  throw new Error()
+                }
+                let successCount = 0
+                cets.forEach(cet => {
+                  ctx = setTipSelectionForUser(ctx, effect, cet.logicID, cet.logicSubID)
+                  ctx = doEffect(ctx, effect, cet.logicID, cet.logicSubID)
+                  for (let i = 0; i < 99; ++i) {
+                    const effect = getTopEffect(ctx)
+                    if (effect) {
+                      ctx = doEffect(ctx, effect, 0, 0)
+                      ctx = removeEffect(ctx, effect.id) as GameState
+                    }
+                  }
+                  successCount++
+                })
+                if (successCount != cets.length) {
+                  throw new Error()
+                }
+                break
+              }
+              case "常駐":
+              case "恒常": {
+                const currentGesLength = getGlobalEffects(ctx, null).length
+                if (currentGesLength == originGesLength) {
+                  throw new Error()
+                }
               }
             }
             break

@@ -237,7 +237,8 @@ export type CreatePlayEffectFn = (ctx: any, effect: Effect, bridge: any) => Effe
 
 export type TestEnv = {
     eventTitle?: GameEventTitle,
-    thisCard?: [RelatedPlayerSideKeyword, BaSyouKeyword, Card, { destroyReason?: DestroyReason } | null],
+    event?: GameEvent,
+    thisCard?: [RelatedPlayerSideKeyword, BaSyouKeyword, Card, { destroyReason?: DestroyReason, flags?: { [key: string]: any } } | null],
     addCards?: [RelatedPlayerSideKeyword, BaSyouKeyword, Card[]][],
     createCards?: [RelatedPlayerSideKeyword, BaSyouKeyword, [string, number][]][],
     setGroupParent?: { [key: string]: string }

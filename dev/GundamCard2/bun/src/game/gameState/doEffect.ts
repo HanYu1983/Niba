@@ -331,7 +331,7 @@ export function getCardTipStrings(ctx: GameState, varName: string, cardId: strin
   return getCardTipSelection(ctx, varName, cardId, { assertTitle: ["StringOptions", [], []] }) as string[]
 }
 
-export function createPlayTextEffectFromEffect(ctx: GameState, e: Effect, options?: { conditions?: { [key: string]: Condition }, logicTreeAction?: LogicTreeAction, isOption?: boolean }): Effect {
+export function createPlayTextEffectFromEffect(ctx: GameState, e: Effect, options?: { conditions?: { [key: string]: Condition }, logicTreeAction?: LogicTreeAction, isOption?: boolean, description?: string }): Effect {
   const cardId = EffectFn.getCardID(e)
   const cardController = getItemController(ctx, cardId)
   /* 改在addImmediateEffectIfCanPayCost時判斷，未驗証
@@ -365,7 +365,7 @@ export function createPlayTextEffectFromEffect(ctx: GameState, e: Effect, option
   })
 }
 
-export function addImmediateEffectIfCanPayCost(ctx: GameState, effect: Effect): GameState {
+export function addImmediateEffectIfCanPayCost(ctx: GameState, effect: Effect, optoins?: { isSkipLimitCheck?: boolean }): GameState {
   const cets = createCommandEffectTips(ctx, effect)
   const cetsNoErr = cets.filter(CommandEffecTipFn.filterNoError)
   if (cetsNoErr.length == 0) {
@@ -375,17 +375,21 @@ export function addImmediateEffectIfCanPayCost(ctx: GameState, effect: Effect): 
   {
     // TODO 未驗証
     // 起動一回合只能用一次
-    const cardId = EffectFn.getCardID(effect)
-    let itemState = getItemState(ctx, cardId)
-    if (itemState.textIdsUseThisTurn?.includes(effect.text.id)) {
-      console.warn(`這個起動效果這回合已發動過: ${effect.text.description}`)
-      return ctx
+    if (optoins?.isSkipLimitCheck) {
+
+    } else {
+      const cardId = EffectFn.getCardID(effect)
+      let itemState = getItemState(ctx, cardId)
+      if (itemState.textIdsUseThisTurn?.includes(effect.text.id)) {
+        console.warn(`這個起動效果這回合已發動過: ${effect.text.description}`)
+        return ctx
+      }
+      itemState = {
+        ...itemState,
+        textIdsUseThisTurn: [...(itemState.textIdsUseThisTurn || []), effect.text.id]
+      }
+      ctx = setItemState(ctx, cardId, itemState) as GameState
     }
-    itemState = {
-      ...itemState,
-      textIdsUseThisTurn: [...(itemState.textIdsUseThisTurn || []), effect.text.id]
-    }
-    ctx = setItemState(ctx, cardId, itemState) as GameState
   }
   return addImmediateEffect(ctx, effect) as GameState
 }

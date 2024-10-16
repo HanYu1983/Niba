@@ -17,7 +17,7 @@ export type EffectReason =
     | ["PlayCard", PlayerID, string, { isPlayG?: boolean, isPlayUnit?: boolean, isPlayCharacter?: boolean, isPlayCommand?: boolean, isPlayOperationUnit?: boolean, isPlayOperation?: boolean }]
     | ["PlayText", PlayerID, string, string]
     // null代表系統負責
-    | ["GameRule", PlayerID | null, { isAttack?: boolean, isDefence?: boolean, isReturn?: boolean, isDamageCheck?: boolean, isDraw?: boolean, isReroll?: boolean }]
+    | ["GameRule", PlayerID | null, { isAttack?: boolean, isDefence?: boolean, isReturn?: boolean, isDamageCheck?: boolean, isDraw?: boolean, isReroll?: boolean, isDiscard?: boolean }]
     // 只要破壞狀態沒有被取消的話就會產生廢棄的效果, 這個移動效果不能被防止(p40, p72)
     | ["Destroy", PlayerID, string, DestroyReason]
     | ["Situation", PlayerID, string, Situation | null]
@@ -99,16 +99,16 @@ export const EffectFn = {
         }
     },
 
-    fromEffectBasic(e: Effect, options?: { reason?: EffectReason, conditions?: { [key: string]: Condition }, logicTreeAction?: LogicTreeAction, isOption?: boolean }): Effect {
+    fromEffectBasic(e: Effect, options?: { reason?: EffectReason, conditions?: { [key: string]: Condition }, logicTreeAction?: LogicTreeAction, isOption?: boolean, description?: string }): Effect {
         return {
             id: "",
             reason: options?.reason || e.reason,
-            description: e.description,
+            description: options?.description || e.description,
             isOption: options?.isOption,
             text: {
                 id: e.text.id,
                 title: e.text.title,
-                description: e.text.description,
+                description: options?.description || e.text.description,
                 conditions: options?.conditions || undefined,
                 logicTreeActions: options?.logicTreeAction ? [options.logicTreeAction] : [
                     {
