@@ -22,6 +22,7 @@ import { getCard } from "./CardTableComponent";
 import { getChip } from "./ChipTableComponent";
 import { getGlobalEffects } from "./globalEffects";
 import { GlobalEffect } from "../define/GlobalEffect";
+import { getPrototype } from "../../script";
 
 export type Entity = {
     itemController: PlayerID,
@@ -84,6 +85,7 @@ export function createEntityIterator(ctx: GameState) {
 
 export function createTipByEntitySearch(ctx: GameState, effect: Effect, searchOptions: EntitySearchOptions, options: { ges?: GlobalEffect[] }): Tip {
     const cardId = EffectFn.getCardID(effect)
+    const prototype = getItemPrototype(ctx, cardId)
     let entityList = createEntityIterator(ctx)
     {
         const opponentEffectNotTargetIds = options?.ges?.filter(ge => ge.title[0] == "敵軍効果の対象にならない").flatMap(ge => ge.cardIds) || []
@@ -210,7 +212,7 @@ export function createTipByEntitySearch(ctx: GameState, effect: Effect, searchOp
         })
     }
     if (searchOptions.isMaster != null) {
-        entityList = entityList.filter(entity => isCardMaster(ctx, getSetGroupRoot(ctx, entity.itemId), entity.itemId))
+        entityList = entityList.filter(entity => getItemRuntimeCategory(ctx, entity.itemId) == "キャラクター" && isCardMaster(ctx, getSetGroupRoot(ctx, entity.itemId), entity.itemId) == searchOptions.isMaster)
     }
     if (searchOptions.title) {
         entityList = entityList.filter(entity => searchOptions.title?.includes(entity.prototype?.title || ""))
@@ -237,6 +239,12 @@ export function createTipByEntitySearch(ctx: GameState, effect: Effect, searchOp
     }
     if (searchOptions.hasSetCard != null) {
         entityList = entityList.filter(EntityFn.filterHasSetCard(ctx, searchOptions.hasSetCard))
+    }
+    if (searchOptions.hasTitle) {
+        if (searchOptions.hasTitle.length == 0) {
+            searchOptions.hasTitle.push(prototype.title || "unknown")
+        }
+        entityList = entityList.filter(entity => searchOptions.hasTitle?.includes(getItemPrototype(ctx, entity.itemId).title || ""))
     }
     if (searchOptions.isDestroy != null) {
         entityList = entityList.filter(EntityFn.filterIsDestroy(searchOptions.isDestroy))

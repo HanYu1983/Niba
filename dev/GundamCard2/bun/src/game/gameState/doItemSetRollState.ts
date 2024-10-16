@@ -18,15 +18,15 @@ export function doItemSetRollState(ctx: GameState, isRoll: boolean, [itemId, ori
   }
   // 整個setGroup都要一起
   const itemIds = getSetGroup(ctx, itemId)
-  logCategory("doItemSetRollState", isRoll, itemIds)
   ctx = itemIds.reduce((ctx, willRollItemId) => {
     if (isCard(ctx, willRollItemId)) {
       let willRollItem = getCard(ctx, willRollItemId)
+      logCategory("doItemSetRollState", "willRollItemId", itemId, willRollItemId, isRoll, !!(willRollItem.isRoll), isRoll == willRollItem.isRoll)
       if(options?.isSkipTargetMissing){
     
       } else {
         // 只判斷自身有沒有違規
-        if (willRollItem.id == itemId && willRollItem.isRoll == isRoll) {
+        if (willRollItem.id == itemId && !!(willRollItem.isRoll) == isRoll) {
           throw new TargetMissingError(`card already isRoll: ${willRollItem.isRoll}: ${willRollItem.id}`)
         }
       }
@@ -40,7 +40,7 @@ export function doItemSetRollState(ctx: GameState, isRoll: boolean, [itemId, ori
     
       } else {
         // 只判斷自身有沒有違規
-        if (willRollItem.id == itemId && willRollItem.isRoll == isRoll) {
+        if (willRollItem.id == itemId && !!(willRollItem.isRoll) == isRoll) {
           throw new TargetMissingError(`chip already isRoll: ${willRollItem.isRoll}: ${willRollItem.id}`)
         }
       }

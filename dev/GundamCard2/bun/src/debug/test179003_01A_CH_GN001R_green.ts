@@ -62,6 +62,7 @@ export async function test179003_01A_CH_GN001R_green() {
         let cets = createCommandEffectTips(ctx, effect)
         cets = cets.filter(CommandEffecTipFn.filterNoError)
         if (cets.length != 1) {
+            console.log(cets)
             for (const cet of cets) {
                 console.log(cet.tipOrErrors)
             }

@@ -8,9 +8,6 @@
 
 import { CardColor, CardPrototype } from "../../game/define/CardPrototype";
 import { Condition } from "../../game/define/CardText";
-import { Effect } from "../../game/define/Effect";
-import { GameState } from "../../game/gameState/GameState";
-import { Bridge } from "../bridge";
 
 export const prototype: CardPrototype = {
   texts: [
@@ -19,26 +16,24 @@ export const prototype: CardPrototype = {
       description: "（攻撃ステップ）〔１〕：このカードをリロールする。",
       title: ["使用型", ["攻撃ステップ"]],
       testEnvs: [{
+        addCards: [["自軍", "戦闘エリア1", [{ id: "", protoID: "179901_00_U_GN002P_green_02", isRoll: true }]]],
         createCards: [
-          ["自軍", "戦闘エリア1", [["179901_00_U_GN002P_green_02", 1]]],
           ["自軍", "Gゾーン", [["unit", 1]]]
         ]
       }],
       conditions: {
         ...createRollCostRequire(1, null),
-        // TODO is roll
+        "このカードをリロールする": {
+          actions: [
+            {
+              title: ["_ロールする", "リロール"]
+            }
+          ]
+        }
       },
       logicTreeActions: [
         {
-          actions: [
-            {
-              title: ["cutIn", [
-                {
-                  title: ["_ロールする", "リロール"]
-                }
-              ]]
-            }
-          ]
+          actions: []
         }
       ]
     }

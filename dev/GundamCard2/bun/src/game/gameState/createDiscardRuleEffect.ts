@@ -40,9 +40,16 @@ export function createDiscardRuleEffect(ctx: GameState, playerId: PlayerID): Eff
                 {
                     actions: [
                         {
-                            title: ["_の_ハンガーに移す", "持ち主", "ジャンクヤード"],
-                            vars: ["調整"]
-                        },
+                            title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GameState {
+                                const cardId = DefineFn.EffectFn.getCardID(effect)
+                                const playerId = DefineFn.EffectFn.getPlayerID(effect)
+                                const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "調整", cardId)
+                                for (const pair of pairs) {
+                                    ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(playerId, "ジャンクヤード"), pair, { isSkipTargetMissing: true })
+                                }
+                                return ctx
+                            }.toString()
+                        }
                     ]
                 }
             ]

@@ -17,6 +17,30 @@ export const prototype: CardPrototype = {
       id: "",
       description: "（防御ステップ）〔１〕：このカードが戦闘エリアにいる場合、交戦中の敵軍部隊１つに３貫通ダメージを与える。自軍ユニットの「専用機のセット」が成立している場合、この効果のコストは〔０〕に変更される。",
       title: ["使用型", ["防御ステップ"]],
+      testEnvs: [
+        {
+          createCards: [
+            ["自軍", "戦闘エリア1", [["179009_03B_U_GN037C_green", 1]]],
+            ["自軍", "Gゾーン", [["unit", 1]]],
+            ["自軍", "戦闘エリア2", [["unit", 1]]],
+            ["敵軍", "戦闘エリア2", [["unit", 1]]],
+          ],
+        },
+        {
+          addCards: [
+            ["自軍", "配備エリア", [
+              { id: "char", protoID: "179901_CG_CH_GN001P_green" },
+              { id: "unit", protoID: "179901_00_U_GN002P_green_02" },
+            ]],
+          ],
+          createCards: [
+            ["自軍", "戦闘エリア1", [["179009_03B_U_GN037C_green", 1]]],
+            ["自軍", "戦闘エリア2", [["unit", 1]]],
+            ["敵軍", "戦闘エリア2", [["unit", 1]]],
+          ],
+          setGroupParent: { "char": "unit" }
+        },
+      ],
       conditions: {
         "自軍ユニットの「専用機のセット」が成立している場合": {
           actions: [

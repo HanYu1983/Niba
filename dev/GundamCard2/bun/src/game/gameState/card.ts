@@ -230,12 +230,17 @@ export function isCardMaster(
   unitCardID: string,
   cardID: string
 ): boolean {
-  const match = getItemCharacteristic(ctx, unitCardID).match(/専用「(.+?)」/);
+  logCategory("isCardMaster", unitCardID, cardID)
+  const char = getItemCharacteristic(ctx, unitCardID)
+  logCategory("isCardMaster", "getItemCharacteristic", char)
+  const match = char.match(/専用「(.+?)」/);
   if (match == null) {
     return false;
   }
   const [_, masterName] = match;
-  if (masterName != getCardTitle(ctx, cardID)) {
+  const title = getCardTitle(ctx, cardID)
+  logCategory("isCardMaster", masterName, title, masterName == title)
+  if (masterName != title) {
     return false;
   }
   return true;

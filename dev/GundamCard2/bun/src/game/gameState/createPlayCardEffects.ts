@@ -14,6 +14,7 @@ import { TipFn } from "../define/Tip"
 import { createBridge } from "../bridge/createBridge"
 import { ToolFn } from "../tool"
 import { GlobalEffect } from "../define/GlobalEffect"
+import { BaSyouKeywordFn } from "../define/BaSyou"
 
 export function createPlayCardEffects(ctx: GameState, cardId: string, options?: { isQuick?: boolean }): Effect[] {
     logCategory("createPlayCardEffects", "")
@@ -51,6 +52,19 @@ export function createPlayCardEffects(ctx: GameState, cardId: string, options?: 
     prototype.texts?.forEach((text) => {
         if (text.createPlayEffect == null) {
             return
+        }
+        if (basyou.value[1] == "Gゾーン") {
+            if (text.protectLevel != 2) {
+                return
+            }
+        }
+        // 非場所只有恒常能發動
+        if (BaSyouKeywordFn.isBa(basyou.value[1]) == false) {
+            if (text.title[0] == "自動型" && text.title[1] == "恒常") {
+
+            } else {
+                return
+            }
         }
         const effs = CardTextFn.getCreatePlayEffectFn(text)(ctx, {
             id: `createPlayCardEffects_${cardId}`,
@@ -636,7 +650,7 @@ export function createPlayCardConditions(ctx: GameState, cardId: string, options
         },
     } : {}
     const rollCostConditions = createRollCostConditions(ctx, prototype, prototype.rollCost || [], 0)
-    const characterConditions: { [key: string]: Condition } = (prototype.category == "キャラクター" || prototype.category == "オペレーション(ユニット)") ? {
+    const characterOperationUnitConditions: { [key: string]: Condition } = (prototype.category == "キャラクター" || prototype.category == "オペレーション(ユニット)") ? {
         [TipFn.createCharacterTargetUnitKey()]: {
             title: ["Entity", {
                 at: ["配備エリア"],
@@ -645,12 +659,26 @@ export function createPlayCardConditions(ctx: GameState, cardId: string, options
                 is: ["ユニット"],
                 count: 1
             }],
+        },
+    } : {}
+    const characterMoreConditions: { [key: string]: Condition } = prototype.category == "キャラクター" ? {
+        "同名卡不能下": {
+            actions: [
+                {
+                    title: ["Entity", {
+                        atBa: true,
+                        hasTitle: [],
+                        count: 0,
+                    }],
+                }
+            ]
         }
     } : {}
     const conditions: { [key: string]: Condition } = {
         ...costConditions,
         ...rollCostConditions,
-        ...characterConditions,
+        ...characterOperationUnitConditions,
+        ...characterMoreConditions
     }
     return conditions
 }

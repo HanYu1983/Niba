@@ -17380,7 +17380,8 @@ var hideCategory = [
   "createPlayStayEffect",
   "createPlayUnitEffect",
   "getGlobalEffects",
-  "createAllCardTexts"
+  "createAllCardTexts",
+  "isCardMaster"
 ], filterCategory = !0, logCategory = (category, ...msg) => {
   if (filterCategory) {
     if (hideCategory.find((c) => c == category))
@@ -19840,10 +19841,13 @@ var EffectFn = {
   isFakeCardID(string) {
     return string.startsWith("SystemFakeCardID_");
   },
+  createFakeCardID(textId) {
+    return `SystemFakeCardID_${textId}`;
+  },
   getCardID(ctx2) {
     switch (ctx2.reason[0]) {
       case "GameRule":
-        return `SystemFakeCardID_${ctx2.text.id}`;
+        return EffectFn.createFakeCardID(ctx2.text.id);
       case "PlayText":
       case "PlayCard":
       case "\u5834\u306B\u51FA\u308B":
@@ -19896,12 +19900,12 @@ var EffectFn = {
     return {
       id: "",
       reason: options?.reason || e.reason,
-      description: e.description,
+      description: options?.description || e.description,
       isOption: options?.isOption,
       text: {
         id: e.text.id,
         title: e.text.title,
-        description: e.text.description,
+        description: options?.description || e.text.description,
         conditions: options?.conditions || void 0,
         logicTreeActions: options?.logicTreeAction ? [options.logicTreeAction] : [
           {
@@ -20256,11 +20260,14 @@ function isCardCanReroll(ctx2, cardID, situation) {
   return !0;
 }
 function isCardMaster(ctx2, unitCardID, cardID) {
-  const match = getItemCharacteristic(ctx2, unitCardID).match(/専用「(.+?)」/);
+  logCategory("isCardMaster", unitCardID, cardID);
+  const char = getItemCharacteristic(ctx2, unitCardID);
+  logCategory("isCardMaster", "getItemCharacteristic", char);
+  const match = char.match(/専用「(.+?)」/);
   if (match == null)
     return !1;
-  const [_, masterName] = match;
-  if (masterName != getCardTitle(ctx2, cardID))
+  const [_, masterName] = match, title = getCardTitle(ctx2, cardID);
+  if (logCategory("isCardMaster", masterName, title, masterName == title), masterName != title)
     return !1;
   return !0;
 }
@@ -21329,13 +21336,12 @@ function doItemSetRollState(ctx2, isRoll, [itemId, originBasyou], options) {
     ;
   else
     assertTargetMissingError(ctx2, [itemId, originBasyou]);
-  const itemIds = getSetGroup(ctx2, itemId);
-  return logCategory("doItemSetRollState", isRoll, itemIds), ctx2 = itemIds.reduce((ctx3, willRollItemId) => {
+  return ctx2 = getSetGroup(ctx2, itemId).reduce((ctx3, willRollItemId) => {
     if (isCard(ctx3, willRollItemId)) {
       let willRollItem = getCard(ctx3, willRollItemId);
-      if (options?.isSkipTargetMissing)
+      if (logCategory("doItemSetRollState", "willRollItemId", itemId, willRollItemId, isRoll, !!willRollItem.isRoll, isRoll == willRollItem.isRoll), options?.isSkipTargetMissing)
         ;
-      else if (willRollItem.id == itemId && willRollItem.isRoll == isRoll)
+      else if (willRollItem.id == itemId && !!willRollItem.isRoll == isRoll)
         throw new TargetMissingError(`card already isRoll: ${willRollItem.isRoll}: ${willRollItem.id}`);
       return willRollItem = CardFn.setIsRoll(willRollItem, isRoll), ctx3 = setCard(ctx3, willRollItemId, willRollItem), ctx3;
     }
@@ -21343,7 +21349,7 @@ function doItemSetRollState(ctx2, isRoll, [itemId, originBasyou], options) {
       let willRollItem = getChip(ctx3, willRollItemId);
       if (options?.isSkipTargetMissing)
         ;
-      else if (willRollItem.id == itemId && willRollItem.isRoll == isRoll)
+      else if (willRollItem.id == itemId && !!willRollItem.isRoll == isRoll)
         throw new TargetMissingError(`chip already isRoll: ${willRollItem.isRoll}: ${willRollItem.id}`);
       return willRollItem = ChipFn.setIsRoll(willRollItem, isRoll), ctx3 = setChip(ctx3, willRollItemId, willRollItem), ctx3;
     }
@@ -21511,7 +21517,7 @@ function createEntityIterator(ctx2) {
   }), rets;
 }
 function createTipByEntitySearch(ctx2, effect, searchOptions, options) {
-  const cardId = EffectFn.getCardID(effect);
+  const cardId = EffectFn.getCardID(effect), prototype = getItemPrototype(ctx2, cardId);
   let entityList = createEntityIterator(ctx2);
   if ((options?.ges?.filter((ge) => ge.title[0] == "\u6575\u8ECD\u52B9\u679C\u306E\u5BFE\u8C61\u306B\u306A\u3089\u306A\u3044").flatMap((ge) => ge.cardIds) || []).length) {
     const effectController = EffectFn.getPlayerID(effect);
@@ -21612,7 +21618,7 @@ function createTipByEntitySearch(ctx2, effect, searchOptions, options) {
     });
   }
   if (searchOptions.isMaster != null)
-    entityList = entityList.filter((entity) => isCardMaster(ctx2, getSetGroupRoot(ctx2, entity.itemId), entity.itemId));
+    entityList = entityList.filter((entity) => getItemRuntimeCategory(ctx2, entity.itemId) == "\u30AD\u30E3\u30E9\u30AF\u30BF\u30FC" && isCardMaster(ctx2, getSetGroupRoot(ctx2, entity.itemId), entity.itemId) == searchOptions.isMaster);
   if (searchOptions.title)
     entityList = entityList.filter((entity) => searchOptions.title?.includes(entity.prototype?.title || ""));
   if (searchOptions.at?.length)
@@ -21631,6 +21637,11 @@ function createTipByEntitySearch(ctx2, effect, searchOptions, options) {
     entityList = entityList.filter(EntityFn.filterItemColor(ctx2, searchOptions.color));
   if (searchOptions.hasSetCard != null)
     entityList = entityList.filter(EntityFn.filterHasSetCard(ctx2, searchOptions.hasSetCard));
+  if (searchOptions.hasTitle) {
+    if (searchOptions.hasTitle.length == 0)
+      searchOptions.hasTitle.push(prototype.title || "unknown");
+    entityList = entityList.filter((entity) => searchOptions.hasTitle?.includes(getItemPrototype(ctx2, entity.itemId).title || ""));
+  }
   if (searchOptions.isDestroy != null)
     entityList = entityList.filter(EntityFn.filterIsDestroy(searchOptions.isDestroy));
   if (searchOptions.isRoll != null)
@@ -22833,7 +22844,7 @@ function createPlayCardConditions(ctx2, cardId, options) {
         }
       ]
     }
-  } : {}, rollCostConditions = createRollCostConditions(ctx2, prototype, prototype.rollCost || [], 0), characterConditions = prototype.category == "\u30AD\u30E3\u30E9\u30AF\u30BF\u30FC" || prototype.category == "\u30AA\u30DA\u30EC\u30FC\u30B7\u30E7\u30F3(\u30E6\u30CB\u30C3\u30C8)" ? {
+  } : {}, rollCostConditions = createRollCostConditions(ctx2, prototype, prototype.rollCost || [], 0), characterOperationUnitConditions = prototype.category == "\u30AD\u30E3\u30E9\u30AF\u30BF\u30FC" || prototype.category == "\u30AA\u30DA\u30EC\u30FC\u30B7\u30E7\u30F3(\u30E6\u30CB\u30C3\u30C8)" ? {
     [TipFn.createCharacterTargetUnitKey()]: {
       title: ["Entity", {
         at: ["\u914D\u5099\u30A8\u30EA\u30A2"],
@@ -22843,11 +22854,24 @@ function createPlayCardConditions(ctx2, cardId, options) {
         count: 1
       }]
     }
+  } : {}, characterMoreConditions = prototype.category == "\u30AD\u30E3\u30E9\u30AF\u30BF\u30FC" ? {
+    "\u540C\u540D\u5361\u4E0D\u80FD\u4E0B": {
+      actions: [
+        {
+          title: ["Entity", {
+            atBa: !0,
+            hasTitle: [],
+            count: 0
+          }]
+        }
+      ]
+    }
   } : {};
   return {
     ...costConditions,
     ...rollCostConditions,
-    ...characterConditions
+    ...characterOperationUnitConditions,
+    ...characterMoreConditions
   };
 }
 
@@ -23478,11 +23502,13 @@ function createPlayTextEffectFromEffect(ctx2, e, options) {
     reason: ["PlayText", cardController, cardId, e.text.id]
   });
 }
-function addImmediateEffectIfCanPayCost(ctx2, effect) {
+function addImmediateEffectIfCanPayCost(ctx2, effect, optoins) {
   const cets = createCommandEffectTips(ctx2, effect);
   if (cets.filter(CommandEffecTipFn.filterNoError).length == 0)
     return ctx2 = EventCenterFn.onAddImmediateEffectButConditionFail(ctx2, effect, cets), ctx2;
-  {
+  if (optoins?.isSkipLimitCheck)
+    ;
+  else {
     const cardId = EffectFn.getCardID(effect);
     let itemState = getItemState(ctx2, cardId);
     if (itemState.textIdsUseThisTurn?.includes(effect.text.id))
@@ -23971,6 +23997,51 @@ function createRerollPhaseRuleEffect(ctx2, playerId) {
   };
 }
 
+// src/game/gameState/createDiscardRuleEffect.ts
+function createDiscardRuleEffect(ctx2, playerId) {
+  return {
+    id: `createDiscardRuleEffect_${playerId}`,
+    reason: ["GameRule", playerId, { isDiscard: !0 }],
+    text: {
+      id: `createDiscardRuleEffect_text_${playerId}`,
+      title: [],
+      description: "\u8ABF\u6574\u624B\u724C\u70BA7\u5F35\u4EE5\u4E0B",
+      conditions: {
+        "\u8ABF\u6574": {
+          title: function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2, Options }) {
+            const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), hands = GameStateFn2.getPlayerHandIds(ctx3, playerId2), maxLen = 7 + (Options.ges?.map((ge) => {
+              if (ge.title[0] == "\u81EA\u8ECD\u306E\u624B\u672D\u306E\u4E0A\u9650\u679A\u6570\u306B\uFF0B_\uFF11" && ge.cardIds.some((cardId) => GameStateFn2.getItemController(ctx3, cardId) == playerId2))
+                return ge.title[1];
+              return 0;
+            }).reduce((a, b) => a + b, 0) || 0), discardLen = hands.length - maxLen;
+            if (discardLen <= 0)
+              throw new DefineFn2.TipError("");
+            const pairs = hands.map((id) => GameStateFn2.createStrBaSyouPair(ctx3, id));
+            return {
+              title: ["\u30AB\u30FC\u30C9", pairs, pairs.slice(0, discardLen)],
+              count: discardLen
+            };
+          }.toString()
+        }
+      },
+      logicTreeActions: [
+        {
+          actions: [
+            {
+              title: function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2, Options }) {
+                const cardId = DefineFn2.EffectFn.getCardID(effect), playerId2 = DefineFn2.EffectFn.getPlayerID(effect), pairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, "\u8ABF\u6574", cardId);
+                for (let pair3 of pairs)
+                  ctx3 = GameStateFn2.doItemMove(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, "\u30B8\u30E3\u30F3\u30AF\u30E4\u30FC\u30C9"), pair3, { isSkipTargetMissing: !0 });
+                return ctx3;
+              }.toString()
+            }
+          ]
+        }
+      ]
+    }
+  };
+}
+
 // src/game/gameStateWithFlowMemory/applyFlow.ts
 function applyFlow(ctx2, playerID, flow) {
   switch (logCategory("applyFlow", `${playerID} ${flow.id} ${flow.description}`, playerID, flow), flow.id) {
@@ -24147,7 +24218,10 @@ function applyFlow(ctx2, playerID, flow) {
                   ctx2 = addImmediateEffect(ctx2, createAttackPhaseRuleEffect(ctx2, ctx2.activePlayerID));
                   break;
                 }
-                case "\u30B9\u30C6\u30C3\u30D7\u958B\u59CB": {
+                case "\u30B9\u30C6\u30C3\u30D7\u958B\u59CB":
+                case "\u30B9\u30C6\u30C3\u30D7\u7D42\u4E86":
+                case "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0":
+                case "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02": {
                   ctx2 = checkIsBattle(ctx2), ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] });
                   break;
                 }
@@ -24162,7 +24236,10 @@ function applyFlow(ctx2, playerID, flow) {
                   ctx2 = addImmediateEffect(ctx2, createAttackPhaseRuleEffect(ctx2, PlayerIDFn.getOpponent(ctx2.activePlayerID)));
                   break;
                 }
-                case "\u30B9\u30C6\u30C3\u30D7\u958B\u59CB": {
+                case "\u30B9\u30C6\u30C3\u30D7\u958B\u59CB":
+                case "\u30B9\u30C6\u30C3\u30D7\u7D42\u4E86":
+                case "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0":
+                case "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02": {
                   ctx2 = checkIsBattle(ctx2), ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] });
                   break;
                 }
@@ -24177,7 +24254,10 @@ function applyFlow(ctx2, playerID, flow) {
                   ctx2 = addImmediateEffect(ctx2, createDamageRuleEffect(ctx2, ctx2.activePlayerID));
                   break;
                 }
-                case "\u30B9\u30C6\u30C3\u30D7\u958B\u59CB": {
+                case "\u30B9\u30C6\u30C3\u30D7\u958B\u59CB":
+                case "\u30B9\u30C6\u30C3\u30D7\u7D42\u4E86":
+                case "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0":
+                case "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02": {
                   ctx2 = checkIsBattle(ctx2), ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] });
                   break;
                 }
@@ -24210,7 +24290,7 @@ function applyFlow(ctx2, playerID, flow) {
                   ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] });
                   break;
                 case "\u624B\u672D\u8ABF\u6574":
-                  ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] });
+                  ctx2 = addImmediateEffectIfCanPayCost(ctx2, createDiscardRuleEffect(ctx2, PlayerA), { isSkipLimitCheck: !0 }), ctx2 = addImmediateEffectIfCanPayCost(ctx2, createDiscardRuleEffect(ctx2, PlayerB), { isSkipLimitCheck: !0 }), ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] });
                   break;
                 case "\u52B9\u679C\u7D42\u4E86\u3002\u30BF\u30FC\u30F3\u7D42\u4E86": {
                   if (ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] }), ctx2.activePlayerID == null)

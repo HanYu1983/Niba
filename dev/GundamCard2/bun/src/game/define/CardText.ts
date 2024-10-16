@@ -107,6 +107,7 @@ export type EntitySearchOptions = {
     isBattleGroupFirst?: boolean,
     isRoll?: boolean,
     isCanSetCharacter?: boolean,
+    hasTitle?: string[],
     hasSetCard?: boolean,
     hasSpecialEffect?: TextSpeicalEffect[],
     hasChar?: string[],

@@ -55,6 +55,7 @@ const hideCategory: string[] = [
   "createPlayUnitEffect",
   "getGlobalEffects",
   "createAllCardTexts",
+  "isCardMaster"
 ];
 let filterCategory = true;
 

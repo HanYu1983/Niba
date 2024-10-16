@@ -46,15 +46,21 @@ export const CardView = (props: {
   const card = useMemo(() => {
     return getCard(appContext.viewModel.model.gameState, props.cardID || "unknown");
   }, [props.cardID, appContext.viewModel.model.gameState]);
+  const itemState = useMemo(() => {
+    return getItemState(appContext.viewModel.model.gameState, props.cardID || "unknown")
+  }, [appContext.viewModel.model.gameState])
   const renderItemState = useMemo(() => {
-    const itemState = getItemState(appContext.viewModel.model.gameState, props.cardID || "unknown")
     return <div>
       <div>damage: {itemState.damage}</div>
       <div>destroy: {itemState.destroyReason?.id}</div>
+      <div>isCheat: {itemState.isCheat}</div>
     </div>
-  }, [props.cardID, appContext.viewModel.model.gameState])
+  }, [props.cardID, itemState])
   const isVisible = useMemo(() => {
     if (props.isCheat) {
+      return true
+    }
+    if (itemState.isCheat) {
       return true
     }
     if (card.isFaceDown) {
@@ -72,7 +78,7 @@ export const CardView = (props: {
       }
     }
     return card.isFaceDown != true
-  }, [props.clientId, props.isCheat, card, appContext.viewModel.model.gameState]);
+  }, [props.clientId, props.isCheat, card, appContext.viewModel.model.gameState, itemState]);
   const renderBp = useMemo(() => {
     const bp = getSetGroupBattlePoint(appContext.viewModel.model.gameState, props.cardID || "unknown", { ges: getGlobalEffects(appContext.viewModel.model.gameState, null) })
     return <div>{bp[0]}/{bp[1]}/{bp[2]}</div>

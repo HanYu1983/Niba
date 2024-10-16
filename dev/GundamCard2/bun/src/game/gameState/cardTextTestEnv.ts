@@ -19,6 +19,8 @@ import { CardPrototype } from "../define/CardPrototype";
 import { CardText } from "../define/CardText";
 import { setSetGroupParent } from "./SetGroupComponent";
 import { getGlobalEffects, setGlobalEffects } from "./globalEffects";
+import { checkIsBattle } from "./IsBattleComponent";
+import { isCardMaster } from "./card";
 
 export async function testAllCardTextTestEnv() {
   const all = createDecks().flatMap(v => v).concat(...["unit", "unitHasPhy", "charBlue"])
@@ -65,6 +67,7 @@ export function testText(proto: CardPrototype, text: CardText) {
           }
         }
       }
+      ctx = checkIsBattle(ctx) as GameState
       if (testEnv.setGroupParent) {
         for (const cardId in testEnv.setGroupParent) {
           const parent = testEnv.setGroupParent[cardId]

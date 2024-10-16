@@ -40,11 +40,15 @@ export const EffectFn = {
         return string.startsWith("SystemFakeCardID_")
     },
 
+    createFakeCardID(textId: string): string {
+        return `SystemFakeCardID_${textId}`
+    },
+
     getCardID(ctx: Effect): string {
         switch (ctx.reason[0]) {
             case "GameRule":
                 // 通常GameRule是沒有第三個cardId的, 存在的目的是為了方便套用程式碼邏輯, 讓沒有cardId的效果也能存入TipSelection到ItemState中
-                return `SystemFakeCardID_${ctx.text.id}`
+                return EffectFn.createFakeCardID(ctx.text.id)
             case "PlayText":
             case "PlayCard":
             case "場に出る":
