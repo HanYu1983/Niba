@@ -1,6 +1,6 @@
 import { logCategory } from "../../tool/logger";
 import { PhaseFn, SiYouTiming } from "../define/Timing";
-import { CardText, Condition } from "../define/CardText";
+import { CardText, CardTextFn, Condition } from "../define/CardText";
 import { PlayerA, PlayerB, PlayerID } from "../define/PlayerID";
 import { AbsoluteBaSyouFn, BaSyouKeywordFn } from "../define/BaSyou";
 import { addCards, createCardWithProtoIds, getCard } from "./CardTableComponent";
@@ -14,6 +14,7 @@ import { getPhase, setPhase } from "./PhaseComponent";
 import { getCardHasSpeicalEffect, getCardTexts } from "./card";
 import { createTextsFromSpecialEffect } from "./createTextsFromSpecialEffect";
 import { getGlobalEffects, setGlobalEffects } from "./globalEffects";
+import { LogicTree } from "../../tool/logicTree";
 
 export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
     logCategory("createPlayEffects", "")
@@ -45,7 +46,7 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
                         if (getItemPrototype(ctx, cardId).category == "コマンド") {
                             return []
                         }
-                        if (getCardHasSpeicalEffect(ctx, ["クイック"], cardId, {ges: ges})) {
+                        if (getCardHasSpeicalEffect(ctx, ["クイック"], cardId, { ges: ges })) {
                             // クイック不判斷使用時機inTiming
                             return createPlayCardEffects(ctx, cardId, { isQuick: true })
                         }
@@ -80,7 +81,7 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
         map(basyou => {
             const cardIds = getItemIdsByBasyou(ctx, basyou)
             return cardIds.flatMap(
-                cardId => getCardTexts(ctx, cardId, {ges: ges})
+                cardId => getCardTexts(ctx, cardId, { ges: ges })
                     .flatMap(text => {
                         if (AbsoluteBaSyouFn.getBaSyouKeyword(basyou) == "Gゾーン") {
                             if (text.protectLevel != 2) {
@@ -129,6 +130,20 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
                                 ]
                             }
                         }
+                        // 合併邏輯樹
+                        const logicLeafs: LogicTree[] = Object.keys(playTextConditions).map(k => {
+                            const ret: LogicTree = {
+                                type: "Leaf",
+                                value: k
+                            }
+                            return ret
+                        })
+                        const logicTree: LogicTree = {
+                            type: "And",
+                            children: text.logicTreeActions?.[0] ?
+                                [...logicLeafs, ...CardTextFn.getLogicTreeTreeLeafs(text, text.logicTreeActions[0])] :
+                                logicLeafs
+                        }
                         return {
                             id: `createPlayEffects_${playerId}_${cardId}_${text.id}`,
                             reason: ["PlayText", playerId, cardId, text.id],
@@ -138,7 +153,13 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
                                 conditions: {
                                     ...text.conditions,
                                     ...playTextConditions
-                                }
+                                },
+                                logicTreeActions: [
+                                    {
+                                        logicTree: logicTree,
+                                        actions: text.logicTreeActions?.[0].actions || []
+                                    }
+                                ]
                             }
                         } as Effect
                     })

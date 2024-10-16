@@ -21880,6 +21880,22 @@ function createActionTitleFn(action) {
   if (typeof action.title == "string")
     return ActionFn.getTitleFn(action);
   switch (action.title[0]) {
+    case "\u770B\u898Bsee": {
+      const varNames2 = action.vars;
+      return function(ctx2, effect) {
+        const cardId = EffectFn.getCardID(effect);
+        if (varNames2 == null)
+          throw new Error;
+        const tips = varNames2.flatMap((varName) => {
+          return getItemState(ctx2, cardId).tips[varName];
+        });
+        for (let tip of tips)
+          if (tip.cheatCardIds)
+            for (let cardId2 of tip.cheatCardIds)
+              ctx2 = mapItemState(ctx2, cardId2, (is) => ({ ...is, isCheat: !0 }));
+        return ctx2;
+      };
+    }
     case "\u3053\u306E\u30AB\u30FC\u30C9\u304C\u653B\u6483\u306B\u51FA\u6483\u3057\u3066\u3044\u308B":
       return function(ctx2, effect) {
         const cardId = EffectFn.getCardID(effect);
@@ -23896,7 +23912,7 @@ function createAttackPhaseRuleEffect(ctx2, playerId) {
                 const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), fackCardId = DefineFn2.EffectFn.getCardID(effect), spacePairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, "\u53BB\u5B87\u5B99", fackCardId), phase2 = GameStateFn2.getPhase(ctx3);
                 for (let pair3 of spacePairs)
                   ctx3 = GameStateFn2.mapItemState(ctx3, pair3[0], (is) => ({ ...is, isAttack: phase2[1] == "\u653B\u6483\u30B9\u30C6\u30C3\u30D7", isDefence: phase2[1] == "\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7" })), ctx3 = GameStateFn2.doItemMove(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, "\u6226\u95D8\u30A8\u30EA\u30A22"), pair3);
-                return ctx3;
+                return ctx3 = GameStateFn2.checkIsBattle(ctx3), ctx3;
               }.toString()
             }
           ],
@@ -24274,7 +24290,13 @@ function applyFlow(ctx2, playerID, flow) {
                 case "\u30B9\u30C6\u30C3\u30D7\u7D42\u4E86":
                 case "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0":
                 case "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02": {
-                  ctx2 = checkIsBattle(ctx2), ctx2 = updateCommand(ctx2), ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] });
+                  ctx2 = checkIsBattle(ctx2), ctx2 = updateCommand(ctx2), ctx2 = {
+                    ...ctx2,
+                    flowMemory: {
+                      ...ctx2.flowMemory,
+                      hasPlayerPassCut: {}
+                    }
+                  }, ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] });
                   break;
                 }
                 default:
@@ -24292,7 +24314,13 @@ function applyFlow(ctx2, playerID, flow) {
                 case "\u30B9\u30C6\u30C3\u30D7\u7D42\u4E86":
                 case "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0":
                 case "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02": {
-                  ctx2 = checkIsBattle(ctx2), ctx2 = updateCommand(ctx2), ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] });
+                  ctx2 = checkIsBattle(ctx2), ctx2 = updateCommand(ctx2), ctx2 = {
+                    ...ctx2,
+                    flowMemory: {
+                      ...ctx2.flowMemory,
+                      hasPlayerPassCut: {}
+                    }
+                  }, ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] });
                   break;
                 }
                 default:
@@ -24310,7 +24338,13 @@ function applyFlow(ctx2, playerID, flow) {
                 case "\u30B9\u30C6\u30C3\u30D7\u7D42\u4E86":
                 case "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0":
                 case "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02": {
-                  ctx2 = checkIsBattle(ctx2), ctx2 = updateCommand(ctx2), ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] });
+                  ctx2 = checkIsBattle(ctx2), ctx2 = updateCommand(ctx2), ctx2 = {
+                    ...ctx2,
+                    flowMemory: {
+                      ...ctx2.flowMemory,
+                      hasPlayerPassCut: {}
+                    }
+                  }, ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] });
                   break;
                 }
                 default:

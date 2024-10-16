@@ -17,6 +17,7 @@ import { loadPrototype } from "../script";
 import { TipError } from "../game/define/GameError";
 import { TipOrErrorsFn } from "../game/define/CommandEffectTip";
 import { getGlobalEffects, setGlobalEffects } from "../game/gameState/globalEffects";
+import { mapItemState } from "../game/gameState/ItemStateComponent";
 
 export async function testCrossWeapon() {
     await loadPrototype("unitHasCrossWeaponABC")
@@ -65,6 +66,8 @@ export async function testCrossWeapon() {
                 throw new Error()
             }
             try {
+                // 強制清除回合上限旗標
+                ctx = mapItemState(ctx, unitHasCrossWeaponABC.id, is => ({ ...is, textIdsUseThisTurn: []})) as GameState
                 ctx = doEffect(ctx, playEffect, 0, 0)
                 throw new Error()
             } catch (e) {
