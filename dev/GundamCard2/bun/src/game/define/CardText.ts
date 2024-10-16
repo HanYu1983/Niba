@@ -83,6 +83,7 @@ export type ActionTitle =
     | ["同回合上限", number]
     | ["このカードが攻撃に出撃している"]
     | ["このカードが交戦中の場合"]
+    | ["看見see"]
 
 export type Action = {
     title: ActionTitle,

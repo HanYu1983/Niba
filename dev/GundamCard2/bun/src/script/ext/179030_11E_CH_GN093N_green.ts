@@ -38,6 +38,12 @@ export const prototype: CardPrototype = {
                   cardCategory: ["ユニット"],
                   max: 1,
                 }],
+                actions: [
+                  {
+                    title: ["看見see"],
+                    vars: ["自軍本国の上のカード１～２枚を見て、その中にある「サイコミュ」を持つユニット１枚"]
+                  }
+                ]
               }
             },
             logicTreeAction: {

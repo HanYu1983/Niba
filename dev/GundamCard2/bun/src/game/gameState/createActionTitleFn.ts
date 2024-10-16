@@ -57,6 +57,27 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
     return ActionFn.getTitleFn(action)
   }
   switch (action.title[0]) {
+    case "看見see": {
+      const varNames = action.vars
+      return function (ctx: GameState, effect: Effect): GameState {
+        // 使用了卡牌後, 同一個回合不能再使用. 以下記錄使用過的卡片, 會在切入結束後清除
+        const cardId = EffectFn.getCardID(effect)
+        if (varNames == null) {
+          throw new Error()
+        }
+        const tips = varNames.flatMap(varName => {
+          return getItemState(ctx, cardId).tips[varName]
+        })
+        for (const tip of tips) {
+          if (tip.cheatCardIds) {
+            for (const cardId of tip.cheatCardIds) {
+              ctx = mapItemState(ctx, cardId, is => ({ ...is, isCheat: true })) as GameState
+            }
+          }
+        }
+        return ctx
+      }
+    }
     case "このカードが攻撃に出撃している":
       return function (ctx: GameState, effect: Effect): GameState {
         // 使用了卡牌後, 同一個回合不能再使用. 以下記錄使用過的卡片, 會在切入結束後清除
