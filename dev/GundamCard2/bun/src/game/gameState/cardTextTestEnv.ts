@@ -16,14 +16,15 @@ import { doTriggerEvent } from "./doTriggerEvent";
 import { CommandEffecTipFn } from "../define/CommandEffectTip";
 import { mapItemState, setItemState } from "./ItemStateComponent";
 import { CardPrototype } from "../define/CardPrototype";
-import { CardText } from "../define/CardText";
+import { CardText, TextSpeicalEffectFn } from "../define/CardText";
 import { setSetGroupParent } from "./SetGroupComponent";
 import { getGlobalEffects, setGlobalEffects } from "./globalEffects";
 import { checkIsBattle } from "./IsBattleComponent";
 import { isCardMaster } from "./card";
+import { createTextsFromSpecialEffect } from "./createTextsFromSpecialEffect";
 
 export async function testAllCardTextTestEnv() {
-  const all = createDecks().flatMap(v => v).concat(...["unit", "unitHasPhy", "charBlue"])
+  const all = createDecks().flatMap(v => v).concat(...["unit", "unitHasPhy", "charBlue", "unitHasGain"])
   for (const id of all) {
     await loadPrototype(id)
   }
@@ -32,6 +33,9 @@ export async function testAllCardTextTestEnv() {
       testText(proto, proto.commandText)
     }
     proto.texts?.forEach(text => {
+      testText(proto, text)
+    })
+    proto.texts?.flatMap(text => text.title[0] == "特殊型" ? createTextsFromSpecialEffect(text, {}) : []).forEach(text => {
       testText(proto, text)
     })
   })
@@ -83,6 +87,7 @@ export function testText(proto: CardPrototype, text: CardText) {
             let effects = createPlayEffects(ctx, PlayerA)
             const effect: any = effects.find(eff => eff.text.id == text.id)
             if (effect == null) {
+              console.log(effects)
               throw new Error()
             }
             const cets = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)

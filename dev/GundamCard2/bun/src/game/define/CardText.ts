@@ -35,6 +35,25 @@ export type TextSpeicalEffect =
 export const TextSpeicalEffectFn = {
     isSameKeyword(left: TextSpeicalEffect, right: TextSpeicalEffect): boolean {
         return left[0] == right[0]
+    },
+    createAll(): TextSpeicalEffect[] {
+        return [
+            ["1枚制限"],
+            ["【PS装甲】"],
+            ["【ステイ】"],
+            ["クイック"],
+            ["クロスウェポン", ""],
+            ["ゲイン"],
+            ["サイコミュ", 0],
+            ["供給"],
+            ["共有", ""],
+            ["強襲"],
+            ["戦闘配備"],
+            ["改装", ""],
+            ["範囲兵器", 0],
+            ["速攻"],
+            ["高機動"]
+        ]
     }
 }
 
