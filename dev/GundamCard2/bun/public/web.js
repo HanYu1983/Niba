@@ -22375,6 +22375,15 @@ function createPlayCardEffects(ctx2, cardId, options) {
   return prototype.texts?.forEach((text) => {
     if (text.createPlayEffect == null)
       return;
+    if (basyou.value[1] == "G\u30BE\u30FC\u30F3") {
+      if (text.protectLevel != 2)
+        return;
+    }
+    if (BaSyouKeywordFn.isBa(basyou.value[1]) == !1)
+      if (text.title[0] == "\u81EA\u52D5\u578B" && text.title[1] == "\u6052\u5E38")
+        ;
+      else
+        return;
     CardTextFn.getCreatePlayEffectFn(text)(ctx2, {
       id: `createPlayCardEffects_${cardId}`,
       reason: ["PlayCard", playerId, cardId, {
@@ -24222,7 +24231,7 @@ function applyFlow(ctx2, playerID, flow) {
                 case "\u30B9\u30C6\u30C3\u30D7\u7D42\u4E86":
                 case "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0":
                 case "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02": {
-                  ctx2 = checkIsBattle(ctx2), ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] });
+                  ctx2 = checkIsBattle(ctx2), ctx2 = updateCommand(ctx2), ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] });
                   break;
                 }
                 default:
@@ -24240,7 +24249,7 @@ function applyFlow(ctx2, playerID, flow) {
                 case "\u30B9\u30C6\u30C3\u30D7\u7D42\u4E86":
                 case "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0":
                 case "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02": {
-                  ctx2 = checkIsBattle(ctx2), ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] });
+                  ctx2 = checkIsBattle(ctx2), ctx2 = updateCommand(ctx2), ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] });
                   break;
                 }
                 default:
@@ -24258,7 +24267,7 @@ function applyFlow(ctx2, playerID, flow) {
                 case "\u30B9\u30C6\u30C3\u30D7\u7D42\u4E86":
                 case "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0":
                 case "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02": {
-                  ctx2 = checkIsBattle(ctx2), ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] });
+                  ctx2 = checkIsBattle(ctx2), ctx2 = updateCommand(ctx2), ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] });
                   break;
                 }
                 default:
@@ -24272,8 +24281,11 @@ function applyFlow(ctx2, playerID, flow) {
                   ctx2 = addImmediateEffect(ctx2, createReturnRuleEffect(ctx2, ctx2.activePlayerID));
                   break;
                 }
-                case "\u30B9\u30C6\u30C3\u30D7\u958B\u59CB": {
-                  ctx2 = checkIsBattle(ctx2), ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] });
+                case "\u30B9\u30C6\u30C3\u30D7\u958B\u59CB":
+                case "\u30B9\u30C6\u30C3\u30D7\u7D42\u4E86":
+                case "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0":
+                case "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02": {
+                  ctx2 = checkIsBattle(ctx2), ctx2 = updateCommand(ctx2), ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] });
                   break;
                 }
                 default:
@@ -25657,8 +25669,9 @@ var jsx_dev_runtime2 = __toESM(require_react_jsx_dev_runtime_development(), 1), 
     });
   }, [flows]), card = import_react2.useMemo(() => {
     return getCard(appContext.viewModel.model.gameState, props.cardID || "unknown");
-  }, [props.cardID, appContext.viewModel.model.gameState]), renderItemState = import_react2.useMemo(() => {
-    const itemState = getItemState(appContext.viewModel.model.gameState, props.cardID || "unknown");
+  }, [props.cardID, appContext.viewModel.model.gameState]), itemState = import_react2.useMemo(() => {
+    return getItemState(appContext.viewModel.model.gameState, props.cardID || "unknown");
+  }, [appContext.viewModel.model.gameState]), renderItemState = import_react2.useMemo(() => {
     return /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
       children: [
         /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
@@ -25672,11 +25685,19 @@ var jsx_dev_runtime2 = __toESM(require_react_jsx_dev_runtime_development(), 1), 
             "destroy: ",
             itemState.destroyReason?.id
           ]
+        }, void 0, !0, void 0, this),
+        /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
+          children: [
+            "isCheat: ",
+            itemState.isCheat
+          ]
         }, void 0, !0, void 0, this)
       ]
     }, void 0, !0, void 0, this);
-  }, [props.cardID, appContext.viewModel.model.gameState]), isVisible = import_react2.useMemo(() => {
+  }, [props.cardID, itemState]), isVisible = import_react2.useMemo(() => {
     if (props.isCheat)
+      return !0;
+    if (itemState.isCheat)
       return !0;
     if (card.isFaceDown)
       switch (getItemBaSyou(appContext.viewModel.model.gameState, card.id).value[1]) {
@@ -25689,7 +25710,7 @@ var jsx_dev_runtime2 = __toESM(require_react_jsx_dev_runtime_development(), 1), 
           break;
       }
     return card.isFaceDown != !0;
-  }, [props.clientId, props.isCheat, card, appContext.viewModel.model.gameState]), renderBp = import_react2.useMemo(() => {
+  }, [props.clientId, props.isCheat, card, appContext.viewModel.model.gameState, itemState]), renderBp = import_react2.useMemo(() => {
     const bp = getSetGroupBattlePoint(appContext.viewModel.model.gameState, props.cardID || "unknown", { ges: getGlobalEffects(appContext.viewModel.model.gameState, null) });
     return /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
       children: [
@@ -26416,8 +26437,8 @@ function ClientView(props) {
 
 // src/client/component/ControlView.tsx
 var import_react9 = __toESM(require_react_development(), 1);
-var jsx_dev_runtime9 = __toESM(require_react_jsx_dev_runtime_development(), 1), DECK_BLACK_T3 = ["179015_04B_O_BK010C_black", "179015_04B_O_BK010C_black", "179015_04B_U_BK058R_black", "179015_04B_U_BK058R_black", "179015_04B_U_BK059C_black", "179015_04B_U_BK059C_black", "179015_04B_U_BK061C_black", "179015_04B_U_BK061C_black", "179016_04B_U_BK066C_black", "179016_04B_U_BK066C_black", "179019_02A_C_BK015S_black", "179019_02A_C_BK015S_black", "179020_05C_U_BK100U_black", "179020_05C_U_BK100U_black", "179023_06C_C_BK048R_black", "179023_06C_C_BK048R_black", "179023_06C_C_BK049U_black", "179023_06C_C_BK049U_black", "179024_04B_C_BK027U_black", "179024_04B_C_BK027U_black", "179024_04B_U_BK060C_black", "179024_04B_U_BK060C_black", "179024_04B_U_BK067C_black", "179024_04B_U_BK067C_black", "179024_B2B_C_BK054C_black", "179024_B2B_C_BK054C_black", "179024_B2B_U_BK128S_black_02", "179024_B2B_U_BK128S_black_02", "179024_B2B_U_BK129R_black", "179024_B2B_U_BK129R_black", "179027_09D_C_BK063R_black", "179027_09D_C_BK063R_black", "179027_09D_O_BK010N_black", "179027_09D_O_BK010N_black", "179027_09D_U_BK163S_black", "179027_09D_U_BK163S_black", "179027_09D_U_BK163S_black", "179029_06C_C_BK045U_black", "179029_06C_C_BK045U_black", "179029_B3C_C_BK071N_black", "179029_B3C_C_BK071N_black", "179029_B3C_U_BK184N_black", "179029_B3C_U_BK184N_black", "179029_B3C_U_BK184N_black", "179029_B3C_U_BK185N_black", "179029_B3C_U_BK185N_black", "179030_11E_U_BK194S_2_black", "179030_11E_U_BK194S_2_black", "179030_11E_U_BK194S_2_black", "179901_B2B_C_BK005P_black"], DECK_WHITE_SPEED = ["179001_01A_CH_WT007R_white", "179004_01A_CH_WT009R_white", "179004_01A_CH_WT010C_white", "179007_02A_U_WT027U_white", "179007_02A_U_WT027U_white", "179008_02A_U_WT034U_white", "179008_02A_U_WT034U_white", "179008_02A_U_WT034U_white", "179014_03B_CH_WT027R_white", "179015_04B_U_WT067C_white", "179015_04B_U_WT067C_white", "179015_04B_U_WT067C_white", "179016_04B_U_WT074C_white", "179016_04B_U_WT074C_white", "179016_04B_U_WT074C_white", "179016_04B_U_WT075C_white", "179016_04B_U_WT075C_white", "179016_04B_U_WT075C_white", "179019_01A_C_WT010C_white", "179019_01A_C_WT010C_white", "179019_02A_U_WT028R_white", "179019_02A_U_WT028R_white", "179022_06C_CH_WT057R_white", "179022_06C_CH_WT057R_white", "179022_06C_CH_WT057R_white", "179022_06C_U_WT113R_white", "179022_06C_U_WT113R_white", "179022_06C_U_WT113R_white", "179023_06C_CH_WT067C_white", "179024_03B_U_WT057U_white", "179024_03B_U_WT057U_white", "179025_07D_C_WT060U_white", "179025_07D_CH_WT075C_white", "179025_07D_CH_WT075C_white", "179025_07D_CH_WT075C_white", "179027_09D_C_WT067R_white", "179027_09D_C_WT067R_white", "179029_B3C_CH_WT102R_white", "179029_B3C_CH_WT103N_white", "179029_B3C_U_WT196R_white", "179030_11E_C_WT077S_white", "179030_11E_C_WT077S_white", "179030_11E_C_WT077S_white", "179030_11E_CH_WT108N_white", "179901_00_C_WT003P_white", "179901_00_C_WT003P_white", "179901_00_C_WT003P_white", "179901_CG_C_WT001P_white", "179901_CG_C_WT001P_white", "179901_CG_CH_WT002P_white"];
-var DECK_W_RANGE = ["179001_01A_CH_WT006C_white", "179003_01A_O_WT001C_white", "179003_01A_O_WT001C_white", "179003_01A_O_WT001C_white", "179003_01A_U_WT011C_white", "179003_01A_U_WT011C_white", "179003_01A_U_WT011C_white", "179009_03B_U_WT044U_white", "179009_03B_U_WT044U_white", "179009_03B_U_WT044U_white", "179009_03B_U_WT045U_white", "179009_03B_U_WT045U_white", "179009_03B_U_WT045U_white", "179015_04B_O_WT005U_white", "179015_04B_O_WT005U_white", "179015_04B_O_WT005U_white", "179019_01A_U_WT003C_white", "179019_01A_U_WT003C_white", "179019_01A_U_WT003C_white", "179019_02A_C_WT012U_white", "179019_02A_C_WT012U_white", "179019_02A_C_WT012U_white", "179019_02A_U_WT031C_white", "179019_02A_U_WT031C_white", "179019_02A_U_WT031C_white", "179023_06C_C_WT055C_white", "179023_06C_C_WT055C_white", "179023_06C_C_WT055C_white", "179024_03B_U_WT039R_white", "179024_03B_U_WT039R_white", "179024_03B_U_WT039R_white", "179024_03B_U_WT042U_white", "179024_03B_U_WT042U_white", "179024_03B_U_WT042U_white", "179025_07D_CH_WT075C_white", "179025_07D_CH_WT075C_white", "179027_09D_O_WT014N_white", "179027_09D_O_WT014N_white", "179027_09D_O_WT014N_white", "179028_10D_CH_WT095_white", "179028_10D_U_WT177R_white", "179030_11E_C_WT077S_white", "179030_11E_C_WT077S_white", "179030_11E_C_WT077S_white", "179030_11E_C_WT078R_white", "179030_11E_C_WT078R_white", "179030_11E_C_WT078R_white", "179901_00_U_WT001P_white_02", "179901_00_U_WT001P_white_02", "179901_00_U_WT001P_white_02"], DECK_GREEN_APU = ["179003_01A_C_GN003R_green", "179003_01A_CH_GN001R_green", "179003_01A_U_GN001R_green", "179003_01A_U_GN001R_green", "179003_01A_U_GN001R_green", "179003_01A_U_GN008R_green_02", "179003_01A_U_GN008R_green_02", "179003_01A_U_GN008R_green_02", "179007_02A_U_GN020R_green", "179009_03B_U_GN036U_green", "179009_03B_U_GN036U_green", "179009_03B_U_GN036U_green", "179009_03B_U_GN037C_green", "179009_03B_U_GN037C_green", "179009_03B_U_GN037C_green", "179009_03B_U_GN042R_green", "179009_03B_U_GN042R_green", "179009_03B_U_GN042R_green", "179015_04B_CH_GN030R_green", "179015_04B_U_GN053U_green", "179015_04B_U_GN055R_green_haku", "179015_04B_U_GN055R_green_haku", "179016_04B_CH_GN035R_green", "179016_04B_CH_GN036C_green", "179016_04B_CH_GN036C_green", "179018_05C_U_GN082U_green", "179019_02A_U_GN024U_green", "179019_02A_U_GN024U_green", "179019_02A_U_GN024U_green", "179024_B2B_C_GN052C_green", "179025_07D_C_GN056U_green", "179025_07D_CH_GN070C_green", "179029_05C_U_GN077R_green", "179030_11E_C_GN074R_green", "179030_11E_CH_GN093N_green", "179030_11E_CH_GN094R_green", "179030_11E_U_GN184N_green", "179030_11E_U_GN184N_green", "179030_11E_U_GN184N_green", "179031_12E_CH_GN096R_green", "179901_00_C_GN007P_green", "179901_00_C_GN007P_green", "179901_00_C_GN007P_green", "179901_00_U_GN001P_green_02", "179901_00_U_GN002P_green_02", "179901_CG_CH_GN001P_green", "179901_CG_U_GN003P_green", "179901_CG_U_GN003P_green", "179901_CG_U_GN008P_green", "179901_CG_U_GN008P_green"], ControlView = () => {
+var jsx_dev_runtime9 = __toESM(require_react_jsx_dev_runtime_development(), 1), DECK_BLACK_T3 = ["179015_04B_O_BK010C_black", "179015_04B_O_BK010C_black", "179015_04B_U_BK058R_black", "179015_04B_U_BK058R_black", "179015_04B_U_BK059C_black", "179015_04B_U_BK059C_black", "179015_04B_U_BK061C_black", "179015_04B_U_BK061C_black", "179016_04B_U_BK066C_black", "179016_04B_U_BK066C_black", "179019_02A_C_BK015S_black", "179019_02A_C_BK015S_black", "179020_05C_U_BK100U_black", "179020_05C_U_BK100U_black", "179023_06C_C_BK048R_black", "179023_06C_C_BK048R_black", "179023_06C_C_BK049U_black", "179023_06C_C_BK049U_black", "179024_04B_C_BK027U_black", "179024_04B_C_BK027U_black", "179024_04B_U_BK060C_black", "179024_04B_U_BK060C_black", "179024_04B_U_BK067C_black", "179024_04B_U_BK067C_black", "179024_B2B_C_BK054C_black", "179024_B2B_C_BK054C_black", "179024_B2B_U_BK128S_black_02", "179024_B2B_U_BK128S_black_02", "179024_B2B_U_BK129R_black", "179024_B2B_U_BK129R_black", "179027_09D_C_BK063R_black", "179027_09D_C_BK063R_black", "179027_09D_O_BK010N_black", "179027_09D_O_BK010N_black", "179027_09D_U_BK163S_black", "179027_09D_U_BK163S_black", "179027_09D_U_BK163S_black", "179029_06C_C_BK045U_black", "179029_06C_C_BK045U_black", "179029_B3C_C_BK071N_black", "179029_B3C_C_BK071N_black", "179029_B3C_U_BK184N_black", "179029_B3C_U_BK184N_black", "179029_B3C_U_BK184N_black", "179029_B3C_U_BK185N_black", "179029_B3C_U_BK185N_black", "179030_11E_U_BK194S_2_black", "179030_11E_U_BK194S_2_black", "179030_11E_U_BK194S_2_black", "179901_B2B_C_BK005P_black"], DECK_WHITE_SPEED = ["179001_01A_CH_WT007R_white", "179004_01A_CH_WT009R_white", "179004_01A_CH_WT010C_white", "179007_02A_U_WT027U_white", "179007_02A_U_WT027U_white", "179008_02A_U_WT034U_white", "179008_02A_U_WT034U_white", "179008_02A_U_WT034U_white", "179014_03B_CH_WT027R_white", "179015_04B_U_WT067C_white", "179015_04B_U_WT067C_white", "179015_04B_U_WT067C_white", "179016_04B_U_WT074C_white", "179016_04B_U_WT074C_white", "179016_04B_U_WT074C_white", "179016_04B_U_WT075C_white", "179016_04B_U_WT075C_white", "179016_04B_U_WT075C_white", "179019_01A_C_WT010C_white", "179019_01A_C_WT010C_white", "179019_02A_U_WT028R_white", "179019_02A_U_WT028R_white", "179022_06C_CH_WT057R_white", "179022_06C_CH_WT057R_white", "179022_06C_CH_WT057R_white", "179022_06C_U_WT113R_white", "179022_06C_U_WT113R_white", "179022_06C_U_WT113R_white", "179023_06C_CH_WT067C_white", "179024_03B_U_WT057U_white", "179024_03B_U_WT057U_white", "179025_07D_C_WT060U_white", "179025_07D_CH_WT075C_white", "179025_07D_CH_WT075C_white", "179025_07D_CH_WT075C_white", "179027_09D_C_WT067R_white", "179027_09D_C_WT067R_white", "179029_B3C_CH_WT102R_white", "179029_B3C_CH_WT103N_white", "179029_B3C_U_WT196R_white", "179030_11E_C_WT077S_white", "179030_11E_C_WT077S_white", "179030_11E_C_WT077S_white", "179030_11E_CH_WT108N_white", "179901_00_C_WT003P_white", "179901_00_C_WT003P_white", "179901_00_C_WT003P_white", "179901_CG_C_WT001P_white", "179901_CG_C_WT001P_white", "179901_CG_CH_WT002P_white"], DECK_W_RANGE = ["179001_01A_CH_WT006C_white", "179003_01A_O_WT001C_white", "179003_01A_O_WT001C_white", "179003_01A_O_WT001C_white", "179003_01A_U_WT011C_white", "179003_01A_U_WT011C_white", "179003_01A_U_WT011C_white", "179009_03B_U_WT044U_white", "179009_03B_U_WT044U_white", "179009_03B_U_WT044U_white", "179009_03B_U_WT045U_white", "179009_03B_U_WT045U_white", "179009_03B_U_WT045U_white", "179015_04B_O_WT005U_white", "179015_04B_O_WT005U_white", "179015_04B_O_WT005U_white", "179019_01A_U_WT003C_white", "179019_01A_U_WT003C_white", "179019_01A_U_WT003C_white", "179019_02A_C_WT012U_white", "179019_02A_C_WT012U_white", "179019_02A_C_WT012U_white", "179019_02A_U_WT031C_white", "179019_02A_U_WT031C_white", "179019_02A_U_WT031C_white", "179023_06C_C_WT055C_white", "179023_06C_C_WT055C_white", "179023_06C_C_WT055C_white", "179024_03B_U_WT039R_white", "179024_03B_U_WT039R_white", "179024_03B_U_WT039R_white", "179024_03B_U_WT042U_white", "179024_03B_U_WT042U_white", "179024_03B_U_WT042U_white", "179025_07D_CH_WT075C_white", "179025_07D_CH_WT075C_white", "179027_09D_O_WT014N_white", "179027_09D_O_WT014N_white", "179027_09D_O_WT014N_white", "179028_10D_CH_WT095_white", "179028_10D_U_WT177R_white", "179030_11E_C_WT077S_white", "179030_11E_C_WT077S_white", "179030_11E_C_WT077S_white", "179030_11E_C_WT078R_white", "179030_11E_C_WT078R_white", "179030_11E_C_WT078R_white", "179901_00_U_WT001P_white_02", "179901_00_U_WT001P_white_02", "179901_00_U_WT001P_white_02"], DECK_GREEN_APU = ["179003_01A_C_GN003R_green", "179003_01A_CH_GN001R_green", "179003_01A_U_GN001R_green", "179003_01A_U_GN001R_green", "179003_01A_U_GN001R_green", "179003_01A_U_GN008R_green_02", "179003_01A_U_GN008R_green_02", "179003_01A_U_GN008R_green_02", "179007_02A_U_GN020R_green", "179009_03B_U_GN036U_green", "179009_03B_U_GN036U_green", "179009_03B_U_GN036U_green", "179009_03B_U_GN037C_green", "179009_03B_U_GN037C_green", "179009_03B_U_GN037C_green", "179009_03B_U_GN042R_green", "179009_03B_U_GN042R_green", "179009_03B_U_GN042R_green", "179015_04B_CH_GN030R_green", "179015_04B_U_GN053U_green", "179015_04B_U_GN055R_green_haku", "179015_04B_U_GN055R_green_haku", "179016_04B_CH_GN035R_green", "179016_04B_CH_GN036C_green", "179016_04B_CH_GN036C_green", "179018_05C_U_GN082U_green", "179019_02A_U_GN024U_green", "179019_02A_U_GN024U_green", "179019_02A_U_GN024U_green", "179024_B2B_C_GN052C_green", "179025_07D_C_GN056U_green", "179025_07D_CH_GN070C_green", "179029_05C_U_GN077R_green", "179030_11E_C_GN074R_green", "179030_11E_CH_GN093N_green", "179030_11E_CH_GN094R_green", "179030_11E_U_GN184N_green", "179030_11E_U_GN184N_green", "179030_11E_U_GN184N_green", "179031_12E_CH_GN096R_green", "179901_00_C_GN007P_green", "179901_00_C_GN007P_green", "179901_00_C_GN007P_green", "179901_00_U_GN001P_green_02", "179901_00_U_GN002P_green_02", "179901_CG_CH_GN001P_green", "179901_CG_U_GN003P_green", "179901_CG_U_GN003P_green", "179901_CG_U_GN008P_green", "179901_CG_U_GN008P_green"];
+var ControlView = () => {
   const onClickStart1 = import_react9.useCallback(async () => {
     const deckA = DECK_W_RANGE, deckB = DECK_WHITE_SPEED, prototypeIds = [...deckA, ...deckB];
     await Promise.all(prototypeIds.map(loadPrototype)).then(() => console.log("loadOK")).catch(console.error), OnEvent.next({ id: "OnClickNewGame", deckA, deckB });
@@ -26435,6 +26456,12 @@ var DECK_W_RANGE = ["179001_01A_CH_WT006C_white", "179003_01A_O_WT001C_white", "
     await Promise.all(prototypeIds.map(loadPrototype)).then(() => console.log("loadOK")).catch(console.error), OnEvent.next({ id: "OnClickNewGame", deckA, deckB });
   }, []), onClickStart6 = import_react9.useCallback(async () => {
     const deckA = DECK_W_RANGE, deckB = DECK_GREEN_APU, prototypeIds = [...deckA, ...deckB];
+    await Promise.all(prototypeIds.map(loadPrototype)).then(() => console.log("loadOK")).catch(console.error), OnEvent.next({ id: "OnClickNewGame", deckA, deckB });
+  }, []), onClickStart7 = import_react9.useCallback(async () => {
+    const deckA = DECK_GREEN_APU, deckB = DECK_WHITE_SPEED, prototypeIds = [...deckA, ...deckB];
+    await Promise.all(prototypeIds.map(loadPrototype)).then(() => console.log("loadOK")).catch(console.error), OnEvent.next({ id: "OnClickNewGame", deckA, deckB });
+  }, []), onClickStart8 = import_react9.useCallback(async () => {
+    const deckA = DECK_GREEN_APU, deckB = DECK_BLACK_T3, prototypeIds = [...deckA, ...deckB];
     await Promise.all(prototypeIds.map(loadPrototype)).then(() => console.log("loadOK")).catch(console.error), OnEvent.next({ id: "OnClickNewGame", deckA, deckB });
   }, []);
   return import_react9.useMemo(() => {
@@ -26461,8 +26488,12 @@ var DECK_W_RANGE = ["179001_01A_CH_WT006C_white", "179003_01A_O_WT001C_white", "
           children: "\u767D\u7BC4\u5175\u5C0D\u9ED1T3"
         }, void 0, !1, void 0, this),
         /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("button", {
-          onClick: onClickStart6,
-          children: "\u767D\u7BC4\u5175\u5C0D\u7DA0\u963F\u666E"
+          onClick: onClickStart7,
+          children: "\u7DA0\u963F\u666E\u5C0D\u767D\u901F\u653B"
+        }, void 0, !1, void 0, this),
+        /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("button", {
+          onClick: onClickStart8,
+          children: "\u7DA0\u963F\u666E\u5C0D\u9ED1T3"
         }, void 0, !1, void 0, this)
       ]
     }, void 0, !0, void 0, this);

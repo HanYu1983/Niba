@@ -47,9 +47,11 @@ export const prototype: CardPrototype = {
       onEvent: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
         const event = DefineFn.EffectFn.getEvent(effect)
         const cardId = DefineFn.EffectFn.getCardID(effect)
-        if (event.title[0] == "GameEventOnTiming" && DefineFn.PhaseFn.eq(event.title[1], DefineFn.PhaseFn.getLastTriigerEffect())) {
+        const cardController = GameStateFn.getItemController(ctx, cardId)
+        if (event.title[0] == "GameEventOnTiming"
+          && DefineFn.PhaseFn.eq(event.title[1], DefineFn.PhaseFn.getLastTriigerEffect())
+          && GameStateFn.getActivePlayerID(ctx) == cardController) {
           const newE = GameStateFn.createPlayTextEffectFromEffect(ctx, effect, {
-            isOption: true,
             conditions: {
               "自軍手札が５枚以上ある場合": {
                 actions: [

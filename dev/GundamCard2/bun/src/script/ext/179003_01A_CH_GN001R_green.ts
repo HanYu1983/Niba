@@ -6,7 +6,7 @@
 // 『恒常』：このカードは、「専用機のセット」が成立するユニットにセットする場合、合計国力２としてプレイできる。
 // （自軍攻撃ステップ）〔２〕：このカードが戦闘エリアにいる場合、敵軍ユニット１枚に３ダメージを与える。
 
-import { CardPrototype } from "../../game/define/CardPrototype";
+import { CardColor, CardPrototype } from "../../game/define/CardPrototype";
 import { CardText, Condition } from "../../game/define/CardText";
 import { Effect } from "../../game/define/Effect";
 import { Tip } from "../../game/define/Tip";
@@ -91,6 +91,7 @@ export const prototype: CardPrototype = {
       description: "（自軍攻撃ステップ）〔２〕：このカードが戦闘エリアにいる場合、敵軍ユニット１枚に３ダメージを与える。",
       title: ["使用型", ["自軍", "攻撃ステップ"]],
       conditions: {
+        ...createRollCostRequire(2, null),
         "このカードが戦闘エリアにいる場合": {
           actions: [
             {
@@ -128,3 +129,27 @@ export const prototype: CardPrototype = {
     }
   ],
 };
+
+
+function createRollCostRequire(
+  costNum: number,
+  color: CardColor | null
+): { [key: string]: Condition } {
+  let ret: { [key: string]: Condition } = {}
+  for (let i = 0; i < costNum; ++i) {
+    const key = `${i}[${color}]`
+    ret = {
+      ...ret,
+      [key]: {
+        title: ["RollColor", color],
+        actions: [
+          {
+            title: ["_ロールする", "ロール"],
+            vars: [key]
+          }
+        ]
+      }
+    };
+  }
+  return ret
+}

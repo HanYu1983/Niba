@@ -98,7 +98,7 @@ export const prototype: CardPrototype = {
                     }
                     const tip2 = GameStateFn.getItemState(ctx, cardId).tips["敵軍部隊１つ"]
                     if (tip2) {
-                      const basyous = DefineFn.TipFn.getSelection(tip1) as AbsoluteBaSyou[]
+                      const basyous = DefineFn.TipFn.getSelection(tip2) as AbsoluteBaSyou[]
                       if (basyous.length == 0) {
                         throw new Error()
                       }

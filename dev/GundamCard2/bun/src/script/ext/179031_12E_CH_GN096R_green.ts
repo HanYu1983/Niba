@@ -35,6 +35,7 @@ export const prototype: CardPrototype = {
             conditions: {
               "自軍セットグループ１つ": {
                 title: ["Entity", {
+                  atBa: true,
                   side: "自軍",
                   isSetGroup: true,
                   count: 1,

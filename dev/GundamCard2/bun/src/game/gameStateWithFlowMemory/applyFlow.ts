@@ -261,6 +261,7 @@ export function applyFlow(
                                 case "フリータイミング":
                                 case "フリータイミング2": {
                                     ctx = checkIsBattle(ctx) as GameStateWithFlowMemory
+                                    ctx = updateCommand(ctx) as GameStateWithFlowMemory
                                     ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
                                     break
                                 }
@@ -281,6 +282,7 @@ export function applyFlow(
                                 case "フリータイミング":
                                 case "フリータイミング2": {
                                     ctx = checkIsBattle(ctx) as GameStateWithFlowMemory
+                                    ctx = updateCommand(ctx) as GameStateWithFlowMemory
                                     ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
                                     break
                                 }
@@ -301,6 +303,7 @@ export function applyFlow(
                                 case "フリータイミング":
                                 case "フリータイミング2": {
                                     ctx = checkIsBattle(ctx) as GameStateWithFlowMemory
+                                    ctx = updateCommand(ctx) as GameStateWithFlowMemory
                                     ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
                                     break
                                 }
@@ -321,6 +324,7 @@ export function applyFlow(
                                 case "フリータイミング":
                                 case "フリータイミング2": {
                                     ctx = checkIsBattle(ctx) as GameStateWithFlowMemory
+                                    ctx = updateCommand(ctx) as GameStateWithFlowMemory
                                     ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
                                     break
                                 }
