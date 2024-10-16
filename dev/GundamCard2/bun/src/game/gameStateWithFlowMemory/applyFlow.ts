@@ -262,6 +262,14 @@ export function applyFlow(
                                 case "フリータイミング2": {
                                     ctx = checkIsBattle(ctx) as GameStateWithFlowMemory
                                     ctx = updateCommand(ctx) as GameStateWithFlowMemory
+                                    ctx = {
+                                        ...ctx,
+                                        // 重設切入旗標，讓玩家再次切入
+                                        flowMemory: {
+                                            ...ctx.flowMemory,
+                                            hasPlayerPassCut: {},
+                                        },
+                                    }
                                     ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
                                     break
                                 }
@@ -283,6 +291,14 @@ export function applyFlow(
                                 case "フリータイミング2": {
                                     ctx = checkIsBattle(ctx) as GameStateWithFlowMemory
                                     ctx = updateCommand(ctx) as GameStateWithFlowMemory
+                                    ctx = {
+                                        ...ctx,
+                                        // 重設切入旗標，讓玩家再次切入
+                                        flowMemory: {
+                                            ...ctx.flowMemory,
+                                            hasPlayerPassCut: {},
+                                        },
+                                    }
                                     ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
                                     break
                                 }
@@ -304,6 +320,14 @@ export function applyFlow(
                                 case "フリータイミング2": {
                                     ctx = checkIsBattle(ctx) as GameStateWithFlowMemory
                                     ctx = updateCommand(ctx) as GameStateWithFlowMemory
+                                    ctx = {
+                                        ...ctx,
+                                        // 重設切入旗標，讓玩家再次切入
+                                        flowMemory: {
+                                            ...ctx.flowMemory,
+                                            hasPlayerPassCut: {},
+                                        },
+                                    }
                                     ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
                                     break
                                 }
