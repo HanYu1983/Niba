@@ -20,13 +20,13 @@ export function doItemSwap(ctx: GameState, pair1: StrBaSyouPair, pair2: StrBaSyo
         const card2 = getCard(ctx, itemId2)
         // 只換protoID
         // 這裡要注意置換protoID時，交差武器的TextRef會跑掉
-        ctx = setCard(ctx, card1.id, { ...card1, protoID: card2.protoID, isRoll: card2.isRoll }) as GameState
-        ctx = setCard(ctx, card2.id, { ...card2, protoID: card1.protoID, isRoll: card1.isRoll }) as GameState
+        ctx = setCard(ctx, card1.id, { ...card1, protoID: card2.protoID/*, isRoll: card2.isRoll*/ }) as GameState
+        ctx = setCard(ctx, card2.id, { ...card2, protoID: card1.protoID/*, isRoll: card1.isRoll*/ }) as GameState
 
-        const is1 = getItemState(ctx, itemId1)
-        const is2 = getItemState(ctx, itemId2)
-        ctx = setItemState(ctx, is1.id, { ...is2, id: is1.id }) as GameState
-        ctx = setItemState(ctx, is2.id, { ...is1, id: is2.id }) as GameState
+        // const is1 = getItemState(ctx, itemId1)
+        // const is2 = getItemState(ctx, itemId2)
+        // ctx = setItemState(ctx, is1.id, { ...is2, id: is1.id }) as GameState
+        // ctx = setItemState(ctx, is2.id, { ...is1, id: is2.id }) as GameState
         // 交換TextRef的cardId
         ctx = mapItemStateValues(ctx, is => {
             let nextGE = is.globalEffects

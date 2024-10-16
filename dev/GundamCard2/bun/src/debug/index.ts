@@ -137,13 +137,13 @@ async function testSwapItem() {
         throw new Error()
     }
     ctx = doItemSwap(ctx, [unit.id, getItemBaSyou(ctx, unit.id)], [unit2.id, getItemBaSyou(ctx, unit2.id)])
-    if (getItemState(ctx, unit.id).damage != 0) {
+    if (getItemState(ctx, unit.id).damage != 2) {
         throw new Error()
     }
-    if (getItemState(ctx, unit2.id).damage != 2) {
+    if (getItemState(ctx, unit2.id).damage != 0) {
         throw new Error()
     }
-    if (getCard(ctx, unit2.id).isRoll != true) {
+    if (getCard(ctx, unit.id).isRoll != true) {
         throw new Error()
     }
     if (getCard(ctx, unit.id).protoID != "unitBlack") {

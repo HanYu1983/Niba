@@ -349,7 +349,7 @@ export function createTextsFromSpecialEffect(text: CardText, options: { ges?: Gl
                                     title: function _(ctx: GameState, effect: Effect, { GameStateFn, DefineFn }: Bridge): GameState {
                                         const cardId = DefineFn.EffectFn.getCardID(effect)
                                         const from = GameStateFn.getItemBaSyou(ctx, cardId)
-                                        const hasNT = GameStateFn.getItemIdsByBasyou(ctx, from).filter(itemId => GameStateFn.getItemCharacteristic(ctx, itemId).indexOf("NT")).length > 0
+                                        const hasNT = GameStateFn.getItemIdsByBasyou(ctx, from).filter(itemId => GameStateFn.getItemCharacteristic(ctx, itemId).indexOf("NT") != -1).length > 0
                                         if (hasNT == false) {
                                             throw new TipError(`no NT in the same area`)
                                         }
