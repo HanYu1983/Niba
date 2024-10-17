@@ -2,6 +2,7 @@
 // 全門射撃
 // 破壊
 // （自軍ターン）：任意の枚数の敵軍ユニットに、Xダメージを振り分けて与える。
+import { OPEN } from "ws";
 import { CardPrototype } from "../../game/define/CardPrototype";
 import { Effect } from "../../game/define/Effect";
 import { Tip } from "../../game/define/Tip";
@@ -15,16 +16,16 @@ export const prototype: CardPrototype = {
     title: ["使用型", ["自軍", "ターン"]],
     conditions: {
       "任意の枚数の敵軍ユニット": {
-        title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, ToolFn }: Bridge): Tip | null {
+        title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, ToolFn, Options }: Bridge): Tip | null {
           const cardId = DefineFn.EffectFn.getCardID(effect)
           const count = GameStateFn.getCardTipStrBaSyouPairs(ctx, DefineFn.TipFn.createTotalCostKey(), cardId).length
-          return GameStateFn.createTipByEntitySearch(ctx, cardId, {
+          return GameStateFn.createTipByEntitySearch(ctx, effect, {
             atBa: true,
             side: "敵軍",
             is: ["ユニット"],
             count: count,
             isRepeat: true,
-          })
+          }, {ges: Options.ges})
         }.toString(),
       }
     },

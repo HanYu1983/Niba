@@ -17,6 +17,10 @@ export const prototype: CardPrototype = {
       title: ["自動型", "恒常"],
       onSituation: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GlobalEffect[] {
         const cardId = DefineFn.EffectFn.getCardID(effect)
+        const situation = DefineFn.EffectFn.getSituation(effect)
+        if (situation != null) {
+          return []
+        }
         return [{ title: ["3以下の合計国力を持つ敵軍コマンドの効果では無効にならない"], cardIds: [cardId] }]
       }.toString()
     }

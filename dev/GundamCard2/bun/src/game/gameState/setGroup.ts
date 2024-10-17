@@ -6,12 +6,13 @@ import { GameState } from "./GameState";
 import { getSetGroupChildren } from "./SetGroupComponent";
 import { getBattleGroup } from "./battleGroup";
 import { getItemBaSyou } from "./ItemTableComponent";
+import { GlobalEffect } from "../define/GlobalEffect";
 
 // setgroup
-export function getSetGroupBattlePoint(ctx: GameState, cardId: string): BattleBonus {
+export function getSetGroupBattlePoint(ctx: GameState, cardId: string, options: { ges?: GlobalEffect[] }): BattleBonus {
     return pipe(
         always(getSetGroupChildren(ctx, cardId)),
-        map(setGroupCardID => getCardBattlePoint(ctx, setGroupCardID)),
+        map(setGroupCardID => getCardBattlePoint(ctx, setGroupCardID, { ges: options.ges })),
         reduce(BattlePointFn.add, BattlePointFn.getAllStar()),
         BattlePointFn.toBattleBonus
     )()
@@ -20,14 +21,15 @@ export function getSetGroupBattlePoint(ctx: GameState, cardId: string): BattleBo
 export function isSetGroupHasA(
     ctx: GameState,
     a: TextSpeicalEffect,
-    cardId: string
+    cardId: string,
+    options: { ges?: GlobalEffect[] }
 ): boolean {
     const setGroupCards = getSetGroupChildren(ctx, cardId);
-    return setGroupCards.some(cardId => getCardHasSpeicalEffect(ctx, a, cardId))
+    return setGroupCards.some(cardId => getCardHasSpeicalEffect(ctx, a, cardId, { ges: options.ges }))
 }
 
-export function isMeleeUnit(ctx: GameState, itemId: string): boolean {
-    const [atk, range, hp] = getSetGroupBattlePoint(ctx, itemId)
+export function isMeleeUnit(ctx: GameState, itemId: string, options: { ges?: GlobalEffect[] }): boolean {
+    const [atk, range, hp] = getSetGroupBattlePoint(ctx, itemId, { ges: options.ges })
     if (range == 0 && atk > 0) {
         return true
     }
@@ -37,10 +39,10 @@ export function isMeleeUnit(ctx: GameState, itemId: string): boolean {
     return false
 }
 
-export function isRangeUnit(ctx: GameState, itemId: string): boolean {
-    const [atk, range, hp] = getSetGroupBattlePoint(ctx, itemId)
+export function isRangeUnit(ctx: GameState, itemId: string, options: { ges?: GlobalEffect[] }): boolean {
+    const [atk, range, hp] = getSetGroupBattlePoint(ctx, itemId, { ges: options.ges })
     if (range == 0) {
         return false
     }
-    return isMeleeUnit(ctx, itemId) == false
+    return isMeleeUnit(ctx, itemId, { ges: options.ges }) == false
 }

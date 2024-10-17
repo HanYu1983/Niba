@@ -17,22 +17,22 @@ export const prototype: CardPrototype = {
       id: "",
       description: "『恒常』：このカードは、敵軍ユニットが３枚以上いる場合、合計国力ー２してプレイできる。",
       title: ["自動型", "恒常"],
-      onSituation: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, ToolFn }: Bridge): GlobalEffect[] {
+      onSituation: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, ToolFn, Options }: Bridge): GlobalEffect[] {
         const cardId = DefineFn.EffectFn.getCardID(effect)
         const situation = DefineFn.EffectFn.getSituation(effect)
         if (situation != null) {
           return []
         }
-        const pairs = DefineFn.TipFn.getWant(GameStateFn.createTipByEntitySearch(ctx, cardId, {
+        const pairs = DefineFn.TipFn.getWant(GameStateFn.createTipByEntitySearch(ctx, effect, {
           at: DefineFn.BaSyouKeywordFn.getBaAll(),
           side: "敵軍",
           is: ["ユニット"],
           count: 3,
-        })) as StrBaSyouPair[]
+        }, {ges: Options.ges})) as StrBaSyouPair[]
         if (pairs.length >= 3) {
           return [
             {
-              title: ["合計国力＋(１)してプレイできる", -2],
+              title: ["合計国力_＋１してプレイできる", -2],
               cardIds: [cardId]
             },
           ]

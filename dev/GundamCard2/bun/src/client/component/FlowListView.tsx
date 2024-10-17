@@ -1,109 +1,14 @@
 import { useContext, useMemo, useEffect, CSSProperties } from "react";
-import { queryFlow } from "../../game/gameStateWithFlowMemory/queryFlow";
 import { AppContext } from "../tool/appContext";
 import { OnEvent } from "../tool/appContext/eventCenter";
 import { EffectView } from "./EffectView";
-import { getEffect, isImmediateEffect } from "../../game/gameState/EffectStackComponent";
-import { PlayerA, PlayerB } from "../../game/define/PlayerID";
 import { FlowSetTipSelectionView } from "./FlowSetTipSelectionView";
-import { getPhase } from "../../game/gameState/PhaseComponent";
-import { PhaseFn } from "../../game/define/Timing";
-import { thinkVer1 } from "../../game/gameStateWithFlowMemory/ai/thinkVer1";
 
 export const FlowListView = (props: { clientId: string, style?: CSSProperties }) => {
   const appContext = useContext(AppContext);
   const flows = useMemo(() => {
     return appContext.viewModel.playerCommands[props.clientId] || []
   }, [appContext.viewModel.playerCommands[props.clientId]]);
-  useEffect(() => {
-    const speed = 50
-    const isPlayerControl = false
-    if (isPlayerControl && props.clientId == PlayerA) {
-      // 規定效果自動按
-      const phase = getPhase(appContext.viewModel.model.gameState)
-      if (PhaseFn.isRuleEffect(phase)) {
-        let flow = flows.find(flow => flow.id == "FlowPassPayCost")
-        if (flow == null) {
-          flows.find(flow => flow.id == "FlowSetActiveEffectID" && phase[0] == "戦闘フェイズ" && (phase[1] != "攻撃ステップ" && phase[1] != "防御ステップ"))
-        }
-        if (flow != null) {
-          setTimeout(() => {
-            OnEvent.next({
-              id: "OnClickFlowConfirm",
-              clientId: props.clientId,
-              flow: flow,
-              versionID: appContext.viewModel.model.versionID
-            });
-          }, speed)
-          return
-        }
-      }
-      {
-        // 立即效果自動按
-        // const flow = flows.find(flow => flow.id == "FlowPassPayCost")
-        // if (flow && isImmediateEffect(appContext.viewModel.model.gameState, flow.effectID)) {
-        //   setTimeout(() => {
-        //     OnEvent.next({
-        //       id: "OnClickFlowConfirm",
-        //       clientId: props.clientId,
-        //       flow: flow,
-        //       versionID: appContext.viewModel.model.versionID
-        //     });
-        //   }, speed)
-        //   return
-        // }
-      }
-      // 只剩下一個命令時自動按，一些狀況除外
-      if (flows.length == 1) {
-        const flow = flows[0]
-        if (flow.id == "FlowCancelPassPhase") {
-          return
-        }
-        if (flow.id == "FlowCancelPassCut") {
-          return
-        }
-        if (flow.id == "FlowWaitPlayer") {
-          return
-        }
-        if (flow.id == "FlowDeleteImmediateEffect") {
-          return
-        }
-        if (flow.id == "FlowSetTipSelection") {
-          return
-        }
-        if (flow.id == "FlowObserveEffect") {
-          return
-        }
-        if (flow.id == "FlowSetActiveLogicID") {
-          return
-        }
-
-        setTimeout(() => {
-          OnEvent.next({
-            id: "OnClickFlowConfirm",
-            clientId: props.clientId,
-            flow: flow,
-            versionID: appContext.viewModel.model.versionID
-          });
-        }, speed)
-      }
-      return
-    }
-    if (flows.length) {
-      const flow = thinkVer1(appContext.viewModel.model.gameState, props.clientId, flows)
-
-      if (flow) {
-        setTimeout(() => {
-          OnEvent.next({
-            id: "OnClickFlowConfirm",
-            clientId: props.clientId,
-            flow: flow,
-            versionID: appContext.viewModel.model.versionID
-          });
-        }, speed)
-      }
-    }
-  }, [appContext.viewModel.model.gameState, props.clientId, flows]);
   // ============== control panel ============= //
   const renderControlPanel = useMemo(() => {
     return (

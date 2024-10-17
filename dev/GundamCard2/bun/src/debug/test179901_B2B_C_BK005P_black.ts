@@ -82,6 +82,7 @@ export async function test179901_B2B_C_BK005P_black() {
     ctx = applyFlow(ctx, PlayerA, playerAPassPayCost)
     //======
     const cets = createEffectTips(ctx, effect, 0, 0, { isCheckUserSelection: true })
+    console.log(cets)
     if (cets.length != 2) {
         throw new Error()
     }

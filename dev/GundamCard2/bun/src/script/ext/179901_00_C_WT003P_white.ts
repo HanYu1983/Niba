@@ -62,7 +62,7 @@ export const prototype: CardPrototype = {
     conditions: {
       "戦闘エリアにいる、４以下の防御力を持つ敵軍ユニット１枚": {
         title: ["Entity", {
-          atBa: true,
+          at: ["戦闘エリア1", "戦闘エリア2"],
           side: "敵軍",
           is: ["ユニット"],
           compareBattlePoint: ["防御力", "<=", 4],

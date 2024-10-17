@@ -46,15 +46,21 @@ export const CardView = (props: {
   const card = useMemo(() => {
     return getCard(appContext.viewModel.model.gameState, props.cardID || "unknown");
   }, [props.cardID, appContext.viewModel.model.gameState]);
+  const itemState = useMemo(() => {
+    return getItemState(appContext.viewModel.model.gameState, props.cardID || "unknown")
+  }, [appContext.viewModel.model.gameState])
   const renderItemState = useMemo(() => {
-    const itemState = getItemState(appContext.viewModel.model.gameState, props.cardID || "unknown")
     return <div>
       <div>damage: {itemState.damage}</div>
       <div>destroy: {itemState.destroyReason?.id}</div>
+      <div>isCheat: {itemState.isCheat}</div>
     </div>
-  }, [props.cardID, appContext.viewModel.model.gameState])
+  }, [props.cardID, itemState])
   const isVisible = useMemo(() => {
     if (props.isCheat) {
+      return true
+    }
+    if (itemState.isCheat) {
       return true
     }
     if (card.isFaceDown) {
@@ -72,9 +78,9 @@ export const CardView = (props: {
       }
     }
     return card.isFaceDown != true
-  }, [props.clientId, props.isCheat, card, appContext.viewModel.model.gameState]);
+  }, [props.clientId, props.isCheat, card, appContext.viewModel.model.gameState, itemState]);
   const renderBp = useMemo(() => {
-    const bp = getSetGroupBattlePoint(appContext.viewModel.model.gameState, props.cardID || "unknown")
+    const bp = getSetGroupBattlePoint(appContext.viewModel.model.gameState, props.cardID || "unknown", { ges: getGlobalEffects(appContext.viewModel.model.gameState, null) })
     return <div>{bp[0]}/{bp[1]}/{bp[2]}</div>
   }, [appContext.viewModel.model.gameState, props.cardID])
   const renderCoin = useMemo(() => {
@@ -120,15 +126,16 @@ export const CardView = (props: {
     if (props.isShowInfo != true) {
       return <></>
     }
-    let texts = getCardTexts(appContext.viewModel.model.gameState, props.cardID || "unknown")
+    let texts = getCardTexts(appContext.viewModel.model.gameState, props.cardID || "unknown", { ges: getGlobalEffects(appContext.viewModel.model.gameState, null) })
     texts = [...(proto.commandText ? [proto.commandText] : []), ...texts]
     return <div>
       <div>{proto.title}</div>
+      <div>{JSON.stringify(proto.battleArea)}</div>
       {
         texts.map((text, i) => {
           return <div key={i}>
             <div style={{ border: "1px solid black" }}>{
-              /*text.title[0] == "特殊型" ? JSON.stringify(text.title[1]) : */text.description
+              text.description || JSON.stringify(text.title)
             }</div>
           </div>
         })

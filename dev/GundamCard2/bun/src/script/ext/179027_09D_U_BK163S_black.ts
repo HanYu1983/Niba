@@ -18,7 +18,7 @@ export const prototype: CardPrototype = {
       onEvent: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
         const cardId = DefineFn.EffectFn.getCardID(effect)
         const evt = DefineFn.EffectFn.getEvent(effect)
-        if (evt.title[0] == "場に出た場合" && evt.cardIds?.includes(cardId)) {
+        if (evt.title[0] == "このカードが場に出た場合" && evt.cardIds?.includes(cardId)) {
 
         } else {
           return ctx
@@ -26,13 +26,13 @@ export const prototype: CardPrototype = {
         const newE = GameStateFn.createPlayTextEffectFromEffect(ctx, effect, {
           conditions: {
             "敵軍手札１枚": {
-              title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip | null {
+              title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): Tip | null {
                 const cardId = DefineFn.EffectFn.getCardID(effect)
-                const tip = GameStateFn.createTipByEntitySearch(ctx, cardId, {
+                const tip = GameStateFn.createTipByEntitySearch(ctx, effect, {
                   side: "敵軍",
                   at: ["手札"],
                   count: 1,
-                })
+                }, {ges: Options.ges})
                 return tip
               }.toString()
             },
@@ -57,11 +57,13 @@ export const prototype: CardPrototype = {
       onEvent: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
         const cardId = DefineFn.EffectFn.getCardID(effect)
         const cardController = GameStateFn.getItemController(ctx, cardId)
+        const opponentPlayerId = DefineFn.PlayerIDFn.getOpponent(cardController)
         const evt = DefineFn.EffectFn.getEvent(effect)
-        if (evt.title[0] == "GameEventOnMove" &&
-          (DefineFn.BaSyouKeywordFn.isBa(DefineFn.AbsoluteBaSyouFn.getBaSyouKeyword(evt.title[1])) ||
-            DefineFn.AbsoluteBaSyouFn.getBaSyouKeyword(evt.title[1]) == "手札") &&
-          DefineFn.AbsoluteBaSyouFn.eq(evt.title[2], DefineFn.AbsoluteBaSyouFn.of(cardController, "ジャンクヤード"))
+        if (evt.title[0] == "GameEventOnMove"
+          && (DefineFn.BaSyouKeywordFn.isBa(DefineFn.AbsoluteBaSyouFn.getBaSyouKeyword(evt.title[1]))
+            || DefineFn.AbsoluteBaSyouFn.getBaSyouKeyword(evt.title[1]) == "手札")
+          && DefineFn.AbsoluteBaSyouFn.eq(evt.title[2], DefineFn.AbsoluteBaSyouFn.of(opponentPlayerId, "ジャンクヤード"))
+          && evt.cardIds?.some(itemId => GameStateFn.getItemRuntimeCategory(ctx, itemId) == "ユニット")
         ) {
 
         } else {

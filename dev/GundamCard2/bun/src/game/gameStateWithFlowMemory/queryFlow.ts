@@ -1,11 +1,11 @@
 import { getEffect, getEffects, getTopEffect } from "../gameState/EffectStackComponent";
 import { Flow } from "./Flow";
-import { getActiveEffectID, getActiveLogicID, getActiveLogicSubID, getEffectIncludePlayerCommand } from "./effect";
+import { getActiveEffectID, getActiveLogicID, getActiveLogicSubID } from "./effect";
 import { GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
 import { PlayerA, PlayerB, PlayerIDFn } from "../define/PlayerID";
 import { AbsoluteBaSyouFn } from "../define/BaSyou";
 import { Effect, EffectFn } from "../define/Effect";
-import { getPlayerCommandsFilterNoErrorDistinct } from "../gameState/updateCommand";
+import { getPlayerCommands, getPlayerCommandsFilterNoError, getPlayerCommandsFilterNoErrorDistinct } from "../gameState/updateCommand";
 import { clearTipSelectionForUser, createCommandEffectTips, createEffectTips } from "../gameState/doEffect";
 import { CommandEffecTipFn, TipOrErrorsFn } from "../define/CommandEffectTip";
 
@@ -29,7 +29,7 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
     // 有玩家在支付卡片
     const activeEffectID = getActiveEffectID(ctx)
     if (activeEffectID != null) {
-        const currentActiveEffect = getEffectIncludePlayerCommand(ctx, activeEffectID)
+        const currentActiveEffect = getEffect(ctx, activeEffectID)
         if (currentActiveEffect == null) {
             throw new Error("activeEffectID not found");
         }
@@ -280,12 +280,13 @@ export function queryFlow(ctx: GameStateWithFlowMemory, playerID: string): Flow[
         ];
     }
     const myCommandList = getPlayerCommandsFilterNoErrorDistinct(ctx, playerID).map(tip => tip.effectId).map(id => getEffect(ctx, id))
+    //console.log("myCommandList", getPlayerCommandsFilterNoError(ctx, playerID))
     // 處理堆疊效果，從最上方開始處理
     if (ctx.stackEffect.length) {
         // 取得最上方的效果
         const effect = getTopEffect(ctx);
         if (effect == null) {
-            throw new Error("effect not found")
+            throw new Error(`effect not found: ${ctx.stackEffect.length}`)
         }
 
         if (effect.id == null) {

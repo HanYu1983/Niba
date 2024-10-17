@@ -20,7 +20,7 @@ export const prototype: CardPrototype = {
         const evt = DefineFn.EffectFn.getEvent(effect)
         const cardId = DefineFn.EffectFn.getCardID(effect)
         const cardController = GameStateFn.getItemController(ctx, cardId)
-        if (evt.title[0] == "場に出た場合" &&
+        if (evt.title[0] == "このカードが場に出た場合" &&
           evt.cardIds?.every(cid => GameStateFn.getItemController(ctx, cid) == cardController) &&
           evt.cardIds?.every(cid => GameStateFn.getItemPrototype(ctx, cid).characteristic?.includes("アストレイ系"))
         ) {

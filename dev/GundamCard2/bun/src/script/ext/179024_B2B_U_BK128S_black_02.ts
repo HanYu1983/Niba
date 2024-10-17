@@ -19,7 +19,7 @@ export const prototype: CardPrototype = {
       id: "",
       description: "『常駐』：このカードが戦闘エリアにいる場合、戦闘エリアにいる全ての敵軍ユニットは、－１／－１／－１を得る。",
       title: ["自動型", "常駐"],
-      onSituation: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GlobalEffect[] {
+      onSituation: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GlobalEffect[] {
         const cardId = DefineFn.EffectFn.getCardID(effect)
         const situation = DefineFn.EffectFn.getSituation(effect)
         if (situation != null) {
@@ -27,13 +27,13 @@ export const prototype: CardPrototype = {
         }
         const basyou = GameStateFn.getItemBaSyou(ctx, cardId)
         if (DefineFn.BaSyouKeywordFn.getBattleArea().includes(DefineFn.AbsoluteBaSyouFn.getBaSyouKeyword(basyou))) {
-          const tip = GameStateFn.createTipByEntitySearch(ctx, cardId, {
+          const tip = GameStateFn.createTipByEntitySearch(ctx, effect, {
             side: "敵軍",
             at: ["戦闘エリア1", "戦闘エリア2"],
             is: ["ユニット"],
             max: 50,
             asMuchAsPossible: true
-          })
+          }, {ges: Options.ges})
           const pairs = DefineFn.TipFn.getWant(tip) as StrBaSyouPair[]
           return [
             {

@@ -20,36 +20,36 @@ export const prototype: CardPrototype = {
         actions: [
           {
             title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
-              const newE = GameStateFn.createPlayTextEffectFromEffect(ctx, effect, {
+              const newE = DefineFn.EffectFn.fromEffectBasic(effect, {
                 conditions: {
                   "全ての軍は、自分の手札X枚を可能な限り選ん1": {
-                    title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip | null {
+                    title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): Tip | null {
                       const cardId = DefineFn.EffectFn.getCardID(effect)
                       const cardProto = GameStateFn.getItemPrototype(ctx, cardId)
                       const payColorKey = DefineFn.TipFn.createConditionKeyOfPayColorX(cardProto)
                       const x = GameStateFn.getCardTipStrBaSyouPairs(ctx, payColorKey, cardId).length
-                      const tip = GameStateFn.createTipByEntitySearch(ctx, cardId, {
+                      const tip = GameStateFn.createTipByEntitySearch(ctx, effect, {
                         side: "自軍",
                         at: ["手札"],
                         max: x,
                         asMuchAsPossible: true,
-                      })
+                      }, {ges: Options.ges})
                       return tip
                     }.toString()
                   },
                   "全ての軍は、自分の手札X枚を可能な限り選ん2": {
                     relatedPlayerSideKeyword: "敵軍",
-                    title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip | null {
+                    title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): Tip | null {
                       const cardId = DefineFn.EffectFn.getCardID(effect)
                       const cardProto = GameStateFn.getItemPrototype(ctx, cardId)
                       const payColorKey = DefineFn.TipFn.createConditionKeyOfPayColorX(cardProto)
                       const x = GameStateFn.getCardTipStrBaSyouPairs(ctx, payColorKey, cardId).length
-                      const tip = GameStateFn.createTipByEntitySearch(ctx, cardId, {
+                      const tip = GameStateFn.createTipByEntitySearch(ctx, effect, {
                         side: "敵軍",
                         at: ["手札"],
                         max: x,
                         asMuchAsPossible: true
-                      })
+                      }, {ges: Options.ges})
                       return tip
                     }.toString()
                   }

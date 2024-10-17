@@ -1,61 +1,54 @@
 import { logCategory } from "../../tool/logger";
 import { PhaseFn, SiYouTiming } from "../define/Timing";
-import { CardText, Condition } from "../define/CardText";
+import { CardText, CardTextFn, Condition } from "../define/CardText";
 import { PlayerA, PlayerB, PlayerID } from "../define/PlayerID";
 import { AbsoluteBaSyouFn, BaSyouKeywordFn } from "../define/BaSyou";
 import { addCards, createCardWithProtoIds, getCard } from "./CardTableComponent";
 import { Effect } from "../define/Effect";
 import { createPlayCardEffects } from "./createPlayCardEffects";
-import { getItemBaSyou, getItemIdsByBasyou, getItemPrototype } from "./ItemTableComponent";
+import { getItem, getItemBaSyou, getItemIdsByBasyou, getItemPrototype } from "./ItemTableComponent";
 import { getPrototype, loadPrototype } from "../../script";
 import { always, concat, flatten, ifElse, lift, map, pipe } from "ramda";
 import { createGameState, GameState } from "./GameState";
 import { getPhase, setPhase } from "./PhaseComponent";
 import { getCardHasSpeicalEffect, getCardTexts } from "./card";
-import { Card } from "../define/Card";
-import { setActivePlayerID } from "./ActivePlayerComponent";
 import { createTextsFromSpecialEffect } from "./createTextsFromSpecialEffect";
-import { createPlayGEffects } from "./createPlayGEffects";
-import { Bridge } from "../../script/bridge";
 import { getGlobalEffects, setGlobalEffects } from "./globalEffects";
+import { LogicTree } from "../../tool/logicTree";
 
 export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
+    logCategory("createPlayEffects", "")
     const ges = getGlobalEffects(ctx, null)
     ctx = setGlobalEffects(ctx, null, ges)
-    const canPlayByText = ges
-        .filter(ge => ge.title[0] == "自軍手札にあるかのようにプレイできる")
-        .flatMap(ge => ge.cardIds).filter(itemId => AbsoluteBaSyouFn.getPlayerID(getItemBaSyou(ctx, itemId)) == playerId)
+    const myTextOn = lift(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getTextOn())
     const getPlayCardEffectsF =
         ifElse(
-            always(PhaseFn.eq(getPhase(ctx), ["配備フェイズ", "フリータイミング"]) && ctx.activePlayerID == playerId),
+            always(PhaseFn.eq(getPhase(ctx), ["配備フェイズ", "フリータイミング"])),
             pipe(
-                always([AbsoluteBaSyouFn.of(playerId, "手札"), AbsoluteBaSyouFn.of(playerId, "ハンガー")]),
+                always(myTextOn),
                 map(basyou => getItemIdsByBasyou(ctx, basyou)), flatten,
-                concat(canPlayByText),
                 map(cardId => {
                     // 指令在一個部分計算
                     if (getItemPrototype(ctx, cardId).category == "コマンド") {
                         return []
                     }
-                    return createPlayCardEffects(ctx, cardId)
+                    return createPlayCardEffects(ctx, cardId).filter(eff => inTiming(eff.text))
                 }), flatten,
             ),
             // クイック
             ifElse(
                 always(PhaseFn.isFreeTiming(getPhase(ctx))),
                 pipe(
-                    always([AbsoluteBaSyouFn.of(playerId, "手札"), AbsoluteBaSyouFn.of(playerId, "ハンガー")]),
+                    always(myTextOn),
                     map(basyou => getItemIdsByBasyou(ctx, basyou)), flatten,
-                    concat(canPlayByText),
                     map(cardId => {
                         // 指令在一個部分計算
                         if (getItemPrototype(ctx, cardId).category == "コマンド") {
                             return []
                         }
-                        logCategory("createPlayEffects", "check クイック start", cardId)
-                        if (getCardHasSpeicalEffect(ctx, ["クイック"], cardId)) {
-                            logCategory("createPlayEffects", "check クイック createPlayCardEffects", cardId)
-                            return createPlayCardEffects(ctx, cardId)
+                        if (getCardHasSpeicalEffect(ctx, ["クイック"], cardId, { ges: ges })) {
+                            // クイック不判斷使用時機inTiming
+                            return createPlayCardEffects(ctx, cardId, { isQuick: true })
                         }
                         return []
                     }),
@@ -65,28 +58,32 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
             )
         )
 
-    const getPlayGF =
-        ifElse(
-            always(PhaseFn.eq(getPhase(ctx), ["配備フェイズ", "フリータイミング"]) && ctx.activePlayerID == playerId),
-            pipe(
-                always([AbsoluteBaSyouFn.of(playerId, "手札"), AbsoluteBaSyouFn.of(playerId, "ハンガー")]),
-                map(basyou => getItemIdsByBasyou(ctx, basyou)), flatten,
-                concat(canPlayByText),
-                map(cardId => {
-                    const card = getCard(ctx, cardId)
-                    return createPlayGEffects(ctx, card.id)
-                })
-            ),
-            always([] as Effect[])
-        )
+    const getPlayCommandF = ifElse(
+        always(PhaseFn.isFreeTiming(getPhase(ctx))),
+        pipe(
+            always(myTextOn),
+            map(basyou => getItemIdsByBasyou(ctx, basyou)), flatten,
+            map(cardId => {
+                const item = getItem(ctx, cardId)
+                const proto = getItemPrototype(ctx, item.id)
+                if (proto.category != "コマンド") {
+                    return []
+                }
+                return createPlayCardEffects(ctx, item.id)
+            }), flatten,
+            effs => effs.filter(eff => inTiming(eff.text))
+        ),
+        always([] as Effect[])
+    )
 
     const getPlayTextF = pipe(
         always(lift(AbsoluteBaSyouFn.of)([playerId], [...BaSyouKeywordFn.getBaAll(), "Gゾーン"])),
         map(basyou => {
             const cardIds = getItemIdsByBasyou(ctx, basyou)
             return cardIds.flatMap(
-                cardId => getCardTexts(ctx, cardId)
+                cardId => getCardTexts(ctx, cardId, { ges: ges })
                     .flatMap(text => {
+                        logCategory("createPlayEffect", cardId, text.description)
                         if (AbsoluteBaSyouFn.getBaSyouKeyword(basyou) == "Gゾーン") {
                             if (text.protectLevel != 2) {
                                 return []
@@ -96,10 +93,12 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
                             case "使用型":
                                 return [text]
                             case "特殊型":
-                                return createTextsFromSpecialEffect(ctx, text).filter(text => text.title[0] == "使用型")
+                                return createTextsFromSpecialEffect(text, { ges: ges, cardId: cardId }).filter(text => text.title[0] == "使用型")
                         }
                         return []
                     }).filter(inTiming).map(text => {
+                        logCategory("createPlayEffect", "====== after inTiming ======")
+                        logCategory("createPlayEffect", cardId, text.description)
                         const playTextConditions: { [key: string]: Condition } = {
                             // 沒有同切上限，只有一回合能用多少次，基本上是1次
                             // "同切上限": {
@@ -129,29 +128,24 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
                             "同回合上限": {
                                 actions: [
                                     {
-                                        title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, ToolFn }: Bridge): GameState {
-                                            // 使用了卡牌後, 同一個回合不能再使用. 以下記錄使用過的卡片, 會在切入結束後清除
-                                            const cardId = DefineFn.EffectFn.getCardID(effect)
-                                            const ps = GameStateFn.getItemState(ctx, cardId)
-                                            // 有"每"字的一回內可以無限使用
-                                            if (effect.text.isEachTime) {
-
-                                            } else {
-                                                if ((ps.textIdsUseThisTurn || []).filter(tid => tid == effect.text.id).length > 0) {
-                                                    throw new DefineFn.TipError(`同回合上限: ${effect.text.description}`)
-                                                }
-                                            }
-                                            ctx = GameStateFn.mapItemState(ctx, cardId, ps => {
-                                                return {
-                                                    ...ps,
-                                                    textIdsUseThisTurn: [effect.text.id, ...(ps.textIdsUseThisTurn || [])]
-                                                }
-                                            }) as GameState
-                                            return ctx
-                                        }.toString()
+                                        title: ["同回合上限", 1]
                                     }
                                 ]
                             }
+                        }
+                        // 合併邏輯樹
+                        const logicLeafs: LogicTree[] = Object.keys(playTextConditions).map(k => {
+                            const ret: LogicTree = {
+                                type: "Leaf",
+                                value: k
+                            }
+                            return ret
+                        })
+                        const logicTree: LogicTree = {
+                            type: "And",
+                            children: text.logicTreeActions?.[0] ?
+                                [...logicLeafs, ...CardTextFn.getLogicTreeTreeLeafs(text, text.logicTreeActions[0])] :
+                                logicLeafs
                         }
                         return {
                             id: `createPlayEffects_${playerId}_${cardId}_${text.id}`,
@@ -162,29 +156,18 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
                                 conditions: {
                                     ...text.conditions,
                                     ...playTextConditions
-                                }
+                                },
+                                logicTreeActions: [
+                                    {
+                                        logicTree: logicTree,
+                                        actions: text.logicTreeActions?.[0].actions || []
+                                    }
+                                ]
                             }
                         } as Effect
                     })
             )
         }), flatten
-    )
-    const getPlayCommandF = ifElse(
-        always(PhaseFn.isFreeTiming(getPhase(ctx)) && ctx.activePlayerID == playerId),
-        pipe(
-            always([AbsoluteBaSyouFn.of(playerId, "手札"), AbsoluteBaSyouFn.of(playerId, "ハンガー")]),
-            map(basyou => getItemIdsByBasyou(ctx, basyou)), flatten,
-            concat(canPlayByText),
-            map(cardId => {
-                const card = getCard(ctx, cardId)
-                const proto = getItemPrototype(ctx, card.id)
-                if (proto.commandText && inTiming(proto.commandText)) {
-                    return createPlayCardEffects(ctx, card.id)
-                }
-                return []
-            }), flatten
-        ),
-        always([] as Effect[])
     )
 
     function inTiming(text: CardText): boolean {
@@ -289,5 +272,5 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
         return true;
     }
 
-    return [...getPlayCardEffectsF(), ...getPlayGF(), ...getPlayCommandF(), ...getPlayTextF()]
+    return [...getPlayCardEffectsF(), ...getPlayCommandF(), ...getPlayTextF()]
 }

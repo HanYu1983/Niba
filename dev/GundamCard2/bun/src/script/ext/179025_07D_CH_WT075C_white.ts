@@ -36,7 +36,17 @@ export const prototype: CardPrototype = {
         const cardId = DefineFn.EffectFn.getCardID(effect)
         const cardController = GameStateFn.getItemController(ctx, cardId)
         if (evt.title[0] == "自軍本国に戦闘ダメージが与えられた場合" && evt.playerId == cardController) {
-          ctx = GameStateFn.doPlayerDrawCard(ctx, 1, cardController)
+          const newE = GameStateFn.createPlayTextEffectFromEffect(ctx, effect, {
+            isOption: true,
+            logicTreeAction: {
+              actions: [
+                {
+                  title: ["カード_１枚を引く", 1]
+                }
+              ]
+            }
+          })
+          ctx = GameStateFn.addImmediateEffectIfCanPayCost(ctx, newE)
         }
         return ctx
       }.toString()

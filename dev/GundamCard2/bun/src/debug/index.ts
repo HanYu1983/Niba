@@ -1,13 +1,13 @@
 import { AbsoluteBaSyouFn } from "../game/define/BaSyou";
 import { Card } from "../game/define/Card";
 import { testGameError } from "../game/define/GameError";
-import { PlayerA } from "../game/define/PlayerID";
-import { addCards, mapCard, getCard } from "../game/gameState/CardTableComponent";
+import { PlayerA, PlayerB } from "../game/define/PlayerID";
+import { addCards, mapCard, getCard, createCardWithProtoIds } from "../game/gameState/CardTableComponent";
 import { doItemSwap } from "../game/gameState/doItemSwap";
 import { createGameState, GameState } from "../game/gameState/GameState";
 import { mapItemState, getItemState } from "../game/gameState/ItemStateComponent";
 import { getItemBaSyou } from "../game/gameState/ItemTableComponent";
-import { loadPrototype } from "../script";
+import { getPrototype, loadPrototype } from "../script";
 import { testItemGroup } from "../tool/ItemGroup";
 import { test179001_01A_CH_WT007R_white } from "./test179001_01A_CH_WT007R_white";
 import { test179019_01A_U_WT003C_white } from "./test179019_01A_U_WT003C_white";
@@ -32,7 +32,6 @@ import { testAttackRuleEffect, testAttackRuleEffect2, testAttackRuleEffect3 } fr
 import { testCompress } from "./testCompress";
 import { testCrossWeapon } from "./testCrossWeapon";
 import { testDrawRuleEffect } from "./testDrawRuleEffect";
-import { testFlow1, testBattleBonus } from "./testFlow";
 import { testGain } from "./testGain";
 import { testGetPlayEffects } from "./testGetPlayEffects";
 import { testIssue } from "./testIssue";
@@ -47,19 +46,41 @@ import { testSupply } from "./testSupply";
 import { testThinkVer1, testThinkVer1_2 } from "./testThinkVer1";
 import { test179901_00_U_WT001P_white_02 } from "./test179901_00_U_WT001P_white_02";
 import { test179028_10D_CH_WT095_white } from "./test179028_10D_CH_WT095_white";
+import { test179009_03B_U_WT045U_white } from "./test179009_03B_U_WT045U_white";
+import { test179003_01A_CH_GN001R_green } from "./test179003_01A_CH_GN001R_green";
+import { test179009_03B_U_GN036U_green } from "./test179009_03B_U_GN036U_green";
+import { testAllCardTextTestEnv } from "../game/gameState/cardTextTestEnv";
+import { testBattleBonus } from "./testFlow";
 
 const fs = require('fs').promises;
 
 export async function tests() {
     return [
+        test179030_11E_C_WT077S_white,
+        testAllCardTextTestEnv,
+        testBattleBonus,
+        testPS,
+        testCrossWeapon,
+        test179028_10D_U_WT181N_white,
+        test179024_03B_U_WT042U_white,
+        test179001_01A_CH_WT007R_white,
+        test179016_04B_U_BK066C_black,
+        test179030_11E_U_BK194S_2_black,
+        test179015_04B_U_BK058R_black,
+        test179030_11E_U_BK194S_2_black_2,
+        test179030_11E_C_BL079R_blue,
+        test179028_10D_C_BL070N_blue,
+        test179025_07D_U_RD158C_red,
+        test179019_01A_U_WT003C_white,
+        test179009_03B_U_GN036U_green,
+        test179003_01A_CH_GN001R_green,
+        test179009_03B_U_WT045U_white,
+        testIssue,
         test179028_10D_CH_WT095_white,
         test179901_00_U_WT001P_white_02,
-        test179019_01A_U_WT003C_white,
-        test179030_11E_C_WT077S_white,
         testPlayerScore,
         testThinkVer1_2,
         test179029_B3C_CH_WT102R_white,
-        testIssue,
         testThinkVer1,
         test179007_02A_U_WT027U_white,
         test179027_09D_C_WT067R_white,
@@ -70,17 +91,10 @@ export async function tests() {
         test179901_B2B_C_BK005P_black,
         test179015_04B_U_BK061C_black_2,
         test179020_05C_U_BK100U_black,
-        test179025_07D_U_RD158C_red,
         test179003_01A_U_BK008U_black,
-        test179030_11E_C_BL079R_blue,
-        test179028_10D_C_BL070N_blue,
         testGain,
-        testLoadPrototype,
         testSwapItem,
         testItemGroup,
-        testFlow1,
-        //testFlow2,
-        testBattleBonus,
         testGetPlayEffects,
         testAttackRuleEffect,
         testAttackRuleEffect2,
@@ -88,18 +102,9 @@ export async function tests() {
         testDrawRuleEffect,
         testReollRuleEffect,
         testReturnRuleEffect,
-        testPS,
-        testCrossWeapon,
         testPlayG,
         testPlayChar,
-        test179028_10D_U_WT181N_white,
-        test179024_03B_U_WT042U_white,
-        test179001_01A_CH_WT007R_white,
         test179015_04B_U_BK061C_black,
-        test179016_04B_U_BK066C_black,
-        test179030_11E_U_BK194S_2_black,
-        test179015_04B_U_BK058R_black,
-        test179030_11E_U_BK194S_2_black_2,
         testCompress,
     ].reduce((worker, testF) => {
         return worker.then(async () => {
@@ -108,14 +113,6 @@ export async function tests() {
         })
     }, Promise.resolve()).then(() => console.log("DONE!"))
 }
-
-async function testLoadPrototype() {
-    //const TMP_DECK = ["179001_01A_CH_WT007R_white", "179003_01A_U_BK008U_black", "179004_01A_CH_WT009R_white", "179004_01A_CH_WT010C_white", "179007_02A_O_BK005C_black", "179007_02A_U_WT027U_white", "179008_02A_U_WT034U_white", "179014_03B_CH_WT027R_white", "179015_04B_U_WT067C_white", "179016_04B_U_RD083C_red", "179016_04B_U_WT074C_white", "179016_04B_U_WT075C_white", "179019_01A_C_WT010C_white", "179022_06C_CH_WT057R_white", "179022_06C_U_WT113R_white", "179023_06C_CH_WT067C_white", "179023_06C_G_BL021C_blue", "179024_03B_U_WT057U_white", "179025_07D_C_WT060U_white", "179025_07D_CH_WT075C_white", "179025_07D_O_GN019C_green", "179025_07D_U_RD156R_red", "179025_07D_U_RD158C_red", "179028_10D_C_BL070N_blue", "179029_05C_O_BK014C_black", "179029_B3C_CH_WT102R_white", "179029_B3C_CH_WT103N_white", "179030_11E_C_BL076S_blue", "179030_11E_G_RD021N_red", "179030_11E_O_BK012N_black", "179030_11E_O_GN023N_green", "179030_11E_U_BL208S_blue", "179030_11E_U_BL210N_blue", "179030_11E_U_BL215R_blue", "179901_00_U_RD010P_red", "179901_CG_C_WT001P_white", "179901_CG_CH_WT002P_white"];
-    const TMP_DECK = ["179031_12E_C_RD085N_red"]
-    await Promise.all(TMP_DECK.map(loadPrototype))
-}
-
-
 
 async function testSwapItem() {
     await loadPrototype("unit")
@@ -140,13 +137,13 @@ async function testSwapItem() {
         throw new Error()
     }
     ctx = doItemSwap(ctx, [unit.id, getItemBaSyou(ctx, unit.id)], [unit2.id, getItemBaSyou(ctx, unit2.id)])
-    if (getItemState(ctx, unit.id).damage != 0) {
+    if (getItemState(ctx, unit.id).damage != 2) {
         throw new Error()
     }
-    if (getItemState(ctx, unit2.id).damage != 2) {
+    if (getItemState(ctx, unit2.id).damage != 0) {
         throw new Error()
     }
-    if (getCard(ctx, unit2.id).isRoll != true) {
+    if (getCard(ctx, unit.id).isRoll != true) {
         throw new Error()
     }
     if (getCard(ctx, unit.id).protoID != "unitBlack") {
@@ -163,24 +160,3 @@ async function testSwapItem() {
         throw new Error()
     }
 }
-
-
-
-
-// ============================================================
-// Bun v1.1.27 (267afa29) Windows x64
-// Windows v.win10_fe
-// CPU: sse42 avx avx2
-// Args: "C:\Program Files\nodejs\node_modules\bun\bin\bun.exe" "run" ".\src\index.ts"
-// Features: jsc tsconfig(2)
-// Builtins: "bun:main" "node:buffer" "node:crypto" "node:fs" "node:string_decoder" "node:util/types"
-// Elapsed: 24026ms | User: 9625ms | Sys: 78ms
-// RSS: 0.35GB | Peak: 0.35GB | Commit: 0.48GB | Faults: 88180
-
-// panic(main thread): Segmentation fault at address 0x30
-// oh no: Bun has crashed. This indicates a bug in Bun, not your code.
-
-// To send a redacted crash report to Bun's team,
-// please file a GitHub issue using the link below:
-
-//  https://bun.report/1.1.27/wr1267afa2AiggggCyhwk3Cyjhk3Csg9j3C4tqyN6nx9X0uqpT2vguJsozwJ47z57C20wjqBA2AgD

@@ -4,11 +4,6 @@ import { Card } from "../game/define/Card";
 import { PlayerA, PlayerB } from "../game/define/PlayerID";
 import { getBattleGroup, getBattleGroupBattlePoint, isBattleGroupHasA } from "../game/gameState/battleGroup";
 import { addCards, createCardWithProtoIds } from "../game/gameState/CardTableComponent";
-import { createCommandEffectTips, createEffectTips, doEffect, setCardTipStrBaSyouPairs, setTipSelectionForUser } from "../game/gameState/doEffect";
-import { createGameState, GameState } from "../game/gameState/GameState";
-import { createAttackPhaseRuleEffect } from "../game/gameState/createAttackPhaseRuleEffect";
-import { createConditionTitleFn } from "../game/gameState/createConditionTitleFn";
-import { getItem, getItemBaSyou } from "../game/gameState/ItemTableComponent";
 import { Flow } from "../game/gameStateWithFlowMemory/Flow";
 import { loadPrototype } from "../script";
 import { repeat } from "ramda";
@@ -21,6 +16,7 @@ import { setActivePlayerID } from "../game/gameState/ActivePlayerComponent";
 import { applyFlow } from "../game/gameStateWithFlowMemory/applyFlow";
 import { thinkVer1 } from "../game/gameStateWithFlowMemory/ai/thinkVer1";
 import { StrBaSyouPair } from "../game/define/Tip";
+import { getGlobalEffects } from "../game/gameState/globalEffects";
 
 export async function testThinkVer1() {
     await loadPrototype("179015_04B_U_BK059C_black")
@@ -43,11 +39,12 @@ export async function testThinkVer1() {
     if (units.length != 4) {
         throw new Error()
     }
-    let meleeUnits = units.filter(id => isMeleeUnit(ctx, id))
+    let ges = getGlobalEffects(ctx, null)
+    let meleeUnits = units.filter(id => isMeleeUnit(ctx, id, {ges: ges}))
     if (meleeUnits.length != 2) {
         throw new Error()
     }
-    let rangeUnits = units.filter(id => isRangeUnit(ctx, id))
+    let rangeUnits = units.filter(id => isRangeUnit(ctx, id, {ges: ges}))
     if (rangeUnits.length != 2) {
         throw new Error()
     }
@@ -128,12 +125,12 @@ export async function testThinkVer1() {
     if (flow == null) {
         throw new Error()
     }
-    ctx = applyFlow(ctx, PlayerB, flow)
-    let bp = getBattleGroupBattlePoint(ctx, getBattleGroup(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1")))
+    ctx = applyFlow(ctx, PlayerA, flow)
+    let bp = getBattleGroupBattlePoint(ctx, getBattleGroup(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1")), {ges: ges})
     if(bp != 6){
         throw new Error()
     }
-    bp = getBattleGroupBattlePoint(ctx, getBattleGroup(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア2")))
+    bp = getBattleGroupBattlePoint(ctx, getBattleGroup(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア2")), {ges: ges})
     if(bp != 6){
         throw new Error()
     }
@@ -161,11 +158,12 @@ export async function testThinkVer1_2() {
     if (units.length != 4) {
         throw new Error()
     }
-    let meleeUnits = units.filter(id => isMeleeUnit(ctx, id))
+    let ges = getGlobalEffects(ctx, null)
+    let meleeUnits = units.filter(id => isMeleeUnit(ctx, id, {ges: ges}))
     if (meleeUnits.length != 2) {
         throw new Error()
     }
-    let rangeUnits = units.filter(id => isRangeUnit(ctx, id))
+    let rangeUnits = units.filter(id => isRangeUnit(ctx, id, {ges: ges}))
     if (rangeUnits.length != 2) {
         throw new Error()
     }
@@ -247,12 +245,12 @@ export async function testThinkVer1_2() {
     if (flow == null) {
         throw new Error()
     }
-    ctx = applyFlow(ctx, PlayerB, flow)
-    let bp = getBattleGroupBattlePoint(ctx, getBattleGroup(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1")))
+    ctx = applyFlow(ctx, PlayerA, flow)
+    let bp = getBattleGroupBattlePoint(ctx, getBattleGroup(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1")), {ges: ges})
     if(bp != 0){
         throw new Error()
     }
-    bp = getBattleGroupBattlePoint(ctx, getBattleGroup(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア2")))
+    bp = getBattleGroupBattlePoint(ctx, getBattleGroup(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア2")), {ges: ges})
     if(bp != 8){
         throw new Error()
     }

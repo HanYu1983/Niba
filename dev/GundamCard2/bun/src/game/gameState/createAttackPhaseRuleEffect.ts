@@ -3,7 +3,6 @@ import { BaKeyword } from "../define/BaSyou";
 import { Effect } from "../define/Effect";
 import { PlayerID } from "../define/PlayerID";
 import { StrBaSyouPair, Tip, TipFn } from "../define/Tip";
-import { ToolFn } from "../tool";
 import { GameState } from "./GameState";
 import { getPhase } from "./PhaseComponent";
 
@@ -35,8 +34,9 @@ export function createAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID):
                             .filter(cardId => GameStateFn.getCard(ctx, cardId).isRoll != true)
                         const opponentUnitIds = GameStateFn.getBattleGroup(ctx, DefineFn.AbsoluteBaSyouFn.of(opponentPlayerId, currentBaKw));
                         if (opponentUnitIds.length) {
-                            if (GameStateFn.isBattleGroupHasA(ctx, ["高機動"], opponentUnitIds[0])) {
-                                unitIds = unitIds.filter(id => GameStateFn.isBattleGroupHasA(ctx, ["高機動"], id))
+                            const ges = GameStateFn.getGlobalEffects(ctx, null)
+                            if (GameStateFn.isABattleGroup(ctx, ["高機動"], opponentUnitIds[0], { ges: ges })) {
+                                unitIds = unitIds.filter(id => GameStateFn.isSetGroupHasA(ctx, ["高機動"], id, { ges: ges }))
                             }
                         }
                         const pairs = unitIds.map(id => {
@@ -53,7 +53,9 @@ export function createAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID):
                                 const playerId = DefineFn.EffectFn.getPlayerID(effect)
                                 const fackCardId = DefineFn.EffectFn.getCardID(effect)
                                 const earthPairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "去地球", fackCardId)
+                                const phase = GameStateFn.getPhase(ctx)
                                 for (const pair of earthPairs) {
+                                    ctx = GameStateFn.mapItemState(ctx, pair[0], is => ({ ...is, isAttack: phase[1] == "攻撃ステップ", isDefence: phase[1] == "防御ステップ" })) as GameState
                                     ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(playerId, "戦闘エリア1"), pair) as GameState
                                 }
                                 return ctx
@@ -78,8 +80,9 @@ export function createAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID):
                             .filter(cardId => GameStateFn.getCard(ctx, cardId).isRoll != true)
                         const opponentUnitIds = GameStateFn.getBattleGroup(ctx, DefineFn.AbsoluteBaSyouFn.of(opponentPlayerId, currentBaKw));
                         if (opponentUnitIds.length) {
-                            if (GameStateFn.isBattleGroupHasA(ctx, ["高機動"], opponentUnitIds[0])) {
-                                unitIds = unitIds.filter(id => GameStateFn.isBattleGroupHasA(ctx, ["高機動"], id))
+                            const ges = GameStateFn.getGlobalEffects(ctx, null)
+                            if (GameStateFn.isABattleGroup(ctx, ["高機動"], opponentUnitIds[0], { ges: ges })) {
+                                unitIds = unitIds.filter(id => GameStateFn.isSetGroupHasA(ctx, ["高機動"], id, { ges: ges }))
                             }
                         }
                         const pairs = unitIds.map(id => {
@@ -96,9 +99,12 @@ export function createAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID):
                                 const playerId = DefineFn.EffectFn.getPlayerID(effect)
                                 const fackCardId = DefineFn.EffectFn.getCardID(effect)
                                 const spacePairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "去宇宙", fackCardId)
+                                const phase = GameStateFn.getPhase(ctx)
                                 for (const pair of spacePairs) {
+                                    ctx = GameStateFn.mapItemState(ctx, pair[0], is => ({ ...is, isAttack: phase[1] == "攻撃ステップ", isDefence: phase[1] == "防御ステップ" })) as GameState
                                     ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(playerId, "戦闘エリア2"), pair) as GameState
                                 }
+                                ctx = GameStateFn.checkIsBattle(ctx) as GameState
                                 return ctx
                             }.toString()
                         }

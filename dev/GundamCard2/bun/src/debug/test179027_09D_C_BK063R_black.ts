@@ -20,6 +20,7 @@ import { TipFn } from "../game/define/Tip";
 import { getTopEffect } from "../game/gameState/EffectStackComponent";
 import { setSetGroupParent } from "../game/gameState/SetGroupComponent";
 import { TipError } from "../game/define/GameError";
+import { getGlobalEffects } from "../game/gameState/globalEffects";
 
 export async function test179027_09D_C_BK063R_black() {
     await loadPrototype("179027_09D_C_BK063R_black")
@@ -38,9 +39,13 @@ export async function test179027_09D_C_BK063R_black() {
     let effects = createPlayEffects(ctx, PlayerA)
     {
         if (effects.length != 1) {
+            console.log(effects)
             throw new Error()
         }
-        let effect = effects[0]
+        let effect = effects.find(eff=>eff.reason[0]=="PlayCard" && eff.reason[3].isPlayCommand)
+        if(effect == null){
+            throw new Error()
+        }
         let tipOrErrors = createEffectTips(ctx, effect, 0, 0)
         let toes = tipOrErrors.filter(toe => toe.errors.length > 0)
         if (toes.length != 1) {
@@ -48,15 +53,15 @@ export async function test179027_09D_C_BK063R_black() {
         }
 
         ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア1"), repeat("unitBlack", 1)) as GameState
-        let tip = createTipByEntitySearch(ctx, cardA.id, {
+        let tip = createTipByEntitySearch(ctx, EffectFn.createEmptyPlayCard(PlayerA, cardA.id), {
             at: ["戦闘エリア1", "戦闘エリア2"],
             hasSetCard: false,
             side: "敵軍",
             is: ["ユニット"],
             count: 1
-        })
+        }, {ges: getGlobalEffects(ctx, null)})
         let selection = TipFn.getSelection(tip)
-        if(selection.length != 1){
+        if (selection.length != 1) {
             console.log(tip)
             throw new Error()
         }
@@ -69,28 +74,27 @@ export async function test179027_09D_C_BK063R_black() {
 
         ctx = setTipSelectionForUser(ctx, effect, 0, 0)
         ctx = doEffect(ctx, effect, 0, 0)
-        
+
         const topEffect = getTopEffect(ctx)
-        if(topEffect == null){
+        if (topEffect == null) {
             throw new Error()
         }
         effect = topEffect
         ctx = doEffect(ctx, effect, 0, 0)
         // 卡被破壞
-        if(getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア1")).find(cardId=>getItemState(ctx, cardId).destroyReason) == null){
+        if (getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア1")).find(cardId => getItemState(ctx, cardId).destroyReason) == null) {
             throw new Error()
         }
         // 本國的本被抽
-        if(getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国")).length != 0){
+        if (getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国")).length != 0) {
             throw new Error()
         }
         // 指令移到墓地
-        if(getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "ジャンクヤード")).length != 1){
+        if (getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "ジャンクヤード")).length != 1) {
             throw new Error()
         }
-        console.log(ctx.cards)
         // 國力橫3張
-        if(getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン")).filter(cardId=>getCard(ctx, cardId).isRoll).length != 3){
+        if (getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン")).filter(cardId => getCard(ctx, cardId).isRoll).length != 3) {
             throw new Error()
         }
     }
@@ -110,10 +114,12 @@ export async function test179027_09D_C_BK063R_black() {
     {
         effects = createPlayEffects(ctx, PlayerA)
         if (effects.length != 2) {
+            console.log(effects)
             throw new Error()
         }
-        let effect = effects[1]
-        if(effect.text.id != "179027_09D_C_BK063R_black_text_command"){
+        let effect = effects.find(eff => eff.description == "『恒常』：自軍セットカードがある場合、このカードは、合計国力－２、ロールコスト－２してプレイできる。")
+        if (effect == null) {
+            console.log(effects)
             throw new Error()
         }
         let tipOrErrors = createEffectTips(ctx, effect, 0, 0)
@@ -124,16 +130,16 @@ export async function test179027_09D_C_BK063R_black() {
 
         ctx = setTipSelectionForUser(ctx, effect, 0, 0)
         ctx = doEffect(ctx, effect, 0, 0)
-        
+
         const topEffect = getTopEffect(ctx)
-        if(topEffect == null){
+        if (topEffect == null) {
             throw new Error()
         }
         effect = topEffect
         ctx = doEffect(ctx, effect, 0, 0)
 
         // 國力橫1張
-        if(getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン")).filter(cardId=>getCard(ctx, cardId).isRoll).length != 1){
+        if (getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン")).filter(cardId => getCard(ctx, cardId).isRoll).length != 1) {
             throw new Error()
         }
     }

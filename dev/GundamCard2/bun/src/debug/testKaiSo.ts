@@ -12,7 +12,6 @@ import { doItemMove } from "../game/gameState/doItemMove";
 import { getEffect, getTopEffect } from "../game/gameState/EffectStackComponent";
 import { createGameState, GameState } from "../game/gameState/GameState";
 import { createPlayEffects } from "../game/gameState/createPlayEffects";
-import { createPlayGEffects } from "../game/gameState/createPlayGEffects";
 import { createTextsFromSpecialEffect } from "../game/gameState/createTextsFromSpecialEffect";
 import { getItemBaSyou, getItemIdsByBasyou } from "../game/gameState/ItemTableComponent";
 import { setPhase } from "../game/gameState/PhaseComponent";
@@ -39,6 +38,7 @@ export async function testKaiSo() {
     ctx = setPhase(ctx, ["戦闘フェイズ", "攻撃ステップ", "フリータイミング"]) as GameState
     let effects = createPlayEffects(ctx, PlayerA)
     if (effects.length != 1) {
+        console.log(effects)
         throw new Error()
     }
     let effect = effects[0]

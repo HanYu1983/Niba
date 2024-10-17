@@ -2,14 +2,16 @@ import { always, ifElse, map, pipe, zipObj } from "ramda";
 import { RelatedPlayerSideKeyword, UnitPropertyKeyword } from ".";
 import { LogicTree, LogicTreeFn } from "../../tool/logicTree";
 import { AbsoluteBaSyou, BaSyou, BaSyouKeyword } from "./BaSyou";
-import { CardColor, CardCategory, GSignProperty } from "./CardPrototype";
-import { Effect } from "./Effect";
-import { GameEvent } from "./GameEvent";
+import { CardColor, CardCategory, GSignProperty, GSign } from "./CardPrototype";
+import { DestroyReason, Effect } from "./Effect";
+import { GameEvent, GameEventTitle } from "./GameEvent";
 import { GlobalEffect } from "./GlobalEffect";
 import { Phase, SiYouTiming } from "./Timing";
 import { StrBaSyouPair, Tip, TipFn } from "./Tip";
 import { PlayerID } from "./PlayerID";
 import { logCategory } from "../../tool/logger";
+import { Card } from "./Card";
+import { ItemState } from "./ItemState";
 
 export type BattleBonus = [number, number, number]
 
@@ -24,15 +26,34 @@ export type TextSpeicalEffect =
     | ["共有", string]
     | ["供給"]
     | ["クロスウェポン", string]
-    | ["PS装甲"]
+    | ["【PS装甲】"]
     | ["クイック"]
     | ["戦闘配備"]
-    | ["ステイ"]
+    | ["【ステイ】"]
     | ["1枚制限"];
 
 export const TextSpeicalEffectFn = {
     isSameKeyword(left: TextSpeicalEffect, right: TextSpeicalEffect): boolean {
         return left[0] == right[0]
+    },
+    createAll(): TextSpeicalEffect[] {
+        return [
+            ["1枚制限"],
+            ["【PS装甲】"],
+            ["【ステイ】"],
+            ["クイック"],
+            ["クロスウェポン", ""],
+            ["ゲイン"],
+            ["サイコミュ", 0],
+            ["供給"],
+            ["共有", ""],
+            ["強襲"],
+            ["戦闘配備"],
+            ["改装", ""],
+            ["範囲兵器", 0],
+            ["速攻"],
+            ["高機動"]
+        ]
     }
 }
 
@@ -49,7 +70,7 @@ export type ActionTitle =
     | ["リロール状態で置き換える"]
     | ["合計国力〔x〕", number]
     | ["_敵軍_ユニットが_戦闘エリアにいる場合", RelatedPlayerSideKeyword, CardCategory, BaSyouKeyword[]]
-    | ["這張卡在_戰區的場合", BaSyouKeyword[]]
+    | ["このカードが_戦闘エリアにいる場合", BaSyouKeyword[]]
     | ["看自己_本國全部的卡", BaSyouKeyword]
     | ["triggerEvent", GameEvent]
     | ["_の_ハンガーに移す", RelatedPlayerSideKeyword, BaSyouKeyword]
@@ -59,6 +80,10 @@ export type ActionTitle =
     | ["_自軍_本国をシャッフルする", RelatedPlayerSideKeyword, BaSyouKeyword]
     | ["この記述の効果は、プレイヤー毎に１ターンに１回まで解決できる"]
     | ["Entity", EntitySearchOptions]
+    | ["同回合上限", number]
+    | ["このカードが攻撃に出撃している"]
+    | ["このカードが交戦中の場合"]
+    | ["看見see"]
 
 export type Action = {
     title: ActionTitle,
@@ -85,6 +110,7 @@ export const ActionFn = {
 export type EntitySearchOptions = {
     isThisBattleGroup?: boolean,
     isThisCard?: boolean,
+    isThisSetGroup?: boolean,
     isBattle?: boolean,
     isBattleWithThis?: boolean,
     side?: RelatedPlayerSideKeyword,
@@ -99,12 +125,17 @@ export type EntitySearchOptions = {
     isDestroy?: boolean,
     isSetGroup?: boolean,
     isBattleGroupFirst?: boolean,
+    isRoll?: boolean,
     isCanSetCharacter?: boolean,
+    hasTitle?: string[],
     hasSetCard?: boolean,
     hasSpecialEffect?: TextSpeicalEffect[],
     hasChar?: string[],
     hasSelfCardId?: boolean,
+    hasGSign?: GSign[],
     hasGSignProperty?: GSignProperty[],
+    hasRollCostColor?: CardColor[],
+    hasDamage?: boolean,
     isMaster?: boolean,
     count?: number,
     min?: number,
@@ -134,7 +165,7 @@ export type ConditionTitle =
     | ["_敵軍部隊がいる場合", RelatedPlayerSideKeyword]
     | ["_敵軍_ユニットが_３枚以上いる場合", RelatedPlayerSideKeyword, CardCategory, number]
     | ["Entity", EntitySearchOptions]
-    | ["_敵軍部隊_１つ", RelatedPlayerSideKeyword, number]
+    | ["_交戦中の_敵軍部隊_１つ", boolean | null, RelatedPlayerSideKeyword | null, number]
 
 export type Condition = {
     title?: ConditionTitle,
@@ -178,6 +209,7 @@ export const ConditionFn = {
 }
 
 export type SituationTitle =
+    | ["有沒有新增內文"]
     | ["「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合"]
     | ["ロールコストの支払いにおいて"]
 
@@ -222,9 +254,20 @@ export type OnEventTitle =
     | string
     | ["GameEventOnTimingDoAction", Phase, Action]
 
+export type CreatePlayEffectFn = (ctx: any, effect: Effect, bridge: any) => Effect[]
+
+export type TestEnv = {
+    eventTitle?: GameEventTitle,
+    event?: GameEvent,
+    thisCard?: [RelatedPlayerSideKeyword, BaSyouKeyword, Card, { destroyReason?: DestroyReason, flags?: { [key: string]: any } } | null],
+    addCards?: [RelatedPlayerSideKeyword, BaSyouKeyword, Card[]][],
+    createCards?: [RelatedPlayerSideKeyword, BaSyouKeyword, [string, number][]][],
+    setGroupParent?: { [key: string]: string }
+}
+
 export type CardText = {
     id: string,
-    title: TextTitle
+    title: TextTitle,
     description?: string
     conditions?: { [key: string]: Condition }
     logicTreeActions?: LogicTreeAction[]
@@ -233,6 +276,8 @@ export type CardText = {
     // 1為非G時不能被洗，2為G時也不能被洗
     protectLevel?: 1 | 2,
     isEachTime?: boolean,
+    createPlayEffect?: string,
+    testEnvs?: TestEnv[]
 }
 
 function getCondition(ctx: CardText, conditionId: string): Condition {
@@ -293,6 +338,15 @@ export const CardTextFn = {
             throw new Error("condition.title must be string")
         }
         return eval(ctx.onEvent + ";_")
+    },
+
+    getCreatePlayEffectFn(ctx: CardText): CreatePlayEffectFn {
+        if (ctx.createPlayEffect == null) {
+            return function (a) {
+                return []
+            }
+        }
+        return eval(ctx.createPlayEffect + ";_")
     }
 }
 

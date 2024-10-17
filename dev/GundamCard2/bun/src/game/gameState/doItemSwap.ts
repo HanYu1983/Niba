@@ -2,7 +2,7 @@ import { TableFns } from "../../tool/table";
 import { StrBaSyouPair } from "../define/Tip";
 import { getCard, mapCard, setCard } from "./CardTableComponent";
 import { GameState } from "./GameState";
-import { getItemState, setItemState } from "./ItemStateComponent";
+import { getItemState, mapItemStateValues, setItemState } from "./ItemStateComponent";
 import { assertTargetMissingError, isCard } from "./ItemTableComponent";
 
 export function doItemSwap(ctx: GameState, pair1: StrBaSyouPair, pair2: StrBaSyouPair, options?: { isSkipTargetMissing?: boolean }): GameState {
@@ -19,29 +19,43 @@ export function doItemSwap(ctx: GameState, pair1: StrBaSyouPair, pair2: StrBaSyo
         const card1 = getCard(ctx, itemId1)
         const card2 = getCard(ctx, itemId2)
         // 只換protoID
-        ctx = setCard(ctx, card1.id, { ...card1, protoID: card2.protoID, isRoll: card2.isRoll }) as GameState
-        ctx = setCard(ctx, card2.id, { ...card2, protoID: card1.protoID, isRoll: card1.isRoll }) as GameState
+        // 這裡要注意置換protoID時，交差武器的TextRef會跑掉
+        ctx = setCard(ctx, card1.id, { ...card1, protoID: card2.protoID/*, isRoll: card2.isRoll*/ }) as GameState
+        ctx = setCard(ctx, card2.id, { ...card2, protoID: card1.protoID/*, isRoll: card1.isRoll*/ }) as GameState
 
-        const is1 = getItemState(ctx, itemId1)
-        const is2 = getItemState(ctx, itemId2)
-        ctx = setItemState(ctx, is1.id, { ...is2, id: is1.id }) as GameState
-        ctx = setItemState(ctx, is2.id, { ...is1, id: is2.id }) as GameState
+        // const is1 = getItemState(ctx, itemId1)
+        // const is2 = getItemState(ctx, itemId2)
+        // ctx = setItemState(ctx, is1.id, { ...is2, id: is1.id }) as GameState
+        // ctx = setItemState(ctx, is2.id, { ...is1, id: is2.id }) as GameState
+        // 交換TextRef的cardId
+        ctx = mapItemStateValues(ctx, is => {
+            let nextGE = is.globalEffects
+            Object.keys(is.globalEffects).forEach(key => {
+                const ge = is.globalEffects[key]
+                if (ge.title[0] == "AddTextRef" && ge.title[1].cardId == card1.id) {
+                    nextGE = {
+                        ...nextGE,
+                        [key]: {
+                            ...ge,
+                            title: ["AddTextRef", { ...ge.title[1], cardId: card2.id }]
+                        }
+                    }
+                } else if (ge.title[0] == "AddTextRef" && ge.title[1].cardId == card2.id) {
+                    nextGE = {
+                        ...nextGE,
+                        [key]: {
+                            ...ge,
+                            title: ["AddTextRef", { ...ge.title[1], cardId: card1.id }]
+                        }
+                    }
+                }
+            })
+            return {
+                ...is,
+                globalEffects: nextGE
+            }
+        }) as GameState
 
-        // const b1 = TableFns.getCardPosition(ctx.table, itemId1)
-        // const b2 = TableFns.getCardPosition(ctx.table, itemId2)
-        // if (b1 == null) {
-        //     throw new Error()
-        // }
-        // if (b2 == null) {
-        //     throw new Error()
-        // }
-        // let table = ctx.table
-        // table = TableFns.moveCard(table, b1, b2, itemId1)
-        // table = TableFns.moveCard(table, b2, b1, itemId2)
-        // ctx = {
-        //     ...ctx,
-        //     table: table
-        // }
         return ctx
     }
     throw new Error(`swapCard not yet support`)

@@ -13,8 +13,13 @@ import { doTriggerEvent } from "./doTriggerEvent"
 import { getCoinIdsByCardId, removeCoinIds } from "./CoinTableComponent"
 import { getCutInDestroyEffects, removeEffect } from "./EffectStackComponent"
 import { EffectFn } from "../define/Effect"
+import { GlobalEffect } from "../define/GlobalEffect"
+import { logCategory } from "../../tool/logger"
 
-export function doItemMove(ctx: GameState, to: AbsoluteBaSyou, [itemId, from]: StrBaSyouPair, options?: { isSkipTargetMissing?: boolean, insertId?: number }): GameState {
+export function doItemMove(ctx: GameState, to: AbsoluteBaSyou, [itemId, from]: StrBaSyouPair, options?: { ges?: GlobalEffect[], isSkipTargetMissing?: boolean, insertId?: number }): GameState {
+    logCategory("doItemMove", "")
+    const ges = getGlobalEffects(ctx, null)
+    ctx = setGlobalEffects(ctx, null, ges)
     if (options?.isSkipTargetMissing) {
 
     } else {
@@ -23,9 +28,7 @@ export function doItemMove(ctx: GameState, to: AbsoluteBaSyou, [itemId, from]: S
     if (isCard(ctx, itemId) || isChip(ctx, itemId)) {
         const oldTable = ctx.table
         {
-            const ges = getGlobalEffects(ctx, null)
-            ctx = setGlobalEffects(ctx, null, ges)
-            const redirectEs = ges.filter(ge => ge.title[0] == "場、または手札から、自軍ジャンクヤードにカードが移る場合、ジャンクヤードに移る代わりにゲームから取り除かれる")
+            const redirectEs = ges.filter(ge => ge.title[0] == "場、または手札から、自軍ジャンクヤードにカードが移る場合、ジャンクヤードに移る代わりにゲームから取り除かれる") || []
             if (redirectEs.length) {
                 // 取得效果的擁有者
                 const textControllers = redirectEs.flatMap(e => e.cardIds).map(id => getItemController(ctx, id))
@@ -41,12 +44,13 @@ export function doItemMove(ctx: GameState, to: AbsoluteBaSyou, [itemId, from]: S
         // 移動子樹
         const itemIds = getSetGroupChildren(ctx, itemId)
         itemIds.forEach(itemId => {
+            const from = getItemBaSyou(ctx, itemId)
             ctx = {
                 ...ctx,
-                table: TableFns.moveCard(ctx.table, AbsoluteBaSyouFn.toString(getItemBaSyou(ctx, itemId)), AbsoluteBaSyouFn.toString(to), itemId, { insertId: options?.insertId })
+                table: TableFns.moveCard(ctx.table, AbsoluteBaSyouFn.toString(from), AbsoluteBaSyouFn.toString(to), itemId, { insertId: options?.insertId })
             }
+            ctx = onMoveItem(ctx, to, [itemId, from])
         })
-        ctx = onMoveItem(ctx, to, [itemId, from])
         ctx = EventCenterFn.onTableChange(ctx, oldTable, ctx.table)
         return ctx
     }
@@ -72,11 +76,17 @@ export function onMoveItem(ctx: GameState, to: AbsoluteBaSyou, [cardId, from]: S
         ctx = mapItemState(ctx, cardId, is => {
             return {
                 ...is,
-                isFirstTurn: true
+                isFirstTurn: true,
+            }
+        }) as GameState
+        ctx = mapCard(ctx, cardId, card => {
+            return {
+                ...card,
+                isFaceDown: false,
             }
         }) as GameState
         ctx = doTriggerEvent(ctx, {
-            title: ["場に出た場合"],
+            title: ["このカードが場に出た場合"],
             cardIds: [cardId]
         } as GameEvent)
     }
@@ -100,6 +110,10 @@ export function onMoveItem(ctx: GameState, to: AbsoluteBaSyou, [cardId, from]: S
                 ctx = removeEffect(ctx, effect.id) as GameState
             }
         }
+        ctx = doTriggerEvent(ctx, {
+            title: ["カードが場から離れた場合"],
+            cardIds: [cardId]
+        } as GameEvent)
     }
     // 到以下的場所
     if ((["捨て山", "本国", "手札"] as BaSyouKeyword[]).includes(AbsoluteBaSyouFn.getBaSyouKeyword(to))) {

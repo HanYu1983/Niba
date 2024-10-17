@@ -42,6 +42,10 @@ export function checkIsBattle(ctx: IsBattleComponent): IsBattleComponent {
   }, ctx);
 }
 
+export function isBattleAtBasyou(ctx: IsBattleComponent, basyou: AbsoluteBaSyou): boolean {
+  return ctx.isBattle[AbsoluteBaSyouFn.toString(basyou)] == true
+}
+
 export function isBattle(
   ctx: IsBattleComponent,
   cardID: string,

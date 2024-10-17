@@ -16,7 +16,7 @@ import { getItemBaSyou } from "../game/gameState/ItemTableComponent"
 import { setPhase } from "../game/gameState/PhaseComponent"
 import { doTriggerEvent } from "../game/gameState/doTriggerEvent"
 import { getPrototype, loadPrototype } from "../script"
-import { getGlobalEffects } from "../game/gameState/globalEffects"
+import { getGlobalEffects, setGlobalEffects } from "../game/gameState/globalEffects"
 import { CommandEffecTipFn } from "../game/define/CommandEffectTip"
 import { GameError, TargetMissingError, TipError } from "../game/define/GameError"
 import { setSetGroupParent } from "../game/gameState/SetGroupComponent"
@@ -39,7 +39,7 @@ export async function test179027_09D_C_WT067R_white() {
     ctx = setActivePlayerID(ctx, PlayerA) as GameState
     ctx = setPhase(ctx, ["ドローフェイズ", "フリータイミング"]) as GameState
     let effects = createPlayEffects(ctx, PlayerA)
-    let effect: Effect | null = effects[0]
+    let effect: Effect | null = effects.find(eff => eff.reason[0] == "PlayCard" && eff.reason[3].isPlayCommand) || null
     if (effect == null) {
         throw new Error()
     }
@@ -47,7 +47,9 @@ export async function test179027_09D_C_WT067R_white() {
     if (conds[TipFn.createRollColorKey(0, "白")] == null) {
         throw new Error()
     }
-    if (getCardIdsCanPayRollCost(ctx, PlayerA, null).length != 4) {
+    let ges = getGlobalEffects(ctx, null)
+    ctx = setGlobalEffects(ctx, null, ges)
+    if (getCardIdsCanPayRollCost(ctx, PlayerA, {ges: ges}).length != 4) {
         throw new Error()
     }
     ctx = setTipSelectionForUser(ctx, effect, 0, 0)

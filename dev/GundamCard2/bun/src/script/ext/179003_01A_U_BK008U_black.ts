@@ -14,8 +14,8 @@ export const prototype: CardPrototype = {
   texts: [
     {
       id: "",
-      title: ["使用型", ["ダメージ判定ステップ"]],
       description: "（ダメージ判定ステップ）〔２〕：このカードが戦闘ダメージで破壊されている場合、このカードを、破壊を無効にした上で自軍Gにする。",
+      title: ["使用型", ["ダメージ判定ステップ"]],
       conditions: {
         ...createRollCostRequire(2, null),
         "このカードが戦闘ダメージで破壊されている場合": {

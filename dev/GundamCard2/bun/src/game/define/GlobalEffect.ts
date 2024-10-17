@@ -1,12 +1,12 @@
 import { RelatedPlayerSideKeyword } from ".";
 import { CardCategory, CardColor } from "./CardPrototype";
 import { BattleBonus, CardText, TextSpeicalEffect } from "./CardText";
+import { DamageTypeKeyword } from "./Effect";
 import { TipTitleTextRef } from "./Tip";
 
 export type GlobalEffectTitle =
-    | ["合計国力＋(１)してプレイできる", number]
-    | ["合計国力＋_、ロールコスト＋_してプレイできる", number, number]
-    | ["合計国力＋(１)", number]
+    | ["合計国力_＋１してプレイできる", number]
+    | ["合計国力_＋１", number]
     | ["AddText", CardText]
     | ["AddTextRef", TipTitleTextRef]
     | ["このカードを自軍Gとしてロールできる"]
@@ -19,6 +19,12 @@ export type GlobalEffectTitle =
     | ["このカードの部隊の部隊戦闘力を_＋３する", number]
     | ["このカードと交戦中の敵軍部隊の部隊戦闘力を_－３する", number]
     | ["_白のGサインを持つ_自軍_Gとして扱う事ができる", CardColor[], RelatedPlayerSideKeyword, CardCategory]
+    | ["このカードが受ける全ての_通常ダメージは、_２減殺される", DamageTypeKeyword, number]
+    | ["「範囲兵器」の対象部分は、『X以下の防御力を持つ敵軍ユニット１枚』に変更される"]
+    | ["_ユニットは、「サイコミュ」の効果において、交戦中として扱う。", string[]]
+    | ["敵軍効果の対象にならない"]
+    | ["敵軍ユニットの効果の対象にならない"]
+    | ["自軍の手札の上限枚数に＋_１", number]
 
 export type GlobalEffect = {
     title: GlobalEffectTitle,

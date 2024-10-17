@@ -17,6 +17,8 @@ import { setPhase } from "../game/gameState/PhaseComponent"
 import { loadPrototype } from "../script"
 import { getItemState, setItemState } from "../game/gameState/ItemStateComponent"
 import { StrBaSyouPair } from "../game/define/Tip"
+import { Effect } from "../game/define/Effect"
+import { getGlobalEffects } from "../game/gameState/globalEffects"
 
 export async function test179030_11E_C_BL079R_blue() {
     await loadPrototype("179030_11E_C_BL079R_blue")
@@ -30,7 +32,8 @@ export async function test179030_11E_C_BL079R_blue() {
     ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "手札"), [cardA]) as GameState
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), repeat("unitBlue", 2)) as GameState
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国"), repeat("unit", 2)) as GameState
-    if (getCardIdsCanPayRollCost(ctx, PlayerA, null).length != 2) {
+    let ges = getGlobalEffects(ctx, null)
+    if (getCardIdsCanPayRollCost(ctx, PlayerA, {ges: ges}).length != 2) {
         throw new Error(`getCardIdsCanPayRollCost(ctx, PlayerA, null).length !=2`)
     }
     ctx = setActivePlayerID(ctx, PlayerA) as GameState
@@ -59,12 +62,17 @@ export async function test179030_11E_C_BL079R_blue() {
         console.log("取得出牌指令")
         const playCardEffects = createPlayEffects(ctx, PlayerA)
         if (playCardEffects.length != 1) {
-            throw new Error(`playCardEffects.length != 1`)
+            console.log(playCardEffects)
+            throw new Error()
+        }
+        let effect: Effect | null = playCardEffects.find(eff => eff.reason[0] == "PlayCard" && eff.reason[3].isPlayCommand) || null
+        if (effect == null) {
+            throw new Error()
         }
         console.log("選擇對象")
-        ctx = setTipSelectionForUser(ctx, playCardEffects[0], 0, 0)
+        ctx = setTipSelectionForUser(ctx, effect, 0, 0)
         console.log("出指令")
-        ctx = doEffect(ctx, playCardEffects[0], 0, 0)
+        ctx = doEffect(ctx, effect, 0, 0)
         {
             console.log("解決指令效果")
             const effect = getTopEffect(ctx)

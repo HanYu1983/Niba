@@ -30,6 +30,7 @@ export const prototype: CardPrototype = {
               title: ["AddText", {
                 id: `179003_01A_O_WT001C_white_gain_1`,
                 title: ["特殊型", ["速攻"]],
+                description: "速攻"
               }],
               cardIds: []
             }
@@ -37,6 +38,7 @@ export const prototype: CardPrototype = {
               title: ["AddText", {
                 id: `179003_01A_O_WT001C_white_gain_2`,
                 title: ["特殊型", ["高機動"]],
+                description: "高機動"
               }],
               cardIds: []
             }

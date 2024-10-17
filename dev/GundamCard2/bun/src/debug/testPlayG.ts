@@ -1,18 +1,18 @@
 import { AbsoluteBaSyouFn } from "../game/define/BaSyou";
 import { Card } from "../game/define/Card";
 import { TipError, TargetMissingError } from "../game/define/GameError";
-import { PlayerA } from "../game/define/PlayerID";
+import { PlayerA, PlayerB } from "../game/define/PlayerID";
 import { PhaseFn } from "../game/define/Timing";
 import { setActivePlayerID } from "../game/gameState/ActivePlayerComponent";
 import { addCards } from "../game/gameState/CardTableComponent";
 import { doEffect, createEffectTips } from "../game/gameState/doEffect";
 import { createGameState, GameState } from "../game/gameState/GameState";
 import { createPlayEffects } from "../game/gameState/createPlayEffects";
-import { createPlayGEffects } from "../game/gameState/createPlayGEffects";
 import { getItemBaSyou } from "../game/gameState/ItemTableComponent";
 import { setPhase } from "../game/gameState/PhaseComponent";
 import { doTriggerEvent } from "../game/gameState/doTriggerEvent";
 import { loadPrototype } from "../script";
+import { createPlayGEffect } from "../game/gameState/createPlayCardEffects";
 
 export async function testPlayG() {
     await loadPrototype("unitBlue")
@@ -30,6 +30,15 @@ export async function testPlayG() {
     ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "手札"), [unitBlue2]) as GameState
     ctx = setActivePlayerID(ctx, PlayerA) as GameState
     ctx = setPhase(ctx, ["配備フェイズ", "フリータイミング"]) as GameState
+    const storedCtx = JSON.parse(JSON.stringify(ctx))
+    {
+        ctx = setActivePlayerID(ctx, PlayerB) as GameState
+        const effects = createPlayEffects(ctx, PlayerA)
+        if(effects.length != 0){
+            throw new Error()
+        }
+    }
+    ctx = storedCtx
     {
 
         const effects = createPlayEffects(ctx, PlayerA)
@@ -38,9 +47,8 @@ export async function testPlayG() {
         }
     }
     {
-        const effect = createPlayGEffects(ctx, unitBlue.id)
+        const effect = createPlayGEffect(ctx, unitBlue.id)
         ctx = doEffect(ctx, effect, 0, 0)
-        console.log(ctx.table)
         if (AbsoluteBaSyouFn.getBaSyouKeyword(getItemBaSyou(ctx, unitBlue.id)) == "Gゾーン") {
 
         } else {
@@ -48,7 +56,7 @@ export async function testPlayG() {
         }
     }
     {
-        const effect = createPlayGEffects(ctx, unitBlue2.id)
+        const effect = createPlayGEffect(ctx, unitBlue2.id)
         const toes = createEffectTips(ctx, effect, 0, 0)
         if(toes.flatMap(toe=>toe.errors).length == 0){
             throw new Error()
@@ -70,7 +78,7 @@ export async function testPlayG() {
     }
     {
         ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", PhaseFn.getLast()] })
-        const effect = createPlayGEffects(ctx, unitBlue2.id)
+        const effect = createPlayGEffect(ctx, unitBlue2.id)
         ctx = doEffect(ctx, effect, 0, 0)
         if (AbsoluteBaSyouFn.getBaSyouKeyword(getItemBaSyou(ctx, unitBlue2.id)) == "Gゾーン") {
 

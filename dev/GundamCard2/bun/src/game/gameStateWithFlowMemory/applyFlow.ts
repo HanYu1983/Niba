@@ -1,11 +1,11 @@
 import { logCategory } from "../../tool/logger";
 import { PlayerA, PlayerB, PlayerID, PlayerIDFn } from "../define/PlayerID";
 import { AbsoluteBaSyou, AbsoluteBaSyouFn, BaSyouKeyword, BaSyouKeywordFn } from "../define/BaSyou";
-import { addImmediateEffect } from "../gameState/EffectStackComponent";
+import { addImmediateEffect, getEffect } from "../gameState/EffectStackComponent";
 import { checkIsBattle } from "../gameState/IsBattleComponent";
 import { Flow } from "./Flow";
 import { GameStateWithFlowMemory } from "./GameStateWithFlowMemory";
-import { setActiveEffectID, cancelActiveEffectID, doActiveEffect, deleteImmediateEffect, getEffectIncludePlayerCommand, setActiveLogicID } from "./effect";
+import { setActiveEffectID, cancelActiveEffectID, doActiveEffect, deleteImmediateEffect, setActiveLogicID } from "./effect";
 import { PhaseFn } from "../define/Timing";
 import { doPlayerAttack } from "../gameState/player";
 import { doTriggerEvent } from "../gameState/doTriggerEvent";
@@ -13,7 +13,7 @@ import { ToolFn } from "../tool";
 import { updateCommand } from "../gameState/updateCommand";
 import { getItem, getItemController, getItemIdsByBasyou, isCard, isCardLike, isChip, isCoin, Item, shuffleItems } from "../gameState/ItemTableComponent";
 import { TableFns } from "../../tool/table";
-import { assertTipForUserSelection, setCardTipStrBaSyouPairs, setTipSelectionForUser } from "../gameState/doEffect";
+import { addImmediateEffectIfCanPayCost, assertTipForUserSelection, setCardTipStrBaSyouPairs, setTipSelectionForUser } from "../gameState/doEffect";
 import { EffectFn } from "../define/Effect";
 import { mapItemState } from "../gameState/ItemStateComponent";
 import { ItemStateFn } from "../define/ItemState";
@@ -31,6 +31,7 @@ import { createDamageRuleEffect } from "../gameState/createDamageRuleEffect";
 import { createReturnRuleEffect } from "../gameState/createReturnRuleEffect";
 import { createDrawPhaseRuleEffect } from "../gameState/createDrawPhaseRuleEffect";
 import { createRerollPhaseRuleEffect } from "../gameState/createRerollPhaseRuleEffect";
+import { createDiscardRuleEffect } from "../gameState/createDiscardRuleEffect";
 
 export function applyFlow(
     ctx: GameStateWithFlowMemory,
@@ -81,7 +82,6 @@ export function applyFlow(
             if (flow.logicSubID == null) {
                 throw new Error("logicSubID not found");
             }
-            //ctx = setTipSelectionForUser(ctx, getEffectIncludePlayerCommand(ctx, flow.effectID), flow.logicID, flow.logicSubID) as GameStateWithFlowMemory
             ctx = doActiveEffect(ctx, playerID, flow.effectID, flow.logicID, flow.logicSubID);
             // 執行完效果時自動取消其中一方的結束宣告
             ctx = {
@@ -99,6 +99,8 @@ export function applyFlow(
                     hasPlayerPassPayCost: {},
                 },
             };
+            // 負數修正破壞
+            ctx = createMinusDestroyEffectAndPush(ctx) as GameStateWithFlowMemory;
             // 每執行完一次效果，就更新指令
             ctx = updateCommand(ctx) as GameStateWithFlowMemory;
             return ctx;
@@ -254,8 +256,20 @@ export function applyFlow(
                                 }
                                 // p34
                                 // 戰鬥階段的每個步驟開始時，確認是否交戰中
-                                case "ステップ開始": {
+                                case "ステップ開始":
+                                case "ステップ終了":
+                                case "フリータイミング":
+                                case "フリータイミング2": {
                                     ctx = checkIsBattle(ctx) as GameStateWithFlowMemory
+                                    ctx = updateCommand(ctx) as GameStateWithFlowMemory
+                                    ctx = {
+                                        ...ctx,
+                                        // 重設切入旗標，讓玩家再次切入
+                                        flowMemory: {
+                                            ...ctx.flowMemory,
+                                            hasPlayerPassCut: {},
+                                        },
+                                    }
                                     ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
                                     break
                                 }
@@ -271,8 +285,20 @@ export function applyFlow(
                                     ctx = addImmediateEffect(ctx, createAttackPhaseRuleEffect(ctx, PlayerIDFn.getOpponent(ctx.activePlayerID))) as GameStateWithFlowMemory
                                     break
                                 }
-                                case "ステップ開始": {
+                                case "ステップ開始":
+                                case "ステップ終了":
+                                case "フリータイミング":
+                                case "フリータイミング2": {
                                     ctx = checkIsBattle(ctx) as GameStateWithFlowMemory
+                                    ctx = updateCommand(ctx) as GameStateWithFlowMemory
+                                    ctx = {
+                                        ...ctx,
+                                        // 重設切入旗標，讓玩家再次切入
+                                        flowMemory: {
+                                            ...ctx.flowMemory,
+                                            hasPlayerPassCut: {},
+                                        },
+                                    }
                                     ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
                                     break
                                 }
@@ -288,8 +314,20 @@ export function applyFlow(
                                     ctx = addImmediateEffect(ctx, createDamageRuleEffect(ctx, ctx.activePlayerID)) as GameStateWithFlowMemory
                                     break
                                 }
-                                case "ステップ開始": {
+                                case "ステップ開始":
+                                case "ステップ終了":
+                                case "フリータイミング":
+                                case "フリータイミング2": {
                                     ctx = checkIsBattle(ctx) as GameStateWithFlowMemory
+                                    ctx = updateCommand(ctx) as GameStateWithFlowMemory
+                                    ctx = {
+                                        ...ctx,
+                                        // 重設切入旗標，讓玩家再次切入
+                                        flowMemory: {
+                                            ...ctx.flowMemory,
+                                            hasPlayerPassCut: {},
+                                        },
+                                    }
                                     ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
                                     break
                                 }
@@ -305,8 +343,12 @@ export function applyFlow(
                                     ctx = addImmediateEffect(ctx, createReturnRuleEffect(ctx, ctx.activePlayerID)) as GameStateWithFlowMemory
                                     break
                                 }
-                                case "ステップ開始": {
+                                case "ステップ開始":
+                                case "ステップ終了":
+                                case "フリータイミング":
+                                case "フリータイミング2": {
                                     ctx = checkIsBattle(ctx) as GameStateWithFlowMemory
+                                    ctx = updateCommand(ctx) as GameStateWithFlowMemory
                                     ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
                                     break
                                 }
@@ -319,12 +361,15 @@ export function applyFlow(
                         case "ターン終了時": {
                             switch (ctx.phase[2]) {
                                 case "ダメージリセット":
-                                    break
-                                case "効果解決": {
                                     ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
                                     break
-                                }
+                                case "効果解決":
+                                    ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
+                                    break
                                 case "手札調整":
+                                    ctx = addImmediateEffectIfCanPayCost(ctx, createDiscardRuleEffect(ctx, PlayerA), { isSkipLimitCheck: true }) as GameStateWithFlowMemory
+                                    ctx = addImmediateEffectIfCanPayCost(ctx, createDiscardRuleEffect(ctx, PlayerB), { isSkipLimitCheck: true }) as GameStateWithFlowMemory
+                                    ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
                                     break
                                 case "効果終了。ターン終了": {
                                     ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
@@ -375,9 +420,6 @@ export function applyFlow(
             ctx = setNextPhase(ctx) as GameStateWithFlowMemory
             // 自動更新指令
             ctx = updateCommand(ctx) as GameStateWithFlowMemory;
-            // 更新所有破壞而廢棄的效果
-            // 若有產生值，在下一步時主動玩家就要拿到決定解決順序的指令
-            ctx = createMinusDestroyEffectAndPush(ctx) as GameStateWithFlowMemory;
             // 重設觸發flag
             ctx = {
                 ...ctx,
@@ -417,13 +459,14 @@ export function applyFlow(
                 stackEffectMemory: [],
                 flowMemory: {
                     ...ctx.flowMemory,
+                    hasPlayerPassCut: {},
                     shouldTriggerStackEffectFinishedEvent: false,
                 },
             };
             return ctx;
         }
         case "FlowPassPayCost": {
-            const effect = getEffectIncludePlayerCommand(ctx, flow.effectID)
+            const effect = getEffect(ctx, flow.effectID)
             if (effect == null) {
                 throw new Error(`effectID not found:${flow.effectID}`);
             }
@@ -443,6 +486,7 @@ export function applyFlow(
         case "FlowMakeDestroyOrder": {
             // 移除破壞效果，全部移到堆疊
             ctx = doCutInDestroyEffectsAndClear(ctx, flow.destroyEffect.map(i => i.id)) as GameStateWithFlowMemory
+            ctx = updateCommand(ctx) as GameStateWithFlowMemory
             return {
                 ...ctx,
                 // 重設切入旗標，讓玩家再次切入
@@ -453,7 +497,7 @@ export function applyFlow(
             };
         }
         case "FlowSetTipSelection": {
-            const effect = getEffectIncludePlayerCommand(ctx, flow.effectID)
+            const effect = getEffect(ctx, flow.effectID)
             const cardId = EffectFn.getCardID(effect)
             ctx = mapItemState(ctx, cardId, is => ItemStateFn.setTip(is, flow.conditionKey, flow.tip)) as GameStateWithFlowMemory
             assertTipForUserSelection(ctx, effect, cardId)

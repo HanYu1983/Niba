@@ -11,6 +11,7 @@ import { createConditionTitleFn } from "../game/gameState/createConditionTitleFn
 import { getItem, getItemBaSyou } from "../game/gameState/ItemTableComponent";
 import { Flow } from "../game/gameStateWithFlowMemory/Flow";
 import { loadPrototype } from "../script";
+import { getGlobalEffects } from "../game/gameState/globalEffects";
 
 export async function testAttackRuleEffect() {
     await loadPrototype("earthUnit")
@@ -52,7 +53,8 @@ export async function testAttackRuleEffect2() {
     if (getBattleGroup(ctx, getItemBaSyou(ctx, earthUnit.id)).length != 1) {
         throw new Error()
     }
-    if (isBattleGroupHasA(ctx, ["高機動"], earthUnit.id)) {
+    let ges = getGlobalEffects(ctx, null)
+    if (isBattleGroupHasA(ctx, ["高機動"], earthUnit.id, { ges: ges })) {
         throw new Error()
     }
     const unitHasHigh: Card = {
@@ -63,7 +65,8 @@ export async function testAttackRuleEffect2() {
     if (getBattleGroup(ctx, getItemBaSyou(ctx, unitHasHigh.id)).length != 1) {
         throw new Error()
     }
-    if (isBattleGroupHasA(ctx, ["高機動"], unitHasHigh.id) == false) {
+    ges = getGlobalEffects(ctx, null)
+    if (isBattleGroupHasA(ctx, ["高機動"], unitHasHigh.id, { ges: ges }) == false) {
         throw new Error()
     }
     ctx = setTipSelectionForUser(ctx, attackEffect, 0, 0)
@@ -85,7 +88,7 @@ export async function testAttackRuleEffect3() {
         if (con == null) {
             throw new Error(`con must exist`)
         }
-        const tip = createConditionTitleFn(con, {})(ctx, attackEffect, createBridge())
+        const tip = createConditionTitleFn(con)(ctx, attackEffect, createBridge({ ges: getGlobalEffects(ctx, null) }))
         return {
             conditionKey: toe.conditionKey,
             condition: con,

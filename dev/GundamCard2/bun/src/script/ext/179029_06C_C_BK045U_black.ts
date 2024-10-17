@@ -21,6 +21,7 @@ export const prototype: CardPrototype = {
         const cardId = DefineFn.EffectFn.getCardID(effect)
         if (event.title[0] == "このカードがGとして場に出た場合" && event.cardIds?.includes(cardId)) {
           const newE = GameStateFn.createPlayTextEffectFromEffect(ctx, effect, {
+            isOption: true,
             conditions: {
               ...DefineFn.createRollCostRequire(2, "黒"),
               "自軍本国のカードを全て見て、その中にあるグラフィック１枚を": {
@@ -39,7 +40,8 @@ export const prototype: CardPrototype = {
             logicTreeAction: {
               actions: [
                 {
-                  title: ["_自軍_本国をシャッフルする", "自軍", "本国"]
+                  title: ["_自軍_本国をシャッフルする", "自軍", "本国"],
+                  vars: ["自軍本国のカードを全て見て、その中にあるグラフィック１枚を"]
                 }
               ]
             }

@@ -16,9 +16,8 @@ import { getItemBaSyou } from "../game/gameState/ItemTableComponent"
 import { setPhase } from "../game/gameState/PhaseComponent"
 import { doTriggerEvent } from "../game/gameState/doTriggerEvent"
 import { loadPrototype } from "../script"
-import { getGlobalEffects } from "../game/gameState/globalEffects"
+import { getGlobalEffects, setGlobalEffects } from "../game/gameState/globalEffects"
 import { CommandEffecTipFn } from "../game/define/CommandEffectTip"
-import { GameError, TargetMissingError, TipError } from "../game/define/GameError"
 import { setSetGroupParent } from "../game/gameState/SetGroupComponent"
 
 export async function test179001_01A_CH_WT007R_white() {
@@ -38,7 +37,9 @@ export async function test179001_01A_CH_WT007R_white() {
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), ["179001_01A_CH_WT007R_white", "179001_01A_CH_WT007R_white"]) as GameState
     ctx = setActivePlayerID(ctx, PlayerA) as GameState
     ctx = setPhase(ctx, ["戦闘フェイズ", "ダメージ判定ステップ", "フリータイミング"]) as GameState
-    if (getCardHasSpeicalEffect(ctx, ["速攻"], cardA.id) != false) {
+    const ges = getGlobalEffects(ctx, null)
+    ctx = setGlobalEffects(ctx, null, ges)
+    if (getCardHasSpeicalEffect(ctx, ["速攻"], cardA.id, { ges: ges }) != false) {
         throw new Error()
     }
     {
@@ -60,7 +61,9 @@ export async function test179001_01A_CH_WT007R_white() {
             throw new Error(`effect.reason[0]!="PlayText`)
         }
         ctx = doEffect(ctx, effect, 0, 0)
-        if (getCardHasSpeicalEffect(ctx, ["速攻"], unit.id) != true) {
+        let ges = getGlobalEffects(ctx, null)
+        ctx = setGlobalEffects(ctx, null, ges)
+        if (getCardHasSpeicalEffect(ctx, ["速攻"], unit.id, { ges: ges }) != true) {
             throw new Error()
         }
         // 避開同切上限
@@ -73,7 +76,10 @@ export async function test179001_01A_CH_WT007R_white() {
         }
 
         ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", PhaseFn.getLast()] })
-        if (getCardHasSpeicalEffect(ctx, ["速攻"], unit.id) != false) {
+
+        ges = getGlobalEffects(ctx, null)
+        ctx = setGlobalEffects(ctx, null, ges)
+        if (getCardHasSpeicalEffect(ctx, ["速攻"], unit.id, {ges: ges}) != false) {
             throw new Error()
         }
     }

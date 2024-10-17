@@ -26,7 +26,7 @@ export const prototype: CardPrototype = {
         if (situation != null) {
           return []
         }
-        if (GameStateFn.isCardMaster(ctx, GameStateFn.getSetGroupRoot(ctx, cardId), cardId)) {
+        if (DefineFn.BaSyouKeywordFn.getBattleArea().includes(GameStateFn.getItemBaSyou(ctx, cardId).value[1])) {
           return [
             {
               title: ["このカードの部隊の部隊戦闘力を_＋３する", 3],
@@ -62,10 +62,6 @@ export const prototype: CardPrototype = {
                   title: ["_の_ハンガーに移す", "自軍", "配備エリア"],
                   vars: ["自軍手札、または自軍ハンガーにある「特徴：メリクリウス系」を持つユニット１枚"]
                 },
-                {
-                  title: ["_ロールする", "リロール"],
-                  vars: ["自軍手札、または自軍ハンガーにある「特徴：メリクリウス系」を持つユニット１枚"]
-                }
               ]]
             }
           ]

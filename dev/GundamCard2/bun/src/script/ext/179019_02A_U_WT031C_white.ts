@@ -21,10 +21,11 @@ export const prototype: CardPrototype = {
         const evt = DefineFn.EffectFn.getEvent(effect)
         const cardId = DefineFn.EffectFn.getCardID(effect)
         const cardController = GameStateFn.getItemController(ctx, cardId)
-        if (evt.title[0] == "場に出た場合"
+        if (evt.title[0] == "このカードが場に出た場合"
           && evt.cardIds?.includes(cardId)
         ) {
           const newE = GameStateFn.createPlayTextEffectFromEffect(ctx, effect, {
+            isOption: true,
             conditions: {
               "自軍本国の上のカード４枚までを見て、その中にある、このカードと同じ属性のGサインを持つユニット１枚": {
                 title: ["Entity", {

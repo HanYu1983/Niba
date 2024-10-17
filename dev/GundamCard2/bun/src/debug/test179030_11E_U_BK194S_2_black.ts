@@ -86,7 +86,7 @@ export async function test179030_11E_U_BK194S_2_black() {
         if (effects.length == 0) {
             throw new Error()
         }
-        const playCard = effects.find(e => e.reason[0] == "PlayCard" && e.reason[2] == unitAtGravyard.id)
+        const playCard = effects.find(e => e.reason[0] == "PlayCard" && e.reason[2] == unitAtGravyard.id && e.reason[3].isPlayUnit)
         if (playCard == null) {
             throw new Error()
         }
@@ -99,6 +99,8 @@ export async function test179030_11E_U_BK194S_2_black() {
         }
         ctx = doEffect(ctx, effect, 0, 0)
         if (AbsoluteBaSyouFn.getBaSyouKeyword(getItemBaSyou(ctx, unitAtGravyard.id)) != "配備エリア") {
+            console.log(effect.text.description)
+            console.log(ctx.table)
             throw new Error()
         }
     }
@@ -125,7 +127,10 @@ export async function test179030_11E_U_BK194S_2_black_2() {
         throw new Error()
     }
     {
-        const effect = effects[0]
+        const effect = effects.find(eff => eff.reason[0] == "PlayCard" && eff.reason[3].isPlayUnit)
+        if(effect == null){
+            throw new Error()
+        }
         ctx = setTipSelectionForUser(ctx, effect, 0, 0)
         ctx = doEffect(ctx, effect, 0, 0)
         if (AbsoluteBaSyouFn.getBaSyouKeyword(getItemBaSyou(ctx, cardA.id)) != "プレイされているカード") {

@@ -35,6 +35,7 @@ export type Tip = {
 
 export const TipFn = {
     createTotalCostKey: () => "合計国力〔x〕",
+    createCharacterTargetUnitKey: () => "一個自軍機體",
     createRollColorKey(i: number, color: CardColor | null): string {
         return `橫置支付${i}[${color}]`
     },
@@ -102,8 +103,8 @@ export const TipFn = {
                 }
         }
     },
-    checkTipSatisfies(tip: Tip): TipError | null {
-        const selection = this.getSelection(tip)
+    createTipErrorWhenCheckFail(tip: Tip): TipError | null {
+        const selection = TipFn.getSelection(tip)
         if (tip.count != null && tip.count != selection.length) {
             return new TipError(`count ${selection.length} not right: ${tip.title[0]}/${tip.count}`)
         }

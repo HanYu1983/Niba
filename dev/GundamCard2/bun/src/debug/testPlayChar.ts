@@ -9,9 +9,6 @@ import { doEffect, createEffectTips, setTipSelectionForUser } from "../game/game
 import { getTopEffect } from "../game/gameState/EffectStackComponent";
 import { createGameState, GameState } from "../game/gameState/GameState";
 import { createPlayCardEffects } from "../game/gameState/createPlayCardEffects";
-import { createPlayEffects } from "../game/gameState/createPlayEffects";
-import { createPlayGEffects } from "../game/gameState/createPlayGEffects";
-import { getItemBaSyou } from "../game/gameState/ItemTableComponent";
 import { setPhase } from "../game/gameState/PhaseComponent";
 import { getSetGroupChildren, getSetGroupRoot } from "../game/gameState/SetGroupComponent";
 import { doTriggerEvent } from "../game/gameState/doTriggerEvent";
@@ -36,10 +33,14 @@ export async function testPlayChar() {
     ctx = setPhase(ctx, ["配備フェイズ", "フリータイミング"]) as GameState
     {
         const effects = createPlayCardEffects(ctx, charBlue.id)
-        if (effects.length != 1) {
+        if (effects.length != 2) {
+            console.log(effects)
             throw new Error()
         }
-        const effect =effects[0]
+        const effect =effects.find(eff=>eff.reason[0] == "PlayCard" && eff.reason[3].isPlayCharacter)
+        if(effect == null){
+            throw new Error()
+        }
         ctx = setTipSelectionForUser(ctx, effect, 0, 0)
         ctx = doEffect(ctx, effect, 0, 0)
     }

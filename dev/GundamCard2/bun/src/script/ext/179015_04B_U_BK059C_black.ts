@@ -20,12 +20,10 @@ export const prototype: CardPrototype = {
       onEvent: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
         const cardId = DefineFn.EffectFn.getCardID(effect)
         const evt = DefineFn.EffectFn.getEvent(effect)
-        if (evt.title[0] == "場に出た場合" && evt.cardIds?.includes(cardId)) {
+        if (evt.title[0] == "このカードが場に出た場合" && evt.cardIds?.includes(cardId)) {
           const newE = GameStateFn.createPlayTextEffectFromEffect(ctx, effect, {
+            isOption: true,
             conditions: {
-              // "_自軍_本国の上のカード_１～_４枚を見て、その中にある、「特徴：_ヘイズル系」を持つ_ユニット_１枚": {
-              //   title: ["_自軍_本国の上のカード_１～_４枚を見て、その中にある、「特徴：_ヘイズル系」を持つ_ユニット_１枚", "敵軍", "本国", 1, 4, "ヘイズル系", "ユニット", 1],
-              // },
               "自軍本国の上のカード１～４枚を見て、その中にある、「特徴：ヘイズル系」を持つユニット１枚": {
                 title: ["Entity", {
                   see: [DefineFn.RelatedBaSyouFn.of("自軍", "本国"), 1, 4],
@@ -33,24 +31,6 @@ export const prototype: CardPrototype = {
                   cardCategory: ["ユニット"],
                   max: 1,
                 }],
-                // actions: [
-                //   {
-                //     title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
-                //       const cardId = DefineFn.EffectFn.getCardID(effect)
-                //       const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "自軍本国の上のカード１～４枚を見て、その中にある、「特徴：ヘイズル系」を持つユニット１枚", cardId)
-                //       const validPairs = DefineFn.TipFn.getWant(GameStateFn.createTipByEntitySearch(ctx, cardId, {
-                //         see: [DefineFn.RelatedBaSyouFn.of("自軍", "本国"), 1, 4],
-                //         hasChar: ["ヘイズル系"],
-                //         cardCategory: ["ユニット"],
-                //       })) as StrBaSyouPair[]
-                //       const isValid = pairs.every(pair=> validPairs.find(vp=> pair[0] == vp[0]))
-                //       if(isValid == false){
-                //         throw new DefineFn.TipError(`select not right`)
-                //       }
-                //       return ctx
-                //     }.toString()
-                //   }
-                // ]
               }
             },
             logicTreeAction: {

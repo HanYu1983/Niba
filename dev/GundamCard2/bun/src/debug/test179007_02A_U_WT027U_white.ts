@@ -18,8 +18,6 @@ import { doTriggerEvent } from "../game/gameState/doTriggerEvent"
 import { getPrototype, loadPrototype } from "../script"
 import { getGlobalEffects } from "../game/gameState/globalEffects"
 import { CommandEffecTipFn, TipOrErrorsFn } from "../game/define/CommandEffectTip"
-import { GameError, TargetMissingError, TipError } from "../game/define/GameError"
-import { setSetGroupParent } from "../game/gameState/SetGroupComponent"
 import { Effect } from "../game/define/Effect"
 
 export async function test179007_02A_U_WT027U_white() {

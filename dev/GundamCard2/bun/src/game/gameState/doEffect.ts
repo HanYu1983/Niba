@@ -16,6 +16,7 @@ import { createConditionTitleFn } from "./createConditionTitleFn"
 import { getItemState, mapItemState, setItemState } from "./ItemStateComponent"
 import { addImmediateEffect } from "./EffectStackComponent"
 import { getItemController } from "./ItemTableComponent"
+import { clearGlobalEffects, getGlobalEffects, setGlobalEffects } from "./globalEffects"
 
 export function doEffect(
   ctx: GameState,
@@ -30,7 +31,7 @@ export function doEffect(
   if (ltacs == null) {
     throw new Error(`ltasc not found: ${logicId}/${logicSubId}`)
   }
-  const bridge = createBridge()
+
   const conditionIds = Object.keys(ltacs)
   const cardId = EffectFn.getCardID(effect)
   conditionIds.forEach(conditionKey => {
@@ -39,39 +40,27 @@ export function doEffect(
     const actions = ConditionFn.getActions(condition)
     for (const action of actions) {
       EventCenterFn.onActionStart(ctx, effect, action)
+      const ges = getGlobalEffects(ctx, null)
+      ctx = setGlobalEffects(ctx, null, ges)
       const actionFn = createActionTitleFn(action)
-      ctx = actionFn(ctx, effect, bridge)
+      ctx = actionFn(ctx, effect, createBridge({ ges: ges }))
+      ctx = clearGlobalEffects(ctx)
       EventCenterFn.onActionEnd(ctx, effect, action)
-      //ctx = clearGlobalEffects(ctx)
     }
-    // if (condition.actions) {
-    //   for (const action of condition.actions) {
-    //     if (action.vars) {
-    //       for (const name of action.vars) {
-    //         log("doEffect", "clearTip", name)
-    //         ctx = mapItemState(ctx, cardId, is => ItemStateFn.clearTip(is, name)) as GameState
-    //       }
-    //     }
-    //   }
-    // }
   })
   const lta = CardTextFn.getLogicTreeAction(effect.text, logicId)
   for (const action of LogicTreeActionFn.getActions(lta)) {
+    logCategory("doEffect", "lta.actions", lta.actions.map(a => a.title))
     EventCenterFn.onActionStart(ctx, effect, action)
+    const ges = getGlobalEffects(ctx, null)
+    ctx = setGlobalEffects(ctx, null, ges)
     const actionFn = createActionTitleFn(action)
-    ctx = actionFn(ctx, effect, bridge)
+    ctx = actionFn(ctx, effect, createBridge({ ges: ges }))
+    ctx = clearGlobalEffects(ctx)
     EventCenterFn.onActionEnd(ctx, effect, action)
-    //ctx = clearGlobalEffects(ctx)
   }
-  // for (const action of lta.actions) {
-  //   if (action.vars) {
-  //     for (const name of action.vars) {
-  //       log("doEffect", "clearTip", name)
-  //       ctx = mapItemState(ctx, cardId, is => ItemStateFn.clearTip(is, name)) as GameState
-  //     }
-  //   }
-  // }
   ctx = EventCenterFn.onEffectEnd(ctx, effect)
+  ctx = clearGlobalEffects(ctx)
   return ctx;
 }
 
@@ -116,14 +105,16 @@ export function createEffectTips(
   if (ltacs == null) {
     throw new Error(`ltasc not found: ${logicId}/${logicSubId}`)
   }
-  const bridge = createBridge()
+
   return Object.keys(ltacs).map(key => {
     const con = ltacs[key]
     logCategory("createEffectTips", key, con.title)
     const errors: string[] = []
     let tip: Tip | null = null
     try {
-      tip = createConditionTitleFn(con)(ctx, effect, bridge)
+      const ges = getGlobalEffects(ctx, null)
+      ctx = setGlobalEffects(ctx, null, ges)
+      tip = createConditionTitleFn(con)(ctx, effect, createBridge({ ges: ges }))
       if ((tip as any)?.isGameState) {
         console.log(`快速檢查是不寫錯回傳成GameState, 應該要回傳Tip|null:`, key, con.title)
         throw new Error()
@@ -159,7 +150,7 @@ export function createEffectTips(
       }
       try {
         logCategory("createEffectTips", "tip")
-        const error = TipFn.checkTipSatisfies(tip)
+        const error = TipFn.createTipErrorWhenCheckFail(tip)
         if (error) {
           throw error
         }
@@ -176,10 +167,14 @@ export function createEffectTips(
         }
       }
     }
-    ctx = ConditionFn.getActionTitleFns(con, createActionTitleFn).reduce((ctx, fn): GameState => {
+    const ges = getGlobalEffects(ctx, null)
+    ctx = setGlobalEffects(ctx, null, ges)
+    ctx = ConditionFn.getActionTitleFns(con, action => createActionTitleFn(action)).reduce((ctx, fn): GameState => {
       try {
-        ctx = fn(ctx, effect, bridge)
-        //ctx = clearGlobalEffects(ctx)
+        const ges = getGlobalEffects(ctx, null)
+        ctx = setGlobalEffects(ctx, null, ges)
+        ctx = fn(ctx, effect, createBridge({ ges: ges }))
+        ctx = clearGlobalEffects(ctx)
         return ctx
       } catch (e) {
         if (e instanceof TipError) {
@@ -210,7 +205,7 @@ export function setEffectTips(ctx: GameState, e: Effect, toes: TipOrErrors[]): G
       logCategory("setEffectTips", "cardId", cardId)
       toes.forEach(toe => {
         if (toe.errors.length) {
-          throw new Error(toe.errors.join("|"))
+          throw new Error(`${toe.errors.join("|")}:${toe.conditionKey}`)
         }
         const tip = toe.tip
         if (tip == null) {
@@ -288,7 +283,7 @@ export function createCommandEffectTips(ctx: GameState, effect: Effect): Command
 export function getCardTipSelection(ctx: GameState, varName: string, cardId: string, options?: { assertTitle?: TipTitle }) {
   const cardState = getItemState(ctx, cardId);
   const tip = ItemStateFn.getTip(cardState, varName)
-  const tipError = TipFn.checkTipSatisfies(tip)
+  const tipError = TipFn.createTipErrorWhenCheckFail(tip)
   if (tipError) {
     throw tipError
   }
@@ -333,21 +328,68 @@ export function getCardTipBattleBonus(ctx: GameState, varName: string, cardId: s
 }
 
 export function getCardTipStrings(ctx: GameState, varName: string, cardId: string): string[] {
-  return getCardTipSelection(ctx, varName, cardId, { assertTitle: ["テキスト", [], []] }) as string[]
+  return getCardTipSelection(ctx, varName, cardId, { assertTitle: ["StringOptions", [], []] }) as string[]
 }
 
-export function createPlayTextEffectFromEffect(ctx: GameState, e: Effect, options?: { conditions?: { [key: string]: Condition }, logicTreeAction?: LogicTreeAction, isOption?: boolean }): Effect {
+export function createPlayTextEffectFromEffect(ctx: GameState, e: Effect, options?: { conditions?: { [key: string]: Condition }, logicTreeAction?: LogicTreeAction, isOption?: boolean, description?: string }): Effect {
   const cardId = EffectFn.getCardID(e)
   const cardController = getItemController(ctx, cardId)
-  return EffectFn.fromEffectBasic(e, { ...options, reason: ["PlayText", cardController, cardId, e.text.id] })
+  /* 改在addImmediateEffectIfCanPayCost時判斷，未驗証
+  if (options?.logicTreeAction?.logicTree) {
+    options.logicTreeAction.logicTree = {
+      type: "And",
+      children: [
+        {
+          type: "Leaf",
+          value: "同回合上限"
+        },
+        options.logicTreeAction.logicTree
+      ]
+    }
+  }
+  if (options?.conditions) {
+    options.conditions = {
+      ...options.conditions,
+      "同回合上限": {
+        actions: [
+          {
+            title: ["同回合上限", 1]
+          }
+        ]
+      }
+    }
+  }*/
+  return EffectFn.fromEffectBasic(e, {
+    ...options,
+    reason: ["PlayText", cardController, cardId, e.text.id]
+  })
 }
 
-export function addImmediateEffectIfCanPayCost(ctx: GameState, effect: Effect): GameState {
+export function addImmediateEffectIfCanPayCost(ctx: GameState, effect: Effect, optoins?: { isSkipLimitCheck?: boolean }): GameState {
   const cets = createCommandEffectTips(ctx, effect)
   const cetsNoErr = cets.filter(CommandEffecTipFn.filterNoError)
   if (cetsNoErr.length == 0) {
-    console.warn("addImmediateEffectIfCanPayCost", `將發動起動效果但條件不足: ${effect.text.description}`, cets)
+    ctx = EventCenterFn.onAddImmediateEffectButConditionFail(ctx, effect, cets)
     return ctx
+  }
+  {
+    // TODO 未驗証
+    // 起動一回合只能用一次
+    if (optoins?.isSkipLimitCheck) {
+
+    } else {
+      const cardId = EffectFn.getCardID(effect)
+      let itemState = getItemState(ctx, cardId)
+      if (itemState.textIdsUseThisTurn?.includes(effect.text.id)) {
+        console.warn(`這個起動效果這回合已發動過: ${effect.text.description}`)
+        return ctx
+      }
+      itemState = {
+        ...itemState,
+        textIdsUseThisTurn: [...(itemState.textIdsUseThisTurn || []), effect.text.id]
+      }
+      ctx = setItemState(ctx, cardId, itemState) as GameState
+    }
   }
   return addImmediateEffect(ctx, effect) as GameState
 }

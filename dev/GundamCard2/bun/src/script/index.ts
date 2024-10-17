@@ -1,7 +1,8 @@
-import { repeat } from "ramda";
+import { repeat, T } from "ramda";
 import { BattleAreaKeyword } from "../game/define/BaSyou";
 import { CardCategory, CardColor, CardColorFn, CardPrototype, RollCostColor } from "../game/define/CardPrototype";
-import { CardText, Condition, createRollCostRequire } from "../game/define/CardText";
+import { CardText, Condition, createRollCostRequire, TextTitle } from "../game/define/CardText";
+import { logCategory } from "../tool/logger";
 
 export async function importJson(path: string): Promise<any> {
   // https://stackoverflow.com/questions/69548822/how-to-import-js-that-imported-json-from-html
@@ -40,7 +41,7 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
       const area = data.info_10
       const characteristic = data.info_11
       // 只取前文字判斷特殊技能比較準
-      const textstr = data.info_12.substr(0, 50)
+      const textstr = data.info_12.substr(0, 60)
       const description = data.info_15
       const prod = data.info_16
       const rarity = data.info_17
@@ -56,66 +57,129 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
         "ACE": "ACE",
         "GRAPHIC": "グラフィック",
       }
+      // 先去掉這些字元並以這行字元分割字串
+      const matches = textstr.matchAll(/([^：　［］（）〔〕]+)/g);
+      const texts: CardText[] = []
+      let allSp = []
+      let currSp = []
+      for (const match of matches) {
+        const curr = match[0]
+        if (curr.length < 20) {
+          const kw = ["高機動", "速攻", "強襲", "【PS装甲】", "クイック", "戦闘配備", "【ステイ】", "1枚制限"].find(kw => curr.indexOf(kw) != -1)
+          if (kw) {
+            allSp.push(kw)
+            continue
+          }
+        }
+        if (currSp.length == 0) {
+          const match = curr.match(/(.?)(０|１|２|３|４|５|６|７|８|９|R+)(毎?)/)
+          if (match) {
+            const [_, colorstr, rollcoststr, every] = match
+            currSp.push([colorstr, rollcoststr, every])
+            continue
+          }
+        }
+        if (currSp.length == 1) {
+          if (["供給", "ゲイン"].includes(curr)) {
+            currSp.push(curr)
+            allSp.push(currSp.slice())
+            currSp.length = 0
+          } else if (["サイコミュ", "範囲兵器", "ゲイン", "改装", "共有", "クロスウェポン"].includes(curr)) {
+            currSp.push(curr)
+          } else {
+            currSp.shift()
+          }
+          continue
+        }
+        if (currSp.length == 2) {
+          currSp.push(curr)
+          allSp.push(currSp.slice())
+          currSp.length = 0
+          continue
+        }
+      }
+      // 大於一個才可能出問題
+      if (currSp.length > 1) {
+        console.log(currSp)
+        throw new Error()
+      }
 
-      const texts = getGainTexts(textstr)
-        .concat(getKaiSo(textstr))
-        .concat(getSupply(textstr))
-        .concat(getCrossWeapon(textstr))
-        .concat(getPao(textstr))
-        .concat(getHave(textstr))
-        .concat(getRange(textstr))
-      if (textstr.indexOf("強襲") != -1) {
-        texts.push({
-          id: "",
-          title: ["特殊型", ["強襲"]]
-        })
-      }
-      if (textstr.indexOf("戦闘配備") != -1) {
-        texts.push({
-          id: "",
-          title: ["特殊型", ["戦闘配備"]]
-        })
-      }
-      if (textstr.indexOf("【PS装甲】") != -1) {
-        texts.push({
-          id: "",
-          title: ["特殊型", ["PS装甲"]]
-        })
-      }
-      if (textstr.indexOf("速攻") != -1) {
-        texts.push({
-          id: "",
-          title: ["特殊型", ["速攻"]]
-        })
-      }
-      if (textstr.indexOf("クイック") != -1) {
-        texts.push({
-          id: "",
-          title: ["特殊型", ["クイック"]]
-        })
-      }
-      if (textstr.indexOf("高機動") != -1) {
-        texts.push({
-          id: "",
-          title: ["特殊型", ["高機動"]]
-        })
-      }
-      if (textstr.indexOf("ステイ") != -1) {
-        texts.push({
-          id: "",
-          title: ["特殊型", ["ステイ"]]
-        })
-      }
-      texts.forEach(text => {
-        text.description = JSON.stringify(text.title)
+      allSp.forEach(sp => {
+        if (typeof sp == "string") {
+          switch (sp) {
+            case "高機動":
+            case "速攻":
+            case "強襲":
+            case "【PS装甲】":
+            case "クイック":
+            case "戦闘配備":
+            case "【ステイ】":
+            case "1枚制限":
+            case "ゲイン":
+              texts.push({ id: "", title: ["特殊型", [sp]], description: sp })
+              break
+            default:
+              throw new Error()
+          }
+          return
+        }
+        if (Array.isArray(sp) && Array.isArray(sp[0])) {
+          const uppercaseDigits = "０１２３４５６７８９";
+          const [[colorstr, rollcoststr, every], titlestr, char] = sp
+          const color: CardColor | null = colorstr == "" ? null : (colorstr as CardColor)
+          let conditions: { [key: string]: Condition } = {}
+          if (rollcoststr == "R") {
+            conditions["R"] = {
+              actions: [
+                {
+                  title: ["_ロールする", "ロール"],
+                }
+              ]
+            }
+          } else {
+            const rollcost = uppercaseDigits.indexOf(rollcoststr)
+            if (rollcost == -1) {
+              throw new Error()
+            }
+            conditions = {
+              ...conditions,
+              ...createRollCostRequire(rollcost, color)
+            }
+          }
+          let title: TextTitle | null = null
+          switch (titlestr) {
+            case "供給":
+            case "ゲイン": {
+              title = ["特殊型", [titlestr]]
+              break
+            }
+            case "サイコミュ":
+            case "範囲兵器": {
+              const num = uppercaseDigits.indexOf(char)
+              title = ["特殊型", [titlestr, num]]
+              break
+            }
+            case "改装":
+            case "共有":
+            case "クロスウェポン":
+              title = ["特殊型", [titlestr, char]]
+              break
+          }
+          if (title == null) {
+            throw new Error()
+          }
+          const text: CardText = {
+            id: "",
+            title: title,
+            isEachTime: every == "毎",
+            description: `〔${colorstr}${rollcoststr}${every}〕${titlestr}[${char || ""}]`,
+            conditions: conditions
+          }
+          texts.push(text)
+          return
+        }
+        throw new Error()
       })
-      // 自動解特殊效果的黑名單
-      // 在名單內的要手動設置
-      const textBlackList = ["179001_01A_CH_WT007R_white"]
-      if (textBlackList.includes(imgID)) {
-        texts.length = 0
-      }
-
       const category = categoryMapping[categoryStr]
       if (category == null) {
         throw new Error(`unknown categoryStr: ${categoryStr}`)
@@ -157,6 +221,13 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
         ...scriptProto.texts || [],
         ...proto.texts || [],
       ]
+    }
+    if (scriptProto.__ignoreAutoTexts) {
+      // 不使用解析出來的內文，因為某些情況會解析錯誤
+      proto = {
+        ...proto,
+        texts: scriptProto.texts
+      }
     }
   }
   if (proto.texts) {
@@ -247,166 +318,3 @@ function parseArea(a: string): BattleAreaKeyword[] {
   }
   return []
 }
-
-const uppercaseDigits = "０１２３４５６７８９";
-
-function getGainTexts(gainStr: string): CardText[] {
-  const match = gainStr.match(/〔(０|１|２|３|４|５|６|７|８|９+)〕：ゲイン/);
-  if (match == null) {
-    return []
-  }
-  const [matchstr, rollcoststr, char] = match
-  const rollcost = uppercaseDigits.indexOf(rollcoststr)
-  if (rollcost == -1) {
-    throw new Error(`getGainTexts error: ${matchstr}`)
-  }
-  return [
-    {
-      id: "",
-      title: ["特殊型", ["ゲイン"]],
-      description: `(${rollcost})ゲイン`,
-      conditions: createRollCostRequire(rollcost, null),
-    }
-  ]
-}
-function getKaiSo(gainStr: string): CardText[] {
-  let match = gainStr.match(/〔(０|１|２|３|４|５|６|７|８|９+)〕：改装［(.+)］/);
-  if (match == null) {
-    match = gainStr.match(/〔(０|１|２|３|４|５|６|７|８|９+)〕：改装〔(.+)〕/);
-    if (match == null) {
-      return []
-    }
-  }
-  const [matchstr, rollcoststr, char] = match
-  const rollcost = uppercaseDigits.indexOf(rollcoststr)
-  if (rollcost == -1) {
-    throw new Error(`getGainTexts error: ${matchstr}`)
-  }
-  return [
-    {
-      id: "",
-      title: ["特殊型", ["改装", char]],
-      description: `(${rollcost})改装[${char}]`,
-      conditions: createRollCostRequire(rollcost, null)
-    }
-  ]
-}
-
-// 〔黒１毎〕：クロスウェポン［T3部隊］
-function getCrossWeapon(gainStr: string): CardText[] {
-  let match = gainStr.match(/〔(.?)(０|１|２|３|４|５|６|７|８|９+)(毎?)〕：クロスウェポン［(.+)］/);
-  if (match == null) {
-    return []
-  }
-  const [matchstr, colorstr, rollcoststr, every, char] = match
-  if (colorstr != "" && CardColorFn.getAll().includes(colorstr as CardColor) == false) {
-    throw new Error(`getCrossWeapon ${gainStr}`)
-  }
-  const color: CardColor | null = colorstr == "" ? null : (colorstr as CardColor)
-  const rollcost = uppercaseDigits.indexOf(rollcoststr)
-  if (rollcost == -1) {
-    throw new Error(`getGainTexts error: ${matchstr}`)
-  }
-  return [
-    {
-      id: "",
-      title: ["特殊型", ["クロスウェポン", char]],
-      isEachTime: every == "毎",
-      description: `(${color}${rollcost}${every})クロスウェポン[${char}]`,
-      conditions: createRollCostRequire(rollcost, color)
-    }
-  ]
-}
-function getRange(gainStr: string): CardText[] {
-  const match = gainStr.match(/〔(０|１|２|３|４|５|６|７|８|９+)〕：範囲兵器（(０|１|２|３|４|５|６|７|８|９+)）/);
-  if (match == null) {
-    return []
-  }
-  const [matchstr, rollcoststr, numstr] = match
-  const rollcost = uppercaseDigits.indexOf(rollcoststr)
-  if (rollcost == -1) {
-    throw new Error(`getGainTexts error: ${matchstr}`)
-  }
-  const num = uppercaseDigits.indexOf(numstr)
-  if (num == -1) {
-    throw new Error(`getGainTexts error: ${numstr}`)
-  }
-  return [
-    {
-      id: "",
-      title: ["特殊型", ["範囲兵器", num]],
-      description: `(${rollcost})範囲兵器[${num}]`,
-      conditions: createRollCostRequire(rollcost, null)
-    }
-  ]
-}
-
-
-function getPao(gainStr: string): CardText[] {
-  const match = gainStr.match(/〔(０|１|２|３|４|５|６|７|８|９+)〕：サイコミュ（(０|１|２|３|４|５|６|７|８|９+)）/);
-  if (match == null) {
-    return []
-  }
-  const [matchstr, rollcoststr, numstr] = match
-  const rollcost = uppercaseDigits.indexOf(rollcoststr)
-  if (rollcost == -1) {
-    throw new Error(`getGainTexts error: ${matchstr}`)
-  }
-  const num = uppercaseDigits.indexOf(numstr)
-  if (num == -1) {
-    throw new Error(`getGainTexts error: ${numstr}`)
-  }
-  return [
-    {
-      id: "",
-      title: ["特殊型", ["サイコミュ", num]],
-      description: `(${rollcost})サイコミュ[${num}]`,
-      conditions: createRollCostRequire(rollcost, null)
-    }
-  ]
-}
-
-function getHave(gainStr: string): CardText[] {
-  let match = gainStr.match(/〔(.?)(０|１|２|３|４|５|６|７|８|９+)(毎?)〕：クロスウェポン［(.+)］/);
-  if (match == null) {
-    return []
-  }
-  const [matchstr, colorstr, rollcoststr, every, char] = match
-  if (colorstr != "" && CardColorFn.getAll().includes(colorstr as CardColor) == false) {
-    throw new Error(`getCrossWeapon ${gainStr}`)
-  }
-  const color: CardColor | null = colorstr == "" ? null : (colorstr as CardColor)
-  const rollcost = uppercaseDigits.indexOf(rollcoststr)
-  if (rollcost == -1) {
-    throw new Error(`getGainTexts error: ${matchstr}`)
-  }
-  return [
-    {
-      id: "",
-      title: ["特殊型", ["共有", char]],
-      description: `(${rollcost})共有[${char}]`,
-      conditions: createRollCostRequire(rollcost, color)
-    }
-  ]
-}
-
-function getSupply(gainStr: string): CardText[] {
-  const match = gainStr.match(/〔(０|１|２|３|４|５|６|７|８|９+)〕：供給/);
-  if (match == null) {
-    return []
-  }
-  const [matchstr, rollcoststr] = match
-  const rollcost = uppercaseDigits.indexOf(rollcoststr)
-  if (rollcost == -1) {
-    throw new Error(`getGainTexts error: ${matchstr}`)
-  }
-  return [
-    {
-      id: "",
-      title: ["特殊型", ["供給"]],
-      description: `(${rollcost})供給`,
-      conditions: createRollCostRequire(rollcost, null)
-    }
-  ]
-}
-

@@ -32,7 +32,7 @@ export const BaSyouKeywordFn = {
         }
     },
     getAll(): BaSyouKeyword[] {
-        return ["本国", "捨て山", "Gゾーン", "ジャンクヤード", "手札", "ハンガー", "取り除かれたカード", "戦闘エリア1", "戦闘エリア2", "配備エリア"]
+        return ["本国", "捨て山", "取り除かれたカード", "Gゾーン", "ジャンクヤード", "手札", "ハンガー", "戦闘エリア1", "戦闘エリア2", "配備エリア"]
     },
     getBaAll(): BaSyouKeyword[] {
         return BaSyouKeywordFn.getAll().filter(BaSyouKeywordFn.isBa)

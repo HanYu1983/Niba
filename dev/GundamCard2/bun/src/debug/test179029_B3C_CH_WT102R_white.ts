@@ -35,12 +35,13 @@ export async function test179029_B3C_CH_WT102R_white() {
     ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア"), [cardA, cardB]) as GameState
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerB, "配備エリア"), ["179029_B3C_CH_WT103N_white"]) as GameState
 
-    let ctx2 = doTriggerEvent(ctx, { title: ["場に出た場合"], cardIds: [cardA.id] })
+    let ctx2 = doTriggerEvent(ctx, { title: ["このカードが場に出た場合"], cardIds: [cardA.id] })
     let effects = getImmediateEffects(ctx2)
     if (effects.length != 2) {
+        console.log(effects)
         throw new Error()
     }
-    ctx2 = doTriggerEvent(ctx, { title: ["場に出た場合"], cardIds: [cardB.id] })
+    ctx2 = doTriggerEvent(ctx, { title: ["このカードが場に出た場合"], cardIds: [cardB.id] })
     effects = getImmediateEffects(ctx2)
     if (effects.length != 2) {
         throw new Error()

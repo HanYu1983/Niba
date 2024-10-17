@@ -7,10 +7,6 @@
 // （注：貫通ダメージは、部隊への戦闘ダメージと同様に処理する）
 
 import { CardPrototype } from "../../game/define/CardPrototype";
-import { Effect } from "../../game/define/Effect";
-import { StrBaSyouPair, Tip } from "../../game/define/Tip";
-import { GameState } from "../../game/gameState/GameState";
-import { Bridge } from "../bridge";
 
 export const prototype: CardPrototype = {
   commandText: {
@@ -19,7 +15,7 @@ export const prototype: CardPrototype = {
     title: ["使用型", ["ダメージ判定ステップ"]],
     conditions: {
       "敵軍部隊１つ": {
-        title: ["_敵軍部隊_１つ", "敵軍", 1]
+        title: ["_交戦中の_敵軍部隊_１つ", null, "敵軍", 1]
       }
     },
     logicTreeActions: [

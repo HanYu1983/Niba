@@ -23,7 +23,7 @@ export const prototype: CardPrototype = {
       onEvent: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
         const evt = DefineFn.EffectFn.getEvent(effect)
         const cardId = DefineFn.EffectFn.getCardID(effect)
-        if (evt.title[0] == "場に出た場合" && evt.cardIds?.includes(cardId)) {
+        if (evt.title[0] == "このカードが場に出た場合" && evt.cardIds?.includes(cardId)) {
           const newE = GameStateFn.createPlayTextEffectFromEffect(ctx, effect, {
             isOption: true,
             conditions: {
@@ -56,18 +56,18 @@ export const prototype: CardPrototype = {
       id: "",
       description: "『常駐』：全ての自軍キャラは、＋２／＋２／＋２を得る。",
       title: ["自動型", "常駐"],
-      onSituation: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GlobalEffect[] {
-        const cardId = DefineFn.EffectFn.getCardID(effect)
+      onSituation: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GlobalEffect[] {
         const situation = DefineFn.EffectFn.getSituation(effect)
         if (situation != null) {
           return []
         }
-        const pairs = DefineFn.TipFn.getWant(GameStateFn.createTipByEntitySearch(ctx, cardId, {
+        const cardId = DefineFn.EffectFn.getCardID(effect)
+        const pairs = DefineFn.TipFn.getWant(GameStateFn.createTipByEntitySearch(ctx, effect, {
           at: ["戦闘エリア1", "戦闘エリア2", "配備エリア"],
           is: ["キャラクター"],
           side: "自軍",
           max: 50
-        })) as StrBaSyouPair[]
+        }, {ges: Options.ges})) as StrBaSyouPair[]
         return [{ title: ["＋x／＋x／＋xを得る", [2, 2, 2]], cardIds: pairs.map(pair => pair[0]) }]
       }.toString()
     }

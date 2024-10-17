@@ -56,7 +56,13 @@ export const prototype: CardPrototype = {
               title: ["Entity", {
                 see: [DefineFn.RelatedBaSyouFn.of("自軍", "本国"), 1, 1],
                 max: 1,
-              }]
+              }],
+              actions:[
+                {
+                  title: ["_ロールする", "見"],
+                  vars: ["自軍本国の上のカード１枚を見て"]
+                }
+              ]
             }
           },
           logicTreeAction: {
@@ -67,6 +73,7 @@ export const prototype: CardPrototype = {
                   const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "自軍本国の上のカード１枚を見て", cardId)
                   if (pairs.length) {
                     const newE = GameStateFn.createPlayTextEffectFromEffect(ctx, effect, {
+                      isOption: true,
                       logicTreeAction: {
                         actions: [
                           {

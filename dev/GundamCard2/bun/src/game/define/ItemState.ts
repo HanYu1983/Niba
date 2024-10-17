@@ -11,6 +11,8 @@ export type ItemState = {
     destroyReason: DestroyReason | null;
     flags: { [key: string]: any };
     tips: { [key: string]: Tip },
+    isAttack?: boolean,
+    isDefence?: boolean,
     globalEffects: { [key: string]: GlobalEffect },
     varNamesRemoveOnTurnEnd: { [key: string]: any },
     isOpenForGain?: boolean,
@@ -82,11 +84,16 @@ export const ItemStateFn = {
             damage: ctx.damage + v
         }
     },
-    setMoreTotalRollCostLengthPlay(ctx: ItemState, x: number) {
-        return this.setFlag(ctx, "合計国力＋(１)してプレイ", x)
+    setMoreTotalRollCostLengthPlay(ctx: ItemState, x: number): ItemState {
+        ctx = ItemStateFn.setFlag(ctx, "合計国力_＋１してプレイ", x)
+        ctx = {
+            ...ctx,
+            varNamesRemoveOnTurnEnd: assoc("合計国力_＋１してプレイ", true, ctx.varNamesRemoveOnTurnEnd)
+        }
+        return ctx
     },
     getMoreTotalRollCostLengthPlay(ctx: ItemState): number {
-        return ctx.flags["合計国力＋(１)してプレイ"] || 0
+        return ctx.flags["合計国力_＋１してプレイ"] || 0
     },
     getGlobalEffects(ctx: ItemState): GlobalEffect[] {
         return Object.values(ctx.globalEffects)
@@ -114,7 +121,7 @@ export const ItemStateFn = {
         // }
         return ctx
     },
-    onDamageReset(ctx:ItemState):ItemState {
+    onDamageReset(ctx: ItemState): ItemState {
         return {
             ...ctx,
             damage: 0,
@@ -136,6 +143,8 @@ export const ItemStateFn = {
             isFirstTurn: false,
             //textIdsUseThisCut: {},
             textIdsUseThisTurn: [],
+            isAttack: false,
+            isDefence: false,
         }
         return ctx
     }

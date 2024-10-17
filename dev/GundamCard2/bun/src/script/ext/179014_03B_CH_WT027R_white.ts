@@ -20,19 +20,6 @@ export const prototype: CardPrototype = {
       conditions: {
         ...createRollCostRequire(1, null),
         "自軍ユニットの「専用機のセット」が成立している場合": {
-          // title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip | null {
-          //   const cardId = DefineFn.EffectFn.getCardID(effect)
-          //   if (GameStateFn.createTipByEntitySearch(ctx, cardId, {
-          //     side: "自軍",
-          //     isMaster: true,
-          //     min: 1
-          //   }).title[1].length) {
-
-          //   } else {
-          //     throw new DefineFn.TargetMissingError(`自軍ユニットの「専用機のセット」が成立している場合`)
-          //   }
-          //   return null
-          // }.toString(),
           actions: [
             {
               title: ["Entity", {
