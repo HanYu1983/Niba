@@ -7,9 +7,10 @@ import { getSetGroupChildren } from "./SetGroupComponent";
 import { getBattleGroup } from "./battleGroup";
 import { getItemBaSyou } from "./ItemTableComponent";
 import { GlobalEffect } from "../define/GlobalEffect";
+import { GameExtParams } from "../define/GameExtParams";
 
 // setgroup
-export function getSetGroupBattlePoint(ctx: GameState, cardId: string, options: { ges?: GlobalEffect[] }): BattleBonus {
+export function getSetGroupBattlePoint(ctx: GameState, cardId: string, options: GameExtParams): BattleBonus {
     return pipe(
         always(getSetGroupChildren(ctx, cardId)),
         map(setGroupCardID => getCardBattlePoint(ctx, setGroupCardID, { ges: options.ges })),

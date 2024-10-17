@@ -1,5 +1,6 @@
 import { AbsoluteBaSyou, AbsoluteBaSyouFn } from "../define/BaSyou";
 import { TextSpeicalEffect } from "../define/CardText";
+import { GameExtParams } from "../define/GameExtParams";
 import { GlobalEffect } from "../define/GlobalEffect";
 import { getCardHasSpeicalEffect } from "./card";
 import { getCard } from "./CardTableComponent";
@@ -23,7 +24,7 @@ export function getBattleGroup(
 export function getBattleGroupBattlePoint(
   ctx: GameState,
   unitCardIDs: string[],
-  options: { ges?: GlobalEffect[] }
+  options: GameExtParams
 ): number {
   if (unitCardIDs.length == 0) {
     return 0
@@ -76,20 +77,20 @@ export function isBattleGroupHasA(
   ctx: GameState,
   a: TextSpeicalEffect,
   cardID: string,
-  options: { ges?: GlobalEffect[] }
+  options: GameExtParams
 ): boolean {
   const baSyou = getItemBaSyou(ctx, cardID);
   const battleGroup = getBattleGroup(ctx, baSyou);
-  return battleGroup.some(bg => isSetGroupHasA(ctx, a, bg, {ges: options.ges}))
+  return battleGroup.some(bg => isSetGroupHasA(ctx, a, bg, { ges: options.ges }))
 }
 
 export function isABattleGroup(
   ctx: GameState,
   a: TextSpeicalEffect,
   cardID: string,
-  options: { ges?: GlobalEffect[] }
+  options: GameExtParams
 ): boolean {
   const baSyou = getItemBaSyou(ctx, cardID);
   const battleGroup = getBattleGroup(ctx, baSyou);
-  return battleGroup.every(bg => isSetGroupHasA(ctx, a, bg, {ges: options.ges}))
+  return battleGroup.every(bg => isSetGroupHasA(ctx, a, bg, { ges: options.ges }))
 }

@@ -24,10 +24,16 @@ import { isCardMaster } from "./card";
 import { createTextsFromSpecialEffect } from "./createTextsFromSpecialEffect";
 
 export async function testAllCardTextTestEnv() {
-  const all = createDecks().flatMap(v => v).concat(...["unit", "unitHasPhy", "charBlue", "unitHasGain"])
+  const extIds = ["unit", "unitHasPhy", "charBlue", "unitHasGain"]
+  const all = createDecks().flatMap(v => v).concat(...extIds)
   for (const id of all) {
     await loadPrototype(id)
   }
+  extIds.map(getPrototype).forEach(proto => {
+    proto.texts?.flatMap(text => text.title[0] == "特殊型" ? createTextsFromSpecialEffect(text, {}) : []).forEach(text => {
+      testText(proto, text, { isCheckDescription: true })
+    })
+  })
   dropRepeats(all).map(getPrototype).forEach(proto => {
     if (proto.commandText) {
       testText(proto, proto.commandText)
@@ -35,13 +41,10 @@ export async function testAllCardTextTestEnv() {
     proto.texts?.forEach(text => {
       testText(proto, text)
     })
-    proto.texts?.flatMap(text => text.title[0] == "特殊型" ? createTextsFromSpecialEffect(text, {}) : []).forEach(text => {
-      testText(proto, text, {isCheckDescription: true})
-    })
   })
 }
 
-export function testText(proto: CardPrototype, text: CardText, options?: {isCheckDescription?: boolean}) {
+export function testText(proto: CardPrototype, text: CardText, options?: { isCheckDescription?: boolean }) {
   if (text.testEnvs) {
     text.testEnvs.forEach(testEnv => {
       let ctx = createGameState()
@@ -86,7 +89,7 @@ export function testText(proto: CardPrototype, text: CardText, options?: {isChec
             ctx = setGlobalEffects(ctx, null, ges)
             let effects = createPlayEffects(ctx, PlayerA)
             let effect: any = null
-            if(options?.isCheckDescription){
+            if (options?.isCheckDescription) {
               effect = effects.find(eff => eff.text.description == text.description)
             } else {
               effect = effects.find(eff => eff.text.id == text.id)

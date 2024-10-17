@@ -1,22 +1,13 @@
-package optalg
-
-func GetBest(population []IGene) IGene {
-	best := 0.0
-	index := 0
-	for i := 0; i < len(population); i++ {
-		if population[i].GetFitness() > best {
-			index = i
-			best = population[i].GetFitness()
-		}
-	}
-	return population[index]
+export type IGene = {
+  calcFitness(): number
+  getFitness(): number
+  mutate(): IGene
+  crossover(gene: IGene): IGene
 }
-
 
 export function getBest(population: IGene[]): IGene {
   let bestFitness = 0;
   let bestIndex = 0;
-
   for (let i = 0; i < population.length; i++) {
     const fitness = population[i].getFitness();
     if (fitness > bestFitness) {
@@ -24,6 +15,5 @@ export function getBest(population: IGene[]): IGene {
       bestIndex = i;
     }
   }
-
   return population[bestIndex];
 }
