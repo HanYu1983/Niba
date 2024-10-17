@@ -15,6 +15,7 @@ import { TipTitleTextRef } from "../define/Tip"
 import { createBridge } from "../bridge/createBridge"
 import { GlobalEffect } from "../define/GlobalEffect"
 import { logCategory } from "../../tool/logger"
+import { GameExtParams } from "../define/GameExtParams"
 
 export function getCardTextFromCardTextRef(ctx: ItemTableComponent, textRef: TipTitleTextRef): CardText {
   const { cardId, textId } = textRef
@@ -55,7 +56,7 @@ export function getCardSpecialText(text: CardText, options: { ges?: GlobalEffect
   }
 }
 
-export function getCardTexts(ctx: ItemTableComponent, cardID: string, options: { ges?: GlobalEffect[] }): CardText[] {
+export function getCardTexts(ctx: ItemTableComponent, cardID: string, options: GameExtParams): CardText[] {
   logCategory("getCardTexts", "")
   const addedTexts = options?.ges?.flatMap(e => {
     if (e.cardIds.includes(cardID) && e.title[0] == "AddText") {

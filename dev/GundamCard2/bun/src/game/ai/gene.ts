@@ -6,7 +6,7 @@ import { BattleBonus } from "../define/CardText";
 import { GameExtParams } from "../define/GameExtParams";
 import { PlayerA, PlayerB, PlayerID } from "../define/PlayerID";
 import { isABattleGroup } from "../gameState/battleGroup";
-import { getCardBattlePoint } from "../gameState/card";
+import { getCardBattlePoint, getCardSpecialText, getCardTexts } from "../gameState/card";
 import { addCards, createCardWithProtoIds } from "../gameState/CardTableComponent";
 import { createDecks } from "../gameState/cardTextTestEnv";
 import { createGameState, GameState } from "../gameState/GameState";
@@ -24,7 +24,9 @@ type SetGroupEncode = {
   bp: BattleBonus
   hasHigh: boolean,
   hasStrong: boolean,
-  hasSpeed: boolean
+  hasSpeed: boolean,
+  phyDamage: number,
+  maxRange: number,
 }
 
 function encodeSetGroup(ctx: GameState, itemId: string, ext: GameExtParams): SetGroupEncode {
@@ -32,7 +34,21 @@ function encodeSetGroup(ctx: GameState, itemId: string, ext: GameExtParams): Set
   const hasHigh = isSetGroupHasA(ctx, ["高機動"], itemId, ext)
   const hasStrong = isSetGroupHasA(ctx, ["強襲"], itemId, ext)
   const hasSpeed = isSetGroupHasA(ctx, ["速攻"], itemId, ext)
-  return { itemId, bp, hasHigh, hasStrong, hasSpeed }
+  const phyDamage = getCardTexts(ctx, itemId, ext).map(text => {
+    text = getCardSpecialText(text, { ...ext, cardId: itemId })
+    if (text.title[0] == "特殊型" && text.title[1][0] == "サイコミュ") {
+      return text.title[1][1]
+    }
+    return 0
+  }).reduce((a, b) => a + b, 0)
+  const maxRange = getCardTexts(ctx, itemId, ext).map(text => {
+    text = getCardSpecialText(text, { ...ext, cardId: itemId })
+    if (text.title[0] == "特殊型" && text.title[1][0] == "範囲兵器") {
+      return text.title[1][1]
+    }
+    return 0
+  }).reduce((a, b) => Math.max(a, b), 0)
+  return { itemId, bp, hasHigh, hasStrong, hasSpeed, phyDamage, maxRange }
 }
 
 type BattleGroupEncode = {
@@ -43,6 +59,8 @@ type BattleGroupEncode = {
   hasHigh: number,
   hasStrong: number,
   hasSpeed: number,
+  phyDamage: number,
+  maxRange: number,
   setGroupLength: number,
 }
 
@@ -58,8 +76,13 @@ function encodeBattleGroup(setGroupEncodes: SetGroupEncode[]): BattleGroupEncode
   const hasStrong = setGroupEncodes.filter(v => v.hasStrong).length
   const hasSpeed = setGroupEncodes.filter(v => v.hasSpeed).length
   const bps = setGroupEncodes.map(v => v.bp)
+  const phyDamage = setGroupEncodes.map(v => v.phyDamage).reduce((a, b) => a + b, 0)
+  const maxRange = setGroupEncodes.map(v => v.maxRange).reduce((a, b) => Math.max(a, b), 0)
   return {
-    itemIds: setGroupEncodes.map(s => s.itemId), bps, power, hp, hasHigh, hasStrong, hasSpeed, setGroupLength: setGroupEncodes.length
+    itemIds: setGroupEncodes.map(s => s.itemId),
+    power, hp, bps, phyDamage, maxRange,
+    hasHigh, hasStrong, hasSpeed,
+    setGroupLength: setGroupEncodes.length
   }
 }
 
@@ -94,6 +117,9 @@ const BattleGroupEncodeFn = {
         dist += LV3
       }
     }
+    dist += LV1 * Math.abs(left.phyDamage - right.phyDamage)
+    dist += LV1 * Math.abs(left.maxRange - right.maxRange)
+    // 以下只能使用LV0，主要特徵要先對上
     dist += LV0 * Math.abs(left.power - right.power)
     for (let i = 0; i < Math.min(left.bps.length, right.bps.length); ++i) {
       const leftBp = left.bps[i]
@@ -154,10 +180,17 @@ export function testSetGroupEncode() {
   })
   const allUnitProtosHasSp = allUnitProtos.filter(cardId => {
     const proto = getPrototype(cardId)
-    return proto.texts?.find(text => text.title[0] == "特殊型" && (text.title[1][0] == "高機動" /*|| text.title[1][0] == "強襲" ||  text.title[1][0] == "速攻"*/))
+    return proto.texts?.find(text => text.title[0] == "特殊型"
+      && ( false 
+        || text.title[1][0] == "高機動"
+        || text.title[1][0] == "強襲"
+        || text.title[1][0] == "速攻"
+        || text.title[1][0] == "範囲兵器"
+        || text.title[1][0] == "サイコミュ"
+      ))
   })
   const unitIdsHasHigh: string[] = []
-  for (let i = 0; i < 2; ++i) {
+  for (let i = 0; i < 4; ++i) {
     const pool = allUnitProtosHasSp
     unitIdsHasHigh.push(pool[Math.floor(Math.random() * 1000) % pool.length])
   }
@@ -182,7 +215,7 @@ export function testSetGroupEncode() {
         let unitIds = [...this.unitIds]
         const rand = Math.random()
         if (rand < 0.33) {
-          const pool = allUnitProtos.slice()
+          const pool = allUnitProtos.slice(0)
           let selectId = 0
           for (let i = 0; i < 10; ++i) {
             selectId = Math.floor(Math.random() * 1000) % pool.length
