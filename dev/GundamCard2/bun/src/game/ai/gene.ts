@@ -29,7 +29,7 @@ type SetGroupEncode = {
   maxRange: number,
 }
 
-function encodeSetGroup(ctx: GameState, itemId: string, ext: GameExtParams): SetGroupEncode {
+function createSetGroupEncode(ctx: GameState, itemId: string, ext: GameExtParams): SetGroupEncode {
   const bp = getSetGroupBattlePoint(ctx, itemId, ext)
   const hasHigh = isSetGroupHasA(ctx, ["高機動"], itemId, ext)
   const hasStrong = isSetGroupHasA(ctx, ["強襲"], itemId, ext)
@@ -65,7 +65,7 @@ type BattleGroupEncode = {
   setGroupLength: number,
 }
 
-function encodeBattleGroup(setGroupEncodes: SetGroupEncode[]): BattleGroupEncode {
+function createBattleGroupEncode(setGroupEncodes: SetGroupEncode[]): BattleGroupEncode {
   const power = setGroupEncodes.map((v, i) => {
     if (i == 0) {
       return v.bp[0]
@@ -93,8 +93,13 @@ function encodeBattleGroup(setGroupEncodes: SetGroupEncode[]): BattleGroupEncode
   }
 }
 
+export function randInt() {
+  return Math.floor(Math.random() * 100000)
+}
+
 const BattleGroupEncodeFn = {
   distance(left: BattleGroupEncode, right: BattleGroupEncode, options?: { isShapeSpStrong: boolean, isShapeBp?: boolean, isShapeLength?: boolean }): number {
+    const LVMIN = 5
     const LV0 = 10
     const LV1 = 200
     const LV2 = 500
@@ -135,15 +140,77 @@ const BattleGroupEncodeFn = {
         dist += LV0 * Math.sqrt(Math.pow(leftBp[0] - rightBp[0], 2) + Math.pow(leftBp[1] - rightBp[1], 2) + Math.pow(leftBp[2] - rightBp[2], 2))
       }
     }
-
-    dist += 7 * Math.abs(left.hp - right.hp)
+    dist += LVMIN * Math.abs(left.hp - right.hp)
     if (options?.isShapeLength) {
       dist += LV0 * Math.abs(left.setGroupLength - right.setGroupLength)
     }
     return dist
   },
   fromItemIds(ctx: GameState, itemIds: string[], ext: GameExtParams): BattleGroupEncode {
-    return encodeBattleGroup(itemIds.map(itemId => encodeSetGroup(ctx, itemId, ext)))
+    return createBattleGroupEncode(itemIds.map(itemId => createSetGroupEncode(ctx, itemId, ext)))
+  },
+  createBattleGroupFromTargetEncode(ctx: GameState, itemIdPool: string[], targetEncode: BattleGroupEncode, options?: { isShapeSpStrong?: boolean }): string[] {
+    type SelectBattleGroupGene = {
+      unitIds: string[],
+      score: number
+    } & IGene
+    let gene: SelectBattleGroupGene = {
+      unitIds: [],
+      score: 0,
+      calcFitness(): number {
+        const encodeBG = BattleGroupEncodeFn.fromItemIds(ctx, this.unitIds, {})
+        // 達成目標群組的距離分，距離越近越高分
+        const unitScore = 100000 - BattleGroupEncodeFn.distance(
+          encodeBG, targetEncode, { isShapeSpStrong: options?.isShapeSpStrong || false }
+        )
+        // 優化部隊組成，損失的格鬥力越少越高分
+        const lostPowerScore = Math.pow(Math.max(0, 20 - encodeBG.lostPower), 2) * 5
+        this.score = unitScore + lostPowerScore
+        return this.score
+      },
+      getFitness(): number {
+        return this.score
+      },
+      mutate(): SelectBattleGroupGene {
+        let unitIds = [...this.unitIds]
+        const rand = Math.random()
+        if (rand < 0.33) {
+          const pool = itemIdPool
+          let selectId = 0
+          for (let i = 0; i < 10; ++i) {
+            selectId = randInt() % pool.length
+            if (unitIds.includes(pool[selectId])) {
+              continue
+            }
+            break
+          }
+          if (unitIds.includes(pool[selectId]) == false) {
+            unitIds.push(pool[selectId])
+          } else {
+            // 如果還是選到重復的
+            const id1 = randInt() % unitIds.length
+            unitIds = unitIds.filter(id => id != unitIds[id1])
+          }
+        } else if (rand < 0.66) {
+          const id1 = randInt() % unitIds.length
+          unitIds = unitIds.filter(id => id != unitIds[id1])
+        } else {
+          if (unitIds.length >= 2) {
+            const id1 = randInt() % unitIds.length
+            const id2 = randInt() % unitIds.length
+            if (id1 != id2) {
+              unitIds[id1], unitIds[id2] = unitIds[id2], unitIds[id1]
+            }
+          }
+        }
+        return {
+          ...this,
+          unitIds: unitIds
+        }
+      },
+    }
+    gene = simulatedAnnealing(1000, 1000, 0.99, gene) as SelectBattleGroupGene
+    return gene.unitIds
   }
 }
 
@@ -180,7 +247,7 @@ export function testSetGroupEncode() {
     throw new Error()
   }
   let ctx = createGameState()
-  ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1"), allProtoIds.map(protoId => {
+  ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア"), allProtoIds.map(protoId => {
     return {
       id: protoId,
       protoID: protoId
@@ -209,61 +276,10 @@ export function testSetGroupEncode() {
   const encodeUnitHasHigh = BattleGroupEncodeFn.fromItemIds(ctx, unitIdsHasHigh, {})
 
   {
-    type SelectBattleGroupGene = {
-      unitIds: string[],
-      score: number
-    } & IGene
-    let gene: SelectBattleGroupGene = {
-      unitIds: [],
-      score: 0,
-      calcFitness(): number {
-        const encodeBG = BattleGroupEncodeFn.fromItemIds(ctx, this.unitIds, {})
-        // 達成目標群組的距離分，距離越近越高分
-        const unitScore = 100000 - BattleGroupEncodeFn.distance(
-          encodeBG, encodeUnitHasHigh, { isShapeSpStrong: true }
-        )
-        // 優化部隊組成，損失的格鬥力越少越高分
-        const lostPowerScore = Math.pow(Math.max(0, 20 - encodeBG.lostPower), 2) * 5
-        this.score = unitScore + lostPowerScore
-        return this.score
-      },
-      getFitness(): number {
-        return this.score
-      },
-      mutate(): SelectBattleGroupGene {
-        let unitIds = [...this.unitIds]
-        const rand = Math.random()
-        if (rand < 0.33) {
-          const pool = allUnitProtos.slice(0)
-          let selectId = 0
-          for (let i = 0; i < 10; ++i) {
-            selectId = Math.floor(Math.random() * 1000) % pool.length
-            if (unitIds.includes(pool[selectId])) {
-              continue
-            }
-            break
-          }
-          if (unitIds.includes(pool[selectId]) == false) {
-            unitIds.push(pool[selectId])
-          }
-        } else if (rand < 0.66) {
-          const id1 = Math.floor(Math.random() * 1000) % unitIds.length
-          unitIds = unitIds.filter(id => id != unitIds[id1])
-        } else {
-          const id1 = Math.floor(Math.random() * 1000) % unitIds.length
-          const id2 = Math.floor(Math.random() * 1000) % unitIds.length
-          unitIds[id1], unitIds[id2] = unitIds[id2], unitIds[id1]
-        }
-        return {
-          ...this,
-          unitIds: unitIds
-        }
-      },
-    }
-    gene = simulatedAnnealing(1000, 1000, 0.99, gene) as SelectBattleGroupGene
-    const result = BattleGroupEncodeFn.fromItemIds(ctx, gene.unitIds, {})
+    const unitIds = BattleGroupEncodeFn.createBattleGroupFromTargetEncode(ctx, allUnitProtos, encodeUnitHasHigh, {isShapeSpStrong: true})
+    const result = BattleGroupEncodeFn.fromItemIds(ctx, unitIds, {})
     console.log(encodeUnitHasHigh.itemIds.map((itemId: any) => getCardBattlePoint(ctx, itemId, {})))
-    console.log(gene.unitIds.map((itemId: any) => getCardBattlePoint(ctx, itemId, {})))
+    console.log(unitIds.map((itemId: any) => getCardBattlePoint(ctx, itemId, {})))
     console.log(encodeUnitHasHigh)
     console.log(result)
     console.log(BattleGroupEncodeFn.distance(encodeUnitHasHigh, result))
