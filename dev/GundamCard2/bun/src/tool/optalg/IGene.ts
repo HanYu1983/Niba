@@ -2,7 +2,7 @@ export type IGene = {
   calcFitness(): number
   getFitness(): number
   mutate(): IGene
-  crossover(gene: IGene): IGene
+  crossover?(gene: IGene): IGene
 }
 
 export function getBest(population: IGene[]): IGene {

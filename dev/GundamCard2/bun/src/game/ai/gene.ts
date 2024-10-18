@@ -55,6 +55,7 @@ type BattleGroupEncode = {
   itemIds: string[],
   bps: BattleBonus[],
   power: number,
+  lostPower: number,
   hp: number,
   hasHigh: number,
   hasStrong: number,
@@ -71,6 +72,12 @@ function encodeBattleGroup(setGroupEncodes: SetGroupEncode[]): BattleGroupEncode
     }
     return v.bp[1]
   }).reduce((a, b) => a + b, 0)
+  const lostPower = setGroupEncodes.map((v, i) => {
+    if (i == 0) {
+      return 0
+    }
+    return v.bp[0]
+  }).reduce((a, b) => a + b, 0)
   const hp = setGroupEncodes.map(v => v.bp[2]).reduce((a, b) => a + b, 0)
   const hasHigh = setGroupEncodes.filter(v => v.hasHigh).length
   const hasStrong = setGroupEncodes.filter(v => v.hasStrong).length
@@ -80,14 +87,14 @@ function encodeBattleGroup(setGroupEncodes: SetGroupEncode[]): BattleGroupEncode
   const maxRange = setGroupEncodes.map(v => v.maxRange).reduce((a, b) => Math.max(a, b), 0)
   return {
     itemIds: setGroupEncodes.map(s => s.itemId),
-    power, hp, bps, phyDamage, maxRange,
+    power, lostPower, hp, bps, phyDamage, maxRange,
     hasHigh, hasStrong, hasSpeed,
     setGroupLength: setGroupEncodes.length
   }
 }
 
 const BattleGroupEncodeFn = {
-  distance(left: BattleGroupEncode, right: BattleGroupEncode, options?: { isAttackSide: boolean }): number {
+  distance(left: BattleGroupEncode, right: BattleGroupEncode, options?: { isShapeSpStrong: boolean, isShapeBp?: boolean, isShapeLength?: boolean }): number {
     const LV0 = 10
     const LV1 = 200
     const LV2 = 500
@@ -96,7 +103,7 @@ const BattleGroupEncodeFn = {
     if (left.hasHigh != right.hasHigh) {
       dist += Math.abs(left.hasHigh - right.hasHigh) * LV1
     }
-    if (options?.isAttackSide) {
+    if (options?.isShapeSpStrong) {
       if (left.hasStrong != right.hasStrong) {
         dist += Math.abs(left.hasStrong - right.hasStrong) * LV1
       }
@@ -108,7 +115,7 @@ const BattleGroupEncodeFn = {
       if ((left.hasHigh == left.setGroupLength) != (right.hasHigh == right.setGroupLength)) {
         dist += LV3
       }
-      if (options?.isAttackSide) {
+      if (options?.isShapeSpStrong) {
         if ((left.hasStrong == left.setGroupLength) != (right.hasStrong == right.setGroupLength)) {
           dist += LV2
         }
@@ -121,13 +128,18 @@ const BattleGroupEncodeFn = {
     dist += LV1 * Math.abs(left.maxRange - right.maxRange)
     // 以下只能使用LV0，主要特徵要先對上
     dist += LV0 * Math.abs(left.power - right.power)
-    for (let i = 0; i < Math.min(left.bps.length, right.bps.length); ++i) {
-      const leftBp = left.bps[i]
-      const rightBp = right.bps[i]
-      dist += LV0 * Math.sqrt(Math.pow(leftBp[0] - rightBp[0], 2) + Math.pow(leftBp[1] - rightBp[1], 2) + Math.pow(leftBp[2] - rightBp[2], 2))
+    if (options?.isShapeBp) {
+      for (let i = 0; i < Math.min(left.bps.length, right.bps.length); ++i) {
+        const leftBp = left.bps[i]
+        const rightBp = right.bps[i]
+        dist += LV0 * Math.sqrt(Math.pow(leftBp[0] - rightBp[0], 2) + Math.pow(leftBp[1] - rightBp[1], 2) + Math.pow(leftBp[2] - rightBp[2], 2))
+      }
     }
-    dist += LV0 * Math.abs(left.hp - right.hp)
-    dist += LV0 * Math.abs(left.setGroupLength - right.setGroupLength)
+
+    dist += 7 * Math.abs(left.hp - right.hp)
+    if (options?.isShapeLength) {
+      dist += LV0 * Math.abs(left.setGroupLength - right.setGroupLength)
+    }
     return dist
   },
   fromItemIds(ctx: GameState, itemIds: string[], ext: GameExtParams): BattleGroupEncode {
@@ -181,7 +193,7 @@ export function testSetGroupEncode() {
   const allUnitProtosHasSp = allUnitProtos.filter(cardId => {
     const proto = getPrototype(cardId)
     return proto.texts?.find(text => text.title[0] == "特殊型"
-      && ( false 
+      && (false
         || text.title[1][0] == "高機動"
         || text.title[1][0] == "強襲"
         || text.title[1][0] == "速攻"
@@ -197,21 +209,28 @@ export function testSetGroupEncode() {
   const encodeUnitHasHigh = BattleGroupEncodeFn.fromItemIds(ctx, unitIdsHasHigh, {})
 
   {
-    let gene: IGene & any = {
+    type SelectBattleGroupGene = {
+      unitIds: string[],
+      score: number
+    } & IGene
+    let gene: SelectBattleGroupGene = {
       unitIds: [],
       score: 0,
       calcFitness(): number {
-        this.score = 100000 - BattleGroupEncodeFn.distance(
-          BattleGroupEncodeFn.fromItemIds(ctx, this.unitIds, {}),
-          encodeUnitHasHigh,
-          { isAttackSide: true }
+        const encodeBG = BattleGroupEncodeFn.fromItemIds(ctx, this.unitIds, {})
+        // 達成目標群組的距離分，距離越近越高分
+        const unitScore = 100000 - BattleGroupEncodeFn.distance(
+          encodeBG, encodeUnitHasHigh, { isShapeSpStrong: true }
         )
+        // 優化部隊組成，損失的格鬥力越少越高分
+        const lostPowerScore = Math.pow(Math.max(0, 20 - encodeBG.lostPower), 2) * 5
+        this.score = unitScore + lostPowerScore
         return this.score
       },
       getFitness(): number {
         return this.score
       },
-      mutate(): IGene {
+      mutate(): SelectBattleGroupGene {
         let unitIds = [...this.unitIds]
         const rand = Math.random()
         if (rand < 0.33) {
@@ -238,13 +257,10 @@ export function testSetGroupEncode() {
         return {
           ...this,
           unitIds: unitIds
-        } as any
+        }
       },
-      crossover(gene: IGene): IGene {
-        return this
-      }
     }
-    gene = simulatedAnnealing(500, 1000, 0.99, gene)
+    gene = simulatedAnnealing(1000, 1000, 0.99, gene) as SelectBattleGroupGene
     const result = BattleGroupEncodeFn.fromItemIds(ctx, gene.unitIds, {})
     console.log(encodeUnitHasHigh.itemIds.map((itemId: any) => getCardBattlePoint(ctx, itemId, {})))
     console.log(gene.unitIds.map((itemId: any) => getCardBattlePoint(ctx, itemId, {})))

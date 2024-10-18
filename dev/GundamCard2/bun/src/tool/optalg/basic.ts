@@ -56,6 +56,9 @@ export function geneticAlgorithm(iteration: number, mutateRate: number, populati
 			const parent2 = pool[Math.floor(Math.random() * pool.length)];
 
 			// 交叉
+			if (parent1.crossover == null) {
+				throw new Error()
+			}
 			let child = parent1.crossover(parent2);
 
 			// 突變
@@ -90,7 +93,13 @@ export function optAlgByPSO(iteration: number, population: IGene[]): IGene[] {
 			// 突變
 			let nextGene = hillClimbing(10, gene);
 			// 和群體最佳解雜交
+			if (nextGene.crossover == null) {
+				throw new Error()
+			}
 			nextGene = nextGene.crossover(globalBestGene)
+			if (nextGene.crossover == null) {
+				throw new Error()
+			}
 			// 和個人最佳解雜交
 			nextGene = nextGene.crossover(bestGenes[j])
 			const nextFitness = nextGene.calcFitness()
