@@ -4,14 +4,14 @@ import { IGene } from "../../tool/optalg/IGene";
 import { AbsoluteBaSyouFn } from "../define/BaSyou";
 import { BattleBonus } from "../define/CardText";
 import { GameExtParams } from "../define/GameExtParams";
-import { PlayerA, PlayerB, PlayerID } from "../define/PlayerID";
+import { PlayerA, PlayerB, PlayerID, PlayerIDFn } from "../define/PlayerID";
 import { isABattleGroup } from "../gameState/battleGroup";
 import { getCardBattlePoint, getCardSpecialText, getCardTexts } from "../gameState/card";
 import { addCards, createCardWithProtoIds } from "../gameState/CardTableComponent";
 import { createDecks } from "../gameState/cardTextTestEnv";
 import { createGameState, GameState } from "../gameState/GameState";
 import { getItemIdsByBasyou } from "../gameState/ItemTableComponent";
-import { doPlayerAttack, getPlayerUnitIds } from "../gameState/player";
+import { doPlayerAttack, getPlayerUnitCanGoEarthIds, getPlayerUnitCanGoSpaceIds, getPlayerUnitIds } from "../gameState/player";
 import { getSetGroupBattlePoint, isSetGroupHasA } from "../gameState/setGroup";
 
 type BattleEnv = {
@@ -98,6 +98,21 @@ export function randInt() {
 }
 
 const BattleGroupEncodeFn = {
+  createEmpty(): BattleGroupEncode {
+    return {
+      itemIds: [],
+      bps: [],
+      power: 0,
+      lostPower: 0,
+      hp: 0,
+      hasHigh: 0,
+      hasStrong: 0,
+      hasSpeed: 0,
+      phyDamage: 0,
+      maxRange: 0,
+      setGroupLength: 0,
+    }
+  },
   distance(left: BattleGroupEncode, right: BattleGroupEncode, options?: { isShapeSpStrong: boolean, isShapeBp?: boolean, isShapeLength?: boolean }): number {
     const LVMIN = 5
     const LV0 = 10
@@ -149,96 +164,71 @@ const BattleGroupEncodeFn = {
   fromItemIds(ctx: GameState, itemIds: string[], ext: GameExtParams): BattleGroupEncode {
     return createBattleGroupEncode(itemIds.map(itemId => createSetGroupEncode(ctx, itemId, ext)))
   },
-  createBattleGroupFromTargetEncode(ctx: GameState, itemIdPool: string[], targetEncode: BattleGroupEncode, options?: { isShapeSpStrong?: boolean }): string[] {
-    type SelectBattleGroupGene = {
-      unitIds: string[],
-      score: number
-    } & IGene
-    let gene: SelectBattleGroupGene = {
-      unitIds: [],
-      score: 0,
-      calcFitness(): number {
-        const encodeBG = BattleGroupEncodeFn.fromItemIds(ctx, this.unitIds, {})
-        // 達成目標群組的距離分，距離越近越高分
-        const unitScore = 100000 - BattleGroupEncodeFn.distance(
-          encodeBG, targetEncode, { isShapeSpStrong: options?.isShapeSpStrong || false }
-        )
-        // 優化部隊組成，損失的格鬥力越少越高分
-        const lostPowerScore = Math.pow(Math.max(0, 20 - encodeBG.lostPower), 2) * 5
-        this.score = unitScore + lostPowerScore
-        return this.score
-      },
-      getFitness(): number {
-        return this.score
-      },
-      mutate(): SelectBattleGroupGene {
-        let unitIds = [...this.unitIds]
-        const rand = Math.random()
-        if (rand < 0.33) {
-          const pool = itemIdPool
-          let selectId = 0
+
+}
+
+export function createBattleGroupFromBattleGroupEncode(ctx: GameState, itemIdPool: string[], targetEncode: BattleGroupEncode, options?: { isShapeSpStrong?: boolean }): string[] {
+  type SelectBattleGroupGene = {
+    unitIds: string[],
+    score: number
+  } & IGene
+  let gene: SelectBattleGroupGene = {
+    unitIds: [],
+    score: 0,
+    calcFitness(): number {
+      const encodeBG = BattleGroupEncodeFn.fromItemIds(ctx, this.unitIds, {})
+      // 達成目標群組的距離分，距離越近越高分
+      const unitScore = 100000 - BattleGroupEncodeFn.distance(
+        encodeBG, targetEncode, { isShapeSpStrong: options?.isShapeSpStrong || false }
+      )
+      // 優化部隊組成，損失的格鬥力越少越高分
+      const lostPowerScore = Math.pow(Math.max(0, 20 - encodeBG.lostPower), 2) * 5
+      this.score = unitScore + lostPowerScore
+      return this.score
+    },
+    getFitness(): number {
+      return this.score
+    },
+    mutate(): SelectBattleGroupGene {
+      let unitIds = [...this.unitIds]
+      const rand = Math.random()
+      if (rand < 0.33) {
+        const pool = itemIdPool
+        if (unitIds.length == pool.length) {
+          const id1 = randInt() % unitIds.length
+          unitIds = unitIds.filter(id => id != unitIds[id1])
+        } else {
           for (let i = 0; i < 10; ++i) {
+            let selectId = 0
             selectId = randInt() % pool.length
             if (unitIds.includes(pool[selectId])) {
               continue
             }
+            unitIds.push(pool[selectId])
             break
           }
-          if (unitIds.includes(pool[selectId]) == false) {
-            unitIds.push(pool[selectId])
-          } else {
-            // 如果還是選到重復的
-            const id1 = randInt() % unitIds.length
-            unitIds = unitIds.filter(id => id != unitIds[id1])
-          }
-        } else if (rand < 0.66) {
+        }
+      } else if (rand < 0.66) {
+        const id1 = randInt() % unitIds.length
+        unitIds = unitIds.filter(id => id != unitIds[id1])
+      } else {
+        if (unitIds.length >= 2) {
           const id1 = randInt() % unitIds.length
-          unitIds = unitIds.filter(id => id != unitIds[id1])
-        } else {
-          if (unitIds.length >= 2) {
-            const id1 = randInt() % unitIds.length
-            const id2 = randInt() % unitIds.length
-            if (id1 != id2) {
-              unitIds[id1], unitIds[id2] = unitIds[id2], unitIds[id1]
-            }
+          const id2 = randInt() % unitIds.length
+          if (id1 != id2) {
+            unitIds[id1], unitIds[id2] = unitIds[id2], unitIds[id1]
           }
         }
-        return {
-          ...this,
-          unitIds: unitIds
-        }
-      },
-    }
-    gene = simulatedAnnealing(1000, 1000, 0.99, gene) as SelectBattleGroupGene
-    return gene.unitIds
+      }
+      return {
+        ...this,
+        unitIds: unitIds
+      }
+    },
   }
+  gene = simulatedAnnealing(1000, 1000, 0.99, gene) as SelectBattleGroupGene
+  return gene.unitIds
 }
-
-type BattleGroupBothEncode = {
-  area1: BattleGroupEncode
-  area2: BattleGroupEncode
-}
-
-const BattleGroupBothEncodeFn = {
-  distance(left: BattleGroupBothEncode, right: BattleGroupBothEncode): number {
-    return BattleGroupEncodeFn.distance(left.area1, right.area1) + BattleGroupEncodeFn.distance(left.area2, right.area2)
-  },
-  fromItemIds(ctx: GameState, itemIds: [string[], string[]], ext: GameExtParams): BattleGroupBothEncode {
-    return {
-      area1: BattleGroupEncodeFn.fromItemIds(ctx, itemIds[0], ext),
-      area2: BattleGroupEncodeFn.fromItemIds(ctx, itemIds[1], ext)
-    }
-  }
-}
-
-type BattleGroupGene = {
-  ctx: GameState
-  playerId: PlayerID
-  score: number
-  unitIds: [string[], string[]]
-  env: BattleEnv,
-  encode(ctx: GameState, ext: GameExtParams): BattleGroupBothEncode;
-} & IGene
 
 export function testSetGroupEncode() {
   const decks = createDecks()
@@ -274,36 +264,67 @@ export function testSetGroupEncode() {
     unitIdsHasHigh.push(pool[Math.floor(Math.random() * 1000) % pool.length])
   }
   const encodeUnitHasHigh = BattleGroupEncodeFn.fromItemIds(ctx, unitIdsHasHigh, {})
-
-  {
-    const unitIds = BattleGroupEncodeFn.createBattleGroupFromTargetEncode(ctx, allUnitProtos, encodeUnitHasHigh, {isShapeSpStrong: true})
-    const result = BattleGroupEncodeFn.fromItemIds(ctx, unitIds, {})
+  const unitIds = createBattleGroupFromBattleGroupEncode(ctx, allUnitProtos, encodeUnitHasHigh, { isShapeSpStrong: true })
+  const resultEncode = BattleGroupEncodeFn.fromItemIds(ctx, unitIds, {})
+  const dist = BattleGroupEncodeFn.distance(encodeUnitHasHigh, resultEncode)
+  if (dist > 1000) {
+    console.log(dist)
     console.log(encodeUnitHasHigh.itemIds.map((itemId: any) => getCardBattlePoint(ctx, itemId, {})))
     console.log(unitIds.map((itemId: any) => getCardBattlePoint(ctx, itemId, {})))
     console.log(encodeUnitHasHigh)
-    console.log(result)
-    console.log(BattleGroupEncodeFn.distance(encodeUnitHasHigh, result))
-
-    // const unitProtoIds2 = allProtoIds.filter(cardId => getPrototype(cardId).category == "ユニット").slice(3, 6)
-    // ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア2"), unitProtoIds2) as GameState
-    // const encode = BattleGroupBothEncodeFn.fromItemIds(
-    //   ctx,
-    //   [
-    //     getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1")),
-    //     getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア2"))
-    //   ],
-    //   {}
-    // )
-    // console.log(encode)
-    // console.log(BattleGroupEncodeFn.distance(encode.area1, encode.area2))
+    console.log(resultEncode)
+    throw new Error()
   }
-
-  throw new Error()
 }
 
+type BattleStageEncode = {
+  area1: BattleGroupEncode
+  area2: BattleGroupEncode
+  area3: BattleGroupEncode
+}
 
+const BattleStageEncodeFn = {
+  distance(left: BattleStageEncode, right: BattleStageEncode): number {
+    return BattleGroupEncodeFn.distance(left.area1, right.area1) + BattleGroupEncodeFn.distance(left.area2, right.area2)
+  },
+  createEmpty(): BattleStageEncode {
+    return {
+      area1: BattleGroupEncodeFn.createEmpty(),
+      area2: BattleGroupEncodeFn.createEmpty(),
+      area3: BattleGroupEncodeFn.createEmpty(),
+    }
+  },
+  fromAttackPlayer(ctx: GameState, playerId: PlayerID, ext: GameExtParams): BattleStageEncode {
+    return {
+      area1: BattleGroupEncodeFn.fromItemIds(ctx, getPlayerUnitIds(ctx, playerId), ext),
+      area2: BattleGroupEncodeFn.fromItemIds(ctx, getPlayerUnitCanGoEarthIds(ctx, PlayerIDFn.getOpponent(playerId)), ext),
+      area3: BattleGroupEncodeFn.fromItemIds(ctx, getPlayerUnitCanGoSpaceIds(ctx, PlayerIDFn.getOpponent(playerId)), ext)
+    }
+  },
+  fromDefencePlayer(ctx: GameState, playerId: PlayerID, ext: GameExtParams): BattleStageEncode {
+    return {
+      area1: BattleGroupEncodeFn.fromItemIds(ctx, getPlayerUnitIds(ctx, playerId), ext),
+      area2: BattleGroupEncodeFn.fromItemIds(ctx, getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerIDFn.getOpponent(playerId), "戦闘エリア1")), ext),
+      area3: BattleGroupEncodeFn.fromItemIds(ctx, getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerIDFn.getOpponent(playerId), "戦闘エリア2")), ext)
+    }
+  },
+  fromItemIds(ctx: GameState, itemIds: [string[], string[], string[]], ext: GameExtParams): BattleStageEncode {
+    return {
+      area1: BattleGroupEncodeFn.fromItemIds(ctx, itemIds[0], ext),
+      area2: BattleGroupEncodeFn.fromItemIds(ctx, itemIds[1], ext),
+      area3: BattleGroupEncodeFn.fromItemIds(ctx, itemIds[2], ext)
+    }
+  }
+}
 
-
+type BattleGroupGene = {
+  ctx: GameState
+  playerId: PlayerID
+  score: number
+  unitIds: [string[], string[]]
+  env: BattleEnv,
+  encode(ctx: GameState, ext: GameExtParams): BattleStageEncode;
+} & IGene
 
 
 
@@ -311,17 +332,7 @@ function getScore(ctx: GameState, playerId: PlayerID) {
   return 0
 }
 
-type Stage = {
 
-}
-
-function encodeAttackStage(ctx: GameState): Stage {
-  return {}
-}
-
-function encodeDefenceStage(ctx: GameState, attackUnitIds: [string[], string[]]): Stage {
-  return {}
-}
 
 function main() {
   const env: BattleEnv = {
@@ -334,10 +345,10 @@ function main() {
 
   attackGene = hillClimbing(10, attackGene) as BattleGroupGene
   env.attackUnitIds = attackGene.unitIds
-  const attackInput = encodeAttackStage(ctx)
+  const attackInput = BattleStageEncodeFn.fromAttackPlayer(ctx, PlayerA, {})
 
   for (let i = 0; i < 1000; ++i) {
-    const defenceInput = encodeDefenceStage(ctx, attackGene.unitIds)
+    const defenceInput = BattleStageEncodeFn.fromDefencePlayer(ctx, PlayerB, {})
     guardGene = hillClimbing(10, guardGene) as BattleGroupGene
     const defenceOutput = guardGene.encode(ctx, {})
     //saveTraningSet(defenceInput, defenceOutput)
@@ -386,8 +397,8 @@ function createBattleGroupGene(ctx: GameState, playerId: PlayerID, env: BattleEn
         ...this
       }
     },
-    encode(ctx: GameState, ext: GameExtParams): BattleGroupBothEncode {
-      return BattleGroupBothEncodeFn.fromItemIds(ctx, this.unitIds, ext)
+    encode(ctx: GameState, ext: GameExtParams): BattleStageEncode {
+      return BattleStageEncodeFn.fromItemIds(ctx, this.unitIds, ext)
     }
   }
 }

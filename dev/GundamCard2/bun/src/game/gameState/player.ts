@@ -1,7 +1,7 @@
 import { pipe, always, map, sum, lift } from "ramda";
 import { logCategory } from "../../tool/logger";
 import { AttackSpeed } from "../define";
-import { AbsoluteBaSyouFn, BaSyouKeyword, BaSyouKeywordFn } from "../define/BaSyou";
+import { AbsoluteBaSyouFn, BaKeyword, BaSyouKeyword, BaSyouKeywordFn } from "../define/BaSyou";
 import { DestroyReason, Effect, EffectFn } from "../define/Effect";
 import { ItemState } from "../define/ItemState";
 import { PlayerA, PlayerB, PlayerID, PlayerIDFn } from "../define/PlayerID";
@@ -20,10 +20,11 @@ import { doCountryDamage } from "./doCountryDamage";
 import { addDestroyEffect, getCutInDestroyEffects, getEffect, getImmediateEffects, getTopEffect, removeEffect } from "./EffectStackComponent";
 import { createDestroyEffect } from "./createDestroyEffect";
 import { getCard } from "./CardTableComponent";
-import { getCardHasSpeicalEffect } from "./card";
+import { getCardBattleArea, getCardHasSpeicalEffect } from "./card";
 import { getActivePlayerID } from "./ActivePlayerComponent";
 import { isBattle } from "./IsBattleComponent";
 import { GlobalEffect } from "../define/GlobalEffect";
+import { GameStateFn } from ".";
 
 // player
 export function isPlayerHasBattleGroup(
@@ -42,7 +43,7 @@ export function isPlayerHasBattleGroup(
   )() > 0
 }
 
-export function doBattleDamage(ctx: GameState, playerId: string, guardUnits: string[], attackPower: number, options: { isNotRule?: boolean, ges?:GlobalEffect[] }): [GameState, number] {
+export function doBattleDamage(ctx: GameState, playerId: string, guardUnits: string[], attackPower: number, options: { isNotRule?: boolean, ges?: GlobalEffect[] }): [GameState, number] {
   // 敵方機體存在, 攻擊機體
   if (guardUnits.length) {
     const changedCardState = guardUnits.map((cardID): ItemState => {
@@ -50,7 +51,7 @@ export function doBattleDamage(ctx: GameState, playerId: string, guardUnits: str
       if (attackPower <= 0) {
         return cs;
       }
-      const [_, _2, hp] = getSetGroupBattlePoint(ctx, cardID, {ges: options?.ges});
+      const [_, _2, hp] = getSetGroupBattlePoint(ctx, cardID, { ges: options?.ges });
       const live = hp - cs.damage;
       if (live <= 0) {
         return cs;
@@ -122,7 +123,7 @@ export function doRuleBattleDamage(
       logCategory("handleAttackDamage", "attack", currentAttackPower);
       // 敵方機體存在, 攻擊機體
       if (willGuardUnits.length) {
-        [ctx, currentAttackPower] = doBattleDamage(ctx, currentAttackPlayerID, willGuardUnits, currentAttackPower, {ges: options?.ges})
+        [ctx, currentAttackPower] = doBattleDamage(ctx, currentAttackPlayerID, willGuardUnits, currentAttackPower, { ges: options?.ges })
       }
       // 若傷害沒有用完, 攻擊方可以攻擊本國
       if (currentAttackPlayerID == getActivePlayerID(ctx) && currentAttackPower > 0) {
@@ -155,8 +156,8 @@ export function doPlayerAttack(
   const attackPower = getBattleGroupBattlePoint(ctx, attackUnits, { ges: options.ges });
   const guardUnits = getBattleGroup(ctx, AbsoluteBaSyouFn.of(guardPlayerID, where));
   const guardPower = getBattleGroupBattlePoint(ctx, guardUnits, { ges: options.ges });
-  ctx = doRuleBattleDamage(ctx, speedPhase, attackPlayerID, guardPlayerID, attackUnits, guardUnits, attackPower, {ges: options?.ges})
-  ctx = doRuleBattleDamage(ctx, speedPhase, guardPlayerID, attackPlayerID, guardUnits, attackUnits, guardPower, {ges: options?.ges});
+  ctx = doRuleBattleDamage(ctx, speedPhase, attackPlayerID, guardPlayerID, attackUnits, guardUnits, attackPower, { ges: options?.ges })
+  ctx = doRuleBattleDamage(ctx, speedPhase, guardPlayerID, attackPlayerID, guardUnits, attackUnits, guardPower, { ges: options?.ges });
   [...attackUnits, ...guardUnits].forEach(cardId => {
     const itemState = getItemState(ctx, cardId)
     const [_, _2, hp] = getSetGroupBattlePoint(ctx, cardId, { ges: options.ges })
@@ -185,6 +186,28 @@ export function getPlayerDestroyIds(ctx: GameState, playerId: PlayerID): string[
 
 export function getPlayerUnitIds(ctx: GameState, playerId: PlayerID): string[] {
   return lift(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getBaAll()).flatMap(basyou => getItemIdsByBasyou(ctx, basyou)).filter(itemId => getItemPrototype(ctx, itemId).category == "ユニット")
+}
+
+export function getPlayerUnitCanGoEarthIds(ctx: GameState, playerId: PlayerID): string[] {
+  const currentBaKw: BaKeyword = "戦闘エリア1"
+  const runtimeBattleArea = GameStateFn.getRuntimeBattleArea(ctx, currentBaKw)
+  if (runtimeBattleArea == "地球エリア") {
+    return []
+  }
+  return getPlayerUnitIds(ctx, playerId)
+    .filter(cardId => getCardBattleArea(ctx, cardId).includes(runtimeBattleArea))
+    .filter(cardId => GameStateFn.getCard(ctx, cardId).isRoll != true)
+}
+
+export function getPlayerUnitCanGoSpaceIds(ctx: GameState, playerId: PlayerID): string[] {
+  const currentBaKw: BaKeyword = "戦闘エリア2"
+  const runtimeBattleArea = GameStateFn.getRuntimeBattleArea(ctx, currentBaKw)
+  if (runtimeBattleArea == "宇宙エリア") {
+    return []
+  }
+  return getPlayerUnitIds(ctx, playerId)
+    .filter(cardId => getCardBattleArea(ctx, cardId).includes(runtimeBattleArea))
+    .filter(cardId => GameStateFn.getCard(ctx, cardId).isRoll != true)
 }
 
 export function getPlayerCharacterIds(ctx: GameState, playerId: PlayerID): string[] {
@@ -241,10 +264,10 @@ export function createPlayerScore(ctx: GameState, playerId: string, options: { g
   return total
 }
 
-export function createPreviewEffectScore(ctx: GameState, playerId: string, effects: Effect[], options: { isMoreThenOrigin?: boolean, ges?:GlobalEffect[] }): [string, number][] {
+export function createPreviewEffectScore(ctx: GameState, playerId: string, effects: Effect[], options: { isMoreThenOrigin?: boolean, ges?: GlobalEffect[] }): [string, number][] {
   const opponentId = PlayerIDFn.getOpponent(playerId)
-  const scoreA = createPlayerScore(ctx, playerId, {ges: options?.ges})
-  const scoreB = createPlayerScore(ctx, opponentId, {ges: options?.ges})
+  const scoreA = createPlayerScore(ctx, playerId, { ges: options?.ges })
+  const scoreB = createPlayerScore(ctx, opponentId, { ges: options?.ges })
   const score = scoreA - scoreB
   let effectScorePairs: [string, number][] = effects.map(eff => {
     try {
@@ -271,8 +294,8 @@ export function createPreviewEffectScore(ctx: GameState, playerId: string, effec
         ctx2 = doEffect(ctx2, eff, 0, 0) as GameState
         ctx2 = removeEffect(ctx2, eff.id) as GameState
       }
-      const scoreA = createPlayerScore(ctx2, playerId, {ges: options?.ges})
-      const scoreB = createPlayerScore(ctx2, opponentId, {ges: options?.ges})
+      const scoreA = createPlayerScore(ctx2, playerId, { ges: options?.ges })
+      const scoreB = createPlayerScore(ctx2, opponentId, { ges: options?.ges })
       const score = scoreA - scoreB
       return [eff.id, score]
     } catch (e: any) {
