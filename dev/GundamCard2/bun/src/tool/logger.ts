@@ -57,6 +57,8 @@ const hideCategory: string[] = [
   "createAllCardTexts",
   "isCardMaster",
   "createBasicForBattle",
+  "onItemDamageChange",
+  "onCountryDamage"
 ];
 let filterCategory = true;
 
