@@ -60,7 +60,8 @@ const hideCategory: string[] = [
   "onItemDamageChange",
   "onCountryDamage"
 ];
-let filterCategory = true;
+const filterCategory = true;
+const filterWarn = true
 
 export const logCategory = (category: string, ...msg: any[]) => {
   if (filterCategory) {
@@ -69,4 +70,11 @@ export const logCategory = (category: string, ...msg: any[]) => {
     }
   }
   console.log(`[${new Date().toLocaleTimeString()}][${category}]`, ...msg);
+};
+
+export const warnCategory = (category: string, ...msg: any[]) => {
+  if (filterWarn) {
+    return
+  }
+  console.warn(`[${new Date().toLocaleTimeString()}][${category}]`, ...msg);
 };

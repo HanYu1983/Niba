@@ -1,4 +1,5 @@
 import { includes } from "ramda";
+import { logCategory, warnCategory } from "../logger";
 
 export type Table = {
     cardStack: { [key: string]: string[] },
@@ -21,9 +22,9 @@ function getCardsByPosition(table: Table, position: string): string[] {
     return table.cardStack[position]
 }
 
-function moveCard(table: Table, fromPosition: string, toPosition: string, cardId: string, options?:{insertId?: number}): Table {
-    if(fromPosition == toPosition){
-        console.warn(`moveCard from ${fromPosition} to ${toPosition}. ignore`)
+function moveCard(table: Table, fromPosition: string, toPosition: string, cardId: string, options?: { insertId?: number }): Table {
+    if (fromPosition == toPosition) {
+        warnCategory(`moveCard from ${fromPosition} to ${toPosition}. ignore`)
         return table
     }
     if (table.cardStack[fromPosition]?.includes(cardId) != true) {
@@ -31,11 +32,11 @@ function moveCard(table: Table, fromPosition: string, toPosition: string, cardId
     }
     const updatedFromStack = (table.cardStack[fromPosition]?.filter(id => id !== cardId) || [])
     let updatedToStack = table.cardStack[toPosition] || []
-    if(options?.insertId != null){
-        if(options.insertId < 0){
+    if (options?.insertId != null) {
+        if (options.insertId < 0) {
             throw new Error(`insertId not < 0: ${options.insertId}`)
         }
-        if(options.insertId == 0){
+        if (options.insertId == 0) {
             updatedToStack = [cardId, ...updatedToStack]
         } else {
             updatedToStack = [...updatedToStack.slice(0, options.insertId), cardId, ...updatedToStack.slice(options.insertId)]

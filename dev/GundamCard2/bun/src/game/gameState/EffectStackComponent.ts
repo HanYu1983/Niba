@@ -8,6 +8,7 @@ import { getItemController } from "./ItemTableComponent";
 import { getSetGroupBattlePoint } from "./setGroup";
 import { CommandEffectTip } from "../define/CommandEffectTip";
 import { EventCenterFn } from "./EventCenter";
+import { logCategory, warnCategory } from "../../tool/logger";
 
 export type EffectStackComponent = {
   // 立即效果。玩家必須立即一個一個進行處理
@@ -107,7 +108,7 @@ export function getImmediateEffects(ctx: EffectStackComponent): Effect[] {
 export function addDestroyEffect(ctx: EffectStackComponent, block: Effect): EffectStackComponent {
   // 破壞效果不必重復加入
   if (ctx.effects[block.id]) {
-    console.warn(`破壞效果不必重復加入: ${block.id}`)
+    warnCategory("addDestroyEffect", `破壞效果不必重復加入: ${block.id}`)
     return ctx
   }
   return {

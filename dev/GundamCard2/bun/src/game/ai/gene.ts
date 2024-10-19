@@ -722,7 +722,17 @@ export const SelectBattleGroupGeneFn = {
       const live = getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(currentPlayerId, "本国")).length
       // 在家戰力也要計算
       const homeLength = getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(currentPlayerId, "配備エリア")).length
-      return scorePart1 + live * 2 + homeLength * 6
+      // 
+      const area1Op = getBattleGroup(ctx, AbsoluteBaSyouFn.of(PlayerIDFn.getOpponent(currentPlayerId), "戦闘エリア1"))
+      const area2Op = getBattleGroup(ctx, AbsoluteBaSyouFn.of(PlayerIDFn.getOpponent(currentPlayerId), "戦闘エリア2"))
+      let goEmptyLost = 0
+      if (area1Op.length == 0 && area1.length > 0) {
+        goEmptyLost += 10
+      }
+      if (area2Op.length == 0 && area2.length > 0) {
+        goEmptyLost += 10
+      }
+      return scorePart1 + live * 2 + homeLength * 6 - goEmptyLost
     }
     return gene
   },
@@ -732,11 +742,17 @@ export const SelectBattleGroupGeneFn = {
     // 先計算原始分數
     const originDefenceScore = getScore(originCtx, defencePlayerId)
     const originAttackScore = getScore(originCtx, attackPlayerId)
-    const gene = SelectBattleGroupGeneFn.createBasic(originCtx, playerId, ext)
+    const gene = SelectBattleGroupGeneFn.createBasic(originCtx, attackPlayerId, ext)
     gene.mutate = function (): SelectBattleGroupGene {
       let ctx = originCtx
       {
-        const [earthIds, spaceIds] = createBattleGroupForAttackCountry(ctx, attackPlayerId, ext)
+        let attackCountryGene = SelectBattleGroupGeneFn.createBasicForAttackCountry(ctx, attackPlayerId, ext)
+        attackCountryGene = optAlgByPSO(10, 10, 0, 1, attackCountryGene) as SelectBattleGroupGene
+        const earthIds = getItemIdsByBasyou(attackCountryGene.ctx, AbsoluteBaSyouFn.of(attackPlayerId, "戦闘エリア1")).filter(itemId => getSetGroupRoot(ctx, itemId) == itemId)
+        const spaceIds = getItemIdsByBasyou(attackCountryGene.ctx, AbsoluteBaSyouFn.of(attackPlayerId, "戦闘エリア2")).filter(itemId => getSetGroupRoot(ctx, itemId) == itemId)
+
+        //const [earthIds, spaceIds] = createBattleGroupForAttackCountry(ctx, attackPlayerId, ext)
+        console.log(earthIds, spaceIds)
         for (let id of earthIds) {
           ctx = doItemMove(ctx, AbsoluteBaSyouFn.of(attackPlayerId, "戦闘エリア1"), createStrBaSyouPair(ctx, id))
         }
@@ -813,10 +829,10 @@ export function createBattleGroupForAttackCountry(ctx: GameState, playerId: Play
 
 export function createBattleGroupForDefenceBattle(ctx: GameState, playerId: PlayerID, ext: GameExtParams): [string[], string[], string[]] {
   let gene = SelectBattleGroupGeneFn.createBasicForDefenceBattle(ctx, playerId, ext)
-  gene = simulatedAnnealing(100, 50, 1000, 0.8, gene) as SelectBattleGroupGene
+  //gene = simulatedAnnealing(100, 50, 1000, 0.8, gene) as SelectBattleGroupGene
   //gene = DSP(2, 2, 50, gene) as SelectBattleGroupGene
   //gene = geneticAlgorithm(5, 100, 20, 0.7, gene) as SelectBattleGroupGene
-  //gene = optAlgByPSO(2, 100, 20, 0.7, gene) as SelectBattleGroupGene
+  gene = optAlgByPSO(3, 30, 20, 0.7, gene) as SelectBattleGroupGene
   const area1 = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(playerId, "戦闘エリア1")).filter(itemId => getSetGroupRoot(ctx, itemId) == itemId)
   const area2 = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(playerId, "戦闘エリア2")).filter(itemId => getSetGroupRoot(ctx, itemId) == itemId)
   const homeIds = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(playerId, "配備エリア")).filter(itemId => getSetGroupRoot(ctx, itemId) == itemId)
@@ -924,7 +940,7 @@ export function testOptAlgAttackCounty3() {
       ))
   })
   //allUnitProtos.sort((a, b) => Math.random() < 0.5 ? -1 : 1)
-  const unitIds = allUnitProtos.slice(30, 32)
+  const unitIds = allUnitProtosHasStrong.slice(0, 5)
   //const unitIds = allUnitProtosHasHigh.slice(0, 5)
   const enemyIds = allUnitProtosHasStrong.slice(0, 5)
 
