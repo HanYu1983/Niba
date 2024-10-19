@@ -717,7 +717,7 @@ export const SelectBattleGroupGeneFn = {
         const live = getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(currentPlayerId, "本国")).length
         // 在家戰力也要計算
         const homeLength = getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(currentPlayerId, "配備エリア")).length
-        return scorePart1 + live * 2 + homeLength * 4
+        return scorePart1 + live * 2 + homeLength * 6
       }
       this.score = attackLost - defenceLost
       logCategory("createBasicForBattle", "score", attackLost - defenceLost)
@@ -741,7 +741,7 @@ export function createBattleGroupForAttackCountry(ctx: GameState, playerId: Play
 
 export function createBattleGroupForDefenceBattle(ctx: GameState, playerId: PlayerID, ext: GameExtParams): [string[], string[], string[]] {
   let gene = SelectBattleGroupGeneFn.createBasicForDefenceBattle(ctx, playerId, ext)
-  gene = simulatedAnnealing(100, 50, 1000, 0.7, gene) as SelectBattleGroupGene
+  gene = simulatedAnnealing(100, 50, 1000, 0.8, gene) as SelectBattleGroupGene
   //gene = DSP(2, 2, 50, gene) as SelectBattleGroupGene
   //gene = geneticAlgorithm(5, 100, 20, 0.7, gene) as SelectBattleGroupGene
   //gene = optAlgByPSO(2, 100, 20, 0.7, gene) as SelectBattleGroupGene
