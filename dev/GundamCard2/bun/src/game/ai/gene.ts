@@ -842,6 +842,9 @@ export function createBattleGroupForDefenceBattle(ctx: GameState, playerId: Play
 export function createBattleGroupForAttackBattle(ctx: GameState, playerId: PlayerID, ext: GameExtParams): [string[], string[], string[], string[], string[], string[]] {
   let gene = SelectBattleGroupGeneFn.createBasicForAttackBattle(ctx, playerId, ext)
   gene = optAlgByPSO(0, 5, 1, 0, gene) as SelectBattleGroupGene
+  if (gene.getFitness() < 0) {
+    return [[], [], [], [], [], []]
+  }
   const area1 = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(playerId, "戦闘エリア1")).filter(itemId => getSetGroupRoot(ctx, itemId) == itemId)
   const area2 = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(playerId, "戦闘エリア2")).filter(itemId => getSetGroupRoot(ctx, itemId) == itemId)
   const homeIds = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(playerId, "配備エリア")).filter(itemId => getSetGroupRoot(ctx, itemId) == itemId)
@@ -940,9 +943,9 @@ export function testOptAlgAttackCounty3() {
       ))
   })
   //allUnitProtos.sort((a, b) => Math.random() < 0.5 ? -1 : 1)
-  const unitIds = allUnitProtosHasStrong.slice(0, 5)
+  const unitIds = allUnitProtos.slice(10, 20)
   //const unitIds = allUnitProtosHasHigh.slice(0, 5)
-  const enemyIds = allUnitProtosHasStrong.slice(0, 5)
+  const enemyIds = allUnitProtos.slice(10, 12)
 
   let ctx = createGameState()
   ctx = setActivePlayerID(ctx, PlayerA) as GameState
