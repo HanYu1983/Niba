@@ -19,7 +19,7 @@ export function createAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID):
             description: "出擊",
             conditions: {
                 [TipFn.createGoEarthKey()]: {
-                    title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip | null {
+                    title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): Tip | null {
                         // const currentBaKw: BaKeyword = "戦闘エリア1"
                         // const runtimeBattleArea = GameStateFn.getRuntimeBattleArea(ctx, currentBaKw)
                         // if (runtimeBattleArea == "宇宙エリア") {
@@ -40,7 +40,7 @@ export function createAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID):
                         //     }
                         // }
                         const playerId = DefineFn.EffectFn.getPlayerID(effect)
-                        const unitIds = GameStateFn.getPlayerUnitCanGoEarthIds(ctx, playerId)
+                        const unitIds = GameStateFn.getPlayerUnitCanGoEarthIds(ctx, playerId, { ges: Options.ges })
                         const pairs = unitIds.map(id => {
                             return [id, GameStateFn.getItemBaSyou(ctx, id)] as StrBaSyouPair
                         })
@@ -67,7 +67,7 @@ export function createAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID):
                     groupKey: "出擊"
                 },
                 [TipFn.createGoSpaceKey()]: {
-                    title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip | null {
+                    title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): Tip | null {
                         // const currentBaKw: BaKeyword = "戦闘エリア2"
                         // const runtimeBattleArea = GameStateFn.getRuntimeBattleArea(ctx, currentBaKw)
                         // if (runtimeBattleArea == "地球エリア") {
@@ -88,7 +88,7 @@ export function createAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID):
                         //     }
                         // }
                         const playerId = DefineFn.EffectFn.getPlayerID(effect)
-                        const unitIds = GameStateFn.getPlayerUnitCanGoSpaceIds(ctx, playerId)
+                        const unitIds = GameStateFn.getPlayerUnitCanGoSpaceIds(ctx, playerId, { ges: Options.ges })
                         const pairs = unitIds.map(id => {
                             return [id, GameStateFn.getItemBaSyou(ctx, id)] as StrBaSyouPair
                         })

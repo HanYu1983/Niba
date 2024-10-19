@@ -39,7 +39,7 @@ export function simulatedAnnealing(iteration: number, D: number, T: number, fact
 		const acceptanceProbability = P(oldFitness, newFitness, T);
 		if (acceptanceProbability > Math.random()) {
 			gene = clone;
-			console.log(gene.calcFitness())
+			//console.log(gene.calcFitness())
 		}
 	}
 	return gene;

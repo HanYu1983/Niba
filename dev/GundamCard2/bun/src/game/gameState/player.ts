@@ -9,7 +9,7 @@ import { isBattleGroupHasA, getBattleGroup, getBattleGroupBattlePoint, isABattle
 import { GameState } from "./GameState";
 import { getItemState, setItemState } from "./ItemStateComponent";
 import { GameEvent } from "../define/GameEvent";
-import { getSetGroupBattlePoint } from "./setGroup";
+import { getSetGroupBattlePoint, isSetGroupHasA } from "./setGroup";
 import { doTriggerEvent } from "./doTriggerEvent";
 import { StrBaSyouPair } from "../define/Tip";
 import { doItemMove } from "./doItemMove";
@@ -25,6 +25,10 @@ import { getActivePlayerID } from "./ActivePlayerComponent";
 import { isBattle } from "./IsBattleComponent";
 import { GlobalEffect } from "../define/GlobalEffect";
 import { GameStateFn } from ".";
+import { getGlobalEffects } from "./globalEffects";
+import { getRuntimeBattleArea } from "./RuntimeBattleAreaComponent";
+import { getSetGroupRoot } from "./SetGroupComponent";
+import { GameExtParams } from "../define/GameExtParams";
 
 // player
 export function isPlayerHasBattleGroup(
@@ -188,45 +192,43 @@ export function getPlayerUnitIds(ctx: GameState, playerId: PlayerID): string[] {
   return lift(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getBaAll()).flatMap(basyou => getItemIdsByBasyou(ctx, basyou)).filter(itemId => getItemPrototype(ctx, itemId).category == "ユニット")
 }
 
-export function getPlayerUnitCanGoEarthIds(ctx: GameState, playerId: PlayerID): string[] {
+export function getPlayerUnitCanGoEarthIds(ctx: GameState, playerId: PlayerID, ext: GameExtParams): string[] {
   const currentBaKw: BaKeyword = "戦闘エリア1"
-  const runtimeBattleArea = GameStateFn.getRuntimeBattleArea(ctx, currentBaKw)
+  const runtimeBattleArea = getRuntimeBattleArea(ctx, currentBaKw)
   if (runtimeBattleArea == "宇宙エリア") {
     return []
   }
   const opponentPlayerId = PlayerIDFn.getOpponent(playerId)
-  const cardIds = getPlayerUnitIds(ctx, playerId)
+  const cardIds = getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(playerId, "配備エリア"))
   let unitIds = cardIds
-    .filter(cardId => GameStateFn.getSetGroupRoot(ctx, cardId) == cardId)
-    .filter(cardId => GameStateFn.getCardBattleArea(ctx, cardId).includes(runtimeBattleArea))
-    .filter(cardId => GameStateFn.getCard(ctx, cardId).isRoll != true)
-  const opponentUnitIds = GameStateFn.getBattleGroup(ctx, AbsoluteBaSyouFn.of(opponentPlayerId, currentBaKw));
+    .filter(cardId => getSetGroupRoot(ctx, cardId) == cardId)
+    .filter(cardId => getCardBattleArea(ctx, cardId).includes(runtimeBattleArea))
+    .filter(cardId => getCard(ctx, cardId).isRoll != true)
+  const opponentUnitIds = getBattleGroup(ctx, AbsoluteBaSyouFn.of(opponentPlayerId, currentBaKw));
   if (opponentUnitIds.length) {
-    const ges = GameStateFn.getGlobalEffects(ctx, null)
-    if (GameStateFn.isABattleGroup(ctx, ["高機動"], opponentUnitIds[0], { ges: ges })) {
-      unitIds = unitIds.filter(id => GameStateFn.isSetGroupHasA(ctx, ["高機動"], id, { ges: ges }))
+    if (isABattleGroup(ctx, ["高機動"], opponentUnitIds[0], ext)) {
+      unitIds = unitIds.filter(id => isSetGroupHasA(ctx, ["高機動"], id, ext))
     }
   }
   return unitIds
 }
 
-export function getPlayerUnitCanGoSpaceIds(ctx: GameState, playerId: PlayerID): string[] {
+export function getPlayerUnitCanGoSpaceIds(ctx: GameState, playerId: PlayerID, ext: GameExtParams): string[] {
   const currentBaKw: BaKeyword = "戦闘エリア2"
-  const runtimeBattleArea = GameStateFn.getRuntimeBattleArea(ctx, currentBaKw)
+  const runtimeBattleArea = getRuntimeBattleArea(ctx, currentBaKw)
   if (runtimeBattleArea == "地球エリア") {
     return []
   }
   const opponentPlayerId = PlayerIDFn.getOpponent(playerId)
-  const cardIds = GameStateFn.getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(playerId, "配備エリア"))
+  const cardIds = getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(playerId, "配備エリア"))
   let unitIds = cardIds
-    .filter(cardId => GameStateFn.getSetGroupRoot(ctx, cardId) == cardId)
-    .filter(cardId => GameStateFn.getCardBattleArea(ctx, cardId).includes(runtimeBattleArea))
-    .filter(cardId => GameStateFn.getCard(ctx, cardId).isRoll != true)
-  const opponentUnitIds = GameStateFn.getBattleGroup(ctx, AbsoluteBaSyouFn.of(opponentPlayerId, currentBaKw));
+    .filter(cardId => getSetGroupRoot(ctx, cardId) == cardId)
+    .filter(cardId => getCardBattleArea(ctx, cardId).includes(runtimeBattleArea))
+    .filter(cardId => getCard(ctx, cardId).isRoll != true)
+  const opponentUnitIds = getBattleGroup(ctx, AbsoluteBaSyouFn.of(opponentPlayerId, currentBaKw));
   if (opponentUnitIds.length) {
-    const ges = GameStateFn.getGlobalEffects(ctx, null)
-    if (GameStateFn.isABattleGroup(ctx, ["高機動"], opponentUnitIds[0], { ges: ges })) {
-      unitIds = unitIds.filter(id => GameStateFn.isSetGroupHasA(ctx, ["高機動"], id, { ges: ges }))
+    if (isABattleGroup(ctx, ["高機動"], opponentUnitIds[0], ext)) {
+      unitIds = unitIds.filter(id => isSetGroupHasA(ctx, ["高機動"], id, ext))
     }
   }
   return unitIds
