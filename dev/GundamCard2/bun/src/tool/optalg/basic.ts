@@ -5,12 +5,12 @@ export function hillClimbing(iteration: number, gene: IGene): IGene {
 		const clone = gene.mutate()
 		if (clone.calcFitness() > gene.getFitness()) {
 			gene = clone;
-			console.log(gene.getFitness())
 		}
 	}
 	return gene;
 }
 
+// simulatedAnnealing(200, 1000, 0.7, gene)
 export function simulatedAnnealing(iteration: number, T: number, factor: number, gene: IGene): IGene {
 	if (T <= 0) {
 		throw new Error("T cannot be 0"); // Use throw for clearer error handling
@@ -32,18 +32,23 @@ export function simulatedAnnealing(iteration: number, T: number, factor: number,
 	return gene;
 }
 
-
-export function geneticAlgorithm(iteration: number, W: number, initForwardTimes: number, mutateRate: number, gene: IGene): IGene[] {
-	// 所有基因隨機試圖登頂
+// geneticAlgorithm(20, 100, 20, 0.7, gene) as SelectBattleGroupGene
+export function geneticAlgorithm(iteration: number, W: number, D: number, mutateRate: number, gene: IGene): IGene {
 	// 盡量平均散佈在解空間
 	let population = [...Array(W).keys()].map(() => {
-		const nextGene = hillClimbing(initForwardTimes, gene)
+		let nextGene = gene
+		for (let i = 0; i < D; ++i) {
+			nextGene = nextGene.mutate()
+		}
 		nextGene.calcFitness()
 		return nextGene
 	})
 	for (let i = 0; i < iteration; i++) {
 		// 找出最佳個體
 		const bestGene = getBest(population)
+		if (isFinite(bestGene.getFitness())) {
+			return bestGene
+		}
 		// 建立選擇池
 		const pool: IGene[] = [];
 		for (const gene of population) {
@@ -56,8 +61,8 @@ export function geneticAlgorithm(iteration: number, W: number, initForwardTimes:
 		const nextPopulation: IGene[] = [];
 		for (let i = 0; i < population.length; i++) {
 			// 選擇兩個親代
-			const parent1 = pool[Math.floor(Math.random() * pool.length)];
-			const parent2 = pool[Math.floor(Math.random() * pool.length)];
+			const parent1 = pool[Math.floor(Math.random() * 1000) % pool.length];
+			const parent2 = pool[Math.floor(Math.random() * 1000) % pool.length];
 
 			// 交叉
 			if (parent1.crossover == null) {
@@ -79,15 +84,18 @@ export function geneticAlgorithm(iteration: number, W: number, initForwardTimes:
 		population = nextPopulation;
 	}
 
-	return population;
+	return getBest(population)
 }
 
 // optAlgByPSO is PSO粒子群演算法修改
-export function optAlgByPSO(iteration: number, W: number, initForwardTimes: number, mutateRate: number, gene: IGene): IGene[] {
-	// 所有基因隨機試圖登頂
+// optAlgByPSO(20, 100, 20, 0.7, gene) as SelectBattleGroupGene
+export function optAlgByPSO(iteration: number, W: number, D: number, mutateRate: number, gene: IGene): IGene {
 	// 盡量平均散佈在解空間
-	const population = [...Array(W).keys()].map(() => {
-		const nextGene = hillClimbing(initForwardTimes, gene)
+	let population = [...Array(W).keys()].map(() => {
+		let nextGene = gene
+		for (let i = 0; i < D; ++i) {
+			nextGene = nextGene.mutate()
+		}
 		nextGene.calcFitness()
 		return nextGene
 	})
@@ -126,40 +134,40 @@ export function optAlgByPSO(iteration: number, W: number, initForwardTimes: numb
 			population[j] = nextGene;
 		}
 	}
-	return population
+	return getBest(population)
 }
 
 // 動態規劃
-export function DSP(W: number, H: number, gene: IGene): IGene {
+// DSP(3, 3, 50, gene) as SelectBattleGroupGene
+export function DSP(W: number, D: number, STEP_D: number, gene: IGene): IGene {
 	gene.calcFitness()
 	let bestGene = gene
 	// 記下計算過的解
-	const accScorePool: { [key: string]: number } = {}
+	const hasDone: { [key: string]: boolean } = {}
 	function nextBranch(gene: IGene, deep: number): void {
-		if (deep > H) {
+		if (deep > D) {
 			return
 		}
-		[...Array(W).keys()].forEach(() => {
+		[...Array(W).keys()].forEach(i => {
 			// 移動一步
-			const nextGene = gene.mutate()
-			const newScore = nextGene.calcFitness()
+			const nextGene = simulatedAnnealing(STEP_D, 1000, 0.7, gene)
 			if (nextGene.getStateKey == null) {
 				throw new Error()
 			}
 			// 若已計算過, 就回傳
 			const key = nextGene.getStateKey()
-			if (accScorePool[key]) {
+			if (hasDone[key]) {
 				return
 			}
-			const nextAccScore = newScore
 			// 記下這次的解
-			accScorePool[key] = nextAccScore
+			hasDone[key] = true
+			nextGene.calcFitness()
 			// 更新最佳解
-			if (nextAccScore > bestGene.getFitness()) {
+			if (nextGene.getFitness() > bestGene.getFitness()) {
 				bestGene = nextGene
 			}
 			// 再次分支
-			return nextBranch(nextGene, deep + 1)
+			nextBranch(nextGene, deep + 1)
 		})
 	}
 	nextBranch(gene, 0)
