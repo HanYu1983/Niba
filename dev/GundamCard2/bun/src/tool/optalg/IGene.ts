@@ -3,6 +3,7 @@ export type IGene = {
   getFitness(): number
   mutate(): IGene
   crossover?(gene: IGene): IGene
+  getStateKey?(): string
 }
 
 export function getBest(population: IGene[]): IGene {

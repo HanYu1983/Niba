@@ -33,9 +33,14 @@ export function simulatedAnnealing(iteration: number, T: number, factor: number,
 }
 
 
-export function geneticAlgorithm(iteration: number, mutateRate: number, population: IGene[]): IGene[] {
-	// 初期化族群適應度
-	population.forEach(gene => gene.calcFitness())
+export function geneticAlgorithm(iteration: number, W: number, initForwardTimes: number, mutateRate: number, gene: IGene): IGene[] {
+	// 所有基因隨機試圖登頂
+	// 盡量平均散佈在解空間
+	let population = [...Array(W).keys()].map(() => {
+		const nextGene = hillClimbing(initForwardTimes, gene)
+		nextGene.calcFitness()
+		return nextGene
+	})
 	for (let i = 0; i < iteration; i++) {
 		// 找出最佳個體
 		const bestGene = getBest(population)
@@ -62,8 +67,7 @@ export function geneticAlgorithm(iteration: number, mutateRate: number, populati
 
 			// 突變
 			if (Math.random() < mutateRate) {
-				// 爬山演算法加速收斂
-				child = hillClimbing(10, child);
+				child = child.mutate()
 			}
 
 			// 計算子代適應度
@@ -79,8 +83,14 @@ export function geneticAlgorithm(iteration: number, mutateRate: number, populati
 }
 
 // optAlgByPSO is PSO粒子群演算法修改
-export function optAlgByPSO(iteration: number, population: IGene[]): IGene[] {
-	population.forEach(gene => gene.calcFitness())
+export function optAlgByPSO(iteration: number, W: number, initForwardTimes: number, mutateRate: number, gene: IGene): IGene[] {
+	// 所有基因隨機試圖登頂
+	// 盡量平均散佈在解空間
+	const population = [...Array(W).keys()].map(() => {
+		const nextGene = hillClimbing(initForwardTimes, gene)
+		nextGene.calcFitness()
+		return nextGene
+	})
 	// 個人最佳
 	const bestGenes = [...population]
 	// 群體最佳
@@ -88,9 +98,7 @@ export function optAlgByPSO(iteration: number, population: IGene[]): IGene[] {
 
 	for (let i = 0; i < iteration; i++) {
 		for (let j = 0; j < population.length; j++) {
-			const gene = population[j]
-			// 突變
-			let nextGene = hillClimbing(10, gene);
+			let nextGene = population[j]
 			// 和群體最佳解雜交
 			if (nextGene.crossover == null) {
 				throw new Error()
@@ -101,11 +109,16 @@ export function optAlgByPSO(iteration: number, population: IGene[]): IGene[] {
 			}
 			// 和個人最佳解雜交
 			nextGene = nextGene.crossover(bestGenes[j])
+			// 突變
+			if (Math.random() < mutateRate) {
+				nextGene = nextGene.mutate()
+			}
 			const nextFitness = nextGene.calcFitness()
 			// 更新最佳解
-			if (nextFitness > gene.getFitness()) {
+			if (nextFitness > bestGenes[j].getFitness()) {
 				bestGenes[j] = nextGene;
 			}
+			// 更新群體最佳解
 			if (nextFitness > globalBestGene.getFitness()) {
 				globalBestGene = nextGene;
 			}
@@ -114,4 +127,41 @@ export function optAlgByPSO(iteration: number, population: IGene[]): IGene[] {
 		}
 	}
 	return population
+}
+
+// 動態規劃
+export function DSP(W: number, H: number, gene: IGene): IGene {
+	gene.calcFitness()
+	let bestGene = gene
+	// 記下計算過的解
+	const accScorePool: { [key: string]: number } = {}
+	function nextBranch(gene: IGene, deep: number): void {
+		if (deep > H) {
+			return
+		}
+		[...Array(W).keys()].forEach(() => {
+			// 移動一步
+			const nextGene = gene.mutate()
+			const newScore = nextGene.calcFitness()
+			if (nextGene.getStateKey == null) {
+				throw new Error()
+			}
+			// 若已計算過, 就回傳
+			const key = nextGene.getStateKey()
+			if (accScorePool[key]) {
+				return
+			}
+			const nextAccScore = newScore
+			// 記下這次的解
+			accScorePool[key] = nextAccScore
+			// 更新最佳解
+			if (nextAccScore > bestGene.getFitness()) {
+				bestGene = nextGene
+			}
+			// 再次分支
+			return nextBranch(nextGene, deep + 1)
+		})
+	}
+	nextBranch(gene, 0)
+	return bestGene
 }
