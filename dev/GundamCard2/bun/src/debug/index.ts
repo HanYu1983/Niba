@@ -51,15 +51,15 @@ import { test179003_01A_CH_GN001R_green } from "./test179003_01A_CH_GN001R_green
 import { test179009_03B_U_GN036U_green } from "./test179009_03B_U_GN036U_green";
 import { testAllCardTextTestEnv } from "../game/gameState/cardTextTestEnv";
 import { testBattleBonus } from "./testFlow";
-import { testAttackCountyEncode, testCreateBattleGroupFromBattleGroupEncode } from "../game/ai/gene";
+import { testOptAlgAttackCounty, testOptCreateBattleGroup } from "../game/ai/gene";
 
 const fs = require('fs').promises;
 
 export async function tests() {
     return [
         testAllCardTextTestEnv,
-        testAttackCountyEncode,
-        testCreateBattleGroupFromBattleGroupEncode,
+        testOptAlgAttackCounty,
+        testOptCreateBattleGroup,
         test179030_11E_C_WT077S_white,
         testBattleBonus,
         testPS,

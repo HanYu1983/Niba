@@ -20,31 +20,33 @@ export function createAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID):
             conditions: {
                 [TipFn.createGoEarthKey()]: {
                     title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip | null {
-                        const currentBaKw: BaKeyword = "戦闘エリア1"
-                        const runtimeBattleArea = GameStateFn.getRuntimeBattleArea(ctx, currentBaKw)
-                        if (runtimeBattleArea == "宇宙エリア") {
-                            return null
-                        }
+                        // const currentBaKw: BaKeyword = "戦闘エリア1"
+                        // const runtimeBattleArea = GameStateFn.getRuntimeBattleArea(ctx, currentBaKw)
+                        // if (runtimeBattleArea == "宇宙エリア") {
+                        //     return null
+                        // }
+                        // const playerId = DefineFn.EffectFn.getPlayerID(effect)
+                        // const opponentPlayerId = DefineFn.PlayerIDFn.getOpponent(playerId)
+                        // const cardIds = GameStateFn.getItemIdsByBasyou(ctx, DefineFn.AbsoluteBaSyouFn.of(playerId, "配備エリア"))
+                        // let unitIds = cardIds
+                        //     .filter(cardId => GameStateFn.getSetGroupRoot(ctx, cardId) == cardId)
+                        //     .filter(cardId => GameStateFn.getCardBattleArea(ctx, cardId).includes(runtimeBattleArea))
+                        //     .filter(cardId => GameStateFn.getCard(ctx, cardId).isRoll != true)
+                        // const opponentUnitIds = GameStateFn.getBattleGroup(ctx, DefineFn.AbsoluteBaSyouFn.of(opponentPlayerId, currentBaKw));
+                        // if (opponentUnitIds.length) {
+                        //     const ges = GameStateFn.getGlobalEffects(ctx, null)
+                        //     if (GameStateFn.isABattleGroup(ctx, ["高機動"], opponentUnitIds[0], { ges: ges })) {
+                        //         unitIds = unitIds.filter(id => GameStateFn.isSetGroupHasA(ctx, ["高機動"], id, { ges: ges }))
+                        //     }
+                        // }
                         const playerId = DefineFn.EffectFn.getPlayerID(effect)
-                        const opponentPlayerId = DefineFn.PlayerIDFn.getOpponent(playerId)
-                        const cardIds = GameStateFn.getItemIdsByBasyou(ctx, DefineFn.AbsoluteBaSyouFn.of(playerId, "配備エリア"))
-                        let unitIds = cardIds
-                            .filter(cardId => GameStateFn.getSetGroupRoot(ctx, cardId) == cardId)
-                            .filter(cardId => GameStateFn.getCardBattleArea(ctx, cardId).includes(runtimeBattleArea))
-                            .filter(cardId => GameStateFn.getCard(ctx, cardId).isRoll != true)
-                        const opponentUnitIds = GameStateFn.getBattleGroup(ctx, DefineFn.AbsoluteBaSyouFn.of(opponentPlayerId, currentBaKw));
-                        if (opponentUnitIds.length) {
-                            const ges = GameStateFn.getGlobalEffects(ctx, null)
-                            if (GameStateFn.isABattleGroup(ctx, ["高機動"], opponentUnitIds[0], { ges: ges })) {
-                                unitIds = unitIds.filter(id => GameStateFn.isSetGroupHasA(ctx, ["高機動"], id, { ges: ges }))
-                            }
-                        }
+                        const unitIds = GameStateFn.getPlayerUnitCanGoEarthIds(ctx, playerId)
                         const pairs = unitIds.map(id => {
                             return [id, GameStateFn.getItemBaSyou(ctx, id)] as StrBaSyouPair
                         })
                         return {
                             title: ["カード", pairs, []],
-                            flags: { isGoBattleArea1: true }
+                            flags: { isGoBattleArea1: true },
                         }
                     }.toString(),
                     actions: [
@@ -66,25 +68,27 @@ export function createAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID):
                 },
                 [TipFn.createGoSpaceKey()]: {
                     title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip | null {
-                        const currentBaKw: BaKeyword = "戦闘エリア2"
-                        const runtimeBattleArea = GameStateFn.getRuntimeBattleArea(ctx, currentBaKw)
-                        if (runtimeBattleArea == "地球エリア") {
-                            return null
-                        }
+                        // const currentBaKw: BaKeyword = "戦闘エリア2"
+                        // const runtimeBattleArea = GameStateFn.getRuntimeBattleArea(ctx, currentBaKw)
+                        // if (runtimeBattleArea == "地球エリア") {
+                        //     return null
+                        // }
+                        // const playerId = DefineFn.EffectFn.getPlayerID(effect)
+                        // const opponentPlayerId = DefineFn.PlayerIDFn.getOpponent(playerId)
+                        // const cardIds = GameStateFn.getItemIdsByBasyou(ctx, DefineFn.AbsoluteBaSyouFn.of(playerId, "配備エリア"))
+                        // let unitIds = cardIds
+                        //     .filter(cardId => GameStateFn.getSetGroupRoot(ctx, cardId) == cardId)
+                        //     .filter(cardId => GameStateFn.getCardBattleArea(ctx, cardId).includes(runtimeBattleArea))
+                        //     .filter(cardId => GameStateFn.getCard(ctx, cardId).isRoll != true)
+                        // const opponentUnitIds = GameStateFn.getBattleGroup(ctx, DefineFn.AbsoluteBaSyouFn.of(opponentPlayerId, currentBaKw));
+                        // if (opponentUnitIds.length) {
+                        //     const ges = GameStateFn.getGlobalEffects(ctx, null)
+                        //     if (GameStateFn.isABattleGroup(ctx, ["高機動"], opponentUnitIds[0], { ges: ges })) {
+                        //         unitIds = unitIds.filter(id => GameStateFn.isSetGroupHasA(ctx, ["高機動"], id, { ges: ges }))
+                        //     }
+                        // }
                         const playerId = DefineFn.EffectFn.getPlayerID(effect)
-                        const opponentPlayerId = DefineFn.PlayerIDFn.getOpponent(playerId)
-                        const cardIds = GameStateFn.getItemIdsByBasyou(ctx, DefineFn.AbsoluteBaSyouFn.of(playerId, "配備エリア"))
-                        let unitIds = cardIds
-                            .filter(cardId => GameStateFn.getSetGroupRoot(ctx, cardId) == cardId)
-                            .filter(cardId => GameStateFn.getCardBattleArea(ctx, cardId).includes(runtimeBattleArea))
-                            .filter(cardId => GameStateFn.getCard(ctx, cardId).isRoll != true)
-                        const opponentUnitIds = GameStateFn.getBattleGroup(ctx, DefineFn.AbsoluteBaSyouFn.of(opponentPlayerId, currentBaKw));
-                        if (opponentUnitIds.length) {
-                            const ges = GameStateFn.getGlobalEffects(ctx, null)
-                            if (GameStateFn.isABattleGroup(ctx, ["高機動"], opponentUnitIds[0], { ges: ges })) {
-                                unitIds = unitIds.filter(id => GameStateFn.isSetGroupHasA(ctx, ["高機動"], id, { ges: ges }))
-                            }
-                        }
+                        const unitIds = GameStateFn.getPlayerUnitCanGoSpaceIds(ctx, playerId)
                         const pairs = unitIds.map(id => {
                             return [id, GameStateFn.getItemBaSyou(ctx, id)] as StrBaSyouPair
                         })

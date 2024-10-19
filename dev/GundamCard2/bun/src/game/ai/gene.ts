@@ -1,6 +1,6 @@
 import { dropRepeats } from "ramda";
 import { getPrototype } from "../../script";
-import { DSP, geneticAlgorithm, hillClimbing, optAlgByPSO, simulatedAnnealing } from "../../tool/optalg/basic";
+import { choise, DSP, geneticAlgorithm, hillClimbing, optAlgByPSO, randInt, simulatedAnnealing } from "../../tool/optalg/basic";
 import { IGene } from "../../tool/optalg/IGene";
 import { AbsoluteBaSyouFn } from "../define/BaSyou";
 import { BattleBonus } from "../define/CardText";
@@ -94,9 +94,7 @@ function createBattleGroupEncode(setGroupEncodes: SetGroupEncode[]): BattleGroup
   }
 }
 
-export function randInt() {
-  return Math.floor(Math.random() * 100000)
-}
+
 
 const BattleGroupEncodeFn = {
   createEmpty(): BattleGroupEncode {
@@ -170,82 +168,7 @@ const BattleGroupEncodeFn = {
 
 }
 
-export function createBattleGroupFromBattleGroupEncode(ctx: GameState, itemIdPool: string[], targetEncode: BattleGroupEncode, options?: { isShapeSpStrong?: boolean, isShapeLostPower?: boolean }): string[] {
-  type SelectBattleGroupGene = {
-    unitIds: string[],
-    score: number,
-  } & IGene
-  let gene: SelectBattleGroupGene = {
-    unitIds: [],
-    score: 0,
-    getStateKey(): string {
-      return JSON.stringify(this.unitIds)
-    },
-    calcFitness(): number {
-      const encodeBG = BattleGroupEncodeFn.fromItemIds(ctx, this.unitIds, {})
-      // 達成目標群組的距離分，距離越近越高分
-      const unitScore = 1.0 / BattleGroupEncodeFn.distance(
-        encodeBG, targetEncode, { isShapeSpStrong: options?.isShapeSpStrong }
-      )
-      this.score = unitScore
-      // 優化部隊組成，損失的格鬥力越少越高分
-      if (options?.isShapeLostPower) {
-        const lostPowerScore = Math.pow(Math.max(0, 20 - encodeBG.lostPower), 2)
-        this.score += lostPowerScore
-      }
-      return this.score
-    },
-    getFitness(): number {
-      return this.score
-    },
-    mutate(): SelectBattleGroupGene {
-      let unitIds = [...this.unitIds]
-      const rand = Math.random()
-      if (rand < 0.33) {
-        const pool = itemIdPool
-        if (unitIds.length == pool.length) {
-          const id1 = randInt() % unitIds.length
-          unitIds = unitIds.filter(id => id != unitIds[id1])
-        } else {
-          for (let i = 0; i < 10; ++i) {
-            let selectId = 0
-            selectId = randInt() % pool.length
-            if (unitIds.includes(pool[selectId])) {
-              continue
-            }
-            unitIds.push(pool[selectId])
-            break
-          }
-        }
-      } else if (rand < 0.66) {
-        const id1 = randInt() % unitIds.length
-        unitIds = unitIds.filter(id => id != unitIds[id1])
-      } else {
-        if (unitIds.length >= 2) {
-          const id1 = randInt() % unitIds.length
-          const id2 = randInt() % unitIds.length
-          if (id1 != id2) {
-            unitIds[id1], unitIds[id2] = unitIds[id2], unitIds[id1]
-          }
-        }
-      }
-      return {
-        ...this,
-        unitIds: unitIds
-      }
-    },
-    crossover(gene: SelectBattleGroupGene): SelectBattleGroupGene {
-      return randInt() % 2 == 0 ? { ...this } : { ...gene }
-    },
-  }
-  gene = simulatedAnnealing(200, 10, 1000, 0.7, gene) as SelectBattleGroupGene
-  //gene = DSP(3, 3, 50, gene) as SelectBattleGroupGene
-  //gene = geneticAlgorithm(20, 100, 20, 0.7, gene) as SelectBattleGroupGene
-  //gene = optAlgByPSO(20, 100, 20, 0.7, gene) as SelectBattleGroupGene
-  return gene.unitIds
-}
-
-export function testCreateBattleGroupFromBattleGroupEncode() {
+export function testOptCreateBattleGroup() {
   const decks = createDecks()
   const allProtoIds = decks.flatMap(v => v)
   if (allProtoIds == null) {
@@ -287,24 +210,87 @@ export function testCreateBattleGroupFromBattleGroupEncode() {
   console.log(unitIds.map((itemId: any) => getCardBattlePoint(ctx, itemId, {})))
   console.log(encodeUnitHasHigh)
   console.log(resultEncode)
-  if (dist > 500) {
+  if (dist > 1000) {
     throw new Error()
   }
-}
 
-export function choise(options: number[]): number {
-  const pool: number[] = [];
-  const total = options.reduce((a, b) => a + b, 0)
-  for (let i = 0; i < options.length; ++i) {
-    const num = Math.floor(options[i] * 100 / total)
-    for (let j = 0; j < num; j++) {
-      pool.push(i);
+  function createBattleGroupFromBattleGroupEncode(ctx: GameState, itemIdPool: string[], targetEncode: BattleGroupEncode, options?: { isShapeSpStrong?: boolean, isShapeLostPower?: boolean }): string[] {
+    type SelectBattleGroupGene = {
+      unitIds: string[],
+      score: number,
+    } & IGene
+    let gene: SelectBattleGroupGene = {
+      unitIds: [],
+      score: 0,
+      getStateKey(): string {
+        return JSON.stringify(this.unitIds)
+      },
+      calcFitness(): number {
+        const encodeBG = BattleGroupEncodeFn.fromItemIds(ctx, this.unitIds, {})
+        // 達成目標群組的距離分，距離越近越高分
+        const unitScore = 1.0 / BattleGroupEncodeFn.distance(
+          encodeBG, targetEncode, { isShapeSpStrong: options?.isShapeSpStrong }
+        )
+        this.score = unitScore
+        // 優化部隊組成，損失的格鬥力越少越高分
+        if (options?.isShapeLostPower) {
+          const lostPowerScore = Math.pow(Math.max(0, 20 - encodeBG.lostPower), 2)
+          this.score += lostPowerScore
+        }
+        return this.score
+      },
+      getFitness(): number {
+        return this.score
+      },
+      mutate(): SelectBattleGroupGene {
+        let unitIds = [...this.unitIds]
+        const rand = Math.random()
+        if (rand < 0.33) {
+          const pool = itemIdPool
+          if (unitIds.length == pool.length) {
+            const id1 = randInt() % unitIds.length
+            unitIds = unitIds.filter(id => id != unitIds[id1])
+          } else {
+            for (let i = 0; i < 10; ++i) {
+              let selectId = 0
+              selectId = randInt() % pool.length
+              if (unitIds.includes(pool[selectId])) {
+                continue
+              }
+              unitIds.push(pool[selectId])
+              break
+            }
+          }
+        } else if (rand < 0.66) {
+          const id1 = randInt() % unitIds.length
+          unitIds = unitIds.filter(id => id != unitIds[id1])
+        } else {
+          if (unitIds.length >= 2) {
+            const id1 = randInt() % unitIds.length
+            const id2 = randInt() % unitIds.length
+            if (id1 != id2) {
+              unitIds[id1], unitIds[id2] = unitIds[id2], unitIds[id1]
+            }
+          }
+        }
+        return {
+          ...this,
+          unitIds: unitIds
+        }
+      },
+      crossover(gene: SelectBattleGroupGene): SelectBattleGroupGene {
+        return randInt() % 2 == 0 ? { ...this } : { ...gene }
+      },
     }
+    gene = simulatedAnnealing(200, 10, 1000, 0.7, gene) as SelectBattleGroupGene
+    //gene = DSP(3, 3, 50, gene) as SelectBattleGroupGene
+    //gene = geneticAlgorithm(20, 100, 20, 0.7, gene) as SelectBattleGroupGene
+    //gene = optAlgByPSO(20, 100, 20, 0.7, gene) as SelectBattleGroupGene
+    return gene.unitIds
   }
-  return pool[randInt() % pool.length]
 }
 
-export function testAttackCountyEncode() {
+export function testOptAlgAttackCounty() {
   const decks = createDecks()
   const allProtoIds = dropRepeats(decks.flatMap(v => v))
   if (allProtoIds == null) {
@@ -507,6 +493,8 @@ export function testAttackCountyEncode() {
   console.log(gene.area1.map(id => getPrototype(id).battlePoint))
   console.log(gene.area2.map(id => getPrototype(id).battlePoint))
   console.log(gene.unitIds.map(id => getPrototype(id).battlePoint))
+
+
   throw new Error()
 }
 
@@ -576,18 +564,18 @@ function main() {
   let attackGene = createBattleGroupGene(ctx, PlayerA, env)
   let guardGene = createBattleGroupGene(ctx, PlayerB, env)
 
-  attackGene = hillClimbing(10, attackGene) as BattleGroupGene
+  attackGene = hillClimbing(10, 0, attackGene) as BattleGroupGene
   env.attackUnitIds = attackGene.unitIds
   const attackInput = BattleStageEncodeFn.fromAttackPlayer(ctx, PlayerA, {})
 
   for (let i = 0; i < 1000; ++i) {
     const defenceInput = BattleStageEncodeFn.fromDefencePlayer(ctx, PlayerB, {})
-    guardGene = hillClimbing(10, guardGene) as BattleGroupGene
+    guardGene = hillClimbing(10, 0, guardGene) as BattleGroupGene
     const defenceOutput = guardGene.encode(ctx, {})
     //saveTraningSet(defenceInput, defenceOutput)
     env.guardUnitIds = guardGene.unitIds
 
-    attackGene = hillClimbing(10, attackGene) as BattleGroupGene
+    attackGene = hillClimbing(10, 0, attackGene) as BattleGroupGene
     env.attackUnitIds = attackGene.unitIds
   }
   const attackOutput = attackGene.encode(ctx, {})

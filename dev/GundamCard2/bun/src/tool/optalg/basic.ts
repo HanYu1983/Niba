@@ -1,5 +1,6 @@
 import { getBest, IGene } from "./IGene";
 
+
 // 最深的深度為D+iteration
 export function hillClimbing(iteration: number, D: number, gene: IGene): IGene {
 	// 隨機從一個點開始
@@ -187,4 +188,20 @@ export function DSP(W: number, D: number, STEP_D: number, gene: IGene): IGene {
 	}
 	nextBranch(gene, 0)
 	return bestGene
+}
+
+export function randInt() {
+	return Math.floor(Math.random() * 100000)
+}
+
+export function choise(options: number[]): number {
+	const pool: number[] = [];
+	const total = options.reduce((a, b) => a + b, 0)
+	for (let i = 0; i < options.length; ++i) {
+		const num = Math.floor(options[i] * 100 / total)
+		for (let j = 0; j < num; j++) {
+			pool.push(i);
+		}
+	}
+	return pool[randInt() % pool.length]
 }
