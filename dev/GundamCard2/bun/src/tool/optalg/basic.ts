@@ -23,6 +23,7 @@ export function simulatedAnnealing(iteration: number, D: number, T: number, fact
 	if (T <= 0) {
 		throw new Error("T cannot be 0"); // Use throw for clearer error handling
 	}
+	const delta: number[] = []
 	// 隨機從一個點開始
 	for (let i = 0; i < D; ++i) {
 		gene = gene.mutate()
@@ -39,7 +40,16 @@ export function simulatedAnnealing(iteration: number, D: number, T: number, fact
 		const acceptanceProbability = P(oldFitness, newFitness, T);
 		if (acceptanceProbability > Math.random()) {
 			gene = clone;
-			//console.log(gene.calcFitness())
+			// 計算收斂
+			// const d = gene.getFitness() - clone.getFitness()
+			// delta.push(d)
+			// if (delta.length > 20) {
+			// 	delta.shift()
+			// 	const avgDelta = delta.reduce((a, b) => a + b, 0) / delta.length
+			// 	if (avgDelta < 5) {
+			// 		break
+			// 	}
+			// }
 		}
 	}
 	return gene;
