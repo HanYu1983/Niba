@@ -151,10 +151,18 @@ export function createStrBaSyouPair(
 
 export function getItemPrototype(ctx: ItemTableComponent, itemId: string): CardPrototype {
   if (isCard(ctx, itemId)) {
-    return getPrototype(getCard(ctx, itemId).protoID || "unknown")
+    const protoId = getCard(ctx, itemId).protoID
+    if (protoId == null) {
+      throw new Error(`protoID not found: ${itemId}`)
+    }
+    return getPrototype(protoId)
   }
   if (isChip(ctx, itemId)) {
-    return getChipPrototype(ctx, getChip(ctx, itemId).protoID || "unknown")
+    const protoId = getChip(ctx, itemId).protoID
+    if (protoId == null) {
+      throw new Error(`protoID not found: ${itemId}`)
+    }
+    return getChipPrototype(ctx, protoId)
   }
   if (isCoin(ctx, itemId)) {
     throw new Error(`coin no prototype: ${itemId}`)

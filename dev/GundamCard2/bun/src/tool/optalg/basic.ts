@@ -1,6 +1,12 @@
 import { getBest, IGene } from "./IGene";
 
-export function hillClimbing(iteration: number, gene: IGene): IGene {
+// 最深的深度為D+iteration
+export function hillClimbing(iteration: number, D: number, gene: IGene): IGene {
+	// 隨機從一個點開始
+	for (let i = 0; i < D; ++i) {
+		gene = gene.mutate()
+	}
+	gene.calcFitness()
 	for (let i = 0; i < iteration; i++) {
 		const clone = gene.mutate()
 		if (clone.calcFitness() > gene.getFitness()) {
@@ -11,9 +17,14 @@ export function hillClimbing(iteration: number, gene: IGene): IGene {
 }
 
 // simulatedAnnealing(200, 1000, 0.7, gene)
-export function simulatedAnnealing(iteration: number, T: number, factor: number, gene: IGene): IGene {
+// 最深的深度為D+iteration
+export function simulatedAnnealing(iteration: number, D: number, T: number, factor: number, gene: IGene): IGene {
 	if (T <= 0) {
 		throw new Error("T cannot be 0"); // Use throw for clearer error handling
+	}
+	// 隨機從一個點開始
+	for (let i = 0; i < D; ++i) {
+		gene = gene.mutate()
 	}
 	gene.calcFitness()
 	const P = (oldFitness: number, newFitness: number, temperature: number): number => {
@@ -27,12 +38,14 @@ export function simulatedAnnealing(iteration: number, T: number, factor: number,
 		const acceptanceProbability = P(oldFitness, newFitness, T);
 		if (acceptanceProbability > Math.random()) {
 			gene = clone;
+			console.log(gene.calcFitness())
 		}
 	}
 	return gene;
 }
 
 // geneticAlgorithm(20, 100, 20, 0.7, gene) as SelectBattleGroupGene
+// 最深的深度為D+iteration
 export function geneticAlgorithm(iteration: number, W: number, D: number, mutateRate: number, gene: IGene): IGene {
 	// 盡量平均散佈在解空間
 	let population = [...Array(W).keys()].map(() => {
@@ -89,6 +102,7 @@ export function geneticAlgorithm(iteration: number, W: number, D: number, mutate
 
 // optAlgByPSO is PSO粒子群演算法修改
 // optAlgByPSO(20, 100, 20, 0.7, gene) as SelectBattleGroupGene
+// 最深的深度為D+iteration
 export function optAlgByPSO(iteration: number, W: number, D: number, mutateRate: number, gene: IGene): IGene {
 	// 盡量平均散佈在解空間
 	let population = [...Array(W).keys()].map(() => {
@@ -139,6 +153,7 @@ export function optAlgByPSO(iteration: number, W: number, D: number, mutateRate:
 
 // 動態規劃
 // DSP(3, 3, 50, gene) as SelectBattleGroupGene
+// 最深的深度為D*STEP_D
 export function DSP(W: number, D: number, STEP_D: number, gene: IGene): IGene {
 	gene.calcFitness()
 	let bestGene = gene
@@ -150,7 +165,7 @@ export function DSP(W: number, D: number, STEP_D: number, gene: IGene): IGene {
 		}
 		[...Array(W).keys()].forEach(i => {
 			// 移動一步
-			const nextGene = simulatedAnnealing(STEP_D, 1000, 0.7, gene)
+			const nextGene = simulatedAnnealing(STEP_D, 0, 1000, 0.7, gene)
 			if (nextGene.getStateKey == null) {
 				throw new Error()
 			}

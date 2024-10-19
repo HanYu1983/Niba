@@ -1,3 +1,4 @@
+import { dropRepeats } from "ramda";
 import { getPrototype } from "../../script";
 import { DSP, geneticAlgorithm, hillClimbing, optAlgByPSO, simulatedAnnealing } from "../../tool/optalg/basic";
 import { IGene } from "../../tool/optalg/IGene";
@@ -5,7 +6,7 @@ import { AbsoluteBaSyouFn } from "../define/BaSyou";
 import { BattleBonus } from "../define/CardText";
 import { GameExtParams } from "../define/GameExtParams";
 import { PlayerA, PlayerB, PlayerID, PlayerIDFn } from "../define/PlayerID";
-import { isABattleGroup } from "../gameState/battleGroup";
+import { getBattleGroupBattlePoint, isABattleGroup } from "../gameState/battleGroup";
 import { getCardBattlePoint, getCardSpecialText, getCardTexts } from "../gameState/card";
 import { addCards, createCardWithProtoIds } from "../gameState/CardTableComponent";
 import { createDecks } from "../gameState/cardTextTestEnv";
@@ -237,30 +238,30 @@ export function createBattleGroupFromBattleGroupEncode(ctx: GameState, itemIdPoo
       return randInt() % 2 == 0 ? { ...this } : { ...gene }
     },
   }
-  gene = simulatedAnnealing(200, 1000, 0.7, gene) as SelectBattleGroupGene
+  gene = simulatedAnnealing(200, 10, 1000, 0.7, gene) as SelectBattleGroupGene
   //gene = DSP(3, 3, 50, gene) as SelectBattleGroupGene
   //gene = geneticAlgorithm(20, 100, 20, 0.7, gene) as SelectBattleGroupGene
   //gene = optAlgByPSO(20, 100, 20, 0.7, gene) as SelectBattleGroupGene
   return gene.unitIds
 }
 
-export function testSetGroupEncode() {
+export function testCreateBattleGroupFromBattleGroupEncode() {
   const decks = createDecks()
   const allProtoIds = decks.flatMap(v => v)
   if (allProtoIds == null) {
     throw new Error()
   }
+  const allUnitProtos = allProtoIds.filter(cardId => {
+    const proto = getPrototype(cardId)
+    return proto.category == "ユニット"
+  })
   let ctx = createGameState()
-  ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア"), allProtoIds.map(protoId => {
+  ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア"), allUnitProtos.map(protoId => {
     return {
       id: protoId,
       protoID: protoId
     }
   })) as GameState
-  const allUnitProtos = allProtoIds.filter(cardId => {
-    const proto = getPrototype(cardId)
-    return proto.category == "ユニット"
-  })
   const allUnitProtosHasSp = allUnitProtos.filter(cardId => {
     const proto = getPrototype(cardId)
     return proto.texts?.find(text => text.title[0] == "特殊型"
@@ -289,6 +290,224 @@ export function testSetGroupEncode() {
   if (dist > 500) {
     throw new Error()
   }
+}
+
+export function choise(options: number[]): number {
+  const pool: number[] = [];
+  const total = options.reduce((a, b) => a + b, 0)
+  for (let i = 0; i < options.length; ++i) {
+    const num = Math.floor(options[i] * 100 / total)
+    for (let j = 0; j < num; j++) {
+      pool.push(i);
+    }
+  }
+  return pool[randInt() % pool.length]
+}
+
+export function testAttackCountyEncode() {
+  const decks = createDecks()
+  const allProtoIds = dropRepeats(decks.flatMap(v => v))
+  if (allProtoIds == null) {
+    throw new Error()
+  }
+  const allUnitProtos = allProtoIds.filter(cardId => {
+    const proto = getPrototype(cardId)
+    return proto.category == "ユニット"
+  })
+
+  allUnitProtos.sort((a, b) => Math.random() < 0.5 ? -1 : 1)
+  const unitIds = allUnitProtos.slice(30, 40)
+  console.log(unitIds)
+
+  type SelectBattleGroupGene = {
+    unitIds: string[],
+    area1: string[],
+    area2: string[],
+    score: number,
+  } & IGene
+
+  let gene: SelectBattleGroupGene = {
+    unitIds: unitIds,
+    area1: [],
+    area2: [],
+    score: 0,
+    getStateKey(): string {
+      return JSON.stringify(this.unitIds)
+    },
+    calcFitness(): number {
+      let ctx = createGameState()
+      ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア"), this.unitIds.map(protoId => {
+        return {
+          id: protoId,
+          protoID: protoId
+        }
+      })) as GameState
+      ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1"), this.area1.map(protoId => {
+        return {
+          id: protoId,
+          protoID: protoId
+        }
+      })) as GameState
+      ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア2"), this.area2.map(protoId => {
+        return {
+          id: protoId,
+          protoID: protoId
+        }
+      })) as GameState
+
+      const area1Power = this.area1.map((v, i) => {
+        if (i == 0) {
+          return getSetGroupBattlePoint(ctx, v, {})[0]
+        }
+        return getSetGroupBattlePoint(ctx, v, {})[1]
+      }).reduce((a, b) => a + b, 0)
+      const area1LostPower = this.area1.map((v, i) => {
+        if (i == 0) {
+          return 0
+        }
+        return getSetGroupBattlePoint(ctx, v, {})[0]
+      }).reduce((a, b) => a + b, 0)
+
+      const area2Power = this.area2.map((v, i) => {
+        if (i == 0) {
+          return getSetGroupBattlePoint(ctx, v, {})[0]
+        }
+        return getSetGroupBattlePoint(ctx, v, {})[1]
+      }).reduce((a, b) => a + b, 0)
+      const area2LostPower = this.area2.map((v, i) => {
+        if (i == 0) {
+          return 0
+        }
+        return getSetGroupBattlePoint(ctx, v, {})[0]
+      }).reduce((a, b) => a + b, 0)
+
+      this.score = (area1Power + area2Power) * 2 - area1LostPower - area2LostPower
+      return this.score
+    },
+    getFitness(): number {
+      return this.score
+    },
+    mutate(): SelectBattleGroupGene {
+      const gene = { ...this }
+      const cmd = choise([2, 2, 3])
+      switch (cmd) {
+        case 0: {
+          const earthIds = gene.unitIds.filter(id => getPrototype(id).battleArea?.includes("地球エリア"))
+          const spaceIds = gene.unitIds.filter(id => getPrototype(id).battleArea?.includes("宇宙エリア"))
+          for (let i = 0; i < 10; ++i) {
+            const cmd2 = randInt() % 2
+            if (cmd2 == 0) {
+              if (earthIds.length) {
+                const id = earthIds[randInt() % earthIds.length]
+                if (id == null) {
+                  throw new Error()
+                }
+                gene.area1 = [...gene.area1, id]
+                gene.unitIds = gene.unitIds.filter(id2 => id2 != id)
+                break
+              }
+            } else if (cmd2 == 1) {
+              if (spaceIds.length) {
+                const id = spaceIds[randInt() % spaceIds.length]
+                if (id == null) {
+                  throw new Error()
+                }
+                gene.area2 = [...gene.area2, id]
+                gene.unitIds = gene.unitIds.filter(id2 => id2 != id)
+                break
+              }
+            } else {
+              throw new Error()
+            }
+          }
+          // if (gene.area1.length + gene.area2.length + gene.unitIds.length != 10) {
+          //   console.log(gene.area1, gene.area2, gene.unitIds)
+          //   throw new Error()
+          // }
+          break
+        }
+        case 1: {
+          for (let i = 0; i < 10; ++i) {
+            const cmd2 = randInt() % 2
+            if (cmd2 == 0) {
+              if (gene.area1.length) {
+                const id = gene.area1[randInt() % gene.area1.length]
+                if (id == null) {
+                  throw new Error()
+                }
+                gene.area1 = gene.area1.filter(id2 => id2 != id)
+                gene.unitIds = [...gene.unitIds, id]
+                break
+              }
+            } else if (cmd2 == 1) {
+              if (gene.area2.length) {
+                const id = gene.area2[randInt() % gene.area2.length]
+                if (id == null) {
+                  throw new Error()
+                }
+                gene.area2 = gene.area2.filter(id2 => id2 != id)
+                gene.unitIds = [...gene.unitIds, id]
+                break
+              }
+            } else {
+              throw new Error()
+            }
+          }
+          // if (gene.area1.length + gene.area2.length + gene.unitIds.length != 10) {
+          //   throw new Error()
+          // }
+          break
+        }
+        case 2: {
+          for (let i = 0; i < 10; ++i) {
+            const cmd2 = randInt() % 2
+            if (cmd2 == 0) {
+              if (gene.area1.length >= 2) {
+                const id = randInt() % gene.area1.length
+                const id2 = randInt() % gene.area1.length
+                if (id != id2) {
+                  gene.area1 = gene.area1.slice()
+                  gene.area1[id], gene.area1[id2] = gene.area1[id2], gene.area1[id]
+                  break
+                }
+              }
+            } else if (cmd2 == 1) {
+              if (gene.area2.length >= 2) {
+                const id = randInt() % gene.area2.length
+                const id2 = randInt() % gene.area2.length
+                if (id != id2) {
+                  gene.area2 = gene.area2.slice()
+                  gene.area2[id], gene.area2[id2] = gene.area2[id2], gene.area2[id]
+                  break
+                }
+              }
+            } else {
+              throw new Error()
+            }
+            // if (gene.area1.length + gene.area2.length + gene.unitIds.length != 10) {
+            //   throw new Error()
+            // }
+          }
+          break
+        }
+        default:
+          throw new Error()
+      }
+      return gene
+    },
+    crossover(gene: SelectBattleGroupGene): SelectBattleGroupGene {
+      return randInt() % 2 == 0 ? { ...this } : { ...gene }
+    },
+  }
+  gene = simulatedAnnealing(100, 50, 1000, 0.7, gene) as SelectBattleGroupGene
+  //gene = DSP(2, 2, 50, gene) as SelectBattleGroupGene
+  //gene = geneticAlgorithm(5, 100, 20, 0.7, gene) as SelectBattleGroupGene
+  //gene = optAlgByPSO(2, 100, 20, 0.7, gene) as SelectBattleGroupGene
+  console.log(gene.getFitness())
+  console.log(gene.area1.map(id => getPrototype(id).battlePoint))
+  console.log(gene.area2.map(id => getPrototype(id).battlePoint))
+  console.log(gene.unitIds.map(id => getPrototype(id).battlePoint))
+  throw new Error()
 }
 
 type BattleStageEncode = {
@@ -412,7 +631,7 @@ function createBattleGroupGene(ctx: GameState, playerId: PlayerID, env: BattleEn
       }
     },
     encode(ctx: GameState, ext: GameExtParams): BattleStageEncode {
-      return BattleStageEncodeFn.fromItemIds(ctx, this.unitIds, ext)
+      return BattleStageEncodeFn.fromItemIds(ctx, [[], [], []], ext)
     }
   }
 }
