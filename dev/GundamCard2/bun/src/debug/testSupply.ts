@@ -8,11 +8,7 @@ import { doEffect, setTipSelectionForUser } from "../game/gameState/doEffect";
 import { getImmediateEffects, getTopEffect } from "../game/gameState/EffectStackComponent";
 import { createGameState, GameState } from "../game/gameState/GameState";
 import { createPlayEffects } from "../game/gameState/createPlayEffects";
-import { getItemState } from "../game/gameState/ItemStateComponent";
-import { getItemBaSyou } from "../game/gameState/ItemTableComponent";
-import { doItemMove } from "../game/gameState/doItemMove";
 import { setPhase } from "../game/gameState/PhaseComponent";
-import { doTriggerEvent } from "../game/gameState/doTriggerEvent";
 import { loadPrototype } from "../script";
 import { getGlobalEffects } from "../game/gameState/globalEffects";
 

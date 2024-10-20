@@ -23,6 +23,7 @@ import { getChip } from "./ChipTableComponent";
 import { getGlobalEffects } from "./globalEffects";
 import { GlobalEffect } from "../define/GlobalEffect";
 import { getPrototype } from "../../script";
+import { GameExtParams } from "../define/GameExtParams";
 
 export type Entity = {
     itemController: PlayerID,
@@ -257,7 +258,7 @@ export function createTipByEntitySearch(ctx: GameState, effect: Effect, searchOp
                 && !!(getChip(ctx, entity.itemId).isRoll) == searchOptions.isRoll))
     }
     if (searchOptions.hasSpecialEffect != null) {
-        entityList = entityList.filter(EntityFn.filterHasSpecialEffect(ctx, searchOptions.hasSpecialEffect))
+        entityList = entityList.filter(EntityFn.filterHasSpecialEffect(ctx, searchOptions.hasSpecialEffect, options))
     }
     if (searchOptions.hasChar != null) {
         entityList = entityList.filter(EntityFn.filterHasChar(ctx, searchOptions.hasChar))
@@ -443,12 +444,12 @@ export const EntityFn = {
             return (getSetGroup(ctx, entity.itemId).length > 1) == v
         }
     },
-    filterHasSpecialEffect(ctx: GameState, vs: TextSpeicalEffect[]) {
+    filterHasSpecialEffect(ctx: GameState, vs: TextSpeicalEffect[], options: GameExtParams) {
         return (entity: Entity) => {
             if (isCardLike(ctx)(entity.itemId) == false) {
                 return false
             }
-            return vs.some(v => isSetGroupHasA(ctx, v, entity.itemId, { ges: getGlobalEffects(ctx, null) }))
+            return vs.some(v => isSetGroupHasA(ctx, v, entity.itemId, options))
         }
     },
     filterHasChar(ctx: GameState, vs: string[]) {

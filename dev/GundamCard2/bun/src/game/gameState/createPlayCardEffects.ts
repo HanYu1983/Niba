@@ -33,8 +33,6 @@ export function createPlayCardEffects(ctx: GameState, cardId: string, options: G
         ret.push(...createPlayCardEffect(ctx, cardId, { ges: ges }))
     } else {
         // 不在手牌的情況
-        const ges = getGlobalEffects(ctx, null)
-        ctx = setGlobalEffects(ctx, null, ges)
         const canPlayByText = ges
             .filter(ge => ge.title[0] == "自軍手札にあるかのようにプレイできる")
             .find(ge => ge.cardIds.includes(cardId))
@@ -76,7 +74,7 @@ export function createPlayCardEffects(ctx: GameState, cardId: string, options: G
                 isPlayOperation: prototype.category == "オペレーション",
             }],
             text: text,
-        }, createBridge({ ges: getGlobalEffects(ctx, null) }))
+        }, createBridge({ ges: ges }))
         effs?.forEach(eff => {
             if (eff.text.title[0] != "使用型") {
                 console.log(eff?.text.description)
@@ -517,17 +515,16 @@ export function createUnitGoStageEffectFromPlayEffect(ctx: GameState, effect: Ef
                         actions: [
                             {
                                 title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GameState {
-                                    const ges = GameStateFn.getGlobalEffects(ctx, null)
                                     const cardId = DefineFn.EffectFn.getCardID(effect)
                                     const from = GameStateFn.getItemBaSyou(ctx, cardId)
                                     const to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "配備エリア")
                                     ctx = GameStateFn.doItemMove(ctx, to, [cardId, from], { ges: Options.ges }) as GameState
-                                    const hasHigh = GameStateFn.getCardHasSpeicalEffect(ctx, ["戦闘配備"], cardId, { ges: ges })
-                                    const hasPS = GameStateFn.getCardHasSpeicalEffect(ctx, ["【PS装甲】"], cardId, { ges: ges })
+                                    const hasHigh = GameStateFn.getCardHasSpeicalEffect(ctx, ["戦闘配備"], cardId, Options)
+                                    const hasPS = GameStateFn.getCardHasSpeicalEffect(ctx, ["【PS装甲】"], cardId, Options)
                                     const isNoNeedRoll = (hasHigh || hasPS)
                                     const isRoll = isNoNeedRoll == false
                                     ctx = GameStateFn.doItemSetRollState(ctx, isRoll, [cardId, GameStateFn.getItemBaSyou(ctx, cardId)], { isSkipTargetMissing: true })
-                                    ctx = GameStateFn.doTriggerEvent(ctx, { title: ["プレイされて場に出た場合"], cardIds: [cardId] }, { ges: Options.ges })
+                                    ctx = GameStateFn.doTriggerEvent(ctx, { title: ["プレイされて場に出た場合"], cardIds: [cardId] }, Options)
                                     return ctx
                                 }.toString()
                             },

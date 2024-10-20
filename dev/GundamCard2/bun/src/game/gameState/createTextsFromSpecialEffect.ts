@@ -28,8 +28,7 @@ export function createTextsFromSpecialEffect(text: CardText, options: GameExtPar
                     id: text.id,
                     title: ["自動型", "起動"],
                     description: "這張卡出現在戰區時, 下回合開始時回到持有者手上. 但如果和持有補給或供給的卡組合部隊的時候, 上述的效果不發動.",
-                    onEvent: function _(ctx: GameState, effect: Effect, { GameStateFn, DefineFn }: Bridge): GameState {
-                        const ges = GameStateFn.getGlobalEffects(ctx, null)
+                    onEvent: function _(ctx: GameState, effect: Effect, { GameStateFn, DefineFn, Options }: Bridge): GameState {
                         const cardId = DefineFn.EffectFn.getCardID(effect)
                         const evt = DefineFn.EffectFn.getEvent(effect)
                         if (evt.title[0] == "GameEventOnMove" &&
@@ -41,7 +40,7 @@ export function createTextsFromSpecialEffect(text: CardText, options: GameExtPar
                             // 如果這張卡移到戰區
                             if (evt.cardIds?.includes(cardId)) {
                                 // 判斷同區有沒有補給或供給
-                                const hasSupply = GameStateFn.isBattleGroupHasA(ctx, ["供給"], cardId, { ges: ges })
+                                const hasSupply = GameStateFn.isBattleGroupHasA(ctx, ["供給"], cardId, Options)
                                 if (hasSupply) {
                                     // do nothing
                                 } else {
@@ -53,7 +52,7 @@ export function createTextsFromSpecialEffect(text: CardText, options: GameExtPar
                                 if (DefineFn.AbsoluteBaSyouFn.eq(GameStateFn.getItemBaSyou(ctx, cardId), evt.title[2])) {
                                     // 判斷新來的卡有沒有補給或供給
                                     // 如果有, 就刪除回家旗標
-                                    const hasSupply = GameStateFn.isBattleGroupHasA(ctx, ["供給"], cardId, { ges: ges })
+                                    const hasSupply = GameStateFn.isBattleGroupHasA(ctx, ["供給"], cardId, Options)
                                     if (hasSupply) {
                                         // 回家旗標
                                         ctx = GameStateFn.mapItemState(ctx, cardId, is => DefineFn.ItemStateFn.removeFlag(is, "return")) as GameState
@@ -70,7 +69,7 @@ export function createTextsFromSpecialEffect(text: CardText, options: GameExtPar
                             const cardController = GameStateFn.getItemController(ctx, cardId)
                             const cs = GameStateFn.getItemState(ctx, cardId)
                             if (cs.flags["return"]) {
-                                ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "手札"), [cardId, GameStateFn.getItemBaSyou(ctx, cardId)], { ges: ges }) as GameState
+                                ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "手札"), [cardId, GameStateFn.getItemBaSyou(ctx, cardId)], Options) as GameState
                                 ctx = GameStateFn.mapItemState(ctx, cardId, is => DefineFn.ItemStateFn.removeFlag(is, "return")) as GameState
                             }
                         }
@@ -96,15 +95,13 @@ export function createTextsFromSpecialEffect(text: CardText, options: GameExtPar
                             exceptItemSelf: true,
                             actions: [
                                 {
-                                    title: function _(ctx: GameState, effect: Effect, { GameStateFn, DefineFn }: Bridge): GameState {
+                                    title: function _(ctx: GameState, effect: Effect, { GameStateFn, DefineFn, Options }: Bridge): GameState {
                                         const cardId = DefineFn.EffectFn.getCardID(effect)
                                         const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "［ ］の特徴を持つ自軍ユニット１枚は", cardId)
                                         const textRefs = GameStateFn.getCardTipTextRefs(ctx, "このカードの本来のテキスト１つ", cardId)
                                         const textRefIds = textRefs.map(tr => tr.textId)
-                                        const ges = GameStateFn.getGlobalEffects(ctx, null)
-                                        ctx = GameStateFn.setGlobalEffects(ctx, null, ges)
                                         for (const pair of pairs) {
-                                            const hasSameText = GameStateFn.getCardTexts(ctx, pair[0], { ges: ges }).find(text => textRefIds.includes(text.id))
+                                            const hasSameText = GameStateFn.getCardTexts(ctx, pair[0], Options).find(text => textRefIds.includes(text.id))
                                             if (hasSameText) {
                                                 throw new DefineFn.TipError(`已有同樣的內文: ${JSON.stringify(textRefIds)}`, { hasSameText: true })
                                             }
@@ -121,18 +118,16 @@ export function createTextsFromSpecialEffect(text: CardText, options: GameExtPar
                                 {
                                     title: ["cutIn", [
                                         {
-                                            title: function _(ctx: GameState, effect: Effect, { GameStateFn, DefineFn }: Bridge): GameState {
+                                            title: function _(ctx: GameState, effect: Effect, { GameStateFn, DefineFn, Options }: Bridge): GameState {
                                                 const cardId = DefineFn.EffectFn.getCardID(effect)
                                                 const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "［ ］の特徴を持つ自軍ユニット１枚は", cardId)
                                                 const textRefs = GameStateFn.getCardTipTextRefs(ctx, "このカードの本来のテキスト１つ", cardId)
-                                                const ges = GameStateFn.getGlobalEffects(ctx, null)
-                                                ctx = GameStateFn.setGlobalEffects(ctx, null, ges)
                                                 for (const pair of pairs) {
                                                     GameStateFn.assertTargetMissingError(ctx, pair)
                                                     const [targetCardId, targetBasyou] = pair
                                                     ctx = GameStateFn.mapItemState(ctx, targetCardId, targetItemState => {
                                                         for (const textRef of textRefs) {
-                                                            const alreadyHas = GameStateFn.getCardTexts(ctx, targetItemState.id, { ges: ges }).find(text => text.id == textRef.textId) != null
+                                                            const alreadyHas = GameStateFn.getCardTexts(ctx, targetItemState.id, Options).find(text => text.id == textRef.textId) != null
                                                             if (alreadyHas) {
                                                                 continue
                                                             }
@@ -459,15 +454,13 @@ export function createTextsFromSpecialEffect(text: CardText, options: GameExtPar
                                             logicTreeAction: {
                                                 actions: [
                                                     {
-                                                        title: function _(ctx: GameState, effect: Effect, { GameStateFn, DefineFn }: Bridge): GameState {
+                                                        title: function _(ctx: GameState, effect: Effect, { GameStateFn, DefineFn, Options }: Bridge): GameState {
                                                             const cardId = DefineFn.EffectFn.getCardID(effect)
                                                             const cardController = GameStateFn.getItemController(ctx, cardId)
                                                             const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "看自己本國全部的卡,可以從中找出特徵A的1張卡移到HANGER,那個時候本國洗牌", cardId)
                                                             if (pairs.length) {
-                                                                const ges = GameStateFn.getGlobalEffects(ctx, null)
-                                                                ctx = GameStateFn.setGlobalEffects(ctx, null, ges)
                                                                 for (const pair of pairs) {
-                                                                    ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "ハンガー"), pair, { ges: ges }) as GameState
+                                                                    ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "ハンガー"), pair, Options) as GameState
                                                                 }
                                                                 ctx = GameStateFn.shuffleItems(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "本国")) as GameState
                                                             }

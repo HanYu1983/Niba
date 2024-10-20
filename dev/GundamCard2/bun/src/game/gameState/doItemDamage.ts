@@ -28,10 +28,8 @@ export function doItemDamage(ctx: GameState, effect: Effect, damage: number, tar
     assertTargetMissingError(ctx, target)
   }
   {
-    const ges = getGlobalEffects(ctx, null)
-    ctx = setGlobalEffects(ctx, null, ges)
     // damage修正
-    const adj = ges.map(ge => {
+    const adj = (options.ges || []).map(ge => {
       if (ge.title[0] == "このカードが受ける全ての_通常ダメージは、_２減殺される" && ge.title[1] == "通常ダメージ") {
         if (ge.cardIds.includes(target[0])) {
           return -ge.title[2]

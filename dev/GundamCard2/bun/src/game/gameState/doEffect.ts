@@ -108,8 +108,8 @@ export function createEffectTips(
     const errors: string[] = []
     let tip: Tip | null = null
     try {
-      const ges = getGlobalEffects(ctx, null)
-      tip = createConditionTitleFn(con)(ctx, effect, createBridge({ ges: ges }))
+      tip = createConditionTitleFn(con)(ctx, effect, createBridge({ ges: getGlobalEffects(ctx, null) }))
+      ctx = updateGlobalEffects(ctx)
       if ((tip as any)?.isGameState) {
         console.log(`快速檢查是不寫錯回傳成GameState, 應該要回傳Tip|null:`, key, con.title)
         throw new Error()
@@ -162,13 +162,9 @@ export function createEffectTips(
         }
       }
     }
-    const ges = getGlobalEffects(ctx, null)
-    ctx = setGlobalEffects(ctx, null, ges)
     ctx = ConditionFn.getActionTitleFns(con, action => createActionTitleFn(action)).reduce((ctx, fn): GameState => {
       try {
-        const ges = getGlobalEffects(ctx, null)
-        ctx = setGlobalEffects(ctx, null, ges)
-        ctx = fn(ctx, effect, createBridge({ ges: ges }))
+        ctx = fn(ctx, effect, createBridge({ ges: getGlobalEffects(ctx, null) }))
         ctx = updateGlobalEffects(ctx)
         return ctx
       } catch (e) {
