@@ -55,6 +55,11 @@ export function doTriggerEvent(
     }
     if (event.title[0] == "GameEventOnTiming") {
         const onPhase = event.title[1]
+        if (onPhase[0] == "戦闘フェイズ" && onPhase[2] == "ステップ終了") {
+            ctx = mapItemStateValues(ctx, cs => {
+                return ItemStateFn.onStepEnd(cs)
+            }) as GameState
+        }
         if (onPhase[0] == "戦闘フェイズ" && onPhase[1] == "ターン終了時") {
             switch (onPhase[2]) {
                 case "ダメージリセット":

@@ -5,7 +5,7 @@ const hideCategory: string[] = [
   "doEffect",
   "applyFlow",
   "handleAttackDamage",
-  //"getGlobalEffects",
+  "getGlobalEffects",
   "getEffectTips",
   "createEffectTips",
   "getActionTitleFn",

@@ -23,7 +23,7 @@ import { doItemSetRollState } from "./doItemSetRollState"
 import { doCountryDamage } from "./doCountryDamage"
 import { logCategory } from "../../tool/logger"
 import { doItemSetDestroy } from "./doItemSetDestroy"
-import { doItemSetGlobalEffectsUntilEndOfTurn } from "./doItemSetGlobalEffectsUntilEndOfTurn"
+import { doItemSetGlobalEffectsUntilEndOfStep, doItemSetGlobalEffectsUntilEndOfTurn } from "./doItemSetGlobalEffectsUntilEndOfTurn"
 import { RelatedPlayerSideKeyword } from "../define"
 import { doPlayerDrawCard } from "./doPlayerDrawCard"
 import { getPlayerState, mapPlayerState } from "./PlayerStateComponent"
@@ -399,6 +399,32 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
             } as GlobalEffect
           })
           ctx = doItemSetGlobalEffectsUntilEndOfTurn(ctx, gesForCard, [targetCardId, targetBaSyou])
+        }
+        return ctx
+      }
+    }
+    case "ステップ終了時まで「速攻」を得る。": {
+      const [_, ges] = action.title
+      const varNames = action.vars
+      // if (varNames == null) {
+      //   throw new Error(`action.var not found: ${action.title[0]}`)
+      // }
+      return function (ctx: GameState, effect: Effect): GameState {
+        const cardId = EffectFn.getCardID(effect)
+        const pairs = varNames == null ?
+          [[cardId, getItemBaSyou(ctx, cardId)] as StrBaSyouPair] :
+          varNames.flatMap(varName => {
+            return getCardTipStrBaSyouPairs(ctx, varName, cardId)
+          })
+        //const pairs = getCardTipStrBaSyouPairs(ctx, varNames[0], cardId)
+        for (const [targetCardId, targetBaSyou] of pairs) {
+          const gesForCard = ges.map(ge => {
+            return {
+              ...ge,
+              cardIds: [targetCardId],
+            } as GlobalEffect
+          })
+          ctx = doItemSetGlobalEffectsUntilEndOfStep(ctx, gesForCard, [targetCardId, targetBaSyou])
         }
         return ctx
       }

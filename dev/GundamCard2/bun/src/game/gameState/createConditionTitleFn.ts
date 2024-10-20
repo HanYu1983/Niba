@@ -5,7 +5,7 @@ import { Condition, ConditionTitleFn, ConditionFn, Situation } from "../define/C
 import { Effect, EffectFn } from "../define/Effect"
 import { TargetMissingError, TipError } from "../define/GameError"
 import { PlayerA, PlayerB, PlayerIDFn } from "../define/PlayerID"
-import { Tip, StrBaSyouPair, TipTitleTextRef } from "../define/Tip"
+import { Tip, StrBaSyouPair, TipTitleTextRef, TipFn } from "../define/Tip"
 import { getItemCharacteristic, getItemRuntimeCategory, getCardTexts, getCardTotalCostLength, getCardIdsCanPayRollColor } from "./card"
 import { getCard } from "./CardTableComponent"
 import { GameState } from "./GameState"
@@ -214,7 +214,13 @@ export function createConditionTitleFn(condition: Condition): ConditionTitleFn {
                 throw new Error(`Entity search must has one of min, max, count`)
             }
             return function (ctx: GameState, effect: Effect, { Options }: Bridge): Tip | null {
-                return createTipByEntitySearch(ctx, effect, searchOptions, { ges: Options.ges })
+                const tip = createTipByEntitySearch(ctx, effect, searchOptions, { ges: Options.ges })
+                if (searchOptions.returnNullIfNotPassCondition) {
+                    if (TipFn.createTipErrorWhenCheckFail(tip)) {
+                        return null
+                    }
+                }
+                return tip
             }
         }
     }

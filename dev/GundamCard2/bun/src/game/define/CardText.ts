@@ -65,6 +65,7 @@ export type ActionTitle =
     | ["_－１／－１／－１コイン_１個を乗せる", BattleBonus, number]
     | ["移除卡狀態_旗標", string]
     | ["ターン終了時まで「速攻」を得る。", GlobalEffect[]]
+    | ["ステップ終了時まで「速攻」を得る。", GlobalEffect[]]
     | ["cutIn", Action[]]
     | ["カード_１枚を引く", number]
     | ["リロール状態で置き換える"]
@@ -142,13 +143,13 @@ export type EntitySearchOptions = {
     max?: number,
     asMuchAsPossible?: boolean,
     exceptCardIds?: string[],
-    isRepeat?: boolean
+    isRepeat?: boolean,
 }
 
 export type ConditionTitle =
     | string
     | ["RollColor", CardColor | null]
-    | ["Entity", EntitySearchOptions]
+    | ["Entity", EntitySearchOptions & { returnNullIfNotPassCondition?: boolean }]
     // | ["_戦闘エリアにいる_敵軍_ユニット_１～_２枚", BaSyouKeyword[], RelatedPlayerSideKeyword, CardCategory, number, number]
     // | ["_交戦中の_自軍_ユニット_１枚", "交戦中" | "非交戦中" | null, RelatedPlayerSideKeyword, CardCategory, number]
     // | ["_自軍_ユニット_１枚", RelatedPlayerSideKeyword, CardCategory, number]
