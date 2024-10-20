@@ -20,7 +20,6 @@ const hideCategory: string[] = [
   "addImmediateEffectIfCanPayCost",
   "doItemSetRollState",
   "doActiveEffect",
-  //"testCompress",
   "createPlayerScore",
   "AppContextProvider",
   "OnClickFlowConfirm",
@@ -29,15 +28,16 @@ const hideCategory: string[] = [
   "onActionStart",
   "onActionEnd",
   "onItemAdd",
+  // "testCompress",
   //
-  // "onSetPhase",
-  // "onItemStateChange",
-  // "onItemStateDestroyReasonChange",
-  // "onAddImmediateEffect",
-  // "onEvent",
-  // "onEffectStart",
-  // "onEffectEnd",
-  // "onItemMove",
+  "onSetPhase",
+  "onItemStateChange",
+  "onItemStateDestroyReasonChange",
+  "onAddImmediateEffect",
+  "onEvent",
+  "onEffectStart",
+  "onEffectEnd",
+  "onItemMove",
   //"onItemDamageChange",
   //"onCountryDamage",
   // 
@@ -60,7 +60,8 @@ const hideCategory: string[] = [
   "isCardMaster",
   "createBasicForBattle",
   "createPreviewEffectScore",
-  //"createBasicForAttackBattle"
+  "createBasicForAttackBattle",
+  "checkIsBattle"
 ];
 const filterCategory = true;
 const filterWarn = false

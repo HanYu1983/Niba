@@ -126,11 +126,11 @@ export async function testThinkVer1() {
         throw new Error()
     }
     ctx = applyFlow(ctx, PlayerA, flow)
-    let bp = getBattleGroupBattlePoint(ctx, getBattleGroup(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1")), { ges: ges })
+    let bp = getBattleGroupBattlePoint(ctx, getBattleGroup(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1")), { ges: ges, isPredict: true })
     if (bp != 6) {
         throw new Error()
     }
-    bp = getBattleGroupBattlePoint(ctx, getBattleGroup(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア2")), { ges: ges })
+    bp = getBattleGroupBattlePoint(ctx, getBattleGroup(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア2")), { ges: ges, isPredict: true })
     if (bp != 6) {
         throw new Error()
     }
@@ -246,11 +246,11 @@ export async function testThinkVer1_2() {
         throw new Error()
     }
     ctx = applyFlow(ctx, PlayerA, flow)
-    let bp = getBattleGroupBattlePoint(ctx, getBattleGroup(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1")), { ges: ges })
+    let bp = getBattleGroupBattlePoint(ctx, getBattleGroup(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1")), { ges: ges, isPredict: true })
     if (bp != 0) {
         throw new Error()
     }
-    bp = getBattleGroupBattlePoint(ctx, getBattleGroup(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア2")), { ges: ges })
+    bp = getBattleGroupBattlePoint(ctx, getBattleGroup(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア2")), { ges: ges, isPredict: true })
     if (bp != 8) {
         console.log(bp)
         throw new Error()

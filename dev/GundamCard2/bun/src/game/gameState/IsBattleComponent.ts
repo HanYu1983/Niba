@@ -3,13 +3,17 @@ import { } from "./GameState";
 import { AbsoluteBaSyou, AbsoluteBaSyouFn } from "../define/BaSyou";
 import { PlayerA } from "../define/PlayerID";
 import { getItemBaSyou, getItemIdsByBasyou, ItemTableComponent } from "./ItemTableComponent";
+import { getSetGroupRoot, SetGroupComponent } from "./SetGroupComponent";
+import { logCategory } from "../../tool/logger";
+import { getPhase, PhaseComponent } from "./PhaseComponent";
 
 export type IsBattleComponent = {
   battleSnapshot: { [key: string]: string[] }
   table: Table
-} & ItemTableComponent
+} & ItemTableComponent & SetGroupComponent & PhaseComponent
 
 export function checkIsBattle(ctx: IsBattleComponent): IsBattleComponent {
+  logCategory("checkIsBattle", getPhase(ctx))
   AbsoluteBaSyouFn.getBattleArea().forEach(basyou => {
     ctx = {
       ...ctx,
@@ -23,11 +27,21 @@ export function checkIsBattle(ctx: IsBattleComponent): IsBattleComponent {
 }
 
 export function isBattleAtBasyou(ctx: IsBattleComponent, basyou: AbsoluteBaSyou): boolean {
-  return (ctx.battleSnapshot[AbsoluteBaSyouFn.toString(basyou)] || []).length > 0
+  const opponentBasyou = AbsoluteBaSyouFn.setOpponentPlayerID(basyou);
+  return getBattleGroupFromSnapshot(ctx, basyou).length + getBattleGroupFromSnapshot(ctx, opponentBasyou).length > 0
 }
 
-export function getItemIdsByBattleSnapshot(ctx: IsBattleComponent, basyou: AbsoluteBaSyou): string[] {
-  return ctx.battleSnapshot[AbsoluteBaSyouFn.toString(basyou)] || []
+export function getBattleGroupFromSnapshot(ctx: IsBattleComponent, basyou: AbsoluteBaSyou): string[] {
+  return (ctx.battleSnapshot[AbsoluteBaSyouFn.toString(basyou)] || []).filter(itemId => getSetGroupRoot(ctx, itemId) == itemId)
+}
+
+export function getItemBasyouFromSnapshot(ctx: IsBattleComponent, itemId: string): AbsoluteBaSyou | null {
+  for (const basyou of AbsoluteBaSyouFn.getBattleArea()) {
+    if ((ctx.battleSnapshot[AbsoluteBaSyouFn.toString(basyou)] || []).find(id => itemId == id)) {
+      return basyou
+    }
+  }
+  return null
 }
 
 export function isBattle(
@@ -36,11 +50,11 @@ export function isBattle(
   cardID2: string | null
 ): boolean {
   const baSyou1 = getItemBaSyou(ctx, cardID);
-  if (getItemIdsByBattleSnapshot(ctx, baSyou1).includes(cardID) == false) {
+  if (getBattleGroupFromSnapshot(ctx, baSyou1).includes(cardID) == false) {
     return false;
   }
   const baSyou2 = AbsoluteBaSyouFn.setOpponentPlayerID(baSyou1);
-  const opponentAreaIds = getItemIdsByBattleSnapshot(ctx, baSyou2)
+  const opponentAreaIds = getBattleGroupFromSnapshot(ctx, baSyou2)
   if (cardID2) {
     if (opponentAreaIds.includes(cardID2)) {
       return true

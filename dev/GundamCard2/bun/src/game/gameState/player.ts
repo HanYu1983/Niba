@@ -22,7 +22,7 @@ import { createDestroyEffect } from "./createDestroyEffect";
 import { getCard } from "./CardTableComponent";
 import { getCardBattleArea, getCardHasSpeicalEffect } from "./card";
 import { getActivePlayerID } from "./ActivePlayerComponent";
-import { isBattle } from "./IsBattleComponent";
+import { getBattleGroupFromSnapshot, isBattle } from "./IsBattleComponent";
 import { GlobalEffect } from "../define/GlobalEffect";
 import { GameStateFn } from ".";
 import { getGlobalEffects } from "./globalEffects";
@@ -86,7 +86,7 @@ export function doBattleDamage(ctx: GameState, playerId: string, guardUnits: str
         cardIds: [cs.id],
         playerId: playerId
       };
-      ctx = doTriggerEvent(ctx, gameEvent, { ges: options.ges })
+      ctx = doTriggerEvent(ctx, gameEvent, options)
       return {
         ...cs,
         damage: nextDamage,
@@ -116,7 +116,7 @@ export function doRuleBattleDamage(
   logCategory("handleAttackDamage", "willAttackPower", willAttackPower);
   if (willAttackUnits.length) {
     // 判斷速度1速度2是否可攻擊
-    const hasSpeedAttack = isABattleGroup(ctx, ["速攻"], willAttackUnits[0], { ges: options.ges });
+    const hasSpeedAttack = isABattleGroup(ctx, ["速攻"], willAttackUnits[0], options);
     if (
       // 有速攻的情況在速度1
       (hasSpeedAttack && speedPhase == 1) ||
@@ -132,14 +132,14 @@ export function doRuleBattleDamage(
       // 若傷害沒有用完, 攻擊方可以攻擊本國
       if (currentAttackPlayerID == getActivePlayerID(ctx) && currentAttackPower > 0) {
         // 非交戰中或有強襲才能打本國(p35)
-        if (isBattle(ctx, willAttackUnits[0], null) == false || isABattleGroup(ctx, ["強襲"], willAttackUnits[0], { ges: options.ges })) {
-          ctx = doCountryDamage(ctx, currentGuardPlayerID, currentAttackPower, { ges: options.ges })
+        if (isBattle(ctx, willAttackUnits[0], null) == false || isABattleGroup(ctx, ["強襲"], willAttackUnits[0], options)) {
+          ctx = doCountryDamage(ctx, currentGuardPlayerID, currentAttackPower, options)
           {
             const gameEvent: GameEvent = {
               title: ["このカードの部隊が敵軍本国に戦闘ダメージを与えた場合"],
               cardIds: willAttackUnits,
             };
-            ctx = doTriggerEvent(ctx, gameEvent, { ges: options.ges })
+            ctx = doTriggerEvent(ctx, gameEvent, options)
           }
         }
       }
@@ -156,15 +156,18 @@ export function doPlayerAttack(
   options: GameExtParams
 ): GameState {
   const guardPlayerID = PlayerIDFn.getOpponent(attackPlayerID)
-  const attackUnits = getBattleGroup(ctx, AbsoluteBaSyouFn.of(attackPlayerID, where));
-  const attackPower = getBattleGroupBattlePoint(ctx, attackUnits, { ges: options.ges });
-  const guardUnits = getBattleGroup(ctx, AbsoluteBaSyouFn.of(guardPlayerID, where));
-  const guardPower = getBattleGroupBattlePoint(ctx, guardUnits, { ges: options.ges });
+  // 注意, 規則上這裡要用交戰快照的機體, 而交戰是每個STEP前或機體加入離開時判斷
+  // 若在傷害判定之前時頭機被打爆了, 就會變成頭機不存在的情況, 這時的部隊順序也不會改變, 射擊機一樣算射擊力, 不會變成頭機
+  // 同樣, 在傷害判定前, 若已成立交戰情況, 就算防禦方機體都不見了, 一定不能打本國(P70)
+  const attackUnits = getBattleGroupFromSnapshot(ctx, AbsoluteBaSyouFn.of(attackPlayerID, where));
+  const attackPower = getBattleGroupBattlePoint(ctx, attackUnits, options);
+  const guardUnits = getBattleGroupFromSnapshot(ctx, AbsoluteBaSyouFn.of(guardPlayerID, where));
+  const guardPower = getBattleGroupBattlePoint(ctx, guardUnits, options);
   ctx = doRuleBattleDamage(ctx, speedPhase, attackPlayerID, guardPlayerID, attackUnits, guardUnits, attackPower, { ges: options?.ges })
   ctx = doRuleBattleDamage(ctx, speedPhase, guardPlayerID, attackPlayerID, guardUnits, attackUnits, guardPower, { ges: options?.ges });
   [...attackUnits, ...guardUnits].forEach(cardId => {
     const itemState = getItemState(ctx, cardId)
-    const [_, _2, hp] = getSetGroupBattlePoint(ctx, cardId, { ges: options.ges })
+    const [_, _2, hp] = getSetGroupBattlePoint(ctx, cardId, options)
     if (hp <= itemState.damage) {
       ctx = addDestroyEffect(ctx, createDestroyEffect(ctx, { id: "戦闘ダメージ", playerID: PlayerIDFn.getOpponent(getItemController(ctx, cardId)) }, cardId)) as GameState
     }

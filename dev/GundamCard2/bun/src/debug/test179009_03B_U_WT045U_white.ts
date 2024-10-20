@@ -19,6 +19,7 @@ import { loadPrototype } from "../script"
 import { getGlobalEffects, setGlobalEffects } from "../game/gameState/globalEffects"
 import { getBattleGroup, getBattleGroupBattlePoint } from "../game/gameState/battleGroup"
 import { doPlayerAttack } from "../game/gameState/player"
+import { checkIsBattle } from "../game/gameState/IsBattleComponent"
 
 export async function test179009_03B_U_WT045U_white() {
     await loadPrototype("179009_03B_U_WT045U_white")
@@ -33,17 +34,19 @@ export async function test179009_03B_U_WT045U_white() {
     ctx = setActivePlayerID(ctx, PlayerA) as GameState
     let ges = getGlobalEffects(ctx, null)
     ctx = setGlobalEffects(ctx, null, ges)
+    ctx = checkIsBattle(ctx) as GameState
     if (ges.find(ge => ge.title[0] == "このカードと交戦中の敵軍部隊の部隊戦闘力を_－３する") == null) {
         throw new Error()
     }
-    if (getBattleGroupBattlePoint(ctx, getBattleGroup(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1")), {ges: ges}) != -2) {
+    if (getBattleGroupBattlePoint(ctx, getBattleGroup(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1")), { ges: ges }) != -2) {
         throw new Error()
     }
-    if (getBattleGroupBattlePoint(ctx, getBattleGroup(ctx, AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア1")), {ges: ges}) != 1) {
+    if (getBattleGroupBattlePoint(ctx, getBattleGroup(ctx, AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア1")), { ges: ges }) != 1) {
         throw new Error()
     }
-    ctx = doPlayerAttack(ctx, PlayerA, "戦闘エリア1", 2, {ges: ges})
+    ctx = doPlayerAttack(ctx, PlayerA, "戦闘エリア1", 2, { ges: ges })
     if (getItemState(ctx, cardA.id).damage != 1) {
+        console.log(ctx.battleSnapshot)
         throw new Error()
     }
 }

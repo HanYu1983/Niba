@@ -1,3 +1,4 @@
+import { warnCategory } from "../../tool/logger";
 import { AbsoluteBaSyou, AbsoluteBaSyouFn } from "../define/BaSyou";
 import { TextSpeicalEffect } from "../define/CardText";
 import { GameExtParams } from "../define/GameExtParams";
@@ -6,6 +7,7 @@ import { getCardHasSpeicalEffect } from "./card";
 import { getCard } from "./CardTableComponent";
 import { GameState } from "./GameState";
 import { getGlobalEffects, setGlobalEffects } from "./globalEffects";
+import { getItemBasyouFromSnapshot, isBattleAtBasyou } from "./IsBattleComponent";
 import { getItemState } from "./ItemStateComponent";
 import { getItemIdsByBasyou, getItemBaSyou } from "./ItemTableComponent";
 import { getSetGroupBattlePoint, isSetGroupHasA } from "./setGroup";
@@ -23,14 +25,28 @@ export function getBattleGroup(
 
 export function getBattleGroupBattlePoint(
   ctx: GameState,
-  unitCardIDs: string[],
-  options: GameExtParams
+  unitIdsFromSnapshot: string[],
+  options: { isPredict?: boolean } & GameExtParams
 ): number {
-  if (unitCardIDs.length == 0) {
+  if (unitIdsFromSnapshot.length == 0) {
     return 0
   }
-  const attackPower = unitCardIDs
+  const attackPower = unitIdsFromSnapshot
     .map((cardID, i): number => {
+      if (options.isPredict) {
+
+      } else {
+        // 從快照的位置判斷機體還在不在原位, 若不在, 戰鬥力算0
+        const basyouFromSnapshot = getItemBasyouFromSnapshot(ctx, cardID)
+        if (basyouFromSnapshot == null) {
+          warnCategory("getBattleGroupBattlePoint", `從快照的位置判斷機體還在不在原位, 若不在, 戰鬥力算0 (1): ${cardID}`)
+          return 0
+        }
+        if (AbsoluteBaSyouFn.eq(basyouFromSnapshot, getItemBaSyou(ctx, cardID)) == false) {
+          warnCategory("getBattleGroupBattlePoint", `從快照的位置判斷機體還在不在原位, 若不在, 戰鬥力算0 (2): ${cardID}`)
+          return 0
+        }
+      }
       // 破壞的單位沒有攻擊力
       const cs = getItemState(ctx, cardID);
       if (cs.destroyReason != null) {
@@ -54,12 +70,12 @@ export function getBattleGroupBattlePoint(
     }).reduce((acc, c) => acc + c, 0);
   const bonus = options.ges?.map(ge => {
     if (ge.title[0] == "このカードの部隊の部隊戦闘力を_＋３する") {
-      const times = unitCardIDs.filter(unitId => ge.cardIds.includes(unitId)).length
+      const times = unitIdsFromSnapshot.filter(unitId => ge.cardIds.includes(unitId)).length
       return ge.title[1] * times
     }
     return 0
   }).reduce((acc, c) => acc + c, 0) || 0
-  const opponentBasyou = AbsoluteBaSyouFn.setOpponentPlayerID(getItemBaSyou(ctx, unitCardIDs[0]))
+  const opponentBasyou = AbsoluteBaSyouFn.setOpponentPlayerID(getItemBaSyou(ctx, unitIdsFromSnapshot[0]))
   const opponentBattleGroup = getBattleGroup(ctx, opponentBasyou)
   const bonus2 = options.ges?.map(ge => {
     if (ge.title[0] == "このカードと交戦中の敵軍部隊の部隊戦闘力を_－３する") {

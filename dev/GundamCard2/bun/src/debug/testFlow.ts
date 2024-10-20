@@ -5,6 +5,7 @@ import { getBattleGroupBattlePoint, getBattleGroup } from "../game/gameState/bat
 import { getCardBattlePoint } from "../game/gameState/card";
 import { addCards, createCardWithProtoIds } from "../game/gameState/CardTableComponent";
 import { clearGlobalEffects, createAllCardTexts, getGlobalEffects, setGlobalEffects } from "../game/gameState/globalEffects";
+import { checkIsBattle } from "../game/gameState/IsBattleComponent";
 import { getItemPrototype } from "../game/gameState/ItemTableComponent";
 import { setSetGroupParent } from "../game/gameState/SetGroupComponent";
 import { createGameStateWithFlowMemory, GameStateWithFlowMemory, initState } from "../game/gameStateWithFlowMemory/GameStateWithFlowMemory";
@@ -89,10 +90,11 @@ export async function testBattleBonus() {
   {
     let ges = getGlobalEffects(ctx, null)
     ctx = setGlobalEffects(ctx, null, ges) as GameStateWithFlowMemory
+    ctx = checkIsBattle(ctx) as GameStateWithFlowMemory
     const bta = getBattleGroupBattlePoint(
       ctx,
       getBattleGroup(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1")),
-      {ges: ges}
+      { ges: ges }
     );
     if (bta != 7) {
       throw new Error("must be 7");

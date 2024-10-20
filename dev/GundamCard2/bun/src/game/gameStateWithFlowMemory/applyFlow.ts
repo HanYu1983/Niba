@@ -257,10 +257,7 @@ export function applyFlow(
                                 }
                                 // p34
                                 // 戰鬥階段的每個步驟開始時，確認是否交戰中
-                                case "ステップ開始":
-                                case "ステップ終了":
-                                case "フリータイミング":
-                                case "フリータイミング2": {
+                                case "ステップ開始": {
                                     ctx = checkIsBattle(ctx) as GameStateWithFlowMemory
                                     ctx = updateCommand(ctx, { ges: getGlobalEffects(ctx, null) }) as GameStateWithFlowMemory
                                     ctx = {
@@ -274,8 +271,11 @@ export function applyFlow(
                                     ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }, { ges: getGlobalEffects(ctx, null) }) as GameStateWithFlowMemory;
                                     break
                                 }
-                                default: {
+                                case "ステップ終了":
+                                case "フリータイミング":
+                                case "フリータイミング2": {
                                     ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }, { ges: getGlobalEffects(ctx, null) }) as GameStateWithFlowMemory;
+                                    break
                                 }
                             }
                             break
@@ -287,9 +287,6 @@ export function applyFlow(
                                     break
                                 }
                                 case "ステップ開始":
-                                case "ステップ終了":
-                                case "フリータイミング":
-                                case "フリータイミング2": {
                                     ctx = checkIsBattle(ctx) as GameStateWithFlowMemory
                                     ctx = updateCommand(ctx, { ges: getGlobalEffects(ctx, null) }) as GameStateWithFlowMemory
                                     ctx = {
@@ -302,8 +299,9 @@ export function applyFlow(
                                     }
                                     ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }, { ges: getGlobalEffects(ctx, null) }) as GameStateWithFlowMemory;
                                     break
-                                }
-                                default: {
+                                case "ステップ終了":
+                                case "フリータイミング":
+                                case "フリータイミング2": {
                                     ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }, { ges: getGlobalEffects(ctx, null) }) as GameStateWithFlowMemory;
                                 }
                             }
@@ -315,10 +313,7 @@ export function applyFlow(
                                     ctx = addImmediateEffect(ctx, createDamageRuleEffect(ctx, ctx.activePlayerID)) as GameStateWithFlowMemory
                                     break
                                 }
-                                case "ステップ開始":
-                                case "ステップ終了":
-                                case "フリータイミング":
-                                case "フリータイミング2": {
+                                case "ステップ開始": {
                                     ctx = checkIsBattle(ctx) as GameStateWithFlowMemory
                                     ctx = updateCommand(ctx, { ges: getGlobalEffects(ctx, null) }) as GameStateWithFlowMemory
                                     ctx = {
@@ -332,7 +327,9 @@ export function applyFlow(
                                     ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }, { ges: getGlobalEffects(ctx, null) }) as GameStateWithFlowMemory;
                                     break
                                 }
-                                default: {
+                                case "ステップ終了":
+                                case "フリータイミング":
+                                case "フリータイミング2": {
                                     ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }, { ges: getGlobalEffects(ctx, null) }) as GameStateWithFlowMemory;
                                 }
                             }
@@ -344,16 +341,15 @@ export function applyFlow(
                                     ctx = addImmediateEffect(ctx, createReturnRuleEffect(ctx, ctx.activePlayerID)) as GameStateWithFlowMemory
                                     break
                                 }
-                                case "ステップ開始":
-                                case "ステップ終了":
-                                case "フリータイミング":
-                                case "フリータイミング2": {
+                                case "ステップ開始": {
                                     ctx = checkIsBattle(ctx) as GameStateWithFlowMemory
                                     ctx = updateCommand(ctx, { ges: getGlobalEffects(ctx, null) }) as GameStateWithFlowMemory
                                     ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }, { ges: getGlobalEffects(ctx, null) }) as GameStateWithFlowMemory;
                                     break
                                 }
-                                default: {
+                                case "ステップ終了":
+                                case "フリータイミング":
+                                case "フリータイミング2": {
                                     ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }, { ges: getGlobalEffects(ctx, null) }) as GameStateWithFlowMemory;
                                 }
                             }

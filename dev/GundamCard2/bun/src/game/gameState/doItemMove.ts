@@ -16,6 +16,7 @@ import { EffectFn } from "../define/Effect"
 import { GlobalEffect } from "../define/GlobalEffect"
 import { logCategory } from "../../tool/logger"
 import { GameExtParams } from "../define/GameExtParams"
+import { checkIsBattle } from "./IsBattleComponent"
 
 export function doItemMove(ctx: GameState, to: AbsoluteBaSyou, [itemId, from]: StrBaSyouPair, options: GameExtParams & { isSkipTargetMissing?: boolean, insertId?: number }): GameState {
     logCategory("doItemMove", "")
@@ -139,6 +140,8 @@ export function onMoveItem(ctx: GameState, to: AbsoluteBaSyou, [cardId, from]: S
                 isFaceDown: false,
             }
         }) as GameState
+    } else if ((["戦闘エリア1", "戦闘エリア2"] as BaSyouKeyword[]).includes(AbsoluteBaSyouFn.getBaSyouKeyword(to))) {
+        ctx = checkIsBattle(ctx) as GameState
     }
     ctx = doTriggerEvent(ctx, {
         title: ["GameEventOnMove", from, to],
