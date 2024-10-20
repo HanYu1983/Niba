@@ -25,8 +25,8 @@ export const CardStackView = (props: {
     appContext.viewModel.model.gameState.table.cardStack,
   ]);
   const ges = useMemo(() => {
-    return getGlobalEffects(appContext.viewModel.model.gameState, null)
-  }, [appContext.viewModel.model.gameState])
+    return appContext.viewModel.localMemory.globalEffects
+  }, [appContext.viewModel.localMemory.globalEffects])
   // 整個setGroup一起移動
   const cardsOnlySetGroupRoot = useMemo(() => {
     return cards.filter((cardId) => {

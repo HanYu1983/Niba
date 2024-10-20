@@ -80,8 +80,8 @@ export const CardView = (props: {
     return card.isFaceDown != true
   }, [props.clientId, props.isCheat, card, appContext.viewModel.model.gameState, itemState]);
   const ges = useMemo(() => {
-    return getGlobalEffects(appContext.viewModel.model.gameState, null)
-  }, [appContext.viewModel.model.gameState])
+    return appContext.viewModel.localMemory.globalEffects
+  }, [appContext.viewModel.localMemory.globalEffects])
   const renderBp = useMemo(() => {
     const bp = getSetGroupBattlePoint(appContext.viewModel.model.gameState, props.cardID || "unknown", { ges: ges })
     return <div>{bp[0]}/{bp[1]}/{bp[2]}</div>

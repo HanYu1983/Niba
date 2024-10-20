@@ -14,6 +14,7 @@ const hideCategory: string[] = [
   "setEffectTips",
   "doTriggerEvent",
   "createPlayEffects",
+  "createPlayEffect",
   "getConditionTitleFn",
   "createPlayCardEffects",
   "addImmediateEffectIfCanPayCost",
@@ -29,14 +30,16 @@ const hideCategory: string[] = [
   "onActionEnd",
   "onItemAdd",
   //
-  "onSetPhase",
-  "onItemStateChange",
-  "onItemStateDestroyReasonChange",
-  "onAddImmediateEffect",
-  "onEvent",
-  "onEffectStart",
-  "onEffectEnd",
-  "onItemMove",
+  // "onSetPhase",
+  // "onItemStateChange",
+  // "onItemStateDestroyReasonChange",
+  // "onAddImmediateEffect",
+  // "onEvent",
+  // "onEffectStart",
+  // "onEffectEnd",
+  // "onItemMove",
+  //"onItemDamageChange",
+  //"onCountryDamage",
   // 
   "createTextsFromSpecialEffect",
   "getCardIdsCanPayRollCost",
@@ -53,17 +56,14 @@ const hideCategory: string[] = [
   "createPlayCharacterOperationEffect",
   "createPlayStayEffect",
   "createPlayUnitEffect",
-  "getGlobalEffects",
   "createAllCardTexts",
   "isCardMaster",
   "createBasicForBattle",
-  "onItemDamageChange",
-  "onCountryDamage",
   "createPreviewEffectScore",
   //"createBasicForAttackBattle"
 ];
 const filterCategory = true;
-const filterWarn = true
+const filterWarn = false
 
 export const logCategory = (category: string, ...msg: any[]) => {
   if (filterCategory) {

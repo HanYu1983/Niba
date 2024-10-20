@@ -44,7 +44,8 @@ export const prototype: CardPrototype = {
           title: ["RollColor", null],
           actions: [
             {
-              title: ["_ロールする", "ロール"]
+              title: ["_ロールする", "ロール"],
+              vars: ["〔X〕"]
             }
           ]
         },

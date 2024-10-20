@@ -16,7 +16,7 @@ import { getGlobalEffects, setGlobalEffects } from "../../gameState/globalEffect
 import { getItemState } from "../../gameState/ItemStateComponent";
 import { createStrBaSyouPair, getItemIdsByBasyou, getItemPrototype } from "../../gameState/ItemTableComponent";
 import { getPhase } from "../../gameState/PhaseComponent";
-import { createPlayerScore, createPreviewEffectScore, getPlayerGIds, getPlayerHandIds, getPlayerUnitCanGoEarthIds, getPlayerUnitCanGoSpaceIds, getPlayerUnitIds } from "../../gameState/player";
+import { createPlayerScore, createPlayerUnitBattlePointScore, createPreviewEffectScore, getPlayerGIds, getPlayerHandIds, getPlayerUnitCanGoEarthIds, getPlayerUnitCanGoSpaceIds, getPlayerUnitIds } from "../../gameState/player";
 import { getSetGroupBattlePoint, isMeleeUnit, isRangeUnit } from "../../gameState/setGroup";
 import { Flow } from "../Flow";
 import { GameStateWithFlowMemory } from "../GameStateWithFlowMemory";
@@ -33,6 +33,11 @@ function getUnitIds(ctx: GameState, playerId: string, isAttack: boolean, isDefen
       const opponentGoEarthIds = getPlayerUnitCanGoEarthIds(ctx, opponentPlayerId, { ges: ges })
       const opponentGoSpaceIds = getPlayerUnitCanGoSpaceIds(ctx, opponentPlayerId, { ges: ges })
       if (opponentGoEarthIds.length == 0 && opponentGoSpaceIds.length == 0) {
+        const opponentBpScore = createPlayerUnitBattlePointScore(ctx, opponentPlayerId, {ges: ges});
+        const bpScore = createPlayerUnitBattlePointScore(ctx, playerId, {ges: ges});
+        if(opponentBpScore > bpScore){
+          return [[], []]
+        }
         [earthIds, spaceIds] = createBattleGroupForAttackCountry(ctx, playerId, { ges: ges })
       } else {
         [earthIds, spaceIds] = createBattleGroupForAttackBattle(ctx, playerId, { ges: ges })

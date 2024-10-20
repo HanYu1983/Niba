@@ -242,6 +242,13 @@ export function getPlayerOperationIds(ctx: GameState, playerId: PlayerID): strin
   return lift(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getBaAll()).flatMap(basyou => getItemIdsByBasyou(ctx, basyou)).filter(itemId => getItemPrototype(ctx, itemId).category == "オペレーション")
 }
 
+export function createPlayerUnitBattlePointScore(ctx: GameState, playerId: string, options: GameExtParams): number {
+  return getPlayerUnitIds(ctx, playerId).map(id => {
+    const [atk, range, hp] = getSetGroupBattlePoint(ctx, id, options)
+    return atk + range + hp
+  }).reduce((acc, c) => acc + c, 0)
+}
+
 export function createPlayerScore(ctx: GameState, playerId: string, options: GameExtParams): number {
   const units = getPlayerUnitIds(ctx, playerId)
   const chars = getPlayerCharacterIds(ctx, playerId)
@@ -267,12 +274,12 @@ export function createPlayerScore(ctx: GameState, playerId: string, options: Gam
     if (getItemState(ctx, id).destroyReason) {
       return 0
     }
-    const [atk, range, hp] = getSetGroupBattlePoint(ctx, id, { ges: options.ges })
+    const [atk, range, hp] = getSetGroupBattlePoint(ctx, id, options)
     return atk + range + hp
   }).reduce((acc, c) => acc + c, 0)
-  const specialScore1 = units.filter(id => getCardHasSpeicalEffect(ctx, ["速攻"], id, { ges: options.ges })).length * 2
-  const specialScore2 = units.filter(id => getCardHasSpeicalEffect(ctx, ["高機動"], id, { ges: options.ges })).length * 2
-  const specialScore3 = units.filter(id => getCardHasSpeicalEffect(ctx, ["強襲"], id, { ges: options.ges })).length * 2
+  const specialScore1 = units.filter(id => getCardHasSpeicalEffect(ctx, ["速攻"], id, options)).length * 2
+  const specialScore2 = units.filter(id => getCardHasSpeicalEffect(ctx, ["高機動"], id, options)).length * 2
+  const specialScore3 = units.filter(id => getCardHasSpeicalEffect(ctx, ["強襲"], id, options)).length * 2
   const total = gScore + unitScore + charScore + opScore + handScore + destroyScore + junkyardScore + rollScore + bpScore + specialScore1 + specialScore2 + specialScore3
   logCategory("createPlayerScore", "=======", playerId)
   logCategory("createPlayerScore", "gScore:", gScore)

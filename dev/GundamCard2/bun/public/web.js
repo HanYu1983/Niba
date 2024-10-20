@@ -17342,6 +17342,7 @@ var hideCategory = [
   "setEffectTips",
   "doTriggerEvent",
   "createPlayEffects",
+  "createPlayEffect",
   "getConditionTitleFn",
   "createPlayCardEffects",
   "addImmediateEffectIfCanPayCost",
@@ -17355,14 +17356,6 @@ var hideCategory = [
   "onActionStart",
   "onActionEnd",
   "onItemAdd",
-  "onSetPhase",
-  "onItemStateChange",
-  "onItemStateDestroyReasonChange",
-  "onAddImmediateEffect",
-  "onEvent",
-  "onEffectStart",
-  "onEffectEnd",
-  "onItemMove",
   "createTextsFromSpecialEffect",
   "getCardIdsCanPayRollCost",
   "getCardIdsCanPayRollColor",
@@ -17378,12 +17371,9 @@ var hideCategory = [
   "createPlayCharacterOperationEffect",
   "createPlayStayEffect",
   "createPlayUnitEffect",
-  "getGlobalEffects",
   "createAllCardTexts",
   "isCardMaster",
   "createBasicForBattle",
-  "onItemDamageChange",
-  "onCountryDamage",
   "createPreviewEffectScore"
 ];
 var logCategory = (category, ...msg) => {
@@ -17391,7 +17381,7 @@ var logCategory = (category, ...msg) => {
     return;
   console.log(`[${(/* @__PURE__ */ new Date()).toLocaleTimeString()}][${category}]`, ...msg);
 }, warnCategory = (category, ...msg) => {
-  return;
+  console.warn(`[${(/* @__PURE__ */ new Date()).toLocaleTimeString()}][${category}]`, ...msg);
 };
 
 // src/tool/table/index.ts
@@ -20454,6 +20444,7 @@ __export(exports_player, {
   doPlayerAttack: () => doPlayerAttack,
   doBattleDamage: () => doBattleDamage,
   createPreviewEffectScore: () => createPreviewEffectScore,
+  createPlayerUnitBattlePointScore: () => createPlayerUnitBattlePointScore,
   createPlayerScore: () => createPlayerScore
 });
 
@@ -21582,14 +21573,14 @@ function createEntityIterator(ctx2) {
 function createTipByEntitySearch(ctx2, effect, searchOptions, options) {
   const cardId = EffectFn.getCardID(effect), prototype = getItemPrototype(ctx2, cardId);
   let entityList = createEntityIterator(ctx2);
-  if ((options?.ges?.filter((ge) => ge.title[0] == "\u6575\u8ECD\u52B9\u679C\u306E\u5BFE\u8C61\u306B\u306A\u3089\u306A\u3044").flatMap((ge) => ge.cardIds) || []).length) {
+  if ((options?.ges?.filter((ge) => ge.title[0] == "\u6575\u8ECD\u52B9\u679C\u306E\u5BFE\u8C61\u306B\u306A\u3089\u306A\u3044").flatMap((ge) => ge.cardIds.includes(cardId)) || []).length) {
     const effectController = EffectFn.getPlayerID(effect);
     entityList = entityList.filter((entity) => {
       return getItemController(ctx2, entity.itemId) == effectController;
     });
   }
   if (getItemRuntimeCategory(ctx2, cardId) == "\u30E6\u30CB\u30C3\u30C8") {
-    if ((options?.ges?.filter((ge) => ge.title[0] == "\u6575\u8ECD\u30E6\u30CB\u30C3\u30C8\u306E\u52B9\u679C\u306E\u5BFE\u8C61\u306B\u306A\u3089\u306A\u3044").flatMap((ge) => ge.cardIds) || []).length) {
+    if ((options?.ges?.filter((ge) => ge.title[0] == "\u6575\u8ECD\u30E6\u30CB\u30C3\u30C8\u306E\u52B9\u679C\u306E\u5BFE\u8C61\u306B\u306A\u3089\u306A\u3044").flatMap((ge) => ge.cardIds.includes(cardId)) || []).length) {
       const effectController = EffectFn.getPlayerID(effect);
       entityList = entityList.filter((entity) => {
         return getItemController(ctx2, entity.itemId) == effectController;
@@ -22404,15 +22395,21 @@ function getPlayerCharacterIds(ctx2, playerId) {
 function getPlayerOperationIds(ctx2, playerId) {
   return lift_default(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getBaAll()).flatMap((basyou) => getItemIdsByBasyou(ctx2, basyou)).filter((itemId) => getItemPrototype(ctx2, itemId).category == "\u30AA\u30DA\u30EC\u30FC\u30B7\u30E7\u30F3");
 }
+function createPlayerUnitBattlePointScore(ctx2, playerId, options) {
+  return getPlayerUnitIds(ctx2, playerId).map((id) => {
+    const [atk, range3, hp] = getSetGroupBattlePoint(ctx2, id, options);
+    return atk + range3 + hp;
+  }).reduce((acc, c) => acc + c, 0);
+}
 function createPlayerScore(ctx2, playerId, options) {
   const units = getPlayerUnitIds(ctx2, playerId), chars = getPlayerCharacterIds(ctx2, playerId), gs = getPlayerGIds(ctx2, playerId), ops = getPlayerOperationIds(ctx2, playerId), hands = getPlayerHandIds(ctx2, playerId), destroyIds = ctx2.destroyEffect.filter((eid) => getItemController(ctx2, EffectFn.getCardID(getEffect(ctx2, eid))) == playerId), junkyardIds = getPlayerJunkyardIds(ctx2, playerId), gScore = gs.length * 3, unitScore = units.length * 5, charScore = chars.length, opScore = Math.max(3, ops.length) * 3, handScore = hands.length * 3, destroyScore = destroyIds.length * -10, junkyardScore = junkyardIds.length * -1, rollScore = [...gs, ...units].filter((itemId) => getCard(ctx2, itemId).isRoll).length * -5, bpScore = units.map((id) => {
     if (getCard(ctx2, id).isRoll)
       return 0;
     if (getItemState(ctx2, id).destroyReason)
       return 0;
-    const [atk, range3, hp] = getSetGroupBattlePoint(ctx2, id, { ges: options.ges });
+    const [atk, range3, hp] = getSetGroupBattlePoint(ctx2, id, options);
     return atk + range3 + hp;
-  }).reduce((acc, c) => acc + c, 0), specialScore1 = units.filter((id) => getCardHasSpeicalEffect(ctx2, ["\u901F\u653B"], id, { ges: options.ges })).length * 2, specialScore2 = units.filter((id) => getCardHasSpeicalEffect(ctx2, ["\u9AD8\u6A5F\u52D5"], id, { ges: options.ges })).length * 2, specialScore3 = units.filter((id) => getCardHasSpeicalEffect(ctx2, ["\u5F37\u8972"], id, { ges: options.ges })).length * 2, total = gScore + unitScore + charScore + opScore + handScore + destroyScore + junkyardScore + rollScore + bpScore + specialScore1 + specialScore2 + specialScore3;
+  }).reduce((acc, c) => acc + c, 0), specialScore1 = units.filter((id) => getCardHasSpeicalEffect(ctx2, ["\u901F\u653B"], id, options)).length * 2, specialScore2 = units.filter((id) => getCardHasSpeicalEffect(ctx2, ["\u9AD8\u6A5F\u52D5"], id, options)).length * 2, specialScore3 = units.filter((id) => getCardHasSpeicalEffect(ctx2, ["\u5F37\u8972"], id, options)).length * 2, total = gScore + unitScore + charScore + opScore + handScore + destroyScore + junkyardScore + rollScore + bpScore + specialScore1 + specialScore2 + specialScore3;
   return logCategory("createPlayerScore", "=======", playerId), logCategory("createPlayerScore", "gScore:", gScore), logCategory("createPlayerScore", "unitScore:", unitScore), logCategory("createPlayerScore", "charScore:", charScore), logCategory("createPlayerScore", "opScore:", opScore), logCategory("createPlayerScore", "handScore:", handScore), logCategory("createPlayerScore", "destroyScore:", destroyScore), logCategory("createPlayerScore", "junkyardScore:", junkyardScore), logCategory("createPlayerScore", "rollScore:", rollScore), logCategory("createPlayerScore", "bpScore:", bpScore), logCategory("createPlayerScore", "specialScore1:", specialScore1), logCategory("createPlayerScore", "specialScore2:", specialScore2), logCategory("createPlayerScore", "specialScore3:", specialScore3), logCategory("createPlayerScore", "total:", total), total;
 }
 function createPreviewEffectScore(ctx2, playerId, effects, options) {
@@ -23848,8 +23845,8 @@ function createDamageRuleEffect(ctx2, playerId) {
           actions: [
             {
               title: function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2, Options }) {
-                const ges = Options.ges || [], playerId2 = DefineFn2.EffectFn.getPlayerID(effect);
-                return ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, "\u6226\u95D8\u30A8\u30EA\u30A21", 1, { ges }), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, "\u6226\u95D8\u30A8\u30EA\u30A22", 1, { ges }), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, "\u6226\u95D8\u30A8\u30EA\u30A21", 2, { ges }), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, "\u6226\u95D8\u30A8\u30EA\u30A22", 2, { ges }), ctx3;
+                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect);
+                return ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, "\u6226\u95D8\u30A8\u30EA\u30A21", 1, Options), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, "\u6226\u95D8\u30A8\u30EA\u30A22", 1, Options), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, "\u6226\u95D8\u30A8\u30EA\u30A21", 2, Options), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, "\u6226\u95D8\u30A8\u30EA\u30A22", 2, Options), ctx3;
               }.toString()
             }
           ]
@@ -25513,7 +25510,8 @@ var DEFAULT_VIEW_MODEL = {
   localMemory: {
     clientId: null,
     timing: PhaseFn.getFirst(),
-    lastPassPhase: !1
+    lastPassPhase: !1,
+    globalEffects: []
   }
 }, OnViewModel = OnEvent.pipe(scan((viewModel, evt) => {
   window.__gameState__ = viewModel.model.gameState, logCategory("OnViewModel", "evt", evt);
@@ -25543,7 +25541,7 @@ var DEFAULT_VIEW_MODEL = {
         logCategory("OnClickFlowConfirm", "before applyFlow", viewModel.model.gameState);
         const gameState = applyFlow(viewModel.model.gameState, evt.clientId, evt.flow);
         logCategory("OnClickFlowConfirm", "after applyFlow", viewModel.model.gameState);
-        const playerAFlow = queryFlow(gameState, PlayerA), playerBFlow = queryFlow(gameState, PlayerB);
+        const playerAFlow = queryFlow(gameState, PlayerA), playerBFlow = queryFlow(gameState, PlayerB), ges = getGlobalEffects(gameState, null);
         return {
           ...viewModel,
           model: {
@@ -25559,7 +25557,8 @@ var DEFAULT_VIEW_MODEL = {
           localMemory: {
             clientId: evt.clientId,
             timing: getPhase(gameState),
-            lastPassPhase: gameState.flowMemory.hasPlayerPassPhase[evt.clientId] || !1
+            lastPassPhase: gameState.flowMemory.hasPlayerPassPhase[evt.clientId] || !1,
+            globalEffects: ges
           }
         };
       }
@@ -25680,8 +25679,8 @@ var jsx_dev_runtime2 = __toESM(require_react_jsx_dev_runtime_development(), 1), 
       }
     return card.isFaceDown != !0;
   }, [props.clientId, props.isCheat, card, appContext.viewModel.model.gameState, itemState]), ges = import_react2.useMemo(() => {
-    return getGlobalEffects(appContext.viewModel.model.gameState, null);
-  }, [appContext.viewModel.model.gameState]), renderBp = import_react2.useMemo(() => {
+    return appContext.viewModel.localMemory.globalEffects;
+  }, [appContext.viewModel.localMemory.globalEffects]), renderBp = import_react2.useMemo(() => {
     const bp = getSetGroupBattlePoint(appContext.viewModel.model.gameState, props.cardID || "unknown", { ges });
     return /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
       children: [
@@ -26175,8 +26174,8 @@ var jsx_dev_runtime6 = __toESM(require_react_jsx_dev_runtime_development(), 1), 
     props.cardPosition,
     appContext.viewModel.model.gameState.table.cardStack
   ]), ges = import_react6.useMemo(() => {
-    return getGlobalEffects(appContext.viewModel.model.gameState, null);
-  }, [appContext.viewModel.model.gameState]), cardsOnlySetGroupRoot = import_react6.useMemo(() => {
+    return appContext.viewModel.localMemory.globalEffects;
+  }, [appContext.viewModel.localMemory.globalEffects]), cardsOnlySetGroupRoot = import_react6.useMemo(() => {
     return cards.filter((cardId) => {
       return getSetGroupRoot(appContext.viewModel.model.gameState, cardId) == cardId;
     });
@@ -26850,9 +26849,12 @@ function getUnitIds(ctx2, playerId, isAttack, isDefence, ges) {
   if (currentKey != key) {
     if (currentKey = key, isAttack) {
       const opponentPlayerId = PlayerIDFn.getOpponent(playerId), opponentGoEarthIds = getPlayerUnitCanGoEarthIds(ctx2, opponentPlayerId, { ges }), opponentGoSpaceIds = getPlayerUnitCanGoSpaceIds(ctx2, opponentPlayerId, { ges });
-      if (opponentGoEarthIds.length == 0 && opponentGoSpaceIds.length == 0)
+      if (opponentGoEarthIds.length == 0 && opponentGoSpaceIds.length == 0) {
+        const opponentBpScore = createPlayerUnitBattlePointScore(ctx2, opponentPlayerId, { ges }), bpScore = createPlayerUnitBattlePointScore(ctx2, playerId, { ges });
+        if (opponentBpScore > bpScore)
+          return [[], []];
         [earthIds, spaceIds] = createBattleGroupForAttackCountry(ctx2, playerId, { ges });
-      else
+      } else
         [earthIds, spaceIds] = createBattleGroupForAttackBattle(ctx2, playerId, { ges });
     } else if (isDefence) {
       const opponentPlayerId = PlayerIDFn.getOpponent(playerId), opponentGoEarthIds = getItemIdsByBasyou(ctx2, AbsoluteBaSyouFn.of(opponentPlayerId, "\u6226\u95D8\u30A8\u30EA\u30A21")), opponentGoSpaceIds = getItemIdsByBasyou(ctx2, AbsoluteBaSyouFn.of(opponentPlayerId, "\u6226\u95D8\u30A8\u30EA\u30A22"));
@@ -27025,7 +27027,7 @@ function AppView() {
       /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(ControlView, {}, void 0, !1, void 0, this),
       /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(PlayerController, {
         clientId: PlayerA,
-        isPlayer: !1
+        isPlayer: !0
       }, void 0, !1, void 0, this),
       /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(PlayerController, {
         clientId: PlayerB,

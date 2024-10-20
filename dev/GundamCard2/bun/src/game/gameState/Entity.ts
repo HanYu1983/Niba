@@ -89,7 +89,7 @@ export function createTipByEntitySearch(ctx: GameState, effect: Effect, searchOp
     const prototype = getItemPrototype(ctx, cardId)
     let entityList = createEntityIterator(ctx)
     {
-        const opponentEffectNotTargetIds = options?.ges?.filter(ge => ge.title[0] == "敵軍効果の対象にならない").flatMap(ge => ge.cardIds) || []
+        const opponentEffectNotTargetIds = options?.ges?.filter(ge => ge.title[0] == "敵軍効果の対象にならない").flatMap(ge => ge.cardIds.includes(cardId)) || []
         if (opponentEffectNotTargetIds.length) {
             const effectController = EffectFn.getPlayerID(effect)
             entityList = entityList.filter(entity => {
@@ -99,7 +99,7 @@ export function createTipByEntitySearch(ctx: GameState, effect: Effect, searchOp
     }
     {
         if (getItemRuntimeCategory(ctx, cardId) == "ユニット") {
-            const opponentUnitEffectNotTargetIds = options?.ges?.filter(ge => ge.title[0] == "敵軍ユニットの効果の対象にならない").flatMap(ge => ge.cardIds) || []
+            const opponentUnitEffectNotTargetIds = options?.ges?.filter(ge => ge.title[0] == "敵軍ユニットの効果の対象にならない").flatMap(ge => ge.cardIds.includes(cardId)) || []
             if (opponentUnitEffectNotTargetIds.length) {
                 const effectController = EffectFn.getPlayerID(effect)
                 entityList = entityList.filter(entity => {
