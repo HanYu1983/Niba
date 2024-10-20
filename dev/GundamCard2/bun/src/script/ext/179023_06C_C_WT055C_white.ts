@@ -51,7 +51,7 @@ export const prototype: CardPrototype = {
       const cardId = DefineFn.EffectFn.getCardID(effect)
       const cardController = GameStateFn.getItemController(ctx, cardId)
       if (evt.title[0] == "GameEventOnTiming"
-        && DefineFn.PhaseFn.eq(evt.title[1], DefineFn.PhaseFn.getLastTriigerEffect())
+        && DefineFn.PhaseFn.eq(evt.title[1], DefineFn.PhaseFn.getLast())
         && GameStateFn.getItemState(ctx, cardId).flags.enabled
       ) {
         ctx = GameStateFn.doPlayerDrawCard(ctx, 1, cardController, Options)

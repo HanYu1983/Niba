@@ -109,7 +109,7 @@ export const PhaseFn = {
         return all[all.length - 1]
     },
     // p41
-    getLastTriigerEffect(): Phase {
+    getLastTrigerEffect(): Phase {
         return ["戦闘フェイズ", "ターン終了時", "効果解決"]
     },
     getNext(timing: Phase): Phase {

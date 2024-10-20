@@ -38,7 +38,7 @@ export const prototype: CardPrototype = {
           ctx = GameStateFn.mapItemState(ctx, cardId, is => DefineFn.ItemStateFn.setFlag(is, "enabled", true, { isRemoveOnTurnEnd: true })) as GameState
         }
         if (event.title[0] == "GameEventOnTiming"
-          && DefineFn.PhaseFn.eq(event.title[1], DefineFn.PhaseFn.getLastTriigerEffect())) {
+          && DefineFn.PhaseFn.eq(event.title[1], DefineFn.PhaseFn.getLastTrigerEffect())) {
           if (GameStateFn.getItemState(ctx, cardId).flags.enabled) {
             ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardOwner, "本国"), GameStateFn.createStrBaSyouPair(ctx, cardId), Options)
           }
