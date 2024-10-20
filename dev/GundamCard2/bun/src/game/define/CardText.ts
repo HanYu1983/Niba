@@ -157,7 +157,6 @@ export type ConditionTitle =
     // | ["_自軍手札、または自軍ハンガーにある、_６以下の合計国力を持つ_ユニット_１枚を", RelatedPlayerSideKeyword, number, CardCategory, number]
     // | ["打開自軍手裡或指定HANGER中特徵_A並合計國力_x以下的_1張卡", string, number, number]
     | ["このカードの_本来のテキスト１つ", boolean, number]
-    | ["_自軍_本國上的_1張卡", RelatedPlayerSideKeyword, BaSyouKeyword, number]
     | ["_自軍_本國找出特徵_A的_1張卡", RelatedPlayerSideKeyword, BaSyouKeyword, string, number]
     // | ["這張卡交戰的防禦力_x以下的敵軍機體_1張", number, number]
     // | ["_配備エリアにいる、「特徴：_T3部隊」を持つ_自軍_ユニット_１枚", BaSyouKeyword, string, RelatedPlayerSideKeyword, CardCategory, number]
