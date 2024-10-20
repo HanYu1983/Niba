@@ -6,6 +6,7 @@ import { getItemBaSyou, getItemIdsByBasyou, ItemTableComponent } from "./ItemTab
 import { getSetGroupRoot, SetGroupComponent } from "./SetGroupComponent";
 import { logCategory } from "../../tool/logger";
 import { getPhase, PhaseComponent } from "./PhaseComponent";
+import { doTriggerEvent } from "./doTriggerEvent";
 
 export type IsBattleComponent = {
   battleSnapshot: { [key: string]: string[] }
@@ -15,11 +16,19 @@ export type IsBattleComponent = {
 export function checkIsBattle(ctx: IsBattleComponent): IsBattleComponent {
   logCategory("checkIsBattle", getPhase(ctx))
   AbsoluteBaSyouFn.getBattleArea().forEach(basyou => {
+    const originState = isBattleAtBasyou(ctx, basyou)
     ctx = {
       ...ctx,
       battleSnapshot: {
         ...ctx.battleSnapshot,
         [AbsoluteBaSyouFn.toString(basyou)]: getItemIdsByBasyou(ctx, basyou)
+      }
+    }
+    const newState = isBattleAtBasyou(ctx, basyou)
+    if (originState != newState) {
+      if (newState) {
+        // TODO
+        // ctx = doTriggerEvent(ctx, {title:["交戦中となった場合"], cardIds: getItemIdsByBasyou(ctx, basyou)}, {})
       }
     }
   })
@@ -64,19 +73,4 @@ export function isBattle(
     return true
   }
   return false
-  // const baSyou1 = getItemBaSyou(ctx, cardID);
-  // if (ctx.isBattle[AbsoluteBaSyouFn.toString(baSyou1)] != true) {
-  //   return false;
-  // }
-  // if (cardID2 != null) {
-  //   const baSyou2 = AbsoluteBaSyouFn.setOpponentPlayerID(baSyou1);
-  //   const isFindCardID2 =
-  //     ctx.table.cardStack[AbsoluteBaSyouFn.toString(baSyou2)].find((cardId) => {
-  //       return cardId == cardID2;
-  //     }) != null;
-  //   if (isFindCardID2 == false) {
-  //     return false;
-  //   }
-  // }
-  // return true;
 }
