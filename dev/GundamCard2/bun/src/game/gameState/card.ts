@@ -150,7 +150,7 @@ export function getCardTotalCostLength(ctx: GameState, cardID: string, options: 
   return totalCost + added;
 }
 
-export function getCardIdsCanPayRollCost(ctx: GameState, playerId: PlayerID, options: { ges?: GlobalEffect[] }): string[] {
+export function getCardIdsCanPayRollCost(ctx: GameState, playerId: PlayerID, options: GameExtParams): string[] {
   logCategory("getCardIdsCanPayRollCost", "")
   return options?.ges?.filter(ge => ge.title[0] == "發生國力")
     .flatMap(ge => ge.cardIds)
@@ -161,7 +161,7 @@ export function getCardIdsCanPayRollCost(ctx: GameState, playerId: PlayerID, opt
 export function getCardBattlePoint(
   ctx: GameState,
   cardID: string,
-  options: { ges?: GlobalEffect[] }
+  options: GameExtParams
 ): BattlePoint {
   logCategory("getCardBattlePoint", "")
   const card = getCard(ctx, cardID);
@@ -194,7 +194,7 @@ export function getCardHasSpeicalEffect(
   ctx: ItemTableComponent,
   a: TextSpeicalEffect,
   cardID: string,
-  options: { ges?: GlobalEffect[] }
+  options: GameExtParams
 ): boolean {
   logCategory("getCardHasSpeicalEffect", "")
   const texts = getCardTexts(ctx, cardID, options)
@@ -283,7 +283,7 @@ export function getItemIsCanRoll(ctx: GameState, itemId: string): boolean {
   return true
 }
 
-export function getCardIdsCanPayRollColor(ctx: GameState, playerId: PlayerID, color: CardColor | null, options: { ges?: GlobalEffect[] }): { cardId: string, colors: CardColor[] }[] {
+export function getCardIdsCanPayRollColor(ctx: GameState, playerId: PlayerID, color: CardColor | null, options: GameExtParams): { cardId: string, colors: CardColor[] }[] {
   logCategory("getCardIdsCanPayRollColor", "")
   return options?.ges?.flatMap(ge => {
     if (ge.cardIds.length == 0) {

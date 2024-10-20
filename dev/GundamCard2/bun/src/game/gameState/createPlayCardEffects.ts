@@ -86,7 +86,7 @@ export function createPlayCardEffects(ctx: GameState, cardId: string, options: G
     return ret
 }
 
-export function createPlayCardEffect(ctx: GameState, cardId: string, options: { ges?: GlobalEffect[] }): Effect[] {
+export function createPlayCardEffect(ctx: GameState, cardId: string, options: GameExtParams): Effect[] {
     logCategory("createPlayCardEffect", "")
     const prototype = getItemPrototype(ctx, cardId)
     let basicEff: Effect | null = null
@@ -240,7 +240,7 @@ export function createPlayGEffect(ctx: GameState, cardId: string): Effect {
     }
 }
 
-export function createPlayUnitEffect(ctx: GameState, cardId: string, options: { ges?: GlobalEffect[] }): Effect {
+export function createPlayUnitEffect(ctx: GameState, cardId: string, options: GameExtParams): Effect {
     logCategory("createPlayUnitEffect", "")
     const prototype = getItemPrototype(ctx, cardId)
     if (prototype.category == "ユニット") {
@@ -280,7 +280,7 @@ export function createPlayUnitEffect(ctx: GameState, cardId: string, options: { 
     }
 }
 
-export function createPlayOperationEffect(ctx: GameState, cardId: string, options: { ges?: GlobalEffect[] }): Effect {
+export function createPlayOperationEffect(ctx: GameState, cardId: string, options: GameExtParams): Effect {
     logCategory("createPlayOperationEffect", "")
     const prototype = getItemPrototype(ctx, cardId)
     if (prototype.category == "オペレーション") {
@@ -319,7 +319,7 @@ export function createPlayOperationEffect(ctx: GameState, cardId: string, option
     }
 }
 
-export function createPlayStayEffect(ctx: GameState, cardId: string, options: { ges?: GlobalEffect[] }): Effect | null {
+export function createPlayStayEffect(ctx: GameState, cardId: string, options: GameExtParams): Effect | null {
     logCategory("createPlayStayEffect", "")
     const prototype = getItemPrototype(ctx, cardId)
     if (prototype.category == "キャラクター") {
@@ -364,7 +364,7 @@ export function createPlayStayEffect(ctx: GameState, cardId: string, options: { 
     }
 }
 
-export function createPlayCharacterOperationEffect(ctx: GameState, cardId: string, options: { ges?: GlobalEffect[] }): Effect {
+export function createPlayCharacterOperationEffect(ctx: GameState, cardId: string, options: GameExtParams): Effect {
     logCategory("createPlayCharacterOperationEffect", "")
     const prototype = getItemPrototype(ctx, cardId)
     if (prototype.category == "キャラクター" || prototype.category == "オペレーション(ユニット)") {
@@ -409,7 +409,7 @@ export function createPlayCharacterOperationEffect(ctx: GameState, cardId: strin
     return eff
 }
 
-export function createPlayCommandText(ctx: GameState, cardId: string, options: { ges?: GlobalEffect[] }): Effect {
+export function createPlayCommandText(ctx: GameState, cardId: string, options: GameExtParams): Effect {
     logCategory("createPlayCommandText", "")
     const prototype = getItemPrototype(ctx, cardId)
     if (prototype.category == "コマンド") {
@@ -498,7 +498,7 @@ export function createPlayCommandText(ctx: GameState, cardId: string, options: {
     }
 }
 
-export function createUnitGoStageEffectFromPlayEffect(ctx: GameState, effect: Effect, options: { ges?: GlobalEffect[] }): Effect {
+export function createUnitGoStageEffectFromPlayEffect(ctx: GameState, effect: Effect, options: GameExtParams): Effect {
     const cardId = EffectFn.getCardID(effect)
     const prototype = getItemPrototype(ctx, cardId)
     if (prototype.category == "ユニット") {
@@ -632,7 +632,7 @@ export function createRollCostConditions(ctx: GameState, proto: CardPrototype, r
     return rollCostConditions
 }
 
-export function createPlayCardConditions(ctx: GameState, cardId: string, options: { ges?: GlobalEffect[] }): { [key: string]: Condition } {
+export function createPlayCardConditions(ctx: GameState, cardId: string, options: GameExtParams): { [key: string]: Condition } {
     logCategory("createPlayCardConditions", "")
     const prototype = getItemPrototype(ctx, cardId)
     const cardRollCostLength = getCardTotalCostLength(ctx, cardId, options)

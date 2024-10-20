@@ -1,12 +1,13 @@
 import { Bridge } from "../../script/bridge";
 import { CardText, OnEventFn, CardTextFn } from "../define/CardText";
 import { Effect, EffectFn } from "../define/Effect";
+import { GameExtParams } from "../define/GameExtParams";
 import { GlobalEffect } from "../define/GlobalEffect";
 import { PhaseFn } from "../define/Timing";
 import { GameState } from "./GameState";
 import { createActionTitleFn } from "./createActionTitleFn";
 
-export function createOnEventTitleFn(text: CardText, options: { ges?: GlobalEffect[] }): OnEventFn {
+export function createOnEventTitleFn(text: CardText): OnEventFn {
   if (text.onEvent == null || typeof text.onEvent == "string") {
     return CardTextFn.getOnEventFn(text)
   }

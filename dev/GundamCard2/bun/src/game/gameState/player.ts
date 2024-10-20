@@ -153,7 +153,7 @@ export function doPlayerAttack(
   attackPlayerID: PlayerID,
   where: BaSyouKeyword,
   speedPhase: AttackSpeed,
-  options: { ges?: GlobalEffect[] }
+  options: GameExtParams
 ): GameState {
   const guardPlayerID = PlayerIDFn.getOpponent(attackPlayerID)
   const attackUnits = getBattleGroup(ctx, AbsoluteBaSyouFn.of(attackPlayerID, where));
@@ -242,7 +242,7 @@ export function getPlayerOperationIds(ctx: GameState, playerId: PlayerID): strin
   return lift(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getBaAll()).flatMap(basyou => getItemIdsByBasyou(ctx, basyou)).filter(itemId => getItemPrototype(ctx, itemId).category == "オペレーション")
 }
 
-export function createPlayerScore(ctx: GameState, playerId: string, options: { ges?: GlobalEffect[] }): number {
+export function createPlayerScore(ctx: GameState, playerId: string, options: GameExtParams): number {
   const units = getPlayerUnitIds(ctx, playerId)
   const chars = getPlayerCharacterIds(ctx, playerId)
   const gs = getPlayerGIds(ctx, playerId)

@@ -45,7 +45,7 @@ export function doTriggerEvent(
             }
             logCategory("doTriggerEvent", "eventTitle", text.onEvent)
             const ges = options.ges || []
-            ctx = createOnEventTitleFn(text, { ges: ges })(ctx, effect, createBridge({ ges: ges }))
+            ctx = createOnEventTitleFn(text)(ctx, effect, createBridge({ ges: ges }))
         })
     })
     if (event.title[0] == "カット終了時") {
