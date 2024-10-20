@@ -1,6 +1,7 @@
 import { AbsoluteBaSyouFn } from "../define/BaSyou";
 import { Effect, EffectFn } from "../define/Effect";
 import { TargetMissingError } from "../define/GameError";
+import { GameExtParams } from "../define/GameExtParams";
 import { ItemStateFn } from "../define/ItemState";
 import { PlayerID } from "../define/PlayerID";
 import { StrBaSyouPair } from "../define/Tip";
@@ -14,13 +15,11 @@ import { getItemState, setItemState } from "./ItemStateComponent";
 import { isCard, isChip, getItemBaSyou, assertTargetMissingError, getItemController } from "./ItemTableComponent";
 import { getSetGroupBattlePoint } from "./setGroup";
 
-export function doItemDamage(ctx: GameState, effect: Effect, damage: number, target: StrBaSyouPair, options?: { isSkipTargetMissing?: boolean }): GameState {
-  const ges = getGlobalEffects(ctx, null)
-  ctx = setGlobalEffects(ctx, null, ges)
+export function doItemDamage(ctx: GameState, effect: Effect, damage: number, target: StrBaSyouPair, options: GameExtParams & { isSkipTargetMissing?: boolean }): GameState {
   if (options?.isSkipTargetMissing) {
 
   } else {
-    ctx = assertTargetNoLongerValidAndUpdate(ctx, effect, target[0])
+    ctx = assertTargetNoLongerValidAndUpdate(ctx, effect, target[0], options)
   }
   const effectController = EffectFn.getPlayerID(effect)
   if (options?.isSkipTargetMissing) {
@@ -49,7 +48,7 @@ export function doItemDamage(ctx: GameState, effect: Effect, damage: number, tar
     let cardState = getItemState(ctx, targetItemId);
     cardState = ItemStateFn.damage(cardState, damage)
     ctx = setItemState(ctx, targetItemId, cardState) as GameState
-    const [_, _2, hp] = getSetGroupBattlePoint(ctx, targetItemId, { ges: ges })
+    const [_, _2, hp] = getSetGroupBattlePoint(ctx, targetItemId, options)
     if (hp <= cardState.damage) {
       const effect: Effect = createDestroyEffect(ctx, { id: "通常ダメージ", playerID: effectController }, targetItemId)
       ctx = addDestroyEffect(ctx, effect) as GameState

@@ -28,7 +28,7 @@ export async function test179020_05C_U_BK100U_black() {
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), ["unitBlack", "unitBlack", "unitBlack", "unitBlack"]) as GameState
     ctx = setActivePlayerID(ctx, PlayerA) as GameState
     // 一開始敵人沒手牌, 無法發動能力
-    ctx = doTriggerEvent(ctx, { title: ["このカードの部隊が敵軍本国に戦闘ダメージを与えた場合"], cardIds: [cardA.id] })
+    ctx = doTriggerEvent(ctx, { title: ["このカードの部隊が敵軍本国に戦闘ダメージを与えた場合"], cardIds: [cardA.id] }, { ges: getGlobalEffects(ctx, null) })
     {
         const tip = createTipByEntitySearch(ctx, EffectFn.createEmptyPlayCard(PlayerA, cardA.id), { side: "敵軍", at: ["手札"], count: 2 }, { ges: getGlobalEffects(ctx, null) })
         if (tip == null) {
@@ -56,7 +56,7 @@ export async function test179020_05C_U_BK100U_black() {
             throw new Error()
         }
     }
-    ctx = doTriggerEvent(ctx, { title: ["このカードの部隊が敵軍本国に戦闘ダメージを与えた場合"], cardIds: [cardA.id] })
+    ctx = doTriggerEvent(ctx, { title: ["このカードの部隊が敵軍本国に戦闘ダメージを与えた場合"], cardIds: [cardA.id] }, { ges: getGlobalEffects(ctx, null) })
     {
         if (getImmediateEffects(ctx).length != 1) {
             throw new Error()

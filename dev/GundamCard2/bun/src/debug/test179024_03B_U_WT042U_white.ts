@@ -52,7 +52,7 @@ export async function test179024_03B_U_WT042U_white() {
         cs = ItemStateFn.setTip(cs, "このカードが非交戦中の場合、敵軍ユニット１枚", { title: ["カード", [], [[cardB.id, getItemBaSyou(ctx, cardB.id)]]] })
         ctx = setItemState(ctx, cardA.id, cs) as GameState
 
-        const playCardEffects = createPlayEffects(ctx, PlayerA)
+        const playCardEffects = createPlayEffects(ctx, PlayerA, { ges: getGlobalEffects(ctx, null) })
         if (playCardEffects.length != 2) {
             throw new Error()
         }
@@ -90,7 +90,7 @@ export async function test179024_03B_U_WT042U_white() {
         }
     }
     // battle
-    ctx = doItemMove(ctx, AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア1"), [cardB.id, getItemBaSyou(ctx, cardB.id)]) as GameState
+    ctx = doItemMove(ctx, AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア1"), [cardB.id, getItemBaSyou(ctx, cardB.id)], { ges: getGlobalEffects(ctx, null) }) as GameState
     const itemIds = getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア1"))
     if (itemIds.length > 0 && itemIds[0] == cardB.id) {
 
@@ -99,7 +99,7 @@ export async function test179024_03B_U_WT042U_white() {
     }
     {
         // 將同一個切入的旗標清除, 因為同樣的切入中1個技能只能使用1次
-        ctx = doTriggerEvent(ctx, { title: ["カット終了時", []] })
+        ctx = doTriggerEvent(ctx, { title: ["カット終了時", []] }, { ges: getGlobalEffects(ctx, null) })
         // 重置G
         ctx = mapCard(ctx, unit.id, card => {
             return {
@@ -111,7 +111,7 @@ export async function test179024_03B_U_WT042U_white() {
         if (isBattle(ctx, cardA.id, null) != true) {
             throw new Error(`isBattle(ctx, cardA.id, null) != true`)
         }
-        const playCardEffects = createPlayEffects(ctx, PlayerA)
+        const playCardEffects = createPlayEffects(ctx, PlayerA, { ges: getGlobalEffects(ctx, null) })
         if (playCardEffects.length != 2) {
             throw new Error(`playCardEffects.length != 2`)
         }
@@ -120,7 +120,7 @@ export async function test179024_03B_U_WT042U_white() {
             throw new Error()
         }
         // 將一回合用一次的旗標清除
-        ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", PhaseFn.getLast()] })
+        ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", PhaseFn.getLast()] }, { ges: getGlobalEffects(ctx, null) })
         ctx = setTipSelectionForUser(ctx, effect, 0, 0)
         ctx = doEffect(ctx, effect, 0, 0)
         {
@@ -143,7 +143,7 @@ export async function test179024_03B_U_WT042U_white() {
             if (BattlePointFn.eq(getCardBattlePoint(ctx, cardA.id, { ges: ges }), [6, 1, 5]) == false) {
                 throw new Error(`BattlePointFn.eq(getCardBattlePoint(ctx, cardA.id), [6,1,5]) == false`)
             }
-            ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", PhaseFn.getLast()] })
+            ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", PhaseFn.getLast()] }, { ges: getGlobalEffects(ctx, null) })
             ges = getGlobalEffects(ctx, null)
             if (ges.length != 0) {
                 throw new Error(`ges.length != 0`)

@@ -13,6 +13,7 @@ import { setPhase } from "../game/gameState/PhaseComponent";
 import { doTriggerEvent } from "../game/gameState/doTriggerEvent";
 import { loadPrototype } from "../script";
 import { createPlayGEffect } from "../game/gameState/createPlayCardEffects";
+import { getGlobalEffects } from "../game/gameState/globalEffects";
 
 export async function testPlayG() {
     await loadPrototype("unitBlue")
@@ -33,15 +34,15 @@ export async function testPlayG() {
     const storedCtx = JSON.parse(JSON.stringify(ctx))
     {
         ctx = setActivePlayerID(ctx, PlayerB) as GameState
-        const effects = createPlayEffects(ctx, PlayerA)
-        if(effects.length != 0){
+        const effects = createPlayEffects(ctx, PlayerA, { ges: getGlobalEffects(ctx, null) })
+        if (effects.length != 0) {
             throw new Error()
         }
     }
     ctx = storedCtx
     {
 
-        const effects = createPlayEffects(ctx, PlayerA)
+        const effects = createPlayEffects(ctx, PlayerA, { ges: getGlobalEffects(ctx, null) })
         if (effects.length != 4) {
             throw new Error()
         }
@@ -58,7 +59,7 @@ export async function testPlayG() {
     {
         const effect = createPlayGEffect(ctx, unitBlue2.id)
         const toes = createEffectTips(ctx, effect, 0, 0)
-        if(toes.flatMap(toe=>toe.errors).length == 0){
+        if (toes.flatMap(toe => toe.errors).length == 0) {
             throw new Error()
         }
         try {
@@ -77,7 +78,7 @@ export async function testPlayG() {
         }
     }
     {
-        ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", PhaseFn.getLast()] })
+        ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", PhaseFn.getLast()] }, { ges: getGlobalEffects(ctx, null) })
         const effect = createPlayGEffect(ctx, unitBlue2.id)
         ctx = doEffect(ctx, effect, 0, 0)
         if (AbsoluteBaSyouFn.getBaSyouKeyword(getItemBaSyou(ctx, unitBlue2.id)) == "Gゾーン") {

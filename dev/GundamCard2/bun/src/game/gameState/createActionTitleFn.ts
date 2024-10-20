@@ -163,7 +163,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
     case "Action": {
       const [_, actionOptions] = action.title
       const varNames = action.vars
-      return function (ctx: GameState, effect: Effect): GameState {
+      return function (ctx: GameState, effect: Effect, { Options }: Bridge): GameState {
         const cardId = EffectFn.getCardID(effect)
         const pairs = varNames == null ?
           [[cardId, getItemBaSyou(ctx, cardId)] as StrBaSyouPair] :
@@ -172,7 +172,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
           })
         for (const pair of pairs) {
           if (actionOptions.move) {
-            ctx = doItemMove(ctx, createAbsoluteBaSyouFromBaSyou(ctx, cardId, actionOptions.move), pair)
+            ctx = doItemMove(ctx, createAbsoluteBaSyouFromBaSyou(ctx, cardId, actionOptions.move), pair, { ges: Options.ges })
           }
         }
         return ctx
@@ -180,9 +180,9 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
     }
     case "triggerEvent": {
       const [_, event] = action.title
-      return function (ctx: GameState, effect: Effect): GameState {
+      return function (ctx: GameState, effect: Effect, { Options }: Bridge): GameState {
         const cardId = EffectFn.getCardID(effect)
-        ctx = doTriggerEvent(ctx, { ...event, effect: effect, cardIds: [cardId] })
+        ctx = doTriggerEvent(ctx, { ...event, effect: effect, cardIds: [cardId] }, { ges: Options.ges })
         return ctx
       }
     }
@@ -211,7 +211,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
     case "_ロールする": {
       const [_, whatToDo] = action.title
       const varNames = action.vars
-      return function (ctx: GameState, effect: Effect): GameState {
+      return function (ctx: GameState, effect: Effect, { Options }: Bridge): GameState {
         const cardId = EffectFn.getCardID(effect)
         const cardController = getItemController(ctx, cardId)
         const pairs = varNames == null ?
@@ -241,19 +241,19 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
           }
           case "破壞": {
             for (const pair of pairs) {
-              ctx = doItemSetDestroy(ctx, { id: "破壊する", playerID: cardController }, pair)
+              ctx = doItemSetDestroy(ctx, { id: "破壊する", playerID: cardController }, pair, Options)
             }
             return ctx
           }
           case "廃棄": {
             for (const pair of pairs) {
-              ctx = doItemMove(ctx, AbsoluteBaSyouFn.setBaSyouKeyword(pair[1], "ジャンクヤード"), pair)
+              ctx = doItemMove(ctx, AbsoluteBaSyouFn.setBaSyouKeyword(pair[1], "ジャンクヤード"), pair, Options)
             }
             return ctx
           }
           case "破壊を無効": {
             for (const pair of pairs) {
-              ctx = doItemSetDestroy(ctx, null, pair)
+              ctx = doItemSetDestroy(ctx, null, pair, Options)
             }
             return ctx
           }
@@ -268,18 +268,18 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
     }
     case "_敵軍本国に_１ダメージ": {
       const [_, side, damage] = action.title
-      return function (ctx: GameState, effect: Effect): GameState {
+      return function (ctx: GameState, effect: Effect, { Options }: Bridge): GameState {
         const cardId = EffectFn.getCardID(effect)
         const cardController = getItemController(ctx, cardId)
         const playerId = PlayerIDFn.fromRelatedPlayerSideKeyword(side, cardController)
-        ctx = doCountryDamage(ctx, playerId, damage)
+        ctx = doCountryDamage(ctx, playerId, damage, { ges: Options.ges })
         return ctx
       }
     }
     case "_の_ハンガーに移す": {
       const [_, side, basyouKw] = action.title
       const varNames = action.vars
-      return function (ctx: GameState, effect: Effect): GameState {
+      return function (ctx: GameState, effect: Effect, { Options }: Bridge): GameState {
         const cardId = EffectFn.getCardID(effect)
         const cardController = getItemController(ctx, cardId)
         const pairs = varNames == null ?
@@ -290,7 +290,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
         const playerId = PlayerIDFn.fromRelatedPlayerSideKeyword(side, cardController)
         const to = AbsoluteBaSyouFn.of(playerId, basyouKw)
         for (const pair of pairs) {
-          ctx = doItemMove(ctx, to, pair)
+          ctx = doItemMove(ctx, to, pair, { ges: Options.ges })
         }
         return ctx
       }
@@ -309,7 +309,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
     case "_１ダメージを与える": {
       const [_, damage] = action.title
       const varNames = action.vars
-      return function (ctx: GameState, effect: Effect): GameState {
+      return function (ctx: GameState, effect: Effect, { Options }: Bridge): GameState {
         const cardId = EffectFn.getCardID(effect)
         const cardController = getItemController(ctx, cardId)
         const pairs = varNames == null ?
@@ -318,7 +318,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
             return getCardTipStrBaSyouPairs(ctx, varName, cardId)
           })
         ctx = pairs.reduce((ctx, pair) => {
-          return doItemDamage(ctx, effect, damage, pair)
+          return doItemDamage(ctx, effect, damage, pair, Options)
         }, ctx)
         return ctx
       }
@@ -405,10 +405,10 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
     }
     case "カード_１枚を引く": {
       const [_, count] = action.title
-      return function (ctx: GameState, effect: Effect): GameState {
+      return function (ctx: GameState, effect: Effect, { Options }: Bridge): GameState {
         const cardId = EffectFn.getCardID(effect)
         const cardController = getItemController(ctx, cardId)
-        ctx = doPlayerDrawCard(ctx, count, cardController)
+        ctx = doPlayerDrawCard(ctx, count, cardController, Options)
         return ctx
       }
     }
@@ -437,9 +437,8 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
       }
     case "合計国力〔x〕": {
       const [_, x] = action.title
-      return function (ctx: GameState, effect: Effect): GameState {
-        const ges = getGlobalEffects(ctx, null)
-        ctx = setGlobalEffects(ctx, null, ges)
+      return function (ctx: GameState, effect: Effect, { Options }: Bridge): GameState {
+        const ges = Options.ges || []
         const cardId = EffectFn.getCardID(effect)
         const cardController = getItemController(ctx, cardId)
         const cardIdsCanPay = getCardIdsCanPayRollCost(ctx, cardController, { ges: ges })

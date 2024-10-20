@@ -29,15 +29,15 @@ export const prototype: CardPrototype = {
       {
         actions: [
           {
-            title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, ToolFn }: Bridge): GameState {
+            title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GameState {
               const cardId = DefineFn.EffectFn.getCardID(effect)
               const cardController = GameStateFn.getItemController(ctx, cardId)
               const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "戦闘エリアにいる敵軍ユニット１枚", cardId)
               for (const pair of pairs) {
-                ctx = GameStateFn.doItemDamage(ctx, effect, 5, pair)
+                ctx = GameStateFn.doItemDamage(ctx, effect, 5, pair, Options)
                 // 対象が破壊されなかった場合
                 if (GameStateFn.getItemState(ctx, pair[0]).destroyReason == null) {
-                  ctx = GameStateFn.mapItemState(ctx, cardId, is => ({ ...is, flags: { ...is.flags, enabled: true, varNamesRemoveOnTurnEnd:{...is.varNamesRemoveOnTurnEnd, ["enabled"]: true} } })) as GameState
+                  ctx = GameStateFn.mapItemState(ctx, cardId, is => ({ ...is, flags: { ...is.flags, enabled: true, varNamesRemoveOnTurnEnd: { ...is.varNamesRemoveOnTurnEnd, ["enabled"]: true } } })) as GameState
                 }
               }
               return ctx
@@ -46,7 +46,7 @@ export const prototype: CardPrototype = {
         ]
       }
     ],
-    onEvent: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+    onEvent: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GameState {
       const evt = DefineFn.EffectFn.getEvent(effect)
       const cardId = DefineFn.EffectFn.getCardID(effect)
       const cardController = GameStateFn.getItemController(ctx, cardId)
@@ -54,7 +54,7 @@ export const prototype: CardPrototype = {
         && DefineFn.PhaseFn.eq(evt.title[1], DefineFn.PhaseFn.getLastTriigerEffect())
         && GameStateFn.getItemState(ctx, cardId).flags.enabled
       ) {
-        ctx = GameStateFn.doPlayerDrawCard(ctx, 1, cardController)
+        ctx = GameStateFn.doPlayerDrawCard(ctx, 1, cardController, Options)
       }
       return ctx
     }.toString()

@@ -32,7 +32,7 @@ export async function test179028_10D_U_WT181N_white() {
         throw new Error('must has one card')
     }
     const cardId = cardIds[0]
-    const playCardEffects = createPlayCardEffects(ctx, cardId)
+    const playCardEffects = createPlayCardEffects(ctx, cardId, { ges: getGlobalEffects(ctx, null) })
     if (playCardEffects.length != 3) {
         throw new Error(`playCardEffects.length != 3`)
     }
@@ -80,14 +80,14 @@ export async function test179028_10D_U_WT181N_white() {
     if (getItemState(ctx, cardId).flags["bonus"] == null) {
         throw new Error()
     }
-    ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", PhaseFn.getLast()] })
+    ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", PhaseFn.getLast()] }, { ges: getGlobalEffects(ctx, null) })
     if (getItemState(ctx, cardId).flags["bonus"] != null) {
         throw new Error()
     }
     ctx = clearGlobalEffects(ctx)
     ges = getGlobalEffects(ctx, null)
     ctx = setGlobalEffects(ctx, null, ges)
-    if (BattlePointFn.eq(getCardBattlePoint(ctx, cardId, { ges: ges }), [4, 0, 4]) == false) {
+    if (BattlePointFn.eq(getCardBattlePoint(ctx, cardId, { ges: getGlobalEffects(ctx, null) }), [4, 0, 4]) == false) {
         throw new Error()
     }
 }

@@ -55,7 +55,7 @@ export const prototype: CardPrototype = {
                       {
                         title: ["cutIn", [
                           {
-                            title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+                            title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GameState {
                               const cardId = DefineFn.EffectFn.getCardID(effect)
                               if (GameStateFn.getItemBaSyou(ctx, cardId).value[1] == "戦闘エリア1" || GameStateFn.getItemBaSyou(ctx, cardId).value[1] == "戦闘エリア2") {
 
@@ -64,7 +64,7 @@ export const prototype: CardPrototype = {
                               }
                               const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "自軍本国の上のカードX枚を見て、その中にあるユニット１枚", cardId)
                               for (const pair of pairs) {
-                                ctx = GameStateFn.doItemMove(ctx, GameStateFn.getItemBaSyou(ctx, cardId), pair, { insertId: 0 })
+                                ctx = GameStateFn.doItemMove(ctx, GameStateFn.getItemBaSyou(ctx, cardId), pair, { insertId: 0, ges: Options.ges })
                               }
                               return ctx
                             }.toString()
@@ -81,7 +81,7 @@ export const prototype: CardPrototype = {
           ]
         }
       ],
-      onEvent: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+      onEvent: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GameState {
         const event = DefineFn.EffectFn.getEvent(effect)
         const cardId = DefineFn.EffectFn.getCardID(effect)
         if (event.title[0] == "GameEventOnTiming" && DefineFn.PhaseFn.eq(event.title[1], DefineFn.PhaseFn.getLast())) {
@@ -96,7 +96,7 @@ export const prototype: CardPrototype = {
             return ctx
           }
           for (const pair of pairs) {
-            ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardOwner, "手札"), GameStateFn.createStrBaSyouPair(ctx, pair[0]))
+            ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardOwner, "手札"), GameStateFn.createStrBaSyouPair(ctx, pair[0]), { ges: Options.ges })
           }
         }
         return ctx

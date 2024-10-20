@@ -28,7 +28,7 @@ export const prototype: CardPrototype = {
           side: "敵軍",
           is: ["ユニット"],
           count: 3,
-        }, {ges: Options.ges})) as StrBaSyouPair[]
+        }, { ges: Options.ges })) as StrBaSyouPair[]
         if (pairs.length >= 3) {
           return [
             {
@@ -61,15 +61,15 @@ export const prototype: CardPrototype = {
       {
         actions: [
           {
-            title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, ToolFn }: Bridge): GameState {
+            title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GameState {
               const cardId = DefineFn.EffectFn.getCardID(effect)
               const cardController = GameStateFn.getItemController(ctx, cardId)
               const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "自軍捨て山の上のカード１枚", cardId)
               for (const pair of pairs) {
                 ctx = GameStateFn.doItemSetRollState(ctx, true, pair, { isSkipTargetMissing: true })
-                ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "Gゾーン"), pair)
+                ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "Gゾーン"), pair, { ges: Options.ges })
               }
-              ctx = GameStateFn.doPlayerDrawCard(ctx, 2, cardController)
+              ctx = GameStateFn.doPlayerDrawCard(ctx, 2, cardController, Options)
               return ctx
             }.toString()
           }

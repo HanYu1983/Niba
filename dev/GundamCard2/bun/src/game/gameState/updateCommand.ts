@@ -4,11 +4,12 @@ import { createCommandEffectTips } from "./doEffect"
 import { getEffect, getEffects, setCommandEffects, setCommandEffectTips } from "./EffectStackComponent"
 import { GameState } from "./GameState"
 import { createPlayEffects } from "./createPlayEffects"
+import { GameExtParams } from "../define/GameExtParams"
 
 // 使用型技能
-export function updateCommand(ctx: GameState): GameState {
-    const playerAEffects = createPlayEffects(ctx, PlayerA)
-    const playerBEffects = createPlayEffects(ctx, PlayerB)
+export function updateCommand(ctx: GameState, options: GameExtParams): GameState {
+    const playerAEffects = createPlayEffects(ctx, PlayerA, options)
+    const playerBEffects = createPlayEffects(ctx, PlayerB, options)
     const allEffects = [...playerAEffects, ...playerBEffects]
     ctx = setCommandEffects(ctx, allEffects) as GameState
     const testedEffects = allEffects.flatMap(e => createCommandEffectTips(ctx, e))

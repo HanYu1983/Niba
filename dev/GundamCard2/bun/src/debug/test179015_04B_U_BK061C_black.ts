@@ -41,7 +41,7 @@ export async function test179015_04B_U_BK061C_black() {
     ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア"), [cardA]) as GameState
     ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerB, "本国"), [unit]) as GameState
     ctx = setActivePlayerID(ctx, PlayerA) as GameState
-    ctx = doTriggerEvent(ctx, { title: ["このカードが場に出た場合"], cardIds: [cardA.id] })
+    ctx = doTriggerEvent(ctx, { title: ["このカードが場に出た場合"], cardIds: [cardA.id] }, { ges: getGlobalEffects(ctx, null) })
     if (ctx.immediateEffect.length != 1) {
         throw new Error()
     }
@@ -66,7 +66,7 @@ export async function test179015_04B_U_BK061C_black() {
     }
     {
         // 避開同回合上限
-        ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", PhaseFn.getLast()] })
+        ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", PhaseFn.getLast()] }, { ges: getGlobalEffects(ctx, null) })
         const unit2: Card = {
             id: "unit2",
             protoID: "unit"
@@ -106,7 +106,7 @@ export async function test179015_04B_U_BK061C_black_2() {
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国"), ["unit"]) as GameStateWithFlowMemory
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerB, "本国"), ["unit"]) as GameStateWithFlowMemory
     ctx = setActivePlayerID(ctx, PlayerA) as GameStateWithFlowMemory
-    ctx = doTriggerEvent(ctx, { title: ["このカードが場に出た場合"], cardIds: [cardA.id] }) as GameStateWithFlowMemory
+    ctx = doTriggerEvent(ctx, { title: ["このカードが場に出た場合"], cardIds: [cardA.id] }, { ges: getGlobalEffects(ctx, null) }) as GameStateWithFlowMemory
     if (ctx.immediateEffect.length != 1) {
         throw new Error()
     }

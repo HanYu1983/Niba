@@ -49,13 +49,13 @@ export const prototype: CardPrototype = {
         const phase = GameStateFn.getPhase(ctx)
         return [{ title: ["合計国力_＋１してプレイできる", -3], cardIds: [cardId] }]
       }.toString(),
-      onEvent: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+      onEvent: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GameState {
         const cardId = DefineFn.EffectFn.getCardID(effect)
         const cardController = GameStateFn.getItemController(ctx, cardId)
         const evt = DefineFn.EffectFn.getEvent(effect)
         const hasSpecialPlayX = DefineFn.ItemStateFn.getMoreTotalRollCostLengthPlay(GameStateFn.getItemState(ctx, cardId))
         if (evt.title[0] == "カット終了時" && hasSpecialPlayX) {
-          ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "ジャンクヤード"), GameStateFn.createStrBaSyouPair(ctx, cardId))
+          ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "ジャンクヤード"), GameStateFn.createStrBaSyouPair(ctx, cardId), { ges: Options.ges })
         }
         return ctx
       }.toString()
@@ -82,7 +82,7 @@ export const prototype: CardPrototype = {
             logicTreeAction: {
               actions: [
                 {
-                  title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+                  title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GameState {
                     const cardId = DefineFn.EffectFn.getCardID(effect)
                     const cardController = GameStateFn.getItemController(ctx, cardId)
                     const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "ユニットとキャラ以外の敵軍カード１枚のプレイ", cardId)
@@ -92,7 +92,7 @@ export const prototype: CardPrototype = {
                       ctx = GameStateFn.removeEffect(ctx, targetE.id) as GameState
                     }
                     for (const pair of pairs) {
-                      ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "ジャンクヤード"), pair)
+                      ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "ジャンクヤード"), pair, { ges: Options.ges })
                     }
                     return ctx
                   }.toString(),

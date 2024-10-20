@@ -43,12 +43,12 @@ export const prototype: CardPrototype = {
                   logicTreeAction: {
                     actions: [
                       {
-                        title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+                        title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GameState {
                           const cardId = DefineFn.EffectFn.getCardID(effect)
                           const cardController = GameStateFn.getItemController(ctx, cardId)
                           const pair = GameStateFn.createStrBaSyouPair(ctx, cardId)
                           ctx = GameStateFn.doItemSetDestroy(ctx, null, pair, { isSkipTargetMissing: true })
-                          ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "Gゾーン"), pair, { isSkipTargetMissing: true })
+                          ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "Gゾーン"), pair, { isSkipTargetMissing: true, ges: Options.ges })
                           return ctx
                         }.toString()
                       }
@@ -71,19 +71,19 @@ function createRollCostRequire(
 ): { [key: string]: Condition } {
   let ret: { [key: string]: Condition } = {}
   for (let i = 0; i < costNum; ++i) {
-      const key = `${i}[${color}]`
-      ret = {
-          ...ret,
-          [key]: {
-              title: ["RollColor", color],
-              actions: [
-                  {
-                    title: ["_ロールする", "ロール"],
-                      vars: [key]
-                  }
-              ]
+    const key = `${i}[${color}]`
+    ret = {
+      ...ret,
+      [key]: {
+        title: ["RollColor", color],
+        actions: [
+          {
+            title: ["_ロールする", "ロール"],
+            vars: [key]
           }
-      };
+        ]
+      }
+    };
   }
   return ret
 }

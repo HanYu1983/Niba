@@ -24,6 +24,7 @@ import { getSetGroupBattlePoint } from "../game/gameState/setGroup"
 import { createDestroyEffect } from "../game/gameState/createDestroyEffect"
 import { DestroyReason, EffectFn } from "../game/define/Effect"
 import { doCutInDestroyEffectsAndClear } from "../game/gameState/doCutInDestroyEffectsAndClear"
+import { getGlobalEffects } from "../game/gameState/globalEffects"
 
 export async function test179003_01A_U_BK008U_black() {
     await loadPrototype("179003_01A_U_BK008U_black")
@@ -37,7 +38,7 @@ export async function test179003_01A_U_BK008U_black() {
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), repeat("unitBlue", 2)) as GameState
     ctx = setActivePlayerID(ctx, PlayerB) as GameState
     ctx = setPhase(ctx, ["戦闘フェイズ", "ダメージ判定ステップ", "フリータイミング"]) as GameState
-    const effects = createPlayEffects(ctx, PlayerA)
+    const effects = createPlayEffects(ctx, PlayerA, { ges: getGlobalEffects(ctx, null) })
     if (effects.length == 0) {
         throw new Error()
     }
@@ -49,13 +50,13 @@ export async function test179003_01A_U_BK008U_black() {
         }
         {
             const destroyReason: DestroyReason = { id: "戦闘ダメージ", playerID: PlayerB }
-            ctx = doItemSetDestroy(ctx, destroyReason, [cardA.id, getItemBaSyou(ctx, cardA.id)])
+            ctx = doItemSetDestroy(ctx, destroyReason, [cardA.id, getItemBaSyou(ctx, cardA.id)], { ges: getGlobalEffects(ctx, null) })
             if (getItemState(ctx, cardA.id).destroyReason == null) {
                 throw new Error()
             }
             // 這裡模擬破壞效果進了堆疊了
             //ctx = createDestroyEffectAndPush(ctx)
-            ctx = doCutInDestroyEffectsAndClear(ctx) as GameState
+            ctx = doCutInDestroyEffectsAndClear(ctx, null, { ges: getGlobalEffects(ctx, null) }) as GameState
             if (getCutInDestroyEffects(ctx).find(e => EffectFn.getCardID(e) == cardA.id) == null) {
                 throw new Error()
             }

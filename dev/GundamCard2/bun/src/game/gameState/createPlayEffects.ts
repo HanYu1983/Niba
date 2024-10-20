@@ -15,11 +15,11 @@ import { getCardHasSpeicalEffect, getCardTexts } from "./card";
 import { createTextsFromSpecialEffect } from "./createTextsFromSpecialEffect";
 import { getGlobalEffects, setGlobalEffects } from "./globalEffects";
 import { LogicTree } from "../../tool/logicTree";
+import { GameExtParams } from "../define/GameExtParams";
 
-export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] {
+export function createPlayEffects(ctx: GameState, playerId: PlayerID, options: GameExtParams): Effect[] {
     logCategory("createPlayEffects", "")
-    const ges = getGlobalEffects(ctx, null)
-    ctx = setGlobalEffects(ctx, null, ges)
+    const ges = options.ges || []
     const myTextOn = lift(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getTextOn())
     const getPlayCardEffectsF =
         ifElse(
@@ -32,7 +32,7 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
                     if (getItemPrototype(ctx, cardId).category == "コマンド") {
                         return []
                     }
-                    return createPlayCardEffects(ctx, cardId).filter(eff => inTiming(eff.text))
+                    return createPlayCardEffects(ctx, cardId, options).filter(eff => inTiming(eff.text))
                 }), flatten,
             ),
             // クイック
@@ -48,7 +48,7 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
                         }
                         if (getCardHasSpeicalEffect(ctx, ["クイック"], cardId, { ges: ges })) {
                             // クイック不判斷使用時機inTiming
-                            return createPlayCardEffects(ctx, cardId, { isQuick: true })
+                            return createPlayCardEffects(ctx, cardId, { isQuick: true, ges: ges })
                         }
                         return []
                     }),
@@ -69,7 +69,7 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID): Effect[] 
                 if (proto.category != "コマンド") {
                     return []
                 }
-                return createPlayCardEffects(ctx, item.id)
+                return createPlayCardEffects(ctx, item.id, { ges: ges })
             }), flatten,
             effs => effs.filter(eff => inTiming(eff.text))
         ),

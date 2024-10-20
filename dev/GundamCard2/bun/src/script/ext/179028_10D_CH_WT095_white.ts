@@ -24,7 +24,7 @@ export const prototype: CardPrototype = {
           return []
         }
         const ges = GameStateFn.getGlobalEffects(ctx, null)
-        const playText = GameStateFn.createPlayCharacterOperationEffect(ctx, cardId, {ges: ges})
+        const playText = GameStateFn.createPlayCharacterOperationEffect(ctx, cardId, { ges: ges })
         const playGText = GameStateFn.createPlayGEffect(ctx, cardId)
         return [playText, playGText]
       }.toString(),
@@ -39,7 +39,7 @@ export const prototype: CardPrototype = {
           return []
         }
         const ges = GameStateFn.getGlobalEffects(ctx, null)
-        const conditions = GameStateFn.createPlayCardConditions(ctx, cardId, {ges: ges})
+        const conditions = GameStateFn.createPlayCardConditions(ctx, cardId, { ges: ges })
         delete conditions[DefineFn.TipFn.createCharacterTargetUnitKey()]
         const text: CardText = {
           id: effect.text.id,
@@ -61,10 +61,10 @@ export const prototype: CardPrototype = {
             {
               actions: [
                 {
-                  title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, ToolFn }: Bridge): GameState {
+                  title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GameState {
                     const cardId = DefineFn.EffectFn.getCardID(effect)
                     const from = GameStateFn.getItemBaSyou(ctx, cardId)
-                    ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "プレイされているカード"), [cardId, from]) as GameState
+                    ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "プレイされているカード"), [cardId, from], { ges: Options.ges }) as GameState
                     return GameStateFn.addStackEffect(ctx, {
                       // 注意：id必須是唯一的，如果不使用亂數請確保你的id不會重復
                       // 否則有可能應該在ctx.effects中的效果被同id的效果刪除
@@ -79,15 +79,15 @@ export const prototype: CardPrototype = {
                           {
                             actions: [
                               {
-                                title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+                                title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GameState {
                                   const cardId = DefineFn.EffectFn.getCardID(effect)
                                   const cardController = GameStateFn.getItemController(ctx, cardId)
                                   ctx = GameStateFn.doItemSetRollState(ctx, false, GameStateFn.createStrBaSyouPair(ctx, cardId), { isSkipTargetMissing: true })
-                                  ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "配備エリア"), GameStateFn.createStrBaSyouPair(ctx, cardId))
+                                  ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "配備エリア"), GameStateFn.createStrBaSyouPair(ctx, cardId), { ges: Options.ges })
                                   const unitPairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "自軍ジャンクヤードにある、このカードと同じ属性のGサインを持つユニット１枚", cardId)
                                   for (const pair of unitPairs) {
                                     ctx = GameStateFn.doItemSetRollState(ctx, false, pair, { isSkipTargetMissing: true })
-                                    ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "配備エリア"), pair)
+                                    ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "配備エリア"), pair, { ges: Options.ges })
                                     ctx = GameStateFn.setSetGroupParent(ctx, pair[0], cardId) as GameState
                                     // only first one
                                     break

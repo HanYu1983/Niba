@@ -41,7 +41,7 @@ export async function testCrossWeapon() {
     }
     ctx = setActivePlayerID(ctx, PlayerA) as GameState
     ctx = setPhase(ctx, ["戦闘フェイズ", "攻撃ステップ", "フリータイミング"]) as GameState
-    const playEffects = createPlayEffects(ctx, PlayerA)
+    const playEffects = createPlayEffects(ctx, PlayerA, { ges: getGlobalEffects(ctx, null) })
     if (playEffects.length == 0) {
         throw new Error("")
     }
@@ -67,7 +67,7 @@ export async function testCrossWeapon() {
             }
             try {
                 // 強制清除回合上限旗標
-                ctx = mapItemState(ctx, unitHasCrossWeaponABC.id, is => ({ ...is, textIdsUseThisTurn: []})) as GameState
+                ctx = mapItemState(ctx, unitHasCrossWeaponABC.id, is => ({ ...is, textIdsUseThisTurn: [] })) as GameState
                 ctx = doEffect(ctx, playEffect, 0, 0)
                 throw new Error()
             } catch (e) {
@@ -77,7 +77,7 @@ export async function testCrossWeapon() {
                     throw e
                 }
             }
-            const playEffects = createPlayEffects(ctx, PlayerA)
+            const playEffects = createPlayEffects(ctx, PlayerA, { ges: getGlobalEffects(ctx, null) })
             if (playEffects.length != 1) {
                 throw new Error()
             }
@@ -91,7 +91,7 @@ export async function testCrossWeapon() {
                     throw new Error()
                 }
             }
-            ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", PhaseFn.getLast()] })
+            ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", PhaseFn.getLast()] }, { ges: getGlobalEffects(ctx, null) })
             ges = getGlobalEffects(ctx, null)
             ctx = setGlobalEffects(ctx, null, ges)
             const texts = getCardTexts(ctx, unit2.id, { ges: ges })

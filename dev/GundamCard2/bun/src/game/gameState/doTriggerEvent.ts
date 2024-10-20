@@ -20,16 +20,18 @@ import { AbsoluteBaSyouFn, BaSyouKeywordFn } from "../define/BaSyou"
 import { createOnEventTitleFn } from "./createOnEventTitleFn"
 import { EventCenterFn } from "./EventCenter"
 import { PlayerA, PlayerB } from "../define/PlayerID"
-import { clearGlobalEffects, createAllCardTexts, getGlobalEffects, setGlobalEffects } from "./globalEffects"
+import { clearGlobalEffects, createAllCardTexts, getGlobalEffects, setGlobalEffects, updateGlobalEffects } from "./globalEffects"
 import { addImmediateEffect } from "./EffectStackComponent"
 import { createAttackPhaseRuleEffect } from "./createAttackPhaseRuleEffect"
+import { GameExtParams } from "../define/GameExtParams"
 
 // 觸發事件腳本
 // 在每次事件發生時都要呼叫
 // 起動型技能
 export function doTriggerEvent(
     ctx: GameState,
-    event: GameEvent
+    event: GameEvent,
+    options: GameExtParams
 ): GameState {
     logCategory("doTriggerEvent", event.title, event.cardIds)
 
@@ -42,8 +44,7 @@ export function doTriggerEvent(
                 text: text
             }
             logCategory("doTriggerEvent", "eventTitle", text.onEvent)
-            const ges = getGlobalEffects(ctx, null)
-            ctx = setGlobalEffects(ctx, null, ges)
+            const ges = options.ges || []
             ctx = createOnEventTitleFn(text, { ges: ges })(ctx, effect, createBridge({ ges: ges }))
         })
     })
@@ -86,7 +87,7 @@ export function doTriggerEvent(
                     ctx = mapPlayerState(ctx, activePlayerId, ps => {
                         return PlayerStateFn.onTurnEnd(ps)
                     }) as GameState
-                    ctx = clearGlobalEffects(ctx)
+                    ctx = updateGlobalEffects(ctx)
                     break
                 }
             }

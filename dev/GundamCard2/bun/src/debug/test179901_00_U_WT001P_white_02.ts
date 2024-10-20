@@ -63,11 +63,11 @@ export async function test179901_00_U_WT001P_white_02() {
     // 制造破壞
     let [newCtx, newPower] = doBattleDamage(ctx, PlayerA, getBattleGroup(ctx, AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア1")), 3, { ges: ges })
     ctx = newCtx
-    ctx = doCutInDestroyEffectsAndClear(ctx)
+    ctx = doCutInDestroyEffectsAndClear(ctx, null, { ges: getGlobalEffects(ctx, null) })
     if (getCutInDestroyEffects(ctx).find(effect => EffectFn.getCardID(effect) != cardB.id)) {
         throw new Error()
     }
-    let effects = createPlayEffects(ctx, PlayerA)
+    let effects = createPlayEffects(ctx, PlayerA, { ges: getGlobalEffects(ctx, null) })
     if (effects.length != 3) {
         throw new Error()
     }
@@ -90,7 +90,7 @@ export async function test179901_00_U_WT001P_white_02() {
         ctx = setTipSelectionForUser(ctx, effect, 0, 0)
         ctx = doEffect(ctx, effect, 0, 0)
         // 為了測試，這裡直接將破壞效果推入堆疊，正常流程不這樣做
-        ctx = doCutInDestroyEffectsAndClear(ctx)
+        ctx = doCutInDestroyEffectsAndClear(ctx, null, { ges: getGlobalEffects(ctx, null) })
         // 這裡的for迴圈會把所有破壞效果執行完畢，所以破壞的機體都到墓地了
         for (let i = 0; i < 10; ++i) {
             const effect2 = getTopEffect(ctx)
@@ -98,7 +98,7 @@ export async function test179901_00_U_WT001P_white_02() {
                 ctx = setTipSelectionForUser(ctx, effect2, 0, 0)
                 ctx = doEffect(ctx, effect2, 0, 0)
                 // 為了測試，這裡直接將破壞效果推入堆疊，正常流程不這樣做
-                ctx = doCutInDestroyEffectsAndClear(ctx)
+                ctx = doCutInDestroyEffectsAndClear(ctx, null, { ges: getGlobalEffects(ctx, null) })
                 ctx = removeEffect(ctx, effect2.id) as GameState
             }
         }

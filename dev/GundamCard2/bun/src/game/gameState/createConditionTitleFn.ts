@@ -114,9 +114,8 @@ export function createConditionTitleFn(condition: Condition): ConditionTitleFn {
         }
         case "このカードの_本来のテキスト１つ": {
             const [_, isOrigin, count] = condition.title
-            return function (ctx: GameState, effect: Effect): Tip | null {
-                const ges = getGlobalEffects(ctx, null)
-                ctx = setGlobalEffects(ctx, null, ges)
+            return function (ctx: GameState, effect: Effect, { Options }: Bridge): Tip | null {
+                const ges = Options.ges || []
                 const cardId = EffectFn.getCardID(effect)
                 const texts = isOrigin ?
                     (getItemPrototype(ctx, cardId).texts || []) :
@@ -232,13 +231,12 @@ export function createConditionTitleFn(condition: Condition): ConditionTitleFn {
         }
         case "_自軍手札、または自軍ハンガーにある、_６以下の合計国力を持つ_ユニット_１枚を": {
             const [_, side, totalCost, category, count] = condition.title
-            return function (ctx: GameState, effect: Effect): Tip | null {
+            return function (ctx: GameState, effect: Effect, { Options }: Bridge): Tip | null {
                 const cardId = EffectFn.getCardID(effect)
                 const playerId = getItemController(ctx, cardId);
                 const targetPlayerId = PlayerIDFn.fromRelatedPlayerSideKeyword(side, playerId)
                 const basyous: AbsoluteBaSyou[] = (lift(AbsoluteBaSyouFn.of)([targetPlayerId], ["手札", "ハンガー"]))
-                const ges = getGlobalEffects(ctx, null)
-                ctx = setGlobalEffects(ctx, null, ges)
+                const ges = Options.ges || []
                 const pairs = basyous.flatMap(basyou =>
                     getItemIdsByBasyou(ctx, basyou)
                         .filter(cardId => getItemRuntimeCategory(ctx, cardId) == category)
@@ -254,12 +252,11 @@ export function createConditionTitleFn(condition: Condition): ConditionTitleFn {
         case "打開自軍手裡或指定HANGER中特徵_A並合計國力_x以下的_1張卡":
             {
                 const [_, char, x, count] = condition.title
-                return function (ctx: GameState, effect: Effect): Tip | null {
+                return function (ctx: GameState, effect: Effect, { Options }: Bridge): Tip | null {
                     const cardId = EffectFn.getCardID(effect)
                     const playerId = getItemController(ctx, cardId);
                     const basyous: AbsoluteBaSyou[] = (lift(AbsoluteBaSyouFn.of)([playerId], ["手札", "ハンガー"]))
-                    const ges = getGlobalEffects(ctx, null)
-                    ctx = setGlobalEffects(ctx, null, ges)
+                    const ges = Options.ges || []
                     const pairs = basyous.flatMap(basyou =>
                         getItemIdsByBasyou(ctx, basyou)
                             .filter(cardId => getItemPrototype(ctx, cardId).category == "ユニット")

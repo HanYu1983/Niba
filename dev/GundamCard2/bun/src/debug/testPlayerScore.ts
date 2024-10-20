@@ -11,6 +11,7 @@ import { repeat } from "ramda";
 import { createPlayCardEffects } from "../game/gameState/createPlayCardEffects";
 import { createPlayerScore, createPreviewEffectScore, getPlayerDestroyIds } from "../game/gameState/player";
 import { Effect, EffectFn } from "../game/define/Effect";
+import { getGlobalEffects } from "../game/gameState/globalEffects";
 
 export async function testPlayerScore() {
 
@@ -32,11 +33,11 @@ export async function testPlayerScore() {
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), repeat("unitBlack", 6)) as GameState
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国"), repeat("unitBlack", 2)) as GameState
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア1"), repeat("unitBlack", 2)) as GameState
-    let playA = createPlayCardEffects(ctx, cardA.id).find(eff=>eff.reason[0]=="PlayCard" && eff.reason[3].isPlayCommand)
+    let playA = createPlayCardEffects(ctx, cardA.id, { ges: getGlobalEffects(ctx, null) }).find(eff => eff.reason[0] == "PlayCard" && eff.reason[3].isPlayCommand)
     if (playA == null) {
         throw new Error()
     }
-    let playB = createPlayCardEffects(ctx, cardB.id).find(eff=>eff.reason[0]=="PlayCard" && eff.reason[3].isPlayCommand)
+    let playB = createPlayCardEffects(ctx, cardB.id, { ges: getGlobalEffects(ctx, null) }).find(eff => eff.reason[0] == "PlayCard" && eff.reason[3].isPlayCommand)
     if (playB == null) {
         throw new Error()
     }

@@ -29,17 +29,17 @@ export const prototype: CardPrototype = {
           isOption: true,
           conditions: {
             "自軍本国の上のカード１～３枚を見て、その中にある、「特徴：ヘイズル系」を持つユニット１枚": {
-              title: ["Entity", { 
-                see: [DefineFn.RelatedBaSyouFn.of("自軍", "本国"), 1, 3], 
-                hasChar: ["ヘイズル系"], 
-                cardCategory: ["ユニット"], 
-                count: 1 
+              title: ["Entity", {
+                see: [DefineFn.RelatedBaSyouFn.of("自軍", "本国"), 1, 3],
+                hasChar: ["ヘイズル系"],
+                cardCategory: ["ユニット"],
+                count: 1
               }],
             },
             "このカードの部隊の任意の順番": {
-              title: ["Entity", { 
-                hasSelfCardId: true, 
-                isSetGroup: true, 
+              title: ["Entity", {
+                hasSelfCardId: true,
+                isSetGroup: true,
                 max: 1
               }]
             }
@@ -47,7 +47,7 @@ export const prototype: CardPrototype = {
           logicTreeAction: {
             actions: [
               {
-                title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+                title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GameState {
                   const cardId = DefineFn.EffectFn.getCardID(effect)
                   const pairs1 = GameStateFn.getCardTipStrBaSyouPairs(ctx, "自軍本国の上のカード１～３枚を見て、その中にある、「特徴：ヘイズル系」を持つユニット１枚", cardId)
                   const pairs2 = GameStateFn.getCardTipStrBaSyouPairs(ctx, "このカードの部隊の任意の順番", cardId)
@@ -58,7 +58,7 @@ export const prototype: CardPrototype = {
                     undefined :
                     pairs2.map(p => p[0]).indexOf(pairs1[0][0])
                   for (const pair of pairs1) {
-                    ctx = GameStateFn.doItemMove(ctx, cardBasyou, pair, { insertId: insertId })
+                    ctx = GameStateFn.doItemMove(ctx, cardBasyou, pair, { insertId: insertId, ges: Options.ges })
                   }
                   return ctx
                 }.toString()

@@ -49,7 +49,7 @@ export const prototype: CardPrototype = {
             logicTreeAction: {
               actions: [
                 {
-                  title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+                  title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GameState {
                     const cardId = DefineFn.EffectFn.getCardID(effect)
                     const cardController = GameStateFn.getItemController(ctx, cardId)
                     const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "自軍本国の上のカード１～２枚を見て、その中にある「サイコミュ」を持つユニット１枚", cardId)
@@ -57,9 +57,9 @@ export const prototype: CardPrototype = {
                       return ctx
                     }
                     const targetPair = pairs[0]
-                    ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "配備エリア"), targetPair)
-                    ctx = GameStateFn.doItemSetDestroy(ctx, null, GameStateFn.createStrBaSyouPair(ctx, cardId))
-                    ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "配備エリア"), GameStateFn.createStrBaSyouPair(ctx, cardId), { isSkipTargetMissing: true })
+                    ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "配備エリア"), targetPair, { ges: Options.ges })
+                    ctx = GameStateFn.doItemSetDestroy(ctx, null, GameStateFn.createStrBaSyouPair(ctx, cardId), { ges: Options.ges })
+                    ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "配備エリア"), GameStateFn.createStrBaSyouPair(ctx, cardId), { isSkipTargetMissing: true, ges: Options.ges })
                     ctx = GameStateFn.setSetGroupParent(ctx, targetPair[0], cardId) as GameState
                     return ctx
                   }.toString()

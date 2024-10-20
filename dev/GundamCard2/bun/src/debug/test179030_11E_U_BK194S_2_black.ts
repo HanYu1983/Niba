@@ -37,7 +37,7 @@ export async function test179030_11E_U_BK194S_2_black() {
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), repeat("unitBlack", 5)) as GameState
     ctx = setActivePlayerID(ctx, PlayerA) as GameState
     ctx = setPhase(ctx, ["ドローフェイズ", "フリータイミング"]) as GameState
-    const effects = createPlayEffects(ctx, PlayerA)
+    const effects = createPlayEffects(ctx, PlayerA, { ges: getGlobalEffects(ctx, null) })
     {
         if (effects.length == 0) {
             throw new Error()
@@ -60,7 +60,7 @@ export async function test179030_11E_U_BK194S_2_black() {
         }
         {
             let ctx2 = JSON.parse(JSON.stringify(ctx))
-            ctx2 = doItemMove(ctx2, AbsoluteBaSyouFn.of(PlayerA, "ジャンクヤード"), [unitWillMove.id, getItemBaSyou(ctx2, unitWillMove.id)])
+            ctx2 = doItemMove(ctx2, AbsoluteBaSyouFn.of(PlayerA, "ジャンクヤード"), [unitWillMove.id, getItemBaSyou(ctx2, unitWillMove.id)], { ges: getGlobalEffects(ctx, null) })
             if (AbsoluteBaSyouFn.getBaSyouKeyword(getItemBaSyou(ctx2, unitWillMove.id)) == "ジャンクヤード") {
                 throw new Error()
             }
@@ -71,7 +71,7 @@ export async function test179030_11E_U_BK194S_2_black() {
         {
             // 移到敵軍墓地則沒有影響
             let ctx2 = JSON.parse(JSON.stringify(ctx))
-            ctx2 = doItemMove(ctx2, AbsoluteBaSyouFn.of(PlayerB, "ジャンクヤード"), [unitWillMove.id, getItemBaSyou(ctx2, unitWillMove.id)])
+            ctx2 = doItemMove(ctx2, AbsoluteBaSyouFn.of(PlayerB, "ジャンクヤード"), [unitWillMove.id, getItemBaSyou(ctx2, unitWillMove.id)], { ges: getGlobalEffects(ctx, null) })
             if (AbsoluteBaSyouFn.getBaSyouKeyword(getItemBaSyou(ctx2, unitWillMove.id)) == "取り除かれたカード") {
                 throw new Error()
             }
@@ -82,7 +82,7 @@ export async function test179030_11E_U_BK194S_2_black() {
     }
     {
         ctx = setPhase(ctx, ["配備フェイズ", "フリータイミング"]) as GameState
-        const effects = createPlayEffects(ctx, PlayerA)
+        const effects = createPlayEffects(ctx, PlayerA, { ges: getGlobalEffects(ctx, null) })
         if (effects.length == 0) {
             throw new Error()
         }
@@ -122,13 +122,13 @@ export async function test179030_11E_U_BK194S_2_black_2() {
         console.log(getItemPrototype(ctx, cardA.id))
         throw new Error()
     }
-    const effects = createPlayCardEffects(ctx, cardA.id)
+    const effects = createPlayCardEffects(ctx, cardA.id, { ges: getGlobalEffects(ctx, null) })
     if (effects.length == 0) {
         throw new Error()
     }
     {
         const effect = effects.find(eff => eff.reason[0] == "PlayCard" && eff.reason[3].isPlayUnit)
-        if(effect == null){
+        if (effect == null) {
             throw new Error()
         }
         ctx = setTipSelectionForUser(ctx, effect, 0, 0)

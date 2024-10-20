@@ -32,6 +32,7 @@ import { createReturnRuleEffect } from "../gameState/createReturnRuleEffect";
 import { createDrawPhaseRuleEffect } from "../gameState/createDrawPhaseRuleEffect";
 import { createRerollPhaseRuleEffect } from "../gameState/createRerollPhaseRuleEffect";
 import { createDiscardRuleEffect } from "../gameState/createDiscardRuleEffect";
+import { getGlobalEffects } from "../gameState/globalEffects";
 
 export function applyFlow(
     ctx: GameStateWithFlowMemory,
@@ -100,9 +101,9 @@ export function applyFlow(
                 },
             };
             // 負數修正破壞
-            ctx = createMinusDestroyEffectAndPush(ctx) as GameStateWithFlowMemory;
+            ctx = createMinusDestroyEffectAndPush(ctx, { ges: getGlobalEffects(ctx, null) }) as GameStateWithFlowMemory;
             // 每執行完一次效果，就更新指令
-            ctx = updateCommand(ctx) as GameStateWithFlowMemory;
+            ctx = updateCommand(ctx, { ges: getGlobalEffects(ctx, null) }) as GameStateWithFlowMemory;
             return ctx;
         }
         case "FlowPassPhase": {
@@ -229,7 +230,7 @@ export function applyFlow(
                             break
                         }
                         default: {
-                            ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
+                            ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }, { ges: getGlobalEffects(ctx, null) }) as GameStateWithFlowMemory;
                         }
                     }
                     break
@@ -241,7 +242,7 @@ export function applyFlow(
                             break
                         }
                         default: {
-                            ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
+                            ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }, { ges: getGlobalEffects(ctx, null) }) as GameStateWithFlowMemory;
                         }
                     }
                     break
@@ -261,7 +262,7 @@ export function applyFlow(
                                 case "フリータイミング":
                                 case "フリータイミング2": {
                                     ctx = checkIsBattle(ctx) as GameStateWithFlowMemory
-                                    ctx = updateCommand(ctx) as GameStateWithFlowMemory
+                                    ctx = updateCommand(ctx, { ges: getGlobalEffects(ctx, null) }) as GameStateWithFlowMemory
                                     ctx = {
                                         ...ctx,
                                         // 重設切入旗標，讓玩家再次切入
@@ -270,11 +271,11 @@ export function applyFlow(
                                             hasPlayerPassCut: {},
                                         },
                                     }
-                                    ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
+                                    ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }, { ges: getGlobalEffects(ctx, null) }) as GameStateWithFlowMemory;
                                     break
                                 }
                                 default: {
-                                    ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
+                                    ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }, { ges: getGlobalEffects(ctx, null) }) as GameStateWithFlowMemory;
                                 }
                             }
                             break
@@ -290,7 +291,7 @@ export function applyFlow(
                                 case "フリータイミング":
                                 case "フリータイミング2": {
                                     ctx = checkIsBattle(ctx) as GameStateWithFlowMemory
-                                    ctx = updateCommand(ctx) as GameStateWithFlowMemory
+                                    ctx = updateCommand(ctx, { ges: getGlobalEffects(ctx, null) }) as GameStateWithFlowMemory
                                     ctx = {
                                         ...ctx,
                                         // 重設切入旗標，讓玩家再次切入
@@ -299,11 +300,11 @@ export function applyFlow(
                                             hasPlayerPassCut: {},
                                         },
                                     }
-                                    ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
+                                    ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }, { ges: getGlobalEffects(ctx, null) }) as GameStateWithFlowMemory;
                                     break
                                 }
                                 default: {
-                                    ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
+                                    ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }, { ges: getGlobalEffects(ctx, null) }) as GameStateWithFlowMemory;
                                 }
                             }
                             break
@@ -319,7 +320,7 @@ export function applyFlow(
                                 case "フリータイミング":
                                 case "フリータイミング2": {
                                     ctx = checkIsBattle(ctx) as GameStateWithFlowMemory
-                                    ctx = updateCommand(ctx) as GameStateWithFlowMemory
+                                    ctx = updateCommand(ctx, { ges: getGlobalEffects(ctx, null) }) as GameStateWithFlowMemory
                                     ctx = {
                                         ...ctx,
                                         // 重設切入旗標，讓玩家再次切入
@@ -328,11 +329,11 @@ export function applyFlow(
                                             hasPlayerPassCut: {},
                                         },
                                     }
-                                    ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
+                                    ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }, { ges: getGlobalEffects(ctx, null) }) as GameStateWithFlowMemory;
                                     break
                                 }
                                 default: {
-                                    ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
+                                    ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }, { ges: getGlobalEffects(ctx, null) }) as GameStateWithFlowMemory;
                                 }
                             }
                             break
@@ -348,12 +349,12 @@ export function applyFlow(
                                 case "フリータイミング":
                                 case "フリータイミング2": {
                                     ctx = checkIsBattle(ctx) as GameStateWithFlowMemory
-                                    ctx = updateCommand(ctx) as GameStateWithFlowMemory
-                                    ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
+                                    ctx = updateCommand(ctx, { ges: getGlobalEffects(ctx, null) }) as GameStateWithFlowMemory
+                                    ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }, { ges: getGlobalEffects(ctx, null) }) as GameStateWithFlowMemory;
                                     break
                                 }
                                 default: {
-                                    ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
+                                    ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }, { ges: getGlobalEffects(ctx, null) }) as GameStateWithFlowMemory;
                                 }
                             }
                             break
@@ -361,18 +362,18 @@ export function applyFlow(
                         case "ターン終了時": {
                             switch (ctx.phase[2]) {
                                 case "ダメージリセット":
-                                    ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
+                                    ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }, { ges: getGlobalEffects(ctx, null) }) as GameStateWithFlowMemory;
                                     break
                                 case "効果解決":
-                                    ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
+                                    ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }, { ges: getGlobalEffects(ctx, null) }) as GameStateWithFlowMemory;
                                     break
                                 case "手札調整":
                                     ctx = addImmediateEffectIfCanPayCost(ctx, createDiscardRuleEffect(ctx, PlayerA), { isSkipLimitCheck: true }) as GameStateWithFlowMemory
                                     ctx = addImmediateEffectIfCanPayCost(ctx, createDiscardRuleEffect(ctx, PlayerB), { isSkipLimitCheck: true }) as GameStateWithFlowMemory
-                                    ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
+                                    ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }, { ges: getGlobalEffects(ctx, null) }) as GameStateWithFlowMemory;
                                     break
                                 case "効果終了。ターン終了": {
-                                    ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
+                                    ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }, { ges: getGlobalEffects(ctx, null) }) as GameStateWithFlowMemory;
                                     if (ctx.activePlayerID == null) {
                                         throw new Error("activePlayerID not found");
                                     }
@@ -385,7 +386,7 @@ export function applyFlow(
                                     break
                                 }
                                 default: {
-                                    ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
+                                    ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }, { ges: getGlobalEffects(ctx, null) }) as GameStateWithFlowMemory;
                                 }
                             }
                         }
@@ -393,7 +394,7 @@ export function applyFlow(
                     break
                 }
                 default: {
-                    ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }) as GameStateWithFlowMemory;
+                    ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", ctx.phase] }, { ges: getGlobalEffects(ctx, null) }) as GameStateWithFlowMemory;
                 }
             }
             ctx = {
@@ -405,7 +406,7 @@ export function applyFlow(
             };
             return ctx;
         case "FlowUpdateCommand":
-            ctx = updateCommand(ctx) as GameStateWithFlowMemory;
+            ctx = updateCommand(ctx, { ges: getGlobalEffects(ctx, null) }) as GameStateWithFlowMemory;
             // set hasTriggerEvent
             ctx = {
                 ...ctx,
@@ -419,7 +420,7 @@ export function applyFlow(
             // 下一步
             ctx = setNextPhase(ctx) as GameStateWithFlowMemory
             // 自動更新指令
-            ctx = updateCommand(ctx) as GameStateWithFlowMemory;
+            ctx = updateCommand(ctx, { ges: getGlobalEffects(ctx, null) }) as GameStateWithFlowMemory;
             // 重設觸發flag
             ctx = {
                 ...ctx,
@@ -453,7 +454,7 @@ export function applyFlow(
         case "FlowHandleStackEffectFinished": {
             ctx = doTriggerEvent(ctx, {
                 title: ["カット終了時", ctx.stackEffectMemory]
-            }) as GameStateWithFlowMemory;
+            }, { ges: getGlobalEffects(ctx, null) }) as GameStateWithFlowMemory;
             ctx = {
                 ...ctx,
                 stackEffectMemory: [],
@@ -485,8 +486,8 @@ export function applyFlow(
         }
         case "FlowMakeDestroyOrder": {
             // 移除破壞效果，全部移到堆疊
-            ctx = doCutInDestroyEffectsAndClear(ctx, flow.destroyEffect.map(i => i.id)) as GameStateWithFlowMemory
-            ctx = updateCommand(ctx) as GameStateWithFlowMemory
+            ctx = doCutInDestroyEffectsAndClear(ctx, flow.destroyEffect.map(i => i.id), { ges: getGlobalEffects(ctx, null) }) as GameStateWithFlowMemory
+            ctx = updateCommand(ctx, { ges: getGlobalEffects(ctx, null) }) as GameStateWithFlowMemory
             return {
                 ...ctx,
                 // 重設切入旗標，讓玩家再次切入

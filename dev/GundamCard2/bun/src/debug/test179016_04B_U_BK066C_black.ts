@@ -41,13 +41,13 @@ export async function test179016_04B_U_BK066C_black() {
     {
         const ges = getGlobalEffects(ctx, null)
         ctx = setGlobalEffects(ctx, null, ges)
-        const effects = createPlayCardEffects(ctx, cardA.id)
+        const effects = createPlayCardEffects(ctx, cardA.id, { ges: getGlobalEffects(ctx, null) })
         if (effects.length == 0) {
             console.log(effects)
             throw new Error()
         }
         const effect = effects.find(eff => eff.reason[0] == "PlayCard" && eff.reason[3].isPlayUnit)
-        if(effect == null){
+        if (effect == null) {
             throw new Error()
         }
         const toes = createEffectTips(ctx, effect, 0, 0)

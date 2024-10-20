@@ -40,7 +40,7 @@ export async function test179028_10D_CH_WT095_white() {
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), repeat("unitWhite", 5)) as GameState
     ctx = setActivePlayerID(ctx, PlayerA) as GameState
     ctx = setPhase(ctx, ["配備フェイズ", "フリータイミング"]) as GameState
-    let effects = createPlayEffects(ctx, PlayerA)
+    let effects = createPlayEffects(ctx, PlayerA, { ges: getGlobalEffects(ctx, null) })
     if (effects.length != 3) {
         console.log(effects)
         throw new Error()

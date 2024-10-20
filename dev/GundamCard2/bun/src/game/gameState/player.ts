@@ -47,7 +47,7 @@ export function isPlayerHasBattleGroup(
   )() > 0
 }
 
-export function doBattleDamage(ctx: GameState, playerId: string, guardUnits: string[], attackPower: number, options: { isNotRule?: boolean, ges?: GlobalEffect[] }): [GameState, number] {
+export function doBattleDamage(ctx: GameState, playerId: string, guardUnits: string[], attackPower: number, options: GameExtParams & { isNotRule?: boolean }): [GameState, number] {
   // 敵方機體存在, 攻擊機體
   if (guardUnits.length) {
     const changedCardState = guardUnits.map((cardID): ItemState => {
@@ -86,7 +86,7 @@ export function doBattleDamage(ctx: GameState, playerId: string, guardUnits: str
         cardIds: [cs.id],
         playerId: playerId
       };
-      ctx = doTriggerEvent(ctx, gameEvent)
+      ctx = doTriggerEvent(ctx, gameEvent, { ges: options.ges })
       return {
         ...cs,
         damage: nextDamage,
@@ -108,7 +108,7 @@ export function doRuleBattleDamage(
   willAttackUnits: string[],
   willGuardUnits: string[],
   willAttackPower: number,
-  options: { ges?: GlobalEffect[] }
+  options: GameExtParams
 ): GameState {
   logCategory("handleAttackDamage", "speed", speedPhase);
   logCategory("handleAttackDamage", "willAttackUnits", willAttackUnits);
@@ -133,13 +133,13 @@ export function doRuleBattleDamage(
       if (currentAttackPlayerID == getActivePlayerID(ctx) && currentAttackPower > 0) {
         // 非交戰中或有強襲才能打本國(p35)
         if (isBattle(ctx, willAttackUnits[0], null) == false || isABattleGroup(ctx, ["強襲"], willAttackUnits[0], { ges: options.ges })) {
-          ctx = doCountryDamage(ctx, currentGuardPlayerID, currentAttackPower)
+          ctx = doCountryDamage(ctx, currentGuardPlayerID, currentAttackPower, { ges: options.ges })
           {
             const gameEvent: GameEvent = {
               title: ["このカードの部隊が敵軍本国に戦闘ダメージを与えた場合"],
               cardIds: willAttackUnits,
             };
-            ctx = doTriggerEvent(ctx, gameEvent)
+            ctx = doTriggerEvent(ctx, gameEvent, { ges: options.ges })
           }
         }
       }

@@ -39,13 +39,13 @@ export async function test179030_11E_C_WT077S_white() {
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerB, "配備エリア"), repeat("unit", 3)) as GameState
     ctx = setActivePlayerID(ctx, PlayerA) as GameState
     ctx = setPhase(ctx, ["戦闘フェイズ", "ダメージ判定ステップ", "フリータイミング"]) as GameState
-    let effects = createPlayEffects(ctx, PlayerA)
+    let effects = createPlayEffects(ctx, PlayerA, { ges: getGlobalEffects(ctx, null) })
     if (effects.length != 2) {
         console.log(effects)
         throw new Error()
     }
-    let effect: Effect | null = effects.find(eff=>eff.reason[0] == "PlayCard" && eff.description == "合計国力_＋１してプレイできる") || null
-    if(effect == null){
+    let effect: Effect | null = effects.find(eff => eff.reason[0] == "PlayCard" && eff.description == "合計国力_＋１してプレイできる") || null
+    if (effect == null) {
         throw new Error()
     }
     ctx = setTipSelectionForUser(ctx, effect, 0, 0)

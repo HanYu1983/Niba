@@ -28,7 +28,7 @@ export const prototype: CardPrototype = {
             side: "敵軍",
             is: ["ユニット"],
             count: 1,
-          }, {ges: Options.ges})
+          }, { ges: Options.ges })
         }.toString()
       },
     },
@@ -36,11 +36,11 @@ export const prototype: CardPrototype = {
       {
         actions: [
           {
-            title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, ToolFn }: Bridge): GameState {
+            title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GameState {
               const cardId = DefineFn.EffectFn.getCardID(effect)
               const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "配備エリアにいる、X以下の合計国力を持つ敵軍ユニット１枚", cardId)
               for (const pair of pairs) {
-                ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(GameStateFn.getCardOwner(ctx, pair[0]), "手札"), pair)
+                ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(GameStateFn.getCardOwner(ctx, pair[0]), "手札"), pair, { ges: Options.ges })
               }
               return ctx
             }.toString()

@@ -17,8 +17,9 @@ import { getSetGroupChildren, getSetGroupRoot } from "./SetGroupComponent"
 import { doTriggerEvent } from "./doTriggerEvent"
 import { getRuntimeBattleArea } from "./RuntimeBattleAreaComponent"
 import { getItemRuntimeCategory } from "./card"
+import { GameExtParams } from "../define/GameExtParams"
 
-export function doItemSetDestroy(ctx: GameState, reason: DestroyReason | null, [itemId, from]: StrBaSyouPair, options?: { isSkipTargetMissing?: boolean }): GameState {
+export function doItemSetDestroy(ctx: GameState, reason: DestroyReason | null, [itemId, from]: StrBaSyouPair, options: GameExtParams & { isSkipTargetMissing?: boolean }): GameState {
     if (options?.isSkipTargetMissing) {
 
     } else {
@@ -73,7 +74,7 @@ export function doItemSetDestroy(ctx: GameState, reason: DestroyReason | null, [
                 // 先將效果放入破壞陣列(destroyEffects)，會在流程中將破壞陣列切入到堆疊中(stackEffects)
                 ctx = addDestroyEffect(ctx, createDestroyEffect(ctx, reason, setGroupId)) as GameState
                 if (setGroupId != itemId) {
-                    ctx = doTriggerEvent(ctx, { title: ["このカードのセットグループのユニットが破壊された場合"], cardIds: [setGroupId] })
+                    ctx = doTriggerEvent(ctx, { title: ["このカードのセットグループのユニットが破壊された場合"], cardIds: [setGroupId] }, options)
                 }
             } else {
                 // if (isDestroyEffect) {
@@ -101,7 +102,7 @@ export function doItemSetDestroy(ctx: GameState, reason: DestroyReason | null, [
     throw new Error(`moveItem unknown item: ${itemId}`)
 }
 
-export function createMinusDestroyEffectAndPush(ctx: GameState): GameState {
+export function createMinusDestroyEffectAndPush(ctx: GameState, options: GameExtParams): GameState {
     // 將所有破壞效果加入破壞用堆疊
     // 加入破壞用堆疊後，主動玩家就必須決定解決順序
     // 決定後，依順序將所有效果移到正在解決中的堆疊，並重設切入的旗標，讓玩家可以在堆疊解決中可以再次切入
@@ -119,9 +120,8 @@ export function createMinusDestroyEffectAndPush(ctx: GameState): GameState {
         } else {
             return
         }
-        const ges = getGlobalEffects(ctx, null)
-        ctx = setGlobalEffects(ctx, null, ges)
-        const [_, _2, hp] = getSetGroupBattlePoint(ctx, cardId, {ges: ges})
+        const ges = options.ges || []
+        const [_, _2, hp] = getSetGroupBattlePoint(ctx, cardId, { ges: ges })
         if (hp <= 0) {
             const destroyReason: DestroyReason = {
                 id: "マイナスの戦闘修正",

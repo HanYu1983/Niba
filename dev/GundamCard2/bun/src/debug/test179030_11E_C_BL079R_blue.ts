@@ -33,7 +33,7 @@ export async function test179030_11E_C_BL079R_blue() {
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), repeat("unitBlue", 2)) as GameState
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "本国"), repeat("unit", 2)) as GameState
     let ges = getGlobalEffects(ctx, null)
-    if (getCardIdsCanPayRollCost(ctx, PlayerA, {ges: ges}).length != 2) {
+    if (getCardIdsCanPayRollCost(ctx, PlayerA, { ges: ges }).length != 2) {
         throw new Error(`getCardIdsCanPayRollCost(ctx, PlayerA, null).length !=2`)
     }
     ctx = setActivePlayerID(ctx, PlayerA) as GameState
@@ -60,7 +60,7 @@ export async function test179030_11E_C_BL079R_blue() {
         const originBasyouD = AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア1")
         ctx = addCards(ctx, originBasyouD, [cardD]) as GameState
         console.log("取得出牌指令")
-        const playCardEffects = createPlayEffects(ctx, PlayerA)
+        const playCardEffects = createPlayEffects(ctx, PlayerA, { ges: getGlobalEffects(ctx, null) })
         if (playCardEffects.length != 1) {
             console.log(playCardEffects)
             throw new Error()

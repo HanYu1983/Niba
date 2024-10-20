@@ -36,14 +36,14 @@ export async function test179027_09D_C_BK063R_black() {
     ctx = setActivePlayerID(ctx, PlayerA) as GameState
     ctx = setPhase(ctx, ["戦闘フェイズ", "ダメージ判定ステップ", "フリータイミング"]) as GameState
     let originCtx = JSON.parse(JSON.stringify(ctx))
-    let effects = createPlayEffects(ctx, PlayerA)
+    let effects = createPlayEffects(ctx, PlayerA, { ges: getGlobalEffects(ctx, null) })
     {
         if (effects.length != 1) {
             console.log(effects)
             throw new Error()
         }
-        let effect = effects.find(eff=>eff.reason[0]=="PlayCard" && eff.reason[3].isPlayCommand)
-        if(effect == null){
+        let effect = effects.find(eff => eff.reason[0] == "PlayCard" && eff.reason[3].isPlayCommand)
+        if (effect == null) {
             throw new Error()
         }
         let tipOrErrors = createEffectTips(ctx, effect, 0, 0)
@@ -59,7 +59,7 @@ export async function test179027_09D_C_BK063R_black() {
             side: "敵軍",
             is: ["ユニット"],
             count: 1
-        }, {ges: getGlobalEffects(ctx, null)})
+        }, { ges: getGlobalEffects(ctx, null) })
         let selection = TipFn.getSelection(tip)
         if (selection.length != 1) {
             console.log(tip)
@@ -112,7 +112,7 @@ export async function test179027_09D_C_BK063R_black() {
     ctx = setSetGroupParent(ctx, cardB.id, cardC.id) as GameState
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア1"), repeat("unitBlack", 1)) as GameState
     {
-        effects = createPlayEffects(ctx, PlayerA)
+        effects = createPlayEffects(ctx, PlayerA, { ges: getGlobalEffects(ctx, null) })
         if (effects.length != 2) {
             console.log(effects)
             throw new Error()

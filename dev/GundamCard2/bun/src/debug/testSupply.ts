@@ -14,6 +14,7 @@ import { doItemMove } from "../game/gameState/doItemMove";
 import { setPhase } from "../game/gameState/PhaseComponent";
 import { doTriggerEvent } from "../game/gameState/doTriggerEvent";
 import { loadPrototype } from "../script";
+import { getGlobalEffects } from "../game/gameState/globalEffects";
 
 export async function testSupply() {
     await loadPrototype("unit")
@@ -32,7 +33,7 @@ export async function testSupply() {
     ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア"), [unitHasSupply]) as GameState
     ctx = setActivePlayerID(ctx, PlayerA) as GameState
     ctx = setPhase(ctx, ["戦闘フェイズ", "攻撃ステップ", "フリータイミング"]) as GameState
-    const playEffects = createPlayEffects(ctx, PlayerA)
+    const playEffects = createPlayEffects(ctx, PlayerA, { ges: getGlobalEffects(ctx, null) })
     if (playEffects.length == 0) {
         throw new Error("")
     }

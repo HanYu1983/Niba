@@ -29,7 +29,7 @@ export async function test179015_04B_U_BK058R_black() {
     ctx = setPhase(ctx, ["配備フェイズ", "フリータイミング"]) as GameState
     const ges = getGlobalEffects(ctx, null)
     ctx = setGlobalEffects(ctx, null, ges)
-    const effects = createPlayCardEffects(ctx, cardA.id)
+    const effects = createPlayCardEffects(ctx, cardA.id, { ges: getGlobalEffects(ctx, null) })
     if (effects.length == 0) {
         throw new Error()
     }

@@ -54,6 +54,12 @@ export function clearGlobalEffects(ctx: GameState): GameState {
   }
 }
 
+export function updateGlobalEffects(ctx: GameState): GameState {
+  ctx = clearGlobalEffects(ctx)
+  ctx = setGlobalEffects(ctx, null, getGlobalEffects(ctx, null))
+  return ctx
+}
+
 // globalEffects
 function getSituationEffects(ctx: GameState, situation: Situation | null): GlobalEffect[] {
   const bridge = createBridge({})

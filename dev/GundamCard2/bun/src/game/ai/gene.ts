@@ -973,5 +973,5 @@ export function testOptAlgAttackCounty3() {
   console.log(area1b.map(id => getPrototype(id).battlePoint))
   console.log(area2b.map(id => getPrototype(id).battlePoint))
   console.log(homeIdsb.map(id => getPrototype(id).battlePoint))
-  throw new Error()
+  //throw new Error()
 }

@@ -5,7 +5,7 @@ import { StrBaSyouPair } from "../define/Tip"
 import { getCard, mapCard, setCard } from "./CardTableComponent"
 import { EventCenterFn } from "./EventCenter"
 import { GameState } from "./GameState"
-import { clearGlobalEffects, getGlobalEffects, setGlobalEffects } from "./globalEffects"
+import { clearGlobalEffects, getGlobalEffects, setGlobalEffects, updateGlobalEffects } from "./globalEffects"
 import { mapItemState } from "./ItemStateComponent"
 import { ItemTableComponent, isCard, isChip, getItemBaSyou, isCoin, getItemController, assertTargetMissingError } from "./ItemTableComponent"
 import { getSetGroupChildren, removeSetGroupParent } from "./SetGroupComponent"
@@ -15,11 +15,11 @@ import { getCutInDestroyEffects, removeEffect } from "./EffectStackComponent"
 import { EffectFn } from "../define/Effect"
 import { GlobalEffect } from "../define/GlobalEffect"
 import { logCategory } from "../../tool/logger"
+import { GameExtParams } from "../define/GameExtParams"
 
-export function doItemMove(ctx: GameState, to: AbsoluteBaSyou, [itemId, from]: StrBaSyouPair, options?: { ges?: GlobalEffect[], isSkipTargetMissing?: boolean, insertId?: number }): GameState {
+export function doItemMove(ctx: GameState, to: AbsoluteBaSyou, [itemId, from]: StrBaSyouPair, options: GameExtParams & { isSkipTargetMissing?: boolean, insertId?: number }): GameState {
     logCategory("doItemMove", "")
-    const ges = getGlobalEffects(ctx, null)
-    ctx = setGlobalEffects(ctx, null, ges)
+    const ges = options.ges || []
     if (options?.isSkipTargetMissing) {
 
     } else {
@@ -49,7 +49,7 @@ export function doItemMove(ctx: GameState, to: AbsoluteBaSyou, [itemId, from]: S
                 ...ctx,
                 table: TableFns.moveCard(ctx.table, AbsoluteBaSyouFn.toString(from), AbsoluteBaSyouFn.toString(to), itemId, { insertId: options?.insertId })
             }
-            ctx = onMoveItem(ctx, to, [itemId, from])
+            ctx = onMoveItem(ctx, to, [itemId, from], options)
         })
         ctx = EventCenterFn.onTableChange(ctx, oldTable, ctx.table)
         return ctx
@@ -60,14 +60,14 @@ export function doItemMove(ctx: GameState, to: AbsoluteBaSyou, [itemId, from]: S
     throw new Error(`moveItem unknown item: ${itemId}`)
 }
 
-export function onMoveItem(ctx: GameState, to: AbsoluteBaSyou, [cardId, from]: StrBaSyouPair): GameState {
-    ctx = clearGlobalEffects(ctx)
+export function onMoveItem(ctx: GameState, to: AbsoluteBaSyou, [cardId, from]: StrBaSyouPair, options: GameExtParams): GameState {
+    ctx = updateGlobalEffects(ctx)
     if (AbsoluteBaSyouFn.getBaSyouKeyword(from) == "手札") {
         if (AbsoluteBaSyouFn.getBaSyouKeyword(to) == "プレイされているカード") {
             ctx = doTriggerEvent(ctx, {
                 title: ["プレイした場合"],
-                cardIds: [cardId]
-            } as GameEvent)
+                cardIds: [cardId],
+            }, options)
         }
     }
     // 從非場所到場所=出場
@@ -88,7 +88,7 @@ export function onMoveItem(ctx: GameState, to: AbsoluteBaSyou, [cardId, from]: S
         ctx = doTriggerEvent(ctx, {
             title: ["このカードが場に出た場合"],
             cardIds: [cardId]
-        } as GameEvent)
+        }, options)
     }
     // 相反從場所到非場所
     if (BaSyouKeywordFn.isBa(AbsoluteBaSyouFn.getBaSyouKeyword(from)) == true && BaSyouKeywordFn.isBa(AbsoluteBaSyouFn.getBaSyouKeyword(to)) == false) {
@@ -113,7 +113,7 @@ export function onMoveItem(ctx: GameState, to: AbsoluteBaSyou, [cardId, from]: S
         ctx = doTriggerEvent(ctx, {
             title: ["カードが場から離れた場合"],
             cardIds: [cardId]
-        } as GameEvent)
+        }, options)
     }
     // 到以下的場所
     if ((["捨て山", "本国", "手札"] as BaSyouKeyword[]).includes(AbsoluteBaSyouFn.getBaSyouKeyword(to))) {
@@ -143,6 +143,6 @@ export function onMoveItem(ctx: GameState, to: AbsoluteBaSyou, [cardId, from]: S
     ctx = doTriggerEvent(ctx, {
         title: ["GameEventOnMove", from, to],
         cardIds: [cardId]
-    })
+    }, options)
     return ctx
 }

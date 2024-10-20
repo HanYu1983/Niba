@@ -17,12 +17,12 @@ export const prototype: CardPrototype = {
       id: "",
       description: "『起動』：このカードがプレイされて場にセットされた場合、カード１枚を引く。",
       title: ["自動型", "起動"],
-      onEvent: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+      onEvent: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GameState {
         const evt = DefineFn.EffectFn.getEvent(effect)
         const cardId = DefineFn.EffectFn.getCardID(effect)
         const cardController = GameStateFn.getItemController(ctx, cardId)
         if (evt.title[0] == "プレイされて場にセットされた場合" && evt.cardIds?.includes(cardId)) {
-          ctx = GameStateFn.doPlayerDrawCard(ctx, 1, cardController)
+          ctx = GameStateFn.doPlayerDrawCard(ctx, 1, cardController, Options)
         }
         return ctx
       }.toString()

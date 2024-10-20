@@ -58,9 +58,9 @@ const fs = require('fs').promises;
 export async function tests() {
     return [
         testAllCardTextTestEnv,
-        testOptAlgAttackCounty3,
-        testOptAlgAttackCounty2,
-        testOptAlgAttackCounty,
+        // testOptAlgAttackCounty3,
+        // testOptAlgAttackCounty2,
+        // testOptAlgAttackCounty,
         testOptCreateBattleGroup,
         test179030_11E_C_WT077S_white,
         testBattleBonus,

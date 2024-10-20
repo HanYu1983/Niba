@@ -7,8 +7,9 @@ import { StrBaSyouPair, Tip } from "../define/Tip";
 import { getCardTexts } from "./card";
 import { GameState } from "./GameState";
 import { logCategory } from "../../tool/logger";
+import { GameExtParams } from "../define/GameExtParams";
 
-export function createTextsFromSpecialEffect(text: CardText, options: { ges?: GlobalEffect[], cardId?: string }): CardText[] {
+export function createTextsFromSpecialEffect(text: CardText, options: GameExtParams & { cardId?: string }): CardText[] {
     logCategory("createTextsFromSpecialEffect", "")
     if (text.title[0] != "特殊型") {
         throw new Error(`text not 特殊型`)
@@ -242,7 +243,7 @@ export function createTextsFromSpecialEffect(text: CardText, options: { ges?: Gl
                                                                     const bonus = GameStateFn.getCardRollCostLength(ctx, openCardId)
                                                                     // 以下參照p69切入的適用
                                                                     const gainBonus: BattleBonus = [bonus, bonus, bonus]
-                                                                    ctx = GameStateFn.doTriggerEvent(ctx, { title: ["「ゲイン」の効果で戦闘修正を得る場合", gainBonus], cardIds: [cardId] })
+                                                                    ctx = GameStateFn.doTriggerEvent(ctx, { title: ["「ゲイン」の効果で戦闘修正を得る場合", gainBonus], cardIds: [cardId] }, { ges: Options.ges })
                                                                     const hasCase1 = GameStateFn.getCardTexts(ctx, cardId, { ges: ges })
                                                                         .find(text => text.description == "『起動』：このカードは、「ゲイン」の効果で戦闘修正を得る場合、その戦闘修正の代わりに、ターン終了時まで＋４／±０／±０を得る事ができる。") != null
                                                                     const hasCase2 = GameStateFn.getCardTexts(ctx, cardId, { ges: ges })
@@ -255,7 +256,7 @@ export function createTextsFromSpecialEffect(text: CardText, options: { ges?: Gl
                                                                         ctx = GameStateFn.mapItemState(ctx, cardId, is => DefineFn.ItemStateFn.setGlobalEffect(is, null, {
                                                                             title: ["＋x／＋x／＋xを得る", gainBonus], cardIds: [cardId]
                                                                         }, { isRemoveOnTurnEnd: true })) as GameState
-                                                                        ctx = GameStateFn.doTriggerEvent(ctx, { title: ["「ゲイン」の効果で戦闘修正を得た場合", gainBonus], cardIds: [cardId] })
+                                                                        ctx = GameStateFn.doTriggerEvent(ctx, { title: ["「ゲイン」の効果で戦闘修正を得た場合", gainBonus], cardIds: [cardId] }, { ges: Options.ges })
                                                                     }
                                                                     return ctx
                                                                 }.toString()
@@ -520,7 +521,7 @@ export function createTextsFromSpecialEffect(text: CardText, options: { ges?: Gl
                                             logicTreeAction: {
                                                 actions: [
                                                     {
-                                                        title: function _(ctx: GameState, effect: Effect, { GameStateFn, DefineFn }: Bridge): GameState {
+                                                        title: function _(ctx: GameState, effect: Effect, { GameStateFn, DefineFn, Options }: Bridge): GameState {
                                                             const cardId = DefineFn.EffectFn.getCardID(effect)
                                                             const basyou = GameStateFn.getItemBaSyou(ctx, cardId)
                                                             const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "打開自軍手裡或指定HANGER中特徵A並合計國力x以下的1張卡", cardId)
@@ -528,19 +529,16 @@ export function createTextsFromSpecialEffect(text: CardText, options: { ges?: Gl
                                                                 throw new Error(`pairs must not 0: ${effect.text.description}`)
                                                             }
                                                             const targetPair = pairs[0]
-
-                                                            const ges = GameStateFn.getGlobalEffects(ctx, null)
-                                                            ctx = GameStateFn.setGlobalEffects(ctx, null, ges)
                                                             GameStateFn.assertTargetMissingError(ctx, targetPair)
                                                             ctx = GameStateFn.doItemSwap(ctx, [cardId, basyou], targetPair)
                                                             ctx = GameStateFn.doItemSetRollState(ctx, false, [cardId, basyou], { isSkipTargetMissing: true })
                                                             ctx = GameStateFn.doItemMove(ctx,
                                                                 DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(basyou, "ジャンクヤード"),
                                                                 targetPair,
-                                                                { ges: ges }
+                                                                { ges: Options.ges }
                                                             ) as GameState
-                                                            ctx = GameStateFn.doTriggerEvent(ctx, { title: ["「改装」の効果で廃棄される場合"], cardIds: [targetPair[0]] })
-                                                            ctx = GameStateFn.doTriggerEvent(ctx, { title: ["「改装」の効果で場に出た場合"], cardIds: [cardId] })
+                                                            ctx = GameStateFn.doTriggerEvent(ctx, { title: ["「改装」の効果で廃棄される場合"], cardIds: [targetPair[0]] }, { ges: Options.ges })
+                                                            ctx = GameStateFn.doTriggerEvent(ctx, { title: ["「改装」の効果で場に出た場合"], cardIds: [cardId] }, { ges: Options.ges })
                                                             return ctx
                                                         }.toString()
                                                     }

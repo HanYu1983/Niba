@@ -20,9 +20,8 @@ export function createDamageRuleEffect(ctx: GameState, playerId: PlayerID): Effe
                 {
                     actions: [
                         {
-                            title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
-                                const ges = GameStateFn.getGlobalEffects(ctx, null)
-                                ctx = GameStateFn.setGlobalEffects(ctx, null, ges)
+                            title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GameState {
+                                const ges = Options.ges || []
                                 const playerId = DefineFn.EffectFn.getPlayerID(effect)
                                 // 速度1
                                 ctx = GameStateFn.doPlayerAttack(ctx, playerId, "戦闘エリア1", 1, { ges: ges })

@@ -8,7 +8,6 @@ import { Situation, BattleBonus, TextSpeicalEffect, TextSpeicalEffectFn, CardTex
 import { getCard } from "./CardTableComponent"
 import { getCoins, getCardIdByCoinId } from "./CoinTableComponent"
 import { GameState } from "./GameState"
-import { getGlobalEffects, setGlobalEffects, clearGlobalEffects } from "./globalEffects"
 import { getItemPrototype, getItemBaSyou, isChip, isCard, getItemController, ItemTableComponent } from "./ItemTableComponent"
 import { getSetGroupChildren } from "./SetGroupComponent"
 import { TipTitleTextRef } from "../define/Tip"
@@ -127,7 +126,7 @@ export function getCardRollCostLength(ctx: GameState, cardID: string): number {
   return prototype.rollCost?.length || 0
 }
 
-export function getCardTotalCostLength(ctx: GameState, cardID: string, options: { ges?: GlobalEffect[] }): number {
+export function getCardTotalCostLength(ctx: GameState, cardID: string, options: GameExtParams): number {
   logCategory("getCardTotalCostLength", "")
   const prototype = getItemPrototype(ctx, cardID)
   const added = pipe(
@@ -144,7 +143,7 @@ export function getCardTotalCostLength(ctx: GameState, cardID: string, options: 
   if (prototype.totalCost == null) {
 
   } else if (prototype.totalCost == "X") {
-    totalCost = getCardIdsCanPayRollCost(ctx, getItemController(ctx, cardID), { ges: options.ges }).length
+    totalCost = getCardIdsCanPayRollCost(ctx, getItemController(ctx, cardID), options).length
   } else {
     totalCost = prototype.totalCost
   }

@@ -86,8 +86,7 @@ export function testText(proto: CardPrototype, text: CardText, options?: { isChe
           case "使用型": {
             ctx = setGameStateWithUseTiming(ctx, text.title[1])
             const ges = getGlobalEffects(ctx, null)
-            ctx = setGlobalEffects(ctx, null, ges)
-            let effects = createPlayEffects(ctx, PlayerA)
+            let effects = createPlayEffects(ctx, PlayerA, { ges: ges })
             let effect: any = null
             if (options?.isCheckDescription) {
               effect = effects.find(eff => eff.text.description == text.description)
@@ -127,6 +126,7 @@ export function testText(proto: CardPrototype, text: CardText, options?: { isChe
             if (card == null) {
               throw new Error()
             }
+            const ges = getGlobalEffects(ctx, null)
             switch (text.title[1]) {
               case "起動": {
                 if (testEnv.eventTitle) {
@@ -134,9 +134,9 @@ export function testText(proto: CardPrototype, text: CardText, options?: { isChe
                     title: testEnv.eventTitle,
                     cardIds: [card.id]
                   }
-                  ctx = doTriggerEvent(ctx, gameEvent)
+                  ctx = doTriggerEvent(ctx, gameEvent, { ges: ges })
                 } else if (testEnv.event) {
-                  ctx = doTriggerEvent(ctx, testEnv.event)
+                  ctx = doTriggerEvent(ctx, testEnv.event, { ges: ges })
                 } else {
                   throw new Error("must has event")
                 }
