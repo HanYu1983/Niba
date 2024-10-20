@@ -49,7 +49,7 @@ export const prototype: CardPrototype = {
         const cardId = DefineFn.EffectFn.getCardID(effect)
         const cardController = GameStateFn.getItemController(ctx, cardId)
         if (event.title[0] == "GameEventOnTiming"
-          && DefineFn.PhaseFn.eq(event.title[1], DefineFn.PhaseFn.getLastTrigerEffect())
+          && DefineFn.PhaseFn.eq(event.title[1], DefineFn.PhaseFn.getLastTriggerEffect())
           && GameStateFn.getActivePlayerID(ctx) == cardController) {
           const newE = GameStateFn.createPlayTextEffectFromEffect(ctx, effect, {
             conditions: {

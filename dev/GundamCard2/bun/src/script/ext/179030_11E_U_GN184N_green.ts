@@ -70,7 +70,7 @@ export const prototype: CardPrototype = {
           })
           ctx = GameStateFn.addImmediateEffectIfCanPayCost(ctx, newE)
         }
-        if (event.title[0] == "GameEventOnTiming" && DefineFn.PhaseFn.eq(event.title[1], DefineFn.PhaseFn.getLastTrigerEffect())) {
+        if (event.title[0] == "GameEventOnTiming" && DefineFn.PhaseFn.eq(event.title[1], DefineFn.PhaseFn.getLastTriggerEffect())) {
           if (GameStateFn.getItemState(ctx, cardId).flags["enabled"]) {
             const newE = GameStateFn.createPlayTextEffectFromEffect(ctx, effect, {
               isOption: true,

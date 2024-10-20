@@ -108,8 +108,8 @@ export const PhaseFn = {
         const all = this.getAll()
         return all[all.length - 1]
     },
-    // p41
-    getLastTrigerEffect(): Phase {
+    // p41 起動能力的時機
+    getLastTriggerEffect(): Phase {
         return ["戦闘フェイズ", "ターン終了時", "効果解決"]
     },
     getNext(timing: Phase): Phase {
