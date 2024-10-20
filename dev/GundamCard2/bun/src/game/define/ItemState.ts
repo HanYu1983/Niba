@@ -19,7 +19,7 @@ export type ItemState = {
     isOpenForGain?: boolean,
     isCheat?: boolean,
     isFirstTurn?: boolean,
-    //textIdsUseThisCut?: { [key: string]: any },
+    textIdsUseThisCut?: { [key: string]: any },
     textIdsUseThisTurn?: string[]
 };
 
@@ -129,10 +129,10 @@ export const ItemStateFn = {
         return ctx
     },
     onCutEnd(ctx: ItemState): ItemState {
-        // ctx = {
-        //     ...ctx,
-        //     textIdsUseThisCut: {},
-        // }
+        ctx = {
+            ...ctx,
+            textIdsUseThisCut: {},
+        }
         return ctx
     },
     onDamageReset(ctx: ItemState): ItemState {
@@ -155,7 +155,7 @@ export const ItemStateFn = {
             isOpenForGain: false,
             isCheat: false,
             isFirstTurn: false,
-            //textIdsUseThisCut: {},
+            textIdsUseThisCut: {},
             textIdsUseThisTurn: [],
             isAttack: false,
             isDefence: false,

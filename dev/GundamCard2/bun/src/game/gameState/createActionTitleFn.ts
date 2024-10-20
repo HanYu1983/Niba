@@ -97,6 +97,27 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
         return ctx
       }
     }
+    case "同切上限": {
+      return function (ctx: GameState, effect: Effect): GameState {
+        // 使用了卡牌後, 同一個切入不能再使用. 以下記錄使用過的卡片, 會在切入結束後清除
+        // 就算有"每", 一個切入也只能使用一次
+        const cardId = EffectFn.getCardID(effect)
+        const ps = getItemState(ctx, cardId)
+        if (ps.textIdsUseThisCut?.[effect.text.id]) {
+          throw new TipError(`同切上限: ${effect.text.description}`)
+        }
+        ctx = mapItemState(ctx, cardId, ps => {
+          return {
+            ...ps,
+            textIdsUseThisCut: {
+              ...ps.textIdsUseThisCut,
+              [effect.text.id]: true
+            }
+          }
+        }) as GameState
+        return ctx
+      }
+    }
     case "同回合上限": {
       const [_, times] = action.title
       return function (ctx: GameState, effect: Effect): GameState {

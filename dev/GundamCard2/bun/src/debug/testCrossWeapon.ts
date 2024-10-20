@@ -67,7 +67,7 @@ export async function testCrossWeapon() {
             }
             try {
                 // 強制清除回合上限旗標
-                ctx = mapItemState(ctx, unitHasCrossWeaponABC.id, is => ({ ...is, textIdsUseThisTurn: [] })) as GameState
+                ctx = mapItemState(ctx, unitHasCrossWeaponABC.id, is => ({ ...is, textIdsUseThisTurn: [], textIdsUseThisCut: [] })) as GameState
                 ctx = doEffect(ctx, playEffect, 0, 0)
                 throw new Error()
             } catch (e) {

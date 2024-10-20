@@ -16,6 +16,7 @@ import { createTextsFromSpecialEffect } from "./createTextsFromSpecialEffect";
 import { getGlobalEffects, setGlobalEffects } from "./globalEffects";
 import { LogicTree } from "../../tool/logicTree";
 import { GameExtParams } from "../define/GameExtParams";
+import { Bridge } from "../../script/bridge";
 
 export function createPlayEffects(ctx: GameState, playerId: PlayerID, options: GameExtParams): Effect[] {
     logCategory("createPlayEffects", "")
@@ -100,31 +101,13 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID, options: G
                         logCategory("createPlayEffect", "====== after inTiming ======")
                         logCategory("createPlayEffect", cardId, text.description)
                         const playTextConditions: { [key: string]: Condition } = {
-                            // 沒有同切上限，只有一回合能用多少次，基本上是1次
-                            // "同切上限": {
-                            //     actions: [
-                            //         {
-                            //             title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, ToolFn }: Bridge): GameState {
-                            //                 // 使用了卡牌後, 同一個切入不能再使用. 以下記錄使用過的卡片, 會在切入結束後清除
-                            //                 const cardId = DefineFn.EffectFn.getCardID(effect)
-                            //                 const ps = GameStateFn.getItemState(ctx, cardId)
-                            //                 if (ps.textIdsUseThisCut?.[effect.text.id]) {
-                            //                     throw new DefineFn.TipError(`同切上限: ${effect.text.description}`)
-                            //                 }
-                            //                 ctx = GameStateFn.mapItemState(ctx, cardId, ps => {
-                            //                     return {
-                            //                         ...ps,
-                            //                         textIdsUseThisCut: {
-                            //                             ...ps.textIdsUseThisCut,
-                            //                             [effect.text.id]: true
-                            //                         }
-                            //                     }
-                            //                 }) as GameState
-                            //                 return ctx
-                            //             }.toString()
-                            //         }
-                            //     ]
-                            // },
+                            "同切上限": {
+                                actions: [
+                                    {
+                                        title: ["同切上限"]
+                                    }
+                                ]
+                            },
                             "同回合上限": {
                                 actions: [
                                     {
