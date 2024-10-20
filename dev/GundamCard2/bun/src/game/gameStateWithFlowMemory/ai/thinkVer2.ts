@@ -21,13 +21,13 @@ import { getSetGroupBattlePoint, isMeleeUnit, isRangeUnit } from "../../gameStat
 import { Flow } from "../Flow";
 import { GameStateWithFlowMemory } from "../GameStateWithFlowMemory";
 
-
+let earthIds: string[] = []
+let spaceIds: string[] = []
 let currentKey: string = ""
 function getUnitIds(ctx: GameState, playerId: string, isAttack: boolean, isDefence: boolean, ges: GlobalEffect[]): [string[], string[]] {
-  let earthIds: string[] = []
-  let spaceIds: string[] = []
   const key = playerId + isAttack + isDefence
   if (currentKey != key) {
+    currentKey = key
     if (isAttack) {
       const opponentPlayerId = PlayerIDFn.getOpponent(playerId)
       const opponentGoEarthIds = getPlayerUnitCanGoEarthIds(ctx, opponentPlayerId, { ges: ges })
@@ -46,8 +46,6 @@ function getUnitIds(ctx: GameState, playerId: string, isAttack: boolean, isDefen
       } else {
         [earthIds, spaceIds] = createBattleGroupForDefenceBattle(ctx, playerId, { ges: ges })
       }
-    } else {
-      [earthIds, spaceIds] = [[], []]
     }
   }
   {

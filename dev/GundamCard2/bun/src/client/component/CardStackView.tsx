@@ -24,6 +24,9 @@ export const CardStackView = (props: {
     props.cardPosition,
     appContext.viewModel.model.gameState.table.cardStack,
   ]);
+  const ges = useMemo(() => {
+    return getGlobalEffects(appContext.viewModel.model.gameState, null)
+  }, [appContext.viewModel.model.gameState])
   // 整個setGroup一起移動
   const cardsOnlySetGroupRoot = useMemo(() => {
     return cards.filter((cardId) => {
@@ -34,11 +37,11 @@ export const CardStackView = (props: {
     if (BaSyouKeywordFn.getBattleArea().includes(props.cardPosition.value[1]) != true) {
       return <></>
     }
-    const bp = getBattleGroupBattlePoint(appContext.viewModel.model.gameState, cardsOnlySetGroupRoot, { ges: getGlobalEffects(appContext.viewModel.model.gameState, null) })
+    const bp = getBattleGroupBattlePoint(appContext.viewModel.model.gameState, cardsOnlySetGroupRoot, { ges: ges })
     return <>
       <div>部隊戰鬥力:{bp}</div>
     </>
-  }, [props.cardPosition, appContext.viewModel.model.gameState, cardsOnlySetGroupRoot])
+  }, [props.cardPosition, appContext.viewModel.model.gameState, cardsOnlySetGroupRoot, ges])
   const render = useMemo(() => {
     const _cardPositionID = AbsoluteBaSyouFn.toString(props.cardPosition);
     if (props.isShowStack) {

@@ -17334,7 +17334,6 @@ var hideCategory = [
   "doEffect",
   "applyFlow",
   "handleAttackDamage",
-  "getGlobalEffects",
   "getEffectTips",
   "createEffectTips",
   "getActionTitleFn",
@@ -17342,6 +17341,7 @@ var hideCategory = [
   "createCommandEffectTips",
   "setEffectTips",
   "doTriggerEvent",
+  "createPlayEffects",
   "getConditionTitleFn",
   "createPlayCardEffects",
   "addImmediateEffectIfCanPayCost",
@@ -17384,8 +17384,7 @@ var hideCategory = [
   "createBasicForBattle",
   "onItemDamageChange",
   "onCountryDamage",
-  "createPreviewEffectScore",
-  "createBasicForAttackBattle"
+  "createPreviewEffectScore"
 ];
 var logCategory = (category, ...msg) => {
   if (hideCategory.find((c) => c == category))
@@ -23482,7 +23481,7 @@ function addImmediateEffectIfCanPayCost(ctx2, effect, optoins) {
     const cardId = EffectFn.getCardID(effect);
     let itemState = getItemState(ctx2, cardId);
     if (itemState.textIdsUseThisTurn?.includes(effect.text.id))
-      return console.warn(`\u9019\u500B\u8D77\u52D5\u6548\u679C\u9019\u56DE\u5408\u5DF2\u767C\u52D5\u904E: ${effect.text.description}`), ctx2;
+      return warnCategory(`\u9019\u500B\u8D77\u52D5\u6548\u679C\u9019\u56DE\u5408\u5DF2\u767C\u52D5\u904E: ${effect.text.description}`), ctx2;
     itemState = {
       ...itemState,
       textIdsUseThisTurn: [...itemState.textIdsUseThisTurn || [], effect.text.id]
@@ -25680,8 +25679,10 @@ var jsx_dev_runtime2 = __toESM(require_react_jsx_dev_runtime_development(), 1), 
           break;
       }
     return card.isFaceDown != !0;
-  }, [props.clientId, props.isCheat, card, appContext.viewModel.model.gameState, itemState]), renderBp = import_react2.useMemo(() => {
-    const bp = getSetGroupBattlePoint(appContext.viewModel.model.gameState, props.cardID || "unknown", { ges: getGlobalEffects(appContext.viewModel.model.gameState, null) });
+  }, [props.clientId, props.isCheat, card, appContext.viewModel.model.gameState, itemState]), ges = import_react2.useMemo(() => {
+    return getGlobalEffects(appContext.viewModel.model.gameState, null);
+  }, [appContext.viewModel.model.gameState]), renderBp = import_react2.useMemo(() => {
+    const bp = getSetGroupBattlePoint(appContext.viewModel.model.gameState, props.cardID || "unknown", { ges });
     return /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
       children: [
         bp[0],
@@ -25691,7 +25692,7 @@ var jsx_dev_runtime2 = __toESM(require_react_jsx_dev_runtime_development(), 1), 
         bp[2]
       ]
     }, void 0, !0, void 0, this);
-  }, [appContext.viewModel.model.gameState, props.cardID]), renderCoin = import_react2.useMemo(() => {
+  }, [appContext.viewModel.model.gameState, props.cardID, ges]), renderCoin = import_react2.useMemo(() => {
     if (getSetGroupRoot(appContext.viewModel.model.gameState, props.cardID || "unknown") == props.cardID == !1)
       return /* @__PURE__ */ jsx_dev_runtime2.jsxDEV(jsx_dev_runtime2.Fragment, {}, void 0, !1, void 0, this);
     const coins = getCoinIdsByCardId(appContext.viewModel.model.gameState, props.cardID || "unknown").map((id) => getCoin(appContext.viewModel.model.gameState, id));
@@ -25705,9 +25706,8 @@ var jsx_dev_runtime2 = __toESM(require_react_jsx_dev_runtime_development(), 1), 
   }, [appContext.viewModel.model.gameState, props.cardID]), renderGlobalEffects = import_react2.useMemo(() => {
     if (getSetGroupRoot(appContext.viewModel.model.gameState, props.cardID || "unknown") == props.cardID == !1)
       return /* @__PURE__ */ jsx_dev_runtime2.jsxDEV(jsx_dev_runtime2.Fragment, {}, void 0, !1, void 0, this);
-    const ges = getGlobalEffects(appContext.viewModel.model.gameState, null).filter((ge) => ge.cardIds.includes(props.cardID || "unknown"));
     return /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
-      children: ges.map((ge, i) => {
+      children: ges.filter((ge) => ge.cardIds.includes(props.cardID || "unknown")).map((ge, i) => {
         if (ge.title[0] == "AddTextRef")
           return /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
             children: getCardTextFromCardTextRef(appContext.viewModel.model.gameState, ge.title[1]).description
@@ -25721,11 +25721,11 @@ var jsx_dev_runtime2 = __toESM(require_react_jsx_dev_runtime_development(), 1), 
         }, i, !1, void 0, this);
       })
     }, void 0, !1, void 0, this);
-  }, [appContext.viewModel.model.gameState, props.cardID]), renderText = import_react2.useMemo(() => {
+  }, [appContext.viewModel.model.gameState, props.cardID, ges]), renderText = import_react2.useMemo(() => {
     const proto = getItemPrototype(appContext.viewModel.model.gameState, props.cardID || "unknown");
     if (props.isShowInfo != !0)
       return /* @__PURE__ */ jsx_dev_runtime2.jsxDEV(jsx_dev_runtime2.Fragment, {}, void 0, !1, void 0, this);
-    let texts = getCardTexts(appContext.viewModel.model.gameState, props.cardID || "unknown", { ges: getGlobalEffects(appContext.viewModel.model.gameState, null) });
+    let texts = getCardTexts(appContext.viewModel.model.gameState, props.cardID || "unknown", { ges });
     return texts = [...proto.commandText ? [proto.commandText] : [], ...texts], /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
       children: [
         /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
@@ -25751,7 +25751,7 @@ var jsx_dev_runtime2 = __toESM(require_react_jsx_dev_runtime_development(), 1), 
         }, void 0, !1, void 0, this)
       ]
     }, void 0, !0, void 0, this);
-  }, [appContext.viewModel.model.gameState, props.cardID, props.isShowInfo]), renderCmds = import_react2.useMemo(() => {
+  }, [appContext.viewModel.model.gameState, props.cardID, props.isShowInfo, ges]), renderCmds = import_react2.useMemo(() => {
     if (props.isShowCmd)
       return flows.flatMap((flow) => {
         if (flow?.id == "FlowSetActiveEffectID")
@@ -26174,14 +26174,16 @@ var jsx_dev_runtime6 = __toESM(require_react_jsx_dev_runtime_development(), 1), 
   }, [
     props.cardPosition,
     appContext.viewModel.model.gameState.table.cardStack
-  ]), cardsOnlySetGroupRoot = import_react6.useMemo(() => {
+  ]), ges = import_react6.useMemo(() => {
+    return getGlobalEffects(appContext.viewModel.model.gameState, null);
+  }, [appContext.viewModel.model.gameState]), cardsOnlySetGroupRoot = import_react6.useMemo(() => {
     return cards.filter((cardId) => {
       return getSetGroupRoot(appContext.viewModel.model.gameState, cardId) == cardId;
     });
   }, [cards, appContext.viewModel.model.gameState]), renderBattlePoint = import_react6.useMemo(() => {
     if (BaSyouKeywordFn.getBattleArea().includes(props.cardPosition.value[1]) != !0)
       return /* @__PURE__ */ jsx_dev_runtime6.jsxDEV(jsx_dev_runtime6.Fragment, {}, void 0, !1, void 0, this);
-    const bp = getBattleGroupBattlePoint(appContext.viewModel.model.gameState, cardsOnlySetGroupRoot, { ges: getGlobalEffects(appContext.viewModel.model.gameState, null) });
+    const bp = getBattleGroupBattlePoint(appContext.viewModel.model.gameState, cardsOnlySetGroupRoot, { ges });
     return /* @__PURE__ */ jsx_dev_runtime6.jsxDEV(jsx_dev_runtime6.Fragment, {
       children: /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
         children: [
@@ -26190,7 +26192,7 @@ var jsx_dev_runtime6 = __toESM(require_react_jsx_dev_runtime_development(), 1), 
         ]
       }, void 0, !0, void 0, this)
     }, void 0, !1, void 0, this);
-  }, [props.cardPosition, appContext.viewModel.model.gameState, cardsOnlySetGroupRoot]);
+  }, [props.cardPosition, appContext.viewModel.model.gameState, cardsOnlySetGroupRoot, ges]);
   return import_react6.useMemo(() => {
     const _cardPositionID = AbsoluteBaSyouFn.toString(props.cardPosition);
     if (props.isShowStack)
@@ -26586,7 +26588,10 @@ function createBattleGroupForAttackCountry(ctx2, playerId, options) {
   let gene = SelectBattleGroupGeneFn.createBasicForAttackCountry(ctx2, playerId, options);
   gene = simulatedAnnealing(100, 50, 1000, 0.7, gene);
   const area1 = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(playerId, "\u6226\u95D8\u30A8\u30EA\u30A21")).filter((itemId) => getSetGroupRoot(ctx2, itemId) == itemId), area2 = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(playerId, "\u6226\u95D8\u30A8\u30EA\u30A22")).filter((itemId) => getSetGroupRoot(ctx2, itemId) == itemId), homeIds = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(playerId, "\u914D\u5099\u30A8\u30EA\u30A2")).filter((itemId) => getSetGroupRoot(ctx2, itemId) == itemId);
-  return [area1, area2, homeIds];
+  return area1.forEach((eid) => {
+    if (area2.includes(eid))
+      throw console.log(area1, area2), new Error;
+  }), [area1, area2, homeIds];
 }
 function createBattleGroupForDefenceBattle(ctx2, playerId, options) {
   const goEarthIds = getPlayerUnitCanGoEarthIds(ctx2, playerId, options), goSpaceIds = getPlayerUnitCanGoSpaceIds(ctx2, playerId, options);
@@ -26595,23 +26600,31 @@ function createBattleGroupForDefenceBattle(ctx2, playerId, options) {
   let gene = SelectBattleGroupGeneFn.createBasicForDefenceBattle(ctx2, playerId, options);
   gene = optAlgByPSO(3, 30, 20, 0.7, gene);
   const area1 = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(playerId, "\u6226\u95D8\u30A8\u30EA\u30A21")).filter((itemId) => getSetGroupRoot(ctx2, itemId) == itemId), area2 = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(playerId, "\u6226\u95D8\u30A8\u30EA\u30A22")).filter((itemId) => getSetGroupRoot(ctx2, itemId) == itemId), homeIds = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(playerId, "\u914D\u5099\u30A8\u30EA\u30A2")).filter((itemId) => getSetGroupRoot(ctx2, itemId) == itemId);
-  return [area1, area2, homeIds];
+  return area1.forEach((eid) => {
+    if (area2.includes(eid))
+      throw console.log(area1, area2), new Error;
+  }), [area1, area2, homeIds];
 }
 function createBattleGroupForAttackBattle(ctx2, playerId, options) {
   const goEarthIds = getPlayerUnitCanGoEarthIds(ctx2, playerId, options), goSpaceIds = getPlayerUnitCanGoSpaceIds(ctx2, playerId, options);
   if (goEarthIds.length == 0 && goSpaceIds.length == 0)
     return [[], [], [], [], [], []];
   let gene = SelectBattleGroupGeneFn.createBasicForAttackBattle(ctx2, playerId, options);
-  if (gene = optAlgByPSO(0, 5, 1, 0, gene), gene.getFitness() < 0)
+  if (gene = optAlgByPSO(0, 2, 1, 0, gene), gene.getFitness() < 0)
     return [[], [], [], [], [], []];
-  const area1 = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(playerId, "\u6226\u95D8\u30A8\u30EA\u30A21")).filter((itemId) => getSetGroupRoot(ctx2, itemId) == itemId), area2 = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(playerId, "\u6226\u95D8\u30A8\u30EA\u30A22")).filter((itemId) => getSetGroupRoot(ctx2, itemId) == itemId), homeIds = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(playerId, "\u914D\u5099\u30A8\u30EA\u30A2")).filter((itemId) => getSetGroupRoot(ctx2, itemId) == itemId), defencePlayerId = PlayerIDFn.getOpponent(playerId), area1b = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(defencePlayerId, "\u6226\u95D8\u30A8\u30EA\u30A21")).filter((itemId) => getSetGroupRoot(ctx2, itemId) == itemId), area2b = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(defencePlayerId, "\u6226\u95D8\u30A8\u30EA\u30A22")).filter((itemId) => getSetGroupRoot(ctx2, itemId) == itemId), homeIdsb = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(defencePlayerId, "\u914D\u5099\u30A8\u30EA\u30A2")).filter((itemId) => getSetGroupRoot(ctx2, itemId) == itemId);
+  const area1 = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(playerId, "\u6226\u95D8\u30A8\u30EA\u30A21")).filter((itemId) => getSetGroupRoot(ctx2, itemId) == itemId), area2 = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(playerId, "\u6226\u95D8\u30A8\u30EA\u30A22")).filter((itemId) => getSetGroupRoot(ctx2, itemId) == itemId), homeIds = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(playerId, "\u914D\u5099\u30A8\u30EA\u30A2")).filter((itemId) => getSetGroupRoot(ctx2, itemId) == itemId);
+  area1.forEach((eid) => {
+    if (area2.includes(eid))
+      throw console.log(area1, area2), new Error;
+  });
+  const defencePlayerId = PlayerIDFn.getOpponent(playerId), area1b = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(defencePlayerId, "\u6226\u95D8\u30A8\u30EA\u30A21")).filter((itemId) => getSetGroupRoot(ctx2, itemId) == itemId), area2b = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(defencePlayerId, "\u6226\u95D8\u30A8\u30EA\u30A22")).filter((itemId) => getSetGroupRoot(ctx2, itemId) == itemId), homeIdsb = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(defencePlayerId, "\u914D\u5099\u30A8\u30EA\u30A2")).filter((itemId) => getSetGroupRoot(ctx2, itemId) == itemId);
   return [area1, area2, homeIds, area1b, area2b, homeIdsb];
 }
 var SelectBattleGroupGeneFn = {
   createBasic(ctx2, playerId, options) {
     const gene = {
       ctx: ctx2,
-      score: 0,
+      score: null,
       getStateKey() {
         const area1 = getItemIdsByBasyou(ctx2, AbsoluteBaSyouFn.of(playerId, "\u6226\u95D8\u30A8\u30EA\u30A21")), area2 = getItemIdsByBasyou(ctx2, AbsoluteBaSyouFn.of(playerId, "\u6226\u95D8\u30A8\u30EA\u30A22"));
         return JSON.stringify([...area1, ...area2]);
@@ -26620,6 +26633,8 @@ var SelectBattleGroupGeneFn = {
         throw new Error;
       },
       getFitness() {
+        if (this.score == null)
+          throw new Error;
         return this.score;
       },
       mutate() {
@@ -26718,6 +26733,13 @@ var SelectBattleGroupGeneFn = {
               } else
                 throw new Error;
             }
+            {
+              const area12 = getItemIdsByBasyou(ctx3, AbsoluteBaSyouFn.of(playerId, "\u6226\u95D8\u30A8\u30EA\u30A21")).filter((itemId) => getSetGroupRoot(ctx3, itemId) == itemId), area22 = getItemIdsByBasyou(ctx3, AbsoluteBaSyouFn.of(playerId, "\u6226\u95D8\u30A8\u30EA\u30A22")).filter((itemId) => getSetGroupRoot(ctx3, itemId) == itemId);
+              area12.forEach((eid) => {
+                if (area22.includes(eid))
+                  throw console.log(area12, area22), new Error;
+              });
+            }
             break;
           }
           default:
@@ -26725,7 +26747,8 @@ var SelectBattleGroupGeneFn = {
         }
         return {
           ...gene,
-          ctx: ctx3
+          ctx: ctx3,
+          score: null
         };
       },
       crossover(gene2) {
@@ -26782,6 +26805,7 @@ var SelectBattleGroupGeneFn = {
         let attackCountryGene = SelectBattleGroupGeneFn.createBasicForAttackCountry(ctx2, attackPlayerId, options);
         attackCountryGene = optAlgByPSO(10, 10, 0, 1, attackCountryGene);
         const earthIds = getItemIdsByBasyou(attackCountryGene.ctx, AbsoluteBaSyouFn.of(attackPlayerId, "\u6226\u95D8\u30A8\u30EA\u30A21")).filter((itemId) => getSetGroupRoot(ctx2, itemId) == itemId), spaceIds = getItemIdsByBasyou(attackCountryGene.ctx, AbsoluteBaSyouFn.of(attackPlayerId, "\u6226\u95D8\u30A8\u30EA\u30A22")).filter((itemId) => getSetGroupRoot(ctx2, itemId) == itemId);
+        logCategory("createBasicForAttackBattle", "earthIds", earthIds), logCategory("createBasicForAttackBattle", "spaceIds", spaceIds);
         for (let id of earthIds)
           ctx2 = doItemMove(ctx2, AbsoluteBaSyouFn.of(attackPlayerId, "\u6226\u95D8\u30A8\u30EA\u30A21"), createStrBaSyouPair(ctx2, id), options);
         for (let id of spaceIds)
@@ -26796,7 +26820,8 @@ var SelectBattleGroupGeneFn = {
       }
       return ctx2 = doPlayerAttack(ctx2, attackPlayerId, "\u6226\u95D8\u30A8\u30EA\u30A21", 1, {}), ctx2 = doPlayerAttack(ctx2, attackPlayerId, "\u6226\u95D8\u30A8\u30EA\u30A22", 1, {}), ctx2 = doPlayerAttack(ctx2, attackPlayerId, "\u6226\u95D8\u30A8\u30EA\u30A21", 2, {}), ctx2 = doPlayerAttack(ctx2, attackPlayerId, "\u6226\u95D8\u30A8\u30EA\u30A22", 2, {}), {
         ...this,
-        ctx: ctx2
+        ctx: ctx2,
+        score: null
       };
     }, gene.calcFitness = function() {
       let ctx2 = this.ctx;
@@ -26820,46 +26845,42 @@ var SelectBattleGroupGeneFn = {
 };
 
 // src/game/gameStateWithFlowMemory/ai/thinkVer2.ts
+function getUnitIds(ctx2, playerId, isAttack, isDefence, ges) {
+  const key = playerId + isAttack + isDefence;
+  if (currentKey != key) {
+    if (currentKey = key, isAttack) {
+      const opponentPlayerId = PlayerIDFn.getOpponent(playerId), opponentGoEarthIds = getPlayerUnitCanGoEarthIds(ctx2, opponentPlayerId, { ges }), opponentGoSpaceIds = getPlayerUnitCanGoSpaceIds(ctx2, opponentPlayerId, { ges });
+      if (opponentGoEarthIds.length == 0 && opponentGoSpaceIds.length == 0)
+        [earthIds, spaceIds] = createBattleGroupForAttackCountry(ctx2, playerId, { ges });
+      else
+        [earthIds, spaceIds] = createBattleGroupForAttackBattle(ctx2, playerId, { ges });
+    } else if (isDefence) {
+      const opponentPlayerId = PlayerIDFn.getOpponent(playerId), opponentGoEarthIds = getItemIdsByBasyou(ctx2, AbsoluteBaSyouFn.of(opponentPlayerId, "\u6226\u95D8\u30A8\u30EA\u30A21")), opponentGoSpaceIds = getItemIdsByBasyou(ctx2, AbsoluteBaSyouFn.of(opponentPlayerId, "\u6226\u95D8\u30A8\u30EA\u30A22"));
+      if (opponentGoEarthIds.length == 0 && opponentGoSpaceIds.length == 0)
+        [earthIds, spaceIds] = [[], []];
+      else
+        [earthIds, spaceIds] = createBattleGroupForDefenceBattle(ctx2, playerId, { ges });
+    }
+  }
+  {
+    const area1 = earthIds, area2 = spaceIds;
+    area1.forEach((eid) => {
+      if (area2.includes(eid))
+        throw console.log(area1, area2), new Error;
+    });
+  }
+  return [earthIds, spaceIds];
+}
 function thinkVer2(ctx2, playerId, flows) {
-  const ges = getGlobalEffects(ctx2, null), hasAttackTip = flows.find((flow) => {
-    if (flow.id == "FlowSetTipSelection") {
-      const effect = getEffect(ctx2, flow.effectID);
-      if (effect.reason[0] == "GameRule" && effect.reason[2].isAttack)
-        return !0;
-    }
-    return !1;
-  }), hasDefenceTip = flows.find((flow) => {
-    if (flow.id == "FlowSetTipSelection") {
-      const effect = getEffect(ctx2, flow.effectID);
-      if (effect.reason[0] == "GameRule" && effect.reason[2].isDefence)
-        return !0;
-    }
-    return !1;
-  });
-  let earthIds = [], spaceIds = [];
-  if (hasAttackTip) {
-    const opponentPlayerId = PlayerIDFn.getOpponent(playerId), opponentGoEarthIds = getPlayerUnitCanGoEarthIds(ctx2, opponentPlayerId, { ges }), opponentGoSpaceIds = getPlayerUnitCanGoSpaceIds(ctx2, opponentPlayerId, { ges });
-    if (opponentGoEarthIds.length == 0 && opponentGoSpaceIds.length == 0)
-      [earthIds, spaceIds] = createBattleGroupForAttackCountry(ctx2, playerId, { ges });
-    else
-      [earthIds, spaceIds] = createBattleGroupForAttackBattle(ctx2, playerId, { ges });
-  } else if (hasDefenceTip) {
-    const opponentPlayerId = PlayerIDFn.getOpponent(playerId), opponentGoEarthIds = getItemIdsByBasyou(ctx2, AbsoluteBaSyouFn.of(opponentPlayerId, "\u6226\u95D8\u30A8\u30EA\u30A21")), opponentGoSpaceIds = getItemIdsByBasyou(ctx2, AbsoluteBaSyouFn.of(opponentPlayerId, "\u6226\u95D8\u30A8\u30EA\u30A22"));
-    if (opponentGoEarthIds.length == 0 && opponentGoSpaceIds.length == 0)
-      [earthIds, spaceIds] = [[], []];
-    else
-      [earthIds, spaceIds] = createBattleGroupForDefenceBattle(ctx2, playerId, { ges });
-  } else
-    [earthIds, spaceIds] = [[], []];
-  const attackFlow = flows.flatMap((flow) => {
+  const ges = getGlobalEffects(ctx2, null), attackFlow = flows.flatMap((flow) => {
     if (flow.id == "FlowSetTipSelection") {
       const effect = getEffect(ctx2, flow.effectID);
       if (effect.reason[0] == "GameRule" && effect.reason[2].isAttack) {
         let willGoIds = [];
         if (flow.tip.flags?.isGoBattleArea1)
-          willGoIds = earthIds;
+          willGoIds = getUnitIds(ctx2, playerId, !0, !1, ges)[0];
         else if (flow.tip.flags?.isGoBattleArea2)
-          willGoIds = spaceIds;
+          willGoIds = getUnitIds(ctx2, playerId, !0, !1, ges)[1];
         else
           throw new Error;
         if (willGoIds.length)
@@ -26874,9 +26895,9 @@ function thinkVer2(ctx2, playerId, flows) {
       if (effect.reason[0] == "GameRule" && effect.reason[2].isDefence) {
         let willGoIds = [];
         if (flow.tip.flags?.isGoBattleArea1)
-          willGoIds = earthIds;
+          willGoIds = getUnitIds(ctx2, playerId, !1, !0, ges)[0];
         else if (flow.tip.flags?.isGoBattleArea2)
-          willGoIds = spaceIds;
+          willGoIds = getUnitIds(ctx2, playerId, !1, !1, ges)[1];
         else
           throw new Error;
         if (willGoIds.length)
@@ -26938,6 +26959,7 @@ function thinkVer2(ctx2, playerId, flows) {
     return useFlows[Math.round(Math.random() * 1000) % useFlows.length];
   return null;
 }
+var earthIds = [], spaceIds = [], currentKey = "";
 
 // src/client/component/PlayerController.tsx
 var jsx_dev_runtime11 = __toESM(require_react_jsx_dev_runtime_development(), 1);
@@ -27003,7 +27025,7 @@ function AppView() {
       /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(ControlView, {}, void 0, !1, void 0, this),
       /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(PlayerController, {
         clientId: PlayerA,
-        isPlayer: !0
+        isPlayer: !1
       }, void 0, !1, void 0, this),
       /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(PlayerController, {
         clientId: PlayerB,

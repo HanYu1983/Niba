@@ -79,10 +79,13 @@ export const CardView = (props: {
     }
     return card.isFaceDown != true
   }, [props.clientId, props.isCheat, card, appContext.viewModel.model.gameState, itemState]);
+  const ges = useMemo(() => {
+    return getGlobalEffects(appContext.viewModel.model.gameState, null)
+  }, [appContext.viewModel.model.gameState])
   const renderBp = useMemo(() => {
-    const bp = getSetGroupBattlePoint(appContext.viewModel.model.gameState, props.cardID || "unknown", { ges: getGlobalEffects(appContext.viewModel.model.gameState, null) })
+    const bp = getSetGroupBattlePoint(appContext.viewModel.model.gameState, props.cardID || "unknown", { ges: ges })
     return <div>{bp[0]}/{bp[1]}/{bp[2]}</div>
-  }, [appContext.viewModel.model.gameState, props.cardID])
+  }, [appContext.viewModel.model.gameState, props.cardID, ges])
   const renderCoin = useMemo(() => {
     const isRoot = getSetGroupRoot(appContext.viewModel.model.gameState, props.cardID || "unknown") == props.cardID
     if (isRoot == false) {
@@ -102,10 +105,9 @@ export const CardView = (props: {
     if (isRoot == false) {
       return <></>
     }
-    const ges = getGlobalEffects(appContext.viewModel.model.gameState, null).filter(ge => ge.cardIds.includes(props.cardID || "unknown"))
     return <div>
       {
-        ges.map((ge, i) => {
+        ges.filter(ge => ge.cardIds.includes(props.cardID || "unknown")).map((ge, i) => {
           if (ge.title[0] == "AddTextRef") {
             return <div key={i}>
               {getCardTextFromCardTextRef(appContext.viewModel.model.gameState, ge.title[1]).description}
@@ -120,13 +122,13 @@ export const CardView = (props: {
         })
       }
     </div>
-  }, [appContext.viewModel.model.gameState, props.cardID])
+  }, [appContext.viewModel.model.gameState, props.cardID, ges])
   const renderText = useMemo(() => {
     const proto = getItemPrototype(appContext.viewModel.model.gameState, props.cardID || "unknown")
     if (props.isShowInfo != true) {
       return <></>
     }
-    let texts = getCardTexts(appContext.viewModel.model.gameState, props.cardID || "unknown", { ges: getGlobalEffects(appContext.viewModel.model.gameState, null) })
+    let texts = getCardTexts(appContext.viewModel.model.gameState, props.cardID || "unknown", { ges: ges })
     texts = [...(proto.commandText ? [proto.commandText] : []), ...texts]
     return <div>
       <div>{proto.title}</div>
@@ -143,7 +145,7 @@ export const CardView = (props: {
       <div>{proto.characteristic}</div>
       <div style={{ color: "grey" }}>{proto.description}</div>
     </div>
-  }, [appContext.viewModel.model.gameState, props.cardID, props.isShowInfo])
+  }, [appContext.viewModel.model.gameState, props.cardID, props.isShowInfo, ges])
   const renderCmds = useMemo(() => {
     if (props.isShowCmd) {
       const cmds = flows.flatMap(flow => {

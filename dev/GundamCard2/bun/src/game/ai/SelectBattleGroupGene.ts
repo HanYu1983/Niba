@@ -364,6 +364,14 @@ export function createBattleGroupForAttackCountry(ctx: GameState, playerId: Play
   const area1 = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(playerId, "戦闘エリア1")).filter(itemId => getSetGroupRoot(ctx, itemId) == itemId)
   const area2 = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(playerId, "戦闘エリア2")).filter(itemId => getSetGroupRoot(ctx, itemId) == itemId)
   const homeIds = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(playerId, "配備エリア")).filter(itemId => getSetGroupRoot(ctx, itemId) == itemId)
+  {
+    area1.forEach(eid => {
+      if (area2.includes(eid)) {
+        console.log(area1, area2)
+        throw new Error()
+      }
+    })
+  }
   return [area1, area2, homeIds]
 }
 
@@ -381,6 +389,14 @@ export function createBattleGroupForDefenceBattle(ctx: GameState, playerId: Play
   const area1 = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(playerId, "戦闘エリア1")).filter(itemId => getSetGroupRoot(ctx, itemId) == itemId)
   const area2 = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(playerId, "戦闘エリア2")).filter(itemId => getSetGroupRoot(ctx, itemId) == itemId)
   const homeIds = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(playerId, "配備エリア")).filter(itemId => getSetGroupRoot(ctx, itemId) == itemId)
+  {
+    area1.forEach(eid => {
+      if (area2.includes(eid)) {
+        console.log(area1, area2)
+        throw new Error()
+      }
+    })
+  }
   return [area1, area2, homeIds]
 }
 
@@ -391,19 +407,25 @@ export function createBattleGroupForAttackBattle(ctx: GameState, playerId: Playe
     return [[], [], [], [], [], []]
   }
   let gene = SelectBattleGroupGeneFn.createBasicForAttackBattle(ctx, playerId, options)
-  gene = optAlgByPSO(0, 5, 1, 0, gene) as SelectBattleGroupGene
+  gene = optAlgByPSO(0, 2, 1, 0, gene) as SelectBattleGroupGene
   if (gene.getFitness() < 0) {
     return [[], [], [], [], [], []]
   }
   const area1 = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(playerId, "戦闘エリア1")).filter(itemId => getSetGroupRoot(ctx, itemId) == itemId)
   const area2 = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(playerId, "戦闘エリア2")).filter(itemId => getSetGroupRoot(ctx, itemId) == itemId)
   const homeIds = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(playerId, "配備エリア")).filter(itemId => getSetGroupRoot(ctx, itemId) == itemId)
-
+  {
+    area1.forEach(eid => {
+      if (area2.includes(eid)) {
+        console.log(area1, area2)
+        throw new Error()
+      }
+    })
+  }
   const defencePlayerId = PlayerIDFn.getOpponent(playerId)
   const area1b = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(defencePlayerId, "戦闘エリア1")).filter(itemId => getSetGroupRoot(ctx, itemId) == itemId)
   const area2b = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(defencePlayerId, "戦闘エリア2")).filter(itemId => getSetGroupRoot(ctx, itemId) == itemId)
   const homeIdsb = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(defencePlayerId, "配備エリア")).filter(itemId => getSetGroupRoot(ctx, itemId) == itemId)
-
   return [area1, area2, homeIds, area1b, area2b, homeIdsb]
 }
 
