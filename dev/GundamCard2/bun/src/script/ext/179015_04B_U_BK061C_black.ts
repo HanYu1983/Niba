@@ -20,10 +20,15 @@ export const prototype: CardPrototype = {
         const cardId = DefineFn.EffectFn.getCardID(effect)
         const evt = DefineFn.EffectFn.getEvent(effect)
         if (evt.title[0] == "このカードが場に出た場合" && evt.cardIds?.includes(cardId)) {
-          const newE = GameStateFn.createPlayTextEffectFromEffect(ctx, effect,{
+          const newE = GameStateFn.createPlayTextEffectFromEffect(ctx, effect, {
             conditions: {
               "敵軍ユニット１枚": {
-                title: ["_自軍_ユニット_１枚", "敵軍", "ユニット", 1],
+                title: ["Entity", {
+                  atBa: true,
+                  side: "敵軍",
+                  is: ["ユニット"],
+                  count: 1,
+                }],
                 actions: [
                   {
                     title: ["_１ダメージを与える", 2],
@@ -39,7 +44,7 @@ export const prototype: CardPrototype = {
                 ]
               }
             },
-            logicTreeAction:{
+            logicTreeAction: {
               logicTree: {
                 type: "Or",
                 children: [

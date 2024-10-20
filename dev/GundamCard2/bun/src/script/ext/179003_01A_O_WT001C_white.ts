@@ -22,7 +22,12 @@ export const prototype: CardPrototype = {
       conditions: {
         ...createRollCostRequire(2, "白"),
         "自軍ユニット１枚": {
-          title: ["_自軍_ユニット_１枚", "自軍", "ユニット", 1]
+          title: ["Entity", {
+            atBa: true,
+            side: "自軍",
+            is: ["ユニット"],
+            count: 1,
+          }]
         },
         "「速攻」、または「高機動」１つ": {
           title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip | null {

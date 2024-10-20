@@ -286,7 +286,10 @@ export function createTipByEntitySearch(ctx: GameState, effect: Effect, searchOp
             return searchOptions.hasRollCostColor?.some(color => color == entity.prototype?.color)
         })
     }
-    if (searchOptions.exceptCardIds?.length) {
+    if (searchOptions.exceptCardIds != null) {
+        if (searchOptions.exceptCardIds.length == 0) {
+            searchOptions.exceptCardIds.push(cardId)
+        }
         entityList = entityList.filter(entity => searchOptions.exceptCardIds?.includes(entity.itemId) != true)
     }
     entityList = entityList.filter(EntityFn.filterDistinct)

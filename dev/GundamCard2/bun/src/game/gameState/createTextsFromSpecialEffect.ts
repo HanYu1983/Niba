@@ -280,8 +280,13 @@ export function createTextsFromSpecialEffect(text: CardText, options: GameExtPar
                     conditions: {
                         ...text.conditions,
                         "這張卡以外的自軍機體1張": {
-                            title: ["_自軍_ユニット_１枚", "自軍", "ユニット", 1],
-                            exceptItemSelf: true,
+                            title: ["Entity", {
+                                atBa: true,
+                                side: "自軍",
+                                is: ["ユニット"],
+                                count: 1,
+                                exceptCardIds: []
+                            }]
                         }
                     },
                     logicTreeActions: [
@@ -500,7 +505,13 @@ export function createTextsFromSpecialEffect(text: CardText, options: GameExtPar
                                 const cardController = GameStateFn.getItemController(ctx, cardId)
                                 const gCount = GameStateFn.getItemIdsByBasyou(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "Gゾーン")).length
                                 return GameStateFn.createConditionTitleFn({
-                                    title: ["打開自軍手裡或指定HANGER中特徵_A並合計國力_x以下的_1張卡", A, gCount, 1]
+                                    title: ["Entity", {
+                                        side: "自軍",
+                                        at: ["手札", "ハンガー"],
+                                        hasChar: [A],
+                                        compareBattlePoint: ["合計国力", "<=", gCount],
+                                        count: 1,
+                                    }]
                                 })(ctx, effect, bridge)
                             }.toString().replace(`{ A: "" }`, JSON.stringify({ A: A })),
                         }

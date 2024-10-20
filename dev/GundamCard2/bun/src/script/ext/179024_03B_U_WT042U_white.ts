@@ -49,7 +49,12 @@ export const prototype: CardPrototype = {
             return null
           }
           return GameStateFn.createConditionTitleFn({
-            title: ["_交戦中の_自軍_ユニット_１枚", null, "敵軍", "ユニット", 1]
+            title: ["Entity", {
+              atBa: true,
+              side: "敵軍",
+              is: ["ユニット"],
+              count: 1
+            }]
           })(ctx, effect, { Options })
         }.toString()
       },

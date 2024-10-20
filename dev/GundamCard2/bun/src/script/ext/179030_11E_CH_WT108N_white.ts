@@ -21,7 +21,12 @@ export const prototype: CardPrototype = {
           ]
         },
         "自軍キャラ１枚": {
-          title: ["_自軍_ユニット_１枚", "自軍", "キャラクター", 1]
+          title: ["Entity", {
+            atBa: true,
+            side: "自軍",
+            is: ["キャラクター"],
+            count: 1,
+          }]
         }
       },
       logicTreeActions: [
