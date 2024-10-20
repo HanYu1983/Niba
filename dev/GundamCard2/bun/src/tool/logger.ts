@@ -60,7 +60,7 @@ const hideCategory: string[] = [
   "onItemDamageChange",
   "onCountryDamage",
   "createPreviewEffectScore",
-  "createBasicForAttackBattle"
+  //"createBasicForAttackBattle"
 ];
 const filterCategory = true;
 const filterWarn = true

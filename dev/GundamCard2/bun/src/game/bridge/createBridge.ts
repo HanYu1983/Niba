@@ -2,7 +2,7 @@ import { Bridge } from "../../script/bridge";
 import { GameStateFn } from "../gameState";
 import { DefineFn } from "../define";
 import { ToolFn } from "../tool";
-import { GlobalEffect } from "../define/GlobalEffect";
+import { GameExtParams } from "../define/GameExtParams";
 
 export function createBridge(options: GameExtParams): Bridge {
     const bridge: Bridge = {

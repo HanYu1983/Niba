@@ -1,5 +1,5 @@
 
-import { logCategory } from "../../tool/logger"
+import { logCategory, warnCategory } from "../../tool/logger"
 import { createBridge } from "../bridge/createBridge"
 import { AbsoluteBaSyouFn } from "../define/BaSyou"
 import { BattleBonus, CardTextFn, Condition, ConditionFn, LogicTreeAction, LogicTreeActionFn } from "../define/CardText"
@@ -372,7 +372,7 @@ export function addImmediateEffectIfCanPayCost(ctx: GameState, effect: Effect, o
       const cardId = EffectFn.getCardID(effect)
       let itemState = getItemState(ctx, cardId)
       if (itemState.textIdsUseThisTurn?.includes(effect.text.id)) {
-        console.warn(`這個起動效果這回合已發動過: ${effect.text.description}`)
+        warnCategory(`這個起動效果這回合已發動過: ${effect.text.description}`)
         return ctx
       }
       itemState = {

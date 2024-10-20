@@ -13,7 +13,7 @@ import { GameExtParams } from "../define/GameExtParams";
 export function getSetGroupBattlePoint(ctx: GameState, cardId: string, options: GameExtParams): BattleBonus {
     return pipe(
         always(getSetGroupChildren(ctx, cardId)),
-        map(setGroupCardID => getCardBattlePoint(ctx, setGroupCardID, { ges: options.ges })),
+        map(setGroupCardID => getCardBattlePoint(ctx, setGroupCardID, options)),
         reduce(BattlePointFn.add, BattlePointFn.getAllStar()),
         BattlePointFn.toBattleBonus
     )()

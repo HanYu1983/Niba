@@ -22,14 +22,14 @@ import { getItemState } from "../gameState/ItemStateComponent";
 
 export type SelectBattleGroupGene = {
   ctx: GameState,
-  score: number,
+  score: number | null,
 } & IGene
 
 export const SelectBattleGroupGeneFn = {
   createBasic(ctx: GameState, playerId: PlayerID, options: GameExtParams): SelectBattleGroupGene {
     const gene: SelectBattleGroupGene = {
       ctx: ctx,
-      score: 0,
+      score: null,
       getStateKey(): string {
         const area1 = getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(playerId, "戦闘エリア1"))
         const area2 = getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(playerId, "戦闘エリア2"))
@@ -39,6 +39,9 @@ export const SelectBattleGroupGeneFn = {
         throw new Error()
       },
       getFitness(): number {
+        if (this.score == null) {
+          throw new Error()
+        }
         return this.score
       },
       mutate(): SelectBattleGroupGene {
@@ -157,6 +160,16 @@ export const SelectBattleGroupGeneFn = {
                 throw new Error()
               }
             }
+            {
+              const area1 = getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(playerId, "戦闘エリア1")).filter(itemId => getSetGroupRoot(ctx, itemId) == itemId)
+              const area2 = getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(playerId, "戦闘エリア2")).filter(itemId => getSetGroupRoot(ctx, itemId) == itemId)
+              area1.forEach(eid => {
+                if (area2.includes(eid)) {
+                  console.log(area1, area2)
+                  throw new Error()
+                }
+              })
+            }
             break
           }
           default:
@@ -164,7 +177,8 @@ export const SelectBattleGroupGeneFn = {
         }
         return {
           ...gene,
-          ctx: ctx
+          ctx: ctx,
+          score: null,
         }
       },
       crossover(gene: SelectBattleGroupGene): SelectBattleGroupGene {
@@ -270,9 +284,9 @@ export const SelectBattleGroupGeneFn = {
         attackCountryGene = optAlgByPSO(10, 10, 0, 1, attackCountryGene) as SelectBattleGroupGene
         const earthIds = getItemIdsByBasyou(attackCountryGene.ctx, AbsoluteBaSyouFn.of(attackPlayerId, "戦闘エリア1")).filter(itemId => getSetGroupRoot(ctx, itemId) == itemId)
         const spaceIds = getItemIdsByBasyou(attackCountryGene.ctx, AbsoluteBaSyouFn.of(attackPlayerId, "戦闘エリア2")).filter(itemId => getSetGroupRoot(ctx, itemId) == itemId)
-
         //const [earthIds, spaceIds] = createBattleGroupForAttackCountry(ctx, attackPlayerId, ext)
-        //console.log(earthIds, spaceIds)
+        logCategory("createBasicForAttackBattle", "earthIds", earthIds)
+        logCategory("createBasicForAttackBattle", "spaceIds", spaceIds)
         for (let id of earthIds) {
           ctx = doItemMove(ctx, AbsoluteBaSyouFn.of(attackPlayerId, "戦闘エリア1"), createStrBaSyouPair(ctx, id), options)
         }
@@ -297,7 +311,8 @@ export const SelectBattleGroupGeneFn = {
       ctx = doPlayerAttack(ctx, attackPlayerId, "戦闘エリア2", 2, {})
       return {
         ...this,
-        ctx: ctx
+        ctx: ctx,
+        score: null,
       }
     }
     gene.calcFitness = function () {

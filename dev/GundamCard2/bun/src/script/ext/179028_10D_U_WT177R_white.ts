@@ -60,14 +60,14 @@ export const prototype: CardPrototype = {
                   description: "「『起動』：このカードが攻撃に出撃した場合、自軍本国をX回復する。Xの値は、このカードの合計国力の値と同じとする」",
                   title: ["自動型", "起動"],
                   protectLevel: 1,
-                  onEvent: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+                  onEvent: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GameState {
                     const ges = GameStateFn.getGlobalEffects(ctx, null)
                     const cardId = DefineFn.EffectFn.getCardID(effect)
                     const cardController = GameStateFn.getItemController(ctx, cardId)
                     const event = DefineFn.EffectFn.getEvent(effect)
                     if (event.title[0] == "このカードが攻撃に出撃した場合" && event.cardIds?.includes(cardId)) {
                       const totalCostLength = GameStateFn.getCardTotalCostLength(ctx, cardId, {ges: ges})
-                      ctx = GameStateFn.doCountryDamage(ctx, cardController, -totalCostLength)
+                      ctx = GameStateFn.doCountryDamage(ctx, cardController, -totalCostLength, Options)
                     }
                     return ctx
                   }.toString()

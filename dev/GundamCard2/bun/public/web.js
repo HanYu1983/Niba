@@ -17380,13 +17380,19 @@ var hideCategory = [
   "createPlayUnitEffect",
   "getGlobalEffects",
   "createAllCardTexts",
-  "isCardMaster"
-], filterCategory = !0, logCategory = (category, ...msg) => {
-  if (filterCategory) {
-    if (hideCategory.find((c) => c == category))
-      return;
-  }
+  "isCardMaster",
+  "createBasicForBattle",
+  "onItemDamageChange",
+  "onCountryDamage",
+  "createPreviewEffectScore",
+  "createBasicForAttackBattle"
+];
+var logCategory = (category, ...msg) => {
+  if (hideCategory.find((c) => c == category))
+    return;
   console.log(`[${(/* @__PURE__ */ new Date()).toLocaleTimeString()}][${category}]`, ...msg);
+}, warnCategory = (category, ...msg) => {
+  return;
 };
 
 // src/tool/table/index.ts
@@ -17406,7 +17412,7 @@ function getCardsByPosition(table, position) {
 }
 function moveCard(table, fromPosition, toPosition, cardId, options) {
   if (fromPosition == toPosition)
-    return console.warn(`moveCard from ${fromPosition} to ${toPosition}. ignore`), table;
+    return warnCategory(`moveCard from ${fromPosition} to ${toPosition}. ignore`), table;
   if (table.cardStack[fromPosition]?.includes(cardId) != !0)
     throw new Error(`table from ${fromPosition} not exist ${cardId}`);
   const updatedFromStack = table.cardStack[fromPosition]?.filter((id) => id !== cardId) || [];
@@ -18480,7 +18486,7 @@ function getImmediateEffects(ctx2) {
 }
 function addDestroyEffect(ctx2, block) {
   if (ctx2.effects[block.id])
-    return console.warn(`\u7834\u58DE\u6548\u679C\u4E0D\u5FC5\u91CD\u5FA9\u52A0\u5165: ${block.id}`), ctx2;
+    return warnCategory("addDestroyEffect", `\u7834\u58DE\u6548\u679C\u4E0D\u5FC5\u91CD\u5FA9\u52A0\u5165: ${block.id}`), ctx2;
   return {
     ...ctx2,
     destroyEffect: [block.id, ...ctx2.destroyEffect],
@@ -19771,10 +19777,18 @@ function createStrBaSyouPair(ctx2, id) {
   return [id, getItemBaSyou(ctx2, id)];
 }
 function getItemPrototype(ctx2, itemId) {
-  if (isCard(ctx2, itemId))
-    return getPrototype(getCard(ctx2, itemId).protoID || "unknown");
-  if (isChip(ctx2, itemId))
-    return getChipPrototype(ctx2, getChip(ctx2, itemId).protoID || "unknown");
+  if (isCard(ctx2, itemId)) {
+    const protoId = getCard(ctx2, itemId).protoID;
+    if (protoId == null)
+      throw new Error(`protoID not found: ${itemId}`);
+    return getPrototype(protoId);
+  }
+  if (isChip(ctx2, itemId)) {
+    const protoId = getChip(ctx2, itemId).protoID;
+    if (protoId == null)
+      throw new Error(`protoID not found: ${itemId}`);
+    return getChipPrototype(ctx2, protoId);
+  }
   if (isCoin(ctx2, itemId))
     throw new Error(`coin no prototype: ${itemId}`);
   throw new Error(`getItemPrototype unknown item: ${itemId}`);
@@ -20239,7 +20253,7 @@ function getCardTotalCostLength(ctx2, cardID, options) {
   if (prototype.totalCost == null)
     ;
   else if (prototype.totalCost == "X")
-    totalCost = getCardIdsCanPayRollCost(ctx2, getItemController(ctx2, cardID), { ges: options.ges }).length;
+    totalCost = getCardIdsCanPayRollCost(ctx2, getItemController(ctx2, cardID), options).length;
   else
     totalCost = prototype.totalCost;
   return totalCost + added;
@@ -20350,578 +20364,6 @@ __export(exports_battleGroup, {
   getBattleGroup: () => getBattleGroup
 });
 
-// src/game/gameState/globalEffects.ts
-var exports_globalEffects = {};
-__export(exports_globalEffects, {
-  setGlobalEffects: () => setGlobalEffects,
-  getGlobalEffects: () => getGlobalEffects,
-  createAllCardTexts: () => createAllCardTexts,
-  clearGlobalEffects: () => clearGlobalEffects
-});
-
-// src/game/gameState/createTextsFromSpecialEffect.ts
-function createTextsFromSpecialEffect(text, options) {
-  if (logCategory("createTextsFromSpecialEffect", ""), text.title[0] != "\u7279\u6B8A\u578B")
-    throw new Error("text not \u7279\u6B8A\u578B");
-  const specialEffect = text.title[1];
-  switch (specialEffect[0]) {
-    case "\u3010PS\u88C5\u7532\u3011":
-      return [
-        {
-          id: text.id,
-          title: ["\u81EA\u52D5\u578B", "\u8D77\u52D5"],
-          description: "\u51FA\u5834\u6642\u76F4\u7ACB\u51FA\u5834"
-        },
-        {
-          id: text.id,
-          title: ["\u81EA\u52D5\u578B", "\u8D77\u52D5"],
-          description: "\u9019\u5F35\u5361\u51FA\u73FE\u5728\u6230\u5340\u6642, \u4E0B\u56DE\u5408\u958B\u59CB\u6642\u56DE\u5230\u6301\u6709\u8005\u624B\u4E0A. \u4F46\u5982\u679C\u548C\u6301\u6709\u88DC\u7D66\u6216\u4F9B\u7D66\u7684\u5361\u7D44\u5408\u90E8\u968A\u7684\u6642\u5019, \u4E0A\u8FF0\u7684\u6548\u679C\u4E0D\u767C\u52D5.",
-          onEvent: function _(ctx2, effect, { GameStateFn, DefineFn }) {
-            const ges = GameStateFn.getGlobalEffects(ctx2, null), cardId = DefineFn.EffectFn.getCardID(effect), evt = DefineFn.EffectFn.getEvent(effect);
-            if (evt.title[0] == "GameEventOnMove" && (DefineFn.AbsoluteBaSyouFn.getBaSyouKeyword(evt.title[2]) == "\u6226\u95D8\u30A8\u30EA\u30A21" || DefineFn.AbsoluteBaSyouFn.getBaSyouKeyword(evt.title[2]) == "\u6226\u95D8\u30A8\u30EA\u30A22")) {
-              if (evt.cardIds?.includes(cardId))
-                if (GameStateFn.isBattleGroupHasA(ctx2, ["\u4F9B\u7D66"], cardId, { ges }))
-                  ;
-                else
-                  ctx2 = GameStateFn.mapItemState(ctx2, cardId, (is) => DefineFn.ItemStateFn.setFlag(is, "return", !0));
-              else if (DefineFn.AbsoluteBaSyouFn.eq(GameStateFn.getItemBaSyou(ctx2, cardId), evt.title[2])) {
-                if (GameStateFn.isBattleGroupHasA(ctx2, ["\u4F9B\u7D66"], cardId, { ges }))
-                  ctx2 = GameStateFn.mapItemState(ctx2, cardId, (is) => DefineFn.ItemStateFn.removeFlag(is, "return"));
-              }
-            }
-            if (evt.title[0] == "GameEventOnTiming" && DefineFn.PhaseFn.eq(evt.title[1], DefineFn.PhaseFn.getFirst())) {
-              const cardId2 = DefineFn.EffectFn.getCardID(effect), cardController = GameStateFn.getItemController(ctx2, cardId2);
-              if (GameStateFn.getItemState(ctx2, cardId2).flags.return)
-                ctx2 = GameStateFn.doItemMove(ctx2, DefineFn.AbsoluteBaSyouFn.of(cardController, "\u624B\u672D"), [cardId2, GameStateFn.getItemBaSyou(ctx2, cardId2)], { ges }), ctx2 = GameStateFn.mapItemState(ctx2, cardId2, (is) => DefineFn.ItemStateFn.removeFlag(is, "return"));
-            }
-            return ctx2;
-          }.toString()
-        }
-      ];
-    case "\u30AF\u30ED\u30B9\u30A6\u30A7\u30DD\u30F3": {
-      const [_, A] = specialEffect;
-      return [
-        {
-          id: text.id,
-          title: ["\u4F7F\u7528\u578B", ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA"]],
-          description: "\uFF08\u6226\u95D8\u30D5\u30A7\u30A4\u30BA\uFF09\uFF1A\uFF3B \uFF3D\u306E\u7279\u5FB4\u3092\u6301\u3064\u81EA\u8ECD\u30E6\u30CB\u30C3\u30C8\uFF11\u679A\u306F\u3001\u30BF\u30FC\u30F3\u7D42\u4E86\u6642\u307E\u3067\u3001\u3053\u306E\u30AB\u30FC\u30C9\u306E\u672C\u6765\u306E\u30C6\u30AD\u30B9\u30C8\uFF11\u3064\u3068\u540C\u3058\u30C6\u30AD\u30B9\u30C8\u3092\u5F97\u308B\u3002\u305F\u3060\u3057\u540C\u3058\u30C6\u30AD\u30B9\u30C8\u306F\u5F97\u3089\u308C\u306A\u3044\uFF09",
-          conditions: {
-            ...text.conditions,
-            "\u3053\u306E\u30AB\u30FC\u30C9\u306E\u672C\u6765\u306E\u30C6\u30AD\u30B9\u30C8\uFF11\u3064": {
-              title: ["\u3053\u306E\u30AB\u30FC\u30C9\u306E_\u672C\u6765\u306E\u30C6\u30AD\u30B9\u30C8\uFF11\u3064", !0, 1]
-            },
-            "\uFF3B \uFF3D\u306E\u7279\u5FB4\u3092\u6301\u3064\u81EA\u8ECD\u30E6\u30CB\u30C3\u30C8\uFF11\u679A\u306F": {
-              title: ["_\u672C\u6765\u306E\u8A18\u8FF0\u306B\uFF62\u7279\u5FB4\uFF1A_\u88C5\u5F3E\uFF63\u3092\u6301\u3064_\u81EA\u8ECD_G_\uFF11\u679A", !1, A, "\u81EA\u8ECD", "\u30E6\u30CB\u30C3\u30C8", 1],
-              exceptItemSelf: !0,
-              actions: [
-                {
-                  title: function _(ctx2, effect, { GameStateFn, DefineFn }) {
-                    const cardId = DefineFn.EffectFn.getCardID(effect), pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx2, "\uFF3B \uFF3D\u306E\u7279\u5FB4\u3092\u6301\u3064\u81EA\u8ECD\u30E6\u30CB\u30C3\u30C8\uFF11\u679A\u306F", cardId), textRefIds = GameStateFn.getCardTipTextRefs(ctx2, "\u3053\u306E\u30AB\u30FC\u30C9\u306E\u672C\u6765\u306E\u30C6\u30AD\u30B9\u30C8\uFF11\u3064", cardId).map((tr) => tr.textId), ges = GameStateFn.getGlobalEffects(ctx2, null);
-                    ctx2 = GameStateFn.setGlobalEffects(ctx2, null, ges);
-                    for (let pair2 of pairs)
-                      if (GameStateFn.getCardTexts(ctx2, pair2[0], { ges }).find((text2) => textRefIds.includes(text2.id)))
-                        throw new DefineFn.TipError(`\u5DF2\u6709\u540C\u6A23\u7684\u5167\u6587: ${JSON.stringify(textRefIds)}`, { hasSameText: !0 });
-                    return ctx2;
-                  }.toString()
-                }
-              ]
-            }
-          },
-          logicTreeActions: [
-            {
-              actions: [
-                {
-                  title: ["cutIn", [
-                    {
-                      title: function _(ctx2, effect, { GameStateFn, DefineFn }) {
-                        const cardId = DefineFn.EffectFn.getCardID(effect), pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx2, "\uFF3B \uFF3D\u306E\u7279\u5FB4\u3092\u6301\u3064\u81EA\u8ECD\u30E6\u30CB\u30C3\u30C8\uFF11\u679A\u306F", cardId), textRefs = GameStateFn.getCardTipTextRefs(ctx2, "\u3053\u306E\u30AB\u30FC\u30C9\u306E\u672C\u6765\u306E\u30C6\u30AD\u30B9\u30C8\uFF11\u3064", cardId), ges = GameStateFn.getGlobalEffects(ctx2, null);
-                        ctx2 = GameStateFn.setGlobalEffects(ctx2, null, ges);
-                        for (let pair2 of pairs) {
-                          GameStateFn.assertTargetMissingError(ctx2, pair2);
-                          const [targetCardId, targetBasyou] = pair2;
-                          ctx2 = GameStateFn.mapItemState(ctx2, targetCardId, (targetItemState) => {
-                            for (let textRef of textRefs) {
-                              if (GameStateFn.getCardTexts(ctx2, targetItemState.id, { ges }).find((text2) => text2.id == textRef.textId) != null)
-                                continue;
-                              targetItemState = DefineFn.ItemStateFn.setGlobalEffect(targetItemState, null, {
-                                title: ["AddTextRef", textRef],
-                                cardIds: [targetItemState.id]
-                              }, { isRemoveOnTurnEnd: !0 });
-                            }
-                            return targetItemState;
-                          });
-                        }
-                        return ctx2;
-                      }.toString()
-                    }
-                  ]]
-                }
-              ]
-            }
-          ]
-        }
-      ];
-    }
-    case "\u30B2\u30A4\u30F3":
-      return [
-        {
-          id: text.id,
-          title: ["\u4F7F\u7528\u578B", ["\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7"]],
-          description: "\u9019\u5F35\u5361\u5728\u6230\u5340\u7684\u5834\u5408, \u6253\u958B\u81EA\u8ECD\u672C\u570B\u4E0A\u76841\u5F35\u5361\u548C\u9019\u5F35\u5361\u540CGsignProperty\u7684\u60C5\u6CC1, \u9019\u5F35\u5361\u56DE\u5408\u7D50\u675F\u524D+x/+x/+x, x\u70BA\u6253\u958B\u7684\u5361\u7684\u6A2A\u7F6E\u8CBB\u7528\u6578\u91CF, \u9019\u500B\u6548\u679C1\u56DE\u5408\u53EA\u80FD\u75281\u6B21",
-          testEnvs: [
-            {
-              createCards: [
-                ["\u81EA\u8ECD", "\u6226\u95D8\u30A8\u30EA\u30A21", [["unitHasGain", 1]]],
-                ["\u81EA\u8ECD", "\u672C\u56FD", [["unitHasGain", 1]]]
-              ]
-            }
-          ],
-          conditions: {
-            ...text.conditions,
-            "\u9019\u500B\u6548\u679C1\u56DE\u5408\u53EA\u80FD\u75281\u6B21": {
-              actions: [
-                {
-                  title: ["\u3053\u306E\u8A18\u8FF0\u306E\u52B9\u679C\u306F\u3001\u30D7\u30EC\u30A4\u30E4\u30FC\u6BCE\u306B\uFF11\u30BF\u30FC\u30F3\u306B\uFF11\u56DE\u307E\u3067\u89E3\u6C7A\u3067\u304D\u308B"]
-                }
-              ]
-            },
-            "\u9019\u5F35\u5361\u5728\u6230\u5340\u7684\u5834\u5408": {
-              actions: [
-                {
-                  title: ["Entity", {
-                    isThisCard: !0,
-                    at: ["\u6226\u95D8\u30A8\u30EA\u30A21", "\u6226\u95D8\u30A8\u30EA\u30A22"],
-                    count: 1
-                  }]
-                }
-              ]
-            }
-          },
-          logicTreeActions: [
-            {
-              actions: [
-                {
-                  title: ["cutIn", [
-                    {
-                      title: function _(ctx2, effect, { GameStateFn, DefineFn }) {
-                        const newE = DefineFn.EffectFn.fromEffectBasic(effect, {
-                          conditions: {
-                            "\u9019\u5F35\u5361\u5728\u6230\u5340\u7684\u5834\u5408, \u6253\u958B\u81EA\u8ECD\u672C\u570B\u4E0A\u76841\u5F35\u5361": {
-                              title: ["Entity", {
-                                see: [DefineFn.RelatedBaSyouFn.of("\u81EA\u8ECD", "\u672C\u56FD"), 1, 1],
-                                count: 1
-                              }],
-                              actions: [
-                                {
-                                  title: ["_\u30ED\u30FC\u30EB\u3059\u308B", "\u898B"],
-                                  vars: ["\u9019\u5F35\u5361\u5728\u6230\u5340\u7684\u5834\u5408, \u6253\u958B\u81EA\u8ECD\u672C\u570B\u4E0A\u76841\u5F35\u5361"]
-                                }
-                              ]
-                            },
-                            "\u9019\u5F35\u5361\u5728\u6230\u5340\u7684\u5834\u5408": {
-                              actions: [
-                                {
-                                  title: ["Entity", {
-                                    isThisCard: !0,
-                                    at: ["\u6226\u95D8\u30A8\u30EA\u30A21", "\u6226\u95D8\u30A8\u30EA\u30A22"],
-                                    count: 1
-                                  }]
-                                }
-                              ]
-                            }
-                          },
-                          logicTreeAction: {
-                            actions: [
-                              {
-                                title: function _(ctx3, effect2, { GameStateFn: GameStateFn2, DefineFn: DefineFn2, ToolFn: ToolFn2, Options }) {
-                                  const cardId = DefineFn2.EffectFn.getCardID(effect2), pairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, "\u9019\u5F35\u5361\u5728\u6230\u5340\u7684\u5834\u5408, \u6253\u958B\u81EA\u8ECD\u672C\u570B\u4E0A\u76841\u5F35\u5361", cardId);
-                                  if (pairs.length == 0)
-                                    throw new Error(`pairs must not 0: ${effect2.text.description}`);
-                                  const [openCardId] = pairs[0];
-                                  if (GameStateFn2.getCardGSignProperty(ctx3, openCardId) == GameStateFn2.getCardGSignProperty(ctx3, cardId) == !1)
-                                    return console.warn("\u4E0D\u540C\u7684GSignProperty\uFF0C\u7121\u6CD5\u5F97\u5230\u7D05\u5229"), ctx3;
-                                  const ges = Options.ges, bonus = GameStateFn2.getCardRollCostLength(ctx3, openCardId), gainBonus = [bonus, bonus, bonus];
-                                  ctx3 = GameStateFn2.doTriggerEvent(ctx3, { title: ["\u300C\u30B2\u30A4\u30F3\u300D\u306E\u52B9\u679C\u3067\u6226\u95D8\u4FEE\u6B63\u3092\u5F97\u308B\u5834\u5408", gainBonus], cardIds: [cardId] });
-                                  const hasCase1 = GameStateFn2.getCardTexts(ctx3, cardId, { ges }).find((text2) => text2.description == "\u300E\u8D77\u52D5\u300F\uFF1A\u3053\u306E\u30AB\u30FC\u30C9\u306F\u3001\u300C\u30B2\u30A4\u30F3\u300D\u306E\u52B9\u679C\u3067\u6226\u95D8\u4FEE\u6B63\u3092\u5F97\u308B\u5834\u5408\u3001\u305D\u306E\u6226\u95D8\u4FEE\u6B63\u306E\u4EE3\u308F\u308A\u306B\u3001\u30BF\u30FC\u30F3\u7D42\u4E86\u6642\u307E\u3067\uFF0B\uFF14\uFF0F\xB1\uFF10\uFF0F\xB1\uFF10\u3092\u5F97\u308B\u4E8B\u304C\u3067\u304D\u308B\u3002") != null, hasCase2 = GameStateFn2.getCardTexts(ctx3, cardId, { ges }).find((text2) => text2.description == "\u300E\u8D77\u52D5\u300F\uFF1A\u3053\u306E\u30AB\u30FC\u30C9\u306F\u3001\u300C\u30B2\u30A4\u30F3\u300D\u306E\u52B9\u679C\u3067\u6226\u95D8\u4FEE\u6B63\u3092\u5F97\u308B\u5834\u5408\u3001\u305D\u306E\u6226\u95D8\u4FEE\u6B63\u3092\u5F97\u308B\u4EE3\u308F\u308A\u306B\u3001\u30BF\u30FC\u30F3\u7D42\u4E86\u6642\u307E\u3067\u3001\u300C\u901F\u653B\u300D\u3092\u5F97\u308B\u4E8B\u304C\u3067\u304D\u308B\u3002") != null;
-                                  if (hasCase1)
-                                    ctx3 = GameStateFn2.doItemSetGlobalEffectsUntilEndOfTurn(ctx3, [{ title: ["\uFF0Bx\uFF0F\uFF0Bx\uFF0F\uFF0Bx\u3092\u5F97\u308B", [4, 0, 0]], cardIds: [cardId] }], GameStateFn2.createStrBaSyouPair(ctx3, cardId));
-                                  else if (hasCase2)
-                                    ctx3 = GameStateFn2.doItemSetGlobalEffectsUntilEndOfTurn(ctx3, [{ title: ["AddText", { id: ToolFn2.getUUID("hasCase2"), title: ["\u7279\u6B8A\u578B", ["\u901F\u653B"]] }], cardIds: [cardId] }], GameStateFn2.createStrBaSyouPair(ctx3, cardId));
-                                  else
-                                    ctx3 = GameStateFn2.mapItemState(ctx3, cardId, (is) => DefineFn2.ItemStateFn.setGlobalEffect(is, null, {
-                                      title: ["\uFF0Bx\uFF0F\uFF0Bx\uFF0F\uFF0Bx\u3092\u5F97\u308B", gainBonus],
-                                      cardIds: [cardId]
-                                    }, { isRemoveOnTurnEnd: !0 })), ctx3 = GameStateFn2.doTriggerEvent(ctx3, { title: ["\u300C\u30B2\u30A4\u30F3\u300D\u306E\u52B9\u679C\u3067\u6226\u95D8\u4FEE\u6B63\u3092\u5F97\u305F\u5834\u5408", gainBonus], cardIds: [cardId] });
-                                  return ctx3;
-                                }.toString()
-                              }
-                            ]
-                          }
-                        });
-                        return ctx2 = GameStateFn.addImmediateEffect(ctx2, newE), ctx2;
-                      }.toString()
-                    }
-                  ]]
-                }
-              ]
-            }
-          ]
-        }
-      ];
-    case "\u4F9B\u7D66":
-      return [
-        {
-          id: text.id,
-          title: ["\u4F7F\u7528\u578B", ["\u81EA\u8ECD", "\u653B\u6483\u30B9\u30C6\u30C3\u30D7"]],
-          description: "\u9019\u5F35\u5361\u4EE5\u5916\u7684\u81EA\u8ECD\u6A5F\u9AD41\u5F35\u91CD\u7F6E",
-          conditions: {
-            ...text.conditions,
-            "\u9019\u5F35\u5361\u4EE5\u5916\u7684\u81EA\u8ECD\u6A5F\u9AD41\u5F35": {
-              title: ["_\u81EA\u8ECD_\u30E6\u30CB\u30C3\u30C8_\uFF11\u679A", "\u81EA\u8ECD", "\u30E6\u30CB\u30C3\u30C8", 1],
-              exceptItemSelf: !0
-            }
-          },
-          logicTreeActions: [
-            {
-              actions: [
-                {
-                  title: ["cutIn", [
-                    {
-                      title: ["_\u30ED\u30FC\u30EB\u3059\u308B", "\u30EA\u30ED\u30FC\u30EB"],
-                      vars: ["\u9019\u5F35\u5361\u4EE5\u5916\u7684\u81EA\u8ECD\u6A5F\u9AD41\u5F35"]
-                    }
-                  ]]
-                }
-              ]
-            }
-          ]
-        }
-      ];
-    case "\u30B5\u30A4\u30B3\u30DF\u30E5": {
-      const [_, x] = specialEffect, addCardIds = options?.ges?.flatMap((ge) => {
-        if (ge.title[0] == "_\u30E6\u30CB\u30C3\u30C8\u306F\u3001\u300C\u30B5\u30A4\u30B3\u30DF\u30E5\u300D\u306E\u52B9\u679C\u306B\u304A\u3044\u3066\u3001\u4EA4\u6226\u4E2D\u3068\u3057\u3066\u6271\u3046\u3002" && ge.cardIds.includes(options?.cardId || ""))
-          return ge.title[1];
-        return [];
-      }) || [];
-      return [
-        {
-          id: text.id,
-          title: ["\u4F7F\u7528\u578B", ["\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7"]],
-          description: "\u4EA4\u6230\u4E2D\u7684\u6575\u8ECD\u6A5F\u9AD41\u5F35x\u50B7\u5BB3. \u9019\u500B\u6548\u679C\u53EA\u6709\u5728\u540C\u5340\u4E2D\u6709NT\u624D\u80FD\u4F7F\u7528.",
-          conditions: {
-            ...text.conditions,
-            "\u4EA4\u6230\u4E2D\u7684\u6575\u8ECD\u6A5F\u9AD41\u5F35": {
-              title: function _(ctx2, effect, { GameStateFn, DefineFn, Options }) {
-                const { addCardIds: addCardIds2 } = { addCardIds: null };
-                if (addCardIds2 == null)
-                  throw new Error("addCardIds must replace");
-                const cardId = DefineFn.EffectFn.getCardID(effect), tip = GameStateFn.createTipByEntitySearch(ctx2, effect, {
-                  isBattle: !0,
-                  side: "\u6575\u8ECD",
-                  is: ["\u30E6\u30CB\u30C3\u30C8"],
-                  count: 1
-                }, { ges: Options.ges });
-                let wants = DefineFn.TipFn.getWant(tip);
-                return wants = [...wants, ...addCardIds2.map((itemId) => GameStateFn.createStrBaSyouPair(ctx2, itemId))], {
-                  title: ["\u30AB\u30FC\u30C9", wants, wants.slice(0, 1)],
-                  count: 1
-                };
-              }.toString().replace("{ addCardIds: null }", JSON.stringify({ addCardIds }))
-            },
-            "\u540C\u5340\u4E2D\u6709NT\u624D\u80FD\u4F7F\u7528": {
-              actions: [
-                {
-                  title: function _(ctx2, effect, { GameStateFn, DefineFn }) {
-                    const cardId = DefineFn.EffectFn.getCardID(effect), from = GameStateFn.getItemBaSyou(ctx2, cardId);
-                    if (GameStateFn.getItemIdsByBasyou(ctx2, from).filter((itemId) => GameStateFn.getItemCharacteristic(ctx2, itemId).indexOf("NT")).length > 0 == !1)
-                      throw new TipError("no NT in the same area");
-                    return ctx2;
-                  }.toString()
-                }
-              ]
-            }
-          },
-          logicTreeActions: [
-            {
-              actions: [
-                {
-                  title: ["cutIn", [
-                    {
-                      title: ["_\uFF11\u30C0\u30E1\u30FC\u30B8\u3092\u4E0E\u3048\u308B", x],
-                      vars: ["\u4EA4\u6230\u4E2D\u7684\u6575\u8ECD\u6A5F\u9AD41\u5F35"]
-                    }
-                  ]]
-                }
-              ]
-            }
-          ]
-        }
-      ];
-    }
-    case "\u7BC4\u56F2\u5175\u5668": {
-      const [_, x] = specialEffect, hasCase1 = (options?.ges?.filter((ge) => ge.title[0] == "\u300C\u7BC4\u56F2\u5175\u5668\u300D\u306E\u5BFE\u8C61\u90E8\u5206\u306F\u3001\u300EX\u4EE5\u4E0B\u306E\u9632\u5FA1\u529B\u3092\u6301\u3064\u6575\u8ECD\u30E6\u30CB\u30C3\u30C8\uFF11\u679A\u300F\u306B\u5909\u66F4\u3055\u308C\u308B" && ge.cardIds.includes(options?.cardId || "")) || []).length > 0;
-      return [
-        {
-          id: text.id,
-          title: ["\u4F7F\u7528\u578B", ["\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7"]],
-          description: "\u548C\u9019\u5F35\u5361\u4EA4\u6230\u7684\u9632\u79A6\u529Bx\u4EE5\u4E0B\u7684\u6575\u8ECD\u6A5F\u9AD41\u5F35\u7834\u58DE",
-          conditions: {
-            ...text.conditions,
-            "\u9019\u5F35\u5361\u4EA4\u6230\u7684\u9632\u79A6\u529Bx\u4EE5\u4E0B\u7684\u6575\u8ECD\u6A5F\u9AD41\u5F35": {
-              title: ["Entity", {
-                atBa: !0,
-                isBattleWithThis: hasCase1 ? void 0 : !0,
-                compareBattlePoint: ["\u9632\u5FA1\u529B", "<=", x],
-                isDestroy: !1,
-                side: "\u6575\u8ECD",
-                is: ["\u30E6\u30CB\u30C3\u30C8"],
-                count: 1
-              }]
-            }
-          },
-          logicTreeActions: [
-            {
-              actions: [
-                {
-                  title: ["cutIn", [
-                    {
-                      title: ["_\u30ED\u30FC\u30EB\u3059\u308B", "\u7834\u58DE"],
-                      vars: ["\u9019\u5F35\u5361\u4EA4\u6230\u7684\u9632\u79A6\u529Bx\u4EE5\u4E0B\u7684\u6575\u8ECD\u6A5F\u9AD41\u5F35"]
-                    }
-                  ]]
-                }
-              ]
-            }
-          ]
-        }
-      ];
-    }
-    case "\u5171\u6709": {
-      const [_, A] = specialEffect;
-      return [
-        {
-          id: text.id,
-          title: ["\u4F7F\u7528\u578B", ["\u5E38\u6642"]],
-          description: "\u770B\u81EA\u5DF1\u672C\u570B\u5168\u90E8\u7684\u5361,\u53EF\u4EE5\u5F9E\u4E2D\u627E\u51FA\u7279\u5FB5A\u76841\u5F35\u5361\u79FB\u5230HANGER,\u90A3\u500B\u6642\u5019\u672C\u570B\u6D17\u724C.\u9019\u500B\u6548\u679C\u53EA\u6709\u9019\u5F35\u5361\u5F9E\u624B\u4E2D\u6253\u51FA\u7684\u56DE\u5408\u53EF\u4EE5\u4F7F\u7528",
-          conditions: {
-            ...text.conditions,
-            "\u9019\u500B\u6548\u679C\u53EA\u6709\u9019\u5F35\u5361\u5F9E\u624B\u4E2D\u6253\u51FA\u7684\u56DE\u5408\u53EF\u4EE5\u4F7F\u7528": {
-              actions: [
-                {
-                  title: function _(ctx2, effect, { GameStateFn, DefineFn }) {
-                    const cardId = DefineFn.EffectFn.getCardID(effect);
-                    if (GameStateFn.getItemState(ctx2, cardId).isFirstTurn != !0)
-                      throw new DefineFn.TipError(`\u9019\u500B\u6548\u679C\u53EA\u6709\u9019\u5F35\u5361\u5F9E\u624B\u4E2D\u6253\u51FA\u7684\u56DE\u5408\u53EF\u4EE5\u4F7F\u7528:${effect.text.description}`);
-                    return ctx2;
-                  }.toString()
-                }
-              ]
-            }
-          },
-          logicTreeActions: [
-            {
-              actions: [
-                {
-                  title: function _(ctx2, effect, { GameStateFn, DefineFn }) {
-                    const { A: A2 } = { A: "" }, newE = DefineFn.EffectFn.fromEffectBasic(effect, {
-                      conditions: {
-                        "\u770B\u81EA\u5DF1\u672C\u570B\u5168\u90E8\u7684\u5361,\u53EF\u4EE5\u5F9E\u4E2D\u627E\u51FA\u7279\u5FB5A\u76841\u5F35\u5361\u79FB\u5230HANGER,\u90A3\u500B\u6642\u5019\u672C\u570B\u6D17\u724C": {
-                          title: ["_\u81EA\u8ECD_\u672C\u570B\u627E\u51FA\u7279\u5FB5_A\u7684_1\u5F35\u5361", "\u81EA\u8ECD", "\u672C\u56FD", A2, 1],
-                          actions: [
-                            {
-                              title: ["\u770B\u81EA\u5DF1_\u672C\u570B\u5168\u90E8\u7684\u5361", "\u672C\u56FD"]
-                            }
-                          ]
-                        }
-                      },
-                      logicTreeAction: {
-                        actions: [
-                          {
-                            title: function _(ctx3, effect2, { GameStateFn: GameStateFn2, DefineFn: DefineFn2 }) {
-                              const cardId = DefineFn2.EffectFn.getCardID(effect2), cardController = GameStateFn2.getItemController(ctx3, cardId), pairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, "\u770B\u81EA\u5DF1\u672C\u570B\u5168\u90E8\u7684\u5361,\u53EF\u4EE5\u5F9E\u4E2D\u627E\u51FA\u7279\u5FB5A\u76841\u5F35\u5361\u79FB\u5230HANGER,\u90A3\u500B\u6642\u5019\u672C\u570B\u6D17\u724C", cardId);
-                              if (pairs.length) {
-                                const ges = GameStateFn2.getGlobalEffects(ctx3, null);
-                                ctx3 = GameStateFn2.setGlobalEffects(ctx3, null, ges);
-                                for (let pair2 of pairs)
-                                  ctx3 = GameStateFn2.doItemMove(ctx3, DefineFn2.AbsoluteBaSyouFn.of(cardController, "\u30CF\u30F3\u30AC\u30FC"), pair2, { ges });
-                                ctx3 = GameStateFn2.shuffleItems(ctx3, DefineFn2.AbsoluteBaSyouFn.of(cardController, "\u672C\u56FD"));
-                              }
-                              return ctx3;
-                            }.toString()
-                          }
-                        ]
-                      }
-                    });
-                    return ctx2 = GameStateFn.addStackEffect(ctx2, newE), ctx2;
-                  }.toString().replace('{ A: "" }', JSON.stringify({ A }))
-                }
-              ]
-            }
-          ]
-        }
-      ];
-    }
-    case "\u6539\u88C5": {
-      const [_, A] = specialEffect;
-      return [
-        {
-          id: text.id,
-          title: ["\u4F7F\u7528\u578B", ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA"]],
-          description: "\u6253\u958B\u81EA\u8ECD\u624B\u88E1\u6216\u6307\u5B9AHANGER\u4E2D\u7279\u5FB5A\u4E26\u5408\u8A08\u570B\u529Bx\u4EE5\u4E0B\u76841\u5F35\u5361, \u548C\u9019\u5F35\u5361\u91CD\u7F6E\u72C0\u614B\u7F6E\u63DB, \u9019\u5F35\u5361\u7F6E\u63DB\u5F8C\u5EE2\u68C4. x\u70BA\u81EA\u8ECDG\u7684\u5F35\u6578",
-          conditions: {
-            ...text.conditions,
-            "\u6253\u958B\u81EA\u8ECD\u624B\u88E1\u6216\u6307\u5B9AHANGER\u4E2D\u7279\u5FB5A\u4E26\u5408\u8A08\u570B\u529Bx\u4EE5\u4E0B\u76841\u5F35\u5361": {
-              title: function _(ctx2, effect, bridge) {
-                const { A: A2 } = { A: "" };
-                if (A2 == "")
-                  throw new Error("A\u6C92\u6709\u88AB\u5B57\u4E32\u7F6E\u63DB");
-                const { GameStateFn, DefineFn } = bridge, cardId = DefineFn.EffectFn.getCardID(effect), cardController = GameStateFn.getItemController(ctx2, cardId), gCount = GameStateFn.getItemIdsByBasyou(ctx2, DefineFn.AbsoluteBaSyouFn.of(cardController, "G\u30BE\u30FC\u30F3")).length;
-                return GameStateFn.createConditionTitleFn({
-                  title: ["\u6253\u958B\u81EA\u8ECD\u624B\u88E1\u6216\u6307\u5B9AHANGER\u4E2D\u7279\u5FB5_A\u4E26\u5408\u8A08\u570B\u529B_x\u4EE5\u4E0B\u7684_1\u5F35\u5361", A2, gCount, 1]
-                })(ctx2, effect, bridge);
-              }.toString().replace('{ A: "" }', JSON.stringify({ A }))
-            }
-          },
-          logicTreeActions: [
-            {
-              actions: [
-                {
-                  title: function _(ctx2, effect, { GameStateFn, DefineFn }) {
-                    const newE = DefineFn.EffectFn.fromEffectBasic(effect, {
-                      logicTreeAction: {
-                        actions: [
-                          {
-                            title: function _(ctx3, effect2, { GameStateFn: GameStateFn2, DefineFn: DefineFn2 }) {
-                              const cardId = DefineFn2.EffectFn.getCardID(effect2), basyou = GameStateFn2.getItemBaSyou(ctx3, cardId), pairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, "\u6253\u958B\u81EA\u8ECD\u624B\u88E1\u6216\u6307\u5B9AHANGER\u4E2D\u7279\u5FB5A\u4E26\u5408\u8A08\u570B\u529Bx\u4EE5\u4E0B\u76841\u5F35\u5361", cardId);
-                              if (pairs.length == 0)
-                                throw new Error(`pairs must not 0: ${effect2.text.description}`);
-                              const targetPair = pairs[0], ges = GameStateFn2.getGlobalEffects(ctx3, null);
-                              return ctx3 = GameStateFn2.setGlobalEffects(ctx3, null, ges), GameStateFn2.assertTargetMissingError(ctx3, targetPair), ctx3 = GameStateFn2.doItemSwap(ctx3, [cardId, basyou], targetPair), ctx3 = GameStateFn2.doItemSetRollState(ctx3, !1, [cardId, basyou], { isSkipTargetMissing: !0 }), ctx3 = GameStateFn2.doItemMove(ctx3, DefineFn2.AbsoluteBaSyouFn.setBaSyouKeyword(basyou, "\u30B8\u30E3\u30F3\u30AF\u30E4\u30FC\u30C9"), targetPair, { ges }), ctx3 = GameStateFn2.doTriggerEvent(ctx3, { title: ["\u300C\u6539\u88C5\u300D\u306E\u52B9\u679C\u3067\u5EC3\u68C4\u3055\u308C\u308B\u5834\u5408"], cardIds: [targetPair[0]] }), ctx3 = GameStateFn2.doTriggerEvent(ctx3, { title: ["\u300C\u6539\u88C5\u300D\u306E\u52B9\u679C\u3067\u5834\u306B\u51FA\u305F\u5834\u5408"], cardIds: [cardId] }), ctx3;
-                            }.toString()
-                          }
-                        ]
-                      }
-                    });
-                    return ctx2 = GameStateFn.addStackEffect(ctx2, newE), ctx2;
-                  }.toString()
-                }
-              ]
-            }
-          ]
-        }
-      ];
-    }
-    case "1\u679A\u5236\u9650":
-    case "\u3010\u30B9\u30C6\u30A4\u3011":
-    case "\u30AF\u30A4\u30C3\u30AF":
-    case "\u5F37\u8972":
-    case "\u6226\u95D8\u914D\u5099":
-    case "\u901F\u653B":
-    case "\u9AD8\u6A5F\u52D5":
-      return [];
-  }
-  throw new Error(`${text.title} not support`);
-}
-
-// src/game/gameState/globalEffects.ts
-function getGlobalEffects(ctx2, situation) {
-  if (logCategory("getGlobalEffects", ""), __callGlobal)
-    throw new Error;
-  __callGlobal = !0;
-  const key = JSON.stringify(situation), cached = ctx2.globalEffectPool[key];
-  if (cached)
-    return __callGlobal = null, logCategory("getGlobalEffects", "======="), cached;
-  const ret = getSituationEffects(ctx2, situation);
-  return __callGlobal = null, logCategory("getGlobalEffects", "======="), ret;
-}
-function setGlobalEffects(ctx2, situation, ges) {
-  const key = JSON.stringify(situation);
-  return {
-    ...ctx2,
-    globalEffectPool: {
-      ...ctx2.globalEffectPool,
-      [key]: ges
-    }
-  };
-}
-function clearGlobalEffects(ctx2) {
-  return {
-    ...ctx2,
-    globalEffectPool: {}
-  };
-}
-function getSituationEffects(ctx2, situation) {
-  const bridge = createBridge({}), ges = createAllCardTexts(ctx2).flatMap(([item, texts]) => {
-    return texts.map((text, i) => {
-      const cardController = getItemController(ctx2, item.id), fn = getOnSituationFn(text), effect = {
-        id: ToolFn.getUUID("getSituationEffects"),
-        reason: ["Situation", cardController, item.id, situation],
-        text
-      };
-      return [fn, effect];
-    }).flatMap(([fn, effect]) => {
-      return fn(ctx2, effect, bridge);
-    });
-  }), itemStateGes = getItemStateValues(ctx2).flatMap(ItemStateFn.getGlobalEffects), gGes = [AbsoluteBaSyouFn.of(PlayerA, "G\u30BE\u30FC\u30F3"), AbsoluteBaSyouFn.of(PlayerB, "G\u30BE\u30FC\u30F3")].flatMap((basyou) => getItemIdsByBasyou(ctx2, basyou)).filter((itemId) => getCard(ctx2, itemId).isRoll != !0).map((itemId) => {
-    return { title: ["\u767C\u751F\u570B\u529B", getItemPrototype(ctx2, itemId).gsign?.[0] || []], cardIds: [itemId] };
-  });
-  return [...ges, ...itemStateGes, ...gGes];
-}
-function createAllCardTexts(ctx2) {
-  const getTextGroup1 = pipe(always_default(AbsoluteBaSyouFn.getBaAll()), map_default((basyou) => getItemIdsByBasyou(ctx2, basyou)), flatten_default, (itemIds) => itemIds.filter((itemId) => isCard(ctx2, itemId) || isChip(ctx2, itemId)), map_default((itemId) => getItem(ctx2, itemId)), map_default((item) => {
-    let texts = (getItemPrototype(ctx2, item.id).texts || []).flatMap((text) => {
-      if (text.title[0] == "\u7279\u6B8A\u578B")
-        return createTextsFromSpecialEffect(text, {});
-      return [text];
-    });
-    return texts = texts.filter((text) => text.title[0] == "\u81EA\u52D5\u578B" && (text.title[1] == "\u5E38\u99D0" || text.title[1] == "\u8D77\u52D5")), [item, texts];
-  })), getTextGroup2 = pipe(always_default(AbsoluteBaSyouFn.getTextOn()), map_default((basyou) => getItemIdsByBasyou(ctx2, basyou)), flatten_default, (itemIds) => itemIds.filter((itemId) => isCard(ctx2, itemId) || isChip(ctx2, itemId)), map_default((itemId) => getItem(ctx2, itemId)), map_default((item) => {
-    let texts = (getItemPrototype(ctx2, item.id).texts || []).flatMap((text) => {
-      if (text.title[0] == "\u7279\u6B8A\u578B")
-        return createTextsFromSpecialEffect(text, {});
-      return [text];
-    });
-    return texts = texts.filter((text) => text.title[0] == "\u81EA\u52D5\u578B" && text.title[1] == "\u6052\u5E38" || text.title[0] == "\u4F7F\u7528\u578B"), [item, texts];
-  })), getTextGroup3 = pipe(always_default([AbsoluteBaSyouFn.of(PlayerA, "G\u30BE\u30FC\u30F3"), AbsoluteBaSyouFn.of(PlayerB, "G\u30BE\u30FC\u30F3")]), map_default((basyou) => getItemIdsByBasyou(ctx2, basyou)), flatten_default, (itemIds) => itemIds.filter((itemId) => isCard(ctx2, itemId) || isChip(ctx2, itemId)), map_default((itemId) => getItem(ctx2, itemId)), map_default((item) => {
-    let texts = (getItemPrototype(ctx2, item.id).texts || []).flatMap((text) => {
-      if (text.protectLevel == 2 && text.title[0] == "\u7279\u6B8A\u578B")
-        return createTextsFromSpecialEffect(text, {});
-      return [text];
-    });
-    return texts = texts.filter((text) => text.protectLevel == 2 && text.title[0] == "\u81EA\u52D5\u578B" && (text.title[1] == "\u5E38\u99D0" || text.title[1] == "\u8D77\u52D5")), [item, texts];
-  })), getTextGroup4 = pipe(always_default(getCardIds(ctx2)), map_default((cardId) => {
-    const proto = getItemPrototype(ctx2, cardId);
-    if (proto.commandText?.onSituation)
-      return [getCard(ctx2, cardId), [proto.commandText]];
-    return null;
-  }), (infos) => infos.filter((v) => v)), allCardTexts = [...getTextGroup1(), ...getTextGroup2(), ...getTextGroup3(), ...getTextGroup4()], bridge = createBridge({}), ges = allCardTexts.flatMap(([item, texts]) => {
-    return texts.map((text, i) => {
-      const cardController = getItemController(ctx2, item.id);
-      logCategory("createAllCardTexts", "getOnSituationFn", text.onSituation);
-      const fn = getOnSituationFn(text), effect = {
-        id: ToolFn.getUUID("getSituationEffects"),
-        reason: ["Situation", cardController, item.id, { title: ["\u6709\u6C92\u6709\u65B0\u589E\u5167\u6587"] }],
-        text
-      };
-      return [fn, effect];
-    }).flatMap(([fn, effect]) => {
-      return fn(ctx2, effect, bridge);
-    });
-  }), itemStateGes = getItemStateValues(ctx2).flatMap(ItemStateFn.getGlobalEffects), gesLayer1 = [...ges, ...itemStateGes], textsLayer2 = gesLayer1.filter((ge) => ge.title[0] == "AddText").map((ge) => [ge.cardIds, ge.title[1]]).flatMap(([itemIds, text]) => {
-    return itemIds.flatMap((itemId) => {
-      const texts = text.title[0] == "\u7279\u6B8A\u578B" ? createTextsFromSpecialEffect(text, {}) : [text];
-      return [[getItem(ctx2, itemId), texts]];
-    });
-  }), textsLayer2_2 = gesLayer1.filter((ge) => ge.title[0] == "AddTextRef").map((ge) => [ge.cardIds, ge.title[1]]).flatMap(([itemIds, textRef]) => {
-    return itemIds.flatMap((itemId) => {
-      const text = getCardTextFromCardTextRef(ctx2, textRef), texts = text.title[0] == "\u7279\u6B8A\u578B" ? createTextsFromSpecialEffect(text, {}) : [text];
-      return [[getItem(ctx2, itemId), texts]];
-    });
-  });
-  return [...allCardTexts, ...textsLayer2, ...textsLayer2_2];
-}
-var __callGlobal = null;
-
 // src/game/gameState/setGroup.ts
 var exports_setGroup = {};
 __export(exports_setGroup, {
@@ -20931,7 +20373,7 @@ __export(exports_setGroup, {
   getSetGroupBattlePoint: () => getSetGroupBattlePoint
 });
 function getSetGroupBattlePoint(ctx2, cardId, options) {
-  return pipe(always_default(getSetGroupChildren(ctx2, cardId)), map_default((setGroupCardID) => getCardBattlePoint(ctx2, setGroupCardID, { ges: options.ges })), reduce_default(BattlePointFn.add, BattlePointFn.getAllStar()), BattlePointFn.toBattleBonus)();
+  return pipe(always_default(getSetGroupChildren(ctx2, cardId)), map_default((setGroupCardID) => getCardBattlePoint(ctx2, setGroupCardID, options)), reduce_default(BattlePointFn.add, BattlePointFn.getAllStar()), BattlePointFn.toBattleBonus)();
 }
 function isSetGroupHasA(ctx2, a, cardId, options) {
   return getSetGroupChildren(ctx2, cardId).some((cardId2) => getCardHasSpeicalEffect(ctx2, a, cardId2, { ges: options.ges }));
@@ -20972,21 +20414,19 @@ function getBattleGroupBattlePoint(ctx2, unitCardIDs, options) {
     if (i == 0)
       return melee;
     return range3;
-  }).reduce((acc, c) => acc + c, 0), ges = getGlobalEffects(ctx2, null);
-  ctx2 = setGlobalEffects(ctx2, null, ges);
-  const bonus = ges.map((ge) => {
+  }).reduce((acc, c) => acc + c, 0), bonus = options.ges?.map((ge) => {
     if (ge.title[0] == "\u3053\u306E\u30AB\u30FC\u30C9\u306E\u90E8\u968A\u306E\u90E8\u968A\u6226\u95D8\u529B\u3092_\uFF0B\uFF13\u3059\u308B") {
       const times3 = unitCardIDs.filter((unitId) => ge.cardIds.includes(unitId)).length;
       return ge.title[1] * times3;
     }
     return 0;
-  }).reduce((acc, c) => acc + c, 0), opponentBasyou = AbsoluteBaSyouFn.setOpponentPlayerID(getItemBaSyou(ctx2, unitCardIDs[0])), opponentBattleGroup = getBattleGroup(ctx2, opponentBasyou), bonus2 = ges.map((ge) => {
+  }).reduce((acc, c) => acc + c, 0) || 0, opponentBasyou = AbsoluteBaSyouFn.setOpponentPlayerID(getItemBaSyou(ctx2, unitCardIDs[0])), opponentBattleGroup = getBattleGroup(ctx2, opponentBasyou), bonus2 = options.ges?.map((ge) => {
     if (ge.title[0] == "\u3053\u306E\u30AB\u30FC\u30C9\u3068\u4EA4\u6226\u4E2D\u306E\u6575\u8ECD\u90E8\u968A\u306E\u90E8\u968A\u6226\u95D8\u529B\u3092_\uFF0D\uFF13\u3059\u308B") {
       const times3 = opponentBattleGroup.filter((unitId) => ge.cardIds.includes(unitId)).length;
       return ge.title[1] * times3;
     }
     return 0;
-  }).reduce((acc, c) => acc + c, 0);
+  }).reduce((acc, c) => acc + c, 0) || 0;
   return attackPower + bonus + bonus2;
 }
 function isBattleGroupHasA(ctx2, a, cardID, options) {
@@ -21003,6 +20443,8 @@ var exports_player = {};
 __export(exports_player, {
   isPlayerHasBattleGroup: () => isPlayerHasBattleGroup,
   getPlayerUnitIds: () => getPlayerUnitIds,
+  getPlayerUnitCanGoSpaceIds: () => getPlayerUnitCanGoSpaceIds,
+  getPlayerUnitCanGoEarthIds: () => getPlayerUnitCanGoEarthIds,
   getPlayerOperationIds: () => getPlayerOperationIds,
   getPlayerJunkyardIds: () => getPlayerJunkyardIds,
   getPlayerHandIds: () => getPlayerHandIds,
@@ -21116,10 +20558,595 @@ __export(exports_doItemMove, {
   onMoveItem: () => onMoveItem,
   doItemMove: () => doItemMove
 });
+
+// src/game/gameState/globalEffects.ts
+var exports_globalEffects = {};
+__export(exports_globalEffects, {
+  updateGlobalEffects: () => updateGlobalEffects,
+  setGlobalEffects: () => setGlobalEffects,
+  getGlobalEffects: () => getGlobalEffects,
+  createAllCardTexts: () => createAllCardTexts,
+  clearGlobalEffects: () => clearGlobalEffects
+});
+
+// src/game/gameState/createTextsFromSpecialEffect.ts
+function createTextsFromSpecialEffect(text, options) {
+  if (logCategory("createTextsFromSpecialEffect", ""), text.title[0] != "\u7279\u6B8A\u578B")
+    throw new Error("text not \u7279\u6B8A\u578B");
+  const specialEffect = text.title[1];
+  switch (specialEffect[0]) {
+    case "\u3010PS\u88C5\u7532\u3011":
+      return [
+        {
+          id: text.id,
+          title: ["\u81EA\u52D5\u578B", "\u8D77\u52D5"],
+          description: "\u51FA\u5834\u6642\u76F4\u7ACB\u51FA\u5834"
+        },
+        {
+          id: text.id,
+          title: ["\u81EA\u52D5\u578B", "\u8D77\u52D5"],
+          description: "\u9019\u5F35\u5361\u51FA\u73FE\u5728\u6230\u5340\u6642, \u4E0B\u56DE\u5408\u958B\u59CB\u6642\u56DE\u5230\u6301\u6709\u8005\u624B\u4E0A. \u4F46\u5982\u679C\u548C\u6301\u6709\u88DC\u7D66\u6216\u4F9B\u7D66\u7684\u5361\u7D44\u5408\u90E8\u968A\u7684\u6642\u5019, \u4E0A\u8FF0\u7684\u6548\u679C\u4E0D\u767C\u52D5.",
+          onEvent: function _(ctx2, effect, { GameStateFn, DefineFn, Options }) {
+            const cardId = DefineFn.EffectFn.getCardID(effect), evt = DefineFn.EffectFn.getEvent(effect);
+            if (evt.title[0] == "GameEventOnMove" && (DefineFn.AbsoluteBaSyouFn.getBaSyouKeyword(evt.title[2]) == "\u6226\u95D8\u30A8\u30EA\u30A21" || DefineFn.AbsoluteBaSyouFn.getBaSyouKeyword(evt.title[2]) == "\u6226\u95D8\u30A8\u30EA\u30A22")) {
+              if (evt.cardIds?.includes(cardId))
+                if (GameStateFn.isBattleGroupHasA(ctx2, ["\u4F9B\u7D66"], cardId, Options))
+                  ;
+                else
+                  ctx2 = GameStateFn.mapItemState(ctx2, cardId, (is) => DefineFn.ItemStateFn.setFlag(is, "return", !0));
+              else if (DefineFn.AbsoluteBaSyouFn.eq(GameStateFn.getItemBaSyou(ctx2, cardId), evt.title[2])) {
+                if (GameStateFn.isBattleGroupHasA(ctx2, ["\u4F9B\u7D66"], cardId, Options))
+                  ctx2 = GameStateFn.mapItemState(ctx2, cardId, (is) => DefineFn.ItemStateFn.removeFlag(is, "return"));
+              }
+            }
+            if (evt.title[0] == "GameEventOnTiming" && DefineFn.PhaseFn.eq(evt.title[1], DefineFn.PhaseFn.getFirst())) {
+              const cardId2 = DefineFn.EffectFn.getCardID(effect), cardController = GameStateFn.getItemController(ctx2, cardId2);
+              if (GameStateFn.getItemState(ctx2, cardId2).flags.return)
+                ctx2 = GameStateFn.doItemMove(ctx2, DefineFn.AbsoluteBaSyouFn.of(cardController, "\u624B\u672D"), [cardId2, GameStateFn.getItemBaSyou(ctx2, cardId2)], Options), ctx2 = GameStateFn.mapItemState(ctx2, cardId2, (is) => DefineFn.ItemStateFn.removeFlag(is, "return"));
+            }
+            return ctx2;
+          }.toString()
+        }
+      ];
+    case "\u30AF\u30ED\u30B9\u30A6\u30A7\u30DD\u30F3": {
+      const [_, A] = specialEffect;
+      return [
+        {
+          id: text.id,
+          title: ["\u4F7F\u7528\u578B", ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA"]],
+          description: "\uFF08\u6226\u95D8\u30D5\u30A7\u30A4\u30BA\uFF09\uFF1A\uFF3B \uFF3D\u306E\u7279\u5FB4\u3092\u6301\u3064\u81EA\u8ECD\u30E6\u30CB\u30C3\u30C8\uFF11\u679A\u306F\u3001\u30BF\u30FC\u30F3\u7D42\u4E86\u6642\u307E\u3067\u3001\u3053\u306E\u30AB\u30FC\u30C9\u306E\u672C\u6765\u306E\u30C6\u30AD\u30B9\u30C8\uFF11\u3064\u3068\u540C\u3058\u30C6\u30AD\u30B9\u30C8\u3092\u5F97\u308B\u3002\u305F\u3060\u3057\u540C\u3058\u30C6\u30AD\u30B9\u30C8\u306F\u5F97\u3089\u308C\u306A\u3044\uFF09",
+          conditions: {
+            ...text.conditions,
+            "\u3053\u306E\u30AB\u30FC\u30C9\u306E\u672C\u6765\u306E\u30C6\u30AD\u30B9\u30C8\uFF11\u3064": {
+              title: ["\u3053\u306E\u30AB\u30FC\u30C9\u306E_\u672C\u6765\u306E\u30C6\u30AD\u30B9\u30C8\uFF11\u3064", !0, 1]
+            },
+            "\uFF3B \uFF3D\u306E\u7279\u5FB4\u3092\u6301\u3064\u81EA\u8ECD\u30E6\u30CB\u30C3\u30C8\uFF11\u679A\u306F": {
+              title: ["_\u672C\u6765\u306E\u8A18\u8FF0\u306B\uFF62\u7279\u5FB4\uFF1A_\u88C5\u5F3E\uFF63\u3092\u6301\u3064_\u81EA\u8ECD_G_\uFF11\u679A", !1, A, "\u81EA\u8ECD", "\u30E6\u30CB\u30C3\u30C8", 1],
+              exceptItemSelf: !0,
+              actions: [
+                {
+                  title: function _(ctx2, effect, { GameStateFn, DefineFn, Options }) {
+                    const cardId = DefineFn.EffectFn.getCardID(effect), pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx2, "\uFF3B \uFF3D\u306E\u7279\u5FB4\u3092\u6301\u3064\u81EA\u8ECD\u30E6\u30CB\u30C3\u30C8\uFF11\u679A\u306F", cardId), textRefIds = GameStateFn.getCardTipTextRefs(ctx2, "\u3053\u306E\u30AB\u30FC\u30C9\u306E\u672C\u6765\u306E\u30C6\u30AD\u30B9\u30C8\uFF11\u3064", cardId).map((tr) => tr.textId);
+                    for (let pair2 of pairs)
+                      if (GameStateFn.getCardTexts(ctx2, pair2[0], Options).find((text2) => textRefIds.includes(text2.id)))
+                        throw new DefineFn.TipError(`\u5DF2\u6709\u540C\u6A23\u7684\u5167\u6587: ${JSON.stringify(textRefIds)}`, { hasSameText: !0 });
+                    return ctx2;
+                  }.toString()
+                }
+              ]
+            }
+          },
+          logicTreeActions: [
+            {
+              actions: [
+                {
+                  title: ["cutIn", [
+                    {
+                      title: function _(ctx2, effect, { GameStateFn, DefineFn, Options }) {
+                        const cardId = DefineFn.EffectFn.getCardID(effect), pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx2, "\uFF3B \uFF3D\u306E\u7279\u5FB4\u3092\u6301\u3064\u81EA\u8ECD\u30E6\u30CB\u30C3\u30C8\uFF11\u679A\u306F", cardId), textRefs = GameStateFn.getCardTipTextRefs(ctx2, "\u3053\u306E\u30AB\u30FC\u30C9\u306E\u672C\u6765\u306E\u30C6\u30AD\u30B9\u30C8\uFF11\u3064", cardId);
+                        for (let pair2 of pairs) {
+                          GameStateFn.assertTargetMissingError(ctx2, pair2);
+                          const [targetCardId, targetBasyou] = pair2;
+                          ctx2 = GameStateFn.mapItemState(ctx2, targetCardId, (targetItemState) => {
+                            for (let textRef of textRefs) {
+                              if (GameStateFn.getCardTexts(ctx2, targetItemState.id, Options).find((text2) => text2.id == textRef.textId) != null)
+                                continue;
+                              targetItemState = DefineFn.ItemStateFn.setGlobalEffect(targetItemState, null, {
+                                title: ["AddTextRef", textRef],
+                                cardIds: [targetItemState.id]
+                              }, { isRemoveOnTurnEnd: !0 });
+                            }
+                            return targetItemState;
+                          });
+                        }
+                        return ctx2;
+                      }.toString()
+                    }
+                  ]]
+                }
+              ]
+            }
+          ]
+        }
+      ];
+    }
+    case "\u30B2\u30A4\u30F3":
+      return [
+        {
+          id: text.id,
+          title: ["\u4F7F\u7528\u578B", ["\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7"]],
+          description: "\u9019\u5F35\u5361\u5728\u6230\u5340\u7684\u5834\u5408, \u6253\u958B\u81EA\u8ECD\u672C\u570B\u4E0A\u76841\u5F35\u5361\u548C\u9019\u5F35\u5361\u540CGsignProperty\u7684\u60C5\u6CC1, \u9019\u5F35\u5361\u56DE\u5408\u7D50\u675F\u524D+x/+x/+x, x\u70BA\u6253\u958B\u7684\u5361\u7684\u6A2A\u7F6E\u8CBB\u7528\u6578\u91CF, \u9019\u500B\u6548\u679C1\u56DE\u5408\u53EA\u80FD\u75281\u6B21",
+          testEnvs: [
+            {
+              createCards: [
+                ["\u81EA\u8ECD", "\u6226\u95D8\u30A8\u30EA\u30A21", [["unitHasGain", 1]]],
+                ["\u81EA\u8ECD", "\u672C\u56FD", [["unitHasGain", 1]]]
+              ]
+            }
+          ],
+          conditions: {
+            ...text.conditions,
+            "\u9019\u500B\u6548\u679C1\u56DE\u5408\u53EA\u80FD\u75281\u6B21": {
+              actions: [
+                {
+                  title: ["\u3053\u306E\u8A18\u8FF0\u306E\u52B9\u679C\u306F\u3001\u30D7\u30EC\u30A4\u30E4\u30FC\u6BCE\u306B\uFF11\u30BF\u30FC\u30F3\u306B\uFF11\u56DE\u307E\u3067\u89E3\u6C7A\u3067\u304D\u308B"]
+                }
+              ]
+            },
+            "\u9019\u5F35\u5361\u5728\u6230\u5340\u7684\u5834\u5408": {
+              actions: [
+                {
+                  title: ["Entity", {
+                    isThisCard: !0,
+                    at: ["\u6226\u95D8\u30A8\u30EA\u30A21", "\u6226\u95D8\u30A8\u30EA\u30A22"],
+                    count: 1
+                  }]
+                }
+              ]
+            }
+          },
+          logicTreeActions: [
+            {
+              actions: [
+                {
+                  title: ["cutIn", [
+                    {
+                      title: function _(ctx2, effect, { GameStateFn, DefineFn }) {
+                        const newE = DefineFn.EffectFn.fromEffectBasic(effect, {
+                          conditions: {
+                            "\u9019\u5F35\u5361\u5728\u6230\u5340\u7684\u5834\u5408, \u6253\u958B\u81EA\u8ECD\u672C\u570B\u4E0A\u76841\u5F35\u5361": {
+                              title: ["Entity", {
+                                see: [DefineFn.RelatedBaSyouFn.of("\u81EA\u8ECD", "\u672C\u56FD"), 1, 1],
+                                count: 1
+                              }],
+                              actions: [
+                                {
+                                  title: ["_\u30ED\u30FC\u30EB\u3059\u308B", "\u898B"],
+                                  vars: ["\u9019\u5F35\u5361\u5728\u6230\u5340\u7684\u5834\u5408, \u6253\u958B\u81EA\u8ECD\u672C\u570B\u4E0A\u76841\u5F35\u5361"]
+                                }
+                              ]
+                            },
+                            "\u9019\u5F35\u5361\u5728\u6230\u5340\u7684\u5834\u5408": {
+                              actions: [
+                                {
+                                  title: ["Entity", {
+                                    isThisCard: !0,
+                                    at: ["\u6226\u95D8\u30A8\u30EA\u30A21", "\u6226\u95D8\u30A8\u30EA\u30A22"],
+                                    count: 1
+                                  }]
+                                }
+                              ]
+                            }
+                          },
+                          logicTreeAction: {
+                            actions: [
+                              {
+                                title: function _(ctx3, effect2, { GameStateFn: GameStateFn2, DefineFn: DefineFn2, ToolFn: ToolFn2, Options }) {
+                                  const cardId = DefineFn2.EffectFn.getCardID(effect2), pairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, "\u9019\u5F35\u5361\u5728\u6230\u5340\u7684\u5834\u5408, \u6253\u958B\u81EA\u8ECD\u672C\u570B\u4E0A\u76841\u5F35\u5361", cardId);
+                                  if (pairs.length == 0)
+                                    throw new Error(`pairs must not 0: ${effect2.text.description}`);
+                                  const [openCardId] = pairs[0];
+                                  if (GameStateFn2.getCardGSignProperty(ctx3, openCardId) == GameStateFn2.getCardGSignProperty(ctx3, cardId) == !1)
+                                    return console.warn("\u4E0D\u540C\u7684GSignProperty\uFF0C\u7121\u6CD5\u5F97\u5230\u7D05\u5229"), ctx3;
+                                  const ges = Options.ges, bonus = GameStateFn2.getCardRollCostLength(ctx3, openCardId), gainBonus = [bonus, bonus, bonus];
+                                  ctx3 = GameStateFn2.doTriggerEvent(ctx3, { title: ["\u300C\u30B2\u30A4\u30F3\u300D\u306E\u52B9\u679C\u3067\u6226\u95D8\u4FEE\u6B63\u3092\u5F97\u308B\u5834\u5408", gainBonus], cardIds: [cardId] }, { ges: Options.ges });
+                                  const hasCase1 = GameStateFn2.getCardTexts(ctx3, cardId, { ges }).find((text2) => text2.description == "\u300E\u8D77\u52D5\u300F\uFF1A\u3053\u306E\u30AB\u30FC\u30C9\u306F\u3001\u300C\u30B2\u30A4\u30F3\u300D\u306E\u52B9\u679C\u3067\u6226\u95D8\u4FEE\u6B63\u3092\u5F97\u308B\u5834\u5408\u3001\u305D\u306E\u6226\u95D8\u4FEE\u6B63\u306E\u4EE3\u308F\u308A\u306B\u3001\u30BF\u30FC\u30F3\u7D42\u4E86\u6642\u307E\u3067\uFF0B\uFF14\uFF0F\xB1\uFF10\uFF0F\xB1\uFF10\u3092\u5F97\u308B\u4E8B\u304C\u3067\u304D\u308B\u3002") != null, hasCase2 = GameStateFn2.getCardTexts(ctx3, cardId, { ges }).find((text2) => text2.description == "\u300E\u8D77\u52D5\u300F\uFF1A\u3053\u306E\u30AB\u30FC\u30C9\u306F\u3001\u300C\u30B2\u30A4\u30F3\u300D\u306E\u52B9\u679C\u3067\u6226\u95D8\u4FEE\u6B63\u3092\u5F97\u308B\u5834\u5408\u3001\u305D\u306E\u6226\u95D8\u4FEE\u6B63\u3092\u5F97\u308B\u4EE3\u308F\u308A\u306B\u3001\u30BF\u30FC\u30F3\u7D42\u4E86\u6642\u307E\u3067\u3001\u300C\u901F\u653B\u300D\u3092\u5F97\u308B\u4E8B\u304C\u3067\u304D\u308B\u3002") != null;
+                                  if (hasCase1)
+                                    ctx3 = GameStateFn2.doItemSetGlobalEffectsUntilEndOfTurn(ctx3, [{ title: ["\uFF0Bx\uFF0F\uFF0Bx\uFF0F\uFF0Bx\u3092\u5F97\u308B", [4, 0, 0]], cardIds: [cardId] }], GameStateFn2.createStrBaSyouPair(ctx3, cardId));
+                                  else if (hasCase2)
+                                    ctx3 = GameStateFn2.doItemSetGlobalEffectsUntilEndOfTurn(ctx3, [{ title: ["AddText", { id: ToolFn2.getUUID("hasCase2"), title: ["\u7279\u6B8A\u578B", ["\u901F\u653B"]] }], cardIds: [cardId] }], GameStateFn2.createStrBaSyouPair(ctx3, cardId));
+                                  else
+                                    ctx3 = GameStateFn2.mapItemState(ctx3, cardId, (is) => DefineFn2.ItemStateFn.setGlobalEffect(is, null, {
+                                      title: ["\uFF0Bx\uFF0F\uFF0Bx\uFF0F\uFF0Bx\u3092\u5F97\u308B", gainBonus],
+                                      cardIds: [cardId]
+                                    }, { isRemoveOnTurnEnd: !0 })), ctx3 = GameStateFn2.doTriggerEvent(ctx3, { title: ["\u300C\u30B2\u30A4\u30F3\u300D\u306E\u52B9\u679C\u3067\u6226\u95D8\u4FEE\u6B63\u3092\u5F97\u305F\u5834\u5408", gainBonus], cardIds: [cardId] }, { ges: Options.ges });
+                                  return ctx3;
+                                }.toString()
+                              }
+                            ]
+                          }
+                        });
+                        return ctx2 = GameStateFn.addImmediateEffect(ctx2, newE), ctx2;
+                      }.toString()
+                    }
+                  ]]
+                }
+              ]
+            }
+          ]
+        }
+      ];
+    case "\u4F9B\u7D66":
+      return [
+        {
+          id: text.id,
+          title: ["\u4F7F\u7528\u578B", ["\u81EA\u8ECD", "\u653B\u6483\u30B9\u30C6\u30C3\u30D7"]],
+          description: "\u9019\u5F35\u5361\u4EE5\u5916\u7684\u81EA\u8ECD\u6A5F\u9AD41\u5F35\u91CD\u7F6E",
+          conditions: {
+            ...text.conditions,
+            "\u9019\u5F35\u5361\u4EE5\u5916\u7684\u81EA\u8ECD\u6A5F\u9AD41\u5F35": {
+              title: ["Entity", {
+                atBa: !0,
+                side: "\u81EA\u8ECD",
+                is: ["\u30E6\u30CB\u30C3\u30C8"],
+                count: 1,
+                exceptCardIds: []
+              }]
+            }
+          },
+          logicTreeActions: [
+            {
+              actions: [
+                {
+                  title: ["cutIn", [
+                    {
+                      title: ["_\u30ED\u30FC\u30EB\u3059\u308B", "\u30EA\u30ED\u30FC\u30EB"],
+                      vars: ["\u9019\u5F35\u5361\u4EE5\u5916\u7684\u81EA\u8ECD\u6A5F\u9AD41\u5F35"]
+                    }
+                  ]]
+                }
+              ]
+            }
+          ]
+        }
+      ];
+    case "\u30B5\u30A4\u30B3\u30DF\u30E5": {
+      const [_, x] = specialEffect, addCardIds = options?.ges?.flatMap((ge) => {
+        if (ge.title[0] == "_\u30E6\u30CB\u30C3\u30C8\u306F\u3001\u300C\u30B5\u30A4\u30B3\u30DF\u30E5\u300D\u306E\u52B9\u679C\u306B\u304A\u3044\u3066\u3001\u4EA4\u6226\u4E2D\u3068\u3057\u3066\u6271\u3046\u3002" && ge.cardIds.includes(options?.cardId || ""))
+          return ge.title[1];
+        return [];
+      }) || [];
+      return [
+        {
+          id: text.id,
+          title: ["\u4F7F\u7528\u578B", ["\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7"]],
+          description: "\u4EA4\u6230\u4E2D\u7684\u6575\u8ECD\u6A5F\u9AD41\u5F35x\u50B7\u5BB3. \u9019\u500B\u6548\u679C\u53EA\u6709\u5728\u540C\u5340\u4E2D\u6709NT\u624D\u80FD\u4F7F\u7528.",
+          conditions: {
+            ...text.conditions,
+            "\u4EA4\u6230\u4E2D\u7684\u6575\u8ECD\u6A5F\u9AD41\u5F35": {
+              title: function _(ctx2, effect, { GameStateFn, DefineFn, Options }) {
+                const { addCardIds: addCardIds2 } = { addCardIds: null };
+                if (addCardIds2 == null)
+                  throw new Error("addCardIds must replace");
+                const cardId = DefineFn.EffectFn.getCardID(effect), tip = GameStateFn.createTipByEntitySearch(ctx2, effect, {
+                  isBattle: !0,
+                  side: "\u6575\u8ECD",
+                  is: ["\u30E6\u30CB\u30C3\u30C8"],
+                  count: 1
+                }, { ges: Options.ges });
+                let wants = DefineFn.TipFn.getWant(tip);
+                return wants = [...wants, ...addCardIds2.map((itemId) => GameStateFn.createStrBaSyouPair(ctx2, itemId))], {
+                  title: ["\u30AB\u30FC\u30C9", wants, wants.slice(0, 1)],
+                  count: 1
+                };
+              }.toString().replace("{ addCardIds: null }", JSON.stringify({ addCardIds }))
+            },
+            "\u540C\u5340\u4E2D\u6709NT\u624D\u80FD\u4F7F\u7528": {
+              actions: [
+                {
+                  title: function _(ctx2, effect, { GameStateFn, DefineFn }) {
+                    const cardId = DefineFn.EffectFn.getCardID(effect), from = GameStateFn.getItemBaSyou(ctx2, cardId);
+                    if (GameStateFn.getItemIdsByBasyou(ctx2, from).filter((itemId) => GameStateFn.getItemCharacteristic(ctx2, itemId).indexOf("NT") != -1).length > 0 == !1)
+                      throw new TipError("no NT in the same area");
+                    return ctx2;
+                  }.toString()
+                }
+              ]
+            }
+          },
+          logicTreeActions: [
+            {
+              actions: [
+                {
+                  title: ["cutIn", [
+                    {
+                      title: ["_\uFF11\u30C0\u30E1\u30FC\u30B8\u3092\u4E0E\u3048\u308B", x],
+                      vars: ["\u4EA4\u6230\u4E2D\u7684\u6575\u8ECD\u6A5F\u9AD41\u5F35"]
+                    }
+                  ]]
+                }
+              ]
+            }
+          ]
+        }
+      ];
+    }
+    case "\u7BC4\u56F2\u5175\u5668": {
+      const [_, x] = specialEffect, hasCase1 = (options?.ges?.filter((ge) => ge.title[0] == "\u300C\u7BC4\u56F2\u5175\u5668\u300D\u306E\u5BFE\u8C61\u90E8\u5206\u306F\u3001\u300EX\u4EE5\u4E0B\u306E\u9632\u5FA1\u529B\u3092\u6301\u3064\u6575\u8ECD\u30E6\u30CB\u30C3\u30C8\uFF11\u679A\u300F\u306B\u5909\u66F4\u3055\u308C\u308B" && ge.cardIds.includes(options?.cardId || "")) || []).length > 0;
+      return [
+        {
+          id: text.id,
+          title: ["\u4F7F\u7528\u578B", ["\u30C0\u30E1\u30FC\u30B8\u5224\u5B9A\u30B9\u30C6\u30C3\u30D7"]],
+          description: "\u548C\u9019\u5F35\u5361\u4EA4\u6230\u7684\u9632\u79A6\u529Bx\u4EE5\u4E0B\u7684\u6575\u8ECD\u6A5F\u9AD41\u5F35\u7834\u58DE",
+          conditions: {
+            ...text.conditions,
+            "\u9019\u5F35\u5361\u4EA4\u6230\u7684\u9632\u79A6\u529Bx\u4EE5\u4E0B\u7684\u6575\u8ECD\u6A5F\u9AD41\u5F35": {
+              title: ["Entity", {
+                atBa: !0,
+                isBattleWithThis: hasCase1 ? void 0 : !0,
+                compareBattlePoint: ["\u9632\u5FA1\u529B", "<=", x],
+                isDestroy: !1,
+                side: "\u6575\u8ECD",
+                is: ["\u30E6\u30CB\u30C3\u30C8"],
+                count: 1
+              }]
+            }
+          },
+          logicTreeActions: [
+            {
+              actions: [
+                {
+                  title: ["cutIn", [
+                    {
+                      title: ["_\u30ED\u30FC\u30EB\u3059\u308B", "\u7834\u58DE"],
+                      vars: ["\u9019\u5F35\u5361\u4EA4\u6230\u7684\u9632\u79A6\u529Bx\u4EE5\u4E0B\u7684\u6575\u8ECD\u6A5F\u9AD41\u5F35"]
+                    }
+                  ]]
+                }
+              ]
+            }
+          ]
+        }
+      ];
+    }
+    case "\u5171\u6709": {
+      const [_, A] = specialEffect;
+      return [
+        {
+          id: text.id,
+          title: ["\u4F7F\u7528\u578B", ["\u5E38\u6642"]],
+          description: "\u770B\u81EA\u5DF1\u672C\u570B\u5168\u90E8\u7684\u5361,\u53EF\u4EE5\u5F9E\u4E2D\u627E\u51FA\u7279\u5FB5A\u76841\u5F35\u5361\u79FB\u5230HANGER,\u90A3\u500B\u6642\u5019\u672C\u570B\u6D17\u724C.\u9019\u500B\u6548\u679C\u53EA\u6709\u9019\u5F35\u5361\u5F9E\u624B\u4E2D\u6253\u51FA\u7684\u56DE\u5408\u53EF\u4EE5\u4F7F\u7528",
+          conditions: {
+            ...text.conditions,
+            "\u9019\u500B\u6548\u679C\u53EA\u6709\u9019\u5F35\u5361\u5F9E\u624B\u4E2D\u6253\u51FA\u7684\u56DE\u5408\u53EF\u4EE5\u4F7F\u7528": {
+              actions: [
+                {
+                  title: function _(ctx2, effect, { GameStateFn, DefineFn }) {
+                    const cardId = DefineFn.EffectFn.getCardID(effect);
+                    if (GameStateFn.getItemState(ctx2, cardId).isFirstTurn != !0)
+                      throw new DefineFn.TipError(`\u9019\u500B\u6548\u679C\u53EA\u6709\u9019\u5F35\u5361\u5F9E\u624B\u4E2D\u6253\u51FA\u7684\u56DE\u5408\u53EF\u4EE5\u4F7F\u7528:${effect.text.description}`);
+                    return ctx2;
+                  }.toString()
+                }
+              ]
+            }
+          },
+          logicTreeActions: [
+            {
+              actions: [
+                {
+                  title: function _(ctx2, effect, { GameStateFn, DefineFn }) {
+                    const { A: A2 } = { A: "" }, newE = DefineFn.EffectFn.fromEffectBasic(effect, {
+                      conditions: {
+                        "\u770B\u81EA\u5DF1\u672C\u570B\u5168\u90E8\u7684\u5361,\u53EF\u4EE5\u5F9E\u4E2D\u627E\u51FA\u7279\u5FB5A\u76841\u5F35\u5361\u79FB\u5230HANGER,\u90A3\u500B\u6642\u5019\u672C\u570B\u6D17\u724C": {
+                          title: ["_\u81EA\u8ECD_\u672C\u570B\u627E\u51FA\u7279\u5FB5_A\u7684_1\u5F35\u5361", "\u81EA\u8ECD", "\u672C\u56FD", A2, 1],
+                          actions: [
+                            {
+                              title: ["\u770B\u81EA\u5DF1_\u672C\u570B\u5168\u90E8\u7684\u5361", "\u672C\u56FD"]
+                            }
+                          ]
+                        }
+                      },
+                      logicTreeAction: {
+                        actions: [
+                          {
+                            title: function _(ctx3, effect2, { GameStateFn: GameStateFn2, DefineFn: DefineFn2, Options }) {
+                              const cardId = DefineFn2.EffectFn.getCardID(effect2), cardController = GameStateFn2.getItemController(ctx3, cardId), pairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, "\u770B\u81EA\u5DF1\u672C\u570B\u5168\u90E8\u7684\u5361,\u53EF\u4EE5\u5F9E\u4E2D\u627E\u51FA\u7279\u5FB5A\u76841\u5F35\u5361\u79FB\u5230HANGER,\u90A3\u500B\u6642\u5019\u672C\u570B\u6D17\u724C", cardId);
+                              if (pairs.length) {
+                                for (let pair2 of pairs)
+                                  ctx3 = GameStateFn2.doItemMove(ctx3, DefineFn2.AbsoluteBaSyouFn.of(cardController, "\u30CF\u30F3\u30AC\u30FC"), pair2, Options);
+                                ctx3 = GameStateFn2.shuffleItems(ctx3, DefineFn2.AbsoluteBaSyouFn.of(cardController, "\u672C\u56FD"));
+                              }
+                              return ctx3;
+                            }.toString()
+                          }
+                        ]
+                      }
+                    });
+                    return ctx2 = GameStateFn.addStackEffect(ctx2, newE), ctx2;
+                  }.toString().replace('{ A: "" }', JSON.stringify({ A }))
+                }
+              ]
+            }
+          ]
+        }
+      ];
+    }
+    case "\u6539\u88C5": {
+      const [_, A] = specialEffect;
+      return [
+        {
+          id: text.id,
+          title: ["\u4F7F\u7528\u578B", ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA"]],
+          description: "\u6253\u958B\u81EA\u8ECD\u624B\u88E1\u6216\u6307\u5B9AHANGER\u4E2D\u7279\u5FB5A\u4E26\u5408\u8A08\u570B\u529Bx\u4EE5\u4E0B\u76841\u5F35\u5361, \u548C\u9019\u5F35\u5361\u91CD\u7F6E\u72C0\u614B\u7F6E\u63DB, \u9019\u5F35\u5361\u7F6E\u63DB\u5F8C\u5EE2\u68C4. x\u70BA\u81EA\u8ECDG\u7684\u5F35\u6578",
+          conditions: {
+            ...text.conditions,
+            "\u6253\u958B\u81EA\u8ECD\u624B\u88E1\u6216\u6307\u5B9AHANGER\u4E2D\u7279\u5FB5A\u4E26\u5408\u8A08\u570B\u529Bx\u4EE5\u4E0B\u76841\u5F35\u5361": {
+              title: function _(ctx2, effect, bridge) {
+                const { A: A2 } = { A: "" };
+                if (A2 == "")
+                  throw new Error("A\u6C92\u6709\u88AB\u5B57\u4E32\u7F6E\u63DB");
+                const { GameStateFn, DefineFn } = bridge, cardId = DefineFn.EffectFn.getCardID(effect), cardController = GameStateFn.getItemController(ctx2, cardId), gCount = GameStateFn.getItemIdsByBasyou(ctx2, DefineFn.AbsoluteBaSyouFn.of(cardController, "G\u30BE\u30FC\u30F3")).length;
+                return GameStateFn.createConditionTitleFn({
+                  title: ["Entity", {
+                    side: "\u81EA\u8ECD",
+                    at: ["\u624B\u672D", "\u30CF\u30F3\u30AC\u30FC"],
+                    hasChar: [A2],
+                    compareBattlePoint: ["\u5408\u8A08\u56FD\u529B", "<=", gCount],
+                    count: 1
+                  }]
+                })(ctx2, effect, bridge);
+              }.toString().replace('{ A: "" }', JSON.stringify({ A }))
+            }
+          },
+          logicTreeActions: [
+            {
+              actions: [
+                {
+                  title: function _(ctx2, effect, { GameStateFn, DefineFn }) {
+                    const newE = DefineFn.EffectFn.fromEffectBasic(effect, {
+                      logicTreeAction: {
+                        actions: [
+                          {
+                            title: function _(ctx3, effect2, { GameStateFn: GameStateFn2, DefineFn: DefineFn2, Options }) {
+                              const cardId = DefineFn2.EffectFn.getCardID(effect2), basyou = GameStateFn2.getItemBaSyou(ctx3, cardId), pairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, "\u6253\u958B\u81EA\u8ECD\u624B\u88E1\u6216\u6307\u5B9AHANGER\u4E2D\u7279\u5FB5A\u4E26\u5408\u8A08\u570B\u529Bx\u4EE5\u4E0B\u76841\u5F35\u5361", cardId);
+                              if (pairs.length == 0)
+                                throw new Error(`pairs must not 0: ${effect2.text.description}`);
+                              const targetPair = pairs[0];
+                              return GameStateFn2.assertTargetMissingError(ctx3, targetPair), ctx3 = GameStateFn2.doItemSwap(ctx3, [cardId, basyou], targetPair), ctx3 = GameStateFn2.doItemSetRollState(ctx3, !1, [cardId, basyou], { isSkipTargetMissing: !0 }), ctx3 = GameStateFn2.doItemMove(ctx3, DefineFn2.AbsoluteBaSyouFn.setBaSyouKeyword(basyou, "\u30B8\u30E3\u30F3\u30AF\u30E4\u30FC\u30C9"), targetPair, { ges: Options.ges }), ctx3 = GameStateFn2.doTriggerEvent(ctx3, { title: ["\u300C\u6539\u88C5\u300D\u306E\u52B9\u679C\u3067\u5EC3\u68C4\u3055\u308C\u308B\u5834\u5408"], cardIds: [targetPair[0]] }, { ges: Options.ges }), ctx3 = GameStateFn2.doTriggerEvent(ctx3, { title: ["\u300C\u6539\u88C5\u300D\u306E\u52B9\u679C\u3067\u5834\u306B\u51FA\u305F\u5834\u5408"], cardIds: [cardId] }, { ges: Options.ges }), ctx3;
+                            }.toString()
+                          }
+                        ]
+                      }
+                    });
+                    return ctx2 = GameStateFn.addStackEffect(ctx2, newE), ctx2;
+                  }.toString()
+                }
+              ]
+            }
+          ]
+        }
+      ];
+    }
+    case "1\u679A\u5236\u9650":
+    case "\u3010\u30B9\u30C6\u30A4\u3011":
+    case "\u30AF\u30A4\u30C3\u30AF":
+    case "\u5F37\u8972":
+    case "\u6226\u95D8\u914D\u5099":
+    case "\u901F\u653B":
+    case "\u9AD8\u6A5F\u52D5":
+      return [];
+  }
+  throw new Error(`${text.title} not support`);
+}
+
+// src/game/gameState/globalEffects.ts
+function getGlobalEffects(ctx2, situation) {
+  if (logCategory("getGlobalEffects", ""), __callGlobal)
+    throw new Error;
+  __callGlobal = !0;
+  const key = JSON.stringify(situation), cached = ctx2.globalEffectPool[key];
+  if (cached)
+    return __callGlobal = null, logCategory("getGlobalEffects", "======="), cached;
+  const ret = getSituationEffects(ctx2, situation);
+  return __callGlobal = null, logCategory("getGlobalEffects", "======="), ret;
+}
+function setGlobalEffects(ctx2, situation, ges) {
+  const key = JSON.stringify(situation);
+  return {
+    ...ctx2,
+    globalEffectPool: {
+      ...ctx2.globalEffectPool,
+      [key]: ges
+    }
+  };
+}
+function clearGlobalEffects(ctx2) {
+  return {
+    ...ctx2,
+    globalEffectPool: {}
+  };
+}
+function updateGlobalEffects(ctx2) {
+  return ctx2 = clearGlobalEffects(ctx2), ctx2 = setGlobalEffects(ctx2, null, getGlobalEffects(ctx2, null)), ctx2;
+}
+function getSituationEffects(ctx2, situation) {
+  const bridge = createBridge({}), ges = createAllCardTexts(ctx2).flatMap(([item, texts]) => {
+    return texts.map((text, i) => {
+      const cardController = getItemController(ctx2, item.id), fn = getOnSituationFn(text), effect = {
+        id: ToolFn.getUUID("getSituationEffects"),
+        reason: ["Situation", cardController, item.id, situation],
+        text
+      };
+      return [fn, effect];
+    }).flatMap(([fn, effect]) => {
+      return fn(ctx2, effect, bridge);
+    });
+  }), itemStateGes = getItemStateValues(ctx2).flatMap(ItemStateFn.getGlobalEffects), gGes = [AbsoluteBaSyouFn.of(PlayerA, "G\u30BE\u30FC\u30F3"), AbsoluteBaSyouFn.of(PlayerB, "G\u30BE\u30FC\u30F3")].flatMap((basyou) => getItemIdsByBasyou(ctx2, basyou)).filter((itemId) => getCard(ctx2, itemId).isRoll != !0).map((itemId) => {
+    return { title: ["\u767C\u751F\u570B\u529B", getItemPrototype(ctx2, itemId).gsign?.[0] || []], cardIds: [itemId] };
+  });
+  return [...ges, ...itemStateGes, ...gGes];
+}
+function createAllCardTexts(ctx2) {
+  const getTextGroup1 = pipe(always_default(AbsoluteBaSyouFn.getBaAll()), map_default((basyou) => getItemIdsByBasyou(ctx2, basyou)), flatten_default, (itemIds) => itemIds.filter((itemId) => isCard(ctx2, itemId) || isChip(ctx2, itemId)), map_default((itemId) => getItem(ctx2, itemId)), map_default((item) => {
+    let texts = (getItemPrototype(ctx2, item.id).texts || []).flatMap((text) => {
+      if (text.title[0] == "\u7279\u6B8A\u578B")
+        return createTextsFromSpecialEffect(text, {});
+      return [text];
+    });
+    return texts = texts.filter((text) => text.title[0] == "\u81EA\u52D5\u578B" && (text.title[1] == "\u5E38\u99D0" || text.title[1] == "\u8D77\u52D5")), [item, texts];
+  })), getTextGroup2 = pipe(always_default(AbsoluteBaSyouFn.getTextOn()), map_default((basyou) => getItemIdsByBasyou(ctx2, basyou)), flatten_default, (itemIds) => itemIds.filter((itemId) => isCard(ctx2, itemId) || isChip(ctx2, itemId)), map_default((itemId) => getItem(ctx2, itemId)), map_default((item) => {
+    let texts = (getItemPrototype(ctx2, item.id).texts || []).flatMap((text) => {
+      if (text.title[0] == "\u7279\u6B8A\u578B")
+        return createTextsFromSpecialEffect(text, {});
+      return [text];
+    });
+    return texts = texts.filter((text) => text.title[0] == "\u81EA\u52D5\u578B" && text.title[1] == "\u6052\u5E38" || text.title[0] == "\u4F7F\u7528\u578B"), [item, texts];
+  })), getTextGroup3 = pipe(always_default([AbsoluteBaSyouFn.of(PlayerA, "G\u30BE\u30FC\u30F3"), AbsoluteBaSyouFn.of(PlayerB, "G\u30BE\u30FC\u30F3")]), map_default((basyou) => getItemIdsByBasyou(ctx2, basyou)), flatten_default, (itemIds) => itemIds.filter((itemId) => isCard(ctx2, itemId) || isChip(ctx2, itemId)), map_default((itemId) => getItem(ctx2, itemId)), map_default((item) => {
+    let texts = (getItemPrototype(ctx2, item.id).texts || []).flatMap((text) => {
+      if (text.protectLevel == 2 && text.title[0] == "\u7279\u6B8A\u578B")
+        return createTextsFromSpecialEffect(text, {});
+      return [text];
+    });
+    return texts = texts.filter((text) => text.protectLevel == 2 && text.title[0] == "\u81EA\u52D5\u578B" && (text.title[1] == "\u5E38\u99D0" || text.title[1] == "\u8D77\u52D5")), [item, texts];
+  })), getTextGroup4 = pipe(always_default(getCardIds(ctx2)), map_default((cardId) => {
+    const proto = getItemPrototype(ctx2, cardId);
+    if (proto.commandText?.onSituation)
+      return [getCard(ctx2, cardId), [proto.commandText]];
+    return null;
+  }), (infos) => infos.filter((v) => v)), allCardTexts = [...getTextGroup1(), ...getTextGroup2(), ...getTextGroup3(), ...getTextGroup4()], bridge = createBridge({}), ges = allCardTexts.flatMap(([item, texts]) => {
+    return texts.map((text, i) => {
+      const cardController = getItemController(ctx2, item.id);
+      logCategory("createAllCardTexts", "getOnSituationFn", text.onSituation);
+      const fn = getOnSituationFn(text), effect = {
+        id: ToolFn.getUUID("getSituationEffects"),
+        reason: ["Situation", cardController, item.id, { title: ["\u6709\u6C92\u6709\u65B0\u589E\u5167\u6587"] }],
+        text
+      };
+      return [fn, effect];
+    }).flatMap(([fn, effect]) => {
+      return fn(ctx2, effect, bridge);
+    });
+  }), itemStateGes = getItemStateValues(ctx2).flatMap(ItemStateFn.getGlobalEffects), gesLayer1 = [...ges, ...itemStateGes], textsLayer2 = gesLayer1.filter((ge) => ge.title[0] == "AddText").map((ge) => [ge.cardIds, ge.title[1]]).flatMap(([itemIds, text]) => {
+    return itemIds.flatMap((itemId) => {
+      const texts = text.title[0] == "\u7279\u6B8A\u578B" ? createTextsFromSpecialEffect(text, {}) : [text];
+      return [[getItem(ctx2, itemId), texts]];
+    });
+  }), textsLayer2_2 = gesLayer1.filter((ge) => ge.title[0] == "AddTextRef").map((ge) => [ge.cardIds, ge.title[1]]).flatMap(([itemIds, textRef]) => {
+    return itemIds.flatMap((itemId) => {
+      const text = getCardTextFromCardTextRef(ctx2, textRef), texts = text.title[0] == "\u7279\u6B8A\u578B" ? createTextsFromSpecialEffect(text, {}) : [text];
+      return [[getItem(ctx2, itemId), texts]];
+    });
+  });
+  return [...allCardTexts, ...textsLayer2, ...textsLayer2_2];
+}
+var __callGlobal = null;
+
+// src/game/gameState/doItemMove.ts
 function doItemMove(ctx2, to, [itemId, from], options) {
   logCategory("doItemMove", "");
-  const ges = getGlobalEffects(ctx2, null);
-  if (ctx2 = setGlobalEffects(ctx2, null, ges), options?.isSkipTargetMissing)
+  const ges = options.ges || [];
+  if (options?.isSkipTargetMissing)
     ;
   else
     assertTargetMissingError(ctx2, [itemId, from]);
@@ -21138,20 +21165,20 @@ function doItemMove(ctx2, to, [itemId, from], options) {
       ctx2 = {
         ...ctx2,
         table: TableFns.moveCard(ctx2.table, AbsoluteBaSyouFn.toString(from2), AbsoluteBaSyouFn.toString(to), itemId2, { insertId: options?.insertId })
-      }, ctx2 = onMoveItem(ctx2, to, [itemId2, from2]);
+      }, ctx2 = onMoveItem(ctx2, to, [itemId2, from2], options);
     }), ctx2 = EventCenterFn.onTableChange(ctx2, oldTable, ctx2.table), ctx2;
   }
   if (isCoin(ctx2, itemId))
     throw new Error(`coin can not move: ${itemId}`);
   throw new Error(`moveItem unknown item: ${itemId}`);
 }
-function onMoveItem(ctx2, to, [cardId, from]) {
-  if (ctx2 = clearGlobalEffects(ctx2), AbsoluteBaSyouFn.getBaSyouKeyword(from) == "\u624B\u672D") {
+function onMoveItem(ctx2, to, [cardId, from], options) {
+  if (ctx2 = updateGlobalEffects(ctx2), AbsoluteBaSyouFn.getBaSyouKeyword(from) == "\u624B\u672D") {
     if (AbsoluteBaSyouFn.getBaSyouKeyword(to) == "\u30D7\u30EC\u30A4\u3055\u308C\u3066\u3044\u308B\u30AB\u30FC\u30C9")
       ctx2 = doTriggerEvent(ctx2, {
         title: ["\u30D7\u30EC\u30A4\u3057\u305F\u5834\u5408"],
         cardIds: [cardId]
-      });
+      }, options);
   }
   if (BaSyouKeywordFn.isBa(AbsoluteBaSyouFn.getBaSyouKeyword(from)) == !1 && BaSyouKeywordFn.isBa(AbsoluteBaSyouFn.getBaSyouKeyword(to)))
     ctx2 = mapItemState(ctx2, cardId, (is) => {
@@ -21167,7 +21194,7 @@ function onMoveItem(ctx2, to, [cardId, from]) {
     }), ctx2 = doTriggerEvent(ctx2, {
       title: ["\u3053\u306E\u30AB\u30FC\u30C9\u304C\u5834\u306B\u51FA\u305F\u5834\u5408"],
       cardIds: [cardId]
-    });
+    }, options);
   if (BaSyouKeywordFn.isBa(AbsoluteBaSyouFn.getBaSyouKeyword(from)) == !0 && BaSyouKeywordFn.isBa(AbsoluteBaSyouFn.getBaSyouKeyword(to)) == !1) {
     ctx2 = mapItemState(ctx2, cardId, (is) => {
       return {
@@ -21182,7 +21209,7 @@ function onMoveItem(ctx2, to, [cardId, from]) {
     ctx2 = doTriggerEvent(ctx2, {
       title: ["\u30AB\u30FC\u30C9\u304C\u5834\u304B\u3089\u96E2\u308C\u305F\u5834\u5408"],
       cardIds: [cardId]
-    });
+    }, options);
   }
   if (["\u6368\u3066\u5C71", "\u672C\u56FD", "\u624B\u672D"].includes(AbsoluteBaSyouFn.getBaSyouKeyword(to)))
     ctx2 = mapCard(ctx2, cardId, (card) => {
@@ -21210,7 +21237,7 @@ function onMoveItem(ctx2, to, [cardId, from]) {
   return ctx2 = doTriggerEvent(ctx2, {
     title: ["GameEventOnMove", from, to],
     cardIds: [cardId]
-  }), ctx2;
+  }, options), ctx2;
 }
 
 // src/game/gameState/doItemSwap.ts
@@ -21226,9 +21253,7 @@ function doItemSwap(ctx2, pair1, pair2, options) {
   const [itemId1] = pair1, [itemId2] = pair2;
   if (isCard(ctx2, itemId1) && isCard(ctx2, itemId2)) {
     const card1 = getCard(ctx2, itemId1), card2 = getCard(ctx2, itemId2);
-    ctx2 = setCard(ctx2, card1.id, { ...card1, protoID: card2.protoID, isRoll: card2.isRoll }), ctx2 = setCard(ctx2, card2.id, { ...card2, protoID: card1.protoID, isRoll: card1.isRoll });
-    const is1 = getItemState(ctx2, itemId1), is2 = getItemState(ctx2, itemId2);
-    return ctx2 = setItemState(ctx2, is1.id, { ...is2, id: is1.id }), ctx2 = setItemState(ctx2, is2.id, { ...is1, id: is2.id }), ctx2 = mapItemStateValues(ctx2, (is) => {
+    return ctx2 = setCard(ctx2, card1.id, { ...card1, protoID: card2.protoID }), ctx2 = setCard(ctx2, card2.id, { ...card2, protoID: card1.protoID }), ctx2 = mapItemStateValues(ctx2, (is) => {
       let nextGE = is.globalEffects;
       return Object.keys(is.globalEffects).forEach((key) => {
         const ge = is.globalEffects[key];
@@ -21264,9 +21289,9 @@ __export(exports_doItemDamage, {
 });
 
 // src/game/gameState/assertTargetNoLongerValidAndUpdate.ts
-function assertTargetNoLongerValidAndUpdate(ctx2, effect, cardId) {
-  const ges = getGlobalEffects(ctx2, null);
-  if (ctx2 = setGlobalEffects(ctx2, null, ges), ges.find((ge) => ge.title[0] == "\u6575\u8ECD\u52B9\u679C\u306E\u5BFE\u8C61\u306B\u306A\u3089\u306A\u3044" && ge.cardIds.includes(cardId))) {
+function assertTargetNoLongerValidAndUpdate(ctx2, effect, cardId, options) {
+  const ges = options.ges || [];
+  if (ges.find((ge) => ge.title[0] == "\u6575\u8ECD\u52B9\u679C\u306E\u5BFE\u8C61\u306B\u306A\u3089\u306A\u3044" && ge.cardIds.includes(cardId))) {
     if (EffectFn.getPlayerID(effect) != getItemController(ctx2, cardId))
       throw new TargetMissingError("\u6575\u8ECD\u52B9\u679C\u306E\u5BFE\u8C61\u306B\u306A\u3089\u306A\u3044");
   }
@@ -21308,20 +21333,17 @@ function createDestroyEffect(ctx2, reason, cardId) {
 
 // src/game/gameState/doItemDamage.ts
 function doItemDamage(ctx2, effect, damage, target, options) {
-  const ges = getGlobalEffects(ctx2, null);
-  if (ctx2 = setGlobalEffects(ctx2, null, ges), options?.isSkipTargetMissing)
+  if (options?.isSkipTargetMissing)
     ;
   else
-    ctx2 = assertTargetNoLongerValidAndUpdate(ctx2, effect, target[0]);
+    ctx2 = assertTargetNoLongerValidAndUpdate(ctx2, effect, target[0], options);
   const effectController = EffectFn.getPlayerID(effect);
   if (options?.isSkipTargetMissing)
     ;
   else
     assertTargetMissingError(ctx2, target);
   {
-    const ges2 = getGlobalEffects(ctx2, null);
-    ctx2 = setGlobalEffects(ctx2, null, ges2);
-    const adj = ges2.map((ge) => {
+    const adj = (options.ges || []).map((ge) => {
       if (ge.title[0] == "\u3053\u306E\u30AB\u30FC\u30C9\u304C\u53D7\u3051\u308B\u5168\u3066\u306E_\u901A\u5E38\u30C0\u30E1\u30FC\u30B8\u306F\u3001_\uFF12\u6E1B\u6BBA\u3055\u308C\u308B" && ge.title[1] == "\u901A\u5E38\u30C0\u30E1\u30FC\u30B8") {
         if (ge.cardIds.includes(target[0]))
           return -ge.title[2];
@@ -21334,7 +21356,7 @@ function doItemDamage(ctx2, effect, damage, target, options) {
   if (isCard(ctx2, targetItemId) || isChip(ctx2, targetItemId)) {
     let cardState = getItemState(ctx2, targetItemId);
     cardState = ItemStateFn.damage(cardState, damage), ctx2 = setItemState(ctx2, targetItemId, cardState);
-    const [_, _2, hp] = getSetGroupBattlePoint(ctx2, targetItemId, { ges });
+    const [_, _2, hp] = getSetGroupBattlePoint(ctx2, targetItemId, options);
     if (hp <= cardState.damage) {
       const effect2 = createDestroyEffect(ctx2, { id: "\u901A\u5E38\u30C0\u30E1\u30FC\u30B8", playerID: effectController }, targetItemId);
       ctx2 = addDestroyEffect(ctx2, effect2);
@@ -21425,7 +21447,7 @@ function doCountryDamage(ctx2, playerId, damage, options) {
   return ctx2 = doTriggerEvent(ctx2, {
     title: ["\u81EA\u8ECD\u672C\u56FD\u306B\u6226\u95D8\u30C0\u30E1\u30FC\u30B8\u304C\u4E0E\u3048\u3089\u308C\u305F\u5834\u5408"],
     playerId
-  }), ctx2 = EventCenterFn.onCountryDamage(ctx2, playerId, damage), ctx2;
+  }, { ges: options.ges }), ctx2 = EventCenterFn.onCountryDamage(ctx2, playerId, damage), ctx2;
 }
 
 // src/game/gameState/doItemSetDestroy.ts
@@ -21455,7 +21477,7 @@ function doItemSetDestroy(ctx2, reason, [itemId, from], options) {
         if (ctx2 = mapItemState(ctx2, setGroupId, (is) => {
           return { ...is, destroyReason: reason };
         }), ctx2 = addDestroyEffect(ctx2, createDestroyEffect(ctx2, reason, setGroupId)), setGroupId != itemId)
-          ctx2 = doTriggerEvent(ctx2, { title: ["\u3053\u306E\u30AB\u30FC\u30C9\u306E\u30BB\u30C3\u30C8\u30B0\u30EB\u30FC\u30D7\u306E\u30E6\u30CB\u30C3\u30C8\u304C\u7834\u58CA\u3055\u308C\u305F\u5834\u5408"], cardIds: [setGroupId] });
+          ctx2 = doTriggerEvent(ctx2, { title: ["\u3053\u306E\u30AB\u30FC\u30C9\u306E\u30BB\u30C3\u30C8\u30B0\u30EB\u30FC\u30D7\u306E\u30E6\u30CB\u30C3\u30C8\u304C\u7834\u58CA\u3055\u308C\u305F\u5834\u5408"], cardIds: [setGroupId] }, options);
       } else {
         if (getItemState(ctx2, setGroupId).destroyReason?.id == "\u30DE\u30A4\u30CA\u30B9\u306E\u6226\u95D8\u4FEE\u6B63")
           return;
@@ -21469,7 +21491,7 @@ function doItemSetDestroy(ctx2, reason, [itemId, from], options) {
     throw new Error(`coin can not move: ${itemId}`);
   throw new Error(`moveItem unknown item: ${itemId}`);
 }
-function createMinusDestroyEffectAndPush(ctx2) {
+function createMinusDestroyEffectAndPush(ctx2, options) {
   return AbsoluteBaSyouFn.getBaAll().flatMap((basyou) => getItemIdsByBasyou(ctx2, basyou)).forEach((cardId) => {
     if (EffectFn.isFakeCardID(cardId))
       return ctx2;
@@ -21481,9 +21503,7 @@ function createMinusDestroyEffectAndPush(ctx2) {
       ;
     else
       return;
-    const ges = getGlobalEffects(ctx2, null);
-    ctx2 = setGlobalEffects(ctx2, null, ges);
-    const [_, _2, hp] = getSetGroupBattlePoint(ctx2, cardId, { ges });
+    const ges = options.ges || [], [_, _2, hp] = getSetGroupBattlePoint(ctx2, cardId, { ges });
     if (hp <= 0) {
       const destroyReason = {
         id: "\u30DE\u30A4\u30CA\u30B9\u306E\u6226\u95D8\u4FEE\u6B63",
@@ -21521,12 +21541,12 @@ var exports_doPlayerDrawCard = {};
 __export(exports_doPlayerDrawCard, {
   doPlayerDrawCard: () => doPlayerDrawCard
 });
-function doPlayerDrawCard(ctx2, count, playerId) {
+function doPlayerDrawCard(ctx2, count, playerId, options) {
   const fromBasyou = AbsoluteBaSyouFn.of(playerId, "\u672C\u56FD"), pairs = getItemIdsByBasyou(ctx2, fromBasyou).slice(0, count).map((cardId) => {
     return [cardId, fromBasyou];
   });
   for (let pair2 of pairs)
-    ctx2 = doItemMove(ctx2, AbsoluteBaSyouFn.of(playerId, "\u624B\u672D"), pair2);
+    ctx2 = doItemMove(ctx2, AbsoluteBaSyouFn.of(playerId, "\u624B\u672D"), pair2, options);
   return ctx2;
 }
 
@@ -21691,7 +21711,7 @@ function createTipByEntitySearch(ctx2, effect, searchOptions, options) {
   if (searchOptions.isRoll != null)
     entityList = entityList.filter((entity) => entity.isCard && !!getCard(ctx2, entity.itemId).isRoll == searchOptions.isRoll || entity.isChip && !!getChip(ctx2, entity.itemId).isRoll == searchOptions.isRoll);
   if (searchOptions.hasSpecialEffect != null)
-    entityList = entityList.filter(EntityFn.filterHasSpecialEffect(ctx2, searchOptions.hasSpecialEffect));
+    entityList = entityList.filter(EntityFn.filterHasSpecialEffect(ctx2, searchOptions.hasSpecialEffect, options));
   if (searchOptions.hasChar != null)
     entityList = entityList.filter(EntityFn.filterHasChar(ctx2, searchOptions.hasChar));
   if (searchOptions.hasGSign) {
@@ -21712,8 +21732,11 @@ function createTipByEntitySearch(ctx2, effect, searchOptions, options) {
         return searchOptions.hasRollCostColor?.some((color) => color == entity.prototype?.color);
       return searchOptions.hasRollCostColor?.some((color) => color == entity.prototype?.color);
     });
-  if (searchOptions.exceptCardIds?.length)
+  if (searchOptions.exceptCardIds != null) {
+    if (searchOptions.exceptCardIds.length == 0)
+      searchOptions.exceptCardIds.push(cardId);
     entityList = entityList.filter((entity) => searchOptions.exceptCardIds?.includes(entity.itemId) != !0);
+  }
   entityList = entityList.filter(EntityFn.filterDistinct);
   const pairs = entityList.map((entity) => {
     if (entity.baSyouKeyword == null)
@@ -21846,11 +21869,11 @@ var EntityFn = {
       return getSetGroup(ctx2, entity.itemId).length > 1 == v;
     };
   },
-  filterHasSpecialEffect(ctx2, vs) {
+  filterHasSpecialEffect(ctx2, vs, options) {
     return (entity) => {
       if (isCardLike(ctx2)(entity.itemId) == !1)
         return !1;
-      return vs.some((v) => isSetGroupHasA(ctx2, v, entity.itemId, { ges: getGlobalEffects(ctx2, null) }));
+      return vs.some((v) => isSetGroupHasA(ctx2, v, entity.itemId, options));
     };
   },
   filterHasChar(ctx2, vs) {
@@ -21964,21 +21987,21 @@ function createActionTitleFn(action) {
     }
     case "Action": {
       const [_, actionOptions] = action.title, varNames2 = action.vars;
-      return function(ctx2, effect) {
+      return function(ctx2, effect, { Options }) {
         const cardId = EffectFn.getCardID(effect), pairs = varNames2 == null ? [[cardId, getItemBaSyou(ctx2, cardId)]] : varNames2.flatMap((varName) => {
           return getCardTipStrBaSyouPairs(ctx2, varName, cardId);
         });
         for (let pair2 of pairs)
           if (actionOptions.move)
-            ctx2 = doItemMove(ctx2, createAbsoluteBaSyouFromBaSyou(ctx2, cardId, actionOptions.move), pair2);
+            ctx2 = doItemMove(ctx2, createAbsoluteBaSyouFromBaSyou(ctx2, cardId, actionOptions.move), pair2, { ges: Options.ges });
         return ctx2;
       };
     }
     case "triggerEvent": {
       const [_, event] = action.title;
-      return function(ctx2, effect) {
+      return function(ctx2, effect, { Options }) {
         const cardId = EffectFn.getCardID(effect);
-        return ctx2 = doTriggerEvent(ctx2, { ...event, effect, cardIds: [cardId] }), ctx2;
+        return ctx2 = doTriggerEvent(ctx2, { ...event, effect, cardIds: [cardId] }, { ges: Options.ges }), ctx2;
       };
     }
     case "cutIn": {
@@ -22004,7 +22027,7 @@ function createActionTitleFn(action) {
     }
     case "_\u30ED\u30FC\u30EB\u3059\u308B": {
       const [_, whatToDo] = action.title, varNames2 = action.vars;
-      return function(ctx2, effect) {
+      return function(ctx2, effect, { Options }) {
         const cardId = EffectFn.getCardID(effect), cardController = getItemController(ctx2, cardId), pairs = varNames2 == null ? [[cardId, getItemBaSyou(ctx2, cardId)]] : varNames2.flatMap((varName) => {
           return getCardTipStrBaSyouPairs(ctx2, varName, cardId);
         });
@@ -22026,17 +22049,17 @@ function createActionTitleFn(action) {
           }
           case "\u7834\u58DE": {
             for (let pair2 of pairs)
-              ctx2 = doItemSetDestroy(ctx2, { id: "\u7834\u58CA\u3059\u308B", playerID: cardController }, pair2);
+              ctx2 = doItemSetDestroy(ctx2, { id: "\u7834\u58CA\u3059\u308B", playerID: cardController }, pair2, Options);
             return ctx2;
           }
           case "\u5EC3\u68C4": {
             for (let pair2 of pairs)
-              ctx2 = doItemMove(ctx2, AbsoluteBaSyouFn.setBaSyouKeyword(pair2[1], "\u30B8\u30E3\u30F3\u30AF\u30E4\u30FC\u30C9"), pair2);
+              ctx2 = doItemMove(ctx2, AbsoluteBaSyouFn.setBaSyouKeyword(pair2[1], "\u30B8\u30E3\u30F3\u30AF\u30E4\u30FC\u30C9"), pair2, Options);
             return ctx2;
           }
           case "\u7834\u58CA\u3092\u7121\u52B9": {
             for (let pair2 of pairs)
-              ctx2 = doItemSetDestroy(ctx2, null, pair2);
+              ctx2 = doItemSetDestroy(ctx2, null, pair2, Options);
             return ctx2;
           }
           case "\u898B": {
@@ -22049,19 +22072,19 @@ function createActionTitleFn(action) {
     }
     case "_\u6575\u8ECD\u672C\u56FD\u306B_\uFF11\u30C0\u30E1\u30FC\u30B8": {
       const [_, side, damage] = action.title;
-      return function(ctx2, effect) {
+      return function(ctx2, effect, { Options }) {
         const cardId = EffectFn.getCardID(effect), cardController = getItemController(ctx2, cardId), playerId = PlayerIDFn.fromRelatedPlayerSideKeyword(side, cardController);
-        return ctx2 = doCountryDamage(ctx2, playerId, damage), ctx2;
+        return ctx2 = doCountryDamage(ctx2, playerId, damage, { ges: Options.ges }), ctx2;
       };
     }
     case "_\u306E_\u30CF\u30F3\u30AC\u30FC\u306B\u79FB\u3059": {
       const [_, side, basyouKw] = action.title, varNames2 = action.vars;
-      return function(ctx2, effect) {
+      return function(ctx2, effect, { Options }) {
         const cardId = EffectFn.getCardID(effect), cardController = getItemController(ctx2, cardId), pairs = varNames2 == null ? [[cardId, getItemBaSyou(ctx2, cardId)]] : varNames2.flatMap((varName) => {
           return getCardTipStrBaSyouPairs(ctx2, varName, cardId);
         }), playerId = PlayerIDFn.fromRelatedPlayerSideKeyword(side, cardController), to = AbsoluteBaSyouFn.of(playerId, basyouKw);
         for (let pair2 of pairs)
-          ctx2 = doItemMove(ctx2, to, pair2);
+          ctx2 = doItemMove(ctx2, to, pair2, { ges: Options.ges });
         return ctx2;
       };
     }
@@ -22076,12 +22099,12 @@ function createActionTitleFn(action) {
     }
     case "_\uFF11\u30C0\u30E1\u30FC\u30B8\u3092\u4E0E\u3048\u308B": {
       const [_, damage] = action.title, varNames2 = action.vars;
-      return function(ctx2, effect) {
+      return function(ctx2, effect, { Options }) {
         const cardId = EffectFn.getCardID(effect), cardController = getItemController(ctx2, cardId);
         return ctx2 = (varNames2 == null ? [[cardId, getItemBaSyou(ctx2, cardId)]] : varNames2.flatMap((varName) => {
           return getCardTipStrBaSyouPairs(ctx2, varName, cardId);
         })).reduce((ctx3, pair2) => {
-          return doItemDamage(ctx3, effect, damage, pair2);
+          return doItemDamage(ctx3, effect, damage, pair2, Options);
         }, ctx2), ctx2;
       };
     }
@@ -22134,9 +22157,9 @@ function createActionTitleFn(action) {
     }
     case "\u30AB\u30FC\u30C9_\uFF11\u679A\u3092\u5F15\u304F": {
       const [_, count] = action.title;
-      return function(ctx2, effect) {
+      return function(ctx2, effect, { Options }) {
         const cardId = EffectFn.getCardID(effect), cardController = getItemController(ctx2, cardId);
-        return ctx2 = doPlayerDrawCard(ctx2, count, cardController), ctx2;
+        return ctx2 = doPlayerDrawCard(ctx2, count, cardController, Options), ctx2;
       };
     }
     case "\u30EA\u30ED\u30FC\u30EB\u72B6\u614B\u3067\u7F6E\u304D\u63DB\u3048\u308B":
@@ -22149,10 +22172,8 @@ function createActionTitleFn(action) {
       };
     case "\u5408\u8A08\u56FD\u529B\u3014x\u3015": {
       const [_, x] = action.title;
-      return function(ctx2, effect) {
-        const ges = getGlobalEffects(ctx2, null);
-        ctx2 = setGlobalEffects(ctx2, null, ges);
-        const cardId = EffectFn.getCardID(effect), cardController = getItemController(ctx2, cardId), cardIdsCanPay = getCardIdsCanPayRollCost(ctx2, cardController, { ges });
+      return function(ctx2, effect, { Options }) {
+        const ges = Options.ges || [], cardId = EffectFn.getCardID(effect), cardController = getItemController(ctx2, cardId), cardIdsCanPay = getCardIdsCanPayRollCost(ctx2, cardController, { ges });
         if (cardIdsCanPay.length < x)
           throw new TargetMissingError(`\u5408\u8A08\u56FD\u529B\u3014x\u3015:${cardIdsCanPay.length} < ${x}. ${effect.text.description}`);
         return ctx2 = setCardTipStrBaSyouPairs(ctx2, TipFn.createTotalCostKey(), cardIdsCanPay.map((cardId2) => createStrBaSyouPair(ctx2, cardId2)), cardId), ctx2;
@@ -22191,7 +22212,7 @@ function createActionTitleFn(action) {
 }
 
 // src/game/gameState/createOnEventTitleFn.ts
-function createOnEventTitleFn(text, options) {
+function createOnEventTitleFn(text) {
   if (text.onEvent == null || typeof text.onEvent == "string")
     return CardTextFn.getOnEventFn(text);
   switch (text.onEvent[0]) {
@@ -22208,7 +22229,7 @@ function createOnEventTitleFn(text, options) {
 }
 
 // src/game/gameState/doTriggerEvent.ts
-function doTriggerEvent(ctx2, event) {
+function doTriggerEvent(ctx2, event, options) {
   if (logCategory("doTriggerEvent", event.title, event.cardIds), createAllCardTexts(ctx2).forEach((info) => {
     const [item, texts] = info;
     texts.forEach((text) => {
@@ -22218,8 +22239,8 @@ function doTriggerEvent(ctx2, event) {
         text
       };
       logCategory("doTriggerEvent", "eventTitle", text.onEvent);
-      const ges = getGlobalEffects(ctx2, null);
-      ctx2 = setGlobalEffects(ctx2, null, ges), ctx2 = createOnEventTitleFn(text, { ges })(ctx2, effect, createBridge({ ges }));
+      const ges = options.ges || [];
+      ctx2 = createOnEventTitleFn(text)(ctx2, effect, createBridge({ ges }));
     });
   }), event.title[0] == "\u30AB\u30C3\u30C8\u7D42\u4E86\u6642")
     ctx2 = mapItemStateValues(ctx2, (cs) => {
@@ -22244,12 +22265,28 @@ function doTriggerEvent(ctx2, event) {
           const activePlayerId = getActivePlayerID(ctx2);
           ctx2 = mapPlayerState(ctx2, activePlayerId, (ps) => {
             return PlayerStateFn.onTurnEnd(ps);
-          }), ctx2 = clearGlobalEffects(ctx2);
+          }), ctx2 = updateGlobalEffects(ctx2);
           break;
         }
       }
   }
   return ctx2 = EventCenterFn.onEvent(ctx2, event), ctx2;
+}
+
+// src/game/gameState/RuntimeBattleAreaComponent.ts
+var exports_RuntimeBattleAreaComponent = {};
+__export(exports_RuntimeBattleAreaComponent, {
+  getRuntimeBattleArea: () => getRuntimeBattleArea
+});
+function getRuntimeBattleArea(ctx2, kw) {
+  switch (kw) {
+    case "\u6226\u95D8\u30A8\u30EA\u30A21":
+      return "\u5730\u7403\u30A8\u30EA\u30A2";
+    case "\u6226\u95D8\u30A8\u30EA\u30A22":
+      return "\u5B87\u5B99\u30A8\u30EA\u30A2";
+    default:
+      throw new Error(`unknown :${kw}`);
+  }
 }
 
 // src/game/gameState/player.ts
@@ -22286,7 +22323,7 @@ function doBattleDamage(ctx2, playerId, guardUnits, attackPower, options) {
         cardIds: [cs.id],
         playerId
       };
-      return ctx2 = doTriggerEvent(ctx2, gameEvent), {
+      return ctx2 = doTriggerEvent(ctx2, gameEvent, { ges: options.ges }), {
         ...cs,
         damage: nextDamage
       };
@@ -22304,10 +22341,10 @@ function doRuleBattleDamage2(ctx2, speedPhase, currentAttackPlayerID, currentGua
         [ctx2, currentAttackPower] = doBattleDamage(ctx2, currentAttackPlayerID, willGuardUnits, currentAttackPower, { ges: options?.ges });
       if (currentAttackPlayerID == getActivePlayerID(ctx2) && currentAttackPower > 0) {
         if (isBattle(ctx2, willAttackUnits[0], null) == !1 || isABattleGroup(ctx2, ["\u5F37\u8972"], willAttackUnits[0], { ges: options.ges }))
-          ctx2 = doCountryDamage(ctx2, currentGuardPlayerID, currentAttackPower), ctx2 = doTriggerEvent(ctx2, {
+          ctx2 = doCountryDamage(ctx2, currentGuardPlayerID, currentAttackPower, { ges: options.ges }), ctx2 = doTriggerEvent(ctx2, {
             title: ["\u3053\u306E\u30AB\u30FC\u30C9\u306E\u90E8\u968A\u304C\u6575\u8ECD\u672C\u56FD\u306B\u6226\u95D8\u30C0\u30E1\u30FC\u30B8\u3092\u4E0E\u3048\u305F\u5834\u5408"],
             cardIds: willAttackUnits
-          });
+          }, { ges: options.ges });
       }
     }
   }
@@ -22336,6 +22373,32 @@ function getPlayerDestroyIds(ctx2, playerId) {
 function getPlayerUnitIds(ctx2, playerId) {
   return lift_default(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getBaAll()).flatMap((basyou) => getItemIdsByBasyou(ctx2, basyou)).filter((itemId) => getItemPrototype(ctx2, itemId).category == "\u30E6\u30CB\u30C3\u30C8");
 }
+function getPlayerUnitCanGoEarthIds(ctx2, playerId, ext) {
+  const runtimeBattleArea = getRuntimeBattleArea(ctx2, "\u6226\u95D8\u30A8\u30EA\u30A21");
+  if (runtimeBattleArea == "\u5B87\u5B99\u30A8\u30EA\u30A2")
+    return [];
+  const opponentPlayerId = PlayerIDFn.getOpponent(playerId);
+  let unitIds = getItemIdsByBasyou(ctx2, AbsoluteBaSyouFn.of(playerId, "\u914D\u5099\u30A8\u30EA\u30A2")).filter((cardId) => getSetGroupRoot(ctx2, cardId) == cardId).filter((cardId) => getCardBattleArea(ctx2, cardId).includes(runtimeBattleArea)).filter((cardId) => getCard(ctx2, cardId).isRoll != !0);
+  const opponentUnitIds = getBattleGroup(ctx2, AbsoluteBaSyouFn.of(opponentPlayerId, "\u6226\u95D8\u30A8\u30EA\u30A21"));
+  if (opponentUnitIds.length) {
+    if (isABattleGroup(ctx2, ["\u9AD8\u6A5F\u52D5"], opponentUnitIds[0], ext))
+      unitIds = unitIds.filter((id) => isSetGroupHasA(ctx2, ["\u9AD8\u6A5F\u52D5"], id, ext));
+  }
+  return unitIds;
+}
+function getPlayerUnitCanGoSpaceIds(ctx2, playerId, ext) {
+  const runtimeBattleArea = getRuntimeBattleArea(ctx2, "\u6226\u95D8\u30A8\u30EA\u30A22");
+  if (runtimeBattleArea == "\u5730\u7403\u30A8\u30EA\u30A2")
+    return [];
+  const opponentPlayerId = PlayerIDFn.getOpponent(playerId);
+  let unitIds = getItemIdsByBasyou(ctx2, AbsoluteBaSyouFn.of(playerId, "\u914D\u5099\u30A8\u30EA\u30A2")).filter((cardId) => getSetGroupRoot(ctx2, cardId) == cardId).filter((cardId) => getCardBattleArea(ctx2, cardId).includes(runtimeBattleArea)).filter((cardId) => getCard(ctx2, cardId).isRoll != !0);
+  const opponentUnitIds = getBattleGroup(ctx2, AbsoluteBaSyouFn.of(opponentPlayerId, "\u6226\u95D8\u30A8\u30EA\u30A22"));
+  if (opponentUnitIds.length) {
+    if (isABattleGroup(ctx2, ["\u9AD8\u6A5F\u52D5"], opponentUnitIds[0], ext))
+      unitIds = unitIds.filter((id) => isSetGroupHasA(ctx2, ["\u9AD8\u6A5F\u52D5"], id, ext));
+  }
+  return unitIds;
+}
 function getPlayerCharacterIds(ctx2, playerId) {
   return lift_default(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getBaAll()).flatMap((basyou) => getItemIdsByBasyou(ctx2, basyou)).filter((itemId) => getItemPrototype(ctx2, itemId).category == "\u30AD\u30E3\u30E9\u30AF\u30BF\u30FC");
 }
@@ -22346,13 +22409,15 @@ function createPlayerScore(ctx2, playerId, options) {
   const units = getPlayerUnitIds(ctx2, playerId), chars = getPlayerCharacterIds(ctx2, playerId), gs = getPlayerGIds(ctx2, playerId), ops = getPlayerOperationIds(ctx2, playerId), hands = getPlayerHandIds(ctx2, playerId), destroyIds = ctx2.destroyEffect.filter((eid) => getItemController(ctx2, EffectFn.getCardID(getEffect(ctx2, eid))) == playerId), junkyardIds = getPlayerJunkyardIds(ctx2, playerId), gScore = gs.length * 3, unitScore = units.length * 5, charScore = chars.length, opScore = Math.max(3, ops.length) * 3, handScore = hands.length * 3, destroyScore = destroyIds.length * -10, junkyardScore = junkyardIds.length * -1, rollScore = [...gs, ...units].filter((itemId) => getCard(ctx2, itemId).isRoll).length * -5, bpScore = units.map((id) => {
     if (getCard(ctx2, id).isRoll)
       return 0;
+    if (getItemState(ctx2, id).destroyReason)
+      return 0;
     const [atk, range3, hp] = getSetGroupBattlePoint(ctx2, id, { ges: options.ges });
     return atk + range3 + hp;
   }).reduce((acc, c) => acc + c, 0), specialScore1 = units.filter((id) => getCardHasSpeicalEffect(ctx2, ["\u901F\u653B"], id, { ges: options.ges })).length * 2, specialScore2 = units.filter((id) => getCardHasSpeicalEffect(ctx2, ["\u9AD8\u6A5F\u52D5"], id, { ges: options.ges })).length * 2, specialScore3 = units.filter((id) => getCardHasSpeicalEffect(ctx2, ["\u5F37\u8972"], id, { ges: options.ges })).length * 2, total = gScore + unitScore + charScore + opScore + handScore + destroyScore + junkyardScore + rollScore + bpScore + specialScore1 + specialScore2 + specialScore3;
   return logCategory("createPlayerScore", "=======", playerId), logCategory("createPlayerScore", "gScore:", gScore), logCategory("createPlayerScore", "unitScore:", unitScore), logCategory("createPlayerScore", "charScore:", charScore), logCategory("createPlayerScore", "opScore:", opScore), logCategory("createPlayerScore", "handScore:", handScore), logCategory("createPlayerScore", "destroyScore:", destroyScore), logCategory("createPlayerScore", "junkyardScore:", junkyardScore), logCategory("createPlayerScore", "rollScore:", rollScore), logCategory("createPlayerScore", "bpScore:", bpScore), logCategory("createPlayerScore", "specialScore1:", specialScore1), logCategory("createPlayerScore", "specialScore2:", specialScore2), logCategory("createPlayerScore", "specialScore3:", specialScore3), logCategory("createPlayerScore", "total:", total), total;
 }
 function createPreviewEffectScore(ctx2, playerId, effects, options) {
-  const opponentId = PlayerIDFn.getOpponent(playerId), scoreA = createPlayerScore(ctx2, playerId, { ges: options?.ges }), scoreB = createPlayerScore(ctx2, opponentId, { ges: options?.ges }), score = scoreA - scoreB;
+  const opponentId = PlayerIDFn.getOpponent(playerId), originScoreA = createPlayerScore(ctx2, playerId, options), originScoreB = createPlayerScore(ctx2, opponentId, options);
   let effectScorePairs = effects.map((eff) => {
     try {
       let ctx22 = JSON.parse(JSON.stringify(ctx2));
@@ -22369,32 +22434,16 @@ function createPreviewEffectScore(ctx2, playerId, effects, options) {
           break;
         ctx22 = setTipSelectionForUser(ctx22, eff2, 0, 0), ctx22 = doEffect(ctx22, eff2, 0, 0), ctx22 = removeEffect(ctx22, eff2.id);
       }
-      const scoreA2 = createPlayerScore(ctx22, playerId, { ges: options?.ges }), scoreB2 = createPlayerScore(ctx22, opponentId, { ges: options?.ges }), score2 = scoreA2 - scoreB2;
-      return [eff.id, score2];
+      const scoreA = createPlayerScore(ctx22, playerId, options), scoreB = createPlayerScore(ctx22, opponentId, options), lostA = originScoreA - scoreA, lostB = originScoreB - scoreB;
+      logCategory("createPreviewEffectScore", "originScoreA", originScoreA), logCategory("createPreviewEffectScore", "originScoreB", originScoreB), logCategory("createPreviewEffectScore", "scoreA", scoreA), logCategory("createPreviewEffectScore", "scoreB", scoreB), logCategory("createPreviewEffectScore", "lostA", lostA), logCategory("createPreviewEffectScore", "lostB", lostB);
+      const score = lostB - lostA;
+      return [eff.id, score];
     } catch (e) {
       console.warn(`AI\u8A08\u7B97\u6642\u4F8B\u5916\uFF0C\u5FFD\u7565:${e.message}`);
     }
     return [eff.id, 0];
   });
-  if (effectScorePairs.sort(([_, s1], [_2, s2]) => s2 - s1), options?.isMoreThenOrigin)
-    effectScorePairs = effectScorePairs.filter(([_, s]) => s >= score);
-  return effectScorePairs;
-}
-
-// src/game/gameState/RuntimeBattleAreaComponent.ts
-var exports_RuntimeBattleAreaComponent = {};
-__export(exports_RuntimeBattleAreaComponent, {
-  getRuntimeBattleArea: () => getRuntimeBattleArea
-});
-function getRuntimeBattleArea(ctx2, kw) {
-  switch (kw) {
-    case "\u6226\u95D8\u30A8\u30EA\u30A21":
-      return "\u5730\u7403\u30A8\u30EA\u30A2";
-    case "\u6226\u95D8\u30A8\u30EA\u30A22":
-      return "\u5B87\u5B99\u30A8\u30EA\u30A2";
-    default:
-      throw new Error(`unknown :${kw}`);
-  }
+  return logCategory("createPreviewEffectScore", "effectScorePairs", effectScorePairs), effectScorePairs = effectScorePairs.filter(([_, s]) => s >= 0), effectScorePairs.sort(([_, s1], [_2, s2]) => s2 - s1), effectScorePairs;
 }
 
 // src/game/gameState/createPlayCardEffects.ts
@@ -22416,8 +22465,7 @@ __export(exports_createPlayCardEffects, {
 });
 function createPlayCardEffects(ctx2, cardId, options) {
   logCategory("createPlayCardEffects", "");
-  let ges = getGlobalEffects(ctx2, null);
-  ctx2 = setGlobalEffects(ctx2, null, ges);
+  let ges = options.ges || [];
   const ret = [], prototype = getItemPrototype(ctx2, cardId), basyou = getItemBaSyou(ctx2, cardId);
   if (basyou.value[1] == "\u624B\u672D" || basyou.value[1] == "\u30CF\u30F3\u30AC\u30FC") {
     if (options?.isQuick)
@@ -22425,15 +22473,12 @@ function createPlayCardEffects(ctx2, cardId, options) {
     else
       ret.push(createPlayGEffect(ctx2, cardId));
     ret.push(...createPlayCardEffect(ctx2, cardId, { ges }));
-  } else {
-    const ges2 = getGlobalEffects(ctx2, null);
-    if (ctx2 = setGlobalEffects(ctx2, null, ges2), ges2.filter((ge) => ge.title[0] == "\u81EA\u8ECD\u624B\u672D\u306B\u3042\u308B\u304B\u306E\u3088\u3046\u306B\u30D7\u30EC\u30A4\u3067\u304D\u308B").find((ge) => ge.cardIds.includes(cardId))) {
-      if (options?.isQuick)
-        ;
-      else
-        ret.push(createPlayGEffect(ctx2, cardId));
-      ret.push(...createPlayCardEffect(ctx2, cardId, { ges: ges2 }));
-    }
+  } else if (ges.filter((ge) => ge.title[0] == "\u81EA\u8ECD\u624B\u672D\u306B\u3042\u308B\u304B\u306E\u3088\u3046\u306B\u30D7\u30EC\u30A4\u3067\u304D\u308B").find((ge) => ge.cardIds.includes(cardId))) {
+    if (options?.isQuick)
+      ;
+    else
+      ret.push(createPlayGEffect(ctx2, cardId));
+    ret.push(...createPlayCardEffect(ctx2, cardId, { ges }));
   }
   const playerId = getItemOwner(ctx2, cardId);
   return prototype.texts?.forEach((text) => {
@@ -22458,7 +22503,7 @@ function createPlayCardEffects(ctx2, cardId, options) {
         isPlayOperation: prototype.category == "\u30AA\u30DA\u30EC\u30FC\u30B7\u30E7\u30F3"
       }],
       text
-    }, createBridge({ ges: getGlobalEffects(ctx2, null) }))?.forEach((eff) => {
+    }, createBridge({ ges }))?.forEach((eff) => {
       if (eff.text.title[0] != "\u4F7F\u7528\u578B")
         throw console.log(eff?.text.description), new Error;
       ret.push(eff);
@@ -22567,9 +22612,9 @@ function createPlayGEffect(ctx2, cardId) {
       {
         actions: [
           {
-            title: function _(ctx3, effect, { DefineFn, GameStateFn, ToolFn: ToolFn2 }) {
+            title: function _(ctx3, effect, { DefineFn, GameStateFn, Options }) {
               const cardId2 = DefineFn.EffectFn.getCardID(effect), from = GameStateFn.getItemBaSyou(ctx3, cardId2);
-              return ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "G\u30BE\u30FC\u30F3"), [cardId2, from]), ctx3;
+              return ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "G\u30BE\u30FC\u30F3"), [cardId2, from], { ges: Options.ges }), ctx3;
             }.toString()
           },
           {
@@ -22605,11 +22650,10 @@ function createPlayUnitEffect(ctx2, cardId, options) {
       {
         actions: [
           {
-            title: function _(ctx3, effect, { DefineFn, GameStateFn, ToolFn: ToolFn2 }) {
-              let ges = GameStateFn.getGlobalEffects(ctx3, null);
-              ctx3 = GameStateFn.setGlobalEffects(ctx3, null, ges);
+            title: function _(ctx3, effect, { DefineFn, GameStateFn, Options }) {
+              let ges = Options.ges || [];
               const cardId2 = DefineFn.EffectFn.getCardID(effect), from = GameStateFn.getItemBaSyou(ctx3, cardId2);
-              ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "\u30D7\u30EC\u30A4\u3055\u308C\u3066\u3044\u308B\u30AB\u30FC\u30C9"), [cardId2, from]);
+              ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "\u30D7\u30EC\u30A4\u3055\u308C\u3066\u3044\u308B\u30AB\u30FC\u30C9"), [cardId2, from], { ges: Options.ges });
               const newE = GameStateFn.createUnitGoStageEffectFromPlayEffect(ctx3, effect, { ges });
               return GameStateFn.addStackEffect(ctx3, newE);
             }.toString()
@@ -22641,9 +22685,9 @@ function createPlayOperationEffect(ctx2, cardId, options) {
       {
         actions: [
           {
-            title: function _(ctx3, effect, { DefineFn, GameStateFn, ToolFn: ToolFn2 }) {
+            title: function _(ctx3, effect, { DefineFn, GameStateFn, Options }) {
               const cardId2 = DefineFn.EffectFn.getCardID(effect), from = GameStateFn.getItemBaSyou(ctx3, cardId2);
-              ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "\u30D7\u30EC\u30A4\u3055\u308C\u3066\u3044\u308B\u30AB\u30FC\u30C9"), [cardId2, from]);
+              ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "\u30D7\u30EC\u30A4\u3055\u308C\u3066\u3044\u308B\u30AB\u30FC\u30C9"), [cardId2, from], { ges: Options.ges });
               const newE = GameStateFn.createOperationGoStageEffectFromPlayEffect(ctx3, effect);
               return GameStateFn.addStackEffect(ctx3, newE);
             }.toString()
@@ -22681,9 +22725,9 @@ function createPlayStayEffect(ctx2, cardId, options) {
       {
         actions: [
           {
-            title: function _(ctx3, effect, { DefineFn, GameStateFn, ToolFn: ToolFn2 }) {
+            title: function _(ctx3, effect, { DefineFn, GameStateFn, Options }) {
               const cardId2 = DefineFn.EffectFn.getCardID(effect), from = GameStateFn.getItemBaSyou(ctx3, cardId2);
-              ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "\u30D7\u30EC\u30A4\u3055\u308C\u3066\u3044\u308B\u30AB\u30FC\u30C9"), [cardId2, from]);
+              ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "\u30D7\u30EC\u30A4\u3055\u308C\u3066\u3044\u308B\u30AB\u30FC\u30C9"), [cardId2, from], { ges: Options.ges });
               const newE = GameStateFn.createOperationGoStageEffectFromPlayEffect(ctx3, effect);
               return GameStateFn.addStackEffect(ctx3, newE);
             }.toString()
@@ -22715,9 +22759,9 @@ function createPlayCharacterOperationEffect(ctx2, cardId, options) {
       {
         actions: [
           {
-            title: function _(ctx3, effect, { DefineFn, GameStateFn, ToolFn: ToolFn2 }) {
+            title: function _(ctx3, effect, { DefineFn, GameStateFn, Options }) {
               const cardId2 = DefineFn.EffectFn.getCardID(effect), prototype2 = GameStateFn.getItemPrototype(ctx3, cardId2), from = GameStateFn.getItemBaSyou(ctx3, cardId2);
-              ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "\u30D7\u30EC\u30A4\u3055\u308C\u3066\u3044\u308B\u30AB\u30FC\u30C9"), [cardId2, from]);
+              ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "\u30D7\u30EC\u30A4\u3055\u308C\u3066\u3044\u308B\u30AB\u30FC\u30C9"), [cardId2, from], { ges: Options.ges });
               const newE = GameStateFn.createCharOpUnitGoStageEffectFromPlayEffect(ctx3, effect);
               return GameStateFn.addStackEffect(ctx3, newE);
             }.toString()
@@ -22764,14 +22808,14 @@ function createPlayCommandText(ctx2, cardId, options) {
         logicTree,
         actions: [
           {
-            title: function _(ctx3, effect, { DefineFn, GameStateFn, ToolFn: ToolFn2 }) {
+            title: function _(ctx3, effect, { DefineFn, GameStateFn, Options }) {
               const cardId2 = DefineFn.EffectFn.getCardID(effect), prototype2 = GameStateFn.getItemPrototype(ctx3, cardId2);
               if (prototype2.category == "\u30B3\u30DE\u30F3\u30C9")
                 ;
               else
                 throw new Error;
               const commandText2 = prototype2.commandText, from = GameStateFn.getItemBaSyou(ctx3, cardId2);
-              return ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "\u30D7\u30EC\u30A4\u3055\u308C\u3066\u3044\u308B\u30AB\u30FC\u30C9"), [cardId2, from]), GameStateFn.addStackEffect(ctx3, {
+              return ctx3 = GameStateFn.doItemMove(ctx3, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "\u30D7\u30EC\u30A4\u3055\u308C\u3066\u3044\u308B\u30AB\u30FC\u30C9"), [cardId2, from], { ges: Options.ges }), GameStateFn.addStackEffect(ctx3, {
                 id: `${effect.id}_\u5834\u306B\u51FA\u308B`,
                 reason: ["\u5834\u306B\u51FA\u308B", DefineFn.EffectFn.getPlayerID(effect), DefineFn.EffectFn.getCardID(effect)],
                 description: effect.text.description,
@@ -22783,9 +22827,9 @@ function createPlayCommandText(ctx2, cardId, options) {
                     {
                       actions: [
                         {
-                          title: function _(ctx4, effect2, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {
+                          title: function _(ctx4, effect2, { DefineFn: DefineFn2, GameStateFn: GameStateFn2, Options: Options2 }) {
                             const cardId3 = DefineFn2.EffectFn.getCardID(effect2), from2 = GameStateFn2.getItemBaSyou(ctx4, cardId3), to = DefineFn2.AbsoluteBaSyouFn.setBaSyouKeyword(from2, "\u30B8\u30E3\u30F3\u30AF\u30E4\u30FC\u30C9");
-                            return ctx4 = GameStateFn2.doItemMove(ctx4, to, [cardId3, from2]), ctx4 = GameStateFn2.doTriggerEvent(ctx4, { title: ["\u30D7\u30EC\u30A4\u3055\u308C\u3066\u5834\u306B\u51FA\u305F\u5834\u5408"], cardIds: [cardId3] }), ctx4;
+                            return ctx4 = GameStateFn2.doItemMove(ctx4, to, [cardId3, from2], { ges: Options2.ges }), ctx4 = GameStateFn2.doTriggerEvent(ctx4, { title: ["\u30D7\u30EC\u30A4\u3055\u308C\u3066\u5834\u306B\u51FA\u305F\u5834\u5408"], cardIds: [cardId3] }, { ges: Options2.ges }), ctx4;
                           }.toString()
                         },
                         ...commandText2?.logicTreeActions?.[0]?.actions || []
@@ -22822,11 +22866,11 @@ function createUnitGoStageEffectFromPlayEffect(ctx2, effect, options) {
           {
             actions: [
               {
-                title: function _(ctx3, effect2, { DefineFn, GameStateFn }) {
-                  const ges = GameStateFn.getGlobalEffects(ctx3, null), cardId2 = DefineFn.EffectFn.getCardID(effect2), from = GameStateFn.getItemBaSyou(ctx3, cardId2), to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "\u914D\u5099\u30A8\u30EA\u30A2");
-                  ctx3 = GameStateFn.doItemMove(ctx3, to, [cardId2, from]);
-                  const hasHigh = GameStateFn.getCardHasSpeicalEffect(ctx3, ["\u6226\u95D8\u914D\u5099"], cardId2, { ges }), hasPS = GameStateFn.getCardHasSpeicalEffect(ctx3, ["\u3010PS\u88C5\u7532\u3011"], cardId2, { ges }), isRoll = (hasHigh || hasPS) == !1;
-                  return ctx3 = GameStateFn.doItemSetRollState(ctx3, isRoll, [cardId2, GameStateFn.getItemBaSyou(ctx3, cardId2)], { isSkipTargetMissing: !0 }), ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: ["\u30D7\u30EC\u30A4\u3055\u308C\u3066\u5834\u306B\u51FA\u305F\u5834\u5408"], cardIds: [cardId2] }), ctx3;
+                title: function _(ctx3, effect2, { DefineFn, GameStateFn, Options }) {
+                  const cardId2 = DefineFn.EffectFn.getCardID(effect2), from = GameStateFn.getItemBaSyou(ctx3, cardId2), to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "\u914D\u5099\u30A8\u30EA\u30A2");
+                  ctx3 = GameStateFn.doItemMove(ctx3, to, [cardId2, from], { ges: Options.ges });
+                  const hasHigh = GameStateFn.getCardHasSpeicalEffect(ctx3, ["\u6226\u95D8\u914D\u5099"], cardId2, Options), hasPS = GameStateFn.getCardHasSpeicalEffect(ctx3, ["\u3010PS\u88C5\u7532\u3011"], cardId2, Options), isRoll = (hasHigh || hasPS) == !1;
+                  return ctx3 = GameStateFn.doItemSetRollState(ctx3, isRoll, [cardId2, GameStateFn.getItemBaSyou(ctx3, cardId2)], { isSkipTargetMissing: !0 }), ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: ["\u30D7\u30EC\u30A4\u3055\u308C\u3066\u5834\u306B\u51FA\u305F\u5834\u5408"], cardIds: [cardId2] }, Options), ctx3;
                 }.toString()
               }
             ]
@@ -22851,9 +22895,9 @@ function createOperationGoStageEffectFromPlayEffect(ctx2, effect) {
           {
             actions: [
               {
-                title: function _(ctx3, effect2, { DefineFn, GameStateFn }) {
+                title: function _(ctx3, effect2, { DefineFn, GameStateFn, Options }) {
                   const cardId2 = DefineFn.EffectFn.getCardID(effect2), from = GameStateFn.getItemBaSyou(ctx3, cardId2), to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "\u914D\u5099\u30A8\u30EA\u30A2");
-                  return ctx3 = GameStateFn.doItemMove(ctx3, to, [cardId2, from]), ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: ["\u30D7\u30EC\u30A4\u3055\u308C\u3066\u5834\u306B\u51FA\u305F\u5834\u5408"], cardIds: [cardId2] }), ctx3;
+                  return ctx3 = GameStateFn.doItemMove(ctx3, to, [cardId2, from], { ges: Options.ges }), ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: ["\u30D7\u30EC\u30A4\u3055\u308C\u3066\u5834\u306B\u51FA\u305F\u5834\u5408"], cardIds: [cardId2] }, { ges: Options.ges }), ctx3;
                 }.toString()
               }
             ]
@@ -22878,14 +22922,14 @@ function createCharOpUnitGoStageEffectFromPlayEffect(ctx2, effect) {
           {
             actions: [
               {
-                title: function _(ctx3, effect2, { DefineFn, GameStateFn }) {
+                title: function _(ctx3, effect2, { DefineFn, GameStateFn, Options }) {
                   const cardId2 = DefineFn.EffectFn.getCardID(effect2), pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx3, DefineFn.TipFn.createCharacterTargetUnitKey(), cardId2);
                   if (pairs.length == 0)
                     throw new Error(`pairs must not 0: ${effect2.text.description}`);
                   const [targetCardId, targetBasyou] = pairs[0], from = GameStateFn.getItemBaSyou(ctx3, cardId2), to = targetBasyou;
-                  ctx3 = GameStateFn.doItemMove(ctx3, to, [cardId2, from]);
+                  ctx3 = GameStateFn.doItemMove(ctx3, to, [cardId2, from], { ges: Options.ges });
                   const isRoll = GameStateFn.getCard(ctx3, targetCardId).isRoll || !1;
-                  return ctx3 = GameStateFn.mapCard(ctx3, cardId2, (is) => ({ ...is, isRoll })), ctx3 = GameStateFn.setSetGroupParent(ctx3, targetCardId, cardId2), ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: ["\u30D7\u30EC\u30A4\u3055\u308C\u3066\u5834\u306B\u51FA\u305F\u5834\u5408"], cardIds: [cardId2] }), ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: ["\u30D7\u30EC\u30A4\u3055\u308C\u3066\u5834\u306B\u30BB\u30C3\u30C8\u3055\u308C\u305F\u5834\u5408"], cardIds: [cardId2] }), ctx3;
+                  return ctx3 = GameStateFn.mapCard(ctx3, cardId2, (is) => ({ ...is, isRoll })), ctx3 = GameStateFn.setSetGroupParent(ctx3, targetCardId, cardId2), ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: ["\u30D7\u30EC\u30A4\u3055\u308C\u3066\u5834\u306B\u51FA\u305F\u5834\u5408"], cardIds: [cardId2] }, { ges: Options.ges }), ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: ["\u30D7\u30EC\u30A4\u3055\u308C\u3066\u5834\u306B\u30BB\u30C3\u30C8\u3055\u308C\u305F\u5834\u5408"], cardIds: [cardId2] }, { ges: Options.ges }), ctx3;
                 }.toString()
               }
             ]
@@ -22983,51 +23027,10 @@ function createConditionTitleFn(condition) {
         };
       };
     }
-    case "_\u6575\u8ECD_\u30E6\u30CB\u30C3\u30C8\u304C_\uFF13\u679A\u4EE5\u4E0A\u3044\u308B\u5834\u5408": {
-      const [_2, side, category2, count] = condition.title;
-      return function(ctx2, effect) {
-        const cardId = EffectFn.getCardID(effect), cardController = getItemController(ctx2, cardId), playerId = PlayerIDFn.fromRelatedPlayerSideKeyword(side, cardController);
-        if (lift_default(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getBaAll()).flatMap((basyou) => getItemIdsByBasyou(ctx2, basyou)).filter((cardId2) => getItemRuntimeCategory(ctx2, cardId2) == category2).length < count)
-          throw new TipError("_\u6575\u8ECD_\u30E6\u30CB\u30C3\u30C8\u304C_\uFF13\u679A\u4EE5\u4E0A\u3044\u308B\u5834\u5408");
-        return null;
-      };
-    }
-    case "_\u6575\u8ECD\u90E8\u968A\u304C\u3044\u308B\u5834\u5408": {
-      const [_2, side] = condition.title;
-      return function(ctx2, effect) {
-        const cardId = EffectFn.getCardID(effect), cardController = getItemController(ctx2, cardId), playerId = PlayerIDFn.fromRelatedPlayerSideKeyword(side, cardController);
-        if (lift_default(AbsoluteBaSyouFn.of)([playerId], ["\u6226\u95D8\u30A8\u30EA\u30A21", "\u6226\u95D8\u30A8\u30EA\u30A22"]).flatMap((basyou) => getItemIdsByBasyou(ctx2, basyou)).length == 0)
-          throw new TipError("_\u6575\u8ECD\u90E8\u968A\u304C\u3044\u308B\u5834\u5408");
-        return null;
-      };
-    }
-    case "_\u81EA\u8ECD_\u30B8\u30E3\u30F3\u30AF\u30E4\u30FC\u30C9\u306B\u3042\u308B\u3001_\u9ED2\u306EG\u30B5\u30A4\u30F3\u3092\u6301\u3064\u5168\u3066\u306E\u30AB\u30FC\u30C9\u306F": {
-      const [_2, side, basyouKw, color] = condition.title;
-      return function(ctx2, effect) {
-        const cardId = EffectFn.getCardID(effect), cardController = getItemController(ctx2, cardId), playerId = PlayerIDFn.fromRelatedPlayerSideKeyword(side, cardController), pairs = lift_default(AbsoluteBaSyouFn.of)([playerId], [basyouKw]).flatMap((basyou) => getItemIdsByBasyou(ctx2, basyou).filter((cardId2) => getItemPrototype(ctx2, cardId2).gsign?.[0].includes(color)).map((cardId2) => [cardId2, basyou]));
-        return {
-          title: ["\u30AB\u30FC\u30C9", pairs, pairs]
-        };
-      };
-    }
-    case "_\u81EA\u8ECD_\u672C\u56FD\u306E\u4E0A\u306E\u30AB\u30FC\u30C9_\uFF11\uFF5E_\uFF14\u679A\u3092\u898B\u3066\u3001\u305D\u306E\u4E2D\u306B\u3042\u308B\u3001\u300C\u7279\u5FB4\uFF1A_\u30D8\u30A4\u30BA\u30EB\u7CFB\u300D\u3092\u6301\u3064_\u30E6\u30CB\u30C3\u30C8_\uFF11\u679A": {
-      const [_2, side, basyouKw, min, max, char, category2, count] = condition.title;
-      return function(ctx2, effect) {
-        const cardId = EffectFn.getCardID(effect), playerId = getItemController(ctx2, cardId), targetPlayerId = PlayerIDFn.fromRelatedPlayerSideKeyword(side, playerId), pairs = lift_default(AbsoluteBaSyouFn.of)([targetPlayerId], [basyouKw]).flatMap((basyou) => getItemIdsByBasyou(ctx2, basyou).filter((cardId2) => getItemCharacteristic(ctx2, cardId2).includes(char)).filter((cardId2) => getItemRuntimeCategory(ctx2, cardId2) == category2).map((cardId2) => [cardId2, basyou])).slice(0, max);
-        if (pairs.length < min)
-          throw new TargetMissingError(`length is ${pairs.length}, min is ${min}: ${effect.text.description}`);
-        return {
-          title: ["\u30AB\u30FC\u30C9", pairs, pairs.slice(0, count)],
-          count
-        };
-      };
-    }
     case "\u3053\u306E\u30AB\u30FC\u30C9\u306E_\u672C\u6765\u306E\u30C6\u30AD\u30B9\u30C8\uFF11\u3064": {
       const [_2, isOrigin, count] = condition.title;
-      return function(ctx2, effect) {
-        const ges = getGlobalEffects(ctx2, null);
-        ctx2 = setGlobalEffects(ctx2, null, ges);
-        const cardId = EffectFn.getCardID(effect), textRefs = (isOrigin ? getItemPrototype(ctx2, cardId).texts || [] : getCardTexts(ctx2, cardId, { ges })).filter((text) => (text.title[0] == "\u7279\u6B8A\u578B" && text.title[1][0] == "\u30AF\u30ED\u30B9\u30A6\u30A7\u30DD\u30F3") == !1).map((text) => {
+      return function(ctx2, effect, { Options }) {
+        const ges = Options.ges || [], cardId = EffectFn.getCardID(effect), textRefs = (isOrigin ? getItemPrototype(ctx2, cardId).texts || [] : getCardTexts(ctx2, cardId, { ges })).filter((text) => (text.title[0] == "\u7279\u6B8A\u578B" && text.title[1][0] == "\u30AF\u30ED\u30B9\u30A6\u30A7\u30DD\u30F3") == !1).map((text) => {
           return {
             cardId,
             textId: text.id
@@ -23074,79 +23077,6 @@ function createConditionTitleFn(condition) {
         }
       };
     }
-    case "_\u6226\u95D8\u30A8\u30EA\u30A2\u306B\u3044\u308B_\u6575\u8ECD_\u30E6\u30CB\u30C3\u30C8_\uFF11\uFF5E_\uFF12\u679A": {
-      const [_2, basyouKws, side, category2, min, max] = condition.title;
-      return function(ctx2, effect) {
-        const cardId = EffectFn.getCardID(effect), playerId = getItemController(ctx2, cardId), targetPlayerId = PlayerIDFn.fromRelatedPlayerSideKeyword(side, playerId), pairs = lift_default(AbsoluteBaSyouFn.of)([targetPlayerId], basyouKws).flatMap((basyou) => getItemIdsByBasyou(ctx2, basyou).filter((cardId2) => getItemRuntimeCategory(ctx2, cardId2) == category2).map((cardId2) => [cardId2, basyou]));
-        return {
-          title: ["\u30AB\u30FC\u30C9", pairs, pairs.slice(0, max)],
-          min,
-          max
-        };
-      };
-    }
-    case "_\u81EA\u8ECD_\u30E6\u30CB\u30C3\u30C8_\uFF11\u679A": {
-      const [_2, side, category2, count] = condition.title;
-      return function(ctx2, effect) {
-        const cardId = EffectFn.getCardID(effect), playerId = getItemController(ctx2, cardId), targetPlayerId = PlayerIDFn.fromRelatedPlayerSideKeyword(side, playerId), pairs = lift_default(AbsoluteBaSyouFn.of)([targetPlayerId], BaSyouKeywordFn.getBaAll()).flatMap((basyou) => getItemIdsByBasyou(ctx2, basyou).filter((cardId2) => getItemRuntimeCategory(ctx2, cardId2) == category2).map((cardId2) => [cardId2, basyou]));
-        return {
-          title: ["\u30AB\u30FC\u30C9", pairs, pairs.slice(0, count)],
-          count: 1
-        };
-      };
-    }
-    case "_\u81EA\u8ECD\u624B\u672D\u3001\u307E\u305F\u306F\u81EA\u8ECD\u30CF\u30F3\u30AC\u30FC\u306B\u3042\u308B\u3001_\uFF16\u4EE5\u4E0B\u306E\u5408\u8A08\u56FD\u529B\u3092\u6301\u3064_\u30E6\u30CB\u30C3\u30C8_\uFF11\u679A\u3092": {
-      const [_2, side, totalCost, category2, count] = condition.title;
-      return function(ctx2, effect) {
-        const cardId = EffectFn.getCardID(effect), playerId = getItemController(ctx2, cardId), targetPlayerId = PlayerIDFn.fromRelatedPlayerSideKeyword(side, playerId), basyous = lift_default(AbsoluteBaSyouFn.of)([targetPlayerId], ["\u624B\u672D", "\u30CF\u30F3\u30AC\u30FC"]), ges = getGlobalEffects(ctx2, null);
-        ctx2 = setGlobalEffects(ctx2, null, ges);
-        const pairs = basyous.flatMap((basyou) => getItemIdsByBasyou(ctx2, basyou).filter((cardId2) => getItemRuntimeCategory(ctx2, cardId2) == category2).filter((cardId2) => getCardTotalCostLength(ctx2, cardId2, { ges }) <= totalCost).map((cardId2) => [cardId2, basyou]));
-        return {
-          title: ["\u30AB\u30FC\u30C9", pairs, pairs.slice(0, count)],
-          min: count
-        };
-      };
-    }
-    case "\u6253\u958B\u81EA\u8ECD\u624B\u88E1\u6216\u6307\u5B9AHANGER\u4E2D\u7279\u5FB5_A\u4E26\u5408\u8A08\u570B\u529B_x\u4EE5\u4E0B\u7684_1\u5F35\u5361": {
-      const [_2, char, x, count] = condition.title;
-      return function(ctx2, effect) {
-        const cardId = EffectFn.getCardID(effect), playerId = getItemController(ctx2, cardId), basyous = lift_default(AbsoluteBaSyouFn.of)([playerId], ["\u624B\u672D", "\u30CF\u30F3\u30AC\u30FC"]), ges = getGlobalEffects(ctx2, null);
-        ctx2 = setGlobalEffects(ctx2, null, ges);
-        const pairs = basyous.flatMap((basyou) => getItemIdsByBasyou(ctx2, basyou).filter((cardId2) => getItemPrototype(ctx2, cardId2).category == "\u30E6\u30CB\u30C3\u30C8").filter((cardId2) => getItemCharacteristic(ctx2, cardId2).includes(char)).filter((cardId2) => getCardTotalCostLength(ctx2, cardId2, { ges }) <= x).map((cardId2) => [cardId2, basyou]));
-        return {
-          title: ["\u30AB\u30FC\u30C9", pairs, pairs.slice(0, count)],
-          count
-        };
-      };
-    }
-    case "_\u81EA\u8ECD_\u672C\u570B\u4E0A\u7684_1\u5F35\u5361": {
-      const [_2, side, basyouKw, count] = condition.title;
-      return function(ctx2, effect) {
-        const cardId = EffectFn.getCardID(effect), playerId = getItemController(ctx2, cardId), targetPlayerId = PlayerIDFn.fromRelatedPlayerSideKeyword(side, playerId), pairs = lift_default(AbsoluteBaSyouFn.of)([targetPlayerId], [basyouKw]).flatMap((basyou) => getItemIdsByBasyou(ctx2, basyou).map((cardId2) => [cardId2, basyou]));
-        return {
-          title: ["\u30AB\u30FC\u30C9", pairs, pairs.slice(0, count)],
-          min: count
-        };
-      };
-    }
-    case "\u9019\u5F35\u5361\u4EA4\u6230\u7684\u9632\u79A6\u529B_x\u4EE5\u4E0B\u7684\u6575\u8ECD\u6A5F\u9AD4_1\u5F35": {
-      const [_2, x, count] = condition.title;
-      return function(ctx2, effect, { Options }) {
-        const cardId = EffectFn.getCardID(effect);
-        if (AbsoluteBaSyouFn.getBaSyouKeyword(getItemBaSyou(ctx2, cardId)) == "\u6226\u95D8\u30A8\u30EA\u30A21" || AbsoluteBaSyouFn.getBaSyouKeyword(getItemBaSyou(ctx2, cardId)) == "\u6226\u95D8\u30A8\u30EA\u30A22")
-          ;
-        else
-          return null;
-        const cardController = getItemController(ctx2, cardId), opponentId = PlayerIDFn.getOpponent(cardController), from = AbsoluteBaSyouFn.setPlayerID(getItemBaSyou(ctx2, cardId), opponentId), pairs = getItemIdsByBasyou(ctx2, from).map((itemId) => getSetGroupRoot(ctx2, itemId)).filter((itemId) => {
-          const [_3, def, _22] = getSetGroupBattlePoint(ctx2, itemId, { ges: Options.ges });
-          return def <= x;
-        }).map((itemId) => [itemId, from]);
-        return {
-          title: ["\u30AB\u30FC\u30C9", pairs, pairs.slice(0, count)],
-          min: count
-        };
-      };
-    }
     case "_\u81EA\u8ECD_\u672C\u570B\u627E\u51FA\u7279\u5FB5_A\u7684_1\u5F35\u5361": {
       const [_2, side, basyouKw, char, count] = condition.title;
       return function(ctx2, effect) {
@@ -23186,30 +23116,6 @@ function createConditionTitleFn(condition) {
         return {
           title: ["\u30AB\u30FC\u30C9", cardIdColorsPairs, pairs],
           min: Math.max(1, pairs.length)
-        };
-      };
-    }
-    case "_\u4EA4\u6226\u4E2D\u306E_\u81EA\u8ECD_\u30E6\u30CB\u30C3\u30C8_\uFF11\u679A": {
-      const [_2, battleStr, side, category2, count] = condition.title;
-      return function(ctx2, effect) {
-        const cardId = EffectFn.getCardID(effect), playerId = getItemController(ctx2, cardId), targetPlayerId = PlayerIDFn.fromRelatedPlayerSideKeyword(side, playerId), pairs = lift_default(AbsoluteBaSyouFn.of)([targetPlayerId], BaSyouKeywordFn.getBaAll()).flatMap((basyou) => getItemIdsByBasyou(ctx2, basyou).filter((cardId2) => getItemRuntimeCategory(ctx2, cardId2) == category2).filter((cardId2) => isBattle(ctx2, cardId2, null) == (battleStr == "\u4EA4\u6226\u4E2D")).map((cardId2) => [cardId2, basyou]));
-        return {
-          title: ["\u30AB\u30FC\u30C9", pairs, pairs.slice(0, count)],
-          count: 1
-        };
-      };
-    }
-    case "_\u914D\u5099\u30A8\u30EA\u30A2\u306B\u3044\u308B\u3001\u300C\u7279\u5FB4\uFF1A_T3\u90E8\u968A\u300D\u3092\u6301\u3064_\u81EA\u8ECD_\u30E6\u30CB\u30C3\u30C8_\uFF11\u679A": {
-      const [_2, basyouKw, char, side, category2, count] = condition.title;
-      return function(ctx2, effect) {
-        const cardId = EffectFn.getCardID(effect), cardController = getItemController(ctx2, cardId), targetPlayerId = PlayerIDFn.fromRelatedPlayerSideKeyword(side, cardController), from = AbsoluteBaSyouFn.of(targetPlayerId, basyouKw), pairs = getItemIdsByBasyou(ctx2, from).filter((itemId) => {
-          return getItemCharacteristic(ctx2, itemId).indexOf(char) != -1;
-        }).filter((itemId) => {
-          return getItemRuntimeCategory(ctx2, itemId) == category2;
-        }).map((targetId) => [targetId, from]);
-        return {
-          title: ["\u30AB\u30FC\u30C9", pairs, pairs.slice(0, count)],
-          min: count
         };
       };
     }
@@ -23374,19 +23280,13 @@ function doEffect(ctx2, effect, logicId, logicSubId) {
   conditionIds.forEach((conditionKey) => {
     logCategory("doEffect", "conditionKey", conditionKey);
     const condition = CardTextFn.getCondition(effect.text, conditionKey), actions = ConditionFn.getActions(condition);
-    for (let action of actions) {
-      EventCenterFn.onActionStart(ctx2, effect, action);
-      const ges = getGlobalEffects(ctx2, null);
-      ctx2 = setGlobalEffects(ctx2, null, ges), ctx2 = createActionTitleFn(action)(ctx2, effect, createBridge({ ges })), ctx2 = clearGlobalEffects(ctx2), EventCenterFn.onActionEnd(ctx2, effect, action);
-    }
+    for (let action of actions)
+      EventCenterFn.onActionStart(ctx2, effect, action), ctx2 = createActionTitleFn(action)(ctx2, effect, createBridge({ ges: getGlobalEffects(ctx2, null) })), ctx2 = updateGlobalEffects(ctx2), EventCenterFn.onActionEnd(ctx2, effect, action);
   });
   const lta = CardTextFn.getLogicTreeAction(effect.text, logicId);
-  for (let action of LogicTreeActionFn.getActions(lta)) {
-    logCategory("doEffect", "lta.actions", lta.actions.map((a) => a.title)), EventCenterFn.onActionStart(ctx2, effect, action);
-    const ges = getGlobalEffects(ctx2, null);
-    ctx2 = setGlobalEffects(ctx2, null, ges), ctx2 = createActionTitleFn(action)(ctx2, effect, createBridge({ ges })), ctx2 = clearGlobalEffects(ctx2), EventCenterFn.onActionEnd(ctx2, effect, action);
-  }
-  return ctx2 = EventCenterFn.onEffectEnd(ctx2, effect), ctx2 = clearGlobalEffects(ctx2), ctx2;
+  for (let action of LogicTreeActionFn.getActions(lta))
+    logCategory("doEffect", "lta.actions", lta.actions.map((a) => a.title)), EventCenterFn.onActionStart(ctx2, effect, action), ctx2 = createActionTitleFn(action)(ctx2, effect, createBridge({ ges: getGlobalEffects(ctx2, null) })), ctx2 = updateGlobalEffects(ctx2), EventCenterFn.onActionEnd(ctx2, effect, action);
+  return ctx2 = EventCenterFn.onEffectEnd(ctx2, effect), ctx2 = updateGlobalEffects(ctx2), ctx2;
 }
 function assertTipForUserSelection(ctx2, effect, cardId) {
   const userTips = getItemState(ctx2, cardId).tips, groupSets = {};
@@ -23420,8 +23320,7 @@ function createEffectTips(ctx2, effect, logicId, logicSubId, options) {
     const errors = [];
     let tip = null;
     try {
-      const ges2 = getGlobalEffects(ctx2, null);
-      if (ctx2 = setGlobalEffects(ctx2, null, ges2), tip = createConditionTitleFn(con)(ctx2, effect, createBridge({ ges: ges2 })), tip?.isGameState)
+      if (tip = createConditionTitleFn(con)(ctx2, effect, createBridge({ ges: getGlobalEffects(ctx2, null) })), ctx2 = updateGlobalEffects(ctx2), tip?.isGameState)
         throw console.log("\u5FEB\u901F\u6AA2\u67E5\u662F\u4E0D\u5BEB\u932F\u56DE\u50B3\u6210GameState, \u61C9\u8A72\u8981\u56DE\u50B3Tip|null:", key, con.title), new Error;
     } catch (e) {
       if (e instanceof TipError) {
@@ -23460,11 +23359,9 @@ function createEffectTips(ctx2, effect, logicId, logicSubId, options) {
           throw e;
       }
     }
-    const ges = getGlobalEffects(ctx2, null);
-    return ctx2 = setGlobalEffects(ctx2, null, ges), ctx2 = ConditionFn.getActionTitleFns(con, (action) => createActionTitleFn(action)).reduce((ctx3, fn) => {
+    return ctx2 = ConditionFn.getActionTitleFns(con, (action) => createActionTitleFn(action)).reduce((ctx3, fn) => {
       try {
-        const ges2 = getGlobalEffects(ctx3, null);
-        return ctx3 = setGlobalEffects(ctx3, null, ges2), ctx3 = fn(ctx3, effect, createBridge({ ges: ges2 })), ctx3 = clearGlobalEffects(ctx3), ctx3;
+        return ctx3 = fn(ctx3, effect, createBridge({ ges: getGlobalEffects(ctx3, null) })), ctx3 = updateGlobalEffects(ctx3), ctx3;
       } catch (e) {
         if (e instanceof TipError) {
           if (options?.isAssert)
@@ -23703,25 +23600,23 @@ function deleteImmediateEffect(ctx2, playerID, effectID) {
 }
 
 // src/game/gameState/createPlayEffects.ts
-function createPlayEffects(ctx2, playerId) {
+function createPlayEffects(ctx2, playerId, options) {
   logCategory("createPlayEffects", "");
-  const ges = getGlobalEffects(ctx2, null);
-  ctx2 = setGlobalEffects(ctx2, null, ges);
-  const myTextOn = lift_default(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getTextOn()), getPlayCardEffectsF = ifElse_default(always_default(PhaseFn.eq(getPhase(ctx2), ["\u914D\u5099\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"])), pipe(always_default(myTextOn), map_default((basyou) => getItemIdsByBasyou(ctx2, basyou)), flatten_default, map_default((cardId) => {
+  const ges = options.ges || [], myTextOn = lift_default(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getTextOn()), getPlayCardEffectsF = ifElse_default(always_default(PhaseFn.eq(getPhase(ctx2), ["\u914D\u5099\u30D5\u30A7\u30A4\u30BA", "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0"])), pipe(always_default(myTextOn), map_default((basyou) => getItemIdsByBasyou(ctx2, basyou)), flatten_default, map_default((cardId) => {
     if (getItemPrototype(ctx2, cardId).category == "\u30B3\u30DE\u30F3\u30C9")
       return [];
-    return createPlayCardEffects(ctx2, cardId).filter((eff) => inTiming(eff.text));
+    return createPlayCardEffects(ctx2, cardId, options).filter((eff) => inTiming(eff.text));
   }), flatten_default), ifElse_default(always_default(PhaseFn.isFreeTiming(getPhase(ctx2))), pipe(always_default(myTextOn), map_default((basyou) => getItemIdsByBasyou(ctx2, basyou)), flatten_default, map_default((cardId) => {
     if (getItemPrototype(ctx2, cardId).category == "\u30B3\u30DE\u30F3\u30C9")
       return [];
     if (getCardHasSpeicalEffect(ctx2, ["\u30AF\u30A4\u30C3\u30AF"], cardId, { ges }))
-      return createPlayCardEffects(ctx2, cardId, { isQuick: !0 });
+      return createPlayCardEffects(ctx2, cardId, { isQuick: !0, ges });
     return [];
   }), flatten_default), always_default([]))), getPlayCommandF = ifElse_default(always_default(PhaseFn.isFreeTiming(getPhase(ctx2))), pipe(always_default(myTextOn), map_default((basyou) => getItemIdsByBasyou(ctx2, basyou)), flatten_default, map_default((cardId) => {
     const item = getItem(ctx2, cardId);
     if (getItemPrototype(ctx2, item.id).category != "\u30B3\u30DE\u30F3\u30C9")
       return [];
-    return createPlayCardEffects(ctx2, item.id);
+    return createPlayCardEffects(ctx2, item.id, { ges });
   }), flatten_default, (effs) => effs.filter((eff) => inTiming(eff.text))), always_default([])), getPlayTextF = pipe(always_default(lift_default(AbsoluteBaSyouFn.of)([playerId], [...BaSyouKeywordFn.getBaAll(), "G\u30BE\u30FC\u30F3"])), map_default((basyou) => {
     return getItemIdsByBasyou(ctx2, basyou).flatMap((cardId) => getCardTexts(ctx2, cardId, { ges }).flatMap((text) => {
       if (logCategory("createPlayEffect", cardId, text.description), AbsoluteBaSyouFn.getBaSyouKeyword(basyou) == "G\u30BE\u30FC\u30F3") {
@@ -23830,8 +23725,8 @@ function createPlayEffects(ctx2, playerId) {
 }
 
 // src/game/gameState/updateCommand.ts
-function updateCommand(ctx2) {
-  const playerAEffects = createPlayEffects(ctx2, PlayerA), playerBEffects = createPlayEffects(ctx2, PlayerB), allEffects = [...playerAEffects, ...playerBEffects];
+function updateCommand(ctx2, options) {
+  const playerAEffects = createPlayEffects(ctx2, PlayerA, options), playerBEffects = createPlayEffects(ctx2, PlayerB, options), allEffects = [...playerAEffects, ...playerBEffects];
   ctx2 = setCommandEffects(ctx2, allEffects);
   const testedEffects = allEffects.flatMap((e) => createCommandEffectTips(ctx2, e));
   return ctx2 = setCommandEffectTips(ctx2, testedEffects), ctx2;
@@ -23847,7 +23742,7 @@ function getPlayerCommandsFilterNoErrorDistinct(ctx2, playerID) {
 }
 
 // src/game/gameState/doCutInDestroyEffectsAndClear.ts
-function doCutInDestroyEffectsAndClear(ctx2, ordered) {
+function doCutInDestroyEffectsAndClear(ctx2, ordered, options) {
   const destryEffectIds = ordered || ctx2.destroyEffect;
   return ctx2 = {
     ...ctx2,
@@ -23857,7 +23752,7 @@ function doCutInDestroyEffectsAndClear(ctx2, ordered) {
     if (e.reason[0] != "Destroy")
       throw new Error;
     const reason = e.reason[3], itemId = EffectFn.getCardID(e);
-    ctx2 = doTriggerEvent(ctx2, { title: ["\u7834\u58CA\u3055\u308C\u305F\u5834\u5408", reason], cardIds: [itemId] });
+    ctx2 = doTriggerEvent(ctx2, { title: ["\u7834\u58CA\u3055\u308C\u305F\u5834\u5408", reason], cardIds: [itemId] }, { ges: options.ges });
   }), ctx2;
 }
 
@@ -23875,20 +23770,10 @@ function createAttackPhaseRuleEffect(ctx2, playerId) {
       description: "\u51FA\u64CA",
       conditions: {
         [TipFn.createGoEarthKey()]: {
-          title: function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {
-            const runtimeBattleArea = GameStateFn2.getRuntimeBattleArea(ctx3, "\u6226\u95D8\u30A8\u30EA\u30A21");
-            if (runtimeBattleArea == "\u5B87\u5B99\u30A8\u30EA\u30A2")
-              return null;
-            const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), opponentPlayerId = DefineFn2.PlayerIDFn.getOpponent(playerId2);
-            let unitIds = GameStateFn2.getItemIdsByBasyou(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, "\u914D\u5099\u30A8\u30EA\u30A2")).filter((cardId) => GameStateFn2.getSetGroupRoot(ctx3, cardId) == cardId).filter((cardId) => GameStateFn2.getCardBattleArea(ctx3, cardId).includes(runtimeBattleArea)).filter((cardId) => GameStateFn2.getCard(ctx3, cardId).isRoll != !0);
-            const opponentUnitIds = GameStateFn2.getBattleGroup(ctx3, DefineFn2.AbsoluteBaSyouFn.of(opponentPlayerId, "\u6226\u95D8\u30A8\u30EA\u30A21"));
-            if (opponentUnitIds.length) {
-              const ges = GameStateFn2.getGlobalEffects(ctx3, null);
-              if (GameStateFn2.isABattleGroup(ctx3, ["\u9AD8\u6A5F\u52D5"], opponentUnitIds[0], { ges }))
-                unitIds = unitIds.filter((id) => GameStateFn2.isSetGroupHasA(ctx3, ["\u9AD8\u6A5F\u52D5"], id, { ges }));
-            }
+          title: function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2, Options }) {
+            const playerId2 = DefineFn2.EffectFn.getPlayerID(effect);
             return {
-              title: ["\u30AB\u30FC\u30C9", unitIds.map((id) => {
+              title: ["\u30AB\u30FC\u30C9", GameStateFn2.getPlayerUnitCanGoEarthIds(ctx3, playerId2, { ges: Options.ges }).map((id) => {
                 return [id, GameStateFn2.getItemBaSyou(ctx3, id)];
               }), []],
               flags: { isGoBattleArea1: !0 }
@@ -23896,10 +23781,10 @@ function createAttackPhaseRuleEffect(ctx2, playerId) {
           }.toString(),
           actions: [
             {
-              title: function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {
+              title: function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2, Options }) {
                 const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), fackCardId = DefineFn2.EffectFn.getCardID(effect), earthPairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, "\u53BB\u5730\u7403", fackCardId), phase2 = GameStateFn2.getPhase(ctx3);
                 for (let pair3 of earthPairs)
-                  ctx3 = GameStateFn2.mapItemState(ctx3, pair3[0], (is) => ({ ...is, isAttack: phase2[1] == "\u653B\u6483\u30B9\u30C6\u30C3\u30D7", isDefence: phase2[1] == "\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7" })), ctx3 = GameStateFn2.doItemMove(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, "\u6226\u95D8\u30A8\u30EA\u30A21"), pair3);
+                  ctx3 = GameStateFn2.mapItemState(ctx3, pair3[0], (is) => ({ ...is, isAttack: phase2[1] == "\u653B\u6483\u30B9\u30C6\u30C3\u30D7", isDefence: phase2[1] == "\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7" })), ctx3 = GameStateFn2.doItemMove(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, "\u6226\u95D8\u30A8\u30EA\u30A21"), pair3, { ges: Options.ges });
                 return ctx3;
               }.toString()
             }
@@ -23907,20 +23792,10 @@ function createAttackPhaseRuleEffect(ctx2, playerId) {
           groupKey: "\u51FA\u64CA"
         },
         [TipFn.createGoSpaceKey()]: {
-          title: function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {
-            const runtimeBattleArea = GameStateFn2.getRuntimeBattleArea(ctx3, "\u6226\u95D8\u30A8\u30EA\u30A22");
-            if (runtimeBattleArea == "\u5730\u7403\u30A8\u30EA\u30A2")
-              return null;
-            const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), opponentPlayerId = DefineFn2.PlayerIDFn.getOpponent(playerId2);
-            let unitIds = GameStateFn2.getItemIdsByBasyou(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, "\u914D\u5099\u30A8\u30EA\u30A2")).filter((cardId) => GameStateFn2.getSetGroupRoot(ctx3, cardId) == cardId).filter((cardId) => GameStateFn2.getCardBattleArea(ctx3, cardId).includes(runtimeBattleArea)).filter((cardId) => GameStateFn2.getCard(ctx3, cardId).isRoll != !0);
-            const opponentUnitIds = GameStateFn2.getBattleGroup(ctx3, DefineFn2.AbsoluteBaSyouFn.of(opponentPlayerId, "\u6226\u95D8\u30A8\u30EA\u30A22"));
-            if (opponentUnitIds.length) {
-              const ges = GameStateFn2.getGlobalEffects(ctx3, null);
-              if (GameStateFn2.isABattleGroup(ctx3, ["\u9AD8\u6A5F\u52D5"], opponentUnitIds[0], { ges }))
-                unitIds = unitIds.filter((id) => GameStateFn2.isSetGroupHasA(ctx3, ["\u9AD8\u6A5F\u52D5"], id, { ges }));
-            }
+          title: function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2, Options }) {
+            const playerId2 = DefineFn2.EffectFn.getPlayerID(effect);
             return {
-              title: ["\u30AB\u30FC\u30C9", unitIds.map((id) => {
+              title: ["\u30AB\u30FC\u30C9", GameStateFn2.getPlayerUnitCanGoSpaceIds(ctx3, playerId2, { ges: Options.ges }).map((id) => {
                 return [id, GameStateFn2.getItemBaSyou(ctx3, id)];
               }), []],
               flags: { isGoBattleArea2: !0 }
@@ -23928,10 +23803,10 @@ function createAttackPhaseRuleEffect(ctx2, playerId) {
           }.toString(),
           actions: [
             {
-              title: function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {
+              title: function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2, Options }) {
                 const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), fackCardId = DefineFn2.EffectFn.getCardID(effect), spacePairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, "\u53BB\u5B87\u5B99", fackCardId), phase2 = GameStateFn2.getPhase(ctx3);
                 for (let pair3 of spacePairs)
-                  ctx3 = GameStateFn2.mapItemState(ctx3, pair3[0], (is) => ({ ...is, isAttack: phase2[1] == "\u653B\u6483\u30B9\u30C6\u30C3\u30D7", isDefence: phase2[1] == "\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7" })), ctx3 = GameStateFn2.doItemMove(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, "\u6226\u95D8\u30A8\u30EA\u30A22"), pair3);
+                  ctx3 = GameStateFn2.mapItemState(ctx3, pair3[0], (is) => ({ ...is, isAttack: phase2[1] == "\u653B\u6483\u30B9\u30C6\u30C3\u30D7", isDefence: phase2[1] == "\u9632\u5FA1\u30B9\u30C6\u30C3\u30D7" })), ctx3 = GameStateFn2.doItemMove(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, "\u6226\u95D8\u30A8\u30EA\u30A22"), pair3, { ges: Options.ges });
                 return ctx3 = GameStateFn2.checkIsBattle(ctx3), ctx3;
               }.toString()
             }
@@ -23943,13 +23818,13 @@ function createAttackPhaseRuleEffect(ctx2, playerId) {
         {
           actions: [
             {
-              title: function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {
+              title: function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2, Options }) {
                 const fackCardId = DefineFn2.EffectFn.getCardID(effect), phase2 = GameStateFn2.getPhase(ctx3), pairs1 = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, "\u53BB\u5730\u7403", fackCardId), pairs2 = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, "\u53BB\u5B87\u5B99", fackCardId);
                 if (DefineFn2.PhaseFn.eq(phase2, ["\u6226\u95D8\u30D5\u30A7\u30A4\u30BA", "\u653B\u6483\u30B9\u30C6\u30C3\u30D7", "\u898F\u5B9A\u306E\u52B9\u679C"]))
                   ctx3 = GameStateFn2.doTriggerEvent(ctx3, {
                     title: ["\u3053\u306E\u30AB\u30FC\u30C9\u304C\u653B\u6483\u306B\u51FA\u6483\u3057\u305F\u5834\u5408"],
                     cardIds: [...pairs1, ...pairs2].map((p) => p[0])
-                  });
+                  }, { ges: Options.ges });
                 return ctx3;
               }.toString()
             }
@@ -23973,10 +23848,8 @@ function createDamageRuleEffect(ctx2, playerId) {
         {
           actions: [
             {
-              title: function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {
-                const ges = GameStateFn2.getGlobalEffects(ctx3, null);
-                ctx3 = GameStateFn2.setGlobalEffects(ctx3, null, ges);
-                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect);
+              title: function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2, Options }) {
+                const ges = Options.ges || [], playerId2 = DefineFn2.EffectFn.getPlayerID(effect);
                 return ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, "\u6226\u95D8\u30A8\u30EA\u30A21", 1, { ges }), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, "\u6226\u95D8\u30A8\u30EA\u30A22", 1, { ges }), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, "\u6226\u95D8\u30A8\u30EA\u30A21", 2, { ges }), ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, "\u6226\u95D8\u30A8\u30EA\u30A22", 2, { ges }), ctx3;
               }.toString()
             }
@@ -24039,10 +23912,10 @@ function createDrawPhaseRuleEffect(ctx2, playerId) {
         {
           actions: [
             {
-              title: function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2 }) {
+              title: function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2, Options }) {
                 const playerId2 = DefineFn2.EffectFn.getPlayerID(effect), from = DefineFn2.AbsoluteBaSyouFn.of(playerId2, "\u672C\u56FD"), cardIds = GameStateFn2.getItemIdsByBasyou(ctx3, from).slice(0, 1);
                 for (let cardId of cardIds)
-                  ctx3 = GameStateFn2.doItemMove(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, "\u624B\u672D"), [cardId, from]);
+                  ctx3 = GameStateFn2.doItemMove(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, "\u624B\u672D"), [cardId, from], { ges: Options.ges });
                 return ctx3;
               }.toString()
             }
@@ -24174,7 +24047,7 @@ function applyFlow(ctx2, playerID, flow) {
           ...ctx2.flowMemory,
           hasPlayerPassPayCost: {}
         }
-      }, ctx2 = createMinusDestroyEffectAndPush(ctx2), ctx2 = updateCommand(ctx2), ctx2;
+      }, ctx2 = createMinusDestroyEffectAndPush(ctx2, { ges: getGlobalEffects(ctx2, null) }), ctx2 = updateCommand(ctx2, { ges: getGlobalEffects(ctx2, null) }), ctx2;
     }
     case "FlowPassPhase":
       return {
@@ -24283,7 +24156,7 @@ function applyFlow(ctx2, playerID, flow) {
               break;
             }
             default:
-              ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] });
+              ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] }, { ges: getGlobalEffects(ctx2, null) });
           }
           break;
         }
@@ -24294,7 +24167,7 @@ function applyFlow(ctx2, playerID, flow) {
               break;
             }
             default:
-              ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] });
+              ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] }, { ges: getGlobalEffects(ctx2, null) });
           }
           break;
         }
@@ -24310,17 +24183,17 @@ function applyFlow(ctx2, playerID, flow) {
                 case "\u30B9\u30C6\u30C3\u30D7\u7D42\u4E86":
                 case "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0":
                 case "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02": {
-                  ctx2 = checkIsBattle(ctx2), ctx2 = updateCommand(ctx2), ctx2 = {
+                  ctx2 = checkIsBattle(ctx2), ctx2 = updateCommand(ctx2, { ges: getGlobalEffects(ctx2, null) }), ctx2 = {
                     ...ctx2,
                     flowMemory: {
                       ...ctx2.flowMemory,
                       hasPlayerPassCut: {}
                     }
-                  }, ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] });
+                  }, ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] }, { ges: getGlobalEffects(ctx2, null) });
                   break;
                 }
                 default:
-                  ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] });
+                  ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] }, { ges: getGlobalEffects(ctx2, null) });
               }
               break;
             }
@@ -24334,17 +24207,17 @@ function applyFlow(ctx2, playerID, flow) {
                 case "\u30B9\u30C6\u30C3\u30D7\u7D42\u4E86":
                 case "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0":
                 case "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02": {
-                  ctx2 = checkIsBattle(ctx2), ctx2 = updateCommand(ctx2), ctx2 = {
+                  ctx2 = checkIsBattle(ctx2), ctx2 = updateCommand(ctx2, { ges: getGlobalEffects(ctx2, null) }), ctx2 = {
                     ...ctx2,
                     flowMemory: {
                       ...ctx2.flowMemory,
                       hasPlayerPassCut: {}
                     }
-                  }, ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] });
+                  }, ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] }, { ges: getGlobalEffects(ctx2, null) });
                   break;
                 }
                 default:
-                  ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] });
+                  ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] }, { ges: getGlobalEffects(ctx2, null) });
               }
               break;
             }
@@ -24358,17 +24231,17 @@ function applyFlow(ctx2, playerID, flow) {
                 case "\u30B9\u30C6\u30C3\u30D7\u7D42\u4E86":
                 case "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0":
                 case "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02": {
-                  ctx2 = checkIsBattle(ctx2), ctx2 = updateCommand(ctx2), ctx2 = {
+                  ctx2 = checkIsBattle(ctx2), ctx2 = updateCommand(ctx2, { ges: getGlobalEffects(ctx2, null) }), ctx2 = {
                     ...ctx2,
                     flowMemory: {
                       ...ctx2.flowMemory,
                       hasPlayerPassCut: {}
                     }
-                  }, ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] });
+                  }, ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] }, { ges: getGlobalEffects(ctx2, null) });
                   break;
                 }
                 default:
-                  ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] });
+                  ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] }, { ges: getGlobalEffects(ctx2, null) });
               }
               break;
             }
@@ -24382,27 +24255,27 @@ function applyFlow(ctx2, playerID, flow) {
                 case "\u30B9\u30C6\u30C3\u30D7\u7D42\u4E86":
                 case "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B0":
                 case "\u30D5\u30EA\u30FC\u30BF\u30A4\u30DF\u30F3\u30B02": {
-                  ctx2 = checkIsBattle(ctx2), ctx2 = updateCommand(ctx2), ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] });
+                  ctx2 = checkIsBattle(ctx2), ctx2 = updateCommand(ctx2, { ges: getGlobalEffects(ctx2, null) }), ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] }, { ges: getGlobalEffects(ctx2, null) });
                   break;
                 }
                 default:
-                  ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] });
+                  ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] }, { ges: getGlobalEffects(ctx2, null) });
               }
               break;
             }
             case "\u30BF\u30FC\u30F3\u7D42\u4E86\u6642":
               switch (ctx2.phase[2]) {
                 case "\u30C0\u30E1\u30FC\u30B8\u30EA\u30BB\u30C3\u30C8":
-                  ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] });
+                  ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] }, { ges: getGlobalEffects(ctx2, null) });
                   break;
                 case "\u52B9\u679C\u89E3\u6C7A":
-                  ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] });
+                  ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] }, { ges: getGlobalEffects(ctx2, null) });
                   break;
                 case "\u624B\u672D\u8ABF\u6574":
-                  ctx2 = addImmediateEffectIfCanPayCost(ctx2, createDiscardRuleEffect(ctx2, PlayerA), { isSkipLimitCheck: !0 }), ctx2 = addImmediateEffectIfCanPayCost(ctx2, createDiscardRuleEffect(ctx2, PlayerB), { isSkipLimitCheck: !0 }), ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] });
+                  ctx2 = addImmediateEffectIfCanPayCost(ctx2, createDiscardRuleEffect(ctx2, PlayerA), { isSkipLimitCheck: !0 }), ctx2 = addImmediateEffectIfCanPayCost(ctx2, createDiscardRuleEffect(ctx2, PlayerB), { isSkipLimitCheck: !0 }), ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] }, { ges: getGlobalEffects(ctx2, null) });
                   break;
                 case "\u52B9\u679C\u7D42\u4E86\u3002\u30BF\u30FC\u30F3\u7D42\u4E86": {
-                  if (ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] }), ctx2.activePlayerID == null)
+                  if (ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] }, { ges: getGlobalEffects(ctx2, null) }), ctx2.activePlayerID == null)
                     throw new Error("activePlayerID not found");
                   ctx2 = {
                     ...ctx2,
@@ -24412,13 +24285,13 @@ function applyFlow(ctx2, playerID, flow) {
                   break;
                 }
                 default:
-                  ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] });
+                  ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] }, { ges: getGlobalEffects(ctx2, null) });
               }
           }
           break;
         }
         default:
-          ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] });
+          ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] }, { ges: getGlobalEffects(ctx2, null) });
       }
       return ctx2 = {
         ...ctx2,
@@ -24428,7 +24301,7 @@ function applyFlow(ctx2, playerID, flow) {
         }
       }, ctx2;
     case "FlowUpdateCommand":
-      return ctx2 = updateCommand(ctx2), ctx2 = {
+      return ctx2 = updateCommand(ctx2, { ges: getGlobalEffects(ctx2, null) }), ctx2 = {
         ...ctx2,
         flowMemory: {
           ...ctx2.flowMemory,
@@ -24436,7 +24309,7 @@ function applyFlow(ctx2, playerID, flow) {
         }
       }, ctx2;
     case "FlowNextTiming":
-      return ctx2 = setNextPhase(ctx2), ctx2 = updateCommand(ctx2), ctx2 = {
+      return ctx2 = setNextPhase(ctx2), ctx2 = updateCommand(ctx2, { ges: getGlobalEffects(ctx2, null) }), ctx2 = {
         ...ctx2,
         flowMemory: {
           ...ctx2.flowMemory,
@@ -24452,7 +24325,7 @@ function applyFlow(ctx2, playerID, flow) {
     case "FlowHandleStackEffectFinished":
       return ctx2 = doTriggerEvent(ctx2, {
         title: ["\u30AB\u30C3\u30C8\u7D42\u4E86\u6642", ctx2.stackEffectMemory]
-      }), ctx2 = {
+      }, { ges: getGlobalEffects(ctx2, null) }), ctx2 = {
         ...ctx2,
         stackEffectMemory: [],
         flowMemory: {
@@ -24476,7 +24349,7 @@ function applyFlow(ctx2, playerID, flow) {
       }, ctx2;
     }
     case "FlowMakeDestroyOrder":
-      return ctx2 = doCutInDestroyEffectsAndClear(ctx2, flow.destroyEffect.map((i) => i.id)), ctx2 = updateCommand(ctx2), {
+      return ctx2 = doCutInDestroyEffectsAndClear(ctx2, flow.destroyEffect.map((i) => i.id), { ges: getGlobalEffects(ctx2, null) }), ctx2 = updateCommand(ctx2, { ges: getGlobalEffects(ctx2, null) }), {
         ...ctx2,
         flowMemory: {
           ...ctx2.flowMemory,
@@ -26639,62 +26512,381 @@ function getPlayerFlowAuto(ctx2, playerId, flows, options) {
   return null;
 }
 
-// src/game/gameStateWithFlowMemory/ai/thinkVer1.ts
-function thinkVer1(ctx2, playerId, flows, options) {
+// src/tool/optalg/IGene.ts
+function getBest(population) {
+  const copy = [...population];
+  return copy.sort((a, b) => b.getFitness() - a.getFitness()), copy[0];
+}
+
+// src/tool/optalg/basic.ts
+function simulatedAnnealing(iteration, D, T2, factor, gene) {
+  if (T2 <= 0)
+    throw new Error("T cannot be 0");
+  const delta = [];
+  for (let i = 0;i < D; ++i)
+    gene = gene.mutate();
+  gene.calcFitness();
+  const P = (oldFitness, newFitness, temperature) => {
+    return newFitness > oldFitness ? 1 : Math.exp((newFitness - oldFitness) / temperature);
+  };
+  for (let i = 0;i < iteration; i++) {
+    const clone = gene.mutate();
+    T2 *= factor;
+    const oldFitness = gene.getFitness(), newFitness = clone.calcFitness();
+    if (P(oldFitness, newFitness, T2) > Math.random())
+      gene = clone;
+  }
+  return gene;
+}
+function optAlgByPSO(iteration, W, D, mutateRate, gene) {
+  let population = [...Array(W).keys()].map(() => {
+    let nextGene = gene;
+    for (let i = 0;i < D; ++i)
+      nextGene = nextGene.mutate();
+    return nextGene.calcFitness(), nextGene;
+  });
+  const bestGenes = [...population];
+  let globalBestGene = getBest(bestGenes);
+  for (let i = 0;i < iteration; i++)
+    for (let j = 0;j < population.length; j++) {
+      let nextGene = population[j];
+      if (nextGene.crossover == null)
+        throw new Error;
+      if (nextGene = nextGene.crossover(globalBestGene), nextGene.crossover == null)
+        throw new Error;
+      if (nextGene = nextGene.crossover(bestGenes[j]), Math.random() < mutateRate)
+        nextGene = nextGene.mutate();
+      const nextFitness = nextGene.calcFitness();
+      if (nextFitness > bestGenes[j].getFitness())
+        bestGenes[j] = nextGene;
+      if (nextFitness > globalBestGene.getFitness())
+        globalBestGene = nextGene;
+      population[j] = nextGene;
+    }
+  return getBest(population);
+}
+function randInt() {
+  return Math.floor(Math.random() * 1e5);
+}
+function choise(options) {
+  const pool = [], total = options.reduce((a, b) => a + b, 0);
+  for (let i = 0;i < options.length; ++i) {
+    const num = Math.floor(options[i] * 100 / total);
+    for (let j = 0;j < num; j++)
+      pool.push(i);
+  }
+  return pool[randInt() % pool.length];
+}
+
+// src/game/ai/SelectBattleGroupGene.ts
+function createBattleGroupForAttackCountry(ctx2, playerId, options) {
+  const goEarthIds = getPlayerUnitCanGoEarthIds(ctx2, playerId, options), goSpaceIds = getPlayerUnitCanGoSpaceIds(ctx2, playerId, options);
+  if (goEarthIds.length == 0 && goSpaceIds.length == 0)
+    return [[], [], []];
+  let gene = SelectBattleGroupGeneFn.createBasicForAttackCountry(ctx2, playerId, options);
+  gene = simulatedAnnealing(100, 50, 1000, 0.7, gene);
+  const area1 = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(playerId, "\u6226\u95D8\u30A8\u30EA\u30A21")).filter((itemId) => getSetGroupRoot(ctx2, itemId) == itemId), area2 = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(playerId, "\u6226\u95D8\u30A8\u30EA\u30A22")).filter((itemId) => getSetGroupRoot(ctx2, itemId) == itemId), homeIds = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(playerId, "\u914D\u5099\u30A8\u30EA\u30A2")).filter((itemId) => getSetGroupRoot(ctx2, itemId) == itemId);
+  return [area1, area2, homeIds];
+}
+function createBattleGroupForDefenceBattle(ctx2, playerId, options) {
+  const goEarthIds = getPlayerUnitCanGoEarthIds(ctx2, playerId, options), goSpaceIds = getPlayerUnitCanGoSpaceIds(ctx2, playerId, options);
+  if (goEarthIds.length == 0 && goSpaceIds.length == 0)
+    return [[], [], []];
+  let gene = SelectBattleGroupGeneFn.createBasicForDefenceBattle(ctx2, playerId, options);
+  gene = optAlgByPSO(3, 30, 20, 0.7, gene);
+  const area1 = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(playerId, "\u6226\u95D8\u30A8\u30EA\u30A21")).filter((itemId) => getSetGroupRoot(ctx2, itemId) == itemId), area2 = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(playerId, "\u6226\u95D8\u30A8\u30EA\u30A22")).filter((itemId) => getSetGroupRoot(ctx2, itemId) == itemId), homeIds = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(playerId, "\u914D\u5099\u30A8\u30EA\u30A2")).filter((itemId) => getSetGroupRoot(ctx2, itemId) == itemId);
+  return [area1, area2, homeIds];
+}
+function createBattleGroupForAttackBattle(ctx2, playerId, options) {
+  const goEarthIds = getPlayerUnitCanGoEarthIds(ctx2, playerId, options), goSpaceIds = getPlayerUnitCanGoSpaceIds(ctx2, playerId, options);
+  if (goEarthIds.length == 0 && goSpaceIds.length == 0)
+    return [[], [], [], [], [], []];
+  let gene = SelectBattleGroupGeneFn.createBasicForAttackBattle(ctx2, playerId, options);
+  if (gene = optAlgByPSO(0, 5, 1, 0, gene), gene.getFitness() < 0)
+    return [[], [], [], [], [], []];
+  const area1 = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(playerId, "\u6226\u95D8\u30A8\u30EA\u30A21")).filter((itemId) => getSetGroupRoot(ctx2, itemId) == itemId), area2 = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(playerId, "\u6226\u95D8\u30A8\u30EA\u30A22")).filter((itemId) => getSetGroupRoot(ctx2, itemId) == itemId), homeIds = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(playerId, "\u914D\u5099\u30A8\u30EA\u30A2")).filter((itemId) => getSetGroupRoot(ctx2, itemId) == itemId), defencePlayerId = PlayerIDFn.getOpponent(playerId), area1b = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(defencePlayerId, "\u6226\u95D8\u30A8\u30EA\u30A21")).filter((itemId) => getSetGroupRoot(ctx2, itemId) == itemId), area2b = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(defencePlayerId, "\u6226\u95D8\u30A8\u30EA\u30A22")).filter((itemId) => getSetGroupRoot(ctx2, itemId) == itemId), homeIdsb = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(defencePlayerId, "\u914D\u5099\u30A8\u30EA\u30A2")).filter((itemId) => getSetGroupRoot(ctx2, itemId) == itemId);
+  return [area1, area2, homeIds, area1b, area2b, homeIdsb];
+}
+var SelectBattleGroupGeneFn = {
+  createBasic(ctx2, playerId, options) {
+    const gene = {
+      ctx: ctx2,
+      score: 0,
+      getStateKey() {
+        const area1 = getItemIdsByBasyou(ctx2, AbsoluteBaSyouFn.of(playerId, "\u6226\u95D8\u30A8\u30EA\u30A21")), area2 = getItemIdsByBasyou(ctx2, AbsoluteBaSyouFn.of(playerId, "\u6226\u95D8\u30A8\u30EA\u30A22"));
+        return JSON.stringify([...area1, ...area2]);
+      },
+      calcFitness() {
+        throw new Error;
+      },
+      getFitness() {
+        return this.score;
+      },
+      mutate() {
+        let ctx3 = this.ctx;
+        switch (choise([2, 2, 3])) {
+          case 0: {
+            const earthIds = getPlayerUnitCanGoEarthIds(ctx3, playerId, options), spaceIds = getPlayerUnitCanGoSpaceIds(ctx3, playerId, options);
+            for (let i = 0;i < 10; ++i) {
+              const cmd2 = randInt() % 2;
+              if (cmd2 == 0) {
+                if (earthIds.length) {
+                  const id = earthIds[randInt() % earthIds.length];
+                  if (id == null)
+                    throw new Error;
+                  ctx3 = doItemMove(ctx3, AbsoluteBaSyouFn.of(playerId, "\u6226\u95D8\u30A8\u30EA\u30A21"), createStrBaSyouPair(ctx3, id), options);
+                  break;
+                }
+              } else if (cmd2 == 1) {
+                if (spaceIds.length) {
+                  const id = spaceIds[randInt() % spaceIds.length];
+                  if (id == null)
+                    throw new Error;
+                  ctx3 = doItemMove(ctx3, AbsoluteBaSyouFn.of(playerId, "\u6226\u95D8\u30A8\u30EA\u30A22"), createStrBaSyouPair(ctx3, id), options);
+                  break;
+                }
+              } else
+                throw new Error;
+            }
+            break;
+          }
+          case 1: {
+            const area1 = getItemIdsByBasyou(ctx3, AbsoluteBaSyouFn.of(playerId, "\u6226\u95D8\u30A8\u30EA\u30A21")).filter((itemId) => getSetGroupRoot(ctx3, itemId) == itemId), area2 = getItemIdsByBasyou(ctx3, AbsoluteBaSyouFn.of(playerId, "\u6226\u95D8\u30A8\u30EA\u30A22")).filter((itemId) => getSetGroupRoot(ctx3, itemId) == itemId);
+            for (let i = 0;i < 10; ++i) {
+              const cmd2 = randInt() % 2;
+              if (cmd2 == 0) {
+                if (area1.length) {
+                  const id = area1[randInt() % area1.length];
+                  if (id == null)
+                    throw new Error;
+                  ctx3 = doItemMove(ctx3, AbsoluteBaSyouFn.of(playerId, "\u914D\u5099\u30A8\u30EA\u30A2"), createStrBaSyouPair(ctx3, id), options);
+                  break;
+                }
+              } else if (cmd2 == 1) {
+                if (area2.length) {
+                  const id = area2[randInt() % area2.length];
+                  if (id == null)
+                    throw new Error;
+                  ctx3 = doItemMove(ctx3, AbsoluteBaSyouFn.of(playerId, "\u914D\u5099\u30A8\u30EA\u30A2"), createStrBaSyouPair(ctx3, id), options);
+                  break;
+                }
+              } else
+                throw new Error;
+            }
+            break;
+          }
+          case 2: {
+            const area1 = getItemIdsByBasyou(ctx3, AbsoluteBaSyouFn.of(playerId, "\u6226\u95D8\u30A8\u30EA\u30A21")).filter((itemId) => getSetGroupRoot(ctx3, itemId) == itemId), area2 = getItemIdsByBasyou(ctx3, AbsoluteBaSyouFn.of(playerId, "\u6226\u95D8\u30A8\u30EA\u30A22")).filter((itemId) => getSetGroupRoot(ctx3, itemId) == itemId);
+            for (let i = 0;i < 10; ++i) {
+              const cmd2 = randInt() % 2;
+              if (cmd2 == 0) {
+                if (area1.length >= 2) {
+                  const id = randInt() % area1.length, id2 = randInt() % area1.length;
+                  if (id != id2) {
+                    const key = AbsoluteBaSyouFn.toString(AbsoluteBaSyouFn.of(playerId, "\u6226\u95D8\u30A8\u30EA\u30A21")), list = ctx3.table.cardStack[key];
+                    list[id], list[id2] = list[id2], list[id], ctx3 = {
+                      ...ctx3,
+                      table: {
+                        ...ctx3.table,
+                        cardStack: {
+                          ...ctx3.table.cardStack,
+                          [key]: list
+                        }
+                      }
+                    };
+                    break;
+                  }
+                }
+              } else if (cmd2 == 1) {
+                if (area2.length >= 2) {
+                  const id = randInt() % area2.length, id2 = randInt() % area2.length;
+                  if (id != id2) {
+                    const key = AbsoluteBaSyouFn.toString(AbsoluteBaSyouFn.of(playerId, "\u6226\u95D8\u30A8\u30EA\u30A22")), list = ctx3.table.cardStack[key];
+                    list[id], list[id2] = list[id2], list[id], ctx3 = {
+                      ...ctx3,
+                      table: {
+                        ...ctx3.table,
+                        cardStack: {
+                          ...ctx3.table.cardStack,
+                          [key]: list
+                        }
+                      }
+                    };
+                    break;
+                  }
+                }
+              } else
+                throw new Error;
+            }
+            break;
+          }
+          default:
+            throw new Error;
+        }
+        return {
+          ...gene,
+          ctx: ctx3
+        };
+      },
+      crossover(gene2) {
+        return randInt() % 2 == 0 ? { ...this } : { ...gene2 };
+      }
+    };
+    return gene;
+  },
+  createBasicForAttackCountry(ctx2, playerId, options) {
+    const gene = SelectBattleGroupGeneFn.createBasic(ctx2, playerId, options);
+    return gene.calcFitness = function() {
+      const ctx3 = this.ctx, area1 = getBattleGroup(ctx3, AbsoluteBaSyouFn.of(playerId, "\u6226\u95D8\u30A8\u30EA\u30A21")), area2 = getBattleGroup(ctx3, AbsoluteBaSyouFn.of(playerId, "\u6226\u95D8\u30A8\u30EA\u30A22")), area1Power = getBattleGroupBattlePoint(ctx3, area1, options), area1LostPower = area1.map((v, i) => {
+        if (i == 0)
+          return 0;
+        return getSetGroupBattlePoint(ctx3, v, options)[0];
+      }).reduce((a, b) => a + b, 0), area2Power = getBattleGroupBattlePoint(ctx3, area2, options), area2LostPower = area2.map((v, i) => {
+        if (i == 0)
+          return 0;
+        return getSetGroupBattlePoint(ctx3, v, options)[0];
+      }).reduce((a, b) => a + b, 0);
+      return this.score = (area1Power + area2Power) * 2 - area1LostPower - area2LostPower, this.score;
+    }, gene;
+  },
+  createBasicForDefenceBattle(originCtx, playerId, options) {
+    const defencePlayerId = playerId, attackPlayerId = PlayerIDFn.getOpponent(defencePlayerId), originDefenceScore = getScore(originCtx, defencePlayerId), originAttackScore = getScore(originCtx, attackPlayerId), gene = SelectBattleGroupGeneFn.createBasic(originCtx, playerId, options);
+    gene.calcFitness = function() {
+      logCategory("createBasicForBattle", "==== calcFitness ====");
+      let ctx2 = this.ctx;
+      logCategory("createBasicForBattle", "originDefenceScore", originDefenceScore), logCategory("createBasicForBattle", "originAttackScore", originAttackScore), ctx2 = doPlayerAttack(ctx2, attackPlayerId, "\u6226\u95D8\u30A8\u30EA\u30A21", 1, {}), ctx2 = doPlayerAttack(ctx2, attackPlayerId, "\u6226\u95D8\u30A8\u30EA\u30A22", 1, {}), ctx2 = doPlayerAttack(ctx2, attackPlayerId, "\u6226\u95D8\u30A8\u30EA\u30A21", 2, {}), ctx2 = doPlayerAttack(ctx2, attackPlayerId, "\u6226\u95D8\u30A8\u30EA\u30A22", 2, {});
+      const defenceScore = getScore(ctx2, defencePlayerId), attackScore = getScore(ctx2, attackPlayerId);
+      logCategory("createBasicForBattle", "defenceScore", defenceScore), logCategory("createBasicForBattle", "attackScore", attackScore);
+      const defenceLost = originDefenceScore - defenceScore, attackLost = originAttackScore - attackScore;
+      return logCategory("createBasicForBattle", "defenceLost", defenceLost), logCategory("createBasicForBattle", "attackLost", attackLost), this.score = attackLost - defenceLost, logCategory("createBasicForBattle", "score", attackLost - defenceLost), this.score;
+    };
+    function getScore(ctx2, currentPlayerId) {
+      const area1 = getBattleGroup(ctx2, AbsoluteBaSyouFn.of(currentPlayerId, "\u6226\u95D8\u30A8\u30EA\u30A21")), area2 = getBattleGroup(ctx2, AbsoluteBaSyouFn.of(currentPlayerId, "\u6226\u95D8\u30A8\u30EA\u30A22")), area1Power = getBattleGroupBattlePoint(ctx2, area1, options), area2Power = getBattleGroupBattlePoint(ctx2, area2, options), scorePart1 = (area1Power + area2Power) * 2;
+      if (currentPlayerId == attackPlayerId)
+        return scorePart1;
+      const live = getItemIdsByBasyou(ctx2, AbsoluteBaSyouFn.of(currentPlayerId, "\u672C\u56FD")).length, homeLength = getItemIdsByBasyou(ctx2, AbsoluteBaSyouFn.of(currentPlayerId, "\u914D\u5099\u30A8\u30EA\u30A2")).length, area1Op = getBattleGroup(ctx2, AbsoluteBaSyouFn.of(PlayerIDFn.getOpponent(currentPlayerId), "\u6226\u95D8\u30A8\u30EA\u30A21")), area2Op = getBattleGroup(ctx2, AbsoluteBaSyouFn.of(PlayerIDFn.getOpponent(currentPlayerId), "\u6226\u95D8\u30A8\u30EA\u30A22"));
+      let goEmptyLost = 0;
+      if (area1Op.length == 0 && area1.length > 0)
+        goEmptyLost += 10;
+      if (area2Op.length == 0 && area2.length > 0)
+        goEmptyLost += 10;
+      return scorePart1 + live * 2 + homeLength * 6 - goEmptyLost;
+    }
+    return gene;
+  },
+  createBasicForAttackBattle(originCtx, playerId, options) {
+    const attackPlayerId = playerId, defencePlayerId = PlayerIDFn.getOpponent(attackPlayerId), originDefenceScore = getScore(originCtx, defencePlayerId), originAttackScore = getScore(originCtx, attackPlayerId), gene = SelectBattleGroupGeneFn.createBasic(originCtx, attackPlayerId, options);
+    gene.mutate = function() {
+      let ctx2 = originCtx;
+      {
+        let attackCountryGene = SelectBattleGroupGeneFn.createBasicForAttackCountry(ctx2, attackPlayerId, options);
+        attackCountryGene = optAlgByPSO(10, 10, 0, 1, attackCountryGene);
+        const earthIds = getItemIdsByBasyou(attackCountryGene.ctx, AbsoluteBaSyouFn.of(attackPlayerId, "\u6226\u95D8\u30A8\u30EA\u30A21")).filter((itemId) => getSetGroupRoot(ctx2, itemId) == itemId), spaceIds = getItemIdsByBasyou(attackCountryGene.ctx, AbsoluteBaSyouFn.of(attackPlayerId, "\u6226\u95D8\u30A8\u30EA\u30A22")).filter((itemId) => getSetGroupRoot(ctx2, itemId) == itemId);
+        for (let id of earthIds)
+          ctx2 = doItemMove(ctx2, AbsoluteBaSyouFn.of(attackPlayerId, "\u6226\u95D8\u30A8\u30EA\u30A21"), createStrBaSyouPair(ctx2, id), options);
+        for (let id of spaceIds)
+          ctx2 = doItemMove(ctx2, AbsoluteBaSyouFn.of(attackPlayerId, "\u6226\u95D8\u30A8\u30EA\u30A22"), createStrBaSyouPair(ctx2, id), options);
+      }
+      {
+        const [earthIds, spaceIds] = createBattleGroupForDefenceBattle(ctx2, defencePlayerId, options);
+        for (let id of earthIds)
+          ctx2 = doItemMove(ctx2, AbsoluteBaSyouFn.of(defencePlayerId, "\u6226\u95D8\u30A8\u30EA\u30A21"), createStrBaSyouPair(ctx2, id), options);
+        for (let id of spaceIds)
+          ctx2 = doItemMove(ctx2, AbsoluteBaSyouFn.of(defencePlayerId, "\u6226\u95D8\u30A8\u30EA\u30A22"), createStrBaSyouPair(ctx2, id), options);
+      }
+      return ctx2 = doPlayerAttack(ctx2, attackPlayerId, "\u6226\u95D8\u30A8\u30EA\u30A21", 1, {}), ctx2 = doPlayerAttack(ctx2, attackPlayerId, "\u6226\u95D8\u30A8\u30EA\u30A22", 1, {}), ctx2 = doPlayerAttack(ctx2, attackPlayerId, "\u6226\u95D8\u30A8\u30EA\u30A21", 2, {}), ctx2 = doPlayerAttack(ctx2, attackPlayerId, "\u6226\u95D8\u30A8\u30EA\u30A22", 2, {}), {
+        ...this,
+        ctx: ctx2
+      };
+    }, gene.calcFitness = function() {
+      let ctx2 = this.ctx;
+      const defenceScore = getScore(ctx2, defencePlayerId), attackScore = getScore(ctx2, attackPlayerId);
+      logCategory("createBasicForAttackBattle", "originDefenceScore", originDefenceScore), logCategory("createBasicForAttackBattle", "originAttackScore", originAttackScore), logCategory("createBasicForAttackBattle", "defenceScore", defenceScore), logCategory("createBasicForAttackBattle", "attackScore", attackScore);
+      const defenceLost = originDefenceScore - defenceScore, attackLost = originAttackScore - attackScore;
+      return logCategory("createBasicForAttackBattle", "defenceLost", defenceLost), logCategory("createBasicForAttackBattle", "attackLost", attackLost), this.score = defenceLost - attackLost, logCategory("createBasicForAttackBattle", "score", this.score), this.score;
+    };
+    function getScore(ctx2, currentPlayerId) {
+      const scorePart1 = getPlayerUnitIds(ctx2, currentPlayerId).filter((id) => getItemState(ctx2, id).destroyReason == null).map((itemId) => {
+        const bp = getSetGroupBattlePoint(ctx2, itemId, options);
+        return bp[0] + bp[1] + bp[2];
+      }).reduce((a, b) => a + b, 0) * 2;
+      if (currentPlayerId == defencePlayerId)
+        return scorePart1;
+      const homeLength = getItemIdsByBasyou(ctx2, AbsoluteBaSyouFn.of(currentPlayerId, "\u914D\u5099\u30A8\u30EA\u30A2")).length, live = getItemIdsByBasyou(ctx2, AbsoluteBaSyouFn.of(PlayerIDFn.getOpponent(currentPlayerId), "\u672C\u56FD")).length;
+      return scorePart1 + homeLength * 2 - live * 4;
+    }
+    return gene;
+  }
+};
+
+// src/game/gameStateWithFlowMemory/ai/thinkVer2.ts
+function thinkVer2(ctx2, playerId, flows) {
+  const ges = getGlobalEffects(ctx2, null), hasAttackTip = flows.find((flow) => {
+    if (flow.id == "FlowSetTipSelection") {
+      const effect = getEffect(ctx2, flow.effectID);
+      if (effect.reason[0] == "GameRule" && effect.reason[2].isAttack)
+        return !0;
+    }
+    return !1;
+  }), hasDefenceTip = flows.find((flow) => {
+    if (flow.id == "FlowSetTipSelection") {
+      const effect = getEffect(ctx2, flow.effectID);
+      if (effect.reason[0] == "GameRule" && effect.reason[2].isDefence)
+        return !0;
+    }
+    return !1;
+  });
+  let earthIds = [], spaceIds = [];
+  if (hasAttackTip) {
+    const opponentPlayerId = PlayerIDFn.getOpponent(playerId), opponentGoEarthIds = getPlayerUnitCanGoEarthIds(ctx2, opponentPlayerId, { ges }), opponentGoSpaceIds = getPlayerUnitCanGoSpaceIds(ctx2, opponentPlayerId, { ges });
+    if (opponentGoEarthIds.length == 0 && opponentGoSpaceIds.length == 0)
+      [earthIds, spaceIds] = createBattleGroupForAttackCountry(ctx2, playerId, { ges });
+    else
+      [earthIds, spaceIds] = createBattleGroupForAttackBattle(ctx2, playerId, { ges });
+  } else if (hasDefenceTip) {
+    const opponentPlayerId = PlayerIDFn.getOpponent(playerId), opponentGoEarthIds = getItemIdsByBasyou(ctx2, AbsoluteBaSyouFn.of(opponentPlayerId, "\u6226\u95D8\u30A8\u30EA\u30A21")), opponentGoSpaceIds = getItemIdsByBasyou(ctx2, AbsoluteBaSyouFn.of(opponentPlayerId, "\u6226\u95D8\u30A8\u30EA\u30A22"));
+    if (opponentGoEarthIds.length == 0 && opponentGoSpaceIds.length == 0)
+      [earthIds, spaceIds] = [[], []];
+    else
+      [earthIds, spaceIds] = createBattleGroupForDefenceBattle(ctx2, playerId, { ges });
+  } else
+    [earthIds, spaceIds] = [[], []];
   const attackFlow = flows.flatMap((flow) => {
-    const ges = getGlobalEffects(ctx2, null);
     if (flow.id == "FlowSetTipSelection") {
       const effect = getEffect(ctx2, flow.effectID);
       if (effect.reason[0] == "GameRule" && effect.reason[2].isAttack) {
-        const hasEarthIds = (getItemState(ctx2, EffectFn.getCardID(effect)).tips[TipFn.createGoEarthKey()]?.title[2] || []).map((pair3) => pair3[0]), hasSpaceIds = (getItemState(ctx2, EffectFn.getCardID(effect)).tips[TipFn.createGoSpaceKey()]?.title[2] || []).map((pair3) => pair3[0]), hasIds = [...hasEarthIds, ...hasSpaceIds], canAttackUnits = TipFn.getWant(flow.tip).filter((pair3) => hasIds.includes(pair3[0]) == !1), meleeUnits = canAttackUnits.filter((pair3) => isMeleeUnit(ctx2, pair3[0], { ges }));
-        meleeUnits.sort(([id1, _], [id2, _2]) => getSetGroupBattlePoint(ctx2, id2, { ges })[0] - getSetGroupBattlePoint(ctx2, id1, { ges })[0]);
-        const rangeUnits = canAttackUnits.filter((pair3) => isRangeUnit(ctx2, pair3[0], { ges }));
-        let willAttackPairs = [];
-        const hasMeleeHighUnits = meleeUnits.filter((pair3) => getCardHasSpeicalEffect(ctx2, ["\u9AD8\u6A5F\u52D5"], pair3[0], { ges })), hasMeleeSpeed = meleeUnits.filter((pair3) => getCardHasSpeicalEffect(ctx2, ["\u901F\u653B"], pair3[0], { ges })), hasMeleeStrongUnits = meleeUnits.filter((pair3) => getCardHasSpeicalEffect(ctx2, ["\u5F37\u8972"], pair3[0], { ges })), hasRangeStrongHighUnits = rangeUnits.filter((pair3) => getCardHasSpeicalEffect(ctx2, ["\u5F37\u8972"], pair3[0], { ges }));
-        if (hasMeleeSpeed.length) {
-          const hasRangeSpeedUnits = rangeUnits.filter((pair3) => getCardHasSpeicalEffect(ctx2, ["\u901F\u653B"], pair3[0], { ges }));
-          willAttackPairs = [hasMeleeSpeed[0], ...hasRangeSpeedUnits];
-        } else if (hasMeleeHighUnits.length) {
-          const hasRangeHighUnits = rangeUnits.filter((pair3) => getCardHasSpeicalEffect(ctx2, ["\u9AD8\u6A5F\u52D5"], pair3[0], { ges }));
-          willAttackPairs = [hasMeleeHighUnits[0], ...hasRangeHighUnits];
-        } else if (hasMeleeStrongUnits.length > 0 && hasRangeStrongHighUnits.length >= 1)
-          willAttackPairs = [hasMeleeStrongUnits[0], ...hasRangeStrongHighUnits];
-        else if (meleeUnits.length == 1)
-          willAttackPairs = [meleeUnits[0], ...rangeUnits];
-        else if (meleeUnits.length >= 1)
-          willAttackPairs = [meleeUnits[0], ...rangeUnits.slice(0, 1)];
-        else if (rangeUnits.length >= 3)
-          willAttackPairs = rangeUnits;
-        if (willAttackPairs.length)
+        let willGoIds = [];
+        if (flow.tip.flags?.isGoBattleArea1)
+          willGoIds = earthIds;
+        else if (flow.tip.flags?.isGoBattleArea2)
+          willGoIds = spaceIds;
+        else
+          throw new Error;
+        if (willGoIds.length)
           return flow = {
             ...flow,
             tip: {
               ...flow.tip,
-              title: ["\u30AB\u30FC\u30C9", [], willAttackPairs]
+              title: ["\u30AB\u30FC\u30C9", [], willGoIds.map((id) => createStrBaSyouPair(ctx2, id))]
             }
           }, [flow];
       }
       if (effect.reason[0] == "GameRule" && effect.reason[2].isDefence) {
-        const hasEarthIds = (getItemState(ctx2, EffectFn.getCardID(effect)).tips[TipFn.createGoEarthKey()]?.title[2] || []).map((pair3) => pair3[0]), hasSpaceIds = (getItemState(ctx2, EffectFn.getCardID(effect)).tips[TipFn.createGoSpaceKey()]?.title[2] || []).map((pair3) => pair3[0]), hasIds = [...hasEarthIds, ...hasSpaceIds], canAttackUnits = TipFn.getWant(flow.tip).filter((pair3) => hasIds.includes(pair3[0]) == !1), meleeUnits = canAttackUnits.filter((pair3) => isMeleeUnit(ctx2, pair3[0], { ges }));
-        meleeUnits.sort(([id1, _], [id2, _2]) => getSetGroupBattlePoint(ctx2, id2, { ges })[0] - getSetGroupBattlePoint(ctx2, id1, { ges })[0]);
-        const rangeUnits = canAttackUnits.filter((pair3) => isRangeUnit(ctx2, pair3[0], { ges }));
-        let willAttackPairs = [];
-        const battleArea = flow.tip.flags?.isGoBattleArea1 ? AbsoluteBaSyouFn.of(PlayerIDFn.getOpponent(playerId), "\u6226\u95D8\u30A8\u30EA\u30A21") : AbsoluteBaSyouFn.of(PlayerIDFn.getOpponent(playerId), "\u6226\u95D8\u30A8\u30EA\u30A22"), opponentPower = getBattleGroupBattlePoint(ctx2, getBattleGroup(ctx2, battleArea), { ges });
-        if (opponentPower == 0)
-          return [flow];
-        if (meleeUnits.length >= 1) {
-          const myUnits2 = [meleeUnits[0], ...rangeUnits];
-          if (getBattleGroupBattlePoint(ctx2, myUnits2.map((pair3) => pair3[0]), { ges }) >= opponentPower)
-            willAttackPairs = myUnits2;
-          if (willAttackPairs.length)
-            return flow = {
-              ...flow,
-              tip: {
-                ...flow.tip,
-                title: ["\u30AB\u30FC\u30C9", [], willAttackPairs]
-              }
-            }, [flow];
-        }
+        let willGoIds = [];
+        if (flow.tip.flags?.isGoBattleArea1)
+          willGoIds = earthIds;
+        else if (flow.tip.flags?.isGoBattleArea2)
+          willGoIds = spaceIds;
+        else
+          throw new Error;
+        if (willGoIds.length)
+          return flow = {
+            ...flow,
+            tip: {
+              ...flow.tip,
+              title: ["\u30AB\u30FC\u30C9", [], willGoIds.map((id) => createStrBaSyouPair(ctx2, id))]
+            }
+          }, [flow];
       }
     }
     return [];
@@ -26720,7 +26912,7 @@ function thinkVer1(ctx2, playerId, flows, options) {
     if (shouldSetCharEffs.length)
       return { id: "FlowSetActiveEffectID", effectID: shouldSetCharEffs[Math.round(Math.random() * 1000) % shouldSetCharEffs.length].id, tips: [] };
   }
-  const playTexts = plays.filter((p) => p.reason[0] == "PlayText"), shouldUseTexts = createPreviewEffectScore(ctx2, playerId, playTexts, { isMoreThenOrigin: !0 });
+  const playTexts = plays.filter((p) => p.reason[0] == "PlayText"), shouldUseTexts = createPreviewEffectScore(ctx2, playerId, playTexts, { ges });
   if (shouldUseTexts.length)
     return { id: "FlowSetActiveEffectID", effectID: shouldUseTexts[0][0], tips: [] };
   if (myUnits.length < 8 && playUnits.length)
@@ -26759,7 +26951,7 @@ function PlayerController(props) {
       if (props.isPlayer)
         flow = getPlayerFlowAuto(appContext.viewModel.model.gameState, props.clientId, flows);
       else
-        flow = thinkVer1(appContext.viewModel.model.gameState, props.clientId, flows);
+        flow = thinkVer2(appContext.viewModel.model.gameState, props.clientId, flows);
       if (flow)
         setTimeout(() => {
           OnEvent.next({

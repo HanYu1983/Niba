@@ -3,7 +3,9 @@ import { AbsoluteBaSyou, AbsoluteBaSyouFn } from "../../define/BaSyou";
 import { BattlePointFn } from "../../define/BattlePoint";
 import { Effect, EffectFn } from "../../define/Effect";
 import { GameExtParams } from "../../define/GameExtParams";
+import { GlobalEffect } from "../../define/GlobalEffect";
 import { PlayerID, PlayerIDFn } from "../../define/PlayerID";
+import { Phase } from "../../define/Timing";
 import { StrBaSyouPair, TipFn } from "../../define/Tip";
 import { getBattleGroup, getBattleGroupBattlePoint } from "../../gameState/battleGroup";
 import { getCardHasSpeicalEffect } from "../../gameState/card";
@@ -20,48 +22,49 @@ import { Flow } from "../Flow";
 import { GameStateWithFlowMemory } from "../GameStateWithFlowMemory";
 
 
-export function thinkVer2(ctx: GameStateWithFlowMemory, playerId: PlayerID, flows: Flow[]): Flow | null {
-  const ges = getGlobalEffects(ctx, null)
-  const hasAttackTip = flows.find(flow => {
-    if (flow.id == "FlowSetTipSelection") {
-      const effect = getEffect(ctx, flow.effectID)
-      if (effect.reason[0] == "GameRule" && (effect.reason[2].isAttack)) {
-        return true
-      }
-    }
-    return false
-  })
-  const hasDefenceTip = flows.find(flow => {
-    if (flow.id == "FlowSetTipSelection") {
-      const effect = getEffect(ctx, flow.effectID)
-      if (effect.reason[0] == "GameRule" && (effect.reason[2].isDefence)) {
-        return true
-      }
-    }
-    return false
-  })
+let currentKey: string = ""
+function getUnitIds(ctx: GameState, playerId: string, isAttack: boolean, isDefence: boolean, ges: GlobalEffect[]): [string[], string[]] {
   let earthIds: string[] = []
   let spaceIds: string[] = []
-  if (hasAttackTip) {
-    const opponentPlayerId = PlayerIDFn.getOpponent(playerId)
-    const opponentGoEarthIds = getPlayerUnitCanGoEarthIds(ctx, opponentPlayerId, { ges: ges })
-    const opponentGoSpaceIds = getPlayerUnitCanGoSpaceIds(ctx, opponentPlayerId, { ges: ges })
-    if (opponentGoEarthIds.length == 0 && opponentGoSpaceIds.length == 0) {
-      [earthIds, spaceIds] = createBattleGroupForAttackCountry(ctx, playerId, { ges: ges })
+  const key = playerId + isAttack + isDefence
+  if (currentKey != key) {
+    if (isAttack) {
+      const opponentPlayerId = PlayerIDFn.getOpponent(playerId)
+      const opponentGoEarthIds = getPlayerUnitCanGoEarthIds(ctx, opponentPlayerId, { ges: ges })
+      const opponentGoSpaceIds = getPlayerUnitCanGoSpaceIds(ctx, opponentPlayerId, { ges: ges })
+      if (opponentGoEarthIds.length == 0 && opponentGoSpaceIds.length == 0) {
+        [earthIds, spaceIds] = createBattleGroupForAttackCountry(ctx, playerId, { ges: ges })
+      } else {
+        [earthIds, spaceIds] = createBattleGroupForAttackBattle(ctx, playerId, { ges: ges })
+      }
+    } else if (isDefence) {
+      const opponentPlayerId = PlayerIDFn.getOpponent(playerId)
+      const opponentGoEarthIds = getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(opponentPlayerId, "戦闘エリア1"))
+      const opponentGoSpaceIds = getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(opponentPlayerId, "戦闘エリア2"))
+      if (opponentGoEarthIds.length == 0 && opponentGoSpaceIds.length == 0) {
+        [earthIds, spaceIds] = [[], []]
+      } else {
+        [earthIds, spaceIds] = createBattleGroupForDefenceBattle(ctx, playerId, { ges: ges })
+      }
     } else {
-      [earthIds, spaceIds] = createBattleGroupForAttackBattle(ctx, playerId, { ges: ges })
-    }
-  }
-  if (hasDefenceTip) {
-    const opponentPlayerId = PlayerIDFn.getOpponent(playerId)
-    const opponentGoEarthIds = getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(opponentPlayerId, "戦闘エリア1"))
-    const opponentGoSpaceIds = getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(opponentPlayerId, "戦闘エリア2"))
-    if (opponentGoEarthIds.length == 0 && opponentGoSpaceIds.length == 0) {
       [earthIds, spaceIds] = [[], []]
-    } else {
-      [earthIds, spaceIds] = createBattleGroupForDefenceBattle(ctx, playerId, { ges: ges })
     }
   }
+  {
+    const area1 = earthIds
+    const area2 = spaceIds
+    area1.forEach(eid => {
+      if (area2.includes(eid)) {
+        console.log(area1, area2)
+        throw new Error()
+      }
+    })
+  }
+  return [earthIds, spaceIds]
+}
+
+export function thinkVer2(ctx: GameStateWithFlowMemory, playerId: PlayerID, flows: Flow[]): Flow | null {
+  const ges = getGlobalEffects(ctx, null)
   // 出擊分配部隊
   const attackFlow: Flow[] = flows.flatMap(flow => {
     if (flow.id == "FlowSetTipSelection") {
@@ -69,9 +72,9 @@ export function thinkVer2(ctx: GameStateWithFlowMemory, playerId: PlayerID, flow
       if (effect.reason[0] == "GameRule" && (effect.reason[2].isAttack)) {
         let willGoIds: string[] = []
         if (flow.tip.flags?.isGoBattleArea1) {
-          willGoIds = earthIds
+          willGoIds = getUnitIds(ctx, playerId, true, false, ges)[0]
         } else if (flow.tip.flags?.isGoBattleArea2) {
-          willGoIds = spaceIds
+          willGoIds = getUnitIds(ctx, playerId, true, false, ges)[1]
         } else {
           throw new Error()
         }
@@ -89,9 +92,9 @@ export function thinkVer2(ctx: GameStateWithFlowMemory, playerId: PlayerID, flow
       if (effect.reason[0] == "GameRule" && (effect.reason[2].isDefence)) {
         let willGoIds: string[] = []
         if (flow.tip.flags?.isGoBattleArea1) {
-          willGoIds = earthIds
+          willGoIds = getUnitIds(ctx, playerId, false, true, ges)[0]
         } else if (flow.tip.flags?.isGoBattleArea2) {
-          willGoIds = spaceIds
+          willGoIds = getUnitIds(ctx, playerId, false, false, ges)[1]
         } else {
           throw new Error()
         }
