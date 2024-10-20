@@ -2,48 +2,32 @@ import { Table } from "../../tool/table";
 import { } from "./GameState";
 import { AbsoluteBaSyou, AbsoluteBaSyouFn } from "../define/BaSyou";
 import { PlayerA } from "../define/PlayerID";
-import { getItemBaSyou, ItemTableComponent } from "./ItemTableComponent";
+import { getItemBaSyou, getItemIdsByBasyou, ItemTableComponent } from "./ItemTableComponent";
 
 export type IsBattleComponent = {
-  // 是否交戰中，key代表牌堆名稱的字串
-  isBattle: { [key: string]: boolean }
+  battleSnapshot: { [key: string]: string[] }
   table: Table
 } & ItemTableComponent
 
 export function checkIsBattle(ctx: IsBattleComponent): IsBattleComponent {
-  const battleAreas: AbsoluteBaSyou[] = [
-    AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1"),
-    AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア2"),
-  ];
-  return battleAreas.reduce((ctx, battleArea) => {
-    const baSyouID1 = AbsoluteBaSyouFn.toString(battleArea);
-    const baSyouID2 = AbsoluteBaSyouFn.toString(AbsoluteBaSyouFn.setOpponentPlayerID(battleArea));
-    if (
-      ctx.table.cardStack[baSyouID1]?.length &&
-      ctx.table.cardStack[baSyouID2]?.length
-    ) {
-      return {
-        ...ctx,
-        isBattle: {
-          ...ctx.isBattle,
-          [baSyouID1]: true,
-          [baSyouID2]: true,
-        },
-      };
-    }
-    return {
+  AbsoluteBaSyouFn.getBattleArea().forEach(basyou => {
+    ctx = {
       ...ctx,
-      isBattle: {
-        ...ctx.isBattle,
-        [baSyouID1]: false,
-        [baSyouID2]: false,
+      battleSnapshot: {
+        ...ctx.battleSnapshot,
+        [AbsoluteBaSyouFn.toString(basyou)]: getItemIdsByBasyou(ctx, basyou)
       }
-    };
-  }, ctx);
+    }
+  })
+  return ctx
 }
 
 export function isBattleAtBasyou(ctx: IsBattleComponent, basyou: AbsoluteBaSyou): boolean {
-  return ctx.isBattle[AbsoluteBaSyouFn.toString(basyou)] == true
+  return (ctx.battleSnapshot[AbsoluteBaSyouFn.toString(basyou)] || []).length > 0
+}
+
+export function getItemIdsByBattleSnapshot(ctx: IsBattleComponent, basyou: AbsoluteBaSyou): string[] {
+  return ctx.battleSnapshot[AbsoluteBaSyouFn.toString(basyou)] || []
 }
 
 export function isBattle(
@@ -52,18 +36,33 @@ export function isBattle(
   cardID2: string | null
 ): boolean {
   const baSyou1 = getItemBaSyou(ctx, cardID);
-  if (ctx.isBattle[AbsoluteBaSyouFn.toString(baSyou1)] != true) {
+  if (getItemIdsByBattleSnapshot(ctx, baSyou1).includes(cardID) == false) {
     return false;
   }
-  if (cardID2 != null) {
-    const baSyou2 = AbsoluteBaSyouFn.setOpponentPlayerID(baSyou1);
-    const isFindCardID2 =
-      ctx.table.cardStack[AbsoluteBaSyouFn.toString(baSyou2)].find((cardId) => {
-        return cardId == cardID2;
-      }) != null;
-    if (isFindCardID2 == false) {
-      return false;
+  const baSyou2 = AbsoluteBaSyouFn.setOpponentPlayerID(baSyou1);
+  const opponentAreaIds = getItemIdsByBattleSnapshot(ctx, baSyou2)
+  if (cardID2) {
+    if (opponentAreaIds.includes(cardID2)) {
+      return true
     }
   }
-  return true;
+  if (opponentAreaIds.length) {
+    return true
+  }
+  return false
+  // const baSyou1 = getItemBaSyou(ctx, cardID);
+  // if (ctx.isBattle[AbsoluteBaSyouFn.toString(baSyou1)] != true) {
+  //   return false;
+  // }
+  // if (cardID2 != null) {
+  //   const baSyou2 = AbsoluteBaSyouFn.setOpponentPlayerID(baSyou1);
+  //   const isFindCardID2 =
+  //     ctx.table.cardStack[AbsoluteBaSyouFn.toString(baSyou2)].find((cardId) => {
+  //       return cardId == cardID2;
+  //     }) != null;
+  //   if (isFindCardID2 == false) {
+  //     return false;
+  //   }
+  // }
+  // return true;
 }

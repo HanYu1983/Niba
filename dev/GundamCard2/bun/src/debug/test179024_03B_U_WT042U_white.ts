@@ -46,7 +46,8 @@ export async function test179024_03B_U_WT042U_white() {
     {
         ctx = checkIsBattle(ctx) as GameState
         if (isBattle(ctx, cardA.id, null) != false) {
-            throw new Error(`isBattle(ctx, cardA.id, null) != false`)
+            console.log(ctx.battleSnapshot)
+            throw new Error(``)
         }
         let cs = getItemState(ctx, cardA.id)
         cs = ItemStateFn.setTip(cs, "このカードが非交戦中の場合、敵軍ユニット１枚", { title: ["カード", [], [[cardB.id, getItemBaSyou(ctx, cardB.id)]]] })
