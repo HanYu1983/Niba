@@ -264,6 +264,9 @@ export function createPlayerScore(ctx: GameState, playerId: string, options: Gam
     if (getCard(ctx, id).isRoll) {
       return 0
     }
+    if (getItemState(ctx, id).destroyReason) {
+      return 0
+    }
     const [atk, range, hp] = getSetGroupBattlePoint(ctx, id, { ges: options.ges })
     return atk + range + hp
   }).reduce((acc, c) => acc + c, 0)
@@ -288,11 +291,10 @@ export function createPlayerScore(ctx: GameState, playerId: string, options: Gam
   return total
 }
 
-export function createPreviewEffectScore(ctx: GameState, playerId: string, effects: Effect[], options: { isMoreThenOrigin?: boolean, ges?: GlobalEffect[] }): [string, number][] {
+export function createPreviewEffectScore(ctx: GameState, playerId: string, effects: Effect[], options: GameExtParams): [string, number][] {
   const opponentId = PlayerIDFn.getOpponent(playerId)
-  const scoreA = createPlayerScore(ctx, playerId, { ges: options?.ges })
-  const scoreB = createPlayerScore(ctx, opponentId, { ges: options?.ges })
-  const score = scoreA - scoreB
+  const originScoreA = createPlayerScore(ctx, playerId, options)
+  const originScoreB = createPlayerScore(ctx, opponentId, options)
   let effectScorePairs: [string, number][] = effects.map(eff => {
     try {
       let ctx2: GameState = JSON.parse(JSON.stringify(ctx))
@@ -318,18 +320,25 @@ export function createPreviewEffectScore(ctx: GameState, playerId: string, effec
         ctx2 = doEffect(ctx2, eff, 0, 0) as GameState
         ctx2 = removeEffect(ctx2, eff.id) as GameState
       }
-      const scoreA = createPlayerScore(ctx2, playerId, { ges: options?.ges })
-      const scoreB = createPlayerScore(ctx2, opponentId, { ges: options?.ges })
-      const score = scoreA - scoreB
+      const scoreA = createPlayerScore(ctx2, playerId, options)
+      const scoreB = createPlayerScore(ctx2, opponentId, options)
+      const lostA = originScoreA - scoreA
+      const lostB = originScoreB - scoreB
+      logCategory("createPreviewEffectScore", "originScoreA", originScoreA)
+      logCategory("createPreviewEffectScore", "originScoreB", originScoreB)
+      logCategory("createPreviewEffectScore", "scoreA", scoreA)
+      logCategory("createPreviewEffectScore", "scoreB", scoreB)
+      logCategory("createPreviewEffectScore", "lostA", lostA)
+      logCategory("createPreviewEffectScore", "lostB", lostB)
+      const score = lostB - lostA
       return [eff.id, score]
     } catch (e: any) {
       console.warn(`AI計算時例外，忽略:${e.message}`)
     }
     return [eff.id, 0]
   })
+  logCategory("createPreviewEffectScore", "effectScorePairs", effectScorePairs)
+  effectScorePairs = effectScorePairs.filter(([_, s]) => s >= 0)
   effectScorePairs.sort(([_, s1], [_2, s2]) => s2 - s1)
-  if (options?.isMoreThenOrigin) {
-    effectScorePairs = effectScorePairs.filter(([_, s]) => s >= score)
-  }
   return effectScorePairs
 }

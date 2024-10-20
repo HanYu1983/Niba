@@ -58,7 +58,9 @@ const hideCategory: string[] = [
   "isCardMaster",
   "createBasicForBattle",
   "onItemDamageChange",
-  "onCountryDamage"
+  "onCountryDamage",
+  "createPreviewEffectScore",
+  "createBasicForAttackBattle"
 ];
 const filterCategory = true;
 const filterWarn = true

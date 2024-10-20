@@ -9,6 +9,7 @@ import { getItemIdsByBasyou } from "../game/gameState/ItemTableComponent"
 import { getPhase } from "../game/gameState/PhaseComponent"
 import { createPlayerScore } from "../game/gameState/player"
 import { thinkRandom, thinkVer1 } from "../game/gameStateWithFlowMemory/ai/thinkVer1"
+import { thinkVer2 } from "../game/gameStateWithFlowMemory/ai/thinkVer2"
 import { applyFlow } from "../game/gameStateWithFlowMemory/applyFlow"
 import { Flow } from "../game/gameStateWithFlowMemory/Flow"
 import { createGameStateWithFlowMemory, initState, GameStateWithFlowMemory } from "../game/gameStateWithFlowMemory/GameStateWithFlowMemory"
@@ -48,7 +49,7 @@ export async function testCompress() {
                     const flows = queryFlow(ctx, playerId)
                     if (flows.length) {
                         try {
-                            let flow: Flow | null = thinkVer1(ctx, playerId, flows)
+                            let flow: Flow | null = thinkVer2(ctx, playerId, flows)
                             if (flow) {
                                 logCategory("testCompress", "think", playerId, flow.id)
                             }

@@ -41,7 +41,7 @@ export async function testPlayerScore() {
     if (playB == null) {
         throw new Error()
     }
-    const effectScorePairs = createPreviewEffectScore(ctx, PlayerA, [playA, playB], { isMoreThenOrigin: true })
+    const effectScorePairs = createPreviewEffectScore(ctx, PlayerA, [playA, playB], { ges: getGlobalEffects(ctx, null) })
     if (effectScorePairs.length != 1) {
         console.log(effectScorePairs)
         throw new Error()
