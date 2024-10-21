@@ -1,16 +1,12 @@
-import { Table } from "../../tool/table";
-import { } from "./GameState";
 import { AbsoluteBaSyou, AbsoluteBaSyouFn } from "../define/BaSyou";
-import { PlayerA } from "../define/PlayerID";
 import { getItemBaSyou, getItemIdsByBasyou, ItemTableComponent } from "./ItemTableComponent";
 import { getSetGroupRoot, SetGroupComponent } from "./SetGroupComponent";
 import { logCategory } from "../../tool/logger";
 import { getPhase, PhaseComponent } from "./PhaseComponent";
-import { doTriggerEvent } from "./doTriggerEvent";
+import { EventCenterFn } from "./EventCenter";
 
 export type IsBattleComponent = {
   battleSnapshot: { [key: string]: string[] }
-  table: Table
 } & ItemTableComponent & SetGroupComponent & PhaseComponent
 
 export function checkIsBattle(ctx: IsBattleComponent): IsBattleComponent {
@@ -26,10 +22,7 @@ export function checkIsBattle(ctx: IsBattleComponent): IsBattleComponent {
     }
     const newState = isBattleAtBasyou(ctx, basyou)
     if (originState != newState) {
-      if (newState) {
-        // TODO
-        // ctx = doTriggerEvent(ctx, {title:["交戦中となった場合"], cardIds: getItemIdsByBasyou(ctx, basyou)}, {})
-      }
+      ctx = EventCenterFn.onIsBattleChange(ctx, basyou, originState, newState)
     }
   })
   return ctx

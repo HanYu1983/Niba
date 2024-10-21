@@ -64,7 +64,7 @@ export const prototype: CardPrototype = {
                               }
                               const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "自軍本国の上のカードX枚を見て、その中にあるユニット１枚", cardId)
                               for (const pair of pairs) {
-                                ctx = GameStateFn.doItemMove(ctx, GameStateFn.getItemBaSyou(ctx, cardId), pair, { insertId: 0, ges: Options.ges })
+                                ctx = GameStateFn.doItemMove(ctx, GameStateFn.getItemBaSyou(ctx, cardId), pair, { insertId: 0, ges: Options.ges }) as GameState
                               }
                               return ctx
                             }.toString()
@@ -96,7 +96,7 @@ export const prototype: CardPrototype = {
             return ctx
           }
           for (const pair of pairs) {
-            ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardOwner, "手札"), GameStateFn.createStrBaSyouPair(ctx, pair[0]), { ges: Options.ges })
+            ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardOwner, "手札"), GameStateFn.createStrBaSyouPair(ctx, pair[0]), { ges: Options.ges }) as GameState
           }
         }
         return ctx

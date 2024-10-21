@@ -38,7 +38,7 @@ export const prototype: CardPrototype = {
         const evt = DefineFn.EffectFn.getEvent(effect)
         const hasSpecialPlayX = DefineFn.ItemStateFn.getMoreTotalRollCostLengthPlay(GameStateFn.getItemState(ctx, cardId))
         if (evt.title[0] == "カット終了時" && hasSpecialPlayX) {
-          ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "ジャンクヤード"), GameStateFn.createStrBaSyouPair(ctx, cardId), { ges: Options.ges })
+          ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "ジャンクヤード"), GameStateFn.createStrBaSyouPair(ctx, cardId), { ges: Options.ges }) as GameState
         }
         return ctx
       }.toString()

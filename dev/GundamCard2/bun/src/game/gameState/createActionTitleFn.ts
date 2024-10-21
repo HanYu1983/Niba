@@ -193,7 +193,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
           })
         for (const pair of pairs) {
           if (actionOptions.move) {
-            ctx = doItemMove(ctx, createAbsoluteBaSyouFromBaSyou(ctx, cardId, actionOptions.move), pair, { ges: Options.ges })
+            ctx = doItemMove(ctx, createAbsoluteBaSyouFromBaSyou(ctx, cardId, actionOptions.move), pair, { ges: Options.ges }) as GameState
           }
         }
         return ctx
@@ -268,7 +268,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
           }
           case "廃棄": {
             for (const pair of pairs) {
-              ctx = doItemMove(ctx, AbsoluteBaSyouFn.setBaSyouKeyword(pair[1], "ジャンクヤード"), pair, Options)
+              ctx = doItemMove(ctx, AbsoluteBaSyouFn.setBaSyouKeyword(pair[1], "ジャンクヤード"), pair, Options) as GameState
             }
             return ctx
           }
@@ -311,7 +311,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
         const playerId = PlayerIDFn.fromRelatedPlayerSideKeyword(side, cardController)
         const to = AbsoluteBaSyouFn.of(playerId, basyouKw)
         for (const pair of pairs) {
-          ctx = doItemMove(ctx, to, pair, { ges: Options.ges })
+          ctx = doItemMove(ctx, to, pair, { ges: Options.ges }) as GameState
         }
         return ctx
       }

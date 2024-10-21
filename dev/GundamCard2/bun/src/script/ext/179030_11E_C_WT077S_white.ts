@@ -67,7 +67,7 @@ export const prototype: CardPrototype = {
               const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "自軍捨て山の上のカード１枚", cardId)
               for (const pair of pairs) {
                 ctx = GameStateFn.doItemSetRollState(ctx, true, pair, { isSkipTargetMissing: true })
-                ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "Gゾーン"), pair, { ges: Options.ges })
+                ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "Gゾーン"), pair, { ges: Options.ges }) as GameState
               }
               ctx = GameStateFn.doPlayerDrawCard(ctx, 2, cardController, Options)
               return ctx

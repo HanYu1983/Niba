@@ -290,19 +290,19 @@ export const SelectBattleGroupGeneFn = {
         logCategory("createBasicForAttackBattle", "earthIds", earthIds)
         logCategory("createBasicForAttackBattle", "spaceIds", spaceIds)
         for (let id of earthIds) {
-          ctx = doItemMove(ctx, AbsoluteBaSyouFn.of(attackPlayerId, "戦闘エリア1"), createStrBaSyouPair(ctx, id), options)
+          ctx = doItemMove(ctx, AbsoluteBaSyouFn.of(attackPlayerId, "戦闘エリア1"), createStrBaSyouPair(ctx, id), options) as GameState
         }
         for (let id of spaceIds) {
-          ctx = doItemMove(ctx, AbsoluteBaSyouFn.of(attackPlayerId, "戦闘エリア2"), createStrBaSyouPair(ctx, id), options)
+          ctx = doItemMove(ctx, AbsoluteBaSyouFn.of(attackPlayerId, "戦闘エリア2"), createStrBaSyouPair(ctx, id), options) as GameState
         }
       }
       {
         const [earthIds, spaceIds] = createBattleGroupForDefenceBattle(ctx, defencePlayerId, options)
         for (let id of earthIds) {
-          ctx = doItemMove(ctx, AbsoluteBaSyouFn.of(defencePlayerId, "戦闘エリア1"), createStrBaSyouPair(ctx, id), options)
+          ctx = doItemMove(ctx, AbsoluteBaSyouFn.of(defencePlayerId, "戦闘エリア1"), createStrBaSyouPair(ctx, id), options) as GameState
         }
         for (let id of spaceIds) {
-          ctx = doItemMove(ctx, AbsoluteBaSyouFn.of(defencePlayerId, "戦闘エリア2"), createStrBaSyouPair(ctx, id), options)
+          ctx = doItemMove(ctx, AbsoluteBaSyouFn.of(defencePlayerId, "戦闘エリア2"), createStrBaSyouPair(ctx, id), options) as GameState
         }
       }
       ctx = checkIsBattle(ctx) as GameState

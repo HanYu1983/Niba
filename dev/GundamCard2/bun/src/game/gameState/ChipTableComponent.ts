@@ -60,7 +60,7 @@ export function getChipPrototype(ctx: ChipTableComponent, k: string): CardProtot
 export function addChips(ctx: ChipTableComponent, basyou: AbsoluteBaSyou, addedChips: Chip[]): ChipTableComponent {
   const old = ctx.table
   ctx = addedChips.reduce((ctx, newChip) => {
-    return {
+    ctx = {
       ...ctx,
       table: TableFns.addCard(ctx.table, AbsoluteBaSyouFn.toString(basyou), newChip.id),
       chips: {
@@ -68,6 +68,8 @@ export function addChips(ctx: ChipTableComponent, basyou: AbsoluteBaSyou, addedC
         [newChip.id]: newChip
       }
     }
+    ctx = EventCenterFn.onItemAdd(ctx, basyou, newChip.id)
+    return ctx
   }, ctx)
   ctx = EventCenterFn.onTableChange(ctx, old, ctx.table)
   return ctx

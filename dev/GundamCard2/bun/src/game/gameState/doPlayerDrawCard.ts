@@ -13,7 +13,7 @@ export function doPlayerDrawCard(ctx: GameState, count: number, playerId: Player
     return [cardId, fromBasyou] as StrBaSyouPair
   })
   for (const pair of pairs) {
-    ctx = doItemMove(ctx, AbsoluteBaSyouFn.of(playerId, "手札"), pair, options)
+    ctx = doItemMove(ctx, AbsoluteBaSyouFn.of(playerId, "手札"), pair, options) as GameState
   }
   return ctx
 }

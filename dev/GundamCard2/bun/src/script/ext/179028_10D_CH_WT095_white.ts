@@ -83,11 +83,11 @@ export const prototype: CardPrototype = {
                                   const cardId = DefineFn.EffectFn.getCardID(effect)
                                   const cardController = GameStateFn.getItemController(ctx, cardId)
                                   ctx = GameStateFn.doItemSetRollState(ctx, false, GameStateFn.createStrBaSyouPair(ctx, cardId), { isSkipTargetMissing: true })
-                                  ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "配備エリア"), GameStateFn.createStrBaSyouPair(ctx, cardId), { ges: Options.ges })
+                                  ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "配備エリア"), GameStateFn.createStrBaSyouPair(ctx, cardId), { ges: Options.ges }) as GameState
                                   const unitPairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "自軍ジャンクヤードにある、このカードと同じ属性のGサインを持つユニット１枚", cardId)
                                   for (const pair of unitPairs) {
                                     ctx = GameStateFn.doItemSetRollState(ctx, false, pair, { isSkipTargetMissing: true })
-                                    ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "配備エリア"), pair, { ges: Options.ges })
+                                    ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "配備エリア"), pair, { ges: Options.ges }) as GameState
                                     ctx = GameStateFn.setSetGroupParent(ctx, pair[0], cardId) as GameState
                                     // only first one
                                     break
