@@ -93,6 +93,7 @@ export function createAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID):
                                         cardIds: [...pairs1, ...pairs2].map(p => p[0])
                                     }, { ges: Options.ges })
                                 }
+                                ctx = GameStateFn.checkIsBattle(ctx) as GameState
                                 return ctx
                             }.toString()
                         }

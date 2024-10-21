@@ -140,8 +140,6 @@ export function onMoveItem(ctx: GameState, to: AbsoluteBaSyou, [cardId, from]: S
                 isFaceDown: false,
             }
         }) as GameState
-    } else if ((["戦闘エリア1", "戦闘エリア2"] as BaSyouKeyword[]).includes(AbsoluteBaSyouFn.getBaSyouKeyword(to))) {
-        ctx = checkIsBattle(ctx) as GameState
     }
     ctx = doTriggerEvent(ctx, {
         title: ["GameEventOnMove", from, to],
