@@ -26,7 +26,7 @@ import { doCutInDestroyEffectsAndClear } from "./doCutInDestroyEffectsAndClear";
 import { createDestroyEffect } from "./createDestroyEffect";
 
 export async function testAllCardTextTestEnv() {
-  const extIds = ["unit", "unitHasPhy", "charBlue", "unitHasGain"]
+  const extIds = ["unit", "unitHasPhy", "charBlue", "unitHasGain", "charBlueNT"]
   const all = createDecks().flatMap(v => v).concat(...extIds)
   for (const id of all) {
     await loadPrototype(id)
@@ -148,6 +148,7 @@ export function testText(proto: CardPrototype, text: CardText, options?: { isChe
                 }
                 const effect: any = getImmediateEffects(ctx).find(eff => eff.text.id == text.id)
                 if (effect == null) {
+                  console.log(text.description)
                   throw new Error()
                 }
                 const cets = createCommandEffectTips(ctx, effect).filter(CommandEffecTipFn.filterNoError)

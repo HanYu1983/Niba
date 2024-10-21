@@ -22,7 +22,7 @@ export function doCountryDamage(ctx: GameState, playerId: PlayerID, damage: numb
         }).slice(0, damage)
         const to = AbsoluteBaSyouFn.of(playerId, "本国")
         for (const pair of pairs) {
-            ctx = doItemMove(ctx, to, pair, { isSkipTargetMissing: true }) as GameState
+            ctx = doItemMove(ctx, to, pair, { isSkipTargetMissing: true, insertId: 0 }) as GameState
         }
         ctx = EventCenterFn.onCountryHeal(ctx, playerId, -damage)
         return ctx
@@ -33,7 +33,7 @@ export function doCountryDamage(ctx: GameState, playerId: PlayerID, damage: numb
     }).slice(0, damage)
     const to = AbsoluteBaSyouFn.of(playerId, "捨て山")
     for (const pair of pairs) {
-        ctx = doItemMove(ctx, to, pair, { isSkipTargetMissing: true }) as GameState
+        ctx = doItemMove(ctx, to, pair, { isSkipTargetMissing: true, insertId: 0 }) as GameState
     }
     ctx = doTriggerEvent(ctx, {
         title: ["自軍本国に戦闘ダメージが与えられた場合"],
