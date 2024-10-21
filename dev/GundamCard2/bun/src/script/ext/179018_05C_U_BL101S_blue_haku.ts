@@ -120,12 +120,7 @@ export const prototype: CardPrototype = {
                               }
                             }
                           })
-                          const cets = GameStateFn.createCommandEffectTips(ctx, effect)
-                          const cetsNoErr = cets.filter(DefineFn.CommandEffecTipFn.filterNoError)
-                          if (cetsNoErr.length == 0) {
-                            throw new Error()
-                          }
-                          ctx = GameStateFn.addImmediateEffect(ctx, newE) as GameState
+                          ctx = GameStateFn.addImmediateEffectIfCanPayCost(ctx, newE, { isSkipLimitCheck: true, isAssertConditionPass: true }) as GameState
                           return ctx
                         }.toString()
                       }

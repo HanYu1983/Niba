@@ -356,17 +356,22 @@ export function createPlayTextEffectFromEffect(ctx: GameState, e: Effect, option
   })
 }
 
-export function addImmediateEffectIfCanPayCost(ctx: GameState, effect: Effect, optoins?: { isSkipLimitCheck?: boolean }): GameState {
+export function addImmediateEffectIfCanPayCost(ctx: GameState, effect: Effect, options?: { isSkipLimitCheck?: boolean, isAssertConditionPass?: boolean }): GameState {
   const cets = createCommandEffectTips(ctx, effect)
   const cetsNoErr = cets.filter(CommandEffecTipFn.filterNoError)
   if (cetsNoErr.length == 0) {
+    if (options?.isAssertConditionPass) {
+      console.log(cets)
+      console.log(cets.map(cet => cet.tipOrErrors.map(toe => toe.errors)))
+      throw new Error(`condition not pass: ${effect.description}`)
+    }
     ctx = EventCenterFn.onAddImmediateEffectButConditionFail(ctx, effect, cets)
     return ctx
   }
   {
     // TODO 未驗証
     // 起動一回合只能用一次
-    if (optoins?.isSkipLimitCheck) {
+    if (options?.isSkipLimitCheck) {
 
     } else {
       const cardId = EffectFn.getCardID(effect)
