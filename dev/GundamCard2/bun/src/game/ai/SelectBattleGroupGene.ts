@@ -194,14 +194,14 @@ export const SelectBattleGroupGeneFn = {
       const ctx = this.ctx
       const area1 = getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(playerId, "戦闘エリア1"))
       const area2 = getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(playerId, "戦闘エリア2"))
-      const area1Power = getBattleGroupBattlePoint(ctx, area1, { ...options, isPredict: true })
+      const area1Power = getBattleGroupBattlePoint(ctx, area1, area1, { ...options })
       const area1LostPower = area1.map((v, i) => {
         if (i == 0) {
           return 0
         }
         return getSetGroupBattlePoint(ctx, v, options)[0]
       }).reduce((a, b) => a + b, 0)
-      const area2Power = getBattleGroupBattlePoint(ctx, area2, { ...options, isPredict: true })
+      const area2Power = getBattleGroupBattlePoint(ctx, area2, area2, { ...options })
       const area2LostPower = area2.map((v, i) => {
         if (i == 0) {
           return 0
@@ -247,8 +247,8 @@ export const SelectBattleGroupGeneFn = {
     function getScore(ctx: GameState, currentPlayerId: string) {
       const area1 = getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(currentPlayerId, "戦闘エリア1"))
       const area2 = getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(currentPlayerId, "戦闘エリア2"))
-      const area1Power = getBattleGroupBattlePoint(ctx, area1, { ...options, isPredict: true })
-      const area2Power = getBattleGroupBattlePoint(ctx, area2, { ...options, isPredict: true })
+      const area1Power = getBattleGroupBattlePoint(ctx, area1, area1, { ...options })
+      const area2Power = getBattleGroupBattlePoint(ctx, area2, area2, { ...options })
       const scorePart1 = (area1Power + area2Power) * 2
       // 攻擊方只計算部隊損失
       if (currentPlayerId == attackPlayerId) {

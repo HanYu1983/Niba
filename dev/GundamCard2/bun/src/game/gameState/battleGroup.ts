@@ -23,29 +23,22 @@ export function getBattleGroup(
   })
 }
 
+// 從快取為主來計算傷害，非快照的部分用來判斷機體是不是還在原位
 export function getBattleGroupBattlePoint(
   ctx: GameState,
+  unitIds: string[],
   unitIdsFromSnapshot: string[],
-  options: { isPredict?: boolean } & GameExtParams
+  options: GameExtParams
 ): number {
   if (unitIdsFromSnapshot.length == 0) {
     return 0
   }
   const attackPower = unitIdsFromSnapshot
     .map((cardID, i): number => {
-      if (options.isPredict) {
-
-      } else {
-        // 從快照的位置判斷機體還在不在原位, 若不在, 戰鬥力算0
-        const basyouFromSnapshot = getItemBasyouFromSnapshot(ctx, cardID)
-        if (basyouFromSnapshot == null) {
-          warnCategory("getBattleGroupBattlePoint", `從快照的位置判斷機體還在不在原位, 若不在, 戰鬥力算0 (1): ${cardID}`)
-          return 0
-        }
-        if (AbsoluteBaSyouFn.eq(basyouFromSnapshot, getItemBaSyou(ctx, cardID)) == false) {
-          warnCategory("getBattleGroupBattlePoint", `從快照的位置判斷機體還在不在原位, 若不在, 戰鬥力算0 (2): ${cardID}`)
-          return 0
-        }
+      // 從快照的位置判斷機體還在不在原位, 若不在, 戰鬥力算0
+      if (unitIds.includes(cardID) == false) {
+        warnCategory("getBattleGroupBattlePoint", `從快照的位置判斷機體還在不在原位, 若不在, 戰鬥力算0: ${cardID}`)
+        return 0
       }
       // 破壞的單位沒有攻擊力
       const cs = getItemState(ctx, cardID);

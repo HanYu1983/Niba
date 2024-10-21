@@ -37,7 +37,7 @@ export const CardStackView = (props: {
     if (BaSyouKeywordFn.getBattleArea().includes(props.cardPosition.value[1]) != true) {
       return <></>
     }
-    const bp = getBattleGroupBattlePoint(appContext.viewModel.model.gameState, cardsOnlySetGroupRoot, { ges: ges })
+    const bp = getBattleGroupBattlePoint(appContext.viewModel.model.gameState, cardsOnlySetGroupRoot, cardsOnlySetGroupRoot, { ges: ges })
     return <>
       <div>部隊戰鬥力:{bp}</div>
     </>

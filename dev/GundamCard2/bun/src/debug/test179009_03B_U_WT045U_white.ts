@@ -38,10 +38,12 @@ export async function test179009_03B_U_WT045U_white() {
     if (ges.find(ge => ge.title[0] == "このカードと交戦中の敵軍部隊の部隊戦闘力を_－３する") == null) {
         throw new Error()
     }
-    if (getBattleGroupBattlePoint(ctx, getBattleGroup(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1")), { ges: ges }) != -2) {
+    let battleGroup = getBattleGroup(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1"))
+    if (getBattleGroupBattlePoint(ctx, battleGroup, battleGroup, { ges: ges }) != -2) {
         throw new Error()
     }
-    if (getBattleGroupBattlePoint(ctx, getBattleGroup(ctx, AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア1")), { ges: ges }) != 1) {
+    battleGroup = getBattleGroup(ctx, AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア1"))
+    if (getBattleGroupBattlePoint(ctx, battleGroup, battleGroup, { ges: ges }) != 1) {
         throw new Error()
     }
     ctx = doPlayerAttack(ctx, PlayerA, "戦闘エリア1", 2, { ges: ges })

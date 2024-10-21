@@ -91,9 +91,10 @@ export async function testBattleBonus() {
     let ges = getGlobalEffects(ctx, null)
     ctx = setGlobalEffects(ctx, null, ges) as GameStateWithFlowMemory
     ctx = checkIsBattle(ctx) as GameStateWithFlowMemory
+    const battleGroup = getBattleGroup(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1"))
     const bta = getBattleGroupBattlePoint(
       ctx,
-      getBattleGroup(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1")),
+      battleGroup, battleGroup,
       { ges: ges }
     );
     if (bta != 7) {
@@ -132,9 +133,10 @@ export async function testBattleBonus() {
   {
     let ges = getGlobalEffects(ctx, null)
     ctx = setGlobalEffects(ctx, null, ges) as GameStateWithFlowMemory
+    const battleGroup = getBattleGroup(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1"))
     const bta = getBattleGroupBattlePoint(
       ctx,
-      getBattleGroup(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1")),
+      battleGroup, battleGroup,
       { ges: ges }
     );
     if (bta != 13) {

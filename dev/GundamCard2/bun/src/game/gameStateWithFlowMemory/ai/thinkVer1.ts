@@ -88,13 +88,15 @@ export function thinkVer1(ctx: GameStateWithFlowMemory, playerId: PlayerID, flow
         const rangeUnits = canAttackUnits.filter(pair => isRangeUnit(ctx, pair[0], { ges: ges }))
         let willAttackPairs: StrBaSyouPair[] = []
         const battleArea: AbsoluteBaSyou = flow.tip.flags?.isGoBattleArea1 ? AbsoluteBaSyouFn.of(PlayerIDFn.getOpponent(playerId), "戦闘エリア1") : AbsoluteBaSyouFn.of(PlayerIDFn.getOpponent(playerId), "戦闘エリア2")
-        const opponentPower = getBattleGroupBattlePoint(ctx, getBattleGroup(ctx, battleArea), { ges: ges, isPredict: true })
+        const battleGroup = getBattleGroup(ctx, battleArea)
+        const opponentPower = getBattleGroupBattlePoint(ctx, battleGroup, battleGroup, { ges: ges })
         if (opponentPower == 0) {
           return [flow]
         }
         if (meleeUnits.length >= 1) {
           const myUnits = [meleeUnits[0], ...rangeUnits]
-          const myPower = getBattleGroupBattlePoint(ctx, myUnits.map(pair => pair[0]), { ges: ges, isPredict: true })
+          const myUnitIds = myUnits.map(pair => pair[0])
+          const myPower = getBattleGroupBattlePoint(ctx, myUnitIds, myUnitIds, { ges: ges })
           if (myPower >= opponentPower) {
             willAttackPairs = myUnits
           }

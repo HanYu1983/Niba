@@ -159,10 +159,12 @@ export function doPlayerAttack(
   // 注意, 規則上這裡要用交戰快照的機體, 而交戰是每個STEP前或機體加入離開時判斷
   // 若在傷害判定之前時頭機被打爆了, 就會變成頭機不存在的情況, 這時的部隊順序也不會改變, 射擊機一樣算射擊力, 不會變成頭機
   // 同樣, 在傷害判定前, 若已成立交戰情況, 就算防禦方機體都不見了, 一定不能打本國(P70)
-  const attackUnits = getBattleGroupFromSnapshot(ctx, AbsoluteBaSyouFn.of(attackPlayerID, where));
-  const attackPower = getBattleGroupBattlePoint(ctx, attackUnits, options);
-  const guardUnits = getBattleGroupFromSnapshot(ctx, AbsoluteBaSyouFn.of(guardPlayerID, where));
-  const guardPower = getBattleGroupBattlePoint(ctx, guardUnits, options);
+  const attackUnits = getBattleGroup(ctx, AbsoluteBaSyouFn.of(attackPlayerID, where));
+  const attackUnitsSnapshot = getBattleGroupFromSnapshot(ctx, AbsoluteBaSyouFn.of(attackPlayerID, where));
+  const attackPower = getBattleGroupBattlePoint(ctx, attackUnits, attackUnitsSnapshot, options);
+  const guardUnits = getBattleGroup(ctx, AbsoluteBaSyouFn.of(guardPlayerID, where));
+  const guardUnitsSnapshot = getBattleGroupFromSnapshot(ctx, AbsoluteBaSyouFn.of(guardPlayerID, where));
+  const guardPower = getBattleGroupBattlePoint(ctx, guardUnits, guardUnitsSnapshot, options);
   ctx = doRuleBattleDamage(ctx, speedPhase, attackPlayerID, guardPlayerID, attackUnits, guardUnits, attackPower, { ges: options?.ges })
   ctx = doRuleBattleDamage(ctx, speedPhase, guardPlayerID, attackPlayerID, guardUnits, attackUnits, guardPower, { ges: options?.ges });
   [...attackUnits, ...guardUnits].forEach(cardId => {
