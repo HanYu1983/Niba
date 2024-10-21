@@ -37,6 +37,7 @@ export const prototype: CardPrototype = {
                   at: ["Gゾーン"],
                   hasChar: ["装弾"],
                   side: "自軍",
+                  isRoll: false,
                   count: 1
                 }]
               },
@@ -91,7 +92,7 @@ export const prototype: CardPrototype = {
                 vars: ["ロール状態の敵軍ユニット１枚"]
               },
               {
-                title: ["triggerEvent", {title: ["解決直後"]}]
+                title: ["triggerEvent", { title: ["解決直後"] }]
               }
             ]]
           }

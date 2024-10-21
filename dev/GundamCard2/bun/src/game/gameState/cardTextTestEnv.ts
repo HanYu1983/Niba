@@ -110,11 +110,18 @@ export function testText(proto: CardPrototype, text: CardText, options?: { isChe
             }
             let successCount = 0
             cets.forEach(cet => {
+              logCategory("testText", "cets.forEach", effect.description, cet.logicID, cet.logicSubID)
               ctx = setTipSelectionForUser(ctx, effect, cet.logicID, cet.logicSubID)
               ctx = doEffect(ctx, effect, cet.logicID, cet.logicSubID)
               for (let i = 0; i < 99; ++i) {
-                const effect = getTopEffect(ctx)
+                let effect = getTopEffect(ctx)
                 if (effect) {
+                  ctx = doEffect(ctx, effect, 0, 0)
+                  ctx = removeEffect(ctx, effect.id) as GameState
+                }
+                effect = getImmediateEffects(ctx)[0]
+                if (effect) {
+                  ctx = setTipSelectionForUser(ctx, effect, 0, 0)
                   ctx = doEffect(ctx, effect, 0, 0)
                   ctx = removeEffect(ctx, effect.id) as GameState
                 }
@@ -164,7 +171,7 @@ export function testText(proto: CardPrototype, text: CardText, options?: { isChe
                   ctx = setTipSelectionForUser(ctx, effect, cet.logicID, cet.logicSubID)
                   ctx = doEffect(ctx, effect, cet.logicID, cet.logicSubID)
                   for (let i = 0; i < 99; ++i) {
-                    const effect = getTopEffect(ctx)
+                    let effect = getTopEffect(ctx)
                     if (effect) {
                       ctx = doEffect(ctx, effect, 0, 0)
                       ctx = removeEffect(ctx, effect.id) as GameState

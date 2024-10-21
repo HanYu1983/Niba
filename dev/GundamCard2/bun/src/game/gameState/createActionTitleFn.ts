@@ -57,6 +57,45 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
     return ActionFn.getTitleFn(action)
   }
   switch (action.title[0]) {
+    case "エリアの任意の順番に_リロール状態で移す": {
+      const varNames = action.vars
+      if (varNames == null) {
+        throw new Error()
+      }
+      if (varNames.length != 2) {
+        throw new Error()
+      }
+      const [varNameTo, varNameCard] = varNames
+      const [_, relatedBasyou, isRoll] = action.title
+      return function (ctx: GameState, effect: Effect, { Options }: Bridge): GameState {
+        const cardId = EffectFn.getCardID(effect)
+        const inserts = getCardTipStrBaSyouPairs(ctx, varNameTo, cardId)
+        const cardPairs = getCardTipStrBaSyouPairs(ctx, varNameCard, cardId)
+        if (inserts.length == 0) {
+          const to = createAbsoluteBaSyouFromBaSyou(ctx, cardId, relatedBasyou)
+          for (const pair of cardPairs) {
+            if (isRoll != null) {
+              ctx = doItemSetRollState(ctx, isRoll, pair, { isSkipTargetMissing: true }) as GameState
+            }
+            ctx = doItemMove(ctx, to, pair, Options) as GameState
+          }
+          return ctx
+        }
+        const insertToCardId = inserts[0][0]
+        const to = getItemBaSyou(ctx, insertToCardId)
+        const idx = getItemIdsByBasyou(ctx, to).indexOf(insertToCardId)
+        if (idx == -1) {
+          throw new Error()
+        }
+        for (const pair of cardPairs) {
+          if (isRoll != null) {
+            ctx = doItemSetRollState(ctx, isRoll, pair, { isSkipTargetMissing: true }) as GameState
+          }
+          ctx = doItemMove(ctx, to, pair, { ...Options, insertId: idx }) as GameState
+        }
+        return ctx
+      }
+    }
     case "看見see": {
       const varNames = action.vars
       return function (ctx: GameState, effect: Effect): GameState {

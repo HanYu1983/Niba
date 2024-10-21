@@ -1,7 +1,7 @@
 import { always, ifElse, map, pipe, zipObj } from "ramda";
 import { RelatedPlayerSideKeyword, UnitPropertyKeyword } from ".";
 import { LogicTree, LogicTreeFn } from "../../tool/logicTree";
-import { AbsoluteBaSyou, BaSyou, BaSyouKeyword } from "./BaSyou";
+import { AbsoluteBaSyou, BaSyou, BaSyouKeyword, RelatedBaSyou } from "./BaSyou";
 import { CardColor, CardCategory, GSignProperty, GSign } from "./CardPrototype";
 import { DestroyReason, Effect } from "./Effect";
 import { GameEvent, GameEventTitle } from "./GameEvent";
@@ -86,6 +86,7 @@ export type ActionTitle =
     | ["このカードが攻撃に出撃している"]
     | ["このカードが交戦中の場合"]
     | ["看見see"]
+    | ["エリアの任意の順番に_リロール状態で移す", RelatedBaSyou, boolean | null]
 
 export type Action = {
     title: ActionTitle,
