@@ -126,6 +126,7 @@ export type EntitySearchOptions = {
     compareBattlePoint?: [UnitPropertyKeyword | "合計国力", "<=" | ">=" | "==", number],
     isDestroy?: boolean,
     isSetGroup?: boolean,
+    isSetGroupHasChar?: string[],
     isBattleGroupFirst?: boolean,
     isRoll?: boolean,
     isCanSetCharacter?: boolean,
@@ -260,6 +261,7 @@ export type CreatePlayEffectFn = (ctx: any, effect: Effect, bridge: any) => Effe
 export type TestEnv = {
     eventTitle?: GameEventTitle,
     event?: GameEvent,
+    phase?: Phase,
     thisCard?: [RelatedPlayerSideKeyword, BaSyouKeyword, Card, { destroyReason?: DestroyReason, flags?: { [key: string]: any } } | null],
     addCards?: [RelatedPlayerSideKeyword, BaSyouKeyword, Card[]][],
     createCards?: [RelatedPlayerSideKeyword, BaSyouKeyword, [string, number][]][],

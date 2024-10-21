@@ -132,6 +132,9 @@ export function testText(proto: CardPrototype, text: CardText, options?: { isChe
             if (card == null) {
               throw new Error()
             }
+            if (testEnv.phase) {
+              ctx = setPhase(ctx, testEnv.phase) as GameState
+            }
             const ges = getGlobalEffects(ctx, null)
             switch (text.title[1]) {
               case "起動": {
