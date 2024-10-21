@@ -6,8 +6,16 @@ import { getPhase, PhaseComponent } from "./PhaseComponent";
 import { EventCenterFn } from "./EventCenter";
 
 export type IsBattleComponent = {
+  hasCheck: boolean,
   battleSnapshot: { [key: string]: string[] }
 } & ItemTableComponent & SetGroupComponent & PhaseComponent
+
+export function clearHasCheck(ctx: IsBattleComponent): IsBattleComponent {
+  return {
+    ...ctx,
+    hasCheck: false
+  }
+}
 
 export function checkIsBattle(ctx: IsBattleComponent): IsBattleComponent {
   logCategory("checkIsBattle", getPhase(ctx))
@@ -25,26 +33,35 @@ export function checkIsBattle(ctx: IsBattleComponent): IsBattleComponent {
       ctx = EventCenterFn.onIsBattleChange(ctx, basyou, originState, newState)
     }
   })
+  ctx = {
+    ...ctx,
+    hasCheck: true
+  }
   return ctx
 }
 
 export function isBattleAtBasyou(ctx: IsBattleComponent, basyou: AbsoluteBaSyou): boolean {
   const opponentBasyou = AbsoluteBaSyouFn.setOpponentPlayerID(basyou);
-  return getBattleGroupFromSnapshot(ctx, basyou).length + getBattleGroupFromSnapshot(ctx, opponentBasyou).length > 0
+  const len1 = (ctx.battleSnapshot[AbsoluteBaSyouFn.toString(basyou)] || []).length
+  const len2 = (ctx.battleSnapshot[AbsoluteBaSyouFn.toString(opponentBasyou)] || []).length
+  return len1 > 0 && len2 > 0
 }
 
 export function getBattleGroupFromSnapshot(ctx: IsBattleComponent, basyou: AbsoluteBaSyou): string[] {
+  if (ctx.hasCheck != true) {
+    throw new Error("getBattleGroupFromSnapshot but not check yet")
+  }
   return (ctx.battleSnapshot[AbsoluteBaSyouFn.toString(basyou)] || []).filter(itemId => getSetGroupRoot(ctx, itemId) == itemId)
 }
 
-export function getItemBasyouFromSnapshot(ctx: IsBattleComponent, itemId: string): AbsoluteBaSyou | null {
-  for (const basyou of AbsoluteBaSyouFn.getBattleArea()) {
-    if ((ctx.battleSnapshot[AbsoluteBaSyouFn.toString(basyou)] || []).find(id => itemId == id)) {
-      return basyou
-    }
-  }
-  return null
-}
+// export function getItemBasyouFromSnapshot(ctx: IsBattleComponent, itemId: string): AbsoluteBaSyou | null {
+//   for (const basyou of AbsoluteBaSyouFn.getBattleArea()) {
+//     if ((ctx.battleSnapshot[AbsoluteBaSyouFn.toString(basyou)] || []).find(id => itemId == id)) {
+//       return basyou
+//     }
+//   }
+//   return null
+// }
 
 export function isBattle(
   ctx: IsBattleComponent,

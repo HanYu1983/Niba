@@ -19,6 +19,7 @@ import { getItemState, setItemState } from "../game/gameState/ItemStateComponent
 import { StrBaSyouPair } from "../game/define/Tip"
 import { Effect } from "../game/define/Effect"
 import { getGlobalEffects } from "../game/gameState/globalEffects"
+import { checkIsBattle } from "../game/gameState/IsBattleComponent"
 
 export async function test179030_11E_C_BL079R_blue() {
     await loadPrototype("179030_11E_C_BL079R_blue")
@@ -36,6 +37,7 @@ export async function test179030_11E_C_BL079R_blue() {
     if (getCardIdsCanPayRollCost(ctx, PlayerA, { ges: ges }).length != 2) {
         throw new Error(`getCardIdsCanPayRollCost(ctx, PlayerA, null).length !=2`)
     }
+    ctx = checkIsBattle(ctx) as GameState
     ctx = setActivePlayerID(ctx, PlayerA) as GameState
     ctx = setPhase(ctx, ["戦闘フェイズ", "ダメージ判定ステップ", "フリータイミング"]) as GameState
     {

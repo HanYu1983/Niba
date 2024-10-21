@@ -38,6 +38,7 @@ export async function test179028_10D_C_BL070N_blue() {
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), repeat("unitBlue", 2)) as GameState
     ctx = setActivePlayerID(ctx, PlayerA) as GameState
     ctx = setPhase(ctx, ["戦闘フェイズ", "攻撃ステップ", "フリータイミング"]) as GameState
+    ctx = checkIsBattle(ctx) as GameState
     const effects = createPlayEffects(ctx, PlayerA, { ges: getGlobalEffects(ctx, null) })
     if (effects.length == 0) {
         throw new Error()
