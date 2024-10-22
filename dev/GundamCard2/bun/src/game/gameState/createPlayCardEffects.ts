@@ -16,6 +16,7 @@ import { ToolFn } from "../tool"
 import { GlobalEffect } from "../define/GlobalEffect"
 import { BaSyouKeywordFn } from "../define/BaSyou"
 import { GameExtParams } from "../define/GameExtParams"
+import { TargetMissingError } from "../define/GameError"
 
 export function createPlayCardEffects(ctx: GameState, cardId: string, options: GameExtParams & { isQuick?: boolean }): Effect[] {
     logCategory("createPlayCardEffects", "")
@@ -218,7 +219,7 @@ export function createPlayGEffect(ctx: GameState, cardId: string): Effect {
                         title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GameState {
                             const cardId = DefineFn.EffectFn.getCardID(effect)
                             const from = GameStateFn.getItemBaSyou(ctx, cardId)
-                            ctx = GameStateFn.doItemMove(ctx, effect ,DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "Gゾーン"), [cardId, from], { ges: Options.ges }) as GameState
+                            ctx = GameStateFn.doItemMove(ctx, effect, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "Gゾーン"), [cardId, from], { ges: Options.ges }) as GameState
                             return ctx
                         }.toString()
                     },
@@ -657,16 +658,24 @@ export function createPlayCardConditions(ctx: GameState, cardId: string, options
             }],
         },
     } : {}
+    
     const characterMoreConditions: { [key: string]: Condition } = prototype.category == "キャラクター" ? {
         "同名卡不能下": {
             actions: [
                 {
-                    title: ["Entity", {
-                        atBa: true,
-                        // 空陣列會自動填入自身
-                        hasTitle: [],
-                        count: 0,
-                    }],
+                    title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GameState {
+                        const cardId = DefineFn.EffectFn.getCardID(effect)
+                        const tip = GameStateFn.createTipByEntitySearch(ctx, effect, {
+                            atBa: true,
+                            // 空陣列會自動填入自身
+                            hasTitle: [],
+                            count: 0
+                        }, Options)
+                        if(DefineFn.TipFn.getWant(tip).length){
+                            throw new TargetMissingError(`已有同名卡存在: ${cardId}`)
+                        }
+                        return ctx
+                    }.toString()
                 }
             ]
         }

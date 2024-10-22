@@ -243,10 +243,11 @@ function onItemMove(ctx: GameState, from: AbsoluteBaSyou, to: AbsoluteBaSyou, ca
             }, options)
         }
     }
-    if (BaSyouKeywordFn.isBa(AbsoluteBaSyouFn.getBaSyouKeyword(from)) == false
-        && (BaSyouKeywordFn.isBa(AbsoluteBaSyouFn.getBaSyouKeyword(to)
-            || to.value[1] == "Gゾーン"
-        ))) {
+    if ((BaSyouKeywordFn.isBa(AbsoluteBaSyouFn.getBaSyouKeyword(from)) == false
+        && to.value[0] != "Gゾーン")
+        && (BaSyouKeywordFn.isBa(AbsoluteBaSyouFn.getBaSyouKeyword(to))
+            || to.value[1] == "Gゾーン")
+    ) {
         // 剛出場的回合
         ctx = mapItemState(ctx, cardId, is => {
             return {
