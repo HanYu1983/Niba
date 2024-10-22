@@ -7,14 +7,17 @@ import { ItemTableComponent, isCard, isChip, getItemBaSyou, isCoin, getItemContr
 import { getSetGroupChildren, removeSetGroupParent } from "./SetGroupComponent"
 import { logCategory } from "../../tool/logger"
 import { GameExtParams } from "../define/GameExtParams"
+import { Effect } from "../define/Effect"
+import { assertTargetNoLongerValidAndUpdate } from "./assertTargetNoLongerValidAndUpdate"
 
-export function doItemMove(ctx: ItemTableComponent, to: AbsoluteBaSyou, [itemId, from]: StrBaSyouPair, options: GameExtParams & { isSkipTargetMissing?: boolean, insertId?: number }): ItemTableComponent {
+export function doItemMove(ctx: GameState, effect:Effect, to: AbsoluteBaSyou, [itemId, from]: StrBaSyouPair, options: GameExtParams & { isSkipTargetMissing?: boolean, insertId?: number }): GameState {
     logCategory("doItemMove", "")
     const ges = options.ges || []
     if (options?.isSkipTargetMissing) {
 
     } else {
         assertTargetMissingError(ctx, [itemId, from])
+        assertTargetNoLongerValidAndUpdate(ctx, effect, itemId, options)
     }
     if (isCard(ctx, itemId) || isChip(ctx, itemId)) {
         const oldTable = ctx.table

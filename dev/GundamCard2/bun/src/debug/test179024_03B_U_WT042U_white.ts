@@ -21,6 +21,7 @@ import { doItemMove } from "../game/gameState/doItemMove"
 import { setPhase } from "../game/gameState/PhaseComponent"
 import { doTriggerEvent } from "../game/gameState/doTriggerEvent"
 import { loadPrototype } from "../script"
+import { EffectFn } from "../game/define/Effect"
 
 export async function test179024_03B_U_WT042U_white() {
     await loadPrototype("179024_03B_U_WT042U_white")
@@ -91,7 +92,7 @@ export async function test179024_03B_U_WT042U_white() {
         }
     }
     // battle
-    ctx = doItemMove(ctx, AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア1"), [cardB.id, getItemBaSyou(ctx, cardB.id)], { ges: getGlobalEffects(ctx, null) }) as GameState
+    ctx = doItemMove(ctx, EffectFn.createGameRule(PlayerA), AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア1"), [cardB.id, getItemBaSyou(ctx, cardB.id)], { ges: getGlobalEffects(ctx, null) }) as GameState
     const itemIds = getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア1"))
     if (itemIds.length > 0 && itemIds[0] == cardB.id) {
 

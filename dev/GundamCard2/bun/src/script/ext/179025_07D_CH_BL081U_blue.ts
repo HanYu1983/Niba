@@ -107,10 +107,10 @@ export const prototype: CardPrototype = {
                               if (pair == null) {
                                 throw new Error()
                               }
-                              ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "配備エリア"), pair, Options) as GameState
-                              ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "配備エリア"), GameStateFn.createStrBaSyouPair(ctx, cardId), Options) as GameState
-                              ctx = GameStateFn.doItemSetRollState(ctx, false, pair, { isSkipTargetMissing: true })
-                              ctx = GameStateFn.doItemSetRollState(ctx, false, GameStateFn.createStrBaSyouPair(ctx, cardId), { isSkipTargetMissing: true })
+                              ctx = GameStateFn.doItemMove(ctx, effect, DefineFn.AbsoluteBaSyouFn.of(cardController, "配備エリア"), pair, Options) as GameState
+                              ctx = GameStateFn.doItemMove(ctx, effect, DefineFn.AbsoluteBaSyouFn.of(cardController, "配備エリア"), GameStateFn.createStrBaSyouPair(ctx, cardId), Options) as GameState
+                              ctx = GameStateFn.doItemSetRollState(ctx, effect, false, pair, { ...Options, isSkipTargetMissing: true })
+                              ctx = GameStateFn.doItemSetRollState(ctx, effect, false, GameStateFn.createStrBaSyouPair(ctx, cardId), { ...Options, isSkipTargetMissing: true })
                               ctx = GameStateFn.setSetGroupParent(ctx, pair[0], cardId) as GameState
                               return ctx
                             }.toString()

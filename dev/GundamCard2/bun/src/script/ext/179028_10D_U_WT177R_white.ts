@@ -67,7 +67,7 @@ export const prototype: CardPrototype = {
                     const event = DefineFn.EffectFn.getEvent(effect)
                     if (event.title[0] == "このカードが攻撃に出撃した場合" && event.cardIds?.includes(cardId)) {
                       const totalCostLength = GameStateFn.getCardTotalCostLength(ctx, cardId, {ges: ges})
-                      ctx = GameStateFn.doCountryDamage(ctx, cardController, -totalCostLength, Options)
+                      ctx = GameStateFn.doCountryDamage(ctx, effect,  cardController, -totalCostLength, Options)
                     }
                     return ctx
                   }.toString()

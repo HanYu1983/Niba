@@ -20,6 +20,7 @@ import { setActivePlayerID } from "../gameState/ActivePlayerComponent";
 import { logCategory } from "../../tool/logger";
 import { getItemState } from "../gameState/ItemStateComponent";
 import { checkIsBattle } from "../gameState/IsBattleComponent";
+import { EffectFn } from "../define/Effect";
 
 export type SelectBattleGroupGene = {
   ctx: GameState,
@@ -61,7 +62,7 @@ export const SelectBattleGroupGeneFn = {
                   if (id == null) {
                     throw new Error()
                   }
-                  ctx = doItemMove(ctx, AbsoluteBaSyouFn.of(playerId, "戦闘エリア1"), createStrBaSyouPair(ctx, id), options) as GameState
+                  ctx = doItemMove(ctx, EffectFn.createGameRule(PlayerA), AbsoluteBaSyouFn.of(playerId, "戦闘エリア1"), createStrBaSyouPair(ctx, id), options) as GameState
                   break
                 }
               } else if (cmd2 == 1) {
@@ -70,7 +71,7 @@ export const SelectBattleGroupGeneFn = {
                   if (id == null) {
                     throw new Error()
                   }
-                  ctx = doItemMove(ctx, AbsoluteBaSyouFn.of(playerId, "戦闘エリア2"), createStrBaSyouPair(ctx, id), options) as GameState
+                  ctx = doItemMove(ctx, EffectFn.createGameRule(PlayerA), AbsoluteBaSyouFn.of(playerId, "戦闘エリア2"), createStrBaSyouPair(ctx, id), options) as GameState
                   break
                 }
               } else {
@@ -91,7 +92,7 @@ export const SelectBattleGroupGeneFn = {
                   if (id == null) {
                     throw new Error()
                   }
-                  ctx = doItemMove(ctx, AbsoluteBaSyouFn.of(playerId, "配備エリア"), createStrBaSyouPair(ctx, id), options) as GameState
+                  ctx = doItemMove(ctx, EffectFn.createGameRule(PlayerA), AbsoluteBaSyouFn.of(playerId, "配備エリア"), createStrBaSyouPair(ctx, id), options) as GameState
                   break
                 }
               } else if (cmd2 == 1) {
@@ -100,7 +101,7 @@ export const SelectBattleGroupGeneFn = {
                   if (id == null) {
                     throw new Error()
                   }
-                  ctx = doItemMove(ctx, AbsoluteBaSyouFn.of(playerId, "配備エリア"), createStrBaSyouPair(ctx, id), options) as GameState
+                  ctx = doItemMove(ctx, EffectFn.createGameRule(PlayerA), AbsoluteBaSyouFn.of(playerId, "配備エリア"), createStrBaSyouPair(ctx, id), options) as GameState
                   break
                 }
               } else {
@@ -290,19 +291,19 @@ export const SelectBattleGroupGeneFn = {
         logCategory("createBasicForAttackBattle", "earthIds", earthIds)
         logCategory("createBasicForAttackBattle", "spaceIds", spaceIds)
         for (let id of earthIds) {
-          ctx = doItemMove(ctx, AbsoluteBaSyouFn.of(attackPlayerId, "戦闘エリア1"), createStrBaSyouPair(ctx, id), options) as GameState
+          ctx = doItemMove(ctx, EffectFn.createGameRule(PlayerA), AbsoluteBaSyouFn.of(attackPlayerId, "戦闘エリア1"), createStrBaSyouPair(ctx, id), options) as GameState
         }
         for (let id of spaceIds) {
-          ctx = doItemMove(ctx, AbsoluteBaSyouFn.of(attackPlayerId, "戦闘エリア2"), createStrBaSyouPair(ctx, id), options) as GameState
+          ctx = doItemMove(ctx, EffectFn.createGameRule(PlayerA), AbsoluteBaSyouFn.of(attackPlayerId, "戦闘エリア2"), createStrBaSyouPair(ctx, id), options) as GameState
         }
       }
       {
         const [earthIds, spaceIds] = createBattleGroupForDefenceBattle(ctx, defencePlayerId, options)
         for (let id of earthIds) {
-          ctx = doItemMove(ctx, AbsoluteBaSyouFn.of(defencePlayerId, "戦闘エリア1"), createStrBaSyouPair(ctx, id), options) as GameState
+          ctx = doItemMove(ctx, EffectFn.createGameRule(PlayerA), AbsoluteBaSyouFn.of(defencePlayerId, "戦闘エリア1"), createStrBaSyouPair(ctx, id), options) as GameState
         }
         for (let id of spaceIds) {
-          ctx = doItemMove(ctx, AbsoluteBaSyouFn.of(defencePlayerId, "戦闘エリア2"), createStrBaSyouPair(ctx, id), options) as GameState
+          ctx = doItemMove(ctx, EffectFn.createGameRule(PlayerA), AbsoluteBaSyouFn.of(defencePlayerId, "戦闘エリア2"), createStrBaSyouPair(ctx, id), options) as GameState
         }
       }
       ctx = checkIsBattle(ctx) as GameState

@@ -18,6 +18,7 @@ import { setPhase } from "../game/gameState/PhaseComponent"
 import { createPlayEffects } from "../game/gameState/createPlayEffects"
 import { Card } from "../game/define/Card"
 import { doItemMove } from "../game/gameState/doItemMove"
+import { EffectFn } from "../game/define/Effect"
 
 export async function test179030_11E_U_BK194S_2_black() {
     await loadPrototype("179030_11E_U_BK194S_2_black")
@@ -60,7 +61,7 @@ export async function test179030_11E_U_BK194S_2_black() {
         }
         {
             let ctx2 = JSON.parse(JSON.stringify(ctx))
-            ctx2 = doItemMove(ctx2, AbsoluteBaSyouFn.of(PlayerA, "ジャンクヤード"), [unitWillMove.id, getItemBaSyou(ctx2, unitWillMove.id)], { ges: getGlobalEffects(ctx, null) })
+            ctx2 = doItemMove(ctx2, EffectFn.createGameRule(PlayerA), AbsoluteBaSyouFn.of(PlayerA, "ジャンクヤード"), [unitWillMove.id, getItemBaSyou(ctx2, unitWillMove.id)], { ges: getGlobalEffects(ctx, null) })
             if (AbsoluteBaSyouFn.getBaSyouKeyword(getItemBaSyou(ctx2, unitWillMove.id)) == "ジャンクヤード") {
                 throw new Error()
             }
@@ -71,7 +72,7 @@ export async function test179030_11E_U_BK194S_2_black() {
         {
             // 移到敵軍墓地則沒有影響
             let ctx2 = JSON.parse(JSON.stringify(ctx))
-            ctx2 = doItemMove(ctx2, AbsoluteBaSyouFn.of(PlayerB, "ジャンクヤード"), [unitWillMove.id, getItemBaSyou(ctx2, unitWillMove.id)], { ges: getGlobalEffects(ctx, null) })
+            ctx2 = doItemMove(ctx2, EffectFn.createGameRule(PlayerA), AbsoluteBaSyouFn.of(PlayerB, "ジャンクヤード"), [unitWillMove.id, getItemBaSyou(ctx2, unitWillMove.id)], { ges: getGlobalEffects(ctx, null) })
             if (AbsoluteBaSyouFn.getBaSyouKeyword(getItemBaSyou(ctx2, unitWillMove.id)) == "取り除かれたカード") {
                 throw new Error()
             }

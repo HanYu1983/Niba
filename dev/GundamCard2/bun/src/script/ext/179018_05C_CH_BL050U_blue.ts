@@ -99,13 +99,13 @@ export const prototype: CardPrototype = {
                         throw new Error()
                       }
                       for (const pair of pairs1) {
-                        ctx = GameStateFn.doItemMove(ctx, to, pair, { ...Options, insertId: idx }) as GameState
+                        ctx = GameStateFn.doItemMove(ctx, effect, to, pair, { ...Options, insertId: idx }) as GameState
                       }
                     } else if (isAppend) {
                       const basyous = DefineFn.TipFn.getSelection(isAppend) as AbsoluteBaSyou[]
                       const to = basyous[0]
                       for (const pair of pairs1) {
-                        ctx = GameStateFn.doItemMove(ctx, to, pair, Options) as GameState
+                        ctx = GameStateFn.doItemMove(ctx, effect, to, pair, Options) as GameState
                       }
                     } else {
                       throw new Error()

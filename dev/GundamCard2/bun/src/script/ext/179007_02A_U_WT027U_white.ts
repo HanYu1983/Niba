@@ -57,8 +57,8 @@ export const prototype: CardPrototype = {
                   title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GameState {
                     const cardId = DefineFn.EffectFn.getCardID(effect)
                     const cardController = GameStateFn.getItemController(ctx, cardId)
-                    ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "配備エリア"), GameStateFn.createStrBaSyouPair(ctx, cardId), { ges: Options.ges }) as GameState
-                    ctx = GameStateFn.doItemSetRollState(ctx, false, GameStateFn.createStrBaSyouPair(ctx, cardId), { isSkipTargetMissing: true })
+                    ctx = GameStateFn.doItemMove(ctx, effect, DefineFn.AbsoluteBaSyouFn.of(cardController, "配備エリア"), GameStateFn.createStrBaSyouPair(ctx, cardId), { ges: Options.ges }) as GameState
+                    ctx = GameStateFn.doItemSetRollState(ctx, effect, false, GameStateFn.createStrBaSyouPair(ctx, cardId), { ...Options, isSkipTargetMissing: true })
                     return ctx
                   }.toString()
                 }

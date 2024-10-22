@@ -57,9 +57,9 @@ export const prototype: CardPrototype = {
                       return ctx
                     }
                     const targetPair = pairs[0]
-                    ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "配備エリア"), targetPair, { ges: Options.ges }) as GameState
+                    ctx = GameStateFn.doItemMove(ctx, effect, DefineFn.AbsoluteBaSyouFn.of(cardController, "配備エリア"), targetPair, { ges: Options.ges }) as GameState
                     ctx = GameStateFn.doItemSetDestroy(ctx, null, GameStateFn.createStrBaSyouPair(ctx, cardId), { ges: Options.ges })
-                    ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "配備エリア"), GameStateFn.createStrBaSyouPair(ctx, cardId), { isSkipTargetMissing: true, ges: Options.ges }) as GameState
+                    ctx = GameStateFn.doItemMove(ctx, effect, DefineFn.AbsoluteBaSyouFn.of(cardController, "配備エリア"), GameStateFn.createStrBaSyouPair(ctx, cardId), { isSkipTargetMissing: true, ges: Options.ges }) as GameState
                     ctx = GameStateFn.setSetGroupParent(ctx, targetPair[0], cardId) as GameState
                     return ctx
                   }.toString()

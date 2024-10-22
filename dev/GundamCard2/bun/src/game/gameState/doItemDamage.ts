@@ -16,16 +16,12 @@ import { isCard, isChip, getItemBaSyou, assertTargetMissingError, getItemControl
 import { getSetGroupBattlePoint } from "./setGroup";
 
 export function doItemDamage(ctx: GameState, effect: Effect, damage: number, target: StrBaSyouPair, options: GameExtParams & { isSkipTargetMissing?: boolean }): GameState {
-  if (options?.isSkipTargetMissing) {
-
-  } else {
-    ctx = assertTargetNoLongerValidAndUpdate(ctx, effect, target[0], options)
-  }
   const effectController = EffectFn.getPlayerID(effect)
   if (options?.isSkipTargetMissing) {
 
   } else {
     assertTargetMissingError(ctx, target)
+    assertTargetNoLongerValidAndUpdate(ctx, effect, target[0], options)
   }
   {
     // damage修正

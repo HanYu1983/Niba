@@ -48,7 +48,7 @@ export const prototype: CardPrototype = {
                           const cardController = GameStateFn.getItemController(ctx, cardId)
                           const pair = GameStateFn.createStrBaSyouPair(ctx, cardId)
                           ctx = GameStateFn.doItemSetDestroy(ctx, null, pair, { isSkipTargetMissing: true })
-                          ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "Gゾーン"), pair, { isSkipTargetMissing: true, ges: Options.ges }) as GameState
+                          ctx = GameStateFn.doItemMove(ctx, effect, DefineFn.AbsoluteBaSyouFn.of(cardController, "Gゾーン"), pair, { isSkipTargetMissing: true, ges: Options.ges }) as GameState
                           return ctx
                         }.toString()
                       }

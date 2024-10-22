@@ -38,6 +38,10 @@ export const EffectFn = {
         return { id: "", reason: ["PlayCard", playerId, cardId, {}], text: { id: "", title: [] } }
     },
 
+    createGameRule(playerId: PlayerID): Effect {
+        return { id: "", reason: ["GameRule", playerId, {}], text: { id: "", title: [] } }
+    },
+
     isFakeCardID(string: string): boolean {
         return string.startsWith("SystemFakeCardID_")
     },

@@ -22,7 +22,7 @@ export const prototype: CardPrototype = {
         const cardId = DefineFn.EffectFn.getCardID(effect)
         const cardController = GameStateFn.getItemController(ctx, cardId)
         if (evt.title[0] == "プレイされて場にセットされた場合" && evt.cardIds?.includes(cardId)) {
-          ctx = GameStateFn.doPlayerDrawCard(ctx, 1, cardController, Options)
+          ctx = GameStateFn.doPlayerDrawCard(ctx, effect, 1, cardController, Options)
         }
         return ctx
       }.toString()

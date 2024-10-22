@@ -45,7 +45,7 @@ export function createDiscardRuleEffect(ctx: GameState, playerId: PlayerID): Eff
                                 const playerId = DefineFn.EffectFn.getPlayerID(effect)
                                 const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "調整", cardId)
                                 for (const pair of pairs) {
-                                    ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(playerId, "ジャンクヤード"), pair, { isSkipTargetMissing: true }) as GameState
+                                    ctx = GameStateFn.doItemMove(ctx, effect, DefineFn.AbsoluteBaSyouFn.of(playerId, "ジャンクヤード"), pair, { isSkipTargetMissing: true }) as GameState
                                 }
                                 return ctx
                             }.toString()

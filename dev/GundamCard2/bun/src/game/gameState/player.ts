@@ -135,7 +135,7 @@ export function doRuleBattleDamage(
       if (currentAttackPlayerID == getActivePlayerID(ctx) && currentAttackPower > 0) {
         // 非交戰中或有強襲才能打本國(p35)
         if (isBattle(ctx, willAttackUnits[0], null) == false || isABattleGroup(ctx, ["強襲"], willAttackUnits[0], options)) {
-          ctx = doCountryDamage(ctx, currentGuardPlayerID, currentAttackPower, options)
+          ctx = doCountryDamage(ctx, EffectFn.createGameRule(currentAttackPlayerID),  currentGuardPlayerID, currentAttackPower, options)
           {
             const gameEvent: GameEvent = {
               title: ["このカードの部隊が敵軍本国に戦闘ダメージを与えた場合"],

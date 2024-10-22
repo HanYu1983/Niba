@@ -218,7 +218,7 @@ export function createPlayGEffect(ctx: GameState, cardId: string): Effect {
                         title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GameState {
                             const cardId = DefineFn.EffectFn.getCardID(effect)
                             const from = GameStateFn.getItemBaSyou(ctx, cardId)
-                            ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "Gゾーン"), [cardId, from], { ges: Options.ges }) as GameState
+                            ctx = GameStateFn.doItemMove(ctx, effect ,DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "Gゾーン"), [cardId, from], { ges: Options.ges }) as GameState
                             return ctx
                         }.toString()
                     },
@@ -263,7 +263,7 @@ export function createPlayUnitEffect(ctx: GameState, cardId: string, options: Ga
                             let ges = Options.ges || []
                             const cardId = DefineFn.EffectFn.getCardID(effect)
                             const from = GameStateFn.getItemBaSyou(ctx, cardId)
-                            ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "プレイされているカード"), [cardId, from], { ges: Options.ges }) as GameState
+                            ctx = GameStateFn.doItemMove(ctx, effect, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "プレイされているカード"), [cardId, from], { ges: Options.ges }) as GameState
                             const newE = GameStateFn.createUnitGoStageEffectFromPlayEffect(ctx, effect, { ges: ges })
                             return GameStateFn.addStackEffect(ctx, newE) as GameState
                         }.toString()
@@ -302,7 +302,7 @@ export function createPlayOperationEffect(ctx: GameState, cardId: string, option
                         title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GameState {
                             const cardId = DefineFn.EffectFn.getCardID(effect)
                             const from = GameStateFn.getItemBaSyou(ctx, cardId)
-                            ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "プレイされているカード"), [cardId, from], { ges: Options.ges }) as GameState
+                            ctx = GameStateFn.doItemMove(ctx, effect, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "プレイされているカード"), [cardId, from], { ges: Options.ges }) as GameState
                             const newE = GameStateFn.createOperationGoStageEffectFromPlayEffect(ctx, effect)
                             return GameStateFn.addStackEffect(ctx, newE) as GameState
                         }.toString()
@@ -347,7 +347,7 @@ export function createPlayStayEffect(ctx: GameState, cardId: string, options: Ga
                         title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GameState {
                             const cardId = DefineFn.EffectFn.getCardID(effect)
                             const from = GameStateFn.getItemBaSyou(ctx, cardId)
-                            ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "プレイされているカード"), [cardId, from], { ges: Options.ges }) as GameState
+                            ctx = GameStateFn.doItemMove(ctx, effect, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "プレイされているカード"), [cardId, from], { ges: Options.ges }) as GameState
                             const newE = GameStateFn.createOperationGoStageEffectFromPlayEffect(ctx, effect)
                             return GameStateFn.addStackEffect(ctx, newE) as GameState
                         }.toString()
@@ -387,7 +387,7 @@ export function createPlayCharacterOperationEffect(ctx: GameState, cardId: strin
                             const cardId = DefineFn.EffectFn.getCardID(effect)
                             const prototype = GameStateFn.getItemPrototype(ctx, cardId)
                             const from = GameStateFn.getItemBaSyou(ctx, cardId)
-                            ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "プレイされているカード"), [cardId, from], { ges: Options.ges }) as GameState
+                            ctx = GameStateFn.doItemMove(ctx, effect, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "プレイされているカード"), [cardId, from], { ges: Options.ges }) as GameState
                             const newE = GameStateFn.createCharOpUnitGoStageEffectFromPlayEffect(ctx, effect)
                             return GameStateFn.addStackEffect(ctx, newE) as GameState
                         }.toString()
@@ -456,7 +456,7 @@ export function createPlayCommandText(ctx: GameState, cardId: string, options: G
                             }
                             const commandText = prototype.commandText
                             const from = GameStateFn.getItemBaSyou(ctx, cardId)
-                            ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "プレイされているカード"), [cardId, from], { ges: Options.ges }) as GameState
+                            ctx = GameStateFn.doItemMove(ctx, effect, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "プレイされているカード"), [cardId, from], { ges: Options.ges }) as GameState
                             return GameStateFn.addStackEffect(ctx, {
                                 id: `${effect.id}_場に出る`,
                                 reason: ["場に出る", DefineFn.EffectFn.getPlayerID(effect), DefineFn.EffectFn.getCardID(effect)],
@@ -473,7 +473,7 @@ export function createPlayCommandText(ctx: GameState, cardId: string, options: G
                                                         const cardId = DefineFn.EffectFn.getCardID(effect)
                                                         const from = GameStateFn.getItemBaSyou(ctx, cardId)
                                                         const to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "ジャンクヤード")
-                                                        ctx = GameStateFn.doItemMove(ctx, to, [cardId, from], { ges: Options.ges }) as GameState
+                                                        ctx = GameStateFn.doItemMove(ctx, effect, to, [cardId, from], { ges: Options.ges }) as GameState
                                                         ctx = GameStateFn.doTriggerEvent(ctx, { title: ["プレイされて場に出た場合"], cardIds: [cardId] }, { ges: Options.ges })
                                                         return ctx
                                                     }.toString()
@@ -518,12 +518,12 @@ export function createUnitGoStageEffectFromPlayEffect(ctx: GameState, effect: Ef
                                     const cardId = DefineFn.EffectFn.getCardID(effect)
                                     const from = GameStateFn.getItemBaSyou(ctx, cardId)
                                     const to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "配備エリア")
-                                    ctx = GameStateFn.doItemMove(ctx, to, [cardId, from], { ges: Options.ges }) as GameState
+                                    ctx = GameStateFn.doItemMove(ctx, effect, to, [cardId, from], { ges: Options.ges }) as GameState
                                     const hasHigh = GameStateFn.getCardHasSpeicalEffect(ctx, ["戦闘配備"], cardId, Options)
                                     const hasPS = GameStateFn.getCardHasSpeicalEffect(ctx, ["【PS装甲】"], cardId, Options)
                                     const isNoNeedRoll = (hasHigh || hasPS)
                                     const isRoll = isNoNeedRoll == false
-                                    ctx = GameStateFn.doItemSetRollState(ctx, isRoll, [cardId, GameStateFn.getItemBaSyou(ctx, cardId)], { isSkipTargetMissing: true })
+                                    ctx = GameStateFn.doItemSetRollState(ctx, effect, isRoll, [cardId, GameStateFn.getItemBaSyou(ctx, cardId)], { ...Options, isSkipTargetMissing: true })
                                     ctx = GameStateFn.doTriggerEvent(ctx, { title: ["プレイされて場に出た場合"], cardIds: [cardId] }, Options)
                                     return ctx
                                 }.toString()
@@ -558,7 +558,7 @@ export function createOperationGoStageEffectFromPlayEffect(ctx: GameState, effec
                                     const cardId = DefineFn.EffectFn.getCardID(effect)
                                     const from = GameStateFn.getItemBaSyou(ctx, cardId)
                                     const to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "配備エリア")
-                                    ctx = GameStateFn.doItemMove(ctx, to, [cardId, from], { ges: Options.ges }) as GameState
+                                    ctx = GameStateFn.doItemMove(ctx, effect, to, [cardId, from], { ges: Options.ges }) as GameState
                                     ctx = GameStateFn.doTriggerEvent(ctx, { title: ["プレイされて場に出た場合"], cardIds: [cardId] }, { ges: Options.ges })
                                     return ctx
                                 }.toString()
@@ -597,7 +597,7 @@ export function createCharOpUnitGoStageEffectFromPlayEffect(ctx: GameState, effe
                                     const [targetCardId, targetBasyou] = pairs[0]
                                     const from = GameStateFn.getItemBaSyou(ctx, cardId)
                                     const to = targetBasyou
-                                    ctx = GameStateFn.doItemMove(ctx, to, [cardId, from], { ges: Options.ges }) as GameState
+                                    ctx = GameStateFn.doItemMove(ctx, effect, to, [cardId, from], { ges: Options.ges }) as GameState
                                     const isRoll = GameStateFn.getCard(ctx, targetCardId).isRoll || false
                                     ctx = GameStateFn.mapCard(ctx, cardId, is => ({ ...is, isRoll: isRoll })) as GameState
                                     ctx = GameStateFn.setSetGroupParent(ctx, targetCardId, cardId) as GameState

@@ -69,7 +69,7 @@ export function createTextsFromSpecialEffect(text: CardText, options: GameExtPar
                             const cardController = GameStateFn.getItemController(ctx, cardId)
                             const cs = GameStateFn.getItemState(ctx, cardId)
                             if (cs.flags["return"]) {
-                                ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "手札"), [cardId, GameStateFn.getItemBaSyou(ctx, cardId)], Options) as GameState
+                                ctx = GameStateFn.doItemMove(ctx, effect, DefineFn.AbsoluteBaSyouFn.of(cardController, "手札"), [cardId, GameStateFn.getItemBaSyou(ctx, cardId)], Options) as GameState
                                 ctx = GameStateFn.mapItemState(ctx, cardId, is => DefineFn.ItemStateFn.removeFlag(is, "return")) as GameState
                             }
                         }
@@ -474,7 +474,7 @@ export function createTextsFromSpecialEffect(text: CardText, options: GameExtPar
                                                             const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "看自己本國全部的卡,可以從中找出特徵A的1張卡移到HANGER,那個時候本國洗牌", cardId)
                                                             if (pairs.length) {
                                                                 for (const pair of pairs) {
-                                                                    ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "ハンガー"), pair, Options) as GameState
+                                                                    ctx = GameStateFn.doItemMove(ctx, effect, DefineFn.AbsoluteBaSyouFn.of(cardController, "ハンガー"), pair, Options) as GameState
                                                                 }
                                                                 ctx = GameStateFn.shuffleItems(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "本国")) as GameState
                                                             }
@@ -544,8 +544,8 @@ export function createTextsFromSpecialEffect(text: CardText, options: GameExtPar
                                                             const targetPair = pairs[0]
                                                             GameStateFn.assertTargetMissingError(ctx, targetPair)
                                                             ctx = GameStateFn.doItemSwap(ctx, [cardId, basyou], targetPair)
-                                                            ctx = GameStateFn.doItemSetRollState(ctx, false, [cardId, basyou], { isSkipTargetMissing: true })
-                                                            ctx = GameStateFn.doItemMove(ctx,
+                                                            ctx = GameStateFn.doItemSetRollState(ctx, effect, false, [cardId, basyou], { ...Options, isSkipTargetMissing: true })
+                                                            ctx = GameStateFn.doItemMove(ctx, effect,
                                                                 DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(basyou, "ジャンクヤード"),
                                                                 targetPair,
                                                                 { ges: Options.ges }

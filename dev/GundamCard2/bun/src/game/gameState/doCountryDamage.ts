@@ -1,5 +1,5 @@
 import { AbsoluteBaSyouFn } from "../define/BaSyou"
-import { EffectFn } from "../define/Effect"
+import { Effect, EffectFn } from "../define/Effect"
 import { GameEvent } from "../define/GameEvent"
 import { GameExtParams } from "../define/GameExtParams"
 import { PlayerID, PlayerIDFn } from "../define/PlayerID"
@@ -11,7 +11,7 @@ import { GameState } from "./GameState"
 import { getGlobalEffects } from "./globalEffects"
 import { getItemController, getItemIdsByBasyou } from "./ItemTableComponent"
 
-export function doCountryDamage(ctx: GameState, playerId: PlayerID, damage: number, options: GameExtParams): GameState {
+export function doCountryDamage(ctx: GameState, effect: Effect, playerId: PlayerID, damage: number, options: GameExtParams): GameState {
     if (damage == 0) {
         return ctx
     }
@@ -22,7 +22,7 @@ export function doCountryDamage(ctx: GameState, playerId: PlayerID, damage: numb
         }).slice(0, damage)
         const to = AbsoluteBaSyouFn.of(playerId, "本国")
         for (const pair of pairs) {
-            ctx = doItemMove(ctx, to, pair, { isSkipTargetMissing: true, insertId: 0 }) as GameState
+            ctx = doItemMove(ctx, effect, to, pair, { isSkipTargetMissing: true, insertId: 0 }) as GameState
         }
         ctx = EventCenterFn.onCountryHeal(ctx, playerId, -damage)
         return ctx
@@ -33,7 +33,7 @@ export function doCountryDamage(ctx: GameState, playerId: PlayerID, damage: numb
     }).slice(0, damage)
     const to = AbsoluteBaSyouFn.of(playerId, "捨て山")
     for (const pair of pairs) {
-        ctx = doItemMove(ctx, to, pair, { isSkipTargetMissing: true, insertId: 0 }) as GameState
+        ctx = doItemMove(ctx, effect, to, pair, { isSkipTargetMissing: true, insertId: 0 }) as GameState
     }
     ctx = doTriggerEvent(ctx, {
         title: ["自軍本国に戦闘ダメージが与えられた場合"],

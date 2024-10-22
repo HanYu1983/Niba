@@ -54,7 +54,7 @@ export const prototype: CardPrototype = {
         if (event.title[0] == "GameEventOnTiming"
           && DefineFn.PhaseFn.eq(event.title[1], DefineFn.PhaseFn.getLastTriggerEffect())) {
           if (GameStateFn.getItemState(ctx, cardId).flags.enabled) {
-            ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardOwner, "本国"), GameStateFn.createStrBaSyouPair(ctx, cardId), Options) as GameState
+            ctx = GameStateFn.doItemMove(ctx, effect, DefineFn.AbsoluteBaSyouFn.of(cardOwner, "本国"), GameStateFn.createStrBaSyouPair(ctx, cardId), Options) as GameState
           }
         }
         return ctx

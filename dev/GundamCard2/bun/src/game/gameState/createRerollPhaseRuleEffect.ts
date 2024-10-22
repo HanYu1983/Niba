@@ -18,7 +18,7 @@ export function createRerollPhaseRuleEffect(ctx: GameState, playerId: PlayerID):
                 {
                     actions: [
                         {
-                            title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+                            title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GameState {
                                 const playerId = DefineFn.EffectFn.getPlayerID(effect)
                                 const pairs = (["配備エリア", "Gゾーン"] as BaSyouKeyword[]).flatMap(kw => {
                                     const basyou = DefineFn.AbsoluteBaSyouFn.of(playerId, kw)
@@ -29,7 +29,7 @@ export function createRerollPhaseRuleEffect(ctx: GameState, playerId: PlayerID):
                                         })
                                 })
                                 for (const pair of pairs) {
-                                    ctx = GameStateFn.doItemSetRollState(ctx, false, pair, { isSkipTargetMissing: true })
+                                    ctx = GameStateFn.doItemSetRollState(ctx, effect, false, pair, { ...Options, isSkipTargetMissing: true })
                                 }
                                 return ctx
                             }.toString()

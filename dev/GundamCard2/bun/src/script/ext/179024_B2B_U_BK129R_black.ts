@@ -58,7 +58,7 @@ export const prototype: CardPrototype = {
                     undefined :
                     pairs2.map(p => p[0]).indexOf(pairs1[0][0])
                   for (const pair of pairs1) {
-                    ctx = GameStateFn.doItemMove(ctx, cardBasyou, pair, { insertId: insertId, ges: Options.ges }) as GameState
+                    ctx = GameStateFn.doItemMove(ctx, effect, cardBasyou, pair, { insertId: insertId, ges: Options.ges }) as GameState
                   }
                   return ctx
                 }.toString()

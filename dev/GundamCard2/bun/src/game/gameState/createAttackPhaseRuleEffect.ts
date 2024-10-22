@@ -39,7 +39,7 @@ export function createAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID):
                                 const phase = GameStateFn.getPhase(ctx)
                                 for (const pair of earthPairs) {
                                     ctx = GameStateFn.mapItemState(ctx, pair[0], is => ({ ...is, isAttack: phase[1] == "攻撃ステップ", isDefence: phase[1] == "防御ステップ" })) as GameState
-                                    ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(playerId, "戦闘エリア1"), pair, { ges: Options.ges }) as GameState
+                                    ctx = GameStateFn.doItemMove(ctx, effect, DefineFn.AbsoluteBaSyouFn.of(playerId, "戦闘エリア1"), pair, { ges: Options.ges }) as GameState
                                 }
                                 return ctx
                             }.toString()
@@ -68,7 +68,7 @@ export function createAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID):
                                 const phase = GameStateFn.getPhase(ctx)
                                 for (const pair of spacePairs) {
                                     ctx = GameStateFn.mapItemState(ctx, pair[0], is => ({ ...is, isAttack: phase[1] == "攻撃ステップ", isDefence: phase[1] == "防御ステップ" })) as GameState
-                                    ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(playerId, "戦闘エリア2"), pair, { ges: Options.ges }) as GameState
+                                    ctx = GameStateFn.doItemMove(ctx, effect, DefineFn.AbsoluteBaSyouFn.of(playerId, "戦闘エリア2"), pair, { ges: Options.ges }) as GameState
                                 }
 
                                 return ctx

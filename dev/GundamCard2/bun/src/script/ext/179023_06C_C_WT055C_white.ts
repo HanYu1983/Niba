@@ -54,7 +54,7 @@ export const prototype: CardPrototype = {
         && DefineFn.PhaseFn.eq(evt.title[1], DefineFn.PhaseFn.getLast())
         && GameStateFn.getItemState(ctx, cardId).flags.enabled
       ) {
-        ctx = GameStateFn.doPlayerDrawCard(ctx, 1, cardController, Options)
+        ctx = GameStateFn.doPlayerDrawCard(ctx, effect, 1, cardController, Options)
       }
       return ctx
     }.toString()

@@ -6,7 +6,7 @@ import { GameState } from "./GameState"
 import { getGlobalEffects, setGlobalEffects } from "./globalEffects"
 import { getItemController } from "./ItemTableComponent"
 
-export function assertTargetNoLongerValidAndUpdate(ctx: GameState, effect: Effect, cardId: string, options: GameExtParams): GameState {
+export function assertTargetNoLongerValidAndUpdate(ctx: GameState, effect: Effect, cardId: string, options: GameExtParams) {
   const ges = options.ges || []
   if (ges.find(ge => ge.title[0] == "敵軍効果の対象にならない" && ge.cardIds.includes(cardId))) {
     if (EffectFn.getPlayerID(effect) != getItemController(ctx, cardId)) {
@@ -18,5 +18,4 @@ export function assertTargetNoLongerValidAndUpdate(ctx: GameState, effect: Effec
       throw new TargetMissingError("敵軍効果の対象にならない")
     }
   }
-  return ctx
 }
