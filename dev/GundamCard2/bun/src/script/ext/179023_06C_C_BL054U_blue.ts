@@ -6,9 +6,9 @@
 // （戦闘フェイズ）：自軍セットグループ１つの全てのカードの上に、＋１／＋１／＋１コイン１個を乗せる。
 
 import { CardColor, CardPrototype } from "../../game/define/CardPrototype";
-import { Condition } from "../../game/define/CardText";
-import { Effect } from "../../game/define/Effect";
+import { Condition, TestEnv } from "../../game/define/CardText";
 import { GameState } from "../../game/gameState/GameState";
+import { getSetGroup } from "../../game/gameState/SetGroupComponent";
 import { Bridge } from "../bridge";
 
 export const prototype: CardPrototype = {
@@ -18,9 +18,16 @@ export const prototype: CardPrototype = {
     title: ["使用型", ["戦闘フェイズ"]],
     testEnvs: [
       {
-        createCards: [
-          ["自軍", "戦闘エリア1", [["unit", 1]]]
-        ]
+        addCards:[
+          ["自軍", "戦闘エリア1", [{id: "unit", protoID: "unit"}, {id: "charBlue", protoID: "charBlue"}]]
+        ],
+        setGroupParent: {"charBlue": "unit"},
+        checkFn(ctx:GameState, {GameStateFn, Options}:Bridge){
+          const coins = GameStateFn.getCoinIds(ctx)
+          if(coins.length != 2){
+            throw new Error()
+          }
+        }
       }
     ],
     conditions: {

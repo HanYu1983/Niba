@@ -414,23 +414,22 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
         const pairs = varNames == null ?
           [[cardId, getItemBaSyou(ctx, cardId)] as StrBaSyouPair] :
           varNames.flatMap(varName => {
-            let ret = getCardTipStrBaSyouPairs(ctx, varName, cardId)
-            // TODO: 沒有成功
+            const ret = getCardTipStrBaSyouPairs(ctx, varName, cardId)
             if (isSelectAllCardInSetGroup?.includes(varName)) {
               const itemIds = ret.map(v => v[0])
-              const appends = itemIds.flatMap(itemId => getSetGroup(ctx, itemId)).map(itemId => createStrBaSyouPair(ctx, itemId))
-              ret.push(...appends)
+              const appends = dropRepeats(itemIds.flatMap(itemId => getSetGroup(ctx, itemId)).map(itemId => createStrBaSyouPair(ctx, itemId)))
+              return appends
             }
-            ret = dropRepeatsBy(p=>p[0], ret)
             return ret
           })
 
         if (pairs.length == 0) {
           throw new Error(`pairs must not 0: ${action.title} ${action.vars}`)
         }
-        const [targetCardId, targetBasyou] = pairs[0]
-        const coins = range(0, x).map(i => CoinFn.battleBonus(playerId, bonus))
-        ctx = addCoinsToCard(ctx, [targetCardId, targetBasyou], coins) as GameState
+        for(const pair of pairs){
+          const coins = range(0, x).map(i => CoinFn.battleBonus(playerId, bonus))
+          ctx = addCoinsToCard(ctx, pair, coins) as GameState
+        }
         return ctx
       }
     }

@@ -12,6 +12,8 @@ import { PlayerID } from "./PlayerID";
 import { logCategory } from "../../tool/logger";
 import { Card } from "./Card";
 import { ItemState } from "./ItemState";
+import { GameState } from "../gameState/GameState";
+import { Bridge } from "../../script/bridge";
 
 export type BattleBonus = [number, number, number]
 
@@ -270,7 +272,8 @@ export type TestEnv = {
     thisCard?: [RelatedPlayerSideKeyword, BaSyouKeyword, Card, { destroyReason?: DestroyReason, flags?: { [key: string]: any } } | null],
     addCards?: [RelatedPlayerSideKeyword, BaSyouKeyword, Card[]][],
     createCards?: [RelatedPlayerSideKeyword, BaSyouKeyword, [string, number][]][],
-    setGroupParent?: { [key: string]: string }
+    setGroupParent?: { [key: string]: string },
+    checkFn?: (ctx:GameState, bridge:Bridge)=>void;
 }
 
 export type CardText = {

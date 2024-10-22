@@ -26,6 +26,7 @@ import { doCutInDestroyEffectsAndClear } from "./doCutInDestroyEffectsAndClear";
 import { createDestroyEffect } from "./createDestroyEffect";
 import { getItemIdsByBasyou, getItemPrototype } from "./ItemTableComponent";
 import { getPlayerHandIds } from "./player";
+import { createBridge } from "../bridge/createBridge";
 
 export async function testAllCardTextTestEnv() {
   const extIds = ["unit", "unitHasPhy", "charBlue", "unitHasGain", "charBlueNT"]
@@ -222,6 +223,9 @@ export function testText(proto: CardPrototype, text: CardText, options?: { isChe
             }
             break
           }
+        }
+        if(testEnv.checkFn){
+          testEnv.checkFn(ctx, createBridge({ges: getGlobalEffects(ctx, null)}))
         }
         logCategory("testAllCardTextTestEnv", `TestEnv Pass: ${proto.id} ${text.description}`)
       } catch (e) {
