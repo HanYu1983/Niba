@@ -74,10 +74,10 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
         // TODO:
         // <〔Ｒ〕：共有［ΖΖ系］>
         if (currSp.length == 0) {
-          const match = curr.match(/(<)?(.?)(０|１|２|３|４|５|６|７|８|９|R|Ｒ+)(毎?)/)
+          const match = curr.match(/(<?)(.?)(０|１|２|３|４|５|６|７|８|９|R|Ｒ+)(毎?)/)
           if (match) {
-            const [_, _2, colorstr, rollcoststr, every] = match
-            currSp.push([colorstr, rollcoststr, every])
+            const [_, protectLevelStr, colorstr, rollcoststr, every] = match
+            currSp.push([protectLevelStr, colorstr, rollcoststr, every])
             continue
           }
         }
@@ -127,7 +127,7 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
         }
         if (Array.isArray(sp) && Array.isArray(sp[0])) {
           const uppercaseDigits = "０１２３４５６７８９";
-          const [[colorstr, rollcoststr, every], titlestr, char] = sp
+          const [[protectLevelStr, colorstr, rollcoststr, every], titlestr, char] = sp
           const color: CardColor | null = colorstr == "" ? null : (colorstr as CardColor)
           let conditions: { [key: string]: Condition } = {}
           if (rollcoststr == "R" || rollcoststr == "Ｒ") {
@@ -175,7 +175,10 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
             title: title,
             isEachTime: every == "毎",
             description: `〔${colorstr}${rollcoststr}${every}〕${titlestr}[${char || ""}]`,
-            conditions: conditions
+            conditions: conditions,
+          }
+          if (protectLevelStr == "<") {
+            text.protectLevel = 2
           }
           texts.push(text)
           return
