@@ -79,14 +79,16 @@ export function doBattleDamage(ctx: GameState, playerId: string, guardUnits: str
       const nextDamage = hp - nextLive;
       // 傷害用完了, 重設為0
       attackPower = 0;
-      const gameEvent: GameEvent = {
-        // p71
-        // 如果非規定效果的時候，這個傷害效果才算是敵軍效果
-        title: ["戦闘ダメージを受けた場合", { isNotRule: options?.isNotRule }],
-        cardIds: [cs.id],
-        playerId: playerId
-      };
-      ctx = doTriggerEvent(ctx, gameEvent, options)
+      {
+        const gameEvent: GameEvent = {
+          // p71
+          // 如果非規定效果的時候，這個傷害效果才算是敵軍效果
+          title: ["戦闘ダメージを受けた場合", { isNotRule: options?.isNotRule }],
+          cardIds: [cs.id],
+          playerId: playerId
+        };
+        ctx = doTriggerEvent(ctx, gameEvent, options)
+      }
       return {
         ...cs,
         damage: nextDamage,
@@ -128,6 +130,13 @@ export function doRuleBattleDamage(
       // 敵方機體存在, 攻擊機體
       if (willGuardUnits.length) {
         [ctx, currentAttackPower] = doBattleDamage(ctx, currentAttackPlayerID, willGuardUnits, currentAttackPower, { ges: options?.ges })
+        {
+          const gameEvent: GameEvent = {
+            title: ["このカードの部隊が戦闘ダメージを与えた場合"],
+            cardIds: willAttackUnits,
+          };
+          ctx = doTriggerEvent(ctx, gameEvent, options)
+        }
       }
       // 若傷害沒有用完, 攻擊方可以攻擊本國
       if (currentAttackPlayerID == getActivePlayerID(ctx) && currentAttackPower > 0) {
