@@ -23,7 +23,8 @@ export const prototype: CardPrototype = {
           eventTitle: ["このカードが場に出た場合"],
           thisCard: ["自軍", "配備エリア", { id: "", protoID: "179018_05C_U_GN082U_green" }, null],
           createCards: [
-            ["自軍", "戦闘エリア2", [["179018_05C_U_GN082U_green", 1]]]
+            ["自軍", "戦闘エリア2", [["179018_05C_U_GN082U_green", 1]]],
+            ["自軍", "本国", [["unit", 1]]]
           ]
         }
       ],

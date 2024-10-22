@@ -1,4 +1,4 @@
-import { repeat, lift, range } from "ramda"
+import { repeat, lift, range, dropRepeats } from "ramda"
 import { AbsoluteBaSyouFn, AbsoluteBaSyou, RelatedBaSyou, BaSyou } from "../define/BaSyou"
 import { Action, ActionTitleFn, ActionFn } from "../define/CardText"
 import { CoinFn } from "../define/Coin"
@@ -33,6 +33,7 @@ import { getBattleGroup } from "./battleGroup"
 import { isBattle } from "./IsBattleComponent"
 import { getGlobalEffects, setGlobalEffects } from "./globalEffects"
 import { Bridge } from "../../script/bridge"
+import { getSetGroup } from "./SetGroupComponent"
 
 export function createPlayerIdFromRelated(ctx: GameState, cardId: string, re: RelatedPlayerSideKeyword): PlayerID {
   switch (re) {
@@ -406,18 +407,22 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
     case "_－１／－１／－１コイン_１個を乗せる": {
       const [_, bonus, x] = action.title
       const varNames = action.vars
-      // if (varNames == null) {
-      //   throw new Error(`action.var not found: ${action.title[0]}`)
-      // }
+      const isSelectAllCardInSetGroup = action.isSelectAllCardInSetGroup
       return function (ctx: GameState, effect: Effect): GameState {
         const cardId = EffectFn.getCardID(effect)
         const playerId = EffectFn.getPlayerID(effect)
         const pairs = varNames == null ?
           [[cardId, getItemBaSyou(ctx, cardId)] as StrBaSyouPair] :
           varNames.flatMap(varName => {
-            return getCardTipStrBaSyouPairs(ctx, varName, cardId)
+            const ret = getCardTipStrBaSyouPairs(ctx, varName, cardId)
+            if (isSelectAllCardInSetGroup?.includes(varName)) {
+              const itemIds = ret.map(v => v[0])
+              const appends = dropRepeats(itemIds.flatMap(itemId => getSetGroup(ctx, itemId))).map(itemId => createStrBaSyouPair(ctx, itemId))
+              ret.push(...appends)
+            }
+            return ret
           })
-        //const pairs = getCardTipStrBaSyouPairs(ctx, varNames[0], cardId)
+
         if (pairs.length == 0) {
           throw new Error(`pairs must not 0: ${action.title} ${action.vars}`)
         }

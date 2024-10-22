@@ -69,6 +69,9 @@ export const prototype: CardPrototype = {
         addCards: [
           ["敵軍", "戦闘エリア2", [{ id: "1", protoID: "unit", isRoll: true }]]
         ],
+        createCards: [
+          ["自軍", "本国", [["unit", 1]]]
+        ]
       }
     ],
     conditions: {

@@ -52,7 +52,7 @@ export const prototype: CardPrototype = {
               "ユニットのいる戦闘エリアの任意の順番": {
                 title: ["Entity", {
                   isBattle: true,
-                  isSetGroup: true,
+                  isSetGroupRoot: true,
                   count: 1
                 }]
               },

@@ -80,7 +80,7 @@ export const prototype: CardPrototype = {
                                 title: ["Entity", {
                                   side: "自軍",
                                   at: [unitBasyou.value[1]],
-                                  isSetGroup: true,
+                                  isSetGroupRoot: true,
                                   max: 1
                                 }],
                                 actions: [
@@ -94,7 +94,7 @@ export const prototype: CardPrototype = {
                                 title: ["Entity", {
                                   side: "自軍",
                                   at: [unitBasyou.value[1]],
-                                  isSetGroup: true,
+                                  isSetGroupRoot: true,
                                   max: 1
                                 }],
                                 actions: [
@@ -108,7 +108,7 @@ export const prototype: CardPrototype = {
                                 title: ["Entity", {
                                   side: "自軍",
                                   at: [unitBasyou.value[1]],
-                                  isSetGroup: true,
+                                  isSetGroupRoot: true,
                                   max: 1
                                 }],
                                 actions: [

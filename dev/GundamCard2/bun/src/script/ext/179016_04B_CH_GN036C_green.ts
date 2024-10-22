@@ -43,7 +43,7 @@ export const prototype: CardPrototype = {
         "このセットグループのユニット": {
           title: ["Entity", {
             isThisSetGroup: true,
-            isSetGroup: true,
+            isSetGroupRoot: true,
             count: 1
           }]
         }

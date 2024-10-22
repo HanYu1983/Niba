@@ -39,7 +39,7 @@ export const prototype: CardPrototype = {
             "このカードの部隊の任意の順番": {
               title: ["Entity", {
                 hasSelfCardId: true,
-                isSetGroup: true,
+                isSetGroupRoot: true,
                 max: 1
               }]
             }

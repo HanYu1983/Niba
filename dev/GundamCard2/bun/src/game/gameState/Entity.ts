@@ -167,8 +167,8 @@ export function createTipByEntitySearch(ctx: GameState, effect: Effect, searchOp
     }
     if (searchOptions.isCanSetCharacter != null) {
         entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx, true)).filter(EntityFn.filterCanSetCharacter(ctx))
-    } else if (searchOptions.isSetGroup != null) {
-        entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx, searchOptions.isSetGroup))
+    } else if (searchOptions.isSetGroupRoot != null) {
+        entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx, searchOptions.isSetGroupRoot))
     }
     if (searchOptions.compareBattlePoint) {
         //entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx, true))

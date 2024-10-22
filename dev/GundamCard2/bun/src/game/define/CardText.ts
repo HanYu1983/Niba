@@ -91,6 +91,7 @@ export type ActionTitle =
 export type Action = {
     title: ActionTitle,
     vars?: string[],
+    isSelectAllCardInSetGroup?: string[],
     description?: string,
 }
 
@@ -128,6 +129,7 @@ export type EntitySearchOptions = {
     hasDestroyId?: DestroyId[],
     isDestroy?: boolean,
     isSetGroup?: boolean,
+    isSetGroupRoot?: boolean,
     isSetGroupHasChar?: string[],
     isBattleGroupFirst?: boolean,
     isRoll?: boolean,
