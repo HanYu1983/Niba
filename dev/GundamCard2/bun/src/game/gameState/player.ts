@@ -133,7 +133,7 @@ export function doRuleBattleDamage(
         {
           const gameEvent: GameEvent = {
             title: ["このカードの部隊が戦闘ダメージを与えた場合"],
-            cardIds: willAttackUnits,
+            cardIds: willAttackUnits.flatMap(unitId => getSetGroup(ctx, unitId)),
           };
           ctx = doTriggerEvent(ctx, gameEvent, options)
         }
@@ -146,7 +146,7 @@ export function doRuleBattleDamage(
           {
             const gameEvent: GameEvent = {
               title: ["このカードの部隊が敵軍本国に戦闘ダメージを与えた場合"],
-              cardIds: willAttackUnits,
+              cardIds: willAttackUnits.flatMap(unitId => getSetGroup(ctx, unitId)),
             };
             ctx = doTriggerEvent(ctx, gameEvent, options)
           }

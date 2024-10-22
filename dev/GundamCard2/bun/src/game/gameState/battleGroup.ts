@@ -7,7 +7,7 @@ import { getCardHasSpeicalEffect } from "./card";
 import { getCard } from "./CardTableComponent";
 import { GameState } from "./GameState";
 import { getGlobalEffects, setGlobalEffects } from "./globalEffects";
-import { getItemBasyouFromSnapshot, isBattleAtBasyou } from "./IsBattleComponent";
+import { isBattleAtBasyou } from "./IsBattleComponent";
 import { getItemState } from "./ItemStateComponent";
 import { getItemIdsByBasyou, getItemBaSyou } from "./ItemTableComponent";
 import { getSetGroupBattlePoint, isSetGroupHasA } from "./setGroup";

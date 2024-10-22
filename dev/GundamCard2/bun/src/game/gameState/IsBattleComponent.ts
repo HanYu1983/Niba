@@ -69,11 +69,12 @@ export function isBattle(
   cardID2: string | null
 ): boolean {
   const baSyou1 = getItemBaSyou(ctx, cardID);
-  if (getBattleGroupFromSnapshot(ctx, baSyou1).includes(cardID) == false) {
+  const baSyou1Ids = (ctx.battleSnapshot[AbsoluteBaSyouFn.toString(baSyou1)] || [])
+  if (baSyou1Ids.includes(cardID) == false) {
     return false;
   }
   const baSyou2 = AbsoluteBaSyouFn.setOpponentPlayerID(baSyou1);
-  const opponentAreaIds = getBattleGroupFromSnapshot(ctx, baSyou2)
+  const opponentAreaIds = (ctx.battleSnapshot[AbsoluteBaSyouFn.toString(baSyou2)] || [])
   if (cardID2) {
     if (opponentAreaIds.includes(cardID2)) {
       return true

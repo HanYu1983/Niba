@@ -81,7 +81,7 @@ export async function test179003_01A_CH_GN001R_green() {
         }
         ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), repeat("179003_01A_CH_GN001R_green", 2)) as GameState
         ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerB, "配備エリア"), repeat("unit", 1)) as GameState
-        ctx = doItemMove(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1"), createStrBaSyouPair(ctx, masterUnit.id), { ges: getGlobalEffects(ctx, null) })
+        ctx = doItemMove(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1"), createStrBaSyouPair(ctx, masterUnit.id), { ges: getGlobalEffects(ctx, null) }) as GameState
         ctx = setPhase(ctx, ["戦闘フェイズ", "攻撃ステップ", "フリータイミング"]) as GameState
         ctx = setActivePlayerID(ctx, PlayerA) as GameState
         if (getItemBaSyou(ctx, char.id).value[1] != "戦闘エリア1") {

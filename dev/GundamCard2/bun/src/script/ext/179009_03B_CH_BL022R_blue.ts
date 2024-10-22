@@ -140,7 +140,7 @@ export const prototype: CardPrototype = {
                     }
                     const tip2 = GameStateFn.getItemState(ctx, cardId).tips["ユニットが３枚以上の部隊にいる、全ての自軍ユニット2"]
                     if (tip2) {
-                      const pairs = DefineFn.TipFn.getSelection(tip1) as StrBaSyouPair[]
+                      const pairs = DefineFn.TipFn.getSelection(tip2) as StrBaSyouPair[]
                       for (const pair of pairs) {
                         ctx = GameStateFn.doItemSetGlobalEffectsUntilEndOfTurn(ctx, [{ title: ["AddText", { id: ToolFn.getUUID("ユニットが３枚以上の部隊にいる、全ての自軍ユニット2"), title: ["特殊型", ["速攻"]] }], cardIds: [pair[0]] }], pair)
                       }

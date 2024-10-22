@@ -1,4 +1,4 @@
-import { repeat, lift, range, dropRepeats } from "ramda"
+import { repeat, lift, range, dropRepeats, dropRepeatsBy } from "ramda"
 import { AbsoluteBaSyouFn, AbsoluteBaSyou, RelatedBaSyou, BaSyou } from "../define/BaSyou"
 import { Action, ActionTitleFn, ActionFn } from "../define/CardText"
 import { CoinFn } from "../define/Coin"
@@ -414,12 +414,14 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
         const pairs = varNames == null ?
           [[cardId, getItemBaSyou(ctx, cardId)] as StrBaSyouPair] :
           varNames.flatMap(varName => {
-            const ret = getCardTipStrBaSyouPairs(ctx, varName, cardId)
+            let ret = getCardTipStrBaSyouPairs(ctx, varName, cardId)
+            // TODO: 沒有成功
             if (isSelectAllCardInSetGroup?.includes(varName)) {
               const itemIds = ret.map(v => v[0])
-              const appends = dropRepeats(itemIds.flatMap(itemId => getSetGroup(ctx, itemId))).map(itemId => createStrBaSyouPair(ctx, itemId))
+              const appends = itemIds.flatMap(itemId => getSetGroup(ctx, itemId)).map(itemId => createStrBaSyouPair(ctx, itemId))
               ret.push(...appends)
             }
+            ret = dropRepeatsBy(p=>p[0], ret)
             return ret
           })
 

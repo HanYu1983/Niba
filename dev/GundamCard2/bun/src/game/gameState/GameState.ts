@@ -49,6 +49,7 @@ export function createGameState(): GameState {
     destroyEffect: [],
     commandEffects: [],
     commandEffectTips: [],
+    hasCheck: false,
     battleSnapshot: {},
     coins: {},
     coinId2cardId: {},

@@ -14,10 +14,16 @@ import type { Bridge } from "../bridge";
 import { GlobalEffect } from "../../game/define/GlobalEffect";
 
 export const prototype: CardPrototype = {
+  __ignoreAutoTexts: true,
   texts: [
     {
       id: "",
-      description: "（戦闘フェイズ）〔２〕：このカードがGである場合、｢特徴：ΖΖ系｣を持つ自軍ユニット３枚をロール状態で自軍Gにする。その場合、このカードと、本来の記述に「特徴：ΖΖ系」を持つ自軍G１枚を抜き出し、１つのセットグループとして、自軍配備エリアにリロール状態で出す",
+      title: ["特殊型", ["共有", "ΖΖ系"]],
+      protectLevel: 2,
+    },
+    {
+      id: "",
+      description: " <（戦闘フェイズ）〔２〕：このカードがGである場合、｢特徴：ΖΖ系｣を持つ自軍ユニット３枚をロール状態で自軍Gにする。その場合、このカードと、本来の記述に「特徴：ΖΖ系」を持つ自軍G１枚を抜き出し、１つのセットグループとして、自軍配備エリアにリロール状態で出す>",
       title: ["使用型", ["戦闘フェイズ"]],
       protectLevel: 2,
       testEnvs: [
@@ -94,6 +100,7 @@ export const prototype: CardPrototype = {
                               ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "配備エリア"), pair, Options) as GameState
                               ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "配備エリア"), GameStateFn.createStrBaSyouPair(ctx, cardId), Options) as GameState
                               ctx = GameStateFn.doItemSetRollState(ctx, false, pair, { isSkipTargetMissing: true })
+                              ctx = GameStateFn.doItemSetRollState(ctx, false, GameStateFn.createStrBaSyouPair(ctx, cardId), { isSkipTargetMissing: true })
                               ctx = GameStateFn.setSetGroupParent(ctx, pair[0], cardId) as GameState
                               return ctx
                             }.toString()

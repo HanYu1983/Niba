@@ -65,7 +65,7 @@ export async function testPS() {
         }
     }
     {
-        ctx = doItemMove(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1"), [unitHasPS.id, getItemBaSyou(ctx, unitHasPS.id)], { ges: getGlobalEffects(ctx, null) })
+        ctx = doItemMove(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1"), [unitHasPS.id, getItemBaSyou(ctx, unitHasPS.id)], { ges: getGlobalEffects(ctx, null) })as GameState
         if (getItemState(ctx, unitHasPS.id).flags["return"] == null) {
             throw new Error("")
         }
@@ -84,7 +84,7 @@ export async function testPS() {
         if (getItemState(ctx, unitHasPS.id).flags["return"] != true) {
             throw new Error("")
         }
-        ctx = doItemMove(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1"), [unitHasSupply.id, getItemBaSyou(ctx, unitHasSupply.id)], { ges: getGlobalEffects(ctx, null) })
+        ctx = doItemMove(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1"), [unitHasSupply.id, getItemBaSyou(ctx, unitHasSupply.id)], { ges: getGlobalEffects(ctx, null) })as GameState
         if (getItemState(ctx, unitHasPS.id).flags["return"]) {
             throw new Error("")
         }
