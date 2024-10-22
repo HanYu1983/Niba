@@ -56,7 +56,6 @@ export function createEntityIterator(ctx: GameState) {
                     isCoin: false,
                     isChip: isChip(ctx, item.id),
                     baSyouKeyword: basyouKw,
-                    // TODO
                     destroyReason: destroyEffect?.reason[0] == "Destroy" ? destroyEffect.reason[3] : null,
                     prototype: getItemPrototype(ctx, itemId)
                 }

@@ -32,7 +32,7 @@ export function doItemMove(ctx: ItemTableComponent, to: AbsoluteBaSyou, [itemId,
                 }
             }
         }
-        // 移動子樹
+        // 移動子樹 (p66)
         const itemIds = getSetGroupChildren(ctx, itemId)
         itemIds.forEach(itemId => {
             const from = getItemBaSyou(ctx, itemId)

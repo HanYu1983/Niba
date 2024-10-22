@@ -63,7 +63,6 @@ export function getBattleGroupFromSnapshot(ctx: IsBattleComponent, basyou: Absol
 //   return null
 // }
 
-// TODO: 驗証
 export function isBattle(
   ctx: IsBattleComponent,
   cardID: string,

@@ -52,8 +52,8 @@ export const prototype: CardPrototype = {
                     if (target == null) {
                       throw new Error()
                     }
-                    // 移出去
-                    ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "取り除かれたカード"), GameStateFn.createStrBaSyouPair(ctx, cardId), { ges: Options.ges }) as GameState
+                    // 移出去 (不必)
+                    // ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "取り除かれたカード"), GameStateFn.createStrBaSyouPair(ctx, cardId), { ges: Options.ges }) as GameState
                     // 再移回來
                     ctx = GameStateFn.doItemMove(ctx, from, GameStateFn.createStrBaSyouPair(ctx, cardId), { ges: Options.ges }) as GameState
                     ctx = GameStateFn.setSetGroupParent(ctx, target[0], cardId)

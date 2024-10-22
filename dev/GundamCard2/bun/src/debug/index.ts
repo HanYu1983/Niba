@@ -262,5 +262,4 @@ function testInsertMove() {
             throw new Error()
         }
     }
-    throw new Error()
 }
