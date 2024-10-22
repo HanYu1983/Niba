@@ -130,13 +130,6 @@ export function doRuleBattleDamage(
       // 敵方機體存在, 攻擊機體
       if (willGuardUnits.length) {
         [ctx, currentAttackPower] = doBattleDamage(ctx, currentAttackPlayerID, willGuardUnits, currentAttackPower, { ges: options?.ges })
-        {
-          const gameEvent: GameEvent = {
-            title: ["このカードの部隊が戦闘ダメージを与えた場合"],
-            cardIds: willAttackUnits.flatMap(unitId => getSetGroup(ctx, unitId)),
-          };
-          ctx = doTriggerEvent(ctx, gameEvent, options)
-        }
       }
       // 若傷害沒有用完, 攻擊方可以攻擊本國
       if (currentAttackPlayerID == getActivePlayerID(ctx) && currentAttackPower > 0) {
@@ -151,6 +144,13 @@ export function doRuleBattleDamage(
             ctx = doTriggerEvent(ctx, gameEvent, options)
           }
         }
+      }
+      {
+        const gameEvent: GameEvent = {
+          title: ["このカードの部隊が戦闘ダメージを与えた場合"],
+          cardIds: willAttackUnits.flatMap(unitId => getSetGroup(ctx, unitId)),
+        };
+        ctx = doTriggerEvent(ctx, gameEvent, options)
       }
     }
   }

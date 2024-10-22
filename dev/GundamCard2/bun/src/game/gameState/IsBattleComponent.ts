@@ -63,6 +63,7 @@ export function getBattleGroupFromSnapshot(ctx: IsBattleComponent, basyou: Absol
 //   return null
 // }
 
+// TODO: 驗証
 export function isBattle(
   ctx: IsBattleComponent,
   cardID: string,
@@ -70,18 +71,21 @@ export function isBattle(
 ): boolean {
   const baSyou1 = getItemBaSyou(ctx, cardID);
   const baSyou1Ids = (ctx.battleSnapshot[AbsoluteBaSyouFn.toString(baSyou1)] || [])
+  if (baSyou1Ids.length == 0) {
+    return false
+  }
   if (baSyou1Ids.includes(cardID) == false) {
-    return false;
+    return false
   }
   const baSyou2 = AbsoluteBaSyouFn.setOpponentPlayerID(baSyou1);
   const opponentAreaIds = (ctx.battleSnapshot[AbsoluteBaSyouFn.toString(baSyou2)] || [])
+  if (opponentAreaIds.length == 0) {
+    return false
+  }
   if (cardID2) {
     if (opponentAreaIds.includes(cardID2)) {
       return true
     }
   }
-  if (opponentAreaIds.length) {
-    return true
-  }
-  return false
+  return true
 }

@@ -56,7 +56,7 @@ export const EventCenterFn = {
         logCategory(`onAddImmediateEffect`, `${effect.description}`, effect)
         return ctx
     },
-    onEvent(ctx: any, evt: GameEvent, options:GameExtParams): any {
+    onEvent(ctx: any, evt: GameEvent, options: GameExtParams): any {
         assertIsGameState(ctx)
         logCategory(`onEvent`, `${JSON.stringify(evt.title)} ${JSON.stringify(evt.cardIds)}`, evt.title, evt.cardIds)
         ctx = addMessage(ctx, { id: 0, description: `onEvent: ${evt.title[0]} ${JSON.stringify(evt.cardIds)}` })
@@ -178,15 +178,15 @@ export const EventCenterFn = {
         logCategory(`onCountryDamage`, msg)
         return ctx
     },
-    onItemAdd(ctx:any, basyou:AbsoluteBaSyou, itemId: string):any{
+    onItemAdd(ctx: any, basyou: AbsoluteBaSyou, itemId: string): any {
         assertIsGameState(ctx)
         return ctx
     },
-    onItemDelete(ctx:any, basyou:AbsoluteBaSyou, itemId: string):any{
+    onItemDelete(ctx: any, basyou: AbsoluteBaSyou, itemId: string): any {
         assertIsGameState(ctx)
         return ctx
     },
-    onItemMove(ctx:any, from:AbsoluteBaSyou, to:AbsoluteBaSyou, itemId: string, options:GameExtParams):any{
+    onItemMove(ctx: any, from: AbsoluteBaSyou, to: AbsoluteBaSyou, itemId: string, options: GameExtParams): any {
         assertIsGameState(ctx)
         ctx = onItemMove(ctx, from, to, itemId, options)
         return ctx
@@ -233,7 +233,7 @@ export const EventCenterFn = {
     },
 }
 
-function onItemMove(ctx: GameState, from:AbsoluteBaSyou, to: AbsoluteBaSyou, cardId: string, options: GameExtParams): GameState {
+function onItemMove(ctx: GameState, from: AbsoluteBaSyou, to: AbsoluteBaSyou, cardId: string, options: GameExtParams): GameState {
     ctx = updateGlobalEffects(ctx)
     if (AbsoluteBaSyouFn.getBaSyouKeyword(from) == "手札") {
         if (AbsoluteBaSyouFn.getBaSyouKeyword(to) == "プレイされているカード") {
@@ -243,8 +243,10 @@ function onItemMove(ctx: GameState, from:AbsoluteBaSyou, to: AbsoluteBaSyou, car
             }, options)
         }
     }
-    // 從非場所到場所=出場
-    if (BaSyouKeywordFn.isBa(AbsoluteBaSyouFn.getBaSyouKeyword(from)) == false && BaSyouKeywordFn.isBa(AbsoluteBaSyouFn.getBaSyouKeyword(to))) {
+    if (BaSyouKeywordFn.isBa(AbsoluteBaSyouFn.getBaSyouKeyword(from)) == false
+        && (BaSyouKeywordFn.isBa(AbsoluteBaSyouFn.getBaSyouKeyword(to)
+            || to.value[1] == "Gゾーン"
+        ))) {
         // 剛出場的回合
         ctx = mapItemState(ctx, cardId, is => {
             return {
@@ -252,6 +254,9 @@ function onItemMove(ctx: GameState, from:AbsoluteBaSyou, to: AbsoluteBaSyou, car
                 isFirstTurn: true,
             }
         }) as GameState
+    }
+    // 從非場所到場所=出場
+    if (BaSyouKeywordFn.isBa(AbsoluteBaSyouFn.getBaSyouKeyword(from)) == false && BaSyouKeywordFn.isBa(AbsoluteBaSyouFn.getBaSyouKeyword(to))) {
         ctx = mapCard(ctx, cardId, card => {
             return {
                 ...card,
@@ -320,7 +325,7 @@ function onItemMove(ctx: GameState, from:AbsoluteBaSyou, to: AbsoluteBaSyou, car
     return ctx
 }
 
-function onEvent(ctx:GameState, event:GameEvent, options:GameExtParams):GameState{
+function onEvent(ctx: GameState, event: GameEvent, options: GameExtParams): GameState {
     if (event.title[0] == "カット終了時") {
         ctx = mapItemStateValues(ctx, cs => {
             return ItemStateFn.onCutEnd(cs)

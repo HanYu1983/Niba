@@ -18,7 +18,17 @@ export const prototype: CardPrototype = {
   texts: [
     {
       id: "",
+      description: "<〔Ｒ〕：共有［ΖΖ系］>",
       title: ["特殊型", ["共有", "ΖΖ系"]],
+      conditions: {
+        "Ｒ": {
+          actions:[
+            {
+              title: ["_ロールする", "ロール"]
+            }
+          ]
+        }
+      },
       protectLevel: 2,
     },
     {

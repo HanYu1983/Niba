@@ -101,10 +101,10 @@ export const CardView = (props: {
     </div>
   }, [appContext.viewModel.model.gameState, props.cardID])
   const renderGlobalEffects = useMemo(() => {
-    const isRoot = getSetGroupRoot(appContext.viewModel.model.gameState, props.cardID || "unknown") == props.cardID
-    if (isRoot == false) {
-      return <></>
-    }
+    // const isRoot = getSetGroupRoot(appContext.viewModel.model.gameState, props.cardID || "unknown") == props.cardID
+    // if (isRoot == false) {
+    //   return <></>
+    // }
     return <div>
       {
         ges.filter(ge => ge.cardIds.includes(props.cardID || "unknown")).map((ge, i) => {

@@ -24,7 +24,7 @@ export function doItemMove(ctx: ItemTableComponent, to: AbsoluteBaSyou, [itemId,
                 // 取得效果的擁有者
                 const textControllers = redirectEs.flatMap(e => e.cardIds).map(id => getItemController(ctx, id))
                 // 如果是從場或手裡移到擁有者的墓地
-                if (BaSyouKeywordFn.getBaAll().concat(["ハンガー"]).includes(AbsoluteBaSyouFn.getBaSyouKeyword(from)) &&
+                if (BaSyouKeywordFn.getBaAll().concat(["手札"]).includes(AbsoluteBaSyouFn.getBaSyouKeyword(from)) &&
                     AbsoluteBaSyouFn.getBaSyouKeyword(to) == "ジャンクヤード" &&
                     textControllers.includes(AbsoluteBaSyouFn.getPlayerID(to))) {
                     // 修改目的地

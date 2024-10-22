@@ -70,7 +70,9 @@ export const prototype: CardPrototype = {
                           const cardId = DefineFn.EffectFn.getCardID(effect)
                           const cardController = GameStateFn.getItemController(ctx, cardId)
                           const unitBasyou = GameStateFn.getItemBaSyou(ctx, cardId)
-                          ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "取り除かれたカード"), GameStateFn.createStrBaSyouPair(ctx, cardId), Options) as GameState
+                          // 直接移到G上，不必先移到場外，不然，它的駕駛就被跟著移除遊戲，但回不來
+                          // TODO: 抜き出し?
+                          //ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "取り除かれたカード"), GameStateFn.createStrBaSyouPair(ctx, cardId), Options) as GameState
                           ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.of(cardController, "Gゾーン"), GameStateFn.createStrBaSyouPair(ctx, cardId), Options) as GameState
                           ctx = GameStateFn.doItemSetRollState(ctx, false, GameStateFn.createStrBaSyouPair(ctx, cardId), { isSkipTargetMissing: true })
                           const relatedBasyou = DefineFn.RelatedBaSyouFn.of("自軍", unitBasyou.value[1])

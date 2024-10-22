@@ -20,12 +20,12 @@ export function createTextsFromSpecialEffect(text: CardText, options: GameExtPar
         case "【PS装甲】": {
             return [
                 {
-                    id: text.id,
+                    ...text,
                     title: ["自動型", "起動"],
                     description: "出場時直立出場",
                 },
                 {
-                    id: text.id,
+                    ...text,
                     title: ["自動型", "起動"],
                     description: "這張卡出現在戰區時, 下回合開始時回到持有者手上. 但如果和持有補給或供給的卡組合部隊的時候, 上述的效果不發動.",
                     onEvent: function _(ctx: GameState, effect: Effect, { GameStateFn, DefineFn, Options }: Bridge): GameState {
@@ -82,7 +82,7 @@ export function createTextsFromSpecialEffect(text: CardText, options: GameExtPar
             const [_, A] = specialEffect
             return [
                 {
-                    id: text.id,
+                    ...text,
                     title: ["使用型", ["戦闘フェイズ"]],
                     description: "（戦闘フェイズ）：［ ］の特徴を持つ自軍ユニット１枚は、ターン終了時まで、このカードの本来のテキスト１つと同じテキストを得る。ただし同じテキストは得られない）",
                     conditions: {
@@ -153,7 +153,7 @@ export function createTextsFromSpecialEffect(text: CardText, options: GameExtPar
         case "ゲイン": {
             return [
                 {
-                    id: text.id,
+                    ...text,
                     title: ["使用型", ["ダメージ判定ステップ"]],
                     description: "這張卡在戰區的場合, 打開自軍本國上的1張卡和這張卡同GsignProperty的情況, 這張卡回合結束前+x/+x/+x, x為打開的卡的横置費用數量, 這個效果1回合只能用1次",
                     testEnvs: [
@@ -231,6 +231,7 @@ export function createTextsFromSpecialEffect(text: CardText, options: GameExtPar
                                                                     const [openCardId] = pairs[0]
                                                                     const enabled = GameStateFn.getCardGSignProperty(ctx, openCardId) == GameStateFn.getCardGSignProperty(ctx, cardId)
                                                                     if (enabled == false) {
+                                                                        console.log(GameStateFn.getCardGSignProperty(ctx, openCardId), GameStateFn.getCardGSignProperty(ctx, cardId))
                                                                         console.warn(`不同的GSignProperty，無法得到紅利`)
                                                                         return ctx
                                                                     }
@@ -274,7 +275,7 @@ export function createTextsFromSpecialEffect(text: CardText, options: GameExtPar
         case "供給": {
             return [
                 {
-                    id: text.id,
+                    ...text,
                     title: ["使用型", ["自軍", "攻撃ステップ"]],
                     description: "這張卡以外的自軍機體1張重置",
                     conditions: {
@@ -316,7 +317,7 @@ export function createTextsFromSpecialEffect(text: CardText, options: GameExtPar
             }) || [])
             return [
                 {
-                    id: text.id,
+                    ...text,
                     title: ["使用型", ["防御ステップ"]],
                     description: "交戰中的敵軍機體1張x傷害. 這個效果只有在同區中有NT才能使用.",
                     conditions: {
@@ -382,7 +383,7 @@ export function createTextsFromSpecialEffect(text: CardText, options: GameExtPar
             const hasCase1 = (options?.ges?.filter(ge => ge.title[0] == "「範囲兵器」の対象部分は、『X以下の防御力を持つ敵軍ユニット１枚』に変更される" && ge.cardIds.includes(options?.cardId || "")) || []).length > 0
             return [
                 {
-                    id: text.id,
+                    ...text,
                     title: ["使用型", ["ダメージ判定ステップ"]],
                     description: "和這張卡交戰的防禦力x以下的敵軍機體1張破壞",
                     conditions: {
@@ -420,7 +421,7 @@ export function createTextsFromSpecialEffect(text: CardText, options: GameExtPar
             const [_, A] = specialEffect
             return [
                 {
-                    id: text.id,
+                    ...text,
                     title: ["使用型", ["常時"]],
                     description: "看自己本國全部的卡,可以從中找出特徵A的1張卡移到HANGER,那個時候本國洗牌.這個效果只有這張卡從手中打出的回合可以使用",
                     conditions: {
@@ -489,7 +490,7 @@ export function createTextsFromSpecialEffect(text: CardText, options: GameExtPar
             const [_, A] = specialEffect
             return [
                 {
-                    id: text.id,
+                    ...text,
                     title: ["使用型", ["戦闘フェイズ"]],
                     description: "打開自軍手裡或指定HANGER中特徵A並合計國力x以下的1張卡, 和這張卡重置狀態置換, 這張卡置換後廢棄. x為自軍G的張數",
                     conditions: {

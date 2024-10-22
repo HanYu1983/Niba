@@ -650,7 +650,7 @@ export function createPlayCardConditions(ctx: GameState, cardId: string, options
         [TipFn.createCharacterTargetUnitKey()]: {
             title: ["Entity", {
                 at: ["配備エリア"],
-                isCanSetCharacter: true,
+                isCanSetCharacter: prototype.category == "キャラクター" || undefined,
                 side: "自軍",
                 is: ["ユニット"],
                 count: 1

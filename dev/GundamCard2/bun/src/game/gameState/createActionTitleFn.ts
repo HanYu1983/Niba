@@ -272,6 +272,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
     case "_ロールする": {
       const [_, whatToDo] = action.title
       const varNames = action.vars
+      const isSkipTargetMissingError = action.isSkipTargetMissingError
       return function (ctx: GameState, effect: Effect, { Options }: Bridge): GameState {
         const cardId = EffectFn.getCardID(effect)
         const cardController = getItemController(ctx, cardId)
@@ -280,51 +281,62 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
           varNames.flatMap(varName => {
             return getCardTipStrBaSyouPairs(ctx, varName, cardId)
           })
-        switch (whatToDo) {
-          case "ロール": {
-            for (const pair of pairs) {
-              ctx = doItemSetRollState(ctx, true, pair) as GameState
+        try {
+          switch (whatToDo) {
+            case "ロール": {
+              for (const pair of pairs) {
+                ctx = doItemSetRollState(ctx, true, pair) as GameState
+              }
+              return ctx
             }
-            return ctx
+            case "リロール": {
+              for (const pair of pairs) {
+                ctx = doItemSetRollState(ctx, false, pair) as GameState
+              }
+              return ctx
+            }
+            case "打開": {
+              for (const pair of pairs) {
+                assertTargetMissingError(ctx, pair)
+                ctx = mapItemState(ctx, pair[0], is => ({ ...is, isOpenForGain: true })) as GameState
+              }
+              return ctx
+            }
+            case "破壞": {
+              for (const pair of pairs) {
+                ctx = doItemSetDestroy(ctx, { id: "破壊する", playerID: cardController }, pair, Options)
+              }
+              return ctx
+            }
+            case "廃棄": {
+              for (const pair of pairs) {
+                ctx = doItemMove(ctx, AbsoluteBaSyouFn.setBaSyouKeyword(pair[1], "ジャンクヤード"), pair, Options) as GameState
+              }
+              return ctx
+            }
+            case "破壊を無効": {
+              for (const pair of pairs) {
+                ctx = doItemSetDestroy(ctx, null, pair, Options)
+              }
+              return ctx
+            }
+            case "見": {
+              for (const pair of pairs) {
+                ctx = mapItemState(ctx, pair[0], is => ({ ...is, isCheat: true })) as GameState
+              }
+              return ctx
+            }
           }
-          case "リロール": {
-            for (const pair of pairs) {
-              ctx = doItemSetRollState(ctx, false, pair) as GameState
+        } catch (e) {
+          if (e instanceof TargetMissingError) {
+            if (isSkipTargetMissingError) {
+              console.warn(`TargetMissingError被isSkipTargetMissingError忽略掉`)
+            } else {
+              throw e
             }
-            return ctx
-          }
-          case "打開": {
-            for (const pair of pairs) {
-              assertTargetMissingError(ctx, pair)
-              ctx = mapItemState(ctx, pair[0], is => ({ ...is, isOpenForGain: true })) as GameState
-            }
-            return ctx
-          }
-          case "破壞": {
-            for (const pair of pairs) {
-              ctx = doItemSetDestroy(ctx, { id: "破壊する", playerID: cardController }, pair, Options)
-            }
-            return ctx
-          }
-          case "廃棄": {
-            for (const pair of pairs) {
-              ctx = doItemMove(ctx, AbsoluteBaSyouFn.setBaSyouKeyword(pair[1], "ジャンクヤード"), pair, Options) as GameState
-            }
-            return ctx
-          }
-          case "破壊を無効": {
-            for (const pair of pairs) {
-              ctx = doItemSetDestroy(ctx, null, pair, Options)
-            }
-            return ctx
-          }
-          case "見": {
-            for (const pair of pairs) {
-              ctx = mapItemState(ctx, pair[0], is => ({ ...is, isCheat: true })) as GameState
-            }
-            return ctx
           }
         }
+        return ctx
       }
     }
     case "_敵軍本国に_１ダメージ": {
@@ -426,7 +438,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
         if (pairs.length == 0) {
           throw new Error(`pairs must not 0: ${action.title} ${action.vars}`)
         }
-        for(const pair of pairs){
+        for (const pair of pairs) {
           const coins = range(0, x).map(i => CoinFn.battleBonus(playerId, bonus))
           ctx = addCoinsToCard(ctx, pair, coins) as GameState
         }
