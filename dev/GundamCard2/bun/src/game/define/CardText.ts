@@ -92,6 +92,7 @@ export type Action = {
     title: ActionTitle,
     vars?: string[],
     isSelectAllCardInSetGroup?: string[],
+    isSkipTargetMissingError?: boolean,
     description?: string,
 }
 

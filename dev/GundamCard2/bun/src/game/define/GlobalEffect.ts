@@ -26,10 +26,11 @@ export type GlobalEffectTitle =
     | ["敵軍ユニットの効果の対象にならない"]
     | ["自軍の手札の上限枚数に＋_１", number]
     | ["このカードは、戦闘エリアにいる自軍ユニットにもセットできる"]
+    | ["このセットグループのユニットは、ロール状態でも防御に出撃できる"]
 
 export type GlobalEffect = {
     title: GlobalEffectTitle,
     cardIds: string[],
     // 保留, 暫時沒有用到
-    textIds?: { [key: string]: string }
+    //textIds?: { [key: string]: string }
 }

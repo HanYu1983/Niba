@@ -71,10 +71,12 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
             continue
           }
         }
+        // TODO:
+        // <〔Ｒ〕：共有［ΖΖ系］>
         if (currSp.length == 0) {
-          const match = curr.match(/(.?)(０|１|２|３|４|５|６|７|８|９|R+)(毎?)/)
+          const match = curr.match(/(<)?(.?)(０|１|２|３|４|５|６|７|８|９|R|Ｒ+)(毎?)/)
           if (match) {
-            const [_, colorstr, rollcoststr, every] = match
+            const [_, _2, colorstr, rollcoststr, every] = match
             currSp.push([colorstr, rollcoststr, every])
             continue
           }
@@ -128,8 +130,8 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
           const [[colorstr, rollcoststr, every], titlestr, char] = sp
           const color: CardColor | null = colorstr == "" ? null : (colorstr as CardColor)
           let conditions: { [key: string]: Condition } = {}
-          if (rollcoststr == "R") {
-            conditions["R"] = {
+          if (rollcoststr == "R" || rollcoststr == "Ｒ") {
+            conditions[rollcoststr] = {
               actions: [
                 {
                   title: ["_ロールする", "ロール"],

@@ -27,7 +27,7 @@ import { GlobalEffect } from "../define/GlobalEffect";
 import { GameStateFn } from ".";
 import { getGlobalEffects } from "./globalEffects";
 import { getRuntimeBattleArea } from "./RuntimeBattleAreaComponent";
-import { getSetGroupRoot } from "./SetGroupComponent";
+import { getSetGroup, getSetGroupRoot } from "./SetGroupComponent";
 import { GameExtParams } from "../define/GameExtParams";
 
 // player
@@ -197,43 +197,65 @@ export function getPlayerUnitIds(ctx: GameState, playerId: PlayerID): string[] {
   return lift(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getBaAll()).flatMap(basyou => getItemIdsByBasyou(ctx, basyou)).filter(itemId => getItemPrototype(ctx, itemId).category == "ユニット")
 }
 
-export function getPlayerUnitCanGoEarthIds(ctx: GameState, playerId: PlayerID, ext: GameExtParams): string[] {
+export function getPlayerUnitCanGoEarthIds(ctx: GameState, playerId: PlayerID, options: GameExtParams): string[] {
   const currentBaKw: BaKeyword = "戦闘エリア1"
   const runtimeBattleArea = getRuntimeBattleArea(ctx, currentBaKw)
   if (runtimeBattleArea == "宇宙エリア") {
     return []
   }
+  const itemIdsCanGoWithRollState = options.ges?.flatMap(ge => {
+    if (ge.title[0] == "このセットグループのユニットは、ロール状態でも防御に出撃できる") {
+      return ge.cardIds.map(cardId => getSetGroupRoot(ctx, cardId))
+    }
+    return []
+  }) || []
   const opponentPlayerId = PlayerIDFn.getOpponent(playerId)
   const cardIds = getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(playerId, "配備エリア"))
   let unitIds = cardIds
     .filter(cardId => getSetGroupRoot(ctx, cardId) == cardId)
     .filter(cardId => getCardBattleArea(ctx, cardId).includes(runtimeBattleArea))
-    .filter(cardId => getCard(ctx, cardId).isRoll != true)
+    .filter(cardId => {
+      if (itemIdsCanGoWithRollState.includes(cardId)) {
+        return true
+      }
+      return getCard(ctx, cardId).isRoll != true
+    })
   const opponentUnitIds = getBattleGroup(ctx, AbsoluteBaSyouFn.of(opponentPlayerId, currentBaKw));
   if (opponentUnitIds.length) {
-    if (isABattleGroup(ctx, ["高機動"], opponentUnitIds[0], ext)) {
-      unitIds = unitIds.filter(id => isSetGroupHasA(ctx, ["高機動"], id, ext))
+    if (isABattleGroup(ctx, ["高機動"], opponentUnitIds[0], options)) {
+      unitIds = unitIds.filter(id => isSetGroupHasA(ctx, ["高機動"], id, options))
     }
   }
   return unitIds
 }
 
-export function getPlayerUnitCanGoSpaceIds(ctx: GameState, playerId: PlayerID, ext: GameExtParams): string[] {
+export function getPlayerUnitCanGoSpaceIds(ctx: GameState, playerId: PlayerID, options: GameExtParams): string[] {
   const currentBaKw: BaKeyword = "戦闘エリア2"
   const runtimeBattleArea = getRuntimeBattleArea(ctx, currentBaKw)
   if (runtimeBattleArea == "地球エリア") {
     return []
   }
+  const itemIdsCanGoWithRollState = options.ges?.flatMap(ge => {
+    if (ge.title[0] == "このセットグループのユニットは、ロール状態でも防御に出撃できる") {
+      return ge.cardIds.map(cardId => getSetGroupRoot(ctx, cardId))
+    }
+    return []
+  }) || []
   const opponentPlayerId = PlayerIDFn.getOpponent(playerId)
   const cardIds = getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(playerId, "配備エリア"))
   let unitIds = cardIds
     .filter(cardId => getSetGroupRoot(ctx, cardId) == cardId)
     .filter(cardId => getCardBattleArea(ctx, cardId).includes(runtimeBattleArea))
-    .filter(cardId => getCard(ctx, cardId).isRoll != true)
+    .filter(cardId => {
+      if (itemIdsCanGoWithRollState.includes(cardId)) {
+        return true
+      }
+      return getCard(ctx, cardId).isRoll != true
+    })
   const opponentUnitIds = getBattleGroup(ctx, AbsoluteBaSyouFn.of(opponentPlayerId, currentBaKw));
   if (opponentUnitIds.length) {
-    if (isABattleGroup(ctx, ["高機動"], opponentUnitIds[0], ext)) {
-      unitIds = unitIds.filter(id => isSetGroupHasA(ctx, ["高機動"], id, ext))
+    if (isABattleGroup(ctx, ["高機動"], opponentUnitIds[0], options)) {
+      unitIds = unitIds.filter(id => isSetGroupHasA(ctx, ["高機動"], id, options))
     }
   }
   return unitIds
