@@ -250,6 +250,9 @@ export function createTipByEntitySearch(ctx: GameState, effect: Effect, searchOp
     if (searchOptions.isDestroy != null) {
         entityList = entityList.filter(EntityFn.filterIsDestroy(searchOptions.isDestroy))
     }
+    if (searchOptions.hasDestroyId != null) {
+        entityList = entityList.filter(entity => entity.destroyReason && searchOptions.hasDestroyId?.includes(entity.destroyReason.id))
+    }
     if (searchOptions.isRoll != null) {
         entityList = entityList.filter(entity =>
             (entity.isCard

@@ -3,7 +3,7 @@ import { RelatedPlayerSideKeyword, UnitPropertyKeyword } from ".";
 import { LogicTree, LogicTreeFn } from "../../tool/logicTree";
 import { AbsoluteBaSyou, BaSyou, BaSyouKeyword, RelatedBaSyou } from "./BaSyou";
 import { CardColor, CardCategory, GSignProperty, GSign } from "./CardPrototype";
-import { DestroyReason, Effect } from "./Effect";
+import { DestroyId, DestroyReason, Effect } from "./Effect";
 import { GameEvent, GameEventTitle } from "./GameEvent";
 import { GlobalEffect } from "./GlobalEffect";
 import { Phase, SiYouTiming } from "./Timing";
@@ -125,6 +125,7 @@ export type EntitySearchOptions = {
     atBa?: boolean,
     color?: CardColor[],
     compareBattlePoint?: [UnitPropertyKeyword | "合計国力", "<=" | ">=" | "==", number],
+    hasDestroyId?: DestroyId[],
     isDestroy?: boolean,
     isSetGroup?: boolean,
     isSetGroupHasChar?: string[],

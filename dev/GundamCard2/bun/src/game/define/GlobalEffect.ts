@@ -25,6 +25,7 @@ export type GlobalEffectTitle =
     | ["敵軍効果の対象にならない"]
     | ["敵軍ユニットの効果の対象にならない"]
     | ["自軍の手札の上限枚数に＋_１", number]
+    | ["このカードは、戦闘エリアにいる自軍ユニットにもセットできる"]
 
 export type GlobalEffect = {
     title: GlobalEffectTitle,

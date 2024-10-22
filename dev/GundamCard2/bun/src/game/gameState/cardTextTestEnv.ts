@@ -3,7 +3,7 @@ import { loadPrototype, getPrototype } from "../../script";
 import { AbsoluteBaSyouFn } from "../define/BaSyou";
 import { PlayerA, PlayerB } from "../define/PlayerID";
 import { setActivePlayerID } from "./ActivePlayerComponent";
-import { addCards, createCardWithProtoIds } from "./CardTableComponent";
+import { addCards, createCardWithProtoIds, getCard } from "./CardTableComponent";
 import { createPlayEffects } from "./createPlayEffects";
 import { createCommandEffectTips, setTipSelectionForUser, doEffect } from "./doEffect";
 import { addDestroyEffect, getImmediateEffects, getTopEffect, removeEffect } from "./EffectStackComponent";
@@ -24,6 +24,8 @@ import { isCardMaster } from "./card";
 import { createTextsFromSpecialEffect } from "./createTextsFromSpecialEffect";
 import { doCutInDestroyEffectsAndClear } from "./doCutInDestroyEffectsAndClear";
 import { createDestroyEffect } from "./createDestroyEffect";
+import { getItemIdsByBasyou, getItemPrototype } from "./ItemTableComponent";
+import { getPlayerHandIds } from "./player";
 
 export async function testAllCardTextTestEnv() {
   const extIds = ["unit", "unitHasPhy", "charBlue", "unitHasGain", "charBlueNT"]
@@ -133,18 +135,17 @@ export function testText(proto: CardPrototype, text: CardText, options?: { isChe
             }
             break
           }
-
           case "自動型": {
-            const card = testEnv.thisCard?.[2]
-            if (card == null) {
-              throw new Error()
-            }
             if (testEnv.phase) {
               ctx = setPhase(ctx, testEnv.phase) as GameState
             }
-            const ges = getGlobalEffects(ctx, null)
+            let ges = getGlobalEffects(ctx, null)
             switch (text.title[1]) {
               case "起動": {
+                const card = testEnv.thisCard?.[2]
+                if (card == null) {
+                  throw new Error()
+                }
                 if (testEnv.eventTitle) {
                   const gameEvent: GameEvent = {
                     title: testEnv.eventTitle,
@@ -186,9 +187,36 @@ export function testText(proto: CardPrototype, text: CardText, options?: { isChe
               }
               case "常駐":
               case "恒常": {
-                const currentGesLength = getGlobalEffects(ctx, null).length
-                if (currentGesLength == originGesLength) {
+                const currentGes = getGlobalEffects(ctx, null)
+                if (currentGes.length == originGesLength) {
                   throw new Error()
+                }
+                ges = currentGes
+                const hasThisCardInHand = getPlayerHandIds(ctx, PlayerA).find(itemId => getCard(ctx, itemId).protoID == proto.id)
+                if (hasThisCardInHand) {
+                  const effects = createPlayEffects(ctx, PlayerA, { ges: ges }).filter(eff => eff.reason[0] == "PlayCard" && eff.reason[3].isPlayG != true)
+                  let successCount = 0
+                  effects.forEach(effect => {
+                    ctx = setTipSelectionForUser(ctx, effect, 0, 0)
+                    ctx = doEffect(ctx, effect, 0, 0)
+                    for (let i = 0; i < 99; ++i) {
+                      let effect = getTopEffect(ctx)
+                      if (effect) {
+                        ctx = doEffect(ctx, effect, 0, 0)
+                        ctx = removeEffect(ctx, effect.id) as GameState
+                      }
+                      effect = getImmediateEffects(ctx)[0]
+                      if (effect) {
+                        ctx = setTipSelectionForUser(ctx, effect, 0, 0)
+                        ctx = doEffect(ctx, effect, 0, 0)
+                        ctx = removeEffect(ctx, effect.id) as GameState
+                      }
+                    }
+                    successCount++
+                  })
+                  if (successCount != effects.length) {
+                    throw new Error()
+                  }
                 }
               }
             }

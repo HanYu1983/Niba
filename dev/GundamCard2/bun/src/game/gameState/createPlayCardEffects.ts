@@ -663,6 +663,7 @@ export function createPlayCardConditions(ctx: GameState, cardId: string, options
                 {
                     title: ["Entity", {
                         atBa: true,
+                        // 空陣列會自動填入自身
                         hasTitle: [],
                         count: 0,
                     }],
@@ -670,11 +671,27 @@ export function createPlayCardConditions(ctx: GameState, cardId: string, options
             ]
         }
     } : {}
-    const conditions: { [key: string]: Condition } = {
+    let conditions: { [key: string]: Condition } = {
         ...costConditions,
         ...rollCostConditions,
         ...characterOperationUnitConditions,
         ...characterMoreConditions
+    }
+    const hasSp = options.ges?.find(ge => ge.title[0] == "このカードは、戦闘エリアにいる自軍ユニットにもセットできる" && ge.cardIds.includes(cardId)) != null
+    if (hasSp) {
+        conditions = {
+            ...conditions,
+            // 覆蓋對象
+            [TipFn.createCharacterTargetUnitKey()]: {
+                title: ["Entity", {
+                    atBa: true,
+                    isCanSetCharacter: true,
+                    side: "自軍",
+                    is: ["ユニット"],
+                    count: 1
+                }],
+            },
+        }
     }
     return conditions
 }

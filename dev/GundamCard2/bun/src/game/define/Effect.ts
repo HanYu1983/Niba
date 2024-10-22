@@ -4,8 +4,10 @@ import { Situation, CardText, Condition, Action, LogicTreeAction } from "./CardT
 
 export type DamageTypeKeyword = "通常ダメージ" | "戦闘ダメージ"
 
+export type DestroyId = DamageTypeKeyword | "破壊する" | "マイナスの戦闘修正"
+
 export type DestroyReason1 = {
-    id: DamageTypeKeyword | "破壊する" | "マイナスの戦闘修正";
+    id: DestroyId;
     // 誰造成的
     playerID: string;
 };
