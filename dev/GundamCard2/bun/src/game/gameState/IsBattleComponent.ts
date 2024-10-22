@@ -83,9 +83,7 @@ export function isBattle(
     return false
   }
   if (cardID2) {
-    if (opponentAreaIds.includes(cardID2)) {
-      return true
-    }
+    return opponentAreaIds.includes(cardID2)
   }
   return true
 }

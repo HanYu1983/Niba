@@ -29,7 +29,7 @@ import { getPlayerHandIds } from "./player";
 import { createBridge } from "../bridge/createBridge";
 
 export async function testAllCardTextTestEnv() {
-  const extIds = ["unit", "unitHasPhy", "charBlue", "unitHasGain", "charBlueNT"]
+  const extIds = ["unit", "unitHasPhy", "charBlue", "unitHasGain", "charBlueNT", "unitHasRange"]
   const all = createDecks().flatMap(v => v).concat(...extIds)
   for (const id of all) {
     await loadPrototype(id)

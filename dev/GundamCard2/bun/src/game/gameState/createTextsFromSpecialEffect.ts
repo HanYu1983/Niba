@@ -386,6 +386,14 @@ export function createTextsFromSpecialEffect(text: CardText, options: GameExtPar
                     ...text,
                     title: ["使用型", ["ダメージ判定ステップ"]],
                     description: "和這張卡交戰的防禦力x以下的敵軍機體1張破壞",
+                    testEnvs:[
+                        {
+                            createCards:[
+                                ["自軍", "戦闘エリア1", [["unitHasRange", 1]]],
+                                ["敵軍", "戦闘エリア1", [["unit", 1]]]
+                            ]
+                        }
+                    ],
                     conditions: {
                         ...text.conditions,
                         "這張卡交戰的防禦力x以下的敵軍機體1張": {

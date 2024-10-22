@@ -1,4 +1,4 @@
-import { AbsoluteBaSyouFn } from "../game/define/BaSyou";
+import { AbsoluteBaSyouFn, RelatedBaSyouFn } from "../game/define/BaSyou";
 import { Card } from "../game/define/Card";
 import { testGameError } from "../game/define/GameError";
 import { PlayerA, PlayerB } from "../game/define/PlayerID";
@@ -6,7 +6,7 @@ import { addCards, mapCard, getCard, createCardWithProtoIds } from "../game/game
 import { doItemSwap } from "../game/gameState/doItemSwap";
 import { createGameState, GameState } from "../game/gameState/GameState";
 import { mapItemState, getItemState } from "../game/gameState/ItemStateComponent";
-import { getItemBaSyou } from "../game/gameState/ItemTableComponent";
+import { createStrBaSyouPair, getItemBaSyou, getItemIdsByBasyou } from "../game/gameState/ItemTableComponent";
 import { getPrototype, loadPrototype } from "../script";
 import { testItemGroup } from "../tool/ItemGroup";
 import { test179001_01A_CH_WT007R_white } from "./test179001_01A_CH_WT007R_white";
@@ -53,12 +53,20 @@ import { testAllCardTextTestEnv } from "../game/gameState/cardTextTestEnv";
 import { testBattleBonus } from "./testFlow";
 import { testOptAlgAttackCounty2, testOptAlgAttackCounty3 } from "../game/ai/SelectBattleGroupGene";
 import { testOptAlgAttackCounty, testOptCreateBattleGroup } from "./testOptAlg";
+import { checkIsBattle, isBattle } from "../game/gameState/IsBattleComponent";
+import { createActionTitleFn } from "../game/gameState/createActionTitleFn";
+import { EffectFn } from "../game/define/Effect";
+import { createBridge } from "../game/bridge/createBridge";
+import { Tip } from "../game/define/Tip";
+import { setCardTipStrBaSyouPairs } from "../game/gameState/doEffect";
 
 const fs = require('fs').promises;
 
 export async function tests() {
     return [
         testAllCardTextTestEnv,
+        testInsertMove,
+        testIsBattle,
         // testOptAlgAttackCounty3,
         // testOptAlgAttackCounty2,
         testOptAlgAttackCounty,
@@ -165,4 +173,94 @@ async function testSwapItem() {
     if (AbsoluteBaSyouFn.getBaSyouKeyword(getItemBaSyou(ctx, unit2.id)) != "戦闘エリア2") {
         throw new Error()
     }
+}
+
+async function testIsBattle() {
+    let ctx = createGameState()
+    ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1"), [{ id: "unit1", protoID: "unit" }]) as GameState
+    ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア2"), [{ id: "unit2", protoID: "unit" }]) as GameState
+    ctx = checkIsBattle(ctx) as GameState
+    if (isBattle(ctx, "unit1", null) != false) {
+        throw new Error()
+    }
+    if (isBattle(ctx, "unit2", null) != false) {
+        throw new Error()
+    }
+    ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア1"), [{ id: "unit3", protoID: "unit" }]) as GameState
+    ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア2"), [{ id: "unit4", protoID: "unit" }]) as GameState
+    ctx = checkIsBattle(ctx) as GameState
+    if (isBattle(ctx, "unit1", null) != true) {
+        throw new Error()
+    }
+    if (isBattle(ctx, "unit2", null) != true) {
+        throw new Error()
+    }
+    if (isBattle(ctx, "unit3", null) != true) {
+        throw new Error()
+    }
+    if (isBattle(ctx, "unit4", null) != true) {
+        throw new Error()
+    }
+    if (isBattle(ctx, "unit1", "unit3") != true) {
+        throw new Error()
+    }
+    if (isBattle(ctx, "unit2", "unit4") != true) {
+        throw new Error()
+    }
+    if (isBattle(ctx, "unit1", "unit4") != false) {
+        throw new Error()
+    }
+    if (isBattle(ctx, "unit2", "unit3") != false) {
+        throw new Error()
+    }
+}
+
+function testInsertMove() {
+    let ctx = createGameState()
+    ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア2"), [
+        { id: "unit1", protoID: "unit" },
+        { id: "unit2", protoID: "unit" },
+        { id: "unit3", protoID: "unit" },
+    ]) as GameState
+    ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), [
+        { id: "g1", protoID: "unit" },
+    ]) as GameState
+    const masterCardId = "unit1"
+    let originCtx = JSON.parse(JSON.stringify(ctx))
+    {
+        ctx = setCardTipStrBaSyouPairs(ctx, "var1", [createStrBaSyouPair(ctx, "unit2")], masterCardId)
+        ctx = setCardTipStrBaSyouPairs(ctx, "var2", [createStrBaSyouPair(ctx, "g1")], masterCardId)
+        ctx = createActionTitleFn({
+            title: ["エリアの任意の順番に_リロール状態で移す", RelatedBaSyouFn.of("自軍", "戦闘エリア2"), false],
+            vars: ["var1", "var2"]
+        })(ctx, EffectFn.createEmptyPlayCard(PlayerA, masterCardId), createBridge({}))
+        if (getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア2"))[1] != "g1") {
+            throw new Error()
+        }
+    }
+    ctx = originCtx
+    {
+        ctx = setCardTipStrBaSyouPairs(ctx, "var1", [], masterCardId)
+        ctx = setCardTipStrBaSyouPairs(ctx, "var2", [createStrBaSyouPair(ctx, "g1")], masterCardId)
+        ctx = createActionTitleFn({
+            title: ["エリアの任意の順番に_リロール状態で移す", RelatedBaSyouFn.of("自軍", "戦闘エリア2"), false],
+            vars: ["var1", "var2"]
+        })(ctx, EffectFn.createEmptyPlayCard(PlayerA, masterCardId), createBridge({}))
+        if (getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア2"))[3] != "g1") {
+            throw new Error()
+        }
+    }
+    ctx = originCtx
+    {
+        ctx = setCardTipStrBaSyouPairs(ctx, "var1", [createStrBaSyouPair(ctx, "unit1")], masterCardId)
+        ctx = setCardTipStrBaSyouPairs(ctx, "var2", [createStrBaSyouPair(ctx, "g1")], masterCardId)
+        ctx = createActionTitleFn({
+            title: ["エリアの任意の順番に_リロール状態で移す", RelatedBaSyouFn.of("自軍", "戦闘エリア2"), false],
+            vars: ["var1", "var2"]
+        })(ctx, EffectFn.createEmptyPlayCard(PlayerA, masterCardId), createBridge({}))
+        if (getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア2"))[0] != "g1") {
+            throw new Error()
+        }
+    }
+    throw new Error()
 }
