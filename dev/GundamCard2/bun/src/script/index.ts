@@ -71,8 +71,6 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
             continue
           }
         }
-        // TODO:
-        // <〔Ｒ〕：共有［ΖΖ系］>
         if (currSp.length == 0) {
           const match = curr.match(/(.?)(０|１|２|３|４|５|６|７|８|９|R|Ｒ+)(毎?)/)
           if (match) {
