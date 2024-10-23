@@ -49,7 +49,7 @@ export async function testCompress() {
                     const flows = queryFlow(ctx, playerId)
                     if (flows.length) {
                         try {
-                            let flow: Flow | null = thinkVer2(ctx, playerId, flows)
+                            let flow: Flow | null = thinkVer1(ctx, playerId, flows)
                             if (flow) {
                                 logCategory("testCompress", "think", playerId, flow.id)
                             }

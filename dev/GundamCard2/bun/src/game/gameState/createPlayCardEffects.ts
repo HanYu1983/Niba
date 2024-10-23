@@ -658,7 +658,7 @@ export function createPlayCardConditions(ctx: GameState, cardId: string, options
             }],
         },
     } : {}
-    
+
     const characterMoreConditions: { [key: string]: Condition } = prototype.category == "キャラクター" ? {
         "同名卡不能下": {
             actions: [
@@ -671,8 +671,8 @@ export function createPlayCardConditions(ctx: GameState, cardId: string, options
                             hasTitle: [],
                             count: 0
                         }, Options)
-                        if(DefineFn.TipFn.getWant(tip).length){
-                            throw new TargetMissingError(`已有同名卡存在: ${cardId}`)
+                        if (DefineFn.TipFn.getWant(tip).length) {
+                            throw new DefineFn.TargetMissingError(`已有同名卡存在: ${cardId}`)
                         }
                         return ctx
                     }.toString()

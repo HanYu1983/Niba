@@ -175,6 +175,7 @@ export function createEffectTips(
           errors.push(e.message)
           return ctx
         } else {
+          console.log(effect.description, logicId, logicSubId, key)
           throw e
         }
       }

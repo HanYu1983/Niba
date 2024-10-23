@@ -19,6 +19,13 @@ import { getRuntimeBattleArea } from "./RuntimeBattleAreaComponent"
 import { getItemRuntimeCategory } from "./card"
 import { GameExtParams } from "../define/GameExtParams"
 
+// export function xxx(ctx: GameState, effect: Effect, [itemId, from]: StrBaSyouPair, options: GameExtParams & { isSkipTargetMissing?: boolean }): GameState {
+//     switch (effect.reason[0]) {
+//         case "GameRule":
+//     }
+//     return ctx
+// }
+
 export function doItemSetDestroy(ctx: GameState, reason: DestroyReason | null, [itemId, from]: StrBaSyouPair, options: GameExtParams & { isSkipTargetMissing?: boolean }): GameState {
     if (options?.isSkipTargetMissing) {
 

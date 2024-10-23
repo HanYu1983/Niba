@@ -74,6 +74,15 @@ export function getCardTexts(ctx: ItemTableComponent, cardID: string, options: G
     return text
   })
 
+
+
+  // 179029_05C_C_RD047U_red
+  // U
+  // ZZ
+  // 甘言
+  // 支配
+  // （常時）：プレイされている敵軍ユニット１枚が持つ全てのテキストは、ターン終了時まで無効になる。（注：対象が場に出た後も有効）
+
   // 取得增減費用的效果, 寫在condition裡很像就可以了
   // 179003_01A_U_BN007R_brown
   // R

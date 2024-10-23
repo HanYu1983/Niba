@@ -273,7 +273,7 @@ export type TestEnv = {
     addCards?: [RelatedPlayerSideKeyword, BaSyouKeyword, Card[]][],
     createCards?: [RelatedPlayerSideKeyword, BaSyouKeyword, [string, number][]][],
     setGroupParent?: { [key: string]: string },
-    checkFn?: (ctx:GameState, bridge:Bridge)=>void;
+    checkFn?: (ctx: GameState, bridge: Bridge) => void;
 }
 
 export type CardText = {
@@ -288,7 +288,8 @@ export type CardText = {
     protectLevel?: 1 | 2,
     isEachTime?: boolean,
     createPlayEffect?: string,
-    testEnvs?: TestEnv[]
+    testEnvs?: TestEnv[],
+    parentTextTitle?: TextTitle
 }
 
 function getCondition(ctx: CardText, conditionId: string): Condition {

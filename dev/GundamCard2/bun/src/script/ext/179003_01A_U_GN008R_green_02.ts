@@ -9,7 +9,6 @@
 import { CardColor, CardPrototype } from "../../game/define/CardPrototype";
 import { Condition } from "../../game/define/CardText";
 import { Effect } from "../../game/define/Effect";
-import { TargetMissingError } from "../../game/define/GameError";
 import { StrBaSyouPair } from "../../game/define/Tip";
 import { GameState } from "../../game/gameState/GameState";
 import { Bridge } from "../bridge";
@@ -60,7 +59,7 @@ export const prototype: CardPrototype = {
                               if (GameStateFn.getItemBaSyou(ctx, cardId).value[1] == "戦闘エリア1" || GameStateFn.getItemBaSyou(ctx, cardId).value[1] == "戦闘エリア2") {
 
                               } else {
-                                throw new TargetMissingError(`必須在戰區`)
+                                throw new DefineFn.TargetMissingError(`必須在戰區`)
                               }
                               const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "自軍本国の上のカードX枚を見て、その中にあるユニット１枚", cardId)
                               for (const pair of pairs) {

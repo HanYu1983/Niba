@@ -94,7 +94,7 @@ function getSituationEffects(ctx: GameState, situation: Situation | null): Globa
 
 
 export function createAllCardTexts(ctx: GameState): [Item, CardText[]][] {
-  // 常駐
+  // 常駐(只在戰區和配置區)
   const getTextGroup1 = pipe(
     always(AbsoluteBaSyouFn.getBaAll()),
     map(basyou => getItemIdsByBasyou(ctx, basyou)),
@@ -113,7 +113,7 @@ export function createAllCardTexts(ctx: GameState): [Item, CardText[]][] {
       return [item, texts] as [Item, CardText[]]
     })
   )
-  // 恒常 & 使用型
+  // 恒常 & 使用型 (只要是牌面向上的的地方, 這裡包含使用型是為了計算事件)
   const getTextGroup2 = pipe(
     always(AbsoluteBaSyouFn.getTextOn()),
     map(basyou => getItemIdsByBasyou(ctx, basyou)),
@@ -132,7 +132,7 @@ export function createAllCardTexts(ctx: GameState): [Item, CardText[]][] {
       return [item, texts] as [Item, CardText[]]
     })
   )
-  // Gゾーン常駐
+  // Gゾーン常駐 (在G區的<>常駐內文)
   const getTextGroup3 = pipe(
     always([AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), AbsoluteBaSyouFn.of(PlayerB, "Gゾーン")]),
     map(basyou => getItemIdsByBasyou(ctx, basyou)),
@@ -151,7 +151,7 @@ export function createAllCardTexts(ctx: GameState): [Item, CardText[]][] {
       return [item, texts] as [Item, CardText[]]
     })
   )
-  // command
+  // 指令. 為了計算事件
   const getTextGroup4 = pipe(
     always(getCardIds(ctx)),
     map(cardId => {
@@ -166,9 +166,12 @@ export function createAllCardTexts(ctx: GameState): [Item, CardText[]][] {
   const allCardTexts = [...getTextGroup1(), ...getTextGroup2(), ...getTextGroup3(), ...getTextGroup4()]
 
   const bridge = createBridge({})
-  const ges = allCardTexts.flatMap(([item, texts]) => {
+  const firstGlobalEffectsFromAllTexts = allCardTexts.flatMap(([item, texts]) => {
     const globalEffects = texts
-      .map((text, i) => {
+      .flatMap((text, i) => {
+        if (text.onSituation == null) {
+          return []
+        }
         const cardController = getItemController(ctx, item.id)
         logCategory("createAllCardTexts", "getOnSituationFn", text.onSituation)
         const fn = getOnSituationFn(text)
@@ -177,9 +180,6 @@ export function createAllCardTexts(ctx: GameState): [Item, CardText[]][] {
           reason: ["Situation", cardController, item.id, { title: ["有沒有新增內文"] }],
           text: text
         }
-        return [fn, effect] as [OnSituationFn, Effect]
-      })
-      .flatMap(([fn, effect]) => {
         return fn(ctx, effect, bridge)
       })
     return globalEffects
@@ -187,9 +187,9 @@ export function createAllCardTexts(ctx: GameState): [Item, CardText[]][] {
 
   const itemStateGes = getItemStateValues(ctx).flatMap(ItemStateFn.getGlobalEffects)
 
-  const gesLayer1 = [...ges, ...itemStateGes]
+  const firstGes = [...firstGlobalEffectsFromAllTexts, ...itemStateGes]
 
-  const textsLayer2 = gesLayer1.filter(ge => ge.title[0] == "AddText")
+  const textsByAddText = firstGes.filter(ge => ge.title[0] == "AddText")
     .map(ge => [ge.cardIds, ge.title[1]] as [string[], CardText])
     .flatMap(([itemIds, text]) => {
       return itemIds.flatMap(itemId => {
@@ -198,7 +198,7 @@ export function createAllCardTexts(ctx: GameState): [Item, CardText[]][] {
       })
     })
 
-  const textsLayer2_2 = gesLayer1.filter(ge => ge.title[0] == "AddTextRef")
+  const textsByAddTextRef = firstGes.filter(ge => ge.title[0] == "AddTextRef")
     .map(ge => [ge.cardIds, ge.title[1]] as [string[], TipTitleTextRef])
     .flatMap(([itemIds, textRef]) => {
       return itemIds.flatMap(itemId => {
@@ -207,5 +207,54 @@ export function createAllCardTexts(ctx: GameState): [Item, CardText[]][] {
         return [[getItem(ctx, itemId), texts]] as [Item, CardText[]][]
       })
     })
-  return [...allCardTexts, ...textsLayer2, ...textsLayer2_2]
+
+  let allTexts = [...allCardTexts, ...textsByAddText, ...textsByAddTextRef]
+
+
+  // allTexts = allCardTexts.filter(([item, texts]) => {
+
+  // })
+
+  // TODO 重構計算順序, 把特殊效果移到最後面再轉換就行了
+  // 179022_06C_C_RD053R_red
+  // R
+  // OO
+  // 癒えない悔恨
+  // 支配
+  // （攻撃ステップ）：全ての敵軍ユニットが持つ、全ての特殊効果を、ターン終了時まで無効にする。
+
+  // 179029_05C_C_RD047U_red
+  // U
+  // ZZ
+  // 甘言
+  // 支配
+  // （常時）：プレイされている敵軍ユニット１枚が持つ全てのテキストは、ターン終了時まで無効になる。（注：対象が場に出た後も有効）
+
+
+  // 179024_03B_C_RD028S_red
+  // S
+  // クロスボーン
+  // 怒れるX3
+  // 支配
+  // ユニーク
+  // ユニーク
+  // 『恒常』：このカードのプレイは、３以下の合計国力を持つ敵軍コマンドの効果では無効にならない。
+  // （戦闘フェイズ）：エリア１つにいる、全ての敵軍カードが持つ全てのテキストと、まだ未解決のその効果を、このターン、無効にする。
+
+
+  // 179016_04B_C_RD037R_red
+  // R
+  // ZZ
+  // 呪縛からの解放
+  // 支配
+  // （常時）：敵軍カード１枚が持つテキスト１つを、ターン終了時まで無効にする。その場合、対象１と同じ種類の自軍カード１枚は、ターン終了時まで、無効にしたテキストと同じテキストを得る。
+
+  // 179013_S1B_C_RD022U_red
+  // U
+  // UC
+  // 無気力
+  // 対抗　支配
+  // （戦闘フェイズ）：戦闘エリアにいる敵軍ユニットのテキストのプレイ１つを無効にする。その場合、その敵軍ユニットが持つ全てのテキストを、このターン、無効にする。
+
+  return allTexts
 }
