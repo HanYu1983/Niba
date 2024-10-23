@@ -186,6 +186,17 @@ export const EventCenterFn = {
         assertIsGameState(ctx)
         return ctx
     },
+    onItemMoveBefore(ctx: any, from: AbsoluteBaSyou, to: AbsoluteBaSyou, itemId: string, options: GameExtParams): any {
+        assertIsGameState(ctx)
+        // 從非場所到場所=出場
+        if (BaSyouKeywordFn.isBa(AbsoluteBaSyouFn.getBaSyouKeyword(from)) == false && BaSyouKeywordFn.isBa(AbsoluteBaSyouFn.getBaSyouKeyword(to))) {
+            ctx = doTriggerEvent(ctx, {
+                title: ["カードが場から離れる場合"],
+                cardIds: [itemId]
+            }, options)
+        }
+        return ctx
+    },
     onItemMove(ctx: any, from: AbsoluteBaSyou, to: AbsoluteBaSyou, itemId: string, options: GameExtParams): any {
         assertIsGameState(ctx)
         ctx = onItemMove(ctx, from, to, itemId, options)

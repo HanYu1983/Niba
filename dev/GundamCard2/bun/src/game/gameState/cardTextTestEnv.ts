@@ -61,7 +61,7 @@ export function testText(proto: CardPrototype, text: CardText, options?: { isChe
       const originGesLength = getGlobalEffects(ctx, null).length
       if (testEnv.thisCard) {
         const [side, kw, card, state] = testEnv.thisCard
-        card.id = "TestCard"
+        card.id = card.id || "TestCard"
         ctx = addCards(ctx, AbsoluteBaSyouFn.of(side == "自軍" ? PlayerA : PlayerB, kw), [card]) as GameState
         if (state) {
           ctx = mapItemState(ctx, card.id, is => ({ ...is, ...state })) as GameState
@@ -82,15 +82,15 @@ export function testText(proto: CardPrototype, text: CardText, options?: { isChe
           }
         }
       }
-      const ges = getGlobalEffects(ctx, null)
-      ctx = checkIsBattle(ctx) as GameState
-      ctx = doCutInDestroyEffectsAndClear(ctx, null, { ges: ges })
       if (testEnv.setGroupParent) {
         for (const cardId in testEnv.setGroupParent) {
           const parent = testEnv.setGroupParent[cardId]
           ctx = setSetGroupParent(ctx, parent, cardId) as GameState
         }
       }
+      const ges = getGlobalEffects(ctx, null)
+      ctx = checkIsBattle(ctx) as GameState
+      ctx = doCutInDestroyEffectsAndClear(ctx, null, { ges: ges })
       try {
         switch (text.title[0]) {
           case "使用型": {
@@ -224,8 +224,8 @@ export function testText(proto: CardPrototype, text: CardText, options?: { isChe
             break
           }
         }
-        if(testEnv.checkFn){
-          testEnv.checkFn(ctx, createBridge({ges: getGlobalEffects(ctx, null)}))
+        if (testEnv.checkFn) {
+          testEnv.checkFn(ctx, createBridge({ ges: getGlobalEffects(ctx, null) }))
         }
         logCategory("testAllCardTextTestEnv", `TestEnv Pass: ${proto.id} ${text.description}`)
       } catch (e) {

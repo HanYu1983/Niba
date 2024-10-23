@@ -10,7 +10,7 @@ import { GameExtParams } from "../define/GameExtParams"
 import { Effect } from "../define/Effect"
 import { assertTargetNoLongerValidAndUpdate } from "./assertTargetNoLongerValidAndUpdate"
 
-export function doItemMove(ctx: GameState, effect:Effect, to: AbsoluteBaSyou, [itemId, from]: StrBaSyouPair, options: GameExtParams & { isSkipTargetMissing?: boolean, insertId?: number }): GameState {
+export function doItemMove(ctx: GameState, effect: Effect, to: AbsoluteBaSyou, [itemId, from]: StrBaSyouPair, options: GameExtParams & { isSkipTargetMissing?: boolean, insertId?: number }): GameState {
     logCategory("doItemMove", "")
     const ges = options.ges || []
     if (options?.isSkipTargetMissing) {
@@ -39,6 +39,7 @@ export function doItemMove(ctx: GameState, effect:Effect, to: AbsoluteBaSyou, [i
         const itemIds = getSetGroupChildren(ctx, itemId)
         itemIds.forEach(itemId => {
             const from = getItemBaSyou(ctx, itemId)
+            ctx = EventCenterFn.onItemMoveBefore(ctx, from, to, itemId, options)
             ctx = {
                 ...ctx,
                 table: TableFns.moveCard(ctx.table, AbsoluteBaSyouFn.toString(from), AbsoluteBaSyouFn.toString(to), itemId, { insertId: options?.insertId })
