@@ -18,18 +18,13 @@ import { doTriggerEvent } from "./doTriggerEvent"
 import { getRuntimeBattleArea } from "./RuntimeBattleAreaComponent"
 import { getItemRuntimeCategory } from "./card"
 import { GameExtParams } from "../define/GameExtParams"
+import { assertTargetNoLongerValidAndUpdate } from "./assertTargetNoLongerValidAndUpdate"
 
-// export function xxx(ctx: GameState, effect: Effect, [itemId, from]: StrBaSyouPair, options: GameExtParams & { isSkipTargetMissing?: boolean }): GameState {
-//     switch (effect.reason[0]) {
-//         case "GameRule":
-//     }
-//     return ctx
-// }
-
-export function doItemSetDestroy(ctx: GameState, reason: DestroyReason | null, [itemId, from]: StrBaSyouPair, options: GameExtParams & { isSkipTargetMissing?: boolean }): GameState {
+export function xxx(ctx: GameState, effect: Effect, reason: DestroyReason | null, [itemId, from]: StrBaSyouPair, options: GameExtParams & { isSkipTargetMissing?: boolean }): GameState {
     if (options?.isSkipTargetMissing) {
 
     } else {
+        assertTargetNoLongerValidAndUpdate(ctx, effect, itemId, options)
         assertTargetMissingError(ctx, [itemId, from])
         if (reason) {
             if (getItemState(ctx, itemId).destroyReason) {
@@ -43,34 +38,16 @@ export function doItemSetDestroy(ctx: GameState, reason: DestroyReason | null, [
                 throw new Error(`マイナスの戦闘修正的破壞不能被選到`)
             }
         }
-        // const isDestroyEffect = getCutInDestroyEffects(ctx).find(e => EffectFn.getCardID(e) == itemId)
-        // if (reason) {
-        //     if (isDestroyEffect) {
-        //         throw new TargetMissingError(`already destroy: ${itemId}`, {})
-        //     }
-        // } else {
-        //     if (isDestroyEffect == null) {
-        //         throw new TargetMissingError(`not destroy: ${itemId}`, {})
-        //     }
-        //     ctx = mapItemState(ctx, itemId, is => {
-        //         if (is.destroyReason?.id == "マイナスの戦闘修正") {
-        //             throw new Error(`マイナスの戦闘修正的破壞不能被選到`)
-        //         }
-        //         return { ...is, destroyReason: null }
-        //     }) as GameState
-        // }
     }
+    return doItemSetDestroy(ctx, reason, [itemId, from], options)
+}
 
+export function doItemSetDestroy(ctx: GameState, reason: DestroyReason | null, [itemId, from]: StrBaSyouPair, options: GameExtParams & { isSkipTargetMissing?: boolean }): GameState {
     if (isCard(ctx, itemId) || isChip(ctx, itemId)) {
         // 自己包含子樹全部破壞，自己的檢查在上方，以下的檢查是用子樹的標準
         getSetGroupChildren(ctx, itemId).forEach(setGroupId => {
-            // 注意：從切入的堆疊取得破壞效果(stackEffects)，而不是從破壞陣列(destroyEffects)
-            const isDestroyEffect = getCutInDestroyEffects(ctx).find(e => EffectFn.getCardID(e) == setGroupId)
             if (reason) {
                 // 略過已被破壞的
-                // if (isDestroyEffect) {
-                //     return
-                // }
                 if (getItemState(ctx, setGroupId).destroyReason) {
                     return
                 }
@@ -84,7 +61,6 @@ export function doItemSetDestroy(ctx: GameState, reason: DestroyReason | null, [
                     ctx = doTriggerEvent(ctx, { title: ["このカードのセットグループのユニットが破壊された場合"], cardIds: [setGroupId] }, options)
                 }
             } else {
-                // if (isDestroyEffect) {
                 // 略過マイナスの戦闘修正，不能破壞無效，但因為在子樹裡，不必理會這種情況
                 if (getItemState(ctx, setGroupId).destroyReason?.id == "マイナスの戦闘修正") {
                     return
@@ -92,13 +68,12 @@ export function doItemSetDestroy(ctx: GameState, reason: DestroyReason | null, [
                 ctx = mapItemState(ctx, setGroupId, is => {
                     return { ...is, destroyReason: null }
                 }) as GameState
+                // 注意：從切入的堆疊取得破壞效果(stackEffects)，而不是從破壞陣列(destroyEffects)
+                const isDestroyEffect = getCutInDestroyEffects(ctx).find(e => EffectFn.getCardID(e) == setGroupId)
                 if (isDestroyEffect) {
                     // 將切入堆疊(stackEffects)中的「破壞而廢棄」效果移除
                     ctx = removeEffect(ctx, isDestroyEffect.id) as GameState
                 }
-                // } else {
-                //     // 本來就沒被破壞，不做任何事
-                // }
             }
         })
         return ctx
