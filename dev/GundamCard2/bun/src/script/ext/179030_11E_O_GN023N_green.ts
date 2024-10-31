@@ -46,7 +46,12 @@ export const prototype: CardPrototype = {
           const newE = GameStateFn.createPlayTextEffectFromEffect(ctx, effect, {
             conditions: {
               "戦闘エリアにいる敵軍ユニット１枚": {
-                title: ["_戦闘エリアにいる_敵軍_ユニット_１～_２枚", ["戦闘エリア1", "戦闘エリア2"], "敵軍", "ユニット", 1, 1]
+                title: ["Entity", {
+                  at: ["戦闘エリア1", "戦闘エリア2"],
+                  side: "敵軍",
+                  is: ["ユニット"],
+                  count: 1
+                }]
               },
             },
             logicTreeAction: {

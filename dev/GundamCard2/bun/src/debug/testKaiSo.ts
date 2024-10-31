@@ -18,6 +18,7 @@ import { setPhase } from "../game/gameState/PhaseComponent";
 import { doTriggerEvent } from "../game/gameState/doTriggerEvent";
 import { loadPrototype } from "../script";
 import { getPlayerCommands, getPlayerCommandsFilterNoErrorDistinct, updateCommand } from "../game/gameState/updateCommand";
+import { getGlobalEffects } from "../game/gameState/globalEffects";
 
 export async function testKaiSo() {
     await loadPrototype("unitHasKaiSo")
@@ -36,7 +37,7 @@ export async function testKaiSo() {
     }
     ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "手札"), [cardB]) as GameState
     ctx = setPhase(ctx, ["戦闘フェイズ", "攻撃ステップ", "フリータイミング"]) as GameState
-    let effects = createPlayEffects(ctx, PlayerA)
+    let effects = createPlayEffects(ctx, PlayerA, { ges: getGlobalEffects(ctx, null) })
     if (effects.length != 1) {
         console.log(effects)
         throw new Error()
@@ -78,7 +79,7 @@ export async function testKaiSo() {
     }
     // =============
     ctx = originCtx
-    ctx = updateCommand(ctx)
+    ctx = updateCommand(ctx, { ges: getGlobalEffects(ctx, null) })
     effects = getPlayerCommandsFilterNoErrorDistinct(ctx, PlayerA).map(cet => getEffect(ctx, cet.effectId))
     if (effects.length == 0) {
         throw new Error()

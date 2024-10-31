@@ -15,10 +15,11 @@ export type ItemState = {
     isDefence?: boolean,
     globalEffects: { [key: string]: GlobalEffect },
     varNamesRemoveOnTurnEnd: { [key: string]: any },
+    varNamesRemoveOnStepEnd: { [key: string]: any },
     isOpenForGain?: boolean,
     isCheat?: boolean,
     isFirstTurn?: boolean,
-    //textIdsUseThisCut?: { [key: string]: any },
+    textIdsUseThisCut?: { [key: string]: any },
     textIdsUseThisTurn?: string[]
 };
 
@@ -39,10 +40,11 @@ export const ItemStateFn = {
             flags: {},
             tips: {},
             globalEffects: {},
-            varNamesRemoveOnTurnEnd: {}
+            varNamesRemoveOnTurnEnd: {},
+            varNamesRemoveOnStepEnd: {}
         }
     },
-    setFlag(ctx: ItemState, name: string, v: any, options?: { isRemoveOnTurnEnd?: boolean }): ItemState {
+    setFlag(ctx: ItemState, name: string, v: any, options?: { isRemoveOnTurnEnd?: boolean, isRemoveOnStepEnd?: boolean }): ItemState {
         ctx = {
             ...ctx,
             flags: assoc(name, v, ctx.flags)
@@ -51,6 +53,12 @@ export const ItemStateFn = {
             ctx = {
                 ...ctx,
                 varNamesRemoveOnTurnEnd: assoc(name, true, ctx.varNamesRemoveOnTurnEnd)
+            }
+        }
+        if (options?.isRemoveOnStepEnd) {
+            ctx = {
+                ...ctx,
+                varNamesRemoveOnStepEnd: assoc(name, true, ctx.varNamesRemoveOnStepEnd)
             }
         }
         return ctx
@@ -98,7 +106,7 @@ export const ItemStateFn = {
     getGlobalEffects(ctx: ItemState): GlobalEffect[] {
         return Object.values(ctx.globalEffects)
     },
-    setGlobalEffect(ctx: ItemState, name: string | null, ge: GlobalEffect, options?: { isRemoveOnTurnEnd: boolean }) {
+    setGlobalEffect(ctx: ItemState, name: string | null, ge: GlobalEffect, options?: { isRemoveOnTurnEnd?: boolean, isRemoveOnStepEnd?: boolean }) {
         if (name == null) {
             name = ToolFn.getUUID("setGlobalEffect")
         }
@@ -112,13 +120,19 @@ export const ItemStateFn = {
                 varNamesRemoveOnTurnEnd: assoc(name, true, ctx.varNamesRemoveOnTurnEnd)
             }
         }
+        if (options?.isRemoveOnStepEnd) {
+            ctx = {
+                ...ctx,
+                varNamesRemoveOnStepEnd: assoc(name, true, ctx.varNamesRemoveOnStepEnd)
+            }
+        }
         return ctx
     },
     onCutEnd(ctx: ItemState): ItemState {
-        // ctx = {
-        //     ...ctx,
-        //     textIdsUseThisCut: {},
-        // }
+        ctx = {
+            ...ctx,
+            textIdsUseThisCut: {},
+        }
         return ctx
     },
     onDamageReset(ctx: ItemState): ItemState {
@@ -141,10 +155,21 @@ export const ItemStateFn = {
             isOpenForGain: false,
             isCheat: false,
             isFirstTurn: false,
-            //textIdsUseThisCut: {},
+            textIdsUseThisCut: {},
             textIdsUseThisTurn: [],
             isAttack: false,
             isDefence: false,
+        }
+        return ctx
+    },
+    onStepEnd(ctx: ItemState): ItemState {
+        for (const varName in ctx.varNamesRemoveOnStepEnd) {
+            ctx = {
+                ...ctx,
+                flags: dissoc(varName, ctx.flags),
+                globalEffects: dissoc(varName, ctx.globalEffects),
+                varNamesRemoveOnStepEnd: {}
+            }
         }
         return ctx
     }

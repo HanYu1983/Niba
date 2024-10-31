@@ -1,4 +1,4 @@
-import { repeat, lift, range } from "ramda"
+import { repeat, lift, range, dropRepeats, dropRepeatsBy } from "ramda"
 import { AbsoluteBaSyouFn, AbsoluteBaSyou, RelatedBaSyou, BaSyou } from "../define/BaSyou"
 import { Action, ActionTitleFn, ActionFn } from "../define/CardText"
 import { CoinFn } from "../define/Coin"
@@ -23,7 +23,7 @@ import { doItemSetRollState } from "./doItemSetRollState"
 import { doCountryDamage } from "./doCountryDamage"
 import { logCategory } from "../../tool/logger"
 import { doItemSetDestroy } from "./doItemSetDestroy"
-import { doItemSetGlobalEffectsUntilEndOfTurn } from "./doItemSetGlobalEffectsUntilEndOfTurn"
+import { doItemSetGlobalEffectsUntilEndOfStep, doItemSetGlobalEffectsUntilEndOfTurn } from "./doItemSetGlobalEffectsUntilEndOfTurn"
 import { RelatedPlayerSideKeyword } from "../define"
 import { doPlayerDrawCard } from "./doPlayerDrawCard"
 import { getPlayerState, mapPlayerState } from "./PlayerStateComponent"
@@ -33,6 +33,7 @@ import { getBattleGroup } from "./battleGroup"
 import { isBattle } from "./IsBattleComponent"
 import { getGlobalEffects, setGlobalEffects } from "./globalEffects"
 import { Bridge } from "../../script/bridge"
+import { getSetGroup } from "./SetGroupComponent"
 
 export function createPlayerIdFromRelated(ctx: GameState, cardId: string, re: RelatedPlayerSideKeyword): PlayerID {
   switch (re) {
@@ -57,6 +58,45 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
     return ActionFn.getTitleFn(action)
   }
   switch (action.title[0]) {
+    case "エリアの任意の順番に_リロール状態で移す": {
+      const varNames = action.vars
+      if (varNames == null) {
+        throw new Error()
+      }
+      if (varNames.length != 2) {
+        throw new Error()
+      }
+      const [varNameTo, varNameCard] = varNames
+      const [_, relatedBasyou, isRoll] = action.title
+      return function (ctx: GameState, effect: Effect, { Options }: Bridge): GameState {
+        const cardId = EffectFn.getCardID(effect)
+        const inserts = getCardTipStrBaSyouPairs(ctx, varNameTo, cardId)
+        const cardPairs = getCardTipStrBaSyouPairs(ctx, varNameCard, cardId)
+        if (inserts.length == 0) {
+          const to = createAbsoluteBaSyouFromBaSyou(ctx, cardId, relatedBasyou)
+          for (const pair of cardPairs) {
+            if (isRoll != null) {
+              ctx = doItemSetRollState(ctx, effect, isRoll, pair, { ...Options, isSkipTargetMissing: true }) as GameState
+            }
+            ctx = doItemMove(ctx, effect, to, pair, Options) as GameState
+          }
+          return ctx
+        }
+        const insertToCardId = inserts[0][0]
+        const to = getItemBaSyou(ctx, insertToCardId)
+        const idx = getItemIdsByBasyou(ctx, to).indexOf(insertToCardId)
+        if (idx == -1) {
+          throw new Error()
+        }
+        for (const pair of cardPairs) {
+          if (isRoll != null) {
+            ctx = doItemSetRollState(ctx, effect, isRoll, pair, { ...Options,isSkipTargetMissing: true }) as GameState
+          }
+          ctx = doItemMove(ctx, effect, to, pair, { ...Options, insertId: idx }) as GameState
+        }
+        return ctx
+      }
+    }
     case "看見see": {
       const varNames = action.vars
       return function (ctx: GameState, effect: Effect): GameState {
@@ -94,6 +134,27 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
         if (isBattle(ctx, cardId, null) == false) {
           throw new TargetMissingError("このカードが交戦中の場合")
         }
+        return ctx
+      }
+    }
+    case "同切上限": {
+      return function (ctx: GameState, effect: Effect): GameState {
+        // 使用了卡牌後, 同一個切入不能再使用. 以下記錄使用過的卡片, 會在切入結束後清除
+        // 就算有"每", 一個切入也只能使用一次
+        const cardId = EffectFn.getCardID(effect)
+        const ps = getItemState(ctx, cardId)
+        if (ps.textIdsUseThisCut?.[effect.text.id]) {
+          throw new TipError(`同切上限: ${effect.text.description}`)
+        }
+        ctx = mapItemState(ctx, cardId, ps => {
+          return {
+            ...ps,
+            textIdsUseThisCut: {
+              ...ps.textIdsUseThisCut,
+              [effect.text.id]: true
+            }
+          }
+        }) as GameState
         return ctx
       }
     }
@@ -163,7 +224,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
     case "Action": {
       const [_, actionOptions] = action.title
       const varNames = action.vars
-      return function (ctx: GameState, effect: Effect): GameState {
+      return function (ctx: GameState, effect: Effect, { Options }: Bridge): GameState {
         const cardId = EffectFn.getCardID(effect)
         const pairs = varNames == null ?
           [[cardId, getItemBaSyou(ctx, cardId)] as StrBaSyouPair] :
@@ -172,7 +233,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
           })
         for (const pair of pairs) {
           if (actionOptions.move) {
-            ctx = doItemMove(ctx, createAbsoluteBaSyouFromBaSyou(ctx, cardId, actionOptions.move), pair)
+            ctx = doItemMove(ctx, effect, createAbsoluteBaSyouFromBaSyou(ctx, cardId, actionOptions.move), pair, { ges: Options.ges }) as GameState
           }
         }
         return ctx
@@ -180,9 +241,9 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
     }
     case "triggerEvent": {
       const [_, event] = action.title
-      return function (ctx: GameState, effect: Effect): GameState {
+      return function (ctx: GameState, effect: Effect, { Options }: Bridge): GameState {
         const cardId = EffectFn.getCardID(effect)
-        ctx = doTriggerEvent(ctx, { ...event, effect: effect, cardIds: [cardId] })
+        ctx = doTriggerEvent(ctx, { ...event, effect: effect, cardIds: [cardId] }, { ges: Options.ges })
         return ctx
       }
     }
@@ -211,7 +272,8 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
     case "_ロールする": {
       const [_, whatToDo] = action.title
       const varNames = action.vars
-      return function (ctx: GameState, effect: Effect): GameState {
+      const isSkipTargetMissingError = action.isSkipTargetMissingError
+      return function (ctx: GameState, effect: Effect, { Options }: Bridge): GameState {
         const cardId = EffectFn.getCardID(effect)
         const cardController = getItemController(ctx, cardId)
         const pairs = varNames == null ?
@@ -219,67 +281,78 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
           varNames.flatMap(varName => {
             return getCardTipStrBaSyouPairs(ctx, varName, cardId)
           })
-        switch (whatToDo) {
-          case "ロール": {
-            for (const pair of pairs) {
-              ctx = doItemSetRollState(ctx, true, pair) as GameState
+        try {
+          switch (whatToDo) {
+            case "ロール": {
+              for (const pair of pairs) {
+                ctx = doItemSetRollState(ctx, effect, true, pair, Options) as GameState
+              }
+              return ctx
             }
-            return ctx
+            case "リロール": {
+              for (const pair of pairs) {
+                ctx = doItemSetRollState(ctx, effect, false, pair, Options) as GameState
+              }
+              return ctx
+            }
+            case "打開": {
+              for (const pair of pairs) {
+                assertTargetMissingError(ctx, pair)
+                ctx = mapItemState(ctx, pair[0], is => ({ ...is, isOpenForGain: true })) as GameState
+              }
+              return ctx
+            }
+            case "破壞": {
+              for (const pair of pairs) {
+                ctx = doItemSetDestroy(ctx, { id: "破壊する", playerID: cardController }, pair, Options)
+              }
+              return ctx
+            }
+            case "廃棄": {
+              for (const pair of pairs) {
+                ctx = doItemMove(ctx, effect, AbsoluteBaSyouFn.setBaSyouKeyword(pair[1], "ジャンクヤード"), pair, Options) as GameState
+              }
+              return ctx
+            }
+            case "破壊を無効": {
+              for (const pair of pairs) {
+                ctx = doItemSetDestroy(ctx, null, pair, Options)
+              }
+              return ctx
+            }
+            case "見": {
+              for (const pair of pairs) {
+                ctx = mapItemState(ctx, pair[0], is => ({ ...is, isCheat: true })) as GameState
+              }
+              return ctx
+            }
           }
-          case "リロール": {
-            for (const pair of pairs) {
-              ctx = doItemSetRollState(ctx, false, pair) as GameState
+        } catch (e) {
+          if (e instanceof TargetMissingError) {
+            if (isSkipTargetMissingError) {
+              console.warn(`TargetMissingError被isSkipTargetMissingError忽略掉`)
+            } else {
+              throw e
             }
-            return ctx
-          }
-          case "打開": {
-            for (const pair of pairs) {
-              assertTargetMissingError(ctx, pair)
-              ctx = mapItemState(ctx, pair[0], is => ({ ...is, isOpenForGain: true })) as GameState
-            }
-            return ctx
-          }
-          case "破壞": {
-            for (const pair of pairs) {
-              ctx = doItemSetDestroy(ctx, { id: "破壊する", playerID: cardController }, pair)
-            }
-            return ctx
-          }
-          case "廃棄": {
-            for (const pair of pairs) {
-              ctx = doItemMove(ctx, AbsoluteBaSyouFn.setBaSyouKeyword(pair[1], "ジャンクヤード"), pair)
-            }
-            return ctx
-          }
-          case "破壊を無効": {
-            for (const pair of pairs) {
-              ctx = doItemSetDestroy(ctx, null, pair)
-            }
-            return ctx
-          }
-          case "見": {
-            for (const pair of pairs) {
-              ctx = mapItemState(ctx, pair[0], is => ({ ...is, isCheat: true })) as GameState
-            }
-            return ctx
           }
         }
+        return ctx
       }
     }
     case "_敵軍本国に_１ダメージ": {
       const [_, side, damage] = action.title
-      return function (ctx: GameState, effect: Effect): GameState {
+      return function (ctx: GameState, effect: Effect, { Options }: Bridge): GameState {
         const cardId = EffectFn.getCardID(effect)
         const cardController = getItemController(ctx, cardId)
         const playerId = PlayerIDFn.fromRelatedPlayerSideKeyword(side, cardController)
-        ctx = doCountryDamage(ctx, playerId, damage)
+        ctx = doCountryDamage(ctx, effect,  playerId, damage, { ges: Options.ges })
         return ctx
       }
     }
     case "_の_ハンガーに移す": {
       const [_, side, basyouKw] = action.title
       const varNames = action.vars
-      return function (ctx: GameState, effect: Effect): GameState {
+      return function (ctx: GameState, effect: Effect, { Options }: Bridge): GameState {
         const cardId = EffectFn.getCardID(effect)
         const cardController = getItemController(ctx, cardId)
         const pairs = varNames == null ?
@@ -290,7 +363,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
         const playerId = PlayerIDFn.fromRelatedPlayerSideKeyword(side, cardController)
         const to = AbsoluteBaSyouFn.of(playerId, basyouKw)
         for (const pair of pairs) {
-          ctx = doItemMove(ctx, to, pair)
+          ctx = doItemMove(ctx, effect, to, pair, { ges: Options.ges }) as GameState
         }
         return ctx
       }
@@ -309,7 +382,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
     case "_１ダメージを与える": {
       const [_, damage] = action.title
       const varNames = action.vars
-      return function (ctx: GameState, effect: Effect): GameState {
+      return function (ctx: GameState, effect: Effect, { Options }: Bridge): GameState {
         const cardId = EffectFn.getCardID(effect)
         const cardController = getItemController(ctx, cardId)
         const pairs = varNames == null ?
@@ -318,7 +391,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
             return getCardTipStrBaSyouPairs(ctx, varName, cardId)
           })
         ctx = pairs.reduce((ctx, pair) => {
-          return doItemDamage(ctx, effect, damage, pair)
+          return doItemDamage(ctx, effect, damage, pair, Options)
         }, ctx)
         return ctx
       }
@@ -346,24 +419,29 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
     case "_－１／－１／－１コイン_１個を乗せる": {
       const [_, bonus, x] = action.title
       const varNames = action.vars
-      // if (varNames == null) {
-      //   throw new Error(`action.var not found: ${action.title[0]}`)
-      // }
+      const isSelectAllCardInSetGroup = action.isSelectAllCardInSetGroup
       return function (ctx: GameState, effect: Effect): GameState {
         const cardId = EffectFn.getCardID(effect)
         const playerId = EffectFn.getPlayerID(effect)
         const pairs = varNames == null ?
           [[cardId, getItemBaSyou(ctx, cardId)] as StrBaSyouPair] :
           varNames.flatMap(varName => {
-            return getCardTipStrBaSyouPairs(ctx, varName, cardId)
+            const ret = getCardTipStrBaSyouPairs(ctx, varName, cardId)
+            if (isSelectAllCardInSetGroup?.includes(varName)) {
+              const itemIds = ret.map(v => v[0])
+              const appends = dropRepeats(itemIds.flatMap(itemId => getSetGroup(ctx, itemId)).map(itemId => createStrBaSyouPair(ctx, itemId)))
+              return appends
+            }
+            return ret
           })
-        //const pairs = getCardTipStrBaSyouPairs(ctx, varNames[0], cardId)
+
         if (pairs.length == 0) {
           throw new Error(`pairs must not 0: ${action.title} ${action.vars}`)
         }
-        const [targetCardId, targetBasyou] = pairs[0]
-        const coins = range(0, x).map(i => CoinFn.battleBonus(playerId, bonus))
-        ctx = addCoinsToCard(ctx, [targetCardId, targetBasyou], coins) as GameState
+        for (const pair of pairs) {
+          const coins = range(0, x).map(i => CoinFn.battleBonus(playerId, bonus))
+          ctx = addCoinsToCard(ctx, pair, coins) as GameState
+        }
         return ctx
       }
     }
@@ -403,12 +481,38 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
         return ctx
       }
     }
-    case "カード_１枚を引く": {
-      const [_, count] = action.title
+    case "ステップ終了時まで「速攻」を得る。": {
+      const [_, ges] = action.title
+      const varNames = action.vars
+      // if (varNames == null) {
+      //   throw new Error(`action.var not found: ${action.title[0]}`)
+      // }
       return function (ctx: GameState, effect: Effect): GameState {
         const cardId = EffectFn.getCardID(effect)
+        const pairs = varNames == null ?
+          [[cardId, getItemBaSyou(ctx, cardId)] as StrBaSyouPair] :
+          varNames.flatMap(varName => {
+            return getCardTipStrBaSyouPairs(ctx, varName, cardId)
+          })
+        //const pairs = getCardTipStrBaSyouPairs(ctx, varNames[0], cardId)
+        for (const [targetCardId, targetBaSyou] of pairs) {
+          const gesForCard = ges.map(ge => {
+            return {
+              ...ge,
+              cardIds: [targetCardId],
+            } as GlobalEffect
+          })
+          ctx = doItemSetGlobalEffectsUntilEndOfStep(ctx, gesForCard, [targetCardId, targetBaSyou])
+        }
+        return ctx
+      }
+    }
+    case "カード_１枚を引く": {
+      const [_, count] = action.title
+      return function (ctx: GameState, effect: Effect, { Options }: Bridge): GameState {
+        const cardId = EffectFn.getCardID(effect)
         const cardController = getItemController(ctx, cardId)
-        ctx = doPlayerDrawCard(ctx, count, cardController)
+        ctx = doPlayerDrawCard(ctx, effect, count, cardController, Options)
         return ctx
       }
     }
@@ -417,12 +521,12 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
       if (varNames == null) {
         throw new Error(`action.var not found: ${action.title[0]}`)
       }
-      return function (ctx: GameState, effect: Effect): GameState {
+      return function (ctx: GameState, effect: Effect, {Options}:Bridge): GameState {
         const cardId = EffectFn.getCardID(effect)
         const [target1] = getCardTipStrBaSyouPairs(ctx, varNames[0], cardId)
         const [target2] = getCardTipStrBaSyouPairs(ctx, varNames[1], cardId)
         ctx = doItemSwap(ctx, target1, target2)
-        ctx = doItemSetRollState(ctx, false, target2, { isSkipTargetMissing: true })
+        ctx = doItemSetRollState(ctx, effect, false, target2, { ...Options, isSkipTargetMissing: true })
         // 以下應不需要, 置換只有換protoID和狀態, 這樣才能繼承所有對象
         // ctx = moveItem(ctx, t2ba, [t1, t1ba]) as GameState
         // ctx = moveItem(ctx, t1ba, [t2, t2ba]) as GameState
@@ -437,9 +541,8 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
       }
     case "合計国力〔x〕": {
       const [_, x] = action.title
-      return function (ctx: GameState, effect: Effect): GameState {
-        const ges = getGlobalEffects(ctx, null)
-        ctx = setGlobalEffects(ctx, null, ges)
+      return function (ctx: GameState, effect: Effect, { Options }: Bridge): GameState {
+        const ges = Options.ges || []
         const cardId = EffectFn.getCardID(effect)
         const cardController = getItemController(ctx, cardId)
         const cardIdsCanPay = getCardIdsCanPayRollCost(ctx, cardController, { ges: ges })

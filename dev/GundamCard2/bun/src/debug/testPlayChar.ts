@@ -13,6 +13,7 @@ import { setPhase } from "../game/gameState/PhaseComponent";
 import { getSetGroupChildren, getSetGroupRoot } from "../game/gameState/SetGroupComponent";
 import { doTriggerEvent } from "../game/gameState/doTriggerEvent";
 import { loadPrototype } from "../script";
+import { getGlobalEffects } from "../game/gameState/globalEffects";
 
 export async function testPlayChar() {
     await loadPrototype("unitBlue")
@@ -32,13 +33,13 @@ export async function testPlayChar() {
     ctx = setActivePlayerID(ctx, PlayerA) as GameState
     ctx = setPhase(ctx, ["配備フェイズ", "フリータイミング"]) as GameState
     {
-        const effects = createPlayCardEffects(ctx, charBlue.id)
+        const effects = createPlayCardEffects(ctx, charBlue.id, { ges: getGlobalEffects(ctx, null) })
         if (effects.length != 2) {
             console.log(effects)
             throw new Error()
         }
-        const effect =effects.find(eff=>eff.reason[0] == "PlayCard" && eff.reason[3].isPlayCharacter)
-        if(effect == null){
+        const effect = effects.find(eff => eff.reason[0] == "PlayCard" && eff.reason[3].isPlayCharacter)
+        if (effect == null) {
             throw new Error()
         }
         ctx = setTipSelectionForUser(ctx, effect, 0, 0)
@@ -50,18 +51,18 @@ export async function testPlayChar() {
             throw new Error()
         }
         ctx = doEffect(ctx, effect, 0, 0)
-        if(getSetGroupRoot(ctx, charBlue.id) != unitBlue.id){
+        if (getSetGroupRoot(ctx, charBlue.id) != unitBlue.id) {
             throw new Error()
         }
         // 子樹
-        if(getSetGroupChildren(ctx, unitBlue.id).length != 2){
+        if (getSetGroupChildren(ctx, unitBlue.id).length != 2) {
             throw new Error()
         }
         // 子樹
-        if(getSetGroupChildren(ctx, charBlue.id).length != 1){
+        if (getSetGroupChildren(ctx, charBlue.id).length != 1) {
             throw new Error()
         }
-        if(getSetGroupRoot(ctx, charBlue.id) != unitBlue.id){
+        if (getSetGroupRoot(ctx, charBlue.id) != unitBlue.id) {
             throw new Error()
         }
     }

@@ -15,11 +15,12 @@ import { createBridge } from "../bridge/createBridge"
 import { ToolFn } from "../tool"
 import { GlobalEffect } from "../define/GlobalEffect"
 import { BaSyouKeywordFn } from "../define/BaSyou"
+import { GameExtParams } from "../define/GameExtParams"
+import { TargetMissingError } from "../define/GameError"
 
-export function createPlayCardEffects(ctx: GameState, cardId: string, options?: { isQuick?: boolean }): Effect[] {
+export function createPlayCardEffects(ctx: GameState, cardId: string, options: GameExtParams & { isQuick?: boolean }): Effect[] {
     logCategory("createPlayCardEffects", "")
-    let ges = getGlobalEffects(ctx, null)
-    ctx = setGlobalEffects(ctx, null, ges)
+    let ges = options.ges || []
     const ret: Effect[] = []
     const prototype = getItemPrototype(ctx, cardId)
     const basyou = getItemBaSyou(ctx, cardId)
@@ -33,8 +34,6 @@ export function createPlayCardEffects(ctx: GameState, cardId: string, options?: 
         ret.push(...createPlayCardEffect(ctx, cardId, { ges: ges }))
     } else {
         // 不在手牌的情況
-        const ges = getGlobalEffects(ctx, null)
-        ctx = setGlobalEffects(ctx, null, ges)
         const canPlayByText = ges
             .filter(ge => ge.title[0] == "自軍手札にあるかのようにプレイできる")
             .find(ge => ge.cardIds.includes(cardId))
@@ -76,7 +75,7 @@ export function createPlayCardEffects(ctx: GameState, cardId: string, options?: 
                 isPlayOperation: prototype.category == "オペレーション",
             }],
             text: text,
-        }, createBridge({ ges: getGlobalEffects(ctx, null) }))
+        }, createBridge({ ges: ges }))
         effs?.forEach(eff => {
             if (eff.text.title[0] != "使用型") {
                 console.log(eff?.text.description)
@@ -88,7 +87,7 @@ export function createPlayCardEffects(ctx: GameState, cardId: string, options?: 
     return ret
 }
 
-export function createPlayCardEffect(ctx: GameState, cardId: string, options: { ges?: GlobalEffect[] }): Effect[] {
+export function createPlayCardEffect(ctx: GameState, cardId: string, options: GameExtParams): Effect[] {
     logCategory("createPlayCardEffect", "")
     const prototype = getItemPrototype(ctx, cardId)
     let basicEff: Effect | null = null
@@ -217,10 +216,10 @@ export function createPlayGEffect(ctx: GameState, cardId: string): Effect {
             {
                 actions: [
                     {
-                        title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, ToolFn }: Bridge): GameState {
+                        title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GameState {
                             const cardId = DefineFn.EffectFn.getCardID(effect)
                             const from = GameStateFn.getItemBaSyou(ctx, cardId)
-                            ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "Gゾーン"), [cardId, from]) as GameState
+                            ctx = GameStateFn.doItemMove(ctx, effect, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "Gゾーン"), [cardId, from], { ges: Options.ges }) as GameState
                             return ctx
                         }.toString()
                     },
@@ -242,7 +241,7 @@ export function createPlayGEffect(ctx: GameState, cardId: string): Effect {
     }
 }
 
-export function createPlayUnitEffect(ctx: GameState, cardId: string, options: { ges?: GlobalEffect[] }): Effect {
+export function createPlayUnitEffect(ctx: GameState, cardId: string, options: GameExtParams): Effect {
     logCategory("createPlayUnitEffect", "")
     const prototype = getItemPrototype(ctx, cardId)
     if (prototype.category == "ユニット") {
@@ -261,12 +260,11 @@ export function createPlayUnitEffect(ctx: GameState, cardId: string, options: { 
             {
                 actions: [
                     {
-                        title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, ToolFn }: Bridge): GameState {
-                            let ges = GameStateFn.getGlobalEffects(ctx, null)
-                            ctx = GameStateFn.setGlobalEffects(ctx, null, ges)
+                        title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GameState {
+                            let ges = Options.ges || []
                             const cardId = DefineFn.EffectFn.getCardID(effect)
                             const from = GameStateFn.getItemBaSyou(ctx, cardId)
-                            ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "プレイされているカード"), [cardId, from]) as GameState
+                            ctx = GameStateFn.doItemMove(ctx, effect, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "プレイされているカード"), [cardId, from], { ges: Options.ges }) as GameState
                             const newE = GameStateFn.createUnitGoStageEffectFromPlayEffect(ctx, effect, { ges: ges })
                             return GameStateFn.addStackEffect(ctx, newE) as GameState
                         }.toString()
@@ -283,7 +281,7 @@ export function createPlayUnitEffect(ctx: GameState, cardId: string, options: { 
     }
 }
 
-export function createPlayOperationEffect(ctx: GameState, cardId: string, options: { ges?: GlobalEffect[] }): Effect {
+export function createPlayOperationEffect(ctx: GameState, cardId: string, options: GameExtParams): Effect {
     logCategory("createPlayOperationEffect", "")
     const prototype = getItemPrototype(ctx, cardId)
     if (prototype.category == "オペレーション") {
@@ -302,10 +300,10 @@ export function createPlayOperationEffect(ctx: GameState, cardId: string, option
             {
                 actions: [
                     {
-                        title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, ToolFn }: Bridge): GameState {
+                        title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GameState {
                             const cardId = DefineFn.EffectFn.getCardID(effect)
                             const from = GameStateFn.getItemBaSyou(ctx, cardId)
-                            ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "プレイされているカード"), [cardId, from]) as GameState
+                            ctx = GameStateFn.doItemMove(ctx, effect, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "プレイされているカード"), [cardId, from], { ges: Options.ges }) as GameState
                             const newE = GameStateFn.createOperationGoStageEffectFromPlayEffect(ctx, effect)
                             return GameStateFn.addStackEffect(ctx, newE) as GameState
                         }.toString()
@@ -322,7 +320,7 @@ export function createPlayOperationEffect(ctx: GameState, cardId: string, option
     }
 }
 
-export function createPlayStayEffect(ctx: GameState, cardId: string, options: { ges?: GlobalEffect[] }): Effect | null {
+export function createPlayStayEffect(ctx: GameState, cardId: string, options: GameExtParams): Effect | null {
     logCategory("createPlayStayEffect", "")
     const prototype = getItemPrototype(ctx, cardId)
     if (prototype.category == "キャラクター") {
@@ -347,10 +345,10 @@ export function createPlayStayEffect(ctx: GameState, cardId: string, options: { 
             {
                 actions: [
                     {
-                        title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, ToolFn }: Bridge): GameState {
+                        title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GameState {
                             const cardId = DefineFn.EffectFn.getCardID(effect)
                             const from = GameStateFn.getItemBaSyou(ctx, cardId)
-                            ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "プレイされているカード"), [cardId, from]) as GameState
+                            ctx = GameStateFn.doItemMove(ctx, effect, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "プレイされているカード"), [cardId, from], { ges: Options.ges }) as GameState
                             const newE = GameStateFn.createOperationGoStageEffectFromPlayEffect(ctx, effect)
                             return GameStateFn.addStackEffect(ctx, newE) as GameState
                         }.toString()
@@ -367,7 +365,7 @@ export function createPlayStayEffect(ctx: GameState, cardId: string, options: { 
     }
 }
 
-export function createPlayCharacterOperationEffect(ctx: GameState, cardId: string, options: { ges?: GlobalEffect[] }): Effect {
+export function createPlayCharacterOperationEffect(ctx: GameState, cardId: string, options: GameExtParams): Effect {
     logCategory("createPlayCharacterOperationEffect", "")
     const prototype = getItemPrototype(ctx, cardId)
     if (prototype.category == "キャラクター" || prototype.category == "オペレーション(ユニット)") {
@@ -386,11 +384,11 @@ export function createPlayCharacterOperationEffect(ctx: GameState, cardId: strin
             {
                 actions: [
                     {
-                        title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, ToolFn }: Bridge): GameState {
+                        title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GameState {
                             const cardId = DefineFn.EffectFn.getCardID(effect)
                             const prototype = GameStateFn.getItemPrototype(ctx, cardId)
                             const from = GameStateFn.getItemBaSyou(ctx, cardId)
-                            ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "プレイされているカード"), [cardId, from]) as GameState
+                            ctx = GameStateFn.doItemMove(ctx, effect, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "プレイされているカード"), [cardId, from], { ges: Options.ges }) as GameState
                             const newE = GameStateFn.createCharOpUnitGoStageEffectFromPlayEffect(ctx, effect)
                             return GameStateFn.addStackEffect(ctx, newE) as GameState
                         }.toString()
@@ -412,7 +410,7 @@ export function createPlayCharacterOperationEffect(ctx: GameState, cardId: strin
     return eff
 }
 
-export function createPlayCommandText(ctx: GameState, cardId: string, options: { ges?: GlobalEffect[] }): Effect {
+export function createPlayCommandText(ctx: GameState, cardId: string, options: GameExtParams): Effect {
     logCategory("createPlayCommandText", "")
     const prototype = getItemPrototype(ctx, cardId)
     if (prototype.category == "コマンド") {
@@ -449,7 +447,7 @@ export function createPlayCommandText(ctx: GameState, cardId: string, options: {
                 logicTree: logicTree,
                 actions: [
                     {
-                        title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, ToolFn }: Bridge): GameState {
+                        title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GameState {
                             const cardId = DefineFn.EffectFn.getCardID(effect)
                             const prototype = GameStateFn.getItemPrototype(ctx, cardId)
                             if (prototype.category == "コマンド") {
@@ -459,7 +457,7 @@ export function createPlayCommandText(ctx: GameState, cardId: string, options: {
                             }
                             const commandText = prototype.commandText
                             const from = GameStateFn.getItemBaSyou(ctx, cardId)
-                            ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "プレイされているカード"), [cardId, from]) as GameState
+                            ctx = GameStateFn.doItemMove(ctx, effect, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "プレイされているカード"), [cardId, from], { ges: Options.ges }) as GameState
                             return GameStateFn.addStackEffect(ctx, {
                                 id: `${effect.id}_場に出る`,
                                 reason: ["場に出る", DefineFn.EffectFn.getPlayerID(effect), DefineFn.EffectFn.getCardID(effect)],
@@ -472,12 +470,12 @@ export function createPlayCommandText(ctx: GameState, cardId: string, options: {
                                         {
                                             actions: [
                                                 {
-                                                    title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+                                                    title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GameState {
                                                         const cardId = DefineFn.EffectFn.getCardID(effect)
                                                         const from = GameStateFn.getItemBaSyou(ctx, cardId)
                                                         const to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "ジャンクヤード")
-                                                        ctx = GameStateFn.doItemMove(ctx, to, [cardId, from]) as GameState
-                                                        ctx = GameStateFn.doTriggerEvent(ctx, { title: ["プレイされて場に出た場合"], cardIds: [cardId] })
+                                                        ctx = GameStateFn.doItemMove(ctx, effect, to, [cardId, from], { ges: Options.ges }) as GameState
+                                                        ctx = GameStateFn.doTriggerEvent(ctx, { title: ["プレイされて場に出た場合"], cardIds: [cardId] }, { ges: Options.ges })
                                                         return ctx
                                                     }.toString()
                                                 },
@@ -501,7 +499,7 @@ export function createPlayCommandText(ctx: GameState, cardId: string, options: {
     }
 }
 
-export function createUnitGoStageEffectFromPlayEffect(ctx: GameState, effect: Effect, options: { ges?: GlobalEffect[] }): Effect {
+export function createUnitGoStageEffectFromPlayEffect(ctx: GameState, effect: Effect, options: GameExtParams): Effect {
     const cardId = EffectFn.getCardID(effect)
     const prototype = getItemPrototype(ctx, cardId)
     if (prototype.category == "ユニット") {
@@ -517,18 +515,17 @@ export function createUnitGoStageEffectFromPlayEffect(ctx: GameState, effect: Ef
                     {
                         actions: [
                             {
-                                title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
-                                    const ges = GameStateFn.getGlobalEffects(ctx, null)
+                                title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GameState {
                                     const cardId = DefineFn.EffectFn.getCardID(effect)
                                     const from = GameStateFn.getItemBaSyou(ctx, cardId)
                                     const to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "配備エリア")
-                                    ctx = GameStateFn.doItemMove(ctx, to, [cardId, from]) as GameState
-                                    const hasHigh = GameStateFn.getCardHasSpeicalEffect(ctx, ["戦闘配備"], cardId, { ges: ges })
-                                    const hasPS = GameStateFn.getCardHasSpeicalEffect(ctx, ["【PS装甲】"], cardId, { ges: ges })
+                                    ctx = GameStateFn.doItemMove(ctx, effect, to, [cardId, from], { ges: Options.ges }) as GameState
+                                    const hasHigh = GameStateFn.getCardHasSpeicalEffect(ctx, ["戦闘配備"], cardId, Options)
+                                    const hasPS = GameStateFn.getCardHasSpeicalEffect(ctx, ["【PS装甲】"], cardId, Options)
                                     const isNoNeedRoll = (hasHigh || hasPS)
                                     const isRoll = isNoNeedRoll == false
-                                    ctx = GameStateFn.doItemSetRollState(ctx, isRoll, [cardId, GameStateFn.getItemBaSyou(ctx, cardId)], { isSkipTargetMissing: true })
-                                    ctx = GameStateFn.doTriggerEvent(ctx, { title: ["プレイされて場に出た場合"], cardIds: [cardId] })
+                                    ctx = GameStateFn.doItemSetRollState(ctx, effect, isRoll, [cardId, GameStateFn.getItemBaSyou(ctx, cardId)], { ...Options, isSkipTargetMissing: true })
+                                    ctx = GameStateFn.doTriggerEvent(ctx, { title: ["プレイされて場に出た場合"], cardIds: [cardId] }, Options)
                                     return ctx
                                 }.toString()
                             },
@@ -558,12 +555,12 @@ export function createOperationGoStageEffectFromPlayEffect(ctx: GameState, effec
                     {
                         actions: [
                             {
-                                title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+                                title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GameState {
                                     const cardId = DefineFn.EffectFn.getCardID(effect)
                                     const from = GameStateFn.getItemBaSyou(ctx, cardId)
                                     const to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "配備エリア")
-                                    ctx = GameStateFn.doItemMove(ctx, to, [cardId, from]) as GameState
-                                    ctx = GameStateFn.doTriggerEvent(ctx, { title: ["プレイされて場に出た場合"], cardIds: [cardId] })
+                                    ctx = GameStateFn.doItemMove(ctx, effect, to, [cardId, from], { ges: Options.ges }) as GameState
+                                    ctx = GameStateFn.doTriggerEvent(ctx, { title: ["プレイされて場に出た場合"], cardIds: [cardId] }, { ges: Options.ges })
                                     return ctx
                                 }.toString()
                             },
@@ -592,7 +589,7 @@ export function createCharOpUnitGoStageEffectFromPlayEffect(ctx: GameState, effe
                     {
                         actions: [
                             {
-                                title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+                                title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GameState {
                                     const cardId = DefineFn.EffectFn.getCardID(effect)
                                     const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, DefineFn.TipFn.createCharacterTargetUnitKey(), cardId)
                                     if (pairs.length == 0) {
@@ -601,12 +598,12 @@ export function createCharOpUnitGoStageEffectFromPlayEffect(ctx: GameState, effe
                                     const [targetCardId, targetBasyou] = pairs[0]
                                     const from = GameStateFn.getItemBaSyou(ctx, cardId)
                                     const to = targetBasyou
-                                    ctx = GameStateFn.doItemMove(ctx, to, [cardId, from]) as GameState
+                                    ctx = GameStateFn.doItemMove(ctx, effect, to, [cardId, from], { ges: Options.ges }) as GameState
                                     const isRoll = GameStateFn.getCard(ctx, targetCardId).isRoll || false
                                     ctx = GameStateFn.mapCard(ctx, cardId, is => ({ ...is, isRoll: isRoll })) as GameState
                                     ctx = GameStateFn.setSetGroupParent(ctx, targetCardId, cardId) as GameState
-                                    ctx = GameStateFn.doTriggerEvent(ctx, { title: ["プレイされて場に出た場合"], cardIds: [cardId] })
-                                    ctx = GameStateFn.doTriggerEvent(ctx, { title: ["プレイされて場にセットされた場合"], cardIds: [cardId] })
+                                    ctx = GameStateFn.doTriggerEvent(ctx, { title: ["プレイされて場に出た場合"], cardIds: [cardId] }, { ges: Options.ges })
+                                    ctx = GameStateFn.doTriggerEvent(ctx, { title: ["プレイされて場にセットされた場合"], cardIds: [cardId] }, { ges: Options.ges })
                                     return ctx
                                 }.toString()
                             }
@@ -636,7 +633,7 @@ export function createRollCostConditions(ctx: GameState, proto: CardPrototype, r
     return rollCostConditions
 }
 
-export function createPlayCardConditions(ctx: GameState, cardId: string, options: { ges?: GlobalEffect[] }): { [key: string]: Condition } {
+export function createPlayCardConditions(ctx: GameState, cardId: string, options: GameExtParams): { [key: string]: Condition } {
     logCategory("createPlayCardConditions", "")
     const prototype = getItemPrototype(ctx, cardId)
     const cardRollCostLength = getCardTotalCostLength(ctx, cardId, options)
@@ -654,31 +651,56 @@ export function createPlayCardConditions(ctx: GameState, cardId: string, options
         [TipFn.createCharacterTargetUnitKey()]: {
             title: ["Entity", {
                 at: ["配備エリア"],
-                isCanSetCharacter: true,
+                isCanSetCharacter: prototype.category == "キャラクター" || undefined,
                 side: "自軍",
                 is: ["ユニット"],
                 count: 1
             }],
         },
     } : {}
+
     const characterMoreConditions: { [key: string]: Condition } = prototype.category == "キャラクター" ? {
         "同名卡不能下": {
             actions: [
                 {
-                    title: ["Entity", {
-                        atBa: true,
-                        hasTitle: [],
-                        count: 0,
-                    }],
+                    title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GameState {
+                        const cardId = DefineFn.EffectFn.getCardID(effect)
+                        const tip = GameStateFn.createTipByEntitySearch(ctx, effect, {
+                            atBa: true,
+                            // 空陣列會自動填入自身
+                            hasTitle: [],
+                            count: 0
+                        }, Options)
+                        if (DefineFn.TipFn.getWant(tip).length) {
+                            throw new DefineFn.TargetMissingError(`已有同名卡存在: ${cardId}`)
+                        }
+                        return ctx
+                    }.toString()
                 }
             ]
         }
     } : {}
-    const conditions: { [key: string]: Condition } = {
+    let conditions: { [key: string]: Condition } = {
         ...costConditions,
         ...rollCostConditions,
         ...characterOperationUnitConditions,
         ...characterMoreConditions
+    }
+    const hasSp = options.ges?.find(ge => ge.title[0] == "このカードは、戦闘エリアにいる自軍ユニットにもセットできる" && ge.cardIds.includes(cardId)) != null
+    if (hasSp) {
+        conditions = {
+            ...conditions,
+            // 覆蓋對象
+            [TipFn.createCharacterTargetUnitKey()]: {
+                title: ["Entity", {
+                    atBa: true,
+                    isCanSetCharacter: true,
+                    side: "自軍",
+                    is: ["ユニット"],
+                    count: 1
+                }],
+            },
+        }
     }
     return conditions
 }

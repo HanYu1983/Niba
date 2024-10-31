@@ -13,13 +13,13 @@ const hideCategory: string[] = [
   "createCommandEffectTips",
   "setEffectTips",
   "doTriggerEvent",
-  //"createPlayEffects",
+  "createPlayEffects",
+  "createPlayEffect",
   "getConditionTitleFn",
   "createPlayCardEffects",
   "addImmediateEffectIfCanPayCost",
   "doItemSetRollState",
   "doActiveEffect",
-  //"testCompress",
   "createPlayerScore",
   "AppContextProvider",
   "OnClickFlowConfirm",
@@ -28,6 +28,7 @@ const hideCategory: string[] = [
   "onActionStart",
   "onActionEnd",
   "onItemAdd",
+  // "testCompress",
   //
   "onSetPhase",
   "onItemStateChange",
@@ -37,6 +38,8 @@ const hideCategory: string[] = [
   "onEffectStart",
   "onEffectEnd",
   "onItemMove",
+  //"onItemDamageChange",
+  //"onCountryDamage",
   // 
   "createTextsFromSpecialEffect",
   "getCardIdsCanPayRollCost",
@@ -53,11 +56,15 @@ const hideCategory: string[] = [
   "createPlayCharacterOperationEffect",
   "createPlayStayEffect",
   "createPlayUnitEffect",
-  "getGlobalEffects",
   "createAllCardTexts",
-  "isCardMaster"
+  "isCardMaster",
+  "createBasicForBattle",
+  "createPreviewEffectScore",
+  "createBasicForAttackBattle",
+  "checkIsBattle"
 ];
-let filterCategory = true;
+const filterCategory = true;
+const filterWarn = false
 
 export const logCategory = (category: string, ...msg: any[]) => {
   if (filterCategory) {
@@ -66,4 +73,11 @@ export const logCategory = (category: string, ...msg: any[]) => {
     }
   }
   console.log(`[${new Date().toLocaleTimeString()}][${category}]`, ...msg);
+};
+
+export const warnCategory = (category: string, ...msg: any[]) => {
+  if (filterWarn) {
+    return
+  }
+  console.warn(`[${new Date().toLocaleTimeString()}][${category}]`, ...msg);
 };

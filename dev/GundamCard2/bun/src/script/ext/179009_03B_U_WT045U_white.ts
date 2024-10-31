@@ -29,7 +29,6 @@ export const prototype: CardPrototype = {
         if (DefineFn.BaSyouKeywordFn.getBattleArea().includes(GameStateFn.getItemBaSyou(ctx, cardId).value[1])) {
           return [
             {
-              // TODO: test it
               title: ["このカードと交戦中の敵軍部隊の部隊戦闘力を_－３する", -3],
               cardIds: [cardId]
             }

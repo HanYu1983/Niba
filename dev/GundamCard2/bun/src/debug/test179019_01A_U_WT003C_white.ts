@@ -36,7 +36,7 @@ export async function test179019_01A_U_WT003C_white() {
     ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "手札"), [cardHand]) as GameState
     const ges = getGlobalEffects(ctx, null)
     ctx = setGlobalEffects(ctx, null, ges)
-    let effects = createPlayCardEffects(ctx, cardHand.id)
+    let effects = createPlayCardEffects(ctx, cardHand.id, { ges: getGlobalEffects(ctx, null) })
     let effect = effects.find(eff => eff.reason[0] == "PlayCard" && eff.reason[3].isPlayUnit == true)
     if (effect == null) {
         throw new Error()
@@ -44,7 +44,7 @@ export async function test179019_01A_U_WT003C_white() {
     let toes = createEffectTips(ctx, effect, 0, 0)
     let hasCardAcanPayCost = toes.find(toe =>
         toe.conditionKey == TipFn.createRollColorKey(0, "白")
-        && toe.tip 
+        && toe.tip
         && (TipFn.getWant(toe.tip) as StrBaSyouPair[]).length > 0
         && (TipFn.getWant(toe.tip) as StrBaSyouPair[])[0][0] == cardA.id
     ) != null

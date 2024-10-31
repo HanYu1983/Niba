@@ -55,7 +55,7 @@ export async function test179009_03B_U_GN036U_green() {
     ctx = setSetGroupParent(ctx, masterUnit.id, char.id) as GameState
     ctx = setPhase(ctx, ["戦闘フェイズ", "防御ステップ", "フリータイミング"]) as GameState
     ctx = setActivePlayerID(ctx, PlayerA) as GameState
-    let effects = createPlayEffects(ctx, PlayerA)
+    let effects = createPlayEffects(ctx, PlayerA, { ges: getGlobalEffects(ctx, null) })
     if (effects.length != 2) {
         console.log(effects)
         throw new Error()

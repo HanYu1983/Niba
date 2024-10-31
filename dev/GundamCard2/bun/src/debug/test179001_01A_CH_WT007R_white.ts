@@ -46,7 +46,8 @@ export async function test179001_01A_CH_WT007R_white() {
         let cs = getItemState(ctx, cardA.id)
         cs = ItemStateFn.setTip(cs, "このセットグループのユニットは", { title: ["カード", [], [[cardA.id, getItemBaSyou(ctx, cardA.id)]]] })
         ctx = setItemState(ctx, cardA.id, cs) as GameState
-        const playCardEffects = createPlayEffects(ctx, PlayerA)
+        let ges = getGlobalEffects(ctx, null)
+        const playCardEffects = createPlayEffects(ctx, PlayerA, { ges: ges })
         if (playCardEffects.length != 1) {
             throw new Error(`playCardEffects.length != 1`)
         }
@@ -61,13 +62,13 @@ export async function test179001_01A_CH_WT007R_white() {
             throw new Error(`effect.reason[0]!="PlayText`)
         }
         ctx = doEffect(ctx, effect, 0, 0)
-        let ges = getGlobalEffects(ctx, null)
+        ges = getGlobalEffects(ctx, null)
         ctx = setGlobalEffects(ctx, null, ges)
         if (getCardHasSpeicalEffect(ctx, ["速攻"], unit.id, { ges: ges }) != true) {
             throw new Error()
         }
         // 避開同切上限
-        ctx = doTriggerEvent(ctx, { title: ["カット終了時", [playCardEffect]] })
+        ctx = doTriggerEvent(ctx, { title: ["カット終了時", [playCardEffect]] }, { ges: ges })
         // 已有速攻了，不能再加速攻
         //ctx = clearTipSelectionForUser(ctx, playCardEffect, 0, 0)
         const cetsNoErr = createCommandEffectTips(ctx, playCardEffect).filter(CommandEffecTipFn.not(CommandEffecTipFn.filterNoError))
@@ -75,11 +76,11 @@ export async function test179001_01A_CH_WT007R_white() {
             throw new Error()
         }
 
-        ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", PhaseFn.getLast()] })
+        ctx = doTriggerEvent(ctx, { title: ["GameEventOnTiming", PhaseFn.getLast()] }, { ges: ges })
 
         ges = getGlobalEffects(ctx, null)
         ctx = setGlobalEffects(ctx, null, ges)
-        if (getCardHasSpeicalEffect(ctx, ["速攻"], unit.id, {ges: ges}) != false) {
+        if (getCardHasSpeicalEffect(ctx, ["速攻"], unit.id, { ges: ges }) != false) {
             throw new Error()
         }
     }

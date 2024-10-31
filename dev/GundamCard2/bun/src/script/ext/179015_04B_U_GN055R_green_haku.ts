@@ -23,6 +23,7 @@ export const prototype: CardPrototype = {
           ["自軍", "Gゾーン", [["unit", 2]]],
           ["自軍", "手札", [["179015_04B_U_GN053U_green", 1]]],
           ["自軍", "配備エリア", [["179015_04B_U_GN055R_green_haku", 1]]],
+          ["自軍", "本国", [["unit", 1]]],
         ]
       }],
       conditions: {

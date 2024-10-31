@@ -59,7 +59,7 @@ export const prototype: CardPrototype = {
     conditions: {
       "セットカード以外の敵軍オペ１枚": {
         title: ["Entity", {
-          isSetGroup: true,
+          isSetGroupRoot: true,
           atBa: true,
           side: "敵軍",
           is: ["オペレーション"],

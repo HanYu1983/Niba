@@ -34,7 +34,7 @@ export const prototype: CardPrototype = {
                   at: ["戦闘エリア1", "戦闘エリア2", "配備エリア"],
                   side: "敵軍",
                   is: ["ユニット"],
-                  isSetGroup: true,
+                  isSetGroupRoot: true,
                   compareBattlePoint: ["防御力", "<=", 5],
                   count: 1,
                 }]

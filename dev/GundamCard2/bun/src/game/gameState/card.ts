@@ -8,13 +8,13 @@ import { Situation, BattleBonus, TextSpeicalEffect, TextSpeicalEffectFn, CardTex
 import { getCard } from "./CardTableComponent"
 import { getCoins, getCardIdByCoinId } from "./CoinTableComponent"
 import { GameState } from "./GameState"
-import { getGlobalEffects, setGlobalEffects, clearGlobalEffects } from "./globalEffects"
 import { getItemPrototype, getItemBaSyou, isChip, isCard, getItemController, ItemTableComponent } from "./ItemTableComponent"
 import { getSetGroupChildren } from "./SetGroupComponent"
 import { TipTitleTextRef } from "../define/Tip"
 import { createBridge } from "../bridge/createBridge"
 import { GlobalEffect } from "../define/GlobalEffect"
 import { logCategory } from "../../tool/logger"
+import { GameExtParams } from "../define/GameExtParams"
 
 export function getCardTextFromCardTextRef(ctx: ItemTableComponent, textRef: TipTitleTextRef): CardText {
   const { cardId, textId } = textRef
@@ -55,7 +55,7 @@ export function getCardSpecialText(text: CardText, options: { ges?: GlobalEffect
   }
 }
 
-export function getCardTexts(ctx: ItemTableComponent, cardID: string, options: { ges?: GlobalEffect[] }): CardText[] {
+export function getCardTexts(ctx: ItemTableComponent, cardID: string, options: GameExtParams): CardText[] {
   logCategory("getCardTexts", "")
   const addedTexts = options?.ges?.flatMap(e => {
     if (e.cardIds.includes(cardID) && e.title[0] == "AddText") {
@@ -73,6 +73,15 @@ export function getCardTexts(ctx: ItemTableComponent, cardID: string, options: {
     }
     return text
   })
+
+
+
+  // 179029_05C_C_RD047U_red
+  // U
+  // ZZ
+  // 甘言
+  // 支配
+  // （常時）：プレイされている敵軍ユニット１枚が持つ全てのテキストは、ターン終了時まで無効になる。（注：対象が場に出た後も有効）
 
   // 取得增減費用的效果, 寫在condition裡很像就可以了
   // 179003_01A_U_BN007R_brown
@@ -126,7 +135,7 @@ export function getCardRollCostLength(ctx: GameState, cardID: string): number {
   return prototype.rollCost?.length || 0
 }
 
-export function getCardTotalCostLength(ctx: GameState, cardID: string, options: { ges?: GlobalEffect[] }): number {
+export function getCardTotalCostLength(ctx: GameState, cardID: string, options: GameExtParams): number {
   logCategory("getCardTotalCostLength", "")
   const prototype = getItemPrototype(ctx, cardID)
   const added = pipe(
@@ -143,14 +152,14 @@ export function getCardTotalCostLength(ctx: GameState, cardID: string, options: 
   if (prototype.totalCost == null) {
 
   } else if (prototype.totalCost == "X") {
-    totalCost = getCardIdsCanPayRollCost(ctx, getItemController(ctx, cardID), { ges: options.ges }).length
+    totalCost = getCardIdsCanPayRollCost(ctx, getItemController(ctx, cardID), options).length
   } else {
     totalCost = prototype.totalCost
   }
   return totalCost + added;
 }
 
-export function getCardIdsCanPayRollCost(ctx: GameState, playerId: PlayerID, options: { ges?: GlobalEffect[] }): string[] {
+export function getCardIdsCanPayRollCost(ctx: GameState, playerId: PlayerID, options: GameExtParams): string[] {
   logCategory("getCardIdsCanPayRollCost", "")
   return options?.ges?.filter(ge => ge.title[0] == "發生國力")
     .flatMap(ge => ge.cardIds)
@@ -161,7 +170,7 @@ export function getCardIdsCanPayRollCost(ctx: GameState, playerId: PlayerID, opt
 export function getCardBattlePoint(
   ctx: GameState,
   cardID: string,
-  options: { ges?: GlobalEffect[] }
+  options: GameExtParams
 ): BattlePoint {
   logCategory("getCardBattlePoint", "")
   const card = getCard(ctx, cardID);
@@ -194,7 +203,7 @@ export function getCardHasSpeicalEffect(
   ctx: ItemTableComponent,
   a: TextSpeicalEffect,
   cardID: string,
-  options: { ges?: GlobalEffect[] }
+  options: GameExtParams
 ): boolean {
   logCategory("getCardHasSpeicalEffect", "")
   const texts = getCardTexts(ctx, cardID, options)
@@ -283,7 +292,7 @@ export function getItemIsCanRoll(ctx: GameState, itemId: string): boolean {
   return true
 }
 
-export function getCardIdsCanPayRollColor(ctx: GameState, playerId: PlayerID, color: CardColor | null, options: { ges?: GlobalEffect[] }): { cardId: string, colors: CardColor[] }[] {
+export function getCardIdsCanPayRollColor(ctx: GameState, playerId: PlayerID, color: CardColor | null, options: GameExtParams): { cardId: string, colors: CardColor[] }[] {
   logCategory("getCardIdsCanPayRollColor", "")
   return options?.ges?.flatMap(ge => {
     if (ge.cardIds.length == 0) {

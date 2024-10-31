@@ -23,6 +23,7 @@ import { getChip } from "./ChipTableComponent";
 import { getGlobalEffects } from "./globalEffects";
 import { GlobalEffect } from "../define/GlobalEffect";
 import { getPrototype } from "../../script";
+import { GameExtParams } from "../define/GameExtParams";
 
 export type Entity = {
     itemController: PlayerID,
@@ -55,7 +56,6 @@ export function createEntityIterator(ctx: GameState) {
                     isCoin: false,
                     isChip: isChip(ctx, item.id),
                     baSyouKeyword: basyouKw,
-                    // TODO
                     destroyReason: destroyEffect?.reason[0] == "Destroy" ? destroyEffect.reason[3] : null,
                     prototype: getItemPrototype(ctx, itemId)
                 }
@@ -83,12 +83,12 @@ export function createEntityIterator(ctx: GameState) {
     return rets
 }
 
-export function createTipByEntitySearch(ctx: GameState, effect: Effect, searchOptions: EntitySearchOptions, options: { ges?: GlobalEffect[] }): Tip {
+export function createTipByEntitySearch(ctx: GameState, effect: Effect, searchOptions: EntitySearchOptions, options: GameExtParams): Tip {
     const cardId = EffectFn.getCardID(effect)
     const prototype = getItemPrototype(ctx, cardId)
     let entityList = createEntityIterator(ctx)
     {
-        const opponentEffectNotTargetIds = options?.ges?.filter(ge => ge.title[0] == "敵軍効果の対象にならない").flatMap(ge => ge.cardIds) || []
+        const opponentEffectNotTargetIds = options?.ges?.filter(ge => ge.title[0] == "敵軍効果の対象にならない").flatMap(ge => ge.cardIds.includes(cardId)) || []
         if (opponentEffectNotTargetIds.length) {
             const effectController = EffectFn.getPlayerID(effect)
             entityList = entityList.filter(entity => {
@@ -98,7 +98,7 @@ export function createTipByEntitySearch(ctx: GameState, effect: Effect, searchOp
     }
     {
         if (getItemRuntimeCategory(ctx, cardId) == "ユニット") {
-            const opponentUnitEffectNotTargetIds = options?.ges?.filter(ge => ge.title[0] == "敵軍ユニットの効果の対象にならない").flatMap(ge => ge.cardIds) || []
+            const opponentUnitEffectNotTargetIds = options?.ges?.filter(ge => ge.title[0] == "敵軍ユニットの効果の対象にならない").flatMap(ge => ge.cardIds.includes(cardId)) || []
             if (opponentUnitEffectNotTargetIds.length) {
                 const effectController = EffectFn.getPlayerID(effect)
                 entityList = entityList.filter(entity => {
@@ -166,8 +166,8 @@ export function createTipByEntitySearch(ctx: GameState, effect: Effect, searchOp
     }
     if (searchOptions.isCanSetCharacter != null) {
         entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx, true)).filter(EntityFn.filterCanSetCharacter(ctx))
-    } else if (searchOptions.isSetGroup != null) {
-        entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx, searchOptions.isSetGroup))
+    } else if (searchOptions.isSetGroupRoot != null) {
+        entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx, searchOptions.isSetGroupRoot))
     }
     if (searchOptions.compareBattlePoint) {
         //entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx, true))
@@ -249,6 +249,9 @@ export function createTipByEntitySearch(ctx: GameState, effect: Effect, searchOp
     if (searchOptions.isDestroy != null) {
         entityList = entityList.filter(EntityFn.filterIsDestroy(searchOptions.isDestroy))
     }
+    if (searchOptions.hasDestroyId != null) {
+        entityList = entityList.filter(entity => entity.destroyReason && searchOptions.hasDestroyId?.includes(entity.destroyReason.id))
+    }
     if (searchOptions.isRoll != null) {
         entityList = entityList.filter(entity =>
             (entity.isCard
@@ -257,10 +260,15 @@ export function createTipByEntitySearch(ctx: GameState, effect: Effect, searchOp
                 && !!(getChip(ctx, entity.itemId).isRoll) == searchOptions.isRoll))
     }
     if (searchOptions.hasSpecialEffect != null) {
-        entityList = entityList.filter(EntityFn.filterHasSpecialEffect(ctx, searchOptions.hasSpecialEffect))
+        entityList = entityList.filter(EntityFn.filterHasSpecialEffect(ctx, searchOptions.hasSpecialEffect, options))
     }
     if (searchOptions.hasChar != null) {
         entityList = entityList.filter(EntityFn.filterHasChar(ctx, searchOptions.hasChar))
+    }
+    if (searchOptions.isSetGroupHasChar != null) {
+        entityList = entityList.filter(entity => getSetGroup(ctx, entity.itemId).some(itemId =>
+            (searchOptions.isSetGroupHasChar || []).some(v => getItemCharacteristic(ctx, itemId).indexOf(v) != -1)
+        ))
     }
     if (searchOptions.hasGSign) {
         if (searchOptions.hasGSign.length == 0) {
@@ -285,7 +293,10 @@ export function createTipByEntitySearch(ctx: GameState, effect: Effect, searchOp
             return searchOptions.hasRollCostColor?.some(color => color == entity.prototype?.color)
         })
     }
-    if (searchOptions.exceptCardIds?.length) {
+    if (searchOptions.exceptCardIds != null) {
+        if (searchOptions.exceptCardIds.length == 0) {
+            searchOptions.exceptCardIds.push(cardId)
+        }
         entityList = entityList.filter(entity => searchOptions.exceptCardIds?.includes(entity.itemId) != true)
     }
     entityList = entityList.filter(EntityFn.filterDistinct)
@@ -443,12 +454,12 @@ export const EntityFn = {
             return (getSetGroup(ctx, entity.itemId).length > 1) == v
         }
     },
-    filterHasSpecialEffect(ctx: GameState, vs: TextSpeicalEffect[]) {
+    filterHasSpecialEffect(ctx: GameState, vs: TextSpeicalEffect[], options: GameExtParams) {
         return (entity: Entity) => {
             if (isCardLike(ctx)(entity.itemId) == false) {
                 return false
             }
-            return vs.some(v => isSetGroupHasA(ctx, v, entity.itemId, { ges: getGlobalEffects(ctx, null) }))
+            return vs.some(v => isSetGroupHasA(ctx, v, entity.itemId, options))
         }
     },
     filterHasChar(ctx: GameState, vs: string[]) {

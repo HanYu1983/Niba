@@ -72,7 +72,7 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
           }
         }
         if (currSp.length == 0) {
-          const match = curr.match(/(.?)(０|１|２|３|４|５|６|７|８|９|R+)(毎?)/)
+          const match = curr.match(/(.?)(０|１|２|３|４|５|６|７|８|９|R|Ｒ+)(毎?)/)
           if (match) {
             const [_, colorstr, rollcoststr, every] = match
             currSp.push([colorstr, rollcoststr, every])
@@ -128,8 +128,8 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
           const [[colorstr, rollcoststr, every], titlestr, char] = sp
           const color: CardColor | null = colorstr == "" ? null : (colorstr as CardColor)
           let conditions: { [key: string]: Condition } = {}
-          if (rollcoststr == "R") {
-            conditions["R"] = {
+          if (rollcoststr == "R" || rollcoststr == "Ｒ") {
+            conditions[rollcoststr] = {
               actions: [
                 {
                   title: ["_ロールする", "ロール"],
@@ -173,8 +173,11 @@ export async function loadPrototype(imgID: string): Promise<CardPrototype> {
             title: title,
             isEachTime: every == "毎",
             description: `〔${colorstr}${rollcoststr}${every}〕${titlestr}[${char || ""}]`,
-            conditions: conditions
+            conditions: conditions,
           }
+          // if (protectLevelStr == "<") {
+          //   text.protectLevel = 2
+          // }
           texts.push(text)
           return
         }

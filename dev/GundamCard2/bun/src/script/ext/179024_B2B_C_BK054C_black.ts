@@ -20,7 +20,6 @@ export const prototype: CardPrototype = {
     },
     logicTreeActions: [
       {
-        // TODO, 順便將破壞效果從堆疊移除
         actions: [
           {
             title: ["_ロールする", "廃棄"]

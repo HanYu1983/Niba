@@ -29,7 +29,12 @@ export const prototype: CardPrototype = {
             conditions: {
               ...DefineFn.createRollCostRequire(1, null),
               "敵軍ユニット１枚": {
-                title: ["_自軍_ユニット_１枚", "敵軍", "ユニット", 1]
+                title: ["Entity", {
+                  atBa: true,
+                  side: "敵軍",
+                  is: ["ユニット"],
+                  count: 1,
+                }]
               }
             },
             logicTreeAction: {

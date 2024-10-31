@@ -102,7 +102,7 @@ export const prototype: CardPrototype = {
                       asMuchAsPossible: true,
                     }, { ges: Options.ges })) as StrBaSyouPair[]
                     for (const pair of pairs) {
-                      ctx = GameStateFn.doItemDamage(ctx, effect, x, pair)
+                      ctx = GameStateFn.doItemDamage(ctx, effect, x, pair, Options)
                     }
                     return ctx
                   }.toString()

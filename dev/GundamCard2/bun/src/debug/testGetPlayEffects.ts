@@ -5,6 +5,7 @@ import { setActivePlayerID } from "../game/gameState/ActivePlayerComponent"
 import { addCards } from "../game/gameState/CardTableComponent"
 import { createPlayEffects } from "../game/gameState/createPlayEffects"
 import { createGameState, GameState } from "../game/gameState/GameState"
+import { getGlobalEffects } from "../game/gameState/globalEffects"
 import { setPhase } from "../game/gameState/PhaseComponent"
 import { loadPrototype, getPrototype } from "../script"
 
@@ -29,14 +30,14 @@ export async function testGetPlayEffects() {
     ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア"), [cardC]) as GameState
     ctx = setActivePlayerID(ctx, PlayerA) as GameState
     {
-        const playEffects = createPlayEffects(ctx, PlayerA)
+        const playEffects = createPlayEffects(ctx, PlayerA, { ges: getGlobalEffects(ctx, null) })
         if (playEffects.length != 0) {
             throw new Error()
         }
     }
     ctx = setPhase(ctx, ["配備フェイズ", "フリータイミング"]) as GameState
     {
-        const playEffects = createPlayEffects(ctx, PlayerA)
+        const playEffects = createPlayEffects(ctx, PlayerA, { ges: getGlobalEffects(ctx, null) })
         if (playEffects.length != 4) {
             throw new Error()
         }
@@ -50,7 +51,7 @@ export async function testGetPlayEffects() {
     ctx = setPhase(ctx, ["戦闘フェイズ", "ダメージ判定ステップ", "フリータイミング"]) as GameState
     ctx = setActivePlayerID(ctx, PlayerA) as GameState
     {
-        const playEffects = createPlayEffects(ctx, PlayerA)
+        const playEffects = createPlayEffects(ctx, PlayerA, { ges: getGlobalEffects(ctx, null) })
         if (playEffects.length != 2) {
             throw new Error()
         }

@@ -80,15 +80,16 @@ export function addCards(ctx: CardTableComponent, basyou: AbsoluteBaSyou, addedC
     if (newCard.ownerID == null) {
       newCard.ownerID = ownerID
     }
-    const table = TableFns.addCard(ctx.table, AbsoluteBaSyouFn.toString(basyou), newCard.id)
-    return {
+    ctx = {
       ...ctx,
-      table: table,
+      table: TableFns.addCard(ctx.table, AbsoluteBaSyouFn.toString(basyou), newCard.id),
       cards: {
         ...ctx.cards,
         [newCard.id]: newCard
       }
     }
+    ctx = EventCenterFn.onItemAdd(ctx, basyou, newCard.id)
+    return ctx
   }, ctx)
   ctx = EventCenterFn.onTableChange(ctx, old, ctx.table)
   return ctx

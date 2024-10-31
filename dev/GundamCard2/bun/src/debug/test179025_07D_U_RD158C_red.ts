@@ -34,13 +34,13 @@ export async function test179025_07D_U_RD158C_red() {
     ctx = setPhase(ctx, ["戦闘フェイズ", "ダメージ判定ステップ", "フリータイミング"]) as GameState
     console.log(getItemPrototype(ctx, cardA.id))
     let ges = getGlobalEffects(ctx, null)
-    if (getCardHasSpeicalEffect(ctx, ["クイック"], cardA.id, {ges: ges}) != true) {
+    if (getCardHasSpeicalEffect(ctx, ["クイック"], cardA.id, { ges: ges }) != true) {
         throw new Error()
     }
     if (getGlobalEffects(ctx, null).find(ge => ge.title[0] == "合計国力_＋１してプレイできる") == null) {
         throw new Error()
     }
-    const effects = createPlayEffects(ctx, PlayerA)
+    const effects = createPlayEffects(ctx, PlayerA, { ges: getGlobalEffects(ctx, null) })
     if (effects.length != 2) {
         console.log(effects)
         throw new Error()
@@ -71,7 +71,7 @@ export async function test179025_07D_U_RD158C_red() {
         if (getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(PlayerB, "戦闘エリア2")).every(itemId => getCard(ctx, itemId).isRoll) != true) {
             throw new Error()
         }
-        ctx = doTriggerEvent(ctx, { title: ["カット終了時", [effect]] })
+        ctx = doTriggerEvent(ctx, { title: ["カット終了時", [effect]] }, { ges: getGlobalEffects(ctx, null) })
         if (AbsoluteBaSyouFn.getBaSyouKeyword(getItemBaSyou(ctx, cardA.id)) != "ジャンクヤード") {
             throw new Error()
         }

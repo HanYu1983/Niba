@@ -22,7 +22,13 @@ export const prototype: CardPrototype = {
           ]
         },
         "配備エリアにいる、「特徴：T3部隊」を持つ自軍ユニット１枚": {
-          title: ["_配備エリアにいる、「特徴：_T3部隊」を持つ_自軍_ユニット_１枚", "配備エリア", "T3部隊", "自軍", "ユニット", 1]
+          title: ["Entity", {
+            at: ["配備エリア"],
+            side: "自軍",
+            hasChar: ["T3部隊"],
+            is: ["ユニット"],
+            count: 1
+          }]
         }
       },
       logicTreeActions: [

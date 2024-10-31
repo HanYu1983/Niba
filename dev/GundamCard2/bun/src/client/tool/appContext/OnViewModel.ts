@@ -16,6 +16,8 @@ import { TableFns } from "../../../tool/table";
 import { queryFlow } from "../../../game/gameStateWithFlowMemory/queryFlow";
 import { shuffleItems } from "../../../game/gameState/ItemTableComponent";
 import { Flow } from "../../../game/gameStateWithFlowMemory/Flow";
+import { getGlobalEffects } from "../../../game/gameState/globalEffects";
+import { GlobalEffect } from "../../../game/define/GlobalEffect";
 
 export type Selection = string[];
 
@@ -27,6 +29,7 @@ export type ViewModel = {
     clientId: string | null;
     timing: Phase;
     lastPassPhase: boolean;
+    globalEffects: GlobalEffect[]
   };
   playerCommands: { [key: string]: Flow[] }
 };
@@ -40,6 +43,7 @@ export const DEFAULT_VIEW_MODEL: ViewModel = {
     clientId: null,
     timing: PhaseFn.getFirst(),
     lastPassPhase: false,
+    globalEffects: []
   },
 };
 
@@ -105,6 +109,7 @@ export const OnViewModel = OnEvent.pipe(
           logCategory("OnClickFlowConfirm", "after applyFlow", viewModel.model.gameState)
           const playerAFlow = queryFlow(gameState, PlayerA)
           const playerBFlow = queryFlow(gameState, PlayerB)
+          const ges = getGlobalEffects(gameState, null)
           return {
             ...viewModel,
             model: {
@@ -121,6 +126,7 @@ export const OnViewModel = OnEvent.pipe(
               clientId: evt.clientId,
               timing: getPhase(gameState),
               lastPassPhase: gameState.flowMemory.hasPlayerPassPhase[evt.clientId] || false,
+              globalEffects: ges
             },
           };
         }

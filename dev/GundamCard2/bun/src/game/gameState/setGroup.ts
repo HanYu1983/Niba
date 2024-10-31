@@ -7,12 +7,13 @@ import { getSetGroupChildren } from "./SetGroupComponent";
 import { getBattleGroup } from "./battleGroup";
 import { getItemBaSyou } from "./ItemTableComponent";
 import { GlobalEffect } from "../define/GlobalEffect";
+import { GameExtParams } from "../define/GameExtParams";
 
 // setgroup
-export function getSetGroupBattlePoint(ctx: GameState, cardId: string, options: { ges?: GlobalEffect[] }): BattleBonus {
+export function getSetGroupBattlePoint(ctx: GameState, cardId: string, options: GameExtParams): BattleBonus {
     return pipe(
         always(getSetGroupChildren(ctx, cardId)),
-        map(setGroupCardID => getCardBattlePoint(ctx, setGroupCardID, { ges: options.ges })),
+        map(setGroupCardID => getCardBattlePoint(ctx, setGroupCardID, options)),
         reduce(BattlePointFn.add, BattlePointFn.getAllStar()),
         BattlePointFn.toBattleBonus
     )()
@@ -22,13 +23,13 @@ export function isSetGroupHasA(
     ctx: GameState,
     a: TextSpeicalEffect,
     cardId: string,
-    options: { ges?: GlobalEffect[] }
+    options: GameExtParams
 ): boolean {
     const setGroupCards = getSetGroupChildren(ctx, cardId);
     return setGroupCards.some(cardId => getCardHasSpeicalEffect(ctx, a, cardId, { ges: options.ges }))
 }
 
-export function isMeleeUnit(ctx: GameState, itemId: string, options: { ges?: GlobalEffect[] }): boolean {
+export function isMeleeUnit(ctx: GameState, itemId: string, options: GameExtParams): boolean {
     const [atk, range, hp] = getSetGroupBattlePoint(ctx, itemId, { ges: options.ges })
     if (range == 0 && atk > 0) {
         return true
@@ -39,7 +40,7 @@ export function isMeleeUnit(ctx: GameState, itemId: string, options: { ges?: Glo
     return false
 }
 
-export function isRangeUnit(ctx: GameState, itemId: string, options: { ges?: GlobalEffect[] }): boolean {
+export function isRangeUnit(ctx: GameState, itemId: string, options: GameExtParams): boolean {
     const [atk, range, hp] = getSetGroupBattlePoint(ctx, itemId, { ges: options.ges })
     if (range == 0) {
         return false

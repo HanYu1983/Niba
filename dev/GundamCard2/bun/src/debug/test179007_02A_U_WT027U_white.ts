@@ -34,7 +34,7 @@ export async function test179007_02A_U_WT027U_white() {
     ctx = setActivePlayerID(ctx, PlayerA) as GameState
     ctx = setPhase(ctx, ["戦闘フェイズ", "攻撃ステップ", "フリータイミング"]) as GameState
     {
-        const effects = createPlayEffects(ctx, PlayerA)
+        const effects = createPlayEffects(ctx, PlayerA, { ges: getGlobalEffects(ctx, null) })
         if (effects.length != 2) {
             throw new Error()
         }

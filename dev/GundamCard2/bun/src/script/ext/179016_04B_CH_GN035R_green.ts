@@ -44,7 +44,7 @@ export const prototype: CardPrototype = {
             {
               title: ["cutIn", [
                 {
-                  title: function _(ctx: any, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+                  title: function _(ctx: any, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GameState {
                     const cardId = DefineFn.EffectFn.getCardID(effect)
                     const from = GameStateFn.getItemBaSyou(ctx, cardId)
                     const targets = GameStateFn.getCardTipStrBaSyouPairs(ctx, "「サイコミュ」を持つ（別の）自軍ユニット", cardId)
@@ -52,10 +52,10 @@ export const prototype: CardPrototype = {
                     if (target == null) {
                       throw new Error()
                     }
-                    // 移出去
-                    ctx = GameStateFn.doItemMove(ctx, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "取り除かれたカード"), GameStateFn.createStrBaSyouPair(ctx, cardId))
+                    // 移出去 (不必)
+                    // ctx = GameStateFn.doItemMove(ctx, effect, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "取り除かれたカード"), GameStateFn.createStrBaSyouPair(ctx, cardId), { ges: Options.ges }) as GameState
                     // 再移回來
-                    ctx = GameStateFn.doItemMove(ctx, from, GameStateFn.createStrBaSyouPair(ctx, cardId))
+                    ctx = GameStateFn.doItemMove(ctx, effect, from, GameStateFn.createStrBaSyouPair(ctx, cardId), { ges: Options.ges }) as GameState
                     ctx = GameStateFn.setSetGroupParent(ctx, target[0], cardId)
                     return ctx
                   }.toString()

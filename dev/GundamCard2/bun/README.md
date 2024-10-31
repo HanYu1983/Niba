@@ -1,3 +1,17 @@
+# window
+## nvm
+    # https://github.com/coreybutler/nvm-windows/releases
+    nvm install 16
+    nvm use 16
+
+## powershell
+    login powershell admin
+    Get-ExecutionPolicy
+    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned
+
+## bun
+    npm i -g bun
+
 # create project
 ```
 bun create typescript

@@ -38,7 +38,7 @@ export async function test179027_09D_C_WT067R_white() {
     ctx = createCardWithProtoIds(ctx, AbsoluteBaSyouFn.of(PlayerB, "配備エリア"), ["unit", "unit"]) as GameState
     ctx = setActivePlayerID(ctx, PlayerA) as GameState
     ctx = setPhase(ctx, ["ドローフェイズ", "フリータイミング"]) as GameState
-    let effects = createPlayEffects(ctx, PlayerA)
+    let effects = createPlayEffects(ctx, PlayerA, { ges: getGlobalEffects(ctx, null) })
     let effect: Effect | null = effects.find(eff => eff.reason[0] == "PlayCard" && eff.reason[3].isPlayCommand) || null
     if (effect == null) {
         throw new Error()
@@ -49,7 +49,7 @@ export async function test179027_09D_C_WT067R_white() {
     }
     let ges = getGlobalEffects(ctx, null)
     ctx = setGlobalEffects(ctx, null, ges)
-    if (getCardIdsCanPayRollCost(ctx, PlayerA, {ges: ges}).length != 4) {
+    if (getCardIdsCanPayRollCost(ctx, PlayerA, { ges: getGlobalEffects(ctx, null) }).length != 4) {
         throw new Error()
     }
     ctx = setTipSelectionForUser(ctx, effect, 0, 0)

@@ -24,3 +24,23 @@ export function doItemSetGlobalEffectsUntilEndOfTurn(ctx: GameState, egs: Global
   }
   throw new Error(`doItemSetGlobalEffectsUntilEndOfTurn unknown item: ${itemId}`)
 }
+
+export function doItemSetGlobalEffectsUntilEndOfStep(ctx: GameState, egs: GlobalEffect[], [itemId, originBasyou]: StrBaSyouPair, options?: { isSkipTargetMissing?: boolean }): GameState {
+  if (options?.isSkipTargetMissing) {
+
+  } else {
+    assertTargetMissingError(ctx, [itemId, originBasyou])
+  }
+  if (isCard(ctx, itemId) || isChip(ctx, itemId)) {
+    let cs = getItemState(ctx, itemId)
+    for (const eg of egs) {
+      cs = ItemStateFn.setGlobalEffect(cs, null, eg, { isRemoveOnStepEnd: true })
+    }
+    ctx = setItemState(ctx, itemId, cs) as GameState
+    return ctx
+  }
+  if (isCoin(ctx, itemId)) {
+    throw new Error(`coin can not doItemSetGlobalEffectsUntilEndOfStep: ${itemId}`)
+  }
+  throw new Error(`doItemSetGlobalEffectsUntilEndOfStep unknown item: ${itemId}`)
+}

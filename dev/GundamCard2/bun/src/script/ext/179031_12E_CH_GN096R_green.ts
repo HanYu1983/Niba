@@ -37,7 +37,7 @@ export const prototype: CardPrototype = {
                 title: ["Entity", {
                   atBa: true,
                   side: "自軍",
-                  isSetGroup: true,
+                  isSetGroupRoot: true,
                   count: 1,
                 }]
               }

@@ -17,7 +17,7 @@ export function createReturnRuleEffect(ctx: GameState, playerId: PlayerID): Effe
                 {
                     actions: [
                         {
-                            title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+                            title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GameState {
                                 const playerId = DefineFn.EffectFn.getPlayerID(effect)
                                 const opponentId = DefineFn.PlayerIDFn.getOpponent(playerId)
                                 ctx = _processKw(ctx, playerId, "戦闘エリア1")
@@ -35,9 +35,9 @@ export function createReturnRuleEffect(ctx: GameState, playerId: PlayerID): Effe
                                             continue
                                         }
                                         if (GameStateFn.getCardBattleArea(ctx, cardId).includes(runtimeArea1)) {
-                                            ctx = GameStateFn.doItemSetRollState(ctx, true, target, { isSkipTargetMissing: true })
+                                            ctx = GameStateFn.doItemSetRollState(ctx, effect, true, target, { ...Options, isSkipTargetMissing: true })
                                             ctx = GameStateFn.doItemMove(
-                                                ctx,
+                                                ctx, effect,
                                                 DefineFn.AbsoluteBaSyouFn.of(playerId, "配備エリア"),
                                                 target,
                                                 { isSkipTargetMissing: true }
@@ -45,7 +45,7 @@ export function createReturnRuleEffect(ctx: GameState, playerId: PlayerID): Effe
                                         } else {
                                             // Rule book p73
                                             ctx = GameStateFn.doItemMove(
-                                                ctx,
+                                                ctx, effect,
                                                 DefineFn.AbsoluteBaSyouFn.of(playerId, "ジャンクヤード"),
                                                 target,
                                                 { isSkipTargetMissing: true }

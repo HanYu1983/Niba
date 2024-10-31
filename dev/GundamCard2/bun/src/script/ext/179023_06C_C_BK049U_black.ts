@@ -29,7 +29,7 @@ export const prototype: CardPrototype = {
         actions: [
           {
             title: ["_ロールする", "破壞"],
-            vars: ["戦闘エリアにいる、セットカードがセットされている敵軍ユニット１枚"]
+            vars: ["戦闘エリアにいる、「高機動」を持つ敵軍ユニット１枚"]
           }
         ]
       }

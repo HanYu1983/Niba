@@ -4,6 +4,7 @@ import { thinkVer1 } from "../../game/gameStateWithFlowMemory/ai/thinkVer1";
 import { AppContext } from "../tool/appContext";
 import { OnEvent } from "../tool/appContext/eventCenter";
 import { Flow } from "../../game/gameStateWithFlowMemory/Flow";
+import { thinkVer2 } from "../../game/gameStateWithFlowMemory/ai/thinkVer2";
 
 export function PlayerController(props: { clientId: string, isPlayer?: boolean }) {
   const appContext = useContext(AppContext);
@@ -16,7 +17,7 @@ export function PlayerController(props: { clientId: string, isPlayer?: boolean }
       if (props.isPlayer) {
         flow = getPlayerFlowAuto(appContext.viewModel.model.gameState, props.clientId, flows)
       } else {
-        flow = thinkVer1(appContext.viewModel.model.gameState, props.clientId, flows)
+        flow = thinkVer2(appContext.viewModel.model.gameState, props.clientId, flows)
       }
       if (flow) {
         setTimeout(() => {

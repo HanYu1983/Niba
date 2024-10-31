@@ -2,19 +2,23 @@ import { logCategory } from "../../tool/logger"
 import { AbsoluteBaSyouFn } from "../define/BaSyou"
 import { CardFn } from "../define/Card"
 import { ChipFn } from "../define/Chip"
+import { Effect } from "../define/Effect"
 import { TargetMissingError, TipError } from "../define/GameError"
+import { GameExtParams } from "../define/GameExtParams"
 import { StrBaSyouPair } from "../define/Tip"
+import { assertTargetNoLongerValidAndUpdate } from "./assertTargetNoLongerValidAndUpdate"
 import { getCard, setCard } from "./CardTableComponent"
 import { getChip, setChip } from "./ChipTableComponent"
 import { GameState } from "./GameState"
 import { ItemTableComponent, assertTargetMissingError, isCard, isChip, getItemBaSyou } from "./ItemTableComponent"
 import { getSetGroup, getSetGroupChildren } from "./SetGroupComponent"
 
-export function doItemSetRollState(ctx: GameState, isRoll: boolean, [itemId, originBasyou]: StrBaSyouPair, options?: { isSkipTargetMissing?: boolean }): GameState {
+export function doItemSetRollState(ctx: GameState, effect:Effect, isRoll: boolean, [itemId, originBasyou]: StrBaSyouPair, options: GameExtParams & { isSkipTargetMissing?: boolean }): GameState {
   if(options?.isSkipTargetMissing){
     
   } else {
     assertTargetMissingError(ctx, [itemId, originBasyou])
+    assertTargetNoLongerValidAndUpdate(ctx, effect, itemId, options)
   }
   // 整個setGroup都要一起
   const itemIds = getSetGroup(ctx, itemId)

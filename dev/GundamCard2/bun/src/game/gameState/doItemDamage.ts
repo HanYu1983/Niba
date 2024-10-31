@@ -1,6 +1,7 @@
 import { AbsoluteBaSyouFn } from "../define/BaSyou";
 import { Effect, EffectFn } from "../define/Effect";
 import { TargetMissingError } from "../define/GameError";
+import { GameExtParams } from "../define/GameExtParams";
 import { ItemStateFn } from "../define/ItemState";
 import { PlayerID } from "../define/PlayerID";
 import { StrBaSyouPair } from "../define/Tip";
@@ -14,25 +15,17 @@ import { getItemState, setItemState } from "./ItemStateComponent";
 import { isCard, isChip, getItemBaSyou, assertTargetMissingError, getItemController } from "./ItemTableComponent";
 import { getSetGroupBattlePoint } from "./setGroup";
 
-export function doItemDamage(ctx: GameState, effect: Effect, damage: number, target: StrBaSyouPair, options?: { isSkipTargetMissing?: boolean }): GameState {
-  const ges = getGlobalEffects(ctx, null)
-  ctx = setGlobalEffects(ctx, null, ges)
-  if (options?.isSkipTargetMissing) {
-
-  } else {
-    ctx = assertTargetNoLongerValidAndUpdate(ctx, effect, target[0])
-  }
+export function doItemDamage(ctx: GameState, effect: Effect, damage: number, target: StrBaSyouPair, options: GameExtParams & { isSkipTargetMissing?: boolean }): GameState {
   const effectController = EffectFn.getPlayerID(effect)
   if (options?.isSkipTargetMissing) {
 
   } else {
     assertTargetMissingError(ctx, target)
+    assertTargetNoLongerValidAndUpdate(ctx, effect, target[0], options)
   }
   {
-    const ges = getGlobalEffects(ctx, null)
-    ctx = setGlobalEffects(ctx, null, ges)
     // damage修正
-    const adj = ges.map(ge => {
+    const adj = (options.ges || []).map(ge => {
       if (ge.title[0] == "このカードが受ける全ての_通常ダメージは、_２減殺される" && ge.title[1] == "通常ダメージ") {
         if (ge.cardIds.includes(target[0])) {
           return -ge.title[2]
@@ -49,7 +42,7 @@ export function doItemDamage(ctx: GameState, effect: Effect, damage: number, tar
     let cardState = getItemState(ctx, targetItemId);
     cardState = ItemStateFn.damage(cardState, damage)
     ctx = setItemState(ctx, targetItemId, cardState) as GameState
-    const [_, _2, hp] = getSetGroupBattlePoint(ctx, targetItemId, { ges: ges })
+    const [_, _2, hp] = getSetGroupBattlePoint(ctx, targetItemId, options)
     if (hp <= cardState.damage) {
       const effect: Effect = createDestroyEffect(ctx, { id: "通常ダメージ", playerID: effectController }, targetItemId)
       ctx = addDestroyEffect(ctx, effect) as GameState

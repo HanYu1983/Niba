@@ -44,7 +44,7 @@ export const prototype: CardPrototype = {
         const cardId = DefineFn.EffectFn.getCardID(effect)
         let state = GameStateFn.getItemState(ctx, cardId)
         if (event.title[0] == "このカードが場に出た場合" && event.cardIds?.includes(cardId)) {
-          const totalCostLength = GameStateFn.getCardTotalCostLength(ctx, cardId, {ges: ges}) - 1
+          const totalCostLength = GameStateFn.getCardTotalCostLength(ctx, cardId, { ges: ges }) - 1
           state = DefineFn.ItemStateFn.setFlag(state, "bonus", totalCostLength)
         }
         if (event.title[0] == "GameEventOnTiming" && DefineFn.PhaseFn.eq(event.title[1], DefineFn.PhaseFn.getLast())) {

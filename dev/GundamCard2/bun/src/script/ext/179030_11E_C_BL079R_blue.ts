@@ -72,10 +72,21 @@ export const prototype: CardPrototype = {
         ]
       },
       "自軍手札、または自軍ハンガーにある、６以下の合計国力を持つユニット１枚を": {
-        title: ["_自軍手札、または自軍ハンガーにある、_６以下の合計国力を持つ_ユニット_１枚を", "自軍", 6, "ユニット", 1]
+        title: ["Entity", {
+          side: "自軍",
+          at: ["ハンガー", "手札"],
+          compareBattlePoint: ["合計国力", "<=", 6],
+          cardCategory: ["ユニット"],
+          count: 1,
+        }]
       },
       "自軍ユニット１枚": {
-        title: ["_自軍_ユニット_１枚", "自軍", "ユニット", 1]
+        title: ["Entity", {
+          atBa: true,
+          side: "自軍",
+          is: ["ユニット"],
+          count: 1,
+        }]
       }
     },
     logicTreeActions: [

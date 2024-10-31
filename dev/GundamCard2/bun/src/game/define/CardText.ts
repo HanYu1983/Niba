@@ -1,9 +1,9 @@
 import { always, ifElse, map, pipe, zipObj } from "ramda";
 import { RelatedPlayerSideKeyword, UnitPropertyKeyword } from ".";
 import { LogicTree, LogicTreeFn } from "../../tool/logicTree";
-import { AbsoluteBaSyou, BaSyou, BaSyouKeyword } from "./BaSyou";
+import { AbsoluteBaSyou, BaSyou, BaSyouKeyword, RelatedBaSyou } from "./BaSyou";
 import { CardColor, CardCategory, GSignProperty, GSign } from "./CardPrototype";
-import { DestroyReason, Effect } from "./Effect";
+import { DestroyId, DestroyReason, Effect } from "./Effect";
 import { GameEvent, GameEventTitle } from "./GameEvent";
 import { GlobalEffect } from "./GlobalEffect";
 import { Phase, SiYouTiming } from "./Timing";
@@ -12,6 +12,8 @@ import { PlayerID } from "./PlayerID";
 import { logCategory } from "../../tool/logger";
 import { Card } from "./Card";
 import { ItemState } from "./ItemState";
+import { GameState } from "../gameState/GameState";
+import { Bridge } from "../../script/bridge";
 
 export type BattleBonus = [number, number, number]
 
@@ -65,6 +67,7 @@ export type ActionTitle =
     | ["_－１／－１／－１コイン_１個を乗せる", BattleBonus, number]
     | ["移除卡狀態_旗標", string]
     | ["ターン終了時まで「速攻」を得る。", GlobalEffect[]]
+    | ["ステップ終了時まで「速攻」を得る。", GlobalEffect[]]
     | ["cutIn", Action[]]
     | ["カード_１枚を引く", number]
     | ["リロール状態で置き換える"]
@@ -81,13 +84,17 @@ export type ActionTitle =
     | ["この記述の効果は、プレイヤー毎に１ターンに１回まで解決できる"]
     | ["Entity", EntitySearchOptions]
     | ["同回合上限", number]
+    | ["同切上限"]
     | ["このカードが攻撃に出撃している"]
     | ["このカードが交戦中の場合"]
     | ["看見see"]
+    | ["エリアの任意の順番に_リロール状態で移す", RelatedBaSyou, boolean | null]
 
 export type Action = {
     title: ActionTitle,
     vars?: string[],
+    isSelectAllCardInSetGroup?: string[],
+    isSkipTargetMissingError?: boolean,
     description?: string,
 }
 
@@ -122,8 +129,11 @@ export type EntitySearchOptions = {
     atBa?: boolean,
     color?: CardColor[],
     compareBattlePoint?: [UnitPropertyKeyword | "合計国力", "<=" | ">=" | "==", number],
+    hasDestroyId?: DestroyId[],
     isDestroy?: boolean,
     isSetGroup?: boolean,
+    isSetGroupRoot?: boolean,
+    isSetGroupHasChar?: string[],
     isBattleGroupFirst?: boolean,
     isRoll?: boolean,
     isCanSetCharacter?: boolean,
@@ -142,29 +152,28 @@ export type EntitySearchOptions = {
     max?: number,
     asMuchAsPossible?: boolean,
     exceptCardIds?: string[],
-    isRepeat?: boolean
+    isRepeat?: boolean,
 }
 
 export type ConditionTitle =
     | string
     | ["RollColor", CardColor | null]
-    | ["_戦闘エリアにいる_敵軍_ユニット_１～_２枚", BaSyouKeyword[], RelatedPlayerSideKeyword, CardCategory, number, number]
-    | ["_交戦中の_自軍_ユニット_１枚", "交戦中" | "非交戦中" | null, RelatedPlayerSideKeyword, CardCategory, number]
-    | ["_自軍_ユニット_１枚", RelatedPlayerSideKeyword, CardCategory, number]
+    | ["Entity", EntitySearchOptions & { returnNullIfNotPassCondition?: boolean }]
+    // | ["_戦闘エリアにいる_敵軍_ユニット_１～_２枚", BaSyouKeyword[], RelatedPlayerSideKeyword, CardCategory, number, number]
+    // | ["_交戦中の_自軍_ユニット_１枚", "交戦中" | "非交戦中" | null, RelatedPlayerSideKeyword, CardCategory, number]
+    // | ["_自軍_ユニット_１枚", RelatedPlayerSideKeyword, CardCategory, number]
     | ["このセットグループの_ユニットは", CardCategory]
     | ["_本来の記述に｢特徴：_装弾｣を持つ_自軍_G_１枚", boolean, string, RelatedPlayerSideKeyword, CardCategory, number]
-    | ["_自軍手札、または自軍ハンガーにある、_６以下の合計国力を持つ_ユニット_１枚を", RelatedPlayerSideKeyword, number, CardCategory, number]
-    | ["打開自軍手裡或指定HANGER中特徵_A並合計國力_x以下的_1張卡", string, number, number]
+    // | ["_自軍手札、または自軍ハンガーにある、_６以下の合計国力を持つ_ユニット_１枚を", RelatedPlayerSideKeyword, number, CardCategory, number]
+    // | ["打開自軍手裡或指定HANGER中特徵_A並合計國力_x以下的_1張卡", string, number, number]
     | ["このカードの_本来のテキスト１つ", boolean, number]
-    | ["_自軍_本國上的_1張卡", RelatedPlayerSideKeyword, BaSyouKeyword, number]
     | ["_自軍_本國找出特徵_A的_1張卡", RelatedPlayerSideKeyword, BaSyouKeyword, string, number]
-    | ["這張卡交戰的防禦力_x以下的敵軍機體_1張", number, number]
-    | ["_配備エリアにいる、「特徴：_T3部隊」を持つ_自軍_ユニット_１枚", BaSyouKeyword, string, RelatedPlayerSideKeyword, CardCategory, number]
-    | ["_自軍_本国の上のカード_１～_４枚を見て、その中にある、「特徴：_ヘイズル系」を持つ_ユニット_１枚", RelatedPlayerSideKeyword, BaSyouKeyword, number, number, string, CardCategory, number]
-    | ["_自軍_ジャンクヤードにある、_黒のGサインを持つ全てのカードは", RelatedPlayerSideKeyword, BaSyouKeyword, CardColor]
-    | ["_敵軍部隊がいる場合", RelatedPlayerSideKeyword]
-    | ["_敵軍_ユニットが_３枚以上いる場合", RelatedPlayerSideKeyword, CardCategory, number]
-    | ["Entity", EntitySearchOptions]
+    // | ["這張卡交戰的防禦力_x以下的敵軍機體_1張", number, number]
+    // | ["_配備エリアにいる、「特徴：_T3部隊」を持つ_自軍_ユニット_１枚", BaSyouKeyword, string, RelatedPlayerSideKeyword, CardCategory, number]
+    // | ["_自軍_本国の上のカード_１～_４枚を見て、その中にある、「特徴：_ヘイズル系」を持つ_ユニット_１枚", RelatedPlayerSideKeyword, BaSyouKeyword, number, number, string, CardCategory, number]
+    // | ["_自軍_ジャンクヤードにある、_黒のGサインを持つ全てのカードは", RelatedPlayerSideKeyword, BaSyouKeyword, CardColor]
+    // | ["_敵軍部隊がいる場合", RelatedPlayerSideKeyword]
+    // | ["_敵軍_ユニットが_３枚以上いる場合", RelatedPlayerSideKeyword, CardCategory, number]
     | ["_交戦中の_敵軍部隊_１つ", boolean | null, RelatedPlayerSideKeyword | null, number]
 
 export type Condition = {
@@ -259,10 +268,12 @@ export type CreatePlayEffectFn = (ctx: any, effect: Effect, bridge: any) => Effe
 export type TestEnv = {
     eventTitle?: GameEventTitle,
     event?: GameEvent,
+    phase?: Phase,
     thisCard?: [RelatedPlayerSideKeyword, BaSyouKeyword, Card, { destroyReason?: DestroyReason, flags?: { [key: string]: any } } | null],
     addCards?: [RelatedPlayerSideKeyword, BaSyouKeyword, Card[]][],
     createCards?: [RelatedPlayerSideKeyword, BaSyouKeyword, [string, number][]][],
-    setGroupParent?: { [key: string]: string }
+    setGroupParent?: { [key: string]: string },
+    checkFn?: (ctx: GameState, bridge: Bridge) => void;
 }
 
 export type CardText = {
@@ -277,7 +288,8 @@ export type CardText = {
     protectLevel?: 1 | 2,
     isEachTime?: boolean,
     createPlayEffect?: string,
-    testEnvs?: TestEnv[]
+    testEnvs?: TestEnv[],
+    parentTextTitle?: TextTitle
 }
 
 function getCondition(ctx: CardText, conditionId: string): Condition {

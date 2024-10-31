@@ -1,50 +1,67 @@
-import { Table } from "../../tool/table";
-import { } from "./GameState";
 import { AbsoluteBaSyou, AbsoluteBaSyouFn } from "../define/BaSyou";
-import { PlayerA } from "../define/PlayerID";
-import { getItemBaSyou, ItemTableComponent } from "./ItemTableComponent";
+import { getItemBaSyou, getItemIdsByBasyou, ItemTableComponent } from "./ItemTableComponent";
+import { getSetGroupRoot, SetGroupComponent } from "./SetGroupComponent";
+import { logCategory } from "../../tool/logger";
+import { getPhase, PhaseComponent } from "./PhaseComponent";
+import { EventCenterFn } from "./EventCenter";
 
 export type IsBattleComponent = {
-  // 是否交戰中，key代表牌堆名稱的字串
-  isBattle: { [key: string]: boolean }
-  table: Table
-} & ItemTableComponent
+  hasCheck: boolean,
+  battleSnapshot: { [key: string]: string[] }
+} & ItemTableComponent & SetGroupComponent & PhaseComponent
+
+export function clearHasCheck(ctx: IsBattleComponent): IsBattleComponent {
+  return {
+    ...ctx,
+    hasCheck: false
+  }
+}
 
 export function checkIsBattle(ctx: IsBattleComponent): IsBattleComponent {
-  const battleAreas: AbsoluteBaSyou[] = [
-    AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア1"),
-    AbsoluteBaSyouFn.of(PlayerA, "戦闘エリア2"),
-  ];
-  return battleAreas.reduce((ctx, battleArea) => {
-    const baSyouID1 = AbsoluteBaSyouFn.toString(battleArea);
-    const baSyouID2 = AbsoluteBaSyouFn.toString(AbsoluteBaSyouFn.setOpponentPlayerID(battleArea));
-    if (
-      ctx.table.cardStack[baSyouID1]?.length &&
-      ctx.table.cardStack[baSyouID2]?.length
-    ) {
-      return {
-        ...ctx,
-        isBattle: {
-          ...ctx.isBattle,
-          [baSyouID1]: true,
-          [baSyouID2]: true,
-        },
-      };
-    }
-    return {
+  logCategory("checkIsBattle", getPhase(ctx))
+  AbsoluteBaSyouFn.getBattleArea().forEach(basyou => {
+    const originState = isBattleAtBasyou(ctx, basyou)
+    ctx = {
       ...ctx,
-      isBattle: {
-        ...ctx.isBattle,
-        [baSyouID1]: false,
-        [baSyouID2]: false,
+      battleSnapshot: {
+        ...ctx.battleSnapshot,
+        [AbsoluteBaSyouFn.toString(basyou)]: getItemIdsByBasyou(ctx, basyou)
       }
-    };
-  }, ctx);
+    }
+    const newState = isBattleAtBasyou(ctx, basyou)
+    if (originState != newState) {
+      ctx = EventCenterFn.onIsBattleChange(ctx, basyou, originState, newState)
+    }
+  })
+  ctx = {
+    ...ctx,
+    hasCheck: true
+  }
+  return ctx
 }
 
 export function isBattleAtBasyou(ctx: IsBattleComponent, basyou: AbsoluteBaSyou): boolean {
-  return ctx.isBattle[AbsoluteBaSyouFn.toString(basyou)] == true
+  const opponentBasyou = AbsoluteBaSyouFn.setOpponentPlayerID(basyou);
+  const len1 = (ctx.battleSnapshot[AbsoluteBaSyouFn.toString(basyou)] || []).length
+  const len2 = (ctx.battleSnapshot[AbsoluteBaSyouFn.toString(opponentBasyou)] || []).length
+  return len1 > 0 && len2 > 0
 }
+
+export function getBattleGroupFromSnapshot(ctx: IsBattleComponent, basyou: AbsoluteBaSyou): string[] {
+  if (ctx.hasCheck != true) {
+    throw new Error("getBattleGroupFromSnapshot but not check yet")
+  }
+  return (ctx.battleSnapshot[AbsoluteBaSyouFn.toString(basyou)] || []).filter(itemId => getSetGroupRoot(ctx, itemId) == itemId)
+}
+
+// export function getItemBasyouFromSnapshot(ctx: IsBattleComponent, itemId: string): AbsoluteBaSyou | null {
+//   for (const basyou of AbsoluteBaSyouFn.getBattleArea()) {
+//     if ((ctx.battleSnapshot[AbsoluteBaSyouFn.toString(basyou)] || []).find(id => itemId == id)) {
+//       return basyou
+//     }
+//   }
+//   return null
+// }
 
 export function isBattle(
   ctx: IsBattleComponent,
@@ -52,18 +69,20 @@ export function isBattle(
   cardID2: string | null
 ): boolean {
   const baSyou1 = getItemBaSyou(ctx, cardID);
-  if (ctx.isBattle[AbsoluteBaSyouFn.toString(baSyou1)] != true) {
-    return false;
+  const baSyou1Ids = (ctx.battleSnapshot[AbsoluteBaSyouFn.toString(baSyou1)] || [])
+  if (baSyou1Ids.length == 0) {
+    return false
   }
-  if (cardID2 != null) {
-    const baSyou2 = AbsoluteBaSyouFn.setOpponentPlayerID(baSyou1);
-    const isFindCardID2 =
-      ctx.table.cardStack[AbsoluteBaSyouFn.toString(baSyou2)].find((cardId) => {
-        return cardId == cardID2;
-      }) != null;
-    if (isFindCardID2 == false) {
-      return false;
-    }
+  if (baSyou1Ids.includes(cardID) == false) {
+    return false
   }
-  return true;
+  const baSyou2 = AbsoluteBaSyouFn.setOpponentPlayerID(baSyou1);
+  const opponentAreaIds = (ctx.battleSnapshot[AbsoluteBaSyouFn.toString(baSyou2)] || [])
+  if (opponentAreaIds.length == 0) {
+    return false
+  }
+  if (cardID2) {
+    return opponentAreaIds.includes(cardID2)
+  }
+  return true
 }
