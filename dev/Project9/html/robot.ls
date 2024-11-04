@@ -1,8 +1,8 @@
 
 create = -> 
     id: ""
-    robotId: ""
-    components: []
+    pos: glMatrix.vec2.create()
+    vec: glMatrix.vec2.create()
 
 const Robot = {
   create: create,
