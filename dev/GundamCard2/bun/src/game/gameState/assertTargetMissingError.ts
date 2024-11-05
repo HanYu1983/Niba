@@ -9,10 +9,10 @@ import { assertStrBasyouMissing, getItemController } from "./ItemTableComponent"
 
 export function assertTargetMissingError(ctx: GameState, effect: Effect, [itemId, originBasyou]: StrBaSyouPair, options: GameExtParams) {
   assertStrBasyouMissing(ctx, [itemId, originBasyou])
-  assertTargetNoLongerValidAndUpdate(ctx, effect, itemId, options)
+  assertTargetNoLongerValid(ctx, effect, itemId, options)
 }
 
-export function assertTargetNoLongerValidAndUpdate(ctx: GameState, effect: Effect, cardId: string, options: GameExtParams) {
+export function assertTargetNoLongerValid(ctx: GameState, effect: Effect, cardId: string, options: GameExtParams) {
   const ges = options.ges || []
   if (ges.find(ge => ge.title[0] == "敵軍効果の対象にならない" && ge.cardIds.includes(cardId))) {
     if (EffectFn.getPlayerID(effect) != getItemController(ctx, cardId)) {

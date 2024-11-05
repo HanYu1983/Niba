@@ -5,7 +5,7 @@ import { GameExtParams } from "../define/GameExtParams";
 import { ItemStateFn } from "../define/ItemState";
 import { PlayerID } from "../define/PlayerID";
 import { StrBaSyouPair } from "../define/Tip";
-import { assertTargetMissingError, assertTargetNoLongerValidAndUpdate } from "./assertTargetNoLongerValidAndUpdate";
+import { assertTargetMissingError, assertTargetNoLongerValid } from "./assertTargetMissingError";
 import { getItemRuntimeCategory } from "./card";
 import { createDestroyEffect } from "./createDestroyEffect";
 import { addDestroyEffect } from "./EffectStackComponent";

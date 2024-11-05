@@ -35,7 +35,7 @@ import { getGlobalEffects, setGlobalEffects } from "./globalEffects"
 import { Bridge } from "../../script/bridge"
 import { getSetGroup } from "./SetGroupComponent"
 import { doItemAddCoin } from "./doItemAddCoin"
-import { assertTargetMissingError } from "./assertTargetNoLongerValidAndUpdate"
+import { assertTargetMissingError } from "./assertTargetMissingError"
 
 export function createPlayerIdFromRelated(ctx: GameState, cardId: string, re: RelatedPlayerSideKeyword): PlayerID {
   switch (re) {

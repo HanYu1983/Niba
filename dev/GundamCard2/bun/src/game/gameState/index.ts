@@ -32,7 +32,7 @@ import * as Entity from "./Entity"
 import * as doPlayerDrawCard from "./doPlayerDrawCard"
 import * as doItemDamage from "./doItemDamage"
 import * as doItemAddCoin from "./doItemAddCoin"
-import * as assertTargetNoLongerValidAndUpdate from "./assertTargetNoLongerValidAndUpdate"
+import * as assertTargetMissingError from "./assertTargetMissingError"
 
 export const GameStateFn = {
     ...GameState,
@@ -69,5 +69,5 @@ export const GameStateFn = {
     ...doPlayerDrawCard,
     ...doItemDamage,
     ...doItemAddCoin,
-    ...assertTargetNoLongerValidAndUpdate
+    ...assertTargetMissingError
 }

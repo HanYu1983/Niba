@@ -18,7 +18,7 @@ import { doTriggerEvent } from "./doTriggerEvent"
 import { getRuntimeBattleArea } from "./RuntimeBattleAreaComponent"
 import { getItemRuntimeCategory } from "./card"
 import { GameExtParams } from "../define/GameExtParams"
-import { assertTargetMissingError, assertTargetNoLongerValidAndUpdate } from "./assertTargetNoLongerValidAndUpdate"
+import { assertTargetMissingError, assertTargetNoLongerValid } from "./assertTargetMissingError"
 
 export function doItemSetDestroy(ctx: GameState, effect: Effect, reason: DestroyReason | null, [itemId, from]: StrBaSyouPair, options: GameExtParams): GameState {
     assertTargetMissingError(ctx, effect, [itemId, from], options)

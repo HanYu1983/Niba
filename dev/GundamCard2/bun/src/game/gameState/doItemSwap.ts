@@ -2,7 +2,7 @@ import { TableFns } from "../../tool/table";
 import { Effect } from "../define/Effect";
 import { GameExtParams } from "../define/GameExtParams";
 import { StrBaSyouPair } from "../define/Tip";
-import { assertTargetMissingError } from "./assertTargetNoLongerValidAndUpdate";
+import { assertTargetMissingError } from "./assertTargetMissingError";
 import { getCard, mapCard, setCard } from "./CardTableComponent";
 import { GameState } from "./GameState";
 import { getItemState, mapItemStateValues, setItemState } from "./ItemStateComponent";

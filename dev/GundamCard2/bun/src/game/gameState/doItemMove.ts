@@ -8,7 +8,7 @@ import { getSetGroupChildren, removeSetGroupParent } from "./SetGroupComponent"
 import { logCategory } from "../../tool/logger"
 import { GameExtParams } from "../define/GameExtParams"
 import { Effect } from "../define/Effect"
-import { assertTargetMissingError, assertTargetNoLongerValidAndUpdate } from "./assertTargetNoLongerValidAndUpdate"
+import { assertTargetMissingError, assertTargetNoLongerValid } from "./assertTargetMissingError"
 
 export function doItemMove(ctx: GameState, effect: Effect, to: AbsoluteBaSyou, [itemId, from]: StrBaSyouPair, options: GameExtParams & { insertId?: number }): GameState {
     assertTargetMissingError(ctx, effect, [itemId, from], options)
