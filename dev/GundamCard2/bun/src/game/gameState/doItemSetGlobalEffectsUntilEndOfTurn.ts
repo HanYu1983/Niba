@@ -3,14 +3,13 @@ import { GameExtParams } from "../define/GameExtParams"
 import { GlobalEffect } from "../define/GlobalEffect"
 import { ItemStateFn } from "../define/ItemState"
 import { StrBaSyouPair } from "../define/Tip"
-import { assertTargetNoLongerValidAndUpdate } from "./assertTargetNoLongerValidAndUpdate"
+import { assertTargetMissingError } from "./assertTargetNoLongerValidAndUpdate"
 import { GameState } from "./GameState"
 import { getItemState, setItemState } from "./ItemStateComponent"
-import { isCard, isChip, getItemBaSyou, isCoin, assertTargetMissingError } from "./ItemTableComponent"
+import { isCard, isChip, getItemBaSyou, isCoin } from "./ItemTableComponent"
 
 export function doItemSetGlobalEffectsUntilEndOfTurn(ctx: GameState, effect: Effect, egs: GlobalEffect[], [itemId, originBasyou]: StrBaSyouPair, options: GameExtParams): GameState {
-  assertTargetMissingError(ctx, [itemId, originBasyou])
-  assertTargetNoLongerValidAndUpdate(ctx, effect, itemId, options)
+  assertTargetMissingError(ctx, effect, [itemId, originBasyou], options)
   return doItemSetGlobalEffectsUntilEndOfTurnBasic(ctx, egs, itemId)
 }
 
@@ -30,8 +29,7 @@ export function doItemSetGlobalEffectsUntilEndOfTurnBasic(ctx: GameState, egs: G
 }
 
 export function doItemSetGlobalEffectsUntilEndOfStep(ctx: GameState, effect: Effect, egs: GlobalEffect[], [itemId, originBasyou]: StrBaSyouPair, options: GameExtParams): GameState {
-  assertTargetMissingError(ctx, [itemId, originBasyou])
-  assertTargetNoLongerValidAndUpdate(ctx, effect, itemId, options)
+  assertTargetMissingError(ctx, effect, [itemId, originBasyou], options)
   return doItemSetGlobalEffectsUntilEndOfStepBasic(ctx, egs, itemId)
 }
 

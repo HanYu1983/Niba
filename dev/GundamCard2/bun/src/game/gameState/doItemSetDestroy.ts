@@ -11,18 +11,17 @@ import { EventCenterFn } from "./EventCenter"
 import { GameState } from "./GameState"
 import { clearGlobalEffects, getGlobalEffects, setGlobalEffects } from "./globalEffects"
 import { getItemState, getItemStateValues, mapItemState } from "./ItemStateComponent"
-import { ItemTableComponent, isCard, isChip, getItemBaSyou, isCoin, getItemController, assertTargetMissingError, getItemIdsByBasyou } from "./ItemTableComponent"
+import { ItemTableComponent, isCard, isChip, getItemBaSyou, isCoin, getItemController, getItemIdsByBasyou } from "./ItemTableComponent"
 import { getSetGroupBattlePoint } from "./setGroup"
 import { getSetGroupChildren, getSetGroupRoot } from "./SetGroupComponent"
 import { doTriggerEvent } from "./doTriggerEvent"
 import { getRuntimeBattleArea } from "./RuntimeBattleAreaComponent"
 import { getItemRuntimeCategory } from "./card"
 import { GameExtParams } from "../define/GameExtParams"
-import { assertTargetNoLongerValidAndUpdate } from "./assertTargetNoLongerValidAndUpdate"
+import { assertTargetMissingError, assertTargetNoLongerValidAndUpdate } from "./assertTargetNoLongerValidAndUpdate"
 
 export function doItemSetDestroy(ctx: GameState, effect: Effect, reason: DestroyReason | null, [itemId, from]: StrBaSyouPair, options: GameExtParams): GameState {
-    assertTargetNoLongerValidAndUpdate(ctx, effect, itemId, options)
-    assertTargetMissingError(ctx, [itemId, from])
+    assertTargetMissingError(ctx, effect, [itemId, from], options)
     if (reason) {
         if (getItemState(ctx, itemId).destroyReason) {
             throw new TargetMissingError(`already destroy: ${itemId}`, {})

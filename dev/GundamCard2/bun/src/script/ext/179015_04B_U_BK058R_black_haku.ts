@@ -44,7 +44,7 @@ export const prototype: CardPrototype = {
                     const bonusV = count + 1
                     const bonus: BattleBonus = [-bonusV, -bonusV, -bonusV]
                     for (const pair of pairs) {
-                      GameStateFn.assertTargetMissingError(ctx, pair)
+                      GameStateFn.assertTargetMissingError(ctx, effect, pair, Options)
                       ctx = GameStateFn.doItemSetGlobalEffectsUntilEndOfTurn(ctx, effect, [{
                         title: ["＋x／＋x／＋xを得る", bonus],
                         cardIds: [pair[0]]

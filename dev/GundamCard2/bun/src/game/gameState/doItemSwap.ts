@@ -1,19 +1,22 @@
 import { TableFns } from "../../tool/table";
+import { Effect } from "../define/Effect";
+import { GameExtParams } from "../define/GameExtParams";
 import { StrBaSyouPair } from "../define/Tip";
+import { assertTargetMissingError } from "./assertTargetNoLongerValidAndUpdate";
 import { getCard, mapCard, setCard } from "./CardTableComponent";
 import { GameState } from "./GameState";
 import { getItemState, mapItemStateValues, setItemState } from "./ItemStateComponent";
-import { assertTargetMissingError, isCard } from "./ItemTableComponent";
+import { isCard } from "./ItemTableComponent";
 
-export function doItemSwap(ctx: GameState, pair1: StrBaSyouPair, pair2: StrBaSyouPair, options?: { isSkipTargetMissing?: boolean }): GameState {
-    if (options?.isSkipTargetMissing) {
-
-    } else {
-        assertTargetMissingError(ctx, pair1)
-        assertTargetMissingError(ctx, pair2)
-    }
+export function doItemSwap(ctx: GameState, effect: Effect, pair1: StrBaSyouPair, pair2: StrBaSyouPair, options: GameExtParams): GameState {
+    assertTargetMissingError(ctx, effect, pair1, options)
+    assertTargetMissingError(ctx, effect, pair2, options)
     const [itemId1] = pair1
     const [itemId2] = pair2
+    return doItemSwapBasic(ctx, itemId1, itemId2, options)
+}
+
+export function doItemSwapBasic(ctx: GameState, itemId1: string, itemId2: string, options: GameExtParams): GameState {
     // 置換(p77)
     if (isCard(ctx, itemId1) && isCard(ctx, itemId2)) {
         const card1 = getCard(ctx, itemId1)

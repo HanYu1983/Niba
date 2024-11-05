@@ -3,7 +3,7 @@ import { Card } from "../game/define/Card";
 import { testGameError } from "../game/define/GameError";
 import { PlayerA, PlayerB } from "../game/define/PlayerID";
 import { addCards, mapCard, getCard, createCardWithProtoIds } from "../game/gameState/CardTableComponent";
-import { doItemSwap } from "../game/gameState/doItemSwap";
+import { doItemSwap, doItemSwapBasic } from "../game/gameState/doItemSwap";
 import { createGameState, GameState } from "../game/gameState/GameState";
 import { mapItemState, getItemState } from "../game/gameState/ItemStateComponent";
 import { createStrBaSyouPair, getItemBaSyou, getItemIdsByBasyou } from "../game/gameState/ItemTableComponent";
@@ -150,7 +150,7 @@ async function testSwapItem() {
     if (getItemState(ctx, unit2.id).damage != 0) {
         throw new Error()
     }
-    ctx = doItemSwap(ctx, [unit.id, getItemBaSyou(ctx, unit.id)], [unit2.id, getItemBaSyou(ctx, unit2.id)])
+    ctx = doItemSwapBasic(ctx, unit.id, unit2.id, {})
     if (getItemState(ctx, unit.id).damage != 2) {
         throw new Error()
     }

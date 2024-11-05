@@ -5,21 +5,20 @@ import { GameExtParams } from "../define/GameExtParams";
 import { ItemStateFn } from "../define/ItemState";
 import { PlayerID } from "../define/PlayerID";
 import { StrBaSyouPair } from "../define/Tip";
-import { assertTargetNoLongerValidAndUpdate } from "./assertTargetNoLongerValidAndUpdate";
+import { assertTargetMissingError, assertTargetNoLongerValidAndUpdate } from "./assertTargetNoLongerValidAndUpdate";
 import { getItemRuntimeCategory } from "./card";
 import { createDestroyEffect } from "./createDestroyEffect";
 import { addDestroyEffect } from "./EffectStackComponent";
 import { GameState } from "./GameState";
 import { getGlobalEffects, setGlobalEffects } from "./globalEffects";
 import { getItemState, setItemState } from "./ItemStateComponent";
-import { isCard, isChip, getItemBaSyou, assertTargetMissingError, getItemController } from "./ItemTableComponent";
+import { isCard, isChip, getItemController } from "./ItemTableComponent";
 import { getSetGroupBattlePoint } from "./setGroup";
 
 
 export function doItemDamage(ctx: GameState, effect: Effect, damage: number, target: StrBaSyouPair, options: GameExtParams): GameState {
   const effectController = EffectFn.getPlayerID(effect)
-  assertTargetMissingError(ctx, target)
-  assertTargetNoLongerValidAndUpdate(ctx, effect, target[0], options)
+  assertTargetMissingError(ctx, effect, target, options)
   return doItemDamageBasic(ctx, effectController, damage, target[0], options)
 }
 

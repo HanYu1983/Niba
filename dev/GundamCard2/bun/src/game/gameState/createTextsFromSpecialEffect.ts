@@ -126,7 +126,7 @@ export function createTextsFromSpecialEffect(text: CardText, options: GameExtPar
                                                 const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "［ ］の特徴を持つ自軍ユニット１枚は", cardId)
                                                 const textRefs = GameStateFn.getCardTipTextRefs(ctx, "このカードの本来のテキスト１つ", cardId)
                                                 for (const pair of pairs) {
-                                                    GameStateFn.assertTargetMissingError(ctx, pair)
+                                                    GameStateFn.assertTargetMissingError(ctx, effect, pair, Options)
                                                     const [targetCardId, targetBasyou] = pair
                                                     ctx = GameStateFn.mapItemState(ctx, targetCardId, targetItemState => {
                                                         for (const textRef of textRefs) {
@@ -551,10 +551,10 @@ export function createTextsFromSpecialEffect(text: CardText, options: GameExtPar
                                                                 throw new Error(`pairs must not 0: ${effect.text.description}`)
                                                             }
                                                             const targetPair = pairs[0]
-                                                            GameStateFn.assertTargetMissingError(ctx, targetPair)
-                                                            ctx = GameStateFn.doItemSwap(ctx, [cardId, basyou], targetPair)
+                                                            GameStateFn.assertTargetMissingError(ctx, effect, targetPair, Options)
+                                                            ctx = GameStateFn.doItemSwapBasic(ctx, cardId, targetPair[0], Options)
                                                             ctx = GameStateFn.doItemSetRollStateBasic(ctx, false, cardId, { ...Options, isSkipTargetMissing: true })
-                                                            ctx = GameStateFn.doItemMove(ctx, effect,
+                                                            ctx = GameStateFn.doItemMoveBasic(ctx,
                                                                 DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(basyou, "ジャンクヤード"),
                                                                 targetPair,
                                                                 { ges: Options.ges }

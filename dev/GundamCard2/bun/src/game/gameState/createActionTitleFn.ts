@@ -14,7 +14,7 @@ import { getCardTipSelection, getCardTipStrBaSyouPairs, setCardTipStrBaSyouPairs
 import { addStackEffect } from "./EffectStackComponent"
 import { GameState } from "./GameState"
 import { mapItemState, getItemState, setItemState } from "./ItemStateComponent"
-import { getItemController, getItemBaSyou, assertTargetMissingError, getItemIdsByBasyou, addCoinsToCard, getItemIdsByPlayerId, getItemPrototype, getItemOwner, shuffleItems, createStrBaSyouPair } from "./ItemTableComponent"
+import { getItemController, getItemBaSyou, getItemIdsByBasyou, addCoinsToCard, getItemIdsByPlayerId, getItemPrototype, getItemOwner, shuffleItems, createStrBaSyouPair } from "./ItemTableComponent"
 import { doItemMove } from "./doItemMove"
 import { doItemSwap } from "./doItemSwap"
 import { doTriggerEvent } from "./doTriggerEvent"
@@ -34,6 +34,8 @@ import { isBattle } from "./IsBattleComponent"
 import { getGlobalEffects, setGlobalEffects } from "./globalEffects"
 import { Bridge } from "../../script/bridge"
 import { getSetGroup } from "./SetGroupComponent"
+import { doItemAddCoin } from "./doItemAddCoin"
+import { assertTargetMissingError } from "./assertTargetNoLongerValidAndUpdate"
 
 export function createPlayerIdFromRelated(ctx: GameState, cardId: string, re: RelatedPlayerSideKeyword): PlayerID {
   switch (re) {
@@ -297,7 +299,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
             }
             case "打開": {
               for (const pair of pairs) {
-                assertTargetMissingError(ctx, pair)
+                assertTargetMissingError(ctx, effect, pair, Options)
                 ctx = mapItemState(ctx, pair[0], is => ({ ...is, isOpenForGain: true })) as GameState
               }
               return ctx
@@ -420,7 +422,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
       const [_, bonus, x] = action.title
       const varNames = action.vars
       const isSelectAllCardInSetGroup = action.isSelectAllCardInSetGroup
-      return function (ctx: GameState, effect: Effect): GameState {
+      return function (ctx: GameState, effect: Effect, { Options }: Bridge): GameState {
         const cardId = EffectFn.getCardID(effect)
         const playerId = EffectFn.getPlayerID(effect)
         const pairs = varNames == null ?
@@ -440,7 +442,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
         }
         for (const pair of pairs) {
           const coins = range(0, x).map(i => CoinFn.battleBonus(playerId, bonus))
-          ctx = addCoinsToCard(ctx, pair, coins) as GameState
+          ctx = doItemAddCoin(ctx, effect, pair, coins, Options) as GameState
         }
         return ctx
       }
@@ -525,7 +527,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
         const cardId = EffectFn.getCardID(effect)
         const [target1] = getCardTipStrBaSyouPairs(ctx, varNames[0], cardId)
         const [target2] = getCardTipStrBaSyouPairs(ctx, varNames[1], cardId)
-        ctx = doItemSwap(ctx, target1, target2)
+        ctx = doItemSwap(ctx, effect, target1, target2, Options)
         ctx = doItemSetRollStateBasic(ctx, false, target2[0], { ...Options, isSkipTargetMissing: true })
         // 以下應不需要, 置換只有換protoID和狀態, 這樣才能繼承所有對象
         // ctx = moveItem(ctx, t2ba, [t1, t1ba]) as GameState

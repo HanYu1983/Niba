@@ -1,10 +1,16 @@
 import { Effect, EffectFn } from "../define/Effect"
 import { TargetMissingError } from "../define/GameError"
 import { GameExtParams } from "../define/GameExtParams"
+import { StrBaSyouPair } from "../define/Tip"
 import { getItemRuntimeCategory } from "./card"
 import { GameState } from "./GameState"
 import { getGlobalEffects, setGlobalEffects } from "./globalEffects"
-import { getItemController } from "./ItemTableComponent"
+import { assertStrBasyouMissing, getItemController } from "./ItemTableComponent"
+
+export function assertTargetMissingError(ctx: GameState, effect: Effect, [itemId, originBasyou]: StrBaSyouPair, options: GameExtParams) {
+  assertStrBasyouMissing(ctx, [itemId, originBasyou])
+  assertTargetNoLongerValidAndUpdate(ctx, effect, itemId, options)
+}
 
 export function assertTargetNoLongerValidAndUpdate(ctx: GameState, effect: Effect, cardId: string, options: GameExtParams) {
   const ges = options.ges || []

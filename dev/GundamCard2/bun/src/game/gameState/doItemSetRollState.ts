@@ -6,16 +6,15 @@ import { Effect } from "../define/Effect"
 import { TargetMissingError, TipError } from "../define/GameError"
 import { GameExtParams } from "../define/GameExtParams"
 import { StrBaSyouPair } from "../define/Tip"
-import { assertTargetNoLongerValidAndUpdate } from "./assertTargetNoLongerValidAndUpdate"
+import { assertTargetMissingError, assertTargetNoLongerValidAndUpdate } from "./assertTargetNoLongerValidAndUpdate"
 import { getCard, setCard } from "./CardTableComponent"
 import { getChip, setChip } from "./ChipTableComponent"
 import { GameState } from "./GameState"
-import { ItemTableComponent, assertTargetMissingError, isCard, isChip, getItemBaSyou } from "./ItemTableComponent"
+import { ItemTableComponent, isCard, isChip, getItemBaSyou } from "./ItemTableComponent"
 import { getSetGroup, getSetGroupChildren } from "./SetGroupComponent"
 
 export function doItemSetRollState(ctx: GameState, effect: Effect, isRoll: boolean, [itemId, originBasyou]: StrBaSyouPair, options: GameExtParams): GameState {
-  assertTargetMissingError(ctx, [itemId, originBasyou])
-  assertTargetNoLongerValidAndUpdate(ctx, effect, itemId, options)
+  assertTargetMissingError(ctx, effect, [itemId, originBasyou], options)
   return doItemSetRollStateBasic(ctx, isRoll, itemId, options)
 }
 

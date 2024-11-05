@@ -43,9 +43,7 @@ export function isCardLike(ctx: ItemTableComponent): (itemId: string) => boolean
   }
 }
 
-export function addCoinsToCard(ctx: ItemTableComponent, target: StrBaSyouPair, coins: Coin[]): ItemTableComponent {
-  assertTargetMissingError(ctx, target)
-  const [targetItemId, targetOriginBasyou] = target
+export function addCoinsToCard(ctx: ItemTableComponent, targetItemId: string, coins: Coin[]): ItemTableComponent {
   if (isCard(ctx, targetItemId)) {
     ctx = addCoins(ctx, targetItemId, coins) as ItemTableComponent
     return ctx
@@ -192,11 +190,11 @@ export function getAbsoluteBaSyouFromBaSyou(
   return AbsoluteBaSyouFn.of(_playerID, baSyou.value[1])
 }
 
-export function assertTargetMissingError(ctx: ItemTableComponent, [itemId, originBasyou]: StrBaSyouPair) {
+export function assertStrBasyouMissing(ctx: ItemTableComponent, [itemId, originBasyou]: StrBaSyouPair) {
   if (isCard(ctx, itemId) || isChip(ctx, itemId)) {
     const nowBasyou = getItemBaSyou(ctx, itemId)
     if (AbsoluteBaSyouFn.eq(nowBasyou, originBasyou) == false) {
-      throw new TargetMissingError(`assertTargetMissingError: ${itemId} from ${AbsoluteBaSyouFn.toString(originBasyou)} now ${AbsoluteBaSyouFn.toString(nowBasyou)}`)
+      throw new TargetMissingError(`assertStrBasyouMissing: ${itemId} from ${AbsoluteBaSyouFn.toString(originBasyou)} now ${AbsoluteBaSyouFn.toString(nowBasyou)}`)
     }
   } else if (isCoin(ctx, itemId)) {
     throw new Error(`coin not support`)
