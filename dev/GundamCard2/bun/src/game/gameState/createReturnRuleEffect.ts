@@ -35,7 +35,7 @@ export function createReturnRuleEffect(ctx: GameState, playerId: PlayerID): Effe
                                             continue
                                         }
                                         if (GameStateFn.getCardBattleArea(ctx, cardId).includes(runtimeArea1)) {
-                                            ctx = GameStateFn.doItemSetRollStateBasic(ctx, true, target[0], { ...Options, isSkipTargetMissing: true })
+                                            ctx = GameStateFn.doItemSetRollStateBasic(ctx, true, target[0], { ...Options })
                                             ctx = GameStateFn.doItemMoveBasic(
                                                 ctx,
                                                 DefineFn.AbsoluteBaSyouFn.of(playerId, "配備エリア"),

@@ -553,7 +553,7 @@ export function createTextsFromSpecialEffect(text: CardText, options: GameExtPar
                                                             const targetPair = pairs[0]
                                                             GameStateFn.assertTargetMissingError(ctx, effect, targetPair, Options)
                                                             ctx = GameStateFn.doItemSwapBasic(ctx, cardId, targetPair[0], Options)
-                                                            ctx = GameStateFn.doItemSetRollStateBasic(ctx, false, cardId, { ...Options, isSkipTargetMissing: true })
+                                                            ctx = GameStateFn.doItemSetRollStateBasic(ctx, false, cardId, { ...Options })
                                                             ctx = GameStateFn.doItemMoveBasic(ctx,
                                                                 DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(basyou, "ジャンクヤード"),
                                                                 targetPair,

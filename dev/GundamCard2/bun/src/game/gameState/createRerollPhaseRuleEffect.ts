@@ -29,7 +29,7 @@ export function createRerollPhaseRuleEffect(ctx: GameState, playerId: PlayerID):
                                         })
                                 })
                                 for (const pair of pairs) {
-                                    ctx = GameStateFn.doItemSetRollStateBasic(ctx, false, pair[0], { ...Options, isSkipTargetMissing: true })
+                                    ctx = GameStateFn.doItemSetRollStateBasic(ctx, false, pair[0], { ...Options })
                                 }
                                 return ctx
                             }.toString()

@@ -78,7 +78,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
           const to = createAbsoluteBaSyouFromBaSyou(ctx, cardId, relatedBasyou)
           for (const pair of cardPairs) {
             if (isRoll != null) {
-              ctx = doItemSetRollStateBasic(ctx, isRoll, pair[0], { ...Options, isSkipTargetMissing: true }) as GameState
+              ctx = doItemSetRollStateBasic(ctx, isRoll, pair[0], { ...Options }) as GameState
             }
             ctx = doItemMove(ctx, effect, to, pair, Options) as GameState
           }
@@ -92,7 +92,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
         }
         for (const pair of cardPairs) {
           if (isRoll != null) {
-            ctx = doItemSetRollStateBasic(ctx, isRoll, pair[0], { ...Options, isSkipTargetMissing: true }) as GameState
+            ctx = doItemSetRollStateBasic(ctx, isRoll, pair[0], { ...Options }) as GameState
           }
           ctx = doItemMove(ctx, effect, to, pair, { ...Options, insertId: idx }) as GameState
         }
@@ -528,7 +528,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
         const [target1] = getCardTipStrBaSyouPairs(ctx, varNames[0], cardId)
         const [target2] = getCardTipStrBaSyouPairs(ctx, varNames[1], cardId)
         ctx = doItemSwap(ctx, effect, target1, target2, Options)
-        ctx = doItemSetRollStateBasic(ctx, false, target2[0], { ...Options, isSkipTargetMissing: true })
+        ctx = doItemSetRollStateBasic(ctx, false, target2[0], { ...Options })
         // 以下應不需要, 置換只有換protoID和狀態, 這樣才能繼承所有對象
         // ctx = moveItem(ctx, t2ba, [t1, t1ba]) as GameState
         // ctx = moveItem(ctx, t1ba, [t2, t2ba]) as GameState

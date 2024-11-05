@@ -15,38 +15,42 @@ import { getSetGroup, getSetGroupChildren } from "./SetGroupComponent"
 
 export function doItemSetRollState(ctx: GameState, effect: Effect, isRoll: boolean, [itemId, originBasyou]: StrBaSyouPair, options: GameExtParams): GameState {
   assertTargetMissingError(ctx, effect, [itemId, originBasyou], options)
+  const itemIds = getSetGroup(ctx, itemId)
+  ctx = itemIds.reduce((ctx, willRollItemId) => {
+    if (isCard(ctx, willRollItemId)) {
+      let willRollItem = getCard(ctx, willRollItemId)
+      // 只判斷自身有沒有違規
+      if (willRollItem.id == itemId && !!(willRollItem.isRoll) == isRoll) {
+        throw new TargetMissingError(`card already isRoll: ${willRollItem.isRoll}: ${willRollItem.id}`)
+      }
+      return ctx
+    }
+    if (isChip(ctx, willRollItemId)) {
+      let willRollItem = getChip(ctx, willRollItemId)
+      // 只判斷自身有沒有違規
+      if (willRollItem.id == itemId && !!(willRollItem.isRoll) == isRoll) {
+        throw new TargetMissingError(`chip already isRoll: ${willRollItem.isRoll}: ${willRollItem.id}`)
+      }
+      return ctx
+    }
+    return ctx
+  }, ctx)
   return doItemSetRollStateBasic(ctx, isRoll, itemId, options)
 }
 
-export function doItemSetRollStateBasic(ctx: GameState, isRoll: boolean, itemId: string, options: GameExtParams & { isSkipTargetMissing?: boolean }): GameState {
+export function doItemSetRollStateBasic(ctx: GameState, isRoll: boolean, itemId: string, options: GameExtParams): GameState {
   // 整個setGroup都要一起
   const itemIds = getSetGroup(ctx, itemId)
   ctx = itemIds.reduce((ctx, willRollItemId) => {
     if (isCard(ctx, willRollItemId)) {
       let willRollItem = getCard(ctx, willRollItemId)
       logCategory("doItemSetRollState", "willRollItemId", itemId, willRollItemId, isRoll, !!(willRollItem.isRoll), isRoll == willRollItem.isRoll)
-      if (options?.isSkipTargetMissing) {
-
-      } else {
-        // 只判斷自身有沒有違規
-        if (willRollItem.id == itemId && !!(willRollItem.isRoll) == isRoll) {
-          throw new TargetMissingError(`card already isRoll: ${willRollItem.isRoll}: ${willRollItem.id}`)
-        }
-      }
       willRollItem = CardFn.setIsRoll(willRollItem, isRoll)
       ctx = setCard(ctx, willRollItemId, willRollItem) as GameState
       return ctx
     }
     if (isChip(ctx, willRollItemId)) {
       let willRollItem = getChip(ctx, willRollItemId)
-      if (options?.isSkipTargetMissing) {
-
-      } else {
-        // 只判斷自身有沒有違規
-        if (willRollItem.id == itemId && !!(willRollItem.isRoll) == isRoll) {
-          throw new TargetMissingError(`chip already isRoll: ${willRollItem.isRoll}: ${willRollItem.id}`)
-        }
-      }
       willRollItem = ChipFn.setIsRoll(willRollItem, isRoll)
       ctx = setChip(ctx, willRollItemId, willRollItem) as GameState
       return ctx
