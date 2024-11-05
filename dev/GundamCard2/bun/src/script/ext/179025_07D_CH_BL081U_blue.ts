@@ -22,7 +22,7 @@ export const prototype: CardPrototype = {
       title: ["特殊型", ["共有", "ΖΖ系"]],
       conditions: {
         "Ｒ": {
-          actions:[
+          actions: [
             {
               title: ["_ロールする", "ロール"]
             }
@@ -109,8 +109,8 @@ export const prototype: CardPrototype = {
                               }
                               ctx = GameStateFn.doItemMove(ctx, effect, DefineFn.AbsoluteBaSyouFn.of(cardController, "配備エリア"), pair, Options) as GameState
                               ctx = GameStateFn.doItemMove(ctx, effect, DefineFn.AbsoluteBaSyouFn.of(cardController, "配備エリア"), GameStateFn.createStrBaSyouPair(ctx, cardId), Options) as GameState
-                              ctx = GameStateFn.doItemSetRollState(ctx, effect, false, pair, { ...Options, isSkipTargetMissing: true })
-                              ctx = GameStateFn.doItemSetRollState(ctx, effect, false, GameStateFn.createStrBaSyouPair(ctx, cardId), { ...Options, isSkipTargetMissing: true })
+                              ctx = GameStateFn.doItemSetRollStateBasic(ctx, false, pair[0], { ...Options, isSkipTargetMissing: true })
+                              ctx = GameStateFn.doItemSetRollStateBasic(ctx, false, cardId, { ...Options, isSkipTargetMissing: true })
                               ctx = GameStateFn.setSetGroupParent(ctx, pair[0], cardId) as GameState
                               return ctx
                             }.toString()

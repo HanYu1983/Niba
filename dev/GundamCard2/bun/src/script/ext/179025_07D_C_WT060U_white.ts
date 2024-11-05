@@ -28,14 +28,14 @@ export const prototype: CardPrototype = {
       {
         actions: [
           {
-            title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, ToolFn }: Bridge): GameState {
+            title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, ToolFn, Options }: Bridge): GameState {
               const cardId = DefineFn.EffectFn.getCardID(effect)
               const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "自軍ユニット１～２枚", cardId)
               for (const pair of pairs) {
-                ctx = GameStateFn.doItemSetGlobalEffectsUntilEndOfTurn(ctx, [
+                ctx = GameStateFn.doItemSetGlobalEffectsUntilEndOfTurn(ctx, effect, [
                   { title: ["AddText", { id: ToolFn.getUUID(), title: ["特殊型", ["高機動"]] }], cardIds: [pair[0]] },
                   { title: ["＋x／＋x／＋xを得る", [3, 3, 3]], cardIds: [pair[0]] }
-                ], pair)
+                ], pair, Options)
               }
               return ctx
             }.toString()

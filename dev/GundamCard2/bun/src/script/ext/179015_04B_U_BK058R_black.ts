@@ -33,10 +33,10 @@ export const prototype: CardPrototype = {
                 }],
               }
             },
-            logicTreeAction:{
+            logicTreeAction: {
               actions: [
                 {
-                  title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+                  title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GameState {
                     const cardId = DefineFn.EffectFn.getCardID(effect)
                     const cardController = GameStateFn.getItemController(ctx, cardId)
                     const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "敵軍ユニット１枚", cardId)
@@ -45,10 +45,10 @@ export const prototype: CardPrototype = {
                     const bonus: BattleBonus = [-bonusV, -bonusV, -bonusV]
                     for (const pair of pairs) {
                       GameStateFn.assertTargetMissingError(ctx, pair)
-                      ctx = GameStateFn.doItemSetGlobalEffectsUntilEndOfTurn(ctx, [{
+                      ctx = GameStateFn.doItemSetGlobalEffectsUntilEndOfTurn(ctx, effect, [{
                         title: ["＋x／＋x／＋xを得る", bonus],
                         cardIds: [pair[0]]
-                      }], pair)
+                      }], pair, Options)
                     }
                     return ctx
                   }.toString()

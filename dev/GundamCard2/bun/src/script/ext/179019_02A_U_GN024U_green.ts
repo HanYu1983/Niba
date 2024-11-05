@@ -78,7 +78,7 @@ export const prototype: CardPrototype = {
             {
               title: ["cutIn", [
                 {
-                  title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+                  title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GameState {
                     const cardId = DefineFn.EffectFn.getCardID(effect)
                     const tip1 = GameStateFn.getItemState(ctx, cardId).tips["自軍部隊１つ"]
                     if (tip1) {
@@ -91,10 +91,10 @@ export const prototype: CardPrototype = {
                         throw new DefineFn.TargetMissingError("")
                       }
                       const targetId = targetIds[0]
-                      ctx = GameStateFn.doItemSetGlobalEffectsUntilEndOfTurn(ctx, [{
+                      ctx = GameStateFn.doItemSetGlobalEffectsUntilEndOfTurn(ctx, effect, [{
                         title: ["このカードの部隊の部隊戦闘力を_＋３する", 2],
                         cardIds: [targetId]
-                      }], GameStateFn.createStrBaSyouPair(ctx, targetId))
+                      }], GameStateFn.createStrBaSyouPair(ctx, targetId), Options)
                     }
                     const tip2 = GameStateFn.getItemState(ctx, cardId).tips["敵軍部隊１つ"]
                     if (tip2) {
@@ -107,10 +107,10 @@ export const prototype: CardPrototype = {
                         throw new DefineFn.TargetMissingError("")
                       }
                       const targetId = targetIds[0]
-                      ctx = GameStateFn.doItemSetGlobalEffectsUntilEndOfTurn(ctx, [{
+                      ctx = GameStateFn.doItemSetGlobalEffectsUntilEndOfTurn(ctx, effect, [{
                         title: ["このカードの部隊の部隊戦闘力を_＋３する", -2],
                         cardIds: [targetId]
-                      }], GameStateFn.createStrBaSyouPair(ctx, targetId))
+                      }], GameStateFn.createStrBaSyouPair(ctx, targetId), Options)
                     }
                     return ctx
                   }.toString()

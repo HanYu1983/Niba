@@ -45,12 +45,12 @@ export const prototype: CardPrototype = {
                   const gLen = Math.max(GameStateFn.getPlayerGIds(ctx, playerId).length - 1, 0)
                   const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "戦闘エリアにいる自軍ユニット1枚", cardId)
                   for (const pair of pairs) {
-                    ctx = GameStateFn.doItemSetGlobalEffectsUntilEndOfTurn(ctx, [
+                    ctx = GameStateFn.doItemSetGlobalEffectsUntilEndOfTurn(ctx, effect, [
                       {
                         title: ["SpecialEffectBonus", ["範囲兵器", gLen]],
                         cardIds: [pair[0]]
                       }
-                    ], pair)
+                    ], pair, Options)
                   }
                   return ctx
                 }.toString()

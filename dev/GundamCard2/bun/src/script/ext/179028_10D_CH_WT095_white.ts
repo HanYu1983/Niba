@@ -82,11 +82,11 @@ export const prototype: CardPrototype = {
                                 title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GameState {
                                   const cardId = DefineFn.EffectFn.getCardID(effect)
                                   const cardController = GameStateFn.getItemController(ctx, cardId)
-                                  ctx = GameStateFn.doItemSetRollState(ctx, effect, false, GameStateFn.createStrBaSyouPair(ctx, cardId), { ...Options, isSkipTargetMissing: true })
+                                  ctx = GameStateFn.doItemSetRollStateBasic(ctx, false, cardId, { ...Options, isSkipTargetMissing: true })
                                   ctx = GameStateFn.doItemMove(ctx, effect, DefineFn.AbsoluteBaSyouFn.of(cardController, "配備エリア"), GameStateFn.createStrBaSyouPair(ctx, cardId), { ges: Options.ges }) as GameState
                                   const unitPairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "自軍ジャンクヤードにある、このカードと同じ属性のGサインを持つユニット１枚", cardId)
                                   for (const pair of unitPairs) {
-                                    ctx = GameStateFn.doItemSetRollState(ctx, effect, false, pair, { ...Options, isSkipTargetMissing: true })
+                                    ctx = GameStateFn.doItemSetRollStateBasic(ctx, false, pair[0], { ...Options, isSkipTargetMissing: true })
                                     ctx = GameStateFn.doItemMove(ctx, effect, DefineFn.AbsoluteBaSyouFn.of(cardController, "配備エリア"), pair, { ges: Options.ges }) as GameState
                                     ctx = GameStateFn.setSetGroupParent(ctx, pair[0], cardId) as GameState
                                     // only first one

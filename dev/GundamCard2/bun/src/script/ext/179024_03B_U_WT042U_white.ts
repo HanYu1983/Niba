@@ -78,12 +78,12 @@ export const prototype: CardPrototype = {
                       title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, ToolFn, Options }: Bridge): GameState {
                         const cardId = DefineFn.EffectFn.getCardID(effect)
                         if (GameStateFn.isBattle(ctx, cardId, null)) {
-                          ctx = GameStateFn.doItemSetGlobalEffectsUntilEndOfTurn(ctx, [
+                          ctx = GameStateFn.doItemSetGlobalEffectsUntilEndOfTurn(ctx, effect, [
                             {
                               title: ["＋x／＋x／＋xを得る", [1, 1, 1]],
                               cardIds: [cardId]
                             }
-                          ], GameStateFn.createStrBaSyouPair(ctx, cardId))
+                          ], GameStateFn.createStrBaSyouPair(ctx, cardId), Options)
                           return ctx
                         }
                         return GameStateFn.createActionTitleFn({

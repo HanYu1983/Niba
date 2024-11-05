@@ -19,7 +19,7 @@ import { doItemMove } from "./doItemMove"
 import { doItemSwap } from "./doItemSwap"
 import { doTriggerEvent } from "./doTriggerEvent"
 import { doItemDamage } from "./doItemDamage"
-import { doItemSetRollState } from "./doItemSetRollState"
+import { doItemSetRollState, doItemSetRollStateBasic } from "./doItemSetRollState"
 import { doCountryDamage } from "./doCountryDamage"
 import { logCategory } from "../../tool/logger"
 import { doItemSetDestroy } from "./doItemSetDestroy"
@@ -76,7 +76,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
           const to = createAbsoluteBaSyouFromBaSyou(ctx, cardId, relatedBasyou)
           for (const pair of cardPairs) {
             if (isRoll != null) {
-              ctx = doItemSetRollState(ctx, effect, isRoll, pair, { ...Options, isSkipTargetMissing: true }) as GameState
+              ctx = doItemSetRollStateBasic(ctx, isRoll, pair[0], { ...Options, isSkipTargetMissing: true }) as GameState
             }
             ctx = doItemMove(ctx, effect, to, pair, Options) as GameState
           }
@@ -90,7 +90,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
         }
         for (const pair of cardPairs) {
           if (isRoll != null) {
-            ctx = doItemSetRollState(ctx, effect, isRoll, pair, { ...Options,isSkipTargetMissing: true }) as GameState
+            ctx = doItemSetRollStateBasic(ctx, isRoll, pair[0], { ...Options, isSkipTargetMissing: true }) as GameState
           }
           ctx = doItemMove(ctx, effect, to, pair, { ...Options, insertId: idx }) as GameState
         }
@@ -304,7 +304,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
             }
             case "破壞": {
               for (const pair of pairs) {
-                ctx = doItemSetDestroy(ctx, { id: "破壊する", playerID: cardController }, pair, Options)
+                ctx = doItemSetDestroy(ctx, effect, { id: "破壊する", playerID: cardController }, pair, Options)
               }
               return ctx
             }
@@ -316,7 +316,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
             }
             case "破壊を無効": {
               for (const pair of pairs) {
-                ctx = doItemSetDestroy(ctx, null, pair, Options)
+                ctx = doItemSetDestroy(ctx, effect, null, pair, Options)
               }
               return ctx
             }
@@ -345,7 +345,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
         const cardId = EffectFn.getCardID(effect)
         const cardController = getItemController(ctx, cardId)
         const playerId = PlayerIDFn.fromRelatedPlayerSideKeyword(side, cardController)
-        ctx = doCountryDamage(ctx, effect,  playerId, damage, { ges: Options.ges })
+        ctx = doCountryDamage(ctx, effect, playerId, damage, { ges: Options.ges })
         return ctx
       }
     }
@@ -461,7 +461,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
       // if (varNames == null) {
       //   throw new Error(`action.var not found: ${action.title[0]}`)
       // }
-      return function (ctx: GameState, effect: Effect): GameState {
+      return function (ctx: GameState, effect: Effect, Options): GameState {
         const cardId = EffectFn.getCardID(effect)
         const pairs = varNames == null ?
           [[cardId, getItemBaSyou(ctx, cardId)] as StrBaSyouPair] :
@@ -476,7 +476,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
               cardIds: [targetCardId],
             } as GlobalEffect
           })
-          ctx = doItemSetGlobalEffectsUntilEndOfTurn(ctx, gesForCard, [targetCardId, targetBaSyou])
+          ctx = doItemSetGlobalEffectsUntilEndOfTurn(ctx, effect, gesForCard, [targetCardId, targetBaSyou], Options)
         }
         return ctx
       }
@@ -487,7 +487,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
       // if (varNames == null) {
       //   throw new Error(`action.var not found: ${action.title[0]}`)
       // }
-      return function (ctx: GameState, effect: Effect): GameState {
+      return function (ctx: GameState, effect: Effect, { Options }: Bridge): GameState {
         const cardId = EffectFn.getCardID(effect)
         const pairs = varNames == null ?
           [[cardId, getItemBaSyou(ctx, cardId)] as StrBaSyouPair] :
@@ -502,7 +502,7 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
               cardIds: [targetCardId],
             } as GlobalEffect
           })
-          ctx = doItemSetGlobalEffectsUntilEndOfStep(ctx, gesForCard, [targetCardId, targetBaSyou])
+          ctx = doItemSetGlobalEffectsUntilEndOfStep(ctx, effect, gesForCard, [targetCardId, targetBaSyou], Options)
         }
         return ctx
       }
@@ -521,12 +521,12 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
       if (varNames == null) {
         throw new Error(`action.var not found: ${action.title[0]}`)
       }
-      return function (ctx: GameState, effect: Effect, {Options}:Bridge): GameState {
+      return function (ctx: GameState, effect: Effect, { Options }: Bridge): GameState {
         const cardId = EffectFn.getCardID(effect)
         const [target1] = getCardTipStrBaSyouPairs(ctx, varNames[0], cardId)
         const [target2] = getCardTipStrBaSyouPairs(ctx, varNames[1], cardId)
         ctx = doItemSwap(ctx, target1, target2)
-        ctx = doItemSetRollState(ctx, effect, false, target2, { ...Options, isSkipTargetMissing: true })
+        ctx = doItemSetRollStateBasic(ctx, false, target2[0], { ...Options, isSkipTargetMissing: true })
         // 以下應不需要, 置換只有換protoID和狀態, 這樣才能繼承所有對象
         // ctx = moveItem(ctx, t2ba, [t1, t1ba]) as GameState
         // ctx = moveItem(ctx, t1ba, [t2, t2ba]) as GameState

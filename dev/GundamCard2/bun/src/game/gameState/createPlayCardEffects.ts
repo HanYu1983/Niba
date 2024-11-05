@@ -524,7 +524,7 @@ export function createUnitGoStageEffectFromPlayEffect(ctx: GameState, effect: Ef
                                     const hasPS = GameStateFn.getCardHasSpeicalEffect(ctx, ["【PS装甲】"], cardId, Options)
                                     const isNoNeedRoll = (hasHigh || hasPS)
                                     const isRoll = isNoNeedRoll == false
-                                    ctx = GameStateFn.doItemSetRollState(ctx, effect, isRoll, [cardId, GameStateFn.getItemBaSyou(ctx, cardId)], { ...Options, isSkipTargetMissing: true })
+                                    ctx = GameStateFn.doItemSetRollStateBasic(ctx, isRoll, cardId, { ...Options, isSkipTargetMissing: true })
                                     ctx = GameStateFn.doTriggerEvent(ctx, { title: ["プレイされて場に出た場合"], cardIds: [cardId] }, Options)
                                     return ctx
                                 }.toString()

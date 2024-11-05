@@ -129,20 +129,20 @@ export const prototype: CardPrototype = {
             {
               title: ["cutIn", [
                 {
-                  title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, ToolFn }: Bridge): GameState {
+                  title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, ToolFn, Options }: Bridge): GameState {
                     const cardId = DefineFn.EffectFn.getCardID(effect)
                     const tip1 = GameStateFn.getItemState(ctx, cardId).tips["ユニットが３枚以上の部隊にいる、全ての自軍ユニット1"]
                     if (tip1) {
                       const pairs = DefineFn.TipFn.getSelection(tip1) as StrBaSyouPair[]
                       for (const pair of pairs) {
-                        ctx = GameStateFn.doItemSetGlobalEffectsUntilEndOfTurn(ctx, [{ title: ["AddText", { id: ToolFn.getUUID("ユニットが３枚以上の部隊にいる、全ての自軍ユニット1"), title: ["特殊型", ["速攻"]] }], cardIds: [pair[0]] }], pair)
+                        ctx = GameStateFn.doItemSetGlobalEffectsUntilEndOfTurn(ctx, effect, [{ title: ["AddText", { id: ToolFn.getUUID("ユニットが３枚以上の部隊にいる、全ての自軍ユニット1"), title: ["特殊型", ["速攻"]] }], cardIds: [pair[0]] }], pair, Options)
                       }
                     }
                     const tip2 = GameStateFn.getItemState(ctx, cardId).tips["ユニットが３枚以上の部隊にいる、全ての自軍ユニット2"]
                     if (tip2) {
                       const pairs = DefineFn.TipFn.getSelection(tip2) as StrBaSyouPair[]
                       for (const pair of pairs) {
-                        ctx = GameStateFn.doItemSetGlobalEffectsUntilEndOfTurn(ctx, [{ title: ["AddText", { id: ToolFn.getUUID("ユニットが３枚以上の部隊にいる、全ての自軍ユニット2"), title: ["特殊型", ["速攻"]] }], cardIds: [pair[0]] }], pair)
+                        ctx = GameStateFn.doItemSetGlobalEffectsUntilEndOfTurn(ctx, effect, [{ title: ["AddText", { id: ToolFn.getUUID("ユニットが３枚以上の部隊にいる、全ての自軍ユニット2"), title: ["特殊型", ["速攻"]] }], cardIds: [pair[0]] }], pair, Options)
                       }
                     }
                     return ctx

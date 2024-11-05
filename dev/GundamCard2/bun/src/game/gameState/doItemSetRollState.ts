@@ -13,21 +13,21 @@ import { GameState } from "./GameState"
 import { ItemTableComponent, assertTargetMissingError, isCard, isChip, getItemBaSyou } from "./ItemTableComponent"
 import { getSetGroup, getSetGroupChildren } from "./SetGroupComponent"
 
-export function doItemSetRollState(ctx: GameState, effect:Effect, isRoll: boolean, [itemId, originBasyou]: StrBaSyouPair, options: GameExtParams & { isSkipTargetMissing?: boolean }): GameState {
-  if(options?.isSkipTargetMissing){
-    
-  } else {
-    assertTargetMissingError(ctx, [itemId, originBasyou])
-    assertTargetNoLongerValidAndUpdate(ctx, effect, itemId, options)
-  }
+export function doItemSetRollState(ctx: GameState, effect: Effect, isRoll: boolean, [itemId, originBasyou]: StrBaSyouPair, options: GameExtParams): GameState {
+  assertTargetMissingError(ctx, [itemId, originBasyou])
+  assertTargetNoLongerValidAndUpdate(ctx, effect, itemId, options)
+  return doItemSetRollStateBasic(ctx, isRoll, itemId, options)
+}
+
+export function doItemSetRollStateBasic(ctx: GameState, isRoll: boolean, itemId: string, options: GameExtParams & { isSkipTargetMissing?: boolean }): GameState {
   // 整個setGroup都要一起
   const itemIds = getSetGroup(ctx, itemId)
   ctx = itemIds.reduce((ctx, willRollItemId) => {
     if (isCard(ctx, willRollItemId)) {
       let willRollItem = getCard(ctx, willRollItemId)
       logCategory("doItemSetRollState", "willRollItemId", itemId, willRollItemId, isRoll, !!(willRollItem.isRoll), isRoll == willRollItem.isRoll)
-      if(options?.isSkipTargetMissing){
-    
+      if (options?.isSkipTargetMissing) {
+
       } else {
         // 只判斷自身有沒有違規
         if (willRollItem.id == itemId && !!(willRollItem.isRoll) == isRoll) {
@@ -40,8 +40,8 @@ export function doItemSetRollState(ctx: GameState, effect:Effect, isRoll: boolea
     }
     if (isChip(ctx, willRollItemId)) {
       let willRollItem = getChip(ctx, willRollItemId)
-      if(options?.isSkipTargetMissing){
-    
+      if (options?.isSkipTargetMissing) {
+
       } else {
         // 只判斷自身有沒有違規
         if (willRollItem.id == itemId && !!(willRollItem.isRoll) == isRoll) {

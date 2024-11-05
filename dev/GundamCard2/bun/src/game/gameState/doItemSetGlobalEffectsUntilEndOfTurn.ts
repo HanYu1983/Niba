@@ -1,16 +1,20 @@
+import { Effect } from "../define/Effect"
+import { GameExtParams } from "../define/GameExtParams"
 import { GlobalEffect } from "../define/GlobalEffect"
 import { ItemStateFn } from "../define/ItemState"
 import { StrBaSyouPair } from "../define/Tip"
+import { assertTargetNoLongerValidAndUpdate } from "./assertTargetNoLongerValidAndUpdate"
 import { GameState } from "./GameState"
 import { getItemState, setItemState } from "./ItemStateComponent"
 import { isCard, isChip, getItemBaSyou, isCoin, assertTargetMissingError } from "./ItemTableComponent"
 
-export function doItemSetGlobalEffectsUntilEndOfTurn(ctx: GameState, egs: GlobalEffect[], [itemId, originBasyou]: StrBaSyouPair, options?: { isSkipTargetMissing?: boolean }): GameState {
-  if (options?.isSkipTargetMissing) {
+export function doItemSetGlobalEffectsUntilEndOfTurn(ctx: GameState, effect: Effect, egs: GlobalEffect[], [itemId, originBasyou]: StrBaSyouPair, options: GameExtParams): GameState {
+  assertTargetMissingError(ctx, [itemId, originBasyou])
+  assertTargetNoLongerValidAndUpdate(ctx, effect, itemId, options)
+  return doItemSetGlobalEffectsUntilEndOfTurnBasic(ctx, egs, itemId)
+}
 
-  } else {
-    assertTargetMissingError(ctx, [itemId, originBasyou])
-  }
+export function doItemSetGlobalEffectsUntilEndOfTurnBasic(ctx: GameState, egs: GlobalEffect[], itemId: string): GameState {
   if (isCard(ctx, itemId) || isChip(ctx, itemId)) {
     let cs = getItemState(ctx, itemId)
     for (const eg of egs) {
@@ -25,12 +29,13 @@ export function doItemSetGlobalEffectsUntilEndOfTurn(ctx: GameState, egs: Global
   throw new Error(`doItemSetGlobalEffectsUntilEndOfTurn unknown item: ${itemId}`)
 }
 
-export function doItemSetGlobalEffectsUntilEndOfStep(ctx: GameState, egs: GlobalEffect[], [itemId, originBasyou]: StrBaSyouPair, options?: { isSkipTargetMissing?: boolean }): GameState {
-  if (options?.isSkipTargetMissing) {
+export function doItemSetGlobalEffectsUntilEndOfStep(ctx: GameState, effect: Effect, egs: GlobalEffect[], [itemId, originBasyou]: StrBaSyouPair, options: GameExtParams): GameState {
+  assertTargetMissingError(ctx, [itemId, originBasyou])
+  assertTargetNoLongerValidAndUpdate(ctx, effect, itemId, options)
+  return doItemSetGlobalEffectsUntilEndOfStepBasic(ctx, egs, itemId)
+}
 
-  } else {
-    assertTargetMissingError(ctx, [itemId, originBasyou])
-  }
+export function doItemSetGlobalEffectsUntilEndOfStepBasic(ctx: GameState, egs: GlobalEffect[], itemId: string): GameState {
   if (isCard(ctx, itemId) || isChip(ctx, itemId)) {
     let cs = getItemState(ctx, itemId)
     for (const eg of egs) {

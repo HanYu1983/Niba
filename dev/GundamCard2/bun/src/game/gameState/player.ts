@@ -14,7 +14,7 @@ import { doTriggerEvent } from "./doTriggerEvent";
 import { StrBaSyouPair } from "../define/Tip";
 import { doItemMove } from "./doItemMove";
 import { createStrBaSyouPair, getItemController, getItemIdsByBasyou, getItemPrototype } from "./ItemTableComponent";
-import { doItemSetDestroy } from "./doItemSetDestroy";
+import { doItemSetDestroy, doItemSetDestroyBasic } from "./doItemSetDestroy";
 import { doEffect, getCardTipStrBaSyouPairs, setTipSelectionForUser } from "./doEffect";
 import { doCountryDamage } from "./doCountryDamage";
 import { addDestroyEffect, getCutInDestroyEffects, getEffect, getImmediateEffects, getTopEffect, removeEffect } from "./EffectStackComponent";
@@ -67,7 +67,7 @@ export function doBattleDamage(ctx: GameState, playerId: string, guardUnits: str
           playerID: playerId,
         };
         // 這裡不發送破壞事件, 因為破壞比較等到破壞效果進堆疊才算數
-        ctx = doItemSetDestroy(ctx, reason, createStrBaSyouPair(ctx, cardID), { isSkipTargetMissing: true })
+        ctx = doItemSetDestroyBasic(ctx, reason, cardID, {})
         return {
           ...cs,
           damage: hp,
@@ -135,7 +135,7 @@ export function doRuleBattleDamage(
       if (currentAttackPlayerID == getActivePlayerID(ctx) && currentAttackPower > 0) {
         // 非交戰中或有強襲才能打本國(p35)
         if (isBattle(ctx, willAttackUnits[0], null) == false || isABattleGroup(ctx, ["強襲"], willAttackUnits[0], options)) {
-          ctx = doCountryDamage(ctx, EffectFn.createGameRule(currentAttackPlayerID),  currentGuardPlayerID, currentAttackPower, options)
+          ctx = doCountryDamage(ctx, EffectFn.createGameRule(currentAttackPlayerID), currentGuardPlayerID, currentAttackPower, options)
           {
             const gameEvent: GameEvent = {
               title: ["このカードの部隊が敵軍本国に戦闘ダメージを与えた場合"],

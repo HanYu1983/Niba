@@ -42,13 +42,13 @@ export const prototype: CardPrototype = {
         },
         actions: [
           {
-            title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+            title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GameState {
               const cardId = DefineFn.EffectFn.getCardID(effect)
               const enable1 = DefineFn.ItemStateFn.hasTip(GameStateFn.getItemState(ctx, cardId), "交戦中の自軍ユニット１枚は")
               if (enable1) {
                 const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "交戦中の自軍ユニット１枚は", cardId)
                 for (const pair of pairs) {
-                  ctx = GameStateFn.doItemSetGlobalEffectsUntilEndOfTurn(ctx, [{ title: ["＋x／＋x／＋xを得る", [3, 3, 3]], cardIds: [pair[0]] }], pair)
+                  ctx = GameStateFn.doItemSetGlobalEffectsUntilEndOfTurn(ctx, effect, [{ title: ["＋x／＋x／＋xを得る", [3, 3, 3]], cardIds: [pair[0]] }], pair, Options)
                 }
                 ctx = GameStateFn.mapItemState(ctx, cardId, is => DefineFn.ItemStateFn.clearTip(is, "交戦中の自軍ユニット１枚は")) as GameState
               }
@@ -56,7 +56,7 @@ export const prototype: CardPrototype = {
               if (enable2) {
                 const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "非交戦中の自軍ユニット１枚の破壊", cardId)
                 for (const pair of pairs) {
-                  ctx = GameStateFn.doItemSetDestroy(ctx, null, pair, { isSkipTargetMissing: true })
+                  ctx = GameStateFn.doItemSetDestroy(ctx, effect, null, pair, Options)
                 }
                 ctx = GameStateFn.mapItemState(ctx, cardId, is => DefineFn.ItemStateFn.clearTip(is, "非交戦中の自軍ユニット１枚の破壊")) as GameState
               }

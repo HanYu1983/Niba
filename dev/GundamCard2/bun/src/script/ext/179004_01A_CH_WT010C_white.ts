@@ -20,7 +20,7 @@ export const prototype: CardPrototype = {
         const cardId = DefineFn.EffectFn.getCardID(effect)
         const cardController = GameStateFn.getItemController(ctx, cardId)
         if (evt.title[0] == "戦闘ダメージを受けた場合" && evt.cardIds?.includes(cardId)) {
-          ctx = GameStateFn.doItemSetDestroy(ctx, { id: "破壊する", playerID: cardController }, GameStateFn.createStrBaSyouPair(ctx, cardId), { isSkipTargetMissing: true })
+          ctx = GameStateFn.doItemSetDestroy(ctx, effect, { id: "破壊する", playerID: cardController }, GameStateFn.createStrBaSyouPair(ctx, cardId), { isSkipTargetMissing: true })
         }
         return ctx
       }.toString()
