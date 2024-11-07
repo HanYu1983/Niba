@@ -8,6 +8,7 @@ import { StrBaSyouPair } from "../define/Tip";
 import { assertTargetMissingError, assertTargetNoLongerValid } from "./assertTargetMissingError";
 import { getItemRuntimeCategory } from "./card";
 import { createDestroyEffect } from "./createDestroyEffect";
+import { doTriggerEvent } from "./doTriggerEvent";
 import { addDestroyEffect } from "./EffectStackComponent";
 import { GameState } from "./GameState";
 import { getGlobalEffects, setGlobalEffects } from "./globalEffects";
@@ -17,12 +18,12 @@ import { getSetGroupBattlePoint } from "./setGroup";
 
 
 export function doItemDamage(ctx: GameState, effect: Effect, damage: number, target: StrBaSyouPair, options: GameExtParams): GameState {
-  const effectController = EffectFn.getPlayerID(effect)
   assertTargetMissingError(ctx, effect, target, options)
-  return doItemDamageBasic(ctx, effectController, damage, target[0], options)
+  return doItemDamageBasic(ctx, effect, damage, target[0], options)
 }
 
-export function doItemDamageBasic(ctx: GameState, fromPlayerId: PlayerID, damage: number, targetItemId: string, options: GameExtParams): GameState {
+export function doItemDamageBasic(ctx: GameState, effect: Effect, damage: number, targetItemId: string, options: GameExtParams): GameState {
+  const effectController = EffectFn.getPlayerID(effect)
   {
     // damage修正
     const adj = (options.ges || []).map(ge => {
@@ -40,9 +41,10 @@ export function doItemDamageBasic(ctx: GameState, fromPlayerId: PlayerID, damage
     let cardState = getItemState(ctx, targetItemId);
     cardState = ItemStateFn.damage(cardState, damage)
     ctx = setItemState(ctx, targetItemId, cardState) as GameState
+    ctx = doTriggerEvent(ctx, { title: ["ユニットがダメージを受けた場合"], cardIds: [targetItemId], effect: effect }, options)
     const [_, _2, hp] = getSetGroupBattlePoint(ctx, targetItemId, options)
     if (hp <= cardState.damage) {
-      const effect: Effect = createDestroyEffect(ctx, { id: "通常ダメージ", playerID: fromPlayerId }, targetItemId)
+      const effect: Effect = createDestroyEffect(ctx, { id: "通常ダメージ", playerID: effectController }, targetItemId)
       ctx = addDestroyEffect(ctx, effect) as GameState
     }
     return ctx

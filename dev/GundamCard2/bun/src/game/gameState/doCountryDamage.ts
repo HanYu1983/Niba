@@ -19,7 +19,7 @@ export function doCountryDamage(ctx: GameState, effect: Effect, playerId: Player
         const from = AbsoluteBaSyouFn.of(playerId, "捨て山")
         const pairs = getItemIdsByBasyou(ctx, from).map(itemId => {
             return [itemId, from] as StrBaSyouPair
-        }).slice(0, damage)
+        }).slice(0, -damage)
         const to = AbsoluteBaSyouFn.of(playerId, "本国")
         for (const pair of pairs) {
             ctx = doItemMoveBasic(ctx, to, pair, { insertId: 0 }) as GameState

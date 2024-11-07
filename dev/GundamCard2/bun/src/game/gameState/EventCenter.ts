@@ -166,6 +166,7 @@ export const EventCenterFn = {
     },
     onCountryHeal(ctx: any, playerId: PlayerID, value: number): any {
         assertIsGameState(ctx)
+        ctx = doTriggerEvent(ctx, { title: ["自軍本国が回復した場合"], playerId: playerId }, {})
         const msg = `本國回血: ${playerId} => ${value}`
         ctx = addMessage(ctx, { id: 0, description: msg })
         logCategory(`onCountryHeal`, msg)

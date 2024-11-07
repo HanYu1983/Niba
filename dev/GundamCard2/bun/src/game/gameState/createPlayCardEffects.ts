@@ -604,6 +604,9 @@ export function createCharOpUnitGoStageEffectFromPlayEffect(ctx: GameState, effe
                                     ctx = GameStateFn.setSetGroupParent(ctx, targetCardId, cardId) as GameState
                                     ctx = GameStateFn.doTriggerEvent(ctx, { title: ["プレイされて場に出た場合"], cardIds: [cardId] }, { ges: Options.ges })
                                     ctx = GameStateFn.doTriggerEvent(ctx, { title: ["プレイされて場にセットされた場合"], cardIds: [cardId] }, { ges: Options.ges })
+                                    if (GameStateFn.getSetGroup(ctx, targetCardId).find(itemId => GameStateFn.getItemRuntimeCategory(ctx, itemId) == "キャラクター") == null) {
+                                        ctx = GameStateFn.doTriggerEvent(ctx, { title: ["このカードがプレイされて、キャラがセットされていないユニットにセットされた場合"], cardIds: [cardId] }, Options)
+                                    }
                                     return ctx
                                 }.toString()
                             }

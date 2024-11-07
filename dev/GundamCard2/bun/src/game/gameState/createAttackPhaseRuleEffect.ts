@@ -70,7 +70,6 @@ export function createAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID):
                                     ctx = GameStateFn.mapItemState(ctx, pair[0], is => ({ ...is, isAttack: phase[1] == "攻撃ステップ", isDefence: phase[1] == "防御ステップ" })) as GameState
                                     ctx = GameStateFn.doItemMove(ctx, effect, DefineFn.AbsoluteBaSyouFn.of(playerId, "戦闘エリア2"), pair, { ges: Options.ges }) as GameState
                                 }
-
                                 return ctx
                             }.toString()
                         }
@@ -90,6 +89,10 @@ export function createAttackPhaseRuleEffect(ctx: GameState, playerId: PlayerID):
                                 if (DefineFn.PhaseFn.eq(phase, ["戦闘フェイズ", "攻撃ステップ", "規定の効果"])) {
                                     ctx = GameStateFn.doTriggerEvent(ctx, {
                                         title: ["このカードが攻撃に出撃した場合"],
+                                        cardIds: [...pairs1, ...pairs2].map(p => p[0])
+                                    }, { ges: Options.ges })
+                                    ctx = GameStateFn.doTriggerEvent(ctx, {
+                                        title: ["ユニットが出撃した場合"],
                                         cardIds: [...pairs1, ...pairs2].map(p => p[0])
                                     }, { ges: Options.ges })
                                 }

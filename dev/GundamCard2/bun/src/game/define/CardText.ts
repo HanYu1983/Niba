@@ -143,6 +143,7 @@ export type EntitySearchOptions = {
     hasChar?: string[],
     hasSelfCardId?: boolean,
     hasGSign?: GSign[],
+    hasGSignColor?: CardColor[],
     hasGSignProperty?: GSignProperty[],
     hasRollCostColor?: CardColor[],
     hasDamage?: boolean,

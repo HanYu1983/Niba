@@ -198,6 +198,10 @@ export function getPlayerJunkyardIds(ctx: GameState, playerId: PlayerID): string
   return getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(playerId, "ジャンクヤード"))
 }
 
+export function getPlayerSuTeYaMaIds(ctx: GameState, playerId: PlayerID): string[] {
+  return getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(playerId, "捨て山"))
+}
+
 export function getPlayerDestroyIds(ctx: GameState, playerId: PlayerID): string[] {
   return getCutInDestroyEffects(ctx).map(e => EffectFn.getCardID(e)).filter(itemId => getItemController(ctx, itemId) == playerId)
 }

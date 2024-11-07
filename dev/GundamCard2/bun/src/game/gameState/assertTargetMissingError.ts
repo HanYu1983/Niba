@@ -2,10 +2,11 @@ import { Effect, EffectFn } from "../define/Effect"
 import { TargetMissingError } from "../define/GameError"
 import { GameExtParams } from "../define/GameExtParams"
 import { StrBaSyouPair } from "../define/Tip"
-import { getItemRuntimeCategory } from "./card"
+import { getCardColor, getCardRollCostColors, getItemRuntimeCategory } from "./card"
 import { GameState } from "./GameState"
 import { getGlobalEffects, setGlobalEffects } from "./globalEffects"
 import { assertStrBasyouMissing, getItemController } from "./ItemTableComponent"
+import { getSetGroup } from "./SetGroupComponent"
 
 export function assertTargetMissingError(ctx: GameState, effect: Effect, [itemId, originBasyou]: StrBaSyouPair, options: GameExtParams) {
   assertStrBasyouMissing(ctx, [itemId, originBasyou])
@@ -23,6 +24,11 @@ export function assertTargetNoLongerValid(ctx: GameState, effect: Effect, cardId
     if (EffectFn.getPlayerID(effect) != getItemController(ctx, cardId) && getItemRuntimeCategory(ctx, EffectFn.getCardID(effect)) == "ユニット") {
       throw new TargetMissingError("敵軍効果の対象にならない")
     }
+  }
+  if (ges.find(ge => ge.title[0] == "このセットグループは、_緑のロールコストを持つ、敵軍カードの効果の対象にならない"
+    && ge.title[1].some(color => getCardRollCostColors(ctx, cardId).includes(color))
+    && ge.cardIds.flatMap(cardId => getSetGroup(ctx, cardId)).includes(cardId))) {
+    throw new TargetMissingError("敵軍効果の対象にならない")
   }
   // 179009_03B_C_RD015C_red
   // C

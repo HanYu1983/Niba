@@ -31,15 +31,31 @@ export const prototype: CardPrototype = {
       id: "",
       description: "『起動』：この記述の効果以外で、敵軍ユニットがダメージを受けた場合、戦闘エリアにいる敵軍ユニット１枚に１ダメージを与える。",
       title: ["自動型", "起動"],
+      testEnvs: [
+        {
+          thisCard: ["自軍", "配備エリア", { id: "", protoID: "179030_11E_O_GN023N_green" }, null],
+          addCards: [
+            ["敵軍", "戦闘エリア1", [{ id: "unit", protoID: "unit" }]],
+          ],
+          event: {
+            title: ["ユニットがダメージを受けた場合"],
+            cardIds: ["unit"],
+            effect: { id: "", reason: ["GameRule", null, {}], text: { id: "", title: [] } }
+          },
+          checkFn: function _(ctx: GameState, { DefineFn, GameStateFn }: Bridge) {
+            if (GameStateFn.getItemState(ctx, "unit").damage != 1) {
+              throw new Error()
+            }
+          }
+        }
+      ],
       onEvent: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
         const event = DefineFn.EffectFn.getEvent(effect)
         const cardId = DefineFn.EffectFn.getCardID(effect)
         const cardController = GameStateFn.getItemController(ctx, cardId)
-        const opponentPlayerId = DefineFn.PlayerIDFn.getOpponent(cardController)
         if (
-          event.title[0] == "(敵軍)(ユニット)がダメージを受けた場合" &&
-          event.title[1] == opponentPlayerId &&
-          event.title[2] == "ユニット" &&
+          event.title[0] == "ユニットがダメージを受けた場合" &&
+          event.cardIds?.some(cardId => GameStateFn.getItemController(ctx, cardId) != cardController) &&
           event.effect != null &&
           event.effect.text.id != effect.text.id
         ) {

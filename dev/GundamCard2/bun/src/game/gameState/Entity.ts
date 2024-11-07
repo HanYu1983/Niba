@@ -282,6 +282,12 @@ export function createTipByEntitySearch(ctx: GameState, effect: Effect, searchOp
         }
         entityList = entityList.filter(entity => isCardLike(ctx)(entity.itemId) && searchOptions.hasGSignProperty?.includes(getCardGSignProperty(ctx, entity.itemId)))
     }
+    if (searchOptions.hasGSignColor) {
+        if (searchOptions.hasGSignColor.length == 0) {
+            searchOptions.hasGSignColor.push(...getItemGSign(ctx, cardId)[0])
+        }
+        entityList = entityList.filter(entity => isCardLike(ctx)(entity.itemId) && searchOptions.hasGSignColor?.some(color => getItemGSign(ctx, entity.itemId)[0].includes(color)))
+    }
     if (searchOptions.hasDamage) {
         entityList = entityList.filter(entity => entity.itemState.damage > 0 && entity.itemState.destroyReason == null)
     }
