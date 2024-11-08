@@ -173,17 +173,30 @@ export function testText(proto: CardPrototype, text: CardText, options?: { isChe
                 cets.forEach(cet => {
                   ctx = setTipSelectionForUser(ctx, effect, cet.logicID, cet.logicSubID)
                   ctx = doEffect(ctx, effect, cet.logicID, cet.logicSubID)
+                  ctx = removeEffect(ctx, effect.id) as GameState
                   for (let i = 0; i < 99; ++i) {
                     let effect = getTopEffect(ctx)
                     if (effect) {
-                      ctx = doEffect(ctx, effect, 0, 0)
+                      ctx = doEffect(ctx, effect, cet.logicID, cet.logicSubID)
                       ctx = removeEffect(ctx, effect.id) as GameState
+                    } else {
+                      break
                     }
                   }
                   successCount++
                 })
                 if (successCount != cets.length) {
                   throw new Error()
+                }
+                for (let i = 0; i < 99; ++i) {
+                  let effect = getImmediateEffects(ctx)[0]
+                  if (effect) {
+                    ctx = setTipSelectionForUser(ctx, effect, 0, 0)
+                    ctx = doEffect(ctx, effect, 0, 0)
+                    ctx = removeEffect(ctx, effect.id) as GameState
+                  } else {
+                    break
+                  }
                 }
                 break
               }
