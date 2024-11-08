@@ -7,11 +7,13 @@
 // 戦闘配備　〔１〕：改装［陸戦型ガンダム系］
 // 『起動』：このカードが場に出た場合、カード２枚を引く。その後、自軍手札１枚を選んで、持ち主の本国の上か下に移す。
 
+import { title } from "process";
 import { CardColor, CardPrototype } from "../../game/define/CardPrototype";
 import { Condition } from "../../game/define/CardText";
 import { Effect } from "../../game/define/Effect";
 import { GameState } from "../../game/gameState/GameState";
 import { Bridge } from "../bridge";
+import { Tip } from "../../game/define/Tip";
 
 export const prototype: CardPrototype = {
   texts: [
@@ -55,13 +57,39 @@ export const prototype: CardPrototype = {
                             at: ["手札"],
                             count: 1
                           }]
+                        },
+                        "上か下": {
+                          title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): Tip | null {
+                            return {
+                              title: ["StringOptions", ["上", "下"], ["上"]],
+                              count: 1
+                            }
+                          }.toString()
                         }
                       },
                       logicTreeAction: {
                         actions: [
                           {
-                            title: ["_の_ハンガーに移す", "持ち主", "本国"],
-                            vars: ["自軍手札１枚"]
+                            title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GameState {
+                              const cardId = DefineFn.EffectFn.getCardID(effect)
+                              const opt = GameStateFn.getCardTipStrings(ctx, "上か下", cardId)[0]
+                              if (opt == null) {
+                                throw new Error()
+                              }
+                              const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "自軍手札１枚", cardId)
+                              if (opt == "上") {
+                                for (const pair of pairs) {
+                                  const playerId = GameStateFn.getCardOwner(ctx, pair[0])
+                                  ctx = GameStateFn.doItemMove(ctx, effect, DefineFn.AbsoluteBaSyouFn.of(playerId, "本国"), pair, { ges: Options.ges, insertId: 0 })
+                                }
+                              } else {
+                                for (const pair of pairs) {
+                                  const playerId = GameStateFn.getCardOwner(ctx, pair[0])
+                                  ctx = GameStateFn.doItemMove(ctx, effect, DefineFn.AbsoluteBaSyouFn.of(playerId, "本国"), pair, { ges: Options.ges })
+                                }
+                              }
+                              return ctx
+                            }.toString()
                           }
                         ]
                       }
