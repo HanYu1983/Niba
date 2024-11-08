@@ -88,6 +88,8 @@ export async function test179009_03B_U_GN036U_green() {
     }
     ctx = doEffect(ctx, effect, 0, 0)
     if (AbsoluteBaSyouFn.eq(getItemBaSyou(ctx, unit.id), AbsoluteBaSyouFn.of(PlayerB, "本国")) != true) {
+        console.log(ctx.table)
+        console.log(ctx.cards)
         throw new Error()
     }
 }

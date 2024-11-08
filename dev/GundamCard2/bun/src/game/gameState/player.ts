@@ -202,6 +202,14 @@ export function getPlayerSuTeYaMaIds(ctx: GameState, playerId: PlayerID): string
   return getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(playerId, "捨て山"))
 }
 
+export function getPlayerHungerIds(ctx: GameState, playerId: PlayerID): string[] {
+  return getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(playerId, "ハンガー"))
+}
+
+export function getPlayerCountrytIds(ctx: GameState, playerId: PlayerID): string[] {
+  return getItemIdsByBasyou(ctx, AbsoluteBaSyouFn.of(playerId, "本国"))
+}
+
 export function getPlayerDestroyIds(ctx: GameState, playerId: PlayerID): string[] {
   return getCutInDestroyEffects(ctx).map(e => EffectFn.getCardID(e)).filter(itemId => getItemController(ctx, itemId) == playerId)
 }

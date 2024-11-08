@@ -333,7 +333,8 @@ function onItemMove(ctx: GameState, from: AbsoluteBaSyou, to: AbsoluteBaSyou, ca
     }
     ctx = doTriggerEvent(ctx, {
         title: ["GameEventOnMove", from, to],
-        cardIds: [cardId]
+        cardIds: [cardId],
+        effect: getMessageCurrentEffect(ctx) || undefined
     }, options)
     return ctx
 }

@@ -362,9 +362,9 @@ export function createActionTitleFn(action: Action): ActionTitleFn {
           varNames.flatMap(varName => {
             return getCardTipStrBaSyouPairs(ctx, varName, cardId)
           })
-        const playerId = PlayerIDFn.fromRelatedPlayerSideKeyword(side, cardController)
-        const to = AbsoluteBaSyouFn.of(playerId, basyouKw)
         for (const pair of pairs) {
+          const playerId = createPlayerIdFromRelated(ctx, pair[0], side)
+          const to = AbsoluteBaSyouFn.of(playerId, basyouKw)
           ctx = doItemMove(ctx, effect, to, pair, { ges: Options.ges }) as GameState
         }
         return ctx
