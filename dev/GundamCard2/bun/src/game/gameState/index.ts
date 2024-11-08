@@ -31,6 +31,8 @@ import * as doItemSetGlobalEffectsUntilEndOfTurn from "./doItemSetGlobalEffectsU
 import * as Entity from "./Entity"
 import * as doPlayerDrawCard from "./doPlayerDrawCard"
 import * as doItemDamage from "./doItemDamage"
+import * as doItemAddCoin from "./doItemAddCoin"
+import * as assertTargetMissingError from "./assertTargetMissingError"
 
 export const GameStateFn = {
     ...GameState,
@@ -65,5 +67,7 @@ export const GameStateFn = {
     ...doItemSetGlobalEffectsUntilEndOfTurn,
     ...Entity,
     ...doPlayerDrawCard,
-    ...doItemDamage
+    ...doItemDamage,
+    ...doItemAddCoin,
+    ...assertTargetMissingError
 }

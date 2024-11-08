@@ -35,20 +35,20 @@ export function createReturnRuleEffect(ctx: GameState, playerId: PlayerID): Effe
                                             continue
                                         }
                                         if (GameStateFn.getCardBattleArea(ctx, cardId).includes(runtimeArea1)) {
-                                            ctx = GameStateFn.doItemSetRollState(ctx, effect, true, target, { ...Options, isSkipTargetMissing: true })
-                                            ctx = GameStateFn.doItemMove(
-                                                ctx, effect,
+                                            ctx = GameStateFn.doItemSetRollStateBasic(ctx, true, target[0], { ...Options })
+                                            ctx = GameStateFn.doItemMoveBasic(
+                                                ctx,
                                                 DefineFn.AbsoluteBaSyouFn.of(playerId, "配備エリア"),
                                                 target,
-                                                { isSkipTargetMissing: true }
+                                                Options
                                             ) as GameState
                                         } else {
                                             // Rule book p73
-                                            ctx = GameStateFn.doItemMove(
-                                                ctx, effect,
+                                            ctx = GameStateFn.doItemMoveBasic(
+                                                ctx,
                                                 DefineFn.AbsoluteBaSyouFn.of(playerId, "ジャンクヤード"),
                                                 target,
-                                                { isSkipTargetMissing: true }
+                                                Options
                                             ) as GameState
                                         }
                                     }

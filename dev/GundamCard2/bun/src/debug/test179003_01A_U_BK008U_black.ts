@@ -50,7 +50,7 @@ export async function test179003_01A_U_BK008U_black() {
         }
         {
             const destroyReason: DestroyReason = { id: "戦闘ダメージ", playerID: PlayerB }
-            ctx = doItemSetDestroy(ctx, destroyReason, [cardA.id, getItemBaSyou(ctx, cardA.id)], { ges: getGlobalEffects(ctx, null) })
+            ctx = doItemSetDestroy(ctx, effect, destroyReason, [cardA.id, getItemBaSyou(ctx, cardA.id)], { ges: getGlobalEffects(ctx, null) })
             if (getItemState(ctx, cardA.id).destroyReason == null) {
                 throw new Error()
             }

@@ -4,7 +4,7 @@ import { GameEvent } from "../define/GameEvent"
 import { GameExtParams } from "../define/GameExtParams"
 import { PlayerID, PlayerIDFn } from "../define/PlayerID"
 import { StrBaSyouPair } from "../define/Tip"
-import { doItemMove } from "./doItemMove"
+import { doItemMove, doItemMoveBasic } from "./doItemMove"
 import { doTriggerEvent } from "./doTriggerEvent"
 import { EventCenterFn } from "./EventCenter"
 import { GameState } from "./GameState"
@@ -19,10 +19,10 @@ export function doCountryDamage(ctx: GameState, effect: Effect, playerId: Player
         const from = AbsoluteBaSyouFn.of(playerId, "捨て山")
         const pairs = getItemIdsByBasyou(ctx, from).map(itemId => {
             return [itemId, from] as StrBaSyouPair
-        }).slice(0, damage)
+        }).slice(0, -damage)
         const to = AbsoluteBaSyouFn.of(playerId, "本国")
         for (const pair of pairs) {
-            ctx = doItemMove(ctx, effect, to, pair, { isSkipTargetMissing: true, insertId: 0 }) as GameState
+            ctx = doItemMoveBasic(ctx, to, pair, { insertId: 0 }) as GameState
         }
         ctx = EventCenterFn.onCountryHeal(ctx, playerId, -damage)
         return ctx
@@ -33,7 +33,7 @@ export function doCountryDamage(ctx: GameState, effect: Effect, playerId: Player
     }).slice(0, damage)
     const to = AbsoluteBaSyouFn.of(playerId, "捨て山")
     for (const pair of pairs) {
-        ctx = doItemMove(ctx, effect, to, pair, { isSkipTargetMissing: true, insertId: 0 }) as GameState
+        ctx = doItemMoveBasic(ctx, to, pair, { insertId: 0 }) as GameState
     }
     ctx = doTriggerEvent(ctx, {
         title: ["自軍本国に戦闘ダメージが与えられた場合"],

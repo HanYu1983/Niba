@@ -126,7 +126,7 @@ export function createTextsFromSpecialEffect(text: CardText, options: GameExtPar
                                                 const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "［ ］の特徴を持つ自軍ユニット１枚は", cardId)
                                                 const textRefs = GameStateFn.getCardTipTextRefs(ctx, "このカードの本来のテキスト１つ", cardId)
                                                 for (const pair of pairs) {
-                                                    GameStateFn.assertTargetMissingError(ctx, pair)
+                                                    GameStateFn.assertTargetMissingError(ctx, effect, pair, Options)
                                                     const [targetCardId, targetBasyou] = pair
                                                     ctx = GameStateFn.mapItemState(ctx, targetCardId, targetItemState => {
                                                         for (const textRef of textRefs) {
@@ -249,9 +249,9 @@ export function createTextsFromSpecialEffect(text: CardText, options: GameExtPar
                                                                     const hasCase2 = GameStateFn.getCardTexts(ctx, cardId, { ges: ges })
                                                                         .find(text => text.description == "『起動』：このカードは、「ゲイン」の効果で戦闘修正を得る場合、その戦闘修正を得る代わりに、ターン終了時まで、「速攻」を得る事ができる。") != null
                                                                     if (hasCase1) {
-                                                                        ctx = GameStateFn.doItemSetGlobalEffectsUntilEndOfTurn(ctx, [{ title: ["＋x／＋x／＋xを得る", [4, 0, 0]], cardIds: [cardId] }], GameStateFn.createStrBaSyouPair(ctx, cardId))
+                                                                        ctx = GameStateFn.doItemSetGlobalEffectsUntilEndOfTurn(ctx, effect, [{ title: ["＋x／＋x／＋xを得る", [4, 0, 0]], cardIds: [cardId] }], GameStateFn.createStrBaSyouPair(ctx, cardId), Options)
                                                                     } else if (hasCase2) {
-                                                                        ctx = GameStateFn.doItemSetGlobalEffectsUntilEndOfTurn(ctx, [{ title: ["AddText", { id: ToolFn.getUUID("hasCase2"), title: ["特殊型", ["速攻"]] }], cardIds: [cardId] }], GameStateFn.createStrBaSyouPair(ctx, cardId))
+                                                                        ctx = GameStateFn.doItemSetGlobalEffectsUntilEndOfTurn(ctx, effect, [{ title: ["AddText", { id: ToolFn.getUUID("hasCase2"), title: ["特殊型", ["速攻"]] }], cardIds: [cardId] }], GameStateFn.createStrBaSyouPair(ctx, cardId), Options)
                                                                     } else {
                                                                         ctx = GameStateFn.mapItemState(ctx, cardId, is => DefineFn.ItemStateFn.setGlobalEffect(is, null, {
                                                                             title: ["＋x／＋x／＋xを得る", gainBonus], cardIds: [cardId]
@@ -551,10 +551,10 @@ export function createTextsFromSpecialEffect(text: CardText, options: GameExtPar
                                                                 throw new Error(`pairs must not 0: ${effect.text.description}`)
                                                             }
                                                             const targetPair = pairs[0]
-                                                            GameStateFn.assertTargetMissingError(ctx, targetPair)
-                                                            ctx = GameStateFn.doItemSwap(ctx, [cardId, basyou], targetPair)
-                                                            ctx = GameStateFn.doItemSetRollState(ctx, effect, false, [cardId, basyou], { ...Options, isSkipTargetMissing: true })
-                                                            ctx = GameStateFn.doItemMove(ctx, effect,
+                                                            GameStateFn.assertTargetMissingError(ctx, effect, targetPair, Options)
+                                                            ctx = GameStateFn.doItemSwapBasic(ctx, cardId, targetPair[0], Options)
+                                                            ctx = GameStateFn.doItemSetRollStateBasic(ctx, false, cardId, { ...Options })
+                                                            ctx = GameStateFn.doItemMoveBasic(ctx,
                                                                 DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(basyou, "ジャンクヤード"),
                                                                 targetPair,
                                                                 { ges: Options.ges }

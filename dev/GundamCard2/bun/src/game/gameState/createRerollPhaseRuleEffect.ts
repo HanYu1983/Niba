@@ -9,7 +9,7 @@ import { GameState } from "./GameState";
 export function createRerollPhaseRuleEffect(ctx: GameState, playerId: PlayerID): Effect {
     return {
         id: `createRerollPhaseRuleEffect_${playerId}`,
-        reason: ["GameRule", playerId, {isReroll: true}],
+        reason: ["GameRule", playerId, { isReroll: true }],
         text: {
             id: `createRerollPhaseRuleEffect_text_${playerId}`,
             title: [],
@@ -29,7 +29,7 @@ export function createRerollPhaseRuleEffect(ctx: GameState, playerId: PlayerID):
                                         })
                                 })
                                 for (const pair of pairs) {
-                                    ctx = GameStateFn.doItemSetRollState(ctx, effect, false, pair, { ...Options, isSkipTargetMissing: true })
+                                    ctx = GameStateFn.doItemSetRollStateBasic(ctx, false, pair[0], { ...Options })
                                 }
                                 return ctx
                             }.toString()

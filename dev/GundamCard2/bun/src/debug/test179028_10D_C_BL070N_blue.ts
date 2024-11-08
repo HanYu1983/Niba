@@ -60,7 +60,7 @@ export async function test179028_10D_C_BL070N_blue() {
             }
             ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア"), [destroyUnit]) as GameState
             const destroyReason: DestroyReason = { id: "破壊する", playerID: PlayerB }
-            ctx = doItemSetDestroy(ctx, destroyReason, [destroyUnit.id, getItemBaSyou(ctx, destroyUnit.id)], { ges: getGlobalEffects(ctx, null) })
+            ctx = doItemSetDestroy(ctx, effect, destroyReason, [destroyUnit.id, getItemBaSyou(ctx, destroyUnit.id)], { ges: getGlobalEffects(ctx, null) })
             if (getItemState(ctx, destroyUnit.id).destroyReason == null) {
                 throw new Error()
             }
@@ -139,7 +139,7 @@ export async function test179028_10D_C_BL070N_blue() {
             }
             ctx = addCards(ctx, AbsoluteBaSyouFn.of(PlayerA, "配備エリア"), [destroyUnit]) as GameState
             const destroyReason: DestroyReason = { id: "破壊する", playerID: PlayerB }
-            ctx = doItemSetDestroy(ctx, destroyReason, [destroyUnit.id, getItemBaSyou(ctx, destroyUnit.id)], { ges: getGlobalEffects(ctx, null) })
+            ctx = doItemSetDestroy(ctx, effect, destroyReason, [destroyUnit.id, getItemBaSyou(ctx, destroyUnit.id)], { ges: getGlobalEffects(ctx, null) })
             if (getItemState(ctx, destroyUnit.id).destroyReason == null) {
                 throw new Error()
             }

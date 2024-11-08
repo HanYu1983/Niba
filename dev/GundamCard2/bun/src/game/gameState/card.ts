@@ -135,6 +135,20 @@ export function getCardRollCostLength(ctx: GameState, cardID: string): number {
   return prototype.rollCost?.length || 0
 }
 
+export function getCardRollCostColors(ctx: GameState, cardID: string): RollCostColor[] {
+  const prototype = getItemPrototype(ctx, cardID)
+  if (prototype.rollCost == null) {
+    throw new Error()
+  }
+  if (prototype.rollCost == "X") {
+    if (prototype.color == null) {
+      throw new Error()
+    }
+    return [prototype.color]
+  }
+  return prototype.rollCost || []
+}
+
 export function getCardTotalCostLength(ctx: GameState, cardID: string, options: GameExtParams): number {
   logCategory("getCardTotalCostLength", "")
   const prototype = getItemPrototype(ctx, cardID)

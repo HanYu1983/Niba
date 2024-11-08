@@ -24,13 +24,13 @@ import { isCardMaster } from "./card";
 import { createTextsFromSpecialEffect } from "./createTextsFromSpecialEffect";
 import { doCutInDestroyEffectsAndClear } from "./doCutInDestroyEffectsAndClear";
 import { createDestroyEffect } from "./createDestroyEffect";
-import { getItemIdsByBasyou, getItemPrototype } from "./ItemTableComponent";
+import { getItemController, getItemIdsByBasyou, getItemPrototype } from "./ItemTableComponent";
 import { getPlayerHandIds } from "./player";
 import { createBridge } from "../bridge/createBridge";
 
 export async function testAllCardTextTestEnv() {
   const extIds = ["unit", "unitHasPhy", "charBlue", "unitHasGain", "charBlueNT", "unitHasRange"]
-  const all = createDecks().flatMap(v => v).concat(...extIds)
+  const all = createDecks().flatMap(v => v).concat(...extIds).concat(["179030_11E_O_GN023N_green"])
   for (const id of all) {
     await loadPrototype(id)
   }
@@ -150,7 +150,8 @@ export function testText(proto: CardPrototype, text: CardText, options?: { isChe
                 if (testEnv.eventTitle) {
                   const gameEvent: GameEvent = {
                     title: testEnv.eventTitle,
-                    cardIds: [card.id]
+                    cardIds: [card.id],
+                    playerId: getItemController(ctx, card.id)
                   }
                   ctx = doTriggerEvent(ctx, gameEvent, { ges: ges })
                 } else if (testEnv.event) {
@@ -172,17 +173,30 @@ export function testText(proto: CardPrototype, text: CardText, options?: { isChe
                 cets.forEach(cet => {
                   ctx = setTipSelectionForUser(ctx, effect, cet.logicID, cet.logicSubID)
                   ctx = doEffect(ctx, effect, cet.logicID, cet.logicSubID)
+                  ctx = removeEffect(ctx, effect.id) as GameState
                   for (let i = 0; i < 99; ++i) {
                     let effect = getTopEffect(ctx)
                     if (effect) {
-                      ctx = doEffect(ctx, effect, 0, 0)
+                      ctx = doEffect(ctx, effect, cet.logicID, cet.logicSubID)
                       ctx = removeEffect(ctx, effect.id) as GameState
+                    } else {
+                      break
                     }
                   }
                   successCount++
                 })
                 if (successCount != cets.length) {
                   throw new Error()
+                }
+                for (let i = 0; i < 99; ++i) {
+                  let effect = getImmediateEffects(ctx)[0]
+                  if (effect) {
+                    ctx = setTipSelectionForUser(ctx, effect, 0, 0)
+                    ctx = doEffect(ctx, effect, 0, 0)
+                    ctx = removeEffect(ctx, effect.id) as GameState
+                  } else {
+                    break
+                  }
                 }
                 break
               }

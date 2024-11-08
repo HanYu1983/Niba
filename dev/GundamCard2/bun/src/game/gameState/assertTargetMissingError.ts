@@ -1,12 +1,19 @@
 import { Effect, EffectFn } from "../define/Effect"
 import { TargetMissingError } from "../define/GameError"
 import { GameExtParams } from "../define/GameExtParams"
-import { getItemRuntimeCategory } from "./card"
+import { StrBaSyouPair } from "../define/Tip"
+import { getCardColor, getCardRollCostColors, getItemRuntimeCategory } from "./card"
 import { GameState } from "./GameState"
 import { getGlobalEffects, setGlobalEffects } from "./globalEffects"
-import { getItemController } from "./ItemTableComponent"
+import { assertStrBasyouMissing, getItemController } from "./ItemTableComponent"
+import { getSetGroup } from "./SetGroupComponent"
 
-export function assertTargetNoLongerValidAndUpdate(ctx: GameState, effect: Effect, cardId: string, options: GameExtParams) {
+export function assertTargetMissingError(ctx: GameState, effect: Effect, [itemId, originBasyou]: StrBaSyouPair, options: GameExtParams) {
+  assertStrBasyouMissing(ctx, [itemId, originBasyou])
+  assertTargetNoLongerValid(ctx, effect, itemId, options)
+}
+
+export function assertTargetNoLongerValid(ctx: GameState, effect: Effect, cardId: string, options: GameExtParams) {
   const ges = options.ges || []
   if (ges.find(ge => ge.title[0] == "敵軍効果の対象にならない" && ge.cardIds.includes(cardId))) {
     if (EffectFn.getPlayerID(effect) != getItemController(ctx, cardId)) {
@@ -17,6 +24,11 @@ export function assertTargetNoLongerValidAndUpdate(ctx: GameState, effect: Effec
     if (EffectFn.getPlayerID(effect) != getItemController(ctx, cardId) && getItemRuntimeCategory(ctx, EffectFn.getCardID(effect)) == "ユニット") {
       throw new TargetMissingError("敵軍効果の対象にならない")
     }
+  }
+  if (ges.find(ge => ge.title[0] == "このセットグループは、_緑のロールコストを持つ、敵軍カードの効果の対象にならない"
+    && ge.title[1].some(color => getCardRollCostColors(ctx, cardId).includes(color))
+    && ge.cardIds.flatMap(cardId => getSetGroup(ctx, cardId)).includes(cardId))) {
+    throw new TargetMissingError("敵軍効果の対象にならない")
   }
   // 179009_03B_C_RD015C_red
   // C

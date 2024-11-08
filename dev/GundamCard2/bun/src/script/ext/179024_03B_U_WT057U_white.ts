@@ -44,10 +44,10 @@ export const prototype: CardPrototype = {
                   logicTreeAction: {
                     actions: [
                       {
-                        title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+                        title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GameState {
                           const cardId = DefineFn.EffectFn.getCardID(effect)
                           const bonus = GameStateFn.getCardTipBattleBonus(ctx, "戦闘力に＋４を振り分けて", cardId)[0]
-                          ctx = GameStateFn.doItemSetGlobalEffectsUntilEndOfTurn(ctx, [{ title: ["＋x／＋x／＋xを得る", bonus], cardIds: [cardId] }], GameStateFn.createStrBaSyouPair(ctx, cardId))
+                          ctx = GameStateFn.doItemSetGlobalEffectsUntilEndOfTurn(ctx, effect, [{ title: ["＋x／＋x／＋xを得る", bonus], cardIds: [cardId] }], GameStateFn.createStrBaSyouPair(ctx, cardId), Options)
                           return ctx
                         }.toString()
                       }

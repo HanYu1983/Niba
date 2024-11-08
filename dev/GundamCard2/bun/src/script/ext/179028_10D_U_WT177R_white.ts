@@ -48,11 +48,11 @@ export const prototype: CardPrototype = {
       id: "",
       description: "『起動』：このカードは場に出た場合、ターン終了時まで以下のテキストを得る。「『起動』：このカードが攻撃に出撃した場合、自軍本国をX回復する。Xの値は、このカードの合計国力の値と同じとする」",
       title: ["自動型", "起動"],
-      onEvent: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+      onEvent: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GameState {
         const event = DefineFn.EffectFn.getEvent(effect)
         const cardId = DefineFn.EffectFn.getCardID(effect)
         if (event.title[0] == "このカードが場に出た場合" && event.cardIds?.includes(cardId)) {
-          ctx = GameStateFn.doItemSetGlobalEffectsUntilEndOfTurn(ctx,
+          ctx = GameStateFn.doItemSetGlobalEffectsUntilEndOfTurn(ctx, effect,
             [
               {
                 title: ["AddText", {
@@ -66,8 +66,8 @@ export const prototype: CardPrototype = {
                     const cardController = GameStateFn.getItemController(ctx, cardId)
                     const event = DefineFn.EffectFn.getEvent(effect)
                     if (event.title[0] == "このカードが攻撃に出撃した場合" && event.cardIds?.includes(cardId)) {
-                      const totalCostLength = GameStateFn.getCardTotalCostLength(ctx, cardId, {ges: ges})
-                      ctx = GameStateFn.doCountryDamage(ctx, effect,  cardController, -totalCostLength, Options)
+                      const totalCostLength = GameStateFn.getCardTotalCostLength(ctx, cardId, { ges: ges })
+                      ctx = GameStateFn.doCountryDamage(ctx, effect, cardController, -totalCostLength, Options)
                     }
                     return ctx
                   }.toString()
@@ -75,7 +75,7 @@ export const prototype: CardPrototype = {
                 cardIds: [cardId]
               }
             ],
-            [cardId, GameStateFn.getItemBaSyou(ctx, cardId)]
+            [cardId, GameStateFn.getItemBaSyou(ctx, cardId)], Options
           )
         }
         return ctx

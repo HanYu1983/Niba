@@ -51,14 +51,14 @@ export const prototype: CardPrototype = {
             {
               title: ["cutIn", [
                 {
-                  title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+                  title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GameState {
                     const cardId = DefineFn.EffectFn.getCardID(effect)
                     const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "このセットグループのユニット", cardId)
                     const selections = GameStateFn.getCardTipSelection(ctx, "「〔０〕：範囲兵器（３）」、または「範囲兵器」＋１", cardId) as GlobalEffect[]
                     pairs.forEach(pair => {
                       selections.forEach(ge => {
                         ge.cardIds = [pair[0]]
-                        ctx = GameStateFn.doItemSetGlobalEffectsUntilEndOfTurn(ctx, [ge], pair)
+                        ctx = GameStateFn.doItemSetGlobalEffectsUntilEndOfTurn(ctx, effect, [ge], pair, Options)
                       })
                     })
                     return ctx

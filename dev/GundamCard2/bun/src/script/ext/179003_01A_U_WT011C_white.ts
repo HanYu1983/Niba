@@ -36,11 +36,11 @@ export const prototype: CardPrototype = {
             {
               title: ["cutIn", [
                 {
-                  title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+                  title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GameState {
                     const cardId = DefineFn.EffectFn.getCardID(effect)
                     const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx, "このカードの部隊にいる、「PS装甲」を持つ自軍ユニット１枚", cardId)
                     pairs.forEach(pair => {
-                      ctx = GameStateFn.doItemSetGlobalEffectsUntilEndOfTurn(ctx, [{ title: ["＋x／＋x／＋xを得る", [0, 2, 0]], cardIds: [pair[0]] }], pair)
+                      ctx = GameStateFn.doItemSetGlobalEffectsUntilEndOfTurn(ctx, effect, [{ title: ["＋x／＋x／＋xを得る", [0, 2, 0]], cardIds: [pair[0]] }], pair, Options)
                     })
                     return ctx
                   }.toString()

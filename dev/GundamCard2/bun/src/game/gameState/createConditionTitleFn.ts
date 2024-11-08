@@ -58,6 +58,13 @@ export function createConditionTitleFn(condition: Condition): ConditionTitleFn {
                     }
                 })
                 logCategory(`getConditionTitleFn`, textRefs)
+                // 179024_04B_C_RD035U_red
+                // U
+                // クロスボーン
+                // ムラマサ・ブラスター
+                // 強化
+                // （戦闘フェイズ）：「クロスウェポン」を持つ自軍ユニット１枚は、ターン終了時まで以下のテキストを得る。
+                // 「『常駐』：このカードは、＋２／＋２／＋２を得る。この効果は、「クロスウェポン」の効果において、本来のテキストとしても扱われる」
                 return {
                     title: ["テキスト", textRefs, textRefs.slice(0, count)],
                     count: count,

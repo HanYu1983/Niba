@@ -2,7 +2,6 @@
 // 全門射撃
 // 破壊
 // （自軍ターン）：任意の枚数の敵軍ユニットに、Xダメージを振り分けて与える。
-import { OPEN } from "ws";
 import { CardPrototype } from "../../game/define/CardPrototype";
 import { Effect } from "../../game/define/Effect";
 import { Tip } from "../../game/define/Tip";
@@ -25,7 +24,7 @@ export const prototype: CardPrototype = {
             is: ["ユニット"],
             count: count,
             isRepeat: true,
-          }, {ges: Options.ges})
+          }, { ges: Options.ges })
         }.toString(),
       }
     },

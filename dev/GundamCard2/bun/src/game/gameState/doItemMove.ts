@@ -3,22 +3,21 @@ import { AbsoluteBaSyou, AbsoluteBaSyouFn, BaSyouKeyword, BaSyouKeywordFn } from
 import { StrBaSyouPair } from "../define/Tip"
 import { EventCenterFn } from "./EventCenter"
 import { GameState } from "./GameState"
-import { ItemTableComponent, isCard, isChip, getItemBaSyou, isCoin, getItemController, assertTargetMissingError, getItem } from "./ItemTableComponent"
+import { ItemTableComponent, isCard, isChip, getItemBaSyou, isCoin, getItemController, getItem } from "./ItemTableComponent"
 import { getSetGroupChildren, removeSetGroupParent } from "./SetGroupComponent"
 import { logCategory } from "../../tool/logger"
 import { GameExtParams } from "../define/GameExtParams"
 import { Effect } from "../define/Effect"
-import { assertTargetNoLongerValidAndUpdate } from "./assertTargetNoLongerValidAndUpdate"
+import { assertTargetMissingError, assertTargetNoLongerValid } from "./assertTargetMissingError"
 
-export function doItemMove(ctx: GameState, effect: Effect, to: AbsoluteBaSyou, [itemId, from]: StrBaSyouPair, options: GameExtParams & { isSkipTargetMissing?: boolean, insertId?: number }): GameState {
+export function doItemMove(ctx: GameState, effect: Effect, to: AbsoluteBaSyou, [itemId, from]: StrBaSyouPair, options: GameExtParams & { insertId?: number }): GameState {
+    assertTargetMissingError(ctx, effect, [itemId, from], options)
+    return doItemMoveBasic(ctx, to, [itemId, from], options)
+}
+
+export function doItemMoveBasic(ctx: GameState, to: AbsoluteBaSyou, [itemId, from]: StrBaSyouPair, options: GameExtParams & { insertId?: number }): GameState {
     logCategory("doItemMove", "")
     const ges = options.ges || []
-    if (options?.isSkipTargetMissing) {
-
-    } else {
-        assertTargetMissingError(ctx, [itemId, from])
-        assertTargetNoLongerValidAndUpdate(ctx, effect, itemId, options)
-    }
     if (isCard(ctx, itemId) || isChip(ctx, itemId)) {
         const oldTable = ctx.table
         {

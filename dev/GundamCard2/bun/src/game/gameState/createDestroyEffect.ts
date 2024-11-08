@@ -19,10 +19,10 @@ export function createDestroyEffect(ctx: GameState, reason: DestroyReason, cardI
         {
           actions: [
             {
-              title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn }: Bridge): GameState {
+              title: function _(ctx: GameState, effect: Effect, { DefineFn, GameStateFn, Options }: Bridge): GameState {
                 const cardId = DefineFn.EffectFn.getCardID(effect)
                 const cardOwner = GameStateFn.getItemOwner(ctx, cardId)
-                ctx = GameStateFn.doItemMove(ctx, effect, DefineFn.AbsoluteBaSyouFn.of(cardOwner, "ジャンクヤード"), [cardId, GameStateFn.getItemBaSyou(ctx, cardId)], { isSkipTargetMissing: true }) as GameState
+                ctx = GameStateFn.doItemMoveBasic(ctx, DefineFn.AbsoluteBaSyouFn.of(cardOwner, "ジャンクヤード"), [cardId, GameStateFn.getItemBaSyou(ctx, cardId)], Options) as GameState
                 ctx = GameStateFn.mapItemState(ctx, cardId, is => {
                   return {
                     ...is,

@@ -11,38 +11,33 @@ import { EventCenterFn } from "./EventCenter"
 import { GameState } from "./GameState"
 import { clearGlobalEffects, getGlobalEffects, setGlobalEffects } from "./globalEffects"
 import { getItemState, getItemStateValues, mapItemState } from "./ItemStateComponent"
-import { ItemTableComponent, isCard, isChip, getItemBaSyou, isCoin, getItemController, assertTargetMissingError, getItemIdsByBasyou } from "./ItemTableComponent"
+import { ItemTableComponent, isCard, isChip, getItemBaSyou, isCoin, getItemController, getItemIdsByBasyou } from "./ItemTableComponent"
 import { getSetGroupBattlePoint } from "./setGroup"
 import { getSetGroupChildren, getSetGroupRoot } from "./SetGroupComponent"
 import { doTriggerEvent } from "./doTriggerEvent"
 import { getRuntimeBattleArea } from "./RuntimeBattleAreaComponent"
 import { getItemRuntimeCategory } from "./card"
 import { GameExtParams } from "../define/GameExtParams"
-import { assertTargetNoLongerValidAndUpdate } from "./assertTargetNoLongerValidAndUpdate"
+import { assertTargetMissingError, assertTargetNoLongerValid } from "./assertTargetMissingError"
 
-export function xxx(ctx: GameState, effect: Effect, reason: DestroyReason | null, [itemId, from]: StrBaSyouPair, options: GameExtParams & { isSkipTargetMissing?: boolean }): GameState {
-    if (options?.isSkipTargetMissing) {
-
+export function doItemSetDestroy(ctx: GameState, effect: Effect, reason: DestroyReason | null, [itemId, from]: StrBaSyouPair, options: GameExtParams): GameState {
+    assertTargetMissingError(ctx, effect, [itemId, from], options)
+    if (reason) {
+        if (getItemState(ctx, itemId).destroyReason) {
+            throw new TargetMissingError(`already destroy: ${itemId}`, {})
+        }
     } else {
-        assertTargetNoLongerValidAndUpdate(ctx, effect, itemId, options)
-        assertTargetMissingError(ctx, [itemId, from])
-        if (reason) {
-            if (getItemState(ctx, itemId).destroyReason) {
-                throw new TargetMissingError(`already destroy: ${itemId}`, {})
-            }
-        } else {
-            if (getItemState(ctx, itemId).destroyReason == null) {
-                throw new TargetMissingError(`not destroy: ${itemId}`, {})
-            }
-            if (getItemState(ctx, itemId).destroyReason?.id == "マイナスの戦闘修正") {
-                throw new Error(`マイナスの戦闘修正的破壞不能被選到`)
-            }
+        if (getItemState(ctx, itemId).destroyReason == null) {
+            throw new TargetMissingError(`not destroy: ${itemId}`, {})
+        }
+        if (getItemState(ctx, itemId).destroyReason?.id == "マイナスの戦闘修正") {
+            throw new Error(`マイナスの戦闘修正的破壞不能被選到`)
         }
     }
-    return doItemSetDestroy(ctx, reason, [itemId, from], options)
+    return doItemSetDestroyBasic(ctx, reason, itemId, options)
 }
 
-export function doItemSetDestroy(ctx: GameState, reason: DestroyReason | null, [itemId, from]: StrBaSyouPair, options: GameExtParams & { isSkipTargetMissing?: boolean }): GameState {
+export function doItemSetDestroyBasic(ctx: GameState, reason: DestroyReason | null, itemId: string, options: GameExtParams): GameState {
     if (isCard(ctx, itemId) || isChip(ctx, itemId)) {
         // 自己包含子樹全部破壞，自己的檢查在上方，以下的檢查是用子樹的標準
         getSetGroupChildren(ctx, itemId).forEach(setGroupId => {
