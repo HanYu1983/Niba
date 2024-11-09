@@ -96,7 +96,7 @@ function getSituationEffects(ctx: GameState, situation: Situation | null): Globa
 export function createAllCardTexts(ctx: GameState): [Item, CardText[]][] {
   // 常駐(只在戰區和配置區)
   const getTextGroup1 = pipe(
-    always(AbsoluteBaSyouFn.getBaAll()),
+    always(AbsoluteBaSyouFn.getBaAll().filter(ba => ba.value[1] != "Gゾーン")),
     map(basyou => getItemIdsByBasyou(ctx, basyou)),
     flatten,
     itemIds => itemIds.filter(itemId => isCard(ctx, itemId) || isChip(ctx, itemId)),

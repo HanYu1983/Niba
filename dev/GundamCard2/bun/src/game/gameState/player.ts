@@ -20,7 +20,7 @@ import { doCountryDamage } from "./doCountryDamage";
 import { addDestroyEffect, getCutInDestroyEffects, getEffect, getImmediateEffects, getTopEffect, removeEffect } from "./EffectStackComponent";
 import { createDestroyEffect } from "./createDestroyEffect";
 import { getCard } from "./CardTableComponent";
-import { getCardBattleArea, getCardHasSpeicalEffect } from "./card";
+import { getCardBattleArea, getCardHasSpeicalEffect, getItemRuntimeCategory } from "./card";
 import { getActivePlayerID } from "./ActivePlayerComponent";
 import { getBattleGroupFromSnapshot, isBattle } from "./IsBattleComponent";
 import { GlobalEffect } from "../define/GlobalEffect";
@@ -215,7 +215,7 @@ export function getPlayerDestroyIds(ctx: GameState, playerId: PlayerID): string[
 }
 
 export function getPlayerUnitIds(ctx: GameState, playerId: PlayerID): string[] {
-  return lift(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getBaAll()).flatMap(basyou => getItemIdsByBasyou(ctx, basyou)).filter(itemId => getItemPrototype(ctx, itemId).category == "ユニット")
+  return lift(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getBaAll()).flatMap(basyou => getItemIdsByBasyou(ctx, basyou)).filter(itemId => getItemRuntimeCategory(ctx, itemId) == "ユニット")
 }
 
 export function getPlayerUnitCanGoEarthIds(ctx: GameState, playerId: PlayerID, options: GameExtParams): string[] {
@@ -283,11 +283,11 @@ export function getPlayerUnitCanGoSpaceIds(ctx: GameState, playerId: PlayerID, o
 }
 
 export function getPlayerCharacterIds(ctx: GameState, playerId: PlayerID): string[] {
-  return lift(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getBaAll()).flatMap(basyou => getItemIdsByBasyou(ctx, basyou)).filter(itemId => getItemPrototype(ctx, itemId).category == "キャラクター")
+  return lift(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getBaAll()).flatMap(basyou => getItemIdsByBasyou(ctx, basyou)).filter(itemId => getItemRuntimeCategory(ctx, itemId) == "キャラクター")
 }
 
 export function getPlayerOperationIds(ctx: GameState, playerId: PlayerID): string[] {
-  return lift(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getBaAll()).flatMap(basyou => getItemIdsByBasyou(ctx, basyou)).filter(itemId => getItemPrototype(ctx, itemId).category == "オペレーション")
+  return lift(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getBaAll()).flatMap(basyou => getItemIdsByBasyou(ctx, basyou)).filter(itemId => getItemRuntimeCategory(ctx, itemId) == "オペレーション")
 }
 
 export function createPlayerUnitBattlePointScore(ctx: GameState, playerId: string, options: GameExtParams): number {

@@ -49,6 +49,7 @@ export const prototype: CardPrototype = {
                   count: 1
                 }]
               },
+              // TODO:
               "ユニットのいる戦闘エリアの任意の順番": {
                 title: ["Entity", {
                   isBattle: true,
