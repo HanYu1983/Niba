@@ -67,15 +67,15 @@ export function getCardTexts(ctx: ItemTableComponent, cardID: string, options: G
     return []
   }).filter(v => v) || []
   const prototype = getItemPrototype(ctx, cardID)
-  const texts = [...prototype.texts || [], ...addedTexts].map(text => {
+  let texts = [...prototype.texts || [], ...addedTexts].map(text => {
     if (text.title[0] == "特殊型") {
       return getCardSpecialText(text, { cardId: cardID, ges: options?.ges })
     }
     return text
   })
-
-
-
+  if (getItemBaSyou(ctx, cardID).value[1] == "Gゾーン") {
+    texts = texts.filter(text => text.protectLevel == 2)
+  }
   // 179029_05C_C_RD047U_red
   // U
   // ZZ
@@ -96,6 +96,9 @@ export function getCardTexts(ctx: ItemTableComponent, cardID: string, options: G
 }
 
 export function getItemCharacteristic(ctx: GameState, cardID: string): string {
+  if (getItemBaSyou(ctx, cardID).value[1] == "Gゾーン") {
+    return ""
+  }
   const prototype = getItemPrototype(ctx, cardID)
   return prototype.characteristic || "";
 }
@@ -125,9 +128,9 @@ export function getCardGSignProperty(ctx: GameState, cardID: string): GSignPrope
   return prototype.gsign[1];
 }
 
-export function getCardTitle(ctx: GameState, cardID: string): string | null {
+export function getCardTitle(ctx: GameState, cardID: string): string {
   if (getItemBaSyou(ctx, cardID).value[1] == "Gゾーン") {
-    return null
+    return ""
   }
   const prototype = getItemPrototype(ctx, cardID)
   return prototype.title || "unknown";

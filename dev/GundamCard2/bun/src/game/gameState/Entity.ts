@@ -266,6 +266,9 @@ export function createTipByEntitySearch(ctx: GameState, effect: Effect, searchOp
     if (searchOptions.hasChar != null) {
         entityList = entityList.filter(EntityFn.filterHasChar(ctx, searchOptions.hasChar))
     }
+    if (searchOptions.hasOriginChar != null) {
+        entityList = entityList.filter(entity=> searchOptions.hasOriginChar?.some(char=>(entity.prototype?.characteristic || "").indexOf(char) != -1))
+    }
     if (searchOptions.isSetGroupHasChar != null) {
         entityList = entityList.filter(entity => getSetGroup(ctx, entity.itemId).some(itemId =>
             (searchOptions.isSetGroupHasChar || []).some(v => getItemCharacteristic(ctx, itemId).indexOf(v) != -1)

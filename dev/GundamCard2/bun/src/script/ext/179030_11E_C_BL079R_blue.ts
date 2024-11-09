@@ -34,11 +34,11 @@ export const prototype: CardPrototype = {
               "本来の記述に｢特徴：装弾｣を持つ自軍G１枚": {
                 title: ["Entity", {
                   at: ["Gゾーン"],
-                  hasChar: ["装弾"],
+                  hasOriginChar: ["装弾"],
+                  isRoll: false,
                   side: "自軍",
                   count: 1
                 }]
-                //title2: ["_本来の記述に｢特徴：_装弾｣を持つ_自軍_G_１枚", true, "装弾", "自軍", "グラフィック", 1],
               },
             },
             logicTreeAction: {

@@ -141,6 +141,7 @@ export type EntitySearchOptions = {
     hasSetCard?: boolean,
     hasSpecialEffect?: TextSpeicalEffect[],
     hasChar?: string[],
+    hasOriginChar?: string[],
     hasSelfCardId?: boolean,
     hasGSign?: GSign[],
     hasGSignColor?: CardColor[],

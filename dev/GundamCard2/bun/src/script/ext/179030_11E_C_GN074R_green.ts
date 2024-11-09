@@ -35,7 +35,7 @@ export const prototype: CardPrototype = {
               "本来の記述に｢特徴：装弾｣を持つ自軍G１枚": {
                 title: ["Entity", {
                   at: ["Gゾーン"],
-                  hasChar: ["装弾"],
+                  hasOriginChar: ["装弾"],
                   side: "自軍",
                   isRoll: false,
                   count: 1
