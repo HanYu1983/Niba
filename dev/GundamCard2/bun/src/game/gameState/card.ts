@@ -125,7 +125,10 @@ export function getCardGSignProperty(ctx: GameState, cardID: string): GSignPrope
   return prototype.gsign[1];
 }
 
-export function getCardTitle(ctx: GameState, cardID: string): string {
+export function getCardTitle(ctx: GameState, cardID: string): string | null {
+  if (getItemBaSyou(ctx, cardID).value[1] == "Gゾーン") {
+    return null
+  }
   const prototype = getItemPrototype(ctx, cardID)
   return prototype.title || "unknown";
 }

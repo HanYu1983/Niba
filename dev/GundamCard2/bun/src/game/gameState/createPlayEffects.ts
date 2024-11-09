@@ -78,7 +78,7 @@ export function createPlayEffects(ctx: GameState, playerId: PlayerID, options: G
     )
 
     const getPlayTextF = pipe(
-        always(lift(AbsoluteBaSyouFn.of)([playerId], [...BaSyouKeywordFn.getBaAll(), "Gゾーン"])),
+        always(lift(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getBaAll())),
         map(basyou => {
             const cardIds = getItemIdsByBasyou(ctx, basyou)
             return cardIds.flatMap(
