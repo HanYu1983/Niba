@@ -236,6 +236,27 @@ function createController() {
         p.background(250, 180, 200)
         controller.onDraw(p)
       }
+
+      p.touchStarted = function () {
+        console.log("touchStarted")
+      }
+      p.touchEnded = function() {
+        console.log("touchEnded")
+      }
+      p.touchMoved = function(){
+        console.log(p.touches)
+      }
+
+      p.mousePressed = function () {
+        console.log("mousePressed")
+      }
+      p.mouseReleased = function() {
+        console.log("mouseReleased")
+      }
+      p.mouseMoved = function(){
+        console.log("mouseMoved")
+      }
+      console.log(p)
     }, "canvas")
   }
   createP5app()
