@@ -32,6 +32,8 @@ app.event = (function () {
       rxjs.takeUntil(onMouseUp)
     ))
   )
+  const onDragStateChange = new rxjs.Subject
+
   function createOnSwapAnim(f) {
     return onSwap.pipe(rxjs.concatMap(f))
   }
@@ -40,7 +42,8 @@ app.event = (function () {
     onMouseUp,
     onMouseMove,
     onSwap,
-    createOnSwapAnim
+    createOnSwapAnim,
+    onDragStateChange
   }
 })()
 
@@ -89,6 +92,10 @@ function createView() {
     })
   }
 
+  function eatCubes(model, crs) {
+    return Promise.resolve()
+  }
+
   function draw(p, model) {
     const board = model.getBoard()
     for (const row in board) {
@@ -103,10 +110,14 @@ function createView() {
       viewer.draw(p)
     }
   }
-
+  function dropCubes(cubes) {
+    return Promise.resolve()
+  }
   return {
     draw,
-    swapCube
+    swapCube,
+    eatCubes,
+    dropCubes
   }
 }
 
@@ -126,10 +137,26 @@ function createModel() {
   function getBoardValue(c, r) {
     return board[r][c]
   }
+  function createEatCubes() {
+    return []
+  }
+  function eatCubes(cubes) {
+
+  }
+  function createDropCubes() {
+    return []
+  }
+  function dropCubes(cubes) {
+
+  }
   return {
     getBoard,
     swapCube,
-    getBoardValue
+    getBoardValue,
+    createDropCubes,
+    createEatCubes,
+    eatCubes,
+    dropCubes
   }
 }
 
@@ -137,17 +164,61 @@ function createController() {
   const view = createView()
   const model = createModel()
 
+  function setDragState(v) {
+    console.log("setDragState", v)
+    app.event.onDragStateChange.next(v)
+  }
+
   async function swapCube([fromCR, toCR]) {
     await view.swapCube(model, fromCR, toCR)
     model.swapCube(fromCR, toCR)
   }
 
-  app.event.createOnSwapAnim(pos => swapCube(pos)).subscribe()
+  function onDragStart() {
 
+  }
+
+  let isEat = false
+  function onDragEnd() {
+    if (isEat != true) {
+      isEat = true
+      setDragState(false)
+      const animWorker = (async function () {
+        for (let i = 0; i < 10; ++i) {
+          const eatCubes = model.createEatCubes()
+          if (eatCubes.length == 0) {
+            break
+          }
+          await view.eatCubes(eatCubes)
+          model.eatCubes(eatCubes)
+          const dropCubes = model.createDropCubes()
+          await view.dropCubes(dropCubes)
+        }
+        setDragState(true)
+        isEat = false
+      })()
+      animWorker.catch(alert)
+    }
+  }
+
+  const onSwapAnim = app.event.onDragStateChange.pipe(
+    rxjs.switchMap(enabled => {
+      if (enabled != true) {
+        return rxjs.of()
+      }
+      return app.event.createOnSwapAnim(pos => swapCube(pos))
+    })
+  )
   function onDraw(p) {
     app.event.onMouseMove.next([p.mouseX, p.mouseY])
     view.draw(p, model)
   }
+
+  app.event.onMouseDown.subscribe(onDragStart)
+  app.event.onMouseUp.subscribe(onDragEnd)
+  onSwapAnim.subscribe()
+  setDragState(true)
+
   return {
     onDraw
   }
