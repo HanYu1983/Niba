@@ -1,0 +1,1 @@
+lsc -wco ../html/js src/*
