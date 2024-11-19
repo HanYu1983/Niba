@@ -1,5 +1,11 @@
 const {map, filter} = R
 
+attack = (ctx, robot, pilot, targetRobot, targetPilot, weapon) ->
+    atk = ctx |> getWeaponPower _, weapon
+    def = getRobotDef ctx (robot |> Robot.getId)
+    damage = atk - def
+    makeDamage ctx robot damage
+
 createPilotRobot = ->
     pilot2robot: {}
 
