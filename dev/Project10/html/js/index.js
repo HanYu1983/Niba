@@ -164,6 +164,21 @@ function createController() {
     model.swapCube(fromCR, toCR)
   }
 
+  async function doEatCubes() {
+    setDragState(false)
+    for (let i = 0; i < 10; ++i) {
+      const eatCubes = model.createEatCubes()
+      if (eatCubes.length == 0) {
+        break
+      }
+      await view.eatCubes(eatCubes)
+      model.eatCubes(eatCubes)
+      const dropCubes = model.createDropCubes()
+      await view.dropCubes(dropCubes)
+    }
+    setDragState(true)
+  }
+
   function onDragStart() {
 
   }
@@ -172,22 +187,9 @@ function createController() {
   function onDragEnd() {
     if (isEat != true) {
       isEat = true
-      setDragState(false)
-      const animWorker = (async function () {
-        for (let i = 0; i < 10; ++i) {
-          const eatCubes = model.createEatCubes()
-          if (eatCubes.length == 0) {
-            break
-          }
-          await view.eatCubes(eatCubes)
-          model.eatCubes(eatCubes)
-          const dropCubes = model.createDropCubes()
-          await view.dropCubes(dropCubes)
-        }
-        setDragState(true)
+      doEatCubes().then(()=>{
         isEat = false
-      })()
-      animWorker.catch(alert)
+      }).catch(alert)
     }
   }
   const onSwapAnimSub = onDragStateChangeSub.pipe(
