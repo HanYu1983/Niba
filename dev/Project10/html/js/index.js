@@ -8,8 +8,8 @@ app.alg = (function () {
     return [Math.floor(x / CUBE_SIZE), Math.floor(y / CUBE_SIZE)]
   }
   function cr2xy([c, r]) {
-    const x = c * CUBE_SIZE + CUBE_SIZE / 2
-    const y = r * CUBE_SIZE + CUBE_SIZE / 2
+    const x = c * CUBE_SIZE //+ CUBE_SIZE / 2
+    const y = r * CUBE_SIZE// + CUBE_SIZE / 2
     return [x, y]
   }
   return {
@@ -40,8 +40,45 @@ function createView() {
         this.pos[0] = this.pos[0] + (this.to[0] - this.pos[0]) / 2
         this.pos[1] = this.pos[1] + (this.to[1] - this.pos[1]) / 2
         const value = this.value
-        const x = this.pos[0]
-        const y = this.pos[1]
+        const x = this.pos[0] + CUBE_SIZE / 2
+        const y = this.pos[1] + CUBE_SIZE / 2
+        p.circle(x, y, CUBE_SIZE)
+        p.text(value, x, y)
+      }
+    }
+  }
+
+  function createSwapViwer2(v, from, to, duration) {
+    const center = glMatrix.vec2.create()
+    glMatrix.vec2.add(center, from, to)
+    glMatrix.vec2.div(center, center, [2, 2])
+    const centerToFrom = glMatrix.vec2.sub(glMatrix.vec2.create(), from, center)
+    return {
+      value: v,
+      from: from,
+      to: to,
+      pos: from,
+      mat: glMatrix.mat2d.create(),
+      vec: glMatrix.vec2.create(),
+      center: center,
+      centerToFrom: centerToFrom,
+      time: 0,
+      draw: function (p) {
+        const deltaTime = p.deltaTime
+        this.time += deltaTime
+
+        // glMatrix.mat2d.identity(this.mat)
+        // glMatrix.mat2d.translate(this.mat, this.mat, this.center)
+        // glMatrix.mat2d.rotate(this.mat, this.mat, this.time * Math.PI / duration )
+        // const nowPos = glMatrix.vec2.transformMat2d(this.vec, this.centerToFrom, this.mat)
+
+        const pe = (deltaTime / duration)
+        glMatrix.mat2d.fromRotation(this.mat, pe * Math.PI)
+        this.centerToFrom = glMatrix.vec2.transformMat2d(this.centerToFrom, this.centerToFrom, this.mat)
+        const nowPos = glMatrix.vec2.add(glMatrix.vec2.create(), this.center, this.centerToFrom)
+        const value = this.value
+        const x = nowPos[0] + CUBE_SIZE / 2
+        const y = nowPos[1] + CUBE_SIZE / 2
         p.circle(x, y, CUBE_SIZE)
         p.text(value, x, y)
       }
@@ -50,15 +87,20 @@ function createView() {
 
   function swapCube(model, fromCR, toCR) {
     return new Promise((res, rej) => {
-      const v1 = createSwapViwer(model.getBoardValue(fromCR[0], fromCR[1]), cr2xy(fromCR), cr2xy(toCR))
-      const v2 = createSwapViwer(model.getBoardValue(toCR[0], toCR[1]), cr2xy(toCR), cr2xy(fromCR))
+      const duration = 100
+      const v1 = createSwapViwer2(model.getBoardValue(fromCR[0], fromCR[1]), cr2xy(fromCR), cr2xy(toCR), duration)
+      const v2 = createSwapViwer2(model.getBoardValue(toCR[0], toCR[1]), cr2xy(toCR), cr2xy(fromCR), duration)
       addViewer(v1)
       addViewer(v2)
+      setCubeHide(fromCR, true)
+      setCubeHide(toCR, true)
       setTimeout(() => {
         removeViewer(v1)
         removeViewer(v2)
+        setCubeHide(fromCR, false)
+        setCubeHide(toCR, false)
         res()
-      }, 50)
+      }, duration)
     })
   }
 
@@ -66,12 +108,27 @@ function createView() {
     return Promise.resolve()
   }
 
+  const _hideCubes = {}
+  function setCubeHide(cr, value) {
+    const key = `${cr[0]}_${cr[1]}`
+    _hideCubes[key] = value
+  }
+  function isCubeHide(cr) {
+    const key = `${cr[0]}_${cr[1]}`
+    return _hideCubes[key]
+  }
+
   function draw(p, model) {
     const board = model.getBoard()
     for (const row in board) {
       for (const col in board[row]) {
+        if (isCubeHide([col, row])) {
+          continue
+        }
         const value = board[row][col]
-        const [x, y] = cr2xy([col, row])
+        let [x, y] = cr2xy([col, row])
+        x = x + CUBE_SIZE / 2
+        y = y + CUBE_SIZE / 2
         p.circle(x, y, CUBE_SIZE)
         p.text(value, x, y)
       }
@@ -146,7 +203,7 @@ function createController() {
     ))
   )
   const onDragStateChangeSub = new rxjs.Subject
-
+  // 暫不使用
   function createOnSwapAnim(f) {
     return onSwapSub.pipe(rxjs.concatMap(f))
   }
@@ -157,11 +214,6 @@ function createController() {
   function setDragState(v) {
     console.log("setDragState", v)
     onDragStateChangeSub.next(v)
-  }
-
-  async function swapCube([fromCR, toCR]) {
-    await view.swapCube(model, fromCR, toCR)
-    model.swapCube(fromCR, toCR)
   }
 
   async function doEatCubes() {
@@ -187,7 +239,7 @@ function createController() {
   function onDragEnd() {
     if (isEat != true) {
       isEat = true
-      doEatCubes().then(()=>{
+      doEatCubes().then(() => {
         isEat = false
       }).catch(alert)
     }
@@ -197,7 +249,19 @@ function createController() {
       if (enabled != true) {
         return rxjs.of()
       }
-      return createOnSwapAnim(pos => swapCube(pos))
+      // 使用concatMap的動畫就會完全正確，但不即時 
+      // return createOnSwapAnim(async ([fromCR, toCR]) => {
+      //   await view.swapCube(model, fromCR, toCR)
+      //   model.swapCube(fromCR, toCR)
+      // })
+      // 使用switchMap做假動畫，看起來比較即時但有瑕疵
+      const animSub = onSwapSub.pipe(rxjs.switchMap(([fromCR, toCR]) => {
+        return view.swapCube(model, fromCR, toCR)
+      }))
+      const tapSub = onSwapSub.pipe(rxjs.tap(([fromCR, toCR]) => {
+        return model.swapCube(fromCR, toCR)
+      }))
+      return rxjs.merge(animSub, tapSub)
     })
   )
   function onDraw(p) {
@@ -230,6 +294,7 @@ function createController() {
     new p5(p => {
       p.setup = function () {
         p.createCanvas(800, 600)
+        p.frameRate(60)
       }
       p.draw = function () {
         controller.onDraw(p)
