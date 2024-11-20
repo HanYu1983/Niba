@@ -17,9 +17,26 @@ app.alg = (function () {
   }
 })()
 
-function createView() {
-
+function createView(p) {
   const { cr2xy } = app.alg
+  const imgCubes = [
+    p.loadImage('img/Drop/drop_d.png'),
+    p.loadImage('img/Drop/drop_f.png'),
+    p.loadImage('img/Drop/drop_h.png'),
+    p.loadImage('img/Drop/drop_l.png'),
+    p.loadImage('img/Drop/drop_t.png'),
+    p.loadImage('img/Drop/drop_w.png'),
+  ]
+  function drawCube(value, x, y) {
+    const img = imgCubes[value % imgCubes.length]
+    p.image(img, x, y, CUBE_SIZE, CUBE_SIZE, 0, 0, img.width, img.height, p.COVER);
+    // const value = board[row][col]
+    // let [x, y] = cr2xy([col, row])
+    // x = x + CUBE_SIZE / 2
+    // y = y + CUBE_SIZE / 2
+    // p.circle(x, y, CUBE_SIZE)
+    // p.text(value, x, y)
+  }
 
   let viewers = []
 
@@ -36,7 +53,7 @@ function createView() {
       from: from,
       to: to,
       pos: from,
-      draw: function (p) {
+      draw: function () {
         this.pos[0] = this.pos[0] + (this.to[0] - this.pos[0]) / 2
         this.pos[1] = this.pos[1] + (this.to[1] - this.pos[1]) / 2
         const value = this.value
@@ -63,7 +80,7 @@ function createView() {
       center: center,
       centerToFrom: centerToFrom,
       time: 0,
-      draw: function (p) {
+      draw: function () {
         const deltaTime = p.deltaTime
         this.time += deltaTime
 
@@ -77,10 +94,7 @@ function createView() {
         this.centerToFrom = glMatrix.vec2.transformMat2d(this.centerToFrom, this.centerToFrom, this.mat)
         const nowPos = glMatrix.vec2.add(glMatrix.vec2.create(), this.center, this.centerToFrom)
         const value = this.value
-        const x = nowPos[0] + CUBE_SIZE / 2
-        const y = nowPos[1] + CUBE_SIZE / 2
-        p.circle(x, y, CUBE_SIZE)
-        p.text(value, x, y)
+        drawCube(value, nowPos[0], nowPos[1])
       }
     }
   }
@@ -118,7 +132,7 @@ function createView() {
     return _hideCubes[key]
   }
 
-  function draw(p, model) {
+  function draw(model) {
     const board = model.getBoard()
     for (const row in board) {
       for (const col in board[row]) {
@@ -127,14 +141,16 @@ function createView() {
         }
         const value = board[row][col]
         let [x, y] = cr2xy([col, row])
-        x = x + CUBE_SIZE / 2
-        y = y + CUBE_SIZE / 2
-        p.circle(x, y, CUBE_SIZE)
-        p.text(value, x, y)
+        drawCube(value, x, y)
+        // let [x, y] = cr2xy([col, row])
+        // x = x + CUBE_SIZE / 2
+        // y = y + CUBE_SIZE / 2
+        // p.circle(x, y, CUBE_SIZE)
+        // p.text(value, x, y)
       }
     }
     for (const viewer of viewers) {
-      viewer.draw(p)
+      viewer.draw()
     }
   }
   function dropCubes(cubes) {
@@ -187,7 +203,7 @@ function createModel() {
   }
 }
 
-function createController() {
+function createController(p) {
   const { xy2cr } = app.alg
 
   const onMouseDownSub = new rxjs.Subject
@@ -208,7 +224,7 @@ function createController() {
     return onSwapSub.pipe(rxjs.concatMap(f))
   }
 
-  const view = createView()
+  const view = createView(p)
   const model = createModel()
 
   function setDragState(v) {
@@ -249,12 +265,12 @@ function createController() {
       if (enabled != true) {
         return rxjs.of()
       }
-      // 使用concatMap的動畫就會完全正確，但不即時 
+      // 使用concatMap的動畫就會和model完全一致，但不即時 
       // return createOnSwapAnim(async ([fromCR, toCR]) => {
       //   await view.swapCube(model, fromCR, toCR)
       //   model.swapCube(fromCR, toCR)
       // })
-      // 使用switchMap做假動畫，看起來比較即時但有瑕疵
+      // 使用switchMap做動畫在過程中和model會不一致，但即時
       const animSub = onSwapSub.pipe(rxjs.switchMap(([fromCR, toCR]) => {
         return view.swapCube(model, fromCR, toCR)
       }))
@@ -264,9 +280,9 @@ function createController() {
       return rxjs.merge(animSub, tapSub)
     })
   )
-  function onDraw(p) {
+  function onDraw() {
     p.background(250, 180, 200)
-    view.draw(p, model)
+    view.draw(model)
   }
   function onMouseDown(x, y) {
     onMouseDownSub.next([x, y])
@@ -288,16 +304,17 @@ function createController() {
 }
 
 (function () {
-  const controller = createController()
 
-  function createP5app(p) {
+
+  function createP5app() {
     new p5(p => {
+      const controller = createController(p)
       p.setup = function () {
         p.createCanvas(800, 600)
         p.frameRate(60)
       }
       p.draw = function () {
-        controller.onDraw(p)
+        controller.onDraw()
       }
       p.touchStarted = function () {
         if (p.touches.length == 0) {
