@@ -17,36 +17,6 @@ app.alg = (function () {
   }
 })()
 
-app.event = (function () {
-  const { xy2cr } = app.alg
-
-  const onMouseDown = rxjs.fromEvent(document, 'mousedown')
-  const onMouseUp = rxjs.fromEvent(document, 'mouseup')
-  const onMouseMove = new rxjs.Subject
-  // https://www.thisdot.co/blog/how-to-implement-drag-and-drop-using-rxjs
-  const onSwap = onMouseDown.pipe(
-    rxjs.switchMap(() => onMouseMove.pipe(
-      rxjs.map(xy2cr),
-      rxjs.pairwise(),
-      rxjs.filter(([[x, y], [x2, y2]]) => x != x2 || y != y2),
-      rxjs.takeUntil(onMouseUp)
-    ))
-  )
-  const onDragStateChange = new rxjs.Subject
-
-  function createOnSwapAnim(f) {
-    return onSwap.pipe(rxjs.concatMap(f))
-  }
-  return {
-    onMouseDown,
-    onMouseUp,
-    onMouseMove,
-    onSwap,
-    createOnSwapAnim,
-    onDragStateChange
-  }
-})()
-
 function createView() {
 
   const { cr2xy } = app.alg
@@ -161,12 +131,32 @@ function createModel() {
 }
 
 function createController() {
+  const { xy2cr } = app.alg
+
+  const onMouseDownSub = new rxjs.Subject
+  const onMouseUpSub = new rxjs.Subject
+  const onMouseMoveSub = new rxjs.Subject
+  // https://www.thisdot.co/blog/how-to-implement-drag-and-drop-using-rxjs
+  const onSwapSub = onMouseDownSub.pipe(
+    rxjs.switchMap(() => onMouseMoveSub.pipe(
+      rxjs.map(xy2cr),
+      rxjs.pairwise(),
+      rxjs.filter(([[x, y], [x2, y2]]) => x != x2 || y != y2),
+      rxjs.takeUntil(onMouseUpSub)
+    ))
+  )
+  const onDragStateChangeSub = new rxjs.Subject
+
+  function createOnSwapAnim(f) {
+    return onSwapSub.pipe(rxjs.concatMap(f))
+  }
+
   const view = createView()
   const model = createModel()
 
   function setDragState(v) {
     console.log("setDragState", v)
-    app.event.onDragStateChange.next(v)
+    onDragStateChangeSub.next(v)
   }
 
   async function swapCube([fromCR, toCR]) {
@@ -200,27 +190,34 @@ function createController() {
       animWorker.catch(alert)
     }
   }
-
-  const onSwapAnim = app.event.onDragStateChange.pipe(
+  const onSwapAnimSub = onDragStateChangeSub.pipe(
     rxjs.switchMap(enabled => {
       if (enabled != true) {
         return rxjs.of()
       }
-      return app.event.createOnSwapAnim(pos => swapCube(pos))
+      return createOnSwapAnim(pos => swapCube(pos))
     })
   )
   function onDraw(p) {
-    app.event.onMouseMove.next([p.mouseX, p.mouseY])
+    p.background(250, 180, 200)
     view.draw(p, model)
   }
-
-  app.event.onMouseDown.subscribe(onDragStart)
-  app.event.onMouseUp.subscribe(onDragEnd)
-  onSwapAnim.subscribe()
+  function onMouseDown(x, y) {
+    onMouseDownSub.next([x, y])
+  }
+  function onMouseUp(x, y) {
+    onMouseUpSub.next([x, y])
+  }
+  function onMouseMove(x, y) {
+    onMouseMoveSub.next([x, y])
+  }
+  onMouseDownSub.subscribe(onDragStart)
+  onMouseUpSub.subscribe(onDragEnd)
+  onSwapAnimSub.subscribe()
   setDragState(true)
 
   return {
-    onDraw
+    onDraw, onMouseDown, onMouseUp, onMouseMove
   }
 }
 
@@ -233,30 +230,43 @@ function createController() {
         p.createCanvas(800, 600)
       }
       p.draw = function () {
-        p.background(250, 180, 200)
         controller.onDraw(p)
       }
-
       p.touchStarted = function () {
-        console.log("touchStarted")
+        if (p.touches.length == 0) {
+          return
+        }
+        const touch = p.touches[0]
+        controller.onMouseDown?.(touch.x, touch.y)
       }
-      p.touchEnded = function() {
-        console.log("touchEnded")
+      p.touchEnded = function () {
+        if (p.touches.length == 0) {
+          return
+        }
+        const touch = p.touches[0]
+        controller.onMouseUp?.(touch.x, touch.y)
       }
-      p.touchMoved = function(){
-        console.log(p.touches)
+      p.touchMoved = function () {
+        if (p.touches.length == 0) {
+          return
+        }
+        const touch = p.touches[0]
+        controller.onMouseMove?.(touch.x, touch.y)
       }
-
       p.mousePressed = function () {
-        console.log("mousePressed")
+        controller.onMouseDown?.(p.mouseX, p.mouseY)
       }
-      p.mouseReleased = function() {
-        console.log("mouseReleased")
+      p.mouseReleased = function () {
+        controller.onMouseUp?.(p.mouseX, p.mouseY)
       }
-      p.mouseMoved = function(){
-        console.log("mouseMoved")
+      // 非drag時
+      p.mouseMoved = function () {
+        controller.onMouseMove?.(p.mouseX, p.mouseY)
       }
-      console.log(p)
+      // drag時
+      p.mouseDragged = function () {
+        controller.onMouseMove?.(p.mouseX, p.mouseY)
+      }
     }, "canvas")
   }
   createP5app()
