@@ -18,7 +18,7 @@ app.alg = (function () {
 })()
 
 function createView(p) {
-  const { cr2xy } = app.alg
+  const { cr2xy, xy2cr } = app.alg
   const imgCubes = [
     p.loadImage('img/Drop/drop_d.png'),
     p.loadImage('img/Drop/drop_f.png'),
@@ -30,8 +30,6 @@ function createView(p) {
   function drawCube(value, x, y) {
     const img = imgCubes[value % imgCubes.length]
     p.image(img, x, y, CUBE_SIZE, CUBE_SIZE, 0, 0, img.width, img.height, p.COVER);
-    // const value = board[row][col]
-    // let [x, y] = cr2xy([col, row])
     // x = x + CUBE_SIZE / 2
     // y = y + CUBE_SIZE / 2
     // p.circle(x, y, CUBE_SIZE)
@@ -94,7 +92,10 @@ function createView(p) {
         this.centerToFrom = glMatrix.vec2.transformMat2d(this.centerToFrom, this.centerToFrom, this.mat)
         const nowPos = glMatrix.vec2.add(glMatrix.vec2.create(), this.center, this.centerToFrom)
         const value = this.value
+        // tint(color, alpha)
+        p.tint(255, 128)
         drawCube(value, nowPos[0], nowPos[1])
+        p.tint(255, 255)
       }
     }
   }
@@ -132,6 +133,39 @@ function createView(p) {
     return _hideCubes[key]
   }
 
+  let _dragCube = null
+  function setDragCube(value, x, y) {
+    _dragCube = {
+      value, x, y
+    }
+  }
+  function updateDragCube(x, y) {
+    if (_dragCube == null) {
+      return
+    }
+    _dragCube.x = x
+    _dragCube.y = y
+  }
+  function deleteDragCube() {
+    _dragCube = null
+  }
+  function getDragCube() {
+    return _dragCube
+  }
+  function dropCubes(cubes) {
+    return Promise.resolve()
+  }
+  function onDragStart(model, x, y) {
+    const cr = xy2cr([x, y])
+    const value = model.getBoardValue(cr[0], cr[1])
+    setDragCube(value, x - CUBE_SIZE / 2, y - CUBE_SIZE / 2)
+  }
+  function onDrag(model, x, y) {
+    updateDragCube(x - CUBE_SIZE / 2, y - CUBE_SIZE / 2)
+  }
+  function onDragEnd() {
+    deleteDragCube()
+  }
   function draw(model) {
     const board = model.getBoard()
     for (const row in board) {
@@ -142,25 +176,22 @@ function createView(p) {
         const value = board[row][col]
         let [x, y] = cr2xy([col, row])
         drawCube(value, x, y)
-        // let [x, y] = cr2xy([col, row])
-        // x = x + CUBE_SIZE / 2
-        // y = y + CUBE_SIZE / 2
-        // p.circle(x, y, CUBE_SIZE)
-        // p.text(value, x, y)
       }
     }
     for (const viewer of viewers) {
       viewer.draw()
     }
-  }
-  function dropCubes(cubes) {
-    return Promise.resolve()
+    const dragCube = getDragCube()
+    if (dragCube) {
+      drawCube(dragCube.value, dragCube.x, dragCube.y)
+    }
   }
   return {
     draw,
     swapCube,
     eatCubes,
-    dropCubes
+    dropCubes,
+    onDragStart, onDrag, onDragEnd
   }
 }
 
@@ -205,7 +236,7 @@ function createModel() {
 
 function createController(p) {
   const { xy2cr } = app.alg
-
+  // 共用事件
   const onMouseDownSub = new rxjs.Subject
   const onMouseUpSub = new rxjs.Subject
   const onMouseMoveSub = new rxjs.Subject
@@ -218,20 +249,18 @@ function createController(p) {
       rxjs.takeUntil(onMouseUpSub)
     ))
   )
+  // 可否拖拉的狀態
+  // ex. 結算吃掉方塊時設為false，結算完後設為true
   const onDragStateChangeSub = new rxjs.Subject
-  // 暫不使用
-  function createOnSwapAnim(f) {
-    return onSwapSub.pipe(rxjs.concatMap(f))
-  }
-
-  const view = createView(p)
-  const model = createModel()
-
   function setDragState(v) {
     console.log("setDragState", v)
     onDragStateChangeSub.next(v)
   }
 
+  const view = createView(p)
+  const model = createModel()
+
+  // 吃掉方塊
   async function doEatCubes() {
     setDragState(false)
     for (let i = 0; i < 10; ++i) {
@@ -247,39 +276,68 @@ function createController(p) {
     setDragState(true)
   }
 
-  function onDragStart() {
-
-  }
-
-  let isEat = false
-  function onDragEnd() {
-    if (isEat != true) {
-      isEat = true
-      doEatCubes().then(() => {
-        isEat = false
-      }).catch(alert)
-    }
-  }
-  const onSwapAnimSub = onDragStateChangeSub.pipe(
-    rxjs.switchMap(enabled => {
-      if (enabled != true) {
-        return rxjs.of()
+  // 拖拉結束後吃掉方塊
+  {
+    let isEat = false
+    function onDragEnd() {
+      if (isEat != true) {
+        isEat = true
+        doEatCubes().then(() => {
+          isEat = false
+        }).catch(alert)
       }
-      // 使用concatMap的動畫就會和model完全一致，但不即時 
-      // return createOnSwapAnim(async ([fromCR, toCR]) => {
-      //   await view.swapCube(model, fromCR, toCR)
-      //   model.swapCube(fromCR, toCR)
-      // })
-      // 使用switchMap做動畫在過程中和model會不一致，但即時
-      const animSub = onSwapSub.pipe(rxjs.switchMap(([fromCR, toCR]) => {
-        return view.swapCube(model, fromCR, toCR)
-      }))
-      const tapSub = onSwapSub.pipe(rxjs.tap(([fromCR, toCR]) => {
-        return model.swapCube(fromCR, toCR)
-      }))
-      return rxjs.merge(animSub, tapSub)
+    }
+    onMouseUpSub.subscribe(onDragEnd)
+  }
+
+  // 拖拉過程中交換方塊
+  {
+    const onSwapAnimSub = onDragStateChangeSub.pipe(
+      rxjs.switchMap(enabled => {
+        if (enabled != true) {
+          return rxjs.of()
+        }
+        // 使用concatMap的動畫就會和model完全一致，但不即時 
+        // return onSwapSub.pipe(rxjs.concatMap(async ([fromCR, toCR]) => {
+        //   await view.swapCube(model, fromCR, toCR)
+        //   model.swapCube(fromCR, toCR)
+        // }))
+        // 使用switchMap做動畫在過程中和model會不一致，但即時
+        const animSub = onSwapSub.pipe(rxjs.switchMap(([fromCR, toCR]) => {
+          return view.swapCube(model, fromCR, toCR)
+        }))
+        const tapSub = onSwapSub.pipe(rxjs.tap(([fromCR, toCR]) => {
+          return model.swapCube(fromCR, toCR)
+        }))
+        return rxjs.merge(animSub, tapSub)
+      })
+    )
+    onSwapAnimSub.subscribe()
+  }
+
+  // 拖拉時的被拖拉方塊的顯示
+  {
+    onDragStateChangeSub.pipe(
+      rxjs.filter(v => v),
+      rxjs.switchMap(() => {
+        return rxjs.merge(
+          onMouseDownSub.pipe(
+            rxjs.tap(([x, y]) => {
+              view.onDragStart(model, x, y)
+            })
+          ),
+          onMouseMoveSub.pipe(
+            rxjs.tap(([x, y]) => {
+              view.onDrag(model, x, y)
+            })
+          )
+        )
+      })
+    ).subscribe()
+    onMouseUpSub.subscribe(() => {
+      view.onDragEnd()
     })
-  )
+  }
   function onDraw() {
     p.background(250, 180, 200)
     view.draw(model)
@@ -287,25 +345,19 @@ function createController(p) {
   function onMouseDown(x, y) {
     onMouseDownSub.next([x, y])
   }
-  function onMouseUp(x, y) {
-    onMouseUpSub.next([x, y])
+  function onMouseUp() {
+    onMouseUpSub.next(true)
   }
   function onMouseMove(x, y) {
     onMouseMoveSub.next([x, y])
   }
-  onMouseDownSub.subscribe(onDragStart)
-  onMouseUpSub.subscribe(onDragEnd)
-  onSwapAnimSub.subscribe()
   setDragState(true)
-
   return {
     onDraw, onMouseDown, onMouseUp, onMouseMove
   }
 }
 
 (function () {
-
-
   function createP5app() {
     new p5(p => {
       const controller = createController(p)
@@ -324,11 +376,7 @@ function createController(p) {
         controller.onMouseDown?.(touch.x, touch.y)
       }
       p.touchEnded = function () {
-        if (p.touches.length == 0) {
-          return
-        }
-        const touch = p.touches[0]
-        controller.onMouseUp?.(touch.x, touch.y)
+        controller.onMouseUp?.()
       }
       p.touchMoved = function () {
         if (p.touches.length == 0) {
@@ -341,7 +389,8 @@ function createController(p) {
         controller.onMouseDown?.(p.mouseX, p.mouseY)
       }
       p.mouseReleased = function () {
-        controller.onMouseUp?.(p.mouseX, p.mouseY)
+        console.log("mouseReleased")
+        controller.onMouseUp?.()
       }
       // 非drag時
       p.mouseMoved = function () {
