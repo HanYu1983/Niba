@@ -63,11 +63,12 @@ function createView(p) {
     }
   }
 
-  function createSwapViwer2(v, from, to, duration) {
+  function createSwapViwer2(v, from, to, duration, options) {
     const center = glMatrix.vec2.create()
     glMatrix.vec2.add(center, from, to)
     glMatrix.vec2.div(center, center, [2, 2])
     const centerToFrom = glMatrix.vec2.sub(glMatrix.vec2.create(), from, center)
+    alpha = options?.alpha || 255
     return {
       value: v,
       from: from,
@@ -78,6 +79,7 @@ function createView(p) {
       center: center,
       centerToFrom: centerToFrom,
       time: 0,
+      alpha: alpha,
       draw: function () {
         const deltaTime = p.deltaTime
         this.time += deltaTime
@@ -93,7 +95,7 @@ function createView(p) {
         const nowPos = glMatrix.vec2.add(glMatrix.vec2.create(), this.center, this.centerToFrom)
         const value = this.value
         // tint(color, alpha)
-        p.tint(255, 128)
+        p.tint(255, this.alpha)
         drawCube(value, nowPos[0], nowPos[1])
         p.tint(255, 255)
       }
@@ -102,8 +104,8 @@ function createView(p) {
 
   function swapCube(model, fromCR, toCR) {
     return new Promise((res, rej) => {
-      const duration = 100
-      const v1 = createSwapViwer2(model.getBoardValue(fromCR[0], fromCR[1]), cr2xy(fromCR), cr2xy(toCR), duration)
+      const duration = 150
+      const v1 = createSwapViwer2(model.getBoardValue(fromCR[0], fromCR[1]), cr2xy(fromCR), cr2xy(toCR), duration, { alpha: 64 })
       const v2 = createSwapViwer2(model.getBoardValue(toCR[0], toCR[1]), cr2xy(toCR), cr2xy(fromCR), duration)
       addViewer(v1)
       addViewer(v2)
@@ -149,6 +151,15 @@ function createView(p) {
   function deleteDragCube() {
     _dragCube = null
   }
+  function isHitDragCubeCR(c, r) {
+    if (_dragCube == null) {
+      return false
+    }
+    const cr1 = xy2cr([_dragCube.x + CUBE_SIZE / 2, _dragCube.y + CUBE_SIZE / 2])
+    const cr2 = [c, r]
+    return cr1[0] == cr2[0] && cr1[1] == cr2[1]
+  }
+  //
   function getDragCube() {
     return _dragCube
   }
@@ -175,7 +186,14 @@ function createView(p) {
         }
         const value = board[row][col]
         let [x, y] = cr2xy([col, row])
+        const isHit = isHitDragCubeCR(col, row)
+        if (isHit) {
+          p.tint(255, 64)
+        }
         drawCube(value, x, y)
+        if (isHit) {
+          p.tint(255, 255)
+        }
       }
     }
     for (const viewer of viewers) {
