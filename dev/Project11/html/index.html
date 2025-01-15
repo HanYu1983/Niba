@@ -12,13 +12,14 @@
   <script type="module">
     import * as THREE from 'three';
     import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import rainParticle from './rainParticle.js';
 
     const deg2rad = Math.PI / 180;
     const width = 300
     const height = 600
     const worldRadius = 15
 
-    main().catch(alert)
+    main().catch(console.error)
 
     async function main() {
       const scene = new THREE.Scene
@@ -31,7 +32,7 @@
       document.body.appendChild(renderer.domElement);
 
       const controls = new OrbitControls(camera, renderer.domElement);
-
+      controls.autoRotate = true
       camera.position.set(0, 0, 5);
 
       lightingByDefinition(cameraParent, getDefaultLights(0.5));
@@ -74,6 +75,38 @@
 
       scene.add(rootObject);
 
+      rainParticle.init({
+        scene: scene,
+        rains: [],
+        worldRadius: 15,
+      }, {
+        particle: {
+          "type": "RAIN",
+          "pattern": "FALL",
+          "count": 200,
+          "length": 5
+        },
+        world: {
+          "radius": 15,
+          "resolution": {
+            "horizontal": 40,
+            "vertical": 40
+          },
+          "fov": 50
+        }
+      });
+
+      {
+        const geometry = new THREE.SphereGeometry(100, 50, 50)
+        const texture = new THREE.TextureLoader().load('https://sample.smartcanvas.net/appdata/user6201/apps119578/cg/05ad3eae39996208.jpg')
+        const material = new THREE.MeshBasicMaterial({ color: 0xffffff, map: texture, side: THREE.DoubleSide })
+        // const light = new THREE.AmbientLight(0xffffff, 0.1)
+        // scene.add(light)
+
+        const sphere = new THREE.Mesh(geometry, material);
+        scene.add(sphere);
+      }
+
       function animate() {
         requestAnimationFrame(animate);
         controls.update()
@@ -82,6 +115,7 @@
       }
 
       animate();
+      rainParticle.start()
     }
 
     function createBufferGeometryLoader(path) {
