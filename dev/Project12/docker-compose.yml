@@ -1,0 +1,43 @@
+version: '3.8'
+
+volumes:
+  db_storage:
+  n8n_storage:
+
+services:
+  postgres:
+    image: postgres:15
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=han
+      - POSTGRES_PASSWORD=han
+      - POSTGRES_DB=han
+    volumes:
+      - db_storage:/var/lib/postgresql/data
+      - ./init-data.sh:/docker-entrypoint-initdb.d/init-data.sh
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -h localhost -U ${POSTGRES_NON_ROOT_USER} -d ${POSTGRES_DB}'] # set user name toPOSTGRES_NON_ROOT_USER
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  n8n:
+    image: docker.n8n.io/n8nio/n8n
+    restart: always
+    environment:
+      - N8N_SECURE_COOKIE=false
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=postgres
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_DATABASE=han
+      - DB_POSTGRESDB_USER=han
+      - DB_POSTGRESDB_PASSWORD=han
+      - N8N_ENCRYPTION_KEY=hitokuse # 這行一定要加，不然下一次起動時已設定的各種認證碼都解不開了
+    ports:
+      - 5678:5678
+    depends_on:
+      - postgres
+    volumes:
+      - n8n_storage:/home/node/n8n/.n8n
