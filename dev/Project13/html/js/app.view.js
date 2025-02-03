@@ -17,19 +17,22 @@ app.view = async function () {
   function create(tagName) {
     new p5(p => {
       p.preload = function () {
-        ["/assets/word_background.png"].forEach(path => {
+        ["../assets/word_background.png"].forEach(path => {
           imgs[path] = p.loadImage(path);
         })
       }
       p.setup = function () {
         // https://www.fontspace.com/category/opentype
         // https://fonts.google.com/noto/specimen/Noto+Sans+JP
-        const font = p.loadFont("/assets/NotoSansJP-VariableFont_wght.ttf")
+        const font = p.loadFont("../assets/NotoSansJP-VariableFont_wght.ttf")
         p.createCanvas(W, H, p.WEBGL)
         p.frameRate(60)
         p.textFont(font)
         p.textAlign(p.CENTER)
+        // https://p5js.org/reference/p5/camera/
+        //p.camera(W / 2, H / 2, 800, W / 2, H / 2, 0)
         p.ortho()
+
         onSetup.next(p)
       }
       p.draw = function () {
