@@ -1,4 +1,6 @@
-app.game = function () {
+app.game = async function () {
+  const view = await app.view
+  const config = await app.config
   // helper
   function isPrepareForCheck(wordWantCheck) {
     return wordWantCheck.filter(i => i == null).length == 0
@@ -82,9 +84,9 @@ app.game = function () {
   function setupEntity(entity) {
     entity.subscriptions = entity.subscriptions || []
     if (entity.radius && entity.pos) {
-      entity.dragStartSubscription = app.view.onSetup.pipe(
+      entity.dragStartSubscription = view.onSetup.pipe(
         rxjs.switchMap(p => {
-          return app.view.onMouseDown.pipe(
+          return view.onMouseDown.pipe(
             rxjs.map(pos => [p, pos])
           )
         })
@@ -119,8 +121,8 @@ app.game = function () {
           onWordDragStart.next(entity)
         }),
         rxjs.switchMap(() => {
-          return app.view.onMouseDrag.pipe(
-            rxjs.takeUntil(app.view.onMouseUp)
+          return view.onMouseDrag.pipe(
+            rxjs.takeUntil(view.onMouseUp)
           )
         })
       ).subscribe(pos => {
@@ -143,7 +145,7 @@ app.game = function () {
           dragObj.pos[1] = pos[1]
         }
       })
-      entity.onWordEndSubscription = app.view.onMouseUp.subscribe(() => {
+      entity.onWordEndSubscription = view.onMouseUp.subscribe(() => {
         if (dragObj) {
           onWordDragEnd.next(dragObj)
           removeEntity(dragObj)
@@ -168,7 +170,7 @@ app.game = function () {
         }
         p.pop()
       }
-      entity.onWordEndSubscription = app.view.onSetup.pipe(
+      entity.onWordEndSubscription = view.onSetup.pipe(
         rxjs.switchMap(p => {
           return onWordDragEnd.pipe(
             rxjs.map(entity => [p, entity])
@@ -191,7 +193,7 @@ app.game = function () {
         end.mask = false
         const currentWord = getCurrentWords()
         if (isPrepareForCheck(currentWord)) {
-          const wins = checkWords(getDragWordEnds(), currentWord.join(""))
+          const wins = checkWords(config.words, currentWord.join(""))
           console.log(wins)
         }
       })
@@ -206,9 +208,9 @@ app.game = function () {
     }
   }
   // render
-  const onDrawP5 = app.view.onSetup.pipe(
+  const onDrawP5 = view.onSetup.pipe(
     rxjs.switchMap(p => {
-      return app.view.onDraw.pipe(
+      return view.onDraw.pipe(
         rxjs.map(() => p)
       )
     })

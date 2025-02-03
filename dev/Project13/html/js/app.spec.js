@@ -1,4 +1,4 @@
-app.spec = function () {
+app.spec = async function () {
   const { spec, valid, explainStr } = window['js.spec']
   return {
     config: spec.map("config", {

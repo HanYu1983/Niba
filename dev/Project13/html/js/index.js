@@ -1,17 +1,12 @@
-
-async function loadConfig() {
-  return {
-    words: [
-      "かさ", "ぞう", "うみ", "みつき", "つき"
-    ]
-  }
-}
 async function main() {
-  const config = await loadConfig()
-  app.game.assertCheckWords(config)
-  app.spec.assert(app.spec.config, config)
-  app.view.create("canvas")
-  app.game.startGame()
+  const config = await app.config
+  const view = await app.view
+  const game = await app.game
+  const spec = await app.spec
+  view.create("canvas")
+  game.assertCheckWords(config)
+  spec.assert(spec.config, config)
+  game.startGame()
 }
 
 main().catch(console.error)

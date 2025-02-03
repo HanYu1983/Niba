@@ -1,4 +1,4 @@
-app.view = function () {
+app.view = async function () {
   const onSetup = new rxjs.ReplaySubject
   const onDraw = new rxjs.Subject
   const onMouseMove = new rxjs.Subject
