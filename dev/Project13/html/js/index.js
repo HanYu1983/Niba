@@ -11,6 +11,7 @@ async function main() {
   app.game.assertCheckWords(config)
   app.spec.assert(app.spec.config, config)
   app.view.create("canvas")
+  app.game.startGame()
 }
 
 main().catch(console.error)
