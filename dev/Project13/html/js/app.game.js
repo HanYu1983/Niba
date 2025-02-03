@@ -29,18 +29,21 @@ app.game = async function () {
   const DRAG_WORD_END_ENTITY = { type: "DRAG_WORD_END_ENTITY", pos: [50, 50], word: "O", mask: false }
   const DRAG_WORD_HIT_LAYER = { type: "DRAG_WORD_HIT_LAYER" }
   const DRAG_WORD_END_OFFSET = 100
+  const DRAG_WORD_END_X = 100
+  const DRAG_WORD_END_Y = 200
+  const DRAG_WORD_START_Y = 400
   let entities = [
-    { ...DRAG_WORD_START_ENTITY, word: "か", pos: [100, 100] },
-    { ...DRAG_WORD_START_ENTITY, word: "う", pos: [200, 100] },
-    { ...DRAG_WORD_START_ENTITY, word: "み", pos: [300, 100] },
-    { ...DRAG_WORD_START_ENTITY, word: "み", pos: [400, 100] },
-    { ...DRAG_WORD_END_ENTITY, pos: [0 * DRAG_WORD_END_OFFSET, 0] },
-    { ...DRAG_WORD_END_ENTITY, pos: [1 * DRAG_WORD_END_OFFSET, 0] },
-    { ...DRAG_WORD_END_ENTITY, pos: [2 * DRAG_WORD_END_OFFSET, 0] },
-    { ...DRAG_WORD_END_ENTITY, pos: [3 * DRAG_WORD_END_OFFSET, 0] },
-    { ...DRAG_WORD_END_ENTITY, pos: [4 * DRAG_WORD_END_OFFSET, 0] },
-    { ...DRAG_WORD_END_ENTITY, pos: [5 * DRAG_WORD_END_OFFSET, 0] },
-    { ...DRAG_WORD_END_ENTITY, pos: [6 * DRAG_WORD_END_OFFSET, 0] },
+    { ...DRAG_WORD_START_ENTITY, word: "か", pos: [100, DRAG_WORD_START_Y] },
+    { ...DRAG_WORD_START_ENTITY, word: "う", pos: [200, DRAG_WORD_START_Y] },
+    { ...DRAG_WORD_START_ENTITY, word: "み", pos: [300, DRAG_WORD_START_Y] },
+    { ...DRAG_WORD_START_ENTITY, word: "み", pos: [400, DRAG_WORD_START_Y] },
+    { ...DRAG_WORD_END_ENTITY, pos: [DRAG_WORD_END_X + 0 * DRAG_WORD_END_OFFSET, DRAG_WORD_END_Y] },
+    { ...DRAG_WORD_END_ENTITY, pos: [DRAG_WORD_END_X + 1 * DRAG_WORD_END_OFFSET, DRAG_WORD_END_Y] },
+    { ...DRAG_WORD_END_ENTITY, pos: [DRAG_WORD_END_X + 2 * DRAG_WORD_END_OFFSET, DRAG_WORD_END_Y] },
+    { ...DRAG_WORD_END_ENTITY, pos: [DRAG_WORD_END_X + 3 * DRAG_WORD_END_OFFSET, DRAG_WORD_END_Y] },
+    { ...DRAG_WORD_END_ENTITY, pos: [DRAG_WORD_END_X + 4 * DRAG_WORD_END_OFFSET, DRAG_WORD_END_Y] },
+    { ...DRAG_WORD_END_ENTITY, pos: [DRAG_WORD_END_X + 5 * DRAG_WORD_END_OFFSET, DRAG_WORD_END_Y] },
+    { ...DRAG_WORD_END_ENTITY, pos: [DRAG_WORD_END_X + 6 * DRAG_WORD_END_OFFSET, DRAG_WORD_END_Y] },
     { ...DRAG_WORD_LAYER },
     { ...DRAG_WORD_HIT_LAYER }
   ]
@@ -168,7 +171,7 @@ app.game = async function () {
         p.translate(x, y)
         if (this.mask) {
           p.fill('gray');
-          p.box()
+          p.plane(100, 50)
         } else {
           const buffer = this.buffer
           const img = view.getImage("../assets/word_background.png")

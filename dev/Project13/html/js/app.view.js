@@ -29,8 +29,9 @@ app.view = async function () {
         p.frameRate(60)
         p.textFont(font)
         p.textAlign(p.CENTER)
+        // 先移動攝像機讓mouse座標和物件位置能對上
         // https://p5js.org/reference/p5/camera/
-        //p.camera(W / 2, H / 2, 800, W / 2, H / 2, 0)
+        p.camera(W / 2, H / 2, 800, W / 2, H / 2, 0)
         p.ortho()
 
         onSetup.next(p)
@@ -43,7 +44,7 @@ app.view = async function () {
           return
         }
         const touch = p.touches[0]
-        onMouseDown.next([touch.x - W / 2, touch.y - H / 2])
+        onMouseDown.next([touch.x, touch.y])
       }
       p.touchEnded = function () {
         onMouseUp.next()
@@ -53,21 +54,21 @@ app.view = async function () {
           return
         }
         const touch = p.touches[0]
-        onMouseMove.next([touch.x - W / 2, touch.y - H / 2])
+        onMouseMove.next([touch.x, touch.y])
       }
       p.mousePressed = function () {
-        onMouseDown.next([p.mouseX - W / 2, p.mouseY - H / 2])
+        onMouseDown.next([p.mouseX, p.mouseY])
       }
       p.mouseReleased = function () {
         onMouseUp.next()
       }
       // 非drag時
       p.mouseMoved = function () {
-        onMouseMove.next([p.mouseX - W / 2, p.mouseY - H / 2])
+        onMouseMove.next([p.mouseX, p.mouseY])
       }
       // drag時
       p.mouseDragged = function () {
-        onMouseDrag.next([p.mouseX - W / 2, p.mouseY - H / 2])
+        onMouseDrag.next([p.mouseX, p.mouseY])
       }
     }, tagName)
   }
