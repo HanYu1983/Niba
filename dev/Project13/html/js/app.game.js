@@ -100,19 +100,23 @@ app.game = async function () {
     }
     if (entity.type == "DRAG_WORD_START_ENTITY") {
       entity.onDrawP5 = function (p) {
+        if (this.buffer == null) {
+          const buffer = p.createGraphics(50, 50)
+          const img = view.getImage("/assets/word_background.png")
+          buffer.image(img, 0, 0, buffer.width, buffer.height, 0, 0, img.width, img.height, p.CONTAIN);
+          buffer.textSize(25)
+          buffer.stroke(255)
+          buffer.strokeWeight(4)
+          buffer.textAlign(p.CENTER)
+          buffer.text(this.word, buffer.width / 2, buffer.height / 2)
+          this.buffer = buffer
+        }
         const [x, y] = this.pos
-        // p.fill('white');
-        // p.circle(x, y, this.radius)
-        // p.fill('yellow');
-        // p.textSize(100);
-        // p.text(this.word, x, y);
         p.push()
         p.translate(x, y)
-        p.fill('white');
-        p.box()
-        p.fill('yellow');
-        p.textSize(100);
-        p.text(this.word, 0, 0);
+        p.texture(this.buffer)
+        p.noStroke()
+        p.box(100)
         p.pop()
       }
       entity.draggingSubscription = onEntityMouseDown.pipe(
@@ -155,6 +159,10 @@ app.game = async function () {
     }
     if (entity.type == "DRAG_WORD_END_ENTITY") {
       entity.onDrawP5 = function (p) {
+        if (this.buffer == null) {
+          const buffer = p.createGraphics(50, 50)
+          this.buffer = buffer
+        }
         const [x, y] = this.pos
         p.push()
         p.translate(x, y)
@@ -162,11 +170,17 @@ app.game = async function () {
           p.fill('gray');
           p.box()
         } else {
-          p.fill('blue');
-          p.box()
-          p.fill('yellow');
-          p.textSize(100);
-          p.text(this.word, 0, 0);
+          const buffer = this.buffer
+          const img = view.getImage("/assets/word_background.png")
+          buffer.image(img, 0, 0, buffer.width, buffer.height, 0, 0, img.width, img.height, p.CONTAIN);
+          buffer.textSize(25)
+          buffer.stroke(255)
+          buffer.strokeWeight(4)
+          buffer.textAlign(p.CENTER);
+          buffer.text(this.word, buffer.width / 2, buffer.height / 2)
+          p.texture(this.buffer)
+          p.noStroke()
+          p.box(100)
         }
         p.pop()
       }

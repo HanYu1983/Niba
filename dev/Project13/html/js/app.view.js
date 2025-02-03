@@ -7,9 +7,20 @@ app.view = async function () {
   const onMouseDrag = new rxjs.Subject
   const W = 800
   const H = 600
-
+  const imgs = {}
+  function getImage(key) {
+    if (imgs[key] == null) {
+      throw new Error(`image not found: ${key}`)
+    }
+    return imgs[key]
+  }
   function create(tagName) {
     new p5(p => {
+      p.preload = function () {
+        ["/assets/word_background.png"].forEach(path => {
+          imgs[path] = p.loadImage(path);
+        })
+      }
       p.setup = function () {
         // https://www.fontspace.com/category/opentype
         // https://fonts.google.com/noto/specimen/Noto+Sans+JP
@@ -18,6 +29,7 @@ app.view = async function () {
         p.frameRate(60)
         p.textFont(font)
         p.textAlign(p.CENTER)
+        p.ortho()
         onSetup.next(p)
       }
       p.draw = function () {
@@ -58,6 +70,12 @@ app.view = async function () {
   }
   return {
     create,
-    onSetup, onDraw, onMouseMove, onMouseDown, onMouseUp, onMouseDrag
+    onSetup,
+    onDraw,
+    onMouseMove,
+    onMouseDown,
+    onMouseUp,
+    onMouseDrag,
+    getImage
   }
 }()
