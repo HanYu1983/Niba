@@ -17,6 +17,7 @@ app.view = async function () {
   function create(tagName) {
     new p5(p => {
       p.preload = function () {
+        // loadImage要放在preload，不然畫不出來
         ["../assets/word_background.png"].forEach(path => {
           imgs[path] = p.loadImage(path);
         })
