@@ -17,16 +17,16 @@ app.game = function () {
       throw new Error()
     }
   }
-  const DRAG_WORD_ENTITY = { type: "DRAG_WORD_ENTITY", word: "O", pos: [100, 100], radius: 50 }
+  const DRAG_WORD_START_ENTITY = { type: "DRAG_WORD_START_ENTITY", word: "O", pos: [100, 100], radius: 50 }
   const DRAG_WORD_LAYER = { type: "DRAG_WORD_LAYER" }
-  const WORD_SLOT = { type: "WORD_SLOT", pos: [50, 50], word: "O" }
+  const DRAG_WORD_END_ENTITY = { type: "DRAG_WORD_END_ENTITY", pos: [50, 50], word: "O" }
   let entities = [
-    { ...DRAG_WORD_ENTITY, word: "か", pos: [100, 200] },
-    { ...DRAG_WORD_ENTITY, word: "う", pos: [200, 200] },
-    { ...DRAG_WORD_ENTITY, word: "み", pos: [300, 100] },
-    { ...DRAG_WORD_ENTITY, word: "み", pos: [400, 100] },
-    { ...WORD_SLOT, pos: [50, 50] },
-    { ...WORD_SLOT, pos: [150, 50] },
+    { ...DRAG_WORD_START_ENTITY, word: "か", pos: [100, 200] },
+    { ...DRAG_WORD_START_ENTITY, word: "う", pos: [200, 200] },
+    { ...DRAG_WORD_START_ENTITY, word: "み", pos: [300, 100] },
+    { ...DRAG_WORD_START_ENTITY, word: "み", pos: [400, 100] },
+    { ...DRAG_WORD_END_ENTITY, pos: [50, 50] },
+    { ...DRAG_WORD_END_ENTITY, pos: [150, 50] },
     { ...DRAG_WORD_LAYER }
   ]
   function removeEntity(entity) {
@@ -45,7 +45,7 @@ app.game = function () {
   function setupEntity(entity) {
     if (entity.radius && entity.pos) {
       entity.dragStartSubscription = app.view.onSetup.pipe(
-        rxjs.mergeMap(p => {
+        rxjs.switchMap(p => {
           return app.view.onMouseDown.pipe(
             rxjs.map(pos => [p, pos])
           )
@@ -58,7 +58,7 @@ app.game = function () {
         }
       })
     }
-    if (entity.type == "DRAG_WORD_ENTITY") {
+    if (entity.type == "DRAG_WORD_START_ENTITY") {
       entity.onDrawP5 = function (p) {
         const [x, y] = this.pos
         // p.fill('white');
@@ -81,7 +81,7 @@ app.game = function () {
           onWordDragStart.next(entity)
         }),
         rxjs.switchMap(() => {
-          return app.view.onMouseMove.pipe(
+          return app.view.onMouseDrag.pipe(
             rxjs.takeUntil(app.view.onMouseUp)
           )
         })
@@ -93,7 +93,7 @@ app.game = function () {
       let dragObj
       entity.onWordDragStartSubscription = onWordDragStart.subscribe(entity => {
         dragObj = {
-          ...DRAG_WORD_ENTITY,
+          ...DRAG_WORD_START_ENTITY,
           word: entity.word,
           pos: [entity.pos[0], entity.pos[1]],
         }
@@ -113,7 +113,7 @@ app.game = function () {
         }
       })
     }
-    if (entity.type == "WORD_SLOT") {
+    if (entity.type == "DRAG_WORD_END_ENTITY") {
       entity.onDrawP5 = function (p) {
         const [x, y] = this.pos
         p.push()
@@ -126,7 +126,7 @@ app.game = function () {
         p.pop()
       }
       entity.onWordEndSubscription = app.view.onSetup.pipe(
-        rxjs.mergeMap(p => {
+        rxjs.switchMap(p => {
           return onWordDragEnd.pipe(
             rxjs.map(entity => [p, entity])
           )
@@ -151,7 +151,7 @@ app.game = function () {
   onWordHitWordSlot.subscribe(console.log)
   // render
   const onDrawP5 = app.view.onSetup.pipe(
-    rxjs.mergeMap(p => {
+    rxjs.switchMap(p => {
       return app.view.onDraw.pipe(
         rxjs.map(() => p)
       )

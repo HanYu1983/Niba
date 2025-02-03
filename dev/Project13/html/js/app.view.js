@@ -4,6 +4,7 @@ app.view = function () {
   const onMouseMove = new rxjs.Subject
   const onMouseUp = new rxjs.Subject
   const onMouseDown = new rxjs.Subject
+  const onMouseDrag = new rxjs.Subject
   const W = 800
   const H = 600
 
@@ -51,12 +52,12 @@ app.view = function () {
       }
       // drag時
       p.mouseDragged = function () {
-        onMouseMove.next([p.mouseX - W / 2, p.mouseY - H / 2])
+        onMouseDrag.next([p.mouseX - W / 2, p.mouseY - H / 2])
       }
     }, tagName)
   }
   return {
     create,
-    onSetup, onDraw, onMouseMove, onMouseDown, onMouseUp
+    onSetup, onDraw, onMouseMove, onMouseDown, onMouseUp, onMouseDrag
   }
 }()
