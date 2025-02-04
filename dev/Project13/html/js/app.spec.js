@@ -1,4 +1,5 @@
 app.spec = async function () {
+  // https://github.com/prayerslayer/js.spec/blob/master/test/types/types-test.ts
   const lib = window['js.spec']
   const { spec, valid, explainStr } = lib
   const pos = spec.tuple("pos", spec.number, spec.number)

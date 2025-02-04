@@ -33,7 +33,7 @@ app.game = async function () {
   const DRAG_WORD_END_X = 60
   const DRAG_WORD_END_Y = 650
   const DRAG_WORD_START_Y = 1120
-  
+
   spec.assert(spec.DRAG_WORD_START_ENTITY, DRAG_WORD_START_ENTITY)
   spec.assert(spec.DRAG_WORD_END_ENTITY, DRAG_WORD_END_ENTITY)
 
@@ -71,6 +71,15 @@ app.game = async function () {
 
   let dragWordEnds = []
   function setDragWordEnds(words) {
+    spec.assert(
+      spec.lib.spec.collection("setDragWordEndsArgs", spec.lib.spec.map("setDragWordEndsArg", {
+        word: spec.lib.spec.nilable("word", spec.lib.spec.string),
+        [spec.lib.symbol.optional]: {
+          isSlot: spec.lib.spec.boolean
+        }
+      })),
+      words
+    )
     const ends = entities.filter(e => e.type == "DRAG_WORD_END_ENTITY")
     if (ends.length != 7) {
       throw new Error("ends.length must 7")
