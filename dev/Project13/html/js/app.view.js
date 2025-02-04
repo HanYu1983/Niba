@@ -1,3 +1,9 @@
+function getAssetPath(path) {
+  if (window.location.href.indexOf("index.html") != -1) {
+    return window.location.href.replace("index.html", path)
+  }
+  return window.location.href + "/" + path
+}
 app.view = async function () {
   const onSetup = new rxjs.ReplaySubject
   const onDraw = new rxjs.Subject
@@ -5,8 +11,7 @@ app.view = async function () {
   const onMouseUp = new rxjs.Subject
   const onMouseDown = new rxjs.Subject
   const onMouseDrag = new rxjs.Subject
-  const W = 720
-  const H = 1484
+
   const imgs = {}
   function getImage(key) {
     if (imgs[key] == null) {
@@ -22,25 +27,36 @@ app.view = async function () {
           "assets/word_background.png",
           "assets/background.png"
         ].forEach(path => {
-          imgs[path] = p.loadImage(path);
+          imgs[path] = p.loadImage(getAssetPath(path));
         })
       }
+      // p.windowResized = function(){
+      //   const W = p.windowWidth
+      //   const H = p.windowHeight
+      //   p.resizeCanvas(W, H);
+      //   p.camera(W / 2, H / 2, 800, W / 2, H / 2, 0)
+      // }
       p.setup = function () {
+        const W = 720
+        const H = 1484
         // https://www.fontspace.com/category/opentype
         // https://fonts.google.com/noto/specimen/Noto+Sans+JP
-        const font = p.loadFont("assets/NotoSansJP-VariableFont_wght.ttf")
-        p.createCanvas(W, H, p.WEBGL)
-        p.frameRate(60)
-        p.textFont(font)
-        p.textAlign(p.CENTER)
+        const font = p.loadFont(getAssetPath("assets/NotoSansJP-VariableFont_wght.ttf"))
+        const canvas = p.createCanvas(W, H, p.WEBGL);
         // 先移動攝像機讓mouse座標和物件位置能對上
         // https://p5js.org/reference/p5/camera/
         p.camera(W / 2, H / 2, 800, W / 2, H / 2, 0)
+        p.frameRate(60)
         p.ortho()
-
+        p.textFont(font)
+        p.textAlign(p.CENTER)
         // 一次性的就呼叫complete
         onSetup.next(p)
         onSetup.complete()
+
+        // 放最後面設定
+        canvas.style('width', '100%')
+        canvas.style('height', '100%')
       }
       p.draw = function () {
         onDraw.next(p.deltaTime)
