@@ -24,19 +24,20 @@ app.game = async function () {
     }
   }
   // model
-  const DRAG_WORD_START_ENTITY = { type: "DRAG_WORD_START_ENTITY", word: "O", pos: [100, 100], radius: 50 }
+  const DRAG_WORD_START_ENTITY = { type: "DRAG_WORD_START_ENTITY", word: "O", pos: [100, 100], radius: 60 }
   const DRAG_WORD_LAYER = { type: "DRAG_WORD_LAYER" }
   const DRAG_WORD_END_ENTITY = { type: "DRAG_WORD_END_ENTITY", pos: [50, 50], word: "O", mask: false }
   const DRAG_WORD_HIT_LAYER = { type: "DRAG_WORD_HIT_LAYER" }
   const DRAG_WORD_END_OFFSET = 100
-  const DRAG_WORD_END_X = 100
-  const DRAG_WORD_END_Y = 200
-  const DRAG_WORD_START_Y = 400
+  const DRAG_WORD_END_X = 60
+  const DRAG_WORD_END_Y = 650
+  const DRAG_WORD_START_Y = 1120
   let entities = [
-    { ...DRAG_WORD_START_ENTITY, word: "か", pos: [100, DRAG_WORD_START_Y] },
-    { ...DRAG_WORD_START_ENTITY, word: "う", pos: [200, DRAG_WORD_START_Y] },
-    { ...DRAG_WORD_START_ENTITY, word: "み", pos: [300, DRAG_WORD_START_Y] },
-    { ...DRAG_WORD_START_ENTITY, word: "み", pos: [400, DRAG_WORD_START_Y] },
+    { type: "BACKGROUND" },
+    { ...DRAG_WORD_START_ENTITY, word: "か", pos: [90, DRAG_WORD_START_Y] },
+    { ...DRAG_WORD_START_ENTITY, word: "う", pos: [260, DRAG_WORD_START_Y] },
+    { ...DRAG_WORD_START_ENTITY, word: "み", pos: [440, DRAG_WORD_START_Y] },
+    { ...DRAG_WORD_START_ENTITY, word: "み", pos: [628, DRAG_WORD_START_Y] },
     { ...DRAG_WORD_END_ENTITY, pos: [DRAG_WORD_END_X + 0 * DRAG_WORD_END_OFFSET, DRAG_WORD_END_Y] },
     { ...DRAG_WORD_END_ENTITY, pos: [DRAG_WORD_END_X + 1 * DRAG_WORD_END_OFFSET, DRAG_WORD_END_Y] },
     { ...DRAG_WORD_END_ENTITY, pos: [DRAG_WORD_END_X + 2 * DRAG_WORD_END_OFFSET, DRAG_WORD_END_Y] },
@@ -104,14 +105,14 @@ app.game = async function () {
     if (entity.type == "DRAG_WORD_START_ENTITY") {
       entity.onDrawP5 = function (p) {
         if (this.buffer == null) {
-          const buffer = p.createGraphics(50, 50)
           const img = view.getImage("../assets/word_background.png")
+          const buffer = p.createGraphics(img.width, img.height)
           buffer.image(img, 0, 0, buffer.width, buffer.height, 0, 0, img.width, img.height, p.CONTAIN);
-          buffer.textSize(25)
+          buffer.textSize(buffer.height / 2)
           buffer.stroke(255)
-          buffer.strokeWeight(4)
           buffer.textAlign(p.CENTER)
-          buffer.text(this.word, buffer.width / 2, buffer.height / 2)
+          buffer.strokeWeight(10)
+          buffer.text(this.word, buffer.width / 2 + 5, buffer.height - 40)
           this.buffer = buffer
         }
         const [x, y] = this.pos
@@ -119,7 +120,7 @@ app.game = async function () {
         p.translate(x, y)
         p.texture(this.buffer)
         p.noStroke()
-        p.plane(100)
+        p.plane(this.radius * 2)
         p.pop()
       }
       entity.draggingSubscription = onEntityMouseDown.pipe(
@@ -128,7 +129,7 @@ app.game = async function () {
           onWordDragStart.next(entity)
         }),
         rxjs.switchMap(() => {
-          return view.onMouseDrag.pipe(
+          return view.onMouseMove.pipe(
             rxjs.takeUntil(view.onMouseUp)
           )
         })
@@ -163,25 +164,26 @@ app.game = async function () {
     if (entity.type == "DRAG_WORD_END_ENTITY") {
       entity.onDrawP5 = function (p) {
         if (this.buffer == null) {
-          const buffer = p.createGraphics(50, 50)
+          const img = view.getImage("../assets/word_background.png")
+          const buffer = p.createGraphics(img.width, img.height)
+          this.img = img
           this.buffer = buffer
         }
         const [x, y] = this.pos
         p.push()
         p.translate(x, y)
         if (this.mask) {
-          p.fill('gray');
-          p.plane(100, 50)
+
         } else {
           const buffer = this.buffer
-          const img = view.getImage("../assets/word_background.png")
+          const img = this.img
           buffer.image(img, 0, 0, buffer.width, buffer.height, 0, 0, img.width, img.height, p.CONTAIN);
-          buffer.textSize(25)
+          buffer.textSize(buffer.height / 2)
           buffer.stroke(255)
-          buffer.strokeWeight(4)
-          buffer.textAlign(p.CENTER);
-          buffer.text(this.word, buffer.width / 2, buffer.height / 2)
-          p.texture(this.buffer)
+          buffer.textAlign(p.CENTER)
+          buffer.strokeWeight(10)
+          buffer.text(this.word, buffer.width / 2 + 5, buffer.height - 40)
+          p.texture(buffer)
           p.noStroke()
           p.plane(100)
         }
@@ -215,6 +217,25 @@ app.game = async function () {
         }
       })
     }
+    if (entity.type == "BACKGROUND") {
+      entity.onDrawP5 = function (p) {
+        if (this.buffer == null) {
+          const img = view.getImage("../assets/background.png")
+          const buffer = p.createGraphics(img.width, img.height)
+          buffer.image(img, 0, 0, buffer.width, buffer.height, 0, 0, img.width, img.height, p.CONTAIN);
+          this.buffer = buffer
+        }
+        const img = view.getImage("../assets/background.png")
+        p.push()
+        p.translate(img.width / 2, img.height / 2)
+
+        p.texture(this.buffer)
+        p.noStroke()
+        p.plane(img.width, img.height)
+
+        p.pop()
+      }
+    }
     entity.unsubscribe = function () {
       this.dragStartSubscription?.unsubscribe()
       this.draggingSubscription?.unsubscribe()
@@ -235,7 +256,7 @@ app.game = async function () {
   onDrawP5.subscribe(p => {
     p.background(200)
     getEntities().forEach(entity => entity.onDrawP5?.(p))
-    p.text(`${p.mouseX}, ${p.mouseY}`, 0, 0)
+    p.text(`${p.mouseX}, ${p.mouseY}`, p.mouseX, p.mouseY)
   })
   function startGame() {
     getEntities().forEach(setupEntity)

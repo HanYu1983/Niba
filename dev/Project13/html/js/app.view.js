@@ -5,8 +5,8 @@ app.view = async function () {
   const onMouseUp = new rxjs.Subject
   const onMouseDown = new rxjs.Subject
   const onMouseDrag = new rxjs.Subject
-  const W = 800
-  const H = 600
+  const W = 720
+  const H = 1484
   const imgs = {}
   function getImage(key) {
     if (imgs[key] == null) {
@@ -18,7 +18,10 @@ app.view = async function () {
     new p5(p => {
       p.preload = function () {
         // loadImage要放在preload，不然畫不出來
-        ["../assets/word_background.png"].forEach(path => {
+        [
+          "../assets/word_background.png",
+          "../assets/background.png"
+        ].forEach(path => {
           imgs[path] = p.loadImage(path);
         })
       }
@@ -69,7 +72,11 @@ app.view = async function () {
       }
       // drag時
       p.mouseDragged = function () {
-        onMouseDrag.next([p.mouseX, p.mouseY])
+        // mouseDragged事件只有在PC上才會有；行動裝置沒有
+        // 所以統一把mouseDragged的事件當成mouseMoved，才能和touchMoved一致
+        onMouseMove.next([p.mouseX, p.mouseY])
+        // 不使用mouseDragged
+        // onMouseDrag.next([p.mouseX, p.mouseY])
       }
     }, tagName)
   }
@@ -80,7 +87,7 @@ app.view = async function () {
     onMouseMove,
     onMouseDown,
     onMouseUp,
-    onMouseDrag,
+    // onMouseDrag,
     getImage
   }
 }()
