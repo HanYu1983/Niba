@@ -88,7 +88,7 @@ app.game = async function () {
   function setupEntity(entity) {
     entity.subscriptions = entity.subscriptions || []
     if (entity.radius && entity.pos) {
-      entity.dragStartSubscription = view.onSetup.pipe(
+      entity.subscriptions.push(view.onSetup.pipe(
         rxjs.switchMap(p => {
           return view.onMouseDown.pipe(
             rxjs.map(pos => [p, pos])
@@ -100,7 +100,7 @@ app.game = async function () {
         if (p1.dist(p2) < entity.radius) {
           onEntityMouseDown.next(entity)
         }
-      })
+      }))
     }
     if (entity.type == "DRAG_WORD_START_ENTITY") {
       entity.onDrawP5 = function (p) {
@@ -123,7 +123,7 @@ app.game = async function () {
         p.plane(this.radius * 2)
         p.pop()
       }
-      entity.draggingSubscription = onEntityMouseDown.pipe(
+      entity.subscriptions.push(onEntityMouseDown.pipe(
         rxjs.filter(entity2 => entity == entity2),
         rxjs.tap(() => {
           onWordDragStart.next(entity)
@@ -135,31 +135,31 @@ app.game = async function () {
         })
       ).subscribe(pos => {
         onWordDrag.next([entity, pos])
-      })
+      }))
     }
     if (entity.type == "DRAG_WORD_LAYER") {
       let dragObj
-      entity.onWordDragStartSubscription = onWordDragStart.subscribe(entity => {
+      entity.subscriptions.push(onWordDragStart.subscribe(entity => {
         dragObj = {
           ...DRAG_WORD_START_ENTITY,
           word: entity.word,
           pos: [entity.pos[0], entity.pos[1]],
         }
         addEntity(dragObj)
-      })
-      entity.onWordDragSubscription = onWordDrag.subscribe(([_, pos]) => {
+      }))
+      entity.subscriptions.push(onWordDrag.subscribe(([_, pos]) => {
         if (dragObj) {
           dragObj.pos[0] = pos[0]
           dragObj.pos[1] = pos[1]
         }
-      })
-      entity.onWordEndSubscription = view.onMouseUp.subscribe(() => {
+      }))
+      entity.subscriptions.push(view.onMouseUp.subscribe(() => {
         if (dragObj) {
           onWordDragEnd.next(dragObj)
           removeEntity(dragObj)
           dragObj = null
         }
-      })
+      }))
     }
     if (entity.type == "DRAG_WORD_END_ENTITY") {
       entity.onDrawP5 = function (p) {
@@ -189,7 +189,7 @@ app.game = async function () {
         }
         p.pop()
       }
-      entity.onWordEndSubscription = view.onSetup.pipe(
+      entity.subscriptions.push(view.onSetup.pipe(
         rxjs.switchMap(p => {
           return onWordDragEnd.pipe(
             rxjs.map(entity => [p, entity])
@@ -201,10 +201,10 @@ app.game = async function () {
         if (p1.dist(p2) < dragWordStartEntity.radius) {
           onWordDragStartEndHit.next([dragWordStartEntity, entity])
         }
-      })
+      }))
     }
     if (entity.type == "DRAG_WORD_HIT_LAYER") {
-      onWordDragStartEndHit.subscribe(([start, end]) => {
+      entity.subscriptions.push(onWordDragStartEndHit.subscribe(([start, end]) => {
         if (end.mask != true) {
           return
         }
@@ -215,7 +215,7 @@ app.game = async function () {
           const wins = checkWords(config.words, currentWord.join(""))
           console.log(wins)
         }
-      })
+      }))
     }
     if (entity.type == "BACKGROUND") {
       entity.onDrawP5 = function (p) {
@@ -237,11 +237,6 @@ app.game = async function () {
       }
     }
     entity.unsubscribe = function () {
-      this.dragStartSubscription?.unsubscribe()
-      this.draggingSubscription?.unsubscribe()
-      this.onWordDragStartSubscription?.unsubscribe()
-      this.onWordDragSubscription?.unsubscribe()
-      this.onWordEndSubscription?.unsubscribe()
       this.subscriptions.forEach(sub => sub.unsubscribe())
     }
   }
