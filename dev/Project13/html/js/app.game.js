@@ -1,6 +1,7 @@
 app.game = async function () {
   const view = await app.view
   const config = await app.config
+  const spec = await app.spec
   // helper
   function isPrepareForCheck(wordWantCheck) {
     return wordWantCheck.filter(i => i == null).length == 0
@@ -26,12 +27,16 @@ app.game = async function () {
   // model
   const DRAG_WORD_START_ENTITY = { type: "DRAG_WORD_START_ENTITY", word: "O", pos: [100, 100], radius: 60 }
   const DRAG_WORD_LAYER = { type: "DRAG_WORD_LAYER" }
-  const DRAG_WORD_END_ENTITY = { type: "DRAG_WORD_END_ENTITY", pos: [50, 50], word: "O", mask: false }
+  const DRAG_WORD_END_ENTITY = { type: "DRAG_WORD_END_ENTITY", pos: [50, 50], word: null, isSlot: false }
   const DRAG_WORD_HIT_LAYER = { type: "DRAG_WORD_HIT_LAYER" }
   const DRAG_WORD_END_OFFSET = 100
   const DRAG_WORD_END_X = 60
   const DRAG_WORD_END_Y = 650
   const DRAG_WORD_START_Y = 1120
+  
+  spec.assert(spec.DRAG_WORD_START_ENTITY, DRAG_WORD_START_ENTITY)
+  spec.assert(spec.DRAG_WORD_END_ENTITY, DRAG_WORD_END_ENTITY)
+
   let entities = [
     { type: "BACKGROUND" },
     { ...DRAG_WORD_START_ENTITY, word: "か", pos: [90, DRAG_WORD_START_Y] },
@@ -61,7 +66,7 @@ app.game = async function () {
   }
   function getCurrentWords() {
     const ends = entities.filter(e => e.type == "DRAG_WORD_END_ENTITY")
-    return ends.map(i => i.mask ? null : i.word)
+    return ends.map(i => i.word)
   }
 
   let dragWordEnds = []
@@ -172,7 +177,7 @@ app.game = async function () {
         const [x, y] = this.pos
         p.push()
         p.translate(x, y)
-        if (this.mask) {
+        if (this.word == null) {
 
         } else {
           const buffer = this.buffer
@@ -205,11 +210,10 @@ app.game = async function () {
     }
     if (entity.type == "DRAG_WORD_HIT_LAYER") {
       entity.subscriptions.push(onWordDragStartEndHit.subscribe(([start, end]) => {
-        if (end.mask != true) {
+        if (end.isSlot != true) {
           return
         }
         end.word = start.word
-        end.mask = false
         const currentWord = getCurrentWords()
         if (isPrepareForCheck(currentWord)) {
           const wins = checkWords(config.words, currentWord.join(""))
@@ -258,12 +262,12 @@ app.game = async function () {
     onWordDragStartEndHit.subscribe(console.log)
     setDragWordEnds([
       { word: "か" },
-      { word: "さ", mask: true },
+      { word: null, isSlot: true },
       { word: "ぞ" },
-      { word: "う", mask: true },
+      { word: null, isSlot: true },
       { word: "み" },
-      { word: "つ", mask: true },
-      { word: "き", mask: true }
+      { word: null, isSlot: true },
+      { word: null, isSlot: true }
     ])
   }
   return {

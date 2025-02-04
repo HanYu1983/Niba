@@ -1,8 +1,25 @@
 app.spec = async function () {
-  const { spec, valid, explainStr } = window['js.spec']
+  const lib = window['js.spec']
+  const { spec, valid, explainStr } = lib
+  const pos = spec.tuple("pos", spec.number, spec.number)
+  const word = spec.string
+  const nilableWord = spec.nilable("nilableWord", word)
   return {
+    lib,
     config: spec.map("config", {
-      words: spec.collection("words", spec.string)
+      words: spec.collection("words", word)
+    }),
+    DRAG_WORD_START_ENTITY: spec.map("DRAG_WORD_START_ENTITY", {
+      "type": obj => obj == "DRAG_WORD_START_ENTITY",
+      pos: pos,
+      word: word,
+      radius: spec.number
+    }),
+    DRAG_WORD_END_ENTITY: spec.map("DRAG_WORD_END_ENTITY", {
+      "type": obj => obj == "DRAG_WORD_END_ENTITY",
+      pos: pos,
+      word: nilableWord,
+      isSlot: spec.boolean
     }),
     assert: function (s, o) {
       if (valid(s, o)) {
