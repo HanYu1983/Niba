@@ -1,3 +1,9 @@
+function delay(d) {
+  return new Promise((res, rej) => {
+    setTimeout(res, d)
+  })
+}
+
 app.game = async function () {
   const view = await app.view
   const config = await app.config
@@ -25,10 +31,12 @@ app.game = async function () {
     }
   }
   // model
+  const BACKGROUND = { type: "BACKGROUND" }
   const DRAG_WORD_START_ENTITY = { type: "DRAG_WORD_START_ENTITY", word: "O", pos: [100, 100], radius: 60 }
   const DRAG_WORD_LAYER = { type: "DRAG_WORD_LAYER" }
   const DRAG_WORD_END_ENTITY = { type: "DRAG_WORD_END_ENTITY", pos: [50, 50], word: null, isSlot: false }
   const DRAG_WORD_HIT_LAYER = { type: "DRAG_WORD_HIT_LAYER" }
+  const DRAG_WORD_SUCCESS_EFFECT_LAYER = { type: "DRAG_WORD_SUCCESS_EFFECT_LAYER", words: 'かさぞうみつき', successWords: ['かさ', 'ぞう', 'うみ', 'みつき', 'つき'] }
   const DRAG_WORD_END_OFFSET = 100
   const DRAG_WORD_END_X = 60
   const DRAG_WORD_END_Y = 650
@@ -38,7 +46,7 @@ app.game = async function () {
   spec.assert(spec.DRAG_WORD_END_ENTITY, DRAG_WORD_END_ENTITY)
 
   let entities = [
-    { type: "BACKGROUND" },
+    { ...BACKGROUND },
     { ...DRAG_WORD_START_ENTITY, word: "か", pos: [90, DRAG_WORD_START_Y] },
     { ...DRAG_WORD_START_ENTITY, word: "う", pos: [260, DRAG_WORD_START_Y] },
     { ...DRAG_WORD_START_ENTITY, word: "み", pos: [440, DRAG_WORD_START_Y] },
@@ -51,7 +59,8 @@ app.game = async function () {
     { ...DRAG_WORD_END_ENTITY, pos: [DRAG_WORD_END_X + 5 * DRAG_WORD_END_OFFSET, DRAG_WORD_END_Y] },
     { ...DRAG_WORD_END_ENTITY, pos: [DRAG_WORD_END_X + 6 * DRAG_WORD_END_OFFSET, DRAG_WORD_END_Y] },
     { ...DRAG_WORD_LAYER },
-    { ...DRAG_WORD_HIT_LAYER }
+    { ...DRAG_WORD_HIT_LAYER },
+    { ...DRAG_WORD_SUCCESS_EFFECT_LAYER }
   ]
   function removeEntity(entity) {
     entity.unsubscribe?.()
@@ -116,7 +125,7 @@ app.game = async function () {
         }
       }))
     }
-    if (entity.type == "DRAG_WORD_START_ENTITY") {
+    if (entity.type == DRAG_WORD_START_ENTITY.type) {
       entity.onDrawP5 = function (p) {
         if (this.buffer == null) {
           const img = view.getImage("../assets/word_background.png")
@@ -151,7 +160,7 @@ app.game = async function () {
         onWordDrag.next([entity, pos])
       }))
     }
-    if (entity.type == "DRAG_WORD_LAYER") {
+    if (entity.type == DRAG_WORD_LAYER.type) {
       let dragObj
       entity.subscriptions.push(onWordDragStart.subscribe(entity => {
         dragObj = {
@@ -175,7 +184,7 @@ app.game = async function () {
         }
       }))
     }
-    if (entity.type == "DRAG_WORD_END_ENTITY") {
+    if (entity.type == DRAG_WORD_END_ENTITY.type) {
       entity.onDrawP5 = function (p) {
         if (this.buffer == null) {
           const img = view.getImage("../assets/word_background.png")
@@ -217,7 +226,7 @@ app.game = async function () {
         }
       }))
     }
-    if (entity.type == "DRAG_WORD_HIT_LAYER") {
+    if (entity.type == DRAG_WORD_HIT_LAYER.type) {
       entity.subscriptions.push(onWordDragStartEndHit.subscribe(([start, end]) => {
         if (end.isSlot != true) {
           return
@@ -230,7 +239,7 @@ app.game = async function () {
         }
       }))
     }
-    if (entity.type == "BACKGROUND") {
+    if (entity.type == BACKGROUND.type) {
       entity.onDrawP5 = function (p) {
         if (this.buffer == null) {
           const img = view.getImage("../assets/background.png")
@@ -248,6 +257,41 @@ app.game = async function () {
 
         p.pop()
       }
+    }
+    if (entity.type == DRAG_WORD_SUCCESS_EFFECT_LAYER.type) {
+      const showWordEffects = rxjs.from(entity.successWords).pipe(
+        rxjs.concatMap(str => rxjs.from(str)),
+        rxjs.concatMap(word => {
+          return view.onSetup.pipe(
+            rxjs.switchMap(p => {
+              return view.onDraw.pipe(
+                rxjs.takeUntil(rxjs.timer(200)),
+                rxjs.scan((a, c) => a + c, 0),
+                rxjs.map((delta) => {
+                  // const tmp = getEntities().find(i => i.type == DRAG_WORD_END_ENTITY.type)
+                  // tmp.pos[0] = 100 + 100 * (delta / 1000.0)
+                  console.log(`showWordEffects: ${word} delta: ${delta}`)
+                  return word
+                })
+              )
+            })
+          )
+        }),
+        // rxjs.concatMap(word => rxjs.from(async function () {
+        //   console.log(`showWordEffects: ${word}`)
+        //   await delay(100)
+        //   return word
+        // }()))
+      )
+      const showAttackEffects = rxjs.from(["A", "B"]).pipe(
+        rxjs.concatMap(word => rxjs.from(async function () {
+          console.log(`showAttackEffects: ${word}`)
+          await delay(100)
+          return word
+        }()))
+      )
+      const animation = rxjs.concat(showWordEffects, showAttackEffects)
+      entity.subscriptions.push(animation.subscribe())
     }
     entity.unsubscribe = function () {
       this.subscriptions.forEach(sub => sub.unsubscribe())
