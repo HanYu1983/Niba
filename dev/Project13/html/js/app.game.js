@@ -151,7 +151,7 @@ app.game = async function () {
         rxjs.tap(() => {
           onWordDragStart.next(entity)
         }),
-        rxjs.switchMap(() => {
+        rxjs.exhaustMap(() => {
           return view.onMouseMove.pipe(
             rxjs.takeUntil(view.onMouseUp)
           )
@@ -163,6 +163,9 @@ app.game = async function () {
     if (entity.type == DRAG_WORD_LAYER.type) {
       let dragObj
       entity.subscriptions.push(onWordDragStart.subscribe(entity => {
+        if (dragObj) {
+          return
+        }
         dragObj = {
           ...DRAG_WORD_START_ENTITY,
           word: entity.word,
@@ -242,12 +245,13 @@ app.game = async function () {
     if (entity.type == BACKGROUND.type) {
       entity.onDrawP5 = function (p) {
         if (this.buffer == null) {
-          const img = view.getImage("assets/background.png")
+          const img = view.getImage("assets/touhoku_01.jpg")
           const buffer = p.createGraphics(img.width, img.height)
           buffer.image(img, 0, 0, buffer.width, buffer.height, 0, 0, img.width, img.height, p.CONTAIN);
           this.buffer = buffer
+          this.img = img
         }
-        const img = view.getImage("assets/background.png")
+        const img = this.img
         p.push()
         p.translate(img.width / 2, img.height / 2)
 

@@ -25,7 +25,8 @@ app.view = async function () {
         // loadImage要放在preload，不然畫不出來
         [
           "assets/word_background.png",
-          "assets/background.png"
+          "assets/background.png",
+          "assets/touhoku_01.jpg"
         ].forEach(path => {
           imgs[path] = p.loadImage(getAssetPath(path));
         })
