@@ -128,7 +128,7 @@ app.game = async function () {
     if (entity.type == DRAG_WORD_START_ENTITY.type) {
       entity.onDrawP5 = function (p) {
         if (this.buffer == null) {
-          const img = view.getImage("../assets/word_background.png")
+          const img = view.getImage("assets/word_background.png")
           const buffer = p.createGraphics(img.width, img.height)
           buffer.image(img, 0, 0, buffer.width, buffer.height, 0, 0, img.width, img.height, p.CONTAIN);
           buffer.textSize(buffer.height / 2)
@@ -187,7 +187,7 @@ app.game = async function () {
     if (entity.type == DRAG_WORD_END_ENTITY.type) {
       entity.onDrawP5 = function (p) {
         if (this.buffer == null) {
-          const img = view.getImage("../assets/word_background.png")
+          const img = view.getImage("assets/word_background.png")
           const buffer = p.createGraphics(img.width, img.height)
           this.img = img
           this.buffer = buffer
@@ -242,12 +242,12 @@ app.game = async function () {
     if (entity.type == BACKGROUND.type) {
       entity.onDrawP5 = function (p) {
         if (this.buffer == null) {
-          const img = view.getImage("../assets/background.png")
+          const img = view.getImage("assets/background.png")
           const buffer = p.createGraphics(img.width, img.height)
           buffer.image(img, 0, 0, buffer.width, buffer.height, 0, 0, img.width, img.height, p.CONTAIN);
           this.buffer = buffer
         }
-        const img = view.getImage("../assets/background.png")
+        const img = view.getImage("assets/background.png")
         p.push()
         p.translate(img.width / 2, img.height / 2)
 
