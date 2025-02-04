@@ -38,10 +38,12 @@ app.view = async function () {
         p.camera(W / 2, H / 2, 800, W / 2, H / 2, 0)
         p.ortho()
 
+        // 一次性的就呼叫complete
         onSetup.next(p)
+        onSetup.complete()
       }
       p.draw = function () {
-        onDraw.next()
+        onDraw.next(p.deltaTime)
       }
       p.touchStarted = function () {
         if (p.touches.length == 0) {
