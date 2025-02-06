@@ -31,12 +31,19 @@ app.game = async function () {
     }
   }
   // model
+  // 背景
   const BACKGROUND = { type: "BACKGROUND" }
+  // 拖字起點
   const DRAG_WORD_START_ENTITY = { type: "DRAG_WORD_START_ENTITY", word: "O", pos: [100, 100], hitRadius: 60, radius: 60 }
+  // 拖移中的圖層
   const DRAG_WORD_LAYER = { type: "DRAG_WORD_LAYER" }
+  // 拖字終點
   const DRAG_WORD_END_ENTITY = { type: "DRAG_WORD_END_ENTITY", pos: [50, 50], word: null, isSlot: false }
+  // 計算拖字到終點的碰撞層
   const DRAG_WORD_HIT_LAYER = { type: "DRAG_WORD_HIT_LAYER" }
+  // 成功組成字的特效層
   const DRAG_WORD_SUCCESS_EFFECT_LAYER = { type: "DRAG_WORD_SUCCESS_EFFECT_LAYER", words: 'かさぞうみつき', successWords: [[0, 1], [2, 3], [3, 4], [4, 5, 6], [5, 6]] }
+  // 
   const DRAG_WORD_END_OFFSET = 100
   const DRAG_WORD_END_X = 60
   const DRAG_WORD_END_Y = 650
@@ -45,30 +52,44 @@ app.game = async function () {
   spec.assert(spec.DRAG_WORD_START_ENTITY, DRAG_WORD_START_ENTITY)
   spec.assert(spec.DRAG_WORD_END_ENTITY, DRAG_WORD_END_ENTITY)
 
-  let entities = [
-    { ...BACKGROUND },
-    { ...DRAG_WORD_START_ENTITY, word: "さ", pos: [90, DRAG_WORD_START_Y] },
-    { ...DRAG_WORD_START_ENTITY, word: "う", pos: [260, DRAG_WORD_START_Y] },
-    { ...DRAG_WORD_START_ENTITY, word: "つ", pos: [440, DRAG_WORD_START_Y] },
-    { ...DRAG_WORD_START_ENTITY, word: "き", pos: [628, DRAG_WORD_START_Y] },
-    { ...DRAG_WORD_END_ENTITY, pos: [DRAG_WORD_END_X + 0 * DRAG_WORD_END_OFFSET, DRAG_WORD_END_Y] },
-    { ...DRAG_WORD_END_ENTITY, pos: [DRAG_WORD_END_X + 1 * DRAG_WORD_END_OFFSET, DRAG_WORD_END_Y] },
-    { ...DRAG_WORD_END_ENTITY, pos: [DRAG_WORD_END_X + 2 * DRAG_WORD_END_OFFSET, DRAG_WORD_END_Y] },
-    { ...DRAG_WORD_END_ENTITY, pos: [DRAG_WORD_END_X + 3 * DRAG_WORD_END_OFFSET, DRAG_WORD_END_Y] },
-    { ...DRAG_WORD_END_ENTITY, pos: [DRAG_WORD_END_X + 4 * DRAG_WORD_END_OFFSET, DRAG_WORD_END_Y] },
-    { ...DRAG_WORD_END_ENTITY, pos: [DRAG_WORD_END_X + 5 * DRAG_WORD_END_OFFSET, DRAG_WORD_END_Y] },
-    { ...DRAG_WORD_END_ENTITY, pos: [DRAG_WORD_END_X + 6 * DRAG_WORD_END_OFFSET, DRAG_WORD_END_Y] },
-    { ...DRAG_WORD_LAYER },
-    { ...DRAG_WORD_HIT_LAYER },
-    //{ ...DRAG_WORD_SUCCESS_EFFECT_LAYER }
-  ]
+  function getPlayPageEntities() {
+    return [
+      { ...BACKGROUND },
+      { ...DRAG_WORD_START_ENTITY, word: "さ", pos: [90, DRAG_WORD_START_Y] },
+      { ...DRAG_WORD_START_ENTITY, word: "う", pos: [260, DRAG_WORD_START_Y] },
+      { ...DRAG_WORD_START_ENTITY, word: "つ", pos: [440, DRAG_WORD_START_Y] },
+      { ...DRAG_WORD_START_ENTITY, word: "き", pos: [628, DRAG_WORD_START_Y] },
+      { ...DRAG_WORD_END_ENTITY, pos: [DRAG_WORD_END_X + 0 * DRAG_WORD_END_OFFSET, DRAG_WORD_END_Y] },
+      { ...DRAG_WORD_END_ENTITY, pos: [DRAG_WORD_END_X + 1 * DRAG_WORD_END_OFFSET, DRAG_WORD_END_Y] },
+      { ...DRAG_WORD_END_ENTITY, pos: [DRAG_WORD_END_X + 2 * DRAG_WORD_END_OFFSET, DRAG_WORD_END_Y] },
+      { ...DRAG_WORD_END_ENTITY, pos: [DRAG_WORD_END_X + 3 * DRAG_WORD_END_OFFSET, DRAG_WORD_END_Y] },
+      { ...DRAG_WORD_END_ENTITY, pos: [DRAG_WORD_END_X + 4 * DRAG_WORD_END_OFFSET, DRAG_WORD_END_Y] },
+      { ...DRAG_WORD_END_ENTITY, pos: [DRAG_WORD_END_X + 5 * DRAG_WORD_END_OFFSET, DRAG_WORD_END_Y] },
+      { ...DRAG_WORD_END_ENTITY, pos: [DRAG_WORD_END_X + 6 * DRAG_WORD_END_OFFSET, DRAG_WORD_END_Y] },
+      { ...DRAG_WORD_LAYER },
+      { ...DRAG_WORD_HIT_LAYER },
+    ]
+  }
+
+  let entities = []
   function removeEntity(entity) {
     entity.unsubscribe?.()
     entities = entities.filter(entity2 => entity != entity2)
   }
+  function removeEntities() {
+    for (const entity of entities) {
+      entity.unsubscribe?.()
+    }
+    entities = []
+  }
   function addEntity(entity) {
     setupEntity(entity)
     entities.push(entity)
+  }
+  function addEntites(_entities) {
+    for (const entity of _entities) {
+      addEntity(entity)
+    }
   }
   function getEntities() {
     return entities
@@ -240,23 +261,32 @@ app.game = async function () {
         rxjs.concatMap(word => {
           return view.onSetup.pipe(
             rxjs.switchMap(p => {
-              const duration = 300
-              const step1 = 250
+              const totalDuration = 300
+              const time1 = 250
               return view.onDraw.pipe(
-                rxjs.takeUntil(rxjs.timer(duration)),
+                rxjs.takeUntil(rxjs.timer(totalDuration)),
                 rxjs.scan((a, c) => a + c, 0),
                 rxjs.map((delta) => {
-                  if (delta > step1) {
+                  let startTime, endTime
+                  if (delta < time1) {
+                    startTime = 0
+                    endTime = time1
+                    const currentDuration = endTime - startTime
+                    const currentDelta = delta - startTime
                     return {
                       idx: word,
-                      scale: 0.8 + 0.5 * Easing.easeInSine((duration - delta) / (duration - step1)),
-                      isBright: false
+                      scale: 0.8 + 0.5 * Easing.easeInSine(currentDelta / currentDuration),
+                      isBright: true
                     }
                   }
+                  startTime = time1
+                  endTime = totalDuration
+                  const currentDuration = endTime - startTime
+                  const currentDelta = delta - startTime
                   return {
                     idx: word,
-                    scale: 0.8 + 0.5 * Easing.easeInSine(delta / step1),
-                    isBright: true
+                    scale: 0.8 + 0.5 * Easing.easeInSine((currentDuration - currentDelta) / currentDuration),
+                    isBright: false
                   }
                 })
               )
@@ -344,9 +374,12 @@ app.game = async function () {
   }
 
   function startGame() {
-    getEntities().forEach(setupEntity)
+    addEntites(getPlayPageEntities())
     onWordDragStartEndHit.subscribe(() => {
-      addEntity({ ...DRAG_WORD_SUCCESS_EFFECT_LAYER })
+      const wordEnds = getEntities().filter(e => e.type == DRAG_WORD_END_ENTITY.type)
+      if (wordEnds.filter(i => i.word).length == 7) {
+        addEntity({ ...DRAG_WORD_SUCCESS_EFFECT_LAYER })
+      }
     })
     setDragWordEnds([
       { word: "か" },
