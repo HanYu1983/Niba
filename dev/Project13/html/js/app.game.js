@@ -32,7 +32,7 @@ app.game = async function () {
   }
   // model
   const BACKGROUND = { type: "BACKGROUND" }
-  const DRAG_WORD_START_ENTITY = { type: "DRAG_WORD_START_ENTITY", word: "O", pos: [100, 100], radius: 60 }
+  const DRAG_WORD_START_ENTITY = { type: "DRAG_WORD_START_ENTITY", word: "O", pos: [100, 100], hitRadius: 60, radius: 60 }
   const DRAG_WORD_LAYER = { type: "DRAG_WORD_LAYER" }
   const DRAG_WORD_END_ENTITY = { type: "DRAG_WORD_END_ENTITY", pos: [50, 50], word: null, isSlot: false }
   const DRAG_WORD_HIT_LAYER = { type: "DRAG_WORD_HIT_LAYER" }
@@ -60,7 +60,7 @@ app.game = async function () {
     { ...DRAG_WORD_END_ENTITY, pos: [DRAG_WORD_END_X + 6 * DRAG_WORD_END_OFFSET, DRAG_WORD_END_Y] },
     { ...DRAG_WORD_LAYER },
     { ...DRAG_WORD_HIT_LAYER },
-    { ...DRAG_WORD_SUCCESS_EFFECT_LAYER }
+    //{ ...DRAG_WORD_SUCCESS_EFFECT_LAYER }
   ]
   function removeEntity(entity) {
     entity.unsubscribe?.()
@@ -101,7 +101,6 @@ app.game = async function () {
   function getDragWordEnds() {
     return dragWordEnds
   }
-
   // controller
   const onEntityMouseDown = new rxjs.Subject
   const onWordDragStart = new rxjs.Subject
@@ -110,7 +109,7 @@ app.game = async function () {
   const onWordDragStartEndHit = new rxjs.Subject
   function setupEntity(entity) {
     entity.subscriptions = entity.subscriptions || []
-    if (entity.radius && entity.pos) {
+    if (entity.hitRadius && entity.pos) {
       entity.subscriptions.push(view.onSetup.pipe(
         rxjs.switchMap(p => {
           return view.onMouseDown.pipe(
@@ -120,31 +119,14 @@ app.game = async function () {
       ).subscribe(([p, [tx, ty]]) => {
         const p1 = p.createVector(tx, ty)
         const p2 = p.createVector(entity.pos[0], entity.pos[1])
-        if (p1.dist(p2) < entity.radius) {
+        if (p1.dist(p2) < entity.hitRadius) {
           onEntityMouseDown.next(entity)
         }
       }))
     }
     if (entity.type == DRAG_WORD_START_ENTITY.type) {
       entity.onDrawP5 = function (p) {
-        if (this.buffer == null) {
-          const img = view.getImage("assets/word_background.png")
-          const buffer = p.createGraphics(img.width, img.height)
-          buffer.image(img, 0, 0, buffer.width, buffer.height, 0, 0, img.width, img.height, p.CONTAIN);
-          buffer.textSize(buffer.height / 2)
-          buffer.stroke(255)
-          buffer.textAlign(p.CENTER)
-          buffer.strokeWeight(10)
-          buffer.text(this.word, buffer.width / 2 + 5, buffer.height - 40)
-          this.buffer = buffer
-        }
-        const [x, y] = this.pos
-        p.push()
-        p.translate(x, y)
-        p.texture(this.buffer)
-        p.noStroke()
-        p.plane(this.radius * 2)
-        p.pop()
+        drawWord(p, { pos: this.pos, word: this.word })
       }
       entity.subscriptions.push(onEntityMouseDown.pipe(
         rxjs.filter(entity2 => entity == entity2),
@@ -189,31 +171,7 @@ app.game = async function () {
     }
     if (entity.type == DRAG_WORD_END_ENTITY.type) {
       entity.onDrawP5 = function (p) {
-        if (this.buffer == null) {
-          const img = view.getImage("assets/word_background.png")
-          const buffer = p.createGraphics(img.width, img.height)
-          this.img = img
-          this.buffer = buffer
-        }
-        const [x, y] = this.pos
-        p.push()
-        p.translate(x, y)
-        if (this.word == null) {
-
-        } else {
-          const buffer = this.buffer
-          const img = this.img
-          buffer.image(img, 0, 0, buffer.width, buffer.height, 0, 0, img.width, img.height, p.CONTAIN);
-          buffer.textSize(buffer.height / 2)
-          buffer.stroke(255)
-          buffer.textAlign(p.CENTER)
-          buffer.strokeWeight(10)
-          buffer.text(this.word, buffer.width / 2 + 5, buffer.height - 40)
-          p.texture(buffer)
-          p.noStroke()
-          p.plane(100)
-        }
-        p.pop()
+        drawWord(p, { pos: this.pos, scale: 0.8, word: this.word })
       }
       entity.subscriptions.push(view.onSetup.pipe(
         rxjs.switchMap(p => {
@@ -224,7 +182,7 @@ app.game = async function () {
       ).subscribe(([p, dragWordStartEntity]) => {
         const p1 = p.createVector(entity.pos[0], entity.pos[1])
         const p2 = p.createVector(dragWordStartEntity.pos[0], dragWordStartEntity.pos[1])
-        if (p1.dist(p2) < dragWordStartEntity.radius) {
+        if (p1.dist(p2) < dragWordStartEntity.hitRadius) {
           onWordDragStartEndHit.next([dragWordStartEntity, entity])
         }
       }))
@@ -263,7 +221,21 @@ app.game = async function () {
       }
     }
     if (entity.type == DRAG_WORD_SUCCESS_EFFECT_LAYER.type) {
-
+      let changes = {}
+      entity.onDrawP5 = function (p) {
+        const wordEnds = getEntities().filter(e => e.type == DRAG_WORD_END_ENTITY.type).map(i => {
+          const change = changes[i.word]
+          return {
+            pos: i.pos,
+            word: i.word,
+            scale: change?.scale || 0.8,
+            isBright: change?.isBright || false
+          }
+        })
+        for (const wordEnd of wordEnds) {
+          drawWord(p, wordEnd)
+        }
+      }
       const showWordEffects = rxjs.from(entity.successWords).pipe(
         rxjs.concatMap(str => rxjs.from(str)),
         rxjs.concatMap(word => {
@@ -273,32 +245,36 @@ app.game = async function () {
                 rxjs.takeUntil(rxjs.timer(200)),
                 rxjs.scan((a, c) => a + c, 0),
                 rxjs.map((delta) => {
-                  entity.status = ""
-                  entity.timer = delta
-                  // const tmp = getEntities().find(i => i.type == DRAG_WORD_END_ENTITY.type)
-                  // tmp.pos[0] = 100 + 100 * (delta / 1000.0)
-                  console.log(`showWordEffects: ${word} delta: ${delta}`)
-                  return word
+                  return {
+                    word: word,
+                    scale: 0.8 + 0.5 * (delta / 1000.0),
+                    isBright: true
+                  }
                 })
               )
             })
           )
         }),
-        // rxjs.concatMap(word => rxjs.from(async function () {
-        //   console.log(`showWordEffects: ${word}`)
-        //   await delay(100)
-        //   return word
-        // }()))
       )
       const showAttackEffects = rxjs.from(["A", "B"]).pipe(
         rxjs.concatMap(word => rxjs.from(async function () {
           console.log(`showAttackEffects: ${word}`)
           await delay(100)
-          return word
+          return {
+            scale: 1,
+            isBright: false,
+          }
         }()))
       )
-      const animation = rxjs.concat(showWordEffects, showAttackEffects)
-      entity.subscriptions.push(animation.subscribe())
+      const animation = rxjs.concat(showWordEffects)
+      entity.subscriptions.push(animation.subscribe(params => {
+        //console.log(params)
+        const { word, scale, isBright } = params
+        changes[word] = {
+          ...changes[word],
+          scale, isBright
+        }
+      }))
     }
     entity.unsubscribe = function () {
       this.subscriptions.forEach(sub => sub.unsubscribe())
@@ -317,9 +293,52 @@ app.game = async function () {
     getEntities().forEach(entity => entity.onDrawP5?.(p))
     p.text(`${p.mouseX}, ${p.mouseY}`, p.mouseX, p.mouseY)
   })
+  // render helper
+  const imagePool = {}
+  function getWordAndBackgroundImage(p, word) {
+    const ret = imagePool[word]
+    if (ret) {
+      return ret
+    }
+    const img = view.getImage("assets/circle_background_01.png")
+    const buffer = p.createGraphics(img.width, img.height)
+    buffer.image(img, 0, 0, buffer.width, buffer.height, 0, 0, img.width, img.height);
+    buffer.textSize(buffer.height / 2)
+    buffer.stroke(255)
+    buffer.textAlign(p.CENTER)
+    buffer.strokeWeight(10)
+    buffer.text(word, buffer.width / 2 + 5, buffer.height - 40)
+    imagePool[word] = buffer
+    return buffer
+  }
+
+  function drawWord(p, params) {
+    spec.assert(spec.WORD_ENTITY, params)
+    if (params.word == null) {
+      return
+    }
+    const { pos: [x, y], word, isBright } = params
+    const scale = params.scale == null ? 1 : params.scale
+    p.push()
+    p.translate(x, y)
+    const img1 = getWordAndBackgroundImage(p, word)
+    p.texture(img1)
+    p.noStroke()
+    p.plane(img1.width * scale, img1.height * scale)
+    if (isBright) {
+      p.blendMode(p.ADD)
+      const img2 = view.getImage("assets/circle_background_bright_01.png")
+      p.texture(img2)
+      p.plane(img2.width * scale, img2.height * scale)
+    }
+    p.pop()
+  }
+
   function startGame() {
     getEntities().forEach(setupEntity)
-    onWordDragStartEndHit.subscribe(console.log)
+    onWordDragStartEndHit.subscribe(() => {
+      addEntity({ ...DRAG_WORD_SUCCESS_EFFECT_LAYER })
+    })
     setDragWordEnds([
       { word: "か" },
       { word: null, isSlot: true },
