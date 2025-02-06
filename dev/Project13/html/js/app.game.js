@@ -36,7 +36,7 @@ app.game = async function () {
   const DRAG_WORD_LAYER = { type: "DRAG_WORD_LAYER" }
   const DRAG_WORD_END_ENTITY = { type: "DRAG_WORD_END_ENTITY", pos: [50, 50], word: null, isSlot: false }
   const DRAG_WORD_HIT_LAYER = { type: "DRAG_WORD_HIT_LAYER" }
-  const DRAG_WORD_SUCCESS_EFFECT_LAYER = { type: "DRAG_WORD_SUCCESS_EFFECT_LAYER", words: 'かさぞうみつき', successWords: ['かさ', 'ぞう', 'うみ', 'みつき', 'つき'] }
+  const DRAG_WORD_SUCCESS_EFFECT_LAYER = { type: "DRAG_WORD_SUCCESS_EFFECT_LAYER", words: 'かさぞうみつき', successWords: [[0, 1], [2, 3], [3, 4], [4, 5, 6], [5, 6]] }
   const DRAG_WORD_END_OFFSET = 100
   const DRAG_WORD_END_X = 60
   const DRAG_WORD_END_Y = 650
@@ -47,10 +47,10 @@ app.game = async function () {
 
   let entities = [
     { ...BACKGROUND },
-    { ...DRAG_WORD_START_ENTITY, word: "か", pos: [90, DRAG_WORD_START_Y] },
+    { ...DRAG_WORD_START_ENTITY, word: "さ", pos: [90, DRAG_WORD_START_Y] },
     { ...DRAG_WORD_START_ENTITY, word: "う", pos: [260, DRAG_WORD_START_Y] },
-    { ...DRAG_WORD_START_ENTITY, word: "み", pos: [440, DRAG_WORD_START_Y] },
-    { ...DRAG_WORD_START_ENTITY, word: "み", pos: [628, DRAG_WORD_START_Y] },
+    { ...DRAG_WORD_START_ENTITY, word: "つ", pos: [440, DRAG_WORD_START_Y] },
+    { ...DRAG_WORD_START_ENTITY, word: "き", pos: [628, DRAG_WORD_START_Y] },
     { ...DRAG_WORD_END_ENTITY, pos: [DRAG_WORD_END_X + 0 * DRAG_WORD_END_OFFSET, DRAG_WORD_END_Y] },
     { ...DRAG_WORD_END_ENTITY, pos: [DRAG_WORD_END_X + 1 * DRAG_WORD_END_OFFSET, DRAG_WORD_END_Y] },
     { ...DRAG_WORD_END_ENTITY, pos: [DRAG_WORD_END_X + 2 * DRAG_WORD_END_OFFSET, DRAG_WORD_END_Y] },
@@ -223,17 +223,16 @@ app.game = async function () {
     if (entity.type == DRAG_WORD_SUCCESS_EFFECT_LAYER.type) {
       let changes = {}
       entity.onDrawP5 = function (p) {
-        const wordEnds = getEntities().filter(e => e.type == DRAG_WORD_END_ENTITY.type).map(i => {
-          const change = changes[i.word]
-          return {
-            pos: i.pos,
-            word: i.word,
+        const wordEnds = getEntities().filter(e => e.type == DRAG_WORD_END_ENTITY.type)
+        for (const i in wordEnds) {
+          const wordEnd = wordEnds[i]
+          const change = changes[i]
+          drawWord(p, {
+            pos: wordEnd.pos,
+            word: wordEnd.word,
             scale: change?.scale || 0.8,
             isBright: change?.isBright || false
-          }
-        })
-        for (const wordEnd of wordEnds) {
-          drawWord(p, wordEnd)
+          })
         }
       }
       const showWordEffects = rxjs.from(entity.successWords).pipe(
@@ -241,13 +240,22 @@ app.game = async function () {
         rxjs.concatMap(word => {
           return view.onSetup.pipe(
             rxjs.switchMap(p => {
+              const duration = 300
+              const step1 = 250
               return view.onDraw.pipe(
-                rxjs.takeUntil(rxjs.timer(200)),
+                rxjs.takeUntil(rxjs.timer(duration)),
                 rxjs.scan((a, c) => a + c, 0),
                 rxjs.map((delta) => {
+                  if (delta > step1) {
+                    return {
+                      idx: word,
+                      scale: 0.8 + 0.5 * Easing.easeInSine((duration - delta) / (duration - step1)),
+                      isBright: false
+                    }
+                  }
                   return {
-                    word: word,
-                    scale: 0.8 + 0.5 * (delta / 1000.0),
+                    idx: word,
+                    scale: 0.8 + 0.5 * Easing.easeInSine(delta / step1),
                     isBright: true
                   }
                 })
@@ -268,12 +276,13 @@ app.game = async function () {
       )
       const animation = rxjs.concat(showWordEffects)
       entity.subscriptions.push(animation.subscribe(params => {
-        //console.log(params)
-        const { word, scale, isBright } = params
-        changes[word] = {
-          ...changes[word],
+        const { idx, scale, isBright } = params
+        changes[idx] = {
+          ...changes[idx],
           scale, isBright
         }
+      }, err => { }, () => {
+        removeEntity(entity)
       }))
     }
     entity.unsubscribe = function () {

@@ -18,6 +18,10 @@
     integrity="sha512-eV9ExyTa3b+YHr99IBTYpwk4wbgDMDlfW8uTxhywO8dWb810fGUSKDgHhEv1fAqmJT4jyYnt1iWWMW4FRxeQOQ=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="./js/js.spec.bundle.js"></script>
+  <script type="module">
+    import * as easing from "./js/easing.js"
+    window.Easing = easing
+  </script>
   <script>
     app = {}
   </script>
