@@ -15,7 +15,8 @@ app.spec = async function () {
       word: nilableWord,
       [symbol.optional]: {
         scale: spec.number,
-        isBright: spec.boolean
+        isBright: spec.boolean,
+        isDark: spec.boolean,
       }
     }),
     DRAG_WORD_START_ENTITY: spec.map("DRAG_WORD_START_ENTITY", {

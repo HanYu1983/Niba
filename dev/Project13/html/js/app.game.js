@@ -68,6 +68,7 @@ app.game = async function () {
       { ...DRAG_WORD_END_ENTITY, pos: [DRAG_WORD_END_X + 6 * DRAG_WORD_END_OFFSET, DRAG_WORD_END_Y] },
       { ...DRAG_WORD_LAYER },
       { ...DRAG_WORD_HIT_LAYER },
+      { ...DRAG_WORD_SUCCESS_EFFECT_LAYER }
     ]
   }
 
@@ -258,12 +259,12 @@ app.game = async function () {
       }
       const showWordEffects = rxjs.from(entity.successWords).pipe(
         rxjs.concatMap(str => rxjs.from(str)),
-        rxjs.concatMap(word => {
+        rxjs.concatMap(idx => {
           return view.onSetup.pipe(
             rxjs.switchMap(p => {
               const totalDuration = 300
               const time1 = 250
-              return view.onDraw.pipe(
+              const anim1 = view.onDraw.pipe(
                 rxjs.takeUntil(rxjs.timer(totalDuration)),
                 rxjs.scan((a, c) => a + c, 0),
                 rxjs.map((delta) => {
@@ -273,7 +274,7 @@ app.game = async function () {
                     const currentDuration = endTime - startTime
                     const currentDelta = delta - startTime
                     return {
-                      idx: word,
+                      idx: idx,
                       scale: 0.8 + 0.5 * Easing.easeInSine(currentDelta / currentDuration),
                       isBright: true
                     }
@@ -283,12 +284,18 @@ app.game = async function () {
                   const currentDuration = endTime - startTime
                   const currentDelta = delta - startTime
                   return {
-                    idx: word,
+                    idx: idx,
                     scale: 0.8 + 0.5 * Easing.easeInSine((currentDuration - currentDelta) / currentDuration),
                     isBright: false
                   }
                 })
               )
+              const anim2 = rxjs.of({
+                idx: idx,
+                scale: 0.8,
+                isBright: false
+              })
+              return rxjs.concat(anim1, anim2)
             })
           )
         }),
@@ -355,7 +362,7 @@ app.game = async function () {
     if (params.word == null) {
       return
     }
-    const { pos: [x, y], word, isBright } = params
+    const { pos: [x, y], word, isBright, isDark } = params
     const scale = params.scale == null ? 1 : params.scale
     p.push()
     p.translate(x, y)
@@ -368,6 +375,11 @@ app.game = async function () {
       const img2 = view.getImage("assets/circle_background_bright_01.png")
       p.texture(img2)
       p.plane(img2.width * scale, img2.height * scale)
+    }
+    if (isDark) {
+      // p.fill(50, 50, 50, 255)
+      // p.blendMode(p.SUBSTRACT)
+      // p.plane(img1.width * scale, img1.height * scale)
     }
     p.pop()
   }
@@ -382,12 +394,12 @@ app.game = async function () {
     })
     setDragWordEnds([
       { word: "か" },
-      { word: null, isSlot: true },
+      { word: "か", isSlot: true },
       { word: "ぞ" },
-      { word: null, isSlot: true },
+      { word: "か", isSlot: true },
       { word: "み" },
-      { word: null, isSlot: true },
-      { word: null, isSlot: true }
+      { word: "か", isSlot: true },
+      { word: "か", isSlot: true }
     ])
   }
   return {
