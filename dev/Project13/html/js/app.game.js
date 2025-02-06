@@ -267,10 +267,9 @@ app.game = async function () {
                 rxjs.takeUntil(rxjs.timer(totalDuration)),
                 rxjs.scan((a, c) => a + c, 0),
                 rxjs.map((delta) => {
-                  let startTime, endTime
                   if (delta < time1) {
-                    startTime = 0
-                    endTime = time1
+                    const startTime = 0
+                    const endTime = time1
                     const currentDuration = endTime - startTime
                     const currentDelta = delta - startTime
                     return {
@@ -279,8 +278,8 @@ app.game = async function () {
                       isBright: true
                     }
                   }
-                  startTime = time1
-                  endTime = totalDuration
+                  const startTime = time1
+                  const endTime = totalDuration
                   const currentDuration = endTime - startTime
                   const currentDelta = delta - startTime
                   return {
