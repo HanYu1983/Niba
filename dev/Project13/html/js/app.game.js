@@ -74,7 +74,7 @@ app.game = async function () {
     return entities
   }
   function getCurrentWords() {
-    const ends = entities.filter(e => e.type == "DRAG_WORD_END_ENTITY")
+    const ends = entities.filter(e => e.type == DRAG_WORD_END_ENTITY.type)
     return ends.map(i => i.word)
   }
 
@@ -89,7 +89,7 @@ app.game = async function () {
       })),
       words
     )
-    const ends = entities.filter(e => e.type == "DRAG_WORD_END_ENTITY")
+    const ends = entities.filter(e => e.type == DRAG_WORD_END_ENTITY.type)
     if (ends.length != 7) {
       throw new Error("ends.length must 7")
     }
@@ -263,6 +263,7 @@ app.game = async function () {
       }
     }
     if (entity.type == DRAG_WORD_SUCCESS_EFFECT_LAYER.type) {
+
       const showWordEffects = rxjs.from(entity.successWords).pipe(
         rxjs.concatMap(str => rxjs.from(str)),
         rxjs.concatMap(word => {
@@ -272,6 +273,8 @@ app.game = async function () {
                 rxjs.takeUntil(rxjs.timer(200)),
                 rxjs.scan((a, c) => a + c, 0),
                 rxjs.map((delta) => {
+                  entity.status = ""
+                  entity.timer = delta
                   // const tmp = getEntities().find(i => i.type == DRAG_WORD_END_ENTITY.type)
                   // tmp.pos[0] = 100 + 100 * (delta / 1000.0)
                   console.log(`showWordEffects: ${word} delta: ${delta}`)

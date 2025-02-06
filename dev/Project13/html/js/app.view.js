@@ -2,7 +2,7 @@ function getAssetPath(path) {
   if (window.location.href.indexOf("index.html") != -1) {
     return window.location.href.replace("index.html", path)
   }
-  return window.location.href + "/" + path
+  return window.location.href + path
 }
 app.view = async function () {
   const onSetup = new rxjs.ReplaySubject
