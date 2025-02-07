@@ -43,6 +43,8 @@ app.game = async function () {
   const DRAG_WORD_HIT_LAYER = { type: "DRAG_WORD_HIT_LAYER" }
   // 成功組成字的特效層
   const DRAG_WORD_SUCCESS_EFFECT_LAYER = { type: "DRAG_WORD_SUCCESS_EFFECT_LAYER", words: 'かさぞうみつき', successWords: [[0, 1], [2, 3], [3, 4], [4, 5, 6], [5, 6]] }
+  //
+  const TIMESUP_COUNTING_LAYER = { type: "TIMESUP_COUNTING_LAYER", timer: 0 }
   // 
   const DRAG_WORD_END_X = 70
   const DRAG_WORD_END_Y = 900
@@ -52,6 +54,12 @@ app.game = async function () {
 
   spec.assert(spec.DRAG_WORD_START_ENTITY, DRAG_WORD_START_ENTITY)
   spec.assert(spec.DRAG_WORD_END_ENTITY, DRAG_WORD_END_ENTITY)
+
+  function getCountingPageEntities() {
+    return [
+      { ...BACKGROUND },
+    ]
+  }
 
   function getPlayPageEntities() {
     return [
@@ -69,7 +77,8 @@ app.game = async function () {
       { ...DRAG_WORD_END_ENTITY, pos: [DRAG_WORD_END_X + 6 * DRAG_WORD_END_OFFSET, DRAG_WORD_END_Y] },
       { ...DRAG_WORD_LAYER },
       { ...DRAG_WORD_HIT_LAYER },
-      { ...DRAG_WORD_SUCCESS_EFFECT_LAYER }
+      { ...DRAG_WORD_SUCCESS_EFFECT_LAYER },
+      { ...TIMESUP_COUNTING_LAYER }
     ]
   }
 
@@ -322,6 +331,28 @@ app.game = async function () {
         removeEntity(entity)
       }))
     }
+    if (entity.type == TIMESUP_COUNTING_LAYER.type) {
+      const COUNT_DURATION = 30000
+      entity.onDrawP5 = function (p) {
+        p.push()
+        p.translate(650, 740)
+        const timerStr = ((COUNT_DURATION - this.timer) / 1000).toFixed(2) + ""
+        drawGText(p, timerStr, 250, 60, -10)
+        p.pop()
+      }
+      entity.subscriptions.push(view.onDraw.pipe(
+        rxjs.takeUntil(rxjs.timer(COUNT_DURATION)),
+        rxjs.scan((a, c) => a + c, 0)
+      ).subscribe(
+        delta => {
+          entity.timer = delta
+        },
+        err => { },
+        () => {
+          entity.timer = COUNT_DURATION
+        }
+      ))
+    }
     entity.unsubscribe = function () {
       this.subscriptions.forEach(sub => sub.unsubscribe())
     }
@@ -337,7 +368,6 @@ app.game = async function () {
   onDrawP5.subscribe(p => {
     p.background(200)
     getEntities().forEach(entity => entity.onDrawP5?.(p))
-
     p.push()
     p.fill(0)
     p.textSize(30)
@@ -358,11 +388,39 @@ app.game = async function () {
     buffer.image(img, 0, 0, buffer.width, buffer.height, 0, 0, img.width, img.height);
     buffer.textSize(buffer.height / 2)
     buffer.stroke(255)
-    buffer.textAlign(p.CENTER)
     buffer.strokeWeight(10)
+    buffer.textAlign(p.CENTER)
     buffer.text(word, buffer.width / 2 + 5, buffer.height - 40)
     imagePool[word] = buffer
     return buffer
+  }
+
+  function getBuffer(p, key, w, h) {
+    const finalKey = `${key}_${w}_${h}`
+    const ret = imagePool[finalKey]
+    if (ret) {
+      return ret
+    }
+    const buffer = p.createGraphics(w, h)
+    imagePool[finalKey] = buffer
+    return buffer
+  }
+
+  function drawGText(p, text, w, h, yoffset) {
+    const buffer = getBuffer(p, "score_text", w, h)
+    buffer.clear()
+    buffer.textSize(buffer.height)
+    buffer.textAlign(p.LEFT)
+    buffer.fill(0)
+    buffer.text(text, 0, buffer.height + yoffset + 5)
+
+    buffer.stroke(0)
+    buffer.strokeWeight(10)
+    buffer.fill(255)
+    buffer.text(text, 0, buffer.height + yoffset)
+    p.texture(buffer)
+    p.noStroke()
+    p.plane(w, h)
   }
 
   function drawWord(p, params) {
