@@ -415,7 +415,7 @@ app.game = async function () {
     buffer.text(text, 0, buffer.height + yoffset + 5)
 
     buffer.stroke(0)
-    buffer.strokeWeight(10)
+    buffer.strokeWeight(5)
     buffer.fill(255)
     buffer.text(text, 0, buffer.height + yoffset)
     p.texture(buffer)
