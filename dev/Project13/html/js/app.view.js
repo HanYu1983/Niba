@@ -1,8 +1,9 @@
 function getAssetPath(path) {
-  if (window.location.href.indexOf("index.html") != -1) {
-    return window.location.href.replace("index.html", path)
-  }
-  return window.location.href + path
+  return `https://test-han-tmp-2.s3.ap-northeast-1.amazonaws.com/kotodaman/${path}`
+  // if (window.location.href.indexOf("index.html") != -1) {
+  //   return window.location.href.replace("index.html", path)
+  // }
+  // return window.location.href + path
 }
 app.view = async function () {
   const onSetup = new rxjs.ReplaySubject
@@ -26,8 +27,7 @@ app.view = async function () {
         [
           "assets/circle_background_01.png",
           "assets/circle_background_bright_01.png",
-          "assets/background.png",
-          "assets/touhoku_01.jpg"
+          "assets/kotodaman_background_sample_01.png"
         ].forEach(path => {
           imgs[path] = p.loadImage(getAssetPath(path));
         })
