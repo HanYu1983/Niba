@@ -235,7 +235,7 @@ app.game = async function () {
     if (entity.type == BACKGROUND.type) {
       entity.onDrawP5 = function (p) {
         if (this.buffer == null) {
-          const img = view.getImage("assets/kotodaman_background_sample_01.png")
+          const img = view.getImage("assets/250207_kotodaman_background_01.png")
           const buffer = p.createGraphics(img.width, img.height)
           buffer.image(img, 0, 0, buffer.width, buffer.height, 0, 0, img.width, img.height, p.CONTAIN);
           this.buffer = buffer
