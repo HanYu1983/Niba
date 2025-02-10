@@ -29,7 +29,8 @@ app.view = async function () {
           "assets/circle_background_bright_01.png",
           "assets/kotodaman_background_sample_01.png",
           "assets/250207_kotodaman_background_01.png",
-          "assets/kotodaman_sample_02.png"
+          "assets/kotodaman_sample_02.png",
+          "assets/kotoba-wo-tsukurou_01.png"
         ].forEach(path => {
           imgs[path] = p.loadImage(getAssetPath(path));
         })

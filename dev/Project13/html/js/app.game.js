@@ -46,6 +46,7 @@ app.game = async function () {
   //
   const TIMESUP_COUNTING_LAYER = { type: "TIMESUP_COUNTING_LAYER", timer: 0 }
   // 
+  const TEXT_STARTER = { type: "TEXT_STARTER", scale: 1, pos: [350, 500] }
   const DRAG_WORD_END_X = 70
   const DRAG_WORD_END_Y = 900
   const DRAG_WORD_END_OFFSET = 98
@@ -55,9 +56,10 @@ app.game = async function () {
   spec.assert(spec.DRAG_WORD_START_ENTITY, DRAG_WORD_START_ENTITY)
   spec.assert(spec.DRAG_WORD_END_ENTITY, DRAG_WORD_END_ENTITY)
 
-  function getCountingPageEntities() {
+  function getStartPageEntities() {
     return [
       { ...BACKGROUND },
+      { ...TEXT_STARTER }
     ]
   }
 
@@ -101,6 +103,10 @@ app.game = async function () {
     for (const entity of _entities) {
       addEntity(entity)
     }
+  }
+  function swapEntites(_entities) {
+    removeEntities()
+    addEntites(_entities)
   }
   function getEntities() {
     return entities
@@ -230,6 +236,11 @@ app.game = async function () {
           const wins = checkWords(config.words, currentWord.join(""))
           console.log(wins)
         }
+        // test
+        const wordEnds = getEntities().filter(e => e.type == DRAG_WORD_END_ENTITY.type)
+        if (wordEnds.filter(i => i.word).length == 7) {
+          addEntity({ ...DRAG_WORD_SUCCESS_EFFECT_LAYER })
+        }
       }))
     }
     if (entity.type == BACKGROUND.type) {
@@ -335,7 +346,7 @@ app.game = async function () {
       const COUNT_DURATION = 30000
       entity.onDrawP5 = function (p) {
         p.push()
-        p.translate(650, 740)
+        p.translate(650, 240)
         const timerStr = ((COUNT_DURATION - this.timer) / 1000).toFixed(2) + ""
         drawGText(p, timerStr, 250, 60, -10)
         p.pop()
@@ -352,6 +363,41 @@ app.game = async function () {
           entity.timer = COUNT_DURATION
         }
       ))
+    }
+    if (entity.type == TEXT_STARTER.type) {
+      entity.onDrawP5 = function (p) {
+        if (this.buffer == null) {
+          const img = view.getImage("assets/kotoba-wo-tsukurou_01.png")
+          const buffer = getBuffer(p, "kotoba-wo-tsukurou_01.png", img.width, img.height)
+          buffer.image(img, 0, 0, buffer.width, buffer.height, 0, 0, img.width, img.height, p.CONTAIN)
+          this.buffer = buffer
+        }
+        p.push()
+        const [x, y] = this.pos
+        p.translate(x, y)
+        p.scale(this.scale)
+        p.texture(this.buffer)
+        p.noStroke()
+        p.plane(this.buffer.width, this.buffer.height)
+        p.pop()
+      }
+      entity.subscriptions.push(view.onDraw.pipe(
+        rxjs.scan((a, c) => a + c, 0),
+      ).subscribe(delta => {
+        entity.scale = 1 + 0.1 * Math.sin(delta / 200.0)
+      }))
+      entity.subscriptions.push(view.onMouseUp.subscribe(() => {
+        swapEntites(getPlayPageEntities())
+        setDragWordEnds([
+          { word: "か" },
+          { word: null, isSlot: true },
+          { word: "ぞ" },
+          { word: null, isSlot: true },
+          { word: "み" },
+          { word: null, isSlot: true },
+          { word: null, isSlot: true }
+        ])
+      }))
     }
     entity.unsubscribe = function () {
       this.subscriptions.forEach(sub => sub.unsubscribe())
@@ -451,22 +497,16 @@ app.game = async function () {
   }
 
   function startGame() {
-    addEntites(getPlayPageEntities())
-    onWordDragStartEndHit.subscribe(() => {
-      const wordEnds = getEntities().filter(e => e.type == DRAG_WORD_END_ENTITY.type)
-      if (wordEnds.filter(i => i.word).length == 7) {
-        addEntity({ ...DRAG_WORD_SUCCESS_EFFECT_LAYER })
-      }
-    })
-    setDragWordEnds([
-      { word: "か" },
-      { word: null, isSlot: true },
-      { word: "ぞ" },
-      { word: null, isSlot: true },
-      { word: "み" },
-      { word: null, isSlot: true },
-      { word: null, isSlot: true }
-    ])
+    addEntites(getStartPageEntities())
+    // setDragWordEnds([
+    //   { word: "か" },
+    //   { word: null, isSlot: true },
+    //   { word: "ぞ" },
+    //   { word: null, isSlot: true },
+    //   { word: "み" },
+    //   { word: null, isSlot: true },
+    //   { word: null, isSlot: true }
+    // ])
   }
   return {
     checkWords,
