@@ -34,7 +34,7 @@ app.game = async function () {
   // 背景
   const BACKGROUND = { type: "BACKGROUND" }
   // 拖字起點
-  const DRAG_WORD_START_ENTITY = { type: "DRAG_WORD_START_ENTITY", word: "O", pos: [100, 100], hitRadius: 60, radius: 60 }
+  const DRAG_WORD_START_ENTITY = { type: "DRAG_WORD_START_ENTITY", idx: 0, word: "O", pos: [100, 100], hitRadius: 60, radius: 60 }
   // 拖移中的圖層
   const DRAG_WORD_LAYER = { type: "DRAG_WORD_LAYER" }
   // 拖字終點
@@ -66,10 +66,10 @@ app.game = async function () {
   function getPlayPageEntities() {
     return [
       { ...BACKGROUND },
-      { ...DRAG_WORD_START_ENTITY, word: "さ", pos: [105, DRAG_WORD_START_Y] },
-      { ...DRAG_WORD_START_ENTITY, word: "う", pos: [275, DRAG_WORD_START_Y] },
-      { ...DRAG_WORD_START_ENTITY, word: "つ", pos: [440, DRAG_WORD_START_Y] },
-      { ...DRAG_WORD_START_ENTITY, word: "き", pos: [615, DRAG_WORD_START_Y] },
+      { ...DRAG_WORD_START_ENTITY, idx: 0, word: "な", pos: [105, DRAG_WORD_START_Y] },
+      { ...DRAG_WORD_START_ENTITY, idx: 1, word: "し", pos: [275, DRAG_WORD_START_Y] },
+      { ...DRAG_WORD_START_ENTITY, idx: 2, word: "ゅ", pos: [440, DRAG_WORD_START_Y] },
+      { ...DRAG_WORD_START_ENTITY, idx: 3, word: "ね", pos: [615, DRAG_WORD_START_Y] },
       { ...DRAG_WORD_END_ENTITY, pos: [DRAG_WORD_END_X + 0 * DRAG_WORD_END_OFFSET, DRAG_WORD_END_Y] },
       { ...DRAG_WORD_END_ENTITY, pos: [DRAG_WORD_END_X + 1 * DRAG_WORD_END_OFFSET, DRAG_WORD_END_Y] },
       { ...DRAG_WORD_END_ENTITY, pos: [DRAG_WORD_END_X + 2 * DRAG_WORD_END_OFFSET, DRAG_WORD_END_Y] },
@@ -139,12 +139,35 @@ app.game = async function () {
   function getDragWordEnds() {
     return dragWordEnds
   }
+  function setStartDragWordEnds() {
+    setDragWordEnds([
+      { word: null, isSlot: true },
+      { word: "な" },
+      { word: null, isSlot: true },
+      { word: null, isSlot: true },
+      { word: "う" },
+      { word: null, isSlot: true },
+      { word: "ん" },
+    ])
+  }
+
+  let nextWords = ["ん", "こ", "き", "そ"]
+  function getNextWord() {
+    if (hasNaxtWord()) {
+      throw new Error(`no next word`)
+    }
+    return nextWords.shift()
+  }
+  function hasNaxtWord() {
+    return nextWords.length > 0
+  }
   // controller
   const onEntityMouseDown = new rxjs.Subject
   const onWordDragStart = new rxjs.Subject
   const onWordDrag = new rxjs.Subject
   const onWordDragEnd = new rxjs.Subject
   const onWordDragStartEndHit = new rxjs.Subject
+  const onWordDragStartEndNoHit = new rxjs.Subject
   function setupEntity(entity) {
     entity.subscriptions = entity.subscriptions || []
     if (entity.hitRadius && entity.pos) {
@@ -164,6 +187,9 @@ app.game = async function () {
     }
     if (entity.type == DRAG_WORD_START_ENTITY.type) {
       entity.onDrawP5 = function (p) {
+        if (this.isHide) {
+          return
+        }
         drawWord(p, { pos: this.pos, word: this.word })
       }
       entity.subscriptions.push(onEntityMouseDown.pipe(
@@ -179,6 +205,11 @@ app.game = async function () {
       ).subscribe(pos => {
         onWordDrag.next([entity, pos])
       }))
+      entity.subscriptions.push(onWordDragStart.pipe(
+        rxjs.filter(entity2 => entity == entity2)
+      ).subscribe(() => {
+        entity.isHide = true
+      }))
     }
     if (entity.type == DRAG_WORD_LAYER.type) {
       let dragObj
@@ -188,6 +219,7 @@ app.game = async function () {
         }
         dragObj = {
           ...DRAG_WORD_START_ENTITY,
+          idx: entity.idx,
           word: entity.word,
           pos: [entity.pos[0], entity.pos[1]],
         }
@@ -222,10 +254,20 @@ app.game = async function () {
         const p2 = p.createVector(dragWordStartEntity.pos[0], dragWordStartEntity.pos[1])
         if (p1.dist(p2) < dragWordStartEntity.hitRadius) {
           onWordDragStartEndHit.next([dragWordStartEntity, entity])
+        } else {
+          onWordDragStartEndNoHit.next([dragWordStartEntity, entity])
         }
       }))
     }
     if (entity.type == DRAG_WORD_HIT_LAYER.type) {
+      entity.subscriptions.push(rxjs.merge(
+        onWordDragStartEndHit.pipe(rxjs.filter(([start, end]) => end.isSlot != true)),
+        onWordDragStartEndNoHit
+      ).subscribe(([start, end]) => {
+        const startWords = getEntities().filter(e => e.type == DRAG_WORD_START_ENTITY.type && e.idx == start.idx)
+        console.log(start.idx)
+        startWords.forEach(entity => delete entity.isHide)
+      }))
       entity.subscriptions.push(onWordDragStartEndHit.subscribe(([start, end]) => {
         if (end.isSlot != true) {
           return
@@ -388,15 +430,7 @@ app.game = async function () {
       }))
       entity.subscriptions.push(view.onMouseUp.subscribe(() => {
         swapEntites(getPlayPageEntities())
-        setDragWordEnds([
-          { word: "か" },
-          { word: null, isSlot: true },
-          { word: "ぞ" },
-          { word: null, isSlot: true },
-          { word: "み" },
-          { word: null, isSlot: true },
-          { word: null, isSlot: true }
-        ])
+        setStartDragWordEnds()
       }))
     }
     entity.unsubscribe = function () {
@@ -498,15 +532,6 @@ app.game = async function () {
 
   function startGame() {
     addEntites(getStartPageEntities())
-    // setDragWordEnds([
-    //   { word: "か" },
-    //   { word: null, isSlot: true },
-    //   { word: "ぞ" },
-    //   { word: null, isSlot: true },
-    //   { word: "み" },
-    //   { word: null, isSlot: true },
-    //   { word: null, isSlot: true }
-    // ])
   }
   return {
     checkWords,

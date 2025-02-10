@@ -21,10 +21,14 @@ app.spec = async function () {
     }),
     DRAG_WORD_START_ENTITY: spec.map("DRAG_WORD_START_ENTITY", {
       "type": obj => obj == "DRAG_WORD_START_ENTITY",
+      idx: spec.number,
       pos: pos,
       word: word,
       radius: spec.number,
       hitRadius: spec.number,
+      [symbol.optional]: {
+        isHide: spec.boolean
+      }
     }),
     DRAG_WORD_END_ENTITY: spec.map("DRAG_WORD_END_ENTITY", {
       "type": obj => obj == "DRAG_WORD_END_ENTITY",
