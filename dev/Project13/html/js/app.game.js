@@ -153,7 +153,7 @@ app.game = async function () {
 
   let nextWords = ["ん", "こ", "き", "そ"]
   function getNextWord() {
-    if (hasNaxtWord()) {
+    if (hasNaxtWord() != true) {
       throw new Error(`no next word`)
     }
     return nextWords.shift()
@@ -167,7 +167,6 @@ app.game = async function () {
   const onWordDrag = new rxjs.Subject
   const onWordDragEnd = new rxjs.Subject
   const onWordDragStartEndHit = new rxjs.Subject
-  const onWordDragStartEndNoHit = new rxjs.Subject
   function setupEntity(entity) {
     entity.subscriptions = entity.subscriptions || []
     if (entity.hitRadius && entity.pos) {
@@ -233,8 +232,8 @@ app.game = async function () {
       }))
       entity.subscriptions.push(view.onMouseUp.subscribe(() => {
         if (dragObj) {
-          onWordDragEnd.next(dragObj)
           removeEntity(dragObj)
+          onWordDragEnd.next(dragObj)
           dragObj = null
         }
       }))
@@ -252,27 +251,39 @@ app.game = async function () {
       ).subscribe(([p, dragWordStartEntity]) => {
         const p1 = p.createVector(entity.pos[0], entity.pos[1])
         const p2 = p.createVector(dragWordStartEntity.pos[0], dragWordStartEntity.pos[1])
-        if (p1.dist(p2) < dragWordStartEntity.hitRadius) {
-          onWordDragStartEndHit.next([dragWordStartEntity, entity])
-        } else {
-          onWordDragStartEndNoHit.next([dragWordStartEntity, entity])
-        }
+        const isHit = p1.dist(p2) < dragWordStartEntity.hitRadius
+        // 這裡會發出N次事件，N為DRAG_WORD_END_ENTITY的數量
+        onWordDragStartEndHit.next([dragWordStartEntity, entity, isHit])
       }))
     }
     if (entity.type == DRAG_WORD_HIT_LAYER.type) {
-      entity.subscriptions.push(rxjs.merge(
-        onWordDragStartEndHit.pipe(rxjs.filter(([start, end]) => end.isSlot != true)),
-        onWordDragStartEndNoHit
-      ).subscribe(([start, end]) => {
-        const startWords = getEntities().filter(e => e.type == DRAG_WORD_START_ENTITY.type && e.idx == start.idx)
-        console.log(start.idx)
-        startWords.forEach(entity => delete entity.isHide)
-      }))
-      entity.subscriptions.push(onWordDragStartEndHit.subscribe(([start, end]) => {
-        if (end.isSlot != true) {
+      const onWordDragStartEndHitResult = onWordDragStartEndHit.pipe(
+        // 先把所有發出的DRAG_WORD_END_ENTITY事件收集起來一起判斷
+        rxjs.bufferCount(getEntities().filter(e => e.type == DRAG_WORD_END_ENTITY.type).length),
+        rxjs.map(bufs => {
+          const isHitOneOfEntity = bufs.find(([_, endEntity, isHit]) => isHit && endEntity.isSlot && endEntity.word == null)
+          if (isHitOneOfEntity) {
+            const [startEntity, endEntity] = isHitOneOfEntity
+            spec.assert(spec.DRAG_WORD_START_ENTITY, startEntity)
+            spec.assert(spec.DRAG_WORD_END_ENTITY, endEntity)
+            return [startEntity, endEntity, true]
+          }
+          const [[startEntity]] = bufs
+          spec.assert(spec.DRAG_WORD_START_ENTITY, startEntity)
+          return [startEntity, null, false]
+        })
+      )
+      entity.subscriptions.push(onWordDragStartEndHitResult.subscribe(([startEntity, endEntity, isHit]) => {
+        const startWord = getEntities().find(e => e.type == DRAG_WORD_START_ENTITY.type && e.idx == startEntity.idx)
+        if (startWord == null) {
+          throw new Error(`startWord not found: ${startEntity.idx}`)
+        }
+        delete startWord.isHide
+        if (isHit != true) {
           return
         }
-        end.word = start.word
+        endEntity.word = startEntity.word
+        startWord.word = getNextWord()
         const currentWord = getCurrentWords()
         if (isPrepareForCheck(currentWord)) {
           const wins = checkWords(config.words, currentWord.join(""))
