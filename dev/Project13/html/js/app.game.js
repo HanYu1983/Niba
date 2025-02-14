@@ -58,6 +58,8 @@ app.game = async function () {
   const TIMESUP_COUNTING_LAYER = { type: "TIMESUP_COUNTING_LAYER", timer: 0 }
   // 
   const TEXT_STARTER = { type: "TEXT_STARTER", scale: 1, pos: [350, 500] }
+  // 
+  const SCORE_LAYER = { type: "SCORE_LAYER" }
   const DRAG_WORD_END_X = 65
   const DRAG_WORD_END_Y = 845
   const DRAG_WORD_END_OFFSET = 99
@@ -90,7 +92,7 @@ app.game = async function () {
       { ...DRAG_WORD_END_ENTITY, pos: [DRAG_WORD_END_X + 6 * DRAG_WORD_END_OFFSET, DRAG_WORD_END_Y] },
       { ...DRAG_WORD_LAYER },
       { ...DRAG_WORD_HIT_LAYER },
-      { ...DRAG_WORD_SUCCESS_EFFECT_LAYER },
+      //{ ...DRAG_WORD_SUCCESS_EFFECT_LAYER },
       { ...TIMESUP_COUNTING_LAYER }
     ]
   }
@@ -171,6 +173,12 @@ app.game = async function () {
   }
   function hasNaxtWord() {
     return nextWords.length > 0
+  }
+  //
+  function setScorePopup() {
+    getEntities().filter(i => i.type == DRAG_WORD_START_ENTITY.type).forEach(i => i.unsubscribe())
+    getEntities().filter(i => i.type == TIMESUP_COUNTING_LAYER.type).forEach(i => i.unsubscribe())
+    addEntity({ ...SCORE_LAYER })
   }
   // controller
   const onEntityMouseDown = new rxjs.Subject
@@ -378,12 +386,20 @@ app.game = async function () {
                   }
                 })
               )
+              // revert
               const anim2 = rxjs.of({
                 idx: idx,
                 scale: DRAG_WORD_END_SCALE,
                 isBright: false
               })
               return rxjs.concat(anim1, anim2)
+            }),
+            rxjs.tap(params => {
+              const { idx, scale, isBright } = params
+              changes[idx] = {
+                ...changes[idx],
+                scale, isBright
+              }
             })
           )
         }),
@@ -399,14 +415,11 @@ app.game = async function () {
         }()))
       )
       const animation = rxjs.concat(showWordEffects)
-      entity.subscriptions.push(animation.subscribe(params => {
-        const { idx, scale, isBright } = params
-        changes[idx] = {
-          ...changes[idx],
-          scale, isBright
-        }
+      entity.subscriptions.push(animation.subscribe(_ => {
+        // nothing to do
       }, err => { }, () => {
         removeEntity(entity)
+        setScorePopup()
       }))
     }
     if (entity.type == TIMESUP_COUNTING_LAYER.type) {
@@ -457,6 +470,14 @@ app.game = async function () {
         swapEntites(getPlayPageEntities())
         setStartDragWordEnds()
       }))
+    }
+    if (entity.type == SCORE_LAYER.type) {
+      entity.onDrawP5 = function (p) {
+        p.push()
+        p.fill(255)
+        p.plane(100, 100)
+        p.pop()
+      }
     }
     entity.unsubscribe = function () {
       this.subscriptions.forEach(sub => sub.unsubscribe())
