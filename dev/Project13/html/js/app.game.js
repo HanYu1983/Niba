@@ -58,11 +58,11 @@ app.game = async function () {
   const TIMESUP_COUNTING_LAYER = { type: "TIMESUP_COUNTING_LAYER", timer: 0 }
   // 
   const TEXT_STARTER = { type: "TEXT_STARTER", scale: 1, pos: [350, 500] }
-  const DRAG_WORD_END_X = 70
-  const DRAG_WORD_END_Y = 900
-  const DRAG_WORD_END_OFFSET = 98
-  const DRAG_WORD_END_SCALE = 0.7
-  const DRAG_WORD_START_Y = 1150
+  const DRAG_WORD_END_X = 65
+  const DRAG_WORD_END_Y = 845
+  const DRAG_WORD_END_OFFSET = 99
+  const DRAG_WORD_END_SCALE = 0.61
+  const DRAG_WORD_START_Y = 1110
 
   spec.assert(spec.DRAG_WORD_START_ENTITY, DRAG_WORD_START_ENTITY)
   spec.assert(spec.DRAG_WORD_END_ENTITY, DRAG_WORD_END_ENTITY)
@@ -495,7 +495,7 @@ app.game = async function () {
     buffer.stroke(255)
     buffer.strokeWeight(10)
     buffer.textAlign(p.CENTER)
-    buffer.text(word, buffer.width / 2 + 5, buffer.height - 40)
+    buffer.text(word, buffer.width / 2, buffer.height - 48)
     imagePool[word] = buffer
     return buffer
   }
