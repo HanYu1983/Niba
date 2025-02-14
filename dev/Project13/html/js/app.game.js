@@ -18,16 +18,27 @@ app.game = async function () {
       const subWorkWantCheck = wordWantCheck.substr(i)
       const matchedWord = words.filter(word => subWorkWantCheck.startsWith(word))?.[0]
       if (matchedWord) {
-        ret.push(matchedWord)
+        ret.push(R.range(i, i + matchedWord.length))
       }
     }
     return ret
   }
   function assertCheckWords(config) {
-    const target = ['かさ', 'ぞう', 'うみ', 'みつき', 'つき']
-    const result = checkWords(config.words, "かさぞうみつき")
-    if (JSON.stringify(target) != JSON.stringify(result)) {
-      throw new Error()
+    {
+      const target = [[0, 1], [2, 3], [3, 4], [4, 5, 6], [5, 6]]
+      const result = checkWords(config.words, "かさぞうみつき")
+      if (JSON.stringify(target) != JSON.stringify(result)) {
+        console.log(result, target)
+        throw new Error()
+      }
+    }
+    {
+      const target = [[0, 1], [2, 3, 4], [5, 6]]
+      const result = checkWords(config.words, "ななしゅうねん")
+      if (JSON.stringify(target) != JSON.stringify(result)) {
+        console.log(result, target)
+        throw new Error()
+      }
     }
   }
   // model
@@ -42,7 +53,7 @@ app.game = async function () {
   // 計算拖字到終點的碰撞層
   const DRAG_WORD_HIT_LAYER = { type: "DRAG_WORD_HIT_LAYER" }
   // 成功組成字的特效層
-  const DRAG_WORD_SUCCESS_EFFECT_LAYER = { type: "DRAG_WORD_SUCCESS_EFFECT_LAYER", words: 'かさぞうみつき', successWords: [[0, 1], [2, 3], [3, 4], [4, 5, 6], [5, 6]] }
+  const DRAG_WORD_SUCCESS_EFFECT_LAYER = { type: "DRAG_WORD_SUCCESS_EFFECT_LAYER", successWords: [[0, 1], [2, 3], [3, 4], [4, 5, 6], [5, 6]] }
   //
   const TIMESUP_COUNTING_LAYER = { type: "TIMESUP_COUNTING_LAYER", timer: 0 }
   // 
@@ -287,13 +298,16 @@ app.game = async function () {
         const currentWord = getCurrentWords()
         if (isPrepareForCheck(currentWord)) {
           const wins = checkWords(config.words, currentWord.join(""))
-          console.log(wins)
+          if (wins.length) {
+            const successEffectLayer = { ...DRAG_WORD_SUCCESS_EFFECT_LAYER, successWords: wins }
+            addEntity(successEffectLayer)
+          }
         }
         // test
-        const wordEnds = getEntities().filter(e => e.type == DRAG_WORD_END_ENTITY.type)
-        if (wordEnds.filter(i => i.word).length == 7) {
-          addEntity({ ...DRAG_WORD_SUCCESS_EFFECT_LAYER })
-        }
+        // const wordEnds = getEntities().filter(e => e.type == DRAG_WORD_END_ENTITY.type)
+        // if (wordEnds.filter(i => i.word).length == 7) {
+        //   addEntity({ ...DRAG_WORD_SUCCESS_EFFECT_LAYER })
+        // }
       }))
     }
     if (entity.type == BACKGROUND.type) {
@@ -542,6 +556,7 @@ app.game = async function () {
   }
 
   function startGame() {
+    assertCheckWords(config)
     addEntites(getStartPageEntities())
   }
   return {
