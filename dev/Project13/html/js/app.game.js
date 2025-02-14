@@ -475,7 +475,10 @@ app.game = async function () {
       entity.onDrawP5 = function (p) {
         p.push()
         p.fill(255)
-        p.plane(100, 100)
+        p.translate(500, 500)
+        p.noStroke()
+        p.plane(500, 500)
+        drawGText(p, "SCORE: 0", 500, 100, -20)
         p.pop()
       }
     }
