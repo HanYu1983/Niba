@@ -46,14 +46,14 @@ app.view = async function () {
         const H = 1484
         // https://www.fontspace.com/category/opentype
         // https://fonts.google.com/noto/specimen/Noto+Sans+JP
-        const font = p.loadFont(getAssetPath("assets/NotoSansJP-VariableFont_wght.ttf"))
+        //const font = p.loadFont(getAssetPath("assets/NotoSansJP-VariableFont_wght.ttf"))
         const canvas = p.createCanvas(W, H, p.WEBGL);
         // 先移動攝像機讓mouse座標和物件位置能對上
         // https://p5js.org/reference/p5/camera/
         p.camera(W / 2, H / 2, 800, W / 2, H / 2, 0)
         p.frameRate(60)
         p.ortho()
-        p.textFont(font)
+        //p.textFont(font)
         p.textAlign(p.CENTER)
         // 一次性的就呼叫complete
         onSetup.next(p)

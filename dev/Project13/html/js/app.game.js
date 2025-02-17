@@ -500,11 +500,8 @@ app.game = async function () {
     p.background(200)
     getEntities().forEach(entity => entity.onDrawP5?.(p))
     p.push()
-    p.fill(0)
-    p.textSize(30)
-    p.stroke(255)
-    p.strokeWeight(10)
-    p.text(`${Math.round(p.mouseX)}, ${Math.round(p.mouseY)}`, p.mouseX, p.mouseY)
+    p.translate(p.mouseX, p.mouseY)
+    drawGText(p, `${Math.round(p.mouseX)}, ${Math.round(p.mouseY)}`, 250, 50, -10)
     p.pop()
   })
   // render helper
