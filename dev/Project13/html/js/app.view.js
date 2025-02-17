@@ -1,5 +1,6 @@
 function getAssetPath(path) {
-  return `https://test-han-tmp-2.s3.ap-northeast-1.amazonaws.com/kotodaman/${path}`
+  return path
+  // return `https://test-han-tmp-2.s3.ap-northeast-1.amazonaws.com/kotodaman/${path}`
   // if (window.location.href.indexOf("index.html") != -1) {
   //   return window.location.href.replace("index.html", path)
   // }

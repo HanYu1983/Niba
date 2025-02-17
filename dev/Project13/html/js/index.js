@@ -8,5 +8,5 @@ async function main() {
   // spec.assert(spec.config, config)
   game.startGame()
 }
-// 這行不加就可以成功上傳tiktok playable ads
-//main().catch(console.error)
+
+main().catch(console.error)
