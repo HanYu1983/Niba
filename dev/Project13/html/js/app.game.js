@@ -309,6 +309,8 @@ app.game = async function () {
           if (wins.length) {
             const successEffectLayer = { ...DRAG_WORD_SUCCESS_EFFECT_LAYER, successWords: wins }
             addEntity(successEffectLayer)
+          } else {
+            setScorePopup()
           }
         }
         // test
