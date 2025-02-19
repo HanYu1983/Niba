@@ -28,23 +28,21 @@ app.view = async function () {
         [
           "assets/circle_background_01.png",
           "assets/circle_background_bright_01.png",
-          "assets/kotodaman_background_sample_01.png",
           "assets/250207_kotodaman_background_01.png",
-          "assets/kotodaman_sample_02.png",
           "assets/kotoba-wo-tsukurou_01.png"
         ].forEach(path => {
           imgs[path] = p.loadImage(getAssetPath(path));
         })
       }
-      // p.windowResized = function(){
-      //   const W = p.windowWidth
-      //   const H = p.windowHeight
-      //   p.resizeCanvas(W, H);
-      //   p.camera(W / 2, H / 2, 800, W / 2, H / 2, 0)
-      // }
+      p.windowResized = function(){
+        // const canvas = this._canavs
+        // canvas.style('width', `${p.windowWidth}px`)
+        // canvas.style('height', `${p.windowHeight}px`)
+      }
       p.setup = function () {
+        // 同背景圖大小
         const W = 720
-        const H = 1484
+        const H = 1264
         // https://www.fontspace.com/category/opentype
         // https://fonts.google.com/noto/specimen/Noto+Sans+JP
         //const font = p.loadFont(getAssetPath("assets/NotoSansJP-VariableFont_wght.ttf"))
@@ -54,15 +52,14 @@ app.view = async function () {
         p.camera(W / 2, H / 2, 800, W / 2, H / 2, 0)
         p.frameRate(60)
         p.ortho()
+        // ortho後才能設定width, height
+        canvas.style('width', "100%")
+        canvas.style('height',  "100%")
         //p.textFont(font)
         p.textAlign(p.CENTER)
         // 一次性的就呼叫complete
         onSetup.next(p)
         onSetup.complete()
-
-        // 放最後面設定
-        canvas.style('width', '100%')
-        canvas.style('height', '100%')
       }
       p.draw = function () {
         onDraw.next(p.deltaTime)

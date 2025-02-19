@@ -6,7 +6,9 @@
 </head>
 
 <body>
-  <div id="canvas"></div>
+  <div class="center">
+    <div id="canvas"></div>
+  </div>
   <button onclick="window.openAppStore()">openAppStore</button>
   <script src="https://sf16-muse-va.ibytedtos.com/obj/union-fe-nc-i18n/playable/sdk/playable-sdk.js"></script>
   <script src="./js/ramda.min.js"></script>
@@ -26,14 +28,51 @@
   <script src="./js/app.view.js"></script>
   <script src="./js/app.game.js"></script>
   <script src="./js/index.js"></script>
+  <script>
+    // 以下代碼要配合p5針對canvas的width,height為100%
+    // example
+    // const canvas = p.createCanvas(W, H, p.WEBGL);
+    // p.camera(W / 2, H / 2, 800, W / 2, H / 2, 0)
+    // p.frameRate(60)
+    // p.ortho()
+    // canvas.style('width', "100%")
+    // canvas.style('height',  "100%")
+    function resizeCanvas() {
+      const canvas = document.getElementById('canvas');
+      const aspectRatio = 720 / 1264;
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      // 計算新的寬度和高度
+      if (width / height > aspectRatio) {
+        canvas.style.width = height * aspectRatio + 'px';
+        canvas.style.height = height + 'px';
+      } else {
+        canvas.style.width = width + 'px';
+        canvas.style.height = width / aspectRatio + 'px';
+      }
+    }
+    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('load', resizeCanvas);
+  </script>
   <style>
     body,
     html {
       margin: 0;
       padding: 0;
       overflow: hidden;
-      /* 防止滚动条显示 */
+    }
+
+    .center {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      background-color: black;
     }
   </style>
+  <script>
+
+  </script>
 
 </html>
