@@ -12,33 +12,21 @@ app.game = async function () {
   function isPrepareForCheck(wordWantCheck) {
     return wordWantCheck.filter(i => i == null).length == 0
   }
-  function checkWords(words, wordWantCheck) {
-    const ret = []
-    for (let i = 0; i < wordWantCheck.length; ++i) {
-      const subWorkWantCheck = wordWantCheck.substr(i)
-      const matchedWord = words.filter(word => subWorkWantCheck.startsWith(word))?.[0]
-      if (matchedWord) {
-        ret.push(R.range(i, i + matchedWord.length))
-      }
-    }
-    return ret
-  }
   function assertCheckWords(config) {
     {
-      const target = [[0, 1], [2, 3], [3, 4], [4, 5, 6], [5, 6]]
-      const result = checkWords(config.words, "かさぞうみつき")
-      if (JSON.stringify(target) != JSON.stringify(result)) {
-        console.log(result, target)
-        throw new Error()
-      }
-    }
-    {
+      const inputWord = "ななしゅうねん"
       const target = [[0, 1], [2, 3, 4], [5, 6]]
-      const result = checkWords(config.words, "ななしゅうねん")
-      if (JSON.stringify(target) != JSON.stringify(result)) {
-        console.log(result, target)
-        throw new Error()
-      }
+      const result = config.checkWordsAndGetIdxAryList(inputWord)
+      console.log(result)
+      result.forEach(idxAry => {
+        const word = config.convertIdxAryToWord(inputWord, idxAry)
+        const kanzi = config.lookupKanji(word)
+        console.log(word, kanzi)
+      })
+      // if (JSON.stringify(target) != JSON.stringify(result)) {
+      //   console.log(result, target)
+      //   throw new Error()
+      // }
     }
   }
   // model
@@ -53,7 +41,7 @@ app.game = async function () {
   // 計算拖字到終點的碰撞層
   const DRAG_WORD_HIT_LAYER = { type: "DRAG_WORD_HIT_LAYER" }
   // 成功組成字的特效層
-  const DRAG_WORD_SUCCESS_EFFECT_LAYER = { type: "DRAG_WORD_SUCCESS_EFFECT_LAYER", successWords: [[0, 1], [2, 3], [3, 4], [4, 5, 6], [5, 6]] }
+  const DRAG_WORD_SUCCESS_EFFECT_LAYER = { type: "DRAG_WORD_SUCCESS_EFFECT_LAYER", currentWord: "", successWords: [[0, 1], [2, 3], [3, 4], [4, 5, 6], [5, 6]] }
   //
   const TIMESUP_COUNTING_LAYER = { type: "TIMESUP_COUNTING_LAYER", timer: 0 }
   // 
@@ -68,6 +56,7 @@ app.game = async function () {
 
   spec.assert(spec.DRAG_WORD_START_ENTITY, DRAG_WORD_START_ENTITY)
   spec.assert(spec.DRAG_WORD_END_ENTITY, DRAG_WORD_END_ENTITY)
+  spec.assert(spec.DRAG_WORD_SUCCESS_EFFECT_LAYER, DRAG_WORD_SUCCESS_EFFECT_LAYER)
 
   function getStartPageEntities() {
     return [
@@ -305,19 +294,14 @@ app.game = async function () {
         startWord.word = getNextWord()
         const currentWord = getCurrentWords()
         if (isPrepareForCheck(currentWord)) {
-          const wins = checkWords(config.words, currentWord.join(""))
+          const wins = config.checkWordsAndGetIdxAryList(currentWord.join(""))
           if (wins.length) {
-            const successEffectLayer = { ...DRAG_WORD_SUCCESS_EFFECT_LAYER, successWords: wins }
+            const successEffectLayer = { ...DRAG_WORD_SUCCESS_EFFECT_LAYER, currentWord: currentWord, successWords: wins }
             addEntity(successEffectLayer)
           } else {
             setScorePopup()
           }
         }
-        // test
-        // const wordEnds = getEntities().filter(e => e.type == DRAG_WORD_END_ENTITY.type)
-        // if (wordEnds.filter(i => i.word).length == 7) {
-        //   addEntity({ ...DRAG_WORD_SUCCESS_EFFECT_LAYER })
-        // }
       }))
     }
     if (entity.type == BACKGROUND.type) {
@@ -341,7 +325,13 @@ app.game = async function () {
       }
     }
     if (entity.type == DRAG_WORD_SUCCESS_EFFECT_LAYER.type) {
+      if (entity.successWords == null || entity.successWords.length == 0) {
+        console.warn(`successWords not found in entity: `, entity)
+        return
+      }
       let changes = {}
+      let currentEffectWord = null
+      let currentEffectOriginWord = null
       entity.onDrawP5 = function (p) {
         const wordEnds = getEntities().filter(e => e.type == DRAG_WORD_END_ENTITY.type)
         for (const i in wordEnds) {
@@ -354,10 +344,24 @@ app.game = async function () {
             isBright: change?.isBright || false
           })
         }
+        if (currentEffectWord) {
+          p.push()
+          p.translate(400, 300)
+          drawGText(p, currentEffectWord, 600, 100, -20)
+          p.pop()
+        }
+        if (currentEffectOriginWord) {
+          p.push()
+          p.translate(400, 400)
+          drawGText(p, currentEffectOriginWord, 600, 100, -20)
+          p.pop()
+        }
       }
       const showWordEffects = rxjs.from(entity.successWords).pipe(
-        rxjs.concatMap(str => rxjs.from(str)),
-        rxjs.concatMap(idx => {
+        rxjs.concatMap(idxAry => rxjs.from(idxAry.map(idx => {
+          return { idx, idxAry }
+        }))),
+        rxjs.concatMap(({ idx, idxAry }) => {
           return view.onSetup.pipe(
             rxjs.switchMap(p => {
               const totalDuration = 300
@@ -374,7 +378,8 @@ app.game = async function () {
                     return {
                       idx: idx,
                       scale: DRAG_WORD_END_SCALE + 0.5 * Easing.easeInSine(currentDelta / currentDuration),
-                      isBright: true
+                      isBright: true,
+                      idxAry: idxAry,
                     }
                   }
                   const startTime = time1
@@ -384,7 +389,8 @@ app.game = async function () {
                   return {
                     idx: idx,
                     scale: DRAG_WORD_END_SCALE + 0.5 * Easing.easeInSine((currentDuration - currentDelta) / currentDuration),
-                    isBright: false
+                    isBright: false,
+                    idxAry: idxAry,
                   }
                 })
               )
@@ -392,37 +398,58 @@ app.game = async function () {
               const anim2 = rxjs.of({
                 idx: idx,
                 scale: DRAG_WORD_END_SCALE,
-                isBright: false
+                isBright: false,
+                idxAry: idxAry,
               })
               return rxjs.concat(anim1, anim2)
             }),
-            rxjs.tap(params => {
-              const { idx, scale, isBright } = params
-              changes[idx] = {
-                ...changes[idx],
-                scale, isBright
-              }
-            })
           )
         }),
       )
-      const showAttackEffects = rxjs.from(["A", "B"]).pipe(
-        rxjs.concatMap(word => rxjs.from(async function () {
-          console.log(`showAttackEffects: ${word}`)
-          await delay(100)
-          return {
-            scale: 1,
-            isBright: false,
-          }
-        }()))
+      // const showAttackEffects = rxjs.from(["A", "B"]).pipe(
+      //   rxjs.concatMap(word => rxjs.from(async function () {
+      //     console.log(`showAttackEffects: ${word}`)
+      //     await delay(100)
+      //     return {
+      //       scale: 1,
+      //       isBright: false,
+      //     }
+      //   }()))
+      // )
+      const onAnimation = rxjs.concat(
+        showWordEffects.pipe(
+          rxjs.tap(params => {
+            const { idx, scale, isBright, idxAry } = params
+            changes[idx] = {
+              ...changes[idx],
+              scale,
+              isBright
+            }
+          }),
+        )
       )
-      const animation = rxjs.concat(showWordEffects)
-      entity.subscriptions.push(animation.subscribe(_ => {
+      const firstNullIdxAryForFilterCompare = rxjs.of({})
+      const onCurrentEffectWordChange = rxjs.merge(firstNullIdxAryForFilterCompare, onAnimation).pipe(
+        rxjs.bufferCount(2, 1),
+        rxjs.filter(([a, b]) => JSON.stringify(a.idxAry) != JSON.stringify(b.idxAry)),
+        rxjs.tap(([a, b]) => {
+          const idxAry = b.idxAry
+          if (idxAry == null) {
+            return
+          }
+          const originWord = config.convertIdxAryToWord(entity.currentWord, idxAry)
+          currentEffectOriginWord = originWord
+          currentEffectWord = config.lookupKanji(originWord)
+        })
+      )
+
+      entity.subscriptions.push(onAnimation.subscribe(_ => {
         // nothing to do
       }, err => { }, () => {
         removeEntity(entity)
         setScorePopup()
       }))
+      entity.subscriptions.push(onCurrentEffectWordChange.subscribe())
     }
     if (entity.type == TIMESUP_COUNTING_LAYER.type) {
       const COUNT_DURATION = 30000
@@ -583,7 +610,6 @@ app.game = async function () {
     addEntites(getStartPageEntities())
   }
   return {
-    checkWords,
     assertCheckWords,
     getEntities,
     startGame

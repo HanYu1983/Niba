@@ -36,6 +36,11 @@ app.spec = async function () {
       word: nilableWord,
       isSlot: spec.boolean
     }),
+    DRAG_WORD_SUCCESS_EFFECT_LAYER: spec.map("DRAG_WORD_SUCCESS_EFFECT_LAYER", {
+      "type": obj => obj == "DRAG_WORD_SUCCESS_EFFECT_LAYER",
+      currentWord: spec.string,
+      successWords: spec.collection("successWords", spec.collection("successWordsIdxAry", spec.number))
+    }),
     assert: function (s, o) {
       if (valid(s, o)) {
         return
