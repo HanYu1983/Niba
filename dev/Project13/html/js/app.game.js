@@ -48,6 +48,8 @@ app.game = async function () {
   const TEXT_STARTER = { type: "TEXT_STARTER", scale: 1, pos: [350, 500] }
   // 
   const SCORE_LAYER = { type: "SCORE_LAYER" }
+  //
+  const NEWS_TICKER = { type: "NEWS_TICKER", text: "A B C", pos: [0, 100], speed: 200 }
   const DRAG_WORD_END_X = 65
   const DRAG_WORD_END_Y = 845
   const DRAG_WORD_END_OFFSET = 99
@@ -61,7 +63,8 @@ app.game = async function () {
   function getStartPageEntities() {
     return [
       { ...BACKGROUND },
-      { ...TEXT_STARTER }
+      { ...TEXT_STARTER },
+      { ...NEWS_TICKER }
     ]
   }
 
@@ -496,7 +499,8 @@ app.game = async function () {
         entity.scale = 1 + 0.1 * Math.sin(delta / 200.0)
       }))
       entity.subscriptions.push(view.onMouseUp.subscribe(() => {
-        swapEntites(getPlayPageEntities())
+        const tickers = getEntities().filter(i => i.type == NEWS_TICKER.type)
+        swapEntites([...getPlayPageEntities(), ...tickers])
         setStartDragWordEnds()
       }))
     }
@@ -511,6 +515,31 @@ app.game = async function () {
         p.pop()
       }
     }
+
+    if (entity.type == NEWS_TICKER.type) {
+      entity.onDrawP5 = function (p) {
+        let [x, y] = this.pos
+
+        p.push()
+        p.fill(0, 0, 0, 100)
+        p.translate(view.getWidth() / 2, y)
+        p.noStroke()
+        p.plane(view.getWidth(), 100)
+        p.pop()
+
+        p.push()
+        this.timer = (this.timer || 0) + p.deltaTime
+        const offsetX = (this.timer / 1000.0) * this.speed
+        x += offsetX
+        x = x % (view.getWidth() * 2)
+        const startX = view.getWidth() + view.getWidth() / 2
+        p.translate(startX - x, y)
+        drawGText(p, this.text, view.getWidth(), 100, -20)
+        p.pop()
+        this.x = x
+      }
+    }
+
     entity.unsubscribe = function () {
       this.subscriptions.forEach(sub => sub.unsubscribe())
     }

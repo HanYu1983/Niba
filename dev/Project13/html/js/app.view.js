@@ -7,13 +7,18 @@ function getAssetPath(path) {
   // return window.location.href + path
 }
 app.view = async function () {
+  // 同背景圖大小
+  const W = 720
+  const H = 1264
+  function getWidth() { return W }
+  function getHeight() { return H }
+
   const onSetup = new rxjs.ReplaySubject
   const onDraw = new rxjs.Subject
   const onMouseMove = new rxjs.Subject
   const onMouseUp = new rxjs.Subject
   const onMouseDown = new rxjs.Subject
   const onMouseDrag = new rxjs.Subject
-
   const imgs = {}
   function getImage(key) {
     if (imgs[key] == null) {
@@ -34,15 +39,13 @@ app.view = async function () {
           imgs[path] = p.loadImage(getAssetPath(path));
         })
       }
-      p.windowResized = function(){
+      p.windowResized = function () {
         // const canvas = this._canavs
         // canvas.style('width', `${p.windowWidth}px`)
         // canvas.style('height', `${p.windowHeight}px`)
       }
       p.setup = function () {
-        // 同背景圖大小
-        const W = 720
-        const H = 1264
+
         // https://www.fontspace.com/category/opentype
         // https://fonts.google.com/noto/specimen/Noto+Sans+JP
         //const font = p.loadFont(getAssetPath("assets/NotoSansJP-VariableFont_wght.ttf"))
@@ -54,7 +57,7 @@ app.view = async function () {
         p.ortho()
         // ortho後才能設定width, height
         canvas.style('width', "100%")
-        canvas.style('height',  "100%")
+        canvas.style('height', "100%")
         //p.textFont(font)
         p.textAlign(p.CENTER)
         // 一次性的就呼叫complete
@@ -109,6 +112,7 @@ app.view = async function () {
     onMouseDown,
     onMouseUp,
     // onMouseDrag,
-    getImage
+    getImage,
+    getWidth, getHeight
   }
 }()
