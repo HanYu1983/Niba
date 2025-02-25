@@ -35,10 +35,6 @@
   <script src="./js/rxjs.umd.min.js"></script>
   <script src="./js/gl-matrix-min.js"></script>
   <script src="./js/js.spec.bundle.js"></script>
-  <script type="module">
-    import * as easing from "./js/easing.js"
-    window.Easing = easing
-  </script>
   <script>
     app = {}
   </script>
@@ -46,16 +42,26 @@
   <script src="./js/app.spec.js"></script>
   <script src="./js/app.view.js"></script>
   <script src="./js/app.game.js"></script>
+  <script src="./js/app.messaging.js"></script>
   <script type="module">
-    import { startMessaing } from "./js/module.messaging.js"
+    import * as easing from "./js/easing.js"
+    window.Easing = easing
+
+    import * as firebase from "./js/firebase-app.js"
+    import * as messaging from "./js/firebase-messaging.js"
+    window.Firebase = {
+      app: firebase,
+      messaging: messaging
+    }
     async function main() {
       const config = await app.config
       const view = await app.view
       const game = await app.game
       const spec = await app.spec
+      const messaging = await app.messaging
       view.create("canvas")
       game.startGame()
-      await startMessaing()
+      await messaging.startMessaing()
     }
     main().catch(console.error)
   </script>
