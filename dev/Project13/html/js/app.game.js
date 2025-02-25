@@ -9,6 +9,27 @@ app.game = async function () {
   const config = await app.config
   const spec = await app.spec
   // helper
+  // 取代rxjs.timer, 讓時間可以正確計算
+  function createP5Timer(duration) {
+    // return rxjs.timer(duration)
+    return new rxjs.Observable(observable => {
+      const onTimer = view.onDraw.pipe(
+        rxjs.scan((a, c) => a + c, 0),
+      )
+      const subscriber = onTimer.subscribe(totalDelta => {
+        if (totalDelta < duration) {
+          return
+        }
+        observable.next(0)
+        observable.complete()
+        subscriber.unsubscribe()
+        return 0
+      })
+      return () => {
+        subscriber.unsubscribe()
+      }
+    });
+  }
   function isPrepareForCheck(wordWantCheck) {
     return wordWantCheck.filter(i => i == null).length == 0
   }
@@ -49,7 +70,7 @@ app.game = async function () {
   // 
   const SCORE_LAYER = { type: "SCORE_LAYER" }
   //
-  const NEWS_TICKER = { type: "NEWS_TICKER", values: [{ text: "Section 1 Section 1 Section 1 Section 1", width: 2000 }, { text: "Section 2", width: 500 }], pos: [0, 100], speed: 200, height: 100 }
+  const NEWS_TICKER = { type: "NEWS_TICKER", values: [{ text: "Section 1 Section 1 Section 1", width: 1500 }, { text: "Section 2", width: 500 }], pos: [0, 100], speed: 200, height: 100 }
   const DRAG_WORD_END_X = 65
   const DRAG_WORD_END_Y = 845
   const DRAG_WORD_END_OFFSET = 99
@@ -375,7 +396,7 @@ app.game = async function () {
               const totalDuration = 300
               const time1 = 250
               const anim1 = view.onDraw.pipe(
-                rxjs.takeUntil(rxjs.timer(totalDuration)),
+                rxjs.takeUntil(createP5Timer(totalDuration)),
                 rxjs.scan((a, c) => a + c, 0),
                 rxjs.map((totalDelta) => {
                   if (totalDelta < time1) {
@@ -469,7 +490,7 @@ app.game = async function () {
         p.pop()
       }
       entity.subscriptions.push(view.onDraw.pipe(
-        rxjs.takeUntil(rxjs.timer(COUNT_DURATION)),
+        rxjs.takeUntil(createP5Timer(COUNT_DURATION)),
         rxjs.scan((a, c) => a + c, 0)
       ).subscribe(
         totalDelta => {
@@ -563,17 +584,17 @@ app.game = async function () {
             ),
             // 先移到x為0
             view.onDraw.pipe(
-              rxjs.takeUntil(rxjs.timer(step1DurationSeconds * 1000)),
+              rxjs.takeUntil(createP5Timer(step1DurationSeconds * 1000)),
               rxjs.tap(delta => {
                 const offsetX = (delta * entity.speed / 1000.0)
                 entity.pos[0] -= offsetX
               })
             ),
             // 停一段時間
-            rxjs.timer(2000),
+            createP5Timer(2000),
             // 移動剩下的部分
             view.onDraw.pipe(
-              rxjs.takeUntil(rxjs.timer(step2DurationSeconds * 1000)),
+              rxjs.takeUntil(createP5Timer(step2DurationSeconds * 1000)),
               rxjs.tap(delta => {
                 const offsetX = (delta * entity.speed / 1000.0)
                 entity.pos[0] -= offsetX
@@ -583,11 +604,7 @@ app.game = async function () {
         }),
         rxjs.repeat()
       )
-      // 在p5.setup之後才使用onDraw的事件，不然會計算錯誤
-      const onAnimationAfterSetup = view.onSetup.pipe(
-        rxjs.exhaustMap(() => onAnimation)
-      )
-      entity.subscriptions.push(onAnimationAfterSetup.subscribe())
+      entity.subscriptions.push(onAnimation.subscribe())
     }
 
     entity.unsubscribe = function () {
