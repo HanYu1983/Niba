@@ -95,11 +95,12 @@ app.game = async function () {
     entity.unsubscribe?.()
     entities = entities.filter(entity2 => entity != entity2)
   }
-  function removeEntities() {
-    for (const entity of entities) {
-      entity.unsubscribe?.()
+  function removeEntities(filterF) {
+    filterF = filterF || ((entity) => true)
+    const willRemoved = entities.filter(filterF)
+    for (const entity of willRemoved) {
+      removeEntity(entity)
     }
-    entities = []
   }
   function addEntity(entity) {
     setupEntity(entity)
@@ -110,9 +111,12 @@ app.game = async function () {
       addEntity(entity)
     }
   }
-  function swapEntites(_entities) {
-    removeEntities()
+  function swapEntites(_entities, filterF) {
+    removeEntities(filterF)
     addEntites(_entities)
+  }
+  function oerderEntites(orderF) {
+    entities.sort((a, b) => orderF(a) - orderF(b))
   }
   function getEntities() {
     return entities
@@ -500,8 +504,13 @@ app.game = async function () {
         entity.scale = 1 + 0.1 * Math.sin(totalDelta / 200.0)
       }))
       entity.subscriptions.push(view.onMouseUp.subscribe(() => {
-        const tickers = getEntities().filter(i => i.type == NEWS_TICKER.type)
-        swapEntites([...getPlayPageEntities(), ...tickers])
+        swapEntites(getPlayPageEntities(), entity => entity.type != NEWS_TICKER.type)
+        oerderEntites(entity => {
+          if (entity.type == NEWS_TICKER.type) {
+            return 1
+          }
+          return 0
+        })
         setStartDragWordEnds()
       }))
     }
