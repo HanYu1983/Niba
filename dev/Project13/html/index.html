@@ -27,7 +27,9 @@
     <div id="canvas"></div>
   </div>
   <button onclick="window.openAppStore()">openAppStore</button>
+  <!--
   <script src="https://sf16-muse-va.ibytedtos.com/obj/union-fe-nc-i18n/playable/sdk/playable-sdk.js"></script>
+  -->
   <script src="./js/ramda.min.js"></script>
   <script src="./js/p5.min.js"></script>
   <script src="./js/rxjs.umd.min.js"></script>
@@ -44,7 +46,19 @@
   <script src="./js/app.spec.js"></script>
   <script src="./js/app.view.js"></script>
   <script src="./js/app.game.js"></script>
-  <script src="./js/index.js"></script>
+  <script type="module">
+    import { startMessaing } from "./js/module.messaging.js"
+    async function main() {
+      const config = await app.config
+      const view = await app.view
+      const game = await app.game
+      const spec = await app.spec
+      view.create("canvas")
+      game.startGame()
+      await startMessaing()
+    }
+    main().catch(console.error)
+  </script>
   <script>
     // 以下代碼要配合p5針對canvas的width,height為100%
     // example
@@ -71,4 +85,5 @@
     window.addEventListener('resize', resizeCanvas);
     window.addEventListener('load', resizeCanvas);
   </script>
+
 </html>
