@@ -9,7 +9,7 @@ app.game = async function () {
   const config = await app.config
   const spec = await app.spec
   // helper
-  // 取代rxjs.timer, 讓時間可以正確計算
+  // 取代rxjs.timer, 讓時間的計算較為正確
   function createP5Timer(duration) {
     // return rxjs.timer(duration)
     return new rxjs.Observable(observable => {
