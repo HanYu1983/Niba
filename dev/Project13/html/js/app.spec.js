@@ -3,6 +3,7 @@ app.spec = async function () {
   const lib = window['js.spec']
   const { spec, valid, explainStr, symbol } = lib
   const pos = spec.tuple("pos", spec.number, spec.number)
+  const size = spec.tuple("size", spec.number, spec.number)
   const word = spec.string
   const nilableWord = spec.nilable("nilableWord", word)
   return {
@@ -40,6 +41,13 @@ app.spec = async function () {
       "type": obj => obj == "DRAG_WORD_SUCCESS_EFFECT_LAYER",
       currentWord: spec.string,
       successWords: spec.collection("successWords", spec.collection("successWordsIdxAry", spec.number))
+    }),
+    NEWS_TICKER: spec.map("NEWS_TICKER", {
+      "type": obj => obj == "NEWS_TICKER",
+      pos: pos,
+      size: size,
+      speed: spec.number,
+      text: spec.string
     }),
     assert: function (s, o) {
       if (valid(s, o)) {

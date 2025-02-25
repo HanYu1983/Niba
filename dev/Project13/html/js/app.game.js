@@ -49,7 +49,7 @@ app.game = async function () {
   // 
   const SCORE_LAYER = { type: "SCORE_LAYER" }
   //
-  const NEWS_TICKER = { type: "NEWS_TICKER", text: "A B C", pos: [0, 100], speed: 200 }
+  const NEWS_TICKER = { type: "NEWS_TICKER", text: "setDragWordEndsArgsetDragWordEndsArgsetDragWordEndsArg         setDragWordEndsArg", pos: [0, 100], speed: 200, size: [2400, 100] }
   const DRAG_WORD_END_X = 65
   const DRAG_WORD_END_Y = 845
   const DRAG_WORD_END_OFFSET = 99
@@ -519,22 +519,23 @@ app.game = async function () {
     if (entity.type == NEWS_TICKER.type) {
       entity.onDrawP5 = function (p) {
         let [x, y] = this.pos
+        const [w, h] = this.size
 
         p.push()
-        p.fill(0, 0, 0, 100)
+        p.fill(0, 0, 0, h)
         p.translate(view.getWidth() / 2, y)
         p.noStroke()
-        p.plane(view.getWidth(), 100)
+        p.plane(view.getWidth(), h)
         p.pop()
 
         p.push()
         this.timer = (this.timer || 0) + p.deltaTime
         const offsetX = (this.timer / 1000.0) * this.speed
         x += offsetX
-        x = x % (view.getWidth() * 2)
-        const startX = view.getWidth() + view.getWidth() / 2
+        x = x % (w * 2)
+        const startX = view.getWidth() + w / 2
         p.translate(startX - x, y)
-        drawGText(p, this.text, view.getWidth(), 100, -20)
+        drawGText(p, this.text, w, h, -20)
         p.pop()
         this.x = x
       }
