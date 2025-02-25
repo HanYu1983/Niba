@@ -49,7 +49,7 @@ app.game = async function () {
   // 
   const SCORE_LAYER = { type: "SCORE_LAYER" }
   //
-  const NEWS_TICKER = { type: "NEWS_TICKER", text: "setDragWordEndsArgsetDragWordEndsArgsetDragWordEndsArg         setDragWordEndsArg", pos: [0, 100], speed: 200, size: [2400, 100] }
+  const NEWS_TICKER = { type: "NEWS_TICKER", values: [{ text: "Section 1 Section 1 Section 1 Section 1", width: 2000 }, { text: "Section 2", width: 500 }], pos: [0, 100], speed: 200, height: 100 }
   const DRAG_WORD_END_X = 65
   const DRAG_WORD_END_Y = 845
   const DRAG_WORD_END_OFFSET = 99
@@ -59,6 +59,7 @@ app.game = async function () {
   spec.assert(spec.DRAG_WORD_START_ENTITY, DRAG_WORD_START_ENTITY)
   spec.assert(spec.DRAG_WORD_END_ENTITY, DRAG_WORD_END_ENTITY)
   spec.assert(spec.DRAG_WORD_SUCCESS_EFFECT_LAYER, DRAG_WORD_SUCCESS_EFFECT_LAYER)
+  spec.assert(spec.NEWS_TICKER, NEWS_TICKER)
 
   function getStartPageEntities() {
     return [
@@ -372,12 +373,12 @@ app.game = async function () {
               const anim1 = view.onDraw.pipe(
                 rxjs.takeUntil(rxjs.timer(totalDuration)),
                 rxjs.scan((a, c) => a + c, 0),
-                rxjs.map((delta) => {
-                  if (delta < time1) {
+                rxjs.map((totalDelta) => {
+                  if (totalDelta < time1) {
                     const startTime = 0
                     const endTime = time1
                     const currentDuration = endTime - startTime
-                    const currentDelta = delta - startTime
+                    const currentDelta = totalDelta - startTime
                     return {
                       idx: idx,
                       scale: DRAG_WORD_END_SCALE + 0.5 * Easing.easeInSine(currentDelta / currentDuration),
@@ -388,7 +389,7 @@ app.game = async function () {
                   const startTime = time1
                   const endTime = totalDuration
                   const currentDuration = endTime - startTime
-                  const currentDelta = delta - startTime
+                  const currentDelta = totalDelta - startTime
                   return {
                     idx: idx,
                     scale: DRAG_WORD_END_SCALE + 0.5 * Easing.easeInSine((currentDuration - currentDelta) / currentDuration),
@@ -467,8 +468,8 @@ app.game = async function () {
         rxjs.takeUntil(rxjs.timer(COUNT_DURATION)),
         rxjs.scan((a, c) => a + c, 0)
       ).subscribe(
-        delta => {
-          entity.timer = delta
+        totalDelta => {
+          entity.timer = totalDelta
         },
         err => { },
         () => {
@@ -495,8 +496,8 @@ app.game = async function () {
       }
       entity.subscriptions.push(view.onDraw.pipe(
         rxjs.scan((a, c) => a + c, 0),
-      ).subscribe(delta => {
-        entity.scale = 1 + 0.1 * Math.sin(delta / 200.0)
+      ).subscribe(totalDelta => {
+        entity.scale = 1 + 0.1 * Math.sin(totalDelta / 200.0)
       }))
       entity.subscriptions.push(view.onMouseUp.subscribe(() => {
         const tickers = getEntities().filter(i => i.type == NEWS_TICKER.type)
@@ -517,10 +518,11 @@ app.game = async function () {
     }
 
     if (entity.type == NEWS_TICKER.type) {
+      let currentWidth = 0
+      let currentText = null
       entity.onDrawP5 = function (p) {
         let [x, y] = this.pos
-        const [w, h] = this.size
-
+        const h = this.height
         p.push()
         p.fill(0, 0, 0, h)
         p.translate(view.getWidth() / 2, y)
@@ -529,16 +531,54 @@ app.game = async function () {
         p.pop()
 
         p.push()
-        this.timer = (this.timer || 0) + p.deltaTime
-        const offsetX = (this.timer / 1000.0) * this.speed
-        x += offsetX
-        x = x % (w * 2)
-        const startX = view.getWidth() + w / 2
-        p.translate(startX - x, y)
-        drawGText(p, this.text, w, h, -20)
+        if (currentText) {
+          p.translate(x, y)
+          //p.plane(10, 10)
+          p.translate(currentWidth / 2, 0)
+          drawGText(p, currentText, currentWidth, h, -20)
+        }
         p.pop()
-        this.x = x
       }
+      const onAnimation = rxjs.from(entity.values).pipe(
+        rxjs.concatMap(({ text, width }) => {
+          const step1DurationSeconds = view.getWidth() / entity.speed
+          const step2DurationSeconds = width / entity.speed
+          return rxjs.concat(
+            // 每段初始值
+            rxjs.of(0).pipe(
+              rxjs.tap(() => {
+                entity.pos[0] = view.getWidth()
+                currentText = text
+                currentWidth = width
+              })
+            ),
+            // 先移到x為0
+            view.onDraw.pipe(
+              rxjs.takeUntil(rxjs.timer(step1DurationSeconds * 1000)),
+              rxjs.tap(delta => {
+                const offsetX = (delta * entity.speed / 1000.0)
+                entity.pos[0] -= offsetX
+              })
+            ),
+            // 停一段時間
+            rxjs.timer(2000),
+            // 移動剩下的部分
+            view.onDraw.pipe(
+              rxjs.takeUntil(rxjs.timer(step2DurationSeconds * 1000)),
+              rxjs.tap(delta => {
+                const offsetX = (delta * entity.speed / 1000.0)
+                entity.pos[0] -= offsetX
+              })
+            ),
+          )
+        }),
+        rxjs.repeat()
+      )
+      // 在p5.setup之後才使用onDraw的事件，不然會計算錯誤
+      const onAnimationAfterSetup = view.onSetup.pipe(
+        rxjs.exhaustMap(() => onAnimation)
+      )
+      entity.subscriptions.push(onAnimationAfterSetup.subscribe())
     }
 
     entity.unsubscribe = function () {

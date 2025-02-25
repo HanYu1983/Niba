@@ -45,9 +45,12 @@ app.spec = async function () {
     NEWS_TICKER: spec.map("NEWS_TICKER", {
       "type": obj => obj == "NEWS_TICKER",
       pos: pos,
-      size: size,
+      height: spec.number,
       speed: spec.number,
-      text: spec.string
+      values: spec.collection("values", spec.map("value", {
+        text: spec.string,
+        width: spec.number
+      }))
     }),
     assert: function (s, o) {
       if (valid(s, o)) {
