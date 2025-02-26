@@ -23,17 +23,21 @@ app.messaging = async function () {
   async function startMessaing() {
     const { app: { initializeApp }, messaging: { getMessaging, getToken, onMessage, isSupported } } = window.Firebase
     try {
+      alert("startMessaing")
       if(isSupported() == false){
         throw new Error("not support")
       }
+      alert("wating requestPermission")
       const permission = await Notification.requestPermission();
+      alert(permission)
       if (permission === "granted") {
         const messaging = getMessaging(initializeApp(firebaseConfig));
-        console.log(messaging)
         const justPathButNoFile = 'firebase-messaging-sw.js'
-        const registration = await navigator.serviceWorker.register(justPathButNoFile)
-        await navigator.serviceWorker.ready
-        //registration.showNotification("title", { body: "body" })
+        await navigator.serviceWorker.register(justPathButNoFile)
+        alert("wating ready")
+        const registration = await navigator.serviceWorker.ready
+        alert("wating ok")
+        registration.showNotification("title", { body: "body" })
 
         const token = await getToken(messaging, {
           vapidKey: "BEO6F5uMvOmhQu9_O6yOzsNyr8R6s4mv9HFfakAM0S2tbwC5Ec1IHAiorAwgi-oHNuEnN1I448mgOFLVp1liDH0",
@@ -44,10 +48,14 @@ app.messaging = async function () {
         await saveToServer(token)
         onMessage(messaging, (payload) => {
           alert("通知受信:" + payload);
-          new Notification(payload.notification.title, {
+          registration.showNotification(payload.notification.title, { 
             body: payload.notification.body,
             icon: payload.notification.icon
-          });
+          })
+          // new Notification(payload.notification.title, {
+          //   body: payload.notification.body,
+          //   icon: payload.notification.icon
+          // });
         });
         //const notification = new Notification("Hi there!");
       }

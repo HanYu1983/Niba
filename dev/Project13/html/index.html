@@ -42,7 +42,7 @@
   <script src="./js/app.spec.js"></script>
   <script src="./js/app.view.js"></script>
   <script src="./js/app.game.js"></script>
-  <script src="./js/app.messaging.js"></script>
+  <script src="./js/app.messaging.js?version=1"></script>
   <script type="module">
     import * as easing from "./js/easing.js"
     window.Easing = easing
@@ -66,9 +66,23 @@
         const button = p.createButton('click me');
         button.position(0, 100);
         button.mousePressed(() => {
-          new Notification("WOw", {body:"wow body"})
+          alert("mousePressed")
           messaging.startMessaing().catch(alert)
+          // try{
+          //   new Notification("mousePressed", {body:"wow mousePressed"})
+          // }catch(e){
+          //   alert(e)
+          // }
         });
+        // button.touchStarted(() => {
+        //   alert("touchStarted")
+        //   messaging.startMessaing().catch(alert)
+        //   try{
+        //     new Notification("mousePressed", {body:"wow mousePressed"})
+        //   }catch(e){
+        //     alert(e)
+        //   }
+        // });
       })
     }
     main().catch(console.error)
