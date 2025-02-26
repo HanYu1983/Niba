@@ -61,7 +61,15 @@
       const messaging = await app.messaging
       view.create("canvas")
       game.startGame()
-      await messaging.startMessaing()
+      //await messaging.startMessaing()
+      view.onSetup.subscribe(p => {
+        const button = p.createButton('click me');
+        button.position(0, 100);
+        button.mousePressed(() => {
+          new Notification("WOw", {body:"wow body"})
+          messaging.startMessaing().catch(alert)
+        });
+      })
     }
     main().catch(console.error)
   </script>

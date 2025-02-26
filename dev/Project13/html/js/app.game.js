@@ -641,6 +641,8 @@ app.game = async function () {
     buffer.stroke(255)
     buffer.strokeWeight(10)
     buffer.textAlign(p.CENTER)
+    buffer.textFont(config.getFontStr())
+    buffer.textStyle(p.BOLD)
     buffer.text(word, buffer.width / 2, buffer.height - 48)
     imagePool[word] = buffer
     return buffer
@@ -658,7 +660,10 @@ app.game = async function () {
   }
 
   function drawGText(p, text, w, h, yoffset) {
-    const buffer = getBuffer(p, "score_text", w, h)
+    const buffer = getBuffer(p, "text_key", w, h)
+    buffer.textFont(config.getFontStr())
+    buffer.textStyle(p.BOLD)
+
     buffer.clear()
     buffer.textSize(buffer.height)
     buffer.textAlign(p.LEFT)

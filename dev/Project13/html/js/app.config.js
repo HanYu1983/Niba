@@ -25,6 +25,9 @@ app.config = async function () {
     },
     convertIdxAryToWord(wordWantCheck, idxAry) {
       return idxAry.map(i => wordWantCheck[i]).join("")
+    },
+    getFontStr(){
+      return "Arial"
     }
   }
 }()
