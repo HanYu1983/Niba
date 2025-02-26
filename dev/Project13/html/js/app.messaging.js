@@ -23,20 +23,15 @@ app.messaging = async function () {
   async function startMessaing() {
     const { app: { initializeApp }, messaging: { getMessaging, getToken, onMessage, isSupported } } = window.Firebase
     try {
-      alert("startMessaing")
       if(isSupported() == false){
         throw new Error("not support")
       }
-      alert("wating requestPermission")
       const permission = await Notification.requestPermission();
-      alert(permission)
       if (permission === "granted") {
         const messaging = getMessaging(initializeApp(firebaseConfig));
         const justPathButNoFile = 'firebase-messaging-sw.js'
         await navigator.serviceWorker.register(justPathButNoFile)
-        alert("wating ready")
         const registration = await navigator.serviceWorker.ready
-        alert("wating ok")
         registration.showNotification("title", { body: "body" })
 
         const token = await getToken(messaging, {
@@ -48,16 +43,12 @@ app.messaging = async function () {
         await saveToServer(token)
         onMessage(messaging, (payload) => {
           alert("通知受信:" + payload);
+          // 使用registration.showNotification才能同時支援safari和chrome
           registration.showNotification(payload.notification.title, { 
             body: payload.notification.body,
             icon: payload.notification.icon
           })
-          // new Notification(payload.notification.title, {
-          //   body: payload.notification.body,
-          //   icon: payload.notification.icon
-          // });
         });
-        //const notification = new Notification("Hi there!");
       }
     } catch (error) {
       console.error("通知トークンの取得失敗:", error);
