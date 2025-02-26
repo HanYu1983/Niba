@@ -8,19 +8,20 @@ app.messaging = async function () {
     appId: "1:353580789457:web:499c3ca51a93b6d2561ff0"
   };
   async function startMessaing() {
-    const { app: { initializeApp }, messaging: { getMessaging, getToken, onMessage, useServiceWorker } } = window.Firebase
+    const { app: { initializeApp }, messaging: { getMessaging, getToken, onMessage } } = window.Firebase
     try {
       const permission = await Notification.requestPermission();
       if (permission === "granted") {
         const messaging = getMessaging(initializeApp(firebaseConfig));
         const justPathButNoFile = 'firebase-messaging-sw.js'
         const registration = await navigator.serviceWorker.register(justPathButNoFile)
+        await navigator.serviceWorker.ready
         const token = await getToken(messaging, {
           vapidKey: "BEO6F5uMvOmhQu9_O6yOzsNyr8R6s4mv9HFfakAM0S2tbwC5Ec1IHAiorAwgi-oHNuEnN1I448mgOFLVp1liDH0",
           serviceWorkerRegistration: registration
         });
         console.log("通知トークン:", token);
-        onMessage((payload) => {
+        onMessage(messaging, (payload) => {
           console.log("通知受信:", payload);
           new Notification(payload.notification.title, {
             body: payload.notification.body,
