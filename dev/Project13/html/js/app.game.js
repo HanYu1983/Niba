@@ -69,8 +69,9 @@ app.game = async function () {
   const TEXT_STARTER = { type: "TEXT_STARTER", scale: 1, pos: [350, 500] }
   // 
   const SCORE_LAYER = { type: "SCORE_LAYER" }
-  //
-  const NEWS_TICKER = { type: "NEWS_TICKER", values: [{ text: "Section 1 Section 1 Section 1", width: 1500 }, { text: "Section 2", width: 500 }], pos: [0, 100], speed: 200, height: 100 }
+  // 這個的width設定大於1500後，手機就會畫成全黑，看不到文字
+  // 1200就行
+  const NEWS_TICKER = { type: "NEWS_TICKER", values: [{ text: "Section 1 Section 1 Section 1", width: 1200 }, { text: "Section 2", width: 500 }], pos: [0, 100], speed: 200, height: 100 }
   const DRAG_WORD_END_X = 65
   const DRAG_WORD_END_Y = 845
   const DRAG_WORD_END_OFFSET = 99
@@ -563,7 +564,7 @@ app.game = async function () {
         p.push()
         if (currentText) {
           p.translate(x, y)
-          //p.plane(10, 10)
+          //p.plane(50, 50)
           p.translate(currentWidth / 2, 0)
           drawGText(p, currentText, currentWidth, h, -20)
         }
@@ -641,8 +642,8 @@ app.game = async function () {
     buffer.stroke(255)
     buffer.strokeWeight(10)
     buffer.textAlign(p.CENTER)
-    buffer.textFont(config.getFontStr())
-    buffer.textStyle(p.BOLD)
+    // buffer.textFont(config.getFontStr())
+    // buffer.textStyle(p.BOLD)
     buffer.text(word, buffer.width / 2, buffer.height - 48)
     imagePool[word] = buffer
     return buffer
@@ -661,8 +662,8 @@ app.game = async function () {
 
   function drawGText(p, text, w, h, yoffset) {
     const buffer = getBuffer(p, "text_key", w, h)
-    buffer.textFont(config.getFontStr())
-    buffer.textStyle(p.BOLD)
+    // buffer.textFont(config.getFontStr())
+    // buffer.textStyle(p.BOLD)
 
     buffer.clear()
     buffer.textSize(buffer.height)
