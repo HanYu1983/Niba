@@ -34,8 +34,22 @@ app.view = async function () {
           "assets/circle_background_01.png",
           "assets/circle_background_bright_01.png",
           "assets/250207_kotodaman_background_01.png",
-          "assets/kotoba-wo-tsukurou_01.png"
+          "assets/kotoba-wo-tsukurou_01.png",
+          "assets/250226_kotodaman_material/mock-up_sample/01.png",
+          "assets/250226_kotodaman_material/material/title_big_01.png",
+          "assets/250226_kotodaman_material/material/title_small_01.png",
+          "assets/250226_kotodaman_material/material/text_01.png",
+          "assets/250226_kotodaman_material/material/text_02.png",
+          "assets/250226_kotodaman_material/material/text_03.png",
+          "assets/250226_kotodaman_material/material/text_04.png",
+          "assets/250226_kotodaman_material/material/text_05.png",
+          "assets/250226_kotodaman_material/material/text_06.png",
+          "assets/250226_kotodaman_material/material/text_07.png",
+          "assets/250226_kotodaman_material/material/tap_text_01.png",
+          "assets/250226_kotodaman_material/material/release_icon_01.png",
+          "assets/250226_kotodaman_material/material/finger_icon_01.png",
         ].forEach(path => {
+          console.log(`load: ${path}`)
           imgs[path] = p.loadImage(getAssetPath(path));
         })
       }

@@ -336,20 +336,14 @@ app.game = async function () {
     }
     if (entity.type == BACKGROUND.type) {
       entity.onDrawP5 = function (p) {
-        if (this.buffer == null) {
-          const img = view.getImage("assets/250207_kotodaman_background_01.png")
-          const buffer = p.createGraphics(img.width, img.height)
-          buffer.image(img, 0, 0, buffer.width, buffer.height, 0, 0, img.width, img.height, p.CONTAIN);
-          this.buffer = buffer
-          this.img = img
-        }
-        const img = this.img
+        //const img = view.getImage("assets/250226_kotodaman_material/mock-up_sample/01.png")
+        const img = view.getImage("assets/250207_kotodaman_background_01.png")
         p.push()
-        p.translate(img.width / 2, img.height / 2)
+        p.translate(view.getWidth() / 2, view.getHeight() / 2)
 
-        p.texture(this.buffer)
+        p.texture(img)
         p.noStroke()
-        p.plane(img.width, img.height)
+        p.plane(view.getWidth(), view.getHeight())
 
         p.pop()
       }
@@ -504,28 +498,181 @@ app.game = async function () {
       ))
     }
     if (entity.type == TEXT_STARTER.type) {
-      entity.onDrawP5 = function (p) {
-        if (this.buffer == null) {
-          const img = view.getImage("assets/kotoba-wo-tsukurou_01.png")
-          const buffer = getBuffer(p, "kotoba-wo-tsukurou_01.png", img.width, img.height)
-          buffer.image(img, 0, 0, buffer.width, buffer.height, 0, 0, img.width, img.height, p.CONTAIN)
-          this.buffer = buffer
-        }
-        p.push()
-        const [x, y] = this.pos
-        p.translate(x, y)
-        p.scale(this.scale)
-        p.texture(this.buffer)
-        p.noStroke()
-        p.plane(this.buffer.width, this.buffer.height)
-        p.pop()
+      const state1 = {
+        id: "state1",
+        img1: null,
+        img2: null
       }
-      entity.subscriptions.push(view.onDraw.pipe(
-        rxjs.scan((a, c) => a + c, 0),
-      ).subscribe(totalDelta => {
-        entity.scale = 1 + 0.1 * Math.sin(totalDelta / 200.0)
-      }))
-      entity.subscriptions.push(view.onMouseUp.subscribe(() => {
+      const state2 = {
+        id: "state2",
+        img1: null,
+        img2: null
+      }
+      const state3 = {
+        id: "state3",
+        img1: null,
+        scale: 1
+      }
+      let currentState = null
+      function setCurrentState(state) {
+        currentState = state
+      }
+      const handState = {
+        totalDelta: 0
+      }
+      let currentHandState = null
+      function setCurrentHandState(state) {
+        currentHandState = state
+      }
+      entity.onDrawP5 = function (p) {
+        if (currentState) {
+          if (currentState.id == state1.id) {
+            const img1 = view.getImage(currentState.img1)
+            if (img1 == null) {
+              throw new Error(`${currentState.id}.img1 not found`)
+            }
+            p.push()
+            p.noStroke()
+            let [x, y] = [350, 380]
+            p.translate(x, y)
+            p.texture(img1)
+            p.plane(img1.width, img1.height)
+            const img2 = view.getImage(currentState.img2)
+            if (img2 == null) {
+              throw new Error(`${currentState.id}.img2 not found`)
+            }
+            p.translate(0, 200)
+            p.texture(img2)
+            p.plane(img2.width, img2.height)
+            p.pop()
+          }
+
+          if (currentState.id == state2.id) {
+            const img1 = view.getImage(currentState.img1)
+            if (img1 == null) {
+              throw new Error(`${currentState.id}.img1 not found`)
+            }
+            p.push()
+            p.noStroke()
+            let [x, y] = [350, 380]
+            p.translate(x, y)
+            p.texture(img1)
+            p.plane(img1.width, img1.height)
+            const img2 = view.getImage(currentState.img2)
+            if (img2 == null) {
+              throw new Error(`${currentState.id}.img2 not found`)
+            }
+            p.translate(0, 200)
+            p.texture(img2)
+            p.plane(img2.width, img2.height)
+            p.pop()
+          }
+
+          if (currentState.id == state3.id) {
+            const img1 = view.getImage(currentState.img1)
+            if (img1 == null) {
+              throw new Error(`${currentState.id}.img1 not found`)
+            }
+            p.push()
+            p.noStroke()
+            let [x, y] = [350, 380]
+            p.translate(x, y)
+            p.texture(img1)
+            p.scale(currentState.scale)
+            p.plane(img1.width, img1.height)
+            p.pop()
+          }
+        }
+
+        if (currentHandState) {
+          p.push()
+          const img1 = view.getImage("assets/250226_kotodaman_material/material/tap_text_01.png")
+          const img2 = view.getImage("assets/250226_kotodaman_material/material/finger_icon_01.png")
+          const img3 = view.getImage("assets/250226_kotodaman_material/material/release_icon_01.png")
+          p.noStroke()
+          p.translate(300, 600)
+          p.texture(img1)
+          p.plane(img1.width, img1.height)
+          p.texture(img2)
+          p.plane(img2.width, img2.height)
+          p.texture(img3)
+          const xoffset = 100 * Math.sin(currentHandState.totalDelta / 200.0)
+          const yoffset = 200 * Math.sin(currentHandState.totalDelta / 200.0)
+          p.translate(xoffset, yoffset)
+          p.plane(img3.width, img3.height)
+          p.pop()
+        }
+      }
+      const onAnimation = rxjs.concat(
+        // onSetup之後才能使用preload的圖片
+        view.onSetup,
+        // 大標
+        rxjs.of(0).pipe(
+          rxjs.tap(() => {
+            state1.img1 = "assets/250226_kotodaman_material/material/title_big_01.png"
+            state1.img2 = "assets/250226_kotodaman_material/material/text_01.png"
+            setCurrentState(state1)
+          })
+        ),
+        view.onDraw.pipe(
+          rxjs.takeUntil(createP5Timer(1000)),
+          rxjs.tap(delta => {
+            handState.totalDelta += delta
+            setCurrentHandState(handState)
+          })
+        ),
+        rxjs.merge(
+          rxjs.concat(
+            // 小標&drag
+            rxjs.of(0).pipe(
+              rxjs.tap(() => {
+                state2.img1 = "assets/250226_kotodaman_material/material/title_small_01.png"
+                state2.img2 = "assets/250226_kotodaman_material/material/text_02.png"
+                setCurrentState(state2)
+              })
+            ),
+            createP5Timer(500),
+            // drop
+            rxjs.of(0).pipe(
+              rxjs.tap(() => {
+                state2.img2 = "assets/250226_kotodaman_material/material/text_03.png"
+              })
+            ),
+            createP5Timer(500),
+          ),
+          // 同時手移動
+          view.onDraw.pipe(
+            rxjs.takeUntil(createP5Timer(1000)),
+            rxjs.tap(delta => {
+              handState.totalDelta += delta
+            })
+          ),
+        ),
+        // ok?
+        rxjs.of(0).pipe(
+          rxjs.tap(() => {
+            state3.img1 = "assets/250226_kotodaman_material/material/text_04.png"
+            setCurrentState(state3)
+            setCurrentHandState(null)
+          })
+        ),
+        createP5Timer(500),
+        // start
+        rxjs.of(0).pipe(
+          rxjs.tap(() => {
+            state3.img1 = "assets/250226_kotodaman_material/material/text_05.png"
+          })
+        ),
+        // start縮放動畫
+        view.onDraw.pipe(
+          rxjs.takeUntil(createP5Timer(3000)),
+          rxjs.scan((a, c) => a + c, 0),
+          rxjs.tap(totalDelta => {
+            state3.scale = 1 + 0.1 * Math.sin(totalDelta / 200.0)
+          })
+        ),
+      )
+      function startGame() {
         swapEntites(getPlayPageEntities(), entity => entity.type != NEWS_TICKER.type)
         oerderEntites(entity => {
           if (entity.type == NEWS_TICKER.type) {
@@ -534,7 +681,9 @@ app.game = async function () {
           return 0
         })
         setStartDragWordEnds()
-      }))
+      }
+      entity.subscriptions.push(onAnimation.subscribe(() => { }, err => { }, startGame))
+      //entity.subscriptions.push(view.onMouseUp.subscribe(startGame))
     }
     if (entity.type == SCORE_LAYER.type) {
       entity.onDrawP5 = function (p) {
