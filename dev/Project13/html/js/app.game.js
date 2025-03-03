@@ -775,6 +775,9 @@ app.game = async function () {
     p.push()
     p.translate(p.mouseX, p.mouseY)
     drawGText(p, `${Math.round(p.mouseX)}, ${Math.round(p.mouseY)}`, 250, 50, -10)
+    
+    p.texture(view.getImage("box"))
+    p.plane(500, 500)
     p.pop()
   })
   // render helper

@@ -77,6 +77,62 @@ app.view = async function () {
         // 一次性的就呼叫complete
         onSetup.next(p)
         onSetup.complete()
+
+
+        // https://cssbud.com/css-generator/css-glow-generator/
+        // https://stackoverflow.com/questions/40393497/text-outer-glow-effect-using-css
+        let div = p.createDiv('<h3>p5*js</h3>');
+        div.style("-webkit-text-stroke", "1px black")
+        div.style("text-shadow", "#FC0 1px 0px 20px")
+        div.style("font-size", 48)
+        div.style("text-align", "center")
+        div.style("color", "fff")
+        div.style("background", "111")
+        // https://cssgradient.io/blog/css-gradient-text/
+        // div.style("background", "linear-gradient(red, blue)")
+        // div.style("color", "transparent")
+        // div.style("background-clip", "text")
+        div.position(100, 100);
+
+        // Convert the div to an image
+        html2canvas(div.elt, { backgroundColor: null }).then(function (canvas) {
+          let img = p.createImage(canvas.width, canvas.height);
+          img.drawingContext.globalCompositeOperation = 'destination-over';
+          img.drawingContext.drawImage(canvas, 0, 0);
+          //p.image(img, 200, 200);
+          imgs.glow = img
+          div.remove()
+        });
+
+        // https://www.youtube.com/watch?v=iIWH3IUYHzM
+        let img = p.createGraphics(960, 540)
+        // img.colorMode(p.HSB, 360, 100, 100, 100)
+        // img.rectMode(p.CENTER)
+        //img.noFill()
+        img.stroke(207, 7, 99)
+        img.strokeWeight(3)
+        img.fill(0)
+        //img.background(230, 50, 15, 0)
+        img.drawingContext.shadowBlur = 32
+        img.drawingContext.shadowOffsetX = 10
+        img.drawingContext.shadowOffsetY = 10
+        img.drawingContext.shadowColor = p.color(207, 7, 99)
+        // https://www.youtube.com/watch?v=-MUOweQ6wac
+        // https://developer.mozilla.org/zh-CN/docs/Web/API/CanvasGradient/addColorStop
+        // https://www.w3schools.com/graphics/canvas_gradients.asp
+        const gradient = img.drawingContext.createLinearGradient(0, 0, 0, 540)
+        gradient.addColorStop(0.5, p.color(255, 0, 0))
+        gradient.addColorStop(0.8, p.color(0, 255, 0))
+        img.drawingContext.fillStyle = gradient
+        //img.drawingContext.strokeStyle = gradient
+        //img.rect(480, 270, 300, 300, 30)
+        img.textSize(250)
+        img.textAlign(p.CENTER, p.CENTER)
+        img.text("そなう,粗名雨", 480, 270)
+        // img.text("Wow HA", 480, 270)
+        //img.text("Wow HA", 480, 270)
+
+        imgs.box = img
       }
       p.draw = function () {
         onDraw.next(p.deltaTime)
