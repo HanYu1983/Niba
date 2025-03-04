@@ -341,10 +341,10 @@ app.game = async function () {
 
         const img = view.getImage("assets2/250303_kotodaman_material_02/material_compressed/background_x0,y0.png")
         //const img = view.getImage("assets/250207_kotodaman_background_01.png")
-        p.translate(view.getWidth() / 2, view.getHeight() / 2)
+        p.translate(img.width / 2, img.height / 2)
         p.texture(img)
         p.noStroke()
-        p.plane(view.getWidth(), view.getHeight())
+        p.plane(img.width, img.height)
         p.pop()
         {
           p.push()
@@ -564,6 +564,7 @@ app.game = async function () {
             x = 11 + img2.width / 2
             y = 643 + img2.height / 2
             p.translate(x, y)
+            p.noStroke()
             p.texture(img2)
             p.plane(img2.width, img2.height)
             p.pop()
