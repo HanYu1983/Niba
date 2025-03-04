@@ -832,14 +832,18 @@ app.game = async function () {
     })
   )
   onDrawP5.subscribe(p => {
+    p.push()
+    p.scale(1 / view.getScaleX(), 1 / view.getScaleY())
     p.background(200)
+
     getEntities().forEach(entity => entity.onDrawP5?.(p))
     p.push()
-    p.translate(p.mouseX, p.mouseY)
-    drawGText(p, `${Math.round(p.mouseX)}, ${Math.round(p.mouseY)}`, 250, 50, -10)
-
+    p.translate(p.mouseX * view.getScaleX(), p.mouseY * view.getScaleY())
+    drawGText(p, `${Math.round(p.mouseX * view.getScaleX())}, ${Math.round(p.mouseY * view.getScaleY())}`, 250, 50, -10)
     // p.texture(view.getImage("box"))
     // p.plane(500, 500)
+    p.pop()
+
     p.pop()
   })
   // render helper
@@ -902,7 +906,8 @@ app.game = async function () {
     const { pos: [x, y], word, isBright, isDark } = params
     const scale = params.scale == null ? 1 : params.scale
     p.push()
-    p.translate(x, y)
+    // tmp
+    p.translate(x * view.getScaleX(), y * view.getScaleY())
     const img1 = getWordAndBackgroundImage(p, word)
     p.texture(img1)
     p.noStroke()

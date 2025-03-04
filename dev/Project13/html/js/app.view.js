@@ -8,10 +8,19 @@ function getAssetPath(path) {
 }
 app.view = async function () {
   // 同背景圖大小
+  const CANVAS_W = 720
+  const CANVAS_H = 1264
   const W = 1080
   const H = 1920
   function getWidth() { return W }
   function getHeight() { return H }
+
+  function getScaleX() {
+    return W / CANVAS_W
+  }
+  function getScaleY() {
+    return H / CANVAS_H
+  }
 
   const onSetup = new rxjs.ReplaySubject
   const onDraw = new rxjs.Subject
@@ -77,10 +86,10 @@ app.view = async function () {
         // https://www.fontspace.com/category/opentype
         // https://fonts.google.com/noto/specimen/Noto+Sans+JP
         //const font = p.loadFont(getAssetPath("assets/NotoSansJP-VariableFont_wght.ttf"))
-        const canvas = p.createCanvas(W, H, p.WEBGL);
+        const canvas = p.createCanvas(CANVAS_W, CANVAS_H, p.WEBGL);
         // 先移動攝像機讓mouse座標和物件位置能對上
         // https://p5js.org/reference/p5/camera/
-        p.camera(W / 2, H / 2, 800, W / 2, H / 2, 0)
+        p.camera(CANVAS_W / 2, CANVAS_H / 2, 800, CANVAS_W / 2, CANVAS_H / 2, 0)
         p.frameRate(60)
         p.ortho()
         // ortho後才能設定width, height
@@ -91,8 +100,6 @@ app.view = async function () {
         // 一次性的就呼叫complete
         onSetup.next(p)
         onSetup.complete()
-
-
         // https://cssbud.com/css-generator/css-glow-generator/
         // https://stackoverflow.com/questions/40393497/text-outer-glow-effect-using-css
         let div = p.createDiv('<h3>p5*js</h3>');
@@ -197,6 +204,6 @@ app.view = async function () {
     onMouseUp,
     // onMouseDrag,
     getImage,
-    getWidth, getHeight
+    getWidth, getHeight, getScaleX, getScaleY
   }
 }()
