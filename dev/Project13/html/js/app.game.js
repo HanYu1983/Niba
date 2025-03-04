@@ -653,9 +653,10 @@ app.game = async function () {
             const img = view.getImage("assets2/250303_kotodaman_material_02/material_compressed/finger_01_x,y.png")
             p.push()
             p.noStroke()
-            p.translate(430 + img.width / 2, 1487 + img.height / 2)
-            const xoffset = 100 * Math.sin(currentHandState.totalDelta / 200.0)
-            const yoffset = -200 * Math.sin(currentHandState.totalDelta / 200.0)
+            const [cx, cy] = [(525 - 430) / 2, (1095 - 1487) / 2]
+            p.translate(430 + cx + img.width / 2, 1487 + cy + img.height / 2)
+            const xoffset = cx * Math.sin(currentHandState.totalDelta / 200.0)
+            const yoffset = cy * Math.sin(currentHandState.totalDelta / 200.0)
             p.translate(xoffset, yoffset)
             p.texture(img)
             p.plane(img.width, img.height)
