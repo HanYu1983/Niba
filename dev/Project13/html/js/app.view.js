@@ -163,7 +163,7 @@ app.view = async function () {
           return
         }
         const touch = p.touches[0]
-        onMouseDown.next([touch.x, touch.y])
+        onMouseDown.next([touch.x * getScaleX(), touch.y * getScaleY()])
       }
       p.touchEnded = function () {
         onMouseUp.next()
@@ -173,23 +173,23 @@ app.view = async function () {
           return
         }
         const touch = p.touches[0]
-        onMouseMove.next([touch.x, touch.y])
+        onMouseMove.next([touch.x * getScaleX(), touch.y * getScaleY()])
       }
       p.mousePressed = function () {
-        onMouseDown.next([p.mouseX, p.mouseY])
+        onMouseDown.next([p.mouseX * getScaleX(), p.mouseY * getScaleY()])
       }
       p.mouseReleased = function () {
         onMouseUp.next()
       }
       // 非drag時
       p.mouseMoved = function () {
-        onMouseMove.next([p.mouseX, p.mouseY])
+        onMouseMove.next([p.mouseX * getScaleX(), p.mouseY * getScaleY()])
       }
       // drag時
       p.mouseDragged = function () {
         // mouseDragged事件只有在PC上才會有；行動裝置沒有
         // 所以統一把mouseDragged的事件當成mouseMoved，才能和touchMoved一致
-        onMouseMove.next([p.mouseX, p.mouseY])
+        onMouseMove.next([p.mouseX * getScaleX(), p.mouseY * getScaleY()])
         // 不使用mouseDragged
         // onMouseDrag.next([p.mouseX, p.mouseY])
       }

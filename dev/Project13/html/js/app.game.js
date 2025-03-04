@@ -73,10 +73,10 @@ app.game = async function () {
   // 1200就行
   const NEWS_TICKER = { type: "NEWS_TICKER", values: [{ text: "Section 1 Section 1 Section 1", width: 1200 }, { text: "Section 2", width: 500 }], pos: [0, 100], speed: 200, height: 100 }
   const DRAG_WORD_END_X = 65
-  const DRAG_WORD_END_Y = 845
-  const DRAG_WORD_END_OFFSET = 99
-  const DRAG_WORD_END_SCALE = 0.61
-  const DRAG_WORD_START_Y = 1110
+  const DRAG_WORD_END_Y = 1150
+  const DRAG_WORD_END_OFFSET = 150
+  const DRAG_WORD_END_SCALE = 0.9
+  const DRAG_WORD_START_Y = 1600
 
   spec.assert(spec.DRAG_WORD_START_ENTITY, DRAG_WORD_START_ENTITY)
   spec.assert(spec.DRAG_WORD_END_ENTITY, DRAG_WORD_END_ENTITY)
@@ -833,11 +833,16 @@ app.game = async function () {
   )
   onDrawP5.subscribe(p => {
     p.push()
+    // 720*1264(WEBGL CANVAS尺寸)轉成1080*1920座標系
+    // 之後的繪圖以1080*1920座標系為主
     p.scale(1 / view.getScaleX(), 1 / view.getScaleY())
     p.background(200)
 
     getEntities().forEach(entity => entity.onDrawP5?.(p))
     p.push()
+
+    // 滑鼠座標也是720*1264(WEBGL CANVAS尺寸)轉成1080*1920座標系
+    // 滑鼠座標會在view中自動做轉換
     p.translate(p.mouseX * view.getScaleX(), p.mouseY * view.getScaleY())
     drawGText(p, `${Math.round(p.mouseX * view.getScaleX())}, ${Math.round(p.mouseY * view.getScaleY())}`, 250, 50, -10)
     // p.texture(view.getImage("box"))
@@ -907,7 +912,7 @@ app.game = async function () {
     const scale = params.scale == null ? 1 : params.scale
     p.push()
     // tmp
-    p.translate(x * view.getScaleX(), y * view.getScaleY())
+    p.translate(x, y)
     const img1 = getWordAndBackgroundImage(p, word)
     p.texture(img1)
     p.noStroke()
