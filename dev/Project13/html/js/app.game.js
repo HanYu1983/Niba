@@ -336,16 +336,26 @@ app.game = async function () {
     }
     if (entity.type == BACKGROUND.type) {
       entity.onDrawP5 = function (p) {
-        //const img = view.getImage("assets/250226_kotodaman_material/mock-up_sample/01.png")
-        const img = view.getImage("assets/250207_kotodaman_background_01.png")
-        p.push()
-        p.translate(view.getWidth() / 2, view.getHeight() / 2)
 
+        p.push()
+
+        const img = view.getImage("assets2/250303_kotodaman_material_02/material_compressed/background_x0,y0.png")
+        //const img = view.getImage("assets/250207_kotodaman_background_01.png")
+        p.translate(view.getWidth() / 2, view.getHeight() / 2)
         p.texture(img)
         p.noStroke()
         p.plane(view.getWidth(), view.getHeight())
-
         p.pop()
+        {
+          p.push()
+          const img = view.getImage("assets2/250303_kotodaman_material_02/material_compressed/text_drop_object_x-6,1081 px.png")
+          const [x, y] = [-6 + img.width / 2, 1081 + img.height / 2]
+          p.texture(img)
+          p.translate(x, y)
+          p.noStroke()
+          p.plane(img.width, img.height)
+          p.pop()
+        }
       }
     }
     if (entity.type == DRAG_WORD_SUCCESS_EFFECT_LAYER.type) {
@@ -525,6 +535,13 @@ app.game = async function () {
         currentHandState = state
       }
       entity.onDrawP5 = function (p) {
+        p.push()
+        p.fill(0, 0, 0, 200)
+        p.translate(view.getWidth() / 2, view.getHeight() / 2)
+        p.noStroke()
+        p.plane(view.getWidth(), view.getHeight())
+        p.pop()
+
         if (currentState) {
           if (currentState.id == state1.id) {
             const img1 = view.getImage(currentState.img1)
@@ -533,15 +550,20 @@ app.game = async function () {
             }
             p.push()
             p.noStroke()
-            let [x, y] = [350, 380]
+            let [x, y] = [0 + img1.width / 2, 57 + img1.height / 2]
             p.translate(x, y)
             p.texture(img1)
             p.plane(img1.width, img1.height)
+            p.pop()
+
+            p.push()
             const img2 = view.getImage(currentState.img2)
             if (img2 == null) {
               throw new Error(`${currentState.id}.img2 not found`)
             }
-            p.translate(0, 200)
+            x = 11 + img2.width / 2
+            y = 643 + img2.height / 2
+            p.translate(x, y)
             p.texture(img2)
             p.plane(img2.width, img2.height)
             p.pop()
@@ -554,15 +576,21 @@ app.game = async function () {
             }
             p.push()
             p.noStroke()
-            let [x, y] = [350, 380]
+            let [x, y] = [164 + img1.width / 2, 23 + img1.height / 2]
             p.translate(x, y)
             p.texture(img1)
             p.plane(img1.width, img1.height)
+            p.pop()
+
             const img2 = view.getImage(currentState.img2)
             if (img2 == null) {
               throw new Error(`${currentState.id}.img2 not found`)
             }
-            p.translate(0, 200)
+            p.push()
+            p.noStroke()
+            x = 26 + img2.width / 2
+            y = 469 + img2.height / 2
+            p.translate(x, y)
             p.texture(img2)
             p.plane(img2.width, img2.height)
             p.pop()
@@ -575,7 +603,7 @@ app.game = async function () {
             }
             p.push()
             p.noStroke()
-            let [x, y] = [350, 380]
+            let [x, y] = [11 + img1.width / 2, 587 + img1.height / 2]
             p.translate(x, y)
             p.texture(img1)
             p.scale(currentState.scale)
@@ -585,22 +613,54 @@ app.game = async function () {
         }
 
         if (currentHandState) {
-          p.push()
-          const img1 = view.getImage("assets/250226_kotodaman_material/material/tap_text_01.png")
-          const img2 = view.getImage("assets/250226_kotodaman_material/material/finger_icon_01.png")
-          const img3 = view.getImage("assets/250226_kotodaman_material/material/release_icon_01.png")
-          p.noStroke()
-          p.translate(300, 600)
-          p.texture(img1)
-          p.plane(img1.width, img1.height)
-          p.texture(img2)
-          p.plane(img2.width, img2.height)
-          p.texture(img3)
-          const xoffset = 100 * Math.sin(currentHandState.totalDelta / 200.0)
-          const yoffset = 200 * Math.sin(currentHandState.totalDelta / 200.0)
-          p.translate(xoffset, yoffset)
-          p.plane(img3.width, img3.height)
-          p.pop()
+          {
+            const img = view.getImage("assets2/250303_kotodaman_material_02/material_compressed/tap_game_start_x295,y1688.png")
+            p.push()
+            p.noStroke()
+            p.translate(295 + img.width / 2, 1688 + img.height / 2)
+            p.texture(img)
+            p.plane(img.width, img.height)
+            p.pop()
+          }
+          {
+            const img = view.getImage("assets2/250303_kotodaman_material_02/material_compressed/release_icon_x,y1095.png")
+            p.push()
+            p.noStroke()
+            p.translate(525 + img.width / 2, 1095 + img.height / 2)
+            p.texture(img)
+            p.plane(img.width, img.height)
+            p.pop()
+          }
+          {
+            const img = view.getImage("assets2/250303_kotodaman_material_02/material_compressed/dot_line_x408, y1157.png")
+            p.push()
+            p.noStroke()
+            p.translate(408 + img.width / 2, 1157 + img.height / 2)
+            p.texture(img)
+            p.plane(img.width, img.height)
+            p.pop()
+          }
+          {
+            const img = view.getImage("assets2/250303_kotodaman_material_02/material_compressed/catch_icon_x430,y1487.png")
+            p.push()
+            p.noStroke()
+            p.translate(430 + img.width / 2, 1487 + img.height / 2)
+            p.texture(img)
+            p.plane(img.width, img.height)
+            p.pop()
+          }
+          {
+            const img = view.getImage("assets2/250303_kotodaman_material_02/material_compressed/finger_01_x,y.png")
+            p.push()
+            p.noStroke()
+            p.translate(430 + img.width / 2, 1487 + img.height / 2)
+            const xoffset = 100 * Math.sin(currentHandState.totalDelta / 200.0)
+            const yoffset = -200 * Math.sin(currentHandState.totalDelta / 200.0)
+            p.translate(xoffset, yoffset)
+            p.texture(img)
+            p.plane(img.width, img.height)
+            p.pop()
+          }
         }
       }
       const onAnimation = rxjs.concat(
@@ -609,8 +669,8 @@ app.game = async function () {
         // 大標
         rxjs.of(0).pipe(
           rxjs.tap(() => {
-            state1.img1 = "assets/250226_kotodaman_material/material/title_big_01.png"
-            state1.img2 = "assets/250226_kotodaman_material/material/text_01.png"
+            state1.img1 = "assets2/250303_kotodaman_material_02/material_compressed/title_big_x-73,y57.png"
+            state1.img2 = "assets2/250303_kotodaman_material_02/material_compressed/title_text_x11,y643.png"
             setCurrentState(state1)
           })
         ),
@@ -626,8 +686,8 @@ app.game = async function () {
             // 小標&drag
             rxjs.of(0).pipe(
               rxjs.tap(() => {
-                state2.img1 = "assets/250226_kotodaman_material/material/title_small_01.png"
-                state2.img2 = "assets/250226_kotodaman_material/material/text_02.png"
+                state2.img1 = "assets2/250303_kotodaman_material_02/material_compressed/logo_small_effect_x164,y23.png"
+                state2.img2 = "assets2/250303_kotodaman_material_02/material_compressed/text_drug&drop_01_x26,y469.png"
                 setCurrentState(state2)
               })
             ),
@@ -635,7 +695,7 @@ app.game = async function () {
             // drop
             rxjs.of(0).pipe(
               rxjs.tap(() => {
-                state2.img2 = "assets/250226_kotodaman_material/material/text_03.png"
+                state2.img2 = "assets2/250303_kotodaman_material_02/material_compressed/text_drug&drop_02_x24,y467.png"
               })
             ),
             createP5Timer(500),
@@ -651,7 +711,7 @@ app.game = async function () {
         // ok?
         rxjs.of(0).pipe(
           rxjs.tap(() => {
-            state3.img1 = "assets/250226_kotodaman_material/material/text_04.png"
+            state3.img1 = "assets2/250303_kotodaman_material_02/material_compressed/ready_x11,y587.png"
             setCurrentState(state3)
             setCurrentHandState(null)
           })
@@ -660,7 +720,7 @@ app.game = async function () {
         // start
         rxjs.of(0).pipe(
           rxjs.tap(() => {
-            state3.img1 = "assets/250226_kotodaman_material/material/text_05.png"
+            state3.img1 = "assets2/250303_kotodaman_material_02/material_compressed/start_text_x16,y499.png"
           })
         ),
         // start縮放動畫
@@ -775,9 +835,9 @@ app.game = async function () {
     p.push()
     p.translate(p.mouseX, p.mouseY)
     drawGText(p, `${Math.round(p.mouseX)}, ${Math.round(p.mouseY)}`, 250, 50, -10)
-    
-    p.texture(view.getImage("box"))
-    p.plane(500, 500)
+
+    // p.texture(view.getImage("box"))
+    // p.plane(500, 500)
     p.pop()
   })
   // render helper

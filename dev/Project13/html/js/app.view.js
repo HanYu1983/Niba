@@ -8,8 +8,8 @@ function getAssetPath(path) {
 }
 app.view = async function () {
   // 同背景圖大小
-  const W = 720
-  const H = 1264
+  const W = 1080
+  const H = 1920
   function getWidth() { return W }
   function getHeight() { return H }
 
@@ -48,6 +48,20 @@ app.view = async function () {
           "assets/250226_kotodaman_material/material/tap_text_01.png",
           "assets/250226_kotodaman_material/material/release_icon_01.png",
           "assets/250226_kotodaman_material/material/finger_icon_01.png",
+          "assets2/250303_kotodaman_material_02/material_compressed/background_x0,y0.png",
+          "assets2/250303_kotodaman_material_02/material_compressed/text_drop_object_x-6,1081 px.png",
+          "assets2/250303_kotodaman_material_02/material_compressed/title_big_x-73,y57.png",
+          "assets2/250303_kotodaman_material_02/material_compressed/title_text_x11,y643.png",
+          "assets2/250303_kotodaman_material_02/material_compressed/logo_small_effect_x164,y23.png",
+          "assets2/250303_kotodaman_material_02/material_compressed/text_drug&drop_01_x26,y469.png",
+          "assets2/250303_kotodaman_material_02/material_compressed/text_drug&drop_02_x24,y467.png",
+          "assets2/250303_kotodaman_material_02/material_compressed/release_icon_x,y1095.png",
+          "assets2/250303_kotodaman_material_02/material_compressed/dot_line_x408, y1157.png",
+          "assets2/250303_kotodaman_material_02/material_compressed/finger_01_x,y.png",
+          "assets2/250303_kotodaman_material_02/material_compressed/tap_game_start_x295,y1688.png",
+          "assets2/250303_kotodaman_material_02/material_compressed/catch_icon_x430,y1487.png",
+          "assets2/250303_kotodaman_material_02/material_compressed/ready_x11,y587.png",
+          "assets2/250303_kotodaman_material_02/material_compressed/start_text_x16,y499.png",
         ].forEach(path => {
           console.log(`load: ${path}`)
           imgs[path] = p.loadImage(getAssetPath(path));
@@ -105,7 +119,7 @@ app.view = async function () {
         });
 
         // https://www.youtube.com/watch?v=iIWH3IUYHzM
-        let img = p.createGraphics(960, 540)
+        let img = p.createGraphics(200, 50)
         // img.colorMode(p.HSB, 360, 100, 100, 100)
         // img.rectMode(p.CENTER)
         //img.noFill()
@@ -113,22 +127,22 @@ app.view = async function () {
         img.strokeWeight(3)
         img.fill(0)
         //img.background(230, 50, 15, 0)
-        img.drawingContext.shadowBlur = 32
-        img.drawingContext.shadowOffsetX = 10
-        img.drawingContext.shadowOffsetY = 10
-        img.drawingContext.shadowColor = p.color(207, 7, 99)
+        img.drawingContext.shadowBlur = 10
+        img.drawingContext.shadowOffsetX = 0
+        img.drawingContext.shadowOffsetY = 0
+        img.drawingContext.shadowColor = p.color(255, 255, 0)
         // https://www.youtube.com/watch?v=-MUOweQ6wac
         // https://developer.mozilla.org/zh-CN/docs/Web/API/CanvasGradient/addColorStop
         // https://www.w3schools.com/graphics/canvas_gradients.asp
-        const gradient = img.drawingContext.createLinearGradient(0, 0, 0, 540)
-        gradient.addColorStop(0.5, p.color(255, 0, 0))
+        const gradient = img.drawingContext.createLinearGradient(0, 0, 0, 50)
+        gradient.addColorStop(0.5, p.color(0, 0, 255))
         gradient.addColorStop(0.8, p.color(0, 255, 0))
         img.drawingContext.fillStyle = gradient
         //img.drawingContext.strokeStyle = gradient
         //img.rect(480, 270, 300, 300, 30)
-        img.textSize(250)
+        img.textSize(25)
         img.textAlign(p.CENTER, p.CENTER)
-        img.text("そなう,粗名雨", 480, 270)
+        img.text("そなう,粗名雨", 100, 25)
         // img.text("Wow HA", 480, 270)
         //img.text("Wow HA", 480, 270)
 
