@@ -7,19 +7,19 @@ function getAssetPath(path) {
   // return window.location.href + path
 }
 app.view = async function () {
-  // 同背景圖大小
-  const CANVAS_W = 720
-  const CANVAS_H = 1264
-  const W = 1080
-  const H = 1920
-  function getWidth() { return W }
-  function getHeight() { return H }
+  const IMAGE_RESOLUTION_W = 1080
+  const IMAGE_RESOLUTION_H = 1920
+  function getWidth() { return IMAGE_RESOLUTION_W }
+  function getHeight() { return IMAGE_RESOLUTION_H }
 
-  function getScaleX() {
-    return W / CANVAS_W
+  // android不能超過1365
+  const CANVAS_RESOLUTION_W = 720
+  const CANVAS_RESOLUTION_H = 1264
+  function getCanvasToImageFactorX() {
+    return IMAGE_RESOLUTION_W / CANVAS_RESOLUTION_W
   }
-  function getScaleY() {
-    return H / CANVAS_H
+  function getCanvasToImageFactorY() {
+    return IMAGE_RESOLUTION_H / CANVAS_RESOLUTION_H
   }
 
   const onSetup = new rxjs.ReplaySubject
@@ -82,14 +82,13 @@ app.view = async function () {
         // canvas.style('height', `${p.windowHeight}px`)
       }
       p.setup = function () {
-
         // https://www.fontspace.com/category/opentype
         // https://fonts.google.com/noto/specimen/Noto+Sans+JP
         //const font = p.loadFont(getAssetPath("assets/NotoSansJP-VariableFont_wght.ttf"))
-        const canvas = p.createCanvas(CANVAS_W, CANVAS_H, p.WEBGL);
+        const canvas = p.createCanvas(CANVAS_RESOLUTION_W, CANVAS_RESOLUTION_H, p.WEBGL);
         // 先移動攝像機讓mouse座標和物件位置能對上
         // https://p5js.org/reference/p5/camera/
-        p.camera(CANVAS_W / 2, CANVAS_H / 2, 800, CANVAS_W / 2, CANVAS_H / 2, 0)
+        p.camera(CANVAS_RESOLUTION_W / 2, CANVAS_RESOLUTION_H / 2, 800, CANVAS_RESOLUTION_W / 2, CANVAS_RESOLUTION_H / 2, 0)
         p.frameRate(60)
         p.ortho()
         // ortho後才能設定width, height
@@ -163,7 +162,7 @@ app.view = async function () {
           return
         }
         const touch = p.touches[0]
-        onMouseDown.next([touch.x * getScaleX(), touch.y * getScaleY()])
+        onMouseDown.next([touch.x * getCanvasToImageFactorX(), touch.y * getCanvasToImageFactorY()])
       }
       p.touchEnded = function () {
         onMouseUp.next()
@@ -173,23 +172,23 @@ app.view = async function () {
           return
         }
         const touch = p.touches[0]
-        onMouseMove.next([touch.x * getScaleX(), touch.y * getScaleY()])
+        onMouseMove.next([touch.x * getCanvasToImageFactorX(), touch.y * getCanvasToImageFactorY()])
       }
       p.mousePressed = function () {
-        onMouseDown.next([p.mouseX * getScaleX(), p.mouseY * getScaleY()])
+        onMouseDown.next([p.mouseX * getCanvasToImageFactorX(), p.mouseY * getCanvasToImageFactorY()])
       }
       p.mouseReleased = function () {
         onMouseUp.next()
       }
       // 非drag時
       p.mouseMoved = function () {
-        onMouseMove.next([p.mouseX * getScaleX(), p.mouseY * getScaleY()])
+        onMouseMove.next([p.mouseX * getCanvasToImageFactorX(), p.mouseY * getCanvasToImageFactorY()])
       }
       // drag時
       p.mouseDragged = function () {
         // mouseDragged事件只有在PC上才會有；行動裝置沒有
         // 所以統一把mouseDragged的事件當成mouseMoved，才能和touchMoved一致
-        onMouseMove.next([p.mouseX * getScaleX(), p.mouseY * getScaleY()])
+        onMouseMove.next([p.mouseX * getCanvasToImageFactorX(), p.mouseY * getCanvasToImageFactorY()])
         // 不使用mouseDragged
         // onMouseDrag.next([p.mouseX, p.mouseY])
       }
@@ -204,6 +203,6 @@ app.view = async function () {
     onMouseUp,
     // onMouseDrag,
     getImage,
-    getWidth, getHeight, getScaleX, getScaleY
+    getWidth, getHeight, getCanvasToImageFactorX, getCanvasToImageFactorY
   }
 }()

@@ -833,18 +833,18 @@ app.game = async function () {
   )
   onDrawP5.subscribe(p => {
     p.push()
-    // 720*1264(WEBGL CANVAS尺寸)轉成1080*1920座標系
-    // 之後的繪圖以1080*1920座標系為主
-    p.scale(1 / view.getScaleX(), 1 / view.getScaleY())
+    // 將1080*1920座標系的圖和同樣座標系定位的轉成720*1264(WEBGL CANVAS尺寸)座標系
+    p.scale(1 / view.getCanvasToImageFactorX(), 1 / view.getCanvasToImageFactorY())
     p.background(200)
 
     getEntities().forEach(entity => entity.onDrawP5?.(p))
     p.push()
 
-    // 滑鼠座標也是720*1264(WEBGL CANVAS尺寸)轉成1080*1920座標系
+    // 滑鼠座標反過來
+    // 從720*1264(WEBGL CANVAS尺寸)座標系轉成1080*1920座標系
     // 滑鼠座標會在view中自動做轉換
-    p.translate(p.mouseX * view.getScaleX(), p.mouseY * view.getScaleY())
-    drawGText(p, `${Math.round(p.mouseX * view.getScaleX())}, ${Math.round(p.mouseY * view.getScaleY())}`, 250, 50, -10)
+    p.translate(p.mouseX * view.getCanvasToImageFactorX(), p.mouseY * view.getCanvasToImageFactorY())
+    drawGText(p, `${Math.round(p.mouseX * view.getCanvasToImageFactorX())}, ${Math.round(p.mouseY * view.getCanvasToImageFactorY())}`, 250, 50, -10)
     // p.texture(view.getImage("box"))
     // p.plane(500, 500)
     p.pop()
