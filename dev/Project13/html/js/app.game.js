@@ -69,8 +69,6 @@ app.game = async function () {
   const TEXT_STARTER = { type: "TEXT_STARTER", scale: 1, pos: [350, 500] }
   // 
   const SCORE_LAYER = { type: "SCORE_LAYER" }
-  // 這個的width設定大於1500後，手機就會畫成全黑，看不到文字
-  // 1200就行
   const NEWS_TICKER = {
     type: "NEWS_TICKER",
     values: [
@@ -354,9 +352,7 @@ app.game = async function () {
     }
     if (entity.type == BACKGROUND.type) {
       entity.onDrawP5 = function (p) {
-
         p.push()
-
         const img = view.getImage("assets2/250303_kotodaman_material_02/material_compressed/background_x0,y0.png")
         //const img = view.getImage("assets/250207_kotodaman_background_01.png")
         p.translate(img.width / 2, img.height / 2)
@@ -912,6 +908,7 @@ app.game = async function () {
     if (ret) {
       return ret
     }
+    // 這個的width設定大於1365後，手機就會畫成全黑，看不到文字
     const buffer = p.createGraphics(w, h)
     imagePool[finalKey] = buffer
     return buffer
