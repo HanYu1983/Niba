@@ -63,9 +63,13 @@ app.spec = async function () {
         backgroundColor: spec.tuple("backgroundColor", spec.number, spec.number, spec.number, spec.number),
       }
     }),
+    SCORE_LAYER: spec.map("SCORE_LAYER", {
+      "type": obj => obj == "SCORE_LAYER",
+      combo: spec.number,
+    }),
     assert: function (s, o) {
       if (valid(s, o)) {
-        return
+        return o
       }
       throw new Error(explainStr(s, o))
     }

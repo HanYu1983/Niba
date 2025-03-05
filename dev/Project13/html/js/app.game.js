@@ -68,7 +68,7 @@ app.game = async function () {
   // 
   const TEXT_STARTER = { type: "TEXT_STARTER", scale: 1, pos: [350, 500] }
   // 
-  const SCORE_LAYER = { type: "SCORE_LAYER" }
+  const SCORE_LAYER = { type: "SCORE_LAYER", combo: 0 }
   const NEWS_TICKER = {
     type: "NEWS_TICKER",
     values: [
@@ -98,6 +98,7 @@ app.game = async function () {
   spec.assert(spec.DRAG_WORD_END_ENTITY, DRAG_WORD_END_ENTITY)
   spec.assert(spec.DRAG_WORD_SUCCESS_EFFECT_LAYER, DRAG_WORD_SUCCESS_EFFECT_LAYER)
   spec.assert(spec.NEWS_TICKER, NEWS_TICKER)
+  spec.assert(spec.SCORE_LAYER, SCORE_LAYER)
 
   function getStartPageEntities() {
     return [
@@ -210,10 +211,10 @@ app.game = async function () {
     return nextWords.length > 0
   }
   //
-  function setScorePopup() {
+  function setScorePopup(combo) {
     getEntities().filter(i => i.type == DRAG_WORD_START_ENTITY.type).forEach(i => i.unsubscribe())
     getEntities().filter(i => i.type == TIMESUP_COUNTING_LAYER.type).forEach(i => i.unsubscribe())
-    addEntity({ ...SCORE_LAYER })
+    addEntity(spec.assert(spec.SCORE_LAYER, { ...SCORE_LAYER, combo: combo }))
   }
   // controller
   const onEntityMouseDown = new rxjs.Subject
@@ -345,21 +346,33 @@ app.game = async function () {
             const successEffectLayer = { ...DRAG_WORD_SUCCESS_EFFECT_LAYER, currentWord: currentWord, successWords: wins }
             addEntity(successEffectLayer)
           } else {
-            setScorePopup()
+            setScorePopup(0)
           }
         }
       }))
     }
     if (entity.type == BACKGROUND.type) {
       entity.onDrawP5 = function (p) {
-        p.push()
-        const img = view.getImage("assets2/250303_kotodaman_material_02/material_compressed/background_x0,y0.png")
-        //const img = view.getImage("assets/250207_kotodaman_background_01.png")
-        p.translate(img.width / 2, img.height / 2)
-        p.texture(img)
-        p.noStroke()
-        p.plane(img.width, img.height)
-        p.pop()
+        {
+          p.push()
+          const img = view.getImage("assets2/250303_kotodaman_material_02/material_compressed/background_x0,y0.png")
+          //const img = view.getImage("assets/250207_kotodaman_background_01.png")
+          p.translate(img.width / 2, img.height / 2)
+          p.texture(img)
+          p.noStroke()
+          p.plane(img.width, img.height)
+          p.pop()
+        }
+        {
+          p.push()
+          const img = view.getImage("assets2/250303_kotodaman_material_02/material_compressed/text_background_light_x0,y1016.png")
+          const [x, y] = [img.width / 2, 1016 + img.height / 2]
+          p.texture(img)
+          p.translate(x, y)
+          p.noStroke()
+          p.plane(img.width, img.height)
+          p.pop()
+        }
         {
           p.push()
           const img = view.getImage("assets2/250303_kotodaman_material_02/material_compressed/text_drop_object_x-6,1081 px.png")
@@ -394,14 +407,28 @@ app.game = async function () {
         }
         if (currentEffectWord) {
           p.push()
-          p.translate(400, 300)
-          drawGText(p, currentEffectWord, 600, 100, { yoffset: -20 })
+          p.translate(434, 1384)
+          drawGradientText(p, currentEffectWord, 200, 200, {
+            yoffset: -10,
+            strokeColor: [0, 0, 0],
+            color1: [255, 255, 124],
+            color2: [245, 195, 76],
+            shadowColor: [255, 255, 124],
+            strokeWeight: 10,
+          })
           p.pop()
         }
         if (currentEffectOriginWord) {
           p.push()
-          p.translate(400, 400)
-          drawGText(p, currentEffectOriginWord, 600, 100, { yoffset: -20 })
+          p.translate(434, 1253)
+          drawGradientText(p, currentEffectOriginWord, 200, 50, {
+            yoffset: -10,
+            strokeColor: [0, 0, 0],
+            color1: [255, 255, 124],
+            color2: [245, 195, 76],
+            shadowColor: [255, 255, 124],
+            strokeWeight: 10,
+          })
           p.pop()
         }
       }
@@ -495,7 +522,8 @@ app.game = async function () {
         // nothing to do
       }, err => { }, () => {
         removeEntity(entity)
-        setScorePopup()
+        const combo = entity.successWords.length
+        setScorePopup(combo)
       }))
       entity.subscriptions.push(onCurrentEffectWordChange.subscribe())
     }
@@ -768,7 +796,7 @@ app.game = async function () {
         p.translate(500, 500)
         p.noStroke()
         p.plane(500, 500)
-        drawGText(p, "SCORE: 0", 500, 100, { yoffset: -20 })
+        drawGText(p, `Combo: ${entity.combo}`, 500, 100, { yoffset: -20 })
         p.pop()
       }
     }
@@ -873,9 +901,18 @@ app.game = async function () {
         // 從720*1264(WEBGL CANVAS尺寸)座標系轉成1080*1920座標系
         // 滑鼠座標會在view中自動做轉換
         p.translate(p.mouseX * view.getCanvasToImageFactorX(), p.mouseY * view.getCanvasToImageFactorY())
-        drawGText(p, `${Math.round(p.mouseX * view.getCanvasToImageFactorX())}, ${Math.round(p.mouseY * view.getCanvasToImageFactorY())}`, 250, 50, { yoffset: -10 })
-        // p.texture(view.getImage("box"))
-        // p.plane(500, 500)
+        drawGradientText(p,
+          `${Math.round(p.mouseX * view.getCanvasToImageFactorX())}, ${Math.round(p.mouseY * view.getCanvasToImageFactorY())}`,
+          250, 50,
+          {
+            yoffset: -10,
+            strokeColor: [0, 0, 0],
+            color1: [255, 255, 124],
+            color2: [245, 195, 76],
+            shadowColor: [255, 255, 124],
+          }
+        )
+        //drawGradientText(p, "Wow", 200, 100, { yoffset: -20 })
         p.pop()
       }
       p.pop()
@@ -914,8 +951,36 @@ app.game = async function () {
     return buffer
   }
 
+  function drawGradientText(p, text, w, h, { yoffset, textSize, strokeWeight, strokeColor, fillColor, color1, color2, shadowColor, shadowBlur }) {
+    const img = getBuffer(p, "drawGradientText", w, h)
+    img.clear()
+    img.stroke(strokeColor?.[0] || 0, strokeColor?.[1] || 0, strokeColor?.[2] || 0)
+    img.strokeWeight(strokeWeight || 3)
+    img.fill(fillColor?.[0] || 255, fillColor?.[1] || 255, fillColor?.[2] || 255)
+    img.drawingContext.shadowBlur = shadowBlur || 30
+    img.drawingContext.shadowOffsetX = 0
+    img.drawingContext.shadowOffsetY = 0
+    img.drawingContext.shadowColor = p.color(shadowColor?.[0] || 255, shadowColor?.[1] || 255, shadowColor?.[2] || 255)
+    // https://www.youtube.com/watch?v=-MUOweQ6wac
+    // https://developer.mozilla.org/zh-CN/docs/Web/API/CanvasGradient/addColorStop
+    // https://www.w3schools.com/graphics/canvas_gradients.asp
+    if (img._gradient == null) {
+      img._gradient = img.drawingContext.createLinearGradient(0, 0, 0, h)
+    }
+    const gradient = img._gradient
+    gradient.addColorStop(0.1, p.color(color1?.[0] || 0, color1?.[1] || 0, color1?.[2] || 255))
+    gradient.addColorStop(0.9, p.color(color2?.[0] || 0, color2?.[1] || 255, color2?.[2] || 0))
+    img.drawingContext.fillStyle = gradient
+    img.textSize(textSize || img.height)
+    img.textAlign(p.LEFT)
+    img.text(text, 0, img.height + yoffset)
+    p.texture(img)
+    p.noStroke()
+    p.plane(w, h)
+  }
+
   function drawGText(p, text, w, h, { yoffset, textSize }) {
-    const buffer = getBuffer(p, "text_key", w, h)
+    const buffer = getBuffer(p, "drawGText", w, h)
     // buffer.textFont(config.getFontStr())
     // buffer.textStyle(p.BOLD)
 
