@@ -89,11 +89,12 @@ app.game = async function () {
     height: 100,
     //backgroundColor: [100, 0, 0, 200],
   }
-  const DRAG_WORD_END_X = 65
-  const DRAG_WORD_END_Y = 1150
+  const DRAG_WORD_END_X = 85
+  const DRAG_WORD_END_Y = 1155
   const DRAG_WORD_END_OFFSET = 150
-  const DRAG_WORD_END_SCALE = 0.9
-  const DRAG_WORD_START_Y = 1600
+  const DRAG_WORD_END_SCALE = 0.95
+  const DRAG_WORD_START_SIZE = 231
+  const DRAG_WORD_START_Y = 1446 + DRAG_WORD_START_SIZE / 2
 
   spec.assert(spec.DRAG_WORD_START_ENTITY, DRAG_WORD_START_ENTITY)
   spec.assert(spec.DRAG_WORD_END_ENTITY, DRAG_WORD_END_ENTITY)
@@ -111,10 +112,10 @@ app.game = async function () {
   function getPlayPageEntities() {
     return [
       { ...BACKGROUND },
-      { ...DRAG_WORD_START_ENTITY, idx: 0, word: "な", pos: [105, DRAG_WORD_START_Y] },
-      { ...DRAG_WORD_START_ENTITY, idx: 1, word: "し", pos: [275, DRAG_WORD_START_Y] },
-      { ...DRAG_WORD_START_ENTITY, idx: 2, word: "ゅ", pos: [440, DRAG_WORD_START_Y] },
-      { ...DRAG_WORD_START_ENTITY, idx: 3, word: "ね", pos: [615, DRAG_WORD_START_Y] },
+      { ...DRAG_WORD_START_ENTITY, idx: 0, word: "な", pos: [63 + DRAG_WORD_START_SIZE / 2, DRAG_WORD_START_Y] },
+      { ...DRAG_WORD_START_ENTITY, idx: 1, word: "し", pos: [305 + DRAG_WORD_START_SIZE / 2, DRAG_WORD_START_Y] },
+      { ...DRAG_WORD_START_ENTITY, idx: 2, word: "ゅ", pos: [545 + DRAG_WORD_START_SIZE / 2, DRAG_WORD_START_Y] },
+      { ...DRAG_WORD_START_ENTITY, idx: 3, word: "ね", pos: [786 + DRAG_WORD_START_SIZE / 2, DRAG_WORD_START_Y] },
       { ...DRAG_WORD_END_ENTITY, pos: [DRAG_WORD_END_X + 0 * DRAG_WORD_END_OFFSET, DRAG_WORD_END_Y] },
       { ...DRAG_WORD_END_ENTITY, pos: [DRAG_WORD_END_X + 1 * DRAG_WORD_END_OFFSET, DRAG_WORD_END_Y] },
       { ...DRAG_WORD_END_ENTITY, pos: [DRAG_WORD_END_X + 2 * DRAG_WORD_END_OFFSET, DRAG_WORD_END_Y] },
