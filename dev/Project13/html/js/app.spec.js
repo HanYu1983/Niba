@@ -47,10 +47,21 @@ app.spec = async function () {
       pos: pos,
       height: spec.number,
       speed: spec.number,
-      values: spec.collection("values", spec.map("value", {
-        text: spec.string,
-        width: spec.number
-      }))
+      values: spec.collection("values", spec.or("value",
+        {
+          text: spec.map("text", {
+            text: spec.string,
+            width: spec.number,
+          }),
+          image: spec.map("image", {
+            imageSrc: spec.string,
+            width: spec.number,
+          })
+        }
+      )),
+      [symbol.optional]: {
+        backgroundColor: spec.tuple("backgroundColor", spec.number, spec.number, spec.number, spec.number),
+      }
     }),
     assert: function (s, o) {
       if (valid(s, o)) {

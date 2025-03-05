@@ -71,7 +71,24 @@ app.game = async function () {
   const SCORE_LAYER = { type: "SCORE_LAYER" }
   // 這個的width設定大於1500後，手機就會畫成全黑，看不到文字
   // 1200就行
-  const NEWS_TICKER = { type: "NEWS_TICKER", values: [{ text: "Section 1 Section 1 Section 1", width: 1200 }, { text: "Section 2", width: 500 }], pos: [0, 100], speed: 200, height: 100 }
+  const NEWS_TICKER = {
+    type: "NEWS_TICKER",
+    values: [
+      {
+        //text: "ドラック＆ドロップで文字をつなげてことばをつくろう！",
+        imageSrc: "assets2/250303_kotodaman_material_02/material_compressed/text_header_01_x52, y29.png",
+        width: 1451
+      },
+      // {
+      //   text: "Section 2",
+      //   width: 500
+      // }
+    ],
+    pos: [0, 60],
+    speed: 200,
+    height: 100,
+    //backgroundColor: [100, 0, 0, 200],
+  }
   const DRAG_WORD_END_X = 65
   const DRAG_WORD_END_Y = 1150
   const DRAG_WORD_END_OFFSET = 150
@@ -381,13 +398,13 @@ app.game = async function () {
         if (currentEffectWord) {
           p.push()
           p.translate(400, 300)
-          drawGText(p, currentEffectWord, 600, 100, -20)
+          drawGText(p, currentEffectWord, 600, 100, { yoffset: -20 })
           p.pop()
         }
         if (currentEffectOriginWord) {
           p.push()
           p.translate(400, 400)
-          drawGText(p, currentEffectOriginWord, 600, 100, -20)
+          drawGText(p, currentEffectOriginWord, 600, 100, { yoffset: -20 })
           p.pop()
         }
       }
@@ -491,7 +508,7 @@ app.game = async function () {
         p.push()
         p.translate(650, 240)
         const timerStr = ((COUNT_DURATION - this.timer) / 1000).toFixed(2) + ""
-        drawGText(p, timerStr, 250, 60, -10)
+        drawGText(p, timerStr, 250, 60, { yoffset: -10 })
         p.pop()
       }
       entity.subscriptions.push(view.onDraw.pipe(
@@ -754,7 +771,7 @@ app.game = async function () {
         p.translate(500, 500)
         p.noStroke()
         p.plane(500, 500)
-        drawGText(p, "SCORE: 0", 500, 100, -20)
+        drawGText(p, "SCORE: 0", 500, 100, { yoffset: -20 })
         p.pop()
       }
     }
@@ -762,27 +779,41 @@ app.game = async function () {
     if (entity.type == NEWS_TICKER.type) {
       let currentWidth = 0
       let currentText = null
+      let currentImageSrc = null
       entity.onDrawP5 = function (p) {
         let [x, y] = this.pos
         const h = this.height
-        p.push()
-        p.fill(0, 0, 0, h)
-        p.translate(view.getWidth() / 2, y)
-        p.noStroke()
-        p.plane(view.getWidth(), h)
-        p.pop()
-
-        p.push()
+        if (entity.backgroundColor) {
+          const [r, g, b, a] = entity.backgroundColor
+          p.push()
+          p.fill(r, g, b, a)
+          p.translate(view.getWidth() / 2, y)
+          p.noStroke()
+          p.plane(view.getWidth(), h)
+          p.pop()
+        }
         if (currentText) {
+          p.push()
           p.translate(x, y)
           //p.plane(50, 50)
           p.translate(currentWidth / 2, 0)
-          drawGText(p, currentText, currentWidth, h, -20)
+          drawGText(p, currentText, currentWidth, h, { yoffset: -20, textSize: h / 2 })
+          p.pop()
         }
-        p.pop()
+        if (currentImageSrc) {
+          p.push()
+          const img = view.getImage(currentImageSrc)
+          currentWidth = img.width
+          p.translate(x, y)
+          p.translate(currentWidth / 2, 0)
+          p.texture(img)
+          p.noStroke()
+          p.plane(img.width, img.height)
+          p.pop()
+        }
       }
       const onAnimation = rxjs.from(entity.values).pipe(
-        rxjs.concatMap(({ text, width }) => {
+        rxjs.concatMap(({ text, width, imageSrc }) => {
           const step1DurationSeconds = view.getWidth() / entity.speed
           const step2DurationSeconds = width / entity.speed
           return rxjs.concat(
@@ -792,6 +823,7 @@ app.game = async function () {
                 entity.pos[0] = view.getWidth()
                 currentText = text
                 currentWidth = width
+                currentImageSrc = imageSrc
               })
             ),
             // 先移到x為0
@@ -832,24 +864,25 @@ app.game = async function () {
     })
   )
   onDrawP5.subscribe(p => {
-    p.push()
-    // 將1080*1920座標系的圖和同樣座標系定位的轉成720*1264(WEBGL CANVAS尺寸)座標系
-    p.scale(1 / view.getCanvasToImageFactorX(), 1 / view.getCanvasToImageFactorY())
-    p.background(200)
-
-    getEntities().forEach(entity => entity.onDrawP5?.(p))
-    p.push()
-
-    // 滑鼠座標反過來
-    // 從720*1264(WEBGL CANVAS尺寸)座標系轉成1080*1920座標系
-    // 滑鼠座標會在view中自動做轉換
-    p.translate(p.mouseX * view.getCanvasToImageFactorX(), p.mouseY * view.getCanvasToImageFactorY())
-    drawGText(p, `${Math.round(p.mouseX * view.getCanvasToImageFactorX())}, ${Math.round(p.mouseY * view.getCanvasToImageFactorY())}`, 250, 50, -10)
-    // p.texture(view.getImage("box"))
-    // p.plane(500, 500)
-    p.pop()
-
-    p.pop()
+    {
+      p.push()
+      // 將1080*1920座標系的圖和同樣座標系定位的轉成720*1264(WEBGL CANVAS尺寸)座標系
+      p.scale(1 / view.getCanvasToImageFactorX(), 1 / view.getCanvasToImageFactorY())
+      p.background(200)
+      getEntities().forEach(entity => entity.onDrawP5?.(p))
+      {
+        p.push()
+        // 滑鼠座標反過來
+        // 從720*1264(WEBGL CANVAS尺寸)座標系轉成1080*1920座標系
+        // 滑鼠座標會在view中自動做轉換
+        p.translate(p.mouseX * view.getCanvasToImageFactorX(), p.mouseY * view.getCanvasToImageFactorY())
+        drawGText(p, `${Math.round(p.mouseX * view.getCanvasToImageFactorX())}, ${Math.round(p.mouseY * view.getCanvasToImageFactorY())}`, 250, 50, { yoffset: -10 })
+        // p.texture(view.getImage("box"))
+        // p.plane(500, 500)
+        p.pop()
+      }
+      p.pop()
+    }
   })
   // render helper
   const imagePool = {}
@@ -883,13 +916,13 @@ app.game = async function () {
     return buffer
   }
 
-  function drawGText(p, text, w, h, yoffset) {
+  function drawGText(p, text, w, h, { yoffset, textSize }) {
     const buffer = getBuffer(p, "text_key", w, h)
     // buffer.textFont(config.getFontStr())
     // buffer.textStyle(p.BOLD)
 
     buffer.clear()
-    buffer.textSize(buffer.height)
+    buffer.textSize(textSize || buffer.height)
     buffer.textAlign(p.LEFT)
     buffer.fill(0)
     buffer.text(text, 0, buffer.height + yoffset + 5)

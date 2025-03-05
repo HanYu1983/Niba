@@ -71,6 +71,7 @@ app.view = async function () {
           "assets2/250303_kotodaman_material_02/material_compressed/catch_icon_x430,y1487.png",
           "assets2/250303_kotodaman_material_02/material_compressed/ready_x11,y587.png",
           "assets2/250303_kotodaman_material_02/material_compressed/start_text_x16,y499.png",
+          "assets2/250303_kotodaman_material_02/material_compressed/text_header_01_x52, y29.png",
         ].forEach(path => {
           console.log(`load: ${path}`)
           imgs[path] = p.loadImage(getAssetPath(path));
