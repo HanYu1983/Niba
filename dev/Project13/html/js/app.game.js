@@ -939,7 +939,7 @@ app.game = async function () {
       p.scale(1 / view.getCanvasToImageFactorX(), 1 / view.getCanvasToImageFactorY())
       p.background(200)
       getEntities().forEach(entity => entity.onDrawP5?.(p))
-      {
+      if (false) {
         p.push()
         // 滑鼠座標反過來
         // 從720*1264(WEBGL CANVAS尺寸)座標系轉成1080*1920座標系

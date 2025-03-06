@@ -54,6 +54,14 @@
       app: firebase,
       messaging: messaging
     }
+    function addTestMessagingButton(p) {
+      const button = p.createButton('click me');
+      button.position(0, 100);
+      button.mousePressed(() => {
+        alert("mousePressed")
+        messaging.startMessaing().catch(alert)
+      });
+    }
     async function main() {
       const config = await app.config
       const view = await app.view
@@ -62,14 +70,8 @@
       const messaging = await app.messaging
       view.create("canvas")
       game.startGame()
-      //await messaging.startMessaing()
       view.onSetup.subscribe(p => {
-        const button = p.createButton('click me');
-        button.position(0, 100);
-        button.mousePressed(() => {
-          alert("mousePressed")
-          messaging.startMessaing().catch(alert)
-        });
+        // nothing to do
       })
     }
     main().catch(console.error)
