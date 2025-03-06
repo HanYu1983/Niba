@@ -395,21 +395,34 @@ app.game = async function () {
       let currentEffectWord = null
       let currentEffectOriginWord = null
       entity.onDrawP5 = function (p) {
+        {
+          p.push()
+          const img = view.getImage("assets2/250303_kotodaman_material_02/material_compressed/text_background_dark_x0,y1016.png")
+          const [x, y] = [img.width / 2, 1016 + img.height / 2]
+          p.texture(img)
+          p.translate(x, y)
+          p.noStroke()
+          p.plane(img.width, img.height)
+          p.pop()
+        }
         const wordEnds = getEntities().filter(e => e.type == DRAG_WORD_END_ENTITY.type)
         for (const i in wordEnds) {
           const wordEnd = wordEnds[i]
           const change = changes[i]
-          drawWord(p, {
-            pos: wordEnd.pos,
-            word: wordEnd.word,
-            scale: change?.scale || DRAG_WORD_END_SCALE,
-            isBright: change?.isBright || false
-          })
+          const isShowWord = currentEffectOriginWord && currentEffectOriginWord?.indexOf(wordEnd.word) != -1
+          if (isShowWord) {
+            drawWord(p, {
+              pos: wordEnd.pos,
+              word: wordEnd.word,
+              scale: change?.scale || DRAG_WORD_END_SCALE,
+              isBright: change?.isBright || false
+            })
+          }
         }
         if (currentEffectWord) {
           p.push()
           p.translate(434, 1384)
-          drawGradientText(p, currentEffectWord, 200, 200, {
+          drawGradientText(p, currentEffectWord, 400, 200, {
             yoffset: -10,
             strokeColor: [0, 0, 0],
             color1: [255, 255, 124],
@@ -422,7 +435,7 @@ app.game = async function () {
         if (currentEffectOriginWord) {
           p.push()
           p.translate(434, 1253)
-          drawGradientText(p, currentEffectOriginWord, 200, 50, {
+          drawGradientText(p, currentEffectOriginWord, 400, 50, {
             yoffset: -10,
             strokeColor: [0, 0, 0],
             color1: [255, 255, 124],
