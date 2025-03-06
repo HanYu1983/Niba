@@ -104,7 +104,8 @@ app.game = async function () {
     return [
       { ...BACKGROUND },
       { ...TEXT_STARTER },
-      { ...NEWS_TICKER }
+      { ...NEWS_TICKER },
+      //{ ...SCORE_LAYER }
     ]
   }
 
@@ -531,9 +532,12 @@ app.game = async function () {
       const COUNT_DURATION = 30000
       entity.onDrawP5 = function (p) {
         p.push()
-        p.translate(650, 240)
-        const timerStr = ((COUNT_DURATION - this.timer) / 1000).toFixed(2) + ""
-        drawGText(p, timerStr, 250, 60, { yoffset: -10 })
+        p.translate(870, 360)
+        const timer = ((COUNT_DURATION - this.timer) / 1000).toFixed(1)
+        const part1 = Math.floor(timer)
+        const part2 = Math.floor((timer - part1) * 10)
+        drawGText(p, `${part1}`.padStart(2, 0), 250, 100, { xoffset: 200, yoffset: -10, textSize: 100, textAlign: p.RIGHT })
+        drawGText(p, `.${part2}`, 250, 100, { xoffset: 200, yoffset: -10, textSize: 50, textAlign: p.LEFT })
         p.pop()
       }
       entity.subscriptions.push(view.onDraw.pipe(
@@ -546,6 +550,7 @@ app.game = async function () {
         err => { },
         () => {
           entity.timer = COUNT_DURATION
+          setScorePopup(0)
         }
       ))
     }
@@ -787,17 +792,56 @@ app.game = async function () {
         setStartDragWordEnds()
       }
       entity.subscriptions.push(onAnimation.subscribe(() => { }, err => { }, startGame))
-      //entity.subscriptions.push(view.onMouseUp.subscribe(startGame))
+      entity.subscriptions.push(view.onMouseUp.subscribe(startGame))
     }
     if (entity.type == SCORE_LAYER.type) {
       entity.onDrawP5 = function (p) {
-        p.push()
-        p.fill(255)
-        p.translate(500, 500)
-        p.noStroke()
-        p.plane(500, 500)
-        drawGText(p, `Combo: ${entity.combo}`, 500, 100, { yoffset: -20 })
-        p.pop()
+        {
+          p.push()
+          const img = view.getImage("assets2/250303_kotodaman_material_02/material_compressed/logo_small_effect_x164,y23.png")
+          const [x, y] = [164 + img.width / 2, 23 + img.height / 2]
+          p.translate(x, y)
+          p.texture(img)
+          p.noStroke()
+          p.plane(img.width, img.height)
+          p.pop()
+        }
+        {
+          p.push()
+          p.translate(462, 789)
+          drawGradientText(p,
+            "Combo",
+            400, 300,
+            {
+              textSize: 100,
+              yoffset: -20,
+              strokeColor: [0, 0, 0],
+              strokeWeight: 20,
+              color1: [107, 224, 174],
+              color2: [166, 222, 115],
+              shadowColor: [255, 255, 255],
+            }
+          )
+          p.pop()
+        }
+        {
+          p.push()
+          p.translate(462, 689)
+          drawGradientText(p,
+            `${entity.combo}`,
+            400, 400,
+            {
+              textSize: 400,
+              yoffset: -20,
+              strokeColor: [0, 0, 0],
+              strokeWeight: 30,
+              color1: [107, 224, 174],
+              color2: [166, 222, 115],
+              shadowColor: [255, 255, 255],
+            }
+          )
+          p.pop()
+        }
       }
     }
 
@@ -973,27 +1017,28 @@ app.game = async function () {
     img.drawingContext.fillStyle = gradient
     img.textSize(textSize || img.height)
     img.textAlign(p.LEFT)
+    img.textStyle(p.BOLD)
     img.text(text, 0, img.height + yoffset)
     p.texture(img)
     p.noStroke()
     p.plane(w, h)
   }
 
-  function drawGText(p, text, w, h, { yoffset, textSize }) {
+  function drawGText(p, text, w, h, { xoffset, yoffset, textSize, textAlign }) {
     const buffer = getBuffer(p, "drawGText", w, h)
     // buffer.textFont(config.getFontStr())
     // buffer.textStyle(p.BOLD)
 
     buffer.clear()
     buffer.textSize(textSize || buffer.height)
-    buffer.textAlign(p.LEFT)
+    buffer.textAlign(textAlign || p.LEFT)
     buffer.fill(0)
-    buffer.text(text, 0, buffer.height + yoffset + 5)
+    buffer.text(text, xoffset || 0, buffer.height + yoffset + 5)
 
     buffer.stroke(0)
     buffer.strokeWeight(5)
     buffer.fill(255)
-    buffer.text(text, 0, buffer.height + yoffset)
+    buffer.text(text, xoffset || 0, buffer.height + yoffset)
     p.texture(buffer)
     p.noStroke()
     p.plane(w, h)
