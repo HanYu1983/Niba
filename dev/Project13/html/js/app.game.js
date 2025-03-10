@@ -62,7 +62,7 @@ app.game = async function () {
   // 計算拖字到終點的碰撞層
   const DRAG_WORD_HIT_LAYER = { type: "DRAG_WORD_HIT_LAYER" }
   // 成功組成字的特效層
-  const DRAG_WORD_SUCCESS_EFFECT_LAYER = { type: "DRAG_WORD_SUCCESS_EFFECT_LAYER", currentWord: "", successWords: [[0, 1], [2, 3], [3, 4], [4, 5, 6], [5, 6]] }
+  const DRAG_WORD_SUCCESS_EFFECT_LAYER = { type: "DRAG_WORD_SUCCESS_EFFECT_LAYER", currentWord: "", successWords: [] }
   //
   const TIMESUP_COUNTING_LAYER = { type: "TIMESUP_COUNTING_LAYER", timer: 0 }
   // 
@@ -105,7 +105,9 @@ app.game = async function () {
       { ...BACKGROUND },
       { ...TEXT_STARTER },
       { ...NEWS_TICKER },
-      //{ ...SCORE_LAYER }
+      // test
+      // { ...SCORE_LAYER },
+      // { ...DRAG_WORD_SUCCESS_EFFECT_LAYER }
     ]
   }
 
@@ -392,8 +394,8 @@ app.game = async function () {
         return
       }
       let changes = {}
-      let currentEffectWord = null
-      let currentEffectOriginWord = null
+      let currentEffectWord = null // "奈寧志雨素"
+      let currentEffectOriginWord = null // "なねしうそ"
       entity.onDrawP5 = function (p) {
         {
           p.push()
@@ -421,9 +423,9 @@ app.game = async function () {
         }
         if (currentEffectWord) {
           p.push()
-          p.translate(434, 1384)
-          drawGradientText(p, currentEffectWord, 400, 200, {
-            yoffset: -10,
+          p.translate(view.getWidth() / 2, 1384)
+          drawGradientText(p, currentEffectWord, view.getWidth(), 200, {
+            yoffset: -30,
             strokeColor: [0, 0, 0],
             color1: [255, 255, 124],
             color2: [245, 195, 76],
@@ -434,8 +436,8 @@ app.game = async function () {
         }
         if (currentEffectOriginWord) {
           p.push()
-          p.translate(434, 1253)
-          drawGradientText(p, currentEffectOriginWord, 400, 50, {
+          p.translate(view.getWidth() / 2, 1253)
+          drawGradientText(p, currentEffectOriginWord, view.getWidth(), 50, {
             yoffset: -10,
             strokeColor: [0, 0, 0],
             color1: [255, 255, 124],
@@ -545,12 +547,12 @@ app.game = async function () {
       const COUNT_DURATION = 30000
       entity.onDrawP5 = function (p) {
         p.push()
-        p.translate(870, 360)
+        p.translate(950, 360)
         const timer = ((COUNT_DURATION - this.timer) / 1000).toFixed(1)
         const part1 = Math.floor(timer)
         const part2 = Math.floor((timer - part1) * 10)
-        drawGText(p, `${part1}`.padStart(2, 0), 250, 100, { xoffset: 200, yoffset: -10, textSize: 100, textAlign: p.RIGHT })
-        drawGText(p, `.${part2}`, 250, 100, { xoffset: 200, yoffset: -10, textSize: 50, textAlign: p.LEFT })
+        drawGText(p, `${part1}`.padStart(2, 0), 250, 100, { xoffset: 0, yoffset: -10, textSize: 100, textAlign: p.RIGHT })
+        drawGText(p, `.${part2}`, 250, 100, { xoffset: 0, yoffset: -10, textSize: 50, textAlign: p.LEFT })
         p.pop()
       }
       entity.subscriptions.push(view.onDraw.pipe(
@@ -821,10 +823,10 @@ app.game = async function () {
         }
         {
           p.push()
-          p.translate(462, 789)
+          p.translate(view.getWidth() / 2, 689)
           drawGradientText(p,
             "Combo",
-            400, 300,
+            400, 450,
             {
               textSize: 100,
               yoffset: -20,
@@ -839,7 +841,7 @@ app.game = async function () {
         }
         {
           p.push()
-          p.translate(462, 689)
+          p.translate(view.getWidth() / 2, 589)
           drawGradientText(p,
             `${entity.combo}`,
             400, 400,
@@ -1008,8 +1010,10 @@ app.game = async function () {
     return buffer
   }
 
-  function drawGradientText(p, text, w, h, { yoffset, textSize, strokeWeight, strokeColor, fillColor, color1, color2, shadowColor, shadowBlur }) {
+  function drawGradientText(p, text, w, h, { yoffset, textSize, strokeWeight, strokeColor, fillColor, color1, color2, shadowColor, shadowBlur, textAlign }) {
     const img = getBuffer(p, "drawGradientText", w, h)
+    img.textFont(config.getFontStr())
+    img.textStyle(p.BOLD)
     img.clear()
     img.stroke(strokeColor?.[0] || 0, strokeColor?.[1] || 0, strokeColor?.[2] || 0)
     img.strokeWeight(strokeWeight || 3)
@@ -1029,9 +1033,8 @@ app.game = async function () {
     gradient.addColorStop(0.9, p.color(color2?.[0] || 0, color2?.[1] || 255, color2?.[2] || 0))
     img.drawingContext.fillStyle = gradient
     img.textSize(textSize || img.height)
-    img.textAlign(p.LEFT)
-    img.textStyle(p.BOLD)
-    img.text(text, 0, img.height + yoffset)
+    img.textAlign(textAlign || p.CENTER)
+    img.text(text, img.width / 2, img.height + yoffset)
     p.texture(img)
     p.noStroke()
     p.plane(w, h)
@@ -1039,19 +1042,19 @@ app.game = async function () {
 
   function drawGText(p, text, w, h, { xoffset, yoffset, textSize, textAlign }) {
     const buffer = getBuffer(p, "drawGText", w, h)
-    // buffer.textFont(config.getFontStr())
-    // buffer.textStyle(p.BOLD)
+    buffer.textFont(config.getFontStr())
+    buffer.textStyle(p.BOLD)
 
     buffer.clear()
     buffer.textSize(textSize || buffer.height)
-    buffer.textAlign(textAlign || p.LEFT)
+    buffer.textAlign(textAlign || p.CENTER)
     buffer.fill(0)
-    buffer.text(text, xoffset || 0, buffer.height + yoffset + 5)
+    buffer.text(text, buffer.width / 2 + (xoffset || 0), buffer.height + yoffset + 5)
 
     buffer.stroke(0)
     buffer.strokeWeight(5)
     buffer.fill(255)
-    buffer.text(text, xoffset || 0, buffer.height + yoffset)
+    buffer.text(text, buffer.width / 2 + (xoffset || 0), buffer.height + yoffset)
     p.texture(buffer)
     p.noStroke()
     p.plane(w, h)
