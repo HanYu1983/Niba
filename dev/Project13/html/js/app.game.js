@@ -1020,6 +1020,32 @@ app.game = async function () {
         //drawGradientText(p, "Wow", 200, 100, { yoffset: -20 })
         p.pop()
       }
+      {
+        const NUM_W = 99
+        const DOT_W = 35
+        const numStr = "00012345.6789000"
+        const img = view.getImage("assets3/250310_number_01.png")
+        const buf = getBuffer(p, "number_img", NUM_W * numStr.length, img.height)
+        buf.clear()
+        for (let i = 0; i < numStr.length; i++) {
+          if (numStr[i] == ".") {
+            buf.image(img, NUM_W * i, 0, DOT_W, img.height, NUM_W * 10, 0, DOT_W, buf.height)
+            continue
+          }
+          const sourceIdx = parseInt(numStr[i])
+          if (isNaN(sourceIdx)) {
+            continue
+          }
+          buf.image(img, NUM_W * i, 0, NUM_W, img.height, NUM_W * sourceIdx, 0, NUM_W, buf.height)
+        }
+        p.push()
+        p.translate(400, 200)
+        p.scale(0.5)
+        p.texture(buf)
+        p.noStroke()
+        p.plane(buf.width, buf.height)
+        p.pop()
+      }
       p.pop()
     }
   })
