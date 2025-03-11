@@ -595,8 +595,14 @@ app.game = async function () {
         const timer = ((COUNT_DURATION - this.timer) / 1000).toFixed(1)
         const part1 = Math.floor(timer)
         const part2 = Math.floor((timer - part1) * 10)
-        drawGText(p, `${part1}`.padStart(2, 0), 250, 100, { xoffset: 0, yoffset: -10, textSize: 100, textAlign: p.RIGHT })
-        drawGText(p, `.${part2}`, 250, 100, { xoffset: 0, yoffset: -10, textSize: 50, textAlign: p.LEFT })
+        //drawGText(p, `${part1}`.padStart(2, 0), 250, 100, { xoffset: 0, yoffset: -10, textSize: 100, textAlign: p.RIGHT })
+        //drawGText(p, `.${part2}`, 250, 100, { xoffset: 0, yoffset: -10, textSize: 50, textAlign: p.LEFT })
+        p.scale(0.9)
+        p.translate(160, 0)
+        drawGNumber(p, `${part1}`.padStart(2, 0), { xstep: 65, isAlignRight: true })
+        p.translate(-30, 10)
+        p.scale(0.7)
+        drawGNumber(p, `.${part2}`, { xstep: 30, isAlignLeft: true })
         p.pop()
       }
       entity.subscriptions.push(view.onDraw.pipe(
@@ -1020,30 +1026,12 @@ app.game = async function () {
         //drawGradientText(p, "Wow", 200, 100, { yoffset: -20 })
         p.pop()
       }
-      {
-        const NUM_W = 99
-        const DOT_W = 35
-        const numStr = "00012345.6789000"
-        const img = view.getImage("assets3/250310_number_01.png")
-        const buf = getBuffer(p, "number_img", NUM_W * numStr.length, img.height)
-        buf.clear()
-        for (let i = 0; i < numStr.length; i++) {
-          if (numStr[i] == ".") {
-            buf.image(img, NUM_W * i, 0, DOT_W, img.height, NUM_W * 10, 0, DOT_W, buf.height)
-            continue
-          }
-          const sourceIdx = parseInt(numStr[i])
-          if (isNaN(sourceIdx)) {
-            continue
-          }
-          buf.image(img, NUM_W * i, 0, NUM_W, img.height, NUM_W * sourceIdx, 0, NUM_W, buf.height)
-        }
+      if (false) {
         p.push()
         p.translate(400, 200)
         p.scale(0.5)
-        p.texture(buf)
-        p.noStroke()
-        p.plane(buf.width, buf.height)
+        drawGNumber(p, "302", { xstep: 65, isAlignLeft: true })
+        drawGNumber(p, "30", { xstep: 65, isAlignRight: true })
         p.pop()
       }
       p.pop()
@@ -1080,6 +1068,35 @@ app.game = async function () {
     const buffer = p.createGraphics(w, h)
     imagePool[finalKey] = buffer
     return buffer
+  }
+
+  function drawGNumber(p, numStr, { xstep, isAlignRight, isAlignLeft }) {
+    const NUM_W = 100
+    const DOT_W = 31
+    const img = view.getImage("assets3/250310_number_01.png")
+    const buf = getBuffer(p, "drawGNumber", NUM_W * numStr.length, img.height)
+    buf.clear()
+    const X_STEP = xstep || NUM_W
+    for (let i = 0; i < numStr.length; i++) {
+      const x = X_STEP * i
+      if (numStr[i] == ".") {
+        buf.image(img, x, 0, DOT_W, img.height, NUM_W * 10, 0, DOT_W, buf.height)
+        continue
+      }
+      const sourceIdx = parseInt(numStr[i])
+      if (isNaN(sourceIdx)) {
+        continue
+      }
+      buf.image(img, x, 0, NUM_W, img.height, NUM_W * sourceIdx, 0, NUM_W, buf.height)
+    }
+    p.texture(buf)
+    p.noStroke()
+    if (isAlignRight) {
+      p.translate(-buf.width, 0)
+    } else if (isAlignLeft) {
+      p.translate(buf.width, 0)
+    }
+    p.plane(buf.width, buf.height)
   }
 
   function drawGradientText(p, text, w, h, { yoffset, textSize, strokeWeight, strokeColor, fillColor, color1, color2, shadowColor, shadowBlur, textAlign }) {
