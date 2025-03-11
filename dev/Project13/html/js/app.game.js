@@ -68,7 +68,7 @@ app.game = async function () {
   // 
   const TEXT_STARTER = { type: "TEXT_STARTER", scale: 1, pos: [350, 500] }
   // 
-  const SCORE_LAYER = { type: "SCORE_LAYER", combo: 0 }
+  const SCORE_LAYER = { type: "SCORE_LAYER", combo: 0, scale: 1 }
   const NEWS_TICKER = {
     type: "NEWS_TICKER",
     values: [
@@ -354,6 +354,7 @@ app.game = async function () {
             const successEffectLayer = { ...DRAG_WORD_SUCCESS_EFFECT_LAYER, currentWord: currentWord, successWords: wins }
             addEntity(successEffectLayer)
             if (wins.length) {
+              // 額外連鎖特效，可加可不加
               // 連鎖數從1開始累加
               const scoreLayer = { ...SCORE_LAYER, combo: 1 }
               addEntity(scoreLayer)
@@ -529,10 +530,23 @@ app.game = async function () {
           }),
         )
       )
+      entity.subscriptions.push(onAnimation.subscribe(_ => {
+        // nothing to do
+      }, err => { }, () => {
+        removeEntity(entity)
+        const combo = entity.successWords.length
+        setScorePopup(combo)
+      }))
+
       const firstNullIdxAryForFilterCompare = rxjs.of({})
       const onCurrentEffectWordChange = rxjs.merge(firstNullIdxAryForFilterCompare, onAnimation).pipe(
         rxjs.bufferCount(2, 1),
-        rxjs.filter(([a, b]) => JSON.stringify(a.idxAry) != JSON.stringify(b.idxAry)),
+        rxjs.filter(([a, b]) => {
+          if (a == null || b == null) {
+            return false
+          }
+          return JSON.stringify(a.idxAry) != JSON.stringify(b.idxAry)
+        }),
         rxjs.tap(([a, b]) => {
           const idxAry = b.idxAry
           if (idxAry == null) {
@@ -543,24 +557,34 @@ app.game = async function () {
           currentEffectWord = config.lookupKanji(originWord)
         })
       )
+      entity.subscriptions.push(onCurrentEffectWordChange.subscribe())
+
+
       const onComboCount = onCurrentEffectWordChange.pipe(
         rxjs.scan((a, c) => a + 1, 0)
       )
-
-      entity.subscriptions.push(onAnimation.subscribe(_ => {
-        // nothing to do
-      }, err => { }, () => {
-        removeEntity(entity)
-        const combo = entity.successWords.length
-        setScorePopup(combo)
-      }))
-      entity.subscriptions.push(onCurrentEffectWordChange.subscribe())
       entity.subscriptions.push(onComboCount.subscribe(comboCount => {
         const scoreLayer = getEntities().find(e => e.type == SCORE_LAYER.type)
-        if (scoreLayer == null) {
-          return
+        if (scoreLayer) {
+          scoreLayer.combo = comboCount
         }
-        scoreLayer.combo = comboCount
+      }))
+
+      const onComboCountAnimation = onComboCount.pipe(
+        rxjs.switchMap(comboCount => {
+          return view.onDraw.pipe(
+            // 停止計算，設定一個能播完動畫的時間就行(新動畫出現時switchMap會覆蓋掉舊動畫)
+            rxjs.takeUntil(createP5Timer(10000)),
+            rxjs.scan((a, c) => a + c, 0),
+            rxjs.filter(totalDelta => totalDelta < 1000),
+          )
+        }),
+      )
+      entity.subscriptions.push(onComboCountAnimation.subscribe(totalDelta => {
+        const scoreLayer = getEntities().find(e => e.type == SCORE_LAYER.type)
+        if (scoreLayer) {
+          scoreLayer.scale = 1 + 0.1 * Math.sin(totalDelta / 200.0)
+        }
       }))
     }
     if (entity.type == TIMESUP_COUNTING_LAYER.type) {
@@ -844,6 +868,7 @@ app.game = async function () {
         {
           p.push()
           p.translate(view.getWidth() / 2, 689)
+          p.scale(this.scale)
           drawGradientText(p,
             "Combo",
             400, 450,
@@ -862,6 +887,7 @@ app.game = async function () {
         {
           p.push()
           p.translate(view.getWidth() / 2, 589)
+          p.scale(this.scale)
           drawGradientText(p,
             `${entity.combo}`,
             400, 400,

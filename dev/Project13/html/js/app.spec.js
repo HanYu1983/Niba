@@ -66,6 +66,7 @@ app.spec = async function () {
     SCORE_LAYER: spec.map("SCORE_LAYER", {
       "type": obj => obj == "SCORE_LAYER",
       combo: spec.number,
+      scale: spec.number,
     }),
     assert: function (s, o) {
       if (valid(s, o)) {
