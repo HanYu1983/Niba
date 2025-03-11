@@ -217,6 +217,11 @@ app.game = async function () {
   function setScorePopup(combo) {
     getEntities().filter(i => i.type == DRAG_WORD_START_ENTITY.type).forEach(i => i.unsubscribe())
     getEntities().filter(i => i.type == TIMESUP_COUNTING_LAYER.type).forEach(i => i.unsubscribe())
+    const scoreLayer = getEntities().find(e => e.type == SCORE_LAYER.type)
+    if (scoreLayer) {
+      scoreLayer.combo = combo
+      return
+    }
     addEntity(spec.assert(spec.SCORE_LAYER, { ...SCORE_LAYER, combo: combo }))
   }
   // controller
@@ -348,6 +353,11 @@ app.game = async function () {
           if (wins.length) {
             const successEffectLayer = { ...DRAG_WORD_SUCCESS_EFFECT_LAYER, currentWord: currentWord, successWords: wins }
             addEntity(successEffectLayer)
+            if (wins.length) {
+              // 連鎖數從1開始累加
+              const scoreLayer = { ...SCORE_LAYER, combo: 1 }
+              addEntity(scoreLayer)
+            }
           } else {
             setScorePopup(0)
           }
@@ -533,6 +543,9 @@ app.game = async function () {
           currentEffectWord = config.lookupKanji(originWord)
         })
       )
+      const onComboCount = onCurrentEffectWordChange.pipe(
+        rxjs.scan((a, c) => a + 1, 0)
+      )
 
       entity.subscriptions.push(onAnimation.subscribe(_ => {
         // nothing to do
@@ -542,6 +555,13 @@ app.game = async function () {
         setScorePopup(combo)
       }))
       entity.subscriptions.push(onCurrentEffectWordChange.subscribe())
+      entity.subscriptions.push(onComboCount.subscribe(comboCount => {
+        const scoreLayer = getEntities().find(e => e.type == SCORE_LAYER.type)
+        if (scoreLayer == null) {
+          return
+        }
+        scoreLayer.combo = comboCount
+      }))
     }
     if (entity.type == TIMESUP_COUNTING_LAYER.type) {
       const COUNT_DURATION = 30000
@@ -991,8 +1011,8 @@ app.game = async function () {
     buffer.stroke(255)
     buffer.strokeWeight(10)
     buffer.textAlign(p.CENTER)
-    // buffer.textFont(config.getFontStr())
-    // buffer.textStyle(p.BOLD)
+    buffer.textFont(config.getFontStr())
+    buffer.textStyle(p.BOLD)
     buffer.text(word, buffer.width / 2, buffer.height - 48)
     imagePool[word] = buffer
     return buffer
