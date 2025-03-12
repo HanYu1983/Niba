@@ -591,18 +591,19 @@ app.game = async function () {
       const COUNT_DURATION = 30000
       entity.onDrawP5 = function (p) {
         p.push()
-        p.translate(950, 360)
+
         const timer = ((COUNT_DURATION - this.timer) / 1000).toFixed(1)
         const part1 = Math.floor(timer)
         const part2 = Math.floor((timer - part1) * 10)
-        //drawGText(p, `${part1}`.padStart(2, 0), 250, 100, { xoffset: 0, yoffset: -10, textSize: 100, textAlign: p.RIGHT })
-        //drawGText(p, `.${part2}`, 250, 100, { xoffset: 0, yoffset: -10, textSize: 50, textAlign: p.LEFT })
-        p.scale(0.9)
-        p.translate(160, 0)
-        drawGNumber(p, `${part1}`.padStart(2, 0), { xstep: 65, isAlignRight: true })
-        p.translate(-30, 10)
-        p.scale(0.7)
-        drawGNumber(p, `.${part2}`, { xstep: 30, isAlignLeft: true })
+        if (false) {
+          p.translate(950, 360)
+          drawGText(p, `${part1}`.padStart(2, 0), 250, 100, { xoffset: 0, yoffset: -10, textSize: 100, textAlign: p.RIGHT })
+          drawGText(p, `.${part2}`, 250, 100, { xoffset: 0, yoffset: -10, textSize: 50, textAlign: p.LEFT })
+        }
+        p.translate(1060, 360)
+        drawGNumber(p, `${part1}`.padStart(2, 0) + ".", { isAlignRight: true })
+        p.translate(65, 18)
+        drawGNumber(p, `${part2}`, { isAlignLeft: true, isSmallFont: true })
         p.pop()
       }
       entity.subscriptions.push(view.onDraw.pipe(
@@ -1070,24 +1071,42 @@ app.game = async function () {
     return buffer
   }
 
-  function drawGNumber(p, numStr, { xstep, isAlignRight, isAlignLeft }) {
-    const NUM_W = 100
-    const DOT_W = 31
-    const img = view.getImage("assets3/250310_number_01.png")
-    const buf = getBuffer(p, "drawGNumber", NUM_W * numStr.length, img.height)
+  function drawGNumber(p, numStr, { xstep, isAlignRight, isAlignLeft, isSmallFont }) {
+    let NUM_W = 72
+    if (isSmallFont) {
+      NUM_W = 38
+    }
+    let numImg = view.getImage("assets3/number_big_01.png")
+    if (isSmallFont) {
+      numImg = view.getImage("assets3/number_small_01.png")
+    }
+    const dotImg = view.getImage("assets3/number_dot_01.png")
+    const DOT_PRE_W = 0
+    const DOT_W = dotImg.width + DOT_PRE_W
+    const dotCount = (numStr.match(/\./g) || []).length;
+    if (isSmallFont) {
+      if (dotCount.length) {
+        throw new Error("小字體不支援小數點")
+      }
+    }
+    const numCount = numStr.length - dotCount
+    const strWidth = numCount * NUM_W + dotCount * DOT_W
+    const buf = getBuffer(p, "drawGNumber", strWidth, numImg.height)
     buf.clear()
-    const X_STEP = xstep || NUM_W
+    let currentX = 0
     for (let i = 0; i < numStr.length; i++) {
-      const x = X_STEP * i
       if (numStr[i] == ".") {
-        buf.image(img, x, 0, DOT_W, img.height, NUM_W * 10, 0, DOT_W, buf.height)
+        currentX += DOT_PRE_W
+        buf.image(dotImg, currentX, 0)
+        currentX += DOT_W
         continue
       }
       const sourceIdx = parseInt(numStr[i])
       if (isNaN(sourceIdx)) {
         continue
       }
-      buf.image(img, x, 0, NUM_W, img.height, NUM_W * sourceIdx, 0, NUM_W, buf.height)
+      buf.image(numImg, currentX, 0, NUM_W, numImg.height, NUM_W * sourceIdx, 0, NUM_W, buf.height)
+      currentX += (xstep || NUM_W)
     }
     p.texture(buf)
     p.noStroke()
