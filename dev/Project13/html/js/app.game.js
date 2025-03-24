@@ -52,7 +52,7 @@ app.game = async function () {
   }
   // model
   // 背景
-  const BACKGROUND = { type: "BACKGROUND" }
+  const BACKGROUND = { type: "BACKGROUND"/*, addColor: [255, 0, 0, 100]*/ }
   // 拖字起點
   const DRAG_WORD_START_ENTITY = { type: "DRAG_WORD_START_ENTITY", idx: 0, word: "O", pos: [100, 100], hitRadius: 60, radius: 60 }
   // 拖移中的圖層
@@ -94,6 +94,7 @@ app.game = async function () {
   const DRAG_WORD_START_SIZE = 231
   const DRAG_WORD_START_Y = 1446 + DRAG_WORD_START_SIZE / 2
 
+  spec.assert(spec.BACKGROUND, BACKGROUND)
   spec.assert(spec.DRAG_WORD_START_ENTITY, DRAG_WORD_START_ENTITY)
   spec.assert(spec.DRAG_WORD_END_ENTITY, DRAG_WORD_END_ENTITY)
   spec.assert(spec.DRAG_WORD_SUCCESS_EFFECT_LAYER, DRAG_WORD_SUCCESS_EFFECT_LAYER)
@@ -167,7 +168,7 @@ app.game = async function () {
     const ends = entities.filter(e => e.type == DRAG_WORD_END_ENTITY.type)
     return ends.map(i => i.word)
   }
-
+  //
   let dragWordEnds = []
   function setDragWordEnds(words) {
     spec.assert(
@@ -202,7 +203,7 @@ app.game = async function () {
       { word: "ん" },
     ])
   }
-
+  //
   let nextWords = ["ん", "こ", "き", "そ"]
   function getNextWord() {
     if (hasNaxtWord() != true) {
@@ -223,6 +224,15 @@ app.game = async function () {
       return
     }
     addEntity(spec.assert(spec.SCORE_LAYER, { ...SCORE_LAYER, combo: combo }))
+  }
+  function setChangeBackgroundAddColor(color) {
+    const background = getEntities().find(e => e.type == BACKGROUND.type)
+    if (background == null) {
+      console.warn(`setChangeBackgroundAddColor fail. ${BACKGROUND.type} not found`)
+      return
+    }
+    background.addColor = color
+    spec.assert(spec.BACKGROUND, background)
   }
   // controller
   const onEntityMouseDown = new rxjs.Subject
@@ -375,6 +385,15 @@ app.game = async function () {
           p.texture(img)
           p.noStroke()
           p.plane(img.width, img.height)
+          p.pop()
+        }
+        if (this.addColor) {
+          p.push()
+          p.fill(this.addColor)
+          p.blendMode(p.ADD)
+          p.noStroke()
+          p.translate(view.getWidth() / 2, view.getHeight() / 2)
+          p.plane(view.getWidth(), view.getHeight())
           p.pop()
         }
         {

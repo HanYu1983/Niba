@@ -11,6 +11,12 @@ app.spec = async function () {
     config: spec.map("config", {
       words: spec.collection("words", word)
     }),
+    BACKGROUND: spec.map("BACKGROUND", {
+      "type": obj => obj == "BACKGROUND",
+      [symbol.optional]: {
+        addColor: spec.tuple("addColor", spec.number, spec.number, spec.number, spec.number),
+      }
+    }),
     WORD_ENTITY: spec.map("WORD_ENTITY", {
       pos: pos,
       word: nilableWord,
