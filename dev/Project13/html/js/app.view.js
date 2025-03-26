@@ -29,6 +29,12 @@ app.view = async function () {
   const onMouseDown = new rxjs.Subject
   const onMouseDrag = new rxjs.Subject
   const imgs = {}
+  // 這個方法要放在preload中
+  function loadImage(p, key) {
+    const dom = document.getElementById(key)
+    //console.log(`loadImage: ${dom.src}`)
+    imgs[key] = p.loadImage(dom.src)
+  }
   function getImage(key) {
     if (imgs[key] == null) {
       throw new Error(`image not found: ${key}`)
@@ -78,8 +84,9 @@ app.view = async function () {
           "assets3/number_dot_01.png",
           "assets3/number_small_01.png",
         ].forEach(path => {
-          console.log(`load: ${path}`)
-          imgs[path] = p.loadImage(getAssetPath(path));
+          
+          loadImage(p, path)
+          //imgs[path] = p.loadImage(getAssetPath(path));
         })
       }
       p.windowResized = function () {
