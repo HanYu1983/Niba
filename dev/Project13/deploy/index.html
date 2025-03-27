@@ -67,6 +67,17 @@
   <div class="center">
     <div id="canvas"></div>
   </div>
+  <script>
+    const STORE_URL = "https://apps.apple.com/app/idXXXXXXXXX"
+    function openAppStore() {
+      if (typeof mraid !== "undefined" && mraid.open) {
+        // for UnityPlayworks
+        mraid.open(STORE_URL);
+      } else {
+        window.open(STORE_URL);
+      }
+    }
+  </script>
   <button onclick="window.openAppStore()">openAppStore</button>
   <!--
   <script src="https://sf16-muse-va.ibytedtos.com/obj/union-fe-nc-i18n/playable/sdk/playable-sdk.js"></script>
