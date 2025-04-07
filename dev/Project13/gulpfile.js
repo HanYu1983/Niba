@@ -28,8 +28,9 @@ function htmlImageEmbededCheerio() {
 function htmlJsEmbededCheerio() {
     return cheerio(($, file, done) => {
         $('script').each((i, el) => {
+            const ignoreList = ["mraid.js"]
             const src = $(el).attr('src');
-            if (src) {
+            if (src && ignoreList.includes(src) == false) {
                 const jsPath = path.resolve(path.dirname(file.path), src);
                 try {
                     const jsBuffer = fs.readFileSync(jsPath);

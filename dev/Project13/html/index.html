@@ -69,6 +69,7 @@
   <div class="center">
     <div id="canvas"></div>
   </div>
+  <script src="mraid.js"></script>
   <script>
     const STORE_URL = "https://apps.apple.com/app/idXXXXXXXXX"
     function openAppStore() {
@@ -116,6 +117,13 @@
         messaging.startMessaing().catch(alert)
       });
     }
+    function addTestButton(p) {
+      const button = p.createButton('openAppStore');
+      button.position(0, 100);
+      button.mousePressed(() => {
+        openAppStore()
+      });
+    }
     async function main() {
       const config = await app.config
       const view = await app.view
@@ -125,7 +133,7 @@
       view.create("canvas")
       game.startGame()
       view.onSetup.subscribe(p => {
-        // nothing to do
+        addTestButton(p)
       })
     }
     main().catch(console.error)

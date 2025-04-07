@@ -523,7 +523,12 @@ app.game = async function () {
                 isBright: false,
                 idxAry: idxAry,
               })
-              return rxjs.concat(anim1, anim2)
+              const isLastOfIdxAry = idxAry[idxAry.length - 1] == idx
+              const anim2WithLastIdxDelay = view.onDraw.pipe(
+                rxjs.takeUntil(createP5Timer(isLastOfIdxAry ? 1000 : 0)),
+                rxjs.flatMap(() => anim2)
+              )
+              return rxjs.concat(anim1, anim2WithLastIdxDelay)
             }),
           )
         }),
@@ -623,8 +628,8 @@ app.game = async function () {
         }
         p.translate(1060, 360)
         drawGNumber(p, `${part1}`.padStart(2, 0) + ".", { isAlignRight: true })
-        p.translate(65, 18)
-        drawGNumber(p, `${part2}`.padEnd(2, 0), { isAlignLeft: true, isSmallFont: true })
+        p.translate(45, 18)
+        drawGNumber(p, `${part2}`.padEnd(2, 0), { xstep: 30, isAlignLeft: true, isSmallFont: true })
         p.pop()
       }
       entity.subscriptions.push(view.onDraw.pipe(
