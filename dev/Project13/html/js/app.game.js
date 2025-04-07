@@ -426,6 +426,7 @@ app.game = async function () {
       let changes = {}
       let currentEffectWord = null // "奈寧志雨素"
       let currentEffectOriginWord = null // "なねしうそ"
+      let currentWordIdxAry = null
       entity.onDrawP5 = function (p) {
         {
           p.push()
@@ -441,7 +442,7 @@ app.game = async function () {
         for (const i in wordEnds) {
           const wordEnd = wordEnds[i]
           const change = changes[i]
-          const isShowWord = currentEffectOriginWord && currentEffectOriginWord?.indexOf(wordEnd.word) != -1
+          const isShowWord = currentWordIdxAry?.find(idx => idx == i) != null
           if (isShowWord) {
             drawWord(p, {
               pos: wordEnd.pos,
@@ -568,6 +569,7 @@ app.game = async function () {
         }),
         rxjs.tap(([a, b]) => {
           const idxAry = b.idxAry
+          currentWordIdxAry = idxAry
           if (idxAry == null) {
             return
           }
@@ -611,9 +613,9 @@ app.game = async function () {
       entity.onDrawP5 = function (p) {
         p.push()
 
-        const timer = ((COUNT_DURATION - this.timer) / 1000).toFixed(1)
+        const timer = ((COUNT_DURATION - this.timer) / 1000).toFixed(2)
         const part1 = Math.floor(timer)
-        const part2 = Math.floor((timer - part1) * 10)
+        const part2 = Math.floor((timer - part1) * 100)
         if (false) {
           p.translate(950, 360)
           drawGText(p, `${part1}`.padStart(2, 0), 250, 100, { xoffset: 0, yoffset: -10, textSize: 100, textAlign: p.RIGHT })
@@ -622,7 +624,7 @@ app.game = async function () {
         p.translate(1060, 360)
         drawGNumber(p, `${part1}`.padStart(2, 0) + ".", { isAlignRight: true })
         p.translate(65, 18)
-        drawGNumber(p, `${part2}`, { isAlignLeft: true, isSmallFont: true })
+        drawGNumber(p, `${part2}`.padEnd(2, 0), { isAlignLeft: true, isSmallFont: true })
         p.pop()
       }
       entity.subscriptions.push(view.onDraw.pipe(
