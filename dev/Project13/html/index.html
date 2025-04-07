@@ -73,11 +73,41 @@
   <script>
     const STORE_URL = "https://apps.apple.com/app/idXXXXXXXXX"
     function openAppStore() {
-      if (typeof mraid !== "undefined" && mraid.open) {
-        // for UnityPlayworks
-        mraid.open(STORE_URL);
-      } else {
+      if (typeof mraid === "undefined") {
+        console.warn("openAppStore: mraid is undefined")
         window.open(STORE_URL);
+        return
+      }
+      mraid.open(STORE_URL);
+    }
+    function onMraidReady(fn) {
+      if (typeof mraid === "undefined") {
+        console.warn("onMraidReady: mraid is undefined")
+        fn()
+        return
+      }
+      if (mraid.getState() === "loading") {
+        mraid.addEventListener("ready", fn)
+        //fn()
+      } else {
+        fn()
+      }
+    }
+    function onSdkReady(fn) {
+      if (typeof mraid === "undefined") {
+        console.warn("onSdkReady: mraid is undefined")
+        fn()
+        return
+      }
+      if (mraid.isViewable()) {
+        fn()
+      } else {
+        function _viewableChange(viewable) {
+          mraid.removeEventListener('viewableChange', _viewableChange);
+          fn()
+        }
+        mraid.addEventListener('viewableChange', _viewableChange);
+        //fn()
       }
     }
   </script>
@@ -136,7 +166,12 @@
         addTestButton(p)
       })
     }
-    main().catch(console.error)
+
+    onMraidReady(() => {
+      onSdkReady(() => {
+        main()
+      })
+    })
   </script>
   <script>
     // 以下代碼要配合p5針對canvas的width,height為100%
