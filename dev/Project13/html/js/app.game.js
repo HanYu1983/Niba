@@ -38,11 +38,11 @@ app.game = async function () {
       const inputWord = "ななしゅうねん"
       const target = [[0, 1], [2, 3, 4], [5, 6]]
       const result = config.checkWordsAndGetIdxAryList(inputWord)
-      console.log(result)
+      //console.log(result)
       result.forEach(idxAry => {
         const word = config.convertIdxAryToWord(inputWord, idxAry)
         const kanzi = config.lookupKanji(word)
-        console.log(word, kanzi)
+        //console.log(word, kanzi)
       })
       // if (JSON.stringify(target) != JSON.stringify(result)) {
       //   console.log(result, target)
@@ -204,8 +204,12 @@ app.game = async function () {
     ])
   }
   //
+  const ENABLED_NEXT_WORD = false
   let nextWords = ["ん", "こ", "き", "そ"]
   function getNextWord() {
+    if (ENABLED_NEXT_WORD != true) {
+      return null
+    }
     if (hasNaxtWord() != true) {
       throw new Error(`no next word`)
     }
@@ -252,7 +256,9 @@ app.game = async function () {
       ).subscribe(([p, [tx, ty]]) => {
         const p1 = p.createVector(tx, ty)
         const p2 = p.createVector(entity.pos[0], entity.pos[1])
-        if (p1.dist(p2) < entity.hitRadius) {
+        const isInDistance = p1.dist(p2) < entity.hitRadius
+        const hasWord = entity.word != null
+        if (isInDistance && hasWord) {
           onEntityMouseDown.next(entity)
         }
       }))
