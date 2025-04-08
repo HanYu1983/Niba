@@ -52,19 +52,6 @@
   <div class="center">
     <div id="canvas"></div>
   </div>
-  <script src="mraid.js"></script>
-  <script>
-    const STORE_URL = "https://apps.apple.com/app/idXXXXXXXXX"
-    function openAppStore() {
-      if (typeof mraid !== "undefined" && mraid.open) {
-        // for UnityPlayworks
-        mraid.open(STORE_URL);
-      } else {
-        window.open(STORE_URL);
-      }
-    }
-  </script>
-  <button onclick="window.openAppStore()">openAppStore</button>
   <!--
   <script src="https://sf16-muse-va.ibytedtos.com/obj/union-fe-nc-i18n/playable/sdk/playable-sdk.js"></script>
   -->
@@ -4232,6 +4219,72 @@ THE SOFTWARE.
   <script>
     app = {}
   </script>
+  <script id="app.ads.js">window.app.ads = async function () {
+
+  function getMraid() {
+    if (window.mraid == null) {
+      console.warn("mraid not found: get fake marid")
+      return {
+        getState: function () { return "ready" },
+        open: function (url) {
+          console.warn(`fake marid open: ${url}`)
+          window.open(url, "_blank")
+        },
+        isViewable: function () { return true },
+      }
+    }
+    return window.mraid
+  }
+
+  const GOOGLE_PLAY_URL = "https://apps.apple.com/app/idXXXXXXXXX"
+  const APP_STORE_URL = "https://apps.apple.com/app/idXXXXXXXXX"
+
+  function isAndroid() {
+    const UserAgent = window.navigator.userAgent.toLowerCase();
+    return UserAgent.indexOf('android') > -1;
+  }
+
+  function openAppStore() {
+    const _mraid = getMraid()
+    if (isAndroid()) {
+      _mraid.open(GOOGLE_PLAY_URL);
+    }
+    else {
+      _mraid.open(APP_STORE_URL);
+    }
+  }
+  function onMraidReadyPromise() {
+    return new Promise((res, rej) => {
+      const _mraid = getMraid()
+      if (_mraid.getState() === "loading") {
+        _mraid.addEventListener("ready", res)
+      } else {
+        res()
+      }
+    })
+  }
+  function onSdkReadyPromise() {
+    return new Promise((res, rej) => {
+      const _mraid = getMraid()
+      if (_mraid.isViewable()) {
+        res()
+      } else {
+        function _viewableChange(viewable) {
+          if (viewable) {
+            _mraid.removeEventListener('viewableChange', _viewableChange);
+            res()
+          }
+        }
+        _mraid.addEventListener('viewableChange', _viewableChange);
+      }
+    })
+  }
+  await onMraidReadyPromise()
+  await onSdkReadyPromise()
+  return {
+    openAppStore: openAppStore,
+  }
+}()</script>
   <script id="app.config.js">app.config = async function () {
   const rows = parseCSV(getDictionryCSV())
   // 長文字優先
@@ -6588,11 +6641,11 @@ app.game = async function () {
       const inputWord = "ななしゅうねん"
       const target = [[0, 1], [2, 3, 4], [5, 6]]
       const result = config.checkWordsAndGetIdxAryList(inputWord)
-      console.log(result)
+      //console.log(result)
       result.forEach(idxAry => {
         const word = config.convertIdxAryToWord(inputWord, idxAry)
         const kanzi = config.lookupKanji(word)
-        console.log(word, kanzi)
+        //console.log(word, kanzi)
       })
       // if (JSON.stringify(target) != JSON.stringify(result)) {
       //   console.log(result, target)
@@ -6615,10 +6668,11 @@ app.game = async function () {
   const DRAG_WORD_SUCCESS_EFFECT_LAYER = { type: "DRAG_WORD_SUCCESS_EFFECT_LAYER", currentWord: "", successWords: [] }
   //
   const TIMESUP_COUNTING_LAYER = { type: "TIMESUP_COUNTING_LAYER", timer: 0 }
-  // 
+  // 開始動畫
   const TEXT_STARTER = { type: "TEXT_STARTER", scale: 1, pos: [350, 500] }
   // 
   const SCORE_LAYER = { type: "SCORE_LAYER", combo: 0, scale: 1 }
+  // 跑馬燈
   const NEWS_TICKER = {
     type: "NEWS_TICKER",
     values: [
@@ -6754,8 +6808,12 @@ app.game = async function () {
     ])
   }
   //
+  const ENABLED_NEXT_WORD = false
   let nextWords = ["ん", "こ", "き", "そ"]
   function getNextWord() {
+    if (ENABLED_NEXT_WORD != true) {
+      return null
+    }
     if (hasNaxtWord() != true) {
       throw new Error(`no next word`)
     }
@@ -6802,7 +6860,9 @@ app.game = async function () {
       ).subscribe(([p, [tx, ty]]) => {
         const p1 = p.createVector(tx, ty)
         const p2 = p.createVector(entity.pos[0], entity.pos[1])
-        if (p1.dist(p2) < entity.hitRadius) {
+        const isInDistance = p1.dist(p2) < entity.hitRadius
+        const hasWord = entity.word != null
+        if (isInDistance && hasWord) {
           onEntityMouseDown.next(entity)
         }
       }))
@@ -7029,6 +7089,7 @@ app.game = async function () {
           p.pop()
         }
       }
+      // 單個字閃爍動畫
       const showWordEffects = rxjs.from(entity.successWords).pipe(
         rxjs.concatMap(idxAry => rxjs.from(idxAry.map(idx => {
           return { idx, idxAry }
@@ -7083,16 +7144,7 @@ app.game = async function () {
           )
         }),
       )
-      // const showAttackEffects = rxjs.from(["A", "B"]).pipe(
-      //   rxjs.concatMap(word => rxjs.from(async function () {
-      //     console.log(`showAttackEffects: ${word}`)
-      //     await delay(100)
-      //     return {
-      //       scale: 1,
-      //       isBright: false,
-      //     }
-      //   }()))
-      // )
+      // 整個動畫流程
       const onAnimation = rxjs.concat(
         showWordEffects.pipe(
           rxjs.tap(params => {
@@ -7103,14 +7155,35 @@ app.game = async function () {
               isBright
             }
           }),
-        )
+        ),
+        // 下一段動畫
       )
+
       entity.subscriptions.push(onAnimation.subscribe(_ => {
         // nothing to do
-      }, err => { }, () => {
+      }, console.error, () => {
+        // 動畫結束，顯示得分頁
         removeEntity(entity)
         const combo = entity.successWords.length
         setScorePopup(combo)
+      }))
+      // 組成的漢字
+      // 最後一個組成的字閃爍時才顯示漢字
+      entity.subscriptions.push(onAnimation.subscribe((curr) => {
+        const idxAry = curr.idxAry
+        currentWordIdxAry = idxAry
+        if (idxAry == null) {
+          return
+        }
+        const isLast = curr.idxAry[curr.idxAry.length - 1] == curr.idx
+        if (isLast == false) {
+          currentEffectOriginWord = null
+          currentEffectWord = null
+          return
+        }
+        const originWord = config.convertIdxAryToWord(entity.currentWord, idxAry)
+        currentEffectOriginWord = originWord
+        currentEffectWord = config.lookupKanji(originWord)
       }))
 
       const firstNullIdxAryForFilterCompare = rxjs.of({})
@@ -7121,9 +7194,12 @@ app.game = async function () {
             return false
           }
           return JSON.stringify(a.idxAry) != JSON.stringify(b.idxAry)
-        }),
-        rxjs.tap(([a, b]) => {
-          const idxAry = b.idxAry
+        })
+      )
+      // 同時顯示漢字
+      if (false) {
+        entity.subscriptions.push(onCurrentEffectWordChange.subscribe(([prev, curr]) => {
+          const idxAry = curr.idxAry
           currentWordIdxAry = idxAry
           if (idxAry == null) {
             return
@@ -7131,11 +7207,9 @@ app.game = async function () {
           const originWord = config.convertIdxAryToWord(entity.currentWord, idxAry)
           currentEffectOriginWord = originWord
           currentEffectWord = config.lookupKanji(originWord)
-        })
-      )
-      entity.subscriptions.push(onCurrentEffectWordChange.subscribe())
-
-
+        }))
+      }
+      // 連鎖數字
       const onComboCount = onCurrentEffectWordChange.pipe(
         rxjs.scan((a, c) => a + 1, 0)
       )
@@ -7145,7 +7219,7 @@ app.game = async function () {
           scoreLayer.combo = comboCount
         }
       }))
-
+      // 連鎖數字縮放動畫
       const onComboCountAnimation = onComboCount.pipe(
         rxjs.switchMap(comboCount => {
           return view.onDraw.pipe(
@@ -7354,6 +7428,10 @@ app.game = async function () {
           }
         }
       }
+      const BIG_TITLE_DURATION = 2000
+      const SMALL_TITLE_DURATION = 2000
+      const OK_DURATION = 1000
+      const START_DURATION = 2000
       const onAnimation = rxjs.concat(
         // onSetup之後才能使用preload的圖片
         view.onSetup,
@@ -7366,7 +7444,7 @@ app.game = async function () {
           })
         ),
         view.onDraw.pipe(
-          rxjs.takeUntil(createP5Timer(1000)),
+          rxjs.takeUntil(createP5Timer(BIG_TITLE_DURATION)),
           rxjs.tap(delta => {
             handState.totalDelta += delta
             setCurrentHandState(handState)
@@ -7382,18 +7460,18 @@ app.game = async function () {
                 setCurrentState(state2)
               })
             ),
-            createP5Timer(500),
+            createP5Timer(SMALL_TITLE_DURATION / 2),
             // drop
             rxjs.of(0).pipe(
               rxjs.tap(() => {
                 state2.img2 = "assets2/250303_kotodaman_material_02/material_compressed/text_drug&drop_02_x24,y467.png"
               })
             ),
-            createP5Timer(500),
+            createP5Timer(SMALL_TITLE_DURATION / 2),
           ),
           // 同時手移動
           view.onDraw.pipe(
-            rxjs.takeUntil(createP5Timer(1000)),
+            rxjs.takeUntil(createP5Timer(SMALL_TITLE_DURATION)),
             rxjs.tap(delta => {
               handState.totalDelta += delta
             })
@@ -7407,7 +7485,7 @@ app.game = async function () {
             setCurrentHandState(null)
           })
         ),
-        createP5Timer(500),
+        createP5Timer(OK_DURATION),
         // start
         rxjs.of(0).pipe(
           rxjs.tap(() => {
@@ -7416,7 +7494,7 @@ app.game = async function () {
         ),
         // start縮放動畫
         view.onDraw.pipe(
-          rxjs.takeUntil(createP5Timer(3000)),
+          rxjs.takeUntil(createP5Timer(START_DURATION)),
           rxjs.scan((a, c) => a + c, 0),
           rxjs.tap(totalDelta => {
             state3.scale = 1 + 0.1 * Math.sin(totalDelta / 200.0)
@@ -7641,6 +7719,7 @@ app.game = async function () {
     if (ret) {
       return ret
     }
+    console.warn(`createGraphics: ${finalKey}`)
     // 這個的width設定大於1365後，手機就會畫成全黑，看不到文字
     const buffer = p.createGraphics(w, h)
     imagePool[finalKey] = buffer
@@ -7804,10 +7883,11 @@ app.game = async function () {
       const button = p.createButton('openAppStore');
       button.position(0, 100);
       button.mousePressed(() => {
-        openAppStore()
+        app.ads.then(ads => ads.openAppStore())
       });
     }
     async function main() {
+      const ads = await app.ads
       const config = await app.config
       const view = await app.view
       const game = await app.game

@@ -159,7 +159,7 @@ app.game = async function () {
     removeEntities(filterF)
     addEntites(_entities)
   }
-  function oerderEntites(orderF) {
+  function orderEntites(orderF) {
     entities.sort((a, b) => orderF(a) - orderF(b))
   }
   function getEntities() {
@@ -660,7 +660,7 @@ app.game = async function () {
         totalDelta => {
           entity.timer = totalDelta
         },
-        err => { },
+        console.error,
         () => {
           entity.timer = COUNT_DURATION
           setScorePopup(0)
@@ -900,7 +900,7 @@ app.game = async function () {
       )
       function startGame() {
         swapEntites(getPlayPageEntities(), entity => entity.type != NEWS_TICKER.type)
-        oerderEntites(entity => {
+        orderEntites(entity => {
           if (entity.type == NEWS_TICKER.type) {
             return 1
           }
@@ -908,7 +908,7 @@ app.game = async function () {
         })
         setStartDragWordEnds()
       }
-      entity.subscriptions.push(onAnimation.subscribe(() => { }, err => { }, startGame))
+      entity.subscriptions.push(onAnimation.subscribe(() => { }, console.error, startGame))
       entity.subscriptions.push(view.onMouseUp.subscribe(startGame))
     }
     if (entity.type == SCORE_LAYER.type) {
@@ -1097,7 +1097,7 @@ app.game = async function () {
       return ret
     }
     const img = view.getImage("assets/circle_background_01.png")
-    const buffer = p.createGraphics(img.width, img.height)
+    const buffer = getBuffer(p, "getWordAndBackgroundImage" + word, img.width, img.height)
     buffer.image(img, 0, 0, buffer.width, buffer.height, 0, 0, img.width, img.height);
     buffer.textSize(buffer.height / 2)
     buffer.stroke(255)
@@ -1116,6 +1116,7 @@ app.game = async function () {
     if (ret) {
       return ret
     }
+    console.warn(`createGraphics: ${finalKey}`)
     // 這個的width設定大於1365後，手機就會畫成全黑，看不到文字
     const buffer = p.createGraphics(w, h)
     imagePool[finalKey] = buffer
@@ -1248,8 +1249,19 @@ app.game = async function () {
   }
 
   function startGame() {
-    assertCheckWords(config)
+    assertCheckWords(config);
     addEntites(getStartPageEntities())
+
+    // async function test() {
+    //   for (let i = 0; i < 1000; i++) {
+    //     console.log(`test: ${i}`)
+    //     addEntites(getStartPageEntities())
+    //     await delay(1000)
+    //     console.log(getEntities().length)
+    //     removeEntities()
+    //   }
+    // }
+    // test()
   }
   return {
     assertCheckWords,
