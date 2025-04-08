@@ -1189,6 +1189,7 @@ app.game = async function () {
     if (img._gradient == null) {
       console.log("img.drawingContext.createLinearGradient")
       const gradient = img.drawingContext.createLinearGradient(0, 0, 0, h)
+      // 注意addColorStop不要放錯地方了，不然會導致記憶體洩漏
       gradient.addColorStop(0.1, p.color(color1?.[0] || 0, color1?.[1] || 0, color1?.[2] || 255))
       gradient.addColorStop(0.9, p.color(color2?.[0] || 0, color2?.[1] || 255, color2?.[2] || 0))
       img._gradient = gradient
