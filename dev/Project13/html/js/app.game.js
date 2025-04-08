@@ -65,10 +65,11 @@ app.game = async function () {
   const DRAG_WORD_SUCCESS_EFFECT_LAYER = { type: "DRAG_WORD_SUCCESS_EFFECT_LAYER", currentWord: "", successWords: [] }
   //
   const TIMESUP_COUNTING_LAYER = { type: "TIMESUP_COUNTING_LAYER", timer: 0 }
-  // 
+  // 開始動畫
   const TEXT_STARTER = { type: "TEXT_STARTER", scale: 1, pos: [350, 500] }
   // 
   const SCORE_LAYER = { type: "SCORE_LAYER", combo: 0, scale: 1 }
+  // 跑馬燈
   const NEWS_TICKER = {
     type: "NEWS_TICKER",
     values: [
@@ -810,6 +811,10 @@ app.game = async function () {
           }
         }
       }
+      const BIG_TITLE_DURATION = 2000
+      const SMALL_TITLE_DURATION = 2000
+      const OK_DURATION = 1000
+      const START_DURATION = 2000
       const onAnimation = rxjs.concat(
         // onSetup之後才能使用preload的圖片
         view.onSetup,
@@ -822,7 +827,7 @@ app.game = async function () {
           })
         ),
         view.onDraw.pipe(
-          rxjs.takeUntil(createP5Timer(1000)),
+          rxjs.takeUntil(createP5Timer(BIG_TITLE_DURATION)),
           rxjs.tap(delta => {
             handState.totalDelta += delta
             setCurrentHandState(handState)
@@ -838,18 +843,18 @@ app.game = async function () {
                 setCurrentState(state2)
               })
             ),
-            createP5Timer(500),
+            createP5Timer(SMALL_TITLE_DURATION / 2),
             // drop
             rxjs.of(0).pipe(
               rxjs.tap(() => {
                 state2.img2 = "assets2/250303_kotodaman_material_02/material_compressed/text_drug&drop_02_x24,y467.png"
               })
             ),
-            createP5Timer(500),
+            createP5Timer(SMALL_TITLE_DURATION / 2),
           ),
           // 同時手移動
           view.onDraw.pipe(
-            rxjs.takeUntil(createP5Timer(1000)),
+            rxjs.takeUntil(createP5Timer(SMALL_TITLE_DURATION)),
             rxjs.tap(delta => {
               handState.totalDelta += delta
             })
@@ -863,7 +868,7 @@ app.game = async function () {
             setCurrentHandState(null)
           })
         ),
-        createP5Timer(500),
+        createP5Timer(OK_DURATION),
         // start
         rxjs.of(0).pipe(
           rxjs.tap(() => {
@@ -872,7 +877,7 @@ app.game = async function () {
         ),
         // start縮放動畫
         view.onDraw.pipe(
-          rxjs.takeUntil(createP5Timer(3000)),
+          rxjs.takeUntil(createP5Timer(START_DURATION)),
           rxjs.scan((a, c) => a + c, 0),
           rxjs.tap(totalDelta => {
             state3.scale = 1 + 0.1 * Math.sin(totalDelta / 200.0)

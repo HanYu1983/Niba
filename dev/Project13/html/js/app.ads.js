@@ -5,17 +5,32 @@ window.app.ads = async function () {
       console.warn("mraid not found: get fake marid")
       return {
         getState: function () { return "ready" },
-        open: function (url) { console.warn(`fake marid open: ${url}`) },
+        open: function (url) {
+          console.warn(`fake marid open: ${url}`)
+          window.open(url, "_blank")
+        },
         isViewable: function () { return true },
       }
     }
     return window.mraid
   }
 
-  const STORE_URL = "https://apps.apple.com/app/idXXXXXXXXX"
+  const GOOGLE_PLAY_URL = "https://apps.apple.com/app/idXXXXXXXXX"
+  const APP_STORE_URL = "https://apps.apple.com/app/idXXXXXXXXX"
+
+  function isAndroid() {
+    const UserAgent = window.navigator.userAgent.toLowerCase();
+    return UserAgent.indexOf('android') > -1;
+  }
 
   function openAppStore() {
-    getMraid().open(STORE_URL)
+    const _mraid = getMraid()
+    if (isAndroid()) {
+      _mraid.open(GOOGLE_PLAY_URL);
+    }
+    else {
+      _mraid.open(APP_STORE_URL);
+    }
   }
   function onMraidReadyPromise() {
     return new Promise((res, rej) => {
