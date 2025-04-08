@@ -593,17 +593,19 @@ app.game = async function () {
           return JSON.stringify(a.idxAry) != JSON.stringify(b.idxAry)
         })
       )
-      // entity.subscriptions.push(onCurrentEffectWordChange.subscribe(([prev, curr]) => {
-      //   const idxAry = curr.idxAry
-      //   currentWordIdxAry = idxAry
-      //   if (idxAry == null) {
-      //     return
-      //   }
-      //   const originWord = config.convertIdxAryToWord(entity.currentWord, idxAry)
-      //   currentEffectOriginWord = originWord
-      //   currentEffectWord = config.lookupKanji(originWord)
-      // }))
-
+      // 同時顯示漢字
+      if (false) {
+        entity.subscriptions.push(onCurrentEffectWordChange.subscribe(([prev, curr]) => {
+          const idxAry = curr.idxAry
+          currentWordIdxAry = idxAry
+          if (idxAry == null) {
+            return
+          }
+          const originWord = config.convertIdxAryToWord(entity.currentWord, idxAry)
+          currentEffectOriginWord = originWord
+          currentEffectWord = config.lookupKanji(originWord)
+        }))
+      }
       // 連鎖數字
       const onComboCount = onCurrentEffectWordChange.pipe(
         rxjs.scan((a, c) => a + 1, 0)
