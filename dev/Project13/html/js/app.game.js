@@ -486,6 +486,7 @@ app.game = async function () {
           p.pop()
         }
       }
+      // 單個字閃爍動畫
       const showWordEffects = rxjs.from(entity.successWords).pipe(
         rxjs.concatMap(idxAry => rxjs.from(idxAry.map(idx => {
           return { idx, idxAry }
@@ -540,16 +541,7 @@ app.game = async function () {
           )
         }),
       )
-      // const showAttackEffects = rxjs.from(["A", "B"]).pipe(
-      //   rxjs.concatMap(word => rxjs.from(async function () {
-      //     console.log(`showAttackEffects: ${word}`)
-      //     await delay(100)
-      //     return {
-      //       scale: 1,
-      //       isBright: false,
-      //     }
-      //   }()))
-      // )
+      // 整個動畫流程
       const onAnimation = rxjs.concat(
         showWordEffects.pipe(
           rxjs.tap(params => {
@@ -560,14 +552,35 @@ app.game = async function () {
               isBright
             }
           }),
-        )
+        ),
+        // 下一段動畫
       )
+
       entity.subscriptions.push(onAnimation.subscribe(_ => {
         // nothing to do
-      }, err => { }, () => {
+      }, console.error, () => {
+        // 動畫結束，顯示得分頁
         removeEntity(entity)
         const combo = entity.successWords.length
         setScorePopup(combo)
+      }))
+      // 組成的漢字
+      // 最後一個組成的字閃爍時才顯示漢字
+      entity.subscriptions.push(onAnimation.subscribe((curr) => {
+        const idxAry = curr.idxAry
+        currentWordIdxAry = idxAry
+        if (idxAry == null) {
+          return
+        }
+        const isLast = curr.idxAry[curr.idxAry.length - 1] == curr.idx
+        if (isLast == false) {
+          currentEffectOriginWord = null
+          currentEffectWord = null
+          return
+        }
+        const originWord = config.convertIdxAryToWord(entity.currentWord, idxAry)
+        currentEffectOriginWord = originWord
+        currentEffectWord = config.lookupKanji(originWord)
       }))
 
       const firstNullIdxAryForFilterCompare = rxjs.of({})
@@ -578,21 +591,20 @@ app.game = async function () {
             return false
           }
           return JSON.stringify(a.idxAry) != JSON.stringify(b.idxAry)
-        }),
-        rxjs.tap(([a, b]) => {
-          const idxAry = b.idxAry
-          currentWordIdxAry = idxAry
-          if (idxAry == null) {
-            return
-          }
-          const originWord = config.convertIdxAryToWord(entity.currentWord, idxAry)
-          currentEffectOriginWord = originWord
-          currentEffectWord = config.lookupKanji(originWord)
         })
       )
-      entity.subscriptions.push(onCurrentEffectWordChange.subscribe())
+      // entity.subscriptions.push(onCurrentEffectWordChange.subscribe(([prev, curr]) => {
+      //   const idxAry = curr.idxAry
+      //   currentWordIdxAry = idxAry
+      //   if (idxAry == null) {
+      //     return
+      //   }
+      //   const originWord = config.convertIdxAryToWord(entity.currentWord, idxAry)
+      //   currentEffectOriginWord = originWord
+      //   currentEffectWord = config.lookupKanji(originWord)
+      // }))
 
-
+      // 連鎖數字
       const onComboCount = onCurrentEffectWordChange.pipe(
         rxjs.scan((a, c) => a + 1, 0)
       )
@@ -602,7 +614,7 @@ app.game = async function () {
           scoreLayer.combo = comboCount
         }
       }))
-
+      // 連鎖數字縮放動畫
       const onComboCountAnimation = onComboCount.pipe(
         rxjs.switchMap(comboCount => {
           return view.onDraw.pipe(
