@@ -107,9 +107,6 @@ app.game = async function () {
       { ...BACKGROUND },
       { ...TEXT_STARTER },
       { ...NEWS_TICKER },
-      // test
-      // { ...SCORE_LAYER },
-      // { ...DRAG_WORD_SUCCESS_EFFECT_LAYER }
     ]
   }
 
@@ -129,7 +126,6 @@ app.game = async function () {
       { ...DRAG_WORD_END_ENTITY, pos: [DRAG_WORD_END_X + 6 * DRAG_WORD_END_OFFSET, DRAG_WORD_END_Y] },
       { ...DRAG_WORD_LAYER },
       { ...DRAG_WORD_HIT_LAYER },
-      //{ ...DRAG_WORD_SUCCESS_EFFECT_LAYER },
       { ...TIMESUP_COUNTING_LAYER }
     ]
   }
@@ -165,6 +161,21 @@ app.game = async function () {
   function getEntities() {
     return entities
   }
+  //
+  function startStartPage() {
+    addEntites(getStartPageEntities())
+  }
+  function startPlayPage() {
+    swapEntites(getPlayPageEntities(), entity => entity.type != NEWS_TICKER.type)
+    orderEntites(entity => {
+      if (entity.type == NEWS_TICKER.type) {
+        return 1
+      }
+      return 0
+    })
+    setStartDragWordEnds()
+  }
+  //
   function getCurrentWords() {
     const ends = entities.filter(e => e.type == DRAG_WORD_END_ENTITY.type)
     return ends.map(i => i.word)
@@ -898,18 +909,8 @@ app.game = async function () {
           })
         ),
       )
-      function startGame() {
-        swapEntites(getPlayPageEntities(), entity => entity.type != NEWS_TICKER.type)
-        orderEntites(entity => {
-          if (entity.type == NEWS_TICKER.type) {
-            return 1
-          }
-          return 0
-        })
-        setStartDragWordEnds()
-      }
-      entity.subscriptions.push(onAnimation.subscribe(() => { }, console.error, startGame))
-      entity.subscriptions.push(view.onMouseUp.subscribe(startGame))
+      entity.subscriptions.push(onAnimation.subscribe(() => { }, console.error, startPlayPage))
+      entity.subscriptions.push(view.onMouseUp.subscribe(startPlayPage))
     }
     if (entity.type == SCORE_LAYER.type) {
       entity.onDrawP5 = function (p) {
@@ -1172,9 +1173,9 @@ app.game = async function () {
 
   function drawGradientText(p, text, w, h, { yoffset, textSize, strokeWeight, strokeColor, fillColor, color1, color2, shadowColor, shadowBlur, textAlign }) {
     const img = getBuffer(p, "drawGradientText", w, h)
+    img.clear()
     img.textFont(config.getFontStr())
     img.textStyle(p.BOLD)
-    img.clear()
     img.stroke(strokeColor?.[0] || 0, strokeColor?.[1] || 0, strokeColor?.[2] || 0)
     img.strokeWeight(strokeWeight || 3)
     img.fill(fillColor?.[0] || 255, fillColor?.[1] || 255, fillColor?.[2] || 255)
@@ -1186,12 +1187,13 @@ app.game = async function () {
     // https://developer.mozilla.org/zh-CN/docs/Web/API/CanvasGradient/addColorStop
     // https://www.w3schools.com/graphics/canvas_gradients.asp
     if (img._gradient == null) {
-      img._gradient = img.drawingContext.createLinearGradient(0, 0, 0, h)
+      console.log("img.drawingContext.createLinearGradient")
+      const gradient = img.drawingContext.createLinearGradient(0, 0, 0, h)
+      gradient.addColorStop(0.1, p.color(color1?.[0] || 0, color1?.[1] || 0, color1?.[2] || 255))
+      gradient.addColorStop(0.9, p.color(color2?.[0] || 0, color2?.[1] || 255, color2?.[2] || 0))
+      img._gradient = gradient
     }
-    const gradient = img._gradient
-    gradient.addColorStop(0.1, p.color(color1?.[0] || 0, color1?.[1] || 0, color1?.[2] || 255))
-    gradient.addColorStop(0.9, p.color(color2?.[0] || 0, color2?.[1] || 255, color2?.[2] || 0))
-    img.drawingContext.fillStyle = gradient
+    img.drawingContext.fillStyle = img._gradient
     img.textSize(textSize || img.height)
     img.textAlign(textAlign || p.CENTER)
     img.text(text, img.width / 2, img.height + yoffset)
@@ -1250,8 +1252,8 @@ app.game = async function () {
 
   function startGame() {
     assertCheckWords(config);
-    addEntites(getStartPageEntities())
-
+    startStartPage()
+    //setScorePopup(0)
     // async function test() {
     //   for (let i = 0; i < 1000; i++) {
     //     console.log(`test: ${i}`)
