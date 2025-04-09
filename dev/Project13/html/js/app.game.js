@@ -4,10 +4,15 @@ function delay(d) {
   })
 }
 
+function isDotInsideRect(dot, rect) {
+  return dot[0] > rect[0] && dot[0] < rect[2] && dot[1] > rect[1] && dot[1] < rect[3]
+}
+
 app.game = async function () {
   const view = await app.view
   const config = await app.config
   const spec = await app.spec
+  const ads = await app.ads
   // helper
   // 取代rxjs.timer, 讓時間的計算較為正確
   function createP5Timer(duration) {
@@ -88,6 +93,16 @@ app.game = async function () {
     height: 100,
     //backgroundColor: [100, 0, 0, 200],
   }
+  const DOWNLOAD_BACKGROUND = {
+    type: "DOWNLOAD_BACKGROUND",
+  }
+  const TOUCH_AREA = {
+    type: "TOUCH_AREA",
+    key: "undefined",
+    hitRect: [0, 0, 500, 100],
+    isDebug: true
+  }
+
   const DRAG_WORD_END_X = 85
   const DRAG_WORD_END_Y = 1155
   const DRAG_WORD_END_OFFSET = 150
@@ -101,6 +116,7 @@ app.game = async function () {
   spec.assert(spec.DRAG_WORD_SUCCESS_EFFECT_LAYER, DRAG_WORD_SUCCESS_EFFECT_LAYER)
   spec.assert(spec.NEWS_TICKER, NEWS_TICKER)
   spec.assert(spec.SCORE_LAYER, SCORE_LAYER)
+  spec.assert(spec.TOUCH_AREA, TOUCH_AREA)
 
   function getStartPageEntities() {
     return [
@@ -127,6 +143,13 @@ app.game = async function () {
       { ...DRAG_WORD_LAYER },
       { ...DRAG_WORD_HIT_LAYER },
       { ...TIMESUP_COUNTING_LAYER }
+    ]
+  }
+
+  function getDownloadPageEntities() {
+    return [
+      { ...DOWNLOAD_BACKGROUND },
+      { ...TOUCH_AREA, key: "download" }
     ]
   }
 
@@ -174,6 +197,25 @@ app.game = async function () {
       return 0
     })
     setStartDragWordEnds()
+  }
+  function setScorePopup(combo) {
+    getEntities().filter(i => i.type == DRAG_WORD_START_ENTITY.type).forEach(i => i.unsubscribe())
+    getEntities().filter(i => i.type == TIMESUP_COUNTING_LAYER.type).forEach(i => i.unsubscribe())
+    const scoreLayer = getEntities().find(e => e.type == SCORE_LAYER.type)
+    if (scoreLayer) {
+      scoreLayer.combo = combo
+      return
+    }
+    addEntity(spec.assert(spec.SCORE_LAYER, { ...SCORE_LAYER, combo: combo }))
+  }
+  function setChangeBackgroundAddColor(color) {
+    const background = getEntities().find(e => e.type == BACKGROUND.type)
+    if (background == null) {
+      console.warn(`setChangeBackgroundAddColor fail. ${BACKGROUND.type} not found`)
+      return
+    }
+    background.addColor = color
+    spec.assert(spec.BACKGROUND, background)
   }
   //
   function getCurrentWords() {
@@ -230,32 +272,13 @@ app.game = async function () {
   function hasNaxtWord() {
     return nextWords.length > 0
   }
-  //
-  function setScorePopup(combo) {
-    getEntities().filter(i => i.type == DRAG_WORD_START_ENTITY.type).forEach(i => i.unsubscribe())
-    getEntities().filter(i => i.type == TIMESUP_COUNTING_LAYER.type).forEach(i => i.unsubscribe())
-    const scoreLayer = getEntities().find(e => e.type == SCORE_LAYER.type)
-    if (scoreLayer) {
-      scoreLayer.combo = combo
-      return
-    }
-    addEntity(spec.assert(spec.SCORE_LAYER, { ...SCORE_LAYER, combo: combo }))
-  }
-  function setChangeBackgroundAddColor(color) {
-    const background = getEntities().find(e => e.type == BACKGROUND.type)
-    if (background == null) {
-      console.warn(`setChangeBackgroundAddColor fail. ${BACKGROUND.type} not found`)
-      return
-    }
-    background.addColor = color
-    spec.assert(spec.BACKGROUND, background)
-  }
   // controller
   const onEntityMouseDown = new rxjs.Subject
   const onWordDragStart = new rxjs.Subject
   const onWordDrag = new rxjs.Subject
   const onWordDragEnd = new rxjs.Subject
   const onWordDragStartEndHit = new rxjs.Subject
+  const onHitRect = new rxjs.Subject
   function setupEntity(entity) {
     entity.subscriptions = entity.subscriptions || []
     if (entity.hitRadius && entity.pos) {
@@ -272,6 +295,29 @@ app.game = async function () {
         const hasWord = entity.word != null
         if (isInDistance && hasWord) {
           onEntityMouseDown.next(entity)
+        }
+      }))
+    }
+    if (entity.hitRect) {
+      entity.onDrawP5 = function (p) {
+        if (this.isDebug) {
+          p.push()
+          p.translate(this.hitRect[0], this.hitRect[1])
+          p.noFill()
+          p.stroke(255, 0, 0)
+          p.plane(this.hitRect[2] - this.hitRect[0], this.hitRect[3] - this.hitRect[1])
+          p.pop()
+        }
+      }
+      entity.subscriptions.push(view.onSetup.pipe(
+        rxjs.switchMap(p => {
+          return view.onMouseDown.pipe(
+            rxjs.map(pos => [p, pos])
+          )
+        })
+      ).subscribe(([p, [tx, ty]]) => {
+        if (isDotInsideRect([tx, ty], entity.hitRect)) {
+          onHitRect.next(entity)
         }
       }))
     }
@@ -1038,6 +1084,25 @@ app.game = async function () {
         rxjs.repeat()
       )
       entity.subscriptions.push(onAnimation.subscribe())
+    }
+
+    if (entity.type == DOWNLOAD_BACKGROUND.type) {
+      entity.onDrawP5 = function (p) {
+        {
+          p.push()
+          const img = view.getImage("assets5/240408_kotodaman_確認用画像_01_compress/tinified/038.png")
+          p.translate(img.width / 2, img.height / 2)
+          p.texture(img)
+          p.noStroke()
+          p.plane(img.width, img.height)
+          p.pop()
+        }
+      }
+      entity.subscriptions.push(onHitRect.subscribe(entity => {
+        if (entity.key == "download") {
+          ads.openAppStore()
+        }
+      }))
     }
 
     entity.unsubscribe = function () {

@@ -74,6 +74,14 @@ app.spec = async function () {
       combo: spec.number,
       scale: spec.number,
     }),
+    TOUCH_AREA: spec.map("TOUCH_AREA", {
+      "type": obj => obj == "TOUCH_AREA",
+      hitRect: spec.tuple("hitRect", spec.number, spec.number, spec.number, spec.number),
+      key: spec.string,
+      [symbol.optional]: {
+        isDebug: spec.boolean,
+      }
+    }),
     assert: function (s, o) {
       if (valid(s, o)) {
         return o

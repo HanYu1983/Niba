@@ -68,6 +68,7 @@ app.view = async function () {
           "assets3/number_big_01.png",
           "assets3/number_dot_01.png",
           "assets3/number_small_01.png",
+          "assets5/240408_kotodaman_確認用画像_01_compress/tinified/038.png",
         ].forEach(path => {
 
           loadImage(p, path)
