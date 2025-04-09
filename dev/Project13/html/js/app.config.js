@@ -26,8 +26,21 @@ app.config = async function () {
     convertIdxAryToWord(wordWantCheck, idxAry) {
       return idxAry.map(i => wordWantCheck[i]).join("")
     },
-    getFontStr(){
+    getFontStr() {
       return "Arial"
+    },
+    getGameTime() {
+      return 30000
+    },
+    getComboColor(combo) {
+      const colors = [
+        [176, 190, 197, 100],
+        [66, 165, 245, 100],
+        [102, 187, 106, 100],
+        [255, 167, 38, 100],
+        [239, 83, 80, 100]
+      ]
+      return colors[combo % colors.length]
     }
   }
 }()

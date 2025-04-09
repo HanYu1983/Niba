@@ -282,6 +282,7 @@ app.game = async function () {
   const onWordDragEnd = new rxjs.Subject
   const onWordDragStartEndHit = new rxjs.Subject
   const onHitRect = new rxjs.Subject
+  const onGameOver = new rxjs.Subject
   function setupEntity(entity) {
     entity.subscriptions = entity.subscriptions || []
     if (entity.hitRadius && entity.pos) {
@@ -439,7 +440,7 @@ app.game = async function () {
               addEntity(scoreLayer)
             }
           } else {
-            setScorePopup(0)
+            onGameOver.next({ combo: 0 })
           }
         }
       }))
@@ -593,9 +594,10 @@ app.game = async function () {
                 isBright: false,
                 idxAry: idxAry,
               })
+              const DELAY_TIME = 500
               const isLastOfIdxAry = idxAry[idxAry.length - 1] == idx
               const anim2WithLastIdxDelay = view.onDraw.pipe(
-                rxjs.takeUntil(createP5Timer(isLastOfIdxAry ? 1000 : 0)),
+                rxjs.takeUntil(createP5Timer(isLastOfIdxAry ? DELAY_TIME : 0)),
                 rxjs.flatMap(() => anim2)
               )
               return rxjs.concat(anim1, anim2WithLastIdxDelay)
@@ -614,7 +616,7 @@ app.game = async function () {
       }, console.error, () => {
         // 動畫結束，顯示得分頁
         const combo = entity.successWords.length
-        setScorePopup(combo)
+        onGameOver.next({ combo: combo })
       }))
       // 下載頁
       entity.subscriptions.push(rxjs.concat(showWordEffects, createP5Timer(1000)).subscribe(
@@ -675,6 +677,7 @@ app.game = async function () {
         if (scoreLayer) {
           scoreLayer.combo = comboCount
         }
+        setChangeBackgroundAddColor(config.getComboColor(comboCount))
       }))
       // 連鎖數字縮放動畫
       const onComboCountAnimation = onComboCount.pipe(
@@ -695,7 +698,7 @@ app.game = async function () {
       }))
     }
     if (entity.type == TIMESUP_COUNTING_LAYER.type) {
-      const COUNT_DURATION = 30000
+      const COUNT_DURATION = config.getGameTime()
       entity.onDrawP5 = function (p) {
         p.push()
 
@@ -707,9 +710,9 @@ app.game = async function () {
           drawGText(p, `${part1}`.padStart(2, 0), 250, 100, { xoffset: 0, yoffset: -10, textSize: 100, textAlign: p.RIGHT })
           drawGText(p, `.${part2}`, 250, 100, { xoffset: 0, yoffset: -10, textSize: 50, textAlign: p.LEFT })
         }
-        p.translate(1060, 360)
-        drawGNumber(p, `${part1}`.padStart(2, 0) + ".", { isAlignRight: true })
-        p.translate(45, 18)
+        p.translate(1050, 360)
+        drawGNumber(p, `${part1}`.padStart(2, 0) + ".", { xstep: 65, isAlignRight: true })
+        p.translate(30, 18)
         drawGNumber(p, `${part2}`.padEnd(2, 0), { xstep: 30, isAlignLeft: true, isSmallFont: true })
         p.pop()
       }
@@ -723,9 +726,19 @@ app.game = async function () {
         console.error,
         () => {
           entity.timer = COUNT_DURATION
-          setScorePopup(0)
+          onGameOver.next({ combo: 0 })
         }
       ))
+      //
+      entity.subscriptions.push(onGameOver.subscribe(({ combo }) => {
+        if (combo == null) {
+          throw new Error(`onGameOver but combo is null`)
+        }
+        setScorePopup(combo)
+        entity.subscriptions.push(
+          createP5Timer(1000).subscribe(startDownloadPage)
+        )
+      }))
     }
     if (entity.type == TEXT_STARTER.type) {
       const state1 = {
