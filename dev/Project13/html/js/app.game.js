@@ -149,7 +149,7 @@ app.game = async function () {
   function getDownloadPageEntities() {
     return [
       { ...DOWNLOAD_BACKGROUND },
-      { ...TOUCH_AREA, key: "download" }
+      { ...TOUCH_AREA, key: "download", hitRect: [110, 1450, 970, 1600], isDebug: false },
     ]
   }
 
@@ -305,10 +305,12 @@ app.game = async function () {
       entity.onDrawP5 = function (p) {
         if (this.isDebug) {
           p.push()
-          p.translate(this.hitRect[0], this.hitRect[1])
+          const [x1, y1, x2, y2] = this.hitRect
+          const [x, y, w, h] = [x1, y1, x2 - x1, y2 - y1]
+          p.translate(x + w / 2, y + h / 2)
           p.noFill()
           p.stroke(255, 0, 0)
-          p.plane(this.hitRect[2] - this.hitRect[0], this.hitRect[3] - this.hitRect[1])
+          p.plane(w, h)
           p.pop()
         }
       }
@@ -616,7 +618,7 @@ app.game = async function () {
       }))
       // 下載頁
       entity.subscriptions.push(rxjs.concat(showWordEffects, createP5Timer(1000)).subscribe(
-        () => {},
+        () => { },
         console.error,
         () => {
           startDownloadPage()
@@ -1320,6 +1322,7 @@ app.game = async function () {
   function startGame() {
     assertCheckWords(config);
     startStartPage()
+    //startDownloadPage()
     //setScorePopup(0)
     // async function test() {
     //   for (let i = 0; i < 1000; i++) {

@@ -54,8 +54,8 @@ window.app.ads = async function () {
     })
   }
 
-  const GOOGLE_PLAY_URL = "https://apps.apple.com/app/idXXXXXXXXX"
-  const APP_STORE_URL = "https://apps.apple.com/app/idXXXXXXXXX"
+  const GOOGLE_PLAY_URL = "https://play.google.com/store/apps/details?id=com.sega.Kotodaman"
+  const APP_STORE_URL = "https://apps.apple.com/jp/app/%E3%82%B3%E3%83%88%E3%83%80%E3%83%9E%E3%83%B3-%E5%85%B1%E9%97%98%E3%81%93%E3%81%A8%E3%81%B0rpg/id1298368256"
 
   function isAndroid() {
     const UserAgent = window.navigator.userAgent.toLowerCase();
