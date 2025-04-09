@@ -208,6 +208,9 @@ app.game = async function () {
     }
     addEntity(spec.assert(spec.SCORE_LAYER, { ...SCORE_LAYER, combo: combo }))
   }
+  function startDownloadPage() {
+    swapEntites(getDownloadPageEntities())
+  }
   function setChangeBackgroundAddColor(color) {
     const background = getEntities().find(e => e.type == BACKGROUND.type)
     if (background == null) {
@@ -598,32 +601,30 @@ app.game = async function () {
           )
         }),
       )
-      // 整個動畫流程
-      const onAnimation = rxjs.concat(
-        showWordEffects.pipe(
-          rxjs.tap(params => {
-            const { idx, scale, isBright, idxAry } = params
-            changes[idx] = {
-              ...changes[idx],
-              scale,
-              isBright
-            }
-          }),
-        ),
-        // 下一段動畫
-      )
-
-      entity.subscriptions.push(onAnimation.subscribe(_ => {
-        // nothing to do
+      // 單字閃爍動畫
+      entity.subscriptions.push(showWordEffects.subscribe(params => {
+        const { idx, scale, isBright, idxAry } = params
+        changes[idx] = {
+          ...changes[idx],
+          scale,
+          isBright
+        }
       }, console.error, () => {
         // 動畫結束，顯示得分頁
-        removeEntity(entity)
         const combo = entity.successWords.length
         setScorePopup(combo)
       }))
+      // 下載頁
+      entity.subscriptions.push(rxjs.concat(showWordEffects, createP5Timer(1000)).subscribe(
+        () => {},
+        console.error,
+        () => {
+          startDownloadPage()
+        }
+      ))
       // 組成的漢字
       // 最後一個組成的字閃爍時才顯示漢字
-      entity.subscriptions.push(onAnimation.subscribe((curr) => {
+      entity.subscriptions.push(showWordEffects.subscribe((curr) => {
         const idxAry = curr.idxAry
         currentWordIdxAry = idxAry
         if (idxAry == null) {
@@ -641,7 +642,7 @@ app.game = async function () {
       }))
 
       const firstNullIdxAryForFilterCompare = rxjs.of({})
-      const onCurrentEffectWordChange = rxjs.merge(firstNullIdxAryForFilterCompare, onAnimation).pipe(
+      const onCurrentEffectWordChange = rxjs.merge(firstNullIdxAryForFilterCompare, showWordEffects).pipe(
         rxjs.bufferCount(2, 1),
         rxjs.filter(([a, b]) => {
           if (a == null || b == null) {
