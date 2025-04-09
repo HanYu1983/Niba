@@ -4172,19 +4172,58 @@ g.startWith=qd;g.subscribeOn=ra;g.switchAll=rd;g.switchMap=ja;g.switchMapTo=sd;g
   </script>
   <script id="app.ads.js">window.app.ads = async function () {
 
-  function getMraid() {
-    if (window.mraid == null) {
-      console.warn("mraid not found: get fake marid")
-      return {
-        getState: function () { return "ready" },
-        open: function (url) {
-          console.warn(`fake marid open: ${url}`)
-          window.open(url, "_blank")
-        },
-        isViewable: function () { return true },
+  function initMraid() {
+    return new Promise((res, rej) => {
+      if (typeof mraid == "undefined") {
+        console.warn("MRAID not found, skipping init")
+        res(false)
+        return
       }
-    }
-    return window.mraid
+      // ====
+      //
+      // https://docs.unity.com/acquire/en-us/manual/playable-ads-best-practices
+      //
+      // ====
+      // Wait for the SDK to become ready: 
+      function Start() {
+        if (mraid.getState() === 'loading') {
+          // If the SDK is still loading, add a listener for the 'ready' event:
+          mraid.addEventListener('ready', onSdkReady);
+          // Otherwise, if the SDK is ready, execute your function:
+        } else {
+          onSdkReady();
+        }
+      }
+
+      // Implement a function that shows the ad when it first renders:
+      function onSdkReady() {
+        // The viewableChange event fires if the ad container's viewability status changes.
+        // Add a listener for the viewabilityChange event, to handle pausing and resuming: 
+        mraid.addEventListener('viewableChange', viewableChangeHandler);
+        // The isViewable method returns whether the ad container is viewable on the screen.
+        if (mraid.isViewable()) {
+          // If the ad container is visible, play the ad:
+          showMyAd();
+        }
+      }
+
+      // Implement a function for executing the ad:
+      function showMyAd() {
+        res(true)
+      }
+
+      // Implement a function that handles pausing and resuming the ad based on visibility:
+      function viewableChangeHandler(viewable) {
+        if (viewable) {
+          // If the ad is viewable, show the ad:
+          showMyAd();
+        } else {
+          // If not, pause the ad.
+        }
+      }
+
+      Start()
+    })
   }
 
   const GOOGLE_PLAY_URL = "https://apps.apple.com/app/idXXXXXXXXX"
@@ -4195,43 +4234,18 @@ g.startWith=qd;g.subscribeOn=ra;g.switchAll=rd;g.switchMap=ja;g.switchMapTo=sd;g
     return UserAgent.indexOf('android') > -1;
   }
 
+  const hasMraid = await initMraid()
+
   function openAppStore() {
-    const _mraid = getMraid()
-    if (isAndroid()) {
-      _mraid.open(GOOGLE_PLAY_URL);
+    const url = isAndroid() ? GOOGLE_PLAY_URL : APP_STORE_URL;
+    if (hasMraid) {
+      mraid.open(url);
+    } else {
+      console.warn(`fake mraid open: ${url}`)
+      window.open(url, "_blank")
     }
-    else {
-      _mraid.open(APP_STORE_URL);
-    }
   }
-  function onMraidReadyPromise() {
-    return new Promise((res, rej) => {
-      const _mraid = getMraid()
-      if (_mraid.getState() === "loading") {
-        _mraid.addEventListener("ready", res)
-      } else {
-        res()
-      }
-    })
-  }
-  function onSdkReadyPromise() {
-    return new Promise((res, rej) => {
-      const _mraid = getMraid()
-      if (_mraid.isViewable()) {
-        res()
-      } else {
-        function _viewableChange(viewable) {
-          if (viewable) {
-            _mraid.removeEventListener('viewableChange', _viewableChange);
-            res()
-          }
-        }
-        _mraid.addEventListener('viewableChange', _viewableChange);
-      }
-    })
-  }
-  await onMraidReadyPromise()
-  await onSdkReadyPromise()
+
   return {
     openAppStore: openAppStore,
   }
@@ -7743,6 +7757,7 @@ app.game = async function () {
     if (img._gradient == null) {
       console.log("img.drawingContext.createLinearGradient")
       const gradient = img.drawingContext.createLinearGradient(0, 0, 0, h)
+      // 注意addColorStop不要放錯地方了，不然會導致記憶體洩漏
       gradient.addColorStop(0.1, p.color(color1?.[0] || 0, color1?.[1] || 0, color1?.[2] || 255))
       gradient.addColorStop(0.9, p.color(color2?.[0] || 0, color2?.[1] || 255, color2?.[2] || 0))
       img._gradient = gradient
@@ -7890,6 +7905,7 @@ app.game = async function () {
     }
     window.addEventListener('resize', resizeCanvas);
     window.addEventListener('load', resizeCanvas);
+    window.addEventListener("orientationchange", resizeCanvas);
   </script>
 
 </body></html>
