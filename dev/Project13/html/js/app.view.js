@@ -32,6 +32,9 @@ app.view = async function () {
   // 這個方法要放在preload中
   function loadImage(p, key) {
     const dom = document.getElementById(key)
+    if (dom == null) {
+      throw new Error(`loadImage not found: ${key}`)
+    }
     //console.log(`loadImage: ${dom.src}`)
     imgs[key] = p.loadImage(dom.src)
   }
@@ -69,6 +72,7 @@ app.view = async function () {
           "assets3/number_dot_01.png",
           "assets3/number_small_01.png",
           "assets5/240408_kotodaman_確認用画像_01_compress/tinified/038.png",
+          //
           "assets6/250409_kotodaman_material_01_compress/23-/0_97px x 496px.png",
           "assets6/250409_kotodaman_material_01_compress/23-/1_97px x 496px.png",
           "assets6/250409_kotodaman_material_01_compress/23-/2_97px x 496px.png",
@@ -84,6 +88,23 @@ app.view = async function () {
           "assets6/250409_kotodaman_material_01_compress/23-/12_97px x 496px.png",
           "assets6/250409_kotodaman_material_01_compress/23-/13_97px x 496px.png",
           "assets6/250409_kotodaman_material_01_compress/23-/14_97px x 496px.png",
+          //
+          "assets6/250409_kotodaman_material_01_compress/08/0_256 px x 328px.png",
+          "assets6/250409_kotodaman_material_01_compress/09/1_254 px x 332px.png",
+          "assets6/250409_kotodaman_material_01_compress/010/2_254 px x 332px.png",
+          "assets6/250409_kotodaman_material_01_compress/010/3_257 px x 332px.png",
+          "assets6/250409_kotodaman_material_01_compress/010/4_257 px x 332px.png",
+          "assets6/250409_kotodaman_material_01_compress/010/5.png",
+          "assets6/250409_kotodaman_material_01_compress/010/6.png",
+          "assets6/250409_kotodaman_material_01_compress/010/7.png",
+          "assets6/250409_kotodaman_material_01_compress/010/8.png",
+          "assets6/250409_kotodaman_material_01_compress/010/9.png",
+          "assets6/250409_kotodaman_material_01_compress/010/10.png",
+          "assets6/250409_kotodaman_material_01_compress/010/11.png",
+          "assets6/250409_kotodaman_material_01_compress/010/12.png",
+          "assets6/250409_kotodaman_material_01_compress/010/13.png",
+          "assets6/250409_kotodaman_material_01_compress/010/14.png",
+          //
         ].forEach(path => {
 
           loadImage(p, path)
@@ -210,10 +231,33 @@ app.view = async function () {
   }
   function getScorePopImage(score) {
     if (score < 0 || score > 14) {
-      throw new Error(`score must in 0 ~ 14: ${score}`)
+      throw new Error(`getScorePopImage: score must in 0 ~ 14: ${score}`)
     }
     const key = `assets6/250409_kotodaman_material_01_compress/23-/${score}_97px x 496px.png`
     return getImage(key)
+  }
+  function getComboImage(score) {
+    if (score < 0 || score > 14) {
+      throw new Error(`getComboImage: score must in 0 ~ 14: ${score}`)
+    }
+    const keys = [
+      "assets6/250409_kotodaman_material_01_compress/08/0_256 px x 328px.png",
+      "assets6/250409_kotodaman_material_01_compress/09/1_254 px x 332px.png",
+      "assets6/250409_kotodaman_material_01_compress/010/2_254 px x 332px.png",
+      "assets6/250409_kotodaman_material_01_compress/010/3_257 px x 332px.png",
+      "assets6/250409_kotodaman_material_01_compress/010/4_257 px x 332px.png",
+      "assets6/250409_kotodaman_material_01_compress/010/5.png",
+      "assets6/250409_kotodaman_material_01_compress/010/6.png",
+      "assets6/250409_kotodaman_material_01_compress/010/7.png",
+      "assets6/250409_kotodaman_material_01_compress/010/8.png",
+      "assets6/250409_kotodaman_material_01_compress/010/9.png",
+      "assets6/250409_kotodaman_material_01_compress/010/10.png",
+      "assets6/250409_kotodaman_material_01_compress/010/11.png",
+      "assets6/250409_kotodaman_material_01_compress/010/12.png",
+      "assets6/250409_kotodaman_material_01_compress/010/13.png",
+      "assets6/250409_kotodaman_material_01_compress/010/14.png"
+    ]
+    return getImage(keys[score])
   }
   return {
     create,
@@ -225,6 +269,7 @@ app.view = async function () {
     // onMouseDrag,
     getImage,
     getWidth, getHeight, getCanvasToImageFactorX, getCanvasToImageFactorY,
-    getScorePopImage
+    getScorePopImage,
+    getComboImage
   }
 }()

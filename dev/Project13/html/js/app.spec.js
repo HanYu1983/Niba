@@ -73,6 +73,9 @@ app.spec = async function () {
       "type": obj => obj == "COMBO_POPUP",
       combo: spec.number,
       scale: spec.number,
+      [symbol.optional]: {
+        isSystemDraw: spec.boolean
+      }
     }),
     TOUCH_AREA: spec.map("TOUCH_AREA", {
       "type": obj => obj == "TOUCH_AREA",

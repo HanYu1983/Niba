@@ -73,7 +73,7 @@ app.game = async function () {
   // 開始動畫
   const TEXT_STARTER = { type: "TEXT_STARTER", scale: 1, pos: [350, 500] }
   // 
-  const COMBO_POPUP = { type: "COMBO_POPUP", combo: 0, scale: 1 }
+  const COMBO_POPUP = { type: "COMBO_POPUP", combo: 0, scale: 1, isSystemDraw: false }
   // 跑馬燈
   const NEWS_TICKER = {
     type: "NEWS_TICKER",
@@ -997,52 +997,63 @@ app.game = async function () {
     }
     if (entity.type == COMBO_POPUP.type) {
       entity.onDrawP5 = function (p) {
-        {
+        if (this.isSystemDraw) {
+          {
+            p.push()
+            const img = view.getImage("assets2/250303_kotodaman_material_02/material_compressed/logo_small_effect_x164,y23.png")
+            const [x, y] = [164 + img.width / 2, 23 + img.height / 2]
+            p.translate(x, y)
+            p.texture(img)
+            p.noStroke()
+            p.plane(img.width, img.height)
+            p.pop()
+          }
+          {
+            p.push()
+            p.translate(view.getWidth() / 2, 689)
+            p.scale(this.scale)
+            drawGradientText(p,
+              "Combo",
+              400, 450,
+              {
+                textSize: 100,
+                yoffset: -20,
+                strokeColor: [0, 0, 0],
+                strokeWeight: 20,
+                color1: [107, 224, 174],
+                color2: [166, 222, 115],
+                shadowColor: [255, 255, 255],
+              }
+            )
+            p.pop()
+          }
+          {
+            p.push()
+            p.translate(view.getWidth() / 2, 589)
+            p.scale(this.scale)
+            drawGradientText(p,
+              `${this.combo}`,
+              400, 400,
+              {
+                textSize: 400,
+                yoffset: -20,
+                strokeColor: [0, 0, 0],
+                strokeWeight: 30,
+                color1: [107, 224, 174],
+                color2: [166, 222, 115],
+                shadowColor: [255, 255, 255],
+              }
+            )
+            p.pop()
+          }
+        } else {
           p.push()
-          const img = view.getImage("assets2/250303_kotodaman_material_02/material_compressed/logo_small_effect_x164,y23.png")
-          const [x, y] = [164 + img.width / 2, 23 + img.height / 2]
+          const img = view.getComboImage(this.combo)
+          const [x, y] = [256 + img.width / 2, 328 + img.height / 2]
           p.translate(x, y)
           p.texture(img)
           p.noStroke()
           p.plane(img.width, img.height)
-          p.pop()
-        }
-        {
-          p.push()
-          p.translate(view.getWidth() / 2, 689)
-          p.scale(this.scale)
-          drawGradientText(p,
-            "Combo",
-            400, 450,
-            {
-              textSize: 100,
-              yoffset: -20,
-              strokeColor: [0, 0, 0],
-              strokeWeight: 20,
-              color1: [107, 224, 174],
-              color2: [166, 222, 115],
-              shadowColor: [255, 255, 255],
-            }
-          )
-          p.pop()
-        }
-        {
-          p.push()
-          p.translate(view.getWidth() / 2, 589)
-          p.scale(this.scale)
-          drawGradientText(p,
-            `${entity.combo}`,
-            400, 400,
-            {
-              textSize: 400,
-              yoffset: -20,
-              strokeColor: [0, 0, 0],
-              strokeWeight: 30,
-              color1: [107, 224, 174],
-              color2: [166, 222, 115],
-              shadowColor: [255, 255, 255],
-            }
-          )
           p.pop()
         }
       }
