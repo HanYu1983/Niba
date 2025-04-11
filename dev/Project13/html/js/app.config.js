@@ -16,11 +16,18 @@ app.config = async function () {
       const ret = []
       for (let i = 0; i < wordWantCheck.length; ++i) {
         const subWorkWantCheck = wordWantCheck.substr(i)
-        const matchedWord = this.words.filter(word => subWorkWantCheck.startsWith(word))?.[0]
-        if (matchedWord) {
-          ret.push(R.range(i, i + matchedWord.length))
+        const matchedWords = this.words.filter(word => subWorkWantCheck.startsWith(word))
+        if (matchedWords.length) {
+          // 短文字在前
+          matchedWords.reverse()
+          matchedWords.forEach(matchedWord => {
+            if (matchedWord.length > 1) {
+              ret.push(R.range(i, i + matchedWord.length))
+            }
+          })
         }
       }
+      console.log(ret)
       return ret
     },
     convertIdxAryToWord(wordWantCheck, idxAry) {

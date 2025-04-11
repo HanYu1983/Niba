@@ -45,7 +45,7 @@ app.spec = async function () {
     }),
     DRAG_WORD_SUCCESS_EFFECT_LAYER: spec.map("DRAG_WORD_SUCCESS_EFFECT_LAYER", {
       "type": obj => obj == "DRAG_WORD_SUCCESS_EFFECT_LAYER",
-      currentWord: spec.string,
+      currentWord: spec.collection("currentWord", spec.string),
       successWords: spec.collection("successWords", spec.collection("successWordsIdxAry", spec.number))
     }),
     NEWS_TICKER: spec.map("NEWS_TICKER", {

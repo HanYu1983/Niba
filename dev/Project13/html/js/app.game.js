@@ -67,7 +67,7 @@ app.game = async function () {
   // 計算拖字到終點的碰撞層
   const DRAG_WORD_HIT_LAYER = { type: "DRAG_WORD_HIT_LAYER" }
   // 成功組成字的特效層
-  const DRAG_WORD_SUCCESS_EFFECT_LAYER = { type: "DRAG_WORD_SUCCESS_EFFECT_LAYER", currentWord: "", successWords: [] }
+  const DRAG_WORD_SUCCESS_EFFECT_LAYER = { type: "DRAG_WORD_SUCCESS_EFFECT_LAYER", currentWord: [], successWords: [] }
   //
   const TIMESUP_COUNTING_LAYER = { type: "TIMESUP_COUNTING_LAYER", timer: 0 }
   // 開始動畫
@@ -203,15 +203,26 @@ app.game = async function () {
     })
     setStartDragWordEnds()
   }
-  function setComboPopupAndDisableDragWord(combo) {
-    getEntities().filter(i => i.type == DRAG_WORD_START_ENTITY.type).forEach(i => i.unsubscribe())
-    getEntities().filter(i => i.type == TIMESUP_COUNTING_LAYER.type).forEach(i => i.unsubscribe())
+  function setComboPopup(combo) {
     const scoreLayer = getEntities().find(e => e.type == COMBO_POPUP.type)
     if (scoreLayer) {
       scoreLayer.combo = combo
       return
     }
     addEntity(spec.assert(spec.COMBO_POPUP, { ...COMBO_POPUP, combo: combo }))
+  }
+  function startDragWordSuccessEffectAndDisableDragWord({ currentWord, successWords, isShowComboAnimation }) {
+    getEntities().filter(i => i.type == DRAG_WORD_START_ENTITY.type).forEach(i => i.unsubscribe())
+    getEntities().filter(i => i.type == TIMESUP_COUNTING_LAYER.type).forEach(i => i.unsubscribe())
+    const successEffectLayer = { ...DRAG_WORD_SUCCESS_EFFECT_LAYER, currentWord: currentWord, successWords: successWords }
+    addEntity(spec.assert(spec.DRAG_WORD_SUCCESS_EFFECT_LAYER, successEffectLayer))
+    if (successWords.length) {
+      if (isShowComboAnimation) {
+        // 額外連鎖特效，可加可不加
+        // 連鎖數從1開始累加
+        setComboPopup(1)
+      }
+    }
   }
   function setScorePopup(score) {
     const scoreLayer = getEntities().find(e => e.type == SCORE_POPUP.type)
@@ -444,14 +455,11 @@ app.game = async function () {
         if (isPrepareForCheck(currentWord)) {
           const wins = config.checkWordsAndGetIdxAryList(currentWord.join(""))
           if (wins.length) {
-            const successEffectLayer = { ...DRAG_WORD_SUCCESS_EFFECT_LAYER, currentWord: currentWord, successWords: wins }
-            addEntity(successEffectLayer)
-            if (wins.length) {
-              // 額外連鎖特效，可加可不加
-              // 連鎖數從1開始累加
-              const scoreLayer = { ...COMBO_POPUP, combo: 1 }
-              addEntity(scoreLayer)
-            }
+            startDragWordSuccessEffectAndDisableDragWord({
+              currentWord: currentWord,
+              successWords: wins,
+              isShowComboAnimation: true
+            })
           } else {
             onGameOver.next({ combo: 0 })
           }
@@ -499,6 +507,15 @@ app.game = async function () {
           p.pop()
         }
       }
+      entity.subscriptions.push(onGameOver.subscribe(({ combo }) => {
+        if (combo == null) {
+          throw new Error(`onGameOver but combo is null`)
+        }
+        setScorePopup(combo)
+        entity.subscriptions.push(
+          createP5Timer(3000).subscribe(startDownloadPage)
+        )
+      }))
     }
     if (entity.type == DRAG_WORD_SUCCESS_EFFECT_LAYER.type) {
       if (entity.successWords == null || entity.successWords.length == 0) {
@@ -738,7 +755,6 @@ app.game = async function () {
         if (combo == null) {
           throw new Error(`onGameOver but combo is null`)
         }
-        setComboPopupAndDisableDragWord(combo)
         setScorePopup(combo)
         entity.subscriptions.push(
           createP5Timer(3000).subscribe(startDownloadPage)
