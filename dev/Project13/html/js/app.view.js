@@ -72,6 +72,18 @@ app.view = async function () {
           "assets6/250409_kotodaman_material_01_compress/23-/0_97px x 496px.png",
           "assets6/250409_kotodaman_material_01_compress/23-/1_97px x 496px.png",
           "assets6/250409_kotodaman_material_01_compress/23-/2_97px x 496px.png",
+          "assets6/250409_kotodaman_material_01_compress/23-/3_97px x 496px.png",
+          "assets6/250409_kotodaman_material_01_compress/23-/4_97px x 496px.png",
+          "assets6/250409_kotodaman_material_01_compress/23-/5_97px x 496px.png",
+          "assets6/250409_kotodaman_material_01_compress/23-/6_97px x 496px.png",
+          "assets6/250409_kotodaman_material_01_compress/23-/7_97px x 496px.png",
+          "assets6/250409_kotodaman_material_01_compress/23-/8_97px x 496px.png",
+          "assets6/250409_kotodaman_material_01_compress/23-/9_97px x 496px.png",
+          "assets6/250409_kotodaman_material_01_compress/23-/10_97px x 496px.png",
+          "assets6/250409_kotodaman_material_01_compress/23-/11_97px x 496px.png",
+          "assets6/250409_kotodaman_material_01_compress/23-/12_97px x 496px.png",
+          "assets6/250409_kotodaman_material_01_compress/23-/13_97px x 496px.png",
+          "assets6/250409_kotodaman_material_01_compress/23-/14_97px x 496px.png",
         ].forEach(path => {
 
           loadImage(p, path)
@@ -196,6 +208,13 @@ app.view = async function () {
       }
     }, tagName)
   }
+  function getScorePopImage(score) {
+    if (score < 0 || score > 14) {
+      throw new Error(`score must in 0 ~ 14: ${score}`)
+    }
+    const key = `assets6/250409_kotodaman_material_01_compress/23-/${score}_97px x 496px.png`
+    return getImage(key)
+  }
   return {
     create,
     onSetup,
@@ -205,6 +224,7 @@ app.view = async function () {
     onMouseUp,
     // onMouseDrag,
     getImage,
-    getWidth, getHeight, getCanvasToImageFactorX, getCanvasToImageFactorY
+    getWidth, getHeight, getCanvasToImageFactorX, getCanvasToImageFactorY,
+    getScorePopImage
   }
 }()

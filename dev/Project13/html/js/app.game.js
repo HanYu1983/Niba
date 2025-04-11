@@ -102,6 +102,10 @@ app.game = async function () {
     hitRect: [0, 0, 500, 100],
     isDebug: true
   }
+  const SCORE_POPUP = {
+    type: "SCORE_POPUP",
+    score: 0
+  }
 
   const DRAG_WORD_END_X = 85
   const DRAG_WORD_END_Y = 1155
@@ -117,6 +121,7 @@ app.game = async function () {
   spec.assert(spec.NEWS_TICKER, NEWS_TICKER)
   spec.assert(spec.COMBO_POPUP, COMBO_POPUP)
   spec.assert(spec.TOUCH_AREA, TOUCH_AREA)
+  spec.assert(spec.SCORE_POPUP, SCORE_POPUP)
 
   function getStartPageEntities() {
     return [
@@ -198,7 +203,7 @@ app.game = async function () {
     })
     setStartDragWordEnds()
   }
-  function setScorePopup(combo) {
+  function setComboPopupAndDisableDragWord(combo) {
     getEntities().filter(i => i.type == DRAG_WORD_START_ENTITY.type).forEach(i => i.unsubscribe())
     getEntities().filter(i => i.type == TIMESUP_COUNTING_LAYER.type).forEach(i => i.unsubscribe())
     const scoreLayer = getEntities().find(e => e.type == COMBO_POPUP.type)
@@ -207,6 +212,14 @@ app.game = async function () {
       return
     }
     addEntity(spec.assert(spec.COMBO_POPUP, { ...COMBO_POPUP, combo: combo }))
+  }
+  function setScorePopup(score) {
+    const scoreLayer = getEntities().find(e => e.type == SCORE_POPUP.type)
+    if (scoreLayer) {
+      scoreLayer.score = score
+      return
+    }
+    addEntity(spec.assert(spec.SCORE_POPUP, { ...SCORE_POPUP, score: score }))
   }
   function startDownloadPage() {
     swapEntites(getDownloadPageEntities())
@@ -450,7 +463,6 @@ app.game = async function () {
         {
           p.push()
           const img = view.getImage("assets2/250303_kotodaman_material_02/material_compressed/background_x0,y0.png")
-          //const img = view.getImage("assets/250207_kotodaman_background_01.png")
           p.translate(img.width / 2, img.height / 2)
           p.texture(img)
           p.noStroke()
@@ -618,14 +630,6 @@ app.game = async function () {
         const combo = entity.successWords.length
         onGameOver.next({ combo: combo })
       }))
-      // 下載頁
-      entity.subscriptions.push(rxjs.concat(showWordEffects, createP5Timer(1000)).subscribe(
-        () => { },
-        console.error,
-        () => {
-          startDownloadPage()
-        }
-      ))
       // 組成的漢字
       // 最後一個組成的字閃爍時才顯示漢字
       entity.subscriptions.push(showWordEffects.subscribe((curr) => {
@@ -734,9 +738,10 @@ app.game = async function () {
         if (combo == null) {
           throw new Error(`onGameOver but combo is null`)
         }
+        setComboPopupAndDisableDragWord(combo)
         setScorePopup(combo)
         entity.subscriptions.push(
-          createP5Timer(1000).subscribe(startDownloadPage)
+          createP5Timer(3000).subscribe(startDownloadPage)
         )
       }))
     }
@@ -1121,6 +1126,20 @@ app.game = async function () {
       }))
     }
 
+    if (entity.type == SCORE_POPUP.type) {
+      entity.onDrawP5 = function (p) {
+        {
+          p.push()
+          const img = view.getScorePopImage(this.score)
+          p.translate(97 + img.width / 2, 496 + img.height / 2)
+          p.texture(img)
+          p.noStroke()
+          p.plane(img.width, img.height)
+          p.pop()
+        }
+      }
+    }
+
     entity.unsubscribe = function () {
       this.subscriptions.forEach(sub => sub.unsubscribe())
     }
@@ -1336,7 +1355,7 @@ app.game = async function () {
     assertCheckWords(config);
     startStartPage()
     //startDownloadPage()
-    //setScorePopup(0)
+    //setScorePopup(14)
     // async function test() {
     //   for (let i = 0; i < 1000; i++) {
     //     console.log(`test: ${i}`)

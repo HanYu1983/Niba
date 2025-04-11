@@ -82,6 +82,10 @@ app.spec = async function () {
         isDebug: spec.boolean,
       }
     }),
+    SCORE_POPUP: spec.map("SCORE_POPUP", {
+      "type": obj => obj == "SCORE_POPUP",
+      score: spec.number,
+    }),
     assert: function (s, o) {
       if (valid(s, o)) {
         return o
