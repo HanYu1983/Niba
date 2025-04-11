@@ -69,8 +69,8 @@ app.spec = async function () {
         backgroundColor: spec.tuple("backgroundColor", spec.number, spec.number, spec.number, spec.number),
       }
     }),
-    SCORE_LAYER: spec.map("SCORE_LAYER", {
-      "type": obj => obj == "SCORE_LAYER",
+    COMBO_POPUP: spec.map("COMBO_POPUP", {
+      "type": obj => obj == "COMBO_POPUP",
       combo: spec.number,
       scale: spec.number,
     }),

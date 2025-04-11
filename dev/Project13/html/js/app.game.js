@@ -73,7 +73,7 @@ app.game = async function () {
   // 開始動畫
   const TEXT_STARTER = { type: "TEXT_STARTER", scale: 1, pos: [350, 500] }
   // 
-  const SCORE_LAYER = { type: "SCORE_LAYER", combo: 0, scale: 1 }
+  const COMBO_POPUP = { type: "COMBO_POPUP", combo: 0, scale: 1 }
   // 跑馬燈
   const NEWS_TICKER = {
     type: "NEWS_TICKER",
@@ -115,7 +115,7 @@ app.game = async function () {
   spec.assert(spec.DRAG_WORD_END_ENTITY, DRAG_WORD_END_ENTITY)
   spec.assert(spec.DRAG_WORD_SUCCESS_EFFECT_LAYER, DRAG_WORD_SUCCESS_EFFECT_LAYER)
   spec.assert(spec.NEWS_TICKER, NEWS_TICKER)
-  spec.assert(spec.SCORE_LAYER, SCORE_LAYER)
+  spec.assert(spec.COMBO_POPUP, COMBO_POPUP)
   spec.assert(spec.TOUCH_AREA, TOUCH_AREA)
 
   function getStartPageEntities() {
@@ -201,12 +201,12 @@ app.game = async function () {
   function setScorePopup(combo) {
     getEntities().filter(i => i.type == DRAG_WORD_START_ENTITY.type).forEach(i => i.unsubscribe())
     getEntities().filter(i => i.type == TIMESUP_COUNTING_LAYER.type).forEach(i => i.unsubscribe())
-    const scoreLayer = getEntities().find(e => e.type == SCORE_LAYER.type)
+    const scoreLayer = getEntities().find(e => e.type == COMBO_POPUP.type)
     if (scoreLayer) {
       scoreLayer.combo = combo
       return
     }
-    addEntity(spec.assert(spec.SCORE_LAYER, { ...SCORE_LAYER, combo: combo }))
+    addEntity(spec.assert(spec.COMBO_POPUP, { ...COMBO_POPUP, combo: combo }))
   }
   function startDownloadPage() {
     swapEntites(getDownloadPageEntities())
@@ -436,7 +436,7 @@ app.game = async function () {
             if (wins.length) {
               // 額外連鎖特效，可加可不加
               // 連鎖數從1開始累加
-              const scoreLayer = { ...SCORE_LAYER, combo: 1 }
+              const scoreLayer = { ...COMBO_POPUP, combo: 1 }
               addEntity(scoreLayer)
             }
           } else {
@@ -673,7 +673,7 @@ app.game = async function () {
         rxjs.scan((a, c) => a + 1, 0)
       )
       entity.subscriptions.push(onComboCount.subscribe(comboCount => {
-        const scoreLayer = getEntities().find(e => e.type == SCORE_LAYER.type)
+        const scoreLayer = getEntities().find(e => e.type == COMBO_POPUP.type)
         if (scoreLayer) {
           scoreLayer.combo = comboCount
         }
@@ -691,7 +691,7 @@ app.game = async function () {
         }),
       )
       entity.subscriptions.push(onComboCountAnimation.subscribe(totalDelta => {
-        const scoreLayer = getEntities().find(e => e.type == SCORE_LAYER.type)
+        const scoreLayer = getEntities().find(e => e.type == COMBO_POPUP.type)
         if (scoreLayer) {
           scoreLayer.scale = 1 + 0.1 * Math.sin(totalDelta / 200.0)
         }
@@ -974,7 +974,7 @@ app.game = async function () {
       entity.subscriptions.push(onAnimation.subscribe(() => { }, console.error, startPlayPage))
       entity.subscriptions.push(view.onMouseUp.subscribe(startPlayPage))
     }
-    if (entity.type == SCORE_LAYER.type) {
+    if (entity.type == COMBO_POPUP.type) {
       entity.onDrawP5 = function (p) {
         {
           p.push()
