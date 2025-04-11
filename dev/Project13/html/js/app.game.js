@@ -523,7 +523,7 @@ app.game = async function () {
         return
       }
       let changes = {}
-      let currentEffectWord = null // "奈寧志雨素"
+      let currentEffectWord = null// "奈寧志雨素"
       let currentEffectOriginWord = null // "なねしうそ"
       let currentWordIdxAry = null
       entity.onDrawP5 = function (p) {
@@ -553,9 +553,10 @@ app.game = async function () {
         }
         if (currentEffectWord) {
           p.push()
-          p.translate(view.getWidth() / 2, 1384)
+          p.translate(view.getWidth() / 2, 1434)
           drawGradientText(p, currentEffectWord, view.getWidth(), 200, {
-            yoffset: -30,
+            yoffset: -40,
+            textSize: 170,
             strokeColor: [0, 0, 0],
             color1: [255, 255, 124],
             color2: [245, 195, 76],
@@ -566,9 +567,10 @@ app.game = async function () {
         }
         if (currentEffectOriginWord) {
           p.push()
-          p.translate(view.getWidth() / 2, 1253)
-          drawGradientText(p, currentEffectOriginWord, view.getWidth(), 50, {
-            yoffset: -10,
+          p.translate(view.getWidth() / 2, 1303)
+          drawGradientText(p, currentEffectOriginWord, view.getWidth(), 100, {
+            yoffset: -20,
+            textSize: 70,
             strokeColor: [0, 0, 0],
             color1: [255, 255, 124],
             color2: [245, 195, 76],
@@ -1314,7 +1316,7 @@ app.game = async function () {
     // https://developer.mozilla.org/zh-CN/docs/Web/API/CanvasGradient/addColorStop
     // https://www.w3schools.com/graphics/canvas_gradients.asp
     if (img._gradient == null) {
-      console.log("img.drawingContext.createLinearGradient")
+      console.warn("img.drawingContext.createLinearGradient")
       const gradient = img.drawingContext.createLinearGradient(0, 0, 0, h)
       // 注意addColorStop不要放錯地方了，不然會導致記憶體洩漏
       gradient.addColorStop(0.1, p.color(color1?.[0] || 0, color1?.[1] || 0, color1?.[2] || 255))
@@ -1381,6 +1383,7 @@ app.game = async function () {
   function startGame() {
     assertCheckWords(config);
     startStartPage()
+    //startDragWordSuccessEffectAndDisableDragWord({ currentWord: [], successWords: [[]], isShowComboAnimation: true })
     //startDownloadPage()
     //setScorePopup(14)
     // async function test() {
