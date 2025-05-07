@@ -1,0 +1,14 @@
+{
+  "dependencies": {
+    "gulp": "^5.0.0",
+    "gulp-cheerio": "^1.0.0",
+    "gulp-if": "^3.0.0",
+    "gulp-img-base64": "^0.0.1",
+    "gulp-rename": "^2.0.0",
+    "gulp-uglify": "^3.0.2",
+    "through2": "^4.0.2",
+    "tsify": "^5.0.4",
+    "uglify-js": "^3.19.3",
+    "vinyl-source-stream": "^2.0.0"
+  }
+}
