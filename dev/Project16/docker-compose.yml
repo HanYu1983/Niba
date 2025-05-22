@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    volumes:
+      - .:/app
+    command: tail -f /dev/null
+    # ffmpeg -i movie_015.mp4 -vf "chromakey=0x314D79:0.1:0.2" -c:v libvpx-vp9 -pix_fmt yuva420p output.webm
+    # ffmpeg -i movie_015.mp4 -vf "colorkey=0x314D79:0.1:0.1" -c:v libvpx-vp9 -pix_fmt yuva420p -b:v 2M output.webm
+    # ffmpeg -i output.webm -c:v apng -pix_fmt rgba output.apng
+
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - .:/usr/share/nginx/html
+    ports:
+      - "8080:80"  # 将容器端口从8080改为标准80端口
+    restart: always

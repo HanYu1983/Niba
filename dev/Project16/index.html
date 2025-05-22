@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+    <video controls preload="auto" width="640" height="360">
+        <source src="movie_015.mp4" type="video/webm">
+        <p class="vjs-no-js">
+            請啟用JavaScript以觀看影片
+        </p>
+    </video>
+
+    <video style="background-image: url('https://static3.depositphotos.com/1000363/104/i/450/depositphotos_1045236-stock-photo-free-button.jpg')" controls preload="auto" width="640" height="360">
+        <source src="output.webm" type="video/webm">
+        <p class="vjs-no-js">
+            請啟用JavaScript以觀看影片
+        </p>
+    </video>
+
+    <img src="output.apng" width="640" height="360" alt="APNG animation">
+    
+    <div style="margin-top: 20px">
+      <button class="vjs-control" onclick="playAPNG()">播放</button>
+      <button class="vjs-control" onclick="pauseAPNG()">暂停</button>
+      <button class="vjs-control" onclick="reloadAPNG()">重载</button>
+    </div>
+
+    <script>
+      const apngImg = document.querySelector('img[alt="APNG animation"]');
+      let originalSrc = 'output.apng';
+
+      function playAPNG() {
+        apngImg.src = 'data:image/png;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=';
+        setTimeout(() => apngImg.src = originalSrc, 50);
+      }
+
+      function pauseAPNG() {
+        apngImg.src = '';
+      }
+
+      function reloadAPNG() {
+        apngImg.src = originalSrc;
+      }
+    </script>
+</body>
+
+</html>
