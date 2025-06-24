@@ -37,7 +37,7 @@ export class View {
         };
         animate()
     }
-    createCanvas(w, h) {
+    async createCanvas(w, h) {
         this.canvas = document.getElementById('gameCanvas');
         this.canvas.width = w || window.innerWidth;
         this.canvas.height = h || window.innerHeight;
