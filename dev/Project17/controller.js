@@ -89,6 +89,35 @@ export class Controller {
                     state = "normal"
                 }
                 animate().catch(console.error);
+
+                // const animate = async () => {
+                //     this.boards[row][col] = null; // 將點擊的球設為null
+                //     const fallInfos = this.getFallInfos();
+                //     this.setHidesFromFallInfos(fallInfos); // 設置隱藏位置
+                //     await this.createBallFallAnimation(fallInfos);
+                //     this.applyFallInfos(fallInfos);
+                //     this.clearHides(); // 清除隱藏位置
+                //     for (let i = 0; i < 50; i++) {
+                //         const eatInfos = this.getEatInfo();
+                //         if (eatInfos.length > 0) {
+                //             await this.setHidesFromEatInfos(eatInfos); // 設置隱藏位置
+                //             // 這裡可以添加吃掉球的動畫
+                //             await this.createEatBallAnimation(eatInfos);
+                //             this.clearHides(); // 清除隱藏位置
+                //             this.applyEatInfos(eatInfos); // 將吃掉的球位置應用到棋盤上
+
+                //             const fallInfos = this.getFallInfos();
+                //             this.setHidesFromFallInfos(fallInfos); // 設置隱藏位置
+                //             await this.createBallFallAnimation(fallInfos);
+                //             this.applyFallInfos(fallInfos);
+                //             this.clearHides(); // 清除隱藏位置
+                //         } else {
+                //             break   // 如果沒有吃掉的球, 則跳出循環
+                //         }
+                //     }
+                //     state = "normal"
+                // }
+                // animate().catch(console.error);
             }
         })
 
@@ -281,7 +310,7 @@ export class Controller {
             if (timeElapsed < 500) {
                 // 在0.5秒內移動到目標位置
                 balls.forEach(ball => {
-                    const progress = timeElapsed / 500; // 0到1之間
+                    const progress = timeElapsed / 500.0; // 0到1之間
                     ball.x = ball.x + (ball.targetX - ball.x) * progress;
                     ball.y = ball.y + (ball.targetY - ball.y) * progress;
                 });
