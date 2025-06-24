@@ -1,11 +1,9 @@
 import { Injector } from "./injector.js";
-import { View } from "./view.js";
+import { View, BALL_SIZE } from "./view.js";
 
 function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
-
-const BALL_SIZE = 50; // 假設每個球的大小為50x50像素
 
 export class Controller {
     injector = new Injector();
