@@ -330,16 +330,16 @@ export class Controller {
         const onUpdate = (delta) => {
             // 1. 0.5秒後移到目標位置
             // 2. 變成彈跳狀態，持續0.5秒
-            if (timeElapsed < 500) {
+            if (timeElapsed < 200) {
                 // 在0.5秒內移動到目標位置
                 balls.forEach(ball => {
-                    const progress = timeElapsed / 500.0; // 0到1之間
+                    const progress = timeElapsed / 300.0; // 0到1之間
                     ball.x = ball.x + (ball.targetX - ball.x) * progress;
                     ball.y = ball.y + (ball.targetY - ball.y) * progress;
                 });
             } else {
                 state = "bouncing";
-                scaleY = 0.7 + 0.3 * Math.abs(Math.cos((timeElapsed - 500) / 1000 * Math.PI * 2));
+                scaleY = 0.5 + 0.5 * Math.abs(Math.cos((timeElapsed - 300) / 600 * Math.PI * 2));
             }
             timeElapsed += delta;
         }
@@ -352,7 +352,7 @@ export class Controller {
         }
         this.injector.addUpdateListener(onUpdate);
         this.injector.addRenderListener(onRender);
-        await delay(1000);
+        await delay(600);
         this.injector.removeListener(onUpdate);
         this.injector.removeListener(onRender);
     }
