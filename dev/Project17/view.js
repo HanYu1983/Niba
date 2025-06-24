@@ -45,44 +45,6 @@ export class View {
         this.ctx.fillStyle = 'black';
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     }
-    _getContext() {
-        if (this.ctx == null) {
-            console.error("Canvas context is not initialized. Call createCanvas first.");
-            return null;
-        }
-        return this.ctx;
-    }
-    _getRelatedPositionFromCanvas([x, y]) {
-        const rect = this.canvas.getBoundingClientRect();
-        const canvasX = x - rect.left;
-        const canvasY = y - rect.top;
-        return [canvasX, canvasY];
-    }
-    _getImage(path) {
-        return document.getElementById(path)
-    }
-
-    // <img src="images/puyo_blue.png" id="images/puyo_blue.png">
-    // <img src="images/puyo_green.png" id="images/puyo_green.png">
-    // <img src="images/puyo_purple.png" id="images/puyo_purple.png">
-    // <img src="images/puyo_red.png" id="images/puyo_red.png">
-    // <img src="images/puyo_yellow.png" id="images/puyo_yellow.png"></img>
-    // type: 0~4
-    _getBallImage(type) {
-        const imgs = [
-            "images/puyo_blue.png",
-            "images/puyo_green.png",
-            "images/puyo_purple.png",
-            "images/puyo_red.png",
-            "images/puyo_yellow.png",
-        ];
-        return this._getImage(imgs[type]);
-    }
-
-    clearCanvas() {
-        const ctx = this._getContext();
-        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); // 清除畫布
-    }
 
     renderBoard({ boards, hides, state, mx, my }) {
         const ctx = this._getContext();
@@ -155,5 +117,48 @@ export class View {
                 }
             });
         }
+    }
+
+    globalToBoardLocal([x, y]) {
+        return [x, y]
+    }
+
+    _getContext() {
+        if (this.ctx == null) {
+            console.error("Canvas context is not initialized. Call createCanvas first.");
+            return null;
+        }
+        return this.ctx;
+    }
+    _getRelatedPositionFromCanvas([x, y]) {
+        const rect = this.canvas.getBoundingClientRect();
+        const canvasX = x - rect.left;
+        const canvasY = y - rect.top;
+        return [canvasX, canvasY];
+    }
+    _getImage(path) {
+        return document.getElementById(path)
+    }
+
+    // <img src="images/puyo_blue.png" id="images/puyo_blue.png">
+    // <img src="images/puyo_green.png" id="images/puyo_green.png">
+    // <img src="images/puyo_purple.png" id="images/puyo_purple.png">
+    // <img src="images/puyo_red.png" id="images/puyo_red.png">
+    // <img src="images/puyo_yellow.png" id="images/puyo_yellow.png"></img>
+    // type: 0~4
+    _getBallImage(type) {
+        const imgs = [
+            "images/puyo_blue.png",
+            "images/puyo_green.png",
+            "images/puyo_purple.png",
+            "images/puyo_red.png",
+            "images/puyo_yellow.png",
+        ];
+        return this._getImage(imgs[type]);
+    }
+
+    clearCanvas() {
+        const ctx = this._getContext();
+        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); // 清除畫布
     }
 }

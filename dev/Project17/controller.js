@@ -55,7 +55,8 @@ export class Controller {
             my = y;
         })
 
-        this.injector.addMouseDBClickListener(([x, y]) => {
+        this.injector.addMouseDBClickListener(([gx, gy]) => {
+            const [x,y] = this.view.globalToBoardLocal([gx, gy]);
             const col = Math.floor(x / BALL_SIZE);
             const row = Math.floor(y / BALL_SIZE);
             if (state == "normal") {

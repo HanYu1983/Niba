@@ -24,6 +24,14 @@ export class ViewPIXI {
             this.injector.notifyUpdateListeners(delta);
             this.injector.notifyRenderListeners();
         });
+        window.addEventListener('dblclick', e => {
+            const { x, y } = this.app.renderer.events.pointer.global
+            this.injector.notifyMouseDBClickListeners([x, y]);
+        });
+        window.addEventListener('mousemove', e => {
+            const { x, y } = this.app.renderer.events.pointer.global
+            this.injector.notifyMouseMoveListeners([x, y]);
+        });
     }
 
     clearCanvas() {
@@ -35,13 +43,9 @@ export class ViewPIXI {
         for (let i = 0; i < boards.length; i++) {
             for (let j = 0; j < boards[i].length; j++) {
                 const isHide = hides.some(([hx, hy]) => hx === j && hy === i);
-                if (isHide) {
-                    continue; // 如果這個位置被隱藏, 跳過繪制
-                }
                 const ballType = boards[i][j];
-                if (ballType !== null) {
-                    this._drawPuyo(`puyo-${i}-${j}`, ballType, { x: j * imgSize, y: i * imgSize });
-                }
+                const isVisible = isHide == false && ballType !== null;
+                this._drawPuyo(`puyo-${i}-${j}`, ballType, { x: j * imgSize, y: i * imgSize, visible: isVisible });
             }
         }
         // // 寫出狀態
@@ -54,6 +58,11 @@ export class ViewPIXI {
 
     renderEatAnimation({ balls, state, scaleY }) {
 
+    }
+
+    globalToBoardLocal([x, y]) {
+        const local = this.playPage.boardContainer.toLocal({ x: x, y: y });
+        return [local.x, local.y]
     }
 
     assets = {}
@@ -92,10 +101,6 @@ export class ViewPIXI {
         return texture
     }
 
-    _getRendererEventsPointer() {
-        return this.app.renderer.events.pointer
-    }
-
     playPage = {
         container: null,
         boardContainer: null
@@ -110,21 +115,14 @@ export class ViewPIXI {
         this.playPage.container = container;
         this.playPage.boardContainer = boardContainer;
         this.app.stage.addChild(container);
-
         boardContainer.x = 100
-        // this.app.ticker.add((time) => {
-        //     const pointer = this._getRendererEventsPointer();
-        //     const local = boardContainer.toLocal(pointer.global);
-        //     const puyo = this._drawPuyo('puyo2', local.x, local.y);
-
-        // })
     }
 
     entites = {}
     _drawPuyo(key, ballType, { x, y, visible }) {
-        const img = this._getBallImage(ballType);
         let entity = this.entites[key]
         if (!entity) {
+            const img = this._getBallImage(ballType);
             entity = new Sprite(img);
             // entity.pivot.x = entity.width / 2;
             // entity.pivot.y = entity.height / 2;
@@ -133,7 +131,7 @@ export class ViewPIXI {
         }
         entity.x = x;
         entity.y = y;
-        entity.visible = visible !== undefined ? visible : true; // 默認可見
+        entity.visible = visible || false
         return entity
     }
 
