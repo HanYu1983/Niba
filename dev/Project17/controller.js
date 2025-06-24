@@ -12,46 +12,12 @@ export class Controller {
     view = new View(this.injector);
     constructor() {
         this.view.createCanvas(720, 1280);
-        this.injector.addRenderListener((ctx) => {
-            ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); // 清除畫布
+        this.injector.addRenderListener(() => {
+            this.view.clearCanvas();
         })
-        this.bindInjectorNotifications();
+        this.view.bindInjectorNotifications();
         this.createBoards()
     }
-    bindInjectorNotifications() {
-        window.addEventListener('mouseup', e => {
-            const { clientX, clientY } = e;
-            const ndc = this.view.getRelatedPositionFromCanvas([clientX, clientY]);
-            this.injector.notifyMouseUpListeners(ndc);
-        });
-        window.addEventListener('mousedown', e => {
-            const { clientX, clientY } = e;
-            const ndc = this.view.getRelatedPositionFromCanvas([clientX, clientY]);
-            this.injector.notifyMouseDownListeners(ndc);
-        });
-        window.addEventListener('dblclick', e => {
-            const { clientX, clientY } = e;
-            const ndc = this.view.getRelatedPositionFromCanvas([clientX, clientY]);
-            this.injector.notifyMouseDBClickListeners(ndc);
-        });
-        window.addEventListener('mousemove', e => {
-            const { clientX, clientY } = e;
-            const ndc = this.view.getRelatedPositionFromCanvas([clientX, clientY]);
-            this.injector.notifyMouseMoveListeners(ndc);
-        });
-        // 使用requestAnimationFrame計算delta並叫用notifyUpdateListeners
-        let lastTime = performance.now();
-        const animate = () => {
-            const time = performance.now();
-            const delta = time - lastTime;
-            lastTime = time;
-            this.injector.notifyUpdateListeners(delta);
-            this.injector.notifyRenderListeners(this.view.getContext());
-            requestAnimationFrame(animate);
-        };
-        animate()
-    }
-
 
     hides = [] // array of [x, y] pairs to hide balls
 
@@ -135,32 +101,14 @@ export class Controller {
             }
         })
 
-
-        this.injector.addRenderListener((ctx) => {
-            const imgSize = BALL_SIZE;
-            for (let i = 0; i < this.boards.length; i++) {
-                for (let j = 0; j < this.boards[i].length; j++) {
-                    const isHide = this.hides.some(([hx, hy]) => hx === j && hy === i);
-                    if (isHide) {
-                        continue; // 如果這個位置被隱藏, 跳過繪制
-                    }
-                    const ballType = this.boards[i][j];
-                    if (ballType !== null) {
-                        const img = this.view.getBallImage(ballType);
-                        if (img) {
-                            ctx.drawImage(img, j * imgSize, i * imgSize, imgSize, imgSize);
-                        } else {
-                            console.error(`Image for type ${ballType} not found`);
-                        }
-                    }
-                }
-            }
-            // 寫出狀態
-            ctx.fillStyle = "blue";
-            ctx.font = "20px Arial";
-            ctx.fillText(`State: ${state}`, 10, 20);
-            // draw x, y
-            ctx.fillText(`Mouse Position: (${mx}, ${my})`, 10, 40);
+        this.injector.addRenderListener(() => {
+            this.view.renderBoard({
+                boards: this.boards,
+                hides: this.hides,
+                state: state,
+                mx: mx,
+                my: my
+            });
         })
     }
 
@@ -342,61 +290,12 @@ export class Controller {
             }
             timeElapsed += delta;
         }
-        const onRender = (ctx) => {
-            if (state == "bouncing") {
-                // 先對y座標進行分組, 同樣的y座標的球放在一起
-                // 每組使用以下計算
-                // 重新計算球的位置, 全部相對於y最大的球的y座標
-                // 先將translate到y最大的球的y座標
-                // 然後scaleY壓扁
-                // 所有的球用相對座標(應為負數)繪制
-                const groupsBallsWithSameY = {};
-                balls.forEach(ball => {
-                    const y2 = Math.floor(ball.targetX / BALL_SIZE)
-                    if (!groupsBallsWithSameY[y2]) {
-                        groupsBallsWithSameY[y2] = [];
-                    }
-                    groupsBallsWithSameY[y2].push(ball);
-                });
-                for(let y2 in groupsBallsWithSameY) {
-                    ctx.save();
-                    const group = groupsBallsWithSameY[y2];
-                    const maxY = Math.max(...group.map(ball => ball.y)) + BALL_SIZE;
-                    ctx.translate(0, maxY);
-                    ctx.scale(1, scaleY);
-                    group.forEach(ball => {
-                        const img = this.view.getBallImage(ball.type);
-                        if (img) {
-                            ctx.drawImage(img, ball.x, ball.y - maxY, BALL_SIZE, BALL_SIZE);
-                        } else {
-                            console.error(`Image for type ${ball.type} not found`);
-                        }
-                    });
-                    ctx.restore(); // 重置變換矩陣
-                }
-                // ctx.save()
-                // const maxY = Math.max(...balls.map(ball => ball.y)) + BALL_SIZE;
-                // ctx.translate(0, maxY);
-                // ctx.scale(1, scaleY);
-                // balls.forEach(ball => {
-                //     const img = this.view.getBallImage(ball.type);
-                //     if (img) {
-                //         ctx.drawImage(img, ball.x, ball.y - maxY, BALL_SIZE, BALL_SIZE);
-                //     } else {
-                //         console.error(`Image for type ${ball.type} not found`);
-                //     }
-                // });
-                // ctx.restore()
-            } else {
-                balls.forEach(ball => {
-                    const img = this.view.getBallImage(ball.type);
-                    if (img) {
-                        ctx.drawImage(img, ball.x, ball.y, BALL_SIZE, BALL_SIZE);
-                    } else {
-                        console.error(`Image for type ${ball.type} not found`);
-                    }
-                });
-            }
+        const onRender = () => {
+            this.view.onRenderEatAnimation({
+                balls: balls,
+                state: state,
+                scaleY: scaleY
+            });
         }
         this.injector.addUpdateListener(onUpdate);
         this.injector.addRenderListener(onRender);
