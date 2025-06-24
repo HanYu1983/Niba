@@ -291,7 +291,7 @@ export class Controller {
             timeElapsed += delta;
         }
         const onRender = () => {
-            this.view.onRenderEatAnimation({
+            this.view.renderEatAnimation({
                 balls: balls,
                 state: state,
                 scaleY: scaleY

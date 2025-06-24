@@ -7,22 +7,22 @@ export class View {
     bindInjectorNotifications() {
         window.addEventListener('mouseup', e => {
             const { clientX, clientY } = e;
-            const ndc = this.getRelatedPositionFromCanvas([clientX, clientY]);
+            const ndc = this._getRelatedPositionFromCanvas([clientX, clientY]);
             this.injector.notifyMouseUpListeners(ndc);
         });
         window.addEventListener('mousedown', e => {
             const { clientX, clientY } = e;
-            const ndc = this.getRelatedPositionFromCanvas([clientX, clientY]);
+            const ndc = this._getRelatedPositionFromCanvas([clientX, clientY]);
             this.injector.notifyMouseDownListeners(ndc);
         });
         window.addEventListener('dblclick', e => {
             const { clientX, clientY } = e;
-            const ndc = this.getRelatedPositionFromCanvas([clientX, clientY]);
+            const ndc = this._getRelatedPositionFromCanvas([clientX, clientY]);
             this.injector.notifyMouseDBClickListeners(ndc);
         });
         window.addEventListener('mousemove', e => {
             const { clientX, clientY } = e;
-            const ndc = this.getRelatedPositionFromCanvas([clientX, clientY]);
+            const ndc = this._getRelatedPositionFromCanvas([clientX, clientY]);
             this.injector.notifyMouseMoveListeners(ndc);
         });
         // 使用requestAnimationFrame計算delta並叫用notifyUpdateListeners
@@ -45,20 +45,20 @@ export class View {
         this.ctx.fillStyle = 'black';
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     }
-    getContext() {
+    _getContext() {
         if (this.ctx == null) {
             console.error("Canvas context is not initialized. Call createCanvas first.");
             return null;
         }
         return this.ctx;
     }
-    getRelatedPositionFromCanvas([x, y]) {
+    _getRelatedPositionFromCanvas([x, y]) {
         const rect = this.canvas.getBoundingClientRect();
         const canvasX = x - rect.left;
         const canvasY = y - rect.top;
         return [canvasX, canvasY];
     }
-    getImage(path) {
+    _getImage(path) {
         return document.getElementById(path)
     }
 
@@ -68,7 +68,7 @@ export class View {
     // <img src="images/puyo_red.png" id="images/puyo_red.png">
     // <img src="images/puyo_yellow.png" id="images/puyo_yellow.png"></img>
     // type: 0~4
-    getBallImage(type) {
+    _getBallImage(type) {
         const imgs = [
             "images/puyo_blue.png",
             "images/puyo_green.png",
@@ -76,16 +76,16 @@ export class View {
             "images/puyo_red.png",
             "images/puyo_yellow.png",
         ];
-        return this.getImage(imgs[type]);
+        return this._getImage(imgs[type]);
     }
 
     clearCanvas() {
-        const ctx = this.getContext();
+        const ctx = this._getContext();
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); // 清除畫布
     }
 
     renderBoard({ boards, hides, state, mx, my }) {
-        const ctx = this.getContext();
+        const ctx = this._getContext();
         const imgSize = BALL_SIZE;
         for (let i = 0; i < boards.length; i++) {
             for (let j = 0; j < boards[i].length; j++) {
@@ -95,7 +95,7 @@ export class View {
                 }
                 const ballType = boards[i][j];
                 if (ballType !== null) {
-                    const img = this.getBallImage(ballType);
+                    const img = this._getBallImage(ballType);
                     if (img) {
                         ctx.drawImage(img, j * imgSize, i * imgSize, imgSize, imgSize);
                     } else {
@@ -111,8 +111,9 @@ export class View {
         // draw x, y
         ctx.fillText(`Mouse Position: (${mx}, ${my})`, 10, 40);
     }
-    onRenderEatAnimation({ balls, state, scaleY }) {
-        const ctx = this.getContext();
+
+    renderEatAnimation({ balls, state, scaleY }) {
+        const ctx = this._getContext();
         if (state == "bouncing") {
             // 先對y座標進行分組, 同樣的y座標的球放在一起
             // 每組使用以下計算
@@ -135,7 +136,7 @@ export class View {
                 ctx.translate(0, maxY);
                 ctx.scale(1, scaleY);
                 group.forEach(ball => {
-                    const img = this.getBallImage(ball.type);
+                    const img = this._getBallImage(ball.type);
                     if (img) {
                         ctx.drawImage(img, ball.x, ball.y - maxY, BALL_SIZE, BALL_SIZE);
                     } else {
@@ -146,7 +147,7 @@ export class View {
             }
         } else {
             balls.forEach(ball => {
-                const img = this.getBallImage(ball.type);
+                const img = this._getBallImage(ball.type);
                 if (img) {
                     ctx.drawImage(img, ball.x, ball.y, BALL_SIZE, BALL_SIZE);
                 } else {
