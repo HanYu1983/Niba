@@ -324,7 +324,7 @@ class Controller {
         let state = "falling"; // falling, bouncing
         let timeElapsed = 0;
         let scaleY = 1;
-        let duration1 = 200
+        let duration1 = 100
         let duration2 = 400
         let totalDuration = duration1 + duration2
         const onUpdate = (delta) => {
@@ -336,7 +336,7 @@ class Controller {
             } else {
                 state = "bouncing";
                 // 使用彈簧效果進行縮放動畫
-                scaleY = Easing.customSpring((timeElapsed - duration1) / duration2, 0.01, 0.5, 0.7)
+                scaleY = Easing.customSpring((timeElapsed - duration1) / duration2, 0.3, 0.5, 0.7)
             }
             timeElapsed += delta;
         }
