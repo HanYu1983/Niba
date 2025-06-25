@@ -1,17 +1,14 @@
 const { Application, Assets, Container, Sprite, Rectangle, Texture } = window.PIXI;
 
-export const BALL_SIZE = 50; // 假設每個球的大小為50x50像素
-
-export class ViewPIXI {
+class ViewPIXI {
     constructor(injector) {
         this.injector = injector;
     }
 
-
     app = null;
     async createCanvas(w, h) {
         const app = new Application();
-        await app.init({ background: '#1099bb', width: w, height: h });
+        await app.init({ background: '#FFFFFF', width: w, height: h });
         document.body.appendChild(app.canvas);
 
         this.app = app;
@@ -178,6 +175,8 @@ export class ViewPIXI {
         if (isNew) {
             // entity.pivot.x = entity.width / 2;
             // entity.pivot.y = entity.height / 2;
+            entity.width = BALL_SIZE
+            entity.height = BALL_SIZE
             container.addChild(entity);
         }
         entity.x = x;

@@ -1,4 +1,4 @@
-export class Injector {
+class Injector {
     updateListeners = [];
     mouseUpListeners = [];
     mouseDownListeners = [];

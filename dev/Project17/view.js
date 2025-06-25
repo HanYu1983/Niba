@@ -1,6 +1,4 @@
-export const BALL_SIZE = 50; // 假設每個球的大小為50x50像素
-
-export class View {
+class View {
     constructor(injector) {
         this.injector = injector;
     }

@@ -1,14 +1,11 @@
-import { Injector } from "./injector.js";
-//import { View, BALL_SIZE } from "./view.js";
-import { ViewPIXI as View, BALL_SIZE } from "./viewPIXI.js";
 
 function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-export class Controller {
+class Controller {
     injector = new Injector();
-    view = new View(this.injector);
+    view = new ViewPIXI(this.injector);
 
     async start() {
         await this.view.createCanvas(720, 1280);
