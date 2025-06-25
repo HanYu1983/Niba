@@ -307,17 +307,18 @@ window.Easing = function () {
     }
 
     // 自定義彈簧效果 - 可以調整彈簧強度和頻率
-    function customSpring(t, tension = 0.3, friction = 0.8) {
-        // tension: 彈簧張力 (0-1)，值越大彈簧越強
-        // friction: 摩擦力 (0-1)，值越大阻尼越大
+    function customSpring(t, tension = 0.3, friction = 0.8, shrinkRatio = 0.0) {
         const springStrength = tension * 10;
         const damping = friction * 0.8;
         
         // 使用正弦函數創建彈簧效果
         const spring = Math.sin(t * Math.PI * springStrength) * Math.exp(-t * damping);
         
+        // 添加縮小效果
+        const shrinkEffect = shrinkRatio * Math.sin(t * Math.PI) * Math.exp(-t * damping * 2);
+        
         // 確保最終值接近 1
-        return 1 - spring * (1 - t);
+        return Math.max(0, Math.min(1, 1 - spring * (1 - t) - shrinkEffect));
     }
 
     // 彈簧進入效果 - 從靜止開始彈跳

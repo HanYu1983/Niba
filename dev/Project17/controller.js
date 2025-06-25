@@ -325,19 +325,18 @@ class Controller {
         let timeElapsed = 0;
         let scaleY = 1;
         let duration1 = 200
-        let duration2 = 300
+        let duration2 = 400
         let totalDuration = duration1 + duration2
         const onUpdate = (delta) => {
             if (timeElapsed < duration1) {
                 balls.forEach(ball => {
-                    ball.x = ball.x + (ball.targetX - ball.x) * Easing.linear(timeElapsed / duration1)
-                    ball.y = ball.y + (ball.targetY - ball.y) * Easing.linear(timeElapsed / duration1)
+                    ball.x = ball.x + (ball.targetX - ball.x) * Easing.easeOutQuad(timeElapsed / duration1)
+                    ball.y = ball.y + (ball.targetY - ball.y) * Easing.easeOutQuad(timeElapsed / duration1)
                 });
             } else {
                 state = "bouncing";
                 // 使用彈簧效果進行縮放動畫
-                scaleY = Math.pow(Easing.customSpring((timeElapsed - duration1) / duration2), 1.4)
-                //console.log(scaleY, (timeElapsed - duration1),  duration2)
+                scaleY = Easing.customSpring((timeElapsed - duration1) / duration2, 0.01, 0.5, 0.7)
             }
             timeElapsed += delta;
         }
@@ -351,7 +350,6 @@ class Controller {
         this.injector.addUpdateListener(onUpdate);
         this.injector.addRenderListener(onRender);
         await delay(totalDuration);
-        console.log("remove")
         this.injector.removeListener(onUpdate);
         this.injector.removeListener(onRender);
     }
