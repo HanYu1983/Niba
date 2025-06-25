@@ -7,9 +7,11 @@ class ViewPIXI {
 
     app = null;
     async createCanvas(w, h) {
+        const existingCanvas = document.getElementById('gameCanvas');
+    
         const app = new Application();
-        await app.init({ background: '#FFFFFF', width: w, height: h });
-        document.body.appendChild(app.canvas);
+        await app.init({ background: '#FFFFFF', width: w, height: h, canvas: existingCanvas });
+        
 
         this.app = app;
         await this._loadAssets();
