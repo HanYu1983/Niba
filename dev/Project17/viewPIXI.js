@@ -205,7 +205,7 @@ export class ViewPIXI {
     }
     objectRetains = {}
     _retainObject(key) {
-        this.objectRetains[key] = Math.min(1, (this.objectRetains[key] || 0) + 1)
+        this.objectRetains[key] = 1 //Math.min(1, (this.objectRetains[key] || 0) + 1)
     }
     _releaseObject(key) {
         this.objectRetains[key]--;

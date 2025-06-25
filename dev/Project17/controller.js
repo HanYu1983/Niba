@@ -327,19 +327,20 @@ export class Controller {
         let state = "falling"; // falling, bouncing
         let timeElapsed = 0;
         let scaleY = 1;
+        let duration1 = 200
+        let duration2 = 300
+        let totalDuration = duration1 + duration2
         const onUpdate = (delta) => {
-            // 1. 0.5秒後移到目標位置
-            // 2. 變成彈跳狀態，持續0.5秒
-            if (timeElapsed < 200) {
-                // 在0.5秒內移動到目標位置
+            if (timeElapsed < duration1) {
                 balls.forEach(ball => {
-                    const progress = timeElapsed / 300.0; // 0到1之間
-                    ball.x = ball.x + (ball.targetX - ball.x) * progress;
-                    ball.y = ball.y + (ball.targetY - ball.y) * progress;
+                    ball.x = ball.x + (ball.targetX - ball.x) * Easing.linear(timeElapsed / duration1)
+                    ball.y = ball.y + (ball.targetY - ball.y) * Easing.linear(timeElapsed / duration1)
                 });
             } else {
                 state = "bouncing";
-                scaleY = 0.5 + 0.5 * Math.abs(Math.cos((timeElapsed - 300) / 600 * Math.PI * 2));
+                // 使用彈簧效果進行縮放動畫
+                scaleY = Math.pow(Easing.customSpring((timeElapsed - duration1) / duration2), 1.4)
+                //console.log(scaleY, (timeElapsed - duration1),  duration2)
             }
             timeElapsed += delta;
         }
@@ -352,7 +353,8 @@ export class Controller {
         }
         this.injector.addUpdateListener(onUpdate);
         this.injector.addRenderListener(onRender);
-        await delay(600);
+        await delay(totalDuration);
+        console.log("remove")
         this.injector.removeListener(onUpdate);
         this.injector.removeListener(onRender);
     }
