@@ -10,7 +10,6 @@ class ViewPIXI {
         const existingCanvas = document.getElementById('gameCanvas');
         const app = new Application();
         await app.init({ background: '#FFFFFF', width: w, height: h, canvas: existingCanvas });
-
         this.app = app;
         await this._loadAssets();
         this._createPlayPage();
@@ -131,11 +130,6 @@ class ViewPIXI {
         await sheet.parse();
         this.assets = sheet.textures
     }
-    // <img src="images/puyo_blue.png" id="images/puyo_blue.png">
-    // <img src="images/puyo_green.png" id="images/puyo_green.png">
-    // <img src="images/puyo_purple.png" id="images/puyo_purple.png">
-    // <img src="images/puyo_red.png" id="images/puyo_red.png">
-    // <img src="images/puyo_yellow.png" id="images/puyo_yellow.png"></img>
     // type: 0~4
     _getBallImage(type) {
         const imgs = [
