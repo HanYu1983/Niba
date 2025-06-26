@@ -1,4 +1,4 @@
-const { Application, Assets, Container, Sprite, Rectangle, Texture } = window.PIXI;
+const { Application, Assets, Container, Sprite, Rectangle, Texture, Spritesheet } = window.PIXI;
 
 class ViewPIXI {
     constructor(injector) {
@@ -10,7 +10,7 @@ class ViewPIXI {
         const existingCanvas = document.getElementById('gameCanvas');
         const app = new Application();
         await app.init({ background: '#FFFFFF', width: w, height: h, canvas: existingCanvas });
-        
+
         this.app = app;
         await this._loadAssets();
         this._createPlayPage();
@@ -118,18 +118,18 @@ class ViewPIXI {
 
     assets = {}
     async _loadAssets() {
-        const imgs = [
-            "images/puyo_blue.png",
-            "images/puyo_green.png",
-            "images/puyo_purple.png",
-            "images/puyo_red.png",
-            "images/puyo_yellow.png",
-        ];
-        for (const imgId of imgs) {
-            const img = document.getElementById(imgId)
-            const texture = Texture.from(img);
-            this.assets[imgId] = texture;
+        // 確保圖像完全載入後再創建紋理
+        // https://pixijs.download/release/docs/assets.Spritesheet.html#textures
+        const img = document.getElementById('images/texture.png')
+        if (img.complete != true) {
+            await new Promise((resolve, reject) => {
+                img.onload = resolve
+                img.onerror = reject
+            })
         }
+        const sheet = new Spritesheet(Texture.from(img), TEXTUERS);
+        await sheet.parse();
+        this.assets = sheet.textures
     }
     // <img src="images/puyo_blue.png" id="images/puyo_blue.png">
     // <img src="images/puyo_green.png" id="images/puyo_green.png">
@@ -139,11 +139,11 @@ class ViewPIXI {
     // type: 0~4
     _getBallImage(type) {
         const imgs = [
-            "images/puyo_blue.png",
-            "images/puyo_green.png",
-            "images/puyo_purple.png",
-            "images/puyo_red.png",
-            "images/puyo_yellow.png",
+            "puyo_blue.png",
+            "puyo_green.png",
+            "puyo_purple.png",
+            "puyo_red.png",
+            "puyo_yellow.png",
         ];
         const texture = this.assets[imgs[type]];
         if (texture == null) {

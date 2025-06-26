@@ -1,2 +1,4 @@
-const ctr = new Controller();
-ctr.start().catch(console.error)
+window.addEventListener('DOMContentLoaded', () => {
+  const ctr = new Controller();
+  ctr.start().catch(console.error)
+})
