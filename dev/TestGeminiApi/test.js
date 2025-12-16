@@ -4,32 +4,42 @@ const ai = new GoogleGenAI({});
 
 async function run() {
   // File name will be visible in citations
-  const fileSearchStore = await ai.fileSearchStores.create({
-    config: { displayName: 'test_han_doc' }
-  });
+  // const sampleFile = await ai.files.upload({
+  //   file: 'doc.md',
+  //   config: { name: 'file-name2', mimeType: "text/plain" },
+  // });
 
-  let operation = await ai.fileSearchStores.uploadToFileSearchStore({
-    file: 'doc.md',
-    fileSearchStoreName: fileSearchStore.name,
-    config: {
-      displayName: 'file-name',
-      mimeType: "text/plain"
-    }
-  });
+  // console.log(sampleFile.name)
 
-  while (!operation.done) {
-    await new Promise(resolve => setTimeout(resolve, 5000));
-    operation = await ai.operations.get({ operation });
-  }
+  // const fileSearchStore = await ai.fileSearchStores.create({
+  //   config: { displayName: 'your-fileSearchStore-name' }
+  // });
+
+  // console.log(fileSearchStore.name)
+
+  // let operation = await ai.fileSearchStores.importFile({
+  //   fileSearchStoreName: fileSearchStore.name,
+  //   fileName: "files/file-name2"
+  // });
+
+  // while (!operation.done) {
+  //   await new Promise(resolve => setTimeout(resolve, 5000));
+  //   operation = await ai.operations.get({ operation: operation });
+  // }
+
+  // const fileSearchStores = await ai.fileSearchStores.list();
+  // for await (const store of fileSearchStores) {
+  //   console.log(store);
+  // }
 
   const response = await ai.models.generateContent({
     model: "gemini-2.5-flash",
-    contents: "故事中主角總共使用幾種程式語言，主角最喜歡哪一種？",
+    contents: "主角第一次遇到挫折是在哪個章節？",
     config: {
       tools: [
         {
           fileSearch: {
-            fileSearchStoreNames: [fileSearchStore.name]
+            fileSearchStoreNames: ["fileSearchStores/yourfilesearchstorename-stdy89e4hsg4"]
           }
         }
       ]
