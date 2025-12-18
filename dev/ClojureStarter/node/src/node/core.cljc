@@ -2,7 +2,8 @@
   (:require [clojure.spec.alpha :as s]
             [clojure.spec.test.alpha :as stest]
             [clojure.spec.gen.alpha :as gen]
-            [app.core]))
+            [node.spec.app]
+            [node.spec.map]))
 
 (s/fdef doA
   :args (s/cat :n1 number? :n2 number?)
@@ -11,30 +12,32 @@
 (defn doA [n1 n2]
   (+ n1 n2))
 
-(s/def ::name string?)
-(s/def ::age number?)
-(s/def ::robot (s/keys :req-un [::name ::age]))
-
-
-(s/def ::card any?)
-(s/def ::card-stack (s/coll-of ::card))
-(s/def ::card-stacks (s/map-of any? ::card-stack))
-(s/def ::card-table (s/keys :req-un [::card-stacks]))
-
-(s/fdef create-card-table
-  :args (s/cat)
-  :ret ::card-table)
-
-(defn create-card-table []
-  {:card-stacks {}})
-
 (defn -main [_args]
   (s/check-asserts true)
   (stest/instrument)
-  (println (stest/check `create-card-table))
+  #_(println (stest/check 'node.spec.map/generate-map))
 
-  ; exit app
-  (System/exit 0)
+  (doseq [fn [`node.spec.map/generate-map]]
+    (println "==============" fn "==============")
+    #_(println (s/exercise-fn fn 2))
+    (->> (stest/check fn)
+         (filter #(not (nil? (:failure %))))
+         (map (comp #(.-data %) :failure))
+         (println))
 
+    #_(println "==============")
+    #_(println (-> (stest/check fn) first :failure .-data))
+  )
+  
+
+  #_(println (stest/summarize-results (stest/check `node.spec.map/generate-map)))
+
+  #_(println (node.spec.map/generate-map {:cells {}} 10 10))
+  #_(println (node.spec.map/set-map-item {:cells {}} 0 0 1))
+
+  #_(println (s/exercise-fn 'node.spec.map/set-map-item 1))
+
+  #_(println (stest/check `create-card-table))
   #_(println (gen/sample (s/gen ::robot) 10))
-  #_(println (s/exercise-fn `doA)))
+  #_(println (s/exercise-fn `doA))
+  (System/exit 0))
