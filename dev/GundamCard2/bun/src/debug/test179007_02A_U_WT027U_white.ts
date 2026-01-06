@@ -36,6 +36,7 @@ export async function test179007_02A_U_WT027U_white() {
     {
         const effects = createPlayEffects(ctx, PlayerA, { ges: getGlobalEffects(ctx, null) })
         if (effects.length != 2) {
+            console.log(effects)
             throw new Error()
         }
     }

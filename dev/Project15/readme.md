@@ -1,0 +1,1 @@
+firebase後台加入facebook後, 輸入app id, app secret, 並且在facebook app的登入設定中設定callback url

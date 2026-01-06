@@ -675,6 +675,7 @@ export function createPlayCardConditions(ctx: GameState, cardId: string, options
                             count: 0
                         }, Options)
                         if (DefineFn.TipFn.getWant(tip).length) {
+                            console.log(tip)
                             throw new DefineFn.TargetMissingError(`已有同名卡存在: ${cardId}`)
                         }
                         return ctx

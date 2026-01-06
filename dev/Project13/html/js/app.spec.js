@@ -1,0 +1,99 @@
+app.spec = async function () {
+  // https://github.com/prayerslayer/js.spec/blob/master/test/types/types-test.ts
+  const lib = window['js.spec']
+  const { spec, valid, explainStr, symbol } = lib
+  const pos = spec.tuple("pos", spec.number, spec.number)
+  const size = spec.tuple("size", spec.number, spec.number)
+  const word = spec.string
+  const nilableWord = spec.nilable("nilableWord", word)
+  return {
+    lib,
+    config: spec.map("config", {
+      words: spec.collection("words", word)
+    }),
+    BACKGROUND: spec.map("BACKGROUND", {
+      "type": obj => obj == "BACKGROUND",
+      [symbol.optional]: {
+        addColor: spec.tuple("addColor", spec.number, spec.number, spec.number, spec.number),
+      }
+    }),
+    WORD_ENTITY: spec.map("WORD_ENTITY", {
+      pos: pos,
+      word: nilableWord,
+      [symbol.optional]: {
+        scale: spec.number,
+        isBright: spec.boolean,
+        isDark: spec.boolean,
+      }
+    }),
+    DRAG_WORD_START_ENTITY: spec.map("DRAG_WORD_START_ENTITY", {
+      "type": obj => obj == "DRAG_WORD_START_ENTITY",
+      idx: spec.number,
+      pos: pos,
+      word: word,
+      radius: spec.number,
+      hitRadius: spec.number,
+      [symbol.optional]: {
+        isHide: spec.boolean
+      }
+    }),
+    DRAG_WORD_END_ENTITY: spec.map("DRAG_WORD_END_ENTITY", {
+      "type": obj => obj == "DRAG_WORD_END_ENTITY",
+      pos: pos,
+      word: nilableWord,
+      isSlot: spec.boolean
+    }),
+    DRAG_WORD_SUCCESS_EFFECT_LAYER: spec.map("DRAG_WORD_SUCCESS_EFFECT_LAYER", {
+      "type": obj => obj == "DRAG_WORD_SUCCESS_EFFECT_LAYER",
+      currentWord: spec.collection("currentWord", spec.string),
+      successWords: spec.collection("successWords", spec.collection("successWordsIdxAry", spec.number))
+    }),
+    NEWS_TICKER: spec.map("NEWS_TICKER", {
+      "type": obj => obj == "NEWS_TICKER",
+      pos: pos,
+      height: spec.number,
+      speed: spec.number,
+      values: spec.collection("values", spec.or("value",
+        {
+          text: spec.map("text", {
+            text: spec.string,
+            width: spec.number,
+          }),
+          image: spec.map("image", {
+            imageSrc: spec.string,
+            width: spec.number,
+          })
+        }
+      )),
+      [symbol.optional]: {
+        backgroundColor: spec.tuple("backgroundColor", spec.number, spec.number, spec.number, spec.number),
+      }
+    }),
+    COMBO_POPUP: spec.map("COMBO_POPUP", {
+      "type": obj => obj == "COMBO_POPUP",
+      combo: spec.number,
+      scale: spec.number,
+      [symbol.optional]: {
+        isSystemDraw: spec.boolean
+      }
+    }),
+    TOUCH_AREA: spec.map("TOUCH_AREA", {
+      "type": obj => obj == "TOUCH_AREA",
+      hitRect: spec.tuple("hitRect", spec.number, spec.number, spec.number, spec.number),
+      key: spec.string,
+      [symbol.optional]: {
+        isDebug: spec.boolean,
+      }
+    }),
+    SCORE_POPUP: spec.map("SCORE_POPUP", {
+      "type": obj => obj == "SCORE_POPUP",
+      score: spec.number,
+    }),
+    assert: function (s, o) {
+      if (valid(s, o)) {
+        return o
+      }
+      throw new Error(explainStr(s, o))
+    }
+  }
+}()

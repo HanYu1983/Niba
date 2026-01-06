@@ -8,7 +8,7 @@ import { ItemState } from "../define/ItemState";
 import { PlayerID, PlayerA, PlayerB, PlayerIDFn } from "../define/PlayerID";
 import { Tip, StrBaSyouPair, TipFn } from "../define/Tip";
 import { getBattleGroup } from "./battleGroup";
-import { getCardColor, getItemGSign, getCardGSignProperty, getCardHasSpeicalEffect, getCardTotalCostLength, getItemCharacteristic, getItemRuntimeCategory, isCardMaster } from "./card";
+import { getCardColor, getItemGSign, getCardGSignProperty, getCardHasSpeicalEffect, getCardTotalCostLength, getItemCharacteristic, getItemRuntimeCategory, isCardMaster, getCardTitle } from "./card";
 import { getCoinIds, getCoin, getCoinOwner } from "./CoinTableComponent";
 import { createAbsoluteBaSyouFromBaSyou, createPlayerIdFromRelated } from "./createActionTitleFn";
 import { getCutInDestroyEffects, getEffect, getEffects, isStackEffect } from "./EffectStackComponent";
@@ -167,6 +167,7 @@ export function createTipByEntitySearch(ctx: GameState, effect: Effect, searchOp
     if (searchOptions.isCanSetCharacter != null) {
         entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx, true)).filter(EntityFn.filterCanSetCharacter(ctx))
     } else if (searchOptions.isSetGroupRoot != null) {
+        entityList = entityList.filter(entity=>entity.baSyouKeyword != "Gゾーン")
         entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx, searchOptions.isSetGroupRoot))
     }
     if (searchOptions.compareBattlePoint) {
@@ -244,7 +245,7 @@ export function createTipByEntitySearch(ctx: GameState, effect: Effect, searchOp
         if (searchOptions.hasTitle.length == 0) {
             searchOptions.hasTitle.push(prototype.title || "unknown")
         }
-        entityList = entityList.filter(entity => searchOptions.hasTitle?.includes(getItemPrototype(ctx, entity.itemId).title || ""))
+        entityList = entityList.filter(entity => searchOptions.hasTitle?.includes(getCardTitle(ctx, entity.itemId) || ""))
     }
     if (searchOptions.isDestroy != null) {
         entityList = entityList.filter(EntityFn.filterIsDestroy(searchOptions.isDestroy))
@@ -264,6 +265,9 @@ export function createTipByEntitySearch(ctx: GameState, effect: Effect, searchOp
     }
     if (searchOptions.hasChar != null) {
         entityList = entityList.filter(EntityFn.filterHasChar(ctx, searchOptions.hasChar))
+    }
+    if (searchOptions.hasOriginChar != null) {
+        entityList = entityList.filter(entity=> searchOptions.hasOriginChar?.some(char=>(entity.prototype?.characteristic || "").indexOf(char) != -1))
     }
     if (searchOptions.isSetGroupHasChar != null) {
         entityList = entityList.filter(entity => getSetGroup(ctx, entity.itemId).some(itemId =>
@@ -447,7 +451,7 @@ export const EntityFn = {
             if (isCardLike(ctx)(entity.itemId) == false) {
                 return false
             }
-            // 有些機體可以設置2個駕駛
+            // TODO: 有些機體可以設置2個駕駛
             const charLen = getSetGroup(ctx, entity.itemId).filter(itemId => getItemRuntimeCategory(ctx, itemId) == "キャラクター").length
             return charLen == 0
         }

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Test Game</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>歡迎來到 Test Game!</h1>
+    <canvas id="gameCanvas" style="border:1px solid #000000;"></canvas>
+    <!-- 新增: 顯示 images 資料夾下的所有圖片 -->
+    <img src="images/texture.png" id="images/texture.png">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/8.10.1/pixi.min.js"
+        integrity="sha512-0aubnTQj6JhnsE5gyeYemL/n3MrER1AsVVdSHGLEChfIrsL/Lyzq5xpZ6NQEisx8EddeiHm61cH4PtOjrgU8Xw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="./easing.js"></script>
+    <script src="./config.js"></script>
+    <script src="./injector.js"></script>
+    <script src="./view.js"></script>
+    <script src="./viewPIXI.js"></script>
+    <script src="./controller.js"></script>
+    <script src="./index.js"></script>
+</body>
+
+</html>

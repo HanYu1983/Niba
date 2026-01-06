@@ -1,5 +1,6 @@
 import { CardPrototype } from "../../game/define/CardPrototype";
 export const prototype: CardPrototype = {
     category: "キャラクター",
-    gsign: [["青"], "08"]
+    gsign: [["青"], "08"],
+    title: "charBlue"
 };

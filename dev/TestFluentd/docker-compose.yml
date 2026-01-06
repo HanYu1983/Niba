@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  fluentd:
+    image: fluent/fluentd:v1.16-debian-1
+    container_name: test-fluentd
+    volumes:
+      - ./fluent.conf:/fluentd/etc/fluent.conf
+      - ./logs:/var/log/app
+    ports:
+      - "24224:24224"
+      - "24224:24224/udp"
+    environment:
+      - FLUENTD_CONF=fluent.conf
+    command: fluentd -c /fluentd/etc/fluent.conf
+

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport"
+    content="width=device-width,user-scalable=no,initial-scale=1.0, minimum-scale=1.0,maximum-scale=1.0" />
+</head>
+
+<body>
+  <script>
+    app = {}
+  </script>
+  <script src="./js/ad-network-plugin.js"></script>
+  <script src="./js/app.networkPlugin.js"></script>
+  <script>
+    function addTestCtaPress() {
+      const button = document.createElement('button')
+      button.innerText = 'Test CTA Press'
+      button.onclick = () => {
+        app.networkPlugin.then(networkPlugin => networkPlugin.onCtaPressed())
+      }
+      document.body.appendChild(button)
+    }
+    function addTestRetry() {
+      const button = document.createElement('button')
+      button.innerText = 'Test Retry'
+      button.onclick = () => {
+        app.networkPlugin.then(networkPlugin => networkPlugin.onRetry())
+      }
+      document.body.appendChild(button)
+    }
+    async function main() {
+      const networkPlugin = await app.networkPlugin
+      networkPlugin.onAssetsLoaded()
+      addTestCtaPress()
+      addTestRetry()
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+      main().catch(console.error)
+    })
+  </script>
+</body>
+
+</html>

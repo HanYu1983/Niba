@@ -100,7 +100,7 @@ export const prototype: CardPrototype = {
                         "本来の記述に「特徴：ΖΖ系」を持つ自軍G１枚": {
                           title: ["Entity", {
                             at: ["Gゾーン"],
-                            hasChar: ["ΖΖ系"],
+                            hasOriginChar: ["ΖΖ系"],
                             cardCategory: ["ユニット"],
                             side: "自軍",
                             count: 1

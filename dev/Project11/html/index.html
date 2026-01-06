@@ -1,0 +1,208 @@
+<html>
+
+<body>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.172.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.172.0/examples/jsm/"
+      }
+    }
+  </script>
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import rainParticle from './rainParticle.js';
+
+    const deg2rad = Math.PI / 180;
+    const width = 300
+    const height = 600
+    const worldRadius = 15
+
+    main().catch(console.error)
+
+    async function main() {
+      const scene = new THREE.Scene
+      const cameraParent = new THREE.Object3D
+      scene.add(cameraParent)
+      const camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 1000);
+
+      const renderer = new THREE.WebGLRenderer();
+      renderer.setSize(width, height);
+      document.body.appendChild(renderer.domElement);
+
+      const controls = new OrbitControls(camera, renderer.domElement);
+      controls.autoRotate = true
+      camera.position.set(0, 0, 5);
+
+      lightingByDefinition(cameraParent, getDefaultLights(0.5));
+
+      const geometry = await createBufferGeometryLoader("https://sample.smartcanvas.net/appdata/user6201/apps119578/cg/crouch_002_covered.json")
+      const map1 = new THREE.TextureLoader().load(resolver('map1.png'));
+      const map2 = new THREE.TextureLoader().load(resolver('map2.png'));
+      const map3 = new THREE.TextureLoader().load(resolver('map3.png'));
+      const map4 = new THREE.TextureLoader().load(resolver('map4.png'));
+      const map5 = new THREE.TextureLoader().load(resolver('map5.png'));
+      const materials = [
+        new THREE.MeshBasicMaterial({ transparent: true, map: map1 }),//kao
+        new THREE.MeshBasicMaterial({ transparent: true, map: map1 }),//hada
+        new THREE.MeshBasicMaterial({ transparent: true, map: map1 }),//hitomi
+        new THREE.MeshBasicMaterial({ transparent: true, transparent: true, map: map1 }),//hada
+        new THREE.MeshBasicMaterial({ transparent: true, map: map1 }),//hada
+        new THREE.MeshBasicMaterial({ transparent: true, map: map2 }),//kami
+        new THREE.MeshBasicMaterial({ transparent: true, map: map1 }),//kamikage
+        new THREE.MeshBasicMaterial({ transparent: true, map: map2 }),//kamiura
+        new THREE.MeshBasicMaterial({ transparent: true, map: map3 }),//hukukuro
+        new THREE.MeshBasicMaterial({ transparent: true, map: map3 }),//hukukurohakkou
+        new THREE.MeshBasicMaterial({ transparent: true, map: map4 }),//fuku
+        new THREE.MeshBasicMaterial({ transparent: true, map: map5 }),//fuku2
+        new THREE.MeshBasicMaterial({ transparent: true, map: map5 }),//fuku3
+        new THREE.MeshBasicMaterial({ transparent: true, map: map4 }),//fukuej
+        new THREE.MeshBasicMaterial({ transparent: true, map: map4 }),//fukuej
+        new THREE.MeshBasicMaterial({ color: 0x000000 })//darkmatter
+      ];
+      const mesh = new THREE.Mesh(geometry, materials);
+      mesh.scale.set(1, 1, 1)
+      mesh.position.set(0, 0, 0)
+      mesh.rotation.set(0, 0, 0)
+      //mesh.matrixWorldNeedsUpdate = true;
+
+      const rootObject = new THREE.Object3D();
+      rootObject.scale.set(2.3, 2.3, 2.3)
+      rootObject.position.set(0, 0, 0)
+      rootObject.rotation.set(0, 0, 0)
+      rootObject.add(mesh)
+
+      scene.add(rootObject);
+
+      rainParticle.init({
+        scene: scene,
+        rains: [],
+        worldRadius: 15,
+      }, {
+        particle: {
+          "type": "RAIN",
+          "pattern": "FALL",
+          "count": 200,
+          "length": 5
+        },
+        world: {
+          "radius": 15,
+          "resolution": {
+            "horizontal": 40,
+            "vertical": 40
+          },
+          "fov": 50
+        }
+      });
+
+      {
+        const geometry = new THREE.SphereGeometry(100, 50, 50)
+        const texture = new THREE.TextureLoader().load('https://sample.smartcanvas.net/appdata/user6201/apps119578/cg/05ad3eae39996208.jpg')
+        const material = new THREE.MeshBasicMaterial({ color: 0xffffff, map: texture, side: THREE.DoubleSide })
+        // const light = new THREE.AmbientLight(0xffffff, 0.1)
+        // scene.add(light)
+
+        const sphere = new THREE.Mesh(geometry, material);
+        scene.add(sphere);
+      }
+
+      function animate() {
+        requestAnimationFrame(animate);
+        controls.update()
+        //rootObject.rotation.y += 0.01
+        renderer.render(scene, camera);
+      }
+
+      animate();
+      rainParticle.start()
+    }
+
+    function createBufferGeometryLoader(path) {
+      return new Promise((res, rej) => {
+        const loader = new THREE.BufferGeometryLoader()
+        loader.load(
+          path,
+          function (geometry) {
+            res(geometry)
+          },
+          function (xhr) {
+            console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+          },
+          function (err) {
+            rej(err)
+          }
+        );
+      })
+    }
+
+    function lightingByDefinition(parent, lights) {
+      for (let i = 0; i < lights.length; i++) {
+        const r = lights[i]['color'][0];
+        const g = lights[i]['color'][1];
+        const b = lights[i]['color'][2];
+        const intensity = lights[i]['intensity'];
+        const color = new THREE.Color(`rgb(${r},${g},${b})`);
+        const light = new THREE.PointLight(color, intensity);
+
+        const x = lights[i]['position'][0];
+        const y = lights[i]['position'][1];
+        const z = lights[i]['position'][2];
+        light.position.set(x, y, z);
+
+        parent.add(light);
+      }
+    };
+
+    function getDefaultLights(lightIntensity) {
+      return [
+        {
+          color: [255, 255, 255],
+          intensity: lightIntensity,
+          position: [10, 50, 10],
+        },
+        {
+          color: [255, 255, 255],
+          intensity: lightIntensity,
+          position: [-10, 50, 10],
+        },
+        {
+          color: [255, 255, 255],
+          intensity: lightIntensity,
+          position: [-10, 50, -10],
+        },
+        {
+          color: [255, 255, 255],
+          intensity: lightIntensity,
+          position: [10, 50, -10],
+        },
+        {
+          color: [255, 255, 255],
+          intensity: lightIntensity,
+          position: [10, -50, 10],
+        },
+        {
+          color: [255, 255, 255],
+          intensity: lightIntensity,
+          position: [-10, -50, 10],
+        },
+        {
+          color: [255, 255, 255],
+          intensity: lightIntensity,
+          position: [-10, -50, -10],
+        },
+        {
+          color: [255, 255, 255],
+          intensity: lightIntensity,
+          position: [10, -50, -10],
+        },
+      ];
+    };
+
+    function resolver(path) {
+      return `https://sample.smartcanvas.net/appdata/user6201/apps119578/cg/${path}`
+    }
+  </script>
+</body>
+
+</html>

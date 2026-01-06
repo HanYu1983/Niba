@@ -1,0 +1,8 @@
+version: "3"
+services:
+  # docker-compose run --rm clojure bash
+  clojure:
+    image: clojure
+    working_dir: /han
+    volumes:
+      - ./:/han

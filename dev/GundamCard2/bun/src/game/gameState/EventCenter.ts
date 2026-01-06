@@ -255,25 +255,26 @@ function onItemMove(ctx: GameState, from: AbsoluteBaSyou, to: AbsoluteBaSyou, ca
             }, options)
         }
     }
-    if ((BaSyouKeywordFn.isBa(AbsoluteBaSyouFn.getBaSyouKeyword(from)) == false
-        && to.value[0] != "Gゾーン")
-        && (BaSyouKeywordFn.isBa(AbsoluteBaSyouFn.getBaSyouKeyword(to))
-            || to.value[1] == "Gゾーン")
-    ) {
-        // 剛出場的回合
-        ctx = mapItemState(ctx, cardId, is => {
-            return {
-                ...is,
-                isFirstTurn: true,
-            }
-        }) as GameState
-    }
+    // if ((BaSyouKeywordFn.isBa(AbsoluteBaSyouFn.getBaSyouKeyword(from)) == false
+    //     && to.value[0] != "Gゾーン")
+    //     && (BaSyouKeywordFn.isBa(AbsoluteBaSyouFn.getBaSyouKeyword(to))
+    //         || to.value[1] == "Gゾーン")
+    // ) {
+    //     // 剛出場的回合
+    //     ctx = mapItemState(ctx, cardId, is => {
+    //         return {
+    //             ...is,
+    //             isFirstTurn: true,
+    //         }
+    //     }) as GameState
+    // }
     // 從非場所到場所=出場
     if (BaSyouKeywordFn.isBa(AbsoluteBaSyouFn.getBaSyouKeyword(from)) == false && BaSyouKeywordFn.isBa(AbsoluteBaSyouFn.getBaSyouKeyword(to))) {
         ctx = mapCard(ctx, cardId, card => {
             return {
                 ...card,
                 isFaceDown: false,
+                isFirstTurn: true,
             }
         }) as GameState
         ctx = doTriggerEvent(ctx, {

@@ -40,7 +40,7 @@ export const prototype: CardPrototype = {
           title: ["Entity", {
             side: "自軍",
             at: ["Gゾーン"],
-            hasChar: ["ガンダムチーム"],
+            hasOriginChar: ["ガンダムチーム"],
             isRoll: false,
             count: 2
           }],

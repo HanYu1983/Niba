@@ -26,6 +26,7 @@ export const BaSyouKeywordFn = {
             case "戦闘エリア2":
             case "戦闘エリア1":
             case "配備エリア":
+            case "Gゾーン":
                 return true;
             default:
                 return false;
