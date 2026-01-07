@@ -34,38 +34,35 @@ export class HandController extends Component implements IInstanceGame<ICard[]> 
 
         const cards: ICard[] = relative;
         cards.forEach((card: ICard, index) => {
-            const cardInstance = this.cardPool!.getInstance(card.id);
-            cardInstance.active = true;
+            const cardInstance = (() => {
+                const inst = this.cardPool!.getInstance(card.id);
+                inst.active = true;
 
-            if (!cardInstance) {
-                return;
-            }
+                const controller = inst.getComponent(CardController);
+                if (controller) {
+                    controller.sync(game, card);
+                }
 
-            const controller = cardInstance.getComponent(CardController);
-            if (controller) {
-                controller.sync(game, card);
-            }
-
-            cardInstance.setPosition(index * 15, 0, 0);
+                inst.setPosition(index * 15, 0, 0);
+                return inst
+            })()
             this.cardContainer.addChild(cardInstance);
 
-            const cardUIInstance = this.cardUIPool!.getInstance(card.id);
-            cardUIInstance.active = true;
+            const cardUIInstance = (() => {
+                const inst = this.cardUIPool!.getInstance(card.id);
+                inst.active = true;
 
-            if (!cardUIInstance) {
-                return;
-            }
+                const uiController = inst.getComponent(CardController);
+                if (uiController) {
+                    uiController.sync(game, card);
+                }
 
-            const uiController = cardUIInstance.getComponent(CardController);
-            if (uiController) {
-                uiController.sync(game, card);
-            }
-
-            const follow3D = cardUIInstance.getComponent(UIFollow3D);
-            if (follow3D) {
-                follow3D.target = cardInstance;
-            }
-
+                const follow3D = inst.getComponent(UIFollow3D);
+                if (follow3D) {
+                    follow3D.target = cardInstance;
+                }
+                return inst;
+            })()
             this.cardUIContainer?.addChild(cardUIInstance);
         });
     }
