@@ -1,0 +1,31 @@
+{
+  "name": "vic-tools",
+  "package_version": 2,
+  "version": "1.0.0",
+  "description": "A Simple Extension",
+  "author": "YuHanPing",
+  "main": "browser.js",
+  "contributions": {
+    "menu": [
+      {
+        "path": "Extension/VicTools",
+        "label": "Add Full Widget Component",
+        "message": "widgetFull"
+      }
+    ],
+    "messages": {
+      "widgetFull": {
+        "methods": [
+          "widgetFull"
+        ]
+      }
+    },
+    "shortcuts": [
+      {
+        "message": "widgetFull",
+        "win": "ctrl+u"
+      }
+    ]
+  },
+  "_storeId": "2ee657465c7489daa8507124ede3e4b4"
+}
