@@ -1,24 +1,14 @@
-import { CardImageLoader } from "./CardImageLoader";
-import { CardModel } from "./CardModel";
-
 const { regClass, property } = Laya;
 
 @regClass()
-export class CardController extends Laya.Script {
-    @property(Laya.MeshRenderer)
-    public mesh: Laya.MeshRenderer = null;
-
-    public model: CardModel = null;
-
-    setModel(model:CardModel){
-        this.model = model;
-        this.loadImage();
+export class CardController extends Laya.Script implements IInstanceGame<ICard> {
+    
+    sync(game: ICard): void {
+        // this.owner.transform
     }
 
-    private async loadImage(){
-        const tex = await CardImageLoader.instance().getImage(this.model.uid, "https://storage.googleapis.com/particle-resources/cardPackage/gundamWarN/179030_11E_U_BL209R_blue.jpg");
-        this.mesh.material.setTexture("Texture2D", tex.bitmap);
-    }
+    //组件被激活后执行，此时所有节点和组件均已创建完毕，此方法只执行一次
+    //onAwake(): void {}
 
     //组件被启用后执行，例如节点被添加到舞台后
     //onEnable(): void {}
@@ -27,10 +17,7 @@ export class CardController extends Laya.Script {
     //onDisable(): void {}
 
     //第一次执行update之前执行，只会执行一次
-    onStart(): void {
-        console.log(this.mesh);
-        
-    }
+    //onStart(): void {}
 
     //手动调用节点销毁时执行
     //onDestroy(): void {}

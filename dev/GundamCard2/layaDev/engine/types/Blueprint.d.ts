@@ -26,9 +26,9 @@ declare module BP {
         /**
          * 增加一个蓝图枚举
          * @param name 枚举名称
-         * @param merbers 枚举成员
+         * @param members 枚举成员
          */
-        static createBPEnum(name: string, merbers: TBPDeclarationMerber[]): void;
+        static createBPEnum(name: string, members: TBPDeclarationMember[]): void;
     }
     /**
      * 蓝图装饰器
@@ -50,14 +50,17 @@ declare module BP {
     /**
      * 增加一个蓝图枚举
      * @param name 枚举名称
-     * @param merbers 枚举成员
+     * @param members 枚举成员
      */
-    function createBPEnum(name: string, merbers: TBPDeclarationMerber[]): void;
-    class BlueprintLoader implements IResourceLoader {
-        load(task: ILoadTask): Promise<BlueprintResource>;
-        postLoad(task: ILoadTask, bp: BlueprintResource): Promise<void>;
+    function createBPEnum(name: string, members: TBPDeclarationMember[]): void;
+    class BlueprintLoader implements Laya.IResourceLoader {
+        load(task: Laya.ILoadTask): Promise<BlueprintResource>;
+        postLoad(task: Laya.ILoadTask, bp: BlueprintResource): Promise<void>;
     }
-    class BlueprintResource extends Resource {
+    /**
+     * @blueprintIgnore
+     */
+    class BlueprintResource extends Laya.Resource {
         data: IBPSaveData;
         dec: TBPDeclaration;
         allData: Record<string, any>;
@@ -115,6 +118,8 @@ declare module BP {
         private _getConstByNode;
         getConstNode(node: IBPNode): IBPCNode;
         private _checkAndPush;
+        private _checkOverrideProp;
+        private _initObject;
         private _createExtData;
         private _createConstData;
         isResetData: boolean;
@@ -137,7 +142,7 @@ declare module BP {
         abstract createPin(def: TBPPinDef): T;
         addPin(pin: T): void;
         parse(def: IBPCNode): void;
-        getPropertyItem(key: string): import("../datas/types/IBlueprint").IBPCInput;
+        getPropertyItem(key: string): IBPCInput;
         getValueType(key: string): "class" | "resource";
         isEmptyObj(o: any): boolean;
         /**
@@ -146,8 +151,8 @@ declare module BP {
          * @returns
          */
         private _checkTarget;
-        parseLinkData(node: IBPNode, manger: INodeManger<BlueprintNode<T>>): void;
-        protected onParseLinkData(node: IBPNode, manger: INodeManger<BlueprintNode<T>>): void;
+        parseLinkData(node: IBPNode, manager: INodeManager<BlueprintNode<T>>): void;
+        protected onParseLinkData(node: IBPNode, manager: INodeManager<BlueprintNode<T>>): void;
         setFunction(fun: Function, isMember: boolean): void;
         setType(type: BPType): void;
         addInput(input: TBPPinDef[]): void;
@@ -231,10 +236,10 @@ declare module BP {
         [BlueprintFactory.contextSymbol]: IRunAble;
         [key: string]: any;
     }
-    interface IExcuteListInfo {
+    interface IExecuteListInfo {
         nid: number;
     }
-    interface INodeManger<T> {
+    interface INodeManager<T> {
         getNodeById(id: any): T;
         dataMap: Record<string, IBPCNode | IBPVariable>;
     }
@@ -242,7 +247,7 @@ declare module BP {
         readonly name: string;
         setValue(runId: number, value: any): void;
     }
-    interface IRuntimeDataManger {
+    interface IRuntimeDataManager {
         getDataById(nid: number): RuntimeNodeData;
         setPinData(pin: BlueprintPinRuntime, value: any, runId: number): void;
         getPinData(pin: BlueprintPinRuntime, runId: number): any;
@@ -283,9 +288,9 @@ declare module BP {
      */
     const customData: Record<string, TBPDeclaration>;
     const extendsData: Record<string, TBPDeclaration>;
-    type TBPDecoratorsPropertType = "function" | "property" | "class";
-    type TBPDecoratorsFuncType = "pure" | "function" | "event" | BPType.Pure | BPType.Function | BPType.Event;
-    type TBPDeclarationType = "Enum" | "Node" | "Component" | "Others";
+    type TBPDecoratorsPropertyType = "function" | "property" | "class";
+    type TBPDecoratorsFuncType = "pure" | "function" | "event";
+    type TBPDeclarationType = "Enum" | "Interface" | "Node" | "Component" | "Others";
     /** 修饰符 */
     type BPModifiers = {
         /** 是否是私有 */
@@ -309,7 +314,7 @@ declare module BP {
         /** 当前描述名 */
         name: string;
         /** 当前描述的具体类型 */
-        type: TBPDeclarationType;
+        type?: TBPDeclarationType;
         /** 能否被继承 */
         canInherited?: boolean;
         /** 父类  */
@@ -325,7 +330,7 @@ declare module BP {
         /** 构造函数 */
         construct?: TBPDeclarationConstructor;
         /** 枚举成员 */
-        merbers?: TBPDeclarationMerber[];
+        members?: TBPDeclarationMember[];
         /** 显示名称，没有默认使用name */
         caption?: string;
         /** 分组 */
@@ -333,7 +338,7 @@ declare module BP {
         /** 提示内容 */
         tips?: string;
     };
-    type TBPDeclarationMerber = {
+    type TBPDeclarationMember = {
         /** 枚举名称 */
         name: string;
         /** 枚举值 */
@@ -376,12 +381,10 @@ declare module BP {
         name: string;
         value?: any;
         /** 变量类型 */
-        type?: string | Function;
+        type?: string;
+        /** 是否为可选项 */
+        optional?: boolean;
         customId?: string | number;
-        /** 是否有getter 方法 */
-        getter?: boolean;
-        /** 是否有setter 方法 */
-        setter?: boolean;
         /** 泛型 */
         typeParameters?: any;
         /** 修饰符 */
@@ -445,7 +448,7 @@ declare module BP {
         /** 标题，如果不提供将使用name */
         caption?: string;
         /** 注册对象成员类型 */
-        propertType?: TBPDecoratorsPropertType;
+        propertyType?: TBPDecoratorsPropertyType;
         /** 修饰符 */
         modifiers?: BPModifiers;
         /** 分类 */
@@ -569,6 +572,8 @@ declare module BP {
         modifiers?: BPModifiers;
         /** 数据唯一的id号,可以不写，默认为name*/
         id?: string | number;
+        /** 旧的id号，用于兼容旧的版本 */
+        oldId?: string;
         /**该节点的类型，如果是variable则类型为string */
         type: BPType | string;
         /**鼠标右键里面的菜单路径,如果填写none则代表不在菜单中显示 */
@@ -579,7 +584,8 @@ declare module BP {
         output?: IBPCOutput[];
         /**插槽上的默認值 */
         inputValue?: Record<string, any>;
-        const?: boolean;
+        /**返回值是否是Promise */
+        isAsync?: boolean;
     }
     interface IBPCOutput {
         /**插槽的id号，一般用户自定义插槽会有这个值 */
@@ -688,42 +694,67 @@ declare module BP {
         type: string;
         data: any;
     }
+    /**
+     * @blueprintable
+     */
     class BPArray<T> {
         length: number;
+        /** @blueprintPure */
         static getItem<T>(arr: Array<T>, index: number): T;
         static setItem<T>(arr: Array<T>, index: number, value: T): void;
         push(item: T): number;
         pop(): T;
-        splice(start: number, deleteCount?: number): T;
+        splice(start: number, deleteCount?: number): T[];
         shift(): T;
         unshift(item: T): T;
+        /** @blueprintPure */
         join(separator?: string): string;
-        concat(item: ConcatArray<T>): T;
+        /** @blueprintPure */
+        concat(item: T[]): T[];
     }
+    /**
+     * @blueprintable @blueprintPure
+     */
     class BPMathLib {
         /**
-         * 两数相加
+         * @en Add two numbers.
+         * @param a The first number.
+         * @param b The second number.
+         * @returns The sum of the two numbers.
+         * @zh 两数相加
          * @param a 第一个数
          * @param b 第二个数
          * @returns 两数相加的结果
          */
         static add(a: number, b: number): number;
         /**
-         * 两数相减
+         * @en Subtract two numbers.
+         * @param a The number to be subtracted from.
+         * @param b The number to subtract.
+         * @returns The result of the subtraction.
+         * @zh 两数相减
          * @param a 被减数
          * @param b 减数
          * @returns 两数相减的结果
          */
         static subtract(a: number, b: number): number;
         /**
-         * 两数相乘
+         * @en Multiply two numbers.
+         * @param a The first number.
+         * @param b The second number.
+         * @returns The product of the two numbers.
+         * @zh 两数相乘
          * @param a 第一个数
          * @param b 第二个数
          * @returns 两数相乘的结果
          */
         static multiply(a: number, b: number): number;
         /**
-         * 两数相除
+         * @en Divide two numbers.
+         * @param a The dividend.
+         * @param b The divisor.
+         * @returns The quotient of the two numbers.
+         * @zh 两数相除
          * @param a 被除数
          * @param b 除数
          * @returns 两数相除的结果
@@ -731,70 +762,108 @@ declare module BP {
          */
         static divide(a: number, b: number): number;
         /**
-         * 计算数字的幂次方
+         * @en Calculate the power of a number.
+         * @param base The base number.
+         * @param exponent The exponent.
+         * @returns The result of raising the base to the exponent.
+         * @zh 计算数字的幂次方
          * @param base 底数
          * @param exponent 指数
          * @returns 幂次方的结果
          */
         static power(base: number, exponent: number): number;
         /**
-         * 计算平方根
+         * @en Calculate the square root of a number.
+         * @param value The number to calculate the square root of.
+         * @returns The square root of the number.
+         * @zh 计算平方根
          * @param value 数字
          * @returns 平方根的结果
          * @throws 如果数字为负数，则抛出错误
          */
         static sqrt(value: number): number;
         /**
-         * 计算一个数的绝对值
+         * @en Calculate the absolute value of a number.
+         * @param value The number to calculate the absolute value of.
+         * @returns The absolute value of the number.
+         * @zh 计算一个数的绝对值
          * @param value 数字
          * @returns 数字的绝对值
          */
         static abs(value: number): number;
         /**
-         * 计算正弦值
+         * @en Calculate the sine of an angle in radians.
+         * @param angle The angle in radians.
+         * @returns The sine of the angle.
+         * @zh 计算正弦值
          * @param angle 角度
          * @returns 正弦值
          */
         static sin(angle: number): number;
         /**
-         * 计算余弦值
+         * @en Calculate the cosine of an angle in radians.
+         * @param angle The angle in radians.
+         * @returns The cosine of the angle.
+         * @zh 计算余弦值
          * @param angle 角度
          * @returns 余弦值
          */
         static cos(angle: number): number;
         /**
-         * 计算正切值
+         * @en Calculate the tangent of an angle in radians.
+         * @param angle The angle in radians.
+         * @returns The tangent of the angle.
+         * @zh 计算正切值
          * @param angle 角度
          * @returns 正切值
          */
         static tan(angle: number): number;
         /**
-         * 计算反正弦值
+         * @en Calculate the arcsine of a value.
+         * @param value The value to calculate the arcsine of.
+         * @returns The arcsine of the value.
+         * @zh 计算反正弦值
          * @param value 数值
          * @returns 反正弦值
          */
         static asin(value: number): number;
         /**
-         * 计算反余弦值
+         * @en Calculate the arccosine of a value.
+         * @param value The value to calculate the arccosine of.
+         * @returns The arccosine of the value.
+         * @zh 计算反余弦值
          * @param value 数值
          * @returns 反余弦值
          */
         static acos(value: number): number;
         /**
-         * 计算反正切值
+         * @en Calculate the arctangent of a value.
+         * @param value The value to calculate the arctangent of.
+         * @returns The arctangent of the value.
+         * @zh 计算反正切值
          * @param value 数值
          * @returns 反正切值
          */
         static atan(value: number): number;
         /**
-         * 计算 y/x（弧度表示）的反正切值
+         * @en Calculate the arctangent of y/x (in radians).
+         * @param y The y-coordinate.
+         * @param x The x-coordinate.
+         * @returns The angle in radians.
+         * @zh 计算 y/x（弧度表示）的反正切值
          * @param y y 轴坐标
          * @param x x 轴坐标
          * @returns 弧度
          */
         static atan2(y: number, x: number): number;
         /**
-         * 计算两点之间的距离
+         * @en Calculate the distance between two points (x1, y1) and (x2, y2).
+         * @param x1 The x-coordinate of the first point.
+         * @param y1 The y-coordinate of the first point.
+         * @param x2 The x-coordinate of the second point.
+         * @param y2 The y-coordinate of the second point.
+         * @returns The distance between the two points.
+         * @zh 计算两点之间的距离
          * @param x1 第一个点的x坐标
          * @param y1 第一个点的y坐标
          * @param x2 第二个点的x坐标
@@ -803,89 +872,273 @@ declare module BP {
          */
         static distance(x1: number, y1: number, x2: number, y2: number): number;
         /**
-         * 四舍五入到指定的小数位数
+         * @en Round a number to a specified number of decimal places.
+         * @param value The number to round.
+         * @param decimals The number of decimal places to round to. Defaults to 0.
+         * @returns The rounded number.
+         * @zh 四舍五入到指定的小数位数
          * @param value 要四舍五入的数字
          * @param decimals 小数位数，默认为0
          * @returns 四舍五入后的结果
          */
         static round(value: number, decimals?: number): number;
         /**
-         * 向下取整
+         * @en Round a number down to the nearest integer.
+         * @param value The number to round down.
+         * @returns The rounded down integer.
+         * @zh 向下取整
          * @param value 数字
          * @returns 向下取整后的结果
          */
         static floor(value: number): number;
         /**
-         * 向上取整
+         * @en Round a number up to the nearest integer.
+         * @param value The number to round up.
+         * @returns The rounded up integer.
+         * @zh 向上取整
          * @param value 数字
          * @returns 向上取整后的结果
          */
         static ceil(value: number): number;
         /**
-         * 计算余数
+         * @en Calculate the remainder of the division of two numbers.
+         * @param dividend The number to be divided.
+         * @param divisor The number to divide by.
+         * @returns The remainder of the division.
+         * @zh 计算余数
          * @param dividend 被除数
          * @param divisor 除数
          * @returns 余数
          */
         static mod(dividend: number, divisor: number): number;
         /**
-         * 计算两数的最小值
+         * @en Calculate the minimum of two numbers.
+         * @param a The first number.
+         * @param b The second number.
+         * @returns The minimum of the two numbers.
+         * @zh 计算两数的最小值
          * @param a 第一个数
          * @param b 第二个数
          * @returns 两数的最小值
          */
         static min(a: number, b: number): number;
         /**
-         * 计算两数的最大值
+         * @en Calculate the maximum of two numbers.
+         * @param a The first number.
+         * @param b The second number.
+         * @returns The maximum of the two numbers.
+         * @zh 计算两数的最大值
          * @param a 第一个数
          * @param b 第二个数
          * @returns 两数的最大值
          */
         static max(a: number, b: number): number;
         /**
-         * 生成随机数，介于 0（包含） 到 1（不包括）之间
-         * @returns 随机数
+         * @en Generate a random number between 0 (inclusive) and 1 (exclusive).
+         * @returns A random number between 0 and 1.
+         * @zh 生成一个介于 0（包含）和 1（不包含）之间的随机数。
+         * @returns 介于 0 和 1
          */
         static random(): number;
         /**
-         * 判断a是否大于b
+         * @en Generate a random number between min (inclusive) and max (exclusive).
+         * @param min The minimum value (inclusive).
+         * @param max The maximum value (exclusive).
+         * @returns A random number between min and max.
+         * @zh 生成一个介于 min（包含）和 max（不包含）之间的随机数。
+         * @param min 最小值（包含）。
+         * @param max 最大值（不包含）。
+         * @returns 介于 min 和 max 之间的随机数。
+         */
+        static random(min: number, max: number): number;
+        /**
+         * @en Check if a number is greater than another number.
+         * @param a The first number.
+         * @param b The second number.
+         * @returns True if a is greater than b; otherwise, false.
+         * @zh 判断a是否大于b
          * @param a 第一个数字
          * @param b 第二个数字
          * @returns 如果a大于b，则返回true；否则返回false
          */
         static greater(a: number, b: number): boolean;
         /**
-         * 判断a是否小于b
+         * @en Check if a number is less than another number.
+         * @param a The first number.
+         * @param b The second number.
+         * @returns True if a is less than b; otherwise, false.
+         * @zh 判断a是否小于b
          * @param a 第一个数字
          * @param b 第二个数字
          * @returns 如果a小于b，则返回true；否则返回false
          */
         static less(a: number, b: number): boolean;
         /**
-         *
-         * @param a
-         * @param b
+         * @en Check if two numbers are equal.
+         * @param a The first number.
+         * @param b The second number.
+         * @returns True if a is equal to b; otherwise, false.
+         * @zh 判断两个数字是否相同
+         * @param a 第一个数字
+         * @param b 第二个数字
          * @returns 是否相同
          */
-        static equal(a: any, b: any): any;
+        static equal(a: number, b: number): boolean;
         /**
-         * 判断a是否大于等于b
+         * @en Check if a number is greater than or equal to another number.
+         * @param a The first number.
+         * @param b The second number.
+         * @returns True if a is greater than or equal to b; otherwise, false.
+         * @zh 判断a是否大于等于b
          * @param a 第一个数字
          * @param b 第二个数字
          * @returns 如果a大于等于b，则返回true；否则返回false
          */
         static greaterEqual(a: number, b: number): boolean;
         /**
-         * 判断a是否小于等于b
+         * @en Check if a number is less than or equal to another number.
+         * @param a The first number.
+         * @param b The second number.
+         * @returns True if a is less than or equal to b; otherwise, false.
+         * @zh 判断a是否小于等于b
          * @param a 第一个数字
          * @param b 第二个数字
          * @returns 如果a小于等于b，则返回true；否则返回false
          */
         static lessEqual(a: number, b: number): boolean;
+        /**
+         * @en Perform bitwise AND operation on two numbers.
+         * @param a The first number.
+         * @param b The second number.
+         * @returns The result of the bitwise AND operation.
+         * @zh 对两个数字执行按位与操作
+         * @param a 第一个数字
+         * @param b 第二个数字
+         * @returns 按位与操作的结果
+         */
+        static bitAnd(a: number, b: number): number;
+        /**
+         * @en Perform bitwise OR operation on two numbers.
+         * @param a The first number.
+         * @param b The second number.
+         * @returns The result of the bitwise OR operation.
+         * @zh 对两个数字执行按位或操作
+         * @param a 第一个数字
+         * @param b 第二个数字
+         * @returns 按位或操作的结果
+         */
+        static bitOr(a: number, b: number): number;
+        /**
+         * @en Perform bitwise XOR operation on two numbers.
+         * @param a The first number.
+         * @param b The second number.
+         * @returns The result of the bitwise XOR operation.
+         * @zh 对两个数字执行按位异或操作
+         * @param a 第一个数字
+         * @param b 第二个数字
+         * @returns 按位异或操作的结果
+         */
+        static bitXor(a: number, b: number): number;
+        /**
+         * @en Perform bitwise NOT operation on a number.
+         * @param a The number to perform the operation on.
+         * @returns The result of the bitwise NOT operation.
+         * @zh 对一个数字执行按位非操作
+         * @param a 数字
+         * @returns 按位非操作的结果
+         */
+        static bitNot(a: number): number;
+        /**
+         * @en Perform bitwise AND NOT operation on two numbers.
+         * @param a The first number.
+         * @param b The second number.
+         * @returns The result of the bitwise AND NOT operation.
+         * @zh 对两个数字执行按位与非操作
+         * @param a 第一个数字
+         * @param b 第二个数字
+         * @returns 按位与非操作的结果
+         */
+        static bitAndNot(a: number, b: number): number;
+        /**
+         * @en Perform left bitwise shift operation on a number.
+         * @param a The number to shift.
+         * @param b The number of bits to shift.
+         * @returns The result of the left bitwise shift operation.
+         * @zh 对一个数字执行左移操作
+         * @param a 数字
+         * @param b 移动的位数
+         * @returns 左移操作的结果
+         */
+        static bitLeftShift(a: number, b: number): number;
+        /**
+         * @en Perform right bitwise shift operation on a number.
+         * @param a The number to shift.
+         * @param b The number of bits to shift.
+         * @returns The result of the right bitwise shift operation.
+         * @zh 对一个数字执行右移操作
+         * @param a 数字
+         * @param b 移动的位数
+         * @returns 右移操作的结果
+         */
+        static bitRightShift(a: number, b: number): number;
+        /**
+         * @en Perform unsigned right bitwise shift operation on a number.
+         * @param a The number to shift.
+         * @param b The number of bits to shift.
+         * @returns The result of the unsigned right bitwise shift operation.
+         * @zh 对一个数字执行无符号右移操作
+         * @param a 数字
+         * @param b 移动的位数
+         * @returns 无符号右移操作的结果
+         */
+        static bitUnsignedRightShift(a: number, b: number): number;
     }
+    /**
+     * @blueprintable @blueprintPure
+     */
+    class BPNumber {
+        static toFixed(num: number, fractionDigits?: number): string;
+        static toExponential(num: number, fractionDigits?: number): string;
+        static toPrecision(num: number, precision?: number): string;
+        static toString(num: number, radix?: number): string;
+    }
+    /**
+     * @blueprintable
+     */
     class BPObject<T> {
+        /** @blueprintPure */
         static getItem<T>(obj: Record<string, T>, key: string): T;
         static setItem<T>(obj: Record<string, T>, key: string, value: T): void;
+        static deleteItem<T>(obj: Record<string, T>, key: string): void;
+    }
+    /**
+     * @blueprintable @blueprintPure
+     */
+    class BPString {
+        static concat(a: string, b: string): string;
+        static concat(a: string, b: string, c: string): string;
+        static concat(a: string, b: string, c: string, d: string): string;
+        static concat(a: string, b: string, c: string, d: string, e: string): string;
+        static split(str: string, separator: string): string[];
+        static toUpperCase(str: string): string;
+        static toLowerCase(str: string): string;
+        static trim(str: string): string;
+        static trimStart(str: string): string;
+        static trimEnd(str: string): string;
+        static includes(str: string, searchString: string, position?: number): boolean;
+        static startsWith(str: string, searchString: string): boolean;
+        static endsWith(str: string, searchString: string): boolean;
+        static replace(str: string, searchValue: string, newValue: string): string;
+        static indexOf(str: string, searchValue: string, position?: number): number;
+        static lastIndexOf(str: string, searchValue: string, position?: number): number;
+        static repeat(str: string, count: number): string;
+        static charAt(str: string, index: number): string;
+        static charCodeAt(str: string, index: number): number;
+        static substring(str: string, start: number, end?: number): string;
+        static slice(str: string, start: number, end?: number): string;
+        static getLength(str: string): number;
+        static parseInt(str: string, radix?: number): number;
+        static parseFloat(str: string): number;
     }
     class ExpressParse {
         _catch: Map<string, ExpressTree>;
@@ -943,38 +1196,38 @@ declare module BP {
         equal(value: any, context: any): void;
     }
     const Precedence: any;
-    class BlueprintExcuteNode extends BlueprintRunBase implements IRunAble {
+    class BlueprintExecuteNode extends BlueprintRunBase implements IRunAble {
         owner: any;
         varDefineMap: Map<string, boolean>;
-        runtimeDataMgrMap: Map<string | symbol, RuntimeDataManger>;
+        runtimeDataMgrMap: Map<string | symbol, RuntimeDataManager>;
         readCache: boolean;
         private _cacheMap;
         setCacheAble(node: BlueprintRuntimeBaseNode, runId: number, value: any): void;
         getCacheAble(node: BlueprintRuntimeBaseNode, runId: number): boolean;
         constructor(data: any);
         finish(runtime: IBPRutime): void;
-        getDataMangerByID(id: string | symbol): IRuntimeDataManger;
+        getDataManagerByID(id: string | symbol): IRuntimeDataManager;
         initData(key: string | symbol, nodeMap: Map<number, BlueprintRuntimeBaseNode>, localVarMap: Record<string, IBPVariable>, parentId?: string | symbol): void;
         debuggerPause: boolean;
-        pushBack(excuteNode: IExcuteListInfo, callback: any): void;
+        pushBack(executeNode: IExecuteListInfo, callback: any): void;
         getSelf(): any;
         initVar(name: string, value: any): void;
         setVar(name: string, value: any): void;
         getVar(name: string): any;
         getCode(): string;
-        beginExcute(runtimeNode: BlueprintRuntimeBaseNode, runner: IBPRutime, enableDebugPause: boolean, fromPin: BlueprintPinRuntime, parmsArray: any[], prePin: BlueprintPinRuntime): BlueprintPromise;
-        endExcute(runtimeNode: BlueprintRuntimeBaseNode): void;
+        beginExecute(runtimeNode: BlueprintRuntimeBaseNode, runner: IBPRutime, enableDebugPause: boolean, fromPin: BlueprintPinRuntime, parmsArray: any[], prePin: BlueprintPinRuntime): BlueprintPromise;
+        endExecute(runtimeNode: BlueprintRuntimeBaseNode): void;
         parmFromCustom(parmsArray: any[], parm: any, parmname: string): void;
         vars: {
             [key: string]: any;
         };
-        parmFromOtherPin(current: BlueprintPinRuntime, runtimeDataMgr: IRuntimeDataManger, from: BlueprintPinRuntime, parmsArray: any[], runId: number): void;
-        parmFromSelf(current: BlueprintPinRuntime, runtimeDataMgr: IRuntimeDataManger, parmsArray: any[], runId: number): void;
-        parmFromOutPut(outPutParmPins: BlueprintPinRuntime[], runtimeDataMgr: IRuntimeDataManger, parmsArray: any[]): void;
-        excuteFun(nativeFun: Function, returnResult: BlueprintPinRuntime, runtimeDataMgr: IRuntimeDataManger, caller: any, parmsArray: any[], runId: number): any;
+        parmFromOtherPin(current: BlueprintPinRuntime, runtimeDataMgr: IRuntimeDataManager, from: BlueprintPinRuntime, parmsArray: any[], runId: number): void;
+        parmFromSelf(current: BlueprintPinRuntime, runtimeDataMgr: IRuntimeDataManager, parmsArray: any[], runId: number): void;
+        parmFromOutPut(outPutParmPins: BlueprintPinRuntime[], runtimeDataMgr: IRuntimeDataManager, parmsArray: any[]): void;
+        executeFun(nativeFun: Function, returnResult: BlueprintPinRuntime, runtimeDataMgr: IRuntimeDataManager, caller: any, parmsArray: any[], runId: number): any;
         reCall(index: number): void;
     }
-    class RuntimeDataManger implements IRuntimeDataManger {
+    class RuntimeDataManager implements IRuntimeDataManager {
         id: symbol | string;
         isInit: boolean;
         /**
@@ -1004,30 +1257,30 @@ declare module BP {
         finish(runtime: IBPRutime): void;
         setCacheAble(node: BlueprintRuntimeBaseNode, runId: number, value: any): void;
         getCacheAble(node: BlueprintRuntimeBaseNode, runId: number): boolean;
-        getDataMangerByID(id: string | symbol): IRuntimeDataManger;
+        getDataManagerByID(id: string | symbol): IRuntimeDataManager;
         initData(key: string | symbol, nodeMap: Map<number, BlueprintRuntimeBaseNode>): void;
         debuggerPause: boolean;
         readCache: boolean;
-        pushBack(excuteNode: IExcuteListInfo): void;
+        pushBack(executeNode: IExecuteListInfo): void;
         getSelf(): void;
         reCall(index: number): void;
         getVar(name: string): void;
         initVar(name: string, value: any): void;
         setVar(name: string, value: any): void;
-        find(input: any, outExcutes: BlueprintPinRuntime[]): BlueprintPinRuntime;
+        find(input: any, outExecutes: BlueprintPinRuntime[]): BlueprintPinRuntime;
         codes: string[][];
         currentFun: string[];
         vars: {
             [key: string]: any;
         };
         blockMap: Map<number, any>;
-        beginExcute(runtimeNode: BlueprintRuntimeBaseNode): BlueprintPromise;
-        endExcute(runtimeNode: BlueprintRuntimeBaseNode): void;
-        parmFromOtherPin(current: BlueprintPinRuntime, runtimeDataMgr: IRuntimeDataManger, from: BlueprintPinRuntime, parmsArray: any[], runId: number): void;
-        parmFromSelf(current: BlueprintPinRuntime, runtimeDataMgr: IRuntimeDataManger, parmsArray: any[], runId: number): void;
-        parmFromOutPut(outPutParmPins: BlueprintPinRuntime[], runtimeDataMgr: IRuntimeDataManger, parmsArray: any[]): void;
+        beginExecute(runtimeNode: BlueprintRuntimeBaseNode): BlueprintPromise;
+        endExecute(runtimeNode: BlueprintRuntimeBaseNode): void;
+        parmFromOtherPin(current: BlueprintPinRuntime, runtimeDataMgr: IRuntimeDataManager, from: BlueprintPinRuntime, parmsArray: any[], runId: number): void;
+        parmFromSelf(current: BlueprintPinRuntime, runtimeDataMgr: IRuntimeDataManager, parmsArray: any[], runId: number): void;
+        parmFromOutPut(outPutParmPins: BlueprintPinRuntime[], runtimeDataMgr: IRuntimeDataManager, parmsArray: any[]): void;
         parmFromCustom(parmsArray: any[], parm: any, parmname: string): void;
-        excuteFun(nativeFun: Function, returnResult: BlueprintPinRuntime, runtimeDataMgr: IRuntimeDataManger, caller: any, parmsArray: any[], runId: number): void;
+        executeFun(nativeFun: Function, returnResult: BlueprintPinRuntime, runtimeDataMgr: IRuntimeDataManager, caller: any, parmsArray: any[], runId: number): void;
         toString(): string;
         getCode(): string;
     }
@@ -1054,7 +1307,7 @@ declare module BP {
         private getValueOnly;
         getValue(runId: number): any;
     }
-    class BluePrintBlock implements INodeManger<BlueprintRuntimeBaseNode>, IBPRutime {
+    class BluePrintBlock implements INodeManager<BlueprintRuntimeBaseNode>, IBPRutime {
         hasRefAnony: boolean;
         localVarMap: Record<string, IBPVariable>;
         get blockSourceType(): EBlockSource;
@@ -1075,26 +1328,26 @@ declare module BP {
         /**
          * 执行list
          */
-        excuteList: BlueprintRuntimeBaseNode[];
+        executeList: BlueprintRuntimeBaseNode[];
         anonymousfunMap: Map<number, BlueprintEventNode>;
         anonymousBlockMap: Map<string, BluePrintEventBlock>;
         dataMap: Record<string, IBPVariable | IBPCNode>;
         constructor(id: symbol | string);
-        getDataMangerByID(context: IRunAble): IRuntimeDataManger;
+        getDataManagerByID(context: IRunAble): IRuntimeDataManager;
         get bpId(): string;
         getNodeById(id: any): BlueprintRuntimeBaseNode;
         idToIndex: Map<number, number>;
         private _addNode;
-        optimizeByStart(value: BlueprintRuntimeBaseNode, excuteAbleList: BlueprintRuntimeBaseNode[]): void;
+        optimizeByStart(value: BlueprintRuntimeBaseNode, executeAbleList: BlueprintRuntimeBaseNode[]): void;
         clear(): void;
         optimize(): void;
         protected onParse(bpjson: IBPNode[]): void;
         append(node: BlueprintRuntimeBaseNode, item: IBPNode): void;
         getRunID(): number;
-        _recoverRunID(id: number, runtimeDataMgr: IRuntimeDataManger): void;
-        recoverRunID(id: number, runtimeDataMgr: IRuntimeDataManger): void;
-        runAnonymous(context: IRunAble, event: BlueprintEventNode, parms: any[], cb: Function, runId: number, execId: number, newRunId: number, oldRuntimeDataMgr: IRuntimeDataManger): boolean;
-        runByContext(context: IRunAble, runtimeDataMgr: IRuntimeDataManger, node: IExcuteListInfo, enableDebugPause: boolean, cb: Function, runId: number, fromPin: BlueprintPinRuntime, prePin: BlueprintPinRuntime, notRecover?: boolean): boolean;
+        _recoverRunID(id: number, runtimeDataMgr: IRuntimeDataManager): void;
+        recoverRunID(id: number, runtimeDataMgr: IRuntimeDataManager): void;
+        runAnonymous(context: IRunAble, event: BlueprintEventNode, parms: any[], cb: Function, runId: number, execId: number, newRunId: number, oldRuntimeDataMgr: IRuntimeDataManager): boolean;
+        runByContext(context: IRunAble, runtimeDataMgr: IRuntimeDataManager, node: IExecuteListInfo, enableDebugPause: boolean, cb: Function, runId: number, fromPin: BlueprintPinRuntime, prePin: BlueprintPinRuntime, notRecover?: boolean): boolean;
         finish(context: IRunAble): void;
     }
     enum EBlockSource {
@@ -1121,14 +1374,14 @@ declare module BP {
         protected parentId: symbol | string;
         protected parent: BluePrintComplexBlock;
         haRef: boolean;
-        static findParamPin(node: BlueprintRuntimeBaseNode, nodeMap: Map<any, BlueprintRuntimeBaseNode>, anonymousfunMap: Map<number, BlueprintEventNode>, excuteList: BlueprintRuntimeBaseNode[], bluePrintEventBlock: BluePrintEventBlock): void;
+        static findParamPin(node: BlueprintRuntimeBaseNode, nodeMap: Map<any, BlueprintRuntimeBaseNode>, anonymousfunMap: Map<number, BlueprintEventNode>, executeList: BlueprintRuntimeBaseNode[], bluePrintEventBlock: BluePrintEventBlock): void;
         init(event: BlueprintEventNode): void;
         private _checkRef;
         optimizeByBlockMap(parent: BluePrintComplexBlock): void;
         getRunID(): number;
-        recoverRunID(id: number, runtimeDataMgr: IRuntimeDataManger): void;
+        recoverRunID(id: number, runtimeDataMgr: IRuntimeDataManager): void;
         run(context: IRunAble, event: BlueprintEventNode, parms: any[], cb: Function, runId: number, execId: number): boolean;
-        getDataMangerByID(context: IRunAble): IRuntimeDataManger;
+        getDataManagerByID(context: IRunAble): IRuntimeDataManager;
         get bpId(): string;
         get blockSourceType(): EBlockSource;
         finish(context: IRunAble): void;
@@ -1143,13 +1396,13 @@ declare module BP {
         optimize(): void;
         protected onParse(bpjson: IBPNode[]): void;
         parse(bpjson: IBPNode[], getCNodeByNode: (node: IBPNode) => IBPCNode, varMap: Record<string, IBPVariable>): void;
-        run(context: IRunAble, eventName: string, parms: any[], cb: Function, runId: number, execId: number, outExcutes: BlueprintPinRuntime[], runner: IBPRutime, oldRuntimeDataMgr: IRuntimeDataManger): boolean;
+        run(context: IRunAble, eventName: string, parms: any[], cb: Function, runId: number, execId: number, outExecutes: BlueprintPinRuntime[], runner: IBPRutime, oldRuntimeDataMgr: IRuntimeDataManager): boolean;
     }
     class BluePrintFunStartBlock extends BluePrintEventBlock {
         funEnds: BlueprintCustomFunReturn[];
         funStart: BlueprintCustomFunStart;
         init(event: BlueprintCustomFunStart): void;
-        runFun(context: IRunAble, eventName: string, parms: any[], cb: Function, runId: number, execId: number, outExcutes: BlueprintPinRuntime[], runner: IBPRutime, oldRuntimeDataMgr: IRuntimeDataManger): boolean;
+        runFun(context: IRunAble, eventName: string, parms: any[], cb: Function, runId: number, execId: number, outExecutes: BlueprintPinRuntime[], runner: IBPRutime, oldRuntimeDataMgr: IRuntimeDataManager): boolean;
     }
     class BluePrintMainBlock extends BluePrintComplexBlock {
         autoAnonymousfuns: BlueprintEventNode[];
@@ -1162,7 +1415,6 @@ declare module BP {
         cls: Function;
         optimize(): void;
         protected onEventParse(eventName: string): void;
-        protected _onEventParse(...args: any[]): void;
         append(node: BlueprintRuntimeBaseNode, item: IBPNode): void;
         runAuto(context: IRunAble): void;
         run(context: IRunAble, event: BlueprintEventNode, parms: any[], cb: Function, runId: number, execId: number): boolean;
@@ -1175,11 +1427,10 @@ declare module BP {
         static readonly autoRunSymbol: unique symbol;
         private static _funMap;
         private static _instance;
-        private static _isInited;
         private static _bpMap;
         private static _bpContextMap;
         static bpNewMap: Map<string, IBPCNode>;
-        static BPExcuteCls: any;
+        static BPExecuteCls: any;
         static BPRuntimeCls: any;
         /**
          * 根据节点类型创建相应的对象
@@ -1194,7 +1445,6 @@ declare module BP {
         ];
         static regBPContextData(type: BPType, cls: new () => RuntimeNodeData): void;
         static getBPContextData(type: BPType): new () => RuntimeNodeData;
-        static __init__(): void;
         /**
          * 生成类
          * @param name
@@ -1223,11 +1473,11 @@ declare module BP {
          * 所属节点
         */
         owner: BlueprintRuntimeBaseNode;
-        step(context: IRunAble, runtimeDataMgr: IRuntimeDataManger, runner: IBPRutime, runId: number, prePin: BlueprintPinRuntime): BlueprintPinRuntime | BlueprintPromise | number;
-        excute(context: IRunAble, runtimeDataMgr: IRuntimeDataManger, runner: IBPRutime, runId: number): BlueprintPinRuntime;
+        step(context: IRunAble, runtimeDataMgr: IRuntimeDataManager, runner: IBPRutime, runId: number, prePin: BlueprintPinRuntime): BlueprintPinRuntime | BlueprintPromise | number;
+        execute(context: IRunAble, runtimeDataMgr: IRuntimeDataManager, runner: IBPRutime, runId: number): BlueprintPinRuntime;
         getValueCode(): any;
     }
-    class BlueprintPromise implements IExcuteListInfo {
+    class BlueprintPromise implements IExecuteListInfo {
         nid: number;
         enableDebugPause: boolean;
         pin: BlueprintPinRuntime;
@@ -1259,111 +1509,36 @@ declare module BP {
          * @param funName
          * @param parms
          */
-        runCustomFun(context: IRunAble, funId: string, parms: any[], cb: Function, runId: number, execId: number, outExcutes: BlueprintPinRuntime[], runner: IBPRutime, oldRuntimeDataMgr: IRuntimeDataManger): boolean;
+        runCustomFun(context: IRunAble, funId: string, parms: any[], cb: Function, runId: number, execId: number, outExecutes: BlueprintPinRuntime[], runner: IBPRutime, oldRuntimeDataMgr: IRuntimeDataManager): boolean;
         parse(mainBlockData: IBPStageData, getCNodeByNode: (node: IBPNode) => IBPCNode, varMap: Record<string, IBPVariable>, newCls: Function): void;
         parseFunction(funData: IBPStageData, getCNodeByNode: (node: IBPNode) => IBPCNode): void;
         toCode(context: IRunAble): void;
     }
     /**
-     *
+     * @blueprintable
      */
     class BlueprintStaticFun {
         /**
-         * @private
-         * @param outExcutes
-         * @param input
-         * @returns
+         * @en Print a string to the console.
+         * @param str string to print
+         * @zh 在控制台打印字符串。
+         * @param str 字符串内容
          */
-        static switchFun(outExcutes: BlueprintPinRuntime[], input: any): BlueprintPinRuntime;
+        static print(str: any): void;
         /**
-         * 打印
-         * @param str
-         */
-        static print(str: string): void;
-        static getTempVar(name: string, runtimeDataMgr: IRuntimeDataManger, runId: number): any;
-        static setTempVar(value: any, name: string, runtimeDataMgr: IRuntimeDataManger, runId: number): void;
-        /**
-         * @private
-         * @param target
-         * @param name
-         * @param context
-         * @returns
-         */
-        static getVariable(target: IBluePrintSubclass, name: string, context: IRunAble): any;
-        /**
-        * @private
-        * @param target
-        * @param name
-        * @param context
-        * @returns
-        */
-        static getSelf(name: string, context: IRunAble): any;
-        /**
-         * @private
-         * @param target
-         * @param value
-         * @param name
-         * @param context
-         */
-        static setVariable(target: IBluePrintSubclass, value: any, name: string, context: IRunAble): any;
-        /**
-         * 等待
-         * @param second
-         * @returns
+         * @en Wait for a specified time in seconds.
+         * @param second Time in seconds to wait.
+         * @zh 等待指定的时间（秒）。
+         * @param second 等待的时间（秒）。
          */
         static waitTime(second: number): Promise<boolean>;
         /**
-         * @private
-         * @returns
+         * @en Sleep for a specified time in milliseconds.
+         * @param time Time in milliseconds to sleep.
+         * @zh 睡眠指定的时间（毫秒）。
+         * @param time 睡眠的时间（毫秒）。
          */
-        static expression(): boolean;
-        /**
-         * @private
-         * @param target
-         * @param value
-         * @param name
-         * @param context
-         */
-        static typeInstanceof<T>(outExcutes: BlueprintPinRuntime[], target: any, type: new () => T): BlueprintPinRuntime;
-        /**
-         * @private
-         * @param nextExec
-         * @param outPutParmPins
-         * @param parms
-         * @param context
-         * @param runner
-         * @param runtimeDataMgr
-         */
-        private static runBranch;
-        /**
-         * @private
-         * @param target
-         * @param value
-         * @param name
-         * @param context
-         */
-        static forEach(inputExcute: BlueprintPinRuntime, inputExcutes: BlueprintPinRuntime[], outExcutes: BlueprintPinRuntime[], outPutParmPins: BlueprintPinRuntime[], context: IRunAble, runner: IBPRutime, runtimeDataMgr: IRuntimeDataManger, runId: number, array: any[]): BlueprintPinRuntime;
-        /**
-        * @private
-        * @param target
-        * @param value
-        * @param name
-        * @param context
-        */
-        static forEachWithBreak(inputExcute: BlueprintPinRuntime, inputExcutes: BlueprintPinRuntime[], outExcutes: BlueprintPinRuntime[], outPutParmPins: BlueprintPinRuntime[], context: IRunAble, runner: IBPRutime, runtimeDataMgr: IRuntimeDataManger, runId: number, array: any[]): BlueprintPinRuntime;
-        /**
-         * @private
-         * @param target
-         * @param value
-         * @param name
-         * @param context
-         */
-        static forLoop(inputExcute: BlueprintPinRuntime, inputExcutes: BlueprintPinRuntime[], outExcutes: BlueprintPinRuntime[], outPutParmPins: BlueprintPinRuntime[], context: IRunAble, runner: IBPRutime, runtimeDataMgr: IRuntimeDataManger, runId: number, firstIndex: number, lastIndex: number, step?: number): BlueprintPinRuntime;
-        /**
-        * @private
-        * breakNode 1 代表只在执行中，2代表执行中断，0代表执行完毕
-        */
-        static forLoopWithBreak(inputExcute: BlueprintPinRuntime, inputExcutes: BlueprintPinRuntime[], outExcutes: BlueprintPinRuntime[], outPutParmPins: BlueprintPinRuntime[], context: IRunAble, runner: IBPRutime, runtimeDataMgr: IRuntimeDataManger, runId: number, firstIndex: number, lastIndex: number, step?: number): BlueprintPinRuntime;
+        static sleep(time: number): Promise<void>;
         /**
          * 执行表达式
          * @param express
@@ -1373,30 +1548,37 @@ declare module BP {
          * @returns
          */
         static runExpress(express: string, a: any, b: any, c: any): any;
+        /**
+         * @en Destroy an object.
+         * @param obj Object to destroy.
+         * @zh 销毁一个对象。
+         * @param obj 要销毁的对象。
+         */
+        static destroy(obj: any): void;
     }
     interface IBPRutime {
         readonly name: string;
         readonly blockSourceType: EBlockSource;
         readonly bpId: string;
-        getDataMangerByID(context: IRunAble): IRuntimeDataManger;
+        getDataManagerByID(context: IRunAble): IRuntimeDataManager;
         getRunID(): number;
-        runAnonymous(context: IRunAble, event: BlueprintEventNode, parms: any[], cb: Function, runId: number, execId: number, newRunId: number, oldRuntimeDataMgr: IRuntimeDataManger): boolean;
-        runByContext(context: IRunAble, runtimeDataMgr: IRuntimeDataManger, node: IExcuteListInfo, enableDebugPause: boolean, cb: Function, runid: number, fromPin: BlueprintPinRuntime, prePin: BlueprintPinRuntime, notRecover?: boolean): boolean;
+        runAnonymous(context: IRunAble, event: BlueprintEventNode, parms: any[], cb: Function, runId: number, execId: number, newRunId: number, oldRuntimeDataMgr: IRuntimeDataManager): boolean;
+        runByContext(context: IRunAble, runtimeDataMgr: IRuntimeDataManager, node: IExecuteListInfo, enableDebugPause: boolean, cb: Function, runid: number, fromPin: BlueprintPinRuntime, prePin: BlueprintPinRuntime, notRecover?: boolean): boolean;
     }
     interface IRunAble {
         debuggerPause: boolean;
         readCache: boolean;
-        pushBack(excuteNode: IExcuteListInfo, callback: any): void;
+        pushBack(executeNode: IExecuteListInfo, callback: any): void;
         readonly vars: {
             [key: string]: any;
         };
-        beginExcute(runtimeNode: BlueprintRuntimeBaseNode, runner: IBPRutime, enableDebugPause: boolean, fromPin: BlueprintPinRuntime, parmsArray: any[], prePin: BlueprintPinRuntime): BlueprintPromise;
-        endExcute(runtimeNode: BlueprintRuntimeBaseNode): void;
-        parmFromOtherPin(current: BlueprintPinRuntime, runtimeDataMgr: IRuntimeDataManger, from: BlueprintPinRuntime, parmsArray: any[], runId: number): void;
-        parmFromSelf(current: BlueprintPinRuntime, runtimeDataMgr: IRuntimeDataManger, parmsArray: any[], runId: number): void;
-        parmFromOutPut(outPutParmPins: BlueprintPinRuntime[], runtimeDataMgr: IRuntimeDataManger, parmsArray: any[]): void;
+        beginExecute(runtimeNode: BlueprintRuntimeBaseNode, runner: IBPRutime, enableDebugPause: boolean, fromPin: BlueprintPinRuntime, parmsArray: any[], prePin: BlueprintPinRuntime): BlueprintPromise;
+        endExecute(runtimeNode: BlueprintRuntimeBaseNode): void;
+        parmFromOtherPin(current: BlueprintPinRuntime, runtimeDataMgr: IRuntimeDataManager, from: BlueprintPinRuntime, parmsArray: any[], runId: number): void;
+        parmFromSelf(current: BlueprintPinRuntime, runtimeDataMgr: IRuntimeDataManager, parmsArray: any[], runId: number): void;
+        parmFromOutPut(outPutParmPins: BlueprintPinRuntime[], runtimeDataMgr: IRuntimeDataManager, parmsArray: any[]): void;
         parmFromCustom(parmsArray: any[], parm: any, parmname: string): void;
-        excuteFun(nativeFun: Function, returnResult: BlueprintPinRuntime, runtimeDataMgr: IRuntimeDataManger, caller: any, parmsArray: any[], runId: number): any;
+        executeFun(nativeFun: Function, returnResult: BlueprintPinRuntime, runtimeDataMgr: IRuntimeDataManager, caller: any, parmsArray: any[], runId: number): any;
         getCode(): string;
         getVar(name: string): any;
         setVar(name: string, value: any): void;
@@ -1404,7 +1586,7 @@ declare module BP {
         reCall(index: number): void;
         getSelf(): any;
         initData(key: string | symbol, nodeMap: Map<number, BlueprintRuntimeBaseNode>, localVarMap: Record<string, IBPVariable>, parentId?: string | symbol): void;
-        getDataMangerByID(id: symbol | string): IRuntimeDataManger;
+        getDataManagerByID(id: symbol | string): IRuntimeDataManager;
         setCacheAble(node: BlueprintRuntimeBaseNode, runId: number, value: any): void;
         getCacheAble(node: BlueprintRuntimeBaseNode, runId: number): boolean;
         finish(runtime: IBPRutime): void;
@@ -1413,21 +1595,21 @@ declare module BP {
         optimize(): void;
     }
     class BlueprintAutoRun extends BlueprintRuntimeBaseNode {
-        protected colloctParam(context: IRunAble, runtimeDataMgr: IRuntimeDataManger, inputPins: BlueprintPinRuntime[], runner: IBPRutime, runId: number, prePin: BlueprintPinRuntime): any[];
+        protected collectParam(context: IRunAble, runtimeDataMgr: IRuntimeDataManager, inputPins: BlueprintPinRuntime[], runner: IBPRutime, runId: number, prePin: BlueprintPinRuntime): any[];
     }
     class BluePrintBlockNode extends BlueprintComplexNode {
-        deal: (inputExcute: BlueprintPinRuntime, inputExcutes: BlueprintPinRuntime[], outExcutes: BlueprintPinRuntime[], outPutParmPins: BlueprintPinRuntime[], context: IRunAble, runner: IBPRutime, runtimeDataMgr: IRuntimeDataManger, runId: number, ...args: any) => BlueprintPinRuntime;
-        next(context: IRunAble, runtimeDataMgr: IRuntimeDataManger, parmsArray: any[], runner: IBPRutime, enableDebugPause: boolean, runId: number, fromPin: BlueprintPinRuntime): BlueprintPinRuntime;
+        deal: (inputExecute: BlueprintPinRuntime, inputExecutes: BlueprintPinRuntime[], outExecutes: BlueprintPinRuntime[], outPutParmPins: BlueprintPinRuntime[], context: IRunAble, runner: IBPRutime, runtimeDataMgr: IRuntimeDataManager, runId: number, ...args: any) => BlueprintPinRuntime;
+        next(context: IRunAble, runtimeDataMgr: IRuntimeDataManager, parmsArray: any[], runner: IBPRutime, enableDebugPause: boolean, runId: number, fromPin: BlueprintPinRuntime): BlueprintPinRuntime;
         setFunction(fun: Function): void;
     }
     class BlueprintComplexNode extends BlueprintRuntimeBaseNode {
         /**
          * 输入引脚
          */
-        inExcutes: BlueprintPinRuntime[];
+        inExecutes: BlueprintPinRuntime[];
         constructor();
-        next(context: IRunAble, runtimeDataMgr: IRuntimeDataManger, parmsArray: any[], runner: IBPRutime, enableDebugPause: boolean, runId: number, fromPin: BlueprintPinRuntime): BlueprintPinRuntime;
-        find: (outExcutes: BlueprintPinRuntime[], ...args: any) => BlueprintPinRuntime;
+        next(context: IRunAble, runtimeDataMgr: IRuntimeDataManager, parmsArray: any[], runner: IBPRutime, enableDebugPause: boolean, runId: number, fromPin: BlueprintPinRuntime): BlueprintPinRuntime;
+        find: (outExecutes: BlueprintPinRuntime[], ...args: any) => BlueprintPinRuntime;
         addPin(pin: BlueprintPinRuntime): void;
         setFunction(fun: Function): void;
     }
@@ -1435,17 +1617,17 @@ declare module BP {
         /**
          * 输入引脚
          */
-        inExcutes: BlueprintPinRuntime[];
+        inExecutes: BlueprintPinRuntime[];
         functionID: string;
         staticContext: IRunAble;
         bpruntime: BlueprintRuntime;
         private _isCheck;
         constructor();
-        colloctParam(context: IRunAble, runtimeDataMgr: IRuntimeDataManger, inputPins: BlueprintPinRuntime[], runner: IBPRutime, runId: number, prePin: BlueprintPinRuntime): any[];
+        collectParam(context: IRunAble, runtimeDataMgr: IRuntimeDataManager, inputPins: BlueprintPinRuntime[], runner: IBPRutime, runId: number, prePin: BlueprintPinRuntime): any[];
         private _checkFun;
-        protected onParseLinkData(node: IBPNode, manger: INodeManger<BlueprintFunNode>): void;
-        protected excuteFun(context: IRunAble, runtimeDataMgr: IRuntimeDataManger, runner: IBPRutime, caller: IBluePrintSubclass, parmsArray: any[], runId: number, fromPin: BlueprintPinRuntime): Promise<any>;
-        protected _excuteFun(context: IRunAble, cb: any, parmsArray: any[], runner: IBPRutime): void;
+        protected onParseLinkData(node: IBPNode, manager: INodeManager<BlueprintFunNode>): void;
+        protected executeFun(context: IRunAble, runtimeDataMgr: IRuntimeDataManager, runner: IBPRutime, caller: IBluePrintSubclass, parmsArray: any[], runId: number, fromPin: BlueprintPinRuntime): Promise<any>;
+        protected _executeFun(context: IRunAble, cb: any, parmsArray: any[], runner: IBPRutime): void;
         addPin(pin: BlueprintPinRuntime): void;
         optimize(): void;
         setFunction(fun: Function, isMember: boolean): void;
@@ -1455,58 +1637,59 @@ declare module BP {
         /**
          * 输入引脚
          */
-        inExcutes: BlueprintPinRuntime[];
+        inExecutes: BlueprintPinRuntime[];
         constructor();
-        step(context: IRunAble, runtimeDataMgr: IRuntimeDataManger, fromExcute: boolean, runner: IBPRutime, enableDebugPause: boolean, runId: number, fromPin: BlueprintPinRuntime, prePin: BlueprintPinRuntime): BlueprintPinRuntime | BlueprintPromise | number;
-        initData(runtimeDataMgr: IRuntimeDataManger, curRunId: number, runId: number, parms: any[], offset: number, outExcutes: BlueprintPinRuntime[], runner: IBPRutime, oldRuntimeDataMgr: IRuntimeDataManger): void;
+        step(context: IRunAble, runtimeDataMgr: IRuntimeDataManager, fromExecute: boolean, runner: IBPRutime, enableDebugPause: boolean, runId: number, fromPin: BlueprintPinRuntime, prePin: BlueprintPinRuntime): BlueprintPinRuntime | BlueprintPromise | number;
+        initData(runtimeDataMgr: IRuntimeDataManager, curRunId: number, runId: number, parms: any[], offset: number, outExecutes: BlueprintPinRuntime[], runner: IBPRutime, oldRuntimeDataMgr: IRuntimeDataManager): void;
         addPin(pin: BlueprintPinRuntime): void;
     }
     class BlueprintCustomFunReturnContext extends RuntimeNodeData {
         returnMap: Map<number, IOutParm[]>;
         runIdMap: Map<number, number>;
-        outExcutesMap: Map<number, BlueprintPinRuntime[]>;
+        outExecutesMap: Map<number, BlueprintPinRuntime[]>;
         runnerMap: Map<number, [
             IBPRutime,
-            IRuntimeDataManger
+            IRuntimeDataManager
         ]>;
         constructor();
-        initData(curRunId: number, runId: number, parms: any[], offset: number, outExcutes: BlueprintPinRuntime[], runner: IBPRutime, runtimeDataMgr: IRuntimeDataManger): void;
-        runExcute(runId: number, index: number, context: IRunAble): void;
+        initData(curRunId: number, runId: number, parms: any[], offset: number, outExecutes: BlueprintPinRuntime[], runner: IBPRutime, runtimeDataMgr: IRuntimeDataManager): void;
+        runExecute(runId: number, index: number, context: IRunAble): void;
         returnResult(runId: number, curRunId: number): void;
     }
     class BlueprintCustomFunStart extends BlueprintEventNode {
-        protected onParseLinkData(node: IBPNode, manger: INodeManger<BlueprintEventNode>): void;
+        protected onParseLinkData(node: IBPNode, manager: INodeManager<BlueprintEventNode>): void;
     }
     class BlueprintEventNode extends BlueprintRuntimeBaseNode {
         /**
          * 输出引脚
          */
-        outExcute: BlueprintPinRuntime;
+        outExecute: BlueprintPinRuntime;
         eventName: string;
         autoReg: boolean;
         isAnonymous: boolean;
         constructor();
-        protected onParseLinkData(node: IBPNode, manger: INodeManger<BlueprintEventNode>): void;
+        protected onParseLinkData(node: IBPNode, manager: INodeManager<BlueprintEventNode>): void;
         setFunction(fun: Function, isMember: boolean): void;
-        emptyExcute(context: IRunAble, runtimeDataMgr: IRuntimeDataManger, fromExcute: boolean, runner: IBPRutime, enableDebugPause: boolean, runId: number, fromPin: BlueprintPinRuntime): BlueprintPinRuntime | BlueprintPromise;
-        step(context: IRunAble, runtimeDataMgr: IRuntimeDataManger, fromExcute: boolean, runner: IBPRutime, enableDebugPause: boolean, runId: number, fromPin: BlueprintPinRuntime, prePin: BlueprintPinRuntime): BlueprintPinRuntime | BlueprintPromise;
+        emptyExecute(context: IRunAble, runtimeDataMgr: IRuntimeDataManager, fromExecute: boolean, runner: IBPRutime, enableDebugPause: boolean, runId: number, fromPin: BlueprintPinRuntime): BlueprintPinRuntime | BlueprintPromise;
+        step(context: IRunAble, runtimeDataMgr: IRuntimeDataManager, fromExecute: boolean, runner: IBPRutime, enableDebugPause: boolean, runId: number, fromPin: BlueprintPinRuntime, prePin: BlueprintPinRuntime): BlueprintPinRuntime | BlueprintPromise;
         addPin(pin: BlueprintPinRuntime): void;
         optimize(): void;
-        initData(runtimeDataMgr: IRuntimeDataManger, parms: any[], curRunId: number): void;
+        initData(runtimeDataMgr: IRuntimeDataManager, parms: any[], curRunId: number): void;
     }
     class BlueprintFunNode extends BlueprintRuntimeBaseNode {
         /**
          * 输入引脚
          */
-        inExcute: BlueprintPinRuntime;
+        inExecute: BlueprintPinRuntime;
         /**
          * 输出引脚
          */
-        outExcute: BlueprintPinRuntime;
+        outExecute: BlueprintPinRuntime;
         eventName: string;
         constructor();
-        protected onParseLinkData(node: IBPNode, manger: INodeManger<BlueprintRuntimeBaseNode>): void;
-        private excuteHookFun;
+        protected onParseLinkData(node: IBPNode, manager: INodeManager<BlueprintRuntimeBaseNode>): void;
+        private executeHookFun;
+        protected executeFun(context: IRunAble, runtimeDataMgr: IRuntimeDataManager, runner: IBPRutime, caller: any, parmsArray: any[], runId: number, fromPin: BlueprintPinRuntime): any;
         next(): BlueprintPinRuntime;
         addPin(pin: BlueprintPinRuntime): void;
         optimize(): void;
@@ -1514,21 +1697,21 @@ declare module BP {
     class BlueprintGetTempVarNode extends BlueprintRuntimeBaseNode {
         protected _varKey: string;
         constructor();
-        protected onParseLinkData(node: IBPNode, manger: INodeManger<BlueprintRuntimeBaseNode>): void;
-        step(context: IRunAble, runtimeDataMgr: IRuntimeDataManger, fromExcute: boolean, runner: IBPRutime, enableDebugPause: boolean, runId: number, fromPin: BlueprintPinRuntime, prePin: BlueprintPinRuntime): BlueprintPinRuntime | BlueprintPromise;
+        protected onParseLinkData(node: IBPNode, manager: INodeManager<BlueprintRuntimeBaseNode>): void;
+        step(context: IRunAble, runtimeDataMgr: IRuntimeDataManager, fromExecute: boolean, runner: IBPRutime, enableDebugPause: boolean, runId: number, fromPin: BlueprintPinRuntime, prePin: BlueprintPinRuntime): BlueprintPinRuntime | BlueprintPromise;
     }
     class BlueprintGetVarNode extends BlueprintRuntimeBaseNode {
         protected _varKey: string;
         constructor();
-        protected onParseLinkData(node: IBPNode, manger: INodeManger<BlueprintRuntimeBaseNode>): void;
-        step(context: IRunAble, runtimeDataMgr: IRuntimeDataManger, fromExcute: boolean, runner: IBPRutime, enableDebugPause: boolean, runId: number, fromPin: BlueprintPinRuntime, prePin: BlueprintPinRuntime): BlueprintPinRuntime | BlueprintPromise;
+        protected onParseLinkData(node: IBPNode, manager: INodeManager<BlueprintRuntimeBaseNode>): void;
+        step(context: IRunAble, runtimeDataMgr: IRuntimeDataManager, fromExecute: boolean, runner: IBPRutime, enableDebugPause: boolean, runId: number, fromPin: BlueprintPinRuntime, prePin: BlueprintPinRuntime): BlueprintPinRuntime | BlueprintPromise;
     }
     class BlueprintNewTargetNode extends BlueprintRuntimeBaseNode {
         cls: ClassDecorator;
         parse(def: IBPCNode): void;
-        step(context: IRunAble, runtimeDataMgr: IRuntimeDataManger, fromExcute: boolean, runner: IBPRutime, enableDebugPause: boolean, runId: number, fromPin: BlueprintPinRuntime, prePin: BlueprintPinRuntime): BlueprintPinRuntime | BlueprintPromise;
+        step(context: IRunAble, runtimeDataMgr: IRuntimeDataManager, fromExecute: boolean, runner: IBPRutime, enableDebugPause: boolean, runId: number, fromPin: BlueprintPinRuntime, prePin: BlueprintPinRuntime): BlueprintPinRuntime | BlueprintPromise;
     }
-    class BlueprintRuntimeBaseNode extends BlueprintNode<BlueprintPinRuntime> implements IExcuteListInfo {
+    class BlueprintRuntimeBaseNode extends BlueprintNode<BlueprintPinRuntime> implements IExecuteListInfo {
         private _refNumber;
         staticNext: BlueprintPinRuntime;
         private static _EMPTY;
@@ -1548,39 +1731,40 @@ declare module BP {
         /**
          * 输出引脚
         */
-        outExcutes: BlueprintPinRuntime[];
-        tryExcute: (context: IRunAble, runtimeDataMgr: IRuntimeDataManger, fromExcute: boolean, runner: IBPRutime, enableDebugPause: boolean, runId: number, fromPin: BlueprintPinRuntime, prePin: BlueprintPinRuntime) => BlueprintPinRuntime | BlueprintPromise | number;
+        outExecutes: BlueprintPinRuntime[];
+        tryExecute: (context: IRunAble, runtimeDataMgr: IRuntimeDataManager, fromExecute: boolean, runner: IBPRutime, enableDebugPause: boolean, runId: number, fromPin: BlueprintPinRuntime, prePin: BlueprintPinRuntime) => BlueprintPinRuntime | BlueprintPromise | number;
         hasDebugger: boolean;
         constructor();
         addRef(): void;
         getRef(): number;
-        emptyExcute(context: IRunAble, runtimeDataMgr: IRuntimeDataManger, fromExcute: boolean, runner: IBPRutime, enableDebugPause: boolean, runId: number, fromPin: BlueprintPinRuntime): BlueprintPinRuntime | BlueprintPromise;
+        emptyExecute(context: IRunAble, runtimeDataMgr: IRuntimeDataManager, fromExecute: boolean, runner: IBPRutime, enableDebugPause: boolean, runId: number, fromPin: BlueprintPinRuntime): BlueprintPinRuntime | BlueprintPromise;
         createPin(def: TBPPinDef): BlueprintPinRuntime;
-        protected excuteFun(context: IRunAble, runtimeDataMgr: IRuntimeDataManger, runner: IBPRutime, caller: any, parmsArray: any[], runId: number, fromPin: BlueprintPinRuntime): any;
-        protected colloctParam(context: IRunAble, runtimeDataMgr: IRuntimeDataManger, inputPins: BlueprintPinRuntime[], runner: IBPRutime, runId: number, prePin: BlueprintPinRuntime): any[];
+        protected executeFun(context: IRunAble, runtimeDataMgr: IRuntimeDataManager, runner: IBPRutime, caller: any, parmsArray: any[], runId: number, fromPin: BlueprintPinRuntime): any;
+        protected collectParam(context: IRunAble, runtimeDataMgr: IRuntimeDataManager, inputPins: BlueprintPinRuntime[], runner: IBPRutime, runId: number, prePin: BlueprintPinRuntime): any[];
         private _checkRun;
-        step(context: IRunAble, runtimeDataMgr: IRuntimeDataManger, fromExcute: boolean, runner: IBPRutime, enableDebugPause: boolean, runId: number, fromPin: BlueprintPinRuntime, prePin: BlueprintPinRuntime): BlueprintPinRuntime | BlueprintPromise | number;
-        next(context: IRunAble, runtimeDataMgr: IRuntimeDataManger, parmsArray: any[], runner: IBPRutime, enableDebugPause: boolean, runId: number, fromPin: BlueprintPinRuntime): BlueprintPinRuntime;
+        step(context: IRunAble, runtimeDataMgr: IRuntimeDataManager, fromExecute: boolean, runner: IBPRutime, enableDebugPause: boolean, runId: number, fromPin: BlueprintPinRuntime, prePin: BlueprintPinRuntime): BlueprintPinRuntime | BlueprintPromise | number;
+        checkTarget(temp: any): void;
+        next(context: IRunAble, runtimeDataMgr: IRuntimeDataManager, parmsArray: any[], runner: IBPRutime, enableDebugPause: boolean, runId: number, fromPin: BlueprintPinRuntime): BlueprintPinRuntime;
         addPin(pin: BlueprintPinRuntime): void;
         optimize(): void;
         setFunction(fun: Function, isMember: boolean): void;
         protected addNextPIn(): void;
     }
     class BlueprintSequenceNode extends BlueprintComplexNode {
-        next(context: IRunAble, runtimeDataMgr: IRuntimeDataManger, parmsArray: any[], runner: IBPRutime, enableDebugPause: boolean, runId: number): BlueprintPinRuntime;
+        next(context: IRunAble, runtimeDataMgr: IRuntimeDataManager, parmsArray: any[], runner: IBPRutime, enableDebugPause: boolean, runId: number): BlueprintPinRuntime;
         setFunction(fun: Function): void;
     }
     class BlueprintSetTempVarNode extends BlueprintFunNode {
         protected _varKey: string;
         constructor();
-        protected onParseLinkData(node: IBPNode, manger: INodeManger<BlueprintRuntimeBaseNode>): void;
-        step(context: IRunAble, runtimeDataMgr: IRuntimeDataManger, fromExcute: boolean, runner: IBPRutime, enableDebugPause: boolean, runId: number, fromPin: BlueprintPinRuntime, prePin: BlueprintPinRuntime): BlueprintPinRuntime | BlueprintPromise;
+        protected onParseLinkData(node: IBPNode, manager: INodeManager<BlueprintRuntimeBaseNode>): void;
+        step(context: IRunAble, runtimeDataMgr: IRuntimeDataManager, fromExecute: boolean, runner: IBPRutime, enableDebugPause: boolean, runId: number, fromPin: BlueprintPinRuntime, prePin: BlueprintPinRuntime): BlueprintPinRuntime | BlueprintPromise;
     }
     class BlueprintSetVarNode extends BlueprintFunNode {
         protected _varKey: string;
         constructor();
-        protected onParseLinkData(node: IBPNode, manger: INodeManger<BlueprintRuntimeBaseNode>): void;
-        step(context: IRunAble, runtimeDataMgr: IRuntimeDataManger, fromExcute: boolean, runner: IBPRutime, enableDebugPause: boolean, runId: number, fromPin: BlueprintPinRuntime, prePin: BlueprintPinRuntime): BlueprintPinRuntime | BlueprintPromise;
+        protected onParseLinkData(node: IBPNode, manager: INodeManager<BlueprintRuntimeBaseNode>): void;
+        step(context: IRunAble, runtimeDataMgr: IRuntimeDataManager, fromExecute: boolean, runner: IBPRutime, enableDebugPause: boolean, runId: number, fromPin: BlueprintPinRuntime, prePin: BlueprintPinRuntime): BlueprintPinRuntime | BlueprintPromise;
     }
     class TestBluePrint {
         static BPMap: Map<string, TBPNodeDef>;
