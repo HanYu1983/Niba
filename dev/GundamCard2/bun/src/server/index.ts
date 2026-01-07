@@ -130,7 +130,7 @@ export async function createServer() {
                 writeGameStateToDesk().then(() => {
                     res.statusCode = 200;
                     res.setHeader('Content-Type', 'text/plain; charset=utf-8');
-                    res.end("OK");
+                    return res.end("OK");
                 }).catch(e => {
                     res.statusCode = 404;
                     return res.end(e.message)
@@ -145,7 +145,7 @@ export async function createServer() {
                     newGameState()
                     res.statusCode = 200;
                     res.setHeader('Content-Type', 'text/plain; charset=utf-8');
-                    res.end("OK");
+                    return res.end("OK");
                 } catch (e: any) {
                     res.statusCode = 404;
                     return res.end(e.message)
