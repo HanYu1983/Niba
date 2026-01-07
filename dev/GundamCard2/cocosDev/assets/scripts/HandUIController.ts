@@ -1,12 +1,13 @@
 import { _decorator, Component, Node, Vec3 } from 'cc';
 import { CardController } from './CardController';
 import { InstancePool } from './InstancePool';
+import { UIFollow3D } from './UIFollow3D';
 
 const { ccclass, property, requireComponent } = _decorator;
 
-@ccclass('HandController')
+@ccclass('HandUIController')
 @requireComponent(InstancePool)
-export class HandController extends Component implements IInstanceGame<ICard[]> {
+export class HandUIController extends Component implements IInstanceGame<ICard[]> {
     @property({ type: Node })
     public container: Node | null = null;
 
@@ -35,7 +36,11 @@ export class HandController extends Component implements IInstanceGame<ICard[]> 
                 controller.sync(game, card);
             }
 
-            handInstance.setPosition(index * 15, 0, 0);
+            const follow3D = handInstance.getComponent(UIFollow3D);
+            if (follow3D) {
+                follow3D.target = handInstance;
+            }
+
             this.container.addChild(handInstance);
         });
     }

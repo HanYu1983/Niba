@@ -3,7 +3,7 @@ const { ccclass, property } = _decorator;
 
 @ccclass('InstancePool')
 export class InstancePool extends Component {
-    @property(Node)
+    @property({ type: Node })
     public prefab: Node | null = null;
 
     public pool: Record<string, Node[]> = {};

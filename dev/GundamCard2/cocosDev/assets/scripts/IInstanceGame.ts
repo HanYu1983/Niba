@@ -1,5 +1,5 @@
 interface IInstanceGame<T> {
-    sync(game: T): void;
+    sync(game: IGame, relative: T): void;
 }
 
 interface IGame {
