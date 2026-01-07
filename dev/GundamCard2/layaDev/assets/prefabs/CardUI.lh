@@ -1,0 +1,105 @@
+{
+  "_$ver": 1,
+  "_$id": "zqn8mud1",
+  "_$type": "GWidget",
+  "name": "CardUI",
+  "width": 100,
+  "height": 100,
+  "relations": [
+    {
+      "_$type": "Relation",
+      "target": {
+        "_$ref": "zqn8mud1"
+      },
+      "data": [
+        1,
+        0,
+        2,
+        0
+      ]
+    }
+  ],
+  "_$child": [
+    {
+      "_$id": "f0em3ouc",
+      "_$type": "GBox",
+      "name": "box",
+      "width": 100,
+      "height": 100,
+      "relations": [
+        {
+          "_$type": "Relation",
+          "target": {
+            "_$ref": "zqn8mud1"
+          },
+          "data": [
+            1,
+            1,
+            2,
+            1
+          ]
+        }
+      ],
+      "layout": {
+        "type": 1
+      },
+      "_$child": [
+        {
+          "_$id": "hm7yzy64",
+          "_$type": "GTextField",
+          "name": "txt",
+          "width": 120,
+          "height": 28,
+          "text": "GundamX",
+          "fontSize": 20
+        },
+        {
+          "_$id": "mxr5am7x",
+          "_$type": "GButton",
+          "name": "btn",
+          "y": 28,
+          "width": 200,
+          "height": 50,
+          "controllers": {
+            "_$type": "Record",
+            "button": {
+              "_$type": "Controller",
+              "pages": [
+                "up",
+                "down",
+                "over",
+                "selectedOver"
+              ]
+            }
+          },
+          "_$child": [
+            {
+              "_$id": "5bvhduec",
+              "_$type": "GTextField",
+              "name": "txt",
+              "width": 120,
+              "height": 28,
+              "gears": [
+                {
+                  "_$type": "GearString",
+                  "controller": {
+                    "_$ref": "mxr5am7x",
+                    "_$ctrl": "button"
+                  },
+                  "propPath": "text",
+                  "values": {
+                    "0": "textC",
+                    "1": "teD",
+                    "_$type": "Record"
+                  }
+                }
+              ],
+              "text": "textC",
+              "fontSize": 20
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

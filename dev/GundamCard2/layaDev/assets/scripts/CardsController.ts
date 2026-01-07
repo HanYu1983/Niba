@@ -1,20 +1,13 @@
-import { ActionModel } from "./ActionModel";
-
 const { regClass, property } = Laya;
 
 @regClass()
-export class ActionController extends Laya.Script {
-    declare owner: Laya.Sprite;
+export class CardsController extends Laya.Script {
 
-    @property(Laya.Button)
-    btnAction: Laya.Button = null;
+    @property(Laya.Sprite3D)
+    public container: Laya.Sprite3D;
 
-    private _model: ActionModel;
-
-    set model(model: ActionModel) {
-        this._model = model;
-        this.btnAction.label = model.name;
-    }
+    @property(Laya.Sprite3D)
+    public cardPrefab: Laya.Sprite3D;
 
     //组件被激活后执行，此时所有节点和组件均已创建完毕，此方法只执行一次
     //onAwake(): void {}

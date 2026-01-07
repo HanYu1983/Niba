@@ -1,36 +1,27 @@
 {
   "_$ver": 1,
-  "_$id": "pnpehaf0",
+  "_$id": "scbbc8k2",
   "_$type": "Sprite3D",
   "name": "Card",
   "transform": {
     "localPosition": {
       "_$type": "Vector3",
-      "y": 1.5032808238671265,
-      "z": -0.17631047772689537
+      "x": 8.580027002735795,
+      "y": -3.508062051387689,
+      "z": -3.453631676032965
     },
-    "localRotation": {
-      "_$type": "Quaternion",
-      "x": 0.5841168263399799,
-      "w": 0.8116695960712769
+    "localScale": {
+      "_$type": "Vector3",
+      "x": 1,
+      "y": 1,
+      "z": 1
     }
   },
-  "_$comp": [
-    {
-      "_$type": "0bfa2143-34dc-4cbe-913b-62d13a82f96d",
-      "scriptPath": "scripts/CardController.ts",
-      "mesh": {
-        "_$ref": "1r4dv5r1",
-        "_$type": "MeshRenderer"
-      },
-      "model": null
-    }
-  ],
   "_$child": [
     {
-      "_$id": "1r4dv5r1",
+      "_$id": "tyy26wvt",
       "_$type": "Sprite3D",
-      "name": "Mesh",
+      "name": "Front",
       "transform": {
         "localScale": {
           "_$type": "Vector3",
@@ -49,14 +40,63 @@
         },
         {
           "_$type": "MeshRenderer",
+          "lightmapScaleOffset": {
+            "_$type": "Vector4"
+          },
           "sharedMaterials": [
             {
-              "_$uuid": "a1bf4dea-0aaf-4c55-9a9e-de04f67af2d2",
+              "_$uuid": "ce30b20f-5764-4f84-94c0-7f2c24ef3199",
               "_$type": "Material"
             }
           ]
         }
       ]
+    },
+    {
+      "_$id": "37yvu095",
+      "_$type": "Sprite3D",
+      "name": "Back",
+      "transform": {
+        "localRotation": {
+          "_$type": "Quaternion",
+          "z": 1,
+          "w": 6.123233995736766e-17
+        },
+        "localScale": {
+          "_$type": "Vector3",
+          "x": 1,
+          "y": 1,
+          "z": 1.4
+        }
+      },
+      "_$comp": [
+        {
+          "_$type": "MeshFilter",
+          "sharedMesh": {
+            "_$uuid": "4a4afb22-ef83-40a2-a6a8-212a2d20c52f",
+            "_$type": "Mesh"
+          }
+        },
+        {
+          "_$type": "MeshRenderer",
+          "lightmapScaleOffset": {
+            "_$type": "Vector4"
+          },
+          "sharedMaterials": [
+            {
+              "_$uuid": "9c13ab7c-60af-4288-aca8-5ee18a7cbe99",
+              "_$type": "Material"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_$comp": [
+    {
+      "_$type": "5aae2d03-b814-4355-8d03-51de810e34c6",
+      "scriptPath": "scripts/CardController.ts",
+      "text": ""
     }
   ]
 }
