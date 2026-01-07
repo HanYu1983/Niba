@@ -43,12 +43,12 @@ async function createWS() {
     )()
     const texts = pipe(
       always(getCardLikeItemIds(ctx)),
-      map(itemId => [itemId, getCardTexts(ctx, itemId).map(t => t.description)] as [string, string[]]),
+      map(itemId => [itemId, getCardTexts(ctx, itemId, {}).map(t => t.description)] as [string, string[]]),
       fromPairs
     )()
     const battlePoints = pipe(
       always(getCardLikeItemIds(ctx)),
-      map(itemId => [itemId, getSetGroupBattlePoint(ctx, itemId)] as [string, BattleBonus]),
+      map(itemId => [itemId, getSetGroupBattlePoint(ctx, itemId, {})] as [string, BattleBonus]),
       fromPairs
     )()
     const globalEffects = pipe(
@@ -110,7 +110,7 @@ async function createWS() {
       const gameStateData = await fs.readFile('__gameState.json', 'utf8');
       return JSON.parse(gameStateData) as GameStateWithFlowMemory;
     } catch (error) {
-      console.log(error)
+      console.log("file not found: __gameState.json, create new game state")
       return null
     }
   }
