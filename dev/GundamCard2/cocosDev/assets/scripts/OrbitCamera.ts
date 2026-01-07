@@ -76,7 +76,7 @@ export class OrbitCamera extends Component {
     }
 
     public rotate(deltaX: number, deltaY: number): void {
-        this._targetAzimuth -= deltaX * this.rotateSpeed * 0.01;
+        this._targetAzimuth += deltaX * this.rotateSpeed * 0.01;
         this._targetPolar += deltaY * this.rotateSpeed * 0.01;
         this._targetPolar = math.clamp(this._targetPolar, this.minPolarAngle, this.maxPolarAngle);
 

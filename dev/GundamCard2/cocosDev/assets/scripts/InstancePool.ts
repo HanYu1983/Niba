@@ -1,12 +1,13 @@
-import { _decorator, Component, Node, Prefab, instantiate } from 'cc';
-const { ccclass, property } = _decorator;
+import { _decorator, Node, instantiate } from 'cc';
 
-@ccclass('InstancePool')
-export class InstancePool extends Component {
-    @property({ type: Node })
-    public prefab: Node | null = null;
+export class InstancePool {
+    private prefab: Node | null = null;
 
-    public pool: Record<string, Node[]> = {};
+    private pool: Record<string, Node[]> = {};
+
+    constructor(prefab: Node | null) {
+        this.prefab = prefab;
+    }
 
     getInstance(key: string): Node | null {
         if (!this.prefab) {

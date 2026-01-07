@@ -1,7 +1,6 @@
 import { _decorator, Component, EventMouse, Input, input, Node } from 'cc';
 import { HandController } from './HandController';
 import { OrbitCamera } from './OrbitCamera';
-import { HandUIController } from './HandUIController';
 
 const { ccclass, property } = _decorator;
 
@@ -10,15 +9,11 @@ export class GameController extends Component implements IInstanceGame<IGame> {
     @property({ type: HandController })
     public handController: IInstanceGame<ICard[]> | null = null;
 
-    @property({ type: HandUIController })
-    public handUIController: IInstanceGame<ICard[]> | null = null;
-
     @property({ type: OrbitCamera })
     public camera: OrbitCamera | null = null;
 
     sync(game: IGame, relative: IGame): void {
         this.handController?.sync(game, relative.players[0].cards);
-        this.handUIController?.sync(game, relative.players[0].cards);
     }
 
     onLoad(): void {

@@ -1,42 +1,72 @@
 import { _decorator, Component, Node, Vec3 } from 'cc';
 import { CardController } from './CardController';
 import { InstancePool } from './InstancePool';
+import { UIFollow3D } from './UIFollow3D';
 
 const { ccclass, property, requireComponent } = _decorator;
 
 @ccclass('HandController')
-@requireComponent(InstancePool)
 export class HandController extends Component implements IInstanceGame<ICard[]> {
     @property({ type: Node })
-    public container: Node | null = null;
+    public cardContainer: Node | null = null;
 
-    private instancePool: InstancePool | null = null;
+    @property({ type: Node })
+    public cardUIContainer: Node | null = null;
+
+    @property({ type: Node })
+    public cardPrefab: Node | null = null;
+
+    @property({ type: Node })
+    public cardUIPrefab: Node | null = null;
+
+    private cardPool: InstancePool | null = null;
+    private cardUIPool: InstancePool | null = null;
 
     onLoad() {
-        this.instancePool = this.instancePool ?? this.getComponent(InstancePool);
+        this.cardPool = new InstancePool(this.cardPrefab);
+        this.cardUIPool = new InstancePool(this.cardUIPrefab);
     }
 
     sync(game: IGame, relative: ICard[]): void {
-        if (!this.container || !this.instancePool) {
+        if (!this.cardContainer || !this.cardPool) {
             return;
         }
 
         const cards: ICard[] = relative;
         cards.forEach((card: ICard, index) => {
-            const handInstance = this.instancePool!.getInstance(card.id);
-            handInstance.active = true;
+            const cardInstance = this.cardPool!.getInstance(card.id);
+            cardInstance.active = true;
 
-            if (!handInstance) {
+            if (!cardInstance) {
                 return;
             }
 
-            const controller = handInstance.getComponent(CardController);
+            const controller = cardInstance.getComponent(CardController);
             if (controller) {
                 controller.sync(game, card);
             }
 
-            handInstance.setPosition(index * 15, 0, 0);
-            this.container.addChild(handInstance);
+            cardInstance.setPosition(index * 15, 0, 0);
+            this.cardContainer.addChild(cardInstance);
+
+            const cardUIInstance = this.cardUIPool!.getInstance(card.id);
+            cardUIInstance.active = true;
+
+            if (!cardUIInstance) {
+                return;
+            }
+
+            const uiController = cardUIInstance.getComponent(CardController);
+            if (uiController) {
+                uiController.sync(game, card);
+            }
+
+            const follow3D = cardUIInstance.getComponent(UIFollow3D);
+            if (follow3D) {
+                follow3D.target = cardInstance;
+            }
+
+            this.cardUIContainer?.addChild(cardUIInstance);
         });
     }
 }
