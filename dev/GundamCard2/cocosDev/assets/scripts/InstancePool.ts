@@ -3,7 +3,7 @@ import { _decorator, Node, instantiate } from 'cc';
 export class InstancePool {
     private prefab: Node | null = null;
 
-    private pool: Record<string, Node[]> = {};
+    private pool: Record<string, Node> = {};
 
     constructor(prefab: Node | null) {
         this.prefab = prefab;
@@ -13,27 +13,19 @@ export class InstancePool {
         if (!this.prefab) {
             return null;
         }
-
-        if (!this.pool[key]) {
-            this.pool[key] = [];
+        if (this.pool[key]) {
+            return this.pool[key];
         }
-
-        if (this.pool[key].length > 0) {
-            const node = this.pool[key].pop()!;
-            node.active = true;
-            return node;
-        }
-
-        return instantiate(this.prefab);
+        const instance = instantiate(this.prefab);
+        instance.active = true;
+        this.pool[key] = instance;
+        return instance;
     }
 
-    releaseInstance(key: string, instance: Node): void {
-        if (!this.pool[key]) {
-            this.pool[key] = [];
+    releaseInstance(instance: Node): void {
+        const key = Object.keys(this.pool).find((k) => this.pool[k] === instance);
+        if (key) {
+            instance.active = false;
         }
-
-        instance.removeFromParent();
-        instance.active = false;
-        this.pool[key].push(instance);
     }
 }
