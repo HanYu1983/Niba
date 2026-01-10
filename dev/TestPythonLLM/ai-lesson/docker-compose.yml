@@ -1,0 +1,32 @@
+services:
+  # Ollama 服務：負責運行大模型
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_storage:/root/.ollama
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+  # Python 應用服務：負責執行我們的代碼
+  app:
+    image: python:3.10-slim
+    container_name: ai_app
+    volumes:
+      - .:/app
+    working_dir: /app
+    depends_on:
+      - ollama
+    command: tail -f /dev/null  # 讓容器保持運行不退出
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
+
+volumes:
+  ollama_storage:
