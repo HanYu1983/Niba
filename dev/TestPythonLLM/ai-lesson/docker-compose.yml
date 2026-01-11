@@ -22,6 +22,7 @@ services:
     volumes:
       - .:/app
       # 將 Python 套件掛載到本地的 .python_libs 資料夾
+      # docker exec -it ai_app pip install -t /custom_libs -r requirements.txt
       - ./custom_libs:/custom_libs
       # 同時掛載模型 (如上一題)
       - "C:\\Users\\johny\\Documents\\bin\\webui_forge_cu121_torch231\\webui\\models:/models"
