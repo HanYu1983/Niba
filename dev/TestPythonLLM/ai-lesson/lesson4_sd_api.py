@@ -3,7 +3,7 @@ import base64
 import json
 
 # SD 服務在 Docker 網路中的位址
-SD_URL = "http://stable-diffusion:7860/sdapi/v1/txt2img"
+SD_URL = "http://host.docker.internal:7860/sdapi/v1/txt2img/"
 
 def generate_image(prompt_text):
     payload = {

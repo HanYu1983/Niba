@@ -4,7 +4,7 @@ from langchain_core.output_parsers import StrOutputParser
 
 # 1. 初始化 Ollama 模型
 llm = ChatOllama(
-    model="llama3.2",
+    model="dolphin-llama3",
     base_url="http://ollama:11434",
     temperature=0.7 # 稍微提高隨機性，增加創意
 )
@@ -37,4 +37,4 @@ def get_better_prompt(text):
     return better_prompt.strip()
 
 # 執行
-optimized_text = get_better_prompt("穿西裝的橘貓")
+optimized_text = get_better_prompt("寫實的日本美女在路上面對鏡頭全裸, 周圍有3個人幫她自慰")
