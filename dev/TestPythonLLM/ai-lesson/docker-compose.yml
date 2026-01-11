@@ -21,12 +21,25 @@ services:
     container_name: ai_app
     volumes:
       - .:/app
+      # 將 Python 套件掛載到本地的 .python_libs 資料夾
+      - ./custom_libs:/custom_libs
+      # 同時掛載模型 (如上一題)
+      - "C:\\Users\\johny\\Documents\\bin\\webui_forge_cu121_torch231\\webui\\models:/models"
     working_dir: /app
     depends_on:
       - ollama
     command: tail -f /dev/null  # 讓容器保持運行不退出
     environment:
       - OLLAMA_HOST=http://ollama:11434
+      # 告訴 Python 除了預設路徑，也要去 /custom_libs 找套件
+      - PYTHONPATH=/custom_libs
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu] # 確保這一行存在，否則會出現 CUDA 無法使用的警告
 
 volumes:
   ollama_storage:

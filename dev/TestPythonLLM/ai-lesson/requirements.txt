@@ -1,3 +1,8 @@
 langchain
 langchain-ollama
 requests
+torch
+diffusers
+transformers
+accelerate
+safetensors
