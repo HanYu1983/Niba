@@ -13,7 +13,6 @@ services:
       - "C:\\Users\\johny\\Documents\\bin\\webui_forge_cu121_torch231\\webui\\models\\text_encoder:/root/ComfyUI/models/text_encoders"
       - ./extra_model_paths.yaml:/root/ComfyUI/extra_model_paths.yaml
       - ./output:/root/ComfyUI/output        # 映射输出目录
-      - ./custom_nodes:/root/ComfyUI/custom_nodes # 映射插件目录
     deploy:
       resources:
         reservations:
