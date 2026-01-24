@@ -6,13 +6,21 @@ https://docs.cloud.google.com/compute/docs/connect/standard-ssh?hl=zh-tw#gcloud
         ssh-keygen -t rsa -f C:\Users\johny\.ssh\gcp_key_tmp -C hanyu
         # 將gcp_key_tmp.pub的內容貼到VM的SSH金鑰中, 輸入下方指令進入VM, 注意VM每次重啟時IP都會變
         # 如果無上連上, 就是HOST("C:\Users\johny\.ssh\known_hosts")被記錄到舊的資料, 打開檔案將舊資料刪除就能重新連上並加入fingerprint
-        ssh -i C:\Users\johny\.ssh\gcp_key_tmp2 -L 8080:localhost:8188 hanyu@136.116.217.32
+        ssh -i C:\Users\johny\.ssh\gcp_key_tmp2 -L 8080:localhost:8188 hanyu@35.192.145.44
         ssh -i C:\Users\johny\.ssh\gcp_key_tmp2 hanyu@136.116.217.32
         # 打開8000的http server後就能用本機的8080連上
         python3 -m http.server 8000
         # 看PORT/pid
         sudo ss -tunlp
         sudo kill [pid]
+
+
+        # 新電腦建立金鑰
+        ssh-keygen -t rsa -C hanyu
+        cd C:\Users\johny\.ssh
+        cat id_rsa
+        ssh -i C:\Users\johny\.ssh\id_rsa -L 8080:localhost:8188 hanyu@35.192.145.44
+        ssh -i C:\Users\johny\.ssh\id_rsa hanyu@35.192.145.44
 
 # gcloud
         # create .ssh folder and connect
