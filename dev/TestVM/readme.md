@@ -6,8 +6,8 @@ https://docs.cloud.google.com/compute/docs/connect/standard-ssh?hl=zh-tw#gcloud
         ssh-keygen -t rsa -f C:\Users\johny\.ssh\gcp_key_tmp -C hanyu
         # 將gcp_key_tmp.pub的內容貼到VM的SSH金鑰中, 輸入下方指令進入VM, 注意VM每次重啟時IP都會變
         # 如果無上連上, 就是HOST("C:\Users\johny\.ssh\known_hosts")被記錄到舊的資料, 打開檔案將舊資料刪除並重新加入fingerprint
-        ssh -i C:\Users\johny\.ssh\gcp_key_tmp2 -L 8080:localhost:8188 hanyu@136.119.70.203
-        ssh -i C:\Users\johny\.ssh\gcp_key_tmp2 hanyu@136.119.70.203
+        ssh -i C:\Users\johny\.ssh\gcp_key_tmp2 -L 8080:localhost:8188 hanyu@136.116.217.32
+        ssh -i C:\Users\johny\.ssh\gcp_key_tmp2 hanyu@136.116.217.32
         # 打開8000的http server後就能用本機的8080連上
         python3 -m http.server 8000
         # 看PORT/pid
@@ -46,7 +46,14 @@ https://docs.cloud.google.com/compute/docs/connect/standard-ssh?hl=zh-tw#gcloud
 
 # download model
         # 本地COPY
-        scp -i C:\Users\johny\.ssh\gcp_key_tmp2 "C:\Users\johny\Documents\bin\webui_forge_cu121_torch231\webui\models\Stable-diffusion\nostrarealisticmix_v20SDXLVAE.safetensors" hanyu@136.119.70.203:~/div/ComfyUI/models/checkpoints/
+        scp -i C:\Users\johny\.ssh\gcp_key_tmp2 "C:\Users\johny\Documents\bin\webui_forge_cu121_torch231\webui\models\Stable-diffusion\ponyRealism_V22.safetensors" hanyu@34.135.21.10:~/div/ComfyUI/models/checkpoints/
+
+        scp -i C:\Users\johny\.ssh\gcp_key_tmp2 "C:\Users\johny\Documents\bin\webui_forge_cu121_torch231\webui\models\Lora\*.safetensors" hanyu@34.135.21.10:~/div/ComfyUI/models/loras
+
+        # copy output
+        scp -i C:\Users\johny\.ssh\gcp_key_tmp2 hanyu@34.135.21.10:~/div/ComfyUI/output/*.png ./
+        # copy workflows
+        scp -i C:\Users\johny\.ssh\gcp_key_tmp2 hanyu@34.135.21.10:~/div/ComfyUI/user/default/workflows/*.json ./workflows
         
         wget -c --content-disposition https://huggingface.co/Comfy-Org/stable-diffusion-v1-5-archive/resolve/main/v1-5-pruned-emaonly-fp16.safetensors?download=true
 
@@ -78,4 +85,22 @@ https://docs.cloud.google.com/compute/docs/connect/standard-ssh?hl=zh-tw#gcloud
         sudo growpart /dev/nvme0n1 1
         sudo resize2fs /dev/nvme0n1p1
 
+        wget -c --content-disposition https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0/resolve/main/sd_xl_base_1.0.safetensors?download=true
+        wget -c --content-disposition https://huggingface.co/stabilityai/stable-video-diffusion-img2vid-xt/resolve/main/svd_xt.safetensors?download=true
 
+        # GPU用量
+        nvidia-smi
+        watch -n 1 nvidia-smi
+
+        # CPU
+        sudo apt-get install htop
+        htop
+
+        # CPU
+        top
+
+        watch -n 1 "free -h && nvidia-smi"
+
+        wget -c --content-disposition https://huggingface.co/Comfy-Org/ACE-Step_ComfyUI_repackaged/resolve/main/all_in_one/ace_step_v1_3.5b.safetensors?download=true
+
+        
