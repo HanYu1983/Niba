@@ -19,8 +19,9 @@ https://docs.cloud.google.com/compute/docs/connect/standard-ssh?hl=zh-tw#gcloud
         ssh-keygen -t rsa -C hanyu
         cd C:\Users\johny\.ssh
         cat id_rsa
-        ssh -i C:\Users\johny\.ssh\id_rsa -L 8080:localhost:8188 hanyu@35.192.145.44
-        ssh -i C:\Users\johny\.ssh\id_rsa hanyu@35.192.145.44
+        ssh -i C:\Users\johny\.ssh\id_rsa -L 8080:localhost:8188 -L 8081:localhost:8080 hanyu@34.63.152.101
+        ssh -i C:\Users\johny\.ssh\id_rsa hanyu@34.63.152.101
+        scp -i C:\Users\johny\.ssh\id_rsa C:\Users\johny\Downloads\face_yolov8n.pt hanyu@34.63.152.101:~/
 
 # gcloud
         # create .ssh folder and connect
@@ -73,7 +74,21 @@ https://docs.cloud.google.com/compute/docs/connect/standard-ssh?hl=zh-tw#gcloud
         # 磁碟空間
         df -h
 
-        
+# comfyUI and jupyter 
+        ssh -i C:\Users\johny\.ssh\id_rsa -L 8080:localhost:8188 -L 8081:localhost:8080 hanyu@136.114.214.122
+        pwd
+        cd /home/jupyter
+
+# comfyUI and jupyter and code-server
+        ssh -i C:\Users\johny\.ssh\id_rsa -L 8080:localhost:8188 -L 8081:localhost:8080 -L 8082:localhost:9000 hanyu@34.61.251.179
+        curl -fsSL https://code-server.dev/install.sh | sh
+        # enable code-server
+        sudo systemctl enable --now code-server@$USER
+        nano ~/.config/code-server/config.yaml # 8080 -> 9000, Ctrl + O -> Enter (存檔), Ctrl + X (離開)
+        sudo systemctl restart code-server@$USER
+        # password -> /home/hanyu/.config/code-server/config.yaml
+
+
 
 # history
         ssh -i C:\Users\johny\.ssh\gcp_key_tmp2 -L 8080:localhost:8188 hanyu@34.173.106.164
@@ -111,4 +126,17 @@ https://docs.cloud.google.com/compute/docs/connect/standard-ssh?hl=zh-tw#gcloud
 
         wget -c --content-disposition https://huggingface.co/Comfy-Org/ACE-Step_ComfyUI_repackaged/resolve/main/all_in_one/ace_step_v1_3.5b.safetensors?download=true
 
-        
+# manager 
+        cd ~/ComfyUI/custom_nodes
+        git clone https://github.com/ltdrdata/ComfyUI-Manager.git
+        # restart ui
+        # install Impact Pack, Impact Subpack, IPAdapter Plus
+
+
+# ab
+        # set host
+        $_host_="35.184.90.69"
+        # connect
+        ssh -i C:\Users\johny\.ssh\id_rsa -L 8080:localhost:8188 -L 8081:localhost:8080 -L 8082:localhost:9000 "hanyu@$_host_"
+        # goto remote vscode
+        http://localhost:8082/?folder=/home/hanyu
