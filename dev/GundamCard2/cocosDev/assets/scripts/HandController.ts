@@ -38,12 +38,13 @@ export class HandController extends Component implements IInstanceGame<ICard[]> 
     }
 
     sync(game: IGame, relative: ICard[]): void {
-        if (!this.cardContainer || !this.cardPool) {
-            return;
-        }
 
         this.cardInstances.forEach((instance) => {
             this.cardPool!.releaseInstance(instance);
+        });
+
+        this.cardUIInstances.forEach((instance) => {
+            this.cardUIPool!.releaseInstance(instance);
         });
 
         const cards: ICard[] = relative;
