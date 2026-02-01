@@ -1,0 +1,129 @@
+export const prototype = {
+    texts: [
+        {
+            id: "",
+            description: "（戦闘フェイズ）〔２毎〕：このカードが戦闘エリアにいる場合、部隊１つの部隊戦闘力を、部隊解散まで＋２、または－２する。",
+            title: ["使用型", ["戦闘フェイズ"]],
+            testEnvs: [
+                {
+                    createCards: [
+                        ["自軍", "戦闘エリア1", [["179019_02A_U_GN024U_green", 1]]],
+                        ["自軍", "Gゾーン", [["unit", 2]]]
+                    ],
+                },
+            ],
+            isEachTime: true,
+            conditions: {
+                ...createRollCostRequire(2, null),
+                "このカードが戦闘エリアにいる場合": {
+                    actions: [
+                        {
+                            title: ["このカードが_戦闘エリアにいる場合", ["戦闘エリア1", "戦闘エリア2"]]
+                        }
+                    ]
+                },
+                "自軍部隊１つ": {
+                    title: ["_交戦中の_敵軍部隊_１つ", null, "自軍", 1],
+                },
+                "敵軍部隊１つ": {
+                    title: ["_交戦中の_敵軍部隊_１つ", null, "敵軍", 1]
+                },
+            },
+            logicTreeActions: [
+                {
+                    logicTree: {
+                        type: "And",
+                        children: [
+                            ...Object.keys(createRollCostRequire(2, null)).map(key => {
+                                return {
+                                    type: "Leaf",
+                                    value: key
+                                };
+                            }),
+                            {
+                                type: "Leaf",
+                                value: "このカードが戦闘エリアにいる場合"
+                            },
+                            {
+                                type: "Or",
+                                children: [
+                                    {
+                                        type: "Leaf",
+                                        value: "自軍部隊１つ"
+                                    },
+                                    {
+                                        type: "Leaf",
+                                        value: "敵軍部隊１つ"
+                                    }
+                                ]
+                            },
+                        ]
+                    },
+                    actions: [
+                        {
+                            title: ["cutIn", [
+                                    {
+                                        title: function _(ctx, effect, { DefineFn, GameStateFn, Options }) {
+                                            const cardId = DefineFn.EffectFn.getCardID(effect);
+                                            const tip1 = GameStateFn.getItemState(ctx, cardId).tips["自軍部隊１つ"];
+                                            if (tip1) {
+                                                const basyous = DefineFn.TipFn.getSelection(tip1);
+                                                if (basyous.length == 0) {
+                                                    throw new Error();
+                                                }
+                                                const targetIds = GameStateFn.getItemIdsByBasyou(ctx, basyous[0]);
+                                                if (targetIds.length == 0) {
+                                                    throw new DefineFn.TargetMissingError("");
+                                                }
+                                                const targetId = targetIds[0];
+                                                ctx = GameStateFn.doItemSetGlobalEffectsUntilEndOfTurn(ctx, effect, [{
+                                                        title: ["このカードの部隊の部隊戦闘力を_＋３する", 2],
+                                                        cardIds: [targetId]
+                                                    }], GameStateFn.createStrBaSyouPair(ctx, targetId), Options);
+                                            }
+                                            const tip2 = GameStateFn.getItemState(ctx, cardId).tips["敵軍部隊１つ"];
+                                            if (tip2) {
+                                                const basyous = DefineFn.TipFn.getSelection(tip2);
+                                                if (basyous.length == 0) {
+                                                    throw new Error();
+                                                }
+                                                const targetIds = GameStateFn.getItemIdsByBasyou(ctx, basyous[0]);
+                                                if (targetIds.length == 0) {
+                                                    throw new DefineFn.TargetMissingError("");
+                                                }
+                                                const targetId = targetIds[0];
+                                                ctx = GameStateFn.doItemSetGlobalEffectsUntilEndOfTurn(ctx, effect, [{
+                                                        title: ["このカードの部隊の部隊戦闘力を_＋３する", -2],
+                                                        cardIds: [targetId]
+                                                    }], GameStateFn.createStrBaSyouPair(ctx, targetId), Options);
+                                            }
+                                            return ctx;
+                                        }.toString()
+                                    }
+                                ]]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+};
+function createRollCostRequire(costNum, color) {
+    let ret = {};
+    for (let i = 0; i < costNum; ++i) {
+        const key = `${i}[${color}]`;
+        ret = {
+            ...ret,
+            [key]: {
+                title: ["RollColor", color],
+                actions: [
+                    {
+                        title: ["_ロールする", "ロール"],
+                        vars: [key]
+                    }
+                ]
+            }
+        };
+    }
+    return ret;
+}
