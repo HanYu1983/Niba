@@ -1,0 +1,22 @@
+services:
+  comfyui:
+    image: yanwk/comfyui-boot:cu124-slim  # 根据你的显卡 CUDA 版本选择镜像标签
+    container_name: comfyui
+    ports:
+      - "8188:8188"
+    volumes:
+      - "C:\\Users\\johny\\Documents\\bin\\webui_forge_cu121_torch231\\webui\\models\\Stable-diffusion:/root/ComfyUI/models/checkpoints"
+      - "C:\\Users\\johny\\Documents\\bin\\webui_forge_cu121_torch231\\webui\\models\\Stable-diffusion:/root/ComfyUI/models/diffusion_models"
+      - "C:\\Users\\johny\\Documents\\bin\\webui_forge_cu121_torch231\\webui\\models\\Lora:/root/ComfyUI/models/loras"
+      - "C:\\Users\\johny\\Documents\\bin\\webui_forge_cu121_torch231\\webui\\models\\VAE:/root/ComfyUI/models/vae"
+      - "C:\\Users\\johny\\Documents\\bin\\webui_forge_cu121_torch231\\webui\\models\\ControlNet:/root/ComfyUI/models/controlnet"
+      - "C:\\Users\\johny\\Documents\\bin\\webui_forge_cu121_torch231\\webui\\models\\text_encoder:/root/ComfyUI/models/text_encoders"
+      - ./extra_model_paths.yaml:/root/ComfyUI/extra_model_paths.yaml
+      - ./output:/root/ComfyUI/output        # 映射输出目录
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
