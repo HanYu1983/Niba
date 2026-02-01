@@ -1,6 +1,4 @@
 node_modules
 tmp
-public/data
-public/ext
 public/index.js
 *.lockb
