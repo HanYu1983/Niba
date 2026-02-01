@@ -46,3 +46,13 @@ bun run build
 bun build src\web.tsx --outdir public
 runWeb.bat
 ```
+
+## WINDOW
+        # build card
+        web.build_card.bat
+
+        # build web
+        web.build.bat
+        
+        # run
+        web.run.bat
