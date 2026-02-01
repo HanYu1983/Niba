@@ -1,0 +1,9 @@
+services:
+  web:
+    image: node:22
+    working_dir: /app
+    command: sh -c "npx http-server -c-1 -p 8080 public"
+    volumes:
+      - ./:/app
+    ports:
+      - "8080:8080"
