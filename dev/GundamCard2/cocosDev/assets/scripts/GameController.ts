@@ -44,6 +44,8 @@ export class GameController extends Component implements IInstanceGame<IGame> {
         }
         this.sync(mockGame, mockGame);
         // this.addListener();
+
+        this.callWeb('cocos ready', null)
     }
 
     onCardButtonClick(event: EventTouch) {
@@ -55,14 +57,14 @@ export class GameController extends Component implements IInstanceGame<IGame> {
         if (btnNode) {
             const cardController = btnNode.parent.getComponent(CardUIController)
             // console.log(cardController);
-            this.callWeb();
+            this.callWeb("cardClicked", { cardId: '1' });
         }
     }
 
-    callWeb() {
-        console.log("Calling web function via postMessage");
+    callWeb(name: string, data: any) {
+        console.log("Calling web function via postMessage", { name, data });
         if (window['html']) {
-            window['html'].callParent({ id: 1 }, "*");
+            window['html'].callParent({ name: name, data: data });
         }
     }
 

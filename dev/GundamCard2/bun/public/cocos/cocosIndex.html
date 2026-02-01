@@ -33,16 +33,13 @@
   <script src="src/polyfills.bundle.js" charset="utf-8"> </script>
 
 
-  <!-- SystemJS support. -->
   <script src="src/system.bundle.js" charset="utf-8"> </script>
 
-  <!-- Import map -->
   <script src="src/import-map.json" type="systemjs-importmap" charset="utf-8"> </script>
 
   <script>
     System.import('./index.js').catch(function (err) { console.error(err); })
 
-    // postMessage method for communication with parent window or other windows
     function callParent(data) {
       if (window.parent && window.parent !== window) {
         console.log('向 parent 發送消息:', data);
@@ -54,28 +51,13 @@
       callParent: callParent
     }
 
-    // 監聽來自 parent 的 postMessage
-    window.addEventListener('message', function(event) {
-      // 驗證來源（可選但推薦）
-      // if (event.origin !== window.location.origin) return;
-
+    window.addEventListener('message', function (event) {
       const data = event.data;
       console.log('收到來自 parent 的消息:', data);
 
-      if(window['cocos']){
-        // 假設 cocos 有一個方法可以處理消息
+      if (window['cocos']) {
         window['cocos'].receiveMessage(data);
       }
-
-      // 根據消息類型處理
-      if (data.type === 'command') {
-        console.log('執行命令:', data.command);
-        // 處理命令邏輯
-      } else if (data.type === 'config') {
-        console.log('更新配置:', data.config);
-        // 處理配置邏輯
-      }
-      // 可在此添加其他消息類型的處理
     });
 
   </script>

@@ -17117,26 +17117,17 @@ var CocosIframe = () => {
         return;
       const data = event.data;
       console.log("收到來自iframe的消息:", data);
-      if (data.type === "ready") {
-        console.log("iframe ready");
-      } else if (data.type === "gameEvent") {
-        console.log("遊戲事件:", data.event);
+      switch (data.name) {
+        case "cocos ready":
+          console.log("Cocos 已準備好");
+          sendMessageToIframe({ type: "test call cocos" });
+          break;
       }
-    };
-    const handleIframeLoad = () => {
-      console.log("iframe 載入完成");
-      sendMessageToIframe({ type: "my ready", timestamp: Date.now() });
     };
     window.addEventListener("message", handleMessage);
     const iframe = iframeRef.current;
-    if (iframe) {
-      iframe.addEventListener("load", handleIframeLoad);
-    }
     return () => {
       window.removeEventListener("message", handleMessage);
-      if (iframe) {
-        iframe.removeEventListener("load", handleIframeLoad);
-      }
     };
   }, []);
   return /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
