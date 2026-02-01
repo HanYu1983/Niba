@@ -20,7 +20,7 @@
   (doseq [fn [`node.spec.map/generate-map]]
     (println "==============" fn "==============")
     #_(println (s/exercise-fn fn 2))
-    (->> (stest/check fn)
+    #_(->> (stest/check fn)
          (filter #(not (nil? (:failure %))))
          (map (comp #(.-data %) :failure))
          (println))

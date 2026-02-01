@@ -1,0 +1,75 @@
+export const prototype = {
+    texts: [
+        {
+            id: "",
+            description: "（戦闘フェイズ）〔２〕：このセットグループのユニットは、ターン終了時まで「速攻」を得る。",
+            title: ["使用型", ["戦闘フェイズ"]],
+            conditions: {
+                ...createRollCostRequire(2, null),
+                "このセットグループのユニットは": {
+                    actions: [
+                        {
+                            title: function _(ctx, effect, { DefineFn, GameStateFn }) {
+                                const ges = GameStateFn.getGlobalEffects(ctx, null);
+                                const cardId = DefineFn.EffectFn.getCardID(effect);
+                                const rootId = GameStateFn.getSetGroupRoot(ctx, cardId);
+                                if (rootId == cardId) {
+                                    throw new DefineFn.TipError(`このセットグループのユニットは不存在`);
+                                }
+                                if (GameStateFn.isSetGroupHasA(ctx, ["速攻"], rootId, { ges: ges })) {
+                                    throw new DefineFn.TipError(`速攻已有了:${cardId}:${effect.text.description}`);
+                                }
+                                return ctx;
+                            }.toString()
+                        }
+                    ]
+                }
+            },
+            logicTreeActions: [
+                {
+                    actions: [
+                        {
+                            title: function _(ctx, effect, { DefineFn, GameStateFn }) {
+                                const newE = DefineFn.EffectFn.fromEffectBasic(effect, {
+                                    logicTreeAction: {
+                                        actions: [
+                                            {
+                                                title: function _(ctx, effect, { DefineFn, GameStateFn, ToolFn }) {
+                                                    const cardId = DefineFn.EffectFn.getCardID(effect);
+                                                    const targetId = GameStateFn.getSetGroupRoot(ctx, cardId);
+                                                    ctx = GameStateFn.mapItemState(ctx, targetId, is => DefineFn.ItemStateFn.setGlobalEffect(is, null, { title: ["AddText", { id: ToolFn.getUUID(), title: ["特殊型", ["速攻"]] }], cardIds: [targetId] }, { isRemoveOnTurnEnd: true }));
+                                                    return ctx;
+                                                }.toString()
+                                            }
+                                        ]
+                                    }
+                                });
+                                ctx = GameStateFn.addStackEffect(ctx, newE);
+                                return ctx;
+                            }.toString()
+                        },
+                    ]
+                }
+            ]
+        }
+    ],
+};
+function createRollCostRequire(costNum, color) {
+    let ret = {};
+    for (let i = 0; i < costNum; ++i) {
+        const key = `${i}[${color}]`;
+        ret = {
+            ...ret,
+            [key]: {
+                title: ["RollColor", color],
+                actions: [
+                    {
+                        title: ["_ロールする", "ロール"],
+                        vars: [key]
+                    }
+                ]
+            }
+        };
+    }
+    return ret;
+}
