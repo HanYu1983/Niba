@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, Vec3 } from 'cc';
+import { _decorator, Button, Component, EventHandler, Node, Vec3 } from 'cc';
 import { CardController } from './CardController';
 import { InstancePool } from './InstancePool';
 import { UIFollow3D } from './UIFollow3D';
@@ -70,6 +70,17 @@ export class HandController extends Component implements IInstanceGame<ICard[]> 
 
                 const follow3D = inst.getComponent(UIFollow3D);
                 follow3D!.target = cardInstance;
+
+                // on click of the card UI, log the card id
+
+                const eventHandler = new EventHandler();
+                eventHandler.target = inst;
+                eventHandler.component = 'CardController';
+                eventHandler.handler = 'onClick';
+                eventHandler.customEventData = card.id;
+                
+                const button = inst.getComponentInChildren(Button)
+                button.clickEvents.push(eventHandler);
                 return inst;
             })()
             this.cardUIContainer?.addChild(cardUIInstance);

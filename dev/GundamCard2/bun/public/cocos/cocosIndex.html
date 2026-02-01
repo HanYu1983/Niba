@@ -41,6 +41,15 @@
 
   <script>
     System.import('./index.js').catch(function (err) { console.error(err); })
+
+    // postMessage method for communication with parent window or other windows
+    function postMessage(data, targetOrigin = '*') {
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage(data, targetOrigin);
+      }
+    }
+
+    window['__Cocos_PostMessage__'] = postMessage;
   </script>
 </body>
 
