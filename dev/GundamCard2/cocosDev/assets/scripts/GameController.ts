@@ -3,47 +3,46 @@ import { HandController } from './HandController';
 import { OrbitCamera } from './OrbitCamera';
 import { CardController } from './CardController';
 import { CardUIController } from './CardUIController';
+import { startGameMockData } from './mockData/startGame';
 
 const { ccclass, property } = _decorator;
 
 @ccclass('GameController')
 export class GameController extends Component implements IInstanceGame<IGame> {
     @property({ type: HandController })
-    public handController: IInstanceGame<ICard[]> | null = null;
+    public handController: IInstanceGame<string[]> | null = null;
+
+    @property({ type: HandController })
+    public deckController: IInstanceGame<string[]> | null = null;
 
     // @property({ type: OrbitCamera })
     // public camera: OrbitCamera | null = null;
 
     sync(game: IGame, relative: IGame): void {
-        this.handController?.sync(game, relative.players[0].cards);
+        console.log("GameController syncing with game data:", game);
+        
+        this.deckController?.sync(game, game.model.gameState.table.cardStack['[\"PlayerA\",\"本国\"]']);
+        // this.handController?.sync(game, relative.players[0].cards);
     }
 
     onLoad(): void {
 
         window['cocos'] = {
-            receiveMessage: (msg: any) => {
+            receiveMessage: (msg: { type: string, data: any }) => {
                 console.log("Received message from web:", msg);
+                switch (msg.type) {
+                    case 'update viewModel':
+                        const gameData: IGame = msg.data;
+                        this.sync(gameData, gameData);
+                        break;
+                    default:
+                        console.warn("Unknown message type:", msg.type);
+                }
             }
         }
 
-        const mockGame: IGame = {
-            players: [
-                {
-                    id: 'player1',
-                    name: 'Alice',
-                    cards: [
-                        { id: 'card1', name: 'Gundam' },
-                        { id: 'card2', name: 'Zaku' },
-                        { id: 'card3', name: 'Dom' },
-                        { id: 'card4', name: 'Gelgoog' },
-                        { id: 'card5', name: 'Gouf' },
-                        { id: 'card6', name: 'Rick Dom' },
-                    ]
-                }
-            ]
-        }
+        const mockGame: IGame = startGameMockData
         this.sync(mockGame, mockGame);
-        // this.addListener();
 
         this.callWeb('cocos ready', null)
     }
