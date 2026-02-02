@@ -1,0 +1,36 @@
+/* src/client/cocosVer/CocosAppCss.module.css */
+.abs_aP31pQ {
+  position: absolute;
+}
+
+.rel_aP31pQ {
+  position: relative;
+}
+
+.fullsize_aP31pQ {
+  width: 100%;
+  height: 100%;
+}
+
+.flex-hori_aP31pQ {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-vert_aP31pQ {
+  display: flex;
+  flex-direction: column;
+}
+
+.vert-center_aP31pQ {
+  justify-content: center;
+}
+
+.hori-center_aP31pQ {
+  align-items:  center;
+}
+
+.center-center_aP31pQ {
+  justify-content: center;
+  align-items:  center;
+}

@@ -1,7 +1,12 @@
-import { useEffect, useRef } from "react"
+import { useContext, useEffect, useRef } from "react"
+import { AppContext } from "../tool/appContext"
+import { OnViewModel } from "../tool/appContext/OnViewModel"
+import { CocosAppCss } from "./CocosAppCss"
 
 export const CocosIframe = () => {
   const iframeRef = useRef<HTMLIFrameElement>(null)
+
+  const appContext = useContext(AppContext)
 
   const sendMessageToIframe = (data: any) => {
     if (iframeRef.current && iframeRef.current.contentWindow) {
@@ -19,40 +24,46 @@ export const CocosIframe = () => {
       const data = event.data
       console.log("收到來自iframe的消息:", data)
 
-      switch(data.name){
+      switch (data.name) {
         case "cocos ready":
           console.log("Cocos 已準備好")
           sendMessageToIframe({ type: "test call cocos" })
           break
+        case 'ddd':
+          // OnEvent.next({
+          //   id: "OnClickFlowConfirm",
+          //   clientId: props.clientId || "unknown",
+          //   flow: { ...flow, effectID: tip.id },
+          //   versionID: appContext.viewModel.model.versionID
+          // });
+          break;
       }
     }
 
-    // const handleIframeLoad = () => {
-    //   console.log("iframe 載入完成")
-    //   sendMessageToIframe({ type: "my ready", timestamp: Date.now() })
-    // }
-
     window.addEventListener("message", handleMessage)
-    // const iframe = iframeRef.current
-    // if (iframe) {
-    //   iframe.addEventListener("load", handleIframeLoad)
-    // }
 
     return () => {
       window.removeEventListener("message", handleMessage)
-      // if (iframe) {
-      //   iframe.removeEventListener("load", handleIframeLoad)
-      // }
+    }
+  }, [])
+
+  useEffect(() => {
+    const subscription = OnViewModel.subscribe((viewModel) => {
+      sendMessageToIframe({ type: "update viewModel", viewModel })
+    })
+
+    return () => {
+      subscription.unsubscribe()
     }
   }, [])
 
   return (
-    <div style={{ width: "100%", height: "100%" }}>
-        <iframe 
-          ref={iframeRef}
-          src="cocos/cocosIndex.html" 
-          style={{ width: "100%", height: "100%", border: "none" }}
-        ></iframe>
+    <div style={{ ...CocosAppCss.fullsize, ...CocosAppCss.rel } as React.CSSProperties}>
+      <iframe
+        ref={iframeRef}
+        src="cocos/cocosIndex.html"
+        style={{ ...CocosAppCss.fullsize, ...CocosAppCss.rel, border: "none" } as React.CSSProperties}
+      ></iframe>
     </div>
   )
 }

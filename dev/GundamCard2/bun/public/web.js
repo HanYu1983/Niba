@@ -15,6 +15,15 @@ var __toESM = (mod, isNodeMode, target) => {
   return to;
 };
 var __commonJS = (cb, mod) => () => (mod || cb((mod = { exports: {} }).exports, mod), mod.exports);
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, {
+      get: all[name],
+      enumerable: true,
+      configurable: true,
+      set: (newValue) => all[name] = () => newValue
+    });
+};
 
 // node_modules/scheduler/cjs/scheduler.development.js
 var require_scheduler_development = __commonJS((exports) => {
@@ -273,8 +282,9 @@ var require_scheduler_development = __commonJS((exports) => {
 
 // node_modules/scheduler/index.js
 var require_scheduler = __commonJS((exports, module) => {
+  var scheduler_development = __toESM(require_scheduler_development());
   if (false) {} else {
-    module.exports = require_scheduler_development();
+    module.exports = scheduler_development;
   }
 });
 
@@ -1103,8 +1113,9 @@ See https://react.dev/link/invalid-hook-call for tips about how to debug and fix
 
 // node_modules/react/index.js
 var require_react = __commonJS((exports, module) => {
+  var react_development = __toESM(require_react_development());
   if (false) {} else {
-    module.exports = require_react_development();
+    module.exports = react_development;
   }
 });
 
@@ -1293,8 +1304,9 @@ See https://react.dev/link/invalid-hook-call for tips about how to debug and fix
 
 // node_modules/react-dom/index.js
 var require_react_dom = __commonJS((exports, module) => {
+  var react_dom_development = __toESM(require_react_dom_development());
   if (false) {} else {
-    module.exports = require_react_dom_development();
+    module.exports = react_dom_development;
   }
 });
 
@@ -16868,8 +16880,9 @@ You might need to use a local HTTP server (instead of file://): https://react.de
 
 // node_modules/react-dom/client.js
 var require_client = __commonJS((exports, module) => {
+  var react_dom_client_development = __toESM(require_react_dom_client_development());
   if (false) {} else {
-    module.exports = require_react_dom_client_development();
+    module.exports = react_dom_client_development;
   }
 });
 
@@ -16877,14 +16890,14 @@ var require_client = __commonJS((exports, module) => {
 var require_react_jsx_dev_runtime_development = __commonJS((exports) => {
   var React = __toESM(require_react());
   (function() {
-    function getComponentNameFromType(type) {
-      if (type == null)
+    function getComponentNameFromType(type3) {
+      if (type3 == null)
         return null;
-      if (typeof type === "function")
-        return type.$$typeof === REACT_CLIENT_REFERENCE ? null : type.displayName || type.name || null;
-      if (typeof type === "string")
-        return type;
-      switch (type) {
+      if (typeof type3 === "function")
+        return type3.$$typeof === REACT_CLIENT_REFERENCE ? null : type3.displayName || type3.name || null;
+      if (typeof type3 === "string")
+        return type3;
+      switch (type3) {
         case REACT_FRAGMENT_TYPE:
           return "Fragment";
         case REACT_PROFILER_TYPE:
@@ -16898,26 +16911,26 @@ var require_react_jsx_dev_runtime_development = __commonJS((exports) => {
         case REACT_ACTIVITY_TYPE:
           return "Activity";
       }
-      if (typeof type === "object")
-        switch (typeof type.tag === "number" && console.error("Received an unexpected object in getComponentNameFromType(). This is likely a bug in React. Please file an issue."), type.$$typeof) {
+      if (typeof type3 === "object")
+        switch (typeof type3.tag === "number" && console.error("Received an unexpected object in getComponentNameFromType(). This is likely a bug in React. Please file an issue."), type3.$$typeof) {
           case REACT_PORTAL_TYPE:
             return "Portal";
           case REACT_CONTEXT_TYPE:
-            return type.displayName || "Context";
+            return type3.displayName || "Context";
           case REACT_CONSUMER_TYPE:
-            return (type._context.displayName || "Context") + ".Consumer";
+            return (type3._context.displayName || "Context") + ".Consumer";
           case REACT_FORWARD_REF_TYPE:
-            var innerType = type.render;
-            type = type.displayName;
-            type || (type = innerType.displayName || innerType.name || "", type = type !== "" ? "ForwardRef(" + type + ")" : "ForwardRef");
-            return type;
+            var innerType = type3.render;
+            type3 = type3.displayName;
+            type3 || (type3 = innerType.displayName || innerType.name || "", type3 = type3 !== "" ? "ForwardRef(" + type3 + ")" : "ForwardRef");
+            return type3;
           case REACT_MEMO_TYPE:
-            return innerType = type.displayName || null, innerType !== null ? innerType : getComponentNameFromType(type.type) || "Memo";
+            return innerType = type3.displayName || null, innerType !== null ? innerType : getComponentNameFromType(type3.type) || "Memo";
           case REACT_LAZY_TYPE:
-            innerType = type._payload;
-            type = type._init;
+            innerType = type3._payload;
+            type3 = type3._init;
             try {
-              return getComponentNameFromType(type(innerType));
+              return getComponentNameFromType(type3(innerType));
             } catch (x) {}
         }
       return null;
@@ -16940,13 +16953,13 @@ var require_react_jsx_dev_runtime_development = __commonJS((exports) => {
         return testStringCoercion(value);
       }
     }
-    function getTaskName(type) {
-      if (type === REACT_FRAGMENT_TYPE)
+    function getTaskName(type3) {
+      if (type3 === REACT_FRAGMENT_TYPE)
         return "<>";
-      if (typeof type === "object" && type !== null && type.$$typeof === REACT_LAZY_TYPE)
+      if (typeof type3 === "object" && type3 !== null && type3.$$typeof === REACT_LAZY_TYPE)
         return "<...>";
       try {
-        var name = getComponentNameFromType(type);
+        var name = getComponentNameFromType(type3);
         return name ? "<" + name + ">" : "<...>";
       } catch (x) {
         return "<...>";
@@ -16959,13 +16972,13 @@ var require_react_jsx_dev_runtime_development = __commonJS((exports) => {
     function UnknownOwner() {
       return Error("react-stack-top-frame");
     }
-    function hasValidKey(config) {
-      if (hasOwnProperty.call(config, "key")) {
-        var getter = Object.getOwnPropertyDescriptor(config, "key").get;
+    function hasValidKey(config2) {
+      if (hasOwnProperty.call(config2, "key")) {
+        var getter = Object.getOwnPropertyDescriptor(config2, "key").get;
         if (getter && getter.isReactWarning)
           return false;
       }
-      return config.key !== undefined;
+      return config2.key !== undefined;
     }
     function defineKeyPropWarningGetter(props, displayName) {
       function warnAboutAccessingKey() {
@@ -16983,83 +16996,83 @@ var require_react_jsx_dev_runtime_development = __commonJS((exports) => {
       componentName = this.props.ref;
       return componentName !== undefined ? componentName : null;
     }
-    function ReactElement(type, key, props, owner, debugStack, debugTask) {
+    function ReactElement(type3, key, props, owner, debugStack, debugTask) {
       var refProp = props.ref;
-      type = {
+      type3 = {
         $$typeof: REACT_ELEMENT_TYPE,
-        type,
+        type: type3,
         key,
         props,
         _owner: owner
       };
-      (refProp !== undefined ? refProp : null) !== null ? Object.defineProperty(type, "ref", {
+      (refProp !== undefined ? refProp : null) !== null ? Object.defineProperty(type3, "ref", {
         enumerable: false,
         get: elementRefGetterWithDeprecationWarning
-      }) : Object.defineProperty(type, "ref", { enumerable: false, value: null });
-      type._store = {};
-      Object.defineProperty(type._store, "validated", {
+      }) : Object.defineProperty(type3, "ref", { enumerable: false, value: null });
+      type3._store = {};
+      Object.defineProperty(type3._store, "validated", {
         configurable: false,
         enumerable: false,
         writable: true,
         value: 0
       });
-      Object.defineProperty(type, "_debugInfo", {
+      Object.defineProperty(type3, "_debugInfo", {
         configurable: false,
         enumerable: false,
         writable: true,
         value: null
       });
-      Object.defineProperty(type, "_debugStack", {
+      Object.defineProperty(type3, "_debugStack", {
         configurable: false,
         enumerable: false,
         writable: true,
         value: debugStack
       });
-      Object.defineProperty(type, "_debugTask", {
+      Object.defineProperty(type3, "_debugTask", {
         configurable: false,
         enumerable: false,
         writable: true,
         value: debugTask
       });
-      Object.freeze && (Object.freeze(type.props), Object.freeze(type));
-      return type;
+      Object.freeze && (Object.freeze(type3.props), Object.freeze(type3));
+      return type3;
     }
-    function jsxDEVImpl(type, config, maybeKey, isStaticChildren, debugStack, debugTask) {
-      var children = config.children;
-      if (children !== undefined)
+    function jsxDEVImpl(type3, config2, maybeKey, isStaticChildren, debugStack, debugTask) {
+      var children2 = config2.children;
+      if (children2 !== undefined)
         if (isStaticChildren)
-          if (isArrayImpl(children)) {
-            for (isStaticChildren = 0;isStaticChildren < children.length; isStaticChildren++)
-              validateChildKeys(children[isStaticChildren]);
-            Object.freeze && Object.freeze(children);
+          if (isArrayImpl(children2)) {
+            for (isStaticChildren = 0;isStaticChildren < children2.length; isStaticChildren++)
+              validateChildKeys(children2[isStaticChildren]);
+            Object.freeze && Object.freeze(children2);
           } else
             console.error("React.jsx: Static children should always be an array. You are likely explicitly calling React.jsxs or React.jsxDEV. Use the Babel transform instead.");
         else
-          validateChildKeys(children);
-      if (hasOwnProperty.call(config, "key")) {
-        children = getComponentNameFromType(type);
-        var keys = Object.keys(config).filter(function(k) {
+          validateChildKeys(children2);
+      if (hasOwnProperty.call(config2, "key")) {
+        children2 = getComponentNameFromType(type3);
+        var keys4 = Object.keys(config2).filter(function(k) {
           return k !== "key";
         });
-        isStaticChildren = 0 < keys.length ? "{key: someKey, " + keys.join(": ..., ") + ": ...}" : "{key: someKey}";
-        didWarnAboutKeySpread[children + isStaticChildren] || (keys = 0 < keys.length ? "{" + keys.join(": ..., ") + ": ...}" : "{}", console.error(`A props object containing a "key" prop is being spread into JSX:
+        isStaticChildren = 0 < keys4.length ? "{key: someKey, " + keys4.join(": ..., ") + ": ...}" : "{key: someKey}";
+        didWarnAboutKeySpread[children2 + isStaticChildren] || (keys4 = 0 < keys4.length ? "{" + keys4.join(": ..., ") + ": ...}" : "{}", console.error(`A props object containing a "key" prop is being spread into JSX:
   let props = %s;
   <%s {...props} />
 React keys must be passed directly to JSX without using spread:
   let props = %s;
-  <%s key={someKey} {...props} />`, isStaticChildren, children, keys, children), didWarnAboutKeySpread[children + isStaticChildren] = true);
+  <%s key={someKey} {...props} />`, isStaticChildren, children2, keys4, children2), didWarnAboutKeySpread[children2 + isStaticChildren] = true);
       }
-      children = null;
-      maybeKey !== undefined && (checkKeyStringCoercion(maybeKey), children = "" + maybeKey);
-      hasValidKey(config) && (checkKeyStringCoercion(config.key), children = "" + config.key);
-      if ("key" in config) {
+      children2 = null;
+      maybeKey !== undefined && (checkKeyStringCoercion(maybeKey), children2 = "" + maybeKey);
+      hasValidKey(config2) && (checkKeyStringCoercion(config2.key), children2 = "" + config2.key);
+      if ("key" in config2) {
         maybeKey = {};
-        for (var propName in config)
-          propName !== "key" && (maybeKey[propName] = config[propName]);
+        for (var propName in config2)
+          propName !== "key" && (maybeKey[propName] = config2[propName]);
       } else
-        maybeKey = config;
-      children && defineKeyPropWarningGetter(maybeKey, typeof type === "function" ? type.displayName || type.name || "Unknown" : type);
-      return ReactElement(type, children, maybeKey, getOwner(), debugStack, debugTask);
+        maybeKey = config2;
+      children2 && defineKeyPropWarningGetter(maybeKey, typeof type3 === "function" ? type3.displayName || type3.name || "Unknown" : type3);
+      return ReactElement(type3, children2, maybeKey, getOwner(), debugStack, debugTask);
     }
     function validateChildKeys(node) {
       isValidElement(node) ? node._store && (node._store.validated = 1) : typeof node === "object" && node !== null && node.$$typeof === REACT_LAZY_TYPE && (node._payload.status === "fulfilled" ? isValidElement(node._payload.value) && node._payload.value._store && (node._payload.value._store.validated = 1) : node._store && (node._store.validated = 1));
@@ -17081,28 +17094,10395 @@ React keys must be passed directly to JSX without using spread:
     var unknownOwnerDebugTask = createTask(getTaskName(UnknownOwner));
     var didWarnAboutKeySpread = {};
     exports.Fragment = REACT_FRAGMENT_TYPE;
-    exports.jsxDEV = function(type, config, maybeKey, isStaticChildren) {
+    exports.jsxDEV = function(type3, config2, maybeKey, isStaticChildren) {
       var trackActualOwner = 1e4 > ReactSharedInternals.recentlyCreatedOwnerStacks++;
-      return jsxDEVImpl(type, config, maybeKey, isStaticChildren, trackActualOwner ? Error("react-stack-top-frame") : unknownOwnerDebugStack, trackActualOwner ? createTask(getTaskName(type)) : unknownOwnerDebugTask);
+      return jsxDEVImpl(type3, config2, maybeKey, isStaticChildren, trackActualOwner ? Error("react-stack-top-frame") : unknownOwnerDebugStack, trackActualOwner ? createTask(getTaskName(type3)) : unknownOwnerDebugTask);
     };
   })();
 });
 
 // node_modules/react/jsx-dev-runtime.js
 var require_jsx_dev_runtime = __commonJS((exports, module) => {
+  var react_jsx_dev_runtime_development = __toESM(require_react_jsx_dev_runtime_development());
   if (false) {} else {
-    module.exports = require_react_jsx_dev_runtime_development();
+    module.exports = react_jsx_dev_runtime_development;
   }
 });
 
 // src/web.tsx
 var ReactDom = __toESM(require_client(), 1);
 
-// src/client/cocosVer/CocosIframe.tsx
+// src/client/tool/appContext/index.tsx
 var import_react = __toESM(require_react(), 1);
+
+// src/game/define/PlayerID.ts
+var exports_PlayerID = {};
+__export(exports_PlayerID, {
+  PlayerIDFn: () => PlayerIDFn,
+  PlayerB: () => PlayerB,
+  PlayerA: () => PlayerA
+});
+var PlayerA = "PlayerA";
+var PlayerB = "PlayerB";
+function getOpponent(playerID) {
+  return playerID == PlayerA ? PlayerB : PlayerA;
+}
+var PlayerIDFn = {
+  getAll: () => [PlayerA, PlayerB],
+  getOpponent,
+  fromRelatedPlayerSideKeyword(kw, playerID) {
+    return kw == "自軍" ? playerID : getOpponent(playerID);
+  }
+};
+
+// src/game/define/Timing.ts
+var exports_Timing = {};
+__export(exports_Timing, {
+  PhaseFn: () => PhaseFn
+});
+var PhaseFn = {
+  eq(l, r) {
+    return l[0] === r[0] && l[1] === r[1] && l[2] === r[2];
+  },
+  isFreeTiming(phase) {
+    switch (phase[0]) {
+      case "ドローフェイズ":
+      case "リロールフェイズ":
+      case "配備フェイズ":
+        return phase[1] == "フリータイミング";
+      case "戦闘フェイズ":
+        return phase[2] == "フリータイミング" || phase[2] == "フリータイミング2";
+    }
+  },
+  isRuleEffect(phase) {
+    switch (phase[0]) {
+      case "ドローフェイズ":
+      case "リロールフェイズ":
+      case "配備フェイズ":
+        return phase[1] == "規定の効果";
+      case "戦闘フェイズ":
+        return phase[2] == "規定の効果";
+    }
+  },
+  getAll() {
+    return [
+      ["リロールフェイズ", "フェイズ開始"],
+      ["リロールフェイズ", "規定の効果"],
+      ["リロールフェイズ", "フリータイミング"],
+      ["リロールフェイズ", "フェイズ終了"],
+      ["ドローフェイズ", "フェイズ開始"],
+      ["ドローフェイズ", "規定の効果"],
+      ["ドローフェイズ", "フリータイミング"],
+      ["ドローフェイズ", "フェイズ終了"],
+      ["配備フェイズ", "フェイズ開始"],
+      ["配備フェイズ", "フリータイミング"],
+      ["配備フェイズ", "フェイズ終了"],
+      ["戦闘フェイズ", "攻撃ステップ", "ステップ開始"],
+      ["戦闘フェイズ", "攻撃ステップ", "フリータイミング"],
+      ["戦闘フェイズ", "攻撃ステップ", "規定の効果"],
+      ["戦闘フェイズ", "攻撃ステップ", "フリータイミング2"],
+      ["戦闘フェイズ", "攻撃ステップ", "ステップ終了"],
+      ["戦闘フェイズ", "防御ステップ", "ステップ開始"],
+      ["戦闘フェイズ", "防御ステップ", "フリータイミング"],
+      ["戦闘フェイズ", "防御ステップ", "規定の効果"],
+      ["戦闘フェイズ", "防御ステップ", "フリータイミング2"],
+      ["戦闘フェイズ", "防御ステップ", "ステップ終了"],
+      ["戦闘フェイズ", "ダメージ判定ステップ", "ステップ開始"],
+      ["戦闘フェイズ", "ダメージ判定ステップ", "フリータイミング"],
+      ["戦闘フェイズ", "ダメージ判定ステップ", "規定の効果"],
+      ["戦闘フェイズ", "ダメージ判定ステップ", "フリータイミング2"],
+      ["戦闘フェイズ", "ダメージ判定ステップ", "ステップ終了"],
+      ["戦闘フェイズ", "帰還ステップ", "ステップ開始"],
+      ["戦闘フェイズ", "帰還ステップ", "フリータイミング"],
+      ["戦闘フェイズ", "帰還ステップ", "規定の効果"],
+      ["戦闘フェイズ", "帰還ステップ", "フリータイミング2"],
+      ["戦闘フェイズ", "帰還ステップ", "ステップ終了"],
+      ["戦闘フェイズ", "ターン終了時", "ダメージリセット"],
+      ["戦闘フェイズ", "ターン終了時", "効果解決"],
+      ["戦闘フェイズ", "ターン終了時", "手札調整"],
+      ["戦闘フェイズ", "ターン終了時", "効果終了。ターン終了"]
+    ];
+  },
+  getFirst() {
+    const all = this.getAll();
+    return all[0];
+  },
+  getLast() {
+    const all = this.getAll();
+    return all[all.length - 1];
+  },
+  getLastTriggerEffect() {
+    return ["戦闘フェイズ", "ターン終了時", "効果解決"];
+  },
+  getNext(timing) {
+    const all = this.getAll();
+    const idx = (this.getSeqId(timing) + 1) % all.length;
+    return all[idx];
+  },
+  getSeqId(timing) {
+    const all = this.getAll();
+    const idx = all.findIndex((t) => this.eq(t, timing));
+    return idx;
+  }
+};
+
+// src/game/gameState/PhaseComponent.ts
+var exports_PhaseComponent = {};
+__export(exports_PhaseComponent, {
+  setPhase: () => setPhase,
+  getPhase: () => getPhase
+});
+
+// src/tool/logger.ts
+var hideCategory = [
+  "triggerEvent",
+  "getPlayEffects",
+  "getConditionTitleFn",
+  "doEffect",
+  "applyFlow",
+  "handleAttackDamage",
+  "getGlobalEffects",
+  "getEffectTips",
+  "createEffectTips",
+  "getActionTitleFn",
+  "getLogicTreeActionConditions",
+  "createCommandEffectTips",
+  "setEffectTips",
+  "doTriggerEvent",
+  "createPlayEffects",
+  "createPlayEffect",
+  "getConditionTitleFn",
+  "createPlayCardEffects",
+  "addImmediateEffectIfCanPayCost",
+  "doItemSetRollState",
+  "doActiveEffect",
+  "createPlayerScore",
+  "AppContextProvider",
+  "OnClickFlowConfirm",
+  "OnViewModel",
+  "onCardChange",
+  "onActionStart",
+  "onActionEnd",
+  "onItemAdd",
+  "onSetPhase",
+  "onItemStateChange",
+  "onItemStateDestroyReasonChange",
+  "onAddImmediateEffect",
+  "onEvent",
+  "onEffectStart",
+  "onEffectEnd",
+  "onItemMove",
+  "createTextsFromSpecialEffect",
+  "getCardIdsCanPayRollCost",
+  "getCardIdsCanPayRollColor",
+  "getCardHasSpeicalEffect",
+  "getCardTexts",
+  "getCardSpecialText",
+  "getCardBattlePoint",
+  "getCardTotalCostLength",
+  "createPlayCommandText",
+  "createPlayCardConditions",
+  "createPlayCardEffect",
+  "doItemMove",
+  "createPlayCharacterOperationEffect",
+  "createPlayStayEffect",
+  "createPlayUnitEffect",
+  "createAllCardTexts",
+  "isCardMaster",
+  "createBasicForBattle",
+  "createPreviewEffectScore",
+  "createBasicForAttackBattle",
+  "checkIsBattle"
+];
+var filterCategory = true;
+var filterWarn = false;
+var logCategory = (category, ...msg) => {
+  if (filterCategory) {
+    if (hideCategory.find((c) => c == category)) {
+      return;
+    }
+  }
+  console.log(`[${new Date().toLocaleTimeString()}][${category}]`, ...msg);
+};
+var warnCategory = (category, ...msg) => {
+  if (filterWarn) {
+    return;
+  }
+  console.warn(`[${new Date().toLocaleTimeString()}][${category}]`, ...msg);
+};
+
+// src/game/define/BaSyou.ts
+var exports_BaSyou = {};
+__export(exports_BaSyou, {
+  RelatedBaSyouFn: () => RelatedBaSyouFn,
+  BaSyouKeywordFn: () => BaSyouKeywordFn,
+  AbsoluteBaSyouFn: () => AbsoluteBaSyouFn
+});
+
+// node_modules/ramda/es/internal/_isPlaceholder.js
+function _isPlaceholder(a) {
+  return a != null && typeof a === "object" && a["@@functional/placeholder"] === true;
+}
+
+// node_modules/ramda/es/internal/_curry1.js
+function _curry1(fn) {
+  return function f1(a) {
+    if (arguments.length === 0 || _isPlaceholder(a)) {
+      return f1;
+    } else {
+      return fn.apply(this, arguments);
+    }
+  };
+}
+
+// node_modules/ramda/es/internal/_curry2.js
+function _curry2(fn) {
+  return function f2(a, b) {
+    switch (arguments.length) {
+      case 0:
+        return f2;
+      case 1:
+        return _isPlaceholder(a) ? f2 : _curry1(function(_b) {
+          return fn(a, _b);
+        });
+      default:
+        return _isPlaceholder(a) && _isPlaceholder(b) ? f2 : _isPlaceholder(a) ? _curry1(function(_a) {
+          return fn(_a, b);
+        }) : _isPlaceholder(b) ? _curry1(function(_b) {
+          return fn(a, _b);
+        }) : fn(a, b);
+    }
+  };
+}
+
+// node_modules/ramda/es/add.js
+var add = /* @__PURE__ */ _curry2(function add2(a, b) {
+  return Number(a) + Number(b);
+});
+var add_default = add;
+
+// node_modules/ramda/es/internal/_concat.js
+function _concat(set1, set2) {
+  set1 = set1 || [];
+  set2 = set2 || [];
+  var idx;
+  var len1 = set1.length;
+  var len2 = set2.length;
+  var result = [];
+  idx = 0;
+  while (idx < len1) {
+    result[result.length] = set1[idx];
+    idx += 1;
+  }
+  idx = 0;
+  while (idx < len2) {
+    result[result.length] = set2[idx];
+    idx += 1;
+  }
+  return result;
+}
+
+// node_modules/ramda/es/internal/_arity.js
+function _arity(n, fn) {
+  switch (n) {
+    case 0:
+      return function() {
+        return fn.apply(this, arguments);
+      };
+    case 1:
+      return function(a0) {
+        return fn.apply(this, arguments);
+      };
+    case 2:
+      return function(a0, a1) {
+        return fn.apply(this, arguments);
+      };
+    case 3:
+      return function(a0, a1, a2) {
+        return fn.apply(this, arguments);
+      };
+    case 4:
+      return function(a0, a1, a2, a3) {
+        return fn.apply(this, arguments);
+      };
+    case 5:
+      return function(a0, a1, a2, a3, a4) {
+        return fn.apply(this, arguments);
+      };
+    case 6:
+      return function(a0, a1, a2, a3, a4, a5) {
+        return fn.apply(this, arguments);
+      };
+    case 7:
+      return function(a0, a1, a2, a3, a4, a5, a6) {
+        return fn.apply(this, arguments);
+      };
+    case 8:
+      return function(a0, a1, a2, a3, a4, a5, a6, a7) {
+        return fn.apply(this, arguments);
+      };
+    case 9:
+      return function(a0, a1, a2, a3, a4, a5, a6, a7, a8) {
+        return fn.apply(this, arguments);
+      };
+    case 10:
+      return function(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9) {
+        return fn.apply(this, arguments);
+      };
+    default:
+      throw new Error("First argument to _arity must be a non-negative integer no greater than ten");
+  }
+}
+
+// node_modules/ramda/es/internal/_curryN.js
+function _curryN(length, received, fn) {
+  return function() {
+    var combined = [];
+    var argsIdx = 0;
+    var left = length;
+    var combinedIdx = 0;
+    var hasPlaceholder = false;
+    while (combinedIdx < received.length || argsIdx < arguments.length) {
+      var result;
+      if (combinedIdx < received.length && (!_isPlaceholder(received[combinedIdx]) || argsIdx >= arguments.length)) {
+        result = received[combinedIdx];
+      } else {
+        result = arguments[argsIdx];
+        argsIdx += 1;
+      }
+      combined[combinedIdx] = result;
+      if (!_isPlaceholder(result)) {
+        left -= 1;
+      } else {
+        hasPlaceholder = true;
+      }
+      combinedIdx += 1;
+    }
+    return !hasPlaceholder && left <= 0 ? fn.apply(this, combined) : _arity(Math.max(0, left), _curryN(length, combined, fn));
+  };
+}
+
+// node_modules/ramda/es/curryN.js
+var curryN = /* @__PURE__ */ _curry2(function curryN2(length, fn) {
+  if (length === 1) {
+    return _curry1(fn);
+  }
+  return _arity(length, _curryN(length, [], fn));
+});
+var curryN_default = curryN;
+
+// node_modules/ramda/es/internal/_curry3.js
+function _curry3(fn) {
+  return function f3(a, b, c) {
+    switch (arguments.length) {
+      case 0:
+        return f3;
+      case 1:
+        return _isPlaceholder(a) ? f3 : _curry2(function(_b, _c) {
+          return fn(a, _b, _c);
+        });
+      case 2:
+        return _isPlaceholder(a) && _isPlaceholder(b) ? f3 : _isPlaceholder(a) ? _curry2(function(_a, _c) {
+          return fn(_a, b, _c);
+        }) : _isPlaceholder(b) ? _curry2(function(_b, _c) {
+          return fn(a, _b, _c);
+        }) : _curry1(function(_c) {
+          return fn(a, b, _c);
+        });
+      default:
+        return _isPlaceholder(a) && _isPlaceholder(b) && _isPlaceholder(c) ? f3 : _isPlaceholder(a) && _isPlaceholder(b) ? _curry2(function(_a, _b) {
+          return fn(_a, _b, c);
+        }) : _isPlaceholder(a) && _isPlaceholder(c) ? _curry2(function(_a, _c) {
+          return fn(_a, b, _c);
+        }) : _isPlaceholder(b) && _isPlaceholder(c) ? _curry2(function(_b, _c) {
+          return fn(a, _b, _c);
+        }) : _isPlaceholder(a) ? _curry1(function(_a) {
+          return fn(_a, b, c);
+        }) : _isPlaceholder(b) ? _curry1(function(_b) {
+          return fn(a, _b, c);
+        }) : _isPlaceholder(c) ? _curry1(function(_c) {
+          return fn(a, b, _c);
+        }) : fn(a, b, c);
+    }
+  };
+}
+
+// node_modules/ramda/es/internal/_isArray.js
+var _isArray_default = Array.isArray || function _isArray(val) {
+  return val != null && val.length >= 0 && Object.prototype.toString.call(val) === "[object Array]";
+};
+
+// node_modules/ramda/es/internal/_isTransformer.js
+function _isTransformer(obj) {
+  return obj != null && typeof obj["@@transducer/step"] === "function";
+}
+
+// node_modules/ramda/es/internal/_dispatchable.js
+function _dispatchable(methodNames, transducerCreator, fn) {
+  return function() {
+    if (arguments.length === 0) {
+      return fn();
+    }
+    var obj = arguments[arguments.length - 1];
+    if (!_isArray_default(obj)) {
+      var idx = 0;
+      while (idx < methodNames.length) {
+        if (typeof obj[methodNames[idx]] === "function") {
+          return obj[methodNames[idx]].apply(obj, Array.prototype.slice.call(arguments, 0, -1));
+        }
+        idx += 1;
+      }
+      if (_isTransformer(obj)) {
+        var transducer = transducerCreator.apply(null, Array.prototype.slice.call(arguments, 0, -1));
+        return transducer(obj);
+      }
+    }
+    return fn.apply(this, arguments);
+  };
+}
+
+// node_modules/ramda/es/internal/_xfBase.js
+var _xfBase_default = {
+  init: function() {
+    return this.xf["@@transducer/init"]();
+  },
+  result: function(result) {
+    return this.xf["@@transducer/result"](result);
+  }
+};
+
+// node_modules/ramda/es/internal/_arrayFromIterator.js
+function _arrayFromIterator(iter) {
+  var list = [];
+  var next;
+  while (!(next = iter.next()).done) {
+    list.push(next.value);
+  }
+  return list;
+}
+
+// node_modules/ramda/es/internal/_includesWith.js
+function _includesWith(pred, x, list) {
+  var idx = 0;
+  var len = list.length;
+  while (idx < len) {
+    if (pred(x, list[idx])) {
+      return true;
+    }
+    idx += 1;
+  }
+  return false;
+}
+
+// node_modules/ramda/es/internal/_functionName.js
+function _functionName(f) {
+  var match = String(f).match(/^function (\w*)/);
+  return match == null ? "" : match[1];
+}
+
+// node_modules/ramda/es/internal/_has.js
+function _has(prop, obj) {
+  return Object.prototype.hasOwnProperty.call(obj, prop);
+}
+
+// node_modules/ramda/es/internal/_objectIs.js
+function _objectIs(a, b) {
+  if (a === b) {
+    return a !== 0 || 1 / a === 1 / b;
+  } else {
+    return a !== a && b !== b;
+  }
+}
+var _objectIs_default = typeof Object.is === "function" ? Object.is : _objectIs;
+
+// node_modules/ramda/es/internal/_isArguments.js
+var toString = Object.prototype.toString;
+var _isArguments = /* @__PURE__ */ function() {
+  return toString.call(arguments) === "[object Arguments]" ? function _isArguments2(x) {
+    return toString.call(x) === "[object Arguments]";
+  } : function _isArguments2(x) {
+    return _has("callee", x);
+  };
+}();
+var _isArguments_default = _isArguments;
+
+// node_modules/ramda/es/keys.js
+var hasEnumBug = !/* @__PURE__ */ {
+  toString: null
+}.propertyIsEnumerable("toString");
+var nonEnumerableProps = ["constructor", "valueOf", "isPrototypeOf", "toString", "propertyIsEnumerable", "hasOwnProperty", "toLocaleString"];
+var hasArgsEnumBug = /* @__PURE__ */ function() {
+  return arguments.propertyIsEnumerable("length");
+}();
+var contains = function contains2(list, item) {
+  var idx = 0;
+  while (idx < list.length) {
+    if (list[idx] === item) {
+      return true;
+    }
+    idx += 1;
+  }
+  return false;
+};
+var keys = typeof Object.keys === "function" && !hasArgsEnumBug ? /* @__PURE__ */ _curry1(function keys2(obj) {
+  return Object(obj) !== obj ? [] : Object.keys(obj);
+}) : /* @__PURE__ */ _curry1(function keys3(obj) {
+  if (Object(obj) !== obj) {
+    return [];
+  }
+  var prop, nIdx;
+  var ks = [];
+  var checkArgsLength = hasArgsEnumBug && _isArguments_default(obj);
+  for (prop in obj) {
+    if (_has(prop, obj) && (!checkArgsLength || prop !== "length")) {
+      ks[ks.length] = prop;
+    }
+  }
+  if (hasEnumBug) {
+    nIdx = nonEnumerableProps.length - 1;
+    while (nIdx >= 0) {
+      prop = nonEnumerableProps[nIdx];
+      if (_has(prop, obj) && !contains(ks, prop)) {
+        ks[ks.length] = prop;
+      }
+      nIdx -= 1;
+    }
+  }
+  return ks;
+});
+var keys_default = keys;
+
+// node_modules/ramda/es/type.js
+var type = /* @__PURE__ */ _curry1(function type2(val) {
+  return val === null ? "Null" : val === undefined ? "Undefined" : Object.prototype.toString.call(val).slice(8, -1);
+});
+var type_default = type;
+
+// node_modules/ramda/es/internal/_equals.js
+function _uniqContentEquals(aIterator, bIterator, stackA, stackB) {
+  var a = _arrayFromIterator(aIterator);
+  var b = _arrayFromIterator(bIterator);
+  function eq(_a, _b) {
+    return _equals(_a, _b, stackA.slice(), stackB.slice());
+  }
+  return !_includesWith(function(b2, aItem) {
+    return !_includesWith(eq, aItem, b2);
+  }, b, a);
+}
+function _equals(a, b, stackA, stackB) {
+  if (_objectIs_default(a, b)) {
+    return true;
+  }
+  var typeA = type_default(a);
+  if (typeA !== type_default(b)) {
+    return false;
+  }
+  if (typeof a["fantasy-land/equals"] === "function" || typeof b["fantasy-land/equals"] === "function") {
+    return typeof a["fantasy-land/equals"] === "function" && a["fantasy-land/equals"](b) && typeof b["fantasy-land/equals"] === "function" && b["fantasy-land/equals"](a);
+  }
+  if (typeof a.equals === "function" || typeof b.equals === "function") {
+    return typeof a.equals === "function" && a.equals(b) && typeof b.equals === "function" && b.equals(a);
+  }
+  switch (typeA) {
+    case "Arguments":
+    case "Array":
+    case "Object":
+      if (typeof a.constructor === "function" && _functionName(a.constructor) === "Promise") {
+        return a === b;
+      }
+      break;
+    case "Boolean":
+    case "Number":
+    case "String":
+      if (!(typeof a === typeof b && _objectIs_default(a.valueOf(), b.valueOf()))) {
+        return false;
+      }
+      break;
+    case "Date":
+      if (!_objectIs_default(a.valueOf(), b.valueOf())) {
+        return false;
+      }
+      break;
+    case "Error":
+      return a.name === b.name && a.message === b.message;
+    case "RegExp":
+      if (!(a.source === b.source && a.global === b.global && a.ignoreCase === b.ignoreCase && a.multiline === b.multiline && a.sticky === b.sticky && a.unicode === b.unicode)) {
+        return false;
+      }
+      break;
+  }
+  var idx = stackA.length - 1;
+  while (idx >= 0) {
+    if (stackA[idx] === a) {
+      return stackB[idx] === b;
+    }
+    idx -= 1;
+  }
+  switch (typeA) {
+    case "Map":
+      if (a.size !== b.size) {
+        return false;
+      }
+      return _uniqContentEquals(a.entries(), b.entries(), stackA.concat([a]), stackB.concat([b]));
+    case "Set":
+      if (a.size !== b.size) {
+        return false;
+      }
+      return _uniqContentEquals(a.values(), b.values(), stackA.concat([a]), stackB.concat([b]));
+    case "Arguments":
+    case "Array":
+    case "Object":
+    case "Boolean":
+    case "Number":
+    case "String":
+    case "Date":
+    case "Error":
+    case "RegExp":
+    case "Int8Array":
+    case "Uint8Array":
+    case "Uint8ClampedArray":
+    case "Int16Array":
+    case "Uint16Array":
+    case "Int32Array":
+    case "Uint32Array":
+    case "Float32Array":
+    case "Float64Array":
+    case "ArrayBuffer":
+      break;
+    default:
+      return false;
+  }
+  var keysA = keys_default(a);
+  if (keysA.length !== keys_default(b).length) {
+    return false;
+  }
+  var extendedStackA = stackA.concat([a]);
+  var extendedStackB = stackB.concat([b]);
+  idx = keysA.length - 1;
+  while (idx >= 0) {
+    var key = keysA[idx];
+    if (!(_has(key, b) && _equals(b[key], a[key], extendedStackA, extendedStackB))) {
+      return false;
+    }
+    idx -= 1;
+  }
+  return true;
+}
+
+// node_modules/ramda/es/equals.js
+var equals = /* @__PURE__ */ _curry2(function equals2(a, b) {
+  return _equals(a, b, [], []);
+});
+var equals_default = equals;
+
+// node_modules/ramda/es/internal/_map.js
+function _map(fn, functor) {
+  var idx = 0;
+  var len = functor.length;
+  var result = Array(len);
+  while (idx < len) {
+    result[idx] = fn(functor[idx]);
+    idx += 1;
+  }
+  return result;
+}
+
+// node_modules/ramda/es/internal/_arrayReduce.js
+function _arrayReduce(reducer, acc, list) {
+  var index = 0;
+  var length = list.length;
+  while (index < length) {
+    acc = reducer(acc, list[index]);
+    index += 1;
+  }
+  return acc;
+}
+
+// node_modules/ramda/es/internal/_xmap.js
+var XMap = /* @__PURE__ */ function() {
+  function XMap2(f, xf) {
+    this.xf = xf;
+    this.f = f;
+  }
+  XMap2.prototype["@@transducer/init"] = _xfBase_default.init;
+  XMap2.prototype["@@transducer/result"] = _xfBase_default.result;
+  XMap2.prototype["@@transducer/step"] = function(result, input) {
+    return this.xf["@@transducer/step"](result, this.f(input));
+  };
+  return XMap2;
+}();
+var _xmap = function _xmap2(f) {
+  return function(xf) {
+    return new XMap(f, xf);
+  };
+};
+var _xmap_default = _xmap;
+
+// node_modules/ramda/es/map.js
+var map = /* @__PURE__ */ _curry2(/* @__PURE__ */ _dispatchable(["fantasy-land/map", "map"], _xmap_default, function map2(fn, functor) {
+  switch (Object.prototype.toString.call(functor)) {
+    case "[object Function]":
+      return curryN_default(functor.length, function() {
+        return fn.call(this, functor.apply(this, arguments));
+      });
+    case "[object Object]":
+      return _arrayReduce(function(acc, key) {
+        acc[key] = fn(functor[key]);
+        return acc;
+      }, {}, keys_default(functor));
+    default:
+      return _map(fn, functor);
+  }
+}));
+var map_default = map;
+
+// node_modules/ramda/es/internal/_isInteger.js
+var _isInteger_default = Number.isInteger || function _isInteger(n) {
+  return n << 0 === n;
+};
+
+// node_modules/ramda/es/internal/_nth.js
+function _nth(offset, list) {
+  var idx = offset < 0 ? list.length + offset : offset;
+  return list[idx];
+}
+
+// node_modules/ramda/es/internal/_prop.js
+function _prop(p, obj) {
+  if (obj == null) {
+    return;
+  }
+  return _isInteger_default(p) ? _nth(p, obj) : obj[p];
+}
+var _prop_default = _prop;
+
+// node_modules/ramda/es/internal/_isString.js
+function _isString(x) {
+  return Object.prototype.toString.call(x) === "[object String]";
+}
+
+// node_modules/ramda/es/internal/_isArrayLike.js
+var _isArrayLike = /* @__PURE__ */ _curry1(function isArrayLike(x) {
+  if (_isArray_default(x)) {
+    return true;
+  }
+  if (!x) {
+    return false;
+  }
+  if (typeof x !== "object") {
+    return false;
+  }
+  if (_isString(x)) {
+    return false;
+  }
+  if (x.length === 0) {
+    return true;
+  }
+  if (x.length > 0) {
+    return x.hasOwnProperty(0) && x.hasOwnProperty(x.length - 1);
+  }
+  return false;
+});
+var _isArrayLike_default = _isArrayLike;
+
+// node_modules/ramda/es/internal/_createReduce.js
+var symIterator = typeof Symbol !== "undefined" ? Symbol.iterator : "@@iterator";
+function _createReduce(arrayReduce, methodReduce, iterableReduce) {
+  return function _reduce(xf, acc, list) {
+    if (_isArrayLike_default(list)) {
+      return arrayReduce(xf, acc, list);
+    }
+    if (list == null) {
+      return acc;
+    }
+    if (typeof list["fantasy-land/reduce"] === "function") {
+      return methodReduce(xf, acc, list, "fantasy-land/reduce");
+    }
+    if (list[symIterator] != null) {
+      return iterableReduce(xf, acc, list[symIterator]());
+    }
+    if (typeof list.next === "function") {
+      return iterableReduce(xf, acc, list);
+    }
+    if (typeof list.reduce === "function") {
+      return methodReduce(xf, acc, list, "reduce");
+    }
+    throw new TypeError("reduce: list must be array or iterable");
+  };
+}
+
+// node_modules/ramda/es/internal/_xArrayReduce.js
+function _xArrayReduce(xf, acc, list) {
+  var idx = 0;
+  var len = list.length;
+  while (idx < len) {
+    acc = xf["@@transducer/step"](acc, list[idx]);
+    if (acc && acc["@@transducer/reduced"]) {
+      acc = acc["@@transducer/value"];
+      break;
+    }
+    idx += 1;
+  }
+  return xf["@@transducer/result"](acc);
+}
+
+// node_modules/ramda/es/bind.js
+var bind = /* @__PURE__ */ _curry2(function bind2(fn, thisObj) {
+  return _arity(fn.length, function() {
+    return fn.apply(thisObj, arguments);
+  });
+});
+var bind_default = bind;
+
+// node_modules/ramda/es/internal/_xReduce.js
+function _xIterableReduce(xf, acc, iter) {
+  var step = iter.next();
+  while (!step.done) {
+    acc = xf["@@transducer/step"](acc, step.value);
+    if (acc && acc["@@transducer/reduced"]) {
+      acc = acc["@@transducer/value"];
+      break;
+    }
+    step = iter.next();
+  }
+  return xf["@@transducer/result"](acc);
+}
+function _xMethodReduce(xf, acc, obj, methodName) {
+  return xf["@@transducer/result"](obj[methodName](bind_default(xf["@@transducer/step"], xf), acc));
+}
+var _xReduce = /* @__PURE__ */ _createReduce(_xArrayReduce, _xMethodReduce, _xIterableReduce);
+var _xReduce_default = _xReduce;
+
+// node_modules/ramda/es/internal/_xwrap.js
+var XWrap = /* @__PURE__ */ function() {
+  function XWrap2(fn) {
+    this.f = fn;
+  }
+  XWrap2.prototype["@@transducer/init"] = function() {
+    throw new Error("init not implemented on XWrap");
+  };
+  XWrap2.prototype["@@transducer/result"] = function(acc) {
+    return acc;
+  };
+  XWrap2.prototype["@@transducer/step"] = function(acc, x) {
+    return this.f(acc, x);
+  };
+  return XWrap2;
+}();
+function _xwrap(fn) {
+  return new XWrap(fn);
+}
+
+// node_modules/ramda/es/reduce.js
+var reduce = /* @__PURE__ */ _curry3(function(xf, acc, list) {
+  return _xReduce_default(typeof xf === "function" ? _xwrap(xf) : xf, acc, list);
+});
+var reduce_default = reduce;
+
+// node_modules/ramda/es/always.js
+var always = /* @__PURE__ */ _curry1(function always2(val) {
+  return function() {
+    return val;
+  };
+});
+var always_default = always;
+// node_modules/ramda/es/internal/_reduce.js
+function _iterableReduce(reducer, acc, iter) {
+  var step = iter.next();
+  while (!step.done) {
+    acc = reducer(acc, step.value);
+    step = iter.next();
+  }
+  return acc;
+}
+function _methodReduce(reducer, acc, obj, methodName) {
+  return obj[methodName](reducer, acc);
+}
+var _reduce = /* @__PURE__ */ _createReduce(_arrayReduce, _methodReduce, _iterableReduce);
+var _reduce_default = _reduce;
+
+// node_modules/ramda/es/ap.js
+var ap = /* @__PURE__ */ _curry2(function ap2(applyF, applyX) {
+  return typeof applyX["fantasy-land/ap"] === "function" ? applyX["fantasy-land/ap"](applyF) : typeof applyF.ap === "function" ? applyF.ap(applyX) : typeof applyF === "function" ? function(x) {
+    return applyF(x)(applyX(x));
+  } : _reduce_default(function(acc, f) {
+    return _concat(acc, map_default(f, applyX));
+  }, [], applyF);
+});
+var ap_default = ap;
+
+// node_modules/ramda/es/internal/_assoc.js
+function _assoc(prop, val, obj) {
+  if (_isInteger_default(prop) && _isArray_default(obj)) {
+    var _idx = prop < 0 ? obj.length + prop : prop;
+    var arr = [].concat(obj);
+    arr[_idx] = val;
+    return arr;
+  }
+  var result = {};
+  for (var p in obj) {
+    result[p] = obj[p];
+  }
+  result[prop] = val;
+  return result;
+}
+
+// node_modules/ramda/es/isNil.js
+var isNil = /* @__PURE__ */ _curry1(function isNil2(x) {
+  return x == null;
+});
+var isNil_default = isNil;
+
+// node_modules/ramda/es/assocPath.js
+var assocPath = /* @__PURE__ */ _curry3(function assocPath2(path, val, obj) {
+  if (path.length === 0) {
+    return val;
+  }
+  var idx = path[0];
+  if (path.length > 1) {
+    var nextObj = _prop_default(idx, obj);
+    if (isNil_default(nextObj) || typeof nextObj !== "object") {
+      nextObj = _isInteger_default(path[1]) ? [] : {};
+    }
+    val = assocPath2(Array.prototype.slice.call(path, 1), val, nextObj);
+  }
+  return _assoc(idx, val, obj);
+});
+var assocPath_default = assocPath;
+
+// node_modules/ramda/es/assoc.js
+var assoc = /* @__PURE__ */ _curry3(function assoc2(prop, val, obj) {
+  return assocPath_default([prop], val, obj);
+});
+var assoc_default = assoc;
+// node_modules/ramda/es/liftN.js
+var liftN = /* @__PURE__ */ _curry2(function liftN2(arity, fn) {
+  var lifted = curryN_default(arity, fn);
+  return curryN_default(arity, function() {
+    return _arrayReduce(ap_default, map_default(lifted, arguments[0]), Array.prototype.slice.call(arguments, 1));
+  });
+});
+var liftN_default = liftN;
+
+// node_modules/ramda/es/lift.js
+var lift = /* @__PURE__ */ _curry1(function lift2(fn) {
+  return liftN_default(fn.length, fn);
+});
+var lift_default = lift;
+
+// node_modules/ramda/es/internal/_makeFlat.js
+function _makeFlat(recursive) {
+  return function flatt(list) {
+    var value, jlen, j;
+    var result = [];
+    var idx = 0;
+    var ilen = list.length;
+    while (idx < ilen) {
+      if (_isArrayLike_default(list[idx])) {
+        value = recursive ? flatt(list[idx]) : list[idx];
+        j = 0;
+        jlen = value.length;
+        while (j < jlen) {
+          result[result.length] = value[j];
+          j += 1;
+        }
+      } else {
+        result[result.length] = list[idx];
+      }
+      idx += 1;
+    }
+    return result;
+  };
+}
+
+// node_modules/ramda/es/internal/_pipe.js
+function _pipe(f, g) {
+  return function() {
+    return g.call(this, f.apply(this, arguments));
+  };
+}
+
+// node_modules/ramda/es/internal/_checkForMethod.js
+function _checkForMethod(methodname, fn) {
+  return function() {
+    var length = arguments.length;
+    if (length === 0) {
+      return fn();
+    }
+    var obj = arguments[length - 1];
+    return _isArray_default(obj) || typeof obj[methodname] !== "function" ? fn.apply(this, arguments) : obj[methodname].apply(obj, Array.prototype.slice.call(arguments, 0, length - 1));
+  };
+}
+
+// node_modules/ramda/es/slice.js
+var slice = /* @__PURE__ */ _curry3(/* @__PURE__ */ _checkForMethod("slice", function slice2(fromIndex, toIndex, list) {
+  return Array.prototype.slice.call(list, fromIndex, toIndex);
+}));
+var slice_default = slice;
+
+// node_modules/ramda/es/tail.js
+var tail = /* @__PURE__ */ _curry1(/* @__PURE__ */ _checkForMethod("tail", /* @__PURE__ */ slice_default(1, Infinity)));
+var tail_default = tail;
+
+// node_modules/ramda/es/pipe.js
+function pipe() {
+  if (arguments.length === 0) {
+    throw new Error("pipe requires at least one argument");
+  }
+  return _arity(arguments[0].length, reduce_default(_pipe, arguments[0], tail_default(arguments)));
+}
+
+// node_modules/ramda/es/remove.js
+var remove = /* @__PURE__ */ _curry3(function remove2(start, count, list) {
+  var result = Array.prototype.slice.call(list, 0);
+  result.splice(start, count);
+  return result;
+});
+var remove_default = remove;
+
+// node_modules/ramda/es/internal/_dissoc.js
+function _dissoc(prop, obj) {
+  if (obj == null) {
+    return obj;
+  }
+  if (_isInteger_default(prop) && _isArray_default(obj)) {
+    return remove_default(prop, 1, obj);
+  }
+  var result = {};
+  for (var p in obj) {
+    result[p] = obj[p];
+  }
+  delete result[prop];
+  return result;
+}
+
+// node_modules/ramda/es/dissocPath.js
+function _shallowCloneObject(prop, obj) {
+  if (_isInteger_default(prop) && _isArray_default(obj)) {
+    return [].concat(obj);
+  }
+  var result = {};
+  for (var p in obj) {
+    result[p] = obj[p];
+  }
+  return result;
+}
+var dissocPath = /* @__PURE__ */ _curry2(function dissocPath2(path, obj) {
+  if (obj == null) {
+    return obj;
+  }
+  switch (path.length) {
+    case 0:
+      return obj;
+    case 1:
+      return _dissoc(path[0], obj);
+    default:
+      var head = path[0];
+      var tail2 = Array.prototype.slice.call(path, 1);
+      if (obj[head] == null) {
+        return _shallowCloneObject(head, obj);
+      } else {
+        return assoc_default(head, dissocPath2(tail2, obj[head]), obj);
+      }
+  }
+});
+var dissocPath_default = dissocPath;
+
+// node_modules/ramda/es/dissoc.js
+var dissoc = /* @__PURE__ */ _curry2(function dissoc2(prop, obj) {
+  return dissocPath_default([prop], obj);
+});
+var dissoc_default = dissoc;
+// node_modules/ramda/es/internal/_xdropRepeatsWith.js
+var XDropRepeatsWith = /* @__PURE__ */ function() {
+  function XDropRepeatsWith2(pred, xf) {
+    this.xf = xf;
+    this.pred = pred;
+    this.lastValue = undefined;
+    this.seenFirstValue = false;
+  }
+  XDropRepeatsWith2.prototype["@@transducer/init"] = _xfBase_default.init;
+  XDropRepeatsWith2.prototype["@@transducer/result"] = _xfBase_default.result;
+  XDropRepeatsWith2.prototype["@@transducer/step"] = function(result, input) {
+    var sameAsLast = false;
+    if (!this.seenFirstValue) {
+      this.seenFirstValue = true;
+    } else if (this.pred(this.lastValue, input)) {
+      sameAsLast = true;
+    }
+    this.lastValue = input;
+    return sameAsLast ? result : this.xf["@@transducer/step"](result, input);
+  };
+  return XDropRepeatsWith2;
+}();
+function _xdropRepeatsWith(pred) {
+  return function(xf) {
+    return new XDropRepeatsWith(pred, xf);
+  };
+}
+
+// node_modules/ramda/es/last.js
+var last = /* @__PURE__ */ _curry1(function(list) {
+  return _nth(-1, list);
+});
+var last_default = last;
+
+// node_modules/ramda/es/dropRepeatsWith.js
+var dropRepeatsWith = /* @__PURE__ */ _curry2(/* @__PURE__ */ _dispatchable([], _xdropRepeatsWith, function dropRepeatsWith2(pred, list) {
+  var result = [];
+  var idx = 1;
+  var len = list.length;
+  if (len !== 0) {
+    result[0] = list[0];
+    while (idx < len) {
+      if (!pred(last_default(result), list[idx])) {
+        result[result.length] = list[idx];
+      }
+      idx += 1;
+    }
+  }
+  return result;
+}));
+var dropRepeatsWith_default = dropRepeatsWith;
+
+// node_modules/ramda/es/dropRepeats.js
+var dropRepeats = /* @__PURE__ */ _curry1(/* @__PURE__ */ _dispatchable([], function() {
+  return _xdropRepeatsWith(equals_default);
+}, /* @__PURE__ */ dropRepeatsWith_default(equals_default)));
+var dropRepeats_default = dropRepeats;
+// node_modules/ramda/es/flatten.js
+var flatten = /* @__PURE__ */ _curry1(/* @__PURE__ */ _makeFlat(true));
+var flatten_default = flatten;
+// node_modules/ramda/es/internal/_fromPairs.js
+function fromPairs(pairs) {
+  var result = {};
+  var idx = 0;
+  while (idx < pairs.length) {
+    result[pairs[idx][0]] = pairs[idx][1];
+    idx += 1;
+  }
+  return result;
+}
+
+// node_modules/ramda/es/fromPairs.js
+var fromPairs2 = /* @__PURE__ */ _curry1(fromPairs);
+var fromPairs_default = fromPairs2;
+// node_modules/ramda/es/ifElse.js
+var ifElse = /* @__PURE__ */ _curry3(function ifElse2(condition, onTrue, onFalse) {
+  return curryN_default(Math.max(condition.length, onTrue.length, onFalse.length), function _ifElse() {
+    return condition.apply(this, arguments) ? onTrue.apply(this, arguments) : onFalse.apply(this, arguments);
+  });
+});
+var ifElse_default = ifElse;
+// node_modules/ramda/es/internal/_isNumber.js
+function _isNumber(x) {
+  return Object.prototype.toString.call(x) === "[object Number]";
+}
+// node_modules/ramda/es/internal/_toPairs.js
+function _toPairs(obj) {
+  var pairs = [];
+  for (var prop in obj) {
+    if (_has(prop, obj)) {
+      pairs[pairs.length] = [prop, obj[prop]];
+    }
+  }
+  return pairs;
+}
+
+// node_modules/ramda/es/sum.js
+var sum = /* @__PURE__ */ reduce_default(add_default, 0);
+var sum_default = sum;
+// node_modules/ramda/es/range.js
+var range = /* @__PURE__ */ _curry2(function range2(from, to) {
+  if (!(_isNumber(from) && _isNumber(to))) {
+    throw new TypeError("Both arguments to range must be numbers");
+  }
+  var length = from < to ? Math.ceil(to - from) : 0;
+  var result = Array(length);
+  var idx = 0;
+  while (idx < length) {
+    result[idx] = idx + from;
+    idx += 1;
+  }
+  return result;
+});
+var range_default = range;
+// node_modules/ramda/es/toPairs.js
+var toPairs = /* @__PURE__ */ _curry1(_toPairs);
+var toPairs_default = toPairs;
+// node_modules/ramda/es/zipObj.js
+var zipObj = /* @__PURE__ */ _curry2(function zipObj2(keys4, values) {
+  var idx = 0;
+  var len = Math.min(keys4.length, values.length);
+  var out = {};
+  while (idx < len) {
+    out[keys4[idx]] = values[idx];
+    idx += 1;
+  }
+  return out;
+});
+var zipObj_default = zipObj;
+// src/game/define/BaSyou.ts
+var BaSyouKeywordFn = {
+  isBa(k) {
+    switch (k) {
+      case "戦闘エリア2":
+      case "戦闘エリア1":
+      case "配備エリア":
+      case "Gゾーン":
+        return true;
+      default:
+        return false;
+    }
+  },
+  getAll() {
+    return ["本国", "捨て山", "取り除かれたカード", "Gゾーン", "ジャンクヤード", "手札", "ハンガー", "戦闘エリア1", "戦闘エリア2", "配備エリア"];
+  },
+  getBaAll() {
+    return BaSyouKeywordFn.getAll().filter(BaSyouKeywordFn.isBa);
+  },
+  getTextOn() {
+    return BaSyouKeywordFn.getAll().filter((kw) => ["本国", "取り除かれたカード", "捨て山"].includes(kw) == false);
+  },
+  getBattleArea() {
+    return ["戦闘エリア1", "戦闘エリア2"];
+  }
+};
+var AbsoluteBaSyouFn = {
+  toString(baSyou) {
+    return JSON.stringify(baSyou.value);
+  },
+  fromString(id) {
+    return {
+      id: "AbsoluteBaSyou",
+      value: JSON.parse(id)
+    };
+  },
+  of(p, k) {
+    return {
+      id: "AbsoluteBaSyou",
+      value: [p, k]
+    };
+  },
+  getBaSyouKeyword(baSyou) {
+    return baSyou.value[1];
+  },
+  setBaSyouKeyword(baSyou, kw) {
+    return AbsoluteBaSyouFn.of(baSyou.value[0], kw);
+  },
+  setPlayerID(baSyou, p) {
+    return AbsoluteBaSyouFn.of(p, baSyou.value[1]);
+  },
+  getPlayerID(baSyou) {
+    return baSyou.value[0];
+  },
+  setOpponentPlayerID(baSyou) {
+    return AbsoluteBaSyouFn.of(PlayerIDFn.getOpponent(baSyou.value[0]), baSyou.value[1]);
+  },
+  getAll() {
+    return lift_default(AbsoluteBaSyouFn.of)(PlayerIDFn.getAll(), BaSyouKeywordFn.getAll());
+  },
+  getBaAll() {
+    return lift_default(AbsoluteBaSyouFn.of)(PlayerIDFn.getAll(), BaSyouKeywordFn.getBaAll());
+  },
+  getTextOn() {
+    return lift_default(AbsoluteBaSyouFn.of)(PlayerIDFn.getAll(), BaSyouKeywordFn.getTextOn());
+  },
+  getBattleArea() {
+    return lift_default(AbsoluteBaSyouFn.of)(PlayerIDFn.getAll(), BaSyouKeywordFn.getBattleArea());
+  },
+  eq(left, right) {
+    return AbsoluteBaSyouFn.toString(left) == AbsoluteBaSyouFn.toString(right);
+  }
+};
+var RelatedBaSyouFn = {
+  of(side, kw) {
+    return {
+      id: "RelatedBaSyou",
+      value: [side, kw]
+    };
+  }
+};
+
+// src/game/define/Effect.ts
+var exports_Effect = {};
+__export(exports_Effect, {
+  EffectFn: () => EffectFn
+});
+var EffectFn = {
+  createEmptyPlayCard(playerId, cardId) {
+    return { id: "", reason: ["PlayCard", playerId, cardId, {}], text: { id: "", title: [] } };
+  },
+  createGameRule(playerId) {
+    return { id: "", reason: ["GameRule", playerId, {}], text: { id: "", title: [] } };
+  },
+  isFakeCardID(string) {
+    return string.startsWith("SystemFakeCardID_");
+  },
+  createFakeCardID(textId) {
+    return `SystemFakeCardID_${textId}`;
+  },
+  getCardID(ctx2) {
+    switch (ctx2.reason[0]) {
+      case "GameRule":
+        return EffectFn.createFakeCardID(ctx2.text.id);
+      case "PlayText":
+      case "PlayCard":
+      case "場に出る":
+      case "Destroy":
+      case "Situation":
+      case "Event":
+        return ctx2.reason[2];
+    }
+  },
+  getPlayerID(ctx2) {
+    switch (ctx2.reason[0]) {
+      case "GameRule":
+        if (ctx2.reason[1] == null) {
+          throw new Error(`this GameRule not playerID: ${ctx2.id} ${ctx2.description}`);
+        }
+        return ctx2.reason[1];
+      case "PlayText":
+      case "場に出る":
+      case "PlayCard":
+      case "Destroy":
+      case "Situation":
+      case "Event":
+        return ctx2.reason[1];
+    }
+  },
+  getSituation(ctx2) {
+    switch (ctx2.reason[0]) {
+      case "Situation":
+        return ctx2.reason[3];
+      default:
+        throw new Error(`${ctx2.reason[0]} no Situation`);
+    }
+  },
+  getDestroyReason(ctx2) {
+    switch (ctx2.reason[0]) {
+      case "Destroy":
+        return ctx2.reason[3];
+      default:
+        throw new Error(`${ctx2.reason[0]} no DestroyReason`);
+    }
+  },
+  getEvent(ctx2) {
+    switch (ctx2.reason[0]) {
+      case "Event":
+        return ctx2.reason[3];
+      default:
+        throw new Error(`${ctx2.reason[0]} no Event`);
+    }
+  },
+  fromEffectBasic(e, options) {
+    return {
+      id: "",
+      reason: options?.reason || e.reason,
+      description: options?.description || e.description,
+      isOption: options?.isOption,
+      text: {
+        id: e.text.id,
+        title: e.text.title,
+        description: options?.description || e.text.description,
+        conditions: options?.conditions || undefined,
+        logicTreeActions: options?.logicTreeAction ? [options.logicTreeAction] : [
+          {
+            actions: []
+          }
+        ]
+      }
+    };
+  }
+};
+
+// src/game/define/ItemState.ts
+var exports_ItemState = {};
+__export(exports_ItemState, {
+  ItemStateFn: () => ItemStateFn
+});
+
+// node_modules/uuid/dist/esm-browser/stringify.js
+var byteToHex = [];
+for (i = 0;i < 256; ++i) {
+  byteToHex.push((i + 256).toString(16).slice(1));
+}
+var i;
+function unsafeStringify(arr, offset = 0) {
+  return (byteToHex[arr[offset + 0]] + byteToHex[arr[offset + 1]] + byteToHex[arr[offset + 2]] + byteToHex[arr[offset + 3]] + "-" + byteToHex[arr[offset + 4]] + byteToHex[arr[offset + 5]] + "-" + byteToHex[arr[offset + 6]] + byteToHex[arr[offset + 7]] + "-" + byteToHex[arr[offset + 8]] + byteToHex[arr[offset + 9]] + "-" + byteToHex[arr[offset + 10]] + byteToHex[arr[offset + 11]] + byteToHex[arr[offset + 12]] + byteToHex[arr[offset + 13]] + byteToHex[arr[offset + 14]] + byteToHex[arr[offset + 15]]).toLowerCase();
+}
+
+// node_modules/uuid/dist/esm-browser/rng.js
+var getRandomValues;
+var rnds8 = new Uint8Array(16);
+function rng() {
+  if (!getRandomValues) {
+    getRandomValues = typeof crypto !== "undefined" && crypto.getRandomValues && crypto.getRandomValues.bind(crypto);
+    if (!getRandomValues) {
+      throw new Error("crypto.getRandomValues() not supported. See https://github.com/uuidjs/uuid#getrandomvalues-not-supported");
+    }
+  }
+  return getRandomValues(rnds8);
+}
+
+// node_modules/uuid/dist/esm-browser/v7.js
+var _seqLow = null;
+var _seqHigh = null;
+var _msecs = 0;
+function v7(options, buf, offset) {
+  options = options || {};
+  var i2 = buf && offset || 0;
+  var b = buf || new Uint8Array(16);
+  var rnds = options.random || (options.rng || rng)();
+  var msecs = options.msecs !== undefined ? options.msecs : Date.now();
+  var seq = options.seq !== undefined ? options.seq : null;
+  var seqHigh = _seqHigh;
+  var seqLow = _seqLow;
+  if (msecs > _msecs && options.msecs === undefined) {
+    _msecs = msecs;
+    if (seq !== null) {
+      seqHigh = null;
+      seqLow = null;
+    }
+  }
+  if (seq !== null) {
+    if (seq > 2147483647) {
+      seq = 2147483647;
+    }
+    seqHigh = seq >>> 19 & 4095;
+    seqLow = seq & 524287;
+  }
+  if (seqHigh === null || seqLow === null) {
+    seqHigh = rnds[6] & 127;
+    seqHigh = seqHigh << 8 | rnds[7];
+    seqLow = rnds[8] & 63;
+    seqLow = seqLow << 8 | rnds[9];
+    seqLow = seqLow << 5 | rnds[10] >>> 3;
+  }
+  if (msecs + 1e4 > _msecs && seq === null) {
+    if (++seqLow > 524287) {
+      seqLow = 0;
+      if (++seqHigh > 4095) {
+        seqHigh = 0;
+        _msecs++;
+      }
+    }
+  } else {
+    _msecs = msecs;
+  }
+  _seqHigh = seqHigh;
+  _seqLow = seqLow;
+  b[i2++] = _msecs / 1099511627776 & 255;
+  b[i2++] = _msecs / 4294967296 & 255;
+  b[i2++] = _msecs / 16777216 & 255;
+  b[i2++] = _msecs / 65536 & 255;
+  b[i2++] = _msecs / 256 & 255;
+  b[i2++] = _msecs & 255;
+  b[i2++] = seqHigh >>> 4 & 15 | 112;
+  b[i2++] = seqHigh & 255;
+  b[i2++] = seqLow >>> 13 & 63 | 128;
+  b[i2++] = seqLow >>> 5 & 255;
+  b[i2++] = seqLow << 3 & 255 | rnds[10] & 7;
+  b[i2++] = rnds[11];
+  b[i2++] = rnds[12];
+  b[i2++] = rnds[13];
+  b[i2++] = rnds[14];
+  b[i2++] = rnds[15];
+  return buf || unsafeStringify(b);
+}
+var v7_default = v7;
+// src/game/tool/index.ts
+var ToolFn = {
+  getUUID(prefix = "") {
+    return prefix + "_" + v7_default();
+  }
+};
+
+// src/game/define/GameError.ts
+var exports_GameError = {};
+__export(exports_GameError, {
+  testGameError: () => testGameError,
+  TipError: () => TipError,
+  TargetMissingError: () => TargetMissingError,
+  GameError: () => GameError
+});
+
+class GameError extends Error {
+  info;
+  constructor(message, info) {
+    super(message);
+    this.name = "GameError";
+    this.info = info || {};
+  }
+}
+
+class TipError extends GameError {
+  constructor(message, info) {
+    super(message, info);
+    this.name = "TipError";
+  }
+}
+
+class TargetMissingError extends TipError {
+  constructor(message, info) {
+    super(message, info);
+    this.name = "TargetMissingError";
+  }
+}
+function testGameError() {
+  if (new TipError("") instanceof TargetMissingError != false) {
+    throw new Error;
+  }
+  if (new TargetMissingError("") instanceof TipError != true) {
+    throw new Error;
+  }
+}
+
+// src/game/define/ItemState.ts
+function clearTip(ctx2, key) {
+  ctx2 = {
+    ...ctx2,
+    tips: dissoc_default(key, ctx2.tips)
+  };
+  return ctx2;
+}
+var ItemStateFn = {
+  identity() {
+    return {
+      id: "",
+      damage: 0,
+      destroyReason: null,
+      flags: {},
+      tips: {},
+      globalEffects: {},
+      varNamesRemoveOnTurnEnd: {},
+      varNamesRemoveOnStepEnd: {}
+    };
+  },
+  setFlag(ctx2, name, v, options) {
+    ctx2 = {
+      ...ctx2,
+      flags: assoc_default(name, v, ctx2.flags)
+    };
+    if (options?.isRemoveOnTurnEnd) {
+      ctx2 = {
+        ...ctx2,
+        varNamesRemoveOnTurnEnd: assoc_default(name, true, ctx2.varNamesRemoveOnTurnEnd)
+      };
+    }
+    if (options?.isRemoveOnStepEnd) {
+      ctx2 = {
+        ...ctx2,
+        varNamesRemoveOnStepEnd: assoc_default(name, true, ctx2.varNamesRemoveOnStepEnd)
+      };
+    }
+    return ctx2;
+  },
+  removeFlag(ctx2, k) {
+    return {
+      ...ctx2,
+      flags: dissoc_default(k, ctx2.flags)
+    };
+  },
+  getTip(ctx2, k) {
+    if (ctx2.tips[k] == null) {
+      throw new TipError(`cardId: ${ctx2.id} target not set yet: ${k}`);
+    }
+    return ctx2.tips[k];
+  },
+  hasTip(ctx2, k) {
+    return ctx2.tips[k] != null;
+  },
+  setTip(ctx2, k, tip) {
+    ctx2 = {
+      ...ctx2,
+      tips: assoc_default(k, tip, ctx2.tips)
+    };
+    return ctx2;
+  },
+  clearTip,
+  damage(ctx2, v) {
+    return {
+      ...ctx2,
+      damage: ctx2.damage + v
+    };
+  },
+  setMoreTotalRollCostLengthPlay(ctx2, x) {
+    ctx2 = ItemStateFn.setFlag(ctx2, "合計国力_＋１してプレイ", x);
+    ctx2 = {
+      ...ctx2,
+      varNamesRemoveOnTurnEnd: assoc_default("合計国力_＋１してプレイ", true, ctx2.varNamesRemoveOnTurnEnd)
+    };
+    return ctx2;
+  },
+  getMoreTotalRollCostLengthPlay(ctx2) {
+    return ctx2.flags["合計国力_＋１してプレイ"] || 0;
+  },
+  getGlobalEffects(ctx2) {
+    return Object.values(ctx2.globalEffects);
+  },
+  setGlobalEffect(ctx2, name, ge, options) {
+    if (name == null) {
+      name = ToolFn.getUUID("setGlobalEffect");
+    }
+    ctx2 = {
+      ...ctx2,
+      globalEffects: assoc_default(name, ge, ctx2.globalEffects)
+    };
+    if (options?.isRemoveOnTurnEnd) {
+      ctx2 = {
+        ...ctx2,
+        varNamesRemoveOnTurnEnd: assoc_default(name, true, ctx2.varNamesRemoveOnTurnEnd)
+      };
+    }
+    if (options?.isRemoveOnStepEnd) {
+      ctx2 = {
+        ...ctx2,
+        varNamesRemoveOnStepEnd: assoc_default(name, true, ctx2.varNamesRemoveOnStepEnd)
+      };
+    }
+    return ctx2;
+  },
+  onCutEnd(ctx2) {
+    ctx2 = {
+      ...ctx2,
+      textIdsUseThisCut: {}
+    };
+    return ctx2;
+  },
+  onDamageReset(ctx2) {
+    return {
+      ...ctx2,
+      damage: 0
+    };
+  },
+  onTurnEnd(ctx2) {
+    for (const varName in ctx2.varNamesRemoveOnTurnEnd) {
+      ctx2 = {
+        ...ctx2,
+        flags: dissoc_default(varName, ctx2.flags),
+        globalEffects: dissoc_default(varName, ctx2.globalEffects)
+      };
+    }
+    ctx2 = {
+      ...ctx2,
+      varNamesRemoveOnTurnEnd: {},
+      isOpenForGain: false,
+      isCheat: false,
+      isFirstTurn: false,
+      textIdsUseThisCut: {},
+      textIdsUseThisTurn: [],
+      isAttack: false,
+      isDefence: false
+    };
+    return ctx2;
+  },
+  onStepEnd(ctx2) {
+    for (const varName in ctx2.varNamesRemoveOnStepEnd) {
+      ctx2 = {
+        ...ctx2,
+        flags: dissoc_default(varName, ctx2.flags),
+        globalEffects: dissoc_default(varName, ctx2.globalEffects),
+        varNamesRemoveOnStepEnd: {}
+      };
+    }
+    return ctx2;
+  }
+};
+
+// src/game/define/PlayerState.ts
+var PlayerStateFn = {
+  identity() {
+    return {
+      id: "",
+      turn: 0,
+      playGCount: 0,
+      confirmPhase: false,
+      textIdsUseThisTurn: {}
+    };
+  },
+  onTurnEnd(ps) {
+    return {
+      ...ps,
+      playGCount: 0,
+      textIdsUseThisTurn: {}
+    };
+  }
+};
+
+// src/game/gameState/ActivePlayerComponent.ts
+var exports_ActivePlayerComponent = {};
+__export(exports_ActivePlayerComponent, {
+  setActivePlayerID: () => setActivePlayerID,
+  getActivePlayerID: () => getActivePlayerID
+});
+function setActivePlayerID(ctx2, playerId) {
+  return {
+    ...ctx2,
+    activePlayerID: playerId
+  };
+}
+function getActivePlayerID(ctx2) {
+  if (ctx2.activePlayerID == null) {
+    throw new Error(`activePlayerID not set yet`);
+  }
+  return ctx2.activePlayerID;
+}
+
+// src/game/gameState/CardTableComponent.ts
+var exports_CardTableComponent = {};
+__export(exports_CardTableComponent, {
+  setCard: () => setCard,
+  mapCardsWithBasyou: () => mapCardsWithBasyou,
+  mapCard: () => mapCard,
+  getCards: () => getCards,
+  getCardOwner: () => getCardOwner,
+  getCardIds: () => getCardIds,
+  getCard: () => getCard,
+  createCardWithProtoIds: () => createCardWithProtoIds,
+  addCards: () => addCards
+});
+
+// src/tool/table/index.ts
+function addCard(table, position, cardId) {
+  return {
+    ...table,
+    cardStack: {
+      ...table.cardStack,
+      [position]: [...table.cardStack[position] || [], cardId]
+    }
+  };
+}
+function getCardsByPosition(table, position) {
+  if (table.cardStack[position] == null) {
+    return [];
+  }
+  return table.cardStack[position];
+}
+function moveCard(table, fromPosition, toPosition, cardId, options) {
+  if (fromPosition == toPosition) {
+    warnCategory(`moveCard from ${fromPosition} to ${toPosition}. ignore`);
+    return table;
+  }
+  if (table.cardStack[fromPosition]?.includes(cardId) != true) {
+    throw new Error(`table from ${fromPosition} not exist ${cardId}`);
+  }
+  const updatedFromStack = table.cardStack[fromPosition]?.filter((id) => id !== cardId) || [];
+  let updatedToStack = table.cardStack[toPosition] || [];
+  if (options?.insertId != null) {
+    if (options.insertId < 0) {
+      throw new Error(`insertId not < 0: ${options.insertId}`);
+    }
+    if (options.insertId == 0) {
+      updatedToStack = [cardId, ...updatedToStack];
+    } else {
+      updatedToStack = [...updatedToStack.slice(0, options.insertId), cardId, ...updatedToStack.slice(options.insertId)];
+    }
+  } else {
+    updatedToStack = [...updatedToStack, cardId];
+  }
+  return {
+    ...table,
+    cardStack: {
+      ...table.cardStack,
+      [fromPosition]: updatedFromStack,
+      [toPosition]: updatedToStack
+    }
+  };
+}
+function getCardPosition(table, cardId) {
+  for (const [key, value] of Object.entries(table.cardStack)) {
+    if (value.includes(cardId)) {
+      return key;
+    }
+  }
+  return null;
+}
+function shuffleCards(ctx2, position) {
+  const cards = ctx2.cardStack[position];
+  if (!cards)
+    return ctx2;
+  const shuffledCards = [...cards].sort(() => Math.random() - 0.5);
+  return {
+    ...ctx2,
+    cardStack: {
+      ...ctx2.cardStack,
+      [position]: shuffledCards
+    }
+  };
+}
+var DEFAULT_TABLE = {
+  cardStack: {}
+};
+var TableFns = {
+  addCard,
+  moveCard,
+  getCardPosition,
+  getCardsByPosition,
+  shuffleCards,
+  assertDup(table) {
+    for (const key in table.cardStack) {
+      const cardIdSets = {};
+      const cs = table.cardStack[key];
+      for (const cardId of cs) {
+        if (cardIdSets[cardId]) {
+          throw new Error(`dup !! ${cardId} in ${key}`);
+        }
+        cardIdSets[cardId] = true;
+      }
+    }
+  }
+};
+
+// src/game/gameState/CardTableComponent.ts
+function getCard(ctx2, cardId) {
+  if (ctx2.cards[cardId] == null) {
+    throw new Error(`card not found: ${cardId}`);
+  }
+  return ctx2.cards[cardId];
+}
+function setCard(ctx2, id, card) {
+  const oldCard = getCard(ctx2, id);
+  ctx2 = {
+    ...ctx2,
+    cards: {
+      ...ctx2.cards,
+      [id]: card
+    }
+  };
+  ctx2 = EventCenterFn.onCardChange(ctx2, oldCard, getCard(ctx2, id));
+  return ctx2;
+}
+function mapCard(ctx2, id, f) {
+  return setCard(ctx2, id, f(getCard(ctx2, id)));
+}
+function getCardIds(ctx2) {
+  return Object.keys(ctx2.cards);
+}
+function getCards(ctx2) {
+  return Object.values(ctx2.cards);
+}
+function mapCardsWithBasyou(ctx2, f) {
+  return toPairs_default(ctx2.table.cardStack).map(([k, cardIds]) => {
+    const basyou = AbsoluteBaSyouFn.fromString(k);
+    const cards = cardIds.map((cardId) => getCard(ctx2, cardId));
+    return [basyou, cards];
+  }).reduce((ctx3, [basyou, cards]) => {
+    return cards.map((card) => f(basyou, card)).reduce((ctx4, card) => setCard(ctx4, card.id, card), ctx3);
+  }, ctx2);
+}
+function createCardWithProtoIds(ctx2, basyou, cardProtoIds) {
+  const cardLen = Object.keys(ctx2.cards).length;
+  ctx2 = addCards(ctx2, basyou, cardProtoIds.map((protoId, i2) => {
+    const ownerID = AbsoluteBaSyouFn.getPlayerID(basyou);
+    const cardId = `${ownerID}_${cardLen + i2}`;
+    return {
+      id: cardId,
+      protoID: protoId,
+      ownerID
+    };
+  }));
+  return ctx2;
+}
+function addCards(ctx2, basyou, addedCards) {
+  const old = ctx2.table;
+  ctx2 = addedCards.reduce((ctx3, newCard) => {
+    const ownerID = AbsoluteBaSyouFn.getPlayerID(basyou);
+    if (newCard.id == "") {
+      const cardLen = Object.keys(ctx3.cards).length;
+      const cardId = `${ownerID}_${cardLen}`;
+      newCard.id = cardId;
+    }
+    if (newCard.ownerID == null) {
+      newCard.ownerID = ownerID;
+    }
+    ctx3 = {
+      ...ctx3,
+      table: TableFns.addCard(ctx3.table, AbsoluteBaSyouFn.toString(basyou), newCard.id),
+      cards: {
+        ...ctx3.cards,
+        [newCard.id]: newCard
+      }
+    };
+    ctx3 = EventCenterFn.onItemAdd(ctx3, basyou, newCard.id);
+    return ctx3;
+  }, ctx2);
+  ctx2 = EventCenterFn.onTableChange(ctx2, old, ctx2.table);
+  return ctx2;
+}
+function getCardOwner(ctx2, cardID) {
+  const card = getCard(ctx2, cardID);
+  if (card == null) {
+    throw new Error("[getCardOwner] card not found");
+  }
+  if (card.ownerID == null) {
+    throw new Error("[getCardOwner] card.ownerID not found");
+  }
+  return card.ownerID;
+}
+
+// src/game/gameState/CoinTableComponent.ts
+var exports_CoinTableComponent = {};
+__export(exports_CoinTableComponent, {
+  removeCoinIds: () => removeCoinIds,
+  getCoins: () => getCoins,
+  getCoinOwner: () => getCoinOwner,
+  getCoinIdsByCardId: () => getCoinIdsByCardId,
+  getCoinIds: () => getCoinIds,
+  getCoin: () => getCoin,
+  getCardIdByCoinId: () => getCardIdByCoinId,
+  addCoins: () => addCoins
+});
+function getCoin(ctx2, id) {
+  if (ctx2.coins[id] == null) {
+    throw new Error("card not found");
+  }
+  return ctx2.coins[id];
+}
+function getCoinIds(ctx2) {
+  return Object.keys(ctx2.coins);
+}
+function getCoins(ctx2) {
+  return Object.values(ctx2.coins);
+}
+function addCoins(ctx2, cardId, added) {
+  return {
+    ...ctx2,
+    coins: {
+      ...ctx2.coins,
+      ...fromPairs_default(added.map((v) => [v.id, v]))
+    },
+    coinId2cardId: {
+      ...ctx2.coinId2cardId,
+      ...fromPairs_default(added.map((v) => [v.id, cardId]))
+    }
+  };
+}
+function getCardIdByCoinId(ctx2, id) {
+  if (ctx2.coinId2cardId[id] == null) {
+    throw new Error(`coin cardId not found: ${id}`);
+  }
+  return ctx2.coinId2cardId[id];
+}
+function getCoinIdsByCardId(ctx2, cardId) {
+  return Object.keys(ctx2.coinId2cardId).filter((coinId) => ctx2.coinId2cardId[coinId] == cardId);
+}
+function removeCoinIds(ctx2, ids) {
+  const coinId2cardId = { ...ctx2.coinId2cardId };
+  const coins = { ...ctx2.coins };
+  for (const id of ids) {
+    delete coinId2cardId[id];
+    delete coins[id];
+  }
+  return {
+    ...ctx2,
+    coinId2cardId,
+    coins
+  };
+}
+function getCoinOwner(ctx2, id) {
+  const item = getCoin(ctx2, id);
+  if (item.ownerID == null) {
+    throw new Error("[getChipOwner] Coin.ownerID not found");
+  }
+  return item.ownerID;
+}
+
+// src/game/gameState/doTriggerEvent.ts
+var exports_doTriggerEvent = {};
+__export(exports_doTriggerEvent, {
+  doTriggerEvent: () => doTriggerEvent
+});
+
+// src/game/gameState/GameState.ts
+var exports_GameState = {};
+__export(exports_GameState, {
+  createGameState: () => createGameState
+});
+
+// src/game/gameState/SetGroupComponent.ts
+var exports_SetGroupComponent = {};
+__export(exports_SetGroupComponent, {
+  setSetGroupParent: () => setSetGroupParent,
+  removeSetGroupParent: () => removeSetGroupParent,
+  getSetGroupRoot: () => getSetGroupRoot,
+  getSetGroupChildren: () => getSetGroupChildren,
+  getSetGroup: () => getSetGroup,
+  createSetGroupComponent: () => createSetGroupComponent
+});
+
+// src/tool/ItemGroup.ts
+function identity() {
+  return {
+    itemGroupParent: {},
+    itemGroupChildren: {}
+  };
+}
+function createItemGroup() {
+  return {
+    itemGroupParent: {},
+    itemGroupChildren: {}
+  };
+}
+function deleteItemGroupParent(ctx2, id) {
+  const parent = ctx2.itemGroupParent[id];
+  if (!parent)
+    return ctx2;
+  const itemGroupParent = { ...ctx2.itemGroupParent };
+  delete itemGroupParent[id];
+  return {
+    ...ctx2,
+    itemGroupParent,
+    itemGroupChildren: {
+      ...ctx2.itemGroupChildren,
+      [parent]: ctx2.itemGroupChildren[parent].filter((child) => child !== id)
+    }
+  };
+}
+function assertCircleRef(ctx2, id) {
+  let visited = [];
+  function checkCircle(currentId) {
+    if (visited.includes(currentId)) {
+      throw new Error("Circular reference detected");
+    }
+    visited.push(currentId);
+    const parent = ctx2.itemGroupParent[currentId];
+    if (parent) {
+      checkCircle(parent);
+    }
+  }
+  checkCircle(id);
+}
+function setItemGroupParent(ctx2, id, parent) {
+  const updatedCtx = deleteItemGroupParent(ctx2, id);
+  ctx2 = {
+    ...updatedCtx,
+    itemGroupParent: { ...updatedCtx.itemGroupParent, [id]: parent },
+    itemGroupChildren: {
+      ...updatedCtx.itemGroupChildren,
+      [parent]: [...updatedCtx.itemGroupChildren[parent] || [], id]
+    }
+  };
+  assertCircleRef(ctx2, id);
+  return ctx2;
+}
+function getItemGroupParent(ctx2, id) {
+  return ctx2.itemGroupParent[id];
+}
+function getItemGroupParentRoot(ctx2, id) {
+  let currentId = id;
+  while (true) {
+    const parent = getItemGroupParent(ctx2, currentId);
+    if (!parent)
+      return currentId;
+    currentId = parent;
+  }
+}
+function getItemGroup(ctx2, id) {
+  const children = ctx2.itemGroupChildren[id] || [];
+  return [id, ...children.flatMap((child) => getItemGroup(ctx2, child))];
+}
+function getItemGroupFromRoot(ctx2, id) {
+  return getItemGroup(ctx2, getItemGroupParentRoot(ctx2, id));
+}
+function deleteItemGroup(ctx2, id) {
+  const willDeleteIds = getItemGroup(ctx2, id);
+  ctx2 = deleteItemGroupParent(ctx2, id);
+  const updatedParent = { ...ctx2.itemGroupParent };
+  const updatedChildren = { ...ctx2.itemGroupChildren };
+  willDeleteIds.forEach((willDeleteId) => {
+    delete updatedParent[willDeleteId];
+    delete updatedChildren[willDeleteId];
+  });
+  return {
+    ...ctx2,
+    itemGroupParent: updatedParent,
+    itemGroupChildren: updatedChildren
+  };
+}
+var ItemGroupFn = {
+  identity,
+  createItemGroup,
+  setItemGroupParent,
+  getItemGroupParent,
+  getItemGroupParentRoot,
+  getItemGroup,
+  getItemGroupFromRoot,
+  deleteItemGroup
+};
+
+// src/game/gameState/SetGroupComponent.ts
+function createSetGroupComponent() {
+  return {
+    setGroup: ItemGroupFn.createItemGroup()
+  };
+}
+function getSetGroup(ctx2, itemId) {
+  return ItemGroupFn.getItemGroupFromRoot(ctx2.setGroup, itemId);
+}
+function getSetGroupChildren(ctx2, itemId) {
+  return ItemGroupFn.getItemGroup(ctx2.setGroup, itemId);
+}
+function getSetGroupRoot(ctx2, cardID) {
+  return ItemGroupFn.getItemGroupParentRoot(ctx2.setGroup, cardID);
+}
+function setSetGroupParent(ctx2, parentCardId, cardId) {
+  ctx2 = {
+    ...ctx2,
+    setGroup: ItemGroupFn.setItemGroupParent(ctx2.setGroup, cardId, parentCardId)
+  };
+  ctx2 = EventCenterFn.onSetSetGroupParent(ctx2, parentCardId, cardId);
+  return ctx2;
+}
+function removeSetGroupParent(ctx2, cardId) {
+  ctx2 = {
+    ...ctx2,
+    setGroup: ItemGroupFn.deleteItemGroup(ctx2.setGroup, cardId)
+  };
+  return ctx2;
+}
+
+// src/game/gameState/GameState.ts
+function createGameState() {
+  return {
+    isGameState: true,
+    cards: {},
+    effects: {},
+    table: DEFAULT_TABLE,
+    chips: {},
+    chipProtos: {},
+    itemStates: {},
+    phase: PhaseFn.getAll()[0],
+    playerStates: {},
+    activePlayerID: null,
+    immediateEffect: [],
+    stackEffect: [],
+    destroyEffect: [],
+    commandEffects: [],
+    commandEffectTips: [],
+    hasCheck: false,
+    battleSnapshot: {},
+    coins: {},
+    coinId2cardId: {},
+    globalEffectPool: {},
+    messageTopId: 0,
+    messages: [],
+    messagesCurrentEffect: null,
+    messagesIsPlayerRead: {},
+    turn: 0,
+    ...createSetGroupComponent()
+  };
+}
+
+// src/game/gameState/ItemStateComponent.ts
+var exports_ItemStateComponent = {};
+__export(exports_ItemStateComponent, {
+  setItemState: () => setItemState,
+  mapItemStateValues: () => mapItemStateValues,
+  mapItemState: () => mapItemState,
+  getItemStateValues: () => getItemStateValues,
+  getItemState: () => getItemState
+});
+function getItemState(ctx2, cardID) {
+  return ctx2.itemStates[cardID] || { ...ItemStateFn.identity(), id: cardID };
+}
+function setItemState(ctx2, cardID, cardState) {
+  const old = getItemState(ctx2, cardID);
+  ctx2 = { ...ctx2, itemStates: assoc_default(cardID, cardState, ctx2.itemStates) };
+  ctx2 = EventCenterFn.onItemStateChange(ctx2, old, getItemState(ctx2, cardID));
+  return ctx2;
+}
+function getItemStateValues(ctx2) {
+  return Object.values(ctx2.itemStates);
+}
+function mapItemStateValues(ctx2, fn) {
+  for (const k in ctx2.itemStates) {
+    ctx2 = mapItemState(ctx2, k, fn);
+  }
+  return ctx2;
+}
+function mapItemState(ctx2, k, fn) {
+  const old = getItemState(ctx2, k);
+  const curr = fn(old);
+  ctx2 = setItemState(ctx2, k, curr);
+  return ctx2;
+}
+
+// src/game/gameState/EffectStackComponent.ts
+var exports_EffectStackComponent = {};
+__export(exports_EffectStackComponent, {
+  setCommandEffects: () => setCommandEffects,
+  setCommandEffectTips: () => setCommandEffectTips,
+  removeEffect: () => removeEffect,
+  isStackEffect: () => isStackEffect,
+  isImmediateEffect: () => isImmediateEffect,
+  getTopEffect: () => getTopEffect,
+  getStackEffects: () => getStackEffects,
+  getImmediateEffects: () => getImmediateEffects,
+  getEffects: () => getEffects,
+  getEffect: () => getEffect,
+  getCutInDestroyEffects: () => getCutInDestroyEffects,
+  getCommandEffecTips: () => getCommandEffecTips,
+  clearDestroyEffects: () => clearDestroyEffects,
+  addStackEffect: () => addStackEffect,
+  addImmediateEffect: () => addImmediateEffect,
+  addDestroyEffect: () => addDestroyEffect
+});
+function isStackEffect(ctx2, id) {
+  return ctx2.stackEffect.includes(id);
+}
+function isImmediateEffect(ctx2, id) {
+  return ctx2.immediateEffect.includes(id);
+}
+function getTopEffect(ctx2) {
+  if (ctx2.stackEffect.length === 0) {
+    return null;
+  }
+  return getEffect(ctx2, ctx2.stackEffect[0]);
+}
+function getEffect(ctx2, id) {
+  if (ctx2.effects[id] == null) {
+    throw new Error(`effect not found: ${id}`);
+  }
+  return ctx2.effects[id];
+}
+function getEffects(ctx2) {
+  return ctx2.effects;
+}
+function removeEffect(ctx2, id) {
+  return {
+    ...ctx2,
+    effects: dissoc_default(id, ctx2.effects),
+    stackEffect: ctx2.stackEffect.filter((_id) => _id != id),
+    immediateEffect: ctx2.immediateEffect.filter((_id) => _id != id),
+    destroyEffect: ctx2.destroyEffect.filter((_id) => _id != id)
+  };
+}
+function addStackEffect(ctx2, block) {
+  if (block.id == "") {
+    block.id = ToolFn.getUUID("addStackEffect");
+  }
+  if (block.text.id == "") {
+    block.text.id = ToolFn.getUUID("addStackEffect");
+  }
+  return {
+    ...ctx2,
+    stackEffect: [block.id, ...ctx2.stackEffect],
+    effects: assoc_default(block.id, block, ctx2.effects)
+  };
+}
+function addImmediateEffect(ctx2, block) {
+  if (block.id == "") {
+    block.id = ToolFn.getUUID("addImmediateEffect");
+  }
+  if (block.text.id == "") {
+    block.text.id = ToolFn.getUUID("addImmediateEffect");
+  }
+  ctx2 = EventCenterFn.onAddImmediateEffect(ctx2, block);
+  return {
+    ...ctx2,
+    immediateEffect: [block.id, ...ctx2.immediateEffect],
+    effects: assoc_default(block.id, block, ctx2.effects)
+  };
+}
+function getStackEffects(ctx2) {
+  return ctx2.stackEffect.map((id) => getEffect(ctx2, id));
+}
+function getImmediateEffects(ctx2) {
+  return ctx2.immediateEffect.map((id) => getEffect(ctx2, id));
+}
+function addDestroyEffect(ctx2, block) {
+  if (ctx2.effects[block.id]) {
+    warnCategory("addDestroyEffect", `破壞效果不必重復加入: ${block.id}`);
+    return ctx2;
+  }
+  return {
+    ...ctx2,
+    destroyEffect: [block.id, ...ctx2.destroyEffect],
+    effects: {
+      ...ctx2.effects,
+      [block.id]: block
+    }
+  };
+}
+function clearDestroyEffects(ctx2) {
+  const effects = { ...ctx2.effects };
+  for (const k of ctx2.destroyEffect) {
+    delete effects[k];
+  }
+  return {
+    ...ctx2,
+    destroyEffect: [],
+    effects
+  };
+}
+function getCutInDestroyEffects(ctx2) {
+  return Object.keys(getEffects(ctx2)).filter((id) => isStackEffect(ctx2, id)).map((id) => getEffect(ctx2, id)).filter((e) => e.reason[0] == "Destroy");
+}
+function setCommandEffects(ctx2, addeds) {
+  const effects = { ...ctx2.effects };
+  for (const k of ctx2.commandEffects) {
+    delete effects[k];
+  }
+  for (const added of addeds) {
+    effects[added.id] = added;
+  }
+  return {
+    ...ctx2,
+    commandEffects: addeds.map((e) => e.id),
+    effects
+  };
+}
+function setCommandEffectTips(ctx2, effects) {
+  return {
+    ...ctx2,
+    commandEffectTips: effects
+  };
+}
+function getCommandEffecTips(ctx2) {
+  return ctx2.commandEffectTips;
+}
+
+// src/game/gameState/IsBattleComponent.ts
+var exports_IsBattleComponent = {};
+__export(exports_IsBattleComponent, {
+  isBattleAtBasyou: () => isBattleAtBasyou,
+  isBattle: () => isBattle,
+  getBattleGroupFromSnapshot: () => getBattleGroupFromSnapshot,
+  clearHasCheck: () => clearHasCheck,
+  checkIsBattle: () => checkIsBattle
+});
+
+// src/game/gameState/ItemTableComponent.ts
+var exports_ItemTableComponent = {};
+__export(exports_ItemTableComponent, {
+  shuffleItems: () => shuffleItems,
+  isCoin: () => isCoin,
+  isChip: () => isChip,
+  isCardLike: () => isCardLike,
+  isCard: () => isCard,
+  getItemPrototype: () => getItemPrototype,
+  getItemOwner: () => getItemOwner,
+  getItemIdsByPlayerId: () => getItemIdsByPlayerId,
+  getItemIdsByBasyou: () => getItemIdsByBasyou,
+  getItemIds: () => getItemIds,
+  getItemController: () => getItemController,
+  getItemBaSyou: () => getItemBaSyou,
+  getItem: () => getItem,
+  getCardLikeItemIds: () => getCardLikeItemIds,
+  getAbsoluteBaSyouFromBaSyou: () => getAbsoluteBaSyouFromBaSyou,
+  createStrBaSyouPair: () => createStrBaSyouPair,
+  assertStrBasyouMissing: () => assertStrBasyouMissing,
+  addCoinsToCard: () => addCoinsToCard
+});
+
+// src/game/gameState/ChipTableComponent.ts
+function getChip(ctx2, chipId) {
+  if (ctx2.chips[chipId] == null) {
+    throw new Error("Chip not found");
+  }
+  return ctx2.chips[chipId];
+}
+function setChip(ctx2, id, card) {
+  return {
+    ...ctx2,
+    chips: {
+      ...ctx2.chips,
+      [id]: card
+    }
+  };
+}
+function getChipIds(ctx2) {
+  return Object.keys(ctx2.chips);
+}
+function getChipPrototype(ctx2, k) {
+  if (ctx2.chipProtos[k] == null) {
+    throw new Error(`chipProto not found: ${k}`);
+  }
+  return ctx2.chipProtos[k];
+}
+function getChipOwner(ctx2, chipId) {
+  const Chip = getChip(ctx2, chipId);
+  if (Chip == null) {
+    throw new Error("[getChipOwner] Chip not found");
+  }
+  if (Chip.ownerID == null) {
+    throw new Error("[getChipOwner] Chip.ownerID not found");
+  }
+  return Chip.ownerID;
+}
+
+// src/game/define/CardPrototype.ts
+var exports_CardPrototype = {};
+__export(exports_CardPrototype, {
+  GSignFn: () => GSignFn,
+  CardColorFn: () => CardColorFn,
+  CardCategoryFn: () => CardCategoryFn
+});
+var CardCategoryFn = {
+  createAll() {
+    return [
+      "ユニット",
+      "キャラクター",
+      "コマンド",
+      "オペレーション",
+      "オペレーション(ユニット)",
+      "ACE",
+      "グラフィック"
+    ];
+  },
+  createRemaining(values) {
+    return CardCategoryFn.createAll().filter((category) => !values.includes(category));
+  }
+};
+var CardColorFn = {
+  getAll() {
+    return ["緑", "茶", "青", "白", "紫", "黒", "赤"];
+  }
+};
+var GSignFn = {
+  eq(left, right) {
+    console.log(JSON.stringify(left), JSON.stringify(right), JSON.stringify(left) == JSON.stringify(right));
+    return JSON.stringify(left) == JSON.stringify(right);
+  }
+};
+
+// src/game/define/CardText.ts
+var exports_CardText = {};
+__export(exports_CardText, {
+  getOnSituationFn: () => getOnSituationFn,
+  createRollCostRequire: () => createRollCostRequire,
+  TextSpeicalEffectFn: () => TextSpeicalEffectFn,
+  LogicTreeActionFn: () => LogicTreeActionFn,
+  ConditionFn: () => ConditionFn,
+  CardTextFn: () => CardTextFn,
+  ActionFn: () => ActionFn
+});
+
+// src/tool/logicTree.ts
+function or(tree) {
+  return tree.type === "Or";
+}
+function and(tree) {
+  return tree.type === "And";
+}
+function leaf(tree) {
+  return tree.type === "Leaf";
+}
+function children(tree) {
+  return tree.children || [];
+}
+function crossProduct(a, b) {
+  return a.flatMap((x) => b.map((y) => [].concat(x, y)));
+}
+function enumerateAll(tree) {
+  if (!tree)
+    return [];
+  if (or(tree))
+    return children(tree).flatMap(enumerateAll);
+  if (and(tree))
+    return children(tree).map(enumerateAll).reduce(crossProduct, [[]]);
+  if (leaf(tree))
+    return [[tree.value]];
+  throw new Error(`Unknown tree structure ${tree}`);
+}
+function has(tree, keys4) {
+  return enumerateAll(tree).some((set) => keys4.length === set.length && keys4.every((key) => set.includes(key)));
+}
+function testEnumerateAll() {
+  const tree1 = {
+    type: "And",
+    children: [
+      { type: "Leaf", value: "action-1" },
+      { type: "Leaf", value: "action-2" },
+      {
+        type: "Or",
+        children: [
+          { type: "Leaf", value: "action-3" },
+          { type: "Leaf", value: "action-4" },
+          {
+            type: "Or",
+            children: [
+              { type: "Leaf", value: "5" },
+              { type: "Leaf", value: "6" }
+            ]
+          }
+        ]
+      },
+      {
+        type: "And",
+        children: [
+          { type: "Leaf", value: "action-7" },
+          { type: "Leaf", value: "action-8" }
+        ]
+      },
+      {
+        type: "And",
+        children: [
+          {
+            type: "Or",
+            children: [
+              { type: "Leaf", value: "action-9" },
+              { type: "Leaf", value: "action-10" }
+            ]
+          },
+          { type: "Leaf", value: "action-11" }
+        ]
+      }
+    ]
+  };
+  const tree2 = {
+    type: "And",
+    children: [
+      { type: "Leaf", value: "5" },
+      { type: "Leaf", value: "6" },
+      {
+        type: "Or",
+        children: [
+          { type: "Leaf", value: "1" },
+          {
+            type: "Or",
+            children: [
+              { type: "Leaf", value: "2" },
+              { type: "Leaf", value: "3" }
+            ]
+          }
+        ]
+      }
+    ]
+  };
+  const tree3 = {
+    type: "And",
+    children: [
+      { type: "Leaf", value: "5" },
+      { type: "Leaf", value: "6" },
+      {
+        type: "Or",
+        children: [
+          { type: "Leaf", value: "1" },
+          {
+            type: "Or",
+            children: [
+              { type: "Leaf", value: "2" },
+              { type: "Leaf", value: "3" }
+            ]
+          }
+        ]
+      },
+      {
+        type: "Or",
+        children: [
+          { type: "Leaf", value: "7" },
+          {
+            type: "And",
+            children: [
+              { type: "Leaf", value: "8" },
+              { type: "Leaf", value: "9" }
+            ]
+          }
+        ]
+      }
+    ]
+  };
+  const result1 = [
+    [
+      "action-1",
+      "action-2",
+      "action-3",
+      "action-7",
+      "action-8",
+      "action-9",
+      "action-11"
+    ],
+    [
+      "action-1",
+      "action-2",
+      "action-3",
+      "action-7",
+      "action-8",
+      "action-10",
+      "action-11"
+    ],
+    [
+      "action-1",
+      "action-2",
+      "action-4",
+      "action-7",
+      "action-8",
+      "action-9",
+      "action-11"
+    ],
+    [
+      "action-1",
+      "action-2",
+      "action-4",
+      "action-7",
+      "action-8",
+      "action-10",
+      "action-11"
+    ],
+    [
+      "action-1",
+      "action-2",
+      "5",
+      "action-7",
+      "action-8",
+      "action-9",
+      "action-11"
+    ],
+    [
+      "action-1",
+      "action-2",
+      "5",
+      "action-7",
+      "action-8",
+      "action-10",
+      "action-11"
+    ],
+    [
+      "action-1",
+      "action-2",
+      "6",
+      "action-7",
+      "action-8",
+      "action-9",
+      "action-11"
+    ],
+    [
+      "action-1",
+      "action-2",
+      "6",
+      "action-7",
+      "action-8",
+      "action-10",
+      "action-11"
+    ]
+  ];
+  const result2 = [["5", "6", "1"], ["5", "6", "2"], ["5", "6", "3"]];
+  const result3 = [
+    ["5", "6", "1", "7"],
+    ["5", "6", "1", "8", "9"],
+    ["5", "6", "2", "7"],
+    ["5", "6", "2", "8", "9"],
+    ["5", "6", "3", "7"],
+    ["5", "6", "3", "8", "9"]
+  ];
+  const assertEqual = (expected, actual) => {
+    if (JSON.stringify(expected) !== JSON.stringify(actual)) {
+      throw new Error(`Expected ${JSON.stringify(expected)} but got ${JSON.stringify(actual)}`);
+    }
+  };
+  assertEqual(result1, enumerateAll(tree1));
+  assertEqual(result2, enumerateAll(tree2));
+  assertEqual(result3, enumerateAll(tree3));
+}
+function tests() {
+  testEnumerateAll();
+}
+var LogicTreeFn = {
+  or,
+  and,
+  leaf,
+  children,
+  crossProduct,
+  enumerateAll,
+  has,
+  tests
+};
+
+// src/game/define/Tip.ts
+var exports_Tip = {};
+__export(exports_Tip, {
+  TipFn: () => TipFn
+});
+var TipFn = {
+  createTotalCostKey: () => "合計国力〔x〕",
+  createCharacterTargetUnitKey: () => "一個自軍機體",
+  createRollColorKey(i2, color) {
+    return `橫置支付${i2}[${color}]`;
+  },
+  createConditionKeyOfPayColorX(proto) {
+    if (proto.color == null) {
+      throw new Error;
+    }
+    return `${proto.color}X`;
+  },
+  createGoEarthKey: () => "去地球",
+  createGoSpaceKey: () => "去宇宙",
+  getWant(tip) {
+    switch (tip.title[0]) {
+      case "カード":
+      case "テキスト":
+      case "StringOptions":
+      case "BattleBonus":
+      case "GlobalEffects":
+      case "BaSyou":
+        return tip.title[1];
+    }
+  },
+  getSelection(tip) {
+    switch (tip.title[0]) {
+      case "カード":
+      case "テキスト":
+      case "StringOptions":
+      case "BattleBonus":
+      case "GlobalEffects":
+      case "BaSyou":
+        return tip.title[2];
+    }
+  },
+  passWantToSelection(tip) {
+    switch (tip.title[0]) {
+      case "カード":
+        return {
+          ...tip,
+          title: [tip.title[0], tip.title[1], tip.title[1]]
+        };
+      case "テキスト":
+        return {
+          ...tip,
+          title: [tip.title[0], tip.title[1], tip.title[1]]
+        };
+      case "StringOptions":
+        return {
+          ...tip,
+          title: [tip.title[0], tip.title[1], tip.title[1]]
+        };
+      case "BattleBonus":
+        return {
+          ...tip,
+          title: [tip.title[0], tip.title[1], tip.title[1]]
+        };
+      case "GlobalEffects":
+        return {
+          ...tip,
+          title: [tip.title[0], tip.title[1], tip.title[1]]
+        };
+      case "BaSyou":
+        return {
+          ...tip,
+          title: [tip.title[0], tip.title[1], tip.title[1]]
+        };
+    }
+  },
+  createTipErrorWhenCheckFail(tip) {
+    const selection = TipFn.getSelection(tip);
+    if (tip.count != null && tip.count != selection.length) {
+      return new TipError(`count ${selection.length} not right: ${tip.title[0]}/${tip.count}`);
+    }
+    if (tip.min != null && selection.length < tip.min) {
+      return new TipError(`min ${selection.length} not right: ${tip.title[0]}/${tip.min}`);
+    }
+    if (tip.max != null && selection.length > tip.max) {
+      return new TipError(`max ${selection.length} not right: ${tip.title[0]}/${tip.max}`);
+    }
+    return null;
+  }
+};
+
+// src/game/define/CardText.ts
+var TextSpeicalEffectFn = {
+  isSameKeyword(left, right) {
+    return left[0] == right[0];
+  },
+  createAll() {
+    return [
+      ["1枚制限"],
+      ["【PS装甲】"],
+      ["【ステイ】"],
+      ["クイック"],
+      ["クロスウェポン", ""],
+      ["ゲイン"],
+      ["サイコミュ", 0],
+      ["供給"],
+      ["共有", ""],
+      ["強襲"],
+      ["戦闘配備"],
+      ["改装", ""],
+      ["範囲兵器", 0],
+      ["速攻"],
+      ["高機動"]
+    ];
+  }
+};
+var ActionFn = {
+  getTitleFn(ctx) {
+    if (typeof ctx.title != "string") {
+      throw new Error("action.title must be string");
+    }
+    try {
+      return eval(ctx.title + ";_");
+    } catch (e) {
+      console.log(`原字串:[${ctx.title}]`);
+      throw e;
+    }
+  }
+};
+var ConditionFn = {
+  getTitleFn(ctx) {
+    if (ctx.title == null) {
+      return () => {
+        return null;
+      };
+    }
+    if (typeof ctx.title != "string") {
+      throw new Error("condition.title must be string");
+    }
+    try {
+      return eval(ctx.title + ";_");
+    } catch (e) {
+      console.log(`原字串:[${ctx.title}]`);
+      throw e;
+    }
+  },
+  getActions(ctx2) {
+    if (ctx2.actions == null) {
+      return [];
+    }
+    return ctx2.actions;
+  },
+  getActionTitleFns(ctx2, genActionFn) {
+    if (ctx2.actions == null) {
+      return [];
+    }
+    return ctx2.actions.map(genActionFn);
+  }
+};
+var LogicTreeActionFn = {
+  getActions(ctx2) {
+    if (ctx2.actions == null) {
+      return [];
+    }
+    return ctx2.actions;
+  },
+  getActionTitleFns(ctx2, genActionFn) {
+    if (ctx2.actions == null) {
+      return [];
+    }
+    return ctx2.actions.map(genActionFn);
+  }
+};
+function getCondition(ctx2, conditionId) {
+  if (ctx2.conditions?.[conditionId] == null) {
+    console.log(ctx2.conditions);
+    throw new Error(`condition not found: ${conditionId}`);
+  }
+  return ctx2.conditions[conditionId];
+}
+var CardTextFn = {
+  getCondition,
+  getLogicTreeAction(ctx2, id) {
+    if (ctx2.logicTreeActions?.[id] == null) {
+      throw new Error(`logic not found: ${id}`);
+    }
+    return ctx2.logicTreeActions[id];
+  },
+  getLogicTreeTreeLeafs(ctx2, logicTreeCommand) {
+    if (logicTreeCommand.logicTree == null) {
+      const logicLeafs = Object.keys(ctx2.conditions || {}).map((k) => {
+        const ret = {
+          type: "Leaf",
+          value: k
+        };
+        return ret;
+      });
+      return logicLeafs;
+    }
+    return [logicTreeCommand.logicTree];
+  },
+  getLogicTreeActionConditions(ctx2, logicTreeCommand) {
+    if (logicTreeCommand.logicTree == null) {
+      const conditionIds = Object.keys(ctx2.conditions || {});
+      const conditions = conditionIds.map((conditionId) => getCondition(ctx2, conditionId));
+      return [zipObj_default(conditionIds, conditions)];
+    }
+    const conditionIdsList = LogicTreeFn.enumerateAll(logicTreeCommand.logicTree);
+    logCategory("getLogicTreeActionConditions", "text.id", ctx2.id);
+    logCategory("getLogicTreeActionConditions", "logicTree", logicTreeCommand.logicTree, conditionIdsList);
+    logCategory("getLogicTreeActionConditions", "text.conditions", ctx2.conditions);
+    return conditionIdsList.map((conditionIds) => {
+      const conditions = conditionIds.map((conditionId) => getCondition(ctx2, conditionId));
+      return zipObj_default(conditionIds, conditions);
+    });
+  },
+  getOnEventFn(ctx) {
+    if (ctx.onEvent == null) {
+      return function(a) {
+        return a;
+      };
+    }
+    if (typeof ctx.onEvent != "string") {
+      throw new Error("condition.title must be string");
+    }
+    return eval(ctx.onEvent + ";_");
+  },
+  getCreatePlayEffectFn(ctx) {
+    if (ctx.createPlayEffect == null) {
+      return function(a) {
+        return [];
+      };
+    }
+    return eval(ctx.createPlayEffect + ";_");
+  }
+};
+function getOnSituationFn(ctx) {
+  if (ctx.onSituation == null) {
+    return function(ctx2) {
+      return [];
+    };
+  }
+  return eval(ctx.onSituation + ";_");
+}
+function createRollCostRequire(costNum, color) {
+  let ret = {};
+  for (let i2 = 0;i2 < costNum; ++i2) {
+    const key = TipFn.createRollColorKey(i2, color);
+    ret = {
+      ...ret,
+      [key]: {
+        title: ["RollColor", color],
+        actions: [
+          {
+            title: ["_ロールする", "ロール"],
+            vars: [key]
+          }
+        ],
+        groupKey: "支付橫置國力"
+      }
+    };
+  }
+  return ret;
+}
+
+// src/script/index.ts
+var _preloadPrototype = {};
+function getPrototype(imgId) {
+  if (_preloadPrototype[imgId] == null) {
+    throw new Error(`imgId not found: ${imgId}`);
+  }
+  return _preloadPrototype[imgId];
+}
+
+// src/game/gameState/ItemTableComponent.ts
+function isCard(ctx2, id) {
+  return getCardIds(ctx2).includes(id);
+}
+function isChip(ctx2, id) {
+  return getChipIds(ctx2).includes(id);
+}
+function isCoin(ctx2, id) {
+  return getCoinIds(ctx2).includes(id);
+}
+function isCardLike(ctx2) {
+  return (itemId) => {
+    return isCard(ctx2, itemId) || isChip(ctx2, itemId);
+  };
+}
+function addCoinsToCard(ctx2, targetItemId, coins) {
+  if (isCard(ctx2, targetItemId)) {
+    ctx2 = addCoins(ctx2, targetItemId, coins);
+    return ctx2;
+  }
+  throw new Error(`addCoinsToCard unknown item: ${targetItemId}`);
+}
+function shuffleItems(ctx2, basyou) {
+  const oldTable = ctx2.table;
+  ctx2 = {
+    ...ctx2,
+    table: TableFns.shuffleCards(ctx2.table, AbsoluteBaSyouFn.toString(basyou))
+  };
+  ctx2 = EventCenterFn.onTableChange(ctx2, oldTable, ctx2.table);
+  return ctx2;
+}
+function getItem(ctx2, id) {
+  if (isCard(ctx2, id)) {
+    return getCard(ctx2, id);
+  }
+  if (isChip(ctx2, id)) {
+    return getChip(ctx2, id);
+  }
+  if (isCoin(ctx2, id)) {
+    return getCoin(ctx2, id);
+  }
+  throw new Error(`item id not found in itemTable: ${id}`);
+}
+function getItemIds(ctx2) {
+  return [
+    ...Object.keys(ctx2.cards),
+    ...Object.keys(ctx2.chips),
+    ...Object.keys(ctx2.coins)
+  ];
+}
+function getCardLikeItemIds(ctx2) {
+  return [
+    ...Object.keys(ctx2.cards),
+    ...Object.keys(ctx2.chips)
+  ];
+}
+function getItemIdsByPlayerId(ctx2, isBa, playerId) {
+  const basyous = isBa ? lift_default(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getBaAll()) : lift_default(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getTextOn());
+  return basyous.flatMap((basyou) => getItemIdsByBasyou(ctx2, basyou));
+}
+function getItemIdsByBasyou(ctx2, basyou) {
+  return TableFns.getCardsByPosition(ctx2.table, AbsoluteBaSyouFn.toString(basyou));
+}
+function getItemController(ctx2, id) {
+  if (isCard(ctx2, id) || isChip(ctx2, id)) {
+    const baSyou = getItemBaSyou(ctx2, id);
+    return baSyou.value[0];
+  }
+  if (isCoin(ctx2, id)) {
+    const baSyou = getItemBaSyou(ctx2, getCardIdByCoinId(ctx2, id));
+    return baSyou.value[0];
+  }
+  throw new Error(`getItemController unknown item: ${id}`);
+}
+function getItemOwner(ctx2, id) {
+  if (isCard(ctx2, id)) {
+    return getCardOwner(ctx2, id);
+  }
+  if (isChip(ctx2, id)) {
+    return getChipOwner(ctx2, id);
+  }
+  if (isCoin(ctx2, id)) {
+    return getCoinOwner(ctx2, id);
+  }
+  throw new Error(`getItemOwner unknown item: ${id}`);
+}
+function getItemBaSyou(ctx2, id) {
+  if (isCard(ctx2, id) || isChip(ctx2, id)) {
+    const cardPosition = TableFns.getCardPosition(ctx2.table, id);
+    if (cardPosition == null) {
+      throw new Error("[getController] cardPosition not found");
+    }
+    return AbsoluteBaSyouFn.fromString(cardPosition);
+  }
+  if (isCoin(ctx2, id)) {
+    throw new Error(`coin no basyou`);
+  }
+  throw new Error(`getItemBaSyou unknown item: ${id}`);
+}
+function createStrBaSyouPair(ctx2, id) {
+  return [id, getItemBaSyou(ctx2, id)];
+}
+function getItemPrototype(ctx2, itemId) {
+  if (isCard(ctx2, itemId)) {
+    const protoId = getCard(ctx2, itemId).protoID;
+    if (protoId == null) {
+      throw new Error(`protoID not found: ${itemId}`);
+    }
+    return getPrototype(protoId);
+  }
+  if (isChip(ctx2, itemId)) {
+    const protoId = getChip(ctx2, itemId).protoID;
+    if (protoId == null) {
+      throw new Error(`protoID not found: ${itemId}`);
+    }
+    return getChipPrototype(ctx2, protoId);
+  }
+  if (isCoin(ctx2, itemId)) {
+    throw new Error(`coin no prototype: ${itemId}`);
+  }
+  throw new Error(`getItemPrototype unknown item: ${itemId}`);
+}
+function getAbsoluteBaSyouFromBaSyou(ctx2, itemId, baSyou) {
+  if (baSyou.id == "AbsoluteBaSyou") {
+    return baSyou;
+  }
+  const _playerID = (() => {
+    switch (baSyou.value[0]) {
+      case "持ち主": {
+        return getItemOwner(ctx2, itemId);
+      }
+      case "自軍":
+        return getItemController(ctx2, itemId);
+      case "敵軍":
+        return PlayerIDFn.getOpponent(getItemController(ctx2, itemId));
+    }
+  })();
+  return AbsoluteBaSyouFn.of(_playerID, baSyou.value[1]);
+}
+function assertStrBasyouMissing(ctx2, [itemId, originBasyou]) {
+  if (isCard(ctx2, itemId) || isChip(ctx2, itemId)) {
+    const nowBasyou = getItemBaSyou(ctx2, itemId);
+    if (AbsoluteBaSyouFn.eq(nowBasyou, originBasyou) == false) {
+      throw new TargetMissingError(`assertStrBasyouMissing: ${itemId} from ${AbsoluteBaSyouFn.toString(originBasyou)} now ${AbsoluteBaSyouFn.toString(nowBasyou)}`);
+    }
+  } else if (isCoin(ctx2, itemId)) {
+    throw new Error(`coin not support`);
+  } else {
+    throw new Error(`unknown cardId type ${itemId}`);
+  }
+}
+
+// src/game/gameState/IsBattleComponent.ts
+function clearHasCheck(ctx2) {
+  return {
+    ...ctx2,
+    hasCheck: false
+  };
+}
+function checkIsBattle(ctx2) {
+  logCategory("checkIsBattle", getPhase(ctx2));
+  AbsoluteBaSyouFn.getBattleArea().forEach((basyou) => {
+    const originState = isBattleAtBasyou(ctx2, basyou);
+    ctx2 = {
+      ...ctx2,
+      battleSnapshot: {
+        ...ctx2.battleSnapshot,
+        [AbsoluteBaSyouFn.toString(basyou)]: getItemIdsByBasyou(ctx2, basyou)
+      }
+    };
+    const newState = isBattleAtBasyou(ctx2, basyou);
+    if (originState != newState) {
+      ctx2 = EventCenterFn.onIsBattleChange(ctx2, basyou, originState, newState);
+    }
+  });
+  ctx2 = {
+    ...ctx2,
+    hasCheck: true
+  };
+  return ctx2;
+}
+function isBattleAtBasyou(ctx2, basyou) {
+  const opponentBasyou = AbsoluteBaSyouFn.setOpponentPlayerID(basyou);
+  const len1 = (ctx2.battleSnapshot[AbsoluteBaSyouFn.toString(basyou)] || []).length;
+  const len2 = (ctx2.battleSnapshot[AbsoluteBaSyouFn.toString(opponentBasyou)] || []).length;
+  return len1 > 0 && len2 > 0;
+}
+function getBattleGroupFromSnapshot(ctx2, basyou) {
+  if (ctx2.hasCheck != true) {
+    throw new Error("getBattleGroupFromSnapshot but not check yet");
+  }
+  return (ctx2.battleSnapshot[AbsoluteBaSyouFn.toString(basyou)] || []).filter((itemId) => getSetGroupRoot(ctx2, itemId) == itemId);
+}
+function isBattle(ctx2, cardID, cardID2) {
+  const baSyou1 = getItemBaSyou(ctx2, cardID);
+  const baSyou1Ids = ctx2.battleSnapshot[AbsoluteBaSyouFn.toString(baSyou1)] || [];
+  if (baSyou1Ids.length == 0) {
+    return false;
+  }
+  if (baSyou1Ids.includes(cardID) == false) {
+    return false;
+  }
+  const baSyou2 = AbsoluteBaSyouFn.setOpponentPlayerID(baSyou1);
+  const opponentAreaIds = ctx2.battleSnapshot[AbsoluteBaSyouFn.toString(baSyou2)] || [];
+  if (opponentAreaIds.length == 0) {
+    return false;
+  }
+  if (cardID2) {
+    return opponentAreaIds.includes(cardID2);
+  }
+  return true;
+}
+
+// src/game/gameState/card.ts
+var exports_card = {};
+__export(exports_card, {
+  isCardMaster: () => isCardMaster,
+  isCardCanReroll: () => isCardCanReroll,
+  getItemRuntimeCategory: () => getItemRuntimeCategory,
+  getItemIsCanRoll: () => getItemIsCanRoll,
+  getItemIsCanReroll: () => getItemIsCanReroll,
+  getItemGSign: () => getItemGSign,
+  getItemCharacteristic: () => getItemCharacteristic,
+  getCardTotalCostLength: () => getCardTotalCostLength,
+  getCardTitle: () => getCardTitle,
+  getCardTexts: () => getCardTexts,
+  getCardTextFromCardTextRef: () => getCardTextFromCardTextRef,
+  getCardSpecialText: () => getCardSpecialText,
+  getCardRollCostLength: () => getCardRollCostLength,
+  getCardRollCostColors: () => getCardRollCostColors,
+  getCardIdsCanPayRollCost: () => getCardIdsCanPayRollCost,
+  getCardIdsCanPayRollColor: () => getCardIdsCanPayRollColor,
+  getCardHasSpeicalEffect: () => getCardHasSpeicalEffect,
+  getCardGSignProperty: () => getCardGSignProperty,
+  getCardColor: () => getCardColor,
+  getCardBattlePoint: () => getCardBattlePoint,
+  getCardBattleArea: () => getCardBattleArea
+});
+
+// src/game/define/BattlePoint.ts
+var exports_BattlePoint = {};
+__export(exports_BattlePoint, {
+  BattlePointFn: () => BattlePointFn
+});
+function getValue(v) {
+  if (v == "*") {
+    return 0;
+  }
+  return v;
+}
+function add3([x, y, z], [x2, y2, z2]) {
+  return [
+    Math.max(0, getValue(x) + getValue(x2)),
+    Math.max(0, getValue(y) + getValue(y2)),
+    Math.max(0, getValue(z) + getValue(z2))
+  ];
+}
+var BattlePointFn = {
+  getAllStar: () => ["*", "*", "*"],
+  add: add3,
+  getValue,
+  toBattleBonus(v) {
+    return [getValue(v[0]), getValue(v[1]), getValue(v[2])];
+  },
+  eq(l, r) {
+    return JSON.stringify(l) == JSON.stringify(r);
+  }
+};
+
+// src/game/gameState/card.ts
+function getCardTextFromCardTextRef(ctx2, textRef) {
+  const { cardId, textId } = textRef;
+  const proto = getItemPrototype(ctx2, cardId);
+  const text = proto.texts?.find((text2) => text2.id == textId);
+  if (text == null) {
+    console.log(proto);
+    console.log(textRef);
+    throw new Error(`textRef not found: ${cardId} => ${textId}`);
+  }
+  return text;
+}
+function getCardSpecialText(text, options) {
+  logCategory("getCardSpecialText", "");
+  if (text.title[0] != "特殊型") {
+    return text;
+  }
+  switch (text.title[1][0]) {
+    case "サイコミュ":
+    case "範囲兵器": {
+      const [name, value] = text.title[1];
+      const bonus = options?.ges?.filter((ge) => ge.cardIds.includes(options.cardId || "")).map((ge) => {
+        if (ge.title[0] == "SpecialEffectBonus" && ge.title[1][0] == name) {
+          return ge.title[1][1];
+        }
+        return 0;
+      }).reduce((a, b) => a + b, 0) || 0;
+      const title = ["特殊型", [name, value + bonus]];
+      return {
+        ...text,
+        title,
+        description: `${text.description} => ${JSON.stringify(title[1])}`
+      };
+    }
+    default:
+      return text;
+  }
+}
+function getCardTexts(ctx2, cardID, options) {
+  logCategory("getCardTexts", "");
+  const addedTexts = options?.ges?.flatMap((e) => {
+    if (e.cardIds.includes(cardID) && e.title[0] == "AddText") {
+      return [e.title[1]];
+    }
+    if (e.cardIds.includes(cardID) && e.title[0] == "AddTextRef") {
+      return [getCardTextFromCardTextRef(ctx2, e.title[1])];
+    }
+    return [];
+  }).filter((v) => v) || [];
+  const prototype = getItemPrototype(ctx2, cardID);
+  let texts = [...prototype.texts || [], ...addedTexts].map((text) => {
+    if (text.title[0] == "特殊型") {
+      return getCardSpecialText(text, { cardId: cardID, ges: options?.ges });
+    }
+    return text;
+  });
+  if (getItemBaSyou(ctx2, cardID).value[1] == "Gゾーン") {
+    texts = texts.filter((text) => text.protectLevel == 2);
+  }
+  return texts;
+}
+function getItemCharacteristic(ctx2, cardID) {
+  if (getItemBaSyou(ctx2, cardID).value[1] == "Gゾーン") {
+    return "";
+  }
+  const prototype = getItemPrototype(ctx2, cardID);
+  return prototype.characteristic || "";
+}
+function getCardColor(ctx2, cardID) {
+  const prototype = getItemPrototype(ctx2, cardID);
+  if (prototype.color == null) {
+    throw new Error(`color not define: ${prototype.id}`);
+  }
+  return prototype.color;
+}
+function getItemGSign(ctx2, cardID) {
+  const prototype = getItemPrototype(ctx2, cardID);
+  if (prototype.gsign == null) {
+    throw new Error(`gsign not define: ${prototype.id}`);
+  }
+  return prototype.gsign;
+}
+function getCardGSignProperty(ctx2, cardID) {
+  const prototype = getItemPrototype(ctx2, cardID);
+  if (prototype.gsign == null) {
+    throw new Error(`gsign not define: ${prototype.id}`);
+  }
+  return prototype.gsign[1];
+}
+function getCardTitle(ctx2, cardID) {
+  if (getItemBaSyou(ctx2, cardID).value[1] == "Gゾーン") {
+    return "";
+  }
+  const prototype = getItemPrototype(ctx2, cardID);
+  return prototype.title || "unknown";
+}
+function getCardRollCostLength(ctx2, cardID) {
+  const prototype = getItemPrototype(ctx2, cardID);
+  return prototype.rollCost?.length || 0;
+}
+function getCardRollCostColors(ctx2, cardID) {
+  const prototype = getItemPrototype(ctx2, cardID);
+  if (prototype.rollCost == null) {
+    throw new Error;
+  }
+  if (prototype.rollCost == "X") {
+    if (prototype.color == null) {
+      throw new Error;
+    }
+    return [prototype.color];
+  }
+  return prototype.rollCost || [];
+}
+function getCardTotalCostLength(ctx2, cardID, options) {
+  logCategory("getCardTotalCostLength", "");
+  const prototype = getItemPrototype(ctx2, cardID);
+  const added = pipe(always_default(options?.ges || []), map_default((ge) => {
+    if (ge.title[0] == "合計国力_＋１" && ge.cardIds.includes(cardID)) {
+      return ge.title[1];
+    }
+    return 0;
+  }), sum_default)();
+  let totalCost = 0;
+  if (prototype.totalCost == null) {} else if (prototype.totalCost == "X") {
+    totalCost = getCardIdsCanPayRollCost(ctx2, getItemController(ctx2, cardID), options).length;
+  } else {
+    totalCost = prototype.totalCost;
+  }
+  return totalCost + added;
+}
+function getCardIdsCanPayRollCost(ctx2, playerId, options) {
+  logCategory("getCardIdsCanPayRollCost", "");
+  return options?.ges?.filter((ge) => ge.title[0] == "發生國力").flatMap((ge) => ge.cardIds).filter((cardId) => getCard(ctx2, cardId).isRoll != true).filter((cardId) => getItemController(ctx2, cardId) == playerId) || [];
+}
+function getCardBattlePoint(ctx2, cardID, options) {
+  logCategory("getCardBattlePoint", "");
+  const card = getCard(ctx2, cardID);
+  const bonusFromGlobalEffects = options?.ges?.map((ge) => {
+    if (ge.title[0] == "AddText" && ge.cardIds.includes(cardID) && ge.title[1].title[0] == "TextBattleBonus") {
+      return ge.title[1].title[1];
+    }
+    if (ge.title[0] == "＋x／＋x／＋xを得る" && ge.cardIds.includes(cardID)) {
+      return ge.title[1];
+    }
+    return [0, 0, 0];
+  }) || [];
+  const bonusFormCoin = getCoins(ctx2).map((coin) => {
+    if (coin.title[0] == "BattleBonus" && getCardIdByCoinId(ctx2, coin.id) == cardID) {
+      return coin.title[1];
+    }
+    return [0, 0, 0];
+  });
+  const prototype = getItemPrototype(ctx2, card.id);
+  const retBonus = [...bonusFromGlobalEffects, ...bonusFormCoin].reduce(BattlePointFn.add, prototype.battlePoint || BattlePointFn.getAllStar());
+  return retBonus;
+}
+function getCardHasSpeicalEffect(ctx2, a, cardID, options) {
+  logCategory("getCardHasSpeicalEffect", "");
+  const texts = getCardTexts(ctx2, cardID, options);
+  const has2 = texts.filter((e) => e.title[0] == "特殊型" && TextSpeicalEffectFn.isSameKeyword(e.title[1], a)).length > 0;
+  return has2;
+}
+function isCardCanReroll(ctx2, cardID, situation) {
+  const baSyouKW = getItemBaSyou(ctx2, cardID).value[1];
+  switch (baSyouKW) {
+    case "Gゾーン":
+    case "配備エリア":
+    case "戦闘エリア2":
+    case "戦闘エリア1":
+      break;
+    default:
+      return false;
+  }
+  const baSyou = getItemBaSyou(ctx2, cardID);
+  const setGroup = getSetGroupChildren(ctx2, cardID);
+  return true;
+}
+function isCardMaster(ctx2, unitCardID, cardID) {
+  logCategory("isCardMaster", unitCardID, cardID);
+  const char = getItemCharacteristic(ctx2, unitCardID);
+  logCategory("isCardMaster", "getItemCharacteristic", char);
+  const match = char.match(/専用「(.+?)」/);
+  if (match == null) {
+    return false;
+  }
+  const [_, masterName] = match;
+  const title = getCardTitle(ctx2, cardID);
+  logCategory("isCardMaster", masterName, title, masterName == title);
+  if (masterName != title) {
+    return false;
+  }
+  return true;
+}
+function getCardBattleArea(ctx2, cardID) {
+  const card = getCard(ctx2, cardID);
+  if (card == null) {
+    throw new Error("card not found");
+  }
+  const prototype = getItemPrototype(ctx2, card.id);
+  return prototype.battleArea || [];
+}
+function getItemRuntimeCategory(ctx2, itemId) {
+  if (AbsoluteBaSyouFn.getBaSyouKeyword(getItemBaSyou(ctx2, itemId)) == "Gゾーン") {
+    return "グラフィック";
+  }
+  if (isChip(ctx2, itemId)) {
+    return "ユニット";
+  }
+  if (isCard(ctx2, itemId)) {
+    const category = getItemPrototype(ctx2, itemId).category;
+    if (category == null) {
+      throw new Error(`card category not found: ${itemId}`);
+    }
+    return category;
+  }
+  throw new Error(`getCardRuntimeCategory unknown item type: ${itemId}`);
+}
+function getItemIsCanReroll(ctx2, itemId) {
+  return true;
+}
+function getItemIsCanRoll(ctx2, itemId) {
+  return true;
+}
+function getCardIdsCanPayRollColor(ctx2, playerId, color, options) {
+  logCategory("getCardIdsCanPayRollColor", "");
+  return options?.ges?.flatMap((ge) => {
+    if (ge.cardIds.length == 0) {
+      return [];
+    }
+    if (getItemController(ctx2, ge.cardIds[0]) != playerId) {
+      return [];
+    }
+    if (ge.title[0] == "發生國力") {
+      const gainColors = ge.title[1];
+      if (color == null || color == "紫" || gainColors.includes(color)) {
+        return ge.cardIds.map((cardId) => ({ cardId, colors: gainColors }));
+      }
+    }
+    if (ge.title[0] == "このカードを自軍Gとしてロールできる") {
+      return ge.cardIds.filter((cardId) => getCard(ctx2, cardId).isRoll != true).map((cardId) => {
+        const colors = getItemPrototype(ctx2, cardId).gsign?.[0] || [];
+        return { cardId, colors };
+      });
+    }
+    if (ge.title[0] == "_白のGサインを持つ_自軍_Gとして扱う事ができる" && ge.title[2] == "自軍" && ge.title[3] == "グラフィック") {
+      const cardIds = ge.cardIds.filter((cardId) => getItemController(ctx2, cardId) == playerId).filter((cardId) => getCard(ctx2, cardId).isRoll != true);
+      const colors = ge.title[1];
+      return cardIds.map((cardId) => {
+        return { cardId, colors };
+      });
+    }
+    return [];
+  }) || [];
+}
+
+// src/game/gameState/battleGroup.ts
+var exports_battleGroup = {};
+__export(exports_battleGroup, {
+  isBattleGroupHasA: () => isBattleGroupHasA,
+  isABattleGroup: () => isABattleGroup,
+  getBattleGroupBattlePoint: () => getBattleGroupBattlePoint,
+  getBattleGroup: () => getBattleGroup
+});
+
+// src/game/gameState/setGroup.ts
+var exports_setGroup = {};
+__export(exports_setGroup, {
+  isSetGroupHasA: () => isSetGroupHasA,
+  isRangeUnit: () => isRangeUnit,
+  isMeleeUnit: () => isMeleeUnit,
+  getSetGroupBattlePoint: () => getSetGroupBattlePoint
+});
+function getSetGroupBattlePoint(ctx2, cardId, options) {
+  return pipe(always_default(getSetGroupChildren(ctx2, cardId)), map_default((setGroupCardID) => getCardBattlePoint(ctx2, setGroupCardID, options)), reduce_default(BattlePointFn.add, BattlePointFn.getAllStar()), BattlePointFn.toBattleBonus)();
+}
+function isSetGroupHasA(ctx2, a, cardId, options) {
+  const setGroupCards = getSetGroupChildren(ctx2, cardId);
+  return setGroupCards.some((cardId2) => getCardHasSpeicalEffect(ctx2, a, cardId2, { ges: options.ges }));
+}
+function isMeleeUnit(ctx2, itemId, options) {
+  const [atk, range3, hp] = getSetGroupBattlePoint(ctx2, itemId, { ges: options.ges });
+  if (range3 == 0 && atk > 0) {
+    return true;
+  }
+  if (atk - range3 >= 2) {
+    return true;
+  }
+  return false;
+}
+function isRangeUnit(ctx2, itemId, options) {
+  const [atk, range3, hp] = getSetGroupBattlePoint(ctx2, itemId, { ges: options.ges });
+  if (range3 == 0) {
+    return false;
+  }
+  return isMeleeUnit(ctx2, itemId, { ges: options.ges }) == false;
+}
+
+// src/game/gameState/battleGroup.ts
+function getBattleGroup(ctx2, baSyou) {
+  return getItemIdsByBasyou(ctx2, baSyou).filter((cardId) => {
+    return getSetGroupRoot(ctx2, cardId) == cardId;
+  });
+}
+function getBattleGroupBattlePoint(ctx2, unitIds, unitIdsFromSnapshot, options) {
+  if (unitIdsFromSnapshot.length == 0) {
+    return 0;
+  }
+  const attackPower = unitIdsFromSnapshot.map((cardID, i2) => {
+    if (unitIds.includes(cardID) == false) {
+      warnCategory("getBattleGroupBattlePoint", `從快照的位置判斷機體還在不在原位, 若不在, 戰鬥力算0: ${cardID}`);
+      return 0;
+    }
+    const cs = getItemState(ctx2, cardID);
+    if (cs.destroyReason != null) {
+      return 0;
+    }
+    const card = getCard(ctx2, cardID);
+    if (card == null) {
+      throw new Error("card not found");
+    }
+    if (card.isRoll) {
+      return 0;
+    }
+    const [melee, range3, _] = getSetGroupBattlePoint(ctx2, cardID, { ges: options.ges });
+    if (i2 == 0) {
+      return melee;
+    }
+    return range3;
+  }).reduce((acc, c) => acc + c, 0);
+  const bonus = options.ges?.map((ge) => {
+    if (ge.title[0] == "このカードの部隊の部隊戦闘力を_＋３する") {
+      const times = unitIdsFromSnapshot.filter((unitId) => ge.cardIds.includes(unitId)).length;
+      return ge.title[1] * times;
+    }
+    return 0;
+  }).reduce((acc, c) => acc + c, 0) || 0;
+  const opponentBasyou = AbsoluteBaSyouFn.setOpponentPlayerID(getItemBaSyou(ctx2, unitIdsFromSnapshot[0]));
+  const opponentBattleGroup = getBattleGroup(ctx2, opponentBasyou);
+  const bonus2 = options.ges?.map((ge) => {
+    if (ge.title[0] == "このカードと交戦中の敵軍部隊の部隊戦闘力を_－３する") {
+      const times = opponentBattleGroup.filter((unitId) => ge.cardIds.includes(unitId)).length;
+      return ge.title[1] * times;
+    }
+    return 0;
+  }).reduce((acc, c) => acc + c, 0) || 0;
+  return attackPower + bonus + bonus2;
+}
+function isBattleGroupHasA(ctx2, a, cardID, options) {
+  const baSyou = getItemBaSyou(ctx2, cardID);
+  const battleGroup = getBattleGroup(ctx2, baSyou);
+  return battleGroup.some((bg) => isSetGroupHasA(ctx2, a, bg, { ges: options.ges }));
+}
+function isABattleGroup(ctx2, a, cardID, options) {
+  const baSyou = getItemBaSyou(ctx2, cardID);
+  const battleGroup = getBattleGroup(ctx2, baSyou);
+  return battleGroup.every((bg) => isSetGroupHasA(ctx2, a, bg, { ges: options.ges }));
+}
+
+// src/game/gameState/doEffect.ts
+var exports_doEffect = {};
+__export(exports_doEffect, {
+  setTipSelectionForUser: () => setTipSelectionForUser,
+  setEffectTips: () => setEffectTips,
+  setCardTipTextRefs: () => setCardTipTextRefs,
+  setCardTipStrBaSyouPairs: () => setCardTipStrBaSyouPairs,
+  getCardTipTextRefs: () => getCardTipTextRefs,
+  getCardTipStrings: () => getCardTipStrings,
+  getCardTipStrBaSyouPairs: () => getCardTipStrBaSyouPairs2,
+  getCardTipSelection: () => getCardTipSelection,
+  getCardTipBattleBonus: () => getCardTipBattleBonus,
+  doEffect: () => doEffect,
+  createPlayTextEffectFromEffect: () => createPlayTextEffectFromEffect,
+  createEffectTips: () => createEffectTips,
+  createCommandEffectTips: () => createCommandEffectTips,
+  clearTipSelectionForUser: () => clearTipSelectionForUser,
+  assertTipForUserSelection: () => assertTipForUserSelection,
+  assertEffectCanPass: () => assertEffectCanPass,
+  addImmediateEffectIfCanPayCost: () => addImmediateEffectIfCanPayCost
+});
+
+// src/game/define/CommandEffectTip.ts
+var exports_CommandEffectTip = {};
+__export(exports_CommandEffectTip, {
+  TipOrErrorsFn: () => TipOrErrorsFn,
+  CommandEffecTipFn: () => CommandEffecTipFn
+});
+var TipOrErrorsFn = {
+  filterNoError(cet) {
+    return cet.errors.length == 0;
+  },
+  filterError(cet) {
+    return cet.errors.length > 0;
+  },
+  filterPlayerId(effects, playerID) {
+    return (cet) => {
+      const effect = effects[cet.effectId];
+      if (effect == null) {
+        throw new Error;
+      }
+      const effectCreator = EffectFn.getPlayerID(effect);
+      const condition = effect.text.conditions?.[cet.conditionKey];
+      if (condition?.relatedPlayerSideKeyword == "敵軍") {
+        return effectCreator != playerID;
+      }
+      return effectCreator == playerID;
+    };
+  }
+};
+var CommandEffecTipFn = {
+  filterPlayerId(effects, playerID) {
+    return (cet) => {
+      const effect = effects[cet.effectId];
+      if (effect == null) {
+        throw new Error;
+      }
+      return EffectFn.getPlayerID(effect) == playerID;
+    };
+  },
+  not(fn) {
+    return (cet) => {
+      return !fn(cet);
+    };
+  },
+  filterNoError(cet) {
+    return cet.tipOrErrors.every((toes) => toes.errors.length == 0);
+  },
+  filterEffectDistinct(cet, index, self) {
+    return index === self.findIndex((c) => c.effectId === cet.effectId);
+  }
+};
+
+// src/game/gameState/createActionTitleFn.ts
+var exports_createActionTitleFn = {};
+__export(exports_createActionTitleFn, {
+  createPlayerIdFromRelated: () => createPlayerIdFromRelated2,
+  createActionTitleFn: () => createActionTitleFn,
+  createAbsoluteBaSyouFromBaSyou: () => createAbsoluteBaSyouFromBaSyou
+});
+
+// src/game/define/Coin.ts
+var exports_Coin = {};
+__export(exports_Coin, {
+  CoinFn: () => CoinFn
+});
+var CoinFn = {
+  battleBonus(playerId, v) {
+    return {
+      id: ToolFn.getUUID("coin"),
+      title: ["BattleBonus", v],
+      ownerID: playerId
+    };
+  }
+};
+
+// src/game/gameState/doItemMove.ts
+var exports_doItemMove = {};
+__export(exports_doItemMove, {
+  doItemMoveBasic: () => doItemMoveBasic,
+  doItemMove: () => doItemMove
+});
+
+// src/game/gameState/assertTargetMissingError.ts
+var exports_assertTargetMissingError = {};
+__export(exports_assertTargetMissingError, {
+  assertTargetNoLongerValid: () => assertTargetNoLongerValid,
+  assertTargetMissingError: () => assertTargetMissingError
+});
+function assertTargetMissingError(ctx2, effect, [itemId, originBasyou], options) {
+  assertStrBasyouMissing(ctx2, [itemId, originBasyou]);
+  assertTargetNoLongerValid(ctx2, effect, itemId, options);
+}
+function assertTargetNoLongerValid(ctx2, effect, cardId, options) {
+  const ges = options.ges || [];
+  if (ges.find((ge) => ge.title[0] == "敵軍効果の対象にならない" && ge.cardIds.includes(cardId))) {
+    if (EffectFn.getPlayerID(effect) != getItemController(ctx2, cardId)) {
+      throw new TargetMissingError("敵軍効果の対象にならない");
+    }
+  }
+  if (ges.find((ge) => ge.title[0] == "敵軍ユニットの効果の対象にならない" && ge.cardIds.includes(cardId))) {
+    if (EffectFn.getPlayerID(effect) != getItemController(ctx2, cardId) && getItemRuntimeCategory(ctx2, EffectFn.getCardID(effect)) == "ユニット") {
+      throw new TargetMissingError("敵軍効果の対象にならない");
+    }
+  }
+  if (ges.find((ge) => ge.title[0] == "このセットグループは、_緑のロールコストを持つ、敵軍カードの効果の対象にならない" && ge.title[1].some((color) => getCardRollCostColors(ctx2, cardId).includes(color)) && ge.cardIds.flatMap((cardId2) => getSetGroup(ctx2, cardId2)).includes(cardId))) {
+    throw new TargetMissingError("敵軍効果の対象にならない");
+  }
+}
+
+// src/game/gameState/doItemMove.ts
+function doItemMove(ctx2, effect, to, [itemId, from], options) {
+  assertTargetMissingError(ctx2, effect, [itemId, from], options);
+  return doItemMoveBasic(ctx2, to, [itemId, from], options);
+}
+function doItemMoveBasic(ctx2, to, [itemId, from], options) {
+  logCategory("doItemMove", "");
+  const ges = options.ges || [];
+  if (isCard(ctx2, itemId) || isChip(ctx2, itemId)) {
+    const oldTable = ctx2.table;
+    {
+      const redirectEs = ges.filter((ge) => ge.title[0] == "場、または手札から、自軍ジャンクヤードにカードが移る場合、ジャンクヤードに移る代わりにゲームから取り除かれる") || [];
+      if (redirectEs.length) {
+        const textControllers = redirectEs.flatMap((e) => e.cardIds).map((id) => getItemController(ctx2, id));
+        if (BaSyouKeywordFn.getBaAll().concat(["手札"]).includes(AbsoluteBaSyouFn.getBaSyouKeyword(from)) && AbsoluteBaSyouFn.getBaSyouKeyword(to) == "ジャンクヤード" && textControllers.includes(AbsoluteBaSyouFn.getPlayerID(to))) {
+          to = AbsoluteBaSyouFn.setBaSyouKeyword(to, "取り除かれたカード");
+        }
+      }
+    }
+    const itemIds = getSetGroupChildren(ctx2, itemId);
+    itemIds.forEach((itemId2) => {
+      const from2 = getItemBaSyou(ctx2, itemId2);
+      ctx2 = EventCenterFn.onItemMoveBefore(ctx2, from2, to, itemId2, options);
+      ctx2 = {
+        ...ctx2,
+        table: TableFns.moveCard(ctx2.table, AbsoluteBaSyouFn.toString(from2), AbsoluteBaSyouFn.toString(to), itemId2, { insertId: options?.insertId })
+      };
+      ctx2 = EventCenterFn.onItemMove(ctx2, from2, to, itemId2, options);
+    });
+    ctx2 = EventCenterFn.onTableChange(ctx2, oldTable, ctx2.table);
+    return ctx2;
+  }
+  if (isCoin(ctx2, itemId)) {
+    throw new Error(`coin can not move: ${itemId}`);
+  }
+  throw new Error(`moveItem unknown item: ${itemId}`);
+}
+
+// src/game/gameState/doItemSwap.ts
+var exports_doItemSwap = {};
+__export(exports_doItemSwap, {
+  doItemSwapBasic: () => doItemSwapBasic,
+  doItemSwap: () => doItemSwap
+});
+function doItemSwap(ctx2, effect, pair1, pair2, options) {
+  assertTargetMissingError(ctx2, effect, pair1, options);
+  assertTargetMissingError(ctx2, effect, pair2, options);
+  const [itemId1] = pair1;
+  const [itemId2] = pair2;
+  return doItemSwapBasic(ctx2, itemId1, itemId2, options);
+}
+function doItemSwapBasic(ctx2, itemId1, itemId2, options) {
+  if (isCard(ctx2, itemId1) && isCard(ctx2, itemId2)) {
+    const card1 = getCard(ctx2, itemId1);
+    const card2 = getCard(ctx2, itemId2);
+    ctx2 = setCard(ctx2, card1.id, { ...card1, protoID: card2.protoID });
+    ctx2 = setCard(ctx2, card2.id, { ...card2, protoID: card1.protoID });
+    ctx2 = mapItemStateValues(ctx2, (is) => {
+      let nextGE = is.globalEffects;
+      Object.keys(is.globalEffects).forEach((key) => {
+        const ge = is.globalEffects[key];
+        if (ge.title[0] == "AddTextRef" && ge.title[1].cardId == card1.id) {
+          nextGE = {
+            ...nextGE,
+            [key]: {
+              ...ge,
+              title: ["AddTextRef", { ...ge.title[1], cardId: card2.id }]
+            }
+          };
+        } else if (ge.title[0] == "AddTextRef" && ge.title[1].cardId == card2.id) {
+          nextGE = {
+            ...nextGE,
+            [key]: {
+              ...ge,
+              title: ["AddTextRef", { ...ge.title[1], cardId: card1.id }]
+            }
+          };
+        }
+      });
+      return {
+        ...is,
+        globalEffects: nextGE
+      };
+    });
+    return ctx2;
+  }
+  throw new Error(`swapCard not yet support`);
+}
+
+// src/game/gameState/doItemDamage.ts
+var exports_doItemDamage = {};
+__export(exports_doItemDamage, {
+  doItemDamageBasic: () => doItemDamageBasic,
+  doItemDamage: () => doItemDamage
+});
+
+// src/game/gameState/createDestroyEffect.ts
+function createDestroyEffect(ctx2, reason, cardId) {
+  const effect = {
+    id: `createDestroyEffect_${cardId}`,
+    reason: ["Destroy", reason.playerID, cardId, reason],
+    text: {
+      id: `createDestroyEffect_text_${cardId}`,
+      title: [],
+      logicTreeActions: [
+        {
+          actions: [
+            {
+              title: function _(ctx3, effect2, { DefineFn, GameStateFn, Options }) {
+                const cardId2 = DefineFn.EffectFn.getCardID(effect2);
+                const cardOwner = GameStateFn.getItemOwner(ctx3, cardId2);
+                ctx3 = GameStateFn.doItemMoveBasic(ctx3, DefineFn.AbsoluteBaSyouFn.of(cardOwner, "ジャンクヤード"), [cardId2, GameStateFn.getItemBaSyou(ctx3, cardId2)], Options);
+                ctx3 = GameStateFn.mapItemState(ctx3, cardId2, (is) => {
+                  return {
+                    ...is,
+                    damage: 0
+                  };
+                });
+                return ctx3;
+              }.toString()
+            }
+          ]
+        }
+      ]
+    }
+  };
+  return effect;
+}
+
+// src/game/gameState/doItemDamage.ts
+function doItemDamage(ctx2, effect, damage, target, options) {
+  assertTargetMissingError(ctx2, effect, target, options);
+  return doItemDamageBasic(ctx2, effect, damage, target[0], options);
+}
+function doItemDamageBasic(ctx2, effect, damage, targetItemId, options) {
+  const effectController = EffectFn.getPlayerID(effect);
+  {
+    const adj = (options.ges || []).map((ge) => {
+      if (ge.title[0] == "このカードが受ける全ての_通常ダメージは、_２減殺される" && ge.title[1] == "通常ダメージ") {
+        if (ge.cardIds.includes(targetItemId)) {
+          return -ge.title[2];
+        }
+      }
+      return 0;
+    }).reduce((a, b) => a + b, 0);
+    damage += adj;
+    damage = Math.max(0, damage);
+  }
+  if (isCard(ctx2, targetItemId) || isChip(ctx2, targetItemId)) {
+    let cardState = getItemState(ctx2, targetItemId);
+    cardState = ItemStateFn.damage(cardState, damage);
+    ctx2 = setItemState(ctx2, targetItemId, cardState);
+    ctx2 = doTriggerEvent(ctx2, { title: ["ユニットがダメージを受けた場合"], cardIds: [targetItemId], effect }, options);
+    const [_, _2, hp] = getSetGroupBattlePoint(ctx2, targetItemId, options);
+    if (hp <= cardState.damage) {
+      const effect2 = createDestroyEffect(ctx2, { id: "通常ダメージ", playerID: effectController }, targetItemId);
+      ctx2 = addDestroyEffect(ctx2, effect2);
+    }
+    return ctx2;
+  }
+  throw new Error(`doItemDamage unknown item: ${targetItemId}`);
+}
+
+// src/game/gameState/doItemSetRollState.ts
+var exports_doItemSetRollState = {};
+__export(exports_doItemSetRollState, {
+  doItemSetRollStateBasic: () => doItemSetRollStateBasic,
+  doItemSetRollState: () => doItemSetRollState
+});
+
+// src/game/define/Card.ts
+var exports_Card = {};
+__export(exports_Card, {
+  CardFn: () => CardFn
+});
+var CardFn = {
+  setIsRoll(ctx2, isRoll) {
+    return {
+      ...ctx2,
+      isRoll
+    };
+  }
+};
+
+// src/game/define/Chip.ts
+var ChipFn = {
+  setIsRoll(ctx2, isRoll) {
+    return {
+      ...ctx2,
+      isRoll
+    };
+  }
+};
+
+// src/game/gameState/doItemSetRollState.ts
+function doItemSetRollState(ctx2, effect, isRoll, [itemId, originBasyou], options) {
+  assertTargetMissingError(ctx2, effect, [itemId, originBasyou], options);
+  const itemIds = getSetGroup(ctx2, itemId);
+  ctx2 = itemIds.reduce((ctx3, willRollItemId) => {
+    if (isCard(ctx3, willRollItemId)) {
+      let willRollItem = getCard(ctx3, willRollItemId);
+      if (willRollItem.id == itemId && !!willRollItem.isRoll == isRoll) {
+        throw new TargetMissingError(`card already isRoll: ${willRollItem.isRoll}: ${willRollItem.id}`);
+      }
+      return ctx3;
+    }
+    if (isChip(ctx3, willRollItemId)) {
+      let willRollItem = getChip(ctx3, willRollItemId);
+      if (willRollItem.id == itemId && !!willRollItem.isRoll == isRoll) {
+        throw new TargetMissingError(`chip already isRoll: ${willRollItem.isRoll}: ${willRollItem.id}`);
+      }
+      return ctx3;
+    }
+    return ctx3;
+  }, ctx2);
+  return doItemSetRollStateBasic(ctx2, isRoll, itemId, options);
+}
+function doItemSetRollStateBasic(ctx2, isRoll, itemId, options) {
+  const itemIds = getSetGroup(ctx2, itemId);
+  ctx2 = itemIds.reduce((ctx3, willRollItemId) => {
+    if (isCard(ctx3, willRollItemId)) {
+      let willRollItem = getCard(ctx3, willRollItemId);
+      logCategory("doItemSetRollState", "willRollItemId", itemId, willRollItemId, isRoll, !!willRollItem.isRoll, isRoll == willRollItem.isRoll);
+      willRollItem = CardFn.setIsRoll(willRollItem, isRoll);
+      ctx3 = setCard(ctx3, willRollItemId, willRollItem);
+      return ctx3;
+    }
+    if (isChip(ctx3, willRollItemId)) {
+      let willRollItem = getChip(ctx3, willRollItemId);
+      willRollItem = ChipFn.setIsRoll(willRollItem, isRoll);
+      ctx3 = setChip(ctx3, willRollItemId, willRollItem);
+      return ctx3;
+    }
+    return ctx3;
+  }, ctx2);
+  return ctx2;
+}
+
+// src/game/gameState/doCountryDamage.ts
+var exports_doCountryDamage = {};
+__export(exports_doCountryDamage, {
+  doCountryDamage: () => doCountryDamage
+});
+function doCountryDamage(ctx2, effect, playerId, damage, options) {
+  if (damage == 0) {
+    return ctx2;
+  }
+  if (damage < 0) {
+    const from2 = AbsoluteBaSyouFn.of(playerId, "捨て山");
+    const pairs2 = getItemIdsByBasyou(ctx2, from2).map((itemId) => {
+      return [itemId, from2];
+    }).slice(0, -damage);
+    const to2 = AbsoluteBaSyouFn.of(playerId, "本国");
+    for (const pair2 of pairs2) {
+      ctx2 = doItemMoveBasic(ctx2, to2, pair2, { insertId: 0 });
+    }
+    ctx2 = EventCenterFn.onCountryHeal(ctx2, playerId, -damage);
+    return ctx2;
+  }
+  const from = AbsoluteBaSyouFn.of(playerId, "本国");
+  const pairs = getItemIdsByBasyou(ctx2, from).map((itemId) => {
+    return [itemId, from];
+  }).slice(0, damage);
+  const to = AbsoluteBaSyouFn.of(playerId, "捨て山");
+  for (const pair2 of pairs) {
+    ctx2 = doItemMoveBasic(ctx2, to, pair2, { insertId: 0 });
+  }
+  ctx2 = doTriggerEvent(ctx2, {
+    title: ["自軍本国に戦闘ダメージが与えられた場合"],
+    playerId
+  }, { ges: options.ges });
+  ctx2 = EventCenterFn.onCountryDamage(ctx2, playerId, damage);
+  return ctx2;
+}
+
+// src/game/gameState/doItemSetDestroy.ts
+var exports_doItemSetDestroy = {};
+__export(exports_doItemSetDestroy, {
+  doItemSetDestroyBasic: () => doItemSetDestroyBasic,
+  doItemSetDestroy: () => doItemSetDestroy,
+  createMinusDestroyEffectAndPush: () => createMinusDestroyEffectAndPush
+});
+function doItemSetDestroy(ctx2, effect, reason, [itemId, from], options) {
+  assertTargetMissingError(ctx2, effect, [itemId, from], options);
+  if (reason) {
+    if (getItemState(ctx2, itemId).destroyReason) {
+      throw new TargetMissingError(`already destroy: ${itemId}`, {});
+    }
+  } else {
+    if (getItemState(ctx2, itemId).destroyReason == null) {
+      throw new TargetMissingError(`not destroy: ${itemId}`, {});
+    }
+    if (getItemState(ctx2, itemId).destroyReason?.id == "マイナスの戦闘修正") {
+      throw new Error(`マイナスの戦闘修正的破壞不能被選到`);
+    }
+  }
+  return doItemSetDestroyBasic(ctx2, reason, itemId, options);
+}
+function doItemSetDestroyBasic(ctx2, reason, itemId, options) {
+  if (isCard(ctx2, itemId) || isChip(ctx2, itemId)) {
+    getSetGroupChildren(ctx2, itemId).forEach((setGroupId) => {
+      if (reason) {
+        if (getItemState(ctx2, setGroupId).destroyReason) {
+          return;
+        }
+        ctx2 = mapItemState(ctx2, setGroupId, (is) => {
+          return { ...is, destroyReason: reason };
+        });
+        ctx2 = addDestroyEffect(ctx2, createDestroyEffect(ctx2, reason, setGroupId));
+        if (setGroupId != itemId) {
+          ctx2 = doTriggerEvent(ctx2, { title: ["このカードのセットグループのユニットが破壊された場合"], cardIds: [setGroupId] }, options);
+        }
+      } else {
+        if (getItemState(ctx2, setGroupId).destroyReason?.id == "マイナスの戦闘修正") {
+          return;
+        }
+        ctx2 = mapItemState(ctx2, setGroupId, (is) => {
+          return { ...is, destroyReason: null };
+        });
+        const isDestroyEffect = getCutInDestroyEffects(ctx2).find((e) => EffectFn.getCardID(e) == setGroupId);
+        if (isDestroyEffect) {
+          ctx2 = removeEffect(ctx2, isDestroyEffect.id);
+        }
+      }
+    });
+    return ctx2;
+  }
+  if (isCoin(ctx2, itemId)) {
+    throw new Error(`coin can not move: ${itemId}`);
+  }
+  throw new Error(`moveItem unknown item: ${itemId}`);
+}
+function createMinusDestroyEffectAndPush(ctx2, options) {
+  AbsoluteBaSyouFn.getBaAll().flatMap((basyou) => getItemIdsByBasyou(ctx2, basyou)).forEach((cardId) => {
+    if (EffectFn.isFakeCardID(cardId)) {
+      return ctx2;
+    }
+    const cs = getItemState(ctx2, cardId);
+    if (getSetGroupRoot(ctx2, cardId) != cardId) {
+      return;
+    }
+    const runtimeCate = getItemRuntimeCategory(ctx2, cardId);
+    if (runtimeCate == "ACE" || runtimeCate == "ユニット") {} else {
+      return;
+    }
+    const ges = options.ges || [];
+    const [_, _2, hp] = getSetGroupBattlePoint(ctx2, cardId, { ges });
+    if (hp <= 0) {
+      const destroyReason = {
+        id: "マイナスの戦闘修正",
+        playerID: getItemController(ctx2, cs.id)
+      };
+      const effect = createDestroyEffect(ctx2, destroyReason, cs.id);
+      ctx2 = addDestroyEffect(ctx2, effect);
+      return ctx2;
+    }
+    return ctx2;
+  });
+  return ctx2;
+}
+
+// src/game/gameState/doItemSetGlobalEffectsUntilEndOfTurn.ts
+var exports_doItemSetGlobalEffectsUntilEndOfTurn = {};
+__export(exports_doItemSetGlobalEffectsUntilEndOfTurn, {
+  doItemSetGlobalEffectsUntilEndOfTurnBasic: () => doItemSetGlobalEffectsUntilEndOfTurnBasic,
+  doItemSetGlobalEffectsUntilEndOfTurn: () => doItemSetGlobalEffectsUntilEndOfTurn,
+  doItemSetGlobalEffectsUntilEndOfStepBasic: () => doItemSetGlobalEffectsUntilEndOfStepBasic,
+  doItemSetGlobalEffectsUntilEndOfStep: () => doItemSetGlobalEffectsUntilEndOfStep
+});
+function doItemSetGlobalEffectsUntilEndOfTurn(ctx2, effect, egs, [itemId, originBasyou], options) {
+  assertTargetMissingError(ctx2, effect, [itemId, originBasyou], options);
+  return doItemSetGlobalEffectsUntilEndOfTurnBasic(ctx2, egs, itemId);
+}
+function doItemSetGlobalEffectsUntilEndOfTurnBasic(ctx2, egs, itemId) {
+  if (isCard(ctx2, itemId) || isChip(ctx2, itemId)) {
+    let cs = getItemState(ctx2, itemId);
+    for (const eg of egs) {
+      cs = ItemStateFn.setGlobalEffect(cs, null, eg, { isRemoveOnTurnEnd: true });
+    }
+    ctx2 = setItemState(ctx2, itemId, cs);
+    return ctx2;
+  }
+  if (isCoin(ctx2, itemId)) {
+    throw new Error(`coin can not doItemSetGlobalEffectsUntilEndOfTurn: ${itemId}`);
+  }
+  throw new Error(`doItemSetGlobalEffectsUntilEndOfTurn unknown item: ${itemId}`);
+}
+function doItemSetGlobalEffectsUntilEndOfStep(ctx2, effect, egs, [itemId, originBasyou], options) {
+  assertTargetMissingError(ctx2, effect, [itemId, originBasyou], options);
+  return doItemSetGlobalEffectsUntilEndOfStepBasic(ctx2, egs, itemId);
+}
+function doItemSetGlobalEffectsUntilEndOfStepBasic(ctx2, egs, itemId) {
+  if (isCard(ctx2, itemId) || isChip(ctx2, itemId)) {
+    let cs = getItemState(ctx2, itemId);
+    for (const eg of egs) {
+      cs = ItemStateFn.setGlobalEffect(cs, null, eg, { isRemoveOnStepEnd: true });
+    }
+    ctx2 = setItemState(ctx2, itemId, cs);
+    return ctx2;
+  }
+  if (isCoin(ctx2, itemId)) {
+    throw new Error(`coin can not doItemSetGlobalEffectsUntilEndOfStep: ${itemId}`);
+  }
+  throw new Error(`doItemSetGlobalEffectsUntilEndOfStep unknown item: ${itemId}`);
+}
+
+// src/game/gameState/doPlayerDrawCard.ts
+var exports_doPlayerDrawCard = {};
+__export(exports_doPlayerDrawCard, {
+  doPlayerDrawCard: () => doPlayerDrawCard
+});
+function doPlayerDrawCard(ctx2, effect, count, playerId, options) {
+  const fromBasyou = AbsoluteBaSyouFn.of(playerId, "本国");
+  const itemIds = getItemIdsByBasyou(ctx2, fromBasyou);
+  if (itemIds.length == 0) {
+    throw new TargetMissingError(`本國的牌不夠抽, 你想抽${count}張, 但剩下${itemIds.length}張`);
+  }
+  const pairs = itemIds.slice(0, count).map((cardId) => {
+    return [cardId, fromBasyou];
+  });
+  for (const pair2 of pairs) {
+    ctx2 = doItemMove(ctx2, effect, AbsoluteBaSyouFn.of(playerId, "手札"), pair2, options);
+  }
+  return ctx2;
+}
+
+// src/game/gameState/PlayerStateComponent.ts
+var exports_PlayerStateComponent = {};
+__export(exports_PlayerStateComponent, {
+  setPlayerState: () => setPlayerState,
+  mapPlayerState: () => mapPlayerState,
+  getPlayerState: () => getPlayerState
+});
+function getPlayerState(ctx2, playerId) {
+  return ctx2.playerStates[playerId] || { ...PlayerStateFn.identity(), id: playerId };
+}
+function setPlayerState(ctx2, playerId, cardState) {
+  const old = getPlayerState(ctx2, playerId);
+  ctx2 = { ...ctx2, playerStates: assoc_default(playerId, cardState, ctx2.playerStates) };
+  ctx2 = EventCenterFn.onPlayerStateChange(ctx2, old, getPlayerState(ctx2, playerId));
+  return ctx2;
+}
+function mapPlayerState(ctx2, playerId, fn) {
+  const old = getPlayerState(ctx2, playerId);
+  const curr = fn(old);
+  ctx2 = setPlayerState(ctx2, playerId, curr);
+  return ctx2;
+}
+
+// src/game/gameState/Entity.ts
+var exports_Entity = {};
+__export(exports_Entity, {
+  createTipByEntitySearch: () => createTipByEntitySearch,
+  createEntityIterator: () => createEntityIterator,
+  EntityFn: () => EntityFn
+});
+function createEntityIterator(ctx2) {
+  const destroyEffects = getCutInDestroyEffects(ctx2);
+  const rets = [];
+  [PlayerA, PlayerB].map((playerId) => {
+    BaSyouKeywordFn.getAll().map((basyouKw) => {
+      const basyou = AbsoluteBaSyouFn.of(playerId, basyouKw);
+      getItemIdsByBasyou(ctx2, basyou).map((itemId) => {
+        const item = getItem(ctx2, itemId);
+        const destroyEffect = destroyEffects.find((e) => EffectFn.getCardID(e) == itemId);
+        const entity = {
+          itemController: playerId,
+          itemId,
+          itemState: getItemState(ctx2, itemId),
+          item,
+          isCard: isCard(ctx2, item.id),
+          isCoin: false,
+          isChip: isChip(ctx2, item.id),
+          baSyouKeyword: basyouKw,
+          destroyReason: destroyEffect?.reason[0] == "Destroy" ? destroyEffect.reason[3] : null,
+          prototype: getItemPrototype(ctx2, itemId)
+        };
+        rets.push(entity);
+      });
+    });
+  });
+  return rets;
+}
+function createTipByEntitySearch(ctx2, effect, searchOptions, options) {
+  const cardId = EffectFn.getCardID(effect);
+  const prototype = getItemPrototype(ctx2, cardId);
+  let entityList = createEntityIterator(ctx2);
+  {
+    const opponentEffectNotTargetIds = options?.ges?.filter((ge) => ge.title[0] == "敵軍効果の対象にならない").flatMap((ge) => ge.cardIds.includes(cardId)) || [];
+    if (opponentEffectNotTargetIds.length) {
+      const effectController = EffectFn.getPlayerID(effect);
+      entityList = entityList.filter((entity) => {
+        return getItemController(ctx2, entity.itemId) == effectController;
+      });
+    }
+  }
+  {
+    if (getItemRuntimeCategory(ctx2, cardId) == "ユニット") {
+      const opponentUnitEffectNotTargetIds = options?.ges?.filter((ge) => ge.title[0] == "敵軍ユニットの効果の対象にならない").flatMap((ge) => ge.cardIds.includes(cardId)) || [];
+      if (opponentUnitEffectNotTargetIds.length) {
+        const effectController = EffectFn.getPlayerID(effect);
+        entityList = entityList.filter((entity) => {
+          return getItemController(ctx2, entity.itemId) == effectController;
+        });
+      }
+    }
+  }
+  if (searchOptions.isBattle != null) {
+    entityList = entityList.filter(EntityFn.filterIsBattle(ctx2, null, searchOptions.isBattle));
+  }
+  if (searchOptions.isBattleWithThis != null) {
+    entityList = entityList.filter(EntityFn.filterIsBattle(ctx2, cardId, searchOptions.isBattleWithThis));
+  }
+  const cheatCardIds = [];
+  if (searchOptions.isThisCard != null) {
+    entityList = entityList.filter((entity) => entity.itemId == cardId == searchOptions.isThisCard);
+  }
+  if (searchOptions.isBattleGroupFirst) {
+    const basyou = getItemBaSyou(ctx2, cardId);
+    if (basyou.value[1] == "戦闘エリア1" || basyou.value[1] == "戦闘エリア2") {
+      const ids = lift_default(AbsoluteBaSyouFn.of)(PlayerIDFn.getAll(), ["戦闘エリア1", "戦闘エリア2"]).flatMap((basyou2) => {
+        return getItemIdsByBasyou(ctx2, basyou2).slice(0, 1);
+      });
+      entityList = entityList.filter((entity) => ids.includes(entity.itemId));
+    } else {
+      entityList = [];
+    }
+  }
+  if (searchOptions.isThisSetGroup != null) {
+    const setGroupIds = getSetGroup(ctx2, cardId);
+    entityList = entityList.filter((entity) => setGroupIds.includes(entity.itemId) == searchOptions.isThisSetGroup);
+  }
+  if (searchOptions.isThisBattleGroup != null) {
+    const basyou = getItemBaSyou(ctx2, cardId);
+    if (basyou.value[1] == "戦闘エリア1" || basyou.value[1] == "戦闘エリア2") {
+      const battleGroupIds = getBattleGroup(ctx2, getItemBaSyou(ctx2, cardId));
+      entityList = entityList.filter((entity) => battleGroupIds.includes(entity.itemId) == searchOptions.isThisBattleGroup);
+    } else {
+      entityList = [];
+    }
+  }
+  if (searchOptions.hasSelfCardId != null) {
+    const absoluteBasyou = getItemBaSyou(ctx2, cardId);
+    entityList = entityList.filter((entity) => (entity.itemController == absoluteBasyou.value[0] && entity.baSyouKeyword == absoluteBasyou.value[1]) == searchOptions.hasSelfCardId);
+  }
+  if (searchOptions.see) {
+    const [basyou, min, max] = searchOptions.see;
+    const absoluteBasyou = createAbsoluteBaSyouFromBaSyou(ctx2, cardId, basyou);
+    entityList = entityList.filter(EntityFn.filterController(AbsoluteBaSyouFn.getPlayerID(absoluteBasyou)));
+    entityList = entityList.filter(EntityFn.filterAtBaSyous([AbsoluteBaSyouFn.getBaSyouKeyword(absoluteBasyou)]));
+    if (entityList.length < min) {
+      throw new TipError(`must at least ${min} for see`);
+    }
+    cheatCardIds.push(...entityList.map((e) => e.itemId).slice(0, max));
+    entityList = entityList.slice(0, max);
+  }
+  if (searchOptions.isCanSetCharacter != null) {
+    entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx2, true)).filter(EntityFn.filterCanSetCharacter(ctx2));
+  } else if (searchOptions.isSetGroupRoot != null) {
+    entityList = entityList.filter((entity) => entity.baSyouKeyword != "Gゾーン");
+    entityList = entityList.filter(EntityFn.filterIsSetGroupRoot(ctx2, searchOptions.isSetGroupRoot));
+  }
+  if (searchOptions.compareBattlePoint) {
+    const [kw, op, value] = searchOptions.compareBattlePoint;
+    entityList = entityList.filter((entity) => {
+      switch (kw) {
+        case "攻撃力": {
+          const [atk, range3, hp] = getSetGroupBattlePoint(ctx2, entity.itemId, { ges: options?.ges });
+          switch (op) {
+            case "<=":
+              return atk <= value;
+            case ">=":
+              return atk >= value;
+            case "==":
+              return atk == value;
+          }
+        }
+        case "防御力": {
+          const [atk, range3, hp] = getSetGroupBattlePoint(ctx2, entity.itemId, { ges: options?.ges });
+          switch (op) {
+            case "<=":
+              return hp <= value;
+            case ">=":
+              return hp >= value;
+            case "==":
+              return hp == value;
+          }
+        }
+        case "合計国力": {
+          const totalCost = getCardTotalCostLength(ctx2, entity.itemId, { ges: options?.ges });
+          switch (op) {
+            case "<=":
+              return totalCost <= value;
+            case ">=":
+              return totalCost >= value;
+            case "==":
+              return totalCost == value;
+          }
+        }
+      }
+      return false;
+    });
+  }
+  if (searchOptions.isMaster != null) {
+    entityList = entityList.filter((entity) => getItemRuntimeCategory(ctx2, entity.itemId) == "キャラクター" && isCardMaster(ctx2, getSetGroupRoot(ctx2, entity.itemId), entity.itemId) == searchOptions.isMaster);
+  }
+  if (searchOptions.title) {
+    entityList = entityList.filter((entity) => searchOptions.title?.includes(entity.prototype?.title || ""));
+  }
+  if (searchOptions.at?.length) {
+    entityList = entityList.filter(EntityFn.filterAtBaSyous(searchOptions.at));
+  }
+  if (searchOptions.atBa != null) {
+    entityList = entityList.filter(EntityFn.filterAtBaSyous(BaSyouKeywordFn.getBaAll()));
+  }
+  if (searchOptions.side) {
+    const cardController = getItemController(ctx2, cardId);
+    const playerId = PlayerIDFn.fromRelatedPlayerSideKeyword(searchOptions.side || "自軍", cardController);
+    entityList = entityList.filter(EntityFn.filterController(playerId));
+  }
+  if (searchOptions.is?.length) {
+    entityList = entityList.filter(EntityFn.filterRuntimeCategory(ctx2, searchOptions.is));
+  }
+  if (searchOptions.cardCategory?.length) {
+    entityList = entityList.filter(EntityFn.filterCategory(ctx2, searchOptions.cardCategory));
+  }
+  if (searchOptions.color?.length) {
+    entityList = entityList.filter(EntityFn.filterItemColor(ctx2, searchOptions.color));
+  }
+  if (searchOptions.hasSetCard != null) {
+    entityList = entityList.filter(EntityFn.filterHasSetCard(ctx2, searchOptions.hasSetCard));
+  }
+  if (searchOptions.hasTitle) {
+    if (searchOptions.hasTitle.length == 0) {
+      searchOptions.hasTitle.push(prototype.title || "unknown");
+    }
+    entityList = entityList.filter((entity) => searchOptions.hasTitle?.includes(getCardTitle(ctx2, entity.itemId) || ""));
+  }
+  if (searchOptions.isDestroy != null) {
+    entityList = entityList.filter(EntityFn.filterIsDestroy(searchOptions.isDestroy));
+  }
+  if (searchOptions.hasDestroyId != null) {
+    entityList = entityList.filter((entity) => entity.destroyReason && searchOptions.hasDestroyId?.includes(entity.destroyReason.id));
+  }
+  if (searchOptions.isRoll != null) {
+    entityList = entityList.filter((entity) => entity.isCard && !!getCard(ctx2, entity.itemId).isRoll == searchOptions.isRoll || entity.isChip && !!getChip(ctx2, entity.itemId).isRoll == searchOptions.isRoll);
+  }
+  if (searchOptions.hasSpecialEffect != null) {
+    entityList = entityList.filter(EntityFn.filterHasSpecialEffect(ctx2, searchOptions.hasSpecialEffect, options));
+  }
+  if (searchOptions.hasChar != null) {
+    entityList = entityList.filter(EntityFn.filterHasChar(ctx2, searchOptions.hasChar));
+  }
+  if (searchOptions.hasOriginChar != null) {
+    entityList = entityList.filter((entity) => searchOptions.hasOriginChar?.some((char) => (entity.prototype?.characteristic || "").indexOf(char) != -1));
+  }
+  if (searchOptions.isSetGroupHasChar != null) {
+    entityList = entityList.filter((entity) => getSetGroup(ctx2, entity.itemId).some((itemId) => (searchOptions.isSetGroupHasChar || []).some((v) => getItemCharacteristic(ctx2, itemId).indexOf(v) != -1)));
+  }
+  if (searchOptions.hasGSign) {
+    if (searchOptions.hasGSign.length == 0) {
+      searchOptions.hasGSign.push(getItemGSign(ctx2, cardId));
+    }
+    entityList = entityList.filter((entity) => isCardLike(ctx2)(entity.itemId) && searchOptions.hasGSign?.some((v) => GSignFn.eq(v, getItemGSign(ctx2, entity.itemId))));
+  }
+  if (searchOptions.hasGSignProperty) {
+    if (searchOptions.hasGSignProperty.length == 0) {
+      searchOptions.hasGSignProperty.push(getCardGSignProperty(ctx2, cardId));
+    }
+    entityList = entityList.filter((entity) => isCardLike(ctx2)(entity.itemId) && searchOptions.hasGSignProperty?.includes(getCardGSignProperty(ctx2, entity.itemId)));
+  }
+  if (searchOptions.hasGSignColor) {
+    if (searchOptions.hasGSignColor.length == 0) {
+      searchOptions.hasGSignColor.push(...getItemGSign(ctx2, cardId)[0]);
+    }
+    entityList = entityList.filter((entity) => isCardLike(ctx2)(entity.itemId) && searchOptions.hasGSignColor?.some((color) => getItemGSign(ctx2, entity.itemId)[0].includes(color)));
+  }
+  if (searchOptions.hasDamage) {
+    entityList = entityList.filter((entity) => entity.itemState.damage > 0 && entity.itemState.destroyReason == null);
+  }
+  if (searchOptions.hasRollCostColor) {
+    entityList = entityList.filter((entity) => {
+      if (entity.prototype?.rollCost == "X") {
+        return searchOptions.hasRollCostColor?.some((color) => color == entity.prototype?.color);
+      }
+      return searchOptions.hasRollCostColor?.some((color) => color == entity.prototype?.color);
+    });
+  }
+  if (searchOptions.exceptCardIds != null) {
+    if (searchOptions.exceptCardIds.length == 0) {
+      searchOptions.exceptCardIds.push(cardId);
+    }
+    entityList = entityList.filter((entity) => searchOptions.exceptCardIds?.includes(entity.itemId) != true);
+  }
+  entityList = entityList.filter(EntityFn.filterDistinct);
+  const pairs = entityList.map((entity) => {
+    if (entity.baSyouKeyword == null) {
+      throw new Error;
+    }
+    return [entity.itemId, AbsoluteBaSyouFn.of(entity.itemController, entity.baSyouKeyword)];
+  });
+  let tipPairs = pairs;
+  if (searchOptions.asMuchAsPossible) {
+    if (searchOptions.max == null) {
+      throw new Error;
+    }
+    tipPairs = tipPairs.slice(0, Math.min(pairs.length, searchOptions.max));
+  } else if (searchOptions.max != null) {
+    tipPairs = tipPairs.slice(0, searchOptions.max);
+  } else if (searchOptions.min != null) {
+    tipPairs = tipPairs.slice(0, searchOptions.min);
+  } else if (searchOptions.count != null) {
+    tipPairs = tipPairs.slice(0, searchOptions.count);
+  }
+  if (searchOptions.isRepeat) {
+    if (searchOptions.count == null) {
+      throw new Error;
+    }
+    if (tipPairs.length > 0) {
+      while (tipPairs.length < searchOptions.count) {
+        tipPairs = [...tipPairs, ...tipPairs];
+      }
+      tipPairs = tipPairs.slice(0, searchOptions.count);
+    }
+  }
+  const tip = {
+    title: ["カード", pairs, tipPairs],
+    isRepeat: searchOptions.isRepeat
+  };
+  if (searchOptions.min != null) {
+    tip.min = searchOptions.min;
+  }
+  if (searchOptions.max != null) {
+    tip.max = searchOptions.max;
+  }
+  if (searchOptions.count != null) {
+    tip.count = searchOptions.count;
+  }
+  if (cheatCardIds.length) {
+    tip.cheatCardIds = cheatCardIds;
+  }
+  if (searchOptions.asMuchAsPossible) {
+    if (searchOptions.max == null) {
+      throw new Error;
+    }
+    tip.min = Math.min(pairs.length, searchOptions.max);
+  }
+  return tip;
+}
+var EntityFn = {
+  filterAtBaSyous(kws) {
+    return (entity) => {
+      if (entity.baSyouKeyword == null) {
+        return false;
+      }
+      return kws.includes(entity.baSyouKeyword);
+    };
+  },
+  filterAtBattleArea(v) {
+    return (entity) => {
+      return (entity.baSyouKeyword == "戦闘エリア1" || entity.baSyouKeyword == "戦闘エリア2") == v;
+    };
+  },
+  filterAtBa(v) {
+    return (entity) => {
+      if (entity.baSyouKeyword == null) {
+        return false;
+      }
+      return BaSyouKeywordFn.isBa(entity.baSyouKeyword) == v;
+    };
+  },
+  filterController(playerId) {
+    return (entity) => {
+      return entity.itemController == playerId;
+    };
+  },
+  filterIsDestroy(v) {
+    return (entity) => {
+      return (entity.destroyReason != null && entity.destroyReason.id != "マイナスの戦闘修正") == v;
+    };
+  },
+  filterIsBattle(ctx2, targetId, v) {
+    return (entity) => {
+      if (isCardLike(ctx2)(entity.itemId) == false) {
+        return false;
+      }
+      return isBattle(ctx2, entity.itemId, targetId) == v;
+    };
+  },
+  filterRuntimeCategory(ctx2, category) {
+    return (entity) => {
+      if (isCardLike(ctx2)(entity.itemId) == false) {
+        return false;
+      }
+      return category.includes(getItemRuntimeCategory(ctx2, entity.itemId));
+    };
+  },
+  filterCategory(ctx2, category) {
+    return (entity) => {
+      if (isCardLike(ctx2)(entity.itemId) == false) {
+        return false;
+      }
+      const targetCate = getItemPrototype(ctx2, entity.itemId).category;
+      if (targetCate == null) {
+        return false;
+      }
+      return category.includes(targetCate);
+    };
+  },
+  filterItemController(ctx2, playerId) {
+    return (entity) => {
+      return getItemController(ctx2, entity.itemId) == playerId;
+    };
+  },
+  filterItemColor(ctx2, color) {
+    return (entity) => {
+      if (isCardLike(ctx2)(entity.itemId) == false) {
+        return false;
+      }
+      return color.includes(getCardColor(ctx2, entity.itemId));
+    };
+  },
+  filterIsSetGroupRoot(ctx2, v) {
+    return (entity) => {
+      if (isCardLike(ctx2)(entity.itemId) == false) {
+        return false;
+      }
+      return getSetGroupRoot(ctx2, entity.itemId) == entity.itemId == v;
+    };
+  },
+  filterCanSetCharacter(ctx2) {
+    return (entity) => {
+      if (isCardLike(ctx2)(entity.itemId) == false) {
+        return false;
+      }
+      const charLen = getSetGroup(ctx2, entity.itemId).filter((itemId) => getItemRuntimeCategory(ctx2, itemId) == "キャラクター").length;
+      return charLen == 0;
+    };
+  },
+  filterHasSetCard(ctx2, v) {
+    return (entity) => {
+      if (isCardLike(ctx2)(entity.itemId) == false) {
+        return false;
+      }
+      return getSetGroup(ctx2, entity.itemId).length > 1 == v;
+    };
+  },
+  filterHasSpecialEffect(ctx2, vs, options) {
+    return (entity) => {
+      if (isCardLike(ctx2)(entity.itemId) == false) {
+        return false;
+      }
+      return vs.some((v) => isSetGroupHasA(ctx2, v, entity.itemId, options));
+    };
+  },
+  filterHasChar(ctx2, vs) {
+    return (entity) => {
+      if (isCardLike(ctx2)(entity.itemId) == false) {
+        return false;
+      }
+      return vs.some((v) => getItemCharacteristic(ctx2, entity.itemId).indexOf(v) != -1);
+    };
+  },
+  filterDistinct(cet, index, self) {
+    return index === self.findIndex((c) => c.itemId === cet.itemId);
+  }
+};
+
+// src/game/gameState/player.ts
+var exports_player = {};
+__export(exports_player, {
+  isPlayerHasBattleGroup: () => isPlayerHasBattleGroup,
+  getPlayerUnitIds: () => getPlayerUnitIds,
+  getPlayerUnitCanGoSpaceIds: () => getPlayerUnitCanGoSpaceIds,
+  getPlayerUnitCanGoEarthIds: () => getPlayerUnitCanGoEarthIds,
+  getPlayerSuTeYaMaIds: () => getPlayerSuTeYaMaIds,
+  getPlayerOperationIds: () => getPlayerOperationIds,
+  getPlayerJunkyardIds: () => getPlayerJunkyardIds,
+  getPlayerHungerIds: () => getPlayerHungerIds,
+  getPlayerHandIds: () => getPlayerHandIds,
+  getPlayerGIds: () => getPlayerGIds,
+  getPlayerDestroyIds: () => getPlayerDestroyIds,
+  getPlayerCountrytIds: () => getPlayerCountrytIds,
+  getPlayerCharacterIds: () => getPlayerCharacterIds,
+  doRuleBattleDamage: () => doRuleBattleDamage,
+  doPlayerAttack: () => doPlayerAttack,
+  doBattleDamage: () => doBattleDamage,
+  createPreviewEffectScore: () => createPreviewEffectScore,
+  createPlayerUnitBattlePointScore: () => createPlayerUnitBattlePointScore,
+  createPlayerScore: () => createPlayerScore
+});
+
+// src/game/gameState/RuntimeBattleAreaComponent.ts
+var exports_RuntimeBattleAreaComponent = {};
+__export(exports_RuntimeBattleAreaComponent, {
+  getRuntimeBattleArea: () => getRuntimeBattleArea
+});
+function getRuntimeBattleArea(ctx2, kw) {
+  switch (kw) {
+    case "戦闘エリア1":
+      return "地球エリア";
+    case "戦闘エリア2":
+      return "宇宙エリア";
+    default:
+      throw new Error(`unknown :${kw}`);
+  }
+}
+
+// src/game/gameState/player.ts
+function isPlayerHasBattleGroup(ctx2, playerId) {
+  return pipe(always_default([
+    AbsoluteBaSyouFn.of(playerId, "戦闘エリア2"),
+    AbsoluteBaSyouFn.of(playerId, "戦闘エリア1")
+  ]), map_default((baSyou) => getItemIdsByBasyou(ctx2, baSyou).length), sum_default)() > 0;
+}
+function doBattleDamage(ctx2, playerId, guardUnits, attackPower, options) {
+  if (guardUnits.length) {
+    const changedCardState = guardUnits.map((cardID) => {
+      const cs = getItemState(ctx2, cardID);
+      if (attackPower <= 0) {
+        return cs;
+      }
+      const [_, _2, hp] = getSetGroupBattlePoint(ctx2, cardID, { ges: options?.ges });
+      const live = hp - cs.damage;
+      if (live <= 0) {
+        return cs;
+      }
+      attackPower -= live;
+      if (attackPower >= 0) {
+        const reason = {
+          id: "戦闘ダメージ",
+          playerID: playerId
+        };
+        ctx2 = doItemSetDestroyBasic(ctx2, reason, cardID, {});
+        return {
+          ...cs,
+          damage: hp,
+          destroyReason: reason
+        };
+      }
+      const nextLive = -attackPower;
+      const nextDamage = hp - nextLive;
+      attackPower = 0;
+      {
+        const gameEvent = {
+          title: ["戦闘ダメージを受けた場合", { isNotRule: options?.isNotRule }],
+          cardIds: [cs.id],
+          playerId
+        };
+        ctx2 = doTriggerEvent(ctx2, gameEvent, options);
+      }
+      return {
+        ...cs,
+        damage: nextDamage
+      };
+    });
+    ctx2 = changedCardState.reduce((ctx3, cs) => {
+      return setItemState(ctx3, cs.id, cs);
+    }, ctx2);
+  }
+  return [ctx2, attackPower];
+}
+function doRuleBattleDamage(ctx2, speedPhase, currentAttackPlayerID, currentGuardPlayerID, willAttackUnits, willGuardUnits, willAttackPower, options) {
+  logCategory("handleAttackDamage", "speed", speedPhase);
+  logCategory("handleAttackDamage", "willAttackUnits", willAttackUnits);
+  logCategory("handleAttackDamage", "willGuardUnits", willGuardUnits);
+  logCategory("handleAttackDamage", "willAttackPower", willAttackPower);
+  if (willAttackUnits.length) {
+    const hasSpeedAttack = isABattleGroup(ctx2, ["速攻"], willAttackUnits[0], options);
+    if (hasSpeedAttack && speedPhase == 1 || hasSpeedAttack == false && speedPhase == 2) {
+      let currentAttackPower = willAttackPower;
+      logCategory("handleAttackDamage", "attack", currentAttackPower);
+      if (willGuardUnits.length) {
+        [ctx2, currentAttackPower] = doBattleDamage(ctx2, currentAttackPlayerID, willGuardUnits, currentAttackPower, { ges: options?.ges });
+      }
+      if (currentAttackPlayerID == getActivePlayerID(ctx2) && currentAttackPower > 0) {
+        if (isBattle(ctx2, willAttackUnits[0], null) == false || isABattleGroup(ctx2, ["強襲"], willAttackUnits[0], options)) {
+          ctx2 = doCountryDamage(ctx2, EffectFn.createGameRule(currentAttackPlayerID), currentGuardPlayerID, currentAttackPower, options);
+          {
+            const gameEvent = {
+              title: ["このカードの部隊が敵軍本国に戦闘ダメージを与えた場合"],
+              cardIds: willAttackUnits.flatMap((unitId) => getSetGroup(ctx2, unitId))
+            };
+            ctx2 = doTriggerEvent(ctx2, gameEvent, options);
+          }
+        }
+      }
+      {
+        const gameEvent = {
+          title: ["このカードの部隊が戦闘ダメージを与えた場合"],
+          cardIds: willAttackUnits.flatMap((unitId) => getSetGroup(ctx2, unitId))
+        };
+        ctx2 = doTriggerEvent(ctx2, gameEvent, options);
+      }
+    }
+  }
+  return ctx2;
+}
+function doPlayerAttack(ctx2, attackPlayerID, where, speedPhase, options) {
+  const guardPlayerID = PlayerIDFn.getOpponent(attackPlayerID);
+  const attackUnits = getBattleGroup(ctx2, AbsoluteBaSyouFn.of(attackPlayerID, where));
+  const attackUnitsSnapshot = getBattleGroupFromSnapshot(ctx2, AbsoluteBaSyouFn.of(attackPlayerID, where));
+  const attackPower = getBattleGroupBattlePoint(ctx2, attackUnits, attackUnitsSnapshot, options);
+  const guardUnits = getBattleGroup(ctx2, AbsoluteBaSyouFn.of(guardPlayerID, where));
+  const guardUnitsSnapshot = getBattleGroupFromSnapshot(ctx2, AbsoluteBaSyouFn.of(guardPlayerID, where));
+  const guardPower = getBattleGroupBattlePoint(ctx2, guardUnits, guardUnitsSnapshot, options);
+  ctx2 = doRuleBattleDamage(ctx2, speedPhase, attackPlayerID, guardPlayerID, attackUnits, guardUnits, attackPower, { ges: options?.ges });
+  ctx2 = doRuleBattleDamage(ctx2, speedPhase, guardPlayerID, attackPlayerID, guardUnits, attackUnits, guardPower, { ges: options?.ges });
+  [...attackUnits, ...guardUnits].forEach((cardId) => {
+    const itemState = getItemState(ctx2, cardId);
+    const [_, _2, hp] = getSetGroupBattlePoint(ctx2, cardId, options);
+    if (hp <= itemState.damage) {
+      ctx2 = addDestroyEffect(ctx2, createDestroyEffect(ctx2, { id: "戦闘ダメージ", playerID: PlayerIDFn.getOpponent(getItemController(ctx2, cardId)) }, cardId));
+    }
+  });
+  return ctx2;
+}
+function getPlayerGIds(ctx2, playerId) {
+  return getItemIdsByBasyou(ctx2, AbsoluteBaSyouFn.of(playerId, "Gゾーン"));
+}
+function getPlayerHandIds(ctx2, playerId) {
+  return getItemIdsByBasyou(ctx2, AbsoluteBaSyouFn.of(playerId, "手札"));
+}
+function getPlayerJunkyardIds(ctx2, playerId) {
+  return getItemIdsByBasyou(ctx2, AbsoluteBaSyouFn.of(playerId, "ジャンクヤード"));
+}
+function getPlayerSuTeYaMaIds(ctx2, playerId) {
+  return getItemIdsByBasyou(ctx2, AbsoluteBaSyouFn.of(playerId, "捨て山"));
+}
+function getPlayerHungerIds(ctx2, playerId) {
+  return getItemIdsByBasyou(ctx2, AbsoluteBaSyouFn.of(playerId, "ハンガー"));
+}
+function getPlayerCountrytIds(ctx2, playerId) {
+  return getItemIdsByBasyou(ctx2, AbsoluteBaSyouFn.of(playerId, "本国"));
+}
+function getPlayerDestroyIds(ctx2, playerId) {
+  return getCutInDestroyEffects(ctx2).map((e) => EffectFn.getCardID(e)).filter((itemId) => getItemController(ctx2, itemId) == playerId);
+}
+function getPlayerUnitIds(ctx2, playerId) {
+  return lift_default(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getBaAll()).flatMap((basyou) => getItemIdsByBasyou(ctx2, basyou)).filter((itemId) => getItemRuntimeCategory(ctx2, itemId) == "ユニット");
+}
+function getPlayerUnitCanGoEarthIds(ctx2, playerId, options) {
+  const currentBaKw = "戦闘エリア1";
+  const runtimeBattleArea = getRuntimeBattleArea(ctx2, currentBaKw);
+  if (runtimeBattleArea == "宇宙エリア") {
+    return [];
+  }
+  const itemIdsCanGoWithRollState = options.ges?.flatMap((ge) => {
+    if (ge.title[0] == "このセットグループのユニットは、ロール状態でも防御に出撃できる") {
+      return ge.cardIds.map((cardId) => getSetGroupRoot(ctx2, cardId));
+    }
+    return [];
+  }) || [];
+  const opponentPlayerId = PlayerIDFn.getOpponent(playerId);
+  const cardIds = getItemIdsByBasyou(ctx2, AbsoluteBaSyouFn.of(playerId, "配備エリア"));
+  let unitIds = cardIds.filter((cardId) => getSetGroupRoot(ctx2, cardId) == cardId).filter((cardId) => getCardBattleArea(ctx2, cardId).includes(runtimeBattleArea)).filter((cardId) => {
+    if (itemIdsCanGoWithRollState.includes(cardId)) {
+      return true;
+    }
+    return getCard(ctx2, cardId).isRoll != true;
+  });
+  const opponentUnitIds = getBattleGroup(ctx2, AbsoluteBaSyouFn.of(opponentPlayerId, currentBaKw));
+  if (opponentUnitIds.length) {
+    if (isABattleGroup(ctx2, ["高機動"], opponentUnitIds[0], options)) {
+      unitIds = unitIds.filter((id) => isSetGroupHasA(ctx2, ["高機動"], id, options));
+    }
+  }
+  return unitIds;
+}
+function getPlayerUnitCanGoSpaceIds(ctx2, playerId, options) {
+  const currentBaKw = "戦闘エリア2";
+  const runtimeBattleArea = getRuntimeBattleArea(ctx2, currentBaKw);
+  if (runtimeBattleArea == "地球エリア") {
+    return [];
+  }
+  const itemIdsCanGoWithRollState = options.ges?.flatMap((ge) => {
+    if (ge.title[0] == "このセットグループのユニットは、ロール状態でも防御に出撃できる") {
+      return ge.cardIds.map((cardId) => getSetGroupRoot(ctx2, cardId));
+    }
+    return [];
+  }) || [];
+  const opponentPlayerId = PlayerIDFn.getOpponent(playerId);
+  const cardIds = getItemIdsByBasyou(ctx2, AbsoluteBaSyouFn.of(playerId, "配備エリア"));
+  let unitIds = cardIds.filter((cardId) => getSetGroupRoot(ctx2, cardId) == cardId).filter((cardId) => getCardBattleArea(ctx2, cardId).includes(runtimeBattleArea)).filter((cardId) => {
+    if (itemIdsCanGoWithRollState.includes(cardId)) {
+      return true;
+    }
+    return getCard(ctx2, cardId).isRoll != true;
+  });
+  const opponentUnitIds = getBattleGroup(ctx2, AbsoluteBaSyouFn.of(opponentPlayerId, currentBaKw));
+  if (opponentUnitIds.length) {
+    if (isABattleGroup(ctx2, ["高機動"], opponentUnitIds[0], options)) {
+      unitIds = unitIds.filter((id) => isSetGroupHasA(ctx2, ["高機動"], id, options));
+    }
+  }
+  return unitIds;
+}
+function getPlayerCharacterIds(ctx2, playerId) {
+  return lift_default(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getBaAll()).flatMap((basyou) => getItemIdsByBasyou(ctx2, basyou)).filter((itemId) => getItemRuntimeCategory(ctx2, itemId) == "キャラクター");
+}
+function getPlayerOperationIds(ctx2, playerId) {
+  return lift_default(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getBaAll()).flatMap((basyou) => getItemIdsByBasyou(ctx2, basyou)).filter((itemId) => getItemRuntimeCategory(ctx2, itemId) == "オペレーション");
+}
+function createPlayerUnitBattlePointScore(ctx2, playerId, options) {
+  return getPlayerUnitIds(ctx2, playerId).map((id) => {
+    const [atk, range3, hp] = getSetGroupBattlePoint(ctx2, id, options);
+    return atk + range3 + hp;
+  }).reduce((acc, c) => acc + c, 0);
+}
+function createPlayerScore(ctx2, playerId, options) {
+  const units = getPlayerUnitIds(ctx2, playerId);
+  const chars = getPlayerCharacterIds(ctx2, playerId);
+  const gs = getPlayerGIds(ctx2, playerId);
+  const ops = getPlayerOperationIds(ctx2, playerId);
+  const hands = getPlayerHandIds(ctx2, playerId);
+  const destroyIds = ctx2.destroyEffect.filter((eid) => getItemController(ctx2, EffectFn.getCardID(getEffect(ctx2, eid))) == playerId);
+  const junkyardIds = getPlayerJunkyardIds(ctx2, playerId);
+  const gScore = gs.length * 3;
+  const unitScore = units.length * 5;
+  const charScore = chars.length;
+  const opScore = Math.max(3, ops.length) * 3;
+  const handScore = hands.length * 3;
+  const destroyScore = destroyIds.length * -10;
+  const junkyardScore = junkyardIds.length * -1;
+  const rollScore = [...gs, ...units].filter((itemId) => getCard(ctx2, itemId).isRoll).length * -5;
+  const bpScore = units.map((id) => {
+    if (getCard(ctx2, id).isRoll) {
+      return 0;
+    }
+    if (getItemState(ctx2, id).destroyReason) {
+      return 0;
+    }
+    const [atk, range3, hp] = getSetGroupBattlePoint(ctx2, id, options);
+    return atk + range3 + hp;
+  }).reduce((acc, c) => acc + c, 0);
+  const specialScore1 = units.filter((id) => getCardHasSpeicalEffect(ctx2, ["速攻"], id, options)).length * 2;
+  const specialScore2 = units.filter((id) => getCardHasSpeicalEffect(ctx2, ["高機動"], id, options)).length * 2;
+  const specialScore3 = units.filter((id) => getCardHasSpeicalEffect(ctx2, ["強襲"], id, options)).length * 2;
+  const total = gScore + unitScore + charScore + opScore + handScore + destroyScore + junkyardScore + rollScore + bpScore + specialScore1 + specialScore2 + specialScore3;
+  logCategory("createPlayerScore", "=======", playerId);
+  logCategory("createPlayerScore", "gScore:", gScore);
+  logCategory("createPlayerScore", "unitScore:", unitScore);
+  logCategory("createPlayerScore", "charScore:", charScore);
+  logCategory("createPlayerScore", "opScore:", opScore);
+  logCategory("createPlayerScore", "handScore:", handScore);
+  logCategory("createPlayerScore", "destroyScore:", destroyScore);
+  logCategory("createPlayerScore", "junkyardScore:", junkyardScore);
+  logCategory("createPlayerScore", "rollScore:", rollScore);
+  logCategory("createPlayerScore", "bpScore:", bpScore);
+  logCategory("createPlayerScore", "specialScore1:", specialScore1);
+  logCategory("createPlayerScore", "specialScore2:", specialScore2);
+  logCategory("createPlayerScore", "specialScore3:", specialScore3);
+  logCategory("createPlayerScore", "total:", total);
+  return total;
+}
+function createPreviewEffectScore(ctx2, playerId, effects, options) {
+  const opponentId = PlayerIDFn.getOpponent(playerId);
+  const originScoreA = createPlayerScore(ctx2, playerId, options);
+  const originScoreB = createPlayerScore(ctx2, opponentId, options);
+  let effectScorePairs = effects.map((eff) => {
+    try {
+      let ctx22 = JSON.parse(JSON.stringify(ctx2));
+      ctx22.stackEffect = [];
+      ctx22.immediateEffect = [];
+      ctx22 = setTipSelectionForUser(ctx22, eff, 0, 0);
+      ctx22 = doEffect(ctx22, eff, 0, 0);
+      for (let i2 = 0;i2 < 99; ++i2) {
+        let eff2 = getTopEffect(ctx22);
+        if (eff2 == null) {
+          break;
+        }
+        ctx22 = setTipSelectionForUser(ctx22, eff2, 0, 0);
+        ctx22 = doEffect(ctx22, eff2, 0, 0);
+        ctx22 = removeEffect(ctx22, eff2.id);
+      }
+      for (let i2 = 0;i2 < 99; ++i2) {
+        const eff2 = getImmediateEffects(ctx22)[0];
+        if (eff2 == null) {
+          break;
+        }
+        ctx22 = setTipSelectionForUser(ctx22, eff2, 0, 0);
+        ctx22 = doEffect(ctx22, eff2, 0, 0);
+        ctx22 = removeEffect(ctx22, eff2.id);
+      }
+      const scoreA = createPlayerScore(ctx22, playerId, options);
+      const scoreB = createPlayerScore(ctx22, opponentId, options);
+      const lostA = originScoreA - scoreA;
+      const lostB = originScoreB - scoreB;
+      logCategory("createPreviewEffectScore", "originScoreA", originScoreA);
+      logCategory("createPreviewEffectScore", "originScoreB", originScoreB);
+      logCategory("createPreviewEffectScore", "scoreA", scoreA);
+      logCategory("createPreviewEffectScore", "scoreB", scoreB);
+      logCategory("createPreviewEffectScore", "lostA", lostA);
+      logCategory("createPreviewEffectScore", "lostB", lostB);
+      const score = lostB - lostA;
+      return [eff.id, score];
+    } catch (e) {
+      console.warn(`AI計算時例外，忽略:${e.message}`);
+    }
+    return [eff.id, 0];
+  });
+  logCategory("createPreviewEffectScore", "effectScorePairs", effectScorePairs);
+  effectScorePairs = effectScorePairs.filter(([_, s]) => s >= 0);
+  effectScorePairs.sort(([_, s1], [_2, s2]) => s2 - s1);
+  return effectScorePairs;
+}
+
+// src/game/gameState/doItemAddCoin.ts
+var exports_doItemAddCoin = {};
+__export(exports_doItemAddCoin, {
+  doItemAddCoin: () => doItemAddCoin
+});
+function doItemAddCoin(ctx2, effect, target, coins, options) {
+  assertTargetMissingError(ctx2, effect, target, options);
+  return addCoinsToCard(ctx2, target[0], coins);
+}
+
+// src/game/gameState/createActionTitleFn.ts
+function createPlayerIdFromRelated2(ctx2, cardId, re) {
+  switch (re) {
+    case "自軍":
+      return getItemController(ctx2, cardId);
+    case "敵軍":
+      return PlayerIDFn.getOpponent(getItemController(ctx2, cardId));
+    case "持ち主":
+      return getItemOwner(ctx2, cardId);
+  }
+}
+function createAbsoluteBaSyouFromBaSyou(ctx2, cardId, re) {
+  if (re.id == "AbsoluteBaSyou") {
+    return re;
+  }
+  return AbsoluteBaSyouFn.of(createPlayerIdFromRelated2(ctx2, cardId, re.value[0]), re.value[1]);
+}
+function createActionTitleFn(action) {
+  if (typeof action.title == "string") {
+    return ActionFn.getTitleFn(action);
+  }
+  switch (action.title[0]) {
+    case "エリアの任意の順番に_リロール状態で移す": {
+      const varNames2 = action.vars;
+      if (varNames2 == null) {
+        throw new Error;
+      }
+      if (varNames2.length != 2) {
+        throw new Error;
+      }
+      const [varNameTo, varNameCard] = varNames2;
+      const [_, relatedBasyou, isRoll] = action.title;
+      return function(ctx2, effect, { Options }) {
+        const cardId = EffectFn.getCardID(effect);
+        const inserts = getCardTipStrBaSyouPairs2(ctx2, varNameTo, cardId);
+        const cardPairs = getCardTipStrBaSyouPairs2(ctx2, varNameCard, cardId);
+        if (inserts.length == 0) {
+          const to2 = createAbsoluteBaSyouFromBaSyou(ctx2, cardId, relatedBasyou);
+          for (const pair2 of cardPairs) {
+            if (isRoll != null) {
+              ctx2 = doItemSetRollStateBasic(ctx2, isRoll, pair2[0], { ...Options });
+            }
+            ctx2 = doItemMove(ctx2, effect, to2, pair2, Options);
+          }
+          return ctx2;
+        }
+        const insertToCardId = inserts[0][0];
+        const to = getItemBaSyou(ctx2, insertToCardId);
+        const idx = getItemIdsByBasyou(ctx2, to).indexOf(insertToCardId);
+        if (idx == -1) {
+          throw new Error;
+        }
+        for (const pair2 of cardPairs) {
+          if (isRoll != null) {
+            ctx2 = doItemSetRollStateBasic(ctx2, isRoll, pair2[0], { ...Options });
+          }
+          ctx2 = doItemMove(ctx2, effect, to, pair2, { ...Options, insertId: idx });
+        }
+        return ctx2;
+      };
+    }
+    case "看見see": {
+      const varNames2 = action.vars;
+      return function(ctx2, effect) {
+        const cardId = EffectFn.getCardID(effect);
+        if (varNames2 == null) {
+          throw new Error;
+        }
+        const tips = varNames2.flatMap((varName) => {
+          return getItemState(ctx2, cardId).tips[varName];
+        });
+        for (const tip of tips) {
+          if (tip.cheatCardIds) {
+            for (const cardId2 of tip.cheatCardIds) {
+              ctx2 = mapItemState(ctx2, cardId2, (is) => ({ ...is, isCheat: true }));
+            }
+          }
+        }
+        return ctx2;
+      };
+    }
+    case "このカードが攻撃に出撃している":
+      return function(ctx2, effect) {
+        const cardId = EffectFn.getCardID(effect);
+        if (getItemState(ctx2, cardId).isAttack != true) {
+          throw new TargetMissingError("このカードが攻撃に出撃している");
+        }
+        return ctx2;
+      };
+    case "このカードが交戦中の場合": {
+      return function(ctx2, effect) {
+        const cardId = EffectFn.getCardID(effect);
+        if (isBattle(ctx2, cardId, null) == false) {
+          throw new TargetMissingError("このカードが交戦中の場合");
+        }
+        return ctx2;
+      };
+    }
+    case "同切上限": {
+      return function(ctx2, effect) {
+        const cardId = EffectFn.getCardID(effect);
+        const ps = getItemState(ctx2, cardId);
+        if (ps.textIdsUseThisCut?.[effect.text.id]) {
+          throw new TipError(`同切上限: ${effect.text.description}`);
+        }
+        ctx2 = mapItemState(ctx2, cardId, (ps2) => {
+          return {
+            ...ps2,
+            textIdsUseThisCut: {
+              ...ps2.textIdsUseThisCut,
+              [effect.text.id]: true
+            }
+          };
+        });
+        return ctx2;
+      };
+    }
+    case "同回合上限": {
+      const [_, times] = action.title;
+      return function(ctx2, effect) {
+        const cardId = EffectFn.getCardID(effect);
+        const ps = getItemState(ctx2, cardId);
+        if (effect.text.isEachTime) {} else {
+          if ((ps.textIdsUseThisTurn || []).filter((tid) => tid == effect.text.id).length >= times) {
+            throw new TargetMissingError(`同回合上限: ${effect.text.description}`);
+          }
+        }
+        ctx2 = mapItemState(ctx2, cardId, (ps2) => {
+          return {
+            ...ps2,
+            textIdsUseThisTurn: [effect.text.id, ...ps2.textIdsUseThisTurn || []]
+          };
+        });
+        return ctx2;
+      };
+    }
+    case "Entity": {
+      const [_, actionOptions] = action.title;
+      if ([actionOptions.max, actionOptions.min, actionOptions.count].every((v) => v == null)) {
+        throw new Error(`Entity search must has one of min, max, count`);
+      }
+      return function(ctx2, effect, { Options }) {
+        const tip = createTipByEntitySearch(ctx2, effect, actionOptions, { ges: Options.ges });
+        const error = TipFn.createTipErrorWhenCheckFail(tip);
+        if (error) {
+          throw error;
+        }
+        return ctx2;
+      };
+    }
+    case "この記述の効果は、プレイヤー毎に１ターンに１回まで解決できる": {
+      return function(ctx2, effect) {
+        const cardId = EffectFn.getCardID(effect);
+        const cardController = getItemController(ctx2, cardId);
+        if (getPlayerState(ctx2, cardController).textIdsUseThisTurn[effect.text.id]) {
+          throw new TargetMissingError(`この記述の効果は、プレイヤー毎に１ターンに１回まで解決できる`);
+        }
+        ctx2 = mapPlayerState(ctx2, cardController, (ps) => ({
+          ...ps,
+          textIdsUseThisTurn: {
+            ...ps.textIdsUseThisTurn,
+            [effect.text.id]: true
+          }
+        }));
+        return ctx2;
+      };
+    }
+    case "_自軍_本国をシャッフルする": {
+      const [_, side, basyouKw] = action.title;
+      return function(ctx2, effect) {
+        const cardId = EffectFn.getCardID(effect);
+        const playerId = createPlayerIdFromRelated2(ctx2, cardId, side);
+        const basyou = AbsoluteBaSyouFn.of(playerId, basyouKw);
+        ctx2 = shuffleItems(ctx2, basyou);
+        return ctx2;
+      };
+    }
+    case "Action": {
+      const [_, actionOptions] = action.title;
+      const varNames2 = action.vars;
+      return function(ctx2, effect, { Options }) {
+        const cardId = EffectFn.getCardID(effect);
+        const pairs = varNames2 == null ? [[cardId, getItemBaSyou(ctx2, cardId)]] : varNames2.flatMap((varName) => {
+          return getCardTipStrBaSyouPairs2(ctx2, varName, cardId);
+        });
+        for (const pair2 of pairs) {
+          if (actionOptions.move) {
+            ctx2 = doItemMove(ctx2, effect, createAbsoluteBaSyouFromBaSyou(ctx2, cardId, actionOptions.move), pair2, { ges: Options.ges });
+          }
+        }
+        return ctx2;
+      };
+    }
+    case "triggerEvent": {
+      const [_, event] = action.title;
+      return function(ctx2, effect, { Options }) {
+        const cardId = EffectFn.getCardID(effect);
+        ctx2 = doTriggerEvent(ctx2, { ...event, effect, cardIds: [cardId] }, { ges: Options.ges });
+        return ctx2;
+      };
+    }
+    case "cutIn": {
+      const [_, actions] = action.title;
+      return function(ctx2, effect) {
+        const cardId = EffectFn.getCardID(effect);
+        ctx2 = addStackEffect(ctx2, {
+          id: "",
+          description: effect.text.description,
+          reason: ["PlayText", EffectFn.getPlayerID(effect), cardId, effect.text.id],
+          text: {
+            id: effect.text.id,
+            description: effect.text.description,
+            title: [],
+            logicTreeActions: [
+              {
+                actions
+              }
+            ]
+          }
+        });
+        return ctx2;
+      };
+    }
+    case "_ロールする": {
+      const [_, whatToDo] = action.title;
+      const varNames2 = action.vars;
+      const isSkipTargetMissingError = action.isSkipTargetMissingError;
+      return function(ctx2, effect, { Options }) {
+        const cardId = EffectFn.getCardID(effect);
+        const cardController = getItemController(ctx2, cardId);
+        const pairs = varNames2 == null ? [[cardId, getItemBaSyou(ctx2, cardId)]] : varNames2.flatMap((varName) => {
+          return getCardTipStrBaSyouPairs2(ctx2, varName, cardId);
+        });
+        try {
+          switch (whatToDo) {
+            case "ロール": {
+              for (const pair2 of pairs) {
+                ctx2 = doItemSetRollState(ctx2, effect, true, pair2, Options);
+              }
+              return ctx2;
+            }
+            case "リロール": {
+              for (const pair2 of pairs) {
+                ctx2 = doItemSetRollState(ctx2, effect, false, pair2, Options);
+              }
+              return ctx2;
+            }
+            case "打開": {
+              for (const pair2 of pairs) {
+                assertTargetMissingError(ctx2, effect, pair2, Options);
+                ctx2 = mapItemState(ctx2, pair2[0], (is) => ({ ...is, isOpenForGain: true }));
+              }
+              return ctx2;
+            }
+            case "破壞": {
+              for (const pair2 of pairs) {
+                ctx2 = doItemSetDestroy(ctx2, effect, { id: "破壊する", playerID: cardController }, pair2, Options);
+              }
+              return ctx2;
+            }
+            case "廃棄": {
+              for (const pair2 of pairs) {
+                ctx2 = doItemMove(ctx2, effect, AbsoluteBaSyouFn.setBaSyouKeyword(pair2[1], "ジャンクヤード"), pair2, Options);
+              }
+              return ctx2;
+            }
+            case "破壊を無効": {
+              for (const pair2 of pairs) {
+                ctx2 = doItemSetDestroy(ctx2, effect, null, pair2, Options);
+              }
+              return ctx2;
+            }
+            case "見": {
+              for (const pair2 of pairs) {
+                ctx2 = mapItemState(ctx2, pair2[0], (is) => ({ ...is, isCheat: true }));
+              }
+              return ctx2;
+            }
+          }
+        } catch (e) {
+          if (e instanceof TargetMissingError) {
+            if (isSkipTargetMissingError) {
+              console.warn(`TargetMissingError被isSkipTargetMissingError忽略掉`);
+            } else {
+              throw e;
+            }
+          }
+        }
+        return ctx2;
+      };
+    }
+    case "_敵軍本国に_１ダメージ": {
+      const [_, side, damage] = action.title;
+      return function(ctx2, effect, { Options }) {
+        const cardId = EffectFn.getCardID(effect);
+        const cardController = getItemController(ctx2, cardId);
+        const playerId = PlayerIDFn.fromRelatedPlayerSideKeyword(side, cardController);
+        ctx2 = doCountryDamage(ctx2, effect, playerId, damage, { ges: Options.ges });
+        return ctx2;
+      };
+    }
+    case "_の_ハンガーに移す": {
+      const [_, side, basyouKw] = action.title;
+      const varNames2 = action.vars;
+      return function(ctx2, effect, { Options }) {
+        const cardId = EffectFn.getCardID(effect);
+        const cardController = getItemController(ctx2, cardId);
+        const pairs = varNames2 == null ? [[cardId, getItemBaSyou(ctx2, cardId)]] : varNames2.flatMap((varName) => {
+          return getCardTipStrBaSyouPairs2(ctx2, varName, cardId);
+        });
+        for (const pair2 of pairs) {
+          const playerId = createPlayerIdFromRelated2(ctx2, pair2[0], side);
+          const to = AbsoluteBaSyouFn.of(playerId, basyouKw);
+          ctx2 = doItemMove(ctx2, effect, to, pair2, { ges: Options.ges });
+        }
+        return ctx2;
+      };
+    }
+    case "看自己_本國全部的卡": {
+      const [_, basyouKw] = action.title;
+      return function(ctx2, effect) {
+        const cardId = EffectFn.getCardID(effect);
+        const cardController = getItemController(ctx2, cardId);
+        for (const itemId of getItemIdsByBasyou(ctx2, AbsoluteBaSyouFn.of(cardController, basyouKw))) {
+          ctx2 = mapItemState(ctx2, itemId, (is) => ({ ...is, isCheat: true }));
+        }
+        return ctx2;
+      };
+    }
+    case "_１ダメージを与える": {
+      const [_, damage] = action.title;
+      const varNames2 = action.vars;
+      return function(ctx2, effect, { Options }) {
+        const cardId = EffectFn.getCardID(effect);
+        const cardController = getItemController(ctx2, cardId);
+        const pairs = varNames2 == null ? [[cardId, getItemBaSyou(ctx2, cardId)]] : varNames2.flatMap((varName) => {
+          return getCardTipStrBaSyouPairs2(ctx2, varName, cardId);
+        });
+        ctx2 = pairs.reduce((ctx3, pair2) => {
+          return doItemDamage(ctx3, effect, damage, pair2, Options);
+        }, ctx2);
+        return ctx2;
+      };
+    }
+    case "_１貫通ダメージを与える": {
+      const [_, damage] = action.title;
+      const varNames2 = action.vars;
+      return function(ctx2, effect) {
+        const cardId = EffectFn.getCardID(effect);
+        const cardController = getItemController(ctx2, cardId);
+        const basyous = varNames2 == null ? [getItemBaSyou(ctx2, cardId)] : varNames2.flatMap((varName) => {
+          return getCardTipSelection(ctx2, varName, cardId, { assertTitle: ["BaSyou", [], []] });
+        });
+        const [nextCtx, _2] = doBattleDamage(ctx2, cardController, basyous.flatMap((basyou) => getBattleGroup(ctx2, basyou)), damage, { isNotRule: true });
+        ctx2 = nextCtx;
+        return ctx2;
+      };
+    }
+    case "_－１／－１／－１コイン_１個を乗せる": {
+      const [_, bonus, x] = action.title;
+      const varNames2 = action.vars;
+      const isSelectAllCardInSetGroup = action.isSelectAllCardInSetGroup;
+      return function(ctx2, effect, { Options }) {
+        const cardId = EffectFn.getCardID(effect);
+        const playerId = EffectFn.getPlayerID(effect);
+        const pairs = varNames2 == null ? [[cardId, getItemBaSyou(ctx2, cardId)]] : varNames2.flatMap((varName) => {
+          const ret = getCardTipStrBaSyouPairs2(ctx2, varName, cardId);
+          if (isSelectAllCardInSetGroup?.includes(varName)) {
+            const itemIds = ret.map((v) => v[0]);
+            const appends = dropRepeats_default(itemIds.flatMap((itemId) => getSetGroup(ctx2, itemId)).map((itemId) => createStrBaSyouPair(ctx2, itemId)));
+            return appends;
+          }
+          return ret;
+        });
+        if (pairs.length == 0) {
+          throw new Error(`pairs must not 0: ${action.title} ${action.vars}`);
+        }
+        for (const pair2 of pairs) {
+          const coins = range_default(0, x).map((i2) => CoinFn.battleBonus(playerId, bonus));
+          ctx2 = doItemAddCoin(ctx2, effect, pair2, coins, Options);
+        }
+        return ctx2;
+      };
+    }
+    case "移除卡狀態_旗標": {
+      const [_, flagName] = action.title;
+      return function(ctx2, effect) {
+        const cardId = EffectFn.getCardID(effect);
+        let cardState = getItemState(ctx2, cardId);
+        cardState = ItemStateFn.removeFlag(cardState, flagName);
+        ctx2 = setItemState(ctx2, cardId, cardState);
+        return ctx2;
+      };
+    }
+    case "ターン終了時まで「速攻」を得る。": {
+      const [_, ges] = action.title;
+      const varNames2 = action.vars;
+      return function(ctx2, effect, Options) {
+        const cardId = EffectFn.getCardID(effect);
+        const pairs = varNames2 == null ? [[cardId, getItemBaSyou(ctx2, cardId)]] : varNames2.flatMap((varName) => {
+          return getCardTipStrBaSyouPairs2(ctx2, varName, cardId);
+        });
+        for (const [targetCardId, targetBaSyou] of pairs) {
+          const gesForCard = ges.map((ge) => {
+            return {
+              ...ge,
+              cardIds: [targetCardId]
+            };
+          });
+          ctx2 = doItemSetGlobalEffectsUntilEndOfTurn(ctx2, effect, gesForCard, [targetCardId, targetBaSyou], Options);
+        }
+        return ctx2;
+      };
+    }
+    case "ステップ終了時まで「速攻」を得る。": {
+      const [_, ges] = action.title;
+      const varNames2 = action.vars;
+      return function(ctx2, effect, { Options }) {
+        const cardId = EffectFn.getCardID(effect);
+        const pairs = varNames2 == null ? [[cardId, getItemBaSyou(ctx2, cardId)]] : varNames2.flatMap((varName) => {
+          return getCardTipStrBaSyouPairs2(ctx2, varName, cardId);
+        });
+        for (const [targetCardId, targetBaSyou] of pairs) {
+          const gesForCard = ges.map((ge) => {
+            return {
+              ...ge,
+              cardIds: [targetCardId]
+            };
+          });
+          ctx2 = doItemSetGlobalEffectsUntilEndOfStep(ctx2, effect, gesForCard, [targetCardId, targetBaSyou], Options);
+        }
+        return ctx2;
+      };
+    }
+    case "カード_１枚を引く": {
+      const [_, count] = action.title;
+      return function(ctx2, effect, { Options }) {
+        const cardId = EffectFn.getCardID(effect);
+        const cardController = getItemController(ctx2, cardId);
+        ctx2 = doPlayerDrawCard(ctx2, effect, count, cardController, Options);
+        return ctx2;
+      };
+    }
+    case "リロール状態で置き換える":
+      const varNames = action.vars;
+      if (varNames == null) {
+        throw new Error(`action.var not found: ${action.title[0]}`);
+      }
+      return function(ctx2, effect, { Options }) {
+        const cardId = EffectFn.getCardID(effect);
+        const [target1] = getCardTipStrBaSyouPairs2(ctx2, varNames[0], cardId);
+        const [target2] = getCardTipStrBaSyouPairs2(ctx2, varNames[1], cardId);
+        ctx2 = doItemSwap(ctx2, effect, target1, target2, Options);
+        ctx2 = doItemSetRollStateBasic(ctx2, false, target2[0], { ...Options });
+        return ctx2;
+      };
+    case "合計国力〔x〕": {
+      const [_, x] = action.title;
+      return function(ctx2, effect, { Options }) {
+        const ges = Options.ges || [];
+        const cardId = EffectFn.getCardID(effect);
+        const cardController = getItemController(ctx2, cardId);
+        const cardIdsCanPay = getCardIdsCanPayRollCost(ctx2, cardController, { ges });
+        if (cardIdsCanPay.length < x) {
+          throw new TargetMissingError(`合計国力〔x〕:${cardIdsCanPay.length} < ${x}. ${effect.text.description}`);
+        }
+        ctx2 = setCardTipStrBaSyouPairs(ctx2, TipFn.createTotalCostKey(), cardIdsCanPay.map((cardId2) => createStrBaSyouPair(ctx2, cardId2)), cardId);
+        return ctx2;
+      };
+    }
+    case "_敵軍_ユニットが_戦闘エリアにいる場合": {
+      const [_, side, category, areas] = action.title;
+      return function(ctx2, effect) {
+        const cardId = EffectFn.getCardID(effect);
+        const playerId = getItemController(ctx2, cardId);
+        const targetPlayerId = PlayerIDFn.fromRelatedPlayerSideKeyword(side, playerId);
+        const basyous = lift_default(AbsoluteBaSyouFn.of)([targetPlayerId], areas);
+        const pairs = basyous.flatMap((basyou) => getItemIdsByBasyou(ctx2, basyou).filter((cardId2) => getItemRuntimeCategory(ctx2, cardId2) == category).map((cardId2) => [cardId2, basyou]));
+        if (pairs.length == 0) {
+          throw new TargetMissingError(`${action.title[0]} ${pairs.length}`);
+        }
+        return ctx2;
+      };
+    }
+    case "このカードが_戦闘エリアにいる場合": {
+      const [_, areas] = action.title;
+      return function(ctx2, effect) {
+        const cardId = EffectFn.getCardID(effect);
+        const from = getItemBaSyou(ctx2, cardId);
+        if (areas.includes(AbsoluteBaSyouFn.getBaSyouKeyword(from))) {} else {
+          throw new TargetMissingError(`${action.title} ${cardId} not in ${JSON.stringify(areas)}`);
+        }
+        return ctx2;
+      };
+    }
+    case "_黒のGサインを持つ_自軍_Gが_５枚以上ある場合": {
+      const [_, color, side, category, count] = action.title;
+      return function(ctx2, effect) {
+        const cardId = EffectFn.getCardID(effect);
+        const cardController = getItemController(ctx2, cardId);
+        const playerId = PlayerIDFn.fromRelatedPlayerSideKeyword(side, cardController);
+        const gsignCount = getItemIdsByPlayerId(ctx2, false, playerId).filter((itemId) => getItemPrototype(ctx2, itemId).gsign?.[0].includes(color)).filter((itemId) => getItemRuntimeCategory(ctx2, itemId) == category).length;
+        if (gsignCount < count) {
+          throw new TargetMissingError(`you have ${gsignCount}. must ${count}: ${action.title[0]}`);
+        }
+        return ctx2;
+      };
+    }
+  }
+}
+
+// src/game/gameState/createConditionTitleFn.ts
+var exports_createConditionTitleFn = {};
+__export(exports_createConditionTitleFn, {
+  createConditionTitleFn: () => createConditionTitleFn
+});
+
+// src/game/gameState/globalEffects.ts
+var exports_globalEffects = {};
+__export(exports_globalEffects, {
+  updateGlobalEffects: () => updateGlobalEffects,
+  setGlobalEffects: () => setGlobalEffects,
+  getGlobalEffects: () => getGlobalEffects,
+  createAllCardTexts: () => createAllCardTexts,
+  clearGlobalEffects: () => clearGlobalEffects
+});
+
+// src/game/gameState/createTextsFromSpecialEffect.ts
+function createTextsFromSpecialEffect(text, options) {
+  logCategory("createTextsFromSpecialEffect", "");
+  if (text.title[0] != "特殊型") {
+    throw new Error(`text not 特殊型`);
+  }
+  const specialEffect = text.title[1];
+  switch (specialEffect[0]) {
+    case "【PS装甲】": {
+      return [
+        {
+          ...text,
+          parentTextTitle: text.title,
+          title: ["自動型", "起動"],
+          description: "出場時直立出場"
+        },
+        {
+          ...text,
+          parentTextTitle: text.title,
+          title: ["自動型", "起動"],
+          description: "這張卡出現在戰區時, 下回合開始時回到持有者手上. 但如果和持有補給或供給的卡組合部隊的時候, 上述的效果不發動.",
+          onEvent: function _(ctx2, effect, { GameStateFn, DefineFn, Options }) {
+            const cardId = DefineFn.EffectFn.getCardID(effect);
+            const evt = DefineFn.EffectFn.getEvent(effect);
+            if (evt.title[0] == "GameEventOnMove" && (DefineFn.AbsoluteBaSyouFn.getBaSyouKeyword(evt.title[2]) == "戦闘エリア1" || DefineFn.AbsoluteBaSyouFn.getBaSyouKeyword(evt.title[2]) == "戦闘エリア2")) {
+              if (evt.cardIds?.includes(cardId)) {
+                const hasSupply = GameStateFn.isBattleGroupHasA(ctx2, ["供給"], cardId, Options);
+                if (hasSupply) {} else {
+                  ctx2 = GameStateFn.mapItemState(ctx2, cardId, (is) => DefineFn.ItemStateFn.setFlag(is, "return", true));
+                }
+              } else {
+                if (DefineFn.AbsoluteBaSyouFn.eq(GameStateFn.getItemBaSyou(ctx2, cardId), evt.title[2])) {
+                  const hasSupply = GameStateFn.isBattleGroupHasA(ctx2, ["供給"], cardId, Options);
+                  if (hasSupply) {
+                    ctx2 = GameStateFn.mapItemState(ctx2, cardId, (is) => DefineFn.ItemStateFn.removeFlag(is, "return"));
+                  }
+                }
+              }
+            }
+            if (evt.title[0] == "GameEventOnTiming" && DefineFn.PhaseFn.eq(evt.title[1], DefineFn.PhaseFn.getFirst())) {
+              const cardId2 = DefineFn.EffectFn.getCardID(effect);
+              const cardController = GameStateFn.getItemController(ctx2, cardId2);
+              const cs = GameStateFn.getItemState(ctx2, cardId2);
+              if (cs.flags["return"]) {
+                ctx2 = GameStateFn.doItemMove(ctx2, effect, DefineFn.AbsoluteBaSyouFn.of(cardController, "手札"), [cardId2, GameStateFn.getItemBaSyou(ctx2, cardId2)], Options);
+                ctx2 = GameStateFn.mapItemState(ctx2, cardId2, (is) => DefineFn.ItemStateFn.removeFlag(is, "return"));
+              }
+            }
+            return ctx2;
+          }.toString()
+        }
+      ];
+    }
+    case "クロスウェポン": {
+      const [_, A] = specialEffect;
+      return [
+        {
+          ...text,
+          parentTextTitle: text.title,
+          title: ["使用型", ["戦闘フェイズ"]],
+          description: "（戦闘フェイズ）：［ ］の特徴を持つ自軍ユニット１枚は、ターン終了時まで、このカードの本来のテキスト１つと同じテキストを得る。ただし同じテキストは得られない）",
+          conditions: {
+            ...text.conditions,
+            "このカードの本来のテキスト１つ": {
+              title: ["このカードの_本来のテキスト１つ", true, 1]
+            },
+            "［ ］の特徴を持つ自軍ユニット１枚は": {
+              title: ["_本来の記述に｢特徴：_装弾｣を持つ_自軍_G_１枚", false, A, "自軍", "ユニット", 1],
+              exceptItemSelf: true,
+              actions: [
+                {
+                  title: function _2(ctx2, effect, { GameStateFn, DefineFn, Options }) {
+                    const cardId = DefineFn.EffectFn.getCardID(effect);
+                    const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx2, "［ ］の特徴を持つ自軍ユニット１枚は", cardId);
+                    const textRefs = GameStateFn.getCardTipTextRefs(ctx2, "このカードの本来のテキスト１つ", cardId);
+                    const textRefIds = textRefs.map((tr) => tr.textId);
+                    for (const pair2 of pairs) {
+                      const hasSameText = GameStateFn.getCardTexts(ctx2, pair2[0], Options).find((text2) => textRefIds.includes(text2.id));
+                      if (hasSameText) {
+                        throw new DefineFn.TipError(`已有同樣的內文: ${JSON.stringify(textRefIds)}`, { hasSameText: true });
+                      }
+                    }
+                    return ctx2;
+                  }.toString()
+                }
+              ]
+            }
+          },
+          logicTreeActions: [
+            {
+              actions: [
+                {
+                  title: ["cutIn", [
+                    {
+                      title: function _2(ctx2, effect, { GameStateFn, DefineFn, Options }) {
+                        const cardId = DefineFn.EffectFn.getCardID(effect);
+                        const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx2, "［ ］の特徴を持つ自軍ユニット１枚は", cardId);
+                        const textRefs = GameStateFn.getCardTipTextRefs(ctx2, "このカードの本来のテキスト１つ", cardId);
+                        for (const pair2 of pairs) {
+                          GameStateFn.assertTargetMissingError(ctx2, effect, pair2, Options);
+                          const [targetCardId, targetBasyou] = pair2;
+                          ctx2 = GameStateFn.mapItemState(ctx2, targetCardId, (targetItemState) => {
+                            for (const textRef of textRefs) {
+                              const alreadyHas = GameStateFn.getCardTexts(ctx2, targetItemState.id, Options).find((text2) => text2.id == textRef.textId) != null;
+                              if (alreadyHas) {
+                                continue;
+                              }
+                              targetItemState = DefineFn.ItemStateFn.setGlobalEffect(targetItemState, null, {
+                                title: ["AddTextRef", textRef],
+                                cardIds: [targetItemState.id]
+                              }, { isRemoveOnTurnEnd: true });
+                            }
+                            return targetItemState;
+                          });
+                        }
+                        return ctx2;
+                      }.toString()
+                    }
+                  ]]
+                }
+              ]
+            }
+          ]
+        }
+      ];
+    }
+    case "ゲイン": {
+      return [
+        {
+          ...text,
+          parentTextTitle: text.title,
+          title: ["使用型", ["ダメージ判定ステップ"]],
+          description: "這張卡在戰區的場合, 打開自軍本國上的1張卡和這張卡同GsignProperty的情況, 這張卡回合結束前+x/+x/+x, x為打開的卡的横置費用數量, 這個效果1回合只能用1次",
+          testEnvs: [
+            {
+              createCards: [
+                ["自軍", "戦闘エリア1", [["unitHasGain", 1]]],
+                ["自軍", "本国", [["unitHasGain", 1]]]
+              ]
+            }
+          ],
+          conditions: {
+            ...text.conditions,
+            "這個效果1回合只能用1次": {
+              actions: [
+                {
+                  title: ["この記述の効果は、プレイヤー毎に１ターンに１回まで解決できる"]
+                }
+              ]
+            },
+            "這張卡在戰區的場合": {
+              actions: [
+                {
+                  title: ["Entity", {
+                    isThisCard: true,
+                    at: ["戦闘エリア1", "戦闘エリア2"],
+                    count: 1
+                  }]
+                }
+              ]
+            }
+          },
+          logicTreeActions: [
+            {
+              actions: [
+                {
+                  title: ["cutIn", [
+                    {
+                      title: function _(ctx2, effect, { GameStateFn, DefineFn }) {
+                        const newE = DefineFn.EffectFn.fromEffectBasic(effect, {
+                          conditions: {
+                            "這張卡在戰區的場合, 打開自軍本國上的1張卡": {
+                              title: ["Entity", {
+                                see: [DefineFn.RelatedBaSyouFn.of("自軍", "本国"), 1, 1],
+                                count: 1
+                              }],
+                              actions: [
+                                {
+                                  title: ["_ロールする", "見"],
+                                  vars: ["這張卡在戰區的場合, 打開自軍本國上的1張卡"]
+                                }
+                              ]
+                            },
+                            "這張卡在戰區的場合": {
+                              actions: [
+                                {
+                                  title: ["Entity", {
+                                    isThisCard: true,
+                                    at: ["戦闘エリア1", "戦闘エリア2"],
+                                    count: 1
+                                  }]
+                                }
+                              ]
+                            }
+                          },
+                          logicTreeAction: {
+                            actions: [
+                              {
+                                title: function _2(ctx3, effect2, { GameStateFn: GameStateFn2, DefineFn: DefineFn2, ToolFn: ToolFn2, Options }) {
+                                  const cardId = DefineFn2.EffectFn.getCardID(effect2);
+                                  const tipKey = "這張卡在戰區的場合, 打開自軍本國上的1張卡";
+                                  const pairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, tipKey, cardId);
+                                  if (pairs.length == 0) {
+                                    throw new Error(`pairs must not 0: ${effect2.text.description}`);
+                                  }
+                                  const [openCardId] = pairs[0];
+                                  const enabled = GameStateFn2.getCardGSignProperty(ctx3, openCardId) == GameStateFn2.getCardGSignProperty(ctx3, cardId);
+                                  if (enabled == false) {
+                                    console.log(GameStateFn2.getCardGSignProperty(ctx3, openCardId), GameStateFn2.getCardGSignProperty(ctx3, cardId));
+                                    console.warn(`不同的GSignProperty，無法得到紅利`);
+                                    return ctx3;
+                                  }
+                                  const ges = Options.ges;
+                                  const bonus = GameStateFn2.getCardRollCostLength(ctx3, openCardId);
+                                  const gainBonus = [bonus, bonus, bonus];
+                                  ctx3 = GameStateFn2.doTriggerEvent(ctx3, { title: ["「ゲイン」の効果で戦闘修正を得る場合", gainBonus], cardIds: [cardId] }, { ges: Options.ges });
+                                  const hasCase1 = GameStateFn2.getCardTexts(ctx3, cardId, { ges }).find((text2) => text2.description == "『起動』：このカードは、「ゲイン」の効果で戦闘修正を得る場合、その戦闘修正の代わりに、ターン終了時まで＋４／±０／±０を得る事ができる。") != null;
+                                  const hasCase2 = GameStateFn2.getCardTexts(ctx3, cardId, { ges }).find((text2) => text2.description == "『起動』：このカードは、「ゲイン」の効果で戦闘修正を得る場合、その戦闘修正を得る代わりに、ターン終了時まで、「速攻」を得る事ができる。") != null;
+                                  if (hasCase1) {
+                                    ctx3 = GameStateFn2.doItemSetGlobalEffectsUntilEndOfTurn(ctx3, effect2, [{ title: ["＋x／＋x／＋xを得る", [4, 0, 0]], cardIds: [cardId] }], GameStateFn2.createStrBaSyouPair(ctx3, cardId), Options);
+                                  } else if (hasCase2) {
+                                    ctx3 = GameStateFn2.doItemSetGlobalEffectsUntilEndOfTurn(ctx3, effect2, [{ title: ["AddText", { id: ToolFn2.getUUID("hasCase2"), title: ["特殊型", ["速攻"]] }], cardIds: [cardId] }], GameStateFn2.createStrBaSyouPair(ctx3, cardId), Options);
+                                  } else {
+                                    ctx3 = GameStateFn2.mapItemState(ctx3, cardId, (is) => DefineFn2.ItemStateFn.setGlobalEffect(is, null, {
+                                      title: ["＋x／＋x／＋xを得る", gainBonus],
+                                      cardIds: [cardId]
+                                    }, { isRemoveOnTurnEnd: true }));
+                                    ctx3 = GameStateFn2.doTriggerEvent(ctx3, { title: ["「ゲイン」の効果で戦闘修正を得た場合", gainBonus], cardIds: [cardId] }, { ges: Options.ges });
+                                  }
+                                  return ctx3;
+                                }.toString()
+                              }
+                            ]
+                          }
+                        });
+                        ctx2 = GameStateFn.addImmediateEffect(ctx2, newE);
+                        return ctx2;
+                      }.toString()
+                    }
+                  ]]
+                }
+              ]
+            }
+          ]
+        }
+      ];
+    }
+    case "供給": {
+      return [
+        {
+          ...text,
+          parentTextTitle: text.title,
+          title: ["使用型", ["自軍", "攻撃ステップ"]],
+          description: "這張卡以外的自軍機體1張重置",
+          conditions: {
+            ...text.conditions,
+            "這張卡以外的自軍機體1張": {
+              title: ["Entity", {
+                atBa: true,
+                side: "自軍",
+                is: ["ユニット"],
+                count: 1,
+                exceptCardIds: []
+              }]
+            }
+          },
+          logicTreeActions: [
+            {
+              actions: [
+                {
+                  title: ["cutIn", [
+                    {
+                      title: ["_ロールする", "リロール"],
+                      vars: ["這張卡以外的自軍機體1張"]
+                    }
+                  ]]
+                }
+              ]
+            }
+          ]
+        }
+      ];
+    }
+    case "サイコミュ": {
+      const [_, x] = specialEffect;
+      const addCardIds = options?.ges?.flatMap((ge) => {
+        if (ge.title[0] == "_ユニットは、「サイコミュ」の効果において、交戦中として扱う。" && ge.cardIds.includes(options?.cardId || "")) {
+          return ge.title[1];
+        }
+        return [];
+      }) || [];
+      return [
+        {
+          ...text,
+          parentTextTitle: text.title,
+          title: ["使用型", ["防御ステップ"]],
+          description: "交戰中的敵軍機體1張x傷害. 這個效果只有在同區中有NT才能使用.",
+          conditions: {
+            ...text.conditions,
+            "交戰中的敵軍機體1張": {
+              title: function _2(ctx2, effect, { GameStateFn, DefineFn, Options }) {
+                const { addCardIds: addCardIds2 } = { addCardIds: null };
+                if (addCardIds2 == null) {
+                  throw new Error(`addCardIds must replace`);
+                }
+                const cardId = DefineFn.EffectFn.getCardID(effect);
+                const tip = GameStateFn.createTipByEntitySearch(ctx2, effect, {
+                  isBattle: true,
+                  side: "敵軍",
+                  is: ["ユニット"],
+                  count: 1
+                }, { ges: Options.ges });
+                let wants = DefineFn.TipFn.getWant(tip);
+                wants = [...wants, ...addCardIds2.map((itemId) => GameStateFn.createStrBaSyouPair(ctx2, itemId))];
+                return {
+                  title: ["カード", wants, wants.slice(0, 1)],
+                  count: 1
+                };
+              }.toString().replace("{ addCardIds: null }", JSON.stringify({ addCardIds }))
+            },
+            "同區中有NT才能使用": {
+              actions: [
+                {
+                  title: function _2(ctx2, effect, { GameStateFn, DefineFn }) {
+                    const cardId = DefineFn.EffectFn.getCardID(effect);
+                    const from = GameStateFn.getItemBaSyou(ctx2, cardId);
+                    const hasNT = GameStateFn.getItemIdsByBasyou(ctx2, from).filter((itemId) => GameStateFn.getItemCharacteristic(ctx2, itemId).indexOf("NT") != -1).length > 0;
+                    if (hasNT == false) {
+                      throw new TipError(`no NT in the same area`);
+                    }
+                    return ctx2;
+                  }.toString()
+                }
+              ]
+            }
+          },
+          logicTreeActions: [
+            {
+              actions: [
+                {
+                  title: ["cutIn", [
+                    {
+                      title: ["_１ダメージを与える", x],
+                      vars: ["交戰中的敵軍機體1張"]
+                    }
+                  ]]
+                }
+              ]
+            }
+          ]
+        }
+      ];
+    }
+    case "範囲兵器": {
+      const [_, x] = specialEffect;
+      const hasCase1 = (options?.ges?.filter((ge) => ge.title[0] == "「範囲兵器」の対象部分は、『X以下の防御力を持つ敵軍ユニット１枚』に変更される" && ge.cardIds.includes(options?.cardId || "")) || []).length > 0;
+      return [
+        {
+          ...text,
+          parentTextTitle: text.title,
+          title: ["使用型", ["ダメージ判定ステップ"]],
+          description: "和這張卡交戰的防禦力x以下的敵軍機體1張破壞",
+          testEnvs: [
+            {
+              createCards: [
+                ["自軍", "戦闘エリア1", [["unitHasRange", 1]]],
+                ["敵軍", "戦闘エリア1", [["unit", 1]]]
+              ]
+            }
+          ],
+          conditions: {
+            ...text.conditions,
+            "這張卡交戰的防禦力x以下的敵軍機體1張": {
+              title: ["Entity", {
+                atBa: true,
+                isBattleWithThis: hasCase1 ? undefined : true,
+                compareBattlePoint: ["防御力", "<=", x],
+                isDestroy: false,
+                side: "敵軍",
+                is: ["ユニット"],
+                count: 1
+              }]
+            }
+          },
+          logicTreeActions: [
+            {
+              actions: [
+                {
+                  title: ["cutIn", [
+                    {
+                      title: ["_ロールする", "破壞"],
+                      vars: ["這張卡交戰的防禦力x以下的敵軍機體1張"]
+                    }
+                  ]]
+                }
+              ]
+            }
+          ]
+        }
+      ];
+    }
+    case "共有": {
+      const [_, A] = specialEffect;
+      return [
+        {
+          ...text,
+          parentTextTitle: text.title,
+          title: ["使用型", ["常時"]],
+          description: "看自己本國全部的卡,可以從中找出特徵A的1張卡移到HANGER,那個時候本國洗牌.這個效果只有這張卡從手中打出的回合可以使用",
+          conditions: {
+            ...text.conditions,
+            "這個效果只有這張卡從手中打出的回合可以使用": {
+              actions: [
+                {
+                  title: function _2(ctx2, effect, { GameStateFn, DefineFn }) {
+                    const cardId = DefineFn.EffectFn.getCardID(effect);
+                    if (GameStateFn.getItemState(ctx2, cardId).isFirstTurn != true) {
+                      throw new DefineFn.TipError(`這個效果只有這張卡從手中打出的回合可以使用:${effect.text.description}`);
+                    }
+                    return ctx2;
+                  }.toString()
+                }
+              ]
+            }
+          },
+          logicTreeActions: [
+            {
+              actions: [
+                {
+                  title: function _2(ctx2, effect, { GameStateFn, DefineFn }) {
+                    const { A: A2 } = { A: "" };
+                    const newE = DefineFn.EffectFn.fromEffectBasic(effect, {
+                      conditions: {
+                        "看自己本國全部的卡,可以從中找出特徵A的1張卡移到HANGER,那個時候本國洗牌": {
+                          title: ["_自軍_本國找出特徵_A的_1張卡", "自軍", "本国", A2, 1],
+                          actions: [
+                            {
+                              title: ["看自己_本國全部的卡", "本国"]
+                            }
+                          ]
+                        }
+                      },
+                      logicTreeAction: {
+                        actions: [
+                          {
+                            title: function _3(ctx3, effect2, { GameStateFn: GameStateFn2, DefineFn: DefineFn2, Options }) {
+                              const cardId = DefineFn2.EffectFn.getCardID(effect2);
+                              const cardController = GameStateFn2.getItemController(ctx3, cardId);
+                              const pairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, "看自己本國全部的卡,可以從中找出特徵A的1張卡移到HANGER,那個時候本國洗牌", cardId);
+                              if (pairs.length) {
+                                for (const pair2 of pairs) {
+                                  ctx3 = GameStateFn2.doItemMove(ctx3, effect2, DefineFn2.AbsoluteBaSyouFn.of(cardController, "ハンガー"), pair2, Options);
+                                }
+                                ctx3 = GameStateFn2.shuffleItems(ctx3, DefineFn2.AbsoluteBaSyouFn.of(cardController, "本国"));
+                              }
+                              return ctx3;
+                            }.toString()
+                          }
+                        ]
+                      }
+                    });
+                    ctx2 = GameStateFn.addStackEffect(ctx2, newE);
+                    return ctx2;
+                  }.toString().replace(`{ A: "" }`, JSON.stringify({ A }))
+                }
+              ]
+            }
+          ]
+        }
+      ];
+    }
+    case "改装": {
+      const [_, A] = specialEffect;
+      return [
+        {
+          ...text,
+          parentTextTitle: text.title,
+          title: ["使用型", ["戦闘フェイズ"]],
+          description: "打開自軍手裡或指定HANGER中特徵A並合計國力x以下的1張卡, 和這張卡重置狀態置換, 這張卡置換後廢棄. x為自軍G的張數",
+          conditions: {
+            ...text.conditions,
+            "打開自軍手裡或指定HANGER中特徵A並合計國力x以下的1張卡": {
+              title: function _2(ctx2, effect, bridge) {
+                const { A: A2 } = { A: "" };
+                if (A2 == "") {
+                  throw new Error("A沒有被字串置換");
+                }
+                const { GameStateFn, DefineFn } = bridge;
+                const cardId = DefineFn.EffectFn.getCardID(effect);
+                const cardController = GameStateFn.getItemController(ctx2, cardId);
+                const gCount = GameStateFn.getItemIdsByBasyou(ctx2, DefineFn.AbsoluteBaSyouFn.of(cardController, "Gゾーン")).length;
+                return GameStateFn.createConditionTitleFn({
+                  title: ["Entity", {
+                    side: "自軍",
+                    at: ["手札", "ハンガー"],
+                    hasChar: [A2],
+                    compareBattlePoint: ["合計国力", "<=", gCount],
+                    count: 1
+                  }]
+                })(ctx2, effect, bridge);
+              }.toString().replace(`{ A: "" }`, JSON.stringify({ A }))
+            }
+          },
+          logicTreeActions: [
+            {
+              actions: [
+                {
+                  title: function _2(ctx2, effect, { GameStateFn, DefineFn }) {
+                    const newE = DefineFn.EffectFn.fromEffectBasic(effect, {
+                      logicTreeAction: {
+                        actions: [
+                          {
+                            title: function _3(ctx3, effect2, { GameStateFn: GameStateFn2, DefineFn: DefineFn2, Options }) {
+                              const cardId = DefineFn2.EffectFn.getCardID(effect2);
+                              const basyou = GameStateFn2.getItemBaSyou(ctx3, cardId);
+                              const pairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, "打開自軍手裡或指定HANGER中特徵A並合計國力x以下的1張卡", cardId);
+                              if (pairs.length == 0) {
+                                throw new Error(`pairs must not 0: ${effect2.text.description}`);
+                              }
+                              const targetPair = pairs[0];
+                              GameStateFn2.assertTargetMissingError(ctx3, effect2, targetPair, Options);
+                              ctx3 = GameStateFn2.doItemSwapBasic(ctx3, cardId, targetPair[0], Options);
+                              ctx3 = GameStateFn2.doItemSetRollStateBasic(ctx3, false, cardId, { ...Options });
+                              ctx3 = GameStateFn2.doItemMoveBasic(ctx3, DefineFn2.AbsoluteBaSyouFn.setBaSyouKeyword(basyou, "ジャンクヤード"), targetPair, { ges: Options.ges });
+                              ctx3 = GameStateFn2.doTriggerEvent(ctx3, { title: ["「改装」の効果で廃棄される場合"], cardIds: [targetPair[0]] }, { ges: Options.ges });
+                              ctx3 = GameStateFn2.doTriggerEvent(ctx3, { title: ["「改装」の効果で場に出た場合"], cardIds: [cardId] }, { ges: Options.ges });
+                              return ctx3;
+                            }.toString()
+                          }
+                        ]
+                      }
+                    });
+                    ctx2 = GameStateFn.addStackEffect(ctx2, newE);
+                    return ctx2;
+                  }.toString()
+                }
+              ]
+            }
+          ]
+        }
+      ];
+    }
+    case "1枚制限":
+    case "【ステイ】":
+    case "クイック":
+    case "強襲":
+    case "戦闘配備":
+    case "速攻":
+    case "高機動":
+      return [];
+  }
+  throw new Error(`${text.title} not support`);
+}
+
+// src/game/gameState/globalEffects.ts
+var __callGlobal = null;
+function getGlobalEffects(ctx2, situation) {
+  logCategory("getGlobalEffects", "");
+  if (__callGlobal) {
+    throw new Error;
+  }
+  __callGlobal = true;
+  const key = JSON.stringify(situation);
+  const cached = ctx2.globalEffectPool[key];
+  if (cached) {
+    __callGlobal = null;
+    logCategory("getGlobalEffects", "=======");
+    return cached;
+  }
+  const ret = getSituationEffects(ctx2, situation);
+  __callGlobal = null;
+  logCategory("getGlobalEffects", "=======");
+  return ret;
+}
+function setGlobalEffects(ctx2, situation, ges) {
+  const key = JSON.stringify(situation);
+  return {
+    ...ctx2,
+    globalEffectPool: {
+      ...ctx2.globalEffectPool,
+      [key]: ges
+    }
+  };
+}
+function clearGlobalEffects(ctx2) {
+  return {
+    ...ctx2,
+    globalEffectPool: {}
+  };
+}
+function updateGlobalEffects(ctx2) {
+  ctx2 = clearGlobalEffects(ctx2);
+  ctx2 = setGlobalEffects(ctx2, null, getGlobalEffects(ctx2, null));
+  return ctx2;
+}
+function getSituationEffects(ctx2, situation) {
+  const bridge = createBridge({});
+  const ges = createAllCardTexts(ctx2).flatMap(([item, texts]) => {
+    const globalEffects = texts.map((text, i2) => {
+      const cardController = getItemController(ctx2, item.id);
+      const fn = getOnSituationFn(text);
+      const effect = {
+        id: ToolFn.getUUID("getSituationEffects"),
+        reason: ["Situation", cardController, item.id, situation],
+        text
+      };
+      return [fn, effect];
+    }).flatMap(([fn, effect]) => {
+      return fn(ctx2, effect, bridge);
+    });
+    return globalEffects;
+  });
+  const itemStateGes = getItemStateValues(ctx2).flatMap(ItemStateFn.getGlobalEffects);
+  const gGes = [AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), AbsoluteBaSyouFn.of(PlayerB, "Gゾーン")].flatMap((basyou) => getItemIdsByBasyou(ctx2, basyou)).filter((itemId) => getCard(ctx2, itemId).isRoll != true).map((itemId) => {
+    const colors = getItemPrototype(ctx2, itemId).gsign?.[0] || [];
+    return { title: ["發生國力", colors], cardIds: [itemId] };
+  });
+  return [...ges, ...itemStateGes, ...gGes];
+}
+function createAllCardTexts(ctx2) {
+  const getTextGroup1 = pipe(always_default(AbsoluteBaSyouFn.getBaAll().filter((ba) => ba.value[1] != "Gゾーン")), map_default((basyou) => getItemIdsByBasyou(ctx2, basyou)), flatten_default, (itemIds) => itemIds.filter((itemId) => isCard(ctx2, itemId) || isChip(ctx2, itemId)), map_default((itemId) => getItem(ctx2, itemId)), map_default((item) => {
+    const proto = getItemPrototype(ctx2, item.id);
+    let texts = (proto.texts || []).flatMap((text) => {
+      if (text.title[0] == "特殊型") {
+        return createTextsFromSpecialEffect(text, {});
+      }
+      return [text];
+    });
+    texts = texts.filter((text) => text.title[0] == "自動型" && (text.title[1] == "常駐" || text.title[1] == "起動"));
+    return [item, texts];
+  }));
+  const getTextGroup2 = pipe(always_default(AbsoluteBaSyouFn.getTextOn()), map_default((basyou) => getItemIdsByBasyou(ctx2, basyou)), flatten_default, (itemIds) => itemIds.filter((itemId) => isCard(ctx2, itemId) || isChip(ctx2, itemId)), map_default((itemId) => getItem(ctx2, itemId)), map_default((item) => {
+    const proto = getItemPrototype(ctx2, item.id);
+    let texts = (proto.texts || []).flatMap((text) => {
+      if (text.title[0] == "特殊型") {
+        return createTextsFromSpecialEffect(text, {});
+      }
+      return [text];
+    });
+    texts = texts.filter((text) => text.title[0] == "自動型" && text.title[1] == "恒常" || text.title[0] == "使用型");
+    return [item, texts];
+  }));
+  const getTextGroup3 = pipe(always_default([AbsoluteBaSyouFn.of(PlayerA, "Gゾーン"), AbsoluteBaSyouFn.of(PlayerB, "Gゾーン")]), map_default((basyou) => getItemIdsByBasyou(ctx2, basyou)), flatten_default, (itemIds) => itemIds.filter((itemId) => isCard(ctx2, itemId) || isChip(ctx2, itemId)), map_default((itemId) => getItem(ctx2, itemId)), map_default((item) => {
+    const proto = getItemPrototype(ctx2, item.id);
+    let texts = (proto.texts || []).flatMap((text) => {
+      if (text.protectLevel == 2 && text.title[0] == "特殊型") {
+        return createTextsFromSpecialEffect(text, {});
+      }
+      return [text];
+    });
+    texts = texts.filter((text) => text.protectLevel == 2 && text.title[0] == "自動型" && (text.title[1] == "常駐" || text.title[1] == "起動"));
+    return [item, texts];
+  }));
+  const getTextGroup4 = pipe(always_default(getCardIds(ctx2)), map_default((cardId) => {
+    const proto = getItemPrototype(ctx2, cardId);
+    if (proto.commandText?.onSituation) {
+      return [getCard(ctx2, cardId), [proto.commandText]];
+    }
+    return null;
+  }), (infos) => infos.filter((v) => v));
+  const allCardTexts = [...getTextGroup1(), ...getTextGroup2(), ...getTextGroup3(), ...getTextGroup4()];
+  const bridge = createBridge({});
+  const firstGlobalEffectsFromAllTexts = allCardTexts.flatMap(([item, texts]) => {
+    const globalEffects = texts.flatMap((text, i2) => {
+      if (text.onSituation == null) {
+        return [];
+      }
+      const cardController = getItemController(ctx2, item.id);
+      logCategory("createAllCardTexts", "getOnSituationFn", text.onSituation);
+      const fn = getOnSituationFn(text);
+      const effect = {
+        id: ToolFn.getUUID("getSituationEffects"),
+        reason: ["Situation", cardController, item.id, { title: ["有沒有新增內文"] }],
+        text
+      };
+      return fn(ctx2, effect, bridge);
+    });
+    return globalEffects;
+  });
+  const itemStateGes = getItemStateValues(ctx2).flatMap(ItemStateFn.getGlobalEffects);
+  const firstGes = [...firstGlobalEffectsFromAllTexts, ...itemStateGes];
+  const textsByAddText = firstGes.filter((ge) => ge.title[0] == "AddText").map((ge) => [ge.cardIds, ge.title[1]]).flatMap(([itemIds, text]) => {
+    return itemIds.flatMap((itemId) => {
+      const texts = text.title[0] == "特殊型" ? createTextsFromSpecialEffect(text, {}) : [text];
+      return [[getItem(ctx2, itemId), texts]];
+    });
+  });
+  const textsByAddTextRef = firstGes.filter((ge) => ge.title[0] == "AddTextRef").map((ge) => [ge.cardIds, ge.title[1]]).flatMap(([itemIds, textRef]) => {
+    return itemIds.flatMap((itemId) => {
+      const text = getCardTextFromCardTextRef(ctx2, textRef);
+      const texts = text.title[0] == "特殊型" ? createTextsFromSpecialEffect(text, {}) : [text];
+      return [[getItem(ctx2, itemId), texts]];
+    });
+  });
+  let allTexts = [...allCardTexts, ...textsByAddText, ...textsByAddTextRef];
+  return allTexts;
+}
+
+// src/game/gameState/createConditionTitleFn.ts
+function createConditionTitleFn(condition) {
+  if (condition.title == null || typeof condition.title == "string") {
+    return ConditionFn.getTitleFn(condition);
+  }
+  logCategory("getConditionTitleFn", condition.title);
+  switch (condition.title[0]) {
+    case "_交戦中の_敵軍部隊_１つ": {
+      const [_2, isBattleV, side, count] = condition.title;
+      return function(ctx2, effect) {
+        const cardId = EffectFn.getCardID(effect);
+        const cardController = getItemController(ctx2, cardId);
+        const playerIds = side ? [PlayerIDFn.fromRelatedPlayerSideKeyword(side, cardController)] : [PlayerA, PlayerB];
+        let basyous = lift_default(AbsoluteBaSyouFn.of)(playerIds, ["戦闘エリア1", "戦闘エリア2"]).filter((basyou) => getItemIdsByBasyou(ctx2, basyou).length);
+        if (isBattleV != null) {
+          basyous = basyous.filter((basyou) => isBattleAtBasyou(ctx2, basyou) == isBattleV);
+        }
+        return {
+          title: ["BaSyou", basyous, basyous.slice(0, count)],
+          count
+        };
+      };
+    }
+    case "このカードの_本来のテキスト１つ": {
+      const [_2, isOrigin, count] = condition.title;
+      return function(ctx2, effect, { Options }) {
+        const ges = Options.ges || [];
+        const cardId = EffectFn.getCardID(effect);
+        const texts = isOrigin ? getItemPrototype(ctx2, cardId).texts || [] : getCardTexts(ctx2, cardId, { ges });
+        const textRefs = texts.filter((text) => (text.title[0] == "特殊型" && text.title[1][0] == "クロスウェポン") == false).map((text) => {
+          return {
+            cardId,
+            textId: text.id
+          };
+        });
+        logCategory(`getConditionTitleFn`, textRefs);
+        return {
+          title: ["テキスト", textRefs, textRefs.slice(0, count)],
+          count
+        };
+      };
+    }
+    case "_本来の記述に｢特徴：_装弾｣を持つ_自軍_G_１枚": {
+      const [_2, isOrigin, targetChar, side, category2, count] = condition.title;
+      const exceptItemSelf = condition.exceptItemSelf;
+      return function(ctx2, effect) {
+        const fromCardId = EffectFn.getCardID(effect);
+        const playerId = getItemController(ctx2, fromCardId);
+        const targetPlayerId = PlayerIDFn.fromRelatedPlayerSideKeyword(side, playerId);
+        if (category2 == "グラフィック") {
+          const basyous = [AbsoluteBaSyouFn.of(targetPlayerId, "Gゾーン")];
+          const pairs = basyous.flatMap((basyou) => getItemIdsByBasyou(ctx2, basyou).filter((cardId) => {
+            if (exceptItemSelf && fromCardId == cardId) {
+              return false;
+            }
+            if (getCard(ctx2, cardId).isRoll) {
+              return false;
+            }
+            if (isOrigin) {
+              return getItemPrototype(ctx2, cardId).characteristic?.includes(targetChar);
+            } else {
+              return getItemCharacteristic(ctx2, cardId);
+            }
+          }).map((cardId) => [cardId, basyou]));
+          return {
+            title: ["カード", pairs, pairs.slice(0, count)],
+            count
+          };
+        } else {
+          const basyous = lift_default(AbsoluteBaSyouFn.of)([targetPlayerId], BaSyouKeywordFn.getBaAll());
+          const pairs = basyous.flatMap((basyou) => getItemIdsByBasyou(ctx2, basyou).filter((cardId) => getSetGroupRoot(ctx2, cardId)).filter((cardId) => getItemRuntimeCategory(ctx2, cardId) == category2).filter((cardId) => {
+            if (exceptItemSelf && fromCardId == cardId) {
+              return false;
+            }
+            if (isOrigin) {
+              return getItemPrototype(ctx2, cardId).characteristic?.includes(targetChar);
+            } else {
+              return getItemCharacteristic(ctx2, cardId).includes(targetChar);
+            }
+          }).map((cardId) => [cardId, basyou]));
+          return {
+            title: ["カード", pairs, pairs.slice(0, count)],
+            count
+          };
+        }
+      };
+    }
+    case "_自軍_本國找出特徵_A的_1張卡": {
+      const [_2, side, basyouKw, char, count] = condition.title;
+      return function(ctx2, effect) {
+        const cardId = EffectFn.getCardID(effect);
+        const playerId = getItemController(ctx2, cardId);
+        const targetPlayerId = PlayerIDFn.fromRelatedPlayerSideKeyword(side, playerId);
+        const from = AbsoluteBaSyouFn.of(targetPlayerId, basyouKw);
+        const itemIdAtBasyou = getItemIdsByBasyou(ctx2, from);
+        const targetIds = itemIdAtBasyou.filter((itemId) => {
+          return getItemCharacteristic(ctx2, itemId).indexOf(char) != -1;
+        });
+        const pairs = targetIds.map((targetId) => [targetId, from]);
+        return {
+          title: ["カード", pairs, pairs.slice(0, count)],
+          max: count,
+          cheatCardIds: itemIdAtBasyou
+        };
+      };
+    }
+    case "RollColor": {
+      const [_2, color] = condition.title;
+      return function(ctx2, effect, { Options }) {
+        const cardId = EffectFn.getCardID(effect);
+        const cardController = getItemController(ctx2, cardId);
+        let situation = { title: ["ロールコストの支払いにおいて"] };
+        if (effect.reason[0] == "PlayCard" && effect.reason[3].isPlayCommand) {
+          if (getItemPrototype(ctx2, cardId).category?.includes("装弾")) {
+            situation = { title: ["「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合"] };
+          }
+        }
+        const gesForAskRollCost = getGlobalEffects(ctx2, situation);
+        ctx2 = setGlobalEffects(ctx2, situation, gesForAskRollCost);
+        const cardIdColors = getCardIdsCanPayRollColor(ctx2, cardController, color, { ges: gesForAskRollCost });
+        let colorIds = [];
+        if (color == null) {
+          colorIds = cardIdColors.map((gId) => gId.cardId).slice(0, 1);
+        } else if (color == "紫") {
+          colorIds = cardIdColors.filter((gId) => gId.colors.length == 1 && gId.colors[0] == color).map((gId) => gId.cardId).slice(0, 1);
+          if (colorIds.length == 0) {
+            colorIds = cardIdColors.filter((gId) => gId.colors.length == 1).map((gId) => gId.cardId).slice(0, 2);
+            if (colorIds.length < 2) {
+              colorIds = cardIdColors.filter((gId) => gId.colors.length > 1).map((gId) => gId.cardId).slice(0, 2);
+            }
+          }
+        } else {
+          colorIds = cardIdColors.filter((gId) => gId.colors.length == 1 && gId.colors[0] == color).map((gId) => gId.cardId).slice(0, 1);
+          if (colorIds.length == 0) {
+            colorIds = cardIdColors.filter((gId) => gId.colors.length > 1 && gId.colors.includes(color)).map((gId) => gId.cardId).slice(0, 1);
+          }
+        }
+        const cardIdColorsPairs = cardIdColors.map((gId) => gId.cardId).map((colorId) => [colorId, getItemBaSyou(ctx2, colorId)]);
+        const pairs = colorIds.map((colorId) => [colorId, getItemBaSyou(ctx2, colorId)]);
+        return {
+          title: ["カード", cardIdColorsPairs, pairs],
+          min: Math.max(1, pairs.length)
+        };
+      };
+    }
+    case "このセットグループの_ユニットは":
+      const [_, category] = condition.title;
+      return function(ctx2, effect) {
+        const cardId = EffectFn.getCardID(effect);
+        switch (category) {
+          case "ユニット":
+            const targetId = getSetGroupRoot(ctx2, cardId);
+            if (getItemRuntimeCategory(ctx2, targetId) != "ユニット") {
+              return {
+                title: ["カード", [], []],
+                min: 1
+              };
+            }
+            const pair3 = [targetId, getItemBaSyou(ctx2, targetId)];
+            return {
+              title: ["カード", [pair3], [pair3]],
+              min: 1
+            };
+          default:
+            throw new Error(`このセットグループの_ユニットは: not support ${category}`);
+        }
+      };
+    case "Entity": {
+      const [_2, searchOptions] = condition.title;
+      if ([searchOptions.max, searchOptions.min, searchOptions.count].every((v) => v == null)) {
+        throw new Error(`Entity search must has one of min, max, count`);
+      }
+      return function(ctx2, effect, { Options }) {
+        const tip = createTipByEntitySearch(ctx2, effect, searchOptions, { ges: Options.ges });
+        if (searchOptions.returnNullIfNotPassCondition) {
+          if (TipFn.createTipErrorWhenCheckFail(tip)) {
+            return null;
+          }
+        }
+        return tip;
+      };
+    }
+  }
+}
+
+// src/game/gameState/doEffect.ts
+function doEffect(ctx2, effect, logicId, logicSubId) {
+  logCategory("doEffect", effect.id, effect.text.id, effect.text.description);
+  ctx2 = EventCenterFn.onEffectStart(ctx2, effect);
+  assertEffectCanPass(ctx2, effect, logicId, logicSubId);
+  const ltacs = CardTextFn.getLogicTreeActionConditions(effect.text, CardTextFn.getLogicTreeAction(effect.text, logicId))[logicSubId];
+  if (ltacs == null) {
+    throw new Error(`ltasc not found: ${logicId}/${logicSubId}`);
+  }
+  const conditionIds = Object.keys(ltacs);
+  const cardId = EffectFn.getCardID(effect);
+  conditionIds.forEach((conditionKey) => {
+    logCategory("doEffect", "conditionKey", conditionKey);
+    const condition = CardTextFn.getCondition(effect.text, conditionKey);
+    const actions = ConditionFn.getActions(condition);
+    for (const action of actions) {
+      EventCenterFn.onActionStart(ctx2, effect, action);
+      const actionFn = createActionTitleFn(action);
+      ctx2 = actionFn(ctx2, effect, createBridge({ ges: getGlobalEffects(ctx2, null) }));
+      ctx2 = updateGlobalEffects(ctx2);
+      EventCenterFn.onActionEnd(ctx2, effect, action);
+    }
+  });
+  const lta = CardTextFn.getLogicTreeAction(effect.text, logicId);
+  for (const action of LogicTreeActionFn.getActions(lta)) {
+    logCategory("doEffect", "lta.actions", lta.actions.map((a) => a.title));
+    EventCenterFn.onActionStart(ctx2, effect, action);
+    const actionFn = createActionTitleFn(action);
+    ctx2 = actionFn(ctx2, effect, createBridge({ ges: getGlobalEffects(ctx2, null) }));
+    ctx2 = updateGlobalEffects(ctx2);
+    EventCenterFn.onActionEnd(ctx2, effect, action);
+  }
+  ctx2 = EventCenterFn.onEffectEnd(ctx2, effect);
+  ctx2 = updateGlobalEffects(ctx2);
+  return ctx2;
+}
+function assertTipForUserSelection(ctx2, effect, cardId) {
+  const userTips = getItemState(ctx2, cardId).tips;
+  const groupSets = {};
+  Object.entries(effect.text.conditions || {}).forEach(([conditionKey, con]) => {
+    if (con.groupKey) {
+      const userTip = userTips[conditionKey];
+      if (userTip == null) {
+        return;
+      }
+      if (userTip.isRepeat) {
+        return;
+      }
+      switch (userTip.title[0]) {
+        case "カード": {
+          const userCardIds = userTip.title[2].map((p) => p[0]);
+          let groupSetsWithKey = groupSets[con.groupKey] || [];
+          groupSetsWithKey = [...userCardIds, ...groupSetsWithKey];
+          groupSetsWithKey.forEach((gid) => {
+            if (groupSetsWithKey.filter((gid2) => gid2 == gid).length > 1) {
+              console.warn(con.groupKey, groupSetsWithKey);
+              throw new TipError(`有重復的對象: ${con.groupKey} ${JSON.stringify(groupSetsWithKey)}`);
+            }
+          });
+          groupSets[con.groupKey] = groupSetsWithKey;
+        }
+      }
+    }
+  });
+}
+function createEffectTips(ctx2, effect, logicId, logicSubId, options) {
+  const ltacs = CardTextFn.getLogicTreeActionConditions(effect.text, CardTextFn.getLogicTreeAction(effect.text, logicId))[logicSubId];
+  if (ltacs == null) {
+    throw new Error(`ltasc not found: ${logicId}/${logicSubId}`);
+  }
+  return Object.keys(ltacs).map((key) => {
+    const con = ltacs[key];
+    logCategory("createEffectTips", key, con.title);
+    const errors = [];
+    let tip = null;
+    try {
+      tip = createConditionTitleFn(con)(ctx2, effect, createBridge({ ges: getGlobalEffects(ctx2, null) }));
+      ctx2 = updateGlobalEffects(ctx2);
+      if (tip?.isGameState) {
+        console.log(`快速檢查是不寫錯回傳成GameState, 應該要回傳Tip|null:`, key, con.title);
+        throw new Error;
+      }
+    } catch (e) {
+      if (e instanceof TipError) {
+        if (options?.isAssert) {
+          throw e;
+        }
+        errors.push(e.message);
+      } else {
+        throw e;
+      }
+    }
+    if (tip) {
+      if (options?.isCheckUserSelection) {
+        try {
+          const cardId = EffectFn.getCardID(effect);
+          ItemStateFn.getTip(getItemState(ctx2, cardId), key);
+          assertTipForUserSelection(ctx2, effect, cardId);
+        } catch (e) {
+          if (e instanceof TipError) {
+            if (options.isAssert) {
+              throw e;
+            }
+            errors.push(e.message);
+          } else {
+            throw e;
+          }
+        }
+      }
+      try {
+        logCategory("createEffectTips", "tip");
+        const error = TipFn.createTipErrorWhenCheckFail(tip);
+        if (error) {
+          throw error;
+        }
+        const cardId = EffectFn.getCardID(effect);
+        ctx2 = mapItemState(ctx2, cardId, (is) => ItemStateFn.setTip(is, key, tip));
+      } catch (e) {
+        if (e instanceof TipError) {
+          if (options?.isAssert) {
+            throw e;
+          }
+          errors.push(e.message);
+        } else {
+          throw e;
+        }
+      }
+    }
+    ctx2 = ConditionFn.getActionTitleFns(con, (action) => createActionTitleFn(action)).reduce((ctx3, fn) => {
+      try {
+        ctx3 = fn(ctx3, effect, createBridge({ ges: getGlobalEffects(ctx3, null) }));
+        ctx3 = updateGlobalEffects(ctx3);
+        return ctx3;
+      } catch (e) {
+        if (e instanceof TipError) {
+          if (options?.isAssert) {
+            throw e;
+          }
+          errors.push(e.message);
+          return ctx3;
+        } else {
+          console.log(effect.description, logicId, logicSubId, key);
+          throw e;
+        }
+      }
+    }, ctx2);
+    return { effectId: effect.id, conditionKey: key, tip, errors };
+  });
+}
+function setEffectTips(ctx2, e, toes) {
+  logCategory("setEffectTips", "effect", e.description);
+  switch (e.reason[0]) {
+    case "Event":
+    case "GameRule":
+    case "Destroy":
+    case "場に出る":
+    case "PlayCard":
+    case "PlayText": {
+      const cardId = EffectFn.getCardID(e);
+      logCategory("setEffectTips", "cardId", cardId);
+      toes.forEach((toe) => {
+        if (toe.errors.length) {
+          throw new Error(`${toe.errors.join("|")}:${toe.conditionKey}`);
+        }
+        const tip = toe.tip;
+        if (tip == null) {
+          return;
+        }
+        const key = toe.conditionKey;
+        logCategory("setEffectTips", key, tip.title);
+        ctx2 = mapItemState(ctx2, cardId, (is) => ItemStateFn.setTip(is, key, tip));
+      });
+      return ctx2;
+    }
+    default:
+      throw new Error(`unknown effect reason: ${e.reason[0]}`);
+  }
+}
+function setTipSelectionForUser(ctx2, e, logicId, logicSubId) {
+  return setEffectTips(ctx2, e, createEffectTips(ctx2, e, logicId, logicSubId));
+}
+function clearTipSelectionForUser(ctx2, effect, logicId, logicSubId) {
+  const ltacs = CardTextFn.getLogicTreeActionConditions(effect.text, CardTextFn.getLogicTreeAction(effect.text, logicId))[logicSubId];
+  if (ltacs == null) {
+    throw new Error(`ltasc not found: ${logicId}/${logicSubId}`);
+  }
+  Object.keys(ltacs).forEach((key) => {
+    const cardId = EffectFn.getCardID(effect);
+    if (getItemState(ctx2, cardId).tips[key]) {
+      ctx2 = mapItemState(ctx2, cardId, (is) => ItemStateFn.clearTip(is, key));
+    }
+  });
+  return ctx2;
+}
+function assertEffectCanPass(ctx2, effect, logicId, logicSubId) {
+  createEffectTips(ctx2, effect, logicId, logicSubId, { isCheckUserSelection: true, isAssert: true });
+}
+function createCommandEffectTips(ctx2, effect) {
+  logCategory("createCommandEffectTips", "effect.id", effect.id);
+  logCategory("createCommandEffectTips", "effect.text.id", effect.text.id, effect.description);
+  if (effect.text.logicTreeActions) {
+    const testedEffects = effect.text.logicTreeActions.flatMap((lta, logicId) => {
+      const conditionsList = CardTextFn.getLogicTreeActionConditions(effect.text, lta);
+      const allTest = conditionsList.map((conditions, logicSubId) => {
+        ctx2 = clearTipSelectionForUser(ctx2, effect, logicId, logicSubId);
+        const conTipErrors = createEffectTips(ctx2, effect, logicId, logicSubId);
+        return {
+          effectId: effect.id,
+          conditionKeys: Object.keys(conditions),
+          logicID: logicId,
+          logicSubID: logicSubId,
+          tipOrErrors: conTipErrors
+        };
+      });
+      return allTest;
+    });
+    return testedEffects;
+  }
+  return [];
+}
+function getCardTipSelection(ctx2, varName, cardId, options) {
+  const cardState = getItemState(ctx2, cardId);
+  const tip = ItemStateFn.getTip(cardState, varName);
+  const tipError = TipFn.createTipErrorWhenCheckFail(tip);
+  if (tipError) {
+    throw tipError;
+  }
+  if (options?.assertTitle && options.assertTitle[0] != tip.title[0]) {
+    throw new Error(`tip title not right: ${tip.title[0]} != ${options.assertTitle[0]}`);
+  }
+  switch (tip.title[0]) {
+    case "カード":
+    case "テキスト":
+    case "StringOptions":
+    case "BattleBonus":
+    case "GlobalEffects":
+    case "BaSyou":
+      return TipFn.getSelection(tip);
+  }
+}
+function getCardTipTextRefs(ctx2, varName, cardId) {
+  return getCardTipSelection(ctx2, varName, cardId, { assertTitle: ["テキスト", [], []] });
+}
+function setCardTipTextRefs(ctx2, varName, pairs, cardId) {
+  let cs = getItemState(ctx2, cardId);
+  cs = ItemStateFn.setTip(cs, varName, { title: ["テキスト", [], pairs] });
+  ctx2 = setItemState(ctx2, cardId, cs);
+  return ctx2;
+}
+function getCardTipStrBaSyouPairs2(ctx2, varName, cardId) {
+  return getCardTipSelection(ctx2, varName, cardId, { assertTitle: ["カード", [], []] });
+}
+function setCardTipStrBaSyouPairs(ctx2, varName, pairs, cardId) {
+  let cs = getItemState(ctx2, cardId);
+  cs = ItemStateFn.setTip(cs, varName, { title: ["カード", [], pairs] });
+  ctx2 = setItemState(ctx2, cardId, cs);
+  return ctx2;
+}
+function getCardTipBattleBonus(ctx2, varName, cardId) {
+  return getCardTipSelection(ctx2, varName, cardId, { assertTitle: ["BattleBonus", [], []] });
+}
+function getCardTipStrings(ctx2, varName, cardId) {
+  return getCardTipSelection(ctx2, varName, cardId, { assertTitle: ["StringOptions", [], []] });
+}
+function createPlayTextEffectFromEffect(ctx2, e, options) {
+  const cardId = EffectFn.getCardID(e);
+  const cardController = getItemController(ctx2, cardId);
+  return EffectFn.fromEffectBasic(e, {
+    ...options,
+    reason: ["PlayText", cardController, cardId, e.text.id]
+  });
+}
+function addImmediateEffectIfCanPayCost(ctx2, effect, options) {
+  const cets = createCommandEffectTips(ctx2, effect);
+  const cetsNoErr = cets.filter(CommandEffecTipFn.filterNoError);
+  if (cetsNoErr.length == 0) {
+    if (options?.isAssertConditionPass) {
+      console.log(cets);
+      console.log(cets.map((cet) => cet.tipOrErrors.map((toe) => toe.errors)));
+      throw new Error(`condition not pass: ${effect.description}`);
+    }
+    ctx2 = EventCenterFn.onAddImmediateEffectButConditionFail(ctx2, effect, cets);
+    return ctx2;
+  }
+  {
+    if (options?.isSkipLimitCheck) {} else {
+      const cardId = EffectFn.getCardID(effect);
+      let itemState = getItemState(ctx2, cardId);
+      if (itemState.textIdsUseThisTurn?.includes(effect.text.id)) {
+        warnCategory(`這個起動效果這回合已發動過: ${effect.text.description}`);
+        return ctx2;
+      }
+      itemState = {
+        ...itemState,
+        textIdsUseThisTurn: [...itemState.textIdsUseThisTurn || [], effect.text.id]
+      };
+      ctx2 = setItemState(ctx2, cardId, itemState);
+    }
+  }
+  return addImmediateEffect(ctx2, effect);
+}
+
+// src/game/gameState/createPlayCardEffects.ts
+var exports_createPlayCardEffects = {};
+__export(exports_createPlayCardEffects, {
+  createUnitGoStageEffectFromPlayEffect: () => createUnitGoStageEffectFromPlayEffect,
+  createRollCostConditions: () => createRollCostConditions,
+  createPlayUnitEffect: () => createPlayUnitEffect,
+  createPlayStayEffect: () => createPlayStayEffect,
+  createPlayOperationEffect: () => createPlayOperationEffect,
+  createPlayGEffect: () => createPlayGEffect,
+  createPlayCommandText: () => createPlayCommandText,
+  createPlayCharacterOperationEffect: () => createPlayCharacterOperationEffect,
+  createPlayCardEffects: () => createPlayCardEffects,
+  createPlayCardEffect: () => createPlayCardEffect,
+  createPlayCardConditions: () => createPlayCardConditions,
+  createOperationGoStageEffectFromPlayEffect: () => createOperationGoStageEffectFromPlayEffect,
+  createCharOpUnitGoStageEffectFromPlayEffect: () => createCharOpUnitGoStageEffectFromPlayEffect
+});
+function createPlayCardEffects(ctx2, cardId, options) {
+  logCategory("createPlayCardEffects", "");
+  let ges = options.ges || [];
+  const ret = [];
+  const prototype = getItemPrototype(ctx2, cardId);
+  const basyou = getItemBaSyou(ctx2, cardId);
+  if (basyou.value[1] == "手札" || basyou.value[1] == "ハンガー") {
+    if (options?.isQuick) {} else {
+      ret.push(createPlayGEffect(ctx2, cardId));
+    }
+    ret.push(...createPlayCardEffect(ctx2, cardId, { ges }));
+  } else {
+    const canPlayByText = ges.filter((ge) => ge.title[0] == "自軍手札にあるかのようにプレイできる").find((ge) => ge.cardIds.includes(cardId));
+    if (canPlayByText) {
+      if (options?.isQuick) {} else {
+        ret.push(createPlayGEffect(ctx2, cardId));
+      }
+      ret.push(...createPlayCardEffect(ctx2, cardId, { ges }));
+    }
+  }
+  const playerId = getItemOwner(ctx2, cardId);
+  prototype.texts?.forEach((text) => {
+    if (text.createPlayEffect == null) {
+      return;
+    }
+    if (basyou.value[1] == "Gゾーン") {
+      if (text.protectLevel != 2) {
+        return;
+      }
+    }
+    if (BaSyouKeywordFn.isBa(basyou.value[1]) == false) {
+      if (text.title[0] == "自動型" && text.title[1] == "恒常") {} else {
+        return;
+      }
+    }
+    const effs = CardTextFn.getCreatePlayEffectFn(text)(ctx2, {
+      id: `createPlayCardEffects_${cardId}`,
+      reason: ["PlayCard", playerId, cardId, {
+        isPlayUnit: prototype.category == "ユニット",
+        isPlayCommand: prototype.category == "コマンド",
+        isPlayCharacter: prototype.category == "キャラクター",
+        isPlayOperationUnit: prototype.category == "オペレーション(ユニット)",
+        isPlayOperation: prototype.category == "オペレーション"
+      }],
+      text
+    }, createBridge({ ges }));
+    effs?.forEach((eff) => {
+      if (eff.text.title[0] != "使用型") {
+        console.log(eff?.text.description);
+        throw new Error;
+      }
+      ret.push(eff);
+    });
+  });
+  return ret;
+}
+function createPlayCardEffect(ctx2, cardId, options) {
+  logCategory("createPlayCardEffect", "");
+  const prototype = getItemPrototype(ctx2, cardId);
+  let basicEff = null;
+  const ret = [];
+  switch (prototype.category) {
+    case "コマンド": {
+      basicEff = createPlayCommandText(ctx2, cardId, options);
+      ret.push(basicEff);
+      break;
+    }
+    case "キャラクター": {
+      basicEff = createPlayCharacterOperationEffect(ctx2, cardId, options);
+      ret.push(basicEff);
+      const stayEff = createPlayStayEffect(ctx2, cardId, options);
+      if (stayEff) {
+        ret.push(stayEff);
+      }
+      break;
+    }
+    case "オペレーション(ユニット)": {
+      basicEff = createPlayCharacterOperationEffect(ctx2, cardId, options);
+      ret.push(basicEff);
+      break;
+    }
+    case "ユニット": {
+      basicEff = createPlayUnitEffect(ctx2, cardId, options);
+      ret.push(basicEff);
+      break;
+    }
+    case "オペレーション":
+    case "ACE": {
+      basicEff = createPlayOperationEffect(ctx2, cardId, options);
+      ret.push(basicEff);
+      break;
+    }
+    case "グラフィック": {
+      ret.push(createPlayGEffect(ctx2, cardId));
+      break;
+    }
+  }
+  if (basicEff) {
+    const morePlayEfs = options?.ges?.filter((g) => g.title[0] == "合計国力_＋１してプレイできる" && g.cardIds.includes(cardId)) || [];
+    const hasTotolCostPlusPlay = morePlayEfs.length > 0;
+    if (hasTotolCostPlusPlay) {
+      let copyOriginCondition = basicEff.text.conditions || {};
+      const cardRollCostLength = getCardTotalCostLength(ctx2, cardId, { ges: options.ges });
+      const addedLength = pipe(always_default(morePlayEfs), map_default((g) => g.title[0] == "合計国力_＋１してプレイできる" ? g.title[1] : 0), sum_default)();
+      copyOriginCondition = {
+        ...copyOriginCondition,
+        "合計国力〔x〕": {
+          actions: [
+            {
+              title: ["合計国力〔x〕", cardRollCostLength + addedLength]
+            }
+          ]
+        }
+      };
+      let totalCostPlusPlayEffect = JSON.parse(JSON.stringify(basicEff));
+      totalCostPlusPlayEffect = {
+        ...totalCostPlusPlayEffect,
+        id: `totalCostPlusPlayEffect_${cardId}`,
+        description: "合計国力_＋１してプレイできる",
+        text: {
+          ...totalCostPlusPlayEffect.text,
+          id: prototype.commandText?.id || `totalCostPlusPlayEffect_text_${cardId}`,
+          description: "合計国力_＋１してプレイできる",
+          conditions: copyOriginCondition
+        }
+      };
+      if (totalCostPlusPlayEffect.text.logicTreeActions?.[0] == null) {
+        throw new Error(`morePlayCardEffect.text.logicTreeActions?.[0] == null`);
+      }
+      totalCostPlusPlayEffect.text.logicTreeActions[0].actions.push({
+        title: function _(ctx3, effect, { GameStateFn, DefineFn }) {
+          const { addedLength: addedLength2 } = { addedLength: 0 };
+          const cardId2 = DefineFn.EffectFn.getCardID(effect);
+          let cs = GameStateFn.getItemState(ctx3, cardId2);
+          cs = DefineFn.ItemStateFn.setMoreTotalRollCostLengthPlay(cs, addedLength2);
+          ctx3 = GameStateFn.setItemState(ctx3, cardId2, cs);
+          return ctx3;
+        }.toString().replace("{ addedLength: 0 }", `{addedLength: ${addedLength}}`)
+      });
+      ret.push(totalCostPlusPlayEffect);
+    }
+  }
+  return ret;
+}
+function createPlayGEffect(ctx2, cardId) {
+  const text = {
+    id: `createPlayGEffect_${cardId}`,
+    title: ["使用型", ["自軍", "配備フェイズ"]],
+    description: "PlayG",
+    conditions: {
+      "出G上限": {
+        actions: [
+          {
+            title: function _(ctx3, effect, { DefineFn, GameStateFn, ToolFn: ToolFn2 }) {
+              const cardId2 = DefineFn.EffectFn.getCardID(effect);
+              const cardController = GameStateFn.getItemController(ctx3, cardId2);
+              const ps = GameStateFn.getPlayerState(ctx3, cardController);
+              if (ps.playGCount > 0) {
+                throw new DefineFn.TipError(`出G上限: ${ps.playGCount}`, { isPlayGLimit: true });
+              }
+              ctx3 = GameStateFn.mapPlayerState(ctx3, cardController, (ps2) => {
+                return {
+                  ...ps2,
+                  playGCount: ps2.playGCount + 1
+                };
+              });
+              return ctx3;
+            }.toString()
+          }
+        ]
+      }
+    },
+    logicTreeActions: [
+      {
+        actions: [
+          {
+            title: function _(ctx3, effect, { DefineFn, GameStateFn, Options }) {
+              const cardId2 = DefineFn.EffectFn.getCardID(effect);
+              const from = GameStateFn.getItemBaSyou(ctx3, cardId2);
+              ctx3 = GameStateFn.doItemMove(ctx3, effect, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "Gゾーン"), [cardId2, from], { ges: Options.ges });
+              return ctx3;
+            }.toString()
+          },
+          {
+            title: ["triggerEvent", { title: ["プレイされて場に出た場合"] }]
+          },
+          {
+            title: ["triggerEvent", { title: ["このカードがGとして場に出た場合"] }]
+          }
+        ]
+      }
+    ]
+  };
+  return {
+    id: `createPlayGEffect_${cardId}`,
+    reason: ["PlayCard", getItemOwner(ctx2, cardId), cardId, { isPlayG: true }],
+    description: `Play G`,
+    text
+  };
+}
+function createPlayUnitEffect(ctx2, cardId, options) {
+  logCategory("createPlayUnitEffect", "");
+  const prototype = getItemPrototype(ctx2, cardId);
+  if (prototype.category == "ユニット") {} else {
+    throw new Error;
+  }
+  const conditions = createPlayCardConditions(ctx2, cardId, options);
+  const description = `Play ${prototype.title}`;
+  const text = {
+    id: `createPlayUnitEffect_${cardId}`,
+    title: ["使用型", ["自軍", "配備フェイズ"]],
+    description,
+    conditions,
+    logicTreeActions: [
+      {
+        actions: [
+          {
+            title: function _(ctx3, effect, { DefineFn, GameStateFn, Options }) {
+              let ges = Options.ges || [];
+              const cardId2 = DefineFn.EffectFn.getCardID(effect);
+              const from = GameStateFn.getItemBaSyou(ctx3, cardId2);
+              ctx3 = GameStateFn.doItemMove(ctx3, effect, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "プレイされているカード"), [cardId2, from], { ges: Options.ges });
+              const newE = GameStateFn.createUnitGoStageEffectFromPlayEffect(ctx3, effect, { ges });
+              return GameStateFn.addStackEffect(ctx3, newE);
+            }.toString()
+          }
+        ]
+      }
+    ]
+  };
+  return {
+    id: `createPlayUnitEffect_${cardId}`,
+    reason: ["PlayCard", getItemOwner(ctx2, cardId), cardId, { isPlayUnit: true }],
+    description: `Play ${prototype.title}`,
+    text
+  };
+}
+function createPlayOperationEffect(ctx2, cardId, options) {
+  logCategory("createPlayOperationEffect", "");
+  const prototype = getItemPrototype(ctx2, cardId);
+  if (prototype.category == "オペレーション") {} else {
+    throw new Error;
+  }
+  const conditions = createPlayCardConditions(ctx2, cardId, options);
+  const description = `Play ${prototype.title}`;
+  const text = {
+    id: `createPlayOperationEffect_${cardId}`,
+    title: ["使用型", ["自軍", "配備フェイズ"]],
+    description,
+    conditions,
+    logicTreeActions: [
+      {
+        actions: [
+          {
+            title: function _(ctx3, effect, { DefineFn, GameStateFn, Options }) {
+              const cardId2 = DefineFn.EffectFn.getCardID(effect);
+              const from = GameStateFn.getItemBaSyou(ctx3, cardId2);
+              ctx3 = GameStateFn.doItemMove(ctx3, effect, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "プレイされているカード"), [cardId2, from], { ges: Options.ges });
+              const newE = GameStateFn.createOperationGoStageEffectFromPlayEffect(ctx3, effect);
+              return GameStateFn.addStackEffect(ctx3, newE);
+            }.toString()
+          }
+        ]
+      }
+    ]
+  };
+  return {
+    id: `createPlayOperationEffect_${cardId}`,
+    reason: ["PlayCard", getItemOwner(ctx2, cardId), cardId, { isPlayOperation: true }],
+    description: `Play ${prototype.title}`,
+    text
+  };
+}
+function createPlayStayEffect(ctx2, cardId, options) {
+  logCategory("createPlayStayEffect", "");
+  const prototype = getItemPrototype(ctx2, cardId);
+  if (prototype.category == "キャラクター") {} else {
+    throw new Error;
+  }
+  if (getCardHasSpeicalEffect(ctx2, ["【ステイ】"], cardId, options)) {} else {
+    return null;
+  }
+  const conditions = createPlayCardConditions(ctx2, cardId, options);
+  delete conditions[TipFn.createCharacterTargetUnitKey()];
+  const description = `Play ${prototype.title}`;
+  const text = {
+    id: `createPlayStayEffect_${cardId}`,
+    title: ["使用型", ["自軍", "配備フェイズ"]],
+    description,
+    conditions,
+    logicTreeActions: [
+      {
+        actions: [
+          {
+            title: function _(ctx3, effect, { DefineFn, GameStateFn, Options }) {
+              const cardId2 = DefineFn.EffectFn.getCardID(effect);
+              const from = GameStateFn.getItemBaSyou(ctx3, cardId2);
+              ctx3 = GameStateFn.doItemMove(ctx3, effect, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "プレイされているカード"), [cardId2, from], { ges: Options.ges });
+              const newE = GameStateFn.createOperationGoStageEffectFromPlayEffect(ctx3, effect);
+              return GameStateFn.addStackEffect(ctx3, newE);
+            }.toString()
+          }
+        ]
+      }
+    ]
+  };
+  return {
+    id: `createPlayStayEffect_${cardId}`,
+    reason: ["PlayCard", getItemOwner(ctx2, cardId), cardId, { isPlayOperation: true }],
+    description: `Play 【ステイ】 ${prototype.title}`,
+    text: { ...text, description: `【ステイ】${text.description}` }
+  };
+}
+function createPlayCharacterOperationEffect(ctx2, cardId, options) {
+  logCategory("createPlayCharacterOperationEffect", "");
+  const prototype = getItemPrototype(ctx2, cardId);
+  if (prototype.category == "キャラクター" || prototype.category == "オペレーション(ユニット)") {} else {
+    throw new Error;
+  }
+  const conditions = createPlayCardConditions(ctx2, cardId, options);
+  const description = `Play ${prototype.title}`;
+  const text = {
+    id: `createPlayCharacterOperationEffect_${cardId}`,
+    title: ["使用型", ["自軍", "配備フェイズ"]],
+    description,
+    conditions,
+    logicTreeActions: [
+      {
+        actions: [
+          {
+            title: function _(ctx3, effect, { DefineFn, GameStateFn, Options }) {
+              const cardId2 = DefineFn.EffectFn.getCardID(effect);
+              const prototype2 = GameStateFn.getItemPrototype(ctx3, cardId2);
+              const from = GameStateFn.getItemBaSyou(ctx3, cardId2);
+              ctx3 = GameStateFn.doItemMove(ctx3, effect, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "プレイされているカード"), [cardId2, from], { ges: Options.ges });
+              const newE = GameStateFn.createCharOpUnitGoStageEffectFromPlayEffect(ctx3, effect);
+              return GameStateFn.addStackEffect(ctx3, newE);
+            }.toString()
+          }
+        ]
+      }
+    ]
+  };
+  const eff = {
+    id: `createPlayCharacterOperationEffect_${cardId}`,
+    reason: ["PlayCard", getItemOwner(ctx2, cardId), cardId, {
+      isPlayCharacter: prototype.category == "キャラクター",
+      isPlayOperation: prototype.category == "オペレーション(ユニット)"
+    }],
+    description: `Play ${prototype.title}`,
+    text
+  };
+  return eff;
+}
+function createPlayCommandText(ctx2, cardId, options) {
+  logCategory("createPlayCommandText", "");
+  const prototype = getItemPrototype(ctx2, cardId);
+  if (prototype.category == "コマンド") {} else {
+    throw new Error;
+  }
+  const commandText = prototype.commandText;
+  const conditions = createPlayCardConditions(ctx2, cardId, options);
+  const description = `Play ${prototype.title}`;
+  const logicLeafs = Object.keys(conditions).map((k) => {
+    const ret = {
+      type: "Leaf",
+      value: k
+    };
+    return ret;
+  });
+  const logicTree = {
+    type: "And",
+    children: commandText?.logicTreeActions?.[0] ? [...logicLeafs, ...CardTextFn.getLogicTreeTreeLeafs(commandText, commandText.logicTreeActions[0])] : logicLeafs
+  };
+  const text = {
+    id: commandText?.id || `createPlayCommandText_${cardId}`,
+    title: commandText?.title || ["使用型", ["自軍", "配備フェイズ"]],
+    description,
+    conditions: {
+      ...conditions,
+      ...commandText?.conditions
+    },
+    logicTreeActions: [
+      {
+        logicTree,
+        actions: [
+          {
+            title: function _(ctx3, effect, { DefineFn, GameStateFn, Options }) {
+              const cardId2 = DefineFn.EffectFn.getCardID(effect);
+              const prototype2 = GameStateFn.getItemPrototype(ctx3, cardId2);
+              if (prototype2.category == "コマンド") {} else {
+                throw new Error;
+              }
+              const commandText2 = prototype2.commandText;
+              const from = GameStateFn.getItemBaSyou(ctx3, cardId2);
+              ctx3 = GameStateFn.doItemMove(ctx3, effect, DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "プレイされているカード"), [cardId2, from], { ges: Options.ges });
+              return GameStateFn.addStackEffect(ctx3, {
+                id: `${effect.id}_場に出る`,
+                reason: ["場に出る", DefineFn.EffectFn.getPlayerID(effect), DefineFn.EffectFn.getCardID(effect)],
+                description: effect.text.description,
+                text: {
+                  id: commandText2?.id || `getPlayCardEffects_commentText_${cardId2}`,
+                  description: commandText2?.description || "unknown",
+                  title: [],
+                  logicTreeActions: [
+                    {
+                      actions: [
+                        {
+                          title: function _2(ctx4, effect2, { DefineFn: DefineFn2, GameStateFn: GameStateFn2, Options: Options2 }) {
+                            const cardId3 = DefineFn2.EffectFn.getCardID(effect2);
+                            const from2 = GameStateFn2.getItemBaSyou(ctx4, cardId3);
+                            const to = DefineFn2.AbsoluteBaSyouFn.setBaSyouKeyword(from2, "ジャンクヤード");
+                            ctx4 = GameStateFn2.doItemMove(ctx4, effect2, to, [cardId3, from2], { ges: Options2.ges });
+                            ctx4 = GameStateFn2.doTriggerEvent(ctx4, { title: ["プレイされて場に出た場合"], cardIds: [cardId3] }, { ges: Options2.ges });
+                            return ctx4;
+                          }.toString()
+                        },
+                        ...commandText2?.logicTreeActions?.[0]?.actions || []
+                      ]
+                    }
+                  ]
+                }
+              });
+            }.toString()
+          }
+        ]
+      }
+    ]
+  };
+  return {
+    id: `createPlayCommandText_${cardId}`,
+    reason: ["PlayCard", getItemOwner(ctx2, cardId), cardId, { isPlayCommand: true }],
+    description: `Play ${prototype.title}`,
+    text
+  };
+}
+function createUnitGoStageEffectFromPlayEffect(ctx2, effect, options) {
+  const cardId = EffectFn.getCardID(effect);
+  const prototype = getItemPrototype(ctx2, cardId);
+  if (prototype.category == "ユニット") {
+    return {
+      id: `createUnitGoStageEffectFromPlayEffect_${cardId}`,
+      reason: ["場に出る", EffectFn.getPlayerID(effect), EffectFn.getCardID(effect)],
+      description: effect.text.description,
+      text: {
+        id: effect.text.id,
+        description: effect.text.description,
+        title: [],
+        logicTreeActions: [
+          {
+            actions: [
+              {
+                title: function _(ctx3, effect2, { DefineFn, GameStateFn, Options }) {
+                  const cardId2 = DefineFn.EffectFn.getCardID(effect2);
+                  const from = GameStateFn.getItemBaSyou(ctx3, cardId2);
+                  const to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "配備エリア");
+                  ctx3 = GameStateFn.doItemMove(ctx3, effect2, to, [cardId2, from], { ges: Options.ges });
+                  const hasHigh = GameStateFn.getCardHasSpeicalEffect(ctx3, ["戦闘配備"], cardId2, Options);
+                  const hasPS = GameStateFn.getCardHasSpeicalEffect(ctx3, ["【PS装甲】"], cardId2, Options);
+                  const isNoNeedRoll = hasHigh || hasPS;
+                  const isRoll = isNoNeedRoll == false;
+                  ctx3 = GameStateFn.doItemSetRollStateBasic(ctx3, isRoll, cardId2, { ...Options });
+                  ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: ["プレイされて場に出た場合"], cardIds: [cardId2] }, Options);
+                  return ctx3;
+                }.toString()
+              }
+            ]
+          }
+        ]
+      }
+    };
+  }
+  throw new Error;
+}
+function createOperationGoStageEffectFromPlayEffect(ctx2, effect) {
+  const cardId = EffectFn.getCardID(effect);
+  const prototype = getItemPrototype(ctx2, cardId);
+  if (prototype.category == "オペレーション" || prototype.category == "キャラクター") {
+    return {
+      id: `createOperationGoStageEffectFromPlayEffect_${cardId}`,
+      reason: ["場に出る", EffectFn.getPlayerID(effect), EffectFn.getCardID(effect)],
+      description: effect.text.description,
+      text: {
+        id: effect.text.id,
+        description: effect.text.description,
+        title: [],
+        logicTreeActions: [
+          {
+            actions: [
+              {
+                title: function _(ctx3, effect2, { DefineFn, GameStateFn, Options }) {
+                  const cardId2 = DefineFn.EffectFn.getCardID(effect2);
+                  const from = GameStateFn.getItemBaSyou(ctx3, cardId2);
+                  const to = DefineFn.AbsoluteBaSyouFn.setBaSyouKeyword(from, "配備エリア");
+                  ctx3 = GameStateFn.doItemMove(ctx3, effect2, to, [cardId2, from], { ges: Options.ges });
+                  ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: ["プレイされて場に出た場合"], cardIds: [cardId2] }, { ges: Options.ges });
+                  return ctx3;
+                }.toString()
+              }
+            ]
+          }
+        ]
+      }
+    };
+  }
+  throw new Error;
+}
+function createCharOpUnitGoStageEffectFromPlayEffect(ctx2, effect) {
+  const cardId = EffectFn.getCardID(effect);
+  const prototype = getItemPrototype(ctx2, cardId);
+  if (prototype.category == "キャラクター" || prototype.category == "オペレーション(ユニット)") {
+    return {
+      id: `createCharOpUnitGoStageEffectFromPlayEffect_${cardId}`,
+      reason: ["場に出る", EffectFn.getPlayerID(effect), EffectFn.getCardID(effect)],
+      description: effect.text.description,
+      text: {
+        id: effect.text.id,
+        description: effect.text.description,
+        title: [],
+        logicTreeActions: [
+          {
+            actions: [
+              {
+                title: function _(ctx3, effect2, { DefineFn, GameStateFn, Options }) {
+                  const cardId2 = DefineFn.EffectFn.getCardID(effect2);
+                  const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx3, DefineFn.TipFn.createCharacterTargetUnitKey(), cardId2);
+                  if (pairs.length == 0) {
+                    throw new Error(`pairs must not 0: ${effect2.text.description}`);
+                  }
+                  const [targetCardId, targetBasyou] = pairs[0];
+                  const from = GameStateFn.getItemBaSyou(ctx3, cardId2);
+                  const to = targetBasyou;
+                  ctx3 = GameStateFn.doItemMove(ctx3, effect2, to, [cardId2, from], { ges: Options.ges });
+                  const isRoll = GameStateFn.getCard(ctx3, targetCardId).isRoll || false;
+                  ctx3 = GameStateFn.mapCard(ctx3, cardId2, (is) => ({ ...is, isRoll }));
+                  ctx3 = GameStateFn.setSetGroupParent(ctx3, targetCardId, cardId2);
+                  ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: ["プレイされて場に出た場合"], cardIds: [cardId2] }, { ges: Options.ges });
+                  ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: ["プレイされて場にセットされた場合"], cardIds: [cardId2] }, { ges: Options.ges });
+                  if (GameStateFn.getSetGroup(ctx3, targetCardId).find((itemId) => GameStateFn.getItemRuntimeCategory(ctx3, itemId) == "キャラクター") == null) {
+                    ctx3 = GameStateFn.doTriggerEvent(ctx3, { title: ["このカードがプレイされて、キャラがセットされていないユニットにセットされた場合"], cardIds: [cardId2] }, Options);
+                  }
+                  return ctx3;
+                }.toString()
+              }
+            ]
+          }
+        ]
+      }
+    };
+  }
+  throw new Error;
+}
+function createRollCostConditions(ctx2, proto, rollCost, bonus) {
+  if (rollCost == "X") {
+    if (proto.color == null) {
+      throw new Error;
+    }
+    return {
+      [TipFn.createConditionKeyOfPayColorX(proto)]: {
+        title: ["RollColor", proto.color]
+      }
+    };
+  }
+  const rollCostConditions = CardColorFn.getAll().map((tc) => createRollCostRequire(Math.max(0, rollCost.filter((c) => c == tc).length + bonus), tc)).reduce((ctx3, cons) => ({ ...ctx3, ...cons }));
+  return rollCostConditions;
+}
+function createPlayCardConditions(ctx2, cardId, options) {
+  logCategory("createPlayCardConditions", "");
+  const prototype = getItemPrototype(ctx2, cardId);
+  const cardRollCostLength = getCardTotalCostLength(ctx2, cardId, options);
+  const costConditions = prototype.category != "グラフィック" ? {
+    [TipFn.createTotalCostKey()]: {
+      actions: [
+        {
+          title: ["合計国力〔x〕", cardRollCostLength]
+        }
+      ]
+    }
+  } : {};
+  const rollCostConditions = createRollCostConditions(ctx2, prototype, prototype.rollCost || [], 0);
+  const characterOperationUnitConditions = prototype.category == "キャラクター" || prototype.category == "オペレーション(ユニット)" ? {
+    [TipFn.createCharacterTargetUnitKey()]: {
+      title: ["Entity", {
+        at: ["配備エリア"],
+        isCanSetCharacter: prototype.category == "キャラクター" || undefined,
+        side: "自軍",
+        is: ["ユニット"],
+        count: 1
+      }]
+    }
+  } : {};
+  const characterMoreConditions = prototype.category == "キャラクター" ? {
+    "同名卡不能下": {
+      actions: [
+        {
+          title: function _(ctx3, effect, { DefineFn, GameStateFn, Options }) {
+            const cardId2 = DefineFn.EffectFn.getCardID(effect);
+            const tip = GameStateFn.createTipByEntitySearch(ctx3, effect, {
+              atBa: true,
+              hasTitle: [],
+              count: 0
+            }, Options);
+            if (DefineFn.TipFn.getWant(tip).length) {
+              console.log(tip);
+              throw new DefineFn.TargetMissingError(`已有同名卡存在: ${cardId2}`);
+            }
+            return ctx3;
+          }.toString()
+        }
+      ]
+    }
+  } : {};
+  let conditions = {
+    ...costConditions,
+    ...rollCostConditions,
+    ...characterOperationUnitConditions,
+    ...characterMoreConditions
+  };
+  const hasSp = options.ges?.find((ge) => ge.title[0] == "このカードは、戦闘エリアにいる自軍ユニットにもセットできる" && ge.cardIds.includes(cardId)) != null;
+  if (hasSp) {
+    conditions = {
+      ...conditions,
+      [TipFn.createCharacterTargetUnitKey()]: {
+        title: ["Entity", {
+          atBa: true,
+          isCanSetCharacter: true,
+          side: "自軍",
+          is: ["ユニット"],
+          count: 1
+        }]
+      }
+    };
+  }
+  return conditions;
+}
+
+// src/game/gameState/getNextPhase.ts
+var exports_getNextPhase = {};
+__export(exports_getNextPhase, {
+  setNextPhase: () => setNextPhase,
+  getNextPhase: () => getNextPhase
+});
+function getNextPhase(ctx2) {
+  const next = PhaseFn.getNext(getPhase(ctx2));
+  return next;
+}
+function setNextPhase(ctx2) {
+  return setPhase(ctx2, getNextPhase(ctx2));
+}
+
+// src/game/gameState/createOnEventTitleFn.ts
+var exports_createOnEventTitleFn = {};
+__export(exports_createOnEventTitleFn, {
+  createOnEventTitleFn: () => createOnEventTitleFn
+});
+function createOnEventTitleFn(text) {
+  if (text.onEvent == null || typeof text.onEvent == "string") {
+    return CardTextFn.getOnEventFn(text);
+  }
+  switch (text.onEvent[0]) {
+    case "GameEventOnTimingDoAction": {
+      const [_, timing, action] = text.onEvent;
+      return function(ctx2, effect, bridge) {
+        const event = EffectFn.getEvent(effect);
+        if (event.title[0] == "GameEventOnTiming" && PhaseFn.eq(event.title[1], timing)) {
+          return createActionTitleFn(action)(ctx2, effect, bridge);
+        }
+        return ctx2;
+      };
+    }
+  }
+}
+
+// src/game/gameState/index.ts
+var GameStateFn = {
+  ...exports_GameState,
+  ...exports_ItemStateComponent,
+  ...exports_EffectStackComponent,
+  ...exports_IsBattleComponent,
+  ...exports_SetGroupComponent,
+  ...exports_CardTableComponent,
+  ...exports_CoinTableComponent,
+  ...exports_ItemTableComponent,
+  ...exports_card,
+  ...exports_battleGroup,
+  ...exports_doEffect,
+  ...exports_player,
+  ...exports_setGroup,
+  ...exports_doTriggerEvent,
+  ...exports_PhaseComponent,
+  ...exports_globalEffects,
+  ...exports_ActivePlayerComponent,
+  ...exports_PlayerStateComponent,
+  ...exports_RuntimeBattleAreaComponent,
+  ...exports_createPlayCardEffects,
+  ...exports_getNextPhase,
+  ...exports_doItemSwap,
+  ...exports_doItemMove,
+  ...exports_createConditionTitleFn,
+  ...exports_createActionTitleFn,
+  ...exports_createOnEventTitleFn,
+  ...exports_doItemSetRollState,
+  ...exports_doCountryDamage,
+  ...exports_doItemSetDestroy,
+  ...exports_doItemSetGlobalEffectsUntilEndOfTurn,
+  ...exports_Entity,
+  ...exports_doPlayerDrawCard,
+  ...exports_doItemDamage,
+  ...exports_doItemAddCoin,
+  ...exports_assertTargetMissingError
+};
+
+// src/game/define/GameEvent.ts
+var exports_GameEvent = {};
+
+// src/game/define/GlobalEffect.ts
+var exports_GlobalEffect = {};
+
+// src/game/define/index.ts
+var DefineFn = {
+  ...exports_BaSyou,
+  ...exports_BattlePoint,
+  ...exports_CardPrototype,
+  ...exports_Effect,
+  ...exports_GameEvent,
+  ...exports_GlobalEffect,
+  ...exports_PlayerID,
+  ...exports_Tip,
+  ...exports_CardText,
+  ...exports_Timing,
+  ...exports_Coin,
+  ...exports_Tip,
+  ...exports_ItemState,
+  ...exports_GameError,
+  ...exports_Card,
+  ...exports_CommandEffectTip
+};
+
+// src/game/bridge/createBridge.ts
+function createBridge(options) {
+  const bridge = {
+    GameStateFn,
+    DefineFn,
+    ToolFn,
+    Options: options
+  };
+  return bridge;
+}
+
+// src/game/gameState/doTriggerEvent.ts
+function doTriggerEvent(ctx2, event, options) {
+  logCategory("doTriggerEvent", event.title, event.cardIds);
+  createAllCardTexts(ctx2).forEach((info) => {
+    const [item, texts] = info;
+    texts.forEach((text) => {
+      const effect = {
+        id: `doTriggerEvent_${item.id}_${text.id}`,
+        reason: ["Event", getItemController(ctx2, item.id), item.id, event],
+        text
+      };
+      logCategory("doTriggerEvent", "eventTitle", text.onEvent);
+      const ges = options.ges || [];
+      ctx2 = createOnEventTitleFn(text)(ctx2, effect, createBridge({ ges }));
+    });
+  });
+  ctx2 = EventCenterFn.onEvent(ctx2, event, options);
+  return ctx2;
+}
+
+// src/game/gameState/MessageComponent.ts
+function addMessage(ctx2, msg) {
+  if (msg.id == 0) {
+    msg.id = ctx2.messageTopId;
+  }
+  msg.effect = ctx2.messagesCurrentEffect || undefined;
+  let nextMsgs = [msg, ...ctx2.messages];
+  if (nextMsgs.length > 200) {
+    nextMsgs = nextMsgs.slice(0, 200);
+  }
+  return {
+    ...ctx2,
+    messageTopId: ctx2.messageTopId + 1,
+    messages: nextMsgs
+  };
+}
+function setMessageCurrentEffect(ctx2, effect) {
+  return {
+    ...ctx2,
+    messagesCurrentEffect: effect
+  };
+}
+function getMessageCurrentEffect(ctx2) {
+  return ctx2.messagesCurrentEffect;
+}
+
+// src/game/gameState/EventCenter.ts
+function assertIsGameState(ctx2) {
+  if (ctx2.isGameState != true) {
+    throw new Error(`must is gameState`);
+  }
+}
+var EventCenterFn = {
+  onTargetMessingError(ctx2, effect, e) {
+    assertIsGameState(ctx2);
+    const msg = `對象遺失: ${e.message}:${effect.text.description}`;
+    ctx2 = addMessage(ctx2, { id: 0, description: msg });
+    console.warn(`=======================`);
+    console.warn(msg);
+    return ctx2;
+  },
+  onAddImmediateEffectButConditionFail(ctx2, effect, cets) {
+    assertIsGameState(ctx2);
+    const msg = `將發動起動效果但條件不足: ${cets.flatMap((cet) => cet.tipOrErrors.flatMap((toe) => toe.errors)).join("|")}: ${effect.text.description}`;
+    ctx2 = addMessage(ctx2, { id: 0, description: msg });
+    console.warn(`=======================`);
+    console.warn(msg);
+    return ctx2;
+  },
+  onAddImmediateEffect(ctx2, effect) {
+    assertIsGameState(ctx2);
+    logCategory(`onAddImmediateEffect`, `${effect.description}`, effect);
+    return ctx2;
+  },
+  onEvent(ctx2, evt, options) {
+    assertIsGameState(ctx2);
+    logCategory(`onEvent`, `${JSON.stringify(evt.title)} ${JSON.stringify(evt.cardIds)}`, evt.title, evt.cardIds);
+    ctx2 = addMessage(ctx2, { id: 0, description: `onEvent: ${evt.title[0]} ${JSON.stringify(evt.cardIds)}` });
+    ctx2 = onEvent(ctx2, evt, options);
+    return ctx2;
+  },
+  onEffectStart(ctx2, effect) {
+    assertIsGameState(ctx2);
+    logCategory(`onEffectStart`, `${effect.text.description}`);
+    ctx2 = setMessageCurrentEffect(ctx2, effect);
+    ctx2 = addMessage(ctx2, { id: 0, description: `onEffectStart: ${effect.text.description}` });
+    return ctx2;
+  },
+  onEffectEnd(ctx2, effect) {
+    assertIsGameState(ctx2);
+    logCategory(`onEffectEnd`, `${effect.text.description}`);
+    ctx2 = setMessageCurrentEffect(ctx2, null);
+    ctx2 = addMessage(ctx2, { id: 0, description: `onEffectEnd: ${effect.text.description}` });
+    return ctx2;
+  },
+  onActionStart(ctx2, effect, action) {
+    assertIsGameState(ctx2);
+    logCategory(`onActionStart`, `${action.description}`);
+    return ctx2;
+  },
+  onActionEnd(ctx2, effect, action) {
+    assertIsGameState(ctx2);
+    logCategory(`onActionEnd`, `${action.description}`);
+    return ctx2;
+  },
+  onItemStateDestroyReasonChange(ctx2, old, curr) {
+    assertIsGameState(ctx2);
+    if (old.destroyReason == null && curr.destroyReason) {
+      logCategory("onItemStateDestroyReasonChange", `被破壞尚未進入堆疊:${curr.id}`);
+      ctx2 = addMessage(ctx2, { id: 0, description: `被破壞尚未進入堆疊:${curr.id}` });
+    } else if (old.destroyReason && curr.destroyReason == null) {
+      logCategory("onItemStateDestroyReasonChange", `破壞被取消:${curr.id}`);
+      ctx2 = addMessage(ctx2, { id: 0, description: `破壞被取消:${curr.id}` });
+    }
+    return ctx2;
+  },
+  onItemDamageChange(ctx2, old, curr) {
+    assertIsGameState(ctx2);
+    const msg = `傷害變化: ${curr.id} ${old.damage} => ${curr.damage}`;
+    logCategory(`onItemDamageChange`, msg);
+    ctx2 = addMessage(ctx2, { id: 0, description: msg });
+    return ctx2;
+  },
+  onItemStateChange(ctx2, old, curr) {
+    assertIsGameState(ctx2);
+    if (old.destroyReason != curr.destroyReason) {
+      ctx2 = EventCenterFn.onItemStateDestroyReasonChange(ctx2, old, curr);
+    }
+    if (old.damage != curr.damage) {
+      ctx2 = EventCenterFn.onItemDamageChange(ctx2, old, curr);
+    }
+    let msg = null;
+    if (old.globalEffects.length != curr.globalEffects.length) {
+      msg = `${curr.id}.globalEffects.length ${old.globalEffects.length} => ${curr.globalEffects.length}`;
+    }
+    if (msg) {
+      ctx2 = addMessage(ctx2, { id: 0, description: msg });
+      logCategory(`onItemStateChange`, msg);
+    }
+    return ctx2;
+  },
+  onCardChange(ctx2, old, curr) {
+    assertIsGameState(ctx2);
+    let msg = null;
+    if (old.isFaceDown != curr.isFaceDown) {
+      msg = `${curr.id}.isFaceDown ${old.isFaceDown} => ${curr.isFaceDown}`;
+    }
+    if (old.isRoll != curr.isRoll) {
+      msg = `${curr.id}.isRoll ${old.isRoll} => ${curr.isRoll}`;
+    }
+    if (old.protoID != curr.protoID) {
+      msg = `${curr.id}.protoID ${old.protoID} => ${curr.protoID}`;
+    }
+    if (msg) {
+      ctx2 = addMessage(ctx2, { id: 0, description: msg });
+      logCategory(`onCardChange`, msg);
+    }
+    return ctx2;
+  },
+  onPlayerStateChange(ctx2, old, curr) {
+    assertIsGameState(ctx2);
+    ctx2 = addMessage(ctx2, { id: 0, description: `onPlayerStateChange:${curr.id}` });
+    return ctx2;
+  },
+  onSetSetGroupParent(ctx2, parentId, itemId) {
+    assertIsGameState(ctx2);
+    ctx2 = addMessage(ctx2, { id: 0, description: `onSetSetGroupParent:${parentId} ${itemId}` });
+    return ctx2;
+  },
+  onSetPhase(ctx2, old, curr) {
+    assertIsGameState(ctx2);
+    logCategory(`onSetPhase`, `${curr}`);
+    ctx2 = addMessage(ctx2, { id: 0, description: `onSetPhase:${curr}` });
+    return ctx2;
+  },
+  onIsBattleChange(ctx2, basyou, old, curr) {
+    assertIsGameState(ctx2);
+    if (curr) {
+      ctx2 = doTriggerEvent(ctx2, { title: ["交戦中となった場合"], cardIds: getItemIdsByBasyou(ctx2, basyou) }, {});
+    }
+    return ctx2;
+  },
+  onCountryHeal(ctx2, playerId, value) {
+    assertIsGameState(ctx2);
+    ctx2 = doTriggerEvent(ctx2, { title: ["自軍本国が回復した場合"], playerId }, {});
+    const msg = `本國回血: ${playerId} => ${value}`;
+    ctx2 = addMessage(ctx2, { id: 0, description: msg });
+    logCategory(`onCountryHeal`, msg);
+    return ctx2;
+  },
+  onCountryDamage(ctx2, playerId, damage) {
+    assertIsGameState(ctx2);
+    const msg = `本國受到傷害: ${playerId} => ${damage} damage`;
+    ctx2 = addMessage(ctx2, { id: 0, description: msg });
+    logCategory(`onCountryDamage`, msg);
+    return ctx2;
+  },
+  onItemAdd(ctx2, basyou, itemId) {
+    assertIsGameState(ctx2);
+    return ctx2;
+  },
+  onItemDelete(ctx2, basyou, itemId) {
+    assertIsGameState(ctx2);
+    return ctx2;
+  },
+  onItemMoveBefore(ctx2, from, to, itemId, options) {
+    assertIsGameState(ctx2);
+    if (BaSyouKeywordFn.isBa(AbsoluteBaSyouFn.getBaSyouKeyword(from)) == false && BaSyouKeywordFn.isBa(AbsoluteBaSyouFn.getBaSyouKeyword(to))) {
+      ctx2 = doTriggerEvent(ctx2, {
+        title: ["カードが場から離れる場合"],
+        cardIds: [itemId]
+      }, options);
+    }
+    return ctx2;
+  },
+  onItemMove(ctx2, from, to, itemId, options) {
+    assertIsGameState(ctx2);
+    ctx2 = onItemMove(ctx2, from, to, itemId, options);
+    return ctx2;
+  },
+  onTableChange(ctx2, old, curr) {
+    assertIsGameState(ctx2);
+    return ctx2;
+  }
+};
+function onItemMove(ctx2, from, to, cardId, options) {
+  ctx2 = updateGlobalEffects(ctx2);
+  if (AbsoluteBaSyouFn.getBaSyouKeyword(from) == "手札") {
+    if (AbsoluteBaSyouFn.getBaSyouKeyword(to) == "プレイされているカード") {
+      ctx2 = doTriggerEvent(ctx2, {
+        title: ["プレイした場合"],
+        cardIds: [cardId]
+      }, options);
+    }
+  }
+  if (BaSyouKeywordFn.isBa(AbsoluteBaSyouFn.getBaSyouKeyword(from)) == false && BaSyouKeywordFn.isBa(AbsoluteBaSyouFn.getBaSyouKeyword(to))) {
+    ctx2 = mapCard(ctx2, cardId, (card) => {
+      return {
+        ...card,
+        isFaceDown: false,
+        isFirstTurn: true
+      };
+    });
+    ctx2 = doTriggerEvent(ctx2, {
+      title: ["このカードが場に出た場合"],
+      cardIds: [cardId]
+    }, options);
+  }
+  if (BaSyouKeywordFn.isBa(AbsoluteBaSyouFn.getBaSyouKeyword(from)) == true && BaSyouKeywordFn.isBa(AbsoluteBaSyouFn.getBaSyouKeyword(to)) == false) {
+    ctx2 = mapItemState(ctx2, cardId, (is) => {
+      return {
+        ...is,
+        damage: 0,
+        destroyReason: null
+      };
+    });
+    ctx2 = removeCoinIds(ctx2, getCoinIdsByCardId(ctx2, cardId));
+    ctx2 = removeSetGroupParent(ctx2, cardId);
+    for (const effect of getCutInDestroyEffects(ctx2)) {
+      if (EffectFn.getCardID(effect) == cardId) {
+        ctx2 = removeEffect(ctx2, effect.id);
+      }
+    }
+    ctx2 = doTriggerEvent(ctx2, {
+      title: ["カードが場から離れた場合"],
+      cardIds: [cardId]
+    }, options);
+  }
+  if (["捨て山", "本国", "手札"].includes(AbsoluteBaSyouFn.getBaSyouKeyword(to))) {
+    ctx2 = mapCard(ctx2, cardId, (card) => {
+      return {
+        ...card,
+        isRoll: false,
+        isFaceDown: true
+      };
+    });
+  } else if (["ジャンクヤード", "ハンガー", "プレイされているカード", "取り除かれたカード"].includes(AbsoluteBaSyouFn.getBaSyouKeyword(to))) {
+    ctx2 = mapCard(ctx2, cardId, (card) => {
+      return {
+        ...card,
+        isRoll: false,
+        isFaceDown: false
+      };
+    });
+  } else if (["Gゾーン"].includes(AbsoluteBaSyouFn.getBaSyouKeyword(to))) {
+    ctx2 = mapCard(ctx2, cardId, (card) => {
+      return {
+        ...card,
+        isFaceDown: false
+      };
+    });
+  }
+  ctx2 = doTriggerEvent(ctx2, {
+    title: ["GameEventOnMove", from, to],
+    cardIds: [cardId],
+    effect: getMessageCurrentEffect(ctx2) || undefined
+  }, options);
+  return ctx2;
+}
+function onEvent(ctx2, event, options) {
+  if (event.title[0] == "カット終了時") {
+    ctx2 = mapItemStateValues(ctx2, (cs) => {
+      return ItemStateFn.onCutEnd(cs);
+    });
+  }
+  if (event.title[0] == "GameEventOnTiming") {
+    const onPhase = event.title[1];
+    if (onPhase[0] == "戦闘フェイズ" && onPhase[2] == "ステップ終了") {
+      ctx2 = mapItemStateValues(ctx2, (cs) => {
+        return ItemStateFn.onStepEnd(cs);
+      });
+      ctx2 = clearHasCheck(ctx2);
+    }
+    if (onPhase[0] == "戦闘フェイズ" && onPhase[1] == "ターン終了時") {
+      switch (onPhase[2]) {
+        case "ダメージリセット":
+          ctx2 = mapItemStateValues(ctx2, (cs) => {
+            return ItemStateFn.onDamageReset(cs);
+          });
+          break;
+        case "効果解決":
+        case "手札調整":
+          break;
+        case "効果終了。ターン終了": {
+          ctx2 = mapItemStateValues(ctx2, (cs) => {
+            return ItemStateFn.onTurnEnd(cs);
+          });
+          const activePlayerId = getActivePlayerID(ctx2);
+          ctx2 = mapPlayerState(ctx2, activePlayerId, (ps) => {
+            return PlayerStateFn.onTurnEnd(ps);
+          });
+          ctx2 = updateGlobalEffects(ctx2);
+          break;
+        }
+      }
+    }
+  }
+  return ctx2;
+}
+
+// src/game/gameState/PhaseComponent.ts
+function setPhase(ctx2, timing) {
+  const old = ctx2.phase;
+  ctx2 = {
+    ...ctx2,
+    phase: timing
+  };
+  ctx2 = EventCenterFn.onSetPhase(ctx2, old, ctx2.phase);
+  return ctx2;
+}
+function getPhase(ctx2) {
+  return ctx2.phase;
+}
+
+// src/game/gameStateWithFlowMemory/effect.ts
+function doActiveEffect(ctx2, playerID, effectID, logicId, logicSubId) {
+  logCategory("doEffect", effectID);
+  if (getActiveEffectID(ctx2) != effectID) {
+    throw new Error("activeEffectID != effectID");
+  }
+  const effect = getEffect(ctx2, effectID);
+  if (effect == null) {
+    throw new Error("effect not found");
+  }
+  if (EffectFn.getPlayerID(effect) != playerID) {
+    throw new Error("你不是效果控制者");
+  }
+  const isStackEffect_ = isStackEffect(ctx2, effectID);
+  try {
+    ctx2 = doEffect(ctx2, effect, logicId, logicSubId);
+  } catch (e) {
+    if (e instanceof TargetMissingError) {
+      ctx2 = EventCenterFn.onTargetMessingError(ctx2, effect, e);
+    } else {
+      throw e;
+    }
+  }
+  ctx2 = clearActiveEffectID(ctx2);
+  ctx2 = removeEffect(ctx2, effectID);
+  if (isStackEffect_) {
+    ctx2 = {
+      ...ctx2,
+      stackEffectMemory: [...ctx2.stackEffectMemory, effect]
+    };
+  }
+  const isStackFinished = isStackEffect_ && ctx2.stackEffect.length == 0;
+  if (isStackFinished) {
+    ctx2 = {
+      ...ctx2,
+      flowMemory: {
+        ...ctx2.flowMemory,
+        shouldTriggerStackEffectFinishedEvent: true
+      }
+    };
+  }
+  return ctx2;
+}
+function setActiveEffectID(ctx2, playerID, effectID) {
+  const activeEffectID = getActiveEffectID(ctx2);
+  if (activeEffectID != null) {
+    throw new Error("有人在執行其它指令");
+  }
+  const effect = getEffect(ctx2, effectID);
+  if (effect == null) {
+    throw new Error("輸入的效果不存在，流程有誤");
+  }
+  const controller = EffectFn.getPlayerID(effect);
+  if (controller != playerID) {
+    throw new Error("你不是控制者");
+  }
+  const cetsNoErr = createCommandEffectTips(ctx2, effect).filter(CommandEffecTipFn.filterNoError);
+  if (cetsNoErr.length == 0) {
+    console.log(JSON.stringify(effect, null, 2));
+    throw new Error(`輸入的效果無法支付，流程有誤`);
+  }
+  for (const cet of cetsNoErr) {
+    ctx2 = clearTipSelectionForUser(ctx2, effect, cet.logicID, cet.logicSubID);
+  }
+  ctx2 = {
+    ...ctx2,
+    flowMemory: {
+      ...ctx2.flowMemory,
+      activeEffectID: effectID,
+      activeLogicID: cetsNoErr.length == 1 ? cetsNoErr[0].logicID : null,
+      activeLogicSubID: cetsNoErr.length == 1 ? cetsNoErr[0].logicSubID : null
+    }
+  };
+  return ctx2;
+}
+function cancelActiveEffectID(ctx2, playerID) {
+  const activeEffectID = getActiveEffectID(ctx2);
+  if (activeEffectID == null) {
+    throw new Error("[cancelEffectID] activeEffectID not exist");
+  }
+  const effect = getEffect(ctx2, activeEffectID);
+  if (effect == null) {
+    return ctx2;
+  }
+  const controller = EffectFn.getPlayerID(effect);
+  if (controller != playerID) {
+    throw new Error("[cancelEffectID] 你不是控制者");
+  }
+  ctx2 = clearActiveEffectID(ctx2);
+  return ctx2;
+}
+function getActiveEffectID(ctx2) {
+  return ctx2.flowMemory.activeEffectID;
+}
+function clearActiveEffectID(ctx2) {
+  return {
+    ...ctx2,
+    flowMemory: {
+      ...ctx2.flowMemory,
+      activeEffectID: null,
+      activeLogicID: null,
+      activeLogicSubID: null
+    }
+  };
+}
+function getActiveLogicID(ctx2) {
+  return ctx2.flowMemory.activeLogicID;
+}
+function getActiveLogicSubID(ctx2) {
+  return ctx2.flowMemory.activeLogicSubID;
+}
+function setActiveLogicID(ctx2, logicID, logicSubID) {
+  return {
+    ...ctx2,
+    flowMemory: {
+      ...ctx2.flowMemory,
+      activeLogicID: logicID,
+      activeLogicSubID: logicSubID
+    }
+  };
+}
+function deleteImmediateEffect(ctx2, playerID, effectID) {
+  const effect = getEffect(ctx2, effectID);
+  if (effect == null) {
+    throw new Error("effect not found " + effectID);
+  }
+  const controller = EffectFn.getPlayerID(effect);
+  if (controller != playerID) {
+    throw new Error("you are not controller");
+  }
+  if (effect.isOption != true) {
+    throw new Error("isOption must true");
+  }
+  return removeEffect(ctx2, effectID);
+}
+
+// src/game/gameState/createPlayEffects.ts
+function createPlayEffects(ctx2, playerId, options) {
+  logCategory("createPlayEffects", "");
+  const ges = options.ges || [];
+  const myTextOn = lift_default(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getTextOn());
+  const getPlayCardEffectsF = ifElse_default(always_default(PhaseFn.eq(getPhase(ctx2), ["配備フェイズ", "フリータイミング"])), pipe(always_default(myTextOn), map_default((basyou) => getItemIdsByBasyou(ctx2, basyou)), flatten_default, map_default((cardId) => {
+    if (getItemPrototype(ctx2, cardId).category == "コマンド") {
+      return [];
+    }
+    return createPlayCardEffects(ctx2, cardId, options).filter((eff) => inTiming(eff.text));
+  }), flatten_default), ifElse_default(always_default(PhaseFn.isFreeTiming(getPhase(ctx2))), pipe(always_default(myTextOn), map_default((basyou) => getItemIdsByBasyou(ctx2, basyou)), flatten_default, map_default((cardId) => {
+    if (getItemPrototype(ctx2, cardId).category == "コマンド") {
+      return [];
+    }
+    if (getCardHasSpeicalEffect(ctx2, ["クイック"], cardId, { ges })) {
+      return createPlayCardEffects(ctx2, cardId, { isQuick: true, ges });
+    }
+    return [];
+  }), flatten_default), always_default([])));
+  const getPlayCommandF = ifElse_default(always_default(PhaseFn.isFreeTiming(getPhase(ctx2))), pipe(always_default(myTextOn), map_default((basyou) => getItemIdsByBasyou(ctx2, basyou)), flatten_default, map_default((cardId) => {
+    const item = getItem(ctx2, cardId);
+    const proto = getItemPrototype(ctx2, item.id);
+    if (proto.category != "コマンド") {
+      return [];
+    }
+    return createPlayCardEffects(ctx2, item.id, { ges });
+  }), flatten_default, (effs) => effs.filter((eff) => inTiming(eff.text))), always_default([]));
+  const getPlayTextF = pipe(always_default(lift_default(AbsoluteBaSyouFn.of)([playerId], BaSyouKeywordFn.getBaAll())), map_default((basyou) => {
+    const cardIds = getItemIdsByBasyou(ctx2, basyou);
+    return cardIds.flatMap((cardId) => getCardTexts(ctx2, cardId, { ges }).flatMap((text) => {
+      logCategory("createPlayEffect", cardId, text.description);
+      if (AbsoluteBaSyouFn.getBaSyouKeyword(basyou) == "Gゾーン") {
+        if (text.protectLevel != 2) {
+          return [];
+        }
+      }
+      switch (text.title[0]) {
+        case "使用型":
+          return [text];
+        case "特殊型":
+          return createTextsFromSpecialEffect(text, { ges, cardId }).filter((text2) => text2.title[0] == "使用型");
+      }
+      return [];
+    }).filter(inTiming).map((text) => {
+      logCategory("createPlayEffect", "====== after inTiming ======");
+      logCategory("createPlayEffect", cardId, text.description);
+      const playTextConditions = {
+        "同切上限": {
+          actions: [
+            {
+              title: ["同切上限"]
+            }
+          ]
+        },
+        "同回合上限": {
+          actions: [
+            {
+              title: ["同回合上限", 1]
+            }
+          ]
+        }
+      };
+      const logicLeafs = Object.keys(playTextConditions).map((k) => {
+        const ret = {
+          type: "Leaf",
+          value: k
+        };
+        return ret;
+      });
+      const logicTree = {
+        type: "And",
+        children: text.logicTreeActions?.[0] ? [...logicLeafs, ...CardTextFn.getLogicTreeTreeLeafs(text, text.logicTreeActions[0])] : logicLeafs
+      };
+      return {
+        id: `createPlayEffects_${playerId}_${cardId}_${text.id}`,
+        reason: ["PlayText", playerId, cardId, text.id],
+        description: text.description,
+        text: {
+          ...text,
+          conditions: {
+            ...text.conditions,
+            ...playTextConditions
+          },
+          logicTreeActions: [
+            {
+              logicTree,
+              actions: text.logicTreeActions?.[0].actions || []
+            }
+          ]
+        }
+      };
+    }));
+  }), flatten_default);
+  function inTiming(text) {
+    const siYouTiming = (() => {
+      if (text.title[0] == "使用型") {
+        return text.title[1];
+      }
+      throw new Error("not support:" + text.title[0] + ":" + text.description);
+    })();
+    switch (siYouTiming[0]) {
+      case "自軍":
+        if (ctx2.activePlayerID != playerId) {
+          logCategory("createPlayEffects", `ctx.activePlayerID != ${playerId}`, text.title, text.description);
+          return false;
+        }
+        break;
+      case "敵軍":
+        if (ctx2.activePlayerID == playerId) {
+          logCategory("createPlayEffects", `ctx.activePlayerID == ${playerId}`, text.title, text.description);
+          return false;
+        }
+        break;
+      case "戦闘フェイズ":
+        if (ctx2.phase[0] != "戦闘フェイズ") {
+          logCategory("createPlayEffects", `ctx.timing[0] != "戦闘フェイズ"`, text.title, text.description);
+          return false;
+        }
+        break;
+      case "攻撃ステップ":
+      case "防御ステップ":
+      case "ダメージ判定ステップ":
+      case "帰還ステップ":
+        if (ctx2.phase[0] != "戦闘フェイズ") {
+          logCategory("createPlayEffects", `ctx.timing[0] != "戦闘フェイズ"`, text.title, text.description);
+          return false;
+        }
+        if (ctx2.phase[1] != siYouTiming[0]) {
+          logCategory("createPlayEffects", `ctx.timing[1] != ${siYouTiming[0]}`, text.title, text.description);
+          return false;
+        }
+        break;
+    }
+    switch (siYouTiming[0]) {
+      case "自軍":
+      case "敵軍":
+        switch (siYouTiming[1]) {
+          case "配備フェイズ":
+          case "戦闘フェイズ":
+            if (ctx2.phase[0] != siYouTiming[1]) {
+              logCategory("createPlayEffects", `ctx.timing[0] != ${siYouTiming[1]}`, text.title, text.description);
+              return false;
+            }
+            break;
+          case "攻撃ステップ":
+          case "防御ステップ":
+          case "ダメージ判定ステップ":
+          case "帰還ステップ":
+            if (ctx2.phase[0] != "戦闘フェイズ") {
+              logCategory("createPlayEffects", `ctx.timing[0] != "戦闘フェイズ"`, ctx2.phase, text.title, text.description);
+              return false;
+            }
+            if (ctx2.phase[1] != siYouTiming[1]) {
+              logCategory("createPlayEffects", `ctx.timing[1] != ${siYouTiming[1]}`, ctx2.phase, text.title, text.description);
+              return false;
+            }
+            break;
+        }
+        break;
+    }
+    return true;
+  }
+  return [...getPlayCardEffectsF(), ...getPlayCommandF(), ...getPlayTextF()];
+}
+
+// src/game/gameState/updateCommand.ts
+function updateCommand(ctx2, options) {
+  const playerAEffects = createPlayEffects(ctx2, PlayerA, options);
+  const playerBEffects = createPlayEffects(ctx2, PlayerB, options);
+  const allEffects = [...playerAEffects, ...playerBEffects];
+  ctx2 = setCommandEffects(ctx2, allEffects);
+  const testedEffects = allEffects.flatMap((e) => createCommandEffectTips(ctx2, e));
+  ctx2 = setCommandEffectTips(ctx2, testedEffects);
+  return ctx2;
+}
+function getPlayerCommands(ctx2, playerID) {
+  return ctx2.commandEffectTips.filter(CommandEffecTipFn.filterPlayerId(getEffects(ctx2), playerID));
+}
+function getPlayerCommandsFilterNoError(ctx2, playerID) {
+  return getPlayerCommands(ctx2, playerID).filter(CommandEffecTipFn.filterNoError);
+}
+function getPlayerCommandsFilterNoErrorDistinct(ctx2, playerID) {
+  return getPlayerCommandsFilterNoError(ctx2, playerID).filter(CommandEffecTipFn.filterEffectDistinct);
+}
+
+// src/game/gameState/doCutInDestroyEffectsAndClear.ts
+function doCutInDestroyEffectsAndClear(ctx2, ordered, options) {
+  const destryEffectIds = ordered || ctx2.destroyEffect;
+  ctx2 = {
+    ...ctx2,
+    destroyEffect: [],
+    stackEffect: [...destryEffectIds, ...ctx2.stackEffect]
+  };
+  destryEffectIds.map((i2) => getEffect(ctx2, i2)).forEach((e) => {
+    if (e.reason[0] != "Destroy") {
+      throw new Error;
+    }
+    const reason = e.reason[3];
+    const itemId = EffectFn.getCardID(e);
+    ctx2 = doTriggerEvent(ctx2, { title: ["破壊された場合", reason], cardIds: [itemId] }, { ges: options.ges });
+  });
+  return ctx2;
+}
+
+// src/game/gameState/createAttackPhaseRuleEffect.ts
+function createAttackPhaseRuleEffect(ctx2, playerId) {
+  const phase = getPhase(ctx2);
+  return {
+    id: `createAttackPhaseRuleEffect_${playerId}`,
+    reason: ["GameRule", playerId, { isAttack: phase[1] == "攻撃ステップ", isDefence: phase[1] == "防御ステップ" }],
+    description: "出擊",
+    isOption: true,
+    text: {
+      id: `createAttackPhaseRuleEffect_text_${playerId}`,
+      title: [],
+      description: "出擊",
+      conditions: {
+        [TipFn.createGoEarthKey()]: {
+          title: function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2, Options }) {
+            const playerId2 = DefineFn2.EffectFn.getPlayerID(effect);
+            const unitIds = GameStateFn2.getPlayerUnitCanGoEarthIds(ctx3, playerId2, { ges: Options.ges });
+            const pairs = unitIds.map((id) => {
+              return [id, GameStateFn2.getItemBaSyou(ctx3, id)];
+            });
+            return {
+              title: ["カード", pairs, []],
+              flags: { isGoBattleArea1: true }
+            };
+          }.toString(),
+          actions: [
+            {
+              title: function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2, Options }) {
+                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect);
+                const fackCardId = DefineFn2.EffectFn.getCardID(effect);
+                const earthPairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, "去地球", fackCardId);
+                const phase2 = GameStateFn2.getPhase(ctx3);
+                for (const pair3 of earthPairs) {
+                  ctx3 = GameStateFn2.mapItemState(ctx3, pair3[0], (is) => ({ ...is, isAttack: phase2[1] == "攻撃ステップ", isDefence: phase2[1] == "防御ステップ" }));
+                  ctx3 = GameStateFn2.doItemMove(ctx3, effect, DefineFn2.AbsoluteBaSyouFn.of(playerId2, "戦闘エリア1"), pair3, { ges: Options.ges });
+                }
+                return ctx3;
+              }.toString()
+            }
+          ],
+          groupKey: "出擊"
+        },
+        [TipFn.createGoSpaceKey()]: {
+          title: function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2, Options }) {
+            const playerId2 = DefineFn2.EffectFn.getPlayerID(effect);
+            const unitIds = GameStateFn2.getPlayerUnitCanGoSpaceIds(ctx3, playerId2, { ges: Options.ges });
+            const pairs = unitIds.map((id) => {
+              return [id, GameStateFn2.getItemBaSyou(ctx3, id)];
+            });
+            return {
+              title: ["カード", pairs, []],
+              flags: { isGoBattleArea2: true }
+            };
+          }.toString(),
+          actions: [
+            {
+              title: function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2, Options }) {
+                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect);
+                const fackCardId = DefineFn2.EffectFn.getCardID(effect);
+                const spacePairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, "去宇宙", fackCardId);
+                const phase2 = GameStateFn2.getPhase(ctx3);
+                for (const pair3 of spacePairs) {
+                  ctx3 = GameStateFn2.mapItemState(ctx3, pair3[0], (is) => ({ ...is, isAttack: phase2[1] == "攻撃ステップ", isDefence: phase2[1] == "防御ステップ" }));
+                  ctx3 = GameStateFn2.doItemMove(ctx3, effect, DefineFn2.AbsoluteBaSyouFn.of(playerId2, "戦闘エリア2"), pair3, { ges: Options.ges });
+                }
+                return ctx3;
+              }.toString()
+            }
+          ],
+          groupKey: "出擊"
+        }
+      },
+      logicTreeActions: [
+        {
+          actions: [
+            {
+              title: function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2, Options }) {
+                const fackCardId = DefineFn2.EffectFn.getCardID(effect);
+                const phase2 = GameStateFn2.getPhase(ctx3);
+                const pairs1 = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, "去地球", fackCardId);
+                const pairs2 = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, "去宇宙", fackCardId);
+                if (DefineFn2.PhaseFn.eq(phase2, ["戦闘フェイズ", "攻撃ステップ", "規定の効果"])) {
+                  ctx3 = GameStateFn2.doTriggerEvent(ctx3, {
+                    title: ["このカードが攻撃に出撃した場合"],
+                    cardIds: [...pairs1, ...pairs2].map((p) => p[0])
+                  }, { ges: Options.ges });
+                  ctx3 = GameStateFn2.doTriggerEvent(ctx3, {
+                    title: ["ユニットが出撃した場合"],
+                    cardIds: [...pairs1, ...pairs2].map((p) => p[0])
+                  }, { ges: Options.ges });
+                }
+                ctx3 = GameStateFn2.checkIsBattle(ctx3);
+                return ctx3;
+              }.toString()
+            }
+          ]
+        }
+      ]
+    }
+  };
+}
+
+// src/game/gameState/createDamageRuleEffect.ts
+function createDamageRuleEffect(ctx2, playerId) {
+  return {
+    id: `createDamageRuleEffect_${playerId}`,
+    reason: ["GameRule", playerId, { isDamageCheck: true }],
+    text: {
+      id: `createDamageRuleEffect_text_${playerId}`,
+      title: [],
+      description: "getDamageRuleEffect",
+      logicTreeActions: [
+        {
+          actions: [
+            {
+              title: function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2, Options }) {
+                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect);
+                ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, "戦闘エリア1", 1, Options);
+                ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, "戦闘エリア2", 1, Options);
+                ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, "戦闘エリア1", 2, Options);
+                ctx3 = GameStateFn2.doPlayerAttack(ctx3, playerId2, "戦闘エリア2", 2, Options);
+                return ctx3;
+              }.toString()
+            }
+          ]
+        }
+      ]
+    }
+  };
+}
+
+// src/game/gameState/createReturnRuleEffect.ts
+function createReturnRuleEffect(ctx2, playerId) {
+  return {
+    id: `createReturnRuleEffect_${playerId}`,
+    reason: ["GameRule", playerId, { isReturn: true }],
+    text: {
+      id: `createReturnRuleEffect_text_${playerId}`,
+      title: [],
+      description: "getReturnRuleEffect",
+      logicTreeActions: [
+        {
+          actions: [
+            {
+              title: function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2, Options }) {
+                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect);
+                const opponentId = DefineFn2.PlayerIDFn.getOpponent(playerId2);
+                ctx3 = _processKw(ctx3, playerId2, "戦闘エリア1");
+                ctx3 = _processKw(ctx3, playerId2, "戦闘エリア2");
+                ctx3 = _processKw(ctx3, opponentId, "戦闘エリア1");
+                ctx3 = _processKw(ctx3, opponentId, "戦闘エリア2");
+                function _processKw(ctx4, playerId3, fromKw) {
+                  const from = DefineFn2.AbsoluteBaSyouFn.of(playerId3, fromKw);
+                  const runtimeArea1 = GameStateFn2.getRuntimeBattleArea(ctx4, fromKw);
+                  const unitIdsAtArea1 = GameStateFn2.getItemIdsByBasyou(ctx4, from);
+                  for (const cardId of unitIdsAtArea1) {
+                    const target = [cardId, from];
+                    if (GameStateFn2.getSetGroupRoot(ctx4, cardId) != cardId) {
+                      continue;
+                    }
+                    if (GameStateFn2.getCardBattleArea(ctx4, cardId).includes(runtimeArea1)) {
+                      ctx4 = GameStateFn2.doItemSetRollStateBasic(ctx4, true, target[0], { ...Options });
+                      ctx4 = GameStateFn2.doItemMoveBasic(ctx4, DefineFn2.AbsoluteBaSyouFn.of(playerId3, "配備エリア"), target, Options);
+                    } else {
+                      ctx4 = GameStateFn2.doItemMoveBasic(ctx4, DefineFn2.AbsoluteBaSyouFn.of(playerId3, "ジャンクヤード"), target, Options);
+                    }
+                  }
+                  return ctx4;
+                }
+                return ctx3;
+              }.toString()
+            }
+          ]
+        }
+      ]
+    }
+  };
+}
+
+// src/game/gameState/createDrawPhaseRuleEffect.ts
+function createDrawPhaseRuleEffect(ctx2, playerId) {
+  return {
+    id: `createDrawPhaseRuleEffect_${playerId}`,
+    reason: ["GameRule", playerId, { isDraw: true }],
+    text: {
+      id: `createDrawPhaseRuleEffect_text_${playerId}`,
+      title: [],
+      description: "抽牌階段規定效果",
+      logicTreeActions: [
+        {
+          actions: [
+            {
+              title: function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2, Options }) {
+                const drawCount = 1;
+                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect);
+                const from = DefineFn2.AbsoluteBaSyouFn.of(playerId2, "本国");
+                const cardIds = GameStateFn2.getItemIdsByBasyou(ctx3, from).slice(0, drawCount);
+                for (const cardId of cardIds) {
+                  ctx3 = GameStateFn2.doItemMove(ctx3, effect, DefineFn2.AbsoluteBaSyouFn.of(playerId2, "手札"), [cardId, from], { ges: Options.ges });
+                }
+                return ctx3;
+              }.toString()
+            }
+          ]
+        }
+      ]
+    }
+  };
+}
+
+// src/game/gameState/createRerollPhaseRuleEffect.ts
+function createRerollPhaseRuleEffect(ctx2, playerId) {
+  return {
+    id: `createRerollPhaseRuleEffect_${playerId}`,
+    reason: ["GameRule", playerId, { isReroll: true }],
+    text: {
+      id: `createRerollPhaseRuleEffect_text_${playerId}`,
+      title: [],
+      description: "getRerollPhaseRuleEffect",
+      logicTreeActions: [
+        {
+          actions: [
+            {
+              title: function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2, Options }) {
+                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect);
+                const pairs = ["配備エリア", "Gゾーン"].flatMap((kw) => {
+                  const basyou = DefineFn2.AbsoluteBaSyouFn.of(playerId2, kw);
+                  return GameStateFn2.getItemIdsByBasyou(ctx3, basyou).filter((cardId) => GameStateFn2.getItemIsCanReroll(ctx3, cardId)).map((cardId) => {
+                    return [cardId, basyou];
+                  });
+                });
+                for (const pair3 of pairs) {
+                  ctx3 = GameStateFn2.doItemSetRollStateBasic(ctx3, false, pair3[0], { ...Options });
+                }
+                return ctx3;
+              }.toString()
+            }
+          ]
+        }
+      ]
+    }
+  };
+}
+
+// src/game/gameState/createDiscardRuleEffect.ts
+function createDiscardRuleEffect(ctx2, playerId) {
+  return {
+    id: `createDiscardRuleEffect_${playerId}`,
+    reason: ["GameRule", playerId, { isDiscard: true }],
+    text: {
+      id: `createDiscardRuleEffect_text_${playerId}`,
+      title: [],
+      description: "調整手牌為7張以下",
+      conditions: {
+        "調整": {
+          title: function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2, Options }) {
+            const playerId2 = DefineFn2.EffectFn.getPlayerID(effect);
+            const hands = GameStateFn2.getPlayerHandIds(ctx3, playerId2);
+            const bonus = Options.ges?.map((ge) => {
+              if (ge.title[0] == "自軍の手札の上限枚数に＋_１" && ge.cardIds.some((cardId) => GameStateFn2.getItemController(ctx3, cardId) == playerId2)) {
+                return ge.title[1];
+              }
+              return 0;
+            }).reduce((a, b) => a + b, 0) || 0;
+            const maxLen = 7 + bonus;
+            const discardLen = hands.length - maxLen;
+            if (discardLen <= 0) {
+              throw new DefineFn2.TipError("");
+            }
+            const pairs = hands.map((id) => GameStateFn2.createStrBaSyouPair(ctx3, id));
+            return {
+              title: ["カード", pairs, pairs.slice(0, discardLen)],
+              count: discardLen
+            };
+          }.toString()
+        }
+      },
+      logicTreeActions: [
+        {
+          actions: [
+            {
+              title: function _(ctx3, effect, { DefineFn: DefineFn2, GameStateFn: GameStateFn2, Options }) {
+                const cardId = DefineFn2.EffectFn.getCardID(effect);
+                const playerId2 = DefineFn2.EffectFn.getPlayerID(effect);
+                const pairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, "調整", cardId);
+                for (const pair3 of pairs) {
+                  ctx3 = GameStateFn2.doItemMoveBasic(ctx3, DefineFn2.AbsoluteBaSyouFn.of(playerId2, "ジャンクヤード"), pair3, Options);
+                }
+                return ctx3;
+              }.toString()
+            }
+          ]
+        }
+      ]
+    }
+  };
+}
+
+// src/game/gameStateWithFlowMemory/applyFlow.ts
+function applyFlow(ctx2, playerID, flow) {
+  logCategory("applyFlow", `${playerID} ${flow.id} ${flow.description}`, playerID, flow);
+  switch (flow.id) {
+    case "FlowSetActiveEffectID": {
+      if (flow.effectID == null) {
+        throw new Error("effectID not found");
+      }
+      ctx2 = setActiveEffectID(ctx2, playerID, flow.effectID);
+      const isAllPassCut = !!ctx2.flowMemory.hasPlayerPassCut[PlayerA] && !!ctx2.flowMemory.hasPlayerPassCut[PlayerB];
+      if (isAllPassCut == false) {
+        ctx2 = {
+          ...ctx2,
+          flowMemory: {
+            ...ctx2.flowMemory,
+            hasPlayerPassCut: {}
+          }
+        };
+      }
+      return ctx2;
+    }
+    case "FlowCancelActiveEffectID": {
+      return cancelActiveEffectID(ctx2, playerID);
+    }
+    case "FlowDeleteImmediateEffect": {
+      if (flow.effectID == null) {
+        throw new Error("effectID not found");
+      }
+      return deleteImmediateEffect(ctx2, playerID, flow.effectID);
+    }
+    case "FlowSetActiveLogicID": {
+      return setActiveLogicID(ctx2, flow.logicID, flow.logicSubID);
+    }
+    case "FlowDoEffect": {
+      if (flow.effectID == null) {
+        throw new Error("effectID not found");
+      }
+      if (flow.logicID == null) {
+        throw new Error("logicID not found");
+      }
+      if (flow.logicSubID == null) {
+        throw new Error("logicSubID not found");
+      }
+      ctx2 = doActiveEffect(ctx2, playerID, flow.effectID, flow.logicID, flow.logicSubID);
+      ctx2 = {
+        ...ctx2,
+        flowMemory: {
+          ...ctx2.flowMemory,
+          hasPlayerPassPhase: {}
+        }
+      };
+      ctx2 = {
+        ...ctx2,
+        flowMemory: {
+          ...ctx2.flowMemory,
+          hasPlayerPassPayCost: {}
+        }
+      };
+      ctx2 = createMinusDestroyEffectAndPush(ctx2, { ges: getGlobalEffects(ctx2, null) });
+      ctx2 = updateCommand(ctx2, { ges: getGlobalEffects(ctx2, null) });
+      return ctx2;
+    }
+    case "FlowPassPhase": {
+      return {
+        ...ctx2,
+        flowMemory: {
+          ...ctx2.flowMemory,
+          hasPlayerPassPhase: {
+            ...ctx2.flowMemory.hasPlayerPassPhase,
+            [playerID]: true
+          }
+        }
+      };
+    }
+    case "FlowCancelPassPhase":
+      return {
+        ...ctx2,
+        flowMemory: {
+          ...ctx2.flowMemory,
+          hasPlayerPassPhase: {
+            ...ctx2.flowMemory.hasPlayerPassPhase,
+            [playerID]: false
+          }
+        }
+      };
+    case "FlowPassCut": {
+      return {
+        ...ctx2,
+        flowMemory: {
+          ...ctx2.flowMemory,
+          hasPlayerPassCut: {
+            ...ctx2.flowMemory.hasPlayerPassCut,
+            [playerID]: true
+          }
+        }
+      };
+    }
+    case "FlowCancelPassCut":
+      return {
+        ...ctx2,
+        flowMemory: {
+          ...ctx2.flowMemory,
+          hasPlayerPassCut: {
+            ...ctx2.flowMemory.hasPlayerPassCut,
+            [playerID]: false
+          }
+        }
+      };
+    case "FlowTriggerTextEvent":
+      if (ctx2.flowMemory.hasTriggerEvent) {
+        logCategory("applyFlow", "已經執行過triggerTextEvent");
+        return ctx2;
+      }
+      if (ctx2.flowMemory.state != "playing") {
+        switch (ctx2.flowMemory.state) {
+          case "prepareDeck": {
+            ctx2 = shuffleItems(ctx2, AbsoluteBaSyouFn.of(PlayerA, "本国"));
+            ctx2 = shuffleItems(ctx2, AbsoluteBaSyouFn.of(PlayerB, "本国"));
+            ctx2 = {
+              ...ctx2,
+              flowMemory: {
+                ...ctx2.flowMemory,
+                state: "whoFirst"
+              }
+            };
+            break;
+          }
+          case "whoFirst": {
+            ctx2 = {
+              ...ctx2,
+              flowMemory: {
+                ...ctx2.flowMemory,
+                state: "draw6AndConfirm"
+              }
+            };
+            break;
+          }
+          case "draw6AndConfirm": {
+            {
+              const from = AbsoluteBaSyouFn.toString(AbsoluteBaSyouFn.of(PlayerA, "本国"));
+              const to = AbsoluteBaSyouFn.toString(AbsoluteBaSyouFn.of(PlayerA, "手札"));
+              const cards = ctx2.table.cardStack[from].slice(0, 6);
+              ctx2.table.cardStack[from] = ctx2.table.cardStack[from].slice(6);
+              ctx2.table.cardStack[to] = [...cards, ...ctx2.table.cardStack[to] || []];
+            }
+            {
+              const from = AbsoluteBaSyouFn.toString(AbsoluteBaSyouFn.of(PlayerB, "本国"));
+              const to = AbsoluteBaSyouFn.toString(AbsoluteBaSyouFn.of(PlayerB, "手札"));
+              const cards = ctx2.table.cardStack[from].slice(0, 6);
+              ctx2.table.cardStack[from] = ctx2.table.cardStack[from].slice(6);
+              ctx2.table.cardStack[to] = [...cards, ...ctx2.table.cardStack[to] || []];
+            }
+            ctx2 = {
+              ...ctx2,
+              phase: ["リロールフェイズ", "フェイズ開始"]
+            };
+            ctx2 = {
+              ...ctx2,
+              flowMemory: {
+                ...ctx2.flowMemory,
+                state: "playing"
+              }
+            };
+            break;
+          }
+        }
+        return ctx2;
+      }
+      if (flow.event.title[0] == "GameEventOnTiming" && PhaseFn.eq(flow.event.title[1], ctx2.phase)) {} else {
+        throw new Error(`你要觸發的階段和現階段不符: ${flow.event.title[1]} != ${ctx2.phase}`);
+      }
+      if (ctx2.activePlayerID == null) {
+        throw new Error("activePlayerID not found");
+      }
+      switch (ctx2.phase[0]) {
+        case "ドローフェイズ": {
+          switch (ctx2.phase[1]) {
+            case "規定の効果": {
+              ctx2 = addImmediateEffect(ctx2, createDrawPhaseRuleEffect(ctx2, ctx2.activePlayerID));
+              break;
+            }
+            default: {
+              ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] }, { ges: getGlobalEffects(ctx2, null) });
+            }
+          }
+          break;
+        }
+        case "リロールフェイズ": {
+          switch (ctx2.phase[1]) {
+            case "規定の効果": {
+              ctx2 = addImmediateEffect(ctx2, createRerollPhaseRuleEffect(ctx2, ctx2.activePlayerID));
+              break;
+            }
+            default: {
+              ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] }, { ges: getGlobalEffects(ctx2, null) });
+            }
+          }
+          break;
+        }
+        case "戦闘フェイズ": {
+          switch (ctx2.phase[1]) {
+            case "攻撃ステップ": {
+              switch (ctx2.phase[2]) {
+                case "規定の効果": {
+                  ctx2 = addImmediateEffect(ctx2, createAttackPhaseRuleEffect(ctx2, ctx2.activePlayerID));
+                  break;
+                }
+                case "ステップ開始": {
+                  ctx2 = checkIsBattle(ctx2);
+                  ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] }, { ges: getGlobalEffects(ctx2, null) });
+                  break;
+                }
+                case "フリータイミング":
+                case "フリータイミング2": {
+                  ctx2 = updateCommand(ctx2, { ges: getGlobalEffects(ctx2, null) });
+                  ctx2 = {
+                    ...ctx2,
+                    flowMemory: {
+                      ...ctx2.flowMemory,
+                      hasPlayerPassCut: {}
+                    }
+                  };
+                  ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] }, { ges: getGlobalEffects(ctx2, null) });
+                  break;
+                }
+                case "ステップ終了": {
+                  ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] }, { ges: getGlobalEffects(ctx2, null) });
+                  break;
+                }
+              }
+              break;
+            }
+            case "防御ステップ": {
+              switch (ctx2.phase[2]) {
+                case "規定の効果": {
+                  ctx2 = addImmediateEffect(ctx2, createAttackPhaseRuleEffect(ctx2, PlayerIDFn.getOpponent(ctx2.activePlayerID)));
+                  break;
+                }
+                case "ステップ開始":
+                  ctx2 = checkIsBattle(ctx2);
+                  ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] }, { ges: getGlobalEffects(ctx2, null) });
+                  break;
+                case "フリータイミング":
+                case "フリータイミング2": {
+                  ctx2 = updateCommand(ctx2, { ges: getGlobalEffects(ctx2, null) });
+                  ctx2 = {
+                    ...ctx2,
+                    flowMemory: {
+                      ...ctx2.flowMemory,
+                      hasPlayerPassCut: {}
+                    }
+                  };
+                  ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] }, { ges: getGlobalEffects(ctx2, null) });
+                  break;
+                }
+                case "ステップ終了": {
+                  ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] }, { ges: getGlobalEffects(ctx2, null) });
+                }
+              }
+              break;
+            }
+            case "ダメージ判定ステップ": {
+              switch (ctx2.phase[2]) {
+                case "規定の効果": {
+                  ctx2 = addImmediateEffect(ctx2, createDamageRuleEffect(ctx2, ctx2.activePlayerID));
+                  break;
+                }
+                case "ステップ開始": {
+                  ctx2 = checkIsBattle(ctx2);
+                  ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] }, { ges: getGlobalEffects(ctx2, null) });
+                  break;
+                }
+                case "フリータイミング":
+                case "フリータイミング2": {
+                  ctx2 = updateCommand(ctx2, { ges: getGlobalEffects(ctx2, null) });
+                  ctx2 = {
+                    ...ctx2,
+                    flowMemory: {
+                      ...ctx2.flowMemory,
+                      hasPlayerPassCut: {}
+                    }
+                  };
+                  ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] }, { ges: getGlobalEffects(ctx2, null) });
+                  break;
+                }
+                case "ステップ終了": {
+                  ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] }, { ges: getGlobalEffects(ctx2, null) });
+                }
+              }
+              break;
+            }
+            case "帰還ステップ": {
+              switch (ctx2.phase[2]) {
+                case "規定の効果": {
+                  ctx2 = addImmediateEffect(ctx2, createReturnRuleEffect(ctx2, ctx2.activePlayerID));
+                  break;
+                }
+                case "ステップ開始": {
+                  ctx2 = checkIsBattle(ctx2);
+                  ctx2 = updateCommand(ctx2, { ges: getGlobalEffects(ctx2, null) });
+                  ctx2 = {
+                    ...ctx2,
+                    flowMemory: {
+                      ...ctx2.flowMemory,
+                      hasPlayerPassCut: {}
+                    }
+                  };
+                  ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] }, { ges: getGlobalEffects(ctx2, null) });
+                  break;
+                }
+                case "ステップ終了":
+                case "フリータイミング":
+                case "フリータイミング2": {
+                  ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] }, { ges: getGlobalEffects(ctx2, null) });
+                }
+              }
+              break;
+            }
+            case "ターン終了時": {
+              switch (ctx2.phase[2]) {
+                case "ダメージリセット":
+                  ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] }, { ges: getGlobalEffects(ctx2, null) });
+                  break;
+                case "効果解決":
+                  ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] }, { ges: getGlobalEffects(ctx2, null) });
+                  break;
+                case "手札調整":
+                  ctx2 = addImmediateEffectIfCanPayCost(ctx2, createDiscardRuleEffect(ctx2, PlayerA), { isSkipLimitCheck: true });
+                  ctx2 = addImmediateEffectIfCanPayCost(ctx2, createDiscardRuleEffect(ctx2, PlayerB), { isSkipLimitCheck: true });
+                  ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] }, { ges: getGlobalEffects(ctx2, null) });
+                  break;
+                case "効果終了。ターン終了": {
+                  ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] }, { ges: getGlobalEffects(ctx2, null) });
+                  if (ctx2.activePlayerID == null) {
+                    throw new Error("activePlayerID not found");
+                  }
+                  ctx2 = {
+                    ...ctx2,
+                    activePlayerID: PlayerIDFn.getOpponent(ctx2.activePlayerID),
+                    turn: ctx2.turn + 1
+                  };
+                  break;
+                }
+                default: {
+                  ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] }, { ges: getGlobalEffects(ctx2, null) });
+                }
+              }
+            }
+          }
+          break;
+        }
+        default: {
+          ctx2 = doTriggerEvent(ctx2, { title: ["GameEventOnTiming", ctx2.phase] }, { ges: getGlobalEffects(ctx2, null) });
+        }
+      }
+      ctx2 = {
+        ...ctx2,
+        flowMemory: {
+          ...ctx2.flowMemory,
+          hasTriggerEvent: true
+        }
+      };
+      return ctx2;
+    case "FlowUpdateCommand":
+      ctx2 = updateCommand(ctx2, { ges: getGlobalEffects(ctx2, null) });
+      ctx2 = {
+        ...ctx2,
+        flowMemory: {
+          ...ctx2.flowMemory,
+          hasTriggerEvent: true
+        }
+      };
+      return ctx2;
+    case "FlowNextTiming": {
+      ctx2 = setNextPhase(ctx2);
+      ctx2 = updateCommand(ctx2, { ges: getGlobalEffects(ctx2, null) });
+      ctx2 = {
+        ...ctx2,
+        flowMemory: {
+          ...ctx2.flowMemory,
+          hasTriggerEvent: false
+        }
+      };
+      ctx2 = {
+        ...ctx2,
+        flowMemory: {
+          ...ctx2.flowMemory,
+          hasPlayerPassPhase: {}
+        }
+      };
+      return ctx2;
+    }
+    case "FlowHandleStackEffectFinished": {
+      ctx2 = doTriggerEvent(ctx2, {
+        title: ["カット終了時", ctx2.stackEffectMemory]
+      }, { ges: getGlobalEffects(ctx2, null) });
+      ctx2 = {
+        ...ctx2,
+        stackEffectMemory: [],
+        flowMemory: {
+          ...ctx2.flowMemory,
+          hasPlayerPassCut: {},
+          shouldTriggerStackEffectFinishedEvent: false
+        }
+      };
+      return ctx2;
+    }
+    case "FlowPassPayCost": {
+      const effect = getEffect(ctx2, flow.effectID);
+      if (effect == null) {
+        throw new Error(`effectID not found:${flow.effectID}`);
+      }
+      ctx2 = {
+        ...ctx2,
+        flowMemory: {
+          ...ctx2.flowMemory,
+          hasPlayerPassPayCost: {
+            ...ctx2.flowMemory.hasPlayerPassPayCost,
+            [playerID]: true
+          }
+        }
+      };
+      return ctx2;
+    }
+    case "FlowMakeDestroyOrder": {
+      ctx2 = doCutInDestroyEffectsAndClear(ctx2, flow.destroyEffect.map((i2) => i2.id), { ges: getGlobalEffects(ctx2, null) });
+      ctx2 = updateCommand(ctx2, { ges: getGlobalEffects(ctx2, null) });
+      return {
+        ...ctx2,
+        flowMemory: {
+          ...ctx2.flowMemory,
+          hasPlayerPassCut: {}
+        }
+      };
+    }
+    case "FlowSetTipSelection": {
+      const effect = getEffect(ctx2, flow.effectID);
+      const cardId = EffectFn.getCardID(effect);
+      ctx2 = mapItemState(ctx2, cardId, (is) => ItemStateFn.setTip(is, flow.conditionKey, flow.tip));
+      assertTipForUserSelection(ctx2, effect, cardId);
+      return ctx2;
+    }
+  }
+  return ctx2;
+}
+
+// src/game/gameStateWithFlowMemory/GameStateWithFlowMemory.ts
+var DEFAULT_FLOW_MEMORY = {
+  state: "prepareDeck",
+  hasTriggerEvent: false,
+  hasPlayerPassPhase: {},
+  hasPlayerPassCut: {},
+  hasPlayerPassPayCost: {},
+  shouldTriggerStackEffectFinishedEvent: false,
+  activeEffectID: null,
+  activeLogicID: null,
+  activeLogicSubID: null
+};
+function createGameStateWithFlowMemory() {
+  return {
+    ...createGameState(),
+    stackEffectMemory: [],
+    flowMemory: DEFAULT_FLOW_MEMORY
+  };
+}
+function initState(ctx2, deckA, deckB) {
+  ctx2 = createCardWithProtoIds(ctx2, AbsoluteBaSyouFn.of(PlayerA, "本国"), deckA);
+  ctx2 = createCardWithProtoIds(ctx2, AbsoluteBaSyouFn.of(PlayerB, "本国"), deckB);
+  ctx2 = shuffleItems(ctx2, AbsoluteBaSyouFn.of(PlayerA, "本国"));
+  ctx2 = shuffleItems(ctx2, AbsoluteBaSyouFn.of(PlayerB, "本国"));
+  ctx2 = initCardFace(ctx2);
+  ctx2 = setActivePlayerID(ctx2, PlayerA);
+  ctx2 = {
+    ...ctx2,
+    flowMemory: DEFAULT_FLOW_MEMORY
+  };
+  return ctx2;
+}
+function initCardFace(ctx2) {
+  return mapCardsWithBasyou(ctx2, (baSyou, card) => {
+    switch (baSyou.value[1]) {
+      case "本国":
+      case "捨て山":
+      case "手札":
+        return {
+          ...card,
+          isFaceDown: true
+        };
+      default:
+        return {
+          ...card,
+          isFaceDown: false
+        };
+    }
+  });
+}
+
+// src/client/define/GameContext.ts
+function createGameContext() {
+  return {
+    varsPool: {},
+    gameState: createGameStateWithFlowMemory(),
+    versionID: 0
+  };
+}
+
+// node_modules/tslib/tslib.es6.mjs
+var extendStatics = function(d, b) {
+  extendStatics = Object.setPrototypeOf || { __proto__: [] } instanceof Array && function(d2, b2) {
+    d2.__proto__ = b2;
+  } || function(d2, b2) {
+    for (var p in b2)
+      if (Object.prototype.hasOwnProperty.call(b2, p))
+        d2[p] = b2[p];
+  };
+  return extendStatics(d, b);
+};
+function __extends(d, b) {
+  if (typeof b !== "function" && b !== null)
+    throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+  extendStatics(d, b);
+  function __() {
+    this.constructor = d;
+  }
+  d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __);
+}
+function __values(o) {
+  var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i2 = 0;
+  if (m)
+    return m.call(o);
+  if (o && typeof o.length === "number")
+    return {
+      next: function() {
+        if (o && i2 >= o.length)
+          o = undefined;
+        return { value: o && o[i2++], done: !o };
+      }
+    };
+  throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
+}
+function __read(o, n) {
+  var m = typeof Symbol === "function" && o[Symbol.iterator];
+  if (!m)
+    return o;
+  var i2 = m.call(o), r, ar = [], e;
+  try {
+    while ((n === undefined || n-- > 0) && !(r = i2.next()).done)
+      ar.push(r.value);
+  } catch (error) {
+    e = { error };
+  } finally {
+    try {
+      if (r && !r.done && (m = i2["return"]))
+        m.call(i2);
+    } finally {
+      if (e)
+        throw e.error;
+    }
+  }
+  return ar;
+}
+function __spreadArray(to, from, pack) {
+  if (pack || arguments.length === 2)
+    for (var i2 = 0, l = from.length, ar;i2 < l; i2++) {
+      if (ar || !(i2 in from)) {
+        if (!ar)
+          ar = Array.prototype.slice.call(from, 0, i2);
+        ar[i2] = from[i2];
+      }
+    }
+  return to.concat(ar || Array.prototype.slice.call(from));
+}
+
+// node_modules/rxjs/dist/esm5/internal/util/isFunction.js
+function isFunction(value) {
+  return typeof value === "function";
+}
+
+// node_modules/rxjs/dist/esm5/internal/util/createErrorClass.js
+function createErrorClass(createImpl) {
+  var _super = function(instance) {
+    Error.call(instance);
+    instance.stack = new Error().stack;
+  };
+  var ctorFunc = createImpl(_super);
+  ctorFunc.prototype = Object.create(Error.prototype);
+  ctorFunc.prototype.constructor = ctorFunc;
+  return ctorFunc;
+}
+
+// node_modules/rxjs/dist/esm5/internal/util/UnsubscriptionError.js
+var UnsubscriptionError = createErrorClass(function(_super) {
+  return function UnsubscriptionErrorImpl(errors) {
+    _super(this);
+    this.message = errors ? errors.length + ` errors occurred during unsubscription:
+` + errors.map(function(err, i2) {
+      return i2 + 1 + ") " + err.toString();
+    }).join(`
+  `) : "";
+    this.name = "UnsubscriptionError";
+    this.errors = errors;
+  };
+});
+
+// node_modules/rxjs/dist/esm5/internal/util/arrRemove.js
+function arrRemove(arr, item) {
+  if (arr) {
+    var index = arr.indexOf(item);
+    0 <= index && arr.splice(index, 1);
+  }
+}
+
+// node_modules/rxjs/dist/esm5/internal/Subscription.js
+var Subscription = function() {
+  function Subscription2(initialTeardown) {
+    this.initialTeardown = initialTeardown;
+    this.closed = false;
+    this._parentage = null;
+    this._finalizers = null;
+  }
+  Subscription2.prototype.unsubscribe = function() {
+    var e_1, _a, e_2, _b;
+    var errors;
+    if (!this.closed) {
+      this.closed = true;
+      var _parentage = this._parentage;
+      if (_parentage) {
+        this._parentage = null;
+        if (Array.isArray(_parentage)) {
+          try {
+            for (var _parentage_1 = __values(_parentage), _parentage_1_1 = _parentage_1.next();!_parentage_1_1.done; _parentage_1_1 = _parentage_1.next()) {
+              var parent_1 = _parentage_1_1.value;
+              parent_1.remove(this);
+            }
+          } catch (e_1_1) {
+            e_1 = { error: e_1_1 };
+          } finally {
+            try {
+              if (_parentage_1_1 && !_parentage_1_1.done && (_a = _parentage_1.return))
+                _a.call(_parentage_1);
+            } finally {
+              if (e_1)
+                throw e_1.error;
+            }
+          }
+        } else {
+          _parentage.remove(this);
+        }
+      }
+      var initialFinalizer = this.initialTeardown;
+      if (isFunction(initialFinalizer)) {
+        try {
+          initialFinalizer();
+        } catch (e) {
+          errors = e instanceof UnsubscriptionError ? e.errors : [e];
+        }
+      }
+      var _finalizers = this._finalizers;
+      if (_finalizers) {
+        this._finalizers = null;
+        try {
+          for (var _finalizers_1 = __values(_finalizers), _finalizers_1_1 = _finalizers_1.next();!_finalizers_1_1.done; _finalizers_1_1 = _finalizers_1.next()) {
+            var finalizer = _finalizers_1_1.value;
+            try {
+              execFinalizer(finalizer);
+            } catch (err) {
+              errors = errors !== null && errors !== undefined ? errors : [];
+              if (err instanceof UnsubscriptionError) {
+                errors = __spreadArray(__spreadArray([], __read(errors)), __read(err.errors));
+              } else {
+                errors.push(err);
+              }
+            }
+          }
+        } catch (e_2_1) {
+          e_2 = { error: e_2_1 };
+        } finally {
+          try {
+            if (_finalizers_1_1 && !_finalizers_1_1.done && (_b = _finalizers_1.return))
+              _b.call(_finalizers_1);
+          } finally {
+            if (e_2)
+              throw e_2.error;
+          }
+        }
+      }
+      if (errors) {
+        throw new UnsubscriptionError(errors);
+      }
+    }
+  };
+  Subscription2.prototype.add = function(teardown) {
+    var _a;
+    if (teardown && teardown !== this) {
+      if (this.closed) {
+        execFinalizer(teardown);
+      } else {
+        if (teardown instanceof Subscription2) {
+          if (teardown.closed || teardown._hasParent(this)) {
+            return;
+          }
+          teardown._addParent(this);
+        }
+        (this._finalizers = (_a = this._finalizers) !== null && _a !== undefined ? _a : []).push(teardown);
+      }
+    }
+  };
+  Subscription2.prototype._hasParent = function(parent) {
+    var _parentage = this._parentage;
+    return _parentage === parent || Array.isArray(_parentage) && _parentage.includes(parent);
+  };
+  Subscription2.prototype._addParent = function(parent) {
+    var _parentage = this._parentage;
+    this._parentage = Array.isArray(_parentage) ? (_parentage.push(parent), _parentage) : _parentage ? [_parentage, parent] : parent;
+  };
+  Subscription2.prototype._removeParent = function(parent) {
+    var _parentage = this._parentage;
+    if (_parentage === parent) {
+      this._parentage = null;
+    } else if (Array.isArray(_parentage)) {
+      arrRemove(_parentage, parent);
+    }
+  };
+  Subscription2.prototype.remove = function(teardown) {
+    var _finalizers = this._finalizers;
+    _finalizers && arrRemove(_finalizers, teardown);
+    if (teardown instanceof Subscription2) {
+      teardown._removeParent(this);
+    }
+  };
+  Subscription2.EMPTY = function() {
+    var empty = new Subscription2;
+    empty.closed = true;
+    return empty;
+  }();
+  return Subscription2;
+}();
+var EMPTY_SUBSCRIPTION = Subscription.EMPTY;
+function isSubscription(value) {
+  return value instanceof Subscription || value && "closed" in value && isFunction(value.remove) && isFunction(value.add) && isFunction(value.unsubscribe);
+}
+function execFinalizer(finalizer) {
+  if (isFunction(finalizer)) {
+    finalizer();
+  } else {
+    finalizer.unsubscribe();
+  }
+}
+
+// node_modules/rxjs/dist/esm5/internal/config.js
+var config = {
+  onUnhandledError: null,
+  onStoppedNotification: null,
+  Promise: undefined,
+  useDeprecatedSynchronousErrorHandling: false,
+  useDeprecatedNextContext: false
+};
+
+// node_modules/rxjs/dist/esm5/internal/scheduler/timeoutProvider.js
+var timeoutProvider = {
+  setTimeout: function(handler, timeout) {
+    var args = [];
+    for (var _i = 2;_i < arguments.length; _i++) {
+      args[_i - 2] = arguments[_i];
+    }
+    var delegate = timeoutProvider.delegate;
+    if (delegate === null || delegate === undefined ? undefined : delegate.setTimeout) {
+      return delegate.setTimeout.apply(delegate, __spreadArray([handler, timeout], __read(args)));
+    }
+    return setTimeout.apply(undefined, __spreadArray([handler, timeout], __read(args)));
+  },
+  clearTimeout: function(handle) {
+    var delegate = timeoutProvider.delegate;
+    return ((delegate === null || delegate === undefined ? undefined : delegate.clearTimeout) || clearTimeout)(handle);
+  },
+  delegate: undefined
+};
+
+// node_modules/rxjs/dist/esm5/internal/util/reportUnhandledError.js
+function reportUnhandledError(err) {
+  timeoutProvider.setTimeout(function() {
+    var onUnhandledError = config.onUnhandledError;
+    if (onUnhandledError) {
+      onUnhandledError(err);
+    } else {
+      throw err;
+    }
+  });
+}
+
+// node_modules/rxjs/dist/esm5/internal/util/noop.js
+function noop() {}
+
+// node_modules/rxjs/dist/esm5/internal/NotificationFactories.js
+var COMPLETE_NOTIFICATION = function() {
+  return createNotification("C", undefined, undefined);
+}();
+function errorNotification(error) {
+  return createNotification("E", undefined, error);
+}
+function nextNotification(value) {
+  return createNotification("N", value, undefined);
+}
+function createNotification(kind, value, error) {
+  return {
+    kind,
+    value,
+    error
+  };
+}
+
+// node_modules/rxjs/dist/esm5/internal/util/errorContext.js
+var context = null;
+function errorContext(cb) {
+  if (config.useDeprecatedSynchronousErrorHandling) {
+    var isRoot = !context;
+    if (isRoot) {
+      context = { errorThrown: false, error: null };
+    }
+    cb();
+    if (isRoot) {
+      var _a = context, errorThrown = _a.errorThrown, error = _a.error;
+      context = null;
+      if (errorThrown) {
+        throw error;
+      }
+    }
+  } else {
+    cb();
+  }
+}
+function captureError(err) {
+  if (config.useDeprecatedSynchronousErrorHandling && context) {
+    context.errorThrown = true;
+    context.error = err;
+  }
+}
+
+// node_modules/rxjs/dist/esm5/internal/Subscriber.js
+var Subscriber = function(_super) {
+  __extends(Subscriber2, _super);
+  function Subscriber2(destination) {
+    var _this = _super.call(this) || this;
+    _this.isStopped = false;
+    if (destination) {
+      _this.destination = destination;
+      if (isSubscription(destination)) {
+        destination.add(_this);
+      }
+    } else {
+      _this.destination = EMPTY_OBSERVER;
+    }
+    return _this;
+  }
+  Subscriber2.create = function(next, error, complete) {
+    return new SafeSubscriber(next, error, complete);
+  };
+  Subscriber2.prototype.next = function(value) {
+    if (this.isStopped) {
+      handleStoppedNotification(nextNotification(value), this);
+    } else {
+      this._next(value);
+    }
+  };
+  Subscriber2.prototype.error = function(err) {
+    if (this.isStopped) {
+      handleStoppedNotification(errorNotification(err), this);
+    } else {
+      this.isStopped = true;
+      this._error(err);
+    }
+  };
+  Subscriber2.prototype.complete = function() {
+    if (this.isStopped) {
+      handleStoppedNotification(COMPLETE_NOTIFICATION, this);
+    } else {
+      this.isStopped = true;
+      this._complete();
+    }
+  };
+  Subscriber2.prototype.unsubscribe = function() {
+    if (!this.closed) {
+      this.isStopped = true;
+      _super.prototype.unsubscribe.call(this);
+      this.destination = null;
+    }
+  };
+  Subscriber2.prototype._next = function(value) {
+    this.destination.next(value);
+  };
+  Subscriber2.prototype._error = function(err) {
+    try {
+      this.destination.error(err);
+    } finally {
+      this.unsubscribe();
+    }
+  };
+  Subscriber2.prototype._complete = function() {
+    try {
+      this.destination.complete();
+    } finally {
+      this.unsubscribe();
+    }
+  };
+  return Subscriber2;
+}(Subscription);
+var _bind = Function.prototype.bind;
+function bind3(fn, thisArg) {
+  return _bind.call(fn, thisArg);
+}
+var ConsumerObserver = function() {
+  function ConsumerObserver2(partialObserver) {
+    this.partialObserver = partialObserver;
+  }
+  ConsumerObserver2.prototype.next = function(value) {
+    var partialObserver = this.partialObserver;
+    if (partialObserver.next) {
+      try {
+        partialObserver.next(value);
+      } catch (error) {
+        handleUnhandledError(error);
+      }
+    }
+  };
+  ConsumerObserver2.prototype.error = function(err) {
+    var partialObserver = this.partialObserver;
+    if (partialObserver.error) {
+      try {
+        partialObserver.error(err);
+      } catch (error) {
+        handleUnhandledError(error);
+      }
+    } else {
+      handleUnhandledError(err);
+    }
+  };
+  ConsumerObserver2.prototype.complete = function() {
+    var partialObserver = this.partialObserver;
+    if (partialObserver.complete) {
+      try {
+        partialObserver.complete();
+      } catch (error) {
+        handleUnhandledError(error);
+      }
+    }
+  };
+  return ConsumerObserver2;
+}();
+var SafeSubscriber = function(_super) {
+  __extends(SafeSubscriber2, _super);
+  function SafeSubscriber2(observerOrNext, error, complete) {
+    var _this = _super.call(this) || this;
+    var partialObserver;
+    if (isFunction(observerOrNext) || !observerOrNext) {
+      partialObserver = {
+        next: observerOrNext !== null && observerOrNext !== undefined ? observerOrNext : undefined,
+        error: error !== null && error !== undefined ? error : undefined,
+        complete: complete !== null && complete !== undefined ? complete : undefined
+      };
+    } else {
+      var context_1;
+      if (_this && config.useDeprecatedNextContext) {
+        context_1 = Object.create(observerOrNext);
+        context_1.unsubscribe = function() {
+          return _this.unsubscribe();
+        };
+        partialObserver = {
+          next: observerOrNext.next && bind3(observerOrNext.next, context_1),
+          error: observerOrNext.error && bind3(observerOrNext.error, context_1),
+          complete: observerOrNext.complete && bind3(observerOrNext.complete, context_1)
+        };
+      } else {
+        partialObserver = observerOrNext;
+      }
+    }
+    _this.destination = new ConsumerObserver(partialObserver);
+    return _this;
+  }
+  return SafeSubscriber2;
+}(Subscriber);
+function handleUnhandledError(error) {
+  if (config.useDeprecatedSynchronousErrorHandling) {
+    captureError(error);
+  } else {
+    reportUnhandledError(error);
+  }
+}
+function defaultErrorHandler(err) {
+  throw err;
+}
+function handleStoppedNotification(notification, subscriber) {
+  var onStoppedNotification = config.onStoppedNotification;
+  onStoppedNotification && timeoutProvider.setTimeout(function() {
+    return onStoppedNotification(notification, subscriber);
+  });
+}
+var EMPTY_OBSERVER = {
+  closed: true,
+  next: noop,
+  error: defaultErrorHandler,
+  complete: noop
+};
+
+// node_modules/rxjs/dist/esm5/internal/symbol/observable.js
+var observable = function() {
+  return typeof Symbol === "function" && Symbol.observable || "@@observable";
+}();
+
+// node_modules/rxjs/dist/esm5/internal/util/identity.js
+function identity2(x) {
+  return x;
+}
+
+// node_modules/rxjs/dist/esm5/internal/util/pipe.js
+function pipeFromArray(fns) {
+  if (fns.length === 0) {
+    return identity2;
+  }
+  if (fns.length === 1) {
+    return fns[0];
+  }
+  return function piped(input) {
+    return fns.reduce(function(prev, fn) {
+      return fn(prev);
+    }, input);
+  };
+}
+
+// node_modules/rxjs/dist/esm5/internal/Observable.js
+var Observable = function() {
+  function Observable2(subscribe) {
+    if (subscribe) {
+      this._subscribe = subscribe;
+    }
+  }
+  Observable2.prototype.lift = function(operator) {
+    var observable2 = new Observable2;
+    observable2.source = this;
+    observable2.operator = operator;
+    return observable2;
+  };
+  Observable2.prototype.subscribe = function(observerOrNext, error, complete) {
+    var _this = this;
+    var subscriber = isSubscriber(observerOrNext) ? observerOrNext : new SafeSubscriber(observerOrNext, error, complete);
+    errorContext(function() {
+      var _a = _this, operator = _a.operator, source = _a.source;
+      subscriber.add(operator ? operator.call(subscriber, source) : source ? _this._subscribe(subscriber) : _this._trySubscribe(subscriber));
+    });
+    return subscriber;
+  };
+  Observable2.prototype._trySubscribe = function(sink) {
+    try {
+      return this._subscribe(sink);
+    } catch (err) {
+      sink.error(err);
+    }
+  };
+  Observable2.prototype.forEach = function(next, promiseCtor) {
+    var _this = this;
+    promiseCtor = getPromiseCtor(promiseCtor);
+    return new promiseCtor(function(resolve, reject) {
+      var subscriber = new SafeSubscriber({
+        next: function(value) {
+          try {
+            next(value);
+          } catch (err) {
+            reject(err);
+            subscriber.unsubscribe();
+          }
+        },
+        error: reject,
+        complete: resolve
+      });
+      _this.subscribe(subscriber);
+    });
+  };
+  Observable2.prototype._subscribe = function(subscriber) {
+    var _a;
+    return (_a = this.source) === null || _a === undefined ? undefined : _a.subscribe(subscriber);
+  };
+  Observable2.prototype[observable] = function() {
+    return this;
+  };
+  Observable2.prototype.pipe = function() {
+    var operations = [];
+    for (var _i = 0;_i < arguments.length; _i++) {
+      operations[_i] = arguments[_i];
+    }
+    return pipeFromArray(operations)(this);
+  };
+  Observable2.prototype.toPromise = function(promiseCtor) {
+    var _this = this;
+    promiseCtor = getPromiseCtor(promiseCtor);
+    return new promiseCtor(function(resolve, reject) {
+      var value;
+      _this.subscribe(function(x) {
+        return value = x;
+      }, function(err) {
+        return reject(err);
+      }, function() {
+        return resolve(value);
+      });
+    });
+  };
+  Observable2.create = function(subscribe) {
+    return new Observable2(subscribe);
+  };
+  return Observable2;
+}();
+function getPromiseCtor(promiseCtor) {
+  var _a;
+  return (_a = promiseCtor !== null && promiseCtor !== undefined ? promiseCtor : config.Promise) !== null && _a !== undefined ? _a : Promise;
+}
+function isObserver(value) {
+  return value && isFunction(value.next) && isFunction(value.error) && isFunction(value.complete);
+}
+function isSubscriber(value) {
+  return value && value instanceof Subscriber || isObserver(value) && isSubscription(value);
+}
+
+// node_modules/rxjs/dist/esm5/internal/util/lift.js
+function hasLift(source) {
+  return isFunction(source === null || source === undefined ? undefined : source.lift);
+}
+function operate(init) {
+  return function(source) {
+    if (hasLift(source)) {
+      return source.lift(function(liftedSource) {
+        try {
+          return init(liftedSource, this);
+        } catch (err) {
+          this.error(err);
+        }
+      });
+    }
+    throw new TypeError("Unable to lift unknown Observable type");
+  };
+}
+
+// node_modules/rxjs/dist/esm5/internal/operators/OperatorSubscriber.js
+function createOperatorSubscriber(destination, onNext, onComplete, onError, onFinalize) {
+  return new OperatorSubscriber(destination, onNext, onComplete, onError, onFinalize);
+}
+var OperatorSubscriber = function(_super) {
+  __extends(OperatorSubscriber2, _super);
+  function OperatorSubscriber2(destination, onNext, onComplete, onError, onFinalize, shouldUnsubscribe) {
+    var _this = _super.call(this, destination) || this;
+    _this.onFinalize = onFinalize;
+    _this.shouldUnsubscribe = shouldUnsubscribe;
+    _this._next = onNext ? function(value) {
+      try {
+        onNext(value);
+      } catch (err) {
+        destination.error(err);
+      }
+    } : _super.prototype._next;
+    _this._error = onError ? function(err) {
+      try {
+        onError(err);
+      } catch (err2) {
+        destination.error(err2);
+      } finally {
+        this.unsubscribe();
+      }
+    } : _super.prototype._error;
+    _this._complete = onComplete ? function() {
+      try {
+        onComplete();
+      } catch (err) {
+        destination.error(err);
+      } finally {
+        this.unsubscribe();
+      }
+    } : _super.prototype._complete;
+    return _this;
+  }
+  OperatorSubscriber2.prototype.unsubscribe = function() {
+    var _a;
+    if (!this.shouldUnsubscribe || this.shouldUnsubscribe()) {
+      var closed_1 = this.closed;
+      _super.prototype.unsubscribe.call(this);
+      !closed_1 && ((_a = this.onFinalize) === null || _a === undefined || _a.call(this));
+    }
+  };
+  return OperatorSubscriber2;
+}(Subscriber);
+
+// node_modules/rxjs/dist/esm5/internal/util/ObjectUnsubscribedError.js
+var ObjectUnsubscribedError = createErrorClass(function(_super) {
+  return function ObjectUnsubscribedErrorImpl() {
+    _super(this);
+    this.name = "ObjectUnsubscribedError";
+    this.message = "object unsubscribed";
+  };
+});
+
+// node_modules/rxjs/dist/esm5/internal/Subject.js
+var Subject = function(_super) {
+  __extends(Subject2, _super);
+  function Subject2() {
+    var _this = _super.call(this) || this;
+    _this.closed = false;
+    _this.currentObservers = null;
+    _this.observers = [];
+    _this.isStopped = false;
+    _this.hasError = false;
+    _this.thrownError = null;
+    return _this;
+  }
+  Subject2.prototype.lift = function(operator) {
+    var subject = new AnonymousSubject(this, this);
+    subject.operator = operator;
+    return subject;
+  };
+  Subject2.prototype._throwIfClosed = function() {
+    if (this.closed) {
+      throw new ObjectUnsubscribedError;
+    }
+  };
+  Subject2.prototype.next = function(value) {
+    var _this = this;
+    errorContext(function() {
+      var e_1, _a;
+      _this._throwIfClosed();
+      if (!_this.isStopped) {
+        if (!_this.currentObservers) {
+          _this.currentObservers = Array.from(_this.observers);
+        }
+        try {
+          for (var _b = __values(_this.currentObservers), _c = _b.next();!_c.done; _c = _b.next()) {
+            var observer = _c.value;
+            observer.next(value);
+          }
+        } catch (e_1_1) {
+          e_1 = { error: e_1_1 };
+        } finally {
+          try {
+            if (_c && !_c.done && (_a = _b.return))
+              _a.call(_b);
+          } finally {
+            if (e_1)
+              throw e_1.error;
+          }
+        }
+      }
+    });
+  };
+  Subject2.prototype.error = function(err) {
+    var _this = this;
+    errorContext(function() {
+      _this._throwIfClosed();
+      if (!_this.isStopped) {
+        _this.hasError = _this.isStopped = true;
+        _this.thrownError = err;
+        var observers = _this.observers;
+        while (observers.length) {
+          observers.shift().error(err);
+        }
+      }
+    });
+  };
+  Subject2.prototype.complete = function() {
+    var _this = this;
+    errorContext(function() {
+      _this._throwIfClosed();
+      if (!_this.isStopped) {
+        _this.isStopped = true;
+        var observers = _this.observers;
+        while (observers.length) {
+          observers.shift().complete();
+        }
+      }
+    });
+  };
+  Subject2.prototype.unsubscribe = function() {
+    this.isStopped = this.closed = true;
+    this.observers = this.currentObservers = null;
+  };
+  Object.defineProperty(Subject2.prototype, "observed", {
+    get: function() {
+      var _a;
+      return ((_a = this.observers) === null || _a === undefined ? undefined : _a.length) > 0;
+    },
+    enumerable: false,
+    configurable: true
+  });
+  Subject2.prototype._trySubscribe = function(subscriber) {
+    this._throwIfClosed();
+    return _super.prototype._trySubscribe.call(this, subscriber);
+  };
+  Subject2.prototype._subscribe = function(subscriber) {
+    this._throwIfClosed();
+    this._checkFinalizedStatuses(subscriber);
+    return this._innerSubscribe(subscriber);
+  };
+  Subject2.prototype._innerSubscribe = function(subscriber) {
+    var _this = this;
+    var _a = this, hasError = _a.hasError, isStopped = _a.isStopped, observers = _a.observers;
+    if (hasError || isStopped) {
+      return EMPTY_SUBSCRIPTION;
+    }
+    this.currentObservers = null;
+    observers.push(subscriber);
+    return new Subscription(function() {
+      _this.currentObservers = null;
+      arrRemove(observers, subscriber);
+    });
+  };
+  Subject2.prototype._checkFinalizedStatuses = function(subscriber) {
+    var _a = this, hasError = _a.hasError, thrownError = _a.thrownError, isStopped = _a.isStopped;
+    if (hasError) {
+      subscriber.error(thrownError);
+    } else if (isStopped) {
+      subscriber.complete();
+    }
+  };
+  Subject2.prototype.asObservable = function() {
+    var observable2 = new Observable;
+    observable2.source = this;
+    return observable2;
+  };
+  Subject2.create = function(destination, source) {
+    return new AnonymousSubject(destination, source);
+  };
+  return Subject2;
+}(Observable);
+var AnonymousSubject = function(_super) {
+  __extends(AnonymousSubject2, _super);
+  function AnonymousSubject2(destination, source) {
+    var _this = _super.call(this) || this;
+    _this.destination = destination;
+    _this.source = source;
+    return _this;
+  }
+  AnonymousSubject2.prototype.next = function(value) {
+    var _a, _b;
+    (_b = (_a = this.destination) === null || _a === undefined ? undefined : _a.next) === null || _b === undefined || _b.call(_a, value);
+  };
+  AnonymousSubject2.prototype.error = function(err) {
+    var _a, _b;
+    (_b = (_a = this.destination) === null || _a === undefined ? undefined : _a.error) === null || _b === undefined || _b.call(_a, err);
+  };
+  AnonymousSubject2.prototype.complete = function() {
+    var _a, _b;
+    (_b = (_a = this.destination) === null || _a === undefined ? undefined : _a.complete) === null || _b === undefined || _b.call(_a);
+  };
+  AnonymousSubject2.prototype._subscribe = function(subscriber) {
+    var _a, _b;
+    return (_b = (_a = this.source) === null || _a === undefined ? undefined : _a.subscribe(subscriber)) !== null && _b !== undefined ? _b : EMPTY_SUBSCRIPTION;
+  };
+  return AnonymousSubject2;
+}(Subject);
+// node_modules/rxjs/dist/esm5/internal/operators/scanInternals.js
+function scanInternals(accumulator, seed, hasSeed, emitOnNext, emitBeforeComplete) {
+  return function(source, subscriber) {
+    var hasState = hasSeed;
+    var state = seed;
+    var index = 0;
+    source.subscribe(createOperatorSubscriber(subscriber, function(value) {
+      var i2 = index++;
+      state = hasState ? accumulator(state, value, i2) : (hasState = true, value);
+      emitOnNext && subscriber.next(state);
+    }, emitBeforeComplete && function() {
+      hasState && subscriber.next(state);
+      subscriber.complete();
+    }));
+  };
+}
+
+// node_modules/rxjs/dist/esm5/internal/operators/scan.js
+function scan(accumulator, seed) {
+  return operate(scanInternals(accumulator, seed, arguments.length >= 2, true));
+}
+// src/client/tool/appContext/eventCenter.ts
+var OnEvent = new Subject;
+var OnError = new Subject;
+
+// src/game/gameStateWithFlowMemory/queryFlow.ts
+function queryFlow(ctx2, playerID) {
+  if (true) {
+    const hasSomeoneLiveIsZero = [PlayerA, PlayerB].map((pid) => {
+      return AbsoluteBaSyouFn.toString(AbsoluteBaSyouFn.of(pid, "本国"));
+    }).map((baSyouID) => {
+      return ctx2.table.cardStack[baSyouID] || [];
+    }).filter((cards) => {
+      return cards.length == 0;
+    }).length > 0;
+    if (hasSomeoneLiveIsZero) {
+      return [{ id: "FlowWaitPlayer", description: "遊戲結束" }];
+    }
+  }
+  const activeEffectID = getActiveEffectID(ctx2);
+  if (activeEffectID != null) {
+    const currentActiveEffect = getEffect(ctx2, activeEffectID);
+    if (currentActiveEffect == null) {
+      throw new Error("activeEffectID not found");
+    }
+    const activeLogicID = getActiveLogicID(ctx2);
+    if (activeLogicID == null) {
+      const controller2 = EffectFn.getPlayerID(currentActiveEffect);
+      if (controller2 != playerID) {
+        return [
+          {
+            id: "FlowObserveEffect",
+            effectID: activeEffectID,
+            description: `觀察正在支付的效果: ${currentActiveEffect.description}`
+          }
+        ];
+      }
+      const cets = createCommandEffectTips(ctx2, currentActiveEffect).filter(CommandEffecTipFn.filterNoError);
+      if (cets.length == 0) {
+        throw new Error(`cets.length must > 0`);
+      }
+      return [
+        {
+          id: "FlowSetActiveLogicID",
+          logicID: cets[0].logicID,
+          logicSubID: cets[0].logicSubID,
+          tips: cets
+        }
+      ];
+    }
+    const activeLogicSubID = getActiveLogicSubID(ctx2);
+    if (activeLogicSubID == null) {
+      throw new Error(`activeLogicSubID must exist now`);
+    }
+    const enablePayCost = true;
+    if (enablePayCost) {
+      const effectCreator = EffectFn.getPlayerID(currentActiveEffect);
+      const playerTips = createEffectTips(ctx2, currentActiveEffect, activeLogicID, activeLogicSubID, { isCheckUserSelection: true }).filter((toe) => toe.errors.length != 0).filter(TipOrErrorsFn.filterPlayerId(getEffects(ctx2), playerID)).map((info) => {
+        if (info.tip == null) {
+          throw new Error(`這裡時候有錯誤的只能是TIP存在的場合, 其它的情況應該在使用者取得指令時就過濾掉了`);
+        }
+        return {
+          id: "FlowSetTipSelection",
+          effectID: currentActiveEffect.id,
+          conditionKey: info.conditionKey,
+          tip: info.tip,
+          description: `${info.conditionKey}`
+        };
+      });
+      const isPass = !!ctx2.flowMemory.hasPlayerPassPayCost[playerID];
+      const isOpponentPass = !!ctx2.flowMemory.hasPlayerPassPayCost[PlayerIDFn.getOpponent(playerID)];
+      if (isPass && isOpponentPass) {
+        if (effectCreator != playerID) {
+          return [
+            {
+              id: "FlowObserveEffect",
+              effectID: activeEffectID,
+              description: `觀察正在支付的效果: ${currentActiveEffect.description}`
+            }
+          ];
+        }
+        return [
+          {
+            id: "FlowDoEffect",
+            effectID: activeEffectID,
+            logicID: activeLogicID,
+            logicSubID: activeLogicSubID
+          }
+        ];
+      } else if (isPass || isOpponentPass) {
+        if (effectCreator == playerID) {
+          if (isPass) {
+            return [
+              {
+                id: "FlowObserveEffect",
+                effectID: activeEffectID,
+                description: `觀察正在支付的效果: ${currentActiveEffect.description}`
+              }
+            ];
+          }
+        } else {
+          if (isOpponentPass == false) {
+            return [
+              {
+                id: "FlowObserveEffect",
+                effectID: activeEffectID,
+                description: `觀察正在支付的效果: ${currentActiveEffect.description}`
+              }
+            ];
+          }
+          return [
+            ...playerTips.length ? playerTips : [{
+              id: "FlowPassPayCost",
+              effectID: activeEffectID
+            }]
+          ];
+        }
+      }
+      if (effectCreator != playerID) {
+        return [
+          {
+            id: "FlowWaitPlayer",
+            description: "等待對方支付ActiveEffectID"
+          }
+        ];
+      }
+      return [
+        {
+          id: "FlowCancelActiveEffectID",
+          description: "取消支付效果，讓其它玩家可以支付"
+        },
+        ...playerTips.length ? playerTips : [{
+          id: "FlowPassPayCost",
+          effectID: activeEffectID
+        }]
+      ];
+    }
+    const controller = EffectFn.getPlayerID(currentActiveEffect);
+    if (controller != playerID) {
+      return [
+        {
+          id: "FlowWaitPlayer",
+          description: "等待對方支付ActiveEffectID"
+        },
+        {
+          id: "FlowObserveEffect",
+          effectID: activeEffectID,
+          description: `觀察正在支付的效果: ${currentActiveEffect.description}`
+        }
+      ];
+    }
+    return [
+      {
+        id: "FlowCancelActiveEffectID",
+        description: "取消支付效果，讓其它玩家可以支付"
+      },
+      {
+        id: "FlowDoEffect",
+        effectID: activeEffectID,
+        logicID: 0,
+        logicSubID: 0
+      }
+    ];
+  }
+  if (ctx2.immediateEffect.length) {
+    const isActivePlayer = ctx2.activePlayerID == playerID;
+    const myEffects = [];
+    const opponentEffect = [];
+    ctx2.immediateEffect.forEach((effectID) => {
+      const effect = getEffect(ctx2, effectID);
+      const controller = EffectFn.getPlayerID(effect);
+      if (controller == playerID) {
+        myEffects.push(effect);
+      } else {
+        opponentEffect.push(effect);
+      }
+    });
+    if (isActivePlayer == false) {
+      if (opponentEffect.length) {
+        return [
+          {
+            id: "FlowWaitPlayer",
+            description: "等待主動玩家處理起動效果"
+          }
+        ];
+      }
+    }
+    if (myEffects.length == 0) {
+      return [
+        {
+          id: "FlowWaitPlayer",
+          description: "等待被動玩家處理起動效果"
+        }
+      ];
+    }
+    const myEffectsOK = myEffects.filter((e) => {
+      const cets = createCommandEffectTips(ctx2, e).filter(CommandEffecTipFn.filterNoError);
+      if (cets.length == 0) {
+        return false;
+      }
+      return true;
+    });
+    const optionEffects = myEffects.filter((v) => v.isOption || myEffectsOK.map((e) => e.id).includes(v.id) == false);
+    return [
+      ...myEffectsOK.length ? [
+        {
+          id: "FlowSetActiveEffectID",
+          effectID: myEffectsOK[0].id,
+          description: "選擇一個起動效果",
+          tips: myEffectsOK
+        }
+      ] : [],
+      ...optionEffects.length ? [
+        {
+          id: "FlowDeleteImmediateEffect",
+          effectID: optionEffects[0].id,
+          description: "你可以放棄這些效果",
+          tips: optionEffects
+        }
+      ] : []
+    ];
+  }
+  if (ctx2.flowMemory.shouldTriggerStackEffectFinishedEvent) {
+    const isActivePlayer = ctx2.activePlayerID == playerID;
+    if (isActivePlayer == false) {
+      return [
+        {
+          id: "FlowWaitPlayer",
+          description: "等待主動玩家處理"
+        }
+      ];
+    }
+    return [
+      {
+        id: "FlowHandleStackEffectFinished",
+        description: "處理堆疊結束"
+      }
+    ];
+  }
+  const myCommandList = getPlayerCommandsFilterNoErrorDistinct(ctx2, playerID).map((tip) => tip.effectId).map((id) => getEffect(ctx2, id));
+  if (ctx2.stackEffect.length) {
+    const effect = getTopEffect(ctx2);
+    if (effect == null) {
+      throw new Error(`effect not found: ${ctx2.stackEffect.length}`);
+    }
+    if (effect.id == null) {
+      throw new Error("effect.id not found");
+    }
+    const controller = EffectFn.getPlayerID(effect);
+    const isAllPassCut = !!ctx2.flowMemory.hasPlayerPassCut[PlayerA] && !!ctx2.flowMemory.hasPlayerPassCut[PlayerB];
+    if (isAllPassCut == false) {
+      const isPassCut = ctx2.flowMemory.hasPlayerPassCut[playerID];
+      if (isPassCut) {
+        return [
+          {
+            id: "FlowCancelPassCut"
+          }
+        ];
+      }
+      if (controller == playerID) {
+        const opponentPlayerID = playerID == PlayerA ? PlayerB : PlayerA;
+        const isOpponentPassCut = ctx2.flowMemory.hasPlayerPassCut[opponentPlayerID];
+        if (!isOpponentPassCut) {
+          return [
+            {
+              id: "FlowWaitPlayer",
+              description: "現在的切入優先權在對方"
+            }
+          ];
+        }
+      }
+      return [
+        ...(() => {
+          if (myCommandList.length == 0) {
+            return [];
+          }
+          const effect2 = myCommandList[0];
+          return [
+            {
+              id: "FlowSetActiveEffectID",
+              effectID: effect2.id,
+              tips: myCommandList,
+              description: "你可以切入"
+            }
+          ];
+        })(),
+        {
+          id: "FlowPassCut"
+        }
+      ];
+    }
+    if (controller != playerID) {
+      return [
+        {
+          id: "FlowWaitPlayer",
+          description: "等待效果控制者處理"
+        }
+      ];
+    }
+    return [
+      {
+        id: "FlowSetActiveEffectID",
+        effectID: effect.id,
+        description: "支付最上方的堆疊效果",
+        tips: [effect]
+      }
+    ];
+  }
+  SelectDestroyOrder: {
+    switch (ctx2.phase[0]) {
+      case "戦闘フェイズ":
+        switch (ctx2.phase[1]) {
+          case "ダメージ判定ステップ":
+            switch (ctx2.phase[2]) {
+              case "規定の効果":
+                break SelectDestroyOrder;
+            }
+        }
+    }
+    const willAddedDestroyEffects = ctx2.destroyEffect.map((aid) => getEffect(ctx2, aid));
+    if (willAddedDestroyEffects.length) {
+      const isActivePlayer = ctx2.activePlayerID == playerID;
+      if (isActivePlayer == false) {
+        return [
+          {
+            id: "FlowWaitPlayer",
+            description: "等待主動玩家決定破壞廢棄效果的順序"
+          }
+        ];
+      }
+      return [
+        {
+          id: "FlowMakeDestroyOrder",
+          destroyEffect: willAddedDestroyEffects,
+          description: "決定破壞廢棄效果的順序"
+        }
+      ];
+    }
+  }
+  const handleFreeTiming = () => {
+    const isAllPassPhase = !!ctx2.flowMemory.hasPlayerPassPhase[PlayerA] && !!ctx2.flowMemory.hasPlayerPassPhase[PlayerB];
+    if (isAllPassPhase == false) {
+      if (ctx2.flowMemory.hasPlayerPassPhase[playerID]) {
+        return [
+          {
+            id: "FlowCancelPassPhase",
+            description: `等待對方結束或是取消[${ctx2.phase}]結束`
+          }
+        ];
+      }
+      return [
+        {
+          id: "FlowPassPhase",
+          description: `宣告[${ctx2.phase}]結束`
+        },
+        ...(() => {
+          if (myCommandList.length == 0) {
+            return [];
+          }
+          const effect = myCommandList[0];
+          return [
+            {
+              id: "FlowSetActiveEffectID",
+              effectID: effect.id,
+              description: "選擇一個指令",
+              tips: myCommandList
+            }
+          ];
+        })()
+      ];
+    }
+    if (playerID != ctx2.activePlayerID) {
+      return [
+        {
+          id: "FlowWaitPlayer",
+          description: "等待伺服器處理"
+        }
+      ];
+    }
+    return [
+      {
+        id: "FlowNextTiming"
+      }
+    ];
+  };
+  if (ctx2.flowMemory.state == "playing") {
+    const phase = ctx2.phase;
+    switch (phase[0]) {
+      case "ドローフェイズ":
+      case "リロールフェイズ":
+      case "配備フェイズ":
+        switch (phase[1]) {
+          case "フリータイミング": {
+            return handleFreeTiming();
+          }
+        }
+        break;
+      case "戦闘フェイズ":
+        switch (phase[1]) {
+          case "攻撃ステップ":
+          case "防御ステップ":
+          case "帰還ステップ":
+          case "ダメージ判定ステップ":
+            switch (phase[2]) {
+              case "フリータイミング":
+              case "フリータイミング2": {
+                return handleFreeTiming();
+              }
+            }
+        }
+        break;
+    }
+  }
+  if (playerID != ctx2.activePlayerID) {
+    return [
+      {
+        id: "FlowWaitPlayer",
+        description: "等待伺服器處理"
+      }
+    ];
+  }
+  if (ctx2.flowMemory.hasTriggerEvent) {
+    return [{ id: "FlowNextTiming" }];
+  }
+  return [
+    {
+      id: "FlowTriggerTextEvent",
+      event: {
+        title: ["GameEventOnTiming", ctx2.phase]
+      }
+    }
+  ];
+}
+
+// src/client/tool/appContext/OnViewModel.ts
+var DEFAULT_VIEW_MODEL = {
+  model: createGameContext(),
+  playerCommands: {},
+  cardSelection: [],
+  cardPositionSelection: [],
+  localMemory: {
+    clientId: null,
+    timing: PhaseFn.getFirst(),
+    lastPassPhase: false,
+    globalEffects: []
+  }
+};
+var OnViewModel = OnEvent.pipe(scan((viewModel, evt) => {
+  window.__gameState__ = viewModel.model.gameState;
+  logCategory("OnViewModel", "evt", evt);
+  try {
+    switch (evt.id) {
+      case "OnClickNewGame": {
+        let ctx2 = createGameContext();
+        ctx2 = {
+          ...ctx2,
+          versionID: 0
+        };
+        const deckA = evt.deckA;
+        const deckB = evt.deckB;
+        ctx2.gameState = initState(ctx2.gameState, deckA, deckB);
+        const playerAFlow = queryFlow(ctx2.gameState, PlayerA);
+        const playerBFlow = queryFlow(ctx2.gameState, PlayerB);
+        return {
+          ...DEFAULT_VIEW_MODEL,
+          model: ctx2,
+          playerCommands: {
+            [PlayerA]: playerAFlow,
+            [PlayerB]: playerBFlow
+          }
+        };
+      }
+      case "OnClickFlowConfirm": {
+        if (evt.versionID != viewModel.model.versionID) {
+          console.warn(`versionID not match, ignore this changes: ${evt.versionID} != origin ${viewModel.model.versionID}`);
+          return viewModel;
+        }
+        logCategory("OnClickFlowConfirm", "before applyFlow", viewModel.model.gameState);
+        const gameState = applyFlow(viewModel.model.gameState, evt.clientId, evt.flow);
+        logCategory("OnClickFlowConfirm", "after applyFlow", viewModel.model.gameState);
+        const playerAFlow = queryFlow(gameState, PlayerA);
+        const playerBFlow = queryFlow(gameState, PlayerB);
+        const ges = getGlobalEffects(gameState, null);
+        return {
+          ...viewModel,
+          model: {
+            ...viewModel.model,
+            gameState,
+            versionID: viewModel.model.versionID + 1
+          },
+          playerCommands: {
+            [PlayerA]: playerAFlow,
+            [PlayerB]: playerBFlow
+          },
+          cardSelection: [],
+          localMemory: {
+            clientId: evt.clientId,
+            timing: getPhase(gameState),
+            lastPassPhase: gameState.flowMemory.hasPlayerPassPhase[evt.clientId] || false,
+            globalEffects: ges
+          }
+        };
+      }
+      case "OnClickRequireTargetConfirm": {
+        return { ...viewModel, cardSelection: [] };
+      }
+      case "OnClickChangeClient": {
+        return viewModel;
+      }
+      case "OnModelFromFirebase":
+        return viewModel;
+      case "OnClickCardEvent":
+        if (viewModel.cardSelection.includes(evt.card.id)) {
+          return {
+            ...viewModel,
+            cardSelection: viewModel.cardSelection.filter((v) => v != evt.card.id)
+          };
+        }
+        return {
+          ...viewModel,
+          cardSelection: [...viewModel.cardSelection, evt.card.id]
+        };
+      default:
+        console.log(`unknown evt ${evt}`);
+        return viewModel;
+    }
+  } catch (e) {
+    console.log(viewModel.model.gameState);
+    OnError.next(e);
+  }
+  return viewModel;
+}, DEFAULT_VIEW_MODEL));
+
+// src/client/tool/appContext/index.tsx
 var jsx_dev_runtime = __toESM(require_jsx_dev_runtime(), 1);
+var AppContext = import_react.createContext({
+  viewModel: DEFAULT_VIEW_MODEL
+});
+var AppContextProvider = (props) => {
+  const [viewModel, setViewModel] = import_react.useState(DEFAULT_VIEW_MODEL);
+  import_react.useEffect(() => {
+    const subscriber = OnViewModel.subscribe((model) => {
+      logCategory("AppContextProvider", "OnViewModel", model);
+      setViewModel(model);
+    });
+    return () => {
+      subscriber.unsubscribe();
+    };
+  }, []);
+  import_react.useEffect(() => {}, []);
+  return /* @__PURE__ */ jsx_dev_runtime.jsxDEV(AppContext.Provider, {
+    value: {
+      viewModel
+    },
+    children: props.children
+  }, undefined, false, undefined, this);
+};
+
+// src/client/cocosVer/CocosIframe.tsx
+var import_react2 = __toESM(require_react(), 1);
+
+// src/client/cocosVer/CocosAppCss.ts
+var CocosAppCss = {
+  abs: {
+    position: "absolute"
+  },
+  rel: {
+    position: "relative"
+  },
+  leftTop: {
+    left: 0,
+    top: 0
+  },
+  fullsize: {
+    left: 0,
+    top: 0,
+    width: "100%",
+    height: "100%"
+  },
+  flexHori: {
+    display: "flex",
+    flexDirection: "row"
+  },
+  flexVert: {
+    display: "flex",
+    flexDirection: "column"
+  },
+  vertCenter: {
+    justifyContent: "center"
+  },
+  horiCenter: {
+    alignItems: "center"
+  },
+  centerCenter: {
+    justifyContent: "center",
+    alignItems: "center"
+  }
+};
+
+// src/client/cocosVer/CocosIframe.tsx
+var jsx_dev_runtime2 = __toESM(require_jsx_dev_runtime(), 1);
 var CocosIframe = () => {
-  const iframeRef = import_react.useRef(null);
+  const iframeRef = import_react2.useRef(null);
+  const appContext = import_react2.useContext(AppContext);
   const sendMessageToIframe = (data) => {
     if (iframeRef.current && iframeRef.current.contentWindow) {
       console.log("發送消息給iframe:", data);
@@ -17111,7 +27491,7 @@ var CocosIframe = () => {
       console.warn("iframe 尚未載入或無法訪問");
     }
   };
-  import_react.useEffect(() => {
+  import_react2.useEffect(() => {
     const handleMessage = (event) => {
       if (event.origin !== window.location.origin)
         return;
@@ -17122,35 +27502,69 @@ var CocosIframe = () => {
           console.log("Cocos 已準備好");
           sendMessageToIframe({ type: "test call cocos" });
           break;
+        case "ddd":
+          break;
       }
     };
     window.addEventListener("message", handleMessage);
-    const iframe = iframeRef.current;
     return () => {
       window.removeEventListener("message", handleMessage);
     };
   }, []);
-  return /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
-    style: { width: "100%", height: "100%" },
-    children: /* @__PURE__ */ jsx_dev_runtime.jsxDEV("iframe", {
+  import_react2.useEffect(() => {
+    const subscription = OnViewModel.subscribe((viewModel) => {
+      sendMessageToIframe({ type: "update viewModel", viewModel });
+    });
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+  return /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
+    style: { ...CocosAppCss.fullsize, ...CocosAppCss.rel },
+    children: /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("iframe", {
       ref: iframeRef,
       src: "cocos/cocosIndex.html",
-      style: { width: "100%", height: "100%", border: "none" }
+      style: { ...CocosAppCss.fullsize, ...CocosAppCss.rel, border: "none" }
     }, undefined, false, undefined, this)
   }, undefined, false, undefined, this);
 };
 
+// src/client/cocosVer/DeckSelectionView.tsx
+var jsx_dev_runtime3 = __toESM(require_jsx_dev_runtime(), 1);
+var DeckSelectionView = () => {
+  return /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("div", {
+    style: { ...CocosAppCss.rel, ...CocosAppCss.leftTop },
+    children: "DeckSelectionView"
+  }, undefined, false, undefined, this);
+};
+
+// src/client/cocosVer/CocosUIView.tsx
+var jsx_dev_runtime4 = __toESM(require_jsx_dev_runtime(), 1);
+var CocosUIView = () => {
+  return /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("div", {
+    style: { ...CocosAppCss.abs, ...CocosAppCss.leftTop },
+    children: /* @__PURE__ */ jsx_dev_runtime4.jsxDEV(DeckSelectionView, {}, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
+};
+
 // src/client/cocosVer/CocosAppVer.tsx
-var jsx_dev_runtime2 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime5 = __toESM(require_jsx_dev_runtime(), 1);
 var CocosAppVer = () => {
-  return /* @__PURE__ */ jsx_dev_runtime2.jsxDEV(CocosIframe, {}, undefined, false, undefined, this);
+  return /* @__PURE__ */ jsx_dev_runtime5.jsxDEV(jsx_dev_runtime5.Fragment, {
+    children: /* @__PURE__ */ jsx_dev_runtime5.jsxDEV(AppContextProvider, {
+      children: [
+        /* @__PURE__ */ jsx_dev_runtime5.jsxDEV(CocosIframe, {}, undefined, false, undefined, this),
+        /* @__PURE__ */ jsx_dev_runtime5.jsxDEV(CocosUIView, {}, undefined, false, undefined, this)
+      ]
+    }, undefined, true, undefined, this)
+  }, undefined, false, undefined, this);
 };
 
 // src/web.tsx
-var jsx_dev_runtime3 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime6 = __toESM(require_jsx_dev_runtime(), 1);
 var rootDom = document.getElementById("root");
 if (rootDom == null) {
   throw new Error(`div root not found`);
 }
 var root = ReactDom.createRoot(rootDom);
-root.render(/* @__PURE__ */ jsx_dev_runtime3.jsxDEV(CocosAppVer, {}, undefined, false, undefined, this));
+root.render(/* @__PURE__ */ jsx_dev_runtime6.jsxDEV(CocosAppVer, {}, undefined, false, undefined, this));
