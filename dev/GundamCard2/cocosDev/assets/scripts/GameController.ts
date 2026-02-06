@@ -5,6 +5,9 @@ import { CardController } from './CardController';
 import { CardUIController } from './CardUIController';
 import { startGameMockData } from './mockData/startGame';
 import { callWeb } from './Helper';
+import { PlayerInfoController } from './PlayerInfoController';
+import { PlayerCommandController } from './PlayerCommandController';
+import { ButtonController } from './ButtonController';
 
 const { ccclass, property } = _decorator;
 
@@ -15,6 +18,9 @@ export class GameController extends Component implements IInstanceGame<IGame> {
 
     @property({ type: HandController })
     public deckControllers: IInstanceGame<string[]>[] = [];
+
+    @property({ type: PlayerCommandController })
+    public playerCommandControllers: IInstanceGame<any>[] = [];
 
     @property(Boolean)
     public debug: boolean = true;
@@ -28,13 +34,18 @@ export class GameController extends Component implements IInstanceGame<IGame> {
         await this.deckControllers[0].sync(game, game.model.gameState.table.cardStack['["PlayerA","本国"]']);
         await this.deckControllers[1].sync(game, game.model.gameState.table.cardStack['["PlayerB","本国"]']);
 
-        if (game.localMemory.timing.toString().includes("リロールフェイズ,フェイズ開始")) {
+        this.playerCommandControllers[0].sync(game, game.playerCommands['PlayerA']);
+        this.playerCommandControllers[1].sync(game, game.playerCommands['PlayerB']);
 
-            callWeb("onCocosGameFlow", { clientId: game.localMemory.clientId, flow: game.playerCommands['PlayerA'][0] });
-            // callWeb("onCocosGameFlow", { clientId: game.localMemory.clientId, flow: game.playerCommands['PlayerA'][0] });
-            // console.log("Syncing hand controller with active player's cards:", game.model.gameState.cards);
-            // this.handController?.sync(game, game.model.gameState.playerStates[game.model.gameState.activePlayerID].cards);
-        }
+        // 只有一個命令時，自動出指令
+        // if (game.playerCommands['PlayerA'] && game.playerCommands['PlayerA'].length === 1) {
+        //     callWeb("onCocosGameFlow", { clientId: 'PlayerA', flow: game.playerCommands['PlayerA'][0] });
+        // }
+
+        // if (game.localMemory.timing.toString().includes("リロールフェイズ,フェイズ開始")) {
+
+        //     callWeb("onCocosGameFlow", { clientId: 'PlayerA', flow: game.playerCommands['PlayerA'][0] });
+        // }
     }
 
     onLoad(): void {
@@ -71,6 +82,30 @@ export class GameController extends Component implements IInstanceGame<IGame> {
             const cardController = btnNode.parent.getComponent(CardUIController)
             // console.log(cardController);
             callWeb("cardClicked", { cardId: '1' });
+        }
+    }
+
+    onPlayerACommandButtonClick(event: EventTouch) {
+        const btnNode: Node = event.currentTarget as Node;
+        // console.log("Player command button clicked:", btnNode);
+
+        if (btnNode) {
+            const commandController = btnNode.getComponent(ButtonController);
+            // console.log("Command controller:", commandController.buttonInfo);
+
+            callWeb("onCocosGameFlow", { clientId: 'PlayerA', flow: commandController.buttonInfo });
+        }
+    }
+
+    onPlayerBCommandButtonClick(event: EventTouch) {
+        const btnNode: Node = event.currentTarget as Node;
+        // console.log("Player command button clicked:", btnNode);
+
+        if (btnNode) {
+            const commandController = btnNode.getComponent(ButtonController);
+            // console.log("Command controller:", commandController.buttonInfo);
+
+            callWeb("onCocosGameFlow", { clientId: 'PlayerB', flow: commandController.buttonInfo });
         }
     }
 
