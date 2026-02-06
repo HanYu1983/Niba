@@ -7,6 +7,7 @@ import { ControlView } from "./ControlView";
 import { CardSelectionView } from "./CardSelectionView";
 import { PlayerController } from "./PlayerController";
 import { MessagesView } from "./MessagesView";
+import { OnViewModel } from "../tool/appContext/OnViewModel";
 
 export function AppView() {
   // error handle
@@ -20,16 +21,27 @@ export function AppView() {
       subscriber.unsubscribe();
     };
   }, []);
+
+  useEffect(() => {
+    const subscription = OnViewModel.subscribe((viewModel) => {
+      console.log("CocosIframe 收到 ViewModel 更新:", viewModel)
+    })
+
+    return () => {
+      subscription.unsubscribe()
+    }
+  }, [])
+
   return (
     <AppContextProvider>
       <ControlView></ControlView>
       <PlayerController clientId={PlayerA} isPlayer={true}></PlayerController>
-      <PlayerController clientId={PlayerB} isPlayer={false}></PlayerController>
+      {/* <PlayerController clientId={PlayerB} isPlayer={false}></PlayerController> */}
       <div style={{ border: "1px solid blue", display: "flex" }}>
         <div style={{ border: "1px solid red", flex: 1, width: 1200 }}>
           <ClientView clientId={PlayerA}></ClientView>
         </div>
-        <div style={{ border: "1px solid red", flex: 1}}>
+        <div style={{ border: "1px solid red", flex: 1 }}>
           <CardSelectionView clientId={PlayerA}></CardSelectionView>
         </div>
       </div>

@@ -1,7 +1,14 @@
-import { useEffect, useRef } from "react"
+import { useContext, useEffect, useRef } from "react"
+import { AppContext } from "../tool/appContext"
+import { OnViewModel } from "../tool/appContext/OnViewModel"
+import { CocosAppCss } from "./CocosAppCss"
+import { OnEvent } from "../tool/appContext/eventCenter"
+import { props } from "ramda"
 
 export const CocosIframe = () => {
   const iframeRef = useRef<HTMLIFrameElement>(null)
+
+  const appContext = useContext(AppContext)
 
   const sendMessageToIframe = (data: any) => {
     if (iframeRef.current && iframeRef.current.contentWindow) {
@@ -19,40 +26,48 @@ export const CocosIframe = () => {
       const data = event.data
       console.log("收到來自iframe的消息:", data)
 
-      switch(data.name){
-        case "cocos ready":
+      switch (data.type) {
+        case "onCocosReady":
           console.log("Cocos 已準備好")
-          sendMessageToIframe({ type: "test call cocos" })
+          // sendMessageToIframe({ type: "test call cocos" })
           break
+        case 'onCocosGameFlow':
+          console.log('flow', data.data.flow, 'id', data.data.clientId, 'version', appContext.viewModel.model.versionID )
+          OnEvent.next({
+            id: "OnClickFlowConfirm",
+            clientId: data.data.clientId || "unknown",
+            flow: data.data.flow,
+            versionID: appContext.viewModel.model.versionID
+          });
+          break;
       }
     }
 
-    // const handleIframeLoad = () => {
-    //   console.log("iframe 載入完成")
-    //   sendMessageToIframe({ type: "my ready", timestamp: Date.now() })
-    // }
-
     window.addEventListener("message", handleMessage)
-    // const iframe = iframeRef.current
-    // if (iframe) {
-    //   iframe.addEventListener("load", handleIframeLoad)
-    // }
 
     return () => {
       window.removeEventListener("message", handleMessage)
-      // if (iframe) {
-      //   iframe.removeEventListener("load", handleIframeLoad)
-      // }
+    }
+  }, [])
+
+  useEffect(() => {
+    const subscription = OnViewModel.subscribe((viewModel) => {
+      console.log("CocosIframe 收到 ViewModel 更新:", viewModel)
+      sendMessageToIframe({ type: "onWebGameUpdate", data: viewModel })
+    })
+
+    return () => {
+      subscription.unsubscribe()
     }
   }, [])
 
   return (
-    <div style={{ width: "100%", height: "100%" }}>
-        <iframe 
-          ref={iframeRef}
-          src="cocos/cocosIndex.html" 
-          style={{ width: "100%", height: "100%", border: "none" }}
-        ></iframe>
+    <div style={{ ...CocosAppCss.fullsize, ...CocosAppCss.rel } as React.CSSProperties}>
+      <iframe
+        ref={iframeRef}
+        src="cocos/cocosIndex.html"
+        style={{ ...CocosAppCss.fullsize, ...CocosAppCss.rel, border: "none" } as React.CSSProperties}
+      ></iframe>
     </div>
   )
 }
