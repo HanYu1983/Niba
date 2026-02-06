@@ -38,7 +38,7 @@ export class HandController extends Component implements IInstanceGame<string[]>
         this.cardUIPool = new InstancePool(this.cardUIPrefab);
     }
 
-    sync(game: IGame, relative: string[]): void {
+    async sync(game: IGame, relative: string[]): Promise<void> {
 
         // console.log("HandController syncing with game data:", game, relative);
 
@@ -51,23 +51,22 @@ export class HandController extends Component implements IInstanceGame<string[]>
         });
 
         const cards: string[] = relative;
-        cards.forEach((card: string, index) => {
+        cards.forEach(async (card: string, index) => {
 
             const cardInfo = game.model.gameState.cards[card];
             // console.log("Processing card:", cardInfo);
 
-            const cardInstance = (() => {
+            const cardInstance = (async () => {
                 const inst = this.cardPool!.getInstance(card);
 
                 const controller = inst.getComponent(CardController);
-                controller?.sync(game, cardInfo);
-
+                await controller?.sync(game, cardInfo);
                 const centerOffset = (cards.length - 1) / 2;
                 inst.setPosition(this.cardOffset.x * (index - centerOffset), this.cardOffset.y * index, this.cardOffset.z * index);
                 return inst
             })()
-            this.cardContainer.addChild(cardInstance);
-            this.cardInstances.push(cardInstance);
+            this.cardContainer.addChild(await cardInstance);
+            this.cardInstances.push(await cardInstance);
 
             // const cardUIInstance = (() => {
             //     const inst = this.cardUIPool!.getInstance(card.id);

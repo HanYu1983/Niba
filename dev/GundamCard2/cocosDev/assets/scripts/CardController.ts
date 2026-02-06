@@ -1,5 +1,5 @@
 import { _decorator, Component, MeshRenderer, Node } from 'cc';
-import { getImgSrc, loadTextureFromURL } from './Helper';
+import { getImgSrc, getTexture, loadTextureFromURL } from './Helper';
 
 const { ccclass, property } = _decorator;
 
@@ -21,16 +21,16 @@ export class CardController extends Component implements IInstanceGame<ICard> {
 
     async sync(game: IGame, relative: ICard): Promise<void> {
 
-        console.log('CardController sync called with card:', relative);
+        // console.log('CardController sync called with card:', relative);
         // TODO: bind card data to visuals
         if (this.front) {
             // Example: Update the material or texture of the frontMeshRenderer based on card data
 
             const imgURL = getImgSrc(relative.protoID);
-            console.log(`CardController syncing card ID: ${relative.id}, ProtoID: ${relative.protoID}, Image URL: ${imgURL}`);
+            // console.log(`CardController syncing card ID: ${relative.id}, ProtoID: ${relative.protoID}, Image URL: ${imgURL}`);
 
-            const imgTexture = await loadTextureFromURL(imgURL);
-            console.log('Loaded texture:', imgTexture);
+            const imgTexture = await getTexture(relative.protoID);
+            // console.log('Loaded texture:', imgTexture);
 
             const frontMeshRenderer = this.front.getComponent(MeshRenderer);
             if (!frontMeshRenderer) {
