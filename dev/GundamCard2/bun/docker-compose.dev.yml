@@ -1,5 +1,5 @@
 services:
-  # docker-compose -f docker-compose.dev.yml run --rm bun
+  # docker-compose -f docker-compose.dev.yml run --rm bun bash
   # docker-compose -f docker-compose.dev.yml run --rm bun sh -c "bun run build && rm -r public/ext && cp -r tmp/script/ext public/ext && rm -r tmp && bun build src/web.tsx --outdir public --minify-syntax"
   bun:
     image: oven/bun:latest

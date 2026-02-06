@@ -1,18 +1,19 @@
 services:
   comfyui:
-    image: yanwk/comfyui-boot:cu124-slim  # 根据你的显卡 CUDA 版本选择镜像标签
+    image: yanwk/comfyui-boot:cu124-slim
     container_name: comfyui
     ports:
       - "8188:8188"
     volumes:
-      - "C:\\Users\\johny\\Documents\\bin\\webui_forge_cu121_torch231\\webui\\models\\Stable-diffusion:/root/ComfyUI/models/checkpoints"
-      - "C:\\Users\\johny\\Documents\\bin\\webui_forge_cu121_torch231\\webui\\models\\Stable-diffusion:/root/ComfyUI/models/diffusion_models"
-      - "C:\\Users\\johny\\Documents\\bin\\webui_forge_cu121_torch231\\webui\\models\\Lora:/root/ComfyUI/models/loras"
-      - "C:\\Users\\johny\\Documents\\bin\\webui_forge_cu121_torch231\\webui\\models\\VAE:/root/ComfyUI/models/vae"
-      - "C:\\Users\\johny\\Documents\\bin\\webui_forge_cu121_torch231\\webui\\models\\ControlNet:/root/ComfyUI/models/controlnet"
-      - "C:\\Users\\johny\\Documents\\bin\\webui_forge_cu121_torch231\\webui\\models\\text_encoder:/root/ComfyUI/models/text_encoders"
-      - ./extra_model_paths.yaml:/root/ComfyUI/extra_model_paths.yaml
-      - ./output:/root/ComfyUI/output        # 映射输出目录
+      - "D:\\models\\Stable-diffusion:/root/ComfyUI/models/checkpoints"
+      - "D:\\models\\diffusion_models:/root/ComfyUI/models/diffusion_models"
+      - "D:\\models\\Lora:/root/ComfyUI/models/loras"
+      - "D:\\models\\VAE:/root/ComfyUI/models/vae"
+      - "D:\\models\\ControlNet:/root/ComfyUI/models/controlnet"
+      - "D:\\models\\text_encoder:/root/ComfyUI/models/text_encoders"
+      - "D:\\comfyStore\\input:/root/ComfyUI/input"
+      - "D:\\comfyStore\\output:/root/ComfyUI/output"
+      - "D:\\comfyStore\\workflows:/root/ComfyUI/user/default/workflows"
     deploy:
       resources:
         reservations:
@@ -20,3 +21,35 @@ services:
             - driver: nvidia
               count: all
               capabilities: [gpu]
+  # https://hub.docker.com/r/universonic/stable-diffusion-webui
+  # stable-diffusion-webui:
+  #   image: universonic/stable-diffusion-webui:minimal
+  #   command: --no-half --no-half-vae --precision full
+  #   runtime: nvidia
+  #   restart: unless-stopped
+  #   ports:
+  #     - "8080:8080/tcp"
+  #   volumes:
+  #     - D:\\webuiStore\\inputs:/app/stable-diffusion-webui/inputs
+  #     - D:\\webuiStore\\textual_inversion_templates:/app/stable-diffusion-webui/textual_inversion_templates
+  #     - D:\\webuiStore\\embeddings:/app/stable-diffusion-webui/embeddings
+  #     - D:\\webuiStore\\extensions:/app/stable-diffusion-webui/extensions
+  #     - D:\\models:/app/stable-diffusion-webui/models
+  #     - D:\\webuiStore\\localizations:/app/stable-diffusion-webui/localizations
+  #     - D:\\webuiStore\\outputs:/app/stable-diffusion-webui/outputs
+  #   cap_drop:
+  #     - ALL
+  #   cap_add:
+  #     - NET_BIND_SERVICE
+  #   deploy:
+  #     mode: global
+  #     placement:
+  #       constraints:
+  #         - "node.labels.iface != extern"
+  #     restart_policy:
+  #       condition: unless-stopped
+  #     resources:
+  #       reservations:
+  #         devices:
+  #           - driver: nvidia
+  #             capabilities: [gpu]
