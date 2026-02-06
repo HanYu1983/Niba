@@ -15,13 +15,16 @@ export class GameController extends Component implements IInstanceGame<IGame> {
     @property({ type: HandController })
     public deckController: IInstanceGame<string[]> | null = null;
 
+    @property(Boolean)
+    public debug: boolean = true;
+
     // @property({ type: OrbitCamera })
     // public camera: OrbitCamera | null = null;
 
     sync(game: IGame, relative: IGame): void {
         console.log("GameController syncing with game data:", game);
-        
-        this.deckController?.sync(game, game.model.gameState.table.cardStack['[\"PlayerA\",\"本国\"]']);
+
+        this.deckController?.sync(game, game.model.gameState.table.cardStack['["PlayerA","本国"]']);
         // this.handController?.sync(game, relative.players[0].cards);
     }
 
@@ -41,8 +44,10 @@ export class GameController extends Component implements IInstanceGame<IGame> {
             }
         }
 
-        const mockGame: IGame = startGameMockData
-        this.sync(mockGame, mockGame);
+        if (this.debug) {
+            const mockGame: IGame = startGameMockData
+            this.sync(mockGame, mockGame);
+        }
 
         this.callWeb('cocos ready', null)
     }

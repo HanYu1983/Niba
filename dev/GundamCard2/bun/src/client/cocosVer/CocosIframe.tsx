@@ -27,7 +27,7 @@ export const CocosIframe = () => {
       switch (data.name) {
         case "cocos ready":
           console.log("Cocos 已準備好")
-          sendMessageToIframe({ type: "test call cocos" })
+          // sendMessageToIframe({ type: "test call cocos" })
           break
         case 'ddd':
           // OnEvent.next({
@@ -49,7 +49,8 @@ export const CocosIframe = () => {
 
   useEffect(() => {
     const subscription = OnViewModel.subscribe((viewModel) => {
-      sendMessageToIframe({ type: "update viewModel", viewModel })
+      console.log("CocosIframe 收到 ViewModel 更新:", viewModel)
+      sendMessageToIframe({ type: "update viewModel", data: viewModel })
     })
 
     return () => {

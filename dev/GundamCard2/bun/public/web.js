@@ -28017,7 +28017,6 @@ var CocosIframe = () => {
       switch (data.name) {
         case "cocos ready":
           console.log("Cocos 已準備好");
-          sendMessageToIframe({ type: "test call cocos" });
           break;
         case "ddd":
           break;
@@ -28030,7 +28029,8 @@ var CocosIframe = () => {
   }, []);
   import_react2.useEffect(() => {
     const subscription = OnViewModel.subscribe((viewModel) => {
-      sendMessageToIframe({ type: "update viewModel", viewModel });
+      console.log("CocosIframe 收到 ViewModel 更新:", viewModel);
+      sendMessageToIframe({ type: "update viewModel", data: viewModel });
     });
     return () => {
       subscription.unsubscribe();
@@ -55814,6 +55814,7 @@ function createDecks() {
 var jsx_dev_runtime3 = __toESM(require_jsx_dev_runtime(), 1);
 var { Title: Title3, Text: Text2 } = typography_default;
 var DeckSelectionView = () => {
+  const [isGameStarted, setIsGameStarted] = import_react82.useState(false);
   const [playerDeckIndex, setPlayerDeckIndex] = import_react82.useState(null);
   const [opponentDeckIndex, setOpponentDeckIndex] = import_react82.useState(null);
   const decks = import_react82.useMemo(() => createDecks(), []);
@@ -55827,6 +55828,7 @@ var DeckSelectionView = () => {
     const prototypeIds = [...deckA, ...deckB];
     await Promise.all(prototypeIds.map(loadPrototype)).then(() => console.log("loadOK")).catch(console.error);
     OnEvent.next({ id: "OnClickNewGame", deckA, deckB });
+    setIsGameStarted(true);
   };
   const renderDecks = import_react82.useMemo(() => {
     const deck = createDecks();
@@ -55888,7 +55890,8 @@ var DeckSelectionView = () => {
       borderRadius: "8px",
       backgroundColor: "rgba(255, 255, 255, 0.95)",
       maxHeight: "100vh",
-      overflowY: "auto"
+      overflowY: "auto",
+      display: isGameStarted ? "none" : "block"
     },
     children: [
       /* @__PURE__ */ jsx_dev_runtime3.jsxDEV(Title3, {

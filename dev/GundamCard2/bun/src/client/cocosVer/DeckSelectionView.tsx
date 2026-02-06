@@ -9,6 +9,7 @@ import { loadPrototype } from "../../script"
 const { Title, Text } = Typography
 
 export const DeckSelectionView = () => {
+    const [isGameStarted, setIsGameStarted] = useState(false)
     const [playerDeckIndex, setPlayerDeckIndex] = useState<number | null>(null)
     const [opponentDeckIndex, setOpponentDeckIndex] = useState<number | null>(null)
     const decks = useMemo(() => createDecks(), [])
@@ -28,6 +29,8 @@ export const DeckSelectionView = () => {
             .catch(console.error)
         
         OnEvent.next({ id: "OnClickNewGame", deckA, deckB })
+        setIsGameStarted(true)
+       
     }
 
     const renderDecks = useMemo(() => {
@@ -83,7 +86,8 @@ export const DeckSelectionView = () => {
             borderRadius: '8px',
             backgroundColor: 'rgba(255, 255, 255, 0.95)',
             maxHeight: '100vh',
-            overflowY: 'auto'
+            overflowY: 'auto',
+            display: isGameStarted ? 'none' : 'block'
         } as React.CSSProperties}>
             <Title level={3}>選擇對戰牌組</Title>
             <Text>玩家: {playerDeckIndex !== null ? `牌組 ${playerDeckIndex + 1}` : '未選擇'} | 對手: {opponentDeckIndex !== null ? `牌組 ${opponentDeckIndex + 1}` : '未選擇'}</Text>
