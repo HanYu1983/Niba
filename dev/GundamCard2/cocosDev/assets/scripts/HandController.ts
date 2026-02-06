@@ -1,8 +1,9 @@
-import { _decorator, Component, Node, Vec3 } from 'cc';
+import { _decorator, Button, Component, EventHandler, Node, Vec3 } from 'cc';
 import { CardController } from './CardController';
 import { InstancePool } from './InstancePool';
 import { UIFollow3D } from './UIFollow3D';
 import { AHandState } from './handState/AHandState';
+import { CardUIController } from './CardUIController';
 
 const { ccclass, property, requireComponent } = _decorator;
 
@@ -65,11 +66,12 @@ export class HandController extends Component implements IInstanceGame<ICard[]> 
             const cardUIInstance = (() => {
                 const inst = this.cardUIPool!.getInstance(card.id);
 
-                const uiController = inst.getComponent(CardController);
+                const uiController = inst.getComponent(CardUIController);
                 uiController?.sync(game, card);
 
                 const follow3D = inst.getComponent(UIFollow3D);
                 follow3D!.target = cardInstance;
+                
                 return inst;
             })()
             this.cardUIContainer?.addChild(cardUIInstance);
@@ -79,4 +81,8 @@ export class HandController extends Component implements IInstanceGame<ICard[]> 
         // const currentState = this.states[0];
         // currentState.setReference();
     }
+
+    // onCardButtonClick(cardId: string) {
+    //     console.log(`Card clicked: ${cardId}`);
+    // }
 }

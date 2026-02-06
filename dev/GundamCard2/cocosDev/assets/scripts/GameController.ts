@@ -1,6 +1,8 @@
-import { _decorator, Component, EventMouse, Input, input, Node } from 'cc';
+import { _decorator, Button, Component, EventMouse, EventTouch, Input, input, Node } from 'cc';
 import { HandController } from './HandController';
 import { OrbitCamera } from './OrbitCamera';
+import { CardController } from './CardController';
+import { CardUIController } from './CardUIController';
 
 const { ccclass, property } = _decorator;
 
@@ -17,6 +19,13 @@ export class GameController extends Component implements IInstanceGame<IGame> {
     }
 
     onLoad(): void {
+
+        window['cocos'] = {
+            receiveMessage: (msg: any) => {
+                console.log("Received message from web:", msg);
+            }
+        }
+
         const mockGame: IGame = {
             players: [
                 {
@@ -35,6 +44,28 @@ export class GameController extends Component implements IInstanceGame<IGame> {
         }
         this.sync(mockGame, mockGame);
         // this.addListener();
+
+        this.callWeb('cocos ready', null)
+    }
+
+    onCardButtonClick(event: EventTouch) {
+        // console.log(event.currentTarget);
+
+        const btnNode: Node = event.currentTarget as Node;
+        // console.log(btnNode.parent);
+
+        if (btnNode) {
+            const cardController = btnNode.parent.getComponent(CardUIController)
+            // console.log(cardController);
+            this.callWeb("cardClicked", { cardId: '1' });
+        }
+    }
+
+    callWeb(name: string, data: any) {
+        console.log("Calling web function via postMessage", { name, data });
+        if (window['html']) {
+            window['html'].callParent({ name: name, data: data });
+        }
     }
 
     // addListener(): void {
