@@ -2,6 +2,8 @@
 // compilerOptions.jsx = "react-jsx"
 import * as ReactDom from "react-dom/client"
 import { AppView } from "./client/component/AppView";
+import { CocosAppVer } from "./client/cocosVer/CocosAppVer";
+import "antd/dist/reset.css"
 
 const rootDom = document.getElementById("root")
 if (rootDom == null) {
@@ -12,4 +14,5 @@ const root = ReactDom.createRoot(rootDom)
 //     const [text, setText] = useState('abc');
 //     return <div onClick={() => setText('def')}>{text}</div>
 // }
-root.render(<AppView />)
+root.render(<CocosAppVer />)
+// root.render(<AppView />)

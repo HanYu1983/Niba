@@ -1,13 +1,14 @@
-import { _decorator, Component, Node, Vec3 } from 'cc';
+import { _decorator, Button, Component, EventHandler, Node, Vec3 } from 'cc';
 import { CardController } from './CardController';
 import { InstancePool } from './InstancePool';
 import { UIFollow3D } from './UIFollow3D';
 import { AHandState } from './handState/AHandState';
+import { CardUIController } from './CardUIController';
 
 const { ccclass, property, requireComponent } = _decorator;
 
 @ccclass('HandController')
-export class HandController extends Component implements IInstanceGame<ICard[]> {
+export class HandController extends Component implements IInstanceGame<string[]> {
     @property(Node)
     public cardContainer: Node | null = null;
 
@@ -37,7 +38,9 @@ export class HandController extends Component implements IInstanceGame<ICard[]> 
         this.cardUIPool = new InstancePool(this.cardUIPrefab);
     }
 
-    sync(game: IGame, relative: ICard[]): void {
+    async sync(game: IGame, relative: string[]): Promise<void> {
+
+        // console.log("HandController syncing with game data:", game, relative);
 
         this.cardInstances.forEach((instance) => {
             this.cardPool!.releaseInstance(instance);
@@ -47,36 +50,44 @@ export class HandController extends Component implements IInstanceGame<ICard[]> 
             this.cardUIPool!.releaseInstance(instance);
         });
 
-        const cards: ICard[] = relative;
-        cards.forEach((card: ICard, index) => {
-            const cardInstance = (() => {
-                const inst = this.cardPool!.getInstance(card.id);
+        const cards: string[] = relative;
+        cards.forEach(async (card: string, index) => {
+
+            const cardInfo = game.model.gameState.cards[card];
+            // console.log("Processing card:", cardInfo);
+
+            const cardInstance = (async () => {
+                const inst = this.cardPool!.getInstance(card);
 
                 const controller = inst.getComponent(CardController);
-                controller?.sync(game, card);
-
+                await controller?.sync(game, cardInfo);
                 const centerOffset = (cards.length - 1) / 2;
                 inst.setPosition(this.cardOffset.x * (index - centerOffset), this.cardOffset.y * index, this.cardOffset.z * index);
                 return inst
             })()
-            this.cardContainer.addChild(cardInstance);
-            this.cardInstances.push(cardInstance);
+            this.cardContainer.addChild(await cardInstance);
+            this.cardInstances.push(await cardInstance);
 
-            const cardUIInstance = (() => {
-                const inst = this.cardUIPool!.getInstance(card.id);
+            // const cardUIInstance = (() => {
+            //     const inst = this.cardUIPool!.getInstance(card.id);
 
-                const uiController = inst.getComponent(CardController);
-                uiController?.sync(game, card);
+            //     const uiController = inst.getComponent(CardUIController);
+            //     uiController?.sync(game, card);
 
-                const follow3D = inst.getComponent(UIFollow3D);
-                follow3D!.target = cardInstance;
-                return inst;
-            })()
-            this.cardUIContainer?.addChild(cardUIInstance);
-            this.cardUIInstances.push(cardUIInstance)
+            //     const follow3D = inst.getComponent(UIFollow3D);
+            //     follow3D!.target = cardInstance;
+                
+            //     return inst;
+            // })()
+            // this.cardUIContainer?.addChild(cardUIInstance);
+            // this.cardUIInstances.push(cardUIInstance)
         });
 
         // const currentState = this.states[0];
         // currentState.setReference();
     }
+
+    // onCardButtonClick(cardId: string) {
+    //     console.log(`Card clicked: ${cardId}`);
+    // }
 }

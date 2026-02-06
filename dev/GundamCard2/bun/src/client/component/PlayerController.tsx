@@ -20,6 +20,7 @@ export function PlayerController(props: { clientId: string, isPlayer?: boolean }
         flow = thinkVer2(appContext.viewModel.model.gameState, props.clientId, flows)
       }
       if (flow) {
+        console.log('flow', flow, 'id', props.clientId, 'version', appContext.viewModel.model.versionID )
         setTimeout(() => {
           OnEvent.next({
             id: "OnClickFlowConfirm",
