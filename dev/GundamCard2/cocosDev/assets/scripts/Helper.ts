@@ -4,6 +4,10 @@ function getImgSrc(imgID: string) {
     return `https://storage.googleapis.com/particle-resources/cardPackage/gundamWarN/${imgID}.jpg`;
 }
 
+function getCardBackImgSrc() {
+    return `https://particle-979.appspot.com/common/images/card/cardback_0.jpg`;
+}
+
 async function loadTextureFromURL(url: string): Promise<Texture2D> {
     return new Promise((resolve, reject) => {
         const image = new Image();
@@ -27,13 +31,12 @@ async function getTexture(cardID: string): Promise<Texture2D> {
     if (texturePool[cardID]) {
         return texturePool[cardID];
     } else {
-        const url = `https://storage.googleapis.com/particle-resources/cardPackage/gundamWarN/${cardID}.jpg`;
+        const url = cardID === '-1' ? getCardBackImgSrc() : `https://storage.googleapis.com/particle-resources/cardPackage/gundamWarN/${cardID}.jpg`;
         const texture = await loadTextureFromURL(url);
         texturePool[cardID] = texture;
         return texture;
     }
 }
-
 
 
 function callWeb(type: string, data: any) {

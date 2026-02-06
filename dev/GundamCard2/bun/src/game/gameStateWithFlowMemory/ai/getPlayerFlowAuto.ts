@@ -11,6 +11,8 @@ export function getPlayerFlowAuto(ctx: GameStateWithFlowMemory, playerId: Player
   const phase = getPhase(ctx)
   if (PhaseFn.isRuleEffect(phase)) {
     let flow: Flow | undefined = flows.find(flow => flow.id == "FlowPassPayCost")
+
+    console.log('auto flow check', { playerId, phase, flows, flow })
     if (flow == null) {
       // 規定效果非出擊一律自動按
       flows.find(flow => flow.id == "FlowSetActiveEffectID" && phase[0] == "戦闘フェイズ" && (phase[1] != "攻撃ステップ" && phase[1] != "防御ステップ"))

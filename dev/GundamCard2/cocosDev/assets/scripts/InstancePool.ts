@@ -14,6 +14,7 @@ export class InstancePool {
             return null;
         }
         if (this.pool[key]) {
+            this.pool[key].active = true;
             return this.pool[key];
         }
         const instance = instantiate(this.prefab);

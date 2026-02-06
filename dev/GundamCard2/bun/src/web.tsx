@@ -15,3 +15,4 @@ const root = ReactDom.createRoot(rootDom)
 //     return <div onClick={() => setText('def')}>{text}</div>
 // }
 root.render(<CocosAppVer />)
+// root.render(<AppView />)

@@ -1,4 +1,4 @@
-import { _decorator, Component, MeshRenderer, Node } from 'cc';
+import { _decorator, Component, MeshRenderer, Node, Vec3 } from 'cc';
 import { getImgSrc, getTexture, loadTextureFromURL } from './Helper';
 
 const { ccclass, property } = _decorator;
@@ -9,28 +9,27 @@ export class CardController extends Component implements IInstanceGame<ICard> {
     @property(Node)
     public front: Node | null = null;
 
-    // private frontMeshRenderer: MeshRenderer | null = null;
+    @property(Node)
+    public back: Node | null = null;
 
-    // protected onLoad(): void {
-    //     if (this.front) {
-    //         this.frontMeshRenderer = this.front.getComponent(MeshRenderer);
-
-    //         console.log('CardController onLoad - frontMeshRenderer:', this.frontMeshRenderer);
+    // protected async onLoad(): Promise<void> {
+    //     if (this.back) {
+    //         const backTexture = await getTexture('-1');
+    //         const backMeshRenderer = this.back.getComponent(MeshRenderer);
+    //         if (!backMeshRenderer) {
+    //             console.warn('Back MeshRenderer not found on back node.');
+    //             return;
+    //         }
+    //         backMeshRenderer.material.setProperty('mainTexture', backTexture);
     //     }
     // }
 
     async sync(game: IGame, relative: ICard): Promise<void> {
 
         // console.log('CardController sync called with card:', relative);
-        // TODO: bind card data to visuals
         if (this.front) {
-            // Example: Update the material or texture of the frontMeshRenderer based on card data
-
-            const imgURL = getImgSrc(relative.protoID);
-            // console.log(`CardController syncing card ID: ${relative.id}, ProtoID: ${relative.protoID}, Image URL: ${imgURL}`);
 
             const imgTexture = await getTexture(relative.protoID);
-            // console.log('Loaded texture:', imgTexture);
 
             const frontMeshRenderer = this.front.getComponent(MeshRenderer);
             if (!frontMeshRenderer) {
@@ -39,6 +38,8 @@ export class CardController extends Component implements IInstanceGame<ICard> {
             }
 
             frontMeshRenderer.material.setProperty('mainTexture', imgTexture);
+
+            this.node.setRotationFromEuler(relative.isFaceDown ? new Vec3(0, 0, 180) : new Vec3(0, 0, 0));
 
             // Debug: Log the current texture property after update
             // const updatedTexture = frontMeshRenderer.material.getProperty('mainTexture');
