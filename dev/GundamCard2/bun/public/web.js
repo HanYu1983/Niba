@@ -17807,9 +17807,9 @@ var _objectIs_default = typeof Object.is === "function" ? Object.is : _objectIs;
 // node_modules/ramda/es/internal/_isArguments.js
 var toString = Object.prototype.toString;
 var _isArguments = /* @__PURE__ */ function() {
-  return toString.call(arguments) === "[object Arguments]" ? function _isArguments(x) {
+  return toString.call(arguments) === "[object Arguments]" ? function _isArguments2(x) {
     return toString.call(x) === "[object Arguments]";
-  } : function _isArguments(x) {
+  } : function _isArguments2(x) {
     return _has("callee", x);
   };
 }();
@@ -23152,7 +23152,7 @@ function createTextsFromSpecialEffect(text, options) {
               exceptItemSelf: true,
               actions: [
                 {
-                  title: function _(ctx2, effect, { GameStateFn, DefineFn, Options }) {
+                  title: function _2(ctx2, effect, { GameStateFn, DefineFn, Options }) {
                     const cardId = DefineFn.EffectFn.getCardID(effect);
                     const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx2, "［ ］の特徴を持つ自軍ユニット１枚は", cardId);
                     const textRefs = GameStateFn.getCardTipTextRefs(ctx2, "このカードの本来のテキスト１つ", cardId);
@@ -23175,7 +23175,7 @@ function createTextsFromSpecialEffect(text, options) {
                 {
                   title: ["cutIn", [
                     {
-                      title: function _(ctx2, effect, { GameStateFn, DefineFn, Options }) {
+                      title: function _2(ctx2, effect, { GameStateFn, DefineFn, Options }) {
                         const cardId = DefineFn.EffectFn.getCardID(effect);
                         const pairs = GameStateFn.getCardTipStrBaSyouPairs(ctx2, "［ ］の特徴を持つ自軍ユニット１枚は", cardId);
                         const textRefs = GameStateFn.getCardTipTextRefs(ctx2, "このカードの本来のテキスト１つ", cardId);
@@ -23279,7 +23279,7 @@ function createTextsFromSpecialEffect(text, options) {
                           logicTreeAction: {
                             actions: [
                               {
-                                title: function _(ctx3, effect2, { GameStateFn: GameStateFn2, DefineFn: DefineFn2, ToolFn: ToolFn2, Options }) {
+                                title: function _2(ctx3, effect2, { GameStateFn: GameStateFn2, DefineFn: DefineFn2, ToolFn: ToolFn2, Options }) {
                                   const cardId = DefineFn2.EffectFn.getCardID(effect2);
                                   const tipKey = "這張卡在戰區的場合, 打開自軍本國上的1張卡";
                                   const pairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, tipKey, cardId);
@@ -23381,7 +23381,7 @@ function createTextsFromSpecialEffect(text, options) {
           conditions: {
             ...text.conditions,
             "交戰中的敵軍機體1張": {
-              title: function _(ctx2, effect, { GameStateFn, DefineFn, Options }) {
+              title: function _2(ctx2, effect, { GameStateFn, DefineFn, Options }) {
                 const { addCardIds: addCardIds2 } = { addCardIds: null };
                 if (addCardIds2 == null) {
                   throw new Error(`addCardIds must replace`);
@@ -23404,7 +23404,7 @@ function createTextsFromSpecialEffect(text, options) {
             "同區中有NT才能使用": {
               actions: [
                 {
-                  title: function _(ctx2, effect, { GameStateFn, DefineFn }) {
+                  title: function _2(ctx2, effect, { GameStateFn, DefineFn }) {
                     const cardId = DefineFn.EffectFn.getCardID(effect);
                     const from = GameStateFn.getItemBaSyou(ctx2, cardId);
                     const hasNT = GameStateFn.getItemIdsByBasyou(ctx2, from).filter((itemId) => GameStateFn.getItemCharacteristic(ctx2, itemId).indexOf("NT") != -1).length > 0;
@@ -23495,7 +23495,7 @@ function createTextsFromSpecialEffect(text, options) {
             "這個效果只有這張卡從手中打出的回合可以使用": {
               actions: [
                 {
-                  title: function _(ctx2, effect, { GameStateFn, DefineFn }) {
+                  title: function _2(ctx2, effect, { GameStateFn, DefineFn }) {
                     const cardId = DefineFn.EffectFn.getCardID(effect);
                     if (GameStateFn.getItemState(ctx2, cardId).isFirstTurn != true) {
                       throw new DefineFn.TipError(`這個效果只有這張卡從手中打出的回合可以使用:${effect.text.description}`);
@@ -23510,7 +23510,7 @@ function createTextsFromSpecialEffect(text, options) {
             {
               actions: [
                 {
-                  title: function _(ctx2, effect, { GameStateFn, DefineFn }) {
+                  title: function _2(ctx2, effect, { GameStateFn, DefineFn }) {
                     const { A: A2 } = { A: "" };
                     const newE = DefineFn.EffectFn.fromEffectBasic(effect, {
                       conditions: {
@@ -23526,7 +23526,7 @@ function createTextsFromSpecialEffect(text, options) {
                       logicTreeAction: {
                         actions: [
                           {
-                            title: function _(ctx3, effect2, { GameStateFn: GameStateFn2, DefineFn: DefineFn2, Options }) {
+                            title: function _3(ctx3, effect2, { GameStateFn: GameStateFn2, DefineFn: DefineFn2, Options }) {
                               const cardId = DefineFn2.EffectFn.getCardID(effect2);
                               const cardController = GameStateFn2.getItemController(ctx3, cardId);
                               const pairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, "看自己本國全部的卡,可以從中找出特徵A的1張卡移到HANGER,那個時候本國洗牌", cardId);
@@ -23563,7 +23563,7 @@ function createTextsFromSpecialEffect(text, options) {
           conditions: {
             ...text.conditions,
             "打開自軍手裡或指定HANGER中特徵A並合計國力x以下的1張卡": {
-              title: function _(ctx2, effect, bridge) {
+              title: function _2(ctx2, effect, bridge) {
                 const { A: A2 } = { A: "" };
                 if (A2 == "") {
                   throw new Error("A沒有被字串置換");
@@ -23588,12 +23588,12 @@ function createTextsFromSpecialEffect(text, options) {
             {
               actions: [
                 {
-                  title: function _(ctx2, effect, { GameStateFn, DefineFn }) {
+                  title: function _2(ctx2, effect, { GameStateFn, DefineFn }) {
                     const newE = DefineFn.EffectFn.fromEffectBasic(effect, {
                       logicTreeAction: {
                         actions: [
                           {
-                            title: function _(ctx3, effect2, { GameStateFn: GameStateFn2, DefineFn: DefineFn2, Options }) {
+                            title: function _3(ctx3, effect2, { GameStateFn: GameStateFn2, DefineFn: DefineFn2, Options }) {
                               const cardId = DefineFn2.EffectFn.getCardID(effect2);
                               const basyou = GameStateFn2.getItemBaSyou(ctx3, cardId);
                               const pairs = GameStateFn2.getCardTipStrBaSyouPairs(ctx3, "打開自軍手裡或指定HANGER中特徵A並合計國力x以下的1張卡", cardId);
@@ -24691,7 +24691,7 @@ function createPlayCommandText(ctx2, cardId, options) {
                     {
                       actions: [
                         {
-                          title: function _(ctx4, effect2, { DefineFn: DefineFn2, GameStateFn: GameStateFn2, Options: Options2 }) {
+                          title: function _2(ctx4, effect2, { DefineFn: DefineFn2, GameStateFn: GameStateFn2, Options: Options2 }) {
                             const cardId3 = DefineFn2.EffectFn.getCardID(effect2);
                             const from2 = GameStateFn2.getItemBaSyou(ctx4, cardId3);
                             const to = DefineFn2.AbsoluteBaSyouFn.setBaSyouKeyword(from2, "ジャンクヤード");
@@ -28019,12 +28019,12 @@ var CocosIframe = () => {
           console.log("Cocos 已準備好");
           break;
         case "onCocosGameFlow":
-          console.log("flow", data.data.flow, "id", data.data.clientId, "version", appContext.viewModel.model.versionID);
+          console.log("flow", data.data.flow, "id", data.data.clientId, "version", data.data.versionID);
           OnEvent.next({
             id: "OnClickFlowConfirm",
             clientId: data.data.clientId || "unknown",
             flow: data.data.flow,
-            versionID: appContext.viewModel.model.versionID
+            versionID: data.data.versionID
           });
           break;
       }
@@ -30808,7 +30808,7 @@ function _isNativeReflectConstruct() {
   try {
     var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function() {}));
   } catch (t2) {}
-  return (_isNativeReflectConstruct = function _isNativeReflectConstruct() {
+  return (_isNativeReflectConstruct = function _isNativeReflectConstruct2() {
     return !!t;
   })();
 }
@@ -30874,7 +30874,7 @@ var CSSCalculator2 = /* @__PURE__ */ function(_AbstractCalculator) {
   }
   _createClass(CSSCalculator3, [{
     key: "add",
-    value: function add(num) {
+    value: function add4(num) {
       if (num instanceof CSSCalculator3) {
         this.result = "".concat(this.result, " + ").concat(num.getResult());
       } else if (typeof num === "number" || typeof num === "string") {
@@ -30968,7 +30968,7 @@ var NumCalculator2 = /* @__PURE__ */ function(_AbstractCalculator) {
   }
   _createClass(NumCalculator3, [{
     key: "add",
-    value: function add(num) {
+    value: function add4(num) {
       if (num instanceof NumCalculator3) {
         this.result += num.result;
       } else if (typeof num === "number") {
@@ -31078,7 +31078,7 @@ function merge2() {
       Object.defineProperty(ret, key, {
         configurable: true,
         enumerable: true,
-        get: function get() {
+        get: function get2() {
           return obj[key];
         }
       });
@@ -31096,7 +31096,7 @@ var statisticToken = function statisticToken2(token2) {
   if (enableStatistic && typeof Proxy !== "undefined") {
     tokenKeys2 = new Set;
     proxy = new Proxy(token2, {
-      get: function get(obj, prop) {
+      get: function get2(obj, prop) {
         if (recording) {
           var _tokenKeys;
           (_tokenKeys = tokenKeys2) === null || _tokenKeys === undefined || _tokenKeys.add(prop);
@@ -31104,7 +31104,7 @@ var statisticToken = function statisticToken2(token2) {
         return obj[prop];
       }
     });
-    flush = function flush(componentName, componentToken) {
+    flush = function flush2(componentName, componentToken) {
       var _statistic$componentN;
       statistic[componentName] = {
         global: Array.from(tokenKeys2),
@@ -31173,7 +31173,7 @@ var ArrayKeyMap = /* @__PURE__ */ function() {
   }
   _createClass(ArrayKeyMap2, [{
     key: "set",
-    value: function set(keys5, value) {
+    value: function set2(keys5, value) {
       this.clear();
       var compositeKey = this.getCompositeKey(keys5);
       this.map.set(compositeKey, value);
@@ -31181,7 +31181,7 @@ var ArrayKeyMap = /* @__PURE__ */ function() {
     }
   }, {
     key: "get",
-    value: function get(keys5) {
+    value: function get2(keys5) {
       var compositeKey = this.getCompositeKey(keys5);
       var cache = this.map.get(compositeKey);
       this.lastAccessBeat.set(compositeKey, Date.now());
@@ -31403,7 +31403,7 @@ function genStyleUtils(config2) {
       resetStyle: false,
       order: -998
     }, options));
-    var StyledComponent = function StyledComponent(_ref) {
+    var StyledComponent = function StyledComponent2(_ref) {
       var { prefixCls, rootCls: _ref$rootCls } = _ref, rootCls = _ref$rootCls === undefined ? prefixCls : _ref$rootCls;
       useStyle(prefixCls, rootCls);
       return null;
@@ -31446,7 +31446,7 @@ function getFontSizes(base) {
 var import_react13 = __toESM(require_react(), 1);
 
 // node_modules/antd/es/version/version.js
-var version_default = "6.2.3";
+var version_default = "6.2.2";
 
 // node_modules/antd/es/version/index.js
 "use client";
@@ -38969,7 +38969,7 @@ if (true) {
   ColorPicker.displayName = "ColorPicker";
 }
 // node_modules/antd/es/color-picker/color.js
-var toHexFormat = (value, alpha) => value?.replace(/[^0-9a-f]/gi, "").slice(0, alpha ? 8 : 6) || "";
+var toHexFormat = (value, alpha) => value?.replace(/[^\w/]/g, "").slice(0, alpha ? 8 : 6) || "";
 var getHex = (value, alpha) => value ? toHexFormat(value, alpha) : "";
 var AggregationColor = /* @__PURE__ */ function() {
   function AggregationColor2(color) {
@@ -39059,7 +39059,7 @@ var AggregationColor = /* @__PURE__ */ function() {
     }
   }, {
     key: "equals",
-    value: function equals(color) {
+    value: function equals3(color) {
       if (!color || this.isGradient() !== color.isGradient()) {
         return false;
       }
@@ -39733,9 +39733,9 @@ var genVariantStyle = (token2) => {
           [varName("color-light")]: token2.colorFillTertiary,
           [varName("color-light-hover")]: token2.colorFillSecondary,
           [varName("color-light-active")]: token2.colorFill,
-          [varName("text-color")]: token2.defaultColor,
-          [varName("text-color-hover")]: token2.defaultHoverColor,
-          [varName("text-color-active")]: token2.defaultActiveColor,
+          [varName("text-color")]: token2.colorText,
+          [varName("text-color-hover")]: token2.defaultHoverBorderColor,
+          [varName("text-color-active")]: token2.defaultActiveBorderColor,
           [varName("shadow")]: token2.defaultShadow,
           [`&${componentCls}-variant-solid`]: {
             [varName("text-color")]: token2.solidTextColor,
@@ -39747,10 +39747,6 @@ var genVariantStyle = (token2) => {
             [varName("text-color-active")]: varRef("text-color")
           },
           [`&${componentCls}-variant-outlined, &${componentCls}-variant-dashed`]: {
-            [varName("text-color")]: token2.defaultColor,
-            [varName("text-color-hover")]: token2.defaultHoverColor,
-            [varName("text-color-active")]: token2.defaultActiveColor,
-            [varName("bg-color-container")]: token2.defaultBg,
             [varName("bg-color-hover")]: token2.defaultHoverBg,
             [varName("bg-color-active")]: token2.defaultActiveBg
           },
@@ -40129,47 +40125,34 @@ function genCompactItemVerticalStyle(token2) {
 // node_modules/antd/es/button/style/compact.js
 var genButtonCompactStyle = (token2) => {
   const {
-    antCls,
     componentCls,
+    colorPrimaryHover,
     lineWidth,
-    calc,
-    colorBgContainer
+    calc
   } = token2;
-  const solidSelector = `${componentCls}-variant-solid:not([disabled])`;
   const insetOffset = calc(lineWidth).mul(-1).equal();
-  const [varName, varRef] = genCssVar(antCls, "btn");
   const getCompactBorderStyle = (vertical) => {
     const itemCls = `${componentCls}-compact${vertical ? "-vertical" : ""}-item`;
+    const selector = `${itemCls}${componentCls}-primary:not([disabled])`;
     return {
       [itemCls]: {
-        [varName("compact-connect-border-color")]: varRef("bg-color-hover"),
-        [`&${solidSelector}`]: {
-          transition: `none`,
-          [`& + ${solidSelector}:before`]: [{
-            position: "absolute",
-            backgroundColor: varRef("compact-connect-border-color"),
-            content: '""'
-          }, vertical ? {
-            top: insetOffset,
-            insetInline: insetOffset,
-            height: lineWidth
-          } : {
-            insetBlock: insetOffset,
-            insetInlineStart: insetOffset,
-            width: lineWidth
-          }],
-          "&:hover:before": {
-            display: "none"
-          }
-        }
+        transition: `none`
+      },
+      [`${selector} + ${selector}::before`]: {
+        position: "absolute",
+        top: vertical ? insetOffset : 0,
+        insetInlineStart: vertical ? 0 : insetOffset,
+        backgroundColor: colorPrimaryHover,
+        content: '""',
+        width: vertical ? "100%" : lineWidth,
+        height: vertical ? lineWidth : "100%"
       }
     };
   };
-  return [getCompactBorderStyle(), getCompactBorderStyle(true), {
-    [`${solidSelector}${componentCls}-color-default`]: {
-      [varName("compact-connect-border-color")]: `color-mix(in srgb, ${varRef("bg-color-hover")} 75%, ${colorBgContainer})`
-    }
-  }];
+  return {
+    ...getCompactBorderStyle(),
+    ...getCompactBorderStyle(true)
+  };
 };
 var compact_default2 = genSubStyleComponent(["Button", "compact"], (token2) => {
   const buttonToken = prepareToken(token2);
@@ -40503,8 +40486,6 @@ function triggerFocus(element, option) {
     }
   }
 }
-var idToElementMap = new Map;
-var ignoredElementMap = new Map;
 
 // node_modules/antd/es/_util/ContextIsolator.js
 var import_react53 = __toESM(require_react(), 1);
@@ -40656,7 +40637,7 @@ function _construct(t, e, r2) {
 // node_modules/@babel/runtime/helpers/esm/wrapNativeSuper.js
 function _wrapNativeSuper(t) {
   var r2 = typeof Map == "function" ? new Map : undefined;
-  return _wrapNativeSuper = function _wrapNativeSuper(t2) {
+  return _wrapNativeSuper = function _wrapNativeSuper2(t2) {
     if (t2 === null || !_isNativeFunction(t2))
       return t2;
     if (typeof t2 != "function")
@@ -40684,7 +40665,7 @@ function _wrapNativeSuper(t) {
 var formatRegExp = /%[sdj%]/g;
 var warning4 = function warning5() {};
 if (typeof process !== "undefined" && process.env && true && typeof window !== "undefined" && typeof document !== "undefined") {
-  warning4 = function warning(type3, errors) {
+  warning4 = function warning6(type3, errors) {
     if (typeof console !== "undefined" && console.warn && typeof ASYNC_VALIDATOR_NO_WARNING === "undefined") {
       if (errors.every(function(e) {
         return typeof e === "string";
@@ -40815,7 +40796,7 @@ var AsyncValidationError = /* @__PURE__ */ function(_Error) {
 function asyncMap(objArr, option, func, callback, source) {
   if (option.first) {
     var _pending = new Promise(function(resolve, reject) {
-      var next2 = function next(errors) {
+      var next2 = function next3(errors) {
         callback(errors);
         return errors.length ? reject(new AsyncValidationError(errors, convertFieldsError(errors))) : resolve(source);
       };
@@ -40833,7 +40814,7 @@ function asyncMap(objArr, option, func, callback, source) {
   var total = 0;
   var results = [];
   var pending = new Promise(function(resolve, reject) {
-    var next2 = function next(errors) {
+    var next2 = function next3(errors) {
       results.push.apply(results, errors);
       total++;
       if (total === objArrLength) {
@@ -40992,7 +40973,7 @@ var url_default = function() {
     return urlReg;
   }
   var word = "[a-fA-F\\d:]";
-  var b = function b(options) {
+  var b = function b2(options) {
     return options && options.includeBoundaries ? "(?:(?<=\\s|^)(?=".concat(word, ")|(?<=").concat(word, ")(?=\\s|$))") : "";
   };
   var v4 = "(?:25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]\\d|\\d)(?:\\.(?:25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]\\d|\\d)){3}";
@@ -41012,7 +40993,7 @@ var url_default = function() {
   var v46Exact = new RegExp("(?:^".concat(v4, "$)|(?:^").concat(v6, "$)"));
   var v4exact = new RegExp("^".concat(v4, "$"));
   var v6exact = new RegExp("^".concat(v6, "$"));
-  var ip = function ip(options) {
+  var ip = function ip2(options) {
     return options && options.exact ? v46Exact : new RegExp("(?:".concat(b(options)).concat(v4).concat(b(options), ")|(?:").concat(b(options)).concat(v6).concat(b(options), ")"), "g");
   };
   ip.v4 = function(options) {
@@ -41439,7 +41420,7 @@ var Schema = /* @__PURE__ */ function() {
     }
   }, {
     key: "messages",
-    value: function messages(_messages) {
+    value: function messages2(_messages) {
       if (_messages) {
         this._messages = deepMerge(newMessages(), _messages);
       }
@@ -54347,8 +54328,7 @@ var TextArea2 = /* @__PURE__ */ import_react79.forwardRef((props, ref) => {
     focus: (option) => {
       triggerFocus(innerRef.current?.resizableTextArea?.textArea, option);
     },
-    blur: () => innerRef.current?.blur(),
-    nativeElement: innerRef.current?.nativeElement || null
+    blur: () => innerRef.current?.blur()
   }));
   const prefixCls = getPrefixCls("input", customizePrefixCls);
   const rootCls = useCSSVarCls_default(prefixCls);
@@ -54533,13 +54513,13 @@ var getTitleStyles = (token2) => {
 };
 var getLinkStyles = (token2) => {
   const {
-    componentCls
+    componentCls,
+    antCls
   } = token2;
-  const linkCls = `${componentCls}-link`;
+  const btnCls = `${antCls}-btn`;
   return {
-    [`&${linkCls}`]: {
+    [`a&:not(${btnCls}), a:not(${btnCls})`]: {
       ...operationUnit(token2),
-      userSelect: "text",
       [`&[disabled], &${componentCls}-disabled`]: {
         color: token2.colorTextDisabled,
         cursor: "not-allowed",
@@ -54726,21 +54706,21 @@ var genTypographyStyle = (token2) => {
       color: token2.colorText,
       wordBreak: "break-word",
       lineHeight: token2.lineHeight,
-      [`&${componentCls}-secondary, &${componentCls}-link${componentCls}-secondary`]: {
+      [`&${componentCls}-secondary`]: {
         color: token2.colorTextDescription
       },
-      [`&${componentCls}-success, &${componentCls}-link${componentCls}-success`]: {
+      [`&${componentCls}-success`]: {
         color: token2.colorSuccessText
       },
-      [`&${componentCls}-warning, &${componentCls}-link${componentCls}-warning`]: {
+      [`&${componentCls}-warning`]: {
         color: token2.colorWarningText
       },
-      [`&${componentCls}-danger, &${componentCls}-link${componentCls}-danger`]: {
+      [`&${componentCls}-danger`]: {
         color: token2.colorErrorText,
-        [`&${componentCls}-link:active, &${componentCls}-link:focus`]: {
+        "a&:active, a&:focus": {
           color: token2.colorErrorTextActive
         },
-        [`&${componentCls}-link:hover`]: {
+        "a&:hover": {
           color: token2.colorErrorTextHover
         }
       },
@@ -55681,8 +55661,7 @@ var Base = /* @__PURE__ */ React180.forwardRef((props, ref) => {
       [`${prefixCls}-disabled`]: disabled,
       [`${prefixCls}-ellipsis`]: enableEllipsis,
       [`${prefixCls}-ellipsis-single-line`]: cssTextOverflow,
-      [`${prefixCls}-ellipsis-multiple-line`]: cssLineClamp,
-      [`${prefixCls}-link`]: component === "a"
+      [`${prefixCls}-ellipsis-multiple-line`]: cssLineClamp
     }, className),
     prefixCls: customizePrefixCls,
     style: {

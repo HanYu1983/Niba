@@ -25,6 +25,8 @@ export class GameController extends Component implements IInstanceGame<IGame> {
     @property(Boolean)
     public debug: boolean = true;
 
+    private lastGame: IGame | null = null;
+
     // @property({ type: OrbitCamera })
     // public camera: OrbitCamera | null = null;
 
@@ -46,6 +48,8 @@ export class GameController extends Component implements IInstanceGame<IGame> {
 
         //     callWeb("onCocosGameFlow", { clientId: 'PlayerA', flow: game.playerCommands['PlayerA'][0] });
         // }
+
+        this.lastGame = game;
     }
 
     onLoad(): void {
@@ -93,7 +97,7 @@ export class GameController extends Component implements IInstanceGame<IGame> {
             const commandController = btnNode.getComponent(ButtonController);
             // console.log("Command controller:", commandController.buttonInfo);
 
-            callWeb("onCocosGameFlow", { clientId: 'PlayerA', flow: commandController.buttonInfo });
+            callWeb("onCocosGameFlow", { clientId: 'PlayerA', flow: commandController.buttonInfo, versionID: this.lastGame?.model.versionID });
         }
     }
 
