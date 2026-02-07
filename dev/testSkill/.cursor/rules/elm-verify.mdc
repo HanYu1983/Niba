@@ -1,0 +1,17 @@
+---
+description: 撰寫 Elm 代碼後以 docker-compose 驗證建置
+globs: elm/**/*.elm
+---
+
+# Elm 代碼驗證
+
+在此專案中修改或新增 Elm 代碼（`elm/**/*.elm`）時：
+
+- **每完成一段修改**（例如一個函數、一個 view 區塊或一輪重構）後，應執行以下指令驗證編譯與型別正確性：
+  ```bash
+  cd elm && docker-compose run --rm elm npm run build
+  ```
+- 若建置失敗，依編譯錯誤修正後再次執行上述指令，直到 `Success! Compiled 1 module.` 為止。
+- 建置成功後再繼續下一段代碼撰寫或提交。
+
+執行目錄為專案內的 `elm` 資料夾（含 `docker-compose.yml` 與 `package.json` 的目錄）。
