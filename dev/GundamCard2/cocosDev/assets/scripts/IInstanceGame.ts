@@ -1,5 +1,5 @@
 interface IInstanceGame<T> {
-    sync(game: IGame, relative: T): Promise<void>;
+    sync(game: IGame, ref: T): Promise<void>;
 }
 
 interface IModel {
@@ -91,4 +91,5 @@ interface IGame {
     cardSelection: any[];
     cardPositionSelection: any[];
     localMemory: ILocalMemory;
+    extra: any;
 }

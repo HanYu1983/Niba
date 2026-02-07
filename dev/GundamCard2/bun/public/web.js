@@ -17321,6 +17321,9 @@ var require_is_mobile = __commonJS((exports, module) => {
 // src/web.tsx
 var ReactDom = __toESM(require_client(), 1);
 
+// src/client/cocosVer/CocosAppVer.tsx
+var import_react83 = __toESM(require_react(), 1);
+
 // src/client/tool/appContext/index.tsx
 var import_react = __toESM(require_react(), 1);
 
@@ -28019,13 +28022,21 @@ var CocosIframe = () => {
           console.log("Cocos 已準備好");
           break;
         case "onCocosGameFlow":
-          console.log("flow", data.data.flow, "id", data.data.clientId, "version", data.data.versionID);
           OnEvent.next({
             id: "OnClickFlowConfirm",
             clientId: data.data.clientId || "unknown",
             flow: data.data.flow,
             versionID: data.data.versionID
           });
+          break;
+        case "onMethodCall":
+          const method = data.data.method;
+          const args = data.data.args;
+          console.log(`Cocos 呼叫方法: ${method}，參數:`, args);
+          const answer = window[method](...args);
+          if (answer !== null) {
+            sendMessageToIframe({ type: "onMethodCallAnswer", data: { callbackId: data.data.callbackId, response: answer } });
+          }
           break;
       }
     };
@@ -55943,6 +55954,9 @@ var CocosUIView = () => {
 // src/client/cocosVer/CocosAppVer.tsx
 var jsx_dev_runtime5 = __toESM(require_jsx_dev_runtime(), 1);
 var CocosAppVer = () => {
+  import_react83.useEffect(() => {
+    window["getItemController"] = getItemController;
+  }, []);
   return /* @__PURE__ */ jsx_dev_runtime5.jsxDEV(jsx_dev_runtime5.Fragment, {
     children: /* @__PURE__ */ jsx_dev_runtime5.jsxDEV(AppContextProvider, {
       children: [

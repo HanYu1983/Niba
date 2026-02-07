@@ -38,12 +38,11 @@ async function getTexture(cardID: string): Promise<Texture2D> {
     }
 }
 
+// function callWeb(id:string, type: string, data: any, callbackFunc?: (response: any) => void): void {
+//     console.log("Calling web function via postMessage", { type, data });
+//     if (window['html']) {
+//         window['html'].callParent({ type: type, data: data });
+//     }
+// }
 
-function callWeb(type: string, data: any) {
-    console.log("Calling web function via postMessage", { type, data });
-    if (window['html']) {
-        window['html'].callParent({ type: type, data: data });
-    }
-}
-
-export { getImgSrc, loadTextureFromURL, getTexture, callWeb };
+export { getImgSrc, loadTextureFromURL, getTexture };

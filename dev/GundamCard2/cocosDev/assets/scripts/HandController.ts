@@ -1,9 +1,10 @@
-import { _decorator, Button, Component, EventHandler, Node, Vec3 } from 'cc';
+import { _decorator, Button, CCBoolean, CCString, Component, EventHandler, Node, Vec3 } from 'cc';
 import { CardController } from './CardController';
 import { InstancePool } from './InstancePool';
 import { UIFollow3D } from './UIFollow3D';
 import { AHandState } from './handState/AHandState';
 import { CardUIController } from './CardUIController';
+import { callWeb } from './PostMessageCallback';
 
 const { ccclass, property, requireComponent } = _decorator;
 
@@ -24,6 +25,9 @@ export class HandController extends Component implements IInstanceGame<string[]>
     @property(Vec3)
     public cardOffset: Vec3 = new Vec3(12, 1, 0);
 
+    @property(CCString)
+    public playerID: string = '';
+
     private cardPool: InstancePool | null = null;
     private cardUIPool: InstancePool | null = null;
     private cardInstances: Node[] = [];
@@ -38,9 +42,25 @@ export class HandController extends Component implements IInstanceGame<string[]>
         this.cardUIPool = new InstancePool(this.cardUIPrefab);
     }
 
-    async sync(game: IGame, relative: string[]): Promise<void> {
+    // onStateA(){
+
+    // }
+
+    // onStawetB(){
+
+    // }
+    
+    // onVisit(accept:IAccest){
+    //     accept.accpet(this)
+    // }
+
+    async sync(game: IGame, relative: string[] | null): Promise<void> {
 
         // console.log("HandController syncing with game data:", game, relative);
+
+        // const cards = game.model.gameState.table.cardStack[deckId]
+
+        // this.states.hand(game, extra, this)
 
         this.cardInstances.forEach((instance) => {
             this.cardPool!.releaseInstance(instance);
@@ -50,7 +70,7 @@ export class HandController extends Component implements IInstanceGame<string[]>
             this.cardUIPool!.releaseInstance(instance);
         });
 
-        const cards: string[] = relative;
+        const cards: string[] = relative || [];
         cards.forEach(async (card: string, index) => {
 
             const cardInfo = game.model.gameState.cards[card];
@@ -60,9 +80,27 @@ export class HandController extends Component implements IInstanceGame<string[]>
                 const inst = this.cardPool!.getInstance(card);
 
                 const controller = inst.getComponent(CardController);
-                await controller?.sync(game, cardInfo);
+                controller.playerID = this.playerID;
+                controller?.sync(game, cardInfo);
+
                 const centerOffset = (cards.length - 1) / 2;
                 inst.setPosition(this.cardOffset.x * (index - centerOffset), this.cardOffset.y * index, this.cardOffset.z * index);
+
+                // ((_closureController) => {
+                //     callWeb('onMethodCall', { method: 'getItemController', args: [game.model.gameState, cardInfo.id] }, async (response: any) => {
+                //         console.log('Received response for getItemController:', response);
+                //         controller?.showForMe(response === this.playerID);
+                //     });
+                // })(controller)
+
+                // callWeb('onMethodCall', { method: 'getItemController', args: [game.model.gameState, cardInfo.id] }, async (response: any) => {
+                //     console.log('Received response for getItemController:', response);
+                //     console.log('card controller', controller);
+                //     console.log('playerID', this.playerID);
+                //     console.log('response', response);
+                //     console.log('response === playerID', response === this.playerID);
+                //     controller?.showForMe(response === this.playerID);
+                // });
                 return inst
             })()
             this.cardContainer.addChild(await cardInstance);
@@ -76,7 +114,7 @@ export class HandController extends Component implements IInstanceGame<string[]>
 
             //     const follow3D = inst.getComponent(UIFollow3D);
             //     follow3D!.target = cardInstance;
-                
+
             //     return inst;
             // })()
             // this.cardUIContainer?.addChild(cardUIInstance);

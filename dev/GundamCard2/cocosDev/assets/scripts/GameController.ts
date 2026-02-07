@@ -1,13 +1,15 @@
-import { _decorator, Button, Component, EventMouse, EventTouch, Input, input, Node } from 'cc';
+import { _decorator, Button, CCBoolean, Component, EventMouse, EventTouch, Input, input, Node } from 'cc';
 import { HandController } from './HandController';
 import { OrbitCamera } from './OrbitCamera';
 import { CardController } from './CardController';
 import { CardUIController } from './CardUIController';
 import { startGameMockData } from './mockData/startGame';
-import { callWeb } from './Helper';
 import { PlayerInfoController } from './PlayerInfoController';
 import { PlayerCommandController } from './PlayerCommandController';
 import { ButtonController } from './ButtonController';
+import { startCardMockData } from './mockData/startCards';
+import { DEBUG } from 'cc/env';
+import { callWeb, solveCallback } from './PostMessageCallback';
 
 const { ccclass, property } = _decorator;
 
@@ -22,8 +24,7 @@ export class GameController extends Component implements IInstanceGame<IGame> {
     @property({ type: PlayerCommandController })
     public playerCommandControllers: IInstanceGame<any>[] = [];
 
-    @property(Boolean)
-    public debug: boolean = true;
+    // public list:
 
     private lastGame: IGame | null = null;
 
@@ -31,10 +32,19 @@ export class GameController extends Component implements IInstanceGame<IGame> {
     // public camera: OrbitCamera | null = null;
 
     async sync(game: IGame, relative: IGame): Promise<void> {
-        console.log("GameController syncing with game data:", game);
+        // console.log("GameController syncing with game data:", game);
+
+        // animaiton
+
+
+        // sync 
+        // const stateg = game.model.gameState;
 
         await this.deckControllers[0].sync(game, game.model.gameState.table.cardStack['["PlayerA","本国"]']);
         await this.deckControllers[1].sync(game, game.model.gameState.table.cardStack['["PlayerB","本国"]']);
+
+        await this.handControllers[0].sync(game, game.model.gameState.table.cardStack['["PlayerA","手札"]']);
+        await this.handControllers[1].sync(game, game.model.gameState.table.cardStack['["PlayerB","手札"]']);
 
         this.playerCommandControllers[0].sync(game, game.playerCommands['PlayerA']);
         this.playerCommandControllers[1].sync(game, game.playerCommands['PlayerB']);
@@ -52,6 +62,10 @@ export class GameController extends Component implements IInstanceGame<IGame> {
         this.lastGame = game;
     }
 
+    // function retureDecks(){
+    //     return this.deckControllers;
+    // }
+
     onLoad(): void {
 
         window['cocos'] = {
@@ -62,13 +76,17 @@ export class GameController extends Component implements IInstanceGame<IGame> {
                         const gameData: IGame = msg.data;
                         this.sync(gameData, gameData);
                         break;
+                    case 'onMethodCallAnswer':
+                        solveCallback(msg.data.callbackId, msg.data.response);
+                        break;
                     default:
                         console.warn("Unknown message type:", msg.type);
                 }
             }
         }
 
-        if (this.debug) {
+        if (DEBUG) {
+            // console.log("Running in debug mode, using mock data");
             const mockGame: IGame = startGameMockData
             this.sync(mockGame, mockGame);
         }
