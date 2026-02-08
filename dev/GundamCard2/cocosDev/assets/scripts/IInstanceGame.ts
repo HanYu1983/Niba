@@ -1,5 +1,5 @@
 interface IInstanceGame<T> {
-    sync(game: IGame, ref: T): Promise<void>;
+    sync(game: IGame, relative: T): Promise<void>;
 }
 
 interface IModel {

@@ -10,6 +10,7 @@ import { ButtonController } from './ButtonController';
 import { startCardMockData } from './mockData/startCards';
 import { DEBUG } from 'cc/env';
 import { callWeb, solveCallback } from './PostMessageCallback';
+import { setView } from './System';
 
 const { ccclass, property } = _decorator;
 
@@ -68,7 +69,7 @@ export class GameController extends Component implements IInstanceGame<IGame> {
 
     onLoad(): void {
 
-        window['cocos'] = {
+        (window as any)['cocos'] = {
             receiveMessage: (msg: { type: string, data: any }) => {
                 console.log("Received message from web:", msg);
                 switch (msg.type) {
@@ -87,7 +88,7 @@ export class GameController extends Component implements IInstanceGame<IGame> {
 
         if (DEBUG) {
             // console.log("Running in debug mode, using mock data");
-            const mockGame: IGame = startGameMockData
+            const mockGame: IGame = startCardMockData
             this.sync(mockGame, mockGame);
         }
 
@@ -129,6 +130,16 @@ export class GameController extends Component implements IInstanceGame<IGame> {
 
             callWeb("onCocosGameFlow", { clientId: 'PlayerB', flow: commandController.buttonInfo });
         }
+    }
+
+    onMainUIPlayerAButtonClick(event: EventTouch) {
+        setView('PlayerA');
+        this.sync(this.lastGame!, this.lastGame!);
+    }
+
+    onMainUIPlayerBButtonClick(event: EventTouch) {
+        setView('PlayerB');
+        this.sync(this.lastGame!, this.lastGame!);
     }
 
     // callWeb(type: string, data: any) {

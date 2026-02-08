@@ -25,8 +25,8 @@ export class HandController extends Component implements IInstanceGame<string[]>
     @property(Vec3)
     public cardOffset: Vec3 = new Vec3(12, 1, 0);
 
-    @property(CCString)
-    public playerID: string = '';
+    // @property(CCString)
+    // public playerID: string = '';
 
     private cardPool: InstancePool | null = null;
     private cardUIPool: InstancePool | null = null;
@@ -80,7 +80,6 @@ export class HandController extends Component implements IInstanceGame<string[]>
                 const inst = this.cardPool!.getInstance(card);
 
                 const controller = inst.getComponent(CardController);
-                controller.playerID = this.playerID;
                 controller?.sync(game, cardInfo);
 
                 const centerOffset = (cards.length - 1) / 2;

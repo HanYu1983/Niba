@@ -1,6 +1,7 @@
 import { _decorator, CCBoolean, CCString, Component, MeshRenderer, Node, Vec3 } from 'cc';
 import { getImgSrc, getTexture, loadTextureFromURL } from './Helper';
 import { callWeb, callWebPromise } from './PostMessageCallback';
+import { getView } from './System';
 
 const { ccclass, property } = _decorator;
 
@@ -13,8 +14,8 @@ export class CardController extends Component implements IInstanceGame<ICard> {
     @property(Node)
     public back: Node | null = null;
 
-    @property(CCString)
-    public playerID: string = '';
+    // @property(CCString)
+    // public playerID: string = '';
 
     // protected async onLoad(): Promise<void> {
     //     if (this.back) {
@@ -61,7 +62,7 @@ export class CardController extends Component implements IInstanceGame<ICard> {
             // });
 
             const response = await callWebPromise('onMethodCall', { method: 'getItemController', args: [game.model.gameState, relative.id] });
-            const showForMe = response === this.playerID;
+            const showForMe = response === getView();
             this.node.setRotationFromEuler(showForMe ? new Vec3(0, 0, 0) : new Vec3(0, 0, 180));
 
             // callWeb('onMethodCall', { method: 'getItemController', args: [game.model.gameState, relative.id] }, {
