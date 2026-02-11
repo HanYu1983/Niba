@@ -55956,6 +55956,8 @@ var jsx_dev_runtime5 = __toESM(require_jsx_dev_runtime(), 1);
 var CocosAppVer = () => {
   import_react83.useEffect(() => {
     window["getItemController"] = getItemController;
+    window["getItemBaSyou"] = getItemBaSyou;
+    window["getItemState"] = getItemState;
   }, []);
   return /* @__PURE__ */ jsx_dev_runtime5.jsxDEV(jsx_dev_runtime5.Fragment, {
     children: /* @__PURE__ */ jsx_dev_runtime5.jsxDEV(AppContextProvider, {

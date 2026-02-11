@@ -11,6 +11,7 @@ import { startCardMockData } from './mockData/startCards';
 import { DEBUG } from 'cc/env';
 import { callWeb, solveCallback } from './PostMessageCallback';
 import { setView } from './System';
+import { DeckController } from './DeckController';
 
 const { ccclass, property } = _decorator;
 
@@ -19,7 +20,7 @@ export class GameController extends Component implements IInstanceGame<IGame> {
     @property({ type: HandController })
     public handControllers: IInstanceGame<string[]>[] = [];
 
-    @property({ type: HandController })
+    @property({ type: DeckController })
     public deckControllers: IInstanceGame<string[]>[] = [];
 
     @property({ type: PlayerCommandController })
@@ -87,7 +88,6 @@ export class GameController extends Component implements IInstanceGame<IGame> {
         }
 
         if (DEBUG) {
-            // console.log("Running in debug mode, using mock data");
             const mockGame: IGame = startCardMockData
             this.sync(mockGame, mockGame);
         }
