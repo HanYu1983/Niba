@@ -55951,6 +55951,684 @@ var CocosUIView = () => {
   }, undefined, false, undefined, this);
 };
 
+// src/game/gameStateWithFlowMemory/ai/getPlayerFlowAuto.ts
+function getPlayerFlowAuto(ctx2, playerId, flows, options) {
+  const phase = getPhase(ctx2);
+  if (PhaseFn.isRuleEffect(phase)) {
+    let flow = flows.find((flow2) => flow2.id == "FlowPassPayCost");
+    console.log("auto flow check", { playerId, phase, flows, flow });
+    if (flow == null) {
+      flows.find((flow2) => flow2.id == "FlowSetActiveEffectID" && phase[0] == "戦闘フェイズ" && (phase[1] != "攻撃ステップ" && phase[1] != "防御ステップ"));
+    }
+    if (flow == null) {
+      const deleteFlow = flows.find((flow2) => flow2.id == "FlowDeleteImmediateEffect" && phase[0] == "戦闘フェイズ" && (phase[1] == "攻撃ステップ" || phase[1] == "防御ステップ"));
+      if (deleteFlow?.id == "FlowDeleteImmediateEffect") {
+        const atkDefEf = deleteFlow.tips.find((e) => e.reason[0] == "GameRule" && (e.reason[2].isAttack || e.reason[2].isDefence));
+        if (atkDefEf) {
+          const isAllRoll = getPlayerUnitIds(ctx2, playerId).every((itemId) => getCard(ctx2, itemId).isRoll);
+          if (isAllRoll) {
+            flow = deleteFlow;
+          }
+        }
+      }
+    }
+    if (flow != null) {
+      return flow;
+    }
+  }
+  if (flows.length == 1) {
+    const flow = flows[0];
+    if (flow.id == "FlowCancelPassPhase") {
+      return null;
+    }
+    if (flow.id == "FlowCancelPassCut") {
+      return null;
+    }
+    if (flow.id == "FlowWaitPlayer") {
+      return null;
+    }
+    if (flow.id == "FlowDeleteImmediateEffect") {
+      return null;
+    }
+    if (flow.id == "FlowSetTipSelection") {
+      return null;
+    }
+    if (flow.id == "FlowObserveEffect") {
+      return null;
+    }
+    if (flow.id == "FlowSetActiveLogicID") {
+      return null;
+    }
+    return flow;
+  }
+  return null;
+}
+
+// src/tool/optalg/IGene.ts
+function getBest(population) {
+  const copy3 = [...population];
+  copy3.sort((a, b) => b.getFitness() - a.getFitness());
+  return copy3[0];
+}
+
+// src/tool/optalg/basic.ts
+function simulatedAnnealing(iteration, D, T2, factor, gene) {
+  if (T2 <= 0) {
+    throw new Error("T cannot be 0");
+  }
+  const delta = [];
+  for (let i2 = 0;i2 < D; ++i2) {
+    gene = gene.mutate();
+  }
+  gene.calcFitness();
+  const P = (oldFitness, newFitness, temperature) => {
+    return newFitness > oldFitness ? 1 : Math.exp((newFitness - oldFitness) / temperature);
+  };
+  for (let i2 = 0;i2 < iteration; i2++) {
+    const clone = gene.mutate();
+    T2 *= factor;
+    const oldFitness = gene.getFitness();
+    const newFitness = clone.calcFitness();
+    const acceptanceProbability = P(oldFitness, newFitness, T2);
+    if (acceptanceProbability > Math.random()) {
+      gene = clone;
+    }
+  }
+  return gene;
+}
+function optAlgByPSO(iteration, W, D, mutateRate, gene) {
+  let population = [...Array(W).keys()].map(() => {
+    let nextGene = gene;
+    for (let i2 = 0;i2 < D; ++i2) {
+      nextGene = nextGene.mutate();
+    }
+    nextGene.calcFitness();
+    return nextGene;
+  });
+  const bestGenes = [...population];
+  let globalBestGene = getBest(bestGenes);
+  for (let i2 = 0;i2 < iteration; i2++) {
+    for (let j = 0;j < population.length; j++) {
+      let nextGene = population[j];
+      if (nextGene.crossover == null) {
+        throw new Error;
+      }
+      nextGene = nextGene.crossover(globalBestGene);
+      if (nextGene.crossover == null) {
+        throw new Error;
+      }
+      nextGene = nextGene.crossover(bestGenes[j]);
+      if (Math.random() < mutateRate) {
+        nextGene = nextGene.mutate();
+      }
+      const nextFitness = nextGene.calcFitness();
+      if (nextFitness > bestGenes[j].getFitness()) {
+        bestGenes[j] = nextGene;
+      }
+      if (nextFitness > globalBestGene.getFitness()) {
+        globalBestGene = nextGene;
+      }
+      population[j] = nextGene;
+    }
+  }
+  return getBest(population);
+}
+function randInt() {
+  return Math.floor(Math.random() * 1e5);
+}
+function choise(options) {
+  const pool = [];
+  const total = options.reduce((a, b) => a + b, 0);
+  for (let i2 = 0;i2 < options.length; ++i2) {
+    const num = Math.floor(options[i2] * 100 / total);
+    for (let j = 0;j < num; j++) {
+      pool.push(i2);
+    }
+  }
+  return pool[randInt() % pool.length];
+}
+
+// src/game/ai/SelectBattleGroupGene.ts
+var SelectBattleGroupGeneFn = {
+  createBasic(ctx2, playerId, options) {
+    const gene = {
+      ctx: ctx2,
+      score: null,
+      getStateKey() {
+        const area1 = getItemIdsByBasyou(ctx2, AbsoluteBaSyouFn.of(playerId, "戦闘エリア1"));
+        const area2 = getItemIdsByBasyou(ctx2, AbsoluteBaSyouFn.of(playerId, "戦闘エリア2"));
+        return JSON.stringify([...area1, ...area2]);
+      },
+      calcFitness() {
+        throw new Error;
+      },
+      getFitness() {
+        if (this.score == null) {
+          throw new Error;
+        }
+        return this.score;
+      },
+      mutate() {
+        let ctx3 = this.ctx;
+        const cmd = choise([2, 2, 3]);
+        switch (cmd) {
+          case 0: {
+            const earthIds = getPlayerUnitCanGoEarthIds(ctx3, playerId, options);
+            const spaceIds = getPlayerUnitCanGoSpaceIds(ctx3, playerId, options);
+            for (let i2 = 0;i2 < 10; ++i2) {
+              const cmd2 = randInt() % 2;
+              if (cmd2 == 0) {
+                if (earthIds.length) {
+                  const id = earthIds[randInt() % earthIds.length];
+                  if (id == null) {
+                    throw new Error;
+                  }
+                  ctx3 = doItemMove(ctx3, EffectFn.createGameRule(PlayerA), AbsoluteBaSyouFn.of(playerId, "戦闘エリア1"), createStrBaSyouPair(ctx3, id), options);
+                  break;
+                }
+              } else if (cmd2 == 1) {
+                if (spaceIds.length) {
+                  const id = spaceIds[randInt() % spaceIds.length];
+                  if (id == null) {
+                    throw new Error;
+                  }
+                  ctx3 = doItemMove(ctx3, EffectFn.createGameRule(PlayerA), AbsoluteBaSyouFn.of(playerId, "戦闘エリア2"), createStrBaSyouPair(ctx3, id), options);
+                  break;
+                }
+              } else {
+                throw new Error;
+              }
+            }
+            break;
+          }
+          case 1: {
+            const area1 = getItemIdsByBasyou(ctx3, AbsoluteBaSyouFn.of(playerId, "戦闘エリア1")).filter((itemId) => getSetGroupRoot(ctx3, itemId) == itemId);
+            const area2 = getItemIdsByBasyou(ctx3, AbsoluteBaSyouFn.of(playerId, "戦闘エリア2")).filter((itemId) => getSetGroupRoot(ctx3, itemId) == itemId);
+            for (let i2 = 0;i2 < 10; ++i2) {
+              const cmd2 = randInt() % 2;
+              if (cmd2 == 0) {
+                if (area1.length) {
+                  const id = area1[randInt() % area1.length];
+                  if (id == null) {
+                    throw new Error;
+                  }
+                  ctx3 = doItemMove(ctx3, EffectFn.createGameRule(PlayerA), AbsoluteBaSyouFn.of(playerId, "配備エリア"), createStrBaSyouPair(ctx3, id), options);
+                  break;
+                }
+              } else if (cmd2 == 1) {
+                if (area2.length) {
+                  const id = area2[randInt() % area2.length];
+                  if (id == null) {
+                    throw new Error;
+                  }
+                  ctx3 = doItemMove(ctx3, EffectFn.createGameRule(PlayerA), AbsoluteBaSyouFn.of(playerId, "配備エリア"), createStrBaSyouPair(ctx3, id), options);
+                  break;
+                }
+              } else {
+                throw new Error;
+              }
+            }
+            break;
+          }
+          case 2: {
+            const area1 = getItemIdsByBasyou(ctx3, AbsoluteBaSyouFn.of(playerId, "戦闘エリア1")).filter((itemId) => getSetGroupRoot(ctx3, itemId) == itemId);
+            const area2 = getItemIdsByBasyou(ctx3, AbsoluteBaSyouFn.of(playerId, "戦闘エリア2")).filter((itemId) => getSetGroupRoot(ctx3, itemId) == itemId);
+            for (let i2 = 0;i2 < 10; ++i2) {
+              const cmd2 = randInt() % 2;
+              if (cmd2 == 0) {
+                if (area1.length >= 2) {
+                  const id = randInt() % area1.length;
+                  const id2 = randInt() % area1.length;
+                  if (id != id2) {
+                    const key = AbsoluteBaSyouFn.toString(AbsoluteBaSyouFn.of(playerId, "戦闘エリア1"));
+                    const list = ctx3.table.cardStack[key];
+                    list[id], list[id2] = list[id2], list[id];
+                    ctx3 = {
+                      ...ctx3,
+                      table: {
+                        ...ctx3.table,
+                        cardStack: {
+                          ...ctx3.table.cardStack,
+                          [key]: list
+                        }
+                      }
+                    };
+                    break;
+                  }
+                }
+              } else if (cmd2 == 1) {
+                if (area2.length >= 2) {
+                  const id = randInt() % area2.length;
+                  const id2 = randInt() % area2.length;
+                  if (id != id2) {
+                    const key = AbsoluteBaSyouFn.toString(AbsoluteBaSyouFn.of(playerId, "戦闘エリア2"));
+                    const list = ctx3.table.cardStack[key];
+                    list[id], list[id2] = list[id2], list[id];
+                    ctx3 = {
+                      ...ctx3,
+                      table: {
+                        ...ctx3.table,
+                        cardStack: {
+                          ...ctx3.table.cardStack,
+                          [key]: list
+                        }
+                      }
+                    };
+                    break;
+                  }
+                }
+              } else {
+                throw new Error;
+              }
+            }
+            {
+              const area12 = getItemIdsByBasyou(ctx3, AbsoluteBaSyouFn.of(playerId, "戦闘エリア1")).filter((itemId) => getSetGroupRoot(ctx3, itemId) == itemId);
+              const area22 = getItemIdsByBasyou(ctx3, AbsoluteBaSyouFn.of(playerId, "戦闘エリア2")).filter((itemId) => getSetGroupRoot(ctx3, itemId) == itemId);
+              area12.forEach((eid) => {
+                if (area22.includes(eid)) {
+                  console.log(area12, area22);
+                  throw new Error;
+                }
+              });
+            }
+            break;
+          }
+          default:
+            throw new Error;
+        }
+        return {
+          ...gene,
+          ctx: ctx3,
+          score: null
+        };
+      },
+      crossover(gene2) {
+        return randInt() % 2 == 0 ? { ...this } : { ...gene2 };
+      }
+    };
+    return gene;
+  },
+  createBasicForAttackCountry(ctx2, playerId, options) {
+    const gene = SelectBattleGroupGeneFn.createBasic(ctx2, playerId, options);
+    gene.calcFitness = function() {
+      const ctx3 = this.ctx;
+      const area1 = getItemIdsByBasyou(ctx3, AbsoluteBaSyouFn.of(playerId, "戦闘エリア1"));
+      const area2 = getItemIdsByBasyou(ctx3, AbsoluteBaSyouFn.of(playerId, "戦闘エリア2"));
+      const area1Power = getBattleGroupBattlePoint(ctx3, area1, area1, { ...options });
+      const area1LostPower = area1.map((v, i2) => {
+        if (i2 == 0) {
+          return 0;
+        }
+        return getSetGroupBattlePoint(ctx3, v, options)[0];
+      }).reduce((a, b) => a + b, 0);
+      const area2Power = getBattleGroupBattlePoint(ctx3, area2, area2, { ...options });
+      const area2LostPower = area2.map((v, i2) => {
+        if (i2 == 0) {
+          return 0;
+        }
+        return getSetGroupBattlePoint(ctx3, v, options)[0];
+      }).reduce((a, b) => a + b, 0);
+      this.score = (area1Power + area2Power) * 2 - area1LostPower - area2LostPower;
+      return this.score;
+    };
+    return gene;
+  },
+  createBasicForDefenceBattle(originCtx, playerId, options) {
+    const defencePlayerId = playerId;
+    const attackPlayerId = PlayerIDFn.getOpponent(defencePlayerId);
+    const originDefenceScore = getScore(originCtx, defencePlayerId);
+    const originAttackScore = getScore(originCtx, attackPlayerId);
+    const gene = SelectBattleGroupGeneFn.createBasic(originCtx, playerId, options);
+    gene.calcFitness = function() {
+      logCategory("createBasicForBattle", "==== calcFitness ====");
+      let ctx2 = this.ctx;
+      logCategory("createBasicForBattle", "originDefenceScore", originDefenceScore);
+      logCategory("createBasicForBattle", "originAttackScore", originAttackScore);
+      ctx2 = checkIsBattle(ctx2);
+      ctx2 = doPlayerAttack(ctx2, attackPlayerId, "戦闘エリア1", 1, {});
+      ctx2 = doPlayerAttack(ctx2, attackPlayerId, "戦闘エリア2", 1, {});
+      ctx2 = doPlayerAttack(ctx2, attackPlayerId, "戦闘エリア1", 2, {});
+      ctx2 = doPlayerAttack(ctx2, attackPlayerId, "戦闘エリア2", 2, {});
+      const defenceScore = getScore(ctx2, defencePlayerId);
+      const attackScore = getScore(ctx2, attackPlayerId);
+      logCategory("createBasicForBattle", "defenceScore", defenceScore);
+      logCategory("createBasicForBattle", "attackScore", attackScore);
+      const defenceLost = originDefenceScore - defenceScore;
+      const attackLost = originAttackScore - attackScore;
+      logCategory("createBasicForBattle", "defenceLost", defenceLost);
+      logCategory("createBasicForBattle", "attackLost", attackLost);
+      this.score = attackLost - defenceLost;
+      logCategory("createBasicForBattle", "score", attackLost - defenceLost);
+      return this.score;
+    };
+    function getScore(ctx2, currentPlayerId) {
+      const area1 = getItemIdsByBasyou(ctx2, AbsoluteBaSyouFn.of(currentPlayerId, "戦闘エリア1"));
+      const area2 = getItemIdsByBasyou(ctx2, AbsoluteBaSyouFn.of(currentPlayerId, "戦闘エリア2"));
+      const area1Power = getBattleGroupBattlePoint(ctx2, area1, area1, { ...options });
+      const area2Power = getBattleGroupBattlePoint(ctx2, area2, area2, { ...options });
+      const scorePart1 = (area1Power + area2Power) * 2;
+      if (currentPlayerId == attackPlayerId) {
+        return scorePart1;
+      }
+      const live = getItemIdsByBasyou(ctx2, AbsoluteBaSyouFn.of(currentPlayerId, "本国")).length;
+      const homeLength = getItemIdsByBasyou(ctx2, AbsoluteBaSyouFn.of(currentPlayerId, "配備エリア")).length;
+      const area1Op = getItemIdsByBasyou(ctx2, AbsoluteBaSyouFn.of(PlayerIDFn.getOpponent(currentPlayerId), "戦闘エリア1"));
+      const area2Op = getItemIdsByBasyou(ctx2, AbsoluteBaSyouFn.of(PlayerIDFn.getOpponent(currentPlayerId), "戦闘エリア2"));
+      let goEmptyLost = 0;
+      if (area1Op.length == 0 && area1.length > 0) {
+        goEmptyLost += 10;
+      }
+      if (area2Op.length == 0 && area2.length > 0) {
+        goEmptyLost += 10;
+      }
+      return scorePart1 + live * 2 + homeLength * 6 - goEmptyLost;
+    }
+    return gene;
+  },
+  createBasicForAttackBattle(originCtx, playerId, options) {
+    const attackPlayerId = playerId;
+    const defencePlayerId = PlayerIDFn.getOpponent(attackPlayerId);
+    const originDefenceScore = getScore(originCtx, defencePlayerId);
+    const originAttackScore = getScore(originCtx, attackPlayerId);
+    const gene = SelectBattleGroupGeneFn.createBasic(originCtx, attackPlayerId, options);
+    gene.mutate = function() {
+      let ctx2 = originCtx;
+      {
+        let attackCountryGene = SelectBattleGroupGeneFn.createBasicForAttackCountry(ctx2, attackPlayerId, options);
+        attackCountryGene = optAlgByPSO(10, 10, 0, 1, attackCountryGene);
+        const earthIds = getItemIdsByBasyou(attackCountryGene.ctx, AbsoluteBaSyouFn.of(attackPlayerId, "戦闘エリア1")).filter((itemId) => getSetGroupRoot(ctx2, itemId) == itemId);
+        const spaceIds = getItemIdsByBasyou(attackCountryGene.ctx, AbsoluteBaSyouFn.of(attackPlayerId, "戦闘エリア2")).filter((itemId) => getSetGroupRoot(ctx2, itemId) == itemId);
+        logCategory("createBasicForAttackBattle", "earthIds", earthIds);
+        logCategory("createBasicForAttackBattle", "spaceIds", spaceIds);
+        for (let id of earthIds) {
+          ctx2 = doItemMove(ctx2, EffectFn.createGameRule(PlayerA), AbsoluteBaSyouFn.of(attackPlayerId, "戦闘エリア1"), createStrBaSyouPair(ctx2, id), options);
+        }
+        for (let id of spaceIds) {
+          ctx2 = doItemMove(ctx2, EffectFn.createGameRule(PlayerA), AbsoluteBaSyouFn.of(attackPlayerId, "戦闘エリア2"), createStrBaSyouPair(ctx2, id), options);
+        }
+      }
+      {
+        const [earthIds, spaceIds] = createBattleGroupForDefenceBattle(ctx2, defencePlayerId, options);
+        for (let id of earthIds) {
+          ctx2 = doItemMove(ctx2, EffectFn.createGameRule(PlayerA), AbsoluteBaSyouFn.of(defencePlayerId, "戦闘エリア1"), createStrBaSyouPair(ctx2, id), options);
+        }
+        for (let id of spaceIds) {
+          ctx2 = doItemMove(ctx2, EffectFn.createGameRule(PlayerA), AbsoluteBaSyouFn.of(defencePlayerId, "戦闘エリア2"), createStrBaSyouPair(ctx2, id), options);
+        }
+      }
+      ctx2 = checkIsBattle(ctx2);
+      ctx2 = doPlayerAttack(ctx2, attackPlayerId, "戦闘エリア1", 1, {});
+      ctx2 = doPlayerAttack(ctx2, attackPlayerId, "戦闘エリア2", 1, {});
+      ctx2 = doPlayerAttack(ctx2, attackPlayerId, "戦闘エリア1", 2, {});
+      ctx2 = doPlayerAttack(ctx2, attackPlayerId, "戦闘エリア2", 2, {});
+      return {
+        ...this,
+        ctx: ctx2,
+        score: null
+      };
+    };
+    gene.calcFitness = function() {
+      let ctx2 = this.ctx;
+      const defenceScore = getScore(ctx2, defencePlayerId);
+      const attackScore = getScore(ctx2, attackPlayerId);
+      logCategory("createBasicForAttackBattle", "originDefenceScore", originDefenceScore);
+      logCategory("createBasicForAttackBattle", "originAttackScore", originAttackScore);
+      logCategory("createBasicForAttackBattle", "defenceScore", defenceScore);
+      logCategory("createBasicForAttackBattle", "attackScore", attackScore);
+      const defenceLost = originDefenceScore - defenceScore;
+      const attackLost = originAttackScore - attackScore;
+      logCategory("createBasicForAttackBattle", "defenceLost", defenceLost);
+      logCategory("createBasicForAttackBattle", "attackLost", attackLost);
+      this.score = defenceLost - attackLost;
+      logCategory("createBasicForAttackBattle", "score", this.score);
+      return this.score;
+    };
+    function getScore(ctx2, currentPlayerId) {
+      const power = getPlayerUnitIds(ctx2, currentPlayerId).filter((id) => getItemState(ctx2, id).destroyReason == null).map((itemId) => {
+        const bp = getSetGroupBattlePoint(ctx2, itemId, options);
+        return bp[0] + bp[1] + bp[2];
+      }).reduce((a, b) => a + b, 0);
+      const scorePart1 = power * 2;
+      if (currentPlayerId == defencePlayerId) {
+        return scorePart1;
+      }
+      const homeLength = getItemIdsByBasyou(ctx2, AbsoluteBaSyouFn.of(currentPlayerId, "配備エリア")).length;
+      const live = getItemIdsByBasyou(ctx2, AbsoluteBaSyouFn.of(PlayerIDFn.getOpponent(currentPlayerId), "本国")).length;
+      return scorePart1 + homeLength * 2 - live * 4;
+    }
+    return gene;
+  }
+};
+function createBattleGroupForAttackCountry(ctx2, playerId, options) {
+  const goEarthIds = getPlayerUnitCanGoEarthIds(ctx2, playerId, options);
+  const goSpaceIds = getPlayerUnitCanGoSpaceIds(ctx2, playerId, options);
+  if (goEarthIds.length == 0 && goSpaceIds.length == 0) {
+    return [[], [], []];
+  }
+  let gene = SelectBattleGroupGeneFn.createBasicForAttackCountry(ctx2, playerId, options);
+  gene = simulatedAnnealing(100, 50, 1000, 0.7, gene);
+  const area1 = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(playerId, "戦闘エリア1")).filter((itemId) => getSetGroupRoot(ctx2, itemId) == itemId);
+  const area2 = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(playerId, "戦闘エリア2")).filter((itemId) => getSetGroupRoot(ctx2, itemId) == itemId);
+  const homeIds = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(playerId, "配備エリア")).filter((itemId) => getSetGroupRoot(ctx2, itemId) == itemId);
+  {
+    area1.forEach((eid) => {
+      if (area2.includes(eid)) {
+        console.log(area1, area2);
+        throw new Error;
+      }
+    });
+  }
+  return [area1, area2, homeIds];
+}
+function createBattleGroupForDefenceBattle(ctx2, playerId, options) {
+  const goEarthIds = getPlayerUnitCanGoEarthIds(ctx2, playerId, options);
+  const goSpaceIds = getPlayerUnitCanGoSpaceIds(ctx2, playerId, options);
+  if (goEarthIds.length == 0 && goSpaceIds.length == 0) {
+    return [[], [], []];
+  }
+  let gene = SelectBattleGroupGeneFn.createBasicForDefenceBattle(ctx2, playerId, options);
+  gene = optAlgByPSO(3, 30, 20, 0.7, gene);
+  const area1 = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(playerId, "戦闘エリア1")).filter((itemId) => getSetGroupRoot(ctx2, itemId) == itemId);
+  const area2 = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(playerId, "戦闘エリア2")).filter((itemId) => getSetGroupRoot(ctx2, itemId) == itemId);
+  const homeIds = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(playerId, "配備エリア")).filter((itemId) => getSetGroupRoot(ctx2, itemId) == itemId);
+  {
+    area1.forEach((eid) => {
+      if (area2.includes(eid)) {
+        console.log(area1, area2);
+        throw new Error;
+      }
+    });
+  }
+  return [area1, area2, homeIds];
+}
+function createBattleGroupForAttackBattle(ctx2, playerId, options) {
+  const goEarthIds = getPlayerUnitCanGoEarthIds(ctx2, playerId, options);
+  const goSpaceIds = getPlayerUnitCanGoSpaceIds(ctx2, playerId, options);
+  if (goEarthIds.length == 0 && goSpaceIds.length == 0) {
+    return [[], [], [], [], [], []];
+  }
+  let gene = SelectBattleGroupGeneFn.createBasicForAttackBattle(ctx2, playerId, options);
+  gene = optAlgByPSO(0, 2, 1, 0, gene);
+  if (gene.getFitness() < 0) {
+    return [[], [], [], [], [], []];
+  }
+  const area1 = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(playerId, "戦闘エリア1")).filter((itemId) => getSetGroupRoot(ctx2, itemId) == itemId);
+  const area2 = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(playerId, "戦闘エリア2")).filter((itemId) => getSetGroupRoot(ctx2, itemId) == itemId);
+  const homeIds = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(playerId, "配備エリア")).filter((itemId) => getSetGroupRoot(ctx2, itemId) == itemId);
+  {
+    area1.forEach((eid) => {
+      if (area2.includes(eid)) {
+        console.log(area1, area2);
+        throw new Error;
+      }
+    });
+  }
+  const defencePlayerId = PlayerIDFn.getOpponent(playerId);
+  const area1b = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(defencePlayerId, "戦闘エリア1")).filter((itemId) => getSetGroupRoot(ctx2, itemId) == itemId);
+  const area2b = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(defencePlayerId, "戦闘エリア2")).filter((itemId) => getSetGroupRoot(ctx2, itemId) == itemId);
+  const homeIdsb = getItemIdsByBasyou(gene.ctx, AbsoluteBaSyouFn.of(defencePlayerId, "配備エリア")).filter((itemId) => getSetGroupRoot(ctx2, itemId) == itemId);
+  return [area1, area2, homeIds, area1b, area2b, homeIdsb];
+}
+
+// src/game/gameStateWithFlowMemory/ai/thinkVer2.ts
+var earthIds = [];
+var spaceIds = [];
+var currentKey = "";
+function getUnitIds(ctx2, playerId, isAttack, isDefence, ges) {
+  const key = playerId + isAttack + isDefence;
+  if (currentKey != key) {
+    currentKey = key;
+    if (isAttack) {
+      const opponentPlayerId = PlayerIDFn.getOpponent(playerId);
+      const opponentGoEarthIds = getPlayerUnitCanGoEarthIds(ctx2, opponentPlayerId, { ges });
+      const opponentGoSpaceIds = getPlayerUnitCanGoSpaceIds(ctx2, opponentPlayerId, { ges });
+      if (opponentGoEarthIds.length == 0 && opponentGoSpaceIds.length == 0) {
+        const opponentBpScore = createPlayerUnitBattlePointScore(ctx2, opponentPlayerId, { ges });
+        const bpScore = createPlayerUnitBattlePointScore(ctx2, playerId, { ges });
+        if (opponentBpScore > bpScore) {
+          return [[], []];
+        }
+        [earthIds, spaceIds] = createBattleGroupForAttackCountry(ctx2, playerId, { ges });
+      } else {
+        [earthIds, spaceIds] = createBattleGroupForAttackBattle(ctx2, playerId, { ges });
+      }
+    } else if (isDefence) {
+      const opponentPlayerId = PlayerIDFn.getOpponent(playerId);
+      const opponentGoEarthIds = getItemIdsByBasyou(ctx2, AbsoluteBaSyouFn.of(opponentPlayerId, "戦闘エリア1"));
+      const opponentGoSpaceIds = getItemIdsByBasyou(ctx2, AbsoluteBaSyouFn.of(opponentPlayerId, "戦闘エリア2"));
+      if (opponentGoEarthIds.length == 0 && opponentGoSpaceIds.length == 0) {
+        [earthIds, spaceIds] = [[], []];
+      } else {
+        [earthIds, spaceIds] = createBattleGroupForDefenceBattle(ctx2, playerId, { ges });
+      }
+    }
+  }
+  {
+    const area1 = earthIds;
+    const area2 = spaceIds;
+    area1.forEach((eid) => {
+      if (area2.includes(eid)) {
+        console.log(area1, area2);
+        throw new Error;
+      }
+    });
+  }
+  return [earthIds, spaceIds];
+}
+function thinkVer2(ctx2, playerId, flows) {
+  const ges = getGlobalEffects(ctx2, null);
+  const attackFlow = flows.flatMap((flow) => {
+    if (flow.id == "FlowSetTipSelection") {
+      const effect = getEffect(ctx2, flow.effectID);
+      if (effect.reason[0] == "GameRule" && effect.reason[2].isAttack) {
+        let willGoIds = [];
+        if (flow.tip.flags?.isGoBattleArea1) {
+          willGoIds = getUnitIds(ctx2, playerId, true, false, ges)[0];
+        } else if (flow.tip.flags?.isGoBattleArea2) {
+          willGoIds = getUnitIds(ctx2, playerId, true, false, ges)[1];
+        } else {
+          throw new Error;
+        }
+        if (willGoIds.length) {
+          flow = {
+            ...flow,
+            tip: {
+              ...flow.tip,
+              title: ["カード", [], willGoIds.map((id) => createStrBaSyouPair(ctx2, id))]
+            }
+          };
+          return [flow];
+        }
+      }
+      if (effect.reason[0] == "GameRule" && effect.reason[2].isDefence) {
+        let willGoIds = [];
+        if (flow.tip.flags?.isGoBattleArea1) {
+          willGoIds = getUnitIds(ctx2, playerId, false, true, ges)[0];
+        } else if (flow.tip.flags?.isGoBattleArea2) {
+          willGoIds = getUnitIds(ctx2, playerId, false, false, ges)[1];
+        } else {
+          throw new Error;
+        }
+        if (willGoIds.length) {
+          flow = {
+            ...flow,
+            tip: {
+              ...flow.tip,
+              title: ["カード", [], willGoIds.map((id) => createStrBaSyouPair(ctx2, id))]
+            }
+          };
+          return [flow];
+        }
+      }
+    }
+    return [];
+  });
+  if (attackFlow.length) {
+    return attackFlow[0];
+  }
+  const plays = flows.flatMap((flow) => flow.id == "FlowSetActiveEffectID" ? flow.tips : []);
+  const ruleEffect = plays.find((p) => p.reason[0] == "GameRule" && (p.reason[2].isAttack || p.reason[2].isDefence || p.reason[2].isReturn || p.reason[2].isDamageCheck || p.reason[2].isReroll || p.reason[2].isDraw));
+  if (ruleEffect) {
+    return { id: "FlowSetActiveEffectID", effectID: ruleEffect.id, tips: [] };
+  }
+  const playGs = plays.filter((p) => p.reason[0] == "PlayCard" && p.reason[3].isPlayG);
+  const playChars = plays.filter((p) => p.reason[0] == "PlayCard" && p.reason[3].isPlayCharacter);
+  const mygs = getPlayerGIds(ctx2, playerId);
+  if (mygs.length < 7 && playGs.length) {
+    return { id: "FlowSetActiveEffectID", effectID: playGs[0].id, tips: [] };
+  }
+  const playUnits = plays.filter((p) => p.reason[0] == "PlayCard" && p.reason[3].isPlayUnit);
+  const myUnits = getPlayerUnitIds(ctx2, playerId);
+  if (myUnits.length < 4 && playUnits.length) {
+    return { id: "FlowSetActiveEffectID", effectID: playUnits[0].id, tips: [] };
+  }
+  if (playChars.length) {
+    const shouldSetCharEffs = playChars.filter((eff) => {
+      const [atk, range5, hp] = getItemPrototype(ctx2, EffectFn.getCardID(eff)).battlePoint || BattlePointFn.getAllStar();
+      if (BattlePointFn.getValue(atk) + BattlePointFn.getValue(range5) + BattlePointFn.getValue(hp) == 0) {
+        return false;
+      }
+      return true;
+    });
+    if (shouldSetCharEffs.length) {
+      let eff = shouldSetCharEffs[Math.round(Math.random() * 1000) % shouldSetCharEffs.length];
+      return { id: "FlowSetActiveEffectID", effectID: eff.id, tips: [] };
+    }
+  }
+  const playTexts = plays.filter((p) => p.reason[0] == "PlayText");
+  const shouldUseTexts = createPreviewEffectScore(ctx2, playerId, playTexts, { ges });
+  if (shouldUseTexts.length) {
+    return { id: "FlowSetActiveEffectID", effectID: shouldUseTexts[0][0], tips: [] };
+  }
+  if (myUnits.length < 8 && playUnits.length) {
+    return { id: "FlowSetActiveEffectID", effectID: playUnits[0].id, tips: [] };
+  }
+  const useFlows = flows.filter((flow) => {
+    switch (flow.id) {
+      case "FlowCancelActiveEffectID":
+      case "FlowCancelActiveLogicID":
+      case "FlowCancelPassCut":
+      case "FlowCancelPassPhase":
+      case "FlowWaitPlayer":
+      case "FlowObserveEffect":
+        return false;
+    }
+    return true;
+  });
+  const myHand = getPlayerHandIds(ctx2, playerId);
+  if (mygs.length >= 6 && myHand.length <= 2) {
+    const flow = flows.find((flow2) => flow2.id == "FlowPassCut");
+    if (flow) {
+      return flow;
+    }
+  }
+  if (useFlows.length) {
+    let flow = useFlows[Math.round(Math.random() * 1000) % useFlows.length];
+    return flow;
+  }
+  return null;
+}
+
 // src/client/cocosVer/CocosAppVer.tsx
 var jsx_dev_runtime5 = __toESM(require_jsx_dev_runtime(), 1);
 var CocosAppVer = () => {
@@ -55958,6 +56636,8 @@ var CocosAppVer = () => {
     window["getItemController"] = getItemController;
     window["getItemBaSyou"] = getItemBaSyou;
     window["getItemState"] = getItemState;
+    window["getPlayerFlowAuto"] = getPlayerFlowAuto;
+    window["thinkVer2"] = thinkVer2;
   }, []);
   return /* @__PURE__ */ jsx_dev_runtime5.jsxDEV(jsx_dev_runtime5.Fragment, {
     children: /* @__PURE__ */ jsx_dev_runtime5.jsxDEV(AppContextProvider, {

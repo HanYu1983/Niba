@@ -12,6 +12,7 @@ import { DEBUG } from 'cc/env';
 import { callWeb, solveCallback } from './PostMessageCallback';
 import { setView } from './System';
 import { DeckController } from './DeckController';
+import { PlayerFlow } from './PlayerFlow';
 
 const { ccclass, property } = _decorator;
 
@@ -26,7 +27,7 @@ export class GameController extends Component implements IInstanceGame<IGame> {
     @property({ type: PlayerCommandController })
     public playerCommandControllers: IInstanceGame<any>[] = [];
 
-    // public list:
+    private playerFlows: IInstanceGame<string>[] = [new PlayerFlow(), new PlayerFlow()];
 
     private lastGame: IGame | null = null;
 
@@ -42,6 +43,9 @@ export class GameController extends Component implements IInstanceGame<IGame> {
 
         this.playerCommandControllers[0].sync(game, 'PlayerA');
         this.playerCommandControllers[1].sync(game, 'PlayerB');
+
+        this.playerFlows[0].sync(game, 'PlayerA');
+        this.playerFlows[1].sync(game, 'PlayerB');
 
         this.lastGame = game;
     }
@@ -106,7 +110,7 @@ export class GameController extends Component implements IInstanceGame<IGame> {
             const commandController = btnNode.getComponent(ButtonController);
             // console.log("Command controller:", commandController.buttonInfo);
 
-            callWeb("onCocosGameFlow", { clientId: 'PlayerB', flow: commandController.buttonInfo });
+            callWeb("onCocosGameFlow", { clientId: 'PlayerB', flow: commandController.buttonInfo, versionID: this.lastGame?.model.versionID });
         }
     }
 
