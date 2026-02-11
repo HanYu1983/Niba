@@ -9,7 +9,7 @@ import { callWeb } from './PostMessageCallback';
 const { ccclass, property, requireComponent } = _decorator;
 
 @ccclass('DeckController')
-export class DeckController extends Component implements IInstanceGame<string[]> {
+export class DeckController extends Component implements IInstanceGame<string> {
     @property(Node)
     public cardContainer: Node | null = null;
 
@@ -54,13 +54,7 @@ export class DeckController extends Component implements IInstanceGame<string[]>
     //     accept.accpet(this)
     // }
 
-    async sync(game: IGame, relative: string[] | null): Promise<void> {
-
-        // console.log("HandController syncing with game data:", game, relative);
-
-        // const cards = game.model.gameState.table.cardStack[deckId]
-
-        // this.states.hand(game, extra, this)
+    async sync(game: IGame, relative: string): Promise<void> {
 
         this.cardInstances.forEach((instance) => {
             this.cardPool!.releaseInstance(instance);
@@ -70,7 +64,7 @@ export class DeckController extends Component implements IInstanceGame<string[]>
             this.cardUIPool!.releaseInstance(instance);
         });
 
-        const cards: string[] = relative || [];
+        const cards = game.model.gameState.table.cardStack[relative] || [];
         cards.forEach(async (card: string, index) => {
 
             const cardInfo = game.model.gameState.cards[card];

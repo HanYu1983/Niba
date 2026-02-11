@@ -4,7 +4,7 @@ import { ButtonController } from './ButtonController';
 const { ccclass, property } = _decorator;
 
 @ccclass('PlayerCommandController')
-export class PlayerCommandController extends Component implements IInstanceGame<IPlayerCommand[]> {
+export class PlayerCommandController extends Component implements IInstanceGame<string> {
 
 
     @property(Node)
@@ -13,24 +13,18 @@ export class PlayerCommandController extends Component implements IInstanceGame<
     private buttons: ButtonController[] = [];
     private buttonPool: InstancePool | null = null;
 
-    sync(game: IGame, relative: IPlayerCommand[]): Promise<void> {
-        // throw new Error('Method not implemented.');
-
-        // console.log("Syncing player commands:", relative);
-
+    sync(game: IGame, relative: string): Promise<void> {
+        const playerCommands = game.playerCommands[relative]
         this.buttons.forEach(button => {
             this.buttonPool?.releaseInstance(button.node);
         });
         this.buttons = [];
-
-        relative.forEach((command, index) => {
+        playerCommands.forEach((command, index) => {
             const button: Node = this.buttonPool.getInstance(command.id);
             button.getComponent(ButtonController)?.sync(game, command);
             button.setParent(this.node);
-            // console.log("Created button for command:", command);
             this.buttons.push(button.getComponent(ButtonController));
         })
-
         return null;
     }
 

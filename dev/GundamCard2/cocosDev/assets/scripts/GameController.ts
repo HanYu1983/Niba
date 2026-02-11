@@ -18,10 +18,10 @@ const { ccclass, property } = _decorator;
 @ccclass('GameController')
 export class GameController extends Component implements IInstanceGame<IGame> {
     @property({ type: HandController })
-    public handControllers: IInstanceGame<string[]>[] = [];
+    public handControllers: IInstanceGame<string>[] = [];
 
     @property({ type: DeckController })
-    public deckControllers: IInstanceGame<string[]>[] = [];
+    public deckControllers: IInstanceGame<string>[] = [];
 
     @property({ type: PlayerCommandController })
     public playerCommandControllers: IInstanceGame<any>[] = [];
@@ -34,39 +34,17 @@ export class GameController extends Component implements IInstanceGame<IGame> {
     // public camera: OrbitCamera | null = null;
 
     async sync(game: IGame, relative: IGame): Promise<void> {
-        // console.log("GameController syncing with game data:", game);
+        await this.deckControllers[0].sync(game, '["PlayerA","本国"]');
+        await this.deckControllers[1].sync(game, '["PlayerB","本国"]');
 
-        // animaiton
+        await this.handControllers[0].sync(game, '["PlayerA","手札"]');
+        await this.handControllers[1].sync(game, '["PlayerB","手札"]');
 
-
-        // sync 
-        // const stateg = game.model.gameState;
-
-        await this.deckControllers[0].sync(game, game.model.gameState.table.cardStack['["PlayerA","本国"]']);
-        await this.deckControllers[1].sync(game, game.model.gameState.table.cardStack['["PlayerB","本国"]']);
-
-        await this.handControllers[0].sync(game, game.model.gameState.table.cardStack['["PlayerA","手札"]']);
-        await this.handControllers[1].sync(game, game.model.gameState.table.cardStack['["PlayerB","手札"]']);
-
-        this.playerCommandControllers[0].sync(game, game.playerCommands['PlayerA']);
-        this.playerCommandControllers[1].sync(game, game.playerCommands['PlayerB']);
-
-        // 只有一個命令時，自動出指令
-        // if (game.playerCommands['PlayerA'] && game.playerCommands['PlayerA'].length === 1) {
-        //     callWeb("onCocosGameFlow", { clientId: 'PlayerA', flow: game.playerCommands['PlayerA'][0] });
-        // }
-
-        // if (game.localMemory.timing.toString().includes("リロールフェイズ,フェイズ開始")) {
-
-        //     callWeb("onCocosGameFlow", { clientId: 'PlayerA', flow: game.playerCommands['PlayerA'][0] });
-        // }
+        this.playerCommandControllers[0].sync(game, 'PlayerA');
+        this.playerCommandControllers[1].sync(game, 'PlayerB');
 
         this.lastGame = game;
     }
-
-    // function retureDecks(){
-    //     return this.deckControllers;
-    // }
 
     onLoad(): void {
 
@@ -88,7 +66,7 @@ export class GameController extends Component implements IInstanceGame<IGame> {
         }
 
         if (DEBUG) {
-            const mockGame: IGame = startCardMockData
+            const mockGame: IGame = startGameMockData
             this.sync(mockGame, mockGame);
         }
 
