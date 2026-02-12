@@ -74,7 +74,8 @@ async function main() {
   }
   const { client_id, client_secret, refresh_token, developer_token } = env;
   const loginCustomerId = env['login-customer-id'];
-  const customerId = env['customer-id'] || loginCustomerId;
+  // 命令列第二參數可覆寫查詢的 customer-id（例：node query-ads.js "GAQL" 214818506583466）
+  const customerId = process.argv[3] ? process.argv[3].trim() : (env['customer-id'] || loginCustomerId);
 
   console.log('=== 步驟 1: 取得 access_token ===');
   const tokenUrl = 'https://www.googleapis.com/oauth2/v3/token';
