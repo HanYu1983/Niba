@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>表單測試頁 - 響應式與驗證</title>
+  <style>
+    :root {
+      --bg: #0f1419;
+      --surface: #1a2332;
+      --border: #2d3a4f;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --error: #f85149;
+      --success: #3fb950;
+      --accent: #58a6ff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 1rem;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    h1 {
+      font-size: clamp(1.25rem, 4vw, 1.5rem);
+      margin-bottom: 1.5rem;
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.25rem;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 0.6rem 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(88, 166, 255, 0.2);
+    }
+    input.error, select.error, textarea.error {
+      border-color: var(--error);
+    }
+    .error-msg {
+      color: var(--error);
+      font-size: 0.8rem;
+      margin-top: -0.25rem;
+      margin-bottom: 0.75rem;
+      display: none;
+    }
+    .error-msg.visible { display: block; }
+    .success-msg {
+      color: var(--success);
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+      display: none;
+    }
+    .success-msg.visible { display: block; }
+    button {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 0.5rem;
+    }
+    button:hover { opacity: 0.9; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    .step-indicator {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    .step {
+      padding: 0.35rem 0.75rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+    .step.active { border-color: var(--accent); color: var(--accent); }
+    .step.done { border-color: var(--success); color: var(--success); }
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    @media (max-width: 400px) {
+      body { padding: 0.75rem; }
+      .card { padding: 1rem; }
+      input, select, textarea { font-size: 16px; } /* 避免 iOS 縮放 */
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>表單測試頁</h1>
+    <div class="step-indicator">
+      <span class="step active" data-step="1">步驟 1</span>
+      <span class="step" data-step="2">步驟 2</span>
+      <span class="step" data-step="3">確認</span>
+    </div>
+
+    <form id="mainForm" novalidate>
+      <!-- 步驟 1 -->
+      <div class="card panel active" id="panel1">
+        <div class="success-msg" id="success1"></div>
+        <label for="name">姓名 <span style="color:var(--error)">*</span></label>
+        <input type="text" id="name" name="name" placeholder="請輸入姓名" required minlength="2" maxlength="50">
+        <span class="error-msg" id="err-name"></span>
+
+        <label for="email">Email <span style="color:var(--error)">*</span></label>
+        <input type="email" id="email" name="email" placeholder="example@mail.com" required>
+        <span class="error-msg" id="err-email"></span>
+
+        <label for="phone">電話</label>
+        <input type="tel" id="phone" name="phone" placeholder="09xxxxxxxx" pattern="[0-9\s\-]{8,20}">
+        <span class="error-msg" id="err-phone"></span>
+
+        <button type="button" id="next1">下一步</button>
+      </div>
+
+      <!-- 步驟 2 -->
+      <div class="card panel" id="panel2">
+        <div class="success-msg" id="success2"></div>
+        <label for="plan">方案 <span style="color:var(--error)">*</span></label>
+        <select id="plan" name="plan" required>
+          <option value="">請選擇</option>
+          <option value="basic">基本方案</option>
+          <option value="pro">專業方案</option>
+          <option value="enterprise">企業方案</option>
+        </select>
+        <span class="error-msg" id="err-plan"></span>
+
+        <label for="note">備註</label>
+        <textarea id="note" name="note" rows="3" maxlength="200" placeholder="選填"></textarea>
+        <span class="error-msg" id="err-note"></span>
+
+        <button type="button" id="prev2">上一步</button>
+        <button type="button" id="next2">下一步</button>
+      </div>
+
+      <!-- 步驟 3 確認 -->
+      <div class="card panel" id="panel3">
+        <p><strong>請確認資料：</strong></p>
+        <div id="summary"></div>
+        <button type="button" id="prev3">上一步</button>
+        <button type="submit" id="submitBtn">送出</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    (function() {
+      const form = document.getElementById('mainForm');
+      const panels = [document.getElementById('panel1'), document.getElementById('panel2'), document.getElementById('panel3')];
+      const steps = document.querySelectorAll('.step');
+      let currentStep = 1;
+
+      function showStep(step) {
+        currentStep = step;
+        panels.forEach((p, i) => {
+          p.classList.toggle('active', i + 1 === step);
+        });
+        steps.forEach((s, i) => {
+          s.classList.remove('active', 'done');
+          if (i + 1 < step) s.classList.add('done');
+          if (i + 1 === step) s.classList.add('active');
+        });
+      }
+
+      function getEl(id) { return document.getElementById(id); }
+      function showError(id, msg) {
+        const el = getEl(id);
+        const err = getEl('err-' + id);
+        if (msg) {
+          el.classList.add('error');
+          if (err) { err.textContent = msg; err.classList.add('visible'); }
+        } else {
+          el.classList.remove('error');
+          if (err) { err.textContent = ''; err.classList.remove('visible'); }
+        }
+      }
+      function clearStepErrors(panelEl) {
+        panelEl.querySelectorAll('.error-msg.visible').forEach(e => e.classList.remove('visible'));
+        panelEl.querySelectorAll('input.error, select.error, textarea.error').forEach(e => e.classList.remove('error'));
+      }
+
+      // 步驟 1 驗證
+      function validateStep1() {
+        let ok = true;
+        const name = getEl('name').value.trim();
+        const email = getEl('email').value.trim();
+        const phone = getEl('phone').value.trim();
+        showError('name', null);
+        showError('email', null);
+        showError('phone', null);
+        if (name.length < 2) {
+          showError('name', '請輸入至少 2 個字元');
+          ok = false;
+        }
+        if (!email) {
+          showError('email', '請輸入 Email');
+          ok = false;
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          showError('email', '請輸入有效的 Email 格式');
+          ok = false;
+        }
+        if (phone && !/^[0-9\s\-]{8,20}$/.test(phone)) {
+          showError('phone', '電話格式不正確（8–20 位數字）');
+          ok = false;
+        }
+        return ok;
+      }
+
+      getEl('next1').addEventListener('click', function() {
+        if (!validateStep1()) return;
+        clearStepErrors(panels[0]);
+        showStep(2);
+      });
+
+      getEl('prev2').addEventListener('click', function() { showStep(1); });
+      getEl('next2').addEventListener('click', function() {
+        const plan = getEl('plan').value;
+        showError('plan', null);
+        if (!plan) {
+          showError('plan', '請選擇方案');
+          return;
+        }
+        clearStepErrors(panels[1]);
+        showStep(3);
+        getEl('summary').innerHTML = [
+          '姓名：' + getEl('name').value,
+          'Email：' + getEl('email').value,
+          '電話：' + getEl('phone').value || '（未填）',
+          '方案：' + getEl('plan').options[getEl('plan').selectedIndex].text,
+          '備註：' + (getEl('note').value || '（無）')
+        ].map(s => '<p style="margin:0.25rem 0;color:var(--muted)">' + s + '</p>').join('');
+      });
+
+      getEl('prev3').addEventListener('click', function() { showStep(2); });
+
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        getEl('submitBtn').disabled = true;
+        console.log('表單送出', Object.fromEntries(new FormData(form)));
+        setTimeout(function() {
+          alert('表單已送出（測試用）');
+          getEl('submitBtn').disabled = false;
+        }, 500);
+      });
+
+      steps.forEach(function(s) {
+        s.addEventListener('click', function() {
+          var step = parseInt(this.getAttribute('data-step'), 10);
+          if (step <= currentStep || step === currentStep + 1) showStep(step);
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

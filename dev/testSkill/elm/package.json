@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "start": "elm reactor --port=8000",
+    "build": "elm make src/Main.elm --output=elm.js"
+  },
+  "dependencies": {
+    "elm": "^0.19.1-6"
+  }
+}
