@@ -1,0 +1,17 @@
+{
+  "name": "form-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "node playwright-form-test.mjs",
+    "serve": "serve -p 3751 -l 3751"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "playwright": "^1.58.2"
+  }
+}
