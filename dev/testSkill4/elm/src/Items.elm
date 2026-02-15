@@ -72,15 +72,8 @@ canUseBomb state side center =
 
                 AI ->
                     cell == Piece Player || cell == Castle Player
-
-        affected = bombAffectedCells center
-        containsCastle p =
-            positionEquals p playerCastlePos || positionEquals p aiCastlePos
-        anyCastleInRange = List.any containsCastle affected
-        centerIsCastle = cell == Castle Player || cell == Castle AI
-        rangeOk = not anyCastleInRange || centerIsCastle
     in
-    scoreOk && isEnemyPieceOrCastle && rangeOk
+    scoreOk && isEnemyPieceOrCastle
 
 
 applyBomb : GameState -> Side -> Position -> Result String GameState
@@ -148,11 +141,6 @@ laserLine isRow index =
         List.range 0 (boardSize - 1) |> List.map (\r -> { row = r, col = index })
 
 
-lineContainsCastle : List Position -> Bool
-lineContainsCastle positions =
-    List.any (\p -> positionEquals p playerCastlePos || positionEquals p aiCastlePos) positions
-
-
 canUseLaser : GameState -> Side -> Bool -> Int -> Bool
 canUseLaser state side isRow index =
     let
@@ -160,10 +148,8 @@ canUseLaser state side isRow index =
             case side of
                 Player -> state.playerScore >= cost Laser
                 AI -> state.aiScore >= cost Laser
-        line = laserLine isRow index
-        noCastle = not (lineContainsCastle line)
     in
-    scoreOk && noCastle
+    scoreOk
 
 
 applyLaser : GameState -> Side -> Bool -> Int -> Result String GameState
@@ -171,22 +157,18 @@ applyLaser state side isRow index =
     let
         line = laserLine isRow index
     in
-    if lineContainsCastle line then
-        Err "雷射路徑不可包含主堡"
+    case side of
+        Player ->
+            if state.playerScore < cost Laser then
+                Err "分數不足"
+            else
+                Ok (applyLaserToLine state line (state.playerScore - cost Laser) state.aiScore)
 
-    else
-        case side of
-            Player ->
-                if state.playerScore < cost Laser then
-                    Err "分數不足"
-                else
-                    Ok (applyLaserToLine state line (state.playerScore - cost Laser) state.aiScore)
-
-            AI ->
-                if state.aiScore < cost Laser then
-                    Err "分數不足"
-                else
-                    Ok (applyLaserToLine state line state.playerScore (state.aiScore - cost Laser))
+        AI ->
+            if state.aiScore < cost Laser then
+                Err "分數不足"
+            else
+                Ok (applyLaserToLine state line state.playerScore (state.aiScore - cost Laser))
 
 
 applyLaserToLine : GameState -> List Position -> Int -> Int -> GameState

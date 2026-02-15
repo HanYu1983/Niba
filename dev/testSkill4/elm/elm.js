@@ -5219,7 +5219,7 @@ var $author$project$Board$initialBoardState = {
 };
 var $author$project$Game$initialScore = 10;
 var $author$project$Game$init = {aiBombUse: 0, aiCaptures: 0, aiCastleHp: $author$project$Game$castleHpDefault, aiLaserUse: 0, aiScore: $author$project$Game$initialScore, aiShieldUse: 0, board: $author$project$Board$initialBoardState, currentSide: $author$project$Board$Player, playerBombUse: 0, playerCaptures: 0, playerCastleHp: $author$project$Game$castleHpDefault, playerLaserUse: 0, playerScore: $author$project$Game$initialScore, playerShieldUse: 0, protectedCells: _List_Nil, shieldedCells: _List_Nil, turn: 1};
-var $author$project$Main$initialModel = {aiActionLog: _List_Nil, errorMessage: $elm$core$Maybe$Nothing, gameState: $author$project$Game$init, itemMode: $elm$core$Maybe$Nothing, laserPending: $elm$core$Maybe$Nothing, legalMoves: _List_Nil, previewCells: _List_Nil, selectedPiece: $elm$core$Maybe$Nothing, testErrors: _List_Nil};
+var $author$project$Main$initialModel = {aiActionLog: _List_Nil, aiItemPendingApply: $elm$core$Maybe$Nothing, errorMessage: $elm$core$Maybe$Nothing, gameState: $author$project$Game$init, itemMode: $elm$core$Maybe$Nothing, itemPendingApply: $elm$core$Maybe$Nothing, laserPending: $elm$core$Maybe$Nothing, legalMoves: _List_Nil, previewCells: _List_Nil, selectedPiece: $elm$core$Maybe$Nothing, testErrors: _List_Nil};
 var $elm$core$Platform$Sub$batch = _Platform_batch;
 var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
 var $author$project$Board$AI = {$: 'AI'};
@@ -5361,16 +5361,7 @@ var $author$project$Main$addLog = F2(
 					A2($elm$core$List$cons, line, model.aiActionLog))
 			});
 	});
-var $author$project$Game$AIWins = {$: 'AIWins'};
-var $author$project$Game$Draw = {$: 'Draw'};
-var $author$project$Game$Ongoing = {$: 'Ongoing'};
-var $author$project$Game$PlayerWins = {$: 'PlayerWins'};
-var $author$project$Game$maxTurns = 100;
-var $author$project$Game$checkVictory = function (state) {
-	return (state.aiCastleHp <= 0) ? $author$project$Game$PlayerWins : ((state.playerCastleHp <= 0) ? $author$project$Game$AIWins : ((_Utils_cmp(state.turn, $author$project$Game$maxTurns) > 0) ? ((_Utils_cmp(state.playerScore, state.aiScore) > 0) ? $author$project$Game$PlayerWins : ((_Utils_cmp(state.aiScore, state.playerScore) > 0) ? $author$project$Game$AIWins : $author$project$Game$Draw)) : $author$project$Game$Ongoing));
-};
-var $elm$core$Platform$Cmd$batch = _Platform_batch;
-var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
+var $author$project$Items$Bomb = {$: 'Bomb'};
 var $elm$core$List$any = F2(
 	function (isOkay, list) {
 		any:
@@ -5392,6 +5383,11 @@ var $elm$core$List$any = F2(
 			}
 		}
 	});
+var $elm$core$Basics$composeR = F3(
+	function (f, g, x) {
+		return g(
+			f(x));
+	});
 var $elm$core$List$filter = F2(
 	function (isGood, list) {
 		return A3(
@@ -5403,309 +5399,10 @@ var $elm$core$List$filter = F2(
 			_List_Nil,
 			list);
 	});
-var $author$project$Game$decrementProtectionList = function (list) {
-	return A2(
-		$elm$core$List$filter,
-		function (c) {
-			return c.remainingTurns > 0;
-		},
-		A2(
-			$elm$core$List$map,
-			function (c) {
-				return _Utils_update(
-					c,
-					{remainingTurns: c.remainingTurns - 1});
-			},
-			list));
-};
-var $author$project$Game$attackCastleByAI = F2(
-	function (state, to) {
-		var b = state.board;
-		var newBoard = _Utils_update(
-			b,
-			{
-				aiPieces: _Utils_ap(
-					b.aiPieces,
-					_List_fromArray(
-						[to]))
-			});
-		var afterMove = _Utils_update(
-			state,
-			{
-				aiScore: state.aiScore + 1,
-				board: newBoard,
-				currentSide: $author$project$Board$Player,
-				playerCastleHp: state.playerCastleHp - 3,
-				protectedCells: $author$project$Game$decrementProtectionList(state.protectedCells),
-				turn: state.turn + 1
-			});
-		return afterMove;
-	});
-var $elm$core$Basics$negate = function (n) {
-	return -n;
-};
-var $author$project$Rules$cannonDirections = _List_fromArray(
-	[
-		_Utils_Tuple2(-1, 0),
-		_Utils_Tuple2(1, 0),
-		_Utils_Tuple2(0, -1),
-		_Utils_Tuple2(0, 1)
-	]);
-var $elm$core$List$append = F2(
-	function (xs, ys) {
-		if (!ys.b) {
-			return xs;
-		} else {
-			return A3($elm$core$List$foldr, $elm$core$List$cons, ys, xs);
-		}
-	});
-var $elm$core$List$concat = function (lists) {
-	return A3($elm$core$List$foldr, $elm$core$List$append, _List_Nil, lists);
-};
-var $elm$core$List$concatMap = F2(
-	function (f, list) {
-		return $elm$core$List$concat(
-			A2($elm$core$List$map, f, list));
-	});
 var $elm$core$Basics$not = _Basics_not;
 var $author$project$Board$positionEquals = F2(
 	function (a, b) {
 		return _Utils_eq(a.row, b.row) && _Utils_eq(a.col, b.col);
-	});
-var $elm$core$Maybe$andThen = F2(
-	function (callback, maybeValue) {
-		if (maybeValue.$ === 'Just') {
-			var value = maybeValue.a;
-			return callback(value);
-		} else {
-			return $elm$core$Maybe$Nothing;
-		}
-	});
-var $author$project$Board$Castle = function (a) {
-	return {$: 'Castle', a: a};
-};
-var $author$project$Board$Empty = {$: 'Empty'};
-var $author$project$Board$Piece = function (a) {
-	return {$: 'Piece', a: a};
-};
-var $author$project$Board$boardSize = 10;
-var $elm$core$Basics$ge = _Utils_ge;
-var $author$project$Board$inBounds = function (pos) {
-	return (pos.row >= 0) && ((_Utils_cmp(pos.row, $author$project$Board$boardSize) < 0) && ((pos.col >= 0) && (_Utils_cmp(pos.col, $author$project$Board$boardSize) < 0)));
-};
-var $author$project$Board$cellAt = F2(
-	function (state, pos) {
-		return (!$author$project$Board$inBounds(pos)) ? $author$project$Board$Empty : (A2(
-			$elm$core$List$any,
-			$author$project$Board$positionEquals(pos),
-			state.playerPieces) ? $author$project$Board$Piece($author$project$Board$Player) : (A2(
-			$elm$core$List$any,
-			$author$project$Board$positionEquals(pos),
-			state.aiPieces) ? $author$project$Board$Piece($author$project$Board$AI) : (A2($author$project$Board$positionEquals, pos, state.playerCastlePos) ? $author$project$Board$Castle($author$project$Board$Player) : (A2($author$project$Board$positionEquals, pos, state.aiCastlePos) ? $author$project$Board$Castle($author$project$Board$AI) : $author$project$Board$Empty))));
-	});
-var $author$project$Rules$maxCannonDistance = 10;
-var $author$project$Rules$findFirstPieceInDirection = F5(
-	function (state, from, dr, dc, startDist) {
-		findFirstPieceInDirection:
-		while (true) {
-			if (_Utils_cmp(startDist, $author$project$Rules$maxCannonDistance) > 0) {
-				return $elm$core$Maybe$Nothing;
-			} else {
-				var pos = {col: from.col + (dc * startDist), row: from.row + (dr * startDist)};
-				if (!$author$project$Board$inBounds(pos)) {
-					return $elm$core$Maybe$Nothing;
-				} else {
-					var _v0 = A2($author$project$Board$cellAt, state, pos);
-					if (_v0.$ === 'Empty') {
-						var $temp$state = state,
-							$temp$from = from,
-							$temp$dr = dr,
-							$temp$dc = dc,
-							$temp$startDist = startDist + 1;
-						state = $temp$state;
-						from = $temp$from;
-						dr = $temp$dr;
-						dc = $temp$dc;
-						startDist = $temp$startDist;
-						continue findFirstPieceInDirection;
-					} else {
-						return $elm$core$Maybe$Just(
-							_Utils_Tuple2(startDist, pos));
-					}
-				}
-			}
-		}
-	});
-var $author$project$Rules$isPositionProtectedOrShielded = F3(
-	function (pos, _protected, shielded) {
-		return A2(
-			$elm$core$List$any,
-			$author$project$Board$positionEquals(pos),
-			_protected) || A2(
-			$elm$core$List$any,
-			$author$project$Board$positionEquals(pos),
-			shielded);
-	});
-var $elm$core$Maybe$map = F2(
-	function (f, maybe) {
-		if (maybe.$ === 'Just') {
-			var value = maybe.a;
-			return $elm$core$Maybe$Just(
-				f(value));
-		} else {
-			return $elm$core$Maybe$Nothing;
-		}
-	});
-var $elm$core$List$singleton = function (value) {
-	return _List_fromArray(
-		[value]);
-};
-var $elm$core$Maybe$withDefault = F2(
-	function (_default, maybe) {
-		if (maybe.$ === 'Just') {
-			var value = maybe.a;
-			return value;
-		} else {
-			return _default;
-		}
-	});
-var $author$project$Rules$scanCannonCapture = F6(
-	function (state, from, dr, dc, protectedPositions, shieldedPositions) {
-		return A2(
-			$elm$core$Maybe$withDefault,
-			_List_Nil,
-			A2(
-				$elm$core$Maybe$map,
-				$elm$core$List$singleton,
-				A2(
-					$elm$core$Maybe$andThen,
-					function (_v0) {
-						var screenDist = _v0.a;
-						var toDist = screenDist + 1;
-						var to = {col: from.col + (dc * toDist), row: from.row + (dr * toDist)};
-						if ((_Utils_cmp(toDist, $author$project$Rules$maxCannonDistance) > 0) || (!$author$project$Board$inBounds(to))) {
-							return $elm$core$Maybe$Nothing;
-						} else {
-							var _v1 = A2($author$project$Board$cellAt, state, to);
-							_v1$2:
-							while (true) {
-								switch (_v1.$) {
-									case 'Piece':
-										if (_v1.a.$ === 'Player') {
-											var _v2 = _v1.a;
-											return A3($author$project$Rules$isPositionProtectedOrShielded, to, protectedPositions, shieldedPositions) ? $elm$core$Maybe$Nothing : $elm$core$Maybe$Just(to);
-										} else {
-											break _v1$2;
-										}
-									case 'Castle':
-										if (_v1.a.$ === 'Player') {
-											var _v3 = _v1.a;
-											return A3($author$project$Rules$isPositionProtectedOrShielded, to, protectedPositions, shieldedPositions) ? $elm$core$Maybe$Nothing : $elm$core$Maybe$Just(to);
-										} else {
-											break _v1$2;
-										}
-									default:
-										break _v1$2;
-								}
-							}
-							return $elm$core$Maybe$Nothing;
-						}
-					},
-					A5($author$project$Rules$findFirstPieceInDirection, state, from, dr, dc, 1))));
-	});
-var $author$project$Rules$scanLine = F6(
-	function (state, from, dr, dc, dist, count) {
-		if (_Utils_cmp(dist, $author$project$Rules$maxCannonDistance) > -1) {
-			return _List_Nil;
-		} else {
-			var d = dist + 1;
-			var to = {col: from.col + (dc * d), row: from.row + (dr * d)};
-			if (!$author$project$Board$inBounds(to)) {
-				return _List_Nil;
-			} else {
-				var _v0 = A2($author$project$Board$cellAt, state, to);
-				if (_v0.$ === 'Empty') {
-					return A2(
-						$elm$core$List$cons,
-						to,
-						A6($author$project$Rules$scanLine, state, from, dr, dc, d, count + 1));
-				} else {
-					return _List_Nil;
-				}
-			}
-		}
-	});
-var $author$project$Rules$cannonLegalMoves = F4(
-	function (state, from, protectedPositions, shieldedPositions) {
-		return A2(
-			$elm$core$List$filter,
-			function (to) {
-				return !A2($author$project$Board$positionEquals, to, from);
-			},
-			A2(
-				$elm$core$List$concatMap,
-				function (_v0) {
-					var dr = _v0.a;
-					var dc = _v0.b;
-					var emptyInDirection = A6($author$project$Rules$scanLine, state, from, dr, dc, 0, 0);
-					var captureInDirection = A6($author$project$Rules$scanCannonCapture, state, from, dr, dc, protectedPositions, shieldedPositions);
-					return _Utils_ap(emptyInDirection, captureInDirection);
-				},
-				$author$project$Rules$cannonDirections));
-	});
-var $elm$core$Basics$composeR = F3(
-	function (f, g, x) {
-		return g(
-			f(x));
-	});
-var $author$project$Game$captureByAI = F2(
-	function (state, to) {
-		var newProtected = _Utils_ap(
-			$author$project$Game$decrementProtectionList(state.protectedCells),
-			_List_fromArray(
-				[
-					{position: to, remainingTurns: 1}
-				]));
-		var b = state.board;
-		var newPlayerPieces = A2(
-			$elm$core$List$filter,
-			A2(
-				$elm$core$Basics$composeR,
-				$author$project$Board$positionEquals(to),
-				$elm$core$Basics$not),
-			b.playerPieces);
-		var newBoard = _Utils_update(
-			b,
-			{
-				aiPieces: _Utils_ap(
-					b.aiPieces,
-					_List_fromArray(
-						[to])),
-				playerPieces: newPlayerPieces
-			});
-		return _Utils_update(
-			state,
-			{aiCaptures: state.aiCaptures + 1, aiScore: state.aiScore + 1, board: newBoard, currentSide: $author$project$Board$Player, protectedCells: newProtected, turn: state.turn + 1});
-	});
-var $author$project$Game$placeAIPiece = F2(
-	function (state, to) {
-		var b = state.board;
-		var newBoard = _Utils_update(
-			b,
-			{
-				aiPieces: _Utils_ap(
-					b.aiPieces,
-					_List_fromArray(
-						[to]))
-			});
-		return _Utils_update(
-			state,
-			{
-				board: newBoard,
-				currentSide: $author$project$Board$Player,
-				protectedCells: $author$project$Game$decrementProtectionList(state.protectedCells),
-				turn: state.turn + 1
-			});
 	});
 var $author$project$Game$protectedPositions = function (state) {
 	return A2(
@@ -5723,46 +5420,6 @@ var $author$project$Game$protectedPositions = function (state) {
 var $author$project$Game$shieldedPositions = function (state) {
 	return state.shieldedCells;
 };
-var $author$project$Game$applyAIMove = F3(
-	function (state, from, to) {
-		var sh = $author$project$Game$shieldedPositions(state);
-		var prot = $author$project$Game$protectedPositions(state);
-		var legal = A4($author$project$Rules$cannonLegalMoves, state.board, from, prot, sh);
-		if (!A2(
-			$elm$core$List$any,
-			$author$project$Board$positionEquals(to),
-			legal)) {
-			return $elm$core$Result$Err('非法落點');
-		} else {
-			var _v0 = A2($author$project$Board$cellAt, state.board, to);
-			_v0$3:
-			while (true) {
-				switch (_v0.$) {
-					case 'Empty':
-						return $elm$core$Result$Ok(
-							A2($author$project$Game$placeAIPiece, state, to));
-					case 'Piece':
-						if (_v0.a.$ === 'Player') {
-							var _v1 = _v0.a;
-							return $elm$core$Result$Ok(
-								A2($author$project$Game$captureByAI, state, to));
-						} else {
-							break _v0$3;
-						}
-					default:
-						if (_v0.a.$ === 'Player') {
-							var _v2 = _v0.a;
-							return $elm$core$Result$Ok(
-								A2($author$project$Game$attackCastleByAI, state, to));
-						} else {
-							break _v0$3;
-						}
-				}
-			}
-			return $elm$core$Result$Err('非法落點');
-		}
-	});
-var $author$project$Items$Bomb = {$: 'Bomb'};
 var $author$project$Items$applyBombToCells = F3(
 	function (state, center, cells) {
 		var sh = $author$project$Game$shieldedPositions(state);
@@ -5840,6 +5497,11 @@ var $author$project$Items$applyBombToCells = F3(
 			{aiHp: state.aiCastleHp, board: state.board, playerHp: state.playerCastleHp, shielded: state.shieldedCells},
 			cells);
 	});
+var $author$project$Board$boardSize = 10;
+var $elm$core$Basics$ge = _Utils_ge;
+var $author$project$Board$inBounds = function (pos) {
+	return (pos.row >= 0) && ((_Utils_cmp(pos.row, $author$project$Board$boardSize) < 0) && ((pos.col >= 0) && (_Utils_cmp(pos.col, $author$project$Board$boardSize) < 0)));
+};
 var $author$project$Items$bombAffectedCells = function (center) {
 	return A2(
 		$elm$core$List$filter,
@@ -5853,6 +5515,23 @@ var $author$project$Items$bombAffectedCells = function (center) {
 				{col: center.col + 1, row: center.row}
 			]));
 };
+var $author$project$Board$Castle = function (a) {
+	return {$: 'Castle', a: a};
+};
+var $author$project$Board$Piece = function (a) {
+	return {$: 'Piece', a: a};
+};
+var $author$project$Board$Empty = {$: 'Empty'};
+var $author$project$Board$cellAt = F2(
+	function (state, pos) {
+		return (!$author$project$Board$inBounds(pos)) ? $author$project$Board$Empty : (A2(
+			$elm$core$List$any,
+			$author$project$Board$positionEquals(pos),
+			state.playerPieces) ? $author$project$Board$Piece($author$project$Board$Player) : (A2(
+			$elm$core$List$any,
+			$author$project$Board$positionEquals(pos),
+			state.aiPieces) ? $author$project$Board$Piece($author$project$Board$AI) : (A2($author$project$Board$positionEquals, pos, state.playerCastlePos) ? $author$project$Board$Castle($author$project$Board$Player) : (A2($author$project$Board$positionEquals, pos, state.aiCastlePos) ? $author$project$Board$Castle($author$project$Board$AI) : $author$project$Board$Empty))));
+	});
 var $author$project$Items$cost = function (item) {
 	switch (item.$) {
 		case 'Bomb':
@@ -5876,15 +5555,7 @@ var $author$project$Items$canUseBomb = F3(
 					$author$project$Items$cost($author$project$Items$Bomb)) > -1;
 			}
 		}();
-		var containsCastle = function (p) {
-			return A2($author$project$Board$positionEquals, p, $author$project$Board$playerCastlePos) || A2($author$project$Board$positionEquals, p, $author$project$Board$aiCastlePos);
-		};
 		var cell = A2($author$project$Board$cellAt, state.board, center);
-		var centerIsCastle = _Utils_eq(
-			cell,
-			$author$project$Board$Castle($author$project$Board$Player)) || _Utils_eq(
-			cell,
-			$author$project$Board$Castle($author$project$Board$AI));
 		var isEnemyPieceOrCastle = function () {
 			if (side.$ === 'Player') {
 				return _Utils_eq(
@@ -5900,10 +5571,7 @@ var $author$project$Items$canUseBomb = F3(
 					$author$project$Board$Castle($author$project$Board$Player));
 			}
 		}();
-		var affected = $author$project$Items$bombAffectedCells(center);
-		var anyCastleInRange = A2($elm$core$List$any, containsCastle, affected);
-		var rangeOk = (!anyCastleInRange) || centerIsCastle;
-		return scoreOk && (isEnemyPieceOrCastle && rangeOk);
+		return scoreOk && isEnemyPieceOrCastle;
 	});
 var $author$project$Items$applyBomb = F3(
 	function (state, side, center) {
@@ -6023,41 +5691,29 @@ var $author$project$Items$laserLine = F2(
 			},
 			A2($elm$core$List$range, 0, $author$project$Board$boardSize - 1));
 	});
-var $author$project$Items$lineContainsCastle = function (positions) {
-	return A2(
-		$elm$core$List$any,
-		function (p) {
-			return A2($author$project$Board$positionEquals, p, $author$project$Board$playerCastlePos) || A2($author$project$Board$positionEquals, p, $author$project$Board$aiCastlePos);
-		},
-		positions);
-};
 var $author$project$Items$applyLaser = F4(
 	function (state, side, isRow, index) {
 		var line = A2($author$project$Items$laserLine, isRow, index);
-		if ($author$project$Items$lineContainsCastle(line)) {
-			return $elm$core$Result$Err('雷射路徑不可包含主堡');
+		if (side.$ === 'Player') {
+			return (_Utils_cmp(
+				state.playerScore,
+				$author$project$Items$cost($author$project$Items$Laser)) < 0) ? $elm$core$Result$Err('分數不足') : $elm$core$Result$Ok(
+				A4(
+					$author$project$Items$applyLaserToLine,
+					state,
+					line,
+					state.playerScore - $author$project$Items$cost($author$project$Items$Laser),
+					state.aiScore));
 		} else {
-			if (side.$ === 'Player') {
-				return (_Utils_cmp(
+			return (_Utils_cmp(
+				state.aiScore,
+				$author$project$Items$cost($author$project$Items$Laser)) < 0) ? $elm$core$Result$Err('分數不足') : $elm$core$Result$Ok(
+				A4(
+					$author$project$Items$applyLaserToLine,
+					state,
+					line,
 					state.playerScore,
-					$author$project$Items$cost($author$project$Items$Laser)) < 0) ? $elm$core$Result$Err('分數不足') : $elm$core$Result$Ok(
-					A4(
-						$author$project$Items$applyLaserToLine,
-						state,
-						line,
-						state.playerScore - $author$project$Items$cost($author$project$Items$Laser),
-						state.aiScore));
-			} else {
-				return (_Utils_cmp(
-					state.aiScore,
-					$author$project$Items$cost($author$project$Items$Laser)) < 0) ? $elm$core$Result$Err('分數不足') : $elm$core$Result$Ok(
-					A4(
-						$author$project$Items$applyLaserToLine,
-						state,
-						line,
-						state.playerScore,
-						state.aiScore - $author$project$Items$cost($author$project$Items$Laser)));
-			}
+					state.aiScore - $author$project$Items$cost($author$project$Items$Laser)));
 		}
 	});
 var $author$project$Items$Shield = {$: 'Shield'};
@@ -6122,6 +5778,436 @@ var $author$project$Items$applyShield = F3(
 				_Utils_update(
 					state,
 					{aiScore: newAiScore, playerScore: newPlayerScore, shieldedCells: newShielded}));
+		}
+	});
+var $author$project$Game$AIWins = {$: 'AIWins'};
+var $author$project$Game$Draw = {$: 'Draw'};
+var $author$project$Game$Ongoing = {$: 'Ongoing'};
+var $author$project$Game$PlayerWins = {$: 'PlayerWins'};
+var $author$project$Game$maxTurns = 100;
+var $author$project$Game$checkVictory = function (state) {
+	return (state.aiCastleHp <= 0) ? $author$project$Game$PlayerWins : ((state.playerCastleHp <= 0) ? $author$project$Game$AIWins : ((_Utils_cmp(state.turn, $author$project$Game$maxTurns) > 0) ? ((_Utils_cmp(state.playerScore, state.aiScore) > 0) ? $author$project$Game$PlayerWins : ((_Utils_cmp(state.aiScore, state.playerScore) > 0) ? $author$project$Game$AIWins : $author$project$Game$Draw)) : $author$project$Game$Ongoing));
+};
+var $author$project$Game$decrementProtectionList = function (list) {
+	return A2(
+		$elm$core$List$filter,
+		function (c) {
+			return c.remainingTurns > 0;
+		},
+		A2(
+			$elm$core$List$map,
+			function (c) {
+				return _Utils_update(
+					c,
+					{remainingTurns: c.remainingTurns - 1});
+			},
+			list));
+};
+var $author$project$Game$decrementProtection = function (state) {
+	return _Utils_update(
+		state,
+		{
+			protectedCells: $author$project$Game$decrementProtectionList(state.protectedCells)
+		});
+};
+var $elm$core$Platform$Cmd$batch = _Platform_batch;
+var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
+var $author$project$Main$posStr = function (p) {
+	return '(' + ($elm$core$String$fromInt(p.row) + (',' + ($elm$core$String$fromInt(p.col) + ')')));
+};
+var $author$project$Main$recordPlayerBomb = function (s) {
+	return _Utils_update(
+		s,
+		{playerBombUse: s.playerBombUse + 1});
+};
+var $author$project$Main$recordPlayerLaser = function (s) {
+	return _Utils_update(
+		s,
+		{playerLaserUse: s.playerLaserUse + 1});
+};
+var $author$project$Main$recordPlayerShield = function (s) {
+	return _Utils_update(
+		s,
+		{playerShieldUse: s.playerShieldUse + 1});
+};
+var $author$project$Main$ApplyAIPendingItem = {$: 'ApplyAIPendingItem'};
+var $author$project$Main$BombAt = function (a) {
+	return {$: 'BombAt', a: a};
+};
+var $author$project$Main$LaserAt = F3(
+	function (a, b, c) {
+		return {$: 'LaserAt', a: a, b: b, c: c};
+	});
+var $author$project$Main$ShieldAt = function (a) {
+	return {$: 'ShieldAt', a: a};
+};
+var $author$project$Game$oppositeSide = function (side) {
+	if (side.$ === 'Player') {
+		return $author$project$Board$AI;
+	} else {
+		return $author$project$Board$Player;
+	}
+};
+var $author$project$Game$attackBlockedByProtection = function (state) {
+	return _Utils_update(
+		state,
+		{
+			currentSide: $author$project$Game$oppositeSide(state.currentSide)
+		});
+};
+var $author$project$Game$removeShieldAt = F2(
+	function (pos, list) {
+		return A2(
+			$elm$core$List$filter,
+			A2(
+				$elm$core$Basics$composeR,
+				$author$project$Board$positionEquals(pos),
+				$elm$core$Basics$not),
+			list);
+	});
+var $author$project$Game$attackBlockedByShield = F2(
+	function (state, pos) {
+		return _Utils_update(
+			state,
+			{
+				currentSide: $author$project$Game$oppositeSide(state.currentSide),
+				shieldedCells: A2($author$project$Game$removeShieldAt, pos, state.shieldedCells)
+			});
+	});
+var $author$project$Game$attackCastleByAI = F2(
+	function (state, to) {
+		var b = state.board;
+		var newBoard = _Utils_update(
+			b,
+			{
+				aiPieces: _Utils_ap(
+					b.aiPieces,
+					_List_fromArray(
+						[to]))
+			});
+		var afterMove = _Utils_update(
+			state,
+			{
+				aiScore: state.aiScore + 1,
+				board: newBoard,
+				currentSide: $author$project$Board$Player,
+				playerCastleHp: state.playerCastleHp - 3,
+				protectedCells: $author$project$Game$decrementProtectionList(state.protectedCells),
+				turn: state.turn + 1
+			});
+		return afterMove;
+	});
+var $elm$core$Basics$negate = function (n) {
+	return -n;
+};
+var $author$project$Rules$cannonDirections = _List_fromArray(
+	[
+		_Utils_Tuple2(-1, 0),
+		_Utils_Tuple2(1, 0),
+		_Utils_Tuple2(0, -1),
+		_Utils_Tuple2(0, 1)
+	]);
+var $elm$core$List$append = F2(
+	function (xs, ys) {
+		if (!ys.b) {
+			return xs;
+		} else {
+			return A3($elm$core$List$foldr, $elm$core$List$cons, ys, xs);
+		}
+	});
+var $elm$core$List$concat = function (lists) {
+	return A3($elm$core$List$foldr, $elm$core$List$append, _List_Nil, lists);
+};
+var $elm$core$List$concatMap = F2(
+	function (f, list) {
+		return $elm$core$List$concat(
+			A2($elm$core$List$map, f, list));
+	});
+var $elm$core$Maybe$andThen = F2(
+	function (callback, maybeValue) {
+		if (maybeValue.$ === 'Just') {
+			var value = maybeValue.a;
+			return callback(value);
+		} else {
+			return $elm$core$Maybe$Nothing;
+		}
+	});
+var $author$project$Rules$maxCannonDistance = 10;
+var $author$project$Rules$findFirstPieceInDirection = F5(
+	function (state, from, dr, dc, startDist) {
+		findFirstPieceInDirection:
+		while (true) {
+			if (_Utils_cmp(startDist, $author$project$Rules$maxCannonDistance) > 0) {
+				return $elm$core$Maybe$Nothing;
+			} else {
+				var pos = {col: from.col + (dc * startDist), row: from.row + (dr * startDist)};
+				if (!$author$project$Board$inBounds(pos)) {
+					return $elm$core$Maybe$Nothing;
+				} else {
+					var _v0 = A2($author$project$Board$cellAt, state, pos);
+					if (_v0.$ === 'Empty') {
+						var $temp$state = state,
+							$temp$from = from,
+							$temp$dr = dr,
+							$temp$dc = dc,
+							$temp$startDist = startDist + 1;
+						state = $temp$state;
+						from = $temp$from;
+						dr = $temp$dr;
+						dc = $temp$dc;
+						startDist = $temp$startDist;
+						continue findFirstPieceInDirection;
+					} else {
+						return $elm$core$Maybe$Just(
+							_Utils_Tuple2(startDist, pos));
+					}
+				}
+			}
+		}
+	});
+var $elm$core$Maybe$map = F2(
+	function (f, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return $elm$core$Maybe$Just(
+				f(value));
+		} else {
+			return $elm$core$Maybe$Nothing;
+		}
+	});
+var $elm$core$List$singleton = function (value) {
+	return _List_fromArray(
+		[value]);
+};
+var $elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
+var $author$project$Rules$scanCannonCapture = F6(
+	function (state, from, dr, dc, protectedPositions, shieldedPositions) {
+		return A2(
+			$elm$core$Maybe$withDefault,
+			_List_Nil,
+			A2(
+				$elm$core$Maybe$map,
+				$elm$core$List$singleton,
+				A2(
+					$elm$core$Maybe$andThen,
+					function (_v0) {
+						var screenDist = _v0.a;
+						var toDist = screenDist + 1;
+						var to = {col: from.col + (dc * toDist), row: from.row + (dr * toDist)};
+						if ((_Utils_cmp(toDist, $author$project$Rules$maxCannonDistance) > 0) || (!$author$project$Board$inBounds(to))) {
+							return $elm$core$Maybe$Nothing;
+						} else {
+							var _v1 = A2($author$project$Board$cellAt, state, to);
+							_v1$2:
+							while (true) {
+								switch (_v1.$) {
+									case 'Piece':
+										if (_v1.a.$ === 'Player') {
+											var _v2 = _v1.a;
+											return $elm$core$Maybe$Just(to);
+										} else {
+											break _v1$2;
+										}
+									case 'Castle':
+										if (_v1.a.$ === 'Player') {
+											var _v3 = _v1.a;
+											return $elm$core$Maybe$Just(to);
+										} else {
+											break _v1$2;
+										}
+									default:
+										break _v1$2;
+								}
+							}
+							return $elm$core$Maybe$Nothing;
+						}
+					},
+					A5($author$project$Rules$findFirstPieceInDirection, state, from, dr, dc, 1))));
+	});
+var $author$project$Rules$scanLine = F6(
+	function (state, from, dr, dc, dist, count) {
+		if (_Utils_cmp(dist, $author$project$Rules$maxCannonDistance) > -1) {
+			return _List_Nil;
+		} else {
+			var d = dist + 1;
+			var to = {col: from.col + (dc * d), row: from.row + (dr * d)};
+			if (!$author$project$Board$inBounds(to)) {
+				return _List_Nil;
+			} else {
+				var _v0 = A2($author$project$Board$cellAt, state, to);
+				if (_v0.$ === 'Empty') {
+					return A2(
+						$elm$core$List$cons,
+						to,
+						A6($author$project$Rules$scanLine, state, from, dr, dc, d, count + 1));
+				} else {
+					return _List_Nil;
+				}
+			}
+		}
+	});
+var $author$project$Rules$cannonLegalMoves = F4(
+	function (state, from, protectedPositions, shieldedPositions) {
+		return A2(
+			$elm$core$List$filter,
+			function (to) {
+				return !A2($author$project$Board$positionEquals, to, from);
+			},
+			A2(
+				$elm$core$List$concatMap,
+				function (_v0) {
+					var dr = _v0.a;
+					var dc = _v0.b;
+					var emptyInDirection = A6($author$project$Rules$scanLine, state, from, dr, dc, 0, 0);
+					var captureInDirection = A6($author$project$Rules$scanCannonCapture, state, from, dr, dc, protectedPositions, shieldedPositions);
+					return _Utils_ap(emptyInDirection, captureInDirection);
+				},
+				$author$project$Rules$cannonDirections));
+	});
+var $author$project$Game$captureByAI = F2(
+	function (state, to) {
+		var newProtected = _Utils_ap(
+			$author$project$Game$decrementProtectionList(state.protectedCells),
+			_List_fromArray(
+				[
+					{position: to, remainingTurns: 1}
+				]));
+		var b = state.board;
+		var newPlayerPieces = A2(
+			$elm$core$List$filter,
+			A2(
+				$elm$core$Basics$composeR,
+				$author$project$Board$positionEquals(to),
+				$elm$core$Basics$not),
+			b.playerPieces);
+		var newBoard = _Utils_update(
+			b,
+			{
+				aiPieces: _Utils_ap(
+					b.aiPieces,
+					_List_fromArray(
+						[to])),
+				playerPieces: newPlayerPieces
+			});
+		return _Utils_update(
+			state,
+			{aiCaptures: state.aiCaptures + 1, aiScore: state.aiScore + 1, board: newBoard, currentSide: $author$project$Board$Player, protectedCells: newProtected, turn: state.turn + 1});
+	});
+var $author$project$Game$isPositionProtected = F2(
+	function (state, pos) {
+		return A2(
+			$elm$core$List$any,
+			$author$project$Board$positionEquals(pos),
+			$author$project$Game$protectedPositions(state));
+	});
+var $author$project$Game$isPositionShielded = F2(
+	function (state, pos) {
+		return A2(
+			$elm$core$List$any,
+			$author$project$Board$positionEquals(pos),
+			state.shieldedCells);
+	});
+var $author$project$Game$placeAIPiece = F2(
+	function (state, to) {
+		var b = state.board;
+		var newBoard = _Utils_update(
+			b,
+			{
+				aiPieces: _Utils_ap(
+					b.aiPieces,
+					_List_fromArray(
+						[to]))
+			});
+		return _Utils_update(
+			state,
+			{
+				board: newBoard,
+				currentSide: $author$project$Board$Player,
+				protectedCells: $author$project$Game$decrementProtectionList(state.protectedCells),
+				turn: state.turn + 1
+			});
+	});
+var $author$project$Game$applyAIMove = F3(
+	function (state, from, to) {
+		var sh = $author$project$Game$shieldedPositions(state);
+		var prot = $author$project$Game$protectedPositions(state);
+		var legal = A4($author$project$Rules$cannonLegalMoves, state.board, from, prot, sh);
+		if (!A2(
+			$elm$core$List$any,
+			$author$project$Board$positionEquals(to),
+			legal)) {
+			return $elm$core$Result$Err('非法落點');
+		} else {
+			var _v0 = A2($author$project$Board$cellAt, state.board, to);
+			_v0$3:
+			while (true) {
+				switch (_v0.$) {
+					case 'Empty':
+						return $elm$core$Result$Ok(
+							A2($author$project$Game$placeAIPiece, state, to));
+					case 'Piece':
+						if (_v0.a.$ === 'Player') {
+							var _v1 = _v0.a;
+							if (A2($author$project$Game$isPositionProtected, state, to)) {
+								var s = $author$project$Game$attackBlockedByProtection(state);
+								return $elm$core$Result$Ok(
+									$author$project$Game$decrementProtection(
+										_Utils_update(
+											s,
+											{turn: state.turn + 1})));
+							} else {
+								if (A2($author$project$Game$isPositionShielded, state, to)) {
+									var s = A2($author$project$Game$attackBlockedByShield, state, to);
+									return $elm$core$Result$Ok(
+										$author$project$Game$decrementProtection(
+											_Utils_update(
+												s,
+												{turn: state.turn + 1})));
+								} else {
+									return $elm$core$Result$Ok(
+										A2($author$project$Game$captureByAI, state, to));
+								}
+							}
+						} else {
+							break _v0$3;
+						}
+					default:
+						if (_v0.a.$ === 'Player') {
+							var _v2 = _v0.a;
+							if (A2($author$project$Game$isPositionProtected, state, to)) {
+								var s = $author$project$Game$attackBlockedByProtection(state);
+								return $elm$core$Result$Ok(
+									$author$project$Game$decrementProtection(
+										_Utils_update(
+											s,
+											{turn: state.turn + 1})));
+							} else {
+								if (A2($author$project$Game$isPositionShielded, state, to)) {
+									var s = A2($author$project$Game$attackBlockedByShield, state, to);
+									return $elm$core$Result$Ok(
+										$author$project$Game$decrementProtection(
+											_Utils_update(
+												s,
+												{turn: state.turn + 1})));
+								} else {
+									return $elm$core$Result$Ok(
+										A2($author$project$Game$attackCastleByAI, state, to));
+								}
+							}
+						} else {
+							break _v0$3;
+						}
+				}
+			}
+			return $elm$core$Result$Err('非法落點');
 		}
 	});
 var $author$project$AI$PlacePiece = F2(
@@ -6329,9 +6415,7 @@ var $author$project$Items$canUseLaser = F4(
 					$author$project$Items$cost($author$project$Items$Laser)) > -1;
 			}
 		}();
-		var line = A2($author$project$Items$laserLine, isRow, index);
-		var noCastle = !$author$project$Items$lineContainsCastle(line);
-		return scoreOk && noCastle;
+		return scoreOk;
 	});
 var $author$project$AI$laserScore = F3(
 	function (state, isRow, index) {
@@ -6490,7 +6574,7 @@ var $author$project$Rules$horseLegalMoves = F4(
 											return $elm$core$Maybe$Nothing;
 										} else {
 											var _v7 = _v4.a;
-											return A3($author$project$Rules$isPositionProtectedOrShielded, to, protectedPositions, shieldedPositions) ? $elm$core$Maybe$Nothing : $elm$core$Maybe$Just(to);
+											return $elm$core$Maybe$Just(to);
 										}
 									case 'Castle':
 										if (_v4.a.$ === 'Player') {
@@ -6498,7 +6582,7 @@ var $author$project$Rules$horseLegalMoves = F4(
 											return $elm$core$Maybe$Nothing;
 										} else {
 											var _v8 = _v4.a;
-											return A3($author$project$Rules$isPositionProtectedOrShielded, to, protectedPositions, shieldedPositions) ? $elm$core$Maybe$Nothing : $elm$core$Maybe$Just(to);
+											return $elm$core$Maybe$Just(to);
 										}
 									default:
 										return $elm$core$Maybe$Just(to);
@@ -6717,16 +6801,6 @@ var $author$project$AI$decide = function (state) {
 		}
 	}
 };
-var $author$project$Game$decrementProtection = function (state) {
-	return _Utils_update(
-		state,
-		{
-			protectedCells: $author$project$Game$decrementProtectionList(state.protectedCells)
-		});
-};
-var $author$project$Main$posStr = function (p) {
-	return '(' + ($elm$core$String$fromInt(p.row) + (',' + ($elm$core$String$fromInt(p.col) + ')')));
-};
 var $author$project$Main$sideLabel = function (side) {
 	if (side.$ === 'Player') {
 		return 'Player';
@@ -6734,6 +6808,7 @@ var $author$project$Main$sideLabel = function (side) {
 		return 'AI';
 	}
 };
+var $elm$core$Process$sleep = _Process_sleep;
 var $author$project$Main$runAIStep = function (model) {
 	var _v0 = $author$project$Game$checkVictory(model.gameState);
 	if (_v0.$ === 'Ongoing') {
@@ -6764,82 +6839,91 @@ var $author$project$Main$runAIStep = function (model) {
 				}
 			case 'UseBomb':
 				var center = _v1.a;
-				var turnN = model.gameState.turn;
-				var actionLine = '[回合 ' + ($elm$core$String$fromInt(turnN) + ('] AI 使用 炸彈 於 ' + $author$project$Main$posStr(center)));
 				var _v3 = A3($author$project$Items$applyBomb, model.gameState, $author$project$Board$AI, center);
 				if (_v3.$ === 'Ok') {
-					var s = _v3.a;
-					var next = $author$project$Game$decrementProtection(
-						_Utils_update(
-							s,
-							{aiBombUse: s.aiBombUse + 1, currentSide: $author$project$Board$Player, turn: s.turn + 1}));
-					var m = A2(
-						$author$project$Main$addLog,
-						actionLine + (' → Ok | currentSide=' + ($author$project$Main$sideLabel(next.currentSide) + (' turn=' + $elm$core$String$fromInt(next.turn)))),
-						model);
 					return _Utils_Tuple2(
-						_Utils_update(
-							m,
-							{gameState: next}),
-						$elm$core$Platform$Cmd$none);
+						A2(
+							$author$project$Main$addLog,
+							'[回合 ' + ($elm$core$String$fromInt(model.gameState.turn) + ('] AI 使用 炸彈 於 ' + ($author$project$Main$posStr(center) + '（顯示後套用）'))),
+							_Utils_update(
+								model,
+								{
+									aiItemPendingApply: $elm$core$Maybe$Just(
+										$author$project$Main$BombAt(center))
+								})),
+						A2(
+							$elm$core$Task$perform,
+							function (_v4) {
+								return $author$project$Main$ApplyAIPendingItem;
+							},
+							$elm$core$Process$sleep(350)));
 				} else {
 					var e = _v3.a;
 					return _Utils_Tuple2(
-						A2($author$project$Main$addLog, actionLine + (' → Err: ' + e), model),
+						A2(
+							$author$project$Main$addLog,
+							'[回合 ' + ($elm$core$String$fromInt(model.gameState.turn) + ('] AI 使用 炸彈 → Err: ' + e)),
+							model),
 						$elm$core$Platform$Cmd$none);
 				}
 			case 'UseLaser':
 				var isRow = _v1.a;
 				var index = _v1.b;
-				var turnN = model.gameState.turn;
-				var axis = isRow ? '行' : '列';
-				var actionLine = '[回合 ' + ($elm$core$String$fromInt(turnN) + ('] AI 使用 雷射 ' + (axis + (' ' + $elm$core$String$fromInt(index)))));
-				var _v4 = A4($author$project$Items$applyLaser, model.gameState, $author$project$Board$AI, isRow, index);
-				if (_v4.$ === 'Ok') {
-					var s = _v4.a;
-					var next = $author$project$Game$decrementProtection(
-						_Utils_update(
-							s,
-							{aiLaserUse: s.aiLaserUse + 1, currentSide: $author$project$Board$Player, turn: s.turn + 1}));
-					var m = A2(
-						$author$project$Main$addLog,
-						actionLine + (' → Ok | currentSide=' + ($author$project$Main$sideLabel(next.currentSide) + (' turn=' + $elm$core$String$fromInt(next.turn)))),
-						model);
+				var displayPos = isRow ? {col: 0, row: index} : {col: index, row: 0};
+				var _v5 = A4($author$project$Items$applyLaser, model.gameState, $author$project$Board$AI, isRow, index);
+				if (_v5.$ === 'Ok') {
 					return _Utils_Tuple2(
-						_Utils_update(
-							m,
-							{gameState: next}),
-						$elm$core$Platform$Cmd$none);
+						A2(
+							$author$project$Main$addLog,
+							'[回合 ' + ($elm$core$String$fromInt(model.gameState.turn) + '] AI 使用 雷射（顯示後套用）'),
+							_Utils_update(
+								model,
+								{
+									aiItemPendingApply: $elm$core$Maybe$Just(
+										A3($author$project$Main$LaserAt, isRow, index, displayPos))
+								})),
+						A2(
+							$elm$core$Task$perform,
+							function (_v6) {
+								return $author$project$Main$ApplyAIPendingItem;
+							},
+							$elm$core$Process$sleep(350)));
 				} else {
-					var e = _v4.a;
+					var e = _v5.a;
 					return _Utils_Tuple2(
-						A2($author$project$Main$addLog, actionLine + (' → Err: ' + e), model),
+						A2(
+							$author$project$Main$addLog,
+							'[回合 ' + ($elm$core$String$fromInt(model.gameState.turn) + ('] AI 使用 雷射 → Err: ' + e)),
+							model),
 						$elm$core$Platform$Cmd$none);
 				}
 			default:
 				var pos = _v1.a;
-				var turnN = model.gameState.turn;
-				var actionLine = '[回合 ' + ($elm$core$String$fromInt(turnN) + ('] AI 使用 護盾 於 ' + $author$project$Main$posStr(pos)));
-				var _v5 = A3($author$project$Items$applyShield, model.gameState, $author$project$Board$AI, pos);
-				if (_v5.$ === 'Ok') {
-					var s = _v5.a;
-					var next = $author$project$Game$decrementProtection(
-						_Utils_update(
-							s,
-							{aiShieldUse: s.aiShieldUse + 1, currentSide: $author$project$Board$Player, turn: s.turn + 1}));
-					var m = A2(
-						$author$project$Main$addLog,
-						actionLine + (' → Ok | currentSide=' + ($author$project$Main$sideLabel(next.currentSide) + (' turn=' + $elm$core$String$fromInt(next.turn)))),
-						model);
+				var _v7 = A3($author$project$Items$applyShield, model.gameState, $author$project$Board$AI, pos);
+				if (_v7.$ === 'Ok') {
 					return _Utils_Tuple2(
-						_Utils_update(
-							m,
-							{gameState: next}),
-						$elm$core$Platform$Cmd$none);
+						A2(
+							$author$project$Main$addLog,
+							'[回合 ' + ($elm$core$String$fromInt(model.gameState.turn) + ('] AI 使用 護盾 於 ' + ($author$project$Main$posStr(pos) + '（顯示後套用）'))),
+							_Utils_update(
+								model,
+								{
+									aiItemPendingApply: $elm$core$Maybe$Just(
+										$author$project$Main$ShieldAt(pos))
+								})),
+						A2(
+							$elm$core$Task$perform,
+							function (_v8) {
+								return $author$project$Main$ApplyAIPendingItem;
+							},
+							$elm$core$Process$sleep(350)));
 				} else {
-					var e = _v5.a;
+					var e = _v7.a;
 					return _Utils_Tuple2(
-						A2($author$project$Main$addLog, actionLine + (' → Err: ' + e), model),
+						A2(
+							$author$project$Main$addLog,
+							'[回合 ' + ($elm$core$String$fromInt(model.gameState.turn) + ('] AI 使用 護盾 → Err: ' + e)),
+							model),
 						$elm$core$Platform$Cmd$none);
 				}
 		}
@@ -6931,16 +7015,20 @@ var $author$project$Game$applyPlayerMove = F3(
 					case 'Piece':
 						if (_v0.a.$ === 'AI') {
 							var _v1 = _v0.a;
-							return $elm$core$Result$Ok(
-								A2($author$project$Game$captureByPlayer, state, to));
+							return A2($author$project$Game$isPositionProtected, state, to) ? $elm$core$Result$Ok(
+								$author$project$Game$attackBlockedByProtection(state)) : (A2($author$project$Game$isPositionShielded, state, to) ? $elm$core$Result$Ok(
+								A2($author$project$Game$attackBlockedByShield, state, to)) : $elm$core$Result$Ok(
+								A2($author$project$Game$captureByPlayer, state, to)));
 						} else {
 							break _v0$3;
 						}
 					default:
 						if (_v0.a.$ === 'AI') {
 							var _v2 = _v0.a;
-							return $elm$core$Result$Ok(
-								A2($author$project$Game$attackCastleByPlayer, state, to));
+							return A2($author$project$Game$isPositionProtected, state, to) ? $elm$core$Result$Ok(
+								$author$project$Game$attackBlockedByProtection(state)) : (A2($author$project$Game$isPositionShielded, state, to) ? $elm$core$Result$Ok(
+								A2($author$project$Game$attackBlockedByShield, state, to)) : $elm$core$Result$Ok(
+								A2($author$project$Game$attackCastleByPlayer, state, to)));
 						} else {
 							break _v0$3;
 						}
@@ -7007,6 +7095,7 @@ var $author$project$Debug$GameTests$horseMoveStateTests = function () {
 				}())));
 }();
 var $author$project$Debug$GameTests$runTests = $author$project$Debug$GameTests$horseMoveStateTests;
+var $author$project$Main$ApplyPendingItem = {$: 'ApplyPendingItem'};
 var $author$project$Main$RunAITurn = {$: 'RunAITurn'};
 var $author$project$Main$getProtected = function (model) {
 	return $author$project$Game$protectedPositions(model.gameState);
@@ -7015,28 +7104,16 @@ var $author$project$Main$getShielded = function (model) {
 	return $author$project$Game$shieldedPositions(model.gameState);
 };
 var $elm$core$Debug$log = _Debug_log;
-var $author$project$Main$recordPlayerBomb = function (s) {
-	return _Utils_update(
-		s,
-		{playerBombUse: s.playerBombUse + 1});
-};
-var $author$project$Main$recordPlayerLaser = function (s) {
-	return _Utils_update(
-		s,
-		{playerLaserUse: s.playerLaserUse + 1});
-};
-var $author$project$Main$recordPlayerShield = function (s) {
-	return _Utils_update(
-		s,
-		{playerShieldUse: s.playerShieldUse + 1});
-};
-var $elm$core$Process$sleep = _Process_sleep;
 var $author$project$Main$updateOngoing = F2(
 	function (msg, model) {
 		switch (msg.$) {
 			case 'RunTests':
 				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 			case 'RunAITurn':
+				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+			case 'ApplyPendingItem':
+				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+			case 'ApplyAIPendingItem':
 				return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 			case 'Restart':
 				return _Utils_Tuple2(
@@ -7070,18 +7147,22 @@ var $author$project$Main$updateOngoing = F2(
 					var pos = _v1.a;
 					var _v2 = A4($author$project$Items$applyLaser, model.gameState, $author$project$Board$Player, true, pos.row);
 					if (_v2.$ === 'Ok') {
-						var s = _v2.a;
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
 								{
 									errorMessage: $elm$core$Maybe$Nothing,
-									gameState: $author$project$Main$recordPlayerLaser(s),
-									itemMode: $elm$core$Maybe$Nothing,
+									itemPendingApply: $elm$core$Maybe$Just(
+										A3($author$project$Main$LaserAt, true, pos.row, pos)),
 									laserPending: $elm$core$Maybe$Nothing,
 									previewCells: _List_Nil
 								}),
-							$elm$core$Platform$Cmd$none);
+							A2(
+								$elm$core$Task$perform,
+								function (_v3) {
+									return $author$project$Main$ApplyPendingItem;
+								},
+								$elm$core$Process$sleep(350)));
 					} else {
 						var e = _v2.a;
 						return _Utils_Tuple2(
@@ -7096,25 +7177,29 @@ var $author$project$Main$updateOngoing = F2(
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
 			case 'LaserCol':
-				var _v3 = model.laserPending;
-				if (_v3.$ === 'Just') {
-					var pos = _v3.a;
-					var _v4 = A4($author$project$Items$applyLaser, model.gameState, $author$project$Board$Player, false, pos.col);
-					if (_v4.$ === 'Ok') {
-						var s = _v4.a;
+				var _v4 = model.laserPending;
+				if (_v4.$ === 'Just') {
+					var pos = _v4.a;
+					var _v5 = A4($author$project$Items$applyLaser, model.gameState, $author$project$Board$Player, false, pos.col);
+					if (_v5.$ === 'Ok') {
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
 								{
 									errorMessage: $elm$core$Maybe$Nothing,
-									gameState: $author$project$Main$recordPlayerLaser(s),
-									itemMode: $elm$core$Maybe$Nothing,
+									itemPendingApply: $elm$core$Maybe$Just(
+										A3($author$project$Main$LaserAt, false, pos.col, pos)),
 									laserPending: $elm$core$Maybe$Nothing,
 									previewCells: _List_Nil
 								}),
-							$elm$core$Platform$Cmd$none);
+							A2(
+								$elm$core$Task$perform,
+								function (_v6) {
+									return $author$project$Main$ApplyPendingItem;
+								},
+								$elm$core$Process$sleep(350)));
 					} else {
-						var e = _v4.a;
+						var e = _v5.a;
 						return _Utils_Tuple2(
 							_Utils_update(
 								model,
@@ -7128,132 +7213,43 @@ var $author$project$Main$updateOngoing = F2(
 				}
 			default:
 				var pos = msg.a;
-				var _v5 = A2(
-					$elm$core$Debug$log,
-					'[CellClicked] pos',
-					_Utils_Tuple2(pos.row, pos.col));
-				var _v6 = A2($elm$core$Debug$log, '[CellClicked] currentSide', model.gameState.currentSide);
-				var _v7 = A2($elm$core$Debug$log, '[CellClicked] selectedPiece', model.selectedPiece);
-				var _v8 = A2(
-					$elm$core$Debug$log,
-					'[CellClicked] legalMoves count',
-					$elm$core$List$length(model.legalMoves));
-				var _v9 = model.itemMode;
-				if (_v9.$ === 'Just') {
-					switch (_v9.a.$) {
-						case 'Bomb':
-							var _v10 = _v9.a;
-							var _v11 = A3($author$project$Items$applyBomb, model.gameState, $author$project$Board$Player, pos);
-							if (_v11.$ === 'Ok') {
-								var s = _v11.a;
-								return _Utils_Tuple2(
-									_Utils_update(
-										model,
-										{
-											errorMessage: $elm$core$Maybe$Nothing,
-											gameState: $author$project$Main$recordPlayerBomb(s),
-											itemMode: $elm$core$Maybe$Nothing,
-											previewCells: _List_Nil
-										}),
-									$elm$core$Platform$Cmd$none);
-							} else {
-								var e = _v11.a;
-								return _Utils_Tuple2(
-									_Utils_update(
-										model,
-										{
-											errorMessage: $elm$core$Maybe$Just(e)
-										}),
-									$elm$core$Platform$Cmd$none);
-							}
-						case 'Shield':
-							var _v12 = _v9.a;
-							var _v13 = A3($author$project$Items$applyShield, model.gameState, $author$project$Board$Player, pos);
-							if (_v13.$ === 'Ok') {
-								var s = _v13.a;
-								return _Utils_Tuple2(
-									_Utils_update(
-										model,
-										{
-											errorMessage: $elm$core$Maybe$Nothing,
-											gameState: $author$project$Main$recordPlayerShield(s),
-											itemMode: $elm$core$Maybe$Nothing,
-											previewCells: _List_Nil
-										}),
-									$elm$core$Platform$Cmd$none);
-							} else {
-								var e = _v13.a;
-								return _Utils_Tuple2(
-									_Utils_update(
-										model,
-										{
-											errorMessage: $elm$core$Maybe$Just(e)
-										}),
-									$elm$core$Platform$Cmd$none);
-							}
-						default:
-							var _v14 = _v9.a;
-							return _Utils_Tuple2(
-								_Utils_update(
-									model,
-									{
-										errorMessage: $elm$core$Maybe$Nothing,
-										laserPending: $elm$core$Maybe$Just(pos),
-										previewCells: _List_Nil
-									}),
-								$elm$core$Platform$Cmd$none);
-					}
+				if ((!_Utils_eq(model.itemPendingApply, $elm$core$Maybe$Nothing)) || (!_Utils_eq(model.aiItemPendingApply, $elm$core$Maybe$Nothing))) {
+					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				} else {
-					if (_Utils_eq(model.gameState.currentSide, $author$project$Board$AI)) {
-						return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-					} else {
-						var sh = $author$project$Main$getShielded(model);
-						var prot = $author$project$Main$getProtected(model);
-						var inLegalMoves = A2(
-							$elm$core$List$any,
-							$author$project$Board$positionEquals(pos),
-							model.legalMoves);
-						var content = A2($author$project$Board$cellAt, model.gameState.board, pos);
-						if ((!_Utils_eq(model.selectedPiece, $elm$core$Maybe$Nothing)) && inLegalMoves) {
-							var _v15 = model.selectedPiece;
-							if (_v15.$ === 'Just') {
-								var from = _v15.a;
-								var _v16 = A2(
-									$elm$core$Debug$log,
-									'[apply] from',
-									_Utils_Tuple2(from.row, from.col));
-								var _v17 = A2(
-									$elm$core$Debug$log,
-									'[apply] to',
-									_Utils_Tuple2(pos.row, pos.col));
-								var _v18 = A2($elm$core$Debug$log, '[apply] inLegalMoves', inLegalMoves);
-								var _v19 = A3($author$project$Game$applyPlayerMove, model.gameState, from, pos);
-								if (_v19.$ === 'Ok') {
-									var newState = _v19.a;
-									var modelAfterPlayer = _Utils_update(
-										model,
-										{errorMessage: $elm$core$Maybe$Nothing, gameState: newState, legalMoves: _List_Nil, selectedPiece: $elm$core$Maybe$Nothing});
-									var _v20 = A2(
-										$elm$core$Debug$log,
-										'[apply] Ok newState.playerPieces',
-										A2(
-											$elm$core$List$map,
-											function (p) {
-												return _Utils_Tuple2(p.row, p.col);
-											},
-											newState.board.playerPieces));
-									var _v21 = A2($elm$core$Debug$log, '[apply] Ok newState.currentSide', newState.currentSide);
+					var _v7 = A2(
+						$elm$core$Debug$log,
+						'[CellClicked] pos',
+						_Utils_Tuple2(pos.row, pos.col));
+					var _v8 = A2($elm$core$Debug$log, '[CellClicked] currentSide', model.gameState.currentSide);
+					var _v9 = A2($elm$core$Debug$log, '[CellClicked] selectedPiece', model.selectedPiece);
+					var _v10 = A2(
+						$elm$core$Debug$log,
+						'[CellClicked] legalMoves count',
+						$elm$core$List$length(model.legalMoves));
+					var _v11 = model.itemMode;
+					if (_v11.$ === 'Just') {
+						switch (_v11.a.$) {
+							case 'Bomb':
+								var _v12 = _v11.a;
+								var _v13 = A3($author$project$Items$applyBomb, model.gameState, $author$project$Board$Player, pos);
+								if (_v13.$ === 'Ok') {
 									return _Utils_Tuple2(
-										modelAfterPlayer,
+										_Utils_update(
+											model,
+											{
+												errorMessage: $elm$core$Maybe$Nothing,
+												itemPendingApply: $elm$core$Maybe$Just(
+													$author$project$Main$BombAt(pos)),
+												previewCells: _List_Nil
+											}),
 										A2(
 											$elm$core$Task$perform,
-											function (_v22) {
-												return $author$project$Main$RunAITurn;
+											function (_v14) {
+												return $author$project$Main$ApplyPendingItem;
 											},
-											$elm$core$Process$sleep(300)));
+											$elm$core$Process$sleep(350)));
 								} else {
-									var e = _v19.a;
-									var _v23 = A2($elm$core$Debug$log, '[apply] Err', e);
+									var e = _v13.a;
 									return _Utils_Tuple2(
 										_Utils_update(
 											model,
@@ -7262,52 +7258,153 @@ var $author$project$Main$updateOngoing = F2(
 											}),
 										$elm$core$Platform$Cmd$none);
 								}
-							} else {
-								return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
-							}
-						} else {
-							_v24$2:
-							while (true) {
-								switch (content.$) {
-									case 'Piece':
-										if (content.a.$ === 'Player') {
-											var _v25 = content.a;
-											return _Utils_Tuple2(
-												_Utils_update(
-													model,
-													{
-														errorMessage: $elm$core$Maybe$Nothing,
-														legalMoves: A4($author$project$Rules$horseLegalMoves, model.gameState.board, pos, prot, sh),
-														selectedPiece: $elm$core$Maybe$Just(pos)
-													}),
-												$elm$core$Platform$Cmd$none);
-										} else {
-											break _v24$2;
-										}
-									case 'Castle':
-										if (content.a.$ === 'Player') {
-											var _v26 = content.a;
-											return _Utils_Tuple2(
-												_Utils_update(
-													model,
-													{
-														errorMessage: $elm$core$Maybe$Nothing,
-														legalMoves: A4($author$project$Rules$horseLegalMoves, model.gameState.board, pos, prot, sh),
-														selectedPiece: $elm$core$Maybe$Just(pos)
-													}),
-												$elm$core$Platform$Cmd$none);
-										} else {
-											break _v24$2;
-										}
-									default:
-										break _v24$2;
+							case 'Shield':
+								var _v15 = _v11.a;
+								var _v16 = A3($author$project$Items$applyShield, model.gameState, $author$project$Board$Player, pos);
+								if (_v16.$ === 'Ok') {
+									return _Utils_Tuple2(
+										_Utils_update(
+											model,
+											{
+												errorMessage: $elm$core$Maybe$Nothing,
+												itemPendingApply: $elm$core$Maybe$Just(
+													$author$project$Main$ShieldAt(pos)),
+												previewCells: _List_Nil
+											}),
+										A2(
+											$elm$core$Task$perform,
+											function (_v17) {
+												return $author$project$Main$ApplyPendingItem;
+											},
+											$elm$core$Process$sleep(350)));
+								} else {
+									var e = _v16.a;
+									return _Utils_Tuple2(
+										_Utils_update(
+											model,
+											{
+												errorMessage: $elm$core$Maybe$Just(e)
+											}),
+										$elm$core$Platform$Cmd$none);
 								}
+							default:
+								var _v18 = _v11.a;
+								return _Utils_Tuple2(
+									_Utils_update(
+										model,
+										{
+											errorMessage: $elm$core$Maybe$Nothing,
+											laserPending: $elm$core$Maybe$Just(pos),
+											previewCells: _List_Nil
+										}),
+									$elm$core$Platform$Cmd$none);
+						}
+					} else {
+						if (_Utils_eq(model.gameState.currentSide, $author$project$Board$AI)) {
+							return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+						} else {
+							var sh = $author$project$Main$getShielded(model);
+							var prot = $author$project$Main$getProtected(model);
+							var inLegalMoves = A2(
+								$elm$core$List$any,
+								$author$project$Board$positionEquals(pos),
+								model.legalMoves);
+							var content = A2($author$project$Board$cellAt, model.gameState.board, pos);
+							if ((!_Utils_eq(model.selectedPiece, $elm$core$Maybe$Nothing)) && inLegalMoves) {
+								var _v19 = model.selectedPiece;
+								if (_v19.$ === 'Just') {
+									var from = _v19.a;
+									var _v20 = A2(
+										$elm$core$Debug$log,
+										'[apply] from',
+										_Utils_Tuple2(from.row, from.col));
+									var _v21 = A2(
+										$elm$core$Debug$log,
+										'[apply] to',
+										_Utils_Tuple2(pos.row, pos.col));
+									var _v22 = A2($elm$core$Debug$log, '[apply] inLegalMoves', inLegalMoves);
+									var _v23 = A3($author$project$Game$applyPlayerMove, model.gameState, from, pos);
+									if (_v23.$ === 'Ok') {
+										var newState = _v23.a;
+										var modelAfterPlayer = _Utils_update(
+											model,
+											{errorMessage: $elm$core$Maybe$Nothing, gameState: newState, legalMoves: _List_Nil, selectedPiece: $elm$core$Maybe$Nothing});
+										var _v24 = A2(
+											$elm$core$Debug$log,
+											'[apply] Ok newState.playerPieces',
+											A2(
+												$elm$core$List$map,
+												function (p) {
+													return _Utils_Tuple2(p.row, p.col);
+												},
+												newState.board.playerPieces));
+										var _v25 = A2($elm$core$Debug$log, '[apply] Ok newState.currentSide', newState.currentSide);
+										return _Utils_Tuple2(
+											modelAfterPlayer,
+											A2(
+												$elm$core$Task$perform,
+												function (_v26) {
+													return $author$project$Main$RunAITurn;
+												},
+												$elm$core$Process$sleep(300)));
+									} else {
+										var e = _v23.a;
+										var _v27 = A2($elm$core$Debug$log, '[apply] Err', e);
+										return _Utils_Tuple2(
+											_Utils_update(
+												model,
+												{
+													errorMessage: $elm$core$Maybe$Just(e)
+												}),
+											$elm$core$Platform$Cmd$none);
+									}
+								} else {
+									return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+								}
+							} else {
+								_v28$2:
+								while (true) {
+									switch (content.$) {
+										case 'Piece':
+											if (content.a.$ === 'Player') {
+												var _v29 = content.a;
+												return _Utils_Tuple2(
+													_Utils_update(
+														model,
+														{
+															errorMessage: $elm$core$Maybe$Nothing,
+															legalMoves: A4($author$project$Rules$horseLegalMoves, model.gameState.board, pos, prot, sh),
+															selectedPiece: $elm$core$Maybe$Just(pos)
+														}),
+													$elm$core$Platform$Cmd$none);
+											} else {
+												break _v28$2;
+											}
+										case 'Castle':
+											if (content.a.$ === 'Player') {
+												var _v30 = content.a;
+												return _Utils_Tuple2(
+													_Utils_update(
+														model,
+														{
+															errorMessage: $elm$core$Maybe$Nothing,
+															legalMoves: A4($author$project$Rules$horseLegalMoves, model.gameState.board, pos, prot, sh),
+															selectedPiece: $elm$core$Maybe$Just(pos)
+														}),
+													$elm$core$Platform$Cmd$none);
+											} else {
+												break _v28$2;
+											}
+										default:
+											break _v28$2;
+									}
+								}
+								return _Utils_Tuple2(
+									_Utils_update(
+										model,
+										{errorMessage: $elm$core$Maybe$Nothing, legalMoves: _List_Nil, selectedPiece: $elm$core$Maybe$Nothing}),
+									$elm$core$Platform$Cmd$none);
 							}
-							return _Utils_Tuple2(
-								_Utils_update(
-									model,
-									{errorMessage: $elm$core$Maybe$Nothing, legalMoves: _List_Nil, selectedPiece: $elm$core$Maybe$Nothing}),
-								$elm$core$Platform$Cmd$none);
 						}
 					}
 				}
@@ -7323,7 +7420,7 @@ var $author$project$Main$update = F2(
 						{testErrors: $author$project$Debug$GameTests$runTests}),
 					$elm$core$Platform$Cmd$none);
 			case 'RunAITurn':
-				if (_Utils_eq(model.gameState.currentSide, $author$project$Board$AI)) {
+				if (_Utils_eq(model.gameState.currentSide, $author$project$Board$AI) && _Utils_eq(model.aiItemPendingApply, $elm$core$Maybe$Nothing)) {
 					var m1 = A2($author$project$Main$addLog, '[RunAITurn] currentSide=AI → 開始執行', model);
 					var _v1 = $author$project$Main$runAIStep(m1);
 					var newModel = _v1.a;
@@ -7337,12 +7434,205 @@ var $author$project$Main$update = F2(
 							model),
 						$elm$core$Platform$Cmd$none);
 				}
+			case 'ApplyPendingItem':
+				var _v2 = model.itemPendingApply;
+				if (_v2.$ === 'Just') {
+					switch (_v2.a.$) {
+						case 'BombAt':
+							var pos = _v2.a.a;
+							var _v3 = A3($author$project$Items$applyBomb, model.gameState, $author$project$Board$Player, pos);
+							if (_v3.$ === 'Ok') {
+								var s = _v3.a;
+								return _Utils_Tuple2(
+									_Utils_update(
+										model,
+										{
+											errorMessage: $elm$core$Maybe$Nothing,
+											gameState: $author$project$Main$recordPlayerBomb(s),
+											itemMode: $elm$core$Maybe$Nothing,
+											itemPendingApply: $elm$core$Maybe$Nothing,
+											previewCells: _List_Nil
+										}),
+									$elm$core$Platform$Cmd$none);
+							} else {
+								var e = _v3.a;
+								return _Utils_Tuple2(
+									_Utils_update(
+										model,
+										{
+											errorMessage: $elm$core$Maybe$Just(e),
+											itemPendingApply: $elm$core$Maybe$Nothing
+										}),
+									$elm$core$Platform$Cmd$none);
+							}
+						case 'ShieldAt':
+							var pos = _v2.a.a;
+							var _v4 = A3($author$project$Items$applyShield, model.gameState, $author$project$Board$Player, pos);
+							if (_v4.$ === 'Ok') {
+								var s = _v4.a;
+								return _Utils_Tuple2(
+									_Utils_update(
+										model,
+										{
+											errorMessage: $elm$core$Maybe$Nothing,
+											gameState: $author$project$Main$recordPlayerShield(s),
+											itemMode: $elm$core$Maybe$Nothing,
+											itemPendingApply: $elm$core$Maybe$Nothing,
+											previewCells: _List_Nil
+										}),
+									$elm$core$Platform$Cmd$none);
+							} else {
+								var e = _v4.a;
+								return _Utils_Tuple2(
+									_Utils_update(
+										model,
+										{
+											errorMessage: $elm$core$Maybe$Just(e),
+											itemPendingApply: $elm$core$Maybe$Nothing
+										}),
+									$elm$core$Platform$Cmd$none);
+							}
+						default:
+							var _v5 = _v2.a;
+							var isRow = _v5.a;
+							var index = _v5.b;
+							var pos = _v5.c;
+							var _v6 = A4($author$project$Items$applyLaser, model.gameState, $author$project$Board$Player, isRow, index);
+							if (_v6.$ === 'Ok') {
+								var s = _v6.a;
+								return _Utils_Tuple2(
+									_Utils_update(
+										model,
+										{
+											errorMessage: $elm$core$Maybe$Nothing,
+											gameState: $author$project$Main$recordPlayerLaser(s),
+											itemMode: $elm$core$Maybe$Nothing,
+											itemPendingApply: $elm$core$Maybe$Nothing,
+											laserPending: $elm$core$Maybe$Nothing,
+											previewCells: _List_Nil
+										}),
+									$elm$core$Platform$Cmd$none);
+							} else {
+								var e = _v6.a;
+								return _Utils_Tuple2(
+									_Utils_update(
+										model,
+										{
+											errorMessage: $elm$core$Maybe$Just(e),
+											itemPendingApply: $elm$core$Maybe$Nothing,
+											laserPending: $elm$core$Maybe$Nothing
+										}),
+									$elm$core$Platform$Cmd$none);
+							}
+					}
+				} else {
+					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				}
+			case 'ApplyAIPendingItem':
+				var _v7 = model.aiItemPendingApply;
+				if (_v7.$ === 'Just') {
+					switch (_v7.a.$) {
+						case 'BombAt':
+							var pos = _v7.a.a;
+							var _v8 = A3($author$project$Items$applyBomb, model.gameState, $author$project$Board$AI, pos);
+							if (_v8.$ === 'Ok') {
+								var s = _v8.a;
+								var next = $author$project$Game$decrementProtection(
+									_Utils_update(
+										s,
+										{aiBombUse: s.aiBombUse + 1, currentSide: $author$project$Board$Player, turn: s.turn + 1}));
+								var m = A2(
+									$author$project$Main$addLog,
+									'[回合 ' + ($elm$core$String$fromInt(model.gameState.turn) + ('] AI 使用 炸彈 於 ' + ($author$project$Main$posStr(pos) + ' → Ok'))),
+									model);
+								return _Utils_Tuple2(
+									_Utils_update(
+										m,
+										{aiItemPendingApply: $elm$core$Maybe$Nothing, gameState: next}),
+									$elm$core$Platform$Cmd$none);
+							} else {
+								var e = _v8.a;
+								return _Utils_Tuple2(
+									A2(
+										$author$project$Main$addLog,
+										'[回合 ' + ($elm$core$String$fromInt(model.gameState.turn) + ('] AI 使用 炸彈 → Err: ' + e)),
+										_Utils_update(
+											model,
+											{aiItemPendingApply: $elm$core$Maybe$Nothing})),
+									$elm$core$Platform$Cmd$none);
+							}
+						case 'ShieldAt':
+							var pos = _v7.a.a;
+							var _v9 = A3($author$project$Items$applyShield, model.gameState, $author$project$Board$AI, pos);
+							if (_v9.$ === 'Ok') {
+								var s = _v9.a;
+								var next = $author$project$Game$decrementProtection(
+									_Utils_update(
+										s,
+										{aiShieldUse: s.aiShieldUse + 1, currentSide: $author$project$Board$Player, turn: s.turn + 1}));
+								var m = A2(
+									$author$project$Main$addLog,
+									'[回合 ' + ($elm$core$String$fromInt(model.gameState.turn) + ('] AI 使用 護盾 於 ' + ($author$project$Main$posStr(pos) + ' → Ok'))),
+									model);
+								return _Utils_Tuple2(
+									_Utils_update(
+										m,
+										{aiItemPendingApply: $elm$core$Maybe$Nothing, gameState: next}),
+									$elm$core$Platform$Cmd$none);
+							} else {
+								var e = _v9.a;
+								return _Utils_Tuple2(
+									A2(
+										$author$project$Main$addLog,
+										'[回合 ' + ($elm$core$String$fromInt(model.gameState.turn) + ('] AI 使用 護盾 → Err: ' + e)),
+										_Utils_update(
+											model,
+											{aiItemPendingApply: $elm$core$Maybe$Nothing})),
+									$elm$core$Platform$Cmd$none);
+							}
+						default:
+							var _v10 = _v7.a;
+							var isRow = _v10.a;
+							var index = _v10.b;
+							var displayPos = _v10.c;
+							var _v11 = A4($author$project$Items$applyLaser, model.gameState, $author$project$Board$AI, isRow, index);
+							if (_v11.$ === 'Ok') {
+								var s = _v11.a;
+								var next = $author$project$Game$decrementProtection(
+									_Utils_update(
+										s,
+										{aiLaserUse: s.aiLaserUse + 1, currentSide: $author$project$Board$Player, turn: s.turn + 1}));
+								var axis = isRow ? '行' : '列';
+								var m = A2(
+									$author$project$Main$addLog,
+									'[回合 ' + ($elm$core$String$fromInt(model.gameState.turn) + ('] AI 使用 雷射 ' + (axis + (' ' + ($elm$core$String$fromInt(index) + ' → Ok'))))),
+									model);
+								return _Utils_Tuple2(
+									_Utils_update(
+										m,
+										{aiItemPendingApply: $elm$core$Maybe$Nothing, gameState: next}),
+									$elm$core$Platform$Cmd$none);
+							} else {
+								var e = _v11.a;
+								return _Utils_Tuple2(
+									A2(
+										$author$project$Main$addLog,
+										'[回合 ' + ($elm$core$String$fromInt(model.gameState.turn) + ('] AI 使用 雷射 → Err: ' + e)),
+										_Utils_update(
+											model,
+											{aiItemPendingApply: $elm$core$Maybe$Nothing})),
+									$elm$core$Platform$Cmd$none);
+							}
+					}
+				} else {
+					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				}
 			default:
-				var _v2 = $author$project$Game$checkVictory(model.gameState);
-				if (_v2.$ === 'Ongoing') {
+				var _v12 = $author$project$Game$checkVictory(model.gameState);
+				if (_v12.$ === 'Ongoing') {
 					return A2($author$project$Main$updateOngoing, msg, model);
 				} else {
-					var result = _v2;
+					var result = _v12;
 					switch (msg.$) {
 						case 'Restart':
 							return _Utils_Tuple2(
@@ -7441,11 +7731,60 @@ var $author$project$Main$boardKey = function (model) {
 		}
 	}())))));
 };
+var $author$project$Main$itemPreviewLabel = function (model) {
+	var _v0 = model.itemMode;
+	if (_v0.$ === 'Just') {
+		switch (_v0.a.$) {
+			case 'Bomb':
+				var _v1 = _v0.a;
+				return $elm$core$Maybe$Just('炸');
+			case 'Laser':
+				var _v2 = _v0.a;
+				return $elm$core$Maybe$Just('雷');
+			default:
+				var _v3 = _v0.a;
+				return $elm$core$Maybe$Just('盾');
+		}
+	} else {
+		return $elm$core$Maybe$Nothing;
+	}
+};
 var $elm$virtual_dom$VirtualDom$keyedNode = function (tag) {
 	return _VirtualDom_keyedNode(
 		_VirtualDom_noScript(tag));
 };
 var $elm$html$Html$Keyed$node = $elm$virtual_dom$VirtualDom$keyedNode;
+var $author$project$Main$pendingCellFrom = function (pending) {
+	switch (pending.$) {
+		case 'BombAt':
+			var p = pending.a;
+			return $elm$core$Maybe$Just(
+				_Utils_Tuple2(p, '炸'));
+		case 'ShieldAt':
+			var p = pending.a;
+			return $elm$core$Maybe$Just(
+				_Utils_Tuple2(p, '盾'));
+		default:
+			var p = pending.c;
+			return $elm$core$Maybe$Just(
+				_Utils_Tuple2(p, '雷'));
+	}
+};
+var $author$project$Main$pendingApplyCell = function (model) {
+	var _v0 = model.itemPendingApply;
+	if (_v0.$ === 'Just') {
+		var x = _v0.a;
+		return $author$project$Main$pendingCellFrom(x);
+	} else {
+		var _v1 = model.aiItemPendingApply;
+		if (_v1.$ === 'Just') {
+			var x = _v1.a;
+			return $author$project$Main$pendingCellFrom(x);
+		} else {
+			return $elm$core$Maybe$Nothing;
+		}
+	}
+};
 var $author$project$Main$previewForItem = function (model) {
 	var _v0 = model.itemMode;
 	_v0$2:
@@ -7466,6 +7805,19 @@ var $author$project$Main$previewForItem = function (model) {
 		}
 	}
 	return _List_Nil;
+};
+var $author$project$Main$protectedWithTurns = function (model) {
+	return A2(
+		$elm$core$List$map,
+		function (c) {
+			return _Utils_Tuple2(c.position, c.remainingTurns);
+		},
+		A2(
+			$elm$core$List$filter,
+			function (c) {
+				return c.remainingTurns > 0;
+			},
+			model.gameState.protectedCells));
 };
 var $author$project$Ui$BoardView$cellLabel = function (content) {
 	switch (content.$) {
@@ -7490,11 +7842,11 @@ var $author$project$Ui$BoardView$cellLabel = function (content) {
 	}
 };
 var $author$project$Ui$BoardView$cellSize = 36;
-var $author$project$Ui$BoardView$cellStyle = F4(
-	function (content, isSelected, isLegal, isPreview) {
+var $author$project$Ui$BoardView$cellStyle = F5(
+	function (content, isSelected, isLegal, isPreview, isItemMode) {
 		var baseTxt = '#333';
 		var baseBg = '#e8dcc4';
-		return isPreview ? _Utils_Tuple2('#b8a888', baseTxt) : (isLegal ? _Utils_Tuple2('#7cb342', '#fff') : (isSelected ? _Utils_Tuple2('#ffb74d', '#fff') : _Utils_Tuple2(baseBg, baseTxt)));
+		return isPreview ? (isItemMode ? _Utils_Tuple2('#ffcc80', '#5d4037') : _Utils_Tuple2('#b8a888', baseTxt)) : (isLegal ? _Utils_Tuple2('#7cb342', '#fff') : (isSelected ? _Utils_Tuple2('#ffb74d', '#fff') : _Utils_Tuple2(baseBg, baseTxt)));
 	});
 var $elm$json$Json$Encode$string = _Json_wrap;
 var $elm$html$Html$Attributes$stringProperty = F2(
@@ -7522,6 +7874,23 @@ var $elm$html$Html$Events$onClick = function (msg) {
 		'click',
 		$elm$json$Json$Decode$succeed(msg));
 };
+var $author$project$Ui$BoardView$remainingAt = F2(
+	function (pos, list) {
+		return A2(
+			$elm$core$Maybe$map,
+			function (_v1) {
+				var n = _v1.b;
+				return n;
+			},
+			$elm$core$List$head(
+				A2(
+					$elm$core$List$filter,
+					function (_v0) {
+						var p = _v0.a;
+						return A2($author$project$Board$positionEquals, p, pos);
+					},
+					list)));
+	});
 var $elm$core$Bitwise$and = _Bitwise_and;
 var $elm$core$Bitwise$shiftRightBy = _Bitwise_shiftRightBy;
 var $elm$core$String$repeatHelp = F3(
@@ -7537,94 +7906,217 @@ var $elm$core$String$repeat = F2(
 		return A3($elm$core$String$repeatHelp, n, chunk, '');
 	});
 var $elm$html$Html$span = _VirtualDom_node('span');
-var $author$project$Ui$BoardView$view = F5(
-	function (board, selected, legalMoves, previewCells, toMsg) {
-		return A2(
-			$elm$html$Html$div,
-			_List_fromArray(
-				[
-					$elm$html$Html$Attributes$class('board'),
-					A2($elm$html$Html$Attributes$style, 'display', 'inline-block')
-				]),
-			_List_fromArray(
-				[
-					A2(
-					$elm$html$Html$div,
-					_List_fromArray(
-						[
-							A2($elm$html$Html$Attributes$style, 'display', 'grid'),
-							A2(
-							$elm$html$Html$Attributes$style,
-							'grid-template-columns',
-							A2($elm$core$String$repeat, $author$project$Board$boardSize, '1fr ')),
-							A2($elm$html$Html$Attributes$style, 'gap', '1px'),
-							A2($elm$html$Html$Attributes$style, 'background', '#333')
-						]),
-					A2(
-						$elm$core$List$concatMap,
-						function (r) {
-							return A2(
-								$elm$core$List$map,
-								function (c) {
-									var pos = {col: c, row: r};
-									var isSelected = A2(
-										$elm$core$Maybe$withDefault,
-										false,
-										A2(
-											$elm$core$Maybe$map,
-											$author$project$Board$positionEquals(pos),
-											selected));
-									var isPreview = A2(
-										$elm$core$List$any,
-										$author$project$Board$positionEquals(pos),
-										previewCells);
-									var isLegal = A2(
-										$elm$core$List$any,
-										$author$project$Board$positionEquals(pos),
-										legalMoves);
-									var content = A2($author$project$Board$cellAt, board, pos);
-									var _v0 = A4($author$project$Ui$BoardView$cellStyle, content, isSelected, isLegal, isPreview);
-									var bg = _v0.a;
-									var txt = _v0.b;
-									return A2(
-										$elm$html$Html$div,
-										_List_fromArray(
-											[
-												A2(
-												$elm$html$Html$Attributes$style,
-												'width',
-												$elm$core$String$fromInt($author$project$Ui$BoardView$cellSize) + 'px'),
-												A2(
-												$elm$html$Html$Attributes$style,
-												'height',
-												$elm$core$String$fromInt($author$project$Ui$BoardView$cellSize) + 'px'),
-												A2($elm$html$Html$Attributes$style, 'background', bg),
-												A2($elm$html$Html$Attributes$style, 'color', txt),
-												A2($elm$html$Html$Attributes$style, 'display', 'flex'),
-												A2($elm$html$Html$Attributes$style, 'align-items', 'center'),
-												A2($elm$html$Html$Attributes$style, 'justify-content', 'center'),
-												A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
-												A2($elm$html$Html$Attributes$style, 'font-size', '20px'),
-												$elm$html$Html$Events$onClick(
-												toMsg(pos))
-											]),
-										_List_fromArray(
-											[
-												A2(
-												$elm$html$Html$span,
-												_List_Nil,
-												_List_fromArray(
-													[
-														$elm$html$Html$text(
-														$author$project$Ui$BoardView$cellLabel(content))
-													]))
-											]));
-								},
-								A2($elm$core$List$range, 0, $author$project$Board$boardSize - 1));
-						},
-						A2($elm$core$List$range, 0, $author$project$Board$boardSize - 1)))
-				]));
-	});
+var $author$project$Ui$BoardView$view = function (board) {
+	return function (selected) {
+		return function (legalMoves) {
+			return function (previewCells) {
+				return function (protectedWithTurns) {
+					return function (shieldedCells) {
+						return function (itemPreviewLabel) {
+							return function (pendingApplyCell) {
+								return function (isItemMode) {
+									return function (toMsg) {
+										return A2(
+											$elm$html$Html$div,
+											_List_fromArray(
+												[
+													$elm$html$Html$Attributes$class('board'),
+													A2($elm$html$Html$Attributes$style, 'display', 'inline-block')
+												]),
+											_List_fromArray(
+												[
+													A2(
+													$elm$html$Html$div,
+													_List_fromArray(
+														[
+															A2($elm$html$Html$Attributes$style, 'display', 'grid'),
+															A2(
+															$elm$html$Html$Attributes$style,
+															'grid-template-columns',
+															A2($elm$core$String$repeat, $author$project$Board$boardSize, '1fr ')),
+															A2($elm$html$Html$Attributes$style, 'gap', '1px'),
+															A2($elm$html$Html$Attributes$style, 'background', '#333')
+														]),
+													A2(
+														$elm$core$List$concatMap,
+														function (r) {
+															return A2(
+																$elm$core$List$map,
+																function (c) {
+																	var pos = {col: c, row: r};
+																	var protectionTurns = A2($author$project$Ui$BoardView$remainingAt, pos, protectedWithTurns);
+																	var pendingLabel = A2(
+																		$elm$core$Maybe$andThen,
+																		function (_v5) {
+																			var p = _v5.a;
+																			var l = _v5.b;
+																			return A2($author$project$Board$positionEquals, pos, p) ? $elm$core$Maybe$Just(l) : $elm$core$Maybe$Nothing;
+																		},
+																		pendingApplyCell);
+																	var isShielded = A2(
+																		$elm$core$List$any,
+																		$author$project$Board$positionEquals(pos),
+																		shieldedCells);
+																	var isSelected = A2(
+																		$elm$core$Maybe$withDefault,
+																		false,
+																		A2(
+																			$elm$core$Maybe$map,
+																			$author$project$Board$positionEquals(pos),
+																			selected));
+																	var isPreview = A2(
+																		$elm$core$List$any,
+																		$author$project$Board$positionEquals(pos),
+																		previewCells);
+																	var isPendingApply = A2(
+																		$elm$core$Maybe$withDefault,
+																		false,
+																		A2(
+																			$elm$core$Maybe$map,
+																			function (_v4) {
+																				var p = _v4.a;
+																				return A2($author$project$Board$positionEquals, pos, p);
+																			},
+																			pendingApplyCell));
+																	var isLegal = A2(
+																		$elm$core$List$any,
+																		$author$project$Board$positionEquals(pos),
+																		legalMoves);
+																	var content = A2($author$project$Board$cellAt, board, pos);
+																	var _v0 = A5($author$project$Ui$BoardView$cellStyle, content, isSelected, isLegal, isPreview, isItemMode);
+																	var bg = _v0.a;
+																	var txt = _v0.b;
+																	return A2(
+																		$elm$html$Html$div,
+																		_List_fromArray(
+																			[
+																				A2(
+																				$elm$html$Html$Attributes$style,
+																				'width',
+																				$elm$core$String$fromInt($author$project$Ui$BoardView$cellSize) + 'px'),
+																				A2(
+																				$elm$html$Html$Attributes$style,
+																				'height',
+																				$elm$core$String$fromInt($author$project$Ui$BoardView$cellSize) + 'px'),
+																				A2($elm$html$Html$Attributes$style, 'background', bg),
+																				A2($elm$html$Html$Attributes$style, 'color', txt),
+																				A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+																				A2($elm$html$Html$Attributes$style, 'flex-direction', 'column'),
+																				A2($elm$html$Html$Attributes$style, 'align-items', 'center'),
+																				A2($elm$html$Html$Attributes$style, 'justify-content', 'center'),
+																				A2($elm$html$Html$Attributes$style, 'cursor', 'pointer'),
+																				A2($elm$html$Html$Attributes$style, 'font-size', '20px'),
+																				A2($elm$html$Html$Attributes$style, 'position', 'relative'),
+																				$elm$html$Html$Events$onClick(
+																				toMsg(pos))
+																			]),
+																		_List_fromArray(
+																			[
+																				A2(
+																				$elm$html$Html$span,
+																				_List_Nil,
+																				_List_fromArray(
+																					[
+																						$elm$html$Html$text(
+																						$author$project$Ui$BoardView$cellLabel(content))
+																					])),
+																				function () {
+																				if (protectionTurns.$ === 'Just') {
+																					var n = protectionTurns.a;
+																					return A2(
+																						$elm$html$Html$span,
+																						_List_fromArray(
+																							[
+																								A2($elm$html$Html$Attributes$style, 'font-size', '9px'),
+																								A2($elm$html$Html$Attributes$style, 'opacity', '0.9'),
+																								A2($elm$html$Html$Attributes$style, 'margin-top', '0px')
+																							]),
+																						_List_fromArray(
+																							[
+																								$elm$html$Html$text(
+																								'護' + $elm$core$String$fromInt(n))
+																							]));
+																				} else {
+																					return A2($elm$html$Html$span, _List_Nil, _List_Nil);
+																				}
+																			}(),
+																				isShielded ? A2(
+																				$elm$html$Html$span,
+																				_List_fromArray(
+																					[
+																						A2($elm$html$Html$Attributes$style, 'font-size', '9px'),
+																						A2($elm$html$Html$Attributes$style, 'opacity', '0.95'),
+																						A2($elm$html$Html$Attributes$style, 'margin-top', '0px'),
+																						A2($elm$html$Html$Attributes$style, 'color', '#2e7d32')
+																					]),
+																				_List_fromArray(
+																					[
+																						$elm$html$Html$text('盾')
+																					])) : A2($elm$html$Html$span, _List_Nil, _List_Nil),
+																				function () {
+																				if (isPreview) {
+																					if (itemPreviewLabel.$ === 'Just') {
+																						var label = itemPreviewLabel.a;
+																						return A2(
+																							$elm$html$Html$span,
+																							_List_fromArray(
+																								[
+																									A2($elm$html$Html$Attributes$style, 'font-size', '10px'),
+																									A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
+																									A2($elm$html$Html$Attributes$style, 'margin-top', '1px'),
+																									A2($elm$html$Html$Attributes$style, 'color', '#5d4037')
+																								]),
+																							_List_fromArray(
+																								[
+																									$elm$html$Html$text(label)
+																								]));
+																					} else {
+																						return A2($elm$html$Html$span, _List_Nil, _List_Nil);
+																					}
+																				} else {
+																					return A2($elm$html$Html$span, _List_Nil, _List_Nil);
+																				}
+																			}(),
+																				function () {
+																				if (isPendingApply) {
+																					if (pendingLabel.$ === 'Just') {
+																						var label = pendingLabel.a;
+																						return A2(
+																							$elm$html$Html$span,
+																							_List_fromArray(
+																								[
+																									A2($elm$html$Html$Attributes$style, 'font-size', '14px'),
+																									A2($elm$html$Html$Attributes$style, 'font-weight', 'bold'),
+																									A2($elm$html$Html$Attributes$style, 'margin-top', '2px'),
+																									A2($elm$html$Html$Attributes$style, 'color', '#bf360c')
+																								]),
+																							_List_fromArray(
+																								[
+																									$elm$html$Html$text(label)
+																								]));
+																					} else {
+																						return A2($elm$html$Html$span, _List_Nil, _List_Nil);
+																					}
+																				} else {
+																					return A2($elm$html$Html$span, _List_Nil, _List_Nil);
+																				}
+																			}()
+																			]));
+																},
+																A2($elm$core$List$range, 0, $author$project$Board$boardSize - 1));
+														},
+														A2($elm$core$List$range, 0, $author$project$Board$boardSize - 1)))
+												]));
+									};
+								};
+							};
+						};
+					};
+				};
+			};
+		};
+	};
+};
 var $author$project$Main$boardWithKey = function (model) {
 	return A3(
 		$elm$html$Html$Keyed$node,
@@ -7634,16 +8126,75 @@ var $author$project$Main$boardWithKey = function (model) {
 			[
 				_Utils_Tuple2(
 				$author$project$Main$boardKey(model),
-				A5(
-					$author$project$Ui$BoardView$view,
-					model.gameState.board,
-					model.selectedPiece,
-					model.legalMoves,
-					$author$project$Main$previewForItem(model),
-					$author$project$Main$CellClicked))
+				$author$project$Ui$BoardView$view(model.gameState.board)(model.selectedPiece)(model.legalMoves)(
+					$author$project$Main$previewForItem(model))(
+					$author$project$Main$protectedWithTurns(model))(
+					$author$project$Main$getShielded(model))(
+					$author$project$Main$itemPreviewLabel(model))(
+					$author$project$Main$pendingApplyCell(model))(
+					!_Utils_eq(model.itemMode, $elm$core$Maybe$Nothing))($author$project$Main$CellClicked))
 			]));
 };
 var $elm$html$Html$button = _VirtualDom_node('button');
+var $author$project$Main$itemModeHint = function (maybeItem) {
+	if (maybeItem.$ === 'Nothing') {
+		return $elm$html$Html$text('');
+	} else {
+		switch (maybeItem.a.$) {
+			case 'Bomb':
+				var _v1 = maybeItem.a;
+				return A2(
+					$elm$html$Html$div,
+					_List_fromArray(
+						[
+							A2($elm$html$Html$Attributes$style, 'margin', '4px 8px'),
+							A2($elm$html$Html$Attributes$style, 'padding', '6px 10px'),
+							A2($elm$html$Html$Attributes$style, 'background', '#fff3e0'),
+							A2($elm$html$Html$Attributes$style, 'border', '1px solid #ff9800'),
+							A2($elm$html$Html$Attributes$style, 'border-radius', '4px'),
+							A2($elm$html$Html$Attributes$style, 'color', '#e65100')
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text('【使用中】炸彈 — 點選敵方棋子或主堡作為中心')
+						]));
+			case 'Laser':
+				var _v2 = maybeItem.a;
+				return A2(
+					$elm$html$Html$div,
+					_List_fromArray(
+						[
+							A2($elm$html$Html$Attributes$style, 'margin', '4px 8px'),
+							A2($elm$html$Html$Attributes$style, 'padding', '6px 10px'),
+							A2($elm$html$Html$Attributes$style, 'background', '#e3f2fd'),
+							A2($elm$html$Html$Attributes$style, 'border', '1px solid #2196f3'),
+							A2($elm$html$Html$Attributes$style, 'border-radius', '4px'),
+							A2($elm$html$Html$Attributes$style, 'color', '#1565c0')
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text('【使用中】雷射 — 點選一格後選擇「破壞此行」或「破壞此列」')
+						]));
+			default:
+				var _v3 = maybeItem.a;
+				return A2(
+					$elm$html$Html$div,
+					_List_fromArray(
+						[
+							A2($elm$html$Html$Attributes$style, 'margin', '4px 8px'),
+							A2($elm$html$Html$Attributes$style, 'padding', '6px 10px'),
+							A2($elm$html$Html$Attributes$style, 'background', '#e8f5e9'),
+							A2($elm$html$Html$Attributes$style, 'border', '1px solid #4caf50'),
+							A2($elm$html$Html$Attributes$style, 'border-radius', '4px'),
+							A2($elm$html$Html$Attributes$style, 'color', '#2e7d32')
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text('【使用中】護盾 — 點選己方棋子或主堡加上保護')
+						]));
+		}
+	}
+};
 var $elm$html$Html$h2 = _VirtualDom_node('h2');
 var $author$project$Ui$Result$view = function (result) {
 	return function (reason) {
@@ -8003,6 +8554,7 @@ var $author$project$Main$view = function (model) {
 				model.itemMode,
 				$author$project$Main$UseItem,
 				$author$project$Main$CancelItem),
+				$author$project$Main$itemModeHint(model.itemMode),
 				$author$project$Main$aiLogPanel(model.aiActionLog),
 				function () {
 				var _v1 = model.errorMessage;

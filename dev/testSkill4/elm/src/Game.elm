@@ -99,6 +99,44 @@ shieldedPositions state =
     state.shieldedCells
 
 
+isPositionProtected : GameState -> Position -> Bool
+isPositionProtected state pos =
+    List.any (positionEquals pos) (protectedPositions state)
+
+
+isPositionShielded : GameState -> Position -> Bool
+isPositionShielded state pos =
+    List.any (positionEquals pos) state.shieldedCells
+
+
+removeShieldAt : Position -> List Position -> List Position
+removeShieldAt pos list =
+    List.filter (positionEquals pos >> not) list
+
+
+attackBlockedByProtection : GameState -> GameState
+attackBlockedByProtection state =
+    { state | currentSide = oppositeSide state.currentSide }
+
+
+attackBlockedByShield : GameState -> Position -> GameState
+attackBlockedByShield state pos =
+    { state
+        | shieldedCells = removeShieldAt pos state.shieldedCells
+        , currentSide = oppositeSide state.currentSide
+    }
+
+
+oppositeSide : Side -> Side
+oppositeSide side =
+    case side of
+        Player ->
+            AI
+
+        AI ->
+            Player
+
+
 checkVictory : GameState -> GameResult
 checkVictory state =
     if state.aiCastleHp <= 0 then
@@ -135,10 +173,20 @@ applyPlayerMove state from to =
                 Ok (placePlayerPiece state to [])
 
             Board.Piece AI ->
-                Ok (captureByPlayer state to)
+                if isPositionProtected state to then
+                    Ok (attackBlockedByProtection state)
+                else if isPositionShielded state to then
+                    Ok (attackBlockedByShield state to)
+                else
+                    Ok (captureByPlayer state to)
 
             Board.Castle AI ->
-                Ok (attackCastleByPlayer state to)
+                if isPositionProtected state to then
+                    Ok (attackBlockedByProtection state)
+                else if isPositionShielded state to then
+                    Ok (attackBlockedByShield state to)
+                else
+                    Ok (attackCastleByPlayer state to)
 
             _ ->
                 Err "非法落點"
@@ -207,10 +255,24 @@ applyAIMove state from to =
                 Ok (placeAIPiece state to)
 
             Board.Piece Board.Player ->
-                Ok (captureByAI state to)
+                if isPositionProtected state to then
+                    let s = attackBlockedByProtection state
+                    in Ok (decrementProtection { s | turn = state.turn + 1 })
+                else if isPositionShielded state to then
+                    let s = attackBlockedByShield state to
+                    in Ok (decrementProtection { s | turn = state.turn + 1 })
+                else
+                    Ok (captureByAI state to)
 
             Board.Castle Board.Player ->
-                Ok (attackCastleByAI state to)
+                if isPositionProtected state to then
+                    let s = attackBlockedByProtection state
+                    in Ok (decrementProtection { s | turn = state.turn + 1 })
+                else if isPositionShielded state to then
+                    let s = attackBlockedByShield state to
+                    in Ok (decrementProtection { s | turn = state.turn + 1 })
+                else
+                    Ok (attackCastleByAI state to)
 
             _ ->
                 Err "非法落點"

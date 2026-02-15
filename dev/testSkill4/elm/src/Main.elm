@@ -29,7 +29,15 @@ type alias Model =
     , errorMessage : Maybe String
     , testErrors : List String
     , aiActionLog : List String
+    , itemPendingApply : Maybe PendingItem
+    , aiItemPendingApply : Maybe PendingItem
     }
+
+
+type PendingItem
+    = BombAt Position
+    | ShieldAt Position
+    | LaserAt Bool Int Position
 
 
 type Msg
@@ -42,6 +50,8 @@ type Msg
     | MainMenu
     | RunTests
     | RunAITurn
+    | ApplyPendingItem
+    | ApplyAIPendingItem
 
 
 initialModel : Model
@@ -55,6 +65,8 @@ initialModel =
     , errorMessage = Nothing
     , testErrors = []
     , aiActionLog = []
+    , itemPendingApply = Nothing
+    , aiItemPendingApply = Nothing
     }
 
 maxLogLines : Int
@@ -87,7 +99,7 @@ update msg model =
             ( { model | testErrors = Debug.GameTests.runTests }, Cmd.none )
 
         RunAITurn ->
-            if model.gameState.currentSide == AI then
+            if model.gameState.currentSide == AI && model.aiItemPendingApply == Nothing then
                 let
                     m1 = addLog "[RunAITurn] currentSide=AI → 開始執行" model
                     ( newModel, cmd ) = runAIStep m1
@@ -95,6 +107,65 @@ update msg model =
                 ( newModel, cmd )
             else
                 ( addLog ("[RunAITurn] 收到時 currentSide=" ++ sideLabel model.gameState.currentSide ++ " → 跳過不執行") model, Cmd.none )
+
+        ApplyPendingItem ->
+            case model.itemPendingApply of
+                Just (BombAt pos) ->
+                    case applyBomb model.gameState Player pos of
+                        Ok s ->
+                            ( { model | gameState = recordPlayerBomb s, itemMode = Nothing, previewCells = [], itemPendingApply = Nothing, errorMessage = Nothing }, Cmd.none )
+                        Err e ->
+                            ( { model | itemPendingApply = Nothing, errorMessage = Just e }, Cmd.none )
+                Just (ShieldAt pos) ->
+                    case applyShield model.gameState Player pos of
+                        Ok s ->
+                            ( { model | gameState = recordPlayerShield s, itemMode = Nothing, previewCells = [], itemPendingApply = Nothing, errorMessage = Nothing }, Cmd.none )
+                        Err e ->
+                            ( { model | itemPendingApply = Nothing, errorMessage = Just e }, Cmd.none )
+                Just (LaserAt isRow index pos) ->
+                    case applyLaser model.gameState Player isRow index of
+                        Ok s ->
+                            ( { model | gameState = recordPlayerLaser s, itemMode = Nothing, laserPending = Nothing, previewCells = [], itemPendingApply = Nothing, errorMessage = Nothing }, Cmd.none )
+                        Err e ->
+                            ( { model | itemPendingApply = Nothing, laserPending = Nothing, errorMessage = Just e }, Cmd.none )
+                Nothing ->
+                    ( model, Cmd.none )
+
+        ApplyAIPendingItem ->
+            case model.aiItemPendingApply of
+                Just (BombAt pos) ->
+                    case applyBomb model.gameState AI pos of
+                        Ok s ->
+                            let
+                                next = decrementProtection { s | currentSide = Player, turn = s.turn + 1, aiBombUse = s.aiBombUse + 1 }
+                                m = addLog ("[回合 " ++ String.fromInt model.gameState.turn ++ "] AI 使用 炸彈 於 " ++ posStr pos ++ " → Ok") model
+                            in
+                            ( { m | gameState = next, aiItemPendingApply = Nothing }, Cmd.none )
+                        Err e ->
+                            ( addLog ("[回合 " ++ String.fromInt model.gameState.turn ++ "] AI 使用 炸彈 → Err: " ++ e) { model | aiItemPendingApply = Nothing }, Cmd.none )
+                Just (ShieldAt pos) ->
+                    case applyShield model.gameState AI pos of
+                        Ok s ->
+                            let
+                                next = decrementProtection { s | currentSide = Player, turn = s.turn + 1, aiShieldUse = s.aiShieldUse + 1 }
+                                m = addLog ("[回合 " ++ String.fromInt model.gameState.turn ++ "] AI 使用 護盾 於 " ++ posStr pos ++ " → Ok") model
+                            in
+                            ( { m | gameState = next, aiItemPendingApply = Nothing }, Cmd.none )
+                        Err e ->
+                            ( addLog ("[回合 " ++ String.fromInt model.gameState.turn ++ "] AI 使用 護盾 → Err: " ++ e) { model | aiItemPendingApply = Nothing }, Cmd.none )
+                Just (LaserAt isRow index displayPos) ->
+                    case applyLaser model.gameState AI isRow index of
+                        Ok s ->
+                            let
+                                next = decrementProtection { s | currentSide = Player, turn = s.turn + 1, aiLaserUse = s.aiLaserUse + 1 }
+                                axis = if isRow then "行" else "列"
+                                m = addLog ("[回合 " ++ String.fromInt model.gameState.turn ++ "] AI 使用 雷射 " ++ axis ++ " " ++ String.fromInt index ++ " → Ok") model
+                            in
+                            ( { m | gameState = next, aiItemPendingApply = Nothing }, Cmd.none )
+                        Err e ->
+                            ( addLog ("[回合 " ++ String.fromInt model.gameState.turn ++ "] AI 使用 雷射 → Err: " ++ e) { model | aiItemPendingApply = Nothing }, Cmd.none )
+                Nothing ->
+                    ( model, Cmd.none )
 
         _ ->
             case checkVictory model.gameState of
@@ -122,6 +193,12 @@ updateOngoing msg model =
         RunAITurn ->
             ( model, Cmd.none )
 
+        ApplyPendingItem ->
+            ( model, Cmd.none )
+
+        ApplyAIPendingItem ->
+            ( model, Cmd.none )
+
         Restart ->
             ( { initialModel | gameState = init }, Cmd.none )
 
@@ -138,12 +215,12 @@ updateOngoing msg model =
             case model.laserPending of
                 Just pos ->
                     case applyLaser model.gameState Player True pos.row of
-                        Ok s ->
-                            ( { model | gameState = recordPlayerLaser s, itemMode = Nothing, laserPending = Nothing, previewCells = [], errorMessage = Nothing }, Cmd.none )
-
+                        Ok _ ->
+                            ( { model | itemPendingApply = Just (LaserAt True pos.row pos), laserPending = Nothing, previewCells = [], errorMessage = Nothing }
+                            , Task.perform (\_ -> ApplyPendingItem) (Process.sleep 350)
+                            )
                         Err e ->
                             ( { model | errorMessage = Just e }, Cmd.none )
-
                 Nothing ->
                     ( model, Cmd.none )
 
@@ -151,16 +228,19 @@ updateOngoing msg model =
             case model.laserPending of
                 Just pos ->
                     case applyLaser model.gameState Player False pos.col of
-                        Ok s ->
-                            ( { model | gameState = recordPlayerLaser s, itemMode = Nothing, laserPending = Nothing, previewCells = [], errorMessage = Nothing }, Cmd.none )
-
+                        Ok _ ->
+                            ( { model | itemPendingApply = Just (LaserAt False pos.col pos), laserPending = Nothing, previewCells = [], errorMessage = Nothing }
+                            , Task.perform (\_ -> ApplyPendingItem) (Process.sleep 350)
+                            )
                         Err e ->
                             ( { model | errorMessage = Just e }, Cmd.none )
-
                 Nothing ->
                     ( model, Cmd.none )
 
         CellClicked pos ->
+            if model.itemPendingApply /= Nothing || model.aiItemPendingApply /= Nothing then
+                ( model, Cmd.none )
+            else
             let
                 _ = Debug.log "[CellClicked] pos" ( pos.row, pos.col )
                 _ = Debug.log "[CellClicked] currentSide" model.gameState.currentSide
@@ -170,17 +250,19 @@ updateOngoing msg model =
             case model.itemMode of
                 Just Bomb ->
                     case applyBomb model.gameState Player pos of
-                        Ok s ->
-                            ( { model | gameState = recordPlayerBomb s, itemMode = Nothing, previewCells = [], errorMessage = Nothing }, Cmd.none )
-
+                        Ok _ ->
+                            ( { model | itemPendingApply = Just (BombAt pos), previewCells = [], errorMessage = Nothing }
+                            , Task.perform (\_ -> ApplyPendingItem) (Process.sleep 350)
+                            )
                         Err e ->
                             ( { model | errorMessage = Just e }, Cmd.none )
 
                 Just Shield ->
                     case applyShield model.gameState Player pos of
-                        Ok s ->
-                            ( { model | gameState = recordPlayerShield s, itemMode = Nothing, previewCells = [], errorMessage = Nothing }, Cmd.none )
-
+                        Ok _ ->
+                            ( { model | itemPendingApply = Just (ShieldAt pos), previewCells = [], errorMessage = Nothing }
+                            , Task.perform (\_ -> ApplyPendingItem) (Process.sleep 350)
+                            )
                         Err e ->
                             ( { model | errorMessage = Just e }, Cmd.none )
 
@@ -310,53 +392,34 @@ runAIStep model =
                             ( addLog (actionLine ++ " → Err: " ++ e) model, Cmd.none )
 
                 UseBomb center ->
-                    let
-                        turnN = model.gameState.turn
-                        actionLine = "[回合 " ++ String.fromInt turnN ++ "] AI 使用 炸彈 於 " ++ posStr center
-                    in
                     case applyBomb model.gameState AI center of
-                        Ok s ->
-                            let
-                                next = decrementProtection { s | currentSide = Player, turn = s.turn + 1, aiBombUse = s.aiBombUse + 1 }
-                                m = addLog (actionLine ++ " → Ok | currentSide=" ++ sideLabel next.currentSide ++ " turn=" ++ String.fromInt next.turn) model
-                            in
-                            ( { m | gameState = next }, Cmd.none )
-
+                        Ok _ ->
+                            ( addLog ("[回合 " ++ String.fromInt model.gameState.turn ++ "] AI 使用 炸彈 於 " ++ posStr center ++ "（顯示後套用）") { model | aiItemPendingApply = Just (BombAt center) }
+                            , Task.perform (\_ -> ApplyAIPendingItem) (Process.sleep 350)
+                            )
                         Err e ->
-                            ( addLog (actionLine ++ " → Err: " ++ e) model, Cmd.none )
+                            ( addLog ("[回合 " ++ String.fromInt model.gameState.turn ++ "] AI 使用 炸彈 → Err: " ++ e) model, Cmd.none )
 
                 UseLaser isRow index ->
                     let
-                        turnN = model.gameState.turn
-                        axis = if isRow then "行" else "列"
-                        actionLine = "[回合 " ++ String.fromInt turnN ++ "] AI 使用 雷射 " ++ axis ++ " " ++ String.fromInt index
+                        displayPos = if isRow then { row = index, col = 0 } else { row = 0, col = index }
                     in
                     case applyLaser model.gameState AI isRow index of
-                        Ok s ->
-                            let
-                                next = decrementProtection { s | currentSide = Player, turn = s.turn + 1, aiLaserUse = s.aiLaserUse + 1 }
-                                m = addLog (actionLine ++ " → Ok | currentSide=" ++ sideLabel next.currentSide ++ " turn=" ++ String.fromInt next.turn) model
-                            in
-                            ( { m | gameState = next }, Cmd.none )
-
+                        Ok _ ->
+                            ( addLog ("[回合 " ++ String.fromInt model.gameState.turn ++ "] AI 使用 雷射（顯示後套用）") { model | aiItemPendingApply = Just (LaserAt isRow index displayPos) }
+                            , Task.perform (\_ -> ApplyAIPendingItem) (Process.sleep 350)
+                            )
                         Err e ->
-                            ( addLog (actionLine ++ " → Err: " ++ e) model, Cmd.none )
+                            ( addLog ("[回合 " ++ String.fromInt model.gameState.turn ++ "] AI 使用 雷射 → Err: " ++ e) model, Cmd.none )
 
                 UseShield pos ->
-                    let
-                        turnN = model.gameState.turn
-                        actionLine = "[回合 " ++ String.fromInt turnN ++ "] AI 使用 護盾 於 " ++ posStr pos
-                    in
                     case applyShield model.gameState AI pos of
-                        Ok s ->
-                            let
-                                next = decrementProtection { s | currentSide = Player, turn = s.turn + 1, aiShieldUse = s.aiShieldUse + 1 }
-                                m = addLog (actionLine ++ " → Ok | currentSide=" ++ sideLabel next.currentSide ++ " turn=" ++ String.fromInt next.turn) model
-                            in
-                            ( { m | gameState = next }, Cmd.none )
-
+                        Ok _ ->
+                            ( addLog ("[回合 " ++ String.fromInt model.gameState.turn ++ "] AI 使用 護盾 於 " ++ posStr pos ++ "（顯示後套用）") { model | aiItemPendingApply = Just (ShieldAt pos) }
+                            , Task.perform (\_ -> ApplyAIPendingItem) (Process.sleep 350)
+                            )
                         Err e ->
-                            ( addLog (actionLine ++ " → Err: " ++ e) model, Cmd.none )
+                            ( addLog ("[回合 " ++ String.fromInt model.gameState.turn ++ "] AI 使用 護盾 → Err: " ++ e) model, Cmd.none )
 
         _ ->
             ( model, Cmd.none )
@@ -392,12 +455,19 @@ boardKey model =
            )
 
 
+protectedWithTurns : Model -> List ( Position, Int )
+protectedWithTurns model =
+    model.gameState.protectedCells
+        |> List.filter (\c -> c.remainingTurns > 0)
+        |> List.map (\c -> ( c.position, c.remainingTurns ))
+
+
 boardWithKey : Model -> Html Msg
 boardWithKey model =
     Html.Keyed.node "div"
         []
         [ ( boardKey model
-          , BoardView.view model.gameState.board model.selectedPiece model.legalMoves (previewForItem model) CellClicked
+          , BoardView.view model.gameState.board model.selectedPiece model.legalMoves (previewForItem model) (protectedWithTurns model) (getShielded model) (itemPreviewLabel model) (pendingApplyCell model) (model.itemMode /= Nothing) CellClicked
           )
         ]
 
@@ -413,6 +483,86 @@ previewForItem model =
 
         _ ->
             []
+
+
+itemPreviewLabel : Model -> Maybe String
+itemPreviewLabel model =
+    case model.itemMode of
+        Just Bomb ->
+            Just "炸"
+
+        Just Laser ->
+            Just "雷"
+
+        Just Shield ->
+            Just "盾"
+
+        Nothing ->
+            Nothing
+
+
+pendingApplyCell : Model -> Maybe ( Position, String )
+pendingApplyCell model =
+    case model.itemPendingApply of
+        Just x ->
+            pendingCellFrom x
+        Nothing ->
+            case model.aiItemPendingApply of
+                Just x ->
+                    pendingCellFrom x
+                Nothing ->
+                    Nothing
+
+
+pendingCellFrom : PendingItem -> Maybe ( Position, String )
+pendingCellFrom pending =
+    case pending of
+        BombAt p ->
+            Just ( p, "炸" )
+        ShieldAt p ->
+            Just ( p, "盾" )
+        LaserAt _ _ p ->
+            Just ( p, "雷" )
+
+
+itemModeHint : Maybe Item -> Html msg
+itemModeHint maybeItem =
+    case maybeItem of
+        Nothing ->
+            Html.text ""
+
+        Just Bomb ->
+            div
+                [ Html.Attributes.style "margin" "4px 8px"
+                , Html.Attributes.style "padding" "6px 10px"
+                , Html.Attributes.style "background" "#fff3e0"
+                , Html.Attributes.style "border" "1px solid #ff9800"
+                , Html.Attributes.style "border-radius" "4px"
+                , Html.Attributes.style "color" "#e65100"
+                ]
+                [ Html.text "【使用中】炸彈 — 點選敵方棋子或主堡作為中心" ]
+
+        Just Laser ->
+            div
+                [ Html.Attributes.style "margin" "4px 8px"
+                , Html.Attributes.style "padding" "6px 10px"
+                , Html.Attributes.style "background" "#e3f2fd"
+                , Html.Attributes.style "border" "1px solid #2196f3"
+                , Html.Attributes.style "border-radius" "4px"
+                , Html.Attributes.style "color" "#1565c0"
+                ]
+                [ Html.text "【使用中】雷射 — 點選一格後選擇「破壞此行」或「破壞此列」" ]
+
+        Just Shield ->
+            div
+                [ Html.Attributes.style "margin" "4px 8px"
+                , Html.Attributes.style "padding" "6px 10px"
+                , Html.Attributes.style "background" "#e8f5e9"
+                , Html.Attributes.style "border" "1px solid #4caf50"
+                , Html.Attributes.style "border-radius" "4px"
+                , Html.Attributes.style "color" "#2e7d32"
+                ]
+                [ Html.text "【使用中】護盾 — 點選己方棋子或主堡加上保護" ]
 
 
 aiLogPanel : List String -> Html msg
@@ -465,6 +615,7 @@ view model =
             model.itemMode
             UseItem
             CancelItem
+        , itemModeHint model.itemMode
         , aiLogPanel model.aiActionLog
         , case model.errorMessage of
             Just e ->

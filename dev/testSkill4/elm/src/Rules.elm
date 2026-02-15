@@ -64,16 +64,10 @@ horseLegalMoves state from protectedPositions shieldedPositions =
                                     Nothing
 
                                 Piece AI ->
-                                    if isPositionProtectedOrShielded to protectedPositions shieldedPositions then
-                                        Nothing
-                                    else
-                                        Just to
+                                    Just to
 
                                 Castle AI ->
-                                    if isPositionProtectedOrShielded to protectedPositions shieldedPositions then
-                                        Nothing
-                                    else
-                                        Just to
+                                    Just to
 
                                 Empty ->
                                     Just to
@@ -161,16 +155,10 @@ scanCannonCapture state from dr dc protectedPositions shieldedPositions =
                 else
                     case cellAt state to of
                         Piece Player ->
-                            if isPositionProtectedOrShielded to protectedPositions shieldedPositions then
-                                Nothing
-                            else
-                                Just to
+                            Just to
 
                         Castle Player ->
-                            if isPositionProtectedOrShielded to protectedPositions shieldedPositions then
-                                Nothing
-                            else
-                                Just to
+                            Just to
 
                         _ ->
                             Nothing
