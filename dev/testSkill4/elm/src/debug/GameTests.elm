@@ -1,13 +1,13 @@
 module Debug.GameTests exposing (runTests)
 
-import Board exposing (CellContent(..), Position, cellAt, positionEquals)
-import Game exposing (GameState, applyPlayerMove, init, protectedPositions, shieldedPositions)
+import Board exposing (CellContent(..), Position, aiCastlePos, cellAt, playerCastlePos, positionEquals)
+import Game exposing (GameState, applyAIMove, applyPlayerMove, init, protectedPositions, shieldedPositions)
 import Rules exposing (horseLegalMoves)
 
 
 runTests : List String
 runTests =
-    horseMoveStateTests
+    horseMoveStateTests ++ castleAttackHpTests
 
 
 {-| 馬點擊移動後狀態與畫面顯示驗證：
@@ -92,6 +92,132 @@ horseMoveStateTests =
                            )
                         ++ (if cellAt state1.board to21 /= Piece Board.Player then
                                 [ "測試失敗: 放置後 cellAt (2,1) 應為 Piece Player，畫面才會顯示馬" ]
+                            else
+                                []
+                           )
+           )
+
+
+{-| 雙方主堡被攻擊時僅扣 HP（扣 3），不佔領、不吃子；驗證攻擊前後 HP 與棋盤不變。
+-}
+castleAttackHpTests : List String
+castleAttackHpTests =
+    playerAttacksAiCastleTests ++ aiAttacksPlayerCastleTests
+
+
+{-| 玩家攻擊 AI 主堡：攻擊前 aiCastleHp=20，攻擊後 aiCastleHp=17，棋盤不變、主堡仍在 (9,9)。
+-}
+playerAttacksAiCastleTests : List String
+playerAttacksAiCastleTests =
+    let
+        from78 : Position
+        from78 =
+            { row = 7, col = 8 }
+
+        castlePos : Position
+        castlePos =
+            aiCastlePos
+
+        baseBoard = init.board
+        stateBefore : GameState
+        stateBefore =
+            { init
+                | board = { baseBoard | playerPieces = [ from78 ], aiPieces = [] }
+            }
+
+        hpBefore = stateBefore.aiCastleHp
+        moveResult = applyPlayerMove stateBefore from78 castlePos
+    in
+    (if hpBefore /= 20 then
+        [ "測試失敗(玩家攻AI堡): 攻擊前 aiCastleHp 應為 20，實際 " ++ String.fromInt hpBefore ]
+     else
+        []
+    )
+        ++ (case moveResult of
+                Err e ->
+                    [ "測試失敗(玩家攻AI堡): applyPlayerMove 應成功，錯誤: " ++ e ]
+
+                Ok stateAfter ->
+                    []
+                        ++ (if stateAfter.aiCastleHp /= 17 then
+                                [ "測試失敗(玩家攻AI堡): 攻擊後 aiCastleHp 應為 17，實際 " ++ String.fromInt stateAfter.aiCastleHp ]
+                            else
+                                []
+                           )
+                        ++ (if stateAfter.board.playerPieces /= [ from78 ] then
+                                [ "測試失敗(玩家攻AI堡): 攻擊後 playerPieces 應不變(不佔領)" ]
+                            else
+                                []
+                           )
+                        ++ (if stateAfter.board.aiPieces /= [] then
+                                [ "測試失敗(玩家攻AI堡): 攻擊後 aiPieces 應不變" ]
+                            else
+                                []
+                           )
+                        ++ (if cellAt stateAfter.board castlePos /= Castle Board.AI then
+                                [ "測試失敗(玩家攻AI堡): 攻擊後 (9,9) 應仍為 Castle AI" ]
+                            else
+                                []
+                           )
+           )
+
+
+{-| AI 攻擊玩家主堡：攻擊前 playerCastleHp=20，攻擊後 playerCastleHp=17，棋盤不變、主堡仍在 (0,0)。
+-}
+aiAttacksPlayerCastleTests : List String
+aiAttacksPlayerCastleTests =
+    let
+        from30 : Position
+        from30 =
+            { row = 3, col = 0 }
+
+        screen10 : Position
+        screen10 =
+            { row = 1, col = 0 }
+
+        castlePos : Position
+        castlePos =
+            playerCastlePos
+
+        baseBoard2 = init.board
+        stateBefore : GameState
+        stateBefore =
+            { init
+                | currentSide = Board.AI
+                , board = { baseBoard2 | playerPieces = [], aiPieces = [ from30, screen10 ] }
+            }
+
+        hpBefore = stateBefore.playerCastleHp
+        moveResult = applyAIMove stateBefore from30 castlePos
+    in
+    (if hpBefore /= 20 then
+        [ "測試失敗(AI攻玩家堡): 攻擊前 playerCastleHp 應為 20，實際 " ++ String.fromInt hpBefore ]
+     else
+        []
+    )
+        ++ (case moveResult of
+                Err e ->
+                    [ "測試失敗(AI攻玩家堡): applyAIMove 應成功，錯誤: " ++ e ]
+
+                Ok stateAfter ->
+                    []
+                        ++ (if stateAfter.playerCastleHp /= 17 then
+                                [ "測試失敗(AI攻玩家堡): 攻擊後 playerCastleHp 應為 17，實際 " ++ String.fromInt stateAfter.playerCastleHp ]
+                            else
+                                []
+                           )
+                        ++ (if stateAfter.board.playerPieces /= [] then
+                                [ "測試失敗(AI攻玩家堡): 攻擊後 playerPieces 應不變(不佔領)" ]
+                            else
+                                []
+                           )
+                        ++ (if stateAfter.board.aiPieces /= [ from30, screen10 ] then
+                                [ "測試失敗(AI攻玩家堡): 攻擊後 aiPieces 應不變" ]
+                            else
+                                []
+                           )
+                        ++ (if cellAt stateAfter.board castlePos /= Castle Board.Player then
+                                [ "測試失敗(AI攻玩家堡): 攻擊後 (0,0) 應仍為 Castle Player" ]
                             else
                                 []
                            )

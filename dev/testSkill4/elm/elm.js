@@ -5875,27 +5875,11 @@ var $author$project$Game$attackBlockedByShield = F2(
 			});
 	});
 var $author$project$Game$attackCastleByAI = F2(
-	function (state, to) {
-		var b = state.board;
-		var newBoard = _Utils_update(
-			b,
-			{
-				aiPieces: _Utils_ap(
-					b.aiPieces,
-					_List_fromArray(
-						[to]))
-			});
-		var afterMove = _Utils_update(
-			state,
-			{
-				aiScore: state.aiScore + 1,
-				board: newBoard,
-				currentSide: $author$project$Board$Player,
-				playerCastleHp: state.playerCastleHp - 3,
-				protectedCells: $author$project$Game$decrementProtectionList(state.protectedCells),
-				turn: state.turn + 1
-			});
-		return afterMove;
+	function (state, _v0) {
+		return $author$project$Game$decrementProtection(
+			_Utils_update(
+				state,
+				{aiScore: state.aiScore + 1, currentSide: $author$project$Board$Player, playerCastleHp: state.playerCastleHp - 3, turn: state.turn + 1}));
 	});
 var $elm$core$Basics$negate = function (n) {
 	return -n;
@@ -6146,68 +6130,91 @@ var $author$project$Game$applyAIMove = F3(
 			legal)) {
 			return $elm$core$Result$Err('非法落點');
 		} else {
-			var _v0 = A2($author$project$Board$cellAt, state.board, to);
-			_v0$3:
-			while (true) {
-				switch (_v0.$) {
-					case 'Empty':
+			if (A2($author$project$Board$positionEquals, to, $author$project$Board$playerCastlePos)) {
+				if (A2($author$project$Game$isPositionProtected, state, to)) {
+					var s = $author$project$Game$attackBlockedByProtection(state);
+					return $elm$core$Result$Ok(
+						$author$project$Game$decrementProtection(
+							_Utils_update(
+								s,
+								{turn: state.turn + 1})));
+				} else {
+					if (A2($author$project$Game$isPositionShielded, state, to)) {
+						var s = A2($author$project$Game$attackBlockedByShield, state, to);
 						return $elm$core$Result$Ok(
-							A2($author$project$Game$placeAIPiece, state, to));
-					case 'Piece':
-						if (_v0.a.$ === 'Player') {
-							var _v1 = _v0.a;
-							if (A2($author$project$Game$isPositionProtected, state, to)) {
-								var s = $author$project$Game$attackBlockedByProtection(state);
-								return $elm$core$Result$Ok(
-									$author$project$Game$decrementProtection(
-										_Utils_update(
-											s,
-											{turn: state.turn + 1})));
-							} else {
-								if (A2($author$project$Game$isPositionShielded, state, to)) {
-									var s = A2($author$project$Game$attackBlockedByShield, state, to);
-									return $elm$core$Result$Ok(
-										$author$project$Game$decrementProtection(
-											_Utils_update(
-												s,
-												{turn: state.turn + 1})));
-								} else {
-									return $elm$core$Result$Ok(
-										A2($author$project$Game$captureByAI, state, to));
-								}
-							}
-						} else {
-							break _v0$3;
-						}
-					default:
-						if (_v0.a.$ === 'Player') {
-							var _v2 = _v0.a;
-							if (A2($author$project$Game$isPositionProtected, state, to)) {
-								var s = $author$project$Game$attackBlockedByProtection(state);
-								return $elm$core$Result$Ok(
-									$author$project$Game$decrementProtection(
-										_Utils_update(
-											s,
-											{turn: state.turn + 1})));
-							} else {
-								if (A2($author$project$Game$isPositionShielded, state, to)) {
-									var s = A2($author$project$Game$attackBlockedByShield, state, to);
-									return $elm$core$Result$Ok(
-										$author$project$Game$decrementProtection(
-											_Utils_update(
-												s,
-												{turn: state.turn + 1})));
-								} else {
-									return $elm$core$Result$Ok(
-										A2($author$project$Game$attackCastleByAI, state, to));
-								}
-							}
-						} else {
-							break _v0$3;
-						}
+							$author$project$Game$decrementProtection(
+								_Utils_update(
+									s,
+									{turn: state.turn + 1})));
+					} else {
+						return $elm$core$Result$Ok(
+							A2($author$project$Game$attackCastleByAI, state, to));
+					}
 				}
+			} else {
+				var _v0 = A2($author$project$Board$cellAt, state.board, to);
+				_v0$3:
+				while (true) {
+					switch (_v0.$) {
+						case 'Empty':
+							return $elm$core$Result$Ok(
+								A2($author$project$Game$placeAIPiece, state, to));
+						case 'Piece':
+							if (_v0.a.$ === 'Player') {
+								var _v1 = _v0.a;
+								if (A2($author$project$Game$isPositionProtected, state, to)) {
+									var s = $author$project$Game$attackBlockedByProtection(state);
+									return $elm$core$Result$Ok(
+										$author$project$Game$decrementProtection(
+											_Utils_update(
+												s,
+												{turn: state.turn + 1})));
+								} else {
+									if (A2($author$project$Game$isPositionShielded, state, to)) {
+										var s = A2($author$project$Game$attackBlockedByShield, state, to);
+										return $elm$core$Result$Ok(
+											$author$project$Game$decrementProtection(
+												_Utils_update(
+													s,
+													{turn: state.turn + 1})));
+									} else {
+										return $elm$core$Result$Ok(
+											A2($author$project$Game$captureByAI, state, to));
+									}
+								}
+							} else {
+								break _v0$3;
+							}
+						default:
+							if (_v0.a.$ === 'Player') {
+								var _v2 = _v0.a;
+								if (A2($author$project$Game$isPositionProtected, state, to)) {
+									var s = $author$project$Game$attackBlockedByProtection(state);
+									return $elm$core$Result$Ok(
+										$author$project$Game$decrementProtection(
+											_Utils_update(
+												s,
+												{turn: state.turn + 1})));
+								} else {
+									if (A2($author$project$Game$isPositionShielded, state, to)) {
+										var s = A2($author$project$Game$attackBlockedByShield, state, to);
+										return $elm$core$Result$Ok(
+											$author$project$Game$decrementProtection(
+												_Utils_update(
+													s,
+													{turn: state.turn + 1})));
+									} else {
+										return $elm$core$Result$Ok(
+											A2($author$project$Game$attackCastleByAI, state, to));
+									}
+								}
+							} else {
+								break _v0$3;
+							}
+					}
+				}
+				return $elm$core$Result$Err('非法落點');
 			}
-			return $elm$core$Result$Err('非法落點');
 		}
 	});
 var $author$project$AI$PlacePiece = F2(
@@ -6931,20 +6938,66 @@ var $author$project$Main$runAIStep = function (model) {
 		return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 	}
 };
+var $elm$core$Basics$neq = _Utils_notEqual;
+var $author$project$Debug$GameTests$aiAttacksPlayerCastleTests = function () {
+	var screen10 = {col: 0, row: 1};
+	var from30 = {col: 0, row: 3};
+	var castlePos = $author$project$Board$playerCastlePos;
+	var baseBoard2 = $author$project$Game$init.board;
+	var stateBefore = _Utils_update(
+		$author$project$Game$init,
+		{
+			board: _Utils_update(
+				baseBoard2,
+				{
+					aiPieces: _List_fromArray(
+						[from30, screen10]),
+					playerPieces: _List_Nil
+				}),
+			currentSide: $author$project$Board$AI
+		});
+	var hpBefore = stateBefore.playerCastleHp;
+	var moveResult = A3($author$project$Game$applyAIMove, stateBefore, from30, castlePos);
+	return _Utils_ap(
+		(hpBefore !== 20) ? _List_fromArray(
+			[
+				'測試失敗(AI攻玩家堡): 攻擊前 playerCastleHp 應為 20，實際 ' + $elm$core$String$fromInt(hpBefore)
+			]) : _List_Nil,
+		function () {
+			if (moveResult.$ === 'Err') {
+				var e = moveResult.a;
+				return _List_fromArray(
+					['測試失敗(AI攻玩家堡): applyAIMove 應成功，錯誤: ' + e]);
+			} else {
+				var stateAfter = moveResult.a;
+				return _Utils_ap(
+					_List_Nil,
+					_Utils_ap(
+						(stateAfter.playerCastleHp !== 17) ? _List_fromArray(
+							[
+								'測試失敗(AI攻玩家堡): 攻擊後 playerCastleHp 應為 17，實際 ' + $elm$core$String$fromInt(stateAfter.playerCastleHp)
+							]) : _List_Nil,
+						_Utils_ap(
+							(!_Utils_eq(stateAfter.board.playerPieces, _List_Nil)) ? _List_fromArray(
+								['測試失敗(AI攻玩家堡): 攻擊後 playerPieces 應不變(不佔領)']) : _List_Nil,
+							_Utils_ap(
+								(!_Utils_eq(
+									stateAfter.board.aiPieces,
+									_List_fromArray(
+										[from30, screen10]))) ? _List_fromArray(
+									['測試失敗(AI攻玩家堡): 攻擊後 aiPieces 應不變']) : _List_Nil,
+								(!_Utils_eq(
+									A2($author$project$Board$cellAt, stateAfter.board, castlePos),
+									$author$project$Board$Castle($author$project$Board$Player))) ? _List_fromArray(
+									['測試失敗(AI攻玩家堡): 攻擊後 (0,0) 應仍為 Castle Player']) : _List_Nil))));
+			}
+		}());
+}();
 var $author$project$Game$attackCastleByPlayer = F2(
-	function (state, to) {
-		var b = state.board;
-		var newBoard = _Utils_update(
-			b,
-			{
-				playerPieces: _Utils_ap(
-					b.playerPieces,
-					_List_fromArray(
-						[to]))
-			});
+	function (state, _v0) {
 		return _Utils_update(
 			state,
-			{aiCastleHp: state.aiCastleHp - 3, board: newBoard, currentSide: $author$project$Board$AI, playerScore: state.playerScore + 1});
+			{aiCastleHp: state.aiCastleHp - 3, currentSide: $author$project$Board$AI, playerScore: state.playerScore + 1});
 	});
 var $author$project$Game$captureByPlayer = F2(
 	function (state, to) {
@@ -7005,39 +7058,98 @@ var $author$project$Game$applyPlayerMove = F3(
 			legal)) {
 			return $elm$core$Result$Err('非法落點');
 		} else {
-			var _v0 = A2($author$project$Board$cellAt, state.board, to);
-			_v0$3:
-			while (true) {
-				switch (_v0.$) {
-					case 'Empty':
-						return $elm$core$Result$Ok(
-							A3($author$project$Game$placePlayerPiece, state, to, _List_Nil));
-					case 'Piece':
-						if (_v0.a.$ === 'AI') {
-							var _v1 = _v0.a;
-							return A2($author$project$Game$isPositionProtected, state, to) ? $elm$core$Result$Ok(
-								$author$project$Game$attackBlockedByProtection(state)) : (A2($author$project$Game$isPositionShielded, state, to) ? $elm$core$Result$Ok(
-								A2($author$project$Game$attackBlockedByShield, state, to)) : $elm$core$Result$Ok(
-								A2($author$project$Game$captureByPlayer, state, to)));
-						} else {
-							break _v0$3;
-						}
-					default:
-						if (_v0.a.$ === 'AI') {
-							var _v2 = _v0.a;
-							return A2($author$project$Game$isPositionProtected, state, to) ? $elm$core$Result$Ok(
-								$author$project$Game$attackBlockedByProtection(state)) : (A2($author$project$Game$isPositionShielded, state, to) ? $elm$core$Result$Ok(
-								A2($author$project$Game$attackBlockedByShield, state, to)) : $elm$core$Result$Ok(
-								A2($author$project$Game$attackCastleByPlayer, state, to)));
-						} else {
-							break _v0$3;
-						}
+			if (A2($author$project$Board$positionEquals, to, $author$project$Board$aiCastlePos)) {
+				return A2($author$project$Game$isPositionProtected, state, to) ? $elm$core$Result$Ok(
+					$author$project$Game$attackBlockedByProtection(state)) : (A2($author$project$Game$isPositionShielded, state, to) ? $elm$core$Result$Ok(
+					A2($author$project$Game$attackBlockedByShield, state, to)) : $elm$core$Result$Ok(
+					A2($author$project$Game$attackCastleByPlayer, state, to)));
+			} else {
+				var _v0 = A2($author$project$Board$cellAt, state.board, to);
+				_v0$3:
+				while (true) {
+					switch (_v0.$) {
+						case 'Empty':
+							return $elm$core$Result$Ok(
+								A3($author$project$Game$placePlayerPiece, state, to, _List_Nil));
+						case 'Piece':
+							if (_v0.a.$ === 'AI') {
+								var _v1 = _v0.a;
+								return A2($author$project$Game$isPositionProtected, state, to) ? $elm$core$Result$Ok(
+									$author$project$Game$attackBlockedByProtection(state)) : (A2($author$project$Game$isPositionShielded, state, to) ? $elm$core$Result$Ok(
+									A2($author$project$Game$attackBlockedByShield, state, to)) : $elm$core$Result$Ok(
+									A2($author$project$Game$captureByPlayer, state, to)));
+							} else {
+								break _v0$3;
+							}
+						default:
+							if (_v0.a.$ === 'AI') {
+								var _v2 = _v0.a;
+								return A2($author$project$Game$isPositionProtected, state, to) ? $elm$core$Result$Ok(
+									$author$project$Game$attackBlockedByProtection(state)) : (A2($author$project$Game$isPositionShielded, state, to) ? $elm$core$Result$Ok(
+									A2($author$project$Game$attackBlockedByShield, state, to)) : $elm$core$Result$Ok(
+									A2($author$project$Game$attackCastleByPlayer, state, to)));
+							} else {
+								break _v0$3;
+							}
+					}
 				}
+				return $elm$core$Result$Err('非法落點');
 			}
-			return $elm$core$Result$Err('非法落點');
 		}
 	});
-var $elm$core$Basics$neq = _Utils_notEqual;
+var $author$project$Debug$GameTests$playerAttacksAiCastleTests = function () {
+	var from78 = {col: 8, row: 7};
+	var castlePos = $author$project$Board$aiCastlePos;
+	var baseBoard = $author$project$Game$init.board;
+	var stateBefore = _Utils_update(
+		$author$project$Game$init,
+		{
+			board: _Utils_update(
+				baseBoard,
+				{
+					aiPieces: _List_Nil,
+					playerPieces: _List_fromArray(
+						[from78])
+				})
+		});
+	var hpBefore = stateBefore.aiCastleHp;
+	var moveResult = A3($author$project$Game$applyPlayerMove, stateBefore, from78, castlePos);
+	return _Utils_ap(
+		(hpBefore !== 20) ? _List_fromArray(
+			[
+				'測試失敗(玩家攻AI堡): 攻擊前 aiCastleHp 應為 20，實際 ' + $elm$core$String$fromInt(hpBefore)
+			]) : _List_Nil,
+		function () {
+			if (moveResult.$ === 'Err') {
+				var e = moveResult.a;
+				return _List_fromArray(
+					['測試失敗(玩家攻AI堡): applyPlayerMove 應成功，錯誤: ' + e]);
+			} else {
+				var stateAfter = moveResult.a;
+				return _Utils_ap(
+					_List_Nil,
+					_Utils_ap(
+						(stateAfter.aiCastleHp !== 17) ? _List_fromArray(
+							[
+								'測試失敗(玩家攻AI堡): 攻擊後 aiCastleHp 應為 17，實際 ' + $elm$core$String$fromInt(stateAfter.aiCastleHp)
+							]) : _List_Nil,
+						_Utils_ap(
+							(!_Utils_eq(
+								stateAfter.board.playerPieces,
+								_List_fromArray(
+									[from78]))) ? _List_fromArray(
+								['測試失敗(玩家攻AI堡): 攻擊後 playerPieces 應不變(不佔領)']) : _List_Nil,
+							_Utils_ap(
+								(!_Utils_eq(stateAfter.board.aiPieces, _List_Nil)) ? _List_fromArray(
+									['測試失敗(玩家攻AI堡): 攻擊後 aiPieces 應不變']) : _List_Nil,
+								(!_Utils_eq(
+									A2($author$project$Board$cellAt, stateAfter.board, castlePos),
+									$author$project$Board$Castle($author$project$Board$AI))) ? _List_fromArray(
+									['測試失敗(玩家攻AI堡): 攻擊後 (9,9) 應仍為 Castle AI']) : _List_Nil))));
+			}
+		}());
+}();
+var $author$project$Debug$GameTests$castleAttackHpTests = _Utils_ap($author$project$Debug$GameTests$playerAttacksAiCastleTests, $author$project$Debug$GameTests$aiAttacksPlayerCastleTests);
 var $author$project$Debug$GameTests$horseMoveStateTests = function () {
 	var to21 = {col: 1, row: 2};
 	var to12 = {col: 2, row: 1};
@@ -7094,7 +7206,7 @@ var $author$project$Debug$GameTests$horseMoveStateTests = function () {
 					}
 				}())));
 }();
-var $author$project$Debug$GameTests$runTests = $author$project$Debug$GameTests$horseMoveStateTests;
+var $author$project$Debug$GameTests$runTests = _Utils_ap($author$project$Debug$GameTests$horseMoveStateTests, $author$project$Debug$GameTests$castleAttackHpTests);
 var $author$project$Main$ApplyPendingItem = {$: 'ApplyPendingItem'};
 var $author$project$Main$RunAITurn = {$: 'RunAITurn'};
 var $author$project$Main$getProtected = function (model) {
