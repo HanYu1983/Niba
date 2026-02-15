@@ -4,7 +4,7 @@ import Browser
 import Debug
 import AI exposing (AIDecision(..), decide)
 import Board exposing (CellContent(..), Position, Side(..), aiCastlePos, cellAt, playerCastlePos, positionEquals)
-import Game exposing (GameResult(..), GameState, applyAIMove, applyPlayerMove, checkVictory, decrementProtection, init)
+import Game exposing (GameResult(..), GameState, applyAIMove, applyPlayerMove, checkVictory, decrementProtection, expectedCastleHpLogLines, init)
 import Html exposing (Html, button, div, text)
 import Html.Attributes
 import Html.Keyed
@@ -84,16 +84,7 @@ addLog line model =
 
 castleHpLog : GameState -> GameState -> Model -> Model
 castleHpLog before after model =
-    let
-        addIfChanged m label beforeHp afterHp =
-            if afterHp < beforeHp then
-                addLog (label ++ " HP " ++ String.fromInt beforeHp ++ "→" ++ String.fromInt afterHp) m
-            else
-                m
-    in
-    model
-        |> addIfChanged "玩家主堡受攻擊" before.playerCastleHp after.playerCastleHp
-        |> addIfChanged "AI主堡受攻擊" before.aiCastleHp after.aiCastleHp
+    List.foldl addLog model (expectedCastleHpLogLines before after)
 
 
 shieldConsumedLog : GameState -> GameState -> Model -> Model

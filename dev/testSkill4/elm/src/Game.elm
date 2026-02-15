@@ -3,13 +3,14 @@ module Game exposing
     , GameResult(..)
     , ProtectedCell
     , applyPlayerMove
+    , applyAIMove
     , checkVictory
+    , decrementProtection
+    , expectedCastleHpLogLines
     , init
     , maxTurns
     , protectedPositions
     , shieldedPositions
-    , decrementProtection
-    , applyAIMove
     )
 
 import Board exposing (BoardState, Position, Side(..), aiCastlePos, cellAt, initialBoardState, playerCastlePos, positionEquals)
@@ -344,3 +345,18 @@ decrementProtectionList list =
 decrementProtection : GameState -> GameState
 decrementProtection state =
     { state | protectedCells = decrementProtectionList state.protectedCells }
+
+
+{-| 主堡 HP 扣減時應寫入 LOG 的內容（供 Main 與測試使用）。
+-}
+expectedCastleHpLogLines : GameState -> GameState -> List String
+expectedCastleHpLogLines before after =
+    let
+        lineIfHpDown label b a =
+            if a < b then
+                [ label ++ " HP " ++ String.fromInt b ++ "→" ++ String.fromInt a ]
+            else
+                []
+    in
+    lineIfHpDown "玩家主堡受攻擊" before.playerCastleHp after.playerCastleHp
+        ++ lineIfHpDown "AI主堡受攻擊" before.aiCastleHp after.aiCastleHp

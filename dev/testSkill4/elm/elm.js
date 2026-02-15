@@ -5781,6 +5781,27 @@ var $author$project$Items$applyShield = F3(
 					{aiScore: newAiScore, playerScore: newPlayerScore, shieldedCells: newShielded}));
 		}
 	});
+var $author$project$Game$expectedCastleHpLogLines = F2(
+	function (before, after) {
+		var lineIfHpDown = F3(
+			function (label, b, a) {
+				return (_Utils_cmp(a, b) < 0) ? _List_fromArray(
+					[
+						label + (' HP ' + ($elm$core$String$fromInt(b) + ('→' + $elm$core$String$fromInt(a))))
+					]) : _List_Nil;
+			});
+		return _Utils_ap(
+			A3(lineIfHpDown, '玩家主堡受攻擊', before.playerCastleHp, after.playerCastleHp),
+			A3(lineIfHpDown, 'AI主堡受攻擊', before.aiCastleHp, after.aiCastleHp));
+	});
+var $author$project$Main$castleHpLog = F3(
+	function (before, after, model) {
+		return A3(
+			$elm$core$List$foldl,
+			$author$project$Main$addLog,
+			model,
+			A2($author$project$Game$expectedCastleHpLogLines, before, after));
+	});
 var $author$project$Game$AIWins = {$: 'AIWins'};
 var $author$project$Game$Draw = {$: 'Draw'};
 var $author$project$Game$Ongoing = {$: 'Ongoing'};
@@ -6809,6 +6830,41 @@ var $author$project$AI$decide = function (state) {
 		}
 	}
 };
+var $author$project$Main$scoreChangeLog = F3(
+	function (before, after, model) {
+		var m = (_Utils_cmp(after.playerScore, before.playerScore) > 0) ? A2(
+			$author$project$Main$addLog,
+			'玩家得 1 分 | 分數 ' + ($elm$core$String$fromInt(before.playerScore) + ('→' + $elm$core$String$fromInt(after.playerScore))),
+			model) : model;
+		var m2 = (_Utils_cmp(after.aiScore, before.aiScore) > 0) ? A2(
+			$author$project$Main$addLog,
+			'AI 得 1 分 | 分數 ' + ($elm$core$String$fromInt(before.aiScore) + ('→' + $elm$core$String$fromInt(after.aiScore))),
+			m) : m;
+		return m2;
+	});
+var $author$project$Main$shieldConsumedLog = F3(
+	function (before, after, model) {
+		var consumed = A2(
+			$elm$core$List$filter,
+			function (p) {
+				return !A2(
+					$elm$core$List$any,
+					$author$project$Board$positionEquals(p),
+					after.shieldedCells);
+			},
+			before.shieldedCells);
+		return A3(
+			$elm$core$List$foldl,
+			F2(
+				function (p, m) {
+					return A2(
+						$author$project$Main$addLog,
+						'護盾抵消 於 ' + ($author$project$Main$posStr(p) + '，攻擊無效'),
+						m);
+				}),
+			model,
+			consumed);
+	});
 var $elm$core$Process$sleep = _Process_sleep;
 var $author$project$Main$runAIStep = function (model) {
 	var _v0 = $author$project$Game$checkVictory(model.gameState);
@@ -6823,10 +6879,23 @@ var $author$project$Main$runAIStep = function (model) {
 				var _v2 = A3($author$project$Game$applyAIMove, model.gameState, from, to);
 				if (_v2.$ === 'Ok') {
 					var newState = _v2.a;
-					var m = A2($author$project$Main$addLog, actionLine + ' → 完成，回合結束', model);
+					var noShieldConsumed = _Utils_eq(
+						$elm$core$List$length(newState.shieldedCells),
+						$elm$core$List$length(model.gameState.shieldedCells));
+					var noDamage = _Utils_eq(newState.playerCastleHp, model.gameState.playerCastleHp) && _Utils_eq(newState.aiScore, model.gameState.aiScore);
+					var m0 = A2($author$project$Main$addLog, actionLine + ' → 完成，回合結束', model);
+					var m1 = A3($author$project$Main$castleHpLog, model.gameState, newState, m0);
+					var m2 = A3($author$project$Main$scoreChangeLog, model.gameState, newState, m1);
+					var m3 = A3($author$project$Main$shieldConsumedLog, model.gameState, newState, m2);
+					var attackedPlayerTarget = A2($author$project$Board$positionEquals, to, $author$project$Board$playerCastlePos) || (_Utils_eq(
+						A2($author$project$Board$cellAt, model.gameState.board, to),
+						$author$project$Board$Piece($author$project$Board$Player)) || _Utils_eq(
+						A2($author$project$Board$cellAt, model.gameState.board, to),
+						$author$project$Board$Castle($author$project$Board$Player)));
+					var m4 = (attackedPlayerTarget && (noDamage && noShieldConsumed)) ? A2($author$project$Main$addLog, '保護中，攻擊無效', m3) : m3;
 					return _Utils_Tuple2(
 						_Utils_update(
-							m,
+							m4,
 							{gameState: newState}),
 						$elm$core$Platform$Cmd$none);
 				} else {
@@ -7141,6 +7210,216 @@ var $author$project$Debug$GameTests$playerAttacksAiCastleTests = function () {
 		}());
 }();
 var $author$project$Debug$GameTests$castleAttackHpTests = _Utils_ap($author$project$Debug$GameTests$playerAttacksAiCastleTests, $author$project$Debug$GameTests$aiAttacksPlayerCastleTests);
+var $elm$core$Result$map = F2(
+	function (func, ra) {
+		if (ra.$ === 'Ok') {
+			var a = ra.a;
+			return $elm$core$Result$Ok(
+				func(a));
+		} else {
+			var e = ra.a;
+			return $elm$core$Result$Err(e);
+		}
+	});
+var $elm$core$List$member = F2(
+	function (x, xs) {
+		return A2(
+			$elm$core$List$any,
+			function (a) {
+				return _Utils_eq(a, x);
+			},
+			xs);
+	});
+var $elm$core$Result$withDefault = F2(
+	function (def, result) {
+		if (result.$ === 'Ok') {
+			var a = result.a;
+			return a;
+		} else {
+			return def;
+		}
+	});
+var $author$project$Debug$GameTests$castleHpLogWhenAiAttacksPlayerCastleTests = function () {
+	var screen10 = {col: 0, row: 1};
+	var from30 = {col: 0, row: 3};
+	var baseBoard2 = $author$project$Game$init.board;
+	var stateBefore = _Utils_update(
+		$author$project$Game$init,
+		{
+			board: _Utils_update(
+				baseBoard2,
+				{
+					aiPieces: _List_fromArray(
+						[from30, screen10]),
+					playerPieces: _List_Nil
+				}),
+			currentSide: $author$project$Board$AI
+		});
+	var moveResult = A3($author$project$Game$applyAIMove, stateBefore, from30, $author$project$Board$playerCastlePos);
+	var lines = A2(
+		$elm$core$Result$withDefault,
+		_List_Nil,
+		A2(
+			$elm$core$Result$map,
+			function (stateAfter) {
+				return A2($author$project$Game$expectedCastleHpLogLines, stateBefore, stateAfter);
+			},
+			moveResult));
+	if (moveResult.$ === 'Err') {
+		var e = moveResult.a;
+		return _List_fromArray(
+			['測試失敗(主堡LOG-AI攻玩家堡): applyAIMove 應成功，錯誤: ' + e]);
+	} else {
+		var stateAfter = moveResult.a;
+		return _Utils_ap(
+			(stateBefore.playerCastleHp !== 20) ? _List_fromArray(
+				['測試失敗(主堡LOG-AI攻玩家堡): 攻擊前 playerCastleHp 應為 20']) : _List_Nil,
+			_Utils_ap(
+				(stateAfter.playerCastleHp !== 17) ? _List_fromArray(
+					['測試失敗(主堡LOG-AI攻玩家堡): 攻擊後 playerCastleHp 應為 17']) : _List_Nil,
+				(!A2($elm$core$List$member, '玩家主堡受攻擊 HP 20→17', lines)) ? _List_fromArray(
+					[
+						'測試失敗(主堡LOG-AI攻玩家堡): LOG 應含「玩家主堡受攻擊 HP 20→17」，實際 ' + A2($elm$core$String$join, '; ', lines)
+					]) : _List_Nil));
+	}
+}();
+var $author$project$Debug$GameTests$castleHpLogWhenItemHitsCastleTests = function () {
+	var bombCenter = {col: 9, row: 8};
+	var baseBoard = $author$project$Game$init.board;
+	var stateBefore = _Utils_update(
+		$author$project$Game$init,
+		{
+			board: _Utils_update(
+				baseBoard,
+				{
+					aiPieces: _List_fromArray(
+						[bombCenter])
+				})
+		});
+	var bombResult = A3($author$project$Items$applyBomb, stateBefore, $author$project$Board$Player, bombCenter);
+	var linesBomb = A2(
+		$elm$core$Result$withDefault,
+		_List_Nil,
+		A2(
+			$elm$core$Result$map,
+			function (s) {
+				return A2($author$project$Game$expectedCastleHpLogLines, stateBefore, s);
+			},
+			bombResult));
+	if (bombResult.$ === 'Err') {
+		var e = bombResult.a;
+		return _List_fromArray(
+			['測試失敗(主堡LOG-道具炸堡): 炸彈應成功，錯誤: ' + e]);
+	} else {
+		var s = bombResult.a;
+		return (!A2($elm$core$List$member, 'AI主堡受攻擊 HP 20→17', linesBomb)) ? _List_fromArray(
+			[
+				'測試失敗(主堡LOG-道具炸堡): 炸彈範圍含 AI 主堡時 LOG 應含「AI主堡受攻擊 HP 20→17」，實際 ' + A2($elm$core$String$join, '; ', linesBomb)
+			]) : ((s.aiCastleHp !== 17) ? _List_fromArray(
+			['測試失敗(主堡LOG-道具炸堡): 攻擊後 aiCastleHp 應為 17']) : _List_Nil);
+	}
+}();
+var $author$project$Debug$GameTests$castleHpLogWhenPlayerAttacksAiCastleTests = function () {
+	var from78 = {col: 8, row: 7};
+	var baseBoard = $author$project$Game$init.board;
+	var stateBefore = _Utils_update(
+		$author$project$Game$init,
+		{
+			board: _Utils_update(
+				baseBoard,
+				{
+					aiPieces: _List_Nil,
+					playerPieces: _List_fromArray(
+						[from78])
+				})
+		});
+	var moveResult = A3($author$project$Game$applyPlayerMove, stateBefore, from78, $author$project$Board$aiCastlePos);
+	var lines = A2(
+		$elm$core$Result$withDefault,
+		_List_Nil,
+		A2(
+			$elm$core$Result$map,
+			function (stateAfter) {
+				return A2($author$project$Game$expectedCastleHpLogLines, stateBefore, stateAfter);
+			},
+			moveResult));
+	if (moveResult.$ === 'Err') {
+		var e = moveResult.a;
+		return _List_fromArray(
+			['測試失敗(主堡LOG-玩家攻AI堡): applyPlayerMove 應成功，錯誤: ' + e]);
+	} else {
+		var stateAfter = moveResult.a;
+		return _Utils_ap(
+			(stateBefore.aiCastleHp !== 20) ? _List_fromArray(
+				['測試失敗(主堡LOG-玩家攻AI堡): 攻擊前 aiCastleHp 應為 20']) : _List_Nil,
+			_Utils_ap(
+				(stateAfter.aiCastleHp !== 17) ? _List_fromArray(
+					['測試失敗(主堡LOG-玩家攻AI堡): 攻擊後 aiCastleHp 應為 17']) : _List_Nil,
+				(!A2($elm$core$List$member, 'AI主堡受攻擊 HP 20→17', lines)) ? _List_fromArray(
+					[
+						'測試失敗(主堡LOG-玩家攻AI堡): LOG 應含「AI主堡受攻擊 HP 20→17」，實際 ' + A2($elm$core$String$join, '; ', lines)
+					]) : _List_Nil));
+	}
+}();
+var $elm$core$List$isEmpty = function (xs) {
+	if (!xs.b) {
+		return true;
+	} else {
+		return false;
+	}
+};
+var $author$project$Debug$GameTests$expectedCastleHpLogLinesUnitTests = function () {
+	var s0 = $author$project$Game$init;
+	var playerHpDown = A2(
+		$author$project$Game$expectedCastleHpLogLines,
+		s0,
+		_Utils_update(
+			s0,
+			{playerCastleHp: 17}));
+	var noChange = A2($author$project$Game$expectedCastleHpLogLines, s0, s0);
+	var bothDown = A2(
+		$author$project$Game$expectedCastleHpLogLines,
+		s0,
+		_Utils_update(
+			s0,
+			{aiCastleHp: 14, playerCastleHp: 17}));
+	var aiHpDown = A2(
+		$author$project$Game$expectedCastleHpLogLines,
+		s0,
+		_Utils_update(
+			s0,
+			{aiCastleHp: 17}));
+	return _Utils_ap(
+		(!_Utils_eq(
+			playerHpDown,
+			_List_fromArray(
+				['玩家主堡受攻擊 HP 20→17']))) ? _List_fromArray(
+			[
+				'測試失敗(主堡LOG): 玩家主堡扣3應得一行「玩家主堡受攻擊 HP 20→17」，實際 ' + A2($elm$core$String$join, '; ', playerHpDown)
+			]) : _List_Nil,
+		_Utils_ap(
+			(!_Utils_eq(
+				aiHpDown,
+				_List_fromArray(
+					['AI主堡受攻擊 HP 20→17']))) ? _List_fromArray(
+				[
+					'測試失敗(主堡LOG): AI主堡扣3應得一行「AI主堡受攻擊 HP 20→17」，實際 ' + A2($elm$core$String$join, '; ', aiHpDown)
+				]) : _List_Nil,
+			_Utils_ap(
+				(($elm$core$List$length(bothDown) !== 2) || ((!A2($elm$core$List$member, '玩家主堡受攻擊 HP 20→17', bothDown)) || (!A2($elm$core$List$member, 'AI主堡受攻擊 HP 20→14', bothDown)))) ? _List_fromArray(
+					[
+						'測試失敗(主堡LOG): 雙方主堡都扣時應得兩行（玩家 20→17、AI 20→14），實際 ' + A2($elm$core$String$join, '; ', bothDown)
+					]) : _List_Nil,
+				(!$elm$core$List$isEmpty(noChange)) ? _List_fromArray(
+					[
+						'測試失敗(主堡LOG): HP 無變化時應無 LOG，實際 ' + A2($elm$core$String$join, '; ', noChange)
+					]) : _List_Nil)));
+}();
+var $author$project$Debug$GameTests$castleHpLogTests = _Utils_ap(
+	$author$project$Debug$GameTests$expectedCastleHpLogLinesUnitTests,
+	_Utils_ap(
+		$author$project$Debug$GameTests$castleHpLogWhenPlayerAttacksAiCastleTests,
+		_Utils_ap($author$project$Debug$GameTests$castleHpLogWhenAiAttacksPlayerCastleTests, $author$project$Debug$GameTests$castleHpLogWhenItemHitsCastleTests)));
 var $author$project$Debug$GameTests$horseMoveStateTests = function () {
 	var to21 = {col: 1, row: 2};
 	var to12 = {col: 2, row: 1};
@@ -7325,7 +7604,9 @@ var $author$project$Debug$GameTests$runTests = _Utils_ap(
 	$author$project$Debug$GameTests$horseMoveStateTests,
 	_Utils_ap(
 		$author$project$Debug$GameTests$castleAttackHpTests,
-		_Utils_ap($author$project$Debug$GameTests$shieldNoDoubleTests, $author$project$Debug$GameTests$itemDeductsScoreTests)));
+		_Utils_ap(
+			$author$project$Debug$GameTests$shieldNoDoubleTests,
+			_Utils_ap($author$project$Debug$GameTests$itemDeductsScoreTests, $author$project$Debug$GameTests$castleHpLogTests))));
 var $author$project$Main$sideLabel = function (side) {
 	if (side.$ === 'Player') {
 		return 'Player';
@@ -7563,9 +7844,26 @@ var $author$project$Main$updateOngoing = F2(
 									var _v23 = A3($author$project$Game$applyPlayerMove, model.gameState, from, pos);
 									if (_v23.$ === 'Ok') {
 										var newState = _v23.a;
-										var modelAfterPlayer = _Utils_update(
-											model,
+										var noShieldConsumed = _Utils_eq(
+											$elm$core$List$length(newState.shieldedCells),
+											$elm$core$List$length(model.gameState.shieldedCells));
+										var noDamage = _Utils_eq(newState.playerScore, model.gameState.playerScore) && _Utils_eq(newState.aiCastleHp, model.gameState.aiCastleHp);
+										var m0 = A2(
+											$author$project$Main$addLog,
+											'[回合 ' + ($elm$core$String$fromInt(model.gameState.turn) + ('] 玩家放置 馬 ' + ($author$project$Main$posStr(from) + ('→' + ($author$project$Main$posStr(pos) + ' → 完成'))))),
+											model);
+										var base = _Utils_update(
+											m0,
 											{errorMessage: $elm$core$Maybe$Nothing, gameState: newState, legalMoves: _List_Nil, selectedPiece: $elm$core$Maybe$Nothing});
+										var m1 = A3($author$project$Main$castleHpLog, model.gameState, newState, base);
+										var m2 = A3($author$project$Main$scoreChangeLog, model.gameState, newState, m1);
+										var m3 = A3($author$project$Main$shieldConsumedLog, model.gameState, newState, m2);
+										var attackedEnemyTarget = A2($author$project$Board$positionEquals, pos, $author$project$Board$aiCastlePos) || (_Utils_eq(
+											A2($author$project$Board$cellAt, model.gameState.board, pos),
+											$author$project$Board$Piece($author$project$Board$AI)) || _Utils_eq(
+											A2($author$project$Board$cellAt, model.gameState.board, pos),
+											$author$project$Board$Castle($author$project$Board$AI)));
+										var modelAfterPlayer = (attackedEnemyTarget && (noDamage && noShieldConsumed)) ? A2($author$project$Main$addLog, '保護中，攻擊無效', m3) : m3;
 										var _v24 = A2(
 											$elm$core$Debug$log,
 											'[apply] Ok newState.playerPieces',
@@ -7586,10 +7884,14 @@ var $author$project$Main$updateOngoing = F2(
 												$elm$core$Process$sleep(300)));
 									} else {
 										var e = _v23.a;
+										var m = A2(
+											$author$project$Main$addLog,
+											'玩家放置 馬 ' + ($author$project$Main$posStr(from) + ('→' + ($author$project$Main$posStr(pos) + (' → Err: ' + e)))),
+											model);
 										var _v27 = A2($elm$core$Debug$log, '[apply] Err', e);
 										return _Utils_Tuple2(
 											_Utils_update(
-												model,
+												m,
 												{
 													errorMessage: $elm$core$Maybe$Just(e)
 												}),
@@ -7680,9 +7982,16 @@ var $author$project$Main$update = F2(
 							var _v3 = A3($author$project$Items$applyBomb, model.gameState, $author$project$Board$Player, pos);
 							if (_v3.$ === 'Ok') {
 								var s = _v3.a;
+								var scoreLog = ' | 分數 玩家 ' + ($elm$core$String$fromInt(model.gameState.playerScore) + ('→' + $elm$core$String$fromInt(s.playerScore)));
+								var m0 = A2(
+									$author$project$Main$addLog,
+									'[回合 ' + ($elm$core$String$fromInt(model.gameState.turn) + ('] 玩家使用 炸彈 於 ' + ($author$project$Main$posStr(pos) + (' → 完成' + scoreLog)))),
+									model);
+								var m1 = A3($author$project$Main$castleHpLog, model.gameState, s, m0);
+								var m2 = A3($author$project$Main$shieldConsumedLog, model.gameState, s, m1);
 								return _Utils_Tuple2(
 									_Utils_update(
-										model,
+										m2,
 										{
 											errorMessage: $elm$core$Maybe$Nothing,
 											gameState: $author$project$Main$recordPlayerBomb(s),
@@ -7694,12 +8003,15 @@ var $author$project$Main$update = F2(
 							} else {
 								var e = _v3.a;
 								return _Utils_Tuple2(
-									_Utils_update(
-										model,
-										{
-											errorMessage: $elm$core$Maybe$Just(e),
-											itemPendingApply: $elm$core$Maybe$Nothing
-										}),
+									A2(
+										$author$project$Main$addLog,
+										'玩家使用 炸彈 → Err: ' + e,
+										_Utils_update(
+											model,
+											{
+												errorMessage: $elm$core$Maybe$Just(e),
+												itemPendingApply: $elm$core$Maybe$Nothing
+											})),
 									$elm$core$Platform$Cmd$none);
 							}
 						case 'ShieldAt':
@@ -7707,9 +8019,14 @@ var $author$project$Main$update = F2(
 							var _v4 = A3($author$project$Items$applyShield, model.gameState, $author$project$Board$Player, pos);
 							if (_v4.$ === 'Ok') {
 								var s = _v4.a;
+								var scoreLog = ' | 分數 玩家 ' + ($elm$core$String$fromInt(model.gameState.playerScore) + ('→' + $elm$core$String$fromInt(s.playerScore)));
+								var m0 = A2(
+									$author$project$Main$addLog,
+									'[回合 ' + ($elm$core$String$fromInt(model.gameState.turn) + ('] 玩家使用 護盾 於 ' + ($author$project$Main$posStr(pos) + (' → 完成' + scoreLog)))),
+									model);
 								return _Utils_Tuple2(
 									_Utils_update(
-										model,
+										m0,
 										{
 											errorMessage: $elm$core$Maybe$Nothing,
 											gameState: $author$project$Main$recordPlayerShield(s),
@@ -7721,12 +8038,15 @@ var $author$project$Main$update = F2(
 							} else {
 								var e = _v4.a;
 								return _Utils_Tuple2(
-									_Utils_update(
-										model,
-										{
-											errorMessage: $elm$core$Maybe$Just(e),
-											itemPendingApply: $elm$core$Maybe$Nothing
-										}),
+									A2(
+										$author$project$Main$addLog,
+										'玩家使用 護盾 → Err: ' + e,
+										_Utils_update(
+											model,
+											{
+												errorMessage: $elm$core$Maybe$Just(e),
+												itemPendingApply: $elm$core$Maybe$Nothing
+											})),
 									$elm$core$Platform$Cmd$none);
 							}
 						default:
@@ -7737,9 +8057,17 @@ var $author$project$Main$update = F2(
 							var _v6 = A4($author$project$Items$applyLaser, model.gameState, $author$project$Board$Player, isRow, index);
 							if (_v6.$ === 'Ok') {
 								var s = _v6.a;
+								var scoreLog = ' | 分數 玩家 ' + ($elm$core$String$fromInt(model.gameState.playerScore) + ('→' + $elm$core$String$fromInt(s.playerScore)));
+								var axis = isRow ? '行' : '列';
+								var m0 = A2(
+									$author$project$Main$addLog,
+									'[回合 ' + ($elm$core$String$fromInt(model.gameState.turn) + ('] 玩家使用 雷射 ' + (axis + (' ' + ($elm$core$String$fromInt(index) + (' → 完成' + scoreLog)))))),
+									model);
+								var m1 = A3($author$project$Main$castleHpLog, model.gameState, s, m0);
+								var m2 = A3($author$project$Main$shieldConsumedLog, model.gameState, s, m1);
 								return _Utils_Tuple2(
 									_Utils_update(
-										model,
+										m2,
 										{
 											errorMessage: $elm$core$Maybe$Nothing,
 											gameState: $author$project$Main$recordPlayerLaser(s),
@@ -7752,13 +8080,16 @@ var $author$project$Main$update = F2(
 							} else {
 								var e = _v6.a;
 								return _Utils_Tuple2(
-									_Utils_update(
-										model,
-										{
-											errorMessage: $elm$core$Maybe$Just(e),
-											itemPendingApply: $elm$core$Maybe$Nothing,
-											laserPending: $elm$core$Maybe$Nothing
-										}),
+									A2(
+										$author$project$Main$addLog,
+										'玩家使用 雷射 → Err: ' + e,
+										_Utils_update(
+											model,
+											{
+												errorMessage: $elm$core$Maybe$Just(e),
+												itemPendingApply: $elm$core$Maybe$Nothing,
+												laserPending: $elm$core$Maybe$Nothing
+											})),
 									$elm$core$Platform$Cmd$none);
 							}
 					}
@@ -7778,13 +8109,15 @@ var $author$project$Main$update = F2(
 									s,
 									{aiBombUse: s.aiBombUse + 1});
 								var scoreLog = ' | 分數 玩家 ' + ($elm$core$String$fromInt(model.gameState.playerScore) + (' AI ' + ($elm$core$String$fromInt(model.gameState.aiScore) + ('→' + $elm$core$String$fromInt(next.aiScore)))));
-								var m = A2(
+								var m0 = A2(
 									$author$project$Main$addLog,
 									'[回合 ' + ($elm$core$String$fromInt(model.gameState.turn) + ('] AI 使用 炸彈 於 ' + ($author$project$Main$posStr(pos) + (' → 完成（本回合繼續，AI 將移動棋子）' + scoreLog)))),
 									model);
+								var m1 = A3($author$project$Main$castleHpLog, model.gameState, next, m0);
+								var m2 = A3($author$project$Main$shieldConsumedLog, model.gameState, next, m1);
 								return _Utils_Tuple2(
 									_Utils_update(
-										m,
+										m2,
 										{aiItemPendingApply: $elm$core$Maybe$Nothing, gameState: next}),
 									A2(
 										$elm$core$Task$perform,
@@ -7850,13 +8183,15 @@ var $author$project$Main$update = F2(
 									{aiLaserUse: s.aiLaserUse + 1});
 								var scoreLog = ' | 分數 玩家 ' + ($elm$core$String$fromInt(model.gameState.playerScore) + (' AI ' + ($elm$core$String$fromInt(model.gameState.aiScore) + ('→' + $elm$core$String$fromInt(next.aiScore)))));
 								var axis = isRow ? '行' : '列';
-								var m = A2(
+								var m0 = A2(
 									$author$project$Main$addLog,
 									'[回合 ' + ($elm$core$String$fromInt(model.gameState.turn) + ('] AI 使用 雷射 ' + (axis + (' ' + ($elm$core$String$fromInt(index) + (' → 完成（本回合繼續，AI 將移動棋子）' + scoreLog)))))),
 									model);
+								var m1 = A3($author$project$Main$castleHpLog, model.gameState, next, m0);
+								var m2 = A3($author$project$Main$shieldConsumedLog, model.gameState, next, m1);
 								return _Utils_Tuple2(
 									_Utils_update(
-										m,
+										m2,
 										{aiItemPendingApply: $elm$core$Maybe$Nothing, gameState: next}),
 									A2(
 										$elm$core$Task$perform,
@@ -7909,13 +8244,6 @@ var $author$project$Main$UseItem = function (a) {
 	return {$: 'UseItem', a: a};
 };
 var $elm$html$Html$div = _VirtualDom_node('div');
-var $elm$core$List$isEmpty = function (xs) {
-	if (!xs.b) {
-		return true;
-	} else {
-		return false;
-	}
-};
 var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
 var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;

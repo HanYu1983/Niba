@@ -1,14 +1,14 @@
 module Debug.GameTests exposing (runTests)
 
 import Board exposing (CellContent(..), Position, Side(..), aiCastlePos, cellAt, playerCastlePos, positionEquals)
-import Game exposing (GameState, applyAIMove, applyPlayerMove, init, protectedPositions, shieldedPositions)
+import Game exposing (GameState, applyAIMove, applyPlayerMove, expectedCastleHpLogLines, init, protectedPositions, shieldedPositions)
 import Items exposing (Item(..), applyBomb, applyLaser, applyShield, cost)
 import Rules exposing (horseLegalMoves)
 
 
 runTests : List String
 runTests =
-    horseMoveStateTests ++ castleAttackHpTests ++ shieldNoDoubleTests ++ itemDeductsScoreTests
+    horseMoveStateTests ++ castleAttackHpTests ++ shieldNoDoubleTests ++ itemDeductsScoreTests ++ castleHpLogTests
 
 
 {-| 馬點擊移動後狀態與畫面顯示驗證：
@@ -323,3 +323,153 @@ itemDeductsScoreTests =
                         []
     in
     bombTests ++ laserTests ++ shieldTests
+
+
+{-| 主堡 HP 扣減時應寫入 LOG：驗證 expectedCastleHpLogLines 與實際攻擊後狀態。
+-}
+castleHpLogTests : List String
+castleHpLogTests =
+    expectedCastleHpLogLinesUnitTests
+        ++ castleHpLogWhenPlayerAttacksAiCastleTests
+        ++ castleHpLogWhenAiAttacksPlayerCastleTests
+        ++ castleHpLogWhenItemHitsCastleTests
+
+
+expectedCastleHpLogLinesUnitTests : List String
+expectedCastleHpLogLinesUnitTests =
+    let
+        s0 = init
+        playerHpDown =
+            expectedCastleHpLogLines s0 { s0 | playerCastleHp = 17 }
+        aiHpDown =
+            expectedCastleHpLogLines s0 { s0 | aiCastleHp = 17 }
+        bothDown =
+            expectedCastleHpLogLines s0 { s0 | playerCastleHp = 17, aiCastleHp = 14 }
+        noChange =
+            expectedCastleHpLogLines s0 s0
+    in
+    (if playerHpDown /= [ "玩家主堡受攻擊 HP 20→17" ] then
+        [ "測試失敗(主堡LOG): 玩家主堡扣3應得一行「玩家主堡受攻擊 HP 20→17」，實際 " ++ String.join "; " playerHpDown ]
+     else
+        []
+    )
+        ++ (if aiHpDown /= [ "AI主堡受攻擊 HP 20→17" ] then
+                [ "測試失敗(主堡LOG): AI主堡扣3應得一行「AI主堡受攻擊 HP 20→17」，實際 " ++ String.join "; " aiHpDown ]
+            else
+                []
+           )
+        ++ (if List.length bothDown /= 2 || not (List.member "玩家主堡受攻擊 HP 20→17" bothDown) || not (List.member "AI主堡受攻擊 HP 20→14" bothDown) then
+                [ "測試失敗(主堡LOG): 雙方主堡都扣時應得兩行（玩家 20→17、AI 20→14），實際 " ++ String.join "; " bothDown ]
+            else
+                []
+           )
+        ++ (if not (List.isEmpty noChange) then
+                [ "測試失敗(主堡LOG): HP 無變化時應無 LOG，實際 " ++ String.join "; " noChange ]
+            else
+                []
+           )
+
+
+castleHpLogWhenPlayerAttacksAiCastleTests : List String
+castleHpLogWhenPlayerAttacksAiCastleTests =
+    let
+        from78 = { row = 7, col = 8 }
+        baseBoard = init.board
+        stateBefore =
+            { init
+                | board = { baseBoard | playerPieces = [ from78 ], aiPieces = [] }
+            }
+        moveResult = applyPlayerMove stateBefore from78 aiCastlePos
+        lines =
+            moveResult
+                |> Result.map (\stateAfter -> expectedCastleHpLogLines stateBefore stateAfter)
+                |> Result.withDefault []
+    in
+    case moveResult of
+        Err e ->
+            [ "測試失敗(主堡LOG-玩家攻AI堡): applyPlayerMove 應成功，錯誤: " ++ e ]
+
+        Ok stateAfter ->
+            (if stateBefore.aiCastleHp /= 20 then
+                [ "測試失敗(主堡LOG-玩家攻AI堡): 攻擊前 aiCastleHp 應為 20" ]
+             else
+                []
+            )
+                ++ (if stateAfter.aiCastleHp /= 17 then
+                        [ "測試失敗(主堡LOG-玩家攻AI堡): 攻擊後 aiCastleHp 應為 17" ]
+                    else
+                        []
+                   )
+                ++ (if not (List.member "AI主堡受攻擊 HP 20→17" lines) then
+                        [ "測試失敗(主堡LOG-玩家攻AI堡): LOG 應含「AI主堡受攻擊 HP 20→17」，實際 " ++ String.join "; " lines ]
+                    else
+                        []
+                   )
+
+
+castleHpLogWhenAiAttacksPlayerCastleTests : List String
+castleHpLogWhenAiAttacksPlayerCastleTests =
+    let
+        from30 = { row = 3, col = 0 }
+        screen10 = { row = 1, col = 0 }
+        baseBoard2 = init.board
+        stateBefore =
+            { init
+                | currentSide = Board.AI
+                , board = { baseBoard2 | playerPieces = [], aiPieces = [ from30, screen10 ] }
+            }
+        moveResult = applyAIMove stateBefore from30 playerCastlePos
+        lines =
+            moveResult
+                |> Result.map (\stateAfter -> expectedCastleHpLogLines stateBefore stateAfter)
+                |> Result.withDefault []
+    in
+    case moveResult of
+        Err e ->
+            [ "測試失敗(主堡LOG-AI攻玩家堡): applyAIMove 應成功，錯誤: " ++ e ]
+
+        Ok stateAfter ->
+            (if stateBefore.playerCastleHp /= 20 then
+                [ "測試失敗(主堡LOG-AI攻玩家堡): 攻擊前 playerCastleHp 應為 20" ]
+             else
+                []
+            )
+                ++ (if stateAfter.playerCastleHp /= 17 then
+                        [ "測試失敗(主堡LOG-AI攻玩家堡): 攻擊後 playerCastleHp 應為 17" ]
+                    else
+                        []
+                   )
+                ++ (if not (List.member "玩家主堡受攻擊 HP 20→17" lines) then
+                        [ "測試失敗(主堡LOG-AI攻玩家堡): LOG 應含「玩家主堡受攻擊 HP 20→17」，實際 " ++ String.join "; " lines ]
+                    else
+                        []
+                   )
+
+
+castleHpLogWhenItemHitsCastleTests : List String
+castleHpLogWhenItemHitsCastleTests =
+    let
+        {- 炸彈中心 (8,9)：範圍含 (9,9)=aiCastlePos，會扣 AI 主堡 HP -}
+        bombCenter = { row = 8, col = 9 }
+        baseBoard = init.board
+        stateBefore =
+            { init
+                | board = { baseBoard | aiPieces = [ bombCenter ] }
+            }
+        bombResult = applyBomb stateBefore Board.Player bombCenter
+        linesBomb =
+            bombResult
+                |> Result.map (\s -> expectedCastleHpLogLines stateBefore s)
+                |> Result.withDefault []
+    in
+    case bombResult of
+        Err e ->
+            [ "測試失敗(主堡LOG-道具炸堡): 炸彈應成功，錯誤: " ++ e ]
+
+        Ok s ->
+            if not (List.member "AI主堡受攻擊 HP 20→17" linesBomb) then
+                [ "測試失敗(主堡LOG-道具炸堡): 炸彈範圍含 AI 主堡時 LOG 應含「AI主堡受攻擊 HP 20→17」，實際 " ++ String.join "; " linesBomb ]
+            else if s.aiCastleHp /= 17 then
+                [ "測試失敗(主堡LOG-道具炸堡): 攻擊後 aiCastleHp 應為 17" ]
+            else
+                []
