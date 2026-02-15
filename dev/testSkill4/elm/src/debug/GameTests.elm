@@ -1,13 +1,14 @@
 module Debug.GameTests exposing (runTests)
 
-import Board exposing (CellContent(..), Position, aiCastlePos, cellAt, playerCastlePos, positionEquals)
+import Board exposing (CellContent(..), Position, Side(..), aiCastlePos, cellAt, playerCastlePos, positionEquals)
 import Game exposing (GameState, applyAIMove, applyPlayerMove, init, protectedPositions, shieldedPositions)
+import Items exposing (Item(..), applyBomb, applyLaser, applyShield, cost)
 import Rules exposing (horseLegalMoves)
 
 
 runTests : List String
 runTests =
-    horseMoveStateTests ++ castleAttackHpTests
+    horseMoveStateTests ++ castleAttackHpTests ++ shieldNoDoubleTests ++ itemDeductsScoreTests
 
 
 {-| 馬點擊移動後狀態與畫面顯示驗證：
@@ -222,3 +223,103 @@ aiAttacksPlayerCastleTests =
                                 []
                            )
            )
+
+
+{-| 一個棋子的護盾在消失前不能再使用護盾於同一個棋子。
+-}
+shieldNoDoubleTests : List String
+shieldNoDoubleTests =
+    let
+        from00 : Position
+        from00 =
+            { row = 0, col = 0 }
+
+        to21 : Position
+        to21 =
+            { row = 2, col = 1 }
+
+        state1Result =
+            applyPlayerMove init from00 to21
+
+        state2Result =
+            state1Result
+                |> Result.andThen (\s1 -> applyShield s1 Player to21)
+
+        secondShieldResult =
+            state2Result
+                |> Result.andThen (\s2 -> applyShield s2 Player to21)
+    in
+    (case state2Result of
+        Err _ ->
+            [ "測試失敗(護盾不可重複): 第一次對 (2,1) 使用護盾應成功" ]
+
+        Ok _ ->
+            []
+    )
+        ++ (case secondShieldResult of
+                Ok _ ->
+                    [ "測試失敗(護盾不可重複): 同一格已有護盾時再使用護盾應失敗" ]
+
+                Err _ ->
+                    []
+           )
+
+
+{-| 使用道具時會扣分（炸彈 3、雷射 4、護盾 2）。
+-}
+itemDeductsScoreTests : List String
+itemDeductsScoreTests =
+    let
+        initial = init.playerScore
+
+        bombTests =
+            let
+                aiPiecePos = { row = 7, col = 9 }
+                baseBoard = init.board
+                stateWithAiPiece =
+                    { init
+                        | board = { baseBoard | aiPieces = [ aiPiecePos ] }
+                    }
+                result = applyBomb stateWithAiPiece Player aiPiecePos
+            in
+            case result of
+                Err e ->
+                    [ "測試失敗(道具扣分-炸彈): applyBomb 應成功，錯誤: " ++ e ]
+
+                Ok s ->
+                    if s.playerScore /= initial - cost Bomb then
+                        [ "測試失敗(道具扣分-炸彈): 玩家分數應為 " ++ String.fromInt (initial - cost Bomb) ++ "，實際 " ++ String.fromInt s.playerScore ]
+                    else
+                        []
+
+        laserTests =
+            let
+                result = applyLaser init Player True 0
+            in
+            case result of
+                Err e ->
+                    [ "測試失敗(道具扣分-雷射): applyLaser 應成功，錯誤: " ++ e ]
+
+                Ok s ->
+                    if s.playerScore /= initial - cost Laser then
+                        [ "測試失敗(道具扣分-雷射): 玩家分數應為 " ++ String.fromInt (initial - cost Laser) ++ "，實際 " ++ String.fromInt s.playerScore ]
+                    else
+                        []
+
+        shieldTests =
+            let
+                to21 = { row = 2, col = 1 }
+                state1Result = applyPlayerMove init { row = 0, col = 0 } to21
+                shieldResult = state1Result |> Result.andThen (\s -> applyShield s Player to21)
+            in
+            case shieldResult of
+                Err e ->
+                    [ "測試失敗(道具扣分-護盾): applyShield 應成功，錯誤: " ++ e ]
+
+                Ok s ->
+                    if s.playerScore /= initial - cost Shield then
+                        [ "測試失敗(道具扣分-護盾): 玩家分數應為 " ++ String.fromInt (initial - cost Shield) ++ "，實際 " ++ String.fromInt s.playerScore ]
+                    else
+                        []
+    in
+    bombTests ++ laserTests ++ shieldTests

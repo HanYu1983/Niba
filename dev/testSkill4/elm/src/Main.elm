@@ -82,6 +82,20 @@ addLog line model =
     { model | aiActionLog = (line :: model.aiActionLog) |> List.take maxLogLines }
 
 
+castleHpLog : GameState -> GameState -> Model -> Model
+castleHpLog before after model =
+    let
+        addIfChanged m label beforeHp afterHp =
+            if afterHp < beforeHp then
+                addLog (label ++ " HP " ++ String.fromInt beforeHp ++ "→" ++ String.fromInt afterHp) m
+            else
+                m
+    in
+    model
+        |> addIfChanged "玩家主堡受攻擊" before.playerCastleHp after.playerCastleHp
+        |> addIfChanged "AI主堡受攻擊" before.aiCastleHp after.aiCastleHp
+
+
 getProtected : Model -> List Position
 getProtected model =
     Game.protectedPositions model.gameState
@@ -137,31 +151,42 @@ update msg model =
                     case applyBomb model.gameState AI pos of
                         Ok s ->
                             let
-                                next = decrementProtection { s | currentSide = Player, turn = s.turn + 1, aiBombUse = s.aiBombUse + 1 }
-                                m = addLog ("[回合 " ++ String.fromInt model.gameState.turn ++ "] AI 使用 炸彈 於 " ++ posStr pos ++ " → Ok") model
+                                next = { s | aiBombUse = s.aiBombUse + 1 }
+                                scoreLog = " | 分數 玩家 " ++ String.fromInt model.gameState.playerScore ++ " AI " ++ String.fromInt model.gameState.aiScore ++ "→" ++ String.fromInt next.aiScore
+                                m0 = addLog ("[回合 " ++ String.fromInt model.gameState.turn ++ "] AI 使用 炸彈 於 " ++ posStr pos ++ " → 完成（本回合繼續，AI 將移動棋子）" ++ scoreLog) model
+                                m1 = castleHpLog model.gameState next m0
                             in
-                            ( { m | gameState = next, aiItemPendingApply = Nothing }, Cmd.none )
+                            ( { m1 | gameState = next, aiItemPendingApply = Nothing }
+                            , Task.perform (\_ -> RunAITurn) (Process.sleep 350)
+                            )
                         Err e ->
                             ( addLog ("[回合 " ++ String.fromInt model.gameState.turn ++ "] AI 使用 炸彈 → Err: " ++ e) { model | aiItemPendingApply = Nothing }, Cmd.none )
                 Just (ShieldAt pos) ->
                     case applyShield model.gameState AI pos of
                         Ok s ->
                             let
-                                next = decrementProtection { s | currentSide = Player, turn = s.turn + 1, aiShieldUse = s.aiShieldUse + 1 }
-                                m = addLog ("[回合 " ++ String.fromInt model.gameState.turn ++ "] AI 使用 護盾 於 " ++ posStr pos ++ " → Ok") model
+                                next = { s | aiShieldUse = s.aiShieldUse + 1 }
+                                scoreLog = " | 分數 玩家 " ++ String.fromInt model.gameState.playerScore ++ " AI " ++ String.fromInt model.gameState.aiScore ++ "→" ++ String.fromInt next.aiScore
+                                m = addLog ("[回合 " ++ String.fromInt model.gameState.turn ++ "] AI 使用 護盾 於 " ++ posStr pos ++ " → 完成（本回合繼續，AI 將移動棋子）" ++ scoreLog) model
                             in
-                            ( { m | gameState = next, aiItemPendingApply = Nothing }, Cmd.none )
+                            ( { m | gameState = next, aiItemPendingApply = Nothing }
+                            , Task.perform (\_ -> RunAITurn) (Process.sleep 350)
+                            )
                         Err e ->
                             ( addLog ("[回合 " ++ String.fromInt model.gameState.turn ++ "] AI 使用 護盾 → Err: " ++ e) { model | aiItemPendingApply = Nothing }, Cmd.none )
                 Just (LaserAt isRow index displayPos) ->
                     case applyLaser model.gameState AI isRow index of
                         Ok s ->
                             let
-                                next = decrementProtection { s | currentSide = Player, turn = s.turn + 1, aiLaserUse = s.aiLaserUse + 1 }
+                                next = { s | aiLaserUse = s.aiLaserUse + 1 }
                                 axis = if isRow then "行" else "列"
-                                m = addLog ("[回合 " ++ String.fromInt model.gameState.turn ++ "] AI 使用 雷射 " ++ axis ++ " " ++ String.fromInt index ++ " → Ok") model
+                                scoreLog = " | 分數 玩家 " ++ String.fromInt model.gameState.playerScore ++ " AI " ++ String.fromInt model.gameState.aiScore ++ "→" ++ String.fromInt next.aiScore
+                                m0 = addLog ("[回合 " ++ String.fromInt model.gameState.turn ++ "] AI 使用 雷射 " ++ axis ++ " " ++ String.fromInt index ++ " → 完成（本回合繼續，AI 將移動棋子）" ++ scoreLog) model
+                                m1 = castleHpLog model.gameState next m0
                             in
-                            ( { m | gameState = next, aiItemPendingApply = Nothing }, Cmd.none )
+                            ( { m1 | gameState = next, aiItemPendingApply = Nothing }
+                            , Task.perform (\_ -> RunAITurn) (Process.sleep 350)
+                            )
                         Err e ->
                             ( addLog ("[回合 " ++ String.fromInt model.gameState.turn ++ "] AI 使用 雷射 → Err: " ++ e) { model | aiItemPendingApply = Nothing }, Cmd.none )
                 Nothing ->
@@ -292,13 +317,8 @@ updateOngoing msg model =
                                             let
                                                 _ = Debug.log "[apply] Ok newState.playerPieces" (List.map (\p -> ( p.row, p.col )) newState.board.playerPieces)
                                                 _ = Debug.log "[apply] Ok newState.currentSide" newState.currentSide
-                                                modelAfterPlayer =
-                                                    { model
-                                                        | gameState = newState
-                                                        , selectedPiece = Nothing
-                                                        , legalMoves = []
-                                                        , errorMessage = Nothing
-                                                    }
+                                                base = { model | gameState = newState, selectedPiece = Nothing, legalMoves = [], errorMessage = Nothing }
+                                                modelAfterPlayer = castleHpLog model.gameState newState base
                                             in
                                             ( modelAfterPlayer
                                             , Task.perform (\_ -> RunAITurn) (Process.sleep 300)
@@ -384,7 +404,14 @@ runAIStep model =
                     case applyAIMove model.gameState from to of
                         Ok newState ->
                             let
-                                m = addLog (actionLine ++ " → Ok | currentSide=" ++ sideLabel newState.currentSide) model
+                                m0 = addLog (actionLine ++ " → 完成，回合結束") model
+                                playerHpBefore = model.gameState.playerCastleHp
+                                playerHpAfter = newState.playerCastleHp
+                                m =
+                                    if playerHpAfter < playerHpBefore then
+                                        addLog ("玩家主堡受攻擊 HP " ++ String.fromInt playerHpBefore ++ "→" ++ String.fromInt playerHpAfter) m0
+                                    else
+                                        m0
                             in
                             ( { m | gameState = newState }, Cmd.none )
 
@@ -630,8 +657,8 @@ view model =
                 div []
                     [ boardWithKey model
                     , div [] [ text "選擇: " ]
-                    , button [ onClick LaserRow ] [ text "破壞此行" ]
-                    , button [ onClick LaserCol ] [ text "破壞此列" ]
+                    , button [ onClick LaserRow ] [ text "破壞此列" ]
+                    , button [ onClick LaserCol ] [ text "破壞此行" ]
                     ]
 
             Nothing ->

@@ -5223,6 +5223,7 @@ var $author$project$Main$initialModel = {aiActionLog: _List_Nil, aiItemPendingAp
 var $elm$core$Platform$Sub$batch = _Platform_batch;
 var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
 var $author$project$Board$AI = {$: 'AI'};
+var $author$project$Main$RunAITurn = {$: 'RunAITurn'};
 var $author$project$Main$maxLogLines = 80;
 var $elm$core$List$takeReverse = F3(
 	function (n, list, kept) {
@@ -5788,28 +5789,6 @@ var $author$project$Game$maxTurns = 100;
 var $author$project$Game$checkVictory = function (state) {
 	return (state.aiCastleHp <= 0) ? $author$project$Game$PlayerWins : ((state.playerCastleHp <= 0) ? $author$project$Game$AIWins : ((_Utils_cmp(state.turn, $author$project$Game$maxTurns) > 0) ? ((_Utils_cmp(state.playerScore, state.aiScore) > 0) ? $author$project$Game$PlayerWins : ((_Utils_cmp(state.aiScore, state.playerScore) > 0) ? $author$project$Game$AIWins : $author$project$Game$Draw)) : $author$project$Game$Ongoing));
 };
-var $author$project$Game$decrementProtectionList = function (list) {
-	return A2(
-		$elm$core$List$filter,
-		function (c) {
-			return c.remainingTurns > 0;
-		},
-		A2(
-			$elm$core$List$map,
-			function (c) {
-				return _Utils_update(
-					c,
-					{remainingTurns: c.remainingTurns - 1});
-			},
-			list));
-};
-var $author$project$Game$decrementProtection = function (state) {
-	return _Utils_update(
-		state,
-		{
-			protectedCells: $author$project$Game$decrementProtectionList(state.protectedCells)
-		});
-};
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Main$posStr = function (p) {
@@ -5874,6 +5853,28 @@ var $author$project$Game$attackBlockedByShield = F2(
 				shieldedCells: A2($author$project$Game$removeShieldAt, pos, state.shieldedCells)
 			});
 	});
+var $author$project$Game$decrementProtectionList = function (list) {
+	return A2(
+		$elm$core$List$filter,
+		function (c) {
+			return c.remainingTurns > 0;
+		},
+		A2(
+			$elm$core$List$map,
+			function (c) {
+				return _Utils_update(
+					c,
+					{remainingTurns: c.remainingTurns - 1});
+			},
+			list));
+};
+var $author$project$Game$decrementProtection = function (state) {
+	return _Utils_update(
+		state,
+		{
+			protectedCells: $author$project$Game$decrementProtectionList(state.protectedCells)
+		});
+};
 var $author$project$Game$attackCastleByAI = F2(
 	function (state, _v0) {
 		return $author$project$Game$decrementProtection(
@@ -6808,13 +6809,6 @@ var $author$project$AI$decide = function (state) {
 		}
 	}
 };
-var $author$project$Main$sideLabel = function (side) {
-	if (side.$ === 'Player') {
-		return 'Player';
-	} else {
-		return 'AI';
-	}
-};
 var $elm$core$Process$sleep = _Process_sleep;
 var $author$project$Main$runAIStep = function (model) {
 	var _v0 = $author$project$Game$checkVictory(model.gameState);
@@ -6829,10 +6823,7 @@ var $author$project$Main$runAIStep = function (model) {
 				var _v2 = A3($author$project$Game$applyAIMove, model.gameState, from, to);
 				if (_v2.$ === 'Ok') {
 					var newState = _v2.a;
-					var m = A2(
-						$author$project$Main$addLog,
-						actionLine + (' → Ok | currentSide=' + $author$project$Main$sideLabel(newState.currentSide)),
-						model);
+					var m = A2($author$project$Main$addLog, actionLine + ' → 完成，回合結束', model);
 					return _Utils_Tuple2(
 						_Utils_update(
 							m,
@@ -7206,9 +7197,143 @@ var $author$project$Debug$GameTests$horseMoveStateTests = function () {
 					}
 				}())));
 }();
-var $author$project$Debug$GameTests$runTests = _Utils_ap($author$project$Debug$GameTests$horseMoveStateTests, $author$project$Debug$GameTests$castleAttackHpTests);
+var $elm$core$Result$andThen = F2(
+	function (callback, result) {
+		if (result.$ === 'Ok') {
+			var value = result.a;
+			return callback(value);
+		} else {
+			var msg = result.a;
+			return $elm$core$Result$Err(msg);
+		}
+	});
+var $author$project$Debug$GameTests$itemDeductsScoreTests = function () {
+	var initial = $author$project$Game$init.playerScore;
+	var laserTests = function () {
+		var result = A4($author$project$Items$applyLaser, $author$project$Game$init, $author$project$Board$Player, true, 0);
+		if (result.$ === 'Err') {
+			var e = result.a;
+			return _List_fromArray(
+				['測試失敗(道具扣分-雷射): applyLaser 應成功，錯誤: ' + e]);
+		} else {
+			var s = result.a;
+			return (!_Utils_eq(
+				s.playerScore,
+				initial - $author$project$Items$cost($author$project$Items$Laser))) ? _List_fromArray(
+				[
+					'測試失敗(道具扣分-雷射): 玩家分數應為 ' + ($elm$core$String$fromInt(
+					initial - $author$project$Items$cost($author$project$Items$Laser)) + ('，實際 ' + $elm$core$String$fromInt(s.playerScore)))
+				]) : _List_Nil;
+		}
+	}();
+	var shieldTests = function () {
+		var to21 = {col: 1, row: 2};
+		var state1Result = A3(
+			$author$project$Game$applyPlayerMove,
+			$author$project$Game$init,
+			{col: 0, row: 0},
+			to21);
+		var shieldResult = A2(
+			$elm$core$Result$andThen,
+			function (s) {
+				return A3($author$project$Items$applyShield, s, $author$project$Board$Player, to21);
+			},
+			state1Result);
+		if (shieldResult.$ === 'Err') {
+			var e = shieldResult.a;
+			return _List_fromArray(
+				['測試失敗(道具扣分-護盾): applyShield 應成功，錯誤: ' + e]);
+		} else {
+			var s = shieldResult.a;
+			return (!_Utils_eq(
+				s.playerScore,
+				initial - $author$project$Items$cost($author$project$Items$Shield))) ? _List_fromArray(
+				[
+					'測試失敗(道具扣分-護盾): 玩家分數應為 ' + ($elm$core$String$fromInt(
+					initial - $author$project$Items$cost($author$project$Items$Shield)) + ('，實際 ' + $elm$core$String$fromInt(s.playerScore)))
+				]) : _List_Nil;
+		}
+	}();
+	var bombTests = function () {
+		var baseBoard = $author$project$Game$init.board;
+		var aiPiecePos = {col: 9, row: 7};
+		var stateWithAiPiece = _Utils_update(
+			$author$project$Game$init,
+			{
+				board: _Utils_update(
+					baseBoard,
+					{
+						aiPieces: _List_fromArray(
+							[aiPiecePos])
+					})
+			});
+		var result = A3($author$project$Items$applyBomb, stateWithAiPiece, $author$project$Board$Player, aiPiecePos);
+		if (result.$ === 'Err') {
+			var e = result.a;
+			return _List_fromArray(
+				['測試失敗(道具扣分-炸彈): applyBomb 應成功，錯誤: ' + e]);
+		} else {
+			var s = result.a;
+			return (!_Utils_eq(
+				s.playerScore,
+				initial - $author$project$Items$cost($author$project$Items$Bomb))) ? _List_fromArray(
+				[
+					'測試失敗(道具扣分-炸彈): 玩家分數應為 ' + ($elm$core$String$fromInt(
+					initial - $author$project$Items$cost($author$project$Items$Bomb)) + ('，實際 ' + $elm$core$String$fromInt(s.playerScore)))
+				]) : _List_Nil;
+		}
+	}();
+	return _Utils_ap(
+		bombTests,
+		_Utils_ap(laserTests, shieldTests));
+}();
+var $author$project$Debug$GameTests$shieldNoDoubleTests = function () {
+	var to21 = {col: 1, row: 2};
+	var from00 = {col: 0, row: 0};
+	var state1Result = A3($author$project$Game$applyPlayerMove, $author$project$Game$init, from00, to21);
+	var state2Result = A2(
+		$elm$core$Result$andThen,
+		function (s1) {
+			return A3($author$project$Items$applyShield, s1, $author$project$Board$Player, to21);
+		},
+		state1Result);
+	var secondShieldResult = A2(
+		$elm$core$Result$andThen,
+		function (s2) {
+			return A3($author$project$Items$applyShield, s2, $author$project$Board$Player, to21);
+		},
+		state2Result);
+	return _Utils_ap(
+		function () {
+			if (state2Result.$ === 'Err') {
+				return _List_fromArray(
+					['測試失敗(護盾不可重複): 第一次對 (2,1) 使用護盾應成功']);
+			} else {
+				return _List_Nil;
+			}
+		}(),
+		function () {
+			if (secondShieldResult.$ === 'Ok') {
+				return _List_fromArray(
+					['測試失敗(護盾不可重複): 同一格已有護盾時再使用護盾應失敗']);
+			} else {
+				return _List_Nil;
+			}
+		}());
+}();
+var $author$project$Debug$GameTests$runTests = _Utils_ap(
+	$author$project$Debug$GameTests$horseMoveStateTests,
+	_Utils_ap(
+		$author$project$Debug$GameTests$castleAttackHpTests,
+		_Utils_ap($author$project$Debug$GameTests$shieldNoDoubleTests, $author$project$Debug$GameTests$itemDeductsScoreTests)));
+var $author$project$Main$sideLabel = function (side) {
+	if (side.$ === 'Player') {
+		return 'Player';
+	} else {
+		return 'AI';
+	}
+};
 var $author$project$Main$ApplyPendingItem = {$: 'ApplyPendingItem'};
-var $author$project$Main$RunAITurn = {$: 'RunAITurn'};
 var $author$project$Main$getProtected = function (model) {
 	return $author$project$Game$protectedPositions(model.gameState);
 };
@@ -7649,19 +7774,24 @@ var $author$project$Main$update = F2(
 							var _v8 = A3($author$project$Items$applyBomb, model.gameState, $author$project$Board$AI, pos);
 							if (_v8.$ === 'Ok') {
 								var s = _v8.a;
-								var next = $author$project$Game$decrementProtection(
-									_Utils_update(
-										s,
-										{aiBombUse: s.aiBombUse + 1, currentSide: $author$project$Board$Player, turn: s.turn + 1}));
+								var next = _Utils_update(
+									s,
+									{aiBombUse: s.aiBombUse + 1});
+								var scoreLog = ' | 分數 玩家 ' + ($elm$core$String$fromInt(model.gameState.playerScore) + (' AI ' + ($elm$core$String$fromInt(model.gameState.aiScore) + ('→' + $elm$core$String$fromInt(next.aiScore)))));
 								var m = A2(
 									$author$project$Main$addLog,
-									'[回合 ' + ($elm$core$String$fromInt(model.gameState.turn) + ('] AI 使用 炸彈 於 ' + ($author$project$Main$posStr(pos) + ' → Ok'))),
+									'[回合 ' + ($elm$core$String$fromInt(model.gameState.turn) + ('] AI 使用 炸彈 於 ' + ($author$project$Main$posStr(pos) + (' → 完成（本回合繼續，AI 將移動棋子）' + scoreLog)))),
 									model);
 								return _Utils_Tuple2(
 									_Utils_update(
 										m,
 										{aiItemPendingApply: $elm$core$Maybe$Nothing, gameState: next}),
-									$elm$core$Platform$Cmd$none);
+									A2(
+										$elm$core$Task$perform,
+										function (_v9) {
+											return $author$project$Main$RunAITurn;
+										},
+										$elm$core$Process$sleep(350)));
 							} else {
 								var e = _v8.a;
 								return _Utils_Tuple2(
@@ -7675,24 +7805,29 @@ var $author$project$Main$update = F2(
 							}
 						case 'ShieldAt':
 							var pos = _v7.a.a;
-							var _v9 = A3($author$project$Items$applyShield, model.gameState, $author$project$Board$AI, pos);
-							if (_v9.$ === 'Ok') {
-								var s = _v9.a;
-								var next = $author$project$Game$decrementProtection(
-									_Utils_update(
-										s,
-										{aiShieldUse: s.aiShieldUse + 1, currentSide: $author$project$Board$Player, turn: s.turn + 1}));
+							var _v10 = A3($author$project$Items$applyShield, model.gameState, $author$project$Board$AI, pos);
+							if (_v10.$ === 'Ok') {
+								var s = _v10.a;
+								var next = _Utils_update(
+									s,
+									{aiShieldUse: s.aiShieldUse + 1});
+								var scoreLog = ' | 分數 玩家 ' + ($elm$core$String$fromInt(model.gameState.playerScore) + (' AI ' + ($elm$core$String$fromInt(model.gameState.aiScore) + ('→' + $elm$core$String$fromInt(next.aiScore)))));
 								var m = A2(
 									$author$project$Main$addLog,
-									'[回合 ' + ($elm$core$String$fromInt(model.gameState.turn) + ('] AI 使用 護盾 於 ' + ($author$project$Main$posStr(pos) + ' → Ok'))),
+									'[回合 ' + ($elm$core$String$fromInt(model.gameState.turn) + ('] AI 使用 護盾 於 ' + ($author$project$Main$posStr(pos) + (' → 完成（本回合繼續，AI 將移動棋子）' + scoreLog)))),
 									model);
 								return _Utils_Tuple2(
 									_Utils_update(
 										m,
 										{aiItemPendingApply: $elm$core$Maybe$Nothing, gameState: next}),
-									$elm$core$Platform$Cmd$none);
+									A2(
+										$elm$core$Task$perform,
+										function (_v11) {
+											return $author$project$Main$RunAITurn;
+										},
+										$elm$core$Process$sleep(350)));
 							} else {
-								var e = _v9.a;
+								var e = _v10.a;
 								return _Utils_Tuple2(
 									A2(
 										$author$project$Main$addLog,
@@ -7703,29 +7838,34 @@ var $author$project$Main$update = F2(
 									$elm$core$Platform$Cmd$none);
 							}
 						default:
-							var _v10 = _v7.a;
-							var isRow = _v10.a;
-							var index = _v10.b;
-							var displayPos = _v10.c;
-							var _v11 = A4($author$project$Items$applyLaser, model.gameState, $author$project$Board$AI, isRow, index);
-							if (_v11.$ === 'Ok') {
-								var s = _v11.a;
-								var next = $author$project$Game$decrementProtection(
-									_Utils_update(
-										s,
-										{aiLaserUse: s.aiLaserUse + 1, currentSide: $author$project$Board$Player, turn: s.turn + 1}));
+							var _v12 = _v7.a;
+							var isRow = _v12.a;
+							var index = _v12.b;
+							var displayPos = _v12.c;
+							var _v13 = A4($author$project$Items$applyLaser, model.gameState, $author$project$Board$AI, isRow, index);
+							if (_v13.$ === 'Ok') {
+								var s = _v13.a;
+								var next = _Utils_update(
+									s,
+									{aiLaserUse: s.aiLaserUse + 1});
+								var scoreLog = ' | 分數 玩家 ' + ($elm$core$String$fromInt(model.gameState.playerScore) + (' AI ' + ($elm$core$String$fromInt(model.gameState.aiScore) + ('→' + $elm$core$String$fromInt(next.aiScore)))));
 								var axis = isRow ? '行' : '列';
 								var m = A2(
 									$author$project$Main$addLog,
-									'[回合 ' + ($elm$core$String$fromInt(model.gameState.turn) + ('] AI 使用 雷射 ' + (axis + (' ' + ($elm$core$String$fromInt(index) + ' → Ok'))))),
+									'[回合 ' + ($elm$core$String$fromInt(model.gameState.turn) + ('] AI 使用 雷射 ' + (axis + (' ' + ($elm$core$String$fromInt(index) + (' → 完成（本回合繼續，AI 將移動棋子）' + scoreLog)))))),
 									model);
 								return _Utils_Tuple2(
 									_Utils_update(
 										m,
 										{aiItemPendingApply: $elm$core$Maybe$Nothing, gameState: next}),
-									$elm$core$Platform$Cmd$none);
+									A2(
+										$elm$core$Task$perform,
+										function (_v14) {
+											return $author$project$Main$RunAITurn;
+										},
+										$elm$core$Process$sleep(350)));
 							} else {
-								var e = _v11.a;
+								var e = _v13.a;
 								return _Utils_Tuple2(
 									A2(
 										$author$project$Main$addLog,
@@ -7740,11 +7880,11 @@ var $author$project$Main$update = F2(
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
 			default:
-				var _v12 = $author$project$Game$checkVictory(model.gameState);
-				if (_v12.$ === 'Ongoing') {
+				var _v15 = $author$project$Game$checkVictory(model.gameState);
+				if (_v15.$ === 'Ongoing') {
 					return A2($author$project$Main$updateOngoing, msg, model);
 				} else {
-					var result = _v12;
+					var result = _v15;
 					switch (msg.$) {
 						case 'Restart':
 							return _Utils_Tuple2(
@@ -8735,7 +8875,7 @@ var $author$project$Main$view = function (model) {
 									]),
 								_List_fromArray(
 									[
-										$elm$html$Html$text('破壞此行')
+										$elm$html$Html$text('破壞此列')
 									])),
 								A2(
 								$elm$html$Html$button,
@@ -8745,7 +8885,7 @@ var $author$project$Main$view = function (model) {
 									]),
 								_List_fromArray(
 									[
-										$elm$html$Html$text('破壞此列')
+										$elm$html$Html$text('破壞此行')
 									]))
 							]));
 				} else {
