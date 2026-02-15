@@ -353,7 +353,9 @@ updateOngoing msg model =
                                                 _ = Debug.log "[apply] Ok newState.playerPieces" (List.map (\p -> ( p.row, p.col )) newState.board.playerPieces)
                                                 _ = Debug.log "[apply] Ok newState.currentSide" newState.currentSide
                                                 m0 = addLog ("[回合 " ++ String.fromInt model.gameState.turn ++ "] 玩家放置 馬 " ++ posStr from ++ "→" ++ posStr pos ++ " → 完成") model
-                                                base = { m0 | gameState = newState, selectedPiece = Nothing, legalMoves = [], errorMessage = Nothing }
+                                                playerAttackedAiCastle = positionEquals pos aiCastlePos && newState.aiCastleHp < model.gameState.aiCastleHp
+                                                m0cast = if playerAttackedAiCastle then addLog ("玩家攻擊 AI 主堡，HP " ++ String.fromInt model.gameState.aiCastleHp ++ "→" ++ String.fromInt newState.aiCastleHp) m0 else m0
+                                                base = { m0cast | gameState = newState, selectedPiece = Nothing, legalMoves = [], errorMessage = Nothing }
                                                 m1 = castleHpLog model.gameState newState base
                                                 m2 = scoreChangeLog model.gameState newState m1
                                                 m3 = shieldConsumedLog model.gameState newState m2

@@ -7844,6 +7844,7 @@ var $author$project$Main$updateOngoing = F2(
 									var _v23 = A3($author$project$Game$applyPlayerMove, model.gameState, from, pos);
 									if (_v23.$ === 'Ok') {
 										var newState = _v23.a;
+										var playerAttackedAiCastle = A2($author$project$Board$positionEquals, pos, $author$project$Board$aiCastlePos) && (_Utils_cmp(newState.aiCastleHp, model.gameState.aiCastleHp) < 0);
 										var noShieldConsumed = _Utils_eq(
 											$elm$core$List$length(newState.shieldedCells),
 											$elm$core$List$length(model.gameState.shieldedCells));
@@ -7852,8 +7853,12 @@ var $author$project$Main$updateOngoing = F2(
 											$author$project$Main$addLog,
 											'[回合 ' + ($elm$core$String$fromInt(model.gameState.turn) + ('] 玩家放置 馬 ' + ($author$project$Main$posStr(from) + ('→' + ($author$project$Main$posStr(pos) + ' → 完成'))))),
 											model);
+										var m0cast = playerAttackedAiCastle ? A2(
+											$author$project$Main$addLog,
+											'玩家攻擊 AI 主堡，HP ' + ($elm$core$String$fromInt(model.gameState.aiCastleHp) + ('→' + $elm$core$String$fromInt(newState.aiCastleHp))),
+											m0) : m0;
 										var base = _Utils_update(
-											m0,
+											m0cast,
 											{errorMessage: $elm$core$Maybe$Nothing, gameState: newState, legalMoves: _List_Nil, selectedPiece: $elm$core$Maybe$Nothing});
 										var m1 = A3($author$project$Main$castleHpLog, model.gameState, newState, base);
 										var m2 = A3($author$project$Main$scoreChangeLog, model.gameState, newState, m1);
