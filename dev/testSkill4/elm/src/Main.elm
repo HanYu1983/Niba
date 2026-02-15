@@ -610,6 +610,8 @@ view model =
         , ToolbarView.view
             model.gameState.playerScore
             model.gameState.aiScore
+            model.gameState.playerCastleHp
+            model.gameState.aiCastleHp
             model.gameState.turn
             (model.gameState.currentSide == Player)
             model.itemMode
@@ -643,6 +645,8 @@ view model =
                     (if model.gameState.turn > Game.maxTurns then "回合上限" else "主堡被佔領")
                     model.gameState.playerScore
                     model.gameState.aiScore
+                    model.gameState.playerCastleHp
+                    model.gameState.aiCastleHp
                     model.gameState.turn
                     model.gameState.playerCaptures
                     model.gameState.aiCaptures

@@ -20,10 +20,12 @@ view :
     -> Int
     -> Int
     -> Int
+    -> Int
+    -> Int
     -> msg
     -> msg
     -> Html msg
-view result reason playerScore aiScore turn playerCaptures aiCaptures playerBomb playerLaser playerShield aiBomb aiLaser aiShield onRestart onMainMenu =
+view result reason playerScore aiScore playerCastleHp aiCastleHp turn playerCaptures aiCaptures playerBomb playerLaser playerShield aiBomb aiLaser aiShield onRestart onMainMenu =
     let
         title =
             case result of
@@ -35,8 +37,8 @@ view result reason playerScore aiScore turn playerCaptures aiCaptures playerBomb
     div [ style "padding" "24px", style "text-align" "center", style "max-width" "400px", style "margin" "0 auto" ]
         [ h2 [] [ text title ]
         , div [ style "margin" "8px 0" ] [ text ("終局原因: " ++ reason) ]
-        , div [ style "margin" "8px 0" ] [ text ("玩家分數: " ++ String.fromInt playerScore) ]
-        , div [ style "margin" "8px 0" ] [ text ("AI 分數: " ++ String.fromInt aiScore) ]
+        , div [ style "margin" "8px 0" ] [ text ("玩家分數: " ++ String.fromInt playerScore ++ " / AI 分數: " ++ String.fromInt aiScore) ]
+        , div [ style "margin" "8px 0" ] [ text ("玩家主堡 HP: " ++ String.fromInt playerCastleHp ++ " / AI 主堡 HP: " ++ String.fromInt aiCastleHp) ]
         , div [ style "margin" "8px 0" ] [ text ("總回合數: " ++ String.fromInt turn) ]
         , div [ style "margin" "8px 0" ] [ text ("玩家吃子: " ++ String.fromInt playerCaptures ++ " / AI 吃子: " ++ String.fromInt aiCaptures) ]
         , div [ style "margin" "8px 0" ] [ text ("玩家道具 炸/雷/盾: " ++ String.fromInt playerBomb ++ " / " ++ String.fromInt playerLaser ++ " / " ++ String.fromInt playerShield) ]

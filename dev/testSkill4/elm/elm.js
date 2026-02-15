@@ -8200,158 +8200,162 @@ var $author$project$Ui$Result$view = function (result) {
 	return function (reason) {
 		return function (playerScore) {
 			return function (aiScore) {
-				return function (turn) {
-					return function (playerCaptures) {
-						return function (aiCaptures) {
-							return function (playerBomb) {
-								return function (playerLaser) {
-									return function (playerShield) {
-										return function (aiBomb) {
-											return function (aiLaser) {
-												return function (aiShield) {
-													return function (onRestart) {
-														return function (onMainMenu) {
-															var title = function () {
-																switch (result.$) {
-																	case 'PlayerWins':
-																		return '玩家勝利';
-																	case 'AIWins':
-																		return 'AI 勝利';
-																	case 'Draw':
-																		return '平局';
-																	default:
-																		return '';
-																}
-															}();
-															return A2(
-																$elm$html$Html$div,
-																_List_fromArray(
-																	[
-																		A2($elm$html$Html$Attributes$style, 'padding', '24px'),
-																		A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
-																		A2($elm$html$Html$Attributes$style, 'max-width', '400px'),
-																		A2($elm$html$Html$Attributes$style, 'margin', '0 auto')
-																	]),
-																_List_fromArray(
-																	[
-																		A2(
-																		$elm$html$Html$h2,
-																		_List_Nil,
-																		_List_fromArray(
-																			[
-																				$elm$html$Html$text(title)
-																			])),
-																		A2(
+				return function (playerCastleHp) {
+					return function (aiCastleHp) {
+						return function (turn) {
+							return function (playerCaptures) {
+								return function (aiCaptures) {
+									return function (playerBomb) {
+										return function (playerLaser) {
+											return function (playerShield) {
+												return function (aiBomb) {
+													return function (aiLaser) {
+														return function (aiShield) {
+															return function (onRestart) {
+																return function (onMainMenu) {
+																	var title = function () {
+																		switch (result.$) {
+																			case 'PlayerWins':
+																				return '玩家勝利';
+																			case 'AIWins':
+																				return 'AI 勝利';
+																			case 'Draw':
+																				return '平局';
+																			default:
+																				return '';
+																		}
+																	}();
+																	return A2(
 																		$elm$html$Html$div,
 																		_List_fromArray(
 																			[
-																				A2($elm$html$Html$Attributes$style, 'margin', '8px 0')
-																			]),
-																		_List_fromArray(
-																			[
-																				$elm$html$Html$text('終局原因: ' + reason)
-																			])),
-																		A2(
-																		$elm$html$Html$div,
-																		_List_fromArray(
-																			[
-																				A2($elm$html$Html$Attributes$style, 'margin', '8px 0')
-																			]),
-																		_List_fromArray(
-																			[
-																				$elm$html$Html$text(
-																				'玩家分數: ' + $elm$core$String$fromInt(playerScore))
-																			])),
-																		A2(
-																		$elm$html$Html$div,
-																		_List_fromArray(
-																			[
-																				A2($elm$html$Html$Attributes$style, 'margin', '8px 0')
-																			]),
-																		_List_fromArray(
-																			[
-																				$elm$html$Html$text(
-																				'AI 分數: ' + $elm$core$String$fromInt(aiScore))
-																			])),
-																		A2(
-																		$elm$html$Html$div,
-																		_List_fromArray(
-																			[
-																				A2($elm$html$Html$Attributes$style, 'margin', '8px 0')
-																			]),
-																		_List_fromArray(
-																			[
-																				$elm$html$Html$text(
-																				'總回合數: ' + $elm$core$String$fromInt(turn))
-																			])),
-																		A2(
-																		$elm$html$Html$div,
-																		_List_fromArray(
-																			[
-																				A2($elm$html$Html$Attributes$style, 'margin', '8px 0')
-																			]),
-																		_List_fromArray(
-																			[
-																				$elm$html$Html$text(
-																				'玩家吃子: ' + ($elm$core$String$fromInt(playerCaptures) + (' / AI 吃子: ' + $elm$core$String$fromInt(aiCaptures))))
-																			])),
-																		A2(
-																		$elm$html$Html$div,
-																		_List_fromArray(
-																			[
-																				A2($elm$html$Html$Attributes$style, 'margin', '8px 0')
-																			]),
-																		_List_fromArray(
-																			[
-																				$elm$html$Html$text(
-																				'玩家道具 炸/雷/盾: ' + ($elm$core$String$fromInt(playerBomb) + (' / ' + ($elm$core$String$fromInt(playerLaser) + (' / ' + $elm$core$String$fromInt(playerShield))))))
-																			])),
-																		A2(
-																		$elm$html$Html$div,
-																		_List_fromArray(
-																			[
-																				A2($elm$html$Html$Attributes$style, 'margin', '8px 0')
-																			]),
-																		_List_fromArray(
-																			[
-																				$elm$html$Html$text(
-																				'AI 道具 炸/雷/盾: ' + ($elm$core$String$fromInt(aiBomb) + (' / ' + ($elm$core$String$fromInt(aiLaser) + (' / ' + $elm$core$String$fromInt(aiShield))))))
-																			])),
-																		A2(
-																		$elm$html$Html$div,
-																		_List_fromArray(
-																			[
-																				A2($elm$html$Html$Attributes$style, 'margin-top', '16px'),
-																				A2($elm$html$Html$Attributes$style, 'display', 'flex'),
-																				A2($elm$html$Html$Attributes$style, 'gap', '8px'),
-																				A2($elm$html$Html$Attributes$style, 'justify-content', 'center')
+																				A2($elm$html$Html$Attributes$style, 'padding', '24px'),
+																				A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
+																				A2($elm$html$Html$Attributes$style, 'max-width', '400px'),
+																				A2($elm$html$Html$Attributes$style, 'margin', '0 auto')
 																			]),
 																		_List_fromArray(
 																			[
 																				A2(
-																				$elm$html$Html$button,
+																				$elm$html$Html$h2,
+																				_List_Nil,
 																				_List_fromArray(
 																					[
-																						$elm$html$Html$Events$onClick(onRestart),
-																						A2($elm$html$Html$Attributes$style, 'padding', '8px 16px')
-																					]),
-																				_List_fromArray(
-																					[
-																						$elm$html$Html$text('重新開始')
+																						$elm$html$Html$text(title)
 																					])),
 																				A2(
-																				$elm$html$Html$button,
+																				$elm$html$Html$div,
 																				_List_fromArray(
 																					[
-																						$elm$html$Html$Events$onClick(onMainMenu),
-																						A2($elm$html$Html$Attributes$style, 'padding', '8px 16px')
+																						A2($elm$html$Html$Attributes$style, 'margin', '8px 0')
 																					]),
 																				_List_fromArray(
 																					[
-																						$elm$html$Html$text('回主選單')
+																						$elm$html$Html$text('終局原因: ' + reason)
+																					])),
+																				A2(
+																				$elm$html$Html$div,
+																				_List_fromArray(
+																					[
+																						A2($elm$html$Html$Attributes$style, 'margin', '8px 0')
+																					]),
+																				_List_fromArray(
+																					[
+																						$elm$html$Html$text(
+																						'玩家分數: ' + ($elm$core$String$fromInt(playerScore) + (' / AI 分數: ' + $elm$core$String$fromInt(aiScore))))
+																					])),
+																				A2(
+																				$elm$html$Html$div,
+																				_List_fromArray(
+																					[
+																						A2($elm$html$Html$Attributes$style, 'margin', '8px 0')
+																					]),
+																				_List_fromArray(
+																					[
+																						$elm$html$Html$text(
+																						'玩家主堡 HP: ' + ($elm$core$String$fromInt(playerCastleHp) + (' / AI 主堡 HP: ' + $elm$core$String$fromInt(aiCastleHp))))
+																					])),
+																				A2(
+																				$elm$html$Html$div,
+																				_List_fromArray(
+																					[
+																						A2($elm$html$Html$Attributes$style, 'margin', '8px 0')
+																					]),
+																				_List_fromArray(
+																					[
+																						$elm$html$Html$text(
+																						'總回合數: ' + $elm$core$String$fromInt(turn))
+																					])),
+																				A2(
+																				$elm$html$Html$div,
+																				_List_fromArray(
+																					[
+																						A2($elm$html$Html$Attributes$style, 'margin', '8px 0')
+																					]),
+																				_List_fromArray(
+																					[
+																						$elm$html$Html$text(
+																						'玩家吃子: ' + ($elm$core$String$fromInt(playerCaptures) + (' / AI 吃子: ' + $elm$core$String$fromInt(aiCaptures))))
+																					])),
+																				A2(
+																				$elm$html$Html$div,
+																				_List_fromArray(
+																					[
+																						A2($elm$html$Html$Attributes$style, 'margin', '8px 0')
+																					]),
+																				_List_fromArray(
+																					[
+																						$elm$html$Html$text(
+																						'玩家道具 炸/雷/盾: ' + ($elm$core$String$fromInt(playerBomb) + (' / ' + ($elm$core$String$fromInt(playerLaser) + (' / ' + $elm$core$String$fromInt(playerShield))))))
+																					])),
+																				A2(
+																				$elm$html$Html$div,
+																				_List_fromArray(
+																					[
+																						A2($elm$html$Html$Attributes$style, 'margin', '8px 0')
+																					]),
+																				_List_fromArray(
+																					[
+																						$elm$html$Html$text(
+																						'AI 道具 炸/雷/盾: ' + ($elm$core$String$fromInt(aiBomb) + (' / ' + ($elm$core$String$fromInt(aiLaser) + (' / ' + $elm$core$String$fromInt(aiShield))))))
+																					])),
+																				A2(
+																				$elm$html$Html$div,
+																				_List_fromArray(
+																					[
+																						A2($elm$html$Html$Attributes$style, 'margin-top', '16px'),
+																						A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+																						A2($elm$html$Html$Attributes$style, 'gap', '8px'),
+																						A2($elm$html$Html$Attributes$style, 'justify-content', 'center')
+																					]),
+																				_List_fromArray(
+																					[
+																						A2(
+																						$elm$html$Html$button,
+																						_List_fromArray(
+																							[
+																								$elm$html$Html$Events$onClick(onRestart),
+																								A2($elm$html$Html$Attributes$style, 'padding', '8px 16px')
+																							]),
+																						_List_fromArray(
+																							[
+																								$elm$html$Html$text('重新開始')
+																							])),
+																						A2(
+																						$elm$html$Html$button,
+																						_List_fromArray(
+																							[
+																								$elm$html$Html$Events$onClick(onMainMenu),
+																								A2($elm$html$Html$Attributes$style, 'padding', '8px 16px')
+																							]),
+																						_List_fromArray(
+																							[
+																								$elm$html$Html$text('回主選單')
+																							]))
 																					]))
-																			]))
-																	]));
+																			]));
+																};
+															};
 														};
 													};
 												};
@@ -8391,8 +8395,8 @@ var $author$project$Ui$Toolbar$itemButton = F3(
 					$elm$html$Html$text(label)
 				]));
 	});
-var $author$project$Ui$Toolbar$view = F7(
-	function (playerScore, aiScore, turn, isPlayerTurn, currentItem, onItemClick, onCancelItem) {
+var $author$project$Ui$Toolbar$view = F9(
+	function (playerScore, aiScore, playerCastleHp, aiCastleHp, turn, isPlayerTurn, currentItem, onItemClick, onCancelItem) {
 		return A2(
 			$elm$html$Html$div,
 			_List_fromArray(
@@ -8426,6 +8430,28 @@ var $author$project$Ui$Toolbar$view = F7(
 						[
 							$elm$html$Html$text(
 							'AI 分數: ' + $elm$core$String$fromInt(aiScore))
+						])),
+					A2(
+					$elm$html$Html$div,
+					_List_fromArray(
+						[
+							A2($elm$html$Html$Attributes$style, 'margin-right', '16px')
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text(
+							'玩家主堡 HP: ' + $elm$core$String$fromInt(playerCastleHp))
+						])),
+					A2(
+					$elm$html$Html$div,
+					_List_fromArray(
+						[
+							A2($elm$html$Html$Attributes$style, 'margin-right', '16px')
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text(
+							'AI 主堡 HP: ' + $elm$core$String$fromInt(aiCastleHp))
 						])),
 					A2(
 					$elm$html$Html$div,
@@ -8545,10 +8571,12 @@ var $author$project$Main$view = function (model) {
 									]));
 						},
 						model.testErrors))),
-				A7(
+				A9(
 				$author$project$Ui$Toolbar$view,
 				model.gameState.playerScore,
 				model.gameState.aiScore,
+				model.gameState.playerCastleHp,
+				model.gameState.aiCastleHp,
 				model.gameState.turn,
 				_Utils_eq(model.gameState.currentSide, $author$project$Board$Player),
 				model.itemMode,
@@ -8617,7 +8645,7 @@ var $author$project$Main$view = function (model) {
 					return $elm$html$Html$text('');
 				} else {
 					return $author$project$Ui$Result$view(result)(
-						(_Utils_cmp(model.gameState.turn, $author$project$Game$maxTurns) > 0) ? '回合上限' : '主堡被佔領')(model.gameState.playerScore)(model.gameState.aiScore)(model.gameState.turn)(model.gameState.playerCaptures)(model.gameState.aiCaptures)(model.gameState.playerBombUse)(model.gameState.playerLaserUse)(model.gameState.playerShieldUse)(model.gameState.aiBombUse)(model.gameState.aiLaserUse)(model.gameState.aiShieldUse)($author$project$Main$Restart)($author$project$Main$MainMenu);
+						(_Utils_cmp(model.gameState.turn, $author$project$Game$maxTurns) > 0) ? '回合上限' : '主堡被佔領')(model.gameState.playerScore)(model.gameState.aiScore)(model.gameState.playerCastleHp)(model.gameState.aiCastleHp)(model.gameState.turn)(model.gameState.playerCaptures)(model.gameState.aiCaptures)(model.gameState.playerBombUse)(model.gameState.playerLaserUse)(model.gameState.playerShieldUse)(model.gameState.aiBombUse)(model.gameState.aiLaserUse)(model.gameState.aiShieldUse)($author$project$Main$Restart)($author$project$Main$MainMenu);
 				}
 			}()
 			]));
