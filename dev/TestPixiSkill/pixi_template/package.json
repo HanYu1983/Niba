@@ -1,0 +1,24 @@
+{
+  "name": "app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "NODE_ENV=production webpack && node convert_to_base64.js",
+    "build:dev": "NODE_ENV=development webpack",
+    "watch": "webpack --watch"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1"
+  },
+  "devDependencies": {
+    "raw-loader": "^4.0.2",
+    "terser-webpack-plugin": "^5.3.14",
+    "url-loader": "^4.1.1",
+    "mime": "^4.0.7"
+  }
+}
