@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-雙 Agent 協作：智能家居熱門新聞
-- Agent 1（新聞查詢）：查詢最近最熱門的 2 條智能家居新聞，附來源網址
+雙 Agent 協作：智能家居熱門新聞（含上網查詢 MCP/Plugin）
+- 上網查詢 Plugin：使用 DuckDuckGo 搜尋網路，取得新聞來源與連結
+- Agent 1（新聞查詢）：根據搜尋結果挑選 2 條最熱門新聞，附來源網址
 - Agent 2（摘要寫入）：將查到的資料總結並以 Markdown 寫入檔案
 使用 Semantic Kernel + OpenRouter。
 """
@@ -11,8 +12,10 @@ import asyncio
 import os
 import warnings
 from pathlib import Path
+from typing import Annotated
 
 warnings.filterwarnings("ignore", message=".*urllib3 v2 only supports OpenSSL.*")
+warnings.filterwarnings("ignore", message=".*duckduckgo_search.*renamed to.*")
 
 try:
     from dotenv import load_dotenv
@@ -20,11 +23,13 @@ try:
 except ImportError:
     pass
 
+from duckduckgo_search import DDGS
 from openai import AsyncOpenAI
 from semantic_kernel import Kernel
 from semantic_kernel.connectors.ai.open_ai import OpenAIChatCompletion
 from semantic_kernel.connectors.ai.open_ai import OpenAIChatPromptExecutionSettings
 from semantic_kernel.functions.kernel_arguments import KernelArguments
+from semantic_kernel.functions.kernel_function_decorator import kernel_function
 from semantic_kernel.prompt_template import PromptTemplateConfig
 
 OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
@@ -33,15 +38,53 @@ OUTPUT_FILE = Path(__file__).resolve().parent / "smart_home_news_report.md"
 
 
 # ---------------------------------------------------------------------------
-# Agent 1：新聞查詢（只取 2 條，附來源網址）
+# 上網查詢 Plugin（MCP 風格：提供網路搜尋能力給 Agent）
 # ---------------------------------------------------------------------------
-NEWS_SEARCHER_PROMPT = """你是一位智能家居領域的資訊助理。請「直接用文字」列出最近最熱門的 2 條智能家居相關新聞。
+class WebSearchPlugin:
+    """提供網路搜尋的 Plugin，供 AI Agent 上網查詢新聞等。"""
 
-重要：請直接輸出純文字內容，不要使用任何搜尋工具、不要只輸出 JSON 或 API 呼叫。請根據你的知識寫出 2 條真實或具代表性的熱門新聞。
+    @kernel_function(
+        name="search_news",
+        description="在網路上搜尋指定關鍵字的新聞，回傳標題、摘要與來源網址。用於查詢熱門新聞。",
+    )
+    def search_news(
+        self,
+        query: Annotated[str, "搜尋關鍵字，例如：智能家居 熱門新聞 2025"],
+        max_results: Annotated[int, "最多回傳幾筆結果"] = 8,
+    ) -> str:
+        """使用 DuckDuckGo 搜尋新聞，回傳整理後的文字（標題、摘要、URL）。"""
+        return _do_web_search(query, max_results)
+
+
+def _do_web_search(query: str, max_results: int = 8) -> str:
+    """同步執行網路搜尋（在執行緒中呼叫，避免阻塞）。先試新聞搜尋，無結果則改為一般搜尋。"""
+    try:
+        with DDGS() as ddgs:
+            results = list(ddgs.news(query, max_results=max_results))
+            if not results:
+                # 新聞無結果時改用一般網頁搜尋
+                results = list(ddgs.text(query, max_results=max_results))
+    except Exception as e:
+        return f"[搜尋發生錯誤: {e}]"
+    if not results:
+        return "[未找到相關結果]"
+    lines = []
+    for i, r in enumerate(results, 1):
+        title = r.get("title") or ""
+        body = r.get("body") or r.get("href") or ""
+        url = r.get("url") or r.get("href") or ""
+        lines.append(f"【{i}】{title}\n摘要：{body}\n來源：{url}")
+    return "\n\n".join(lines)
+
+
+# ---------------------------------------------------------------------------
+# Agent 1：根據「搜尋結果」挑選 2 條新聞（附來源網址）
+# ---------------------------------------------------------------------------
+NEWS_SEARCHER_PROMPT = """你是一位資訊助理。以下是用「上網查詢」得到的搜尋結果，請從中挑選「最熱門、最值得報導」的 2 條semantic kernel相關新聞。
 
 要求：
-- 只輸出 2 條新聞。
-- 每條請包含：標題、簡短摘要（1～2 句）、以及來源網址（可為真實或範例格式的 URL）。
+- 只輸出 2 條新聞，必須來自下方搜尋結果，不要編造。
+- 每條請包含：標題、簡短摘要（1～2 句）、以及來源網址（請使用搜尋結果中的「來源」URL）。
 - 輸出格式請用清楚的分段，例如：
   新聞1標題：...
   新聞1摘要：...
@@ -49,16 +92,21 @@ NEWS_SEARCHER_PROMPT = """你是一位智能家居領域的資訊助理。請「
   新聞2標題：...
   新聞2摘要：...
   新聞2來源：...
-"""
+
+以下是網路搜尋結果：
+---
+{{$search_results}}
+---
+請直接輸出上述格式的 2 條新聞，不要加上其他說明。"""
 
 
 # ---------------------------------------------------------------------------
 # Agent 2：將新聞內容總結並整理成 Markdown
 # ---------------------------------------------------------------------------
-MARKDOWN_WRITER_PROMPT = """你是一位專業的技術寫作助理。請將以下「智能家居熱門新聞」的原始內容，整理成一份簡潔的 Markdown 報告。
+MARKDOWN_WRITER_PROMPT = """你是一位專業的技術寫作助理。請將以下「semantic kernel 熱門新聞」的原始內容，整理成一份簡潔的 Markdown 報告。
 
 要求：
-- 標題使用： # 智能家居熱門新聞摘要
+- 標題使用： # semantic kernel 熱門新聞摘要
 - 每條新聞用 ## 編號. 標題 作為小標，接著一段摘要，最後一行用「來源：」加上可點擊的連結，例如：來源：[連結文字](URL)
 - 保持簡短、易讀，不要添加額外章節。
 - 只根據提供的內容撰寫，不要編造沒有出現的新聞或網址。
@@ -91,6 +139,9 @@ async def main():
         )
     )
 
+    # ----- 上網查詢 Plugin（MCP 風格） -----
+    kernel.add_plugin(WebSearchPlugin(), plugin_name="web_search_plugin")
+
     execution_settings = OpenAIChatPromptExecutionSettings(
         service_id="default",
         ai_model_id=model_id,
@@ -98,12 +149,27 @@ async def main():
         temperature=0.3,
     )
 
-    # ----- Agent 1：新聞查詢 -----
+    # ----- Step 1：上網查詢（呼叫 MCP/Plugin 的搜尋能力） -----
+    search_query = "semantic kernel 2026"
+    print(f"上網查詢中：{search_query}")
+    search_results_text = await asyncio.to_thread(_do_web_search, search_query, 8)
+    if not search_results_text:
+        print("上網查詢未取得結果。")
+        return
+    if search_results_text.strip().startswith("[搜尋發生錯誤"):
+        print("上網查詢錯誤：", search_results_text[:250])
+        return
+    print("上網查詢完成。\n")
+
+    # print(search_results_text)
+    # return
+
+    # ----- Step 2：Agent 1 根據搜尋結果挑選 2 條新聞 -----
     news_searcher_config = PromptTemplateConfig(
         template=NEWS_SEARCHER_PROMPT,
         name="news_searcher",
         template_format="semantic-kernel",
-        input_variables=[],
+        input_variables=[{"name": "search_results", "description": "網路搜尋結果文字"}],
         execution_settings=execution_settings,
     )
     news_searcher = kernel.add_function(
@@ -113,7 +179,10 @@ async def main():
     )
 
     print("Agent 1（新聞查詢）執行中…")
-    result1 = await kernel.invoke(news_searcher)
+    result1 = await kernel.invoke(
+        news_searcher,
+        arguments=KernelArguments(search_results=search_results_text),
+    )
     news_content = _get_text(result1)
     if not news_content or not news_content.strip():
         print("Agent 1 未傳回內容，請檢查 OPENROUTER_API_KEY 或稍後重試。")
