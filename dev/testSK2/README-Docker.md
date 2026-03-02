@@ -33,6 +33,11 @@ docker-compose run --rm app python hello_planner.py
 docker-compose down
 ```
 
+## Qdrant 向量庫
+
+- 執行 `docker-compose up -d` 會一併啟動 **Qdrant**（port 6333、6334），資料持久化在 volume `qdrant_data`。
+- 測試 SK + Qdrant：`docker-compose run --rm app python test_qdrant_sk.py`（需設定 `OPENAI_API_KEY`）。
+
 ## Volume 說明
 
 - `.:/app` 表示**本機專案目錄**掛載到容器內的 `/app`。
