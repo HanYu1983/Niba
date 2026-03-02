@@ -1,0 +1,28 @@
+# F# 命令列開發環境（僅用 docker-compose，無 Dockerfile）
+# 使用 volume 掛載本地目錄，編輯與執行皆在容器內
+
+services:
+  fsharp-dev:
+    image: mcr.microsoft.com/dotnet/sdk:8.0
+    container_name: fsharp-dev
+    working_dir: /app
+    volumes:
+      - .:/app
+    stdin_open: true
+    tty: true
+    command: ["bash", "-c", "dotnet --version && echo '--- F# 開發環境就緒。可用: dotnet fsi, dotnet run, dotnet build ---' && exec bash"]
+
+  # Semantic Kernel Hello World：使用 OpenRouter，需傳入 OPENROUTER_API_KEY
+  # 執行：docker compose run --rm run-sk
+  # 或：  docker compose run --rm -e OPENROUTER_API_KEY=sk-or-v1-xxx run-sk
+  run-sk:
+    image: mcr.microsoft.com/dotnet/sdk:8.0
+    container_name: run-sk
+    working_dir: /app/HelloSk
+    volumes:
+      - .:/app
+    environment:
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY:-}
+      - OPENROUTER_MODEL=${OPENROUTER_MODEL:-minimax/minimax-m2.5}
+      - OPENROUTER_BASE_URL=${OPENROUTER_BASE_URL:-https://openrouter.ai/api/v1}
+    command: ["dotnet", "run"]
