@@ -1,6 +1,7 @@
 # Semantic Kernel 最新版（需 Python 3.10+，planner 以 function calling 為主）
 semantic-kernel>=1.0.0
 semantic-kernel[qdrant]
+semantic-kernel[mcp]
 python-dotenv>=1.0.0
 openai>=1.0.0
 qdrant-client>=1.7.0

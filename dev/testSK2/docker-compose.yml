@@ -12,14 +12,32 @@ services:
       - .env
     environment:
       - PYTHONUNBUFFERED=1
-      # 從 app 容器連 Qdrant 用服務名
       - QDRANT_HOST=qdrant
       - QDRANT_PORT=6333
+      # 從 app 容器連 MCP 用服務名（SSE 端點）
+      - MCP_URL=http://mcp:8000
     depends_on:
       - qdrant
+      - mcp
     stdin_open: true
     tty: true
     command: ["sleep", "infinity"]
+
+  # FastMCP 讀檔 MCP 伺服器（供 SK 以 MCP plugin 呼叫）
+  mcp:
+    build:
+      context: ./mcp_server
+      dockerfile: Dockerfile
+    image: testsk2-mcp:latest
+    container_name: mcp
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./mcp_server/data:/data
+    environment:
+      - DATA_DIR=/data
+      - MCP_SSE=1
+      - MCP_PORT=8000
 
   # Qdrant 向量資料庫（供 SK 向量記憶 / RAG 使用）
   qdrant:

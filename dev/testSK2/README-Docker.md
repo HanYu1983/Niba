@@ -38,6 +38,13 @@ docker-compose down
 - 執行 `docker-compose up -d` 會一併啟動 **Qdrant**（port 6333、6334），資料持久化在 volume `qdrant_data`。
 - 測試 SK + Qdrant：`docker-compose run --rm app python test_qdrant_sk.py`（需設定 `OPENAI_API_KEY`）。
 
+## MCP 讀檔伺服器（FastMCP）
+
+- **mcp** 服務：FastMCP 提供的讀檔 MCP（工具 `read_file`、`list_dir`），port 8000，SSE 端點 `/sse`。
+- 資料目錄掛載為 `./mcp_server/data` → 容器內 `/data`，可在此放檔供 `read_file` 讀取。
+- 測試 SK 連本地 MCP：`docker-compose run --rm app python test_mcp_sk.py`（需先 `docker-compose up -d` 啟動 mcp）。
+- 自訂 prompt 例：`docker-compose run --rm app python test_mcp_sk.py "用 list_dir 列出 /data 目錄"`
+
 ## Volume 說明
 
 - `.:/app` 表示**本機專案目錄**掛載到容器內的 `/app`。
