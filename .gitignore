@@ -166,3 +166,4 @@ localtmp
 elm-stuff
 
 .venv
+__pycache__

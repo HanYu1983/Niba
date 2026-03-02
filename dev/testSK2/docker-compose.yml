@@ -1,0 +1,21 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: testsk2-app:latest
+    container_name: testsk2
+    # 用 volume 掛載本機專案目錄，本機改檔即反映到容器內
+    volumes:
+      - .:/app
+    # 工作目錄即掛載的 /app（本機專案根目錄）
+    working_dir: /app
+    # 環境變數可從本機 .env 帶入（docker-compose 會自動讀取同目錄 .env）
+    env_file:
+      - .env
+    environment:
+      - PYTHONUNBUFFERED=1
+    # 預設不執行一次性指令，方便用 run 進入環境
+    stdin_open: true
+    tty: true
+    command: ["sleep", "infinity"]

@@ -1,0 +1,8 @@
+# 不送進 Docker build 的檔案（volume 會掛載本機目錄，這些不需打包進 image）
+.venv
+__pycache__
+*.pyc
+.git
+.env
+*.md
+.DS_Store
