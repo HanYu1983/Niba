@@ -80,11 +80,10 @@ def _do_web_search(query: str, max_results: int = 8) -> str:
 # ---------------------------------------------------------------------------
 # Agent 1：根據「搜尋結果」挑選 2 條新聞（附來源網址）
 # ---------------------------------------------------------------------------
-NEWS_SEARCHER_PROMPT = """你是一位資訊助理。以下是用「上網查詢」得到的搜尋結果，請從中挑選「最熱門、最值得報導」的 2 條semantic kernel相關新聞。
+NEWS_SEARCHER_PROMPT = """你是一位資訊助理。以下是用「上網查詢」得到的搜尋結果，將結果整理成新聞摘要。
 
 要求：
-- 只輸出 2 條新聞，必須來自下方搜尋結果，不要編造。
-- 每條請包含：標題、簡短摘要（1～2 句）、以及來源網址（請使用搜尋結果中的「來源」URL）。
+- 每條請包含：標題、簡短摘要、以及來源網址（請使用搜尋結果中的「來源」URL）。
 - 輸出格式請用清楚的分段，例如：
   新聞1標題：...
   新聞1摘要：...
@@ -150,7 +149,7 @@ async def main():
     )
 
     # ----- Step 1：上網查詢（呼叫 MCP/Plugin 的搜尋能力） -----
-    search_query = "semantic kernel 2026"
+    search_query = "semantic kernel"
     print(f"上網查詢中：{search_query}")
     search_results_text = await asyncio.to_thread(_do_web_search, search_query, 8)
     if not search_results_text:
@@ -183,7 +182,13 @@ async def main():
         news_searcher,
         arguments=KernelArguments(search_results=search_results_text),
     )
+    #print(result1)
+
     news_content = _get_text(result1)
+
+    # print(news_content)
+    # return
+
     if not news_content or not news_content.strip():
         print("Agent 1 未傳回內容，請檢查 OPENROUTER_API_KEY 或稍後重試。")
         return
@@ -206,7 +211,15 @@ async def main():
     print("Agent 2（摘要寫入）執行中…")
     writer_args = KernelArguments(news_content=news_content)
     result2 = await kernel.invoke(markdown_writer, arguments=writer_args)
+    print("--------------------------------")
+    print(result2)
+    print("--------------------------------")
+    # return
+
     markdown_text = _get_text(result2)
+    print("--------------------------------")
+    print(markdown_text)
+    print("--------------------------------")
     if not markdown_text or not markdown_text.strip():
         print("Agent 2 未傳回內容，結束。")
         return
