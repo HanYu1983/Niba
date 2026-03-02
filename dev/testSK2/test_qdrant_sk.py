@@ -31,10 +31,7 @@ from qdrant_client import QdrantClient
 from qdrant_client.models import Distance, PointStruct, VectorParams
 
 from semantic_kernel import Kernel
-try:
-    from semantic_kernel.connectors.ai.open_ai import OpenAITextEmbedding
-except ImportError:
-    from semantic_kernel.connectors.ai.open_ai.services import OpenAITextEmbedding
+from semantic_kernel.connectors.ai.open_ai import OpenAITextEmbedding
 
 OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
 COLLECTION_NAME = "sk_test_memory"
