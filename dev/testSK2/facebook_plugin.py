@@ -100,4 +100,7 @@ class FacebookPlugin:
                 ensure_ascii=False,
                 indent=2,
             )
-        return json.dumps(res, ensure_ascii=False, indent=2)
+        ret = json.dumps(res, ensure_ascii=False, indent=2)
+        print("ret:")
+        print(ret)
+        return ret

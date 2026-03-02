@@ -133,4 +133,6 @@ class GoogleAdsPlugin:
             lines.append(f"  [{i}] {json.dumps(row, ensure_ascii=False)}")
         lines.append("\n完整回應:")
         lines.append(json.dumps(search_res, ensure_ascii=False, indent=2))
+        print("search_res:")
+        print(search_res)
         return "\n".join(lines)

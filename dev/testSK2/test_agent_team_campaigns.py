@@ -4,6 +4,8 @@
 AI 團隊測試：兩 agent 分別從 Facebook / Google Ads 取得 campaign，
 找出最多 2 筆名稱相似的 campaign，並用本地 MCP 寫出結果。
 
+終止條件：每邊最多取 20 個 campaign（MAX_CAMPAIGNS_PER_SOURCE），達標就不再收。
+
 使用 semantic_kernel.agents 的 ChatCompletionAgent、GroupChatOrchestration；
 若無則改為兩次 planner 取得資料後在程式中比對並寫檔。
 
@@ -28,6 +30,8 @@ OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
 DEFAULT_OPENROUTER_MODEL = "minimax/minimax-m2.5"
 MCP_OUTPUT_FILE = "campaign_match_result.txt"
 MAX_SIMILAR_PAIRS = 2
+# 終止條件：每邊最多取幾個 campaign，達標就不再收
+MAX_CAMPAIGNS_PER_SOURCE = 20
 
 
 def _chat_service():
@@ -123,10 +127,11 @@ async def _write_via_mcp(content: str, file_path: str = MCP_OUTPUT_FILE) -> str:
         url=url,
     ) as mcp_plugin:
         kernel = Kernel()
-        write_fn = mcp_plugin["write_file"]
+        kernel.add_plugin(mcp_plugin, plugin_name="file_writer")
         result = await kernel.invoke(
-            write_fn,
-            KernelArguments(file_path=file_path, content=content),
+            plugin_name="file_writer",
+            function_name="write_file",
+            arguments=KernelArguments(file_path=file_path, content=content),
         )
         out = str(result.get_inner_content() if hasattr(result, "get_inner_content") else result)
         return out or "已寫入。"
@@ -152,7 +157,7 @@ async def _run_with_agents(chat_svc) -> tuple[list[str], list[str]]:
         instructions=(
             "你只能使用 query_graph 工具。請查詢 Facebook 廣告的 campaign 列表"
             "（例如先 /me/adaccounts 取得帳號，再查該帳號的 campaigns，或使用可用的路徑）。"
-            "最後只回報 campaign 名稱，每行一個，不要其他說明。"
+            "最多只回報 20 個 campaign 名稱，每行一個，不要其他說明。"
         ),
         service=chat_svc,
         plugins=[FacebookPlugin()],
@@ -162,8 +167,8 @@ async def _run_with_agents(chat_svc) -> tuple[list[str], list[str]]:
         description="使用 Google Ads API 取得廣告 campaign。",
         instructions=(
             "你只能使用 query_ads 工具。請用 GAQL 查詢 campaign 的 id 與 name，"
-            "例如：SELECT campaign.id, campaign.name FROM campaign WHERE campaign.status != 'REMOVED' LIMIT 15。"
-            "最後只回報 campaign 名稱，每行一個，不要其他說明。"
+            "例如：SELECT campaign.id, campaign.name FROM campaign WHERE campaign.status != 'REMOVED' LIMIT 20。"
+            "最多只回報 20 個 campaign 名稱，每行一個，不要其他說明。"
         ),
         service=chat_svc,
         plugins=[GoogleAdsPlugin()],
@@ -200,7 +205,8 @@ async def _run_with_agents(chat_svc) -> tuple[list[str], list[str]]:
             fb_names.extend(_extract_campaign_names(content))
         elif "google" in name.lower():
             ga_names.extend(_extract_campaign_names(content))
-    return fb_names, ga_names
+    # 終止條件：每邊最多 MAX_CAMPAIGNS_PER_SOURCE 筆，達標就不再使用多餘的
+    return fb_names[:MAX_CAMPAIGNS_PER_SOURCE], ga_names[:MAX_CAMPAIGNS_PER_SOURCE]
 
 
 async def _run_fallback_planner(chat_svc) -> tuple[list[str], list[str]]:
@@ -223,11 +229,11 @@ async def _run_fallback_planner(chat_svc) -> tuple[list[str], list[str]]:
     r1 = await kernel.invoke_prompt(
         function_name="fb_campaigns",
         plugin_name="demo",
-        prompt="請用 query_graph 取得 Facebook 廣告 campaign 列表（必要時先查 /me/adaccounts 再查 campaigns）。最後只回報 campaign 名稱，每行一個。",
+        prompt="請用 query_graph 取得 Facebook 廣告 campaign 列表（必要時先查 /me/adaccounts 再查 campaigns）。最多 20 個，只回報 campaign 名稱，每行一個。",
         settings=settings,
     )
     fb_text = str(r1) if r1 else ""
-    fb_names = _extract_campaign_names(fb_text)
+    fb_names = _extract_campaign_names(fb_text)[:MAX_CAMPAIGNS_PER_SOURCE]
 
     # Google Ads（改用 google_ads plugin）
     kernel.add_plugin(GoogleAdsPlugin(), plugin_name="google_ads")
@@ -237,11 +243,11 @@ async def _run_fallback_planner(chat_svc) -> tuple[list[str], list[str]]:
     r2 = await kernel.invoke_prompt(
         function_name="ga_campaigns",
         plugin_name="demo",
-        prompt="請用 query_ads 查詢 campaign 名稱，GAQL 例如 SELECT campaign.id, campaign.name FROM campaign WHERE campaign.status != 'REMOVED' LIMIT 15。最後只回報 campaign 名稱，每行一個。",
+        prompt="請用 query_ads 查詢 campaign 名稱，GAQL 例如 SELECT campaign.id, campaign.name FROM campaign WHERE campaign.status != 'REMOVED' LIMIT 20。最多 20 個，只回報 campaign 名稱，每行一個。",
         settings=settings,
     )
     ga_text = str(r2) if r2 else ""
-    ga_names = _extract_campaign_names(ga_text)
+    ga_names = _extract_campaign_names(ga_text)[:MAX_CAMPAIGNS_PER_SOURCE]
 
     return fb_names, ga_names
 
