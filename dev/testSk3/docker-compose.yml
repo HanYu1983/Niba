@@ -15,16 +15,16 @@ services:
     tty: true
     command: ["bash", "-c", "dotnet --version && echo '--- F# 開發環境就緒。可用: dotnet fsi, dotnet run, dotnet build ---' && exec bash"]
 
-  # Semantic Kernel Hello World：使用 OpenRouter，需傳入 OPENROUTER_API_KEY
-  # 執行
-  # docker compose run --rm run-sk dotnet run HelloSk
-  # docker compose run --rm run-sk dotnet run HelloSk.Ask
-  # window 執行第一個 exe（Hello）
-  # docker compose run --rm run-sk dotnet run --project HelloSk
+  # Semantic Kernel：使用 OpenRouter，需設定 OPENROUTER_API_KEY（.env 或 -e）
+  # 執行範例（從 repo 根目錄 /app）：
+  #   docker compose run --rm run-sk dotnet run --project HelloSk
+  #   docker compose run --rm run-sk dotnet run --project HelloSk.Ask -- "你的問題"
+  # 建置方案（需先將 HelloSk.sln_ 更名為 HelloSk.sln）：
+  #   docker compose run --rm run-sk dotnet build HelloSk.sln
   run-sk:
     image: mcr.microsoft.com/dotnet/sdk:8.0
     container_name: run-sk
-    working_dir: /app/HelloSk
+    working_dir: /app
     volumes:
       - .:/app
     environment:
