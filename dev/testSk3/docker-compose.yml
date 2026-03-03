@@ -20,8 +20,13 @@ services:
   #   docker compose run --rm run-sk dotnet run --project HelloSk
   #   docker compose run --rm run-sk dotnet run --project HelloSk.Ask -- "你的問題"
   #   docker compose run --rm run-sk dotnet run --project HelloSk.Ask -- --aws "列出 S3 桶子"
+  #   docker compose run --rm run-sk dotnet run --project HelloSk.Planner
   # 建置方案（需先將 HelloSk.sln_ 更名為 HelloSk.sln）：
   #   docker compose run --rm run-sk dotnet build HelloSk.sln
+  # 執行測試：
+  #   docker compose run --rm run-sk dotnet test HelloSk.Core.Tests
+  # 建置專案：
+  #   docker compose run --rm run-sk dotnet build HelloSk.Ask/HelloSk.Ask.fsproj
   run-sk:
     image: mcr.microsoft.com/dotnet/sdk:8.0
     container_name: run-sk

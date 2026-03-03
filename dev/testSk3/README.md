@@ -12,9 +12,10 @@
 
 | 專案 | 說明 |
 |------|------|
-| **HelloSk.Core** | 共用核心：從環境變數建立 Kernel、呼叫 prompt（OpenRouter/OpenAI 相容） |
+| **HelloSk.Core** | 共用核心：從環境變數建立 Kernel、呼叫 prompt（OpenRouter/OpenAI 相容），以及 AWS CLI 語義函數與安全的本機命令執行 |
 | **HelloSk** | 範例：印出「Hello, Semantic Kernel!」 |
-| **HelloSk.Ask** | 命令列問答：依參數或預設問題呼叫 LLM |
+| **HelloSk.Ask** | 命令列問答：依參數或預設問題呼叫 LLM，支援 `--aws` 產生 AWS CLI 語法 |
+| **HelloSk.Planner** | 命令列聊天 Planner：與使用者對話，必要時規劃並產生 / 執行（安全檢查後）AWS CLI 指令 |
 
 ## 快速開始
 
@@ -64,6 +65,7 @@ dotnet run --project HelloSk.Ask -- "用一句話解釋 F#"
 ```bash
 docker compose run --rm run-sk dotnet run --project HelloSk
 docker compose run --rm run-sk dotnet run --project HelloSk.Ask -- "用一句話解釋 F#"
+docker compose run --rm run-sk dotnet run --project HelloSk.Planner
 ```
 
 ## 作為 AI 工作站的建議
