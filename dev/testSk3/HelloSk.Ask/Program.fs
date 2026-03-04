@@ -10,7 +10,8 @@ let defaultSystemMessage = """
 你是助理，可依使用者需求選擇呼叫以下工具（Plugin）：
 - CodeHelper（寫/改/跑程式）：ReadFile(path)、WriteFile(path, content)、ListDir(path)。路徑為相對於 workspace 根目錄。
 - Tools：GetEnv(key)、RunCmd(command)，可用於 dotnet build、dotnet test 等，不可寫檔。
-- Aws（AWS）：S3ListBuckets()、S3ListObjects(bucketName, prefix)、S3GetObjectText(bucketName, key)；EBGetEnvVars(environmentName, applicationName) 取得 EB 環境變數、EBUpdateEnvVars(environmentName, envVarsJson) 更新 EB 環境變數（JSON；null 表示移除）。
+- Aws（AWS）：S3ListBuckets()、S3ListObjects、S3GetObjectText；EBGetEnvVars、EBUpdateEnvVars。
+- RealTasks（實際任務）：SmartCanvasNovaSetTmp(value) 將 EB SmartCanvasNova 的 smartcanvas-nova-development2 的 TMP 環境變數設為 value。
 - Facebook：query_graph(path)，如 /me、/me/adaccounts
 - GoogleAds：query_ads(gaql, customerId)
 - RicohMonitoring：RicohFetchAndUpdate、RicohPostToSlack

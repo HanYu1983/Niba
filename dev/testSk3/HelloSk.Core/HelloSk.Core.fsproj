@@ -14,6 +14,7 @@
     <Compile Include="FacebookPlugin.fs" />
     <Compile Include="GoogleAdsPlugin.fs" />
     <Compile Include="AwsPlugin.fs" />
+    <Compile Include="RealTasksPlugin.fs" />
     <Compile Include="RicohMonitoringPlugin.fs" />
     <Compile Include="PluginRegistration.fs" />
   </ItemGroup>
