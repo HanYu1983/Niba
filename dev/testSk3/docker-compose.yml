@@ -5,6 +5,9 @@ services:
   # Ollama 本機 LLM：安裝 ollama、拉取 qwen3.5:0.8b、啟動 API server（port 11434）
   # 啟動：docker compose up -d ollama
   # 本機存取：http://localhost:11434 （API 相容 OpenAI，可設 OPENROUTER_BASE_URL=http://host.docker.internal:11434/v1 給 run-sk）
+  # OPENROUTER_BASE_URL=http://ollama:11434/v1
+  # OPENROUTER_MODEL=qwen3.5:0.8b
+  # OPENROUTER_API_KEY=anything
   ollama:
     image: ollama/ollama:latest
     container_name: ollama
