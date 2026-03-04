@@ -9,10 +9,16 @@
 
   <ItemGroup>
     <Compile Include="Shared.fs" />
+    <Compile Include="ToolsPlugin.fs" />
+    <Compile Include="RicohMonitoringPlugin.fs" />
+    <Compile Include="PluginRegistration.fs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.SemanticKernel" Version="1.32.0" />
     <PackageReference Include="Microsoft.SemanticKernel.Connectors.OpenAI" Version="1.32.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HelloSk.RicohMonitoring\HelloSk.RicohMonitoring.fsproj" />
   </ItemGroup>
 
 </Project>

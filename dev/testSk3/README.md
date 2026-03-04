@@ -12,7 +12,7 @@
 
 | 專案 | 說明 |
 |------|------|
-| **HelloSk.Core** | 共用核心：從環境變數建立 Kernel、呼叫 prompt（OpenRouter/OpenAI 相容），以及 AWS CLI 語義函數與安全的本機命令執行 |
+| **HelloSk.Core** | 共用核心：Kernel 建立、prompt 呼叫、AWS CLI 語義函數、安全 runCmd；**SK Plugin**：Tools（GetEnv、RunCmd）、RicohMonitoring（RicohFetchAndUpdate、RicohPostToSlack） |
 | **HelloSk** | 範例：印出「Hello, Semantic Kernel!」 |
 | **HelloSk.Ask** | 命令列問答：依參數或預設問題呼叫 LLM，支援 `--aws` 產生 AWS CLI 語法 |
 | **HelloSk.Planner** | 命令列聊天 Planner：與使用者對話，必要時規劃並產生 / 執行（安全檢查後）AWS CLI 指令 |
@@ -74,5 +74,28 @@ docker compose run --rm run-sk dotnet run --project HelloSk.Planner
 2. **模型與用量**：在 `.env` 用 `OPENROUTER_MODEL` 切換模型；用量與計費以 OpenRouter 為準。
 3. **擴充**：新功能可放在 `HelloSk.Core`（Kernel、prompt、plugins），再以新專案（如新的 Console 或 Web）呼叫。
 4. **互動開發**：在專案目錄執行 `dotnet fsi`，可 `#load "HelloSk.Core/Shared.fs"` 後在 F# Interactive 裡試跑 prompt。
+
+### Core Plugin 註冊
+
+HelloSk.Core 提供可註冊到 Kernel 的 Plugin（供 AI function calling 使用）：
+
+- **Tools**：`GetEnv(key)`、`RunCmd(command)`（安全執行本機指令）
+- **RicohMonitoring**：`RicohFetchAndUpdate(dryRun, outputPath, force)`、`RicohPostToSlack(inputPath)`（呼叫 `.cursor/skills/ricoh-monitoring` 的 Python 腳本）
+
+註冊方式（在建立 kernel 之後）：
+
+```fsharp
+open HelloSk.Core.Shared
+open HelloSk.Core.PluginRegistration
+
+match createKernelFromEnv () with
+| Ok kernel ->
+    PluginRegistration.registerCorePlugins kernel
+    // 之後 invoke 時 AI 可選用上述工具
+```
+
+Ricoh 腳本路徑由環境變數 `RICOH_MONITORING_SCRIPT_DIR` 指定（預設 `.cursor/skills/ricoh-monitoring`）；Python 與 `~/.ricoh-monitoring.env` 需自行設定。
+
+---
 
 完成以上步驟後，本機即具備以 F# + Semantic Kernel 呼叫 OpenRouter LLM 的「AI 工作站」環境。
