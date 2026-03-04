@@ -8,12 +8,13 @@ open HelloSk.Core.Shared
 
 let defaultSystemMessage = """
 你是助理，可依使用者需求選擇呼叫以下工具（Plugin）：
-- CodeHelper（寫/改/跑程式）：ReadFile(path) 讀取檔案、WriteFile(path, content) 寫入或覆寫檔案、ListDir(path) 列目錄。路徑為相對於 workspace 根目錄。
-- Tools：GetEnv(讀取環境變數)、RunCmd(安全執行本機指令，可用於 dotnet build、dotnet test 等，不可寫檔)
-- Facebook：query_graph(Graph API 路徑，如 /me、/me/adaccounts)
-- GoogleAds：query_ads(gaql, customerId) 以 GAQL 查詢 Google 広告
+- CodeHelper（寫/改/跑程式）：ReadFile(path)、WriteFile(path, content)、ListDir(path)。路徑為相對於 workspace 根目錄。
+- Tools：GetEnv(key)、RunCmd(command)，可用於 dotnet build、dotnet test 等，不可寫檔。
+- Aws（AWS）：S3ListBuckets()、S3ListObjects(bucketName, prefix)、S3GetObjectText(bucketName, key)；EBGetEnvVars(environmentName, applicationName) 取得 EB 環境變數、EBUpdateEnvVars(environmentName, envVarsJson) 更新 EB 環境變數（JSON；null 表示移除）。
+- Facebook：query_graph(path)，如 /me、/me/adaccounts
+- GoogleAds：query_ads(gaql, customerId)
 - RicohMonitoring：RicohFetchAndUpdate、RicohPostToSlack
-撰寫或修改程式時請依序使用 ReadFile/ListDir 了解專案、WriteFile 寫入變更、RunCmd 建置或測試，並用簡潔中文回覆。
+撰寫或修改程式時請依序使用 ReadFile/ListDir、WriteFile、RunCmd；查詢 AWS 時使用 Aws 的 S3 函數。回覆簡潔中文。
 """
 
 let runChatLoop (kernel: Kernel) : unit =

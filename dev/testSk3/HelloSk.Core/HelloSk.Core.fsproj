@@ -13,10 +13,13 @@
     <Compile Include="CodeHelperPlugin.fs" />
     <Compile Include="FacebookPlugin.fs" />
     <Compile Include="GoogleAdsPlugin.fs" />
+    <Compile Include="AwsPlugin.fs" />
     <Compile Include="RicohMonitoringPlugin.fs" />
     <Compile Include="PluginRegistration.fs" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="AWSSDK.ElasticBeanstalk" Version="4.0.2.14" />
+    <PackageReference Include="AWSSDK.S3" Version="4.0.18.7" />
     <PackageReference Include="Microsoft.SemanticKernel" Version="1.32.0" />
     <PackageReference Include="Microsoft.SemanticKernel.Connectors.OpenAI" Version="1.32.0" />
   </ItemGroup>

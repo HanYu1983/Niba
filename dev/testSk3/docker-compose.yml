@@ -59,8 +59,13 @@ services:
       - .:/app
     environment:
       - OPENROUTER_API_KEY=${OPENROUTER_API_KEY:-}
-      - OPENROUTER_MODEL=${OPENROUTER_MODEL:-minimax/minimax-m2.5}
-      - OPENROUTER_BASE_URL=${OPENROUTER_BASE_URL:-https://openrouter.ai/api/v1}
+      - OPENROUTER_MODEL=${OPENROUTER_MODEL:-qwen3.5:0.8b}
+      - OPENROUTER_BASE_URL=${OPENROUTER_BASE_URL:-http://ollama:11434/v1}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:-}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY:-}
+      - AWS_REGION=${AWS_REGION:-ap-northeast-1}
+    depends_on:
+      - ollama
 
 volumes:
   ollama_data:
