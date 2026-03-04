@@ -10,7 +10,6 @@ services:
   # OPENROUTER_API_KEY=anything
   ollama:
     image: ollama/ollama:latest
-    container_name: ollama
     ports:
       - "11434:11434"
     volumes:
@@ -25,6 +24,15 @@ services:
     #         - driver: nvidia
     #           count: all
     #           capabilities: [gpu]
+  # Qdrant 向量資料庫：供 RAG 使用
+  # 啟動：docker compose up -d qdrant
+  # 本機存取：http://localhost:6334
+  qdrant:
+    image: qdrant/qdrant:latest
+    ports:
+      - "6333:6333"
+    volumes:
+      - qdrant_data:/qdrant/storage
   # 建置整個方案
   # 將HelloSk.sln_改為HelloSk.sln
   # docker-compose run --rm fsharp-dev dotnet build HelloSk.sln
@@ -45,6 +53,7 @@ services:
   #   docker compose run --rm run-sk dotnet run --project HelloSk.Ask -- --aws "列出 S3 桶子"
   #   docker compose run --rm run-sk dotnet run --project HelloSk.Planner
   #   docker compose run --rm run-sk dotnet run --project HelloSk.Ask -- --chat
+  #   docker compose run --rm --no-deps run-sk dotnet run --project HelloSk.Rag -- ./docs my_docs_collection
   # 建置方案（需先將 HelloSk.sln_ 更名為 HelloSk.sln）：
   #   docker compose run --rm run-sk dotnet build HelloSk.sln
   # 執行測試：
@@ -53,7 +62,6 @@ services:
   #   docker compose run --rm run-sk dotnet build HelloSk.Ask/HelloSk.Ask.fsproj
   run-sk:
     image: mcr.microsoft.com/dotnet/sdk:8.0
-    container_name: run-sk
     working_dir: /app
     volumes:
       - .:/app
@@ -61,12 +69,17 @@ services:
       - OPENROUTER_API_KEY=${OPENROUTER_API_KEY:-}
       - OPENROUTER_MODEL=${OPENROUTER_MODEL:-qwen3.5:0.8b}
       - OPENROUTER_BASE_URL=${OPENROUTER_BASE_URL:-http://ollama:11434/v1}
+      - OPENROUTER_EMBED_MODEL=${OPENROUTER_EMBED_MODEL:-nvidia/llama-nemotron-embed-vl-1b-v2:free}
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:-}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY:-}
       - AWS_REGION=${AWS_REGION:-ap-northeast-1}
+      - QDRANT_ENDPOINT=${QDRANT_ENDPOINT:-http://qdrant:6333}
     depends_on:
       - ollama
+      - qdrant
 
 volumes:
   ollama_data:
     # Ollama 模型與資料持久化
+  qdrant_data:
+    # Qdrant 資料持久化
