@@ -2,6 +2,7 @@ namespace HelloSk.Core
 
 open System
 open System.Diagnostics
+open System.IO
 open System.Runtime.InteropServices
 open System.Text.RegularExpressions
 open Microsoft.SemanticKernel
@@ -12,6 +13,37 @@ module Shared =
     let getEnv key =
         Environment.GetEnvironmentVariable key
         |> Option.ofObj
+
+    /// 從單一檔案路徑讀取 .env（key=value，支援 ~ 展開）。檔案不存在或讀取失敗回傳 Error。
+    let loadEnvFile (path: string) : Result<Map<string, string>, string> =
+        if String.IsNullOrWhiteSpace path then Error "Env path is empty"
+        else
+            let expanded =
+                path.Trim().Replace("~", Environment.GetFolderPath(Environment.SpecialFolder.UserProfile))
+            let file = FileInfo(expanded)
+            if not file.Exists then Error(sprintf "Env file not found: %s" file.FullName)
+            else
+                try
+                    let mutable m = Map.empty
+                    for line in File.ReadAllLines(file.FullName) do
+                        let s = line.Trim()
+                        if s.Length > 0 && not (s.StartsWith("#")) && s.Contains("=") then
+                            let i = s.IndexOf('=')
+                            let k = s.Substring(0, i).Trim()
+                            let v = s.Substring(i + 1).Trim()
+                            m <- m.Add(k, v)
+                    Ok m
+                with ex -> Error(ex.Message)
+
+    /// 依序嘗試多個 .env 路徑，回傳第一個成功載入的 Map；全部失敗則回傳 Error（最後一則錯誤訊息）。
+    let loadEnvFromCandidates (paths: string list) : Result<Map<string, string>, string> =
+        let rec tryLoop acc = function
+            | [] -> Error(acc |> Option.defaultValue "No env file found")
+            | p :: rest ->
+                match loadEnvFile p with
+                | Ok m -> Ok m
+                | Error e -> tryLoop (Some e) rest
+        tryLoop None paths
 
     /// 依環境變數建立 OpenRouter Kernel；失敗回傳 Error 訊息
     let createKernelFromEnv () =

@@ -10,6 +10,8 @@
   <ItemGroup>
     <Compile Include="Shared.fs" />
     <Compile Include="ToolsPlugin.fs" />
+    <Compile Include="FacebookPlugin.fs" />
+    <Compile Include="GoogleAdsPlugin.fs" />
     <Compile Include="RicohMonitoringPlugin.fs" />
     <Compile Include="PluginRegistration.fs" />
   </ItemGroup>
