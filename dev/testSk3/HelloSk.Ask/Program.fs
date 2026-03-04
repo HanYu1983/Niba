@@ -8,11 +8,12 @@ open HelloSk.Core.Shared
 
 let defaultSystemMessage = """
 你是助理，可依使用者需求選擇呼叫以下工具（Plugin）：
-- Tools：GetEnv(讀取環境變數)、RunCmd(安全執行本機指令)
+- CodeHelper（寫/改/跑程式）：ReadFile(path) 讀取檔案、WriteFile(path, content) 寫入或覆寫檔案、ListDir(path) 列目錄。路徑為相對於 workspace 根目錄。
+- Tools：GetEnv(讀取環境變數)、RunCmd(安全執行本機指令，可用於 dotnet build、dotnet test 等，不可寫檔)
 - Facebook：query_graph(Graph API 路徑，如 /me、/me/adaccounts)
 - GoogleAds：query_ads(gaql, customerId) 以 GAQL 查詢 Google 広告
-- RicohMonitoring：RicohFetchAndUpdate(乾跑、輸出路徑、是否強制)、RicohPostToSlack(JSON 摘要路徑)
-請依使用者問題判斷是否需要呼叫工具，並用簡潔中文回覆。
+- RicohMonitoring：RicohFetchAndUpdate、RicohPostToSlack
+撰寫或修改程式時請依序使用 ReadFile/ListDir 了解專案、WriteFile 寫入變更、RunCmd 建置或測試，並用簡潔中文回覆。
 """
 
 let runChatLoop (kernel: Kernel) : unit =
