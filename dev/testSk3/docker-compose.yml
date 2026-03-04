@@ -60,6 +60,8 @@ services:
   #   docker compose run --rm run-sk dotnet test HelloSk.Core.Tests
   # 建置專案：
   #   docker compose run --rm run-sk dotnet build HelloSk.Ask/HelloSk.Ask.fsproj
+  # 查詢 Qdrant collection 中的點數：
+  # curl http:/localhost:6333/collections/my_docs_collection6/points/count -H "Content-Type: application/json" -d '{"exact": true}'
   run-sk:
     image: mcr.microsoft.com/dotnet/sdk:8.0
     working_dir: /app
