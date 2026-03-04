@@ -7,12 +7,18 @@ open System.Net.Http.Headers
 open System.Text
 open System.Text.Json
 open System.Threading.Tasks
-open HelloSk.Core.Shared
 
 type CleanChunk =
     { Path: string
       Index: int
       Text: string }
+
+module private Env =
+    let getEnv (key: string) =
+        match Environment.GetEnvironmentVariable key with
+        | null
+        | "" -> None
+        | v -> Some v
 
 module private Utils =
     let normalizeNewlines (s: string) =
@@ -47,15 +53,15 @@ module private Embedding =
         JsonSerializerOptions(PropertyNamingPolicy = JsonNamingPolicy.CamelCase, WriteIndented = false)
 
     let private getConfig () =
-        let apiKey = getEnv "OPENROUTER_API_KEY" |> Option.defaultValue ""
+        let apiKey = Env.getEnv "OPENROUTER_API_KEY" |> Option.defaultValue ""
         let baseUrl =
-            getEnv "OPENROUTER_BASE_URL"
+            Env.getEnv "OPENROUTER_BASE_URL"
             |> Option.filter (String.IsNullOrWhiteSpace >> not)
             |> Option.defaultValue "https://openrouter.ai/api/v1"
         let modelId =
-            getEnv "OPENROUTER_EMBED_MODEL"
+            Env.getEnv "OPENROUTER_EMBED_MODEL"
             |> Option.filter (String.IsNullOrWhiteSpace >> not)
-            |> Option.orElse (getEnv "OPENROUTER_MODEL")
+            |> Option.orElse (Env.getEnv "OPENROUTER_MODEL")
             |> Option.defaultValue "text-embedding-3-large"
         baseUrl, apiKey, modelId
 
@@ -92,12 +98,20 @@ module private Embedding =
         | ex ->
             failwithf "Embeddings 未預期錯誤：%s" ex.Message
 
+    /// 對單一文字產生一個 embedding 向量
+    let generateOne (text: string) : float[] =
+        let vectors = generateEmbeddings [ text ]
+        if vectors.Length = 0 then
+            failwith "generateOne：產生向量數量為 0"
+        else
+            vectors.[0]
+
 module private Qdrant =
     let private jsonOptions =
         JsonSerializerOptions(PropertyNamingPolicy = JsonNamingPolicy.CamelCase, WriteIndented = false)
 
     let getEndpoint () =
-        getEnv "QDRANT_ENDPOINT"
+        Env.getEnv "QDRANT_ENDPOINT"
         |> Option.filter (String.IsNullOrWhiteSpace >> not)
         |> Option.defaultValue "http://qdrant:6333"
         |> fun s -> if s.EndsWith("/") then s else s + "/"
@@ -147,6 +161,47 @@ module private Qdrant =
             let msg = resp.Content.ReadAsStringAsync().Result
             failwithf "寫入 Qdrant 失敗（HTTP %d）：%s" (int resp.StatusCode) msg
 
+    /// 使用給定 HttpClient 對 Qdrant 進行語意搜尋，回傳簡單的搜尋結果。
+    type SearchHit =
+        { Path: string option
+          Text: string option
+          Score: float }
+
+    let search (client: HttpClient) (collection: string) (vector: float[]) (topK: int) : SearchHit list =
+        let body =
+            {| vector = vector
+               limit = topK
+               with_payload = true
+               with_vectors = false |}
+        use content = new StringContent(JsonSerializer.Serialize(body, jsonOptions), Encoding.UTF8, "application/json")
+        let url = sprintf "collections/%s/points/search" collection
+        let resp = client.PostAsync(url, content).Result
+        if not resp.IsSuccessStatusCode then
+            let msg = resp.Content.ReadAsStringAsync().Result
+            failwithf "Qdrant 搜尋失敗（HTTP %d）：%s" (int resp.StatusCode) msg
+        let json = resp.Content.ReadAsStringAsync().Result
+        use doc = JsonDocument.Parse(json)
+        let root = doc.RootElement
+        if not (root.TryGetProperty("result") |> fst) then
+            []
+        else
+            root.GetProperty("result").EnumerateArray()
+            |> Seq.map (fun hit ->
+                let score = hit.GetProperty("score").GetDouble() |> float
+                let payload =
+                    if hit.TryGetProperty("payload") |> fst then hit.GetProperty("payload")
+                    else JsonElement()
+                let tryGetString (name: string) =
+                    if payload.ValueKind = JsonValueKind.Object && payload.TryGetProperty(name) |> fst then
+                        let v = payload.GetProperty(name)
+                        if v.ValueKind = JsonValueKind.String then Some (v.GetString())
+                        else None
+                    else None
+                { Path = tryGetString "path"
+                  Text = tryGetString "text"
+                  Score = score })
+            |> Seq.toList
+
 module Program =
 
     /// 自我測試：寫入一段固定中文到指定 collection，然後用該文字查詢；
@@ -186,8 +241,8 @@ module Program =
             if raw.Length <= 80 then raw else raw.Substring(0, 80)
 
         printfn "  使用 snippet 檢索（前 %d 字）..." snippet.Length
-        let queryVec = HelloSk.Core.RagPluginImpl.Embedding.generateOne snippet
-        let hits = HelloSk.Core.RagPluginImpl.Qdrant.search collection queryVec 1
+        let queryVec = Embedding.generateOne snippet
+        let hits = Qdrant.search http collection queryVec 1
         if List.isEmpty hits then
             failwith "自我測試失敗：Qdrant 查不到剛寫入的 self-test chunk。"
         else
@@ -272,10 +327,8 @@ module Program =
                                             else raw.Substring(0, 80)
 
                                         printfn "  驗證 chunk #%d 檢索（截取前 %d 字）..." chunk.Index snippet.Length
-                                        let vec =
-                                            HelloSk.Core.RagPluginImpl.Embedding.generateOne snippet
-                                        let hits =
-                                            HelloSk.Core.RagPluginImpl.Qdrant.search collection vec 1
+                                        let vec = Embedding.generateOne snippet
+                                        let hits = Qdrant.search http collection vec 1
                                         if List.isEmpty hits then
                                             failwithf "Qdrant 查不到剛寫入的 chunk：%s (index=%d)" chunk.Path chunk.Index
 
