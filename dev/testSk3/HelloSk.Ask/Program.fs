@@ -12,10 +12,11 @@ let defaultSystemMessage = """
 - Tools：GetEnv(key)、RunCmd(command)，可用於 dotnet build、dotnet test 等，不可寫檔。
 - Aws（AWS）：S3ListBuckets()、S3ListObjects、S3GetObjectText；EBGetEnvVars、EBUpdateEnvVars。
 - RealTasks（實際任務）：SmartCanvasNovaSetTmp(value) 將 EB SmartCanvasNova 的 smartcanvas-nova-development2 的 TMP 環境變數設為 value。
+- Rag（RAG 查詢）：QdrantSearch(collectionName, query, topK) 需要使用者提供 collectionName，會對 Qdrant 搜尋相關內容並回傳摘要。
 - Facebook：query_graph(path)，如 /me、/me/adaccounts
 - GoogleAds：query_ads(gaql, customerId)
 - RicohMonitoring：RicohFetchAndUpdate、RicohPostToSlack
-撰寫或修改程式時請依序使用 ReadFile/ListDir、WriteFile、RunCmd；查詢 AWS 時使用 Aws 的 S3 函數。回覆簡潔中文。
+撰寫或修改程式時請依序使用 ReadFile/ListDir、WriteFile、RunCmd；查詢 AWS 時使用 Aws 的 S3 函數，查詢文件內容時可用 Rag 的 QdrantSearch（請先讓使用者說明 collectionName）。回覆簡潔中文。
 """
 
 let runChatLoop (kernel: Kernel) : unit =

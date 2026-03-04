@@ -69,7 +69,7 @@ services:
       - OPENROUTER_API_KEY=${OPENROUTER_API_KEY:-}
       - OPENROUTER_MODEL=${OPENROUTER_MODEL:-qwen3.5:0.8b}
       - OPENROUTER_BASE_URL=${OPENROUTER_BASE_URL:-http://ollama:11434/v1}
-      - OPENROUTER_EMBED_MODEL=${OPENROUTER_EMBED_MODEL:-nvidia/llama-nemotron-embed-vl-1b-v2:free}
+      - OPENROUTER_EMBED_MODEL=${OPENROUTER_EMBED_MODEL:-openai/text-embedding-3-large}
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:-}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY:-}
       - AWS_REGION=${AWS_REGION:-ap-northeast-1}
