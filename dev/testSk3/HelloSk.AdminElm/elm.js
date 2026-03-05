@@ -5356,6 +5356,12 @@ var $author$project$Main$QdrantManagePage = {$: 'QdrantManagePage'};
 var $author$project$Main$GotCollections = function (a) {
 	return {$: 'GotCollections', a: a};
 };
+var $author$project$QdrantPage$CollectionsError = function (a) {
+	return {$: 'CollectionsError', a: a};
+};
+var $author$project$QdrantPage$CollectionsOk = function (a) {
+	return {$: 'CollectionsOk', a: a};
+};
 var $elm$json$Json$Decode$field = _Json_decodeField;
 var $elm$json$Json$Decode$at = F2(
 	function (fields, decoder) {
@@ -5373,11 +5379,27 @@ var $author$project$QdrantPage$decodeCollection = A3(
 	A2($elm$json$Json$Decode$field, 'name', $elm$json$Json$Decode$string),
 	A2($elm$json$Json$Decode$field, 'pointsCount', $elm$json$Json$Decode$int));
 var $elm$json$Json$Decode$list = _Json_decodeList;
-var $author$project$QdrantPage$decodeCollectionsResponse = A2(
-	$elm$json$Json$Decode$at,
+var $elm$json$Json$Decode$oneOf = _Json_oneOf;
+var $author$project$QdrantPage$decodeCollectionsResponse = $elm$json$Json$Decode$oneOf(
 	_List_fromArray(
-		['data', 'collections']),
-	$elm$json$Json$Decode$list($author$project$QdrantPage$decodeCollection));
+		[
+			A2(
+			$elm$json$Json$Decode$map,
+			$author$project$QdrantPage$CollectionsOk,
+			A2(
+				$elm$json$Json$Decode$at,
+				_List_fromArray(
+					['data', 'collections']),
+				$elm$json$Json$Decode$list($author$project$QdrantPage$decodeCollection))),
+			A2(
+			$elm$json$Json$Decode$map,
+			$author$project$QdrantPage$CollectionsError,
+			A2(
+				$elm$json$Json$Decode$at,
+				_List_fromArray(
+					['errors', '0', 'message']),
+				$elm$json$Json$Decode$string))
+		]));
 var $elm$json$Json$Decode$decodeString = _Json_runOnString;
 var $elm$http$Http$BadStatus_ = F2(
 	function (a, b) {
@@ -6294,7 +6316,6 @@ var $author$project$Main$GraphQLError = function (a) {
 var $author$project$Main$Token = function (a) {
 	return {$: 'Token', a: a};
 };
-var $elm$json$Json$Decode$oneOf = _Json_oneOf;
 var $author$project$Main$decodeLoginResponse = $elm$json$Json$Decode$oneOf(
 	_List_fromArray(
 		[
@@ -6394,18 +6415,31 @@ var $author$project$Main$update = F2(
 				}
 			case 'GotCollections':
 				if (msg.a.$ === 'Ok') {
-					var list = msg.a.a;
-					return _Utils_Tuple2(
-						_Utils_update(
-							model,
-							{collections: list, collectionsError: $elm$core$Maybe$Nothing, collectionsLoading: false}),
-						$elm$core$Platform$Cmd$none);
+					if (msg.a.a.$ === 'CollectionsOk') {
+						var list = msg.a.a.a;
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{collections: list, collectionsError: $elm$core$Maybe$Nothing, collectionsLoading: false}),
+							$elm$core$Platform$Cmd$none);
+					} else {
+						var errMsg = msg.a.a.a;
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{
+									collections: _List_Nil,
+									collectionsError: $elm$core$Maybe$Just('後端錯誤：' + errMsg),
+									collectionsLoading: false
+								}),
+							$elm$core$Platform$Cmd$none);
+					}
 				} else {
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
 							{
-								collectionsError: $elm$core$Maybe$Just('無法載入 collections'),
+								collectionsError: $elm$core$Maybe$Just('無法載入 collections（網路錯誤）'),
 								collectionsLoading: false
 							}),
 						$elm$core$Platform$Cmd$none);

@@ -7,7 +7,7 @@ import Html.Events exposing (onClick)
 import Http
 import Json.Decode as Decode
 import Json.Encode as Encode
-import QdrantPage exposing (Collection)
+import QdrantPage exposing (Collection, CollectionsResponse(..))
 
 
 -- 頁面型別：登入後可擴充更多管理頁
@@ -53,7 +53,7 @@ init _ =
 type Msg
     = LoginClick
     | GotLogin (Result Http.Error LoginResponse)
-    | GotCollections (Result Http.Error (List Collection))
+    | GotCollections (Result Http.Error CollectionsResponse)
     | RequestDeleteCollection String
     | GotDeleteCollection String (Result Http.Error { success : Bool, message : String })
 
@@ -131,11 +131,14 @@ update msg model =
         GotLogin (Err _) ->
             ( { model | loading = False, error = Just "請求失敗" }, Cmd.none )
 
-        GotCollections (Ok list) ->
+        GotCollections (Ok (CollectionsOk list)) ->
             ( { model | collections = list, collectionsLoading = False, collectionsError = Nothing }, Cmd.none )
 
+        GotCollections (Ok (CollectionsError errMsg)) ->
+            ( { model | collectionsLoading = False, collectionsError = Just ("後端錯誤：" ++ errMsg), collections = [] }, Cmd.none )
+
         GotCollections (Err _) ->
-            ( { model | collectionsLoading = False, collectionsError = Just "無法載入 collections" }, Cmd.none )
+            ( { model | collectionsLoading = False, collectionsError = Just "無法載入 collections（網路錯誤）" }, Cmd.none )
 
         RequestDeleteCollection name ->
             case model.token of

@@ -194,9 +194,15 @@ type Query() =
                 let count = QdrantApi.getPointsCount client name
                 QdrantCollection(name, count))
         with ex ->
-            // 若呼叫 Qdrant 失敗，回傳空清單，並將錯誤寫入 log
-            printfn "取得 Qdrant collections 失敗：%s" ex.Message
-            []
+            // 交給 GraphQL error 機制，前端可以從 errors[0].message 取得訊息
+            raise (
+                GraphQLException(
+                    ErrorBuilder.New()
+                        .SetMessage($"取得 Qdrant collections 失敗：{ex.Message}")
+                        .SetCode("QDRANT_COLLECTIONS_ERROR")
+                        .Build()
+                )
+            )
 
 module Program =
 

@@ -1,4 +1,4 @@
-module QdrantPage exposing (Collection, view, fetchCollections, deleteCollection, decodeCollectionsResponse, decodeDeleteResponse)
+module QdrantPage exposing (Collection, CollectionsResponse(..), view, fetchCollections, deleteCollection, decodeCollectionsResponse, decodeDeleteResponse)
 
 import Html exposing (Html, button, div, h2, li, p, text, ul)
 import Html.Attributes exposing (disabled, style)
@@ -8,13 +8,18 @@ import Json.Decode as Decode
 import Json.Encode as Encode
 
 
--- 型別：與 GraphQL QdrantCollection 對應
+-- 型別：與 GraphQL QdrantCollection 對應，以及查詢回應（成功 / 錯誤）
 
 
 type alias Collection =
     { name : String
     , pointsCount : Int
     }
+
+
+type CollectionsResponse
+    = CollectionsOk (List Collection)
+    | CollectionsError String
 
 
 -- GraphQL 查詢／變更與解碼（需 JWT 時由 Main 帶 Authorization header）
@@ -34,9 +39,14 @@ graphqlDeleteMutation name =
             ]
 
 
-decodeCollectionsResponse : Decode.Decoder (List Collection)
+decodeCollectionsResponse : Decode.Decoder CollectionsResponse
 decodeCollectionsResponse =
-    Decode.at [ "data", "collections" ] (Decode.list decodeCollection)
+    Decode.oneOf
+        [ Decode.map CollectionsOk
+            (Decode.at [ "data", "collections" ] (Decode.list decodeCollection))
+        , Decode.map CollectionsError
+            (Decode.at [ "errors", "0", "message" ] Decode.string)
+        ]
 
 
 decodeCollection : Decode.Decoder Collection
@@ -53,11 +63,11 @@ decodeDeleteResponse =
         (Decode.at [ "data", "deleteCollection", "message" ] Decode.string)
 
 
--- 帶 Bearer token 的 GET 風格查詢（GraphQL 用 POST，body 為 query）
+-- 帶 Bearer token 的查詢（GraphQL 用 POST，body 為 query）
 -- 回傳 Cmd，結果由 Main 用 GotCollections 處理
 
 
-fetchCollections : String -> String -> (Result Http.Error (List Collection) -> msg) -> Cmd msg
+fetchCollections : String -> String -> (Result Http.Error CollectionsResponse -> msg) -> Cmd msg
 fetchCollections baseUrl token toMsg =
     Http.request
         { method = "POST"
