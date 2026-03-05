@@ -7,6 +7,7 @@ open System.Text
 open Microsoft.AspNetCore.Builder
 open Microsoft.Extensions.Configuration
 open Microsoft.Extensions.DependencyInjection
+open Microsoft.Extensions.Hosting
 open Microsoft.IdentityModel.Tokens
 open HotChocolate
 open HotChocolate.AspNetCore
@@ -24,19 +25,29 @@ type LoginPayload(token: string) =
 /// 根 Mutation：login 不帶參數，回傳 JWT
 type Mutation() =
     member _.Login([<Service>] config: IConfiguration) =
-        let secret = config["Jwt:Secret"] |> Option.ofObj |> Option.defaultValue "dev-secret-at-least-32-chars!!"
-        let issuer = config["Jwt:Issuer"] |> Option.ofObj |> Option.defaultValue "HelloSk.GraphQL"
-        let audience = config["Jwt:Audience"] |> Option.ofObj |> Option.defaultValue "HelloSk"
-        let expMinutes = config["Jwt:ExpirationMinutes"] |> Option.ofObj |> Option.bind (fun s -> match Int32.TryParse(s) with true, n -> Some n | _ -> None) |> Option.defaultValue 60
-        let key = SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret))
+        let jwt = config.GetSection("Jwt")
+        let str (key: string) = let v = jwt[key] in if isNull v then None else Some v
+        let secret = str "Secret" |> Option.defaultValue "dev-secret-must-be-32-bytes-long!!"
+        let issuer = str "Issuer" |> Option.defaultValue "HelloSk.GraphQL"
+        let audience = str "Audience" |> Option.defaultValue "HelloSk"
+        let expMinutes =
+            str "ExpirationMinutes"
+            |> Option.bind (fun s -> match Int32.TryParse(s) with true, n -> Some n | _ -> None)
+            |> Option.defaultValue 60
+        // HS256 需要金鑰至少 256 bits (32 bytes)，不足則以 0 填滿
+        let rawKey = Encoding.UTF8.GetBytes(secret)
+        let keyBytes = if rawKey.Length >= 32 then rawKey else Array.zeroCreate 32
+        if rawKey.Length < 32 then Array.blit rawKey 0 keyBytes 0 rawKey.Length
+        let key = SymmetricSecurityKey(keyBytes)
         let creds = SigningCredentials(key, SecurityAlgorithms.HmacSha256)
         let claims = [|
             Claim(JwtRegisteredClaimNames.Sub, "me")
             Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N"))
         |]
-        let expires = DateTime.UtcNow.AddMinutes(float expMinutes)
         let notBefore = System.Nullable<DateTime>()
-        let token = JwtSecurityToken(issuer, audience, claims, notBefore, expires, creds)
+        let expires = DateTime.UtcNow.AddMinutes(float expMinutes)
+        let expiresNullable = System.Nullable(expires)
+        let token = JwtSecurityToken(issuer, audience, claims, notBefore, expiresNullable, creds)
         let tokenString = JwtSecurityTokenHandler().WriteToken(token)
         LoginPayload(tokenString)
 
@@ -66,6 +77,7 @@ module Program =
             .AddQueryType<Query>()
             .AddMutationType<Mutation>()
             .AddType<User>()
+            .ModifyRequestOptions(fun opt -> opt.IncludeExceptionDetails <- (builder.Environment.EnvironmentName = Environments.Development))
             |> ignore
 
         let app = builder.Build()
