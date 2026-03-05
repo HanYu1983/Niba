@@ -56,16 +56,18 @@ type ChatResult(messages: ChatMessage list, answer: string) =
 /// 共用的 Semantic Kernel 建立與 chat 呼叫
 module private ChatKernel =
 
+    /// 將 Kernel 建立與 Plugin 註冊都包在 lazy 中，只做一次，避免重複加入相同名稱的 Plugin（如 Tools）
     let private lazyKernel: Lazy<Result<Kernel, string>> =
-        lazy (Shared.createKernelFromEnv ())
+        lazy (
+            match Shared.createKernelFromEnv () with
+            | Result.Error msg -> Result.Error msg
+            | Result.Ok k ->
+                HelloSk.Core.PluginRegistration.registerCorePlugins k
+                Result.Ok k
+        )
 
     let getKernel () =
-        match lazyKernel.Value with
-        | Result.Error msg -> Result.Error msg
-        | Result.Ok k ->
-            // 確保 Plugin 只註冊一次（若重複註冊會重覆出現在 Plugins 中，但影響有限）
-            HelloSk.Core.PluginRegistration.registerCorePlugins k
-            Result.Ok k
+        lazyKernel.Value
 
     let private defaultSystemMessage = """
 你是助理，可依使用者需求選擇呼叫以下工具（Plugin）：
