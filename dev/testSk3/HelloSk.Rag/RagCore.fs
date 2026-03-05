@@ -110,6 +110,9 @@ module Embedding =
 module Qdrant =
     let private jsonOptions =
         JsonSerializerOptions(PropertyNamingPolicy = JsonNamingPolicy.CamelCase, WriteIndented = false)
+    /// Qdrant API 使用 snake_case，搜尋請求欄位名需與文件一致
+    let private jsonOptionsSnake =
+        JsonSerializerOptions(PropertyNamingPolicy = null, WriteIndented = false)
 
     let getEndpoint () =
         Env.getEnv "QDRANT_ENDPOINT"
@@ -164,10 +167,13 @@ module Qdrant =
                    text = chunk.Text |})
             |> List.toArray
 
-        let body = {| ids = ids; vectors = vectors; payloads = payloads |}
+        let batch = {| ids = ids; vectors = vectors; payloads = payloads |}
+        let body = {| batch = batch |}
         use content = new StringContent(JsonSerializer.Serialize(body, jsonOptions), Encoding.UTF8, "application/json")
         let url = sprintf "collections/%s/points?wait=true" collection
-        let resp = client.PostAsync(url, content).Result
+        use req = new HttpRequestMessage(HttpMethod.Put, url)
+        req.Content <- content
+        let resp = client.Send(req)
         if not resp.IsSuccessStatusCode then
             let msg = resp.Content.ReadAsStringAsync().Result
             failwithf "寫入 Qdrant 失敗（HTTP %d）：%s" (int resp.StatusCode) msg
@@ -182,8 +188,8 @@ module Qdrant =
             {| vector = vector
                limit = topK
                with_payload = true
-               with_vectors = false |}
-        use content = new StringContent(JsonSerializer.Serialize(body, jsonOptions), Encoding.UTF8, "application/json")
+               with_vector = false |}
+        use content = new StringContent(JsonSerializer.Serialize(body, jsonOptionsSnake), Encoding.UTF8, "application/json")
         let url = sprintf "collections/%s/points/search" collection
         let resp = client.PostAsync(url, content).Result
         if not resp.IsSuccessStatusCode then
