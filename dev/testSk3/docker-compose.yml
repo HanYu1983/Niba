@@ -37,6 +37,7 @@ services:
     environment:
       - ASPNETCORE_URLS=http://0.0.0.0:5000
       - ASPNETCORE_ENVIRONMENT=Development
+      - QDRANT_ENDPOINT=http://qdrant:6333
     command: ["sh", "-c", "dotnet build HelloSk.GraphQL/HelloSk.GraphQL.fsproj && dotnet run --project HelloSk.GraphQL --no-build"]
 
   # 管理後台（Elm 前端，node 安裝 elm 編譯，無 Vite）

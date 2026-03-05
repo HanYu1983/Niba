@@ -2,8 +2,10 @@ namespace HelloSk.GraphQL
 
 open System
 open System.IdentityModel.Tokens.Jwt
+open System.Net.Http
 open System.Security.Claims
 open System.Text
+open System.Text.Json
 open Microsoft.AspNetCore.Authentication.JwtBearer
 open Microsoft.AspNetCore.Authorization
 open Microsoft.AspNetCore.Builder
@@ -24,7 +26,7 @@ open HotChocolate.Types
 type LoginPayload(token: string) =
     member _.Token = token
 
-/// Qdrant collection 假資料型別（供前端列表顯示）
+/// Qdrant collection 型別（供前端列表顯示）
 type QdrantCollection(name: string, pointsCount: int) =
     member _.Name = name
     member _.PointsCount = pointsCount
@@ -33,6 +35,102 @@ type QdrantCollection(name: string, pointsCount: int) =
 type DeleteCollectionPayload(success: bool, message: string) =
     member _.Success = success
     member _.Message = message
+
+/// 呼叫 Qdrant REST API 的小工具模組（本檔內自用）
+module private QdrantApi =
+
+    let private getEndpointFromEnv () =
+        let v = Environment.GetEnvironmentVariable "QDRANT_ENDPOINT"
+        if String.IsNullOrWhiteSpace v then
+            "http://qdrant:6333"
+        else
+            v
+
+    let getBaseUri () =
+        let raw = getEndpointFromEnv ()
+        let withSlash = if raw.EndsWith("/") then raw else raw + "/"
+        Uri(withSlash)
+
+    let createClient () =
+        let baseUri = getBaseUri ()
+        let c = new HttpClient(BaseAddress = baseUri)
+        c.Timeout <- TimeSpan.FromSeconds(30.0)
+        c
+
+    /// 取得所有 collections 名稱
+    let listCollections (client: HttpClient) : string list =
+        let url = "collections"
+        use req = new HttpRequestMessage(HttpMethod.Get, url)
+        let resp = client.Send(req)
+        if not resp.IsSuccessStatusCode then
+            let msg = resp.Content.ReadAsStringAsync().Result
+            failwithf "Qdrant 列出 collections 失敗（HTTP %d）：%s" (int resp.StatusCode) msg
+
+        let json = resp.Content.ReadAsStringAsync().Result
+        use doc = JsonDocument.Parse(json)
+        let root = doc.RootElement
+
+        // 根據官方文件：{ result: { collections: [ { name: \"...\" }, ... ] } }
+        if not (root.TryGetProperty("result") |> fst) then
+            []
+        else
+            let result = root.GetProperty("result")
+            if not (result.TryGetProperty("collections") |> fst) then
+                []
+            else
+                result.GetProperty("collections").EnumerateArray()
+                |> Seq.choose (fun item ->
+                    if item.TryGetProperty("name") |> fst then
+                        Some (item.GetProperty("name").GetString())
+                    else
+                        None)
+                |> Seq.filter (fun n -> not (String.IsNullOrWhiteSpace n))
+                |> Seq.map (fun n -> n.Trim())
+                |> Seq.distinct
+                |> Seq.toList
+
+    /// 取得單一 collection 的 points 數量
+    let getPointsCount (client: HttpClient) (collection: string) : int =
+        // 依 docker-compose 註解：POST /collections/{name}/points/count，body: {\"exact\": true}
+        let url = sprintf "collections/%s/points/count" collection
+        use content =
+            new StringContent("{\"exact\": true}", Encoding.UTF8, "application/json")
+        use req = new HttpRequestMessage(HttpMethod.Post, url)
+        req.Content <- content
+        let resp = client.Send(req)
+
+        if not resp.IsSuccessStatusCode then
+            // 若失敗，回傳 0 並記 log，不中斷整體查詢
+            let msg = resp.Content.ReadAsStringAsync().Result
+            printfn "Qdrant 取得 points count 失敗（collection=%s, HTTP %d）：%s" collection (int resp.StatusCode) msg
+            0
+        else
+            let json = resp.Content.ReadAsStringAsync().Result
+            use doc = JsonDocument.Parse(json)
+            let root = doc.RootElement
+            if not (root.TryGetProperty("result") |> fst) then
+                0
+            else
+                let result = root.GetProperty("result")
+                if result.TryGetProperty("count") |> fst then
+                    result.GetProperty("count").GetInt32()
+                else
+                    0
+
+    /// 刪除 collection，回傳是否成功與訊息
+    let deleteCollection (client: HttpClient) (collection: string) : bool * string =
+        let url = sprintf "collections/%s" collection
+        use req = new HttpRequestMessage(HttpMethod.Delete, url)
+        let resp = client.Send(req)
+
+        if resp.IsSuccessStatusCode then
+            true, sprintf "Collection \"%s\" deleted." collection
+        elif resp.StatusCode = System.Net.HttpStatusCode.NotFound then
+            // 若不存在，當作成功，但提示訊息
+            true, sprintf "Collection \"%s\" does not exist (treated as deleted)." collection
+        else
+            let msg = resp.Content.ReadAsStringAsync().Result
+            false, sprintf "刪除失敗（HTTP %d）：%s" (int resp.StatusCode) msg
 
 /// 根 Mutation：login 不帶參數，回傳 JWT；deleteCollection 需 JWT
 type Mutation() =
@@ -65,8 +163,12 @@ type Mutation() =
 
     [<Authorize>]
     member _.DeleteCollection(name: string) =
-        // 假資料：一律回傳成功，之後可改為呼叫 Qdrant API
-        DeleteCollectionPayload(true, sprintf "Collection \"%s\" deleted." name)
+        try
+            use client = QdrantApi.createClient ()
+            let ok, msg = QdrantApi.deleteCollection client name
+            DeleteCollectionPayload(ok, msg)
+        with ex ->
+            DeleteCollectionPayload(false, sprintf "刪除 collection \"%s\" 時發生錯誤：%s" name ex.Message)
 
 /// Federation 規定 subgraph 至少要有一個 entity（@key + reference resolver）
 /// 此為佔位 entity，供之後擴充或由 gateway 解析
@@ -84,11 +186,17 @@ type Query() =
 
     [<Authorize>]
     member _.Collections() : QdrantCollection list =
-        // 假資料：之後可改為呼叫 Qdrant GET /collections
-        [
-            QdrantCollection("my_docs", 120)
-            QdrantCollection("rag_demo", 45)
-        ]
+        try
+            use client = QdrantApi.createClient ()
+            let names = QdrantApi.listCollections client
+            names
+            |> List.map (fun name ->
+                let count = QdrantApi.getPointsCount client name
+                QdrantCollection(name, count))
+        with ex ->
+            // 若呼叫 Qdrant 失敗，回傳空清單，並將錯誤寫入 log
+            printfn "取得 Qdrant collections 失敗：%s" ex.Message
+            []
 
 module Program =
 

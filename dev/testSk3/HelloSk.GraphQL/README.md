@@ -1,6 +1,9 @@
 # HelloSk.GraphQL
-
 F# 撰寫的 GraphQL server，使用 HotChocolate。
+
+## 開發規範
+1. graphql的回傳的相關方法都要實作在...Impl.fs中
+1. Program.fs中的graphql只做為綁定實作的存在
 
 ## 基本配置（目前）
 
