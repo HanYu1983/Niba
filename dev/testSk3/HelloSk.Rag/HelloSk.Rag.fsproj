@@ -18,9 +18,6 @@
     <PackageReference Include="Microsoft.SemanticKernel" Version="1.51.0" />
     <PackageReference Include="Microsoft.SemanticKernel.Connectors.OpenAI" Version="1.51.0" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\HelloSk.Core\HelloSk.Core.fsproj" />
-  </ItemGroup>
 
 </Project>
 
