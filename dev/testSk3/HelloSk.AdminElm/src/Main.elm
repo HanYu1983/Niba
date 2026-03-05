@@ -7,6 +7,13 @@ import Html.Events exposing (onClick)
 import Http
 import Json.Decode as Decode
 import Json.Encode as Encode
+import QdrantPage exposing (Collection)
+
+
+-- 頁面型別：登入後可擴充更多管理頁
+type Page
+    = LoginPage
+    | QdrantManagePage
 
 
 -- Model
@@ -16,12 +23,27 @@ type alias Model =
     { token : Maybe String
     , error : Maybe String
     , loading : Bool
+    , page : Page
+    , collections : List Collection
+    , collectionsLoading : Bool
+    , collectionsError : Maybe String
+    , deletingCollection : Maybe String
     }
 
 
 init : () -> ( Model, Cmd Msg )
 init _ =
-    ( { token = Nothing, error = Nothing, loading = False }, Cmd.none )
+    ( { token = Nothing
+      , error = Nothing
+      , loading = False
+      , page = LoginPage
+      , collections = []
+      , collectionsLoading = False
+      , collectionsError = Nothing
+      , deletingCollection = Nothing
+      }
+    , Cmd.none
+    )
 
 
 
@@ -31,6 +53,9 @@ init _ =
 type Msg
     = LoginClick
     | GotLogin (Result Http.Error LoginResponse)
+    | GotCollections (Result Http.Error (List Collection))
+    | RequestDeleteCollection String
+    | GotDeleteCollection String (Result Http.Error { success : Bool, message : String })
 
 
 type LoginResponse
@@ -72,6 +97,16 @@ loginRequest =
         }
 
 
+collectionsRequest : String -> Cmd Msg
+collectionsRequest token =
+    QdrantPage.fetchCollections graphqlUrl token GotCollections
+
+
+deleteCollectionRequest : String -> String -> Cmd Msg
+deleteCollectionRequest token name =
+    QdrantPage.deleteCollection graphqlUrl token name (GotDeleteCollection name)
+
+
 
 -- Update
 
@@ -83,7 +118,9 @@ update msg model =
             ( { model | loading = True, error = Nothing }, loginRequest )
 
         GotLogin (Ok (Token token)) ->
-            ( { model | token = Just token, loading = False, error = Nothing }, Cmd.none )
+            ( { model | token = Just token, loading = False, error = Nothing, page = QdrantManagePage, collectionsLoading = True }
+            , collectionsRequest token
+            )
 
         GotLogin (Ok (GraphQLError errMsg)) ->
             ( { model | loading = False, error = Just errMsg }, Cmd.none )
@@ -93,6 +130,31 @@ update msg model =
 
         GotLogin (Err _) ->
             ( { model | loading = False, error = Just "請求失敗" }, Cmd.none )
+
+        GotCollections (Ok list) ->
+            ( { model | collections = list, collectionsLoading = False, collectionsError = Nothing }, Cmd.none )
+
+        GotCollections (Err _) ->
+            ( { model | collectionsLoading = False, collectionsError = Just "無法載入 collections" }, Cmd.none )
+
+        RequestDeleteCollection name ->
+            case model.token of
+                Just token ->
+                    ( { model | deletingCollection = Just name }, deleteCollectionRequest token name )
+
+                Nothing ->
+                    ( model, Cmd.none )
+
+        GotDeleteCollection _ (Ok _) ->
+            case model.token of
+                Just token ->
+                    ( { model | deletingCollection = Nothing }, collectionsRequest token )
+
+                Nothing ->
+                    ( { model | deletingCollection = Nothing }, Cmd.none )
+
+        GotDeleteCollection _ (Err _) ->
+            ( { model | deletingCollection = Nothing, collectionsError = Just "刪除失敗" }, Cmd.none )
 
 
 
@@ -106,26 +168,7 @@ view model =
         , style "font-family" "system-ui, sans-serif"
         ]
         [ h1 [] [ text "管理後台 (Elm)" ]
-        , div [ style "margin-top" "16px" ]
-            (case model.token of
-                Just t ->
-                    [ div []
-                        [ p [] [ text "已登入" ]
-                        , p [ style "word-break" "break-all" ] [ text t ]
-                        ]
-                    ]
-
-                Nothing ->
-                    [ button
-                        [ onClick LoginClick
-                        , disabled model.loading
-                        , style "padding" "8px 16px"
-                        , style "font-size" "16px"
-                        , style "cursor" (if model.loading then "wait" else "pointer")
-                        ]
-                        [ text (if model.loading then "登入中…" else "登入") ]
-                    ]
-            )
+        , viewPage model
         , case model.error of
             Just e ->
                 p [ style "color" "red", style "margin-top" "8px" ] [ text e ]
@@ -133,6 +176,36 @@ view model =
             Nothing ->
                 text ""
         ]
+
+
+viewPage : Model -> Html Msg
+viewPage model =
+    case model.token of
+        Nothing ->
+            div [ style "margin-top" "16px" ]
+                [ button
+                    [ onClick LoginClick
+                    , disabled model.loading
+                    , style "padding" "8px 16px"
+                    , style "font-size" "16px"
+                    , style "cursor" (if model.loading then "wait" else "pointer")
+                    ]
+                    [ text (if model.loading then "登入中…" else "登入") ]
+                ]
+
+        Just _ ->
+            case model.page of
+                LoginPage ->
+                    div [] []
+
+                QdrantManagePage ->
+                    QdrantPage.view
+                        { collections = model.collections
+                        , loading = model.collectionsLoading
+                        , error = model.collectionsError
+                        , deletingCollection = model.deletingCollection
+                        , onDeleteClick = RequestDeleteCollection
+                        }
 
 
 

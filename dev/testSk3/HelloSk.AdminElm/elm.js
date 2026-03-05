@@ -5342,51 +5342,42 @@ var $elm$core$Task$perform = F2(
 				A2($elm$core$Task$map, toMessage, task)));
 	});
 var $elm$browser$Browser$element = _Browser_element;
+var $author$project$Main$LoginPage = {$: 'LoginPage'};
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
-		{error: $elm$core$Maybe$Nothing, loading: false, token: $elm$core$Maybe$Nothing},
+		{collections: _List_Nil, collectionsError: $elm$core$Maybe$Nothing, collectionsLoading: false, deletingCollection: $elm$core$Maybe$Nothing, error: $elm$core$Maybe$Nothing, loading: false, page: $author$project$Main$LoginPage, token: $elm$core$Maybe$Nothing},
 		$elm$core$Platform$Cmd$none);
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
 var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
-var $author$project$Main$GotLogin = function (a) {
-	return {$: 'GotLogin', a: a};
-};
-var $author$project$Main$GraphQLError = function (a) {
-	return {$: 'GraphQLError', a: a};
-};
-var $author$project$Main$Token = function (a) {
-	return {$: 'Token', a: a};
+var $author$project$Main$QdrantManagePage = {$: 'QdrantManagePage'};
+var $author$project$Main$GotCollections = function (a) {
+	return {$: 'GotCollections', a: a};
 };
 var $elm$json$Json$Decode$field = _Json_decodeField;
 var $elm$json$Json$Decode$at = F2(
 	function (fields, decoder) {
 		return A3($elm$core$List$foldr, $elm$json$Json$Decode$field, decoder, fields);
 	});
-var $elm$json$Json$Decode$oneOf = _Json_oneOf;
+var $author$project$QdrantPage$Collection = F2(
+	function (name, pointsCount) {
+		return {name: name, pointsCount: pointsCount};
+	});
+var $elm$json$Json$Decode$int = _Json_decodeInt;
 var $elm$json$Json$Decode$string = _Json_decodeString;
-var $author$project$Main$decodeLoginResponse = $elm$json$Json$Decode$oneOf(
+var $author$project$QdrantPage$decodeCollection = A3(
+	$elm$json$Json$Decode$map2,
+	$author$project$QdrantPage$Collection,
+	A2($elm$json$Json$Decode$field, 'name', $elm$json$Json$Decode$string),
+	A2($elm$json$Json$Decode$field, 'pointsCount', $elm$json$Json$Decode$int));
+var $elm$json$Json$Decode$list = _Json_decodeList;
+var $author$project$QdrantPage$decodeCollectionsResponse = A2(
+	$elm$json$Json$Decode$at,
 	_List_fromArray(
-		[
-			A2(
-			$elm$json$Json$Decode$map,
-			$author$project$Main$Token,
-			A2(
-				$elm$json$Json$Decode$at,
-				_List_fromArray(
-					['data', 'login', 'token']),
-				$elm$json$Json$Decode$string)),
-			A2(
-			$elm$json$Json$Decode$map,
-			$author$project$Main$GraphQLError,
-			A2(
-				$elm$json$Json$Decode$at,
-				_List_fromArray(
-					['errors', '0', 'message']),
-				$elm$json$Json$Decode$string))
-		]));
+		['data', 'collections']),
+	$elm$json$Json$Decode$list($author$project$QdrantPage$decodeCollection));
 var $elm$json$Json$Decode$decodeString = _Json_runOnString;
 var $elm$http$Http$BadStatus_ = F2(
 	function (a, b) {
@@ -6001,7 +5992,12 @@ var $elm$http$Http$expectJson = F2(
 						A2($elm$json$Json$Decode$decodeString, decoder, string));
 				}));
 	});
-var $author$project$Main$graphqlUrl = 'graphql';
+var $author$project$QdrantPage$graphqlCollectionsQuery = 'query { collections { name pointsCount } }';
+var $elm$http$Http$Header = F2(
+	function (a, b) {
+		return {$: 'Header', a: a, b: b};
+	});
+var $elm$http$Http$header = $elm$http$Http$Header;
 var $elm$json$Json$Encode$object = function (pairs) {
 	return _Json_wrap(
 		A3(
@@ -6015,17 +6011,6 @@ var $elm$json$Json$Encode$object = function (pairs) {
 			_Json_emptyObject(_Utils_Tuple0),
 			pairs));
 };
-var $elm$json$Json$Encode$string = _Json_wrap;
-var $author$project$Main$loginMutationBody = A2(
-	$elm$json$Json$Encode$encode,
-	0,
-	$elm$json$Json$Encode$object(
-		_List_fromArray(
-			[
-				_Utils_Tuple2(
-				'query',
-				$elm$json$Json$Encode$string('mutation { login { token } }'))
-			])));
 var $elm$http$Http$Request = function (a) {
 	return {$: 'Request', a: a};
 };
@@ -6194,11 +6179,156 @@ var $elm$http$Http$request = function (r) {
 		$elm$http$Http$Request(
 			{allowCookiesFromOtherDomains: false, body: r.body, expect: r.expect, headers: r.headers, method: r.method, timeout: r.timeout, tracker: r.tracker, url: r.url}));
 };
+var $elm$json$Json$Encode$string = _Json_wrap;
+var $elm$http$Http$stringBody = _Http_pair;
+var $author$project$QdrantPage$fetchCollections = F3(
+	function (baseUrl, token, toMsg) {
+		return $elm$http$Http$request(
+			{
+				body: A2(
+					$elm$http$Http$stringBody,
+					'application/json',
+					A2(
+						$elm$json$Json$Encode$encode,
+						0,
+						$elm$json$Json$Encode$object(
+							_List_fromArray(
+								[
+									_Utils_Tuple2(
+									'query',
+									$elm$json$Json$Encode$string($author$project$QdrantPage$graphqlCollectionsQuery))
+								])))),
+				expect: A2($elm$http$Http$expectJson, toMsg, $author$project$QdrantPage$decodeCollectionsResponse),
+				headers: _List_fromArray(
+					[
+						A2($elm$http$Http$header, 'Authorization', 'Bearer ' + token),
+						A2($elm$http$Http$header, 'Content-Type', 'application/json')
+					]),
+				method: 'POST',
+				timeout: $elm$core$Maybe$Nothing,
+				tracker: $elm$core$Maybe$Nothing,
+				url: baseUrl
+			});
+	});
+var $author$project$Main$graphqlUrl = 'graphql';
+var $author$project$Main$collectionsRequest = function (token) {
+	return A3($author$project$QdrantPage$fetchCollections, $author$project$Main$graphqlUrl, token, $author$project$Main$GotCollections);
+};
+var $author$project$Main$GotDeleteCollection = F2(
+	function (a, b) {
+		return {$: 'GotDeleteCollection', a: a, b: b};
+	});
+var $elm$json$Json$Decode$bool = _Json_decodeBool;
+var $author$project$QdrantPage$decodeDeleteResponse = A3(
+	$elm$json$Json$Decode$map2,
+	F2(
+		function (s, m) {
+			return {message: m, success: s};
+		}),
+	A2(
+		$elm$json$Json$Decode$at,
+		_List_fromArray(
+			['data', 'deleteCollection', 'success']),
+		$elm$json$Json$Decode$bool),
+	A2(
+		$elm$json$Json$Decode$at,
+		_List_fromArray(
+			['data', 'deleteCollection', 'message']),
+		$elm$json$Json$Decode$string));
+var $author$project$QdrantPage$graphqlDeleteMutation = function (name) {
+	return A2(
+		$elm$json$Json$Encode$encode,
+		0,
+		$elm$json$Json$Encode$object(
+			_List_fromArray(
+				[
+					_Utils_Tuple2(
+					'query',
+					$elm$json$Json$Encode$string('mutation($name: String!) { deleteCollection(name: $name) { success message } }')),
+					_Utils_Tuple2(
+					'variables',
+					$elm$json$Json$Encode$object(
+						_List_fromArray(
+							[
+								_Utils_Tuple2(
+								'name',
+								$elm$json$Json$Encode$string(name))
+							])))
+				])));
+};
+var $author$project$QdrantPage$deleteCollection = F4(
+	function (baseUrl, token, collectionName, toMsg) {
+		return $elm$http$Http$request(
+			{
+				body: A2(
+					$elm$http$Http$stringBody,
+					'application/json',
+					$author$project$QdrantPage$graphqlDeleteMutation(collectionName)),
+				expect: A2($elm$http$Http$expectJson, toMsg, $author$project$QdrantPage$decodeDeleteResponse),
+				headers: _List_fromArray(
+					[
+						A2($elm$http$Http$header, 'Authorization', 'Bearer ' + token),
+						A2($elm$http$Http$header, 'Content-Type', 'application/json')
+					]),
+				method: 'POST',
+				timeout: $elm$core$Maybe$Nothing,
+				tracker: $elm$core$Maybe$Nothing,
+				url: baseUrl
+			});
+	});
+var $author$project$Main$deleteCollectionRequest = F2(
+	function (token, name) {
+		return A4(
+			$author$project$QdrantPage$deleteCollection,
+			$author$project$Main$graphqlUrl,
+			token,
+			name,
+			$author$project$Main$GotDeleteCollection(name));
+	});
+var $author$project$Main$GotLogin = function (a) {
+	return {$: 'GotLogin', a: a};
+};
+var $author$project$Main$GraphQLError = function (a) {
+	return {$: 'GraphQLError', a: a};
+};
+var $author$project$Main$Token = function (a) {
+	return {$: 'Token', a: a};
+};
+var $elm$json$Json$Decode$oneOf = _Json_oneOf;
+var $author$project$Main$decodeLoginResponse = $elm$json$Json$Decode$oneOf(
+	_List_fromArray(
+		[
+			A2(
+			$elm$json$Json$Decode$map,
+			$author$project$Main$Token,
+			A2(
+				$elm$json$Json$Decode$at,
+				_List_fromArray(
+					['data', 'login', 'token']),
+				$elm$json$Json$Decode$string)),
+			A2(
+			$elm$json$Json$Decode$map,
+			$author$project$Main$GraphQLError,
+			A2(
+				$elm$json$Json$Decode$at,
+				_List_fromArray(
+					['errors', '0', 'message']),
+				$elm$json$Json$Decode$string))
+		]));
+var $author$project$Main$loginMutationBody = A2(
+	$elm$json$Json$Encode$encode,
+	0,
+	$elm$json$Json$Encode$object(
+		_List_fromArray(
+			[
+				_Utils_Tuple2(
+				'query',
+				$elm$json$Json$Encode$string('mutation { login { token } }'))
+			])));
 var $elm$http$Http$post = function (r) {
 	return $elm$http$Http$request(
 		{body: r.body, expect: r.expect, headers: _List_Nil, method: 'POST', timeout: $elm$core$Maybe$Nothing, tracker: $elm$core$Maybe$Nothing, url: r.url});
 };
-var $elm$http$Http$stringBody = _Http_pair;
 var $author$project$Main$loginRequest = $elm$http$Http$post(
 	{
 		body: A2($elm$http$Http$stringBody, 'application/json', $author$project$Main$loginMutationBody),
@@ -6207,61 +6337,134 @@ var $author$project$Main$loginRequest = $elm$http$Http$post(
 	});
 var $author$project$Main$update = F2(
 	function (msg, model) {
-		if (msg.$ === 'LoginClick') {
-			return _Utils_Tuple2(
-				_Utils_update(
-					model,
-					{error: $elm$core$Maybe$Nothing, loading: true}),
-				$author$project$Main$loginRequest);
-		} else {
-			if (msg.a.$ === 'Ok') {
-				if (msg.a.a.$ === 'Token') {
-					var token = msg.a.a.a;
+		switch (msg.$) {
+			case 'LoginClick':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{error: $elm$core$Maybe$Nothing, loading: true}),
+					$author$project$Main$loginRequest);
+			case 'GotLogin':
+				if (msg.a.$ === 'Ok') {
+					if (msg.a.a.$ === 'Token') {
+						var token = msg.a.a.a;
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{
+									collectionsLoading: true,
+									error: $elm$core$Maybe$Nothing,
+									loading: false,
+									page: $author$project$Main$QdrantManagePage,
+									token: $elm$core$Maybe$Just(token)
+								}),
+							$author$project$Main$collectionsRequest(token));
+					} else {
+						var errMsg = msg.a.a.a;
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{
+									error: $elm$core$Maybe$Just(errMsg),
+									loading: false
+								}),
+							$elm$core$Platform$Cmd$none);
+					}
+				} else {
+					if (msg.a.a.$ === 'BadBody') {
+						var errMsg = msg.a.a.a;
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{
+									error: $elm$core$Maybe$Just(errMsg),
+									loading: false
+								}),
+							$elm$core$Platform$Cmd$none);
+					} else {
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{
+									error: $elm$core$Maybe$Just('請求失敗'),
+									loading: false
+								}),
+							$elm$core$Platform$Cmd$none);
+					}
+				}
+			case 'GotCollections':
+				if (msg.a.$ === 'Ok') {
+					var list = msg.a.a;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
-							{
-								error: $elm$core$Maybe$Nothing,
-								loading: false,
-								token: $elm$core$Maybe$Just(token)
-							}),
+							{collections: list, collectionsError: $elm$core$Maybe$Nothing, collectionsLoading: false}),
 						$elm$core$Platform$Cmd$none);
 				} else {
-					var errMsg = msg.a.a.a;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
 							{
-								error: $elm$core$Maybe$Just(errMsg),
-								loading: false
+								collectionsError: $elm$core$Maybe$Just('無法載入 collections'),
+								collectionsLoading: false
 							}),
 						$elm$core$Platform$Cmd$none);
 				}
-			} else {
-				if (msg.a.a.$ === 'BadBody') {
-					var errMsg = msg.a.a.a;
+			case 'RequestDeleteCollection':
+				var name = msg.a;
+				var _v1 = model.token;
+				if (_v1.$ === 'Just') {
+					var token = _v1.a;
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
 							{
-								error: $elm$core$Maybe$Just(errMsg),
-								loading: false
+								deletingCollection: $elm$core$Maybe$Just(name)
 							}),
-						$elm$core$Platform$Cmd$none);
+						A2($author$project$Main$deleteCollectionRequest, token, name));
+				} else {
+					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				}
+			default:
+				if (msg.b.$ === 'Ok') {
+					var _v2 = model.token;
+					if (_v2.$ === 'Just') {
+						var token = _v2.a;
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{deletingCollection: $elm$core$Maybe$Nothing}),
+							$author$project$Main$collectionsRequest(token));
+					} else {
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{deletingCollection: $elm$core$Maybe$Nothing}),
+							$elm$core$Platform$Cmd$none);
+					}
 				} else {
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
 							{
-								error: $elm$core$Maybe$Just('請求失敗'),
-								loading: false
+								collectionsError: $elm$core$Maybe$Just('刪除失敗'),
+								deletingCollection: $elm$core$Maybe$Nothing
 							}),
 						$elm$core$Platform$Cmd$none);
 				}
-			}
 		}
 	});
+var $elm$html$Html$div = _VirtualDom_node('div');
+var $elm$html$Html$h1 = _VirtualDom_node('h1');
+var $elm$html$Html$p = _VirtualDom_node('p');
+var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
+var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
+var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
+var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $author$project$Main$LoginClick = {$: 'LoginClick'};
+var $author$project$Main$RequestDeleteCollection = function (a) {
+	return {$: 'RequestDeleteCollection', a: a};
+};
 var $elm$html$Html$button = _VirtualDom_node('button');
 var $elm$json$Json$Encode$bool = _Json_wrap;
 var $elm$html$Html$Attributes$boolProperty = F2(
@@ -6272,8 +6475,6 @@ var $elm$html$Html$Attributes$boolProperty = F2(
 			$elm$json$Json$Encode$bool(bool));
 	});
 var $elm$html$Html$Attributes$disabled = $elm$html$Html$Attributes$boolProperty('disabled');
-var $elm$html$Html$div = _VirtualDom_node('div');
-var $elm$html$Html$h1 = _VirtualDom_node('h1');
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 'Normal', a: a};
 };
@@ -6291,11 +6492,158 @@ var $elm$html$Html$Events$onClick = function (msg) {
 		'click',
 		$elm$json$Json$Decode$succeed(msg));
 };
-var $elm$html$Html$p = _VirtualDom_node('p');
-var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
-var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
-var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
-var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
+var $elm$html$Html$h2 = _VirtualDom_node('h2');
+var $elm$core$List$isEmpty = function (xs) {
+	if (!xs.b) {
+		return true;
+	} else {
+		return false;
+	}
+};
+var $elm$html$Html$li = _VirtualDom_node('li');
+var $elm$html$Html$ul = _VirtualDom_node('ul');
+var $author$project$QdrantPage$view = function (opts) {
+	return A2(
+		$elm$html$Html$div,
+		_List_fromArray(
+			[
+				A2($elm$html$Html$Attributes$style, 'margin-top', '16px')
+			]),
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$h2,
+				_List_Nil,
+				_List_fromArray(
+					[
+						$elm$html$Html$text('Qdrant Collections')
+					])),
+				function () {
+				if (opts.loading) {
+					return A2(
+						$elm$html$Html$p,
+						_List_Nil,
+						_List_fromArray(
+							[
+								$elm$html$Html$text('載入中…')
+							]));
+				} else {
+					var _v0 = opts.error;
+					if (_v0.$ === 'Just') {
+						var e = _v0.a;
+						return A2(
+							$elm$html$Html$p,
+							_List_fromArray(
+								[
+									A2($elm$html$Html$Attributes$style, 'color', 'red')
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text(e)
+								]));
+					} else {
+						return $elm$core$List$isEmpty(opts.collections) ? A2(
+							$elm$html$Html$p,
+							_List_Nil,
+							_List_fromArray(
+								[
+									$elm$html$Html$text('尚無 collection。')
+								])) : A2(
+							$elm$html$Html$ul,
+							_List_fromArray(
+								[
+									A2($elm$html$Html$Attributes$style, 'list-style', 'none'),
+									A2($elm$html$Html$Attributes$style, 'padding', '0')
+								]),
+							A2(
+								$elm$core$List$map,
+								function (c) {
+									return A2(
+										$elm$html$Html$li,
+										_List_fromArray(
+											[
+												A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+												A2($elm$html$Html$Attributes$style, 'align-items', 'center'),
+												A2($elm$html$Html$Attributes$style, 'gap', '12px'),
+												A2($elm$html$Html$Attributes$style, 'margin-bottom', '8px')
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text(
+												c.name + (' (' + ($elm$core$String$fromInt(c.pointsCount) + ' points)'))),
+												A2(
+												$elm$html$Html$button,
+												_List_fromArray(
+													[
+														$elm$html$Html$Events$onClick(
+														opts.onDeleteClick(c.name)),
+														$elm$html$Html$Attributes$disabled(
+														_Utils_eq(
+															opts.deletingCollection,
+															$elm$core$Maybe$Just(c.name))),
+														A2($elm$html$Html$Attributes$style, 'padding', '4px 12px'),
+														A2(
+														$elm$html$Html$Attributes$style,
+														'cursor',
+														_Utils_eq(
+															opts.deletingCollection,
+															$elm$core$Maybe$Just(c.name)) ? 'wait' : 'pointer')
+													]),
+												_List_fromArray(
+													[
+														$elm$html$Html$text(
+														_Utils_eq(
+															opts.deletingCollection,
+															$elm$core$Maybe$Just(c.name)) ? '刪除中…' : '刪除')
+													]))
+											]));
+								},
+								opts.collections));
+					}
+				}
+			}()
+			]));
+};
+var $author$project$Main$viewPage = function (model) {
+	var _v0 = model.token;
+	if (_v0.$ === 'Nothing') {
+		return A2(
+			$elm$html$Html$div,
+			_List_fromArray(
+				[
+					A2($elm$html$Html$Attributes$style, 'margin-top', '16px')
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$button,
+					_List_fromArray(
+						[
+							$elm$html$Html$Events$onClick($author$project$Main$LoginClick),
+							$elm$html$Html$Attributes$disabled(model.loading),
+							A2($elm$html$Html$Attributes$style, 'padding', '8px 16px'),
+							A2($elm$html$Html$Attributes$style, 'font-size', '16px'),
+							A2(
+							$elm$html$Html$Attributes$style,
+							'cursor',
+							model.loading ? 'wait' : 'pointer')
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text(
+							model.loading ? '登入中…' : '登入')
+						]))
+				]));
+	} else {
+		var _v1 = model.page;
+		if (_v1.$ === 'LoginPage') {
+			return A2($elm$html$Html$div, _List_Nil, _List_Nil);
+		} else {
+			return $author$project$QdrantPage$view(
+				{collections: model.collections, deletingCollection: model.deletingCollection, error: model.collectionsError, loading: model.collectionsLoading, onDeleteClick: $author$project$Main$RequestDeleteCollection});
+		}
+	}
+};
 var $author$project$Main$view = function (model) {
 	return A2(
 		$elm$html$Html$div,
@@ -6313,70 +6661,11 @@ var $author$project$Main$view = function (model) {
 					[
 						$elm$html$Html$text('管理後台 (Elm)')
 					])),
-				A2(
-				$elm$html$Html$div,
-				_List_fromArray(
-					[
-						A2($elm$html$Html$Attributes$style, 'margin-top', '16px')
-					]),
+				$author$project$Main$viewPage(model),
 				function () {
-					var _v0 = model.token;
-					if (_v0.$ === 'Just') {
-						var t = _v0.a;
-						return _List_fromArray(
-							[
-								A2(
-								$elm$html$Html$div,
-								_List_Nil,
-								_List_fromArray(
-									[
-										A2(
-										$elm$html$Html$p,
-										_List_Nil,
-										_List_fromArray(
-											[
-												$elm$html$Html$text('已登入')
-											])),
-										A2(
-										$elm$html$Html$p,
-										_List_fromArray(
-											[
-												A2($elm$html$Html$Attributes$style, 'word-break', 'break-all')
-											]),
-										_List_fromArray(
-											[
-												$elm$html$Html$text(t)
-											]))
-									]))
-							]);
-					} else {
-						return _List_fromArray(
-							[
-								A2(
-								$elm$html$Html$button,
-								_List_fromArray(
-									[
-										$elm$html$Html$Events$onClick($author$project$Main$LoginClick),
-										$elm$html$Html$Attributes$disabled(model.loading),
-										A2($elm$html$Html$Attributes$style, 'padding', '8px 16px'),
-										A2($elm$html$Html$Attributes$style, 'font-size', '16px'),
-										A2(
-										$elm$html$Html$Attributes$style,
-										'cursor',
-										model.loading ? 'wait' : 'pointer')
-									]),
-								_List_fromArray(
-									[
-										$elm$html$Html$text(
-										model.loading ? '登入中…' : '登入')
-									]))
-							]);
-					}
-				}()),
-				function () {
-				var _v1 = model.error;
-				if (_v1.$ === 'Just') {
-					var e = _v1.a;
+				var _v0 = model.error;
+				if (_v0.$ === 'Just') {
+					var e = _v0.a;
 					return A2(
 						$elm$html$Html$p,
 						_List_fromArray(
