@@ -54,6 +54,7 @@ services:
   #   docker compose run --rm run-sk dotnet run --project HelloSk.Planner
   #   docker compose run --rm run-sk dotnet run --project HelloSk.Ask -- --chat
   #   docker compose run --rm --no-deps run-sk dotnet run --project HelloSk.Rag -- ./docs my_docs_collection
+  #   docker compose run --rm run-sk dotnet run --project HelloSk.PdfToMd -- ./便利商店工作.pdf ./docs
   # 建置方案（需先將 HelloSk.sln_ 更名為 HelloSk.sln）：
   #   docker compose run --rm run-sk dotnet build HelloSk.sln
   # 執行測試：
