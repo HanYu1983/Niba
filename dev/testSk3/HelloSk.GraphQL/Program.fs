@@ -95,8 +95,10 @@ module private ChatKernel =
         h
 
     let runChat (messages: ChatMessageInput list) : ChatResult =
+        printfn "[Chat] runChat start, messages=%d" messages.Length
         match getKernel () with
         | Error msg ->
+            printfn "[Chat] getKernel error: %s" msg
             // 當作 GraphQL error，由外層包裝
             raise (
                 GraphQLException(
@@ -107,15 +109,19 @@ module private ChatKernel =
                 )
             )
         | Ok kernel ->
+            printfn "[Chat] getKernel ok, building history..."
             let chatService = kernel.GetRequiredService<IChatCompletionService>()
             let settings = PromptExecutionSettings()
             settings.FunctionChoiceBehavior <- FunctionChoiceBehavior.Auto()
             let history = buildHistory messages
+            printfn "[Chat] history built, count=%d" (history.Count)
 
+            printfn "[Chat] calling GetChatMessageContentAsync..."
             let result =
                 chatService.GetChatMessageContentAsync(history, settings, kernel)
                 |> Async.AwaitTask
                 |> Async.RunSynchronously
+            printfn "[Chat] GetChatMessageContentAsync done."
 
             history.Add(result)
 
@@ -137,6 +143,7 @@ module private ChatKernel =
                             m.Role.ToString().ToLowerInvariant()
                         Some(ChatMessage(role, content)))
 
+            printfn "[Chat] runChat done, totalMessages=%d" allMessages.Length
             ChatResult(allMessages, answer)
 
 /// 呼叫 Qdrant REST API 的小工具模組（本檔內自用）
