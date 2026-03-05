@@ -1,0 +1,20 @@
+{
+  "private": true,
+  "scripts": {
+    "start": "dotnet tool restore && dotnet fable watch src --run vite",
+    "build": "dotnet tool restore && dotnet fable src --run vite build",
+    "clean": "dotnet fable clean src --yes",
+    "femto:install": "dotnet femto install"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.0",
+    "vite": "^5.4.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
