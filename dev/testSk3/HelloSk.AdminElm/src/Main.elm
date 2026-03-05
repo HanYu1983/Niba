@@ -44,7 +44,7 @@ type LoginResponse
 
 graphqlUrl : String
 graphqlUrl =
-    "//localhost:5000/graphql"
+    "graphql"
 
 
 loginMutationBody : String

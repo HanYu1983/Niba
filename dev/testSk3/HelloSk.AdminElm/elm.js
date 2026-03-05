@@ -6001,7 +6001,7 @@ var $elm$http$Http$expectJson = F2(
 						A2($elm$json$Json$Decode$decodeString, decoder, string));
 				}));
 	});
-var $author$project$Main$graphqlUrl = '//localhost:5000/graphql';
+var $author$project$Main$graphqlUrl = 'graphql';
 var $elm$json$Json$Encode$object = function (pairs) {
 	return _Json_wrap(
 		A3(
