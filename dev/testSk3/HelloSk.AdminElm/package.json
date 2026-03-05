@@ -2,7 +2,8 @@
   "private": true,
   "scripts": {
     "build": "elm make src/Main.elm --output=elm.js",
-    "start": "node server.js"
+    "start": "node server.js",
+    "elm": "elm"
   },
   "devDependencies": {
     "elm": "latest-0.19.1"

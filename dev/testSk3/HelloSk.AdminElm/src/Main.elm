@@ -85,8 +85,8 @@ update msg model =
         GotLogin (Ok (Token token)) ->
             ( { model | token = Just token, loading = False, error = Nothing }, Cmd.none )
 
-        GotLogin (Ok (GraphQLError msg)) ->
-            ( { model | loading = False, error = Just msg }, Cmd.none )
+        GotLogin (Ok (GraphQLError errMsg)) ->
+            ( { model | loading = False, error = Just errMsg }, Cmd.none )
 
         GotLogin (Err (Http.BadBody errMsg)) ->
             ( { model | loading = False, error = Just errMsg }, Cmd.none )

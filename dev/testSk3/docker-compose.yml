@@ -60,8 +60,11 @@ services:
   # 管理後台（Elm 前端，node 安裝 elm 編譯，無 Vite）
   # 啟動：docker compose up -d admin-elm（建議先啟動 graphql）
   # 本機存取：http://localhost:5174
+  # platform: linux/amd64 讓 npm elm 可安裝預編譯二進位（官方無 linux_arm64）
+  # docker compose run --rm admin-elm npm run build
   admin-elm:
     image: node:22
+    platform: linux/amd64
     working_dir: /app/HelloSk.AdminElm
     volumes:
       - .:/app
