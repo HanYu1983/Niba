@@ -10,10 +10,8 @@
 ## 本機開發
 
 ```bash
-cd HelloSk.AdminElm
-npm install
-npm run build   # elm make src/Main.elm --output=elm.js
-npm start       # node server.js，靜態檔 + /graphql 代理
+docker compose run --rm admin-elm npm run elm install ...
+docker compose run --rm admin-elm npm run build
 ```
 
 瀏覽 http://localhost:5174 ，按「登入」取得 JWT。

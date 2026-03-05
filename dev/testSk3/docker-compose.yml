@@ -62,6 +62,7 @@ services:
   # 本機存取：http://localhost:5174
   # platform: linux/amd64 讓 npm elm 可安裝預編譯二進位（官方無 linux_arm64）
   # docker compose run --rm admin-elm npm run build
+  # docker compose run --rm admin-elm npm run elm install ...
   admin-elm:
     image: node:22
     platform: linux/amd64
