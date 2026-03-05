@@ -24,6 +24,20 @@ services:
     #         - driver: nvidia
     #           count: all
     #           capabilities: [gpu]
+  # GraphQL Server（F# + HotChocolate）
+  # 啟動：docker compose up -d graphql
+  # 本機存取：http://localhost:5000/graphql（Banana Cake Pop IDE）
+  graphql:
+    image: mcr.microsoft.com/dotnet/sdk:8.0
+    working_dir: /app
+    volumes:
+      - .:/app
+    ports:
+      - "5000:5000"
+    environment:
+      - ASPNETCORE_URLS=http://0.0.0.0:5000
+    command: ["sh", "-c", "dotnet build HelloSk.GraphQL/HelloSk.GraphQL.fsproj && dotnet run --project HelloSk.GraphQL --no-build"]
+
   # Qdrant 向量資料庫：供 RAG 使用
   # 啟動：docker compose up -d qdrant
   # 本機存取：http://localhost:6334
@@ -55,6 +69,8 @@ services:
   #   docker compose run --rm run-sk dotnet run --project HelloSk.Ask -- --chat
   #   docker compose run --rm --no-deps run-sk dotnet run --project HelloSk.Rag -- ./docs my_docs_collection
   #   docker compose run --rm run-sk dotnet run --project HelloSk.PdfToMd -- ./便利商店工作.pdf ./docs
+  #   docker compose run --rm run-sk dotnet run --project HelloSk.GraphQL
+  # 或常駐執行 GraphQL：docker compose up -d graphql → http://localhost:5000/graphql
   # 建置方案（需先將 HelloSk.sln_ 更名為 HelloSk.sln）：
   #   docker compose run --rm run-sk dotnet build HelloSk.sln
   # 執行測試：
