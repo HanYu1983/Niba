@@ -38,6 +38,13 @@ services:
       - ASPNETCORE_URLS=http://0.0.0.0:5000
       - ASPNETCORE_ENVIRONMENT=Development
       - QDRANT_ENDPOINT=http://qdrant:6333
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY:-}
+      - OPENROUTER_MODEL=${OPENROUTER_MODEL:-qwen3.5:0.8b}
+      - OPENROUTER_BASE_URL=${OPENROUTER_BASE_URL:-http://ollama:11434/v1}
+      - OPENROUTER_EMBED_MODEL=${OPENROUTER_EMBED_MODEL:-openai/text-embedding-3-large}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:-}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY:-}
+      - AWS_REGION=${AWS_REGION:-ap-northeast-1}
     command: ["sh", "-c", "dotnet build HelloSk.GraphQL/HelloSk.GraphQL.fsproj && dotnet run --project HelloSk.GraphQL --no-build"]
 
   # 管理後台（Elm 前端，node 安裝 elm 編譯，無 Vite）

@@ -5347,59 +5347,51 @@ var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
 var $author$project$Main$init = function (_v0) {
 	return _Utils_Tuple2(
-		{collections: _List_Nil, collectionsError: $elm$core$Maybe$Nothing, collectionsLoading: false, deletingCollection: $elm$core$Maybe$Nothing, error: $elm$core$Maybe$Nothing, loading: false, page: $author$project$Main$LoginPage, token: $elm$core$Maybe$Nothing},
+		{chatError: $elm$core$Maybe$Nothing, chatInput: '', chatLoading: false, chatMessages: _List_Nil, collections: _List_Nil, collectionsError: $elm$core$Maybe$Nothing, collectionsLoading: false, deletingCollection: $elm$core$Maybe$Nothing, error: $elm$core$Maybe$Nothing, loading: false, page: $author$project$Main$LoginPage, token: $elm$core$Maybe$Nothing},
 		$elm$core$Platform$Cmd$none);
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
 var $elm$core$Platform$Sub$none = $elm$core$Platform$Sub$batch(_List_Nil);
+var $author$project$Main$ChatPage = {$: 'ChatPage'};
 var $author$project$Main$QdrantManagePage = {$: 'QdrantManagePage'};
-var $author$project$Main$GotCollections = function (a) {
-	return {$: 'GotCollections', a: a};
+var $author$project$Main$GotChat = function (a) {
+	return {$: 'GotChat', a: a};
 };
-var $author$project$QdrantPage$CollectionsError = function (a) {
-	return {$: 'CollectionsError', a: a};
-};
-var $author$project$QdrantPage$CollectionsOk = function (a) {
-	return {$: 'CollectionsOk', a: a};
-};
+var $author$project$Main$ChatMessage = F2(
+	function (role, content) {
+		return {content: content, role: role};
+	});
+var $author$project$Main$ChatResponse = F2(
+	function (messages, answer) {
+		return {answer: answer, messages: messages};
+	});
 var $elm$json$Json$Decode$field = _Json_decodeField;
 var $elm$json$Json$Decode$at = F2(
 	function (fields, decoder) {
 		return A3($elm$core$List$foldr, $elm$json$Json$Decode$field, decoder, fields);
 	});
-var $author$project$QdrantPage$Collection = F2(
-	function (name, pointsCount) {
-		return {name: name, pointsCount: pointsCount};
-	});
-var $elm$json$Json$Decode$int = _Json_decodeInt;
-var $elm$json$Json$Decode$string = _Json_decodeString;
-var $author$project$QdrantPage$decodeCollection = A3(
-	$elm$json$Json$Decode$map2,
-	$author$project$QdrantPage$Collection,
-	A2($elm$json$Json$Decode$field, 'name', $elm$json$Json$Decode$string),
-	A2($elm$json$Json$Decode$field, 'pointsCount', $elm$json$Json$Decode$int));
 var $elm$json$Json$Decode$list = _Json_decodeList;
-var $elm$json$Json$Decode$oneOf = _Json_oneOf;
-var $author$project$QdrantPage$decodeCollectionsResponse = $elm$json$Json$Decode$oneOf(
-	_List_fromArray(
-		[
-			A2(
-			$elm$json$Json$Decode$map,
-			$author$project$QdrantPage$CollectionsOk,
-			A2(
-				$elm$json$Json$Decode$at,
-				_List_fromArray(
-					['data', 'collections']),
-				$elm$json$Json$Decode$list($author$project$QdrantPage$decodeCollection))),
-			A2(
-			$elm$json$Json$Decode$map,
-			$author$project$QdrantPage$CollectionsError,
-			A2(
-				$elm$json$Json$Decode$at,
-				_List_fromArray(
-					['errors', '0', 'message']),
-				$elm$json$Json$Decode$string))
-		]));
+var $elm$json$Json$Decode$string = _Json_decodeString;
+var $author$project$Main$decodeChatResponse = function () {
+	var decodeMsg = A3(
+		$elm$json$Json$Decode$map2,
+		$author$project$Main$ChatMessage,
+		A2($elm$json$Json$Decode$field, 'role', $elm$json$Json$Decode$string),
+		A2($elm$json$Json$Decode$field, 'content', $elm$json$Json$Decode$string));
+	return A3(
+		$elm$json$Json$Decode$map2,
+		$author$project$Main$ChatResponse,
+		A2(
+			$elm$json$Json$Decode$at,
+			_List_fromArray(
+				['data', 'chat', 'messages']),
+			$elm$json$Json$Decode$list(decodeMsg)),
+		A2(
+			$elm$json$Json$Decode$at,
+			_List_fromArray(
+				['data', 'chat', 'answer']),
+			$elm$json$Json$Decode$string));
+}();
 var $elm$json$Json$Decode$decodeString = _Json_runOnString;
 var $elm$http$Http$BadStatus_ = F2(
 	function (a, b) {
@@ -6014,12 +6006,21 @@ var $elm$http$Http$expectJson = F2(
 						A2($elm$json$Json$Decode$decodeString, decoder, string));
 				}));
 	});
-var $author$project$QdrantPage$graphqlCollectionsQuery = 'query { collections { name pointsCount } }';
+var $author$project$Main$graphqlUrl = 'graphql';
 var $elm$http$Http$Header = F2(
 	function (a, b) {
 		return {$: 'Header', a: a, b: b};
 	});
 var $elm$http$Http$header = $elm$http$Http$Header;
+var $elm$json$Json$Encode$list = F2(
+	function (func, entries) {
+		return _Json_wrap(
+			A3(
+				$elm$core$List$foldl,
+				_Json_addEntry(func),
+				_Json_emptyArray(_Utils_Tuple0),
+				entries));
+	});
 var $elm$json$Json$Encode$object = function (pairs) {
 	return _Json_wrap(
 		A3(
@@ -6203,6 +6204,101 @@ var $elm$http$Http$request = function (r) {
 };
 var $elm$json$Json$Encode$string = _Json_wrap;
 var $elm$http$Http$stringBody = _Http_pair;
+var $author$project$Main$chatRequest = F3(
+	function (token, history, userInput) {
+		var encodeMessage = function (msg) {
+			return $elm$json$Json$Encode$object(
+				_List_fromArray(
+					[
+						_Utils_Tuple2(
+						'role',
+						$elm$json$Json$Encode$string(msg.role)),
+						_Utils_Tuple2(
+						'content',
+						$elm$json$Json$Encode$string(msg.content))
+					]));
+		};
+		var allMessages = _Utils_ap(
+			history,
+			$elm$core$String$isEmpty(userInput) ? _List_Nil : _List_fromArray(
+				[
+					{content: userInput, role: 'user'}
+				]));
+		var body = A2(
+			$elm$json$Json$Encode$encode,
+			0,
+			$elm$json$Json$Encode$object(
+				_List_fromArray(
+					[
+						_Utils_Tuple2(
+						'query',
+						$elm$json$Json$Encode$string('mutation($messages: [ChatMessageInput!]!) { chat(messages: $messages) { messages { role content } answer } }')),
+						_Utils_Tuple2(
+						'variables',
+						$elm$json$Json$Encode$object(
+							_List_fromArray(
+								[
+									_Utils_Tuple2(
+									'messages',
+									A2($elm$json$Json$Encode$list, encodeMessage, allMessages))
+								])))
+					])));
+		return $elm$http$Http$request(
+			{
+				body: A2($elm$http$Http$stringBody, 'application/json', body),
+				expect: A2($elm$http$Http$expectJson, $author$project$Main$GotChat, $author$project$Main$decodeChatResponse),
+				headers: _List_fromArray(
+					[
+						A2($elm$http$Http$header, 'Authorization', 'Bearer ' + token),
+						A2($elm$http$Http$header, 'Content-Type', 'application/json')
+					]),
+				method: 'POST',
+				timeout: $elm$core$Maybe$Nothing,
+				tracker: $elm$core$Maybe$Nothing,
+				url: $author$project$Main$graphqlUrl
+			});
+	});
+var $author$project$Main$GotCollections = function (a) {
+	return {$: 'GotCollections', a: a};
+};
+var $author$project$QdrantPage$CollectionsError = function (a) {
+	return {$: 'CollectionsError', a: a};
+};
+var $author$project$QdrantPage$CollectionsOk = function (a) {
+	return {$: 'CollectionsOk', a: a};
+};
+var $author$project$QdrantPage$Collection = F2(
+	function (name, pointsCount) {
+		return {name: name, pointsCount: pointsCount};
+	});
+var $elm$json$Json$Decode$int = _Json_decodeInt;
+var $author$project$QdrantPage$decodeCollection = A3(
+	$elm$json$Json$Decode$map2,
+	$author$project$QdrantPage$Collection,
+	A2($elm$json$Json$Decode$field, 'name', $elm$json$Json$Decode$string),
+	A2($elm$json$Json$Decode$field, 'pointsCount', $elm$json$Json$Decode$int));
+var $elm$json$Json$Decode$oneOf = _Json_oneOf;
+var $author$project$QdrantPage$decodeCollectionsResponse = $elm$json$Json$Decode$oneOf(
+	_List_fromArray(
+		[
+			A2(
+			$elm$json$Json$Decode$map,
+			$author$project$QdrantPage$CollectionsOk,
+			A2(
+				$elm$json$Json$Decode$at,
+				_List_fromArray(
+					['data', 'collections']),
+				$elm$json$Json$Decode$list($author$project$QdrantPage$decodeCollection))),
+			A2(
+			$elm$json$Json$Decode$map,
+			$author$project$QdrantPage$CollectionsError,
+			A2(
+				$elm$json$Json$Decode$at,
+				_List_fromArray(
+					['errors', '0', 'message']),
+				$elm$json$Json$Decode$string))
+		]));
+var $author$project$QdrantPage$graphqlCollectionsQuery = 'query { collections { name pointsCount } }';
 var $author$project$QdrantPage$fetchCollections = F3(
 	function (baseUrl, token, toMsg) {
 		return $elm$http$Http$request(
@@ -6232,7 +6328,6 @@ var $author$project$QdrantPage$fetchCollections = F3(
 				url: baseUrl
 			});
 	});
-var $author$project$Main$graphqlUrl = 'graphql';
 var $author$project$Main$collectionsRequest = function (token) {
 	return A3($author$project$QdrantPage$fetchCollections, $author$project$Main$graphqlUrl, token, $author$project$Main$GotCollections);
 };
@@ -6459,7 +6554,7 @@ var $author$project$Main$update = F2(
 				} else {
 					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
 				}
-			default:
+			case 'GotDeleteCollection':
 				if (msg.b.$ === 'Ok') {
 					var _v2 = model.token;
 					if (_v2.$ === 'Just') {
@@ -6483,6 +6578,58 @@ var $author$project$Main$update = F2(
 							{
 								collectionsError: $elm$core$Maybe$Just('刪除失敗'),
 								deletingCollection: $elm$core$Maybe$Nothing
+							}),
+						$elm$core$Platform$Cmd$none);
+				}
+			case 'SwitchToQdrant':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{page: $author$project$Main$QdrantManagePage}),
+					$elm$core$Platform$Cmd$none);
+			case 'SwitchToChat':
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{page: $author$project$Main$ChatPage}),
+					$elm$core$Platform$Cmd$none);
+			case 'ChatInputChanged':
+				var txt = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{chatInput: txt}),
+					$elm$core$Platform$Cmd$none);
+			case 'SendChat':
+				var _v3 = _Utils_Tuple3(
+					model.token,
+					$elm$core$String$isEmpty(model.chatInput),
+					model.chatLoading);
+				if (((_v3.a.$ === 'Just') && (!_v3.b)) && (!_v3.c)) {
+					var token = _v3.a.a;
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{chatError: $elm$core$Maybe$Nothing, chatLoading: true}),
+						A3($author$project$Main$chatRequest, token, model.chatMessages, model.chatInput));
+				} else {
+					return _Utils_Tuple2(model, $elm$core$Platform$Cmd$none);
+				}
+			default:
+				if (msg.a.$ === 'Ok') {
+					var resp = msg.a.a;
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{chatError: $elm$core$Maybe$Nothing, chatInput: '', chatLoading: false, chatMessages: resp.messages}),
+						$elm$core$Platform$Cmd$none);
+				} else {
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{
+								chatError: $elm$core$Maybe$Just('聊天呼叫失敗'),
+								chatLoading: false
 							}),
 						$elm$core$Platform$Cmd$none);
 				}
@@ -6638,6 +6785,160 @@ var $author$project$QdrantPage$view = function (opts) {
 			}()
 			]));
 };
+var $author$project$Main$ChatInputChanged = function (a) {
+	return {$: 'ChatInputChanged', a: a};
+};
+var $author$project$Main$SendChat = {$: 'SendChat'};
+var $elm$html$Html$Events$alwaysStop = function (x) {
+	return _Utils_Tuple2(x, true);
+};
+var $elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
+	return {$: 'MayStopPropagation', a: a};
+};
+var $elm$html$Html$Events$stopPropagationOn = F2(
+	function (event, decoder) {
+		return A2(
+			$elm$virtual_dom$VirtualDom$on,
+			event,
+			$elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
+	});
+var $elm$html$Html$Events$targetValue = A2(
+	$elm$json$Json$Decode$at,
+	_List_fromArray(
+		['target', 'value']),
+	$elm$json$Json$Decode$string);
+var $elm$html$Html$Events$onInput = function (tagger) {
+	return A2(
+		$elm$html$Html$Events$stopPropagationOn,
+		'input',
+		A2(
+			$elm$json$Json$Decode$map,
+			$elm$html$Html$Events$alwaysStop,
+			A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetValue)));
+};
+var $elm$html$Html$Attributes$stringProperty = F2(
+	function (key, string) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			$elm$json$Json$Encode$string(string));
+	});
+var $elm$html$Html$Attributes$placeholder = $elm$html$Html$Attributes$stringProperty('placeholder');
+var $elm$html$Html$Attributes$rows = function (n) {
+	return A2(
+		_VirtualDom_attribute,
+		'rows',
+		$elm$core$String$fromInt(n));
+};
+var $elm$html$Html$textarea = _VirtualDom_node('textarea');
+var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
+var $author$project$Main$viewChat = function (model) {
+	var viewMsg = function (msg) {
+		var bg = (msg.role === 'user') ? '#DCF8C6' : '#FFFFFF';
+		var align = (msg.role === 'user') ? 'flex-end' : 'flex-start';
+		return A2(
+			$elm$html$Html$div,
+			_List_fromArray(
+				[
+					A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+					A2($elm$html$Html$Attributes$style, 'justify-content', align),
+					A2($elm$html$Html$Attributes$style, 'margin', '4px 0')
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$div,
+					_List_fromArray(
+						[
+							A2($elm$html$Html$Attributes$style, 'max-width', '70%'),
+							A2($elm$html$Html$Attributes$style, 'padding', '8px 12px'),
+							A2($elm$html$Html$Attributes$style, 'border-radius', '8px'),
+							A2($elm$html$Html$Attributes$style, 'background-color', bg),
+							A2($elm$html$Html$Attributes$style, 'border', '1px solid #ddd')
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text(msg.content)
+						]))
+				]));
+	};
+	return A2(
+		$elm$html$Html$div,
+		_List_fromArray(
+			[
+				A2($elm$html$Html$Attributes$style, 'margin-top', '16px'),
+				A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+				A2($elm$html$Html$Attributes$style, 'flex-direction', 'column'),
+				A2($elm$html$Html$Attributes$style, 'height', '60vh')
+			]),
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						A2($elm$html$Html$Attributes$style, 'flex', '1'),
+						A2($elm$html$Html$Attributes$style, 'overflow-y', 'auto'),
+						A2($elm$html$Html$Attributes$style, 'border', '1px solid #ddd'),
+						A2($elm$html$Html$Attributes$style, 'padding', '8px')
+					]),
+				A2($elm$core$List$map, viewMsg, model.chatMessages)),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						A2($elm$html$Html$Attributes$style, 'margin-top', '8px')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$textarea,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$value(model.chatInput),
+								$elm$html$Html$Attributes$placeholder('輸入訊息...'),
+								$elm$html$Html$Attributes$rows(3),
+								A2($elm$html$Html$Attributes$style, 'width', '100%'),
+								$elm$html$Html$Events$onInput($author$project$Main$ChatInputChanged)
+							]),
+						_List_Nil),
+						A2(
+						$elm$html$Html$button,
+						_List_fromArray(
+							[
+								$elm$html$Html$Events$onClick($author$project$Main$SendChat),
+								$elm$html$Html$Attributes$disabled(
+								model.chatLoading || $elm$core$String$isEmpty(model.chatInput)),
+								A2($elm$html$Html$Attributes$style, 'margin-top', '4px'),
+								A2($elm$html$Html$Attributes$style, 'padding', '6px 16px')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text(
+								model.chatLoading ? '送出中…' : '送出')
+							])),
+						function () {
+						var _v0 = model.chatError;
+						if (_v0.$ === 'Just') {
+							var e = _v0.a;
+							return A2(
+								$elm$html$Html$p,
+								_List_fromArray(
+									[
+										A2($elm$html$Html$Attributes$style, 'color', 'red'),
+										A2($elm$html$Html$Attributes$style, 'margin-top', '4px')
+									]),
+								_List_fromArray(
+									[
+										$elm$html$Html$text(e)
+									]));
+						} else {
+							return $elm$html$Html$text('');
+						}
+					}()
+					]))
+			]));
+};
 var $author$project$Main$viewPage = function (model) {
 	var _v0 = model.token;
 	if (_v0.$ === 'Nothing') {
@@ -6670,12 +6971,57 @@ var $author$project$Main$viewPage = function (model) {
 				]));
 	} else {
 		var _v1 = model.page;
-		if (_v1.$ === 'LoginPage') {
-			return A2($elm$html$Html$div, _List_Nil, _List_Nil);
-		} else {
-			return $author$project$QdrantPage$view(
-				{collections: model.collections, deletingCollection: model.deletingCollection, error: model.collectionsError, loading: model.collectionsLoading, onDeleteClick: $author$project$Main$RequestDeleteCollection});
+		switch (_v1.$) {
+			case 'LoginPage':
+				return A2($elm$html$Html$div, _List_Nil, _List_Nil);
+			case 'QdrantManagePage':
+				return $author$project$QdrantPage$view(
+					{collections: model.collections, deletingCollection: model.deletingCollection, error: model.collectionsError, loading: model.collectionsLoading, onDeleteClick: $author$project$Main$RequestDeleteCollection});
+			default:
+				return $author$project$Main$viewChat(model);
 		}
+	}
+};
+var $author$project$Main$SwitchToChat = {$: 'SwitchToChat'};
+var $author$project$Main$SwitchToQdrant = {$: 'SwitchToQdrant'};
+var $author$project$Main$viewTabs = function (model) {
+	var _v0 = model.token;
+	if (_v0.$ === 'Nothing') {
+		return $elm$html$Html$text('');
+	} else {
+		return A2(
+			$elm$html$Html$div,
+			_List_fromArray(
+				[
+					A2($elm$html$Html$Attributes$style, 'margin-top', '16px'),
+					A2($elm$html$Html$Attributes$style, 'margin-bottom', '8px')
+				]),
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$button,
+					_List_fromArray(
+						[
+							$elm$html$Html$Events$onClick($author$project$Main$SwitchToQdrant),
+							A2($elm$html$Html$Attributes$style, 'margin-right', '8px'),
+							A2($elm$html$Html$Attributes$style, 'padding', '4px 12px')
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text('Collections 管理')
+						])),
+					A2(
+					$elm$html$Html$button,
+					_List_fromArray(
+						[
+							$elm$html$Html$Events$onClick($author$project$Main$SwitchToChat),
+							A2($elm$html$Html$Attributes$style, 'padding', '4px 12px')
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text('聊天')
+						]))
+				]));
 	}
 };
 var $author$project$Main$view = function (model) {
@@ -6695,6 +7041,7 @@ var $author$project$Main$view = function (model) {
 					[
 						$elm$html$Html$text('管理後台 (Elm)')
 					])),
+				$author$project$Main$viewTabs(model),
 				$author$project$Main$viewPage(model),
 				function () {
 				var _v0 = model.error;

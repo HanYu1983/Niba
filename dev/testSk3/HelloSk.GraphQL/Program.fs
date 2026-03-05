@@ -19,6 +19,10 @@ open HotChocolate.ApolloFederation
 open HotChocolate.ApolloFederation.Types
 open HotChocolate.ApolloFederation.Resolvers
 open HotChocolate.Types
+open Microsoft.SemanticKernel
+open Microsoft.SemanticKernel.ChatCompletion
+open HelloSk.Core
+open HelloSk.Core.Shared
 
 // ----- Schema：Login（無帳密）、Federation 用 entity -----
 
@@ -35,6 +39,105 @@ type QdrantCollection(name: string, pointsCount: int) =
 type DeleteCollectionPayload(success: bool, message: string) =
     member _.Success = success
     member _.Message = message
+
+/// 聊天訊息 input / output 型別
+type ChatMessageInput(role: string, content: string) =
+    member _.Role = role
+    member _.Content = content
+
+type ChatMessage(role: string, content: string) =
+    member _.Role = role
+    member _.Content = content
+
+type ChatResult(messages: ChatMessage list, answer: string) =
+    member _.Messages = messages
+    member _.Answer = answer
+
+/// 共用的 Semantic Kernel 建立與 chat 呼叫
+module private ChatKernel =
+
+    let private lazyKernel: Lazy<Result<Kernel, string>> =
+        lazy (Shared.createKernelFromEnv ())
+
+    let getKernel () =
+        match lazyKernel.Value with
+        | Result.Error msg -> Result.Error msg
+        | Result.Ok k ->
+            // 確保 Plugin 只註冊一次（若重複註冊會重覆出現在 Plugins 中，但影響有限）
+            HelloSk.Core.PluginRegistration.registerCorePlugins k
+            Result.Ok k
+
+    let private defaultSystemMessage = """
+你是助理，可依使用者需求選擇呼叫以下工具（Plugin）：
+- CodeHelper（寫/改/跑程式）：ReadFile(path)、WriteFile(path, content)、ListDir(path)。路徑為相對於 workspace 根目錄。
+- Tools：GetEnv(key)、RunCmd(command)，可用於 dotnet build、dotnet test 等，不可寫檔。
+- Aws（AWS）：S3ListBuckets()、S3ListObjects、S3GetObjectText；EBGetEnvVars、EBUpdateEnvVars。
+- RealTasks（實際任務）：SmartCanvasNovaSetTmp(value) 將 EB SmartCanvasNova 的 smartcanvas-nova-development2 的 TMP 環境變數設為 value。
+- Rag（RAG 查詢）：QdrantSearch(collectionName, query, topK) 需要使用者提供 collectionName，會對 Qdrant 搜尋相關內容並回傳摘要。
+- Facebook：query_graph(path)，如 /me、/me/adaccounts
+- GoogleAds：query_ads(gaql, customerId)
+- RicohMonitoring：RicohFetchAndUpdate、RicohPostToSlack
+撰寫或修改程式時請依序使用 ReadFile/ListDir、WriteFile、RunCmd；查詢 AWS 時使用 Aws 的 S3 函數，查詢文件內容時可用 Rag 的 QdrantSearch（請先讓使用者說明 collectionName）。回覆簡潔中文。
+"""
+
+    let buildHistory (inputs: ChatMessageInput list) : ChatHistory =
+        let h = ChatHistory()
+        h.AddSystemMessage(defaultSystemMessage)
+        for m in inputs do
+            let role = (m.Role |> string).ToLowerInvariant()
+            let content = m.Content
+            if not (String.IsNullOrWhiteSpace content) then
+                match role with
+                | "user" -> h.AddUserMessage(content)
+                | "assistant" -> h.AddAssistantMessage(content)
+                | "system" -> h.AddSystemMessage(content)
+                | _ -> h.AddUserMessage(content)
+        h
+
+    let runChat (messages: ChatMessageInput list) : ChatResult =
+        match getKernel () with
+        | Error msg ->
+            // 當作 GraphQL error，由外層包裝
+            raise (
+                GraphQLException(
+                    ErrorBuilder.New()
+                        .SetMessage($"建立 Kernel 失敗：{msg}")
+                        .SetCode("CHAT_KERNEL_ERROR")
+                        .Build()
+                )
+            )
+        | Ok kernel ->
+            let chatService = kernel.GetRequiredService<IChatCompletionService>()
+            let settings = PromptExecutionSettings()
+            settings.FunctionChoiceBehavior <- FunctionChoiceBehavior.Auto()
+            let history = buildHistory messages
+
+            let result =
+                chatService.GetChatMessageContentAsync(history, settings, kernel)
+                |> Async.AwaitTask
+                |> Async.RunSynchronously
+
+            history.Add(result)
+
+            let answer =
+                result.Content
+                |> Option.ofObj
+                |> Option.defaultValue ""
+
+            // 將完整對話歷史轉回 GraphQL 型別
+            let allMessages =
+                history
+                |> Seq.toList
+                |> List.choose (fun m ->
+                    let content = m.Content |> Option.ofObj |> Option.defaultValue ""
+                    if String.IsNullOrWhiteSpace content then
+                        None
+                    else
+                        let role =
+                            m.Role.ToString().ToLowerInvariant()
+                        Some(ChatMessage(role, content)))
+
+            ChatResult(allMessages, answer)
 
 /// 呼叫 Qdrant REST API 的小工具模組（本檔內自用）
 module private QdrantApi =
@@ -169,6 +272,28 @@ type Mutation() =
             DeleteCollectionPayload(ok, msg)
         with ex ->
             DeleteCollectionPayload(false, sprintf "刪除 collection \"%s\" 時發生錯誤：%s" name ex.Message)
+
+    /// 與 HelloSk.Ask 的聊天模式相同，但由 GraphQL 取得輸入
+    /// 注意這裡使用 C# 陣列型別當作參數，避免 F# list 與 HotChocolate 的 List 之間型別轉換問題
+    [<Authorize>]
+    member _.Chat(messages: ChatMessageInput array) =
+        try
+            messages
+            |> Array.toList
+            |> ChatKernel.runChat
+        with
+        | :? GraphQLException as gex ->
+            // 直接向外拋出 GraphQLException
+            raise gex
+        | ex ->
+            raise (
+                GraphQLException(
+                    ErrorBuilder.New()
+                        .SetMessage($"聊天呼叫失敗：{ex.Message}")
+                        .SetCode("CHAT_ERROR")
+                        .Build()
+                )
+            )
 
 /// Federation 規定 subgraph 至少要有一個 entity（@key + reference resolver）
 /// 此為佔位 entity，供之後擴充或由 gateway 解析
