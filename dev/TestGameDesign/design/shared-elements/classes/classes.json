@@ -1,0 +1,75 @@
+{
+  "comment": "通用職業：定位、可裝備類型、基礎屬性、資源類型、可學技能 id 列表，遊戲可依 skillIds 對應 skills.json",
+  "classes": [
+    {
+      "id": "class_warrior",
+      "name": "戰士",
+      "description": "近戰專家，能扛能打，擅長重武器與重甲。",
+      "category": "class",
+      "tags": ["melee", "physical", "heavy_armor", "tank"],
+      "role": "tank",
+      "allowedWeaponTags": ["melee", "one-handed", "two-handed", "slash", "blunt", "pierce"],
+      "allowedArmorTags": ["heavy", "metal", "leather", "shield"],
+      "baseStats": { "power": 14, "defense": 12, "speed": 8, "magic": 4, "vitality": 12 },
+      "statGrowth": { "power": 2.5, "defense": 2.2, "speed": 0.8, "magic": 0.3, "vitality": 2.0 },
+      "resourceType": "stamina",
+      "skillIds": ["skill_basic_attack", "skill_slash", "skill_heavy_strike", "skill_taunt", "skill_shield_block", "skill_warrior_ultimate"]
+    },
+    {
+      "id": "class_rogue",
+      "name": "盜賊",
+      "description": "高機動近戰，擅長爆發與異常狀態，偏輕裝。",
+      "category": "class",
+      "tags": ["melee", "physical", "light_armor", "dps"],
+      "role": "dps",
+      "allowedWeaponTags": ["melee", "one-handed", "pierce", "slash"],
+      "allowedArmorTags": ["light", "leather", "cloth"],
+      "baseStats": { "power": 12, "defense": 6, "speed": 14, "magic": 6, "vitality": 8 },
+      "statGrowth": { "power": 2.2, "defense": 1.0, "speed": 2.5, "magic": 0.5, "vitality": 1.2 },
+      "resourceType": "stamina",
+      "skillIds": ["skill_basic_attack", "skill_slash", "skill_backstab", "skill_poison_blade", "skill_evasion"]
+    },
+    {
+      "id": "class_mage",
+      "name": "法師",
+      "description": "遠程法術傷害，使用 MP 施放火冰雷等魔法。",
+      "category": "class",
+      "tags": ["ranged", "magic", "cloth", "dps"],
+      "role": "dps",
+      "allowedWeaponTags": ["magic", "staff", "wand"],
+      "allowedArmorTags": ["cloth", "light"],
+      "baseStats": { "power": 6, "defense": 4, "speed": 8, "magic": 16, "vitality": 6 },
+      "statGrowth": { "power": 0.3, "defense": 0.5, "speed": 0.8, "magic": 3.0, "vitality": 0.8 },
+      "resourceType": "mp",
+      "skillIds": ["skill_fire_ball", "skill_ice_lance", "skill_flame_wave", "skill_mana_shield", "skill_mage_ultimate"]
+    },
+    {
+      "id": "class_cleric",
+      "name": "牧師",
+      "description": "治療與輔助專家，兼備神聖傷害與增益。",
+      "category": "class",
+      "tags": ["magic", "healer", "cloth", "support"],
+      "role": "healer",
+      "allowedWeaponTags": ["magic", "wand", "one-handed"],
+      "allowedArmorTags": ["cloth", "light", "leather"],
+      "baseStats": { "power": 6, "defense": 8, "speed": 7, "magic": 14, "vitality": 10 },
+      "statGrowth": { "power": 0.4, "defense": 1.2, "speed": 0.7, "magic": 2.5, "vitality": 1.8 },
+      "resourceType": "mp",
+      "skillIds": ["skill_heal", "skill_group_heal", "skill_holy_light", "skill_bless", "skill_cleric_ultimate"]
+    },
+    {
+      "id": "class_archer",
+      "name": "弓箭手",
+      "description": "遠程物理輸出，擅長弓與陷阱式戰鬥。",
+      "category": "class",
+      "tags": ["ranged", "physical", "light_armor", "dps"],
+      "role": "dps",
+      "allowedWeaponTags": ["ranged", "bow", "pierce"],
+      "allowedArmorTags": ["light", "leather", "cloth"],
+      "baseStats": { "power": 11, "defense": 6, "speed": 13, "magic": 5, "vitality": 8 },
+      "statGrowth": { "power": 2.0, "defense": 1.0, "speed": 2.2, "magic": 0.3, "vitality": 1.2 },
+      "resourceType": "stamina",
+      "skillIds": ["skill_basic_attack", "skill_precise_shot", "skill_multi_shot", "skill_poison_arrow", "skill_steady_aim"]
+    }
+  ]
+}
