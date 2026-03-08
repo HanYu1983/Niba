@@ -1,0 +1,20 @@
+services:
+  n8n:
+    image: n8nio/n8n:latest
+    ports:
+      - "5678:5678"
+    volumes:
+      - ./n8n_data:/home/node/.n8n
+      - ./shared:/shared
+    environment:
+      # n8n 基本設定
+      - N8N_HOST=0.0.0.0           # 監聽所有網路介面
+      - N8N_PORT=5678              # n8n 服務埠號
+      - N8N_PROTOCOL=http          # 使用 HTTP（開發環境無需 HTTPS）
+      - WEBHOOK_URL=http://localhost:5678/  # Webhook 根網址
+      - GENERIC_TIMEZONE=Asia/Taipei       # 設定時區為台北
+      # 開發友善設置
+      - N8N_SECURE_COOKIE=false    # 關閉 cookie 安全標誌，方便 HTTP 存取
+      - N8N_DIAGNOSTICS_ENABLED=false  # 關閉匿名診斷數據收集
+      # 授權本機寫檔
+      - N8N_RESTRICT_FILE_ACCESS_TO=/shared
