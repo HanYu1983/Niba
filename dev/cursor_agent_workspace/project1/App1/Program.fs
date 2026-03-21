@@ -35,8 +35,15 @@ let main argv =
     | Ok (inputPath, outputPath) ->
         let conditionSet = App1ConditionSet()
         match Runner.run inputPath outputPath conditionSet with
-        | Ok _ ->
-            printfn "已寫入結果: %s" outputPath
+        | Ok (RunOutcome.SingleFile (path, _)) ->
+            printfn "已寫入結果: %s" path
+            0
+        | Ok (RunOutcome.MultiFolder paths) ->
+            printfn "已寫入 %d 個結果檔:" paths.Length
+
+            for p in paths do
+                printfn "  %s" p
+
             0
         | Error msg ->
             eprintfn "%s" msg

@@ -10,6 +10,11 @@ open System.Text.Json.Serialization
 open AdAutomation.Core
 open AdAutomation.Core.Domain
 
+/// `run` 成功時：單一結果檔，或資料夾多檔輸入時之多個結果檔路徑。
+type RunOutcome =
+    | SingleFile of writtenPath: string * output: SystemOutput
+    | MultiFolder of writtenPaths: string[]
+
 /// 通用的「讀取輸入 JSON → 呼叫 ConditionSet → 組裝 `SystemOutput` 並寫檔」執行器。
 /// App1/App2/... 只需提供最精簡的 ConditionSet。
 module Runner =
@@ -49,14 +54,6 @@ module Runner =
         with ex ->
             Error $"讀取或解析 JSON 失敗: {ex.Message}"
 
-    type private SourceItem =
-        { SourceFile: string
-          StartDate: string
-          EndDate: string
-          Platform: string
-          CredentialCustomId: string
-          Row: AdRow }
-
     let private tryGetInputDirAndFiles (inputPath: string) : string * string[] =
         if Directory.Exists inputPath then
             let files =
@@ -68,12 +65,6 @@ module Runner =
             let dir = Path.GetDirectoryName inputPath
             let inputDir = if String.IsNullOrEmpty dir then "." else dir
             inputDir, [| inputPath |]
-
-    let private sameEnvelopeOuter (a: SourceItem) (b: SourceItem) =
-        a.Platform = b.Platform
-        && a.CredentialCustomId = b.CredentialCustomId
-        && a.StartDate = b.StartDate
-        && a.EndDate = b.EndDate
 
     /// 將 `SystemOutput` 寫成結果 JSON 契約之檔案（根層 platform／期間；items 無 reason／sourceFile）。
     let private writeSystemOutputFile (outputPath: string) (so: SystemOutput) =
@@ -128,97 +119,147 @@ module Runner =
 
         File.WriteAllText(outputPath, root.ToJsonString(jsonWriteOptions), utf8Json)
 
-    /// 讀取輸入、評估條件、寫入 `outputPath`，成功時回傳已寫入之 **`SystemOutput`**。
-    /// 多檔合併時，各來源之外層 `platform`／`credentialCustomId`／`startDate`／`endDate` 必須一致，否則回傳 `Error`。
-    let run (inputPath: string) (outputPath: string) (conditionSet: ConditionSet) : Result<SystemOutput, string> =
+    /// 內部：指定本次 `runId`、時間戳、來源檔名（寫入 `EvaluationContext`），評估單一 `SystemInput`。
+    /// 回傳之 `Errors` 為空陣列；解析錯誤由 `run` 寫入對應結果檔。
+    let private evaluateSystemInputCore
+        (runId: Guid)
+        (generatedAt: DateTimeOffset)
+        (sourceFile: string)
+        (si: SystemInput)
+        (conditionSet: ConditionSet)
+        : SystemOutput =
+        let itemsOut =
+            si.Items
+            |> Array.map (fun row ->
+                let ctx =
+                    { RunId = runId
+                      Platform = si.Platform
+                      CredentialCustomId = si.CredentialCustomId
+                      SourceFile = sourceFile
+                      StartDate = si.StartDate
+                      EndDate = si.EndDate }
+
+                let decision =
+                    conditionSet.EvaluateRowAsync(row, ctx) |> Async.RunSynchronously
+
+                { AdId = row.EncodedAdId
+                  AdName = row.AdName
+                  DesiredState = decision.State
+                  Metadata = row.Metadata })
+
+        { SchemaVersion = 1
+          RunId = runId
+          GeneratedAt = generatedAt
+          Platform = si.Platform
+          CredentialCustomId = si.CredentialCustomId
+          StartDate = si.StartDate
+          EndDate = si.EndDate
+          Items = itemsOut
+          Errors = [||] }
+
+    /// 對單一輸入封套做條件評估；每次呼叫使用**新** `RunId` 與 `GeneratedAt`，`SourceFile` 為空字串。
+    let evaluateSystemInput (si: SystemInput) (conditionSet: ConditionSet) : SystemOutput =
+        evaluateSystemInputCore (Guid.NewGuid()) (DateTimeOffset.UtcNow) "" si conditionSet
+
+    /// 讀取輸入、評估條件、寫入結果檔。
+    /// - 輸入為**單一路徑**（檔案，或僅含一個 `*.json` 的資料夾）：寫入 `outputPath` 單檔，成功為 `SingleFile`。
+    /// - 輸入為**資料夾且有多個** `*.json`：每個輸入檔各自 `evaluateSystemInputCore`（各自 `runId`／時間），寫入 `outputPath` **資料夾**內，檔名為 `原名不含副檔名 + ".result.json"`；成功為 `MultiFolder`。
+    /// - 多檔模式時 `outputPath` 不可為已存在之一般檔案。
+    let run (inputPath: string) (outputPath: string) (conditionSet: ConditionSet) : Result<RunOutcome, string> =
         try
-            let runId = Guid.NewGuid()
+            let isInputDir = Directory.Exists inputPath
             let _inputDir, inputFiles = tryGetInputDirAndFiles inputPath
+            let multiFileDirMode = isInputDir && inputFiles.Length > 1
 
-            let parseErrors = ResizeArray<Domain.Error>()
-            let collectedItems = ResizeArray<SourceItem>()
-
-            for fullPath in inputFiles do
-                let sourceFile = Path.GetFileName fullPath
-
-                match loadEnvelope fullPath with
-                | Error msg ->
-                    parseErrors.Add(
-                        { File = sourceFile
-                          Message = msg
-                          Detail = None }
-                    )
-                | Ok env ->
-                    for row in env.Items do
-                        collectedItems.Add
-                            { SourceFile = sourceFile
-                              StartDate = env.StartDate
-                              EndDate = env.EndDate
-                              Platform = env.Platform
-                              CredentialCustomId = env.CredentialCustomId
-                              Row = row }
-
-            let generatedAt = DateTimeOffset.UtcNow
-
-            if collectedItems.Count = 0 then
-                let so =
-                    { SchemaVersion = 1
-                      RunId = runId
-                      GeneratedAt = generatedAt
-                      Platform = ""
-                      CredentialCustomId = ""
-                      StartDate = ""
-                      EndDate = ""
-                      Items = [||]
-                      Errors = parseErrors.ToArray() }
-
-                writeSystemOutputFile outputPath so
-                Ok so
-            else
-                let f0 = collectedItems.[0]
-
-                let inconsistent =
-                    seq { 1 .. collectedItems.Count - 1 }
-                    |> Seq.exists (fun i -> not (sameEnvelopeOuter f0 collectedItems.[i]))
-
-                if inconsistent then
-                    Error
-                        "多檔輸入之外層 platform、credentialCustomId、startDate、endDate 不一致；請分次執行或對齊輸入封套（見設計 result-json）。"
+            if multiFileDirMode then
+                if File.Exists outputPath then
+                    Error "輸入資料夾含多個 JSON 時，outputPath 必須為資料夾路徑，不可為已存在之檔案。"
                 else
-                    let itemsOut = ResizeArray<AdRowOutput>()
+                    Directory.CreateDirectory outputPath |> ignore
 
-                    for si in collectedItems do
-                        let row = si.Row
+                    let written = ResizeArray<string>()
 
-                        let ctx =
-                            { RunId = runId
-                              Platform = si.Platform
-                              CredentialCustomId = si.CredentialCustomId
-                              SourceFile = si.SourceFile
-                              StartDate = si.StartDate
-                              EndDate = si.EndDate }
+                    for fullPath in inputFiles do
+                        let sourceFile = Path.GetFileName fullPath
 
-                        let decision =
-                            conditionSet.EvaluateRowAsync(row, ctx) |> Async.RunSynchronously
+                        let outFile =
+                            Path.Combine(
+                                outputPath,
+                                Path.GetFileNameWithoutExtension(sourceFile) + ".result.json"
+                            )
 
-                        itemsOut.Add
-                            { AdId = row.EncodedAdId
-                              AdName = row.AdName
-                              DesiredState = decision.State
-                              Metadata = row.Metadata }
+                        match loadEnvelope fullPath with
+                        | Error msg ->
+                            let runId = Guid.NewGuid()
+                            let generatedAt = DateTimeOffset.UtcNow
 
+                            let so =
+                                { SchemaVersion = 1
+                                  RunId = runId
+                                  GeneratedAt = generatedAt
+                                  Platform = ""
+                                  CredentialCustomId = ""
+                                  StartDate = ""
+                                  EndDate = ""
+                                  Items = [||]
+                                  Errors =
+                                    [| { File = sourceFile
+                                         Message = msg
+                                         Detail = None } |] }
+
+                            writeSystemOutputFile outFile so
+                            written.Add(outFile)
+                        | Ok si ->
+                            let runId = Guid.NewGuid()
+                            let generatedAt = DateTimeOffset.UtcNow
+
+                            let so =
+                                evaluateSystemInputCore runId generatedAt sourceFile si conditionSet
+
+                            writeSystemOutputFile outFile so
+                            written.Add(outFile)
+
+                    Ok(MultiFolder(written.ToArray()))
+            else
+                let parseErrors = ResizeArray<Domain.Error>()
+                let loaded = ResizeArray<string * SystemInput>()
+
+                for fullPath in inputFiles do
+                    let sourceFile = Path.GetFileName fullPath
+
+                    match loadEnvelope fullPath with
+                    | Error msg ->
+                        parseErrors.Add(
+                            { File = sourceFile
+                              Message = msg
+                              Detail = None }
+                        )
+                    | Ok env -> loaded.Add(sourceFile, env)
+
+                let runId = Guid.NewGuid()
+                let generatedAt = DateTimeOffset.UtcNow
+
+                if loaded.Count = 0 then
                     let so =
                         { SchemaVersion = 1
                           RunId = runId
                           GeneratedAt = generatedAt
-                          Platform = f0.Platform
-                          CredentialCustomId = f0.CredentialCustomId
-                          StartDate = f0.StartDate
-                          EndDate = f0.EndDate
-                          Items = itemsOut.ToArray()
+                          Platform = ""
+                          CredentialCustomId = ""
+                          StartDate = ""
+                          EndDate = ""
+                          Items = [||]
                           Errors = parseErrors.ToArray() }
 
                     writeSystemOutputFile outputPath so
-                    Ok so
+                    Ok(SingleFile(outputPath, so))
+                else
+                    let sourceFile, si = loaded.[0]
+
+                    let so =
+                        evaluateSystemInputCore runId generatedAt sourceFile si conditionSet
+
+                    writeSystemOutputFile outputPath so
+                    Ok(SingleFile(outputPath, so))
         with ex ->
             Error ex.Message
