@@ -61,7 +61,7 @@ module private GoogleAdsRowJson =
           AdId = adId }
 
 /// 以編碼 ID 查詢 Google Ads。
-/// 支援兩種編碼：`customerId`（僅驗證可讀客戶），或 `customerId.campaignId.adGroupId.adId`（查詢 ad_group_ad）。
+/// 支援 `customerId`（僅驗證客戶）、`customerId.campaignId`、`customerId.campaignId.adGroupId`、`customerId.campaignId.adGroupId.adId`（查詢 **ad_group_ad**）。
 type GoogleAdsPlatformAdQuery(credentials: GoogleAdsCredentials, loginCustomerId: string, ?client: GoogleAdsClient) =
     inherit PlatformAdQuery()
 
@@ -101,12 +101,22 @@ type GoogleAdsPlatformAdQuery(credentials: GoogleAdsCredentials, loginCustomerId
                                 $"SELECT customer.id, campaign.id, ad_group.id, ad_group_ad.ad.id FROM ad_group_ad WHERE campaign.id = {parts.[1]} AND ad_group.id = {parts.[2]} AND ad_group_ad.ad.id = {parts.[3]}"
 
                             async.Return(Ok gaql)
+                        elif parts.Length = 3 && isDigits parts.[1] && isDigits parts.[2] then
+                            let gaql =
+                                $"SELECT customer.id, campaign.id, ad_group.id FROM ad_group WHERE campaign.id = {parts.[1]} AND ad_group.id = {parts.[2]}"
+
+                            async.Return(Ok gaql)
+                        elif parts.Length = 2 && isDigits parts.[1] then
+                            let gaql =
+                                $"SELECT customer.id, campaign.id FROM campaign WHERE campaign.id = {parts.[1]}"
+
+                            async.Return(Ok gaql)
                         elif parts.Length = 1 then
                             async.Return(Ok "SELECT customer.id FROM customer LIMIT 1")
                         else
                             async.Return(
                                 Error
-                                    "編碼格式須為「customerId」或「customerId.campaignId.adGroupId.adId」（純數字，以 . 分隔）。"
+                                    "編碼格式須為「customerId」、「customerId.campaignId」、「customerId.campaignId.adGroupId」或「customerId.campaignId.adGroupId.adId」（純數字，以 . 分隔）。"
                             )
 
                     match gaqlResult with
