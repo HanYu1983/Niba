@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "runId": "7f836805-743e-4204-9937-cefa4c3b9ae0",
+  "entryPoint": "App1",
+  "generatedAt": "2026-03-21T05:53:26.7457542\u002B00:00",
+  "inputDirectory": "/app/App1/../samples",
+  "inputFiles": [
+    "demo-input.json"
+  ],
+  "items": [
+    {
+      "adId": "acc1.cmp1.grp1.ad1",
+      "platform": "demo",
+      "adName": "acc1.cmp1.grp1.ad1",
+      "credentialCustomId": "demo-account-a",
+      "desiredState": "On",
+      "reason": "\u6E2C\u8A66\u689D\u4EF6\u9810\u8A2D On",
+      "sourceFile": "demo-input.json",
+      "startDate": "2025-03-01",
+      "endDate": "2025-03-31",
+      "metadata": {
+        "note": "\u9810\u671F On"
+      }
+    },
+    {
+      "adId": "acc1.cmp1.grp1.ad-pause-1",
+      "platform": "demo",
+      "adName": "acc1.cmp1.grp1.ad-pause-1",
+      "credentialCustomId": "demo-account-a",
+      "desiredState": "Off",
+      "reason": "adId \u542B pause",
+      "sourceFile": "demo-input.json",
+      "startDate": "2025-03-01",
+      "endDate": "2025-03-31",
+      "metadata": {
+        "note": "adId \u542B pause \u2192 Off"
+      }
+    },
+    {
+      "adId": "acc1.cmp1.grp1.ad2",
+      "platform": "demo",
+      "adName": "acc1.cmp1.grp1.ad2",
+      "credentialCustomId": "demo-account-b",
+      "desiredState": "Off",
+      "reason": "testPause=true",
+      "sourceFile": "demo-input.json",
+      "startDate": "2025-03-01",
+      "endDate": "2025-03-31",
+      "metadata": {
+        "note": "testPause \u2192 Off",
+        "testPause": "true"
+      }
+    }
+  ],
+  "errors": []
+}
