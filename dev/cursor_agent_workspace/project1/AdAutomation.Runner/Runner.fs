@@ -3,6 +3,8 @@ namespace AdAutomation.Runner
 open System
 open System.Collections.Generic
 open System.IO
+open System.Text
+open System.Text.Encodings.Web
 open System.Text.Json
 open System.Text.Json.Nodes
 open System.Text.Json.Serialization
@@ -37,7 +39,11 @@ module Runner =
         let o = JsonSerializerOptions(WriteIndented = true)
         o.PropertyNamingPolicy <- JsonNamingPolicy.CamelCase
         o.DefaultIgnoreCondition <- JsonIgnoreCondition.WhenWritingNull
+        o.Encoder <- JavaScriptEncoder.UnsafeRelaxedJsonEscaping
         o
+
+    /// 讀寫 JSON 檔案用 UTF-8、無 BOM（與常見工具／管線相容）。
+    let private utf8Json = UTF8Encoding(false)
 
     let private metadataToMap (d: Dictionary<string, string>) =
         if isNull d || d.Count = 0 then
@@ -51,7 +57,7 @@ module Runner =
 
     let private loadEnvelope (path: string) : Result<InputEnvelopeDto, string> =
         try
-            let text = File.ReadAllText path
+            let text = File.ReadAllText(path, utf8Json)
             let dtoObj = JsonSerializer.Deserialize(text, typeof<InputEnvelopeDto>, jsonReadOptions)
 
             if isNull dtoObj then
@@ -176,7 +182,7 @@ module Runner =
             if not (String.IsNullOrEmpty dir) then
                 Directory.CreateDirectory dir |> ignore
 
-            File.WriteAllText(outputPath, root.ToJsonString(jsonWriteOptions))
+            File.WriteAllText(outputPath, root.ToJsonString(jsonWriteOptions), utf8Json)
             Ok outputPath
         with ex ->
             Error ex.Message
