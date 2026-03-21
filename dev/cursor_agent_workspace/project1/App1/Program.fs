@@ -1,5 +1,6 @@
 open System
 open System.IO
+open System.Text
 open App1
 open AdAutomation.Runner
 
@@ -14,6 +15,10 @@ let private defaultOutput =
 
 [<EntryPoint>]
 let main argv =
+    // 與 AdPlatform.Google 一致：避免容器／終端非 UTF-8 時中文等輸出異常。
+    Console.OutputEncoding <- Encoding.UTF8
+    Console.InputEncoding <- Encoding.UTF8
+
     let ioResult =
         match argv with
         | [| i; o |] -> Ok(i, o)
