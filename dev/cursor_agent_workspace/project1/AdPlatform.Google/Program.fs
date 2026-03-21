@@ -2,6 +2,7 @@ module AdPlatform.Google.Program
 
 open System
 open System.Text.Json
+open System.Text.Json.Serialization
 open AdAutomation.Core.Domain
 open AdCredentials
 open AdPlatform.Google
@@ -13,7 +14,7 @@ let private usage () =
     eprintfn ""
     eprintfn "  AdPlatform.Google flow2 <credentials.json> <credentialCustomId> <loginCustomerId|-> <customerId> <GAQL 查詢…>"
     eprintfn "    憑證：AdCredentials JSON；login 傳「-」則使用該筆 key5（defaultLoginCustomerId）。"
-    eprintfn "    輸出：與 input-model 對齊之 JSON（schemaVersion、items[]、query、googleAdsSearchResults）。"
+    eprintfn "    輸出：`SystemInput` 之 JSON（items[0].metadata 含 query、googleAdsSearchResults 字串）。"
     eprintfn ""
     eprintfn "GAQL 含空白時請用引號包住；查詢可拆成多個參數（以空白合併）。"
     eprintfn ""
@@ -119,19 +120,26 @@ let flow2 (args: string[]) : int =
 
                 let query = GoogleAdsCredentialQuery(store)
 
+                let jsonOpts =
+                    let o = JsonSerializerOptions(WriteIndented = true)
+                    o.PropertyNamingPolicy <- JsonNamingPolicy.CamelCase
+                    o.DefaultIgnoreCondition <- JsonIgnoreCondition.WhenWritingNull
+                    o
+
                 let work =
                     async {
                         let! r =
                             match loginOpt with
-                            | None -> query.SearchToInputAlignedJsonAsync(systemInput, customerId, gaql)
+                            | None -> query.SearchToSystemInputAsync(systemInput, customerId, gaql)
                             | Some login ->
-                                query.SearchToInputAlignedJsonAsync(systemInput, customerId, gaql, loginCustomerId = login)
+                                query.SearchToSystemInputAsync(systemInput, customerId, gaql, loginCustomerId = login)
 
                         match r with
                         | Error msg ->
                             eprintfn "%s" msg
                             return 3
-                        | Ok json ->
+                        | Ok siOut ->
+                            let json = JsonSerializer.Serialize(siOut, jsonOpts)
                             Console.Out.WriteLine(json)
                             return 0
                     }

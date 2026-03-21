@@ -1,5 +1,7 @@
 namespace AdAutomation.Core
 
+open System.Text.Json.Serialization
+
 /// 跨模組共用的領域型別（輸入列、決策、階層路徑）。
 module Domain =
 
@@ -15,9 +17,9 @@ module Domain =
           AdGroupId: string option
           AdId: string option }
 
-    /// JSON／管線中的一列廣告；`EncodedAdId` 為平台定義的「.」分隔編碼字串。
+    /// JSON／管線中的一列廣告；`EncodedAdId` 為平台定義的「.」分隔編碼字串（JSON 鍵 `adId`）。
     type AdRow =
-        { EncodedAdId: string
+        { [<JsonPropertyName("adId")>] EncodedAdId: string
           AdName: string
           Area: string
           Metadata: Map<string, string> }
