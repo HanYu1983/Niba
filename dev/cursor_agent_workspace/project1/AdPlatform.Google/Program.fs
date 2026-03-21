@@ -8,6 +8,10 @@ open AdAutomation.Core.Domain
 open AdCredentials
 open AdPlatform.Google
 
+/// 錯誤訊息一律寫 stderr，方便與 stdout 的 JSON 分離（管線／重新導向）。
+let private err (reason: string) =
+    eprintfn "錯誤原因：%s" reason
+
 /// 主控台輸出用：避免日文等字元被序列化成 `\uXXXX`（System.Text.Json 預設行為）。
 let private consoleJsonOptions (configure: JsonSerializerOptions -> unit) =
     let o = JsonSerializerOptions(WriteIndented = true)
@@ -17,72 +21,22 @@ let private consoleJsonOptions (configure: JsonSerializerOptions -> unit) =
 
 let private usage () =
     eprintfn "用法:"
-    eprintfn "  AdPlatform.Google flow1 <loginCustomerId> <customerId> <GAQL 查詢…>"
-    eprintfn "    憑證：環境變數 GOOGLE_ADS_CLIENT_ID / _CLIENT_SECRET / _REFRESH_TOKEN / _DEVELOPER_TOKEN"
-    eprintfn ""
-    eprintfn "  AdPlatform.Google flow2 <credentials.json> <credentialCustomId> <loginCustomerId|-> <customerId> <GAQL 查詢…>"
+    eprintfn
+        "  dotnet run --project AdPlatform.Google -- createSystemInput <credentials.json> <credentialCustomId> <loginCustomerId|-> <customerId> <GAQL 查詢…>"
     eprintfn "    憑證：AdCredentials JSON；login 傳「-」則使用該筆 key5（defaultLoginCustomerId）。"
-    eprintfn "    輸出：`SystemInput` JSON；`items` 為 API 各列轉成之 `AdRow`（編碼 adId／階層 adName，metadata：isVideoAd、resourceName）。"
+    eprintfn "    成功時 stdout：SystemInput JSON（items 為各列 AdRow）。"
+    eprintfn "    失敗時 stderr：錯誤原因（見「錯誤原因：」開頭列）。"
     eprintfn ""
     eprintfn "GAQL 含空白時請用引號包住；查詢可拆成多個參數（以空白合併）。"
     eprintfn ""
     eprintfn "範例:"
-    eprintfn "  dotnet run --project AdPlatform.Google -- flow1 9876543210 1234567890 \"SELECT campaign.id FROM campaign LIMIT 3\""
-    eprintfn "  dotnet run --project AdPlatform.Google -- flow2 ./AdCredentials/credentials.sample.json google-local-env - 2044490174 \"SELECT campaign.id FROM campaign LIMIT 3\""
+    eprintfn
+        "  dotnet run --project AdPlatform.Google -- createSystemInput ./AdCredentials/credentials.sample.json google-local-env - 2044490174 \"SELECT campaign.id FROM campaign LIMIT 3\""
 
-let private searchAndPrint (client: GoogleAdsClient) (customerId: string) (gaql: string) : int =
-    let work =
-        async {
-            let! r = client.SearchAsync(customerId, gaql)
-
-            match r with
-            | Error msg ->
-                eprintfn "%s" msg
-                return 3
-            | Ok doc ->
-                use doc = doc
-
-                let opts = consoleJsonOptions ignore
-
-                let json = JsonSerializer.Serialize(doc.RootElement, opts)
-
-                Console.Out.WriteLine(json)
-                return 0
-        }
-
-    work |> Async.RunSynchronously
-
-/// 憑證來自環境變數（`GoogleAdsCredentials.tryLoadFromEnvironment`）。
-let flow1 (args: string[]) : int =
-    if args.Length < 3 then
-        eprintfn "錯誤：flow1 需要至少 3 個參數（loginCustomerId、customerId、GAQL）。"
-        usage ()
-        1
-    else
-        let loginCustomerId = args.[0].Trim()
-        let customerId = args.[1].Trim()
-        let gaql = String.Join(" ", args.[2..]).Trim()
-
-        if
-            String.IsNullOrWhiteSpace loginCustomerId
-            || String.IsNullOrWhiteSpace customerId
-            || String.IsNullOrWhiteSpace gaql
-        then
-            eprintfn "錯誤：loginCustomerId、customerId 與 GAQL 皆不可為空。"
-            1
-        else
-            match GoogleAdsCredentials.tryLoadFromEnvironment () with
-            | Error missing ->
-                eprintfn "缺少環境變數：%s" (String.Join(", ", missing))
-                2
-            | Ok creds ->
-                let client = GoogleAdsClient(creds, loginCustomerId)
-                searchAndPrint client customerId gaql
-
-/// 憑證來自 `AdCredentials` JSON，經 `GoogleAdsCredentialBundle` 轉成 `GoogleAdsCredentials`。
-let flow2 (args: string[]) : int =
+/// 憑證來自 `AdCredentials` JSON；查詢 Google Ads 後輸出 `SystemInput` JSON。
+let createSystemInput (args: string[]) : int =
     if args.Length < 5 then
-        eprintfn "錯誤：flow2 需要至少 5 個參數（憑證檔、credentialCustomId、login 或 -、customerId、GAQL）。"
+        err "參數不足。需要：憑證檔、credentialCustomId、login 或 -、customerId、GAQL（至少一個 token）。"
         usage ()
         1
     else
@@ -93,15 +47,15 @@ let flow2 (args: string[]) : int =
         let gaql = String.Join(" ", args.[4..]).Trim()
 
         if String.IsNullOrWhiteSpace credPath || String.IsNullOrWhiteSpace credentialCustomId then
-            eprintfn "錯誤：憑證檔路徑與 credentialCustomId 不可為空。"
+            err "憑證檔路徑與 credentialCustomId 不可為空。"
             1
         elif String.IsNullOrWhiteSpace customerId || String.IsNullOrWhiteSpace gaql then
-            eprintfn "錯誤：customerId 與 GAQL 不可為空。"
+            err "customerId 與 GAQL 不可為空。"
             1
         else
             match AdCredentialsStore.TryLoad credPath with
             | Error msg ->
-                eprintfn "%s" msg
+                err $"無法載入憑證檔「{credPath}」：{msg}"
                 2
             | Ok store ->
                 let loginOpt =
@@ -141,29 +95,32 @@ let flow2 (args: string[]) : int =
 
                         match r with
                         | Error msg ->
-                            eprintfn "%s" msg
+                            err $"Google Ads 查詢或轉換 SystemInput 失敗：{msg}"
                             return 3
                         | Ok siOut ->
-                            let json = JsonSerializer.Serialize(siOut, jsonOpts)
-                            Console.Out.WriteLine(json)
-                            return 0
+                            try
+                                let json = JsonSerializer.Serialize(siOut, jsonOpts)
+                                Console.Out.WriteLine(json)
+                                return 0
+                            with ex ->
+                                err $"序列化 SystemInput 為 JSON 失敗：{ex.Message}"
+                                return 4
                     }
 
                 work |> Async.RunSynchronously
 
 [<EntryPoint>]
 let main argv =
-    // 容器／管線預設可能非 UTF-8；與下方 JSON「不跳脫 Unicode」一併避免日文顯示異常。
     Console.OutputEncoding <- Text.Encoding.UTF8
 
     if argv.Length < 1 then
+        err "未指定子命令；應使用 createSystemInput。"
         usage ()
         1
     else
         match argv.[0].Trim().ToLowerInvariant() with
-        | "flow1" -> flow1 argv.[1..]
-        | "flow2" -> flow2 argv.[1..]
-        | _ ->
-            eprintfn "錯誤：第一個參數須為 flow1 或 flow2。"
+        | "createsysteminput" -> createSystemInput argv.[1..]
+        | other ->
+            err $"不支援的子命令「{other}」；請使用 createSystemInput。"
             usage ()
             1

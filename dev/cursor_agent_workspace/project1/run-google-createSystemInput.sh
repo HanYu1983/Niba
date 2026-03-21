@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # 在 project1 目錄執行（與 docker-compose.yml 掛載 /app 一致）。
-# 用法: ./run-google-flow2.sh <customerId> "<GAQL>"
-# 範例: ./run-google-flow2.sh 2044490174 "SELECT campaign.id FROM campaign LIMIT 3"
+# 用法: ./run-google-createSystemInput.sh <customerId> "<GAQL>"
+# 範例: ./run-google-createSystemInput.sh 2044490174 "SELECT campaign.id FROM campaign LIMIT 3"
 
 set -euo pipefail
 
@@ -18,5 +18,5 @@ GAQL="$2"
 
 exec docker compose run --rm -T fsharp-dev \
     dotnet run --project AdPlatform.Google -- \
-    flow2 ./AdCredentials/credentials.sample.json google-local-env - \
+    createSystemInput ./AdCredentials/credentials.sample.json google-local-env - \
     "$CUSTOMER_ID" "$GAQL"
