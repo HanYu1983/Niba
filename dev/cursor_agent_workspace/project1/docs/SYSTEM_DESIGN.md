@@ -9,7 +9,7 @@
 
 - **條件判斷端**：指定資料夾內多份輸入 JSON → 合併 → **一組條件**逐列評估 → 寫出**結果 JSON**。
 - **不**在本行程內實作「對平台開／關」；**下游系統**讀結果檔後再呼叫各平台 API。
-- 每份輸入 JSON **外層**含 **`platform`**、**`credentialCustomId`**；`items` 每列含 **`adId`**（階層編碼）等。憑證經 **AdCredentials** 等共用專案解析，**秘密不進 JSON**；[結果 JSON](../../.cursor/skills/ad-automation-system-design/design/result-json.md) 仍逐列帶 `platform`／`credentialCustomId`（與來源檔外層一致）。
+- 每份輸入 JSON **外層**含 **`platform`**、**`credentialCustomId`**；`items` 每列含 **`adId`**（階層編碼）等。憑證經 **AdCredentials** 等共用專案解析，**秘密不進 JSON**；[結果 JSON](../../.cursor/skills/ad-automation-system-design/design/result-json.md) 將 `platform`／`credentialCustomId`／`startDate`／`endDate` 置於**檔案根層**，`items` 為列級決策（與設計篇一致）。
 - **AdPlatform.***（每平台一專案）統一封裝**查詢**與**操作** API，條件端與下游共用同一憑證對照規則。
 - **下游**讀結果檔後**必須**依 `(platform, credentialCustomId)` **分組**，再依平台 API 限制**分批**呼叫；**預設每批 100**（可設定）。
 - **進入點主程式**預留**錯誤輸出抽象**（如 `IErrorSink`），可接 Slack 等，與結果 JSON 的 `errors` 並用。

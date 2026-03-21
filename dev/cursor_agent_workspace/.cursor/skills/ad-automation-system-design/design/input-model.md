@@ -70,9 +70,9 @@
 - 進入點啟動時指定**輸入目錄**（例如 `--input-dir ./campaigns/spring`）。
 - 讀取目錄內所有副檔名為 **`.json`** 的檔案（是否遞迴子目錄可選，**預設建議：僅一層、不遞迴**，避免誤掃；若需遞迴應在文件中與旗標上明示）。
 - **合併規則（建議預設）**：
-  - 將各檔 `items` **串接**為單一列表，處理順序為**檔名字母序**（或明訂為修改時間序，需定案並寫入進入點說明）。串接後**每一筆列**須保留其**來源檔**外層之 `platform`、`credentialCustomId`（以及 `startDate`／`endDate`）之語意，供憑證解析與結果 JSON 使用。
+  - 將各檔 `items` **串接**為單一列表，處理順序為**檔名字母序**（或明訂為修改時間序，需定案並寫入進入點說明）。串接後**每一筆列**於評估時仍須知其**來源檔**外層之 `platform`、`credentialCustomId`（以及 `startDate`／`endDate`）之語意，供條件與憑證解析。**若**要產出**單一** [結果 JSON](result-json.md)，各來源檔外層之 `platform`、`credentialCustomId`、`startDate`、`endDate` **必須一致**，並寫入該檔**根層**；不一致時應**分次執行**或產出多份結果檔。
   - 合併後以 **(來源檔外層之 `platform`, `credentialCustomId`, `adId`)** 作為列之唯一鍵；若重複：記錄警告或錯誤。**預設策略建議二擇一並定案**：後掃到的覆蓋先掃到的，或整批失敗拒寫結果。（若同一 `adId` 出現於不同檔且外層 `credentialCustomId` 不一致，建議**視為錯誤**並列入 `errors`，避免同一廣告誤用不同憑證。）
-- **每列繼承之期間**：每筆 `item` 所屬的 `startDate`/`endDate` 預設為**來源檔案外層**之值；寫入結果 JSON 時建議保留 `sourceFile`（見 [結果 JSON](result-json.md)）以利稽核。
+- **每列繼承之期間**：每筆 `item` 所屬的 `startDate`/`endDate` 預設為**來源檔案外層**之值；寫入 [結果 JSON](result-json.md) 時，與 `platform`／`credentialCustomId` 一併置於**根層**（單一結果檔僅支援一致外層語意，見上）。輸入檔名若需稽核，由**進入點日誌**或營運對照表保存，結果檔**不含** `sourceFile`。
 - 若某檔缺少 `startDate` 或 `endDate`：建議**整批拒絕**該檔並列入結果之 `errors`，或允許進入點提供**全域預設**（需設定與文件一致）。
 
 ## 選填與擴充

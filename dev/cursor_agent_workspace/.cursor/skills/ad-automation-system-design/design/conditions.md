@@ -14,7 +14,7 @@
 | 欄位 | 說明 |
 |------|------|
 | 列層級 `startDate` / `endDate` | 來自該列所屬輸入檔之外層。 |
-| 輸入檔名 | 供日誌與結果 `sourceFile`。 |
+| 輸入檔名 | 供日誌與稽核；結果 JSON 不含檔名欄位時，以此與 `RunId` 對照即可。 |
 | 批次基準時間 | 例如執行開始的 UTC 時間，供條件與有效期比較。 |
 | `adName`（列上） | 對應階層名稱（`accName.capName.grpName.adName`），主要用於稽核／除錯與結果回填。 |
 | `area`（列上） | 地區路由鍵；當需要呼叫某平台 API 時，應從此取得該 API 所需的地區／region 代碼（透過共用路由專案）。 |
@@ -25,14 +25,14 @@
 
 ## 單列決策（邏輯輸出）
 
+條件實作回傳之 `Decision` 可含內部稽核欄位；寫入 [結果 JSON](result-json.md) 之 **`items`** 時僅保留下游開關所需列級欄位（見該篇），**不含** `reason`。`platform`／`credentialCustomId`／期間由**結果檔根層**表達，不重複於每列。
+
 | 欄位 | 說明 |
 |------|------|
 | `adId` | 與輸入一致 |
-| `adName` | 與輸入一致（供結果 JSON 回填） |
-| `platform` | 與輸入一致 |
-| `credentialCustomId` | **必須**與輸入一致並寫入結果 JSON，供下游解析與查詢端相同的憑證。 |
+| `adName` | 與輸入一致（供結果 `items` 回填） |
 | `desiredState` | `On` \| `Off` |
-| `reason` | 可選；稽核用 |
+| `metadata`（列上） | 與輸入一致；可原樣進結果 `items` |
 
 （若需「不變更」可另擴充三態或由下游忽略該列。）
 

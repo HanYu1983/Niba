@@ -4,9 +4,6 @@ open System.Text
 open App1
 open AdAutomation.Runner
 
-[<Literal>]
-let EntryName = "App1"
-
 let private defaultInput =
     Path.Combine(__SOURCE_DIRECTORY__, "..", "samples", "demo-input.json")
 
@@ -37,9 +34,9 @@ let main argv =
         2
     | Ok (inputPath, outputPath) ->
         let conditionSet = App1ConditionSet()
-        match Runner.run EntryName inputPath outputPath conditionSet with
-        | Ok p ->
-            printfn "已寫入結果: %s" p
+        match Runner.run inputPath outputPath conditionSet with
+        | Ok _ ->
+            printfn "已寫入結果: %s" outputPath
             0
         | Error msg ->
             eprintfn "%s" msg

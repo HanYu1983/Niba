@@ -60,6 +60,7 @@ module Domain =
             |> Map.ofSeq
 
     /// JSON／管線中的一列廣告；`EncodedAdId` 為平台定義的「.」分隔編碼字串（JSON 鍵 `adId`）。
+    [<CLIMutable>]
     type AdRow =
         { [<JsonPropertyName("adId")>] EncodedAdId: string
           AdName: string
@@ -68,6 +69,8 @@ module Domain =
           Metadata: Map<string, string> }
 
     /// 對應輸入 JSON 單檔封套（`input-model.md`）；`Items` 為 `items[]`。
+    /// 與 Runner 反序列化共用；`schemaVersion` 缺漏時 JSON 預設為 `0`（建議輸入仍明寫版本）。
+    [<CLIMutable>]
     type SystemInput =
         { SchemaVersion: int
           StartDate: string
@@ -75,6 +78,28 @@ module Domain =
           Platform: string
           CredentialCustomId: string
           Items: AdRow[] }
+
+    type AdRowOutput =
+        { AdId: string
+          AdName: string
+          DesiredState: DesiredState
+          Metadata: Map<string, string> }
+
+    type Error =
+        { File: string
+          Message: string
+          Detail: string option }
+
+    type SystemOutput =
+        { SchemaVersion: int
+          RunId: System.Guid
+          GeneratedAt: System.DateTimeOffset
+          Platform: string
+          CredentialCustomId: string
+          StartDate: string
+          EndDate: string
+          Items: AdRowOutput[]
+          Errors: Error[] }
 
     /// 條件評估結果，供開關器使用。
     type Decision =

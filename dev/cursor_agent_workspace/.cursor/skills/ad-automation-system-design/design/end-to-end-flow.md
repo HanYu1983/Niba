@@ -7,5 +7,5 @@
 3. 依 [輸入資料模型 — 多檔合併](input-model.md#folder-merge) 合併 `items`，附帶每列的來源檔與期間。
 4. 建立評估上下文（`RunId`、批次時間、憑證解析器、平台查詢用戶端等）。
 5. 對每一列執行該進入點綁定之條件（必要時以 `platform` + `credentialCustomId` 打查詢 API）→ 得到 `desiredState` 等。
-6. 組裝 [結果 JSON](result-json.md)（每列**原樣帶出**與輸入一致之 `platform`、`credentialCustomId`；實作上由**來源檔外層**填入每列）並寫檔。
-7. （非本行程）下游讀取結果 JSON：篩選有效期內列 → **依 `(platform, credentialCustomId)` 分組** → 組內依平台 API 限制**分批**（**預設每批 100**）呼叫**操作** API；憑證每組解析一次。
+6. 組裝 [結果 JSON](result-json.md)：`platform`、`credentialCustomId`、`startDate`、`endDate` 置於**根層**（與輸入封套一致；多檔合併時外層須已對齊或已分次執行）；`items` 僅含列級 `adId`、`adName`、`desiredState`、`metadata` 等。寫檔。
+7. （非本行程）下游讀取結果 JSON：依根層 `startDate`／`endDate` 篩選是否執行 → 以根層 **`platform`、`credentialCustomId`** 解析憑證一次 → 對 `items` 依平台 API 限制**分批**（**預設每批 100**）呼叫**操作** API。

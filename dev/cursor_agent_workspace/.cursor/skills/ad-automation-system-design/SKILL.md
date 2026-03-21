@@ -37,7 +37,7 @@ description: Aligns implementation in project1 with canonical design documents b
 - **秘密**：不得進輸入／結果 JSON；憑證以 `(platform, credentialCustomId)` 經 **AdCredentials** 解析。
 - **輸入封套**：`platform`、`credentialCustomId` 在**檔案外層**；`items` 列上不重複（見 input-model）。
 - **評估**：`AdRow` 僅列欄位；平台／憑證／來源檔／期間在 **`EvaluationContext`**（見 conditions、現行 `Domain.fs`）。
-- **下游**：結果 JSON 逐列仍帶 `platform`／`credentialCustomId`；依 `(platform, credentialCustomId)` 分組再分批（預設 100）（見 result-json）。
+- **下游**：結果 JSON 於**根層**帶 `platform`／`credentialCustomId`／`startDate`／`endDate`；`items` 僅列級決策欄位；依根層 `(platform, credentialCustomId)` 取憑證後對 `items` 分批（預設 100）（見 result-json）。
 
 ## 延伸閱讀
 
