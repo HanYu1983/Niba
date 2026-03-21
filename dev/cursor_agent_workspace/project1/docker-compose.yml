@@ -1,17 +1,4 @@
 # 在 project1 目錄執行 compose（掛載目前目錄為 /app）。
-#
-# 測試 AdPlatform.Google（OAuth 憑證由環境變數；login-customer-id 與查詢客戶／GAQL 亦由 env 傳入再轉成 CLI 參數）：
-#   1) 在 shell 匯出變數，或於本目錄建立 .env（Compose 會自動讀取）
-#   2) docker compose run --rm adplatform-google-test
-#
-# 單次覆寫範例：在 .env 或 shell 設定 GOOGLE_ADS_*；command 使用 flow1（loginCustomerId、customerId、GAQL）。
-#
-# flow2（AdCredentials JSON）：docker compose run --rm adplatform-google-test-flow2
-#   需設定 AD_CREDENTIALS_JSON_PATH、AD_CREDENTIAL_CUSTOM_ID；FLOW2_LOGIN 傳「-」表示用憑證 key5；
-#   查詢客戶與 GAQL 預設沿用 GOOGLE_ADS_TEST_CUSTOMER_ID、GOOGLE_ADS_TEST_GAQL（可於 .env 一併維護）。
-#
-# 此服務的 environment 使用 ${VAR:-}，未設定時為空字串，compose 可與 fsharp-dev 並存；
-# 實際跑測試前請在 shell 或 .env 填妥變數，否則程式會因缺憑證／參數失敗。
 
 services:
   fsharp-dev:
@@ -28,38 +15,3 @@ services:
         "-c",
         "dotnet --version && echo '--- F# 開發環境就緒。可用: dotnet fsi, dotnet run, dotnet build ---' && exec bash",
       ]
-
-  # 一次性執行：dotnet run AdPlatform.Google（需已掛載原始碼，首次會 restore/build）
-  adplatform-google-test:
-    image: mcr.microsoft.com/dotnet/sdk:8.0
-    container_name: project1-adplatform-google-test
-    working_dir: /app
-    volumes:
-      - .:/app
-    env_file:
-      - .env
-    command:
-      - bash
-      - -c
-      - 'exec dotnet run --project AdPlatform.Google -- flow1 "$$GOOGLE_ADS_LOGIN_CUSTOMER_ID" "$$GOOGLE_ADS_TEST_CUSTOMER_ID" "$$GOOGLE_ADS_TEST_GAQL"'
-
-  # 一次性執行：AdPlatform.Google flow2（憑證來自 JSON，見 Program.fs flow2 說明）
-  adplatform-google-test-flow2:
-    image: mcr.microsoft.com/dotnet/sdk:8.0
-    container_name: project1-adplatform-google-test-flow2
-    working_dir: /app
-    volumes:
-      - .:/app
-    # 讓執行緒／執行環境以 UTF-8 處理字元（與程式內 Console.OutputEncoding 一併使用）
-    environment:
-      LANG: C.UTF-8
-      LC_ALL: C.UTF-8
-      AD_CREDENTIALS_JSON_PATH: ${AD_CREDENTIALS_JSON_PATH:-AdCredentials/credentials.sample.json}
-      AD_CREDENTIAL_CUSTOM_ID: ${AD_CREDENTIAL_CUSTOM_ID:-google-local-env}
-      FLOW2_LOGIN: ${FLOW2_LOGIN:--}
-      GOOGLE_ADS_TEST_CUSTOMER_ID: ${GOOGLE_ADS_TEST_CUSTOMER_ID:-}
-      GOOGLE_ADS_TEST_GAQL: ${GOOGLE_ADS_TEST_GAQL:-}
-    command:
-      - bash
-      - -c
-      - 'exec dotnet run --project AdPlatform.Google -- flow2 "$$AD_CREDENTIALS_JSON_PATH" "$$AD_CREDENTIAL_CUSTOM_ID" "$$FLOW2_LOGIN" "$$GOOGLE_ADS_TEST_CUSTOMER_ID" "$$GOOGLE_ADS_TEST_GAQL"'
