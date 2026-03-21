@@ -14,7 +14,7 @@ let private usage () =
     eprintfn ""
     eprintfn "  AdPlatform.Google flow2 <credentials.json> <credentialCustomId> <loginCustomerId|-> <customerId> <GAQL 查詢…>"
     eprintfn "    憑證：AdCredentials JSON；login 傳「-」則使用該筆 key5（defaultLoginCustomerId）。"
-    eprintfn "    輸出：`SystemInput` 之 JSON（items[0].metadata 含 query、googleAdsSearchResults 字串）。"
+    eprintfn "    輸出：`SystemInput` JSON；`items` 為 API 各列轉成之 `AdRow`（編碼 adId／階層 adName，metadata：isVideoAd、resourceName）。"
     eprintfn ""
     eprintfn "GAQL 含空白時請用引號包住；查詢可拆成多個參數（以空白合併）。"
     eprintfn ""
@@ -85,12 +85,6 @@ let flow2 (args: string[]) : int =
         let loginArg = args.[2].Trim()
         let customerId = args.[3].Trim()
         let gaql = String.Join(" ", args.[4..]).Trim()
-
-        printfn "credPath: %s" credPath
-        printfn "credentialCustomId: %s" credentialCustomId
-        printfn "loginArg: %s" loginArg
-        printfn "customerId: %s" customerId
-        printfn "gaql: %s" gaql
 
         if String.IsNullOrWhiteSpace credPath || String.IsNullOrWhiteSpace credentialCustomId then
             eprintfn "錯誤：憑證檔路徑與 credentialCustomId 不可為空。"
