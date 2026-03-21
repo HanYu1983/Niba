@@ -1,6 +1,6 @@
 # 與 `project1` 程式結構的對照（參考）
 
-[← 上一篇：可觀測性與安全](observability-security.md) · [回到索引](../../../../docs/SYSTEM_DESIGN.md) · [下一篇：待確認議題 →](open-questions.md)
+[← 上一篇：可觀測性與安全](observability-security.md) · [回到索引](../../../../project1/docs/SYSTEM_DESIGN.md) · [下一篇：待確認議題 →](open-questions.md)
 
 ## 專案一覽（統計）
 

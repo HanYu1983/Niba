@@ -1,6 +1,6 @@
 # 概覽與目標
 
-[← 回到索引](../../../../docs/SYSTEM_DESIGN.md) · [下一篇：名詞與範圍 →](glossary-and-scope.md)
+[← 回到索引](../../../../project1/docs/SYSTEM_DESIGN.md) · [下一篇：名詞與範圍 →](glossary-and-scope.md)
 
 在多平台投放廣告時，常需依營運條件（時段、預算、庫存、活動檔期、風控等）決定**是否讓某則廣告處於可投放／啟用狀態**。本系統（條件判斷端）負責：
 

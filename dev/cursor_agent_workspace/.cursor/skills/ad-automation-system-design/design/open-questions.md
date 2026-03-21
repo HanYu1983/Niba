@@ -1,6 +1,6 @@
 # 待確認議題（討論清單）
 
-[← 上一篇：與 project1 對照](project-map.md) · [回到索引](../../../../docs/SYSTEM_DESIGN.md)
+[← 上一篇：與 project1 對照](project-map.md) · [回到索引](../../../../project1/docs/SYSTEM_DESIGN.md)
 
 1. **日期格式**：僅日期（`YYYY-MM-DD`）或必含時區之日期時間？`endDate` 是否含當日終了？
 2. **多檔合併**：`(platform, adId)` 重複時採覆蓋、拒絕或合併 metadata？

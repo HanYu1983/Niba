@@ -153,7 +153,8 @@ type GoogleAdsCredentialQuery(store: AdCredentialsStore, ?httpClient: HttpClient
             credentialCustomId: string,
             customerId: string,
             gaql: string,
-            ?loginCustomerId: string
+            ?loginCustomerId: string,
+            ?pageSize: int
         ) : Async<Result<string, string>> =
         async {
             match store.TryResolveGoogleAdsBundle(credentialCustomId) with
@@ -183,7 +184,7 @@ type GoogleAdsCredentialQuery(store: AdCredentialsStore, ?httpClient: HttpClient
                     | Error msg -> return Error msg
                     | Ok login ->
                         let client = GoogleAdsClient(creds, login, ?httpClient = httpClient)
-                        let! search = client.SearchAsync(customerId, gaql)
+                        let! search = client.SearchAsync(customerId, gaql, ?pageSize = pageSize)
 
                         match search with
                         | Error msg -> return Error msg
@@ -205,11 +206,18 @@ type GoogleAdsCredentialQuery(store: AdCredentialsStore, ?httpClient: HttpClient
             si: SystemInput,
             customerId: string,
             gaql: string,
-            ?loginCustomerId: string
+            ?loginCustomerId: string,
+            ?pageSize: int
         ) : Async<Result<SystemInput, string>> =
         async {
             let! raw =
-                this.SearchToJsonAsync(si.CredentialCustomId, customerId, gaql, ?loginCustomerId = loginCustomerId)
+                this.SearchToJsonAsync(
+                    si.CredentialCustomId,
+                    customerId,
+                    gaql,
+                    ?loginCustomerId = loginCustomerId,
+                    ?pageSize = pageSize
+                )
 
             match raw with
             | Error e -> return Error e

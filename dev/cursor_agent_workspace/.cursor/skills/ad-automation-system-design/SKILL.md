@@ -15,7 +15,7 @@ description: Aligns implementation in project1 with canonical design documents b
 4. **改專案邊界、共用專案、Google／憑證**時，對照 **[架構](design/architecture.md)**、**[project 對照](design/project-map.md)**、**[可觀測性與安全](design/observability-security.md)**。
 5. **編輯設計正文**時以 **`design/*.md`** 為準（與本技能同目錄）；完成後若行為與文件不一致，**在回覆中註明**（使用者未要求則不主動大改文件，但必須點出差異）。
 
-索引總覽（人類導覽）：[SYSTEM_DESIGN.md](../../../docs/SYSTEM_DESIGN.md)（路徑自本檔向上三層為 `project1/docs`）。
+索引總覽（人類導覽）：[SYSTEM_DESIGN.md](../../../project1/docs/SYSTEM_DESIGN.md)（自本技能目錄向上三層為工作區根，再進 `project1/docs`）。
 
 ## 主題速查（實作時開哪一篇）
 

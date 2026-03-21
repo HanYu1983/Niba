@@ -1,11 +1,19 @@
 module AdPlatform.Google.Program
 
 open System
+open System.Text.Encodings.Web
 open System.Text.Json
 open System.Text.Json.Serialization
 open AdAutomation.Core.Domain
 open AdCredentials
 open AdPlatform.Google
+
+/// 主控台輸出用：避免日文等字元被序列化成 `\uXXXX`（System.Text.Json 預設行為）。
+let private consoleJsonOptions (configure: JsonSerializerOptions -> unit) =
+    let o = JsonSerializerOptions(WriteIndented = true)
+    o.Encoder <- JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+    configure o
+    o
 
 let private usage () =
     eprintfn "用法:"
@@ -34,11 +42,9 @@ let private searchAndPrint (client: GoogleAdsClient) (customerId: string) (gaql:
             | Ok doc ->
                 use doc = doc
 
-                let json =
-                    JsonSerializer.Serialize(
-                        doc.RootElement,
-                        JsonSerializerOptions(WriteIndented = true)
-                    )
+                let opts = consoleJsonOptions ignore
+
+                let json = JsonSerializer.Serialize(doc.RootElement, opts)
 
                 Console.Out.WriteLine(json)
                 return 0
@@ -121,10 +127,9 @@ let flow2 (args: string[]) : int =
                 let query = GoogleAdsCredentialQuery(store)
 
                 let jsonOpts =
-                    let o = JsonSerializerOptions(WriteIndented = true)
-                    o.PropertyNamingPolicy <- JsonNamingPolicy.CamelCase
-                    o.DefaultIgnoreCondition <- JsonIgnoreCondition.WhenWritingNull
-                    o
+                    consoleJsonOptions (fun o ->
+                        o.PropertyNamingPolicy <- JsonNamingPolicy.CamelCase
+                        o.DefaultIgnoreCondition <- JsonIgnoreCondition.WhenWritingNull)
 
                 let work =
                     async {
@@ -148,6 +153,9 @@ let flow2 (args: string[]) : int =
 
 [<EntryPoint>]
 let main argv =
+    // 容器／管線預設可能非 UTF-8；與下方 JSON「不跳脫 Unicode」一併避免日文顯示異常。
+    Console.OutputEncoding <- Text.Encoding.UTF8
+
     if argv.Length < 1 then
         usage ()
         1

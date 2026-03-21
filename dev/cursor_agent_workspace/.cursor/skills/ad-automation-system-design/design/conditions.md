@@ -1,6 +1,6 @@
 # 條件邏輯設計（進入點綁定）
 
-[← 上一篇：輸入資料模型](input-model.md) · [回到索引](../../../../docs/SYSTEM_DESIGN.md) · [下一篇：結果 JSON →](result-json.md)
+[← 上一篇：輸入資料模型](input-model.md) · [回到索引](../../../../project1/docs/SYSTEM_DESIGN.md) · [下一篇：結果 JSON →](result-json.md)
 
 ## 一進入點、一組條件
 

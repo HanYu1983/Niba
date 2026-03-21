@@ -1,6 +1,6 @@
 # 名詞與範圍
 
-[← 上一篇：概覽](overview.md) · [回到索引](../../../../docs/SYSTEM_DESIGN.md) · [下一篇：架構 →](architecture.md)
+[← 上一篇：概覽](overview.md) · [回到索引](../../../../project1/docs/SYSTEM_DESIGN.md) · [下一篇：架構 →](architecture.md)
 
 ## 名詞
 

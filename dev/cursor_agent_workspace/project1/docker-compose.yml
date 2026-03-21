@@ -50,7 +50,10 @@ services:
     working_dir: /app
     volumes:
       - .:/app
+    # 讓執行緒／執行環境以 UTF-8 處理字元（與程式內 Console.OutputEncoding 一併使用）
     environment:
+      LANG: C.UTF-8
+      LC_ALL: C.UTF-8
       AD_CREDENTIALS_JSON_PATH: ${AD_CREDENTIALS_JSON_PATH:-AdCredentials/credentials.sample.json}
       AD_CREDENTIAL_CUSTOM_ID: ${AD_CREDENTIAL_CUSTOM_ID:-google-local-env}
       FLOW2_LOGIN: ${FLOW2_LOGIN:--}
