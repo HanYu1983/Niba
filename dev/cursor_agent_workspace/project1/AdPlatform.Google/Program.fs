@@ -86,6 +86,12 @@ let flow2 (args: string[]) : int =
         let customerId = args.[3].Trim()
         let gaql = String.Join(" ", args.[4..]).Trim()
 
+        printfn "credPath: %s" credPath
+        printfn "credentialCustomId: %s" credentialCustomId
+        printfn "loginArg: %s" loginArg
+        printfn "customerId: %s" customerId
+        printfn "gaql: %s" gaql
+
         if String.IsNullOrWhiteSpace credPath || String.IsNullOrWhiteSpace credentialCustomId then
             eprintfn "錯誤：憑證檔路徑與 credentialCustomId 不可為空。"
             1

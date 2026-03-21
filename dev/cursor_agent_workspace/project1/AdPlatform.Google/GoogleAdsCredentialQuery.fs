@@ -76,6 +76,7 @@ type GoogleAdsCredentialQuery(store: AdCredentialsStore, ?httpClient: HttpClient
             match raw with
             | Error e -> return Error e
             | Ok jsonText ->
+                printfn "jsonText: %s" jsonText
                 use doc: JsonDocument = JsonDocument.Parse(jsonText)
                 let root = doc.RootElement
 
