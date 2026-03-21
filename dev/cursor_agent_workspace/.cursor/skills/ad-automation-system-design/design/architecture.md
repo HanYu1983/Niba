@@ -1,6 +1,6 @@
 # 架構與專案分層
 
-[← 上一篇：名詞與範圍](glossary-and-scope.md) · [回到索引](../SYSTEM_DESIGN.md) · [下一篇：輸入資料模型 →](input-model.md)
+[← 上一篇：名詞與範圍](glossary-and-scope.md) · [回到索引](../../../../docs/SYSTEM_DESIGN.md) · [下一篇：輸入資料模型 →](input-model.md)
 
 ## 高階架構
 

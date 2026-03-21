@@ -1,6 +1,6 @@
 # 結果 JSON（給下游開關系統）
 
-[← 上一篇：條件邏輯](conditions.md) · [回到索引](../SYSTEM_DESIGN.md) · [下一篇：端到端流程 →](end-to-end-flow.md)
+[← 上一篇：條件邏輯](conditions.md) · [回到索引](../../../../docs/SYSTEM_DESIGN.md) · [下一篇：端到端流程 →](end-to-end-flow.md)
 
 本系統**主要產出**為結果檔；下游**只依契約讀檔**，不呼叫本進入點行程。
 

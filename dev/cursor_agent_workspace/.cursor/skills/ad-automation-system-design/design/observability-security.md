@@ -1,6 +1,6 @@
 # 可觀測性、設定與安全
 
-[← 上一篇：端到端流程](end-to-end-flow.md) · [回到索引](../SYSTEM_DESIGN.md) · [下一篇：與 project1 對照 →](project-map.md)
+[← 上一篇：端到端流程](end-to-end-flow.md) · [回到索引](../../../../docs/SYSTEM_DESIGN.md) · [下一篇：與 project1 對照 →](project-map.md)
 
 ## 可觀測性與稽核
 

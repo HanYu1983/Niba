@@ -1,6 +1,6 @@
 # 輸入資料模型（JSON）
 
-[← 上一篇：架構](architecture.md) · [回到索引](../SYSTEM_DESIGN.md) · [下一篇：條件邏輯 →](conditions.md)
+[← 上一篇：架構](architecture.md) · [回到索引](../../../../docs/SYSTEM_DESIGN.md) · [下一篇：條件邏輯 →](conditions.md)
 
 ## 單一檔案外層（輸入封套，建議）
 
