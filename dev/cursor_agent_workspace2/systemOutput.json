@@ -3,8 +3,9 @@
     "startDate": "2026-01-01",
     "endDate": "2026-01-02",
     "conditions": [
-        "Condition2",
-        "1"
+        "temperatureMinMax",
+        "10",
+        "20"
     ],
     "items": [
         {
@@ -15,7 +16,7 @@
                 "resourceName": "Resource 1",
                 "isVideo": true
             },
-            "desiredState": "Off"
+            "desiredState": "On"
         }
     ]
 }

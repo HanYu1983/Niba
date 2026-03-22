@@ -37,7 +37,7 @@ module Type =
     type SystemOutput = SystemInput
 
     // function type
-    type SystemProcess = SystemInput -> SystemOutput
+    type SystemProcess = SystemInput -> Result<SystemOutput, AppError>
 
     type ConditionFactory = string list -> Result<SystemProcess, AppError>
 
