@@ -1,8 +1,8 @@
-namespace AdPlatform.Google
+namespace AdCredentials
 
 open System
 
-/// Google Ads API 與 OAuth 所需憑證（通常由環境變數載入）。
+/// Google Ads API 與 OAuth 所需憑證（由憑證檔 key1～key4 或環境變數載入）。
 /// `login-customer-id` 標頭請於呼叫 `GoogleAdsClient`／`SearchAsync` 時另以參數傳入。
 type GoogleAdsCredentials =
     { ClientId: string

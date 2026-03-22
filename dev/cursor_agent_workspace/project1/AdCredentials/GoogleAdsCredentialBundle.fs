@@ -31,21 +31,11 @@ module GoogleAdsCredentialBundle =
             Error
                 $"此筆憑證的 clientAdPlatform 為 '{entry.ClientAdPlatform}'，無法解析為 Google 憑證（須為 '{ExpectedClientAdPlatform}'）。"
         else
-            let k1 = entry.Key1
-            let k2 = entry.Key2
-            let k3 = entry.Key3
-            let k4 = entry.Key4
-
-            let missing =
-                [ if String.IsNullOrWhiteSpace k1 then "key1（clientId）"
-                  if String.IsNullOrWhiteSpace k2 then "key2（clientSecret）"
-                  if String.IsNullOrWhiteSpace k3 then "key3（refreshToken）"
-                  if String.IsNullOrWhiteSpace k4 then "key4（developerToken）" ]
-
-            if missing.Length > 0 then
+            match GoogleAdsCredentials.tryCreate entry.Key1 entry.Key2 entry.Key3 entry.Key4 with
+            | Error missing ->
                 let joined = String.Join("、", missing)
-                Error $"Google 憑證缺少：{joined}"
-            else
+                Error $"GoogleAdsCredentials 驗證失敗，缺少：{joined}"
+            | Ok creds ->
                 let login =
                     if String.IsNullOrWhiteSpace entry.Key5 then
                         None
@@ -53,8 +43,8 @@ module GoogleAdsCredentialBundle =
                         Some(entry.Key5.Trim())
 
                 Ok
-                    { ClientId = k1.Trim()
-                      ClientSecret = k2.Trim()
-                      RefreshToken = k3.Trim()
-                      DeveloperToken = k4.Trim()
+                    { ClientId = creds.ClientId
+                      ClientSecret = creds.ClientSecret
+                      RefreshToken = creds.RefreshToken
+                      DeveloperToken = creds.DeveloperToken
                       DefaultLoginCustomerId = login }

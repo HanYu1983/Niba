@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "runId": "f997c2ae-a968-4fdd-a5bd-10f97fb82ce9",
+  "generatedAt": "2026-03-22T07:08:19.4840627+00:00",
+  "platform": "",
+  "credentialCustomId": "",
+  "startDate": "",
+  "endDate": "",
+  "items": [],
+  "errors": [
+    {
+      "file": "google-ads-pipeline-input.json",
+      "message": "外層 startDate 不可為空白"
+    },
+    {
+      "file": "google-ads-pipeline-input.json",
+      "message": "外層 endDate 不可為空白"
+    },
+    {
+      "file": "google-ads-pipeline-input.json",
+      "message": "items[0].area 不可為空白"
+    },
+    {
+      "file": "google-ads-pipeline-input.json",
+      "message": "items[1].area 不可為空白"
+    },
+    {
+      "file": "google-ads-pipeline-input.json",
+      "message": "items[2].area 不可為空白"
+    },
+    {
+      "file": "google-ads-pipeline-input.json",
+      "message": "items[3].area 不可為空白"
+    },
+    {
+      "file": "google-ads-pipeline-input.json",
+      "message": "items[4].area 不可為空白"
+    },
+    {
+      "file": "google-ads-pipeline-input.json",
+      "message": "items[5].area 不可為空白"
+    },
+    {
+      "file": "google-ads-pipeline-input.json",
+      "message": "items[6].area 不可為空白"
+    },
+    {
+      "file": "google-ads-pipeline-input.json",
+      "message": "items[7].area 不可為空白"
+    },
+    {
+      "file": "google-ads-pipeline-input.json",
+      "message": "items[8].area 不可為空白"
+    },
+    {
+      "file": "google-ads-pipeline-input.json",
+      "message": "items[9].area 不可為空白"
+    }
+  ]
+}

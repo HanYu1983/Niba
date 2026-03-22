@@ -101,12 +101,40 @@ module Domain =
           Items: AdRowOutput[]
           Errors: Error[] }
 
-    /// 條件評估結果，供開關器使用。
+    /// 條件評估結果，供開關器使用。`platform` 由 `EvaluationContext` 提供，不應重複於列級結果 JSON。
     type Decision =
         { EncodedAdId: string
-          Platform: string
           State: DesiredState
           Reason: string option }
+
+    /// 查詢結果：通常先以編碼 ID 呼叫平台 API，再將回應對應為階層路徑供開關器操作特定層級。
+    type AdSnapshot =
+        { EncodedId: string
+          DecodedPath: DecodedAdPath }
+
+    /// 依「編碼過的廣告 ID」向平台查詢；實作內可呼叫 HTTP/SDK，並組出 `DecodedPath`（可與 `Decode` 純字串解碼並用或取代）。
+    [<AbstractClass>]
+    type PlatformAdQuery() =
+        abstract PlatformKey: string
+        abstract FetchByEncodedIdAsync: encodedId: string -> Async<Result<AdSnapshot, string>>
+
+    /// Composition root 注入：依 `(platform, credentialCustomId)` 提供**已組裝憑證**之平台查詢用戶端。
+    /// 條件邏輯應透過 `EvaluationContext.PlatformQueryProvider` 取得，**勿**在 `ConditionSet` 內讀環境變數自行組裝。
+    type IPlatformAdQueryProvider =
+        abstract TryGetPlatformAdQuery: platform: string * credentialCustomId: string -> PlatformAdQuery option
+
+    /// 可選：驗證憑證庫可解析該鍵（不暴露秘密）。
+    type ICredentialKeyValidator =
+        abstract Validate: platform: string * credentialCustomId: string -> Result<unit, string>
+
+    /// `Runner.runWithHooks` 使用；同一 `run` 內各列共用。
+    type RunEvaluationHooks =
+        { PlatformQueryProvider: IPlatformAdQueryProvider option
+          CredentialKeyValidator: ICredentialKeyValidator option }
+
+        static member Empty =
+            { PlatformQueryProvider = None
+              CredentialKeyValidator = None }
 
     /// 條件評估上下文：`AdRow` 僅含列欄位；平台／憑證鍵／來源檔與期間來自輸入**封套外層**（見 `input-model.md`）。
     type EvaluationContext =
@@ -115,4 +143,9 @@ module Domain =
           CredentialCustomId: string
           SourceFile: string
           StartDate: string
-          EndDate: string }
+          EndDate: string
+          /// 本次 Runner 執行的批次基準時間（條件可比對是否落在檔期內等）。
+          BatchAt: System.DateTimeOffset
+          /// 與 `RunEvaluationHooks` 對齊；條件內打 API 時優先使用，而非硬編環境變數。
+          PlatformQueryProvider: IPlatformAdQueryProvider option
+          CredentialKeyValidator: ICredentialKeyValidator option }

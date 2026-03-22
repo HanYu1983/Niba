@@ -8,11 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="GoogleAdsCredentials.fs" />
     <Compile Include="GoogleOAuth.fs" />
     <Compile Include="GoogleAdsClient.fs" />
+    <Compile Include="GoogleAdsJsonElement.fs" />
     <Compile Include="GoogleAdsCredentialQuery.fs" />
     <Compile Include="GoogleAdsPlatformAdQuery.fs" />
+    <Compile Include="GoogleAdsPlatformQueryProvider.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 

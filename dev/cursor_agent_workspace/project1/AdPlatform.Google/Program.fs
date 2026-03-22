@@ -3,9 +3,9 @@ module AdPlatform.Google.Program
 open System
 open System.IO
 open System.Text
-open System.Text.Encodings.Web
 open System.Text.Json
 open System.Text.Json.Serialization
+open AdAutomation.Core
 open AdAutomation.Core.Domain
 open AdCredentials
 open AdPlatform.Google
@@ -16,13 +16,6 @@ let private err (reason: string) =
 
 /// 與 Runner 一致：UTF-8、無 BOM。
 let private utf8Json = UTF8Encoding(false)
-
-/// 主控台輸出用：避免日文等字元被序列化成 `\uXXXX`（System.Text.Json 預設行為）。
-let private consoleJsonOptions (configure: JsonSerializerOptions -> unit) =
-    let o = JsonSerializerOptions(WriteIndented = true)
-    o.Encoder <- JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-    configure o
-    o
 
 let private usage () =
     eprintfn "用法:"
@@ -90,9 +83,9 @@ let createSystemInput (args: string[]) : int =
                 let query = GoogleAdsCredentialQuery(store)
 
                 let jsonOpts =
-                    consoleJsonOptions (fun o ->
-                        o.PropertyNamingPolicy <- JsonNamingPolicy.CamelCase
-                        o.DefaultIgnoreCondition <- JsonIgnoreCondition.WhenWritingNull)
+                    let o = SystemTextJsonOptions.createWriteOptions ()
+                    o.DefaultIgnoreCondition <- JsonIgnoreCondition.WhenWritingNull
+                    o
 
                 let work =
                     async {

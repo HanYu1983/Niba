@@ -1,5 +1,6 @@
 namespace AdPlatform.Google
 
+open AdCredentials
 open System
 open System.IO
 open System.Net.Http

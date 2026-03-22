@@ -30,7 +30,6 @@ type App1ConditionSet() =
 
             return
                 { EncodedAdId = row.EncodedAdId
-                  Platform = ctx.Platform
                   State = state
                   Reason = reason }
         }

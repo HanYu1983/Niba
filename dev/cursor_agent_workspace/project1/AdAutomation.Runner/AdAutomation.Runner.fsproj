@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="RunnerCli.fs" />
     <Compile Include="Runner.fs" />
   </ItemGroup>
 

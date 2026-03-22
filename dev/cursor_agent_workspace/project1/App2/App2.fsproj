@@ -9,10 +9,13 @@
   <ItemGroup>
     <ProjectReference Include="..\AdAutomation.Core\AdAutomation.Core.fsproj" />
     <ProjectReference Include="..\AdAutomation.Runner\AdAutomation.Runner.fsproj" />
+    <ProjectReference Include="..\AdCredentials\AdCredentials.fsproj" />
+    <ProjectReference Include="..\AdPlatform.Google\AdPlatform.Google.fsproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Compile Include="ConditionSet.fs" />
+    <Compile Include="..\SharedApps\Composition.fs" Link="Composition.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 

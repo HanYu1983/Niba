@@ -11,7 +11,6 @@ type App2ConditionSet() =
         async {
             return
                 { EncodedAdId = row.EncodedAdId
-                  Platform = ctx.Platform
                   State = On
                   Reason = Some "App2 default On" }
         }

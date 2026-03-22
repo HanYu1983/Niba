@@ -1,6 +1,8 @@
 open System
 open System.IO
+open System.Text
 open App2
+open AdAutomation.Apps
 open AdAutomation.Runner
 
 let private defaultInput =
@@ -11,25 +13,22 @@ let private defaultOutput =
 
 [<EntryPoint>]
 let main argv =
-    let ioResult =
-        match argv with
-        | [| i; o |] -> Ok(i, o)
-        | [| i |] ->
-            let dir = Path.GetDirectoryName(i)
-            let name = Path.GetFileNameWithoutExtension(i) + ".result.json"
-            let outPath = if String.IsNullOrEmpty dir then name else Path.Combine(dir, name)
-            Ok(i, outPath)
-        | [||] -> Ok(defaultInput, defaultOutput)
-        | _ -> Error()
+    Console.OutputEncoding <- Encoding.UTF8
+    Console.InputEncoding <- Encoding.UTF8
+
+    let ioResult = RunnerCli.tryParseIoArgs argv defaultInput defaultOutput
 
     match ioResult with
     | Error () ->
         eprintfn "用法: App2 [<輸入.json> [<輸出.json>]]"
         eprintfn "未給路徑時使用 samples/demo-input.json → samples/app2-output.json"
+        eprintfn "可選：環境變數 AD_CREDENTIALS_JSON 指向憑證 JSON；未設定時嘗試 AdCredentials/credentials.sample.json。"
         2
     | Ok (inputPath, outputPath) ->
+        let hooks = EvaluationHooks.tryResolveHooks ()
         let conditionSet = App2ConditionSet()
-        match Runner.run inputPath outputPath conditionSet with
+
+        match Runner.runWithHooks hooks inputPath outputPath conditionSet with
         | Ok (RunOutcome.SingleFile (path, _)) ->
             printfn "已寫入結果: %s" path
             0

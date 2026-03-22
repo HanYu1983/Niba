@@ -1,5 +1,6 @@
 namespace AdPlatform.Google
 
+open AdCredentials
 open System
 open System.Text.Json
 open AdAutomation.Core
@@ -7,35 +8,11 @@ open AdAutomation.Core.Domain
 
 module private GoogleAdsRowJson =
 
-    let private idAsString (el: JsonElement) =
-        match el.ValueKind with
-        | JsonValueKind.String ->
-            let s = el.GetString()
-
-            if String.IsNullOrEmpty s then
-                None
-            else
-                Some s
-        | JsonValueKind.Number -> Some(el.GetInt64() |> string)
-        | _ -> None
-
-    let private tryChildId (row: JsonElement) (objectName: string) =
-        let mutable child = Unchecked.defaultof<JsonElement>
-
-        if row.TryGetProperty(objectName, &child) then
-            let mutable idEl = Unchecked.defaultof<JsonElement>
-
-            if child.TryGetProperty("id", &idEl) then
-                idAsString idEl
-            else
-                None
-        else
-            None
-
     /// REST 回應使用 camelCase 欄位名稱（如 campaign、adGroup、adGroupAd）。
     let decodePath (row: JsonElement) (fallbackAccountId: string) =
         let account =
-            tryChildId row "customer" |> Option.defaultValue fallbackAccountId
+            GoogleAdsJsonElement.tryChildId row "customer" false
+            |> Option.defaultValue fallbackAccountId
 
         let adId =
             let mutable aga = Unchecked.defaultof<JsonElement>
@@ -47,7 +24,7 @@ module private GoogleAdsRowJson =
                     let mutable idEl = Unchecked.defaultof<JsonElement>
 
                     if ad.TryGetProperty("id", &idEl) then
-                        idAsString idEl
+                        GoogleAdsJsonElement.idAsString false idEl
                     else
                         None
                 else
@@ -56,8 +33,8 @@ module private GoogleAdsRowJson =
                 None
 
         { AccountId = account
-          CampaignId = tryChildId row "campaign"
-          AdGroupId = tryChildId row "adGroup"
+          CampaignId = GoogleAdsJsonElement.tryChildId row "campaign" false
+          AdGroupId = GoogleAdsJsonElement.tryChildId row "adGroup" false
           AdId = adId }
 
 /// 以編碼 ID 查詢 Google Ads。
@@ -69,8 +46,6 @@ type GoogleAdsPlatformAdQuery(credentials: GoogleAdsCredentials, loginCustomerId
         match client with
         | Some c -> c
         | None -> GoogleAdsClient(credentials, loginCustomerId)
-
-    static let normalizeDigits (s: string) = s.Replace("-", "", StringComparison.Ordinal).Trim()
 
     static let isDigits (s: string) =
         s.Length > 0 && Seq.forall Char.IsDigit s
@@ -86,7 +61,8 @@ type GoogleAdsPlatformAdQuery(credentials: GoogleAdsCredentials, loginCustomerId
                     StringSplitOptions.RemoveEmptyEntries ||| StringSplitOptions.TrimEntries
 
                 let parts =
-                    encodedId.Split([| '.' |], splitOpts) |> Array.map normalizeDigits
+                    encodedId.Split([| '.' |], splitOpts)
+                    |> Array.map GoogleAdsJsonElement.normalizeDigits
 
                 if parts.Length = 0 then
                     return Error "無法解析編碼 ID。"

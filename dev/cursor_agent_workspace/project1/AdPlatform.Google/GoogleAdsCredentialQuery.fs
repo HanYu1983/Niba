@@ -11,24 +11,6 @@ module internal GoogleAdsSearchResultRows =
 
     open AdAutomation.Core.Domain
 
-    let normalizeDigits (s: string) =
-        if String.IsNullOrWhiteSpace s then
-            ""
-        else
-            s.Replace("-", "", StringComparison.Ordinal).Trim()
-
-    let private idAsString (el: JsonElement) =
-        match el.ValueKind with
-        | JsonValueKind.String ->
-            let s = el.GetString()
-
-            if String.IsNullOrEmpty s then
-                None
-            else
-                Some(normalizeDigits s)
-        | JsonValueKind.Number -> Some(el.GetInt64() |> string)
-        | _ -> None
-
     let private tryChild (row: JsonElement) (name: string) =
         let mutable ch = Unchecked.defaultof<JsonElement>
 
@@ -38,15 +20,7 @@ module internal GoogleAdsSearchResultRows =
             None
 
     let private tryChildId (row: JsonElement) (objectName: string) =
-        match tryChild row objectName with
-        | None -> None
-        | Some child ->
-            let mutable idEl = Unchecked.defaultof<JsonElement>
-
-            if child.TryGetProperty("id", &idEl) then
-                idAsString idEl
-            else
-                None
+        GoogleAdsJsonElement.tryChildId row objectName true
 
     let private tryChildString (row: JsonElement) (objectName: string) (field: string) =
         match tryChild row objectName with
@@ -95,7 +69,7 @@ module internal GoogleAdsSearchResultRows =
             let mutable idEl = Unchecked.defaultof<JsonElement>
 
             if ad.TryGetProperty("id", &idEl) then
-                idAsString idEl
+                GoogleAdsJsonElement.idAsString true idEl
             else
                 None
 
@@ -238,7 +212,7 @@ module internal GoogleAdsSearchResultRows =
 /// 依 `credentialCustomId` 自 `AdCredentialsStore` 解析 Google 憑證並呼叫 `googleAds:search`。
 type GoogleAdsCredentialQuery(store: AdCredentialsStore, ?httpClient: HttpClient) =
 
-    let jsonWriteOptions = JsonSerializerOptions(WriteIndented = true)
+    let jsonWriteOptions = AdAutomation.Core.SystemTextJsonOptions.createWriteOptions ()
 
     /// `loginCustomerId`：可覆寫憑證 key5；若未提供且 key5 為空則失敗。
     member _.SearchToJsonAsync
@@ -319,7 +293,7 @@ type GoogleAdsCredentialQuery(store: AdCredentialsStore, ?httpClient: HttpClient
                 use doc: JsonDocument = JsonDocument.Parse(jsonText)
                 let root = doc.RootElement
 
-                let cidNorm = GoogleAdsSearchResultRows.normalizeDigits customerId
+                let cidNorm = GoogleAdsJsonElement.normalizeDigits customerId
 
                 let area =
                     si.Items |> Array.tryHead |> Option.map (fun r -> r.Area) |> Option.defaultValue ""
