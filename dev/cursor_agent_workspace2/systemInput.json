@@ -10,7 +10,8 @@
             "googleMeta": {
                 "resourceName": "Resource 1",
                 "isVideo": true
-            }
+            },
+            "desiredState": "NotSet"
         }
     ]
 }

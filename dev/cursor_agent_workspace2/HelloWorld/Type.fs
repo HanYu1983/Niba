@@ -41,7 +41,13 @@ module Type =
 
 
     let private desiredStateDecoder : Decoder<DesiredState> =
-        Decode.map (fun b -> if b then On else Off) Decode.bool
+        Decode.map (fun s ->
+            match s with
+            | "On" -> On
+            | "Off" -> Off
+            | "NotSet" -> NotSet
+            | _ -> NotSet
+        ) Decode.string
 
     let private googleMetaDecoder : Decoder<GoogleMeta> =
         Decode.object (fun get ->
@@ -68,9 +74,9 @@ module Type =
 
     let private desiredStateEncoder (d: DesiredState) : JsonValue =
         match d with
-        | On -> Encode.bool true
-        | Off -> Encode.bool false
-        | NotSet -> Encode.nil
+        | On -> Encode.string "On"
+        | Off -> Encode.string "Off"
+        | NotSet -> Encode.string "NotSet"
 
     let private googleMetaEncoder (g: GoogleMeta) : JsonValue =
         Encode.object
