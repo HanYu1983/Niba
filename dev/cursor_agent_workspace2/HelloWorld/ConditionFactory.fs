@@ -18,7 +18,7 @@ type FakeBugService() =
 
 let temperatureMinMax (min: float, max: float) : SystemProcess =
     fun input ->
-        let service = FakeBugService() :> IService
+        let service = Service() :> IService
         // 若要測「第一個 Error 即短路」，可改為：FakeBugService() :> IService
 
         let itemProcess (item: Item) : Result<Item, AppError> =
