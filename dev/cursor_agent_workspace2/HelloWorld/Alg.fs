@@ -5,17 +5,6 @@ open System.IO
 
 module Alg =
 
-    /// 依序套用 f；任一 Error 則短路，否則 Ok（順序與輸入相同）。
-    let traverseResult (f: 'a -> Result<'b, 'e>) (xs: 'a list) : Result<'b list, 'e> =
-        let folder acc x =
-            acc |> Result.bind (fun ys -> f x |> Result.map (fun y -> y :: ys))
-
-        List.fold folder (Ok []) xs |> Result.map List.rev
-
-    /// `Result<'a,'e> list` → `Result<'a list,'e>`（遇錯即停）。
-    let sequenceResult (xs: Result<'a, 'e> list) : Result<'a list, 'e> =
-        traverseResult id xs
-
     let readAllText (path: string) : Result<string, AppError> =
         try
             let text = File.ReadAllText path

@@ -1,7 +1,6 @@
 module HelloWorld.ConditionFactory
 
 open HelloWorld.Type
-open HelloWorld.Alg
 
 type IService =
     abstract queryTemperature: string -> Result<float, AppError>
@@ -20,7 +19,7 @@ type FakeBugService() =
 let temperatureMinMax (min: float, max: float) : SystemProcess =
     fun input ->
         let service = FakeBugService() :> IService
-        // 若要驗證「遇錯即停」，可改為：FakeBugService() :> IService
+        // 若要測「第一個 Error 即短路」，可改為：FakeBugService() :> IService
 
         let itemProcess (item: Item) : Result<Item, AppError> =
             match item.area with
@@ -40,7 +39,7 @@ let temperatureMinMax (min: float, max: float) : SystemProcess =
         | None -> Ok { input with items = None }
         | Some items ->
             items
-            |> Alg.traverseResult itemProcess
+            |> FsToolkit.ErrorHandling.List.traverseResultM itemProcess
             |> Result.map (fun newItems -> { input with items = Some newItems })
 
 let condition2: SystemProcess = fun input -> 
