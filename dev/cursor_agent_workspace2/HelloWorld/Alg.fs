@@ -37,33 +37,28 @@ module Alg =
         fun input -> Ok { input with items = input.items |> Option.map (List.map fn) }
 
     let runSystemProcessTemplate (conditionFactory: ConditionFactory) (inputPath: string) (outputPath: string) : Result<unit, AppError> =
+        let processIfInDateRange (input: SystemInput) : Result<unit, AppError> =
+            let now = System.DateTime.UtcNow.Date
+            let startDateOpt =
+                match input.startDate with
+                | Some s -> match System.DateTime.TryParse(s) with | true, dt -> Some dt.Date | _ -> None
+                | None -> None
+            let endDateOpt =
+                match input.endDate with
+                | Some s -> match System.DateTime.TryParse(s) with | true, dt -> Some dt.Date | _ -> None
+                | None -> None
+            let isInDateRange =
+                match startDateOpt, endDateOpt with
+                | Some startDate, Some endDate -> now >= startDate && now <= endDate
+                | Some startDate, None -> now >= startDate
+                | None, Some endDate -> now <= endDate
+                | None, None -> true
+            if not isInDateRange then
+                printfn "Now is not in the date range"
+                Ok ()
+            else
+                runSystemProcessWithConditionFactory conditionFactory input
+                |> Result.bind (writeAllText outputPath << encodeSystemInput)
         readAllText inputPath 
             |> Result.bind parseSystemInput
-            |> Result.bind (fun input ->
-                // 檢查區間，如果不在區間則 early return
-                let now = System.DateTime.UtcNow.Date
-                let startDateOpt =
-                    match input.startDate with
-                    | Some s -> match System.DateTime.TryParse(s) with | true, dt -> Some dt.Date | _ -> None
-                    | None -> None
-                let endDateOpt =
-                    match input.endDate with
-                    | Some s -> match System.DateTime.TryParse(s) with | true, dt -> Some dt.Date | _ -> None
-                    | None -> None
-
-                let isInDateRange =
-                    match startDateOpt, endDateOpt with
-                    | Some startDate, Some endDate -> now >= startDate && now <= endDate
-                    | Some startDate, None -> now >= startDate
-                    | None, Some endDate -> now <= endDate
-                    | None, None -> true
-
-                if not isInDateRange then
-                    // 不在區間，直接 early return (可回傳 Ok ())
-                    printfn "Now is not in the date range"
-                    Ok ()
-                else
-                    // 在區間內才繼續流程
-                    runSystemProcessWithConditionFactory conditionFactory input
-                    |> Result.bind (writeAllText outputPath << encodeSystemInput)
-            )
+            |> Result.bind processIfInDateRange
