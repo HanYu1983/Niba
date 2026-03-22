@@ -66,4 +66,35 @@ module Type =
     let parseSystemInput (str: string) : Result<SystemInput, AppError> =
         Decode.fromString systemInputDecoder str |> Result.mapError AppError.String
 
+    let private desiredStateEncoder (d: DesiredState) : JsonValue =
+        match d with
+        | On -> Encode.bool true
+        | Off -> Encode.bool false
+        | NotSet -> Encode.nil
+
+    let private googleMetaEncoder (g: GoogleMeta) : JsonValue =
+        Encode.object
+            [ "resourceName", Encode.option Encode.string g.resourceName
+              "isVideo", Encode.option Encode.bool g.isVideo ]
+
+    let private itemEncoder (item: Item) : JsonValue =
+        Encode.object
+            [ "id", Encode.option Encode.string item.id
+              "name", Encode.option Encode.string item.name
+              "area", Encode.option Encode.string item.area
+              "googleMeta", Encode.option googleMetaEncoder item.googleMeta
+              "desiredState", Encode.option desiredStateEncoder item.desiredState ]
+
+    let private systemInputValue (input: SystemInput) : JsonValue =
+        Encode.object
+            [ "clientId", Encode.option Encode.string input.clientId
+              "startDate", Encode.option Encode.string input.startDate
+              "endDate", Encode.option Encode.string input.endDate
+              "items",
+                Encode.option (fun items -> items |> List.map itemEncoder |> Encode.list) input.items ]
+
+    /// 與 parseSystemInput 對稱：手動 Encode 管線，desiredState 以 bool（或 NotSet → null）輸出。
+    let encodeSystemInput (input: SystemInput) : string =
+        Encode.toString 4 (systemInputValue input)
+
     

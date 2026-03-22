@@ -1,0 +1,17 @@
+{
+    "clientId": "123",
+    "startDate": "2026-01-01",
+    "endDate": "2026-01-02",
+    "items": [
+        {
+            "id": "1",
+            "name": "Item 1",
+            "area": "Area 1",
+            "googleMeta": {
+                "resourceName": "Resource 1",
+                "isVideo": true
+            },
+            "desiredState": true
+        }
+    ]
+}
