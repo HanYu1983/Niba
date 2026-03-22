@@ -2,6 +2,10 @@
     "clientId": "123",
     "startDate": "2026-01-01",
     "endDate": "2026-01-02",
+    "conditions": [
+        "Condition2",
+        "1"
+    ],
     "items": [
         {
             "id": "1",
@@ -11,7 +15,7 @@
                 "resourceName": "Resource 1",
                 "isVideo": true
             },
-            "desiredState": "On"
+            "desiredState": "Off"
         }
     ]
 }

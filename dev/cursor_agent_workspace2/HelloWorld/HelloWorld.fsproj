@@ -10,7 +10,7 @@
   <ItemGroup>
     <Compile Include="Type.fs" />
     <Compile Include="Alg.fs" />
-    <Compile Include="Condition1.fs" />
+    <Compile Include="ConditionFactory.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 </Project>

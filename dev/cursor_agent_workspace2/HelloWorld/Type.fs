@@ -2,6 +2,10 @@ namespace HelloWorld
 open Thoth.Json.Net
 
 module Type = 
+    type AppError =
+        | Exn of exn
+        | String of string
+
     type GoogleMeta = {
         resourceName: string option
         isVideo: bool option
@@ -25,7 +29,8 @@ module Type =
         clientId: string option
         startDate: string option
         endDate: string option
-        items: (Item list) option
+        conditions: string list option
+        items: Item list option
     }
 
     
@@ -34,11 +39,7 @@ module Type =
     // function type
     type SystemProcess = SystemInput -> SystemOutput
 
-
-    type AppError =
-        | Exn of exn
-        | String of string
-
+    type ConditionFactory = string list -> Result<SystemProcess, AppError>
 
     let private desiredStateDecoder : Decoder<DesiredState> =
         Decode.map (fun s ->
@@ -67,6 +68,7 @@ module Type =
             { clientId = get.Optional.Field "clientId" Decode.string
               startDate = get.Optional.Field "startDate" Decode.string
               endDate = get.Optional.Field "endDate" Decode.string
+              conditions = get.Optional.Field "conditions" (Decode.list Decode.string)
               items = get.Optional.Field "items" (Decode.list itemDecoder) })
 
     let parseSystemInput (str: string) : Result<SystemInput, AppError> =
@@ -96,6 +98,7 @@ module Type =
             [ "clientId", Encode.option Encode.string input.clientId
               "startDate", Encode.option Encode.string input.startDate
               "endDate", Encode.option Encode.string input.endDate
+              "conditions", Encode.option (fun conditions -> conditions |> List.map Encode.string |> Encode.list) input.conditions
               "items",
                 Encode.option (fun items -> items |> List.map itemEncoder |> Encode.list) input.items ]
 

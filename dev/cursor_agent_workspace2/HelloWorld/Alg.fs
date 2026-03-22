@@ -19,8 +19,25 @@ module Alg =
         with
             | exn -> Error (AppError.Exn exn)
 
-    let doIt (input: SystemInput) (run: SystemProcess) : SystemOutput =
+    let runSystemProcess (input: SystemInput) (run: SystemProcess) : SystemOutput =
         run input
+
+    let runSystemProcessWithConditionFactory  (conditionFactory: ConditionFactory) (input: SystemInput) : Result<SystemOutput, AppError> =
+        match input.conditions with
+        | Some conditions ->
+            match conditionFactory conditions with
+            | Ok systemProcess ->
+                runSystemProcess input systemProcess |> Ok
+            | Error err ->
+                Error err
+        | None ->
+            Error (AppError.String "No conditions provided")
 
     let itemSystemProcess (fn: Item -> Item) : SystemProcess =
         fun input -> { input with items = input.items |> Option.map (List.map fn) }
+
+    let runSystemProcessTemplate (conditionFactory: ConditionFactory) (inputPath: string) (outputPath: string) : Result<unit, AppError> =
+        readAllText inputPath 
+            |> Result.bind parseSystemInput
+            |> Result.bind (runSystemProcessWithConditionFactory conditionFactory)
+            |> Result.bind (writeAllText outputPath << encodeSystemInput)
