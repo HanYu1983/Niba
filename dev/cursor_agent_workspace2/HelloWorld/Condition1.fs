@@ -25,13 +25,16 @@ module Condition1 =
         ]
     }
 
-    let run () = 
-        let text = readAllText "systemInput.json"
-        match text with
-        | Ok text ->
-            let input = parseSystemInput text
-            let runner = itemSystemProcess (fun item -> item)
+    let run () =
+        let input = readAllText "systemInput.json" |> Result.bind parseSystemInput
+        match input with
+        | Ok input ->
+            let runner = itemSystemProcess (fun item -> 
+                { item with desiredState = Some On }
+            )
             let output = doIt input runner
             printfn "Output: %A" output
-        | Error exn ->
-            printfn "Error: %A" exn
+        | Error err ->
+            match err with
+            | AppError.Exn ex -> printfn "Error: %A" ex
+            | AppError.String msg -> printfn "Error: %s" msg
