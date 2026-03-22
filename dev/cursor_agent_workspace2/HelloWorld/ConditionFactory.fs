@@ -22,28 +22,25 @@ let temperatureMinMax (min: float, max: float) : SystemProcess =
         // 若要測「第一個 Error 即短路」，可改為：FakeBugService() :> IService
 
         let itemProcess (item: Item) : Result<Item, AppError> =
-            match item.area with
-            | None -> Ok { item with desiredState = Some On }
-            | Some area ->
-                service.queryTemperature area
+            if System.String.IsNullOrWhiteSpace item.area then
+                Ok { item with desiredState = On }
+            else
+                service.queryTemperature item.area
                 |> Result.map (fun temperature ->
                     let desiredState =
-                        if temperature < min || temperature > max then
-                            Some Off
-                        else
-                            Some On
+                        if temperature < min || temperature > max then Off else On
 
                     { item with desiredState = desiredState })
 
-        match input.items with
-        | None -> Ok { input with items = None }
-        | Some items ->
-            items
-            |> FsToolkit.ErrorHandling.List.traverseResultM itemProcess
-            |> Result.map (fun newItems -> { input with items = Some newItems })
+        input.items
+        |> FsToolkit.ErrorHandling.List.traverseResultM itemProcess
+        |> Result.map (fun newItems -> { input with items = newItems })
 
-let condition2: SystemProcess = fun input -> 
-    Ok { input with items = input.items |> Option.map (List.map (fun item -> { item with desiredState = Some Off })) }
+let condition2: SystemProcess =
+    fun input ->
+        Ok
+            { input with
+                items = input.items |> List.map (fun item -> { item with desiredState = Off }) }
 
 let createConditionFactory: ConditionFactory = fun _conditions ->
     match _conditions with

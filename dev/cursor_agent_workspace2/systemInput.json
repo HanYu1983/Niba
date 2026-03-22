@@ -1,7 +1,7 @@
 {
     "clientId": "123",
     "startDate": "2026-03-22",
-    "endDate": "2026-03-13",
+    "endDate": "2026-03-23",
     "conditions": ["temperatureMinMax", "10", "20"],
     "items": [
         {

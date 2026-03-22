@@ -1,5 +1,6 @@
 namespace HelloWorld
 open HelloWorld.Type
+open System
 open System.IO
 
 
@@ -22,37 +23,24 @@ module Alg =
     let runSystemProcess (input: SystemInput) (run: SystemProcess) : Result<SystemOutput, AppError> =
         run input
 
-    let runSystemProcessWithConditionFactory  (conditionFactory: ConditionFactory) (input: SystemInput) : Result<SystemOutput, AppError> =
-        match input.conditions with
-        | Some conditions ->
-            match conditionFactory conditions with
-            | Ok systemProcess ->
-                runSystemProcess input systemProcess
-            | Error err ->
-                Error err
-        | None ->
+    let runSystemProcessWithConditionFactory (conditionFactory: ConditionFactory) (input: SystemInput) : Result<SystemOutput, AppError> =
+        if List.isEmpty input.conditions then
             Error (AppError.String "No conditions provided")
+        else
+            match conditionFactory input.conditions with
+            | Ok systemProcess -> runSystemProcess input systemProcess
+            | Error err -> Error err
 
     let itemSystemProcess (fn: Item -> Item) : SystemProcess =
-        fun input -> Ok { input with items = input.items |> Option.map (List.map fn) }
+        fun input -> Ok { input with items = List.map fn input.items }
 
     let runSystemProcessTemplate (conditionFactory: ConditionFactory) (inputPath: string) (outputPath: string) : Result<unit, AppError> =
         let processIfInDateRange (input: SystemInput) : Result<unit, AppError> =
-            let now = System.DateTime.UtcNow.Date
-            let startDateOpt =
-                match input.startDate with
-                | Some s -> match System.DateTime.TryParse(s) with | true, dt -> Some dt.Date | _ -> None
-                | None -> None
-            let endDateOpt =
-                match input.endDate with
-                | Some s -> match System.DateTime.TryParse(s) with | true, dt -> Some dt.Date | _ -> None
-                | None -> None
-            let isInDateRange =
-                match startDateOpt, endDateOpt with
-                | Some startDate, Some endDate -> now >= startDate && now <= endDate
-                | Some startDate, None -> now >= startDate
-                | None, Some endDate -> now <= endDate
-                | None, None -> true
+            let now = DateTime.UtcNow.Date
+            let startDate = input.startDate.Date
+            let endDate = input.endDate.Date
+            let isInDateRange = now >= startDate && now <= endDate
+
             if not isInDateRange then
                 printfn "Now is not in the date range"
                 Ok ()
