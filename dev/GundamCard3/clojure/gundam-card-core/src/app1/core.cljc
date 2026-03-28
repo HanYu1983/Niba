@@ -8,8 +8,8 @@
 
 (defrecord Attack [id damage])
 
-(defrecord HasAttack [id])
-(defrecord HasAttackSound [id])
+(defrecord HasAttack [id damage])
+(defrecord HasAttackSound [id damage])
 
 (defrule add-card-state
   "Add card state"
@@ -21,47 +21,34 @@
 (defrule attack-card
   "attack card"
   {:salience -10}
-  [?attack <- Attack (= ?id id)]
+  [?attack <- Attack (= ?id id) (= ?damage damage)]
+  =>
+  (println "Attack card" ?attack)
+  (insert-unconditional! (->HasAttack ?id ?damage))
+  (insert-unconditional! (->HasAttackSound ?id ?damage))
+  (retract! ?attack))
+
+(defrule has-attack 
+  "has attack"
+  [?has-attack <- HasAttack (= ?id id) (= ?damage damage)]
   [?card-state <- CardState (= id ?id)]
-  [:not (HasAttack (= id ?id))]
   =>
-  (println "Attack card" ?attack ?card-state) 
-  (retract! ?card-state) 
-  (insert-unconditional! (assoc ?card-state :damage (+ (:damage ?attack) (:damage ?card-state))))
-  ; ok
-  (insert-unconditional! (->HasAttack ?id))
-  ; infinite loop
-  ;(insert! (->HasAttack ?id))
-  )
-
-(defrule attack-sound-card
-  "attack sound card"
-  {:salience -10}
-  [?attack <- Attack (= ?id id)]
-  [:not (HasAttackSound (= id ?id))]
-  =>
-  (println "Attack sound card" ?attack)
-  (insert-unconditional! (->HasAttackSound ?id)))
-
-(defrule has-attack-card [?has-attack <- HasAttack]
-  =>
-  (println "Has attack card" ?has-attack))
-
-(defrule delete-attack-card
-  {:salience -100}
-  [?attack <- Attack (= ?id id)]
-  [?has-attack <- HasAttack (= id ?id)]
-  [?attack-sound <- HasAttackSound (= id ?id)]
-  =>
-  (println "Delete attack card" ?attack)
-  (retract! ?attack)
+  (println "Has attack" ?has-attack)
   (retract! ?has-attack)
-  (retract! ?attack-sound)
-  )
+  (retract! ?card-state) 
+  (insert-unconditional! (assoc ?card-state :damage (+ (:damage ?has-attack) (:damage ?card-state)))))
+
+(defrule has-attack-sound
+  "attack sound card"
+  [?attack-sound <- HasAttackSound]
+  =>
+  (println "has attack sound" ?attack-sound)
+  (retract! ?attack-sound))
+
 
 (defquery get-card-states []
   [?card-state <- CardState])
-  
+
 (defquery get-card-by-id [?id]
   [?card <- Card (= id ?id)])
 
@@ -74,8 +61,7 @@
 (defn -main [args]
   (let [session (-> (mk-session 'app1.core)
                     (insert (->Card "a" true false)
-                            (->Card "b" true false)
-                            )
+                            (->Card "b" true false))
                     (fire-rules))
         _ (println (query session get-card-states))
         session (-> session
@@ -85,9 +71,8 @@
         _ (println (query session get-card-states))
         card-a (-> (query session get-card-by-id :?id "a") first :?card)
         ;_ (println card-a)
-        session (-> session 
+        session (-> session
                     (retract card-a)
                     (fire-rules))
-        _ (println (query session get-card-states))
-        ]
+        _ (println (query session get-card-states))]
     (println "Hello, World!")))
