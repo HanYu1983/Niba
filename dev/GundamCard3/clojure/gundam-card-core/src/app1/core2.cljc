@@ -14,7 +14,7 @@
   [?card <- Card]
   =>
   (println "Add card state" ?card)
-  (insert! (->CardState (:id ?card) 50)))
+  (insert! (->CardState (:id ?card) 20)))
 
 (defrule trigger-attack
   [?attack <- Attack (= ?id id) (= ?card-id card-id) (= ?damage damage)]
@@ -23,12 +23,14 @@
   (insert! (->DamageSound ?id ?card-id ?damage))
   (insert! (->DamageCard ?id ?card-id ?damage)))
 
-#_(defrule trigger-damage
-  [?damage <- DamageCard]
+(defrule trigger-damage
+  [?damage <- DamageCard] 
+  =>
   (println "Trigger damage" ?damage))
 
-#_(defrule trigger-sound
+(defrule trigger-sound
   [?damage-sound <- DamageSound]
+  =>
   (println "Trigger sound" ?damage-sound))
 
 (defrule trigger-dead
@@ -46,4 +48,5 @@
                             (->Attack (gensym) "a" 10)
                             (->Attack (gensym) "a" 20))
                     (fire-rules))]
+    (println "ok")
     session))

@@ -9,6 +9,10 @@ services:
     # 在 GundamCard3 根目錄執行：
     # docker compose -f docker/docker-compose.local.yml run --rm clojure clojure -M -e "(require '[gundam.card3.core]) (gundam.card3.core/hello)"
     # docker compose -f docker/docker-compose.local.yml run --rm clojure clojure -M:test
+    # docker compose -f docker/docker-compose.local.yml run --rm clojure clojure -M:nrepl
+    # (load-file "src/app1/core2.cljc")
+    # (in-ns 'app1.core2)
+    # (-main 0)
 
 volumes:
   clojure-m2:
