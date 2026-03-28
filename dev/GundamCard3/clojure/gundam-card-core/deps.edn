@@ -3,7 +3,7 @@
         com.cerner/clara-rules {:mvn/version "0.24.0"}}
  :aliases
  {:run 
-  {:main-opts ["-m" "app1.core" {:env :main}]}
+  {:main-opts ["-m" "app1.core2" {:env :main}]}
   
   :test
   {:extra-paths ["test"]
