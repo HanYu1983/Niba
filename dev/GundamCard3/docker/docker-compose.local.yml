@@ -1,0 +1,14 @@
+services:
+  clojure:
+    image: clojure:temurin-21-tools-deps-bookworm
+    working_dir: /work/gundam-card-core
+    volumes:
+      - ../clojure:/work
+      # 持久化 Maven／tools.deps 快取，避免每次 run 都重新抓 jar（首次仍會下載）。
+      - clojure-m2:/root/.m2
+    # 在 GundamCard3 根目錄執行：
+    # docker compose -f docker/docker-compose.local.yml run --rm clojure clojure -M -e "(require '[gundam.card3.core]) (gundam.card3.core/hello)"
+    # docker compose -f docker/docker-compose.local.yml run --rm clojure clojure -M:test
+
+volumes:
+  clojure-m2:
