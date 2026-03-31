@@ -23,7 +23,8 @@
   [(->ComboRule "combo-1" "三連擊" [:light :light :heavy] 3000 50)
    (->ComboRule "combo-2" "快速連打" [:light :light :light] 1500 40)
    (->ComboRule "combo-3" "重擊終結" [:light :heavy :special] 4000 80)
-   (->ComboRule "combo-4" "極限連段" [:special :light :heavy :special] 5000 150)])
+   (->ComboRule "combo-4" "極限連段" [:special :light :heavy :special] 5000 150)
+   ])
 
 (defrule game-start
   [?evt <- GameStartEvent]
@@ -38,6 +39,7 @@
 
 ;; 規則1：開始新連擊
 (defrule start-combo
+  "所有actionEvent配所有ComboRule這裡本質上是窮舉法"
   [ActionEvent (= player-id ?player-id) (= action ?action) (= timestamp ?ts)] 
   [ComboRule [{id :id [action & _] :actions}] (= id ?rule-id) (= action ?action)]
   [:not [ComboState (= player-id ?player-id)]]
@@ -68,6 +70,7 @@
 
 ;; 規則3：完成連擊
 (defrule complete-combo
+  "所有可能性當中找出功成的連擊"
   [?state <- ComboState
    (= player-id ?player-id) (= current-step ?step)
    (= matched-actions ?actions) (= last-action-time ?ts)]
@@ -76,9 +79,10 @@
    (= name ?name) (= damage ?damage)]
   [:test (= ?step (count ?actions))]  ;; 已匹配所有動作
   =>
-  (println "complete-combo" ?rule-id)
+  (println "complete-combo" ?rule-id ?ts)
   (insert-unconditional! (->ComboExecuted ?player-id ?rule-id ?damage ?ts))
-  (retract! ?state))
+  ; 刪除state會重新觸發start-combo, 又會塞入一堆ComboState
+  #_(retract! ?state))
 
 ;; 規則4：連擊超時
 (defrule combo-timeout
@@ -88,7 +92,8 @@
   =>
   (println "combo-timeout" ?action ?ts)
   (insert-unconditional! (->ComboTimeout ?player-id))
-  (retract! ?state))
+  ; 刪除state會重新觸發start-combo, 又會塞入一堆ComboState
+  #_(retract! ?state))
 
 ;; 規則5：連擊失敗（動作不匹配）
 (defrule combo-failure
@@ -101,7 +106,8 @@
   [:test (<= (- ?ts ?last-ts) 3000)]
   =>
   (println "combo-failure" ?actions ?step)
-  (retract! ?state))
+  ; 刪除state會重新觸發start-combo, 又會塞入一堆ComboState
+  #_(retract! ?state))
 
 (defquery get-action-event []
   [?item <- ActionEvent])
@@ -119,12 +125,10 @@
                     (fire-rules))]
 
     (println "=== 連擊系統執行結果 ===")
-    ;(println "執行的連擊:" (query session ComboExecuted))
-    ;(println "連擊超時:" (query session ComboTimeout))
-    ;(println "連擊狀態:" (query session ComboState))
     (println "get-action-event" (query session get-action-event))
     (println "getComboState" (query session getComboState))
     (println "getComboExecuted" (query session getComboExecuted))
+    ; 從getComboExecuted當中選出最好的Combo來執行
     ))
 
 (defn -main [args]
