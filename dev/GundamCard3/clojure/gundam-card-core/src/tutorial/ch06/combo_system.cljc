@@ -116,12 +116,6 @@
   (let [session (-> (mk-session 'tutorial.ch06.combo-system)
                     (insert-all combo-rules)
                     (insert (->GameStartEvent))
-                    ;(insert (->ActionEvent "player-1" :light 1000 1))
-                    ;(insert (->ActionEvent "player-1" :light 1200 2))
-                    ;(insert (->ActionEvent "player-1" :heavy 1400 3))
-                    ;(insert (->ActionEvent "player-1" :light 1600 4))
-                    ;(insert (->ActionEvent "player-1" :heavy 1800 5))
-                    ;(insert (->ActionEvent "player-1" :special 2000 6))
                     (fire-rules))]
 
     (println "=== 連擊系統執行結果 ===")
