@@ -10,18 +10,48 @@
 
 (Event)
 
-(defrule execute-abc
+(defrule query-require
   "（ダメージ判定ステップ）〔２〕：このセットグループのユニットは、ターン終了時まで、「〔０〕：範囲兵器（３）」、または「範囲兵器」＋１を得る。"
-  [CardText (= card-id ?this-card) (= text :abc-1)]
+  [QueryRequire (= text-id ?text-id)]
+  [CardText (= id ?text-id) (= card-id ?this-card) (= text :abc-1)]
   [SetGroup (contains? card-ids ?this-card) (= unit-id ?unit-id)]
-  [:not [SelectionConfirm (= options ["〔０〕：範囲兵器（３）" "または「範囲兵器」＋１"]) (= select ?select)]]
   =>
-  [Selection ?card-text-id ["〔０〕：範囲兵器（３）" "または「範囲兵器」＋１"]]) 
+  [SelectToPayColor ?card-text-id colors 2]
+  [SelectFromOptions ?card-text-id ["〔０〕：範囲兵器（３）" "または「範囲兵器」＋１"]])
+
+(defrule query-execute-script
+  [QueryScript (= text-id ?text-id)]
+  =>
+  [Script `(fn [ctx]
+             (let [session (-> ctx :session)
+                   session (-> session (insert! (->AddText "範囲兵器（３）")))
+                   ctx (-> ctx (assoc :session session))]
+               ctx))])
+
+(comment
+  (let [current-tokens []
+        session (-> session
+                    remove-tokens
+                    (insert-all current-tokens))
+        requires (-> session
+                     (inesrt (->QueryRequire "text-id"))
+                     (fire-rule)
+                     (query get-selection)
+                     :items)
+        exe-requires (-> (exe-requiers ctx session))
+        ; set requires from user
+        session (-> session
+                    (insert (->QueryScript "text-id"))
+                    (fire-rule))
+        ; sync token
+        next-tokens (-> session (query token) :items)
+
+        script (-> session (query script))]))
 
 
 (defrule skill1
   "（ダメージ判定ステップ）〔２〕：このセットグループのユニットは、ターン終了時まで、「〔０〕：範囲兵器（３）」、または「範囲兵器」＋１を得る。"
-  [Timing [[phase step substep]]  (= phase :battle) (= step :damage) (= substep :free)] 
+  [Timing [[phase step substep]]  (= phase :battle) (= step :damage) (= substep :free)]
   [Turn (= turn ?this-turn)]
   [CardOwner (= player-id ?owner-id) (= proto-id :abc) (= card-id ?this-card)]
   [colors <- (acc/all) :from [GenColor (= player-id ?owner-id)]]
@@ -63,7 +93,7 @@
   =>
   (insert (map->PSArmorState {:card-id ?this-card, :enabled (-> ?bgs count pos?)})))
 
-(defrule )
+(defrule)
 
 (defrule ps-armor
   [CardText (= text :psarmor) (= card-id ?this-card)]
@@ -71,4 +101,4 @@
   [Turn (= turn ?this-turn)]
   [BattleGroup [{card-ids :card-ids}] (contains card-id ?this-card) (= turn ?battle-turn)]
   =>
-  (retract! ))
+  (retract!))
