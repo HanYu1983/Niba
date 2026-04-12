@@ -6,9 +6,23 @@
    [clara.rules.accumulators :as acc]))
 
 
-(map->Event {})
-
-(Event)
+(def infomation
+  {:texts [{:text "（ダメージ判定ステップ）〔２〕：このセットグループのユニットは、ターン終了時まで、「〔０〕：範囲兵器（３）」、または「範囲兵器」＋１を得る。"
+            ; select one
+            :commands [{:conditions [{:assert `(dynamic/mk-assert "ダメージ判定ステップ")}
+                                     {:tips `(dynamic/mk-tips "〔２〕")
+                                      :action `(dynamic/mk-action "tap color")}
+                                     {:tips `(dynamic/mk-tips "「〔０〕：範囲兵器（３）」、または「範囲兵器」＋１")}]
+                        :action `(fn [~'ctx]
+                                   (let [~'select (dynamic/get-select "「〔０〕：範囲兵器（３）」、または「範囲兵器」＋１")
+                                         ; insert!
+                                         ~'ctx (-> ~'ctx (dynamic/add-effect ~'select))]
+                                     ~'ctx))}]
+            :event `(fn [ctx evt]
+                      ; remove tag
+                      ; retract!
+                      )}
+           {}]})
 
 (defrule query-require
   "（ダメージ判定ステップ）〔２〕：このセットグループのユニットは、ターン終了時まで、「〔０〕：範囲兵器（３）」、または「範囲兵器」＋１を得る。"
