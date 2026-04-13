@@ -5,6 +5,29 @@
    [clara.rules :refer :all]
    [clara.rules.accumulators :as acc]))
 
+(def play-text {:text "play G"
+                :commands [{:action `(fn [~'ctx]
+                                       (move-card ctx :g-zone))}]})
+
+(defn play-command [card-proto]
+  (let []
+    {:text "play command"
+   ; for each
+     :commands [{:conditions (-> command-text :command)}]
+     :action `(fn [~'ctx]
+              ; move to gravyard
+              ; push effect to stack
+                (dynamic/cut-in ~'ctx {:text ~(-> command-text :text)
+                                       :action ~(-> command-text :action)}))}))
+
+(defn play-unit [card-proto]
+  {:text "play-unit"
+   :commands [{:conditions (get-play-conditions card-proto)}]
+   :action `(fn [~'ctx]
+              (dynamic/cut-in ~'ctx {:text ~(-> command-text :text)
+                                      ;move card to stage
+                                     :action ~(-> command-text :action)}))})
+
 
 (def infomation
   {:texts [{:text "（ダメージ判定ステップ）〔２〕：このセットグループのユニットは、ターン終了時まで、「〔０〕：範囲兵器（３）」、または「範囲兵器」＋１を得る。"
