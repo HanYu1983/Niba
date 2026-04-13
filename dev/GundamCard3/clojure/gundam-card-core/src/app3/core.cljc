@@ -3,6 +3,9 @@
             [clara.rules :refer :all]
             [clara.rules.accumulators :as acc]))
 
+(def CardPositionSet #{:set-area :battle-area})
+(def ColorSet #{:red :white :black :purple})
+
 (defrecord Card [id])
 (defrecord CardPosition [card-id position])
 (defrecord SetCard [card-id unit-id])
