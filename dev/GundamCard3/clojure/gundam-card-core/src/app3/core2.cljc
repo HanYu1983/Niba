@@ -1,5 +1,6 @@
 (ns app3.core2
   (:require
+   [clojure.edn :as edn]
    [clara.rules :refer :all]
    [clojure.string :as str])
   (:import
@@ -138,6 +139,9 @@
 (defmulti runtime-get-card-id :type)
 (defmulti runtime-get-player-id :type)
 
+(defmulti game-is-phase :type)
+(defmulti game-get-var :type)
+
 (defn test-text []
   (let [ctx {:env :test, :version 0}
         text (text-create "text-1"
@@ -151,11 +155,34 @@
                                              (update ~'ctx :version inc)))]
                           `(fn [~'ctx ~'runtime ~'event] ~'ctx)
                           `(fn [~'ctx ~'runtime] ~'ctx))
+
         ;_ (println text)
         action (-> text (text-get-action 0))
         ;_ (println action)
         ctx (->> (action-evaluate-conditions action ctx {}))
-        _ (println ctx)]))
+        _ (println ctx)])
+
+  
+  (let [text (text-create ""
+                          [(action-create "（ダメージ判定ステップ）〔２〕：このセットグループのユニットは、ターン終了時まで、「〔０〕：範囲兵器（３）」、または「範囲兵器」＋１を得る。"
+                                          [(condition-create "ダメージ判定ステップ"
+                                                             `(fn [~'ctx ~'runtime]
+                                                                {:type :phase :phase "ダメージ判定ステップ"})
+                                                             `(fn [~'ctx ~'runtime]
+                                                                (update ~'ctx :version inc)))
+                                           (condition-create "〔２〕"
+                                                             `(fn [~'ctx ~'runtime]
+                                                                {:type :color-count :value 2})
+                                                             `(fn [~'ctx ~'runtime]
+                                                                (let [value (game-get-var ~'ctx "〔２〕")])
+                                                                (update ~'ctx :version inc)))]
+                                          `(fn [~'ctx ~'runtime]
+                                            ; add fact until end of turn
+                                             (update ~'ctx :version inc)))]
+                          `(fn [~'ctx ~'runtime ~'event]
+                            ; ターン終了時, remove fact
+                             ~'ctx)
+                          `(fn [~'ctx ~'runtime] ~'ctx))]))
 
 
 (defn -main [args]
