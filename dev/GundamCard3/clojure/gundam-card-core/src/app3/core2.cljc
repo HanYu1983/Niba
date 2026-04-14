@@ -131,6 +131,8 @@
   (-> text :actions (nth id)))
 
 
+
+
 (defmethod is-tip-ok-to-perform :test [ctx tip]
   (println "is-tip-ok-to-perform")
   true)
@@ -141,6 +143,11 @@
 
 (defmulti game-is-phase :type)
 (defmulti game-get-var :type)
+
+; =================== tip ===============
+(defn tip-search-create [ctx {:keys [card-type card-category card-position side]}]
+  {:type :search })
+
 
 (defn test-text []
   (let [ctx {:env :test, :version 0}
@@ -167,14 +174,23 @@
                           [(action-create "（ダメージ判定ステップ）〔２〕：このセットグループのユニットは、ターン終了時まで、「〔０〕：範囲兵器（３）」、または「範囲兵器」＋１を得る。"
                                           [(condition-create "ダメージ判定ステップ"
                                                              `(fn [~'ctx ~'runtime]
-                                                                {:type :phase :phase "ダメージ判定ステップ"})
+                                                                ;{:type :phase :phase "ダメージ判定ステップ"}
+                                                                )
                                                              `(fn [~'ctx ~'runtime]
+                                                                ; assert phase
                                                                 (update ~'ctx :version inc)))
                                            (condition-create "〔２〕"
                                                              `(fn [~'ctx ~'runtime]
                                                                 {:type :color-count :value 2})
                                                              `(fn [~'ctx ~'runtime]
                                                                 (let [value (game-get-var ~'ctx "〔２〕")])
+                                                                (update ~'ctx :version inc)))
+                                           (condition-create "このセットグループのユニット"
+                                                             `(fn [~'ctx ~'runtime]
+                                                                (let [~'this-card-id (-> ~'runtime get-card-id)
+                                                                      ~'this-setgroup-unit-id (-> (get-setgroup ~'ctx ~'this-card-id) :unit-id)]
+                                                                  {:type :card :value [~'this-setgroup-unit-id]}))
+                                                             `(fn [~'ctx ~'runtime]
                                                                 (update ~'ctx :version inc)))]
                                           `(fn [~'ctx ~'runtime]
                                             ; add fact until end of turn
