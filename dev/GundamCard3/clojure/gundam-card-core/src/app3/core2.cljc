@@ -73,7 +73,7 @@
 
 ; ========== Text =========== 
 #_(defprotocol ITipComponent
-  (is-tip-ok-to-perform [ctx tip]))
+    (is-tip-ok-to-perform [ctx tip]))
 
 (defmulti is-tip-ok-to-perform :env)
 
@@ -91,34 +91,34 @@
   (-> action :conditions))
 (defn action-reduce-conditions [action f ctx]
   (->> action action-get-conditions (reduce f ctx)))
-(defn action-evaluate-conditions-errors [action ctx]
+(defn action-evaluate-conditions-errors [action ctx runtime]
   (let [errors (atom [])
         ctx (->> ctx (action-reduce-conditions action
                                                (fn [ctx con]
                                                  (println "action-evaluate-conditions-errors" ctx)
                                                  (let [tip-script (condition-eval-tip-script con)
                                                        action-script (condition-eval-action-script con)
-                                                       tip (-> ctx tip-script)
+                                                       tip (tip-script ctx runtime)
                                                        _ (when (->> tip (is-tip-ok-to-perform ctx) not)
                                                            (swap! errors conj "error tip"))
-                                                       ctx (try (-> ctx action-script)
+                                                       ctx (try (action-script ctx runtime)
                                                                 (catch ExceptionInfo e
                                                                   (swap! errors conj (ex-message e))
                                                                   ctx))]
                                                    ctx))))
         final-action (condition-eval-action-script action)
-        ctx (try (-> ctx final-action)
+        ctx (try (final-action ctx runtime)
                  (catch ExceptionInfo e
                    (swap! errors conj (ex-message e))
                    ctx))]
     [@errors ctx]))
-(defn action-evaluate-conditions [action ctx]
-  (-> action (action-evaluate-conditions-errors ctx) ((fn [[errors ctx]]
-                                                        (when (-> errors count pos?)
-                                                          (throw (ex-info (str/join "," errors)
-                                                                          {:errors errors}))
-                                                          true)
-                                                        ctx))))
+(defn action-evaluate-conditions [action ctx runtime]
+  (-> action (action-evaluate-conditions-errors ctx runtime) ((fn [[errors ctx]]
+                                                                (when (-> errors count pos?)
+                                                                  (throw (ex-info (str/join "," errors)
+                                                                                  {:errors errors}))
+                                                                  true)
+                                                                ctx))))
 
 (defn text-create [id actions event-script effect-script]
   {:id id, :actions actions, :event-script event-script :effect-script effect-script})
@@ -134,22 +134,27 @@
   (println "is-tip-ok-to-perform")
   true)
 
+
+(defmulti runtime-get-card-id :type)
+(defmulti runtime-get-player-id :type)
+
 (defn test-text []
-  (let [ctx {:env :test}
+  (let [ctx {:env :test, :version 0}
         text (text-create "text-1"
                           [(action-create "action-1"
                                           [(condition-create "cond1"
-                                                             `(fn [~'ctx] ~'ctx)
-                                                             `(fn [~'ctx] 
-                                                                (throw (ex-info "acc" {}))
-                                                                ~'ctx))]
-                                          `(fn [~'ctx] ~'ctx))]
-                          `(fn [~'ctx] ~'ctx)
-                          `(fn [~'ctx] ~'ctx))
+                                                             `(fn [~'ctx ~'runtime] ~'ctx)
+                                                             `(fn [~'ctx ~'runtime]
+                                                                #_(throw (ex-info "acc" {}))
+                                                                (update ~'ctx :version inc)))]
+                                          `(fn [~'ctx ~'runtime]
+                                             (update ~'ctx :version inc)))]
+                          `(fn [~'ctx ~'runtime ~'event] ~'ctx)
+                          `(fn [~'ctx ~'runtime] ~'ctx))
         ;_ (println text)
         action (-> text (text-get-action 0))
         ;_ (println action)
-        ctx (->> ctx (action-evaluate-conditions action))
+        ctx (->> (action-evaluate-conditions action ctx {}))
         _ (println ctx)]))
 
 
