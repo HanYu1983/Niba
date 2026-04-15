@@ -1,6 +1,7 @@
 (ns app3.core2
   (:require
    [clojure.edn :as edn]
+   [clojure.core.match :refer [match]]
    [clara.rules :refer :all]
    [clojure.string :as str])
   (:import
@@ -72,6 +73,9 @@
 (defn stack-system-get-top-effect [stack-system])
 (defn stack-system-get-effect [stack-system id])
 
+; ========== Tip ============
+
+
 ; ========== Text =========== 
 #_(defprotocol ITipComponent
     (is-tip-ok-to-perform [ctx tip]))
@@ -100,7 +104,7 @@
                                                  (let [tip-script (condition-eval-tip-script con)
                                                        action-script (condition-eval-action-script con)
                                                        tip (tip-script ctx runtime)
-                                                       _ (when (->> tip (is-tip-ok-to-perform ctx) not)
+                                                       _ (when (->> (is-tip-ok-to-perform ctx tip) not)
                                                            (swap! errors conj "error tip"))
                                                        ctx (try (action-script ctx runtime)
                                                                 (catch ExceptionInfo e
@@ -131,10 +135,28 @@
   (-> text :actions (nth id)))
 
 
+; =======================================
+(defn tip-assert-timing-create [ctx timing]
+  {:type :assert-timing, :value timing})
 
+(defn tip-search-create [ctx options]
+  {:type :search,
+   :options [{:type :card, :value ""}]
+   :values [{:type :card, :value ""}]
+   :min 1
+   :max 1
+   :repeat false})
+
+; ===================================
 
 (defmethod is-tip-ok-to-perform :test [ctx tip]
   (println "is-tip-ok-to-perform")
+  (match tip
+    {:type :assert-timing, :value (val :guard even?)}
+    []
+
+    :else
+    {})
   true)
 
 
@@ -146,7 +168,7 @@
 
 ; =================== tip ===============
 (defn tip-search-create [ctx {:keys [card-type card-category card-position side]}]
-  {:type :search })
+  {:type :search})
 
 
 (defn test-text []
@@ -169,7 +191,7 @@
         ctx (->> (action-evaluate-conditions action ctx {}))
         _ (println ctx)])
 
-  
+
   (let [text (text-create ""
                           [(action-create "（ダメージ判定ステップ）〔２〕：このセットグループのユニットは、ターン終了時まで、「〔０〕：範囲兵器（３）」、または「範囲兵器」＋１を得る。"
                                           [(condition-create "ダメージ判定ステップ"
