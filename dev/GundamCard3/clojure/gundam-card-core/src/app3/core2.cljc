@@ -84,9 +84,9 @@
 (defmulti runtime-get-player-id :type)
 
 (defmulti game-is-phase :type)
-(defmulti game-set-tip :type)
-(defmulti game-get-tip :type)
-(defmulti game-get-tips :type)
+(defmulti game-set-tip :type) ; [game card-id condition-id tip]
+(defmulti game-get-tip :type) ; [game card-id condition-id]
+(defmulti game-get-tips :type) ; [game card-id]
 (defmulti game-get-card-position :type)
 (defmulti game-get-card-from-card-position :type)
 (defmulti game-tip-create :type)
@@ -108,12 +108,15 @@
   (-> action :conditions))
 (defn action-reduce-conditions [action f ctx]
   (->> action action-get-conditions (reduce f ctx)))
-(defn action-set-conditions-tip [action ctx runtime]
+(defn action-set-condition-tips [action ctx runtime]
   (let [ctx (->> ctx (action-reduce-conditions action
                                                (fn [ctx con]
                                                  (let [tip-script (condition-eval-tip-script con)
                                                        tip (tip-script ctx runtime)
-                                                       ctx (game-set-tip ctx (:id con) tip)]
+                                                       ctx (game-set-tip ctx
+                                                                         (runtime-get-card-id runtime)
+                                                                         (:id con)
+                                                                         tip)]
                                                    ctx))))]
     ctx))
 (defn action-evaluate-conditions-errors [action ctx runtime]
@@ -122,16 +125,17 @@
                                                (fn [ctx con]
                                                  (println "action-evaluate-conditions-errors" ctx)
                                                  (let [action-script (condition-eval-action-script con)
-                                                       tip (game-get-tip ctx (:id con))
+                                                       tip (game-get-tip ctx (runtime-get-card-id runtime) (:id con))
                                                        _ (when (->> (game-tip-is-ok-to-perform ctx tip) not)
                                                            (swap! errors conj "error tip"))
-                                                       ctx (try (action-script ctx runtime)
+                                                       ctx (try (action-script ctx runtime tip)
                                                                 (catch ExceptionInfo e
                                                                   (swap! errors conj (ex-message e))
                                                                   ctx))]
                                                    ctx))))
+        tips (game-get-tips ctx (runtime-get-card-id runtime))
         final-action (condition-eval-action-script action)
-        ctx (try (final-action ctx runtime)
+        ctx (try (final-action ctx runtime tips)
                  (catch ExceptionInfo e
                    (swap! errors conj (ex-message e))
                    ctx))]
@@ -166,11 +170,11 @@
         text (text-create "text-1"
                           [(action-create "action-1"
                                           [(condition-create "cond1"
-                                                             `(fn [~'ctx ~'runtime] ~'ctx)
-                                                             `(fn [~'ctx ~'runtime]
+                                                             `(fn [~'ctx ~'runtime ~'tip] ~'ctx)
+                                                             `(fn [~'ctx ~'runtime ~'tip]
                                                                 #_(throw (ex-info "acc" {}))
                                                                 (update ~'ctx :version inc)))]
-                                          `(fn [~'ctx ~'runtime]
+                                          `(fn [~'ctx ~'runtime ~'tips]
                                              (update ~'ctx :version inc)))]
                           `(fn [~'ctx ~'runtime ~'event] ~'ctx)
                           `(fn [~'ctx ~'runtime] ~'ctx))
@@ -180,12 +184,13 @@
         action (-> text (text-get-action 0))
         ;_ (println action)
         ; 記下那個action的預設選擇, 然後給玩家選擇
-        ctx (action-set-conditions-tip action ctx {})
-        ; 取得現有的選擇
-        tips (game-get-tips ctx)
-        ; 是否滿足
+        ctx (action-set-condition-tips action ctx {})
+        ; 取得某張卡的選擇
+        tips (game-get-tips ctx "card-id")
+        ; 檢查預設選擇是否滿足條件
         _ (doseq [tip tips]
             (-> (game-tip-is-ok-to-perform ctx tip) not (when (throw (ex-info "" {})))))
+        ; 若滿足後就放入可PLAY指令列表, 玩家可以做的就只是修改選擇
         ; 執行
         ctx (->> (action-evaluate-conditions action ctx {}))
         _ (println ctx)])
