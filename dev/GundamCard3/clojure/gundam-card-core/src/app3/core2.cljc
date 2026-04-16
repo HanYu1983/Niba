@@ -77,10 +77,22 @@
 
 
 ; ========== Text =========== 
-#_(defprotocol ITipComponent
-    (is-tip-ok-to-perform [ctx tip]))
 
-(defmulti is-tip-ok-to-perform :env)
+
+
+(defmulti runtime-get-card-id :type)
+(defmulti runtime-get-player-id :type)
+
+(defmulti game-is-phase :type)
+(defmulti game-set-tip :type)
+(defmulti game-get-tip :type)
+(defmulti game-get-tips :type)
+(defmulti game-get-card-position :type)
+(defmulti game-get-card-from-card-position :type)
+(defmulti game-tip-create :type)
+(defmulti game-tip-is-ok-to-perform :env)
+
+; ===============================
 
 
 (defn condition-create [id tip-script action-script]
@@ -96,15 +108,22 @@
   (-> action :conditions))
 (defn action-reduce-conditions [action f ctx]
   (->> action action-get-conditions (reduce f ctx)))
+(defn action-set-conditions-tip [action ctx runtime]
+  (let [ctx (->> ctx (action-reduce-conditions action
+                                               (fn [ctx con]
+                                                 (let [tip-script (condition-eval-tip-script con)
+                                                       tip (tip-script ctx runtime)
+                                                       ctx (game-set-tip ctx (:id con) tip)]
+                                                   ctx))))]
+    ctx))
 (defn action-evaluate-conditions-errors [action ctx runtime]
   (let [errors (atom [])
         ctx (->> ctx (action-reduce-conditions action
                                                (fn [ctx con]
                                                  (println "action-evaluate-conditions-errors" ctx)
-                                                 (let [tip-script (condition-eval-tip-script con)
-                                                       action-script (condition-eval-action-script con)
-                                                       tip (tip-script ctx runtime)
-                                                       _ (when (->> (is-tip-ok-to-perform ctx tip) not)
+                                                 (let [action-script (condition-eval-action-script con)
+                                                       tip (game-get-tip ctx (:id con))
+                                                       _ (when (->> (game-tip-is-ok-to-perform ctx tip) not)
                                                            (swap! errors conj "error tip"))
                                                        ctx (try (action-script ctx runtime)
                                                                 (catch ExceptionInfo e
@@ -134,37 +153,8 @@
 (defn text-get-action [text id]
   (-> text :actions (nth id)))
 
-
-; =======================================
-(defn tip-assert-timing-create [ctx timing]
-  {:type :assert-timing, :value timing})
-
-(defn tip-search-create [ctx options]
-  {:type :search,
-   :options [{:type :card, :value ""}]
-   :values [{:type :card, :value ""}]
-   :min 1
-   :max 1
-   :repeat false})
-
 ; ===================================
 
-(defmethod is-tip-ok-to-perform :test [ctx tip]
-  (println "is-tip-ok-to-perform")
-  (match tip
-    {:type :assert-timing, :value (val :guard even?)}
-    []
-
-    :else
-    {})
-  true)
-
-
-(defmulti runtime-get-card-id :type)
-(defmulti runtime-get-player-id :type)
-
-(defmulti game-is-phase :type)
-(defmulti game-get-var :type)
 
 ; =================== tip ===============
 (defn tip-search-create [ctx {:keys [card-type card-category card-position side]}]
@@ -186,8 +176,17 @@
                           `(fn [~'ctx ~'runtime] ~'ctx))
 
         ;_ (println text)
+        ; 先確認玩家使用哪一個action
         action (-> text (text-get-action 0))
         ;_ (println action)
+        ; 記下那個action的預設選擇, 然後給玩家選擇
+        ctx (action-set-conditions-tip action ctx {})
+        ; 取得現有的選擇
+        tips (game-get-tips ctx)
+        ; 是否滿足
+        _ (doseq [tip tips]
+            (-> (game-tip-is-ok-to-perform ctx tip) not (when (throw (ex-info "" {})))))
+        ; 執行
         ctx (->> (action-evaluate-conditions action ctx {}))
         _ (println ctx)])
 
