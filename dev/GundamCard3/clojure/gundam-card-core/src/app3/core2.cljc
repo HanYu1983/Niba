@@ -83,16 +83,32 @@
 (defmulti runtime-get-card-id :type)
 (defmulti runtime-get-player-id :type)
 
-(defmulti game-is-phase :type)
-(defmulti game-set-tip :type) ; [game card-id condition-id tip]
-(defmulti game-get-tip :type) ; [game card-id condition-id]
-(defmulti game-get-tips :type) ; [game card-id]
-(defmulti game-get-card-position :type)
-(defmulti game-get-card-from-card-position :type)
-(defmulti game-tip-create :type)
-(defmulti game-tip-is-ok-to-perform :env)
+(defmulti game-is-phase :env)
+(defmulti game-set-tip (fn [game card-id condition-id tip] (:env game)))
+(defmulti game-get-tip (fn [game card-id condition-id] (:env game))) ; 
+(defmulti game-get-tips (fn [game card-id] (:env game))) ;
+(defmulti game-get-card-position :env)
+(defmulti game-get-card-from-card-position :env)
+(defmulti game-tip-create :env)
+(defmulti game-tip-is-ok-to-perform (fn [game tip] (:env game)))
 
 ; ===============================
+
+(defmethod runtime-get-card-id :default [runtime]
+  "runtime-card-id")
+
+(defmethod game-set-tip :default [game card-id condition-id tip]
+  (println "game-set-tip " card-id condition-id tip)
+  (update-in game [:tips card-id condition-id] (constantly tip)))
+
+(defmethod game-get-tip :default [game card-id condition-id]
+  (get-in game [:tips card-id condition-id]))
+
+(defmethod game-get-tips :default [game card-id]
+  (get-in game [:tips card-id]))
+
+(defmethod game-tip-is-ok-to-perform :default [game tip]
+  true)
 
 
 (defn condition-create [id tip-script action-script]
@@ -170,11 +186,21 @@
         text (text-create "text-1"
                           [(action-create "action-1"
                                           [(condition-create "cond1"
-                                                             `(fn [~'ctx ~'runtime ~'tip] ~'ctx)
+                                                             `(fn [~'ctx ~'runtime]
+                                                                :tip-1)
                                                              `(fn [~'ctx ~'runtime ~'tip]
+                                                                (println "condition action " ~'tip)
+                                                                #_(throw (ex-info "acc" {}))
+                                                                (update ~'ctx :version inc)))
+                                           (condition-create "cond2"
+                                                             `(fn [~'ctx ~'runtime]
+                                                                :tip-2)
+                                                             `(fn [~'ctx ~'runtime ~'tip]
+                                                                (println "condition action " ~'tip)
                                                                 #_(throw (ex-info "acc" {}))
                                                                 (update ~'ctx :version inc)))]
                                           `(fn [~'ctx ~'runtime ~'tips]
+                                             (println "action action" ~'tips)
                                              (update ~'ctx :version inc)))]
                           `(fn [~'ctx ~'runtime ~'event] ~'ctx)
                           `(fn [~'ctx ~'runtime] ~'ctx))
@@ -196,7 +222,7 @@
         _ (println ctx)])
 
 
-  (let [text (text-create ""
+  #_(let [text (text-create ""
                           [(action-create "（ダメージ判定ステップ）〔２〕：このセットグループのユニットは、ターン終了時まで、「〔０〕：範囲兵器（３）」、または「範囲兵器」＋１を得る。"
                                           [(condition-create "ダメージ判定ステップ"
                                                              `(fn [~'ctx ~'runtime]
