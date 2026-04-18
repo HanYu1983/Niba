@@ -76,7 +76,7 @@
 ; ========== Tip ============
 
 
-; ========== Text =========== 
+
 
 
 
@@ -110,6 +110,7 @@
 (defmethod game-tip-is-ok-to-perform :default [game tip]
   true)
 
+; ========== Text =========== 
 
 (defn condition-create [id tip-script action-script]
   {:id id :tip-script tip-script :action-script action-script})
@@ -172,6 +173,17 @@
   (-> text :event-script eval))
 (defn text-get-action [text id]
   (-> text :actions (nth id)))
+
+; ========== Effect
+
+(defmulti effect-reason-get-owner-id :type)
+
+(defn effect-create [id reason text]
+  {:id id :reason reason :text text})
+
+(defn effect-get-owner-id [effect]
+  (-> effect :reason effect-reason-get-owner-id))
+
 
 ; ===================================
 

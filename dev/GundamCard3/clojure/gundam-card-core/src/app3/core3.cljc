@@ -36,7 +36,14 @@
                        (fn [cmds]
                          (if cmds cmds (f ctx player-id))))
         cmds (-> nil
+                 ; 處理正在執行的效果
                  ((early-return query-handle-active-effect-command))
+                 ; 處理立即效果
+                 ; 堆疊效果存在並且雙方皆讓過, 處理堆疊效果
+                 ; 若玩家可以PLAY效果, 處理切入與讓過
+                 ; 依各回合的規定效果
+                 ; 若是自由時間
+                 ; 若玩家可以PLAY效果, 主動玩家發效果
                  ((early-return query-abc-command)))]
     cmds))
 
