@@ -1,7 +1,7 @@
 services:
   clojure:
     image: clojure:temurin-21-tools-deps-bookworm
-    working_dir: /work/gundam-card-core
+    working_dir: /work/game
     volumes:
       - ../clojure:/work
       # 持久化 Maven／tools.deps 快取，避免每次 run 都重新抓 jar（首次仍會下載）。
