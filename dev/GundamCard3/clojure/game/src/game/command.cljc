@@ -1,4 +1,4 @@
-(ns app3.core3
+(ns game.command
   (:require
    [clojure.edn :as edn]
    [clojure.core.match :refer [match]]
