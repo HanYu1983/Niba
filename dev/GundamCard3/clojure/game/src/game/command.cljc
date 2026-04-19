@@ -15,13 +15,13 @@
 (defmulti game-get-player-can-play-texts (fn [game player-id] (:env game)))
 
 (defn command-create [id player-id options]
-  {:id id, :player-id player-id})
+  {:id id, :player-id player-id, :options options})
 
 (defn query-handle-active-effect-commands [ctx player-id]
   (let [eff (game-get-active-effect ctx)
         effect-owner-id (effect-get-owner-id eff)]
     (when eff
-      (if (-> effect-owner-id player-id)
+      (if (= effect-owner-id player-id)
         [(command-create :handle-active-effect effect-owner-id {})]
         [(command-create :wait-handle-active-effect (player-get-opponent-id effect-owner-id) {})]))))
 
@@ -40,7 +40,9 @@
           [(command-create :set-active-effect player-id {:options my-effs})])))))
 
 
-(defn query-cut-in-commands [ctx player-id]
+(defn query-cut-in-commands
+  "處理讓過與切入, 執行切入時會自動讓過並將對方的讓過重設, 對方就有機會再切入, 對方切入時也相同, 雙方都主動讓過時結算"
+  [ctx player-id]
   (let [effs (game-get-stack-effects ctx)
         me-pass-cut (game-get-player-pass-cut ctx player-id)
         oppo-pass-cut (game-get-player-pass-cut ctx (player-get-opponent-id player-id))
@@ -49,34 +51,41 @@
         oppo-can-play-texts (game-get-player-can-play-texts ctx (player-get-opponent-id player-id))]
     (cond
             ; 若雙方都讓過並堆疊內有效果
-      (and me-pass-cut oppo-pass-cut effs)
+      (and me-pass-cut oppo-pass-cut (-> effs count pos?))
       (if is-active-player
               ; 進攻玩家設定效果
         [(command-create :set-active-effect player-id {:options (first effs)})]
               ; 防守防家等待
-        [(command-create :wait player-id {})])
+        [(command-create :wait player-id "wait abc")])
 
             ; 若我讓過並對手有招
-      (and me-pass-cut oppo-can-play-texts)
+      (and me-pass-cut (-> oppo-can-play-texts count pos?))
             ; 對待對手切入或讓過
       [(command-create :wait-player player-id {})]
 
             ; 若對手讓過並且我有招
-      (and oppo-pass-cut my-can-play-texts)
+      (and oppo-pass-cut (-> my-can-play-texts count pos?))
             ; 選招切入
       [(command-create :set-cut-in player-id {:options my-can-play-texts})
              ; 或讓過
        (command-create :set-pass-cut player-id {})]
 
             ; 若我有招
-      my-can-play-texts
+      (-> my-can-play-texts count pos?)
       (if is-active-player
               ; 選招切入
         [(command-create :set-cut-in player-id {:options my-can-play-texts})
                ; 或讓過
          (command-create :set-pass-cut player-id {})]
               ; 對手只能等主動玩家先發招
-        [(command-create :wait-player player-id {})]))))
+        [(command-create :wait-player player-id {})])
+
+      ; 若我無招, 只能讓過
+      :else
+      (if is-active-player
+        [(command-create :set-pass-cut player-id {})]
+        ; 對手等我讓過
+        [(command-create :wait-player-pass-cut player-id {})]))))
 
 (defn query-rule-effect-commands [ctx player-id])
 
@@ -104,3 +113,10 @@
 
 (defn apply-commands [ctx player-id command]
   ctx)
+
+(defn test-query-command [ctx]
+  (let [player-a-cmds (query-command ctx player-a)
+        player-b-cmds (query-command ctx player-b)
+        _ (println player-a-cmds)
+        _ (println player-b-cmds)]
+    ctx))
