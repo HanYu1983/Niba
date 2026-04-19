@@ -19,29 +19,33 @@
 
 (defn card-stack-remove-card-ids [card-stack card-ids]
   (update card-stack :card-ids (partial filter (fn [card-id]
-                                                 (some #(% not= card-id) card-ids)))))
+                                                 (every? #(not= % card-id) card-ids)))))
 
 (defn card-stack-add-card-ids [card-stack options card-ids]
-  (update card-stack :card-ids (partial concat card-ids)))
+  (update card-stack :card-ids #(concat % card-ids)))
 
 (defn card-table-create [card-map card-stack-map]
   {:card-map card-map :card-stack-map card-stack-map})
 
-(defn card-table-add-card [table id card]
-  (-> table (update :card-map (partial cons [id card]))))
-
-(defn card-table-get-card [table id]
-  (-> table :card-map (get id)))
-
-(defn card-table-map-card [table id f]
-  (-> table (update-in [:card-map id] f)))
-
-(defn card-table-move-card [table from to options ids]
+(defn card-table-add-card [table card-stack-id card-id card]
+  (-> table :card-stack-map (get card-stack-id) not 
+      (when (throw (ex-info (str "card-stack not found" card-stack-id) {}))))
   (-> table
-      (update-in [:card-stack-map from] ((fn [card-stack]
-                                           (card-stack-remove-card-ids card-stack ids))))
-      (update-in [:card-stack-map to] ((fn [card-stack]
-                                         (card-stack-add-card-ids card-stack options ids))))))
+      (update :card-map #(assoc % card-id card))
+      (update-in [:card-stack-map card-stack-id] #(card-stack-add-card-ids % {} [card-id]))))
+
+(defn card-table-get-card [table card-id]
+  (-> table :card-map (get card-id)))
+
+(defn card-table-map-card [table card-id f]
+  (-> table (update-in [:card-map card-id] f)))
+
+(defn card-table-move-cards [table from to options card-ids]
+  (-> table
+      (update-in [:card-stack-map from] (fn [card-stack]
+                                          (card-stack-remove-card-ids card-stack card-ids)))
+      (update-in [:card-stack-map to] (fn [card-stack]
+                                        (card-stack-add-card-ids card-stack options card-ids)))))
 
 (defn card-table-map-card-stack-map [table f]
   (-> table (update :card-stack-map (fn [card-stack-map]
@@ -49,11 +53,39 @@
                                            (map (fn [[card-stack-id card-stack]]
                                                   [card-stack-id (f card-stack)]))
                                            (into {}))))))
-(defn card-table-remove-card [table id]
+(defn card-table-remove-card [table card-id]
   (-> table
-      (update :card-map dissoc id)
+      (update :card-map dissoc card-id)
       (card-table-map-card-stack-map (fn [card-stack]
-                                       (card-stack-remove-card-ids card-stack [id])))))
+                                       (card-stack-remove-card-ids card-stack [card-id])))))
+
+
+(defn test-table []
+  (let [table (card-table-create {:a :card-a, :b :card-b}
+                                 (->> [(card-stack-create :cs-a [:a, :b]),
+                                       (card-stack-create :cs-b [])]
+                                      (map (juxt :id identity))
+                                      (into {})))
+        ;_ (println table)
+        table (card-table-add-card table :cs-a :c :card-c)
+        ; _ (println table)
+        _ (-> table :card-map vals (not= '(:card-a, :card-b, :card-c))
+              (when (throw (ex-info "" {}))))
+        _ (-> table :card-stack-map :cs-a :card-ids (not= '(:a :b :c))
+              (when (throw (ex-info "" {}))))
+        table (card-table-remove-card table :b)
+        _ (-> table :card-map vals (not= '(:card-a, :card-c))
+              (when (throw (ex-info "" {}))))
+        _ (-> table :card-stack-map :cs-a :card-ids (not= '(:a :c))
+              (when (throw (ex-info "" {}))))
+        table (card-table-move-cards table :cs-a :cs-b {} [:a :c])
+        _ (println table)
+        _ (-> table :card-stack-map :cs-a :card-ids (not= '())
+              (when (throw (ex-info "" {}))))
+        _ (-> table :card-stack-map :cs-b :card-ids (not= '(:a :c))
+              (when (throw (ex-info "" {}))))
+        _ (-> table (card-table-get-card :a) (not= :card-a)
+              (when (throw (ex-info "" {}))))]))
 
 ; ============= CoinTable ==============
 (defn coin-table-create [coin-map coin-assoc-map]
