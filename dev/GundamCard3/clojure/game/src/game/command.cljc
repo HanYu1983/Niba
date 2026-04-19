@@ -18,12 +18,12 @@
   {:id id, :player-id player-id, :options options})
 
 (defn query-handle-active-effect-commands [ctx player-id]
-  (let [eff (game-get-active-effect ctx)
-        effect-owner-id (effect-get-owner-id eff)]
+  (let [eff (game-get-active-effect ctx)]
     (when eff
-      (if (= effect-owner-id player-id)
-        [(command-create :handle-active-effect effect-owner-id {})]
-        [(command-create :wait-handle-active-effect (player-get-opponent-id effect-owner-id) {})]))))
+      (let [effect-owner-id (effect-get-owner-id eff)]
+        (if (= effect-owner-id player-id)
+          [(command-create :handle-active-effect effect-owner-id {})]
+          [(command-create :wait-handle-active-effect (player-get-opponent-id effect-owner-id) {})])))))
 
 (defn query-immediate-effects-commands [ctx player-id]
   (let [[my-effs oppo-effs] ((juxt player-id (player-get-opponent-id player-id))
@@ -114,9 +114,24 @@
 (defn apply-commands [ctx player-id command]
   ctx)
 
-(defn test-query-command [ctx]
-  (let [player-a-cmds (query-command ctx player-a)
-        player-b-cmds (query-command ctx player-b)
+; ================== test =======================
+(defmethod game-get-active-effect :game.command [game]
+  (effect-create "eff-id" {:env :game.command, :player-id player-a} :text)
+  nil)
+(defmethod game-get-active-player-id :game.command [game] player-a)
+(defmethod game-get-immediate-effects :game.command [game] [])
+(defmethod game-get-stack-effects :game.command [game] [])
+(defmethod game-get-player-pass-cut :game.command [game player-id] false)
+(defmethod game-get-player-can-play-texts :game.command [game player-id] [])
+
+(defmethod effect-reason-get-owner-id :game.command [reason]
+  (println "effect-reason-get-owner-id" reason)
+  (:player-id reason))
+
+(defn test-query-command []
+  (let [game {:env :game.command}
+        player-a-cmds (query-command game player-a)
+        player-b-cmds (query-command game player-b)
         _ (println player-a-cmds)
         _ (println player-b-cmds)]
-    ctx))
+    game))

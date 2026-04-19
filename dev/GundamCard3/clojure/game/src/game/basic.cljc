@@ -80,8 +80,8 @@
 
 
 
-(defmulti runtime-get-card-id :type)
-(defmulti runtime-get-player-id :type)
+(defmulti runtime-get-card-id :env)
+(defmulti runtime-get-player-id :env)
 
 (defmulti game-is-phase :env)
 (defmulti game-set-tip (fn [game card-id condition-id tip] (:env game)))
@@ -158,7 +158,7 @@
 
 ; ========== Effect
 
-(defmulti effect-reason-get-owner-id :type)
+(defmulti effect-reason-get-owner-id :env)
 
 (defn effect-create [id reason text]
   {:id id :reason reason :text text})
@@ -172,11 +172,37 @@
 
 ; =================== tip ===============
 (defn tip-search-create [ctx {:keys [card-type card-category card-position side]}]
-  {:type :search})
+  {:env :search})
 
+; ==============================
+
+(def player-a :A)
+(def player-b :B)
+(def player-ids [player-a player-b])
+(defn player-get-opponent-id [player-id]
+  (if (= player-id player-a) player-b player-a))
+
+; =========================
+
+(defmethod runtime-get-card-id :game.basic [runtime]
+  "runtime-card-id")
+
+(defmethod game-set-tip :game.basic [game card-id condition-id tip]
+  (println "game-set-tip " card-id condition-id tip)
+  (update-in game [:tips card-id condition-id] (constantly tip)))
+
+(defmethod game-get-tip :game.basic [game card-id condition-id]
+  (get-in game [:tips card-id condition-id]))
+
+(defmethod game-get-tips :game.basic [game card-id]
+  (get-in game [:tips card-id]))
+
+(defmethod game-tip-is-ok-to-perform :game.basic [game tip]
+  true)
 
 (defn test-text []
-  (let [ctx {:env :test, :version 0}
+  (let [ctx {:env :game.basic, :version 0}
+        runtime {:env :game.basic}
         text (text-create "text-1"
                           [(action-create "action-1"
                                           [(condition-create "cond1"
@@ -204,7 +230,7 @@
         action (-> text (text-get-action 0))
         ;_ (println action)
         ; 記下那個action的預設選擇, 然後給玩家選擇
-        ctx (action-set-condition-tips action ctx {})
+        ctx (action-set-condition-tips action ctx runtime)
         ; 取得某張卡的選擇
         tips (game-get-tips ctx "card-id")
         ; 檢查預設選擇是否滿足條件
@@ -212,15 +238,5 @@
             (-> (game-tip-is-ok-to-perform ctx tip) not (when (throw (ex-info "" {})))))
         ; 若滿足後就放入可PLAY指令列表, 玩家可以做的就只是修改選擇
         ; 執行
-        ctx (->> (action-evaluate-conditions action ctx {}))
+        ctx (->> (action-evaluate-conditions action ctx runtime))
         _ (println ctx)]))
-
-; ==============================
-
-
-(def player-a :A)
-(def player-b :B)
-(def player-ids [player-a player-b])
-(defn player-get-opponent-id [player-id]
-  (if (= player-id player-a) player-b player-a))
-
