@@ -90,9 +90,17 @@
 ; ============= CoinTable ==============
 (defn coin-table-create [coin-map coin-assoc-map]
   {:coin-map coin-map :coin-assoc-map coin-assoc-map})
-(defn coin-table-add-coin [table id coin])
-(defn coin-table-get-coin [table id])
-(defn coin-table-get-coins [table assoc-id])
+(defn coin-table-add-coin [table assoc-id id coin]
+  (-> table
+      (update :coin-map #(assoc % id coin))
+      (update :coin-assoc-map #(assoc % id assoc-id))))
+(defn coin-table-get-coin [table id]
+  (get-in table [:coin-map id]))
+(defn coin-table-get-assoc-coins [table coin-assoc-id]
+  (->> table :coin-assoc-map
+       (filter (fn [[coin-id assoc-id]] (= assoc-id coin-assoc-id)))
+       (map first)
+       (map #(coin-table-get-coin table %))))
 
 ; =========== stack system ==============
 
