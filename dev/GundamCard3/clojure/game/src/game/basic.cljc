@@ -104,21 +104,39 @@
 
 ; =========== stack system ==============
 
-(defn stack-system-create [effect-map effect-stack immediate-effects destory-effects])
-(defn stack-system-cut-in [stack-system id effect])
-(defn stack-system-append-immediate-effect [stack-system id effect])
-(defn stack-system-append-destory-effect [stack-system id effect])
-(defn stack-system-remove-effect [stack-system id])
-(defn stack-system-map-effect [stack-system id f])
-(defn stack-system-get-top-effect [stack-system])
-(defn stack-system-get-effect [stack-system id])
+(defn stack-system-create [effect-map stack-effects immediate-effects destroy-effects] 
+  {:effect-map effect-map, :stack-effects stack-effects, :immediate-effects immediate-effects, :destroy-effects destroy-effects})
+(defn stack-system-cut-in [stack-system id effect]
+  (-> stack-system
+      (update :effect-map #(assoc % id effect))
+      (update :stack-effects #(cons id %))))
+(defn stack-system-append-immediate-effect [stack-system id effect]
+  (-> stack-system
+      (update :effect-map #(assoc % id effect))
+      ; 使用vec才能在conj(後方推入)中保持順序性
+      (update :immediate-effects #(conj (vec %) id))))
+(defn stack-system-append-destroy-effect [stack-system id effect]
+  (-> stack-system
+      (update :effect-map #(assoc % id effect))
+      ; 使用vec才能在conj(後方推入)中保持順序性
+      (update :destroy-effects #(conj (vec %) id))))
+(defn stack-system-remove-effect [stack-system id]
+  (-> stack-system
+      (update :effect-map #(dissoc % id))
+      (update :stack-effects (partial remove (fn [card-id]
+                                               (= id card-id))))
+      (update :immediate-effects (partial remove (fn [card-id]
+                                                   (= id card-id))))
+      (update :destroy-effects (partial remove (fn [card-id]
+                                                 (= id card-id))))))
+(defn stack-system-map-effect [stack-system id f]
+  (update-in stack-system [:effect-map id] f))
+(defn stack-system-get-top-effect [stack-system]
+  (-> stack-system :stack-effects first ((:effect-map stack-system))))
+(defn stack-system-get-effect [stack-system id]
+  (-> stack-system :effect-map (get id)))
 
 ; ========== Tip ============
-
-
-
-
-
 
 (defmulti runtime-get-card-id :env)
 (defmulti runtime-get-player-id :env)
