@@ -1,6 +1,7 @@
 (ns game.core
   (:require [game.basic :refer :all]
-            [game.command :refer :all]))
+            [game.command :refer :all]
+            [game.data :refer :all]))
 
 (defn -main [args]
   (test-text)
@@ -8,4 +9,5 @@
   (test-table)
   (test-timing)
   (test-gsign)
-  (test-battle-point))
+  (test-battle-point)
+  (test-get-card-data))

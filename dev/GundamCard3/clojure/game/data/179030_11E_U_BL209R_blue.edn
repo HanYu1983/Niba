@@ -1,0 +1,49 @@
+;; 179030_11E_U_BL209R_blue
+;; R
+;; CCA
+;; νガンダム［†］
+;; νガンダム系　MS　専用「アムロ・レイ」
+;; 戦闘配備　〔１〕：サイコミュ（３）　〔１〕：改装［νガンダム系］
+;; 『恒常』：本来の記述に「特徴：装弾」を持つ自軍Gがある場合、このカードは、合計国力ー１してプレイできる。
+;; 『常駐』：青のGサインを持つ自軍Gが５枚以上ある場合、このカードと同じエリアにいる全ての自軍ユニットは、敵軍効果では破壊されずダメージを受けない。
+{:id "179030_11E_U_BL209R_blue"
+ :gsign [:blue :uc]
+ :type :unit
+ :texts {"『恒常』：本来の記述に「特徴：装弾」を持つ自軍Gがある場合、このカードは、合計国力ー１してプレイできる。"
+         {:type [:automatic :constant]
+          :game-effects [`(fn [~'ctx ~'runtime]
+                            (let [~'card-id (game.data.dynamic/get-runtime-card-id ~'ctx ~'runtime)
+                                  ~'power 30
+                                  ~'text `(fn [~~''ctx ~~''runtime]
+                                            (println "power" ~~'power)
+                                            ~~''ctx)]
+                              ["add text" [~'card-id] {:type :system
+                                                       :logics {"default" {:action ~'text}}}]))
+                         '(fn [ctx runtime]
+                            (let [card-id (game.data.dynamic/get-runtime-card-id ctx runtime)
+                                  player-id (game.data.dynamic/get-runtime-player-id ctx runtime)
+                                  enabled (-> ctx
+                                              (game.data.dynamic/get-my-g player-id)
+                                              ((fn [g-card-ids]
+                                                 (mapcat (fn [g-card-id]
+                                                           (game.data.dynamic/get-card-chars ctx g-card-id))
+                                                         g-card-ids)))
+                                              #_(contains? "装弾"))]
+                              (when true
+                                ["合計国力+Nしてプレイできる" [card-id] -1 {:from-card-id card-id}])))]}
+         "『常駐』：青のGサインを持つ自軍Gが５枚以上ある場合、このカードと同じエリアにいる全ての自軍ユニットは、敵軍効果では破壊されずダメージを受けない。"
+         {:type [:automatic :residents]
+          :game-effects ['(fn [ctx runtime]
+                            (let [card-id (-> runtime game.define.runtime/get-card-id)
+                                  player-id (-> runtime game.define.runtime/get-player-id)
+                                  is-every-blue-g (-> ctx
+                                                      (game.data.dynamic/get-my-g player-id)
+                                                      ((fn [g-card-ids]
+                                                         (map (fn [card-id] (game.data.dynamic/get-card-color ctx card-id)) g-card-ids)))
+                                                      ((fn [colors]
+                                                         (every? game.data.dynamic/is-card-color-blue colors))))
+                                  is-my-g-more-then-5 (-> ctx (game.data.dynamic/get-my-g player-id) count (> 5))
+                                  enabled (and is-every-blue-g is-my-g-more-then-5)
+                                  unit-in-the-same-area ["0" "1" "2"]]
+                              (when true
+                                ["敵軍効果では破壊されずダメージを受けない" unit-in-the-same-area {:from-card-id card-id}])))]}}}

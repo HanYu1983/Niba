@@ -1,0 +1,29 @@
+;;  179001_01A_CH_WT007R_white
+;;  キラ・ヤマト
+;;  男性　子供　CO
+;;  （戦闘フェイズ）〔２〕：このセットグループのユニットは、ターン終了時まで「速攻」を得る。
+{:id "179030_11E_U_BL209R_blue"
+ :title "キラ・ヤマト",
+ :characteristic ["男性" "子供" "CO"],
+ :category "キャラクター",
+ :color "白",
+ :rollCost ["白" nil nil nil],
+ :battlePoint [2 2 2],
+ :texts {"（戦闘フェイズ）〔２〕：このセットグループのユニットは、ターン終了時まで「速攻」を得る。"
+         {:type (game.data.dynamic/gen-use-time "戦闘フェイズ")
+          :conditions (->> ["〔2〕" "このセットグループのユニットは"]
+                           (map (juxt identity game.data.dynamic/gen-condition))
+                           (into {}))
+          :logics {:action '(fn [ctx runtime
+                                 (let [card-id (game.data.dynamic/get-runtime-card-id ctx runtime)
+                                       unit (game.data.dynamic/get-setgroup-root ctx card-id)
+                                       ctx (game.data.dynamic/cut-in ctx {:reason ""
+                                                                          :text {}})])])}
+          :game-effects ['(fn [ctx runtime]
+                            (let [card-id (game.data.dynamic/get-runtime-card-id ctx runtime)
+                                  card-state (game.data.dynamic/get-card-state ctx runtime card-id)
+                                  is-on (-> card-state :flags :xxx)]
+                              (when is-on
+                                ["「速攻」を得る"])))]}}}
+
+

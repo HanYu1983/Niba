@@ -390,12 +390,12 @@
     (when (not (can-pay-roll-cost color pay-colors))
       (throw (ex-info (str color " can not use " pay-colors " to pay") {}))))
   (doseq [[color pay-colors] [[:purple [:blue]]
-                            [:purple [:blue :purple]]
-                            [:blue [:white]]
-                            [:white [:black]]
-                            [:black [:red]]
-                            [:red [:black]]
-                            [:red [:red :red]]]]
+                              [:purple [:blue :purple]]
+                              [:blue [:white]]
+                              [:white [:black]]
+                              [:black [:red]]
+                              [:red [:black]]
+                              [:red [:red :red]]]]
     (when (can-pay-roll-cost color pay-colors)
       (throw (ex-info (str color " must can not use " pay-colors " to pay") {})))))
 
@@ -415,3 +415,8 @@
 (defn test-battle-point []
   (-> (add [1 1 1] [1 1 1] [1 1 1]) (= [3 3 3]) (or (throw (ex-info "must [3 3 3]" {}))))
   (-> (add [1 1 1] [2 "*" 1] ["*" 1 -1]) (= ["*" "*" 1]) (or (throw (ex-info "must [* * 1]" {})))))
+
+; ================
+(def card-proto {:gsign [:blue :uc]
+                 :type :unit
+                 :texts []})
