@@ -12,8 +12,9 @@
 (def get-card-data-memo (memoize get-card-data))
 
 ; =========================
-(defmethod runtime-get-card-id :game.data [runtime]
+(defmethod effect-get-card-id :game.data [eff]
   "runtime-card-id")
+
 (defmethod game-set-tip :game.data [game card-id condition-id tip]
   (println "game-set-tip " card-id condition-id tip)
   (update-in game [:tips card-id condition-id] (constantly tip)))

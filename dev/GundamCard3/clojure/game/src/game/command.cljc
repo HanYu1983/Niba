@@ -157,9 +157,8 @@
 (defmethod game-get-player-pass-cut :game.command [game player-id] false)
 (defmethod game-get-player-can-play-texts :game.command [game player-id] [])
 
-(defmethod effect-reason-get-owner-id :game.command [reason]
-  (println "effect-reason-get-owner-id" reason)
-  (:player-id reason))
+(defmethod effect-get-owner-id :game.command [eff]
+  (-> eff :reason :player-id))
 
 (defmethod game-get-phase :game.command [game]
   [:battle :attack :start])

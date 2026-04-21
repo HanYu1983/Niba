@@ -138,9 +138,6 @@
 
 ; ========== Tip ============
 
-(defmulti runtime-get-card-id :env)
-(defmulti runtime-get-player-id :env)
-
 (defmulti game-is-phase :env)
 (defmulti game-set-tip (fn [game card-id condition-id tip] (:env game)))
 (defmulti game-get-tip (fn [game card-id condition-id] (:env game))) ; 
@@ -151,6 +148,9 @@
 (defmulti game-tip-is-ok-to-perform (fn [game tip] (:env game)))
 
 ; ========== Text =========== 
+
+(defmulti effect-get-owner-id :env)
+(defmulti effect-get-card-id :env)
 
 (defn condition-create [id tip-script action-script]
   {:id id :tip-script tip-script :action-script action-script})
@@ -165,45 +165,45 @@
   (-> action :conditions))
 (defn action-reduce-conditions [action f ctx]
   (->> action action-get-conditions (reduce f ctx)))
-(defn action-set-condition-tips [action ctx runtime]
+(defn action-set-condition-tips [action ctx effect]
   (let [ctx (->> ctx (action-reduce-conditions action
                                                (fn [ctx con]
                                                  (let [tip-script (condition-eval-tip-script con)
-                                                       tip (tip-script ctx runtime)
+                                                       tip (tip-script ctx effect)
                                                        ctx (game-set-tip ctx
-                                                                         (runtime-get-card-id runtime)
+                                                                         (effect-get-card-id effect)
                                                                          (:id con)
                                                                          tip)]
                                                    ctx))))]
     ctx))
-(defn action-evaluate-conditions-errors [action ctx runtime]
+(defn action-evaluate-conditions-errors [action ctx effect]
   (let [errors (atom [])
         ctx (->> ctx (action-reduce-conditions action
                                                (fn [ctx con]
                                                  (println "action-evaluate-conditions-errors" ctx)
                                                  (let [action-script (condition-eval-action-script con)
-                                                       tip (game-get-tip ctx (runtime-get-card-id runtime) (:id con))
+                                                       tip (game-get-tip ctx (effect-get-card-id effect) (:id con))
                                                        _ (when (->> (game-tip-is-ok-to-perform ctx tip) not)
                                                            (swap! errors conj "error tip"))
-                                                       ctx (try (action-script ctx runtime tip)
+                                                       ctx (try (action-script ctx effect tip)
                                                                 (catch ExceptionInfo e
                                                                   (swap! errors conj (ex-message e))
                                                                   ctx))]
                                                    ctx))))
-        tips (game-get-tips ctx (runtime-get-card-id runtime))
+        tips (game-get-tips ctx (effect-get-card-id effect))
         final-action (condition-eval-action-script action)
-        ctx (try (final-action ctx runtime tips)
+        ctx (try (final-action ctx effect tips)
                  (catch ExceptionInfo e
                    (swap! errors conj (ex-message e))
                    ctx))]
     [@errors ctx]))
-(defn action-evaluate-conditions [action ctx runtime]
-  (-> action (action-evaluate-conditions-errors ctx runtime) ((fn [[errors ctx]]
-                                                                (when (-> errors count pos?)
-                                                                  (throw (ex-info (str/join "," errors)
-                                                                                  {:errors errors}))
-                                                                  true)
-                                                                ctx))))
+(defn action-evaluate-conditions [action ctx effect]
+  (-> action (action-evaluate-conditions-errors ctx effect) ((fn [[errors ctx]]
+                                                               (when (-> errors count pos?)
+                                                                 (throw (ex-info (str/join "," errors)
+                                                                                 {:errors errors}))
+                                                                 true)
+                                                               ctx))))
 
 (defn text-create [id actions event-script effect-script]
   {:id id, :actions actions, :event-script event-script :effect-script effect-script})
@@ -216,13 +216,9 @@
 
 ; ========== Effect
 
-(defmulti effect-reason-get-owner-id :env)
-
 (defn effect-create [id reason text]
   {:id id :reason reason :text text})
 
-(defn effect-get-owner-id [effect]
-  (-> effect :reason effect-reason-get-owner-id))
 
 
 ; ===================================
@@ -242,7 +238,7 @@
 
 ; =========================
 
-(defmethod runtime-get-card-id :game.basic [runtime]
+(defmethod effect-get-card-id :game.basic [eff]
   "runtime-card-id")
 
 (defmethod game-set-tip :game.basic [game card-id condition-id tip]
@@ -260,35 +256,34 @@
 
 (defn test-text []
   (let [ctx {:env :game.basic, :version 0}
-        runtime {:env :game.basic}
         text (text-create "text-1"
                           [(action-create "action-1"
                                           [(condition-create "cond1"
-                                                             `(fn [~'ctx ~'runtime]
+                                                             `(fn [~'ctx ~'effect]
                                                                 :tip-1)
-                                                             `(fn [~'ctx ~'runtime ~'tip]
+                                                             `(fn [~'ctx ~'effect ~'tip]
                                                                 (println "condition action " ~'tip)
                                                                 #_(throw (ex-info "acc" {}))
                                                                 (update ~'ctx :version inc)))
                                            (condition-create "cond2"
-                                                             `(fn [~'ctx ~'runtime]
+                                                             `(fn [~'ctx ~'effect]
                                                                 :tip-2)
-                                                             `(fn [~'ctx ~'runtime ~'tip]
+                                                             `(fn [~'ctx ~'effect ~'tip]
                                                                 (println "condition action " ~'tip)
                                                                 #_(throw (ex-info "acc" {}))
                                                                 (update ~'ctx :version inc)))]
-                                          `(fn [~'ctx ~'runtime ~'tips]
+                                          `(fn [~'ctx ~'effect ~'tips]
                                              (println "action action" ~'tips)
                                              (update ~'ctx :version inc)))]
-                          `(fn [~'ctx ~'runtime ~'event] ~'ctx)
-                          `(fn [~'ctx ~'runtime] ~'ctx))
-
+                          `(fn [~'ctx ~'effect ~'event] ~'ctx)
+                          `(fn [~'ctx ~'effect] ~'ctx))
+        effect {:env :game.basic}
         ;_ (println text)
         ; 先確認玩家使用哪一個action
         action (-> text (text-get-action 0))
         ;_ (println action)
         ; 記下那個action的預設選擇, 然後給玩家選擇
-        ctx (action-set-condition-tips action ctx runtime)
+        ctx (action-set-condition-tips action ctx effect)
         ; 取得某張卡的選擇
         tips (game-get-tips ctx "card-id")
         ; 檢查預設選擇是否滿足條件
@@ -296,7 +291,7 @@
             (-> (game-tip-is-ok-to-perform ctx tip) not (when (throw (ex-info "" {})))))
         ; 若滿足後就放入可PLAY指令列表, 玩家可以做的就只是修改選擇
         ; 執行
-        ctx (->> (action-evaluate-conditions action ctx runtime))
+        ctx (->> (action-evaluate-conditions action ctx effect))
         _ (println ctx)]))
 
 ; ====================
