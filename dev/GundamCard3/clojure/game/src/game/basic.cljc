@@ -398,3 +398,20 @@
                             [:red [:red :red]]]]
     (when (can-pay-roll-cost color pay-colors)
       (throw (ex-info (str color " must can not use " pay-colors " to pay") {})))))
+
+; =====================
+
+(defn add-value [& vs]
+  (reduce (fn [acc-a a]
+            (if (or (= "*" a) (= "*" acc-a))
+              "*"
+              (+ a acc-a)))
+          0
+          vs))
+
+(defn add [& vs]
+  (->> vs (apply map vector) (mapv #(apply add-value %))))
+
+(defn test-battle-point []
+  (-> (add [1 1 1] [1 1 1] [1 1 1]) (= [3 3 3]) (or (throw (ex-info "must [3 3 3]" {}))))
+  (-> (add [1 1 1] [2 "*" 1] ["*" 1 -1]) (= ["*" "*" 1]) (or (throw (ex-info "must [* * 1]" {})))))

@@ -7,4 +7,5 @@
   (test-query-command)
   (test-table)
   (test-timing)
-  (test-gsign))
+  (test-gsign)
+  (test-battle-point))
