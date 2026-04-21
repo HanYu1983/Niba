@@ -31,7 +31,12 @@
 (defn test-get-card-data []
   (let [data (get-card-data "test_card")
         _ (println data)
-        text (-> data :texts first)
+        ; save
+        data-str (str data)
+        ; load
+        data2 (read-string data-str)
+        _ (println data2)
+        text (-> data2 :texts first)
         action (-> text (text-get-action 0))
         ctx (->> (action-evaluate-conditions action {:env :game.data, :version 0} {:env :game.data}))
         _ (println ctx)])
