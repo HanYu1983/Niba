@@ -298,3 +298,65 @@
         ; 執行
         ctx (->> (action-evaluate-conditions action ctx runtime))
         _ (println ctx)]))
+
+; ====================
+(def timings [;; Reroll
+              [:reroll :start]
+              [:reroll :rule]
+              [:reroll :free2]
+              [:reroll :end]
+              ;; Draw
+              [:draw :start]
+              [:draw :free1]
+              [:draw :rule]
+              [:draw :free2]
+              [:draw :end]
+              ;; Maintenance
+              [:maintenance :start]
+              [:maintenance :free1]
+              [:maintenance :end]
+              ;; Attack
+              [:battle :attack :start]
+              [:battle :attack :free1]
+              [:battle :attack :rule]
+              [:battle :attack :free2]
+              [:battle :attack :end]
+              ;; Defense
+              [:battle :defense :start]
+              [:battle :defense :free1]
+              [:battle :defense :rule]
+              [:battle :defense :free2]
+              [:battle :defense :end]
+              ;; DamageChecking
+              [:battle :damage-checking :start]
+              [:battle :damage-checking :free1]
+              [:battle :damage-checking :rule]
+              [:battle :damage-checking :free2]
+              [:battle :damage-checking :end]
+              ;; Return
+              [:battle :return :start]
+              [:battle :return :free1]
+              [:battle :return :rule]
+              [:battle :return :free2]
+              [:battle :end :damage-reset]
+              [:battle :end :resolve-effect]
+              [:battle :end :adjust-hand]
+              [:battle :end :turn-end]])
+
+(defn next-timing [curr-timing]
+  (->> timings cycle (take (inc (count timings))) (drop-while #(not (= % curr-timing))) next first))
+
+(defn can-play-card-or-text [timing]
+  (->> timing (filter #{:free1 :free2}) count pos?))
+
+(defn get-phase-keyword [timing]
+  (->> timing first))
+
+(defn get-step-keyword [timing]
+  (match timing
+    [:battle step-keyword _] step-keyword
+    :else (throw (ex-info (str "no step:" timing) {}))))
+
+(defn test-timing []
+  (let [_ (-> [:battle :return :start] can-play-card-or-text (= false) (or (throw (ex-info "" {}))))
+        _ (-> [:battle :return :free1] can-play-card-or-text (= true) (or (throw (ex-info "" {}))))]))
