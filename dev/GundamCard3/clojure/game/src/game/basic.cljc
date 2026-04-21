@@ -28,7 +28,7 @@
   {:card-map card-map :card-stack-map card-stack-map})
 
 (defn card-table-add-card [table card-stack-id card-id card]
-  (-> table :card-stack-map (get card-stack-id) not 
+  (-> table :card-stack-map (get card-stack-id) not
       (when (throw (ex-info (str "card-stack not found" card-stack-id) {}))))
   (-> table
       (update :card-map #(assoc % card-id card))
@@ -104,7 +104,7 @@
 
 ; =========== stack system ==============
 
-(defn stack-system-create [effect-map stack-effects immediate-effects destroy-effects] 
+(defn stack-system-create [effect-map stack-effects immediate-effects destroy-effects]
   {:effect-map effect-map, :stack-effects stack-effects, :immediate-effects immediate-effects, :destroy-effects destroy-effects})
 (defn stack-system-cut-in [stack-system id effect]
   (-> stack-system
@@ -360,3 +360,41 @@
 (defn test-timing []
   (let [_ (-> [:battle :return :start] can-play-card-or-text (= false) (or (throw (ex-info "" {}))))
         _ (-> [:battle :return :free1] can-play-card-or-text (= true) (or (throw (ex-info "" {}))))]))
+
+; ==========================
+
+; "緑" | "茶" | "青" | "白" | "紫" | "黒" | "赤";
+(def gsign-colors #{:green :brown :blue :white :purple :black :red})
+(def gsign-properties #{:uc :08})
+
+(defn can-pay-roll-cost
+  "紫國力用1個紫或2個非紫的支付
+   其它國力用1個相應國力支付"
+  [color pay-colors]
+  (when (not (vector? pay-colors))
+    (throw (ex-info "pay-colors must vec" {})))
+  (cond
+    (= color :purple)
+    (or (->> pay-colors (= [:purple]))
+        (->> pay-colors (filter #(not (= :purple %))) count (= 2)))
+    :else
+    (->> pay-colors (= [color]))))
+
+(defn test-gsign []
+  (doseq [[color pay-colors] [[:purple [:purple]]
+                              [:purple [:blue :white]]
+                              [:blue [:blue]]
+                              [:white [:white]]
+                              [:black [:black]]
+                              [:red [:red]]]]
+    (when (not (can-pay-roll-cost color pay-colors))
+      (throw (ex-info (str color " can not use " pay-colors " to pay") {}))))
+  (doseq [[color pay-colors] [[:purple [:blue]]
+                            [:purple [:blue :purple]]
+                            [:blue [:white]]
+                            [:white [:black]]
+                            [:black [:red]]
+                            [:red [:black]]
+                            [:red [:red :red]]]]
+    (when (can-pay-roll-cost color pay-colors)
+      (throw (ex-info (str color " must can not use " pay-colors " to pay") {})))))

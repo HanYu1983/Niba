@@ -6,4 +6,5 @@
   (test-text)
   (test-query-command)
   (test-table)
-  (test-timing))
+  (test-timing)
+  (test-gsign))
