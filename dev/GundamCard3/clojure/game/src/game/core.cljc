@@ -1,10 +1,12 @@
 (ns game.core
-  (:require [game.basic :refer :all]
+  (:require [clojure.spec.alpha :as s]
+            [game.basic :refer :all]
             [game.data :refer :all]
             [game.query-command :refer :all]
             [game.apply-command :refer :all]))
 
 (defn -main [args]
+  (s/check-asserts true)
   (test-text)
   (test-query-command)
   (test-table)

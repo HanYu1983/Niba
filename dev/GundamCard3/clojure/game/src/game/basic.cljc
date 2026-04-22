@@ -2,8 +2,9 @@
   (:require
    [clojure.edn :as edn]
    [clojure.core.match :refer [match]]
-   [clara.rules :refer :all]
-   [clojure.string :as str])
+   [clojure.string :as str]
+   [clojure.spec.alpha :as s]
+   [clara.rules :refer :all])
   (:import
    (clojure.lang ExceptionInfo)))
 
@@ -152,12 +153,17 @@
 (defmulti effect-get-owner-id :env)
 (defmulti effect-get-card-id :env)
 
+(s/def ::condition  (s/keys :opt-un [::id ::tip-script ::action-script]))
+
 (defn condition-create [id tip-script action-script]
   {:id id :tip-script tip-script :action-script action-script})
 (defn condition-eval-tip-script [con]
   (-> con :tip-script eval))
 (defn condition-eval-action-script [con]
   (-> con :action-script eval))
+
+(s/def ::conditions (s/coll-of ::condition))
+(s/def ::action (s/keys :opt-un [::id ::conditions ::action-script]))
 
 (defn action-create [id conditions action-script]
   {:id id, :conditions conditions, :action-script action-script})
@@ -205,6 +211,10 @@
                                                                  true)
                                                                ctx))))
 
+
+(s/def ::actions (s/coll-of ::action))
+(s/def ::text (s/keys :opt-un [::id ::actions ::event-script ::effect-script]))
+
 (defn text-create [{:keys [id actions event-script effect-script]}]
   {:id id, :actions actions, :event-script event-script :effect-script effect-script})
 (defn text-get-actions [text]
@@ -215,6 +225,8 @@
   (-> text :actions (nth id)))
 
 ; ========== Effect
+
+(s/def ::effect (s/keys :req-un [::id ::reason ::text]))
 
 (defn effect-create [{:keys [id reason text]}]
   {:id id :reason reason :text text})
@@ -359,8 +371,9 @@
 ; ==========================
 
 ; "緑" | "茶" | "青" | "白" | "紫" | "黒" | "赤";
-(def gsign-colors #{:green :brown :blue :white :purple :black :red})
-(def gsign-properties #{:uc :08})
+(s/def :gsign/color #{:green :brown :blue :white :purple :black :red})
+(s/def :gsign/property #{:uc :08})
+(s/def ::gsign (s/tuple :gsign/color :gsign/property))
 
 (defn can-pay-roll-cost
   "紫國力用1個紫或2個非紫的支付
@@ -396,6 +409,9 @@
 
 ; =====================
 
+(s/def ::battle-point-value (s/or :empty #{"*"} :int int?))
+(s/def ::battle-point (s/tuple ::battle-point-value ::battle-point-value ::battle-point-value))
+
 (defn add-value [& vs]
   (reduce (fn [acc-a a]
             (if (or (= "*" a) (= "*" acc-a))
@@ -408,10 +424,14 @@
   (->> vs (apply map vector) (mapv #(apply add-value %))))
 
 (defn test-battle-point []
+  (-> (s/assert ::battle-point [1 "*" 1]))
   (-> (add [1 1 1] [1 1 1] [1 1 1]) (= [3 3 3]) (or (throw (ex-info "must [3 3 3]" {}))))
   (-> (add [1 1 1] [2 "*" 1] ["*" 1 -1]) (= ["*" "*" 1]) (or (throw (ex-info "must [* * 1]" {})))))
 
 ; ================
+
+(s/def ::card-proto (s/keys :opt-un [::id ::gsign ::type ::texts]))
+
 (defn card-proto-create [{:keys [id gsign type texts]}]
   {:id id, :gsign gsign, :type type, :texts texts})
 

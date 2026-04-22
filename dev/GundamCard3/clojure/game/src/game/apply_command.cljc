@@ -1,5 +1,6 @@
 (ns game.apply-command
-  (:require [game.basic :refer :all]))
+  (:require [clojure.spec.alpha :as s]
+            [game.basic :refer :all]))
 
 (defmulti game-move-top-card (fn [game from to n] (:env game)))
 (defmulti game-get-setgroups-from-tip (fn [game tip] (:env game)))
@@ -40,4 +41,5 @@
 
 (defn test-rules []
   (let [eff (draw-phase-rule-effect-create player-a)
+        _ (s/assert :game.basic/effect eff)
         _ (println eff)]))
