@@ -1,7 +1,8 @@
 (ns game.core
   (:require [game.basic :refer :all]
-            [game.command :refer :all]
-            [game.data :refer :all]))
+            [game.data :refer :all]
+            [game.query-command :refer :all]
+            [game.apply-command :refer :all]))
 
 (defn -main [args]
   (test-text)

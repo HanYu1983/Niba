@@ -1,4 +1,4 @@
-(ns game.command
+(ns game.query-command
   (:require
    [clojure.edn :as edn]
    [clojure.core.match :refer [match]]

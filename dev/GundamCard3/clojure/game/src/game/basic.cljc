@@ -414,3 +414,27 @@
 ; ================
 (defn card-proto-create [{:keys [id gsign type texts]}]
   {:id id, :gsign gsign, :type type, :texts texts})
+
+
+; =================
+(def ba-syou-keyword [:hon-goku
+                      :sute-yama
+                      :space-area
+                      :earth-area
+                      :maintenance-area
+                      :g-zone
+                      :junk-yard
+                      :te-hu-ta
+                      :hanger
+                      :played-card
+                      :removed-card])
+
+(defn is-battle-area? [k]
+  (#{:space-area :earth-area} k))
+
+(defn is-maintenance-area? [k]
+  (#{:maintenance-area :g-zone} k))
+
+(defn is-ba? [k]
+  (or (is-battle-area? k)
+      (is-maintenance-area? k)))
