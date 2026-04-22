@@ -11,4 +11,5 @@
   (test-timing)
   (test-gsign)
   (test-battle-point)
-  (test-get-card-data))
+  (test-get-card-data)
+  (test-rules))

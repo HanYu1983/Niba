@@ -36,3 +36,8 @@
                                                                                        [~player-id :earth-area]
                                                                                        pairs)]
                                                        ~'game))}]}]}})
+
+
+(defn test-rules []
+  (let [eff (draw-phase-rule-effect-create player-a)
+        _ (println eff)]))
