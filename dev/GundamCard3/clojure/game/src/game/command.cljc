@@ -149,7 +149,9 @@
 
 ; ================== test =======================
 (defmethod game-get-active-effect :game.command [game]
-  (effect-create "eff-id" {:env :game.command, :player-id player-a} :text)
+  (effect-create {:id "eff-id"
+                  :reason {:env :game.command, :player-id player-a}
+                  :text :text})
   nil)
 (defmethod game-get-active-player-id :game.command [game] player-a)
 (defmethod game-get-immediate-effects :game.command [game] [])

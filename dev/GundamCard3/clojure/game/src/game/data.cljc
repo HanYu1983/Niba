@@ -6,8 +6,7 @@
   ; 其它方法
   (-> card-id empty? (and (throw (ex-info (str "card-id must exist:" card-id) {}))))
   (-> card-id
-      (#(str "data/" % ".edn")) slurp read-string eval
-      (#(merge game.basic/card-proto %))))
+      (#(str "data/" % ".edn")) slurp read-string eval))
 
 (def get-card-data-memo (memoize get-card-data))
 

@@ -205,7 +205,7 @@
                                                                  true)
                                                                ctx))))
 
-(defn text-create [id actions event-script effect-script]
+(defn text-create [{:keys [id actions event-script effect-script]}]
   {:id id, :actions actions, :event-script event-script :effect-script effect-script})
 (defn text-get-actions [text]
   (-> text :actions))
@@ -216,7 +216,7 @@
 
 ; ========== Effect
 
-(defn effect-create [id reason text]
+(defn effect-create [{:keys [id reason text]}]
   {:id id :reason reason :text text})
 
 
@@ -256,27 +256,27 @@
 
 (defn test-text []
   (let [ctx {:env :game.basic, :version 0}
-        text (text-create "text-1"
-                          [(action-create "action-1"
-                                          [(condition-create "cond1"
-                                                             `(fn [~'ctx ~'effect]
-                                                                :tip-1)
-                                                             `(fn [~'ctx ~'effect ~'tip]
-                                                                (println "condition action " ~'tip)
-                                                                #_(throw (ex-info "acc" {}))
-                                                                (update ~'ctx :version inc)))
-                                           (condition-create "cond2"
-                                                             `(fn [~'ctx ~'effect]
-                                                                :tip-2)
-                                                             `(fn [~'ctx ~'effect ~'tip]
-                                                                (println "condition action " ~'tip)
-                                                                #_(throw (ex-info "acc" {}))
-                                                                (update ~'ctx :version inc)))]
-                                          `(fn [~'ctx ~'effect ~'tips]
-                                             (println "action action" ~'tips)
-                                             (update ~'ctx :version inc)))]
-                          `(fn [~'ctx ~'effect ~'event] ~'ctx)
-                          `(fn [~'ctx ~'effect] ~'ctx))
+        text (text-create {:id "text-1"
+                           :actions [(action-create "action-1"
+                                                    [(condition-create "cond1"
+                                                                       `(fn [~'ctx ~'effect]
+                                                                          :tip-1)
+                                                                       `(fn [~'ctx ~'effect ~'tip]
+                                                                          (println "condition action " ~'tip)
+                                                                          #_(throw (ex-info "acc" {}))
+                                                                          (update ~'ctx :version inc)))
+                                                     (condition-create "cond2"
+                                                                       `(fn [~'ctx ~'effect]
+                                                                          :tip-2)
+                                                                       `(fn [~'ctx ~'effect ~'tip]
+                                                                          (println "condition action " ~'tip)
+                                                                          #_(throw (ex-info "acc" {}))
+                                                                          (update ~'ctx :version inc)))]
+                                                    `(fn [~'ctx ~'effect ~'tips]
+                                                       (println "action action" ~'tips)
+                                                       (update ~'ctx :version inc)))]
+                           :event-script `(fn [~'ctx ~'effect ~'event] ~'ctx)
+                           :effect-script `(fn [~'ctx ~'effect] ~'ctx)})
         effect {:env :game.basic}
         ;_ (println text)
         ; 先確認玩家使用哪一個action
@@ -412,6 +412,5 @@
   (-> (add [1 1 1] [2 "*" 1] ["*" 1 -1]) (= ["*" "*" 1]) (or (throw (ex-info "must [* * 1]" {})))))
 
 ; ================
-(def card-proto {:gsign [:blue :uc]
-                 :type :unit
-                 :texts []})
+(defn card-proto-create [{:keys [id gsign type texts]}]
+  {:id id, :gsign gsign, :type type, :texts texts})
