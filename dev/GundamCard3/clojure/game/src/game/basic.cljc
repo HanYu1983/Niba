@@ -223,6 +223,10 @@
   (-> text :event-script (or '(fn [game effect event])) eval))
 (defn text-get-action [text id]
   (-> text :actions (nth id)))
+(defn text-get-checked-actions [text ctx effect]
+  (->> (text-get-actions text)
+       (group-by (comp zero? count first
+                       #(action-evaluate-conditions-errors % ctx effect)))))
 
 ; ========== Effect
 

@@ -63,6 +63,9 @@
 
 
 
+(defmulti game-cut-in (fn [game effect] (:env game)))
+(defmulti game-set-cut-pass (fn [game player-id] (:env game)))
+
 (defn apply-command [game {:keys [player-id payload] :as cmd}]
   (match payload
     {:id :handle-active-effect, :value effect}
@@ -75,11 +78,11 @@
     {:id :convert-destroy-effects-to-new-cut, :values destroy-card-ids}
     game
 
-    {:id :set-cut-in, :value text}
-    game
+    {:id :set-cut-in, :value effect}
+    (game-cut-in game effect)
 
     {:id :set-pass-cut}
-    game
+    (game-set-cut-pass game player-id)
 
     {:id :next-phase, :value phase}
     game
