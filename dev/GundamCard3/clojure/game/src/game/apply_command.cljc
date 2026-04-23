@@ -1,5 +1,6 @@
 (ns game.apply-command
   (:require [clojure.spec.alpha :as s]
+            [clojure.core.match :refer [match]]
             [game.basic :refer :all]))
 
 (defmulti game-move-top-card (fn [game from to n] (:env game)))
@@ -59,3 +60,32 @@
         _ (println eff)
         game {:env :game.apply-command}
         game (-> (effect-get-text eff) (text-get-action 0) (action-evaluate-conditions game eff))]))
+
+
+
+(defn apply-command [game {:keys [player-id payload] :as cmd}]
+  (match payload
+    {:id :handle-active-effect, :value effect}
+    game
+
+    {:id :set-active-effect, :values [effect]}
+    (assoc game :active-effect effect)
+
+    ; 所有破壞效果進堆疊, 這時就可以切入破壞無效
+    {:id :convert-destroy-effects-to-new-cut, :values destroy-card-ids}
+    game
+
+    {:id :set-cut-in, :value text}
+    game
+
+    {:id :set-pass-cut}
+    game
+
+    {:id :next-phase, :value phase}
+    game
+
+    {:id :handle-phase, :value phase}
+    game
+
+    :else
+    (throw (ex-info "unknown command" {:command cmd}))))

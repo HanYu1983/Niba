@@ -3,6 +3,7 @@
    [clojure.edn :as edn]
    [clojure.core.match :refer [match]]
    [clojure.string :as str]
+   [clojure.spec.alpha :as s]
    [game.basic :refer :all])
   (:import
    (clojure.lang ExceptionInfo)))
@@ -14,8 +15,11 @@
 (defmulti game-get-player-pass-cut (fn [game player-id] (:env game)))
 (defmulti game-get-player-can-play-texts (fn [game player-id] (:env game)))
 
+(s/def ::command (s/keys :req-un [::id ::player-id]
+                         :opt-un [::description ::payload]))
+
 (defn command-create [id player-id options]
-  {:id id, :player-id player-id, :options options})
+  {:id id, :player-id player-id, :payload options})
 
 (defn query-handle-active-effect-commands [ctx player-id]
   (let [eff (game-get-active-effect ctx)]
