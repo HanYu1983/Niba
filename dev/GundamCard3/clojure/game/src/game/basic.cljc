@@ -151,16 +151,16 @@
 ; ========== Text =========== 
 
 (defmulti effect-get-owner-id :env)
-(defmulti effect-get-card-id :env)
+(defmulti effect-get-card-id (fn [game effect] (:env game)))
 
 (s/def ::condition  (s/keys :opt-un [::id ::tip-script ::action-script]))
 
 (defn condition-create [id tip-script action-script]
   {:id id :tip-script tip-script :action-script action-script})
 (defn condition-eval-tip-script [con]
-  (-> con :tip-script eval))
+  (-> con :tip-script (or `(fn [~'game ~'effect] nil)) eval))
 (defn condition-eval-action-script [con]
-  (-> con :action-script eval))
+  (-> con :action-script (or `(fn [~'game ~'effect ~'tip])) eval))
 
 (s/def ::conditions (s/coll-of ::condition))
 (s/def ::action (s/keys :opt-un [::id ::conditions ::action-script]))
@@ -168,7 +168,7 @@
 (defn action-create [id conditions action-script]
   {:id id, :conditions conditions, :action-script action-script})
 (defn action-get-conditions [action]
-  (-> action :conditions))
+  (-> action :conditions (or [])))
 (defn action-reduce-conditions [action f ctx]
   (->> action action-get-conditions (reduce f ctx)))
 (defn action-set-condition-tips [action ctx effect]
@@ -177,7 +177,7 @@
                                                  (let [tip-script (condition-eval-tip-script con)
                                                        tip (tip-script ctx effect)
                                                        ctx (game-set-tip ctx
-                                                                         (effect-get-card-id effect)
+                                                                         (effect-get-card-id ctx effect)
                                                                          (:id con)
                                                                          tip)]
                                                    ctx))))]
@@ -188,7 +188,7 @@
                                                (fn [ctx con]
                                                  (println "action-evaluate-conditions-errors" ctx)
                                                  (let [action-script (condition-eval-action-script con)
-                                                       tip (game-get-tip ctx (effect-get-card-id effect) (:id con))
+                                                       tip (game-get-tip ctx (effect-get-card-id ctx effect) (:id con))
                                                        _ (when (->> (game-tip-is-ok-to-perform ctx tip) not)
                                                            (swap! errors conj "error tip"))
                                                        ctx (try (action-script ctx effect tip)
@@ -196,7 +196,7 @@
                                                                   (swap! errors conj (ex-message e))
                                                                   ctx))]
                                                    ctx))))
-        tips (game-get-tips ctx (effect-get-card-id effect))
+        tips (game-get-tips ctx (effect-get-card-id ctx effect))
         final-action (condition-eval-action-script action)
         ctx (try (final-action ctx effect tips)
                  (catch ExceptionInfo e
@@ -218,9 +218,9 @@
 (defn text-create [{:keys [id actions event-script effect-script]}]
   {:id id, :actions actions, :event-script event-script :effect-script effect-script})
 (defn text-get-actions [text]
-  (-> text :actions))
+  (-> text :actions (or [])))
 (defn text-eval-event-script [text]
-  (-> text :event-script eval))
+  (-> text :event-script (or '(fn [game effect event])) eval))
 (defn text-get-action [text id]
   (-> text :actions (nth id)))
 
@@ -230,6 +230,9 @@
 
 (defn effect-create [{:keys [id reason text]}]
   {:id id :reason reason :text text})
+
+(defn effect-get-text [effect]
+  (-> effect :text))
 
 
 
@@ -250,7 +253,7 @@
 
 ; =========================
 
-(defmethod effect-get-card-id :game.basic [eff]
+(defmethod effect-get-card-id :game.basic [game eff]
   "runtime-card-id")
 
 (defmethod game-set-tip :game.basic [game card-id condition-id tip]
