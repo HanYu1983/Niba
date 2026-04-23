@@ -12,7 +12,7 @@
 (def get-card-data-memo (memoize get-card-data))
 
 ; =========================
-(defmethod effect-get-card-id :game.data [game eff]
+(defmethod game-get-effect-card-id :game.data [game eff]
   "runtime-card-id")
 
 (defmethod game-set-tip :game.data [game card-id condition-id tip]

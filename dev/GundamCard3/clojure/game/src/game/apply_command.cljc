@@ -39,7 +39,7 @@
                                                        ~'game))}]}]}})
 
 
-(defmethod effect-get-card-id :game.apply-command [game eff]
+(defmethod game-get-effect-card-id :game.apply-command [game eff]
   "runtime-card-id")
 
 (defmethod game-move-top-card :game.apply-command [game from to n]

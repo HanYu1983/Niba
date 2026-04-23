@@ -150,8 +150,8 @@
 
 ; ========== Text =========== 
 
-(defmulti effect-get-owner-id :env)
-(defmulti effect-get-card-id (fn [game effect] (:env game)))
+(defmulti game-get-effect-owner-id (fn [game effect] (:env game)))
+(defmulti game-get-effect-card-id (fn [game effect] (:env game)))
 
 (s/def ::condition  (s/keys :opt-un [::id ::tip-script ::action-script]))
 
@@ -177,7 +177,7 @@
                                                  (let [tip-script (condition-eval-tip-script con)
                                                        tip (tip-script ctx effect)
                                                        ctx (game-set-tip ctx
-                                                                         (effect-get-card-id ctx effect)
+                                                                         (game-get-effect-card-id ctx effect)
                                                                          (:id con)
                                                                          tip)]
                                                    ctx))))]
@@ -188,7 +188,7 @@
                                                (fn [ctx con]
                                                  (println "action-evaluate-conditions-errors" ctx)
                                                  (let [action-script (condition-eval-action-script con)
-                                                       tip (game-get-tip ctx (effect-get-card-id ctx effect) (:id con))
+                                                       tip (game-get-tip ctx (game-get-effect-card-id ctx effect) (:id con))
                                                        _ (when (->> (game-tip-is-ok-to-perform ctx tip) not)
                                                            (swap! errors conj "error tip"))
                                                        ctx (try (action-script ctx effect tip)
@@ -196,7 +196,7 @@
                                                                   (swap! errors conj (ex-message e))
                                                                   ctx))]
                                                    ctx))))
-        tips (game-get-tips ctx (effect-get-card-id ctx effect))
+        tips (game-get-tips ctx (game-get-effect-card-id ctx effect))
         final-action (condition-eval-action-script action)
         ctx (try (final-action ctx effect tips)
                  (catch ExceptionInfo e
@@ -253,7 +253,7 @@
 
 ; =========================
 
-(defmethod effect-get-card-id :game.basic [game eff]
+(defmethod game-get-effect-card-id :game.basic [game eff]
   "runtime-card-id")
 
 (defmethod game-set-tip :game.basic [game card-id condition-id tip]

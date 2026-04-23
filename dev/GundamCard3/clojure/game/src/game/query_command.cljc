@@ -20,14 +20,14 @@
 (defn query-handle-active-effect-commands [ctx player-id]
   (let [eff (game-get-active-effect ctx)]
     (when eff
-      (let [effect-owner-id (effect-get-owner-id eff)]
+      (let [effect-owner-id (game-get-effect-owner-id ctx eff)]
         (if (= effect-owner-id player-id)
           [(command-create :handle-active-effect effect-owner-id {})]
           [(command-create :wait-handle-active-effect (player-get-opponent-id effect-owner-id) {})])))))
 
 (defn query-immediate-effects-commands [ctx player-id]
   (let [[my-effs oppo-effs] ((juxt player-id (player-get-opponent-id player-id))
-                             (group-by effect-get-owner-id (game-get-immediate-effects ctx)))
+                             (group-by (partial game-get-effect-owner-id ctx) (game-get-immediate-effects ctx)))
         is-active-player (-> (game-get-active-player-id ctx) (= player-id))]
     (if is-active-player
       (if my-effs
@@ -159,7 +159,7 @@
 (defmethod game-get-player-pass-cut :game.command [game player-id] false)
 (defmethod game-get-player-can-play-texts :game.command [game player-id] [])
 
-(defmethod effect-get-owner-id :game.command [eff]
+(defmethod game-get-effect-owner-id :game.command [eff]
   (-> eff :reason :player-id))
 
 (defmethod game-get-phase :game.command [game]
