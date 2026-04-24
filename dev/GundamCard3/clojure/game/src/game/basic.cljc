@@ -108,6 +108,11 @@
        (map #(coin-table-get-coin table %))))
 
 ; =========== stack system ==============
+(s/def ::effect-map (s/map-of any? any?))
+(s/def ::stack-effects (s/coll-of any?))
+(s/def ::immediate-effects (s/coll-of any?))
+(s/def ::destroy-effects (s/coll-of any?))
+(s/def ::stack-system (s/keys :req-un [::effect-map ::stack-effects ::immediate-effects ::destroy-effects]))
 
 (defn stack-system-create [effect-map stack-effects immediate-effects destroy-effects]
   {:effect-map effect-map, :stack-effects stack-effects, :immediate-effects immediate-effects, :destroy-effects destroy-effects})

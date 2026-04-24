@@ -55,3 +55,21 @@
   player-a)
 (defmethod game-get-effect-card-id :impl [game effect]
   :card-a)
+(defmethod game-get-active-effect :impl [game]
+  (:active-effect game))
+(defmethod game-get-active-player-id :impl [game]
+  (:active-player-id game))
+(defmethod game-get-immediate-effects :impl [game]
+  (-> (:stack-system game) game-get-immediate-effects))
+(defmethod game-get-stack-effects :impl [game]
+  (-> (:stack-system game) game-get-stack-effects))
+(defmethod game-get-player-pass-cut :impl [game player-id]
+  ((:player-has-cut game) player-id))
+(defmethod game-get-player-can-play-texts :impl [game player-id]
+  [])
+(defmethod game-get-effect-owner-id :impl [eff]
+  (-> eff :reason :player-id))
+(defmethod game-get-phase :impl [game]
+  [:battle :attack :start])
+(defmethod game-has-handle-phase :impl [game phase]
+  true)
