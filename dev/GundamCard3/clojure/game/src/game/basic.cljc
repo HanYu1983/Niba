@@ -25,6 +25,10 @@
 (defn card-stack-add-card-ids [card-stack options card-ids]
   (update card-stack :card-ids #(concat % card-ids)))
 
+(s/def ::card-map (s/map-of any? any?))
+(s/def ::card-stack-map (s/map-of any? (s/coll-of any?)))
+(s/def ::card-table (s/keys :req-un [::card-map ::card-stack-map]))
+
 (defn card-table-create [card-map card-stack-map]
   {:card-map card-map :card-stack-map card-stack-map})
 
@@ -465,3 +469,62 @@
 (defn is-ba? [k]
   (or (is-battle-area? k)
       (is-maintenance-area? k)))
+
+; ==================
+
+(defmulti game-move-top-card (fn [game from to n] (:env game)))
+(defmulti game-get-setgroups-from-tip (fn [game tip] (:env game)))
+(defmulti game-move-setgroups (fn [game to setgroups] (:env game)))
+(defmulti game-create-can-attack-tip (fn [game where] (:env game)))
+
+(defn draw-phase-rule-effect-create [player-id]
+  {:id :draw-phase-rule-effect-create
+   :reason {:type :rule, :player-id player-id}
+   :text {:actions [{:action-script `(fn [~'game ~'effect ~'tips]
+                                       (game-move-top-card ~'game
+                                                           [~player-id :hon-goku]
+                                                           [~player-id :te-hu-ta]
+                                                           1))}]}})
+
+(defn attack-phase-rule-effect-create [player-id]
+  {:id :attack-phase-rule-effect-create
+   :reason {:type :rule, :player-id player-id}
+   :text {:actions [{:conditions [{:id :attack-space
+                                   :tip-script `(fn [~'game ~'effect]
+                                                  (game-create-can-attack-tip ~'game :space-area))
+                                   :action-script `(fn [~'game ~'effect ~'tip]
+                                                     (let [~'pairs (game-get-setgroups-from-tip ~'game ~'tip)
+                                                           ~'game (game-move-setgroups game
+                                                                                       [~player-id :space-area]
+                                                                                       pairs)]
+                                                       ~'game))}
+                                  {:id :attack-earth
+                                   :tip-script `(fn [~'game ~'effect]
+                                                  (game-create-can-attack-tip ~'game :earth-area))
+                                   :action-script `(fn [~'game ~'effect ~'tip]
+                                                     (let [~'pairs (game-get-setgroups-from-tip ~'game ~'tip)
+                                                           ~'game (game-move-setgroups game
+                                                                                       [~player-id :earth-area]
+                                                                                       pairs)]
+                                                       ~'game))}]}]}})
+
+(defmethod game-get-effect-card-id :game.basic [game eff]
+  "runtime-card-id")
+
+(defmethod game-move-top-card :game.basic [game from to n]
+  game)
+(defmethod game-get-setgroups-from-tip :game.basic [game tip]
+  game)
+(defmethod game-move-setgroups :game.basic [game to setgroups]
+  game)
+(defmethod game-create-can-attack-tip  :game.basic [game where]
+  game)
+(defmethod game-get-tips :game.basic [game card-id]
+  game)
+
+(defn test-rules []
+  (let [eff (draw-phase-rule-effect-create player-a)
+        _ (s/assert ::effect eff)
+        _ (println eff)
+        game {:env :game.basic}
+        game (-> (effect-get-text eff) (text-get-action 0) (action-evaluate-conditions game eff))]))
