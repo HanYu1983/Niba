@@ -147,9 +147,6 @@
 (defmulti game-set-tip (fn [game card-id condition-id tip] (:env game)))
 (defmulti game-get-tip (fn [game card-id condition-id] (:env game))) ; 
 (defmulti game-get-tips (fn [game card-id] (:env game))) ;
-(defmulti game-get-card-position :env)
-(defmulti game-get-card-from-card-position :env)
-(defmulti game-tip-create :env)
 (defmulti game-tip-is-ok-to-perform (fn [game tip] (:env game)))
 
 ; ========== Text =========== 
