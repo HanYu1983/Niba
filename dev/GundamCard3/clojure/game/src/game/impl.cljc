@@ -65,8 +65,29 @@
   (-> (:stack-system game) game-get-stack-effects))
 (defmethod game-get-player-pass-cut :impl [game player-id]
   ((:player-has-cut game) player-id))
-(defmethod game-get-player-can-play-texts :impl [game player-id]
+
+(defn game-query-play-card-effect [game player-id]
   [])
+(defn game-query-play-text-effect [game player-id]
+  [])
+(defn game-query-quick-play-card-effect [game player-id]
+  [])
+(defmethod game-get-player-can-play-texts :impl [game player-id]
+  (let [play-effects (match (game-get-phase game)
+                       [:maintenance :free1]
+                    ; play g, unit, character, operation
+                       (concat (game-query-play-card-effect game player-id)
+                    ; play text
+                               (game-query-play-text-effect game player-id))
+
+                       (:or [_ :free1] [_ _ :free1] [_ :free2] [_ _ :free2])
+                       ; quick
+                       (concat (game-query-quick-play-card-effect game player-id)
+                               (game-query-play-text-effect game player-id))
+
+                       :else
+                       [])]
+    play-effects))
 (defmethod game-get-effect-owner-id :impl [eff]
   (-> eff :reason :player-id))
 (defmethod game-get-phase :impl [game]

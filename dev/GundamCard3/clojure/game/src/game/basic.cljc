@@ -363,23 +363,31 @@
               [:battle :end :adjust-hand]
               [:battle :end :turn-end]])
 
-(defn next-timing [curr-timing]
+(defn timing-next-timing [curr-timing]
   (->> timings cycle (take (inc (count timings))) (drop-while #(not (= % curr-timing))) next first))
 
-(defn can-play-card-or-text [timing]
+(defn timing-can-play-card-or-text [timing]
   (->> timing (filter #{:free1 :free2}) count pos?))
 
-(defn get-phase-keyword [timing]
+(defn timing-get-phase-keyword [timing]
   (->> timing first))
 
-(defn get-step-keyword [timing]
+(defn timing-get-step-keyword [timing]
   (match timing
     [:battle step-keyword _] step-keyword
     :else (throw (ex-info (str "no step:" timing) {}))))
 
+(defn timing-is-free [timing]
+  (match timing
+    (:or [_ :free1] [_ _ :free1] [_ :free2] [_ _ :free2])
+    true
+    
+    :else
+    false))
+
 (defn test-timing []
-  (let [_ (-> [:battle :return :start] can-play-card-or-text (= false) (or (throw (ex-info "" {}))))
-        _ (-> [:battle :return :free1] can-play-card-or-text (= true) (or (throw (ex-info "" {}))))]))
+  (let [_ (-> [:battle :return :start] timing-can-play-card-or-text (= false) (or (throw (ex-info "" {}))))
+        _ (-> [:battle :return :free1] timing-can-play-card-or-text (= true) (or (throw (ex-info "" {}))))]))
 
 ; ==========================
 
