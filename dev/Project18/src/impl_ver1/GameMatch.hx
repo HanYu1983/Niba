@@ -1,0 +1,273 @@
+package impl_ver1;
+
+import game.GameIds;
+import game.IBoard;
+import game.IGameMatch;
+import game.IGeneral;
+import game.IJiCe;
+import game.IJiCeStagingPreviewRow;
+import game.IMonarch;
+import game.IPlayer;
+import game.IPlayerMenu;
+import game.IPlayerMenuEntry;
+import game.IPlayerMenuNode;
+import game.ITile;
+import game.ITileEvent;
+import game.PlayerMenuKind;
+import game.TileKind;
+
+/**
+ * Ver1 賽局：零件工廠與賽局狀態皆於此；友元見 {@literal @:allow(impl_ver1)}。
+ */
+@:allow(impl_ver1)
+class GameMatch implements IGameMatch {
+  public static inline var DEFAULT_MOVE_DELTA = 3;
+
+  var _board:Board;
+  var _monarchs:Array<Monarch>;
+  var _activeId:MonarchId;
+  var _activeSliceComplete:Bool;
+
+  var _tileEventByIndex:Map<Int, ITileEvent>;
+  var _pendingTileEvent:Null<ITileEvent>;
+
+  var _pendingJiCe:Null<IJiCe>;
+  var _jiCeStagingTargetId:Null<MonarchId>;
+  var _jiCeStagingRows:Array<IJiCeStagingPreviewRow>;
+
+  /** 空白賽局；由 {@link Game#createGameMatch} 透過 {@link #createBoard}／{@link #createMonarch} 等組立局面。 */
+  public function new() {
+    _board = cast null;
+    _monarchs = [];
+    _activeId = "";
+    _activeSliceComplete = false;
+    _tileEventByIndex = new Map();
+    _pendingTileEvent = null;
+    clearJiCeStaging();
+  }
+
+  function clearJiCeStaging():Void {
+    _pendingJiCe = null;
+    _jiCeStagingTargetId = null;
+    _jiCeStagingRows = ([] : Array<IJiCeStagingPreviewRow>);
+  }
+
+  public function bindTileEvent(at:TileIndex, handler:ITileEvent):Void {
+    _tileEventByIndex.set(at, handler);
+  }
+
+  public function createTile(index:TileIndex, kind:TileKind):ITile
+    return new Tile(index, kind);
+
+  public function createBoard(tiles:Array<ITile>):IBoard {
+    if (_board != null)
+      throw "GameMatch.createBoard: board already set";
+    var b = new Board(tiles);
+    _board = b;
+    return b;
+  }
+
+  public function createGeneral(id:GeneralId, owner:MonarchId, command:Int, might:Int, wit:Int, stewardship:Int):IGeneral
+    return new General(id, owner, command, might, wit, stewardship);
+
+  public function createMonarch(id:MonarchId, seat:Int, pawnIndex:TileIndex, roster:Array<IGeneral>, ?troops:Int, ?grain:Int):IMonarch {
+    var t = troops != null ? troops : 0;
+    var g = grain != null ? grain : 0;
+    var m = new Monarch(id, seat, pawnIndex, roster, t, g);
+    _monarchs.push(m);
+    if (_monarchs.length == 1)
+      _activeId = m.id();
+    return m;
+  }
+
+  public function createPlayer(monarchId:MonarchId, displayName:String):IPlayer
+    return new Player(monarchId, displayName);
+
+  public function createPlayerMenuEntry(kind:PlayerMenuKind, caption:String, enabled:Bool, ?decisionToken:String):IPlayerMenuEntry
+    return new PlayerMenuEntry(kind, caption, enabled, decisionToken);
+
+  public function createPlayerMenuNode(caption:String, leaf:Null<IPlayerMenuEntry>, children:Array<IPlayerMenuNode>):IPlayerMenuNode
+    return new PlayerMenuNode(caption, leaf, children);
+
+  public function pendingTileEvent():Null<ITileEvent>
+    return _pendingTileEvent;
+
+  public function pendingJiCe():Null<IJiCe>
+    return _pendingJiCe;
+
+  public function jiCeStagingTargetMonarchId():Null<MonarchId>
+    return _jiCeStagingTargetId;
+
+  public function jiCeStagingPreviewRows():Array<IJiCeStagingPreviewRow> {
+    if (_pendingJiCe == null)
+      return [];
+    return _jiCeStagingRows.copy();
+  }
+
+  public function enterJiCeStaging(card:IJiCe, targetMonarchId:MonarchId, previewRows:Array<IJiCeStagingPreviewRow>):Void {
+    _pendingJiCe = card;
+    _jiCeStagingTargetId = targetMonarchId;
+    _jiCeStagingRows = previewRows.copy();
+  }
+
+  public function createPlayerMenu(actor:IPlayer):IPlayerMenu {
+    var pend = pendingTileEvent();
+    var jiPending = pendingJiCe();
+    var stagingActive = jiPending != null;
+    var ctx = actor.monarchId() + "-" + isActivePlayerSliceComplete();
+    if (pend != null)
+      ctx += "-evt-" + pend.registryKey();
+    if (stagingActive && jiPending != null)
+      ctx += "-jice-" + jiPending.registryKey();
+
+    var roots:Array<IPlayerMenuNode> = [];
+
+    if (pend != null) {
+      var evRoots = pend.buildPlayerMenu(actor).rootNodes();
+      roots.push(createPlayerMenuNode("事件：" + pend.registryKey(), null, evRoots));
+    }
+
+    if (stagingActive && jiPending != null) {
+      var jiRoots = jiPending.buildPlayerMenu(actor).rootNodes();
+      roots.push(createPlayerMenuNode("計策：" + jiPending.designLabel(), null, jiRoots));
+    }
+
+    var blockBasics = pend != null || stagingActive;
+    var actions:Array<IPlayerMenuNode> = [
+      createPlayerMenuNode("移動", createPlayerMenuEntry(Move, "移動", !blockBasics), ([] : Array<IPlayerMenuNode>)),
+      createPlayerMenuNode(
+        "計策",
+        createPlayerMenuEntry(JiCe, "計策（打出後暫存並選將）", !stagingActive && pend == null),
+        ([] : Array<IPlayerMenuNode>)
+      ),
+      createPlayerMenuNode("狀態", createPlayerMenuEntry(Status, "狀態（前端用，無後端結算）", true), ([] : Array<IPlayerMenuNode>)),
+    ];
+    var allowConfirm = isActivePlayerSliceComplete() && pend == null && !stagingActive;
+    if (allowConfirm)
+      actions.push(createPlayerMenuNode("結束", createPlayerMenuEntry(ConfirmDone, "結束本階段", true), ([] : Array<IPlayerMenuNode>)));
+
+    roots.push(createPlayerMenuNode("本回合", null, actions));
+    return new PlayerMenu(actor, ctx, roots);
+  }
+
+  function syncActiveSliceAfterMenuLeaf(kind:PlayerMenuKind):Void {
+    switch kind {
+      case ConfirmDone:
+        _activeSliceComplete = false;
+      case JiCe:
+      case JiCePick:
+      case Status:
+      case Move:
+      case TileEventPick:
+    }
+  }
+
+  function settleAfterMoveLanding():Void {
+    var ruler = cast(activeMonarch(), Monarch);
+    considerLandingAt(ruler.pawnIndex());
+    _activeSliceComplete = _pendingTileEvent == null;
+  }
+
+  function considerLandingAt(idx:TileIndex):Void {
+    _pendingTileEvent = null;
+    var tile = board().tileAt(idx);
+    if (tile.kind() != Event)
+      return;
+    _pendingTileEvent = _tileEventByIndex.get(idx);
+  }
+
+  function handleTileEventPick(actor:IPlayer, leaf:IPlayerMenuEntry):Void {
+    var ev = _pendingTileEvent;
+    if (ev == null)
+      throw "GameMatch: TileEventPick 但無 pendingTileEvent";
+    var tok = leaf.decisionToken();
+    if (tok == null)
+      throw "GameMatch: TileEventPick 需要 decisionToken";
+    ev.resolveChoice(actor, tok);
+    _pendingTileEvent = null;
+    _activeSliceComplete = true;
+  }
+
+  function handleJiCePick(actor:IPlayer, leaf:IPlayerMenuEntry):Void {
+    var card = pendingJiCe();
+    if (card == null)
+      throw "GameMatch: JiCePick 但無 pendingJiCe";
+    var tok = leaf.decisionToken();
+    if (tok == null)
+      throw "GameMatch: JiCePick 需要 decisionToken（機械鍵）";
+
+    card.resolveChoice(actor, tok);
+
+    clearJiCeStaging();
+    syncActiveSliceAfterMenuLeaf(JiCePick);
+  }
+
+  public function applyMenuLeaf(actor:IPlayer, leaf:IPlayerMenuEntry, ?playedJiCe:IJiCe, ?jiCeTargetMonarchId:MonarchId):Void {
+    if (!leaf.isEnabled())
+      throw "GameMatch.applyMenuLeaf: leaf disabled (" + leaf.caption() + ")";
+
+    if (actor.monarchId() != activeMonarch().id())
+      throw "GameMatch.applyMenuLeaf: actor must be active monarch";
+
+    switch leaf.kind() {
+      case Move:
+        var ruler = cast(activeMonarch(), Monarch);
+        ruler.advanceOnBoard(DEFAULT_MOVE_DELTA, board().length());
+        settleAfterMoveLanding();
+      case TileEventPick:
+        handleTileEventPick(actor, leaf);
+      case JiCePick:
+        handleJiCePick(actor, leaf);
+      case JiCe:
+        if (pendingJiCe() != null)
+          throw "GameMatch: 已有進行中之計策暫存，請先完成計策選項";
+        if (playedJiCe == null)
+          throw "GameMatch.applyMenuLeaf: JiCe leaf requires playedJiCe";
+        if (jiCeTargetMonarchId == null)
+          throw "GameMatch.applyMenuLeaf: JiCe leaf requires jiCeTargetMonarchId";
+        playedJiCe.applyAgainstMonarch(actor, jiCeTargetMonarchId);
+        syncActiveSliceAfterMenuLeaf(JiCe);
+      case Status:
+        syncActiveSliceAfterMenuLeaf(Status);
+      case ConfirmDone:
+        syncActiveSliceAfterMenuLeaf(ConfirmDone);
+        advanceActiveMonarchAfterConfirmDone();
+    }
+  }
+
+  /** 「結束本階段」後將行動權輪至 {@link #monarchs} 陣列之下一位（環狀）；僅一人時維持同君主。 */
+  function advanceActiveMonarchAfterConfirmDone():Void {
+    var n = _monarchs.length;
+    if (n == 0)
+      return;
+    var idx = -1;
+    for (i in 0...n)
+      if (_monarchs[i].id() == _activeId) {
+        idx = i;
+        break;
+      }
+    if (idx < 0)
+      throw 'GameMatch.advanceActiveMonarchAfterConfirmDone: active ($_activeId) not in monarchs';
+    _activeId = _monarchs[(idx + 1) % n].id();
+  }
+
+  public function board():IBoard
+    return _board;
+
+  public function monarchs():Array<IMonarch>
+    return cast _monarchs;
+
+  public function activeMonarch():IMonarch {
+    for (m in _monarchs)
+      if (m.id() == _activeId)
+        return m;
+    throw 'GameMatch.activeMonarch: id not in roster ($_activeId)';
+  }
+
+  public function availableJiCe(monarchId:MonarchId):Array<IJiCe> {
+    return [];
+  }
+
+  public function isActivePlayerSliceComplete():Bool
+    return _activeSliceComplete;
+}

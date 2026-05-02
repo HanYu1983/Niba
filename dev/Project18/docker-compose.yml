@@ -1,0 +1,7 @@
+services:
+  haxe:
+    image: haxe:4.3-bookworm
+    working_dir: /workspace
+    volumes:
+      # 將 compose 檔所在目錄（本機專案根）對應到容器內 /workspace
+      - .:/workspace

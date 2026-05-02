@@ -1,0 +1,55 @@
+import game.IGame;
+import game.GameIds;
+import game.GeneralStat;
+import game.TileKind;
+import game.IBoard;
+import game.ITile;
+import game.IGeneral;
+import game.IMonarch;
+import game.IJiCe;
+import game.IGameMatch;
+import game.IPlayer;
+import game.IPlayerMenu;
+import game.IPlayerMenuEntry;
+import game.IPlayerMenuNode;
+import game.PlayerMenuKind;
+
+class HelloWorld {
+  static function main() {
+    debug.BoardUnitTest.run();
+    debug.PlayerMenuNestedTest.run();
+    debug.JiCeLuoshiTest.run();
+    debug.TurnSliceFlagTest.run();
+    debug.MenuLoopRoundTest.run();
+    debug.TileEventLandingTest.run();
+    debug.JiCeStagingFlowTest.run();
+    impl_ver1.Ver1SmokeTest.run();
+    debug_ver1.EmptyLevelFourPlayerLoopTest.run();
+    trace("Hello world");
+  }
+
+  /** 強制將架構符號納入編譯檢查（無執行語意）。 */
+  static function __architectureCompileCheck():Void {
+    var _tid:TileKind = Plain;
+    var _stat:GeneralStat = Command;
+    var _mid:MonarchId = "";
+    var _gid:GeneralId = "";
+    var _ti:TileIndex = 0;
+    var _tile:ITile = cast null;
+    var _board:IBoard = cast null;
+    var _general:IGeneral = cast null;
+    var _monarch:IMonarch = cast null;
+    var _jice:IJiCe = cast null;
+    var _match:IGameMatch = cast null;
+    var _root:IGame = cast null;
+    var _player:IPlayer = cast null;
+    var _menu:IPlayerMenu = cast null;
+    var _menuNode:IPlayerMenuNode = cast null;
+    var _menuRow:IPlayerMenuEntry = cast null;
+    var _mk:PlayerMenuKind = Move;
+    var _mtk:PlayerMenuKind = TileEventPick;
+    var _mjk:PlayerMenuKind = JiCePick;
+    var _ver1Game:impl_ver1.Game = cast null;
+    var _ver1Match:impl_ver1.GameMatch = cast null;
+  }
+}
