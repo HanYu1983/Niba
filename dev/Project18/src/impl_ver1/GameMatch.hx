@@ -3,6 +3,7 @@ package impl_ver1;
 import game.GameIds;
 import game.IBoard;
 import game.IGameMatch;
+import game.MatchTerminationReason;
 import game.IGeneral;
 import game.IJiCe;
 import game.IJiCeStagingPreviewRow;
@@ -28,6 +29,7 @@ class GameMatch implements IGameMatch {
   var _monarchs:Array<Monarch>;
   var _activeId:MonarchId;
   var _activeSliceComplete:Bool;
+  var _terminationReason:MatchTerminationReason;
 
   var _tileEventByIndex:Map<Int, ITileEvent>;
   var _pendingTileEvent:Null<ITileEvent>;
@@ -47,6 +49,7 @@ class GameMatch implements IGameMatch {
     _monarchs = [];
     _activeId = "";
     _activeSliceComplete = false;
+    _terminationReason = NotEnded;
     _tileEventByIndex = new Map();
     _pendingTileEvent = null;
     clearTileEventStagingRows();
@@ -297,6 +300,21 @@ class GameMatch implements IGameMatch {
     throw "GameMatch: JiCePick 但無進行中之計策暫存或事件選將暫存";
   }
 
+  /**
+   * 每次 {@link #applyMenuLeaf} 結算後統一進入：勝負／強制終局／回合線等應集中於此（可再委派注入之規剘）。
+   * 已終局時不重算；規剘實作可寫入 {@link #getTerminationReason} 對應之狀態。
+   */
+  function evaluateTermination():Void {
+    switch (_terminationReason) {
+      case Draw | Victory(_):
+        return;
+      case NotEnded:
+    }
+  }
+
+  public function getTerminationReason():MatchTerminationReason
+    return _terminationReason;
+
   public function applyMenuLeaf(actor:IPlayer, leaf:IPlayerMenuEntry, ?playedJiCe:IJiCe, ?jiCeTargetMonarchId:MonarchId):Void {
     if (!leaf.isEnabled())
       throw "GameMatch.applyMenuLeaf: leaf disabled (" + leaf.caption() + ")";
@@ -328,6 +346,7 @@ class GameMatch implements IGameMatch {
         syncActiveSliceAfterMenuLeaf(ConfirmDone);
         advanceActiveMonarchAfterConfirmDone();
     }
+    evaluateTermination();
   }
 
   /** 「結束本階段」後將行動權輪至 {@link #monarchs} 陣列之下一位（環狀）；僅一人時維持同君主。 */

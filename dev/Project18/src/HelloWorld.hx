@@ -8,6 +8,7 @@ import game.IGeneral;
 import game.IMonarch;
 import game.IJiCe;
 import game.IGameMatch;
+import game.MatchTerminationReason;
 import game.IPlayer;
 import game.IPlayerMenu;
 import game.IPlayerMenuEntry;
@@ -38,6 +39,7 @@ class HelloWorld {
     var _monarch:IMonarch = cast null;
     var _jice:IJiCe = cast null;
     var _match:IGameMatch = cast null;
+    var _term:MatchTerminationReason = NotEnded;
     var _root:IGame = cast null;
     var _player:IPlayer = cast null;
     var _menu:IPlayerMenu = cast null;

@@ -61,6 +61,11 @@ interface IGameMatch {
     function isActivePlayerSliceComplete():Bool;
 
     /**
+     * 終局語意：進行中為 {@link MatchTerminationReason.NotEnded}；否則為平局或 {@link MatchTerminationReason.Victory}。
+     */
+    function getTerminationReason():MatchTerminationReason;
+
+    /**
      * 除錯／測試／關卡組立：將事件腳本綁至環上索引（生產流程可改由劇本載入呼叫）。
      */
     function forceBindTileEvent(at:TileIndex, handler:ITileEvent):Void;
