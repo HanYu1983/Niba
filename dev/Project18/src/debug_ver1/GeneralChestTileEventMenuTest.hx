@@ -1,6 +1,5 @@
 package debug_ver1;
 
-import debug.JiCeLuoshiTest;
 import game.IPlayer;
 import game.IPlayerMenu;
 import game.IPlayerMenuEntry;
@@ -63,7 +62,7 @@ class GeneralChestTileEventMenuTest {
     if (jiPicks[0].decisionToken() != "g-chest")
       throw "GeneralChestTileEventMenuTest: JiCePick 機械鍵應為 g-chest";
 
-    match.applyMenuLeaf(player, JiCeLuoshiTest.findJiCePickLeaf(menuPick, "g-chest"));
+    match.applyMenuLeaf(player, PlayerMenuFind.findJiCePickLeaf(menuPick, "g-chest"));
 
     if (match.pendingTileEvent() != null)
       throw "GeneralChestTileEventMenuTest: 結算後應清除 pending";

@@ -9,7 +9,6 @@ import game.IPlayerMenuNode;
 import game.ITile;
 import game.PlayerMenuKind;
 import game.TileKind;
-import debug.JiCeLuoshiTest;
 import impl_ver1.Game;
 import impl_ver1.GameMatch;
 import impl_ver1.LuoshiJiCe;
@@ -64,7 +63,7 @@ class TwoPlayerJiCeStagingMoveConfirmTest {
     if (jiAgain != null && jiAgain.isEnabled())
       throw "TwoPlayerJiCeStagingMoveConfirmTest: 暫存期中「計策」主項應停用";
 
-    var pickLeaf = JiCeLuoshiTest.findJiCePickLeaf(menuPick, "g-one");
+    var pickLeaf = PlayerMenuFind.findJiCePickLeaf(menuPick, "g-one");
     match.applyMenuLeaf(actorAtk, pickLeaf);
 
     if (match.pendingJiCe() != null)

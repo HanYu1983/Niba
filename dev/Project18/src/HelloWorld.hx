@@ -16,14 +16,6 @@ import game.PlayerMenuKind;
 
 class HelloWorld {
   static function main() {
-    debug.BoardUnitTest.run();
-    debug.PlayerMenuNestedTest.run();
-    debug.JiCeLuoshiTest.run();
-    debug.TurnSliceFlagTest.run();
-    debug.MenuLoopRoundTest.run();
-    debug.TileEventLandingTest.run();
-    debug.TileEventSupplyStagingTest.run();
-    debug.JiCeStagingFlowTest.run();
     impl_ver1.Ver1SmokeTest.run();
     debug_ver1.EmptyLevelFourPlayerLoopTest.run();
     debug_ver1.TwoPlayerJiCeStagingMoveConfirmTest.run();
