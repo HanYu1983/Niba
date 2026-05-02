@@ -11,15 +11,15 @@ import game.IPlayerMenuNode;
 import game.PlayerMenuKind;
 
 /**
- * 落石計策：建構子綁定具體 {@link GameMatch}，並直接讀寫其私有暫存欄位（與 GameMatch 同套件友元）。
+ * 落石計策：建構子綁定 {@link GameMatchCore}，並直接讀寫其私有暫存欄位（與 GameMatchCore 同套件友元）。
  */
 class LuoshiJiCe implements IJiCe {
   public static inline var REGISTRY_KEY = "jice_luoshi";
   public static inline var DESIGN_LABEL = "落石";
 
-  var gameMatch:GameMatch;
+  var gameMatch:GameMatchCore;
 
-  public function new(gameMatch:GameMatch) {
+  public function new(gameMatch:GameMatchCore) {
     this.gameMatch = gameMatch;
   }
 
@@ -109,6 +109,6 @@ class LuoshiJiCe implements IJiCe {
   }
 
   static function __init__():Void {
-    JiCeRegistry.register(REGISTRY_KEY, function(m:GameMatch) return new LuoshiJiCe(m));
+    JiCeRegistry.register(REGISTRY_KEY, function(m:GameMatchCore) return new LuoshiJiCe(m));
   }
 }

@@ -7,7 +7,7 @@ import game.IJiCe;
  * 計策 {@link JiCeKey}→建構閉包註冊表。
  * {@link #spawn} 每次建立新實例（無狀態牌等同 clone；若牌帶開局狀態請在閉包內自行複製）。
  */
-typedef JiCeSpawn = GameMatch -> IJiCe;
+typedef JiCeSpawn = GameMatchCore -> IJiCe;
 
 class JiCeRegistry {
   static var _byKey:Null<Map<JiCeKey, JiCeSpawn>>;
@@ -25,7 +25,7 @@ class JiCeRegistry {
     m.set(key, spawn);
   }
 
-  public static function spawn(match:GameMatch, key:JiCeKey):IJiCe {
+  public static function spawn(match:GameMatchCore, key:JiCeKey):IJiCe {
     var sp = map().get(key);
     if (sp == null)
       throw 'JiCeRegistry.spawn: unknown JiCeKey "$key"';

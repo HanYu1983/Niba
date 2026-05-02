@@ -48,7 +48,7 @@
 | 層級 | 典型位置 | 屬於 |
 |------|----------|------|
 | 契約（介面與語意） | `src/game/`（如 `IGameMatch`、`ITileEvent`、`IJiCe`、`PlayerMenuKind`） | **骨架** |
-| 賽局編排與選單／結算總線 | `src/impl_ver1/GameMatch.hx`（及同套件核心型別） | **骨架** |
+| 賽局編排與選單／結算總線 | `GameMatchCore.hx`（總線）＋`GameMatchVer1Ops.hx`（終局／移動，`@:allow` 下同套件可視私有）＋`GameMatch.hx` | **骨架** |
 | 具體計策／事件腳本 | 例如 `impl_ver1/LuoshiJiCe`、`debug_ver1/*TileEvent`（日後可遷到 `content/` 等命名空間） | **擴充內容** |
 | 關卡組立 | `impl_ver1/Game.hx` 的 `level_key` 分支（「空白局」vs「某劇本」） | **擴充內容**（編排便當）；工廠介面仍屬骨架契約 |
 
@@ -65,7 +65,7 @@
 ## 4. 開發規範：不可混淆
 
 1. **骨架不應硬編特定劇本**  
-   例如不要在 `GameMatch` 裡寫死某一事件的選項文字或某一計策的公式；應透過 `ITileEvent`／`IJiCe` 等實作注入。
+   例如不要在 `GameMatchCore`／總線裡寫死某一事件的選項文字或某一計策的公式；應透過 `ITileEvent`／`IJiCe` 等實作注入。
 
 2. **擴充內容不應繞過公開 API**  
    事件／計策應透過 `IGameMatch` 提供的方法（如進入暫存、清除 pending）與選單葉種類一致；避免從腳本直接篡改私有狀態或複製一套「平行主迴圈」。

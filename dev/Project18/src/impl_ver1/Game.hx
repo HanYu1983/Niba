@@ -7,10 +7,10 @@ import game.ITile;
 import game.TileKind;
 
 /**
- * Ver1：依 level_key 建立 {@link GameMatch} 並組立關卡局面。
+ * Ver1：依 level_key 建立 {@link GameMatch}（{@link GameMatchCore} 子類）並組立關卡局面。
  */
 class Game implements IGame {
-  /** 空白賽局：僅 {@link GameMatch} 初始化，供測試自行 {@link GameMatch#createBoard}／{@link GameMatch#createMonarch} 等組局。 */
+  /** 空白賽局：僅 {@link GameMatchCore}／{@link GameMatch} 初始化，供測試自行組局。 */
   public static inline var LEVEL_KEY_EMPTY = "ver1/empty";
 
   public function new() {}
@@ -21,7 +21,7 @@ class Game implements IGame {
     return match;
   }
 
-  function configureFromLevel(match:GameMatch, key:LevelKey):Void {
+  function configureFromLevel(match:GameMatchCore, key:LevelKey):Void {
     switch key {
       case LEVEL_KEY_EMPTY:
         return;
