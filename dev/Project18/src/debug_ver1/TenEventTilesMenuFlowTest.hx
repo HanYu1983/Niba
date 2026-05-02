@@ -1,5 +1,7 @@
 package debug_ver1;
 
+import game.IGame;
+import game.IGameMatch;
 import game.IPlayer;
 import game.IPlayerMenu;
 import game.IPlayerMenuEntry;
@@ -8,20 +10,19 @@ import game.ITile;
 import game.PlayerMenuKind;
 import game.TileKind;
 import impl_ver1.Game;
-import impl_ver1.GameMatch;
 import impl_ver1.Monarch;
 
 /**
- * 單君主、十格皆 {@link TileKind.Event}：移動落地→pending 事件→選單含事件分歧→結算後出現結束語意。
+ * 單君主、十格皆 {@link TileKind.Event}：移動落地→forceGetPendingTileEvent→選單含事件分歧→結算後出現結束語意。
  */
 class TenEventTilesMenuFlowTest {
   static inline var RING_LEN = 10;
-  /** {@link GameMatch#DEFAULT_MOVE_DELTA} 為 3：自 0 出發落在索引 3。 */
+  /** 與 ver1 預設移動步幅（3）一致：自 0 出發落在索引 3。 */
   static inline var EXPECT_LANDING_IDX = 3;
 
   public static function run():Void {
-    var factory = new Game();
-    var match:GameMatch = cast factory.createGameMatch(Game.LEVEL_KEY_EMPTY);
+    var game:IGame = new Game();
+    var match:IGameMatch = game.createGameMatch(Game.LEVEL_KEY_EMPTY);
 
     var tiles:Array<ITile> = [];
     for (i in 0...RING_LEN)
@@ -32,7 +33,7 @@ class TenEventTilesMenuFlowTest {
 
     var evt = new RingLootForkTileEvent(match);
     for (i in 0...RING_LEN)
-      match.bindTileEvent(i, evt);
+      match.forceBindTileEvent(i, evt);
 
     var ruler = cast(match.monarchs()[0], Monarch);
     var player:IPlayer = match.createPlayer(ruler.id(), "evt-solo");
@@ -49,8 +50,8 @@ class TenEventTilesMenuFlowTest {
 
     if (ruler.pawnIndex() != EXPECT_LANDING_IDX)
       throw 'TenEventTilesMenuFlowTest: 預期落在索引 $EXPECT_LANDING_IDX，實際 ${ruler.pawnIndex()}';
-    if (match.pendingTileEvent() == null)
-      throw "TenEventTilesMenuFlowTest: 十格皆 Event 且已綁腳本時落地應有 pendingTileEvent";
+    if (match.forceGetPendingTileEvent() == null)
+      throw "TenEventTilesMenuFlowTest: 十格皆 Event 且已綁腳本時落地應有 forceGetPendingTileEvent";
     if (match.isActivePlayerSliceComplete())
       throw "TenEventTilesMenuFlowTest: 事件未結算前切片不得標為可結束";
 
@@ -72,8 +73,8 @@ class TenEventTilesMenuFlowTest {
 
     match.applyMenuLeaf(player, grainLeaf);
 
-    if (match.pendingTileEvent() != null)
-      throw "TenEventTilesMenuFlowTest: 結算後應清除 pending";
+    if (match.forceGetPendingTileEvent() != null)
+      throw "TenEventTilesMenuFlowTest: 結算後應清除 forceGetPendingTileEvent";
     if (evt.lastResolvedChoice != "take_grain")
       throw "TenEventTilesMenuFlowTest: resolveChoice 鍵不符";
     if (ruler.grain() != 72)

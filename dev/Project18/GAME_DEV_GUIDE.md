@@ -39,7 +39,7 @@
 
 之後的工作主要是 **增量擴充內容** 與平衡，而非重做核心架構。
 
-擴充再多，若破坏了骨架與內容的界線，仍視為架構問題，應回到骨架層修正契約或掛鉤，而不是把流程寫死在單一事件腳本裡。
+擴充再多，若破壞了骨架與內容的界線，仍視為架構問題，應回到骨架層修正契約或掛鉤，而不是把流程寫死在單一事件腳本裡。
 
 ---
 
@@ -51,6 +51,10 @@
 | 賽局編排與選單／結算總線 | `src/impl_ver1/GameMatch.hx`（及同套件核心型別） | **骨架** |
 | 具體計策／事件腳本 | 例如 `impl_ver1/LuoshiJiCe`、`debug_ver1/*TileEvent`（日後可遷到 `content/` 等命名空間） | **擴充內容** |
 | 關卡組立 | `impl_ver1/Game.hx` 的 `level_key` 分支（「空白局」vs「某劇本」） | **擴充內容**（編排便當）；工廠介面仍屬骨架契約 |
+
+**計策註冊**：具體計策類別在模組載入時向 `impl_ver1.JiCeRegistry.register` 登錄 spawn 閉包；`createJiCe` 每次 `spawn` 建新實例（無狀態牌語意等同 clone）。骨架檔不再 `switch` 具體計策類別。
+
+**`force*` API**：`IGameMatch` 上此前綴的方法（如 `forceBindTileEvent`、`forceGetPendingTileEvent`）供除錯／測試／組局透視或注入；對局推進仍以 `createPlayerMenu`／`applyMenuLeaf` 為準。
 
 **判斷小技巧：**  
 若拿掉某一個計策或事件類別後，主迴路仍可編譯且「換另一組內容」仍能跑通同樣流程，則該類別多半是 **擴充內容**。  
@@ -80,7 +84,7 @@
 | 骨架負責 | 擴充內容負責 |
 |----------|----------------|
 | `createPlayerMenu`／`applyMenuLeaf` 與葉種類語意 | 各 `ITileEvent`／`IJiCe` 的選項與結算 |
-| `pendingTileEvent`／`pendingJiCe`、切片是否可結束 | 兵力／糧食變動數值與條件 |
+| 內部暫存與切片是否可結束（對外除錯見 `forceGetPendingTileEvent` 等） | 兵力／糧食變動數值與條件 |
 | 移動「結構」（例如環狀前進、落地觸發時機）；**目前步幅為占位** | 骰子結果、路網修正、動畫與演出 |
 | 暫存列模型（預覽列與機械鍵） | 每一列的描述與 predicted 語意 |
 

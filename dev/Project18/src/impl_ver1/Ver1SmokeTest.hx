@@ -1,6 +1,8 @@
 package impl_ver1;
 
 import game.GeneralStat;
+import game.IGame;
+import game.IGameMatch;
 import game.IJiCe;
 import game.IPlayer;
 import game.IPlayerMenu;
@@ -9,12 +11,12 @@ import game.IPlayerMenuNode;
 import game.PlayerMenuKind;
 
 /**
- * Ver1 骨架煙霧：{@link Game#createGameMatch("ver1/smoke")} → LuoshiJiCe。
+ * Ver1 骨架煙霧：{@link IGame#createGameMatch}（{@code ver1/smoke}）→ LuoshiJiCe。
  */
 class Ver1SmokeTest {
   public static function run():Void {
-    var factory = new Game();
-    var match:GameMatch = cast factory.createGameMatch("ver1/smoke");
+    var game:IGame = new Game();
+    var match:IGameMatch = game.createGameMatch("ver1/smoke");
 
     var attacker = cast(match.monarchs()[0], Monarch);
     var defender = cast(match.monarchs()[1], Monarch);
@@ -33,14 +35,14 @@ class Ver1SmokeTest {
     var pickLeaf = findJiCePickLeaf(match.createPlayerMenu(player), "g-might-high");
     match.applyMenuLeaf(player, pickLeaf);
 
-    if (match.pendingJiCe() != null)
-      throw "Ver1SmokeTest: pendingJiCe 應已清除";
+    if (match.forceGetPendingJiCe() != null)
+      throw "Ver1SmokeTest: forceGetPendingJiCe 應已清除";
 
     var lossPickHigh = LuoshiJiCe.previewTroopLoss(100, gHigh.stat(Might));
     if (defender.troops() != 100 - lossPickHigh)
       throw "Ver1SmokeTest: 守方兵力不符預期";
 
-    trace("[Ver1SmokeTest] OK — impl_ver1 level_key→GameMatch→LuoshiJiCe");
+    trace("[Ver1SmokeTest] OK — impl_ver1 level_key→IGameMatch→LuoshiJiCe");
   }
 
   static function findJiCePickLeaf(menu:IPlayerMenu, generalId:String):IPlayerMenuEntry {

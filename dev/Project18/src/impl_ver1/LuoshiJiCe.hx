@@ -107,4 +107,8 @@ class LuoshiJiCe implements IJiCe {
   public static function previewTroopLoss(defenderTroops:Int, casterGeneralMight:Int):Int {
     return stagedLuoshiTroopLossPreview(defenderTroops, casterGeneralMight);
   }
+
+  static function __init__():Void {
+    JiCeRegistry.register(REGISTRY_KEY, function(m:GameMatch) return new LuoshiJiCe(m));
+  }
 }

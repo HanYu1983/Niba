@@ -1,5 +1,7 @@
 package debug_ver1;
 
+import game.IGame;
+import game.IGameMatch;
 import game.IPlayer;
 import game.IPlayerMenu;
 import game.IPlayerMenuEntry;
@@ -19,8 +21,8 @@ class GeneralChestTileEventMenuTest {
   static inline var LANDING_IDX = 3;
 
   public static function run():Void {
-    var factory = new Game();
-    var match:GameMatch = cast factory.createGameMatch(Game.LEVEL_KEY_EMPTY);
+    var game:IGame = new Game();
+    var match:IGameMatch = game.createGameMatch(Game.LEVEL_KEY_EMPTY);
 
     var tiles:Array<ITile> = [];
     for (i in 0...RING_LEN)
@@ -31,7 +33,7 @@ class GeneralChestTileEventMenuTest {
     match.createGeneral("g-chest", "m-chest", 5, 5, 5, 5);
 
     var evt = new GeneralChestTileEvent(match);
-    match.bindTileEvent(LANDING_IDX, evt);
+    match.forceBindTileEvent(LANDING_IDX, evt);
 
     var ruler = cast(match.monarchs()[0], Monarch);
     var player:IPlayer = match.createPlayer(ruler.id(), "evt-chest");
@@ -40,7 +42,7 @@ class GeneralChestTileEventMenuTest {
 
     if (ruler.pawnIndex() != LANDING_IDX)
       throw 'GeneralChestTileEventMenuTest: 預期落在索引 $LANDING_IDX，實際 ${ruler.pawnIndex()}';
-    if (match.pendingTileEvent() != evt)
+    if (match.forceGetPendingTileEvent() != evt)
       throw "GeneralChestTileEventMenuTest: 應為 GeneralChest pending";
 
     var menuEvt = match.createPlayerMenu(player);
@@ -49,9 +51,9 @@ class GeneralChestTileEventMenuTest {
       throw "GeneralChestTileEventMenuTest: 缺少 claim_reward";
     match.applyMenuLeaf(player, claim);
 
-    if (match.pendingTileEvent() == null)
-      throw "GeneralChestTileEventMenuTest: 選將暫存期仍應有 pendingTileEvent";
-    var rows = match.tileEventStagingPreviewRows();
+    if (match.forceGetPendingTileEvent() == null)
+      throw "GeneralChestTileEventMenuTest: 選將暫存期仍應有 forceGetPendingTileEvent";
+    var rows = match.forceTileEventStagingPreviewRows();
     if (rows.length != 1 || rows[0].generalId() != "g-chest")
       throw "GeneralChestTileEventMenuTest: 預覽列應為單一 g-chest";
 
@@ -64,7 +66,7 @@ class GeneralChestTileEventMenuTest {
 
     match.applyMenuLeaf(player, PlayerMenuFind.findJiCePickLeaf(menuPick, "g-chest"));
 
-    if (match.pendingTileEvent() != null)
+    if (match.forceGetPendingTileEvent() != null)
       throw "GeneralChestTileEventMenuTest: 結算後應清除 pending";
     if (ruler.troops() != 108)
       throw "GeneralChestTileEventMenuTest: 預期兵力 100+8=108，got " + ruler.troops();

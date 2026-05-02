@@ -60,33 +60,36 @@ interface IGameMatch {
      */
     function isActivePlayerSliceComplete():Bool;
 
-    /** 踩點後待結算之事件腳本；無則 null。 */
-    function pendingTileEvent():Null<ITileEvent>;
-
     /**
-     * 計策打出後尚待 resolveChoice 之腳本；非 null 時 createPlayerMenu 應委派 pendingJiCe.buildPlayerMenu(actor)。
+     * 除錯／測試／關卡組立：將事件腳本綁至環上索引（生產流程可改由劇本載入呼叫）。
      */
-    function pendingJiCe():Null<IJiCe>;
+    function forceBindTileEvent(at:TileIndex, handler:ITileEvent):Void;
 
-    /** 暫存計策所鎖定之目標君主；僅於 pendingJiCe 非 null 時有效。 */
-    function jiCeStagingTargetMonarchId():Null<MonarchId>;
+    /** 除錯／測試：踩點後待結算之事件腳本；無則 null。 */
+    function forceGetPendingTileEvent():Null<ITileEvent>;
 
-    /** 與暫存計策對應之武將選項預覽；無暫存時為空陣列。 */
-    function jiCeStagingPreviewRows():Array<IJiCeStagingPreviewRow>;
+    /** 除錯／測試：計策打出後尚待 resolveChoice 之腳本。 */
+    function forceGetPendingJiCe():Null<IJiCe>;
+
+    /** 除錯／測試：暫存計策所鎖定之目標君主。 */
+    function forceGetJiCeStagingTargetMonarchId():Null<MonarchId>;
+
+    /** 除錯／測試：暫存計策對應之武將預覽列；無暫存時為空陣列。 */
+    function forceJiCeStagingPreviewRows():Array<IJiCeStagingPreviewRow>;
 
     /**
-     * IJiCe.applyAgainstMonarch 實作呼叫：設 pendingJiCe、目標君主與預覽列。
+     * IJiCe.applyAgainstMonarch 實作呼叫：進入計策暫存（目標君主與預覽列）。
      */
     function enterJiCeStaging(card:IJiCe, targetMonarchId:MonarchId, previewRows:Array<IJiCeStagingPreviewRow>):Void;
 
     /**
-     * 踩點事件於第一段 {@link ITileEvent#resolveChoice} 後進入「選將＋預覽」暫存（{@code handler} 須為當前 {@link #pendingTileEvent}）。
+     * 踩點事件於第一段 {@link ITileEvent#resolveChoice} 後進入「選將＋預覽」暫存（{@code handler} 須為當前 {@link #forceGetPendingTileEvent}）。
      * 選單第二段沿用 {@link PlayerMenuKind.JiCePick}，結算呼叫 {@link ITileEvent#resolveStagingGeneral}。
      */
     function enterTileEventGeneralStaging(handler:ITileEvent, previewRows:Array<IJiCeStagingPreviewRow>):Void;
 
-    /** 當前格子事件選將暫存列；無暫存或非選將流程時為空。 */
-    function tileEventStagingPreviewRows():Array<IJiCeStagingPreviewRow>;
+    /** 除錯／測試：格子事件選將暫存列；無暫存或非選將流程時為空。 */
+    function forceTileEventStagingPreviewRows():Array<IJiCeStagingPreviewRow>;
 
     /** 單格；多格按索引有序組裝後再交由 createBoard。 */
     function createTile(index:TileIndex, kind:TileKind):ITile;

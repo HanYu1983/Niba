@@ -7,8 +7,8 @@ import game.IPlayerMenu;
 import game.IPlayerMenuEntry;
 import game.IPlayerMenuNode;
 import game.ITileEvent;
+import game.IGameMatch;
 import game.PlayerMenuKind.TileEventPick;
-import impl_ver1.GameMatch;
 import impl_ver1.General;
 import impl_ver1.JiCeStagingPreviewRow;
 import impl_ver1.Monarch;
@@ -20,10 +20,10 @@ import impl_ver1.PlayerMenu;
 class RingLootForkTileEvent implements ITileEvent {
   public var lastResolvedChoice:String = "";
 
-  var _match:GameMatch;
+  var _match:IGameMatch;
   var _awaitingSupplyGeneralPick:Bool;
 
-  public function new(match:GameMatch) {
+  public function new(match:IGameMatch) {
     _match = match;
     _awaitingSupplyGeneralPick = false;
   }

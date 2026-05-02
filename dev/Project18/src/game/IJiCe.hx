@@ -9,7 +9,7 @@ import game.GameIds;
  *
  * - applyAgainstMonarch：對目標君主進入「暫存／待選」態（通常經 enterJiCeStaging）。
  * - buildPlayerMenu：暫存期中組裝後續選單。
- * - resolveChoice：機械鍵與選單葉 decisionToken 對齊；結算後由 match.applyMenuLeaf 清除 pendingJiCe。
+ * - resolveChoice：機械鍵與選單葉 decisionToken 對齊；結算後由 match.applyMenuLeaf 清除計策暫存。
  */
 interface IJiCe {
     /** 規剘／版本無關之設計顯示名（本地化由此向上委派）。 */
@@ -21,7 +21,7 @@ interface IJiCe {
     /** 打出本計策並對 targetMonarchId 進入暫存態（尚未套用對守方之最終結算）。 */
     function applyAgainstMonarch(actor:IPlayer, targetMonarchId:MonarchId):Void;
 
-    /** 暫存期中組裝後續選單（須配合賽局 pendingJiCe()==this）。 */
+    /** 暫存期中組裝後續選單（賽局內暫存之計策須為 this）。 */
     function buildPlayerMenu(actor:IPlayer):IPlayerMenu;
 
     /** 玩家選定機械鍵後套用規剘（須配合賽局暫存列與目標君主）。 */

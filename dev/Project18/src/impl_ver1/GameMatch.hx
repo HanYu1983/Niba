@@ -64,7 +64,7 @@ class GameMatch implements IGameMatch {
     _tileEventStagingRows = ([] : Array<IJiCeStagingPreviewRow>);
   }
 
-  public function bindTileEvent(at:TileIndex, handler:ITileEvent):Void {
+  public function forceBindTileEvent(at:TileIndex, handler:ITileEvent):Void {
     _tileEventByIndex.set(at, handler);
   }
 
@@ -121,26 +121,21 @@ class GameMatch implements IGameMatch {
 
   public function createJiCe(key:JiCeKey, ownerMonarchId:MonarchId):IJiCe {
     requireOwnerMonarch(ownerMonarchId);
-    var card:IJiCe = switch key {
-      case LuoshiJiCe.REGISTRY_KEY:
-        new LuoshiJiCe(this);
-      default:
-        throw 'GameMatch.createJiCe: unknown key "$key"';
-    };
+    var card = JiCeRegistry.spawn(this, key);
     _ownedJiCe.get(ownerMonarchId).push(card);
     return card;
   }
 
-  public function pendingTileEvent():Null<ITileEvent>
+  public function forceGetPendingTileEvent():Null<ITileEvent>
     return _pendingTileEvent;
 
-  public function pendingJiCe():Null<IJiCe>
+  public function forceGetPendingJiCe():Null<IJiCe>
     return _pendingJiCe;
 
-  public function jiCeStagingTargetMonarchId():Null<MonarchId>
+  public function forceGetJiCeStagingTargetMonarchId():Null<MonarchId>
     return _jiCeStagingTargetId;
 
-  public function jiCeStagingPreviewRows():Array<IJiCeStagingPreviewRow> {
+  public function forceJiCeStagingPreviewRows():Array<IJiCeStagingPreviewRow> {
     if (_pendingJiCe == null)
       return [];
     return _jiCeStagingRows.copy();
@@ -154,16 +149,16 @@ class GameMatch implements IGameMatch {
 
   public function enterTileEventGeneralStaging(handler:ITileEvent, previewRows:Array<IJiCeStagingPreviewRow>):Void {
     if (_pendingTileEvent != handler)
-      throw "GameMatch.enterTileEventGeneralStaging: handler 須為當前 pendingTileEvent";
+      throw "GameMatch.enterTileEventGeneralStaging: handler 須為當前 forceGetPendingTileEvent()";
     _tileEventStagingRows = previewRows.copy();
   }
 
-  public function tileEventStagingPreviewRows():Array<IJiCeStagingPreviewRow>
+  public function forceTileEventStagingPreviewRows():Array<IJiCeStagingPreviewRow>
     return _tileEventStagingRows.copy();
 
   public function createPlayerMenu(actor:IPlayer):IPlayerMenu {
-    var pend = pendingTileEvent();
-    var jiPending = pendingJiCe();
+    var pend = _pendingTileEvent;
+    var jiPending = _pendingJiCe;
     var stagingActive = jiPending != null;
     var ctx = actor.monarchId() + "-" + isActivePlayerSliceComplete();
     if (pend != null)
@@ -265,7 +260,7 @@ class GameMatch implements IGameMatch {
   function handleTileEventPick(actor:IPlayer, leaf:IPlayerMenuEntry):Void {
     var ev = _pendingTileEvent;
     if (ev == null)
-      throw "GameMatch: TileEventPick 但無 pendingTileEvent";
+      throw "GameMatch: TileEventPick 但無 forceGetPendingTileEvent";
     var tok = leaf.decisionToken();
     if (tok == null)
       throw "GameMatch: TileEventPick 需要 decisionToken";
@@ -281,7 +276,7 @@ class GameMatch implements IGameMatch {
     if (tok == null)
       throw "GameMatch: JiCePick 需要 decisionToken（機械鍵）";
 
-    var card = pendingJiCe();
+    var card = _pendingJiCe;
     if (card != null) {
       card.resolveChoice(actor, tok);
       clearJiCeStaging();
@@ -289,7 +284,7 @@ class GameMatch implements IGameMatch {
       return;
     }
 
-    var ev = pendingTileEvent();
+    var ev = _pendingTileEvent;
     if (ev != null && _tileEventStagingRows.length > 0) {
       ev.resolveStagingGeneral(actor, tok);
       clearTileEventStagingRows();
@@ -320,7 +315,7 @@ class GameMatch implements IGameMatch {
       case JiCePick:
         handleJiCePick(actor, leaf);
       case JiCe:
-        if (pendingJiCe() != null)
+        if (_pendingJiCe != null)
           throw "GameMatch: 已有進行中之計策暫存，請先完成計策選項";
         var card = playedJiCe != null ? playedJiCe : resolvePlayedJiCeFromLeaf(actor, leaf);
         if (jiCeTargetMonarchId == null)

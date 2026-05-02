@@ -5,11 +5,12 @@ import game.IPlayer;
 import game.IPlayerMenu;
 import game.IPlayerMenuEntry;
 import game.IPlayerMenuNode;
+import game.IGame;
+import game.IGameMatch;
 import game.ITile;
 import game.PlayerMenuKind;
 import game.TileKind;
 import impl_ver1.Game;
-import impl_ver1.GameMatch;
 
 /**
  * 空白 level（{@link Game#LEVEL_KEY_EMPTY}）組局後，驗證四人主迴圈：
@@ -17,8 +18,8 @@ import impl_ver1.GameMatch;
  */
 class EmptyLevelFourPlayerLoopTest {
   public static function run():Void {
-    var factory = new Game();
-    var match:GameMatch = cast factory.createGameMatch(Game.LEVEL_KEY_EMPTY);
+    var game:IGame = new Game();
+    var match:IGameMatch = game.createGameMatch(Game.LEVEL_KEY_EMPTY);
 
     var tiles:Array<ITile> = [];
     for (i in 0...10)

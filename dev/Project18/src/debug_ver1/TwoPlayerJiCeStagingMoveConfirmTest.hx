@@ -6,11 +6,12 @@ import game.IPlayer;
 import game.IPlayerMenu;
 import game.IPlayerMenuEntry;
 import game.IPlayerMenuNode;
+import game.IGame;
+import game.IGameMatch;
 import game.ITile;
 import game.PlayerMenuKind;
 import game.TileKind;
 import impl_ver1.Game;
-import impl_ver1.GameMatch;
 import impl_ver1.LuoshiJiCe;
 
 /**
@@ -19,8 +20,8 @@ import impl_ver1.LuoshiJiCe;
  */
 class TwoPlayerJiCeStagingMoveConfirmTest {
   public static function run():Void {
-    var factory = new Game();
-    var match:GameMatch = cast factory.createGameMatch(Game.LEVEL_KEY_EMPTY);
+    var game:IGame = new Game();
+    var match:IGameMatch = game.createGameMatch(Game.LEVEL_KEY_EMPTY);
 
     var tiles:Array<ITile> = [];
     for (i in 0...10)
@@ -51,7 +52,7 @@ class TwoPlayerJiCeStagingMoveConfirmTest {
     var jiLeaf = requireEnabledLeaf(menu0, JiCe);
     match.applyMenuLeaf(actorAtk, jiLeaf, luoshi, defId);
 
-    if (match.pendingJiCe() == null)
+    if (match.forceGetPendingJiCe() == null)
       throw "TwoPlayerJiCeStagingMoveConfirmTest: 打出計策後應進入暫存";
 
     var menuPick = match.createPlayerMenu(actorAtk);
@@ -66,8 +67,8 @@ class TwoPlayerJiCeStagingMoveConfirmTest {
     var pickLeaf = PlayerMenuFind.findJiCePickLeaf(menuPick, "g-one");
     match.applyMenuLeaf(actorAtk, pickLeaf);
 
-    if (match.pendingJiCe() != null)
-      throw "TwoPlayerJiCeStagingMoveConfirmTest: 選將後應清除 pendingJiCe";
+    if (match.forceGetPendingJiCe() != null)
+      throw "TwoPlayerJiCeStagingMoveConfirmTest: 選將後應清除 forceGetPendingJiCe";
 
     var menuAfterPick = match.createPlayerMenu(actorAtk);
     requireEnabledLeaf(menuAfterPick, Move);
