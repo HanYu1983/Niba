@@ -3,7 +3,6 @@ package impl_ver1;
 import game.GameIds;
 import game.IGame;
 import game.IGameMatch;
-import game.IGeneral;
 import game.ITile;
 import game.TileKind;
 
@@ -27,12 +26,10 @@ class Game implements IGame {
       case LEVEL_KEY_EMPTY:
         return;
       case "ver1/smoke":
-        var gHigh = match.createGeneral("g-might-high", "m-atk", 1, 50, 1, 1);
-        var gLow = match.createGeneral("g-might-low", "m-atk", 1, 20, 1, 1);
-        var rosterA:Array<IGeneral> = [gHigh, gLow];
-        var rosterB:Array<IGeneral> = [];
-        match.createMonarch("m-atk", 0, 0, rosterA, 500, 80);
-        match.createMonarch("m-def", 1, 0, rosterB, 100, 200);
+        match.createMonarch("m-atk", 0, 0, 500, 80);
+        match.createMonarch("m-def", 1, 0, 100, 200);
+        match.createGeneral("g-might-high", "m-atk", 1, 50, 1, 1);
+        match.createGeneral("g-might-low", "m-atk", 1, 20, 1, 1);
         var tiles:Array<ITile> = [match.createTile(0, Plain)];
         match.createBoard(tiles);
       default:

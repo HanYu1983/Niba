@@ -16,3 +16,6 @@ typedef TileIndex = Int;
 
 /** 關卡／劇本組態鍵（由 IGame.createGameMatch 傳入）。 */
 typedef LevelKey = String;
+
+/** 計策類型資料鍵（對應 IJiCe.registryKey／資料表 id）。 */
+typedef JiCeKey = String;

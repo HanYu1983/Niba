@@ -15,11 +15,12 @@ class Ver1SmokeTest {
   public static function run():Void {
     var factory = new Game();
     var match:GameMatch = cast factory.createGameMatch("ver1/smoke");
-    var luoshi:IJiCe = new LuoshiJiCe(match);
 
     var attacker = cast(match.monarchs()[0], Monarch);
     var defender = cast(match.monarchs()[1], Monarch);
     var gHigh = cast(attacker.roster()[0], General);
+
+    var luoshi:IJiCe = match.createJiCe(LuoshiJiCe.REGISTRY_KEY, attacker.id());
 
     var player:IPlayer = match.createPlayer(attacker.id(), "攻方");
     var jiCeLeaf = match.createPlayerMenuEntry(JiCe, "計策：落石", true);

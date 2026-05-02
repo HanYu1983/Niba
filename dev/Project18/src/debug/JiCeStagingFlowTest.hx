@@ -3,7 +3,6 @@ package debug;
 import game.IJiCe;
 import game.IPlayer;
 import game.IPlayerMenuEntry;
-import game.PlayerMenuKind;
 import game.GeneralStat;
 import game.PlayerMenuKind;
 
@@ -18,7 +17,7 @@ class JiCeStagingFlowTest {
     var def = cast(match.monarchs()[1], SimpleMonarch);
     var gb = cast(atk.roster()[1], SimpleGeneral);
 
-    var luoshi:IJiCe = new LuoshiJiCe(match);
+    var luoshi:IJiCe = match.createJiCe(LuoshiJiCe.REGISTRY_KEY, atk.id());
     var player:IPlayer = match.createPlayer(atk.id(), "操縱者");
     var jiLeaf:IPlayerMenuEntry = match.createPlayerMenuEntry(JiCe, "打出：落石", true);
 

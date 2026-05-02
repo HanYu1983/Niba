@@ -31,10 +31,10 @@ class SimpleGame implements IGame {
   public function createGeneral(id:GeneralId, owner:MonarchId, command:Int, might:Int, wit:Int, stewardship:Int):IGeneral
     return new SimpleGeneral(id, owner, command, might, wit, stewardship);
 
-  public function createMonarch(id:MonarchId, seat:Int, pawnIndex:TileIndex, roster:Array<IGeneral>, ?troops:Int, ?grain:Int):IMonarch {
+  public function createMonarch(id:MonarchId, seat:Int, pawnIndex:TileIndex, ?troops:Int, ?grain:Int):IMonarch {
     var tr = troops != null ? troops : 0;
     var gr = grain != null ? grain : 0;
-    return new SimpleMonarch(id, seat, pawnIndex, roster, tr, gr);
+    return new SimpleMonarch(id, seat, pawnIndex, tr, gr);
   }
 
   public function createPlayer(monarchId:MonarchId, displayName:String):IPlayer

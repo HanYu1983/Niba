@@ -21,6 +21,7 @@ import game.TileKind;
  */
 @:allow(impl_ver1)
 class GameMatch implements IGameMatch {
+  /** TODO: 骨架預設步幅；骰子／路網／計策修正後應由此衍生有效 delta（見 {@link #applyMenuLeaf} Move）。 */
   public static inline var DEFAULT_MOVE_DELTA = 3;
 
   var _board:Board;
@@ -35,6 +36,9 @@ class GameMatch implements IGameMatch {
   var _jiCeStagingTargetId:Null<MonarchId>;
   var _jiCeStagingRows:Array<IJiCeStagingPreviewRow>;
 
+  /** 君主所持計策實例列表（順序對應選單 decisionToken 索引）。 */
+  var _ownedJiCe:Map<MonarchId, Array<IJiCe>>;
+
   /** 空白賽局；由 {@link Game#createGameMatch} 透過 {@link #createBoard}／{@link #createMonarch} 等組立局面。 */
   public function new() {
     _board = cast null;
@@ -43,6 +47,7 @@ class GameMatch implements IGameMatch {
     _activeSliceComplete = false;
     _tileEventByIndex = new Map();
     _pendingTileEvent = null;
+    _ownedJiCe = new Map();
     clearJiCeStaging();
   }
 
@@ -67,17 +72,28 @@ class GameMatch implements IGameMatch {
     return b;
   }
 
-  public function createGeneral(id:GeneralId, owner:MonarchId, command:Int, might:Int, wit:Int, stewardship:Int):IGeneral
-    return new General(id, owner, command, might, wit, stewardship);
+  public function createGeneral(id:GeneralId, owner:MonarchId, command:Int, might:Int, wit:Int, stewardship:Int):IGeneral {
+    var gen = new General(id, owner, command, might, wit, stewardship);
+    monarchWithId(owner).addGeneral(gen);
+    return gen;
+  }
 
-  public function createMonarch(id:MonarchId, seat:Int, pawnIndex:TileIndex, roster:Array<IGeneral>, ?troops:Int, ?grain:Int):IMonarch {
+  public function createMonarch(id:MonarchId, seat:Int, pawnIndex:TileIndex, ?troops:Int, ?grain:Int):IMonarch {
     var t = troops != null ? troops : 0;
     var g = grain != null ? grain : 0;
-    var m = new Monarch(id, seat, pawnIndex, roster, t, g);
+    var m = new Monarch(id, seat, pawnIndex, t, g);
     _monarchs.push(m);
+    _ownedJiCe.set(id, []);
     if (_monarchs.length == 1)
       _activeId = m.id();
     return m;
+  }
+
+  function monarchWithId(mid:MonarchId):Monarch {
+    for (m in _monarchs)
+      if (m.id() == mid)
+        return m;
+    throw 'GameMatch: monarch "$mid" not registered';
   }
 
   public function createPlayer(monarchId:MonarchId, displayName:String):IPlayer
@@ -88,6 +104,25 @@ class GameMatch implements IGameMatch {
 
   public function createPlayerMenuNode(caption:String, leaf:Null<IPlayerMenuEntry>, children:Array<IPlayerMenuNode>):IPlayerMenuNode
     return new PlayerMenuNode(caption, leaf, children);
+
+  function requireOwnerMonarch(ownerMonarchId:MonarchId):Void {
+    for (mon in _monarchs)
+      if (mon.id() == ownerMonarchId)
+        return;
+    throw 'GameMatch.createJiCe: owner "$ownerMonarchId" not in monarchs';
+  }
+
+  public function createJiCe(key:JiCeKey, ownerMonarchId:MonarchId):IJiCe {
+    requireOwnerMonarch(ownerMonarchId);
+    var card:IJiCe = switch key {
+      case LuoshiJiCe.REGISTRY_KEY:
+        new LuoshiJiCe(this);
+      default:
+        throw 'GameMatch.createJiCe: unknown key "$key"';
+    };
+    _ownedJiCe.get(ownerMonarchId).push(card);
+    return card;
+  }
 
   public function pendingTileEvent():Null<ITileEvent>
     return _pendingTileEvent;
@@ -133,13 +168,34 @@ class GameMatch implements IGameMatch {
     }
 
     var blockBasics = pend != null || stagingActive;
+    var jiEnabledBase = !stagingActive && pend == null;
+
+    // TODO: 依規剘過濾／排序／灰階可用計策（冷卻、目標合法性、同名堆疊等）；現為 availableJiCe 全列不過濾。
+    var ownedJiCe = availableJiCe(actor.monarchId());
+    var jiChildren:Array<IPlayerMenuNode> = [];
+    if (ownedJiCe.length == 0)
+      jiChildren.push(
+        createPlayerMenuNode(
+          "(無所持計策)",
+          createPlayerMenuEntry(JiCe, "（尚無所持計策）", false, null),
+          ([] : Array<IPlayerMenuNode>)
+        )
+      );
+    else
+      for (i in 0...ownedJiCe.length) {
+        var j = ownedJiCe[i];
+        jiChildren.push(
+          createPlayerMenuNode(
+            j.designLabel(),
+            createPlayerMenuEntry(JiCe, "打出：" + j.designLabel(), jiEnabledBase, Std.string(i)),
+            ([] : Array<IPlayerMenuNode>)
+          )
+        );
+      }
+
     var actions:Array<IPlayerMenuNode> = [
       createPlayerMenuNode("移動", createPlayerMenuEntry(Move, "移動", !blockBasics), ([] : Array<IPlayerMenuNode>)),
-      createPlayerMenuNode(
-        "計策",
-        createPlayerMenuEntry(JiCe, "計策（打出後暫存並選將）", !stagingActive && pend == null),
-        ([] : Array<IPlayerMenuNode>)
-      ),
+      createPlayerMenuNode("計策", null, jiChildren),
       createPlayerMenuNode("狀態", createPlayerMenuEntry(Status, "狀態（前端用，無後端結算）", true), ([] : Array<IPlayerMenuNode>)),
     ];
     var allowConfirm = isActivePlayerSliceComplete() && pend == null && !stagingActive;
@@ -212,6 +268,7 @@ class GameMatch implements IGameMatch {
     switch leaf.kind() {
       case Move:
         var ruler = cast(activeMonarch(), Monarch);
+        // TODO: 移動份量應來自骰子／計策修正／路網過費等規剘，勿長期固定 DEFAULT_MOVE_DELTA。
         ruler.advanceOnBoard(DEFAULT_MOVE_DELTA, board().length());
         settleAfterMoveLanding();
       case TileEventPick:
@@ -221,11 +278,10 @@ class GameMatch implements IGameMatch {
       case JiCe:
         if (pendingJiCe() != null)
           throw "GameMatch: 已有進行中之計策暫存，請先完成計策選項";
-        if (playedJiCe == null)
-          throw "GameMatch.applyMenuLeaf: JiCe leaf requires playedJiCe";
+        var card = playedJiCe != null ? playedJiCe : resolvePlayedJiCeFromLeaf(actor, leaf);
         if (jiCeTargetMonarchId == null)
           throw "GameMatch.applyMenuLeaf: JiCe leaf requires jiCeTargetMonarchId";
-        playedJiCe.applyAgainstMonarch(actor, jiCeTargetMonarchId);
+        card.applyAgainstMonarch(actor, jiCeTargetMonarchId);
         syncActiveSliceAfterMenuLeaf(JiCe);
       case Status:
         syncActiveSliceAfterMenuLeaf(Status);
@@ -265,7 +321,21 @@ class GameMatch implements IGameMatch {
   }
 
   public function availableJiCe(monarchId:MonarchId):Array<IJiCe> {
-    return [];
+    var row = _ownedJiCe.get(monarchId);
+    return row != null ? row.copy() : [];
+  }
+
+  function resolvePlayedJiCeFromLeaf(actor:IPlayer, leaf:IPlayerMenuEntry):IJiCe {
+    var tok = leaf.decisionToken();
+    if (tok == null)
+      throw "GameMatch.applyMenuLeaf: JiCe leaf 須傳 playedJiCe，或選單葉 decisionToken（所持計策索引）";
+    var idx = Std.parseInt(tok);
+    if (idx == null)
+      throw "GameMatch.applyMenuLeaf: JiCe decisionToken 須為所持計策索引數字";
+    var owned = _ownedJiCe.get(actor.monarchId());
+    if (owned == null || idx < 0 || idx >= owned.length)
+      throw "GameMatch.applyMenuLeaf: 所持計策索引超出範圍 (" + tok + ")";
+    return owned[idx];
   }
 
   public function isActivePlayerSliceComplete():Bool

@@ -32,7 +32,7 @@ class TurnSliceFlagTest {
 
     assertSlice(m, false, "jiCe initial");
     var leaf:IPlayerMenuEntry = g.createPlayerMenuEntry(JiCe, "計策", true);
-    var card:IJiCe = new LuoshiJiCe(m);
+    var card:IJiCe = m.createJiCe(LuoshiJiCe.REGISTRY_KEY, "m-a");
     var pl:IPlayer = g.createPlayer("m-a", "p");
     m.applyMenuLeaf(pl, leaf, card, "m-b");
     assertSlice(m, false, "after JiCe staging");

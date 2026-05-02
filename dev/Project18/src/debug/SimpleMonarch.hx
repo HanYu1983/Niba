@@ -15,13 +15,18 @@ class SimpleMonarch implements IMonarch {
   var _troops:Int;
   var _grain:Int;
 
-  public function new(id:MonarchId, seat:Int, pawnIndex:TileIndex, roster:Array<IGeneral>, troops:Int = 0, grain:Int = 0) {
+  public function new(id:MonarchId, seat:Int, pawnIndex:TileIndex, troops:Int = 0, grain:Int = 0) {
     _id = id;
     _seat = seat;
     _pawn = pawnIndex;
-    _roster = roster;
+    _roster = [];
     _troops = troops;
     _grain = grain;
+  }
+
+  /** 於 MatchLevels／SimpleGameMatch 將 {@link SimpleGeneral} 登錄至麾下。 */
+  public function addGeneral(g:IGeneral):Void {
+    _roster.push(g);
   }
 
   /** 測試／事件獎勵：兵力增加。 */

@@ -48,6 +48,12 @@ interface IGameMatch {
     function availableJiCe(monarchId:MonarchId):Array<IJiCe>;
 
     /**
+     * 依資料鍵建立計策實例；{@code ownerMonarchId} 為持有／所屬君主（牌組歸屬），實作可據此校驗。
+     * 未支援之鍵應拋錯。
+     */
+    function createJiCe(key:JiCeKey, ownerMonarchId:MonarchId):IJiCe;
+
+    /**
      * 行動切片是否已到「可收束」狀態（例如移動並完成踩點結算後為 true）。
      * 典型用途：為 true 時主選單才出現「結束／確認」類葉節點；為 false 時僅允許進行中指令（移動、計策等）。
      * 選擇 ConfirmDone 並 apply 後，實作應清回 false，以便下一回合切片重新計算。
@@ -81,14 +87,15 @@ interface IGameMatch {
 
     /**
      * 武將四維一次性注入（對應 GeneralStat 列舉順序之語意：統／勇／智／政）。
+     * 實作須將武將登錄至 {@code owner} 對應君主之麾下 roster。
      */
     function createGeneral(id:GeneralId, owner:MonarchId, command:Int, might:Int, wit:Int, stewardship:Int):IGeneral;
 
     /**
-     * 君主；開局 roster 設計語意為三名武將。
+     * 君主；麾下武將須另行 {@link #createGeneral} 登錄。
      * 兵力／糧食可選；未傳時由實作預設。實作可於組局時將君主登錄入本局（如 ver1 以首次登錄者為當前行動方）。
      */
-    function createMonarch(id:MonarchId, seat:Int, pawnIndex:TileIndex, roster:Array<IGeneral>, ?troops:Int, ?grain:Int):IMonarch;
+    function createMonarch(id:MonarchId, seat:Int, pawnIndex:TileIndex, ?troops:Int, ?grain:Int):IMonarch;
 
     /** 玩家視角物件；每位人類／AI 控制器一個實例，與 monarchId 綁定。 */
     function createPlayer(monarchId:MonarchId, displayName:String):IPlayer;

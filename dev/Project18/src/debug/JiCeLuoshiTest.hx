@@ -26,7 +26,7 @@ class JiCeLuoshiTest {
     if (defender.grain() != 200 || attacker.grain() != 80)
       throw "JiCeLuoshiTest: grain precondition";
 
-    var luoshi:IJiCe = new LuoshiJiCe(match);
+    var luoshi:IJiCe = match.createJiCe(LuoshiJiCe.REGISTRY_KEY, attacker.id());
     var player:IPlayer = match.createPlayer(attacker.id(), "攻方");
     var jiCeLeaf:IPlayerMenuEntry = match.createPlayerMenuEntry(JiCe, "計策：落石", true);
 
@@ -109,7 +109,7 @@ class JiCeLuoshiTest {
 
     var p = match.createPlayer(atk.id(), "攻");
     var leaf = match.createPlayerMenuEntry(JiCe, "計策", true);
-    match.applyMenuLeaf(p, leaf, new LuoshiJiCe(match), d.id());
+    match.applyMenuLeaf(p, leaf, match.createJiCe(LuoshiJiCe.REGISTRY_KEY, atk.id()), d.id());
     var expectLoss = stagedLuoshiTroopLossPreview(33, gen.stat(game.GeneralStat.Might));
     var pick = findJiCePickLeaf(match.createPlayerMenu(p), gen.id());
     match.applyMenuLeaf(p, pick);

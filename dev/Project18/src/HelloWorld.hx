@@ -25,6 +25,8 @@ class HelloWorld {
     debug.JiCeStagingFlowTest.run();
     impl_ver1.Ver1SmokeTest.run();
     debug_ver1.EmptyLevelFourPlayerLoopTest.run();
+    debug_ver1.TwoPlayerJiCeStagingMoveConfirmTest.run();
+    debug_ver1.TenEventTilesMenuFlowTest.run();
     trace("Hello world");
   }
 
@@ -34,6 +36,7 @@ class HelloWorld {
     var _stat:GeneralStat = Command;
     var _mid:MonarchId = "";
     var _gid:GeneralId = "";
+    var _jk:JiCeKey = "";
     var _ti:TileIndex = 0;
     var _tile:ITile = cast null;
     var _board:IBoard = cast null;
