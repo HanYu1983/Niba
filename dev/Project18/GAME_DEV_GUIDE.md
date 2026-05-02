@@ -23,6 +23,7 @@
 - 某一張計策的結算公式與文案。
 - 某一個格子事件的選項與獎懲。
 - 關卡初始兵力／武將列表／棋盤長度與格子種類組態。
+- **Ver1 規剘實作入口**：`impl_ver1/GameMatchVer1Ops.hx`（例如終局判定、本版移動如何決定步幅與可否移動）；由 `GameMatchCore` 委派呼叫，規剘細節可隨版本替換。
 
 擴充內容回答的是：**「玩家這一步會體驗到什麼」**。
 
@@ -48,7 +49,8 @@
 | 層級 | 典型位置 | 屬於 |
 |------|----------|------|
 | 契約（介面與語意） | `src/game/`（如 `IGameMatch`、`ITileEvent`、`IJiCe`、`PlayerMenuKind`） | **骨架** |
-| 賽局編排與選單／結算總線 | `GameMatchCore.hx`（總線）＋`GameMatchVer1Ops.hx`（終局／移動，`@:allow` 下同套件可視私有） | **骨架** |
+| 賽局編排與選單／結算總線 | `impl_ver1/GameMatchCore.hx`（誰來動、`applyMenuLeaf` 分派、暫存與換手時機） | **骨架** |
+| Ver1 終局／移動等規剘 | `impl_ver1/GameMatchVer1Ops.hx`（`GameMatchCore` 委派至此；同套件 `@:allow` 僅便於讀寫賽局狀態，**語意上仍屬可替換的規剘**） | **擴充內容** |
 | 具體計策／事件腳本 | 例如 `impl_ver1/LuoshiJiCe`、`debug_ver1/*TileEvent`（日後可遷到 `content/` 等命名空間） | **擴充內容** |
 | 關卡組立 | `impl_ver1/Game.hx` 的 `level_key` 分支（「空白局」vs「某劇本」） | **擴充內容**（編排便當）；工廠介面仍屬骨架契約 |
 
@@ -58,7 +60,8 @@
 
 **判斷小技巧：**  
 若拿掉某一個計策或事件類別後，主迴路仍可編譯且「換另一組內容」仍能跑通同樣流程，則該類別多半是 **擴充內容**。  
-若拿掉後無法定義「如何結束暫存」「如何換手」，則屬 **骨架**。
+若拿掉後無法定義「如何結束暫存」「如何換手」，則屬 **骨架**。  
+`GameMatchVer1Ops` 若改為另一套規剘模組（仍由 `GameMatchCore` 以同樣掛鉤呼叫），主迴路不變，故歸 **擴充內容**。
 
 ---
 
@@ -85,7 +88,7 @@
 |----------|----------------|
 | `createPlayerMenu`／`applyMenuLeaf` 與葉種類語意 | 各 `ITileEvent`／`IJiCe` 的選項與結算 |
 | 內部暫存與切片是否可結束（對外除錯見 `forceGetPendingTileEvent` 等） | 兵力／糧食變動數值與條件 |
-| 移動「結構」（例如環狀前進、落地觸發時機）；**目前步幅為占位** | 骰子結果、路網修正、動畫與演出 |
+| `Move` 葉時委派規剘模組；環狀索引位移 API（`Monarch.advanceOnBoard`）與落地後 `settleAfterMoveLanding` 的銜接 | `GameMatchVer1Ops`：本版步幅、終局條件等；骰子結果、路網修正、動畫與演出 |
 | 暫存列模型（預覽列與機械鍵） | 每一列的描述與 predicted 語意 |
 
 ---
