@@ -2,6 +2,8 @@
 
 以 Docker 提供 Haxe 工具鏈；原始碼在 `src`，Apache Ant 的 `build.xml` 描述編譯步驟。
 
+**遊戲骨架與擴充內容的分工**：見 [`GAME_DEV_GUIDE.md`](GAME_DEV_GUIDE.md)。
+
 ## 事前準備
 
 - **Docker Compose**：請先啟動 Docker Desktop（或你的 Docker 引擎），再執行下方指令。
