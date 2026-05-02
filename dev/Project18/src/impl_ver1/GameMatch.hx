@@ -31,6 +31,8 @@ class GameMatch implements IGameMatch {
 
   var _tileEventByIndex:Map<Int, ITileEvent>;
   var _pendingTileEvent:Null<ITileEvent>;
+  /** 格子事件「選將」暫存列（與計策共用 {@link IJiCeStagingPreviewRow} 展示模型）。 */
+  var _tileEventStagingRows:Array<IJiCeStagingPreviewRow>;
 
   var _pendingJiCe:Null<IJiCe>;
   var _jiCeStagingTargetId:Null<MonarchId>;
@@ -47,6 +49,7 @@ class GameMatch implements IGameMatch {
     _activeSliceComplete = false;
     _tileEventByIndex = new Map();
     _pendingTileEvent = null;
+    clearTileEventStagingRows();
     _ownedJiCe = new Map();
     clearJiCeStaging();
   }
@@ -55,6 +58,10 @@ class GameMatch implements IGameMatch {
     _pendingJiCe = null;
     _jiCeStagingTargetId = null;
     _jiCeStagingRows = ([] : Array<IJiCeStagingPreviewRow>);
+  }
+
+  function clearTileEventStagingRows():Void {
+    _tileEventStagingRows = ([] : Array<IJiCeStagingPreviewRow>);
   }
 
   public function bindTileEvent(at:TileIndex, handler:ITileEvent):Void {
@@ -145,6 +152,15 @@ class GameMatch implements IGameMatch {
     _jiCeStagingRows = previewRows.copy();
   }
 
+  public function enterTileEventGeneralStaging(handler:ITileEvent, previewRows:Array<IJiCeStagingPreviewRow>):Void {
+    if (_pendingTileEvent != handler)
+      throw "GameMatch.enterTileEventGeneralStaging: handler 須為當前 pendingTileEvent";
+    _tileEventStagingRows = previewRows.copy();
+  }
+
+  public function tileEventStagingPreviewRows():Array<IJiCeStagingPreviewRow>
+    return _tileEventStagingRows.copy();
+
   public function createPlayerMenu(actor:IPlayer):IPlayerMenu {
     var pend = pendingTileEvent();
     var jiPending = pendingJiCe();
@@ -158,8 +174,21 @@ class GameMatch implements IGameMatch {
     var roots:Array<IPlayerMenuNode> = [];
 
     if (pend != null) {
-      var evRoots = pend.buildPlayerMenu(actor).rootNodes();
-      roots.push(createPlayerMenuNode("事件：" + pend.registryKey(), null, evRoots));
+      if (_tileEventStagingRows.length > 0) {
+        var evPickNodes:Array<IPlayerMenuNode> = [];
+        for (r in _tileEventStagingRows)
+          evPickNodes.push(
+            createPlayerMenuNode(
+              r.generalId(),
+              createPlayerMenuEntry(JiCePick, r.outcomeDescription(), true, r.generalId()),
+              ([] : Array<IPlayerMenuNode>)
+            )
+          );
+        roots.push(createPlayerMenuNode("事件：" + pend.registryKey() + "·選將", null, evPickNodes));
+      } else {
+        var evRoots = pend.buildPlayerMenu(actor).rootNodes();
+        roots.push(createPlayerMenuNode("事件：" + pend.registryKey(), null, evRoots));
+      }
     }
 
     if (stagingActive && jiPending != null) {
@@ -226,6 +255,7 @@ class GameMatch implements IGameMatch {
 
   function considerLandingAt(idx:TileIndex):Void {
     _pendingTileEvent = null;
+    clearTileEventStagingRows();
     var tile = board().tileAt(idx);
     if (tile.kind() != Event)
       return;
@@ -240,22 +270,36 @@ class GameMatch implements IGameMatch {
     if (tok == null)
       throw "GameMatch: TileEventPick 需要 decisionToken";
     ev.resolveChoice(actor, tok);
+    if (_tileEventStagingRows.length > 0)
+      return;
     _pendingTileEvent = null;
     _activeSliceComplete = true;
   }
 
   function handleJiCePick(actor:IPlayer, leaf:IPlayerMenuEntry):Void {
-    var card = pendingJiCe();
-    if (card == null)
-      throw "GameMatch: JiCePick 但無 pendingJiCe";
     var tok = leaf.decisionToken();
     if (tok == null)
       throw "GameMatch: JiCePick 需要 decisionToken（機械鍵）";
 
-    card.resolveChoice(actor, tok);
+    var card = pendingJiCe();
+    if (card != null) {
+      card.resolveChoice(actor, tok);
+      clearJiCeStaging();
+      syncActiveSliceAfterMenuLeaf(JiCePick);
+      return;
+    }
 
-    clearJiCeStaging();
-    syncActiveSliceAfterMenuLeaf(JiCePick);
+    var ev = pendingTileEvent();
+    if (ev != null && _tileEventStagingRows.length > 0) {
+      ev.resolveStagingGeneral(actor, tok);
+      clearTileEventStagingRows();
+      _pendingTileEvent = null;
+      _activeSliceComplete = true;
+      syncActiveSliceAfterMenuLeaf(JiCePick);
+      return;
+    }
+
+    throw "GameMatch: JiCePick 但無進行中之計策暫存或事件選將暫存";
   }
 
   public function applyMenuLeaf(actor:IPlayer, leaf:IPlayerMenuEntry, ?playedJiCe:IJiCe, ?jiCeTargetMonarchId:MonarchId):Void {

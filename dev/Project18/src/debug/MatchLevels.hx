@@ -75,6 +75,7 @@ class MatchLevels {
       tiles.push(game.createTile(i, i == evtAt ? Event : Plain));
     var board = game.createBoard(tiles);
     var monarch:IMonarch = new SimpleMonarch("m-evt", 0, 0, 100, 50);
+    cast(monarch, SimpleMonarch).addGeneral(game.createGeneral("g-evt", "m-evt", 1, 20, 1, 1));
     return {
       board: board,
       monarchs: [monarch],

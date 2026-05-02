@@ -3,7 +3,8 @@ package game;
 import game.GameIds;
 
 /**
- * 計策「選將前」預計算列：供 UI 展示與二次選單；實際結算須與 predictedTroopLoss 一致。
+ * 「選將前」預計算列：計策暫存與格子事件暫存共用；供 UI 展示與二次選單。
+ * 計策對守方折兵時 {@link #predictedTroopLoss} 須與結算一致；事件等非折兵語意可填 0，細節見文案。
  */
 interface IJiCeStagingPreviewRow {
     function generalId():GeneralId;

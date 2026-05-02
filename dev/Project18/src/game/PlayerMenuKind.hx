@@ -23,6 +23,6 @@ enum PlayerMenuKind {
     /** 踩點事件之分支持選；機械鍵見 IPlayerMenuEntry.decisionToken。 */
     TileEventPick;
 
-    /** 計策暫存期選項：機械鍵語意由當前 pendingJiCe 定義（常見為 GeneralId）。 */
+    /** 選將暫存期選項：機械鍵常為 GeneralId（計策 pendingJiCe，或格子事件 tileEventStagingPreviewRows）。 */
     JiCePick;
 }

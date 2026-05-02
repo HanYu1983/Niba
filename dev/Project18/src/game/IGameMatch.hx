@@ -79,6 +79,15 @@ interface IGameMatch {
      */
     function enterJiCeStaging(card:IJiCe, targetMonarchId:MonarchId, previewRows:Array<IJiCeStagingPreviewRow>):Void;
 
+    /**
+     * 踩點事件於第一段 {@link ITileEvent#resolveChoice} 後進入「選將＋預覽」暫存（{@code handler} 須為當前 {@link #pendingTileEvent}）。
+     * 選單第二段沿用 {@link PlayerMenuKind.JiCePick}，結算呼叫 {@link ITileEvent#resolveStagingGeneral}。
+     */
+    function enterTileEventGeneralStaging(handler:ITileEvent, previewRows:Array<IJiCeStagingPreviewRow>):Void;
+
+    /** 當前格子事件選將暫存列；無暫存或非選將流程時為空。 */
+    function tileEventStagingPreviewRows():Array<IJiCeStagingPreviewRow>;
+
     /** 單格；多格按索引有序組裝後再交由 createBoard。 */
     function createTile(index:TileIndex, kind:TileKind):ITile;
 

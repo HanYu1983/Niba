@@ -77,7 +77,7 @@ class TileEventLandingTest {
     }
   }
 
-  static function requireLeafKind(menu:IPlayerMenu, kind:PlayerMenuKind):IPlayerMenuEntry {
+  public static function requireLeafKind(menu:IPlayerMenu, kind:PlayerMenuKind):IPlayerMenuEntry {
     var found:Null<IPlayerMenuEntry> = null;
     function walk(nodes:Array<IPlayerMenuNode>):Void {
       for (n in nodes) {
