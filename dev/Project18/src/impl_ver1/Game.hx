@@ -7,16 +7,16 @@ import game.ITile;
 import game.TileKind;
 
 /**
- * Ver1：依 level_key 建立 {@link GameMatch}（{@link GameMatchCore} 子類）並組立關卡局面。
+ * Ver1：依 level_key 建立 {@link GameMatchCore} 並組立關卡局面。
  */
 class Game implements IGame {
-  /** 空白賽局：僅 {@link GameMatchCore}／{@link GameMatch} 初始化，供測試自行組局。 */
+  /** 空白賽局：僅 {@link GameMatchCore} 初始化，供測試自行組局。 */
   public static inline var LEVEL_KEY_EMPTY = "ver1/empty";
 
   public function new() {}
 
   public function createGameMatch(level_key:LevelKey):IGameMatch {
-    var match = new GameMatch();
+    var match = new GameMatchCore();
     configureFromLevel(match, level_key);
     return match;
   }

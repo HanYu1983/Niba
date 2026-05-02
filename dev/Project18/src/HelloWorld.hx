@@ -49,6 +49,6 @@ class HelloWorld {
     var _mtk:PlayerMenuKind = TileEventPick;
     var _mjk:PlayerMenuKind = JiCePick;
     var _ver1Game:impl_ver1.Game = cast null;
-    var _ver1Match:impl_ver1.GameMatch = cast null;
+    var _ver1Match:impl_ver1.GameMatchCore = cast null;
   }
 }

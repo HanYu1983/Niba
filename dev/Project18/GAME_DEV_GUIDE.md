@@ -48,7 +48,7 @@
 | 層級 | 典型位置 | 屬於 |
 |------|----------|------|
 | 契約（介面與語意） | `src/game/`（如 `IGameMatch`、`ITileEvent`、`IJiCe`、`PlayerMenuKind`） | **骨架** |
-| 賽局編排與選單／結算總線 | `GameMatchCore.hx`（總線）＋`GameMatchVer1Ops.hx`（終局／移動，`@:allow` 下同套件可視私有）＋`GameMatch.hx` | **骨架** |
+| 賽局編排與選單／結算總線 | `GameMatchCore.hx`（總線）＋`GameMatchVer1Ops.hx`（終局／移動，`@:allow` 下同套件可視私有） | **骨架** |
 | 具體計策／事件腳本 | 例如 `impl_ver1/LuoshiJiCe`、`debug_ver1/*TileEvent`（日後可遷到 `content/` 等命名空間） | **擴充內容** |
 | 關卡組立 | `impl_ver1/Game.hx` 的 `level_key` 分支（「空白局」vs「某劇本」） | **擴充內容**（編排便當）；工廠介面仍屬骨架契約 |
 
