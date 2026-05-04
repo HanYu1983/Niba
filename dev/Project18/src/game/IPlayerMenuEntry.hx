@@ -12,6 +12,6 @@ interface IPlayerMenuEntry {
     /** 當前賽局狀態下是否允許進入該分支。 */
     function isEnabled():Bool;
 
-    /** 機械選項鍵（例如 ITileEvent.resolveChoice 之 choiceId）；非選項類葉為 null。 */
+    /** 機械選項鍵（例如 {@link ITileEvent#resolveChoice}／{@link IJiCe#resolveChoice} 所傳入之 leaf 可取此欄）；非選項類葉為 null。 */
     function decisionToken():Null<String>;
 }

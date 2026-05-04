@@ -3,6 +3,7 @@ package debug_ver1;
 import game.GameIds;
 import game.IPlayer;
 import game.IPlayerMenu;
+import game.IPlayerMenuEntry;
 import game.IPlayerMenuNode;
 import game.ITileEvent;
 import game.IGameMatch;
@@ -57,10 +58,15 @@ class RingLootForkTileEvent implements ITileEvent {
     return new PlayerMenu(actor, "evt-" + registryKey(), roots);
   }
 
-  public function resolveChoice(actor:IPlayer, choiceId:String, ?formStringListFields:Map<String, Array<String>>):Void {
-    lastResolvedChoice = choiceId;
+  public function resolveChoice(actor:IPlayer, leaf:IPlayerMenuEntry, ?formStringListFields:Map<String, Array<String>>):Void {
+    if (leaf.kind() != TileEventPick)
+      throw "RingLootForkTileEvent.resolveChoice: 預期 TileEventPick 葉";
+    var tok = leaf.decisionToken();
+    if (tok == null)
+      throw "RingLootForkTileEvent.resolveChoice: leaf 須有 decisionToken";
+    lastResolvedChoice = tok;
     var ruler = cast(_match.activeMonarch(), Monarch);
-    switch choiceId {
+    switch tok {
       case "take_supplies":
         if (ruler.roster().length == 0)
           ruler.grantTroops(15);
@@ -75,7 +81,7 @@ class RingLootForkTileEvent implements ITileEvent {
         ruler.grantGrain(22);
       case "pass":
       default:
-        throw "RingLootForkTileEvent.resolveChoice: unknown choiceId " + choiceId;
+        throw "RingLootForkTileEvent.resolveChoice: unknown decisionToken " + tok;
     }
   }
 

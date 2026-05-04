@@ -1,6 +1,7 @@
 package game;
 
 import game.GameIds;
+import game.IPlayerMenuEntry;
 
 /**
  * GDD：計策為君主可操作之規剘資源；打出時機由規剘／賽局狀態約定。
@@ -9,7 +10,7 @@ import game.GameIds;
  *
  * - applyAgainstMonarch：對目標君主進入「暫存／待選」態（通常經 enterJiCeStaging）。
  * - buildPlayerMenu：暫存期中組裝後續選單。
- * - resolveChoice：施計武將 id 由賽局自表單解析後傳入（見 {@link MenuFieldIds.JiCeStagingGenerals}／{@link PlayerMenuKind.JiCeStagingSubmit}）；結算後由 match.applyMenuLeaf 清除計策暫存。
+ * - resolveChoice：傳入玩家所點選之選單葉（與 {@link IGameMatch#applyMenuLeaf} 相同引用語意），暫存選將時附 {@code formStringListFields}（鍵 {@link MenuFieldIds.JiCeStagingGenerals}）；結算後由 match.applyMenuLeaf 清除計策暫存。
  */
 interface IJiCe {
     /** 規剘／版本無關之設計顯示名（本地化由此向上委派）。 */
@@ -24,6 +25,9 @@ interface IJiCe {
     /** 暫存期中組裝後續選單（賽局內暫存之計策須為 this）。 */
     function buildPlayerMenu(actor:IPlayer):IPlayerMenu;
 
-    /** 玩家選定機械鍵後套用規剘（須配合賽局暫存列與目標君主）。 */
-    function resolveChoice(actor:IPlayer, choiceId:String):Void;
+    /**
+     * {@code leaf}：通常為 {@link PlayerMenuKind.JiCeStagingSubmit}（機械鍵見 {@link IPlayerMenuEntry#decisionToken}）。
+     * {@code formStringListFields}：與 {@link MenuFormWidget.GeneralMultiPick} 鍵 {@link MenuFieldIds.JiCeStagingGenerals} 對齊。
+     */
+    function resolveChoice(actor:IPlayer, leaf:IPlayerMenuEntry, ?formStringListFields:Map<String, Array<String>>):Void;
 }

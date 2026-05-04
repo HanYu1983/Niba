@@ -418,15 +418,15 @@ class GameMatchCore implements IGameMatch {
     var ev = _pendingTileEvent;
     if (ev == null)
       throw "GameMatchCore: TileEventPick 但無 forceGetPendingTileEvent";
-    var tok = leaf.decisionToken();
-    if (tok == null)
+    if (leaf.decisionToken() == null)
       throw "GameMatchCore: TileEventPick 需要 decisionToken";
-    ev.resolveChoice(actor, tok, formStringListFields);
+    ev.resolveChoice(actor, leaf, formStringListFields);
     _pendingTileEvent = null;
     _activeSliceComplete = true;
   }
 
-  function parseJiCeStagingGeneralIds(formStringListFields:Null<Map<String, Array<String>>>):GeneralId {
+  /** 暫存選將表單校驗（同套件計策實作可呼叫以解析施計武將 id）。 */
+  public function parseJiCeStagingGeneralIds(formStringListFields:Null<Map<String, Array<String>>>):GeneralId {
     var raw = formStringListFields != null && formStringListFields.exists(MenuFieldIds.JiCeStagingGenerals)
       ? formStringListFields.get(MenuFieldIds.JiCeStagingGenerals)
       : ([] : Array<String>);
@@ -459,8 +459,7 @@ class GameMatchCore implements IGameMatch {
     var card = _pendingJiCe;
     if (card == null)
       throw "GameMatchCore: JiCeStagingSubmit 但無進行中之計策暫存";
-    var gid = parseJiCeStagingGeneralIds(formStringListFields);
-    card.resolveChoice(actor, gid);
+    card.resolveChoice(actor, leaf, formStringListFields);
     clearJiCeStaging();
     syncActiveSliceAfterMenuLeaf(JiCeStagingSubmit);
   }

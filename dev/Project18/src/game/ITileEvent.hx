@@ -3,6 +3,7 @@ package game;
 import game.GameIds;
 import game.IPlayer;
 import game.IPlayerMenu;
+import game.IPlayerMenuEntry;
 
 /**
  * GDD：踩中事件格後懸置之結算腳本（支線／問卷／多選一等）。
@@ -11,7 +12,7 @@ import game.IPlayerMenu;
  *
  * UI／選單語意對照：
  * - buildPlayerMenu：事件全貌（含是否以 {@link MenuFormWidget.GeneralMultiPick} 組武將複選；鍵見 {@link MenuFieldIds.TileEventGenerals}）。
- * - resolveChoice：機械鍵與選單葉 decisionToken 對齊；若同一節點含複選武將 widget，結算時經 {@code formStringListFields} 傳入選中 id。
+ * - resolveChoice：傳入玩家所點選之 **選單葉** {@link IPlayerMenuEntry}（與 {@link IGameMatch#applyMenuLeaf} 相同引用語意）；若同一節點含複選武將 widget，結算時經 {@code formStringListFields} 傳入選中 id。
  */
 interface ITileEvent {
     /** 資料／存檔用之穩定鍵（例如事件表列 id）。 */
@@ -21,8 +22,8 @@ interface ITileEvent {
     function buildPlayerMenu(actor:IPlayer):IPlayerMenu;
 
     /**
-     * choiceId：與選單葉之 decisionToken（機械鍵）對齊；不含展示文案。
+     * {@code leaf}：與 {@link IGameMatch#applyMenuLeaf} 所套用者相同之葉（常見機械鍵見 {@link IPlayerMenuEntry#decisionToken}）。
      * {@code formStringListFields}：與同一表單 {@link MenuFormWidget.GeneralMultiPick} 對齊時傳入（鍵 {@link MenuFieldIds.TileEventGenerals}）。
      */
-    function resolveChoice(actor:IPlayer, choiceId:String, ?formStringListFields:Map<String, Array<String>>):Void;
+    function resolveChoice(actor:IPlayer, leaf:IPlayerMenuEntry, ?formStringListFields:Map<String, Array<String>>):Void;
 }

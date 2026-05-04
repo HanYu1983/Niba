@@ -7,6 +7,7 @@ import game.IJiCe;
 import game.IJiCeStagingPreviewRow;
 import game.IPlayer;
 import game.IPlayerMenu;
+import game.IPlayerMenuEntry;
 import game.IPlayerMenuNode;
 import game.MenuFieldIds;
 import game.MenuFormWidget;
@@ -69,13 +70,17 @@ class LuoshiJiCe implements IJiCe {
     return new PlayerMenu(actor, "jice-" + registryKey(), [root]);
   }
 
-  public function resolveChoice(actor:IPlayer, choiceId:String):Void {
+  public function resolveChoice(actor:IPlayer, leaf:IPlayerMenuEntry, ?formStringListFields:Map<String, Array<String>>):Void {
     if (gameMatch._pendingJiCe != this)
       throw "LuoshiJiCe.resolveChoice: pendingJiCe mismatch";
+    if (leaf.kind() != JiCeStagingSubmit)
+      throw "LuoshiJiCe.resolveChoice: 預期 JiCeStagingSubmit 葉";
 
     var tid = gameMatch._jiCeStagingTargetId;
     if (tid == null)
       throw "LuoshiJiCe.resolveChoice: missing staging target";
+
+    var choiceId = gameMatch.parseJiCeStagingGeneralIds(formStringListFields);
 
     var pickedLoss:Null<Int> = null;
     for (r in gameMatch._jiCeStagingRows)

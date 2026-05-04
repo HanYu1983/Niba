@@ -3,6 +3,7 @@ package debug_ver1;
 import game.GameIds;
 import game.IPlayer;
 import game.IPlayerMenu;
+import game.IPlayerMenuEntry;
 import game.IPlayerMenuNode;
 import game.ITileEvent;
 import game.IGameMatch;
@@ -47,10 +48,15 @@ class GeneralChestTileEvent implements ITileEvent {
     return new PlayerMenu(actor, "evt-" + registryKey(), roots);
   }
 
-  public function resolveChoice(actor:IPlayer, choiceId:String, ?formStringListFields:Map<String, Array<String>>):Void {
-    lastResolvedChoice = choiceId;
+  public function resolveChoice(actor:IPlayer, leaf:IPlayerMenuEntry, ?formStringListFields:Map<String, Array<String>>):Void {
+    if (leaf.kind() != TileEventPick)
+      throw "GeneralChestTileEvent.resolveChoice: 預期 TileEventPick 葉";
+    var tok = leaf.decisionToken();
+    if (tok == null)
+      throw "GeneralChestTileEvent.resolveChoice: leaf 須有 decisionToken";
+    lastResolvedChoice = tok;
     var ruler = cast(_match.activeMonarch(), Monarch);
-    switch choiceId {
+    switch tok {
       case "claim_reward":
         if (ruler.roster().length == 0) {
           ruler.grantTroops(GRANT_NO_ROSTER);
@@ -63,7 +69,7 @@ class GeneralChestTileEvent implements ITileEvent {
           lastResolvedChoice = "claim_reward:" + ids[0];
         }
       default:
-        throw "GeneralChestTileEvent.resolveChoice: unknown choiceId " + choiceId;
+        throw "GeneralChestTileEvent.resolveChoice: unknown decisionToken " + tok;
     }
   }
 

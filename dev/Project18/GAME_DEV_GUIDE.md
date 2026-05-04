@@ -74,7 +74,7 @@
    計策暫存應經 **`enterJiCeStaging`**／對應 **`IJiCe.buildPlayerMenu`**，並以 **`JiCeStagingSubmit`**＋表單結算（見 **`applyMenuLeaf`**）；格子事件應經 **`ITileEvent.buildPlayerMenu`** 與 **`TileEventPick`**，pending 清除由賽局在 **`resolveChoice`** 流程內統一處理，事件腳本不得自行維持「第二回合選單」狀態。避免從腳本篡改 **`GameMatchCore`** 私有欄位或複製一套平行主迴圈。
 
 3. **同一個契約，多種實作**  
-   計策暫存選將由骨架統一的 **`JiCeStagingSubmit`** 葉＋表單鍵 **`MenuFieldIds.JiCeStagingGenerals`**（通常搭配 **`MenuFormWidget.GeneralMultiPick`**）結算；格子事件是否在 **`buildPlayerMenu`** 裡放武將複選、鍵為 **`MenuFieldIds.TileEventGenerals`**，由各路 **`ITileEvent`** 決定，並在一次 **`TileEventPick`／`resolveChoice`** 附 **`formStringListFields`** 完成，不再有賽局第二階段「事件選將子選單」。預覽文案與數值規剘仍屬擴充內容。
+   計策暫存選將由骨架統一的 **`JiCeStagingSubmit`** 葉＋表單鍵 **`MenuFieldIds.JiCeStagingGenerals`**（通常搭配 **`MenuFormWidget.GeneralMultiPick`**）結算；格子事件是否在 **`buildPlayerMenu`** 裡放武將複選、鍵為 **`MenuFieldIds.TileEventGenerals`**，由各路 **`ITileEvent`** 決定；**`resolveChoice(actor, leaf, …)`** 接收與 **`applyMenuLeaf`** 相同之 **`IPlayerMenuEntry`**（機械鍵仍可取 **`leaf.decisionToken()`**），並在一次 **`TileEventPick`** 流程附 **`formStringListFields`** 完成，不再有賽局第二階段「事件選將子選單」。預覽文案與數值規剘仍屬擴充內容。
 
 4. **測試分層**  
    - 驗證主迴路與狀態機：`debug_ver1` 中以流程為主的測試。  
