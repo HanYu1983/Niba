@@ -74,7 +74,7 @@
    計策暫存應經 **`enterJiCeStaging`**／對應 **`IJiCe.buildPlayerMenu`**，並以 **`JiCeStagingSubmit`**＋表單結算（見 **`applyMenuLeaf`**）；格子事件應經 **`ITileEvent.buildPlayerMenu`** 與 **`TileEventPick`**，pending 清除由賽局在 **`resolveChoice`** 流程內統一處理，事件腳本不得自行維持「第二回合選單」狀態。避免從腳本篡改 **`GameMatchCore`** 私有欄位或複製一套平行主迴圈。
 
 3. **同一個契約，多種實作**  
-   計策暫存選將由骨架統一的 **`JiCeStagingSubmit`** 葉＋表單鍵 **`MenuFieldIds.JiCeStagingGenerals`**（通常搭配 **`MenuFormWidget.GeneralMultiPick`**）結算；格子事件是否在 **`buildPlayerMenu`** 裡放武將複選、鍵為 **`MenuFieldIds.TileEventGenerals`**，由各路 **`ITileEvent`** 決定；UI 將複選／滑桿結果寫入即將送出之 **`IPlayerMenuEntry`**（**`setFormStringListFields`**／**`setFormNumericFields`**），**`applyMenuLeaf(actor, leaf)`** 與 **`resolveChoice(actor, leaf)`** 僅藉 **`leaf`** 取值；不再有賽局第二階段「事件選將子選單」。預覽文案與數值規剘仍屬擴充內容。
+   計策暫存選將由骨架統一的 **`JiCeStagingSubmit`** 與節點內 **`MenuFormWidget.GeneralMultiPick`**（UI 就地改寫 **`selectedGeneralIds`**）結算；格子事件是否在 **`buildPlayerMenu`** 裡放武將複選、滑桿等 widget，由各路 **`ITileEvent`** 決定。UI 將複選／滑桿結果寫入即將送出之 **`IPlayerMenuNode#formWidgets`** 對應 enum 取值，**`applyMenuLeaf(actor, menuNode)`** 與 **`resolveChoice(actor, menuNode)`** 從該節點（含 **`activationEntry`**）讀取；不再有賽局第二階段「事件選將子選單」。預覽文案與數值規剘仍屬擴充內容。
 
 4. **測試分層**  
    - 驗證主迴路與狀態機：`debug_ver1` 中以流程為主的測試。  
@@ -86,10 +86,10 @@
 
 | 骨架負責 | 擴充內容負責 |
 |----------|----------------|
-| `createPlayerMenu`／`applyMenuLeaf` 與葉種類語意 | 各 `ITileEvent`／`IJiCe` 的選項與結算 |
+| `createPlayerMenu`／`applyMenuLeaf` 與選單節點／葉種類語意 | 各 `ITileEvent`／`IJiCe` 的選項與結算 |
 | 內部暫存與切片是否可結束（對外除錯見 `forceGetPendingTileEvent` 等） | 兵力／糧食變動數值與條件 |
 | `Move` 葉時委派規剘模組；環狀索引位移 API（`Monarch.advanceOnBoard`）與落地後 `settleAfterMoveLanding` 的銜接 | `GameMatchVer1Ops`：本版步幅、終局條件等；骰子結果、路網修正、動畫與演出 |
-| 計策暫存：`enterJiCeStaging`、預覽列校驗與 **`JiCeStagingSubmit`** 表單解析；事件無第二階段，武將 widget 與 **`TileEventPick`** 表單由 **`ITileEvent`** 自組 | 預覽列文案、`predicted` 語意、結算數值與事件選項機械鍵 |
+| 計策暫存：`enterJiCeStaging`、預覽列校驗與 **`JiCeStagingSubmit`**（節點 widgets）解析；事件無第二階段，武將 widget 與 **`TileEventPick`** 由 **`ITileEvent`** 自組 | 預覽列文案、`predicted` 語意、結算數值與事件選項機械鍵 |
 
 ---
 

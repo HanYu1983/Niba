@@ -42,8 +42,8 @@ class PlayerMenu implements IPlayerMenu {
         switch w {
           case Button(entry):
             acc.push(entry);
-          case Slider(_, _, _, _, _, _):
-          case GeneralMultiPick(_, _, _, _):
+          case Slider(_, _, _, _, _):
+          case GeneralMultiPick(_, _, _):
         }
     }
   }

@@ -9,12 +9,14 @@ class PlayerMenuNode implements IPlayerMenuNode {
   var _leaf:Null<IPlayerMenuEntry>;
   var _children:Array<IPlayerMenuNode>;
   var _formWidgets:Array<MenuFormWidget>;
+  var _activationEntry:Null<IPlayerMenuEntry>;
 
   public function new(caption:String, leaf:Null<IPlayerMenuEntry>, children:Array<IPlayerMenuNode>, ?formWidgets:Array<MenuFormWidget>) {
     _caption = caption;
     _leaf = leaf;
     _children = children;
     _formWidgets = formWidgets != null ? formWidgets.copy() : [];
+    _activationEntry = null;
   }
 
   public function caption():String
@@ -27,5 +29,12 @@ class PlayerMenuNode implements IPlayerMenuNode {
     return _children;
 
   public function formWidgets():Array<MenuFormWidget>
-    return _formWidgets.copy();
+    return _formWidgets;
+
+  public function activationEntry():Null<IPlayerMenuEntry>
+    return _activationEntry;
+
+  public function setActivationEntry(value:Null<IPlayerMenuEntry>):Void {
+    _activationEntry = value;
+  }
 }

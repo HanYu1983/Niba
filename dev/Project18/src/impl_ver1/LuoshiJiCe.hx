@@ -9,10 +9,11 @@ import game.IPlayer;
 import game.IPlayerMenu;
 import game.IPlayerMenuEntry;
 import game.IPlayerMenuNode;
-import game.MenuFieldIds;
+import game.MenuActivation;
 import game.MenuFormWidget;
 import game.MenuGeneralChoice;
 import game.PlayerMenuKind;
+import game.PlayerMenuKind.JiCeStagingSubmit;
 
 /**
  * 落石計策：建構子綁定 {@link GameMatchCore}，並直接讀寫其私有暫存欄位（與 GameMatchCore 同套件友元）。
@@ -63,24 +64,24 @@ class LuoshiJiCe implements IJiCe {
     }
     var submitLeaf = gameMatch.createPlayerMenuEntry(JiCeStagingSubmit, "確認計策選將", true, "confirm_jice_pick");
     var widgets:Array<MenuFormWidget> = [
-      GeneralMultiPick(MenuFieldIds.JiCeStagingGenerals, "選擇施計武將", choices, defSel),
+      GeneralMultiPick("選擇施計武將", choices, defSel),
       Button(submitLeaf),
     ];
     var root = gameMatch.createPlayerMenuNode("落石選將", null, ([] : Array<IPlayerMenuNode>), widgets);
     return new PlayerMenu(actor, "jice-" + registryKey(), [root]);
   }
 
-  public function resolveChoice(actor:IPlayer, leaf:IPlayerMenuEntry):Void {
+  public function resolveChoice(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
     if (gameMatch._pendingJiCe != this)
       throw "LuoshiJiCe.resolveChoice: pendingJiCe mismatch";
-    if (leaf.kind() != JiCeStagingSubmit)
-      throw "LuoshiJiCe.resolveChoice: 預期 JiCeStagingSubmit 葉";
+    if (MenuActivation.activatingEntry(menuNode).kind() != JiCeStagingSubmit)
+      throw "LuoshiJiCe.resolveChoice: 預期 JiCeStagingSubmit";
 
     var tid = gameMatch._jiCeStagingTargetId;
     if (tid == null)
       throw "LuoshiJiCe.resolveChoice: missing staging target";
 
-    var choiceId = gameMatch.parseJiCeStagingGeneralIds(leaf.formStringListFields());
+    var choiceId = readStagingPickGeneralId(menuNode.formWidgets());
 
     var pickedLoss:Null<Int> = null;
     for (r in gameMatch._jiCeStagingRows)
@@ -96,6 +97,45 @@ class LuoshiJiCe implements IJiCe {
         return;
       }
     throw "LuoshiJiCe.resolveChoice: monarch not found " + tid;
+  }
+
+  /**
+   * 與 {@link #buildPlayerMenu} 約定：索引 0 為施計武將 {@link MenuFormWidget.GeneralMultiPick}。
+   * 須恰好一名、在暫存預覽列且為當前行動君主麾下。
+   */
+  function readStagingPickGeneralId(widgets:Array<MenuFormWidget>):GeneralId {
+    if (widgets.length == 0)
+      throw "LuoshiJiCe: 計策暫存選單為空";
+    var raw:Array<String>;
+    switch widgets[0] {
+      case GeneralMultiPick(_, _, sel):
+        raw = sel.copy();
+      default:
+        throw "LuoshiJiCe: 計策暫存選單第一元件須為 GeneralMultiPick";
+    }
+    var seen = new Map<String, Bool>();
+    var uniq:Array<GeneralId> = [];
+    for (id in raw) {
+      if (seen.exists(id))
+        continue;
+      seen.set(id, true);
+      uniq.push(id);
+    }
+    if (uniq.length != 1)
+      throw "LuoshiJiCe: 計策選將須恰好選擇一名麾下武將";
+    var gid = uniq[0];
+    var allowed = new Map<String, Bool>();
+    for (r in gameMatch._jiCeStagingRows)
+      allowed.set(r.generalId(), true);
+    if (!allowed.exists(gid))
+      throw 'LuoshiJiCe: 計策選將 "$gid" 不在暫存預覽列';
+    var ruler = cast(gameMatch.activeMonarch(), Monarch);
+    var ok = new Map<String, Bool>();
+    for (g in ruler.roster())
+      ok.set(g.id(), true);
+    if (!ok.exists(gid))
+      throw 'LuoshiJiCe: 計策選將含非麾下武將 "$gid"';
+    return gid;
   }
 
   function monarchTroops(monarchId:MonarchId):Int {

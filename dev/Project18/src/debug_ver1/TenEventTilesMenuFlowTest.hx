@@ -7,7 +7,9 @@ import game.IPlayerMenu;
 import game.IPlayerMenuEntry;
 import game.IPlayerMenuNode;
 import game.ITile;
+import game.MenuNodeQuery;
 import game.PlayerMenuKind;
+import game.PlayerMenuKind.TileEventPick;
 import game.TileKind;
 import impl_ver1.Game;
 import impl_ver1.Monarch;
@@ -46,7 +48,7 @@ class TenEventTilesMenuFlowTest {
     if (findLeaf(menu0, ConfirmDone) != null)
       throw "TenEventTilesMenuFlowTest: 尚未移動前不可結束";
 
-    match.applyMenuLeaf(player, requireLeaf(menu0, Move));
+    match.applyMenuLeaf(player, MenuNodeQuery.requireNodeWithKind(menu0, Move));
 
     if (ruler.pawnIndex() != EXPECT_LANDING_IDX)
       throw 'TenEventTilesMenuFlowTest: 預期落在索引 $EXPECT_LANDING_IDX，實際 ${ruler.pawnIndex()}';
@@ -67,14 +69,8 @@ class TenEventTilesMenuFlowTest {
     if (picks.length != 3)
       throw "TenEventTilesMenuFlowTest: 預期三選一選項數 3（含表單內按鈕），got " + picks.length;
 
-    var grainLeaf:Null<IPlayerMenuEntry> = null;
-    for (p in picks)
-      if (p.decisionToken() == "take_grain")
-        grainLeaf = p;
-    if (grainLeaf == null)
-      throw "TenEventTilesMenuFlowTest: 缺少 take_grain";
-
-    match.applyMenuLeaf(player, grainLeaf);
+    var grainNode = MenuNodeQuery.requireNodeWithTilePickToken(menuEvt, "take_grain");
+    match.applyMenuLeaf(player, grainNode);
 
     if (match.forceGetPendingTileEvent() != null)
       throw "TenEventTilesMenuFlowTest: 結算後應清除 forceGetPendingTileEvent";

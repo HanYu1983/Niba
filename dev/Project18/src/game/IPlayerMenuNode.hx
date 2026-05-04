@@ -6,18 +6,23 @@ package game;
  * 慣例（測試與 UI 共用）：
  * - 葉：leaf() 非 null，children() 為空陣列。
  * - 分枝：leaf() 為 null，children() 至少一項。
+ * - 表單節點：formWidgets() 非空；若有多個 {@link MenuFormWidget.Button}，送出 {@link IGameMatch#applyMenuLeaf} 前須 {@link #setActivationEntry} 指向被點擊之 {@link IPlayerMenuEntry}。
  */
 interface IPlayerMenuNode {
     function caption():String;
 
-    /** 葉節點之條目；分枝節點為 null。 */
+    /** 葉節點之條目；分枝節點為 null；表單節點亦可能為 null（動作完全由 {@link #formWidgets} 內 Button 負責）。 */
     function leaf():Null<IPlayerMenuEntry>;
 
     function children():Array<IPlayerMenuNode>;
 
     /**
-     * 表單／複合節點專用之嵌件（滑桿等）；無則空陣列。
-     * 慣例：同節點若帶 {@link #formWidgets}，多為 leaf=null 且 children 可空。
+     * 表單嵌件；回傳與節點綁定之陣列（非防衛性複本），UI／測試得就地改寫 Slider／GeneralMultiPick 取值後送結算。
      */
     function formWidgets():Array<MenuFormWidget>;
+
+    /** 表單同節點多 {@link MenuFormWidget.Button} 時必設；結算後由賽局清空。 */
+    function activationEntry():Null<IPlayerMenuEntry>;
+
+    function setActivationEntry(value:Null<IPlayerMenuEntry>):Void;
 }

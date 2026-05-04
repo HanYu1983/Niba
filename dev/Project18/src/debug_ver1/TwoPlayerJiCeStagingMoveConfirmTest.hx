@@ -1,7 +1,9 @@
 package debug_ver1;
 
 import game.GameIds;
-import game.MenuFieldIds;
+import game.MenuActivation;
+import game.MenuFormWidget;
+import game.MenuNodeQuery;
 import game.IJiCe;
 import game.IPlayer;
 import game.IPlayerMenu;
@@ -11,6 +13,10 @@ import game.IGame;
 import game.IGameMatch;
 import game.ITile;
 import game.PlayerMenuKind;
+import game.PlayerMenuKind.ConfirmDone;
+import game.PlayerMenuKind.JiCe;
+import game.PlayerMenuKind.JiCeStagingSubmit;
+import game.PlayerMenuKind.Move;
 import game.TileKind;
 import impl_ver1.Game;
 import impl_ver1.LuoshiJiCe;
@@ -45,13 +51,12 @@ class TwoPlayerJiCeStagingMoveConfirmTest {
       throw "TwoPlayerJiCeStagingMoveConfirmTest: 預期先手為 m-atk";
 
     var menu0 = match.createPlayerMenu(actorAtk);
-    requireEnabledLeaf(menu0, Move);
-    requireEnabledLeaf(menu0, JiCe);
+    requireEnabledNode(menu0, Move);
+    requireEnabledNode(menu0, JiCe);
     if (findLeaf(menu0, ConfirmDone) != null)
       throw "TwoPlayerJiCeStagingMoveConfirmTest: 開局不得出現結束葉";
 
-    var jiLeaf = requireEnabledLeaf(menu0, JiCe);
-    match.applyMenuLeaf(actorAtk, jiLeaf, luoshi, defId);
+    match.applyMenuLeaf(actorAtk, requireEnabledNode(menu0, JiCe), luoshi, defId);
 
     if (match.forceGetPendingJiCe() == null)
       throw "TwoPlayerJiCeStagingMoveConfirmTest: 打出計策後應進入暫存";
@@ -65,28 +70,35 @@ class TwoPlayerJiCeStagingMoveConfirmTest {
     if (jiAgain != null && jiAgain.isEnabled())
       throw "TwoPlayerJiCeStagingMoveConfirmTest: 暫存期中「計策」主項應停用";
 
-    var pickLeaf = PlayerMenuFind.findJiCeStagingSubmitLeaf(menuPick);
-    var form = new Map<String, Array<String>>();
-    form.set(MenuFieldIds.JiCeStagingGenerals, ["g-one"]);
-    pickLeaf.setFormStringListFields(form);
-    match.applyMenuLeaf(actorAtk, pickLeaf);
+    var jNode = PlayerMenuFind.findJiCeStagingSubmitNode(menuPick);
+    var fw = jNode.formWidgets();
+    switch fw[0] {
+      case GeneralMultiPick(lbl, choices, _):
+        fw[0] = GeneralMultiPick(lbl, choices, ["g-one"]);
+      default:
+        throw "TwoPlayerJiCeStagingMoveConfirmTest: 預期計策暫存 MultiPick";
+    }
+    var sub = MenuNodeQuery.buttonEntryOnNode(jNode, JiCeStagingSubmit);
+    if (sub == null)
+      throw "TwoPlayerJiCeStagingMoveConfirmTest: 缺少確認計策選將鈕";
+    jNode.setActivationEntry(sub);
+    match.applyMenuLeaf(actorAtk, jNode);
 
     if (match.forceGetPendingJiCe() != null)
       throw "TwoPlayerJiCeStagingMoveConfirmTest: 選將後應清除 forceGetPendingJiCe";
 
     var menuAfterPick = match.createPlayerMenu(actorAtk);
-    requireEnabledLeaf(menuAfterPick, Move);
+    requireEnabledNode(menuAfterPick, Move);
     if (findLeaf(menuAfterPick, ConfirmDone) != null)
       throw "TwoPlayerJiCeStagingMoveConfirmTest: 計策結算後尚未移動前不應出現結束葉";
 
-    match.applyMenuLeaf(actorAtk, requireEnabledLeaf(menuAfterPick, Move));
+    match.applyMenuLeaf(actorAtk, requireEnabledNode(menuAfterPick, Move));
 
     if (!match.isActivePlayerSliceComplete())
       throw "TwoPlayerJiCeStagingMoveConfirmTest: 平原移動後切片應可結束";
 
     var menuDone = match.createPlayerMenu(actorAtk);
-    var doneLeaf = requireEnabledLeaf(menuDone, ConfirmDone);
-    match.applyMenuLeaf(actorAtk, doneLeaf);
+    match.applyMenuLeaf(actorAtk, requireEnabledNode(menuDone, ConfirmDone));
 
     if (match.activeMonarch().id() != defId)
       throw "TwoPlayerJiCeStagingMoveConfirmTest: 結束階段後應換至守方 " + defId;
@@ -110,12 +122,10 @@ class TwoPlayerJiCeStagingMoveConfirmTest {
     return null;
   }
 
-  static function requireEnabledLeaf(menu:IPlayerMenu, kind:PlayerMenuKind):IPlayerMenuEntry {
-    var L = findLeaf(menu, kind);
-    if (L == null)
-      throw "TwoPlayerJiCeStagingMoveConfirmTest: 選單缺少 " + Std.string(kind);
-    if (!L.isEnabled())
-      throw "TwoPlayerJiCeStagingMoveConfirmTest: 葉節點 " + Std.string(kind) + " 應為可用";
-    return L;
+  static function requireEnabledNode(menu:IPlayerMenu, kind:PlayerMenuKind):IPlayerMenuNode {
+    var n = MenuNodeQuery.requireNodeWithKind(menu, kind);
+    if (!MenuActivation.activatingEntry(n).isEnabled())
+      throw "TwoPlayerJiCeStagingMoveConfirmTest: 節點 " + Std.string(kind) + " 應為可用";
+    return n;
   }
 }

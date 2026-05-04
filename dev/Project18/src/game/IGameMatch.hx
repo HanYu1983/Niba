@@ -157,8 +157,8 @@ interface IGameMatch {
     function createPlayerMenu(actor:IPlayer):IPlayerMenu;
 
     /**
-     * 對本局賽局結算選單葉節點（移動、計策、狀態、確認等），並視規剘修改棋子／兵力／切片旗標等。
-     * 需表單數值／複選時由 UI 先寫入 {@link IPlayerMenuEntry#setFormNumericFields}／{@link IPlayerMenuEntry#setFormStringListFields}（鍵對齊組菜單時之 widget {@code fieldId}），再呼叫本方法；結算後賽局會清空上述附載。
+     * 對本局賽局結算 **選單節點**（移動、計策、表單送出等），並視規剘修改棋子／兵力／切片旗標等。
+     * 表單節點須已就地更新 {@link IPlayerMenuNode#formWidgets} 內之取值；多 {@link MenuFormWidget.Button} 時須 {@link IPlayerMenuNode#setActivationEntry}；結算後清空 {@link IPlayerMenuNode#setActivationEntry}。
      */
-    function applyMenuLeaf(actor:IPlayer, leaf:IPlayerMenuEntry, ?playedJiCe:IJiCe, ?jiCeTargetMonarchId:MonarchId):Void;
+    function applyMenuLeaf(actor:IPlayer, menuNode:IPlayerMenuNode, ?playedJiCe:IJiCe, ?jiCeTargetMonarchId:MonarchId):Void;
 }

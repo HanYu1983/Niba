@@ -8,7 +8,10 @@ import game.IPlayerMenuNode;
 import game.IGame;
 import game.IGameMatch;
 import game.ITile;
+import game.MenuNodeQuery;
 import game.PlayerMenuKind;
+import game.PlayerMenuKind.ConfirmDone;
+import game.PlayerMenuKind.Move;
 import game.TileKind;
 import impl_ver1.Game;
 
@@ -48,14 +51,13 @@ class EmptyLevelFourPlayerLoopTest {
       if (findLeaf(menuMove, ConfirmDone) != null)
         throw "EmptyLevelFourPlayerLoopTest: 移動前不應出現「結束本階段」葉節點";
 
-      match.applyMenuLeaf(actor, requireLeaf(menuMove, Move));
+      match.applyMenuLeaf(actor, MenuNodeQuery.requireNodeWithKind(menuMove, Move));
 
       if (!match.isActivePlayerSliceComplete())
         throw "EmptyLevelFourPlayerLoopTest: 全平原移動後切片應可結束";
 
       var menuEnd = match.createPlayerMenu(actor);
-      var endLeaf = requireLeaf(menuEnd, ConfirmDone);
-      match.applyMenuLeaf(actor, endLeaf);
+      match.applyMenuLeaf(actor, MenuNodeQuery.requireNodeWithKind(menuEnd, ConfirmDone));
     }
 
     if (match.activeMonarch().id() != firstId)
@@ -78,12 +80,5 @@ class EmptyLevelFourPlayerLoopTest {
         return inner;
     }
     return null;
-  }
-
-  static function requireLeaf(menu:IPlayerMenu, kind:PlayerMenuKind):IPlayerMenuEntry {
-    var L = findLeaf(menu, kind);
-    if (L == null)
-      throw "EmptyLevelFourPlayerLoopTest: 選單缺少葉節點 " + Std.string(kind);
-    return L;
   }
 }

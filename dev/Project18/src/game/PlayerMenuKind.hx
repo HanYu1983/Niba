@@ -23,16 +23,16 @@ enum PlayerMenuKind {
     /** 踩點事件之分支持選；機械鍵見 IPlayerMenuEntry.decisionToken。 */
     TileEventPick;
 
-    /** 計策暫存：確認選將（複選寫入葉 {@link IPlayerMenuEntry#setFormStringListFields}，鍵 {@link MenuFieldIds.JiCeStagingGenerals}）。 */
+    /** 計策暫存：確認選將（複選結果由 UI 改寫該節點 {@link IPlayerMenuNode#formWidgets} 之 {@link MenuFormWidget.GeneralMultiPick}）。 */
     JiCeStagingSubmit;
 
-    /** 空城進駐：同表單內複選駐將＋資源滑桿（數值／駐將列表寫入葉 {@link IPlayerMenuEntry#setFormNumericFields}／{@link IPlayerMenuEntry#setFormStringListFields}）。 */
+    /** 空城進駐：同表單內複選駐將＋資源滑桿（數值／駐將列表皆改寫該節點 {@link IPlayerMenuNode#formWidgets}）。 */
     EmptyCityOccupySubmit;
 
     /** 空城進駐：取消進駐。 */
     EmptyCityOccupyAbort;
 
-    /** 我方城池拜訪：調度表單內確認（滑桿數值寫入葉 {@link IPlayerMenuEntry#setFormNumericFields}），不結束拜訪。 */
+    /** 我方城池拜訪：調度表單內確認（滑桿數值改寫該節點 {@link IPlayerMenuNode#formWidgets}），不結束拜訪。 */
     FriendlyCityDispatchApply;
 
     /** 我方城池拜訪：結束拜訪並關閉持續選單。 */

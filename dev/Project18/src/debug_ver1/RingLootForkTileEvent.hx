@@ -3,11 +3,10 @@ package debug_ver1;
 import game.GameIds;
 import game.IPlayer;
 import game.IPlayerMenu;
-import game.IPlayerMenuEntry;
 import game.IPlayerMenuNode;
 import game.ITileEvent;
 import game.IGameMatch;
-import game.MenuFieldIds;
+import game.MenuActivation;
 import game.MenuFormWidget;
 import game.MenuGeneralChoice;
 import game.PlayerMenuKind.TileEventPick;
@@ -15,7 +14,7 @@ import impl_ver1.Monarch;
 import impl_ver1.PlayerMenu;
 
 /**
- * impl_ver1 分叉事件：「軍資」以表單複選武將＋確認鈕結算；糧秣／略過為單葉。
+ * impl_ver1 分叉事件：「軍資」以複選武將＋確認鈕結算；糧秣／略過為單葉。
  */
 class RingLootForkTileEvent implements ITileEvent {
   public var lastResolvedChoice:String = "";
@@ -37,7 +36,7 @@ class RingLootForkTileEvent implements ITileEvent {
     var supplyWidgets:Array<MenuFormWidget> = [];
     if (choices.length > 0) {
       var def:Array<String> = [choices[0].generalId];
-      supplyWidgets.push(GeneralMultiPick(MenuFieldIds.TileEventGenerals, "領軍補給武將（選一人）", choices, def));
+      supplyWidgets.push(GeneralMultiPick("領軍補給武將（選一人）", choices, def));
     }
     supplyWidgets.push(
       Button(_match.createPlayerMenuEntry(TileEventPick, "事件選項：取軍資（+兵力，須選將若有麾下）", true, "take_supplies"))
@@ -58,7 +57,8 @@ class RingLootForkTileEvent implements ITileEvent {
     return new PlayerMenu(actor, "evt-" + registryKey(), roots);
   }
 
-  public function resolveChoice(actor:IPlayer, leaf:IPlayerMenuEntry):Void {
+  public function resolveChoice(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
+    var leaf = MenuActivation.activatingEntry(menuNode);
     if (leaf.kind() != TileEventPick)
       throw "RingLootForkTileEvent.resolveChoice: 預期 TileEventPick 葉";
     var tok = leaf.decisionToken();
@@ -71,7 +71,7 @@ class RingLootForkTileEvent implements ITileEvent {
         if (ruler.roster().length == 0)
           ruler.grantTroops(15);
         else {
-          var ids = parseTileEventGeneralIds(leaf.formStringListFields(), ruler);
+          var ids = parseTileEventGeneralIds(menuNode, ruler);
           if (ids.length != 1)
             throw "RingLootForkTileEvent.resolveChoice: 取軍資須恰好選擇一名麾下武將";
           ruler.grantTroops(15);
@@ -85,8 +85,15 @@ class RingLootForkTileEvent implements ITileEvent {
     }
   }
 
-  static function parseTileEventGeneralIds(form:Null<Map<String, Array<String>>>, ruler:Monarch):Array<GeneralId> {
-    var raw = form != null && form.exists(MenuFieldIds.TileEventGenerals) ? form.get(MenuFieldIds.TileEventGenerals) : ([] : Array<String>);
+  static function parseTileEventGeneralIds(menuNode:IPlayerMenuNode, ruler:Monarch):Array<GeneralId> {
+    var raw:Array<String> = [];
+    for (w in menuNode.formWidgets())
+      switch w {
+        case GeneralMultiPick(_, _, sel):
+          raw = sel.copy();
+        case Slider(_, _, _, _, _):
+        case Button(_):
+      }
     var seen = new Map<String, Bool>();
     var uniq:Array<GeneralId> = [];
     for (id in raw) {

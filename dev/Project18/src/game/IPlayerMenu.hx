@@ -5,7 +5,7 @@ package game;
  *
  * 建構規剘：須以唯讀之 IGameMatch 與操作者 IPlayer（通常即 activeMonarch 所屬玩家）
  * 決定列舉內容；賽局狀態變更後應重新向 IGameMatch.createPlayerMenu 索取，不假定本物件隱式同步。
- * 玩家選定葉節點後，賽局突變一律經 IGameMatch.applyMenuLeaf 統一結算。
+ * 玩家選定選單節點（含 {@link IPlayerMenuNode#activationEntry} 所指按鈕）後，賽局突變一律經 {@link IGameMatch#applyMenuLeaf} 統一結算。
  */
 interface IPlayerMenu {
     /** 選單所服務之玩家（檢視者）。 */

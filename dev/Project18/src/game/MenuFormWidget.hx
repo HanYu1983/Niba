@@ -1,19 +1,15 @@
 package game;
 
 /**
- * 嵌於 {@link IPlayerMenuNode} 之表單元件語意；UI 端依 type 繪製滑動條／按鈕，
- * 按鈕結算仍經 {@link IGameMatch#applyMenuLeaf}；同節點之 Slider／GeneralMultiPick 數值由 UI 寫入該按鈕葉 {@link IPlayerMenuEntry#setFormNumericFields}／{@link IPlayerMenuEntry#setFormStringListFields}（鍵為各 widget 之 {@code fieldId}）。
+ * 嵌於 {@link IPlayerMenuNode} 之表單元件語意；UI 依序繪製並可在送出前 **就地改寫** enum 取值（如 {@link Slider} 之 {@code value}、{@link GeneralMultiPick} 之 {@code selectedGeneralIds}）。
+ * 結算經 {@link IGameMatch#applyMenuLeaf} 傳入 **含已修改 widgets 之節點**；同節點有多個 {@link Button} 時須 {@link IPlayerMenuNode#setActivationEntry} 標記所按之葉。
  */
 enum MenuFormWidget {
-    /** UI 初始游標位置；須落於 [min,max]（賽局組裝時應已夾限）。 */
-    Slider(fieldId:String, label:String, min:Int, max:Int, step:Int, defaultValue:Int);
+    /** 數值須落於 [min,max]；送出前 UI 將 {@code value} 設為玩家設定值。 */
+    Slider(label:String, min:Int, max:Int, step:Int, value:Int);
 
-    /** 表單內按鈕；與一般選單葉共用同一 {@link IPlayerMenuEntry} 結算語意。 */
     Button(entry:IPlayerMenuEntry);
 
-    /**
-     * 武將複選（勾選框）；{@code defaultSelectedGeneralIds} 為 UI 預設勾選（通常為城中既有駐將，且應為候選之子集）。
-     * 結算時將選中 id 列表（順序保留）寫入同表單按鈕葉 {@link IPlayerMenuEntry#setFormStringListFields}，鍵為 {@code fieldId}。
-     */
-    GeneralMultiPick(fieldId:String, label:String, choices:Array<MenuGeneralChoice>, defaultSelectedGeneralIds:Array<String>);
+    /** 送出前 UI 將 {@code selectedGeneralIds} 設為勾選結果（順序保留）。 */
+    GeneralMultiPick(label:String, choices:Array<MenuGeneralChoice>, selectedGeneralIds:Array<String>);
 }
