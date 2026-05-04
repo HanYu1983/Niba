@@ -390,6 +390,7 @@ class GameMatchCore implements IGameMatch {
     _hostileCityAttackerGeneralIds = picks.copy();
     _hostileCityAwaitingDuel = tok == "duel";
     _hostileCityPhase = DefenderResponse;
+    GameMatchVer1Ops.handleHostileCityAttackerPick(this, actor, menuNode);
     syncActiveSliceAfterMenuLeaf(HostileCityAttackerPick);
   }
 
@@ -400,6 +401,7 @@ class GameMatchCore implements IGameMatch {
       throw "GameMatchCore: 單挑時不可使用守方簡認確認";
     _hostileCitySettlementSummary = computeHostileCitySettlementSummary();
     _hostileCityPhase = AttackerSettlement;
+    GameMatchVer1Ops.handleHostileCityDefenderAck(this, actor, menuNode);
     syncActiveSliceAfterMenuLeaf(HostileCityDefenderAck);
   }
 
@@ -415,12 +417,14 @@ class GameMatchCore implements IGameMatch {
     _hostileCityDefenderGeneralId = picks[0];
     _hostileCitySettlementSummary = computeHostileCitySettlementSummary();
     _hostileCityPhase = AttackerSettlement;
+    GameMatchVer1Ops.handleHostileCityDefenderPickSubmit(this, actor, menuNode);
     syncActiveSliceAfterMenuLeaf(HostileCityDefenderPickSubmit);
   }
 
   function handleHostileCitySettlementAck(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
     if (_pendingHostileCityTileIndex == null || _hostileCityPhase != AttackerSettlement)
       throw "GameMatchCore: HostileCitySettlementAck 與對峙階段不符";
+    GameMatchVer1Ops.handleHostileCitySettlementAck(this, actor, menuNode);
     clearHostileCityConfrontation();
     _activeSliceComplete = true;
     syncActiveSliceAfterMenuLeaf(HostileCitySettlementAck);
