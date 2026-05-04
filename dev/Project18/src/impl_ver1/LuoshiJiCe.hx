@@ -16,7 +16,7 @@ import game.PlayerMenuKind;
 import game.PlayerMenuKind.JiCeStagingSubmit;
 
 /**
- * 落石計策：建構子綁定 {@link GameMatchCore}，並直接讀寫其私有暫存欄位（與 GameMatchCore 同套件友元）。
+ * 落石計策：建構子綁定 {@link GameMatchCore}；暫存與兵力結算經 Core 私有方法（同套件友元可見）。
  */
 class LuoshiJiCe implements IJiCe {
   public static inline var REGISTRY_KEY = "jice_luoshi";
@@ -40,7 +40,7 @@ class LuoshiJiCe implements IJiCe {
     if (roster.length == 0)
       throw "LuoshiJiCe: 計策暫存需要攻方 roster 至少一名武將";
 
-    var defTroops = monarchTroops(targetMonarchId);
+    var defTroops = gameMatch.monarchTroopCount(targetMonarchId);
     var previewRows:Array<IJiCeStagingPreviewRow> = [];
 
     for (g in roster) {
@@ -54,7 +54,7 @@ class LuoshiJiCe implements IJiCe {
   }
 
   public function buildPlayerMenu(actor:IPlayer):IPlayerMenu {
-    var rows = gameMatch._jiCeStagingRows;
+    var rows = gameMatch.jiCeStagingRowsLive();
     var choices:Array<MenuGeneralChoice> = [];
     var defSel:Array<String> = [];
     for (r in rows) {
@@ -72,31 +72,17 @@ class LuoshiJiCe implements IJiCe {
   }
 
   public function resolveChoice(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
-    if (gameMatch._pendingJiCe != this)
+    if (!gameMatch.jiCePendingMatchesCard(this))
       throw "LuoshiJiCe.resolveChoice: pendingJiCe mismatch";
     if (MenuActivation.activatingEntry(menuNode).kind() != JiCeStagingSubmit)
       throw "LuoshiJiCe.resolveChoice: 預期 JiCeStagingSubmit";
 
-    var tid = gameMatch._jiCeStagingTargetId;
-    if (tid == null)
-      throw "LuoshiJiCe.resolveChoice: missing staging target";
+    var tid = gameMatch.jiCeStagingTargetMonarchIdOrThrow();
 
     var choiceId = readStagingPickGeneralId(menuNode.formWidgets());
 
-    var pickedLoss:Null<Int> = null;
-    for (r in gameMatch._jiCeStagingRows)
-      if (r.generalId() == choiceId)
-        pickedLoss = r.predictedTroopLoss();
-
-    if (pickedLoss == null)
-      throw "LuoshiJiCe.resolveChoice: unknown general " + choiceId;
-
-    for (mon in gameMatch._monarchs)
-      if (mon.id() == tid) {
-        mon.reduceTroops(pickedLoss);
-        return;
-      }
-    throw "LuoshiJiCe.resolveChoice: monarch not found " + tid;
+    var pickedLoss = gameMatch.jiCeStagingPredictedTroopLossForGeneralOrThrow(choiceId);
+    gameMatch.monarchApplyTroopLoss(tid, pickedLoss);
   }
 
   /**
@@ -125,7 +111,7 @@ class LuoshiJiCe implements IJiCe {
       throw "LuoshiJiCe: 計策選將須恰好選擇一名麾下武將";
     var gid = uniq[0];
     var allowed = new Map<String, Bool>();
-    for (r in gameMatch._jiCeStagingRows)
+    for (r in gameMatch.jiCeStagingRowsLive())
       allowed.set(r.generalId(), true);
     if (!allowed.exists(gid))
       throw 'LuoshiJiCe: 計策選將 "$gid" 不在暫存預覽列';
@@ -136,13 +122,6 @@ class LuoshiJiCe implements IJiCe {
     if (!ok.exists(gid))
       throw 'LuoshiJiCe: 計策選將含非麾下武將 "$gid"';
     return gid;
-  }
-
-  function monarchTroops(monarchId:MonarchId):Int {
-    for (m in gameMatch._monarchs)
-      if (m.id() == monarchId)
-        return m.troops();
-    throw "LuoshiJiCe: monarch not found " + monarchId;
   }
 
   static function loseTroopFractionOneTenth(currentTroops:Int):Int {

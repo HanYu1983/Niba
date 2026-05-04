@@ -28,31 +28,37 @@ import game.TileKind;
 class GameMatchCore implements IGameMatch {
   public static inline var DEFAULT_MOVE_DELTA = 3;
 
+  // ========== 私有欄位（依狀態分區，後續重構時維持對應私有方法區塊）==========
+
+  /** --- 棋盤 --- */
   var _board:Board;
+
+  /** --- 君主列、當前行動方、行動切片、終局 --- */
   var _monarchs:Array<Monarch>;
   var _activeId:MonarchId;
   var _activeSliceComplete:Bool;
   var _terminationReason:MatchTerminationReason;
 
+  /** --- 環上格子事件綁定與落地 pending --- */
   var _tileEventByIndex:Map<Int, ITileEvent>;
   var _pendingTileEvent:Null<ITileEvent>;
 
+  /** --- 計策暫存與君主所持牌 --- */
   var _pendingJiCe:Null<IJiCe>;
   var _jiCeStagingTargetId:Null<MonarchId>;
   var _jiCeStagingRows:Array<IJiCeStagingPreviewRow>;
-
   var _ownedJiCe:Map<MonarchId, Array<IJiCe>>;
 
+  /** --- 城池：駐軍、儲備、屬主；踩中空城／我方城 pending --- */
   /** 城池格索引 → 駐守武將 id 列表；無鍵或空陣列視為無駐將（空城語意）。 */
   var _cityGarrisonGenerals:Map<Int, Array<GeneralId>>;
-
   var _cityStockTroops:Map<Int, Int>;
   var _cityStockGrain:Map<Int, Int>;
   var _pendingEmptyCityTileIndex:Null<TileIndex>;
-
   var _cityOwner:Map<Int, MonarchId>;
   var _pendingFriendlyCityTileIndex:Null<TileIndex>;
 
+  /** --- 敵城對峙多階段 --- */
   var _pendingHostileCityTileIndex:Null<TileIndex>;
   var _hostileCityPhase:Null<HostileCityPhase>;
   var _hostileCityAttackerId:MonarchId;
@@ -88,20 +94,169 @@ class GameMatchCore implements IGameMatch {
     _jiCeStagingRows = ([] : Array<IJiCeStagingPreviewRow>);
   }
 
-  public function forceBindTileEvent(at:TileIndex, handler:ITileEvent):Void {
+  // ========== 私有行為（依欄位分組；公開方法與友元僅委派至此）==========
+
+  // --- 格子事件綁定 ---
+  private function tileEventBind(at:TileIndex, handler:ITileEvent):Void {
     _tileEventByIndex.set(at, handler);
   }
 
-  public function createTile(index:TileIndex, kind:TileKind):ITile
-    return new Tile(index, kind);
-
-  public function createBoard(tiles:Array<ITile>):IBoard {
+  // --- 棋盤（單例安裝）---
+  private function boardInstallOnce(tiles:Array<ITile>):IBoard {
     if (_board != null)
       throw "GameMatchCore.createBoard: board already set";
     var b = new Board(tiles);
     _board = b;
     return b;
   }
+
+  // --- 計策暫存寫入／友元讀取用（不將欄位暴露給套件外）---
+  private function jiCeStagingEnter(card:IJiCe, targetMonarchId:MonarchId, previewRows:Array<IJiCeStagingPreviewRow>):Void {
+    _pendingJiCe = card;
+    _jiCeStagingTargetId = targetMonarchId;
+    _jiCeStagingRows = previewRows.copy();
+  }
+
+  /** 與計策選單建構同步：直接回傳暫存列（勿在暫存期外依賴其內容）。 */
+  private function jiCeStagingRowsLive():Array<IJiCeStagingPreviewRow>
+    return _jiCeStagingRows;
+
+  private function jiCePendingMatchesCard(card:IJiCe):Bool
+    return _pendingJiCe == card;
+
+  private function jiCeStagingTargetMonarchIdOrThrow():MonarchId {
+    var tid = _jiCeStagingTargetId;
+    if (tid == null)
+      throw "GameMatchCore.jiCeStagingTargetMonarchIdOrThrow: missing staging target";
+    return tid;
+  }
+
+  private function jiCeStagingPredictedTroopLossForGeneralOrThrow(gid:GeneralId):Int {
+    for (r in _jiCeStagingRows)
+      if (r.generalId() == gid)
+        return r.predictedTroopLoss();
+    throw 'GameMatchCore: unknown general $gid in staging rows';
+  }
+
+  private function monarchTroopCount(mid:MonarchId):Int
+    return monarchWithId(mid).troops();
+
+  private function monarchApplyTroopLoss(mid:MonarchId, loss:Int):Void
+    monarchWithId(mid).reduceTroops(loss);
+
+  // --- 城池圖資：進駐／調度結果寫回（君主池已由規剘扣除或加回）---
+  private function cityMapsDepositOccupy(
+    tileIndex:TileIndex,
+    ownerMonarchId:MonarchId,
+    troops:Int,
+    grain:Int,
+    garrisonIds:Array<GeneralId>
+  ):Void {
+    var prevT = _cityStockTroops.exists(tileIndex) ? _cityStockTroops.get(tileIndex) : 0;
+    var prevG = _cityStockGrain.exists(tileIndex) ? _cityStockGrain.get(tileIndex) : 0;
+    _cityStockTroops.set(tileIndex, prevT + troops);
+    _cityStockGrain.set(tileIndex, prevG + grain);
+    _cityOwner.set(tileIndex, ownerMonarchId);
+    _cityGarrisonGenerals.set(tileIndex, garrisonIds.copy());
+  }
+
+  private function cityMapsApplyFriendlyDispatchTargets(tileIndex:TileIndex, targetTroops:Int, targetGrain:Int):Void {
+    _cityStockTroops.set(tileIndex, targetTroops);
+    _cityStockGrain.set(tileIndex, targetGrain);
+  }
+
+  // --- 落地 surface：清空事件／空城／友城 pending 並重置敵城對峙 ---
+  private function landingClearSurfacePendings():Void {
+    _pendingTileEvent = null;
+    _pendingEmptyCityTileIndex = null;
+    _pendingFriendlyCityTileIndex = null;
+    hostileCityResetAll();
+  }
+
+  private function landingArmPendingTileEventAt(idx:TileIndex):Void {
+    _pendingTileEvent = _tileEventByIndex.get(idx);
+  }
+
+  /** 君主踩在 {@link game.TileKind.City}：依屬主／空城／駐軍決定 pending（語意集中於此）。 */
+  private function landingResolveCityTile(idx:TileIndex):Void {
+    if (_cityOwner.exists(idx) && _cityOwner.get(idx) == activeMonarch().id())
+      _pendingFriendlyCityTileIndex = idx;
+    else if (_cityOwner.exists(idx) && !cityVacantNoGarrison(idx))
+      hostileCityEnterConfrontationAt(idx);
+    else if (cityVacantNoGarrison(idx))
+      _pendingEmptyCityTileIndex = idx;
+  }
+
+  // --- 敵城對峙 ---
+  private function hostileCityResetAll():Void {
+    _pendingHostileCityTileIndex = null;
+    _hostileCityPhase = null;
+    _hostileCityAttackerId = "";
+    _hostileCityDefenderId = "";
+    _hostileCityAwaitingDuel = false;
+    _hostileCityAttackerChoiceToken = "";
+    _hostileCityAttackerGeneralIds = [];
+    _hostileCityDefenderGeneralId = null;
+    _hostileCitySettlementSummary = "";
+  }
+
+  private function hostileCityEnterConfrontationAt(idx:TileIndex):Void {
+    if (!_cityOwner.exists(idx))
+      throw "GameMatchCore.hostileCityEnterConfrontationAt: city has no owner";
+    _pendingHostileCityTileIndex = idx;
+    _hostileCityPhase = AttackerChoosing;
+    _hostileCityAttackerId = activeMonarch().id();
+    _hostileCityDefenderId = _cityOwner.get(idx);
+    _hostileCityAwaitingDuel = false;
+    _hostileCityAttackerChoiceToken = "";
+    _hostileCityAttackerGeneralIds = [];
+    _hostileCityDefenderGeneralId = null;
+    _hostileCitySettlementSummary = "";
+  }
+
+  private function hostileCityRecordAttackerChoice(tok:String, picks:Array<GeneralId>):Void {
+    _hostileCityAttackerChoiceToken = tok;
+    _hostileCityAttackerGeneralIds = picks.copy();
+    _hostileCityAwaitingDuel = tok == "duel";
+    _hostileCityPhase = DefenderResponse;
+  }
+
+  /** 依暫存攻方選項與將面組結算摘要文案。 */
+  private function hostileCityComputeSettlementSummaryText():String {
+    var tileIdx = _pendingHostileCityTileIndex != null ? _pendingHostileCityTileIndex : -1;
+    var tok = _hostileCityAttackerChoiceToken;
+    var atkG = _hostileCityAttackerGeneralIds.length > 0 ? _hostileCityAttackerGeneralIds[0] : "(無)";
+    switch tok {
+      case "pay_toll":
+        return '結算：過路費已付｜城池格 $tileIdx';
+      case "negotiate":
+        return '結算：談判（攻將 $atkG）｜協議草案已備';
+      case "attrition":
+        return '結算：消耗戰（攻將 $atkG）｜損耗預估完成';
+      case "siege":
+        return '結算：攻城戰（攻將 $atkG）｜城防推演完成';
+      case "duel":
+        var defG = _hostileCityDefenderGeneralId != null ? _hostileCityDefenderGeneralId : "?";
+        return '結算：單挑（攻將 $atkG vs 守將 $defG）｜勝負已裁定';
+      default:
+        throw 'GameMatchCore.hostileCityComputeSettlementSummaryText: 未知選項 $tok';
+    }
+  }
+
+  private function hostileCityPublishSettlementPreview():Void {
+    _hostileCitySettlementSummary = hostileCityComputeSettlementSummaryText();
+    _hostileCityPhase = AttackerSettlement;
+  }
+
+  public function forceBindTileEvent(at:TileIndex, handler:ITileEvent):Void {
+    tileEventBind(at, handler);
+  }
+
+  public function createTile(index:TileIndex, kind:TileKind):ITile
+    return new Tile(index, kind);
+
+  public function createBoard(tiles:Array<ITile>):IBoard
+    return boardInstallOnce(tiles);
 
   public function createGeneral(id:GeneralId, owner:MonarchId, command:Int, might:Int, wit:Int, stewardship:Int):IGeneral {
     var gen = new General(id, owner, command, might, wit, stewardship);
@@ -166,9 +321,7 @@ class GameMatchCore implements IGameMatch {
   }
 
   public function enterJiCeStaging(card:IJiCe, targetMonarchId:MonarchId, previewRows:Array<IJiCeStagingPreviewRow>):Void {
-    _pendingJiCe = card;
-    _jiCeStagingTargetId = targetMonarchId;
-    _jiCeStagingRows = previewRows.copy();
+    jiCeStagingEnter(card, targetMonarchId, previewRows);
   }
 
   public function cityVacantNoGarrison(at:TileIndex):Bool {
@@ -357,10 +510,7 @@ class GameMatchCore implements IGameMatch {
       default:
         throw 'GameMatchCore: 未知敵城攻方選項 $tok';
     }
-    _hostileCityAttackerChoiceToken = tok;
-    _hostileCityAttackerGeneralIds = picks.copy();
-    _hostileCityAwaitingDuel = tok == "duel";
-    _hostileCityPhase = DefenderResponse;
+    hostileCityRecordAttackerChoice(tok, picks);
     GameMatchVer1Ops.onHostileCityAttackerConfirmed(this, actor, menuNode);
     syncActiveSliceAfterMenuLeaf(HostileCityAttackerPick);
   }
@@ -370,8 +520,7 @@ class GameMatchCore implements IGameMatch {
       throw "GameMatchCore: HostileCityDefenderAck 與對峙階段不符";
     if (_hostileCityAwaitingDuel)
       throw "GameMatchCore: 單挑時不可使用守方簡認確認";
-    _hostileCitySettlementSummary = GameMatchVer1Ops.computeHostileCitySettlementSummary(this);
-    _hostileCityPhase = AttackerSettlement;
+    hostileCityPublishSettlementPreview();
     GameMatchVer1Ops.onHostileCityDefenderAck(this, actor, menuNode);
     syncActiveSliceAfterMenuLeaf(HostileCityDefenderAck);
   }
@@ -386,8 +535,7 @@ class GameMatchCore implements IGameMatch {
       throw "GameMatchCore: 守方單挑須恰好選擇一名武將";
     assertGeneralOwnedBy(_hostileCityDefenderId, picks[0]);
     _hostileCityDefenderGeneralId = picks[0];
-    _hostileCitySettlementSummary = GameMatchVer1Ops.computeHostileCitySettlementSummary(this);
-    _hostileCityPhase = AttackerSettlement;
+    hostileCityPublishSettlementPreview();
     GameMatchVer1Ops.onHostileCityDefenderDuelPickConfirmed(this, actor, menuNode);
     syncActiveSliceAfterMenuLeaf(HostileCityDefenderPickSubmit);
   }
@@ -585,28 +733,17 @@ class GameMatchCore implements IGameMatch {
   }
 
   function clearHostileCityConfrontation():Void {
-    _pendingHostileCityTileIndex = null;
-    _hostileCityPhase = null;
-    _hostileCityAttackerId = "";
-    _hostileCityDefenderId = "";
-    _hostileCityAwaitingDuel = false;
-    _hostileCityAttackerChoiceToken = "";
-    _hostileCityAttackerGeneralIds = [];
-    _hostileCityDefenderGeneralId = null;
-    _hostileCitySettlementSummary = "";
+    hostileCityResetAll();
   }
 
   function considerLandingAt(idx:TileIndex):Void {
-    _pendingTileEvent = null;
-    _pendingEmptyCityTileIndex = null;
-    _pendingFriendlyCityTileIndex = null;
-    clearHostileCityConfrontation();
+    landingClearSurfacePendings();
     var tile = board().tileAt(idx);
     switch tile.kind() {
       case Event:
-        _pendingTileEvent = _tileEventByIndex.get(idx);
+        landingArmPendingTileEventAt(idx);
       case City:
-        GameMatchVer1Ops.considerLandingAtCityTile(this, idx);
+        landingResolveCityTile(idx);
       case Plain:
       case Battle:
       case Scheme:
