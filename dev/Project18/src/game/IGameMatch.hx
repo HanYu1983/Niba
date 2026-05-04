@@ -167,8 +167,8 @@ interface IGameMatch {
 
     /**
      * 對本局賽局結算選單葉節點（移動、計策、狀態、確認等），並視規剘修改棋子／兵力／切片旗標等。
-     * {@link PlayerMenuKind.EmptyCityOccupySubmit}、{@link PlayerMenuKind.FriendlyCityDispatchApply} 須附 {@code formNumericFields}（欄位鍵見規剘／選單組裝）。
-     * {@link PlayerMenuKind.EmptyCityGarrisonPickConfirm} 須附 {@code formStringListFields}。
+     * {@link PlayerMenuKind.EmptyCityOccupySubmit} 須附 {@code formNumericFields} 與 {@code formStringListFields}（駐將複選鍵見規剘）；
+     * {@link PlayerMenuKind.FriendlyCityDispatchApply} 須附 {@code formNumericFields}。
      */
     function applyMenuLeaf(actor:IPlayer, leaf:IPlayerMenuEntry, ?playedJiCe:IJiCe, ?jiCeTargetMonarchId:MonarchId, ?formNumericFields:Map<String, Int>, ?formStringListFields:Map<String, Array<String>>):Void;
 }

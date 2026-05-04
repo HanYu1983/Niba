@@ -16,8 +16,8 @@ import impl_ver1.GameMatchCore;
 import impl_ver1.Monarch;
 
 /**
- * 空城進駐：第一段 {@link MenuFormWidget.GeneralMultiPick}，第二段兵力／糧食 Slider；
- * {@link MenuFormWidget.Button} 結算經 {@link IGameMatch#applyMenuLeaf}。
+ * 空城進駐：單一 menuNode 內 {@link MenuFormWidget.GeneralMultiPick}（預設為城中駐將∩麾下）+
+ * 兵力／糧食 Slider；{@link PlayerMenuKind.EmptyCityOccupySubmit} 須同附數值與駐將列表。
  */
 class EmptyCityVacantFormMenuTest {
   static inline var RING_LEN = 10;
@@ -25,12 +25,12 @@ class EmptyCityVacantFormMenuTest {
   static inline var CITY_IDX = 5;
 
   public static function run():Void {
-    testVacantCityTwoPhaseOccupy();
+    testVacantCitySingleFormOccupy();
     testOccupiedCitySkipsForm();
-    trace("[EmptyCityVacantFormMenuTest] OK — 空城複選駐將→調配資源／有駐將跳過");
+    trace("[EmptyCityVacantFormMenuTest] OK — 空城複選＋資源同表單／有駐將跳過");
   }
 
-  static function testVacantCityTwoPhaseOccupy():Void {
+  static function testVacantCitySingleFormOccupy():Void {
     var game:IGame = new Game();
     var match:IGameMatch = game.createGameMatch(Game.LEVEL_KEY_EMPTY);
 
@@ -54,23 +54,16 @@ class EmptyCityVacantFormMenuTest {
     if (match.forceGetPendingEmptyCityOccupyTile() != CITY_IDX)
       throw "EmptyCityVacantFormMenuTest: 應 pending 空城進駐";
 
-    var menuPick = match.createPlayerMenu(player);
-    assertPhasePickGenerals(menuPick);
-
-    var pickLists = new Map<String, Array<String>>();
-    pickLists.set(GameMatchCore.EMPTY_CITY_GARRISON_FIELD, ["g-a", "g-b"]);
-    match.applyMenuLeaf(player, requireLeafKind(menuPick, EmptyCityGarrisonPickConfirm), null, null, null, pickLists);
-
-    if (match.forceGetPendingEmptyCityOccupyTile() != CITY_IDX)
-      throw "EmptyCityVacantFormMenuTest: 第二段仍應為同一 pending 格";
-
-    var menuAlloc = match.createPlayerMenu(player);
-    assertPhaseAllocate(menuAlloc);
+    var menu = match.createPlayerMenu(player);
+    assertCombinedOccupyForm(menu);
 
     var fm = new Map<String, Int>();
     fm.set(GameMatchCore.OCCUPY_FIELD_TROOPS, 30);
     fm.set(GameMatchCore.OCCUPY_FIELD_GRAIN, 10);
-    match.applyMenuLeaf(player, requireLeafKind(menuAlloc, EmptyCityOccupySubmit), null, null, fm);
+    var pickLists = new Map<String, Array<String>>();
+    pickLists.set(GameMatchCore.EMPTY_CITY_GARRISON_FIELD, ["g-a", "g-b"]);
+
+    match.applyMenuLeaf(player, requireLeafKind(menu, EmptyCityOccupySubmit), null, null, fm, pickLists);
 
     if (match.forceGetPendingEmptyCityOccupyTile() != null)
       throw "EmptyCityVacantFormMenuTest: 結算後應清除 pending";
@@ -119,76 +112,58 @@ class EmptyCityVacantFormMenuTest {
     requireLeafKind(match.createPlayerMenu(player), ConfirmDone);
   }
 
-  static function assertPhasePickGenerals(menu:IPlayerMenu):Void {
-    var n = findRootFormNode(menu, "複選駐將");
+  static function assertCombinedOccupyForm(menu:IPlayerMenu):Void {
+    var n = findRootOccupyNode(menu);
     var fw = n.formWidgets();
-    if (fw.length != 3)
-      throw "EmptyCityVacantFormMenuTest: 第一段預期 MultiPick + 2 Button，got " + fw.length;
+    if (fw.length != 5)
+      throw "EmptyCityVacantFormMenuTest: 預期 MultiPick + 2 Slider + 2 Button，got " + fw.length;
+
     switch fw[0] {
-      case GeneralMultiPick(fid, _, choices):
+      case GeneralMultiPick(fid, _, choices, defSel):
         if (fid != GameMatchCore.EMPTY_CITY_GARRISON_FIELD)
           throw "EmptyCityVacantFormMenuTest: GeneralMultiPick fieldId 不符";
         if (choices.length != 2 || choices[0].generalId != "g-a" || choices[1].generalId != "g-b")
           throw "EmptyCityVacantFormMenuTest: 複選候選應為 g-a、g-b";
+        if (defSel.length != 0)
+          throw "EmptyCityVacantFormMenuTest: 空城預設選中應為空（無城中駐將）";
       default:
         throw "EmptyCityVacantFormMenuTest: [0] 應為 GeneralMultiPick";
     }
     switch fw[1] {
-      case Button(e):
-        if (e.kind() != EmptyCityGarrisonPickConfirm)
-          throw "EmptyCityVacantFormMenuTest: [1] 應為確認駐將";
-      default:
-        throw "EmptyCityVacantFormMenuTest: [1] 應為 Button";
-    }
-    switch fw[2] {
-      case Button(e):
-        if (e.kind() != EmptyCityOccupyAbort)
-          throw "EmptyCityVacantFormMenuTest: [2] 應為取消進駐";
-      default:
-        throw "EmptyCityVacantFormMenuTest: [2] 應為 Button";
-    }
-  }
-
-  static function assertPhaseAllocate(menu:IPlayerMenu):Void {
-    var n = findRootFormNode(menu, "調配資源");
-    var fw = n.formWidgets();
-    if (fw.length != 4)
-      throw "EmptyCityVacantFormMenuTest: 第二段預期 2 Slider + 2 Button，got " + fw.length;
-    switch fw[0] {
       case Slider(fid, _, min, max, step, def):
         if (fid != GameMatchCore.OCCUPY_FIELD_TROOPS || min != 0 || max != 80 || step != 1 || def != 0)
           throw "EmptyCityVacantFormMenuTest: 兵力滑桿參數不符";
       default:
-        throw "EmptyCityVacantFormMenuTest: [0] 應為兵力 Slider";
+        throw "EmptyCityVacantFormMenuTest: [1] 應為兵力 Slider";
     }
-    switch fw[1] {
+    switch fw[2] {
       case Slider(fid, _, min, max, step, def):
         if (fid != GameMatchCore.OCCUPY_FIELD_GRAIN || min != 0 || max != 40 || step != 1 || def != 0)
           throw "EmptyCityVacantFormMenuTest: 糧食滑桿參數不符";
       default:
-        throw "EmptyCityVacantFormMenuTest: [1] 應為糧食 Slider";
-    }
-    switch fw[2] {
-      case Button(e):
-        if (e.kind() != EmptyCityOccupySubmit)
-          throw "EmptyCityVacantFormMenuTest: [2] 應為確認進駐";
-      default:
-        throw "EmptyCityVacantFormMenuTest: [2] 應為 Button";
+        throw "EmptyCityVacantFormMenuTest: [2] 應為糧食 Slider";
     }
     switch fw[3] {
       case Button(e):
-        if (e.kind() != EmptyCityOccupyAbort)
-          throw "EmptyCityVacantFormMenuTest: [3] 應為離開";
+        if (e.kind() != EmptyCityOccupySubmit)
+          throw "EmptyCityVacantFormMenuTest: [3] 應為確認進駐";
       default:
         throw "EmptyCityVacantFormMenuTest: [3] 應為 Button";
     }
+    switch fw[4] {
+      case Button(e):
+        if (e.kind() != EmptyCityOccupyAbort)
+          throw "EmptyCityVacantFormMenuTest: [4] 應為離開／取消";
+      default:
+        throw "EmptyCityVacantFormMenuTest: [4] 應為 Button";
+    }
   }
 
-  static function findRootFormNode(menu:IPlayerMenu, captionSub:String):IPlayerMenuNode {
+  static function findRootOccupyNode(menu:IPlayerMenu):IPlayerMenuNode {
     for (r in menu.rootNodes())
-      if (r.formWidgets().length > 0 && r.caption().indexOf(captionSub) >= 0)
+      if (r.formWidgets().length > 0 && r.caption().indexOf("空城進駐") >= 0)
         return r;
-    throw 'EmptyCityVacantFormMenuTest: 找不到表單根節點（$captionSub）';
+    throw "EmptyCityVacantFormMenuTest: 找不到空城進駐表單節點";
   }
 
   static function findLeafKind(menu:IPlayerMenu, kind:PlayerMenuKind):Null<IPlayerMenuEntry> {
@@ -206,7 +181,7 @@ class EmptyCityVacantFormMenuTest {
             if (e.kind() == kind)
               return e;
           case Slider(_, _, _, _, _, _):
-          case GeneralMultiPick(_, _, _):
+          case GeneralMultiPick(_, _, _, _):
         }
       var inner = findLeafInNodes(n.children(), kind);
       if (inner != null)

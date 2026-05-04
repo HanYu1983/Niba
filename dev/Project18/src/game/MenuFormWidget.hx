@@ -12,8 +12,8 @@ enum MenuFormWidget {
     Button(entry:IPlayerMenuEntry);
 
     /**
-     * 武將複選（勾選框）；結算時 {@link IGameMatch#applyMenuLeaf} 附 {@code formStringListFields}
-     * 鍵為 {@code fieldId}，值為選中之 {@link GeneralId} 列表（順序保留）。
+     * 武將複選（勾選框）；{@code defaultSelectedGeneralIds} 為 UI 預設勾選（通常為城中既有駐將，且應為候選之子集）。
+     * 結算時附 {@code formStringListFields} 鍵為 {@code fieldId}，值為選中 id 列表（順序保留）。
      */
-    GeneralMultiPick(fieldId:String, label:String, choices:Array<MenuGeneralChoice>);
+    GeneralMultiPick(fieldId:String, label:String, choices:Array<MenuGeneralChoice>, defaultSelectedGeneralIds:Array<String>);
 }

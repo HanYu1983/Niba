@@ -135,7 +135,7 @@ class FriendlyOwnedCityDispatchMenuTest {
             if (e.kind() == kind)
               return e;
           case Slider(_, _, _, _, _, _):
-          case GeneralMultiPick(_, _, _):
+          case GeneralMultiPick(_, _, _, _):
         }
       var inner = findLeafInNodes(n.children(), kind);
       if (inner != null)
