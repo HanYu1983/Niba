@@ -26,9 +26,18 @@ enum PlayerMenuKind {
     /** 選將暫存期選項：機械鍵常為 GeneralId（計策暫存或格子事件 forceTileEventStagingPreviewRows）。 */
     JiCePick;
 
-    /** 空城進駐表單：送出調配（兵力／糧食欄位經 applyMenuLeaf 之 formNumericFields）。 */
+    /** 空城進駐第一段：確認複選駐將（附 formStringListFields）。 */
+    EmptyCityGarrisonPickConfirm;
+
+    /** 空城進駐第二段：送出調配（兵力／糧食欄位經 applyMenuLeaf 之 formNumericFields）。 */
     EmptyCityOccupySubmit;
 
-    /** 空城進駐表單：不放資源並離開表單。 */
+    /** 空城進駐：取消進駐（任一段皆可）。 */
     EmptyCityOccupyAbort;
+
+    /** 我方城池拜訪：調度表單內確認（附 formNumericFields），不結束拜訪。 */
+    FriendlyCityDispatchApply;
+
+    /** 我方城池拜訪：結束拜訪並關閉持續選單。 */
+    FriendlyCityVisitEnd;
 }

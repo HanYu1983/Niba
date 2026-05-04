@@ -13,6 +13,7 @@ import game.IPlayer;
 import game.IPlayerMenu;
 import game.IPlayerMenuEntry;
 import game.IPlayerMenuNode;
+import game.MenuGeneralChoice;
 import game.MenuFormWidget;
 import game.PlayerMenuKind;
 
@@ -24,6 +25,7 @@ class HelloWorld {
     debug_ver1.TenEventTilesMenuFlowTest.run();
     debug_ver1.GeneralChestTileEventMenuTest.run();
     debug_ver1.EmptyCityVacantFormMenuTest.run();
+    debug_ver1.FriendlyOwnedCityDispatchMenuTest.run();
     trace("Hello world");
   }
 
@@ -52,7 +54,11 @@ class HelloWorld {
     var _mjk:PlayerMenuKind = JiCePick;
     var _mec1:PlayerMenuKind = EmptyCityOccupySubmit;
     var _mec2:PlayerMenuKind = EmptyCityOccupyAbort;
-    var _fw:MenuFormWidget = Slider("f", "l", 0, 1, 1);
+    var _meg:PlayerMenuKind = EmptyCityGarrisonPickConfirm;
+    var _mfc1:PlayerMenuKind = FriendlyCityDispatchApply;
+    var _mfc2:PlayerMenuKind = FriendlyCityVisitEnd;
+    var _fw:MenuFormWidget = Slider("f", "l", 0, 1, 1, 0);
+    var _fwm:MenuFormWidget = GeneralMultiPick("x", "y", ([] : Array<MenuGeneralChoice>));
     var _ver1Game:impl_ver1.Game = cast null;
     var _ver1Match:impl_ver1.GameMatchCore = cast null;
   }

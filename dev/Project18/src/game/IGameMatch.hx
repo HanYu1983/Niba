@@ -115,6 +115,23 @@ interface IGameMatch {
     /** 除錯／測試：標記城池格已有武將駐守（非空城）；供分支測試用。 */
     function forceAssignCityGarrison(at:TileIndex, generalId:GeneralId):Void;
 
+    /** 除錯／測試：該城池格駐守武將 id 列表（無則空陣列）。 */
+    function forceGetCityGarrisonGeneralIds(at:TileIndex):Array<GeneralId>;
+
+    /**
+     * 除錯／測試：標記城池格所屬君主；與 {@link #activeMonarch} 相符且踩中該城時進入我方拜訪選單。
+     */
+    function forceSetCityOwner(at:TileIndex, ownerMonarchId:MonarchId):Void;
+
+    /** 除錯／測試：直接寫入城池格儲備（兵力／糧食）。 */
+    function forcePutCityStores(at:TileIndex, troops:Int, grain:Int):Void;
+
+    /** 除錯／測試：踩中我方城池後尚待「結束拜訪」時為該格索引；否則 null。 */
+    function forceGetPendingFriendlyCityVisitTile():Null<TileIndex>;
+
+    /** 該城格 {@link TileKind.City} 之屬主為當前行動君主時為 true。 */
+    function cityOwnedByActiveMonarch(at:TileIndex):Bool;
+
     /** 單格；多格按索引有序組裝後再交由 createBoard。 */
     function createTile(index:TileIndex, kind:TileKind):ITile;
 
@@ -150,7 +167,8 @@ interface IGameMatch {
 
     /**
      * 對本局賽局結算選單葉節點（移動、計策、狀態、確認等），並視規剘修改棋子／兵力／切片旗標等。
-     * {@link PlayerMenuKind.EmptyCityOccupySubmit} 須附 {@code formNumericFields}（欄位鍵見規剘／選單組裝）。
+     * {@link PlayerMenuKind.EmptyCityOccupySubmit}、{@link PlayerMenuKind.FriendlyCityDispatchApply} 須附 {@code formNumericFields}（欄位鍵見規剘／選單組裝）。
+     * {@link PlayerMenuKind.EmptyCityGarrisonPickConfirm} 須附 {@code formStringListFields}。
      */
-    function applyMenuLeaf(actor:IPlayer, leaf:IPlayerMenuEntry, ?playedJiCe:IJiCe, ?jiCeTargetMonarchId:MonarchId, ?formNumericFields:Map<String, Int>):Void;
+    function applyMenuLeaf(actor:IPlayer, leaf:IPlayerMenuEntry, ?playedJiCe:IJiCe, ?jiCeTargetMonarchId:MonarchId, ?formNumericFields:Map<String, Int>, ?formStringListFields:Map<String, Array<String>>):Void;
 }

@@ -14,6 +14,7 @@ import game.IPlayerMenuEntry;
 import game.IPlayerMenuNode;
 import game.ITile;
 import game.ITileEvent;
+import game.MenuGeneralChoice;
 import game.MenuFormWidget;
 import game.PlayerMenuKind;
 import game.TileKind;
@@ -31,6 +32,14 @@ class GameMatchCore implements IGameMatch {
 
   public static inline var OCCUPY_FIELD_GRAIN:String = "occupy_grain";
 
+  /** 我方城池調度表單 {@link MenuFormWidget.Slider} fieldId。 */
+  public static inline var DISPATCH_FIELD_TROOPS:String = "dispatch_troops";
+
+  public static inline var DISPATCH_FIELD_GRAIN:String = "dispatch_grain";
+
+  /** 空城第一段複選駐將 {@link MenuFormWidget.GeneralMultiPick} fieldId／{@link #applyMenuLeaf} formStringListFields 鍵。 */
+  public static inline var EMPTY_CITY_GARRISON_FIELD:String = "empty_city_garrison_generals";
+
   var _board:Board;
   var _monarchs:Array<Monarch>;
   var _activeId:MonarchId;
@@ -47,12 +56,21 @@ class GameMatchCore implements IGameMatch {
 
   var _ownedJiCe:Map<MonarchId, Array<IJiCe>>;
 
-  /** 城池格索引 → 駐守武將 id；無鍵視為無將（空城語意）。 */
-  var _cityStationedGeneral:Map<Int, GeneralId>;
+  /** 城池格索引 → 駐守武將 id 列表；無鍵或空陣列視為無駐將（空城語意）。 */
+  var _cityGarrisonGenerals:Map<Int, Array<GeneralId>>;
 
   var _cityStockTroops:Map<Int, Int>;
   var _cityStockGrain:Map<Int, Int>;
   var _pendingEmptyCityTileIndex:Null<TileIndex>;
+
+  /** 空城進駐第一段：君主麾下有待選武將時為 true（複選介面）。 */
+  var _pendingEmptyCityAwaitGeneralPick:Bool;
+
+  /** 第一段確認後之駐將列表（第二段進駐資源結算時寫入城池）。 */
+  var _pendingEmptyCityGeneralPick:Array<GeneralId>;
+
+  var _cityOwner:Map<Int, MonarchId>;
+  var _pendingFriendlyCityTileIndex:Null<TileIndex>;
 
   public function new() {
     _board = cast null;
@@ -64,10 +82,14 @@ class GameMatchCore implements IGameMatch {
     _pendingTileEvent = null;
     clearTileEventStagingRows();
     _ownedJiCe = new Map();
-    _cityStationedGeneral = new Map();
+    _cityGarrisonGenerals = new Map();
     _cityStockTroops = new Map();
     _cityStockGrain = new Map();
     _pendingEmptyCityTileIndex = null;
+    _pendingEmptyCityAwaitGeneralPick = false;
+    _pendingEmptyCityGeneralPick = [];
+    _cityOwner = new Map();
+    _pendingFriendlyCityTileIndex = null;
     clearJiCeStaging();
   }
 
@@ -179,7 +201,9 @@ class GameMatchCore implements IGameMatch {
     var tile = _board.tileAt(at);
     if (tile.kind() != City)
       return false;
-    return !_cityStationedGeneral.exists(at);
+    if (!_cityGarrisonGenerals.exists(at))
+      return true;
+    return _cityGarrisonGenerals.get(at).length == 0;
   }
 
   public function forceGetPendingEmptyCityOccupyTile():Null<TileIndex>
@@ -196,7 +220,52 @@ class GameMatchCore implements IGameMatch {
       throw "GameMatchCore.forceAssignCityGarrison: board not set";
     if (_board.tileAt(at).kind() != City)
       throw "GameMatchCore.forceAssignCityGarrison: not a City tile";
-    _cityStationedGeneral.set(at, generalId);
+    _cityGarrisonGenerals.set(at, [generalId]);
+  }
+
+  public function forceGetCityGarrisonGeneralIds(at:TileIndex):Array<GeneralId> {
+    if (!_cityGarrisonGenerals.exists(at))
+      return [];
+    return _cityGarrisonGenerals.get(at).copy();
+  }
+
+  public function forceSetCityOwner(at:TileIndex, ownerMonarchId:MonarchId):Void {
+    if (_board == null)
+      throw "GameMatchCore.forceSetCityOwner: board not set";
+    if (_board.tileAt(at).kind() != City)
+      throw "GameMatchCore.forceSetCityOwner: not a City tile";
+    monarchWithId(ownerMonarchId);
+    _cityOwner.set(at, ownerMonarchId);
+  }
+
+  public function forcePutCityStores(at:TileIndex, troops:Int, grain:Int):Void {
+    if (_board == null)
+      throw "GameMatchCore.forcePutCityStores: board not set";
+    if (_board.tileAt(at).kind() != City)
+      throw "GameMatchCore.forcePutCityStores: not a City tile";
+    if (troops < 0 || grain < 0)
+      throw "GameMatchCore.forcePutCityStores: negative stock";
+    _cityStockTroops.set(at, troops);
+    _cityStockGrain.set(at, grain);
+  }
+
+  public function forceGetPendingFriendlyCityVisitTile():Null<TileIndex>
+    return _pendingFriendlyCityTileIndex;
+
+  public function cityOwnedByActiveMonarch(at:TileIndex):Bool {
+    if (_board == null)
+      return false;
+    if (_board.tileAt(at).kind() != City)
+      return false;
+    return _cityOwner.exists(at) && _cityOwner.get(at) == activeMonarch().id();
+  }
+
+  function clampInt(v:Int, lo:Int, hi:Int):Int {
+    if (v < lo)
+      return lo;
+    if (v > hi)
+      return hi;
+    return v;
   }
 
   public function createPlayerMenu(actor:IPlayer):IPlayerMenu {
@@ -209,24 +278,67 @@ class GameMatchCore implements IGameMatch {
     if (stagingActive && jiPending != null)
       ctx += "-jice-" + jiPending.registryKey();
     if (_pendingEmptyCityTileIndex != null)
-      ctx += "-empty-city-" + _pendingEmptyCityTileIndex;
+      ctx += "-empty-city-" + _pendingEmptyCityTileIndex + (_pendingEmptyCityAwaitGeneralPick ? "-pick-gen" : "-alloc");
+    if (_pendingFriendlyCityTileIndex != null)
+      ctx += "-friendly-city-" + _pendingFriendlyCityTileIndex;
 
     var roots:Array<IPlayerMenuNode> = [];
+
+    if (_pendingFriendlyCityTileIndex != null) {
+      var fidx = _pendingFriendlyCityTileIndex;
+      var rulerF = cast(activeMonarch(), Monarch);
+      var cityTroop = forceGetCityStoredTroops(fidx);
+      var cityGrain = forceGetCityStoredGrain(fidx);
+      var maxTroopSlider = rulerF.troops();
+      var maxGrainSlider = rulerF.grain();
+      var defTroop = clampInt(cityTroop, 0, maxTroopSlider);
+      var defGrain = clampInt(cityGrain, 0, maxGrainSlider);
+      var dispatchApplyLeaf = createPlayerMenuEntry(FriendlyCityDispatchApply, "確認調度", true, "dispatch_apply");
+      var dispatchWidgets:Array<MenuFormWidget> = [
+        Slider(DISPATCH_FIELD_TROOPS, "調度兵力（目標城池兵力）", 0, maxTroopSlider, 1, defTroop),
+        Slider(DISPATCH_FIELD_GRAIN, "調度糧食（目標城池糧食）", 0, maxGrainSlider, 1, defGrain),
+        Button(dispatchApplyLeaf),
+      ];
+      roots.push(createPlayerMenuNode("調度", null, [], dispatchWidgets));
+      roots.push(
+        createPlayerMenuNode(
+          "結束拜訪",
+          createPlayerMenuEntry(FriendlyCityVisitEnd, "結束拜訪", true, "visit_end"),
+          ([] : Array<IPlayerMenuNode>)
+        )
+      );
+    }
 
     if (_pendingEmptyCityTileIndex != null) {
       var idx = _pendingEmptyCityTileIndex;
       var ruler = cast(activeMonarch(), Monarch);
-      var troopMax = ruler.troops();
-      var grainMax = ruler.grain();
-      var confirmLeaf = createPlayerMenuEntry(EmptyCityOccupySubmit, "確認進駐（套用滑桿數值）", true, "confirm_occupy");
-      var abortLeaf = createPlayerMenuEntry(EmptyCityOccupyAbort, "離開（不放資源）", true, "abort_occupy");
-      var formParts:Array<MenuFormWidget> = [
-        Slider(OCCUPY_FIELD_TROOPS, "進駐兵力（君主池扣除）", 0, troopMax, 1),
-        Slider(OCCUPY_FIELD_GRAIN, "進駐糧食（君主池扣除）", 0, grainMax, 1),
-        Button(confirmLeaf),
-        Button(abortLeaf),
-      ];
-      roots.push(createPlayerMenuNode('空城進駐（格 $idx）', null, [], formParts));
+      if (_pendingEmptyCityAwaitGeneralPick) {
+        var choices:Array<MenuGeneralChoice> = [];
+        for (g in ruler.roster()) {
+          var gid = g.id();
+          choices.push({generalId: gid, caption: gid});
+        }
+        var pickConfirmLeaf = createPlayerMenuEntry(EmptyCityGarrisonPickConfirm, "確認駐將選擇", true, "confirm_garrison_pick");
+        var abortPickLeaf = createPlayerMenuEntry(EmptyCityOccupyAbort, "取消進駐", true, "abort_occupy");
+        var pickForm:Array<MenuFormWidget> = [
+          GeneralMultiPick(EMPTY_CITY_GARRISON_FIELD, "複選駐守武將（可不選）", choices),
+          Button(pickConfirmLeaf),
+          Button(abortPickLeaf),
+        ];
+        roots.push(createPlayerMenuNode('空城進駐（格 $idx）·複選駐將', null, [], pickForm));
+      } else {
+        var troopMax = ruler.troops();
+        var grainMax = ruler.grain();
+        var confirmLeaf = createPlayerMenuEntry(EmptyCityOccupySubmit, "確認進駐（套用滑桿數值）", true, "confirm_occupy");
+        var abortLeaf = createPlayerMenuEntry(EmptyCityOccupyAbort, "離開（不放資源）", true, "abort_occupy");
+        var formParts:Array<MenuFormWidget> = [
+          Slider(OCCUPY_FIELD_TROOPS, "進駐兵力（君主池扣除）", 0, troopMax, 1, 0),
+          Slider(OCCUPY_FIELD_GRAIN, "進駐糧食（君主池扣除）", 0, grainMax, 1, 0),
+          Button(confirmLeaf),
+          Button(abortLeaf),
+        ];
+        roots.push(createPlayerMenuNode('空城進駐（格 $idx）·調配資源', null, [], formParts));
+      }
     }
 
     if (pend != null) {
@@ -252,8 +364,10 @@ class GameMatchCore implements IGameMatch {
       roots.push(createPlayerMenuNode("計策：" + jiPending.designLabel(), null, jiRoots));
     }
 
-    var blockBasics = pend != null || stagingActive || _pendingEmptyCityTileIndex != null;
-    var jiEnabledBase = !stagingActive && pend == null && _pendingEmptyCityTileIndex == null;
+    var blockBasics =
+      pend != null || stagingActive || _pendingEmptyCityTileIndex != null || _pendingFriendlyCityTileIndex != null;
+    var jiEnabledBase =
+      !stagingActive && pend == null && _pendingEmptyCityTileIndex == null && _pendingFriendlyCityTileIndex == null;
 
     var ownedJiCe = availableJiCe(actor.monarchId());
     var jiChildren:Array<IPlayerMenuNode> = [];
@@ -283,7 +397,11 @@ class GameMatchCore implements IGameMatch {
       createPlayerMenuNode("狀態", createPlayerMenuEntry(Status, "狀態（前端用，無後端結算）", true), ([] : Array<IPlayerMenuNode>)),
     ];
     var allowConfirm =
-      isActivePlayerSliceComplete() && pend == null && !stagingActive && _pendingEmptyCityTileIndex == null;
+      isActivePlayerSliceComplete()
+      && pend == null
+      && !stagingActive
+      && _pendingEmptyCityTileIndex == null
+      && _pendingFriendlyCityTileIndex == null;
     if (allowConfirm)
       actions.push(createPlayerMenuNode("結束", createPlayerMenuEntry(ConfirmDone, "結束本階段", true), ([] : Array<IPlayerMenuNode>)));
 
@@ -300,8 +418,11 @@ class GameMatchCore implements IGameMatch {
       case Status:
       case Move:
       case TileEventPick:
+      case EmptyCityGarrisonPickConfirm:
       case EmptyCityOccupySubmit:
       case EmptyCityOccupyAbort:
+      case FriendlyCityDispatchApply:
+      case FriendlyCityVisitEnd:
     }
   }
 
@@ -309,20 +430,29 @@ class GameMatchCore implements IGameMatch {
   public function settleAfterMoveLanding():Void {
     var ruler = cast(activeMonarch(), Monarch);
     considerLandingAt(ruler.pawnIndex());
-    _activeSliceComplete = _pendingTileEvent == null && _pendingEmptyCityTileIndex == null;
+    _activeSliceComplete =
+      _pendingTileEvent == null && _pendingEmptyCityTileIndex == null && _pendingFriendlyCityTileIndex == null;
   }
 
   function considerLandingAt(idx:TileIndex):Void {
     _pendingTileEvent = null;
     clearTileEventStagingRows();
     _pendingEmptyCityTileIndex = null;
+    _pendingEmptyCityAwaitGeneralPick = false;
+    _pendingEmptyCityGeneralPick = [];
+    _pendingFriendlyCityTileIndex = null;
     var tile = board().tileAt(idx);
     switch tile.kind() {
       case Event:
         _pendingTileEvent = _tileEventByIndex.get(idx);
       case City:
-        if (cityVacantNoGarrison(idx))
+        if (_cityOwner.exists(idx) && _cityOwner.get(idx) == activeMonarch().id())
+          _pendingFriendlyCityTileIndex = idx;
+        else if (cityVacantNoGarrison(idx)) {
           _pendingEmptyCityTileIndex = idx;
+          var rulerLand = cast(activeMonarch(), Monarch);
+          _pendingEmptyCityAwaitGeneralPick = rulerLand.roster().length > 0;
+        }
       case Plain:
       case Battle:
       case Scheme:
@@ -372,6 +502,8 @@ class GameMatchCore implements IGameMatch {
   function handleEmptyCityOccupySubmit(actor:IPlayer, leaf:IPlayerMenuEntry, formNumericFields:Null<Map<String, Int>>):Void {
     if (_pendingEmptyCityTileIndex == null)
       throw "GameMatchCore: EmptyCityOccupySubmit 但無 pending 空城";
+    if (_pendingEmptyCityAwaitGeneralPick)
+      throw "GameMatchCore: EmptyCityOccupySubmit 須先完成複選駐將";
     if (formNumericFields == null)
       throw "GameMatchCore: EmptyCityOccupySubmit 須附 formNumericFields";
     var idx = _pendingEmptyCityTileIndex;
@@ -386,6 +518,10 @@ class GameMatchCore implements IGameMatch {
     var prevG = _cityStockGrain.exists(idx) ? _cityStockGrain.get(idx) : 0;
     _cityStockTroops.set(idx, prevT + tt);
     _cityStockGrain.set(idx, prevG + gg);
+    _cityOwner.set(idx, ruler.id());
+    _cityGarrisonGenerals.set(idx, _pendingEmptyCityGeneralPick.copy());
+    _pendingEmptyCityAwaitGeneralPick = false;
+    _pendingEmptyCityGeneralPick = [];
     _pendingEmptyCityTileIndex = null;
     _activeSliceComplete = true;
     syncActiveSliceAfterMenuLeaf(EmptyCityOccupySubmit);
@@ -394,9 +530,77 @@ class GameMatchCore implements IGameMatch {
   function handleEmptyCityOccupyAbort(actor:IPlayer, leaf:IPlayerMenuEntry):Void {
     if (_pendingEmptyCityTileIndex == null)
       throw "GameMatchCore: EmptyCityOccupyAbort 但無 pending 空城";
+    _pendingEmptyCityAwaitGeneralPick = false;
+    _pendingEmptyCityGeneralPick = [];
     _pendingEmptyCityTileIndex = null;
     _activeSliceComplete = true;
     syncActiveSliceAfterMenuLeaf(EmptyCityOccupyAbort);
+  }
+
+  function handleEmptyCityGarrisonPickConfirm(actor:IPlayer, leaf:IPlayerMenuEntry, formStringListFields:Null<Map<String, Array<String>>>):Void {
+    if (_pendingEmptyCityTileIndex == null || !_pendingEmptyCityAwaitGeneralPick)
+      throw "GameMatchCore: EmptyCityGarrisonPickConfirm 不在複選駐將階段";
+    var raw = formStringListFields != null && formStringListFields.exists(EMPTY_CITY_GARRISON_FIELD)
+      ? formStringListFields.get(EMPTY_CITY_GARRISON_FIELD)
+      : ([] : Array<String>);
+    var seen = new Map<String, Bool>();
+    var uniq:Array<GeneralId> = [];
+    for (id in raw) {
+      if (seen.exists(id))
+        continue;
+      seen.set(id, true);
+      uniq.push(id);
+    }
+    var ruler = cast(activeMonarch(), Monarch);
+    var ok = new Map<String, Bool>();
+    for (g in ruler.roster())
+      ok.set(g.id(), true);
+    for (gid in uniq)
+      if (!ok.exists(gid))
+        throw 'GameMatchCore: 複選駐將含非麾下武將 "$gid"';
+    _pendingEmptyCityGeneralPick = uniq;
+    _pendingEmptyCityAwaitGeneralPick = false;
+    syncActiveSliceAfterMenuLeaf(EmptyCityGarrisonPickConfirm);
+  }
+
+  function handleFriendlyCityDispatchApply(actor:IPlayer, leaf:IPlayerMenuEntry, formNumericFields:Null<Map<String, Int>>):Void {
+    if (_pendingFriendlyCityTileIndex == null)
+      throw "GameMatchCore: FriendlyCityDispatchApply 但無 pending 我方城池拜訪";
+    if (formNumericFields == null)
+      throw "GameMatchCore: FriendlyCityDispatchApply 須附 formNumericFields";
+    var idx = _pendingFriendlyCityTileIndex;
+    var tt = formNumericFields.exists(DISPATCH_FIELD_TROOPS) ? formNumericFields.get(DISPATCH_FIELD_TROOPS) : 0;
+    var gg = formNumericFields.exists(DISPATCH_FIELD_GRAIN) ? formNumericFields.get(DISPATCH_FIELD_GRAIN) : 0;
+    var oldT = forceGetCityStoredTroops(idx);
+    var oldG = forceGetCityStoredGrain(idx);
+    var ruler = cast(activeMonarch(), Monarch);
+    if (tt < 0 || gg < 0)
+      throw "GameMatchCore: 調度目標不可為負";
+    var dT = tt - oldT;
+    var dG = gg - oldG;
+    if (dT > ruler.troops())
+      throw "GameMatchCore: 自君主池調出兵力不足";
+    if (dG > ruler.grain())
+      throw "GameMatchCore: 自君主池調出糧食不足";
+    if (dT > 0)
+      ruler.reduceTroops(dT);
+    else if (dT < 0)
+      ruler.grantTroops(-dT);
+    if (dG > 0)
+      ruler.reduceGrain(dG);
+    else if (dG < 0)
+      ruler.grantGrain(-dG);
+    _cityStockTroops.set(idx, tt);
+    _cityStockGrain.set(idx, gg);
+    syncActiveSliceAfterMenuLeaf(FriendlyCityDispatchApply);
+  }
+
+  function handleFriendlyCityVisitEnd(actor:IPlayer, leaf:IPlayerMenuEntry):Void {
+    if (_pendingFriendlyCityTileIndex == null)
+      throw "GameMatchCore: FriendlyCityVisitEnd 但無 pending 我方城池拜訪";
+    _pendingFriendlyCityTileIndex = null;
+    _activeSliceComplete = true;
+    syncActiveSliceAfterMenuLeaf(FriendlyCityVisitEnd);
   }
 
   /**
@@ -416,7 +620,7 @@ class GameMatchCore implements IGameMatch {
   public function getTerminationReason():MatchTerminationReason
     return _terminationReason;
 
-  public function applyMenuLeaf(actor:IPlayer, leaf:IPlayerMenuEntry, ?playedJiCe:IJiCe, ?jiCeTargetMonarchId:MonarchId, ?formNumericFields:Map<String, Int>):Void {
+  public function applyMenuLeaf(actor:IPlayer, leaf:IPlayerMenuEntry, ?playedJiCe:IJiCe, ?jiCeTargetMonarchId:MonarchId, ?formNumericFields:Map<String, Int>, ?formStringListFields:Map<String, Array<String>>):Void {
     if (!leaf.isEnabled())
       throw "GameMatchCore.applyMenuLeaf: leaf disabled (" + leaf.caption() + ")";
 
@@ -443,10 +647,16 @@ class GameMatchCore implements IGameMatch {
       case ConfirmDone:
         syncActiveSliceAfterMenuLeaf(ConfirmDone);
         advanceActiveMonarchAfterConfirmDone();
+      case EmptyCityGarrisonPickConfirm:
+        handleEmptyCityGarrisonPickConfirm(actor, leaf, formStringListFields);
       case EmptyCityOccupySubmit:
         handleEmptyCityOccupySubmit(actor, leaf, formNumericFields);
       case EmptyCityOccupyAbort:
         handleEmptyCityOccupyAbort(actor, leaf);
+      case FriendlyCityDispatchApply:
+        handleFriendlyCityDispatchApply(actor, leaf, formNumericFields);
+      case FriendlyCityVisitEnd:
+        handleFriendlyCityVisitEnd(actor, leaf);
     }
     evaluateTermination();
   }

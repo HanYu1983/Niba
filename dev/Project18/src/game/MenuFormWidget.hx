@@ -2,11 +2,18 @@ package game;
 
 /**
  * 嵌於 {@link IPlayerMenuNode} 之表單元件語意；UI 端依 type 繪製滑動條／按鈕，
- * 按鈕結算仍經 {@link IGameMatch#applyMenuLeaf}（必要時附 {@code formNumericFields}）。
+ * 按鈕結算仍經 {@link IGameMatch#applyMenuLeaf}（必要時附 {@code formNumericFields}／{@code formStringListFields}）。
  */
 enum MenuFormWidget {
-    Slider(fieldId:String, label:String, min:Int, max:Int, step:Int);
+    /** UI 初始游標位置；須落於 [min,max]（賽局組裝時應已夾限）。 */
+    Slider(fieldId:String, label:String, min:Int, max:Int, step:Int, defaultValue:Int);
 
     /** 表單內按鈕；與一般選單葉共用同一 {@link IPlayerMenuEntry} 結算語意。 */
     Button(entry:IPlayerMenuEntry);
+
+    /**
+     * 武將複選（勾選框）；結算時 {@link IGameMatch#applyMenuLeaf} 附 {@code formStringListFields}
+     * 鍵為 {@code fieldId}，值為選中之 {@link GeneralId} 列表（順序保留）。
+     */
+    GeneralMultiPick(fieldId:String, label:String, choices:Array<MenuGeneralChoice>);
 }
