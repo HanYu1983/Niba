@@ -1,54 +1,48 @@
 package debug_ver1;
 
 import game.GameIds;
-import game.IJiCeStagingPreviewRow;
 import game.IPlayer;
 import game.IPlayerMenu;
-import game.IPlayerMenuEntry;
 import game.IPlayerMenuNode;
 import game.ITileEvent;
 import game.IGameMatch;
+import game.MenuFieldIds;
+import game.MenuFormWidget;
+import game.MenuGeneralChoice;
 import game.PlayerMenuKind.TileEventPick;
-import impl_ver1.General;
-import impl_ver1.JiCeStagingPreviewRow;
 import impl_ver1.Monarch;
 import impl_ver1.PlayerMenu;
 
 /**
- * impl_ver1 分叉事件：糧秣／略過仍為單段；「軍資」改為選將暫存＋預覽（對齊計策 staging 模型）。
+ * impl_ver1 分叉事件：「軍資」以表單複選武將＋確認鈕結算；糧秣／略過為單葉。
  */
 class RingLootForkTileEvent implements ITileEvent {
   public var lastResolvedChoice:String = "";
 
   var _match:IGameMatch;
-  var _awaitingSupplyGeneralPick:Bool;
 
   public function new(match:IGameMatch) {
     _match = match;
-    _awaitingSupplyGeneralPick = false;
   }
 
   public function registryKey():String
     return "fork_loot_ring_evt";
 
-  function buildSupplyStagingRows(actor:IPlayer):Array<IJiCeStagingPreviewRow> {
-    var ruler = cast(_match.activeMonarch(), Monarch);
-    var rows:Array<IJiCeStagingPreviewRow> = [];
-    for (g in ruler.roster()) {
-      var sg = cast(g, General);
-      var desc = "【" + sg.id() + "】領軍補給：預計 +15 兵力（predictedTroopLoss 事件語意填 0）";
-      rows.push(new JiCeStagingPreviewRow(sg.id(), desc, 0));
-    }
-    return rows;
-  }
-
   public function buildPlayerMenu(actor:IPlayer):IPlayerMenu {
+    var ruler = cast(_match.activeMonarch(), Monarch);
+    var choices:Array<MenuGeneralChoice> = [];
+    for (g in ruler.roster())
+      choices.push({generalId: g.id(), caption: g.id()});
+    var supplyWidgets:Array<MenuFormWidget> = [];
+    if (choices.length > 0) {
+      var def:Array<String> = [choices[0].generalId];
+      supplyWidgets.push(GeneralMultiPick(MenuFieldIds.TileEventGenerals, "領軍補給武將（選一人）", choices, def));
+    }
+    supplyWidgets.push(
+      Button(_match.createPlayerMenuEntry(TileEventPick, "事件選項：取軍資（+兵力，須選將若有麾下）", true, "take_supplies"))
+    );
     var roots:Array<IPlayerMenuNode> = [
-      _match.createPlayerMenuNode(
-        "軍資",
-        _match.createPlayerMenuEntry(TileEventPick, "事件選項：取軍資（+兵力，須選將）", true, "take_supplies"),
-        ([] : Array<IPlayerMenuNode>)
-      ),
+      _match.createPlayerMenuNode("軍資", null, ([] : Array<IPlayerMenuNode>), supplyWidgets),
       _match.createPlayerMenuNode(
         "糧秣",
         _match.createPlayerMenuEntry(TileEventPick, "事件選項：取糧秣（+糧食）", true, "take_grain"),
@@ -63,18 +57,19 @@ class RingLootForkTileEvent implements ITileEvent {
     return new PlayerMenu(actor, "evt-" + registryKey(), roots);
   }
 
-  public function resolveChoice(actor:IPlayer, choiceId:String):Void {
+  public function resolveChoice(actor:IPlayer, choiceId:String, ?formStringListFields:Map<String, Array<String>>):Void {
     lastResolvedChoice = choiceId;
     var ruler = cast(_match.activeMonarch(), Monarch);
     switch choiceId {
       case "take_supplies":
-        var rows = buildSupplyStagingRows(actor);
-        if (rows.length == 0) {
+        if (ruler.roster().length == 0)
           ruler.grantTroops(15);
-          _awaitingSupplyGeneralPick = false;
-        } else {
-          _awaitingSupplyGeneralPick = true;
-          _match.enterTileEventGeneralStaging(this, rows);
+        else {
+          var ids = parseTileEventGeneralIds(formStringListFields, ruler);
+          if (ids.length != 1)
+            throw "RingLootForkTileEvent.resolveChoice: 取軍資須恰好選擇一名麾下武將";
+          ruler.grantTroops(15);
+          lastResolvedChoice = "take_supplies:" + ids[0];
         }
       case "take_grain":
         ruler.grantGrain(22);
@@ -84,18 +79,22 @@ class RingLootForkTileEvent implements ITileEvent {
     }
   }
 
-  public function resolveStagingGeneral(actor:IPlayer, generalId:GeneralId):Void {
-    if (!_awaitingSupplyGeneralPick)
-      throw "RingLootForkTileEvent.resolveStagingGeneral: 未處於軍資選將暫存";
-    var ruler = cast(_match.activeMonarch(), Monarch);
-    var ok = false;
+  static function parseTileEventGeneralIds(form:Null<Map<String, Array<String>>>, ruler:Monarch):Array<GeneralId> {
+    var raw = form != null && form.exists(MenuFieldIds.TileEventGenerals) ? form.get(MenuFieldIds.TileEventGenerals) : ([] : Array<String>);
+    var seen = new Map<String, Bool>();
+    var uniq:Array<GeneralId> = [];
+    for (id in raw) {
+      if (seen.exists(id))
+        continue;
+      seen.set(id, true);
+      uniq.push(id);
+    }
+    var ok = new Map<String, Bool>();
     for (g in ruler.roster())
-      if (g.id() == generalId)
-        ok = true;
-    if (!ok)
-      throw "RingLootForkTileEvent.resolveStagingGeneral: 無此麾下武將 " + generalId;
-    ruler.grantTroops(15);
-    lastResolvedChoice = "take_supplies:" + generalId;
-    _awaitingSupplyGeneralPick = false;
+      ok.set(g.id(), true);
+    for (gid in uniq)
+      if (!ok.exists(gid))
+        throw 'RingLootForkTileEvent: 複選含非麾下武將 "$gid"';
+    return uniq;
   }
 }

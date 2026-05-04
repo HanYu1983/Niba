@@ -9,7 +9,7 @@ import game.GameIds;
  *
  * - applyAgainstMonarch：對目標君主進入「暫存／待選」態（通常經 enterJiCeStaging）。
  * - buildPlayerMenu：暫存期中組裝後續選單。
- * - resolveChoice：機械鍵與選單葉 decisionToken 對齊；結算後由 match.applyMenuLeaf 清除計策暫存。
+ * - resolveChoice：施計武將 id 由賽局自表單解析後傳入（見 {@link MenuFieldIds.JiCeStagingGenerals}／{@link PlayerMenuKind.JiCeStagingSubmit}）；結算後由 match.applyMenuLeaf 清除計策暫存。
  */
 interface IJiCe {
     /** 規剘／版本無關之設計顯示名（本地化由此向上委派）。 */

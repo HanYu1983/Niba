@@ -89,15 +89,6 @@ interface IGameMatch {
     function enterJiCeStaging(card:IJiCe, targetMonarchId:MonarchId, previewRows:Array<IJiCeStagingPreviewRow>):Void;
 
     /**
-     * 踩點事件於第一段 {@link ITileEvent#resolveChoice} 後進入「選將＋預覽」暫存（{@code handler} 須為當前 {@link #forceGetPendingTileEvent}）。
-     * 選單第二段沿用 {@link PlayerMenuKind.JiCePick}，結算呼叫 {@link ITileEvent#resolveStagingGeneral}。
-     */
-    function enterTileEventGeneralStaging(handler:ITileEvent, previewRows:Array<IJiCeStagingPreviewRow>):Void;
-
-    /** 除錯／測試：格子事件選將暫存列；無暫存或非選將流程時為空。 */
-    function forceTileEventStagingPreviewRows():Array<IJiCeStagingPreviewRow>;
-
-    /**
      * 該索引格子為 {@link TileKind.City} 且無武將駐守時為 true；
      * 非城池或已有駐將（{@link #forceAssignCityGarrison}）為 false。
      */

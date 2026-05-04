@@ -8,6 +8,9 @@ import game.IJiCeStagingPreviewRow;
 import game.IPlayer;
 import game.IPlayerMenu;
 import game.IPlayerMenuNode;
+import game.MenuFieldIds;
+import game.MenuFormWidget;
+import game.MenuGeneralChoice;
 import game.PlayerMenuKind;
 
 /**
@@ -50,16 +53,20 @@ class LuoshiJiCe implements IJiCe {
 
   public function buildPlayerMenu(actor:IPlayer):IPlayerMenu {
     var rows = gameMatch._jiCeStagingRows;
-    var pickNodes:Array<IPlayerMenuNode> = [];
-    for (r in rows)
-      pickNodes.push(
-        gameMatch.createPlayerMenuNode(
-          r.generalId(),
-          gameMatch.createPlayerMenuEntry(JiCePick, r.outcomeDescription(), true, r.generalId()),
-          ([] : Array<IPlayerMenuNode>)
-        )
-      );
-    return new PlayerMenu(actor, "jice-" + registryKey(), pickNodes);
+    var choices:Array<MenuGeneralChoice> = [];
+    var defSel:Array<String> = [];
+    for (r in rows) {
+      choices.push({generalId: r.generalId(), caption: r.outcomeDescription()});
+      if (defSel.length == 0)
+        defSel.push(r.generalId());
+    }
+    var submitLeaf = gameMatch.createPlayerMenuEntry(JiCeStagingSubmit, "確認計策選將", true, "confirm_jice_pick");
+    var widgets:Array<MenuFormWidget> = [
+      GeneralMultiPick(MenuFieldIds.JiCeStagingGenerals, "選擇施計武將", choices, defSel),
+      Button(submitLeaf),
+    ];
+    var root = gameMatch.createPlayerMenuNode("落石選將", null, ([] : Array<IPlayerMenuNode>), widgets);
+    return new PlayerMenu(actor, "jice-" + registryKey(), [root]);
   }
 
   public function resolveChoice(actor:IPlayer, choiceId:String):Void {

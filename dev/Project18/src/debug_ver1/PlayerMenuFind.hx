@@ -3,16 +3,25 @@ package debug_ver1;
 import game.IPlayerMenu;
 import game.IPlayerMenuEntry;
 import game.IPlayerMenuNode;
+import game.MenuFormWidget;
 import game.PlayerMenuKind;
 
-/** 測試／除錯用：自巢狀選單找出 JiCePick 葉（機械鍵 = generalId）。 */
+/** 測試／除錯：計策暫存確認葉（{@link PlayerMenuKind.JiCeStagingSubmit}）。 */
 class PlayerMenuFind {
-  public static function findJiCePickLeaf(menu:IPlayerMenu, generalId:String):IPlayerMenuEntry {
+  public static function findJiCeStagingSubmitLeaf(menu:IPlayerMenu):IPlayerMenuEntry {
     function walk(nodes:Array<IPlayerMenuNode>):Null<IPlayerMenuEntry> {
       for (n in nodes) {
         var L = n.leaf();
-        if (L != null && L.kind() == JiCePick && L.decisionToken() == generalId)
+        if (L != null && L.kind() == JiCeStagingSubmit)
           return L;
+        for (w in n.formWidgets())
+          switch w {
+            case Button(entry):
+              if (entry.kind() == JiCeStagingSubmit)
+                return entry;
+            case Slider(_, _, _, _, _, _):
+            case GeneralMultiPick(_, _, _, _,):
+          }
         var h = walk(n.children());
         if (h != null)
           return h;
@@ -21,7 +30,7 @@ class PlayerMenuFind {
     }
     var found = walk(menu.rootNodes());
     if (found == null)
-      throw "PlayerMenuFind: missing JiCePick for " + generalId;
+      throw "PlayerMenuFind: missing JiCeStagingSubmit leaf";
     return found;
   }
 }

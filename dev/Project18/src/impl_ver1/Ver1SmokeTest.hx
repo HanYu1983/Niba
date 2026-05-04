@@ -8,6 +8,8 @@ import game.IPlayer;
 import game.IPlayerMenu;
 import game.IPlayerMenuEntry;
 import game.IPlayerMenuNode;
+import game.MenuFieldIds;
+import game.MenuFormWidget;
 import game.PlayerMenuKind;
 
 /**
@@ -32,8 +34,10 @@ class Ver1SmokeTest {
     if (defender.troops() != 100)
       throw "Ver1SmokeTest: 暫存階段守方兵力不得變動";
 
-    var pickLeaf = findJiCePickLeaf(match.createPlayerMenu(player), "g-might-high");
-    match.applyMenuLeaf(player, pickLeaf);
+    var pickLeaf = findJiCeStagingSubmitLeaf(match.createPlayerMenu(player));
+    var form = new Map<String, Array<String>>();
+    form.set(MenuFieldIds.JiCeStagingGenerals, ["g-might-high"]);
+    match.applyMenuLeaf(player, pickLeaf, null, null, null, form);
 
     if (match.forceGetPendingJiCe() != null)
       throw "Ver1SmokeTest: forceGetPendingJiCe 應已清除";
@@ -45,12 +49,20 @@ class Ver1SmokeTest {
     trace("[Ver1SmokeTest] OK — impl_ver1 level_key→IGameMatch→LuoshiJiCe");
   }
 
-  static function findJiCePickLeaf(menu:IPlayerMenu, generalId:String):IPlayerMenuEntry {
+  static function findJiCeStagingSubmitLeaf(menu:IPlayerMenu):IPlayerMenuEntry {
     function walk(nodes:Array<IPlayerMenuNode>):Null<IPlayerMenuEntry> {
       for (n in nodes) {
         var L = n.leaf();
-        if (L != null && L.kind() == JiCePick && L.decisionToken() == generalId)
+        if (L != null && L.kind() == JiCeStagingSubmit)
           return L;
+        for (w in n.formWidgets())
+          switch w {
+            case Button(entry):
+              if (entry.kind() == JiCeStagingSubmit)
+                return entry;
+            case Slider(_, _, _, _, _, _):
+            case GeneralMultiPick(_, _, _, _,):
+          }
         var h = walk(n.children());
         if (h != null)
           return h;
@@ -59,7 +71,7 @@ class Ver1SmokeTest {
     }
     var found = walk(menu.rootNodes());
     if (found == null)
-      throw "Ver1SmokeTest: missing JiCePick for " + generalId;
+      throw "Ver1SmokeTest: missing JiCeStagingSubmit leaf";
     return found;
   }
 }

@@ -60,9 +60,12 @@ class TenEventTilesMenuFlowTest {
     if (moveDuringEvt != null && moveDuringEvt.isEnabled())
       throw "TenEventTilesMenuFlowTest: 事件進行中「移動」應停用";
 
-    var picks = collectLeavesKind(menuEvt, TileEventPick);
+    var picks:Array<IPlayerMenuEntry> = [];
+    for (e in menuEvt.entries())
+      if (e.kind() == TileEventPick)
+        picks.push(e);
     if (picks.length != 3)
-      throw "TenEventTilesMenuFlowTest: 預期三選一選項數 3，got " + picks.length;
+      throw "TenEventTilesMenuFlowTest: 預期三選一選項數 3（含表單內按鈕），got " + picks.length;
 
     var grainLeaf:Null<IPlayerMenuEntry> = null;
     for (p in picks)
@@ -110,20 +113,5 @@ class TenEventTilesMenuFlowTest {
     if (L == null)
       throw "TenEventTilesMenuFlowTest: 選單缺少 " + Std.string(kind);
     return L;
-  }
-
-  static function collectLeavesKind(menu:IPlayerMenu, kind:PlayerMenuKind):Array<IPlayerMenuEntry> {
-    var acc:Array<IPlayerMenuEntry> = [];
-    collectLeavesKindNodes(menu.rootNodes(), kind, acc);
-    return acc;
-  }
-
-  static function collectLeavesKindNodes(nodes:Array<IPlayerMenuNode>, kind:PlayerMenuKind, acc:Array<IPlayerMenuEntry>):Void {
-    for (n in nodes) {
-      var L = n.leaf();
-      if (L != null && L.kind() == kind)
-        acc.push(L);
-      collectLeavesKindNodes(n.children(), kind, acc);
-    }
   }
 }

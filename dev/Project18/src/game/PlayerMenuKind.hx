@@ -23,8 +23,8 @@ enum PlayerMenuKind {
     /** 踩點事件之分支持選；機械鍵見 IPlayerMenuEntry.decisionToken。 */
     TileEventPick;
 
-    /** 選將暫存期選項：機械鍵常為 GeneralId（計策暫存或格子事件 forceTileEventStagingPreviewRows）。 */
-    JiCePick;
+    /** 計策暫存：確認選將（附 {@code formStringListFields}，鍵 {@link MenuFieldIds.JiCeStagingGenerals}）。 */
+    JiCeStagingSubmit;
 
     /** 空城進駐：同表單內複選駐將＋資源滑桿；附 formNumericFields 與 formStringListFields。 */
     EmptyCityOccupySubmit;

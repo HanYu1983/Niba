@@ -1,6 +1,7 @@
 package debug_ver1;
 
 import game.GameIds;
+import game.MenuFieldIds;
 import game.IJiCe;
 import game.IPlayer;
 import game.IPlayerMenu;
@@ -64,8 +65,10 @@ class TwoPlayerJiCeStagingMoveConfirmTest {
     if (jiAgain != null && jiAgain.isEnabled())
       throw "TwoPlayerJiCeStagingMoveConfirmTest: 暫存期中「計策」主項應停用";
 
-    var pickLeaf = PlayerMenuFind.findJiCePickLeaf(menuPick, "g-one");
-    match.applyMenuLeaf(actorAtk, pickLeaf);
+    var pickLeaf = PlayerMenuFind.findJiCeStagingSubmitLeaf(menuPick);
+    var form = new Map<String, Array<String>>();
+    form.set(MenuFieldIds.JiCeStagingGenerals, ["g-one"]);
+    match.applyMenuLeaf(actorAtk, pickLeaf, null, null, null, form);
 
     if (match.forceGetPendingJiCe() != null)
       throw "TwoPlayerJiCeStagingMoveConfirmTest: 選將後應清除 forceGetPendingJiCe";

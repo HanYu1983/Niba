@@ -10,10 +10,8 @@ import game.IPlayerMenu;
  * 實作通常由 IGameMatch（或其所屬工廠）建立並注入賽局引用，故方法簽名不再傳入 IGameMatch。
  *
  * UI／選單語意對照：
- * - buildPlayerMenu ≒ 「為此事件建立選項選單」（常見命名 createMenu）。
- * - resolveChoice ≒ 「玩家選定機械鍵後套用規剘」（機械鍵與選單葉 decisionToken 對齊）。
- * - 若第一段選擇後呼叫 {@link IGameMatch#enterTileEventGeneralStaging}，第二段選將葉種類為 {@link PlayerMenuKind.JiCePick}，
- *   機械鍵為 {@link GeneralId}；結算由 {@link #resolveStagingGeneral} 負責。
+ * - buildPlayerMenu：事件全貌（含是否以 {@link MenuFormWidget.GeneralMultiPick} 組武將複選；鍵見 {@link MenuFieldIds.TileEventGenerals}）。
+ * - resolveChoice：機械鍵與選單葉 decisionToken 對齊；若同一節點含複選武將 widget，結算時經 {@code formStringListFields} 傳入選中 id。
  */
 interface ITileEvent {
     /** 資料／存檔用之穩定鍵（例如事件表列 id）。 */
@@ -24,12 +22,7 @@ interface ITileEvent {
 
     /**
      * choiceId：與選單葉之 decisionToken（機械鍵）對齊；不含展示文案。
+     * {@code formStringListFields}：與同一表單 {@link MenuFormWidget.GeneralMultiPick} 對齊時傳入（鍵 {@link MenuFieldIds.TileEventGenerals}）。
      */
-    function resolveChoice(actor:IPlayer, choiceId:String):Void;
-
-    /**
-     * 事件進入「選將暫存」（{@link IGameMatch#enterTileEventGeneralStaging}）後，玩家選定武將時結算。
-     * 未使用暫存流程的事件可拋錯或留空實作（不應被賽局呼叫）。
-     */
-    function resolveStagingGeneral(actor:IPlayer, generalId:GeneralId):Void;
+    function resolveChoice(actor:IPlayer, choiceId:String, ?formStringListFields:Map<String, Array<String>>):Void;
 }
