@@ -53,6 +53,16 @@ class GameMatchCore implements IGameMatch {
   var _cityOwner:Map<Int, MonarchId>;
   var _pendingFriendlyCityTileIndex:Null<TileIndex>;
 
+  var _pendingHostileCityTileIndex:Null<TileIndex>;
+  var _hostileCityPhase:Null<HostileCityPhase>;
+  var _hostileCityAttackerId:MonarchId;
+  var _hostileCityDefenderId:MonarchId;
+  var _hostileCityAwaitingDuel:Bool;
+  var _hostileCityAttackerChoiceToken:String;
+  var _hostileCityAttackerGeneralIds:Array<GeneralId>;
+  var _hostileCityDefenderGeneralId:Null<GeneralId>;
+  var _hostileCitySettlementSummary:String;
+
   public function new() {
     _board = cast null;
     _monarchs = [];
@@ -68,6 +78,7 @@ class GameMatchCore implements IGameMatch {
     _pendingEmptyCityTileIndex = null;
     _cityOwner = new Map();
     _pendingFriendlyCityTileIndex = null;
+    clearHostileCityConfrontation();
     clearJiCeStaging();
   }
 
@@ -217,6 +228,25 @@ class GameMatchCore implements IGameMatch {
   public function forceGetPendingFriendlyCityVisitTile():Null<TileIndex>
     return _pendingFriendlyCityTileIndex;
 
+  public function forceGetPendingHostileCityTile():Null<TileIndex>
+    return _pendingHostileCityTileIndex;
+
+  public function forceGetHostileCityFlowPhase():Null<String> {
+    if (_hostileCityPhase == null)
+      return null;
+    return switch _hostileCityPhase {
+      case AttackerChoosing: "AttackerChoosing";
+      case DefenderResponse: "DefenderResponse";
+      case AttackerSettlement: "AttackerSettlement";
+    };
+  }
+
+  public function forceGetHostileCitySettlementSummary():Null<String> {
+    if (_pendingHostileCityTileIndex == null || _hostileCityPhase != AttackerSettlement)
+      return null;
+    return _hostileCitySettlementSummary;
+  }
+
   public function cityOwnedByActiveMonarch(at:TileIndex):Bool {
     if (_board == null)
       return false;
@@ -233,10 +263,190 @@ class GameMatchCore implements IGameMatch {
     return v;
   }
 
+  function menuChoicesFromRoster(mon:Monarch):Array<MenuGeneralChoice> {
+    var out:Array<MenuGeneralChoice> = [];
+    for (g in mon.roster())
+      out.push({generalId: g.id(), caption: g.id()});
+    return out;
+  }
+
+  function appendHostileCityMenuRoots(actor:IPlayer, roots:Array<IPlayerMenuNode>):Void {
+    var idx = _pendingHostileCityTileIndex;
+    if (idx == null || _hostileCityPhase == null)
+      return;
+
+    var atkId = _hostileCityAttackerId;
+    var defId = _hostileCityDefenderId;
+
+    if (actor.monarchId() == atkId && _hostileCityPhase == AttackerChoosing) {
+      var atkMon = cast(monarchWithId(atkId), Monarch);
+      var choices = menuChoicesFromRoster(atkMon);
+      var defSel = choices.length > 0 ? [choices[0].generalId] : ([] : Array<String>);
+
+      function optNode(caption:String, token:String, needPick:Bool):IPlayerMenuNode {
+        var optLeaf = createPlayerMenuEntry(HostileCityAttackerPick, caption, true, token);
+        if (!needPick)
+          return createPlayerMenuNode(caption, null, ([] : Array<IPlayerMenuNode>), [Button(optLeaf)]);
+        var form:Array<MenuFormWidget> = [
+          GeneralMultiPick("選擇武將", choices, defSel),
+          Button(optLeaf),
+        ];
+        return createPlayerMenuNode(caption, null, ([] : Array<IPlayerMenuNode>), form);
+      }
+
+      var atkChildren:Array<IPlayerMenuNode> = [
+        optNode("付過路費", "pay_toll", false),
+        optNode("談判", "negotiate", true),
+        optNode("消耗戰", "attrition", true),
+        optNode("攻城戰", "siege", true),
+        optNode("單挑", "duel", true),
+      ];
+      roots.push(createPlayerMenuNode('敵城對峙（格 $idx）', null, atkChildren));
+    }
+
+    if (actor.monarchId() == defId && _hostileCityPhase == DefenderResponse) {
+      if (_hostileCityAwaitingDuel) {
+        var defMon = cast(monarchWithId(defId), Monarch);
+        var dChoices = menuChoicesFromRoster(defMon);
+        var dDef = dChoices.length > 0 ? [dChoices[0].generalId] : ([] : Array<String>);
+        var duelLeaf = createPlayerMenuEntry(HostileCityDefenderPickSubmit, "確認應戰武將", true, "def_duel_pick");
+        var duelForm:Array<MenuFormWidget> = [
+          GeneralMultiPick("守方單挑武將", dChoices, dDef),
+          Button(duelLeaf),
+        ];
+        roots.push(createPlayerMenuNode("守方：單挑應戰", null, ([] : Array<IPlayerMenuNode>), duelForm));
+      } else {
+        var ackLeaf = createPlayerMenuEntry(HostileCityDefenderAck, "確認（無單挑）", true, "def_ack");
+        roots.push(createPlayerMenuNode("守方：結束", null, ([] : Array<IPlayerMenuNode>), [Button(ackLeaf)]));
+      }
+    }
+
+    if (actor.monarchId() == atkId && _hostileCityPhase == AttackerSettlement) {
+      var settleLeaf = createPlayerMenuEntry(HostileCitySettlementAck, "確認結算", true, "atk_settle_ok");
+      roots.push(createPlayerMenuNode(_hostileCitySettlementSummary, null, ([] : Array<IPlayerMenuNode>), [Button(settleLeaf)]));
+    }
+  }
+
+  function extractFirstGeneralMultiPickSelections(widgets:Array<MenuFormWidget>):Array<GeneralId> {
+    for (w in widgets)
+      switch w {
+        case GeneralMultiPick(_, _, sel):
+          return sel.copy();
+        case Slider(_, _, _, _, _):
+        case Button(_):
+      }
+    return [];
+  }
+
+  function assertGeneralOwnedBy(monarchId:MonarchId, gid:GeneralId):Void {
+    var mon = cast(monarchWithId(monarchId), Monarch);
+    for (g in mon.roster())
+      if (g.id() == gid)
+        return;
+    throw 'GameMatchCore: 武將 "$gid" 非君主 $monarchId 麾下';
+  }
+
+  function computeHostileCitySettlementSummary():String {
+    var tileIdx = _pendingHostileCityTileIndex != null ? _pendingHostileCityTileIndex : -1;
+    var tok = _hostileCityAttackerChoiceToken;
+    var atkG = _hostileCityAttackerGeneralIds.length > 0 ? _hostileCityAttackerGeneralIds[0] : "(無)";
+    switch tok {
+      case "pay_toll":
+        return '結算：過路費已付｜城池格 $tileIdx';
+      case "negotiate":
+        return '結算：談判（攻將 $atkG）｜協議草案已備';
+      case "attrition":
+        return '結算：消耗戰（攻將 $atkG）｜損耗預估完成';
+      case "siege":
+        return '結算：攻城戰（攻將 $atkG）｜城防推演完成';
+      case "duel":
+        var defG = _hostileCityDefenderGeneralId != null ? _hostileCityDefenderGeneralId : "?";
+        return '結算：單挑（攻將 $atkG vs 守將 $defG）｜勝負已裁定';
+      default:
+        throw 'GameMatchCore.computeHostileCitySettlementSummary: 未知選項 $tok';
+    }
+  }
+
+  function handleHostileCityAttackerPick(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
+    if (_pendingHostileCityTileIndex == null || _hostileCityPhase != AttackerChoosing)
+      throw "GameMatchCore: HostileCityAttackerPick 與對峙階段不符";
+    var leaf = MenuActivation.activatingEntry(menuNode);
+    var tok = leaf.decisionToken();
+    if (tok == null)
+      throw "GameMatchCore: HostileCityAttackerPick 需要 decisionToken";
+    var picks = extractFirstGeneralMultiPickSelections(menuNode.formWidgets());
+    switch tok {
+      case "pay_toll":
+        if (picks.length != 0)
+          throw "GameMatchCore: 付過路費不可附帶武將選取";
+      case "negotiate", "attrition", "siege", "duel":
+        if (picks.length != 1)
+          throw "GameMatchCore: 此攻勢選項須恰好選擇一名攻方武將";
+        assertGeneralOwnedBy(_hostileCityAttackerId, picks[0]);
+      default:
+        throw 'GameMatchCore: 未知敵城攻方選項 $tok';
+    }
+    _hostileCityAttackerChoiceToken = tok;
+    _hostileCityAttackerGeneralIds = picks.copy();
+    _hostileCityAwaitingDuel = tok == "duel";
+    _hostileCityPhase = DefenderResponse;
+    syncActiveSliceAfterMenuLeaf(HostileCityAttackerPick);
+  }
+
+  function handleHostileCityDefenderAck(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
+    if (_pendingHostileCityTileIndex == null || _hostileCityPhase != DefenderResponse)
+      throw "GameMatchCore: HostileCityDefenderAck 與對峙階段不符";
+    if (_hostileCityAwaitingDuel)
+      throw "GameMatchCore: 單挑時不可使用守方簡認確認";
+    _hostileCitySettlementSummary = computeHostileCitySettlementSummary();
+    _hostileCityPhase = AttackerSettlement;
+    syncActiveSliceAfterMenuLeaf(HostileCityDefenderAck);
+  }
+
+  function handleHostileCityDefenderPickSubmit(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
+    if (_pendingHostileCityTileIndex == null || _hostileCityPhase != DefenderResponse)
+      throw "GameMatchCore: HostileCityDefenderPickSubmit 與對峙階段不符";
+    if (!_hostileCityAwaitingDuel)
+      throw "GameMatchCore: 僅攻方選單挑時守方選將";
+    var picks = extractFirstGeneralMultiPickSelections(menuNode.formWidgets());
+    if (picks.length != 1)
+      throw "GameMatchCore: 守方單挑須恰好選擇一名武將";
+    assertGeneralOwnedBy(_hostileCityDefenderId, picks[0]);
+    _hostileCityDefenderGeneralId = picks[0];
+    _hostileCitySettlementSummary = computeHostileCitySettlementSummary();
+    _hostileCityPhase = AttackerSettlement;
+    syncActiveSliceAfterMenuLeaf(HostileCityDefenderPickSubmit);
+  }
+
+  function handleHostileCitySettlementAck(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
+    if (_pendingHostileCityTileIndex == null || _hostileCityPhase != AttackerSettlement)
+      throw "GameMatchCore: HostileCitySettlementAck 與對峙階段不符";
+    clearHostileCityConfrontation();
+    _activeSliceComplete = true;
+    syncActiveSliceAfterMenuLeaf(HostileCitySettlementAck);
+  }
+
+  function assertHostileCityApplyActor(actor:IPlayer, kind:PlayerMenuKind):Void {
+    switch kind {
+      case HostileCityAttackerPick:
+        if (actor.monarchId() != _hostileCityAttackerId || _hostileCityPhase != AttackerChoosing)
+          throw "GameMatchCore.applyMenuLeaf: 僅攻方於攻勢選擇階段可操作 HostileCityAttackerPick";
+      case HostileCityDefenderAck, HostileCityDefenderPickSubmit:
+        if (actor.monarchId() != _hostileCityDefenderId || _hostileCityPhase != DefenderResponse)
+          throw "GameMatchCore.applyMenuLeaf: 僅守方於守方應對階段可操作";
+      case HostileCitySettlementAck:
+        if (actor.monarchId() != _hostileCityAttackerId || _hostileCityPhase != AttackerSettlement)
+          throw "GameMatchCore.applyMenuLeaf: 僅攻方於結算確認階段可操作 HostileCitySettlementAck";
+      default:
+        throw "GameMatchCore.assertHostileCityApplyActor: internal";
+    }
+  }
+
   public function createPlayerMenu(actor:IPlayer):IPlayerMenu {
     var pend = _pendingTileEvent;
     var jiPending = _pendingJiCe;
     var stagingActive = jiPending != null;
+    var hostilePending = _pendingHostileCityTileIndex != null;
     var ctx = actor.monarchId() + "-" + isActivePlayerSliceComplete();
     if (pend != null)
       ctx += "-evt-" + pend.registryKey();
@@ -246,8 +456,14 @@ class GameMatchCore implements IGameMatch {
       ctx += "-empty-city-" + _pendingEmptyCityTileIndex;
     if (_pendingFriendlyCityTileIndex != null)
       ctx += "-friendly-city-" + _pendingFriendlyCityTileIndex;
+    if (hostilePending) {
+      var phaseTag = forceGetHostileCityFlowPhase();
+      ctx += "-hostile-city-" + (phaseTag != null ? phaseTag : "?");
+    }
 
     var roots:Array<IPlayerMenuNode> = [];
+
+    appendHostileCityMenuRoots(actor, roots);
 
     if (_pendingFriendlyCityTileIndex != null) {
       var fidx = _pendingFriendlyCityTileIndex;
@@ -314,9 +530,17 @@ class GameMatchCore implements IGameMatch {
     }
 
     var blockBasics =
-      pend != null || stagingActive || _pendingEmptyCityTileIndex != null || _pendingFriendlyCityTileIndex != null;
+      pend != null
+      || stagingActive
+      || _pendingEmptyCityTileIndex != null
+      || _pendingFriendlyCityTileIndex != null
+      || hostilePending;
     var jiEnabledBase =
-      !stagingActive && pend == null && _pendingEmptyCityTileIndex == null && _pendingFriendlyCityTileIndex == null;
+      !stagingActive
+      && pend == null
+      && _pendingEmptyCityTileIndex == null
+      && _pendingFriendlyCityTileIndex == null
+      && !hostilePending;
 
     var ownedJiCe = availableJiCe(actor.monarchId());
     var jiChildren:Array<IPlayerMenuNode> = [];
@@ -350,7 +574,8 @@ class GameMatchCore implements IGameMatch {
       && pend == null
       && !stagingActive
       && _pendingEmptyCityTileIndex == null
-      && _pendingFriendlyCityTileIndex == null;
+      && _pendingFriendlyCityTileIndex == null
+      && !hostilePending;
     if (allowConfirm)
       actions.push(createPlayerMenuNode("結束", createPlayerMenuEntry(ConfirmDone, "結束本階段", true), ([] : Array<IPlayerMenuNode>)));
 
@@ -371,6 +596,10 @@ class GameMatchCore implements IGameMatch {
       case EmptyCityOccupyAbort:
       case FriendlyCityDispatchApply:
       case FriendlyCityVisitEnd:
+      case HostileCityAttackerPick:
+      case HostileCityDefenderAck:
+      case HostileCityDefenderPickSubmit:
+      case HostileCitySettlementAck:
     }
   }
 
@@ -379,13 +608,43 @@ class GameMatchCore implements IGameMatch {
     var ruler = cast(activeMonarch(), Monarch);
     considerLandingAt(ruler.pawnIndex());
     _activeSliceComplete =
-      _pendingTileEvent == null && _pendingEmptyCityTileIndex == null && _pendingFriendlyCityTileIndex == null;
+      _pendingTileEvent == null
+      && _pendingEmptyCityTileIndex == null
+      && _pendingFriendlyCityTileIndex == null
+      && _pendingHostileCityTileIndex == null;
+  }
+
+  function clearHostileCityConfrontation():Void {
+    _pendingHostileCityTileIndex = null;
+    _hostileCityPhase = null;
+    _hostileCityAttackerId = "";
+    _hostileCityDefenderId = "";
+    _hostileCityAwaitingDuel = false;
+    _hostileCityAttackerChoiceToken = "";
+    _hostileCityAttackerGeneralIds = [];
+    _hostileCityDefenderGeneralId = null;
+    _hostileCitySettlementSummary = "";
+  }
+
+  function enterHostileCityConfrontation(idx:TileIndex):Void {
+    if (!_cityOwner.exists(idx))
+      throw "GameMatchCore.enterHostileCityConfrontation: city has no owner";
+    _pendingHostileCityTileIndex = idx;
+    _hostileCityPhase = AttackerChoosing;
+    _hostileCityAttackerId = activeMonarch().id();
+    _hostileCityDefenderId = _cityOwner.get(idx);
+    _hostileCityAwaitingDuel = false;
+    _hostileCityAttackerChoiceToken = "";
+    _hostileCityAttackerGeneralIds = [];
+    _hostileCityDefenderGeneralId = null;
+    _hostileCitySettlementSummary = "";
   }
 
   function considerLandingAt(idx:TileIndex):Void {
     _pendingTileEvent = null;
     _pendingEmptyCityTileIndex = null;
     _pendingFriendlyCityTileIndex = null;
+    clearHostileCityConfrontation();
     var tile = board().tileAt(idx);
     switch tile.kind() {
       case Event:
@@ -393,6 +652,8 @@ class GameMatchCore implements IGameMatch {
       case City:
         if (_cityOwner.exists(idx) && _cityOwner.get(idx) == activeMonarch().id())
           _pendingFriendlyCityTileIndex = idx;
+        else if (_cityOwner.exists(idx) && !cityVacantNoGarrison(idx))
+          enterHostileCityConfrontation(idx);
         else if (cityVacantNoGarrison(idx))
           _pendingEmptyCityTileIndex = idx;
       case Plain:
@@ -570,37 +831,55 @@ class GameMatchCore implements IGameMatch {
     if (!leaf.isEnabled())
       throw "GameMatchCore.applyMenuLeaf: activating entry disabled (" + leaf.caption() + ")";
 
-    if (actor.monarchId() != activeMonarch().id())
-      throw "GameMatchCore.applyMenuLeaf: actor must be active monarch";
+    var lk = leaf.kind();
+    switch lk {
+      case HostileCityAttackerPick:
+        assertHostileCityApplyActor(actor, lk);
+        handleHostileCityAttackerPick(actor, menuNode);
+      case HostileCityDefenderAck:
+        assertHostileCityApplyActor(actor, lk);
+        handleHostileCityDefenderAck(actor, menuNode);
+      case HostileCityDefenderPickSubmit:
+        assertHostileCityApplyActor(actor, lk);
+        handleHostileCityDefenderPickSubmit(actor, menuNode);
+      case HostileCitySettlementAck:
+        assertHostileCityApplyActor(actor, lk);
+        handleHostileCitySettlementAck(actor, menuNode);
+      default:
+        if (actor.monarchId() != activeMonarch().id())
+          throw "GameMatchCore.applyMenuLeaf: actor must be active monarch";
 
-    switch leaf.kind() {
-      case Move:
-        GameMatchVer1Ops.applyMenuLeafForMove(this, actor);
-      case TileEventPick:
-        handleTileEventPick(actor, menuNode);
-      case JiCeStagingSubmit:
-        handleJiCeStagingSubmit(actor, menuNode);
-      case JiCe:
-        if (_pendingJiCe != null)
-          throw "GameMatchCore: 已有進行中之計策暫存，請先完成計策選項";
-        var card = playedJiCe != null ? playedJiCe : resolvePlayedJiCeFromLeaf(actor, leaf);
-        if (jiCeTargetMonarchId == null)
-          throw "GameMatchCore.applyMenuLeaf: JiCe leaf requires jiCeTargetMonarchId";
-        card.applyAgainstMonarch(actor, jiCeTargetMonarchId);
-        syncActiveSliceAfterMenuLeaf(JiCe);
-      case Status:
-        syncActiveSliceAfterMenuLeaf(Status);
-      case ConfirmDone:
-        syncActiveSliceAfterMenuLeaf(ConfirmDone);
-        advanceActiveMonarchAfterConfirmDone();
-      case EmptyCityOccupySubmit:
-        handleEmptyCityOccupySubmit(actor, menuNode);
-      case EmptyCityOccupyAbort:
-        handleEmptyCityOccupyAbort(actor, menuNode);
-      case FriendlyCityDispatchApply:
-        handleFriendlyCityDispatchApply(actor, menuNode);
-      case FriendlyCityVisitEnd:
-        handleFriendlyCityVisitEnd(actor, menuNode);
+        switch lk {
+          case Move:
+            GameMatchVer1Ops.applyMenuLeafForMove(this, actor);
+          case TileEventPick:
+            handleTileEventPick(actor, menuNode);
+          case JiCeStagingSubmit:
+            handleJiCeStagingSubmit(actor, menuNode);
+          case JiCe:
+            if (_pendingJiCe != null)
+              throw "GameMatchCore: 已有進行中之計策暫存，請先完成計策選項";
+            var card = playedJiCe != null ? playedJiCe : resolvePlayedJiCeFromLeaf(actor, leaf);
+            if (jiCeTargetMonarchId == null)
+              throw "GameMatchCore.applyMenuLeaf: JiCe leaf requires jiCeTargetMonarchId";
+            card.applyAgainstMonarch(actor, jiCeTargetMonarchId);
+            syncActiveSliceAfterMenuLeaf(JiCe);
+          case Status:
+            syncActiveSliceAfterMenuLeaf(Status);
+          case ConfirmDone:
+            syncActiveSliceAfterMenuLeaf(ConfirmDone);
+            advanceActiveMonarchAfterConfirmDone();
+          case EmptyCityOccupySubmit:
+            handleEmptyCityOccupySubmit(actor, menuNode);
+          case EmptyCityOccupyAbort:
+            handleEmptyCityOccupyAbort(actor, menuNode);
+          case FriendlyCityDispatchApply:
+            handleFriendlyCityDispatchApply(actor, menuNode);
+          case FriendlyCityVisitEnd:
+            handleFriendlyCityVisitEnd(actor, menuNode);
+          case HostileCityAttackerPick, HostileCityDefenderAck, HostileCityDefenderPickSubmit, HostileCitySettlementAck:
+            throw "GameMatchCore.applyMenuLeaf: internal hostile routing";
+        }
     }
     evaluateTermination();
     menuNode.setActivationEntry(null);

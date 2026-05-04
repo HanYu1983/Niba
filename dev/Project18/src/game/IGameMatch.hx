@@ -120,6 +120,15 @@ interface IGameMatch {
     /** 除錯／測試：踩中我方城池後尚待「結束拜訪」時為該格索引；否則 null。 */
     function forceGetPendingFriendlyCityVisitTile():Null<TileIndex>;
 
+    /** 除錯／測試：踩中非友方且有駐軍城池後之多階段對峙尚未結束時為該格索引；否則 null。 */
+    function forceGetPendingHostileCityTile():Null<TileIndex>;
+
+    /** 除錯／測試：敵城對峙流程階段（字串）；無 pending 時為 null。 */
+    function forceGetHostileCityFlowPhase():Null<String>;
+
+    /** 除錯／測試：結算階段攻方節點標題所用之預算文案；非該階段時為 null。 */
+    function forceGetHostileCitySettlementSummary():Null<String>;
+
     /** 該城格 {@link TileKind.City} 之屬主為當前行動君主時為 true。 */
     function cityOwnedByActiveMonarch(at:TileIndex):Bool;
 

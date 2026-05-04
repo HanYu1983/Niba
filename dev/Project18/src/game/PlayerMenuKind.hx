@@ -37,4 +37,16 @@ enum PlayerMenuKind {
 
     /** 我方城池拜訪：結束拜訪並關閉持續選單。 */
     FriendlyCityVisitEnd;
+
+    /** 敵城對峙：攻方選項（機械鍵見 {@link IPlayerMenuEntry#decisionToken}）。 */
+    HostileCityAttackerPick;
+
+    /** 敵城對峙：守方在非單挑攻勢後僅確認結束本段。 */
+    HostileCityDefenderAck;
+
+    /** 敵城對峙：守方於攻方選單挑後提交應戰武將。 */
+    HostileCityDefenderPickSubmit;
+
+    /** 敵城對峙：攻方確認預算結算文案並結束落地流程。 */
+    HostileCitySettlementAck;
 }

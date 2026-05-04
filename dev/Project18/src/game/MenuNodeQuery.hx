@@ -1,5 +1,6 @@
 package game;
 
+import game.PlayerMenuKind.HostileCityAttackerPick;
 import game.PlayerMenuKind.TileEventPick;
 
 /** 依選單結構尋節點（測試／UI 共用）。 */
@@ -25,6 +26,31 @@ class MenuNodeQuery {
           case GeneralMultiPick(_, _, _):
         }
       var inner = findNodeWithKind(n.children(), kind);
+      if (inner != null)
+        return inner;
+    }
+    return null;
+  }
+
+  /** 敵城對峙攻方選項：{@link HostileCityAttackerPick} 且 decisionToken 相符之節點（表單內 Button）。 */
+  public static function requireNodeWithHostileAttackerPickToken(menu:IPlayerMenu, decisionToken:String):IPlayerMenuNode {
+    var n = findNodeWithHostileAttackerPickToken(menu.rootNodes(), decisionToken);
+    if (n == null)
+      throw 'MenuNodeQuery: 缺少 HostileCityAttackerPick decisionToken="$decisionToken" 之節點';
+    return n;
+  }
+
+  static function findNodeWithHostileAttackerPickToken(nodes:Array<IPlayerMenuNode>, decisionToken:String):Null<IPlayerMenuNode> {
+    for (n in nodes) {
+      for (w in n.formWidgets())
+        switch w {
+          case Button(e):
+            if (e.kind() == HostileCityAttackerPick && e.decisionToken() == decisionToken)
+              return n;
+          case Slider(_, _, _, _, _):
+          case GeneralMultiPick(_, _, _):
+        }
+      var inner = findNodeWithHostileAttackerPickToken(n.children(), decisionToken);
       if (inner != null)
         return inner;
     }

@@ -26,6 +26,7 @@ class HelloWorld {
     debug_ver1.GeneralChestTileEventMenuTest.run();
     debug_ver1.EmptyCityVacantFormMenuTest.run();
     debug_ver1.FriendlyOwnedCityDispatchMenuTest.run();
+    debug_ver1.HostileCityConfrontMenuTest.run();
     trace("Hello world");
   }
 
@@ -56,6 +57,10 @@ class HelloWorld {
     var _mec2:PlayerMenuKind = EmptyCityOccupyAbort;
     var _mfc1:PlayerMenuKind = FriendlyCityDispatchApply;
     var _mfc2:PlayerMenuKind = FriendlyCityVisitEnd;
+    var _mhc1:PlayerMenuKind = HostileCityAttackerPick;
+    var _mhc2:PlayerMenuKind = HostileCityDefenderAck;
+    var _mhc3:PlayerMenuKind = HostileCityDefenderPickSubmit;
+    var _mhc4:PlayerMenuKind = HostileCitySettlementAck;
     var _fw:MenuFormWidget = Slider("f", 0, 1, 1, 0);
     var _fwm:MenuFormWidget = GeneralMultiPick("x", ([] : Array<MenuGeneralChoice>), []);
     var _ver1Game:impl_ver1.Game = cast null;
