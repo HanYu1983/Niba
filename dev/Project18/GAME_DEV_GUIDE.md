@@ -71,10 +71,10 @@
    例如不要在 `GameMatchCore`／總線裡寫死某一事件的選項文字或某一計策的公式；應透過 `ITileEvent`／`IJiCe` 等實作注入。
 
 2. **擴充內容不應繞過公開 API**  
-   事件／計策應透過 `IGameMatch` 提供的方法（如進入暫存、清除 pending）與選單葉種類一致；避免從腳本直接篡改私有狀態或複製一套「平行主迴圈」。
+   計策暫存應經 **`enterJiCeStaging`**／對應 **`IJiCe.buildPlayerMenu`**，並以 **`JiCeStagingSubmit`**＋表單結算（見 **`applyMenuLeaf`**）；格子事件應經 **`ITileEvent.buildPlayerMenu`** 與 **`TileEventPick`**，pending 清除由賽局在 **`resolveChoice`** 流程內統一處理，事件腳本不得自行維持「第二回合選單」狀態。避免從腳本篡改 **`GameMatchCore`** 私有欄位或複製一套平行主迴圈。
 
 3. **同一個契約，多種實作**  
-   「選將暫存」對計策與格子事件共用同一套選單語意（如 `JiCePick`）屬骨架決策；具體預覽文案與結算數值屬擴充內容。
+   計策暫存選將由骨架統一的 **`JiCeStagingSubmit`** 葉＋表單鍵 **`MenuFieldIds.JiCeStagingGenerals`**（通常搭配 **`MenuFormWidget.GeneralMultiPick`**）結算；格子事件是否在 **`buildPlayerMenu`** 裡放武將複選、鍵為 **`MenuFieldIds.TileEventGenerals`**，由各路 **`ITileEvent`** 決定，並在一次 **`TileEventPick`／`resolveChoice`** 附 **`formStringListFields`** 完成，不再有賽局第二階段「事件選將子選單」。預覽文案與數值規剘仍屬擴充內容。
 
 4. **測試分層**  
    - 驗證主迴路與狀態機：`debug_ver1` 中以流程為主的測試。  
@@ -89,7 +89,7 @@
 | `createPlayerMenu`／`applyMenuLeaf` 與葉種類語意 | 各 `ITileEvent`／`IJiCe` 的選項與結算 |
 | 內部暫存與切片是否可結束（對外除錯見 `forceGetPendingTileEvent` 等） | 兵力／糧食變動數值與條件 |
 | `Move` 葉時委派規剘模組；環狀索引位移 API（`Monarch.advanceOnBoard`）與落地後 `settleAfterMoveLanding` 的銜接 | `GameMatchVer1Ops`：本版步幅、終局條件等；骰子結果、路網修正、動畫與演出 |
-| 暫存列模型（預覽列與機械鍵） | 每一列的描述與 predicted 語意 |
+| 計策暫存：`enterJiCeStaging`、預覽列校驗與 **`JiCeStagingSubmit`** 表單解析；事件無第二階段，武將 widget 與 **`TileEventPick`** 表單由 **`ITileEvent`** 自組 | 預覽列文案、`predicted` 語意、結算數值與事件選項機械鍵 |
 
 ---
 
