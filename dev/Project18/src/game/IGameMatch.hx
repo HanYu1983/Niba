@@ -158,8 +158,7 @@ interface IGameMatch {
 
     /**
      * 對本局賽局結算選單葉節點（移動、計策、狀態、確認等），並視規剘修改棋子／兵力／切片旗標等。
-     * {@link PlayerMenuKind.EmptyCityOccupySubmit} 須附 {@code formNumericFields} 與 {@code formStringListFields}（駐將複選鍵見規剘）；
-     * {@link PlayerMenuKind.FriendlyCityDispatchApply} 須附 {@code formNumericFields}。
+     * 需表單數值／複選時由 UI 先寫入 {@link IPlayerMenuEntry#setFormNumericFields}／{@link IPlayerMenuEntry#setFormStringListFields}（鍵對齊組菜單時之 widget {@code fieldId}），再呼叫本方法；結算後賽局會清空上述附載。
      */
-    function applyMenuLeaf(actor:IPlayer, leaf:IPlayerMenuEntry, ?playedJiCe:IJiCe, ?jiCeTargetMonarchId:MonarchId, ?formNumericFields:Map<String, Int>, ?formStringListFields:Map<String, Array<String>>):Void;
+    function applyMenuLeaf(actor:IPlayer, leaf:IPlayerMenuEntry, ?playedJiCe:IJiCe, ?jiCeTargetMonarchId:MonarchId):Void;
 }

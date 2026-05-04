@@ -53,7 +53,8 @@ class GeneralChestTileEventMenuTest {
 
     var form = new Map<String, Array<String>>();
     form.set(MenuFieldIds.TileEventGenerals, ["g-chest"]);
-    match.applyMenuLeaf(player, claim, null, null, null, form);
+    claim.setFormStringListFields(form);
+    match.applyMenuLeaf(player, claim);
 
     if (match.forceGetPendingTileEvent() != null)
       throw "GeneralChestTileEventMenuTest: 結算後應清除 pending";

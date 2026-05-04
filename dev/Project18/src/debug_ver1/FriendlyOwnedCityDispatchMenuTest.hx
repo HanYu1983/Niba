@@ -62,7 +62,9 @@ class FriendlyOwnedCityDispatchMenuTest {
     var fm1 = new Map<String, Int>();
     fm1.set(GameMatchCore.DISPATCH_FIELD_TROOPS, 50);
     fm1.set(GameMatchCore.DISPATCH_FIELD_GRAIN, 15);
-    match.applyMenuLeaf(player, requireLeafKind(menu1, FriendlyCityDispatchApply), null, null, fm1);
+    var dispatchLeaf = requireLeafKind(menu1, FriendlyCityDispatchApply);
+    dispatchLeaf.setFormNumericFields(fm1);
+    match.applyMenuLeaf(player, dispatchLeaf);
 
     if (match.forceGetPendingFriendlyCityVisitTile() != CITY_IDX)
       throw "FriendlyOwnedCityDispatchMenuTest: 確認調度後仍應停留拜訪（選單持續）";

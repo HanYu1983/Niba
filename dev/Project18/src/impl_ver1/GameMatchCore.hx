@@ -38,7 +38,7 @@ class GameMatchCore implements IGameMatch {
 
   public static inline var DISPATCH_FIELD_GRAIN:String = "dispatch_grain";
 
-  /** 空城進駐表單 {@link MenuFormWidget.GeneralMultiPick} fieldId／{@link #applyMenuLeaf} formStringListFields 鍵。 */
+  /** 空城進駐表單 {@link MenuFormWidget.GeneralMultiPick} fieldId／寫入 {@link IPlayerMenuEntry#setFormStringListFields} 之鍵。 */
   public static inline var EMPTY_CITY_GARRISON_FIELD:String = "empty_city_garrison_generals";
 
   var _board:Board;
@@ -414,13 +414,13 @@ class GameMatchCore implements IGameMatch {
     }
   }
 
-  function handleTileEventPick(actor:IPlayer, leaf:IPlayerMenuEntry, formStringListFields:Null<Map<String, Array<String>>>):Void {
+  function handleTileEventPick(actor:IPlayer, leaf:IPlayerMenuEntry):Void {
     var ev = _pendingTileEvent;
     if (ev == null)
       throw "GameMatchCore: TileEventPick 但無 forceGetPendingTileEvent";
     if (leaf.decisionToken() == null)
       throw "GameMatchCore: TileEventPick 需要 decisionToken";
-    ev.resolveChoice(actor, leaf, formStringListFields);
+    ev.resolveChoice(actor, leaf);
     _pendingTileEvent = null;
     _activeSliceComplete = true;
   }
@@ -455,11 +455,11 @@ class GameMatchCore implements IGameMatch {
     return gid;
   }
 
-  function handleJiCeStagingSubmit(actor:IPlayer, leaf:IPlayerMenuEntry, formStringListFields:Null<Map<String, Array<String>>>):Void {
+  function handleJiCeStagingSubmit(actor:IPlayer, leaf:IPlayerMenuEntry):Void {
     var card = _pendingJiCe;
     if (card == null)
       throw "GameMatchCore: JiCeStagingSubmit 但無進行中之計策暫存";
-    card.resolveChoice(actor, leaf, formStringListFields);
+    card.resolveChoice(actor, leaf);
     clearJiCeStaging();
     syncActiveSliceAfterMenuLeaf(JiCeStagingSubmit);
   }
@@ -486,18 +486,19 @@ class GameMatchCore implements IGameMatch {
     return uniq;
   }
 
-  function handleEmptyCityOccupySubmit(actor:IPlayer, leaf:IPlayerMenuEntry, formNumericFields:Null<Map<String, Int>>, formStringListFields:Null<Map<String, Array<String>>>):Void {
+  function handleEmptyCityOccupySubmit(actor:IPlayer, leaf:IPlayerMenuEntry):Void {
     if (_pendingEmptyCityTileIndex == null)
       throw "GameMatchCore: EmptyCityOccupySubmit 但無 pending 空城";
+    var formNumericFields = leaf.formNumericFields();
     if (formNumericFields == null)
-      throw "GameMatchCore: EmptyCityOccupySubmit 須附 formNumericFields";
+      throw "GameMatchCore: EmptyCityOccupySubmit 須於 leaf 附 formNumericFields";
     var idx = _pendingEmptyCityTileIndex;
     var tt = formNumericFields.exists(OCCUPY_FIELD_TROOPS) ? formNumericFields.get(OCCUPY_FIELD_TROOPS) : 0;
     var gg = formNumericFields.exists(OCCUPY_FIELD_GRAIN) ? formNumericFields.get(OCCUPY_FIELD_GRAIN) : 0;
     var ruler = cast(activeMonarch(), Monarch);
     if (tt < 0 || gg < 0 || tt > ruler.troops() || gg > ruler.grain())
       throw "GameMatchCore: 進駐數值超出君主可用資源";
-    var garrisonIds = parseOccupyGarrisonGeneralIds(formStringListFields);
+    var garrisonIds = parseOccupyGarrisonGeneralIds(leaf.formStringListFields());
     ruler.reduceTroops(tt);
     ruler.reduceGrain(gg);
     var prevT = _cityStockTroops.exists(idx) ? _cityStockTroops.get(idx) : 0;
@@ -519,11 +520,12 @@ class GameMatchCore implements IGameMatch {
     syncActiveSliceAfterMenuLeaf(EmptyCityOccupyAbort);
   }
 
-  function handleFriendlyCityDispatchApply(actor:IPlayer, leaf:IPlayerMenuEntry, formNumericFields:Null<Map<String, Int>>):Void {
+  function handleFriendlyCityDispatchApply(actor:IPlayer, leaf:IPlayerMenuEntry):Void {
     if (_pendingFriendlyCityTileIndex == null)
       throw "GameMatchCore: FriendlyCityDispatchApply 但無 pending 我方城池拜訪";
+    var formNumericFields = leaf.formNumericFields();
     if (formNumericFields == null)
-      throw "GameMatchCore: FriendlyCityDispatchApply 須附 formNumericFields";
+      throw "GameMatchCore: FriendlyCityDispatchApply 須於 leaf 附 formNumericFields";
     var idx = _pendingFriendlyCityTileIndex;
     var tt = formNumericFields.exists(DISPATCH_FIELD_TROOPS) ? formNumericFields.get(DISPATCH_FIELD_TROOPS) : 0;
     var gg = formNumericFields.exists(DISPATCH_FIELD_GRAIN) ? formNumericFields.get(DISPATCH_FIELD_GRAIN) : 0;
@@ -576,7 +578,12 @@ class GameMatchCore implements IGameMatch {
   public function getTerminationReason():MatchTerminationReason
     return _terminationReason;
 
-  public function applyMenuLeaf(actor:IPlayer, leaf:IPlayerMenuEntry, ?playedJiCe:IJiCe, ?jiCeTargetMonarchId:MonarchId, ?formNumericFields:Map<String, Int>, ?formStringListFields:Map<String, Array<String>>):Void {
+  function clearLeafFormSubmission(leaf:IPlayerMenuEntry):Void {
+    leaf.setFormNumericFields(null);
+    leaf.setFormStringListFields(null);
+  }
+
+  public function applyMenuLeaf(actor:IPlayer, leaf:IPlayerMenuEntry, ?playedJiCe:IJiCe, ?jiCeTargetMonarchId:MonarchId):Void {
     if (!leaf.isEnabled())
       throw "GameMatchCore.applyMenuLeaf: leaf disabled (" + leaf.caption() + ")";
 
@@ -587,9 +594,9 @@ class GameMatchCore implements IGameMatch {
       case Move:
         GameMatchVer1Ops.applyMenuLeafForMove(this, actor);
       case TileEventPick:
-        handleTileEventPick(actor, leaf, formStringListFields);
+        handleTileEventPick(actor, leaf);
       case JiCeStagingSubmit:
-        handleJiCeStagingSubmit(actor, leaf, formStringListFields);
+        handleJiCeStagingSubmit(actor, leaf);
       case JiCe:
         if (_pendingJiCe != null)
           throw "GameMatchCore: 已有進行中之計策暫存，請先完成計策選項";
@@ -604,15 +611,16 @@ class GameMatchCore implements IGameMatch {
         syncActiveSliceAfterMenuLeaf(ConfirmDone);
         advanceActiveMonarchAfterConfirmDone();
       case EmptyCityOccupySubmit:
-        handleEmptyCityOccupySubmit(actor, leaf, formNumericFields, formStringListFields);
+        handleEmptyCityOccupySubmit(actor, leaf);
       case EmptyCityOccupyAbort:
         handleEmptyCityOccupyAbort(actor, leaf);
       case FriendlyCityDispatchApply:
-        handleFriendlyCityDispatchApply(actor, leaf, formNumericFields);
+        handleFriendlyCityDispatchApply(actor, leaf);
       case FriendlyCityVisitEnd:
         handleFriendlyCityVisitEnd(actor, leaf);
     }
     evaluateTermination();
+    clearLeafFormSubmission(leaf);
   }
 
   function advanceActiveMonarchAfterConfirmDone():Void {

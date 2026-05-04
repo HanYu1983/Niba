@@ -48,7 +48,7 @@ class GeneralChestTileEvent implements ITileEvent {
     return new PlayerMenu(actor, "evt-" + registryKey(), roots);
   }
 
-  public function resolveChoice(actor:IPlayer, leaf:IPlayerMenuEntry, ?formStringListFields:Map<String, Array<String>>):Void {
+  public function resolveChoice(actor:IPlayer, leaf:IPlayerMenuEntry):Void {
     if (leaf.kind() != TileEventPick)
       throw "GeneralChestTileEvent.resolveChoice: 預期 TileEventPick 葉";
     var tok = leaf.decisionToken();
@@ -62,7 +62,7 @@ class GeneralChestTileEvent implements ITileEvent {
           ruler.grantTroops(GRANT_NO_ROSTER);
           lastResolvedChoice = "claim_reward:no_general";
         } else {
-          var ids = parseTileEventGeneralIds(formStringListFields, ruler);
+          var ids = parseTileEventGeneralIds(leaf.formStringListFields(), ruler);
           if (ids.length != 1)
             throw "GeneralChestTileEvent.resolveChoice: 領賞須恰好選擇一名麾下武將";
           ruler.grantTroops(GRANT_PER_GENERAL);

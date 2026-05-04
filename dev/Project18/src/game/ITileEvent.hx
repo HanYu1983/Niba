@@ -12,7 +12,7 @@ import game.IPlayerMenuEntry;
  *
  * UI／選單語意對照：
  * - buildPlayerMenu：事件全貌（含是否以 {@link MenuFormWidget.GeneralMultiPick} 組武將複選；鍵見 {@link MenuFieldIds.TileEventGenerals}）。
- * - resolveChoice：傳入玩家所點選之 **選單葉** {@link IPlayerMenuEntry}（與 {@link IGameMatch#applyMenuLeaf} 相同引用語意）；若同一節點含複選武將 widget，結算時經 {@code formStringListFields} 傳入選中 id。
+ * - resolveChoice：傳入玩家所點選之 **選單葉** {@link IPlayerMenuEntry}（與 {@link IGameMatch#applyMenuLeaf} 相同引用語意）；複選武將 id 見該葉 {@link IPlayerMenuEntry#formStringListFields}。
  */
 interface ITileEvent {
     /** 資料／存檔用之穩定鍵（例如事件表列 id）。 */
@@ -21,9 +21,6 @@ interface ITileEvent {
     /** 事件專用之選項選單（可為二選一、三選一或單鍵「執行」葉節點）。根節點集合可直接交給巢狀 UI。 */
     function buildPlayerMenu(actor:IPlayer):IPlayerMenu;
 
-    /**
-     * {@code leaf}：與 {@link IGameMatch#applyMenuLeaf} 所套用者相同之葉（常見機械鍵見 {@link IPlayerMenuEntry#decisionToken}）。
-     * {@code formStringListFields}：與同一表單 {@link MenuFormWidget.GeneralMultiPick} 對齊時傳入（鍵 {@link MenuFieldIds.TileEventGenerals}）。
-     */
-    function resolveChoice(actor:IPlayer, leaf:IPlayerMenuEntry, ?formStringListFields:Map<String, Array<String>>):Void;
+    /** {@code leaf}：與 {@link IGameMatch#applyMenuLeaf} 所套用者相同之葉（機械鍵見 {@link IPlayerMenuEntry#decisionToken}；複選見 {@link IPlayerMenuEntry#formStringListFields}）。 */
+    function resolveChoice(actor:IPlayer, leaf:IPlayerMenuEntry):Void;
 }

@@ -10,7 +10,7 @@ import game.IPlayerMenuEntry;
  *
  * - applyAgainstMonarch：對目標君主進入「暫存／待選」態（通常經 enterJiCeStaging）。
  * - buildPlayerMenu：暫存期中組裝後續選單。
- * - resolveChoice：傳入玩家所點選之選單葉（與 {@link IGameMatch#applyMenuLeaf} 相同引用語意），暫存選將時附 {@code formStringListFields}（鍵 {@link MenuFieldIds.JiCeStagingGenerals}）；結算後由 match.applyMenuLeaf 清除計策暫存。
+ * - resolveChoice：傳入玩家所點選之選單葉（與 {@link IGameMatch#applyMenuLeaf} 相同引用語意）；施計武將見該葉 {@link IPlayerMenuEntry#formStringListFields}（鍵 {@link MenuFieldIds.JiCeStagingGenerals}）；結算後由 match.applyMenuLeaf 清除計策暫存。
  */
 interface IJiCe {
     /** 規剘／版本無關之設計顯示名（本地化由此向上委派）。 */
@@ -25,9 +25,6 @@ interface IJiCe {
     /** 暫存期中組裝後續選單（賽局內暫存之計策須為 this）。 */
     function buildPlayerMenu(actor:IPlayer):IPlayerMenu;
 
-    /**
-     * {@code leaf}：通常為 {@link PlayerMenuKind.JiCeStagingSubmit}（機械鍵見 {@link IPlayerMenuEntry#decisionToken}）。
-     * {@code formStringListFields}：與 {@link MenuFormWidget.GeneralMultiPick} 鍵 {@link MenuFieldIds.JiCeStagingGenerals} 對齊。
-     */
-    function resolveChoice(actor:IPlayer, leaf:IPlayerMenuEntry, ?formStringListFields:Map<String, Array<String>>):Void;
+    /** {@code leaf}：通常為 {@link PlayerMenuKind.JiCeStagingSubmit}（機械鍵見 {@link IPlayerMenuEntry#decisionToken}；複選見 {@link IPlayerMenuEntry#formStringListFields}）。 */
+    function resolveChoice(actor:IPlayer, leaf:IPlayerMenuEntry):Void;
 }

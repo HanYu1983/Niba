@@ -58,7 +58,7 @@ class RingLootForkTileEvent implements ITileEvent {
     return new PlayerMenu(actor, "evt-" + registryKey(), roots);
   }
 
-  public function resolveChoice(actor:IPlayer, leaf:IPlayerMenuEntry, ?formStringListFields:Map<String, Array<String>>):Void {
+  public function resolveChoice(actor:IPlayer, leaf:IPlayerMenuEntry):Void {
     if (leaf.kind() != TileEventPick)
       throw "RingLootForkTileEvent.resolveChoice: 預期 TileEventPick 葉";
     var tok = leaf.decisionToken();
@@ -71,7 +71,7 @@ class RingLootForkTileEvent implements ITileEvent {
         if (ruler.roster().length == 0)
           ruler.grantTroops(15);
         else {
-          var ids = parseTileEventGeneralIds(formStringListFields, ruler);
+          var ids = parseTileEventGeneralIds(leaf.formStringListFields(), ruler);
           if (ids.length != 1)
             throw "RingLootForkTileEvent.resolveChoice: 取軍資須恰好選擇一名麾下武將";
           ruler.grantTroops(15);

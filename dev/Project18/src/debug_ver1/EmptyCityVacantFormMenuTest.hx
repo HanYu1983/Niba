@@ -17,7 +17,7 @@ import impl_ver1.Monarch;
 
 /**
  * 空城進駐：單一 menuNode 內 {@link MenuFormWidget.GeneralMultiPick}（預設為城中駐將∩麾下）+
- * 兵力／糧食 Slider；{@link PlayerMenuKind.EmptyCityOccupySubmit} 須同附數值與駐將列表。
+ * 兵力／糧食 Slider；送出前將數值／駐將列表寫入 {@link IPlayerMenuEntry#setFormNumericFields}／{@link IPlayerMenuEntry#setFormStringListFields}（鍵對齊 {@link GameMatchCore} 之 field 常數）。
  */
 class EmptyCityVacantFormMenuTest {
   static inline var RING_LEN = 10;
@@ -63,7 +63,10 @@ class EmptyCityVacantFormMenuTest {
     var pickLists = new Map<String, Array<String>>();
     pickLists.set(GameMatchCore.EMPTY_CITY_GARRISON_FIELD, ["g-a", "g-b"]);
 
-    match.applyMenuLeaf(player, requireLeafKind(menu, EmptyCityOccupySubmit), null, null, fm, pickLists);
+    var occupyLeaf = requireLeafKind(menu, EmptyCityOccupySubmit);
+    occupyLeaf.setFormNumericFields(fm);
+    occupyLeaf.setFormStringListFields(pickLists);
+    match.applyMenuLeaf(player, occupyLeaf);
 
     if (match.forceGetPendingEmptyCityOccupyTile() != null)
       throw "EmptyCityVacantFormMenuTest: 結算後應清除 pending";

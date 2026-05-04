@@ -68,7 +68,8 @@ class TwoPlayerJiCeStagingMoveConfirmTest {
     var pickLeaf = PlayerMenuFind.findJiCeStagingSubmitLeaf(menuPick);
     var form = new Map<String, Array<String>>();
     form.set(MenuFieldIds.JiCeStagingGenerals, ["g-one"]);
-    match.applyMenuLeaf(actorAtk, pickLeaf, null, null, null, form);
+    pickLeaf.setFormStringListFields(form);
+    match.applyMenuLeaf(actorAtk, pickLeaf);
 
     if (match.forceGetPendingJiCe() != null)
       throw "TwoPlayerJiCeStagingMoveConfirmTest: 選將後應清除 forceGetPendingJiCe";

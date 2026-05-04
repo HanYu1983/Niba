@@ -70,7 +70,7 @@ class LuoshiJiCe implements IJiCe {
     return new PlayerMenu(actor, "jice-" + registryKey(), [root]);
   }
 
-  public function resolveChoice(actor:IPlayer, leaf:IPlayerMenuEntry, ?formStringListFields:Map<String, Array<String>>):Void {
+  public function resolveChoice(actor:IPlayer, leaf:IPlayerMenuEntry):Void {
     if (gameMatch._pendingJiCe != this)
       throw "LuoshiJiCe.resolveChoice: pendingJiCe mismatch";
     if (leaf.kind() != JiCeStagingSubmit)
@@ -80,7 +80,7 @@ class LuoshiJiCe implements IJiCe {
     if (tid == null)
       throw "LuoshiJiCe.resolveChoice: missing staging target";
 
-    var choiceId = gameMatch.parseJiCeStagingGeneralIds(formStringListFields);
+    var choiceId = gameMatch.parseJiCeStagingGeneralIds(leaf.formStringListFields());
 
     var pickedLoss:Null<Int> = null;
     for (r in gameMatch._jiCeStagingRows)

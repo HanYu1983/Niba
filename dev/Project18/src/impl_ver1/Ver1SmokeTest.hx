@@ -37,7 +37,8 @@ class Ver1SmokeTest {
     var pickLeaf = findJiCeStagingSubmitLeaf(match.createPlayerMenu(player));
     var form = new Map<String, Array<String>>();
     form.set(MenuFieldIds.JiCeStagingGenerals, ["g-might-high"]);
-    match.applyMenuLeaf(player, pickLeaf, null, null, null, form);
+    pickLeaf.setFormStringListFields(form);
+    match.applyMenuLeaf(player, pickLeaf);
 
     if (match.forceGetPendingJiCe() != null)
       throw "Ver1SmokeTest: forceGetPendingJiCe 應已清除";
