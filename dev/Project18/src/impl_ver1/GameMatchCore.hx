@@ -255,14 +255,6 @@ class GameMatchCore implements IGameMatch {
     return _cityOwner.exists(at) && _cityOwner.get(at) == activeMonarch().id();
   }
 
-  function clampInt(v:Int, lo:Int, hi:Int):Int {
-    if (v < lo)
-      return lo;
-    if (v > hi)
-      return hi;
-    return v;
-  }
-
   function menuChoicesFromRoster(mon:Monarch):Array<MenuGeneralChoice> {
     var out:Array<MenuGeneralChoice> = [];
     for (g in mon.roster())
@@ -346,27 +338,6 @@ class GameMatchCore implements IGameMatch {
     throw 'GameMatchCore: 武將 "$gid" 非君主 $monarchId 麾下';
   }
 
-  function computeHostileCitySettlementSummary():String {
-    var tileIdx = _pendingHostileCityTileIndex != null ? _pendingHostileCityTileIndex : -1;
-    var tok = _hostileCityAttackerChoiceToken;
-    var atkG = _hostileCityAttackerGeneralIds.length > 0 ? _hostileCityAttackerGeneralIds[0] : "(無)";
-    switch tok {
-      case "pay_toll":
-        return '結算：過路費已付｜城池格 $tileIdx';
-      case "negotiate":
-        return '結算：談判（攻將 $atkG）｜協議草案已備';
-      case "attrition":
-        return '結算：消耗戰（攻將 $atkG）｜損耗預估完成';
-      case "siege":
-        return '結算：攻城戰（攻將 $atkG）｜城防推演完成';
-      case "duel":
-        var defG = _hostileCityDefenderGeneralId != null ? _hostileCityDefenderGeneralId : "?";
-        return '結算：單挑（攻將 $atkG vs 守將 $defG）｜勝負已裁定';
-      default:
-        throw 'GameMatchCore.computeHostileCitySettlementSummary: 未知選項 $tok';
-    }
-  }
-
   function handleHostileCityAttackerPick(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
     if (_pendingHostileCityTileIndex == null || _hostileCityPhase != AttackerChoosing)
       throw "GameMatchCore: HostileCityAttackerPick 與對峙階段不符";
@@ -390,6 +361,7 @@ class GameMatchCore implements IGameMatch {
     _hostileCityAttackerGeneralIds = picks.copy();
     _hostileCityAwaitingDuel = tok == "duel";
     _hostileCityPhase = DefenderResponse;
+    GameMatchVer1Ops.onHostileCityAttackerConfirmed(this, actor, menuNode);
     syncActiveSliceAfterMenuLeaf(HostileCityAttackerPick);
   }
 
@@ -398,8 +370,9 @@ class GameMatchCore implements IGameMatch {
       throw "GameMatchCore: HostileCityDefenderAck 與對峙階段不符";
     if (_hostileCityAwaitingDuel)
       throw "GameMatchCore: 單挑時不可使用守方簡認確認";
-    _hostileCitySettlementSummary = computeHostileCitySettlementSummary();
+    _hostileCitySettlementSummary = GameMatchVer1Ops.computeHostileCitySettlementSummary(this);
     _hostileCityPhase = AttackerSettlement;
+    GameMatchVer1Ops.onHostileCityDefenderAck(this, actor, menuNode);
     syncActiveSliceAfterMenuLeaf(HostileCityDefenderAck);
   }
 
@@ -413,14 +386,16 @@ class GameMatchCore implements IGameMatch {
       throw "GameMatchCore: 守方單挑須恰好選擇一名武將";
     assertGeneralOwnedBy(_hostileCityDefenderId, picks[0]);
     _hostileCityDefenderGeneralId = picks[0];
-    _hostileCitySettlementSummary = computeHostileCitySettlementSummary();
+    _hostileCitySettlementSummary = GameMatchVer1Ops.computeHostileCitySettlementSummary(this);
     _hostileCityPhase = AttackerSettlement;
+    GameMatchVer1Ops.onHostileCityDefenderDuelPickConfirmed(this, actor, menuNode);
     syncActiveSliceAfterMenuLeaf(HostileCityDefenderPickSubmit);
   }
 
   function handleHostileCitySettlementAck(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
     if (_pendingHostileCityTileIndex == null || _hostileCityPhase != AttackerSettlement)
       throw "GameMatchCore: HostileCitySettlementAck 與對峙階段不符";
+    GameMatchVer1Ops.applyHostileCitySettlementAck(this, actor, menuNode);
     clearHostileCityConfrontation();
     _activeSliceComplete = true;
     syncActiveSliceAfterMenuLeaf(HostileCitySettlementAck);
@@ -468,16 +443,11 @@ class GameMatchCore implements IGameMatch {
     if (_pendingFriendlyCityTileIndex != null) {
       var fidx = _pendingFriendlyCityTileIndex;
       var rulerF = cast(activeMonarch(), Monarch);
-      var cityTroop = forceGetCityStoredTroops(fidx);
-      var cityGrain = forceGetCityStoredGrain(fidx);
-      var maxTroopSlider = rulerF.troops();
-      var maxGrainSlider = rulerF.grain();
-      var defTroop = clampInt(cityTroop, 0, maxTroopSlider);
-      var defGrain = clampInt(cityGrain, 0, maxGrainSlider);
+      var caps = GameMatchVer1Ops.friendlyCityDispatchSliderDefaults(this, fidx, rulerF);
       var dispatchApplyLeaf = createPlayerMenuEntry(FriendlyCityDispatchApply, "確認調度", true, "dispatch_apply");
       var dispatchWidgets:Array<MenuFormWidget> = [
-        Slider("調度兵力（目標城池兵力）", 0, maxTroopSlider, 1, defTroop),
-        Slider("調度糧食（目標城池糧食）", 0, maxGrainSlider, 1, defGrain),
+        Slider("調度兵力（目標城池兵力）", 0, caps.maxTroopSlider, 1, caps.defTroop),
+        Slider("調度糧食（目標城池糧食）", 0, caps.maxGrainSlider, 1, caps.defGrain),
         Button(dispatchApplyLeaf),
       ];
       roots.push(createPlayerMenuNode("調度", null, [], dispatchWidgets));
@@ -626,20 +596,6 @@ class GameMatchCore implements IGameMatch {
     _hostileCitySettlementSummary = "";
   }
 
-  function enterHostileCityConfrontation(idx:TileIndex):Void {
-    if (!_cityOwner.exists(idx))
-      throw "GameMatchCore.enterHostileCityConfrontation: city has no owner";
-    _pendingHostileCityTileIndex = idx;
-    _hostileCityPhase = AttackerChoosing;
-    _hostileCityAttackerId = activeMonarch().id();
-    _hostileCityDefenderId = _cityOwner.get(idx);
-    _hostileCityAwaitingDuel = false;
-    _hostileCityAttackerChoiceToken = "";
-    _hostileCityAttackerGeneralIds = [];
-    _hostileCityDefenderGeneralId = null;
-    _hostileCitySettlementSummary = "";
-  }
-
   function considerLandingAt(idx:TileIndex):Void {
     _pendingTileEvent = null;
     _pendingEmptyCityTileIndex = null;
@@ -650,12 +606,7 @@ class GameMatchCore implements IGameMatch {
       case Event:
         _pendingTileEvent = _tileEventByIndex.get(idx);
       case City:
-        if (_cityOwner.exists(idx) && _cityOwner.get(idx) == activeMonarch().id())
-          _pendingFriendlyCityTileIndex = idx;
-        else if (_cityOwner.exists(idx) && !cityVacantNoGarrison(idx))
-          enterHostileCityConfrontation(idx);
-        else if (cityVacantNoGarrison(idx))
-          _pendingEmptyCityTileIndex = idx;
+        GameMatchVer1Ops.considerLandingAtCityTile(this, idx);
       case Plain:
       case Battle:
       case Scheme:
@@ -749,14 +700,7 @@ class GameMatchCore implements IGameMatch {
     var garrisonIds = parsed.garrisonIds;
     if (tt < 0 || gg < 0 || tt > ruler.troops() || gg > ruler.grain())
       throw "GameMatchCore: 進駐數值超出君主可用資源";
-    ruler.reduceTroops(tt);
-    ruler.reduceGrain(gg);
-    var prevT = _cityStockTroops.exists(idx) ? _cityStockTroops.get(idx) : 0;
-    var prevG = _cityStockGrain.exists(idx) ? _cityStockGrain.get(idx) : 0;
-    _cityStockTroops.set(idx, prevT + tt);
-    _cityStockGrain.set(idx, prevG + gg);
-    _cityOwner.set(idx, ruler.id());
-    _cityGarrisonGenerals.set(idx, garrisonIds.copy());
+    GameMatchVer1Ops.applyEmptyCityOccupySubmit(this, idx, ruler, tt, gg, garrisonIds);
     _pendingEmptyCityTileIndex = null;
     _activeSliceComplete = true;
     syncActiveSliceAfterMenuLeaf(EmptyCityOccupySubmit);
@@ -765,6 +709,7 @@ class GameMatchCore implements IGameMatch {
   function handleEmptyCityOccupyAbort(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
     if (_pendingEmptyCityTileIndex == null)
       throw "GameMatchCore: EmptyCityOccupyAbort 但無 pending 空城";
+    GameMatchVer1Ops.onEmptyCityOccupyAbort(this);
     _pendingEmptyCityTileIndex = null;
     _activeSliceComplete = true;
     syncActiveSliceAfterMenuLeaf(EmptyCityOccupyAbort);
@@ -788,22 +733,14 @@ class GameMatchCore implements IGameMatch {
       throw "GameMatchCore: 自君主池調出兵力不足";
     if (dG > ruler.grain())
       throw "GameMatchCore: 自君主池調出糧食不足";
-    if (dT > 0)
-      ruler.reduceTroops(dT);
-    else if (dT < 0)
-      ruler.grantTroops(-dT);
-    if (dG > 0)
-      ruler.reduceGrain(dG);
-    else if (dG < 0)
-      ruler.grantGrain(-dG);
-    _cityStockTroops.set(idx, tt);
-    _cityStockGrain.set(idx, gg);
+    GameMatchVer1Ops.applyFriendlyCityDispatch(this, idx, ruler, tt, gg);
     syncActiveSliceAfterMenuLeaf(FriendlyCityDispatchApply);
   }
 
   function handleFriendlyCityVisitEnd(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
     if (_pendingFriendlyCityTileIndex == null)
       throw "GameMatchCore: FriendlyCityVisitEnd 但無 pending 我方城池拜訪";
+    GameMatchVer1Ops.onFriendlyCityVisitEnd(this);
     _pendingFriendlyCityTileIndex = null;
     _activeSliceComplete = true;
     syncActiveSliceAfterMenuLeaf(FriendlyCityVisitEnd);
