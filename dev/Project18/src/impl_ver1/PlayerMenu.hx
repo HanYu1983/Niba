@@ -4,6 +4,7 @@ import game.IPlayer;
 import game.IPlayerMenu;
 import game.IPlayerMenuEntry;
 import game.IPlayerMenuNode;
+import game.MenuFormWidget;
 
 class PlayerMenu implements IPlayerMenu {
   var _player:IPlayer;
@@ -36,8 +37,13 @@ class PlayerMenu implements IPlayerMenu {
       var leaf = n.leaf();
       if (leaf != null)
         acc.push(leaf);
-      else
-        collectLeaves(n.children(), acc);
+      collectLeaves(n.children(), acc);
+      for (w in n.formWidgets())
+        switch w {
+          case Button(entry):
+            acc.push(entry);
+          case Slider(_, _, _, _, _):
+        }
     }
   }
 }

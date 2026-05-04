@@ -14,6 +14,7 @@ import game.IPlayerMenuEntry;
 import game.IPlayerMenuNode;
 import game.ITile;
 import game.ITileEvent;
+import game.MenuFormWidget;
 import game.PlayerMenuKind;
 import game.TileKind;
 
@@ -24,6 +25,11 @@ import game.TileKind;
 @:allow(impl_ver1)
 class GameMatchCore implements IGameMatch {
   public static inline var DEFAULT_MOVE_DELTA = 3;
+
+  /** 與空城進駐表單 {@link MenuFormWidget.Slider} fieldId 對齊。 */
+  public static inline var OCCUPY_FIELD_TROOPS:String = "occupy_troops";
+
+  public static inline var OCCUPY_FIELD_GRAIN:String = "occupy_grain";
 
   var _board:Board;
   var _monarchs:Array<Monarch>;
@@ -41,6 +47,13 @@ class GameMatchCore implements IGameMatch {
 
   var _ownedJiCe:Map<MonarchId, Array<IJiCe>>;
 
+  /** 城池格索引 → 駐守武將 id；無鍵視為無將（空城語意）。 */
+  var _cityStationedGeneral:Map<Int, GeneralId>;
+
+  var _cityStockTroops:Map<Int, Int>;
+  var _cityStockGrain:Map<Int, Int>;
+  var _pendingEmptyCityTileIndex:Null<TileIndex>;
+
   public function new() {
     _board = cast null;
     _monarchs = [];
@@ -51,6 +64,10 @@ class GameMatchCore implements IGameMatch {
     _pendingTileEvent = null;
     clearTileEventStagingRows();
     _ownedJiCe = new Map();
+    _cityStationedGeneral = new Map();
+    _cityStockTroops = new Map();
+    _cityStockGrain = new Map();
+    _pendingEmptyCityTileIndex = null;
     clearJiCeStaging();
   }
 
@@ -109,8 +126,8 @@ class GameMatchCore implements IGameMatch {
   public function createPlayerMenuEntry(kind:PlayerMenuKind, caption:String, enabled:Bool, ?decisionToken:String):IPlayerMenuEntry
     return new PlayerMenuEntry(kind, caption, enabled, decisionToken);
 
-  public function createPlayerMenuNode(caption:String, leaf:Null<IPlayerMenuEntry>, children:Array<IPlayerMenuNode>):IPlayerMenuNode
-    return new PlayerMenuNode(caption, leaf, children);
+  public function createPlayerMenuNode(caption:String, leaf:Null<IPlayerMenuEntry>, children:Array<IPlayerMenuNode>, ?formWidgets:Array<MenuFormWidget>):IPlayerMenuNode
+    return new PlayerMenuNode(caption, leaf, children, formWidgets);
 
   function requireOwnerMonarch(ownerMonarchId:MonarchId):Void {
     for (mon in _monarchs)
@@ -156,6 +173,32 @@ class GameMatchCore implements IGameMatch {
   public function forceTileEventStagingPreviewRows():Array<IJiCeStagingPreviewRow>
     return _tileEventStagingRows.copy();
 
+  public function cityVacantNoGarrison(at:TileIndex):Bool {
+    if (_board == null)
+      return false;
+    var tile = _board.tileAt(at);
+    if (tile.kind() != City)
+      return false;
+    return !_cityStationedGeneral.exists(at);
+  }
+
+  public function forceGetPendingEmptyCityOccupyTile():Null<TileIndex>
+    return _pendingEmptyCityTileIndex;
+
+  public function forceGetCityStoredTroops(at:TileIndex):Int
+    return _cityStockTroops.exists(at) ? _cityStockTroops.get(at) : 0;
+
+  public function forceGetCityStoredGrain(at:TileIndex):Int
+    return _cityStockGrain.exists(at) ? _cityStockGrain.get(at) : 0;
+
+  public function forceAssignCityGarrison(at:TileIndex, generalId:GeneralId):Void {
+    if (_board == null)
+      throw "GameMatchCore.forceAssignCityGarrison: board not set";
+    if (_board.tileAt(at).kind() != City)
+      throw "GameMatchCore.forceAssignCityGarrison: not a City tile";
+    _cityStationedGeneral.set(at, generalId);
+  }
+
   public function createPlayerMenu(actor:IPlayer):IPlayerMenu {
     var pend = _pendingTileEvent;
     var jiPending = _pendingJiCe;
@@ -165,8 +208,26 @@ class GameMatchCore implements IGameMatch {
       ctx += "-evt-" + pend.registryKey();
     if (stagingActive && jiPending != null)
       ctx += "-jice-" + jiPending.registryKey();
+    if (_pendingEmptyCityTileIndex != null)
+      ctx += "-empty-city-" + _pendingEmptyCityTileIndex;
 
     var roots:Array<IPlayerMenuNode> = [];
+
+    if (_pendingEmptyCityTileIndex != null) {
+      var idx = _pendingEmptyCityTileIndex;
+      var ruler = cast(activeMonarch(), Monarch);
+      var troopMax = ruler.troops();
+      var grainMax = ruler.grain();
+      var confirmLeaf = createPlayerMenuEntry(EmptyCityOccupySubmit, "確認進駐（套用滑桿數值）", true, "confirm_occupy");
+      var abortLeaf = createPlayerMenuEntry(EmptyCityOccupyAbort, "離開（不放資源）", true, "abort_occupy");
+      var formParts:Array<MenuFormWidget> = [
+        Slider(OCCUPY_FIELD_TROOPS, "進駐兵力（君主池扣除）", 0, troopMax, 1),
+        Slider(OCCUPY_FIELD_GRAIN, "進駐糧食（君主池扣除）", 0, grainMax, 1),
+        Button(confirmLeaf),
+        Button(abortLeaf),
+      ];
+      roots.push(createPlayerMenuNode('空城進駐（格 $idx）', null, [], formParts));
+    }
 
     if (pend != null) {
       if (_tileEventStagingRows.length > 0) {
@@ -191,8 +252,8 @@ class GameMatchCore implements IGameMatch {
       roots.push(createPlayerMenuNode("計策：" + jiPending.designLabel(), null, jiRoots));
     }
 
-    var blockBasics = pend != null || stagingActive;
-    var jiEnabledBase = !stagingActive && pend == null;
+    var blockBasics = pend != null || stagingActive || _pendingEmptyCityTileIndex != null;
+    var jiEnabledBase = !stagingActive && pend == null && _pendingEmptyCityTileIndex == null;
 
     var ownedJiCe = availableJiCe(actor.monarchId());
     var jiChildren:Array<IPlayerMenuNode> = [];
@@ -221,7 +282,8 @@ class GameMatchCore implements IGameMatch {
       createPlayerMenuNode("計策", null, jiChildren),
       createPlayerMenuNode("狀態", createPlayerMenuEntry(Status, "狀態（前端用，無後端結算）", true), ([] : Array<IPlayerMenuNode>)),
     ];
-    var allowConfirm = isActivePlayerSliceComplete() && pend == null && !stagingActive;
+    var allowConfirm =
+      isActivePlayerSliceComplete() && pend == null && !stagingActive && _pendingEmptyCityTileIndex == null;
     if (allowConfirm)
       actions.push(createPlayerMenuNode("結束", createPlayerMenuEntry(ConfirmDone, "結束本階段", true), ([] : Array<IPlayerMenuNode>)));
 
@@ -238,6 +300,8 @@ class GameMatchCore implements IGameMatch {
       case Status:
       case Move:
       case TileEventPick:
+      case EmptyCityOccupySubmit:
+      case EmptyCityOccupyAbort:
     }
   }
 
@@ -245,16 +309,24 @@ class GameMatchCore implements IGameMatch {
   public function settleAfterMoveLanding():Void {
     var ruler = cast(activeMonarch(), Monarch);
     considerLandingAt(ruler.pawnIndex());
-    _activeSliceComplete = _pendingTileEvent == null;
+    _activeSliceComplete = _pendingTileEvent == null && _pendingEmptyCityTileIndex == null;
   }
 
   function considerLandingAt(idx:TileIndex):Void {
     _pendingTileEvent = null;
     clearTileEventStagingRows();
+    _pendingEmptyCityTileIndex = null;
     var tile = board().tileAt(idx);
-    if (tile.kind() != Event)
-      return;
-    _pendingTileEvent = _tileEventByIndex.get(idx);
+    switch tile.kind() {
+      case Event:
+        _pendingTileEvent = _tileEventByIndex.get(idx);
+      case City:
+        if (cityVacantNoGarrison(idx))
+          _pendingEmptyCityTileIndex = idx;
+      case Plain:
+      case Battle:
+      case Scheme:
+    }
   }
 
   function handleTileEventPick(actor:IPlayer, leaf:IPlayerMenuEntry):Void {
@@ -297,6 +369,36 @@ class GameMatchCore implements IGameMatch {
     throw "GameMatchCore: JiCePick 但無進行中之計策暫存或事件選將暫存";
   }
 
+  function handleEmptyCityOccupySubmit(actor:IPlayer, leaf:IPlayerMenuEntry, formNumericFields:Null<Map<String, Int>>):Void {
+    if (_pendingEmptyCityTileIndex == null)
+      throw "GameMatchCore: EmptyCityOccupySubmit 但無 pending 空城";
+    if (formNumericFields == null)
+      throw "GameMatchCore: EmptyCityOccupySubmit 須附 formNumericFields";
+    var idx = _pendingEmptyCityTileIndex;
+    var tt = formNumericFields.exists(OCCUPY_FIELD_TROOPS) ? formNumericFields.get(OCCUPY_FIELD_TROOPS) : 0;
+    var gg = formNumericFields.exists(OCCUPY_FIELD_GRAIN) ? formNumericFields.get(OCCUPY_FIELD_GRAIN) : 0;
+    var ruler = cast(activeMonarch(), Monarch);
+    if (tt < 0 || gg < 0 || tt > ruler.troops() || gg > ruler.grain())
+      throw "GameMatchCore: 進駐數值超出君主可用資源";
+    ruler.reduceTroops(tt);
+    ruler.reduceGrain(gg);
+    var prevT = _cityStockTroops.exists(idx) ? _cityStockTroops.get(idx) : 0;
+    var prevG = _cityStockGrain.exists(idx) ? _cityStockGrain.get(idx) : 0;
+    _cityStockTroops.set(idx, prevT + tt);
+    _cityStockGrain.set(idx, prevG + gg);
+    _pendingEmptyCityTileIndex = null;
+    _activeSliceComplete = true;
+    syncActiveSliceAfterMenuLeaf(EmptyCityOccupySubmit);
+  }
+
+  function handleEmptyCityOccupyAbort(actor:IPlayer, leaf:IPlayerMenuEntry):Void {
+    if (_pendingEmptyCityTileIndex == null)
+      throw "GameMatchCore: EmptyCityOccupyAbort 但無 pending 空城";
+    _pendingEmptyCityTileIndex = null;
+    _activeSliceComplete = true;
+    syncActiveSliceAfterMenuLeaf(EmptyCityOccupyAbort);
+  }
+
   /**
    * 終局規剘：僅在仍為 {@link MatchTerminationReason.NotEnded} 時呼叫；已終局不重算。
    */
@@ -314,7 +416,7 @@ class GameMatchCore implements IGameMatch {
   public function getTerminationReason():MatchTerminationReason
     return _terminationReason;
 
-  public function applyMenuLeaf(actor:IPlayer, leaf:IPlayerMenuEntry, ?playedJiCe:IJiCe, ?jiCeTargetMonarchId:MonarchId):Void {
+  public function applyMenuLeaf(actor:IPlayer, leaf:IPlayerMenuEntry, ?playedJiCe:IJiCe, ?jiCeTargetMonarchId:MonarchId, ?formNumericFields:Map<String, Int>):Void {
     if (!leaf.isEnabled())
       throw "GameMatchCore.applyMenuLeaf: leaf disabled (" + leaf.caption() + ")";
 
@@ -341,6 +443,10 @@ class GameMatchCore implements IGameMatch {
       case ConfirmDone:
         syncActiveSliceAfterMenuLeaf(ConfirmDone);
         advanceActiveMonarchAfterConfirmDone();
+      case EmptyCityOccupySubmit:
+        handleEmptyCityOccupySubmit(actor, leaf, formNumericFields);
+      case EmptyCityOccupyAbort:
+        handleEmptyCityOccupyAbort(actor, leaf);
     }
     evaluateTermination();
   }

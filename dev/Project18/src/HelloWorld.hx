@@ -13,6 +13,7 @@ import game.IPlayer;
 import game.IPlayerMenu;
 import game.IPlayerMenuEntry;
 import game.IPlayerMenuNode;
+import game.MenuFormWidget;
 import game.PlayerMenuKind;
 
 class HelloWorld {
@@ -22,6 +23,7 @@ class HelloWorld {
     debug_ver1.TwoPlayerJiCeStagingMoveConfirmTest.run();
     debug_ver1.TenEventTilesMenuFlowTest.run();
     debug_ver1.GeneralChestTileEventMenuTest.run();
+    debug_ver1.EmptyCityVacantFormMenuTest.run();
     trace("Hello world");
   }
 
@@ -48,6 +50,9 @@ class HelloWorld {
     var _mk:PlayerMenuKind = Move;
     var _mtk:PlayerMenuKind = TileEventPick;
     var _mjk:PlayerMenuKind = JiCePick;
+    var _mec1:PlayerMenuKind = EmptyCityOccupySubmit;
+    var _mec2:PlayerMenuKind = EmptyCityOccupyAbort;
+    var _fw:MenuFormWidget = Slider("f", "l", 0, 1, 1);
     var _ver1Game:impl_ver1.Game = cast null;
     var _ver1Match:impl_ver1.GameMatchCore = cast null;
   }

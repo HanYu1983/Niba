@@ -1,6 +1,7 @@
 package game;
 
 import game.GameIds;
+import game.MenuFormWidget;
 import game.IJiCe;
 import game.IPlayer;
 import game.ITileEvent;
@@ -96,6 +97,24 @@ interface IGameMatch {
     /** 除錯／測試：格子事件選將暫存列；無暫存或非選將流程時為空。 */
     function forceTileEventStagingPreviewRows():Array<IJiCeStagingPreviewRow>;
 
+    /**
+     * 該索引格子為 {@link TileKind.City} 且無武將駐守時為 true；
+     * 非城池或已有駐將（{@link #forceAssignCityGarrison}）為 false。
+     */
+    function cityVacantNoGarrison(at:TileIndex):Bool;
+
+    /** 除錯／測試：踩中空城後待進駐表單結算時為該格索引；否則 null。 */
+    function forceGetPendingEmptyCityOccupyTile():Null<TileIndex>;
+
+    /** 除錯／測試：城池格累計進駐兵力（無紀錄為 0）。 */
+    function forceGetCityStoredTroops(at:TileIndex):Int;
+
+    /** 除錯／測試：城池格累計進駐糧食（無紀錄為 0）。 */
+    function forceGetCityStoredGrain(at:TileIndex):Int;
+
+    /** 除錯／測試：標記城池格已有武將駐守（非空城）；供分支測試用。 */
+    function forceAssignCityGarrison(at:TileIndex, generalId:GeneralId):Void;
+
     /** 單格；多格按索引有序組裝後再交由 createBoard。 */
     function createTile(index:TileIndex, kind:TileKind):ITile;
 
@@ -120,8 +139,8 @@ interface IGameMatch {
     /** 單列選單條目；通常由 createPlayerMenu 內部組裝，亦允許模組化注入。 */
     function createPlayerMenuEntry(kind:PlayerMenuKind, caption:String, enabled:Bool, ?decisionToken:String):IPlayerMenuEntry;
 
-    /** 巢狀選單節點。 */
-    function createPlayerMenuNode(caption:String, leaf:Null<IPlayerMenuEntry>, children:Array<IPlayerMenuNode>):IPlayerMenuNode;
+    /** 巢狀選單節點；{@code formWidgets} 非空時為表單語意節點。 */
+    function createPlayerMenuNode(caption:String, leaf:Null<IPlayerMenuEntry>, children:Array<IPlayerMenuNode>, ?formWidgets:Array<MenuFormWidget>):IPlayerMenuNode;
 
     /**
      * 依當前賽局×操作者建立主選單快照（移動／計策／狀態／確認等）。
@@ -131,6 +150,7 @@ interface IGameMatch {
 
     /**
      * 對本局賽局結算選單葉節點（移動、計策、狀態、確認等），並視規剘修改棋子／兵力／切片旗標等。
+     * {@link PlayerMenuKind.EmptyCityOccupySubmit} 須附 {@code formNumericFields}（欄位鍵見規剘／選單組裝）。
      */
-    function applyMenuLeaf(actor:IPlayer, leaf:IPlayerMenuEntry, ?playedJiCe:IJiCe, ?jiCeTargetMonarchId:MonarchId):Void;
+    function applyMenuLeaf(actor:IPlayer, leaf:IPlayerMenuEntry, ?playedJiCe:IJiCe, ?jiCeTargetMonarchId:MonarchId, ?formNumericFields:Map<String, Int>):Void;
 }

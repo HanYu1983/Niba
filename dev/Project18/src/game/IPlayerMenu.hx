@@ -18,8 +18,8 @@ interface IPlayerMenu {
     function rootNodes():Array<IPlayerMenuNode>;
 
     /**
-     * 扁平投影（僅含葉條目），供簡易清單 UI 或舊邏輯走訪。
-     * 預設實作可由 rootNodes DFS 合成；順序為前序深優先。
+     * 扁平投影（含傳統葉節點與 {@link IPlayerMenuNode#formWidgets} 內 {@link MenuFormWidget.Button}），
+     * 供簡易清單 UI 或舊邏輯走訪；順序為前序深優先後再接該節點之表單按鈕。
      */
     function entries():Array<IPlayerMenuEntry>;
 }

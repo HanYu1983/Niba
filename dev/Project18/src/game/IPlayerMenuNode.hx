@@ -14,4 +14,10 @@ interface IPlayerMenuNode {
     function leaf():Null<IPlayerMenuEntry>;
 
     function children():Array<IPlayerMenuNode>;
+
+    /**
+     * 表單／複合節點專用之嵌件（滑桿等）；無則空陣列。
+     * 慣例：同節點若帶 {@link #formWidgets}，多為 leaf=null 且 children 可空。
+     */
+    function formWidgets():Array<MenuFormWidget>;
 }

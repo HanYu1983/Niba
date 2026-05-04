@@ -46,6 +46,14 @@ class Monarch implements IMonarch {
       _troops = 0;
   }
 
+  public function reduceGrain(loss:Int):Void {
+    if (loss < 0)
+      throw "Monarch.reduceGrain: loss negative";
+    _grain -= loss;
+    if (_grain < 0)
+      _grain = 0;
+  }
+
   public function advanceOnBoard(delta:Int, ringLen:Int):Void {
     if (ringLen <= 0)
       throw "Monarch.advanceOnBoard: ringLen must be positive";
