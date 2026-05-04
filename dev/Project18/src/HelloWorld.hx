@@ -27,6 +27,7 @@ class HelloWorld {
     debug_ver1.EmptyCityVacantFormMenuTest.run();
     debug_ver1.FriendlyOwnedCityDispatchMenuTest.run();
     debug_ver1.HostileCityConfrontMenuTest.run();
+    debug_ver1.RoadblockJiCeMovementTest.run();
     trace("Hello world");
   }
 

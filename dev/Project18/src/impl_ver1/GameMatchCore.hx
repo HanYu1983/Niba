@@ -6,6 +6,7 @@ import game.IGameMatch;
 import game.MatchTerminationReason;
 import game.IGeneral;
 import game.IJiCe;
+import game.IJiCeMovementStepHook;
 import game.IJiCeStagingPreviewRow;
 import game.IMonarch;
 import game.IPlayer;
@@ -49,6 +50,9 @@ class GameMatchCore implements IGameMatch {
   var _jiCeStagingRows:Array<IJiCeStagingPreviewRow>;
   var _ownedJiCe:Map<MonarchId, Array<IJiCe>>;
 
+  /** --- 移動逐步結算：已登錄之計策／場地效果勾子 --- */
+  var _movementStepHooks:Array<IJiCeMovementStepHook>;
+
   /** --- 城池：駐軍、儲備、屬主；踩中空城／我方城 pending --- */
   /** 城池格索引 → 駐守武將 id 列表；無鍵或空陣列視為無駐將（空城語意）。 */
   var _cityGarrisonGenerals:Map<Int, Array<GeneralId>>;
@@ -84,6 +88,7 @@ class GameMatchCore implements IGameMatch {
     _pendingEmptyCityTileIndex = null;
     _cityOwner = new Map();
     _pendingFriendlyCityTileIndex = null;
+    _movementStepHooks = [];
     clearHostileCityConfrontation();
     clearJiCeStaging();
   }
@@ -246,6 +251,23 @@ class GameMatchCore implements IGameMatch {
   private function hostileCityPublishSettlementPreview():Void {
     _hostileCitySettlementSummary = hostileCityComputeSettlementSummaryText();
     _hostileCityPhase = AttackerSettlement;
+  }
+
+  public function movementStepHooks():Array<IJiCeMovementStepHook>
+    return _movementStepHooks.copy();
+
+  public function forceRegisterMovementStepHook(h:IJiCeMovementStepHook):Void {
+    for (x in _movementStepHooks)
+      if (x == h)
+        return;
+    _movementStepHooks.push(h);
+  }
+
+  public function forceUnregisterMovementStepHook(h:IJiCeMovementStepHook):Void {
+    var i = _movementStepHooks.length;
+    while (i-- > 0)
+      if (_movementStepHooks[i] == h)
+        _movementStepHooks.splice(i, 1);
   }
 
   public function forceBindTileEvent(at:TileIndex, handler:ITileEvent):Void {

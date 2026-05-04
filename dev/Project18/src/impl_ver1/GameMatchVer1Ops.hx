@@ -1,19 +1,43 @@
 package impl_ver1;
 
 import game.GameIds;
+import game.MovementStepOutcome;
 import game.IPlayer;
 import game.IPlayerMenuNode;
 
 /**
- * Ver1 規剘：終局、移動落地、進駐／調度時君主池與城池儲備的數值規剘；敵城對峙戰果套用鉤子。
+ * Ver1 規剘：終局、移動（逐步前進並呼叫 {@link game.IJiCeMovementStepHook}）、進駐／調度數值；敵城對峙戰果套用鉤子。
  * 落地分流與敵城 pending／結算文案組字由 {@link GameMatchCore} 私有方法集中管理；此地僅呼叫已暴露之私有行為（同套件）。
  */
 class GameMatchVer1Ops {
   public static function evaluateTermination(m:GameMatchCore):Void {}
 
+  /**
+   * 移動：依計畫步數逐一 {@link Monarch#advanceOnBoard(1, ringLen)}，每步落地後依序呼叫
+   * {@link game.IGameMatch#movementStepHooks} 快照；任一勾子回 {@link MovementStepOutcome.HaltRemainingSteps}
+   * 則不再消費後續步數。最後統一 {@link GameMatchCore#settleAfterMoveLanding}（與「一步走完 δ」語意相容）。
+   */
   public static function applyMenuLeafForMove(m:GameMatchCore, actor:IPlayer):Void {
     var ruler = cast(m.activeMonarch(), Monarch);
-    ruler.advanceOnBoard(GameMatchCore.DEFAULT_MOVE_DELTA, m.board().length());
+    var ringLen = m.board().length();
+    var planned = GameMatchCore.DEFAULT_MOVE_DELTA;
+    var stepOrdinal = 0;
+    while (stepOrdinal < planned) {
+      ruler.advanceOnBoard(1, ringLen);
+      stepOrdinal++;
+      var landIdx = ruler.pawnIndex();
+      var hooks = m.movementStepHooks();
+      var halt = false;
+      for (h in hooks) {
+        switch h.onMovementStepAfterLand(m, actor, stepOrdinal, planned, landIdx) {
+          case Continue:
+          case HaltRemainingSteps:
+            halt = true;
+        }
+      }
+      if (halt)
+        break;
+    }
     m.settleAfterMoveLanding();
   }
 

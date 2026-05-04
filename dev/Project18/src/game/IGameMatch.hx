@@ -7,6 +7,7 @@ import game.IPlayer;
 import game.ITileEvent;
 import game.IPlayerMenu;
 import game.IPlayerMenuEntry;
+import game.IJiCeMovementStepHook;
 import game.IJiCeStagingPreviewRow;
 import game.IBoard;
 import game.ITile;
@@ -65,6 +66,18 @@ interface IGameMatch {
      * 終局語意：進行中為 {@link MatchTerminationReason.NotEnded}；否則為平局或 {@link MatchTerminationReason.Victory}。
      */
     function getTerminationReason():MatchTerminationReason;
+
+    /**
+     * 當前已登錄、於「移動逐步前進」每步落地後會依序呼叫的勾子（回傳為拷貝快照）。
+     * 計策若需路障／提早止步等，應實作 {@link IJiCeMovementStepHook} 並於適當時機 {@link #forceRegisterMovementStepHook}。
+     */
+    function movementStepHooks():Array<IJiCeMovementStepHook>;
+
+    /** 除錯／測試／擴充：登錄移動逐步勾子（同一實例重複登錄應為 no-op）。 */
+    function forceRegisterMovementStepHook(h:IJiCeMovementStepHook):Void;
+
+    /** 除錯／測試／擴充：移除先前登錄之勾子。 */
+    function forceUnregisterMovementStepHook(h:IJiCeMovementStepHook):Void;
 
     /**
      * 除錯／測試／關卡組立：將事件腳本綁至環上索引（生產流程可改由劇本載入呼叫）。
