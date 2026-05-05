@@ -35,6 +35,8 @@ class HelloWorld {
     debug_ver1.HostileCityConfrontMenuTest.run();
     debug_ver1.RoadblockJiCeMovementTest.run();
     debug_ver1.MoveMenuHiddenUntilConfirmTest.run();
+    debug_ver1.RestMenuFlowTest.run();
+    debug_ver1.VillageMenuFlowTest.run();
     trace("Hello world");
 
     // --- HTML view demo ---
