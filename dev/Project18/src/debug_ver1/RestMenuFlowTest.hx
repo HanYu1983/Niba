@@ -10,20 +10,19 @@ import game.IPlayerMenu;
 import game.IPlayerMenuEntry;
 import game.IPlayerMenuNode;
 import game.ITile;
+import game.LevelKeys;
 import game.PlayerMenuKind;
 import game.PlayerMenuKind.Rest;
 import game.PlayerMenuKind.StagingSubmit;
 import game.TileKind;
-import impl_ver1.Game;
 
 /**
  * 指令菜單流程：休整 → 進入 staging → 出現提交鈕 → 提交後退出 staging。
  * 重點：測菜單流程，不檢查體力/資源結算結果。
  */
 class RestMenuFlowTest {
-  public static function testRestMenuFlow():Void {
-    var game:IGame = new Game();
-    var match:IGameMatch = game.createGameMatch(Game.LEVEL_KEY_EMPTY);
+  public static function testRestMenuFlow(game:IGame):Void {
+    var match:IGameMatch = game.createGameMatch(LevelKeys.EMPTY);
 
     var tiles:Array<ITile> = [];
     for (i in 0...8)

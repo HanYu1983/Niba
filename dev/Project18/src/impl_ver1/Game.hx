@@ -1,6 +1,7 @@
 package impl_ver1;
 
 import game.GameIds;
+import game.LevelKeys;
 import game.IGame;
 import game.IGameMatch;
 import game.ITile;
@@ -11,9 +12,6 @@ import impl_ver1.core.GameMatchCore;
  * Ver1：依 level_key 建立 {@link GameMatchCore} 並組立關卡局面。
  */
 class Game implements IGame {
-  /** 空白賽局：僅 {@link GameMatchCore} 初始化，供測試自行組局。 */
-  public static inline var LEVEL_KEY_EMPTY = "ver1/empty";
-
   public function new() {}
 
   public function createGameMatch(level_key:LevelKey):IGameMatch {
@@ -24,7 +22,7 @@ class Game implements IGame {
 
   function configureFromLevel(match:GameMatchCore, key:LevelKey):Void {
     switch key {
-      case LEVEL_KEY_EMPTY:
+      case LevelKeys.EMPTY:
         return;
       case "ver1/smoke":
         match.createMonarch("m-atk", 0, 0, 500, 80);

@@ -12,7 +12,7 @@ import game.PlayerMenuKind.LandingContinue;
 import game.PlayerMenuKind.TileEventPick;
 import game.ITile;
 import game.TileKind;
-import impl_ver1.Game;
+import game.LevelKeys;
 
 /**
  * {@link GeneralChestTileEvent}：落地→表單複選武將＋確認→結算兵力。
@@ -21,9 +21,8 @@ class GeneralChestTileEventMenuTest {
   static inline var RING_LEN = 10;
   static inline var LANDING_IDX = 3;
 
-  public static function testGeneralChestTileEventMenuFlow():Void {
-    var game:IGame = new Game();
-    var match:IGameMatch = game.createGameMatch(Game.LEVEL_KEY_EMPTY);
+  public static function testGeneralChestTileEventMenuFlow(game:IGame):Void {
+    var match:IGameMatch = game.createGameMatch(LevelKeys.EMPTY);
 
     var tiles:Array<ITile> = [];
     for (i in 0...RING_LEN)

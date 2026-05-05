@@ -18,16 +18,15 @@ import game.PlayerMenuKind.LandingContinue;
 import game.PlayerMenuKind.VillageConquer;
 import game.PlayerMenuKind.VillageTrade;
 import game.TileKind;
-import impl_ver1.Game;
+import game.LevelKeys;
 
 /**
  * 指令菜單流程：移動落在 Village → 出現村落指令（交易/攻占）→ 進 staging → 提交 → 村落 pending 清除 → 可結束。
  * 重點：只測菜單流程，不檢查交易/攻占的資源或兵力結算。
  */
 class VillageMenuFlowTest {
-  public static function testVillageMenuFlow():Void {
-    var game:IGame = new Game();
-    var match:IGameMatch = game.createGameMatch(Game.LEVEL_KEY_EMPTY);
+  public static function testVillageMenuFlow(game:IGame):Void {
+    var match:IGameMatch = game.createGameMatch(LevelKeys.EMPTY);
 
     // 讓 Move(預設 3 格) 落在 Village
     var tiles:Array<ITile> = [];

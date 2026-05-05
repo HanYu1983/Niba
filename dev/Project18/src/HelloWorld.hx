@@ -19,6 +19,7 @@ import game.PlayerMenuKind;
 import game.EquipmentType;
 import game.IEquipment;
 import game.PositionRank;
+import game.LevelKeys;
 import view.BasicViewModel;
 import view.EventCenter;
 import view.html.HtmlInfoPanelView;
@@ -29,30 +30,30 @@ import view.html.HtmlPlayersView;
 class HelloWorld {
   static function main() {
     impl_ver1.Ver1SmokeTest.run();
-    debug_ver1.EmptyLevelFourPlayerLoopTest.testEmptyLevelFourPlayerLoop();
-    debug_ver1.TwoPlayerJiCeStagingMoveConfirmTest.testTwoPlayerJiCeStagingMoveConfirm();
-    debug_ver1.TenEventTilesMenuFlowTest.testTenEventTilesMenuFlow();
-    debug_ver1.GeneralChestTileEventMenuTest.testGeneralChestTileEventMenuFlow();
-    debug_ver1.EmptyCityVacantFormMenuTest.testVacantCitySingleFormOccupy();
-    debug_ver1.EmptyCityVacantFormMenuTest.testOccupiedCitySkipsForm();
-    debug_ver1.FriendlyOwnedCityDispatchMenuTest.testFriendlyCityPersistentMenuUntilVisitEnd();
-    debug_ver1.HostileCityConfrontMenuTest.testPayTollThenDefenderAckThenSettlement();
-    debug_ver1.HostileCityConfrontMenuTest.testNegotiateWithGeneralPickThenSettlement();
-    debug_ver1.HostileCityConfrontMenuTest.testDuelBothSidesPickGeneralThenSettlement();
-    debug_ver1.RoadblockJiCeMovementTest.testEnemyHaltedByRoadblockJiCe();
-    debug_ver1.RoadblockJiCeMovementTest.testPlacerPassesHookTile();
-    debug_ver1.MoveMenuHiddenUntilConfirmTest.testMoveMenuHiddenUntilConfirm();
-    debug_ver1.RestMenuFlowTest.testRestMenuFlow();
-    debug_ver1.VillageMenuFlowTest.testVillageMenuFlow();
-    debug_ver1.VillagePlunderMenuFlowTest.testVillagePlunderMenuFlow();
-    debug_ver1.FriendlyCityDevelopRestMenuFlowTest.testFriendlyCityDevelopRestMenuFlow();
-    debug_ver1.PostMoveLandingWindowMenuTest.testPostMoveLandingWindow();
+    debug_ver1.EmptyLevelFourPlayerLoopTest.testEmptyLevelFourPlayerLoop(new impl_ver1.Game());
+    debug_ver1.TwoPlayerJiCeStagingMoveConfirmTest.testTwoPlayerJiCeStagingMoveConfirm(new impl_ver1.Game());
+    debug_ver1.TenEventTilesMenuFlowTest.testTenEventTilesMenuFlow(new impl_ver1.Game());
+    debug_ver1.GeneralChestTileEventMenuTest.testGeneralChestTileEventMenuFlow(new impl_ver1.Game());
+    debug_ver1.EmptyCityVacantFormMenuTest.testVacantCitySingleFormOccupy(new impl_ver1.Game());
+    debug_ver1.EmptyCityVacantFormMenuTest.testOccupiedCitySkipsForm(new impl_ver1.Game());
+    debug_ver1.FriendlyOwnedCityDispatchMenuTest.testFriendlyCityPersistentMenuUntilVisitEnd(new impl_ver1.Game());
+    debug_ver1.HostileCityConfrontMenuTest.testPayTollThenDefenderAckThenSettlement(new impl_ver1.Game());
+    debug_ver1.HostileCityConfrontMenuTest.testNegotiateWithGeneralPickThenSettlement(new impl_ver1.Game());
+    debug_ver1.HostileCityConfrontMenuTest.testDuelBothSidesPickGeneralThenSettlement(new impl_ver1.Game());
+    debug_ver1.RoadblockJiCeMovementTest.testEnemyHaltedByRoadblockJiCe(new impl_ver1.Game());
+    debug_ver1.RoadblockJiCeMovementTest.testPlacerPassesHookTile(new impl_ver1.Game());
+    debug_ver1.MoveMenuHiddenUntilConfirmTest.testMoveMenuHiddenUntilConfirm(new impl_ver1.Game());
+    debug_ver1.RestMenuFlowTest.testRestMenuFlow(new impl_ver1.Game());
+    debug_ver1.VillageMenuFlowTest.testVillageMenuFlow(new impl_ver1.Game());
+    debug_ver1.VillagePlunderMenuFlowTest.testVillagePlunderMenuFlow(new impl_ver1.Game());
+    debug_ver1.FriendlyCityDevelopRestMenuFlowTest.testFriendlyCityDevelopRestMenuFlow(new impl_ver1.Game());
+    debug_ver1.PostMoveLandingWindowMenuTest.testPostMoveLandingWindow(new impl_ver1.Game());
     trace("Hello world");
 
     // --- HTML view demo ---
     // 建立一個最小 demo match，注入 ViewModel 並建出地圖與玩家組件。
     var game:IGame = new impl_ver1.Game();
-    var match:IGameMatch = game.createGameMatch(impl_ver1.Game.LEVEL_KEY_EMPTY);
+    var match:IGameMatch = game.createGameMatch(LevelKeys.EMPTY);
     var tiles:Array<ITile> = [];
     for (i in 0...12)
       tiles.push(match.createTile(i, City));

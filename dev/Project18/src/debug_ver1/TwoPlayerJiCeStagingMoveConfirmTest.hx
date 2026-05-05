@@ -12,6 +12,7 @@ import game.IPlayerMenuNode;
 import game.IGame;
 import game.IGameMatch;
 import game.ITile;
+import game.LevelKeys;
 import game.PlayerMenuKind;
 import game.PlayerMenuKind.ConfirmDone;
 import game.PlayerMenuKind.JiCe;
@@ -19,7 +20,6 @@ import game.PlayerMenuKind.StagingSubmit;
 import game.PlayerMenuKind.LandingContinue;
 import game.PlayerMenuKind.Move;
 import game.TileKind;
-import impl_ver1.Game;
 import impl_ver1.jice.LuoshiJiCe;
 
 /**
@@ -27,9 +27,8 @@ import impl_ver1.jice.LuoshiJiCe;
  * （移動+計策 → 暫存選將 → 移動 → 結束 → 換下家）。
  */
 class TwoPlayerJiCeStagingMoveConfirmTest {
-  public static function testTwoPlayerJiCeStagingMoveConfirm():Void {
-    var game:IGame = new Game();
-    var match:IGameMatch = game.createGameMatch(Game.LEVEL_KEY_EMPTY);
+  public static function testTwoPlayerJiCeStagingMoveConfirm(game:IGame):Void {
+    var match:IGameMatch = game.createGameMatch(LevelKeys.EMPTY);
 
     var tiles:Array<ITile> = [];
     for (i in 0...10)

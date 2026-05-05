@@ -8,22 +8,21 @@ import game.IPlayerMenuNode;
 import game.IGame;
 import game.IGameMatch;
 import game.ITile;
+import game.LevelKeys;
 import game.MenuNodeQuery;
 import game.PlayerMenuKind;
 import game.PlayerMenuKind.ConfirmDone;
 import game.PlayerMenuKind.LandingContinue;
 import game.PlayerMenuKind.Move;
 import game.TileKind;
-import impl_ver1.Game;
 
 /**
- * 空白 level（{@link Game#LEVEL_KEY_EMPTY}）組局後，驗證四人主迴圈：
+ * 空白 level（{@link LevelKeys#EMPTY}）組局後，驗證四人主迴圈：
  * 當前玩家 → 選單含移動 → 移動 → 選單含「結束」→ 確認 → 輪到下家，直至回到首位。
  */
 class EmptyLevelFourPlayerLoopTest {
-  public static function testEmptyLevelFourPlayerLoop():Void {
-    var game:IGame = new Game();
-    var match:IGameMatch = game.createGameMatch(Game.LEVEL_KEY_EMPTY);
+  public static function testEmptyLevelFourPlayerLoop(game:IGame):Void {
+    var match:IGameMatch = game.createGameMatch(LevelKeys.EMPTY);
 
     var tiles:Array<ITile> = [];
     for (i in 0...10)

@@ -15,16 +15,15 @@ import game.PlayerMenuKind.LandingContinue;
 import game.PlayerMenuKind.StagingSubmit;
 import game.PlayerMenuKind.VillagePlunder;
 import game.TileKind;
-import impl_ver1.Game;
+import game.LevelKeys;
 
 /**
  * 指令菜單流程：移動落在 Village → 出現搶奪 → 進 staging → 提交後退出 staging（村落 pending 清除）。
  * 重點：測菜單流程，不檢查搶奪結果。
  */
 class VillagePlunderMenuFlowTest {
-  public static function testVillagePlunderMenuFlow():Void {
-    var game:IGame = new Game();
-    var match:IGameMatch = game.createGameMatch(Game.LEVEL_KEY_EMPTY);
+  public static function testVillagePlunderMenuFlow(game:IGame):Void {
+    var match:IGameMatch = game.createGameMatch(LevelKeys.EMPTY);
 
     var tiles:Array<ITile> = [];
     tiles.push(match.createTile(0, Plain));

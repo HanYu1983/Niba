@@ -7,12 +7,12 @@ import game.IPlayerMenu;
 import game.IPlayerMenuEntry;
 import game.IPlayerMenuNode;
 import game.ITile;
+import game.LevelKeys;
 import game.MenuNodeQuery;
 import game.PlayerMenuKind;
 import game.PlayerMenuKind.LandingContinue;
 import game.PlayerMenuKind.TileEventPick;
 import game.TileKind;
-import impl_ver1.Game;
 
 /**
  * 單君主、十格皆 {@link TileKind.Event}：移動落地→forceGetPendingTileEvent→選單含事件分歧→結算後出現結束語意。
@@ -22,9 +22,8 @@ class TenEventTilesMenuFlowTest {
   /** 與 ver1 預設移動步幅（3）一致：自 0 出發落在索引 3。 */
   static inline var EXPECT_LANDING_IDX = 3;
 
-  public static function testTenEventTilesMenuFlow():Void {
-    var game:IGame = new Game();
-    var match:IGameMatch = game.createGameMatch(Game.LEVEL_KEY_EMPTY);
+  public static function testTenEventTilesMenuFlow(game:IGame):Void {
+    var match:IGameMatch = game.createGameMatch(LevelKeys.EMPTY);
 
     var tiles:Array<ITile> = [];
     for (i in 0...RING_LEN)

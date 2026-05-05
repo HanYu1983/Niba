@@ -10,13 +10,13 @@ import game.IPlayerMenuNode;
 import game.IGame;
 import game.IGameMatch;
 import game.ITile;
+import game.LevelKeys;
 import game.PlayerMenuKind;
 import game.PlayerMenuKind.ConfirmDone;
 import game.PlayerMenuKind.JiCe;
 import game.PlayerMenuKind.LandingContinue;
 import game.PlayerMenuKind.Move;
 import game.TileKind;
-import impl_ver1.Game;
 import impl_ver1.jice.RoadblockJiCe;
 import impl_ver1.hooks.RoadblockMovementHook;
 
@@ -25,9 +25,8 @@ import impl_ver1.hooks.RoadblockMovementHook;
  * A 逐步移動經過該格時止步。另附直接註冊 {@link RoadblockMovementHook} 驗證放置者經過目標格不中斷。
  */
 class RoadblockJiCeMovementTest {
-  public static function testEnemyHaltedByRoadblockJiCe():Void {
-    var game:IGame = new Game();
-    var match:IGameMatch = game.createGameMatch(Game.LEVEL_KEY_EMPTY);
+  public static function testEnemyHaltedByRoadblockJiCe(game:IGame):Void {
+    var match:IGameMatch = game.createGameMatch(LevelKeys.EMPTY);
     var ring = 12;
     var tiles:Array<ITile> = [];
     for (i in 0...ring)
@@ -85,9 +84,8 @@ class RoadblockJiCeMovementTest {
   }
 
   /** 等同 {@link RoadblockMovementHook} 放置者豁免語意（不經計策選單，避免「當前格放置」無法再走回該格的測試死局）。 */
-  public static function testPlacerPassesHookTile():Void {
-    var game:IGame = new Game();
-    var match:IGameMatch = game.createGameMatch(Game.LEVEL_KEY_EMPTY);
+  public static function testPlacerPassesHookTile(game:IGame):Void {
+    var match:IGameMatch = game.createGameMatch(LevelKeys.EMPTY);
     var ring = 12;
     var tiles:Array<ITile> = [];
     for (i in 0...ring)

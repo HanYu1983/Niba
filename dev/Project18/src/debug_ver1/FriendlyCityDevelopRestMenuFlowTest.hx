@@ -18,16 +18,15 @@ import game.PlayerMenuKind.LandingContinue;
 import game.PlayerMenuKind.Move;
 import game.PlayerMenuKind.StagingSubmit;
 import game.TileKind;
-import impl_ver1.Game;
+import game.LevelKeys;
 
 /**
  * 指令菜單流程：移動落在我方 City → 出現 開發/休整/調度/結束拜訪 → 開發進 staging 提交 → 仍停留拜訪 → 結束拜訪後可結束。
  * 重點：只測菜單流程，不檢查開發/休整/調度結算狀態。
  */
 class FriendlyCityDevelopRestMenuFlowTest {
-  public static function testFriendlyCityDevelopRestMenuFlow():Void {
-    var game:IGame = new Game();
-    var match:IGameMatch = game.createGameMatch(Game.LEVEL_KEY_EMPTY);
+  public static function testFriendlyCityDevelopRestMenuFlow(game:IGame):Void {
+    var match:IGameMatch = game.createGameMatch(LevelKeys.EMPTY);
 
     // 讓 Move 落在 City=3
     var tiles:Array<ITile> = [];
