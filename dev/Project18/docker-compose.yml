@@ -5,3 +5,8 @@ services:
     volumes:
       # 將 compose 檔所在目錄（本機專案根）對應到容器內 /workspace
       - .:/workspace
+      # 持久化 haxelib 安裝目錄，避免每次 run 都要重裝套件
+      - haxelib:/haxelib
+
+volumes:
+  haxelib:

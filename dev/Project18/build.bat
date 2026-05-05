@@ -1,1 +1,1 @@
-docker compose run --rm haxe haxe -cp src -main HelloWorld -js bin/hello.js
+docker compose run --rm haxe haxe -cp src -lib rxhaxe -main HelloWorld -js bin/hello.js

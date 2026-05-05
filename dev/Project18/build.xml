@@ -10,6 +10,8 @@
     <exec executable="haxe" failonerror="true">
       <arg value="-cp"/>
       <arg value="src"/>
+      <arg value="-lib"/>
+      <arg value="rxhaxe"/>
       <arg value="-main"/>
       <arg value="HelloWorld"/>
       <arg value="-js"/>
