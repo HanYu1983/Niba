@@ -1,104 +1,89 @@
-# GDD 骨架差距對照（對照 `GDD_富甲天下.md` v0.1）
+# GDD 骨架差距對照（最新版，以代碼為準）
 
-> 目的：把 GDD 中「**骨架（可先跑起來的最小閉環）**」與「**擴充（後續豐富內容）**」分開，並對照目前 `src/` 的實作狀態，列出**還差多少骨架沒完成**。
+> 目的：把 `docs/GDD_富甲天下.md` 中「**骨架（最小可玩閉環）**」與「**擴充（延後豐富）**」分開，並以目前 `src/` 實作現況為準，列出**仍需補齊的骨架差距**與下一輪建議順序。
 >
-> - **骨架**：沒有它就無法形成可玩的回合閉環（最小可測的遊戲循環）。
-> - **擴充**：可延後，但需要在骨架確立後逐步接上。
+> 本文件是「現況報表」：每個條目都力求能在代碼中找到對應位置或測試。
 
 ---
 
-## 骨架 vs 擴充（依 GDD 章節分層）
+## 一、目前已具備的最小閉環（骨架已落地）
 
-### 棋盤與回合循環（骨架）
-- **玩家輪替 / 回合推進**
-  - **現況**：已存在。`impl_ver1/core/GameMatchCore.hx` 有 `ConfirmDone` 推進 active monarch、`roundNumber`、並有多個 debug flow 測試。
-  - **缺口**：
-    - **「擲骰 1~6」移動**尚未做：目前是 `DEFAULT_MOVE_DELTA = 3` 固定步數（見 `GameMatchCore.DEFAULT_MOVE_DELTA`、`GameMatchVer1Ops.applyMenuLeafForMove`）。
-    - **經過起點獎勵 / 回合資源成長結算點**尚未做（GDD 2.1.12、2.1.7、2.1.3）。
+### 1) 回合循環：玩家輪替／回合推進（已完成）
+- **現況**：`ConfirmDone` 推進 active monarch、回合狀態重置。
+- **主要位置**：`src/impl_ver1/core/GameMatchCore.hx`
+- **驗證**：多個 `debug_ver1/*FlowTest.hx` 以及 `runHelloJs.bat` 全綠。
 
-- **棋盤閉環**
-  - **現況**：已存在。`Monarch.advanceOnBoard(delta, ringLen)` 以 ringLen 做取模。
+### 2) 移動：擲骰 1~6 + 測試固定骰點（已完成）
+- **現況**：
+  - 移動步數改為擲骰 1~6。
+  - 測試可用 `forceSetFixedMoveDelta(delta)` 固定骰點（設 null 回到隨機）。
+- **主要位置**：`src/impl_ver1/core/GameMatchCore.hx`、`src/impl_ver1/rules/GameMatchVer1Ops.hx`
 
-- **格子類型分流**
-  - **現況**：部分存在。`game/TileKind.hx` 目前有 `Plain/City/Village/Battle/Scheme/Event`，`GameMatchCore.considerLandingAt()` 有對 `Event/City/Village/Plain` 分流。
-  - **缺口**（對照 GDD 2.1.2 的格子類型）：
-    - **資源格**、**武將格**、**商店格**、**起點**：目前沒有對應 `TileKind`，也沒有落地流程。
-    - `Battle/Scheme` 在 `TileKind` 有列出，但落地分流目前尚未實作具體流程。
+### 3) 起點獎勵 + 回合末結算點（已完成最小骨架）
+- **現況**：
+  - **經過起點獎勵**：移動逐步時經過 index=0 會給獎勵。
+  - **回合末結算**：新回合開始時觸發（seat 回到 0）：
+    - 全體武將體力回復（+`Balance.STAMINA_RECOVER_PER_TURN`）。
+    - 套用並清除 next-turn 領地 bonus（目前 gold/grain 方向）。
+- **主要位置**：`src/impl_ver1/core/GameMatchCore.hx`、`src/impl_ver1/rules/GameMatchVer1Ops.hx`
+- **驗證**：`src/debug_ver1/EndOfRoundSettlementTest.hx`
 
----
+### 4) 資源：君主 troops / grain / gold / prestige（已完成最小可增減）
+- **現況**：`IMonarch` / `Monarch` 已具備 troops、grain、gold、prestige 的最小 API（grant / reduce）。
+- **主要位置**：`src/game/IMonarch.hx`、`src/impl_ver1/model/Monarch.hx`
 
-## 核心子系統（骨架完成度）
+### 5) 策略/計策：移動前/後階段 + 每張牌使用時機限制（已完成骨架）
+- **現況**：
+  - 移動前 / 移動後兩階段，各每回合一次。
+  - `IJiCe.allowedPhases()`：每張牌宣告可用時機。
+  - 建選單時過濾 + Core 打出時硬檢查（避免 UI 漏網）。
+- **主要位置**：`src/game/IJiCe.hx`、`src/impl_ver1/commands/Ver1MainCommands.hx`、`src/impl_ver1/core/GameMatchCore.hx`
+- **驗證**：`src/debug_ver1/StrategyPhaseRestrictionTest.hx`
 
-### 1) 策略/計策（骨架：可在回合中使用一次/兩次並結算）
-- **GDD/策略系統.md 要求**
-  - 移動前/移動後兩個階段，各每回合一次
-  - 指定武將/格子/玩家三大類
-  - 發動武將、成功率預覽、消耗體力、成功/失敗結算
-- **現況**
-  - **階段機制**：已完成（`StrategyPre`/`StrategyPost` + `canUseStrategyPreMove`/`canUseStrategyPostMove`）。
-  - **每張牌使用時機（Pre/Post）限制**：已完成（`IJiCe.allowedPhases()` + 產生選單過濾 + Core 打出時硬檢查）。
-  - **指定玩家 4 張**：已完成（離間/急襲/流言/徵兵）。
-  - **指定武將 4 張**：已完成（鼓舞/激勵/療傷/覺醒）。
-  - **指定格子 5 張**：已完成（火計/破壞/屯田/商路/築城），但多為「骨架示範」。
-- **缺口（仍屬骨架）**
-  - **成功率預覽（staging preview rows）**：目前只有 `LuoshiJiCe` 有預覽列，其它牌尚未接。
-  - **移動後策略「一律針對所站格子」的目標限制**：尚未落地（目前 tile 類策略仍可任選格；只是預設選中 pawn 位置）。
-  - **與城池等級/金錢/敵我領地判定的整合**：多處仍是 TODO（例如商路需要 gold 與結算點）。
+### 6) 村落：友好度（每村落×每玩家）+ 至少一條真結算線（已完成）
+- **現況**：
+  - 友好度模型：`tile × monarch`（0~100）。
+  - `VillageTrade` 已有真結算：花 gold 換 grain + 友好度上升。
+- **主要位置**：`src/impl_ver1/core/GameMatchCore.hx`、`src/impl_ver1/staging/VillageTradeStagingAction.hx`
+- **驗證**：`src/debug_ver1/VillageFriendlyTradeSettlementTest.hx`
 
----
-
-### 2) 城池/村落/領地（骨架：可佔領、可產出、可互動）
-- **GDD 要求摘要**
-  - 村落對每玩家友好度、交易/搶奪/攻占；村落可發展成城池等級；領地有資源庫與調度；敵方領地有搶奪/攻占/策略。
-- **現況**
-  - **城池屬主**：存在（`forceSetCityOwner` 等 API + 敵城對峙流程）。
-  - **城池資源庫（troops/grain）**：存在（storedTroops/storedGrain），有「空城進駐」與「調度」流程測試。
-  - **敵方領地互動**：目前以「敵城對峙」流程存在（偏向骨架 UI flow；非完整搶奪/攻占）。
-  - **村落互動**：存在選單/暫存的骨架（`VillageTrade/VillagePlunder/VillageConquer`），但仍是示範 staging，尚未接入「友好度/守軍/占領」。
-- **缺口（骨架缺失或仍未接）**
-  - **友好度（0~100，且每村落×每玩家）**：未實作資料模型與結算。
-  - **城池等級（村落→小城→大城→都城）**：未實作（`Balance.cityDefenseBonus` 只有算法，缺資料存放與套用點）。
-  - **領地資源成長率、地形、每回合產出結算點**：未實作。
-  - **搶奪/攻占的真實戰鬥計算（含兵力投入、城防加成）**：未實作（目前是 hostile city 流程骨架與少量摘要文案）。
+### 7) 城池：等級/防禦模型最小落地（已完成）＋ 接入一條戰鬥/攻占結算線（已完成最小）
+- **現況**：
+  - 城池等級資料：`forceGetCityLevel/forceSetCityLevel`（預設 SmallCity）。
+  - 防禦加成：`Balance.cityDefenseBonus(level)` 已接入「敵城對峙」的 `siege` 結算線。
+- **主要位置**：`src/impl_ver1/core/GameMatchCore.hx`、`src/impl_ver1/rules/GameMatchVer1Ops.hx`、`src/game/Balance.hx`
+- **驗證**：`src/debug_ver1/HostileCitySiegeCityLevelDefenseTest.hx`
 
 ---
 
-### 3) 資源系統（骨架：至少金錢/糧食/士兵能在回合中增減）
-- **現況**
-  - **君主資源**：目前有 `troops/grain`（`IMonarch` + `impl_ver1/model/Monarch.hx`）。
-  - **聲望**：已補上 `prestige`（`IMonarch` + `Monarch`），但尚未連動到招募/事件等。
-  - **領地資源庫**：城池有 troops/grain stored。
-- **缺口（骨架缺失）**
-  - **金錢（gold）**：尚未實作（程式內已有 TODO，策略「商路」也因此只能寫入未結算的 bonus map）。
-  - **士兵→糧食每回合消耗**：未實作。
-  - **起點與回合結算（資源成長/聲望獎勵）**：未實作。
+## 二、仍存在的骨架差距（下一輪應優先補）
+
+### A) 棋盤格子類型仍不完整（骨架缺口）
+- **現況**：`TileKind` 只有 `Plain/City/Village/Battle/Scheme/Event`，落地分流主要覆蓋 `Event/City/Village/Plain`。
+- **差距（對照 GDD 的最小玩法閉環）**
+  - **起點作為正式格子語意**：目前以「經過 index=0」做獎勵，但仍非 `TileKind`。
+  - **資源格 / 武將格 / 商店格**：尚未落地成 `TileKind` 與落地流程。
+  - `Battle/Scheme`：型別存在，但缺少可持續玩的落地規則鏈（目前仍偏骨架空殼）。
+
+### B) 策略系統仍缺「成功率預覽」與「目標限制」（骨架缺口）
+- **成功率預覽（staging preview rows）**
+  - 現況：只有少數牌有預覽列，其餘多未接。
+- **移動後策略目標限制**
+  - 現況：tile 類策略多仍可任選格（僅預設在自己所站格），尚未落地「移動後只能針對所站格」/己方敵方領地等規則約束。
+
+### C) 村落互動仍偏「只有 trade 真結算」的狀態（骨架可延伸）
+- 已達到「至少一條真結算線」要求，但：
+  - `VillagePlunder` / `VillageConquer` 若要符合 GDD 的最小可玩性，仍需補上更一致的守軍/投入/結果/友好度變化與占領線。
+
+### D) 經濟閉環尚未完整（骨架缺口）
+- **士兵→糧食每回合消耗**：尚未落地。
+- **領地產出（依地形/等級/友好度等）**：目前僅有部分 next-turn bonus 機制，尚未形成完整經濟循環。
 
 ---
 
-### 4) 武將系統（骨架：屬性/體力/忠誠/職位至少能被策略/指令使用）
-- **現況**
-  - **屬性**（武力/統率/智力/政治）與 **體力 stamina**：存在，策略成功率已用 `Balance.strategySuccessRate`。
-  - **忠誠度**：存在（`IGeneral.loyalty()`），且已補上 `General.setLoyalty()` 供策略調整。
-  - **狀態/效果**：存在（`GeneralEffect`、`GeneralStatus`）且部分策略會寫入。
-- **缺口（介於骨架與擴充之間）**
-  - **回合結束回復體力（+15）**：`Balance.STAMINA_RECOVER_PER_TURN` 有常量，但核心尚未套用到回合推進點。
-  - **功績/職位提升與解鎖策略**：資料欄位存在（`merit/positionRank`），但尚未有結算與解鎖邏輯。
-
----
-
-## 明確屬於「擴充」的內容（可延後）
-- 程序化生成（地圖/武將/裝備/技能）
-- AI 行為、難度、NPC 決策
-- 美術/UI 規範與完整前端互動（目前 HTML view 是 demo）
-- 故事/世界觀、角色列表
-- 完整勝利條件（征服/領土/財富/時限）與評分系統
-
----
-
-## 建議的「骨架補齊順序」（最小閉環優先）
-1. **移動改為擲骰 1~6**（並把目前固定 3 步改為可變）
-2. **補金錢 gold 到 `IMonarch/Monarch`**，並補最小的增減 API
-3. **回合結算點（過起點獎勵 + 領地產出 + 體力回復）**
-4. **村落友好度資料模型 + 交易/搶奪/攻占至少一條真實結算線**
-5. **城池等級/防禦模型最小落地**（讓攻占/戰鬥有可用的「城防加成」來源）
+## 三、建議的下一輪「骨架補齊順序」（更新版）
+1. **補棋盤格子骨架**：新增至少一個缺口 `TileKind`（推薦：資源格或商店格），並接一條可測的落地結算線。
+2. **補策略成功率預覽**：讓主要幾張牌在 staging 顯示成功率與關鍵影響值。
+3. **補策略目標限制**：先落地「移動後策略只能針對所站格」的硬檢查 + 選單過濾。
+4. **補經濟閉環**：回合末士兵耗糧 + 領地產出（最小規則即可）。
 
