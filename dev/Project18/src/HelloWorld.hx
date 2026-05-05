@@ -42,27 +42,25 @@ class HelloWorld {
     var game:IGame = new impl_ver1.Game();
     var match:IGameMatch = game.createGameMatch(impl_ver1.Game.LEVEL_KEY_EMPTY);
     var tiles:Array<ITile> = [];
-    for (i in 0...12) {
-      var k:TileKind = Plain;
-      if (i == 2 || i == 9)
-        k = Event;
-      if (i == 4 || i == 7)
-        k = City;
-      tiles.push(match.createTile(i, k));
-    }
+    for (i in 0...12)
+      tiles.push(match.createTile(i, City));
     match.createBoard(tiles);
+
+    // 君主基本資源（兵力/糧食）
     match.createMonarch("m-a", 0, 0, 500, 80);
-    match.createMonarch("m-b", 1, 5, 100, 200);
-    match.createGeneral("g-a", "m-a", 1, 40, 1, 1);
-    match.createGeneral("g-b", "m-b", 1, 10, 1, 1);
+    match.createMonarch("m-b", 1, 5, 500, 80);
 
-    // 綁定事件腳本到 Event 格（先用既有 debug event）
-    match.forceBindTileEvent(2, new debug_ver1.GeneralChestTileEvent(match));
-    match.forceBindTileEvent(9, new debug_ver1.RingLootForkTileEvent(match));
+    // 每位君主各 3 名武將
+    match.createGeneral("g-a-1", "m-a", 1, 40, 1, 1);
+    match.createGeneral("g-a-2", "m-a", 1, 20, 1, 1);
+    match.createGeneral("g-a-3", "m-a", 1, 10, 1, 1);
+    match.createGeneral("g-b-1", "m-b", 1, 40, 1, 1);
+    match.createGeneral("g-b-2", "m-b", 1, 20, 1, 1);
+    match.createGeneral("g-b-3", "m-b", 1, 10, 1, 1);
 
-    // 標記城池屬主（讓後續流程可擴充顯示/交互）
-    match.forceSetCityOwner(4, "m-a");
-    match.forceSetCityOwner(7, "m-b");
+    // 所有格位皆為城池：先交錯標記屬主
+    for (i in 0...12)
+      match.forceSetCityOwner(i, (i % 2 == 0) ? "m-a" : "m-b");
 
     var core:impl_ver1.GameMatchCore = cast match;
     var vm = new BasicViewModel(core);
