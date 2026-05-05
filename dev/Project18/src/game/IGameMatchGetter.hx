@@ -81,8 +81,20 @@ interface IGameMatchGetter {
   /** 除錯／測試：計策打出後尚待 resolveChoice 之腳本。 */
   function forceGetPendingJiCe():Null<IJiCe>;
 
+  /** 除錯／測試：目前是否存在任何暫存（計策/休整/未來村落等）。 */
+  function forceHasPendingStaging():Bool;
+
+  /** 除錯／測試：暫存指令 registryKey；無暫存時為 null。 */
+  function forceGetPendingStagingKey():Null<String>;
+
+  /** 除錯／測試：暫存指令顯示名稱；無暫存時為 null。 */
+  function forceGetPendingStagingLabel():Null<String>;
+
   /** 除錯／測試：暫存計策對應之武將預覽列；無暫存時為空陣列。 */
   function forceJiCeStagingPreviewRows():Array<IJiCeStagingPreviewRow>;
+
+  /** 除錯／測試：暫存指令之預覽列（計策/休整/未來村落等共用）；無暫存時為空陣列。 */
+  function forceStagingPreviewRows():Array<IJiCeStagingPreviewRow>;
 
   /**
    * 該索引格子為 {@link TileKind.City} 且無武將駐守時為 true；

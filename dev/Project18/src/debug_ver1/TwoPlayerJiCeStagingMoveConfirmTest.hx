@@ -58,7 +58,7 @@ class TwoPlayerJiCeStagingMoveConfirmTest {
 
     match.applyMenuLeaf(actorAtk, requireEnabledNode(menu0, JiCe));
 
-    if (match.forceGetPendingJiCe() == null)
+    if (!match.forceHasPendingStaging())
       throw "TwoPlayerJiCeStagingMoveConfirmTest: 打出計策後應進入暫存";
 
     var menuPick = match.createPlayerMenu(actorAtk);
@@ -94,8 +94,8 @@ class TwoPlayerJiCeStagingMoveConfirmTest {
     jNode.setActivationEntry(sub);
     match.applyMenuLeaf(actorAtk, jNode);
 
-    if (match.forceGetPendingJiCe() != null)
-      throw "TwoPlayerJiCeStagingMoveConfirmTest: 選將後應清除 forceGetPendingJiCe";
+    if (match.forceHasPendingStaging())
+      throw "TwoPlayerJiCeStagingMoveConfirmTest: 選將後應清除暫存";
 
     var menuAfterPick = match.createPlayerMenu(actorAtk);
     requireEnabledNode(menuAfterPick, Move);

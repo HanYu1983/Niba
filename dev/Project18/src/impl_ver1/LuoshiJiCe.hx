@@ -66,7 +66,7 @@ class LuoshiJiCe implements IJiCe {
   }
 
   public function resolveChoice(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
-    if (!gameMatch.jiCePendingMatchesCard(this))
+    if (!gameMatch.stagingMatchesJiCe(this))
       throw "LuoshiJiCe.resolveChoice: pendingJiCe mismatch";
     if (MenuActivation.activatingEntry(menuNode).kind() != StagingSubmit)
       throw "LuoshiJiCe.resolveChoice: 預期 StagingSubmit";

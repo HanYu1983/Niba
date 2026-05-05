@@ -53,7 +53,7 @@ class GameMatchCore implements IGameMatch {
 
   /** --- 計策暫存與君主所持牌 --- */
   var _pendingStaging:Null<IStagingAction>;
-  var _jiCeStagingRows:Array<IJiCeStagingPreviewRow>;
+  var _stagingPreviewRows:Array<IJiCeStagingPreviewRow>;
   var _ownedJiCe:Map<MonarchId, Array<IJiCe>>;
 
   /** --- 移動逐步結算：已登錄之計策／場地效果勾子 --- */
@@ -101,12 +101,12 @@ class GameMatchCore implements IGameMatch {
     _pendingFriendlyCityTileIndex = null;
     _movementStepHooks = [];
     clearHostileCityConfrontation();
-    clearJiCeStaging();
+    clearStaging();
   }
 
-  function clearJiCeStaging():Void {
+  function clearStaging():Void {
     _pendingStaging = null;
-    _jiCeStagingRows = ([] : Array<IJiCeStagingPreviewRow>);
+    _stagingPreviewRows = ([] : Array<IJiCeStagingPreviewRow>);
   }
 
   // ========== 私有行為（依欄位分組；公開方法與友元僅委派至此）==========
@@ -125,25 +125,25 @@ class GameMatchCore implements IGameMatch {
     return b;
   }
 
-  // --- 計策暫存寫入／友元讀取用（不將欄位暴露給套件外）---
-  private function jiCeStagingEnter(card:IJiCe):Void {
-    _pendingStaging = new JiCeStagingAction(card);
-    _jiCeStagingRows = ([] : Array<IJiCeStagingPreviewRow>);
+  // --- 暫存（staging）寫入／友元讀取用（不將欄位暴露給套件外）---
+  private function stagingEnterJiCe(card:IJiCe):Void {
+    _pendingStaging = new JiCeStagingAction(this, card);
+    _stagingPreviewRows = ([] : Array<IJiCeStagingPreviewRow>);
   }
 
-  /** 與計策選單建構同步：直接回傳暫存列（勿在暫存期外依賴其內容）。 */
-  private function jiCeStagingRowsLive():Array<IJiCeStagingPreviewRow>
-    return _jiCeStagingRows;
+  /** 與暫存選單建構同步：直接回傳暫存列（勿在暫存期外依賴其內容）。 */
+  private function stagingPreviewRowsLive():Array<IJiCeStagingPreviewRow>
+    return _stagingPreviewRows;
 
-  private function jiCePendingMatchesCard(card:IJiCe):Bool {
+  private function stagingMatchesJiCe(card:IJiCe):Bool {
     if (_pendingStaging == null)
       return false;
     var c = _pendingStaging.asJiCe();
     return c != null && c == card;
   }
 
-  private function jiCeStagingPredictedTroopLossForGeneralOrThrow(gid:GeneralId):Int {
-    for (r in _jiCeStagingRows)
+  private function stagingPredictedTroopLossForGeneralOrThrow(gid:GeneralId):Int {
+    for (r in _stagingPreviewRows)
       if (r.generalId() == gid)
         return r.predictedTroopLoss();
     throw 'GameMatchCore: unknown general $gid in staging rows';
@@ -339,14 +339,27 @@ class GameMatchCore implements IGameMatch {
   public function forceGetPendingJiCe():Null<IJiCe>
     return _pendingStaging != null ? _pendingStaging.asJiCe() : null;
 
+  public function forceHasPendingStaging():Bool
+    return _pendingStaging != null;
+
+  public function forceGetPendingStagingKey():Null<String>
+    return _pendingStaging != null ? _pendingStaging.registryKey() : null;
+
+  public function forceGetPendingStagingLabel():Null<String>
+    return _pendingStaging != null ? _pendingStaging.designLabel() : null;
+
   public function forceJiCeStagingPreviewRows():Array<IJiCeStagingPreviewRow> {
-    if (_pendingStaging == null || _pendingStaging.asJiCe() == null)
+    return forceStagingPreviewRows();
+  }
+
+  public function forceStagingPreviewRows():Array<IJiCeStagingPreviewRow> {
+    if (_pendingStaging == null)
       return [];
-    return _jiCeStagingRows.copy();
+    return _stagingPreviewRows.copy();
   }
 
   public function forceEnterJiCeStaging(card:IJiCe):Void {
-    jiCeStagingEnter(card);
+    stagingEnterJiCe(card);
   }
 
   public function cityVacantNoGarrison(at:TileIndex):Bool {
@@ -803,7 +816,7 @@ class GameMatchCore implements IGameMatch {
     if (stg == null)
       throw "GameMatchCore: StagingSubmit 但無進行中之暫存";
     stg.resolveChoice(actor, menuNode);
-    clearJiCeStaging();
+    clearStaging();
     syncActiveSliceAfterMenuLeaf(StagingSubmit);
   }
 
@@ -975,11 +988,15 @@ class GameMatchCore implements IGameMatch {
               throw "GameMatchCore: 已有進行中之計策暫存，請先完成計策選項";
             var card = resolvePlayedJiCeFromLeaf(actor, leaf);
             forceEnterJiCeStaging(card);
+            // 目前 previewRows 先留空；後續各指令可自行實作 previewRows
+            if (_pendingStaging != null)
+              _stagingPreviewRows = _pendingStaging.previewRows(actor);
             syncActiveSliceAfterMenuLeaf(JiCe);
           case Rest:
             if (_pendingStaging != null)
               throw "GameMatchCore: 已有進行中之暫存，請先完成";
             _pendingStaging = new RestStagingAction(this);
+            _stagingPreviewRows = _pendingStaging.previewRows(actor);
             syncActiveSliceAfterMenuLeaf(Rest);
           case Status:
             syncActiveSliceAfterMenuLeaf(Status);

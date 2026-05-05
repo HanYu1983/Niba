@@ -59,8 +59,8 @@ class Ver1SmokeTest {
     jNode.setActivationEntry(sub);
     match.applyMenuLeaf(player, jNode);
 
-    if (match.forceGetPendingJiCe() != null)
-      throw "Ver1SmokeTest: forceGetPendingJiCe 應已清除";
+    if (match.forceHasPendingStaging())
+      throw "Ver1SmokeTest: 暫存應已清除";
 
     var lossPickHigh = LuoshiJiCe.previewTroopLoss(100, gHigh.stat(Might));
     if (defender.troops() != 100 - lossPickHigh)

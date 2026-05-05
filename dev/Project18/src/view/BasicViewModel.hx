@@ -133,8 +133,20 @@ class BasicViewModel implements IViewModel {
   public function forceGetPendingJiCe():Null<IJiCe>
     return match.forceGetPendingJiCe();
 
+  public function forceHasPendingStaging():Bool
+    return match.forceHasPendingStaging();
+
+  public function forceGetPendingStagingKey():Null<String>
+    return match.forceGetPendingStagingKey();
+
+  public function forceGetPendingStagingLabel():Null<String>
+    return match.forceGetPendingStagingLabel();
+
   public function forceJiCeStagingPreviewRows():Array<IJiCeStagingPreviewRow>
     return match.forceJiCeStagingPreviewRows();
+
+  public function forceStagingPreviewRows():Array<IJiCeStagingPreviewRow>
+    return match.forceStagingPreviewRows();
 
   public function cityVacantNoGarrison(at:TileIndex):Bool
     return match.cityVacantNoGarrison(at);

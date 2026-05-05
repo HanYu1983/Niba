@@ -9,6 +9,8 @@ import game.IPlayerMenuNode;
 import game.IStagingAction;
 import game.MenuFormWidget;
 import game.PlayerMenuKind;
+import game.IJiCeStagingPreviewRow;
+import impl_ver1.SimpleStagingPreviewRow;
 
 /** 休整（staging）：選一名武將回復體力。 */
 class RestStagingAction implements IStagingAction {
@@ -85,6 +87,14 @@ class RestStagingAction implements IStagingAction {
 
     var next = Balance.clampInt(target.stamina() + Balance.STAMINA_RECOVER_REST, 0, 100);
     target.forceSetStamina(next);
+  }
+
+  public function previewRows(actor:IPlayer):Array<IJiCeStagingPreviewRow> {
+    var ruler = cast(match.activeMonarch(), Monarch);
+    var rows:Array<IJiCeStagingPreviewRow> = [];
+    for (g in ruler.roster())
+      rows.push(new SimpleStagingPreviewRow(g.id(), "+30 體力", 0));
+    return rows;
   }
 }
 
