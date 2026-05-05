@@ -25,6 +25,7 @@ class MenuNodeQuery {
           case Slider(_, _, _, _, _):
           case MonarchSinglePick(_, _, _):
           case GeneralMultiPick(_, _, _):
+          case TileSinglePick(_, _, _):
         }
       var inner = findNodeWithKind(n.children(), kind);
       if (inner != null)
@@ -51,6 +52,7 @@ class MenuNodeQuery {
           case Slider(_, _, _, _, _):
           case MonarchSinglePick(_, _, _):
           case GeneralMultiPick(_, _, _):
+          case TileSinglePick(_, _, _):
         }
       var inner = findNodeWithHostileAttackerPickToken(n.children(), decisionToken);
       if (inner != null)
@@ -79,6 +81,7 @@ class MenuNodeQuery {
           case Slider(_, _, _, _, _):
           case MonarchSinglePick(_, _, _):
           case GeneralMultiPick(_, _, _):
+          case TileSinglePick(_, _, _):
         }
       var inner = findNodeWithTilePickToken(n.children(), decisionToken);
       if (inner != null)
@@ -97,6 +100,7 @@ class MenuNodeQuery {
         case Slider(_, _, _, _, _):
         case MonarchSinglePick(_, _, _):
         case GeneralMultiPick(_, _, _):
+        case TileSinglePick(_, _, _):
       }
     return null;
   }

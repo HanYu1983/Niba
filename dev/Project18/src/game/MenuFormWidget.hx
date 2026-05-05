@@ -18,4 +18,9 @@ enum MenuFormWidget {
 
     /** 送出前 UI 將 {@code selectedGeneralIds} 設為勾選結果（順序保留）。 */
     GeneralMultiPick(label:String, choices:Array<MenuGeneralChoice>, selectedGeneralIds:Array<String>);
+
+    /**
+     * 指定格子：送出前 UI 將 {@code selectedTileIndexes} 設為選取結果；目前約定為「單選」（陣列長度須為 1）。
+     */
+    TileSinglePick(label:String, choices:Array<MenuTileChoice>, selectedTileIndexes:Array<Int>);
 }

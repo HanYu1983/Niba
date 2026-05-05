@@ -40,12 +40,16 @@ class Ver1SmokeTest {
     switch fw[0] {
       case MonarchSinglePick(lbl, choices, _):
         fw[0] = MonarchSinglePick(lbl, choices, [defender.id()]);
+      case TileSinglePick(_, _, _):
+        throw "Ver1SmokeTest: 不應出現 TileSinglePick";
       default:
         throw "Ver1SmokeTest: 預期計策暫存 MonarchSinglePick";
     }
     switch fw[1] {
       case GeneralMultiPick(lbl, choices, _):
         fw[1] = GeneralMultiPick(lbl, choices, ["g-might-high"]);
+      case TileSinglePick(_, _, _):
+        throw "Ver1SmokeTest: 不應出現 TileSinglePick";
       default:
         throw "Ver1SmokeTest: 預期計策暫存 MultiPick";
     }

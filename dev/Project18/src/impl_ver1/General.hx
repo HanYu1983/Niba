@@ -11,6 +11,7 @@ class General implements IGeneral {
   var _might:Int;
   var _wit:Int;
   var _stewardship:Int;
+  var _stamina:Int;
 
   public function new(id:GeneralId, owner:MonarchId, command:Int, might:Int, wit:Int, stewardship:Int) {
     _id = id;
@@ -19,6 +20,7 @@ class General implements IGeneral {
     _might = might;
     _wit = wit;
     _stewardship = stewardship;
+    _stamina = 100;
   }
 
   public function id():GeneralId
@@ -35,4 +37,10 @@ class General implements IGeneral {
       case Stewardship: _stewardship;
     };
   }
+
+  public function stamina():Int
+    return _stamina;
+
+  public function setStamina(value:Int):Void
+    _stamina = value;
 }

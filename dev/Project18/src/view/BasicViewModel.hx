@@ -94,6 +94,15 @@ class BasicViewModel implements IViewModel {
   public function roundNumber():Int
     return match.roundNumber();
 
+  public function hasMovedThisTurn():Bool
+    return match.hasMovedThisTurn();
+
+  public function canUseStrategyPreMove():Bool
+    return match.canUseStrategyPreMove();
+
+  public function canUseStrategyPostMove():Bool
+    return match.canUseStrategyPostMove();
+
   public function monarchById(monarchId:MonarchId):IMonarch
     return match.monarchById(monarchId);
 

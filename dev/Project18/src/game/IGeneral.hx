@@ -17,4 +17,10 @@ interface IGeneral {
      * 暫時增益／賽場修正是否反映在返回值中，由實作契約載明。
      */
     function stat(which:GeneralStat):Int;
+
+    /** 體力（策略消耗用）；上限語意由實作決定。 */
+    function stamina():Int;
+
+    /** 寫入體力（供結算消耗／回復）。 */
+    function setStamina(value:Int):Void;
 }

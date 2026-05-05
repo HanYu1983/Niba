@@ -148,6 +148,11 @@ class HtmlActiveMenuView {
               default:
             }
             form.appendChild(wrap);
+          case TileSinglePick(lbl, choices, selected):
+            var p = Browser.document.createDivElement();
+            p.className = "menu-pick";
+            p.textContent = lbl + " = " + (selected != null && selected.length > 0 ? Std.string(selected[0]) : "(none)");
+            form.appendChild(p);
         }
       }
       row.appendChild(form);

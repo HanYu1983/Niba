@@ -82,6 +82,7 @@ class GeneralChestTileEvent implements ITileEvent {
         case Slider(_, _, _, _, _):
         case MonarchSinglePick(_, _, _):
         case Button(_):
+        case TileSinglePick(_, _, _):
       }
     var seen = new Map<String, Bool>();
     var uniq:Array<GeneralId> = [];

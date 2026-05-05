@@ -75,12 +75,16 @@ class TwoPlayerJiCeStagingMoveConfirmTest {
     switch fw[0] {
       case MonarchSinglePick(lbl, choices, _):
         fw[0] = MonarchSinglePick(lbl, choices, [defId]);
+      case TileSinglePick(_, _, _):
+        throw "TwoPlayerJiCeStagingMoveConfirmTest: 不應出現 TileSinglePick";
       default:
         throw "TwoPlayerJiCeStagingMoveConfirmTest: 預期計策暫存 MonarchSinglePick";
     }
     switch fw[1] {
       case GeneralMultiPick(lbl, choices, _):
         fw[1] = GeneralMultiPick(lbl, choices, ["g-one"]);
+      case TileSinglePick(_, _, _):
+        throw "TwoPlayerJiCeStagingMoveConfirmTest: 不應出現 TileSinglePick";
       default:
         throw "TwoPlayerJiCeStagingMoveConfirmTest: 預期計策暫存 MultiPick";
     }

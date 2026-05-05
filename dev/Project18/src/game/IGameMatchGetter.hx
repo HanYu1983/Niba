@@ -33,6 +33,15 @@ interface IGameMatchGetter {
   /** 回合數（完整輪轉一圈算一回合；起始為 1）。 */
   function roundNumber():Int;
 
+  /** 本回合是否已完成一次「移動」指令。 */
+  function hasMovedThisTurn():Bool;
+
+  /** 是否仍可使用「移動前」策略（每回合一次）。 */
+  function canUseStrategyPreMove():Bool;
+
+  /** 是否仍可使用「移動後」策略（每回合一次）。 */
+  function canUseStrategyPostMove():Bool;
+
   /** 依君主 id 取得君主（不存在則拋錯）。 */
   function monarchById(monarchId:MonarchId):IMonarch;
 

@@ -45,6 +45,7 @@ class PlayerMenu implements IPlayerMenu {
           case Slider(_, _, _, _, _):
           case MonarchSinglePick(_, _, _):
           case GeneralMultiPick(_, _, _):
+          case TileSinglePick(_, _, _):
         }
     }
   }

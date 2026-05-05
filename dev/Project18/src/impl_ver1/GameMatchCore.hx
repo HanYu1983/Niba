@@ -38,6 +38,9 @@ class GameMatchCore implements IGameMatch {
   var _monarchs:Array<Monarch>;
   var _activeId:MonarchId;
   var _roundNumber:Int;
+  var _hasMovedThisTurn:Bool;
+  var _strategyPreUsed:Bool;
+  var _strategyPostUsed:Bool;
   var _activeSliceComplete:Bool;
   var _terminationReason:MatchTerminationReason;
 
@@ -78,6 +81,9 @@ class GameMatchCore implements IGameMatch {
     _monarchs = [];
     _activeId = "";
     _roundNumber = 1;
+    _hasMovedThisTurn = false;
+    _strategyPreUsed = false;
+    _strategyPostUsed = false;
     _activeSliceComplete = false;
     _terminationReason = NotEnded;
     _tileEventByIndex = new Map();
@@ -491,6 +497,7 @@ class GameMatchCore implements IGameMatch {
         case Slider(_, _, _, _, _):
         case MonarchSinglePick(_, _, _):
         case Button(_):
+        case TileSinglePick(_, _, _):
       }
     return [];
   }
@@ -718,10 +725,14 @@ class GameMatchCore implements IGameMatch {
     switch kind {
       case ConfirmDone:
         _activeSliceComplete = false;
+        _hasMovedThisTurn = false;
+        _strategyPreUsed = false;
+        _strategyPostUsed = false;
       case JiCe:
       case JiCeStagingSubmit:
       case Status:
       case Move:
+        _hasMovedThisTurn = true;
       case TileEventPick:
       case EmptyCityOccupySubmit:
       case EmptyCityOccupyAbort:
@@ -816,6 +827,7 @@ class GameMatchCore implements IGameMatch {
           sliders.push(v);
         case MonarchSinglePick(_, _, _):
         case Button(_):
+        case TileSinglePick(_, _, _):
       }
     if (sliders.length < 2)
       throw "GameMatchCore: 空城進駐節點須含 MultiPick 後至少兩個 Slider（兵力／糧食）";
@@ -835,6 +847,7 @@ class GameMatchCore implements IGameMatch {
         case GeneralMultiPick(_, _, _):
         case MonarchSinglePick(_, _, _):
         case Button(_):
+        case TileSinglePick(_, _, _):
       }
     if (sliders.length < 2)
       throw "GameMatchCore: 我方城池調度節點須含至少兩個 Slider（兵力／糧食）";
@@ -1013,6 +1026,15 @@ class GameMatchCore implements IGameMatch {
 
   public function roundNumber():Int
     return _roundNumber;
+
+  public function hasMovedThisTurn():Bool
+    return _hasMovedThisTurn;
+
+  public function canUseStrategyPreMove():Bool
+    return !_strategyPreUsed && !_hasMovedThisTurn;
+
+  public function canUseStrategyPostMove():Bool
+    return !_strategyPostUsed && _hasMovedThisTurn;
 
   public function monarchById(monarchId:MonarchId):IMonarch
     return monarchWithId(monarchId);

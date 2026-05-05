@@ -96,7 +96,7 @@ class LuoshiJiCe implements IJiCe {
   function readStagingPickGeneralId(widgets:Array<MenuFormWidget>):GeneralId {
     if (widgets.length == 0)
       throw "LuoshiJiCe: 計策暫存選單為空";
-    var raw:Array<String>;
+    var raw:Array<String> = [];
     if (widgets.length < 2)
       throw "LuoshiJiCe: 計策暫存選單缺少目標君主/選將元件";
     switch widgets[1] {
@@ -131,7 +131,7 @@ class LuoshiJiCe implements IJiCe {
   function readStagingPickTargetMonarchId(widgets:Array<MenuFormWidget>):MonarchId {
     if (widgets.length == 0)
       throw "LuoshiJiCe: 計策暫存選單為空";
-    var raw:Array<String>;
+    var raw:Array<String> = [];
     switch widgets[0] {
       case MonarchSinglePick(_, _, sel):
         raw = sel.copy();
