@@ -9,6 +9,7 @@ import game.MenuFormWidget;
 import js.Browser;
 import js.html.DivElement;
 import js.html.Element;
+import rx.disposables.ISubscription;
 import view.EventCenter;
 import view.IViewModel;
 import view.UiEvent;
@@ -21,6 +22,7 @@ import view.UiEvent;
 class HtmlActiveMenuView {
   final host:Element;
   final root:DivElement;
+  var vmSub:Null<ISubscription> = null;
 
   public function new(mountElementId:String) {
     var el = Browser.document.getElementById(mountElementId);
@@ -31,6 +33,9 @@ class HtmlActiveMenuView {
     root.className = "active-menu";
     host.appendChild(root);
 
+    vmSub = EventCenter.viewModelSubject.subscribe(function(vm:IViewModel) {
+      render(vm);
+    });
     var vm = EventCenter.currentViewModel;
     if (vm != null)
       render(vm);
@@ -68,17 +73,18 @@ class HtmlActiveMenuView {
 
     var leaf = n.leaf();
     if (leaf != null) {
-      row.appendChild(renderEntryButton(leaf, "leaf"));
+      row.appendChild(renderEntryButton(n, leaf, "leaf"));
     }
 
     var widgets = n.formWidgets();
     if (widgets != null && widgets.length > 0) {
       var form = Browser.document.createDivElement();
       form.className = "menu-form";
-      for (w in widgets)
+      for (i in 0...widgets.length) {
+        var w = widgets[i];
         switch w {
           case Button(e):
-            form.appendChild(renderEntryButton(e, "button"));
+            form.appendChild(renderEntryButton(n, e, "button"));
           case Slider(lbl, min, max, step, value):
             var wrap = Browser.document.createDivElement();
             wrap.className = "menu-slider";
@@ -93,7 +99,7 @@ class HtmlActiveMenuView {
             input.value = Std.string(value);
             input.oninput = function(_) {
               var v = Std.parseInt(input.value);
-              EventCenter.publishEvent(UiEvent.Slider(lbl, v == null ? value : v));
+              EventCenter.publishEvent(UiEvent.Slider(n, i, v == null ? value : v));
             };
             wrap.appendChild(input);
             form.appendChild(wrap);
@@ -108,6 +114,7 @@ class HtmlActiveMenuView {
             p.textContent = lbl + " = " + (selected != null ? selected.join(",") : "");
             form.appendChild(p);
         }
+      }
       row.appendChild(form);
     }
 
@@ -123,17 +130,17 @@ class HtmlActiveMenuView {
     return row;
   }
 
-  function renderEntryButton(e:IPlayerMenuEntry, role:String):Element {
+  function renderEntryButton(node:IPlayerMenuNode, e:IPlayerMenuEntry, role:String):Element {
     var btn = Browser.document.createButtonElement();
     btn.className = "menu-entry";
     btn.textContent = e.caption();
     btn.disabled = !e.isEnabled();
-    var tok = e.decisionToken();
     btn.onclick = function(_) {
-      EventCenter.publishEvent(UiEvent.MenuClick(e.kind(), tok));
+      EventCenter.publishEvent(UiEvent.MenuClick(node, e));
     };
     btn.setAttribute("data-role", role);
     btn.setAttribute("data-kind", Std.string(e.kind()));
+    var tok = e.decisionToken();
     if (tok != null)
       btn.setAttribute("data-token", tok);
     return btn;
@@ -143,6 +150,10 @@ class HtmlActiveMenuView {
     return root;
 
   public function dispose():Void {
+    if (vmSub != null) {
+      vmSub.unsubscribe();
+      vmSub = null;
+    }
     if (root.parentElement != null)
       root.parentElement.removeChild(root);
   }

@@ -1,6 +1,8 @@
 package view;
 
 import game.GameIds;
+import game.IPlayerMenuEntry;
+import game.IPlayerMenuNode;
 import game.PlayerMenuKind;
 
 /**
@@ -15,10 +17,10 @@ enum UiEvent {
   /** 點擊玩家/君主。 */
   PlayerClick(monarchId:MonarchId);
 
-  /** 點擊選單項目（kind + 可選 decisionToken）。 */
-  MenuClick(kind:PlayerMenuKind, decisionToken:Null<String>);
+  /** 點擊選單項目（帶入 node 與 entry；entry.kind/decisionToken 由 entry 提供）。 */
+  MenuClick(node:IPlayerMenuNode, entry:IPlayerMenuEntry);
 
-  /** 調整 Slider（以 id 辨識 + value）。 */
-  Slider(id:String, value:Int);
+  /** 調整 Slider：帶入 node 與 widgetIndex，並提供新值。 */
+  Slider(node:IPlayerMenuNode, widgetIndex:Int, value:Int);
 }
 

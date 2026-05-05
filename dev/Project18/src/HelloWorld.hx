@@ -49,7 +49,8 @@ class HelloWorld {
     match.createGeneral("g-a", "m-a", 1, 40, 1, 1);
     match.createGeneral("g-b", "m-b", 1, 10, 1, 1);
 
-    var vm = new BasicViewModel(match);
+    var core:impl_ver1.GameMatchCore = cast match;
+    var vm = new BasicViewModel(core);
     EventCenter.publishViewModel(vm);
 
     // 掛載點由 index.htm 提供

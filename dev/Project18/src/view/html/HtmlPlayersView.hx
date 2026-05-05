@@ -2,7 +2,9 @@ package view.html;
 
 import js.Browser;
 import js.html.Element;
+import rx.disposables.ISubscription;
 import view.EventCenter;
+import view.IViewModel;
 
 /**
  * 玩家面板容器：負責取得掛載點、建立 slot，並產生每個 HtmlPlayerView。
@@ -11,6 +13,7 @@ import view.EventCenter;
  */
 class HtmlPlayersView {
   final host:Element;
+  var vmSub:Null<ISubscription> = null;
 
   public function new(mountElementId:String) {
     var el = Browser.document.getElementById(mountElementId);
@@ -18,11 +21,15 @@ class HtmlPlayersView {
       throw 'HtmlPlayersView: mount element not found: "$mountElementId"';
     host = el;
 
-    // 先求簡單：依 currentViewModel 立即建一次
+    vmSub = EventCenter.viewModelSubject.subscribe(function(vm:IViewModel) {
+      render(vm);
+    });
     var vm = EventCenter.currentViewModel;
-    if (vm == null)
-      return;
+    if (vm != null) render(vm);
+  }
 
+  function render(vm:IViewModel):Void {
+    host.innerHTML = "";
     for (m in vm.monarchs()) {
       var id = "player-" + m.id();
       var slot = Browser.document.createDivElement();
@@ -30,6 +37,14 @@ class HtmlPlayersView {
       host.appendChild(slot);
       new HtmlPlayerView(id, m.id());
     }
+  }
+
+  public function dispose():Void {
+    if (vmSub != null) {
+      vmSub.unsubscribe();
+      vmSub = null;
+    }
+    host.innerHTML = "";
   }
 }
 

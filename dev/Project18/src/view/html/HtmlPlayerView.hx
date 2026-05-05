@@ -4,6 +4,7 @@ import game.GameIds;
 import js.Browser;
 import js.html.DivElement;
 import js.html.Element;
+import rx.disposables.ISubscription;
 import view.EventCenter;
 import view.IViewModel;
 import view.UiEvent;
@@ -17,6 +18,7 @@ class HtmlPlayerView {
   final monarchId:MonarchId;
   final host:Element;
   final root:DivElement;
+  var vmSub:Null<ISubscription> = null;
 
   public function new(mountElementId:String, monarchId:MonarchId) {
     this.monarchId = monarchId;
@@ -32,9 +34,11 @@ class HtmlPlayerView {
     root.onclick = function(_) {
       EventCenter.publishEvent(UiEvent.PlayerClick(monarchId));
     };
-    var vm = EventCenter.currentViewModel;
-    if (vm != null)
+    vmSub = EventCenter.viewModelSubject.subscribe(function(vm:IViewModel) {
       render(vm);
+    });
+    var vm = EventCenter.currentViewModel;
+    if (vm != null) render(vm);
   }
 
   function render(vm:IViewModel):Void {
@@ -52,6 +56,10 @@ class HtmlPlayerView {
     return root;
 
   public function dispose():Void {
+    if (vmSub != null) {
+      vmSub.unsubscribe();
+      vmSub = null;
+    }
     if (root.parentElement != null)
       root.parentElement.removeChild(root);
   }

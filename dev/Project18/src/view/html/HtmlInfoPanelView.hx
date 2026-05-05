@@ -3,6 +3,7 @@ package view.html;
 import js.Browser;
 import js.html.DivElement;
 import js.html.Element;
+import rx.disposables.ISubscription;
 import view.EventCenter;
 import view.IViewModel;
 
@@ -14,6 +15,7 @@ import view.IViewModel;
 class HtmlInfoPanelView {
   final host:Element;
   final root:DivElement;
+  var vmSub:Null<ISubscription> = null;
 
   public function new(mountElementId:String) {
     var el = Browser.document.getElementById(mountElementId);
@@ -24,6 +26,9 @@ class HtmlInfoPanelView {
     root.className = "info-panel";
     host.appendChild(root);
 
+    vmSub = EventCenter.viewModelSubject.subscribe(function(vm:IViewModel) {
+      render(vm);
+    });
     var vm = EventCenter.currentViewModel;
     if (vm != null)
       render(vm);
@@ -44,6 +49,10 @@ class HtmlInfoPanelView {
     return root;
 
   public function dispose():Void {
+    if (vmSub != null) {
+      vmSub.unsubscribe();
+      vmSub = null;
+    }
     if (root.parentElement != null)
       root.parentElement.removeChild(root);
   }

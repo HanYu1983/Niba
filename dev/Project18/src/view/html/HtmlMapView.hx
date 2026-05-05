@@ -5,6 +5,7 @@ import game.TileKind;
 import js.Browser;
 import js.html.DivElement;
 import js.html.Element;
+import rx.disposables.ISubscription;
 import view.EventCenter;
 import view.IViewModel;
 import view.UiEvent;
@@ -17,6 +18,7 @@ import view.UiEvent;
 class HtmlMapView {
   final host:Element;
   final root:DivElement;
+  var vmSub:Null<ISubscription> = null;
 
   public function new(mountElementId:String) {
     var el = Browser.document.getElementById(mountElementId);
@@ -26,9 +28,11 @@ class HtmlMapView {
     root = Browser.document.createDivElement();
     root.className = "map";
     host.appendChild(root);
-    var vm = EventCenter.currentViewModel;
-    if (vm != null)
+    vmSub = EventCenter.viewModelSubject.subscribe(function(vm:IViewModel) {
       render(vm);
+    });
+    var vm = EventCenter.currentViewModel;
+    if (vm != null) render(vm);
   }
 
   function render(vm:IViewModel):Void {
@@ -76,6 +80,10 @@ class HtmlMapView {
     return root;
 
   public function dispose():Void {
+    if (vmSub != null) {
+      vmSub.unsubscribe();
+      vmSub = null;
+    }
     if (root.parentElement != null)
       root.parentElement.removeChild(root);
   }

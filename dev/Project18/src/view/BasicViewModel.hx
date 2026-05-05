@@ -2,7 +2,8 @@ package view;
 
 import game.GameIds;
 import game.IBoard;
-import game.IGameMatch;
+import game.IPlayerMenuEntry;
+import game.IPlayerMenuNode;
 import game.IJiCe;
 import game.IJiCeMovementStepHook;
 import game.IJiCeStagingPreviewRow;
@@ -12,18 +13,61 @@ import game.IPlayerMenu;
 import game.ITile;
 import game.ITileEvent;
 import game.MatchTerminationReason;
+import game.MenuFormWidget;
+import impl_ver1.GameMatchCore;
+import rx.disposables.ISubscription;
+import view.UiEvent;
 
 /**
  * 最小可用的 ViewModel 包裝：直接委派到底層 IGameMatch（以便快速把 HTML view 跑起來）。
  */
 class BasicViewModel implements IViewModel {
-  final match:IGameMatch;
+  final match:GameMatchCore;
+  var evSub:Null<ISubscription> = null;
 
-  public function new(match:IGameMatch) {
+  public function new(match:GameMatchCore) {
     this.match = match;
+    evSub = EventCenter.onEventSubject.subscribe(handleUiEvent);
   }
 
-  public function dispose():Void {}
+  public function dispose():Void {
+    if (evSub != null) {
+      evSub.unsubscribe();
+      evSub = null;
+    }
+  }
+
+  function handleUiEvent(ev:UiEvent):Void {
+    switch ev {
+      case TileClick(_):
+      case PlayerClick(_):
+      case Slider(node, widgetIndex, value):
+        applySliderToNode(node, widgetIndex, value);
+        EventCenter.publishViewModel(this);
+      case MenuClick(node, entry):
+        applyMenuClick(node, entry);
+        EventCenter.publishViewModel(this);
+    }
+  }
+
+  function applySliderToNode(node:IPlayerMenuNode, widgetIndex:Int, value:Int):Void {
+    var widgets = node.formWidgets();
+    if (widgets == null || widgetIndex < 0 || widgetIndex >= widgets.length)
+      return;
+    switch widgets[widgetIndex] {
+      case Slider(lbl, min, max, step, _):
+        widgets[widgetIndex] = Slider(lbl, min, max, step, value);
+      default:
+    }
+  }
+
+  function applyMenuClick(node:IPlayerMenuNode, entry:IPlayerMenuEntry):Void {
+    // 若為表單內 Button，需標記 activationEntry
+    node.setActivationEntry(entry);
+    var a = match.activeMonarch();
+    var actor:IPlayer = new LocalPlayer(a.id(), "active");
+    match.applyMenuLeaf(actor, node);
+  }
 
   public function board():IBoard
     return match.board();
@@ -102,5 +146,16 @@ class BasicViewModel implements IViewModel {
 
   public function createPlayerMenu(actor:IPlayer):IPlayerMenu
     return match.createPlayerMenu(actor);
+}
+
+private class LocalPlayer implements IPlayer {
+  final mid:MonarchId;
+  final name:String;
+  public function new(mid:MonarchId, name:String) {
+    this.mid = mid;
+    this.name = name;
+  }
+  public function monarchId():MonarchId return mid;
+  public function displayName():String return name;
 }
 
