@@ -16,6 +16,7 @@ import game.MatchTerminationReason;
 import game.MenuFormWidget;
 import impl_ver1.core.GameMatchCore;
 import game.IPopupMessage;
+import game.PopupPayload;
 import js.Browser;
 import rx.disposables.ISubscription;
 import view.UiEvent;
@@ -82,7 +83,7 @@ class BasicViewModel implements IViewModel {
     var xs:Array<IPopupMessage> = match.pendingPopups(mid);
     for (p in xs) {
       // v0：先用 alert，之後可改成真正的 modal 元件。
-      Browser.window.alert(p.title() + "\n\n" + p.message());
+      Browser.window.alert(p.title() + "\n\n" + popupPayloadText(p.payload()));
       match.ackPopup(mid, p.id());
     }
   }
@@ -220,6 +221,12 @@ class BasicViewModel implements IViewModel {
 
   public function ackPopup(monarchId:MonarchId, popupId:String):Void
     match.ackPopup(monarchId, popupId);
+
+  static function popupPayloadText(p:PopupPayload):String {
+    return switch p {
+      case Plain(text): text;
+    };
+  }
 }
 
 private class LocalPlayer implements IPlayer {

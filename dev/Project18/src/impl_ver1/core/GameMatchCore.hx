@@ -25,6 +25,7 @@ import game.MenuGeneralChoice;
 import game.MenuFormWidget;
 import game.PopupAudience;
 import game.PopupOption;
+import game.PopupPayload;
 import game.PlayerMenuKind;
 import game.StrategyPhase;
 import game.TileKind;
@@ -479,11 +480,11 @@ class GameMatchCore implements IGameMatch {
       }
   }
 
-  function pushPopupToMonarch(monarchId:MonarchId, title:String, message:String, option:PopupOption, ctxKey:String):String {
+  function pushPopupToMonarch(monarchId:MonarchId, title:String, payload:PopupPayload, option:PopupOption, ctxKey:String):String {
     if (!_popupsByMonarchId.exists(monarchId))
       _popupsByMonarchId.set(monarchId, []);
     var id = popupId(monarchId, ctxKey);
-    _popupsByMonarchId.get(monarchId).push(new PopupMessage(id, ToMonarch(monarchId), title, message, option));
+    _popupsByMonarchId.get(monarchId).push(new PopupMessage(id, ToMonarch(monarchId), title, payload, option));
     return id;
   }
 
@@ -1338,7 +1339,7 @@ class GameMatchCore implements IGameMatch {
 
     // v0：先提供最小可見性（方便 UI 串接與回歸測試）
     // 之後可改為在各規剘點（例如事件/交易/攻城結算）精準 push。
-    pushPopupToMonarch(actor.monarchId(), "完成指令", leaf.caption(), Ok, "apply");
+    pushPopupToMonarch(actor.monarchId(), "完成指令", Plain(leaf.caption()), Ok, "apply");
   }
 
   function advanceActiveMonarchAfterConfirmDone():Void {

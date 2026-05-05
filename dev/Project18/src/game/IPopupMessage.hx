@@ -7,7 +7,7 @@ interface IPopupMessage {
   function id():String;
   function audience():PopupAudience;
   function title():String;
-  function message():String;
+  function payload():PopupPayload;
   function option():PopupOption;
 }
 
