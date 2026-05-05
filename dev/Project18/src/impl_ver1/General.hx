@@ -3,6 +3,8 @@ package impl_ver1;
 import game.GameIds;
 import game.GeneralStat;
 import game.IGeneral;
+import game.IEquipment;
+import game.PositionRank;
 import game.Rarity;
 
 class General implements IGeneral {
@@ -16,6 +18,8 @@ class General implements IGeneral {
   var _loyalty:Int;
   var _merit:Int;
   var _rarity:Rarity;
+  var _rank:PositionRank;
+  var _equipments:Array<IEquipment>;
 
   public function new(id:GeneralId, owner:MonarchId, command:Int, might:Int, wit:Int, stewardship:Int) {
     _id = id;
@@ -28,6 +32,8 @@ class General implements IGeneral {
     _loyalty = 100;
     _merit = 0;
     _rarity = Common;
+    _rank = Soldier;
+    _equipments = [];
   }
 
   public function id():GeneralId
@@ -60,4 +66,10 @@ class General implements IGeneral {
 
   public function rarity():Rarity
     return _rarity;
+
+  public function positionRank():PositionRank
+    return _rank;
+
+  public function equipments():Array<IEquipment>
+    return _equipments;
 }

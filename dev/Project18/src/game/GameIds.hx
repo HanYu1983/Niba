@@ -19,3 +19,6 @@ typedef LevelKey = String;
 
 /** 計策類型資料鍵（對應 IJiCe.registryKey／資料表 id）。 */
 typedef JiCeKey = String;
+
+/** 裝備實體辨識（可對應資料表 id + 生成序號）。 */
+typedef EquipmentId = String;

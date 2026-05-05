@@ -43,5 +43,17 @@ class Balance {
       return hi;
     return x;
   }
+
+  /** docs/裝備系統.md：職位 → 裝備數量上限。 */
+  public static function equipmentLimit(rank:PositionRank):Int {
+    return switch rank {
+      case Soldier: 1;
+      case SquadLeader: 1;
+      case SectionLeader: 2;
+      case Captain: 2;
+      case General: 3;
+      case GreatGeneral: 4;
+    };
+  }
 }
 

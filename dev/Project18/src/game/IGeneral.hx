@@ -2,6 +2,8 @@ package game;
 
 import game.GameIds;
 import game.Rarity;
+import game.IEquipment;
+import game.PositionRank;
 
 /**
  * GDD：武將為君主麾下之可指派單位；四維數值為規剘共用度量。
@@ -30,4 +32,10 @@ interface IGeneral {
 
     /** 稀有度。 */
     function rarity():Rarity;
+
+    /** 職位（影響可裝備數量）。 */
+    function positionRank():PositionRank;
+
+    /** 已裝備列表（裝備一旦裝上不可拆；故只會增長）。 */
+    function equipments():Array<IEquipment>;
 }
