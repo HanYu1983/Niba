@@ -132,6 +132,66 @@
       .info-panel .info-stats{ display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
       .info-panel .info-generals{ margin-top:10px; padding-top:10px; border-top: 1px dashed rgba(42,49,64,.18); display:flex; gap:6px; flex-wrap:wrap; }
 
+      /* --- tabs + table --- */
+      .ui-tabs{
+        display:flex;
+        gap:8px;
+        margin-top: 10px;
+        padding-bottom: 10px;
+        border-bottom: 1px dashed rgba(42,49,64,.18);
+      }
+      .ui-tab{
+        appearance: none;
+        border: 1px solid rgba(42,49,64,.18);
+        background: rgba(255,255,255,.45);
+        color: rgba(26,31,42,.85);
+        border-radius: 999px;
+        padding: 7px 12px;
+        font-size: 12px;
+        cursor: pointer;
+        transition: transform .12s ease, background .12s ease, border-color .12s ease;
+      }
+      .ui-tab:hover{ transform: translateY(-1px); background: rgba(255,255,255,.65); border-color: rgba(199,163,74,.45); }
+      .ui-tab.is-active{
+        border-color: rgba(199,163,74,.65);
+        background: rgba(226,195,110,.18);
+        color: var(--ink-2);
+        box-shadow: 0 8px 18px rgba(15,17,21,.10);
+      }
+      .ui-tab-body{ padding-top: 10px; }
+
+      .ui-table{
+        width:100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        overflow: hidden;
+        border-radius: 12px;
+        border: 1px solid rgba(42,49,64,.16);
+        background: rgba(255,255,255,.45);
+        box-shadow: 0 10px 22px rgba(15,17,21,.08);
+      }
+      .ui-th{
+        text-align:left;
+        font-size: 11px;
+        letter-spacing:.08em;
+        color: rgba(26,31,42,.75);
+        padding: 10px 10px;
+        background: linear-gradient(180deg, rgba(239,229,209,.65), rgba(255,255,255,.35));
+        border-bottom: 1px solid rgba(42,49,64,.12);
+        position: sticky;
+        top: 0;
+      }
+      .ui-td{
+        font-size: 12px;
+        padding: 9px 10px;
+        border-bottom: 1px solid rgba(42,49,64,.10);
+        color: rgba(26,31,42,.90);
+      }
+      .ui-td-name{ font-weight: 900; color: var(--ink-2); }
+      .ui-td-num{ text-align: right; font-variant-numeric: tabular-nums; }
+      .ui-empty{ text-align:center; color: rgba(26,31,42,.65); padding: 14px 10px; }
+      .ui-table tr:last-child .ui-td{ border-bottom: 0; }
+
       /* --- menu --- */
       .active-menu-title{ font-size: 12px; margin: 6px 0 10px; display:flex; align-items:center; justify-content:space-between; gap:8px; }
       .active-menu-title .title-main{ font-weight: 900; letter-spacing:.06em; color: var(--ink-2); }
