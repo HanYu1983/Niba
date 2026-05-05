@@ -8,6 +8,7 @@ import game.IGeneral;
 import game.IEquipment;
 import game.PositionRank;
 import game.Rarity;
+import game.Balance;
 
 class General implements IGeneral {
   var _id:GeneralId;
@@ -49,12 +50,19 @@ class General implements IGeneral {
     return _owner;
 
   public function stat(which:GeneralStat):Int {
-    return switch which {
+    var base = switch which {
       case Command: _command;
       case Might: _might;
       case Wit: _wit;
       case Stewardship: _stewardship;
     };
+    var bonus = 0;
+    if (_equipments != null) {
+      for (eq in _equipments)
+        if (eq != null && eq.bonusStat() == which)
+          bonus += eq.bonusValue();
+    }
+    return base + bonus;
   }
 
   public function stamina():Int
@@ -110,4 +118,18 @@ class General implements IGeneral {
 
   public function equipments():Array<IEquipment>
     return _equipments;
+
+  /**
+   * docs/裝備系統.md：裝備一旦裝上不可拆下。
+   * 規剘：裝備時立即增加忠誠度；超過職位上限則拒絕。
+   */
+  public function addEquipment(eq:IEquipment):Void {
+    if (eq == null)
+      throw "General.addEquipment: eq is null";
+    var limit = Balance.equipmentLimit(_rank);
+    if (_equipments.length >= limit)
+      throw 'General.addEquipment: over limit (rank=${Std.string(_rank)} limit=$limit)';
+    _equipments.push(eq);
+    setLoyalty(_loyalty + eq.loyaltyBonus());
+  }
 }

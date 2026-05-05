@@ -26,6 +26,7 @@ import view.html.HtmlInfoPanelView;
 import view.html.HtmlActiveMenuView;
 import view.html.HtmlMapView;
 import view.html.HtmlPlayersView;
+import impl_ver1.core.GameMatchCore;
 
 class HelloWorld {
   static function main() {
@@ -83,6 +84,12 @@ class HelloWorld {
     match.createGeneral("g-b-1", "m-b", 1, 40, 1, 1);
     match.createGeneral("g-b-2", "m-b", 1, 20, 1, 1);
     match.createGeneral("g-b-3", "m-b", 1, 10, 1, 1);
+
+    // --- 裝備 demo：替部分武將配武器（見 docs/裝備系統.md）---
+    var core = cast(match, GameMatchCore);
+    core.forceEquipWeaponByName("g-a-1", "eq-a-1", "村正");
+    core.forceEquipWeaponByName("g-a-2", "eq-a-2", "長槍");
+    core.forceEquipWeaponByName("g-b-1", "eq-b-1", "青龍偃月刀");
 
     // 所有格位皆為城池：先交錯標記屬主
     for (i in 0...12)

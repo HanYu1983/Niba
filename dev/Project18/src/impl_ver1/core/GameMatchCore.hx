@@ -18,6 +18,7 @@ import game.ITile;
 import game.ITileEvent;
 import game.IPlayerCommand;
 import game.Balance;
+import game.IEquipment;
 import game.MenuActivation;
 import game.MenuGeneralChoice;
 import game.MenuFormWidget;
@@ -36,6 +37,7 @@ import impl_ver1.model.PlayerMenu;
 import impl_ver1.model.PlayerMenuEntry;
 import impl_ver1.model.PlayerMenuNode;
 import impl_ver1.model.Tile;
+import impl_ver1.equipment.WeaponCatalog;
 import impl_ver1.rules.GameMatchVer1Ops;
 import impl_ver1.staging.FriendlyCityDevelopStagingAction;
 import impl_ver1.staging.FriendlyCityRestStagingAction;
@@ -411,6 +413,30 @@ class GameMatchCore implements IGameMatch {
     var gen = new General(id, owner, command, might, wit, stewardship);
     monarchWithId(owner).addGeneral(gen);
     return gen;
+  }
+
+  /**
+   * docs/裝備系統.md：裝備裝上不可拆下。
+   * ver1 暫提供 force API，供 demo/測試/關卡組立注入武器。
+   */
+  public function forceEquipWeaponByName(generalId:GeneralId, equipmentId:EquipmentId, weaponName:String, ?price:Int):Void {
+    var g = requireGeneral(generalId);
+    var eq = WeaponCatalog.spawnByName(equipmentId, weaponName, price);
+    g.addEquipment(eq);
+  }
+
+  /** demo/測試：直接注入任意裝備實例。 */
+  public function forceEquipEquipment(generalId:GeneralId, eq:IEquipment):Void {
+    var g = requireGeneral(generalId);
+    g.addEquipment(eq);
+  }
+
+  function requireGeneral(gid:GeneralId):General {
+    for (m in _monarchs)
+      for (g in m.roster())
+        if (g != null && g.id() == gid)
+          return cast g;
+    throw 'GameMatchCore: general "$gid" not found';
   }
 
   public function createMonarch(id:MonarchId, seat:Int, pawnIndex:TileIndex, ?troops:Int, ?grain:Int):IMonarch {
