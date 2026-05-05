@@ -166,6 +166,12 @@ class BasicViewModel implements IViewModel {
   public function forceGetCityStoredGrain(at:TileIndex):Int
     return match.forceGetCityStoredGrain(at);
 
+  public function forceGetCityLevel(at:TileIndex):game.CityLevel
+    return match.forceGetCityLevel(at);
+
+  public function forceGetCityOwner(at:TileIndex):Null<MonarchId>
+    return match.forceGetCityOwner(at);
+
   public function forceGetCityGarrisonGeneralIds(at:TileIndex):Array<GeneralId>
     return match.forceGetCityGarrisonGeneralIds(at);
 
@@ -174,6 +180,9 @@ class BasicViewModel implements IViewModel {
 
   public function forceGetPendingVillageTile():Null<TileIndex>
     return match.forceGetPendingVillageTile();
+
+  public function forceGetVillageFriendly(at:TileIndex, monarchId:MonarchId):Int
+    return match.forceGetVillageFriendly(at, monarchId);
 
   public function forceGetPendingHostileCityTile():Null<TileIndex>
     return match.forceGetPendingHostileCityTile();

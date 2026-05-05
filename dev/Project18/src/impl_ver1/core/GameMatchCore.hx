@@ -24,6 +24,7 @@ import game.MenuFormWidget;
 import game.PlayerMenuKind;
 import game.StrategyPhase;
 import game.TileKind;
+import game.CityLevel;
 import impl_ver1.commands.Ver1MainCommands;
 import impl_ver1.flows.HostileCityPhase;
 import impl_ver1.jice.JiCeRegistry;
@@ -96,10 +97,13 @@ class GameMatchCore implements IGameMatch {
   var _cityStockGrain:Map<Int, Int>;
   var _pendingEmptyCityTileIndex:Null<TileIndex>;
   var _cityOwner:Map<Int, MonarchId>;
+  var _cityLevel:Map<Int, CityLevel>;
   var _pendingFriendlyCityTileIndex:Null<TileIndex>;
 
   /** --- 村落互動 pending（交易/搶奪/攻占）--- */
   var _pendingVillageTileIndex:Null<TileIndex>;
+  /** 村落格索引 →（君主 id → 友好度 0~100）。 */
+  var _villageFriendly:Map<Int, Map<MonarchId, Int>>;
 
   /** --- 策略（指定格子）暫存效果骨架 --- */
   // TODO(strategy): 目前僅存放「下回合加成」等占位資料；需定義：
@@ -145,8 +149,10 @@ class GameMatchCore implements IGameMatch {
     _cityStockGrain = new Map();
     _pendingEmptyCityTileIndex = null;
     _cityOwner = new Map();
+    _cityLevel = new Map();
     _pendingFriendlyCityTileIndex = null;
     _pendingVillageTileIndex = null;
+    _villageFriendly = new Map();
     _tileNextTurnGrainBonus = new Map();
     _tileNextTurnGoldBonus = new Map();
     _tileDefenseBonus = new Map();
@@ -501,6 +507,51 @@ class GameMatchCore implements IGameMatch {
   public function forceGetCityStoredGrain(at:TileIndex):Int
     return _cityStockGrain.exists(at) ? _cityStockGrain.get(at) : 0;
 
+  public function forceGetCityLevel(at:TileIndex):CityLevel {
+    if (_cityLevel.exists(at))
+      return _cityLevel.get(at);
+    return CityLevel.SmallCity;
+  }
+
+  public function forceSetCityLevel(at:TileIndex, level:CityLevel):Void {
+    if (_board == null)
+      throw "GameMatchCore.forceSetCityLevel: board not set";
+    if (_board.tileAt(at).kind() != City)
+      throw "GameMatchCore.forceSetCityLevel: not a City tile";
+    _cityLevel.set(at, level);
+  }
+
+  function ensureVillageRow(at:TileIndex):Map<MonarchId, Int> {
+    if (_villageFriendly.exists(at))
+      return _villageFriendly.get(at);
+    var row = new Map<MonarchId, Int>();
+    for (m in _monarchs)
+      row.set(m.id(), 50);
+    _villageFriendly.set(at, row);
+    return row;
+  }
+
+  public function forceGetVillageFriendly(at:TileIndex, monarchId:MonarchId):Int {
+    if (_board == null)
+      throw "GameMatchCore.forceGetVillageFriendly: board not set";
+    if (_board.tileAt(at).kind() != Village)
+      throw "GameMatchCore.forceGetVillageFriendly: not a Village tile";
+    var row = ensureVillageRow(at);
+    if (!row.exists(monarchId))
+      row.set(monarchId, 50);
+    return row.get(monarchId);
+  }
+
+  public function forceSetVillageFriendly(at:TileIndex, monarchId:MonarchId, friendly:Int):Void {
+    if (_board == null)
+      throw "GameMatchCore.forceSetVillageFriendly: board not set";
+    if (_board.tileAt(at).kind() != Village)
+      throw "GameMatchCore.forceSetVillageFriendly: not a Village tile";
+    monarchWithId(monarchId);
+    var v = Balance.clampInt(friendly, 0, 100);
+    ensureVillageRow(at).set(monarchId, v);
+  }
+
   public function forceAssignCityGarrison(at:TileIndex, generalId:GeneralId):Void {
     if (_board == null)
       throw "GameMatchCore.forceAssignCityGarrison: board not set";
@@ -527,6 +578,8 @@ class GameMatchCore implements IGameMatch {
       throw "GameMatchCore.forceSetCityOwner: not a City tile";
     monarchWithId(ownerMonarchId);
     _cityOwner.set(at, ownerMonarchId);
+    if (!_cityLevel.exists(at))
+      _cityLevel.set(at, CityLevel.SmallCity);
   }
 
   /** 關卡/規剘：標記城池格屬主（正式 API；非 force）。 */
@@ -559,6 +612,22 @@ class GameMatchCore implements IGameMatch {
   public function forceGetPendingHostileCityTile():Null<TileIndex>
     return _pendingHostileCityTileIndex;
 
+  public function forceGetHostileCityAttackerId():Null<MonarchId> {
+    return _hostileCityAttackerId != "" ? _hostileCityAttackerId : null;
+  }
+
+  public function forceGetHostileCityDefenderId():Null<MonarchId> {
+    return _hostileCityDefenderId != "" ? _hostileCityDefenderId : null;
+  }
+
+  public function forceGetHostileCityAttackerChoiceToken():Null<String> {
+    return _hostileCityAttackerChoiceToken != "" ? _hostileCityAttackerChoiceToken : null;
+  }
+
+  public function forceGetHostileCityAttackerGeneralId():Null<GeneralId> {
+    return _hostileCityAttackerGeneralIds.length > 0 ? _hostileCityAttackerGeneralIds[0] : null;
+  }
+
   public function forceGetHostileCityFlowPhase():Null<String> {
     if (_hostileCityPhase == null)
       return null;
@@ -581,6 +650,14 @@ class GameMatchCore implements IGameMatch {
     if (_board.tileAt(at).kind() != City)
       return false;
     return _cityOwner.exists(at) && _cityOwner.get(at) == activeMonarch().id();
+  }
+
+  public function forceGetCityOwner(at:TileIndex):Null<MonarchId> {
+    if (_board == null)
+      throw "GameMatchCore.forceGetCityOwner: board not set";
+    if (_board.tileAt(at).kind() != City)
+      throw "GameMatchCore.forceGetCityOwner: not a City tile";
+    return _cityOwner.exists(at) ? _cityOwner.get(at) : null;
   }
 
   function menuChoicesFromRoster(mon:Monarch):Array<MenuGeneralChoice> {
@@ -905,6 +982,8 @@ class GameMatchCore implements IGameMatch {
       case City:
         landingResolveCityTile(idx);
       case Village:
+        // 骨架：第一次踩到某村落時，初始化每位君主友好度預設 50
+        ensureVillageRow(idx);
         _pendingVillageTileIndex = idx;
       case Plain:
       case Battle:

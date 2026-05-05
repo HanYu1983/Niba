@@ -4,8 +4,11 @@ import game.GameIds;
 import game.MovementStepOutcome;
 import game.IPlayer;
 import game.IPlayerMenuNode;
+import game.Balance;
+import game.GeneralStat;
 import impl_ver1.core.GameMatchCore;
 import impl_ver1.model.Monarch;
+import impl_ver1.model.General;
 
 /**
  * Ver1 規剘：終局、移動（逐步前進並呼叫 {@link game.IJiCeMovementStepHook}）、進駐／調度數值；敵城對峙戰果套用鉤子。
@@ -127,7 +130,59 @@ class GameMatchVer1Ops {
   public static function onHostileCityDefenderDuelPickConfirmed(m:GameMatchCore, actor:IPlayer, menuNode:IPlayerMenuNode):Void {}
 
   /** 攻方確認結算後套用實際戰果（扣糧、易主、駐軍損耗等）；呼叫時仍可讀 pending 暫存。 */
-  public static function applyHostileCitySettlementAck(m:GameMatchCore, actor:IPlayer, menuNode:IPlayerMenuNode):Void {}
+  public static function applyHostileCitySettlementAck(m:GameMatchCore, actor:IPlayer, menuNode:IPlayerMenuNode):Void {
+    var idx = m.forceGetPendingHostileCityTile();
+    if (idx == null)
+      return;
+    var tok = m.forceGetHostileCityAttackerChoiceToken();
+    if (tok == null)
+      return;
+    // 目前僅把「攻城戰」接成真結算線，其他選項仍保留流程骨架。
+    if (tok != "siege")
+      return;
+
+    var atkId = m.forceGetHostileCityAttackerId();
+    var defId = m.forceGetHostileCityDefenderId();
+    if (atkId == null || defId == null)
+      return;
+
+    var atkMon = cast(m.monarchById(atkId), Monarch);
+    var defCityTroops = m.forceGetCityStoredTroops(idx);
+    var level = m.forceGetCityLevel(idx);
+    var cityBonus = Balance.cityDefenseBonus(level);
+
+    // 攻城投入：最多 500，若不足則投入現有兵力
+    var commit = Std.int(Math.min(500, atkMon.troops()));
+    if (commit <= 0)
+      return;
+
+    // 取攻方選擇武將（應恰好一名）
+    var gid = m.forceGetHostileCityAttackerGeneralId();
+    var gAtk:Null<General> = null;
+    for (g in atkMon.roster())
+      if (g.id() == gid) {
+        gAtk = cast g;
+        break;
+      }
+    if (gAtk == null)
+      return;
+
+    var atkPower = commit * ((gAtk.stat(Might) / 100.0) + (gAtk.stat(Command) / 100.0) * 0.5) * Balance.staminaModifier(gAtk.stamina());
+    var defPower = defCityTroops * 0.8 * cityBonus; // 骨架：守城以 city stored troops 為主
+    var win = atkPower > defPower;
+
+    if (win) {
+      // 攻方投入損耗 20%
+      atkMon.reduceTroops(Std.int(Math.floor(commit * 0.2)));
+      // 城池易主，並削減城池駐軍（骨架：-30%）
+      var newTroops = Std.int(Math.floor(defCityTroops * 0.7));
+      m.forcePutCityStores(idx, newTroops, m.forceGetCityStoredGrain(idx));
+      m.forceSetCityOwner(idx, atkId);
+    } else {
+      // 攻方失敗：投入損耗 50%
+      atkMon.reduceTroops(Std.int(Math.floor(commit * 0.5)));
+    }
+  }
 
   static function clampInt(v:Int, lo:Int, hi:Int):Int {
     if (v < lo)

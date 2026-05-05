@@ -60,6 +60,9 @@ class VillageTradeStagingAction implements IStagingAction {
     var ruler = cast(match.activeMonarch(), Monarch);
     if (actor.monarchId() != ruler.id())
       throw "VillageTradeStagingAction: actor must be active monarch";
+    var vIdx = match.forceGetPendingVillageTile();
+    if (vIdx == null)
+      throw "VillageTradeStagingAction: no pendingVillage";
 
     var picked:Array<String> = [];
     for (w in menuNode.formWidgets())
@@ -79,8 +82,18 @@ class VillageTradeStagingAction implements IStagingAction {
     if (gid == null || picked.length == 0)
       throw "VillageTradeStagingAction: must pick a general";
 
-    // 目前先當作必定成功：給固定收益，並做一點體力消耗（低消耗策略級別）
+    // 真結算線（骨架）：
+    // - 成功率暫不擲隨機（避免測試不穩）；先視為成功。
+    // - 消耗金錢換糧食：20 gold → 50 grain（之後可依友好度調整比例）
+    // - 友好度 +10（上限 100）
+    var costGold = 20;
+    if (ruler.gold() < costGold)
+      throw "VillageTradeStagingAction: insufficient gold";
+    ruler.reduceGold(costGold);
     ruler.grantGrain(50);
+    var prevF = match.forceGetVillageFriendly(vIdx, ruler.id());
+    match.forceSetVillageFriendly(vIdx, ruler.id(), prevF + 10);
+
     for (g in ruler.roster())
       if (g.id() == gid) {
         var gg = cast(g, General);

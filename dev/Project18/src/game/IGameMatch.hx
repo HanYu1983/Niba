@@ -17,6 +17,7 @@ import game.IMonarch;
 import game.IPlayerMenuNode;
 import game.PlayerMenuKind;
 import game.IGameMatchGetter;
+import game.CityLevel;
 
 /**
  * GDD：一局對戲之頂層聚合視角（類大富翁踩點行軍）。
@@ -65,6 +66,12 @@ interface IGameMatch extends IGameMatchGetter {
 
     /** 除錯／測試：直接寫入城池格儲備（兵力／糧食）。 */
     function forcePutCityStores(at:TileIndex, troops:Int, grain:Int):Void;
+
+    /** 除錯／測試：直接寫入城池等級。 */
+    function forceSetCityLevel(at:TileIndex, level:CityLevel):Void;
+
+    /** 除錯／測試：直接寫入村落對玩家友好度（0~100）。 */
+    function forceSetVillageFriendly(at:TileIndex, monarchId:MonarchId, friendly:Int):Void;
 
     /** 單格；多格按索引有序組裝後再交由 createBoard。 */
     function createTile(index:TileIndex, kind:TileKind):ITile;

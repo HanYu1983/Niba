@@ -11,6 +11,7 @@ import game.IBoard;
 import game.IMonarch;
 import game.IPlayerMenuNode;
 import game.ITile;
+import game.CityLevel;
 
 /**
  * 賽局「唯讀」視角：狀態查詢＋選單快照生成（不得改變賽局內容）。
@@ -117,6 +118,9 @@ interface IGameMatchGetter {
   /** 除錯／測試：城池格累計進駐糧食（無紀錄為 0）。 */
   function forceGetCityStoredGrain(at:TileIndex):Int;
 
+  /** 除錯／測試：城池等級（無紀錄時由實作給預設）。 */
+  function forceGetCityLevel(at:TileIndex):CityLevel;
+
   /** 除錯／測試：該城池格駐守武將 id 列表（無則空陣列）。 */
   function forceGetCityGarrisonGeneralIds(at:TileIndex):Array<GeneralId>;
 
@@ -125,6 +129,9 @@ interface IGameMatchGetter {
 
   /** 除錯／測試：踩中村落格後，尚待完成互動指令時為該格索引；否則 null。 */
   function forceGetPendingVillageTile():Null<TileIndex>;
+
+  /** 除錯／測試：村落對指定玩家之友好度（0~100）；無紀錄時由實作給預設。 */
+  function forceGetVillageFriendly(at:TileIndex, monarchId:MonarchId):Int;
 
   /** 除錯／測試：踩中非友方且有駐軍城池後之多階段對峙尚未結束時為該格索引；否則 null。 */
   function forceGetPendingHostileCityTile():Null<TileIndex>;
@@ -137,6 +144,9 @@ interface IGameMatchGetter {
 
   /** 該城格 {@link TileKind.City} 之屬主為當前行動君主時為 true。 */
   function cityOwnedByActiveMonarch(at:TileIndex):Bool;
+
+  /** 除錯／測試：城池格屬主（無屬主則 null）。 */
+  function forceGetCityOwner(at:TileIndex):Null<MonarchId>;
 
   /**
    * 依當前賽局×操作者建立主選單快照（移動／計策／狀態／確認等）。

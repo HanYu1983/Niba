@@ -19,6 +19,7 @@ import game.PlayerMenuKind.VillageConquer;
 import game.PlayerMenuKind.VillageTrade;
 import game.TileKind;
 import game.LevelKeys;
+import impl_ver1.model.Monarch;
 
 /**
  * 指令菜單流程：移動落在 Village → 出現村落指令（交易/攻占）→ 進 staging → 提交 → 村落 pending 清除 → 可結束。
@@ -44,6 +45,8 @@ class VillageMenuFlowTest {
     match.createGeneral("g-a-2", idA, 20, 20, 20, 20);
     match.createGeneral("g-a-3", idA, 10, 10, 10, 10);
     var actor:IPlayer = match.createPlayer(idA, "A");
+    // 交易骨架：需要足夠 gold 才能提交
+    cast(match.activeMonarch(), Monarch).grantGold(100);
 
     // Move 前：不應出現村落指令
     var m0 = match.createPlayerMenu(actor);
