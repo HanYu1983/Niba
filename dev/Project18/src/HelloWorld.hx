@@ -16,6 +16,11 @@ import game.IPlayerMenuNode;
 import game.MenuGeneralChoice;
 import game.MenuFormWidget;
 import game.PlayerMenuKind;
+import js.Browser;
+import view.BasicViewModel;
+import view.EventCenter;
+import view.html.HtmlMapView;
+import view.html.HtmlPlayerView;
 
 class HelloWorld {
   static function main() {
@@ -29,6 +34,35 @@ class HelloWorld {
     debug_ver1.HostileCityConfrontMenuTest.run();
     debug_ver1.RoadblockJiCeMovementTest.run();
     trace("Hello world");
+
+    // --- HTML view demo ---
+    // 建立一個最小 demo match，注入 ViewModel 並建出地圖與玩家組件。
+    var game:IGame = new impl_ver1.Game();
+    var match:IGameMatch = game.createGameMatch(impl_ver1.Game.LEVEL_KEY_EMPTY);
+    var tiles:Array<ITile> = [];
+    for (i in 0...12)
+      tiles.push(match.createTile(i, Plain));
+    match.createBoard(tiles);
+    match.createMonarch("m-a", 0, 0, 500, 80);
+    match.createMonarch("m-b", 1, 5, 100, 200);
+    match.createGeneral("g-a", "m-a", 1, 40, 1, 1);
+    match.createGeneral("g-b", "m-b", 1, 10, 1, 1);
+
+    var vm = new BasicViewModel(match);
+    EventCenter.publishViewModel(vm);
+
+    // 掛載點由 index.htm 提供
+    new HtmlMapView("app-map");
+    var playersHost = Browser.document.getElementById("app-players");
+    if (playersHost != null) {
+      for (m in match.monarchs()) {
+        var id = "player-" + m.id();
+        var slot = Browser.document.createDivElement();
+        slot.id = id;
+        playersHost.appendChild(slot);
+        new HtmlPlayerView(id, m.id());
+      }
+    }
   }
 
   /** 強制將架構符號納入編譯檢查（無執行語意）。 */

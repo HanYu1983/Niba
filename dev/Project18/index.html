@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Project18</title>
+    <style>
+      body { font-family: system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans TC", sans-serif; margin: 16px; }
+      .layout { display: grid; grid-template-columns: 1fr 360px; gap: 16px; align-items: start; }
+      .panel { border: 1px solid #ddd; border-radius: 8px; padding: 12px; }
+      .map { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px; }
+      .tile { border: 1px solid #e3e3e3; border-radius: 6px; padding: 6px; font-size: 12px; user-select: none; cursor: pointer; }
+      .tile:hover { background: #f6f6f6; }
+      .player { border: 1px solid #e3e3e3; border-radius: 6px; padding: 8px; margin-bottom: 8px; font-size: 12px; cursor: pointer; }
+      .player:hover { background: #f6f6f6; }
+      .muted { color: #666; font-size: 12px; }
+    </style>
+  </head>
+  <body>
+    <div class="muted">開啟 DevTools Console 可看 trace。</div>
+    <div class="layout">
+      <div class="panel">
+        <div><b>Map</b></div>
+        <div id="app-map"></div>
+      </div>
+      <div class="panel">
+        <div><b>Players</b></div>
+        <div id="app-players"></div>
+      </div>
+    </div>
+
+    <script defer src="bin/hello.js"></script>
+  </body>
+  </html>
+

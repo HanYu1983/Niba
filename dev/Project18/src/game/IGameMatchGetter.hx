@@ -10,6 +10,7 @@ import game.IJiCeStagingPreviewRow;
 import game.IBoard;
 import game.IMonarch;
 import game.IPlayerMenuNode;
+import game.ITile;
 
 /**
  * 賽局「唯讀」視角：狀態查詢＋選單快照生成（不得改變賽局內容）。
@@ -28,6 +29,18 @@ interface IGameMatchGetter {
 
   /** 當前具行動權之君主。 */
   function activeMonarch():IMonarch;
+
+  /** 依君主 id 取得君主（不存在則拋錯）。 */
+  function monarchById(monarchId:MonarchId):IMonarch;
+
+  /** 依玩家（其 monarchId）查詢目前所在格索引。 */
+  function pawnIndexOfPlayer(player:IPlayer):TileIndex;
+
+  /** 依君主 id 查詢目前所在格索引。 */
+  function pawnIndexOfMonarch(monarchId:MonarchId):TileIndex;
+
+  /** 依格索引取得棋盤格（等同 {@link #board}.tileAt）。 */
+  function tileAt(index:TileIndex):ITile;
 
   /**
    * 指定君主當下可打出的计策視圖。

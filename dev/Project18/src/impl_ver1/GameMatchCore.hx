@@ -1005,6 +1005,18 @@ class GameMatchCore implements IGameMatch {
     throw 'GameMatchCore.activeMonarch: id not in roster ($_activeId)';
   }
 
+  public function monarchById(monarchId:MonarchId):IMonarch
+    return monarchWithId(monarchId);
+
+  public function pawnIndexOfPlayer(player:IPlayer):TileIndex
+    return pawnIndexOfMonarch(player.monarchId());
+
+  public function pawnIndexOfMonarch(monarchId:MonarchId):TileIndex
+    return monarchWithId(monarchId).pawnIndex();
+
+  public function tileAt(index:TileIndex):ITile
+    return board().tileAt(index);
+
   public function availableJiCe(monarchId:MonarchId):Array<IJiCe> {
     var row = _ownedJiCe.get(monarchId);
     return row != null ? row.copy() : [];
