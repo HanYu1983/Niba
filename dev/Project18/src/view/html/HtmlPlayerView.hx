@@ -43,13 +43,37 @@ class HtmlPlayerView {
 
   function render(vm:IViewModel):Void {
     var m = vm.monarchById(monarchId);
-    var idx = m.pawnIndex();
-    root.textContent =
-      'monarch=' + m.id()
-      + ' seat=' + m.seat()
-      + ' pos=' + idx
-      + ' troops=' + m.troops()
-      + ' grain=' + m.grain();
+    root.innerHTML = "";
+
+    var head = Browser.document.createDivElement();
+    head.className = "player-head";
+
+    var name = Browser.document.createDivElement();
+    name.className = "player-name";
+    name.textContent = m.id();
+    head.appendChild(name);
+
+    var seat = Browser.document.createSpanElement();
+    seat.className = "ui-badge";
+    seat.textContent = "席位 " + m.seat();
+    head.appendChild(seat);
+
+    root.appendChild(head);
+
+    var meta = Browser.document.createDivElement();
+    meta.className = "player-meta";
+    meta.appendChild(badge("位置", Std.string(m.pawnIndex()), null));
+    meta.appendChild(badge("兵力", Std.string(m.troops()), "red"));
+    meta.appendChild(badge("糧食", Std.string(m.grain()), "gold"));
+    root.appendChild(meta);
+  }
+
+  static function badge(k:String, v:String, tone:Null<String>):Element {
+    var s = Browser.document.createSpanElement();
+    s.className = "ui-badge";
+    if (tone != null) s.setAttribute("data-tone", tone);
+    s.textContent = k + " " + v;
+    return s;
   }
 
   public function element():Element

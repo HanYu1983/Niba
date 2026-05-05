@@ -30,6 +30,7 @@ class HtmlPlayersView {
 
   function render(vm:IViewModel):Void {
     host.innerHTML = "";
+    host.className = "players";
     for (m in vm.monarchs()) {
       var id = "player-" + m.id();
       var slot = Browser.document.createDivElement();

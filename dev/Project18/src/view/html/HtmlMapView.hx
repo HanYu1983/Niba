@@ -62,11 +62,34 @@ class HtmlMapView {
 
       var kind:TileKind = tile.kind();
       var players = occ.exists(i) ? occ.get(i) : [];
+      var top = Browser.document.createDivElement();
+      top.className = "tile-top";
+      var idx = Browser.document.createDivElement();
+      idx.className = "tile-index";
+      idx.textContent = '#$i';
+      top.appendChild(idx);
+      var k = Browser.document.createDivElement();
+      k.className = "tile-kind";
+      k.textContent = Std.string(kind);
+      top.appendChild(k);
+      cell.appendChild(top);
 
-      var label = '#$i ' + Std.string(kind);
-      if (players.length > 0)
-        label += ' @' + players.join(",");
-      cell.textContent = label;
+      var occBox = Browser.document.createDivElement();
+      occBox.className = "tile-occupants";
+      if (players.length > 0) {
+        for (pid in players) {
+          var b = Browser.document.createSpanElement();
+          b.className = "ui-badge";
+          b.textContent = pid;
+          occBox.appendChild(b);
+        }
+      } else {
+        var none = Browser.document.createSpanElement();
+        none.className = "ui-label";
+        none.textContent = "（空）";
+        occBox.appendChild(none);
+      }
+      cell.appendChild(occBox);
 
       cell.onclick = function(_) {
         EventCenter.publishEvent(UiEvent.TileClick(i));

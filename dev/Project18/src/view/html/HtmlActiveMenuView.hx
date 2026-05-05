@@ -50,7 +50,15 @@ class HtmlActiveMenuView {
 
     var title = Browser.document.createDivElement();
     title.className = "active-menu-title";
-    title.textContent = "Menu (active=" + a.id() + ")";
+    var tMain = Browser.document.createDivElement();
+    tMain.className = "title-main";
+    tMain.textContent = "指令";
+    title.appendChild(tMain);
+    var tSub = Browser.document.createSpanElement();
+    tSub.className = "ui-badge";
+    tSub.setAttribute("data-tone", "gold");
+    tSub.textContent = "主公 " + a.id();
+    title.appendChild(tSub);
     root.appendChild(title);
 
     var tree = Browser.document.createDivElement();

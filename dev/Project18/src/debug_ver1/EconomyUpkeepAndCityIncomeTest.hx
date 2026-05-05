@@ -17,8 +17,8 @@ import impl_ver1.model.Monarch;
 class EconomyUpkeepAndCityIncomeTest {
   public static function testEconomyUpkeepAndCityIncome(game:IGame):Void {
     var match:IGameMatch = game.createGameMatch(LevelKeys.EMPTY);
-    // 不需要移動；避免 0 觸發範圍檢查
-    match.forceSetFixedMoveDelta(null);
+    // 固定走 1 步，避免隨機骰點繞圈「經過起點」拿到額外獎勵（會影響 troops→upkeep）
+    match.forceSetFixedMoveDelta(1);
 
     match.createBoard([
       match.createTile(0, Plain),
@@ -27,7 +27,8 @@ class EconomyUpkeepAndCityIncomeTest {
     ]);
 
     var idA:MonarchId = "m-a";
-    match.createMonarch(idA, 0, 0, 1000, 20);
+    // pawn 放在 1（城市格）再走 1 步到 2，避免「起點獎勵」干擾經濟斷言
+    match.createMonarch(idA, 0, 1, 1000, 20);
     match.createGeneral("g-a", idA, 10, 10, 10, 10);
     var actor:IPlayer = match.createPlayer(idA, "A");
 
@@ -46,10 +47,14 @@ class EconomyUpkeepAndCityIncomeTest {
     match.applyMenuLeaf(actor, MenuNodeQuery.requireNodeWithKind(match.createPlayerMenu(actor), PlayerMenuKind.ConfirmDone));
 
     // upkeep：1000 troops → ceil(1000*0.01)=10 grain
-    if (mon.grain() != g0 - 10 + 20) // +20 grain from SmallCity base income
-      throw "EconomyUpkeepAndCityIncomeTest: expected grain apply upkeep + city income";
-    if (mon.gold() != gold0 + 20)
-      throw "EconomyUpkeepAndCityIncomeTest: expected gold +20 from SmallCity income";
+    var grain1 = mon.grain();
+    var gold1 = mon.gold();
+    var expectGrain = g0 - 10 + 20; // +20 grain from SmallCity base income
+    var expectGold = gold0 + 20;
+    if (grain1 != expectGrain)
+      throw 'EconomyUpkeepAndCityIncomeTest: expected grain=${expectGrain} (g0=${g0} -10 +20) but got ${grain1}';
+    if (gold1 != expectGold)
+      throw 'EconomyUpkeepAndCityIncomeTest: expected gold=${expectGold} (gold0=${gold0} +20) but got ${gold1}';
 
     trace("[EconomyUpkeepAndCityIncomeTest] OK — upkeep and city income at end of round");
   }
