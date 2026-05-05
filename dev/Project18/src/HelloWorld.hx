@@ -70,8 +70,7 @@ class HelloWorld {
     for (i in 0...12)
       match.forceSetCityOwner(i, (i % 2 == 0) ? "m-a" : "m-b");
 
-    var core:impl_ver1.GameMatchCore = cast match;
-    var vm = new BasicViewModel(core);
+    var vm = new BasicViewModel(cast match);
     EventCenter.publishViewModel(vm);
 
     // 掛載點由 index.htm 提供

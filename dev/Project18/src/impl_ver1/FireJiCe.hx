@@ -106,7 +106,7 @@ class FireJiCe implements IJiCe {
     if (tile.kind() == TileKind.City) {
       var prevT = gameMatch.forceGetCityStoredTroops(targetTile);
       var loss = Balance.clampInt(Std.int(prevT * 0.2), 0, prevT); // TODO(strategy-tile): 以規格表調整
-      gameMatch.forcePutCityStores(targetTile, prevT - loss, gameMatch.forceGetCityStoredGrain(targetTile));
+      gameMatch.putCityStores(targetTile, prevT - loss, gameMatch.forceGetCityStoredGrain(targetTile));
     }
   }
 

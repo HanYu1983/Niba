@@ -105,7 +105,7 @@ class SabotageJiCe implements IJiCe {
       // TODO(strategy-tile): 改為城池等級下降；目前先做資源破壞示範。
       var prevG = gameMatch.forceGetCityStoredGrain(targetTile);
       var loss = Balance.clampInt(Std.int(prevG * 0.25), 0, prevG);
-      gameMatch.forcePutCityStores(targetTile, gameMatch.forceGetCityStoredTroops(targetTile), prevG - loss);
+      gameMatch.putCityStores(targetTile, gameMatch.forceGetCityStoredTroops(targetTile), prevG - loss);
     }
   }
 

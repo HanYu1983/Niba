@@ -44,7 +44,7 @@ class RoadblockJiCe implements IJiCe {
     var ruler = cast(gameMatch.activeMonarch(), Monarch);
     var tile = ruler.pawnIndex();
     var placer = actor.monarchId();
-    gameMatch.forceRegisterMovementStepHook(new RoadblockMovementHook(tile, placer));
+    gameMatch.registerMovementStepHook(new RoadblockMovementHook(tile, placer));
   }
 
   static function __init__():Void {

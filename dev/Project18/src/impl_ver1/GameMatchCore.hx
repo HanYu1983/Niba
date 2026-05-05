@@ -294,22 +294,40 @@ class GameMatchCore implements IGameMatch {
   public function movementStepHooks():Array<IJiCeMovementStepHook>
     return _movementStepHooks.copy();
 
-  public function forceRegisterMovementStepHook(h:IJiCeMovementStepHook):Void {
+  /** 規剘：登錄移動逐步勾子（正式 API；非 force）。 */
+  public function registerMovementStepHook(h:IJiCeMovementStepHook):Void {
     for (x in _movementStepHooks)
       if (x == h)
         return;
     _movementStepHooks.push(h);
   }
 
-  public function forceUnregisterMovementStepHook(h:IJiCeMovementStepHook):Void {
+  public function forceRegisterMovementStepHook(h:IJiCeMovementStepHook):Void {
+    // TODO(convention): force* 僅供測試/除錯使用；正式規剘請改呼叫 registerMovementStepHook。
+    registerMovementStepHook(h);
+  }
+
+  /** 規剘：移除先前登錄之勾子（正式 API；非 force）。 */
+  public function unregisterMovementStepHook(h:IJiCeMovementStepHook):Void {
     var i = _movementStepHooks.length;
     while (i-- > 0)
       if (_movementStepHooks[i] == h)
         _movementStepHooks.splice(i, 1);
   }
 
-  public function forceBindTileEvent(at:TileIndex, handler:ITileEvent):Void {
+  public function forceUnregisterMovementStepHook(h:IJiCeMovementStepHook):Void {
+    // TODO(convention): force* 僅供測試/除錯使用；正式規剘請改呼叫 unregisterMovementStepHook。
+    unregisterMovementStepHook(h);
+  }
+
+  /** 關卡/規剘：將事件腳本綁至環上索引（正式 API；非 force）。 */
+  public function bindTileEvent(at:TileIndex, handler:ITileEvent):Void {
     tileEventBind(at, handler);
+  }
+
+  public function forceBindTileEvent(at:TileIndex, handler:ITileEvent):Void {
+    // TODO(convention): force* 僅供測試/除錯使用；正式規剘請改呼叫 bindTileEvent。
+    bindTileEvent(at, handler);
   }
 
   public function createTile(index:TileIndex, kind:TileKind):ITile
@@ -426,6 +444,11 @@ class GameMatchCore implements IGameMatch {
     _cityGarrisonGenerals.set(at, [generalId]);
   }
 
+  /** 關卡/規剘：標記城池格已有駐守武將（正式 API；非 force）。 */
+  public function assignCityGarrison(at:TileIndex, generalId:GeneralId):Void {
+    forceAssignCityGarrison(at, generalId);
+  }
+
   public function forceGetCityGarrisonGeneralIds(at:TileIndex):Array<GeneralId> {
     if (!_cityGarrisonGenerals.exists(at))
       return [];
@@ -441,6 +464,11 @@ class GameMatchCore implements IGameMatch {
     _cityOwner.set(at, ownerMonarchId);
   }
 
+  /** 關卡/規剘：標記城池格屬主（正式 API；非 force）。 */
+  public function setCityOwner(at:TileIndex, ownerMonarchId:MonarchId):Void {
+    forceSetCityOwner(at, ownerMonarchId);
+  }
+
   public function forcePutCityStores(at:TileIndex, troops:Int, grain:Int):Void {
     if (_board == null)
       throw "GameMatchCore.forcePutCityStores: board not set";
@@ -450,6 +478,11 @@ class GameMatchCore implements IGameMatch {
       throw "GameMatchCore.forcePutCityStores: negative stock";
     _cityStockTroops.set(at, troops);
     _cityStockGrain.set(at, grain);
+  }
+
+  /** 規剘：寫入城池格儲備（正式 API；非 force）。 */
+  public function putCityStores(at:TileIndex, troops:Int, grain:Int):Void {
+    forcePutCityStores(at, troops, grain);
   }
 
   public function forceGetPendingFriendlyCityVisitTile():Null<TileIndex>
