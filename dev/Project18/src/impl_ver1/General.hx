@@ -3,6 +3,7 @@ package impl_ver1;
 import game.GameIds;
 import game.GeneralStat;
 import game.IGeneral;
+import game.Rarity;
 
 class General implements IGeneral {
   var _id:GeneralId;
@@ -12,6 +13,9 @@ class General implements IGeneral {
   var _wit:Int;
   var _stewardship:Int;
   var _stamina:Int;
+  var _loyalty:Int;
+  var _merit:Int;
+  var _rarity:Rarity;
 
   public function new(id:GeneralId, owner:MonarchId, command:Int, might:Int, wit:Int, stewardship:Int) {
     _id = id;
@@ -21,6 +25,9 @@ class General implements IGeneral {
     _wit = wit;
     _stewardship = stewardship;
     _stamina = 100;
+    _loyalty = 100;
+    _merit = 0;
+    _rarity = Common;
   }
 
   public function id():GeneralId
@@ -43,4 +50,19 @@ class General implements IGeneral {
 
   public function forceSetStamina(value:Int):Void
     _stamina = value;
+
+  public function loyalty():Int
+    return _loyalty;
+
+  public function forceSetLoyalty(value:Int):Void
+    _loyalty = value;
+
+  public function merit():Int
+    return _merit;
+
+  public function forceAddMerit(delta:Int):Void
+    _merit += delta;
+
+  public function rarity():Rarity
+    return _rarity;
 }
