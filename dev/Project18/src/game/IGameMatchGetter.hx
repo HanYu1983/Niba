@@ -12,6 +12,7 @@ import game.IMonarch;
 import game.IPlayerMenuNode;
 import game.ITile;
 import game.CityLevel;
+import game.IPopupMessage;
 
 /**
  * 賽局「唯讀」視角：狀態查詢＋選單快照生成（不得改變賽局內容）。
@@ -153,5 +154,14 @@ interface IGameMatchGetter {
    * 賽局狀態變更後須重新呼叫，不得假定與賽局隱式同步。
    */
   function createPlayerMenu(actor:IPlayer):IPlayerMenu;
+
+  /**
+   * 彈窗 outbox：applyMenuLeaf 後由 view 查詢並顯示，再以 ackPopup 消費。
+   * 受眾為 {@link PopupAudience.ToMonarch} 時，僅該 monarchId 會取到。
+   */
+  function pendingPopups(monarchId:MonarchId):Array<IPopupMessage>;
+
+  /** 彈窗消費（顯示完畢後呼叫）；不存在則為 no-op。 */
+  function ackPopup(monarchId:MonarchId, popupId:String):Void;
 }
 

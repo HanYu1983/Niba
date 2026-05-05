@@ -15,6 +15,8 @@ import game.ITileEvent;
 import game.MatchTerminationReason;
 import game.MenuFormWidget;
 import impl_ver1.core.GameMatchCore;
+import game.IPopupMessage;
+import js.Browser;
 import rx.disposables.ISubscription;
 import view.UiEvent;
 
@@ -48,6 +50,7 @@ class BasicViewModel implements IViewModel {
         applyGeneralMultiPickToNode(node, widgetIndex, selectedGeneralIds);
       case MenuClick(node, entry):
         applyMenuClick(node, entry);
+        drainPopups();
         EventCenter.publishViewModel(this);
     }
   }
@@ -69,6 +72,19 @@ class BasicViewModel implements IViewModel {
     var a = match.activeMonarch();
     var actor:IPlayer = new LocalPlayer(a.id(), "active");
     match.applyMenuLeaf(actor, node);
+  }
+
+  function drainPopups():Void {
+    var hasWindow:Bool = untyped __js__("typeof window !== 'undefined' && typeof window.alert !== 'undefined'");
+    if (!hasWindow)
+      return;
+    var mid = match.activeMonarch().id();
+    var xs:Array<IPopupMessage> = match.pendingPopups(mid);
+    for (p in xs) {
+      // v0：先用 alert，之後可改成真正的 modal 元件。
+      Browser.window.alert(p.title() + "\n\n" + p.message());
+      match.ackPopup(mid, p.id());
+    }
   }
 
   function applyGeneralMultiPickToNode(node:IPlayerMenuNode, widgetIndex:Int, selectedGeneralIds:Array<String>):Void {
@@ -198,6 +214,12 @@ class BasicViewModel implements IViewModel {
 
   public function createPlayerMenu(actor:IPlayer):IPlayerMenu
     return match.createPlayerMenu(actor);
+
+  public function pendingPopups(monarchId:MonarchId):Array<IPopupMessage>
+    return match.pendingPopups(monarchId);
+
+  public function ackPopup(monarchId:MonarchId, popupId:String):Void
+    match.ackPopup(monarchId, popupId);
 }
 
 private class LocalPlayer implements IPlayer {

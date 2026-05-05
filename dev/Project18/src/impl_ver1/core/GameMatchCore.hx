@@ -19,9 +19,12 @@ import game.ITileEvent;
 import game.IPlayerCommand;
 import game.Balance;
 import game.IEquipment;
+import game.IPopupMessage;
 import game.MenuActivation;
 import game.MenuGeneralChoice;
 import game.MenuFormWidget;
+import game.PopupAudience;
+import game.PopupOption;
 import game.PlayerMenuKind;
 import game.StrategyPhase;
 import game.TileKind;
@@ -36,6 +39,7 @@ import impl_ver1.model.Player;
 import impl_ver1.model.PlayerMenu;
 import impl_ver1.model.PlayerMenuEntry;
 import impl_ver1.model.PlayerMenuNode;
+import impl_ver1.model.PopupMessage;
 import impl_ver1.model.Tile;
 import impl_ver1.equipment.WeaponCatalog;
 import impl_ver1.rules.GameMatchVer1Ops;
@@ -76,6 +80,10 @@ class GameMatchCore implements IGameMatch {
   /** --- 環上格子事件綁定與落地 pending --- */
   var _tileEventByIndex:Map<Int, ITileEvent>;
   var _pendingTileEvent:Null<ITileEvent>;
+
+  /** --- 彈窗 outbox（apply 產生、view 消費）--- */
+  var _popupSeq:Int;
+  var _popupsByMonarchId:Map<MonarchId, Array<IPopupMessage>>;
 
   /** 移動完成但尚未「落地分流」時，暫存落點索引（用於移動後策略窗口）。 */
   var _pendingLandingTileIndex:Null<TileIndex>;
@@ -143,6 +151,8 @@ class GameMatchCore implements IGameMatch {
     _terminationReason = NotEnded;
     _tileEventByIndex = new Map();
     _pendingTileEvent = null;
+    _popupSeq = 0;
+    _popupsByMonarchId = new Map();
     _pendingLandingTileIndex = null;
     _pendingStaging = null;
     _ownedJiCe = new Map();
@@ -445,9 +455,41 @@ class GameMatchCore implements IGameMatch {
     var m = new Monarch(id, seat, pawnIndex, t, g);
     _monarchs.push(m);
     _ownedJiCe.set(id, []);
+    _popupsByMonarchId.set(id, []);
     if (_monarchs.length == 1)
       _activeId = m.id();
     return m;
+  }
+
+  public function pendingPopups(monarchId:MonarchId):Array<IPopupMessage> {
+    if (!_popupsByMonarchId.exists(monarchId))
+      return [];
+    return _popupsByMonarchId.get(monarchId).copy();
+  }
+
+  public function ackPopup(monarchId:MonarchId, popupId:String):Void {
+    if (!_popupsByMonarchId.exists(monarchId))
+      return;
+    var xs = _popupsByMonarchId.get(monarchId);
+    var i = xs.length;
+    while (i-- > 0)
+      if (xs[i] != null && xs[i].id() == popupId) {
+        xs.splice(i, 1);
+        return;
+      }
+  }
+
+  function pushPopupToMonarch(monarchId:MonarchId, title:String, message:String, option:PopupOption, ctxKey:String):String {
+    if (!_popupsByMonarchId.exists(monarchId))
+      _popupsByMonarchId.set(monarchId, []);
+    var id = popupId(monarchId, ctxKey);
+    _popupsByMonarchId.get(monarchId).push(new PopupMessage(id, ToMonarch(monarchId), title, message, option));
+    return id;
+  }
+
+  function popupId(monarchId:MonarchId, ctxKey:String):String {
+    _popupSeq++;
+    return "pop-" + monarchId + "-" + ctxKey + "-" + _roundNumber + "-" + _popupSeq;
   }
 
   function monarchWithId(mid:MonarchId):Monarch {
@@ -1293,6 +1335,10 @@ class GameMatchCore implements IGameMatch {
     }
     evaluateTermination();
     menuNode.setActivationEntry(null);
+
+    // v0：先提供最小可見性（方便 UI 串接與回歸測試）
+    // 之後可改為在各規剘點（例如事件/交易/攻城結算）精準 push。
+    pushPopupToMonarch(actor.monarchId(), "完成指令", leaf.caption(), Ok, "apply");
   }
 
   function advanceActiveMonarchAfterConfirmDone():Void {
