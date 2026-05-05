@@ -694,11 +694,12 @@ class GameMatchCore implements IGameMatch {
         );
       }
 
-    var actions:Array<IPlayerMenuNode> = [
-      createPlayerMenuNode("移動", createPlayerMenuEntry(Move, "移動", !blockBasics), ([] : Array<IPlayerMenuNode>)),
-      createPlayerMenuNode("計策", null, jiChildren),
-      createPlayerMenuNode("狀態", createPlayerMenuEntry(Status, "狀態（前端用，無後端結算）", true), ([] : Array<IPlayerMenuNode>)),
-    ];
+    var actions:Array<IPlayerMenuNode> = [];
+    // 規則：一旦切片已完成（可結束），移動主項先不再出現；直到 ConfirmDone 結算後（切片重置）才再次出現。
+    if (!isActivePlayerSliceComplete())
+      actions.push(createPlayerMenuNode("移動", createPlayerMenuEntry(Move, "移動", !blockBasics), ([] : Array<IPlayerMenuNode>)));
+    actions.push(createPlayerMenuNode("計策", null, jiChildren));
+    actions.push(createPlayerMenuNode("狀態", createPlayerMenuEntry(Status, "狀態（前端用，無後端結算）", true), ([] : Array<IPlayerMenuNode>)));
     var allowConfirm =
       isActivePlayerSliceComplete()
       && pend == null
