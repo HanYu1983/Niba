@@ -95,6 +95,9 @@ class FireJiCe implements IJiCe {
     var targetTile = readSingleTileIndex(widgets[1], "tile");
 
     var ruler = cast(gameMatch.activeMonarch(), Monarch);
+    // docs/策略系統.md：移動後策略一律針對所站格子（骨架先針對指定格子類策略硬檢查）
+    if (gameMatch.forceGetPendingLandingTile() != null && targetTile != ruler.pawnIndex())
+      throw "FireJiCe: post-move must target current tile";
     var caster:Null<General> = null;
     for (g in ruler.roster())
       if (g.id() == casterId)

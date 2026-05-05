@@ -94,6 +94,8 @@ class SabotageJiCe implements IJiCe {
     var targetTile = readSingleTileIndex(widgets[1], "tile");
 
     var ruler = cast(gameMatch.activeMonarch(), Monarch);
+    if (gameMatch.forceGetPendingLandingTile() != null && targetTile != ruler.pawnIndex())
+      throw "SabotageJiCe: post-move must target current tile";
     var caster:Null<General> = null;
     for (g in ruler.roster())
       if (g.id() == casterId)

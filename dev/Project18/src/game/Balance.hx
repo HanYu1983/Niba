@@ -1,5 +1,7 @@
 package game;
 
+import game.CityLevel;
+
 /**
  * 數值算法（v0.1）之可重用純函數。
  * 目前先做成骨架：UI/規則層可引用，賽局核心可逐步導入。
@@ -78,6 +80,25 @@ class Balance {
   public static function strategySuccessRate(statValue:Int, tier:StrategyCostTier, stamina:Int):Float {
     var s = clampInt(statValue, 0, 100) / 100.0;
     return s * strategyBaseRate(tier) * staminaModifier(stamina);
+  }
+
+  /** docs/數值算法.md 6.2：每回合糧食消耗係數（每 100 士兵消耗 1 糧食）。 */
+  public static inline var GRAIN_UPKEEP_PER_TROOP:Float = 0.01;
+
+  /** 回合末糧食消耗（向上取整）。 */
+  public static function grainUpkeepForTroops(troops:Int):Int {
+    var t = Math.max(0, troops);
+    return Std.int(Math.ceil(t * GRAIN_UPKEEP_PER_TROOP));
+  }
+
+  /** 最小城池產出（骨架）：依城池等級給定每回合 gold/grain。 */
+  public static function cityBaseIncome(level:CityLevel):{gold:Int, grain:Int} {
+    return switch level {
+      case Village: {gold: 10, grain: 10};
+      case SmallCity: {gold: 20, grain: 20};
+      case BigCity: {gold: 40, grain: 40};
+      case Capital: {gold: 60, grain: 60};
+    };
   }
 }
 

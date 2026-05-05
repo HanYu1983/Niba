@@ -53,6 +53,10 @@ class HelloWorld {
     debug_ver1.EndOfRoundSettlementTest.testEndOfRoundSettlement(new impl_ver1.Game());
     debug_ver1.VillageFriendlyTradeSettlementTest.testVillageFriendlyTradeSettlement(new impl_ver1.Game());
     debug_ver1.HostileCitySiegeCityLevelDefenseTest.testHostileCitySiegeCityLevelDefense(new impl_ver1.Game());
+    debug_ver1.ResourceTileSettlementTest.testResourceTileSettlement(new impl_ver1.Game());
+    debug_ver1.JiCePreviewRowsTest.testJiCePreviewRows(new impl_ver1.Game());
+    debug_ver1.PostMoveTileTargetRestrictionTest.testPostMoveTileTargetRestriction(new impl_ver1.Game());
+    debug_ver1.EconomyUpkeepAndCityIncomeTest.testEconomyUpkeepAndCityIncome(new impl_ver1.Game());
     trace("Hello world");
 
     // --- HTML view demo ---

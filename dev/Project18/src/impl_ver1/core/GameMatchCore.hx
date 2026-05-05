@@ -985,10 +985,20 @@ class GameMatchCore implements IGameMatch {
         // 骨架：第一次踩到某村落時，初始化每位君主友好度預設 50
         ensureVillageRow(idx);
         _pendingVillageTileIndex = idx;
+      case Resource:
+        landingApplyResourceTile(idx);
       case Plain:
       case Battle:
       case Scheme:
     }
+  }
+
+  function landingApplyResourceTile(idx:TileIndex):Void {
+    // 骨架：資源格落地直接給最小收益，避免卡在 staging/menu。
+    var ruler = cast(activeMonarch(), Monarch);
+    ruler.grantGold(30);
+    ruler.grantGrain(30);
+    _activeSliceComplete = true;
   }
 
   function handleTileEventPick(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
@@ -1309,6 +1319,34 @@ class GameMatchCore implements IGameMatch {
     _tileNextTurnGrainBonus = new Map();
     _tileNextTurnGoldBonus = new Map();
     // _tileDefenseBonus 先不清除（目前尚未有消耗點）；後續接上戰鬥/攻城時再定義生命周期。
+
+    // 3) 每回合糧食消耗（士兵維持費）
+    for (m in _monarchs) {
+      var mon = cast(m, Monarch);
+      var cost = Balance.grainUpkeepForTroops(mon.troops());
+      if (cost <= 0)
+        continue;
+      if (mon.grain() >= cost)
+        mon.reduceGrain(cost);
+      else {
+        // 糧食不足先扣到 0；士兵逃亡尚未落地（留給下一輪）
+        mon.reduceGrain(mon.grain());
+      }
+    }
+
+    // 4) 最小領地產出：依城池等級給屬主每回合基本 gold/grain
+    if (_board != null) {
+      var len = _board.length();
+      for (i in 0...len) {
+        if (_cityOwner.exists(i)) {
+          var owner = _cityOwner.get(i);
+          var lvl = forceGetCityLevel(i);
+          var inc = Balance.cityBaseIncome(lvl);
+          monarchWithId(owner).grantGold(inc.gold);
+          monarchWithId(owner).grantGrain(inc.grain);
+        }
+      }
+    }
   }
 
   public function board():IBoard
