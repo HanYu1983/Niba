@@ -22,5 +22,5 @@ interface IGeneral {
     function stamina():Int;
 
     /** 寫入體力（供結算消耗／回復）。 */
-    function setStamina(value:Int):Void;
+    function forceSetStamina(value:Int):Void;
 }

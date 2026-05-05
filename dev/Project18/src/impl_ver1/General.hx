@@ -41,6 +41,6 @@ class General implements IGeneral {
   public function stamina():Int
     return _stamina;
 
-  public function setStamina(value:Int):Void
+  public function forceSetStamina(value:Int):Void
     _stamina = value;
 }
