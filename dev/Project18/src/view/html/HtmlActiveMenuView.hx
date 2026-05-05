@@ -99,7 +99,9 @@ class HtmlActiveMenuView {
             input.value = Std.string(value);
             input.oninput = function(_) {
               var v = Std.parseInt(input.value);
-              EventCenter.publishEvent(UiEvent.Slider(n, i, v == null ? value : v));
+              var vv = v == null ? value : v;
+              lab.textContent = lbl + " (" + vv + ")";
+              EventCenter.publishEvent(UiEvent.Slider(n, i, vv));
             };
             wrap.appendChild(input);
             form.appendChild(wrap);

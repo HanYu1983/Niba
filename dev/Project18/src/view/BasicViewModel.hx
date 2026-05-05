@@ -43,7 +43,7 @@ class BasicViewModel implements IViewModel {
       case PlayerClick(_):
       case Slider(node, widgetIndex, value):
         applySliderToNode(node, widgetIndex, value);
-        EventCenter.publishViewModel(this);
+        // Slider 互動不應觸發整體重繪，否則 DOM 會被重建導致滑桿被重置，看起來像「無法拖動」。
       case MenuClick(node, entry):
         applyMenuClick(node, entry);
         EventCenter.publishViewModel(this);
