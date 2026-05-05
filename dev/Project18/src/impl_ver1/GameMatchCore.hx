@@ -83,6 +83,15 @@ class GameMatchCore implements IGameMatch {
   /** --- 村落互動 pending（交易/搶奪/攻占）--- */
   var _pendingVillageTileIndex:Null<TileIndex>;
 
+  /** --- 策略（指定格子）暫存效果骨架 --- */
+  // TODO(strategy): 目前僅存放「下回合加成」等占位資料；需定義：
+  // - 加成何時結算（回合開始？落地結算？指令結算？）
+  // - 加成如何消耗/衰減（僅一次/維持 N 回合）
+  // - 與城池等級/產出模型整合（目前尚無 gold/城等級資料）
+  var _tileNextTurnGrainBonus:Map<Int, Int>;
+  var _tileNextTurnGoldBonus:Map<Int, Int>;
+  var _tileDefenseBonus:Map<Int, Float>;
+
   /** --- 敵城對峙多階段 --- */
   var _pendingHostileCityTileIndex:Null<TileIndex>;
   var _hostileCityPhase:Null<HostileCityPhase>;
@@ -117,6 +126,9 @@ class GameMatchCore implements IGameMatch {
     _cityOwner = new Map();
     _pendingFriendlyCityTileIndex = null;
     _pendingVillageTileIndex = null;
+    _tileNextTurnGrainBonus = new Map();
+    _tileNextTurnGoldBonus = new Map();
+    _tileDefenseBonus = new Map();
     _movementStepHooks = [];
     clearHostileCityConfrontation();
     clearStaging();
@@ -1092,6 +1104,11 @@ class GameMatchCore implements IGameMatch {
     // 完整輪轉一圈（回到 seat=0）算一回合
     if (activeMonarch().seat() == 0)
       _roundNumber += 1;
+    // TODO(strategy-tile): 在回合推進時處理 _tileNextTurnGrainBonus/_tileNextTurnGoldBonus/_tileDefenseBonus 的套用與清除。
+    // 目前缺少：
+    // - 君主 gold 資源欄位（商路）
+    // - 城池等級/防禦模型（築城、破壞）
+    // - 格子產出結算點（屯田/商路的「下回合」語意）
   }
 
   public function board():IBoard
@@ -1109,6 +1126,22 @@ class GameMatchCore implements IGameMatch {
 
   public function roundNumber():Int
     return _roundNumber;
+
+  // TODO(strategy-tile): 後續若 UI 要顯示格子加成/防禦，補進 IGameMatchGetter 對應 query。
+  public function forceAddTileNextTurnGrainBonus(at:TileIndex, amount:Int):Void {
+    var prev = _tileNextTurnGrainBonus.exists(at) ? _tileNextTurnGrainBonus.get(at) : 0;
+    _tileNextTurnGrainBonus.set(at, prev + amount);
+  }
+
+  public function forceAddTileNextTurnGoldBonus(at:TileIndex, amount:Int):Void {
+    var prev = _tileNextTurnGoldBonus.exists(at) ? _tileNextTurnGoldBonus.get(at) : 0;
+    _tileNextTurnGoldBonus.set(at, prev + amount);
+  }
+
+  public function forceAddTileDefenseBonus(at:TileIndex, amount:Float):Void {
+    var prev = _tileDefenseBonus.exists(at) ? _tileDefenseBonus.get(at) : 0.0;
+    _tileDefenseBonus.set(at, prev + amount);
+  }
 
   public function hasMovedThisTurn():Bool
     return _hasMovedThisTurn;
