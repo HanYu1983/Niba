@@ -11,6 +11,7 @@ class Monarch implements IMonarch {
   var _roster:Array<IGeneral>;
   var _troops:Int;
   var _grain:Int;
+  var _prestige:Int;
 
   public function new(id:MonarchId, seat:Int, pawnIndex:TileIndex, troops:Int = 0, grain:Int = 0) {
     _id = id;
@@ -19,6 +20,7 @@ class Monarch implements IMonarch {
     _roster = [];
     _troops = troops;
     _grain = grain;
+    _prestige = 100;
   }
 
   /** 由 {@link GameMatchCore#createGeneral} 將武將加入麾下；不重複檢查 id（規剘層可自行約束）。 */
@@ -36,6 +38,22 @@ class Monarch implements IMonarch {
     if (n < 0)
       throw "Monarch.grantGrain: negative";
     _grain += n;
+  }
+
+  public function grantPrestige(n:Int):Void {
+    if (n < 0)
+      throw "Monarch.grantPrestige: negative";
+    _prestige += n;
+    if (_prestige > 100)
+      _prestige = 100;
+  }
+
+  public function reducePrestige(loss:Int):Void {
+    if (loss < 0)
+      throw "Monarch.reducePrestige: loss negative";
+    _prestige -= loss;
+    if (_prestige < 0)
+      _prestige = 0;
   }
 
   public function reduceTroops(loss:Int):Void {
@@ -81,5 +99,8 @@ class Monarch implements IMonarch {
 
   public function grain():Int
     return _grain;
+
+  public function prestige():Int
+    return _prestige;
 }
 

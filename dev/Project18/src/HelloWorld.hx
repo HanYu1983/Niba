@@ -48,6 +48,7 @@ class HelloWorld {
     debug_ver1.VillagePlunderMenuFlowTest.testVillagePlunderMenuFlow(new impl_ver1.Game());
     debug_ver1.FriendlyCityDevelopRestMenuFlowTest.testFriendlyCityDevelopRestMenuFlow(new impl_ver1.Game());
     debug_ver1.PostMoveLandingWindowMenuTest.testPostMoveLandingWindow(new impl_ver1.Game());
+    debug_ver1.PlayerTargetJiCeMenuFlowTest.testPlayerTargetJiCeMenuFlow(new impl_ver1.Game());
     trace("Hello world");
 
     // --- HTML view demo ---

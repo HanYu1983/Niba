@@ -90,6 +90,15 @@ class General implements IGeneral {
   public function loyalty():Int
     return _loyalty;
 
+  /** 規剘：直接寫入忠誠度（具象類方法；介面不暴露 setter）。 */
+  public function setLoyalty(value:Int):Void {
+    _loyalty = value;
+    if (_loyalty < 1)
+      _loyalty = 1;
+    if (_loyalty > 100)
+      _loyalty = 100;
+  }
+
   public function merit():Int
     return _merit;
 
