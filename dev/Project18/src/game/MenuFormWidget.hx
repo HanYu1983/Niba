@@ -10,6 +10,12 @@ enum MenuFormWidget {
 
     Button(entry:IPlayerMenuEntry);
 
+    /**
+     * 送出前 UI 將 {@code selectedMonarchIds} 設為選取結果；目前約定為「單選」（陣列長度須為 1）。
+     * 用於計策/事件等需要玩家指定目標君主之表單。
+     */
+    MonarchSinglePick(label:String, choices:Array<MenuMonarchChoice>, selectedMonarchIds:Array<String>);
+
     /** 送出前 UI 將 {@code selectedGeneralIds} 設為勾選結果（順序保留）。 */
     GeneralMultiPick(label:String, choices:Array<MenuGeneralChoice>, selectedGeneralIds:Array<String>);
 }

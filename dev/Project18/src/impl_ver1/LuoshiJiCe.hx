@@ -12,6 +12,7 @@ import game.IPlayerMenuNode;
 import game.MenuActivation;
 import game.MenuFormWidget;
 import game.MenuGeneralChoice;
+import game.MenuMonarchChoice;
 import game.PlayerMenuKind;
 import game.PlayerMenuKind.JiCeStagingSubmit;
 
@@ -54,6 +55,14 @@ class LuoshiJiCe implements IJiCe {
   }
 
   public function buildPlayerMenu(actor:IPlayer):IPlayerMenu {
+    var monarchChoices:Array<MenuMonarchChoice> = [];
+    for (m in gameMatch.monarchs())
+      if (m.id() != actor.monarchId())
+        monarchChoices.push({monarchId: m.id(), caption: m.id()});
+    if (monarchChoices.length == 0)
+      throw "LuoshiJiCe: 無可選擇之目標君主（至少需一名非自身君主）";
+    var defTarget:Array<String> = [monarchChoices[0].monarchId];
+
     var rows = gameMatch.jiCeStagingRowsLive();
     var choices:Array<MenuGeneralChoice> = [];
     var defSel:Array<String> = [];
@@ -64,6 +73,7 @@ class LuoshiJiCe implements IJiCe {
     }
     var submitLeaf = gameMatch.createPlayerMenuEntry(JiCeStagingSubmit, "確認計策選將", true, "confirm_jice_pick");
     var widgets:Array<MenuFormWidget> = [
+      MonarchSinglePick("選擇目標君主", monarchChoices, defTarget),
       GeneralMultiPick("選擇施計武將", choices, defSel),
       Button(submitLeaf),
     ];
@@ -77,8 +87,7 @@ class LuoshiJiCe implements IJiCe {
     if (MenuActivation.activatingEntry(menuNode).kind() != JiCeStagingSubmit)
       throw "LuoshiJiCe.resolveChoice: 預期 JiCeStagingSubmit";
 
-    var tid = gameMatch.jiCeStagingTargetMonarchIdOrThrow();
-
+    var tid = readStagingPickTargetMonarchId(menuNode.formWidgets());
     var choiceId = readStagingPickGeneralId(menuNode.formWidgets());
 
     var pickedLoss = gameMatch.jiCeStagingPredictedTroopLossForGeneralOrThrow(choiceId);
@@ -86,18 +95,21 @@ class LuoshiJiCe implements IJiCe {
   }
 
   /**
-   * 與 {@link #buildPlayerMenu} 約定：索引 0 為施計武將 {@link MenuFormWidget.GeneralMultiPick}。
+   * 與 {@link #buildPlayerMenu} 約定：索引 0 為目標君主 {@link MenuFormWidget.MonarchSinglePick}；
+   * 索引 1 為施計武將 {@link MenuFormWidget.GeneralMultiPick}。
    * 須恰好一名、在暫存預覽列且為當前行動君主麾下。
    */
   function readStagingPickGeneralId(widgets:Array<MenuFormWidget>):GeneralId {
     if (widgets.length == 0)
       throw "LuoshiJiCe: 計策暫存選單為空";
     var raw:Array<String>;
-    switch widgets[0] {
+    if (widgets.length < 2)
+      throw "LuoshiJiCe: 計策暫存選單缺少目標君主/選將元件";
+    switch widgets[1] {
       case GeneralMultiPick(_, _, sel):
         raw = sel.copy();
       default:
-        throw "LuoshiJiCe: 計策暫存選單第一元件須為 GeneralMultiPick";
+        throw "LuoshiJiCe: 計策暫存選單第二元件須為 GeneralMultiPick";
     }
     var seen = new Map<String, Bool>();
     var uniq:Array<GeneralId> = [];
@@ -122,6 +134,32 @@ class LuoshiJiCe implements IJiCe {
     if (!ok.exists(gid))
       throw 'LuoshiJiCe: 計策選將含非麾下武將 "$gid"';
     return gid;
+  }
+
+  /**
+   * 與 {@link #buildPlayerMenu} 約定：索引 0 為 {@link MenuFormWidget.MonarchSinglePick}（單選）。
+   */
+  function readStagingPickTargetMonarchId(widgets:Array<MenuFormWidget>):MonarchId {
+    if (widgets.length == 0)
+      throw "LuoshiJiCe: 計策暫存選單為空";
+    var raw:Array<String>;
+    switch widgets[0] {
+      case MonarchSinglePick(_, _, sel):
+        raw = sel.copy();
+      default:
+        throw "LuoshiJiCe: 計策暫存選單第一元件須為 MonarchSinglePick";
+    }
+    var seen = new Map<String, Bool>();
+    var uniq:Array<MonarchId> = [];
+    for (id in raw) {
+      if (seen.exists(id))
+        continue;
+      seen.set(id, true);
+      uniq.push(id);
+    }
+    if (uniq.length != 1)
+      throw "LuoshiJiCe: 目標君主須恰好選擇一名";
+    return uniq[0];
   }
 
   static function loseTroopFractionOneTenth(currentTroops:Int):Int {

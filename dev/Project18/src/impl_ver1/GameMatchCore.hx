@@ -500,6 +500,7 @@ class GameMatchCore implements IGameMatch {
         case GeneralMultiPick(_, _, sel):
           return sel.copy();
         case Slider(_, _, _, _, _):
+        case MonarchSinglePick(_, _, _):
         case Button(_):
       }
     return [];
@@ -823,6 +824,7 @@ class GameMatchCore implements IGameMatch {
           garrisonRaw = sel.copy();
         case Slider(_, _, _, _, v):
           sliders.push(v);
+        case MonarchSinglePick(_, _, _):
         case Button(_):
       }
     if (sliders.length < 2)
@@ -841,6 +843,7 @@ class GameMatchCore implements IGameMatch {
         case Slider(_, _, _, _, v):
           sliders.push(v);
         case GeneralMultiPick(_, _, _):
+        case MonarchSinglePick(_, _, _):
         case Button(_):
       }
     if (sliders.length < 2)

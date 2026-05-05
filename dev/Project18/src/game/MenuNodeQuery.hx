@@ -23,6 +23,7 @@ class MenuNodeQuery {
             if (e.kind() == kind)
               return n;
           case Slider(_, _, _, _, _):
+          case MonarchSinglePick(_, _, _):
           case GeneralMultiPick(_, _, _):
         }
       var inner = findNodeWithKind(n.children(), kind);
@@ -48,6 +49,7 @@ class MenuNodeQuery {
             if (e.kind() == HostileCityAttackerPick && e.decisionToken() == decisionToken)
               return n;
           case Slider(_, _, _, _, _):
+          case MonarchSinglePick(_, _, _):
           case GeneralMultiPick(_, _, _):
         }
       var inner = findNodeWithHostileAttackerPickToken(n.children(), decisionToken);
@@ -75,6 +77,7 @@ class MenuNodeQuery {
             if (e.kind() == TileEventPick && e.decisionToken() == decisionToken)
               return n;
           case Slider(_, _, _, _, _):
+          case MonarchSinglePick(_, _, _):
           case GeneralMultiPick(_, _, _):
         }
       var inner = findNodeWithTilePickToken(n.children(), decisionToken);
@@ -92,6 +95,7 @@ class MenuNodeQuery {
           if (e.kind() == kind)
             return e;
         case Slider(_, _, _, _, _):
+        case MonarchSinglePick(_, _, _):
         case GeneralMultiPick(_, _, _):
       }
     return null;

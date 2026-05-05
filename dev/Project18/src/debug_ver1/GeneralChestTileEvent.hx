@@ -80,6 +80,7 @@ class GeneralChestTileEvent implements ITileEvent {
         case GeneralMultiPick(_, _, sel):
           raw = sel.copy();
         case Slider(_, _, _, _, _):
+        case MonarchSinglePick(_, _, _):
         case Button(_):
       }
     var seen = new Map<String, Bool>();

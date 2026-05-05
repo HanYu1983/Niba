@@ -38,8 +38,14 @@ class Ver1SmokeTest {
     var jNode = MenuNodeQuery.requireNodeWithKind(menuPick, JiCeStagingSubmit);
     var fw = jNode.formWidgets();
     switch fw[0] {
+      case MonarchSinglePick(lbl, choices, _):
+        fw[0] = MonarchSinglePick(lbl, choices, [defender.id()]);
+      default:
+        throw "Ver1SmokeTest: 預期計策暫存 MonarchSinglePick";
+    }
+    switch fw[1] {
       case GeneralMultiPick(lbl, choices, _):
-        fw[0] = GeneralMultiPick(lbl, choices, ["g-might-high"]);
+        fw[1] = GeneralMultiPick(lbl, choices, ["g-might-high"]);
       default:
         throw "Ver1SmokeTest: 預期計策暫存 MultiPick";
     }
