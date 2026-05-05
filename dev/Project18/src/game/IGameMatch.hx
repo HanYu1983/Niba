@@ -106,4 +106,10 @@ interface IGameMatch extends IGameMatchGetter {
      * 表單節點須已就地更新 {@link IPlayerMenuNode#formWidgets} 內之取值；多 {@link MenuFormWidget.Button} 時須 {@link IPlayerMenuNode#setActivationEntry}；結算後清空 {@link IPlayerMenuNode#setActivationEntry}。
      */
     function applyMenuLeaf(actor:IPlayer, menuNode:IPlayerMenuNode):Void;
+
+    /**
+     * docs/玩家指令.md §8：將結果／事件類訊息寫入該君主之彈窗 outbox（由 view 顯示並 ack）。
+     * {@code ctxKey} 供辨識來源；實際 popup id 仍含回合序與流水號。
+     */
+    function pushInfoPopup(monarchId:MonarchId, title:String, body:String, ctxKey:String):Void;
 }

@@ -60,12 +60,24 @@ class GeneralChestTileEvent implements ITileEvent {
         if (ruler.roster().length == 0) {
           ruler.grantTroops(GRANT_NO_ROSTER);
           lastResolvedChoice = "claim_reward:no_general";
+          _match.pushInfoPopup(
+            actor.monarchId(),
+            "奇遇：開箱領賞",
+            '獲得：兵力 +${GRANT_NO_ROSTER}\n（麾下無武將）',
+            "evt-general-chest"
+          );
         } else {
           var ids = parseTileEventGeneralIds(menuNode, ruler);
           if (ids.length != 1)
             throw "GeneralChestTileEvent.resolveChoice: 領賞須恰好選擇一名麾下武將";
           ruler.grantTroops(GRANT_PER_GENERAL);
           lastResolvedChoice = "claim_reward:" + ids[0];
+          _match.pushInfoPopup(
+            actor.monarchId(),
+            "奇遇：開箱領賞",
+            '武將 ${ids[0]} 領賞\n獲得：兵力 +${GRANT_PER_GENERAL}',
+            "evt-general-chest"
+          );
         }
       default:
         throw "GeneralChestTileEvent.resolveChoice: unknown decisionToken " + tok;

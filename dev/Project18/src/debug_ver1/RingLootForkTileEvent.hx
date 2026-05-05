@@ -67,18 +67,22 @@ class RingLootForkTileEvent implements ITileEvent {
     var ruler = _match.activeMonarch();
     switch tok {
       case "take_supplies":
-        if (ruler.roster().length == 0)
+        if (ruler.roster().length == 0) {
           ruler.grantTroops(15);
-        else {
+          _match.pushInfoPopup(actor.monarchId(), "事件：軍資", "獲得：兵力 +15", "evt-ring-loot");
+        } else {
           var ids = parseTileEventGeneralIds(menuNode, ruler);
           if (ids.length != 1)
             throw "RingLootForkTileEvent.resolveChoice: 取軍資須恰好選擇一名麾下武將";
           ruler.grantTroops(15);
           lastResolvedChoice = "take_supplies:" + ids[0];
+          _match.pushInfoPopup(actor.monarchId(), "事件：軍資", '武將 ${ids[0]} 領軍資\n獲得：兵力 +15', "evt-ring-loot");
         }
       case "take_grain":
         ruler.grantGrain(22);
+        _match.pushInfoPopup(actor.monarchId(), "事件：糧秣", "獲得：糧食 +22", "evt-ring-loot");
       case "pass":
+        _match.pushInfoPopup(actor.monarchId(), "事件", "略過獎勵。", "evt-ring-loot");
       default:
         throw "RingLootForkTileEvent.resolveChoice: unknown decisionToken " + tok;
     }

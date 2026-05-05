@@ -95,6 +95,18 @@ class LuoshiJiCe implements IJiCe {
       throw 'LuoshiJiCe: 計策選將含非麾下武將 "$choiceId"';
     var pickedLoss = previewTroopLoss(defTroops, might);
     gameMatch.monarchApplyTroopLoss(tid, pickedLoss);
+    gameMatch.pushInfoPopup(
+      actor.monarchId(),
+      "計策：落石",
+      '已對目標君主 ${tid} 造成兵力損失（-${pickedLoss}）',
+      "jice-luoshi"
+    );
+    gameMatch.pushInfoPopup(
+      tid,
+      "遭受計策",
+      '${actor.monarchId()} 對你施展【落石】\n兵力 -${pickedLoss}',
+      "jice-luoshi-hit"
+    );
   }
 
   /**

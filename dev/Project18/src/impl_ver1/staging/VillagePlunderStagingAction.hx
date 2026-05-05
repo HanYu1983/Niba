@@ -62,6 +62,7 @@ class VillagePlunderStagingAction implements IStagingAction {
     var ruler = cast(match.activeMonarch(), Monarch);
     if (actor.monarchId() != ruler.id())
       throw "VillagePlunderStagingAction: actor must be active monarch";
+    match.pushInfoPopup(ruler.id(), "搶奪", "搶奪指令已確認（數值結算仍為骨架）。", "village-plunder");
   }
 
   public function previewRows(actor:IPlayer):Array<IJiCeStagingPreviewRow> {

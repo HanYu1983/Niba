@@ -11,6 +11,7 @@ import game.IPlayerMenuEntry;
 import game.IPlayerMenuNode;
 import game.IStagingAction;
 import game.MenuFormWidget;
+import game.MenuClientConfirm;
 import game.PlayerMenuKind;
 import impl_ver1.core.GameMatchCore;
 import impl_ver1.model.Monarch;
@@ -50,7 +51,11 @@ class VillageConquerStagingAction implements IStagingAction {
     }
     var maxTroops = ruler.troops();
     var defTroops = maxTroops > 0 ? Std.int(Math.min(500, maxTroops)) : 0;
-    var submit:IPlayerMenuEntry = match.createPlayerMenuEntry(PlayerMenuKind.StagingSubmit, "確認攻占", true, "conquer_ok");
+    var conquerConfirm:MenuClientConfirm = {
+      title: "確認攻占",
+      message: "攻占會消耗兵力並影響武將體力，勝負依目前規剘結算。\n確定要攻占嗎？",
+    };
+    var submit:IPlayerMenuEntry = match.createPlayerMenuEntry(PlayerMenuKind.StagingSubmit, "確認攻占", true, "conquer_ok", conquerConfirm);
     var widgets:Array<MenuFormWidget> = [
       GeneralMultiPick("選擇攻占武將（單選）", choices, defSel),
       Slider("投入士兵數", 0, maxTroops, 1, defTroops),
@@ -116,6 +121,11 @@ class VillageConquerStagingAction implements IStagingAction {
     }
     // 低消耗體力
     gAtk.setStamina(Balance.clampInt(gAtk.stamina() - 15, 0, 100));
+
+    var body = win
+      ? '攻占成功。\n武將：${gid}\n投入兵力：${commitTroops}\n獲得：糧食 +100\n（武將體力 -15）'
+      : '攻占失敗。\n武將：${gid}\n投入兵力：${commitTroops}\n兵力損失約 20%\n（武將體力 -15）';
+    match.pushInfoPopup(ruler.id(), win ? "攻占成功" : "攻占失敗", body, "village-conquer");
   }
 
   public function previewRows(actor:IPlayer):Array<IJiCeStagingPreviewRow> {

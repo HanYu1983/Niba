@@ -10,6 +10,7 @@ import game.IPlayerMenuEntry;
 import game.IPlayerMenuNode;
 import game.IStagingAction;
 import game.MenuFormWidget;
+import game.MenuClientConfirm;
 import game.PlayerMenuKind;
 import impl_ver1.core.GameMatchCore;
 import impl_ver1.model.Monarch;
@@ -47,7 +48,11 @@ class VillageTradeStagingAction implements IStagingAction {
       if (defSel.length == 0)
         defSel.push(gid);
     }
-    var submit:IPlayerMenuEntry = match.createPlayerMenuEntry(PlayerMenuKind.StagingSubmit, "確認交易", true, "trade_ok");
+    var tradeConfirm:MenuClientConfirm = {
+      title: "確認交易",
+      message: "將消耗金錢 20，武將體力 -10，並提升村落友好度。\n確定要交易嗎？",
+    };
+    var submit:IPlayerMenuEntry = match.createPlayerMenuEntry(PlayerMenuKind.StagingSubmit, "確認交易", true, "trade_ok", tradeConfirm);
     var widgets:Array<MenuFormWidget> = [
       GeneralMultiPick("選擇交易武將（單選）", choices, defSel),
       Button(submit),
@@ -92,12 +97,21 @@ class VillageTradeStagingAction implements IStagingAction {
     ruler.reduceGold(costGold);
     ruler.grantGrain(50);
     var prevF = match.forceGetVillageFriendly(vIdx, ruler.id());
-    match.forceSetVillageFriendly(vIdx, ruler.id(), prevF + 10);
+    var nextF = prevF + 10;
+    if (nextF > 100)
+      nextF = 100;
+    match.forceSetVillageFriendly(vIdx, ruler.id(), nextF);
 
     for (g in ruler.roster())
       if (g.id() == gid) {
         var gg = cast(g, General);
         gg.setStamina(Balance.clampInt(gg.stamina() - 10, 0, 100));
+        match.pushInfoPopup(
+          ruler.id(),
+          "交易成功",
+          '與村落（格 ${vIdx}）交易完成。\n\n獲得：糧食 +50\n友好度：${prevF} → ${nextF}\n消耗：金錢 -${costGold}\n${gid} 體力 -10',
+          "village-trade"
+        );
         return;
       }
     throw "VillageTradeStagingAction: picked general not in roster";
