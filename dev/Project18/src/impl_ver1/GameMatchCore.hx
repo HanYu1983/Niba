@@ -25,6 +25,7 @@ import game.TileKind;
 import impl_ver1.JiCeStagingAction;
 import impl_ver1.RestStagingAction;
 import impl_ver1.VillageTradeStagingAction;
+import impl_ver1.VillageConquerStagingAction;
 import impl_ver1.Ver1MainCommands;
 
 /**
@@ -71,6 +72,9 @@ class GameMatchCore implements IGameMatch {
   var _cityOwner:Map<Int, MonarchId>;
   var _pendingFriendlyCityTileIndex:Null<TileIndex>;
 
+  /** --- 村落互動 pending（交易/搶奪/攻占）--- */
+  var _pendingVillageTileIndex:Null<TileIndex>;
+
   /** --- 敵城對峙多階段 --- */
   var _pendingHostileCityTileIndex:Null<TileIndex>;
   var _hostileCityPhase:Null<HostileCityPhase>;
@@ -102,6 +106,7 @@ class GameMatchCore implements IGameMatch {
     _pendingEmptyCityTileIndex = null;
     _cityOwner = new Map();
     _pendingFriendlyCityTileIndex = null;
+    _pendingVillageTileIndex = null;
     _movementStepHooks = [];
     clearHostileCityConfrontation();
     clearStaging();
@@ -184,6 +189,7 @@ class GameMatchCore implements IGameMatch {
     _pendingTileEvent = null;
     _pendingEmptyCityTileIndex = null;
     _pendingFriendlyCityTileIndex = null;
+    _pendingVillageTileIndex = null;
     hostileCityResetAll();
   }
 
@@ -422,6 +428,9 @@ class GameMatchCore implements IGameMatch {
 
   public function forceGetPendingFriendlyCityVisitTile():Null<TileIndex>
     return _pendingFriendlyCityTileIndex;
+
+  public function forceGetPendingVillageTile():Null<TileIndex>
+    return _pendingVillageTileIndex;
 
   public function forceGetPendingHostileCityTile():Null<TileIndex>
     return _pendingHostileCityTileIndex;
@@ -697,45 +706,13 @@ class GameMatchCore implements IGameMatch {
       || _pendingEmptyCityTileIndex != null
       || _pendingFriendlyCityTileIndex != null
       || hostilePending;
-    var jiEnabledBase =
-      !stagingActive
-      && pend == null
-      && _pendingEmptyCityTileIndex == null
-      && _pendingFriendlyCityTileIndex == null
-      && !hostilePending;
-
-    var ownedJiCe = availableJiCe(actor.monarchId());
-    var jiChildren:Array<IPlayerMenuNode> = [];
-    if (ownedJiCe.length == 0)
-      jiChildren.push(
-        createPlayerMenuNode(
-          "(無所持計策)",
-          createPlayerMenuEntry(JiCe, "（尚無所持計策）", false, null),
-          ([] : Array<IPlayerMenuNode>)
-        )
-      );
-    else
-      for (i in 0...ownedJiCe.length) {
-        var j = ownedJiCe[i];
-        jiChildren.push(
-          createPlayerMenuNode(
-            j.designLabel(),
-            createPlayerMenuEntry(JiCe, "打出：" + j.designLabel(), jiEnabledBase, Std.string(i)),
-            ([] : Array<IPlayerMenuNode>)
-          )
-        );
-      }
-
     var actions:Array<IPlayerMenuNode> = [];
-    // 指令抽象：除「計策」仍維持子選單列牌外，其餘主指令由 command registry 產生。
+    // 指令抽象：主指令由 command registry 產生（含計策列牌 children）。
     for (cmd in Ver1MainCommands.build(this, actor)) {
-      if (cmd.kind() == JiCe)
-        continue;
       var n = cmd.buildActionNode(actor);
       if (n != null)
         actions.push(n);
     }
-    actions.insert(1, createPlayerMenuNode("計策", null, jiChildren));
 
     roots.push(createPlayerMenuNode("本回合", null, actions));
     return new PlayerMenu(actor, ctx, roots);
@@ -754,6 +731,7 @@ class GameMatchCore implements IGameMatch {
       case Move:
       case Rest:
       case VillageTrade:
+      case VillageConquer:
         _hasMovedThisTurn = true;
       case TileEventPick:
       case EmptyCityOccupySubmit:
@@ -775,7 +753,8 @@ class GameMatchCore implements IGameMatch {
       _pendingTileEvent == null
       && _pendingEmptyCityTileIndex == null
       && _pendingFriendlyCityTileIndex == null
-      && _pendingHostileCityTileIndex == null;
+      && _pendingHostileCityTileIndex == null
+      && _pendingVillageTileIndex == null;
   }
 
   function clearHostileCityConfrontation():Void {
@@ -790,6 +769,8 @@ class GameMatchCore implements IGameMatch {
         landingArmPendingTileEventAt(idx);
       case City:
         landingResolveCityTile(idx);
+      case Village:
+        _pendingVillageTileIndex = idx;
       case Plain:
       case Battle:
       case Scheme:
@@ -814,6 +795,11 @@ class GameMatchCore implements IGameMatch {
       throw "GameMatchCore: StagingSubmit 但無進行中之暫存";
     stg.resolveChoice(actor, menuNode);
     clearStaging();
+    // 若本次 staging 發生於村落互動，提交後視為已完成落地互動，可結束切片
+    if (_pendingVillageTileIndex != null) {
+      _pendingVillageTileIndex = null;
+      _activeSliceComplete = true;
+    }
     syncActiveSliceAfterMenuLeaf(StagingSubmit);
   }
 
@@ -995,6 +981,8 @@ class GameMatchCore implements IGameMatch {
             enterStaging(actor, new RestStagingAction(this), Rest);
           case VillageTrade:
             enterStaging(actor, new VillageTradeStagingAction(this), VillageTrade);
+          case VillageConquer:
+            enterStaging(actor, new VillageConquerStagingAction(this), VillageConquer);
           case Status:
             syncActiveSliceAfterMenuLeaf(Status);
           case ConfirmDone:

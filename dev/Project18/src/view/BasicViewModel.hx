@@ -166,6 +166,9 @@ class BasicViewModel implements IViewModel {
   public function forceGetPendingFriendlyCityVisitTile():Null<TileIndex>
     return match.forceGetPendingFriendlyCityVisitTile();
 
+  public function forceGetPendingVillageTile():Null<TileIndex>
+    return match.forceGetPendingVillageTile();
+
   public function forceGetPendingHostileCityTile():Null<TileIndex>
     return match.forceGetPendingHostileCityTile();
 

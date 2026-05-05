@@ -5,6 +5,7 @@ import game.IPlayer;
 import game.IPlayerCommand;
 import game.IPlayerMenuNode;
 import game.PlayerMenuKind;
+import impl_ver1.VillageConquerStagingAction;
 
 /** Ver1：把「本回合」主指令做成可註冊的 command 列表。 */
 class Ver1MainCommands {
@@ -14,6 +15,7 @@ class Ver1MainCommands {
       new JiCeCommand(match),
       new RestCommand(match),
       new VillageTradeCommand(match),
+      new VillageConquerCommand(match),
       new StatusCommand(match),
       new ConfirmDoneCommand(match),
     ];
@@ -33,7 +35,8 @@ private class MoveCommand implements IPlayerCommand {
       || m.forceHasPendingStaging()
       || m.forceGetPendingEmptyCityOccupyTile() != null
       || m.forceGetPendingFriendlyCityVisitTile() != null
-      || m.forceGetPendingHostileCityTile() != null;
+      || m.forceGetPendingHostileCityTile() != null
+      || m.forceGetPendingVillageTile() != null;
     return m.createPlayerMenuNode("移動", m.createPlayerMenuEntry(Move, "移動", !blockBasics), []);
   }
   public function apply(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
@@ -47,8 +50,26 @@ private class JiCeCommand implements IPlayerCommand {
   public function kind():PlayerMenuKind return JiCe;
   public function designLabel():String return "計策";
   public function buildActionNode(actor:IPlayer):Null<IPlayerMenuNode> {
-    // JiCe 主項維持原本用 children 列牌的方式：這裡回傳 null，讓 GameMatchCore 走舊 UI 組裝。
-    return null;
+    var owned = m.availableJiCe(actor.monarchId());
+    var stagingActive = m.forceHasPendingStaging();
+    var hostilePending = m.forceGetPendingHostileCityTile() != null;
+    var pend = m.forceGetPendingTileEvent();
+    var jiEnabledBase =
+      !stagingActive
+      && pend == null
+      && m.forceGetPendingEmptyCityOccupyTile() == null
+      && m.forceGetPendingFriendlyCityVisitTile() == null
+      && !hostilePending;
+
+    var jiChildren:Array<IPlayerMenuNode> = [];
+    if (owned.length == 0)
+      jiChildren.push(m.createPlayerMenuNode("(無所持計策)", m.createPlayerMenuEntry(JiCe, "（尚無所持計策）", false, null), []));
+    else
+      for (i in 0...owned.length) {
+        var j = owned[i];
+        jiChildren.push(m.createPlayerMenuNode(j.designLabel(), m.createPlayerMenuEntry(JiCe, "打出：" + j.designLabel(), jiEnabledBase, Std.string(i)), []));
+      }
+    return m.createPlayerMenuNode("計策", null, jiChildren);
   }
   public function apply(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
     var leaf = game.MenuActivation.activatingEntry(menuNode);
@@ -70,7 +91,8 @@ private class RestCommand implements IPlayerCommand {
       || m.forceHasPendingStaging()
       || m.forceGetPendingEmptyCityOccupyTile() != null
       || m.forceGetPendingFriendlyCityVisitTile() != null
-      || m.forceGetPendingHostileCityTile() != null;
+      || m.forceGetPendingHostileCityTile() != null
+      || m.forceGetPendingVillageTile() != null;
     return m.createPlayerMenuNode("休整", m.createPlayerMenuEntry(Rest, "休整（回復體力）", !blockBasics), []);
   }
   public function apply(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
@@ -86,16 +108,42 @@ private class VillageTradeCommand implements IPlayerCommand {
   public function buildActionNode(actor:IPlayer):Null<IPlayerMenuNode> {
     if (m.isActivePlayerSliceComplete())
       return null;
+    if (m.forceGetPendingVillageTile() == null)
+      return null;
+    var blockBasics =
+      m.forceGetPendingTileEvent() != null
+      || m.forceHasPendingStaging()
+      || m.forceGetPendingEmptyCityOccupyTile() != null
+      || m.forceGetPendingFriendlyCityVisitTile() != null
+      || m.forceGetPendingHostileCityTile() != null
+      || m.forceGetPendingVillageTile() != null;
+    return m.createPlayerMenuNode("村落：交易（示範）", m.createPlayerMenuEntry(VillageTrade, "交易（示範）", !blockBasics), []);
+  }
+  public function apply(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
+    m.enterStaging(actor, new VillageTradeStagingAction(m), VillageTrade);
+  }
+}
+
+private class VillageConquerCommand implements IPlayerCommand {
+  final m:GameMatchCore;
+  public function new(m:GameMatchCore) this.m = m;
+  public function kind():PlayerMenuKind return VillageConquer;
+  public function designLabel():String return "村落攻占";
+  public function buildActionNode(actor:IPlayer):Null<IPlayerMenuNode> {
+    if (m.isActivePlayerSliceComplete())
+      return null;
+    if (m.forceGetPendingVillageTile() == null)
+      return null;
     var blockBasics =
       m.forceGetPendingTileEvent() != null
       || m.forceHasPendingStaging()
       || m.forceGetPendingEmptyCityOccupyTile() != null
       || m.forceGetPendingFriendlyCityVisitTile() != null
       || m.forceGetPendingHostileCityTile() != null;
-    return m.createPlayerMenuNode("村落：交易（示範）", m.createPlayerMenuEntry(VillageTrade, "交易（示範）", !blockBasics), []);
+    return m.createPlayerMenuNode("村落：攻占（示範）", m.createPlayerMenuEntry(VillageConquer, "攻占（示範）", !blockBasics), []);
   }
   public function apply(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
-    m.enterStaging(actor, new VillageTradeStagingAction(m), VillageTrade);
+    m.enterStaging(actor, new VillageConquerStagingAction(m), VillageConquer);
   }
 }
 
@@ -125,7 +173,8 @@ private class ConfirmDoneCommand implements IPlayerCommand {
       && !m.forceHasPendingStaging()
       && m.forceGetPendingEmptyCityOccupyTile() == null
       && m.forceGetPendingFriendlyCityVisitTile() == null
-      && m.forceGetPendingHostileCityTile() == null;
+      && m.forceGetPendingHostileCityTile() == null
+      && m.forceGetPendingVillageTile() == null;
     if (!allowConfirm)
       return null;
     return m.createPlayerMenuNode("結束", m.createPlayerMenuEntry(ConfirmDone, "結束本階段", true), []);

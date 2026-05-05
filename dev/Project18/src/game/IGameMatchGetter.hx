@@ -117,6 +117,9 @@ interface IGameMatchGetter {
   /** 除錯／測試：踩中我方城池後尚待「結束拜訪」時為該格索引；否則 null。 */
   function forceGetPendingFriendlyCityVisitTile():Null<TileIndex>;
 
+  /** 除錯／測試：踩中村落格後，尚待完成互動指令時為該格索引；否則 null。 */
+  function forceGetPendingVillageTile():Null<TileIndex>;
+
   /** 除錯／測試：踩中非友方且有駐軍城池後之多階段對峙尚未結束時為該格索引；否則 null。 */
   function forceGetPendingHostileCityTile():Null<TileIndex>;
 
