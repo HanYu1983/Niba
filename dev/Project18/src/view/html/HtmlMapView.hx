@@ -7,6 +7,7 @@ import js.html.DivElement;
 import js.html.Element;
 import view.EventCenter;
 import view.IViewModel;
+import view.UiEvent;
 
 /**
  * 地圖（棋盤）顯示元件。
@@ -64,7 +65,7 @@ class HtmlMapView {
       cell.textContent = label;
 
       cell.onclick = function(_) {
-        EventCenter.publishOnClick('tile:$i');
+        EventCenter.publishEvent(UiEvent.TileClick(i));
       };
 
       root.appendChild(cell);

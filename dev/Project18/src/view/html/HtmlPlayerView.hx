@@ -6,6 +6,7 @@ import js.html.DivElement;
 import js.html.Element;
 import view.EventCenter;
 import view.IViewModel;
+import view.UiEvent;
 
 /**
  * 單一玩家（君主）資訊顯示元件。
@@ -29,7 +30,7 @@ class HtmlPlayerView {
     host.appendChild(root);
 
     root.onclick = function(_) {
-      EventCenter.publishOnClick('player:$monarchId');
+      EventCenter.publishEvent(UiEvent.PlayerClick(monarchId));
     };
     var vm = EventCenter.currentViewModel;
     if (vm != null)

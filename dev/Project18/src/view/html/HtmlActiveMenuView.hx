@@ -11,6 +11,7 @@ import js.html.DivElement;
 import js.html.Element;
 import view.EventCenter;
 import view.IViewModel;
+import view.UiEvent;
 
 /**
  * 當前玩家（activeMonarch）選單顯示元件。
@@ -92,7 +93,7 @@ class HtmlActiveMenuView {
             input.value = Std.string(value);
             input.oninput = function(_) {
               var v = Std.parseInt(input.value);
-              EventCenter.publishOnSlider("slider:" + lbl, v == null ? value : v);
+              EventCenter.publishEvent(UiEvent.Slider(lbl, v == null ? value : v));
             };
             wrap.appendChild(input);
             form.appendChild(wrap);
@@ -128,9 +129,8 @@ class HtmlActiveMenuView {
     btn.textContent = e.caption();
     btn.disabled = !e.isEnabled();
     var tok = e.decisionToken();
-    var id = "menu:" + Std.string(e.kind()) + ":" + (tok == null ? "" : tok);
     btn.onclick = function(_) {
-      EventCenter.publishOnClick(id);
+      EventCenter.publishEvent(UiEvent.MenuClick(e.kind(), tok));
     };
     btn.setAttribute("data-role", role);
     btn.setAttribute("data-kind", Std.string(e.kind()));
