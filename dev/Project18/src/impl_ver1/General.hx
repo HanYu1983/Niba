@@ -48,20 +48,11 @@ class General implements IGeneral {
   public function stamina():Int
     return _stamina;
 
-  public function forceSetStamina(value:Int):Void
-    _stamina = value;
-
   public function loyalty():Int
     return _loyalty;
 
-  public function forceSetLoyalty(value:Int):Void
-    _loyalty = value;
-
   public function merit():Int
     return _merit;
-
-  public function forceAddMerit(delta:Int):Void
-    _merit += delta;
 
   public function rarity():Rarity
     return _rarity;
