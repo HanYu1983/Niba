@@ -9,6 +9,7 @@ import game.IPlayerMenuNode;
 import game.ITile;
 import game.MenuNodeQuery;
 import game.PlayerMenuKind;
+import game.PlayerMenuKind.LandingContinue;
 import game.PlayerMenuKind.TileEventPick;
 import game.TileKind;
 import impl_ver1.Game;
@@ -52,6 +53,9 @@ class TenEventTilesMenuFlowTest {
 
     if (ruler.pawnIndex() != EXPECT_LANDING_IDX)
       throw 'TenEventTilesMenuFlowTest: 預期落在索引 $EXPECT_LANDING_IDX，實際 ${ruler.pawnIndex()}';
+    // 移動後先進入 pendingLanding（移動後策略窗口），需按落地才進入事件 pending
+    var menuLand = match.createPlayerMenu(player);
+    match.applyMenuLeaf(player, MenuNodeQuery.requireNodeWithKind(menuLand, LandingContinue));
     if (match.forceGetPendingTileEvent() == null)
       throw "TenEventTilesMenuFlowTest: 十格皆 Event 且已綁腳本時落地應有 forceGetPendingTileEvent";
     if (match.isActivePlayerSliceComplete())

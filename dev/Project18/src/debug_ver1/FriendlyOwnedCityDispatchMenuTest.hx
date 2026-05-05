@@ -9,6 +9,7 @@ import game.ITile;
 import game.MenuFormWidget;
 import game.MenuNodeQuery;
 import game.PlayerMenuKind;
+import game.PlayerMenuKind.LandingContinue;
 import game.TileKind;
 import impl_ver1.Game;
 import impl_ver1.Monarch;
@@ -47,6 +48,7 @@ class FriendlyOwnedCityDispatchMenuTest {
     var player:IPlayer = match.createPlayer(ruler.id(), "own-city");
 
     match.applyMenuLeaf(player, MenuNodeQuery.requireNodeWithKind(match.createPlayerMenu(player), Move));
+    match.applyMenuLeaf(player, MenuNodeQuery.requireNodeWithKind(match.createPlayerMenu(player), LandingContinue));
 
     if (ruler.pawnIndex() != CITY_IDX)
       throw 'FriendlyOwnedCityDispatchMenuTest: 預期落在 $CITY_IDX';
@@ -128,9 +130,15 @@ class FriendlyOwnedCityDispatchMenuTest {
         throw "FriendlyOwnedCityDispatchMenuTest: [2] 應為 Button（確認調度）";
     }
 
-    var endNode = roots[1];
-    var endLeaf = endNode.leaf();
-    if (endLeaf == null || endLeaf.kind() != FriendlyCityVisitEnd)
-      throw "FriendlyOwnedCityDispatchMenuTest: 第二項應為結束拜訪葉";
+    var foundEnd = false;
+    for (n in roots) {
+      var L = n.leaf();
+      if (L != null && L.kind() == FriendlyCityVisitEnd) {
+        foundEnd = true;
+        break;
+      }
+    }
+    if (!foundEnd)
+      throw "FriendlyOwnedCityDispatchMenuTest: 缺少結束拜訪葉";
   }
 }

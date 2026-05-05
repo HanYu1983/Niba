@@ -58,6 +58,9 @@ class GameMatchCore implements IGameMatch {
   var _tileEventByIndex:Map<Int, ITileEvent>;
   var _pendingTileEvent:Null<ITileEvent>;
 
+  /** 移動完成但尚未「落地分流」時，暫存落點索引（用於移動後策略窗口）。 */
+  var _pendingLandingTileIndex:Null<TileIndex>;
+
   /** --- 計策暫存與君主所持牌 --- */
   var _pendingStaging:Null<IStagingAction>;
   var _stagingPreviewRows:Array<IJiCeStagingPreviewRow>;
@@ -101,6 +104,7 @@ class GameMatchCore implements IGameMatch {
     _terminationReason = NotEnded;
     _tileEventByIndex = new Map();
     _pendingTileEvent = null;
+    _pendingLandingTileIndex = null;
     _pendingStaging = null;
     _ownedJiCe = new Map();
     _cityGarrisonGenerals = new Map();
@@ -347,6 +351,9 @@ class GameMatchCore implements IGameMatch {
 
   public function forceGetPendingTileEvent():Null<ITileEvent>
     return _pendingTileEvent;
+
+  public function forceGetPendingLandingTile():Null<TileIndex>
+    return _pendingLandingTileIndex;
 
   public function forceGetPendingJiCe():Null<IJiCe>
     return _pendingStaging != null ? _pendingStaging.asJiCe() : null;
@@ -734,6 +741,7 @@ class GameMatchCore implements IGameMatch {
       case StagingSubmit:
       case Status:
       case Move:
+      case LandingContinue:
       case Rest:
       case VillageTrade:
       case VillageConquer:
@@ -756,8 +764,18 @@ class GameMatchCore implements IGameMatch {
 
   /** 子類 {@link #_applyMenuLeafForMove} 完成棋子位移後呼叫，處理落地與切片旗標。 */
   public function settleAfterMoveLanding():Void {
+    // Ver2：移動後先進入「落地前」窗口（允許移動後策略一次），由 LandingContinue 再觸發 considerLandingAt。
     var ruler = cast(activeMonarch(), Monarch);
-    considerLandingAt(ruler.pawnIndex());
+    _pendingLandingTileIndex = ruler.pawnIndex();
+    _activeSliceComplete = false;
+  }
+
+  function handleLandingContinue(actor:IPlayer):Void {
+    if (_pendingLandingTileIndex == null)
+      throw "GameMatchCore: LandingContinue 但無 pendingLanding";
+    var idx = _pendingLandingTileIndex;
+    _pendingLandingTileIndex = null;
+    considerLandingAt(idx);
     _activeSliceComplete =
       _pendingTileEvent == null
       && _pendingEmptyCityTileIndex == null
@@ -984,6 +1002,8 @@ class GameMatchCore implements IGameMatch {
             handleTileEventPick(actor, menuNode);
           case StagingSubmit:
             handleStagingSubmit(actor, menuNode);
+          case LandingContinue:
+            handleLandingContinue(actor);
           case JiCe:
             var card = resolvePlayedJiCeFromLeaf(actor, leaf);
             enterStaging(actor, new JiCeStagingAction(this, card), JiCe);

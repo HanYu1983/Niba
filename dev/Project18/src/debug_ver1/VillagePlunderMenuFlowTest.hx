@@ -11,6 +11,7 @@ import game.IPlayerMenuNode;
 import game.ITile;
 import game.PlayerMenuKind;
 import game.PlayerMenuKind.Move;
+import game.PlayerMenuKind.LandingContinue;
 import game.PlayerMenuKind.StagingSubmit;
 import game.PlayerMenuKind.VillagePlunder;
 import game.TileKind;
@@ -39,6 +40,9 @@ class VillagePlunderMenuFlowTest {
 
     var m0 = match.createPlayerMenu(actor);
     match.applyMenuLeaf(actor, requireEnabledNode(m0, Move));
+
+    var m0b = match.createPlayerMenu(actor);
+    match.applyMenuLeaf(actor, requireEnabledNode(m0b, LandingContinue));
 
     var m1 = match.createPlayerMenu(actor);
     requireEnabledNode(m1, VillagePlunder);

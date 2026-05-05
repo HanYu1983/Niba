@@ -13,6 +13,7 @@ class Ver1MainCommands {
   public static function build(match:GameMatchCore, actor:IPlayer):Array<IPlayerCommand> {
     return [
       new MoveCommand(match),
+      new LandingContinueCommand(match),
       new JiCeCommand(match),
       new RestCommand(match),
       new VillageTradeCommand(match),
@@ -23,6 +24,20 @@ class Ver1MainCommands {
       new ConfirmDoneCommand(match),
     ];
   }
+}
+
+private class LandingContinueCommand implements IPlayerCommand {
+  final m:GameMatchCore;
+  public function new(m:GameMatchCore) this.m = m;
+  public function kind():PlayerMenuKind return LandingContinue;
+  public function designLabel():String return "落地";
+  public function buildActionNode(actor:IPlayer):Null<IPlayerMenuNode> {
+    if (m.forceGetPendingLandingTile() == null)
+      return null;
+    // 當存在 pendingLanding 時，玩家可選擇先用移動後策略，再按此鍵進入落地分流。
+    return m.createPlayerMenuNode("落地", m.createPlayerMenuEntry(LandingContinue, "繼續落地結算", true), []);
+  }
+  public function apply(actor:IPlayer, menuNode:IPlayerMenuNode):Void {}
 }
 
 private class MoveCommand implements IPlayerCommand {
@@ -36,6 +51,7 @@ private class MoveCommand implements IPlayerCommand {
     var blockBasics =
       m.forceGetPendingTileEvent() != null
       || m.forceHasPendingStaging()
+      || m.forceGetPendingLandingTile() != null
       || m.forceGetPendingEmptyCityOccupyTile() != null
       || m.forceGetPendingFriendlyCityVisitTile() != null
       || m.forceGetPendingHostileCityTile() != null
@@ -92,6 +108,7 @@ private class RestCommand implements IPlayerCommand {
     var blockBasics =
       m.forceGetPendingTileEvent() != null
       || m.forceHasPendingStaging()
+      || m.forceGetPendingLandingTile() != null
       || m.forceGetPendingEmptyCityOccupyTile() != null
       || m.forceGetPendingFriendlyCityVisitTile() != null
       || m.forceGetPendingHostileCityTile() != null
@@ -118,8 +135,7 @@ private class VillageTradeCommand implements IPlayerCommand {
       || m.forceHasPendingStaging()
       || m.forceGetPendingEmptyCityOccupyTile() != null
       || m.forceGetPendingFriendlyCityVisitTile() != null
-      || m.forceGetPendingHostileCityTile() != null
-      || m.forceGetPendingVillageTile() != null;
+      || m.forceGetPendingHostileCityTile() != null;
     return m.createPlayerMenuNode("村落：交易（示範）", m.createPlayerMenuEntry(VillageTrade, "交易（示範）", !blockBasics), []);
   }
   public function apply(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
@@ -220,6 +236,7 @@ private class ConfirmDoneCommand implements IPlayerCommand {
       m.isActivePlayerSliceComplete()
       && m.forceGetPendingTileEvent() == null
       && !m.forceHasPendingStaging()
+      && m.forceGetPendingLandingTile() == null
       && m.forceGetPendingEmptyCityOccupyTile() == null
       && m.forceGetPendingFriendlyCityVisitTile() == null
       && m.forceGetPendingHostileCityTile() == null

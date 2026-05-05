@@ -25,6 +25,7 @@ class Ver1SmokeTest {
     var gHigh = cast(attacker.roster()[0], General);
 
     var luoshi:IJiCe = match.createJiCe(LuoshiJiCe.REGISTRY_KEY, attacker.id());
+    var inspire:IJiCe = match.createJiCe(InspireJiCe.REGISTRY_KEY, attacker.id());
 
     var player:IPlayer = match.createPlayer(attacker.id(), "攻方");
 

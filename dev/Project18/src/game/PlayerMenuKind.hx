@@ -11,6 +11,9 @@ enum PlayerMenuKind {
     /** 計策：列出可用 IJiCe 並進入打出流程。 */
     JiCe;
 
+    /** 移動後落地：繼續進入格子事件/領地/村落分流。 */
+    LandingContinue;
+
     /** 狀態：君主、武將、資源與格子資訊之唯讀總覽。 */
     Status;
 

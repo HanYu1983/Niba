@@ -14,6 +14,7 @@ import game.PlayerMenuKind;
 import game.PlayerMenuKind.ConfirmDone;
 import game.PlayerMenuKind.Move;
 import game.PlayerMenuKind.StagingSubmit;
+import game.PlayerMenuKind.LandingContinue;
 import game.PlayerMenuKind.VillageConquer;
 import game.PlayerMenuKind.VillageTrade;
 import game.TileKind;
@@ -51,10 +52,16 @@ class VillageMenuFlowTest {
     if (MenuNodeQuery.findNodeWithKind(m0.rootNodes(), VillageConquer) != null)
       throw "VillageMenuFlowTest: move 前不應出現 VillageConquer";
 
-    // 點 Move → 落在 Village → pendingVillage 產生
+    // 點 Move → 先進入 pendingLanding（移動後策略窗口）
     match.applyMenuLeaf(actor, requireEnabledNode(m0, Move));
+    if (match.forceGetPendingLandingTile() == null)
+      throw "VillageMenuFlowTest: 移動後應有 pendingLanding";
+
+    // 按落地 → 觸發 village pending
+    var m1a = match.createPlayerMenu(actor);
+    match.applyMenuLeaf(actor, requireEnabledNode(m1a, LandingContinue));
     if (match.forceGetPendingVillageTile() == null)
-      throw "VillageMenuFlowTest: 落在 Village 後應有 pendingVillage";
+      throw "VillageMenuFlowTest: 落地後應有 pendingVillage";
 
     var m1 = match.createPlayerMenu(actor);
     requireEnabledNode(m1, VillageTrade);

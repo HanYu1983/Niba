@@ -11,6 +11,7 @@ import game.ITile;
 import game.MenuNodeQuery;
 import game.PlayerMenuKind;
 import game.PlayerMenuKind.ConfirmDone;
+import game.PlayerMenuKind.LandingContinue;
 import game.PlayerMenuKind.Move;
 import game.TileKind;
 import impl_ver1.Game;
@@ -52,6 +53,8 @@ class EmptyLevelFourPlayerLoopTest {
         throw "EmptyLevelFourPlayerLoopTest: 移動前不應出現「結束本階段」葉節點";
 
       match.applyMenuLeaf(actor, MenuNodeQuery.requireNodeWithKind(menuMove, Move));
+      // 移動後需先按落地
+      match.applyMenuLeaf(actor, MenuNodeQuery.requireNodeWithKind(match.createPlayerMenu(actor), LandingContinue));
 
       if (!match.isActivePlayerSliceComplete())
         throw "EmptyLevelFourPlayerLoopTest: 全平原移動後切片應可結束";

@@ -13,6 +13,7 @@ import game.ITile;
 import game.PlayerMenuKind;
 import game.PlayerMenuKind.ConfirmDone;
 import game.PlayerMenuKind.JiCe;
+import game.PlayerMenuKind.LandingContinue;
 import game.PlayerMenuKind.Move;
 import game.TileKind;
 import impl_ver1.Game;
@@ -54,6 +55,7 @@ class RoadblockJiCeMovementTest {
 
     var m0 = match.createPlayerMenu(actorA);
     match.applyMenuLeaf(actorA, requireEnabledNode(m0, Move));
+    match.applyMenuLeaf(actorA, requireEnabledNode(match.createPlayerMenu(actorA), LandingContinue));
     match.applyMenuLeaf(actorA, requireEnabledNode(match.createPlayerMenu(actorA), ConfirmDone));
     if (match.activeMonarch().id() != idB || match.activeMonarch().pawnIndex() != 5)
       throw "RoadblockJiCeMovementTest: 換手後應為 B 在格 5";
@@ -78,6 +80,7 @@ class RoadblockJiCeMovementTest {
       throw "RoadblockJiCeMovementTest: 路障應在格 5 且放置者為 B";
 
     match.applyMenuLeaf(actorB, requireEnabledNode(match.createPlayerMenu(actorB), Move));
+    match.applyMenuLeaf(actorB, requireEnabledNode(match.createPlayerMenu(actorB), LandingContinue));
     match.applyMenuLeaf(actorB, requireEnabledNode(match.createPlayerMenu(actorB), ConfirmDone));
     if (match.activeMonarch().id() != idA || match.activeMonarch().pawnIndex() != 3)
       throw "RoadblockJiCeMovementTest: A 應在格 3";

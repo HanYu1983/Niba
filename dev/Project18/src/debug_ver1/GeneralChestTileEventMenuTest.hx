@@ -8,6 +8,7 @@ import game.MenuFormWidget;
 import game.MenuNodeQuery;
 import game.PlayerMenuKind;
 import game.PlayerMenuKind.ConfirmDone;
+import game.PlayerMenuKind.LandingContinue;
 import game.PlayerMenuKind.TileEventPick;
 import game.ITile;
 import game.TileKind;
@@ -40,6 +41,8 @@ class GeneralChestTileEventMenuTest {
     var player:IPlayer = match.createPlayer(ruler.id(), "evt-chest");
 
     match.applyMenuLeaf(player, MenuNodeQuery.requireNodeWithKind(match.createPlayerMenu(player), Move));
+    // 移動後需先按落地，才會進入事件 pending
+    match.applyMenuLeaf(player, MenuNodeQuery.requireNodeWithKind(match.createPlayerMenu(player), LandingContinue));
 
     if (ruler.pawnIndex() != LANDING_IDX)
       throw 'GeneralChestTileEventMenuTest: 預期落在索引 $LANDING_IDX，實際 ${ruler.pawnIndex()}';

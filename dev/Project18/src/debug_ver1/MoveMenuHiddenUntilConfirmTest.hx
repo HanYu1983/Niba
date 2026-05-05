@@ -12,6 +12,7 @@ import game.IPlayerMenuNode;
 import game.ITile;
 import game.PlayerMenuKind;
 import game.PlayerMenuKind.ConfirmDone;
+import game.PlayerMenuKind.LandingContinue;
 import game.PlayerMenuKind.Move;
 import game.TileKind;
 import impl_ver1.Game;
@@ -42,14 +43,19 @@ class MoveMenuHiddenUntilConfirmTest {
     // 點 Move
     match.applyMenuLeaf(actor, requireEnabledNode(m0, Move));
 
-    // 平原落地無 pending，切片應完成 → Move 不再出現，ConfirmDone 出現
+    // 移動後先進入 pendingLanding → 應出現 LandingContinue
     var m1 = match.createPlayerMenu(actor);
-    if (MenuNodeQuery.findNodeWithKind(m1.rootNodes(), Move) != null)
+    requireNodeWithKind(m1, LandingContinue);
+    match.applyMenuLeaf(actor, requireEnabledNode(m1, LandingContinue));
+
+    // 平原落地無 pending，切片應完成 → Move 不再出現，ConfirmDone 出現
+    var m1b = match.createPlayerMenu(actor);
+    if (MenuNodeQuery.findNodeWithKind(m1b.rootNodes(), Move) != null)
       throw "MoveMenuHiddenUntilConfirmTest: 切片完成後不應再出現 Move";
-    requireNodeWithKind(m1, ConfirmDone);
+    requireNodeWithKind(m1b, ConfirmDone);
 
     // 點 ConfirmDone 後切片重置 → Move 再次出現
-    match.applyMenuLeaf(actor, requireEnabledNode(m1, ConfirmDone));
+    match.applyMenuLeaf(actor, requireEnabledNode(m1b, ConfirmDone));
     var m2 = match.createPlayerMenu(actor);
     requireNodeWithKind(m2, Move);
 

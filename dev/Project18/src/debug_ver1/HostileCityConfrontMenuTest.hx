@@ -6,6 +6,7 @@ import game.IGameMatch;
 import game.IPlayer;
 import game.MenuFormWidget;
 import game.MenuNodeQuery;
+import game.PlayerMenuKind.LandingContinue;
 import game.PlayerMenuKind.Move;
 import game.PlayerMenuKind.HostileCityAttackerPick;
 import game.PlayerMenuKind.HostileCityDefenderAck;
@@ -61,6 +62,7 @@ class HostileCityConfrontMenuTest {
 
   static function landAttackerOnCity(match:IGameMatch, atk:IPlayer):Void {
     match.applyMenuLeaf(atk, MenuNodeQuery.requireNodeWithKind(match.createPlayerMenu(atk), Move));
+    match.applyMenuLeaf(atk, MenuNodeQuery.requireNodeWithKind(match.createPlayerMenu(atk), LandingContinue));
     if (match.forceGetPendingHostileCityTile() != CITY_IDX)
       throw "HostileCityConfrontMenuTest: 預期進入敵城對峙 pending";
     if (match.forceGetHostileCityFlowPhase() != "AttackerChoosing")

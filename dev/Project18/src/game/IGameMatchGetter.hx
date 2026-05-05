@@ -78,6 +78,9 @@ interface IGameMatchGetter {
   /** 除錯／測試：踩點後待結算之事件腳本；無則 null。 */
   function forceGetPendingTileEvent():Null<ITileEvent>;
 
+  /** 除錯／測試：移動完成但尚未落地分流時之落點索引；用於移動後策略窗口。 */
+  function forceGetPendingLandingTile():Null<TileIndex>;
+
   /** 除錯／測試：計策打出後尚待 resolveChoice 之腳本。 */
   function forceGetPendingJiCe():Null<IJiCe>;
 

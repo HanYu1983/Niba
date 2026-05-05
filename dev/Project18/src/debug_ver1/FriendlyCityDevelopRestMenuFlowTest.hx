@@ -14,6 +14,7 @@ import game.PlayerMenuKind.ConfirmDone;
 import game.PlayerMenuKind.FriendlyCityDevelop;
 import game.PlayerMenuKind.FriendlyCityRest;
 import game.PlayerMenuKind.FriendlyCityVisitEnd;
+import game.PlayerMenuKind.LandingContinue;
 import game.PlayerMenuKind.Move;
 import game.PlayerMenuKind.StagingSubmit;
 import game.TileKind;
@@ -46,8 +47,10 @@ class FriendlyCityDevelopRestMenuFlowTest {
 
     var m0 = match.createPlayerMenu(actor);
     match.applyMenuLeaf(actor, requireEnabledNode(m0, Move));
+    var m0b = match.createPlayerMenu(actor);
+    match.applyMenuLeaf(actor, requireEnabledNode(m0b, LandingContinue));
     if (match.forceGetPendingFriendlyCityVisitTile() == null)
-      throw "FriendlyCityDevelopRestMenuFlowTest: 落在我方城池後應 pendingFriendlyCity";
+      throw "FriendlyCityDevelopRestMenuFlowTest: 落地後應 pendingFriendlyCity";
 
     var m1 = match.createPlayerMenu(actor);
     requireEnabledNode(m1, FriendlyCityDevelop);

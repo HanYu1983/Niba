@@ -10,6 +10,7 @@ import game.ITile;
 import game.MenuFormWidget;
 import game.MenuNodeQuery;
 import game.PlayerMenuKind;
+import game.PlayerMenuKind.LandingContinue;
 import game.TileKind;
 import impl_ver1.Game;
 import impl_ver1.Monarch;
@@ -49,6 +50,7 @@ class EmptyCityVacantFormMenuTest {
       throw "EmptyCityVacantFormMenuTest: 預期初始為空城";
 
     match.applyMenuLeaf(player, MenuNodeQuery.requireNodeWithKind(match.createPlayerMenu(player), Move));
+    match.applyMenuLeaf(player, MenuNodeQuery.requireNodeWithKind(match.createPlayerMenu(player), LandingContinue));
 
     if (match.forceGetPendingEmptyCityOccupyTile() != CITY_IDX)
       throw "EmptyCityVacantFormMenuTest: 應 pending 空城進駐";
@@ -113,6 +115,7 @@ class EmptyCityVacantFormMenuTest {
       throw "EmptyCityVacantFormMenuTest: 有駐將後不應為空城";
 
     match.applyMenuLeaf(player, MenuNodeQuery.requireNodeWithKind(match.createPlayerMenu(player), Move));
+    match.applyMenuLeaf(player, MenuNodeQuery.requireNodeWithKind(match.createPlayerMenu(player), LandingContinue));
 
     if (match.forceGetPendingEmptyCityOccupyTile() != null)
       throw "EmptyCityVacantFormMenuTest: 有駐城不應進空城表單";

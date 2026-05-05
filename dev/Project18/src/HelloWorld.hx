@@ -42,6 +42,7 @@ class HelloWorld {
     debug_ver1.VillageMenuFlowTest.run();
     debug_ver1.VillagePlunderMenuFlowTest.run();
     debug_ver1.FriendlyCityDevelopRestMenuFlowTest.run();
+    debug_ver1.PostMoveLandingWindowMenuTest.run();
     trace("Hello world");
 
     // --- HTML view demo ---

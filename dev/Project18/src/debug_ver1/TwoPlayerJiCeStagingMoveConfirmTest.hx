@@ -16,6 +16,7 @@ import game.PlayerMenuKind;
 import game.PlayerMenuKind.ConfirmDone;
 import game.PlayerMenuKind.JiCe;
 import game.PlayerMenuKind.StagingSubmit;
+import game.PlayerMenuKind.LandingContinue;
 import game.PlayerMenuKind.Move;
 import game.TileKind;
 import impl_ver1.Game;
@@ -103,6 +104,7 @@ class TwoPlayerJiCeStagingMoveConfirmTest {
       throw "TwoPlayerJiCeStagingMoveConfirmTest: 計策結算後尚未移動前不應出現結束葉";
 
     match.applyMenuLeaf(actorAtk, requireEnabledNode(menuAfterPick, Move));
+    match.applyMenuLeaf(actorAtk, requireEnabledNode(match.createPlayerMenu(actorAtk), LandingContinue));
 
     if (!match.isActivePlayerSliceComplete())
       throw "TwoPlayerJiCeStagingMoveConfirmTest: 平原移動後切片應可結束";
