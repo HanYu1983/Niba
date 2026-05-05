@@ -10,6 +10,7 @@ import game.IPlayerMenuEntry;
 import game.IPlayerMenuNode;
 import game.IStagingAction;
 import game.MenuFormWidget;
+import game.MenuClientConfirm;
 import game.PlayerMenuKind;
 import impl_ver1.core.GameMatchCore;
 import impl_ver1.model.Monarch;
@@ -46,7 +47,8 @@ class VillagePlunderStagingAction implements IStagingAction {
       if (defSel.length == 0)
         defSel.push(gid);
     }
-    var submit:IPlayerMenuEntry = match.createPlayerMenuEntry(PlayerMenuKind.StagingSubmit, "確認搶奪", true, "plunder_ok");
+    var plunderConfirm:MenuClientConfirm = {title: "確認搶奪", message: "搶奪會大幅降低村落友好度。確定要執行嗎？"};
+    var submit:IPlayerMenuEntry = match.createPlayerMenuEntry(PlayerMenuKind.StagingSubmit, "確認搶奪", true, "plunder_ok", plunderConfirm);
     var widgets:Array<MenuFormWidget> = [
       GeneralMultiPick("選擇搶奪武將（單選）", choices, defSel),
       Button(submit),

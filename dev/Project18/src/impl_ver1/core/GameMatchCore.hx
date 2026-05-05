@@ -20,6 +20,7 @@ import game.IPlayerCommand;
 import game.Balance;
 import game.IEquipment;
 import game.IPopupMessage;
+import game.MenuClientConfirm;
 import game.MenuActivation;
 import game.MenuGeneralChoice;
 import game.MenuFormWidget;
@@ -503,8 +504,8 @@ class GameMatchCore implements IGameMatch {
   public function createPlayer(monarchId:MonarchId, displayName:String):IPlayer
     return new Player(monarchId, displayName);
 
-  public function createPlayerMenuEntry(kind:PlayerMenuKind, caption:String, enabled:Bool, ?decisionToken:String):IPlayerMenuEntry
-    return new PlayerMenuEntry(kind, caption, enabled, decisionToken);
+  public function createPlayerMenuEntry(kind:PlayerMenuKind, caption:String, enabled:Bool, ?decisionToken:String, ?clientConfirm:MenuClientConfirm):IPlayerMenuEntry
+    return new PlayerMenuEntry(kind, caption, enabled, decisionToken, clientConfirm);
 
   public function createPlayerMenuNode(caption:String, leaf:Null<IPlayerMenuEntry>, children:Array<IPlayerMenuNode>, ?formWidgets:Array<MenuFormWidget>):IPlayerMenuNode
     return new PlayerMenuNode(caption, leaf, children, formWidgets);

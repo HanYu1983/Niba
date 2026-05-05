@@ -16,6 +16,7 @@ import game.IGeneral;
 import game.IMonarch;
 import game.IPlayerMenuNode;
 import game.PlayerMenuKind;
+import game.MenuClientConfirm;
 import game.IGameMatchGetter;
 import game.CityLevel;
 
@@ -95,7 +96,7 @@ interface IGameMatch extends IGameMatchGetter {
     function createPlayer(monarchId:MonarchId, displayName:String):IPlayer;
 
     /** 單列選單條目；通常由 createPlayerMenu 內部組裝，亦允許模組化注入。 */
-    function createPlayerMenuEntry(kind:PlayerMenuKind, caption:String, enabled:Bool, ?decisionToken:String):IPlayerMenuEntry;
+    function createPlayerMenuEntry(kind:PlayerMenuKind, caption:String, enabled:Bool, ?decisionToken:String, ?clientConfirm:MenuClientConfirm):IPlayerMenuEntry;
 
     /** 巢狀選單節點；{@code formWidgets} 非空時為表單語意節點。 */
     function createPlayerMenuNode(caption:String, leaf:Null<IPlayerMenuEntry>, children:Array<IPlayerMenuNode>, ?formWidgets:Array<MenuFormWidget>):IPlayerMenuNode;

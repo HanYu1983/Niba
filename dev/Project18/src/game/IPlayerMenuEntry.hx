@@ -14,4 +14,9 @@ interface IPlayerMenuEntry {
 
     /** 機械選項鍵；非選項類葉為 null。 */
     function decisionToken():Null<String>;
+
+    /**
+     * 若非 null，View 應在送出 {@code applyMenuLeaf} 前先顯示確認（取消則不 apply、不改賽局）。
+     */
+    function clientConfirm():Null<MenuClientConfirm>;
 }

@@ -1,6 +1,7 @@
 package impl_ver1.model;
 
 import game.IPlayerMenuEntry;
+import game.MenuClientConfirm;
 import game.PlayerMenuKind;
 
 class PlayerMenuEntry implements IPlayerMenuEntry {
@@ -8,12 +9,14 @@ class PlayerMenuEntry implements IPlayerMenuEntry {
   var _caption:String;
   var _enabled:Bool;
   var _decisionToken:Null<String>;
+  var _clientConfirm:Null<MenuClientConfirm>;
 
-  public function new(kind:PlayerMenuKind, caption:String, enabled:Bool, ?decisionToken:String) {
+  public function new(kind:PlayerMenuKind, caption:String, enabled:Bool, ?decisionToken:String, ?clientConfirm:MenuClientConfirm) {
     _kind = kind;
     _caption = caption;
     _enabled = enabled;
     _decisionToken = decisionToken;
+    _clientConfirm = clientConfirm;
   }
 
   public function kind():PlayerMenuKind
@@ -27,4 +30,7 @@ class PlayerMenuEntry implements IPlayerMenuEntry {
 
   public function decisionToken():Null<String>
     return _decisionToken;
+
+  public function clientConfirm():Null<MenuClientConfirm>
+    return _clientConfirm;
 }

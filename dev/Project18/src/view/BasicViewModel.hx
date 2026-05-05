@@ -17,6 +17,7 @@ import game.MenuFormWidget;
 import impl_ver1.core.GameMatchCore;
 import game.IPopupMessage;
 import game.PopupPayload;
+import game.MenuClientConfirm;
 import js.Browser;
 import rx.disposables.ISubscription;
 import view.UiEvent;
@@ -70,6 +71,17 @@ class BasicViewModel implements IViewModel {
   function applyMenuClick(node:IPlayerMenuNode, entry:IPlayerMenuEntry):Void {
     // 若為表單內 Button，需標記 activationEntry
     node.setActivationEntry(entry);
+    var hint:Null<MenuClientConfirm> = entry.clientConfirm();
+    if (hint != null) {
+      var hasWindow:Bool = untyped __js__("typeof window !== 'undefined' && typeof window.confirm !== 'undefined'");
+      if (hasWindow) {
+        var ok = Browser.window.confirm(hint.title + "\n\n" + hint.message);
+        if (!ok) {
+          node.setActivationEntry(null);
+          return;
+        }
+      }
+    }
     var a = match.activeMonarch();
     var actor:IPlayer = new LocalPlayer(a.id(), "active");
     match.applyMenuLeaf(actor, node);
