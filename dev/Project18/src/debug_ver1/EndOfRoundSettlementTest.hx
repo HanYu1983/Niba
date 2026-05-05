@@ -10,7 +10,6 @@ import game.PlayerMenuKind.Move;
 import game.PlayerMenuKind.LandingContinue;
 import game.TileKind;
 import game.LevelKeys;
-import impl_ver1.core.GameMatchCore;
 import impl_ver1.model.General;
 import impl_ver1.model.Monarch;
 
@@ -22,8 +21,7 @@ import impl_ver1.model.Monarch;
 class EndOfRoundSettlementTest {
   public static function testEndOfRoundSettlement(game:IGame):Void {
     var match:IGameMatch = game.createGameMatch(LevelKeys.EMPTY);
-    var core = cast(match, GameMatchCore);
-    core.forceSetFixedMoveDelta(2);
+    match.forceSetFixedMoveDelta(2);
 
     // 4 格環：把 pawn 放在 3，走 2 步會經過 0
     match.createBoard([

@@ -21,7 +21,6 @@ import game.PlayerMenuKind.LandingContinue;
 import game.PlayerMenuKind.Move;
 import game.TileKind;
 import impl_ver1.jice.LuoshiJiCe;
-import impl_ver1.core.GameMatchCore;
 
 /**
  * 空白 level 組兩君主、一武將、一落石計策：驗證選單語意鏈
@@ -30,7 +29,7 @@ import impl_ver1.core.GameMatchCore;
 class TwoPlayerJiCeStagingMoveConfirmTest {
   public static function testTwoPlayerJiCeStagingMoveConfirm(game:IGame):Void {
     var match:IGameMatch = game.createGameMatch(LevelKeys.EMPTY);
-    cast(match, GameMatchCore).forceSetFixedMoveDelta(3);
+    match.forceSetFixedMoveDelta(3);
 
     var tiles:Array<ITile> = [];
     for (i in 0...10)

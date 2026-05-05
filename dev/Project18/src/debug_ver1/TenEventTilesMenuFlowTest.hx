@@ -13,7 +13,6 @@ import game.PlayerMenuKind;
 import game.PlayerMenuKind.LandingContinue;
 import game.PlayerMenuKind.TileEventPick;
 import game.TileKind;
-import impl_ver1.core.GameMatchCore;
 
 /**
  * 單君主、十格皆 {@link TileKind.Event}：移動落地→forceGetPendingTileEvent→選單含事件分歧→結算後出現結束語意。
@@ -25,7 +24,7 @@ class TenEventTilesMenuFlowTest {
 
   public static function testTenEventTilesMenuFlow(game:IGame):Void {
     var match:IGameMatch = game.createGameMatch(LevelKeys.EMPTY);
-    cast(match, GameMatchCore).forceSetFixedMoveDelta(3);
+    match.forceSetFixedMoveDelta(3);
 
     var tiles:Array<ITile> = [];
     for (i in 0...RING_LEN)

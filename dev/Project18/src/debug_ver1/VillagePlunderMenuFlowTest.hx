@@ -16,7 +16,6 @@ import game.PlayerMenuKind.StagingSubmit;
 import game.PlayerMenuKind.VillagePlunder;
 import game.TileKind;
 import game.LevelKeys;
-import impl_ver1.core.GameMatchCore;
 
 /**
  * 指令菜單流程：移動落在 Village → 出現搶奪 → 進 staging → 提交後退出 staging（村落 pending 清除）。
@@ -25,7 +24,7 @@ import impl_ver1.core.GameMatchCore;
 class VillagePlunderMenuFlowTest {
   public static function testVillagePlunderMenuFlow(game:IGame):Void {
     var match:IGameMatch = game.createGameMatch(LevelKeys.EMPTY);
-    cast(match, GameMatchCore).forceSetFixedMoveDelta(3);
+    match.forceSetFixedMoveDelta(3);
 
     var tiles:Array<ITile> = [];
     tiles.push(match.createTile(0, Plain));

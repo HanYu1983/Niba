@@ -19,7 +19,6 @@ import game.PlayerMenuKind.Move;
 import game.TileKind;
 import impl_ver1.jice.RoadblockJiCe;
 import impl_ver1.hooks.RoadblockMovementHook;
-import impl_ver1.core.GameMatchCore;
 
 /**
  * A／B 雙君主：B 以 {@link RoadblockJiCe} 於當前格設路障（勾子記住格與放置者，只擋非 B）；
@@ -28,7 +27,7 @@ import impl_ver1.core.GameMatchCore;
 class RoadblockJiCeMovementTest {
   public static function testEnemyHaltedByRoadblockJiCe(game:IGame):Void {
     var match:IGameMatch = game.createGameMatch(LevelKeys.EMPTY);
-    cast(match, GameMatchCore).forceSetFixedMoveDelta(3);
+    match.forceSetFixedMoveDelta(3);
     var ring = 12;
     var tiles:Array<ITile> = [];
     for (i in 0...ring)
@@ -88,7 +87,7 @@ class RoadblockJiCeMovementTest {
   /** 等同 {@link RoadblockMovementHook} 放置者豁免語意（不經計策選單，避免「當前格放置」無法再走回該格的測試死局）。 */
   public static function testPlacerPassesHookTile(game:IGame):Void {
     var match:IGameMatch = game.createGameMatch(LevelKeys.EMPTY);
-    cast(match, GameMatchCore).forceSetFixedMoveDelta(3);
+    match.forceSetFixedMoveDelta(3);
     var ring = 12;
     var tiles:Array<ITile> = [];
     for (i in 0...ring)

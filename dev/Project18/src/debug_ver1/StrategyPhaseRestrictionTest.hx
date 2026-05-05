@@ -13,7 +13,6 @@ import game.TileKind;
 import game.LevelKeys;
 import impl_ver1.jice.DissensionJiCe;
 import impl_ver1.jice.FireJiCe;
-import impl_ver1.core.GameMatchCore;
 
 /**
  * 驗證「計策使用時機」骨架：
@@ -23,7 +22,7 @@ import impl_ver1.core.GameMatchCore;
 class StrategyPhaseRestrictionTest {
   public static function testStrategyPhaseRestriction(game:IGame):Void {
     var match:IGameMatch = game.createGameMatch(LevelKeys.EMPTY);
-    cast(match, GameMatchCore).forceSetFixedMoveDelta(3);
+    match.forceSetFixedMoveDelta(3);
     match.createBoard([match.createTile(0, Plain), match.createTile(1, Plain), match.createTile(2, Plain), match.createTile(3, Plain)]);
 
     var idA:MonarchId = "m-a";
@@ -41,10 +40,9 @@ class StrategyPhaseRestrictionTest {
 
     // 移動後策略選單：只會看到 allowedPhases 含 PostMove 的牌（此例 Fire）
     var mPost = match.createPlayerMenu(actor);
-    var core = cast(match, GameMatchCore);
-    if (core.forceGetPendingLandingTile() == null)
+    if (match.forceGetPendingLandingTile() == null)
       throw "StrategyPhaseRestrictionTest: 預期 pendingLanding 存在";
-    if (!core.canUseStrategyPostMove())
+    if (!match.canUseStrategyPostMove())
       throw "StrategyPhaseRestrictionTest: 預期 canUseStrategyPostMove() = true（已移動後）";
     var postNode = findStrategyPostNode(mPost.rootNodes());
     if (postNode == null)

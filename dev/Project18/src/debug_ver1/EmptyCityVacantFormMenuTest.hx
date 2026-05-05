@@ -13,7 +13,6 @@ import game.PlayerMenuKind;
 import game.PlayerMenuKind.LandingContinue;
 import game.TileKind;
 import game.LevelKeys;
-import impl_ver1.core.GameMatchCore;
 
 /**
  * 空城進駐：單一 menuNode 內 {@link MenuFormWidget.GeneralMultiPick}+兩 {@link MenuFormWidget.Slider}；
@@ -26,7 +25,7 @@ class EmptyCityVacantFormMenuTest {
 
   public static function testVacantCitySingleFormOccupy(game:IGame):Void {
     var match:IGameMatch = game.createGameMatch(LevelKeys.EMPTY);
-    cast(match, GameMatchCore).forceSetFixedMoveDelta(3);
+    match.forceSetFixedMoveDelta(3);
 
     var tiles:Array<ITile> = [];
     for (i in 0...RING_LEN)
@@ -91,7 +90,7 @@ class EmptyCityVacantFormMenuTest {
 
   public static function testOccupiedCitySkipsForm(game:IGame):Void {
     var match:IGameMatch = game.createGameMatch(LevelKeys.EMPTY);
-    cast(match, GameMatchCore).forceSetFixedMoveDelta(3);
+    match.forceSetFixedMoveDelta(3);
 
     var tiles:Array<ITile> = [];
     for (i in 0...RING_LEN)

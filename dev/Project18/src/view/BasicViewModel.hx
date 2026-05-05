@@ -133,6 +133,9 @@ class BasicViewModel implements IViewModel {
   public function forceGetPendingLandingTile():Null<TileIndex>
     return match.forceGetPendingLandingTile();
 
+  public function forceGetLastRolledMoveDelta():Null<Int>
+    return match.forceGetLastRolledMoveDelta();
+
   public function forceGetPendingJiCe():Null<IJiCe>
     return match.forceGetPendingJiCe();
 

@@ -16,7 +16,6 @@ import game.PlayerMenuKind.ConfirmDone;
 import game.PlayerMenuKind.LandingContinue;
 import game.PlayerMenuKind.Move;
 import game.TileKind;
-import impl_ver1.core.GameMatchCore;
 
 /**
  * 單一玩家：移動後（切片完成）主選單不再出現「移動」，直到按下「結束」後才再次出現。
@@ -24,7 +23,7 @@ import impl_ver1.core.GameMatchCore;
 class MoveMenuHiddenUntilConfirmTest {
   public static function testMoveMenuHiddenUntilConfirm(game:IGame):Void {
     var match:IGameMatch = game.createGameMatch(LevelKeys.EMPTY);
-    cast(match, GameMatchCore).forceSetFixedMoveDelta(3);
+    match.forceSetFixedMoveDelta(3);
     var tiles:Array<ITile> = [];
     for (i in 0...12)
       tiles.push(match.createTile(i, Plain));

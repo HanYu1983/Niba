@@ -15,7 +15,6 @@ import game.PlayerMenuKind.ConfirmDone;
 import game.PlayerMenuKind.LandingContinue;
 import game.PlayerMenuKind.Move;
 import game.TileKind;
-import impl_ver1.core.GameMatchCore;
 
 /**
  * 空白 level（{@link LevelKeys#EMPTY}）組局後，驗證四人主迴圈：
@@ -24,7 +23,7 @@ import impl_ver1.core.GameMatchCore;
 class EmptyLevelFourPlayerLoopTest {
   public static function testEmptyLevelFourPlayerLoop(game:IGame):Void {
     var match:IGameMatch = game.createGameMatch(LevelKeys.EMPTY);
-    cast(match, GameMatchCore).forceSetFixedMoveDelta(3);
+    match.forceSetFixedMoveDelta(3);
 
     var tiles:Array<ITile> = [];
     for (i in 0...10)

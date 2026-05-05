@@ -13,7 +13,6 @@ import game.PlayerMenuKind.TileEventPick;
 import game.ITile;
 import game.TileKind;
 import game.LevelKeys;
-import impl_ver1.core.GameMatchCore;
 
 /**
  * {@link GeneralChestTileEvent}：落地→表單複選武將＋確認→結算兵力。
@@ -24,7 +23,7 @@ class GeneralChestTileEventMenuTest {
 
   public static function testGeneralChestTileEventMenuFlow(game:IGame):Void {
     var match:IGameMatch = game.createGameMatch(LevelKeys.EMPTY);
-    cast(match, GameMatchCore).forceSetFixedMoveDelta(3);
+    match.forceSetFixedMoveDelta(3);
 
     var tiles:Array<ITile> = [];
     for (i in 0...RING_LEN)

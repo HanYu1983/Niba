@@ -44,6 +44,9 @@ interface IGameMatch extends IGameMatchGetter {
     /** 除錯／測試／擴充：移除先前登錄之勾子。 */
     function forceUnregisterMovementStepHook(h:IJiCeMovementStepHook):Void;
 
+    /** 除錯／測試：固定每次移動骰點（設為 null 代表恢復隨機）。 */
+    function forceSetFixedMoveDelta(delta:Null<Int>):Void;
+
     /**
      * 除錯／測試／關卡組立：將事件腳本綁至環上索引（生產流程可改由劇本載入呼叫）。
      */

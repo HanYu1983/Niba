@@ -19,7 +19,6 @@ import game.PlayerMenuKind.Move;
 import game.PlayerMenuKind.StagingSubmit;
 import game.TileKind;
 import game.LevelKeys;
-import impl_ver1.core.GameMatchCore;
 
 /**
  * 指令菜單流程：移動落在我方 City → 出現 開發/休整/調度/結束拜訪 → 開發進 staging 提交 → 仍停留拜訪 → 結束拜訪後可結束。
@@ -28,7 +27,7 @@ import impl_ver1.core.GameMatchCore;
 class FriendlyCityDevelopRestMenuFlowTest {
   public static function testFriendlyCityDevelopRestMenuFlow(game:IGame):Void {
     var match:IGameMatch = game.createGameMatch(LevelKeys.EMPTY);
-    cast(match, GameMatchCore).forceSetFixedMoveDelta(3);
+    match.forceSetFixedMoveDelta(3);
 
     // 讓 Move 落在 City=3
     var tiles:Array<ITile> = [];

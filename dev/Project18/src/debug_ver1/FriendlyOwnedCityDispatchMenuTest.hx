@@ -12,7 +12,6 @@ import game.PlayerMenuKind;
 import game.PlayerMenuKind.LandingContinue;
 import game.TileKind;
 import game.LevelKeys;
-import impl_ver1.core.GameMatchCore;
 
 /**
  * 踩中 {@link IGameMatch#cityOwnedByActiveMonarch 我方城池}：應持續出現「調度」表單（3 嵌件）與「結束拜訪」，
@@ -25,7 +24,7 @@ class FriendlyOwnedCityDispatchMenuTest {
 
   public static function testFriendlyCityPersistentMenuUntilVisitEnd(game:IGame):Void {
     var match:IGameMatch = game.createGameMatch(LevelKeys.EMPTY);
-    cast(match, GameMatchCore).forceSetFixedMoveDelta(3);
+    match.forceSetFixedMoveDelta(3);
 
     var tiles:Array<ITile> = [];
     for (i in 0...RING_LEN)

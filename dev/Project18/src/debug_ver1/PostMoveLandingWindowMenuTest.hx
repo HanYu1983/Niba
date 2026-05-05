@@ -14,7 +14,6 @@ import game.PlayerMenuKind;
 import game.PlayerMenuKind.LandingContinue;
 import game.PlayerMenuKind.Move;
 import game.TileKind;
-import impl_ver1.core.GameMatchCore;
 
 /**
  * 菜單流程：Move 後先進入 pendingLanding → 菜單出現 LandingContinue → 按下後才觸發落地分流（例如 pendingVillage）。
@@ -23,7 +22,7 @@ import impl_ver1.core.GameMatchCore;
 class PostMoveLandingWindowMenuTest {
   public static function testPostMoveLandingWindow(game:IGame):Void {
     var match:IGameMatch = game.createGameMatch(LevelKeys.EMPTY);
-    cast(match, GameMatchCore).forceSetFixedMoveDelta(3);
+    match.forceSetFixedMoveDelta(3);
 
     var tiles:Array<ITile> = [];
     for (i in 0...6)
