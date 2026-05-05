@@ -27,4 +27,16 @@ interface IMonarch {
 
     /** 當前糧食（規剘整數刻度）。 */
     function grain():Int;
+
+    /**
+     * 規剘/事件結算：增加兵力（不得為負）。
+     * 備註：此為「對局進行中」必要的可變動操作，不是測試專用 force API。
+     */
+    function grantTroops(n:Int):Void;
+
+    /**
+     * 規剘/事件結算：增加糧食（不得為負）。
+     * 備註：此為「對局進行中」必要的可變動操作，不是測試專用 force API。
+     */
+    function grantGrain(n:Int):Void;
 }

@@ -15,7 +15,6 @@ import game.PlayerMenuKind.HostileCitySettlementAck;
 import game.ITile;
 import game.TileKind;
 import impl_ver1.Game;
-import impl_ver1.model.Monarch;
 
 /**
  * 踩中非友方且有駐軍城池：攻方五選項（過路費／談判／消耗戰／攻城戰／單挑）→ 守方（單挑則選將，否則確認結束）→ 攻方結算文案確認。
@@ -25,15 +24,7 @@ class HostileCityConfrontMenuTest {
   static inline var START_PAWN = 2;
   static inline var CITY_IDX = 5;
 
-  public static function run():Void {
-    testPayTollThenDefenderAckThenSettlement();
-    testNegotiateWithGeneralPickThenSettlement();
-    testDuelBothSidesPickGeneralThenSettlement();
-    trace("[HostileCityConfrontMenuTest] OK — 敵城二階段對峙→結算");
-  }
-
-  static function setupOccupiedEnemyCity():{match:IGameMatch, atk:IPlayer, def:IPlayer, atkId:MonarchId, defId:MonarchId} {
-    var game:IGame = new Game();
+  static function setupOccupiedEnemyCity(game:IGame):{match:IGameMatch, atk:IPlayer, def:IPlayer, atkId:MonarchId, defId:MonarchId} {
     var match:IGameMatch = game.createGameMatch(Game.LEVEL_KEY_EMPTY);
 
     var tiles:Array<ITile> = [];
@@ -67,7 +58,7 @@ class HostileCityConfrontMenuTest {
       throw "HostileCityConfrontMenuTest: 預期進入敵城對峙 pending";
     if (match.forceGetHostileCityFlowPhase() != "AttackerChoosing")
       throw "HostileCityConfrontMenuTest: 預期攻方選項階段";
-    var ruler = cast(match.activeMonarch(), Monarch);
+    var ruler = match.activeMonarch();
     if (ruler.pawnIndex() != CITY_IDX)
       throw "HostileCityConfrontMenuTest: 預期踩中城池格";
   }
@@ -142,8 +133,9 @@ class HostileCityConfrontMenuTest {
       throw "HostileCityConfrontMenuTest: 結算後切片應可收束";
   }
 
-  static function testPayTollThenDefenderAckThenSettlement():Void {
-    var s = setupOccupiedEnemyCity();
+  public static function testPayTollThenDefenderAckThenSettlement():Void {
+    var game:IGame = new Game();
+    var s = setupOccupiedEnemyCity(game);
     landAttackerOnCity(s.match, s.atk);
     applyHostileAttackerToken(s.match, s.atk, "pay_toll");
     applyDefenderAck(s.match, s.def);
@@ -151,8 +143,9 @@ class HostileCityConfrontMenuTest {
     applyAttackerSettlement(s.match, s.atk);
   }
 
-  static function testNegotiateWithGeneralPickThenSettlement():Void {
-    var s = setupOccupiedEnemyCity();
+  public static function testNegotiateWithGeneralPickThenSettlement():Void {
+    var game:IGame = new Game();
+    var s = setupOccupiedEnemyCity(game);
     landAttackerOnCity(s.match, s.atk);
     applyHostileAttackerToken(s.match, s.atk, "negotiate", "g-atk");
     applyDefenderAck(s.match, s.def);
@@ -160,8 +153,9 @@ class HostileCityConfrontMenuTest {
     applyAttackerSettlement(s.match, s.atk);
   }
 
-  static function testDuelBothSidesPickGeneralThenSettlement():Void {
-    var s = setupOccupiedEnemyCity();
+  public static function testDuelBothSidesPickGeneralThenSettlement():Void {
+    var game:IGame = new Game();
+    var s = setupOccupiedEnemyCity(game);
     landAttackerOnCity(s.match, s.atk);
     applyHostileAttackerToken(s.match, s.atk, "duel", "g-atk");
     applyDefenderDuelPick(s.match, s.def, "g-def");

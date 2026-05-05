@@ -13,7 +13,6 @@ import game.PlayerMenuKind;
 import game.PlayerMenuKind.LandingContinue;
 import game.TileKind;
 import impl_ver1.Game;
-import impl_ver1.model.Monarch;
 
 /**
  * 空城進駐：單一 menuNode 內 {@link MenuFormWidget.GeneralMultiPick}+兩 {@link MenuFormWidget.Slider}；
@@ -24,13 +23,7 @@ class EmptyCityVacantFormMenuTest {
   static inline var START_PAWN = 2;
   static inline var CITY_IDX = 5;
 
-  public static function run():Void {
-    testVacantCitySingleFormOccupy();
-    testOccupiedCitySkipsForm();
-    trace("[EmptyCityVacantFormMenuTest] OK — 空城複選＋資源同表單／有駐將跳過");
-  }
-
-  static function testVacantCitySingleFormOccupy():Void {
+  public static function testVacantCitySingleFormOccupy():Void {
     var game:IGame = new Game();
     var match:IGameMatch = game.createGameMatch(Game.LEVEL_KEY_EMPTY);
 
@@ -43,7 +36,7 @@ class EmptyCityVacantFormMenuTest {
     match.createGeneral("g-a", "m-city", 1, 1, 1, 1);
     match.createGeneral("g-b", "m-city", 1, 1, 1, 1);
 
-    var ruler = cast(match.monarchs()[0], Monarch);
+    var ruler = match.monarchs()[0];
     var player:IPlayer = match.createPlayer(ruler.id(), "city-player");
 
     if (!match.cityVacantNoGarrison(CITY_IDX))
@@ -95,7 +88,7 @@ class EmptyCityVacantFormMenuTest {
     return false;
   }
 
-  static function testOccupiedCitySkipsForm():Void {
+  public static function testOccupiedCitySkipsForm():Void {
     var game:IGame = new Game();
     var match:IGameMatch = game.createGameMatch(Game.LEVEL_KEY_EMPTY);
 
@@ -108,7 +101,7 @@ class EmptyCityVacantFormMenuTest {
     match.createGeneral("g-guard", "m-occ", 1, 1, 1, 1);
     match.forceAssignCityGarrison(CITY_IDX, "g-guard");
 
-    var ruler = cast(match.monarchs()[0], Monarch);
+    var ruler = match.monarchs()[0];
     var player:IPlayer = match.createPlayer(ruler.id(), "occ-player");
 
     if (match.cityVacantNoGarrison(CITY_IDX))

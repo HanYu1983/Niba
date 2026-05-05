@@ -21,7 +21,7 @@ import impl_ver1.Game;
  * 重點：測菜單流程，不檢查體力/資源結算結果。
  */
 class RestMenuFlowTest {
-  public static function run():Void {
+  public static function testRestMenuFlow():Void {
     var game:IGame = new Game();
     var match:IGameMatch = game.createGameMatch(Game.LEVEL_KEY_EMPTY);
 

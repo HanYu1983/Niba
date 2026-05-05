@@ -29,20 +29,24 @@ import view.html.HtmlPlayersView;
 class HelloWorld {
   static function main() {
     impl_ver1.Ver1SmokeTest.run();
-    debug_ver1.EmptyLevelFourPlayerLoopTest.run();
-    debug_ver1.TwoPlayerJiCeStagingMoveConfirmTest.run();
-    debug_ver1.TenEventTilesMenuFlowTest.run();
-    debug_ver1.GeneralChestTileEventMenuTest.run();
-    debug_ver1.EmptyCityVacantFormMenuTest.run();
-    debug_ver1.FriendlyOwnedCityDispatchMenuTest.run();
-    debug_ver1.HostileCityConfrontMenuTest.run();
-    debug_ver1.RoadblockJiCeMovementTest.run();
-    debug_ver1.MoveMenuHiddenUntilConfirmTest.run();
-    debug_ver1.RestMenuFlowTest.run();
-    debug_ver1.VillageMenuFlowTest.run();
-    debug_ver1.VillagePlunderMenuFlowTest.run();
-    debug_ver1.FriendlyCityDevelopRestMenuFlowTest.run();
-    debug_ver1.PostMoveLandingWindowMenuTest.run();
+    debug_ver1.EmptyLevelFourPlayerLoopTest.testEmptyLevelFourPlayerLoop();
+    debug_ver1.TwoPlayerJiCeStagingMoveConfirmTest.testTwoPlayerJiCeStagingMoveConfirm();
+    debug_ver1.TenEventTilesMenuFlowTest.testTenEventTilesMenuFlow();
+    debug_ver1.GeneralChestTileEventMenuTest.testGeneralChestTileEventMenuFlow();
+    debug_ver1.EmptyCityVacantFormMenuTest.testVacantCitySingleFormOccupy();
+    debug_ver1.EmptyCityVacantFormMenuTest.testOccupiedCitySkipsForm();
+    debug_ver1.FriendlyOwnedCityDispatchMenuTest.testFriendlyCityPersistentMenuUntilVisitEnd();
+    debug_ver1.HostileCityConfrontMenuTest.testPayTollThenDefenderAckThenSettlement();
+    debug_ver1.HostileCityConfrontMenuTest.testNegotiateWithGeneralPickThenSettlement();
+    debug_ver1.HostileCityConfrontMenuTest.testDuelBothSidesPickGeneralThenSettlement();
+    debug_ver1.RoadblockJiCeMovementTest.testEnemyHaltedByRoadblockJiCe();
+    debug_ver1.RoadblockJiCeMovementTest.testPlacerPassesHookTile();
+    debug_ver1.MoveMenuHiddenUntilConfirmTest.testMoveMenuHiddenUntilConfirm();
+    debug_ver1.RestMenuFlowTest.testRestMenuFlow();
+    debug_ver1.VillageMenuFlowTest.testVillageMenuFlow();
+    debug_ver1.VillagePlunderMenuFlowTest.testVillagePlunderMenuFlow();
+    debug_ver1.FriendlyCityDevelopRestMenuFlowTest.testFriendlyCityDevelopRestMenuFlow();
+    debug_ver1.PostMoveLandingWindowMenuTest.testPostMoveLandingWindow();
     trace("Hello world");
 
     // --- HTML view demo ---

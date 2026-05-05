@@ -13,7 +13,6 @@ import game.PlayerMenuKind.LandingContinue;
 import game.PlayerMenuKind.TileEventPick;
 import game.TileKind;
 import impl_ver1.Game;
-import impl_ver1.model.Monarch;
 
 /**
  * 單君主、十格皆 {@link TileKind.Event}：移動落地→forceGetPendingTileEvent→選單含事件分歧→結算後出現結束語意。
@@ -23,7 +22,7 @@ class TenEventTilesMenuFlowTest {
   /** 與 ver1 預設移動步幅（3）一致：自 0 出發落在索引 3。 */
   static inline var EXPECT_LANDING_IDX = 3;
 
-  public static function run():Void {
+  public static function testTenEventTilesMenuFlow():Void {
     var game:IGame = new Game();
     var match:IGameMatch = game.createGameMatch(Game.LEVEL_KEY_EMPTY);
 
@@ -38,7 +37,7 @@ class TenEventTilesMenuFlowTest {
     for (i in 0...RING_LEN)
       match.forceBindTileEvent(i, evt);
 
-    var ruler = cast(match.monarchs()[0], Monarch);
+    var ruler = match.monarchs()[0];
     var player:IPlayer = match.createPlayer(ruler.id(), "evt-solo");
 
     if (match.activeMonarch().id() != ruler.id())

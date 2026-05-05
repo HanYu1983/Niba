@@ -21,7 +21,7 @@ import impl_ver1.Game;
  * 當前玩家 → 選單含移動 → 移動 → 選單含「結束」→ 確認 → 輪到下家，直至回到首位。
  */
 class EmptyLevelFourPlayerLoopTest {
-  public static function run():Void {
+  public static function testEmptyLevelFourPlayerLoop():Void {
     var game:IGame = new Game();
     var match:IGameMatch = game.createGameMatch(Game.LEVEL_KEY_EMPTY);
 

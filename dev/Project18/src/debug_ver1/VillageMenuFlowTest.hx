@@ -25,7 +25,7 @@ import impl_ver1.Game;
  * 重點：只測菜單流程，不檢查交易/攻占的資源或兵力結算。
  */
 class VillageMenuFlowTest {
-  public static function run():Void {
+  public static function testVillageMenuFlow():Void {
     var game:IGame = new Game();
     var match:IGameMatch = game.createGameMatch(Game.LEVEL_KEY_EMPTY);
 

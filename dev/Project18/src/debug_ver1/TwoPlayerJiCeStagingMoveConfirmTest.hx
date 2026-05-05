@@ -27,7 +27,7 @@ import impl_ver1.jice.LuoshiJiCe;
  * （移動+計策 → 暫存選將 → 移動 → 結束 → 換下家）。
  */
 class TwoPlayerJiCeStagingMoveConfirmTest {
-  public static function run():Void {
+  public static function testTwoPlayerJiCeStagingMoveConfirm():Void {
     var game:IGame = new Game();
     var match:IGameMatch = game.createGameMatch(Game.LEVEL_KEY_EMPTY);
 

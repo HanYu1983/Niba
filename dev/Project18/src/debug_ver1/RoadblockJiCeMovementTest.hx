@@ -25,13 +25,7 @@ import impl_ver1.hooks.RoadblockMovementHook;
  * A 逐步移動經過該格時止步。另附直接註冊 {@link RoadblockMovementHook} 驗證放置者經過目標格不中斷。
  */
 class RoadblockJiCeMovementTest {
-  public static function run():Void {
-    testEnemyHaltedByRoadblockJiCe();
-    testPlacerPassesHookTile();
-    trace("[RoadblockJiCeMovementTest] OK — 路障擋敵方、放置者除外");
-  }
-
-  static function testEnemyHaltedByRoadblockJiCe():Void {
+  public static function testEnemyHaltedByRoadblockJiCe():Void {
     var game:IGame = new Game();
     var match:IGameMatch = game.createGameMatch(Game.LEVEL_KEY_EMPTY);
     var ring = 12;
@@ -91,7 +85,7 @@ class RoadblockJiCeMovementTest {
   }
 
   /** 等同 {@link RoadblockMovementHook} 放置者豁免語意（不經計策選單，避免「當前格放置」無法再走回該格的測試死局）。 */
-  static function testPlacerPassesHookTile():Void {
+  public static function testPlacerPassesHookTile():Void {
     var game:IGame = new Game();
     var match:IGameMatch = game.createGameMatch(Game.LEVEL_KEY_EMPTY);
     var ring = 12;

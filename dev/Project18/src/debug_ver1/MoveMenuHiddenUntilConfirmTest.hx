@@ -21,7 +21,7 @@ import impl_ver1.Game;
  * 單一玩家：移動後（切片完成）主選單不再出現「移動」，直到按下「結束」後才再次出現。
  */
 class MoveMenuHiddenUntilConfirmTest {
-  public static function run():Void {
+  public static function testMoveMenuHiddenUntilConfirm():Void {
     var game:IGame = new Game();
     var match:IGameMatch = game.createGameMatch(Game.LEVEL_KEY_EMPTY);
     var tiles:Array<ITile> = [];

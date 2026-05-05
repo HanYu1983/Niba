@@ -12,7 +12,6 @@ import game.PlayerMenuKind;
 import game.PlayerMenuKind.LandingContinue;
 import game.TileKind;
 import impl_ver1.Game;
-import impl_ver1.model.Monarch;
 
 /**
  * 踩中 {@link IGameMatch#cityOwnedByActiveMonarch 我方城池}：應持續出現「調度」表單（3 嵌件）與「結束拜訪」，
@@ -23,12 +22,7 @@ class FriendlyOwnedCityDispatchMenuTest {
   static inline var START_PAWN = 2;
   static inline var CITY_IDX = 5;
 
-  public static function run():Void {
-    testFriendlyCityPersistentMenuUntilVisitEnd();
-    trace("[FriendlyOwnedCityDispatchMenuTest] OK — 我方城調度表單／結束拜訪");
-  }
-
-  static function testFriendlyCityPersistentMenuUntilVisitEnd():Void {
+  public static function testFriendlyCityPersistentMenuUntilVisitEnd():Void {
     var game:IGame = new Game();
     var match:IGameMatch = game.createGameMatch(Game.LEVEL_KEY_EMPTY);
 
@@ -44,7 +38,7 @@ class FriendlyOwnedCityDispatchMenuTest {
     if (!match.cityOwnedByActiveMonarch(CITY_IDX))
       throw "FriendlyOwnedCityDispatchMenuTest: 預期為我方城地";
 
-    var ruler = cast(match.monarchs()[0], Monarch);
+    var ruler = match.monarchs()[0];
     var player:IPlayer = match.createPlayer(ruler.id(), "own-city");
 
     match.applyMenuLeaf(player, MenuNodeQuery.requireNodeWithKind(match.createPlayerMenu(player), Move));

@@ -11,7 +11,6 @@ import game.MenuActivation;
 import game.MenuFormWidget;
 import game.MenuGeneralChoice;
 import game.PlayerMenuKind.TileEventPick;
-import impl_ver1.model.Monarch;
 import impl_ver1.model.PlayerMenu;
 
 /**
@@ -33,7 +32,7 @@ class GeneralChestTileEvent implements ITileEvent {
   inline static var GRANT_NO_ROSTER:Int = 5;
 
   public function buildPlayerMenu(actor:IPlayer):IPlayerMenu {
-    var ruler = cast(_match.activeMonarch(), Monarch);
+    var ruler = _match.activeMonarch();
     var choices:Array<MenuGeneralChoice> = [];
     for (g in ruler.roster())
       choices.push({generalId: g.id(), caption: g.id()});
@@ -55,7 +54,7 @@ class GeneralChestTileEvent implements ITileEvent {
     if (tok == null)
       throw "GeneralChestTileEvent.resolveChoice: leaf 須有 decisionToken";
     lastResolvedChoice = tok;
-    var ruler = cast(_match.activeMonarch(), Monarch);
+    var ruler = _match.activeMonarch();
     switch tok {
       case "claim_reward":
         if (ruler.roster().length == 0) {
@@ -73,7 +72,7 @@ class GeneralChestTileEvent implements ITileEvent {
     }
   }
 
-  static function parseTileEventGeneralIds(menuNode:IPlayerMenuNode, ruler:Monarch):Array<GeneralId> {
+  static function parseTileEventGeneralIds(menuNode:IPlayerMenuNode, ruler:game.IMonarch):Array<GeneralId> {
     var raw:Array<String> = [];
     for (w in menuNode.formWidgets())
       switch w {

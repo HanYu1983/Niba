@@ -10,7 +10,6 @@ import game.MenuActivation;
 import game.MenuFormWidget;
 import game.MenuGeneralChoice;
 import game.PlayerMenuKind.TileEventPick;
-import impl_ver1.model.Monarch;
 import impl_ver1.model.PlayerMenu;
 
 /**
@@ -29,7 +28,7 @@ class RingLootForkTileEvent implements ITileEvent {
     return "fork_loot_ring_evt";
 
   public function buildPlayerMenu(actor:IPlayer):IPlayerMenu {
-    var ruler = cast(_match.activeMonarch(), Monarch);
+    var ruler = _match.activeMonarch();
     var choices:Array<MenuGeneralChoice> = [];
     for (g in ruler.roster())
       choices.push({generalId: g.id(), caption: g.id()});
@@ -65,7 +64,7 @@ class RingLootForkTileEvent implements ITileEvent {
     if (tok == null)
       throw "RingLootForkTileEvent.resolveChoice: leaf 須有 decisionToken";
     lastResolvedChoice = tok;
-    var ruler = cast(_match.activeMonarch(), Monarch);
+    var ruler = _match.activeMonarch();
     switch tok {
       case "take_supplies":
         if (ruler.roster().length == 0)
@@ -85,7 +84,7 @@ class RingLootForkTileEvent implements ITileEvent {
     }
   }
 
-  static function parseTileEventGeneralIds(menuNode:IPlayerMenuNode, ruler:Monarch):Array<GeneralId> {
+  static function parseTileEventGeneralIds(menuNode:IPlayerMenuNode, ruler:game.IMonarch):Array<GeneralId> {
     var raw:Array<String> = [];
     for (w in menuNode.formWidgets())
       switch w {

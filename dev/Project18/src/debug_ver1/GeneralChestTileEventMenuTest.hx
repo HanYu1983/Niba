@@ -13,7 +13,6 @@ import game.PlayerMenuKind.TileEventPick;
 import game.ITile;
 import game.TileKind;
 import impl_ver1.Game;
-import impl_ver1.model.Monarch;
 
 /**
  * {@link GeneralChestTileEvent}：落地→表單複選武將＋確認→結算兵力。
@@ -22,7 +21,7 @@ class GeneralChestTileEventMenuTest {
   static inline var RING_LEN = 10;
   static inline var LANDING_IDX = 3;
 
-  public static function run():Void {
+  public static function testGeneralChestTileEventMenuFlow():Void {
     var game:IGame = new Game();
     var match:IGameMatch = game.createGameMatch(Game.LEVEL_KEY_EMPTY);
 
@@ -37,7 +36,7 @@ class GeneralChestTileEventMenuTest {
     var evt = new GeneralChestTileEvent(match);
     match.forceBindTileEvent(LANDING_IDX, evt);
 
-    var ruler = cast(match.monarchs()[0], Monarch);
+    var ruler = match.monarchs()[0];
     var player:IPlayer = match.createPlayer(ruler.id(), "evt-chest");
 
     match.applyMenuLeaf(player, MenuNodeQuery.requireNodeWithKind(match.createPlayerMenu(player), Move));

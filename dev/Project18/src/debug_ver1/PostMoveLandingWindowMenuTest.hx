@@ -20,7 +20,7 @@ import impl_ver1.Game;
  * 重點：只驗證「移動後策略窗口」的存在，不驗證落地效果。
  */
 class PostMoveLandingWindowMenuTest {
-  public static function run():Void {
+  public static function testPostMoveLandingWindow():Void {
     var game:IGame = new Game();
     var match:IGameMatch = game.createGameMatch(Game.LEVEL_KEY_EMPTY);
 

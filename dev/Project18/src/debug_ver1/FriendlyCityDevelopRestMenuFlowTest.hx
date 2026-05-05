@@ -25,7 +25,7 @@ import impl_ver1.Game;
  * 重點：只測菜單流程，不檢查開發/休整/調度結算狀態。
  */
 class FriendlyCityDevelopRestMenuFlowTest {
-  public static function run():Void {
+  public static function testFriendlyCityDevelopRestMenuFlow():Void {
     var game:IGame = new Game();
     var match:IGameMatch = game.createGameMatch(Game.LEVEL_KEY_EMPTY);
 
