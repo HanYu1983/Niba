@@ -92,7 +92,7 @@ class RestStagingAction implements IStagingAction {
     var prevSt = target.stamina();
     var next = Balance.clampInt(prevSt + Balance.STAMINA_RECOVER_REST, 0, 100);
     target.setStamina(next);
-    match.pushInfoPopup(ruler.id(), "休整完成", '${gid} 體力：${prevSt} → ${next}', "rest");
+    match.pushInfoPopup(ruler.id(), "休整完成", game.PopupPayload.Plain('${gid} 體力：${prevSt} → ${next}'), "rest");
   }
 
   public function previewRows(actor:IPlayer):Array<IJiCeStagingPreviewRow> {

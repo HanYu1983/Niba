@@ -59,7 +59,7 @@ class FriendlyCityDevelopStagingAction implements IStagingAction {
     var ruler = cast(match.activeMonarch(), Monarch);
     if (actor.monarchId() != ruler.id())
       throw "FriendlyCityDevelopStagingAction: actor must be active monarch";
-    match.pushInfoPopup(ruler.id(), "開發完成", "領地開發已執行（數值結算仍為骨架）。", "friendly-develop");
+    match.pushInfoPopup(ruler.id(), "開發完成", game.PopupPayload.Plain("領地開發已執行（數值結算仍為骨架）。"), "friendly-develop");
   }
 
   public function previewRows(actor:IPlayer):Array<IJiCeStagingPreviewRow> {

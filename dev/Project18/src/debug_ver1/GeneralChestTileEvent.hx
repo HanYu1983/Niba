@@ -10,6 +10,7 @@ import game.IGameMatch;
 import game.MenuActivation;
 import game.MenuFormWidget;
 import game.MenuGeneralChoice;
+import game.PopupPayload;
 import game.PlayerMenuKind.TileEventPick;
 import impl_ver1.model.PlayerMenu;
 
@@ -63,7 +64,7 @@ class GeneralChestTileEvent implements ITileEvent {
           _match.pushInfoPopup(
             actor.monarchId(),
             "奇遇：開箱領賞",
-            '獲得：兵力 +${GRANT_NO_ROSTER}\n（麾下無武將）',
+            Plain('獲得：兵力 +${GRANT_NO_ROSTER}\n（麾下無武將）'),
             "evt-general-chest"
           );
         } else {
@@ -75,7 +76,7 @@ class GeneralChestTileEvent implements ITileEvent {
           _match.pushInfoPopup(
             actor.monarchId(),
             "奇遇：開箱領賞",
-            '武將 ${ids[0]} 領賞\n獲得：兵力 +${GRANT_PER_GENERAL}',
+            Plain('武將 ${ids[0]} 領賞\n獲得：兵力 +${GRANT_PER_GENERAL}'),
             "evt-general-chest"
           );
         }

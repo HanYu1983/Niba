@@ -109,7 +109,7 @@ class VillageTradeStagingAction implements IStagingAction {
         match.pushInfoPopup(
           ruler.id(),
           "交易成功",
-          '與村落（格 ${vIdx}）交易完成。\n\n獲得：糧食 +50\n友好度：${prevF} → ${nextF}\n消耗：金錢 -${costGold}\n${gid} 體力 -10',
+          game.PopupPayload.Plain('與村落（格 ${vIdx}）交易完成。\n\n獲得：糧食 +50\n友好度：${prevF} → ${nextF}\n消耗：金錢 -${costGold}\n${gid} 體力 -10'),
           "village-trade"
         );
         return;

@@ -98,13 +98,13 @@ class LuoshiJiCe implements IJiCe {
     gameMatch.pushInfoPopup(
       actor.monarchId(),
       "計策：落石",
-      '已對目標君主 ${tid} 造成兵力損失（-${pickedLoss}）',
+      game.PopupPayload.Plain('已對目標君主 ${tid} 造成兵力損失（-${pickedLoss}）'),
       "jice-luoshi"
     );
     gameMatch.pushInfoPopup(
       tid,
       "遭受計策",
-      '${actor.monarchId()} 對你施展【落石】\n兵力 -${pickedLoss}',
+      game.PopupPayload.Plain('${actor.monarchId()} 對你施展【落石】\n兵力 -${pickedLoss}'),
       "jice-luoshi-hit"
     );
   }

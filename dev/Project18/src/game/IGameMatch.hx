@@ -19,6 +19,7 @@ import game.PlayerMenuKind;
 import game.MenuClientConfirm;
 import game.IGameMatchGetter;
 import game.CityLevel;
+import game.PopupPayload;
 
 /**
  * GDD：一局對戲之頂層聚合視角（類大富翁踩點行軍）。
@@ -111,5 +112,5 @@ interface IGameMatch extends IGameMatchGetter {
      * docs/玩家指令.md §8：將結果／事件類訊息寫入該君主之彈窗 outbox（由 view 顯示並 ack）。
      * {@code ctxKey} 供辨識來源；實際 popup id 仍含回合序與流水號。
      */
-    function pushInfoPopup(monarchId:MonarchId, title:String, body:String, ctxKey:String):Void;
+    function pushInfoPopup(monarchId:MonarchId, title:String, payload:PopupPayload, ctxKey:String):Void;
 }

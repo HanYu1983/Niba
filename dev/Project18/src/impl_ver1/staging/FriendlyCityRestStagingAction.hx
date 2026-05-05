@@ -58,7 +58,7 @@ class FriendlyCityRestStagingAction implements IStagingAction {
     var ruler = cast(match.activeMonarch(), Monarch);
     if (actor.monarchId() != ruler.id())
       throw "FriendlyCityRestStagingAction: actor must be active monarch";
-    match.pushInfoPopup(ruler.id(), "休整完成", "領地休整已執行（數值結算仍為骨架）。", "friendly-city-rest");
+    match.pushInfoPopup(ruler.id(), "休整完成", game.PopupPayload.Plain("領地休整已執行（數值結算仍為骨架）。"), "friendly-city-rest");
   }
 
   public function previewRows(actor:IPlayer):Array<IJiCeStagingPreviewRow> {

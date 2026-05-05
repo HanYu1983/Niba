@@ -481,8 +481,8 @@ class GameMatchCore implements IGameMatch {
       }
   }
 
-  public function pushInfoPopup(monarchId:MonarchId, title:String, body:String, ctxKey:String):Void {
-    pushPopupToMonarch(monarchId, title, Plain(body), Ok, ctxKey);
+  public function pushInfoPopup(monarchId:MonarchId, title:String, payload:PopupPayload, ctxKey:String):Void {
+    pushPopupToMonarch(monarchId, title, payload, Ok, ctxKey);
   }
 
   function pushPopupToMonarch(monarchId:MonarchId, title:String, payload:PopupPayload, option:PopupOption, ctxKey:String):String {
@@ -875,7 +875,7 @@ class GameMatchCore implements IGameMatch {
     var atkId = _hostileCityAttackerId;
     GameMatchVer1Ops.applyHostileCitySettlementAck(this, actor, menuNode);
     clearHostileCityConfrontation();
-    pushInfoPopup(atkId, "戰鬥結果", sum, "hostile-settle");
+    pushInfoPopup(atkId, "戰鬥結果", Plain(sum), "hostile-settle");
     _activeSliceComplete = true;
     syncActiveSliceAfterMenuLeaf(HostileCitySettlementAck);
   }
@@ -1078,7 +1078,7 @@ class GameMatchCore implements IGameMatch {
     pushInfoPopup(
       ruler.id(),
       "資源格收益",
-      '格位 ${idx}\n獲得：金錢 +30\n獲得：糧食 +30',
+      Plain('格位 ${idx}\n獲得：金錢 +30\n獲得：糧食 +30'),
       "resource-tile"
     );
     _activeSliceComplete = true;
@@ -1204,7 +1204,7 @@ class GameMatchCore implements IGameMatch {
     pushInfoPopup(
       ruler.id(),
       "進駐完成",
-      '城池格 ${idx}\n進駐兵力：${tt}\n進駐糧食：${gg}\n駐守武將：${gTxt}',
+      Plain('城池格 ${idx}\n進駐兵力：${tt}\n進駐糧食：${gg}\n駐守武將：${gTxt}'),
       "empty-city-occupy"
     );
     _pendingEmptyCityTileIndex = null;
@@ -1216,7 +1216,7 @@ class GameMatchCore implements IGameMatch {
     if (_pendingEmptyCityTileIndex == null)
       throw "GameMatchCore: EmptyCityOccupyAbort 但無 pending 空城";
     GameMatchVer1Ops.onEmptyCityOccupyAbort(this);
-    pushInfoPopup(actor.monarchId(), "已取消", "未進駐空城。", "empty-city-abort");
+    pushInfoPopup(actor.monarchId(), "已取消", Plain("未進駐空城。"), "empty-city-abort");
     _pendingEmptyCityTileIndex = null;
     _activeSliceComplete = true;
     syncActiveSliceAfterMenuLeaf(EmptyCityOccupyAbort);
@@ -1244,7 +1244,7 @@ class GameMatchCore implements IGameMatch {
     pushInfoPopup(
       ruler.id(),
       "調度完成",
-      '城池格 ${idx}\n城池兵力調整為：${tt}\n城池糧食調整為：${gg}',
+      Plain('城池格 ${idx}\n城池兵力調整為：${tt}\n城池糧食調整為：${gg}'),
       "friendly-dispatch"
     );
     syncActiveSliceAfterMenuLeaf(FriendlyCityDispatchApply);
@@ -1254,7 +1254,7 @@ class GameMatchCore implements IGameMatch {
     if (_pendingFriendlyCityTileIndex == null)
       throw "GameMatchCore: FriendlyCityVisitEnd 但無 pending 我方城池拜訪";
     GameMatchVer1Ops.onFriendlyCityVisitEnd(this);
-    pushInfoPopup(actor.monarchId(), "結束拜訪", "已離開我方城池。", "friendly-visit-end");
+    pushInfoPopup(actor.monarchId(), "結束拜訪", Plain("已離開我方城池。"), "friendly-visit-end");
     _pendingFriendlyCityTileIndex = null;
     _activeSliceComplete = true;
     syncActiveSliceAfterMenuLeaf(FriendlyCityVisitEnd);
@@ -1309,7 +1309,7 @@ class GameMatchCore implements IGameMatch {
             pushInfoPopup(
               actor.monarchId(),
               "移動",
-              (dMove != null ? '本次移動步數：${dMove}\n' : "") + '目前位置：格 ${pos}',
+              Plain((dMove != null ? '本次移動步數：${dMove}\n' : "") + '目前位置：格 ${pos}'),
               "move"
             );
           case TileEventPick:
@@ -1347,7 +1347,7 @@ class GameMatchCore implements IGameMatch {
           case VillageEndTurn:
             if (_pendingVillageTileIndex == null)
               throw "GameMatchCore: VillageEndTurn 但無 pendingVillage";
-            pushInfoPopup(actor.monarchId(), "村落", "已結束村落互動。", "village-end");
+            pushInfoPopup(actor.monarchId(), "村落", Plain("已結束村落互動。"), "village-end");
             _pendingVillageTileIndex = null;
             _activeSliceComplete = true;
             syncActiveSliceAfterMenuLeaf(VillageEndTurn);
