@@ -58,6 +58,24 @@
 
 **`force*` API**：`IGameMatch` 上此前綴的方法（如 `forceBindTileEvent`、`forceGetPendingTileEvent`）供除錯／測試／組局透視或注入；對局推進仍以 `createPlayerMenu`／`applyMenuLeaf` 為準。
 
+### 3.1 `force*` / setter 命名與暴露規範（重要）
+
+- **測試/除錯專用的介面方法才使用 `force*` 前綴**  
+  - 例：`IGameMatch.forceSetCityOwner`、`IGameMatch.forcePutCityStores`、`IGameMatchGetter.forceGetPendingTileEvent`
+  - 測試案例 **不可依賴具象類別 cast**（避免測試綁死 ver1 實作）；因此測試需要的「注入/透視」能力必須保留在 `IGameMatch`/`IGameMatchGetter` 的 `force*` API 內。
+
+- **具象實作類別上的 setter 不加 `force`**  
+  - 例：`impl_ver1.General.setStamina`
+  - 原因：impl 端本來就知道具體類型與友元可見性，應直接呼叫具象 public/友元 private 方法，不把 setter 汙染到介面層。
+
+- **只有「測試真的需要從介面呼叫 setter」時，才在介面新增 `force*` wrapper**  
+  - 作法：在介面新增 `forceSetX(...)`，並在具象實作內把它 **綁定到非 force 方法**（例如 `forceSetX` 內部呼叫 `setX`）。  
+  - 這樣可同時滿足：測試不 cast、介面不背負完整 setter 族、impl 仍保持自然命名。
+
+- **impl 內 code 的使用準則**  
+  - 規剘/內容若已拿到具象類（如 `GameMatchCore`、`General`）就 **直接呼叫非 force 方法**。  
+  - `force*` 主要用於測試/除錯/組局階段的注入與透視；避免在一般規剘結算流程中濫用。
+
 **判斷小技巧：**  
 若拿掉某一個計策或事件類別後，主迴路仍可編譯且「換另一組內容」仍能跑通同樣流程，則該類別多半是 **擴充內容**。  
 若拿掉後無法定義「如何結束暫存」「如何換手」，則屬 **骨架**。  
