@@ -11,6 +11,7 @@ import game.MenuActivation;
 import game.MenuFormWidget;
 import game.MenuGeneralChoice;
 import game.PlayerMenuKind;
+import game.StrategyCostTier;
 
 /**
  * 策略：鼓舞（指定武將）— 回復目標武將體力。
@@ -88,15 +89,13 @@ class InspireJiCe implements IJiCe {
     if (caster == null || target == null)
       throw "InspireJiCe: picked general not in roster";
 
-    // 成功率
-    var cmd = caster.stat(Command) / 100.0;
-    var base = 0.60; // 中消耗策略基礎成功率
-    var mod = Balance.staminaModifier(caster.stamina());
-    var rate = cmd * base * mod;
+    // 成功率（統率 × 基礎成功率 × 體力修正）
+    var tier = StrategyCostTier.Medium;
+    var rate = Balance.strategySuccessRate(caster.stat(Command), tier, caster.stamina());
     var ok = Math.random() < rate;
 
-    // 消耗體力（中：先用 20）
-    caster.forceSetStamina(Balance.clampInt(caster.stamina() - 20, 0, 100));
+    // 消耗體力（中）
+    caster.forceSetStamina(Balance.clampInt(caster.stamina() - Balance.strategyStaminaCost(tier), 0, 100));
 
     if (ok) {
       // 效果：目標回復（先用 +20 當骨架；之後可依屬性/修正調整）

@@ -14,7 +14,8 @@ class Ver1MainCommands {
     return [
       new MoveCommand(match),
       new LandingContinueCommand(match),
-      new JiCeCommand(match),
+      new StrategyPreCommand(match),
+      new StrategyPostCommand(match),
       new RestCommand(match),
       new VillageTradeCommand(match),
       new VillagePlunderCommand(match),
@@ -63,12 +64,16 @@ private class MoveCommand implements IPlayerCommand {
   }
 }
 
-private class JiCeCommand implements IPlayerCommand {
+private class StrategyPreCommand implements IPlayerCommand {
   final m:GameMatchCore;
   public function new(m:GameMatchCore) this.m = m;
-  public function kind():PlayerMenuKind return JiCe;
-  public function designLabel():String return "計策";
+  public function kind():PlayerMenuKind return StrategyPre;
+  public function designLabel():String return "策略（移動前）";
   public function buildActionNode(actor:IPlayer):Null<IPlayerMenuNode> {
+    if (!m.canUseStrategyPreMove())
+      return null;
+    if (m.forceGetPendingLandingTile() != null)
+      return null;
     var owned = m.availableJiCe(actor.monarchId());
     var stagingActive = m.forceHasPendingStaging();
     var hostilePending = m.forceGetPendingHostileCityTile() != null;
@@ -76,6 +81,7 @@ private class JiCeCommand implements IPlayerCommand {
     var jiEnabledBase =
       !stagingActive
       && pend == null
+      && m.forceGetPendingLandingTile() == null
       && m.forceGetPendingEmptyCityOccupyTile() == null
       && m.forceGetPendingFriendlyCityVisitTile() == null
       && !hostilePending;
@@ -88,12 +94,39 @@ private class JiCeCommand implements IPlayerCommand {
         var j = owned[i];
         jiChildren.push(m.createPlayerMenuNode(j.designLabel(), m.createPlayerMenuEntry(JiCe, "打出：" + j.designLabel(), jiEnabledBase, Std.string(i)), []));
       }
-    return m.createPlayerMenuNode("計策", null, jiChildren);
+    return m.createPlayerMenuNode("策略（移動前）", null, jiChildren);
   }
   public function apply(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
-    var leaf = game.MenuActivation.activatingEntry(menuNode);
-    var card:IJiCe = m.resolvePlayedJiCeFromLeaf(actor, leaf);
-    m.enterStaging(actor, new JiCeStagingAction(m, card), JiCe);
+    // applyMenuLeaf 會處理 JiCe leaf → 進入 staging
+  }
+}
+
+private class StrategyPostCommand implements IPlayerCommand {
+  final m:GameMatchCore;
+  public function new(m:GameMatchCore) this.m = m;
+  public function kind():PlayerMenuKind return StrategyPost;
+  public function designLabel():String return "策略（移動後）";
+  public function buildActionNode(actor:IPlayer):Null<IPlayerMenuNode> {
+    if (!m.canUseStrategyPostMove())
+      return null;
+    if (m.forceGetPendingLandingTile() == null)
+      return null;
+    // 移動後策略：只在 pendingLanding 窗口中顯示；目前先沿用同一套計策列表（後續可依策略類型過濾）
+    var owned = m.availableJiCe(actor.monarchId());
+    var stagingActive = m.forceHasPendingStaging();
+    var jiEnabledBase = !stagingActive;
+    var jiChildren:Array<IPlayerMenuNode> = [];
+    if (owned.length == 0)
+      jiChildren.push(m.createPlayerMenuNode("(無所持計策)", m.createPlayerMenuEntry(JiCe, "（尚無所持計策）", false, null), []));
+    else
+      for (i in 0...owned.length) {
+        var j = owned[i];
+        jiChildren.push(m.createPlayerMenuNode(j.designLabel(), m.createPlayerMenuEntry(JiCe, "打出：" + j.designLabel(), jiEnabledBase, Std.string(i)), []));
+      }
+    return m.createPlayerMenuNode("策略（移動後）", null, jiChildren);
+  }
+  public function apply(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
+    // applyMenuLeaf 會處理 JiCe leaf → 進入 staging
   }
 }
 

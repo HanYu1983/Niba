@@ -21,6 +21,7 @@ import game.MenuActivation;
 import game.MenuGeneralChoice;
 import game.MenuFormWidget;
 import game.PlayerMenuKind;
+import game.StrategyPhase;
 import game.TileKind;
 import impl_ver1.JiCeStagingAction;
 import impl_ver1.RestStagingAction;
@@ -51,6 +52,7 @@ class GameMatchCore implements IGameMatch {
   var _hasMovedThisTurn:Bool;
   var _strategyPreUsed:Bool;
   var _strategyPostUsed:Bool;
+  var _pendingStrategyPhase:Null<StrategyPhase>;
   var _activeSliceComplete:Bool;
   var _terminationReason:MatchTerminationReason;
 
@@ -100,6 +102,7 @@ class GameMatchCore implements IGameMatch {
     _hasMovedThisTurn = false;
     _strategyPreUsed = false;
     _strategyPostUsed = false;
+    _pendingStrategyPhase = null;
     _activeSliceComplete = false;
     _terminationReason = NotEnded;
     _tileEventByIndex = new Map();
@@ -122,6 +125,7 @@ class GameMatchCore implements IGameMatch {
   function clearStaging():Void {
     _pendingStaging = null;
     _stagingPreviewRows = ([] : Array<IJiCeStagingPreviewRow>);
+    _pendingStrategyPhase = null;
   }
 
   // ========== 私有行為（依欄位分組；公開方法與友元僅委派至此）==========
@@ -737,7 +741,10 @@ class GameMatchCore implements IGameMatch {
         _hasMovedThisTurn = false;
         _strategyPreUsed = false;
         _strategyPostUsed = false;
+        _pendingStrategyPhase = null;
       case JiCe:
+      case StrategyPre:
+      case StrategyPost:
       case StagingSubmit:
       case Status:
       case Move:
@@ -820,7 +827,17 @@ class GameMatchCore implements IGameMatch {
     var stg = _pendingStaging;
     if (stg == null)
       throw "GameMatchCore: StagingSubmit 但無進行中之暫存";
+    var phase = _pendingStrategyPhase;
+    var asJiCe = stg.asJiCe();
     stg.resolveChoice(actor, menuNode);
+    // docs/策略系統.md：每階段僅能提交一次（先以「提交即消耗」處理）
+    if (asJiCe != null && phase != null)
+      switch phase {
+        case PreMove:
+          _strategyPreUsed = true;
+        case PostMove:
+          _strategyPostUsed = true;
+      }
     clearStaging();
     // 若本次 staging 發生於村落互動，提交後視為已完成落地互動，可結束切片
     if (_pendingVillageTileIndex != null) {
@@ -1004,9 +1021,22 @@ class GameMatchCore implements IGameMatch {
             handleStagingSubmit(actor, menuNode);
           case LandingContinue:
             handleLandingContinue(actor);
+          case StrategyPre, StrategyPost:
+            throw "GameMatchCore.applyMenuLeaf: StrategyPre/StrategyPost 不應為 leaf kind（父節點無 entry）";
           case JiCe:
             var card = resolvePlayedJiCeFromLeaf(actor, leaf);
-            enterStaging(actor, new JiCeStagingAction(this, card), JiCe);
+            // docs/策略系統.md：依是否處於 pendingLanding 窗口決定階段
+            if (forceGetPendingLandingTile() != null) {
+              if (!canUseStrategyPostMove())
+                throw "GameMatchCore: StrategyPost 不可用";
+              _pendingStrategyPhase = PostMove;
+              enterStaging(actor, new JiCeStagingAction(this, card), StrategyPost);
+            } else {
+              if (!canUseStrategyPreMove())
+                throw "GameMatchCore: StrategyPre 不可用";
+              _pendingStrategyPhase = PreMove;
+              enterStaging(actor, new JiCeStagingAction(this, card), StrategyPre);
+            }
           case Rest:
             enterStaging(actor, new RestStagingAction(this), Rest);
           case VillageTrade:

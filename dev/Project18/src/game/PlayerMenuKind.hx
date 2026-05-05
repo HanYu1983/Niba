@@ -11,6 +11,12 @@ enum PlayerMenuKind {
     /** 計策：列出可用 IJiCe 並進入打出流程。 */
     JiCe;
 
+    /** 策略（移動前）：每回合一次。 */
+    StrategyPre;
+
+    /** 策略（移動後）：每回合一次，且僅在 pendingLanding 窗口中可用。 */
+    StrategyPost;
+
     /** 移動後落地：繼續進入格子事件/領地/村落分流。 */
     LandingContinue;
 

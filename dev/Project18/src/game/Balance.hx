@@ -55,5 +55,29 @@ class Balance {
       case GreatGeneral: 4;
     };
   }
+
+  /** docs/策略系統.md：策略體力消耗占位值（之後可改為區間抽樣）。 */
+  public static function strategyStaminaCost(tier:StrategyCostTier):Int {
+    return switch tier {
+      case Low: 10;
+      case Medium: 20;
+      case High: 40;
+    };
+  }
+
+  /** docs/數值算法.md 4.1：策略基礎成功率（依消耗級別）。 */
+  public static function strategyBaseRate(tier:StrategyCostTier):Float {
+    return switch tier {
+      case Low: 0.80;
+      case Medium: 0.60;
+      case High: 0.40;
+    };
+  }
+
+  /** docs/數值算法.md 4.1：策略成功率（stat 1~100）。 */
+  public static function strategySuccessRate(statValue:Int, tier:StrategyCostTier, stamina:Int):Float {
+    var s = clampInt(statValue, 0, 100) / 100.0;
+    return s * strategyBaseRate(tier) * staminaModifier(stamina);
+  }
 }
 
