@@ -16,6 +16,7 @@ import game.IGeneral;
 import game.IMonarch;
 import game.IPlayerMenuNode;
 import game.PlayerMenuKind;
+import game.IGameMatchGetter;
 
 /**
  * GDD：一局對戲之頂層聚合視角（類大富翁踩點行軍）。
@@ -30,48 +31,12 @@ import game.PlayerMenuKind;
  * 查詢與狀態讀取由此介面暴露；選單快照（createPlayerMenu）與 **會改變賽局內容** 之結算（applyMenuLeaf）皆屬本介面。
  * 零件工廠（createTile／createBoard／…）於取得賽局後由此介面提供，與關卡組立解耦。
  */
-interface IGameMatch {
-    /** 環狀棋盤本體。 */
-    function board():IBoard;
-
-    /**
-     * 四位君主；陣列順序應與 seat 遞增一致或以契約另行說明。
-     * monarchs().length 之設計語意為 4。
-     */
-    function monarchs():Array<IMonarch>;
-
-    /** 當前具行動權之君主。 */
-    function activeMonarch():IMonarch;
-
-    /**
-     * 指定君主當下可打出的计策視圖。
-     * 手牌上限、共用牌庫或冷卻堆疊由實作模型補充。
-     */
-    function availableJiCe(monarchId:MonarchId):Array<IJiCe>;
-
+interface IGameMatch extends IGameMatchGetter {
     /**
      * 依資料鍵建立計策實例；{@code ownerMonarchId} 為持有／所屬君主（牌組歸屬），實作可據此校驗。
      * 未支援之鍵應拋錯。
      */
     function createJiCe(key:JiCeKey, ownerMonarchId:MonarchId):IJiCe;
-
-    /**
-     * 行動切片是否已到「可收束」狀態（例如移動並完成踩點結算後為 true）。
-     * 典型用途：為 true 時主選單才出現「結束／確認」類葉節點；為 false 時僅允許進行中指令（移動、計策等）。
-     * 選擇 ConfirmDone 並 apply 後，實作應清回 false，以便下一回合切片重新計算。
-     */
-    function isActivePlayerSliceComplete():Bool;
-
-    /**
-     * 終局語意：進行中為 {@link MatchTerminationReason.NotEnded}；否則為平局或 {@link MatchTerminationReason.Victory}。
-     */
-    function getTerminationReason():MatchTerminationReason;
-
-    /**
-     * 當前已登錄、於「移動逐步前進」每步落地後會依序呼叫的勾子（回傳為拷貝快照）。
-     * 計策若需路障／提早止步等，應實作 {@link IJiCeMovementStepHook} 並於適當時機 {@link #forceRegisterMovementStepHook}。
-     */
-    function movementStepHooks():Array<IJiCeMovementStepHook>;
 
     /** 除錯／測試／擴充：登錄移動逐步勾子（同一實例重複登錄應為 no-op）。 */
     function forceRegisterMovementStepHook(h:IJiCeMovementStepHook):Void;
@@ -84,38 +49,11 @@ interface IGameMatch {
      */
     function forceBindTileEvent(at:TileIndex, handler:ITileEvent):Void;
 
-    /** 除錯／測試：踩點後待結算之事件腳本；無則 null。 */
-    function forceGetPendingTileEvent():Null<ITileEvent>;
-
-    /** 除錯／測試：計策打出後尚待 resolveChoice 之腳本。 */
-    function forceGetPendingJiCe():Null<IJiCe>;
-
-    /** 除錯／測試：暫存計策對應之武將預覽列；無暫存時為空陣列。 */
-    function forceJiCeStagingPreviewRows():Array<IJiCeStagingPreviewRow>;
-
     /** 除錯／測試：進入計策暫存。 */
     function forceEnterJiCeStaging(card:IJiCe):Void;
 
-    /**
-     * 該索引格子為 {@link TileKind.City} 且無武將駐守時為 true；
-     * 非城池或已有駐將（{@link #forceAssignCityGarrison}）為 false。
-     */
-    function cityVacantNoGarrison(at:TileIndex):Bool;
-
-    /** 除錯／測試：踩中空城後待進駐表單結算時為該格索引；否則 null。 */
-    function forceGetPendingEmptyCityOccupyTile():Null<TileIndex>;
-
-    /** 除錯／測試：城池格累計進駐兵力（無紀錄為 0）。 */
-    function forceGetCityStoredTroops(at:TileIndex):Int;
-
-    /** 除錯／測試：城池格累計進駐糧食（無紀錄為 0）。 */
-    function forceGetCityStoredGrain(at:TileIndex):Int;
-
     /** 除錯／測試：標記城池格已有武將駐守（非空城）；供分支測試用。 */
     function forceAssignCityGarrison(at:TileIndex, generalId:GeneralId):Void;
-
-    /** 除錯／測試：該城池格駐守武將 id 列表（無則空陣列）。 */
-    function forceGetCityGarrisonGeneralIds(at:TileIndex):Array<GeneralId>;
 
     /**
      * 除錯／測試：標記城池格所屬君主；與 {@link #activeMonarch} 相符且踩中該城時進入我方拜訪選單。
@@ -124,21 +62,6 @@ interface IGameMatch {
 
     /** 除錯／測試：直接寫入城池格儲備（兵力／糧食）。 */
     function forcePutCityStores(at:TileIndex, troops:Int, grain:Int):Void;
-
-    /** 除錯／測試：踩中我方城池後尚待「結束拜訪」時為該格索引；否則 null。 */
-    function forceGetPendingFriendlyCityVisitTile():Null<TileIndex>;
-
-    /** 除錯／測試：踩中非友方且有駐軍城池後之多階段對峙尚未結束時為該格索引；否則 null。 */
-    function forceGetPendingHostileCityTile():Null<TileIndex>;
-
-    /** 除錯／測試：敵城對峙流程階段（字串）；無 pending 時為 null。 */
-    function forceGetHostileCityFlowPhase():Null<String>;
-
-    /** 除錯／測試：結算階段攻方節點標題所用之預算文案；非該階段時為 null。 */
-    function forceGetHostileCitySettlementSummary():Null<String>;
-
-    /** 該城格 {@link TileKind.City} 之屬主為當前行動君主時為 true。 */
-    function cityOwnedByActiveMonarch(at:TileIndex):Bool;
 
     /** 單格；多格按索引有序組裝後再交由 createBoard。 */
     function createTile(index:TileIndex, kind:TileKind):ITile;
@@ -166,12 +89,6 @@ interface IGameMatch {
 
     /** 巢狀選單節點；{@code formWidgets} 非空時為表單語意節點。 */
     function createPlayerMenuNode(caption:String, leaf:Null<IPlayerMenuEntry>, children:Array<IPlayerMenuNode>, ?formWidgets:Array<MenuFormWidget>):IPlayerMenuNode;
-
-    /**
-     * 依當前賽局×操作者建立主選單快照（移動／計策／狀態／確認等）。
-     * 賽局狀態變更後須重新呼叫，不得假定與賽局隱式同步。
-     */
-    function createPlayerMenu(actor:IPlayer):IPlayerMenu;
 
     /**
      * 對本局賽局結算 **選單節點**（移動、計策、表單送出等），並視規剘修改棋子／兵力／切片旗標等。
