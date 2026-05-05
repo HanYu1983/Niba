@@ -1,6 +1,7 @@
 package view.html;
 
 import game.GeneralStat;
+import game.IEquipment;
 import game.IMonarch;
 import js.Browser;
 import js.html.DivElement;
@@ -18,7 +19,7 @@ class HtmlInfoPanelView {
   final host:Element;
   final root:DivElement;
   var vmSub:Null<ISubscription> = null;
-  var activeTab:String = "monarch"; // "monarch" | "generals"
+  var activeTab:String = "monarch"; // "monarch" | "generals" | "weapons"
 
   public function new(mountElementId:String) {
     var el = Browser.document.getElementById(mountElementId);
@@ -60,6 +61,7 @@ class HtmlInfoPanelView {
     tabs.className = "ui-tabs";
     tabs.appendChild(tabBtn("monarch", "君主資料", vm));
     tabs.appendChild(tabBtn("generals", "武將列表", vm));
+    tabs.appendChild(tabBtn("weapons", "武器列表", vm));
     root.appendChild(tabs);
 
     // content
@@ -70,6 +72,8 @@ class HtmlInfoPanelView {
     switch activeTab {
       case "generals":
         body.appendChild(renderGenerals(a));
+      case "weapons":
+        body.appendChild(renderWeapons(a));
       default:
         body.appendChild(renderMonarch(a));
     }
@@ -149,6 +153,60 @@ class HtmlInfoPanelView {
         r.appendChild(td(Std.string(g.stat(Stewardship)), false));
         r.appendChild(td(Std.string(g.stamina()), false));
         r.appendChild(td(Std.string(g.loyalty()), false));
+        tbody.appendChild(r);
+      }
+    }
+    table.appendChild(tbody);
+    wrap.appendChild(table);
+    return wrap;
+  }
+
+  function renderWeapons(a:IMonarch):Element {
+    var wrap = Browser.document.createDivElement();
+
+    var table = Browser.document.createTableElement();
+    table.className = "ui-table";
+
+    var thead = Browser.document.createTableSectionElement();
+    var hr = Browser.document.createTableRowElement();
+    for (h in ["裝備", "類型", "稀有度", "加成", "忠誠+", "價格", "所裝備武將"]) {
+      var th = Browser.document.createTableCellElement();
+      th.className = "ui-th";
+      th.textContent = h;
+      hr.appendChild(th);
+    }
+    thead.appendChild(hr);
+    table.appendChild(thead);
+
+    var tbody = Browser.document.createTableSectionElement();
+    var rows:Array<{ eq:IEquipment, gid:String }> = [];
+    for (g in a.roster()) {
+      var eqs = g.equipments();
+      if (eqs != null) {
+        for (eq in eqs)
+          rows.push({ eq: eq, gid: g.id() });
+      }
+    }
+
+    if (rows.length == 0) {
+      var r0 = Browser.document.createTableRowElement();
+      var td0 = Browser.document.createTableCellElement();
+      td0.colSpan = 7;
+      td0.className = "ui-td ui-empty";
+      td0.textContent = "（目前沒有武器/裝備）";
+      r0.appendChild(td0);
+      tbody.appendChild(r0);
+    } else {
+      for (x in rows) {
+        var eq = x.eq;
+        var r = Browser.document.createTableRowElement();
+        r.appendChild(td(eq.name(), true));
+        r.appendChild(td(Std.string(eq.type()), false));
+        r.appendChild(td(Std.string(eq.rarity()), false));
+        r.appendChild(td(Std.string(eq.bonusStat()) + " +" + eq.bonusValue(), false));
+        r.appendChild(td(Std.string(eq.loyaltyBonus()), false));
+        r.appendChild(td(Std.string(eq.price()), false));
+        r.appendChild(td(x.gid, true));
         tbody.appendChild(r);
       }
     }
