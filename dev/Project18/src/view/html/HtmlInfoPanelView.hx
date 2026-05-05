@@ -36,13 +36,17 @@ class HtmlInfoPanelView {
 
   function render(vm:IViewModel):Void {
     var a = vm.activeMonarch();
+    var gs:Array<String> = [];
+    for (g in a.roster())
+      gs.push(g.id());
     root.textContent =
       'round=' + vm.roundNumber()
       + ' active=' + a.id()
       + ' seat=' + a.seat()
       + ' pos=' + a.pawnIndex()
       + ' troops=' + a.troops()
-      + ' grain=' + a.grain();
+      + ' grain=' + a.grain()
+      + ' generals=' + gs.join(",");
   }
 
   public function element():Element
