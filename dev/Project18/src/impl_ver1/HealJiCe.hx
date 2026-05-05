@@ -92,11 +92,11 @@ class HealJiCe implements IJiCe {
     var rate = Balance.strategySuccessRate(caster.stat(Wit), tier, caster.stamina());
     var ok = Math.random() < rate;
 
-    caster.forceSetStamina(Balance.clampInt(caster.stamina() - Balance.strategyStaminaCost(tier), 0, 100));
+    caster.setStamina(Balance.clampInt(caster.stamina() - Balance.strategyStaminaCost(tier), 0, 100));
 
     if (ok) {
       // 骨架：回復固定 +40（之後可參數化）
-      target.forceSetStamina(Balance.clampInt(target.stamina() + 40, 0, 100));
+      target.setStamina(Balance.clampInt(target.stamina() + 40, 0, 100));
       target.removeOneDebuff();
     }
   }

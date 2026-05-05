@@ -95,11 +95,11 @@ class InspireJiCe implements IJiCe {
     var ok = Math.random() < rate;
 
     // 消耗體力（中）
-    caster.forceSetStamina(Balance.clampInt(caster.stamina() - Balance.strategyStaminaCost(tier), 0, 100));
+    caster.setStamina(Balance.clampInt(caster.stamina() - Balance.strategyStaminaCost(tier), 0, 100));
 
     if (ok) {
       // 效果：目標回復（先用 +20 當骨架；之後可依屬性/修正調整）
-      target.forceSetStamina(Balance.clampInt(target.stamina() + 20, 0, 100));
+      target.setStamina(Balance.clampInt(target.stamina() + 20, 0, 100));
     }
   }
 

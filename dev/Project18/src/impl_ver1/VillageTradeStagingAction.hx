@@ -80,7 +80,7 @@ class VillageTradeStagingAction implements IStagingAction {
     for (g in ruler.roster())
       if (g.id() == gid) {
         var gg = cast(g, General);
-        gg.forceSetStamina(Balance.clampInt(gg.stamina() - 10, 0, 100));
+        gg.setStamina(Balance.clampInt(gg.stamina() - 10, 0, 100));
         return;
       }
     throw "VillageTradeStagingAction: picked general not in roster";

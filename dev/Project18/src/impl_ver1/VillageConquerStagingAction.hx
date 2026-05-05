@@ -111,7 +111,7 @@ class VillageConquerStagingAction implements IStagingAction {
       ruler.reduceTroops(loss);
     }
     // 低消耗體力
-    gAtk.forceSetStamina(Balance.clampInt(gAtk.stamina() - 15, 0, 100));
+    gAtk.setStamina(Balance.clampInt(gAtk.stamina() - 15, 0, 100));
   }
 
   public function previewRows(actor:IPlayer):Array<IJiCeStagingPreviewRow> {

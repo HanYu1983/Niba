@@ -86,7 +86,7 @@ class RestStagingAction implements IStagingAction {
       throw "RestStagingAction: picked general not in roster";
 
     var next = Balance.clampInt(target.stamina() + Balance.STAMINA_RECOVER_REST, 0, 100);
-    target.forceSetStamina(next);
+    target.setStamina(next);
   }
 
   public function previewRows(actor:IPlayer):Array<IJiCeStagingPreviewRow> {

@@ -93,7 +93,7 @@ class EncourageJiCe implements IJiCe {
     var rate = Balance.strategySuccessRate(caster.stat(Command), tier, caster.stamina());
     var ok = Math.random() < rate;
 
-    caster.forceSetStamina(Balance.clampInt(caster.stamina() - Balance.strategyStaminaCost(tier), 0, 100));
+    caster.setStamina(Balance.clampInt(caster.stamina() - Balance.strategyStaminaCost(tier), 0, 100));
 
     if (ok) {
       // 先以 1.2 作為骨架倍率；後續可由 Balance/策略表驅動

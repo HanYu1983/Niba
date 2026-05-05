@@ -95,7 +95,7 @@ class SabotageJiCe implements IJiCe {
     var tier = StrategyCostTier.High;
     var rate = Balance.strategySuccessRate(caster.stat(Wit), tier, caster.stamina());
     var ok = Math.random() < rate;
-    caster.forceSetStamina(Balance.clampInt(caster.stamina() - Balance.strategyStaminaCost(tier), 0, 100));
+    caster.setStamina(Balance.clampInt(caster.stamina() - Balance.strategyStaminaCost(tier), 0, 100));
 
     if (!ok)
       return;
