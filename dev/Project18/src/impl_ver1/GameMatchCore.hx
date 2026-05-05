@@ -26,6 +26,9 @@ import impl_ver1.JiCeStagingAction;
 import impl_ver1.RestStagingAction;
 import impl_ver1.VillageTradeStagingAction;
 import impl_ver1.VillageConquerStagingAction;
+import impl_ver1.VillagePlunderStagingAction;
+import impl_ver1.FriendlyCityDevelopStagingAction;
+import impl_ver1.FriendlyCityRestStagingAction;
 import impl_ver1.Ver1MainCommands;
 
 /**
@@ -652,6 +655,8 @@ class GameMatchCore implements IGameMatch {
         Button(dispatchApplyLeaf),
       ];
       roots.push(createPlayerMenuNode("調度", null, [], dispatchWidgets));
+      roots.push(createPlayerMenuNode("開發", createPlayerMenuEntry(FriendlyCityDevelop, "開發（示範）", true, "friendly_dev"), []));
+      roots.push(createPlayerMenuNode("休整", createPlayerMenuEntry(FriendlyCityRest, "休整（示範）", true, "friendly_rest"), []));
       roots.push(
         createPlayerMenuNode(
           "結束拜訪",
@@ -732,6 +737,10 @@ class GameMatchCore implements IGameMatch {
       case Rest:
       case VillageTrade:
       case VillageConquer:
+      case VillagePlunder:
+      case VillageEndTurn:
+      case FriendlyCityDevelop:
+      case FriendlyCityRest:
         _hasMovedThisTurn = true;
       case TileEventPick:
       case EmptyCityOccupySubmit:
@@ -800,6 +809,7 @@ class GameMatchCore implements IGameMatch {
       _pendingVillageTileIndex = null;
       _activeSliceComplete = true;
     }
+    // 於我方領地拜訪下，staging 提交後仍停留在拜訪選單（由 VisitEnd 結束）
     syncActiveSliceAfterMenuLeaf(StagingSubmit);
   }
 
@@ -983,6 +993,18 @@ class GameMatchCore implements IGameMatch {
             enterStaging(actor, new VillageTradeStagingAction(this), VillageTrade);
           case VillageConquer:
             enterStaging(actor, new VillageConquerStagingAction(this), VillageConquer);
+          case VillagePlunder:
+            enterStaging(actor, new VillagePlunderStagingAction(this), VillagePlunder);
+          case VillageEndTurn:
+            if (_pendingVillageTileIndex == null)
+              throw "GameMatchCore: VillageEndTurn 但無 pendingVillage";
+            _pendingVillageTileIndex = null;
+            _activeSliceComplete = true;
+            syncActiveSliceAfterMenuLeaf(VillageEndTurn);
+          case FriendlyCityDevelop:
+            enterStaging(actor, new FriendlyCityDevelopStagingAction(this), FriendlyCityDevelop);
+          case FriendlyCityRest:
+            enterStaging(actor, new FriendlyCityRestStagingAction(this), FriendlyCityRest);
           case Status:
             syncActiveSliceAfterMenuLeaf(Status);
           case ConfirmDone:

@@ -6,6 +6,7 @@ import game.IPlayerCommand;
 import game.IPlayerMenuNode;
 import game.PlayerMenuKind;
 import impl_ver1.VillageConquerStagingAction;
+import impl_ver1.VillagePlunderStagingAction;
 
 /** Ver1：把「本回合」主指令做成可註冊的 command 列表。 */
 class Ver1MainCommands {
@@ -15,7 +16,9 @@ class Ver1MainCommands {
       new JiCeCommand(match),
       new RestCommand(match),
       new VillageTradeCommand(match),
+      new VillagePlunderCommand(match),
       new VillageConquerCommand(match),
+      new VillageEndTurnCommand(match),
       new StatusCommand(match),
       new ConfirmDoneCommand(match),
     ];
@@ -124,6 +127,29 @@ private class VillageTradeCommand implements IPlayerCommand {
   }
 }
 
+private class VillagePlunderCommand implements IPlayerCommand {
+  final m:GameMatchCore;
+  public function new(m:GameMatchCore) this.m = m;
+  public function kind():PlayerMenuKind return VillagePlunder;
+  public function designLabel():String return "村落搶奪";
+  public function buildActionNode(actor:IPlayer):Null<IPlayerMenuNode> {
+    if (m.isActivePlayerSliceComplete())
+      return null;
+    if (m.forceGetPendingVillageTile() == null)
+      return null;
+    var blockBasics =
+      m.forceGetPendingTileEvent() != null
+      || m.forceHasPendingStaging()
+      || m.forceGetPendingEmptyCityOccupyTile() != null
+      || m.forceGetPendingFriendlyCityVisitTile() != null
+      || m.forceGetPendingHostileCityTile() != null;
+    return m.createPlayerMenuNode("村落：搶奪（示範）", m.createPlayerMenuEntry(VillagePlunder, "搶奪（示範）", !blockBasics), []);
+  }
+  public function apply(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
+    m.enterStaging(actor, new VillagePlunderStagingAction(m), VillagePlunder);
+  }
+}
+
 private class VillageConquerCommand implements IPlayerCommand {
   final m:GameMatchCore;
   public function new(m:GameMatchCore) this.m = m;
@@ -144,6 +170,29 @@ private class VillageConquerCommand implements IPlayerCommand {
   }
   public function apply(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
     m.enterStaging(actor, new VillageConquerStagingAction(m), VillageConquer);
+  }
+}
+
+private class VillageEndTurnCommand implements IPlayerCommand {
+  final m:GameMatchCore;
+  public function new(m:GameMatchCore) this.m = m;
+  public function kind():PlayerMenuKind return VillageEndTurn;
+  public function designLabel():String return "村落回合結束";
+  public function buildActionNode(actor:IPlayer):Null<IPlayerMenuNode> {
+    if (m.isActivePlayerSliceComplete())
+      return null;
+    if (m.forceGetPendingVillageTile() == null)
+      return null;
+    var block =
+      m.forceGetPendingTileEvent() != null
+      || m.forceHasPendingStaging()
+      || m.forceGetPendingEmptyCityOccupyTile() != null
+      || m.forceGetPendingFriendlyCityVisitTile() != null
+      || m.forceGetPendingHostileCityTile() != null;
+    return m.createPlayerMenuNode("回合結束", m.createPlayerMenuEntry(VillageEndTurn, "回合結束（村落）", !block), []);
+  }
+  public function apply(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
+    // 實際清 pending 由 GameMatchCore.applyMenuLeaf 處理
   }
 }
 

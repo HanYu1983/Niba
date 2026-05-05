@@ -35,6 +35,12 @@ enum PlayerMenuKind {
     /** 村落：攻占（示範用 staging 指令：選將＋選兵 slider → 預覽勝率）。 */
     VillageConquer;
 
+    /** 村落：搶奪（staging：選將 → 預覽成功率 → 提交）。 */
+    VillagePlunder;
+
+    /** 村落：結束（不互動直接結束落地階段）。 */
+    VillageEndTurn;
+
     /** 空城進駐：同表單內複選駐將＋資源滑桿（數值／駐將列表皆改寫該節點 {@link IPlayerMenuNode#formWidgets}）。 */
     EmptyCityOccupySubmit;
 
@@ -43,6 +49,12 @@ enum PlayerMenuKind {
 
     /** 我方城池拜訪：調度表單內確認（滑桿數值改寫該節點 {@link IPlayerMenuNode#formWidgets}），不結束拜訪。 */
     FriendlyCityDispatchApply;
+
+    /** 我方領地：開發（staging：選將 → 預覽成功率 → 提交）。 */
+    FriendlyCityDevelop;
+
+    /** 我方領地：休整（staging：選將 → 提交）。 */
+    FriendlyCityRest;
 
     /** 我方城池拜訪：結束拜訪並關閉持續選單。 */
     FriendlyCityVisitEnd;
