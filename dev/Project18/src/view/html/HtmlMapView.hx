@@ -57,7 +57,7 @@ class HtmlMapView {
     for (i in 0...board.length()) {
       var tile = vm.tileAt(i);
       var cell = Browser.document.createDivElement();
-      cell.className = "tile";
+      cell.className = "tile kind-" + Std.string(tile.kind());
       cell.setAttribute("data-tile-index", Std.string(i));
 
       var kind:TileKind = tile.kind();

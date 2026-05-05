@@ -41,13 +41,27 @@ class HelloWorld {
     var game:IGame = new impl_ver1.Game();
     var match:IGameMatch = game.createGameMatch(impl_ver1.Game.LEVEL_KEY_EMPTY);
     var tiles:Array<ITile> = [];
-    for (i in 0...12)
-      tiles.push(match.createTile(i, Plain));
+    for (i in 0...12) {
+      var k:TileKind = Plain;
+      if (i == 2 || i == 9)
+        k = Event;
+      if (i == 4 || i == 7)
+        k = City;
+      tiles.push(match.createTile(i, k));
+    }
     match.createBoard(tiles);
     match.createMonarch("m-a", 0, 0, 500, 80);
     match.createMonarch("m-b", 1, 5, 100, 200);
     match.createGeneral("g-a", "m-a", 1, 40, 1, 1);
     match.createGeneral("g-b", "m-b", 1, 10, 1, 1);
+
+    // 綁定事件腳本到 Event 格（先用既有 debug event）
+    match.forceBindTileEvent(2, new debug_ver1.GeneralChestTileEvent(match));
+    match.forceBindTileEvent(9, new debug_ver1.RingLootForkTileEvent(match));
+
+    // 標記城池屬主（讓後續流程可擴充顯示/交互）
+    match.forceSetCityOwner(4, "m-a");
+    match.forceSetCityOwner(7, "m-b");
 
     var core:impl_ver1.GameMatchCore = cast match;
     var vm = new BasicViewModel(core);
