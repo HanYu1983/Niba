@@ -329,7 +329,7 @@ class GameMatchCore implements IGameMatch {
     return _jiCeStagingRows.copy();
   }
 
-  public function enterJiCeStaging(card:IJiCe):Void {
+  public function forceEnterJiCeStaging(card:IJiCe):Void {
     jiCeStagingEnter(card);
   }
 
@@ -954,7 +954,7 @@ class GameMatchCore implements IGameMatch {
               }
             if (tid == null)
               throw "GameMatchCore.applyMenuLeaf: JiCe leaf requires at least one non-self monarch to target";
-            enterJiCeStaging(card);
+            forceEnterJiCeStaging(card);
             syncActiveSliceAfterMenuLeaf(JiCe);
           case Status:
             syncActiveSliceAfterMenuLeaf(Status);

@@ -93,8 +93,8 @@ interface IGameMatch {
     /** 除錯／測試：暫存計策對應之武將預覽列；無暫存時為空陣列。 */
     function forceJiCeStagingPreviewRows():Array<IJiCeStagingPreviewRow>;
 
-    /** 進入計策暫存。 */
-    function enterJiCeStaging(card:IJiCe):Void;
+    /** 除錯／測試：進入計策暫存。 */
+    function forceEnterJiCeStaging(card:IJiCe):Void;
 
     /**
      * 該索引格子為 {@link TileKind.City} 且無武將駐守時為 true；
