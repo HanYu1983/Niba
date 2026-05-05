@@ -25,5 +25,16 @@ enum UiEvent {
 
   /** 更新 GeneralMultiPick：帶入 node 與 widgetIndex，並提供新的 selectedGeneralIds。 */
   GeneralMultiPick(node:IPlayerMenuNode, widgetIndex:Int, selectedGeneralIds:Array<String>);
+
+  /**
+   * 系統→UI：提示 popup view 重新讀取 pendingPopups 並顯示（若有）。
+   * （由 ViewModel 在 apply 後觸發）
+   */
+  PopupRefresh;
+
+  /**
+   * UI→系統：使用者關閉某筆 popup（由 ViewModel 執行 ackPopup）。
+   */
+  PopupClose(popupId:String);
 }
 

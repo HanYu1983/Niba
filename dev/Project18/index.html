@@ -222,6 +222,34 @@
       .menu-children { margin-left: 10px; }
       .menu-multipick { margin: 8px 0; padding: 8px 10px; border: 1px dashed rgba(42,49,64,.2); border-radius: 12px; background: rgba(255,255,255,.35); }
       .menu-pick-row { display: flex; gap: 8px; align-items: center; margin: 6px 0; font-size: 12px; }
+
+      /* --- popup --- */
+      .popup-host{ position: fixed; inset: 0; pointer-events: none; z-index: 999; }
+      .popup-overlay{
+        position: absolute; inset: 0;
+        display:flex; align-items:center; justify-content:center;
+        background: rgba(15,17,21,.35);
+        pointer-events: auto;
+      }
+      .popup-card{
+        width: min(520px, calc(100vw - 32px));
+        border-radius: var(--radius);
+        padding: 14px 14px 12px;
+        background: linear-gradient(180deg, rgba(247,242,232,.95), rgba(239,229,209,.86));
+        border: 1px solid rgba(42,49,64,.22);
+        box-shadow: var(--shadow);
+      }
+      .popup-title{ font-weight: 900; letter-spacing:.04em; color: var(--ink-2); margin-bottom: 8px; }
+      .popup-body{ white-space: pre-wrap; font-size: 12px; line-height: 18px; color: rgba(26,31,42,.85); }
+      .popup-actions{ display:flex; justify-content:flex-end; gap:10px; margin-top: 12px; }
+      .popup-btn{
+        border-radius: 12px;
+        padding: 8px 12px;
+        border: 1px solid rgba(42,49,64,.22);
+        background: rgba(255,255,255,.65);
+        cursor: pointer;
+      }
+      .popup-btn:hover{ background: rgba(255,255,255,.78); border-color: rgba(199,163,74,.55); }
     </style>
   </head>
   <body>
@@ -242,6 +270,8 @@
         <div id="app-players"></div>
       </div>
     </div>
+
+    <div id="app-popup"></div>
 
     <script defer src="bin/hello.js"></script>
   </body>

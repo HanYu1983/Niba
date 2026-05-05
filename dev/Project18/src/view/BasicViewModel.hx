@@ -52,8 +52,14 @@ class BasicViewModel implements IViewModel {
         applyGeneralMultiPickToNode(node, widgetIndex, selectedGeneralIds);
       case MenuClick(node, entry):
         applyMenuClick(node, entry);
-        drainPopups();
+        EventCenter.publishEvent(PopupRefresh);
         EventCenter.publishViewModel(this);
+      case PopupClose(popupId):
+        var mid = match.activeMonarch().id();
+        match.ackPopup(mid, popupId);
+        EventCenter.publishEvent(PopupRefresh);
+        EventCenter.publishViewModel(this);
+      case PopupRefresh:
     }
   }
 
@@ -85,19 +91,6 @@ class BasicViewModel implements IViewModel {
     var a = match.activeMonarch();
     var actor:IPlayer = new LocalPlayer(a.id(), "active");
     match.applyMenuLeaf(actor, node);
-  }
-
-  function drainPopups():Void {
-    var hasWindow:Bool = untyped __js__("typeof window !== 'undefined' && typeof window.alert !== 'undefined'");
-    if (!hasWindow)
-      return;
-    var mid = match.activeMonarch().id();
-    var xs:Array<IPopupMessage> = match.pendingPopups(mid);
-    for (p in xs) {
-      // v0：先用 alert，之後可改成真正的 modal 元件。
-      Browser.window.alert(p.title() + "\n\n" + popupPayloadText(p.payload()));
-      match.ackPopup(mid, p.id());
-    }
   }
 
   function applyGeneralMultiPickToNode(node:IPlayerMenuNode, widgetIndex:Int, selectedGeneralIds:Array<String>):Void {
