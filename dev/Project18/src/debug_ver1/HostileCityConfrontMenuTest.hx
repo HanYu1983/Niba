@@ -15,6 +15,7 @@ import game.PlayerMenuKind.HostileCitySettlementAck;
 import game.ITile;
 import game.TileKind;
 import game.LevelKeys;
+import impl_ver1.core.GameMatchCore;
 
 /**
  * 踩中非友方且有駐軍城池：攻方五選項（過路費／談判／消耗戰／攻城戰／單挑）→ 守方（單挑則選將，否則確認結束）→ 攻方結算文案確認。
@@ -26,6 +27,7 @@ class HostileCityConfrontMenuTest {
 
   static function setupOccupiedEnemyCity(game:IGame):{match:IGameMatch, atk:IPlayer, def:IPlayer, atkId:MonarchId, defId:MonarchId} {
     var match:IGameMatch = game.createGameMatch(LevelKeys.EMPTY);
+    cast(match, GameMatchCore).forceSetFixedMoveDelta(3);
 
     var tiles:Array<ITile> = [];
     for (i in 0...RING_LEN)

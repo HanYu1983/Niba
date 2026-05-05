@@ -22,12 +22,15 @@ class GameMatchVer1Ops {
   public static function applyMenuLeafForMove(m:GameMatchCore, actor:IPlayer):Void {
     var ruler = cast(m.activeMonarch(), Monarch);
     var ringLen = m.board().length();
-    var planned = GameMatchCore.DEFAULT_MOVE_DELTA;
+    var planned = m.rollMoveDelta();
     var stepOrdinal = 0;
     while (stepOrdinal < planned) {
       ruler.advanceOnBoard(1, ringLen);
       stepOrdinal++;
       var landIdx = ruler.pawnIndex();
+      // 骨架：起點暫定為索引 0；踩回/經過即給獎勵。
+      if (landIdx == 0)
+        m.onPassStartTile(ruler);
       var hooks = m.movementStepHooks();
       var halt = false;
       for (h in hooks) {

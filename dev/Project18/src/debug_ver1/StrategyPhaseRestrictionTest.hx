@@ -23,6 +23,7 @@ import impl_ver1.core.GameMatchCore;
 class StrategyPhaseRestrictionTest {
   public static function testStrategyPhaseRestriction(game:IGame):Void {
     var match:IGameMatch = game.createGameMatch(LevelKeys.EMPTY);
+    cast(match, GameMatchCore).forceSetFixedMoveDelta(3);
     match.createBoard([match.createTile(0, Plain), match.createTile(1, Plain), match.createTile(2, Plain), match.createTile(3, Plain)]);
 
     var idA:MonarchId = "m-a";

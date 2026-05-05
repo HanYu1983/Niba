@@ -50,6 +50,7 @@ class HelloWorld {
     debug_ver1.PostMoveLandingWindowMenuTest.testPostMoveLandingWindow(new impl_ver1.Game());
     debug_ver1.PlayerTargetJiCeMenuFlowTest.testPlayerTargetJiCeMenuFlow(new impl_ver1.Game());
     debug_ver1.StrategyPhaseRestrictionTest.testStrategyPhaseRestriction(new impl_ver1.Game());
+    debug_ver1.EndOfRoundSettlementTest.testEndOfRoundSettlement(new impl_ver1.Game());
     trace("Hello world");
 
     // --- HTML view demo ---

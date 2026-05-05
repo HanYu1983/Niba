@@ -17,6 +17,7 @@ import game.IStagingAction;
 import game.ITile;
 import game.ITileEvent;
 import game.IPlayerCommand;
+import game.Balance;
 import game.MenuActivation;
 import game.MenuGeneralChoice;
 import game.MenuFormWidget;
@@ -50,6 +51,8 @@ import impl_ver1.staging.VillageTradeStagingAction;
 @:allow(impl_ver1)
 class GameMatchCore implements IGameMatch {
   public static inline var DEFAULT_MOVE_DELTA = 3;
+  public static inline var DICE_MIN = 1;
+  public static inline var DICE_MAX = 6;
 
   // ========== 私有欄位（依狀態分區，後續重構時維持對應私有方法區塊）==========
 
@@ -82,6 +85,10 @@ class GameMatchCore implements IGameMatch {
   /** --- 移動逐步結算：已登錄之計策／場地效果勾子 --- */
   var _movementStepHooks:Array<IJiCeMovementStepHook>;
 
+  /** --- 移動：骰點/步數規剘骨架 --- */
+  var _fixedMoveDelta:Null<Int>;
+  var _lastRolledMoveDelta:Null<Int>;
+
   /** --- 城池：駐軍、儲備、屬主；踩中空城／我方城 pending --- */
   /** 城池格索引 → 駐守武將 id 列表；無鍵或空陣列視為無駐將（空城語意）。 */
   var _cityGarrisonGenerals:Map<Int, Array<GeneralId>>;
@@ -102,6 +109,9 @@ class GameMatchCore implements IGameMatch {
   var _tileNextTurnGrainBonus:Map<Int, Int>;
   var _tileNextTurnGoldBonus:Map<Int, Int>;
   var _tileDefenseBonus:Map<Int, Float>;
+
+  /** --- 起點獎勵骨架 --- */
+  static inline var START_TILE_INDEX:TileIndex = 0;
 
   /** --- 敵城對峙多階段 --- */
   var _pendingHostileCityTileIndex:Null<TileIndex>;
@@ -141,8 +151,52 @@ class GameMatchCore implements IGameMatch {
     _tileNextTurnGoldBonus = new Map();
     _tileDefenseBonus = new Map();
     _movementStepHooks = [];
+    _fixedMoveDelta = null;
+    _lastRolledMoveDelta = null;
     clearHostileCityConfrontation();
     clearStaging();
+  }
+
+  /** 規剘：擲骰（1~6）取得本次移動步數。 */
+  public function rollMoveDelta():Int {
+    if (_fixedMoveDelta != null) {
+      _lastRolledMoveDelta = _fixedMoveDelta;
+      return _fixedMoveDelta;
+    }
+    var d = Std.random(DICE_MAX) + DICE_MIN;
+    _lastRolledMoveDelta = d;
+    return d;
+  }
+
+  /** 測試/除錯：固定每次移動骰點（設為 null 代表恢復隨機）。 */
+  public function forceSetFixedMoveDelta(delta:Null<Int>):Void {
+    if (delta == null) {
+      _fixedMoveDelta = null;
+      return;
+    }
+    if (delta < DICE_MIN || delta > DICE_MAX)
+      throw "GameMatchCore.forceSetFixedMoveDelta: delta out of range";
+    _fixedMoveDelta = delta;
+  }
+
+  /** 除錯/UI：上一個擲出的移動步數（尚未擴充到 IGameMatchGetter）。 */
+  public function forceGetLastRolledMoveDelta():Null<Int>
+    return _lastRolledMoveDelta;
+
+  /** 規剘：經過起點給予獎勵（骨架：以 prestige 分三段）。 */
+  public function onPassStartTile(ruler:Monarch):Void {
+    // 先用簡化規剘：高/中/低聲望三段獎勵（之後可搬到 Balance 或資料表）
+    var p = ruler.prestige();
+    if (p >= 70) {
+      ruler.grantGold(200);
+      ruler.grantGrain(100);
+      ruler.grantTroops(100);
+    } else if (p >= 40) {
+      ruler.grantGold(100);
+      ruler.grantGrain(100);
+    } else {
+      ruler.grantGold(50);
+    }
   }
 
   function clearStaging():Void {
@@ -1140,13 +1194,42 @@ class GameMatchCore implements IGameMatch {
       throw 'GameMatchCore.advanceActiveMonarchAfterConfirmDone: active ($_activeId) not in monarchs';
     _activeId = _monarchs[(idx + 1) % n].id();
     // 完整輪轉一圈（回到 seat=0）算一回合
-    if (activeMonarch().seat() == 0)
+    if (activeMonarch().seat() == 0) {
       _roundNumber += 1;
-    // TODO(strategy-tile): 在回合推進時處理 _tileNextTurnGrainBonus/_tileNextTurnGoldBonus/_tileDefenseBonus 的套用與清除。
-    // 目前缺少：
-    // - 君主 gold 資源欄位（商路）
-    // - 城池等級/防禦模型（築城、破壞）
-    // - 格子產出結算點（屯田/商路的「下回合」語意）
+      applyEndOfRoundSettlement();
+    }
+  }
+
+  function applyEndOfRoundSettlement():Void {
+    // 1) 回合末武將體力回復（全體）
+    for (m in _monarchs) {
+      var mon = cast(m, Monarch);
+      for (g in mon.roster()) {
+        var gg = cast(g, General);
+        gg.setStamina(Balance.clampInt(gg.stamina() + Balance.STAMINA_RECOVER_PER_TURN, 0, 100));
+      }
+    }
+
+    // 2) 套用「下回合」格子 bonus（目前只把 bonus 寫回城池儲備/君主金錢；之後再接城等級/地形產出）
+    for (at => amt in _tileNextTurnGrainBonus) {
+      if (amt <= 0)
+        continue;
+      if (_cityOwner.exists(at)) {
+        var prev = forceGetCityStoredGrain(at);
+        _cityStockGrain.set(at, prev + amt);
+      }
+    }
+    for (at => amt in _tileNextTurnGoldBonus) {
+      if (amt <= 0)
+        continue;
+      if (_cityOwner.exists(at)) {
+        var owner = _cityOwner.get(at);
+        monarchWithId(owner).grantGold(amt);
+      }
+    }
+    _tileNextTurnGrainBonus = new Map();
+    _tileNextTurnGoldBonus = new Map();
+    // _tileDefenseBonus 先不清除（目前尚未有消耗點）；後續接上戰鬥/攻城時再定義生命周期。
   }
 
   public function board():IBoard

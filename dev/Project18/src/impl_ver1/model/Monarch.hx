@@ -11,6 +11,7 @@ class Monarch implements IMonarch {
   var _roster:Array<IGeneral>;
   var _troops:Int;
   var _grain:Int;
+  var _gold:Int;
   var _prestige:Int;
 
   public function new(id:MonarchId, seat:Int, pawnIndex:TileIndex, troops:Int = 0, grain:Int = 0) {
@@ -20,6 +21,7 @@ class Monarch implements IMonarch {
     _roster = [];
     _troops = troops;
     _grain = grain;
+    _gold = 0;
     _prestige = 100;
   }
 
@@ -38,6 +40,12 @@ class Monarch implements IMonarch {
     if (n < 0)
       throw "Monarch.grantGrain: negative";
     _grain += n;
+  }
+
+  public function grantGold(n:Int):Void {
+    if (n < 0)
+      throw "Monarch.grantGold: negative";
+    _gold += n;
   }
 
   public function grantPrestige(n:Int):Void {
@@ -72,6 +80,14 @@ class Monarch implements IMonarch {
       _grain = 0;
   }
 
+  public function reduceGold(loss:Int):Void {
+    if (loss < 0)
+      throw "Monarch.reduceGold: loss negative";
+    _gold -= loss;
+    if (_gold < 0)
+      _gold = 0;
+  }
+
   public function advanceOnBoard(delta:Int, ringLen:Int):Void {
     if (ringLen <= 0)
       throw "Monarch.advanceOnBoard: ringLen must be positive";
@@ -99,6 +115,9 @@ class Monarch implements IMonarch {
 
   public function grain():Int
     return _grain;
+
+  public function gold():Int
+    return _gold;
 
   public function prestige():Int
     return _prestige;

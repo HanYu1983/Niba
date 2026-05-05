@@ -28,6 +28,9 @@ interface IMonarch {
     /** 當前糧食（規剘整數刻度）。 */
     function grain():Int;
 
+    /** 當前金錢（規剘整數刻度）。 */
+    function gold():Int;
+
     /** 聲望（0~100，規剘刻度；影響招募/外交等後續系統）。 */
     function prestige():Int;
 
@@ -42,6 +45,9 @@ interface IMonarch {
      * 備註：此為「對局進行中」必要的可變動操作，不是測試專用 force API。
      */
     function grantGrain(n:Int):Void;
+
+    /** 規剘/事件結算：增加金錢（不得為負）。 */
+    function grantGold(n:Int):Void;
 
     /** 規剘/事件結算：增加聲望（不得為負；上限由實作約束）。 */
     function grantPrestige(n:Int):Void;

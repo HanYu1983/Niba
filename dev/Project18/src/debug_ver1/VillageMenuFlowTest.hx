@@ -19,6 +19,7 @@ import game.PlayerMenuKind.VillageConquer;
 import game.PlayerMenuKind.VillageTrade;
 import game.TileKind;
 import game.LevelKeys;
+import impl_ver1.core.GameMatchCore;
 
 /**
  * 指令菜單流程：移動落在 Village → 出現村落指令（交易/攻占）→ 進 staging → 提交 → 村落 pending 清除 → 可結束。
@@ -27,6 +28,7 @@ import game.LevelKeys;
 class VillageMenuFlowTest {
   public static function testVillageMenuFlow(game:IGame):Void {
     var match:IGameMatch = game.createGameMatch(LevelKeys.EMPTY);
+    cast(match, GameMatchCore).forceSetFixedMoveDelta(3);
 
     // 讓 Move(預設 3 格) 落在 Village
     var tiles:Array<ITile> = [];
