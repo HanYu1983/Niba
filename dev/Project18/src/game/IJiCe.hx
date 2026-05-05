@@ -15,8 +15,6 @@ interface IJiCe {
 
     function registryKey():String;
 
-    function applyAgainstMonarch(actor:IPlayer, targetMonarchId:MonarchId):Void;
-
     function buildPlayerMenu(actor:IPlayer):IPlayerMenu;
 
     function resolveChoice(actor:IPlayer, menuNode:IPlayerMenuNode):Void;

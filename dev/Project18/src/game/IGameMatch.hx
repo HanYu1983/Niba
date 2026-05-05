@@ -90,16 +90,11 @@ interface IGameMatch {
     /** 除錯／測試：計策打出後尚待 resolveChoice 之腳本。 */
     function forceGetPendingJiCe():Null<IJiCe>;
 
-    /** 除錯／測試：暫存計策所鎖定之目標君主。 */
-    function forceGetJiCeStagingTargetMonarchId():Null<MonarchId>;
-
     /** 除錯／測試：暫存計策對應之武將預覽列；無暫存時為空陣列。 */
     function forceJiCeStagingPreviewRows():Array<IJiCeStagingPreviewRow>;
 
-    /**
-     * IJiCe.applyAgainstMonarch 實作呼叫：進入計策暫存（目標君主與預覽列）。
-     */
-    function enterJiCeStaging(card:IJiCe, targetMonarchId:MonarchId, previewRows:Array<IJiCeStagingPreviewRow>):Void;
+    /** 進入計策暫存。 */
+    function enterJiCeStaging(card:IJiCe):Void;
 
     /**
      * 該索引格子為 {@link TileKind.City} 且無武將駐守時為 true；
@@ -182,5 +177,5 @@ interface IGameMatch {
      * 對本局賽局結算 **選單節點**（移動、計策、表單送出等），並視規剘修改棋子／兵力／切片旗標等。
      * 表單節點須已就地更新 {@link IPlayerMenuNode#formWidgets} 內之取值；多 {@link MenuFormWidget.Button} 時須 {@link IPlayerMenuNode#setActivationEntry}；結算後清空 {@link IPlayerMenuNode#setActivationEntry}。
      */
-    function applyMenuLeaf(actor:IPlayer, menuNode:IPlayerMenuNode, ?playedJiCe:IJiCe, ?jiCeTargetMonarchId:MonarchId):Void;
+    function applyMenuLeaf(actor:IPlayer, menuNode:IPlayerMenuNode):Void;
 }

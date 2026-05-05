@@ -46,7 +46,6 @@ class GameMatchCore implements IGameMatch {
 
   /** --- 計策暫存與君主所持牌 --- */
   var _pendingJiCe:Null<IJiCe>;
-  var _jiCeStagingTargetId:Null<MonarchId>;
   var _jiCeStagingRows:Array<IJiCeStagingPreviewRow>;
   var _ownedJiCe:Map<MonarchId, Array<IJiCe>>;
 
@@ -95,7 +94,6 @@ class GameMatchCore implements IGameMatch {
 
   function clearJiCeStaging():Void {
     _pendingJiCe = null;
-    _jiCeStagingTargetId = null;
     _jiCeStagingRows = ([] : Array<IJiCeStagingPreviewRow>);
   }
 
@@ -116,10 +114,9 @@ class GameMatchCore implements IGameMatch {
   }
 
   // --- 計策暫存寫入／友元讀取用（不將欄位暴露給套件外）---
-  private function jiCeStagingEnter(card:IJiCe, targetMonarchId:MonarchId, previewRows:Array<IJiCeStagingPreviewRow>):Void {
+  private function jiCeStagingEnter(card:IJiCe):Void {
     _pendingJiCe = card;
-    _jiCeStagingTargetId = targetMonarchId;
-    _jiCeStagingRows = previewRows.copy();
+    _jiCeStagingRows = ([] : Array<IJiCeStagingPreviewRow>);
   }
 
   /** 與計策選單建構同步：直接回傳暫存列（勿在暫存期外依賴其內容）。 */
@@ -128,13 +125,6 @@ class GameMatchCore implements IGameMatch {
 
   private function jiCePendingMatchesCard(card:IJiCe):Bool
     return _pendingJiCe == card;
-
-  private function jiCeStagingTargetMonarchIdOrThrow():MonarchId {
-    var tid = _jiCeStagingTargetId;
-    if (tid == null)
-      throw "GameMatchCore.jiCeStagingTargetMonarchIdOrThrow: missing staging target";
-    return tid;
-  }
 
   private function jiCeStagingPredictedTroopLossForGeneralOrThrow(gid:GeneralId):Int {
     for (r in _jiCeStagingRows)
@@ -333,17 +323,14 @@ class GameMatchCore implements IGameMatch {
   public function forceGetPendingJiCe():Null<IJiCe>
     return _pendingJiCe;
 
-  public function forceGetJiCeStagingTargetMonarchId():Null<MonarchId>
-    return _jiCeStagingTargetId;
-
   public function forceJiCeStagingPreviewRows():Array<IJiCeStagingPreviewRow> {
     if (_pendingJiCe == null)
       return [];
     return _jiCeStagingRows.copy();
   }
 
-  public function enterJiCeStaging(card:IJiCe, targetMonarchId:MonarchId, previewRows:Array<IJiCeStagingPreviewRow>):Void {
-    jiCeStagingEnter(card, targetMonarchId, previewRows);
+  public function enterJiCeStaging(card:IJiCe):Void {
+    jiCeStagingEnter(card);
   }
 
   public function cityVacantNoGarrison(at:TileIndex):Bool {
@@ -925,7 +912,7 @@ class GameMatchCore implements IGameMatch {
   public function getTerminationReason():MatchTerminationReason
     return _terminationReason;
 
-  public function applyMenuLeaf(actor:IPlayer, menuNode:IPlayerMenuNode, ?playedJiCe:IJiCe, ?jiCeTargetMonarchId:MonarchId):Void {
+  public function applyMenuLeaf(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
     var leaf = MenuActivation.activatingEntry(menuNode);
     if (!leaf.isEnabled())
       throw "GameMatchCore.applyMenuLeaf: activating entry disabled (" + leaf.caption() + ")";
@@ -958,10 +945,16 @@ class GameMatchCore implements IGameMatch {
           case JiCe:
             if (_pendingJiCe != null)
               throw "GameMatchCore: 已有進行中之計策暫存，請先完成計策選項";
-            var card = playedJiCe != null ? playedJiCe : resolvePlayedJiCeFromLeaf(actor, leaf);
-            if (jiCeTargetMonarchId == null)
-              throw "GameMatchCore.applyMenuLeaf: JiCe leaf requires jiCeTargetMonarchId";
-            card.applyAgainstMonarch(actor, jiCeTargetMonarchId);
+            var card = resolvePlayedJiCeFromLeaf(actor, leaf);
+            var tid:Null<MonarchId> = null;
+            for (m in monarchs())
+              if (m.id() != actor.monarchId()) {
+                tid = m.id();
+                break;
+              }
+            if (tid == null)
+              throw "GameMatchCore.applyMenuLeaf: JiCe leaf requires at least one non-self monarch to target";
+            enterJiCeStaging(card);
             syncActiveSliceAfterMenuLeaf(JiCe);
           case Status:
             syncActiveSliceAfterMenuLeaf(Status);

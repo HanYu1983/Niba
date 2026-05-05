@@ -56,7 +56,7 @@ class TwoPlayerJiCeStagingMoveConfirmTest {
     if (findLeaf(menu0, ConfirmDone) != null)
       throw "TwoPlayerJiCeStagingMoveConfirmTest: 開局不得出現結束葉";
 
-    match.applyMenuLeaf(actorAtk, requireEnabledNode(menu0, JiCe), luoshi, defId);
+    match.applyMenuLeaf(actorAtk, requireEnabledNode(menu0, JiCe));
 
     if (match.forceGetPendingJiCe() == null)
       throw "TwoPlayerJiCeStagingMoveConfirmTest: 打出計策後應進入暫存";

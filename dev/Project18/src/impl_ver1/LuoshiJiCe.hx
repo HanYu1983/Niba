@@ -4,7 +4,6 @@ import game.GameIds;
 import game.GeneralStat;
 import game.IGeneral;
 import game.IJiCe;
-import game.IJiCeStagingPreviewRow;
 import game.IPlayer;
 import game.IPlayerMenu;
 import game.IPlayerMenuEntry;
@@ -35,25 +34,6 @@ class LuoshiJiCe implements IJiCe {
   public function registryKey():String
     return REGISTRY_KEY;
 
-  public function applyAgainstMonarch(actor:IPlayer, targetMonarchId:MonarchId):Void {
-    var atk = cast(gameMatch.activeMonarch(), Monarch);
-    var roster = atk.roster();
-    if (roster.length == 0)
-      throw "LuoshiJiCe: 計策暫存需要攻方 roster 至少一名武將";
-
-    var defTroops = gameMatch.monarchTroopCount(targetMonarchId);
-    var previewRows:Array<IJiCeStagingPreviewRow> = [];
-
-    for (g in roster) {
-      var sg = cast(g, General);
-      var loss = stagedLuoshiTroopLossPreview(defTroops, sg.stat(Might));
-      var desc = "【" + sg.id() + "】落石預覽：預計對守方折兵 " + loss + "（一成基礎+勇武加成）";
-      previewRows.push(new JiCeStagingPreviewRow(sg.id(), desc, loss));
-    }
-
-    gameMatch.enterJiCeStaging(this, targetMonarchId, previewRows);
-  }
-
   public function buildPlayerMenu(actor:IPlayer):IPlayerMenu {
     var monarchChoices:Array<MenuMonarchChoice> = [];
     for (m in gameMatch.monarchs())
@@ -63,13 +43,17 @@ class LuoshiJiCe implements IJiCe {
       throw "LuoshiJiCe: 無可選擇之目標君主（至少需一名非自身君主）";
     var defTarget:Array<String> = [monarchChoices[0].monarchId];
 
-    var rows = gameMatch.jiCeStagingRowsLive();
+    var atk = cast(gameMatch.activeMonarch(), Monarch);
+    var roster = atk.roster();
+    if (roster.length == 0)
+      throw "LuoshiJiCe: 計策暫存需要攻方 roster 至少一名武將";
     var choices:Array<MenuGeneralChoice> = [];
     var defSel:Array<String> = [];
-    for (r in rows) {
-      choices.push({generalId: r.generalId(), caption: r.outcomeDescription()});
+    for (g in roster) {
+      var gid = g.id();
+      choices.push({generalId: gid, caption: "以【" + gid + "】施計"});
       if (defSel.length == 0)
-        defSel.push(r.generalId());
+        defSel.push(gid);
     }
     var submitLeaf = gameMatch.createPlayerMenuEntry(JiCeStagingSubmit, "確認計策選將", true, "confirm_jice_pick");
     var widgets:Array<MenuFormWidget> = [
@@ -90,7 +74,17 @@ class LuoshiJiCe implements IJiCe {
     var tid = readStagingPickTargetMonarchId(menuNode.formWidgets());
     var choiceId = readStagingPickGeneralId(menuNode.formWidgets());
 
-    var pickedLoss = gameMatch.jiCeStagingPredictedTroopLossForGeneralOrThrow(choiceId);
+    var defTroops = gameMatch.monarchTroopCount(tid);
+    var ruler = cast(gameMatch.activeMonarch(), Monarch);
+    var might:Null<Int> = null;
+    for (g in ruler.roster())
+      if (g.id() == choiceId) {
+        might = cast(g, General).stat(Might);
+        break;
+      }
+    if (might == null)
+      throw 'LuoshiJiCe: 計策選將含非麾下武將 "$choiceId"';
+    var pickedLoss = previewTroopLoss(defTroops, might);
     gameMatch.monarchApplyTroopLoss(tid, pickedLoss);
   }
 
@@ -122,11 +116,6 @@ class LuoshiJiCe implements IJiCe {
     if (uniq.length != 1)
       throw "LuoshiJiCe: 計策選將須恰好選擇一名麾下武將";
     var gid = uniq[0];
-    var allowed = new Map<String, Bool>();
-    for (r in gameMatch.jiCeStagingRowsLive())
-      allowed.set(r.generalId(), true);
-    if (!allowed.exists(gid))
-      throw 'LuoshiJiCe: 計策選將 "$gid" 不在暫存預覽列';
     var ruler = cast(gameMatch.activeMonarch(), Monarch);
     var ok = new Map<String, Bool>();
     for (g in ruler.roster())

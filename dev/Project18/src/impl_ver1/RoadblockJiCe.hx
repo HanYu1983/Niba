@@ -2,7 +2,6 @@ package impl_ver1;
 
 import game.GameIds;
 import game.IJiCe;
-import game.IJiCeStagingPreviewRow;
 import game.IPlayer;
 import game.IPlayerMenu;
 import game.IPlayerMenuNode;
@@ -29,12 +28,6 @@ class RoadblockJiCe implements IJiCe {
 
   public function registryKey():String
     return REGISTRY_KEY;
-
-  /** 需要目標君主參數以符合骨架介面；路障語意不依此欄位，傳操作中君主即可。 */
-  public function applyAgainstMonarch(actor:IPlayer, targetMonarchId:MonarchId):Void {
-    var rows:Array<IJiCeStagingPreviewRow> = [];
-    gameMatch.enterJiCeStaging(this, targetMonarchId, rows);
-  }
 
   public function buildPlayerMenu(actor:IPlayer):IPlayerMenu {
     var submitLeaf = gameMatch.createPlayerMenuEntry(JiCeStagingSubmit, "確認於當前格設置路障", true, "confirm_roadblock");

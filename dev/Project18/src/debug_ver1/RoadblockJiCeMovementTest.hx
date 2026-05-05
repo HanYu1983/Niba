@@ -59,7 +59,7 @@ class RoadblockJiCeMovementTest {
       throw "RoadblockJiCeMovementTest: 換手後應為 B 在格 5";
 
     var mB1 = match.createPlayerMenu(actorB);
-    match.applyMenuLeaf(actorB, requireEnabledNode(mB1, JiCe), roadblock, idB);
+    match.applyMenuLeaf(actorB, requireEnabledNode(mB1, JiCe));
 
     var stagingNode = PlayerMenuFind.findJiCeStagingSubmitNode(match.createPlayerMenu(actorB));
     var sub = MenuNodeQuery.buttonEntryOnNode(stagingNode, PlayerMenuKind.JiCeStagingSubmit);

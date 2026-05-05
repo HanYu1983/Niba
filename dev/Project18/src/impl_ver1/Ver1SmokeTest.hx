@@ -29,7 +29,7 @@ class Ver1SmokeTest {
     var player:IPlayer = match.createPlayer(attacker.id(), "攻方");
 
     var menuJi = match.createPlayerMenu(player);
-    match.applyMenuLeaf(player, MenuNodeQuery.requireNodeWithKind(menuJi, JiCe), luoshi, defender.id());
+    match.applyMenuLeaf(player, MenuNodeQuery.requireNodeWithKind(menuJi, JiCe));
 
     if (defender.troops() != 100)
       throw "Ver1SmokeTest: 暫存階段守方兵力不得變動";
