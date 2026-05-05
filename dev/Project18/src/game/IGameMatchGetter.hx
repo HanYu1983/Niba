@@ -30,6 +30,9 @@ interface IGameMatchGetter {
   /** 當前具行動權之君主。 */
   function activeMonarch():IMonarch;
 
+  /** 回合數（完整輪轉一圈算一回合；起始為 1）。 */
+  function roundNumber():Int;
+
   /** 依君主 id 取得君主（不存在則拋錯）。 */
   function monarchById(monarchId:MonarchId):IMonarch;
 

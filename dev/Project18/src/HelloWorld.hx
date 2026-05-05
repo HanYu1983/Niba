@@ -16,11 +16,12 @@ import game.IPlayerMenuNode;
 import game.MenuGeneralChoice;
 import game.MenuFormWidget;
 import game.PlayerMenuKind;
-import js.Browser;
 import view.BasicViewModel;
 import view.EventCenter;
+import view.html.HtmlInfoPanelView;
+import view.html.HtmlActiveMenuView;
 import view.html.HtmlMapView;
-import view.html.HtmlPlayerView;
+import view.html.HtmlPlayersView;
 
 class HelloWorld {
   static function main() {
@@ -52,17 +53,10 @@ class HelloWorld {
     EventCenter.publishViewModel(vm);
 
     // 掛載點由 index.htm 提供
+    new HtmlInfoPanelView("app-info");
+    new HtmlActiveMenuView("app-menu");
     new HtmlMapView("app-map");
-    var playersHost = Browser.document.getElementById("app-players");
-    if (playersHost != null) {
-      for (m in match.monarchs()) {
-        var id = "player-" + m.id();
-        var slot = Browser.document.createDivElement();
-        slot.id = id;
-        playersHost.appendChild(slot);
-        new HtmlPlayerView(id, m.id());
-      }
-    }
+    new HtmlPlayersView("app-players");
   }
 
   /** 強制將架構符號納入編譯檢查（無執行語意）。 */

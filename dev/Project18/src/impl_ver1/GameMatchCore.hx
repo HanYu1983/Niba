@@ -37,6 +37,7 @@ class GameMatchCore implements IGameMatch {
   /** --- 君主列、當前行動方、行動切片、終局 --- */
   var _monarchs:Array<Monarch>;
   var _activeId:MonarchId;
+  var _roundNumber:Int;
   var _activeSliceComplete:Bool;
   var _terminationReason:MatchTerminationReason;
 
@@ -76,6 +77,7 @@ class GameMatchCore implements IGameMatch {
     _board = cast null;
     _monarchs = [];
     _activeId = "";
+    _roundNumber = 1;
     _activeSliceComplete = false;
     _terminationReason = NotEnded;
     _tileEventByIndex = new Map();
@@ -990,6 +992,9 @@ class GameMatchCore implements IGameMatch {
     if (idx < 0)
       throw 'GameMatchCore.advanceActiveMonarchAfterConfirmDone: active ($_activeId) not in monarchs';
     _activeId = _monarchs[(idx + 1) % n].id();
+    // 完整輪轉一圈（回到 seat=0）算一回合
+    if (activeMonarch().seat() == 0)
+      _roundNumber += 1;
   }
 
   public function board():IBoard
@@ -1004,6 +1009,9 @@ class GameMatchCore implements IGameMatch {
         return m;
     throw 'GameMatchCore.activeMonarch: id not in roster ($_activeId)';
   }
+
+  public function roundNumber():Int
+    return _roundNumber;
 
   public function monarchById(monarchId:MonarchId):IMonarch
     return monarchWithId(monarchId);

@@ -34,6 +34,9 @@ class BasicViewModel implements IViewModel {
   public function activeMonarch():IMonarch
     return match.activeMonarch();
 
+  public function roundNumber():Int
+    return match.roundNumber();
+
   public function monarchById(monarchId:MonarchId):IMonarch
     return match.monarchById(monarchId);
 
