@@ -104,6 +104,7 @@ class HelloWorld {
     var _mhc2:PlayerMenuKind = HostileCityDefenderAck;
     var _mhc3:PlayerMenuKind = HostileCityDefenderPickSubmit;
     var _mhc4:PlayerMenuKind = HostileCitySettlementAck;
+    var _mv:PlayerMenuKind = VillageTrade;
     var _fw:MenuFormWidget = Slider("f", 0, 1, 1, 0);
     var _fwm:MenuFormWidget = GeneralMultiPick("x", ([] : Array<MenuGeneralChoice>), []);
     var _ver1Game:impl_ver1.Game = cast null;

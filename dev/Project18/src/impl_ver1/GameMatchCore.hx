@@ -16,6 +16,7 @@ import game.IPlayerMenuNode;
 import game.IStagingAction;
 import game.ITile;
 import game.ITileEvent;
+import game.IPlayerCommand;
 import game.MenuActivation;
 import game.MenuGeneralChoice;
 import game.MenuFormWidget;
@@ -23,6 +24,8 @@ import game.PlayerMenuKind;
 import game.TileKind;
 import impl_ver1.JiCeStagingAction;
 import impl_ver1.RestStagingAction;
+import impl_ver1.VillageTradeStagingAction;
+import impl_ver1.Ver1MainCommands;
 
 /**
  * Ver1 賽局核心：終局／「移動」葉委派 {@link GameMatchVer1Ops}（傳入 {@code this}，不靠建構注入）。
@@ -359,6 +362,7 @@ class GameMatchCore implements IGameMatch {
   }
 
   public function forceEnterJiCeStaging(card:IJiCe):Void {
+    // 相容層：舊測試/除錯入口仍可用（無 actor 脈絡，因此不填 preview rows）
     stagingEnterJiCe(card);
   }
 
@@ -723,23 +727,15 @@ class GameMatchCore implements IGameMatch {
       }
 
     var actions:Array<IPlayerMenuNode> = [];
-    // 規則：一旦切片已完成（可結束），移動主項先不再出現；直到 ConfirmDone 結算後（切片重置）才再次出現。
-    if (!isActivePlayerSliceComplete())
-      actions.push(createPlayerMenuNode("移動", createPlayerMenuEntry(Move, "移動", !blockBasics), ([] : Array<IPlayerMenuNode>)));
-    actions.push(createPlayerMenuNode("計策", null, jiChildren));
-    // 休整：目前先做成 staging 指令（選將→提交→resolve）
-    if (!isActivePlayerSliceComplete())
-      actions.push(createPlayerMenuNode("休整", createPlayerMenuEntry(Rest, "休整（回復體力）", !blockBasics), ([] : Array<IPlayerMenuNode>)));
-    actions.push(createPlayerMenuNode("狀態", createPlayerMenuEntry(Status, "狀態（前端用，無後端結算）", true), ([] : Array<IPlayerMenuNode>)));
-    var allowConfirm =
-      isActivePlayerSliceComplete()
-      && pend == null
-      && !stagingActive
-      && _pendingEmptyCityTileIndex == null
-      && _pendingFriendlyCityTileIndex == null
-      && !hostilePending;
-    if (allowConfirm)
-      actions.push(createPlayerMenuNode("結束", createPlayerMenuEntry(ConfirmDone, "結束本階段", true), ([] : Array<IPlayerMenuNode>)));
+    // 指令抽象：除「計策」仍維持子選單列牌外，其餘主指令由 command registry 產生。
+    for (cmd in Ver1MainCommands.build(this, actor)) {
+      if (cmd.kind() == JiCe)
+        continue;
+      var n = cmd.buildActionNode(actor);
+      if (n != null)
+        actions.push(n);
+    }
+    actions.insert(1, createPlayerMenuNode("計策", null, jiChildren));
 
     roots.push(createPlayerMenuNode("本回合", null, actions));
     return new PlayerMenu(actor, ctx, roots);
@@ -757,6 +753,7 @@ class GameMatchCore implements IGameMatch {
       case Status:
       case Move:
       case Rest:
+      case VillageTrade:
         _hasMovedThisTurn = true;
       case TileEventPick:
       case EmptyCityOccupySubmit:
@@ -818,6 +815,14 @@ class GameMatchCore implements IGameMatch {
     stg.resolveChoice(actor, menuNode);
     clearStaging();
     syncActiveSliceAfterMenuLeaf(StagingSubmit);
+  }
+
+  public function enterStaging(actor:IPlayer, action:IStagingAction, kindForSync:PlayerMenuKind):Void {
+    if (_pendingStaging != null)
+      throw "GameMatchCore: 已有進行中之暫存，請先完成";
+    _pendingStaging = action;
+    _stagingPreviewRows = action.previewRows(actor);
+    syncActiveSliceAfterMenuLeaf(kindForSync);
   }
 
   function dedupeGeneralIds(raw:Array<String>):Array<GeneralId> {
@@ -984,20 +989,12 @@ class GameMatchCore implements IGameMatch {
           case StagingSubmit:
             handleStagingSubmit(actor, menuNode);
           case JiCe:
-            if (_pendingStaging != null)
-              throw "GameMatchCore: 已有進行中之計策暫存，請先完成計策選項";
             var card = resolvePlayedJiCeFromLeaf(actor, leaf);
-            forceEnterJiCeStaging(card);
-            // 目前 previewRows 先留空；後續各指令可自行實作 previewRows
-            if (_pendingStaging != null)
-              _stagingPreviewRows = _pendingStaging.previewRows(actor);
-            syncActiveSliceAfterMenuLeaf(JiCe);
+            enterStaging(actor, new JiCeStagingAction(this, card), JiCe);
           case Rest:
-            if (_pendingStaging != null)
-              throw "GameMatchCore: 已有進行中之暫存，請先完成";
-            _pendingStaging = new RestStagingAction(this);
-            _stagingPreviewRows = _pendingStaging.previewRows(actor);
-            syncActiveSliceAfterMenuLeaf(Rest);
+            enterStaging(actor, new RestStagingAction(this), Rest);
+          case VillageTrade:
+            enterStaging(actor, new VillageTradeStagingAction(this), VillageTrade);
           case Status:
             syncActiveSliceAfterMenuLeaf(Status);
           case ConfirmDone:

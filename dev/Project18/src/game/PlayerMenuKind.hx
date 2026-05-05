@@ -29,6 +29,9 @@ enum PlayerMenuKind {
     /** 休整：選將並回復體力（先以 staging 形式實作）。 */
     Rest;
 
+    /** 村落：交易（示範用 staging 指令，之後會接真正的村落模型）。 */
+    VillageTrade;
+
     /** 空城進駐：同表單內複選駐將＋資源滑桿（數值／駐將列表皆改寫該節點 {@link IPlayerMenuNode#formWidgets}）。 */
     EmptyCityOccupySubmit;
 

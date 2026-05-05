@@ -36,8 +36,8 @@ class RoadblockJiCe implements IJiCe {
   }
 
   public function resolveChoice(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
-    if (gameMatch.forceGetPendingJiCe() != this)
-      throw "RoadblockJiCe.resolveChoice: pendingJiCe mismatch";
+    if (!gameMatch.stagingMatchesJiCe(this))
+      throw "RoadblockJiCe.resolveChoice: pending staging mismatch";
     if (MenuActivation.activatingEntry(menuNode).kind() != StagingSubmit)
       throw "RoadblockJiCe.resolveChoice: 預期 StagingSubmit";
 
