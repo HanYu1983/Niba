@@ -13,7 +13,7 @@ import game.MenuFormWidget;
 import game.MenuGeneralChoice;
 import game.MenuMonarchChoice;
 import game.PlayerMenuKind;
-import game.PlayerMenuKind.JiCeStagingSubmit;
+import game.PlayerMenuKind.StagingSubmit;
 
 /**
  * 落石計策：建構子綁定 {@link GameMatchCore}；暫存與兵力結算經 Core 私有方法（同套件友元可見）。
@@ -55,7 +55,7 @@ class LuoshiJiCe implements IJiCe {
       if (defSel.length == 0)
         defSel.push(gid);
     }
-    var submitLeaf = gameMatch.createPlayerMenuEntry(JiCeStagingSubmit, "確認計策選將", true, "confirm_jice_pick");
+    var submitLeaf = gameMatch.createPlayerMenuEntry(StagingSubmit, "確認計策選將", true, "confirm_jice_pick");
     var widgets:Array<MenuFormWidget> = [
       MonarchSinglePick("選擇目標君主", monarchChoices, defTarget),
       GeneralMultiPick("選擇施計武將", choices, defSel),
@@ -68,8 +68,8 @@ class LuoshiJiCe implements IJiCe {
   public function resolveChoice(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
     if (!gameMatch.jiCePendingMatchesCard(this))
       throw "LuoshiJiCe.resolveChoice: pendingJiCe mismatch";
-    if (MenuActivation.activatingEntry(menuNode).kind() != JiCeStagingSubmit)
-      throw "LuoshiJiCe.resolveChoice: 預期 JiCeStagingSubmit";
+    if (MenuActivation.activatingEntry(menuNode).kind() != StagingSubmit)
+      throw "LuoshiJiCe.resolveChoice: 預期 StagingSubmit";
 
     var tid = readStagingPickTargetMonarchId(menuNode.formWidgets());
     var choiceId = readStagingPickGeneralId(menuNode.formWidgets());

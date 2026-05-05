@@ -23,8 +23,11 @@ enum PlayerMenuKind {
     /** 踩點事件之分支持選；機械鍵見 IPlayerMenuEntry.decisionToken。 */
     TileEventPick;
 
-    /** 計策暫存：確認選將（複選結果由 UI 改寫該節點 {@link IPlayerMenuNode#formWidgets} 之 {@link MenuFormWidget.GeneralMultiPick}）。 */
-    JiCeStagingSubmit;
+    /** 通用暫存：提交表單並結算（可用於非計策的 staging 指令）。 */
+    StagingSubmit;
+
+    /** 休整：選將並回復體力（先以 staging 形式實作）。 */
+    Rest;
 
     /** 空城進駐：同表單內複選駐將＋資源滑桿（數值／駐將列表皆改寫該節點 {@link IPlayerMenuNode#formWidgets}）。 */
     EmptyCityOccupySubmit;

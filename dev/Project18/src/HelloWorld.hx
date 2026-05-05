@@ -95,7 +95,7 @@ class HelloWorld {
     var _menuRow:IPlayerMenuEntry = cast null;
     var _mk:PlayerMenuKind = Move;
     var _mtk:PlayerMenuKind = TileEventPick;
-    var _mjk:PlayerMenuKind = JiCeStagingSubmit;
+    var _mjk:PlayerMenuKind = StagingSubmit;
     var _mec1:PlayerMenuKind = EmptyCityOccupySubmit;
     var _mec2:PlayerMenuKind = EmptyCityOccupyAbort;
     var _mfc1:PlayerMenuKind = FriendlyCityDispatchApply;

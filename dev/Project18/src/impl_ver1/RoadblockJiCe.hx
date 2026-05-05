@@ -9,7 +9,7 @@ import game.MenuActivation;
 import game.MenuFormWidget;
 import game.MenuFormWidget.Button;
 import game.PlayerMenuKind;
-import game.PlayerMenuKind.JiCeStagingSubmit;
+import game.PlayerMenuKind.StagingSubmit;
 /**
  * 路障計策：於打出者當前兵棋格設障；{@link RoadblockMovementHook} 僅阻斷非放置者之逐步移動落地。
  */
@@ -30,7 +30,7 @@ class RoadblockJiCe implements IJiCe {
     return REGISTRY_KEY;
 
   public function buildPlayerMenu(actor:IPlayer):IPlayerMenu {
-    var submitLeaf = gameMatch.createPlayerMenuEntry(JiCeStagingSubmit, "確認於當前格設置路障", true, "confirm_roadblock");
+    var submitLeaf = gameMatch.createPlayerMenuEntry(StagingSubmit, "確認於當前格設置路障", true, "confirm_roadblock");
     var root = gameMatch.createPlayerMenuNode("路障", null, ([] : Array<IPlayerMenuNode>), [Button(submitLeaf)]);
     return new PlayerMenu(actor, "jice-" + registryKey(), [root]);
   }
@@ -38,8 +38,8 @@ class RoadblockJiCe implements IJiCe {
   public function resolveChoice(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
     if (gameMatch.forceGetPendingJiCe() != this)
       throw "RoadblockJiCe.resolveChoice: pendingJiCe mismatch";
-    if (MenuActivation.activatingEntry(menuNode).kind() != JiCeStagingSubmit)
-      throw "RoadblockJiCe.resolveChoice: 預期 JiCeStagingSubmit";
+    if (MenuActivation.activatingEntry(menuNode).kind() != StagingSubmit)
+      throw "RoadblockJiCe.resolveChoice: 預期 StagingSubmit";
 
     var ruler = cast(gameMatch.activeMonarch(), Monarch);
     var tile = ruler.pawnIndex();

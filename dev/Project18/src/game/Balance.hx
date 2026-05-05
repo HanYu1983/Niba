@@ -35,5 +35,13 @@ class Balance {
   public static function friendlyModifier(friendly:Int):Float {
     return 1.0 + (100 - friendly) / 100.0 * 0.3;
   }
+
+  public static inline function clampInt(x:Int, lo:Int, hi:Int):Int {
+    if (x < lo)
+      return lo;
+    if (x > hi)
+      return hi;
+    return x;
+  }
 }
 

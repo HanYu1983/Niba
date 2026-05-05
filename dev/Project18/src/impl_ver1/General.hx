@@ -48,6 +48,10 @@ class General implements IGeneral {
   public function stamina():Int
     return _stamina;
 
+  /** 規剘／測試用：直接寫入體力（不暴露於 IGeneral 介面，以免介面過重）。 */
+  public function forceSetStamina(value:Int):Void
+    _stamina = value;
+
   public function loyalty():Int
     return _loyalty;
 

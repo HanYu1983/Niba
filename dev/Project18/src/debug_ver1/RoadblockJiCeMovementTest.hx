@@ -61,8 +61,8 @@ class RoadblockJiCeMovementTest {
     var mB1 = match.createPlayerMenu(actorB);
     match.applyMenuLeaf(actorB, requireEnabledNode(mB1, JiCe));
 
-    var stagingNode = PlayerMenuFind.findJiCeStagingSubmitNode(match.createPlayerMenu(actorB));
-    var sub = MenuNodeQuery.buttonEntryOnNode(stagingNode, PlayerMenuKind.JiCeStagingSubmit);
+    var stagingNode = PlayerMenuFind.findStagingSubmitNode(match.createPlayerMenu(actorB));
+    var sub = MenuNodeQuery.buttonEntryOnNode(stagingNode, PlayerMenuKind.StagingSubmit);
     if (sub == null)
       throw "RoadblockJiCeMovementTest: 缺少路障確認鈕";
     stagingNode.setActivationEntry(sub);

@@ -15,7 +15,7 @@ import game.ITile;
 import game.PlayerMenuKind;
 import game.PlayerMenuKind.ConfirmDone;
 import game.PlayerMenuKind.JiCe;
-import game.PlayerMenuKind.JiCeStagingSubmit;
+import game.PlayerMenuKind.StagingSubmit;
 import game.PlayerMenuKind.Move;
 import game.TileKind;
 import impl_ver1.Game;
@@ -70,7 +70,7 @@ class TwoPlayerJiCeStagingMoveConfirmTest {
     if (jiAgain != null && jiAgain.isEnabled())
       throw "TwoPlayerJiCeStagingMoveConfirmTest: 暫存期中「計策」主項應停用";
 
-    var jNode = PlayerMenuFind.findJiCeStagingSubmitNode(menuPick);
+    var jNode = PlayerMenuFind.findStagingSubmitNode(menuPick);
     var fw = jNode.formWidgets();
     switch fw[0] {
       case MonarchSinglePick(lbl, choices, _):
@@ -88,7 +88,7 @@ class TwoPlayerJiCeStagingMoveConfirmTest {
       default:
         throw "TwoPlayerJiCeStagingMoveConfirmTest: 預期計策暫存 MultiPick";
     }
-    var sub = MenuNodeQuery.buttonEntryOnNode(jNode, JiCeStagingSubmit);
+    var sub = MenuNodeQuery.buttonEntryOnNode(jNode, StagingSubmit);
     if (sub == null)
       throw "TwoPlayerJiCeStagingMoveConfirmTest: 缺少確認計策選將鈕";
     jNode.setActivationEntry(sub);

@@ -10,7 +10,7 @@ import game.MenuFormWidget;
 import game.MenuNodeQuery;
 import game.PlayerMenuKind;
 import game.PlayerMenuKind.JiCe;
-import game.PlayerMenuKind.JiCeStagingSubmit;
+import game.PlayerMenuKind.StagingSubmit;
 
 /**
  * Ver1 骨架煙霧：{@link IGame#createGameMatch}（{@code ver1/smoke}）→ LuoshiJiCe。
@@ -35,7 +35,7 @@ class Ver1SmokeTest {
       throw "Ver1SmokeTest: 暫存階段守方兵力不得變動";
 
     var menuPick = match.createPlayerMenu(player);
-    var jNode = MenuNodeQuery.requireNodeWithKind(menuPick, JiCeStagingSubmit);
+    var jNode = MenuNodeQuery.requireNodeWithKind(menuPick, StagingSubmit);
     var fw = jNode.formWidgets();
     switch fw[0] {
       case MonarchSinglePick(lbl, choices, _):
@@ -53,7 +53,7 @@ class Ver1SmokeTest {
       default:
         throw "Ver1SmokeTest: 預期計策暫存 MultiPick";
     }
-    var sub = MenuNodeQuery.buttonEntryOnNode(jNode, JiCeStagingSubmit);
+    var sub = MenuNodeQuery.buttonEntryOnNode(jNode, StagingSubmit);
     if (sub == null)
       throw "Ver1SmokeTest: 缺少確認計策選將";
     jNode.setActivationEntry(sub);

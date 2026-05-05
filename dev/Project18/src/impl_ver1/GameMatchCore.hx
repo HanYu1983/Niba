@@ -13,6 +13,7 @@ import game.IPlayer;
 import game.IPlayerMenu;
 import game.IPlayerMenuEntry;
 import game.IPlayerMenuNode;
+import game.IStagingAction;
 import game.ITile;
 import game.ITileEvent;
 import game.MenuActivation;
@@ -20,6 +21,8 @@ import game.MenuGeneralChoice;
 import game.MenuFormWidget;
 import game.PlayerMenuKind;
 import game.TileKind;
+import impl_ver1.JiCeStagingAction;
+import impl_ver1.RestStagingAction;
 
 /**
  * Ver1 賽局核心：終局／「移動」葉委派 {@link GameMatchVer1Ops}（傳入 {@code this}，不靠建構注入）。
@@ -49,7 +52,7 @@ class GameMatchCore implements IGameMatch {
   var _pendingTileEvent:Null<ITileEvent>;
 
   /** --- 計策暫存與君主所持牌 --- */
-  var _pendingJiCe:Null<IJiCe>;
+  var _pendingStaging:Null<IStagingAction>;
   var _jiCeStagingRows:Array<IJiCeStagingPreviewRow>;
   var _ownedJiCe:Map<MonarchId, Array<IJiCe>>;
 
@@ -88,6 +91,7 @@ class GameMatchCore implements IGameMatch {
     _terminationReason = NotEnded;
     _tileEventByIndex = new Map();
     _pendingTileEvent = null;
+    _pendingStaging = null;
     _ownedJiCe = new Map();
     _cityGarrisonGenerals = new Map();
     _cityStockTroops = new Map();
@@ -101,7 +105,7 @@ class GameMatchCore implements IGameMatch {
   }
 
   function clearJiCeStaging():Void {
-    _pendingJiCe = null;
+    _pendingStaging = null;
     _jiCeStagingRows = ([] : Array<IJiCeStagingPreviewRow>);
   }
 
@@ -123,7 +127,7 @@ class GameMatchCore implements IGameMatch {
 
   // --- 計策暫存寫入／友元讀取用（不將欄位暴露給套件外）---
   private function jiCeStagingEnter(card:IJiCe):Void {
-    _pendingJiCe = card;
+    _pendingStaging = new JiCeStagingAction(card);
     _jiCeStagingRows = ([] : Array<IJiCeStagingPreviewRow>);
   }
 
@@ -131,8 +135,12 @@ class GameMatchCore implements IGameMatch {
   private function jiCeStagingRowsLive():Array<IJiCeStagingPreviewRow>
     return _jiCeStagingRows;
 
-  private function jiCePendingMatchesCard(card:IJiCe):Bool
-    return _pendingJiCe == card;
+  private function jiCePendingMatchesCard(card:IJiCe):Bool {
+    if (_pendingStaging == null)
+      return false;
+    var c = _pendingStaging.asJiCe();
+    return c != null && c == card;
+  }
 
   private function jiCeStagingPredictedTroopLossForGeneralOrThrow(gid:GeneralId):Int {
     for (r in _jiCeStagingRows)
@@ -329,10 +337,10 @@ class GameMatchCore implements IGameMatch {
     return _pendingTileEvent;
 
   public function forceGetPendingJiCe():Null<IJiCe>
-    return _pendingJiCe;
+    return _pendingStaging != null ? _pendingStaging.asJiCe() : null;
 
   public function forceJiCeStagingPreviewRows():Array<IJiCeStagingPreviewRow> {
-    if (_pendingJiCe == null)
+    if (_pendingStaging == null || _pendingStaging.asJiCe() == null)
       return [];
     return _jiCeStagingRows.copy();
   }
@@ -586,14 +594,14 @@ class GameMatchCore implements IGameMatch {
 
   public function createPlayerMenu(actor:IPlayer):IPlayerMenu {
     var pend = _pendingTileEvent;
-    var jiPending = _pendingJiCe;
-    var stagingActive = jiPending != null;
+    var stg = _pendingStaging;
+    var stagingActive = stg != null;
     var hostilePending = _pendingHostileCityTileIndex != null;
     var ctx = actor.monarchId() + "-" + isActivePlayerSliceComplete();
     if (pend != null)
       ctx += "-evt-" + pend.registryKey();
-    if (stagingActive && jiPending != null)
-      ctx += "-jice-" + jiPending.registryKey();
+    if (stagingActive && stg != null)
+      ctx += "-stg-" + stg.registryKey();
     if (_pendingEmptyCityTileIndex != null)
       ctx += "-empty-city-" + _pendingEmptyCityTileIndex;
     if (_pendingFriendlyCityTileIndex != null)
@@ -661,9 +669,9 @@ class GameMatchCore implements IGameMatch {
       roots.push(createPlayerMenuNode("事件：" + pend.registryKey(), null, evRoots));
     }
 
-    if (stagingActive && jiPending != null) {
-      var jiRoots = jiPending.buildPlayerMenu(actor).rootNodes();
-      roots.push(createPlayerMenuNode("計策：" + jiPending.designLabel(), null, jiRoots));
+    if (stagingActive && stg != null) {
+      var stgRoots = stg.buildPlayerMenu(actor).rootNodes();
+      roots.push(createPlayerMenuNode("暫存：" + stg.designLabel(), null, stgRoots));
     }
 
     var blockBasics =
@@ -706,6 +714,9 @@ class GameMatchCore implements IGameMatch {
     if (!isActivePlayerSliceComplete())
       actions.push(createPlayerMenuNode("移動", createPlayerMenuEntry(Move, "移動", !blockBasics), ([] : Array<IPlayerMenuNode>)));
     actions.push(createPlayerMenuNode("計策", null, jiChildren));
+    // 休整：目前先做成 staging 指令（選將→提交→resolve）
+    if (!isActivePlayerSliceComplete())
+      actions.push(createPlayerMenuNode("休整", createPlayerMenuEntry(Rest, "休整（回復體力）", !blockBasics), ([] : Array<IPlayerMenuNode>)));
     actions.push(createPlayerMenuNode("狀態", createPlayerMenuEntry(Status, "狀態（前端用，無後端結算）", true), ([] : Array<IPlayerMenuNode>)));
     var allowConfirm =
       isActivePlayerSliceComplete()
@@ -729,9 +740,10 @@ class GameMatchCore implements IGameMatch {
         _strategyPreUsed = false;
         _strategyPostUsed = false;
       case JiCe:
-      case JiCeStagingSubmit:
+      case StagingSubmit:
       case Status:
       case Move:
+      case Rest:
         _hasMovedThisTurn = true;
       case TileEventPick:
       case EmptyCityOccupySubmit:
@@ -786,13 +798,13 @@ class GameMatchCore implements IGameMatch {
     _activeSliceComplete = true;
   }
 
-  function handleJiCeStagingSubmit(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
-    var card = _pendingJiCe;
-    if (card == null)
-      throw "GameMatchCore: JiCeStagingSubmit 但無進行中之計策暫存";
-    card.resolveChoice(actor, menuNode);
+  function handleStagingSubmit(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
+    var stg = _pendingStaging;
+    if (stg == null)
+      throw "GameMatchCore: StagingSubmit 但無進行中之暫存";
+    stg.resolveChoice(actor, menuNode);
     clearJiCeStaging();
-    syncActiveSliceAfterMenuLeaf(JiCeStagingSubmit);
+    syncActiveSliceAfterMenuLeaf(StagingSubmit);
   }
 
   function dedupeGeneralIds(raw:Array<String>):Array<GeneralId> {
@@ -956,22 +968,19 @@ class GameMatchCore implements IGameMatch {
             GameMatchVer1Ops.applyMenuLeafForMove(this, actor);
           case TileEventPick:
             handleTileEventPick(actor, menuNode);
-          case JiCeStagingSubmit:
-            handleJiCeStagingSubmit(actor, menuNode);
+          case StagingSubmit:
+            handleStagingSubmit(actor, menuNode);
           case JiCe:
-            if (_pendingJiCe != null)
+            if (_pendingStaging != null)
               throw "GameMatchCore: 已有進行中之計策暫存，請先完成計策選項";
             var card = resolvePlayedJiCeFromLeaf(actor, leaf);
-            var tid:Null<MonarchId> = null;
-            for (m in monarchs())
-              if (m.id() != actor.monarchId()) {
-                tid = m.id();
-                break;
-              }
-            if (tid == null)
-              throw "GameMatchCore.applyMenuLeaf: JiCe leaf requires at least one non-self monarch to target";
             forceEnterJiCeStaging(card);
             syncActiveSliceAfterMenuLeaf(JiCe);
+          case Rest:
+            if (_pendingStaging != null)
+              throw "GameMatchCore: 已有進行中之暫存，請先完成";
+            _pendingStaging = new RestStagingAction(this);
+            syncActiveSliceAfterMenuLeaf(Rest);
           case Status:
             syncActiveSliceAfterMenuLeaf(Status);
           case ConfirmDone:
