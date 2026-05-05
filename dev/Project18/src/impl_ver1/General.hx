@@ -1,7 +1,9 @@
 package impl_ver1;
 
 import game.GameIds;
+import game.GeneralEffect;
 import game.GeneralStat;
+import game.GeneralStatus;
 import game.IGeneral;
 import game.IEquipment;
 import game.PositionRank;
@@ -20,6 +22,8 @@ class General implements IGeneral {
   var _rarity:Rarity;
   var _rank:PositionRank;
   var _equipments:Array<IEquipment>;
+  var _effects:Array<GeneralEffect>;
+  var _statuses:Array<GeneralStatus>;
 
   public function new(id:GeneralId, owner:MonarchId, command:Int, might:Int, wit:Int, stewardship:Int) {
     _id = id;
@@ -34,6 +38,8 @@ class General implements IGeneral {
     _rarity = Common;
     _rank = Soldier;
     _equipments = [];
+    _effects = [];
+    _statuses = [];
   }
 
   public function id():GeneralId
@@ -57,6 +63,29 @@ class General implements IGeneral {
   /** 規剘／測試用：直接寫入體力（不暴露於 IGeneral 介面，以免介面過重）。 */
   public function forceSetStamina(value:Int):Void
     _stamina = value;
+
+  public function effects():Array<GeneralEffect>
+    return _effects;
+
+  public function addEffect(e:GeneralEffect):Void
+    _effects.push(e);
+
+  public function statuses():Array<GeneralStatus>
+    return _statuses;
+
+  public function addStatus(s:GeneralStatus):Void
+    _statuses.push(s);
+
+  /** 回傳是否成功移除一個 debuff。 */
+  public function removeOneDebuff():Bool {
+    for (i in 0..._statuses.length)
+      switch _statuses[i] {
+        case Debuff(_):
+          _statuses.splice(i, 1);
+          return true;
+      }
+    return false;
+  }
 
   public function loyalty():Int
     return _loyalty;
