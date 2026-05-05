@@ -111,10 +111,43 @@ class HtmlActiveMenuView {
             p.textContent = lbl + " = " + (selected != null && selected.length > 0 ? selected[0] : "(none)");
             form.appendChild(p);
           case GeneralMultiPick(lbl, _, selected):
-            var p = Browser.document.createDivElement();
-            p.className = "menu-pick";
-            p.textContent = lbl + " = " + (selected != null ? selected.join(",") : "");
-            form.appendChild(p);
+            // 複選武將：渲染成 checkbox 列表，勾選變更時送 UiEvent.GeneralMultiPick 以便就地改寫 widgets
+            var wrap = Browser.document.createDivElement();
+            wrap.className = "menu-multipick";
+            var head = Browser.document.createDivElement();
+            head.className = "menu-pick";
+            var selNow = selected != null ? selected.copy() : [];
+            head.textContent = lbl + " = " + selNow.join(",");
+            wrap.appendChild(head);
+            switch w {
+              case GeneralMultiPick(_, choices, _):
+                for (c in choices) {
+                  var row2 = Browser.document.createDivElement();
+                  row2.className = "menu-pick-row";
+                  var cb = Browser.document.createInputElement();
+                  cb.type = "checkbox";
+                  cb.checked = selNow.indexOf(c.generalId) >= 0;
+                  cb.onchange = function(_) {
+                    if (cb.checked) {
+                      if (selNow.indexOf(c.generalId) < 0)
+                        selNow.push(c.generalId);
+                    } else {
+                      var j = selNow.indexOf(c.generalId);
+                      if (j >= 0)
+                        selNow.splice(j, 1);
+                    }
+                    head.textContent = lbl + " = " + selNow.join(",");
+                    EventCenter.publishEvent(UiEvent.GeneralMultiPick(n, i, selNow));
+                  };
+                  row2.appendChild(cb);
+                  var txt = Browser.document.createSpanElement();
+                  txt.textContent = c.caption;
+                  row2.appendChild(txt);
+                  wrap.appendChild(row2);
+                }
+              default:
+            }
+            form.appendChild(wrap);
         }
       }
       row.appendChild(form);

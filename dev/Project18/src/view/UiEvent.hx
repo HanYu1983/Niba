@@ -22,5 +22,8 @@ enum UiEvent {
 
   /** 調整 Slider：帶入 node 與 widgetIndex，並提供新值。 */
   Slider(node:IPlayerMenuNode, widgetIndex:Int, value:Int);
+
+  /** 更新 GeneralMultiPick：帶入 node 與 widgetIndex，並提供新的 selectedGeneralIds。 */
+  GeneralMultiPick(node:IPlayerMenuNode, widgetIndex:Int, selectedGeneralIds:Array<String>);
 }
 

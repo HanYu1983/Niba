@@ -44,6 +44,8 @@ class BasicViewModel implements IViewModel {
       case Slider(node, widgetIndex, value):
         applySliderToNode(node, widgetIndex, value);
         // Slider 互動不應觸發整體重繪，否則 DOM 會被重建導致滑桿被重置，看起來像「無法拖動」。
+      case GeneralMultiPick(node, widgetIndex, selectedGeneralIds):
+        applyGeneralMultiPickToNode(node, widgetIndex, selectedGeneralIds);
       case MenuClick(node, entry):
         applyMenuClick(node, entry);
         EventCenter.publishViewModel(this);
@@ -67,6 +69,17 @@ class BasicViewModel implements IViewModel {
     var a = match.activeMonarch();
     var actor:IPlayer = new LocalPlayer(a.id(), "active");
     match.applyMenuLeaf(actor, node);
+  }
+
+  function applyGeneralMultiPickToNode(node:IPlayerMenuNode, widgetIndex:Int, selectedGeneralIds:Array<String>):Void {
+    var widgets = node.formWidgets();
+    if (widgets == null || widgetIndex < 0 || widgetIndex >= widgets.length)
+      return;
+    switch widgets[widgetIndex] {
+      case GeneralMultiPick(lbl, choices, _):
+        widgets[widgetIndex] = GeneralMultiPick(lbl, choices, selectedGeneralIds.copy());
+      default:
+    }
   }
 
   public function board():IBoard
