@@ -13,7 +13,7 @@ import game.PlayerMenuKind.LandingContinue;
 import game.PlayerMenuKind.TileEventPick;
 import game.TileKind;
 import impl_ver1.Game;
-import impl_ver1.Monarch;
+import impl_ver1.model.Monarch;
 
 /**
  * 單君主、十格皆 {@link TileKind.Event}：移動落地→forceGetPendingTileEvent→選單含事件分歧→結算後出現結束語意。

@@ -116,7 +116,7 @@ class HelloWorld {
     var _fw:MenuFormWidget = Slider("f", 0, 1, 1, 0);
     var _fwm:MenuFormWidget = GeneralMultiPick("x", ([] : Array<MenuGeneralChoice>), []);
     var _ver1Game:impl_ver1.Game = cast null;
-    var _ver1Match:impl_ver1.GameMatchCore = cast null;
+    var _ver1Match:impl_ver1.core.GameMatchCore = cast null;
     var _et:EquipmentType = Weapon;
     var _eq:IEquipment = cast null;
     var _pr:PositionRank = Soldier;

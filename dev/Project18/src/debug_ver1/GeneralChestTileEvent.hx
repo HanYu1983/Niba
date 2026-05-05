@@ -11,8 +11,8 @@ import game.MenuActivation;
 import game.MenuFormWidget;
 import game.MenuGeneralChoice;
 import game.PlayerMenuKind.TileEventPick;
-import impl_ver1.Monarch;
-import impl_ver1.PlayerMenu;
+import impl_ver1.model.Monarch;
+import impl_ver1.model.PlayerMenu;
 
 /**
  * 除錯用事件：開箱領賞；麾下武將時以 {@link MenuFormWidget.GeneralMultiPick}＋確認鈕同節點結算。

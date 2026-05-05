@@ -12,7 +12,7 @@ import game.PlayerMenuKind;
 import game.PlayerMenuKind.LandingContinue;
 import game.TileKind;
 import impl_ver1.Game;
-import impl_ver1.Monarch;
+import impl_ver1.model.Monarch;
 
 /**
  * 踩中 {@link IGameMatch#cityOwnedByActiveMonarch 我方城池}：應持續出現「調度」表單（3 嵌件）與「結束拜訪」，

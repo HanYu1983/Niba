@@ -13,7 +13,7 @@ import game.PlayerMenuKind.TileEventPick;
 import game.ITile;
 import game.TileKind;
 import impl_ver1.Game;
-import impl_ver1.Monarch;
+import impl_ver1.model.Monarch;
 
 /**
  * {@link GeneralChestTileEvent}：落地→表單複選武將＋確認→結算兵力。

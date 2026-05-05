@@ -10,8 +10,8 @@ import game.MenuActivation;
 import game.MenuFormWidget;
 import game.MenuGeneralChoice;
 import game.PlayerMenuKind.TileEventPick;
-import impl_ver1.Monarch;
-import impl_ver1.PlayerMenu;
+import impl_ver1.model.Monarch;
+import impl_ver1.model.PlayerMenu;
 
 /**
  * impl_ver1 分叉事件：「軍資」以複選武將＋確認鈕結算；糧秣／略過為單葉。

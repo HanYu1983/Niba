@@ -14,7 +14,7 @@ import game.ITile;
 import game.ITileEvent;
 import game.MatchTerminationReason;
 import game.MenuFormWidget;
-import impl_ver1.GameMatchCore;
+import impl_ver1.core.GameMatchCore;
 import rx.disposables.ISubscription;
 import view.UiEvent;
 

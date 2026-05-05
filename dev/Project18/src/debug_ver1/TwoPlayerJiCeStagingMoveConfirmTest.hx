@@ -20,7 +20,7 @@ import game.PlayerMenuKind.LandingContinue;
 import game.PlayerMenuKind.Move;
 import game.TileKind;
 import impl_ver1.Game;
-import impl_ver1.LuoshiJiCe;
+import impl_ver1.jice.LuoshiJiCe;
 
 /**
  * 空白 level 組兩君主、一武將、一落石計策：驗證選單語意鏈

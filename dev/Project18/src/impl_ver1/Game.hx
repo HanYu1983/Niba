@@ -5,6 +5,7 @@ import game.IGame;
 import game.IGameMatch;
 import game.ITile;
 import game.TileKind;
+import impl_ver1.core.GameMatchCore;
 
 /**
  * Ver1：依 level_key 建立 {@link GameMatchCore} 並組立關卡局面。

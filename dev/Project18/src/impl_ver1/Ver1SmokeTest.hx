@@ -11,6 +11,10 @@ import game.MenuNodeQuery;
 import game.PlayerMenuKind;
 import game.PlayerMenuKind.JiCe;
 import game.PlayerMenuKind.StagingSubmit;
+import impl_ver1.jice.LuoshiJiCe;
+import impl_ver1.jice.InspireJiCe;
+import impl_ver1.model.Monarch;
+import impl_ver1.model.General;
 
 /**
  * Ver1 骨架煙霧：{@link IGame#createGameMatch}（{@code ver1/smoke}）→ LuoshiJiCe。

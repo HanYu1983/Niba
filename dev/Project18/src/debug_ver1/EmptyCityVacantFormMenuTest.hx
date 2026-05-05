@@ -13,7 +13,7 @@ import game.PlayerMenuKind;
 import game.PlayerMenuKind.LandingContinue;
 import game.TileKind;
 import impl_ver1.Game;
-import impl_ver1.Monarch;
+import impl_ver1.model.Monarch;
 
 /**
  * 空城進駐：單一 menuNode 內 {@link MenuFormWidget.GeneralMultiPick}+兩 {@link MenuFormWidget.Slider}；

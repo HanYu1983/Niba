@@ -17,8 +17,8 @@ import game.PlayerMenuKind.LandingContinue;
 import game.PlayerMenuKind.Move;
 import game.TileKind;
 import impl_ver1.Game;
-import impl_ver1.RoadblockJiCe;
-import impl_ver1.RoadblockMovementHook;
+import impl_ver1.jice.RoadblockJiCe;
+import impl_ver1.hooks.RoadblockMovementHook;
 
 /**
  * A／B 雙君主：B 以 {@link RoadblockJiCe} 於當前格設路障（勾子記住格與放置者，只擋非 B）；
