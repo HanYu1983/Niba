@@ -5,6 +5,7 @@ import game.IPlayer;
 import game.IPlayerCommand;
 import game.IPlayerMenuNode;
 import game.PlayerMenuKind;
+import game.StrategyPhase;
 import impl_ver1.core.GameMatchCore;
 import impl_ver1.rules.GameMatchVer1Ops;
 import impl_ver1.staging.JiCeStagingAction;
@@ -94,12 +95,34 @@ private class StrategyPreCommand implements IPlayerCommand {
       && !hostilePending;
 
     var jiChildren:Array<IPlayerMenuNode> = [];
-    if (owned.length == 0)
+    var phase = StrategyPhase.PreMove;
+    var filtered:Array<IJiCe> = [];
+    for (j in owned) {
+      var ok = false;
+      for (p in j.allowedPhases())
+        if (p == phase) {
+          ok = true;
+          break;
+        }
+      if (ok)
+        filtered.push(j);
+    }
+
+    if (filtered.length == 0)
       jiChildren.push(m.createPlayerMenuNode("(無所持計策)", m.createPlayerMenuEntry(JiCe, "（尚無所持計策）", false, null), []));
     else
-      for (i in 0...owned.length) {
-        var j = owned[i];
-        jiChildren.push(m.createPlayerMenuNode(j.designLabel(), m.createPlayerMenuEntry(JiCe, "打出：" + j.designLabel(), jiEnabledBase, Std.string(i)), []));
+      for (i in 0...filtered.length) {
+        var j = filtered[i];
+        // decisionToken 仍需對應「原 owned 陣列索引」以便 GameMatchCore 取牌
+        var ownedIdx = -1;
+        for (k in 0...owned.length)
+          if (owned[k] == j) {
+            ownedIdx = k;
+            break;
+          }
+        if (ownedIdx < 0)
+          throw "StrategyPreCommand: internal index mapping failed";
+        jiChildren.push(m.createPlayerMenuNode(j.designLabel(), m.createPlayerMenuEntry(JiCe, "打出：" + j.designLabel(), jiEnabledBase, Std.string(ownedIdx)), []));
       }
     return m.createPlayerMenuNode("策略（移動前）", null, jiChildren);
   }
@@ -123,12 +146,33 @@ private class StrategyPostCommand implements IPlayerCommand {
     var stagingActive = m.forceHasPendingStaging();
     var jiEnabledBase = !stagingActive;
     var jiChildren:Array<IPlayerMenuNode> = [];
-    if (owned.length == 0)
+    var phase = StrategyPhase.PostMove;
+    var filtered:Array<IJiCe> = [];
+    for (j in owned) {
+      var ok = false;
+      for (p in j.allowedPhases())
+        if (p == phase) {
+          ok = true;
+          break;
+        }
+      if (ok)
+        filtered.push(j);
+    }
+
+    if (filtered.length == 0)
       jiChildren.push(m.createPlayerMenuNode("(無所持計策)", m.createPlayerMenuEntry(JiCe, "（尚無所持計策）", false, null), []));
     else
-      for (i in 0...owned.length) {
-        var j = owned[i];
-        jiChildren.push(m.createPlayerMenuNode(j.designLabel(), m.createPlayerMenuEntry(JiCe, "打出：" + j.designLabel(), jiEnabledBase, Std.string(i)), []));
+      for (i in 0...filtered.length) {
+        var j = filtered[i];
+        var ownedIdx = -1;
+        for (k in 0...owned.length)
+          if (owned[k] == j) {
+            ownedIdx = k;
+            break;
+          }
+        if (ownedIdx < 0)
+          throw "StrategyPostCommand: internal index mapping failed";
+        jiChildren.push(m.createPlayerMenuNode(j.designLabel(), m.createPlayerMenuEntry(JiCe, "打出：" + j.designLabel(), jiEnabledBase, Std.string(ownedIdx)), []));
       }
     return m.createPlayerMenuNode("策略（移動後）", null, jiChildren);
   }

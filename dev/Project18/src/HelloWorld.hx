@@ -49,10 +49,15 @@ class HelloWorld {
     debug_ver1.FriendlyCityDevelopRestMenuFlowTest.testFriendlyCityDevelopRestMenuFlow(new impl_ver1.Game());
     debug_ver1.PostMoveLandingWindowMenuTest.testPostMoveLandingWindow(new impl_ver1.Game());
     debug_ver1.PlayerTargetJiCeMenuFlowTest.testPlayerTargetJiCeMenuFlow(new impl_ver1.Game());
+    debug_ver1.StrategyPhaseRestrictionTest.testStrategyPhaseRestriction(new impl_ver1.Game());
     trace("Hello world");
 
     // --- HTML view demo ---
     // 建立一個最小 demo match，注入 ViewModel 並建出地圖與玩家組件。
+    // 注意：runHelloJs.bat 以 node 執行（無 window/document），因此需 guard。
+    var hasWindow:Bool = untyped __js__("typeof window !== 'undefined' && typeof window.document !== 'undefined'");
+    if (!hasWindow)
+      return;
     var game:IGame = new impl_ver1.Game();
     var match:IGameMatch = game.createGameMatch(LevelKeys.EMPTY);
     var tiles:Array<ITile> = [];

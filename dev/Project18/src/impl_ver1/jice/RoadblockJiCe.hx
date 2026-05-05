@@ -10,6 +10,7 @@ import game.MenuFormWidget;
 import game.MenuFormWidget.Button;
 import game.PlayerMenuKind;
 import game.PlayerMenuKind.StagingSubmit;
+import game.StrategyPhase;
 import impl_ver1.core.GameMatchCore;
 import impl_ver1.hooks.RoadblockMovementHook;
 import impl_ver1.model.Monarch;
@@ -33,6 +34,9 @@ class RoadblockJiCe implements IJiCe {
 
   public function registryKey():String
     return REGISTRY_KEY;
+
+  public function allowedPhases():Array<StrategyPhase>
+    return [PreMove];
 
   public function buildPlayerMenu(actor:IPlayer):IPlayerMenu {
     var submitLeaf = gameMatch.createPlayerMenuEntry(StagingSubmit, "確認於當前格設置路障", true, "confirm_roadblock");

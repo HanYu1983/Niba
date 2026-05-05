@@ -13,6 +13,7 @@ import game.MenuFormWidget;
 import game.MenuGeneralChoice;
 import game.PlayerMenuKind;
 import game.StrategyCostTier;
+import game.StrategyPhase;
 import impl_ver1.core.GameMatchCore;
 import impl_ver1.model.Monarch;
 import impl_ver1.model.General;
@@ -40,6 +41,9 @@ class EncourageJiCe implements IJiCe {
 
   public function registryKey():String
     return REGISTRY_KEY;
+
+  public function allowedPhases():Array<StrategyPhase>
+    return [PreMove];
 
   public function buildPlayerMenu(actor:IPlayer):IPlayerMenu {
     var ruler = cast(gameMatch.activeMonarch(), Monarch);

@@ -798,30 +798,21 @@ class GameMatchCore implements IGameMatch {
         _strategyPreUsed = false;
         _strategyPostUsed = false;
         _pendingStrategyPhase = null;
-      case JiCe:
-      case StrategyPre:
-      case StrategyPost:
-      case StagingSubmit:
-      case Status:
-      case Move:
-      case LandingContinue:
-      case Rest:
-      case VillageTrade:
-      case VillageConquer:
-      case VillagePlunder:
-      case VillageEndTurn:
-      case FriendlyCityDevelop:
-      case FriendlyCityRest:
+
+      // 任一玩家操作（除 ConfirmDone 外）都視為「本回合已行動過」，因此移動後策略才可用。
+      case Move, LandingContinue, JiCe, StagingSubmit, Status, StrategyPre, StrategyPost, Rest, VillageTrade, VillageConquer, VillagePlunder, VillageEndTurn, FriendlyCityDevelop, FriendlyCityRest:
         _hasMovedThisTurn = true;
-      case TileEventPick:
-      case EmptyCityOccupySubmit:
-      case EmptyCityOccupyAbort:
-      case FriendlyCityDispatchApply:
-      case FriendlyCityVisitEnd:
-      case HostileCityAttackerPick:
-      case HostileCityDefenderAck:
-      case HostileCityDefenderPickSubmit:
-      case HostileCitySettlementAck:
+
+      // 這些 leaf 不改動 hasMovedThisTurn（但通常也不會在回合開始前出現）
+      case TileEventPick,
+        EmptyCityOccupySubmit,
+        EmptyCityOccupyAbort,
+        FriendlyCityDispatchApply,
+        FriendlyCityVisitEnd,
+        HostileCityAttackerPick,
+        HostileCityDefenderAck,
+        HostileCityDefenderPickSubmit,
+        HostileCitySettlementAck:
     }
   }
 
@@ -1071,6 +1062,7 @@ class GameMatchCore implements IGameMatch {
         switch lk {
           case Move:
             GameMatchVer1Ops.applyMenuLeafForMove(this, actor);
+            syncActiveSliceAfterMenuLeaf(Move);
           case TileEventPick:
             handleTileEventPick(actor, menuNode);
           case StagingSubmit:
@@ -1086,11 +1078,13 @@ class GameMatchCore implements IGameMatch {
               if (!canUseStrategyPostMove())
                 throw "GameMatchCore: StrategyPost 不可用";
               _pendingStrategyPhase = PostMove;
+              assertJiCeAllowedInPhase(card, PostMove);
               enterStaging(actor, new JiCeStagingAction(this, card), StrategyPost);
             } else {
               if (!canUseStrategyPreMove())
                 throw "GameMatchCore: StrategyPre 不可用";
               _pendingStrategyPhase = PreMove;
+              assertJiCeAllowedInPhase(card, PreMove);
               enterStaging(actor, new JiCeStagingAction(this, card), StrategyPre);
             }
           case Rest:
@@ -1224,6 +1218,14 @@ class GameMatchCore implements IGameMatch {
     if (owned == null || idx < 0 || idx >= owned.length)
       throw "GameMatchCore.applyMenuLeaf: 所持計策索引超出範圍 (" + tok + ")";
     return owned[idx];
+  }
+
+  function assertJiCeAllowedInPhase(card:IJiCe, phase:StrategyPhase):Void {
+    var allowed = card.allowedPhases();
+    for (p in allowed)
+      if (p == phase)
+        return;
+    throw 'GameMatchCore: 計策 "${card.designLabel()}" 不可於階段 ${Std.string(phase)} 使用';
   }
 
   public function isActivePlayerSliceComplete():Bool
