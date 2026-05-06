@@ -26,10 +26,10 @@ import view.UiEvent;
  * 最小可用的 ViewModel 包裝：直接委派到底層 IGameMatch（以便快速把 HTML view 跑起來）。
  */
 class BasicViewModel implements IViewModel {
-  final match:IGameMatchCore;
+  final match:GameMatchCore;
   var evSub:Null<ISubscription> = null;
 
-  public function new(match:IGameMatchCore) {
+  public function new(match:GameMatchCore) {
     this.match = match;
     evSub = EventCenter.onEventSubject.subscribe(handleUiEvent);
   }
