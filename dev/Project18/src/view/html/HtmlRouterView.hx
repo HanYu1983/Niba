@@ -116,6 +116,14 @@ class HtmlRouterView {
     btnDebug.onclick = function(_) setState(Debug);
     bar.appendChild(btnDebug);
 
+    var btnP2:ButtonElement = Browser.document.createButtonElement();
+    btnP2.className = "ui-btn";
+    btnP2.type = "button";
+    btnP2.textContent = "測試頁2";
+    // 以指令要求 controller 建立「頁2場景」，並同步切換 router state
+    btnP2.onclick = function(_) EventCenter.publishCommand(UiCommand.ChangePage(ViewState.TestPage2));
+    bar.appendChild(btnP2);
+
     var btnNew:ButtonElement = Browser.document.createButtonElement();
     btnNew.className = "ui-btn";
     btnNew.type = "button";
@@ -138,6 +146,10 @@ class HtmlRouterView {
       case Main:
         overlay.style.display = "none";
         return;
+      case TestPage2:
+        // TestPage2 是「場景切換」而非覆蓋式頁面，因此不顯示 overlay
+        overlay.style.display = "none";
+        return;
       default:
         overlay.style.display = "block";
     }
@@ -149,6 +161,7 @@ class HtmlRouterView {
     title.textContent = switch state {
       case Debug: "Debug";
       case InspectorTile(_), InspectorMonarch(_): "Inspector";
+      case TestPage2: "TestPage2";
       case Main: "Main";
     };
     head.appendChild(title);
@@ -169,6 +182,8 @@ class HtmlRouterView {
     switch state {
       case Debug:
         body.textContent = "（debug view placeholder）";
+      case TestPage2:
+        body.textContent = "（TestPage2：此狀態不顯示 overlay，若看到此文字代表 renderOverlay 分支未被短路）";
       case InspectorTile(ti):
         var t = vm.tileAt(ti);
         body.textContent = '格 $ti｜${Std.string(t.kind())}';

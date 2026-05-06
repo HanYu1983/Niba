@@ -8,6 +8,8 @@ import game.GameIds;
 enum ViewState {
   Main;
   Debug;
+  /** UI 測試頁 2：載入一個包含多種格子功能的示範場景。 */
+  TestPage2;
   InspectorTile(tileIndex:TileIndex);
   InspectorMonarch(monarchId:MonarchId);
 }
