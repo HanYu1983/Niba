@@ -52,7 +52,7 @@ class AppController {
     // Demo/測試用初始化：先保留既有 HelloWorld 的內容
     initDemoMatch(match);
 
-    vm = new BasicViewModel(cast match);
+    vm = new BasicViewModel(match);
     EventCenter.publishViewModel(vm);
   }
 
