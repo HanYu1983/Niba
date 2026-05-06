@@ -12,6 +12,8 @@ import game.IStagingAction;
 import game.MenuFormWidget;
 import game.MenuClientConfirm;
 import game.PlayerMenuKind;
+import game.GeneralAssignmentKind;
+import impl_ver1.rules.GeneralAssignmentOps;
 import impl_ver1.core.GameMatchCore;
 import impl_ver1.model.Monarch;
 import impl_ver1.model.General;
@@ -68,13 +70,19 @@ class VillagePlunderStagingAction implements IStagingAction {
   public function previewRows(actor:IPlayer):Array<IJiCeStagingPreviewRow> {
     var ruler = cast(match.activeMonarch(), Monarch);
     var rows:Array<IJiCeStagingPreviewRow> = [];
-    for (g in ruler.roster()) {
-      var might = cast(g, General).stat(Might);
-      var stamina = cast(g, General).stamina();
-      var rate = 0.30 + (might / 100.0) * 0.20 * Balance.staminaModifier(stamina);
-      var pct = Std.int(Math.floor(rate * 100));
-      rows.push(new SimpleStagingPreviewRow(g.id(), '成功率約 ${pct}%', 0));
-    }
+    var previews = GeneralAssignmentOps.previewForRosterWithRate(
+      GeneralAssignmentKind.VillagePlunder,
+      ruler.roster(),
+      Might,
+      0,
+      g -> {
+        var might = g.stat(Might);
+        return 0.30 + (might / 100.0) * 0.20 * Balance.staminaModifier(g.stamina());
+      },
+      (_, rate) -> '成功率約 ${Std.int(Math.floor(rate * 100))}%'
+    );
+    for (p in previews)
+      rows.push(new SimpleStagingPreviewRow(p.generalId, p.summary, 0));
     return rows;
   }
 }

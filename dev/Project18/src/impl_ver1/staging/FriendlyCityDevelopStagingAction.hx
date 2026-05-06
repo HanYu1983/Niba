@@ -11,6 +11,8 @@ import game.IPlayerMenuNode;
 import game.IStagingAction;
 import game.MenuFormWidget;
 import game.PlayerMenuKind;
+import game.GeneralAssignmentKind;
+import impl_ver1.rules.GeneralAssignmentOps;
 import impl_ver1.core.GameMatchCore;
 import impl_ver1.model.Monarch;
 import impl_ver1.model.General;
@@ -65,13 +67,19 @@ class FriendlyCityDevelopStagingAction implements IStagingAction {
   public function previewRows(actor:IPlayer):Array<IJiCeStagingPreviewRow> {
     var ruler = cast(match.activeMonarch(), Monarch);
     var rows:Array<IJiCeStagingPreviewRow> = [];
-    for (g in ruler.roster()) {
-      var pol = cast(g, General).stat(Stewardship);
-      var stamina = cast(g, General).stamina();
-      var rate = (pol / 100.0) * 0.60 * Balance.staminaModifier(stamina) * 100.0;
-      var pct = Std.int(Math.floor(rate));
-      rows.push(new SimpleStagingPreviewRow(g.id(), '成功率約 ${pct}%', 0));
-    }
+    var previews = GeneralAssignmentOps.previewForRosterWithRate(
+      GeneralAssignmentKind.FriendlyCityDevelop,
+      ruler.roster(),
+      Stewardship,
+      0,
+      g -> {
+        var pol = g.stat(Stewardship);
+        return (pol / 100.0) * 0.60 * Balance.staminaModifier(g.stamina());
+      },
+      (_, rate) -> '成功率約 ${Std.int(Math.floor(rate * 100))}%'
+    );
+    for (p in previews)
+      rows.push(new SimpleStagingPreviewRow(p.generalId, p.summary, 0));
     return rows;
   }
 }

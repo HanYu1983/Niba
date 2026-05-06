@@ -12,6 +12,9 @@ import game.IStagingAction;
 import game.MenuFormWidget;
 import game.MenuClientConfirm;
 import game.PlayerMenuKind;
+import game.GeneralAssignmentKind;
+import impl_ver1.rules.GeneralAssignmentOps;
+import impl_ver1.rules.GeneralAssignmentApply;
 import impl_ver1.core.GameMatchCore;
 import impl_ver1.model.Monarch;
 import impl_ver1.model.General;
@@ -68,24 +71,7 @@ class VillageTradeStagingAction implements IStagingAction {
     var vIdx = match.forceGetPendingVillageTile();
     if (vIdx == null)
       throw "VillageTradeStagingAction: no pendingVillage";
-
-    var picked:Array<String> = [];
-    for (w in menuNode.formWidgets())
-      switch w {
-        case GeneralMultiPick(_, _, sel):
-          picked = sel.copy();
-        default:
-      }
-    var gid:Null<GeneralId> = null;
-    var seen = new Map<String, Bool>();
-    for (id in picked) {
-      if (seen.exists(id))
-        continue;
-      seen.set(id, true);
-      gid = id;
-    }
-    if (gid == null || picked.length == 0)
-      throw "VillageTradeStagingAction: must pick a general";
+    var gid = GeneralAssignmentApply.pickSingleGeneralId(menuNode.formWidgets());
 
     // 真結算線（骨架）：
     // - 成功率暫不擲隨機（避免測試不穩）；先視為成功。
@@ -101,32 +87,32 @@ class VillageTradeStagingAction implements IStagingAction {
     if (nextF > 100)
       nextF = 100;
     match.forceSetVillageFriendly(vIdx, ruler.id(), nextF);
-
-    for (g in ruler.roster())
-      if (g.id() == gid) {
-        var gg = cast(g, General);
-        gg.setStamina(Balance.clampInt(gg.stamina() - 10, 0, 100));
-        match.pushInfoPopup(
-          ruler.id(),
-          "交易成功",
-          game.PopupPayload.Plain('與村落（格 ${vIdx}）交易完成。\n\n獲得：糧食 +50\n友好度：${prevF} → ${nextF}\n消耗：金錢 -${costGold}\n${gid} 體力 -10'),
-          "village-trade"
-        );
-        return;
-      }
-    throw "VillageTradeStagingAction: picked general not in roster";
+    var gg = GeneralAssignmentApply.requireOwnedGeneral(ruler, gid);
+    GeneralAssignmentApply.applyStaminaCost(gg, 10);
+    match.pushInfoPopup(
+      ruler.id(),
+      "交易成功",
+      game.PopupPayload.Plain('與村落（格 ${vIdx}）交易完成。\n\n獲得：糧食 +50\n友好度：${prevF} → ${nextF}\n消耗：金錢 -${costGold}\n${gid} 體力 -10'),
+      "village-trade"
+    );
   }
 
   public function previewRows(actor:IPlayer):Array<IJiCeStagingPreviewRow> {
     var ruler = cast(match.activeMonarch(), Monarch);
     var rows:Array<IJiCeStagingPreviewRow> = [];
-    for (g in ruler.roster()) {
-      var pol = cast(g, General).stat(Stewardship);
-      var stamina = cast(g, General).stamina();
-      var rate = 0.90 + (pol / 100.0) * 0.10 * Balance.staminaModifier(stamina);
-      var pct = Std.int(Math.floor(rate * 100));
-      rows.push(new SimpleStagingPreviewRow(g.id(), '成功率約 ${pct}%；成功獎勵 +50 糧', 0));
-    }
+    var previews = GeneralAssignmentOps.previewForRosterWithRate(
+      GeneralAssignmentKind.VillageTrade,
+      ruler.roster(),
+      Stewardship,
+      10,
+      g -> {
+        var pol = g.stat(Stewardship);
+        return 0.90 + (pol / 100.0) * 0.10 * Balance.staminaModifier(g.stamina());
+      },
+      (_, rate) -> '成功率約 ${Std.int(Math.floor(rate * 100))}%；成功獎勵 +50 糧'
+    );
+    for (p in previews)
+      rows.push(new SimpleStagingPreviewRow(p.generalId, p.summary, 0));
     return rows;
   }
 }

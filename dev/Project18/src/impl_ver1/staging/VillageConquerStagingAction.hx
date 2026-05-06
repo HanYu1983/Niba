@@ -13,6 +13,9 @@ import game.IStagingAction;
 import game.MenuFormWidget;
 import game.MenuClientConfirm;
 import game.PlayerMenuKind;
+import game.GeneralAssignmentKind;
+import impl_ver1.rules.GeneralAssignmentOps;
+import impl_ver1.rules.GeneralAssignmentApply;
 import impl_ver1.core.GameMatchCore;
 import impl_ver1.model.Monarch;
 import impl_ver1.model.General;
@@ -70,12 +73,9 @@ class VillageConquerStagingAction implements IStagingAction {
     if (actor.monarchId() != ruler.id())
       throw "VillageConquerStagingAction: actor must be active monarch";
 
-    var picked:Array<String> = [];
     var commitTroops:Int = 0;
     for (w in menuNode.formWidgets())
       switch w {
-        case GeneralMultiPick(_, _, sel):
-          picked = sel.copy();
         case Slider(_, _, _, _, v):
           commitTroops = v;
         default:
@@ -83,25 +83,8 @@ class VillageConquerStagingAction implements IStagingAction {
     if (commitTroops <= 0)
       throw "VillageConquerStagingAction: commitTroops must be > 0";
 
-    var gid:Null<GeneralId> = null;
-    var seen = new Map<String, Bool>();
-    for (id in picked) {
-      if (seen.exists(id))
-        continue;
-      seen.set(id, true);
-      gid = id;
-    }
-    if (gid == null)
-      throw "VillageConquerStagingAction: must pick a general";
-
-    var gAtk:Null<General> = null;
-    for (g in ruler.roster())
-      if (g.id() == gid) {
-        gAtk = cast g;
-        break;
-      }
-    if (gAtk == null)
-      throw "VillageConquerStagingAction: picked general not in roster";
+    var gid = GeneralAssignmentApply.pickSingleGeneralId(menuNode.formWidgets());
+    var gAtk = GeneralAssignmentApply.requireOwnedGeneral(ruler, gid);
 
     if (commitTroops > ruler.troops())
       throw "VillageConquerStagingAction: insufficient troops";
@@ -120,7 +103,7 @@ class VillageConquerStagingAction implements IStagingAction {
       ruler.reduceTroops(loss);
     }
     // 低消耗體力
-    gAtk.setStamina(Balance.clampInt(gAtk.stamina() - 15, 0, 100));
+    GeneralAssignmentApply.applyStaminaCost(gAtk, 15);
 
     var body = win
       ? '攻占成功。\n武將：${gid}\n投入兵力：${commitTroops}\n獲得：糧食 +100\n（武將體力 -15）'
@@ -136,12 +119,19 @@ class VillageConquerStagingAction implements IStagingAction {
     var commit = Std.int(Math.min(500, ruler.troops()));
     if (commit <= 0)
       return [];
-    for (g in ruler.roster()) {
-      var atkP = attackPower(commit, cast g);
-      var rate = (atkP / (atkP + defP)) * 100.0;
-      var pct = Std.int(Math.floor(rate));
-      rows.push(new SimpleStagingPreviewRow(g.id(), '投入 $commit 兵：預估勝率 ${pct}%', 0));
-    }
+    var previews = GeneralAssignmentOps.previewForRosterWithRate(
+      GeneralAssignmentKind.VillageConquer,
+      ruler.roster(),
+      Might,
+      15,
+      g -> {
+        var atkP = attackPower(commit, cast g);
+        return (atkP / (atkP + defP)); // 0..1
+      },
+      (_, rate) -> '投入 $commit 兵：預估勝率 ${Std.int(Math.floor(rate * 100))}%'
+    );
+    for (p in previews)
+      rows.push(new SimpleStagingPreviewRow(p.generalId, p.summary, 0));
     return rows;
   }
 

@@ -11,6 +11,7 @@ import game.MenuFormWidget;
 import game.PlayerMenuKind;
 import game.IJiCeStagingPreviewRow;
 import impl_ver1.staging.SimpleStagingPreviewRow;
+import impl_ver1.rules.GeneralAssignmentApply;
 import impl_ver1.core.GameMatchCore;
 import impl_ver1.model.Monarch;
 import impl_ver1.model.General;
@@ -60,34 +61,8 @@ class RestStagingAction implements IStagingAction {
     if (widgets == null || widgets.length == 0)
       throw "RestStagingAction: missing widgets";
 
-    var picked:Array<String> = [];
-    for (w in widgets)
-      switch w {
-        case GeneralMultiPick(_, _, sel):
-          picked = sel.copy();
-        default:
-      }
-
-    var seen = new Map<String, Bool>();
-    var uniq:Array<GeneralId> = [];
-    for (id in picked) {
-      if (seen.exists(id))
-        continue;
-      seen.set(id, true);
-      uniq.push(id);
-    }
-    if (uniq.length != 1)
-      throw "RestStagingAction: must pick exactly one general";
-    var gid = uniq[0];
-
-    var target:Null<General> = null;
-    for (g in ruler.roster())
-      if (g.id() == gid) {
-        target = cast g;
-        break;
-      }
-    if (target == null)
-      throw "RestStagingAction: picked general not in roster";
+    var gid = GeneralAssignmentApply.pickSingleGeneralId(widgets);
+    var target = GeneralAssignmentApply.requireOwnedGeneral(ruler, gid);
 
     var prevSt = target.stamina();
     var next = Balance.clampInt(prevSt + Balance.STAMINA_RECOVER_REST, 0, 100);
