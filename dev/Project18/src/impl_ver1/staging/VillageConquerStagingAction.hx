@@ -13,9 +13,9 @@ import game.IStagingAction;
 import game.MenuFormWidget;
 import game.MenuClientConfirm;
 import game.PlayerMenuKind;
-import game.GeneralAssignmentKind;
 import impl_ver1.rules.GeneralAssignmentOps;
 import impl_ver1.rules.GeneralAssignmentApply;
+import impl_ver1.rules.GeneralAssignmentKeys;
 import impl_ver1.core.GameMatchCore;
 import impl_ver1.model.Monarch;
 import impl_ver1.model.General;
@@ -120,7 +120,7 @@ class VillageConquerStagingAction implements IStagingAction {
     if (commit <= 0)
       return [];
     var previews = GeneralAssignmentOps.previewForRosterWithRate(
-      GeneralAssignmentKind.VillageConquer,
+      GeneralAssignmentKeys.VillageConquer,
       ruler.roster(),
       Might,
       15,

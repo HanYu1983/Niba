@@ -8,7 +8,7 @@ import game.GameIds;
  * - statUsed 決定主要判定維度（如智力/統率/政治/武力）
  */
 typedef GeneralAssignmentSpec = {
-  kind:GeneralAssignmentKind,
+  kind:GeneralAssignmentKey,
   generalId:GeneralId,
   statUsed:GeneralStat,
   staminaCost:Int,
