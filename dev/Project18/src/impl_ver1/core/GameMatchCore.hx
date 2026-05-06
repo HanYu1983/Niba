@@ -1154,6 +1154,10 @@ class GameMatchCore implements IGameMatch {
 
   function landingApplyResourceTile(idx:TileIndex):Void {
     // 骨架：資源格落地直接給最小收益，避免卡在 staging/menu。
+    // TODO(GDD 2.1.2 / 2.1.8): 資源格應支援「指派武將加成」：
+    // - 落地後提供選單：選 1 名武將（單選）→ 依武將數值（待對齊 GDD）調整獲得資源量
+    // - 並處理體力消耗/成功率（若規劃需要）
+    // - 目前先用固定 +30 金 / +30 糧，且直接結束落地切片
     var ruler = cast(activeMonarch(), Monarch);
     ruler.grantGold(30);
     ruler.grantGrain(30);
@@ -1310,6 +1314,10 @@ class GameMatchCore implements IGameMatch {
     var leaf = MenuActivation.activatingEntry(menuNode);
     if (leaf.decisionToken() == null)
       throw "GameMatchCore: TileEventPick 需要 decisionToken";
+    // TODO(GDD 2.1.2 / 2.1.9): 事件格應支援「指派武將規避壞事件」：
+    // - 事件觸發前（或事件選項內）提供選將表單，並把選擇結果傳給 ITileEvent.resolveChoice
+    // - 規避不消耗體力，但依事件類型對應不同屬性作判定（智/武/政/統等，見 GDD 表）
+    // - 目前事件系統僅走 ITileEvent 自己的選單分支，尚未有通用的「事件前置選將」管線
     ev.resolveChoice(actor, menuNode);
     _pendingTileEvent = null;
     _activeSliceComplete = true;
