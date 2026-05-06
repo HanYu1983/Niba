@@ -47,6 +47,7 @@ import impl_ver1.equipment.WeaponCatalog;
 import impl_ver1.equipment.ArmorCatalog;
 import impl_ver1.equipment.TacticsBookCatalog;
 import impl_ver1.equipment.PoliticsBookCatalog;
+import impl_ver1.util.Deterministic;
 import impl_ver1.rules.GameMatchVer1Ops;
 import impl_ver1.staging.FriendlyCityDevelopStagingAction;
 import impl_ver1.staging.FriendlyCityRestStagingAction;
@@ -1175,36 +1176,23 @@ class GameMatchCore implements IGameMatch {
     return x;
   }
 
-  static function fnv1a32(s:String):Int {
-    var h:Int = 0x811C9DC5;
-    for (i in 0...s.length) {
-      h ^= s.charCodeAt(i);
-      h = (h + (h << 1) + (h << 4) + (h << 7) + (h << 8) + (h << 24));
-    }
-    return h;
-  }
-
-  static inline function hash01(seed:String):Float {
-    var h = fnv1a32(seed);
-    var x = h & 0xFFFFFF;
-    return x / 16777215.0;
-  }
+  // seed/hash 的底層實作統一由 Deterministic 提供（避免多處複製造成規則漂移）。
 
   function generalTileRefreshOffers(tileIdx:TileIndex):Void {
     var ruler = cast(activeMonarch(), Monarch);
     var seedBase = 'general|t=${tileIdx}|r=${roundNumber()}|m=${ruler.id()}';
-    var count = 3 + Std.int(Math.floor(hash01(seedBase + "|n") * 3)); // 3~5
+    var count = 3 + Std.int(Math.floor(Deterministic.hash01(seedBase + "|n") * 3)); // 3~5
     var out:Array<GeneralRecruitOffer> = [];
     for (i in 0...count) {
       var id = 'gen-${tileIdx}-${roundNumber()}-${i}';
       var s = seedBase + "|i=" + i;
-      var cmd = 10 + Std.int(Math.floor(hash01(s + "|c") * 91)); // 10..100
-      var mig = 10 + Std.int(Math.floor(hash01(s + "|m") * 91));
-      var wit = 10 + Std.int(Math.floor(hash01(s + "|w") * 91));
-      var stw = 10 + Std.int(Math.floor(hash01(s + "|s") * 91));
-      var rarity = rarityFrom01(hash01(s + "|rar"));
+      var cmd = 10 + Std.int(Math.floor(Deterministic.hash01(s + "|c") * 91)); // 10..100
+      var mig = 10 + Std.int(Math.floor(Deterministic.hash01(s + "|m") * 91));
+      var wit = 10 + Std.int(Math.floor(Deterministic.hash01(s + "|w") * 91));
+      var stw = 10 + Std.int(Math.floor(Deterministic.hash01(s + "|s") * 91));
+      var rarity = rarityFrom01(Deterministic.hash01(s + "|rar"));
       var base = baseRecruitCost(rarity, cmd, mig, wit, stw);
-      var finalCost = applyPrestigeRecruitModifier(ruler.prestige(), base, hash01(s + "|mod"));
+      var finalCost = applyPrestigeRecruitModifier(ruler.prestige(), base, Deterministic.hash01(s + "|mod"));
       out.push({
         offerId: id,
         displayName: "武將#" + (i + 1),
@@ -1222,10 +1210,10 @@ class GameMatchCore implements IGameMatch {
   function shopTileRefreshStock(tileIdx:TileIndex):Void {
     var ruler = cast(activeMonarch(), Monarch);
     var seedBase = 'shop|t=${tileIdx}|r=${roundNumber()}|m=${ruler.id()}';
-    var count = 3 + Std.int(Math.floor(hash01(seedBase + "|n") * 3)); // 3~5
+    var count = 3 + Std.int(Math.floor(Deterministic.hash01(seedBase + "|n") * 3)); // 3~5
     var out:Array<ShopStockItem> = [];
     for (i in 0...count) {
-      var tPick = hash01(seedBase + "|type=" + i);
+      var tPick = Deterministic.hash01(seedBase + "|type=" + i);
       var et:game.EquipmentType =
         if (tPick < 0.40) Weapon else if (tPick < 0.65) Armor else if (tPick < 0.85) TacticsBook else PoliticsBook;
       var names = switch et {
@@ -1234,16 +1222,11 @@ class GameMatchCore implements IGameMatch {
         case TacticsBook: TacticsBookCatalog.allNames();
         case PoliticsBook: PoliticsBookCatalog.allNames();
       };
-      var pick = Std.int(Math.floor(hash01(seedBase + "|pick=" + i) * names.length));
-      if (pick < 0)
-        pick = 0;
-      if (pick >= names.length)
-        pick = names.length - 1;
-      var nm = names[pick];
+      var nm = names[Deterministic.pickIndex(seedBase + "|pick=" + i, names.length)];
       var eqId:EquipmentId = 'shop-${tileIdx}-${roundNumber()}-${i}';
       var eq = spawnStockEquipment(eqId, et, nm);
       // 價格再受聲望做些微調整（高聲望略便宜）；先保持可重現
-      var p = applyPrestigeShopPriceModifier(ruler.prestige(), eq.price(), hash01(seedBase + "|pmod=" + i));
+      var p = applyPrestigeShopPriceModifier(ruler.prestige(), eq.price(), Deterministic.hash01(seedBase + "|pmod=" + i));
       out.push({
         stockId: eqId,
         type: et,
