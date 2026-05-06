@@ -17,5 +17,12 @@ class GameError extends Exception {
     this.popupTitle = popupTitle;
     this.ctxKey = ctxKey;
   }
+
+  // TODO(game-error): 建議新增 error code（例如 enum GameErrorCode）：
+  // - 讓 UI 可用 code 做在地化/一致文案（而不是依 message 字串比對）
+  // - 讓測試可 assert code，而非 assert message
+  //
+  // TODO(game-error): 可提供一些靜態建構子（例如 GameError.insufficientGold(required, current)）
+  // 讓 core 不必重複拼字串/ctxKey，並避免文案散落。
 }
 

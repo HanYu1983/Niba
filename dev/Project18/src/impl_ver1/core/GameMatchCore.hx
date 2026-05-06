@@ -67,6 +67,13 @@ import impl_ver1.staging.VillageTradeStagingAction;
  */
 @:allow(impl_ver1)
 class GameMatchCore implements IGameMatch {
+  // TODO(game-error): 目前仍有大量 `throw "GameMatchCore: ..."` 的字串例外。
+  // 下一步請把「可預期的玩家操作失敗」逐步改成 `throw new GameError(...)`，讓 UI 可以用 popup 顯示而不會中斷：
+  // - 資源不足（兵/糧/金不足）
+  // - 表單選擇不合法（應單選/未選等）
+  // - 指令不可用（例如 StrategyPre/StrategyPost 不可用）若屬玩家可理解的規則拒絕也應轉為 GameError
+  //
+  // 注意：真正的程式 bug（狀態機不一致、內部 invariant 破壞）仍應維持 throw 以利除錯。
   public static inline var DEFAULT_MOVE_DELTA = 3;
   public static inline var DICE_MIN = 1;
   public static inline var DICE_MAX = 6;

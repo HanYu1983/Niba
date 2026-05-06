@@ -102,6 +102,11 @@ class BasicViewModel implements IViewModel {
       node.setActivationEntry(null);
       match.pushInfoPopup(actor.monarchId(), e.popupTitle, PopupPayload.Plain(e.message), e.ctxKey);
     }
+    // TODO(popup): 目前僅攔截 GameError 並轉 popup；其他例外會直接拋出（利於除錯）。
+    // 下一步可評估是否要在「非開發模式」也攔截一般例外並顯示「系統錯誤」popup（但要保留堆疊供回報）。
+    //
+    // TODO(popup): 可把「哪些錯誤要轉 popup」的策略抽成一個 helper（例如 view/GameErrorPresenter），
+    // 避免 BasicViewModel 逐步長大後 catch 區塊變成各種特例的堆疊。
   }
 
   function applyGeneralMultiPickToNode(node:IPlayerMenuNode, widgetIndex:Int, selectedGeneralIds:Array<String>):Void {
