@@ -16,5 +16,8 @@ enum GeneralEffect {
    * turns 目前先作為資料，生命週期由規剘/核心後續接上。
    */
   TempStatBoost(stat:GeneralStat, amount:Int, turns:Int);
+
+  /** 永久能力變動（可用於負面事件「永久 -3」等）。 */
+  PermanentStatDelta(stat:GeneralStat, amount:Int);
 }
 

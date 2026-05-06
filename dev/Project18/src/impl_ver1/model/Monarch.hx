@@ -30,6 +30,18 @@ class Monarch implements IMonarch {
     _roster.push(g);
   }
 
+  /** 規剘：移除麾下一名武將（用於叛逃等事件）。回傳是否成功移除。 */
+  public function removeGeneralById(gid:GeneralId):Bool {
+    for (i in 0..._roster.length) {
+      var g = _roster[i];
+      if (g != null && g.id() == gid) {
+        _roster.splice(i, 1);
+        return true;
+      }
+    }
+    return false;
+  }
+
   public function grantTroops(n:Int):Void {
     if (n < 0)
       throw "Monarch.grantTroops: negative";

@@ -62,7 +62,21 @@ class General implements IGeneral {
         if (eq != null && eq.bonusStat() == which)
           bonus += eq.bonusValue();
     }
-    return base + bonus;
+    var eff = 0;
+    if (_effects != null) {
+      for (e in _effects)
+        switch e {
+          case TempStatBoost(stat, amount, turns):
+            if (turns != 0 && stat == which)
+              eff += amount;
+          case PermanentStatDelta(stat, amount):
+            if (stat == which)
+              eff += amount;
+          case NextCommandMultiplier(_):
+          case CleanseOneDebuff:
+        }
+    }
+    return base + bonus + eff;
   }
 
   public function stamina():Int
