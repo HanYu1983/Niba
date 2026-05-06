@@ -62,6 +62,10 @@ class ShopTileMenuFlowTest {
 
   static function requireEnabledNode(menu:IPlayerMenu, kind:PlayerMenuKind):IPlayerMenuNode {
     var n = MenuNodeQuery.requireNodeWithKind(menu, kind);
+    // 若該 kind 是表單內 Button，需先設 activationEntry
+    var btn = MenuNodeQuery.buttonEntryOnNode(n, kind);
+    if (btn != null)
+      n.setActivationEntry(btn);
     if (!MenuActivation.activatingEntry(n).isEnabled())
       throw "ShopTileMenuFlowTest: 節點 " + Std.string(kind) + " 應為可用";
     return n;

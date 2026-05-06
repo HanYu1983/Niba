@@ -25,7 +25,6 @@ class Ver1MainCommands {
       new StrategyPreCommand(match),
       new StrategyPostCommand(match),
       new RestCommand(match),
-      new GeneralRecruitCommand(match),
       new GeneralEndTurnCommand(match),
       new ShopBuyCommand(match),
       new ShopEndTurnCommand(match),
@@ -37,29 +36,6 @@ class Ver1MainCommands {
       new ConfirmDoneCommand(match),
     ];
   }
-}
-
-private class GeneralRecruitCommand implements IPlayerCommand {
-  final m:GameMatchCore;
-  public function new(m:GameMatchCore) this.m = m;
-  public function kind():PlayerMenuKind return GeneralRecruit;
-  public function designLabel():String return "武將招募";
-  public function buildActionNode(actor:IPlayer):Null<IPlayerMenuNode> {
-    if (m.isActivePlayerSliceComplete())
-      return null;
-    if (m.forceGetPendingGeneralTile() == null)
-      return null;
-    var blockBasics =
-      m.forceGetPendingTileEvent() != null
-      || m.forceHasPendingStaging()
-      || m.forceGetPendingEmptyCityOccupyTile() != null
-      || m.forceGetPendingFriendlyCityVisitTile() != null
-      || m.forceGetPendingHostileCityTile() != null
-      || m.forceGetPendingVillageTile() != null
-      || m.forceGetPendingShopTile() != null;
-    return m.createPlayerMenuNode("武將格：招募（骨架）", m.createPlayerMenuEntry(GeneralRecruit, "招募（骨架）", !blockBasics), []);
-  }
-  public function apply(actor:IPlayer, menuNode:IPlayerMenuNode):Void {}
 }
 
 private class GeneralEndTurnCommand implements IPlayerCommand {

@@ -53,6 +53,9 @@ enum PlayerMenuKind {
     /** 武將格：招募（ver1 骨架：先以彈窗結算並結束落地）。 */
     GeneralRecruit;
 
+    /** 武將格：批次招募提交（表單內 Button）。 */
+    GeneralRecruitSubmit;
+
     /** 武將格：離開（不招募直接結束落地）。 */
     GeneralEndTurn;
 

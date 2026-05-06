@@ -44,6 +44,9 @@ import impl_ver1.model.PlayerMenuNode;
 import impl_ver1.model.PopupMessage;
 import impl_ver1.model.Tile;
 import impl_ver1.equipment.WeaponCatalog;
+import impl_ver1.equipment.ArmorCatalog;
+import impl_ver1.equipment.TacticsBookCatalog;
+import impl_ver1.equipment.PoliticsBookCatalog;
 import impl_ver1.rules.GameMatchVer1Ops;
 import impl_ver1.staging.FriendlyCityDevelopStagingAction;
 import impl_ver1.staging.FriendlyCityRestStagingAction;
@@ -999,15 +1002,19 @@ class GameMatchCore implements IGameMatch {
     if (_pendingGeneralTileIndex != null) {
       var idx = _pendingGeneralTileIndex;
       var offers = _generalOffersByTile.exists(idx) ? _generalOffersByTile.get(idx) : [];
-      var children:Array<IPlayerMenuNode> = [];
+      var offerChoices:Array<MenuGeneralChoice> = [];
       for (o in offers) {
-        var tok = o.offerId;
         var cap = '${o.displayName}｜${Std.string(o.rarity)}｜金 ${o.costGold}\n'
           + '統率 ${o.command}｜武力 ${o.might}｜智力 ${o.wit}｜政治 ${o.stewardship}';
-        children.push(createPlayerMenuNode(cap, createPlayerMenuEntry(GeneralRecruit, "招募", true, tok), []));
+        offerChoices.push({generalId: o.offerId, caption: cap});
       }
-      children.push(createPlayerMenuNode("回合結束（武將格）", createPlayerMenuEntry(GeneralEndTurn, "回合結束", true, "general_end"), []));
-      roots.push(createPlayerMenuNode('武將格（格 $idx）', null, children));
+      var submit = createPlayerMenuEntry(GeneralRecruitSubmit, "批次招募（提交）", offerChoices.length > 0, "general_recruit_submit");
+      var widgets:Array<MenuFormWidget> = [
+        GeneralMultiPick("招募清單（可複選）", offerChoices, []),
+        Button(submit),
+      ];
+      roots.push(createPlayerMenuNode('武將格（格 $idx）', null, [], widgets));
+      roots.push(createPlayerMenuNode("回合結束（武將格）", createPlayerMenuEntry(GeneralEndTurn, "回合結束", true, "general_end"), []));
     }
 
     if (_pendingShopTileIndex != null) {
@@ -1021,14 +1028,14 @@ class GameMatchCore implements IGameMatch {
 
       var shopChildren:Array<IPlayerMenuNode> = [];
       for (it in stocks) {
-        var eq = WeaponCatalog.spawnByName(it.stockId, it.weaponName, it.priceGold);
+        var eq = spawnStockEquipment(it.stockId, it.type, it.name, it.priceGold);
         var disabled = choices.length == 0 || ruler.gold() < it.priceGold;
         var leaf = createPlayerMenuEntry(ShopBuy, "購買並裝備", !disabled, it.stockId);
         var widgets:Array<MenuFormWidget> = [
           GeneralMultiPick("裝備給（需恰選 1 名武將）", choices, defSel),
           Button(leaf),
         ];
-        var title = '${eq.name()}｜${Std.string(eq.rarity())}｜${Std.string(eq.bonusStat())}+${eq.bonusValue()}｜忠誠+${eq.loyaltyBonus()}｜金 ${it.priceGold}';
+        var title = '${eq.name()}｜${Std.string(eq.type())}｜${Std.string(eq.rarity())}｜${Std.string(eq.bonusStat())}+${eq.bonusValue()}｜忠誠+${eq.loyaltyBonus()}｜金 ${it.priceGold}';
         shopChildren.push(createPlayerMenuNode(title, null, ([] : Array<IPlayerMenuNode>), widgets));
       }
       shopChildren.push(createPlayerMenuNode("回合結束（商店格）", createPlayerMenuEntry(ShopEndTurn, "回合結束", true, "shop_end"), []));
@@ -1073,7 +1080,7 @@ class GameMatchCore implements IGameMatch {
         _pendingStrategyPhase = null;
 
       // 任一玩家操作（除 ConfirmDone 外）都視為「本回合已行動過」，因此移動後策略才可用。
-      case Move, LandingContinue, JiCe, StagingSubmit, Status, StrategyPre, StrategyPost, Rest, VillageTrade, VillageConquer, VillagePlunder, VillageEndTurn, GeneralRecruit, GeneralEndTurn, ShopBuy, ShopEndTurn, FriendlyCityDevelop, FriendlyCityRest:
+      case Move, LandingContinue, JiCe, StagingSubmit, Status, StrategyPre, StrategyPost, Rest, VillageTrade, VillageConquer, VillagePlunder, VillageEndTurn, GeneralRecruit, GeneralRecruitSubmit, GeneralEndTurn, ShopBuy, ShopEndTurn, FriendlyCityDevelop, FriendlyCityRest:
         _hasMovedThisTurn = true;
 
       // 這些 leaf 不改動 hasMovedThisTurn（但通常也不會在回合開始前出現）
@@ -1216,9 +1223,17 @@ class GameMatchCore implements IGameMatch {
     var ruler = cast(activeMonarch(), Monarch);
     var seedBase = 'shop|t=${tileIdx}|r=${roundNumber()}|m=${ruler.id()}';
     var count = 3 + Std.int(Math.floor(hash01(seedBase + "|n") * 3)); // 3~5
-    var names = WeaponCatalog.allNames();
     var out:Array<ShopStockItem> = [];
     for (i in 0...count) {
+      var tPick = hash01(seedBase + "|type=" + i);
+      var et:game.EquipmentType =
+        if (tPick < 0.40) Weapon else if (tPick < 0.65) Armor else if (tPick < 0.85) TacticsBook else PoliticsBook;
+      var names = switch et {
+        case Weapon: WeaponCatalog.allNames();
+        case Armor: ArmorCatalog.allNames();
+        case TacticsBook: TacticsBookCatalog.allNames();
+        case PoliticsBook: PoliticsBookCatalog.allNames();
+      };
       var pick = Std.int(Math.floor(hash01(seedBase + "|pick=" + i) * names.length));
       if (pick < 0)
         pick = 0;
@@ -1226,16 +1241,26 @@ class GameMatchCore implements IGameMatch {
         pick = names.length - 1;
       var nm = names[pick];
       var eqId:EquipmentId = 'shop-${tileIdx}-${roundNumber()}-${i}';
-      var eq = WeaponCatalog.spawnByName(eqId, nm);
+      var eq = spawnStockEquipment(eqId, et, nm);
       // 價格再受聲望做些微調整（高聲望略便宜）；先保持可重現
       var p = applyPrestigeShopPriceModifier(ruler.prestige(), eq.price(), hash01(seedBase + "|pmod=" + i));
       out.push({
         stockId: eqId,
-        weaponName: nm,
+        type: et,
+        name: nm,
         priceGold: p,
       });
     }
     _shopStocksByTile.set(tileIdx, out);
+  }
+
+  function spawnStockEquipment(id:EquipmentId, et:game.EquipmentType, name:String, ?price:Int):IEquipment {
+    return switch et {
+      case Weapon: WeaponCatalog.spawnByName(id, name, price);
+      case Armor: ArmorCatalog.spawnByName(id, name, price);
+      case TacticsBook: TacticsBookCatalog.spawnByName(id, name, price);
+      case PoliticsBook: PoliticsBookCatalog.spawnByName(id, name, price);
+    };
   }
 
   function rarityFrom01(u:Float):game.Rarity {
@@ -1563,39 +1588,63 @@ class GameMatchCore implements IGameMatch {
             _activeSliceComplete = true;
             syncActiveSliceAfterMenuLeaf(VillageEndTurn);
           case GeneralRecruit:
+            throw "GameMatchCore: GeneralRecruit 已改為批次招募（GeneralRecruitSubmit）";
+          case GeneralRecruitSubmit:
             if (_pendingGeneralTileIndex == null)
-              throw "GameMatchCore: GeneralRecruit 但無 pendingGeneral";
-            if (leaf.decisionToken() == null)
-              throw "GameMatchCore: GeneralRecruit 需要 decisionToken";
+              throw "GameMatchCore: GeneralRecruitSubmit 但無 pendingGeneral";
             var tileIdx = _pendingGeneralTileIndex;
             var offers = _generalOffersByTile.exists(tileIdx) ? _generalOffersByTile.get(tileIdx) : [];
-            var picked:Null<GeneralRecruitOffer> = null;
-            for (o in offers)
-              if (o.offerId == leaf.decisionToken()) {
-                picked = o;
-                break;
-              }
-            if (picked == null)
-              throw "GameMatchCore: GeneralRecruit 找不到 offer";
+            var sel = extractFirstGeneralMultiPickSelections(menuNode.formWidgets());
+            if (sel.length == 0)
+              throw "GameMatchCore: 請至少選擇 1 名欲招募武將";
+
+            // 依 sel 順序挑出 offer（並去重）
+            var uniq = dedupeGeneralIds(sel);
+            var picked:Array<GeneralRecruitOffer> = [];
+            for (id in uniq) {
+              var found:Null<GeneralRecruitOffer> = null;
+              for (o in offers)
+                if (o.offerId == id) {
+                  found = o;
+                  break;
+                }
+              if (found == null)
+                throw 'GameMatchCore: 招募清單包含未知項目 "$id"';
+              picked.push(found);
+            }
+
+            var total = 0;
+            for (o in picked)
+              total += o.costGold;
             var ruler = cast(activeMonarch(), Monarch);
-            if (ruler.gold() < picked.costGold)
-              throw "GameMatchCore: 金錢不足，無法招募";
-            ruler.reduceGold(picked.costGold);
-            var newId:GeneralId = picked.offerId; // 先用 offerId 當一般 id（可重現且不衝突）
-            createGeneral(newId, ruler.id(), picked.command, picked.might, picked.wit, picked.stewardship);
-            // 招募後從清單移除，允許繼續招募其他人；切片不結束，須按「回合結束」離開武將格
+            if (ruler.gold() < total)
+              throw "GameMatchCore: 金錢不足，無法完成批次招募";
+            ruler.reduceGold(total);
+
+            var lines:Array<String> = [];
+            for (o in picked) {
+              var newId:GeneralId = o.offerId;
+              createGeneral(newId, ruler.id(), o.command, o.might, o.wit, o.stewardship);
+              lines.push('${o.displayName}（${Std.string(o.rarity)}）金 ${o.costGold}');
+            }
+
+            // 從清單移除已招募者
             var rest:Array<GeneralRecruitOffer> = [];
+            var removed = new Map<String, Bool>();
+            for (o in picked)
+              removed.set(o.offerId, true);
             for (o in offers)
-              if (o.offerId != picked.offerId)
+              if (!removed.exists(o.offerId))
                 rest.push(o);
             _generalOffersByTile.set(tileIdx, rest);
+
             pushInfoPopup(
               actor.monarchId(),
-              "招募成功",
-              Plain('武將格 ${tileIdx}\n招募：${picked.displayName}（${Std.string(picked.rarity)}）\n花費：金 ${picked.costGold}\n統率 ${picked.command}｜武力 ${picked.might}｜智力 ${picked.wit}｜政治 ${picked.stewardship}'),
+              "批次招募成功",
+              Plain('武將格 ${tileIdx}\n招募：\n- ' + lines.join("\n- ") + '\n\n總花費：金 ${total}'),
               "general-recruit"
             );
-            syncActiveSliceAfterMenuLeaf(GeneralRecruit);
+            syncActiveSliceAfterMenuLeaf(GeneralRecruitSubmit);
           case GeneralEndTurn:
             if (_pendingGeneralTileIndex == null)
               throw "GameMatchCore: GeneralEndTurn 但無 pendingGeneral";
@@ -1632,7 +1681,7 @@ class GameMatchCore implements IGameMatch {
               throw "GameMatchCore: 只能替自己麾下武將購買裝備";
 
             ruler.reduceGold(picked.priceGold);
-            var eq = WeaponCatalog.spawnByName(picked.stockId, picked.weaponName, picked.priceGold);
+            var eq = spawnStockEquipment(picked.stockId, picked.type, picked.name, picked.priceGold);
             g.addEquipment(eq);
 
             // 移除已購買商品；切片不結束，須按「回合結束」離開商店格
@@ -1644,7 +1693,7 @@ class GameMatchCore implements IGameMatch {
             pushInfoPopup(
               actor.monarchId(),
               "購買成功",
-              Plain('商店格 ${tileIdx}\n購買：${eq.name()}（${Std.string(eq.rarity())}）\n花費：金 ${picked.priceGold}\n裝備給：${gid}\n效果：${Std.string(eq.bonusStat())}+${eq.bonusValue()}｜忠誠+${eq.loyaltyBonus()}'),
+              Plain('商店格 ${tileIdx}\n購買：${eq.name()}（${Std.string(eq.type())}/${Std.string(eq.rarity())}）\n花費：金 ${picked.priceGold}\n裝備給：${gid}\n效果：${Std.string(eq.bonusStat())}+${eq.bonusValue()}｜忠誠+${eq.loyaltyBonus()}'),
               "shop-buy"
             );
             syncActiveSliceAfterMenuLeaf(ShopBuy);
@@ -1856,6 +1905,7 @@ private typedef GeneralRecruitOffer = {
 
 private typedef ShopStockItem = {
   stockId:EquipmentId,
-  weaponName:String,
+  type:game.EquipmentType,
+  name:String,
   priceGold:Int,
 };

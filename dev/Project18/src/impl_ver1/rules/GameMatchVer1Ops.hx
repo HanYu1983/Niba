@@ -31,8 +31,9 @@ class GameMatchVer1Ops {
       ruler.advanceOnBoard(1, ringLen);
       stepOrdinal++;
       var landIdx = ruler.pawnIndex();
-      // 骨架：起點暫定為索引 0；踩回/經過即給獎勵。
-      if (landIdx == 0)
+      // 起點獎勵：若格子類型為 Start 則觸發；為相容既有關卡，索引 0 仍視為起點（直到全面換成 Start）。
+      var k = m.tileAt(landIdx).kind();
+      if (k == Start || landIdx == 0)
         m.onPassStartTile(ruler);
       var hooks = m.movementStepHooks();
       var halt = false;

@@ -8,8 +8,9 @@ import game.IPlayerMenu;
 import game.IPlayerMenuNode;
 import game.MenuActivation;
 import game.MenuNodeQuery;
+import game.MenuFormWidget;
 import game.PlayerMenuKind;
-import game.PlayerMenuKind.GeneralRecruit;
+import game.PlayerMenuKind.GeneralRecruitSubmit;
 import game.PlayerMenuKind.GeneralEndTurn;
 import game.PlayerMenuKind.LandingContinue;
 import game.PlayerMenuKind.Move;
@@ -45,7 +46,27 @@ class GeneralTileMenuFlowTest {
 
     // 招募：不應結束 pending（可連續招募），需按回合結束才離開
     var m2 = match.createPlayerMenu(actor);
-    match.applyMenuLeaf(actor, requireEnabledNode(m2, GeneralRecruit));
+    // 預設不會勾選任何候選，需先人工指定 activation node 的 widgets selection。
+    // 這裡直接用「第一個 offer」作為單一勾選。
+    var n = MenuNodeQuery.requireNodeWithKind(m2, GeneralRecruitSubmit);
+    // 找到同一 root 裡的 GeneralMultiPick widget，勾選第一個 choice id
+    // （MenuNodeQuery 目前沒有直接取 choices 的 API，因此先以 widgets[0] 的 selected ids 直接寫入）
+    var ws = n.formWidgets();
+    if (ws == null || ws.length == 0)
+      throw "GeneralTileMenuFlowTest: expected widgets on general tile node";
+    switch ws[0] {
+      case GeneralMultiPick(lbl, choices, _):
+        if (choices == null || choices.length == 0)
+          throw "GeneralTileMenuFlowTest: expected at least 1 offer choice";
+        ws[0] = GeneralMultiPick(lbl, choices, [choices[0].generalId]);
+      default:
+        throw "GeneralTileMenuFlowTest: expected GeneralMultiPick as first widget";
+    }
+    var submit = MenuNodeQuery.buttonEntryOnNode(n, GeneralRecruitSubmit);
+    if (submit == null)
+      throw "GeneralTileMenuFlowTest: expected submit button on node";
+    n.setActivationEntry(submit);
+    match.applyMenuLeaf(actor, n);
     if (match.forceGetPendingGeneralTile() == null)
       throw "GeneralTileMenuFlowTest: 招募後仍應維持 pendingGeneral";
 
@@ -60,6 +81,10 @@ class GeneralTileMenuFlowTest {
 
   static function requireEnabledNode(menu:IPlayerMenu, kind:PlayerMenuKind):IPlayerMenuNode {
     var n = MenuNodeQuery.requireNodeWithKind(menu, kind);
+    // 若該 kind 是表單內 Button，需先設 activationEntry
+    var btn = MenuNodeQuery.buttonEntryOnNode(n, kind);
+    if (btn != null)
+      n.setActivationEntry(btn);
     if (!MenuActivation.activatingEntry(n).isEnabled())
       throw "GeneralTileMenuFlowTest: 節點 " + Std.string(kind) + " 應為可用";
     return n;

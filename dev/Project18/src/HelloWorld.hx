@@ -56,6 +56,7 @@ class HelloWorld {
     debug_ver1.VillageFriendlyTradeSettlementTest.testVillageFriendlyTradeSettlement(new impl_ver1.Game());
     debug_ver1.HostileCitySiegeCityLevelDefenseTest.testHostileCitySiegeCityLevelDefense(new impl_ver1.Game());
     debug_ver1.ResourceTileSettlementTest.testResourceTileSettlement(new impl_ver1.Game());
+    debug_ver1.StartTileRewardTest.testStartTileReward(new impl_ver1.Game());
     debug_ver1.GeneralTileMenuFlowTest.testGeneralTileMenuFlow(new impl_ver1.Game());
     debug_ver1.ShopTileMenuFlowTest.testShopTileMenuFlow(new impl_ver1.Game());
     debug_ver1.PopupLifecycleTest.testPopupLifecycle(new impl_ver1.Game());
