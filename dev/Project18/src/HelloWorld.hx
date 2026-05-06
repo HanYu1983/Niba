@@ -24,6 +24,7 @@ import view.AppController;
 import view.EventCenter;
 import view.html.HtmlRouterView;
 import impl_ver1.core.GameMatchCore;
+import view.UiCommand;
 
 class HelloWorld {
   static function main() {
@@ -73,7 +74,7 @@ class HelloWorld {
     var controller = new AppController(game);
     new HtmlRouterView();
     // 啟動：建立第一局並注入 ViewModel
-    EventCenter.publishEvent(view.UiEvent.NewGame(LevelKeys.EMPTY));
+    EventCenter.publishCommand(view.UiCommand.NewGame(LevelKeys.EMPTY));
   }
 
   /** 強制將架構符號納入編譯檢查（無執行語意）。 */

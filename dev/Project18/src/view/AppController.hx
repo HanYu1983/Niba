@@ -10,7 +10,7 @@ import impl_ver1.core.GameMatchCore;
 import rx.disposables.ISubscription;
 import view.BasicViewModel;
 import view.EventCenter;
-import view.UiEvent;
+import view.UiCommand;
 
 /**
  * View 層協調者：
@@ -26,16 +26,17 @@ class AppController {
 
   public function new(game:IGame) {
     this.game = game;
-    sub = EventCenter.onEventSubject.subscribe(onUiEvent);
+    sub = EventCenter.commandSubject.subscribe(onUiCommand);
   }
 
-  function onUiEvent(ev:UiEvent):Void {
-    switch ev {
+  function onUiCommand(cmd:UiCommand):Void {
+    switch cmd {
       case NewGame(levelKey):
         currentLevelKey = levelKey;
         startNewMatch(levelKey);
       case ResetGame:
         startNewMatch(currentLevelKey);
+      case ChangePage(_):
       default:
     }
   }

@@ -8,6 +8,7 @@ import js.html.Element;
 import rx.disposables.ISubscription;
 import view.EventCenter;
 import view.IViewModel;
+import view.UiCommand;
 import view.UiEvent;
 import view.ViewState;
 import game.LevelKeys;
@@ -33,6 +34,7 @@ class HtmlRouterView {
 
   var vmSub:Null<ISubscription> = null;
   var evSub:Null<ISubscription> = null;
+  var cmdSub:Null<ISubscription> = null;
 
   public function new() {
     // 主視圖常駐
@@ -52,12 +54,21 @@ class HtmlRouterView {
     renderBar();
 
     // 事件驅動導航：點格子/點玩家 → Inspector
-    evSub = EventCenter.onEventSubject.subscribe(function(ev:UiEvent) {
+    evSub = EventCenter.eventSubject.subscribe(function(ev:UiEvent) {
       switch ev {
         case TileClick(i):
           setState(InspectorTile(i));
         case PlayerClick(mid):
           setState(InspectorMonarch(mid));
+        default:
+      }
+    });
+
+    // 指令：外部可要求換頁
+    cmdSub = EventCenter.commandSubject.subscribe(function(cmd:UiCommand) {
+      switch cmd {
+        case ChangePage(next):
+          setState(next);
         default:
       }
     });
@@ -84,7 +95,6 @@ class HtmlRouterView {
 
   public function setState(next:ViewState):Void {
     state = next;
-    EventCenter.publishEvent(UiEvent.PageChange(next));
     var vm = EventCenter.currentViewModel;
     if (vm != null)
       renderOverlay(vm);
@@ -110,14 +120,14 @@ class HtmlRouterView {
     btnNew.className = "ui-btn";
     btnNew.type = "button";
     btnNew.textContent = "新局";
-    btnNew.onclick = function(_) EventCenter.publishEvent(UiEvent.NewGame(LevelKeys.EMPTY));
+    btnNew.onclick = function(_) EventCenter.publishCommand(UiCommand.NewGame(LevelKeys.EMPTY));
     bar.appendChild(btnNew);
 
     var btnReset:ButtonElement = Browser.document.createButtonElement();
     btnReset.className = "ui-btn";
     btnReset.type = "button";
     btnReset.textContent = "重開";
-    btnReset.onclick = function(_) EventCenter.publishEvent(UiEvent.ResetGame);
+    btnReset.onclick = function(_) EventCenter.publishCommand(UiCommand.ResetGame);
     bar.appendChild(btnReset);
   }
 
@@ -178,6 +188,10 @@ class HtmlRouterView {
     if (evSub != null) {
       evSub.unsubscribe();
       evSub = null;
+    }
+    if (cmdSub != null) {
+      cmdSub.unsubscribe();
+      cmdSub = null;
     }
 
     info.dispose();

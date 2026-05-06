@@ -36,7 +36,7 @@ class HtmlPopupView {
       // 初次注入也可以嘗試渲染（避免 reload 後漏顯示）
       renderIfAny();
     });
-    evSub = EventCenter.onEventSubject.subscribe(function(ev:UiEvent) {
+    evSub = EventCenter.eventSubject.subscribe(function(ev:UiEvent) {
       switch ev {
         case PopupRefresh:
           renderIfAny();
