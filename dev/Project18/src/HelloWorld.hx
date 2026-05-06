@@ -22,11 +22,7 @@ import game.PositionRank;
 import game.LevelKeys;
 import view.BasicViewModel;
 import view.EventCenter;
-import view.html.HtmlInfoPanelView;
-import view.html.HtmlActiveMenuView;
-import view.html.HtmlMapView;
-import view.html.HtmlPlayersView;
-import view.html.HtmlPopupView;
+import view.html.HtmlRouterView;
 import impl_ver1.core.GameMatchCore;
 
 class HelloWorld {
@@ -105,12 +101,8 @@ class HelloWorld {
     var vm = new BasicViewModel(cast match);
     EventCenter.publishViewModel(vm);
 
-    // 掛載點由 index.htm 提供
-    new HtmlInfoPanelView("app-info");
-    new HtmlActiveMenuView("app-menu");
-    new HtmlMapView("app-map");
-    new HtmlPlayersView("app-players");
-    new HtmlPopupView("app-popup");
+    // HtmlRouterView：集中管理所有 Html*View 與換頁 overlay
+    new HtmlRouterView();
   }
 
   /** 強制將架構符號納入編譯檢查（無執行語意）。 */
