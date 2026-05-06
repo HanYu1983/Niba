@@ -117,6 +117,10 @@ class GameMatchCore implements IGameMatch {
   /** 村落格索引 →（君主 id → 友好度 0~100）。 */
   var _villageFriendly:Map<Int, Map<MonarchId, Int>>;
 
+  /** --- 武將格/商店格 pending（骨架）--- */
+  var _pendingGeneralTileIndex:Null<TileIndex>;
+  var _pendingShopTileIndex:Null<TileIndex>;
+
   /** --- 策略（指定格子）暫存效果骨架 --- */
   // TODO(strategy): 目前僅存放「下回合加成」等占位資料；需定義：
   // - 加成何時結算（回合開始？落地結算？指令結算？）
@@ -166,6 +170,8 @@ class GameMatchCore implements IGameMatch {
     _cityLevel = new Map();
     _pendingFriendlyCityTileIndex = null;
     _pendingVillageTileIndex = null;
+    _pendingGeneralTileIndex = null;
+    _pendingShopTileIndex = null;
     _villageFriendly = new Map();
     _tileNextTurnGrainBonus = new Map();
     _tileNextTurnGoldBonus = new Map();
@@ -298,6 +304,8 @@ class GameMatchCore implements IGameMatch {
     _pendingEmptyCityTileIndex = null;
     _pendingFriendlyCityTileIndex = null;
     _pendingVillageTileIndex = null;
+    _pendingGeneralTileIndex = null;
+    _pendingShopTileIndex = null;
     hostileCityResetAll();
   }
 
@@ -683,6 +691,12 @@ class GameMatchCore implements IGameMatch {
   public function forceGetPendingVillageTile():Null<TileIndex>
     return _pendingVillageTileIndex;
 
+  public function forceGetPendingGeneralTile():Null<TileIndex>
+    return _pendingGeneralTileIndex;
+
+  public function forceGetPendingShopTile():Null<TileIndex>
+    return _pendingShopTileIndex;
+
   public function forceGetPendingHostileCityTile():Null<TileIndex>
     return _pendingHostileCityTileIndex;
 
@@ -914,6 +928,10 @@ class GameMatchCore implements IGameMatch {
       var phaseTag = forceGetHostileCityFlowPhase();
       ctx += "-hostile-city-" + (phaseTag != null ? phaseTag : "?");
     }
+    if (_pendingGeneralTileIndex != null)
+      ctx += "-general-" + _pendingGeneralTileIndex;
+    if (_pendingShopTileIndex != null)
+      ctx += "-shop-" + _pendingShopTileIndex;
 
     var roots:Array<IPlayerMenuNode> = [];
 
@@ -1008,7 +1026,7 @@ class GameMatchCore implements IGameMatch {
         _pendingStrategyPhase = null;
 
       // 任一玩家操作（除 ConfirmDone 外）都視為「本回合已行動過」，因此移動後策略才可用。
-      case Move, LandingContinue, JiCe, StagingSubmit, Status, StrategyPre, StrategyPost, Rest, VillageTrade, VillageConquer, VillagePlunder, VillageEndTurn, FriendlyCityDevelop, FriendlyCityRest:
+      case Move, LandingContinue, JiCe, StagingSubmit, Status, StrategyPre, StrategyPost, Rest, VillageTrade, VillageConquer, VillagePlunder, VillageEndTurn, GeneralRecruit, GeneralEndTurn, ShopBuy, ShopEndTurn, FriendlyCityDevelop, FriendlyCityRest:
         _hasMovedThisTurn = true;
 
       // 這些 leaf 不改動 hasMovedThisTurn（但通常也不會在回合開始前出現）
@@ -1043,7 +1061,9 @@ class GameMatchCore implements IGameMatch {
       && _pendingEmptyCityTileIndex == null
       && _pendingFriendlyCityTileIndex == null
       && _pendingHostileCityTileIndex == null
-      && _pendingVillageTileIndex == null;
+      && _pendingVillageTileIndex == null
+      && _pendingGeneralTileIndex == null
+      && _pendingShopTileIndex == null;
   }
 
   function clearHostileCityConfrontation():Void {
@@ -1064,6 +1084,11 @@ class GameMatchCore implements IGameMatch {
         _pendingVillageTileIndex = idx;
       case Resource:
         landingApplyResourceTile(idx);
+      case General:
+        _pendingGeneralTileIndex = idx;
+      case Shop:
+        _pendingShopTileIndex = idx;
+      case Start:
       case Plain:
       case Battle:
       case Scheme:
@@ -1351,6 +1376,46 @@ class GameMatchCore implements IGameMatch {
             _pendingVillageTileIndex = null;
             _activeSliceComplete = true;
             syncActiveSliceAfterMenuLeaf(VillageEndTurn);
+          case GeneralRecruit:
+            if (_pendingGeneralTileIndex == null)
+              throw "GameMatchCore: GeneralRecruit 但無 pendingGeneral";
+            var gidx = _pendingGeneralTileIndex;
+            pushInfoPopup(
+              actor.monarchId(),
+              "武將格",
+              Plain('（骨架）格位 ${gidx}\n招募流程尚未實作：目前僅占位以確保選單/切片可收束。'),
+              "general-recruit"
+            );
+            _pendingGeneralTileIndex = null;
+            _activeSliceComplete = true;
+            syncActiveSliceAfterMenuLeaf(GeneralRecruit);
+          case GeneralEndTurn:
+            if (_pendingGeneralTileIndex == null)
+              throw "GameMatchCore: GeneralEndTurn 但無 pendingGeneral";
+            pushInfoPopup(actor.monarchId(), "武將格", Plain("已離開武將格。"), "general-end");
+            _pendingGeneralTileIndex = null;
+            _activeSliceComplete = true;
+            syncActiveSliceAfterMenuLeaf(GeneralEndTurn);
+          case ShopBuy:
+            if (_pendingShopTileIndex == null)
+              throw "GameMatchCore: ShopBuy 但無 pendingShop";
+            var sidx = _pendingShopTileIndex;
+            pushInfoPopup(
+              actor.monarchId(),
+              "商店格",
+              Plain('（骨架）格位 ${sidx}\n購買流程尚未實作：目前僅占位以確保選單/切片可收束。'),
+              "shop-buy"
+            );
+            _pendingShopTileIndex = null;
+            _activeSliceComplete = true;
+            syncActiveSliceAfterMenuLeaf(ShopBuy);
+          case ShopEndTurn:
+            if (_pendingShopTileIndex == null)
+              throw "GameMatchCore: ShopEndTurn 但無 pendingShop";
+            pushInfoPopup(actor.monarchId(), "商店格", Plain("已離開商店格。"), "shop-end");
+            _pendingShopTileIndex = null;
+            _activeSliceComplete = true;
+            syncActiveSliceAfterMenuLeaf(ShopEndTurn);
           case FriendlyCityDevelop:
             enterStaging(actor, new FriendlyCityDevelopStagingAction(this), FriendlyCityDevelop);
           case FriendlyCityRest:

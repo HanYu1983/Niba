@@ -25,6 +25,10 @@ class Ver1MainCommands {
       new StrategyPreCommand(match),
       new StrategyPostCommand(match),
       new RestCommand(match),
+      new GeneralRecruitCommand(match),
+      new GeneralEndTurnCommand(match),
+      new ShopBuyCommand(match),
+      new ShopEndTurnCommand(match),
       new VillageTradeCommand(match),
       new VillagePlunderCommand(match),
       new VillageConquerCommand(match),
@@ -33,6 +37,98 @@ class Ver1MainCommands {
       new ConfirmDoneCommand(match),
     ];
   }
+}
+
+private class GeneralRecruitCommand implements IPlayerCommand {
+  final m:GameMatchCore;
+  public function new(m:GameMatchCore) this.m = m;
+  public function kind():PlayerMenuKind return GeneralRecruit;
+  public function designLabel():String return "武將招募";
+  public function buildActionNode(actor:IPlayer):Null<IPlayerMenuNode> {
+    if (m.isActivePlayerSliceComplete())
+      return null;
+    if (m.forceGetPendingGeneralTile() == null)
+      return null;
+    var blockBasics =
+      m.forceGetPendingTileEvent() != null
+      || m.forceHasPendingStaging()
+      || m.forceGetPendingEmptyCityOccupyTile() != null
+      || m.forceGetPendingFriendlyCityVisitTile() != null
+      || m.forceGetPendingHostileCityTile() != null
+      || m.forceGetPendingVillageTile() != null
+      || m.forceGetPendingShopTile() != null;
+    return m.createPlayerMenuNode("武將格：招募（骨架）", m.createPlayerMenuEntry(GeneralRecruit, "招募（骨架）", !blockBasics), []);
+  }
+  public function apply(actor:IPlayer, menuNode:IPlayerMenuNode):Void {}
+}
+
+private class GeneralEndTurnCommand implements IPlayerCommand {
+  final m:GameMatchCore;
+  public function new(m:GameMatchCore) this.m = m;
+  public function kind():PlayerMenuKind return GeneralEndTurn;
+  public function designLabel():String return "離開武將格";
+  public function buildActionNode(actor:IPlayer):Null<IPlayerMenuNode> {
+    if (m.isActivePlayerSliceComplete())
+      return null;
+    if (m.forceGetPendingGeneralTile() == null)
+      return null;
+    var block =
+      m.forceGetPendingTileEvent() != null
+      || m.forceHasPendingStaging()
+      || m.forceGetPendingEmptyCityOccupyTile() != null
+      || m.forceGetPendingFriendlyCityVisitTile() != null
+      || m.forceGetPendingHostileCityTile() != null
+      || m.forceGetPendingVillageTile() != null
+      || m.forceGetPendingShopTile() != null;
+    return m.createPlayerMenuNode("離開", m.createPlayerMenuEntry(GeneralEndTurn, "離開（武將格）", !block), []);
+  }
+  public function apply(actor:IPlayer, menuNode:IPlayerMenuNode):Void {}
+}
+
+private class ShopBuyCommand implements IPlayerCommand {
+  final m:GameMatchCore;
+  public function new(m:GameMatchCore) this.m = m;
+  public function kind():PlayerMenuKind return ShopBuy;
+  public function designLabel():String return "商店購買";
+  public function buildActionNode(actor:IPlayer):Null<IPlayerMenuNode> {
+    if (m.isActivePlayerSliceComplete())
+      return null;
+    if (m.forceGetPendingShopTile() == null)
+      return null;
+    var blockBasics =
+      m.forceGetPendingTileEvent() != null
+      || m.forceHasPendingStaging()
+      || m.forceGetPendingEmptyCityOccupyTile() != null
+      || m.forceGetPendingFriendlyCityVisitTile() != null
+      || m.forceGetPendingHostileCityTile() != null
+      || m.forceGetPendingVillageTile() != null
+      || m.forceGetPendingGeneralTile() != null;
+    return m.createPlayerMenuNode("商店格：購買（骨架）", m.createPlayerMenuEntry(ShopBuy, "購買（骨架）", !blockBasics), []);
+  }
+  public function apply(actor:IPlayer, menuNode:IPlayerMenuNode):Void {}
+}
+
+private class ShopEndTurnCommand implements IPlayerCommand {
+  final m:GameMatchCore;
+  public function new(m:GameMatchCore) this.m = m;
+  public function kind():PlayerMenuKind return ShopEndTurn;
+  public function designLabel():String return "離開商店";
+  public function buildActionNode(actor:IPlayer):Null<IPlayerMenuNode> {
+    if (m.isActivePlayerSliceComplete())
+      return null;
+    if (m.forceGetPendingShopTile() == null)
+      return null;
+    var block =
+      m.forceGetPendingTileEvent() != null
+      || m.forceHasPendingStaging()
+      || m.forceGetPendingEmptyCityOccupyTile() != null
+      || m.forceGetPendingFriendlyCityVisitTile() != null
+      || m.forceGetPendingHostileCityTile() != null
+      || m.forceGetPendingVillageTile() != null
+      || m.forceGetPendingGeneralTile() != null;
+    return m.createPlayerMenuNode("離開", m.createPlayerMenuEntry(ShopEndTurn, "離開（商店格）", !block), []);
+  }
+  public function apply(actor:IPlayer, menuNode:IPlayerMenuNode):Void {}
 }
 
 private class LandingContinueCommand implements IPlayerCommand {
@@ -64,7 +160,9 @@ private class MoveCommand implements IPlayerCommand {
       || m.forceGetPendingEmptyCityOccupyTile() != null
       || m.forceGetPendingFriendlyCityVisitTile() != null
       || m.forceGetPendingHostileCityTile() != null
-      || m.forceGetPendingVillageTile() != null;
+      || m.forceGetPendingVillageTile() != null
+      || m.forceGetPendingGeneralTile() != null
+      || m.forceGetPendingShopTile() != null;
     return m.createPlayerMenuNode("移動", m.createPlayerMenuEntry(Move, "移動", !blockBasics), []);
   }
   public function apply(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
@@ -92,7 +190,10 @@ private class StrategyPreCommand implements IPlayerCommand {
       && m.forceGetPendingLandingTile() == null
       && m.forceGetPendingEmptyCityOccupyTile() == null
       && m.forceGetPendingFriendlyCityVisitTile() == null
-      && !hostilePending;
+      && !hostilePending
+      && m.forceGetPendingVillageTile() == null
+      && m.forceGetPendingGeneralTile() == null
+      && m.forceGetPendingShopTile() == null;
 
     var jiChildren:Array<IPlayerMenuNode> = [];
     var phase = StrategyPhase.PreMove;
@@ -144,7 +245,11 @@ private class StrategyPostCommand implements IPlayerCommand {
     // 移動後策略：只在 pendingLanding 窗口中顯示；目前先沿用同一套計策列表（後續可依策略類型過濾）
     var owned = m.availableJiCe(actor.monarchId());
     var stagingActive = m.forceHasPendingStaging();
-    var jiEnabledBase = !stagingActive;
+    var jiEnabledBase =
+      !stagingActive
+      && m.forceGetPendingVillageTile() == null
+      && m.forceGetPendingGeneralTile() == null
+      && m.forceGetPendingShopTile() == null;
     var jiChildren:Array<IPlayerMenuNode> = [];
     var phase = StrategyPhase.PostMove;
     var filtered:Array<IJiCe> = [];
@@ -196,7 +301,9 @@ private class RestCommand implements IPlayerCommand {
       || m.forceGetPendingEmptyCityOccupyTile() != null
       || m.forceGetPendingFriendlyCityVisitTile() != null
       || m.forceGetPendingHostileCityTile() != null
-      || m.forceGetPendingVillageTile() != null;
+      || m.forceGetPendingVillageTile() != null
+      || m.forceGetPendingGeneralTile() != null
+      || m.forceGetPendingShopTile() != null;
     return m.createPlayerMenuNode("休整", m.createPlayerMenuEntry(Rest, "休整（回復體力）", !blockBasics), []);
   }
   public function apply(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
@@ -324,7 +431,9 @@ private class ConfirmDoneCommand implements IPlayerCommand {
       && m.forceGetPendingEmptyCityOccupyTile() == null
       && m.forceGetPendingFriendlyCityVisitTile() == null
       && m.forceGetPendingHostileCityTile() == null
-      && m.forceGetPendingVillageTile() == null;
+      && m.forceGetPendingVillageTile() == null
+      && m.forceGetPendingGeneralTile() == null
+      && m.forceGetPendingShopTile() == null;
     if (!allowConfirm)
       return null;
     return m.createPlayerMenuNode("結束", m.createPlayerMenuEntry(ConfirmDone, "結束本階段", true), []);

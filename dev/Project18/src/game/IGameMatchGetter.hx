@@ -131,6 +131,12 @@ interface IGameMatchGetter {
   /** 除錯／測試：踩中村落格後，尚待完成互動指令時為該格索引；否則 null。 */
   function forceGetPendingVillageTile():Null<TileIndex>;
 
+  /** 除錯／測試：踩中武將格後，尚待完成招募/離開互動時為該格索引；否則 null。 */
+  function forceGetPendingGeneralTile():Null<TileIndex>;
+
+  /** 除錯／測試：踩中商店格後，尚待完成購買/離開互動時為該格索引；否則 null。 */
+  function forceGetPendingShopTile():Null<TileIndex>;
+
   /** 除錯／測試：村落對指定玩家之友好度（0~100）；無紀錄時由實作給預設。 */
   function forceGetVillageFriendly(at:TileIndex, monarchId:MonarchId):Int;
 

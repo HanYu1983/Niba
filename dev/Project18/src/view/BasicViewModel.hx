@@ -203,6 +203,12 @@ class BasicViewModel implements IViewModel {
   public function forceGetPendingVillageTile():Null<TileIndex>
     return match.forceGetPendingVillageTile();
 
+  public function forceGetPendingGeneralTile():Null<TileIndex>
+    return match.forceGetPendingGeneralTile();
+
+  public function forceGetPendingShopTile():Null<TileIndex>
+    return match.forceGetPendingShopTile();
+
   public function forceGetVillageFriendly(at:TileIndex, monarchId:MonarchId):Int
     return match.forceGetVillageFriendly(at, monarchId);
 

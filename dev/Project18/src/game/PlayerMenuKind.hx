@@ -50,6 +50,18 @@ enum PlayerMenuKind {
     /** 村落：結束（不互動直接結束落地階段）。 */
     VillageEndTurn;
 
+    /** 武將格：招募（ver1 骨架：先以彈窗結算並結束落地）。 */
+    GeneralRecruit;
+
+    /** 武將格：離開（不招募直接結束落地）。 */
+    GeneralEndTurn;
+
+    /** 商店格：購買（ver1 骨架：先以彈窗結算並結束落地）。 */
+    ShopBuy;
+
+    /** 商店格：離開（不購買直接結束落地）。 */
+    ShopEndTurn;
+
     /** 空城進駐：同表單內複選駐將＋資源滑桿（數值／駐將列表皆改寫該節點 {@link IPlayerMenuNode#formWidgets}）。 */
     EmptyCityOccupySubmit;
 
