@@ -20,6 +20,7 @@ import impl_ver1.model.Monarch;
 import impl_ver1.model.General;
 import impl_ver1.model.PlayerMenu;
 import impl_ver1.jice.JiCeRegistry;
+import impl_ver1.jice.JiCeApply;
 
 /**
  * 策略：破壞（指定格子）
@@ -90,23 +91,16 @@ class SabotageJiCe implements IJiCe {
     var widgets = menuNode.formWidgets();
     if (widgets.length < 2)
       throw "SabotageJiCe: missing widgets";
-    var casterId = readSingleGeneralId(widgets[0], "caster");
-    var targetTile = readSingleTileIndex(widgets[1], "tile");
+    var casterId = JiCeApply.readSingleGeneralId(widgets[0], "SabotageJiCe", "caster");
+    var targetTile = JiCeApply.readSingleTileIndex(widgets[1], "SabotageJiCe", "tile");
 
     var ruler = cast(gameMatch.activeMonarch(), Monarch);
     if (gameMatch.forceGetPendingLandingTile() != null && targetTile != ruler.pawnIndex())
       throw "SabotageJiCe: post-move must target current tile";
-    var caster:Null<General> = null;
-    for (g in ruler.roster())
-      if (g.id() == casterId)
-        caster = cast g;
-    if (caster == null)
-      throw "SabotageJiCe: caster not in roster";
+    var caster = JiCeApply.requireCaster(ruler, casterId, "SabotageJiCe");
 
     var tier = StrategyCostTier.High;
-    var rate = Balance.strategySuccessRate(caster.stat(Wit), tier, caster.stamina());
-    var ok = Math.random() < rate;
-    caster.setStamina(Balance.clampInt(caster.stamina() - Balance.strategyStaminaCost(tier), 0, 100));
+    var ok = JiCeApply.rollAndConsumeStamina(caster, Wit, tier);
 
     if (!ok)
       return;
@@ -121,25 +115,11 @@ class SabotageJiCe implements IJiCe {
   }
 
   static function readSingleGeneralId(w:MenuFormWidget, label:String):GeneralId {
-    return switch w {
-      case GeneralMultiPick(_, _, sel):
-        if (sel == null || sel.length != 1)
-          throw 'SabotageJiCe: $label must pick exactly 1 general';
-        sel[0];
-      default:
-        throw 'SabotageJiCe: $label widget must be GeneralMultiPick';
-    };
+    return JiCeApply.readSingleGeneralId(w, "SabotageJiCe", label);
   }
 
   static function readSingleTileIndex(w:MenuFormWidget, label:String):TileIndex {
-    return switch w {
-      case TileSinglePick(_, _, selected):
-        if (selected == null || selected.length != 1)
-          throw 'SabotageJiCe: $label must pick exactly 1 tile';
-        selected[0];
-      default:
-        throw 'SabotageJiCe: $label widget must be TileSinglePick';
-    };
+    return JiCeApply.readSingleTileIndex(w, "SabotageJiCe", label);
   }
 
   static function __init__():Void {

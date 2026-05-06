@@ -20,6 +20,7 @@ import impl_ver1.model.Monarch;
 import impl_ver1.model.General;
 import impl_ver1.model.PlayerMenu;
 import impl_ver1.jice.JiCeRegistry;
+import impl_ver1.jice.JiCeApply;
 
 /**
  * 策略：火計（指定格子）
@@ -91,24 +92,17 @@ class FireJiCe implements IJiCe {
     var widgets = menuNode.formWidgets();
     if (widgets.length < 2)
       throw "FireJiCe: missing widgets";
-    var casterId = readSingleGeneralId(widgets[0], "caster");
-    var targetTile = readSingleTileIndex(widgets[1], "tile");
+    var casterId = JiCeApply.readSingleGeneralId(widgets[0], "FireJiCe", "caster");
+    var targetTile = JiCeApply.readSingleTileIndex(widgets[1], "FireJiCe", "tile");
 
     var ruler = cast(gameMatch.activeMonarch(), Monarch);
     // docs/策略系統.md：移動後策略一律針對所站格子（骨架先針對指定格子類策略硬檢查）
     if (gameMatch.forceGetPendingLandingTile() != null && targetTile != ruler.pawnIndex())
       throw "FireJiCe: post-move must target current tile";
-    var caster:Null<General> = null;
-    for (g in ruler.roster())
-      if (g.id() == casterId)
-        caster = cast g;
-    if (caster == null)
-      throw "FireJiCe: caster not in roster";
+    var caster = JiCeApply.requireCaster(ruler, casterId, "FireJiCe");
 
     var tier = StrategyCostTier.Medium;
-    var rate = Balance.strategySuccessRate(caster.stat(Wit), tier, caster.stamina());
-    var ok = Math.random() < rate;
-    caster.setStamina(Balance.clampInt(caster.stamina() - Balance.strategyStaminaCost(tier), 0, 100));
+    var ok = JiCeApply.rollAndConsumeStamina(caster, Wit, tier);
 
     if (!ok)
       return;
@@ -123,25 +117,11 @@ class FireJiCe implements IJiCe {
   }
 
   static function readSingleGeneralId(w:MenuFormWidget, label:String):GeneralId {
-    return switch w {
-      case GeneralMultiPick(_, _, sel):
-        if (sel == null || sel.length != 1)
-          throw 'FireJiCe: $label must pick exactly 1 general';
-        sel[0];
-      default:
-        throw 'FireJiCe: $label widget must be GeneralMultiPick';
-    };
+    return JiCeApply.readSingleGeneralId(w, "FireJiCe", label);
   }
 
   static function readSingleTileIndex(w:MenuFormWidget, label:String):TileIndex {
-    return switch w {
-      case TileSinglePick(_, _, selected):
-        if (selected == null || selected.length != 1)
-          throw 'FireJiCe: $label must pick exactly 1 tile';
-        selected[0];
-      default:
-        throw 'FireJiCe: $label widget must be TileSinglePick';
-    };
+    return JiCeApply.readSingleTileIndex(w, "FireJiCe", label);
   }
 
   static function __init__():Void {

@@ -18,6 +18,7 @@ import impl_ver1.model.Monarch;
 import impl_ver1.model.General;
 import impl_ver1.model.PlayerMenu;
 import impl_ver1.jice.JiCeRegistry;
+import impl_ver1.jice.JiCeApply;
 
 /**
  * 策略：療傷（指定武將）— 回復指定武將體力並解除負面狀態。
@@ -82,26 +83,15 @@ class HealJiCe implements IJiCe {
     if (widgets.length < 2)
       throw "HealJiCe: missing widgets";
 
-    var casterId = readSinglePick(widgets[0], "caster");
-    var targetId = readSinglePick(widgets[1], "target");
+    var casterId = JiCeApply.readSingleGeneralId(widgets[0], "HealJiCe", "caster");
+    var targetId = JiCeApply.readSingleGeneralId(widgets[1], "HealJiCe", "target");
 
     var ruler = cast(gameMatch.activeMonarch(), Monarch);
-    var caster:Null<General> = null;
-    var target:Null<General> = null;
-    for (g in ruler.roster()) {
-      if (g.id() == casterId)
-        caster = cast g;
-      if (g.id() == targetId)
-        target = cast g;
-    }
-    if (caster == null || target == null)
-      throw "HealJiCe: picked general not in roster";
+    var caster = JiCeApply.requireCaster(ruler, casterId, "HealJiCe");
+    var target = JiCeApply.requireCaster(ruler, targetId, "HealJiCe");
 
     var tier = StrategyCostTier.High;
-    var rate = Balance.strategySuccessRate(caster.stat(Wit), tier, caster.stamina());
-    var ok = Math.random() < rate;
-
-    caster.setStamina(Balance.clampInt(caster.stamina() - Balance.strategyStaminaCost(tier), 0, 100));
+    var ok = JiCeApply.rollAndConsumeStamina(caster, Wit, tier);
 
     if (ok) {
       // 骨架：回復固定 +40（之後可參數化）
@@ -111,14 +101,7 @@ class HealJiCe implements IJiCe {
   }
 
   static function readSinglePick(w:MenuFormWidget, label:String):GeneralId {
-    return switch w {
-      case GeneralMultiPick(_, _, sel):
-        if (sel == null || sel.length != 1)
-          throw 'HealJiCe: $label must pick exactly 1 general';
-        sel[0];
-      default:
-        throw 'HealJiCe: $label widget must be GeneralMultiPick';
-    };
+    return JiCeApply.readSingleGeneralId(w, "HealJiCe", label);
   }
 
   static function __init__():Void {

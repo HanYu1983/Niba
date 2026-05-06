@@ -15,6 +15,7 @@ import game.PlayerMenuKind;
 import game.StrategyCostTier;
 import game.StrategyPhase;
 import impl_ver1.core.GameMatchCore;
+import impl_ver1.jice.JiCeApply;
 import impl_ver1.model.General;
 import impl_ver1.model.Monarch;
 import impl_ver1.model.PlayerMenu;
@@ -87,21 +88,14 @@ class RaidJiCe implements IJiCe {
     if (widgets.length < 2)
       throw "RaidJiCe: missing widgets";
 
-    var targetMonarchId = readSingleMonarchId(widgets[0], "target");
-    var casterId = readSingleGeneralId(widgets[1], "caster");
+    var targetMonarchId = JiCeApply.readSingleMonarchId(widgets[0], "RaidJiCe", "target");
+    var casterId = JiCeApply.readSingleGeneralId(widgets[1], "RaidJiCe", "caster");
 
     var ruler = cast(gameMatch.activeMonarch(), Monarch);
-    var caster:Null<General> = null;
-    for (g in ruler.roster())
-      if (g.id() == casterId)
-        caster = cast g;
-    if (caster == null)
-      throw "RaidJiCe: caster not in roster";
+    var caster = JiCeApply.requireCaster(ruler, casterId, "RaidJiCe");
 
     var tier = StrategyCostTier.High;
-    var rate = Balance.strategySuccessRate(caster.stat(Might), tier, caster.stamina());
-    var ok = Math.random() < rate;
-    caster.setStamina(Balance.clampInt(caster.stamina() - Balance.strategyStaminaCost(tier), 0, 100));
+    var ok = JiCeApply.rollAndConsumeStamina(caster, Might, tier);
     if (!ok)
       return;
 
@@ -113,27 +107,11 @@ class RaidJiCe implements IJiCe {
     gameMatch.monarchApplyTroopLoss(targetMonarchId, loss);
   }
 
-  static function readSingleGeneralId(w:MenuFormWidget, label:String):GeneralId {
-    return switch w {
-      case GeneralMultiPick(_, _, sel):
-        if (sel == null || sel.length != 1)
-          throw 'RaidJiCe: $label must pick exactly 1 general';
-        sel[0];
-      default:
-        throw 'RaidJiCe: $label widget must be GeneralMultiPick';
-    };
-  }
+  static function readSingleGeneralId(w:MenuFormWidget, label:String):GeneralId
+    return JiCeApply.readSingleGeneralId(w, "RaidJiCe", label);
 
-  static function readSingleMonarchId(w:MenuFormWidget, label:String):MonarchId {
-    return switch w {
-      case MonarchSinglePick(_, _, selected):
-        if (selected == null || selected.length != 1)
-          throw 'RaidJiCe: $label must pick exactly 1 monarch';
-        selected[0];
-      default:
-        throw 'RaidJiCe: $label widget must be MonarchSinglePick';
-    };
-  }
+  static function readSingleMonarchId(w:MenuFormWidget, label:String):MonarchId
+    return JiCeApply.readSingleMonarchId(w, "RaidJiCe", label);
 
   static function __init__():Void {
     JiCeRegistry.register(REGISTRY_KEY, function(m:GameMatchCore) return new RaidJiCe(m));

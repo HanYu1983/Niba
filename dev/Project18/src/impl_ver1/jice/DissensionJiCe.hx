@@ -18,6 +18,7 @@ import impl_ver1.core.GameMatchCore;
 import impl_ver1.model.General;
 import impl_ver1.model.Monarch;
 import impl_ver1.model.PlayerMenu;
+import impl_ver1.jice.JiCeApply;
 
 /**
  * 策略：【指定玩家】離間 — 降低目標玩家麾下武將忠誠度。
@@ -89,21 +90,14 @@ class DissensionJiCe implements IJiCe {
     if (widgets.length < 2)
       throw "DissensionJiCe: missing widgets";
 
-    var targetMonarchId = readSingleMonarchId(widgets[0], "target");
-    var casterId = readSingleGeneralId(widgets[1], "caster");
+    var targetMonarchId = JiCeApply.readSingleMonarchId(widgets[0], "DissensionJiCe", "target");
+    var casterId = JiCeApply.readSingleGeneralId(widgets[1], "DissensionJiCe", "caster");
 
     var ruler = cast(gameMatch.activeMonarch(), Monarch);
-    var caster:Null<General> = null;
-    for (g in ruler.roster())
-      if (g.id() == casterId)
-        caster = cast g;
-    if (caster == null)
-      throw "DissensionJiCe: caster not in roster";
+    var caster = JiCeApply.requireCaster(ruler, casterId, "DissensionJiCe");
 
     var tier = StrategyCostTier.Medium;
-    var rate = Balance.strategySuccessRate(caster.stat(Wit), tier, caster.stamina());
-    var ok = Math.random() < rate;
-    caster.setStamina(Balance.clampInt(caster.stamina() - Balance.strategyStaminaCost(tier), 0, 100));
+    var ok = JiCeApply.rollAndConsumeStamina(caster, Wit, tier);
     if (!ok)
       return;
 
@@ -120,25 +114,11 @@ class DissensionJiCe implements IJiCe {
   }
 
   static function readSingleGeneralId(w:MenuFormWidget, label:String):GeneralId {
-    return switch w {
-      case GeneralMultiPick(_, _, sel):
-        if (sel == null || sel.length != 1)
-          throw 'DissensionJiCe: $label must pick exactly 1 general';
-        sel[0];
-      default:
-        throw 'DissensionJiCe: $label widget must be GeneralMultiPick';
-    };
+    return JiCeApply.readSingleGeneralId(w, "DissensionJiCe", label);
   }
 
   static function readSingleMonarchId(w:MenuFormWidget, label:String):MonarchId {
-    return switch w {
-      case MonarchSinglePick(_, _, selected):
-        if (selected == null || selected.length != 1)
-          throw 'DissensionJiCe: $label must pick exactly 1 monarch';
-        selected[0];
-      default:
-        throw 'DissensionJiCe: $label widget must be MonarchSinglePick';
-    };
+    return JiCeApply.readSingleMonarchId(w, "DissensionJiCe", label);
   }
 
   static function __init__():Void {

@@ -19,6 +19,7 @@ import impl_ver1.model.Monarch;
 import impl_ver1.model.General;
 import impl_ver1.model.PlayerMenu;
 import impl_ver1.jice.JiCeRegistry;
+import impl_ver1.jice.JiCeApply;
 
 /**
  * 策略：覺醒（指定武將）— 指定武將隨機一項能力暫時提升。
@@ -83,26 +84,15 @@ class AwakenJiCe implements IJiCe {
     if (widgets.length < 2)
       throw "AwakenJiCe: missing widgets";
 
-    var casterId = readSinglePick(widgets[0], "caster");
-    var targetId = readSinglePick(widgets[1], "target");
+    var casterId = JiCeApply.readSingleGeneralId(widgets[0], "AwakenJiCe", "caster");
+    var targetId = JiCeApply.readSingleGeneralId(widgets[1], "AwakenJiCe", "target");
 
     var ruler = cast(gameMatch.activeMonarch(), Monarch);
-    var caster:Null<General> = null;
-    var target:Null<General> = null;
-    for (g in ruler.roster()) {
-      if (g.id() == casterId)
-        caster = cast g;
-      if (g.id() == targetId)
-        target = cast g;
-    }
-    if (caster == null || target == null)
-      throw "AwakenJiCe: picked general not in roster";
+    var caster = JiCeApply.requireCaster(ruler, casterId, "AwakenJiCe");
+    var target = JiCeApply.requireCaster(ruler, targetId, "AwakenJiCe");
 
     var tier = StrategyCostTier.High;
-    var rate = Balance.strategySuccessRate(caster.stat(Wit), tier, caster.stamina());
-    var ok = Math.random() < rate;
-
-    caster.setStamina(Balance.clampInt(caster.stamina() - Balance.strategyStaminaCost(tier), 0, 100));
+    var ok = JiCeApply.rollAndConsumeStamina(caster, Wit, tier);
 
     if (ok) {
       var pool:Array<GeneralStat> = [Command, Might, Wit, Stewardship];
@@ -114,14 +104,7 @@ class AwakenJiCe implements IJiCe {
   }
 
   static function readSinglePick(w:MenuFormWidget, label:String):GeneralId {
-    return switch w {
-      case GeneralMultiPick(_, _, sel):
-        if (sel == null || sel.length != 1)
-          throw 'AwakenJiCe: $label must pick exactly 1 general';
-        sel[0];
-      default:
-        throw 'AwakenJiCe: $label widget must be GeneralMultiPick';
-    };
+    return JiCeApply.readSingleGeneralId(w, "AwakenJiCe", label);
   }
 
   static function __init__():Void {

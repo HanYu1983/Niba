@@ -18,6 +18,7 @@ import impl_ver1.model.Monarch;
 import impl_ver1.model.General;
 import impl_ver1.model.PlayerMenu;
 import impl_ver1.jice.JiCeRegistry;
+import impl_ver1.jice.JiCeApply;
 
 /**
  * 策略：鼓舞（指定武將）— 回復目標武將體力。
@@ -83,28 +84,16 @@ class InspireJiCe implements IJiCe {
     if (widgets.length < 2)
       throw "InspireJiCe: missing widgets";
 
-    var casterId = readSinglePick(widgets[0], "caster");
-    var targetId = readSinglePick(widgets[1], "target");
+    var casterId = JiCeApply.readSingleGeneralId(widgets[0], "InspireJiCe", "caster");
+    var targetId = JiCeApply.readSingleGeneralId(widgets[1], "InspireJiCe", "target");
 
     var ruler = cast(gameMatch.activeMonarch(), Monarch);
-    var caster:Null<General> = null;
-    var target:Null<General> = null;
-    for (g in ruler.roster()) {
-      if (g.id() == casterId)
-        caster = cast g;
-      if (g.id() == targetId)
-        target = cast g;
-    }
-    if (caster == null || target == null)
-      throw "InspireJiCe: picked general not in roster";
+    var caster = JiCeApply.requireCaster(ruler, casterId, "InspireJiCe");
+    var target = JiCeApply.requireCaster(ruler, targetId, "InspireJiCe");
 
     // 成功率（統率 × 基礎成功率 × 體力修正）
     var tier = StrategyCostTier.Medium;
-    var rate = Balance.strategySuccessRate(caster.stat(Command), tier, caster.stamina());
-    var ok = Math.random() < rate;
-
-    // 消耗體力（中）
-    caster.setStamina(Balance.clampInt(caster.stamina() - Balance.strategyStaminaCost(tier), 0, 100));
+    var ok = JiCeApply.rollAndConsumeStamina(caster, Command, tier);
 
     if (ok) {
       // 效果：目標回復（先用 +20 當骨架；之後可依屬性/修正調整）
@@ -113,14 +102,7 @@ class InspireJiCe implements IJiCe {
   }
 
   static function readSinglePick(w:MenuFormWidget, label:String):GeneralId {
-    return switch w {
-      case GeneralMultiPick(_, _, sel):
-        if (sel == null || sel.length != 1)
-          throw 'InspireJiCe: $label must pick exactly 1 general';
-        sel[0];
-      default:
-        throw 'InspireJiCe: $label widget must be GeneralMultiPick';
-    };
+    return JiCeApply.readSingleGeneralId(w, "InspireJiCe", label);
   }
 
   static function __init__():Void {

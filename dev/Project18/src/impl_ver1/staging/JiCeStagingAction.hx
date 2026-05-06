@@ -12,6 +12,7 @@ import game.StrategyCostTier;
 import game.Balance;
 import impl_ver1.staging.SimpleStagingPreviewRow;
 import impl_ver1.core.GameMatchCore;
+import impl_ver1.rules.GeneralAssignmentOps;
 import impl_ver1.jice.LuoshiJiCe;
 import impl_ver1.jice.DissensionJiCe;
 import impl_ver1.jice.RaidJiCe;
@@ -111,12 +112,16 @@ class JiCeStagingAction implements IStagingAction {
     var atk = cast(match.activeMonarch(), Monarch);
     var rows:Array<IJiCeStagingPreviewRow> = [];
     var cost = Balance.strategyStaminaCost(tier);
-    for (g in atk.roster()) {
-      var gg = cast(g, General);
-      var rate = Balance.strategySuccessRate(gg.stat(stat), tier, gg.stamina());
-      var pct = Std.int(Math.floor(rate * 100));
-      rows.push(new SimpleStagingPreviewRow(g.id(), '$label：$pct%｜體力消耗 $cost', 0));
-    }
+    var previews = GeneralAssignmentOps.previewForRoster(
+      registryKey(),
+      atk.roster(),
+      stat,
+      cost,
+      tier,
+      (_, rate) -> '$label：${Std.int(Math.floor(rate * 100))}%｜體力消耗 $cost'
+    );
+    for (p in previews)
+      rows.push(new SimpleStagingPreviewRow(p.generalId, p.summary, 0));
     return rows;
   }
 
