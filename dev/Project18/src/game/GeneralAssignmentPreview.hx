@@ -7,7 +7,7 @@ import game.GameIds;
  * - 成功率的定義由規則層提供（ver1 先沿用 Balance.strategySuccessRate 的型態）
  */
 typedef GeneralAssignmentPreview = {
-  kind:GeneralAssignmentKind,
+  kind:GeneralAssignmentKey,
   generalId:GeneralId,
   statUsed:GeneralStat,
   staminaCost:Int,

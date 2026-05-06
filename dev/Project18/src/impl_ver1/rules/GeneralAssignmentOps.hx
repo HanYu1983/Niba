@@ -1,7 +1,7 @@
 package impl_ver1.rules;
 
 import game.Balance;
-import game.GeneralAssignmentKind;
+import game.GeneralAssignmentKey;
 import game.GeneralAssignmentPreview;
 import game.GeneralAssignmentSpec;
 import game.GeneralStat;
@@ -51,7 +51,7 @@ class GeneralAssignmentOps {
    * summaryBuilder 由呼叫端決定內容（資源格顯示加成後收益、事件顯示減免比例等）。
    */
   public static function previewForRoster(
-    kind:GeneralAssignmentKind,
+    kind:GeneralAssignmentKey,
     roster:Array<IGeneral>,
     statUsed:GeneralStat,
     staminaCost:Int,
@@ -84,7 +84,7 @@ class GeneralAssignmentOps {
    * 用於村落交易/搶奪/開發等自訂公式。
    */
   public static function previewForRosterWithRate(
-    kind:GeneralAssignmentKind,
+    kind:GeneralAssignmentKey,
     roster:Array<IGeneral>,
     statUsed:GeneralStat,
     staminaCost:Int,

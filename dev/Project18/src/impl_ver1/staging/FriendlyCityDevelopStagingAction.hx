@@ -11,8 +11,8 @@ import game.IPlayerMenuNode;
 import game.IStagingAction;
 import game.MenuFormWidget;
 import game.PlayerMenuKind;
-import game.GeneralAssignmentKind;
 import impl_ver1.rules.GeneralAssignmentOps;
+import impl_ver1.rules.GeneralAssignmentKeys;
 import impl_ver1.core.GameMatchCore;
 import impl_ver1.model.Monarch;
 import impl_ver1.model.General;
@@ -68,7 +68,7 @@ class FriendlyCityDevelopStagingAction implements IStagingAction {
     var ruler = cast(match.activeMonarch(), Monarch);
     var rows:Array<IJiCeStagingPreviewRow> = [];
     var previews = GeneralAssignmentOps.previewForRosterWithRate(
-      GeneralAssignmentKind.FriendlyCityDevelop,
+      GeneralAssignmentKeys.FriendlyCityDevelop,
       ruler.roster(),
       Stewardship,
       0,
