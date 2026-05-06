@@ -50,6 +50,10 @@ class BasicViewModel implements IViewModel {
         // Slider 互動不應觸發整體重繪，否則 DOM 會被重建導致滑桿被重置，看起來像「無法拖動」。
       case GeneralMultiPick(node, widgetIndex, selectedGeneralIds):
         applyGeneralMultiPickToNode(node, widgetIndex, selectedGeneralIds);
+      case MonarchSinglePick(node, widgetIndex, selectedMonarchIds):
+        applyMonarchSinglePickToNode(node, widgetIndex, selectedMonarchIds);
+      case TileSinglePick(node, widgetIndex, selectedTileIndexes):
+        applyTileSinglePickToNode(node, widgetIndex, selectedTileIndexes);
       case MenuClick(node, entry):
         applyMenuClick(node, entry);
         EventCenter.publishEvent(PopupRefresh);
@@ -100,6 +104,28 @@ class BasicViewModel implements IViewModel {
     switch widgets[widgetIndex] {
       case GeneralMultiPick(lbl, choices, _):
         widgets[widgetIndex] = GeneralMultiPick(lbl, choices, selectedGeneralIds.copy());
+      default:
+    }
+  }
+
+  function applyMonarchSinglePickToNode(node:IPlayerMenuNode, widgetIndex:Int, selectedMonarchIds:Array<String>):Void {
+    var widgets = node.formWidgets();
+    if (widgets == null || widgetIndex < 0 || widgetIndex >= widgets.length)
+      return;
+    switch widgets[widgetIndex] {
+      case MonarchSinglePick(lbl, choices, _):
+        widgets[widgetIndex] = MonarchSinglePick(lbl, choices, selectedMonarchIds.copy());
+      default:
+    }
+  }
+
+  function applyTileSinglePickToNode(node:IPlayerMenuNode, widgetIndex:Int, selectedTileIndexes:Array<Int>):Void {
+    var widgets = node.formWidgets();
+    if (widgets == null || widgetIndex < 0 || widgetIndex >= widgets.length)
+      return;
+    switch widgets[widgetIndex] {
+      case TileSinglePick(lbl, choices, _):
+        widgets[widgetIndex] = TileSinglePick(lbl, choices, selectedTileIndexes.copy());
       default:
     }
   }

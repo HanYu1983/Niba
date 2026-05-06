@@ -114,10 +114,29 @@ class HtmlActiveMenuView {
             wrap.appendChild(input);
             form.appendChild(wrap);
           case MonarchSinglePick(lbl, choices, selected):
-            var p = Browser.document.createDivElement();
-            p.className = "menu-pick";
-            p.textContent = lbl + " = " + (selected != null && selected.length > 0 ? selected[0] : "(none)");
-            form.appendChild(p);
+            var wrap = Browser.document.createDivElement();
+            wrap.className = "menu-pick";
+            var lab = Browser.document.createDivElement();
+            lab.className = "menu-pick-label";
+            lab.textContent = lbl;
+            wrap.appendChild(lab);
+            var sel = Browser.document.createSelectElement();
+            sel.className = "menu-select";
+            for (c in choices) {
+              var opt = Browser.document.createOptionElement();
+              opt.value = c.monarchId;
+              opt.text = c.caption;
+              sel.add(opt);
+            }
+            if (selected != null && selected.length > 0)
+              sel.value = selected[0];
+            sel.onchange = function(_) {
+              var v = sel.value;
+              var xs:Array<String> = v != null && v.length > 0 ? [v] : [];
+              EventCenter.publishEvent(UiEvent.MonarchSinglePick(n, i, xs));
+            };
+            wrap.appendChild(sel);
+            form.appendChild(wrap);
           case GeneralMultiPick(lbl, _, selected):
             // 複選武將：渲染成 checkbox 列表，勾選變更時送 UiEvent.GeneralMultiPick 以便就地改寫 widgets
             var wrap = Browser.document.createDivElement();
@@ -157,10 +176,29 @@ class HtmlActiveMenuView {
             }
             form.appendChild(wrap);
           case TileSinglePick(lbl, choices, selected):
-            var p = Browser.document.createDivElement();
-            p.className = "menu-pick";
-            p.textContent = lbl + " = " + (selected != null && selected.length > 0 ? Std.string(selected[0]) : "(none)");
-            form.appendChild(p);
+            var wrap = Browser.document.createDivElement();
+            wrap.className = "menu-pick";
+            var lab = Browser.document.createDivElement();
+            lab.className = "menu-pick-label";
+            lab.textContent = lbl;
+            wrap.appendChild(lab);
+            var sel = Browser.document.createSelectElement();
+            sel.className = "menu-select";
+            for (c in choices) {
+              var opt = Browser.document.createOptionElement();
+              opt.value = Std.string(c.tileIndex);
+              opt.text = c.caption;
+              sel.add(opt);
+            }
+            if (selected != null && selected.length > 0)
+              sel.value = Std.string(selected[0]);
+            sel.onchange = function(_) {
+              var v = Std.parseInt(sel.value);
+              var xs:Array<Int> = v == null ? [] : [v];
+              EventCenter.publishEvent(UiEvent.TileSinglePick(n, i, xs));
+            };
+            wrap.appendChild(sel);
+            form.appendChild(wrap);
         }
       }
       row.appendChild(form);
