@@ -4,6 +4,7 @@ import game.GameIds;
 import game.IPlayerMenuEntry;
 import game.IPlayerMenuNode;
 import game.PlayerMenuKind;
+import view.ViewState;
 
 /**
  * UI 事件（由 view/html 元件發送；由上層流程或 ViewModel/Controller 訂閱處理）。
@@ -11,6 +12,15 @@ import game.PlayerMenuKind;
  * 統一入口：EventCenter.onEventSubject。
  */
 enum UiEvent {
+  /** 換頁：純 UI 導航（不一定改變賽局）。 */
+  PageChange(next:ViewState);
+
+  /** 建立新局（由 controller 負責 createGameMatch）。 */
+  NewGame(levelKey:String);
+
+  /** 重開當前關卡（由 controller 決定如何 reset）。 */
+  ResetGame;
+
   /** 點擊格子（棋盤索引）。 */
   TileClick(index:TileIndex);
 

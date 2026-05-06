@@ -10,6 +10,7 @@ import view.EventCenter;
 import view.IViewModel;
 import view.UiEvent;
 import view.ViewState;
+import game.LevelKeys;
 
 /**
  * HTML Router（狀態模式但不拆 page 類）：
@@ -27,6 +28,7 @@ class HtmlRouterView {
   final popup:HtmlPopupView;
 
   final overlayHost:Element;
+  final bar:DivElement;
   final overlay:DivElement;
 
   var vmSub:Null<ISubscription> = null;
@@ -41,9 +43,13 @@ class HtmlRouterView {
     popup = new HtmlPopupView("app-popup");
 
     overlayHost = ensureDiv("app-overlay");
+    bar = Browser.document.createDivElement();
+    bar.className = "router-bar";
+    overlayHost.appendChild(bar);
     overlay = Browser.document.createDivElement();
     overlay.className = "router-overlay";
     overlayHost.appendChild(overlay);
+    renderBar();
 
     // 事件驅動導航：點格子/點玩家 → Inspector
     evSub = EventCenter.onEventSubject.subscribe(function(ev:UiEvent) {
@@ -78,9 +84,41 @@ class HtmlRouterView {
 
   public function setState(next:ViewState):Void {
     state = next;
+    EventCenter.publishEvent(UiEvent.PageChange(next));
     var vm = EventCenter.currentViewModel;
     if (vm != null)
       renderOverlay(vm);
+  }
+
+  function renderBar():Void {
+    bar.innerHTML = "";
+    var btnMain:ButtonElement = Browser.document.createButtonElement();
+    btnMain.className = "ui-btn";
+    btnMain.type = "button";
+    btnMain.textContent = "主畫面";
+    btnMain.onclick = function(_) setState(Main);
+    bar.appendChild(btnMain);
+
+    var btnDebug:ButtonElement = Browser.document.createButtonElement();
+    btnDebug.className = "ui-btn";
+    btnDebug.type = "button";
+    btnDebug.textContent = "Debug";
+    btnDebug.onclick = function(_) setState(Debug);
+    bar.appendChild(btnDebug);
+
+    var btnNew:ButtonElement = Browser.document.createButtonElement();
+    btnNew.className = "ui-btn";
+    btnNew.type = "button";
+    btnNew.textContent = "新局";
+    btnNew.onclick = function(_) EventCenter.publishEvent(UiEvent.NewGame(LevelKeys.EMPTY));
+    bar.appendChild(btnNew);
+
+    var btnReset:ButtonElement = Browser.document.createButtonElement();
+    btnReset.className = "ui-btn";
+    btnReset.type = "button";
+    btnReset.textContent = "重開";
+    btnReset.onclick = function(_) EventCenter.publishEvent(UiEvent.ResetGame);
+    bar.appendChild(btnReset);
   }
 
   function renderOverlay(vm:IViewModel):Void {
@@ -148,6 +186,8 @@ class HtmlRouterView {
     players.dispose();
     popup.dispose();
 
+    if (bar.parentElement != null)
+      bar.parentElement.removeChild(bar);
     if (overlay.parentElement != null)
       overlay.parentElement.removeChild(overlay);
   }

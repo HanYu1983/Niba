@@ -20,7 +20,7 @@ import game.EquipmentType;
 import game.IEquipment;
 import game.PositionRank;
 import game.LevelKeys;
-import view.BasicViewModel;
+import view.AppController;
 import view.EventCenter;
 import view.html.HtmlRouterView;
 import impl_ver1.core.GameMatchCore;
@@ -70,39 +70,10 @@ class HelloWorld {
     if (!hasWindow)
       return;
     var game:IGame = new impl_ver1.Game();
-    var match:IGameMatch = game.createGameMatch(LevelKeys.EMPTY);
-    var tiles:Array<ITile> = [];
-    for (i in 0...12)
-      tiles.push(match.createTile(i, City));
-    match.createBoard(tiles);
-
-    // 君主基本資源（兵力/糧食）
-    match.createMonarch("m-a", 0, 0, 500, 80);
-    match.createMonarch("m-b", 1, 5, 500, 80);
-
-    // 每位君主各 3 名武將
-    match.createGeneral("g-a-1", "m-a", 1, 40, 1, 1);
-    match.createGeneral("g-a-2", "m-a", 1, 20, 1, 1);
-    match.createGeneral("g-a-3", "m-a", 1, 10, 1, 1);
-    match.createGeneral("g-b-1", "m-b", 1, 40, 1, 1);
-    match.createGeneral("g-b-2", "m-b", 1, 20, 1, 1);
-    match.createGeneral("g-b-3", "m-b", 1, 10, 1, 1);
-
-    // --- 裝備 demo：替部分武將配武器（見 docs/裝備系統.md）---
-    var core = cast(match, GameMatchCore);
-    core.forceEquipWeaponByName("g-a-1", "eq-a-1", "村正");
-    core.forceEquipWeaponByName("g-a-2", "eq-a-2", "長槍");
-    core.forceEquipWeaponByName("g-b-1", "eq-b-1", "青龍偃月刀");
-
-    // 所有格位皆為城池：先交錯標記屬主
-    for (i in 0...12)
-      match.forceSetCityOwner(i, (i % 2 == 0) ? "m-a" : "m-b");
-
-    var vm = new BasicViewModel(cast match);
-    EventCenter.publishViewModel(vm);
-
-    // HtmlRouterView：集中管理所有 Html*View 與換頁 overlay
+    var controller = new AppController(game);
     new HtmlRouterView();
+    // 啟動：建立第一局並注入 ViewModel
+    EventCenter.publishEvent(view.UiEvent.NewGame(LevelKeys.EMPTY));
   }
 
   /** 強制將架構符號納入編譯檢查（無執行語意）。 */
