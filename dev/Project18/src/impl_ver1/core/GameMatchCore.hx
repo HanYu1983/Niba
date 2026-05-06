@@ -121,6 +121,12 @@ class GameMatchCore implements IGameMatch {
   var _pendingGeneralTileIndex:Null<TileIndex>;
   var _pendingShopTileIndex:Null<TileIndex>;
 
+  /** 武將格：本次落地的招募清單（程序化生成；離開格子或招募後刷新）。 */
+  var _generalOffersByTile:Map<Int, Array<GeneralRecruitOffer>>;
+
+  /** 商店格：本次落地的商品清單（程序化生成；購買後從清單移除）。 */
+  var _shopStocksByTile:Map<Int, Array<ShopStockItem>>;
+
   /** --- 策略（指定格子）暫存效果骨架 --- */
   // TODO(strategy): 目前僅存放「下回合加成」等占位資料；需定義：
   // - 加成何時結算（回合開始？落地結算？指令結算？）
@@ -172,6 +178,8 @@ class GameMatchCore implements IGameMatch {
     _pendingVillageTileIndex = null;
     _pendingGeneralTileIndex = null;
     _pendingShopTileIndex = null;
+    _generalOffersByTile = new Map();
+    _shopStocksByTile = new Map();
     _villageFriendly = new Map();
     _tileNextTurnGrainBonus = new Map();
     _tileNextTurnGoldBonus = new Map();
@@ -988,6 +996,45 @@ class GameMatchCore implements IGameMatch {
       roots.push(createPlayerMenuNode('空城進駐（格 $idx）', null, [], occupyForm));
     }
 
+    if (_pendingGeneralTileIndex != null) {
+      var idx = _pendingGeneralTileIndex;
+      var offers = _generalOffersByTile.exists(idx) ? _generalOffersByTile.get(idx) : [];
+      var children:Array<IPlayerMenuNode> = [];
+      for (o in offers) {
+        var tok = o.offerId;
+        var cap = '${o.displayName}｜${Std.string(o.rarity)}｜金 ${o.costGold}\n'
+          + '統率 ${o.command}｜武力 ${o.might}｜智力 ${o.wit}｜政治 ${o.stewardship}';
+        children.push(createPlayerMenuNode(cap, createPlayerMenuEntry(GeneralRecruit, "招募", true, tok), []));
+      }
+      children.push(createPlayerMenuNode("回合結束（武將格）", createPlayerMenuEntry(GeneralEndTurn, "回合結束", true, "general_end"), []));
+      roots.push(createPlayerMenuNode('武將格（格 $idx）', null, children));
+    }
+
+    if (_pendingShopTileIndex != null) {
+      var idx = _pendingShopTileIndex;
+      var stocks = _shopStocksByTile.exists(idx) ? _shopStocksByTile.get(idx) : [];
+      var ruler = cast(activeMonarch(), Monarch);
+      var choices:Array<MenuGeneralChoice> = [];
+      for (g in ruler.roster())
+        choices.push({generalId: g.id(), caption: g.id()});
+      var defSel:Array<String> = choices.length > 0 ? [choices[0].generalId] : [];
+
+      var shopChildren:Array<IPlayerMenuNode> = [];
+      for (it in stocks) {
+        var eq = WeaponCatalog.spawnByName(it.stockId, it.weaponName, it.priceGold);
+        var disabled = choices.length == 0 || ruler.gold() < it.priceGold;
+        var leaf = createPlayerMenuEntry(ShopBuy, "購買並裝備", !disabled, it.stockId);
+        var widgets:Array<MenuFormWidget> = [
+          GeneralMultiPick("裝備給（需恰選 1 名武將）", choices, defSel),
+          Button(leaf),
+        ];
+        var title = '${eq.name()}｜${Std.string(eq.rarity())}｜${Std.string(eq.bonusStat())}+${eq.bonusValue()}｜忠誠+${eq.loyaltyBonus()}｜金 ${it.priceGold}';
+        shopChildren.push(createPlayerMenuNode(title, null, ([] : Array<IPlayerMenuNode>), widgets));
+      }
+      shopChildren.push(createPlayerMenuNode("回合結束（商店格）", createPlayerMenuEntry(ShopEndTurn, "回合結束", true, "shop_end"), []));
+      roots.push(createPlayerMenuNode('商店格（格 $idx）', null, shopChildren));
+    }
+
     if (pend != null) {
       var evRoots = pend.buildPlayerMenu(actor).rootNodes();
       roots.push(createPlayerMenuNode("事件：" + pend.registryKey(), null, evRoots));
@@ -1085,8 +1132,10 @@ class GameMatchCore implements IGameMatch {
       case Resource:
         landingApplyResourceTile(idx);
       case General:
+        generalTileRefreshOffers(idx);
         _pendingGeneralTileIndex = idx;
       case Shop:
+        shopTileRefreshStock(idx);
         _pendingShopTileIndex = idx;
       case Start:
       case Plain:
@@ -1107,6 +1156,143 @@ class GameMatchCore implements IGameMatch {
       "resource-tile"
     );
     _activeSliceComplete = true;
+  }
+
+  // --- 武將格/商店格：程序化生成（先用可重現的簡易規則）---
+
+  static inline function clampInt(x:Int, lo:Int, hi:Int):Int {
+    if (x < lo)
+      return lo;
+    if (x > hi)
+      return hi;
+    return x;
+  }
+
+  static function fnv1a32(s:String):Int {
+    var h:Int = 0x811C9DC5;
+    for (i in 0...s.length) {
+      h ^= s.charCodeAt(i);
+      h = (h + (h << 1) + (h << 4) + (h << 7) + (h << 8) + (h << 24));
+    }
+    return h;
+  }
+
+  static inline function hash01(seed:String):Float {
+    var h = fnv1a32(seed);
+    var x = h & 0xFFFFFF;
+    return x / 16777215.0;
+  }
+
+  function generalTileRefreshOffers(tileIdx:TileIndex):Void {
+    var ruler = cast(activeMonarch(), Monarch);
+    var seedBase = 'general|t=${tileIdx}|r=${roundNumber()}|m=${ruler.id()}';
+    var count = 3 + Std.int(Math.floor(hash01(seedBase + "|n") * 3)); // 3~5
+    var out:Array<GeneralRecruitOffer> = [];
+    for (i in 0...count) {
+      var id = 'gen-${tileIdx}-${roundNumber()}-${i}';
+      var s = seedBase + "|i=" + i;
+      var cmd = 10 + Std.int(Math.floor(hash01(s + "|c") * 91)); // 10..100
+      var mig = 10 + Std.int(Math.floor(hash01(s + "|m") * 91));
+      var wit = 10 + Std.int(Math.floor(hash01(s + "|w") * 91));
+      var stw = 10 + Std.int(Math.floor(hash01(s + "|s") * 91));
+      var rarity = rarityFrom01(hash01(s + "|rar"));
+      var base = baseRecruitCost(rarity, cmd, mig, wit, stw);
+      var finalCost = applyPrestigeRecruitModifier(ruler.prestige(), base, hash01(s + "|mod"));
+      out.push({
+        offerId: id,
+        displayName: "武將#" + (i + 1),
+        rarity: rarity,
+        command: cmd,
+        might: mig,
+        wit: wit,
+        stewardship: stw,
+        costGold: finalCost,
+      });
+    }
+    _generalOffersByTile.set(tileIdx, out);
+  }
+
+  function shopTileRefreshStock(tileIdx:TileIndex):Void {
+    var ruler = cast(activeMonarch(), Monarch);
+    var seedBase = 'shop|t=${tileIdx}|r=${roundNumber()}|m=${ruler.id()}';
+    var count = 3 + Std.int(Math.floor(hash01(seedBase + "|n") * 3)); // 3~5
+    var names = WeaponCatalog.allNames();
+    var out:Array<ShopStockItem> = [];
+    for (i in 0...count) {
+      var pick = Std.int(Math.floor(hash01(seedBase + "|pick=" + i) * names.length));
+      if (pick < 0)
+        pick = 0;
+      if (pick >= names.length)
+        pick = names.length - 1;
+      var nm = names[pick];
+      var eqId:EquipmentId = 'shop-${tileIdx}-${roundNumber()}-${i}';
+      var eq = WeaponCatalog.spawnByName(eqId, nm);
+      // 價格再受聲望做些微調整（高聲望略便宜）；先保持可重現
+      var p = applyPrestigeShopPriceModifier(ruler.prestige(), eq.price(), hash01(seedBase + "|pmod=" + i));
+      out.push({
+        stockId: eqId,
+        weaponName: nm,
+        priceGold: p,
+      });
+    }
+    _shopStocksByTile.set(tileIdx, out);
+  }
+
+  function rarityFrom01(u:Float):game.Rarity {
+    // 先用簡化分佈：Common 50%, Fine 30%, Epic 15%, Legendary 5%
+    if (u < 0.50)
+      return Common;
+    if (u < 0.80)
+      return Fine;
+    if (u < 0.95)
+      return Epic;
+    return Legendary;
+  }
+
+  function baseRecruitCost(r:game.Rarity, c:Int, m:Int, w:Int, s:Int):Int {
+    var rarityBase = switch r {
+      case Common: 200;
+      case Fine: 500;
+      case Epic: 1200;
+      case Legendary: 3000;
+    };
+    // 以能力總和做線性放大
+    var sum = c + m + w + s;
+    return rarityBase + sum * 5;
+  }
+
+  function applyPrestigeRecruitModifier(prestige:Int, base:Int, u:Float):Int {
+    // 依 GDD：高聲望折扣、中聲望不變、低聲望加價；用 u 決定區間內幅度
+    var mult:Float;
+    if (prestige >= 70) {
+      var d = 0.20 + u * 0.10; // 20%~30%
+      mult = 1.0 - d;
+    } else if (prestige >= 40) {
+      mult = 1.0;
+    } else {
+      var up = 0.20 + u * 0.30; // 20%~50%
+      mult = 1.0 + up;
+    }
+    var v = Std.int(Math.round(base * mult));
+    if (v < 1)
+      v = 1;
+    return v;
+  }
+
+  function applyPrestigeShopPriceModifier(prestige:Int, base:Int, u:Float):Int {
+    // shop 沒寫聲望折扣規則；先做「高聲望 -5%~10%，低聲望 +5%~15%」的輕微調整
+    var mult:Float;
+    if (prestige >= 70) {
+      mult = 1.0 - (0.05 + u * 0.05);
+    } else if (prestige >= 40) {
+      mult = 1.0;
+    } else {
+      mult = 1.0 + (0.05 + u * 0.10);
+    }
+    var v = Std.int(Math.round(base * mult));
+    if (v < 1)
+      v = 1;
+    return v;
   }
 
   function handleTileEventPick(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
@@ -1379,15 +1565,36 @@ class GameMatchCore implements IGameMatch {
           case GeneralRecruit:
             if (_pendingGeneralTileIndex == null)
               throw "GameMatchCore: GeneralRecruit 但無 pendingGeneral";
-            var gidx = _pendingGeneralTileIndex;
+            if (leaf.decisionToken() == null)
+              throw "GameMatchCore: GeneralRecruit 需要 decisionToken";
+            var tileIdx = _pendingGeneralTileIndex;
+            var offers = _generalOffersByTile.exists(tileIdx) ? _generalOffersByTile.get(tileIdx) : [];
+            var picked:Null<GeneralRecruitOffer> = null;
+            for (o in offers)
+              if (o.offerId == leaf.decisionToken()) {
+                picked = o;
+                break;
+              }
+            if (picked == null)
+              throw "GameMatchCore: GeneralRecruit 找不到 offer";
+            var ruler = cast(activeMonarch(), Monarch);
+            if (ruler.gold() < picked.costGold)
+              throw "GameMatchCore: 金錢不足，無法招募";
+            ruler.reduceGold(picked.costGold);
+            var newId:GeneralId = picked.offerId; // 先用 offerId 當一般 id（可重現且不衝突）
+            createGeneral(newId, ruler.id(), picked.command, picked.might, picked.wit, picked.stewardship);
+            // 招募後從清單移除，允許繼續招募其他人；切片不結束，須按「回合結束」離開武將格
+            var rest:Array<GeneralRecruitOffer> = [];
+            for (o in offers)
+              if (o.offerId != picked.offerId)
+                rest.push(o);
+            _generalOffersByTile.set(tileIdx, rest);
             pushInfoPopup(
               actor.monarchId(),
-              "武將格",
-              Plain('（骨架）格位 ${gidx}\n招募流程尚未實作：目前僅占位以確保選單/切片可收束。'),
+              "招募成功",
+              Plain('武將格 ${tileIdx}\n招募：${picked.displayName}（${Std.string(picked.rarity)}）\n花費：金 ${picked.costGold}\n統率 ${picked.command}｜武力 ${picked.might}｜智力 ${picked.wit}｜政治 ${picked.stewardship}'),
               "general-recruit"
             );
-            _pendingGeneralTileIndex = null;
-            _activeSliceComplete = true;
             syncActiveSliceAfterMenuLeaf(GeneralRecruit);
           case GeneralEndTurn:
             if (_pendingGeneralTileIndex == null)
@@ -1399,15 +1606,47 @@ class GameMatchCore implements IGameMatch {
           case ShopBuy:
             if (_pendingShopTileIndex == null)
               throw "GameMatchCore: ShopBuy 但無 pendingShop";
-            var sidx = _pendingShopTileIndex;
+            if (leaf.decisionToken() == null)
+              throw "GameMatchCore: ShopBuy 需要 decisionToken（stockId）";
+            var tileIdx = _pendingShopTileIndex;
+            var stocks = _shopStocksByTile.exists(tileIdx) ? _shopStocksByTile.get(tileIdx) : [];
+            var picked:Null<ShopStockItem> = null;
+            for (x in stocks)
+              if (x.stockId == leaf.decisionToken()) {
+                picked = x;
+                break;
+              }
+            if (picked == null)
+              throw "GameMatchCore: ShopBuy 找不到商品";
+            var ruler = cast(activeMonarch(), Monarch);
+            if (ruler.gold() < picked.priceGold)
+              throw "GameMatchCore: 金錢不足，無法購買";
+
+            // 解析表單：需恰好選一名武將
+            var sel = extractFirstGeneralMultiPickSelections(menuNode.formWidgets());
+            if (sel.length != 1)
+              throw "GameMatchCore: 商店購買需恰好選擇 1 名武將";
+            var gid:GeneralId = sel[0];
+            var g = requireGeneral(gid);
+            if (g.owner() != ruler.id())
+              throw "GameMatchCore: 只能替自己麾下武將購買裝備";
+
+            ruler.reduceGold(picked.priceGold);
+            var eq = WeaponCatalog.spawnByName(picked.stockId, picked.weaponName, picked.priceGold);
+            g.addEquipment(eq);
+
+            // 移除已購買商品；切片不結束，須按「回合結束」離開商店格
+            var rest:Array<ShopStockItem> = [];
+            for (x in stocks)
+              if (x.stockId != picked.stockId)
+                rest.push(x);
+            _shopStocksByTile.set(tileIdx, rest);
             pushInfoPopup(
               actor.monarchId(),
-              "商店格",
-              Plain('（骨架）格位 ${sidx}\n購買流程尚未實作：目前僅占位以確保選單/切片可收束。'),
+              "購買成功",
+              Plain('商店格 ${tileIdx}\n購買：${eq.name()}（${Std.string(eq.rarity())}）\n花費：金 ${picked.priceGold}\n裝備給：${gid}\n效果：${Std.string(eq.bonusStat())}+${eq.bonusValue()}｜忠誠+${eq.loyaltyBonus()}'),
               "shop-buy"
             );
-            _pendingShopTileIndex = null;
-            _activeSliceComplete = true;
             syncActiveSliceAfterMenuLeaf(ShopBuy);
           case ShopEndTurn:
             if (_pendingShopTileIndex == null)
@@ -1603,3 +1842,20 @@ class GameMatchCore implements IGameMatch {
   public function isActivePlayerSliceComplete():Bool
     return _activeSliceComplete;
 }
+
+private typedef GeneralRecruitOffer = {
+  offerId:String,
+  displayName:String,
+  rarity:game.Rarity,
+  command:Int,
+  might:Int,
+  wit:Int,
+  stewardship:Int,
+  costGold:Int,
+};
+
+private typedef ShopStockItem = {
+  stockId:EquipmentId,
+  weaponName:String,
+  priceGold:Int,
+};
