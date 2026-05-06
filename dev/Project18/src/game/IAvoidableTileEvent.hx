@@ -19,7 +19,15 @@ interface IAvoidableTileEvent {
   /** 基礎成功率（0..1）；core 會疊加武將屬性後 clamp 到 0..1。 */
   function avoidanceBaseRate():Float;
 
-  /** 規避成功後要執行的效果（例如彈窗提示、清負面狀態等）。 */
-  function onAvoided(actor:IPlayer):Void;
+  /** 規避消耗之武將體力（>=0）。 */
+  function avoidanceStaminaCost():Int;
+
+  /**
+   * 規避成功後之效果倍率：
+   * - 0.0：事件效果完全無效
+   * - 0.5：事件效果減半
+   * - 1.0：事件效果不變（不建議，等同規避無意義）
+   */
+  function avoidanceSuccessMultiplier():Float;
 }
 

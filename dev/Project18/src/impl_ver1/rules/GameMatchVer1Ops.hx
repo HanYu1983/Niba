@@ -31,10 +31,9 @@ class GameMatchVer1Ops {
       ruler.advanceOnBoard(1, ringLen);
       stepOrdinal++;
       var landIdx = ruler.pawnIndex();
-      // 起點獎勵：若格子類型為 Start 則觸發；為相容既有關卡，索引 0 仍視為起點（直到全面換成 Start）。
-      // TODO(GDD 2.1.12): 待關卡/地圖生成全面改為顯式放置 TileKind.Start 後，移除 landIdx==0 的相容判定。
+      // 起點獎勵：僅在格子類型為 Start 時觸發（GDD 2.1.12）
       var k = m.tileAt(landIdx).kind();
-      if (k == Start || landIdx == 0)
+      if (k == Start)
         m.onPassStartTile(ruler);
       var hooks = m.movementStepHooks();
       var halt = false;

@@ -11,7 +11,6 @@ import impl_ver1.model.Monarch;
 
 /**
  * 起點（TileKind.Start）測試：起點不再綁死 index=0；只要踩到 Start 就應給獎勵。
- * 同時仍保留 index=0 相容獎勵（見 GameMatchVer1Ops）。
  */
 class StartTileRewardTest {
   public static function testStartTileReward(game:IGame):Void {

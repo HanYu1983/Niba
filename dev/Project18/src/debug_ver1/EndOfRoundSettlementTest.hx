@@ -15,7 +15,7 @@ import impl_ver1.model.Monarch;
 
 /**
  * 骨架測試：回合結算點
- * - 起點獎勵：移動經過 index=0 時 gold 增加
+ * - 起點獎勵：移動經過 Start 時 gold 增加
  * - 回合末體力回復：每回合（輪回 seat=0）全體 +15
  */
 class EndOfRoundSettlementTest {
@@ -23,9 +23,9 @@ class EndOfRoundSettlementTest {
     var match:IGameMatch = game.createGameMatch(LevelKeys.EMPTY);
     match.forceSetFixedMoveDelta(2);
 
-    // 4 格環：把 pawn 放在 3，走 2 步會經過 0
+    // 4 格環：把 pawn 放在 3，走 2 步會經過 Start（此測試放在 index=0）
     match.createBoard([
-      match.createTile(0, Plain),
+      match.createTile(0, Start),
       match.createTile(1, Plain),
       match.createTile(2, Plain),
       match.createTile(3, Plain),

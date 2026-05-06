@@ -80,6 +80,12 @@ interface IGameMatchGetter {
   /** 除錯／測試：踩點後待結算之事件腳本；無則 null。 */
   function forceGetPendingTileEvent():Null<ITileEvent>;
 
+  /**
+   * 除錯／測試：事件效果倍率（預設 1.0）。
+   * 事件若支援負面規避（GDD 2.1.9）可依此縮放其效果（例如 0.5 減半，0.0 無效）。
+   */
+  function forceGetPendingTileEventEffectMultiplier():Float;
+
   /** 除錯／測試：移動完成但尚未落地分流時之落點索引；用於移動後策略窗口。 */
   function forceGetPendingLandingTile():Null<TileIndex>;
 

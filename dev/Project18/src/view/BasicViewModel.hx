@@ -152,6 +152,9 @@ class BasicViewModel implements IViewModel {
   public function forceGetPendingTileEvent():Null<ITileEvent>
     return match.forceGetPendingTileEvent();
 
+  public function forceGetPendingTileEventEffectMultiplier():Float
+    return match.forceGetPendingTileEventEffectMultiplier();
+
   public function forceGetPendingLandingTile():Null<TileIndex>
     return match.forceGetPendingLandingTile();
 

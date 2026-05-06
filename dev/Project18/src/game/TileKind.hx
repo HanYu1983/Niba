@@ -7,9 +7,6 @@ package game;
 enum TileKind {
     /**
      * 起點：可被視為一種格子語意。
-     *
-     * TODO(GDD 2.1.12): 目前為相容舊關卡/測試，起點獎勵仍同時支援「index=0 視為起點」；
-     * 待地圖/關卡全面改為顯式使用 TileKind.Start 後，移除 index=0 相容分支，統一以 TileKind.Start 判定。
      */
     Start;
 

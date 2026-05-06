@@ -59,6 +59,7 @@ class HelloWorld {
     debug_ver1.StartTileRewardTest.testStartTileReward(new impl_ver1.Game());
     debug_ver1.GeneralTileMenuFlowTest.testGeneralTileMenuFlow(new impl_ver1.Game());
     debug_ver1.ShopTileMenuFlowTest.testShopTileMenuFlow(new impl_ver1.Game());
+    debug_ver1.TileEventAvoidanceMenuFlowTest.testTileEventAvoidanceMenuFlow(new impl_ver1.Game());
     debug_ver1.PopupLifecycleTest.testPopupLifecycle(new impl_ver1.Game());
     debug_ver1.JiCePreviewRowsTest.testJiCePreviewRows(new impl_ver1.Game());
     debug_ver1.PostMoveTileTargetRestrictionTest.testPostMoveTileTargetRestriction(new impl_ver1.Game());

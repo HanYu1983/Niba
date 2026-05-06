@@ -91,6 +91,7 @@ class GameMatchCore implements IGameMatch {
   var _pendingTileEvent:Null<ITileEvent>;
   var _pendingTileEventIndex:Null<TileIndex>;
   var _pendingTileEventAvoidanceDone:Bool;
+  var _pendingTileEventEffectMultiplier:Float;
 
   /** --- 彈窗 outbox（apply 產生、view 消費）--- */
   var _popupSeq:Int;
@@ -150,9 +151,6 @@ class GameMatchCore implements IGameMatch {
   var _tileNextTurnGoldBonus:Map<Int, Int>;
   var _tileDefenseBonus:Map<Int, Float>;
 
-  /** --- 起點獎勵骨架 --- */
-  static inline var START_TILE_INDEX:TileIndex = 0;
-
   /** --- 敵城對峙多階段 --- */
   var _pendingHostileCityTileIndex:Null<TileIndex>;
   var _hostileCityPhase:Null<HostileCityPhase>;
@@ -179,6 +177,7 @@ class GameMatchCore implements IGameMatch {
     _pendingTileEvent = null;
     _pendingTileEventIndex = null;
     _pendingTileEventAvoidanceDone = false;
+    _pendingTileEventEffectMultiplier = 1.0;
     _popupSeq = 0;
     _popupsByMonarchId = new Map();
     _pendingLandingTileIndex = null;
@@ -329,6 +328,7 @@ class GameMatchCore implements IGameMatch {
     _pendingTileEvent = null;
     _pendingTileEventIndex = null;
     _pendingTileEventAvoidanceDone = false;
+    _pendingTileEventEffectMultiplier = 1.0;
     _pendingEmptyCityTileIndex = null;
     _pendingFriendlyCityTileIndex = null;
     _pendingVillageTileIndex = null;
@@ -342,6 +342,7 @@ class GameMatchCore implements IGameMatch {
     _pendingTileEvent = _tileEventByIndex.get(idx);
     _pendingTileEventIndex = idx;
     _pendingTileEventAvoidanceDone = false;
+    _pendingTileEventEffectMultiplier = 1.0;
   }
 
   /** 君主踩在 {@link game.TileKind.City}：依屬主／空城／駐軍決定 pending（語意集中於此）。 */
@@ -569,6 +570,9 @@ class GameMatchCore implements IGameMatch {
 
   public function forceGetPendingTileEvent():Null<ITileEvent>
     return _pendingTileEvent;
+
+  public function forceGetPendingTileEventEffectMultiplier():Float
+    return _pendingTileEventEffectMultiplier;
 
   public function forceGetPendingLandingTile():Null<TileIndex>
     return _pendingLandingTileIndex;
@@ -1097,13 +1101,24 @@ class GameMatchCore implements IGameMatch {
         if (av.isNegative()) {
           var ruler = cast(activeMonarch(), Monarch);
           var choices:Array<MenuGeneralChoice> = [];
-          for (g in ruler.roster())
-            choices.push({generalId: g.id(), caption: g.id()});
+          var stat = av.avoidanceStat();
+          var baseRate = av.avoidanceBaseRate();
+          for (g in ruler.roster()) {
+            var gid = g.id();
+            var statVal = g.stat(stat);
+            var rate = baseRate + (statVal / 200.0);
+            if (rate < 0)
+              rate = 0;
+            if (rate > 1)
+              rate = 1;
+            var cap = '${gid}｜${Std.string(stat)}=${statVal}｜成功率 ${Std.int(rate * 100)}%｜體力-${av.avoidanceStaminaCost()}';
+            choices.push({generalId: gid, caption: cap});
+          }
           var defSel:Array<String> = choices.length > 0 ? [choices[0].generalId] : [];
           var widgets:Array<MenuFormWidget> = [];
           if (choices.length > 0)
             widgets.push(GeneralMultiPick("規避指派武將（單選）", choices, defSel));
-          widgets.push(Button(createPlayerMenuEntry(TileEventAvoidAttempt, "嘗試規避（不消耗體力）", choices.length > 0, "evt_avoid_try")));
+          widgets.push(Button(createPlayerMenuEntry(TileEventAvoidAttempt, "嘗試規避（消耗體力）", choices.length > 0, "evt_avoid_try")));
           widgets.push(Button(createPlayerMenuEntry(TileEventAvoidSkip, "略過規避，直接進入事件", true, "evt_avoid_skip")));
           roots.push(createPlayerMenuNode("事件規避（可選）", null, [], widgets));
         } else {
@@ -1398,6 +1413,7 @@ class GameMatchCore implements IGameMatch {
     _pendingTileEvent = null;
     _pendingTileEventIndex = null;
     _pendingTileEventAvoidanceDone = false;
+    _pendingTileEventEffectMultiplier = 1.0;
     _activeSliceComplete = true;
   }
 
@@ -1439,18 +1455,28 @@ class GameMatchCore implements IGameMatch {
     var roll = Deterministic.hash01(seed);
     var ok = roll < rate;
     if (ok) {
-      av.onAvoided(actor);
+      var cost = av.avoidanceStaminaCost();
+      if (cost < 0)
+        throw "GameMatchCore: avoidanceStaminaCost must be >=0";
+      g.setStamina(Balance.clampInt(g.stamina() - cost, 0, 100));
+      _pendingTileEventEffectMultiplier = av.avoidanceSuccessMultiplier();
+      if (_pendingTileEventEffectMultiplier < 0)
+        _pendingTileEventEffectMultiplier = 0;
+      if (_pendingTileEventEffectMultiplier > 1)
+        _pendingTileEventEffectMultiplier = 1;
       pushInfoPopup(
         actor.monarchId(),
         "事件規避成功",
-        Plain('武將 $gid 規避成功（${Std.string(stat)}=$statVal，率=${Std.int(rate * 100)}%）\n事件已跳過。'),
+        Plain('武將 $gid 規避成功（${Std.string(stat)}=$statVal，率=${Std.int(rate * 100)}%）\n事件效果倍率：${_pendingTileEventEffectMultiplier}'),
         "evt-avoid-ok"
       );
-      _pendingTileEvent = null;
-      _pendingTileEventIndex = null;
-      _pendingTileEventAvoidanceDone = false;
-      _activeSliceComplete = true;
+      // 成功後仍進入事件本體（由事件自行用 multiplier 進行減半/無效等縮放）
+      _pendingTileEventAvoidanceDone = true;
     } else {
+      var cost = av.avoidanceStaminaCost();
+      if (cost < 0)
+        throw "GameMatchCore: avoidanceStaminaCost must be >=0";
+      g.setStamina(Balance.clampInt(g.stamina() - cost, 0, 100));
       pushInfoPopup(
         actor.monarchId(),
         "事件規避失敗",
