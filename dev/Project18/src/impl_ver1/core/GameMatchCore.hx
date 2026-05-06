@@ -33,6 +33,7 @@ import game.ResourceReward;
 import game.StrategyPhase;
 import game.TileKind;
 import game.CityLevel;
+import game.GameError;
 import impl_ver1.commands.Ver1MainCommands;
 import impl_ver1.flows.HostileCityPhase;
 import impl_ver1.jice.JiCeRegistry;
@@ -1436,7 +1437,7 @@ class GameMatchCore implements IGameMatch {
 
     var sel = extractFirstGeneralMultiPickSelections(menuNode.formWidgets());
     if (sel.length != 1)
-      throw "GameMatchCore: 事件規避需恰好選擇 1 名武將";
+      throw new GameError("事件規避需恰好選擇 1 名武將", "選擇不合法", "evt-avoid");
     var gid:GeneralId = sel[0];
     var g = requireGeneral(gid);
     if (g.owner() != ruler.id())
@@ -1796,7 +1797,7 @@ class GameMatchCore implements IGameMatch {
             var offers = _generalOffersByTile.exists(tileIdx) ? _generalOffersByTile.get(tileIdx) : [];
             var sel = extractFirstGeneralMultiPickSelections(menuNode.formWidgets());
             if (sel.length == 0)
-              throw "GameMatchCore: 請至少選擇 1 名欲招募武將";
+              throw new GameError("請至少選擇 1 名欲招募武將", "選擇不合法", "general-recruit");
 
             // 依 sel 順序挑出 offer（並去重）
             var uniq = dedupeGeneralIds(sel);
@@ -1818,7 +1819,7 @@ class GameMatchCore implements IGameMatch {
               total += o.costGold;
             var ruler = cast(activeMonarch(), Monarch);
             if (ruler.gold() < total)
-              throw "GameMatchCore: 金錢不足，無法完成批次招募";
+              throw new GameError("金錢不足，無法完成批次招募", "金錢不足", "general-recruit");
             ruler.reduceGold(total);
 
             var lines:Array<String> = [];
@@ -1869,12 +1870,12 @@ class GameMatchCore implements IGameMatch {
               throw "GameMatchCore: ShopBuy 找不到商品";
             var ruler = cast(activeMonarch(), Monarch);
             if (ruler.gold() < picked.priceGold)
-              throw "GameMatchCore: 金錢不足，無法購買";
+              throw new GameError("金錢不足，無法購買", "金錢不足", "shop-buy");
 
             // 解析表單：需恰好選一名武將
             var sel = extractFirstGeneralMultiPickSelections(menuNode.formWidgets());
             if (sel.length != 1)
-              throw "GameMatchCore: 商店購買需恰好選擇 1 名武將";
+              throw new GameError("商店購買需恰好選擇 1 名武將", "選擇不合法", "shop-buy");
             var gid:GeneralId = sel[0];
             var g = requireGeneral(gid);
             if (g.owner() != ruler.id())

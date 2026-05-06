@@ -15,6 +15,7 @@ import game.ITileEvent;
 import game.MatchTerminationReason;
 import game.MenuFormWidget;
 import game.IGameMatch;
+import game.GameError;
 import game.IPopupMessage;
 import game.PopupPayload;
 import game.MenuClientConfirm;
@@ -94,7 +95,13 @@ class BasicViewModel implements IViewModel {
     }
     var a = match.activeMonarch();
     var actor:IPlayer = new LocalPlayer(a.id(), "active");
-    match.applyMenuLeaf(actor, node);
+    try {
+      match.applyMenuLeaf(actor, node);
+    } catch (e:GameError) {
+      // 只攔截遊戲規則錯誤，轉成 popup，避免整個 UI 流程中斷
+      node.setActivationEntry(null);
+      match.pushInfoPopup(actor.monarchId(), e.popupTitle, PopupPayload.Plain(e.message), e.ctxKey);
+    }
   }
 
   function applyGeneralMultiPickToNode(node:IPlayerMenuNode, widgetIndex:Int, selectedGeneralIds:Array<String>):Void {
