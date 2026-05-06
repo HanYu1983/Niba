@@ -2,6 +2,7 @@ package impl_ver1.core;
 
 import game.GameIds;
 import game.IBoard;
+import game.IAvoidableTileEvent;
 import game.IGameMatch;
 import game.MatchTerminationReason;
 import game.IGeneral;
@@ -28,6 +29,7 @@ import game.PopupAudience;
 import game.PopupOption;
 import game.PopupPayload;
 import game.PlayerMenuKind;
+import game.ResourceReward;
 import game.StrategyPhase;
 import game.TileKind;
 import game.CityLevel;
@@ -52,6 +54,7 @@ import impl_ver1.rules.GameMatchVer1Ops;
 import impl_ver1.staging.FriendlyCityDevelopStagingAction;
 import impl_ver1.staging.FriendlyCityRestStagingAction;
 import impl_ver1.staging.JiCeStagingAction;
+import impl_ver1.staging.ResourceTileBoostStagingAction;
 import impl_ver1.staging.RestStagingAction;
 import impl_ver1.staging.VillageConquerStagingAction;
 import impl_ver1.staging.VillagePlunderStagingAction;
@@ -86,6 +89,8 @@ class GameMatchCore implements IGameMatch {
   /** --- 環上格子事件綁定與落地 pending --- */
   var _tileEventByIndex:Map<Int, ITileEvent>;
   var _pendingTileEvent:Null<ITileEvent>;
+  var _pendingTileEventIndex:Null<TileIndex>;
+  var _pendingTileEventAvoidanceDone:Bool;
 
   /** --- 彈窗 outbox（apply 產生、view 消費）--- */
   var _popupSeq:Int;
@@ -120,6 +125,11 @@ class GameMatchCore implements IGameMatch {
   var _pendingVillageTileIndex:Null<TileIndex>;
   /** 村落格索引 →（君主 id → 友好度 0~100）。 */
   var _villageFriendly:Map<Int, Map<MonarchId, Int>>;
+
+  /** --- 資源格 pending（領取／指派武將加成）--- */
+  var _pendingResourceTileIndex:Null<TileIndex>;
+  /** 資源格：本次落地的資源包（程序化生成；離開格子或結算後刷新）。 */
+  var _resourceRewardsByTile:Map<Int, ResourceReward>;
 
   /** --- 武將格/商店格 pending（骨架）--- */
   var _pendingGeneralTileIndex:Null<TileIndex>;
@@ -167,6 +177,8 @@ class GameMatchCore implements IGameMatch {
     _terminationReason = NotEnded;
     _tileEventByIndex = new Map();
     _pendingTileEvent = null;
+    _pendingTileEventIndex = null;
+    _pendingTileEventAvoidanceDone = false;
     _popupSeq = 0;
     _popupsByMonarchId = new Map();
     _pendingLandingTileIndex = null;
@@ -180,10 +192,12 @@ class GameMatchCore implements IGameMatch {
     _cityLevel = new Map();
     _pendingFriendlyCityTileIndex = null;
     _pendingVillageTileIndex = null;
+    _pendingResourceTileIndex = null;
     _pendingGeneralTileIndex = null;
     _pendingShopTileIndex = null;
     _generalOffersByTile = new Map();
     _shopStocksByTile = new Map();
+    _resourceRewardsByTile = new Map();
     _villageFriendly = new Map();
     _tileNextTurnGrainBonus = new Map();
     _tileNextTurnGoldBonus = new Map();
@@ -313,9 +327,12 @@ class GameMatchCore implements IGameMatch {
   // --- 落地 surface：清空事件／空城／友城 pending 並重置敵城對峙 ---
   private function landingClearSurfacePendings():Void {
     _pendingTileEvent = null;
+    _pendingTileEventIndex = null;
+    _pendingTileEventAvoidanceDone = false;
     _pendingEmptyCityTileIndex = null;
     _pendingFriendlyCityTileIndex = null;
     _pendingVillageTileIndex = null;
+    _pendingResourceTileIndex = null;
     _pendingGeneralTileIndex = null;
     _pendingShopTileIndex = null;
     hostileCityResetAll();
@@ -323,6 +340,8 @@ class GameMatchCore implements IGameMatch {
 
   private function landingArmPendingTileEventAt(idx:TileIndex):Void {
     _pendingTileEvent = _tileEventByIndex.get(idx);
+    _pendingTileEventIndex = idx;
+    _pendingTileEventAvoidanceDone = false;
   }
 
   /** 君主踩在 {@link game.TileKind.City}：依屬主／空城／駐軍決定 pending（語意集中於此）。 */
@@ -703,6 +722,9 @@ class GameMatchCore implements IGameMatch {
   public function forceGetPendingVillageTile():Null<TileIndex>
     return _pendingVillageTileIndex;
 
+  public function forceGetPendingResourceTile():Null<TileIndex>
+    return _pendingResourceTileIndex;
+
   public function forceGetPendingGeneralTile():Null<TileIndex>
     return _pendingGeneralTileIndex;
 
@@ -940,6 +962,8 @@ class GameMatchCore implements IGameMatch {
       var phaseTag = forceGetHostileCityFlowPhase();
       ctx += "-hostile-city-" + (phaseTag != null ? phaseTag : "?");
     }
+    if (_pendingResourceTileIndex != null)
+      ctx += "-resource-" + _pendingResourceTileIndex;
     if (_pendingGeneralTileIndex != null)
       ctx += "-general-" + _pendingGeneralTileIndex;
     if (_pendingShopTileIndex != null)
@@ -1000,6 +1024,29 @@ class GameMatchCore implements IGameMatch {
       roots.push(createPlayerMenuNode('空城進駐（格 $idx）', null, [], occupyForm));
     }
 
+    if (_pendingResourceTileIndex != null) {
+      var idx = _pendingResourceTileIndex;
+      var ruler = cast(activeMonarch(), Monarch);
+      var rw:ResourceReward = _resourceRewardsByTile.exists(idx) ? _resourceRewardsByTile.get(idx) : {gold: 0, grain: 0, troops: 0};
+      var lines:Array<String> = [];
+      if (rw.gold > 0)
+        lines.push('金錢 +${rw.gold}');
+      if (rw.grain > 0)
+        lines.push('糧食 +${rw.grain}');
+      if (rw.troops > 0)
+        lines.push('兵力 +${rw.troops}');
+      if (lines.length == 0)
+        lines.push("（無）");
+
+      var claim = createPlayerMenuEntry(ResourceClaim, "領取資源", true, "resource_claim");
+      var canBoost = ruler.roster().length > 0;
+      var boost = createPlayerMenuEntry(ResourceBoost, "指派武將加成", canBoost, "resource_boost");
+      var widgets:Array<MenuFormWidget> = [Button(claim), Button(boost)];
+      roots.push(createPlayerMenuNode('資源格（格 $idx）', null, [], widgets));
+      roots.push(createPlayerMenuNode("本次資源包：" + lines.join("｜"), null, [], []));
+      roots.push(createPlayerMenuNode("回合結束（資源格）", createPlayerMenuEntry(ResourceEndTurn, "回合結束（不加成）", true, "resource_end"), []));
+    }
+
     if (_pendingGeneralTileIndex != null) {
       var idx = _pendingGeneralTileIndex;
       var offers = _generalOffersByTile.exists(idx) ? _generalOffersByTile.get(idx) : [];
@@ -1044,6 +1091,26 @@ class GameMatchCore implements IGameMatch {
     }
 
     if (pend != null) {
+      // GDD 2.1.9：負面事件（可規避）在事件選單前插入「規避」流程
+      if (!_pendingTileEventAvoidanceDone && Std.isOfType(pend, IAvoidableTileEvent)) {
+        var av:IAvoidableTileEvent = cast pend;
+        if (av.isNegative()) {
+          var ruler = cast(activeMonarch(), Monarch);
+          var choices:Array<MenuGeneralChoice> = [];
+          for (g in ruler.roster())
+            choices.push({generalId: g.id(), caption: g.id()});
+          var defSel:Array<String> = choices.length > 0 ? [choices[0].generalId] : [];
+          var widgets:Array<MenuFormWidget> = [];
+          if (choices.length > 0)
+            widgets.push(GeneralMultiPick("規避指派武將（單選）", choices, defSel));
+          widgets.push(Button(createPlayerMenuEntry(TileEventAvoidAttempt, "嘗試規避（不消耗體力）", choices.length > 0, "evt_avoid_try")));
+          widgets.push(Button(createPlayerMenuEntry(TileEventAvoidSkip, "略過規避，直接進入事件", true, "evt_avoid_skip")));
+          roots.push(createPlayerMenuNode("事件規避（可選）", null, [], widgets));
+        } else {
+          _pendingTileEventAvoidanceDone = true;
+        }
+      }
+
       var evRoots = pend.buildPlayerMenu(actor).rootNodes();
       roots.push(createPlayerMenuNode("事件：" + pend.registryKey(), null, evRoots));
     }
@@ -1081,7 +1148,7 @@ class GameMatchCore implements IGameMatch {
         _pendingStrategyPhase = null;
 
       // 任一玩家操作（除 ConfirmDone 外）都視為「本回合已行動過」，因此移動後策略才可用。
-      case Move, LandingContinue, JiCe, StagingSubmit, Status, StrategyPre, StrategyPost, Rest, VillageTrade, VillageConquer, VillagePlunder, VillageEndTurn, GeneralRecruit, GeneralRecruitSubmit, GeneralEndTurn, ShopBuy, ShopEndTurn, FriendlyCityDevelop, FriendlyCityRest:
+      case Move, LandingContinue, JiCe, StagingSubmit, Status, StrategyPre, StrategyPost, Rest, VillageTrade, VillageConquer, VillagePlunder, VillageEndTurn, ResourceClaim, ResourceBoost, ResourceEndTurn, GeneralRecruit, GeneralRecruitSubmit, GeneralEndTurn, ShopBuy, ShopEndTurn, FriendlyCityDevelop, FriendlyCityRest, TileEventAvoidAttempt, TileEventAvoidSkip:
         _hasMovedThisTurn = true;
 
       // 這些 leaf 不改動 hasMovedThisTurn（但通常也不會在回合開始前出現）
@@ -1117,6 +1184,7 @@ class GameMatchCore implements IGameMatch {
       && _pendingFriendlyCityTileIndex == null
       && _pendingHostileCityTileIndex == null
       && _pendingVillageTileIndex == null
+      && _pendingResourceTileIndex == null
       && _pendingGeneralTileIndex == null
       && _pendingShopTileIndex == null;
   }
@@ -1138,7 +1206,7 @@ class GameMatchCore implements IGameMatch {
         ensureVillageRow(idx);
         _pendingVillageTileIndex = idx;
       case Resource:
-        landingApplyResourceTile(idx);
+        landingArmPendingResourceTileAt(idx);
       case General:
         generalTileRefreshOffers(idx);
         _pendingGeneralTileIndex = idx;
@@ -1152,22 +1220,34 @@ class GameMatchCore implements IGameMatch {
     }
   }
 
-  function landingApplyResourceTile(idx:TileIndex):Void {
-    // 骨架：資源格落地直接給最小收益，避免卡在 staging/menu。
-    // TODO(GDD 2.1.2 / 2.1.8): 資源格應支援「指派武將加成」：
-    // - 落地後提供選單：選 1 名武將（單選）→ 依武將數值（待對齊 GDD）調整獲得資源量
-    // - 並處理體力消耗/成功率（若規劃需要）
-    // - 目前先用固定 +30 金 / +30 糧，且直接結束落地切片
+  function landingArmPendingResourceTileAt(idx:TileIndex):Void {
+    _pendingResourceTileIndex = idx;
+    // 每次落地刷新本次資源包（可重現）
+    _resourceRewardsByTile.set(idx, rollResourceReward(idx));
+  }
+
+  function rollResourceReward(idx:TileIndex):ResourceReward {
     var ruler = cast(activeMonarch(), Monarch);
-    ruler.grantGold(30);
-    ruler.grantGrain(30);
-    pushInfoPopup(
-      ruler.id(),
-      "資源格收益",
-      Plain('格位 ${idx}\n獲得：金錢 +30\n獲得：糧食 +30'),
-      "resource-tile"
-    );
-    _activeSliceComplete = true;
+    var seedBase = 'resource|t=${idx}|r=${roundNumber()}|m=${ruler.id()}';
+    var uType = Deterministic.hash01(seedBase + "|type");
+    var amt = 20 + Std.int(Math.floor(Deterministic.hash01(seedBase + "|amt") * 41)); // 20~60
+    // 聲望做微幅調整：高聲望 +0~10%，低聲望 -0~10%（保持可重現）
+    var p = ruler.prestige();
+    var modU = Deterministic.hash01(seedBase + "|pmod");
+    var mult:Float = 1.0;
+    if (p >= 70)
+      mult = 1.0 + (modU * 0.10);
+    else if (p < 40)
+      mult = 1.0 - (modU * 0.10);
+    var finalAmt = Std.int(Math.round(amt * mult));
+    if (finalAmt < 1)
+      finalAmt = 1;
+
+    if (uType < 0.34)
+      return {gold: finalAmt, grain: 0, troops: 0};
+    if (uType < 0.67)
+      return {gold: 0, grain: finalAmt, troops: 0};
+    return {gold: 0, grain: 0, troops: finalAmt};
   }
 
   // --- 武將格/商店格：程序化生成（先用可重現的簡易規則）---
@@ -1314,13 +1394,72 @@ class GameMatchCore implements IGameMatch {
     var leaf = MenuActivation.activatingEntry(menuNode);
     if (leaf.decisionToken() == null)
       throw "GameMatchCore: TileEventPick 需要 decisionToken";
-    // TODO(GDD 2.1.2 / 2.1.9): 事件格應支援「指派武將規避壞事件」：
-    // - 事件觸發前（或事件選項內）提供選將表單，並把選擇結果傳給 ITileEvent.resolveChoice
-    // - 規避不消耗體力，但依事件類型對應不同屬性作判定（智/武/政/統等，見 GDD 表）
-    // - 目前事件系統僅走 ITileEvent 自己的選單分支，尚未有通用的「事件前置選將」管線
     ev.resolveChoice(actor, menuNode);
     _pendingTileEvent = null;
+    _pendingTileEventIndex = null;
+    _pendingTileEventAvoidanceDone = false;
     _activeSliceComplete = true;
+  }
+
+  function handleTileEventAvoidAttempt(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
+    var ev = _pendingTileEvent;
+    if (ev == null)
+      throw "GameMatchCore: TileEventAvoidAttempt 但無 pendingTileEvent";
+    if (!Std.isOfType(ev, IAvoidableTileEvent))
+      throw "GameMatchCore: TileEventAvoidAttempt 但事件未 implements IAvoidableTileEvent";
+    var av:IAvoidableTileEvent = cast ev;
+    if (!av.isNegative()) {
+      _pendingTileEventAvoidanceDone = true;
+      return;
+    }
+
+    var tileIdx = _pendingTileEventIndex != null ? _pendingTileEventIndex : -1;
+    var ruler = cast(activeMonarch(), Monarch);
+    if (ruler.roster().length == 0)
+      throw "GameMatchCore: TileEventAvoidAttempt 需要至少 1 名麾下武將";
+
+    var sel = extractFirstGeneralMultiPickSelections(menuNode.formWidgets());
+    if (sel.length != 1)
+      throw "GameMatchCore: 事件規避需恰好選擇 1 名武將";
+    var gid:GeneralId = sel[0];
+    var g = requireGeneral(gid);
+    if (g.owner() != ruler.id())
+      throw "GameMatchCore: 事件規避只能選擇自己麾下武將";
+
+    var stat = av.avoidanceStat();
+    var statVal = g.stat(stat);
+    var baseRate = av.avoidanceBaseRate();
+    var rate = baseRate + (statVal / 200.0);
+    if (rate < 0)
+      rate = 0;
+    if (rate > 1)
+      rate = 1;
+
+    var seed = 'evt_avoid|k=${ev.registryKey()}|t=${tileIdx}|r=${roundNumber()}|m=${ruler.id()}|g=${gid}';
+    var roll = Deterministic.hash01(seed);
+    var ok = roll < rate;
+    if (ok) {
+      av.onAvoided(actor);
+      pushInfoPopup(
+        actor.monarchId(),
+        "事件規避成功",
+        Plain('武將 $gid 規避成功（${Std.string(stat)}=$statVal，率=${Std.int(rate * 100)}%）\n事件已跳過。'),
+        "evt-avoid-ok"
+      );
+      _pendingTileEvent = null;
+      _pendingTileEventIndex = null;
+      _pendingTileEventAvoidanceDone = false;
+      _activeSliceComplete = true;
+    } else {
+      pushInfoPopup(
+        actor.monarchId(),
+        "事件規避失敗",
+        Plain('武將 $gid 規避失敗（${Std.string(stat)}=$statVal，率=${Std.int(rate * 100)}%）\n請繼續處理事件選項。'),
+        "evt-avoid-fail"
+      );
+      _pendingTileEventAvoidanceDone = true;
+    }
+    syncActiveSliceAfterMenuLeaf(TileEventAvoidAttempt);
   }
 
   function handleStagingSubmit(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
@@ -1342,6 +1481,11 @@ class GameMatchCore implements IGameMatch {
     // 若本次 staging 發生於村落互動，提交後視為已完成落地互動，可結束切片
     if (_pendingVillageTileIndex != null) {
       _pendingVillageTileIndex = null;
+      _activeSliceComplete = true;
+    }
+    // 資源格：若本次 staging 用於指派武將加成，提交後視為已完成落地互動，可結束切片
+    if (_pendingResourceTileIndex != null) {
+      _pendingResourceTileIndex = null;
       _activeSliceComplete = true;
     }
     // 於我方領地拜訪下，staging 提交後仍停留在拜訪選單（由 VisitEnd 結束）
@@ -1541,6 +1685,11 @@ class GameMatchCore implements IGameMatch {
             );
           case TileEventPick:
             handleTileEventPick(actor, menuNode);
+          case TileEventAvoidAttempt:
+            handleTileEventAvoidAttempt(actor, menuNode);
+          case TileEventAvoidSkip:
+            _pendingTileEventAvoidanceDone = true;
+            syncActiveSliceAfterMenuLeaf(TileEventAvoidSkip);
           case StagingSubmit:
             handleStagingSubmit(actor, menuNode);
           case LandingContinue:
@@ -1578,6 +1727,40 @@ class GameMatchCore implements IGameMatch {
             _pendingVillageTileIndex = null;
             _activeSliceComplete = true;
             syncActiveSliceAfterMenuLeaf(VillageEndTurn);
+          case ResourceClaim:
+            if (_pendingResourceTileIndex == null)
+              throw "GameMatchCore: ResourceClaim 但無 pendingResource";
+            var idx = _pendingResourceTileIndex;
+            var rw:ResourceReward = _resourceRewardsByTile.exists(idx) ? _resourceRewardsByTile.get(idx) : {gold: 0, grain: 0, troops: 0};
+            var ruler = cast(activeMonarch(), Monarch);
+            if (rw.gold > 0)
+              ruler.grantGold(rw.gold);
+            if (rw.grain > 0)
+              ruler.grantGrain(rw.grain);
+            if (rw.troops > 0)
+              ruler.grantTroops(rw.troops);
+            pushInfoPopup(
+              actor.monarchId(),
+              "資源格收益",
+              Plain('格位 ${idx}\n獲得：金錢 +${rw.gold}\n獲得：糧食 +${rw.grain}\n獲得：兵力 +${rw.troops}'),
+              "resource-claim"
+            );
+            _pendingResourceTileIndex = null;
+            _activeSliceComplete = true;
+            syncActiveSliceAfterMenuLeaf(ResourceClaim);
+          case ResourceBoost:
+            if (_pendingResourceTileIndex == null)
+              throw "GameMatchCore: ResourceBoost 但無 pendingResource";
+            var idx = _pendingResourceTileIndex;
+            var rw:ResourceReward = _resourceRewardsByTile.exists(idx) ? _resourceRewardsByTile.get(idx) : {gold: 0, grain: 0, troops: 0};
+            enterStaging(actor, new ResourceTileBoostStagingAction(this, idx, rw), ResourceBoost);
+          case ResourceEndTurn:
+            if (_pendingResourceTileIndex == null)
+              throw "GameMatchCore: ResourceEndTurn 但無 pendingResource";
+            pushInfoPopup(actor.monarchId(), "資源格", Plain("已結束資源格互動（不加成）。"), "resource-end");
+            _pendingResourceTileIndex = null;
+            _activeSliceComplete = true;
+            syncActiveSliceAfterMenuLeaf(ResourceEndTurn);
           case GeneralRecruit:
             throw "GameMatchCore: GeneralRecruit 已改為批次招募（GeneralRecruitSubmit）";
           case GeneralRecruitSubmit:

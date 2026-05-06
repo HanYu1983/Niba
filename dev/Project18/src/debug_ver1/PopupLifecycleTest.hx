@@ -34,6 +34,13 @@ class PopupLifecycleTest {
 
     match.applyMenuLeaf(actor, MenuNodeQuery.requireNodeWithKind(match.createPlayerMenu(actor), PlayerMenuKind.Move));
     match.applyMenuLeaf(actor, MenuNodeQuery.requireNodeWithKind(match.createPlayerMenu(actor), PlayerMenuKind.LandingContinue));
+    // 資源格改為 pending；需先按「領取」才會產生收益 popup
+    var claimNode = MenuNodeQuery.requireNodeWithKind(match.createPlayerMenu(actor), PlayerMenuKind.ResourceClaim);
+    var claimEntry = MenuNodeQuery.buttonEntryOnNode(claimNode, PlayerMenuKind.ResourceClaim);
+    if (claimEntry == null)
+      throw "PopupLifecycleTest: missing claim entry";
+    claimNode.setActivationEntry(claimEntry);
+    match.applyMenuLeaf(actor, claimNode);
 
     var popups = match.pendingPopups(idA);
     if (popups.length < 1)
@@ -50,7 +57,7 @@ class PopupLifecycleTest {
 
     switch p.payload() {
       case Plain(text):
-        if (text.indexOf("金錢 +30") < 0 || text.indexOf("糧食 +30") < 0)
+        if (text.indexOf("格位 1") < 0)
           throw 'PopupLifecycleTest: unexpected popup payload "$text"';
       default:
         throw "PopupLifecycleTest: expected Plain payload";

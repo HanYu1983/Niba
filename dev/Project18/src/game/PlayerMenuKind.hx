@@ -32,6 +32,12 @@ enum PlayerMenuKind {
     /** 踩點事件之分支持選；機械鍵見 IPlayerMenuEntry.decisionToken。 */
     TileEventPick;
 
+    /** 事件格：規避嘗試（表單內 Button；若成功則直接跳過事件）。 */
+    TileEventAvoidAttempt;
+
+    /** 事件格：略過規避（直接進入事件本體選項）。 */
+    TileEventAvoidSkip;
+
     /** 通用暫存：提交表單並結算（可用於非計策的 staging 指令）。 */
     StagingSubmit;
 
@@ -49,6 +55,15 @@ enum PlayerMenuKind {
 
     /** 村落：結束（不互動直接結束落地階段）。 */
     VillageEndTurn;
+
+    /** 資源格：直接領取本次資源包並結束落地。 */
+    ResourceClaim;
+
+    /** 資源格：指派武將加成（進入 staging 表單）。 */
+    ResourceBoost;
+
+    /** 資源格：離開（不加成，等同直接結束落地）。 */
+    ResourceEndTurn;
 
     /** 武將格：招募（ver1 骨架：先以彈窗結算並結束落地）。 */
     GeneralRecruit;

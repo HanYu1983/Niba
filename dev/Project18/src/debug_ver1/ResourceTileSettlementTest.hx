@@ -11,7 +11,7 @@ import game.GameIds;
 import impl_ver1.model.Monarch;
 
 /**
- * 骨架測試：新增 Resource 格子後，落地會立即結算並改變資源。
+ * 資源格測試：落地後進入 pending，需由選單「領取」或「指派加成」結算。
  */
 class ResourceTileSettlementTest {
   public static function testResourceTileSettlement(game:IGame):Void {
@@ -32,18 +32,28 @@ class ResourceTileSettlementTest {
     var ruler = cast(match.activeMonarch(), Monarch);
     var g0 = ruler.gold();
     var gr0 = ruler.grain();
+    var t0 = ruler.troops();
 
     match.applyMenuLeaf(actor, MenuNodeQuery.requireNodeWithKind(match.createPlayerMenu(actor), PlayerMenuKind.Move));
     match.applyMenuLeaf(actor, MenuNodeQuery.requireNodeWithKind(match.createPlayerMenu(actor), PlayerMenuKind.LandingContinue));
 
     if (ruler.pawnIndex() != 1)
       throw "ResourceTileSettlementTest: expected landing at 1";
-    if (ruler.gold() != g0 + 30)
-      throw "ResourceTileSettlementTest: gold should +30";
-    if (ruler.grain() != gr0 + 30)
-      throw "ResourceTileSettlementTest: grain should +30";
+    if (match.forceGetPendingResourceTile() != 1)
+      throw "ResourceTileSettlementTest: expected pendingResource at 1";
+    if (ruler.gold() != g0 || ruler.grain() != gr0 || ruler.troops() != t0)
+      throw "ResourceTileSettlementTest: resources should not change before claim";
 
-    trace("[ResourceTileSettlementTest] OK — resource tile settles immediately");
+    var claimNode = MenuNodeQuery.requireNodeWithKind(match.createPlayerMenu(actor), PlayerMenuKind.ResourceClaim);
+    var claimEntry = MenuNodeQuery.buttonEntryOnNode(claimNode, PlayerMenuKind.ResourceClaim);
+    if (claimEntry == null)
+      throw "ResourceTileSettlementTest: missing claim entry";
+    claimNode.setActivationEntry(claimEntry);
+    match.applyMenuLeaf(actor, claimNode);
+    if (ruler.gold() == g0 && ruler.grain() == gr0 && ruler.troops() == t0)
+      throw "ResourceTileSettlementTest: expected some resource gain after claim";
+
+    trace("[ResourceTileSettlementTest] OK — resource tile pending → claim settles");
   }
 }
 

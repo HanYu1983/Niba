@@ -55,6 +55,7 @@ private class GeneralEndTurnCommand implements IPlayerCommand {
       || m.forceGetPendingFriendlyCityVisitTile() != null
       || m.forceGetPendingHostileCityTile() != null
       || m.forceGetPendingVillageTile() != null
+      || m.forceGetPendingResourceTile() != null
       || m.forceGetPendingShopTile() != null;
     return m.createPlayerMenuNode("離開", m.createPlayerMenuEntry(GeneralEndTurn, "離開（武將格）", !block), []);
   }
@@ -78,6 +79,7 @@ private class ShopBuyCommand implements IPlayerCommand {
       || m.forceGetPendingFriendlyCityVisitTile() != null
       || m.forceGetPendingHostileCityTile() != null
       || m.forceGetPendingVillageTile() != null
+      || m.forceGetPendingResourceTile() != null
       || m.forceGetPendingGeneralTile() != null;
     return m.createPlayerMenuNode("商店格：購買（骨架）", m.createPlayerMenuEntry(ShopBuy, "購買（骨架）", !blockBasics), []);
   }
@@ -101,6 +103,7 @@ private class ShopEndTurnCommand implements IPlayerCommand {
       || m.forceGetPendingFriendlyCityVisitTile() != null
       || m.forceGetPendingHostileCityTile() != null
       || m.forceGetPendingVillageTile() != null
+      || m.forceGetPendingResourceTile() != null
       || m.forceGetPendingGeneralTile() != null;
     return m.createPlayerMenuNode("離開", m.createPlayerMenuEntry(ShopEndTurn, "離開（商店格）", !block), []);
   }
@@ -137,6 +140,7 @@ private class MoveCommand implements IPlayerCommand {
       || m.forceGetPendingFriendlyCityVisitTile() != null
       || m.forceGetPendingHostileCityTile() != null
       || m.forceGetPendingVillageTile() != null
+      || m.forceGetPendingResourceTile() != null
       || m.forceGetPendingGeneralTile() != null
       || m.forceGetPendingShopTile() != null;
     return m.createPlayerMenuNode("移動", m.createPlayerMenuEntry(Move, "移動", !blockBasics), []);
@@ -168,6 +172,7 @@ private class StrategyPreCommand implements IPlayerCommand {
       && m.forceGetPendingFriendlyCityVisitTile() == null
       && !hostilePending
       && m.forceGetPendingVillageTile() == null
+      && m.forceGetPendingResourceTile() == null
       && m.forceGetPendingGeneralTile() == null
       && m.forceGetPendingShopTile() == null;
 
@@ -224,6 +229,7 @@ private class StrategyPostCommand implements IPlayerCommand {
     var jiEnabledBase =
       !stagingActive
       && m.forceGetPendingVillageTile() == null
+      && m.forceGetPendingResourceTile() == null
       && m.forceGetPendingGeneralTile() == null
       && m.forceGetPendingShopTile() == null;
     var jiChildren:Array<IPlayerMenuNode> = [];
@@ -278,6 +284,7 @@ private class RestCommand implements IPlayerCommand {
       || m.forceGetPendingFriendlyCityVisitTile() != null
       || m.forceGetPendingHostileCityTile() != null
       || m.forceGetPendingVillageTile() != null
+      || m.forceGetPendingResourceTile() != null
       || m.forceGetPendingGeneralTile() != null
       || m.forceGetPendingShopTile() != null;
     return m.createPlayerMenuNode("休整", m.createPlayerMenuEntry(Rest, "休整（回復體力）", !blockBasics), []);
@@ -408,6 +415,7 @@ private class ConfirmDoneCommand implements IPlayerCommand {
       && m.forceGetPendingFriendlyCityVisitTile() == null
       && m.forceGetPendingHostileCityTile() == null
       && m.forceGetPendingVillageTile() == null
+      && m.forceGetPendingResourceTile() == null
       && m.forceGetPendingGeneralTile() == null
       && m.forceGetPendingShopTile() == null;
     if (!allowConfirm)

@@ -131,6 +131,9 @@ interface IGameMatchGetter {
   /** 除錯／測試：踩中村落格後，尚待完成互動指令時為該格索引；否則 null。 */
   function forceGetPendingVillageTile():Null<TileIndex>;
 
+  /** 除錯／測試：踩中資源格後，尚待完成領取/加成互動時為該格索引；否則 null。 */
+  function forceGetPendingResourceTile():Null<TileIndex>;
+
   /** 除錯／測試：踩中武將格後，尚待完成招募/離開互動時為該格索引；否則 null。 */
   function forceGetPendingGeneralTile():Null<TileIndex>;
 
