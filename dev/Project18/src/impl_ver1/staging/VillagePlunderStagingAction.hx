@@ -71,6 +71,7 @@ class VillagePlunderStagingAction implements IStagingAction {
     var g = impl_ver1.rules.GeneralAssignmentApply.requireOwnedGeneral(ruler, gid);
 
     // GDD 2.1.3：低成功率，高效果；武力影響；友好度 -20~-40（劇烈下降）
+    // TODO(num-algo): docs/數值算法.md §5.2（搶奪成功率）本實作已套用「0.30 + (武力/100)*20%*體力修正」；但搶奪資源掉落/上限仍為 ver1 自訂區間，尚未對齊 §2（搶奪戰鬥/資源獲取比例）完整規則。
     var might = g.stat(Might);
     var rate = 0.30 + (might / 100.0) * 0.20 * Balance.staminaModifier(g.stamina());
     if (rate < 0)

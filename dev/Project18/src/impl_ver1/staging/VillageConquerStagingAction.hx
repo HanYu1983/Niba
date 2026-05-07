@@ -97,6 +97,11 @@ class VillageConquerStagingAction implements IStagingAction {
     var defPower = defenderPower(vIdx, ruler.id());
     var win = atkPower > defPower;
 
+    // TODO(num-algo): docs/數值算法.md §3（攻占機率算法）與 §5.3（村落守軍）目前仍為骨架：
+    // - 缺 0.85~1.15 隨機係數
+    // - 守軍戰力目前用固定 defTroops/defMight/defCmd（未由村落等級/資源狀態推導）
+    // - friendlyModifier 係數文件 §5.3 為 0.5，但 Balance.friendlyModifier 目前為 0.3
+    // - 勝負後「掠奪比例/更完整資源處理」仍未對齊文件
     // 骨架結算：先用 deterministic（無隨機）勝負。
     if (win) {
       ruler.reduceTroops(commitTroops);

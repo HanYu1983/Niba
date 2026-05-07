@@ -269,6 +269,7 @@ class GameMatchCore implements IGameMatch {
 
   /** 規剘：經過起點給予獎勵（骨架：以 prestige 分三段）。 */
   public function onPassStartTile(ruler:Monarch):Void {
+    // TODO(num-algo): docs/數值算法.md §7（聲望算法）目前僅有「三段獎勵」骨架，未對齊文件的聲望變化/影響全表與回合/行為觸發點。
     // 先用簡化規剘：高/中/低聲望三段獎勵（之後可搬到 Balance 或資料表）
     var p = ruler.prestige();
     if (p >= 70) {
@@ -294,6 +295,7 @@ class GameMatchCore implements IGameMatch {
    * 後續對齊 2.1.7 時，應改為「地形/成長率」驅動並存入領地資源庫。
    */
   function applyTerritoryGrowthOnPassStart():Void {
+    // TODO(num-algo): docs/數值算法.md §6.1（資源成長）文件為「地形係數×城池等級係數×武將政治加成」；目前採用 ver1 的 base growth + levelMult + garrison statMult，尚未完全對齊係數表與公式。
     if (_board == null)
       return;
     var len = _board.length();
@@ -364,6 +366,7 @@ class GameMatchCore implements IGameMatch {
   }
 
   function cityGarrisonGrowthMultiplier(at:TileIndex):{gold:Float, grain:Float, troops:Float} {
+    // TODO(num-algo): docs/數值算法.md §6.1 的「武將政治加成」尚未按文件公式落地；此處目前用最大 stat 映射到三資源倍率（最小版）。
     // 取駐將中「各資源對應 stat」的最大值，作為加成來源（最小版）
     // gold: 政治 Stewardship；grain: 智力 Wit；troops: 統率 Command
     var bestPol = 0;
@@ -395,6 +398,7 @@ class GameMatchCore implements IGameMatch {
   }
 
   function rollTerrain(idx:TileIndex):TerrainKind {
+    // TODO(num-algo): docs/數值算法.md §1.0（格子類型出現概率）與地形/格子生成尚未整合；目前 terrain 以近似均勻分布生成（非文件概率表）。
     var u = Deterministic.hash01('terrain|t=${idx}');
     // 依大致均勻分布（之後可改權重）
     if (u < 0.18)
@@ -411,6 +415,7 @@ class GameMatchCore implements IGameMatch {
   }
 
   function rollGrowth(idx:TileIndex, terrain:TerrainKind):TileGrowth {
+    // TODO(num-algo): docs/數值算法.md §12（地形成長率數值表）尚未逐條落地；目前以簡化增量骨架（隨機 base + terrain 偏移）生成。
     // 2.1.7：地形影響三資源的相對高低；這裡先用「每次觸發」的增量骨架
     // base ranges（再依地形調整）
     var uG = Deterministic.hash01('growth|t=${idx}|k=gold');

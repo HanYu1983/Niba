@@ -79,6 +79,7 @@ class VillageTradeStagingAction implements IStagingAction {
     // - 成功率由政治（stewardship）與體力決定，採 deterministic 擲骰以利測試可重現
     // - 成功後資源交換為「低效果」；交易比例受友好度影響（友好度越高越優惠）
     // - 友好度提升 +5~15（依交易規模；ver1 先以固定規模 + jitter）
+    // TODO(num-algo): docs/數值算法.md §5.1（交易成功率）文件為「0.90 + (政治/100)*10%*體力修正」；本實作已接近，但交易規模/交換公式仍為 ver1 簡化版（未落地完整資源換算表）。
     var costGold = 20;
     if (ruler.gold() < costGold)
       throw new GameError('金錢不足（需要 ${costGold}）。', "資源不足", "village-trade/insufficient-gold");

@@ -334,6 +334,10 @@ class GameMatchVer1Ops {
 
   /** 攻方確認結算後套用實際戰果（扣糧、易主、駐軍損耗等）；呼叫時仍可讀 pending 暫存。 */
   public static function applyHostileCitySettlementAck(m:GameMatchCore, actor:IPlayer, menuNode:IPlayerMenuNode):Void {
+    // TODO(num-algo): docs/數值算法.md §3（攻占機率算法）此處仍為「攻城戰」骨架：
+    // - 缺 0.85~1.15 隨機係數
+    // - 缺守方武將/駐將體力修正與更完整的防守戰力定義
+    // - 缺「掠奪比例/友好度變動/資源處理」等文件規則
     var idx = m.forceGetPendingHostileCityTile();
     if (idx == null)
       return;

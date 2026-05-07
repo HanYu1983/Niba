@@ -86,6 +86,7 @@ class VillageDevelopStagingAction implements IStagingAction {
 
     var pol = g.stat(Stewardship);
     var rate = 0.40 + (pol / 100.0) * 0.40 * Balance.staminaModifier(g.stamina());
+    // TODO(num-algo): docs/數值算法.md 尚未定義「村落開發成功率」；此處先用 ver1 自訂公式（政治與體力修正），後續若文件補齊應抽到 Balance/資料表統一。
     if (rate < 0)
       rate = 0;
     if (rate > 1)
