@@ -310,8 +310,9 @@ class AppController {
     match.forceBindTileEvent(8, new GranaryFireAvoidableTileEvent(match, 120));
 
     // 避免糧食維持費導致兵力快速歸零 → 提早征服勝利（UI 看起來像 AI「卡住」）
-    for (mid in ["m-a", "m-b", "m-c", "m-d"])
-      match.forceGrantMonarchGrain(mid, 5000);
+    // 用現有 monarchs() 迭代，避免場景/重開造成 id 不一致時拋錯。
+    for (m in match.monarchs())
+      match.forceGrantMonarchGrain(m.id(), 5000);
 
     var core = cast(match, GameMatchCore);
     core.pushInfoPopup(
