@@ -41,6 +41,9 @@ enum PlayerMenuKind {
     /** 通用暫存：提交表單並結算（可用於非計策的 staging 指令）。 */
     StagingSubmit;
 
+    /** 通用暫存：取消本次暫存，返回暫存前狀態（不結算、不消耗）。 */
+    StagingAbort;
+
     /** 休整：選將並回復體力（先以 staging 形式實作）。 */
     Rest;
 

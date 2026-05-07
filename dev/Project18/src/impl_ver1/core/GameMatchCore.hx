@@ -1519,6 +1519,8 @@ class GameMatchCore implements IGameMatch {
 
     if (stagingActive && stg != null) {
       var stgRoots = stg.buildPlayerMenu(actor).rootNodes();
+      // 通用「取消暫存」：避免玩家被 staging 卡住（例如「暫存：領地：開發」需能取消返回）
+      stgRoots.push(createPlayerMenuNode("取消", createPlayerMenuEntry(StagingAbort, "取消（返回）", true, "stg_abort"), []));
       roots.push(createPlayerMenuNode("暫存：" + stg.designLabel(), null, stgRoots));
     }
 
@@ -1555,6 +1557,7 @@ class GameMatchCore implements IGameMatch {
 
       // 這些 leaf 不改動 hasMovedThisTurn（但通常也不會在回合開始前出現）
       case TileEventPick,
+        StagingAbort,
         EmptyCityOccupySubmit,
         EmptyCityOccupyAbort,
         FriendlyCityDispatchApply,
@@ -2110,6 +2113,13 @@ class GameMatchCore implements IGameMatch {
             syncActiveSliceAfterMenuLeaf(TileEventAvoidSkip);
           case StagingSubmit:
             handleStagingSubmit(actor, menuNode);
+          case StagingAbort:
+            if (_pendingStaging == null)
+              throw new GameError("目前沒有進行中的暫存操作。", "操作失敗", "staging/abort/no-pending");
+            clearStaging();
+            pushInfoPopup(actor.monarchId(), "已取消", Plain("已取消暫存操作。"), "staging-abort");
+            // 取消僅退出 staging；其他 pending（村落/領地/資源格等）保持不變
+            syncActiveSliceAfterMenuLeaf(StagingAbort);
           case LandingContinue:
             handleLandingContinue(actor);
           case StrategyPre, StrategyPost:

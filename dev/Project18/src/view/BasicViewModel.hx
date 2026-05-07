@@ -104,6 +104,15 @@ class BasicViewModel implements IViewModel {
       // 只攔截遊戲規則錯誤，轉成 popup，避免整個 UI 流程中斷
       node.setActivationEntry(null);
       match.pushInfoPopup(actor.monarchId(), e.popupTitle, PopupPayload.Plain(e.message), e.ctxKey);
+    } catch (e:Dynamic) {
+      // 非 GameError：視為系統/程式錯誤，使用 alert 直接顯示（方便回報與除錯）
+      node.setActivationEntry(null);
+      var hasWindow:Bool = untyped __js__("typeof window !== 'undefined' && typeof window.alert !== 'undefined'");
+      if (hasWindow) {
+        var msg = "系統錯誤（非 GameError）\n\n" + Std.string(e);
+        Browser.window.alert(msg);
+      }
+      throw e;
     }
     // TODO(popup): 目前僅攔截 GameError 並轉 popup；其他例外會直接拋出（利於除錯）。
     // 下一步可評估是否要在「非開發模式」也攔截一般例外並顯示「系統錯誤」popup（但要保留堆疊供回報）。
