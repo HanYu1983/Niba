@@ -27,6 +27,7 @@ import js.Browser;
 import rx.disposables.ISubscription;
 import view.UiEvent;
 import view.AiUiFlow;
+import view.UiSnapshot;
 
 /**
  * 最小可用的 ViewModel 包裝：直接委派到底層 IGameMatch（以便快速把 HTML view 跑起來）。
@@ -35,6 +36,7 @@ class BasicViewModel implements IViewModel {
   final match:IGameMatch;
   var evSub:Null<ISubscription> = null;
   final _aiByMonarchId:Map<MonarchId, Bool> = new Map();
+  var _presentationSnapshot:Null<UiSnapshot> = null;
 
   public function new(match:IGameMatch) {
     this.match = match;
@@ -105,6 +107,14 @@ class BasicViewModel implements IViewModel {
 
   public function isAiMonarch(monarchId:MonarchId):Bool {
     return _aiByMonarchId.exists(monarchId) && _aiByMonarchId.get(monarchId);
+  }
+
+  public function setPresentationSnapshot(snapshot:Null<UiSnapshot>):Void {
+    _presentationSnapshot = snapshot;
+  }
+
+  public function presentationSnapshot():Null<UiSnapshot> {
+    return _presentationSnapshot;
   }
 
   function runAiStepOnce(?autoAckPopups:Bool = false):Bool {
@@ -293,6 +303,33 @@ class BasicViewModel implements IViewModel {
     // 避免 BasicViewModel 逐步長大後 catch 區塊變成各種特例的堆疊。
   }
 
+  function snapshotWrapMonarchs(xs:Array<IMonarch>):Array<IMonarch> {
+    if (_presentationSnapshot == null)
+      return xs;
+    var out:Array<IMonarch> = [];
+    for (m in xs)
+      out.push(snapshotWrapMonarch(m));
+    return out;
+  }
+
+  function snapshotWrapMonarch(m:IMonarch):IMonarch {
+    var s = _presentationSnapshot;
+    if (s == null)
+      return m;
+    // 若 snapshot 沒提供任何該 monarch 的覆寫，直接回傳原物件
+    var id = m.id();
+    var has = false;
+    if (s.monarchPawnIndexById != null && s.monarchPawnIndexById.exists(id))
+      has = true;
+    if (s.monarchTroopsById != null && s.monarchTroopsById.exists(id))
+      has = true;
+    if (s.monarchGrainById != null && s.monarchGrainById.exists(id))
+      has = true;
+    if (s.monarchGoldById != null && s.monarchGoldById.exists(id))
+      has = true;
+    return has ? new SnapshotMonarch(m, s) : m;
+  }
+
   function applyGeneralMultiPickToNode(node:IPlayerMenuNode, widgetIndex:Int, selectedGeneralIds:Array<String>):Void {
     var widgets = node.formWidgets();
     if (widgets == null || widgetIndex < 0 || widgetIndex >= widgets.length)
@@ -330,10 +367,10 @@ class BasicViewModel implements IViewModel {
     return match.board();
 
   public function monarchs():Array<IMonarch>
-    return match.monarchs();
+    return snapshotWrapMonarchs(match.monarchs());
 
   public function activeMonarch():IMonarch
-    return match.activeMonarch();
+    return snapshotWrapMonarch(match.activeMonarch());
 
   public function roundNumber():Int
     return match.roundNumber();
@@ -348,7 +385,7 @@ class BasicViewModel implements IViewModel {
     return match.canUseStrategyPostMove();
 
   public function monarchById(monarchId:MonarchId):IMonarch
-    return match.monarchById(monarchId);
+    return snapshotWrapMonarch(match.monarchById(monarchId));
 
   public function pawnIndexOfPlayer(player:IPlayer):TileIndex
     return match.pawnIndexOfPlayer(player);
@@ -522,5 +559,47 @@ private class LocalPlayer implements IPlayer {
   public function monarchId():MonarchId return mid;
   public function displayName():String return name;
   public function isAi():Bool return ai;
+}
+
+private class SnapshotMonarch implements game.IMonarch {
+  final base:game.IMonarch;
+  final snap:UiSnapshot;
+
+  public function new(base:game.IMonarch, snap:UiSnapshot) {
+    this.base = base;
+    this.snap = snap;
+  }
+
+  public function id():MonarchId return base.id();
+  public function seat():Int return base.seat();
+
+  public function pawnIndex():TileIndex {
+    var m = snap.monarchPawnIndexById;
+    return (m != null && m.exists(base.id())) ? m.get(base.id()) : base.pawnIndex();
+  }
+
+  public function roster():Array<game.IGeneral> return base.roster();
+
+  public function troops():Int {
+    var m = snap.monarchTroopsById;
+    return (m != null && m.exists(base.id())) ? m.get(base.id()) : base.troops();
+  }
+
+  public function grain():Int {
+    var m = snap.monarchGrainById;
+    return (m != null && m.exists(base.id())) ? m.get(base.id()) : base.grain();
+  }
+
+  public function gold():Int {
+    var m = snap.monarchGoldById;
+    return (m != null && m.exists(base.id())) ? m.get(base.id()) : base.gold();
+  }
+
+  public function prestige():Int return base.prestige();
+
+  public function grantTroops(n:Int):Void base.grantTroops(n);
+  public function grantGrain(n:Int):Void base.grantGrain(n);
+  public function grantGold(n:Int):Void base.grantGold(n);
+  public function grantPrestige(n:Int):Void base.grantPrestige(n);
 }
 

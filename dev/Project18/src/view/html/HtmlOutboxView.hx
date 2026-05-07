@@ -13,6 +13,7 @@ import rx.disposables.ISubscription;
 import view.EventCenter;
 import view.IViewModel;
 import view.UiEvent;
+import view.UiSnapshot;
 
 /**
  * 統一 Outbox 元件：
@@ -103,12 +104,36 @@ class HtmlOutboxView {
         // 阻塞：等待使用者按關閉（由 PopupClose → vm ack → OutboxRefresh 進行下一筆）
       case Animation(_, _, durationMs):
         playing = true;
+
+        // 動畫期間：套用「過程快照」（目前先支援 PawnMove：把棋子暫時顯示在 from）
+        applySnapshotForHeadIfAny(vm, mid, head);
+
         Browser.window.setTimeout(function() {
+          // 動畫結束：清除快照，回到 match 真實狀態
+          vm.setPresentationSnapshot(null);
+          EventCenter.publishViewModel(vm);
+
           vm.ackOutbox(mid, head.id());
           EventCenter.publishEvent(UiEvent.OutboxRefresh);
           playing = false;
           tryAdvance();
         }, durationMs);
+    }
+  }
+
+  function applySnapshotForHeadIfAny(vm:IViewModel, mid:MonarchId, head:IOutboxMessage):Void {
+    switch head.presentation() {
+      case Animation(_, payload, _):
+        switch payload {
+          case PawnMove(from, _, _):
+            var mp = new Map<MonarchId, TileIndex>();
+            mp.set(mid, from);
+            var s:UiSnapshot = { monarchPawnIndexById: mp };
+            vm.setPresentationSnapshot(s);
+            EventCenter.publishViewModel(vm);
+          case _:
+        }
+      case _:
     }
   }
 
