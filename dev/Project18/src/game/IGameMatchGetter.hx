@@ -13,6 +13,8 @@ import game.IPlayerMenuNode;
 import game.ITile;
 import game.CityLevel;
 import game.IPopupMessage;
+import game.TerrainKind;
+import game.TileGrowth;
 
 /**
  * 賽局「唯讀」視角：狀態查詢＋選單快照生成（不得改變賽局內容）。
@@ -55,6 +57,12 @@ interface IGameMatchGetter {
 
   /** 依格索引取得棋盤格（等同 {@link #board}.tileAt）。 */
   function tileAt(index:TileIndex):ITile;
+
+  /** GDD 2.1.7：格子地形（影響成長率）。 */
+  function forceGetTileTerrain(at:TileIndex):TerrainKind;
+
+  /** GDD 2.1.7：格子成長率（每次觸發之增量）。 */
+  function forceGetTileGrowth(at:TileIndex):TileGrowth;
 
   /**
    * 指定君主當下可打出的计策視圖。
@@ -124,6 +132,9 @@ interface IGameMatchGetter {
 
   /** 除錯／測試：城池格累計進駐糧食（無紀錄為 0）。 */
   function forceGetCityStoredGrain(at:TileIndex):Int;
+
+  /** 除錯／測試：城池格累計儲備金錢（無紀錄為 0）。 */
+  function forceGetCityStoredGold(at:TileIndex):Int;
 
   /** 除錯／測試：城池等級（無紀錄時由實作給預設）。 */
   function forceGetCityLevel(at:TileIndex):CityLevel;

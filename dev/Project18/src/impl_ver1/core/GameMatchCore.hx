@@ -34,6 +34,8 @@ import game.StrategyPhase;
 import game.TileKind;
 import game.CityLevel;
 import game.GameError;
+import game.TerrainKind;
+import game.TileGrowth;
 import impl_ver1.commands.Ver1MainCommands;
 import impl_ver1.flows.HostileCityPhase;
 import impl_ver1.jice.JiCeRegistry;
@@ -125,6 +127,7 @@ class GameMatchCore implements IGameMatch {
   var _cityGarrisonGenerals:Map<Int, Array<GeneralId>>;
   var _cityStockTroops:Map<Int, Int>;
   var _cityStockGrain:Map<Int, Int>;
+  var _cityStockGold:Map<Int, Int>;
   var _pendingEmptyCityTileIndex:Null<TileIndex>;
   var _cityOwner:Map<Int, MonarchId>;
   var _cityLevel:Map<Int, CityLevel>;
@@ -138,6 +141,15 @@ class GameMatchCore implements IGameMatch {
   var _villageOwner:Map<Int, MonarchId>;
   /** 村落格索引 → 領地等級（先以 CityLevel.Village 表示，未來可升級）。 */
   var _villageLevel:Map<Int, CityLevel>;
+
+  /** --- 2.1.7：地形與格子成長率（以 tileIndex 為鍵）--- */
+  var _terrainByIndex:Map<Int, TerrainKind>;
+  var _growthByIndex:Map<Int, TileGrowth>;
+
+  /** --- 村落領地資源庫（最小版；暫不暴露 UI）--- */
+  var _villageStockGold:Map<Int, Int>;
+  var _villageStockGrain:Map<Int, Int>;
+  var _villageStockTroops:Map<Int, Int>;
 
   /** --- 資源格 pending（領取／指派武將加成）--- */
   var _pendingResourceTileIndex:Null<TileIndex>;
@@ -198,6 +210,7 @@ class GameMatchCore implements IGameMatch {
     _cityGarrisonGenerals = new Map();
     _cityStockTroops = new Map();
     _cityStockGrain = new Map();
+    _cityStockGold = new Map();
     _pendingEmptyCityTileIndex = null;
     _cityOwner = new Map();
     _cityLevel = new Map();
@@ -212,6 +225,11 @@ class GameMatchCore implements IGameMatch {
     _villageFriendly = new Map();
     _villageOwner = new Map();
     _villageLevel = new Map();
+    _terrainByIndex = new Map();
+    _growthByIndex = new Map();
+    _villageStockGold = new Map();
+    _villageStockGrain = new Map();
+    _villageStockTroops = new Map();
     _tileNextTurnGrainBonus = new Map();
     _tileNextTurnGoldBonus = new Map();
     _tileDefenseBonus = new Map();
@@ -279,26 +297,85 @@ class GameMatchCore implements IGameMatch {
       return;
     var len = _board.length();
     for (i in 0...len) {
-      // 城池領地
+      // 2.1.7：成長量由每格 growth 決定（程序化生成，可 forceSet）
+      var g = forceGetTileGrowth(i);
+
+      // 城池領地：寫入領地資源庫（城池儲備）
       if (_cityOwner.exists(i)) {
-        var owner = _cityOwner.get(i);
-        var lvl = forceGetCityLevel(i);
-        var inc = Balance.cityBaseIncome(lvl);
-        // gold：先直接給屬主（尚未有 city gold store）
-        monarchWithId(owner).grantGold(inc.gold);
-        // grain：寫入城池儲備（對齊「存入領地資源庫」的方向）
+        var prevGold = forceGetCityStoredGold(i);
         var prevGr = forceGetCityStoredGrain(i);
-        _cityStockGrain.set(i, prevGr + inc.grain);
+        var prevT = forceGetCityStoredTroops(i);
+        _cityStockGold.set(i, prevGold + g.gold);
+        _cityStockGrain.set(i, prevGr + g.grain);
+        _cityStockTroops.set(i, prevT + g.troops);
       }
-      // 村落領地化
+
+      // 村落領地化：寫入村落領地資源庫（最小版；暫無調度 UI）
       if (_villageOwner.exists(i)) {
-        var vOwner = _villageOwner.get(i);
-        var vLvl = _villageLevel.exists(i) ? _villageLevel.get(i) : CityLevel.Village;
-        var vInc = Balance.cityBaseIncome(vLvl);
-        monarchWithId(vOwner).grantGold(vInc.gold);
-        monarchWithId(vOwner).grantGrain(vInc.grain);
+        var vg = _villageStockGold.exists(i) ? _villageStockGold.get(i) : 0;
+        var vgr = _villageStockGrain.exists(i) ? _villageStockGrain.get(i) : 0;
+        var vt = _villageStockTroops.exists(i) ? _villageStockTroops.get(i) : 0;
+        _villageStockGold.set(i, vg + g.gold);
+        _villageStockGrain.set(i, vgr + g.grain);
+        _villageStockTroops.set(i, vt + g.troops);
       }
     }
+  }
+
+  function rollTerrain(idx:TileIndex):TerrainKind {
+    var u = Deterministic.hash01('terrain|t=${idx}');
+    // 依大致均勻分布（之後可改權重）
+    if (u < 0.18)
+      return TerrainKind.Plain;
+    if (u < 0.34)
+      return TerrainKind.Mountain;
+    if (u < 0.50)
+      return TerrainKind.Forest;
+    if (u < 0.66)
+      return TerrainKind.River;
+    if (u < 0.82)
+      return TerrainKind.Coast;
+    return TerrainKind.Grassland;
+  }
+
+  function rollGrowth(idx:TileIndex, terrain:TerrainKind):TileGrowth {
+    // 2.1.7：地形影響三資源的相對高低；這裡先用「每次觸發」的增量骨架
+    // base ranges（再依地形調整）
+    var uG = Deterministic.hash01('growth|t=${idx}|k=gold');
+    var uGr = Deterministic.hash01('growth|t=${idx}|k=grain');
+    var uT = Deterministic.hash01('growth|t=${idx}|k=troops');
+
+    var gold = 2 + Std.int(Math.floor(uG * 6)); // 2..7
+    var grain = 2 + Std.int(Math.floor(uGr * 6)); // 2..7
+    var troops = 2 + Std.int(Math.floor(uT * 6)); // 2..7
+
+    switch terrain {
+      case Plain:
+        grain += 4; // 高
+        gold += 2; // 中
+        troops += 2; // 中
+      case Mountain:
+        gold += 6; // 高（礦產）
+        grain += 0; // 低
+        troops += 0; // 低
+      case Forest:
+        grain += 2; // 中
+        gold += 0; // 低
+        troops += 2; // 中
+      case River:
+        grain += 6; // 高
+        gold += 2; // 中
+        troops += 0; // 低
+      case Coast:
+        gold += 6; // 高（貿易）
+        grain += 0; // 低
+        troops += 0; // 低
+      case Grassland:
+        troops += 6; // 高（牧馬）
+        grain += 2; // 中
+        gold += 0; // 低
+    }
+    return {gold: gold, grain: grain, troops: troops};
   }
 
   function clearStaging():Void {
@@ -320,6 +397,14 @@ class GameMatchCore implements IGameMatch {
       throw "GameMatchCore.createBoard: board already set";
     var b = new Board(tiles);
     _board = b;
+    // 2.1.7：安裝棋盤時生成地形與基礎成長率（可被 forceSet 覆寫）
+    var len = b.length();
+    for (i in 0...len) {
+      if (!_terrainByIndex.exists(i))
+        _terrainByIndex.set(i, rollTerrain(i));
+      if (!_growthByIndex.exists(i))
+        _growthByIndex.set(i, rollGrowth(i, _terrainByIndex.get(i)));
+    }
     return b;
   }
 
@@ -365,6 +450,8 @@ class GameMatchCore implements IGameMatch {
     var prevG = _cityStockGrain.exists(tileIndex) ? _cityStockGrain.get(tileIndex) : 0;
     _cityStockTroops.set(tileIndex, prevT + troops);
     _cityStockGrain.set(tileIndex, prevG + grain);
+    if (!_cityStockGold.exists(tileIndex))
+      _cityStockGold.set(tileIndex, 0);
     _cityOwner.set(tileIndex, ownerMonarchId);
     _cityGarrisonGenerals.set(tileIndex, garrisonIds.copy());
   }
@@ -372,6 +459,8 @@ class GameMatchCore implements IGameMatch {
   private function cityMapsApplyFriendlyDispatchTargets(tileIndex:TileIndex, targetTroops:Int, targetGrain:Int):Void {
     _cityStockTroops.set(tileIndex, targetTroops);
     _cityStockGrain.set(tileIndex, targetGrain);
+    if (!_cityStockGold.exists(tileIndex))
+      _cityStockGold.set(tileIndex, 0);
   }
 
   // --- 落地 surface：清空事件／空城／友城 pending 並重置敵城對峙 ---
@@ -675,6 +764,9 @@ class GameMatchCore implements IGameMatch {
   public function forceGetCityStoredGrain(at:TileIndex):Int
     return _cityStockGrain.exists(at) ? _cityStockGrain.get(at) : 0;
 
+  public function forceGetCityStoredGold(at:TileIndex):Int
+    return _cityStockGold.exists(at) ? _cityStockGold.get(at) : 0;
+
   public function forceGetCityLevel(at:TileIndex):CityLevel {
     if (_cityLevel.exists(at))
       return _cityLevel.get(at);
@@ -742,6 +834,12 @@ class GameMatchCore implements IGameMatch {
     _villageOwner.set(at, ownerMonarchId);
     if (!_villageLevel.exists(at))
       _villageLevel.set(at, CityLevel.Village);
+    if (!_villageStockGold.exists(at))
+      _villageStockGold.set(at, 0);
+    if (!_villageStockGrain.exists(at))
+      _villageStockGrain.set(at, 0);
+    if (!_villageStockTroops.exists(at))
+      _villageStockTroops.set(at, 0);
   }
 
   public function forceAssignCityGarrison(at:TileIndex, generalId:GeneralId):Void {
@@ -788,6 +886,63 @@ class GameMatchCore implements IGameMatch {
       throw "GameMatchCore.forcePutCityStores: negative stock";
     _cityStockTroops.set(at, troops);
     _cityStockGrain.set(at, grain);
+  }
+
+  public function forcePutCityStoredGold(at:TileIndex, gold:Int):Void {
+    if (_board == null)
+      throw "GameMatchCore.forcePutCityStoredGold: board not set";
+    if (_board.tileAt(at).kind() != City)
+      throw "GameMatchCore.forcePutCityStoredGold: not a City tile";
+    if (gold < 0)
+      throw "GameMatchCore.forcePutCityStoredGold: negative stock";
+    _cityStockGold.set(at, gold);
+  }
+
+  public function forceGetTileTerrain(at:TileIndex):TerrainKind {
+    if (_board == null)
+      throw "GameMatchCore.forceGetTileTerrain: board not set";
+    // 若尚未生成則以 deterministic 生成
+    if (!_terrainByIndex.exists(at))
+      _terrainByIndex.set(at, rollTerrain(at));
+    return _terrainByIndex.get(at);
+  }
+
+  public function forceGetTileGrowth(at:TileIndex):TileGrowth {
+    if (_board == null)
+      throw "GameMatchCore.forceGetTileGrowth: board not set";
+    if (!_growthByIndex.exists(at)) {
+      var t = forceGetTileTerrain(at);
+      _growthByIndex.set(at, rollGrowth(at, t));
+    }
+    return _growthByIndex.get(at);
+  }
+
+  public function forceSetTileTerrain(at:TileIndex, terrain:TerrainKind):Void {
+    if (_board == null)
+      throw "GameMatchCore.forceSetTileTerrain: board not set";
+    _terrainByIndex.set(at, terrain);
+    // terrain 改變後預設也重 roll 成長率（測試可再 forceSetTileGrowth 覆寫）
+    _growthByIndex.set(at, rollGrowth(at, terrain));
+  }
+
+  public function forceSetTileGrowth(at:TileIndex, growth:TileGrowth):Void {
+    if (_board == null)
+      throw "GameMatchCore.forceSetTileGrowth: board not set";
+    var gGold = growth.gold;
+    var gGrain = growth.grain;
+    var gTroops = growth.troops;
+    if (gGold < 0)
+      gGold = 0;
+    if (gGrain < 0)
+      gGrain = 0;
+    if (gTroops < 0)
+      gTroops = 0;
+    var g = {
+      gold: gGold,
+      grain: gGrain,
+      troops: gTroops,
+    };
+    _growthByIndex.set(at, g);
   }
 
   /** 規剘：寫入城池格儲備（正式 API；非 force）。 */

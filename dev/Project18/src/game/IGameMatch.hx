@@ -20,6 +20,8 @@ import game.MenuClientConfirm;
 import game.IGameMatchGetter;
 import game.CityLevel;
 import game.PopupPayload;
+import game.TerrainKind;
+import game.TileGrowth;
 
 /**
  * GDD：一局對戲之頂層聚合視角（類大富翁踩點行軍）。
@@ -69,6 +71,9 @@ interface IGameMatch extends IGameMatchGetter {
     /** 除錯／測試：直接寫入城池格儲備（兵力／糧食）。 */
     function forcePutCityStores(at:TileIndex, troops:Int, grain:Int):Void;
 
+    /** 除錯／測試：直接寫入城池格金錢儲備。 */
+    function forcePutCityStoredGold(at:TileIndex, gold:Int):Void;
+
     /** 除錯／測試：直接寫入城池等級。 */
     function forceSetCityLevel(at:TileIndex, level:CityLevel):Void;
 
@@ -77,6 +82,12 @@ interface IGameMatch extends IGameMatchGetter {
 
     /** 除錯／測試：直接寫入村落屬主（無屬主語意請傳 null）。 */
     function forceSetVillageOwner(at:TileIndex, ownerMonarchId:Null<MonarchId>):Void;
+
+    /** 除錯／測試：直接寫入格子地形。 */
+    function forceSetTileTerrain(at:TileIndex, terrain:TerrainKind):Void;
+
+    /** 除錯／測試：直接寫入格子成長率（增量）。 */
+    function forceSetTileGrowth(at:TileIndex, growth:TileGrowth):Void;
 
     /** 單格；多格按索引有序組裝後再交由 createBoard。 */
     function createTile(index:TileIndex, kind:TileKind):ITile;

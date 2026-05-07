@@ -19,6 +19,8 @@ import game.GameError;
 import game.IPopupMessage;
 import game.PopupPayload;
 import game.MenuClientConfirm;
+import game.TerrainKind;
+import game.TileGrowth;
 import js.Browser;
 import rx.disposables.ISubscription;
 import view.UiEvent;
@@ -175,6 +177,12 @@ class BasicViewModel implements IViewModel {
   public function tileAt(index:TileIndex):ITile
     return match.tileAt(index);
 
+  public function forceGetTileTerrain(at:TileIndex):TerrainKind
+    return match.forceGetTileTerrain(at);
+
+  public function forceGetTileGrowth(at:TileIndex):TileGrowth
+    return match.forceGetTileGrowth(at);
+
   public function availableJiCe(monarchId:MonarchId):Array<IJiCe>
     return match.availableJiCe(monarchId);
 
@@ -228,6 +236,9 @@ class BasicViewModel implements IViewModel {
 
   public function forceGetCityStoredGrain(at:TileIndex):Int
     return match.forceGetCityStoredGrain(at);
+
+  public function forceGetCityStoredGold(at:TileIndex):Int
+    return match.forceGetCityStoredGold(at);
 
   public function forceGetCityLevel(at:TileIndex):game.CityLevel
     return match.forceGetCityLevel(at);
