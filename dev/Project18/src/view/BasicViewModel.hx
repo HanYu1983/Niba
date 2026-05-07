@@ -26,6 +26,7 @@ import game.AiDecision;
 import js.Browser;
 import rx.disposables.ISubscription;
 import view.UiEvent;
+import view.AiUiFlow;
 
 /**
  * 最小可用的 ViewModel 包裝：直接委派到底層 IGameMatch（以便快速把 HTML view 跑起來）。
@@ -70,11 +71,15 @@ class BasicViewModel implements IViewModel {
         _aiByMonarchId.set(monarchId, isAi);
         EventCenter.publishViewModel(this);
       case AiStep:
+        if (!ensureActiveMonarchAiOrHint())
+          return;
         if (runAiStepOnce()) {
           EventCenter.publishEvent(PopupRefresh);
           EventCenter.publishViewModel(this);
         }
       case AiAuto:
+        if (!ensureActiveMonarchAiOrHint())
+          return;
         runAiAutoUntilStop();
         EventCenter.publishEvent(PopupRefresh);
         EventCenter.publishViewModel(this);
@@ -93,22 +98,34 @@ class BasicViewModel implements IViewModel {
 
   function runAiStepOnce(?autoAckPopups:Bool = false):Bool {
     var mid = match.activeMonarch().id();
-    if (!isAiMonarch(mid))
+    trace('[AI/UI] runAiStepOnce enter mid=$mid ai=' + Std.string(isAiMonarch(mid)) + ' sig=' + aiStateSignature());
+    if (!isAiMonarch(mid)) {
+      trace('[AI/UI] skip: active monarch not AI');
       return false;
+    }
     // 終局就不再自動操作
     switch match.getTerminationReason() {
       case NotEnded:
       case _:
+        trace('[AI/UI] skip: terminated reason=' + Std.string(match.getTerminationReason()));
         return false;
     }
 
     var actor:IPlayer = new LocalPlayer(mid, "ai", true);
     var d = match.aiSuggest(actor);
-    if (d == null)
+    if (d == null) {
+      trace('[AI/UI] stop: aiSuggest returned null mid=$mid sig=' + aiStateSignature());
       return false;
+    }
+    trace('[AI/UI] aiSuggest ok mid=$mid nodePath=' + (d.nodePath != null ? d.nodePath.join(".") : "null")
+      + ' activation=' + (d.activation != null ? (Std.string(d.activation.kind) + "|" + Std.string(d.activation.decisionToken)) : "null"));
     applyAiDecision(actor, d);
-    if (autoAckPopups)
+    trace('[AI/UI] after apply sig=' + aiStateSignature());
+    if (autoAckPopups) {
+      // 重要：若有 popup modal，UI 必須立即重繪才能把 overlay 移除，否則看起來會「卡住」
       ackAllPopupsFor(mid);
+      EventCenter.publishEvent(PopupRefresh);
+    }
     return true;
   }
 
@@ -144,6 +161,21 @@ class BasicViewModel implements IViewModel {
     }
   }
 
+  function ensureActiveMonarchAiOrHint():Bool {
+    var mid = match.activeMonarch().id();
+    if (isAiMonarch(mid))
+      return true;
+    match.pushInfoPopup(
+      mid,
+      "AI 尚未啟用",
+      PopupPayload.Plain("請先在右側 Menu 勾選「AI 控制此主公」，再按 AI 執行一步 / 自動。"),
+      "ui-ai-not-enabled"
+    );
+    EventCenter.publishEvent(PopupRefresh);
+    EventCenter.publishViewModel(this);
+    return false;
+  }
+
   function ackAllPopupsFor(monarchId:MonarchId):Void {
     var xs = match.pendingPopups(monarchId);
     if (xs == null || xs.length == 0)
@@ -169,44 +201,10 @@ class BasicViewModel implements IViewModel {
   }
 
   function applyAiDecision(actor:IPlayer, d:AiDecision):Void {
-    var menu = match.createPlayerMenu(actor);
-    var node = resolveNodeByPath(menu.rootNodes(), d.nodePath);
-    if (node == null)
-      return;
-    // 先套用表單 patch（若有）
-    if (d.widgetPatches != null) {
-      for (p in d.widgetPatches) {
-        switch p {
-          case SetSlider(widgetIndex, value):
-            applySliderToNode(node, widgetIndex, value);
-          case SetGeneralMultiPick(widgetIndex, ids):
-            applyGeneralMultiPickToNode(node, widgetIndex, ids);
-          case SetMonarchSinglePick(widgetIndex, ids):
-            applyMonarchSinglePickToNode(node, widgetIndex, ids);
-          case SetTileSinglePick(widgetIndex, idxs):
-            applyTileSinglePickToNode(node, widgetIndex, idxs);
-        }
-      }
-    }
-    // activationEntry（表單內 Button）
-    if (d.activation != null) {
-      var act = findEntryOnNode(node, d.activation.kind, d.activation.decisionToken);
-      if (act != null)
-        node.setActivationEntry(act);
-    } else if (node.leaf() != null) {
-      node.setActivationEntry(node.leaf());
-    }
-
-    // 直接走既有 applyMenuClick 的錯誤處理路徑（含 GameError→popup）
-    var entry = node.leaf();
-    if (d.activation != null) {
-      var act = findEntryOnNode(node, d.activation.kind, d.activation.decisionToken);
-      if (act != null)
-        entry = act;
-    }
-    if (entry == null)
-      return;
-    applyMenuClick(node, entry);
+    AiUiFlow.applyAiDecision(match, actor, d, function(node, entry) {
+      // 走既有 applyMenuClick 的錯誤處理路徑（含 GameError→popup）
+      applyMenuClick(node, entry);
+    });
   }
 
   static function resolveNodeByPath(roots:Array<IPlayerMenuNode>, path:Array<Int>):Null<IPlayerMenuNode> {

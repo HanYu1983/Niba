@@ -14,6 +14,7 @@ import game.MenuFormWidget;
 import game.PlayerMenuKind;
 import game.TileKind;
 import debug_ver1.GranaryFireAvoidableTileEvent;
+import view.AiUiFlow;
 
 /**
  * 模擬 UI 的 AI 迴圈（全息 aiSuggest → 建 menu → 依 nodePath 定位 → 套用 widgets → setActivationEntry → apply）。
@@ -50,37 +51,15 @@ class AiFourPlayersToTerminationTest {
       if (d == null)
         throw "AiFourPlayersToTerminationTest: aiSuggest returned null at step " + step;
 
-      // 依 UI 流程：重新建 menu，依 nodePath 定位 node，套用 widgets/activation，再 apply
-      var menu:IPlayerMenu = match.createPlayerMenu(actor);
-      var node = resolveNodeByPath(menu.rootNodes(), d.nodePath);
-      if (node == null)
-        throw "AiFourPlayersToTerminationTest: nodePath not found at step " + step;
-
-      // 套用 widget patches（目前 policy 回傳空陣列也 OK）
-      if (d.widgetPatches != null)
-        for (p in d.widgetPatches)
-          applyWidgetPatch(node, p);
-
-      var entry:Null<IPlayerMenuEntry> = null;
-      if (d.activation != null) {
-        entry = findEntryOnNode(node, d.activation.kind, d.activation.decisionToken);
-        if (entry == null)
-          throw "AiFourPlayersToTerminationTest: activation entry not found at step " + step;
-      } else {
-        entry = node.leaf();
-      }
-      if (entry == null)
-        throw "AiFourPlayersToTerminationTest: missing entry at step " + step;
-
-      // 方便定位卡住：印出本步要按的 kind
-      //（測試輸出可直接看到是否一直重複某個 leaf）
-      trace('[AiFourPlayersToTerminationTest] step=$step mid=$mid pick=${Std.string(entry.kind())}');
-
-      node.setActivationEntry(entry);
-      match.applyMenuLeaf(actor, node);
+      var ok = AiUiFlow.applyAiDecision(match, actor, d, function(node, entry) {
+        trace('[AiFourPlayersToTerminationTest] step=$step mid=$mid pick=${Std.string(entry.kind())}');
+        match.applyMenuLeaf(actor, node);
+      });
+      if (!ok)
+        throw "AiFourPlayersToTerminationTest: failed to apply AiDecision at step " + step;
 
       // 模擬 UI：任何 apply 後若產生 popup，必須能被 ack 掉，不然 UI 會被 modal 卡住
-      ackAllPopups(match, mid);
+      AiUiFlow.ackAllPopups(match, mid);
       var remain = match.pendingPopups(mid);
       if (remain != null && remain.length > 0)
         throw "AiFourPlayersToTerminationTest: popups not cleared after ack at step " + step;
@@ -143,84 +122,7 @@ class AiFourPlayersToTerminationTest {
     }
   }
 
-  static function resolveNodeByPath(roots:Array<IPlayerMenuNode>, path:Array<Int>):Null<IPlayerMenuNode> {
-    if (path == null || path.length == 0)
-      return null;
-    var cur:Null<IPlayerMenuNode> = null;
-    var kids = roots;
-    for (i in 0...path.length) {
-      var idx = path[i];
-      if (kids == null || idx < 0 || idx >= kids.length)
-        return null;
-      cur = kids[idx];
-      kids = cur.children();
-    }
-    return cur;
-  }
-
-  static function findEntryOnNode(node:IPlayerMenuNode, kind:PlayerMenuKind, tok:Null<String>):Null<IPlayerMenuEntry> {
-    var leaf = node.leaf();
-    if (leaf != null && leaf.kind() == kind && (tok == null || leaf.decisionToken() == tok))
-      return leaf;
-    var ws = node.formWidgets();
-    if (ws != null)
-      for (w in ws)
-        switch w {
-          case Button(e):
-            if (e.kind() == kind && (tok == null || e.decisionToken() == tok))
-              return e;
-          default:
-        }
-    return null;
-  }
-
-  static function applyWidgetPatch(node:IPlayerMenuNode, p:game.AiWidgetPatch):Void {
-    var ws = node.formWidgets();
-    if (ws == null)
-      return;
-    switch p {
-      case SetSlider(i, v):
-        if (i < 0 || i >= ws.length)
-          return;
-        switch ws[i] {
-          case Slider(lbl, min, max, step, _):
-            ws[i] = Slider(lbl, min, max, step, v);
-          default:
-        }
-      case SetGeneralMultiPick(i, ids):
-        if (i < 0 || i >= ws.length)
-          return;
-        switch ws[i] {
-          case GeneralMultiPick(lbl, choices, _):
-            ws[i] = GeneralMultiPick(lbl, choices, ids.copy());
-          default:
-        }
-      case SetMonarchSinglePick(i, ids):
-        if (i < 0 || i >= ws.length)
-          return;
-        switch ws[i] {
-          case MonarchSinglePick(lbl, choices, _):
-            ws[i] = MonarchSinglePick(lbl, choices, ids.copy());
-          default:
-        }
-      case SetTileSinglePick(i, idxs):
-        if (i < 0 || i >= ws.length)
-          return;
-        switch ws[i] {
-          case TileSinglePick(lbl, choices, _):
-            ws[i] = TileSinglePick(lbl, choices, idxs.copy());
-          default:
-        }
-    }
-  }
-
-  static function ackAllPopups(match:IGameMatch, monarchId:MonarchId):Void {
-    var xs = match.pendingPopups(monarchId);
-    if (xs == null || xs.length == 0)
-      return;
-    for (p in xs)
-      match.ackPopup(monarchId, p.id());
-  }
+  // UI/測試共用邏輯已抽到 view.AiUiFlow
 }
 
 private class AiPlayer implements IPlayer {

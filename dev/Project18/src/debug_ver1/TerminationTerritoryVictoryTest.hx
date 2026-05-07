@@ -6,9 +6,9 @@ import game.IGameMatch;
 import game.IPlayer;
 import game.LevelKeys;
 import game.MatchTerminationReason;
-import game.MenuNodeQuery;
-import game.PlayerMenuKind.Status;
 import game.TileKind;
+import impl_ver1.core.GameMatchCore;
+import impl_ver1.rules.GameMatchVer1Ops;
 
 /**
  * 對齊 GDD 2.4：領土勝利（佔領 > 半數城池格）。
@@ -40,8 +40,7 @@ class TerminationTerritoryVictoryTest {
     match.forceSetCityOwner(1, a);
     match.forceSetCityOwner(2, b);
 
-    var actor:IPlayer = match.createPlayer(a, "A");
-    match.applyMenuLeaf(actor, MenuNodeQuery.requireNodeWithKind(match.createPlayerMenu(actor), Status));
+    GameMatchVer1Ops.evaluateTermination(cast(match, GameMatchCore));
 
     switch match.getTerminationReason() {
       case Victory(mid):

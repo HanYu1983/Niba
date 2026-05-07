@@ -6,9 +6,9 @@ import game.IGameMatch;
 import game.IPlayer;
 import game.LevelKeys;
 import game.MatchTerminationReason;
-import game.MenuNodeQuery;
-import game.PlayerMenuKind.Status;
 import game.TileKind;
+import impl_ver1.core.GameMatchCore;
+import impl_ver1.rules.GameMatchVer1Ops;
 
 /**
  * 對齊 GDD 2.4：財富勝利（總金錢達門檻，ver1 暫用 100000）。
@@ -38,8 +38,7 @@ class TerminationWealthVictoryTest {
     match.forceSetCityOwner(0, a);
     match.forcePutCityStoredGold(0, 1);
 
-    var actor:IPlayer = match.createPlayer(a, "A");
-    match.applyMenuLeaf(actor, MenuNodeQuery.requireNodeWithKind(match.createPlayerMenu(actor), Status));
+    GameMatchVer1Ops.evaluateTermination(cast(match, GameMatchCore));
 
     switch match.getTerminationReason() {
       case Victory(mid):

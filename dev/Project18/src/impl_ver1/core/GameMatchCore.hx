@@ -271,6 +271,14 @@ class GameMatchCore implements IGameMatch {
     _roundNumber = round;
   }
 
+  /** 測試/除錯：直接增加君主糧食（n 必須 >= 0）。 */
+  public function forceGrantMonarchGrain(monarchId:MonarchId, n:Int):Void {
+    if (n < 0)
+      throw "GameMatchCore.forceGrantMonarchGrain: n must be >= 0";
+    var mon = monarchWithId(monarchId);
+    mon.grantGrain(n);
+  }
+
   /** 除錯/UI：上一個擲出的移動步數（尚未擴充到 IGameMatchGetter）。 */
   public function forceGetLastRolledMoveDelta():Null<Int>
     return _lastRolledMoveDelta;
@@ -2420,7 +2428,8 @@ class GameMatchCore implements IGameMatch {
           case FriendlyCityRest:
             enterStaging(actor, new FriendlyCityRestStagingAction(this), FriendlyCityRest);
           case Status:
-            syncActiveSliceAfterMenuLeaf(Status);
+            // GDD 未設計此 leaf，createPlayerMenu 已不會產生；保留分支僅為 switch 完整性
+            throw "GameMatchCore.applyMenuLeaf: Status leaf removed";
           case ConfirmDone:
             syncActiveSliceAfterMenuLeaf(ConfirmDone);
             advanceActiveMonarchAfterConfirmDone();

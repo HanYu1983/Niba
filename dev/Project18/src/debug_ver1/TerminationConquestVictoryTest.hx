@@ -6,9 +6,9 @@ import game.IGameMatch;
 import game.IPlayer;
 import game.LevelKeys;
 import game.MatchTerminationReason;
-import game.MenuNodeQuery;
-import game.PlayerMenuKind.Status;
 import game.TileKind;
+import impl_ver1.core.GameMatchCore;
+import impl_ver1.rules.GameMatchVer1Ops;
 
 /**
  * 對齊 GDD 2.4：征服勝利（僅剩 1 名總兵力 > 0）。
@@ -33,8 +33,8 @@ class TerminationConquestVictoryTest {
     // A 有兵，B 無兵（含領地儲備也為 0）
     cast(match.monarchById(a), impl_ver1.model.Monarch).grantTroops(1);
 
-    var actor:IPlayer = match.createPlayer(a, "A");
-    match.applyMenuLeaf(actor, MenuNodeQuery.requireNodeWithKind(match.createPlayerMenu(actor), Status));
+    // 觸發終局判定（原本用 Status leaf；該 leaf 已移除）
+    GameMatchVer1Ops.evaluateTermination(cast(match, GameMatchCore));
 
     switch match.getTerminationReason() {
       case Victory(mid):

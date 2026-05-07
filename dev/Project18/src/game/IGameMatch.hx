@@ -66,6 +66,9 @@ interface IGameMatch extends IGameMatchGetter {
      */
     function forceSetRoundNumber(round:Int):Void;
 
+    /** 除錯／測試：直接增加君主糧食（n 必須 >= 0）。 */
+    function forceGrantMonarchGrain(monarchId:MonarchId, n:Int):Void;
+
     /**
      * 除錯／測試／關卡組立：將事件腳本綁至環上索引（生產流程可改由劇本載入呼叫）。
      */

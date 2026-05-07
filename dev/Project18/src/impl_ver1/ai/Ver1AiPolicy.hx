@@ -188,9 +188,7 @@ class Ver1AiPolicy {
       }
     }
 
-    // 避免「純查狀態」類操作被一直點
-    if (k == Status)
-      s -= 500;
+    // Status（狀態）菜單已移除（GDD 未設計），不需特別處理
 
     // 一些互動類：給中等分（避免完全不會玩）
     if (k == FriendlyCityDevelop || k == FriendlyCityRest)

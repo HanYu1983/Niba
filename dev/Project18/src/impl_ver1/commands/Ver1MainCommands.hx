@@ -365,11 +365,11 @@ private class StatusCommand implements IPlayerCommand {
   public function kind():PlayerMenuKind return Status;
   public function designLabel():String return "狀態";
   public function buildActionNode(actor:IPlayer):Null<IPlayerMenuNode> {
-    return m.createPlayerMenuNode("狀態", m.createPlayerMenuEntry(Status, "狀態（前端用，無後端結算）", true), []);
+    // GDD 未設計「狀態」此菜單：不產生 leaf（等同移除）
+    return null;
   }
   public function apply(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
-    // Status 無結算，但仍視為一次操作（與原實作一致）
-    m.syncActiveSliceAfterMenuLeaf(Status);
+    // 不應被呼叫：buildActionNode 已回傳 null
   }
 }
 

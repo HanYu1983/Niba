@@ -10,8 +10,9 @@ import game.MenuNodeQuery;
 import game.PlayerMenuKind.ConfirmDone;
 import game.PlayerMenuKind.Move;
 import game.PlayerMenuKind.LandingContinue;
-import game.PlayerMenuKind.Status;
 import game.TileKind;
+import impl_ver1.core.GameMatchCore;
+import impl_ver1.rules.GameMatchVer1Ops;
 
 /**
  * 對齊 GDD 2.4：時限勝利（回合數達 100 → 綜合評分最高者勝）。
@@ -58,10 +59,8 @@ class TerminationTimeLimitVictoryTest {
       match.applyMenuLeaf(actor, MenuNodeQuery.requireNodeWithKind(match.createPlayerMenu(actor), ConfirmDone));
     }
 
-    // 保險：用一個無副作用 leaf 再觸發一次 evaluateTermination
-    var mid = match.activeMonarch().id();
-    var actor = mid == a ? actorA : actorB;
-    match.applyMenuLeaf(actor, MenuNodeQuery.requireNodeWithKind(match.createPlayerMenu(actor), Status));
+    // 直接觸發終局判定（避免依賴已移除的 Status leaf）
+    GameMatchVer1Ops.evaluateTermination(cast(match, GameMatchCore));
 
     var sa = match.scoreOfMonarch(a);
     var sb = match.scoreOfMonarch(b);

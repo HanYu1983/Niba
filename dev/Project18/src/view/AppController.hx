@@ -309,6 +309,10 @@ class AppController {
     // 綁定可規避事件，方便測 AI 對 pending/選單分支的處理
     match.forceBindTileEvent(8, new GranaryFireAvoidableTileEvent(match, 120));
 
+    // 避免糧食維持費導致兵力快速歸零 → 提早征服勝利（UI 看起來像 AI「卡住」）
+    for (mid in ["m-a", "m-b", "m-c", "m-d"])
+      match.forceGrantMonarchGrain(mid, 5000);
+
     var core = cast(match, GameMatchCore);
     core.pushInfoPopup(
       "m-a",
