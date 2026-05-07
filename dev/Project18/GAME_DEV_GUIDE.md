@@ -94,6 +94,22 @@
 3. **同一個契約，多種實作**  
    計策暫存選將由骨架統一的 **`JiCeStagingSubmit`** 與節點內 **`MenuFormWidget.GeneralMultiPick`**（UI 就地改寫 **`selectedGeneralIds`**）結算；格子事件是否在 **`buildPlayerMenu`** 裡放武將複選、滑桿等 widget，由各路 **`ITileEvent`** 決定。UI 將複選／滑桿結果寫入即將送出之 **`IPlayerMenuNode#formWidgets`** 對應 enum 取值，**`applyMenuLeaf(actor, menuNode)`** 與 **`resolveChoice(actor, menuNode)`** 從該節點（含 **`activationEntry`**）讀取；不再有賽局第二階段「事件選將子選單」。預覽文案與數值規剘仍屬擴充內容。
 
+4. **錯誤處理：規則拒絕必須用 `GameError`（重要）**  
+   本專案需要同時支援「程式錯誤（bug）」與「玩家可理解的操作失敗（規則拒絕）」兩種錯誤來源，兩者處理方式不同：
+   - **必須用 `GameError` 的情境（可預期、應回饋給玩家）**  
+     - 資源不足：金／糧／兵不足、領地庫不足、投入數值超過可用等。  
+     - 操作時機不合法：不是 active monarch、不是在對應的 pending 狀態（例如不在村落/城池拜訪、無 pendingResource 等）。  
+     - 表單輸入不合法：負數、必須 >0 的 slider、必須單選但未選／多選等（屬規則拒絕而非程式 bug）。  
+     - 選單 entry 被 disable：玩家點到不可用按鈕時，應以 `GameError` 告知。  
+     - 以上錯誤應使用 `throw new GameError(message, popupTitle, ctxKey)`，讓 UI 以 popup 呈現、不中斷整局。
+   - **不應用 `GameError` 的情境（屬程式 bug，應直接 throw 以利除錯）**  
+     - 內部 invariant 破壞：狀態機不一致、unmatched patterns、internal routing、資料結構缺欄位等。  
+     - 開發者環境/掛載錯誤：例如 mount element 不存在、必須存在的資源檔缺失等。  
+     - 這類錯誤要保留一般 `throw`（或 `throw new Exception`）讓測試/console 立刻暴露問題。
+   - **`ctxKey` 命名建議**  
+     - 使用「模組/情境/原因」分段，例如：`village-trade/insufficient-gold`、`menu/not-active`、`dispatch/negative`。  
+     - 目的：後續 UI 可依 `ctxKey` 做一致文案/在地化，也利於 log 聚合與測試定位。
+
 4. **測試分層**  
    - 驗證主迴路與狀態機：`debug_ver1` 中以流程為主的測試。  
    - 驗證單一計策／事件數學或分支：應與該擴充模組鄰近，避免把大量數值断言塞進骨架測試。
