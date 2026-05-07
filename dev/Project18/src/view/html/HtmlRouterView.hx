@@ -221,7 +221,43 @@ class HtmlRouterView {
         body.textContent = lines.join("\n");
       case InspectorMonarch(mid):
         var m = vm.monarchById(mid);
-        body.textContent = '主公 $mid｜位置 ${m.pawnIndex()}｜兵 ${m.troops()}｜糧 ${m.grain()}｜金 ${m.gold()}';
+        var lines:Array<String> = [];
+        lines.push('主公 $mid');
+        lines.push('位置｜${m.pawnIndex()}');
+        lines.push('隨身｜兵 ${m.troops()}｜糧 ${m.grain()}｜金 ${m.gold()}');
+
+        var cityN = 0;
+        var villageN = 0;
+        var stockGold = 0;
+        var stockGrain = 0;
+        var stockTroops = 0;
+        var len = vm.board().length();
+        for (i in 0...len) {
+          var t = vm.tileAt(i);
+          switch t.kind() {
+            case City:
+              var owner = vm.forceGetCityOwner(i);
+              if (owner != null && owner == mid) {
+                cityN++;
+                stockGold += vm.forceGetCityStoredGold(i);
+                stockGrain += vm.forceGetCityStoredGrain(i);
+                stockTroops += vm.forceGetCityStoredTroops(i);
+              }
+            case Village:
+              var owner = vm.forceGetVillageOwner(i);
+              if (owner != null && owner == mid) {
+                villageN++;
+                stockGold += vm.forceGetVillageStoredGold(i);
+                stockGrain += vm.forceGetVillageStoredGrain(i);
+                stockTroops += vm.forceGetVillageStoredTroops(i);
+              }
+            default:
+          }
+        }
+        lines.push('領地｜城池 ${cityN}｜村落 ${villageN}');
+        lines.push('領地庫｜金 ${stockGold}｜糧 ${stockGrain}｜兵 ${stockTroops}');
+        lines.push('總計｜金 ${m.gold() + stockGold}｜糧 ${m.grain() + stockGrain}｜兵 ${m.troops() + stockTroops}');
+        body.textContent = lines.join("\n");
       case Main:
     }
   }
