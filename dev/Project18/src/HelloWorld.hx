@@ -51,6 +51,9 @@ class HelloWorld {
     debug_ver1.StrategyPhaseRestrictionTest.testStrategyPhaseRestriction(new impl_ver1.Game());
     debug_ver1.EndOfRoundSettlementTest.testEndOfRoundSettlement(new impl_ver1.Game());
     debug_ver1.VillageFriendlyTradeSettlementTest.testVillageFriendlyTradeSettlement(new impl_ver1.Game());
+    debug_ver1.VillagePlunderSettlementTest.testVillagePlunderSettlement(new impl_ver1.Game());
+    debug_ver1.VillageConquerSettlementTest.testVillageConquerSettlement(new impl_ver1.Game());
+    debug_ver1.VillageIncomeAtEndOfRoundTest.testVillageIncomeAtEndOfRound(new impl_ver1.Game());
     debug_ver1.HostileCitySiegeCityLevelDefenseTest.testHostileCitySiegeCityLevelDefense(new impl_ver1.Game());
     debug_ver1.ResourceTileSettlementTest.testResourceTileSettlement(new impl_ver1.Game());
     debug_ver1.StartTileRewardTest.testStartTileReward(new impl_ver1.Game());

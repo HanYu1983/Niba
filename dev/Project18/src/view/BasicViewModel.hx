@@ -256,6 +256,9 @@ class BasicViewModel implements IViewModel {
   public function forceGetVillageFriendly(at:TileIndex, monarchId:MonarchId):Int
     return match.forceGetVillageFriendly(at, monarchId);
 
+  public function forceGetVillageOwner(at:TileIndex):Null<MonarchId>
+    return match.forceGetVillageOwner(at);
+
   public function forceGetPendingHostileCityTile():Null<TileIndex>
     return match.forceGetPendingHostileCityTile();
 

@@ -60,11 +60,54 @@ class VillagePlunderStagingAction implements IStagingAction {
   }
 
   public function resolveChoice(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
-    // 菜單流程測試為主：結算先做最小骨架（略）
     var ruler = cast(match.activeMonarch(), Monarch);
     if (actor.monarchId() != ruler.id())
       throw "VillagePlunderStagingAction: actor must be active monarch";
-    match.pushInfoPopup(ruler.id(), "搶奪", game.PopupPayload.Plain("搶奪指令已確認（數值結算仍為骨架）。"), "village-plunder");
+    var vIdx = match.forceGetPendingVillageTile();
+    if (vIdx == null)
+      throw "VillagePlunderStagingAction: no pendingVillage";
+    var gid = impl_ver1.rules.GeneralAssignmentApply.pickSingleGeneralId(menuNode.formWidgets());
+    var g = impl_ver1.rules.GeneralAssignmentApply.requireOwnedGeneral(ruler, gid);
+
+    // GDD 2.1.3：低成功率，高效果；武力影響；友好度 -20~-40（劇烈下降）
+    var might = g.stat(Might);
+    var rate = 0.30 + (might / 100.0) * 0.20 * Balance.staminaModifier(g.stamina());
+    if (rate < 0)
+      rate = 0;
+    if (rate > 1)
+      rate = 1;
+
+    var seed = 'village_plunder|t=${vIdx}|r=${match.roundNumber()}|m=${ruler.id()}|g=${gid}';
+    var roll = impl_ver1.util.Deterministic.hash01(seed);
+    var ok = roll < rate;
+
+    var prevF = match.forceGetVillageFriendly(vIdx, ruler.id());
+    var lossSeed = 'village_plunder_f_loss|t=${vIdx}|r=${match.roundNumber()}|m=${ruler.id()}|g=${gid}';
+    var fLoss = 20 + Std.int(Math.floor(impl_ver1.util.Deterministic.hash01(lossSeed) * 21)); // 20..40
+    var nextF = Balance.clampInt(prevF - (ok ? fLoss : 10), 0, 100); // 失敗也 -10（GDD 只寫攻占失敗-10，但搶奪失敗亦應惡化）
+    match.forceSetVillageFriendly(vIdx, ruler.id(), nextF);
+
+    // 高效果：成功時給較多資源（ver1 先用固定區間的 deterministic 掉落）
+    var gainGold = 0;
+    var gainGrain = 0;
+    var gainTroops = 0;
+    if (ok) {
+      var sBase = 'village_plunder_gain|t=${vIdx}|r=${match.roundNumber()}|m=${ruler.id()}|g=${gid}';
+      gainGold = 40 + Std.int(Math.floor(impl_ver1.util.Deterministic.hash01(sBase + "|gold") * 61)); // 40..100
+      gainGrain = 30 + Std.int(Math.floor(impl_ver1.util.Deterministic.hash01(sBase + "|grain") * 71)); // 30..100
+      gainTroops = 50 + Std.int(Math.floor(impl_ver1.util.Deterministic.hash01(sBase + "|troop") * 151)); // 50..200
+      ruler.grantGold(gainGold);
+      ruler.grantGrain(gainGrain);
+      ruler.grantTroops(gainTroops);
+    }
+
+    impl_ver1.rules.GeneralAssignmentApply.applyStaminaCost(g, 12);
+
+    var title = ok ? "搶奪成功" : "搶奪失敗";
+    var body = ok
+      ? '村落（格 ${vIdx}）搶奪成功\n武將：${gid}\n成功率：約 ${Std.int(Math.floor(rate * 100))}%\n獲得：金 +${gainGold}｜糧 +${gainGrain}｜兵 +${gainTroops}\n友好度：${prevF} → ${nextF}\n${gid} 體力 -12'
+      : '村落（格 ${vIdx}）搶奪失敗\n武將：${gid}\n成功率：約 ${Std.int(Math.floor(rate * 100))}%\n未獲得資源\n友好度：${prevF} → ${nextF}\n${gid} 體力 -12';
+    match.pushInfoPopup(ruler.id(), title, game.PopupPayload.Plain(body), "village-plunder");
   }
 
   public function previewRows(actor:IPlayer):Array<IJiCeStagingPreviewRow> {

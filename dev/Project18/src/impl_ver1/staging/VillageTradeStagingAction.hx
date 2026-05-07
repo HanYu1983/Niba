@@ -73,26 +73,65 @@ class VillageTradeStagingAction implements IStagingAction {
       throw "VillageTradeStagingAction: no pendingVillage";
     var gid = GeneralAssignmentApply.pickSingleGeneralId(menuNode.formWidgets());
 
-    // 真結算線（骨架）：
-    // - 成功率暫不擲隨機（避免測試不穩）；先視為成功。
-    // - 消耗金錢換糧食：20 gold → 50 grain（之後可依友好度調整比例）
-    // - 友好度 +10（上限 100）
+    // 真結算線（對齊 GDD 2.1.3）：
+    // - 需要指派武將、消耗體力
+    // - 成功率由政治（stewardship）與體力決定，採 deterministic 擲骰以利測試可重現
+    // - 成功後資源交換為「低效果」；交易比例受友好度影響（友好度越高越優惠）
+    // - 友好度提升 +5~15（依交易規模；ver1 先以固定規模 + jitter）
     var costGold = 20;
     if (ruler.gold() < costGold)
       throw "VillageTradeStagingAction: insufficient gold";
-    ruler.reduceGold(costGold);
-    ruler.grantGrain(50);
-    var prevF = match.forceGetVillageFriendly(vIdx, ruler.id());
-    var nextF = prevF + 10;
-    if (nextF > 100)
-      nextF = 100;
-    match.forceSetVillageFriendly(vIdx, ruler.id(), nextF);
+
     var gg = GeneralAssignmentApply.requireOwnedGeneral(ruler, gid);
+    var pol = gg.stat(Stewardship);
+    var rate = 0.90 + (pol / 100.0) * 0.10 * Balance.staminaModifier(gg.stamina());
+    if (rate < 0)
+      rate = 0;
+    if (rate > 1)
+      rate = 1;
+    var seed = 'village_trade|t=${vIdx}|r=${match.roundNumber()}|m=${ruler.id()}|g=${gid}|gold=${costGold}';
+    var roll = impl_ver1.util.Deterministic.hash01(seed);
+    var ok = roll < rate;
+
+    var prevF = match.forceGetVillageFriendly(vIdx, ruler.id());
+
+    // 友好度加成：5~15（以 deterministic jitter）
+    var gainSeed = 'village_trade_f_gain|t=${vIdx}|r=${match.roundNumber()}|m=${ruler.id()}|g=${gid}';
+    var fGain = 5 + Std.int(Math.floor(impl_ver1.util.Deterministic.hash01(gainSeed) * 11)); // 5..15
+    var nextF = Balance.clampInt(prevF + fGain, 0, 100);
+
+    // 交易比例受友好度影響：友好度越高，同額金錢換到的糧食越多（ver1 先做簡化）
+    // base 50，友好度 50 時不變；100 時 +20%；0 時 -20%
+    var mult = 1.0 + (prevF - 50) / 50.0 * 0.20;
+    if (mult < 0.80)
+      mult = 0.80;
+    if (mult > 1.20)
+      mult = 1.20;
+    var gainGrain = Std.int(Math.floor(50 * mult));
+
+    // 成功才交換資源；失敗仍消耗體力，友好度不增加（但避免太懲罰，給 +1~3 微幅）
+    if (ok) {
+      ruler.reduceGold(costGold);
+      ruler.grantGrain(gainGrain);
+      match.forceSetVillageFriendly(vIdx, ruler.id(), nextF);
+      // 歸順：90~100 → 領地化（每回合產出）
+      if (nextF >= 90)
+        match.forceSetVillageOwner(vIdx, ruler.id());
+    } else {
+      var micro = 1 + Std.int(Math.floor(roll * 3)); // 1..3
+      match.forceSetVillageFriendly(vIdx, ruler.id(), Balance.clampInt(prevF + micro, 0, 100));
+    }
+
     GeneralAssignmentApply.applyStaminaCost(gg, 10);
+    var ownerNow = match.forceGetVillageOwner(vIdx);
+    var ownerLine = ownerNow == null ? "" : '\n領地：已歸順（屬主 ${ownerNow}）';
+    var title = ok ? "交易成功" : "交易失敗";
+    var gainLine = ok ? ('\n獲得：糧食 +${gainGrain}\n消耗：金錢 -${costGold}') : "\n未完成交換（仍消耗體力）";
+    var fNow = match.forceGetVillageFriendly(vIdx, ruler.id());
     match.pushInfoPopup(
       ruler.id(),
-      "交易成功",
-      game.PopupPayload.Plain('與村落（格 ${vIdx}）交易完成。\n\n獲得：糧食 +50\n友好度：${prevF} → ${nextF}\n消耗：金錢 -${costGold}\n${gid} 體力 -10'),
+      title,
+      game.PopupPayload.Plain('村落（格 ${vIdx}）交易\n武將：${gid}\n成功率：約 ${Std.int(Math.floor(rate * 100))}%（roll=${Std.int(Math.floor(roll * 100))}）${gainLine}\n友好度：${prevF} → ${fNow}${ownerLine}\n${gid} 體力 -10'),
       "village-trade"
     );
   }

@@ -75,6 +75,9 @@ interface IGameMatch extends IGameMatchGetter {
     /** 除錯／測試：直接寫入村落對玩家友好度（0~100）。 */
     function forceSetVillageFriendly(at:TileIndex, monarchId:MonarchId, friendly:Int):Void;
 
+    /** 除錯／測試：直接寫入村落屬主（無屬主語意請傳 null）。 */
+    function forceSetVillageOwner(at:TileIndex, ownerMonarchId:Null<MonarchId>):Void;
+
     /** 單格；多格按索引有序組裝後再交由 createBoard。 */
     function createTile(index:TileIndex, kind:TileKind):ITile;
 

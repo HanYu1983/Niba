@@ -72,6 +72,9 @@ class VillageConquerStagingAction implements IStagingAction {
     var ruler = cast(match.activeMonarch(), Monarch);
     if (actor.monarchId() != ruler.id())
       throw "VillageConquerStagingAction: actor must be active monarch";
+    var vIdx = match.forceGetPendingVillageTile();
+    if (vIdx == null)
+      throw "VillageConquerStagingAction: no pendingVillage";
 
     var commitTroops:Int = 0;
     for (w in menuNode.formWidgets())
@@ -90,30 +93,40 @@ class VillageConquerStagingAction implements IStagingAction {
       throw "VillageConquerStagingAction: insufficient troops";
 
     var atkPower = attackPower(commitTroops, gAtk);
-    var defPower = defenderPower();
+    var defPower = defenderPower(vIdx, ruler.id());
     var win = atkPower > defPower;
 
     // 骨架結算：先用 deterministic（無隨機）勝負。
     if (win) {
       ruler.reduceTroops(commitTroops);
       ruler.grantGrain(100);
+      // GDD 2.1.3：攻占成功後友好度重置為 50（中立），並成為領地（每回合產出）
+      match.forceSetVillageFriendly(vIdx, ruler.id(), 50);
+      match.forceSetVillageOwner(vIdx, ruler.id());
     } else {
       // 攻占失敗：投入士兵損失 20%
       var loss = Std.int(Math.floor(commitTroops * 0.2));
       ruler.reduceTroops(loss);
+      // GDD 2.1.3：攻占失敗後友好度 -10
+      var prevF = match.forceGetVillageFriendly(vIdx, ruler.id());
+      match.forceSetVillageFriendly(vIdx, ruler.id(), Balance.clampInt(prevF - 10, 0, 100));
     }
     // 低消耗體力
     GeneralAssignmentApply.applyStaminaCost(gAtk, 15);
 
+    var afterF = match.forceGetVillageFriendly(vIdx, ruler.id());
     var body = win
-      ? '攻占成功。\n武將：${gid}\n投入兵力：${commitTroops}\n獲得：糧食 +100\n（武將體力 -15）'
-      : '攻占失敗。\n武將：${gid}\n投入兵力：${commitTroops}\n兵力損失約 20%\n（武將體力 -15）';
+      ? '攻占成功。\n格子：${vIdx}\n武將：${gid}\n投入兵力：${commitTroops}\n獲得：糧食 +100\n友好度：→ ${afterF}（重置）\n領地：已占領（每回合產出）\n（武將體力 -15）'
+      : '攻占失敗。\n格子：${vIdx}\n武將：${gid}\n投入兵力：${commitTroops}\n兵力損失約 20%\n友好度：→ ${afterF}\n（武將體力 -15）';
     match.pushInfoPopup(ruler.id(), win ? "攻占成功" : "攻占失敗", game.PopupPayload.Plain(body), "village-conquer");
   }
 
   public function previewRows(actor:IPlayer):Array<IJiCeStagingPreviewRow> {
     var ruler = cast(match.activeMonarch(), Monarch);
-    var defP = defenderPower();
+    var vIdx = match.forceGetPendingVillageTile();
+    if (vIdx == null)
+      return [];
+    var defP = defenderPower(vIdx, ruler.id());
     var rows:Array<IJiCeStagingPreviewRow> = [];
     // 使用預設投入兵力（500 或目前兵力）
     var commit = Std.int(Math.min(500, ruler.troops()));
@@ -142,14 +155,16 @@ class VillageConquerStagingAction implements IStagingAction {
     return troops * (might + cmd) * stamina;
   }
 
-  static function defenderPower():Float {
-    // 骨架常數：村落守軍 + 中階防禦（之後接 friendly/level/守方武將）
+  function defenderPower(vIdx:TileIndex, attackerId:MonarchId):Float {
+    // GDD 2.1.3：友好度越高，守軍戰鬥力越低
     var defTroops = 800;
     var defMight = 0.55;
     var defCmd = 0.55 * 0.5;
     var stamina = 1.0;
     var city = Balance.cityDefenseBonus(CityLevel.Village);
-    var friendly = Balance.friendlyModifier(50);
+    // friendlyModifier：friendly 越低倍率越高；因此可直接套用
+    var f = match.forceGetVillageFriendly(vIdx, attackerId);
+    var friendly = Balance.friendlyModifier(f);
     return defTroops * (defMight + defCmd) * stamina * city * friendly;
   }
 }

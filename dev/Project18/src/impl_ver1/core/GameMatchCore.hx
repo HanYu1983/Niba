@@ -134,6 +134,10 @@ class GameMatchCore implements IGameMatch {
   var _pendingVillageTileIndex:Null<TileIndex>;
   /** 村落格索引 →（君主 id → 友好度 0~100）。 */
   var _villageFriendly:Map<Int, Map<MonarchId, Int>>;
+  /** 村落格索引 → 屬主君主 id；用於「歸順後每回合產出」等領地語意。 */
+  var _villageOwner:Map<Int, MonarchId>;
+  /** 村落格索引 → 領地等級（先以 CityLevel.Village 表示，未來可升級）。 */
+  var _villageLevel:Map<Int, CityLevel>;
 
   /** --- 資源格 pending（領取／指派武將加成）--- */
   var _pendingResourceTileIndex:Null<TileIndex>;
@@ -206,6 +210,8 @@ class GameMatchCore implements IGameMatch {
     _shopStocksByTile = new Map();
     _resourceRewardsByTile = new Map();
     _villageFriendly = new Map();
+    _villageOwner = new Map();
+    _villageLevel = new Map();
     _tileNextTurnGrainBonus = new Map();
     _tileNextTurnGoldBonus = new Map();
     _tileDefenseBonus = new Map();
@@ -675,6 +681,30 @@ class GameMatchCore implements IGameMatch {
     monarchWithId(monarchId);
     var v = Balance.clampInt(friendly, 0, 100);
     ensureVillageRow(at).set(monarchId, v);
+  }
+
+  public function forceGetVillageOwner(at:TileIndex):Null<MonarchId> {
+    if (_board == null)
+      throw "GameMatchCore.forceGetVillageOwner: board not set";
+    if (_board.tileAt(at).kind() != Village)
+      throw "GameMatchCore.forceGetVillageOwner: not a Village tile";
+    return _villageOwner.exists(at) ? _villageOwner.get(at) : null;
+  }
+
+  public function forceSetVillageOwner(at:TileIndex, ownerMonarchId:Null<MonarchId>):Void {
+    if (_board == null)
+      throw "GameMatchCore.forceSetVillageOwner: board not set";
+    if (_board.tileAt(at).kind() != Village)
+      throw "GameMatchCore.forceSetVillageOwner: not a Village tile";
+    if (ownerMonarchId == null) {
+      _villageOwner.remove(at);
+      _villageLevel.remove(at);
+      return;
+    }
+    monarchWithId(ownerMonarchId);
+    _villageOwner.set(at, ownerMonarchId);
+    if (!_villageLevel.exists(at))
+      _villageLevel.set(at, CityLevel.Village);
   }
 
   public function forceAssignCityGarrison(at:TileIndex, generalId:GeneralId):Void {
@@ -2012,6 +2042,14 @@ class GameMatchCore implements IGameMatch {
           var inc = Balance.cityBaseIncome(lvl);
           monarchWithId(owner).grantGold(inc.gold);
           monarchWithId(owner).grantGrain(inc.grain);
+        }
+        // 4b) 村落領地化（歸順／攻占後）：先視同 CityLevel.Village 給基本產出
+        if (_villageOwner.exists(i)) {
+          var vOwner = _villageOwner.get(i);
+          var vLvl = _villageLevel.exists(i) ? _villageLevel.get(i) : CityLevel.Village;
+          var vInc = Balance.cityBaseIncome(vLvl);
+          monarchWithId(vOwner).grantGold(vInc.gold);
+          monarchWithId(vOwner).grantGrain(vInc.grain);
         }
       }
     }
