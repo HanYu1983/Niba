@@ -297,8 +297,8 @@ class GameMatchCore implements IGameMatch {
       return;
     var len = _board.length();
     for (i in 0...len) {
-      // 2.1.7：成長量由每格 growth 決定（程序化生成，可 forceSet）
-      var g = forceGetTileGrowth(i);
+      // 2.1.7：成長量由每格 base growth 決定，並受「城池等級」「駐守武將」影響（最小版）
+      var g = effectiveTerritoryGrowth(i);
 
       // 城池領地：寫入領地資源庫（城池儲備）
       if (_cityOwner.exists(i)) {
@@ -320,6 +320,77 @@ class GameMatchCore implements IGameMatch {
         _villageStockTroops.set(i, vt + g.troops);
       }
     }
+  }
+
+  function effectiveTerritoryGrowth(at:TileIndex):TileGrowth {
+    var base = forceGetTileGrowth(at);
+    // 預設倍率
+    var levelMult = 1.0;
+    var goldMult = 1.0;
+    var grainMult = 1.0;
+    var troopMult = 1.0;
+
+    // 城池：等級倍率 + 駐守武將加成
+    if (_board != null && _board.tileAt(at).kind() == City && _cityOwner.exists(at)) {
+      var lvl = forceGetCityLevel(at);
+      levelMult = cityLevelGrowthMultiplier(lvl);
+      var gm = cityGarrisonGrowthMultiplier(at);
+      goldMult *= gm.gold;
+      grainMult *= gm.grain;
+      troopMult *= gm.troops;
+    }
+
+    // 村落領地化：暫用 Village 等級倍率（未來升級時可改讀 _villageLevel）
+    if (_villageOwner.exists(at)) {
+      var vLvl = _villageLevel.exists(at) ? _villageLevel.get(at) : CityLevel.Village;
+      levelMult = cityLevelGrowthMultiplier(vLvl);
+    }
+
+    return {
+      gold: Std.int(Math.floor(base.gold * levelMult * goldMult)),
+      grain: Std.int(Math.floor(base.grain * levelMult * grainMult)),
+      troops: Std.int(Math.floor(base.troops * levelMult * troopMult)),
+    };
+  }
+
+  function cityLevelGrowthMultiplier(level:CityLevel):Float {
+    return switch level {
+      case Village: 1.0;
+      case SmallCity: 1.2;
+      case BigCity: 1.5;
+      case Capital: 1.8;
+    };
+  }
+
+  function cityGarrisonGrowthMultiplier(at:TileIndex):{gold:Float, grain:Float, troops:Float} {
+    // 取駐將中「各資源對應 stat」的最大值，作為加成來源（最小版）
+    // gold: 政治 Stewardship；grain: 智力 Wit；troops: 統率 Command
+    var bestPol = 0;
+    var bestWit = 0;
+    var bestCmd = 0;
+    for (gid in forceGetCityGarrisonGeneralIds(at)) {
+      var g = requireGeneral(gid);
+      var pol = g.stat(game.GeneralStat.Stewardship);
+      var wit = g.stat(game.GeneralStat.Wit);
+      var cmd = g.stat(game.GeneralStat.Command);
+      if (pol > bestPol)
+        bestPol = pol;
+      if (wit > bestWit)
+        bestWit = wit;
+      if (cmd > bestCmd)
+        bestCmd = cmd;
+    }
+    // 轉倍率：stat=0 → 1.0；stat=100 → 1.5（+50%）
+    var polMult = 1.0 + (bestPol / 200.0);
+    var witMult = 1.0 + (bestWit / 200.0);
+    var cmdMult = 1.0 + (bestCmd / 200.0);
+    // 體力修正：用 activeMonarch 的駐將體力平均（簡化：取最大體力的 modifier，避免太懲罰）
+    var staminaMult = 1.0;
+    for (gid in forceGetCityGarrisonGeneralIds(at)) {
+      var g = requireGeneral(gid);
+      staminaMult = Math.max(staminaMult, Balance.staminaModifier(g.stamina()));
+    }
+    return {gold: polMult * staminaMult, grain: witMult * staminaMult, troops: cmdMult * staminaMult};
   }
 
   function rollTerrain(idx:TileIndex):TerrainKind {

@@ -35,7 +35,8 @@ class StartTileTerritoryGrowthTest {
 
     // 設置城池領地（本測試不依城等級；直接 forceSetTileGrowth）
     match.forceSetCityOwner(2, idA);
-    match.forceSetCityLevel(2, CityLevel.SmallCity);
+    // 設為 Village，避免等級倍率影響斷言（等級倍率另有專門測試）
+    match.forceSetCityLevel(2, CityLevel.Village);
     match.forcePutCityStores(2, 0, 0);
     match.forcePutCityStoredGold(2, 0);
     match.forceSetTileGrowth(2, {gold: 9, grain: 8, troops: 7});
