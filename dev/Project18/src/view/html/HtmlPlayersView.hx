@@ -14,6 +14,7 @@ import view.IViewModel;
 class HtmlPlayersView {
   final host:Element;
   var vmSub:Null<ISubscription> = null;
+  var views:Array<HtmlPlayerView> = [];
 
   public function new(mountElementId:String) {
     var el = Browser.document.getElementById(mountElementId);
@@ -29,6 +30,11 @@ class HtmlPlayersView {
   }
 
   function render(vm:IViewModel):Void {
+    // 清理舊 views 的訂閱，避免切換場景後仍在 render 已不存在的 monarchId（例如 m-c）
+    for (v in views)
+      v.dispose();
+    views = [];
+
     host.innerHTML = "";
     host.className = "players";
     for (m in vm.monarchs()) {
@@ -36,7 +42,7 @@ class HtmlPlayersView {
       var slot = Browser.document.createDivElement();
       slot.id = id;
       host.appendChild(slot);
-      new HtmlPlayerView(id, m.id());
+      views.push(new HtmlPlayerView(id, m.id()));
     }
   }
 
@@ -45,6 +51,9 @@ class HtmlPlayersView {
       vmSub.unsubscribe();
       vmSub = null;
     }
+    for (v in views)
+      v.dispose();
+    views = [];
     host.innerHTML = "";
   }
 }
