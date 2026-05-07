@@ -191,7 +191,34 @@ class HtmlRouterView {
         body.textContent = "（TestPage2：此狀態不顯示 overlay，若看到此文字代表 renderOverlay 分支未被短路）";
       case InspectorTile(ti):
         var t = vm.tileAt(ti);
-        body.textContent = '格 $ti｜${Std.string(t.kind())}';
+        var terrain = vm.forceGetTileTerrain(ti);
+        var growth = vm.forceGetTileGrowth(ti);
+        var lines:Array<String> = [];
+        lines.push('格 $ti｜${Std.string(t.kind())}');
+        lines.push('地形｜${Std.string(terrain)}');
+        lines.push('成長｜金 ${growth.gold}｜糧 ${growth.grain}｜兵 ${growth.troops}');
+        switch t.kind() {
+          case City:
+            var owner = vm.forceGetCityOwner(ti);
+            var lvl = vm.forceGetCityLevel(ti);
+            var gold = vm.forceGetCityStoredGold(ti);
+            var grain = vm.forceGetCityStoredGrain(ti);
+            var troops = vm.forceGetCityStoredTroops(ti);
+            lines.push('屬主｜' + (owner != null ? owner : "（無）"));
+            lines.push('等級｜${Std.string(lvl)}');
+            lines.push('資源庫｜金 ${gold}｜糧 ${grain}｜兵 ${troops}');
+          case Village:
+            var owner = vm.forceGetVillageOwner(ti);
+            var lvl = vm.forceGetVillageLevel(ti);
+            var gold = vm.forceGetVillageStoredGold(ti);
+            var grain = vm.forceGetVillageStoredGrain(ti);
+            var troops = vm.forceGetVillageStoredTroops(ti);
+            lines.push('屬主｜' + (owner != null ? owner : "（無）"));
+            lines.push('等級｜${Std.string(lvl)}');
+            lines.push('資源庫｜金 ${gold}｜糧 ${grain}｜兵 ${troops}');
+          default:
+        }
+        body.textContent = lines.join("\n");
       case InspectorMonarch(mid):
         var m = vm.monarchById(mid);
         body.textContent = '主公 $mid｜位置 ${m.pawnIndex()}｜兵 ${m.troops()}｜糧 ${m.grain()}｜金 ${m.gold()}';

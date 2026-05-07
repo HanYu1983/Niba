@@ -3,6 +3,8 @@ package view.html;
 import game.GeneralStat;
 import game.IEquipment;
 import game.IMonarch;
+import game.TileKind;
+import game.CityLevel;
 import js.Browser;
 import js.html.DivElement;
 import js.html.Element;
@@ -19,7 +21,7 @@ class HtmlInfoPanelView {
   final host:Element;
   final root:DivElement;
   var vmSub:Null<ISubscription> = null;
-  var activeTab:String = "monarch"; // "monarch" | "generals" | "weapons"
+  var activeTab:String = "monarch"; // "monarch" | "generals" | "weapons" | "territories"
 
   public function new(mountElementId:String) {
     var el = Browser.document.getElementById(mountElementId);
@@ -62,6 +64,7 @@ class HtmlInfoPanelView {
     tabs.appendChild(tabBtn("monarch", "君主資料", vm));
     tabs.appendChild(tabBtn("generals", "武將列表", vm));
     tabs.appendChild(tabBtn("weapons", "武器列表", vm));
+    tabs.appendChild(tabBtn("territories", "領地資源庫", vm));
     root.appendChild(tabs);
 
     // content
@@ -74,6 +77,8 @@ class HtmlInfoPanelView {
         body.appendChild(renderGenerals(a));
       case "weapons":
         body.appendChild(renderWeapons(a));
+      case "territories":
+        body.appendChild(renderTerritories(vm, a));
       default:
         body.appendChild(renderMonarch(a));
     }
@@ -209,6 +214,84 @@ class HtmlInfoPanelView {
         r.appendChild(td(x.gid, true));
         tbody.appendChild(r);
       }
+    }
+    table.appendChild(tbody);
+    wrap.appendChild(table);
+    return wrap;
+  }
+
+  function renderTerritories(vm:IViewModel, a:IMonarch):Element {
+    var wrap = Browser.document.createDivElement();
+
+    var lab = Browser.document.createSpanElement();
+    lab.className = "ui-label";
+    lab.textContent = "我方領地（城池/村落）資源庫";
+    wrap.appendChild(lab);
+
+    var table = Browser.document.createTableElement();
+    table.className = "ui-table";
+
+    var thead = Browser.document.createTableSectionElement();
+    var hr = Browser.document.createTableRowElement();
+    for (h in ["格", "類型", "等級", "金庫", "糧庫", "兵庫", "地形", "成長(金/糧/兵)"]) {
+      var th = Browser.document.createTableCellElement();
+      th.className = "ui-th";
+      th.textContent = h;
+      hr.appendChild(th);
+    }
+    thead.appendChild(hr);
+    table.appendChild(thead);
+
+    var tbody = Browser.document.createTableSectionElement();
+    var any = false;
+    var len = vm.board().length();
+    for (i in 0...len) {
+      var t = vm.tileAt(i);
+      switch t.kind() {
+        case City:
+          var owner = vm.forceGetCityOwner(i);
+          if (owner != null && owner == a.id()) {
+            any = true;
+            var r = Browser.document.createTableRowElement();
+            r.appendChild(td(Std.string(i), true));
+            r.appendChild(td("城池", true));
+            r.appendChild(td(Std.string(vm.forceGetCityLevel(i)), false));
+            r.appendChild(td(Std.string(vm.forceGetCityStoredGold(i)), false));
+            r.appendChild(td(Std.string(vm.forceGetCityStoredGrain(i)), false));
+            r.appendChild(td(Std.string(vm.forceGetCityStoredTroops(i)), false));
+            r.appendChild(td(Std.string(vm.forceGetTileTerrain(i)), false));
+            var g = vm.forceGetTileGrowth(i);
+            r.appendChild(td('${g.gold}/${g.grain}/${g.troops}', false));
+            tbody.appendChild(r);
+          }
+        case Village:
+          var vOwner = vm.forceGetVillageOwner(i);
+          if (vOwner != null && vOwner == a.id()) {
+            any = true;
+            var r = Browser.document.createTableRowElement();
+            r.appendChild(td(Std.string(i), true));
+            r.appendChild(td("村落", true));
+            r.appendChild(td(Std.string(vm.forceGetVillageLevel(i)), false));
+            r.appendChild(td(Std.string(vm.forceGetVillageStoredGold(i)), false));
+            r.appendChild(td(Std.string(vm.forceGetVillageStoredGrain(i)), false));
+            r.appendChild(td(Std.string(vm.forceGetVillageStoredTroops(i)), false));
+            r.appendChild(td(Std.string(vm.forceGetTileTerrain(i)), false));
+            var g = vm.forceGetTileGrowth(i);
+            r.appendChild(td('${g.gold}/${g.grain}/${g.troops}', false));
+            tbody.appendChild(r);
+          }
+        default:
+      }
+    }
+
+    if (!any) {
+      var r0 = Browser.document.createTableRowElement();
+      var td0 = Browser.document.createTableCellElement();
+      td0.colSpan = 8;
+      td0.className = "ui-td ui-empty";
+      td0.textContent = "（目前沒有領地資源庫）";
+      r0.appendChild(td0);
+      tbody.appendChild(r0);
     }
     table.appendChild(tbody);
     wrap.appendChild(table);
