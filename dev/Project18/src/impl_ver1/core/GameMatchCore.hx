@@ -21,10 +21,15 @@ import game.IPlayerCommand;
 import game.Balance;
 import game.IEquipment;
 import game.IPopupMessage;
+import game.IAnimationMessage;
+import game.IOutboxMessage;
 import game.MenuClientConfirm;
 import game.MenuActivation;
 import game.MenuGeneralChoice;
 import game.MenuFormWidget;
+import game.AnimationAudience;
+import game.AnimationKind;
+import game.AnimationPayload;
 import game.PopupAudience;
 import game.PopupOption;
 import game.PopupPayload;
@@ -37,6 +42,9 @@ import game.GameError;
 import game.TerrainKind;
 import game.TileGrowth;
 import game.AiDecision;
+import game.OutboxAudience;
+import game.OutboxPresentation;
+import game.OutboxPresentationMode;
 import impl_ver1.commands.Ver1MainCommands;
 import impl_ver1.flows.HostileCityPhase;
 import impl_ver1.jice.JiCeRegistry;
@@ -48,6 +56,8 @@ import impl_ver1.model.PlayerMenu;
 import impl_ver1.model.PlayerMenuEntry;
 import impl_ver1.model.PlayerMenuNode;
 import impl_ver1.model.PopupMessage;
+import impl_ver1.model.AnimationMessage;
+import impl_ver1.model.OutboxMessage;
 import impl_ver1.model.Tile;
 import impl_ver1.equipment.WeaponCatalog;
 import impl_ver1.equipment.ArmorCatalog;
@@ -108,6 +118,14 @@ class GameMatchCore implements IGameMatch {
   /** --- 彈窗 outbox（apply 產生、view 消費）--- */
   var _popupSeq:Int;
   var _popupsByMonarchId:Map<MonarchId, Array<IPopupMessage>>;
+
+  /** --- 動畫 outbox（apply 產生、view 消費；非阻塞）--- */
+  var _animSeq:Int;
+  var _animsByMonarchId:Map<MonarchId, Array<IAnimationMessage>>;
+
+  /** --- 統一 outbox（嚴格保序；Animation/Popup 混合）--- */
+  var _outboxSeq:Int;
+  var _outboxByMonarchId:Map<MonarchId, Array<IOutboxMessage>>;
 
   /** 移動完成但尚未「落地分流」時，暫存落點索引（用於移動後策略窗口）。 */
   var _pendingLandingTileIndex:Null<TileIndex>;
@@ -206,6 +224,10 @@ class GameMatchCore implements IGameMatch {
     _pendingTileEventEffectMultiplier = 1.0;
     _popupSeq = 0;
     _popupsByMonarchId = new Map();
+    _animSeq = 0;
+    _animsByMonarchId = new Map();
+    _outboxSeq = 0;
+    _outboxByMonarchId = new Map();
     _pendingLandingTileIndex = null;
     _pendingStaging = null;
     _ownedJiCe = new Map();
@@ -731,31 +753,69 @@ class GameMatchCore implements IGameMatch {
     _monarchs.push(m);
     _ownedJiCe.set(id, []);
     _popupsByMonarchId.set(id, []);
+    _animsByMonarchId.set(id, []);
+    _outboxByMonarchId.set(id, []);
     if (_monarchs.length == 1)
       _activeId = m.id();
     return m;
   }
 
-  public function pendingPopups(monarchId:MonarchId):Array<IPopupMessage> {
-    if (!_popupsByMonarchId.exists(monarchId))
+  public function pendingOutbox(monarchId:MonarchId):Array<IOutboxMessage> {
+    if (!_outboxByMonarchId.exists(monarchId))
       return [];
-    return _popupsByMonarchId.get(monarchId).copy();
+    return _outboxByMonarchId.get(monarchId).copy();
   }
 
-  public function ackPopup(monarchId:MonarchId, popupId:String):Void {
-    if (!_popupsByMonarchId.exists(monarchId))
+  public function ackOutbox(monarchId:MonarchId, outboxId:String):Void {
+    if (!_outboxByMonarchId.exists(monarchId))
       return;
-    var xs = _popupsByMonarchId.get(monarchId);
+    var xs = _outboxByMonarchId.get(monarchId);
     var i = xs.length;
     while (i-- > 0)
-      if (xs[i] != null && xs[i].id() == popupId) {
+      if (xs[i] != null && xs[i].id() == outboxId) {
         xs.splice(i, 1);
         return;
       }
   }
 
+  public function pendingAnimations(monarchId:MonarchId):Array<IAnimationMessage> {
+    var xs = pendingOutbox(monarchId);
+    if (xs == null || xs.length == 0)
+      return [];
+    var out:Array<IAnimationMessage> = [];
+    for (m in xs)
+      switch m.presentation() {
+        case Animation(kind, payload, _):
+          out.push(new AnimationMessage(m.id(), AnimationAudience.ToMonarch(monarchId), kind, payload, m.ctxKey()));
+        case Popup(_, _, _):
+      }
+    return out;
+  }
+
+  public function ackAnimation(monarchId:MonarchId, animationId:String):Void {
+    ackOutbox(monarchId, animationId);
+  }
+
+  public function pendingPopups(monarchId:MonarchId):Array<IPopupMessage> {
+    var xs = pendingOutbox(monarchId);
+    if (xs == null || xs.length == 0)
+      return [];
+    var out:Array<IPopupMessage> = [];
+    for (m in xs)
+      switch m.presentation() {
+        case Popup(title, payload, option):
+          out.push(new PopupMessage(m.id(), PopupAudience.ToMonarch(monarchId), title, payload, option));
+        case Animation(_, _, _):
+      }
+    return out;
+  }
+
+  public function ackPopup(monarchId:MonarchId, popupId:String):Void {
+    ackOutbox(monarchId, popupId);
+  }
+
   public function pushInfoPopup(monarchId:MonarchId, title:String, payload:PopupPayload, ctxKey:String):Void {
-    pushPopupToMonarch(monarchId, title, payload, Ok, ctxKey);
+    pushOutboxPopup(monarchId, title, payload, Ok, ctxKey);
   }
 
   function pushPopupToMonarch(monarchId:MonarchId, title:String, payload:PopupPayload, option:PopupOption, ctxKey:String):String {
@@ -769,6 +829,54 @@ class GameMatchCore implements IGameMatch {
   function popupId(monarchId:MonarchId, ctxKey:String):String {
     _popupSeq++;
     return "pop-" + monarchId + "-" + ctxKey + "-" + _roundNumber + "-" + _popupSeq;
+  }
+
+  function animId(monarchId:MonarchId, ctxKey:String):String {
+    _animSeq++;
+    return "anim-" + monarchId + "-" + ctxKey + "-" + _roundNumber + "-" + _animSeq;
+  }
+
+  function outboxId(monarchId:MonarchId, ctxKey:String):String {
+    _outboxSeq++;
+    return "out-" + monarchId + "-" + ctxKey + "-" + _roundNumber + "-" + _outboxSeq;
+  }
+
+  function pushOutboxToMonarch(monarchId:MonarchId, msg:IOutboxMessage):Void {
+    if (!_outboxByMonarchId.exists(monarchId))
+      _outboxByMonarchId.set(monarchId, []);
+    _outboxByMonarchId.get(monarchId).push(msg);
+  }
+
+  function pushOutboxPopup(monarchId:MonarchId, title:String, payload:PopupPayload, option:PopupOption, ctxKey:String):String {
+    var id = outboxId(monarchId, ctxKey);
+    var msg = new OutboxMessage(
+      id,
+      OutboxAudience.ToMonarch(monarchId),
+      ctxKey,
+      true,
+      OutboxPresentationMode.Serial,
+      OutboxPresentation.Popup(title, payload, option)
+    );
+    pushOutboxToMonarch(monarchId, msg);
+    return id;
+  }
+
+  function pushOutboxAnim(monarchId:MonarchId, kind:AnimationKind, payload:AnimationPayload, durationMs:Int, mode:OutboxPresentationMode, ctxKey:String):String {
+    var id = outboxId(monarchId, ctxKey);
+    var msg = new OutboxMessage(
+      id,
+      OutboxAudience.ToMonarch(monarchId),
+      ctxKey,
+      false,
+      mode,
+      OutboxPresentation.Animation(kind, payload, durationMs)
+    );
+    pushOutboxToMonarch(monarchId, msg);
+    return id;
+  }
+
+  function pushAnimToMonarch(monarchId:MonarchId, kind:AnimationKind, payload:AnimationPayload, ctxKey:String):String {
+    return pushOutboxAnim(monarchId, kind, payload, 450, OutboxPresentationMode.FanOut2, ctxKey);
   }
 
   function monarchWithId(mid:MonarchId):Monarch {
@@ -2152,10 +2260,13 @@ class GameMatchCore implements IGameMatch {
 
         switch lk {
           case Move:
+            var before = pawnIndexOfMonarch(actor.monarchId());
             GameMatchVer1Ops.applyMenuLeafForMove(this, actor);
             syncActiveSliceAfterMenuLeaf(Move);
             var dMove = forceGetLastRolledMoveDelta();
             var pos = pawnIndexOfMonarch(actor.monarchId());
+            if (dMove != null)
+              pushAnimToMonarch(actor.monarchId(), AnimationKind.PawnMove, AnimationPayload.PawnMove(before, pos, dMove), "anim-move");
             pushInfoPopup(
               actor.monarchId(),
               "移動",

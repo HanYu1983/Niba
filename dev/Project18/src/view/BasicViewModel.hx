@@ -65,7 +65,9 @@ class BasicViewModel implements IViewModel {
         applyTileSinglePickToNode(node, widgetIndex, selectedTileIndexes);
       case MenuClick(node, entry):
         applyMenuClick(node, entry);
+        EventCenter.publishEvent(OutboxRefresh);
         EventCenter.publishEvent(PopupRefresh);
+        EventCenter.publishEvent(AnimationRefresh);
         EventCenter.publishViewModel(this);
       case AiToggle(monarchId, isAi):
         _aiByMonarchId.set(monarchId, isAi);
@@ -74,21 +76,30 @@ class BasicViewModel implements IViewModel {
         if (!ensureActiveMonarchAiOrHint())
           return;
         if (runAiStepOnce()) {
+          EventCenter.publishEvent(OutboxRefresh);
           EventCenter.publishEvent(PopupRefresh);
+          EventCenter.publishEvent(AnimationRefresh);
           EventCenter.publishViewModel(this);
         }
       case AiAuto:
         if (!ensureActiveMonarchAiOrHint())
           return;
         runAiAutoUntilStop();
+        EventCenter.publishEvent(OutboxRefresh);
         EventCenter.publishEvent(PopupRefresh);
+        EventCenter.publishEvent(AnimationRefresh);
         EventCenter.publishViewModel(this);
       case PopupClose(popupId):
         var mid = match.activeMonarch().id();
+        match.ackOutbox(mid, popupId);
         match.ackPopup(mid, popupId);
+        EventCenter.publishEvent(OutboxRefresh);
         EventCenter.publishEvent(PopupRefresh);
+        EventCenter.publishEvent(AnimationRefresh);
         EventCenter.publishViewModel(this);
       case PopupRefresh:
+      case AnimationRefresh:
+      case OutboxRefresh:
     }
   }
 
@@ -117,6 +128,7 @@ class BasicViewModel implements IViewModel {
     if (autoAckPopups) {
       // 重要：若有 popup modal，UI 必須立即重繪才能把 overlay 移除，否則看起來會「卡住」
       ackAllPopupsFor(mid);
+      EventCenter.publishEvent(OutboxRefresh);
       EventCenter.publishEvent(PopupRefresh);
     }
     return true;
@@ -478,6 +490,18 @@ class BasicViewModel implements IViewModel {
 
   public function ackPopup(monarchId:MonarchId, popupId:String):Void
     match.ackPopup(monarchId, popupId);
+
+  public function pendingAnimations(monarchId:MonarchId):Array<game.IAnimationMessage>
+    return match.pendingAnimations(monarchId);
+
+  public function ackAnimation(monarchId:MonarchId, animationId:String):Void
+    match.ackAnimation(monarchId, animationId);
+
+  public function pendingOutbox(monarchId:MonarchId):Array<game.IOutboxMessage>
+    return match.pendingOutbox(monarchId);
+
+  public function ackOutbox(monarchId:MonarchId, outboxId:String):Void
+    match.ackOutbox(monarchId, outboxId);
 
   static function popupPayloadText(p:PopupPayload):String {
     return switch p {

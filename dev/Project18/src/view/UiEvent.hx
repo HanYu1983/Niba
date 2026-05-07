@@ -47,6 +47,12 @@ enum UiEvent {
    */
   PopupRefresh;
 
+  /** 系統→UI：提示 animation view 重新讀取 pendingAnimations 並播放（若有）。 */
+  AnimationRefresh;
+
+  /** 系統→UI：提示 outbox view 重新讀取 pendingOutbox 並處理（若有）。 */
+  OutboxRefresh;
+
   /**
    * UI→系統：使用者關閉某筆 popup（由 ViewModel 執行 ackPopup）。
    */

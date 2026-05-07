@@ -284,6 +284,28 @@
       .endgame-title{ font-weight: 900; letter-spacing:.06em; color: var(--ink-2); margin-bottom: 8px; }
       .endgame-body{ white-space: pre-wrap; font-size: 12px; line-height: 18px; color: rgba(26,31,42,.88); }
       .endgame-actions{ display:flex; justify-content:flex-end; gap:10px; margin-top: 12px; flex-wrap: wrap; }
+
+      /* --- animation --- */
+      .anim-host{ position: fixed; inset: 0; pointer-events: none; z-index: 900; display:none; }
+      .anim-card{
+        position: absolute;
+        left: 50%;
+        bottom: 18px;
+        transform: translateX(-50%);
+        padding: 8px 12px;
+        border-radius: 999px;
+        border: 1px solid rgba(42,49,64,.22);
+        background: rgba(255,255,255,.85);
+        box-shadow: 0 10px 22px rgba(15,17,21,.12);
+        font-size: 12px;
+        color: rgba(26,31,42,.88);
+        white-space: pre;
+      }
+      .anim-card-next{
+        bottom: 46px;
+        opacity: .72;
+        filter: saturate(.92);
+      }
     </style>
   </head>
   <body>
@@ -308,7 +330,7 @@
       </div>
     </div>
 
-    <div id="app-popup"></div>
+    <div id="app-outbox"></div>
     <div id="app-endgame"></div>
 
     <script defer src="bin/hello.js"></script>

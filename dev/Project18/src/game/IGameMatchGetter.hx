@@ -16,6 +16,8 @@ import game.IPopupMessage;
 import game.TerrainKind;
 import game.TileGrowth;
 import game.AiDecision;
+import game.IAnimationMessage;
+import game.IOutboxMessage;
 
 /**
  * 賽局「唯讀」視角：狀態查詢＋選單快照生成（不得改變賽局內容）。
@@ -218,5 +220,20 @@ interface IGameMatchGetter {
 
   /** 彈窗消費（顯示完畢後呼叫）；不存在則為 no-op。 */
   function ackPopup(monarchId:MonarchId, popupId:String):Void;
+
+  /**
+   * 動畫 outbox：applyMenuLeaf 後由 view 查詢並播放，再以 ackAnimation 消費。
+   * 非阻塞（不需要使用者點擊）；建議 UI 以佇列方式依序播放。
+   */
+  function pendingAnimations(monarchId:MonarchId):Array<IAnimationMessage>;
+
+  /** 動畫消費（播放完畢後呼叫）；不存在則為 no-op。 */
+  function ackAnimation(monarchId:MonarchId, animationId:String):Void;
+
+  /** 統一 outbox（嚴格保序）：Animation/Popup 依產生順序排隊。 */
+  function pendingOutbox(monarchId:MonarchId):Array<IOutboxMessage>;
+
+  /** 消費 outbox（播放/顯示完畢後呼叫）；不存在則為 no-op。 */
+  function ackOutbox(monarchId:MonarchId, outboxId:String):Void;
 }
 

@@ -44,7 +44,6 @@ class AiFourPlayersToTerminationTest {
       switch match.getTerminationReason() {
         case NotEnded:
         case _:
-          trace("[AiFourPlayersToTerminationTest] terminated at step=" + step + " reason=" + Std.string(match.getTerminationReason()));
           return;
       }
 
@@ -55,17 +54,18 @@ class AiFourPlayersToTerminationTest {
         throw "AiFourPlayersToTerminationTest: aiSuggest returned null at step " + step;
 
       var ok = AiUiFlow.applyAiDecision(match, actor, d, function(node, entry) {
-        trace('[AiFourPlayersToTerminationTest] step=$step mid=$mid pick=${Std.string(entry.kind())}');
         match.applyMenuLeaf(actor, node);
       });
       if (!ok)
         throw "AiFourPlayersToTerminationTest: failed to apply AiDecision at step " + step;
 
-      // 模擬 UI：任何 apply 後若產生 popup，必須能被 ack 掉，不然 UI 會被 modal 卡住
-      AiUiFlow.ackAllPopups(match, mid);
-      var remain = match.pendingPopups(mid);
+      // 模擬 UI：任何 apply 後若產生 outbox（含 popup/animation），必須能被 ack 掉，不然 UI 會被卡住
+      AiUiFlow.ackAllOutbox(match, mid);
+      AiUiFlow.ackAllPopups(match, mid);      // 相容：舊 outbox
+      AiUiFlow.ackAllAnimations(match, mid);  // 相容：舊 outbox
+      var remain = match.pendingOutbox(mid);
       if (remain != null && remain.length > 0)
-        throw "AiFourPlayersToTerminationTest: popups not cleared after ack at step " + step;
+        throw "AiFourPlayersToTerminationTest: outbox not cleared after ack at step " + step;
     }
 
     throw "AiFourPlayersToTerminationTest: reached loop cap=100 without termination (round=" + match.roundNumber() + ")";

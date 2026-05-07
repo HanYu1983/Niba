@@ -26,8 +26,8 @@ class HtmlRouterView {
   final menu:HtmlActiveMenuView;
   final map:HtmlMapView;
   final players:HtmlPlayersView;
-  final popup:HtmlPopupView;
   final endgame:HtmlEndgameView;
+  final outbox:HtmlOutboxView;
 
   final overlayHost:Element;
   final bar:DivElement;
@@ -43,8 +43,8 @@ class HtmlRouterView {
     menu = new HtmlActiveMenuView("app-menu");
     map = new HtmlMapView("app-map");
     players = new HtmlPlayersView("app-players");
-    popup = new HtmlPopupView("app-popup");
     endgame = new HtmlEndgameView("app-endgame");
+    outbox = new HtmlOutboxView("app-outbox");
 
     overlayHost = ensureDiv("app-overlay");
     bar = Browser.document.createDivElement();
@@ -312,7 +312,8 @@ class HtmlRouterView {
     menu.dispose();
     map.dispose();
     players.dispose();
-    popup.dispose();
+    outbox.dispose();
+    endgame.dispose();
 
     if (bar.parentElement != null)
       bar.parentElement.removeChild(bar);

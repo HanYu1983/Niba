@@ -58,6 +58,22 @@ class AiUiFlow {
       match.ackPopup(monarchId, p.id());
   }
 
+  public static function ackAllAnimations(match:IGameMatch, monarchId:MonarchId):Void {
+    var xs = match.pendingAnimations(monarchId);
+    if (xs == null || xs.length == 0)
+      return;
+    for (a in xs)
+      match.ackAnimation(monarchId, a.id());
+  }
+
+  public static function ackAllOutbox(match:IGameMatch, monarchId:MonarchId):Void {
+    var xs = match.pendingOutbox(monarchId);
+    if (xs == null || xs.length == 0)
+      return;
+    for (m in xs)
+      match.ackOutbox(monarchId, m.id());
+  }
+
   static function resolveNodeByPath(roots:Array<IPlayerMenuNode>, path:Array<Int>):Null<IPlayerMenuNode> {
     if (path == null || path.length == 0)
       return null;
