@@ -172,6 +172,9 @@ interface IGameMatchGetter {
   /** 除錯／測試：村落領地資源庫（無紀錄為 0）。 */
   function forceGetVillageStoredTroops(at:TileIndex):Int;
 
+  /** 除錯／測試：村落等級（無紀錄視為 Village）。 */
+  function forceGetVillageLevel(at:TileIndex):CityLevel;
+
   /** 除錯／測試：踩中非友方且有駐軍城池後之多階段對峙尚未結束時為該格索引；否則 null。 */
   function forceGetPendingHostileCityTile():Null<TileIndex>;
 

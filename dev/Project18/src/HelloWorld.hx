@@ -70,6 +70,7 @@ class HelloWorld {
     debug_ver1.CityGrowthAffectedByLevelAndGarrisonTest.testCityGrowthAffectedByLevelAndGarrison(new impl_ver1.Game());
     debug_ver1.FriendlyCityDevelopSettlementTest.testFriendlyCityDevelopSettlement(new impl_ver1.Game());
     debug_ver1.OwnedVillageDispatchMenuTest.testOwnedVillagePersistentMenuUntilVisitEnd(new impl_ver1.Game());
+    debug_ver1.VillageDevelopSettlementTest.testVillageDevelopSettlement(new impl_ver1.Game());
     trace("Hello world");
 
     // --- HTML view demo ---

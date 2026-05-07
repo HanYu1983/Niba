@@ -62,6 +62,9 @@ enum PlayerMenuKind {
     /** 我方村落拜訪：結束拜訪並關閉持續選單。 */
     VillageVisitEnd;
 
+    /** 我方村落拜訪：開發（staging：選將→預覽成功率→提交）。 */
+    VillageDevelop;
+
     /** 資源格：直接領取本次資源包並結束落地。 */
     ResourceClaim;
 

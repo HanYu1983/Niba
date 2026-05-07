@@ -62,6 +62,7 @@ import impl_ver1.staging.RestStagingAction;
 import impl_ver1.staging.VillageConquerStagingAction;
 import impl_ver1.staging.VillagePlunderStagingAction;
 import impl_ver1.staging.VillageTradeStagingAction;
+import impl_ver1.staging.VillageDevelopStagingAction;
 
 /**
  * Ver1 賽局核心：終局／「移動」葉委派 {@link GameMatchVer1Ops}（傳入 {@code this}，不靠建構注入）。
@@ -949,6 +950,22 @@ class GameMatchCore implements IGameMatch {
     _villageStockGold.set(at, gold);
   }
 
+  public function forceGetVillageLevel(at:TileIndex):CityLevel {
+    if (_board == null)
+      throw "GameMatchCore.forceGetVillageLevel: board not set";
+    if (_board.tileAt(at).kind() != Village)
+      throw "GameMatchCore.forceGetVillageLevel: not a Village tile";
+    return _villageLevel.exists(at) ? _villageLevel.get(at) : CityLevel.Village;
+  }
+
+  public function forceSetVillageLevel(at:TileIndex, level:CityLevel):Void {
+    if (_board == null)
+      throw "GameMatchCore.forceSetVillageLevel: board not set";
+    if (_board.tileAt(at).kind() != Village)
+      throw "GameMatchCore.forceSetVillageLevel: not a Village tile";
+    _villageLevel.set(at, level);
+  }
+
   public function forceAssignCityGarrison(at:TileIndex, generalId:GeneralId):Void {
     if (_board == null)
       throw "GameMatchCore.forceAssignCityGarrison: board not set";
@@ -1356,6 +1373,7 @@ class GameMatchCore implements IGameMatch {
           Button(dispatchLeaf),
         ];
         roots.push(createPlayerMenuNode("調度", null, [], widgets));
+        roots.push(createPlayerMenuNode("開發", createPlayerMenuEntry(VillageDevelop, "開發", true, "v_dev"), []));
         roots.push(createPlayerMenuNode("結束拜訪", createPlayerMenuEntry(VillageVisitEnd, "結束拜訪", true, "v_visit_end"), []));
       } else {
         // 非我方村落：維持原互動指令
@@ -1532,7 +1550,7 @@ class GameMatchCore implements IGameMatch {
         _pendingStrategyPhase = null;
 
       // 任一玩家操作（除 ConfirmDone 外）都視為「本回合已行動過」，因此移動後策略才可用。
-      case Move, LandingContinue, JiCe, StagingSubmit, Status, StrategyPre, StrategyPost, Rest, VillageTrade, VillageConquer, VillagePlunder, VillageEndTurn, VillageDispatchApply, VillageVisitEnd, ResourceClaim, ResourceBoost, ResourceEndTurn, GeneralRecruit, GeneralRecruitSubmit, GeneralEndTurn, ShopBuy, ShopEndTurn, FriendlyCityDevelop, FriendlyCityRest, TileEventAvoidAttempt, TileEventAvoidSkip:
+      case Move, LandingContinue, JiCe, StagingSubmit, Status, StrategyPre, StrategyPost, Rest, VillageTrade, VillageConquer, VillagePlunder, VillageEndTurn, VillageDevelop, VillageDispatchApply, VillageVisitEnd, ResourceClaim, ResourceBoost, ResourceEndTurn, GeneralRecruit, GeneralRecruitSubmit, GeneralEndTurn, ShopBuy, ShopEndTurn, FriendlyCityDevelop, FriendlyCityRest, TileEventAvoidAttempt, TileEventAvoidSkip:
         _hasMovedThisTurn = true;
 
       // 這些 leaf 不改動 hasMovedThisTurn（但通常也不會在回合開始前出現）
@@ -2127,6 +2145,16 @@ class GameMatchCore implements IGameMatch {
             _pendingVillageTileIndex = null;
             _activeSliceComplete = true;
             syncActiveSliceAfterMenuLeaf(VillageEndTurn);
+          case VillageDevelop:
+            if (_pendingVillageTileIndex == null)
+              throw "GameMatchCore: VillageDevelop 但無 pendingVillage";
+            // 僅我方村落可開發
+            var vidx = _pendingVillageTileIndex;
+            var owner = forceGetVillageOwner(vidx);
+            var ruler = cast(activeMonarch(), Monarch);
+            if (owner == null || owner != ruler.id())
+              throw "GameMatchCore: VillageDevelop 僅可對我方村落使用";
+            enterStaging(actor, new VillageDevelopStagingAction(this), VillageDevelop);
           case VillageDispatchApply:
             if (_pendingVillageTileIndex == null)
               throw "GameMatchCore: VillageDispatchApply 但無 pendingVillage";

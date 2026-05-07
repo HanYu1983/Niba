@@ -86,6 +86,9 @@ interface IGameMatch extends IGameMatchGetter {
     /** 除錯／測試：直接寫入村落領地資源庫（兵/糧/金）。 */
     function forcePutVillageStores(at:TileIndex, troops:Int, grain:Int, gold:Int):Void;
 
+    /** 除錯／測試：直接寫入村落等級。 */
+    function forceSetVillageLevel(at:TileIndex, level:CityLevel):Void;
+
     /** 除錯／測試：直接寫入格子地形。 */
     function forceSetTileTerrain(at:TileIndex, terrain:TerrainKind):Void;
 

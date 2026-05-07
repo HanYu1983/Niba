@@ -21,6 +21,7 @@ import game.PopupPayload;
 import game.MenuClientConfirm;
 import game.TerrainKind;
 import game.TileGrowth;
+import game.CityLevel;
 import js.Browser;
 import rx.disposables.ISubscription;
 import view.UiEvent;
@@ -278,6 +279,9 @@ class BasicViewModel implements IViewModel {
 
   public function forceGetVillageStoredTroops(at:TileIndex):Int
     return match.forceGetVillageStoredTroops(at);
+
+  public function forceGetVillageLevel(at:TileIndex):CityLevel
+    return match.forceGetVillageLevel(at);
 
   public function forceGetPendingHostileCityTile():Null<TileIndex>
     return match.forceGetPendingHostileCityTile();
