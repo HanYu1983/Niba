@@ -20,6 +20,7 @@ import impl_ver1.core.GameMatchCore;
 import impl_ver1.model.Monarch;
 import impl_ver1.model.General;
 import impl_ver1.model.PlayerMenu;
+import game.GameError;
 
 /**
  * 村落攻占（示範）：選一名武將 + 選擇投入士兵數（slider）→ 顯示勝率 → 確認提交。
@@ -71,10 +72,10 @@ class VillageConquerStagingAction implements IStagingAction {
   public function resolveChoice(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
     var ruler = cast(match.activeMonarch(), Monarch);
     if (actor.monarchId() != ruler.id())
-      throw "VillageConquerStagingAction: actor must be active monarch";
+      throw new GameError("目前不是你的回合，無法攻占。", "操作失敗", "village-conquer/actor");
     var vIdx = match.forceGetPendingVillageTile();
     if (vIdx == null)
-      throw "VillageConquerStagingAction: no pendingVillage";
+      throw new GameError("必須在拜訪村落時才能攻占。", "操作失敗", "village-conquer/pending");
 
     var commitTroops:Int = 0;
     for (w in menuNode.formWidgets())
@@ -84,13 +85,13 @@ class VillageConquerStagingAction implements IStagingAction {
         default:
       }
     if (commitTroops <= 0)
-      throw "VillageConquerStagingAction: commitTroops must be > 0";
+      throw new GameError("投入士兵數必須大於 0。", "輸入不合法", "village-conquer/invalid-troops");
 
     var gid = GeneralAssignmentApply.pickSingleGeneralId(menuNode.formWidgets());
     var gAtk = GeneralAssignmentApply.requireOwnedGeneral(ruler, gid);
 
     if (commitTroops > ruler.troops())
-      throw "VillageConquerStagingAction: insufficient troops";
+      throw new GameError("兵力不足，無法投入指定數量。", "資源不足", "village-conquer/insufficient-troops");
 
     var atkPower = attackPower(commitTroops, gAtk);
     var defPower = defenderPower(vIdx, ruler.id());

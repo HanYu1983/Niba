@@ -17,6 +17,7 @@ import impl_ver1.model.Monarch;
 import impl_ver1.model.PlayerMenu;
 import impl_ver1.rules.GeneralAssignmentApply;
 import impl_ver1.staging.SimpleStagingPreviewRow;
+import game.GameError;
 
 /**
  * 資源格：指派武將加成（staging）。
@@ -68,7 +69,7 @@ class ResourceTileBoostStagingAction implements IStagingAction {
   public function resolveChoice(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
     var ruler = cast(match.activeMonarch(), Monarch);
     if (actor.monarchId() != ruler.id())
-      throw "ResourceTileBoostStagingAction: actor must be active monarch";
+      throw new GameError("目前不是你的回合，無法指派武將加成。", "操作失敗", "resource-boost/actor");
 
     var gid = GeneralAssignmentApply.pickSingleGeneralId(menuNode.formWidgets());
     var g:General = GeneralAssignmentApply.requireOwnedGeneral(ruler, gid);

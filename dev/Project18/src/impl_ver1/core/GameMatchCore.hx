@@ -2069,7 +2069,7 @@ class GameMatchCore implements IGameMatch {
   public function applyMenuLeaf(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
     var leaf = MenuActivation.activatingEntry(menuNode);
     if (!leaf.isEnabled())
-      throw "GameMatchCore.applyMenuLeaf: activating entry disabled (" + leaf.caption() + ")";
+      throw new GameError('此操作目前不可用：${leaf.caption()}', "操作失敗", "menu/disabled");
 
     var lk = leaf.kind();
     switch lk {
@@ -2087,7 +2087,7 @@ class GameMatchCore implements IGameMatch {
         handleHostileCitySettlementAck(actor, menuNode);
       default:
         if (actor.monarchId() != activeMonarch().id())
-          throw "GameMatchCore.applyMenuLeaf: actor must be active monarch";
+          throw new GameError("目前不是你的回合，無法操作。", "操作失敗", "menu/not-active");
 
         switch lk {
           case Move:
@@ -2140,35 +2140,35 @@ class GameMatchCore implements IGameMatch {
             enterStaging(actor, new VillagePlunderStagingAction(this), VillagePlunder);
           case VillageEndTurn:
             if (_pendingVillageTileIndex == null)
-              throw "GameMatchCore: VillageEndTurn 但無 pendingVillage";
+              throw new GameError("目前不在村落互動中。", "操作失敗", "village/end/pending");
             pushInfoPopup(actor.monarchId(), "村落", Plain("已結束村落互動。"), "village-end");
             _pendingVillageTileIndex = null;
             _activeSliceComplete = true;
             syncActiveSliceAfterMenuLeaf(VillageEndTurn);
           case VillageDevelop:
             if (_pendingVillageTileIndex == null)
-              throw "GameMatchCore: VillageDevelop 但無 pendingVillage";
+              throw new GameError("目前不在村落互動中，無法開發。", "操作失敗", "village/develop/pending");
             // 僅我方村落可開發
             var vidx = _pendingVillageTileIndex;
             var owner = forceGetVillageOwner(vidx);
             var ruler = cast(activeMonarch(), Monarch);
             if (owner == null || owner != ruler.id())
-              throw "GameMatchCore: VillageDevelop 僅可對我方村落使用";
+              throw new GameError("只能對我方已歸順的村落進行開發。", "操作失敗", "village/develop/not-owned");
             enterStaging(actor, new VillageDevelopStagingAction(this), VillageDevelop);
           case VillageDispatchApply:
             if (_pendingVillageTileIndex == null)
-              throw "GameMatchCore: VillageDispatchApply 但無 pendingVillage";
+              throw new GameError("目前不在村落互動中，無法調度。", "操作失敗", "village/dispatch/pending");
             var idx = _pendingVillageTileIndex;
             var owner = forceGetVillageOwner(idx);
             var ruler = cast(activeMonarch(), Monarch);
             if (owner == null || owner != ruler.id())
-              throw "GameMatchCore: VillageDispatchApply 僅可對我方村落使用";
+              throw new GameError("只能對我方已歸順的村落進行調度。", "操作失敗", "village/dispatch/not-owned");
             var parsed = parseFriendlyDispatchTargets(menuNode.formWidgets());
             var tt = parsed.tt;
             var gg = parsed.gg;
             var gold = parsed.gold;
             if (tt < 0 || gg < 0 || gold < 0)
-              throw "GameMatchCore: 調度目標不可為負";
+              throw new GameError("調度目標不可為負數。", "輸入不合法", "dispatch/negative");
             var oldT = forceGetVillageStoredTroops(idx);
             var oldG = forceGetVillageStoredGrain(idx);
             var oldGold = forceGetVillageStoredGold(idx);
@@ -2176,11 +2176,11 @@ class GameMatchCore implements IGameMatch {
             var dG = gg - oldG;
             var dGold = gold - oldGold;
             if (dT > ruler.troops())
-              throw "GameMatchCore: 自君主池調出兵力不足";
+              throw new GameError("隨身兵力不足，無法調出指定數量。", "資源不足", "dispatch/insufficient-troops");
             if (dG > ruler.grain())
-              throw "GameMatchCore: 自君主池調出糧食不足";
+              throw new GameError("隨身糧食不足，無法調出指定數量。", "資源不足", "dispatch/insufficient-grain");
             if (dGold > ruler.gold())
-              throw "GameMatchCore: 自君主池調出金錢不足";
+              throw new GameError("隨身金錢不足，無法調出指定數量。", "資源不足", "dispatch/insufficient-gold");
             // 差額進出
             if (dT > 0)
               ruler.reduceTroops(dT);
@@ -2204,14 +2204,14 @@ class GameMatchCore implements IGameMatch {
             syncActiveSliceAfterMenuLeaf(VillageDispatchApply);
           case VillageVisitEnd:
             if (_pendingVillageTileIndex == null)
-              throw "GameMatchCore: VillageVisitEnd 但無 pendingVillage";
+              throw new GameError("目前不在村落互動中。", "操作失敗", "village/visit-end/pending");
             pushInfoPopup(actor.monarchId(), "結束拜訪", Plain("已離開我方村落。"), "village-visit-end");
             _pendingVillageTileIndex = null;
             _activeSliceComplete = true;
             syncActiveSliceAfterMenuLeaf(VillageVisitEnd);
           case ResourceClaim:
             if (_pendingResourceTileIndex == null)
-              throw "GameMatchCore: ResourceClaim 但無 pendingResource";
+              throw new GameError("目前不在資源格互動中。", "操作失敗", "resource/claim/pending");
             var idx = _pendingResourceTileIndex;
             var rw:ResourceReward = _resourceRewardsByTile.exists(idx) ? _resourceRewardsByTile.get(idx) : {gold: 0, grain: 0, troops: 0};
             var ruler = cast(activeMonarch(), Monarch);

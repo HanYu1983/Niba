@@ -20,6 +20,7 @@ import impl_ver1.rules.GeneralAssignmentApply;
 import impl_ver1.rules.GeneralAssignmentOps;
 import impl_ver1.rules.GeneralAssignmentKeys;
 import impl_ver1.util.Deterministic;
+import game.GameError;
 
 /**
  * 我方村落開發（最小可用）：
@@ -65,13 +66,13 @@ class VillageDevelopStagingAction implements IStagingAction {
   public function resolveChoice(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
     var ruler = cast(match.activeMonarch(), Monarch);
     if (actor.monarchId() != ruler.id())
-      throw "VillageDevelopStagingAction: actor must be active monarch";
+      throw new GameError("目前不是你的回合，無法進行村落開發。", "操作失敗", "village-develop/actor");
     var idx = match.forceGetPendingVillageTile();
     if (idx == null)
-      throw "VillageDevelopStagingAction: no pendingVillage";
+      throw new GameError("必須在拜訪村落時才能進行開發。", "操作失敗", "village-develop/pending");
     var owner = match.forceGetVillageOwner(idx);
     if (owner == null || owner != ruler.id())
-      throw "VillageDevelopStagingAction: only allowed on owned village";
+      throw new GameError("只有我方已歸順的村落才能開發。", "操作失敗", "village-develop/not-owned");
 
     var gid = GeneralAssignmentApply.pickSingleGeneralId(menuNode.formWidgets());
     var g:General = GeneralAssignmentApply.requireOwnedGeneral(ruler, gid);
@@ -79,9 +80,9 @@ class VillageDevelopStagingAction implements IStagingAction {
     var costGold = 25;
     var costGrain = 25;
     if (match.forceGetVillageStoredGold(idx) < costGold)
-      throw "VillageDevelopStagingAction: insufficient village gold store";
+      throw new GameError('村落金庫不足（需要 ${costGold}）。', "資源不足", "village-develop/insufficient-gold");
     if (match.forceGetVillageStoredGrain(idx) < costGrain)
-      throw "VillageDevelopStagingAction: insufficient village grain store";
+      throw new GameError('村落糧庫不足（需要 ${costGrain}）。', "資源不足", "village-develop/insufficient-grain");
 
     var pol = g.stat(Stewardship);
     var rate = 0.40 + (pol / 100.0) * 0.40 * Balance.staminaModifier(g.stamina());

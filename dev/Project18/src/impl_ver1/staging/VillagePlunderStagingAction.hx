@@ -18,6 +18,7 @@ import impl_ver1.core.GameMatchCore;
 import impl_ver1.model.Monarch;
 import impl_ver1.model.General;
 import impl_ver1.model.PlayerMenu;
+import game.GameError;
 
 /**
  * 村落搶奪（骨架）：選一名武將 → 預覽成功率 → 提交。
@@ -62,10 +63,10 @@ class VillagePlunderStagingAction implements IStagingAction {
   public function resolveChoice(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
     var ruler = cast(match.activeMonarch(), Monarch);
     if (actor.monarchId() != ruler.id())
-      throw "VillagePlunderStagingAction: actor must be active monarch";
+      throw new GameError("目前不是你的回合，無法搶奪。", "操作失敗", "village-plunder/actor");
     var vIdx = match.forceGetPendingVillageTile();
     if (vIdx == null)
-      throw "VillagePlunderStagingAction: no pendingVillage";
+      throw new GameError("必須在拜訪村落時才能搶奪。", "操作失敗", "village-plunder/pending");
     var gid = impl_ver1.rules.GeneralAssignmentApply.pickSingleGeneralId(menuNode.formWidgets());
     var g = impl_ver1.rules.GeneralAssignmentApply.requireOwnedGeneral(ruler, gid);
 

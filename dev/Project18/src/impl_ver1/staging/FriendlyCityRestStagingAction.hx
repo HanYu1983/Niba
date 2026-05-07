@@ -14,6 +14,7 @@ import impl_ver1.core.GameMatchCore;
 import impl_ver1.model.Monarch;
 import impl_ver1.model.General;
 import impl_ver1.model.PlayerMenu;
+import game.GameError;
 
 /**
  * 我方領地休整（骨架）：選一名武將 → 提交（回復 +40）。
@@ -57,7 +58,7 @@ class FriendlyCityRestStagingAction implements IStagingAction {
   public function resolveChoice(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
     var ruler = cast(match.activeMonarch(), Monarch);
     if (actor.monarchId() != ruler.id())
-      throw "FriendlyCityRestStagingAction: actor must be active monarch";
+      throw new GameError("目前不是你的回合，無法領地休整。", "操作失敗", "friendly-rest/actor");
     match.pushInfoPopup(ruler.id(), "休整完成", game.PopupPayload.Plain("領地休整已執行（數值結算仍為骨架）。"), "friendly-city-rest");
   }
 

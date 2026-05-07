@@ -20,6 +20,7 @@ import impl_ver1.model.PlayerMenu;
 import impl_ver1.rules.GeneralAssignmentApply;
 import impl_ver1.util.Deterministic;
 import game.CityLevel;
+import game.GameError;
 
 /**
  * 我方領地開發（骨架）：選一名武將 → 預覽成功率 → 提交。
@@ -63,10 +64,10 @@ class FriendlyCityDevelopStagingAction implements IStagingAction {
   public function resolveChoice(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
     var ruler = cast(match.activeMonarch(), Monarch);
     if (actor.monarchId() != ruler.id())
-      throw "FriendlyCityDevelopStagingAction: actor must be active monarch";
+      throw new GameError("目前不是你的回合，無法執行開發。", "操作失敗", "friendly-city-develop/actor");
     var idx = match.forceGetPendingFriendlyCityVisitTile();
     if (idx == null)
-      throw "FriendlyCityDevelopStagingAction: no pending friendly city visit";
+      throw new GameError("必須在拜訪我方城池時才能開發。", "操作失敗", "friendly-city-develop/pending");
 
     var gid = GeneralAssignmentApply.pickSingleGeneralId(menuNode.formWidgets());
     var g:General = GeneralAssignmentApply.requireOwnedGeneral(ruler, gid);
@@ -75,9 +76,9 @@ class FriendlyCityDevelopStagingAction implements IStagingAction {
     var costGold = 30;
     var costGrain = 20;
     if (match.forceGetCityStoredGold(idx) < costGold)
-      throw "FriendlyCityDevelopStagingAction: insufficient city gold store";
+      throw new GameError('城池金庫不足（需要 ${costGold}）。', "資源不足", "friendly-city-develop/insufficient-gold");
     if (match.forceGetCityStoredGrain(idx) < costGrain)
-      throw "FriendlyCityDevelopStagingAction: insufficient city grain store";
+      throw new GameError('城池糧庫不足（需要 ${costGrain}）。', "資源不足", "friendly-city-develop/insufficient-grain");
 
     // 成功率：政治 × 體力（deterministic 擲骰）
     var pol = g.stat(Stewardship);

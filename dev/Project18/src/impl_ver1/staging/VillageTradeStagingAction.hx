@@ -19,6 +19,7 @@ import impl_ver1.core.GameMatchCore;
 import impl_ver1.model.Monarch;
 import impl_ver1.model.General;
 import impl_ver1.model.PlayerMenu;
+import game.GameError;
 
 /**
  * 村落交易（示範）：選一名武將進行交易 → 顯示成功率預覽 → 確認提交。
@@ -67,10 +68,10 @@ class VillageTradeStagingAction implements IStagingAction {
   public function resolveChoice(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
     var ruler = cast(match.activeMonarch(), Monarch);
     if (actor.monarchId() != ruler.id())
-      throw "VillageTradeStagingAction: actor must be active monarch";
+      throw new GameError("目前不是你的回合，無法交易。", "操作失敗", "village-trade/actor");
     var vIdx = match.forceGetPendingVillageTile();
     if (vIdx == null)
-      throw "VillageTradeStagingAction: no pendingVillage";
+      throw new GameError("必須在拜訪村落時才能交易。", "操作失敗", "village-trade/pending");
     var gid = GeneralAssignmentApply.pickSingleGeneralId(menuNode.formWidgets());
 
     // 真結算線（對齊 GDD 2.1.3）：
@@ -80,7 +81,7 @@ class VillageTradeStagingAction implements IStagingAction {
     // - 友好度提升 +5~15（依交易規模；ver1 先以固定規模 + jitter）
     var costGold = 20;
     if (ruler.gold() < costGold)
-      throw "VillageTradeStagingAction: insufficient gold";
+      throw new GameError('金錢不足（需要 ${costGold}）。', "資源不足", "village-trade/insufficient-gold");
 
     var gg = GeneralAssignmentApply.requireOwnedGeneral(ruler, gid);
     var pol = gg.stat(Stewardship);

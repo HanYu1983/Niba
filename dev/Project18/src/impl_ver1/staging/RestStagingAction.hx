@@ -16,6 +16,7 @@ import impl_ver1.core.GameMatchCore;
 import impl_ver1.model.Monarch;
 import impl_ver1.model.General;
 import impl_ver1.model.PlayerMenu;
+import game.GameError;
 
 /** 休整（staging）：選一名武將回復體力。 */
 class RestStagingAction implements IStagingAction {
@@ -56,10 +57,10 @@ class RestStagingAction implements IStagingAction {
   public function resolveChoice(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
     var ruler = cast(match.activeMonarch(), Monarch);
     if (actor.monarchId() != ruler.id())
-      throw "RestStagingAction: actor must be active monarch";
+      throw new GameError("目前不是你的回合，無法休整。", "操作失敗", "rest/actor");
     var widgets = menuNode.formWidgets();
     if (widgets == null || widgets.length == 0)
-      throw "RestStagingAction: missing widgets";
+      throw new GameError("休整表單異常（缺少輸入）。", "操作失敗", "rest/missing-widgets");
 
     var gid = GeneralAssignmentApply.pickSingleGeneralId(widgets);
     var target = GeneralAssignmentApply.requireOwnedGeneral(ruler, gid);
