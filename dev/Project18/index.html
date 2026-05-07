@@ -264,6 +264,26 @@
         cursor: pointer;
       }
       .popup-btn:hover{ background: rgba(255,255,255,.78); border-color: rgba(199,163,74,.55); }
+
+      /* --- endgame --- */
+      .endgame-host{ position: fixed; inset: 0; pointer-events: none; z-index: 1001; }
+      .endgame-overlay{
+        position: absolute; inset: 0;
+        display:flex; align-items:center; justify-content:center;
+        background: rgba(15,17,21,.45);
+        pointer-events: auto;
+      }
+      .endgame-card{
+        width: min(560px, calc(100vw - 32px));
+        border-radius: var(--radius);
+        padding: 14px 14px 12px;
+        background: linear-gradient(180deg, rgba(247,242,232,.97), rgba(239,229,209,.90));
+        border: 1px solid rgba(42,49,64,.22);
+        box-shadow: var(--shadow);
+      }
+      .endgame-title{ font-weight: 900; letter-spacing:.06em; color: var(--ink-2); margin-bottom: 8px; }
+      .endgame-body{ white-space: pre-wrap; font-size: 12px; line-height: 18px; color: rgba(26,31,42,.88); }
+      .endgame-actions{ display:flex; justify-content:flex-end; gap:10px; margin-top: 12px; flex-wrap: wrap; }
     </style>
   </head>
   <body>
@@ -289,6 +309,7 @@
     </div>
 
     <div id="app-popup"></div>
+    <div id="app-endgame"></div>
 
     <script defer src="bin/hello.js"></script>
   </body>

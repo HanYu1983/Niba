@@ -27,6 +27,7 @@ class HtmlRouterView {
   final map:HtmlMapView;
   final players:HtmlPlayersView;
   final popup:HtmlPopupView;
+  final endgame:HtmlEndgameView;
 
   final overlayHost:Element;
   final bar:DivElement;
@@ -43,6 +44,7 @@ class HtmlRouterView {
     map = new HtmlMapView("app-map");
     players = new HtmlPlayersView("app-players");
     popup = new HtmlPopupView("app-popup");
+    endgame = new HtmlEndgameView("app-endgame");
 
     overlayHost = ensureDiv("app-overlay");
     bar = Browser.document.createDivElement();
