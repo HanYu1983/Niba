@@ -21,7 +21,7 @@ class HtmlInfoPanelView {
   final host:Element;
   final root:DivElement;
   var vmSub:Null<ISubscription> = null;
-  var activeTab:String = "monarch"; // "monarch" | "generals" | "weapons" | "territories"
+  var activeTab:String = "monarch"; // "monarch" | "generals" | "weapons" | "jice" | "territories"
 
   public function new(mountElementId:String) {
     var el = Browser.document.getElementById(mountElementId);
@@ -64,6 +64,7 @@ class HtmlInfoPanelView {
     tabs.appendChild(tabBtn("monarch", "君主資料", vm));
     tabs.appendChild(tabBtn("generals", "武將列表", vm));
     tabs.appendChild(tabBtn("weapons", "武器列表", vm));
+    tabs.appendChild(tabBtn("jice", "計策列表", vm));
     tabs.appendChild(tabBtn("territories", "領地資源庫", vm));
     root.appendChild(tabs);
 
@@ -77,6 +78,8 @@ class HtmlInfoPanelView {
         body.appendChild(renderGenerals(vm, a));
       case "weapons":
         body.appendChild(renderWeapons(a));
+      case "jice":
+        body.appendChild(renderJiCe(vm, a));
       case "territories":
         body.appendChild(renderTerritories(vm, a));
       default:
@@ -234,6 +237,56 @@ class HtmlInfoPanelView {
         r.appendChild(td(Std.string(eq.loyaltyBonus()), false));
         r.appendChild(td(Std.string(eq.price()), false));
         r.appendChild(td(x.gid, true));
+        tbody.appendChild(r);
+      }
+    }
+    table.appendChild(tbody);
+    wrap.appendChild(table);
+    return wrap;
+  }
+
+  function renderJiCe(vm:IViewModel, a:IMonarch):Element {
+    var wrap = Browser.document.createDivElement();
+
+    var lab = Browser.document.createSpanElement();
+    lab.className = "ui-label";
+    lab.textContent = "所持計策（依使用階段顯示）";
+    wrap.appendChild(lab);
+
+    var table = Browser.document.createTableElement();
+    table.className = "ui-table";
+
+    var thead = Browser.document.createTableSectionElement();
+    var hr = Browser.document.createTableRowElement();
+    for (h in ["名稱", "Key", "可用階段"]) {
+      var th = Browser.document.createTableCellElement();
+      th.className = "ui-th";
+      th.textContent = h;
+      hr.appendChild(th);
+    }
+    thead.appendChild(hr);
+    table.appendChild(thead);
+
+    var tbody = Browser.document.createTableSectionElement();
+    var cards = vm.availableJiCe(a.id());
+    if (cards.length == 0) {
+      var r0 = Browser.document.createTableRowElement();
+      var td0 = Browser.document.createTableCellElement();
+      td0.colSpan = 3;
+      td0.className = "ui-td ui-empty";
+      td0.textContent = "（目前沒有計策）";
+      r0.appendChild(td0);
+      tbody.appendChild(r0);
+    } else {
+      for (c in cards) {
+        var r = Browser.document.createTableRowElement();
+        r.appendChild(td(c.designLabel(), true));
+        r.appendChild(td(c.registryKey(), true));
+        var ps = c.allowedPhases();
+        var pTxt = [];
+        for (p in ps)
+          pTxt.push(p == PreMove ? "移動前" : "移動後");
+        r.appendChild(td(pTxt.length > 0 ? pTxt.join(" / ") : "（無）", true));
         tbody.appendChild(r);
       }
     }
