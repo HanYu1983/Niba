@@ -44,6 +44,9 @@ class FriendlyCityDevelopRestMenuFlowTest {
 
     // 標記格 3 屬於 A
     match.forceSetCityOwner(3, idA);
+    // 開發需要領地資源庫（城池儲備）足夠
+    match.forcePutCityStores(3, 0, 100);
+    match.forcePutCityStoredGold(3, 100);
 
     var m0 = match.createPlayerMenu(actor);
     match.applyMenuLeaf(actor, requireEnabledNode(m0, Move));

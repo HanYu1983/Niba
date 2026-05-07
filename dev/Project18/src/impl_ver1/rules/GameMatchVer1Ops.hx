@@ -54,22 +54,30 @@ class GameMatchVer1Ops {
   public static function friendlyCityDispatchSliderDefaults(m:GameMatchCore, tileIndex:TileIndex, ruler:Monarch):{
     cityTroop:Int,
     cityGrain:Int,
+    cityGold:Int,
     maxTroopSlider:Int,
     maxGrainSlider:Int,
+    maxGoldSlider:Int,
     defTroop:Int,
     defGrain:Int,
+    defGold:Int,
   } {
     var cityTroop = m.forceGetCityStoredTroops(tileIndex);
     var cityGrain = m.forceGetCityStoredGrain(tileIndex);
+    var cityGold = m.forceGetCityStoredGold(tileIndex);
     var maxTroopSlider = ruler.troops();
     var maxGrainSlider = ruler.grain();
+    var maxGoldSlider = ruler.gold();
     return {
       cityTroop: cityTroop,
       cityGrain: cityGrain,
+      cityGold: cityGold,
       maxTroopSlider: maxTroopSlider,
       maxGrainSlider: maxGrainSlider,
+      maxGoldSlider: maxGoldSlider,
       defTroop: clampInt(cityTroop, 0, maxTroopSlider),
       defGrain: clampInt(cityGrain, 0, maxGrainSlider),
+      defGold: clampInt(cityGold, 0, maxGoldSlider),
     };
   }
 
@@ -101,12 +109,15 @@ class GameMatchVer1Ops {
     tileIndex:TileIndex,
     ruler:Monarch,
     targetTroops:Int,
-    targetGrain:Int
+    targetGrain:Int,
+    targetGold:Int
   ):Void {
     var oldT = m.forceGetCityStoredTroops(tileIndex);
     var oldG = m.forceGetCityStoredGrain(tileIndex);
+    var oldGold = m.forceGetCityStoredGold(tileIndex);
     var dT = targetTroops - oldT;
     var dG = targetGrain - oldG;
+    var dGold = targetGold - oldGold;
     if (dT > 0)
       ruler.reduceTroops(dT);
     else if (dT < 0)
@@ -115,7 +126,12 @@ class GameMatchVer1Ops {
       ruler.reduceGrain(dG);
     else if (dG < 0)
       ruler.grantGrain(-dG);
+    if (dGold > 0)
+      ruler.reduceGold(dGold);
+    else if (dGold < 0)
+      ruler.grantGold(-dGold);
     m.cityMapsApplyFriendlyDispatchTargets(tileIndex, targetTroops, targetGrain);
+    m.forcePutCityStoredGold(tileIndex, targetGold);
   }
 
   /** 結束拜訪城池（預留事件／音效鉤子）。 */

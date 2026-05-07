@@ -42,11 +42,11 @@ class VillageIncomeAtEndOfRoundTest {
     match.applyMenuLeaf(actor, MenuNodeQuery.requireNodeWithKind(match.createPlayerMenu(actor), PlayerMenuKind.LandingContinue));
     match.applyMenuLeaf(actor, MenuNodeQuery.requireNodeWithKind(match.createPlayerMenu(actor), PlayerMenuKind.ConfirmDone));
 
-    // Balance.cityBaseIncome(Village) = {gold:10, grain:10}
-    if (mon.gold() != g0 + 10)
-      throw "VillageIncomeAtEndOfRoundTest: expected gold +10";
-    if (mon.grain() != gr0 + 10)
-      throw "VillageIncomeAtEndOfRoundTest: expected grain +10";
+    // 回合產出已改為寫入領地資源庫，不直接加到君主身上；此測試僅驗證「不會直接加」
+    if (mon.gold() != g0)
+      throw "VillageIncomeAtEndOfRoundTest: expected gold unchanged (stored in territory stock)";
+    if (mon.grain() != gr0)
+      throw "VillageIncomeAtEndOfRoundTest: expected grain unchanged (stored in territory stock)";
 
     trace("[VillageIncomeAtEndOfRoundTest] OK — surrendered village produces income");
   }

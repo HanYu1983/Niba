@@ -40,21 +40,26 @@ class EconomyUpkeepAndCityIncomeTest {
 
     var g0 = mon.grain();
     var gold0 = mon.gold();
+    var cityGold0 = match.forceGetCityStoredGold(1);
+    var cityGrain0 = match.forceGetCityStoredGrain(1);
 
     // 單人局：ConfirmDone 會立刻進入新回合並觸發回合末結算
     match.applyMenuLeaf(actor, MenuNodeQuery.requireNodeWithKind(match.createPlayerMenu(actor), PlayerMenuKind.Move));
     match.applyMenuLeaf(actor, MenuNodeQuery.requireNodeWithKind(match.createPlayerMenu(actor), PlayerMenuKind.LandingContinue));
     match.applyMenuLeaf(actor, MenuNodeQuery.requireNodeWithKind(match.createPlayerMenu(actor), PlayerMenuKind.ConfirmDone));
 
-    // upkeep：1000 troops → ceil(1000*0.01)=10 grain
+    // upkeep：1000 troops → ceil(1000*0.01)=10 grain（扣在君主身上）
+    // city income：寫入城池儲備（SmallCity base income 20/20）
     var grain1 = mon.grain();
     var gold1 = mon.gold();
-    var expectGrain = g0 - 10 + 20; // +20 grain from SmallCity base income
-    var expectGold = gold0 + 20;
-    if (grain1 != expectGrain)
-      throw 'EconomyUpkeepAndCityIncomeTest: expected grain=${expectGrain} (g0=${g0} -10 +20) but got ${grain1}';
-    if (gold1 != expectGold)
-      throw 'EconomyUpkeepAndCityIncomeTest: expected gold=${expectGold} (gold0=${gold0} +20) but got ${gold1}';
+    if (grain1 != g0 - 10)
+      throw 'EconomyUpkeepAndCityIncomeTest: expected grain=${g0 - 10} (g0=${g0} -10) but got ${grain1}';
+    if (gold1 != gold0)
+      throw 'EconomyUpkeepAndCityIncomeTest: expected gold unchanged=${gold0} but got ${gold1}';
+    if (match.forceGetCityStoredGold(1) != cityGold0 + 20)
+      throw "EconomyUpkeepAndCityIncomeTest: expected city gold store +20";
+    if (match.forceGetCityStoredGrain(1) != cityGrain0 + 20)
+      throw "EconomyUpkeepAndCityIncomeTest: expected city grain store +20";
 
     trace("[EconomyUpkeepAndCityIncomeTest] OK — upkeep and city income at end of round");
   }

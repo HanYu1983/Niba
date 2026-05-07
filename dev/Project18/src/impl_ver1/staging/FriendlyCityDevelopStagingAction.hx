@@ -17,6 +17,9 @@ import impl_ver1.core.GameMatchCore;
 import impl_ver1.model.Monarch;
 import impl_ver1.model.General;
 import impl_ver1.model.PlayerMenu;
+import impl_ver1.rules.GeneralAssignmentApply;
+import impl_ver1.util.Deterministic;
+import game.CityLevel;
 
 /**
  * 我方領地開發（骨架）：選一名武將 → 預覽成功率 → 提交。
@@ -61,7 +64,63 @@ class FriendlyCityDevelopStagingAction implements IStagingAction {
     var ruler = cast(match.activeMonarch(), Monarch);
     if (actor.monarchId() != ruler.id())
       throw "FriendlyCityDevelopStagingAction: actor must be active monarch";
-    match.pushInfoPopup(ruler.id(), "開發完成", game.PopupPayload.Plain("領地開發已執行（數值結算仍為骨架）。"), "friendly-develop");
+    var idx = match.forceGetPendingFriendlyCityVisitTile();
+    if (idx == null)
+      throw "FriendlyCityDevelopStagingAction: no pending friendly city visit";
+
+    var gid = GeneralAssignmentApply.pickSingleGeneralId(menuNode.formWidgets());
+    var g:General = GeneralAssignmentApply.requireOwnedGeneral(ruler, gid);
+
+    // 成本（最小版）：花費領地庫內 gold/grain（用城池儲備），並消耗體力
+    var costGold = 30;
+    var costGrain = 20;
+    if (match.forceGetCityStoredGold(idx) < costGold)
+      throw "FriendlyCityDevelopStagingAction: insufficient city gold store";
+    if (match.forceGetCityStoredGrain(idx) < costGrain)
+      throw "FriendlyCityDevelopStagingAction: insufficient city grain store";
+
+    // 成功率：政治 × 體力（deterministic 擲骰）
+    var pol = g.stat(Stewardship);
+    var rate = (pol / 100.0) * 0.60 * Balance.staminaModifier(g.stamina());
+    if (rate < 0)
+      rate = 0;
+    if (rate > 1)
+      rate = 1;
+    var seed = 'dev|t=${idx}|r=${match.roundNumber()}|m=${ruler.id()}|g=${gid}';
+    var roll = Deterministic.hash01(seed);
+    var ok = roll < rate;
+
+    // 扣成本（無論成敗都扣，避免洗）
+    match.forcePutCityStoredGold(idx, match.forceGetCityStoredGold(idx) - costGold);
+    match.forcePutCityStores(idx, match.forceGetCityStoredTroops(idx), match.forceGetCityStoredGrain(idx) - costGrain);
+    GeneralAssignmentApply.applyStaminaCost(g, 15);
+
+    var beforeLvl = match.forceGetCityLevel(idx);
+    var afterLvl = beforeLvl;
+    if (ok) {
+      // 成功：城池等級+1（上限 Capital）
+      afterLvl = switch beforeLvl {
+        case Village: SmallCity;
+        case SmallCity: BigCity;
+        case BigCity: Capital;
+        case Capital: Capital;
+      };
+      match.forceSetCityLevel(idx, afterLvl);
+    }
+
+    var title = ok ? "開發成功" : "開發失敗";
+    match.pushInfoPopup(
+      ruler.id(),
+      title,
+      game.PopupPayload.Plain(
+        '城池格 ${idx}\n'
+        + '武將：${gid}（政治=${pol}）\n'
+        + '成功率：約 ${Std.int(Math.floor(rate * 100))}%\n'
+        + '消耗：城池金 -${costGold}、城池糧 -${costGrain}、體力 -15\n'
+        + (ok ? '城等級：${Std.string(beforeLvl)} → ${Std.string(afterLvl)}' : '城等級：${Std.string(beforeLvl)}（不變）')
+      ),
+      "friendly-develop"
+    );
   }
 
   public function previewRows(actor:IPlayer):Array<IJiCeStagingPreviewRow> {

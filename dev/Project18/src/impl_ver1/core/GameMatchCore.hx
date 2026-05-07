@@ -1286,6 +1286,7 @@ class GameMatchCore implements IGameMatch {
       var dispatchWidgets:Array<MenuFormWidget> = [
         Slider("調度兵力（目標城池兵力）", 0, caps.maxTroopSlider, 1, caps.defTroop),
         Slider("調度糧食（目標城池糧食）", 0, caps.maxGrainSlider, 1, caps.defGrain),
+        Slider("調度金錢（目標城池金錢）", 0, caps.maxGoldSlider, 1, caps.defGold),
         Button(dispatchApplyLeaf),
       ];
       roots.push(createPlayerMenuNode("調度", null, [], dispatchWidgets));
@@ -1870,7 +1871,7 @@ class GameMatchCore implements IGameMatch {
     return {troops: tt, grain: gg, garrisonIds: garrisonIds};
   }
 
-  function parseFriendlyDispatchTargets(widgets:Array<MenuFormWidget>):{tt:Int, gg:Int} {
+  function parseFriendlyDispatchTargets(widgets:Array<MenuFormWidget>):{tt:Int, gg:Int, gold:Int} {
     var sliders:Array<Int> = [];
     for (x in widgets)
       switch x {
@@ -1881,9 +1882,9 @@ class GameMatchCore implements IGameMatch {
         case Button(_):
         case TileSinglePick(_, _, _):
       }
-    if (sliders.length < 2)
-      throw "GameMatchCore: 我方城池調度節點須含至少兩個 Slider（兵力／糧食）";
-    return {tt: sliders[0], gg: sliders[1]};
+    if (sliders.length < 3)
+      throw "GameMatchCore: 我方城池調度節點須含至少三個 Slider（兵力／糧食／金錢）";
+    return {tt: sliders[0], gg: sliders[1], gold: sliders[2]};
   }
 
   function handleEmptyCityOccupySubmit(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
@@ -1927,22 +1928,27 @@ class GameMatchCore implements IGameMatch {
     var parsed = parseFriendlyDispatchTargets(menuNode.formWidgets());
     var tt = parsed.tt;
     var gg = parsed.gg;
+    var gold = parsed.gold;
     var oldT = forceGetCityStoredTroops(idx);
     var oldG = forceGetCityStoredGrain(idx);
+    var oldGold = forceGetCityStoredGold(idx);
     var ruler = cast(activeMonarch(), Monarch);
-    if (tt < 0 || gg < 0)
+    if (tt < 0 || gg < 0 || gold < 0)
       throw "GameMatchCore: 調度目標不可為負";
     var dT = tt - oldT;
     var dG = gg - oldG;
+    var dGold = gold - oldGold;
     if (dT > ruler.troops())
       throw "GameMatchCore: 自君主池調出兵力不足";
     if (dG > ruler.grain())
       throw "GameMatchCore: 自君主池調出糧食不足";
-    GameMatchVer1Ops.applyFriendlyCityDispatch(this, idx, ruler, tt, gg);
+    if (dGold > ruler.gold())
+      throw "GameMatchCore: 自君主池調出金錢不足";
+    GameMatchVer1Ops.applyFriendlyCityDispatch(this, idx, ruler, tt, gg, gold);
     pushInfoPopup(
       ruler.id(),
       "調度完成",
-      Plain('城池格 ${idx}\n城池兵力調整為：${tt}\n城池糧食調整為：${gg}'),
+      Plain('城池格 ${idx}\n城池兵力調整為：${tt}\n城池糧食調整為：${gg}\n城池金錢調整為：${gold}'),
       "friendly-dispatch"
     );
     syncActiveSliceAfterMenuLeaf(FriendlyCityDispatchApply);
@@ -2260,7 +2266,7 @@ class GameMatchCore implements IGameMatch {
       }
     }
 
-    // 2) 套用「下回合」格子 bonus（目前只把 bonus 寫回城池儲備/君主金錢；之後再接城等級/地形產出）
+    // 2) 套用「下回合」格子 bonus（寫入領地資源庫：城池儲備；村落暫存）。
     for (at => amt in _tileNextTurnGrainBonus) {
       if (amt <= 0)
         continue;
@@ -2268,13 +2274,21 @@ class GameMatchCore implements IGameMatch {
         var prev = forceGetCityStoredGrain(at);
         _cityStockGrain.set(at, prev + amt);
       }
+      if (_villageOwner.exists(at)) {
+        var prev = _villageStockGrain.exists(at) ? _villageStockGrain.get(at) : 0;
+        _villageStockGrain.set(at, prev + amt);
+      }
     }
     for (at => amt in _tileNextTurnGoldBonus) {
       if (amt <= 0)
         continue;
       if (_cityOwner.exists(at)) {
-        var owner = _cityOwner.get(at);
-        monarchWithId(owner).grantGold(amt);
+        var prev = forceGetCityStoredGold(at);
+        _cityStockGold.set(at, prev + amt);
+      }
+      if (_villageOwner.exists(at)) {
+        var prev = _villageStockGold.exists(at) ? _villageStockGold.get(at) : 0;
+        _villageStockGold.set(at, prev + amt);
       }
     }
     _tileNextTurnGrainBonus = new Map();
@@ -2313,24 +2327,24 @@ class GameMatchCore implements IGameMatch {
       }
     }
 
-    // 4) 最小領地產出：依城池等級給屬主每回合基本 gold/grain
+    // 4) 最小領地產出：統一寫入「領地資源庫」（避免直接加到君主身上）
     if (_board != null) {
       var len = _board.length();
       for (i in 0...len) {
         if (_cityOwner.exists(i)) {
-          var owner = _cityOwner.get(i);
           var lvl = forceGetCityLevel(i);
           var inc = Balance.cityBaseIncome(lvl);
-          monarchWithId(owner).grantGold(inc.gold);
-          monarchWithId(owner).grantGrain(inc.grain);
+          _cityStockGold.set(i, forceGetCityStoredGold(i) + inc.gold);
+          _cityStockGrain.set(i, forceGetCityStoredGrain(i) + inc.grain);
         }
         // 4b) 村落領地化（歸順／攻占後）：先視同 CityLevel.Village 給基本產出
         if (_villageOwner.exists(i)) {
-          var vOwner = _villageOwner.get(i);
           var vLvl = _villageLevel.exists(i) ? _villageLevel.get(i) : CityLevel.Village;
           var vInc = Balance.cityBaseIncome(vLvl);
-          monarchWithId(vOwner).grantGold(vInc.gold);
-          monarchWithId(vOwner).grantGrain(vInc.grain);
+          var prevGold = _villageStockGold.exists(i) ? _villageStockGold.get(i) : 0;
+          var prevGrain = _villageStockGrain.exists(i) ? _villageStockGrain.get(i) : 0;
+          _villageStockGold.set(i, prevGold + vInc.gold);
+          _villageStockGrain.set(i, prevGrain + vInc.grain);
         }
       }
     }
