@@ -15,6 +15,7 @@ import impl_ver1.model.Monarch;
 import impl_ver1.model.General;
 import impl_ver1.model.PlayerMenu;
 import game.GameError;
+import impl_ver1.rules.GeneralAssignmentApply;
 
 /**
  * 我方領地休整（骨架）：選一名武將 → 提交（回復 +40）。
@@ -59,7 +60,17 @@ class FriendlyCityRestStagingAction implements IStagingAction {
     var ruler = cast(match.activeMonarch(), Monarch);
     if (actor.monarchId() != ruler.id())
       throw new GameError("目前不是你的回合，無法領地休整。", "操作失敗", "friendly-rest/actor");
-    match.pushInfoPopup(ruler.id(), "休整完成", game.PopupPayload.Plain("領地休整已執行（數值結算仍為骨架）。"), "friendly-city-rest");
+    var widgets = menuNode.formWidgets();
+    if (widgets == null || widgets.length == 0)
+      throw new GameError("休整表單異常（缺少輸入）。", "操作失敗", "friendly-rest/missing-widgets");
+
+    var gid = GeneralAssignmentApply.pickSingleGeneralId(widgets);
+    var g:General = GeneralAssignmentApply.requireOwnedGeneral(ruler, gid);
+    var prevSt = g.stamina();
+    var next = Balance.clampInt(prevSt + Balance.STAMINA_RECOVER_TERRITORY_REST, 0, 100);
+    g.setStamina(next);
+
+    match.pushInfoPopup(ruler.id(), "休整完成", game.PopupPayload.Plain('${gid} 體力：${prevSt} → ${next}（+${Balance.STAMINA_RECOVER_TERRITORY_REST}）'), "friendly-city-rest");
   }
 
   public function previewRows(actor:IPlayer):Array<IJiCeStagingPreviewRow> {

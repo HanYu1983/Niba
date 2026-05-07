@@ -12,13 +12,15 @@ import game.IPlayerMenuNode;
 import game.ITile;
 import game.LevelKeys;
 import game.PlayerMenuKind;
-import game.PlayerMenuKind.Rest;
+import game.PlayerMenuKind.FriendlyCityRest;
 import game.PlayerMenuKind.StagingSubmit;
+import game.PlayerMenuKind.Move;
+import game.PlayerMenuKind.LandingContinue;
 import game.TileKind;
 
 /**
- * 指令菜單流程：休整 → 進入 staging → 出現提交鈕 → 提交後退出 staging。
- * 重點：測菜單流程，不檢查體力/資源結算結果。
+ * 領地休整菜單流程：移動落在己方城池 → 出現「領地：休整」→ 進入 staging → 提交後退出 staging（仍停留拜訪）。
+ * 重點：測菜單流程，不檢查體力結算結果。
  */
 class RestMenuFlowTest {
   public static function testRestMenuFlow(game:IGame):Void {
@@ -26,7 +28,7 @@ class RestMenuFlowTest {
 
     var tiles:Array<ITile> = [];
     for (i in 0...8)
-      tiles.push(match.createTile(i, Plain));
+      tiles.push(match.createTile(i, i == 1 ? City : Plain));
     match.createBoard(tiles);
 
     var idA:MonarchId = "m-a";
@@ -34,11 +36,17 @@ class RestMenuFlowTest {
     match.createGeneral("g-a", idA, 10, 10, 10, 10);
     var actor:IPlayer = match.createPlayer(idA, "A");
 
-    // 開局應可見 Rest
-    var m0 = match.createPlayerMenu(actor);
-    var restNode = requireEnabledNode(m0, Rest);
+    // 走到己方城池（格 1）
+    match.forceSetFixedMoveDelta(1);
+    match.forceSetCityOwner(1, idA);
+    match.applyMenuLeaf(actor, MenuNodeQuery.requireNodeWithKind(match.createPlayerMenu(actor), Move));
+    match.applyMenuLeaf(actor, MenuNodeQuery.requireNodeWithKind(match.createPlayerMenu(actor), LandingContinue));
 
-    // 點 Rest → 進入 staging
+    // 應可見 FriendlyCityRest
+    var m0 = match.createPlayerMenu(actor);
+    var restNode = requireEnabledNode(m0, FriendlyCityRest);
+
+    // 點 FriendlyCityRest → 進入 staging
     match.applyMenuLeaf(actor, restNode);
     if (!match.forceHasPendingStaging())
       throw "RestMenuFlowTest: 點 Rest 後應進入 staging";

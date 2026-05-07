@@ -24,7 +24,6 @@ class Ver1MainCommands {
       new LandingContinueCommand(match),
       new StrategyPreCommand(match),
       new StrategyPostCommand(match),
-      new RestCommand(match),
       new GeneralEndTurnCommand(match),
       new ShopBuyCommand(match),
       new ShopEndTurnCommand(match),
@@ -265,32 +264,6 @@ private class StrategyPostCommand implements IPlayerCommand {
   }
   public function apply(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
     // applyMenuLeaf 會處理 JiCe leaf → 進入 staging
-  }
-}
-
-private class RestCommand implements IPlayerCommand {
-  final m:GameMatchCore;
-  public function new(m:GameMatchCore) this.m = m;
-  public function kind():PlayerMenuKind return Rest;
-  public function designLabel():String return "休整";
-  public function buildActionNode(actor:IPlayer):Null<IPlayerMenuNode> {
-    if (m.isActivePlayerSliceComplete())
-      return null;
-    var blockBasics =
-      m.forceGetPendingTileEvent() != null
-      || m.forceHasPendingStaging()
-      || m.forceGetPendingLandingTile() != null
-      || m.forceGetPendingEmptyCityOccupyTile() != null
-      || m.forceGetPendingFriendlyCityVisitTile() != null
-      || m.forceGetPendingHostileCityTile() != null
-      || m.forceGetPendingVillageTile() != null
-      || m.forceGetPendingResourceTile() != null
-      || m.forceGetPendingGeneralTile() != null
-      || m.forceGetPendingShopTile() != null;
-    return m.createPlayerMenuNode("休整", m.createPlayerMenuEntry(Rest, "休整（回復體力）", !blockBasics), []);
-  }
-  public function apply(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
-    m.enterStaging(actor, new RestStagingAction(m), Rest);
   }
 }
 

@@ -2164,7 +2164,8 @@ class GameMatchCore implements IGameMatch {
               enterStaging(actor, new JiCeStagingAction(this, card), StrategyPre);
             }
           case Rest:
-            enterStaging(actor, new RestStagingAction(this), Rest);
+            // GDD：休整屬於「己方領地互動」；全局休整已移除
+            throw new GameError("全局休整已移除，請在己方領地使用【休整】。", "操作失敗", "rest/global-removed");
           case VillageTrade:
             enterStaging(actor, new VillageTradeStagingAction(this), VillageTrade);
           case VillageConquer:
