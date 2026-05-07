@@ -43,6 +43,8 @@ class AppController {
         switch next {
           case TestPage2:
             startTestPage2Match();
+          case TestPage3:
+            startTestPage3Match();
           default:
         }
       default:
@@ -73,6 +75,19 @@ class AppController {
     // 目前用 EMPTY match 做容器，場景由 initTestPage2Match 組立
     var match:IGameMatch = game.createGameMatch(LevelKeys.EMPTY);
     initTestPage2Match(match);
+    vm = new BasicViewModel(match);
+    EventCenter.publishViewModel(vm);
+  }
+
+  function startTestPage3Match():Void {
+    // dispose 舊 vm
+    if (vm != null) {
+      vm.dispose();
+      vm = null;
+    }
+    // 目前用 EMPTY match 做容器，場景由 initTestPage3Match 組立
+    var match:IGameMatch = game.createGameMatch(LevelKeys.EMPTY);
+    initTestPage3Match(match);
     vm = new BasicViewModel(match);
     EventCenter.publishViewModel(vm);
   }
@@ -163,6 +178,66 @@ class AppController {
     // 綁定負面事件（可規避）：讓 UI 可直接測「規避→倍率→事件結算」
     match.forceBindTileEvent(3, new GranaryFireAvoidableTileEvent(match, 120));
     match.forceBindTileEvent(9, new EpidemicAvoidableTileEvent(match));
+  }
+
+  /**
+   * UI 測試頁3：計策（JiCe）測試場景。
+   * - 給玩家一組常用計策（含指定玩家/指定格子/指定武將）
+   * - 小地圖混合 City/Plain/Event/Resource，便於測試移動前/移動後策略限制
+   */
+  static function initTestPage3Match(match:IGameMatch):Void {
+    var kinds:Array<TileKind> = [
+      Start,   // 0
+      Plain,   // 1
+      City,    // 2
+      Resource,// 3
+      Plain,   // 4
+      Event,   // 5
+      City,    // 6
+      Plain,   // 7
+    ];
+    var tiles:Array<ITile> = [];
+    for (i in 0...kinds.length)
+      tiles.push(match.createTile(i, kinds[i]));
+    match.createBoard(tiles);
+
+    match.createMonarch("m-a", 0, 0, 800, 200);
+    match.createMonarch("m-b", 1, 6, 800, 200);
+
+    match.createGeneral("g-a-1", "m-a", 60, 40, 55, 70);
+    match.createGeneral("g-a-2", "m-a", 30, 80, 25, 20);
+    match.createGeneral("g-a-3", "m-a", 45, 35, 90, 30);
+    match.createGeneral("g-b-1", "m-b", 70, 60, 30, 40);
+    match.createGeneral("g-b-2", "m-b", 20, 25, 80, 75);
+
+    // 城池屬主：一城我方、一城敵方（方便測試「移動後」策略的目標限制）
+    match.forceSetCityOwner(2, "m-a");
+    match.forceSetCityOwner(6, "m-b");
+
+    // 綁定負面事件（可規避），方便測試「移動後策略」與「事件規避」並存
+    match.forceBindTileEvent(5, new GranaryFireAvoidableTileEvent(match, 120));
+
+    // 給攻方（m-a）一組測試計策
+    match.createJiCe("jice_dissension", "m-a"); // 指定玩家（PreMove only）
+    match.createJiCe("jice_rumor", "m-a");      // 指定玩家（PreMove only）
+    match.createJiCe("jice_fire", "m-a");       // 指定格子（Pre+Post）
+    match.createJiCe("jice_farm", "m-a");       // 指定格子（Pre+Post）
+    match.createJiCe("jice_inspire", "m-a");    // 指定武將（PreMove）
+
+    // 提示：讓玩家一進來就知道怎麼測
+    var core = cast(match, GameMatchCore);
+    core.pushInfoPopup(
+      "m-a",
+      "測試頁3：計策測試",
+      game.PopupPayload.Plain(
+        "目標：測試策略（移動前/移動後）與計策暫存流程。\n\n"
+        + "建議步驟：\n"
+        + "1) 右側『Menu』→『本回合』→『策略（移動前）』：測試指定玩家/格子/武將類計策。\n"
+        + "2) 點『移動』後（仍在落地前窗口）再用『策略（移動後）』：應只能指定『所站格子』。\n"
+        + "3) 進入暫存後，可用『取消（返回）』退出 staging。\n"
+      ),
+      "test3-jice"
+    );
   }
 
   public function dispose():Void {
