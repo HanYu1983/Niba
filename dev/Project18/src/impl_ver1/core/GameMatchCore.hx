@@ -264,6 +264,13 @@ class GameMatchCore implements IGameMatch {
     _fixedMoveDelta = delta;
   }
 
+  /** 測試/除錯：直接設定回合數（round 必須 >= 1）。 */
+  public function forceSetRoundNumber(round:Int):Void {
+    if (round < 1)
+      throw "GameMatchCore.forceSetRoundNumber: round must be >= 1";
+    _roundNumber = round;
+  }
+
   /** 除錯/UI：上一個擲出的移動步數（尚未擴充到 IGameMatchGetter）。 */
   public function forceGetLastRolledMoveDelta():Null<Int>
     return _lastRolledMoveDelta;

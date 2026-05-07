@@ -61,6 +61,12 @@ interface IGameMatch extends IGameMatchGetter {
     function forceSetFixedMoveDelta(delta:Null<Int>):Void;
 
     /**
+     * 除錯／測試：直接設定回合數（用於終局/時限勝利等情境的快速建局）。
+     * round 必須 >= 1。
+     */
+    function forceSetRoundNumber(round:Int):Void;
+
+    /**
      * 除錯／測試／關卡組立：將事件腳本綁至環上索引（生產流程可改由劇本載入呼叫）。
      */
     function forceBindTileEvent(at:TileIndex, handler:ITileEvent):Void;

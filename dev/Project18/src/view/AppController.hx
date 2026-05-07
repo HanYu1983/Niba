@@ -45,6 +45,8 @@ class AppController {
             startTestPage2Match();
           case TestPage3:
             startTestPage3Match();
+          case TestPage4AI:
+            startTestPage4AiMatch();
           default:
         }
       default:
@@ -88,6 +90,18 @@ class AppController {
     // 目前用 EMPTY match 做容器，場景由 initTestPage3Match 組立
     var match:IGameMatch = game.createGameMatch(LevelKeys.EMPTY);
     initTestPage3Match(match);
+    vm = new BasicViewModel(match);
+    EventCenter.publishViewModel(vm);
+  }
+
+  function startTestPage4AiMatch():Void {
+    // dispose 舊 vm
+    if (vm != null) {
+      vm.dispose();
+      vm = null;
+    }
+    var match:IGameMatch = game.createGameMatch(LevelKeys.EMPTY);
+    initTestPage4AiMatch(match);
     vm = new BasicViewModel(match);
     EventCenter.publishViewModel(vm);
   }
@@ -237,6 +251,76 @@ class AppController {
         + "3) 進入暫存後，可用『取消（返回）』退出 staging。\n"
       ),
       "test3-jice"
+    );
+  }
+
+  /**
+   * UI 測試頁4：AI 測試場景。
+   * - 4 位君主 + 混合格子（避免太單調）
+   * - 提示使用者在 Menu 勾選「AI 控制此主公」並用「AI 自動到結束回合」觀察循環
+   */
+  static function initTestPage4AiMatch(match:IGameMatch):Void {
+    var kinds:Array<TileKind> = [
+      Start,   // 0
+      Plain,   // 1
+      City,    // 2
+      Plain,   // 3
+      Village, // 4
+      Plain,   // 5
+      Resource,// 6
+      Plain,   // 7
+      Event,   // 8
+      Plain,   // 9
+      City,    // 10
+      Plain,   // 11
+    ];
+    var tiles:Array<ITile> = [];
+    for (i in 0...kinds.length)
+      tiles.push(match.createTile(i, kinds[i]));
+    match.createBoard(tiles);
+
+    // 4 君主分散起點
+    match.createMonarch("m-a", 0, 0, 800, 400);
+    match.createMonarch("m-b", 1, 3, 800, 400);
+    match.createMonarch("m-c", 2, 6, 800, 400);
+    match.createMonarch("m-d", 3, 9, 800, 400);
+
+    // 給每人 3 武將（能力分布刻意不同，便於之後加權）
+    match.createGeneral("g-a-1", "m-a", 60, 40, 55, 70);
+    match.createGeneral("g-a-2", "m-a", 30, 80, 25, 20);
+    match.createGeneral("g-a-3", "m-a", 45, 35, 90, 30);
+
+    match.createGeneral("g-b-1", "m-b", 70, 60, 30, 40);
+    match.createGeneral("g-b-2", "m-b", 20, 25, 80, 75);
+    match.createGeneral("g-b-3", "m-b", 55, 55, 55, 55);
+
+    match.createGeneral("g-c-1", "m-c", 40, 70, 40, 30);
+    match.createGeneral("g-c-2", "m-c", 75, 25, 45, 55);
+    match.createGeneral("g-c-3", "m-c", 35, 35, 90, 25);
+
+    match.createGeneral("g-d-1", "m-d", 50, 50, 20, 80);
+    match.createGeneral("g-d-2", "m-d", 25, 85, 25, 25);
+    match.createGeneral("g-d-3", "m-d", 65, 35, 65, 35);
+
+    // 城池屬主：交錯，讓領地互動容易出現
+    match.forceSetCityOwner(2, "m-a");
+    match.forceSetCityOwner(10, "m-b");
+
+    // 綁定可規避事件，方便測 AI 對 pending/選單分支的處理
+    match.forceBindTileEvent(8, new GranaryFireAvoidableTileEvent(match, 120));
+
+    var core = cast(match, GameMatchCore);
+    core.pushInfoPopup(
+      "m-a",
+      "測試頁4：AI 測試",
+      game.PopupPayload.Plain(
+        "目標：測試 aiSuggest + AI 自動操作是否能推進回合並收束。\n\n"
+        + "建議步驟：\n"
+        + "1) 右側 Menu 上方勾選『AI 控制此主公』。\n"
+        + "2) 按『AI 自動到結束回合』觀察是否能自動完成 Move→落地→互動→ConfirmDone。\n"
+        + "3) 可逐一切換主公觀察四人輪轉。\n"
+      ),
+      "test4-ai"
     );
   }
 

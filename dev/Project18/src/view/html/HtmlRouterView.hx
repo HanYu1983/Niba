@@ -132,6 +132,13 @@ class HtmlRouterView {
     btnP3.onclick = function(_) EventCenter.publishCommand(UiCommand.ChangePage(ViewState.TestPage3));
     bar.appendChild(btnP3);
 
+    var btnP4:ButtonElement = Browser.document.createButtonElement();
+    btnP4.className = "ui-btn";
+    btnP4.type = "button";
+    btnP4.textContent = "測試頁4（AI）";
+    btnP4.onclick = function(_) EventCenter.publishCommand(UiCommand.ChangePage(ViewState.TestPage4AI));
+    bar.appendChild(btnP4);
+
     // TODO(router-ui): 「測試頁2」目前用 ChangePage(TestPage2) 觸發 controller 重建 match。
     // 若後續要新增更多測試場景，建議改成下拉選單：
     // - 選擇 SceneKey/LevelKey 後送 `UiCommand.NewGame(key)` 或新增 `UiCommand.LoadScene(sceneKey)`
@@ -167,6 +174,10 @@ class HtmlRouterView {
         // TestPage3 是「場景切換」而非覆蓋式頁面，因此不顯示 overlay
         overlay.style.display = "none";
         return;
+      case TestPage4AI:
+        // TestPage4AI 是「場景切換」而非覆蓋式頁面，因此不顯示 overlay
+        overlay.style.display = "none";
+        return;
       default:
         overlay.style.display = "block";
     }
@@ -180,6 +191,7 @@ class HtmlRouterView {
       case InspectorTile(_), InspectorMonarch(_): "Inspector";
       case TestPage2: "TestPage2";
       case TestPage3: "TestPage3";
+      case TestPage4AI: "TestPage4AI";
       case Main: "Main";
     };
     head.appendChild(title);
@@ -204,6 +216,8 @@ class HtmlRouterView {
         body.textContent = "（TestPage2：此狀態不顯示 overlay，若看到此文字代表 renderOverlay 分支未被短路）";
       case TestPage3:
         body.textContent = "（TestPage3：此狀態不顯示 overlay，若看到此文字代表 renderOverlay 分支未被短路）";
+      case TestPage4AI:
+        body.textContent = "（TestPage4AI：此狀態不顯示 overlay，若看到此文字代表 renderOverlay 分支未被短路）";
       case InspectorTile(ti):
         var t = vm.tileAt(ti);
         var terrain = vm.forceGetTileTerrain(ti);

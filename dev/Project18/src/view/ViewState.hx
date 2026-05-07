@@ -12,6 +12,8 @@ enum ViewState {
   TestPage2;
   /** UI 測試頁 3：測試計策（JiCe）流程的示範場景。 */
   TestPage3;
+  /** UI 測試頁 4：測試 AI（aiSuggest + 自動操作）流程的示範場景。 */
+  TestPage4AI;
   InspectorTile(tileIndex:TileIndex);
   InspectorMonarch(monarchId:MonarchId);
 }

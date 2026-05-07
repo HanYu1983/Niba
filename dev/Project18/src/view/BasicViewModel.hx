@@ -91,7 +91,7 @@ class BasicViewModel implements IViewModel {
     return _aiByMonarchId.exists(monarchId) && _aiByMonarchId.get(monarchId);
   }
 
-  function runAiStepOnce():Bool {
+  function runAiStepOnce(?autoAckPopups:Bool = false):Bool {
     var mid = match.activeMonarch().id();
     if (!isAiMonarch(mid))
       return false;
@@ -107,6 +107,8 @@ class BasicViewModel implements IViewModel {
     if (d == null)
       return false;
     applyAiDecision(actor, d);
+    if (autoAckPopups)
+      ackAllPopupsFor(mid);
     return true;
   }
 
@@ -114,8 +116,20 @@ class BasicViewModel implements IViewModel {
     // 保守上限：避免死循環（例如規則 bug 或無可用操作）
     var cap = 200;
     var steps = 0;
+    var lastSig:Null<String> = null;
+    var repeat = 0;
     while (steps < cap) {
-      if (!runAiStepOnce())
+      // 簡單卡住偵測：若連續重複同一個「狀態簽章」太多次就停止
+      var sig = aiStateSignature();
+      if (lastSig != null && sig == lastSig) {
+        repeat++;
+        if (repeat >= 8)
+          break;
+      } else {
+        repeat = 0;
+        lastSig = sig;
+      }
+      if (!runAiStepOnce(true))
         break;
       steps++;
       // 若切換到非 AI 或終局，停止
@@ -128,6 +142,30 @@ class BasicViewModel implements IViewModel {
           break;
       }
     }
+  }
+
+  function ackAllPopupsFor(monarchId:MonarchId):Void {
+    var xs = match.pendingPopups(monarchId);
+    if (xs == null || xs.length == 0)
+      return;
+    // 一次清空，避免 popup modal 卡住 AI 操作
+    for (p in xs)
+      match.ackPopup(monarchId, p.id());
+  }
+
+  function aiStateSignature():String {
+    // 只要能反映「是否有推進」即可，不追求完美
+    return 'r=${match.roundNumber()}|a=${match.activeMonarch().id()}'
+      + '|moved=${match.hasMovedThisTurn()}|slice=${match.isActivePlayerSliceComplete()}'
+      + '|landing=${match.forceGetPendingLandingTile() != null}'
+      + '|stg=${match.forceHasPendingStaging()}'
+      + '|tileEv=${match.forceGetPendingTileEvent() != null}'
+      + '|friendly=${match.forceGetPendingFriendlyCityVisitTile() != null}'
+      + '|village=${match.forceGetPendingVillageTile() != null}'
+      + '|resource=${match.forceGetPendingResourceTile() != null}'
+      + '|general=${match.forceGetPendingGeneralTile() != null}'
+      + '|shop=${match.forceGetPendingShopTile() != null}'
+      + '|hostile=${match.forceGetPendingHostileCityTile() != null}';
   }
 
   function applyAiDecision(actor:IPlayer, d:AiDecision):Void {
