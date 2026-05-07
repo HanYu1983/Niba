@@ -29,7 +29,13 @@
           linear-gradient(180deg, var(--paper-0), #fff 28%, var(--paper-0));
       }
       .muted{ color: rgba(26,31,42,.65); font-size: 12px; }
-      .layout { display: grid; grid-template-columns: 1fr 380px; gap: 16px; align-items: start; }
+      .layout {
+        display: grid;
+        grid-template-columns: 20% 20% 1fr;
+        gap: 16px;
+        align-items: start;
+        height: calc(100vh - 32px);
+      }
       .panel{
         position: relative;
         border-radius: var(--radius);
@@ -38,7 +44,8 @@
           linear-gradient(180deg, rgba(247,242,232,.92), rgba(239,229,209,.78));
         box-shadow: var(--shadow);
         border: 1px solid rgba(42,49,64,.18);
-        overflow: hidden;
+        overflow: auto;
+        height: 100%;
       }
       .panel:before{
         content:"";
@@ -127,6 +134,7 @@
         border: 1px solid rgba(42,49,64,.16);
         box-shadow: 0 10px 22px rgba(15,17,21,.08);
         margin: 8px 0 12px;
+        overflow: auto;
       }
       .info-panel .info-row{ display:flex; justify-content:space-between; gap:10px; align-items:baseline; }
       .info-panel .info-stats{ display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
@@ -139,6 +147,7 @@
         margin-top: 10px;
         padding-bottom: 10px;
         border-bottom: 1px dashed rgba(42,49,64,.18);
+        flex-wrap: wrap;
       }
       .ui-tab{
         appearance: none;
@@ -169,6 +178,9 @@
         border: 1px solid rgba(42,49,64,.16);
         background: rgba(255,255,255,.45);
         box-shadow: 0 10px 22px rgba(15,17,21,.08);
+        display: block;
+        max-width: 100%;
+        overflow: auto;
       }
       .ui-th{
         text-align:left;
@@ -180,12 +192,14 @@
         border-bottom: 1px solid rgba(42,49,64,.12);
         position: sticky;
         top: 0;
+        white-space: nowrap;
       }
       .ui-td{
         font-size: 12px;
         padding: 9px 10px;
         border-bottom: 1px solid rgba(42,49,64,.10);
         color: rgba(26,31,42,.90);
+        white-space: nowrap;
       }
       .ui-td-name{ font-weight: 900; color: var(--ink-2); }
       .ui-td-num{ text-align: right; font-variant-numeric: tabular-nums; }
@@ -256,18 +270,21 @@
     <div class="muted">開啟 DevTools Console 可看 trace。</div>
     <div class="layout">
       <div class="panel">
-        <div><b>Map</b></div>
-        <div id="app-map"></div>
-      </div>
-      <div class="panel">
         <div><b>Info</b></div>
         <div id="app-info"></div>
         <hr />
+        <div><b>Players</b></div>
+        <div id="app-players"></div>
+      </div>
+      <div class="panel">
         <div><b>Menu</b></div>
         <div id="app-menu"></div>
         <hr />
-        <div><b>Players</b></div>
-        <div id="app-players"></div>
+        <div class="muted">（提示）選單較長時可在本欄捲動</div>
+      </div>
+      <div class="panel">
+        <div><b>Map</b></div>
+        <div id="app-map"></div>
       </div>
     </div>
 
