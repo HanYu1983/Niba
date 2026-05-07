@@ -72,6 +72,9 @@ class HelloWorld {
     debug_ver1.OwnedVillageDispatchMenuTest.testOwnedVillagePersistentMenuUntilVisitEnd(new impl_ver1.Game());
     debug_ver1.VillageDevelopSettlementTest.testVillageDevelopSettlement(new impl_ver1.Game());
     debug_ver1.VillageGrowthAffectedByLevelTest.testVillageGrowthAffectedByLevel(new impl_ver1.Game());
+    debug_ver1.TerminationConquestVictoryTest.testTerminationConquestVictory(new impl_ver1.Game());
+    debug_ver1.TerminationTerritoryVictoryTest.testTerminationTerritoryVictory(new impl_ver1.Game());
+    debug_ver1.TerminationWealthVictoryTest.testTerminationWealthVictory(new impl_ver1.Game());
     trace("Hello world");
 
     // --- HTML view demo ---

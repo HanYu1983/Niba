@@ -6,6 +6,8 @@ import game.IPlayer;
 import game.IPlayerMenuNode;
 import game.Balance;
 import game.GeneralStat;
+import game.MatchTerminationReason;
+import game.TileKind;
 import impl_ver1.core.GameMatchCore;
 import impl_ver1.model.Monarch;
 import impl_ver1.model.General;
@@ -15,7 +17,134 @@ import impl_ver1.model.General;
  * 落地分流與敵城 pending／結算文案組字由 {@link GameMatchCore} 私有方法集中管理；此地僅呼叫已暴露之私有行為（同套件）。
  */
 class GameMatchVer1Ops {
-  public static function evaluateTermination(m:GameMatchCore):Void {}
+  /**
+   * GDD 2.4 勝利條件（ver1 最短對齊）：
+   * - 征服勝利：僅剩 1 名「總兵力」> 0 的君主
+   * - 領土勝利：佔領 > 1/2 城池格
+   * - 財富勝利：總金錢 >= 門檻（暫用 100000）
+   *
+   * 時限勝利（回合數 + 綜合評分）目前 GDD 未提供評分公式，先不實作。
+   *
+   * 優先序：征服 > 領土 > 財富（同一 tick 只會產生一個終局原因）。
+   */
+  public static function evaluateTermination(m:GameMatchCore):Void {
+    // 已終局則不重算
+    switch m.getTerminationReason() {
+      case NotEnded:
+      case _:
+        return;
+    }
+
+    var mons = m.monarchs();
+
+    // 1) 征服勝利：僅剩 1 名總兵力 > 0
+    var alive:Array<MonarchId> = [];
+    for (x in mons) {
+      var mid = x.id();
+      if (totalTroops(m, mid) > 0)
+        alive.push(mid);
+    }
+    if (alive.length == 1) {
+      m.assignTerminationReason(Victory(alive[0]));
+      return;
+    }
+    if (alive.length == 0) {
+      m.assignTerminationReason(Draw);
+      return;
+    }
+
+    // 2) 領土勝利：佔領 > 1/2 城池格
+    var cityTotal = 0;
+    var cityOwned = new Map<MonarchId, Int>();
+    for (x in mons)
+      cityOwned.set(x.id(), 0);
+    var n = m.board().length();
+    for (i in 0...n) {
+      if (m.tileAt(i).kind() != City)
+        continue;
+      cityTotal++;
+      var owner = m.forceGetCityOwner(i);
+      if (owner != null) {
+        var prev = cityOwned.exists(owner) ? cityOwned.get(owner) : 0;
+        cityOwned.set(owner, prev + 1);
+      }
+    }
+    if (cityTotal > 0) {
+      for (x in mons) {
+        var mid = x.id();
+        var owned = cityOwned.get(mid);
+        if (owned > cityTotal / 2) {
+          m.assignTerminationReason(Victory(mid));
+          return;
+        }
+      }
+    }
+
+    // 3) 財富勝利：總金錢（君主金 + 領地金）達門檻
+    var wealthThreshold = 100000;
+    var best:Null<{mid:MonarchId, gold:Int}> = null;
+    var tied = false;
+    for (x in mons) {
+      var mid = x.id();
+      var g = totalGold(m, mid);
+      if (g >= wealthThreshold) {
+        if (best == null || g > best.gold) {
+          best = {mid: mid, gold: g};
+          tied = false;
+        } else if (best != null && g == best.gold) {
+          tied = true;
+        }
+      }
+    }
+    if (best != null) {
+      m.assignTerminationReason(tied ? Draw : Victory(best.mid));
+      return;
+    }
+  }
+
+  static function totalTroops(m:GameMatchCore, mid:MonarchId):Int {
+    var mon = cast(m.monarchById(mid), Monarch);
+    var sum = mon.troops();
+    if (sum < 0)
+      sum = 0;
+    var n = m.board().length();
+    for (i in 0...n) {
+      switch m.tileAt(i).kind() {
+        case City:
+          if (m.forceGetCityOwner(i) == mid)
+            sum += nonNeg(m.forceGetCityStoredTroops(i));
+        case Village:
+          if (m.forceGetVillageOwner(i) == mid)
+            sum += nonNeg(m.forceGetVillageStoredTroops(i));
+        default:
+      }
+    }
+    return sum;
+  }
+
+  static function totalGold(m:GameMatchCore, mid:MonarchId):Int {
+    var mon = cast(m.monarchById(mid), Monarch);
+    var sum = mon.gold();
+    if (sum < 0)
+      sum = 0;
+    var n = m.board().length();
+    for (i in 0...n) {
+      switch m.tileAt(i).kind() {
+        case City:
+          if (m.forceGetCityOwner(i) == mid)
+            sum += nonNeg(m.forceGetCityStoredGold(i));
+        case Village:
+          if (m.forceGetVillageOwner(i) == mid)
+            sum += nonNeg(m.forceGetVillageStoredGold(i));
+        default:
+      }
+    }
+    return sum;
+  }
+
+  static inline function nonNeg(x:Int):Int {
+    return x < 0 ? 0 : x;
+  }
 
   /**
    * 移動：依計畫步數逐一 {@link Monarch#advanceOnBoard(1, ringLen)}，每步落地後依序呼叫
