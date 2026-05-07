@@ -13,6 +13,9 @@ import game.MatchTerminationReason;
 import game.MenuFormWidget;
 import game.PlayerMenuKind;
 import game.TileKind;
+import debug_ver1.AssassinationAvoidableTileEvent;
+import debug_ver1.DefectionAvoidableTileEvent;
+import debug_ver1.EpidemicAvoidableTileEvent;
 import debug_ver1.GranaryFireAvoidableTileEvent;
 import view.AiUiFlow;
 
@@ -71,17 +74,17 @@ class AiFourPlayersToTerminationTest {
   static function initLikeTestPage4Ai(match:IGameMatch):Void {
     var kinds:Array<TileKind> = [
       Start,   // 0
-      Plain,   // 1
+      Event,   // 1
       City,    // 2
       Plain,   // 3
       Village, // 4
       Plain,   // 5
       Resource,// 6
-      Plain,   // 7
+      Event,   // 7
       Event,   // 8
       Plain,   // 9
       City,    // 10
-      Plain,   // 11
+      Event,   // 11
     ];
     var tiles:Array<game.ITile> = [];
     for (i in 0...kinds.length)
@@ -92,6 +95,13 @@ class AiFourPlayersToTerminationTest {
     match.createMonarch("m-b", 1, 3, 800, 400);
     match.createMonarch("m-c", 2, 6, 800, 400);
     match.createMonarch("m-d", 3, 9, 800, 400);
+
+    // 給測試一些計策（讓 AI 也會遇到策略分支/暫存）
+    match.createJiCe("jice_dissension", "m-a"); // 指定玩家（PreMove）
+    match.createJiCe("jice_rumor", "m-a");      // 指定玩家（PreMove）
+    match.createJiCe("jice_fire", "m-a");       // 指定格子（Pre+Post）
+    match.createJiCe("jice_farm", "m-a");       // 指定格子（Pre+Post）
+    match.createJiCe("jice_inspire", "m-a");    // 指定武將（PreMove）
 
     match.createGeneral("g-a-1", "m-a", 60, 40, 55, 70);
     match.createGeneral("g-a-2", "m-a", 30, 80, 25, 20);
@@ -112,14 +122,16 @@ class AiFourPlayersToTerminationTest {
     match.forceSetCityOwner(2, "m-a");
     match.forceSetCityOwner(10, "m-b");
 
+    // 綁定多個可規避事件，確保 AI 會跑進事件分支且仍能收束到終局
+    match.forceBindTileEvent(1, new EpidemicAvoidableTileEvent(match));
+    match.forceBindTileEvent(7, new AssassinationAvoidableTileEvent(match));
     match.forceBindTileEvent(8, new GranaryFireAvoidableTileEvent(match, 120));
+    match.forceBindTileEvent(11, new DefectionAvoidableTileEvent(match));
 
     // 避免維持費把兵耗光導致提早終局/平局，補足糧
     var ids:Array<MonarchId> = ["m-a", "m-b", "m-c", "m-d"];
-    for (id in ids) {
-      var mon = cast(match.monarchById(id), impl_ver1.model.Monarch);
-      mon.grantGrain(5000);
-    }
+    for (id in ids)
+      match.forceGrantMonarchGrain(id, 5000);
   }
 
   // UI/測試共用邏輯已抽到 view.AiUiFlow
