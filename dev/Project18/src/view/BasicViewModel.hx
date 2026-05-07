@@ -202,6 +202,9 @@ class BasicViewModel implements IViewModel {
   public function getTerminationReason():MatchTerminationReason
     return match.getTerminationReason();
 
+  public function scoreOfMonarch(monarchId:MonarchId):Int
+    return match.scoreOfMonarch(monarchId);
+
   public function movementStepHooks():Array<IJiCeMovementStepHook>
     return match.movementStepHooks();
 

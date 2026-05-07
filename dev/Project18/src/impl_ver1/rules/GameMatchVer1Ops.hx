@@ -17,13 +17,16 @@ import impl_ver1.model.General;
  * 落地分流與敵城 pending／結算文案組字由 {@link GameMatchCore} 私有方法集中管理；此地僅呼叫已暴露之私有行為（同套件）。
  */
 class GameMatchVer1Ops {
+  public static inline var TIME_LIMIT_ROUNDS:Int = 100;
+  public static inline var WEALTH_VICTORY_THRESHOLD:Int = 100000;
+
   /**
    * GDD 2.4 勝利條件（ver1 最短對齊）：
    * - 征服勝利：僅剩 1 名「總兵力」> 0 的君主
    * - 領土勝利：佔領 > 1/2 城池格
    * - 財富勝利：總金錢 >= 門檻（暫用 100000）
    *
-   * 時限勝利（回合數 + 綜合評分）目前 GDD 未提供評分公式，先不實作。
+   * 時限勝利：回合數達上限（暫定 100）→ 以綜合評分最高者勝；同分為平局。
    *
    * 優先序：征服 > 領土 > 財富（同一 tick 只會產生一個終局原因）。
    */
@@ -50,6 +53,25 @@ class GameMatchVer1Ops {
     }
     if (alive.length == 0) {
       m.assignTerminationReason(Draw);
+      return;
+    }
+
+    // 0) 時限勝利：回合數達上限 → 比分數
+    if (m.roundNumber() >= TIME_LIMIT_ROUNDS) {
+      var bestScore:Null<{mid:MonarchId, score:Int}> = null;
+      for (x in mons) {
+        var mid = x.id();
+        var s = scoreOfMonarch(m, mid);
+        if (bestScore == null || s > bestScore.score) {
+          bestScore = {mid: mid, score: s};
+        }
+      }
+      if (bestScore == null) {
+        m.assignTerminationReason(Draw);
+        return;
+      }
+      // 同分處理：ver1 暫定「並列不和局」，維持先出現者（seat/monarchs() 順序）為勝方
+      m.assignTerminationReason(Victory(bestScore.mid));
       return;
     }
 
@@ -81,13 +103,12 @@ class GameMatchVer1Ops {
     }
 
     // 3) 財富勝利：總金錢（君主金 + 領地金）達門檻
-    var wealthThreshold = 100000;
     var best:Null<{mid:MonarchId, gold:Int}> = null;
     var tied = false;
     for (x in mons) {
       var mid = x.id();
       var g = totalGold(m, mid);
-      if (g >= wealthThreshold) {
+      if (g >= WEALTH_VICTORY_THRESHOLD) {
         if (best == null || g > best.gold) {
           best = {mid: mid, gold: g};
           tied = false;
@@ -100,6 +121,24 @@ class GameMatchVer1Ops {
       m.assignTerminationReason(tied ? Draw : Victory(best.mid));
       return;
     }
+  }
+
+  /**
+   * 時限勝利評分（暫定 ver1 隨意算法，先可用即可）：
+   * - 君主金錢（含領地存金）每 10 金 = 1 分
+   * - 總兵力（含領地儲兵）每 10 兵 = 1 分
+   * - 每座城池 +100 分
+   * - 每座村落 +50 分
+   */
+  public static function scoreOfMonarch(m:GameMatchCore, mid:MonarchId):Int {
+    var gold = totalGold(m, mid);
+    var troops = totalTroops(m, mid);
+    var cities = countOwnedCities(m, mid);
+    var villages = countOwnedVillages(m, mid);
+    var s = Std.int(gold / 10) + Std.int(troops / 10) + cities * 100 + villages * 50;
+    if (s < 0)
+      s = 0;
+    return s;
   }
 
   static function totalTroops(m:GameMatchCore, mid:MonarchId):Int {
@@ -140,6 +179,24 @@ class GameMatchVer1Ops {
       }
     }
     return sum;
+  }
+
+  static function countOwnedCities(m:GameMatchCore, mid:MonarchId):Int {
+    var n = m.board().length();
+    var c = 0;
+    for (i in 0...n)
+      if (m.tileAt(i).kind() == City && m.forceGetCityOwner(i) == mid)
+        c++;
+    return c;
+  }
+
+  static function countOwnedVillages(m:GameMatchCore, mid:MonarchId):Int {
+    var n = m.board().length();
+    var c = 0;
+    for (i in 0...n)
+      if (m.tileAt(i).kind() == Village && m.forceGetVillageOwner(i) == mid)
+        c++;
+    return c;
   }
 
   static inline function nonNeg(x:Int):Int {

@@ -2092,6 +2092,10 @@ class GameMatchCore implements IGameMatch {
   public function getTerminationReason():MatchTerminationReason
     return _terminationReason;
 
+  public function scoreOfMonarch(monarchId:MonarchId):Int {
+    return GameMatchVer1Ops.scoreOfMonarch(this, monarchId);
+  }
+
   public function applyMenuLeaf(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
     var leaf = MenuActivation.activatingEntry(menuNode);
     if (!leaf.isEnabled())

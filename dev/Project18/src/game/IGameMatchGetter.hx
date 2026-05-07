@@ -81,6 +81,12 @@ interface IGameMatchGetter {
   function getTerminationReason():MatchTerminationReason;
 
   /**
+   * 時限勝利（GDD 2.4）：綜合評分（暫定 ver1 算法）。
+   * UI/測試可用於顯示與比較；實際勝負由規則層判定。
+   */
+  function scoreOfMonarch(monarchId:MonarchId):Int;
+
+  /**
    * 當前已登錄、於「移動逐步前進」每步落地後會依序呼叫的勾子（回傳為拷貝快照）。
    */
   function movementStepHooks():Array<IJiCeMovementStepHook>;
