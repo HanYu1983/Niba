@@ -98,29 +98,22 @@ class BasicViewModel implements IViewModel {
 
   function runAiStepOnce(?autoAckPopups:Bool = false):Bool {
     var mid = match.activeMonarch().id();
-    trace('[AI/UI] runAiStepOnce enter mid=$mid ai=' + Std.string(isAiMonarch(mid)) + ' sig=' + aiStateSignature());
     if (!isAiMonarch(mid)) {
-      trace('[AI/UI] skip: active monarch not AI');
       return false;
     }
     // 終局就不再自動操作
     switch match.getTerminationReason() {
       case NotEnded:
       case _:
-        trace('[AI/UI] skip: terminated reason=' + Std.string(match.getTerminationReason()));
         return false;
     }
 
     var actor:IPlayer = new LocalPlayer(mid, "ai", true);
     var d = match.aiSuggest(actor);
     if (d == null) {
-      trace('[AI/UI] stop: aiSuggest returned null mid=$mid sig=' + aiStateSignature());
       return false;
     }
-    trace('[AI/UI] aiSuggest ok mid=$mid nodePath=' + (d.nodePath != null ? d.nodePath.join(".") : "null")
-      + ' activation=' + (d.activation != null ? (Std.string(d.activation.kind) + "|" + Std.string(d.activation.decisionToken)) : "null"));
     applyAiDecision(actor, d);
-    trace('[AI/UI] after apply sig=' + aiStateSignature());
     if (autoAckPopups) {
       // 重要：若有 popup modal，UI 必須立即重繪才能把 overlay 移除，否則看起來會「卡住」
       ackAllPopupsFor(mid);

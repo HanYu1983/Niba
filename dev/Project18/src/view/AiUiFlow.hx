@@ -22,13 +22,9 @@ class AiUiFlow {
     d:AiDecision,
     apply:(node:IPlayerMenuNode, entry:IPlayerMenuEntry) -> Void
   ):Bool {
-    trace('[AiUiFlow] applyAiDecision actor=${actor.monarchId()} nodePath=' + (d.nodePath != null ? d.nodePath.join(".") : "null")
-      + ' activation=' + (d.activation != null ? (Std.string(d.activation.kind) + "|" + Std.string(d.activation.decisionToken)) : "null")
-      + ' widgetPatches=' + (d.widgetPatches != null ? Std.string(d.widgetPatches.length) : "null"));
     var menu:IPlayerMenu = match.createPlayerMenu(actor);
     var node = resolveNodeByPath(menu.rootNodes(), d.nodePath);
     if (node == null) {
-      trace('[AiUiFlow] FAIL: nodePath not found');
       return false;
     }
 
@@ -46,12 +42,10 @@ class AiUiFlow {
       entry = node.leaf();
     }
     if (entry == null) {
-      trace('[AiUiFlow] FAIL: entry not found (leaf=' + (node.leaf() != null ? Std.string(node.leaf().kind()) : "null") + ')');
       return false;
     }
 
     node.setActivationEntry(entry);
-    trace('[AiUiFlow] OK: entry.kind=' + Std.string(entry.kind()) + ' enabled=' + Std.string(entry.isEnabled()) + ' caption=' + entry.caption());
     apply(node, entry);
     return true;
   }
