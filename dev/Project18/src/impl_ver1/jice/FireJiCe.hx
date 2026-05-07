@@ -102,10 +102,20 @@ class FireJiCe implements IJiCe {
     var caster = JiCeApply.requireCaster(ruler, casterId, "FireJiCe");
 
     var tier = StrategyCostTier.Medium;
-    var ok = JiCeApply.rollAndConsumeStamina(caster, Wit, tier);
+    var phase = gameMatch.forceGetPendingLandingTile() != null ? PostMove : PreMove;
+    var roll = JiCeApply.rollAndConsumeStamina(
+      gameMatch,
+      caster,
+      Wit,
+      tier,
+      'jice_fire|r=${gameMatch.roundNumber()}|m=${ruler.id()}|g=${casterId}|p=${Std.string(phase)}|t=${targetTile}'
+    );
 
-    if (!ok)
+    var effectLines:Array<String> = [];
+    if (!roll.ok) {
+      JiCeApply.popupCaster(gameMatch, ruler.id(), designLabel(), phase, casterId, Wit, tier, roll, '格 $targetTile', effectLines, "jice-fire");
       return;
+    }
 
     var tile = gameMatch.tileAt(targetTile);
     // 骨架：僅對 City 格生效（示範用）
@@ -113,7 +123,12 @@ class FireJiCe implements IJiCe {
       var prevT = gameMatch.forceGetCityStoredTroops(targetTile);
       var loss = Balance.clampInt(Std.int(prevT * 0.2), 0, prevT); // TODO(strategy-tile): 以規格表調整
       gameMatch.putCityStores(targetTile, prevT - loss, gameMatch.forceGetCityStoredGrain(targetTile));
+      effectLines.push('城池兵力 ${prevT} → ${prevT - loss}（-${loss}）');
+    } else {
+      effectLines.push("目標非城池，無效果");
     }
+
+    JiCeApply.popupCaster(gameMatch, ruler.id(), designLabel(), phase, casterId, Wit, tier, roll, '格 $targetTile', effectLines, "jice-fire");
   }
 
   static function readSingleGeneralId(w:MenuFormWidget, label:String):GeneralId {

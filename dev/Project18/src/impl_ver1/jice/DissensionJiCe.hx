@@ -97,9 +97,19 @@ class DissensionJiCe implements IJiCe {
     var caster = JiCeApply.requireCaster(ruler, casterId, "DissensionJiCe");
 
     var tier = StrategyCostTier.Medium;
-    var ok = JiCeApply.rollAndConsumeStamina(caster, Wit, tier);
-    if (!ok)
+    var phase = gameMatch.forceGetPendingLandingTile() != null ? PostMove : PreMove;
+    var roll = JiCeApply.rollAndConsumeStamina(
+      gameMatch,
+      caster,
+      Wit,
+      tier,
+      'jice_dissension|r=${gameMatch.roundNumber()}|m=${ruler.id()}|g=${casterId}|p=${Std.string(phase)}|t=${targetMonarchId}'
+    );
+    var effectLines:Array<String> = [];
+    if (!roll.ok) {
+      JiCeApply.popupCaster(gameMatch, ruler.id(), designLabel(), phase, casterId, Wit, tier, roll, '君主 $targetMonarchId', effectLines, "jice-dissension");
       return;
+    }
 
     // 最小示範：目標君主麾下所有武將忠誠度 -10（下限 1）
     for (m in gameMatch.monarchs())
@@ -111,6 +121,10 @@ class DissensionJiCe implements IJiCe {
         }
         break;
       }
+
+    effectLines.push("目標麾下全體武將忠誠度 -10");
+    JiCeApply.popupCaster(gameMatch, ruler.id(), designLabel(), phase, casterId, Wit, tier, roll, '君主 $targetMonarchId', effectLines, "jice-dissension");
+    JiCeApply.popupTargetMonarch(gameMatch, targetMonarchId, designLabel(), ruler.id(), casterId, effectLines, "jice-dissension/target");
   }
 
   static function readSingleGeneralId(w:MenuFormWidget, label:String):GeneralId {

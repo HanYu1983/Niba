@@ -11,6 +11,8 @@ import game.MenuFormWidget.Button;
 import game.PlayerMenuKind;
 import game.PlayerMenuKind.StagingSubmit;
 import game.StrategyPhase;
+import game.StrategyCostTier;
+import game.GeneralStat;
 import impl_ver1.core.GameMatchCore;
 import impl_ver1.hooks.RoadblockMovementHook;
 import impl_ver1.model.Monarch;
@@ -54,6 +56,10 @@ class RoadblockJiCe implements IJiCe {
     var tile = ruler.pawnIndex();
     var placer = actor.monarchId();
     gameMatch.registerMovementStepHook(new RoadblockMovementHook(tile, placer));
+
+    // 無選將/無擲骰：以固定成功、無成本模板顯示提示彈窗
+    var dummy = {ok: true, rate: 1.0, roll: 0.0, cost: 0, before: 0, after: 0};
+    JiCeApply.popupCaster(gameMatch, actor.monarchId(), designLabel(), PreMove, "（無）", Command, StrategyCostTier.Low, dummy, '格 $tile', ["設置路障（移動逐步結算時生效）"], "jice-roadblock");
   }
 
   static function __init__():Void {

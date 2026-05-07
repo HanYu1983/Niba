@@ -93,12 +93,22 @@ class InspireJiCe implements IJiCe {
 
     // 成功率（統率 × 基礎成功率 × 體力修正）
     var tier = StrategyCostTier.Medium;
-    var ok = JiCeApply.rollAndConsumeStamina(caster, Command, tier);
-
-    if (ok) {
+    var phase = gameMatch.forceGetPendingLandingTile() != null ? PostMove : PreMove;
+    var roll = JiCeApply.rollAndConsumeStamina(
+      gameMatch,
+      caster,
+      Command,
+      tier,
+      'jice_inspire|r=${gameMatch.roundNumber()}|m=${ruler.id()}|g=${casterId}|p=${Std.string(phase)}|tg=${targetId}'
+    );
+    var effectLines:Array<String> = [];
+    if (roll.ok) {
       // 效果：目標回復（先用 +20 當骨架；之後可依屬性/修正調整）
-      target.setStamina(Balance.clampInt(target.stamina() + 20, 0, 100));
+      var before = target.stamina();
+      target.setStamina(Balance.clampInt(before + 20, 0, 100));
+      effectLines.push('目標體力 ${before} → ${target.stamina()}（+20）');
     }
+    JiCeApply.popupCaster(gameMatch, ruler.id(), designLabel(), phase, casterId, Command, tier, roll, '武將 $targetId', effectLines, "jice-inspire");
   }
 
   static function readSinglePick(w:MenuFormWidget, label:String):GeneralId {

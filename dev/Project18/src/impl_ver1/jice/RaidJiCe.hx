@@ -95,9 +95,19 @@ class RaidJiCe implements IJiCe {
     var caster = JiCeApply.requireCaster(ruler, casterId, "RaidJiCe");
 
     var tier = StrategyCostTier.High;
-    var ok = JiCeApply.rollAndConsumeStamina(caster, Might, tier);
-    if (!ok)
+    var phase = gameMatch.forceGetPendingLandingTile() != null ? PostMove : PreMove;
+    var roll = JiCeApply.rollAndConsumeStamina(
+      gameMatch,
+      caster,
+      Might,
+      tier,
+      'jice_raid|r=${gameMatch.roundNumber()}|m=${ruler.id()}|g=${casterId}|p=${Std.string(phase)}|t=${targetMonarchId}'
+    );
+    var effectLines:Array<String> = [];
+    if (!roll.ok) {
+      JiCeApply.popupCaster(gameMatch, ruler.id(), designLabel(), phase, casterId, Might, tier, roll, '君主 $targetMonarchId', effectLines, "jice-raid");
       return;
+    }
 
     // 骨架公式：目標現有兵力 10% + might/10（與落石類似，之後可改規格表）
     var defTroops = gameMatch.monarchTroopCount(targetMonarchId);
@@ -105,6 +115,10 @@ class RaidJiCe implements IJiCe {
     if (loss < 0)
       loss = 0;
     gameMatch.monarchApplyTroopLoss(targetMonarchId, loss);
+
+    effectLines.push('目標兵力 -${loss}');
+    JiCeApply.popupCaster(gameMatch, ruler.id(), designLabel(), phase, casterId, Might, tier, roll, '君主 $targetMonarchId', effectLines, "jice-raid");
+    JiCeApply.popupTargetMonarch(gameMatch, targetMonarchId, designLabel(), ruler.id(), casterId, ['兵力 -${loss}'], "jice-raid/target");
   }
 
   static function readSingleGeneralId(w:MenuFormWidget, label:String):GeneralId

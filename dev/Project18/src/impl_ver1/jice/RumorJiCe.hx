@@ -97,9 +97,19 @@ class RumorJiCe implements IJiCe {
     var caster = JiCeApply.requireCaster(ruler, casterId, "RumorJiCe");
 
     var tier = StrategyCostTier.Medium;
-    var ok = JiCeApply.rollAndConsumeStamina(caster, Wit, tier);
-    if (!ok)
+    var phase = gameMatch.forceGetPendingLandingTile() != null ? PostMove : PreMove;
+    var roll = JiCeApply.rollAndConsumeStamina(
+      gameMatch,
+      caster,
+      Wit,
+      tier,
+      'jice_rumor|r=${gameMatch.roundNumber()}|m=${ruler.id()}|g=${casterId}|p=${Std.string(phase)}|t=${targetMonarchId}'
+    );
+    var effectLines:Array<String> = [];
+    if (!roll.ok) {
+      JiCeApply.popupCaster(gameMatch, ruler.id(), designLabel(), phase, casterId, Wit, tier, roll, '君主 $targetMonarchId', effectLines, "jice-rumor");
       return;
+    }
 
     // 最小示範：目標聲望 -12（下限 0）
     for (m in gameMatch.monarchs())
@@ -108,6 +118,10 @@ class RumorJiCe implements IJiCe {
         tm.reducePrestige(12);
         break;
       }
+
+    effectLines.push("聲望 -12");
+    JiCeApply.popupCaster(gameMatch, ruler.id(), designLabel(), phase, casterId, Wit, tier, roll, '君主 $targetMonarchId', effectLines, "jice-rumor");
+    JiCeApply.popupTargetMonarch(gameMatch, targetMonarchId, designLabel(), ruler.id(), casterId, effectLines, "jice-rumor/target");
   }
 
   static function readSingleGeneralId(w:MenuFormWidget, label:String):GeneralId {

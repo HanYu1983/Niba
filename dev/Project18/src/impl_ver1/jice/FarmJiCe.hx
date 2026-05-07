@@ -99,12 +99,22 @@ class FarmJiCe implements IJiCe {
     var caster = JiCeApply.requireCaster(ruler, casterId, "FarmJiCe");
 
     var tier = StrategyCostTier.Low;
-    var ok = JiCeApply.rollAndConsumeStamina(caster, Stewardship, tier);
-
-    if (!ok)
+    var phase = gameMatch.forceGetPendingLandingTile() != null ? PostMove : PreMove;
+    var roll = JiCeApply.rollAndConsumeStamina(
+      gameMatch,
+      caster,
+      Stewardship,
+      tier,
+      'jice_farm|r=${gameMatch.roundNumber()}|m=${ruler.id()}|g=${casterId}|p=${Std.string(phase)}|t=${targetTile}'
+    );
+    var effectLines:Array<String> = [];
+    if (!roll.ok) {
+      JiCeApply.popupCaster(gameMatch, ruler.id(), designLabel(), phase, casterId, Stewardship, tier, roll, '格 $targetTile', effectLines, "jice-farm");
       return;
-
+    }
     gameMatch.forceAddTileNextTurnGrainBonus(targetTile, 100); // TODO(strategy-tile): 以規格表調整
+    effectLines.push("下回合糧食產出 +100");
+    JiCeApply.popupCaster(gameMatch, ruler.id(), designLabel(), phase, casterId, Stewardship, tier, roll, '格 $targetTile', effectLines, "jice-farm");
   }
 
   static function readSingleGeneralId(w:MenuFormWidget, label:String):GeneralId {

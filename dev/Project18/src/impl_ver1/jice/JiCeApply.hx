@@ -5,6 +5,10 @@ import game.GameIds;
 import game.GeneralStat;
 import game.MenuFormWidget;
 import game.StrategyCostTier;
+import game.StrategyPhase;
+import game.PopupPayload;
+import impl_ver1.core.GameMatchCore;
+import impl_ver1.util.Deterministic;
 import impl_ver1.model.General;
 import impl_ver1.model.Monarch;
 
@@ -13,6 +17,34 @@ import impl_ver1.model.Monarch;
  * 目的：讓各張牌避免重複寫「單選武將/目標」與「成功率/扣體力」樣板碼。
  */
 class JiCeApply {
+  public static function phaseLabel(p:Null<StrategyPhase>):String {
+    return switch p {
+      case PreMove: "移動前";
+      case PostMove: "移動後";
+      case null: "（未知）";
+    };
+  }
+
+  public static function tierLabel(t:StrategyCostTier):String {
+    return switch t {
+      case Low: "低";
+      case Medium: "中";
+      case High: "高";
+    };
+  }
+
+  public static function statLabel(s:GeneralStat):String {
+    return switch s {
+      case Command: "統御";
+      case Might: "武力";
+      case Wit: "智謀";
+      case Stewardship: "政治";
+    };
+  }
+
+  public static function pct(v:Float):Int
+    return Std.int(Math.floor(v * 100));
+
   public static function readSingleGeneralId(w:MenuFormWidget, ctx:String, label:String):GeneralId {
     return switch w {
       case GeneralMultiPick(_, _, sel):
@@ -55,13 +87,78 @@ class JiCeApply {
 
   /**
    * 套用策略成功率並扣體力（固定：不論成功與否都扣）。
-   * 回傳此次是否成功。
+   * 回傳此次擲骰與消耗結果（deterministic，利於測試重現）。
    */
-  public static function rollAndConsumeStamina(caster:General, stat:GeneralStat, tier:StrategyCostTier):Bool {
-    var rate = Balance.strategySuccessRate(caster.stat(stat), tier, caster.stamina());
-    var ok = Math.random() < rate;
-    caster.setStamina(Balance.clampInt(caster.stamina() - Balance.strategyStaminaCost(tier), 0, 100));
-    return ok;
+  public static function rollAndConsumeStamina(
+    match:GameMatchCore,
+    caster:General,
+    stat:GeneralStat,
+    tier:StrategyCostTier,
+    seed:String
+  ):{ok:Bool, rate:Float, roll:Float, cost:Int, before:Int, after:Int} {
+    var before = caster.stamina();
+    var rate = Balance.strategySuccessRate(caster.stat(stat), tier, before);
+    var roll = Deterministic.hash01(seed);
+    var ok = roll < rate;
+    var cost = Balance.strategyStaminaCost(tier);
+    caster.setStamina(Balance.clampInt(before - cost, 0, 100));
+    var after = caster.stamina();
+    return {ok: ok, rate: rate, roll: roll, cost: cost, before: before, after: after};
+  }
+
+  /**
+   * 計策通用彈窗（施放方）。
+   * - 失敗也顯示（避免玩家以為沒按到）
+   * - 目標與效果摘要由呼叫端傳入
+   */
+  public static function popupCaster(
+    match:GameMatchCore,
+    actorId:MonarchId,
+    cardLabel:String,
+    phase:Null<StrategyPhase>,
+    casterId:GeneralId,
+    stat:GeneralStat,
+    tier:StrategyCostTier,
+    roll:{ok:Bool, rate:Float, roll:Float, cost:Int, before:Int, after:Int},
+    targetLine:String,
+    effectLines:Array<String>,
+    ctxKey:String
+  ):Void {
+    var title = '計策：${cardLabel}（' + (roll.ok ? "成功" : "失敗") + "）";
+    var lines:Array<String> = [];
+    lines.push('階段：' + phaseLabel(phase));
+    lines.push('施放武將：${casterId}（體力 ${roll.before} → ${roll.after}，消耗 ${roll.cost}）');
+    lines.push('成功率：約 ${pct(roll.rate)}%（roll=${pct(roll.roll)}%｜${statLabel(stat)}｜消耗=' + tierLabel(tier) + '）');
+    if (targetLine != null && targetLine.length > 0)
+      lines.push('目標：' + targetLine);
+    if (effectLines != null && effectLines.length > 0) {
+      lines.push("效果：");
+      for (x in effectLines)
+        lines.push("- " + x);
+    }
+    match.pushInfoPopup(actorId, title, PopupPayload.Plain(lines.join("\n")), ctxKey);
+  }
+
+  /** 計策通用彈窗（受影響方；若沒有目標玩家可略）。 */
+  public static function popupTargetMonarch(
+    match:GameMatchCore,
+    targetMonarchId:MonarchId,
+    cardLabel:String,
+    attackerMonarchId:MonarchId,
+    casterId:GeneralId,
+    effectLines:Array<String>,
+    ctxKey:String
+  ):Void {
+    var title = '遭遇計策：${cardLabel}';
+    var lines:Array<String> = [];
+    lines.push('施放者：${attackerMonarchId}');
+    lines.push('武將：${casterId}');
+    if (effectLines != null && effectLines.length > 0) {
+      lines.push("影響：");
+      for (x in effectLines)
+        lines.push("- " + x);
+    }
+    match.pushInfoPopup(targetMonarchId, title, PopupPayload.Plain(lines.join("\n")), ctxKey);
   }
 }
 

@@ -91,13 +91,24 @@ class HealJiCe implements IJiCe {
     var target = JiCeApply.requireCaster(ruler, targetId, "HealJiCe");
 
     var tier = StrategyCostTier.High;
-    var ok = JiCeApply.rollAndConsumeStamina(caster, Wit, tier);
-
-    if (ok) {
+    var phase = gameMatch.forceGetPendingLandingTile() != null ? PostMove : PreMove;
+    var roll = JiCeApply.rollAndConsumeStamina(
+      gameMatch,
+      caster,
+      Wit,
+      tier,
+      'jice_heal|r=${gameMatch.roundNumber()}|m=${ruler.id()}|g=${casterId}|p=${Std.string(phase)}|tg=${targetId}'
+    );
+    var effectLines:Array<String> = [];
+    if (roll.ok) {
       // 骨架：回復固定 +40（之後可參數化）
-      target.setStamina(Balance.clampInt(target.stamina() + 40, 0, 100));
+      var before = target.stamina();
+      target.setStamina(Balance.clampInt(before + 40, 0, 100));
       target.removeOneDebuff();
+      effectLines.push('目標體力 ${before} → ${target.stamina()}（+40）');
+      effectLines.push("移除 1 個 debuff");
     }
+    JiCeApply.popupCaster(gameMatch, ruler.id(), designLabel(), phase, casterId, Wit, tier, roll, '武將 $targetId', effectLines, "jice-heal");
   }
 
   static function readSinglePick(w:MenuFormWidget, label:String):GeneralId {

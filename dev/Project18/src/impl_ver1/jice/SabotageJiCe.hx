@@ -100,10 +100,19 @@ class SabotageJiCe implements IJiCe {
     var caster = JiCeApply.requireCaster(ruler, casterId, "SabotageJiCe");
 
     var tier = StrategyCostTier.High;
-    var ok = JiCeApply.rollAndConsumeStamina(caster, Wit, tier);
-
-    if (!ok)
+    var phase = gameMatch.forceGetPendingLandingTile() != null ? PostMove : PreMove;
+    var roll = JiCeApply.rollAndConsumeStamina(
+      gameMatch,
+      caster,
+      Wit,
+      tier,
+      'jice_sabotage|r=${gameMatch.roundNumber()}|m=${ruler.id()}|g=${casterId}|p=${Std.string(phase)}|t=${targetTile}'
+    );
+    var effectLines:Array<String> = [];
+    if (!roll.ok) {
+      JiCeApply.popupCaster(gameMatch, ruler.id(), designLabel(), phase, casterId, Wit, tier, roll, '格 $targetTile', effectLines, "jice-sabotage");
       return;
+    }
 
     var tile = gameMatch.tileAt(targetTile);
     if (tile.kind() == TileKind.City) {
@@ -111,7 +120,11 @@ class SabotageJiCe implements IJiCe {
       var prevG = gameMatch.forceGetCityStoredGrain(targetTile);
       var loss = Balance.clampInt(Std.int(prevG * 0.25), 0, prevG);
       gameMatch.putCityStores(targetTile, gameMatch.forceGetCityStoredTroops(targetTile), prevG - loss);
+      effectLines.push('城池糧食 ${prevG} → ${prevG - loss}（-${loss}）');
+    } else {
+      effectLines.push("目標非城池，無效果");
     }
+    JiCeApply.popupCaster(gameMatch, ruler.id(), designLabel(), phase, casterId, Wit, tier, roll, '格 $targetTile', effectLines, "jice-sabotage");
   }
 
   static function readSingleGeneralId(w:MenuFormWidget, label:String):GeneralId {

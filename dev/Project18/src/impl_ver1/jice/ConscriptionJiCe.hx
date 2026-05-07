@@ -97,9 +97,19 @@ class ConscriptionJiCe implements IJiCe {
     var caster = JiCeApply.requireCaster(ruler, casterId, "ConscriptionJiCe");
 
     var tier = StrategyCostTier.Medium;
-    var ok = JiCeApply.rollAndConsumeStamina(caster, Command, tier);
-    if (!ok)
+    var phase = gameMatch.forceGetPendingLandingTile() != null ? PostMove : PreMove;
+    var roll = JiCeApply.rollAndConsumeStamina(
+      gameMatch,
+      caster,
+      Command,
+      tier,
+      'jice_conscription|r=${gameMatch.roundNumber()}|m=${ruler.id()}|g=${casterId}|p=${Std.string(phase)}|t=${targetMonarchId}'
+    );
+    var effectLines:Array<String> = [];
+    if (!roll.ok) {
+      JiCeApply.popupCaster(gameMatch, ruler.id(), designLabel(), phase, casterId, Command, tier, roll, '君主 $targetMonarchId', effectLines, "jice-conscription");
       return;
+    }
 
     // 最小示範：轉移 min(目標兵力的 5% + command/10, 20) 到施計者
     var defTroops = gameMatch.monarchTroopCount(targetMonarchId);
@@ -112,6 +122,10 @@ class ConscriptionJiCe implements IJiCe {
     // 先扣目標，再加回己方（避免負數）
     gameMatch.monarchApplyTroopLoss(targetMonarchId, take);
     ruler.grantTroops(take);
+
+    effectLines.push('奪取士兵 +${take}');
+    JiCeApply.popupCaster(gameMatch, ruler.id(), designLabel(), phase, casterId, Command, tier, roll, '君主 $targetMonarchId', effectLines, "jice-conscription");
+    JiCeApply.popupTargetMonarch(gameMatch, targetMonarchId, designLabel(), ruler.id(), casterId, ['士兵 -${take}'], "jice-conscription/target");
   }
 
   static function readSingleGeneralId(w:MenuFormWidget, label:String):GeneralId {

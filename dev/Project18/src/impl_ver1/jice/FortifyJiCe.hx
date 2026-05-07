@@ -99,12 +99,22 @@ class FortifyJiCe implements IJiCe {
     var caster = JiCeApply.requireCaster(ruler, casterId, "FortifyJiCe");
 
     var tier = StrategyCostTier.Medium;
-    var ok = JiCeApply.rollAndConsumeStamina(caster, Stewardship, tier);
-
-    if (!ok)
+    var phase = gameMatch.forceGetPendingLandingTile() != null ? PostMove : PreMove;
+    var roll = JiCeApply.rollAndConsumeStamina(
+      gameMatch,
+      caster,
+      Stewardship,
+      tier,
+      'jice_fortify|r=${gameMatch.roundNumber()}|m=${ruler.id()}|g=${casterId}|p=${Std.string(phase)}|t=${targetTile}'
+    );
+    var effectLines:Array<String> = [];
+    if (!roll.ok) {
+      JiCeApply.popupCaster(gameMatch, ruler.id(), designLabel(), phase, casterId, Stewardship, tier, roll, '格 $targetTile', effectLines, "jice-fortify");
       return;
-
+    }
     gameMatch.forceAddTileDefenseBonus(targetTile, 0.15); // TODO(strategy-tile): 以規格表調整
+    effectLines.push("防禦加成 +0.15");
+    JiCeApply.popupCaster(gameMatch, ruler.id(), designLabel(), phase, casterId, Stewardship, tier, roll, '格 $targetTile', effectLines, "jice-fortify");
   }
 
   static function readSingleGeneralId(w:MenuFormWidget, label:String):GeneralId {

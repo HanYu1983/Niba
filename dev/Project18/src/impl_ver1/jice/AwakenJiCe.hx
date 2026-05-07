@@ -17,6 +17,7 @@ import game.StrategyPhase;
 import impl_ver1.core.GameMatchCore;
 import impl_ver1.model.Monarch;
 import impl_ver1.model.General;
+import impl_ver1.util.Deterministic;
 import impl_ver1.model.PlayerMenu;
 import impl_ver1.jice.JiCeRegistry;
 import impl_ver1.jice.JiCeApply;
@@ -92,15 +93,26 @@ class AwakenJiCe implements IJiCe {
     var target = JiCeApply.requireCaster(ruler, targetId, "AwakenJiCe");
 
     var tier = StrategyCostTier.High;
-    var ok = JiCeApply.rollAndConsumeStamina(caster, Wit, tier);
-
-    if (ok) {
+    var phase = gameMatch.forceGetPendingLandingTile() != null ? PostMove : PreMove;
+    var roll = JiCeApply.rollAndConsumeStamina(
+      gameMatch,
+      caster,
+      Wit,
+      tier,
+      'jice_awaken|r=${gameMatch.roundNumber()}|m=${ruler.id()}|g=${casterId}|p=${Std.string(phase)}|tg=${targetId}'
+    );
+    var effectLines:Array<String> = [];
+    if (roll.ok) {
       var pool:Array<GeneralStat> = [Command, Might, Wit, Stewardship];
-      var idx = Std.random(pool.length);
+      var idx = Std.int(Math.floor(Deterministic.hash01('jice_awaken_pick|r=${gameMatch.roundNumber()}|m=${ruler.id()}|g=${casterId}|tg=${targetId}') * pool.length));
+      if (idx < 0) idx = 0;
+      if (idx >= pool.length) idx = pool.length - 1;
       var picked = pool[idx];
       // 骨架：+20 維持 1 回合（生命週期由後續核心接上）
       target.addEffect(GeneralEffect.TempStatBoost(picked, 20, 1));
+      effectLines.push('目標獲得暫時屬性提升：${JiCeApply.statLabel(picked)} +20（1 回合）');
     }
+    JiCeApply.popupCaster(gameMatch, ruler.id(), designLabel(), phase, casterId, Wit, tier, roll, '武將 $targetId', effectLines, "jice-awaken");
   }
 
   static function readSinglePick(w:MenuFormWidget, label:String):GeneralId {

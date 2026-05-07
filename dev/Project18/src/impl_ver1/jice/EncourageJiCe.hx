@@ -92,12 +92,21 @@ class EncourageJiCe implements IJiCe {
     var target = JiCeApply.requireCaster(ruler, targetId, "EncourageJiCe");
 
     var tier = StrategyCostTier.Low;
-    var ok = JiCeApply.rollAndConsumeStamina(caster, Command, tier);
-
-    if (ok) {
+    var phase = gameMatch.forceGetPendingLandingTile() != null ? PostMove : PreMove;
+    var roll = JiCeApply.rollAndConsumeStamina(
+      gameMatch,
+      caster,
+      Command,
+      tier,
+      'jice_encourage|r=${gameMatch.roundNumber()}|m=${ruler.id()}|g=${casterId}|p=${Std.string(phase)}|tg=${targetId}'
+    );
+    var effectLines:Array<String> = [];
+    if (roll.ok) {
       // 先以 1.2 作為骨架倍率；後續可由 Balance/策略表驅動
       target.addEffect(GeneralEffect.NextCommandMultiplier(1.2));
+      effectLines.push("目標獲得下次指令倍率 1.2×");
     }
+    JiCeApply.popupCaster(gameMatch, ruler.id(), designLabel(), phase, casterId, Command, tier, roll, '武將 $targetId', effectLines, "jice-encourage");
   }
 
   static function readSinglePick(w:MenuFormWidget, label:String):GeneralId {
