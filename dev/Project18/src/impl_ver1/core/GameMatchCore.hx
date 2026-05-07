@@ -1389,8 +1389,11 @@ class GameMatchCore implements IGameMatch {
         Button(dispatchApplyLeaf),
       ];
       roots.push(createPlayerMenuNode("調度", null, [], dispatchWidgets));
-      roots.push(createPlayerMenuNode("開發", createPlayerMenuEntry(FriendlyCityDevelop, "開發（示範）", true, "friendly_dev"), []));
-      roots.push(createPlayerMenuNode("休整", createPlayerMenuEntry(FriendlyCityRest, "休整（示範）", true, "friendly_rest"), []));
+      // 合法性下推到 menu：缺武將或缺領地資源就 disable，避免 AI/玩家進 staging 才被拒絕
+      var canDev = rulerF.roster().length > 0 && forceGetCityStoredGold(fidx) >= 30 && forceGetCityStoredGrain(fidx) >= 20;
+      var canRest = rulerF.roster().length > 0;
+      roots.push(createPlayerMenuNode("開發", createPlayerMenuEntry(FriendlyCityDevelop, "開發（示範）", canDev, "friendly_dev"), []));
+      roots.push(createPlayerMenuNode("休整", createPlayerMenuEntry(FriendlyCityRest, "休整（示範）", canRest, "friendly_rest"), []));
       roots.push(
         createPlayerMenuNode(
           "結束拜訪",
@@ -1417,14 +1420,17 @@ class GameMatchCore implements IGameMatch {
           Button(dispatchLeaf),
         ];
         roots.push(createPlayerMenuNode("調度", null, [], widgets));
-        roots.push(createPlayerMenuNode("開發", createPlayerMenuEntry(VillageDevelop, "開發", true, "v_dev"), []));
+        // 合法性下推到 menu：只有我方領地村落且資源足夠才可進入 staging
+        var canVillageDev = forceGetVillageStoredGold(vidx) >= 25 && forceGetVillageStoredGrain(vidx) >= 25 && rulerV.roster().length > 0;
+        roots.push(createPlayerMenuNode("開發", createPlayerMenuEntry(VillageDevelop, "開發", canVillageDev, "v_dev"), []));
         roots.push(createPlayerMenuNode("結束拜訪", createPlayerMenuEntry(VillageVisitEnd, "結束拜訪", true, "v_visit_end"), []));
       } else {
         // 非我方村落：維持原互動指令
         roots.push(createPlayerMenuNode("村落指令", null, [
-          createPlayerMenuNode("交易", createPlayerMenuEntry(VillageTrade, "交易", true, "v_trade"), []),
-          createPlayerMenuNode("搶奪", createPlayerMenuEntry(VillagePlunder, "搶奪", true, "v_plunder"), []),
-          createPlayerMenuNode("攻占", createPlayerMenuEntry(VillageConquer, "攻占", true, "v_conquer"), []),
+          // 合法性下推到 menu：缺武將/缺金/缺兵就先 disable，避免 AI/玩家進 staging 才被拒絕
+          createPlayerMenuNode("交易", createPlayerMenuEntry(VillageTrade, "交易", rulerV.roster().length > 0 && rulerV.gold() >= 20, "v_trade"), []),
+          createPlayerMenuNode("搶奪", createPlayerMenuEntry(VillagePlunder, "搶奪", rulerV.roster().length > 0, "v_plunder"), []),
+          createPlayerMenuNode("攻占", createPlayerMenuEntry(VillageConquer, "攻占", rulerV.roster().length > 0 && rulerV.troops() > 0, "v_conquer"), []),
           createPlayerMenuNode("回合結束（村落）", createPlayerMenuEntry(VillageEndTurn, "回合結束", true, "v_end"), []),
         ]));
       }

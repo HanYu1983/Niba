@@ -81,49 +81,7 @@ class Ver1AiPolicy {
     if (k == null)
       return -1e6;
 
-    // ---- 基本合法性過濾（避免選到 apply 時才發現資源不足）----
-    // 目前先針對已知會拋「資源不足」的 staging（城池開發/村落開發）做最小判斷。
-    // 若判斷為必定失敗，直接給極低分，讓 AI 不會選它。
-    if (k == StagingSubmit) {
-      var stgKey = match.forceGetPendingStagingKey();
-      if (stgKey == "friendly_develop") {
-        var idx = match.forceGetPendingFriendlyCityVisitTile();
-        if (idx == null)
-          return -1e9;
-        // FriendlyCityDevelopStagingAction: costGold=30, costGrain=20
-        if (match.forceGetCityStoredGold(idx) < 30 || match.forceGetCityStoredGrain(idx) < 20)
-          return -1e9;
-      }
-      if (stgKey == "village_develop") {
-        var vIdx = match.forceGetPendingVillageTile();
-        if (vIdx == null)
-          return -1e9;
-        // VillageDevelopStagingAction: costGold=25, costGrain=25
-        if (match.forceGetVillageStoredGold(vIdx) < 25 || match.forceGetVillageStoredGrain(vIdx) < 25)
-          return -1e9;
-      }
-    }
-
-    // 若尚未進入 staging，則對「會進 staging 且可能資源不足」的 leaf 做預先過濾（避免反覆：進 staging → 取消）
-    if (!match.forceHasPendingStaging()) {
-      if (k == FriendlyCityDevelop) {
-        var idx = match.forceGetPendingFriendlyCityVisitTile();
-        if (idx == null)
-          return -1e9;
-        if (match.forceGetCityStoredGold(idx) < 30 || match.forceGetCityStoredGrain(idx) < 20)
-          return -1e9;
-      }
-      if (k == VillageDevelop) {
-        var vIdx = match.forceGetPendingVillageTile();
-        if (vIdx == null)
-          return -1e9;
-        // 需要「已歸順」才可開發；owner 不符合就不選（避免進去後才失敗）
-        if (match.forceGetVillageOwner(vIdx) != mid)
-          return -1e9;
-        if (match.forceGetVillageStoredGold(vIdx) < 25 || match.forceGetVillageStoredGrain(vIdx) < 25)
-          return -1e9;
-      }
-    }
+    // 合法性下推到 menu 建構端：AI 僅會枚舉 enabled entry（choose() 只取 isEnabled）
 
     // 基本偏好：推進狀態機、避免無意義操作
     var s = 0.0;

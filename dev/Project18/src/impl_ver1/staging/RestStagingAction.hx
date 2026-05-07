@@ -45,7 +45,8 @@ class RestStagingAction implements IStagingAction {
       if (defSel.length == 0)
         defSel.push(gid);
     }
-    var submit = match.createPlayerMenuEntry(PlayerMenuKind.StagingSubmit, "確認休整", true, "rest_ok");
+    // menu 建構端先做合法性：至少 1 名武將
+    var submit = match.createPlayerMenuEntry(PlayerMenuKind.StagingSubmit, "確認休整", choices.length > 0, "rest_ok");
     var widgets:Array<MenuFormWidget> = [
       GeneralMultiPick("選擇休整武將（單選）", choices, defSel),
       Button(submit),

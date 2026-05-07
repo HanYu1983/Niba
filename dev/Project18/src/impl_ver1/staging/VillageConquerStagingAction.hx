@@ -59,7 +59,10 @@ class VillageConquerStagingAction implements IStagingAction {
       title: "確認攻占",
       message: "攻占會消耗兵力並影響武將體力，勝負依目前規剘結算。\n確定要攻占嗎？",
     };
-    var submit:IPlayerMenuEntry = match.createPlayerMenuEntry(PlayerMenuKind.StagingSubmit, "確認攻占", true, "conquer_ok", conquerConfirm);
+    // menu 建構端先做合法性：需有 pending village、至少 1 名武將、且投入兵力預設值 > 0
+    var vIdx = match.forceGetPendingVillageTile();
+    var enabled = vIdx != null && choices.length > 0 && defTroops > 0 && maxTroops > 0;
+    var submit:IPlayerMenuEntry = match.createPlayerMenuEntry(PlayerMenuKind.StagingSubmit, "確認攻占", enabled, "conquer_ok", conquerConfirm);
     var widgets:Array<MenuFormWidget> = [
       GeneralMultiPick("選擇攻占武將（單選）", choices, defSel),
       Slider("投入士兵數", 0, maxTroops, 1, defTroops),

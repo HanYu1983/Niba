@@ -56,7 +56,11 @@ class VillageTradeStagingAction implements IStagingAction {
       title: "確認交易",
       message: "將消耗金錢 20，武將體力 -10，並提升村落友好度。\n確定要交易嗎？",
     };
-    var submit:IPlayerMenuEntry = match.createPlayerMenuEntry(PlayerMenuKind.StagingSubmit, "確認交易", true, "trade_ok", tradeConfirm);
+    // menu 建構端先做合法性：需有 pending village、至少 1 名武將、且金錢足夠
+    var vIdx = match.forceGetPendingVillageTile();
+    var costGold = 20;
+    var enabled = vIdx != null && choices.length > 0 && ruler.gold() >= costGold;
+    var submit:IPlayerMenuEntry = match.createPlayerMenuEntry(PlayerMenuKind.StagingSubmit, "確認交易", enabled, "trade_ok", tradeConfirm);
     var widgets:Array<MenuFormWidget> = [
       GeneralMultiPick("選擇交易武將（單選）", choices, defSel),
       Button(submit),

@@ -47,7 +47,10 @@ class FriendlyCityRestStagingAction implements IStagingAction {
       if (defSel.length == 0)
         defSel.push(gid);
     }
-    var submit:IPlayerMenuEntry = match.createPlayerMenuEntry(PlayerMenuKind.StagingSubmit, "確認休整", true, "friendly_rest_ok");
+    // menu 建構端先做合法性：需在拜訪我方城池且至少 1 名武將
+    var idx = match.forceGetPendingFriendlyCityVisitTile();
+    var enabled = idx != null && choices.length > 0;
+    var submit:IPlayerMenuEntry = match.createPlayerMenuEntry(PlayerMenuKind.StagingSubmit, "確認休整", enabled, "friendly_rest_ok");
     var widgets:Array<MenuFormWidget> = [
       GeneralMultiPick("選擇休整武將（單選）", choices, defSel),
       Button(submit),

@@ -51,7 +51,10 @@ class VillagePlunderStagingAction implements IStagingAction {
         defSel.push(gid);
     }
     var plunderConfirm:MenuClientConfirm = {title: "確認搶奪", message: "搶奪會大幅降低村落友好度。確定要執行嗎？"};
-    var submit:IPlayerMenuEntry = match.createPlayerMenuEntry(PlayerMenuKind.StagingSubmit, "確認搶奪", true, "plunder_ok", plunderConfirm);
+    // menu 建構端先做合法性：需有 pending village、至少 1 名武將
+    var vIdx = match.forceGetPendingVillageTile();
+    var enabled = vIdx != null && choices.length > 0;
+    var submit:IPlayerMenuEntry = match.createPlayerMenuEntry(PlayerMenuKind.StagingSubmit, "確認搶奪", enabled, "plunder_ok", plunderConfirm);
     var widgets:Array<MenuFormWidget> = [
       GeneralMultiPick("選擇搶奪武將（單選）", choices, defSel),
       Button(submit),

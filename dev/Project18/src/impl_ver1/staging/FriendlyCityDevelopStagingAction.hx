@@ -52,7 +52,16 @@ class FriendlyCityDevelopStagingAction implements IStagingAction {
       if (defSel.length == 0)
         defSel.push(gid);
     }
-    var submit:IPlayerMenuEntry = match.createPlayerMenuEntry(PlayerMenuKind.StagingSubmit, "確認開發", true, "dev_ok");
+    // 由 menu 建構端先做「合法性」判斷：不合法就 disabled，AI/玩家都能共用同一套規則
+    var idx = match.forceGetPendingFriendlyCityVisitTile();
+    var costGold = 30;
+    var costGrain = 20;
+    var enabled =
+      idx != null
+      && choices.length > 0
+      && match.forceGetCityStoredGold(idx) >= costGold
+      && match.forceGetCityStoredGrain(idx) >= costGrain;
+    var submit:IPlayerMenuEntry = match.createPlayerMenuEntry(PlayerMenuKind.StagingSubmit, "確認開發", enabled, "dev_ok");
     var widgets:Array<MenuFormWidget> = [
       GeneralMultiPick("選擇開發武將（單選）", choices, defSel),
       Button(submit),
