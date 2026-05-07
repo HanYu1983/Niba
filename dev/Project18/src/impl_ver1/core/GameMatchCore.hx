@@ -1147,6 +1147,18 @@ class GameMatchCore implements IGameMatch {
     return out;
   }
 
+  function menuChoicesFromCityGarrison(mon:Monarch, cityIdx:TileIndex):Array<MenuGeneralChoice> {
+    // GDD：守城/成長等應以「駐守武將」為主，因此選單候選以城池駐將為準。
+    var out:Array<MenuGeneralChoice> = [];
+    var ok = new Map<String, Bool>();
+    for (g in mon.roster())
+      ok.set(g.id(), true);
+    for (gid in forceGetCityGarrisonGeneralIds(cityIdx))
+      if (ok.exists(gid))
+        out.push({generalId: gid, caption: gid});
+    return out;
+  }
+
   function appendHostileCityMenuRoots(actor:IPlayer, roots:Array<IPlayerMenuNode>):Void {
     var idx = _pendingHostileCityTileIndex;
     if (idx == null || _hostileCityPhase == null)
@@ -1184,9 +1196,10 @@ class GameMatchCore implements IGameMatch {
     if (actor.monarchId() == defId && _hostileCityPhase == DefenderResponse) {
       if (_hostileCityAwaitingDuel) {
         var defMon = cast(monarchWithId(defId), Monarch);
-        var dChoices = menuChoicesFromRoster(defMon);
+        // 守方單挑：僅允許城池駐守武將（若無駐將，理應不可單挑）
+        var dChoices = menuChoicesFromCityGarrison(defMon, idx);
         var dDef = dChoices.length > 0 ? [dChoices[0].generalId] : ([] : Array<String>);
-        var duelLeaf = createPlayerMenuEntry(HostileCityDefenderPickSubmit, "確認應戰武將", true, "def_duel_pick");
+        var duelLeaf = createPlayerMenuEntry(HostileCityDefenderPickSubmit, "確認應戰武將", dChoices.length > 0, "def_duel_pick");
         var duelForm:Array<MenuFormWidget> = [
           GeneralMultiPick("守方單挑武將", dChoices, dDef),
           Button(duelLeaf),
@@ -1268,6 +1281,16 @@ class GameMatchCore implements IGameMatch {
     if (picks.length != 1)
       throw "GameMatchCore: 守方單挑須恰好選擇一名武將";
     assertGeneralOwnedBy(_hostileCityDefenderId, picks[0]);
+    // GDD：守方出戰應優先由該城池駐守武將出任
+    var idx = _pendingHostileCityTileIndex;
+    var gOk = false;
+    for (gid in forceGetCityGarrisonGeneralIds(idx))
+      if (gid == picks[0]) {
+        gOk = true;
+        break;
+      }
+    if (!gOk)
+      throw new GameError("守方單挑必須選擇該城池的駐守武將。", "選擇不合法", "hostile-city/defender-not-garrisoned");
     _hostileCityDefenderGeneralId = picks[0];
     hostileCityPublishSettlementPreview();
     GameMatchVer1Ops.onHostileCityDefenderDuelPickConfirmed(this, actor, menuNode);
