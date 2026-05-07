@@ -913,6 +913,42 @@ class GameMatchCore implements IGameMatch {
       _villageStockTroops.set(at, 0);
   }
 
+  public function forceGetVillageStoredGold(at:TileIndex):Int {
+    if (_board == null)
+      throw "GameMatchCore.forceGetVillageStoredGold: board not set";
+    if (_board.tileAt(at).kind() != Village)
+      throw "GameMatchCore.forceGetVillageStoredGold: not a Village tile";
+    return _villageStockGold.exists(at) ? _villageStockGold.get(at) : 0;
+  }
+
+  public function forceGetVillageStoredGrain(at:TileIndex):Int {
+    if (_board == null)
+      throw "GameMatchCore.forceGetVillageStoredGrain: board not set";
+    if (_board.tileAt(at).kind() != Village)
+      throw "GameMatchCore.forceGetVillageStoredGrain: not a Village tile";
+    return _villageStockGrain.exists(at) ? _villageStockGrain.get(at) : 0;
+  }
+
+  public function forceGetVillageStoredTroops(at:TileIndex):Int {
+    if (_board == null)
+      throw "GameMatchCore.forceGetVillageStoredTroops: board not set";
+    if (_board.tileAt(at).kind() != Village)
+      throw "GameMatchCore.forceGetVillageStoredTroops: not a Village tile";
+    return _villageStockTroops.exists(at) ? _villageStockTroops.get(at) : 0;
+  }
+
+  public function forcePutVillageStores(at:TileIndex, troops:Int, grain:Int, gold:Int):Void {
+    if (_board == null)
+      throw "GameMatchCore.forcePutVillageStores: board not set";
+    if (_board.tileAt(at).kind() != Village)
+      throw "GameMatchCore.forcePutVillageStores: not a Village tile";
+    if (troops < 0 || grain < 0 || gold < 0)
+      throw "GameMatchCore.forcePutVillageStores: negative stock";
+    _villageStockTroops.set(at, troops);
+    _villageStockGrain.set(at, grain);
+    _villageStockGold.set(at, gold);
+  }
+
   public function forceAssignCityGarrison(at:TileIndex, generalId:GeneralId):Void {
     if (_board == null)
       throw "GameMatchCore.forceAssignCityGarrison: board not set";
@@ -1273,6 +1309,8 @@ class GameMatchCore implements IGameMatch {
       ctx += "-general-" + _pendingGeneralTileIndex;
     if (_pendingShopTileIndex != null)
       ctx += "-shop-" + _pendingShopTileIndex;
+    if (_pendingVillageTileIndex != null)
+      ctx += "-village-" + _pendingVillageTileIndex;
 
     var roots:Array<IPlayerMenuNode> = [];
 
@@ -1299,6 +1337,35 @@ class GameMatchCore implements IGameMatch {
           ([] : Array<IPlayerMenuNode>)
         )
       );
+    }
+
+    if (_pendingVillageTileIndex != null) {
+      var vidx = _pendingVillageTileIndex;
+      var rulerV = cast(activeMonarch(), Monarch);
+      // 若村落已歸順（屬主為當前君主），視同「領地拜訪」：提供調度 + 結束拜訪
+      var owner = forceGetVillageOwner(vidx);
+      if (owner != null && owner == rulerV.id()) {
+        var vTroop = forceGetVillageStoredTroops(vidx);
+        var vGrain = forceGetVillageStoredGrain(vidx);
+        var vGold = forceGetVillageStoredGold(vidx);
+        var dispatchLeaf = createPlayerMenuEntry(VillageDispatchApply, "確認調度", true, "v_dispatch_apply");
+        var widgets:Array<MenuFormWidget> = [
+          Slider("調度兵力（目標村落兵力）", 0, rulerV.troops(), 1, Std.int(Math.min(vTroop, rulerV.troops()))),
+          Slider("調度糧食（目標村落糧食）", 0, rulerV.grain(), 1, Std.int(Math.min(vGrain, rulerV.grain()))),
+          Slider("調度金錢（目標村落金錢）", 0, rulerV.gold(), 1, Std.int(Math.min(vGold, rulerV.gold()))),
+          Button(dispatchLeaf),
+        ];
+        roots.push(createPlayerMenuNode("調度", null, [], widgets));
+        roots.push(createPlayerMenuNode("結束拜訪", createPlayerMenuEntry(VillageVisitEnd, "結束拜訪", true, "v_visit_end"), []));
+      } else {
+        // 非我方村落：維持原互動指令
+        roots.push(createPlayerMenuNode("村落指令", null, [
+          createPlayerMenuNode("交易", createPlayerMenuEntry(VillageTrade, "交易", true, "v_trade"), []),
+          createPlayerMenuNode("搶奪", createPlayerMenuEntry(VillagePlunder, "搶奪", true, "v_plunder"), []),
+          createPlayerMenuNode("攻占", createPlayerMenuEntry(VillageConquer, "攻占", true, "v_conquer"), []),
+          createPlayerMenuNode("回合結束（村落）", createPlayerMenuEntry(VillageEndTurn, "回合結束", true, "v_end"), []),
+        ]));
+      }
     }
 
     if (_pendingEmptyCityTileIndex != null) {
@@ -1465,7 +1532,7 @@ class GameMatchCore implements IGameMatch {
         _pendingStrategyPhase = null;
 
       // 任一玩家操作（除 ConfirmDone 外）都視為「本回合已行動過」，因此移動後策略才可用。
-      case Move, LandingContinue, JiCe, StagingSubmit, Status, StrategyPre, StrategyPost, Rest, VillageTrade, VillageConquer, VillagePlunder, VillageEndTurn, ResourceClaim, ResourceBoost, ResourceEndTurn, GeneralRecruit, GeneralRecruitSubmit, GeneralEndTurn, ShopBuy, ShopEndTurn, FriendlyCityDevelop, FriendlyCityRest, TileEventAvoidAttempt, TileEventAvoidSkip:
+      case Move, LandingContinue, JiCe, StagingSubmit, Status, StrategyPre, StrategyPost, Rest, VillageTrade, VillageConquer, VillagePlunder, VillageEndTurn, VillageDispatchApply, VillageVisitEnd, ResourceClaim, ResourceBoost, ResourceEndTurn, GeneralRecruit, GeneralRecruitSubmit, GeneralEndTurn, ShopBuy, ShopEndTurn, FriendlyCityDevelop, FriendlyCityRest, TileEventAvoidAttempt, TileEventAvoidSkip:
         _hasMovedThisTurn = true;
 
       // 這些 leaf 不改動 hasMovedThisTurn（但通常也不會在回合開始前出現）
@@ -2060,6 +2127,60 @@ class GameMatchCore implements IGameMatch {
             _pendingVillageTileIndex = null;
             _activeSliceComplete = true;
             syncActiveSliceAfterMenuLeaf(VillageEndTurn);
+          case VillageDispatchApply:
+            if (_pendingVillageTileIndex == null)
+              throw "GameMatchCore: VillageDispatchApply 但無 pendingVillage";
+            var idx = _pendingVillageTileIndex;
+            var owner = forceGetVillageOwner(idx);
+            var ruler = cast(activeMonarch(), Monarch);
+            if (owner == null || owner != ruler.id())
+              throw "GameMatchCore: VillageDispatchApply 僅可對我方村落使用";
+            var parsed = parseFriendlyDispatchTargets(menuNode.formWidgets());
+            var tt = parsed.tt;
+            var gg = parsed.gg;
+            var gold = parsed.gold;
+            if (tt < 0 || gg < 0 || gold < 0)
+              throw "GameMatchCore: 調度目標不可為負";
+            var oldT = forceGetVillageStoredTroops(idx);
+            var oldG = forceGetVillageStoredGrain(idx);
+            var oldGold = forceGetVillageStoredGold(idx);
+            var dT = tt - oldT;
+            var dG = gg - oldG;
+            var dGold = gold - oldGold;
+            if (dT > ruler.troops())
+              throw "GameMatchCore: 自君主池調出兵力不足";
+            if (dG > ruler.grain())
+              throw "GameMatchCore: 自君主池調出糧食不足";
+            if (dGold > ruler.gold())
+              throw "GameMatchCore: 自君主池調出金錢不足";
+            // 差額進出
+            if (dT > 0)
+              ruler.reduceTroops(dT);
+            else if (dT < 0)
+              ruler.grantTroops(-dT);
+            if (dG > 0)
+              ruler.reduceGrain(dG);
+            else if (dG < 0)
+              ruler.grantGrain(-dG);
+            if (dGold > 0)
+              ruler.reduceGold(dGold);
+            else if (dGold < 0)
+              ruler.grantGold(-dGold);
+            forcePutVillageStores(idx, tt, gg, gold);
+            pushInfoPopup(
+              ruler.id(),
+              "調度完成",
+              Plain('村落格 ${idx}\n村落兵力調整為：${tt}\n村落糧食調整為：${gg}\n村落金錢調整為：${gold}'),
+              "village-dispatch"
+            );
+            syncActiveSliceAfterMenuLeaf(VillageDispatchApply);
+          case VillageVisitEnd:
+            if (_pendingVillageTileIndex == null)
+              throw "GameMatchCore: VillageVisitEnd 但無 pendingVillage";
+            pushInfoPopup(actor.monarchId(), "結束拜訪", Plain("已離開我方村落。"), "village-visit-end");
+            _pendingVillageTileIndex = null;
+            _activeSliceComplete = true;
+            syncActiveSliceAfterMenuLeaf(VillageVisitEnd);
           case ResourceClaim:
             if (_pendingResourceTileIndex == null)
               throw "GameMatchCore: ResourceClaim 但無 pendingResource";

@@ -270,6 +270,15 @@ class BasicViewModel implements IViewModel {
   public function forceGetVillageOwner(at:TileIndex):Null<MonarchId>
     return match.forceGetVillageOwner(at);
 
+  public function forceGetVillageStoredGold(at:TileIndex):Int
+    return match.forceGetVillageStoredGold(at);
+
+  public function forceGetVillageStoredGrain(at:TileIndex):Int
+    return match.forceGetVillageStoredGrain(at);
+
+  public function forceGetVillageStoredTroops(at:TileIndex):Int
+    return match.forceGetVillageStoredTroops(at);
+
   public function forceGetPendingHostileCityTile():Null<TileIndex>
     return match.forceGetPendingHostileCityTile();
 

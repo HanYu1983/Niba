@@ -56,6 +56,12 @@ enum PlayerMenuKind {
     /** 村落：結束（不互動直接結束落地階段）。 */
     VillageEndTurn;
 
+    /** 我方村落拜訪：調度表單內確認（滑桿數值改寫該節點 formWidgets），不結束拜訪。 */
+    VillageDispatchApply;
+
+    /** 我方村落拜訪：結束拜訪並關閉持續選單。 */
+    VillageVisitEnd;
+
     /** 資源格：直接領取本次資源包並結束落地。 */
     ResourceClaim;
 

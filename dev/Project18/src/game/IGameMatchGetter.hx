@@ -163,6 +163,15 @@ interface IGameMatchGetter {
   /** 除錯／測試：村落格屬主（無屬主則 null）。用於「歸順→領地化→回合產出」等規剘。 */
   function forceGetVillageOwner(at:TileIndex):Null<MonarchId>;
 
+  /** 除錯／測試：村落領地資源庫（無紀錄為 0）。 */
+  function forceGetVillageStoredGold(at:TileIndex):Int;
+
+  /** 除錯／測試：村落領地資源庫（無紀錄為 0）。 */
+  function forceGetVillageStoredGrain(at:TileIndex):Int;
+
+  /** 除錯／測試：村落領地資源庫（無紀錄為 0）。 */
+  function forceGetVillageStoredTroops(at:TileIndex):Int;
+
   /** 除錯／測試：踩中非友方且有駐軍城池後之多階段對峙尚未結束時為該格索引；否則 null。 */
   function forceGetPendingHostileCityTile():Null<TileIndex>;
 
