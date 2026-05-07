@@ -262,6 +262,43 @@ class GameMatchCore implements IGameMatch {
     } else {
       ruler.grantGold(50);
     }
+
+    // GDD 2.1.12：經過起點時，領地資源成長一次（最小版）
+    applyTerritoryGrowthOnPassStart();
+  }
+
+  /**
+   * 起點觸發之領地資源成長（ver1 最小版）：
+   * - 城池：grain 成長寫入城池儲備；gold 成長直接發放給屬主（目前未建城池 gold 儲備模型）
+   * - 村落領地化：gold/grain 直接發放給屬主
+   *
+   * 後續對齊 2.1.7 時，應改為「地形/成長率」驅動並存入領地資源庫。
+   */
+  function applyTerritoryGrowthOnPassStart():Void {
+    if (_board == null)
+      return;
+    var len = _board.length();
+    for (i in 0...len) {
+      // 城池領地
+      if (_cityOwner.exists(i)) {
+        var owner = _cityOwner.get(i);
+        var lvl = forceGetCityLevel(i);
+        var inc = Balance.cityBaseIncome(lvl);
+        // gold：先直接給屬主（尚未有 city gold store）
+        monarchWithId(owner).grantGold(inc.gold);
+        // grain：寫入城池儲備（對齊「存入領地資源庫」的方向）
+        var prevGr = forceGetCityStoredGrain(i);
+        _cityStockGrain.set(i, prevGr + inc.grain);
+      }
+      // 村落領地化
+      if (_villageOwner.exists(i)) {
+        var vOwner = _villageOwner.get(i);
+        var vLvl = _villageLevel.exists(i) ? _villageLevel.get(i) : CityLevel.Village;
+        var vInc = Balance.cityBaseIncome(vLvl);
+        monarchWithId(vOwner).grantGold(vInc.gold);
+        monarchWithId(vOwner).grantGrain(vInc.grain);
+      }
+    }
   }
 
   function clearStaging():Void {
@@ -2024,11 +2061,29 @@ class GameMatchCore implements IGameMatch {
       var cost = Balance.grainUpkeepForTroops(mon.troops());
       if (cost <= 0)
         continue;
-      if (mon.grain() >= cost)
+      var g = mon.grain();
+      if (g >= cost) {
         mon.reduceGrain(cost);
-      else {
-        // 糧食不足先扣到 0；士兵逃亡尚未落地（留給下一輪）
-        mon.reduceGrain(mon.grain());
+      } else {
+        // GDD 2.1.3：糧食不足 → 士兵依不足比例逃亡
+        // 例：僅夠 70% 需求 → 30% 士兵逃亡；糧食=0 → 大量逃亡（可視同 100%）
+        var keepRatio = cost > 0 ? (g / (cost * 1.0)) : 1.0; // 0..1
+        if (keepRatio < 0)
+          keepRatio = 0;
+        if (keepRatio > 1)
+          keepRatio = 1;
+        var fleeRatio = 1.0 - keepRatio;
+        var loss = Std.int(Math.floor(mon.troops() * fleeRatio));
+        if (loss < 0)
+          loss = 0;
+        if (loss > mon.troops())
+          loss = mon.troops();
+        // 扣糧到 0
+        if (g > 0)
+          mon.reduceGrain(g);
+        // 扣兵
+        if (loss > 0)
+          mon.reduceTroops(loss);
       }
     }
 

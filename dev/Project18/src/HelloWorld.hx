@@ -65,6 +65,8 @@ class HelloWorld {
     debug_ver1.JiCePreviewRowsTest.testJiCePreviewRows(new impl_ver1.Game());
     debug_ver1.PostMoveTileTargetRestrictionTest.testPostMoveTileTargetRestriction(new impl_ver1.Game());
     debug_ver1.EconomyUpkeepAndCityIncomeTest.testEconomyUpkeepAndCityIncome(new impl_ver1.Game());
+    debug_ver1.GrainShortageTroopDesertionTest.testGrainShortageTroopDesertion(new impl_ver1.Game());
+    debug_ver1.StartTileTerritoryGrowthTest.testStartTileTerritoryGrowth(new impl_ver1.Game());
     trace("Hello world");
 
     // --- HTML view demo ---
