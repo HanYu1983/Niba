@@ -45,7 +45,7 @@ class HtmlActiveMenuView {
     root.innerHTML = "";
 
     var a = vm.activeMonarch();
-    var actor:IPlayer = new LocalPlayer(a.id(), "active");
+    var actor:IPlayer = new LocalPlayer(a.id(), "active", vm.isAiMonarch(a.id()));
     var menu:IPlayerMenu = vm.createPlayerMenu(actor);
 
     var title = Browser.document.createDivElement();
@@ -60,6 +60,34 @@ class HtmlActiveMenuView {
     tSub.textContent = "主公 " + a.id();
     title.appendChild(tSub);
     root.appendChild(title);
+
+    // AI 控制區（僅影響 UI 自動操作，不改變規則）
+    var aiBar = Browser.document.createDivElement();
+    aiBar.className = "active-menu-ai";
+    var chk = Browser.document.createInputElement();
+    chk.type = "checkbox";
+    chk.checked = actor.isAi();
+    chk.onchange = function(_) {
+      EventCenter.publishEvent(UiEvent.AiToggle(a.id(), chk.checked));
+    };
+    aiBar.appendChild(chk);
+    var lab = Browser.document.createSpanElement();
+    lab.textContent = "AI 控制此主公";
+    aiBar.appendChild(lab);
+
+    var btnStep = Browser.document.createButtonElement();
+    btnStep.textContent = "AI 執行一步";
+    btnStep.disabled = !chk.checked;
+    btnStep.onclick = function(_) EventCenter.publishEvent(UiEvent.AiStep);
+    aiBar.appendChild(btnStep);
+
+    var btnAuto = Browser.document.createButtonElement();
+    btnAuto.textContent = "AI 自動到結束回合";
+    btnAuto.disabled = !chk.checked;
+    btnAuto.onclick = function(_) EventCenter.publishEvent(UiEvent.AiAuto);
+    aiBar.appendChild(btnAuto);
+
+    root.appendChild(aiBar);
 
     var tree = Browser.document.createDivElement();
     tree.className = "active-menu-tree";
@@ -248,11 +276,14 @@ class HtmlActiveMenuView {
 private class LocalPlayer implements IPlayer {
   final mid:MonarchId;
   final name:String;
-  public function new(mid:MonarchId, name:String) {
+  final ai:Bool;
+  public function new(mid:MonarchId, name:String, isAi:Bool = false) {
     this.mid = mid;
     this.name = name;
+    this.ai = isAi;
   }
   public function monarchId():MonarchId return mid;
   public function displayName():String return name;
+  public function isAi():Bool return ai;
 }
 

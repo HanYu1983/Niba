@@ -36,6 +36,7 @@ import game.CityLevel;
 import game.GameError;
 import game.TerrainKind;
 import game.TileGrowth;
+import game.AiDecision;
 import impl_ver1.commands.Ver1MainCommands;
 import impl_ver1.flows.HostileCityPhase;
 import impl_ver1.jice.JiCeRegistry;
@@ -763,7 +764,7 @@ class GameMatchCore implements IGameMatch {
   }
 
   public function createPlayer(monarchId:MonarchId, displayName:String):IPlayer
-    return new Player(monarchId, displayName);
+    return new Player(monarchId, displayName, false);
 
   public function createPlayerMenuEntry(kind:PlayerMenuKind, caption:String, enabled:Bool, ?decisionToken:String, ?clientConfirm:MenuClientConfirm):IPlayerMenuEntry
     return new PlayerMenuEntry(kind, caption, enabled, decisionToken, clientConfirm);
@@ -2099,6 +2100,10 @@ class GameMatchCore implements IGameMatch {
 
   public function scoreOfMonarch(monarchId:MonarchId):Int {
     return GameMatchVer1Ops.scoreOfMonarch(this, monarchId);
+  }
+
+  public function aiSuggest(actor:IPlayer):Null<AiDecision> {
+    return impl_ver1.ai.Ver1AiPolicy.choose(this, actor);
   }
 
   public function applyMenuLeaf(actor:IPlayer, menuNode:IPlayerMenuNode):Void {

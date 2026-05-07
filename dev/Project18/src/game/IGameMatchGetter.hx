@@ -15,6 +15,7 @@ import game.CityLevel;
 import game.IPopupMessage;
 import game.TerrainKind;
 import game.TileGrowth;
+import game.AiDecision;
 
 /**
  * 賽局「唯讀」視角：狀態查詢＋選單快照生成（不得改變賽局內容）。
@@ -85,6 +86,13 @@ interface IGameMatchGetter {
    * UI/測試可用於顯示與比較；實際勝負由規則層判定。
    */
   function scoreOfMonarch(monarchId:MonarchId):Int;
+
+  /**
+   * AI 建議下一步操作（純建議、不得改變賽局狀態）。
+   * - 供 UI/控制器在「全息狀態」下計算權重與填表
+   * - 回傳的 nodePath 以本次 createPlayerMenu 的節點樹為準
+   */
+  function aiSuggest(actor:IPlayer):Null<AiDecision>;
 
   /**
    * 當前已登錄、於「移動逐步前進」每步落地後會依序呼叫的勾子（回傳為拷貝快照）。

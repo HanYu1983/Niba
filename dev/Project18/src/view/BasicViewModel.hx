@@ -22,6 +22,7 @@ import game.MenuClientConfirm;
 import game.TerrainKind;
 import game.TileGrowth;
 import game.CityLevel;
+import game.AiDecision;
 import js.Browser;
 import rx.disposables.ISubscription;
 import view.UiEvent;
@@ -32,10 +33,13 @@ import view.UiEvent;
 class BasicViewModel implements IViewModel {
   final match:IGameMatch;
   var evSub:Null<ISubscription> = null;
+  final _aiByMonarchId:Map<MonarchId, Bool> = new Map();
 
   public function new(match:IGameMatch) {
     this.match = match;
     evSub = EventCenter.eventSubject.subscribe(handleUiEvent);
+    // 預設：demo 先把 m-b 視為 AI（若不存在則無效果）；可在 UI 透過 AiToggle 更改
+    _aiByMonarchId.set("m-b", true);
   }
 
   public function dispose():Void {
@@ -62,6 +66,18 @@ class BasicViewModel implements IViewModel {
         applyMenuClick(node, entry);
         EventCenter.publishEvent(PopupRefresh);
         EventCenter.publishViewModel(this);
+      case AiToggle(monarchId, isAi):
+        _aiByMonarchId.set(monarchId, isAi);
+        EventCenter.publishViewModel(this);
+      case AiStep:
+        if (runAiStepOnce()) {
+          EventCenter.publishEvent(PopupRefresh);
+          EventCenter.publishViewModel(this);
+        }
+      case AiAuto:
+        runAiAutoUntilStop();
+        EventCenter.publishEvent(PopupRefresh);
+        EventCenter.publishViewModel(this);
       case PopupClose(popupId):
         var mid = match.activeMonarch().id();
         match.ackPopup(mid, popupId);
@@ -69,6 +85,121 @@ class BasicViewModel implements IViewModel {
         EventCenter.publishViewModel(this);
       case PopupRefresh:
     }
+  }
+
+  public function isAiMonarch(monarchId:MonarchId):Bool {
+    return _aiByMonarchId.exists(monarchId) && _aiByMonarchId.get(monarchId);
+  }
+
+  function runAiStepOnce():Bool {
+    var mid = match.activeMonarch().id();
+    if (!isAiMonarch(mid))
+      return false;
+    // 終局就不再自動操作
+    switch match.getTerminationReason() {
+      case NotEnded:
+      case _:
+        return false;
+    }
+
+    var actor:IPlayer = new LocalPlayer(mid, "ai", true);
+    var d = match.aiSuggest(actor);
+    if (d == null)
+      return false;
+    applyAiDecision(actor, d);
+    return true;
+  }
+
+  function runAiAutoUntilStop():Void {
+    // 保守上限：避免死循環（例如規則 bug 或無可用操作）
+    var cap = 200;
+    var steps = 0;
+    while (steps < cap) {
+      if (!runAiStepOnce())
+        break;
+      steps++;
+      // 若切換到非 AI 或終局，停止
+      var mid = match.activeMonarch().id();
+      if (!isAiMonarch(mid))
+        break;
+      switch match.getTerminationReason() {
+        case NotEnded:
+        case _:
+          break;
+      }
+    }
+  }
+
+  function applyAiDecision(actor:IPlayer, d:AiDecision):Void {
+    var menu = match.createPlayerMenu(actor);
+    var node = resolveNodeByPath(menu.rootNodes(), d.nodePath);
+    if (node == null)
+      return;
+    // 先套用表單 patch（若有）
+    if (d.widgetPatches != null) {
+      for (p in d.widgetPatches) {
+        switch p {
+          case SetSlider(widgetIndex, value):
+            applySliderToNode(node, widgetIndex, value);
+          case SetGeneralMultiPick(widgetIndex, ids):
+            applyGeneralMultiPickToNode(node, widgetIndex, ids);
+          case SetMonarchSinglePick(widgetIndex, ids):
+            applyMonarchSinglePickToNode(node, widgetIndex, ids);
+          case SetTileSinglePick(widgetIndex, idxs):
+            applyTileSinglePickToNode(node, widgetIndex, idxs);
+        }
+      }
+    }
+    // activationEntry（表單內 Button）
+    if (d.activation != null) {
+      var act = findEntryOnNode(node, d.activation.kind, d.activation.decisionToken);
+      if (act != null)
+        node.setActivationEntry(act);
+    } else if (node.leaf() != null) {
+      node.setActivationEntry(node.leaf());
+    }
+
+    // 直接走既有 applyMenuClick 的錯誤處理路徑（含 GameError→popup）
+    var entry = node.leaf();
+    if (d.activation != null) {
+      var act = findEntryOnNode(node, d.activation.kind, d.activation.decisionToken);
+      if (act != null)
+        entry = act;
+    }
+    if (entry == null)
+      return;
+    applyMenuClick(node, entry);
+  }
+
+  static function resolveNodeByPath(roots:Array<IPlayerMenuNode>, path:Array<Int>):Null<IPlayerMenuNode> {
+    if (path == null || path.length == 0)
+      return null;
+    var cur:Null<IPlayerMenuNode> = null;
+    var kids = roots;
+    for (i in 0...path.length) {
+      var idx = path[i];
+      if (kids == null || idx < 0 || idx >= kids.length)
+        return null;
+      cur = kids[idx];
+      kids = cur.children();
+    }
+    return cur;
+  }
+
+  static function findEntryOnNode(node:IPlayerMenuNode, kind:game.PlayerMenuKind, tok:Null<String>):Null<IPlayerMenuEntry> {
+    var leaf = node.leaf();
+    if (leaf != null && leaf.kind() == kind && (tok == null || leaf.decisionToken() == tok))
+      return leaf;
+    var ws = node.formWidgets();
+    if (ws != null)
+      for (w in ws)
+        switch w {
+          case Button(e):
+            if (e.kind() == kind && (tok == null || e.decisionToken() == tok))
+              return e;
+          default:
+        }
+    return null;
   }
 
   function applySliderToNode(node:IPlayerMenuNode, widgetIndex:Int, value:Int):Void {
@@ -205,6 +336,9 @@ class BasicViewModel implements IViewModel {
   public function scoreOfMonarch(monarchId:MonarchId):Int
     return match.scoreOfMonarch(monarchId);
 
+  public function aiSuggest(actor:IPlayer):Null<game.AiDecision>
+    return match.aiSuggest(actor);
+
   public function movementStepHooks():Array<IJiCeMovementStepHook>
     return match.movementStepHooks();
 
@@ -326,11 +460,14 @@ class BasicViewModel implements IViewModel {
 private class LocalPlayer implements IPlayer {
   final mid:MonarchId;
   final name:String;
-  public function new(mid:MonarchId, name:String) {
+  final ai:Bool;
+  public function new(mid:MonarchId, name:String, isAi:Bool = false) {
     this.mid = mid;
     this.name = name;
+    this.ai = isAi;
   }
   public function monarchId():MonarchId return mid;
   public function displayName():String return name;
+  public function isAi():Bool return ai;
 }
 

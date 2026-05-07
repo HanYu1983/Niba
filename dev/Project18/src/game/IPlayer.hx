@@ -14,4 +14,7 @@ interface IPlayer {
      * 顯示名（可本地化）；與君主劇本稱號分層，避免與規剘 ID 混淆。
      */
     function displayName():String;
+
+    /** UI/控制器語意：是否由 AI 控制（不改變規則，僅影響自動操作與顯示）。 */
+    function isAi():Bool;
 }
