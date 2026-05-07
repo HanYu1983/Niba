@@ -74,7 +74,7 @@ class HtmlInfoPanelView {
 
     switch activeTab {
       case "generals":
-        body.appendChild(renderGenerals(a));
+        body.appendChild(renderGenerals(vm, a));
       case "weapons":
         body.appendChild(renderWeapons(a));
       case "territories":
@@ -121,15 +121,33 @@ class HtmlInfoPanelView {
     return wrap;
   }
 
-  function renderGenerals(a:IMonarch):Element {
+  function renderGenerals(vm:IViewModel, a:IMonarch):Element {
     var wrap = Browser.document.createDivElement();
+
+    // generalId -> [cityTileIndex...]
+    var garrisonByGeneral = new Map<String, Array<Int>>();
+    var len = vm.board().length();
+    for (i in 0...len) {
+      var t = vm.tileAt(i);
+      switch t.kind() {
+        case City:
+          var gids = vm.forceGetCityGarrisonGeneralIds(i);
+          if (gids != null && gids.length > 0)
+            for (gid in gids) {
+              var xs = garrisonByGeneral.exists(gid) ? garrisonByGeneral.get(gid) : [];
+              xs.push(i);
+              garrisonByGeneral.set(gid, xs);
+            }
+        default:
+      }
+    }
 
     var table = Browser.document.createTableElement();
     table.className = "ui-table";
 
     var thead = Browser.document.createTableSectionElement();
     var hr = Browser.document.createTableRowElement();
-    for (h in ["姓名", "統御", "勇武", "智謀", "政理", "體力", "忠誠"]) {
+    for (h in ["姓名", "統御", "勇武", "智謀", "政理", "體力", "忠誠", "進駐城池"]) {
       var th = Browser.document.createTableCellElement();
       th.className = "ui-th";
       th.textContent = h;
@@ -143,7 +161,7 @@ class HtmlInfoPanelView {
     if (roster.length == 0) {
       var r0 = Browser.document.createTableRowElement();
       var td0 = Browser.document.createTableCellElement();
-      td0.colSpan = 7;
+      td0.colSpan = 8;
       td0.className = "ui-td ui-empty";
       td0.textContent = "（目前沒有武將）";
       r0.appendChild(td0);
@@ -151,13 +169,17 @@ class HtmlInfoPanelView {
     } else {
       for (g in roster) {
         var r = Browser.document.createTableRowElement();
-        r.appendChild(td(g.id(), true));
+        var gid = g.id();
+        r.appendChild(td(gid, true));
         r.appendChild(td(Std.string(g.stat(Command)), false));
         r.appendChild(td(Std.string(g.stat(Might)), false));
         r.appendChild(td(Std.string(g.stat(Wit)), false));
         r.appendChild(td(Std.string(g.stat(Stewardship)), false));
         r.appendChild(td(Std.string(g.stamina()), false));
         r.appendChild(td(Std.string(g.loyalty()), false));
+        var xs = garrisonByGeneral.exists(gid) ? garrisonByGeneral.get(gid) : null;
+        var cap = (xs == null || xs.length == 0) ? "（無）" : xs.join(", ");
+        r.appendChild(td(cap, true));
         tbody.appendChild(r);
       }
     }
