@@ -55,6 +55,23 @@ interface IGameMatch extends IGameMatchGetter {
     // - §7.2：商店價格與聲望規則文件缺失（目前為 ver1 placeholder）；待補規格後對齊。
     // - §8.3：價格公式含「稀有度係數」的明確數值尚未定義（目前以 tier+bonus 線性化），待規格表化。
     // - §11：規避成功後「減半/無效」需依事件類型細分；目前僅 multiplier 機制，待把事件效果分類並加測。
+    //
+    // TODO(strategy-system/doc-missing): docs/策略系統.md 尚未明確定義（目前只能做 ver1 假設/占位）
+    // - 事件解鎖策略：文件提「特殊事件解鎖」，但缺「哪個事件→解鎖哪些策略」與解鎖持久性/是否可重複等資料表。
+    // - Buff/效果生命週期細則：
+    //   - 激勵（NextCommandMultiplier）是否只作用於「下一次哪類指令」（移動/策略/交易/開發/戰鬥…）與結束時機。
+    //   - 覺醒（TempStatBoost turns=1）的「turns」扣減點（回合末？輪到自己時？執行一次指令後？）缺明確規格。
+    // - 築城的「防禦力」定義：文件只說提升防禦力，未給「加成幅度/疊加/持續回合數」與其在戰鬥公式中的確切位置。
+    // - 「敵方領地」的精確定義：空城/無主村落/未歸順村落（友好度）是否算敵方？文件未明確。
+    //
+    // TODO(strategy-system/code-misaligned): docs/策略系統.md 已描述但代碼仍未完全對齊（或僅骨架）
+    // - Buff/效果生命週期未落地：
+    //   - 激勵 NextCommandMultiplier：目前有寫入 effect，但缺「觸發一次後移除」的結算點。
+    //   - 覺醒 TempStatBoost(turns=1)：目前缺「回合推進時 turns 遞減」機制（可能變成永久）。
+    // - 築城防禦加成未完整接入戰鬥：
+    //   - `FortifyJiCe` 寫入 `_tileDefenseBonus`，但該值尚未在主要攻城/防禦戰力計算中完整使用（僅存放）。
+    // - 策略卡清單缺項：
+    //   - docs 範例提到「潛入」「開發（作為策略範例）」等，但目前無對應 `JiCe` 實作或未納入策略系統。
 
     /**
      * 依資料鍵建立計策實例；{@code ownerMonarchId} 為持有／所屬君主（牌組歸屬），實作可據此校驗。
