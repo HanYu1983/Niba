@@ -56,6 +56,15 @@ class General implements IGeneral {
       case Wit: _wit;
       case Stewardship: _stewardship;
     };
+    // docs/數值算法.md §10.3：職位提供全屬性加成
+    var rankBonus = switch _rank {
+      case Soldier: 0;
+      case SquadLeader: 2;
+      case SectionLeader: 5;
+      case Captain: 8;
+      case General: 12;
+      case GreatGeneral: 15;
+    };
     var bonus = 0;
     if (_equipments != null) {
       for (eq in _equipments)
@@ -76,7 +85,7 @@ class General implements IGeneral {
           case CleanseOneDebuff:
         }
     }
-    return base + bonus + eff;
+    return base + rankBonus + bonus + eff;
   }
 
   public function stamina():Int
@@ -124,8 +133,33 @@ class General implements IGeneral {
   public function merit():Int
     return _merit;
 
+  /** docs/數值算法.md §10：功績累積並自動升職。 */
+  public function grantMerit(n:Int):Void {
+    if (n < 0)
+      throw "General.grantMerit: negative";
+    _merit += n;
+    if (_merit < 0)
+      _merit = 0;
+    refreshRankByMerit();
+  }
+
+  function refreshRankByMerit():Void {
+    // §10.2：職位晉升條件
+    var next = if (_merit >= 800) GreatGeneral
+    else if (_merit >= 500) General
+    else if (_merit >= 300) Captain
+    else if (_merit >= 150) SectionLeader
+    else if (_merit >= 50) SquadLeader
+    else Soldier;
+    _rank = next;
+  }
+
   public function rarity():Rarity
     return _rarity;
+
+  /** ver1：由生成/招募流程寫入稀有度（不暴露在介面層）。 */
+  public function setRarity(r:Rarity):Void
+    _rarity = r;
 
   public function positionRank():PositionRank
     return _rank;

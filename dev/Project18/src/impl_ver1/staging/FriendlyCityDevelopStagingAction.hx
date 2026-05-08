@@ -108,6 +108,8 @@ class FriendlyCityDevelopStagingAction implements IStagingAction {
     var beforeLvl = match.forceGetCityLevel(idx);
     var afterLvl = beforeLvl;
     if (ok) {
+      // docs/數值算法.md §10.1：開發成功 → 功績 +15
+      g.grantMerit(15);
       // 成功：城池等級+1（上限 Capital）
       afterLvl = switch beforeLvl {
         case Village: SmallCity;

@@ -102,6 +102,8 @@ class VillagePlunderStagingAction implements IStagingAction {
     var gainGrain = 0;
     var gainTroops = 0;
     if (ok) {
+      // docs/數值算法.md §10.1：搶奪成功 → 功績 +10
+      g.grantMerit(10);
       gainGold = match.forceGetVillageStoredGold(vIdx);
       gainGrain = match.forceGetVillageStoredGrain(vIdx);
       gainTroops = match.forceGetVillageStoredTroops(vIdx);

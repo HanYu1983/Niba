@@ -13,7 +13,8 @@ import impl_ver1.model.Monarch;
 /**
  * 對齊 GDD 2.1.3：糧食不足 → 士兵依不足比例逃亡。
  * - troops=1000 → upkeep=ceil(1000*0.01)=10
- * - grain=7（僅夠 70%）→ 30% troops 逃亡 → loss=300
+ * 對齊 docs/數值算法.md 6.2：
+ * - grain=7（僅夠 70%）→ (1-0.7)*0.5 = 15% troops 逃亡 → loss=150
  */
 class GrainShortageTroopDesertionTest {
   public static function testGrainShortageTroopDesertion(game:IGame):Void {
@@ -40,8 +41,8 @@ class GrainShortageTroopDesertionTest {
 
     if (mon.grain() != 0)
       throw "GrainShortageTroopDesertionTest: expected grain reduced to 0";
-    if (mon.troops() != 700)
-      throw "GrainShortageTroopDesertionTest: expected troops 1000 -> 700 (30% flee)";
+    if (mon.troops() != 850)
+      throw "GrainShortageTroopDesertionTest: expected troops 1000 -> 850 (15% flee)";
 
     trace("[GrainShortageTroopDesertionTest] OK — grain shortage causes proportional troop desertion");
   }

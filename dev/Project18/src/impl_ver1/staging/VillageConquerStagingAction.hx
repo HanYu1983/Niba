@@ -110,6 +110,8 @@ class VillageConquerStagingAction implements IStagingAction {
     // - docs/數值算法.md 5.3：守軍友好度修正採 0.5
     // - docs/數值算法.md 3.3：攻占成功掠奪部分資源（ver1：村落儲備的 30%）
     if (win) {
+      // docs/數值算法.md §10.1：攻占成功 → 功績 +20
+      gAtk.grantMerit(20);
       // docs/數值算法.md 7.1：攻占成功 → 聲望 -3
       ruler.reducePrestige(3);
 

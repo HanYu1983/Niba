@@ -121,6 +121,8 @@ class VillageDevelopStagingAction implements IStagingAction {
     var before = match.forceGetVillageLevel(idx);
     var after = before;
     if (ok) {
+      // docs/數值算法.md §10.1：開發成功 → 功績 +15
+      g.grantMerit(15);
       after = switch before {
         case Village: SmallCity;
         case SmallCity: BigCity;

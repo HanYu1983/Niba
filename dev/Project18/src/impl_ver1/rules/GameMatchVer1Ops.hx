@@ -428,14 +428,18 @@ class GameMatchVer1Ops {
           ratio = 0.50;
         var prevGold = m.forceGetCityStoredGold(idx);
         var prevGrain = m.forceGetCityStoredGrain(idx);
+        var prevTroops = m.forceGetCityStoredTroops(idx);
         var lootGold = Std.int(Math.floor(prevGold * ratio));
         var lootGrain = Std.int(Math.floor(prevGrain * ratio));
+        var lootTroops = Std.int(Math.floor(prevTroops * ratio));
         if (lootGold > 0)
           atkMon.grantGold(lootGold);
         if (lootGrain > 0)
           atkMon.grantGrain(lootGrain);
+        if (lootTroops > 0)
+          atkMon.grantTroops(lootTroops);
         m.forcePutCityStoredGold(idx, prevGold - lootGold);
-        m.forcePutCityStores(idx, m.forceGetCityStoredTroops(idx), prevGrain - lootGrain);
+        m.forcePutCityStores(idx, prevTroops - lootTroops, prevGrain - lootGrain);
       } else {
         // 攻方損失：損失比例 = (def-atk)/def * 30%
         var ratio = ((defPow - atkPow) / defPow) * 0.30;

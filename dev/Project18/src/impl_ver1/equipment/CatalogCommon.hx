@@ -30,7 +30,7 @@ class CatalogCommon {
     ?price:Int
   ):IEquipment {
     var t = findTemplate(catalogName, templates, name);
-    var v = applyJitter(t.baseBonus, id);
+    var v = applyJitter(t.rarity, t.baseBonus, id);
     var p = price != null ? price : defaultPrice(t.rarity, v);
     return new Equipment(id, t.name, type, t.rarity, bonusStat, v, t.loyaltyBonus, p);
   }
@@ -42,12 +42,31 @@ class CatalogCommon {
     throw catalogName + ': unknown item name "' + name + '"';
   }
 
-  /** 同名裝備加成浮動（±10%），由 id 決定，確保可重現。 */
-  static function applyJitter(baseBonus:Int, id:EquipmentId):Int {
+  /**
+   * 同名裝備加成浮動（±10%），由 id 決定，確保可重現。
+   * 對齊 docs/數值算法.md §8.1：依稀有度將最終值 clamp 在範圍內。
+   */
+  static function applyJitter(r:Rarity, baseBonus:Int, id:EquipmentId):Int {
     var f = Deterministic.jitter(id, 0.1); // [-0.1, 0.1]
     var v = Std.int(Math.round(baseBonus * (1.0 + f)));
     if (v < 1)
       v = 1;
+    var lo = switch r {
+      case Common: 5;
+      case Fine: 10;
+      case Epic: 20;
+      case Legendary: 35;
+    };
+    var hi = switch r {
+      case Common: 10;
+      case Fine: 20;
+      case Epic: 35;
+      case Legendary: 50;
+    };
+    if (v < lo)
+      v = lo;
+    if (v > hi)
+      v = hi;
     return v;
   }
 

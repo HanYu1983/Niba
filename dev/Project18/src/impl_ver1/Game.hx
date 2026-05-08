@@ -9,6 +9,8 @@ import game.TileKind;
 import impl_ver1.core.GameMatchCore;
 import impl_ver1.util.Deterministic;
 import impl_ver1.model.Monarch;
+import game.Rarity;
+import impl_ver1.model.General;
 
 /**
  * Ver1：依 level_key 建立 {@link GameMatchCore} 並組立關卡局面。
@@ -62,12 +64,93 @@ class Game implements IGame {
       mon.reducePrestige(60); // 100 -> 40（保持中聲望）
       mon.grantGold(1000);
 
-      // 初始武將 4 名（docs/數值算法.md 9.2 的「稀有度分配」尚未資料表化；此處先固定可玩數值）
-      match.createGeneral('g-${mid}-1', mid, 60, 60, 60, 60);
-      match.createGeneral('g-${mid}-2', mid, 55, 55, 55, 55);
-      match.createGeneral('g-${mid}-3', mid, 50, 50, 50, 50);
-      match.createGeneral('g-${mid}-4', mid, 45, 45, 45, 45);
+      // 初始武將 4 名：docs/數值算法.md 9.2
+      // - 1 名精良
+      // - 2 名普通
+      // - 1 名隨機（普通或精良）
+      var seed = seedBase + "|init_gen|" + mid;
+      spawnGeneratedGeneral(match, 'g-${mid}-1', mid, Fine, seed + "|1");
+      spawnGeneratedGeneral(match, 'g-${mid}-2', mid, Common, seed + "|2");
+      spawnGeneratedGeneral(match, 'g-${mid}-3', mid, Common, seed + "|3");
+      var u = Deterministic.hash01(seed + "|4rar");
+      var r4:Rarity = (u < 0.5) ? Common : Fine;
+      spawnGeneratedGeneral(match, 'g-${mid}-4', mid, r4, seed + "|4");
     }
+  }
+
+  static function spawnGeneratedGeneral(match:GameMatchCore, id:GeneralId, owner:MonarchId, r:Rarity, seedBase:String):Void {
+    var lo = switch r {
+      case Common: 150;
+      case Fine: 250;
+      case Epic: 350;
+      case Legendary: 450;
+    };
+    var hi = switch r {
+      case Common: 250;
+      case Fine: 350;
+      case Epic: 450;
+      case Legendary: 500;
+    };
+    var total = lo + Std.int(Math.floor(Deterministic.hash01(seedBase + "|sum") * (hi - lo + 1)));
+    if (total < lo)
+      total = lo;
+    if (total > hi)
+      total = hi;
+
+    var mainPick = Std.int(Math.floor(Deterministic.hash01(seedBase + "|main") * 4));
+    if (mainPick < 0)
+      mainPick = 0;
+    if (mainPick > 3)
+      mainPick = 3;
+    var mainRatio = 0.30 + Deterministic.hash01(seedBase + "|mainRatio") * 0.10;
+    var main = Std.int(Math.floor(total * mainRatio));
+    if (main < 10)
+      main = 10;
+
+    var rest = total - main - 30;
+    if (rest < 0)
+      rest = 0;
+    var w0 = Deterministic.hash01(seedBase + "|w0") + 0.01;
+    var w1 = Deterministic.hash01(seedBase + "|w1") + 0.01;
+    var w2 = Deterministic.hash01(seedBase + "|w2") + 0.01;
+    var ws = w0 + w1 + w2;
+    var a0 = Std.int(Math.floor(rest * (w0 / ws)));
+    var a1 = Std.int(Math.floor(rest * (w1 / ws)));
+    var a2 = rest - a0 - a1;
+    var base0 = 10 + a0;
+    var base1 = 10 + a1;
+    var base2 = 10 + a2;
+
+    var cmd = 10;
+    var mig = 10;
+    var wit = 10;
+    var stw = 10;
+    switch mainPick {
+      case 0: cmd = main;
+      case 1: mig = main;
+      case 2: wit = main;
+      case 3: stw = main;
+      default:
+    }
+    var xs = [base0, base1, base2];
+    var xi = 0;
+    function take():Int return xs[xi++];
+    if (mainPick != 0)
+      cmd = take();
+    if (mainPick != 1)
+      mig = take();
+    if (mainPick != 2)
+      wit = take();
+    if (mainPick != 3)
+      stw = take();
+
+    cmd = game.Balance.clampInt(cmd, 10, 100);
+    mig = game.Balance.clampInt(mig, 10, 100);
+    wit = game.Balance.clampInt(wit, 10, 100);
+    stw = game.Balance.clampInt(stw, 10, 100);
+
+    var g = cast(match.createGeneral(id, owner, cmd, mig, wit, stw), General);
+    g.setRarity(r);
   }
 
   /**

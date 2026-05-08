@@ -118,6 +118,8 @@ class VillageTradeStagingAction implements IStagingAction {
 
     // 成功才交換資源；失敗仍消耗體力，友好度不增加（但避免太懲罰，給 +1~3 微幅）
     if (ok) {
+      // docs/數值算法.md §10.1：交易成功 → 功績 +5
+      gg.grantMerit(5);
       // docs/數值算法.md 7.1：交易（村落）→ 聲望 +2~5（可重現）
       var pSeed = 'prestige|village_trade|t=${vIdx}|r=${match.roundNumber()}|m=${ruler.id()}|g=${gid}';
       var pGain = 2 + Std.int(Math.floor(impl_ver1.util.Deterministic.hash01(pSeed) * 4)); // 2..5

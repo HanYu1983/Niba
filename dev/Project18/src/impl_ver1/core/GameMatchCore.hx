@@ -39,6 +39,7 @@ import game.StrategyPhase;
 import game.TileKind;
 import game.CityLevel;
 import game.GameError;
+import game.Rarity;
 import game.TerrainKind;
 import game.TileGrowth;
 import game.AiDecision;
@@ -1789,11 +1790,12 @@ class GameMatchCore implements IGameMatch {
     for (i in 0...count) {
       var id = 'gen-${tileIdx}-${roundNumber()}-${i}';
       var s = seedBase + "|i=" + i;
-      var cmd = 10 + Std.int(Math.floor(Deterministic.hash01(s + "|c") * 91)); // 10..100
-      var mig = 10 + Std.int(Math.floor(Deterministic.hash01(s + "|m") * 91));
-      var wit = 10 + Std.int(Math.floor(Deterministic.hash01(s + "|w") * 91));
-      var stw = 10 + Std.int(Math.floor(Deterministic.hash01(s + "|s") * 91));
       var rarity = rarityFrom01(Deterministic.hash01(s + "|rar"));
+      var gen = rollGeneralStatsByRarity(rarity, s + "|gen");
+      var cmd = gen.command;
+      var mig = gen.might;
+      var wit = gen.wit;
+      var stw = gen.stewardship;
       var base = baseRecruitCost(rarity, cmd, mig, wit, stw);
       var finalCost = applyPrestigeRecruitModifier(ruler.prestige(), base, Deterministic.hash01(s + "|mod"));
       out.push({
@@ -1808,6 +1810,104 @@ class GameMatchCore implements IGameMatch {
       });
     }
     _generalOffersByTile.set(tileIdx, out);
+  }
+
+  /**
+   * docs/數值算法.md §9.1：依稀有度生成武將四維屬性（最小值 10）。
+   * - 先依稀有度抽「屬性總和」區間
+   * - 隨機決定主屬性，主屬性占比 30~40%
+   * - 其餘三屬性在保底 10 後按隨機權重分配
+   */
+  static function rollGeneralStatsByRarity(r:Rarity, seedBase:String):{command:Int, might:Int, wit:Int, stewardship:Int} {
+    var lo = switch r {
+      case Common: 150;
+      case Fine: 250;
+      case Epic: 350;
+      case Legendary: 450;
+    };
+    var hi = switch r {
+      case Common: 250;
+      case Fine: 350;
+      case Epic: 450;
+      case Legendary: 500;
+    };
+    var uSum = Deterministic.hash01(seedBase + "|sum");
+    var total = lo + Std.int(Math.floor(uSum * (hi - lo + 1)));
+    if (total < lo)
+      total = lo;
+    if (total > hi)
+      total = hi;
+
+    var mainPick = Std.int(Math.floor(Deterministic.hash01(seedBase + "|main") * 4));
+    if (mainPick < 0)
+      mainPick = 0;
+    if (mainPick > 3)
+      mainPick = 3;
+
+    var mainRatio = 0.30 + Deterministic.hash01(seedBase + "|mainRatio") * 0.10; // 0.30~0.40
+    var main = Std.int(Math.floor(total * mainRatio));
+    if (main < 10)
+      main = 10;
+    // 其餘三項先保底 10
+    var rest = total - main - 30;
+    if (rest < 0)
+      rest = 0;
+
+    // 隨機權重分配 rest
+    var w0 = Deterministic.hash01(seedBase + "|w0") + 0.01;
+    var w1 = Deterministic.hash01(seedBase + "|w1") + 0.01;
+    var w2 = Deterministic.hash01(seedBase + "|w2") + 0.01;
+    var ws = w0 + w1 + w2;
+    var a0 = Std.int(Math.floor(rest * (w0 / ws)));
+    var a1 = Std.int(Math.floor(rest * (w1 / ws)));
+    var a2 = rest - a0 - a1;
+
+    var base0 = 10 + a0;
+    var base1 = 10 + a1;
+    var base2 = 10 + a2;
+
+    // 組回四維
+    var cmd = 10;
+    var mig = 10;
+    var wit = 10;
+    var stw = 10;
+
+    // 先填主屬性
+    switch mainPick {
+      case 0:
+        cmd = main;
+      case 1:
+        mig = main;
+      case 2:
+        wit = main;
+      case 3:
+        stw = main;
+      default:
+    }
+
+    // 再把其餘三項依序填入（跳過主屬性）
+    var xs = [base0, base1, base2];
+    var xi = 0;
+    function take():Int {
+      var v = xs[xi];
+      xi++;
+      return v;
+    }
+    if (mainPick != 0)
+      cmd = take();
+    if (mainPick != 1)
+      mig = take();
+    if (mainPick != 2)
+      wit = take();
+    if (mainPick != 3)
+      stw = take();
+
+    // clamp 10..100（領域層假設）
+    cmd = Balance.clampInt(cmd, 10, 100);
+    mig = Balance.clampInt(mig, 10, 100);
+    wit = Balance.clampInt(wit, 10, 100);
+    stw = Balance.clampInt(stw, 10, 100);
+    return {command: cmd, might: mig, wit: wit, stewardship: stw};
   }
 
   function shopTileRefreshStock(tileIdx:TileIndex):Void {
@@ -1873,7 +1973,11 @@ class GameMatchCore implements IGameMatch {
   }
 
   function applyPrestigeRecruitModifier(prestige:Int, base:Int, u:Float):Int {
-    // 依 GDD：高聲望折扣、中聲望不變、低聲望加價；用 u 決定區間內幅度
+    // 對齊 docs/數值算法.md 7.2（招募費用調整）：
+    // - prestige >= 70：折扣 0.7~0.8（-20%~-30%）
+    // - prestige >= 40：倍率 1.0
+    // - prestige < 40：加價 1.2~1.5（+20%~+50%）
+    // u 用於決定區間內幅度（保持可重現）。
     var mult:Float;
     if (prestige >= 70) {
       var d = 0.20 + u * 0.10; // 20%~30%
@@ -1891,7 +1995,8 @@ class GameMatchCore implements IGameMatch {
   }
 
   function applyPrestigeShopPriceModifier(prestige:Int, base:Int, u:Float):Int {
-    // shop 沒寫聲望折扣規則；先做「高聲望 -5%~10%，低聲望 +5%~15%」的輕微調整
+    // NOTE(num-algo): docs/數值算法.md 尚未定義「商店價格與聲望」的規則；
+    // ver1 先做輕微調整（高聲望 -5%~10%，低聲望 +5%~15%）保持可玩，待文件補齊再統一。
     var mult:Float;
     if (prestige >= 70) {
       mult = 1.0 - (0.05 + u * 0.05);
@@ -1949,7 +2054,9 @@ class GameMatchCore implements IGameMatch {
     var stat = av.avoidanceStat();
     var statVal = g.stat(stat);
     var baseRate = av.avoidanceBaseRate();
-    var rate = baseRate + (statVal / 200.0);
+    // 對齊 docs/數值算法.md §11：規避成功率 = (stat/100) * baseRate * staminaModifier * 100%
+    // baseRate 由事件定義（文件建議 50%）
+    var rate = (Balance.clampInt(statVal, 0, 100) / 100.0) * baseRate * Balance.staminaModifier(g.stamina());
     if (rate < 0)
       rate = 0;
     if (rate > 1)
@@ -1963,6 +2070,8 @@ class GameMatchCore implements IGameMatch {
       if (cost < 0)
         throw "GameMatchCore: avoidanceStaminaCost must be >=0";
       g.setStamina(Balance.clampInt(g.stamina() - cost, 0, 100));
+      // docs/數值算法.md §10.1：規避事件成功 → 功績 +5
+      g.grantMerit(5);
       _pendingTileEventEffectMultiplier = av.avoidanceSuccessMultiplier();
       if (_pendingTileEventEffectMultiplier < 0)
         _pendingTileEventEffectMultiplier = 0;
@@ -2598,7 +2707,8 @@ class GameMatchCore implements IGameMatch {
           keepRatio = 0;
         if (keepRatio > 1)
           keepRatio = 1;
-        var fleeRatio = 1.0 - keepRatio;
+        // 對齊 docs/數值算法.md §6.2：士兵逃亡比例 = (1 - keepRatio) * 0.5
+        var fleeRatio = (1.0 - keepRatio) * 0.5;
         var loss = Std.int(Math.floor(mon.troops() * fleeRatio));
         if (loss < 0)
           loss = 0;

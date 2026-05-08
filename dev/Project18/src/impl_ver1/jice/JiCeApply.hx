@@ -103,6 +103,9 @@ class JiCeApply {
     var cost = Balance.strategyStaminaCost(tier);
     caster.setStamina(Balance.clampInt(before - cost, 0, 100));
     var after = caster.stamina();
+    // docs/數值算法.md §10.1：策略成功 → 功績 +10
+    if (ok)
+      caster.grantMerit(10);
     return {ok: ok, rate: rate, roll: roll, cost: cost, before: before, after: after};
   }
 
