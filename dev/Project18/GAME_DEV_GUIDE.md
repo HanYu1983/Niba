@@ -110,6 +110,27 @@
      - 使用「模組/情境/原因」分段，例如：`village-trade/insufficient-gold`、`menu/not-active`、`dispatch/negative`。  
      - 目的：後續 UI 可依 `ctxKey` 做一致文案/在地化，也利於 log 聚合與測試定位。
 
+5. **選單強語意（buildPlayerMenu / resolveChoice）與狀態變更歸因（重要）**  
+   本專案對「表單式選單」（含 `MenuFormWidget` + `PlayerMenuKind.StagingSubmit`）採 **強語意** 約定，用以避免「UI 顯示可按，但 resolve 又拒絕」的錯誤體驗，並讓錯誤能快速歸因。
+   - **強語意定義（enabled 的意義）**  
+     - `buildPlayerMenu` 回傳之 submit entry 若 `enabled=true`，代表：在 **賽局狀態不變**（menu snapshot sig match），且使用者依該 menu 提供的 **widget 約束**（choices/slider 範圍等）提交時，`resolveChoice` **必須可成功執行**。  
+     - 若在上述前提下仍失敗，視為 **menu 組裝/約束漏算** 或 **流程 bug**，應以 fail-fast 方式直接 `throw` 暴露問題（而不是吞成一般規則彈窗）。
+   - **`resolveChoice` 的檢查順序（建議範式）**  
+     - **先以「當下合法性」為準**：重新計算目前合法 choices/上下限（或直接檢查 pending/owner/kind/資源等），判斷本次提交是否仍合法。  
+     - **sig 僅作歸因，不是 veto**：sig mismatch 不代表必拒絕；只有在「當下不合法」時，才用 mismatch 來區分是狀態變更或流程 bug。
+   - **狀態變更錯誤：統一用 `StageChangeError`**  
+     - 當「當下不合法」且判定為狀態變更（sig mismatch）時，應 `throw` `StageChangeError`（透過 `JiCeMenuSig.stateChangedError(...)` 建立）。  
+     - 目的：讓 UI/測試/紀錄能用型別區分「合法的重試彈窗」（狀態變更）與其他規則拒絕（一般 `GameError`）。
+   - **fail-fast 規則（sig match + 不合法/條件不符）**  
+     - 當「當下不合法」但 sig match（或無法解析 sig）時，更像是 menu/widget 組裝錯誤或提交流程被竄改；此時應 **直接 `throw` 字串或例外**（非 `GameError`）以利開發期快速爆出。  
+     - 例：`throw "XxxAction: invalid-choice (sig matched) — menu/widget mismatch";`
+   - **常見錯誤使用（應避免）**  
+     - **slider/widget 約束與 resolve 不一致**：  
+       - 例：slider 設為 `0..max`，但 resolve 要求 `>0`；此時就算 `enabled=true`，使用者仍可提交 0 造成拒絕。  
+       - 修正：把 slider 下限改為 1（或 submit disabled/限制輸入），讓「enabled + widget 約束」能保證成功。  
+     - **只用 sig 判斷合法性**：sig 不是狀態檢查本體，`resolveChoice` 必須仍做「當下合法性」檢查（choices membership、pending/owner/kind/資源等）。  
+     - **把狀態變更當成一般規則拒絕**：狀態變更應使用 `StageChangeError`，避免被誤認為需要修正規則或 UI 文案的 `GameError`。
+
 4. **測試分層**  
    - 驗證主迴路與狀態機：`debug_ver1` 中以流程為主的測試。  
    - 驗證單一計策／事件數學或分支：應與該擴充模組鄰近，避免把大量數值断言塞進骨架測試。
