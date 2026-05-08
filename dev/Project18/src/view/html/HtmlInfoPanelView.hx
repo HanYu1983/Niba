@@ -151,7 +151,7 @@ class HtmlInfoPanelView {
 
     var thead = Browser.document.createTableSectionElement();
     var hr = Browser.document.createTableRowElement();
-    for (h in ["姓名", "統御", "勇武", "智謀", "政理", "體力", "忠誠", "進駐城池"]) {
+    for (h in ["姓名", "統御", "勇武", "智謀", "政理", "體力", "忠誠", "功績", "職位", "進駐城池"]) {
       var th = Browser.document.createTableCellElement();
       th.className = "ui-th";
       th.textContent = h;
@@ -165,7 +165,7 @@ class HtmlInfoPanelView {
     if (roster.length == 0) {
       var r0 = Browser.document.createTableRowElement();
       var td0 = Browser.document.createTableCellElement();
-      td0.colSpan = 8;
+      td0.colSpan = 10;
       td0.className = "ui-td ui-empty";
       td0.textContent = "（目前沒有武將）";
       r0.appendChild(td0);
@@ -181,6 +181,8 @@ class HtmlInfoPanelView {
         r.appendChild(td(Std.string(g.stat(Stewardship)), false));
         r.appendChild(td(Std.string(g.stamina()), false));
         r.appendChild(td(Std.string(g.loyalty()), false));
+        r.appendChild(td(Std.string(g.merit()), false));
+        r.appendChild(td(Std.string(g.positionRank()), true));
         var xs = garrisonByGeneral.exists(gid) ? garrisonByGeneral.get(gid) : null;
         var cap = (xs == null || xs.length == 0) ? "（無）" : xs.join(", ");
         r.appendChild(td(cap, true));

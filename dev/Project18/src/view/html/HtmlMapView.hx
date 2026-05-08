@@ -9,6 +9,7 @@ import rx.disposables.ISubscription;
 import view.EventCenter;
 import view.IViewModel;
 import view.UiEvent;
+import view.html.HtmlTileView;
 
 /**
  * 地圖（棋盤）顯示元件。
@@ -19,6 +20,8 @@ class HtmlMapView {
   final host:Element;
   final root:DivElement;
   var vmSub:Null<ISubscription> = null;
+  var tileViews:Array<HtmlTileView> = [];
+  var lastBoardLen:Int = -1;
 
   public function new(mountElementId:String) {
     var el = Browser.document.getElementById(mountElementId);
@@ -36,11 +39,9 @@ class HtmlMapView {
   }
 
   function render(vm:IViewModel):Void {
-    // 清空並重建（先求簡單；之後再做 diff/patch）
-    root.innerHTML = "";
-
     var board = vm.board();
     if (board == null) {
+      root.innerHTML = "";
       root.textContent = "(board not ready)";
       return;
     }
@@ -54,48 +55,24 @@ class HtmlMapView {
       occ.get(idx).push(m.id());
     }
 
-    for (i in 0...board.length()) {
-      var tile = vm.tileAt(i);
-      var cell = Browser.document.createDivElement();
-      cell.className = "tile kind-" + Std.string(tile.kind());
-      cell.setAttribute("data-tile-index", Std.string(i));
-
-      var kind:TileKind = tile.kind();
-      var players = occ.exists(i) ? occ.get(i) : [];
-      var top = Browser.document.createDivElement();
-      top.className = "tile-top";
-      var idx = Browser.document.createDivElement();
-      idx.className = "tile-index";
-      idx.textContent = '#$i';
-      top.appendChild(idx);
-      var k = Browser.document.createDivElement();
-      k.className = "tile-kind";
-      k.textContent = Std.string(kind);
-      top.appendChild(k);
-      cell.appendChild(top);
-
-      var occBox = Browser.document.createDivElement();
-      occBox.className = "tile-occupants";
-      if (players.length > 0) {
-        for (pid in players) {
-          var b = Browser.document.createSpanElement();
-          b.className = "ui-badge";
-          b.textContent = pid;
-          occBox.appendChild(b);
-        }
-      } else {
-        var none = Browser.document.createSpanElement();
-        none.className = "ui-label";
-        none.textContent = "（空）";
-        occBox.appendChild(none);
+    // 只在 board 長度變更時重建每格 view（切換場景/新局）
+    var len = board.length();
+    if (len != lastBoardLen) {
+      root.innerHTML = "";
+      tileViews = [];
+      lastBoardLen = len;
+      for (i in 0...len) {
+        var v = new HtmlTileView(i);
+        tileViews.push(v);
+        root.appendChild(v.element());
       }
-      cell.appendChild(occBox);
+    }
 
-      cell.onclick = function(_) {
-        EventCenter.publishEvent(UiEvent.TileClick(i));
-      };
-
-      root.appendChild(cell);
+    // 更新每一格內容
+    for (v in tileViews) {
+      var i = v.tileIndex;
+      var players = occ.exists(i) ? occ.get(i) : [];
+      v.render(vm, players);
     }
   }
 
@@ -107,6 +84,8 @@ class HtmlMapView {
       vmSub.unsubscribe();
       vmSub = null;
     }
+    tileViews = [];
+    lastBoardLen = -1;
     if (root.parentElement != null)
       root.parentElement.removeChild(root);
   }
