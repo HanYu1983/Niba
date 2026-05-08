@@ -58,8 +58,18 @@ class HtmlTileView {
     occBox.className = "tile-occupants";
     if (occupants != null && occupants.length > 0) {
       for (pid in occupants) {
+        var m = vm.monarchById(pid);
+        var seat = m != null ? m.seat() : 0;
+        var tone = switch seat {
+          case 0: "p0";
+          case 1: "p1";
+          case 2: "p2";
+          case 3: "p3";
+          default: "p0";
+        };
         var b = Browser.document.createSpanElement();
         b.className = "ui-badge";
+        b.setAttribute("data-tone", tone);
         b.textContent = pid;
         occBox.appendChild(b);
       }
