@@ -88,6 +88,8 @@ class HelloWorld {
     debug_ver1.PlayerTargetStrategyEffectTest.testPlayerTargetStrategyEffect();
     debug_ver1.StrategyUnlockByRankTest.testStrategyUnlockByRank(new impl_ver1.Game());
     debug_ver1.StrategyAutoGrantByRankTest.testStrategyAutoGrantByRank(new impl_ver1.Game());
+    debug_ver1.StrategyFailQuarterEffectTest.testStrategyFailQuarterEffect();
+    debug_ver1.StrategyTileTargetOwnershipRestrictionTest.testStrategyTileTargetOwnershipRestriction(new impl_ver1.Game());
     trace("Hello world");
 
     // --- HTML view demo ---

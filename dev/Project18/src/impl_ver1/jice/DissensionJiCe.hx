@@ -107,16 +107,10 @@ class DissensionJiCe implements IJiCe {
       'jice_dissension|r=${gameMatch.roundNumber()}|m=${ruler.id()}|g=${casterId}|p=${Std.string(phase)}|t=${targetMonarchId}'
     );
     var effectLines:Array<String> = [];
-    if (!roll.ok) {
-      JiCeApply.popupCaster(gameMatch, ruler.id(), designLabel(), phase, casterId, Wit, tier, roll, '君主 $targetMonarchId', effectLines, "jice-dissension");
-      return;
-    }
-
-    // docs/數值算法.md 7.1：使用離間策略 → 發動方聲望 -3
+    // docs/數值算法.md 7.1：使用離間策略 → 發動方聲望 -3（此策略無論成敗都視為「使用」）
     ruler.reducePrestige(3);
 
-    // docs/數值算法.md §4.3：效果倍率（ver1 基礎效果=10，再乘倍率）
-    var loss = Balance.dissensionLoyaltyLoss(caster.stat(Wit), roll.before);
+    var loss = if (roll.ok) Balance.dissensionLoyaltyLoss(caster.stat(Wit), roll.before) else Balance.strategyFailEffectAmountInt(10, registryKey());
     // 目標君主麾下所有武將忠誠度 -loss（下限 1）
     for (m in gameMatch.monarchs())
       if (m.id() == targetMonarchId) {

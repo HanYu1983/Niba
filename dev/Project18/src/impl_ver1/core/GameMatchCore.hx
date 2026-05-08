@@ -1240,6 +1240,35 @@ class GameMatchCore implements IGameMatch {
     return _cityOwner.exists(at) ? _cityOwner.get(at) : null;
   }
 
+  public function tileOwnedByMonarch(at:TileIndex, monarchId:MonarchId):Bool {
+    if (_board == null)
+      return false;
+    var k = _board.tileAt(at).kind();
+    if (k == City) {
+      return _cityOwner.exists(at) && _cityOwner.get(at) == monarchId;
+    }
+    if (k == Village) {
+      return _villageOwner.exists(at) && _villageOwner.get(at) == monarchId;
+    }
+    return false;
+  }
+
+  public function tileOwnedByActiveMonarch(at:TileIndex):Bool
+    return tileOwnedByMonarch(at, activeMonarch().id());
+
+  public function tileOwnedByOtherMonarch(at:TileIndex, monarchId:MonarchId):Bool {
+    if (_board == null)
+      return false;
+    var k = _board.tileAt(at).kind();
+    if (k == City) {
+      return _cityOwner.exists(at) && _cityOwner.get(at) != monarchId;
+    }
+    if (k == Village) {
+      return _villageOwner.exists(at) && _villageOwner.get(at) != monarchId;
+    }
+    return false;
+  }
+
   function menuChoicesFromRoster(mon:Monarch):Array<MenuGeneralChoice> {
     var out:Array<MenuGeneralChoice> = [];
     for (g in mon.roster())

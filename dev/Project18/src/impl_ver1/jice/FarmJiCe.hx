@@ -2,6 +2,7 @@ package impl_ver1.jice;
 
 import game.Balance;
 import game.GameIds;
+import game.GameError;
 import game.GeneralStat;
 import game.IJiCe;
 import game.IPlayer;
@@ -96,6 +97,9 @@ class FarmJiCe implements IJiCe {
     var ruler = cast(gameMatch.activeMonarch(), Monarch);
     if (gameMatch.forceGetPendingLandingTile() != null && targetTile != ruler.pawnIndex())
       throw "FarmJiCe: post-move must target current tile";
+    // docs/策略系統.md：屯田僅能對己方領地（城池/村落）
+    if (!gameMatch.tileOwnedByMonarch(targetTile, ruler.id()))
+      throw new GameError("屯田只能對己方領地使用。", "目標不合法", "jice-farm/target-not-owned");
     var caster = JiCeApply.requireCaster(ruler, casterId, "FarmJiCe");
     JiCeApply.requireCasterRank(caster, Balance.requiredRankForStrategy(registryKey()), "FarmJiCe");
 
@@ -109,16 +113,12 @@ class FarmJiCe implements IJiCe {
       'jice_farm|r=${gameMatch.roundNumber()}|m=${ruler.id()}|g=${casterId}|p=${Std.string(phase)}|t=${targetTile}'
     );
     var effectLines:Array<String> = [];
+    // docs/數值算法.md §4.3：成功效果倍率；屯田失敗 → 0（策略類型：正向增益）
     if (!roll.ok) {
       JiCeApply.popupCaster(gameMatch, ruler.id(), designLabel(), phase, casterId, Stewardship, tier, roll, '格 $targetTile', effectLines, "jice-farm");
       return;
     }
-    // docs/數值算法.md §4.3：效果 = 基礎效果 × (屬性/100) × 體力修正
-    var base = 100;
-    var mul = Balance.strategyEffectMultiplier(caster.stat(Stewardship), roll.before);
-    var amt = Std.int(Math.floor(base * mul));
-    if (amt < 0)
-      amt = 0;
+    var amt = Balance.strategyEffectAmountInt(100, caster.stat(Stewardship), roll.before);
     gameMatch.forceAddTileNextTurnGrainBonus(targetTile, amt);
     effectLines.push("下回合糧食產出 +" + amt);
     JiCeApply.popupCaster(gameMatch, ruler.id(), designLabel(), phase, casterId, Stewardship, tier, roll, '格 $targetTile', effectLines, "jice-farm");

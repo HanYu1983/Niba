@@ -2,6 +2,7 @@ package impl_ver1.jice;
 
 import game.Balance;
 import game.GameIds;
+import game.GameError;
 import game.GeneralStat;
 import game.IJiCe;
 import game.IPlayer;
@@ -96,6 +97,9 @@ class TradeRouteJiCe implements IJiCe {
     var ruler = cast(gameMatch.activeMonarch(), Monarch);
     if (gameMatch.forceGetPendingLandingTile() != null && targetTile != ruler.pawnIndex())
       throw "TradeRouteJiCe: post-move must target current tile";
+    // docs/策略系統.md：商路僅能對己方領地（城池/村落）
+    if (!gameMatch.tileOwnedByMonarch(targetTile, ruler.id()))
+      throw new GameError("商路只能對己方領地使用。", "目標不合法", "jice-trade-route/target-not-owned");
     var caster = JiCeApply.requireCaster(ruler, casterId, "TradeRouteJiCe");
     JiCeApply.requireCasterRank(caster, Balance.requiredRankForStrategy(registryKey()), "TradeRouteJiCe");
 
@@ -109,16 +113,12 @@ class TradeRouteJiCe implements IJiCe {
       'jice_trade_route|r=${gameMatch.roundNumber()}|m=${ruler.id()}|g=${casterId}|p=${Std.string(phase)}|t=${targetTile}'
     );
     var effectLines:Array<String> = [];
+    // 商路失敗 → 0（策略類型：正向增益）
     if (!roll.ok) {
       JiCeApply.popupCaster(gameMatch, ruler.id(), designLabel(), phase, casterId, Stewardship, tier, roll, '格 $targetTile', effectLines, "jice-trade-route");
       return;
     }
-    // docs/數值算法.md §4.3：效果 = 基礎效果 × (屬性/100) × 體力修正
-    var base = 100;
-    var mul = Balance.strategyEffectMultiplier(caster.stat(Stewardship), roll.before);
-    var amt = Std.int(Math.floor(base * mul));
-    if (amt < 0)
-      amt = 0;
+    var amt = Balance.strategyEffectAmountInt(100, caster.stat(Stewardship), roll.before);
     gameMatch.forceAddTileNextTurnGoldBonus(targetTile, amt);
     effectLines.push("下回合金錢產出 +" + amt);
     JiCeApply.popupCaster(gameMatch, ruler.id(), designLabel(), phase, casterId, Stewardship, tier, roll, '格 $targetTile', effectLines, "jice-trade-route");

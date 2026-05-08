@@ -2,6 +2,7 @@ package impl_ver1.jice;
 
 import game.Balance;
 import game.GameIds;
+import game.GameError;
 import game.GeneralStat;
 import game.IJiCe;
 import game.IPlayer;
@@ -99,6 +100,9 @@ class FireJiCe implements IJiCe {
     // docs/策略系統.md：移動後策略一律針對所站格子（骨架先針對指定格子類策略硬檢查）
     if (gameMatch.forceGetPendingLandingTile() != null && targetTile != ruler.pawnIndex())
       throw "FireJiCe: post-move must target current tile";
+    // docs/策略系統.md：火計僅能對敵方領地（城池/村落）
+    if (!gameMatch.tileOwnedByOtherMonarch(targetTile, ruler.id()))
+      throw new GameError("火計只能對敵方領地使用。", "目標不合法", "jice-fire/target-not-enemy");
     var caster = JiCeApply.requireCaster(ruler, casterId, "FireJiCe");
     JiCeApply.requireCasterRank(caster, Balance.requiredRankForStrategy(registryKey()), "FireJiCe");
 
@@ -113,20 +117,19 @@ class FireJiCe implements IJiCe {
     );
 
     var effectLines:Array<String> = [];
-    if (!roll.ok) {
-      JiCeApply.popupCaster(gameMatch, ruler.id(), designLabel(), phase, casterId, Wit, tier, roll, '格 $targetTile', effectLines, "jice-fire");
-      return;
-    }
-
     var tile = gameMatch.tileAt(targetTile);
     // 骨架：僅對 City 格生效（示範用）
     if (tile.kind() == TileKind.City) {
       var prevT = gameMatch.forceGetCityStoredTroops(targetTile);
-      // docs/數值算法.md §4.3：效果 = 基礎效果 × (屬性/100) × 體力修正
-      // ver1：以「基礎損失比例」呈現火計的壓制力。
+      // docs/數值算法.md §4.3：
+      // - 成功：基礎效果 × (屬性/100) × 體力修正
+      // - 失敗：0 或基礎效果的 25%（此策略採 25%）
       var baseLossRatio = 0.20;
-      var mul = Balance.strategyEffectMultiplier(caster.stat(Wit), roll.before);
-      var ratio = baseLossRatio * mul;
+      var ratio = if (roll.ok) {
+        baseLossRatio * Balance.strategyEffectMultiplier(caster.stat(Wit), roll.before);
+      } else {
+        baseLossRatio * Balance.strategyFailBaseRate(registryKey());
+      };
       if (ratio < 0)
         ratio = 0;
       if (ratio > 1)

@@ -134,6 +134,33 @@ class Balance {
     return amt;
   }
 
+  /** docs/數值算法.md 4.3：部分策略失敗仍有 25% 基礎效果。 */
+  public static function strategyFailBaseRate(jiceKey:String):Float {
+    return switch jiceKey {
+      // 負面干擾類：失敗仍可能造成少量影響（ver1 先採 25%）
+      case "jice_fire", "jice_sabotage", "jice_dissension", "jice_raid", "jice_conscription", "jice_rumor":
+        0.25;
+      default:
+        0.0;
+    };
+  }
+
+  public static function strategyFailEffectAmountInt(base:Int, jiceKey:String):Int {
+    var r = strategyFailBaseRate(jiceKey);
+    var amt = Std.int(Math.floor(base * r + 0.000001));
+    if (amt < 0)
+      amt = 0;
+    return amt;
+  }
+
+  public static function strategyFailEffectAmountFloat(base:Float, jiceKey:String):Float {
+    var r = strategyFailBaseRate(jiceKey);
+    var amt = base * r;
+    if (amt < 0)
+      amt = 0;
+    return amt;
+  }
+
   // ===== 指定玩家類策略（ver1 基礎效果 + §4.3 倍率）=====
 
   /**

@@ -107,20 +107,17 @@ class RumorJiCe implements IJiCe {
       'jice_rumor|r=${gameMatch.roundNumber()}|m=${ruler.id()}|g=${casterId}|p=${Std.string(phase)}|t=${targetMonarchId}'
     );
     var effectLines:Array<String> = [];
-    if (!roll.ok) {
-      JiCeApply.popupCaster(gameMatch, ruler.id(), designLabel(), phase, casterId, Wit, tier, roll, '君主 $targetMonarchId', effectLines, "jice-rumor");
-      return;
-    }
-
-    // docs/數值算法.md 7.1：使用流言策略 → 聲望 -5
+    // docs/數值算法.md §4.3：此策略採「失敗仍有 25% 基礎效果」。
+    var delta = roll.ok ? 5 : Balance.strategyFailEffectAmountInt(5, registryKey());
+    // docs/數值算法.md 7.1：使用流言策略 → 聲望降低（成功 -5；失敗依上式取 25%）
     for (m in gameMatch.monarchs())
       if (m.id() == targetMonarchId) {
         var tm = cast(m, Monarch);
-        tm.reducePrestige(5);
+        tm.reducePrestige(delta);
         break;
       }
 
-    effectLines.push("聲望 -5");
+    effectLines.push("聲望 -" + delta);
     JiCeApply.popupCaster(gameMatch, ruler.id(), designLabel(), phase, casterId, Wit, tier, roll, '君主 $targetMonarchId', effectLines, "jice-rumor");
     JiCeApply.popupTargetMonarch(gameMatch, targetMonarchId, designLabel(), ruler.id(), casterId, effectLines, "jice-rumor/target");
   }

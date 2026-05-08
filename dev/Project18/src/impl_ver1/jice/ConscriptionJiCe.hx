@@ -107,14 +107,15 @@ class ConscriptionJiCe implements IJiCe {
       'jice_conscription|r=${gameMatch.roundNumber()}|m=${ruler.id()}|g=${casterId}|p=${Std.string(phase)}|t=${targetMonarchId}'
     );
     var effectLines:Array<String> = [];
-    if (!roll.ok) {
-      JiCeApply.popupCaster(gameMatch, ruler.id(), designLabel(), phase, casterId, Command, tier, roll, '君主 $targetMonarchId', effectLines, "jice-conscription");
-      return;
-    }
 
     // docs/數值算法.md §4.3：效果倍率（ver1 基礎效果=min(目標 5% + command/10, 20)，再乘倍率）
     var defTroops = gameMatch.monarchTroopCount(targetMonarchId);
-    var take = Balance.conscriptionTroopTake(defTroops, caster.stat(Command), roll.before);
+    var base = Std.int(Math.ceil(Math.max(0, defTroops) * 0.05)) + Std.int(Balance.clampInt(caster.stat(Command), 0, 100) / 10);
+    if (base > 20)
+      base = 20;
+    if (base < 0)
+      base = 0;
+    var take = if (roll.ok) Balance.conscriptionTroopTake(defTroops, caster.stat(Command), roll.before) else Balance.strategyFailEffectAmountInt(base, registryKey());
 
     // 先扣目標，再加回己方（避免負數）
     gameMatch.monarchApplyTroopLoss(targetMonarchId, take);

@@ -2,6 +2,7 @@ package impl_ver1.jice;
 
 import game.Balance;
 import game.GameIds;
+import game.GameError;
 import game.GeneralStat;
 import game.IJiCe;
 import game.IPlayer;
@@ -97,6 +98,9 @@ class SabotageJiCe implements IJiCe {
     var ruler = cast(gameMatch.activeMonarch(), Monarch);
     if (gameMatch.forceGetPendingLandingTile() != null && targetTile != ruler.pawnIndex())
       throw "SabotageJiCe: post-move must target current tile";
+    // docs/策略系統.md：破壞僅能對敵方領地（城池/村落）
+    if (!gameMatch.tileOwnedByOtherMonarch(targetTile, ruler.id()))
+      throw new GameError("破壞只能對敵方領地使用。", "目標不合法", "jice-sabotage/target-not-enemy");
     var caster = JiCeApply.requireCaster(ruler, casterId, "SabotageJiCe");
     JiCeApply.requireCasterRank(caster, Balance.requiredRankForStrategy(registryKey()), "SabotageJiCe");
 
@@ -110,22 +114,26 @@ class SabotageJiCe implements IJiCe {
       'jice_sabotage|r=${gameMatch.roundNumber()}|m=${ruler.id()}|g=${casterId}|p=${Std.string(phase)}|t=${targetTile}'
     );
     var effectLines:Array<String> = [];
-    if (!roll.ok) {
-      JiCeApply.popupCaster(gameMatch, ruler.id(), designLabel(), phase, casterId, Wit, tier, roll, '格 $targetTile', effectLines, "jice-sabotage");
-      return;
-    }
 
     var tile = gameMatch.tileAt(targetTile);
     if (tile.kind() == TileKind.City) {
       var before = gameMatch.forceGetCityLevel(targetTile);
-      var after = switch before {
-        case Capital: game.CityLevel.BigCity;
-        case BigCity: game.CityLevel.SmallCity;
-        case SmallCity: game.CityLevel.Village;
-        case Village: game.CityLevel.Village;
-      };
-      gameMatch.forceSetCityLevel(targetTile, after);
-      effectLines.push('城池等級 ${Std.string(before)} → ${Std.string(after)}');
+      // docs/數值算法.md §4.3：此策略採「失敗仍有 25% 基礎效果」。
+      // ver1：基礎效果 = 降 1 階；失敗效果 = 25% → 以 deterministic 機率方式表達是否觸發降級。
+      var okDrop = roll.ok
+        || (impl_ver1.util.Deterministic.hash01('jice_sabotage|fail25|r=${gameMatch.roundNumber()}|m=${ruler.id()}|g=${casterId}|t=${targetTile}') < Balance.strategyFailBaseRate(registryKey()));
+      if (okDrop) {
+        var after = switch before {
+          case Capital: game.CityLevel.BigCity;
+          case BigCity: game.CityLevel.SmallCity;
+          case SmallCity: game.CityLevel.Village;
+          case Village: game.CityLevel.Village;
+        };
+        gameMatch.forceSetCityLevel(targetTile, after);
+        effectLines.push('城池等級 ${Std.string(before)} → ${Std.string(after)}');
+      } else {
+        effectLines.push('城池等級 ${Std.string(before)}（不變）');
+      }
     } else {
       effectLines.push("目標非城池，無效果");
     }

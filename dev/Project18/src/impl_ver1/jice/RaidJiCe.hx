@@ -105,14 +105,10 @@ class RaidJiCe implements IJiCe {
       'jice_raid|r=${gameMatch.roundNumber()}|m=${ruler.id()}|g=${casterId}|p=${Std.string(phase)}|t=${targetMonarchId}'
     );
     var effectLines:Array<String> = [];
-    if (!roll.ok) {
-      JiCeApply.popupCaster(gameMatch, ruler.id(), designLabel(), phase, casterId, Might, tier, roll, '君主 $targetMonarchId', effectLines, "jice-raid");
-      return;
-    }
 
     // docs/數值算法.md §4.3：效果倍率（ver1 基礎效果=目標 10% + might/10，再乘倍率）
     var defTroops = gameMatch.monarchTroopCount(targetMonarchId);
-    var loss = Balance.raidTroopLoss(defTroops, caster.stat(Might), roll.before);
+    var loss = if (roll.ok) Balance.raidTroopLoss(defTroops, caster.stat(Might), roll.before) else Balance.strategyFailEffectAmountInt(Std.int(Math.ceil(Math.max(0, defTroops) * 0.1)) + Std.int(Balance.clampInt(caster.stat(Might), 0, 100) / 10), registryKey());
     gameMatch.monarchApplyTroopLoss(targetMonarchId, loss);
 
     effectLines.push('目標兵力 -${loss}');
