@@ -121,7 +121,7 @@ class SabotageJiCe implements IJiCe {
     if (!casterOk || !tileOk) {
       if (sigMismatch)
         throw JiCeMenuSig.stateChangedError("狀態已變更，請重新選擇破壞目標。", "jice-sabotage/state-changed");
-      throw new GameError("破壞目標已不合法（請重新開啟選單再選擇）。", "目標不合法", "jice-sabotage/invalid-choice");
+      throw "SabotageJiCe: invalid-choice (sig matched) — menu/widget mismatch";
     }
     var caster = JiCeApply.requireCaster(ruler, casterId, "SabotageJiCe");
     JiCeApply.requireCasterRank(caster, Balance.requiredRankForStrategy(registryKey()), "SabotageJiCe");

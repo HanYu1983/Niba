@@ -116,7 +116,7 @@ class EncourageJiCe implements IJiCe {
     if (!casterOk || !targetOk) {
       if (sigMismatch)
         throw JiCeMenuSig.stateChangedError("狀態已變更，請重新選擇激勵目標。", "jice-encourage/state-changed");
-      throw new GameError("激勵目標已不合法（請重新開啟選單再選擇）。", "目標不合法", "jice-encourage/invalid-choice");
+      throw "EncourageJiCe: invalid-choice (sig matched) — menu/widget mismatch";
     }
 
     var caster = JiCeApply.requireCaster(ruler, casterId, "EncourageJiCe");

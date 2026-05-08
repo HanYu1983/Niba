@@ -118,7 +118,7 @@ class RumorJiCe implements IJiCe {
     if (!casterOk || !targetOk) {
       if (sigMismatch)
         throw JiCeMenuSig.stateChangedError("狀態已變更，請重新選擇流言目標。", "jice-rumor/state-changed");
-      throw new GameError("流言目標已不合法（請重新開啟選單再選擇）。", "目標不合法", "jice-rumor/invalid-choice");
+      throw "RumorJiCe: invalid-choice (sig matched) — menu/widget mismatch";
     }
 
     var caster = JiCeApply.requireCaster(ruler, casterId, "RumorJiCe");

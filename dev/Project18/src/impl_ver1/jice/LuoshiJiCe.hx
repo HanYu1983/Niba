@@ -112,7 +112,7 @@ class LuoshiJiCe implements IJiCe {
     if (!casterOk || !targetOk) {
       if (sigMismatch)
         throw JiCeMenuSig.stateChangedError("狀態已變更，請重新選擇落石目標。", "jice-luoshi/state-changed");
-      throw new GameError("落石目標已不合法（請重新開啟選單再選擇）。", "目標不合法", "jice-luoshi/invalid-choice");
+      throw "LuoshiJiCe: invalid-choice (sig matched) — menu/widget mismatch";
     }
 
     var might:Null<Int> = null;

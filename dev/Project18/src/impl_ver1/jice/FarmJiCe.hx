@@ -121,7 +121,7 @@ class FarmJiCe implements IJiCe {
     if (!casterOk || !tileOk) {
       if (sigMismatch)
         throw JiCeMenuSig.stateChangedError("狀態已變更，請重新選擇屯田目標。", "jice-farm/state-changed");
-      throw new GameError("屯田目標已不合法（請重新開啟選單再選擇）。", "目標不合法", "jice-farm/invalid-choice");
+      throw "FarmJiCe: invalid-choice (sig matched) — menu/widget mismatch";
     }
     var caster = JiCeApply.requireCaster(ruler, casterId, "FarmJiCe");
     JiCeApply.requireCasterRank(caster, Balance.requiredRankForStrategy(registryKey()), "FarmJiCe");

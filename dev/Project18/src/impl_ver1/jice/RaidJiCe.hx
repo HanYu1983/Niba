@@ -116,7 +116,7 @@ class RaidJiCe implements IJiCe {
     if (!casterOk || !targetOk) {
       if (sigMismatch)
         throw JiCeMenuSig.stateChangedError("狀態已變更，請重新選擇急襲目標。", "jice-raid/state-changed");
-      throw new GameError("急襲目標已不合法（請重新開啟選單再選擇）。", "目標不合法", "jice-raid/invalid-choice");
+      throw "RaidJiCe: invalid-choice (sig matched) — menu/widget mismatch";
     }
 
     var caster = JiCeApply.requireCaster(ruler, casterId, "RaidJiCe");

@@ -118,7 +118,7 @@ class DissensionJiCe implements IJiCe {
     if (!casterOk || !targetOk) {
       if (sigMismatch)
         throw JiCeMenuSig.stateChangedError("狀態已變更，請重新選擇離間目標。", "jice-dissension/state-changed");
-      throw new GameError("離間目標已不合法（請重新開啟選單再選擇）。", "目標不合法", "jice-dissension/invalid-choice");
+      throw "DissensionJiCe: invalid-choice (sig matched) — menu/widget mismatch";
     }
 
     var caster = JiCeApply.requireCaster(ruler, casterId, "DissensionJiCe");

@@ -124,7 +124,7 @@ class FireJiCe implements IJiCe {
     if (!casterOk || !tileOk) {
       if (sigMismatch)
         throw JiCeMenuSig.stateChangedError("狀態已變更，請重新選擇火計目標。", "jice-fire/state-changed");
-      throw new GameError("火計目標已不合法（請重新開啟選單再選擇）。", "目標不合法", "jice-fire/invalid-choice");
+      throw "FireJiCe: invalid-choice (sig matched) — menu/widget mismatch";
     }
     var caster = JiCeApply.requireCaster(ruler, casterId, "FireJiCe");
     JiCeApply.requireCasterRank(caster, Balance.requiredRankForStrategy(registryKey()), "FireJiCe");

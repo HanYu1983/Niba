@@ -120,7 +120,7 @@ class TradeRouteJiCe implements IJiCe {
     if (!casterOk || !tileOk) {
       if (sigMismatch)
         throw JiCeMenuSig.stateChangedError("狀態已變更，請重新選擇商路目標。", "jice-trade-route/state-changed");
-      throw new GameError("商路目標已不合法（請重新開啟選單再選擇）。", "目標不合法", "jice-trade-route/invalid-choice");
+      throw "TradeRouteJiCe: invalid-choice (sig matched) — menu/widget mismatch";
     }
     var caster = JiCeApply.requireCaster(ruler, casterId, "TradeRouteJiCe");
     JiCeApply.requireCasterRank(caster, Balance.requiredRankForStrategy(registryKey()), "TradeRouteJiCe");

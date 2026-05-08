@@ -115,7 +115,7 @@ class HealJiCe implements IJiCe {
     if (!casterOk || !targetOk) {
       if (sigMismatch)
         throw JiCeMenuSig.stateChangedError("狀態已變更，請重新選擇療傷目標。", "jice-heal/state-changed");
-      throw new GameError("療傷目標已不合法（請重新開啟選單再選擇）。", "目標不合法", "jice-heal/invalid-choice");
+      throw "HealJiCe: invalid-choice (sig matched) — menu/widget mismatch";
     }
 
     var caster = JiCeApply.requireCaster(ruler, casterId, "HealJiCe");

@@ -117,7 +117,7 @@ class AwakenJiCe implements IJiCe {
     if (!casterOk || !targetOk) {
       if (sigMismatch)
         throw JiCeMenuSig.stateChangedError("狀態已變更，請重新選擇覺醒目標。", "jice-awaken/state-changed");
-      throw new GameError("覺醒目標已不合法（請重新開啟選單再選擇）。", "目標不合法", "jice-awaken/invalid-choice");
+      throw "AwakenJiCe: invalid-choice (sig matched) — menu/widget mismatch";
     }
 
     var caster = JiCeApply.requireCaster(ruler, casterId, "AwakenJiCe");

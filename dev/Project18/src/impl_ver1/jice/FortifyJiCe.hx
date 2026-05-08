@@ -120,7 +120,7 @@ class FortifyJiCe implements IJiCe {
     if (!casterOk || !tileOk) {
       if (sigMismatch)
         throw JiCeMenuSig.stateChangedError("狀態已變更，請重新選擇築城目標。", "jice-fortify/state-changed");
-      throw new GameError("築城目標已不合法（請重新開啟選單再選擇）。", "目標不合法", "jice-fortify/invalid-choice");
+      throw "FortifyJiCe: invalid-choice (sig matched) — menu/widget mismatch";
     }
     var caster = JiCeApply.requireCaster(ruler, casterId, "FortifyJiCe");
     JiCeApply.requireCasterRank(caster, Balance.requiredRankForStrategy(registryKey()), "FortifyJiCe");

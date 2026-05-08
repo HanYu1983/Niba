@@ -118,7 +118,7 @@ class ConscriptionJiCe implements IJiCe {
     if (!casterOk || !targetOk) {
       if (sigMismatch)
         throw JiCeMenuSig.stateChangedError("狀態已變更，請重新選擇徵兵目標。", "jice-conscription/state-changed");
-      throw new GameError("徵兵目標已不合法（請重新開啟選單再選擇）。", "目標不合法", "jice-conscription/invalid-choice");
+      throw "ConscriptionJiCe: invalid-choice (sig matched) — menu/widget mismatch";
     }
 
     var caster = JiCeApply.requireCaster(ruler, casterId, "ConscriptionJiCe");
