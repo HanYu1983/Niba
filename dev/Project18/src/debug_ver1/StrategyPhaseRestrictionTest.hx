@@ -13,6 +13,7 @@ import game.TileKind;
 import game.LevelKeys;
 import impl_ver1.jice.DissensionJiCe;
 import impl_ver1.jice.FireJiCe;
+import impl_ver1.jice.FarmJiCe;
 
 /**
  * 驗證「計策使用時機」骨架：
@@ -48,8 +49,19 @@ class StrategyPhaseRestrictionTest {
     if (postNode == null)
       throw "StrategyPhaseRestrictionTest: 應存在「策略（移動後）」節點";
     var children = postNode.children();
-    if (children.length != 1 || children[0].caption() != FireJiCe.DESIGN_LABEL)
-      throw "StrategyPhaseRestrictionTest: 移動後策略應只列出火計（排除離間）";
+    // ver1：可能存在其他可 PostMove 的策略（例如屯田）；此測試只要求「不出現 PreMove-only 的離間」，且火計必存在。
+    var hasFire = false;
+    var hasDissension = false;
+    for (c in children) {
+      if (c.caption() == FireJiCe.DESIGN_LABEL)
+        hasFire = true;
+      if (c.caption() == DissensionJiCe.DESIGN_LABEL)
+        hasDissension = true;
+    }
+    if (!hasFire)
+      throw "StrategyPhaseRestrictionTest: 移動後策略應至少包含火計";
+    if (hasDissension)
+      throw "StrategyPhaseRestrictionTest: 移動後策略不應包含離間";
 
     trace("[StrategyPhaseRestrictionTest] OK — allowedPhases 過濾 + core 檢查");
   }

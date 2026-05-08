@@ -296,5 +296,24 @@ class Balance {
       default: true;
     };
   }
+
+  /**
+   * docs/策略系統.md：依職位解鎖的策略清單（ver1 顯式列出，避免掃描註冊表）。
+   * 用途：讓 match 在不持牌的情況下，也能自動補齊「已解鎖」的策略卡。
+   */
+  public static function rankUnlockableStrategyKeys():Array<String> {
+    return [
+      // Soldier
+      "jice_fire", "jice_inspire", "jice_farm", "jice_luoshi", "jice_roadblock",
+      // SquadLeader
+      "jice_encourage", "jice_trade_route",
+      // SectionLeader
+      "jice_heal", "jice_fortify", "jice_rumor",
+      // Captain
+      "jice_awaken", "jice_sabotage", "jice_dissension",
+      // General
+      "jice_raid", "jice_conscription",
+    ];
+  }
 }
 

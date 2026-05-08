@@ -2825,8 +2825,42 @@ class GameMatchCore implements IGameMatch {
     return board().tileAt(index);
 
   public function availableJiCe(monarchId:MonarchId):Array<IJiCe> {
+    ensureUnlockedJiCe(monarchId);
     var row = _ownedJiCe.get(monarchId);
     return row != null ? row.copy() : [];
+  }
+
+  function ensureUnlockedJiCe(monarchId:MonarchId):Void {
+    // ver1：依 docs/策略系統.md 的職位解鎖表，自動補齊已解鎖策略（追加到所持牌尾端，避免改變既有索引）。
+    requireOwnerMonarch(monarchId);
+    var ruler = monarchWithId(monarchId);
+    var roster = ruler.roster();
+    var maxRank = game.PositionRank.Soldier;
+    for (g in roster) {
+      if (g == null)
+        continue;
+      if (Balance.positionRankValue(g.positionRank()) > Balance.positionRankValue(maxRank))
+        maxRank = g.positionRank();
+    }
+
+    var owned = _ownedJiCe.get(monarchId);
+    if (owned == null)
+      return;
+    var ownedKey = new Map<String, Bool>();
+    for (c in owned)
+      if (c != null)
+        ownedKey.set(c.registryKey(), true);
+
+    for (k in Balance.rankUnlockableStrategyKeys()) {
+      var req = Balance.requiredRankForStrategy(k);
+      if (!Balance.positionRankGte(maxRank, req))
+        continue;
+      if (ownedKey.exists(k))
+        continue;
+      // 追加到尾端（保持既有 token=index 的穩定性）
+      createJiCe(k, monarchId);
+      ownedKey.set(k, true);
+    }
   }
 
   function resolvePlayedJiCeFromLeaf(actor:IPlayer, leaf:IPlayerMenuEntry):IJiCe {
