@@ -22,6 +22,7 @@ import impl_ver1.model.PlayerMenu;
 import impl_ver1.jice.JiCeRegistry;
 import impl_ver1.jice.JiCeApply;
 import impl_ver1.jice.JiCeMenuLegalChoices;
+import impl_ver1.jice.JiCeMenuSig;
 
 /**
  * 策略：屯田（指定格子）
@@ -61,7 +62,13 @@ class FarmJiCe implements IJiCe {
     var defTile:Array<Int> = tChoices.length > 0 ? [tChoices[0].tileIndex] : [];
 
     var enabled = gChoices.length > 0 && tChoices.length > 0;
-    var submit = gameMatch.createPlayerMenuEntry(PlayerMenuKind.StagingSubmit, "確認屯田", enabled, "farm_ok");
+    var sig = JiCeMenuSig.make([
+      registryKey(),
+      "phase=" + (gameMatch.forceGetPendingLandingTile() != null ? "post" : "pre"),
+      "casters=" + gChoices.map(c -> c.generalId).join(","),
+      "tiles=" + tChoices.map(t -> Std.string(t.tileIndex)).join(","),
+    ]);
+    var submit = gameMatch.createPlayerMenuEntry(PlayerMenuKind.StagingSubmit, "確認屯田", enabled, JiCeMenuSig.attach("farm_ok", sig));
     var widgets:Array<MenuFormWidget> = [
       GeneralMultiPick("選擇發動武將（單選）", gChoices, defCaster),
       TileSinglePick("選擇目標格子", tChoices, defTile),
@@ -84,11 +91,38 @@ class FarmJiCe implements IJiCe {
     var targetTile = JiCeApply.readSingleTileIndex(widgets[1], "FarmJiCe", "tile");
 
     var ruler = cast(gameMatch.activeMonarch(), Monarch);
-    if (gameMatch.forceGetPendingLandingTile() != null && targetTile != ruler.pawnIndex())
-      throw "FarmJiCe: post-move must target current tile";
-    // docs/策略系統.md：屯田僅能對己方領地（城池/村落）
-    if (!gameMatch.tileOwnedByMonarch(targetTile, ruler.id()))
-      throw new GameError("屯田只能對己方領地使用。", "目標不合法", "jice-farm/target-not-owned");
+
+    // --- menu snapshot sig（只作歸因，不作一票否決）---
+    var token = MenuActivation.activatingEntry(menuNode).decisionToken();
+    var gotSig = JiCeMenuSig.parseSig(token);
+    var gChoices = JiCeMenuLegalChoices.eligibleCasters(ruler, registryKey(), StrategyCostTier.Low);
+    var only = gameMatch.forceGetPendingLandingTile() != null ? ruler.pawnIndex() : null;
+    var tChoices = JiCeMenuLegalChoices.ownedTerritoryTileChoices(gameMatch, ruler.id(), only);
+    var nowSig = JiCeMenuSig.make([
+      registryKey(),
+      "phase=" + (gameMatch.forceGetPendingLandingTile() != null ? "post" : "pre"),
+      "casters=" + gChoices.map(c -> c.generalId).join(","),
+      "tiles=" + tChoices.map(t -> Std.string(t.tileIndex)).join(","),
+    ]);
+    var sigMismatch = (gotSig != null && gotSig != nowSig);
+
+    var casterOk = false;
+    for (c in gChoices)
+      if (c.generalId == casterId) {
+        casterOk = true;
+        break;
+      }
+    var tileOk = false;
+    for (t in tChoices)
+      if (t.tileIndex == targetTile) {
+        tileOk = true;
+        break;
+      }
+    if (!casterOk || !tileOk) {
+      if (sigMismatch)
+        throw JiCeMenuSig.stateChangedError("狀態已變更，請重新選擇屯田目標。", "jice-farm/state-changed");
+      throw new GameError("屯田目標已不合法（請重新開啟選單再選擇）。", "目標不合法", "jice-farm/invalid-choice");
+    }
     var caster = JiCeApply.requireCaster(ruler, casterId, "FarmJiCe");
     JiCeApply.requireCasterRank(caster, Balance.requiredRankForStrategy(registryKey()), "FarmJiCe");
 

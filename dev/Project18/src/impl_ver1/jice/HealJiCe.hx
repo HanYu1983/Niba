@@ -2,6 +2,7 @@ package impl_ver1.jice;
 
 import game.Balance;
 import game.GameIds;
+import game.GameError;
 import game.GeneralStat;
 import game.IJiCe;
 import game.IPlayer;
@@ -20,6 +21,7 @@ import impl_ver1.model.PlayerMenu;
 import impl_ver1.jice.JiCeRegistry;
 import impl_ver1.jice.JiCeApply;
 import impl_ver1.jice.JiCeMenuLegalChoices;
+import impl_ver1.jice.JiCeMenuSig;
 
 /**
  * 策略：療傷（指定武將）— 回復指定武將體力並解除負面狀態。
@@ -54,7 +56,13 @@ class HealJiCe implements IJiCe {
     var defTarget:Array<String> = targetChoices.length > 0 ? [targetChoices[0].generalId] : [];
 
     var enabled = casterChoices.length > 0 && targetChoices.length > 0;
-    var submit = gameMatch.createPlayerMenuEntry(PlayerMenuKind.StagingSubmit, "確認療傷", enabled, "heal_ok");
+    var sig = JiCeMenuSig.make([
+      registryKey(),
+      "phase=pre",
+      "casters=" + casterChoices.map(c -> c.generalId).join(","),
+      "targets=" + targetChoices.map(c -> c.generalId).join(","),
+    ]);
+    var submit = gameMatch.createPlayerMenuEntry(PlayerMenuKind.StagingSubmit, "確認療傷", enabled, JiCeMenuSig.attach("heal_ok", sig));
     var widgets:Array<MenuFormWidget> = [
       GeneralMultiPick("選擇發動武將（單選）", casterChoices, defCaster),
       GeneralMultiPick("選擇目標武將（單選）", targetChoices, defTarget),
@@ -78,6 +86,38 @@ class HealJiCe implements IJiCe {
     var targetId = JiCeApply.readSingleGeneralId(widgets[1], "HealJiCe", "target");
 
     var ruler = cast(gameMatch.activeMonarch(), Monarch);
+
+    // --- menu snapshot sig（只作歸因，不作一票否決）---
+    var token = MenuActivation.activatingEntry(menuNode).decisionToken();
+    var gotSig = JiCeMenuSig.parseSig(token);
+    var casterChoices = JiCeMenuLegalChoices.eligibleCasters(ruler, registryKey(), StrategyCostTier.High);
+    var targetChoices = JiCeMenuLegalChoices.rosterChoices(ruler);
+    var nowSig = JiCeMenuSig.make([
+      registryKey(),
+      "phase=pre",
+      "casters=" + casterChoices.map(c -> c.generalId).join(","),
+      "targets=" + targetChoices.map(c -> c.generalId).join(","),
+    ]);
+    var sigMismatch = (gotSig != null && gotSig != nowSig);
+
+    var casterOk = false;
+    for (c in casterChoices)
+      if (c.generalId == casterId) {
+        casterOk = true;
+        break;
+      }
+    var targetOk = false;
+    for (c in targetChoices)
+      if (c.generalId == targetId) {
+        targetOk = true;
+        break;
+      }
+    if (!casterOk || !targetOk) {
+      if (sigMismatch)
+        throw JiCeMenuSig.stateChangedError("狀態已變更，請重新選擇療傷目標。", "jice-heal/state-changed");
+      throw new GameError("療傷目標已不合法（請重新開啟選單再選擇）。", "目標不合法", "jice-heal/invalid-choice");
+    }
+
     var caster = JiCeApply.requireCaster(ruler, casterId, "HealJiCe");
     JiCeApply.requireCasterRank(caster, Balance.requiredRankForStrategy(registryKey()), "HealJiCe");
     var target = JiCeApply.requireCaster(ruler, targetId, "HealJiCe");

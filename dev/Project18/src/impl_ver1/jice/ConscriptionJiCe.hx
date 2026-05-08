@@ -2,6 +2,7 @@ package impl_ver1.jice;
 
 import game.Balance;
 import game.GameIds;
+import game.GameError;
 import game.GeneralStat;
 import game.IJiCe;
 import game.IPlayer;
@@ -20,6 +21,7 @@ import impl_ver1.model.Monarch;
 import impl_ver1.model.PlayerMenu;
 import impl_ver1.jice.JiCeApply;
 import impl_ver1.jice.JiCeMenuLegalChoices;
+import impl_ver1.jice.JiCeMenuSig;
 
 /**
  * 策略：【指定玩家】徵兵 — 從目標玩家處獲取少量士兵。
@@ -57,7 +59,13 @@ class ConscriptionJiCe implements IJiCe {
     var defCaster:Array<String> = gChoices.length > 0 ? [gChoices[0].generalId] : [];
 
     var enabled = monarchChoices.length > 0 && gChoices.length > 0;
-    var submit = gameMatch.createPlayerMenuEntry(PlayerMenuKind.StagingSubmit, "確認徵兵", enabled, "conscription_ok");
+    var sig = JiCeMenuSig.make([
+      registryKey(),
+      "phase=pre",
+      "casters=" + gChoices.map(c -> c.generalId).join(","),
+      "monarchs=" + monarchChoices.map(m -> m.monarchId).join(","),
+    ]);
+    var submit = gameMatch.createPlayerMenuEntry(PlayerMenuKind.StagingSubmit, "確認徵兵", enabled, JiCeMenuSig.attach("conscription_ok", sig));
     var widgets:Array<MenuFormWidget> = [
       MonarchSinglePick("選擇目標君主", monarchChoices, defTarget),
       GeneralMultiPick("選擇發動武將（單選）", gChoices, defCaster),
@@ -81,6 +89,38 @@ class ConscriptionJiCe implements IJiCe {
     var casterId = JiCeApply.readSingleGeneralId(widgets[1], "ConscriptionJiCe", "caster");
 
     var ruler = cast(gameMatch.activeMonarch(), Monarch);
+
+    // --- menu snapshot sig（只作歸因，不作一票否決）---
+    var token = MenuActivation.activatingEntry(menuNode).decisionToken();
+    var gotSig = JiCeMenuSig.parseSig(token);
+    var monarchChoices = JiCeMenuLegalChoices.otherMonarchChoices(gameMatch, actor.monarchId());
+    var gChoices = JiCeMenuLegalChoices.eligibleCasters(ruler, registryKey(), StrategyCostTier.Medium);
+    var nowSig = JiCeMenuSig.make([
+      registryKey(),
+      "phase=pre",
+      "casters=" + gChoices.map(c -> c.generalId).join(","),
+      "monarchs=" + monarchChoices.map(m -> m.monarchId).join(","),
+    ]);
+    var sigMismatch = (gotSig != null && gotSig != nowSig);
+
+    var casterOk = false;
+    for (c in gChoices)
+      if (c.generalId == casterId) {
+        casterOk = true;
+        break;
+      }
+    var targetOk = false;
+    for (m in monarchChoices)
+      if (m.monarchId == targetMonarchId) {
+        targetOk = true;
+        break;
+      }
+    if (!casterOk || !targetOk) {
+      if (sigMismatch)
+        throw JiCeMenuSig.stateChangedError("狀態已變更，請重新選擇徵兵目標。", "jice-conscription/state-changed");
+      throw new GameError("徵兵目標已不合法（請重新開啟選單再選擇）。", "目標不合法", "jice-conscription/invalid-choice");
+    }
+
     var caster = JiCeApply.requireCaster(ruler, casterId, "ConscriptionJiCe");
     JiCeApply.requireCasterRank(caster, Balance.requiredRankForStrategy(registryKey()), "ConscriptionJiCe");
 

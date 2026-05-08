@@ -1,6 +1,7 @@
 package impl_ver1.jice;
 
 import game.GameIds;
+import game.GameError;
 import game.GeneralStat;
 import game.IGeneral;
 import game.IJiCe;
@@ -21,6 +22,7 @@ import impl_ver1.model.General;
 import impl_ver1.model.PlayerMenu;
 import impl_ver1.jice.JiCeRegistry;
 import impl_ver1.jice.JiCeMenuLegalChoices;
+import impl_ver1.jice.JiCeMenuSig;
 
 /**
  * 落石計策：建構子綁定 {@link GameMatchCore}；暫存與兵力結算經 Core 私有方法（同套件友元可見）。
@@ -54,7 +56,13 @@ class LuoshiJiCe implements IJiCe {
     var defSel:Array<String> = choices.length > 0 ? [choices[0].generalId] : [];
 
     var enabled = monarchChoices.length > 0 && choices.length > 0;
-    var submitLeaf = gameMatch.createPlayerMenuEntry(StagingSubmit, "確認計策選將", enabled, "confirm_jice_pick");
+    var sig = JiCeMenuSig.make([
+      registryKey(),
+      "phase=pre",
+      "casters=" + choices.map(c -> c.generalId).join(","),
+      "monarchs=" + monarchChoices.map(m -> m.monarchId).join(","),
+    ]);
+    var submitLeaf = gameMatch.createPlayerMenuEntry(StagingSubmit, "確認計策選將", enabled, JiCeMenuSig.attach("confirm_jice_pick", sig));
     var widgets:Array<MenuFormWidget> = [
       MonarchSinglePick("選擇目標君主", monarchChoices, defTarget),
       GeneralMultiPick("選擇施計武將", choices, defSel),
@@ -75,6 +83,38 @@ class LuoshiJiCe implements IJiCe {
 
     var defTroops = gameMatch.monarchTroopCount(tid);
     var ruler = cast(gameMatch.activeMonarch(), Monarch);
+
+    // --- menu snapshot sig（只作歸因，不作一票否決）---
+    var token = MenuActivation.activatingEntry(menuNode).decisionToken();
+    var gotSig = JiCeMenuSig.parseSig(token);
+    var monarchChoices = JiCeMenuLegalChoices.otherMonarchChoices(gameMatch, actor.monarchId());
+    var gChoices = JiCeMenuLegalChoices.rosterChoices(ruler);
+    var nowSig = JiCeMenuSig.make([
+      registryKey(),
+      "phase=pre",
+      "casters=" + gChoices.map(c -> c.generalId).join(","),
+      "monarchs=" + monarchChoices.map(m -> m.monarchId).join(","),
+    ]);
+    var sigMismatch = (gotSig != null && gotSig != nowSig);
+
+    var casterOk = false;
+    for (c in gChoices)
+      if (c.generalId == choiceId) {
+        casterOk = true;
+        break;
+      }
+    var targetOk = false;
+    for (m in monarchChoices)
+      if (m.monarchId == tid) {
+        targetOk = true;
+        break;
+      }
+    if (!casterOk || !targetOk) {
+      if (sigMismatch)
+        throw JiCeMenuSig.stateChangedError("狀態已變更，請重新選擇落石目標。", "jice-luoshi/state-changed");
+      throw new GameError("落石目標已不合法（請重新開啟選單再選擇）。", "目標不合法", "jice-luoshi/invalid-choice");
+    }
+
     var might:Null<Int> = null;
     for (g in ruler.roster())
       if (g.id() == choiceId) {
