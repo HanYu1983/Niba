@@ -77,6 +77,7 @@ class HelloWorld {
     debug_ver1.TerminationWealthVictoryTest.testTerminationWealthVictory(new impl_ver1.Game());
     debug_ver1.TerminationTimeLimitVictoryTest.testTerminationTimeLimitVictory(new impl_ver1.Game());
     debug_ver1.AiFourPlayersToTerminationTest.testAiFourPlayersToTermination(new impl_ver1.Game());
+    debug_ver1.ProbTileKindGenerationTest.testProbTileKindGeneration(new impl_ver1.Game());
     trace("Hello world");
 
     // --- HTML view demo ---
