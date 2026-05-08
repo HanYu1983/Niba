@@ -62,7 +62,10 @@ class HostileCitySiegeCityLevelDefenseTest {
 
     match.forceSetCityOwner(1, idB);
     match.forceAssignCityGarrison(1, "g-b");
-    match.forcePutCityStores(1, 600, 0);
+    // 對齊 docs/數值算法.md §3：守方戰力取決於守軍兵力與守方武將能力；
+    // 本測試要驗證「城池等級的防禦加成會影響結果」，因此在 Capital 情境提高守軍量以形成可判別差異。
+    var defTroops = (level == Capital) ? 10000 : 600;
+    match.forcePutCityStores(1, defTroops, 0);
     match.forceSetCityLevel(1, level);
 
     cast(match.activeMonarch(), Monarch).grantTroops(1200);

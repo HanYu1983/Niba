@@ -81,8 +81,8 @@ import impl_ver1.staging.VillageDevelopStagingAction;
  */
 @:allow(impl_ver1)
 class GameMatchCore implements IGameMatch {
-  // TODO(game-error): 目前仍有大量 `throw "GameMatchCore: ..."` 的字串例外。
-  // 下一步請把「可預期的玩家操作失敗」逐步改成 `throw new GameError(...)`，讓 UI 可以用 popup 顯示而不會中斷：
+  // NOTE(game-error): 目前仍有大量 `throw "GameMatchCore: ..."` 的字串例外。
+  // 若要讓 UI 可用 popup 呈現「可預期的玩家操作失敗」，可逐步改成 `throw new GameError(...)`：
   // - 資源不足（兵/糧/金不足）
   // - 表單選擇不合法（應單選/未選等）
   // - 指令不可用（例如 StrategyPre/StrategyPost 不可用）若屬玩家可理解的規則拒絕也應轉為 GameError
@@ -187,10 +187,10 @@ class GameMatchCore implements IGameMatch {
   var _shopStocksByTile:Map<Int, Array<ShopStockItem>>;
 
   /** --- 策略（指定格子）暫存效果骨架 --- */
-  // TODO(strategy): 目前僅存放「下回合加成」等占位資料；需定義：
-  // - 加成何時結算（回合開始？落地結算？指令結算？）
-  // - 加成如何消耗/衰減（僅一次/維持 N 回合）
-  // - 與城池等級/產出模型整合（目前尚無 gold/城等級資料）
+  // NOTE(strategy): ver1 以「一次性下回合加成」作為最小可玩落地：
+  // - 由計策寫入 _tileNextTurn*Bonus
+  // - 於回合結算點統一套用到領地資源庫後清空（一次性消耗）
+  // _tileDefenseBonus 目前僅存放，尚未接到攻城/防禦計算（待策略系統完整化）。
   var _tileNextTurnGrainBonus:Map<Int, Int>;
   var _tileNextTurnGoldBonus:Map<Int, Int>;
   var _tileDefenseBonus:Map<Int, Float>;
@@ -307,7 +307,7 @@ class GameMatchCore implements IGameMatch {
 
   /** 規剘：經過起點給予獎勵（骨架：以 prestige 分三段）。 */
   public function onPassStartTile(ruler:Monarch):Void {
-    // TODO(num-algo): docs/數值算法.md §7（聲望算法）目前僅有「三段獎勵」骨架，未對齊文件的聲望變化/影響全表與回合/行為觸發點。
+    // NOTE(num-algo): 起點獎勵對齊 docs/數值算法.md §7.2；其餘聲望變化/影響可逐步擴充。
     // 對齊 docs/數值算法.md 7.2（起點獎勵）：高/中/低聲望三段獎勵（之後可搬到 Balance 或資料表）
     var p = ruler.prestige();
     if (p >= 70) {
@@ -333,7 +333,7 @@ class GameMatchCore implements IGameMatch {
    * 後續對齊 2.1.7 時，應改為「地形/成長率」驅動並存入領地資源庫。
    */
   function applyTerritoryGrowthOnPassStart():Void {
-    // TODO(num-algo): docs/數值算法.md §6.1（資源成長）文件為「地形係數×城池等級係數×武將政治加成」；目前採用 ver1 的 base growth + levelMult + garrison statMult，尚未完全對齊係數表與公式。
+    // NOTE(num-algo): ver1 資源成長已對齊 docs/數值算法.md §6.1（等級係數、地形成長表、政治加成）。
     if (_board == null)
       return;
     var len = _board.length();
@@ -419,7 +419,8 @@ class GameMatchCore implements IGameMatch {
   }
 
   function rollTerrain(idx:TileIndex):TerrainKind {
-    // TODO(num-algo): docs/數值算法.md §1.0（格子類型出現概率）與地形/格子生成尚未整合；目前 terrain 以近似均勻分布生成（非文件概率表）。
+    // NOTE(num-algo): docs/數值算法.md §1.0（格子類型出現概率）屬「TileKind 生成」層面；
+    // ver1 的 terrain 先採近似均勻分布（尚未引入地形權重表）。
     var u = Deterministic.hash01('terrain|t=${idx}');
     // 依大致均勻分布（之後可改權重）
     if (u < 0.18)
@@ -638,7 +639,7 @@ class GameMatchCore implements IGameMatch {
   }
 
   public function forceRegisterMovementStepHook(h:IJiCeMovementStepHook):Void {
-    // TODO(convention): force* 僅供測試/除錯使用；正式規剘請改呼叫 registerMovementStepHook。
+    // NOTE(convention): force* 僅供測試/除錯使用；正式規剘請改呼叫 registerMovementStepHook。
     registerMovementStepHook(h);
   }
 
@@ -651,7 +652,7 @@ class GameMatchCore implements IGameMatch {
   }
 
   public function forceUnregisterMovementStepHook(h:IJiCeMovementStepHook):Void {
-    // TODO(convention): force* 僅供測試/除錯使用；正式規剘請改呼叫 unregisterMovementStepHook。
+    // NOTE(convention): force* 僅供測試/除錯使用；正式規剘請改呼叫 unregisterMovementStepHook。
     unregisterMovementStepHook(h);
   }
 
@@ -661,7 +662,7 @@ class GameMatchCore implements IGameMatch {
   }
 
   public function forceBindTileEvent(at:TileIndex, handler:ITileEvent):Void {
-    // TODO(convention): force* 僅供測試/除錯使用；正式規剘請改呼叫 bindTileEvent。
+    // NOTE(convention): force* 僅供測試/除錯使用；正式規剘請改呼叫 bindTileEvent。
     bindTileEvent(at, handler);
   }
 
@@ -2651,7 +2652,7 @@ class GameMatchCore implements IGameMatch {
   public function roundNumber():Int
     return _roundNumber;
 
-  // TODO(strategy-tile): 後續若 UI 要顯示格子加成/防禦，補進 IGameMatchGetter 對應 query。
+  // NOTE(strategy-tile): 若 UI 要顯示格子加成/防禦，可補進 IGameMatchGetter 對應 query。
   public function forceAddTileNextTurnGrainBonus(at:TileIndex, amount:Int):Void {
     var prev = _tileNextTurnGrainBonus.exists(at) ? _tileNextTurnGrainBonus.get(at) : 0;
     _tileNextTurnGrainBonus.set(at, prev + amount);

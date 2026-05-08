@@ -26,7 +26,7 @@ import impl_ver1.jice.JiCeApply;
  * - 消耗：中
  * - 主要屬性：政治
  *
- * TODO(strategy-tile): docs 語意為「提升目標格子的防禦力」；
+ * NOTE(strategy-tile): docs 語意為「提升目標格子的防禦力」；
  * 目前先寫入 GameMatchCore 的 _tileDefenseBonus（尚未接到攻城/防禦計算）。
  */
 class FortifyJiCe implements IJiCe {
@@ -112,7 +112,7 @@ class FortifyJiCe implements IJiCe {
       JiCeApply.popupCaster(gameMatch, ruler.id(), designLabel(), phase, casterId, Stewardship, tier, roll, '格 $targetTile', effectLines, "jice-fortify");
       return;
     }
-    gameMatch.forceAddTileDefenseBonus(targetTile, 0.15); // TODO(strategy-tile): 以規格表調整
+    gameMatch.forceAddTileDefenseBonus(targetTile, 0.15); // NOTE(balance): 數值待平衡表調整
     effectLines.push("防禦加成 +0.15");
     JiCeApply.popupCaster(gameMatch, ruler.id(), designLabel(), phase, casterId, Stewardship, tier, roll, '格 $targetTile', effectLines, "jice-fortify");
   }

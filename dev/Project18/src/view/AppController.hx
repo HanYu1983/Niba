@@ -106,12 +106,12 @@ class AppController {
     EventCenter.publishViewModel(vm);
   }
 
-  // TODO(router-command): 目前 ChangePage(TestPage2) 會「重建 match」並 publish 新 VM。
+  // NOTE(router-command): 目前 ChangePage(TestPage2) 會「重建 match」並 publish 新 VM。
   // 後續如果要支持更多測試頁/關卡：
   // - 建議引入一個 `SceneKey`（或直接用 LevelKeys）統一描述「要載入的場景」
   // - AppController 只做 key → buildMatch 的 mapping（避免 switch 越來越長）
   //
-  // TODO(router-command): 若未來要支持「同場景內切換 Inspector/Debug」這種純 UI 導航，
+  // NOTE(router-command): 若未來要支持「同場景內切換 Inspector/Debug」這種純 UI 導航，
   // ChangePage 應只改 ViewState，不重建 match；而 NewGame/ResetGame/LoadScene 才重建 match。
 
   static function initDemoMatch(match:IGameMatch):Void {

@@ -296,11 +296,11 @@ class BasicViewModel implements IViewModel {
       }
       throw e;
     }
-    // TODO(popup): 目前僅攔截 GameError 並轉 popup；其他例外會直接拋出（利於除錯）。
-    // 下一步可評估是否要在「非開發模式」也攔截一般例外並顯示「系統錯誤」popup（但要保留堆疊供回報）。
+    // NOTE(popup): 目前僅攔截 GameError 並轉 popup；其他例外會直接拋出（利於除錯）。
+    // 若要做「正式版更友善」的錯誤呈現，可在非開發模式也攔截一般例外並顯示「系統錯誤」popup（同時保留堆疊供回報）。
     //
-    // TODO(popup): 可把「哪些錯誤要轉 popup」的策略抽成一個 helper（例如 view/GameErrorPresenter），
-    // 避免 BasicViewModel 逐步長大後 catch 區塊變成各種特例的堆疊。
+    // NOTE(popup): 若 catch 規則變複雜，建議抽出 presenter（例如 view/GameErrorPresenter），
+    // 避免 BasicViewModel 逐步長大後 catch 區塊變成各種特例堆疊。
   }
 
   function snapshotWrapMonarchs(xs:Array<IMonarch>):Array<IMonarch> {

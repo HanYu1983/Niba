@@ -141,7 +141,7 @@ class HtmlRouterView {
     btnP4.onclick = function(_) EventCenter.publishCommand(UiCommand.ChangePage(ViewState.TestPage4AI));
     bar.appendChild(btnP4);
 
-    // TODO(router-ui): 「測試頁2」目前用 ChangePage(TestPage2) 觸發 controller 重建 match。
+    // NOTE(router-ui): 「測試頁2」目前用 ChangePage(TestPage2) 觸發 controller 重建 match。
     // 若後續要新增更多測試場景，建議改成下拉選單：
     // - 選擇 SceneKey/LevelKey 後送 `UiCommand.NewGame(key)` 或新增 `UiCommand.LoadScene(sceneKey)`
     // - ChangePage 保持純 UI 導航（Main/Debug/Inspector...）

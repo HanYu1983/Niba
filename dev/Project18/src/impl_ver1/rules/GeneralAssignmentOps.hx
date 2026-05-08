@@ -20,7 +20,8 @@ class GeneralAssignmentOps {
    * Ver1：把「指派武將」映射到一個可預覽的成功率。
    * 目前先借用 Balance.strategySuccessRate 的形狀（stat 1~100 + tier + stamina）。
    *
-   * TODO(GDD): 若未來資源格加成不需要成功率（一定成功），可讓 successRate 固定 1.0。
+   * NOTE(GDD): 若未來資源格加成改為「必定成功」，可讓此 preview 直接回傳 1.0，
+   * 或在 ResourceTileBoostStagingAction 走 previewWithRate（避免 UI 誤導）。
    */
   public static function preview(spec:GeneralAssignmentSpec, g:IGeneral, tier:StrategyCostTier, summary:String):GeneralAssignmentPreview {
     var rate = Balance.strategySuccessRate(g.stat(spec.statUsed), tier, g.stamina());

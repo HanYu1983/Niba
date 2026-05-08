@@ -334,10 +334,8 @@ class GameMatchVer1Ops {
 
   /** 攻方確認結算後套用實際戰果（扣糧、易主、駐軍損耗等）；呼叫時仍可讀 pending 暫存。 */
   public static function applyHostileCitySettlementAck(m:GameMatchCore, actor:IPlayer, menuNode:IPlayerMenuNode):Void {
-    // TODO(num-algo): docs/數值算法.md §3（攻占機率算法）此處仍為「攻城戰」骨架：
-    // - 缺 0.85~1.15 隨機係數
-    // - 缺守方武將/駐將體力修正與更完整的防守戰力定義
-    // - 缺「掠奪比例/友好度變動/資源處理」等文件規則
+    // NOTE(num-algo): ver1「攻城戰」以 docs/數值算法.md §3 的形狀落地（含 0.85~1.15 隨機係數與城防加成）。
+    // 城池不含友好度修正（該修正用於村落/攻占），並保留後續擴充空間（駐防設施/計策防禦等）。
     var idx = m.forceGetPendingHostileCityTile();
     if (idx == null)
       return;
@@ -374,20 +372,69 @@ class GameMatchVer1Ops {
     if (gAtk == null)
       return;
 
-    var atkPower = commit * ((gAtk.stat(Might) / 100.0) + (gAtk.stat(Command) / 100.0) * 0.5) * Balance.staminaModifier(gAtk.stamina());
-    var defPower = defCityTroops * 0.8 * cityBonus; // 骨架：守城以 city stored troops 為主
-    var win = atkPower > defPower;
+    // docs/數值算法.md 3.2：戰力 = 士兵數 × (武力係數 + 統率係數) × 體力修正 × (城防加成) × 隨機係數
+    var atkBase = commit * ((gAtk.stat(Might) / 100.0) + (gAtk.stat(Command) / 100.0) * 0.5) * Balance.staminaModifier(gAtk.stamina());
+
+    // 守方武將：優先用「守方單挑選將」（必為駐守）；否則以駐守第一名；再不然用 0.8 係數的骨架
+    var defGid = m._hostileCityDefenderGeneralId;
+    if (defGid == null) {
+      var gs = m.forceGetCityGarrisonGeneralIds(idx);
+      if (gs.length > 0)
+        defGid = gs[0];
+    }
+    var defBase:Float = 0;
+    if (defGid != null) {
+      // 由君主 roster 尋找武將（避免引入新的 core API）
+      var gDef:Null<General> = null;
+      for (mm in m.monarchs()) {
+        var mon = cast(mm, Monarch);
+        for (gg in mon.roster())
+          if (gg.id() == defGid) {
+            gDef = cast gg;
+            break;
+          }
+        if (gDef != null)
+          break;
+      }
+      if (gDef != null) {
+        defBase = defCityTroops * ((gDef.stat(Might) / 100.0) + (gDef.stat(Command) / 100.0) * 0.5) * Balance.staminaModifier(gDef.stamina()) * cityBonus;
+      } else {
+        defBase = defCityTroops * 0.8 * cityBonus;
+      }
+    } else {
+      defBase = defCityTroops * 0.8 * cityBonus;
+    }
+
+    var seed = 'hostile_city_siege|t=${idx}|r=${m.roundNumber()}|atk=${atkId}|def=${defId}|g=${gid}|c=${commit}';
+    var atkRand = 0.85 + impl_ver1.util.Deterministic.hash01(seed + "|atk") * 0.30;
+    var defRand = 0.85 + impl_ver1.util.Deterministic.hash01(seed + "|def") * 0.30;
+    var win = (atkBase * atkRand) > (defBase * defRand);
 
     if (win) {
-      // 攻方投入損耗 20%
-      atkMon.reduceTroops(Std.int(Math.floor(commit * 0.2)));
-      // 城池易主，並削減城池駐軍（骨架：-30%）
-      var newTroops = Std.int(Math.floor(defCityTroops * 0.7));
-      m.forcePutCityStores(idx, newTroops, m.forceGetCityStoredGrain(idx));
+      // 攻占成功：城池易主；掠奪儲備 30%（比照 docs/數值算法.md 3.3）
+      atkMon.reduceTroops(commit);
+
+      var prevGold = m.forceGetCityStoredGold(idx);
+      var prevGrain = m.forceGetCityStoredGrain(idx);
+      var prevTroops = m.forceGetCityStoredTroops(idx);
+      var lootGold = Std.int(Math.floor(prevGold * 0.30));
+      var lootGrain = Std.int(Math.floor(prevGrain * 0.30));
+      var lootTroops = Std.int(Math.floor(prevTroops * 0.30));
+      if (lootGold > 0)
+        atkMon.grantGold(lootGold);
+      if (lootGrain > 0)
+        atkMon.grantGrain(lootGrain);
+      if (lootTroops > 0)
+        atkMon.grantTroops(lootTroops);
+
+      m.forcePutCityStoredGold(idx, prevGold - lootGold);
+      m.forcePutCityStores(idx, prevTroops - lootTroops, prevGrain - lootGrain);
       m.forceSetCityOwner(idx, atkId);
     } else {
-      // 攻方失敗：投入損耗 50%
-      atkMon.reduceTroops(Std.int(Math.floor(commit * 0.5)));
+      // 攻占失敗：投入士兵損失 20%（docs/數值算法.md 3.3）
+      var loss = Std.int(Math.floor(commit * 0.20));
+      if (loss > 0)
+        atkMon.reduceTroops(loss);
     }
   }
 

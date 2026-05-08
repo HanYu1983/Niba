@@ -28,7 +28,7 @@ import impl_ver1.jice.JiCeApply;
  * - 主要屬性：智力
  * - 使用時機：移動前、移動後（敵方領地）
  *
- * TODO(strategy-tile): 目前 tile 僅有 kind/index；尚無「敵方領地」判定與格子駐軍模型。
+ * NOTE(strategy-tile): ver1 尚未有「敵方領地」判定與格子駐軍模型；
  * 先以 City 格的 storedTroops 作為示範目標。
  */
 class FireJiCe implements IJiCe {
@@ -121,7 +121,7 @@ class FireJiCe implements IJiCe {
     // 骨架：僅對 City 格生效（示範用）
     if (tile.kind() == TileKind.City) {
       var prevT = gameMatch.forceGetCityStoredTroops(targetTile);
-      var loss = Balance.clampInt(Std.int(prevT * 0.2), 0, prevT); // TODO(strategy-tile): 以規格表調整
+      var loss = Balance.clampInt(Std.int(prevT * 0.2), 0, prevT); // NOTE(balance): 數值待平衡表調整
       gameMatch.putCityStores(targetTile, prevT - loss, gameMatch.forceGetCityStoredGrain(targetTile));
       effectLines.push('城池兵力 ${prevT} → ${prevT - loss}（-${loss}）');
     } else {

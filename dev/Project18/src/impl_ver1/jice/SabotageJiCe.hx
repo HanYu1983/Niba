@@ -1,6 +1,5 @@
 package impl_ver1.jice;
 
-import game.Balance;
 import game.GameIds;
 import game.GeneralStat;
 import game.IJiCe;
@@ -27,8 +26,8 @@ import impl_ver1.jice.JiCeApply;
  * - 消耗：高
  * - 主要屬性：智力
  *
- * TODO(strategy-tile): docs 要求「降低城池等級」；目前領域模型尚無城池等級存放。
- * 先以 City 格的 storedGrain 減少作為骨架示範，並留下 TODO。
+ * NOTE(strategy-tile): docs 語意為「降低城池等級」；
+ * ver1 已有城池等級（CityLevel），因此此處直接下調等級（最低為 Village）。
  */
 class SabotageJiCe implements IJiCe {
   public static inline var REGISTRY_KEY = "jice_sabotage";
@@ -116,11 +115,15 @@ class SabotageJiCe implements IJiCe {
 
     var tile = gameMatch.tileAt(targetTile);
     if (tile.kind() == TileKind.City) {
-      // TODO(strategy-tile): 改為城池等級下降；目前先做資源破壞示範。
-      var prevG = gameMatch.forceGetCityStoredGrain(targetTile);
-      var loss = Balance.clampInt(Std.int(prevG * 0.25), 0, prevG);
-      gameMatch.putCityStores(targetTile, gameMatch.forceGetCityStoredTroops(targetTile), prevG - loss);
-      effectLines.push('城池糧食 ${prevG} → ${prevG - loss}（-${loss}）');
+      var before = gameMatch.forceGetCityLevel(targetTile);
+      var after = switch before {
+        case Capital: game.CityLevel.BigCity;
+        case BigCity: game.CityLevel.SmallCity;
+        case SmallCity: game.CityLevel.Village;
+        case Village: game.CityLevel.Village;
+      };
+      gameMatch.forceSetCityLevel(targetTile, after);
+      effectLines.push('城池等級 ${Std.string(before)} → ${Std.string(after)}');
     } else {
       effectLines.push("目標非城池，無效果");
     }

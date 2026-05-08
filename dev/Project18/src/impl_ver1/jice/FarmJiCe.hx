@@ -26,8 +26,8 @@ import impl_ver1.jice.JiCeApply;
  * - 消耗：低
  * - 主要屬性：政治
  *
- * TODO(strategy-tile): docs 語意為「提升目標格子下回合糧食產出」；
- * 目前先寫入 GameMatchCore 的 _tileNextTurnGrainBonus（尚未有結算點）。
+ * NOTE(strategy-tile): docs 語意為「提升目標格子下回合糧食產出」；
+ * ver1 以一次性「下回合加成」寫入 GameMatchCore，並在回合結算時統一套用。
  */
 class FarmJiCe implements IJiCe {
   public static inline var REGISTRY_KEY = "jice_farm";
@@ -112,7 +112,7 @@ class FarmJiCe implements IJiCe {
       JiCeApply.popupCaster(gameMatch, ruler.id(), designLabel(), phase, casterId, Stewardship, tier, roll, '格 $targetTile', effectLines, "jice-farm");
       return;
     }
-    gameMatch.forceAddTileNextTurnGrainBonus(targetTile, 100); // TODO(strategy-tile): 以規格表調整
+    gameMatch.forceAddTileNextTurnGrainBonus(targetTile, 100); // NOTE(balance): 數值待平衡表調整
     effectLines.push("下回合糧食產出 +100");
     JiCeApply.popupCaster(gameMatch, ruler.id(), designLabel(), phase, casterId, Stewardship, tier, roll, '格 $targetTile', effectLines, "jice-farm");
   }

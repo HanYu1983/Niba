@@ -37,7 +37,7 @@ import game.TileGrowth;
  * 零件工廠（createTile／createBoard／…）於取得賽局後由此介面提供，與關卡組立解耦。
  */
 interface IGameMatch extends IGameMatchGetter {
-    // TODO(num-algo): docs/數值算法.md 落地追蹤（介面層缺口/未實作規則清單）
+    // NOTE(num-algo): docs/數值算法.md 落地追蹤（介面層缺口/未實作規則清單）
     // - §1.0 格子類型出現概率：尚未有「依概率生成 TileKind」的正式 API/規則入口（目前多由關卡或測試直接 createTile）。
     // - §2 搶奪機率算法：缺「搶奪戰鬥」的正式流程/結算 API（包含隨機係數 0.85~1.15、資源獲取比例、不改變所有權等）。
     // - §3 攻占機率算法：目前攻城/攻占仍有大量骨架（隨機係數、友好度/城防/駐將參與、掠奪/資源處理等）。

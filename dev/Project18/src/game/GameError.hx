@@ -11,18 +11,29 @@ import haxe.Exception;
 class GameError extends Exception {
   public var popupTitle(default, null):String;
   public var ctxKey(default, null):String;
+  /** 穩定代碼（給 UI/測試使用）；可為 null 代表未分類。 */
+  public var code(default, null):Null<String>;
 
-  public function new(message:String, ?popupTitle:String = "操作失敗", ?ctxKey:String = "game-error") {
+  public function new(message:String, ?popupTitle:String = "操作失敗", ?ctxKey:String = "game-error", ?code:Null<String> = null) {
     super(message);
     this.popupTitle = popupTitle;
     this.ctxKey = ctxKey;
+    this.code = code;
   }
 
-  // TODO(game-error): 建議新增 error code（例如 enum GameErrorCode）：
-  // - 讓 UI 可用 code 做在地化/一致文案（而不是依 message 字串比對）
-  // - 讓測試可 assert code，而非 assert message
-  //
-  // TODO(game-error): 可提供一些靜態建構子（例如 GameError.insufficientGold(required, current)）
-  // 讓 core 不必重複拼字串/ctxKey，並避免文案散落。
+  // NOTE(game-error): 建議 UI 優先依 code 呈現一致文案（避免依 message 字串比對）。
+  // NOTE(game-error): 若日後需要更強型別，可再抽 enum（或 union）取代 String code。
+
+  public static inline function insufficientGold(required:Int, current:Int, ?ctxKey:String = "economy/insufficient-gold"):GameError {
+    return new GameError("金錢不足（需要 " + required + "，目前 " + current + "）。", "資源不足", ctxKey, "INSUFFICIENT_GOLD");
+  }
+
+  public static inline function insufficientGrain(required:Int, current:Int, ?ctxKey:String = "economy/insufficient-grain"):GameError {
+    return new GameError("糧食不足（需要 " + required + "，目前 " + current + "）。", "資源不足", ctxKey, "INSUFFICIENT_GRAIN");
+  }
+
+  public static inline function insufficientTroops(required:Int, current:Int, ?ctxKey:String = "economy/insufficient-troops"):GameError {
+    return new GameError("兵力不足（需要 " + required + "，目前 " + current + "）。", "資源不足", ctxKey, "INSUFFICIENT_TROOPS");
+  }
 }
 

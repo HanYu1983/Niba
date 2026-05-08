@@ -26,8 +26,8 @@ import impl_ver1.jice.JiCeApply;
  * - 消耗：低
  * - 主要屬性：政治
  *
- * TODO(strategy-tile): 需要君主 gold 資源欄位與「下回合金錢產出」結算點。
- * 目前先寫入 GameMatchCore 的 _tileNextTurnGoldBonus（尚未有結算點）。
+ * NOTE(strategy-tile): 目前寫入 GameMatchCore 的 _tileNextTurnGoldBonus，
+ * 並在回合結算時統一套用（一次性加成）。
  */
 class TradeRouteJiCe implements IJiCe {
   public static inline var REGISTRY_KEY = "jice_trade_route";
@@ -112,7 +112,7 @@ class TradeRouteJiCe implements IJiCe {
       JiCeApply.popupCaster(gameMatch, ruler.id(), designLabel(), phase, casterId, Stewardship, tier, roll, '格 $targetTile', effectLines, "jice-trade-route");
       return;
     }
-    gameMatch.forceAddTileNextTurnGoldBonus(targetTile, 100); // TODO(strategy-tile): 以規格表調整
+    gameMatch.forceAddTileNextTurnGoldBonus(targetTile, 100); // NOTE(balance): 數值待平衡表調整
     effectLines.push("下回合金錢產出 +100");
     JiCeApply.popupCaster(gameMatch, ruler.id(), designLabel(), phase, casterId, Stewardship, tier, roll, '格 $targetTile', effectLines, "jice-trade-route");
   }
