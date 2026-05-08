@@ -111,12 +111,12 @@ class VillageDevelopStagingAction implements IStagingAction {
     if (idx == null) {
       if (sigMismatch)
         throw JiCeMenuSig.stateChangedError("狀態已變更，請重新開啟村落開發。", "village-develop/state-changed");
-      throw new GameError("必須在拜訪村落時才能進行開發。", "操作失敗", "village-develop/pending");
+      throw "VillageDevelopStagingAction: pending missing (sig matched) — menu/widget mismatch";
     }
     if (owner == null || owner != ruler.id()) {
       if (sigMismatch)
         throw JiCeMenuSig.stateChangedError("狀態已變更，村落不再屬於我方。", "village-develop/state-changed");
-      throw new GameError("只有我方已歸順的村落才能開發。", "操作失敗", "village-develop/not-owned");
+      throw "VillageDevelopStagingAction: not-owned (sig matched) — menu/widget mismatch";
     }
 
     var gid = GeneralAssignmentApply.pickSingleGeneralId(menuNode.formWidgets());

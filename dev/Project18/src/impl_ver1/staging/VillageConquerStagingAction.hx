@@ -102,7 +102,7 @@ class VillageConquerStagingAction implements IStagingAction {
     if (vIdx == null) {
       if (sigMismatch)
         throw JiCeMenuSig.stateChangedError("狀態已變更，請重新開啟村落攻占。", "village-conquer/state-changed");
-      throw new GameError("必須在拜訪村落時才能攻占。", "操作失敗", "village-conquer/pending");
+      throw "VillageConquerStagingAction: pending missing (sig matched) — menu/widget mismatch";
     }
 
     var commitTroops:Int = 0;

@@ -89,7 +89,7 @@ class VillagePlunderStagingAction implements IStagingAction {
     if (vIdx == null) {
       if (sigMismatch)
         throw JiCeMenuSig.stateChangedError("狀態已變更，請重新開啟村落搶奪。", "village-plunder/state-changed");
-      throw new GameError("必須在拜訪村落時才能搶奪。", "操作失敗", "village-plunder/pending");
+      throw "VillagePlunderStagingAction: pending missing (sig matched) — menu/widget mismatch";
     }
     var gid = impl_ver1.rules.GeneralAssignmentApply.pickSingleGeneralId(menuNode.formWidgets());
     var gOk = false;

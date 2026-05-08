@@ -100,7 +100,7 @@ class FriendlyCityDevelopStagingAction implements IStagingAction {
     if (idx == null) {
       if (sigMismatch)
         throw JiCeMenuSig.stateChangedError("狀態已變更，請重新開啟領地開發。", "friendly-city-develop/state-changed");
-      throw new GameError("必須在拜訪我方城池時才能開發。", "操作失敗", "friendly-city-develop/pending");
+      throw "FriendlyCityDevelopStagingAction: pending missing (sig matched) — menu/widget mismatch";
     }
 
     var gid = GeneralAssignmentApply.pickSingleGeneralId(menuNode.formWidgets());

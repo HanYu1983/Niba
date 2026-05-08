@@ -85,7 +85,7 @@ class FriendlyCityRestStagingAction implements IStagingAction {
     if (idx == null) {
       if (sigMismatch)
         throw JiCeMenuSig.stateChangedError("狀態已變更，請重新開啟領地休整。", "friendly-rest/state-changed");
-      throw new GameError("必須在拜訪我方城池時才能領地休整。", "操作失敗", "friendly-rest/pending");
+      throw "FriendlyCityRestStagingAction: pending missing (sig matched) — menu/widget mismatch";
     }
     var widgets = menuNode.formWidgets();
     if (widgets == null || widgets.length == 0)

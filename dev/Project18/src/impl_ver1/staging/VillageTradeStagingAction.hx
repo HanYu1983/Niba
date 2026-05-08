@@ -97,7 +97,7 @@ class VillageTradeStagingAction implements IStagingAction {
     if (vIdx == null) {
       if (sigMismatch)
         throw JiCeMenuSig.stateChangedError("狀態已變更，請重新開啟村落交易。", "village-trade/state-changed");
-      throw new GameError("必須在拜訪村落時才能交易。", "操作失敗", "village-trade/pending");
+      throw "VillageTradeStagingAction: pending missing (sig matched) — menu/widget mismatch";
     }
     var gid = GeneralAssignmentApply.pickSingleGeneralId(menuNode.formWidgets());
     var gOk = false;
