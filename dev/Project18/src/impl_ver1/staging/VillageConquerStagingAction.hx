@@ -22,6 +22,8 @@ import impl_ver1.model.General;
 import impl_ver1.model.PlayerMenu;
 import game.GameError;
 import impl_ver1.util.Deterministic;
+import game.MenuActivation;
+import impl_ver1.jice.JiCeMenuSig;
 
 /**
  * 村落攻占（示範）：選一名武將 + 選擇投入士兵數（slider）→ 顯示勝率 → 確認提交。
@@ -63,7 +65,13 @@ class VillageConquerStagingAction implements IStagingAction {
     // menu 建構端先做合法性：需有 pending village、至少 1 名武將、且投入兵力預設值 > 0
     var vIdx = match.forceGetPendingVillageTile();
     var enabled = vIdx != null && choices.length > 0 && defTroops > 0 && maxTroops > 0;
-    var submit:IPlayerMenuEntry = match.createPlayerMenuEntry(PlayerMenuKind.StagingSubmit, "確認攻占", enabled, "conquer_ok", conquerConfirm);
+    var sig = JiCeMenuSig.make([
+      registryKey(),
+      "pending=" + (vIdx != null ? Std.string(vIdx) : "null"),
+      "generals=" + choices.map(c -> c.generalId).join(","),
+      "maxTroops=" + Std.string(maxTroops),
+    ]);
+    var submit:IPlayerMenuEntry = match.createPlayerMenuEntry(PlayerMenuKind.StagingSubmit, "確認攻占", enabled, JiCeMenuSig.attach("conquer_ok", sig), conquerConfirm);
     var widgets:Array<MenuFormWidget> = [
       GeneralMultiPick("選擇攻占武將（單選）", choices, defSel),
       Slider("投入士兵數", 0, maxTroops, 1, defTroops),
@@ -77,9 +85,25 @@ class VillageConquerStagingAction implements IStagingAction {
     var ruler = cast(match.activeMonarch(), Monarch);
     if (actor.monarchId() != ruler.id())
       throw new GameError("目前不是你的回合，無法攻占。", "操作失敗", "village-conquer/actor");
+    var token = MenuActivation.activatingEntry(menuNode).decisionToken();
+    var gotSig = JiCeMenuSig.parseSig(token);
     var vIdx = match.forceGetPendingVillageTile();
-    if (vIdx == null)
+    var nowChoices:Array<game.MenuGeneralChoice> = [];
+    for (g in ruler.roster())
+      nowChoices.push({generalId: g.id(), caption: g.id()});
+    var nowMaxTroops = ruler.troops();
+    var nowSig = JiCeMenuSig.make([
+      registryKey(),
+      "pending=" + (vIdx != null ? Std.string(vIdx) : "null"),
+      "generals=" + nowChoices.map(c -> c.generalId).join(","),
+      "maxTroops=" + Std.string(nowMaxTroops),
+    ]);
+    var sigMismatch = (gotSig != null && gotSig != nowSig);
+    if (vIdx == null) {
+      if (sigMismatch)
+        throw JiCeMenuSig.stateChangedError("狀態已變更，請重新開啟村落攻占。", "village-conquer/state-changed");
       throw new GameError("必須在拜訪村落時才能攻占。", "操作失敗", "village-conquer/pending");
+    }
 
     var commitTroops:Int = 0;
     for (w in menuNode.formWidgets())
@@ -88,14 +112,26 @@ class VillageConquerStagingAction implements IStagingAction {
           commitTroops = v;
         default:
       }
-    if (commitTroops <= 0)
-      throw new GameError("投入士兵數必須大於 0。", "輸入不合法", "village-conquer/invalid-troops");
+    if (commitTroops <= 0 || commitTroops > nowMaxTroops) {
+      if (sigMismatch)
+        throw JiCeMenuSig.stateChangedError("狀態已變更，投入兵力已不合法。", "village-conquer/state-changed");
+      throw "VillageConquerStagingAction: invalid-troops (sig matched) — menu/widget mismatch";
+    }
 
     var gid = GeneralAssignmentApply.pickSingleGeneralId(menuNode.formWidgets());
+    var gOk = false;
+    for (c in nowChoices)
+      if (c.generalId == gid) {
+        gOk = true;
+        break;
+      }
+    if (!gOk) {
+      if (sigMismatch)
+        throw JiCeMenuSig.stateChangedError("狀態已變更，請重新選擇攻占武將。", "village-conquer/state-changed");
+      throw "VillageConquerStagingAction: invalid-choice (sig matched) — menu/widget mismatch";
+    }
     var gAtk = GeneralAssignmentApply.requireOwnedGeneral(ruler, gid);
-
-    if (commitTroops > ruler.troops())
-      throw new GameError("兵力不足，無法投入指定數量。", "資源不足", "village-conquer/insufficient-troops");
+    // commitTroops 已以 nowMaxTroops 檢查
 
     var atkPower = attackPower(commitTroops, gAtk);
     var defPower = defenderPower(vIdx, ruler.id());

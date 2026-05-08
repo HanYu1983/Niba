@@ -20,6 +20,8 @@ import impl_ver1.model.Monarch;
 import impl_ver1.model.General;
 import impl_ver1.model.PlayerMenu;
 import game.GameError;
+import game.MenuActivation;
+import impl_ver1.jice.JiCeMenuSig;
 
 /**
  * 村落交易（示範）：選一名武將進行交易 → 顯示成功率預覽 → 確認提交。
@@ -60,7 +62,13 @@ class VillageTradeStagingAction implements IStagingAction {
     var vIdx = match.forceGetPendingVillageTile();
     var costGold = 20;
     var enabled = vIdx != null && choices.length > 0 && ruler.gold() >= costGold;
-    var submit:IPlayerMenuEntry = match.createPlayerMenuEntry(PlayerMenuKind.StagingSubmit, "確認交易", enabled, "trade_ok", tradeConfirm);
+    var sig = JiCeMenuSig.make([
+      registryKey(),
+      "pending=" + (vIdx != null ? Std.string(vIdx) : "null"),
+      "generals=" + choices.map(c -> c.generalId).join(","),
+      "gold=" + Std.string(ruler.gold()),
+    ]);
+    var submit:IPlayerMenuEntry = match.createPlayerMenuEntry(PlayerMenuKind.StagingSubmit, "確認交易", enabled, JiCeMenuSig.attach("trade_ok", sig), tradeConfirm);
     var widgets:Array<MenuFormWidget> = [
       GeneralMultiPick("選擇交易武將（單選）", choices, defSel),
       Button(submit),
@@ -73,10 +81,36 @@ class VillageTradeStagingAction implements IStagingAction {
     var ruler = cast(match.activeMonarch(), Monarch);
     if (actor.monarchId() != ruler.id())
       throw new GameError("目前不是你的回合，無法交易。", "操作失敗", "village-trade/actor");
+    var token = MenuActivation.activatingEntry(menuNode).decisionToken();
+    var gotSig = JiCeMenuSig.parseSig(token);
     var vIdx = match.forceGetPendingVillageTile();
-    if (vIdx == null)
+    var nowChoices:Array<game.MenuGeneralChoice> = [];
+    for (g in ruler.roster())
+      nowChoices.push({generalId: g.id(), caption: g.id()});
+    var nowSig = JiCeMenuSig.make([
+      registryKey(),
+      "pending=" + (vIdx != null ? Std.string(vIdx) : "null"),
+      "generals=" + nowChoices.map(c -> c.generalId).join(","),
+      "gold=" + Std.string(ruler.gold()),
+    ]);
+    var sigMismatch = (gotSig != null && gotSig != nowSig);
+    if (vIdx == null) {
+      if (sigMismatch)
+        throw JiCeMenuSig.stateChangedError("狀態已變更，請重新開啟村落交易。", "village-trade/state-changed");
       throw new GameError("必須在拜訪村落時才能交易。", "操作失敗", "village-trade/pending");
+    }
     var gid = GeneralAssignmentApply.pickSingleGeneralId(menuNode.formWidgets());
+    var gOk = false;
+    for (c in nowChoices)
+      if (c.generalId == gid) {
+        gOk = true;
+        break;
+      }
+    if (!gOk) {
+      if (sigMismatch)
+        throw JiCeMenuSig.stateChangedError("狀態已變更，請重新選擇交易武將。", "village-trade/state-changed");
+      throw "VillageTradeStagingAction: invalid-choice (sig matched) — menu/widget mismatch";
+    }
 
     // 真結算線（對齊 GDD 2.1.3）：
     // - 需要指派武將、消耗體力
@@ -86,8 +120,11 @@ class VillageTradeStagingAction implements IStagingAction {
     // NOTE(num-algo): 交易成功率對齊 docs/數值算法.md §5.1；
     // 但交易規模/交換公式目前仍為 ver1 簡化版（文件未提供完整換算表時先保持可玩）。
     var costGold = 20;
-    if (ruler.gold() < costGold)
-      throw new GameError('金錢不足（需要 ${costGold}）。', "資源不足", "village-trade/insufficient-gold");
+    if (ruler.gold() < costGold) {
+      if (sigMismatch)
+        throw JiCeMenuSig.stateChangedError("狀態已變更，金錢不足。請重新開啟交易。", "village-trade/state-changed");
+      throw "VillageTradeStagingAction: insufficient-gold (sig matched) — menu/widget mismatch";
+    }
 
     var gg = GeneralAssignmentApply.requireOwnedGeneral(ruler, gid);
     var pol = gg.stat(Stewardship);

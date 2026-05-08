@@ -17,6 +17,8 @@ import impl_ver1.model.Monarch;
 import impl_ver1.model.General;
 import impl_ver1.model.PlayerMenu;
 import game.GameError;
+import game.MenuActivation;
+import impl_ver1.jice.JiCeMenuSig;
 
 /** 休整（staging）：選一名武將回復體力。 */
 class RestStagingAction implements IStagingAction {
@@ -46,7 +48,8 @@ class RestStagingAction implements IStagingAction {
         defSel.push(gid);
     }
     // menu 建構端先做合法性：至少 1 名武將
-    var submit = match.createPlayerMenuEntry(PlayerMenuKind.StagingSubmit, "確認休整", choices.length > 0, "rest_ok");
+    var sig = JiCeMenuSig.make([registryKey(), "generals=" + choices.map(c -> c.generalId).join(",")]);
+    var submit = match.createPlayerMenuEntry(PlayerMenuKind.StagingSubmit, "確認休整", choices.length > 0, JiCeMenuSig.attach("rest_ok", sig));
     var widgets:Array<MenuFormWidget> = [
       GeneralMultiPick("選擇休整武將（單選）", choices, defSel),
       Button(submit),
@@ -59,11 +62,29 @@ class RestStagingAction implements IStagingAction {
     var ruler = cast(match.activeMonarch(), Monarch);
     if (actor.monarchId() != ruler.id())
       throw new GameError("目前不是你的回合，無法休整。", "操作失敗", "rest/actor");
+    var token = MenuActivation.activatingEntry(menuNode).decisionToken();
+    var gotSig = JiCeMenuSig.parseSig(token);
     var widgets = menuNode.formWidgets();
     if (widgets == null || widgets.length == 0)
       throw new GameError("休整表單異常（缺少輸入）。", "操作失敗", "rest/missing-widgets");
 
     var gid = GeneralAssignmentApply.pickSingleGeneralId(widgets);
+    var nowChoices:Array<game.MenuGeneralChoice> = [];
+    for (g in ruler.roster())
+      nowChoices.push({generalId: g.id(), caption: g.id()});
+    var nowSig = JiCeMenuSig.make([registryKey(), "generals=" + nowChoices.map(c -> c.generalId).join(",")]);
+    var sigMismatch = (gotSig != null && gotSig != nowSig);
+    var gOk = false;
+    for (c in nowChoices)
+      if (c.generalId == gid) {
+        gOk = true;
+        break;
+      }
+    if (!gOk) {
+      if (sigMismatch)
+        throw JiCeMenuSig.stateChangedError("狀態已變更，請重新選擇休整武將。", "rest/state-changed");
+      throw "RestStagingAction: invalid-choice (sig matched) — menu/widget mismatch";
+    }
     var target = GeneralAssignmentApply.requireOwnedGeneral(ruler, gid);
 
     var prevSt = target.stamina();

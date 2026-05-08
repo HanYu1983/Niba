@@ -21,6 +21,8 @@ import impl_ver1.rules.GeneralAssignmentApply;
 import impl_ver1.util.Deterministic;
 import game.CityLevel;
 import game.GameError;
+import game.MenuActivation;
+import impl_ver1.jice.JiCeMenuSig;
 
 /**
  * 我方領地開發（骨架）：選一名武將 → 預覽成功率 → 提交。
@@ -61,7 +63,14 @@ class FriendlyCityDevelopStagingAction implements IStagingAction {
       && choices.length > 0
       && match.forceGetCityStoredGold(idx) >= costGold
       && match.forceGetCityStoredGrain(idx) >= costGrain;
-    var submit:IPlayerMenuEntry = match.createPlayerMenuEntry(PlayerMenuKind.StagingSubmit, "確認開發", enabled, "dev_ok");
+    var sig = JiCeMenuSig.make([
+      registryKey(),
+      "pending=" + (idx != null ? Std.string(idx) : "null"),
+      "generals=" + choices.map(c -> c.generalId).join(","),
+      "gold=" + (idx != null ? Std.string(match.forceGetCityStoredGold(idx)) : "na"),
+      "grain=" + (idx != null ? Std.string(match.forceGetCityStoredGrain(idx)) : "na"),
+    ]);
+    var submit:IPlayerMenuEntry = match.createPlayerMenuEntry(PlayerMenuKind.StagingSubmit, "確認開發", enabled, JiCeMenuSig.attach("dev_ok", sig));
     var widgets:Array<MenuFormWidget> = [
       GeneralMultiPick("選擇開發武將（單選）", choices, defSel),
       Button(submit),
@@ -74,20 +83,53 @@ class FriendlyCityDevelopStagingAction implements IStagingAction {
     var ruler = cast(match.activeMonarch(), Monarch);
     if (actor.monarchId() != ruler.id())
       throw new GameError("目前不是你的回合，無法執行開發。", "操作失敗", "friendly-city-develop/actor");
+    var token = MenuActivation.activatingEntry(menuNode).decisionToken();
+    var gotSig = JiCeMenuSig.parseSig(token);
     var idx = match.forceGetPendingFriendlyCityVisitTile();
-    if (idx == null)
+    var nowChoices:Array<game.MenuGeneralChoice> = [];
+    for (g in ruler.roster())
+      nowChoices.push({generalId: g.id(), caption: g.id()});
+    var nowSig = JiCeMenuSig.make([
+      registryKey(),
+      "pending=" + (idx != null ? Std.string(idx) : "null"),
+      "generals=" + nowChoices.map(c -> c.generalId).join(","),
+      "gold=" + (idx != null ? Std.string(match.forceGetCityStoredGold(idx)) : "na"),
+      "grain=" + (idx != null ? Std.string(match.forceGetCityStoredGrain(idx)) : "na"),
+    ]);
+    var sigMismatch = (gotSig != null && gotSig != nowSig);
+    if (idx == null) {
+      if (sigMismatch)
+        throw JiCeMenuSig.stateChangedError("狀態已變更，請重新開啟領地開發。", "friendly-city-develop/state-changed");
       throw new GameError("必須在拜訪我方城池時才能開發。", "操作失敗", "friendly-city-develop/pending");
+    }
 
     var gid = GeneralAssignmentApply.pickSingleGeneralId(menuNode.formWidgets());
+    var gOk = false;
+    for (c in nowChoices)
+      if (c.generalId == gid) {
+        gOk = true;
+        break;
+      }
+    if (!gOk) {
+      if (sigMismatch)
+        throw JiCeMenuSig.stateChangedError("狀態已變更，請重新選擇開發武將。", "friendly-city-develop/state-changed");
+      throw "FriendlyCityDevelopStagingAction: invalid-choice (sig matched) — menu/widget mismatch";
+    }
     var g:General = GeneralAssignmentApply.requireOwnedGeneral(ruler, gid);
 
     // 成本（最小版）：花費領地庫內 gold/grain（用城池儲備），並消耗體力
     var costGold = 30;
     var costGrain = 20;
-    if (match.forceGetCityStoredGold(idx) < costGold)
-      throw new GameError('城池金庫不足（需要 ${costGold}）。', "資源不足", "friendly-city-develop/insufficient-gold");
-    if (match.forceGetCityStoredGrain(idx) < costGrain)
-      throw new GameError('城池糧庫不足（需要 ${costGrain}）。', "資源不足", "friendly-city-develop/insufficient-grain");
+    if (match.forceGetCityStoredGold(idx) < costGold) {
+      if (sigMismatch)
+        throw JiCeMenuSig.stateChangedError("狀態已變更，城池金庫不足。請重新開啟開發。", "friendly-city-develop/state-changed");
+      throw "FriendlyCityDevelopStagingAction: insufficient-gold (sig matched) — menu/widget mismatch";
+    }
+    if (match.forceGetCityStoredGrain(idx) < costGrain) {
+      if (sigMismatch)
+        throw JiCeMenuSig.stateChangedError("狀態已變更，城池糧庫不足。請重新開啟開發。", "friendly-city-develop/state-changed");
+      throw "FriendlyCityDevelopStagingAction: insufficient-grain (sig matched) — menu/widget mismatch";
+    }
 
     // 成功率：政治 × 體力（deterministic 擲骰）
     var pol = g.stat(Stewardship);

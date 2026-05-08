@@ -21,6 +21,8 @@ import impl_ver1.rules.GeneralAssignmentOps;
 import impl_ver1.rules.GeneralAssignmentKeys;
 import impl_ver1.util.Deterministic;
 import game.GameError;
+import game.MenuActivation;
+import impl_ver1.jice.JiCeMenuSig;
 
 /**
  * 我方村落開發（最小可用）：
@@ -70,6 +72,15 @@ class VillageDevelopStagingAction implements IStagingAction {
         && match.forceGetVillageStoredGrain(idx) >= costGrain;
     }
     var submit:IPlayerMenuEntry = match.createPlayerMenuEntry(PlayerMenuKind.StagingSubmit, "確認開發", enabled, "v_dev_ok");
+    var sig = JiCeMenuSig.make([
+      registryKey(),
+      "pending=" + (idx != null ? Std.string(idx) : "null"),
+      "owner=" + (idx != null && match.forceGetVillageOwner(idx) != null ? match.forceGetVillageOwner(idx) : "null"),
+      "generals=" + choices.map(c -> c.generalId).join(","),
+      "gold=" + (idx != null ? Std.string(match.forceGetVillageStoredGold(idx)) : "na"),
+      "grain=" + (idx != null ? Std.string(match.forceGetVillageStoredGrain(idx)) : "na"),
+    ]);
+    submit = match.createPlayerMenuEntry(PlayerMenuKind.StagingSubmit, "確認開發", enabled, JiCeMenuSig.attach("v_dev_ok", sig));
     var widgets:Array<MenuFormWidget> = [
       GeneralMultiPick("選擇開發武將（單選）", choices, defSel),
       Button(submit),
@@ -81,22 +92,59 @@ class VillageDevelopStagingAction implements IStagingAction {
     var ruler = cast(match.activeMonarch(), Monarch);
     if (actor.monarchId() != ruler.id())
       throw new GameError("目前不是你的回合，無法進行村落開發。", "操作失敗", "village-develop/actor");
+    var token = MenuActivation.activatingEntry(menuNode).decisionToken();
+    var gotSig = JiCeMenuSig.parseSig(token);
     var idx = match.forceGetPendingVillageTile();
-    if (idx == null)
+    var nowChoices:Array<game.MenuGeneralChoice> = [];
+    for (g in ruler.roster())
+      nowChoices.push({generalId: g.id(), caption: g.id()});
+    var owner = idx != null ? match.forceGetVillageOwner(idx) : null;
+    var nowSig = JiCeMenuSig.make([
+      registryKey(),
+      "pending=" + (idx != null ? Std.string(idx) : "null"),
+      "owner=" + (owner != null ? owner : "null"),
+      "generals=" + nowChoices.map(c -> c.generalId).join(","),
+      "gold=" + (idx != null ? Std.string(match.forceGetVillageStoredGold(idx)) : "na"),
+      "grain=" + (idx != null ? Std.string(match.forceGetVillageStoredGrain(idx)) : "na"),
+    ]);
+    var sigMismatch = (gotSig != null && gotSig != nowSig);
+    if (idx == null) {
+      if (sigMismatch)
+        throw JiCeMenuSig.stateChangedError("狀態已變更，請重新開啟村落開發。", "village-develop/state-changed");
       throw new GameError("必須在拜訪村落時才能進行開發。", "操作失敗", "village-develop/pending");
-    var owner = match.forceGetVillageOwner(idx);
-    if (owner == null || owner != ruler.id())
+    }
+    if (owner == null || owner != ruler.id()) {
+      if (sigMismatch)
+        throw JiCeMenuSig.stateChangedError("狀態已變更，村落不再屬於我方。", "village-develop/state-changed");
       throw new GameError("只有我方已歸順的村落才能開發。", "操作失敗", "village-develop/not-owned");
+    }
 
     var gid = GeneralAssignmentApply.pickSingleGeneralId(menuNode.formWidgets());
+    var gOk = false;
+    for (c in nowChoices)
+      if (c.generalId == gid) {
+        gOk = true;
+        break;
+      }
+    if (!gOk) {
+      if (sigMismatch)
+        throw JiCeMenuSig.stateChangedError("狀態已變更，請重新選擇開發武將。", "village-develop/state-changed");
+      throw "VillageDevelopStagingAction: invalid-choice (sig matched) — menu/widget mismatch";
+    }
     var g:General = GeneralAssignmentApply.requireOwnedGeneral(ruler, gid);
 
     var costGold = 25;
     var costGrain = 25;
-    if (match.forceGetVillageStoredGold(idx) < costGold)
-      throw new GameError('村落金庫不足（需要 ${costGold}）。', "資源不足", "village-develop/insufficient-gold");
-    if (match.forceGetVillageStoredGrain(idx) < costGrain)
-      throw new GameError('村落糧庫不足（需要 ${costGrain}）。', "資源不足", "village-develop/insufficient-grain");
+    if (match.forceGetVillageStoredGold(idx) < costGold) {
+      if (sigMismatch)
+        throw JiCeMenuSig.stateChangedError("狀態已變更，村落金庫不足。請重新開啟開發。", "village-develop/state-changed");
+      throw "VillageDevelopStagingAction: insufficient-gold (sig matched) — menu/widget mismatch";
+    }
+    if (match.forceGetVillageStoredGrain(idx) < costGrain) {
+      if (sigMismatch)
+        throw JiCeMenuSig.stateChangedError("狀態已變更，村落糧庫不足。請重新開啟開發。", "village-develop/state-changed");
+      throw "VillageDevelopStagingAction: insufficient-grain (sig matched) — menu/widget mismatch";
+    }
 
     var pol = g.stat(Stewardship);
     var rate = 0.40 + (pol / 100.0) * 0.40 * Balance.staminaModifier(g.stamina());

@@ -16,6 +16,8 @@ import impl_ver1.model.General;
 import impl_ver1.model.PlayerMenu;
 import game.GameError;
 import impl_ver1.rules.GeneralAssignmentApply;
+import game.MenuActivation;
+import impl_ver1.jice.JiCeMenuSig;
 
 /**
  * 我方領地休整（骨架）：選一名武將 → 提交（回復 +40）。
@@ -50,7 +52,12 @@ class FriendlyCityRestStagingAction implements IStagingAction {
     // menu 建構端先做合法性：需在拜訪我方城池且至少 1 名武將
     var idx = match.forceGetPendingFriendlyCityVisitTile();
     var enabled = idx != null && choices.length > 0;
-    var submit:IPlayerMenuEntry = match.createPlayerMenuEntry(PlayerMenuKind.StagingSubmit, "確認休整", enabled, "friendly_rest_ok");
+    var sig = JiCeMenuSig.make([
+      registryKey(),
+      "pending=" + (idx != null ? Std.string(idx) : "null"),
+      "generals=" + choices.map(c -> c.generalId).join(","),
+    ]);
+    var submit:IPlayerMenuEntry = match.createPlayerMenuEntry(PlayerMenuKind.StagingSubmit, "確認休整", enabled, JiCeMenuSig.attach("friendly_rest_ok", sig));
     var widgets:Array<MenuFormWidget> = [
       GeneralMultiPick("選擇休整武將（單選）", choices, defSel),
       Button(submit),
@@ -63,11 +70,39 @@ class FriendlyCityRestStagingAction implements IStagingAction {
     var ruler = cast(match.activeMonarch(), Monarch);
     if (actor.monarchId() != ruler.id())
       throw new GameError("目前不是你的回合，無法領地休整。", "操作失敗", "friendly-rest/actor");
+    var token = MenuActivation.activatingEntry(menuNode).decisionToken();
+    var gotSig = JiCeMenuSig.parseSig(token);
+    var idx = match.forceGetPendingFriendlyCityVisitTile();
+    var nowChoices:Array<game.MenuGeneralChoice> = [];
+    for (g in ruler.roster())
+      nowChoices.push({generalId: g.id(), caption: g.id()});
+    var nowSig = JiCeMenuSig.make([
+      registryKey(),
+      "pending=" + (idx != null ? Std.string(idx) : "null"),
+      "generals=" + nowChoices.map(c -> c.generalId).join(","),
+    ]);
+    var sigMismatch = (gotSig != null && gotSig != nowSig);
+    if (idx == null) {
+      if (sigMismatch)
+        throw JiCeMenuSig.stateChangedError("狀態已變更，請重新開啟領地休整。", "friendly-rest/state-changed");
+      throw new GameError("必須在拜訪我方城池時才能領地休整。", "操作失敗", "friendly-rest/pending");
+    }
     var widgets = menuNode.formWidgets();
     if (widgets == null || widgets.length == 0)
       throw new GameError("休整表單異常（缺少輸入）。", "操作失敗", "friendly-rest/missing-widgets");
 
     var gid = GeneralAssignmentApply.pickSingleGeneralId(widgets);
+    var gOk = false;
+    for (c in nowChoices)
+      if (c.generalId == gid) {
+        gOk = true;
+        break;
+      }
+    if (!gOk) {
+      if (sigMismatch)
+        throw JiCeMenuSig.stateChangedError("狀態已變更，請重新選擇休整武將。", "friendly-rest/state-changed");
+      throw "FriendlyCityRestStagingAction: invalid-choice (sig matched) — menu/widget mismatch";
+    }
     var g:General = GeneralAssignmentApply.requireOwnedGeneral(ruler, gid);
     var prevSt = g.stamina();
     var next = Balance.clampInt(prevSt + Balance.STAMINA_RECOVER_TERRITORY_REST, 0, 100);

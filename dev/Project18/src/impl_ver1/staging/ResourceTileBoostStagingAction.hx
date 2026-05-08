@@ -18,6 +18,8 @@ import impl_ver1.model.PlayerMenu;
 import impl_ver1.rules.GeneralAssignmentApply;
 import impl_ver1.staging.SimpleStagingPreviewRow;
 import game.GameError;
+import game.MenuActivation;
+import impl_ver1.jice.JiCeMenuSig;
 
 /**
  * 資源格：指派武將加成（staging）。
@@ -57,7 +59,12 @@ class ResourceTileBoostStagingAction implements IStagingAction {
       if (defSel.length == 0)
         defSel.push(gid);
     }
-    var submit = match.createPlayerMenuEntry(PlayerMenuKind.StagingSubmit, "確認加成（體力 -10）", choices.length > 0, "resource_boost_ok");
+    var sig = JiCeMenuSig.make([
+      registryKey(),
+      "tile=" + Std.string(tileIndex),
+      "generals=" + choices.map(c -> c.generalId).join(","),
+    ]);
+    var submit = match.createPlayerMenuEntry(PlayerMenuKind.StagingSubmit, "確認加成（體力 -10）", choices.length > 0, JiCeMenuSig.attach("resource_boost_ok", sig));
     var widgets:Array<MenuFormWidget> = [
       GeneralMultiPick("選擇指派武將（單選）", choices, defSel),
       Button(submit),
@@ -72,6 +79,28 @@ class ResourceTileBoostStagingAction implements IStagingAction {
       throw new GameError("目前不是你的回合，無法指派武將加成。", "操作失敗", "resource-boost/actor");
 
     var gid = GeneralAssignmentApply.pickSingleGeneralId(menuNode.formWidgets());
+    var token = MenuActivation.activatingEntry(menuNode).decisionToken();
+    var gotSig = JiCeMenuSig.parseSig(token);
+    var nowChoices:Array<game.MenuGeneralChoice> = [];
+    for (g in ruler.roster())
+      nowChoices.push({generalId: g.id(), caption: g.id()});
+    var nowSig = JiCeMenuSig.make([
+      registryKey(),
+      "tile=" + Std.string(tileIndex),
+      "generals=" + nowChoices.map(c -> c.generalId).join(","),
+    ]);
+    var sigMismatch = (gotSig != null && gotSig != nowSig);
+    var gOk = false;
+    for (c in nowChoices)
+      if (c.generalId == gid) {
+        gOk = true;
+        break;
+      }
+    if (!gOk) {
+      if (sigMismatch)
+        throw JiCeMenuSig.stateChangedError("狀態已變更，請重新選擇資源格加成武將。", "resource-boost/state-changed");
+      throw "ResourceTileBoostStagingAction: invalid-choice (sig matched) — menu/widget mismatch";
+    }
     var g:General = GeneralAssignmentApply.requireOwnedGeneral(ruler, gid);
 
     var stat = resourceBoostStat(base);

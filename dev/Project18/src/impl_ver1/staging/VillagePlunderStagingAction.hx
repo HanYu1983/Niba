@@ -19,6 +19,8 @@ import impl_ver1.model.Monarch;
 import impl_ver1.model.General;
 import impl_ver1.model.PlayerMenu;
 import game.GameError;
+import game.MenuActivation;
+import impl_ver1.jice.JiCeMenuSig;
 
 /**
  * 村落搶奪（骨架）：選一名武將 → 預覽成功率 → 提交。
@@ -54,7 +56,12 @@ class VillagePlunderStagingAction implements IStagingAction {
     // menu 建構端先做合法性：需有 pending village、至少 1 名武將
     var vIdx = match.forceGetPendingVillageTile();
     var enabled = vIdx != null && choices.length > 0;
-    var submit:IPlayerMenuEntry = match.createPlayerMenuEntry(PlayerMenuKind.StagingSubmit, "確認搶奪", enabled, "plunder_ok", plunderConfirm);
+    var sig = JiCeMenuSig.make([
+      registryKey(),
+      "pending=" + (vIdx != null ? Std.string(vIdx) : "null"),
+      "generals=" + choices.map(c -> c.generalId).join(","),
+    ]);
+    var submit:IPlayerMenuEntry = match.createPlayerMenuEntry(PlayerMenuKind.StagingSubmit, "確認搶奪", enabled, JiCeMenuSig.attach("plunder_ok", sig), plunderConfirm);
     var widgets:Array<MenuFormWidget> = [
       GeneralMultiPick("選擇搶奪武將（單選）", choices, defSel),
       Button(submit),
@@ -67,10 +74,35 @@ class VillagePlunderStagingAction implements IStagingAction {
     var ruler = cast(match.activeMonarch(), Monarch);
     if (actor.monarchId() != ruler.id())
       throw new GameError("目前不是你的回合，無法搶奪。", "操作失敗", "village-plunder/actor");
+    var token = MenuActivation.activatingEntry(menuNode).decisionToken();
+    var gotSig = JiCeMenuSig.parseSig(token);
     var vIdx = match.forceGetPendingVillageTile();
-    if (vIdx == null)
+    var nowChoices:Array<game.MenuGeneralChoice> = [];
+    for (g in ruler.roster())
+      nowChoices.push({generalId: g.id(), caption: g.id()});
+    var nowSig = JiCeMenuSig.make([
+      registryKey(),
+      "pending=" + (vIdx != null ? Std.string(vIdx) : "null"),
+      "generals=" + nowChoices.map(c -> c.generalId).join(","),
+    ]);
+    var sigMismatch = (gotSig != null && gotSig != nowSig);
+    if (vIdx == null) {
+      if (sigMismatch)
+        throw JiCeMenuSig.stateChangedError("狀態已變更，請重新開啟村落搶奪。", "village-plunder/state-changed");
       throw new GameError("必須在拜訪村落時才能搶奪。", "操作失敗", "village-plunder/pending");
+    }
     var gid = impl_ver1.rules.GeneralAssignmentApply.pickSingleGeneralId(menuNode.formWidgets());
+    var gOk = false;
+    for (c in nowChoices)
+      if (c.generalId == gid) {
+        gOk = true;
+        break;
+      }
+    if (!gOk) {
+      if (sigMismatch)
+        throw JiCeMenuSig.stateChangedError("狀態已變更，請重新選擇搶奪武將。", "village-plunder/state-changed");
+      throw "VillagePlunderStagingAction: invalid-choice (sig matched) — menu/widget mismatch";
+    }
     var g = impl_ver1.rules.GeneralAssignmentApply.requireOwnedGeneral(ruler, gid);
 
     // GDD 2.1.3：低成功率，高效果；武力影響；友好度 -20~-40（劇烈下降）
