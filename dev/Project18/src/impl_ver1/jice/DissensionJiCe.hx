@@ -111,6 +111,9 @@ class DissensionJiCe implements IJiCe {
       return;
     }
 
+    // docs/數值算法.md 7.1：使用離間策略 → 發動方聲望 -3
+    ruler.reducePrestige(3);
+
     // 最小示範：目標君主麾下所有武將忠誠度 -10（下限 1）
     for (m in gameMatch.monarchs())
       if (m.id() == targetMonarchId) {
@@ -122,6 +125,7 @@ class DissensionJiCe implements IJiCe {
         break;
       }
 
+    effectLines.push("發動方聲望 -3");
     effectLines.push("目標麾下全體武將忠誠度 -10");
     JiCeApply.popupCaster(gameMatch, ruler.id(), designLabel(), phase, casterId, Wit, tier, roll, '君主 $targetMonarchId', effectLines, "jice-dissension");
     JiCeApply.popupTargetMonarch(gameMatch, targetMonarchId, designLabel(), ruler.id(), casterId, effectLines, "jice-dissension/target");

@@ -110,6 +110,9 @@ class VillageConquerStagingAction implements IStagingAction {
     // - docs/數值算法.md 5.3：守軍友好度修正採 0.5
     // - docs/數值算法.md 3.3：攻占成功掠奪部分資源（ver1：村落儲備的 30%）
     if (win) {
+      // docs/數值算法.md 7.1：攻占成功 → 聲望 -3
+      ruler.reducePrestige(3);
+
       ruler.reduceTroops(commitTroops);
       // 掠奪村落儲備資源 30%（四捨五入到整數）；剩餘留在領地庫
       var prevGold = match.forceGetVillageStoredGold(vIdx);
@@ -141,7 +144,7 @@ class VillageConquerStagingAction implements IStagingAction {
 
     var afterF = match.forceGetVillageFriendly(vIdx, ruler.id());
     var body = win
-      ? '攻占成功。\n格子：${vIdx}\n武將：${gid}\n投入兵力：${commitTroops}\n掠奪：村落儲備 30%\n友好度：→ ${afterF}（重置）\n領地：已占領（每回合產出）\n（武將體力 -15）'
+      ? '攻占成功。\n格子：${vIdx}\n武將：${gid}\n投入兵力：${commitTroops}\n掠奪：村落儲備 30%\n聲望 -3\n友好度：→ ${afterF}（重置）\n領地：已占領（每回合產出）\n（武將體力 -15）'
       : '攻占失敗。\n格子：${vIdx}\n武將：${gid}\n投入兵力：${commitTroops}\n兵力損失約 20%\n友好度：→ ${afterF}\n（武將體力 -15）';
     match.pushInfoPopup(ruler.id(), win ? "攻占成功" : "攻占失敗", game.PopupPayload.Plain(body), "village-conquer");
   }

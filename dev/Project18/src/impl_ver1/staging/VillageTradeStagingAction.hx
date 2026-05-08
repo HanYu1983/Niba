@@ -118,12 +118,22 @@ class VillageTradeStagingAction implements IStagingAction {
 
     // 成功才交換資源；失敗仍消耗體力，友好度不增加（但避免太懲罰，給 +1~3 微幅）
     if (ok) {
+      // docs/數值算法.md 7.1：交易（村落）→ 聲望 +2~5（可重現）
+      var pSeed = 'prestige|village_trade|t=${vIdx}|r=${match.roundNumber()}|m=${ruler.id()}|g=${gid}';
+      var pGain = 2 + Std.int(Math.floor(impl_ver1.util.Deterministic.hash01(pSeed) * 4)); // 2..5
+      ruler.grantPrestige(pGain);
+
       ruler.reduceGold(costGold);
       ruler.grantGrain(gainGrain);
       match.forceSetVillageFriendly(vIdx, ruler.id(), nextF);
       // 歸順：90~100 → 領地化（每回合產出）
-      if (nextF >= 90)
+      if (nextF >= 90) {
+        var prevOwner = match.forceGetVillageOwner(vIdx);
         match.forceSetVillageOwner(vIdx, ruler.id());
+        // docs/數值算法.md 7.1：歸順村落 → 聲望 +10（僅首次歸屬時）
+        if (prevOwner == null)
+          ruler.grantPrestige(10);
+      }
     } else {
       var micro = 1 + Std.int(Math.floor(roll * 3)); // 1..3
       match.forceSetVillageFriendly(vIdx, ruler.id(), Balance.clampInt(prevF + micro, 0, 100));

@@ -86,6 +86,11 @@ class VillagePlunderStagingAction implements IStagingAction {
     var roll = impl_ver1.util.Deterministic.hash01(seed);
     var ok = roll < rate;
 
+    // docs/數值算法.md 7.1：搶奪（村落）→ 聲望 -5~10（可重現；無論成敗皆屬負面行為）
+    var pSeed = 'prestige|village_plunder|t=${vIdx}|r=${match.roundNumber()}|m=${ruler.id()}|g=${gid}';
+    var pLoss = 5 + Std.int(Math.floor(impl_ver1.util.Deterministic.hash01(pSeed) * 6)); // 5..10
+    ruler.reducePrestige(pLoss);
+
     var prevF = match.forceGetVillageFriendly(vIdx, ruler.id());
     var lossSeed = 'village_plunder_f_loss|t=${vIdx}|r=${match.roundNumber()}|m=${ruler.id()}|g=${gid}';
     var fLoss = 20 + Std.int(Math.floor(impl_ver1.util.Deterministic.hash01(lossSeed) * 21)); // 20..40
@@ -110,8 +115,8 @@ class VillagePlunderStagingAction implements IStagingAction {
 
     var title = ok ? "搶奪成功" : "搶奪失敗";
     var body = ok
-      ? '村落（格 ${vIdx}）搶奪成功\n武將：${gid}\n成功率：約 ${Std.int(Math.floor(rate * 100))}%\n獲得：金 +${gainGold}｜糧 +${gainGrain}｜兵 +${gainTroops}\n友好度：${prevF} → ${nextF}\n${gid} 體力 -12'
-      : '村落（格 ${vIdx}）搶奪失敗\n武將：${gid}\n成功率：約 ${Std.int(Math.floor(rate * 100))}%\n未獲得資源\n友好度：${prevF} → ${nextF}\n${gid} 體力 -12';
+      ? '村落（格 ${vIdx}）搶奪成功\n武將：${gid}\n成功率：約 ${Std.int(Math.floor(rate * 100))}%\n獲得：金 +${gainGold}｜糧 +${gainGrain}｜兵 +${gainTroops}\n友好度：${prevF} → ${nextF}\n聲望 -${pLoss}\n${gid} 體力 -12'
+      : '村落（格 ${vIdx}）搶奪失敗\n武將：${gid}\n成功率：約 ${Std.int(Math.floor(rate * 100))}%\n未獲得資源\n友好度：${prevF} → ${nextF}\n聲望 -${pLoss}\n${gid} 體力 -12';
     match.pushInfoPopup(ruler.id(), title, game.PopupPayload.Plain(body), "village-plunder");
   }
 

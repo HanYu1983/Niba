@@ -11,6 +11,7 @@ import game.TileKind;
 import impl_ver1.core.GameMatchCore;
 import impl_ver1.model.Monarch;
 import impl_ver1.model.General;
+import impl_ver1.util.Deterministic;
 
 /**
  * Ver1 規剘：終局、移動（逐步前進並呼叫 {@link game.IJiCeMovementStepHook}）、進駐／調度數值；敵城對峙戰果套用鉤子。
@@ -342,8 +343,8 @@ class GameMatchVer1Ops {
     var tok = m.forceGetHostileCityAttackerChoiceToken();
     if (tok == null)
       return;
-    // 目前僅把「攻城戰」接成真結算線，其他選項仍保留流程骨架。
-    if (tok != "siege")
+    // ver1：先落地「消耗戰(搶奪)」與「攻城戰」兩條真結算線；其餘選項保留流程骨架。
+    if (tok != "siege" && tok != "attrition")
       return;
 
     var atkId = m.forceGetHostileCityAttackerId();
@@ -356,9 +357,9 @@ class GameMatchVer1Ops {
     var level = m.forceGetCityLevel(idx);
     var cityBonus = Balance.cityDefenseBonus(level);
 
-    // 攻城投入：最多 500，若不足則投入現有兵力
-    var commit = Std.int(Math.min(500, atkMon.troops()));
-    if (commit <= 0)
+    // 攻方投入：最多 500，若不足則投入現有兵力
+    var commitAtk = Std.int(Math.min(500, atkMon.troops()));
+    if (commitAtk <= 0)
       return;
 
     // 取攻方選擇武將（應恰好一名）
@@ -372,8 +373,8 @@ class GameMatchVer1Ops {
     if (gAtk == null)
       return;
 
-    // docs/數值算法.md 3.2：戰力 = 士兵數 × (武力係數 + 統率係數) × 體力修正 × (城防加成) × 隨機係數
-    var atkBase = commit * ((gAtk.stat(Might) / 100.0) + (gAtk.stat(Command) / 100.0) * 0.5) * Balance.staminaModifier(gAtk.stamina());
+    // docs/數值算法.md 2.2/3.2：戰力 = 士兵數 × (武力係數 + 統率係數) × 體力修正 ×（城防加成）× 隨機係數
+    var atkBase = commitAtk * ((gAtk.stat(Might) / 100.0) + (gAtk.stat(Command) / 100.0) * 0.5) * Balance.staminaModifier(gAtk.stamina());
 
     // 守方武將：優先用「守方單挑選將」（必為駐守）；否則以駐守第一名；再不然用 0.8 係數的骨架
     var defGid = m._hostileCityDefenderGeneralId;
@@ -405,14 +406,54 @@ class GameMatchVer1Ops {
       defBase = defCityTroops * 0.8 * cityBonus;
     }
 
-    var seed = 'hostile_city_siege|t=${idx}|r=${m.roundNumber()}|atk=${atkId}|def=${defId}|g=${gid}|c=${commit}';
+    var seed = 'hostile_city_${tok}|t=${idx}|r=${m.roundNumber()}|atk=${atkId}|def=${defId}|g=${gid}|c=${commitAtk}';
     var atkRand = 0.85 + impl_ver1.util.Deterministic.hash01(seed + "|atk") * 0.30;
     var defRand = 0.85 + impl_ver1.util.Deterministic.hash01(seed + "|def") * 0.30;
     var win = (atkBase * atkRand) > (defBase * defRand);
 
+    // === A) 消耗戰（搶奪）：docs/數值算法.md §2（500 vs 500，不改變所有權）===
+    if (tok == "attrition") {
+      var commitDef = Std.int(Math.min(500, defCityTroops));
+      if (commitDef <= 0)
+        return;
+      // 防守戰力依 §2.2：帶城防加成（以城池等級），並加隨機係數
+      var atkPow = atkBase * atkRand;
+      var defPow = defBase * defRand;
+      if (atkPow > defPow) {
+        // 獲取敵方領地資源：比例 = (atk-def)/atk * 50%
+        var ratio = ((atkPow - defPow) / atkPow) * 0.50;
+        if (ratio < 0)
+          ratio = 0;
+        if (ratio > 0.50)
+          ratio = 0.50;
+        var prevGold = m.forceGetCityStoredGold(idx);
+        var prevGrain = m.forceGetCityStoredGrain(idx);
+        var lootGold = Std.int(Math.floor(prevGold * ratio));
+        var lootGrain = Std.int(Math.floor(prevGrain * ratio));
+        if (lootGold > 0)
+          atkMon.grantGold(lootGold);
+        if (lootGrain > 0)
+          atkMon.grantGrain(lootGrain);
+        m.forcePutCityStoredGold(idx, prevGold - lootGold);
+        m.forcePutCityStores(idx, m.forceGetCityStoredTroops(idx), prevGrain - lootGrain);
+      } else {
+        // 攻方損失：損失比例 = (def-atk)/def * 30%
+        var ratio = ((defPow - atkPow) / defPow) * 0.30;
+        if (ratio < 0)
+          ratio = 0;
+        if (ratio > 0.30)
+          ratio = 0.30;
+        var loss = Std.int(Math.floor(commitAtk * ratio));
+        if (loss > 0)
+          atkMon.reduceTroops(loss);
+      }
+      return;
+    }
+
+    // === B) 攻城戰：docs/數值算法.md §3（易主 + 掠奪 30%）===
     if (win) {
-      // 攻占成功：城池易主；掠奪儲備 30%（比照 docs/數值算法.md 3.3）
-      atkMon.reduceTroops(commit);
+      // 攻占成功：城池易主；掠奪儲備 30%
+      atkMon.reduceTroops(commitAtk);
 
       var prevGold = m.forceGetCityStoredGold(idx);
       var prevGrain = m.forceGetCityStoredGrain(idx);
@@ -432,7 +473,7 @@ class GameMatchVer1Ops {
       m.forceSetCityOwner(idx, atkId);
     } else {
       // 攻占失敗：投入士兵損失 20%（docs/數值算法.md 3.3）
-      var loss = Std.int(Math.floor(commit * 0.20));
+      var loss = Std.int(Math.floor(commitAtk * 0.20));
       if (loss > 0)
         atkMon.reduceTroops(loss);
     }

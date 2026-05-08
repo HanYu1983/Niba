@@ -111,15 +111,15 @@ class RumorJiCe implements IJiCe {
       return;
     }
 
-    // 最小示範：目標聲望 -12（下限 0）
+    // docs/數值算法.md 7.1：使用流言策略 → 聲望 -5
     for (m in gameMatch.monarchs())
       if (m.id() == targetMonarchId) {
         var tm = cast(m, Monarch);
-        tm.reducePrestige(12);
+        tm.reducePrestige(5);
         break;
       }
 
-    effectLines.push("聲望 -12");
+    effectLines.push("聲望 -5");
     JiCeApply.popupCaster(gameMatch, ruler.id(), designLabel(), phase, casterId, Wit, tier, roll, '君主 $targetMonarchId', effectLines, "jice-rumor");
     JiCeApply.popupTargetMonarch(gameMatch, targetMonarchId, designLabel(), ruler.id(), casterId, effectLines, "jice-rumor/target");
   }
