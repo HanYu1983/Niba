@@ -99,8 +99,8 @@
    - **必須用 `GameError` 的情境（可預期、應回饋給玩家）**  
      - 資源不足：金／糧／兵不足、領地庫不足、投入數值超過可用等。  
      - 操作時機不合法：不是 active monarch、不是在對應的 pending 狀態（例如不在村落/城池拜訪、無 pendingResource 等）。  
-     - 表單輸入不合法：負數、必須 >0 的 slider、必須單選但未選／多選等（屬規則拒絕而非程式 bug）。  
-     - 選單 entry 被 disable：玩家點到不可用按鈕時，應以 `GameError` 告知。  
+     - 表單輸入不合法（弱語意情境）：例如「非強語意的 menu」或「非由 widget 產生之輸入」造成的負數/超界/未選等，視為規則拒絕，用 `GameError` 回饋。  
+     - 選單 entry 被 disable：玩家點到不可用按鈕時，應以 `GameError` 告知（正式版可改為 UI 直接不觸發）。  
      - 以上錯誤應使用 `throw new GameError(message, popupTitle, ctxKey)`，讓 UI 以 popup 呈現、不中斷整局。
    - **不應用 `GameError` 的情境（屬程式 bug，應直接 throw 以利除錯）**  
      - 內部 invariant 破壞：狀態機不一致、unmatched patterns、internal routing、資料結構缺欄位等。  
@@ -131,7 +131,7 @@
      - **只用 sig 判斷合法性**：sig 不是狀態檢查本體，`resolveChoice` 必須仍做「當下合法性」檢查（choices membership、pending/owner/kind/資源等）。  
      - **把狀態變更當成一般規則拒絕**：狀態變更應使用 `StageChangeError`，避免被誤認為需要修正規則或 UI 文案的 `GameError`。
 
-4. **測試分層**  
+6. **測試分層**  
    - 驗證主迴路與狀態機：`debug_ver1` 中以流程為主的測試。  
    - 驗證單一計策／事件數學或分支：應與該擴充模組鄰近，避免把大量數值断言塞進骨架測試。
 
