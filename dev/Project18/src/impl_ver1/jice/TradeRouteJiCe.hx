@@ -21,6 +21,7 @@ import impl_ver1.model.General;
 import impl_ver1.model.PlayerMenu;
 import impl_ver1.jice.JiCeRegistry;
 import impl_ver1.jice.JiCeApply;
+import impl_ver1.jice.JiCeMenuLegalChoices;
 
 /**
  * 策略：商路（指定格子）
@@ -51,28 +52,15 @@ class TradeRouteJiCe implements IJiCe {
 
   public function buildPlayerMenu(actor:IPlayer):IPlayerMenu {
     var ruler = cast(gameMatch.activeMonarch(), Monarch);
-    var roster = ruler.roster();
-    if (roster.length == 0)
-      throw "TradeRouteJiCe: roster empty";
+    var gChoices:Array<MenuGeneralChoice> = JiCeMenuLegalChoices.eligibleCasters(ruler, registryKey(), StrategyCostTier.Low);
+    var defCaster:Array<String> = gChoices.length > 0 ? [gChoices[0].generalId] : [];
 
-    var gChoices:Array<MenuGeneralChoice> = [];
-    var defCaster:Array<String> = [];
-    for (g in roster) {
-      var gid = g.id();
-      gChoices.push({generalId: gid, caption: gid});
-      if (defCaster.length == 0)
-        defCaster.push(gid);
-    }
+    var only = gameMatch.forceGetPendingLandingTile() != null ? ruler.pawnIndex() : null;
+    var tChoices:Array<MenuTileChoice> = JiCeMenuLegalChoices.ownedTerritoryTileChoices(gameMatch, ruler.id(), only);
+    var defTile:Array<Int> = tChoices.length > 0 ? [tChoices[0].tileIndex] : [];
 
-    var tChoices:Array<MenuTileChoice> = [];
-    var n = gameMatch.board().length();
-    for (i in 0...n) {
-      var tile = gameMatch.tileAt(i);
-      tChoices.push({tileIndex: i, caption: '[$i] ' + Std.string(tile.kind())});
-    }
-    var defTile:Array<Int> = [ruler.pawnIndex()];
-
-    var submit = gameMatch.createPlayerMenuEntry(PlayerMenuKind.StagingSubmit, "確認商路", true, "trade_route_ok");
+    var enabled = gChoices.length > 0 && tChoices.length > 0;
+    var submit = gameMatch.createPlayerMenuEntry(PlayerMenuKind.StagingSubmit, "確認商路", enabled, "trade_route_ok");
     var widgets:Array<MenuFormWidget> = [
       GeneralMultiPick("選擇發動武將（單選）", gChoices, defCaster),
       TileSinglePick("選擇目標格子", tChoices, defTile),

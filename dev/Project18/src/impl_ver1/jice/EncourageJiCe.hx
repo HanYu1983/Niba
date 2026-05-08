@@ -20,6 +20,7 @@ import impl_ver1.model.General;
 import impl_ver1.model.PlayerMenu;
 import impl_ver1.jice.JiCeRegistry;
 import impl_ver1.jice.JiCeApply;
+import impl_ver1.jice.JiCeMenuLegalChoices;
 
 /**
  * 策略：激勵（指定武將）— 指定武將下次指令效果提升。
@@ -48,26 +49,16 @@ class EncourageJiCe implements IJiCe {
 
   public function buildPlayerMenu(actor:IPlayer):IPlayerMenu {
     var ruler = cast(gameMatch.activeMonarch(), Monarch);
-    var roster = ruler.roster();
-    if (roster.length == 0)
-      throw "EncourageJiCe: roster empty";
+    var casterChoices:Array<MenuGeneralChoice> = JiCeMenuLegalChoices.eligibleCasters(ruler, registryKey(), StrategyCostTier.Low);
+    var targetChoices:Array<MenuGeneralChoice> = JiCeMenuLegalChoices.rosterChoices(ruler);
+    var defCaster:Array<String> = casterChoices.length > 0 ? [casterChoices[0].generalId] : [];
+    var defTarget:Array<String> = targetChoices.length > 0 ? [targetChoices[0].generalId] : [];
 
-    var choices:Array<MenuGeneralChoice> = [];
-    var defCaster:Array<String> = [];
-    var defTarget:Array<String> = [];
-    for (g in roster) {
-      var gid = g.id();
-      choices.push({generalId: gid, caption: gid});
-      if (defCaster.length == 0)
-        defCaster.push(gid);
-      if (defTarget.length == 0)
-        defTarget.push(gid);
-    }
-
-    var submit = gameMatch.createPlayerMenuEntry(PlayerMenuKind.StagingSubmit, "確認激勵", true, "encourage_ok");
+    var enabled = casterChoices.length > 0 && targetChoices.length > 0;
+    var submit = gameMatch.createPlayerMenuEntry(PlayerMenuKind.StagingSubmit, "確認激勵", enabled, "encourage_ok");
     var widgets:Array<MenuFormWidget> = [
-      GeneralMultiPick("選擇發動武將（單選）", choices, defCaster),
-      GeneralMultiPick("選擇目標武將（單選）", choices, defTarget),
+      GeneralMultiPick("選擇發動武將（單選）", casterChoices, defCaster),
+      GeneralMultiPick("選擇目標武將（單選）", targetChoices, defTarget),
       Button(submit),
     ];
     var root = gameMatch.createPlayerMenuNode("激勵", null, [], widgets);

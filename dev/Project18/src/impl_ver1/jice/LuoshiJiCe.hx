@@ -20,6 +20,7 @@ import impl_ver1.model.Monarch;
 import impl_ver1.model.General;
 import impl_ver1.model.PlayerMenu;
 import impl_ver1.jice.JiCeRegistry;
+import impl_ver1.jice.JiCeMenuLegalChoices;
 
 /**
  * 落石計策：建構子綁定 {@link GameMatchCore}；暫存與兵力結算經 Core 私有方法（同套件友元可見）。
@@ -44,27 +45,16 @@ class LuoshiJiCe implements IJiCe {
     return [PreMove];
 
   public function buildPlayerMenu(actor:IPlayer):IPlayerMenu {
-    var monarchChoices:Array<MenuMonarchChoice> = [];
-    for (m in gameMatch.monarchs())
-      if (m.id() != actor.monarchId())
-        monarchChoices.push({monarchId: m.id(), caption: m.id()});
-    if (monarchChoices.length == 0)
-      throw "LuoshiJiCe: 無可選擇之目標君主（至少需一名非自身君主）";
-    var defTarget:Array<String> = [monarchChoices[0].monarchId];
-
     var atk = cast(gameMatch.activeMonarch(), Monarch);
-    var roster = atk.roster();
-    if (roster.length == 0)
-      throw "LuoshiJiCe: 計策暫存需要攻方 roster 至少一名武將";
-    var choices:Array<MenuGeneralChoice> = [];
-    var defSel:Array<String> = [];
-    for (g in roster) {
-      var gid = g.id();
-      choices.push({generalId: gid, caption: "以【" + gid + "】施計"});
-      if (defSel.length == 0)
-        defSel.push(gid);
-    }
-    var submitLeaf = gameMatch.createPlayerMenuEntry(StagingSubmit, "確認計策選將", true, "confirm_jice_pick");
+    var monarchChoices:Array<MenuMonarchChoice> = JiCeMenuLegalChoices.otherMonarchChoices(gameMatch, actor.monarchId());
+    var defTarget:Array<String> = monarchChoices.length > 0 ? [monarchChoices[0].monarchId] : [];
+
+    // 落石 ver1 無體力消耗，但仍限制「至少要有一名我方武將可選」
+    var choices:Array<MenuGeneralChoice> = JiCeMenuLegalChoices.rosterChoices(atk);
+    var defSel:Array<String> = choices.length > 0 ? [choices[0].generalId] : [];
+
+    var enabled = monarchChoices.length > 0 && choices.length > 0;
+    var submitLeaf = gameMatch.createPlayerMenuEntry(StagingSubmit, "確認計策選將", enabled, "confirm_jice_pick");
     var widgets:Array<MenuFormWidget> = [
       MonarchSinglePick("選擇目標君主", monarchChoices, defTarget),
       GeneralMultiPick("選擇施計武將", choices, defSel),

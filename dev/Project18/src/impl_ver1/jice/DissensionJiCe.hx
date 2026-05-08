@@ -19,6 +19,7 @@ import impl_ver1.model.General;
 import impl_ver1.model.Monarch;
 import impl_ver1.model.PlayerMenu;
 import impl_ver1.jice.JiCeApply;
+import impl_ver1.jice.JiCeMenuLegalChoices;
 
 /**
  * 策略：【指定玩家】離間 — 降低目標玩家麾下武將忠誠度。
@@ -49,28 +50,14 @@ class DissensionJiCe implements IJiCe {
 
   public function buildPlayerMenu(actor:IPlayer):IPlayerMenu {
     var ruler = cast(gameMatch.activeMonarch(), Monarch);
-    var roster = ruler.roster();
-    if (roster.length == 0)
-      throw "DissensionJiCe: roster empty";
+    var monarchChoices:Array<MenuMonarchChoice> = JiCeMenuLegalChoices.otherMonarchChoices(gameMatch, actor.monarchId());
+    var defTarget:Array<String> = monarchChoices.length > 0 ? [monarchChoices[0].monarchId] : [];
 
-    var monarchChoices:Array<MenuMonarchChoice> = [];
-    for (m in gameMatch.monarchs())
-      if (m.id() != actor.monarchId())
-        monarchChoices.push({monarchId: m.id(), caption: m.id()});
-    if (monarchChoices.length == 0)
-      throw "DissensionJiCe: 無可選擇之目標君主";
-    var defTarget:Array<String> = [monarchChoices[0].monarchId];
+    var gChoices:Array<MenuGeneralChoice> = JiCeMenuLegalChoices.eligibleCasters(ruler, registryKey(), StrategyCostTier.Medium);
+    var defCaster:Array<String> = gChoices.length > 0 ? [gChoices[0].generalId] : [];
 
-    var gChoices:Array<MenuGeneralChoice> = [];
-    var defCaster:Array<String> = [];
-    for (g in roster) {
-      var gid = g.id();
-      gChoices.push({generalId: gid, caption: gid});
-      if (defCaster.length == 0)
-        defCaster.push(gid);
-    }
-
-    var submit = gameMatch.createPlayerMenuEntry(PlayerMenuKind.StagingSubmit, "確認離間", true, "dissension_ok");
+    var enabled = monarchChoices.length > 0 && gChoices.length > 0;
+    var submit = gameMatch.createPlayerMenuEntry(PlayerMenuKind.StagingSubmit, "確認離間", enabled, "dissension_ok");
     var widgets:Array<MenuFormWidget> = [
       MonarchSinglePick("選擇目標君主", monarchChoices, defTarget),
       GeneralMultiPick("選擇發動武將（單選）", gChoices, defCaster),
