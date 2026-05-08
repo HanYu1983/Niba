@@ -89,6 +89,7 @@ class EncourageJiCe implements IJiCe {
 
     var ruler = cast(gameMatch.activeMonarch(), Monarch);
     var caster = JiCeApply.requireCaster(ruler, casterId, "EncourageJiCe");
+    JiCeApply.requireCasterRank(caster, Balance.requiredRankForStrategy(registryKey()), "EncourageJiCe");
     var target = JiCeApply.requireCaster(ruler, targetId, "EncourageJiCe");
 
     var tier = StrategyCostTier.Low;
@@ -102,9 +103,12 @@ class EncourageJiCe implements IJiCe {
     );
     var effectLines:Array<String> = [];
     if (roll.ok) {
-      // 先以 1.2 作為骨架倍率；後續可由 Balance/策略表驅動
-      target.addEffect(GeneralEffect.NextCommandMultiplier(1.2));
-      effectLines.push("目標獲得下次指令倍率 1.2×");
+      // docs/數值算法.md §4.3：效果 = 基礎效果 × (屬性/100) × 體力修正
+      // ver1：基礎「額外倍率」= +0.2（也就是 1.2×），並乘上效果倍率後加到 1.0 上。
+      var extra = Balance.strategyEffectAmountFloat(0.20, caster.stat(Command), roll.before);
+      var mult = 1.0 + extra;
+      target.addEffect(GeneralEffect.NextCommandMultiplier(mult));
+      effectLines.push("目標獲得下次指令倍率 " + Std.string(mult) + "×");
     }
     JiCeApply.popupCaster(gameMatch, ruler.id(), designLabel(), phase, casterId, Command, tier, roll, '武將 $targetId', effectLines, "jice-encourage");
   }

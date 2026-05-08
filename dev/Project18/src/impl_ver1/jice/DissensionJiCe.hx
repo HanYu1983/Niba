@@ -95,6 +95,7 @@ class DissensionJiCe implements IJiCe {
 
     var ruler = cast(gameMatch.activeMonarch(), Monarch);
     var caster = JiCeApply.requireCaster(ruler, casterId, "DissensionJiCe");
+    JiCeApply.requireCasterRank(caster, Balance.requiredRankForStrategy(registryKey()), "DissensionJiCe");
 
     var tier = StrategyCostTier.Medium;
     var phase = gameMatch.forceGetPendingLandingTile() != null ? PostMove : PreMove;
@@ -114,19 +115,21 @@ class DissensionJiCe implements IJiCe {
     // docs/數值算法.md 7.1：使用離間策略 → 發動方聲望 -3
     ruler.reducePrestige(3);
 
-    // 最小示範：目標君主麾下所有武將忠誠度 -10（下限 1）
+    // docs/數值算法.md §4.3：效果倍率（ver1 基礎效果=10，再乘倍率）
+    var loss = Balance.dissensionLoyaltyLoss(caster.stat(Wit), roll.before);
+    // 目標君主麾下所有武將忠誠度 -loss（下限 1）
     for (m in gameMatch.monarchs())
       if (m.id() == targetMonarchId) {
         var tm = cast(m, Monarch);
         for (g in tm.roster()) {
           var gg = cast(g, General);
-          gg.setLoyalty(gg.loyalty() - 10);
+          gg.setLoyalty(gg.loyalty() - loss);
         }
         break;
       }
 
     effectLines.push("發動方聲望 -3");
-    effectLines.push("目標麾下全體武將忠誠度 -10");
+    effectLines.push("目標麾下全體武將忠誠度 -" + loss);
     JiCeApply.popupCaster(gameMatch, ruler.id(), designLabel(), phase, casterId, Wit, tier, roll, '君主 $targetMonarchId', effectLines, "jice-dissension");
     JiCeApply.popupTargetMonarch(gameMatch, targetMonarchId, designLabel(), ruler.id(), casterId, effectLines, "jice-dissension/target");
   }

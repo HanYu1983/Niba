@@ -95,6 +95,7 @@ class ConscriptionJiCe implements IJiCe {
 
     var ruler = cast(gameMatch.activeMonarch(), Monarch);
     var caster = JiCeApply.requireCaster(ruler, casterId, "ConscriptionJiCe");
+    JiCeApply.requireCasterRank(caster, Balance.requiredRankForStrategy(registryKey()), "ConscriptionJiCe");
 
     var tier = StrategyCostTier.Medium;
     var phase = gameMatch.forceGetPendingLandingTile() != null ? PostMove : PreMove;
@@ -111,13 +112,9 @@ class ConscriptionJiCe implements IJiCe {
       return;
     }
 
-    // 最小示範：轉移 min(目標兵力的 5% + command/10, 20) 到施計者
+    // docs/數值算法.md §4.3：效果倍率（ver1 基礎效果=min(目標 5% + command/10, 20)，再乘倍率）
     var defTroops = gameMatch.monarchTroopCount(targetMonarchId);
-    var take = Std.int(Math.ceil(defTroops * 0.05)) + Std.int(caster.stat(Command) / 10);
-    if (take > 20)
-      take = 20;
-    if (take < 0)
-      take = 0;
+    var take = Balance.conscriptionTroopTake(defTroops, caster.stat(Command), roll.before);
 
     // 先扣目標，再加回己方（避免負數）
     gameMatch.monarchApplyTroopLoss(targetMonarchId, take);

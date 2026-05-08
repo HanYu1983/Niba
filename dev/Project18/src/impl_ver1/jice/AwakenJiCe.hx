@@ -90,6 +90,7 @@ class AwakenJiCe implements IJiCe {
 
     var ruler = cast(gameMatch.activeMonarch(), Monarch);
     var caster = JiCeApply.requireCaster(ruler, casterId, "AwakenJiCe");
+    JiCeApply.requireCasterRank(caster, Balance.requiredRankForStrategy(registryKey()), "AwakenJiCe");
     var target = JiCeApply.requireCaster(ruler, targetId, "AwakenJiCe");
 
     var tier = StrategyCostTier.High;
@@ -108,9 +109,13 @@ class AwakenJiCe implements IJiCe {
       if (idx < 0) idx = 0;
       if (idx >= pool.length) idx = pool.length - 1;
       var picked = pool[idx];
-      // 骨架：+20 維持 1 回合（生命週期由後續核心接上）
-      target.addEffect(GeneralEffect.TempStatBoost(picked, 20, 1));
-      effectLines.push('目標獲得暫時屬性提升：${JiCeApply.statLabel(picked)} +20（1 回合）');
+      // docs/數值算法.md §4.3：效果 = 基礎效果 × (屬性/100) × 體力修正
+      // ver1：基礎效果 = +20（維持 1 回合）
+      var amt = Balance.strategyEffectAmountInt(20, caster.stat(Wit), roll.before);
+      if (amt < 1)
+        amt = 1;
+      target.addEffect(GeneralEffect.TempStatBoost(picked, amt, 1));
+      effectLines.push('目標獲得暫時屬性提升：${JiCeApply.statLabel(picked)} +${amt}（1 回合）');
     }
     JiCeApply.popupCaster(gameMatch, ruler.id(), designLabel(), phase, casterId, Wit, tier, roll, '武將 $targetId', effectLines, "jice-awaken");
   }

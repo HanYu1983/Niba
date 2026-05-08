@@ -95,6 +95,7 @@ class RumorJiCe implements IJiCe {
 
     var ruler = cast(gameMatch.activeMonarch(), Monarch);
     var caster = JiCeApply.requireCaster(ruler, casterId, "RumorJiCe");
+    JiCeApply.requireCasterRank(caster, Balance.requiredRankForStrategy(registryKey()), "RumorJiCe");
 
     var tier = StrategyCostTier.Medium;
     var phase = gameMatch.forceGetPendingLandingTile() != null ? PostMove : PreMove;

@@ -3,7 +3,9 @@ package impl_ver1.jice;
 import game.Balance;
 import game.GameIds;
 import game.GeneralStat;
+import game.GameError;
 import game.MenuFormWidget;
+import game.PositionRank;
 import game.StrategyCostTier;
 import game.StrategyPhase;
 import game.PopupPayload;
@@ -83,6 +85,16 @@ class JiCeApply {
       if (g != null && g.id() == casterId)
         return cast g;
     throw ctx + ': caster not in roster';
+  }
+
+  /** docs/策略系統.md：部分策略需達到職位才可使用（UI 應過濾；此處再做硬檢查）。 */
+  public static function requireCasterRank(caster:General, required:PositionRank, ctx:String):Void {
+    if (!Balance.positionRankGte(caster.positionRank(), required))
+      throw new GameError(
+        "武將職位不足（需要 " + Std.string(required) + "）。",
+        "不可使用策略",
+        ctx + "/insufficient-rank"
+      );
   }
 
   /**

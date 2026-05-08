@@ -4,6 +4,7 @@ import game.IJiCe;
 import game.IPlayer;
 import game.IPlayerCommand;
 import game.IPlayerMenuNode;
+import game.Balance;
 import game.PlayerMenuKind;
 import game.StrategyPhase;
 import impl_ver1.core.GameMatchCore;
@@ -15,6 +16,7 @@ import impl_ver1.staging.RestStagingAction;
 import impl_ver1.staging.VillageConquerStagingAction;
 import impl_ver1.staging.VillagePlunderStagingAction;
 import impl_ver1.staging.VillageTradeStagingAction;
+import impl_ver1.model.Monarch;
 
 /** Ver1：把「本回合」主指令做成可註冊的 command 列表。 */
 class Ver1MainCommands {
@@ -178,6 +180,17 @@ private class StrategyPreCommand implements IPlayerCommand {
     var jiChildren:Array<IPlayerMenuNode> = [];
     var phase = StrategyPhase.PreMove;
     var filtered:Array<IJiCe> = [];
+    var ruler = cast(m.activeMonarch(), Monarch);
+    var roster = ruler.roster();
+    function hasEligibleCaster(j:IJiCe):Bool {
+      if (!Balance.strategyRequiresCaster(j.registryKey()))
+        return true;
+      var req = Balance.requiredRankForStrategy(j.registryKey());
+      for (g in roster)
+        if (g != null && Balance.positionRankGte(g.positionRank(), req))
+          return true;
+      return false;
+    }
     for (j in owned) {
       var ok = false;
       for (p in j.allowedPhases())
@@ -185,7 +198,7 @@ private class StrategyPreCommand implements IPlayerCommand {
           ok = true;
           break;
         }
-      if (ok)
+      if (ok && hasEligibleCaster(j))
         filtered.push(j);
     }
 
@@ -234,6 +247,17 @@ private class StrategyPostCommand implements IPlayerCommand {
     var jiChildren:Array<IPlayerMenuNode> = [];
     var phase = StrategyPhase.PostMove;
     var filtered:Array<IJiCe> = [];
+    var ruler = cast(m.activeMonarch(), Monarch);
+    var roster = ruler.roster();
+    function hasEligibleCaster(j:IJiCe):Bool {
+      if (!Balance.strategyRequiresCaster(j.registryKey()))
+        return true;
+      var req = Balance.requiredRankForStrategy(j.registryKey());
+      for (g in roster)
+        if (g != null && Balance.positionRankGte(g.positionRank(), req))
+          return true;
+      return false;
+    }
     for (j in owned) {
       var ok = false;
       for (p in j.allowedPhases())
@@ -241,7 +265,7 @@ private class StrategyPostCommand implements IPlayerCommand {
           ok = true;
           break;
         }
-      if (ok)
+      if (ok && hasEligibleCaster(j))
         filtered.push(j);
     }
 

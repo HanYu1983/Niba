@@ -1,5 +1,6 @@
 package impl_ver1.jice;
 
+import game.Balance;
 import game.GameIds;
 import game.GeneralStat;
 import game.IJiCe;
@@ -97,6 +98,7 @@ class SabotageJiCe implements IJiCe {
     if (gameMatch.forceGetPendingLandingTile() != null && targetTile != ruler.pawnIndex())
       throw "SabotageJiCe: post-move must target current tile";
     var caster = JiCeApply.requireCaster(ruler, casterId, "SabotageJiCe");
+    JiCeApply.requireCasterRank(caster, Balance.requiredRankForStrategy(registryKey()), "SabotageJiCe");
 
     var tier = StrategyCostTier.High;
     var phase = gameMatch.forceGetPendingLandingTile() != null ? PostMove : PreMove;

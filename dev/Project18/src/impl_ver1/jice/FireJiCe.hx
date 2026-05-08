@@ -100,6 +100,7 @@ class FireJiCe implements IJiCe {
     if (gameMatch.forceGetPendingLandingTile() != null && targetTile != ruler.pawnIndex())
       throw "FireJiCe: post-move must target current tile";
     var caster = JiCeApply.requireCaster(ruler, casterId, "FireJiCe");
+    JiCeApply.requireCasterRank(caster, Balance.requiredRankForStrategy(registryKey()), "FireJiCe");
 
     var tier = StrategyCostTier.Medium;
     var phase = gameMatch.forceGetPendingLandingTile() != null ? PostMove : PreMove;
@@ -121,9 +122,18 @@ class FireJiCe implements IJiCe {
     // 骨架：僅對 City 格生效（示範用）
     if (tile.kind() == TileKind.City) {
       var prevT = gameMatch.forceGetCityStoredTroops(targetTile);
-      var loss = Balance.clampInt(Std.int(prevT * 0.2), 0, prevT); // NOTE(balance): 數值待平衡表調整
+      // docs/數值算法.md §4.3：效果 = 基礎效果 × (屬性/100) × 體力修正
+      // ver1：以「基礎損失比例」呈現火計的壓制力。
+      var baseLossRatio = 0.20;
+      var mul = Balance.strategyEffectMultiplier(caster.stat(Wit), roll.before);
+      var ratio = baseLossRatio * mul;
+      if (ratio < 0)
+        ratio = 0;
+      if (ratio > 1)
+        ratio = 1;
+      var loss = Balance.clampInt(Std.int(Math.floor(prevT * ratio)), 0, prevT);
       gameMatch.putCityStores(targetTile, prevT - loss, gameMatch.forceGetCityStoredGrain(targetTile));
-      effectLines.push('城池兵力 ${prevT} → ${prevT - loss}（-${loss}）');
+      effectLines.push('城池兵力 ${prevT} → ${prevT - loss}（-${loss}，比例=${Std.int(Math.floor(ratio * 100))}%）');
     } else {
       effectLines.push("目標非城池，無效果");
     }

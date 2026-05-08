@@ -93,6 +93,7 @@ class RaidJiCe implements IJiCe {
 
     var ruler = cast(gameMatch.activeMonarch(), Monarch);
     var caster = JiCeApply.requireCaster(ruler, casterId, "RaidJiCe");
+    JiCeApply.requireCasterRank(caster, Balance.requiredRankForStrategy(registryKey()), "RaidJiCe");
 
     var tier = StrategyCostTier.High;
     var phase = gameMatch.forceGetPendingLandingTile() != null ? PostMove : PreMove;
@@ -109,11 +110,9 @@ class RaidJiCe implements IJiCe {
       return;
     }
 
-    // 骨架公式：目標現有兵力 10% + might/10（與落石類似，之後可改規格表）
+    // docs/數值算法.md §4.3：效果倍率（ver1 基礎效果=目標 10% + might/10，再乘倍率）
     var defTroops = gameMatch.monarchTroopCount(targetMonarchId);
-    var loss = Std.int(Math.ceil(defTroops * 0.1)) + Std.int(caster.stat(Might) / 10);
-    if (loss < 0)
-      loss = 0;
+    var loss = Balance.raidTroopLoss(defTroops, caster.stat(Might), roll.before);
     gameMatch.monarchApplyTroopLoss(targetMonarchId, loss);
 
     effectLines.push('目標兵力 -${loss}');

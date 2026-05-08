@@ -109,6 +109,67 @@ class Balance {
     return s * strategyBaseRate(tier) * staminaModifier(stamina);
   }
 
+  /** docs/數值算法.md 4.3：策略成功時效果倍率。 */
+  public static function strategyEffectMultiplier(statValue:Int, stamina:Int):Float {
+    var s = clampInt(statValue, 0, 100) / 100.0;
+    return s * staminaModifier(stamina);
+  }
+
+  /** docs/數值算法.md 4.3：策略成功時的整數型效果（向下取整）。 */
+  public static function strategyEffectAmountInt(base:Int, statValue:Int, stamina:Int):Int {
+    var mul = strategyEffectMultiplier(statValue, stamina);
+    // 避免浮點誤差導致 56 變 55（例如 0.56 實際為 0.559999999...）
+    var amt = Std.int(Math.floor(base * mul + 0.000001));
+    if (amt < 0)
+      amt = 0;
+    return amt;
+  }
+
+  /** docs/數值算法.md 4.3：策略成功時的浮點型效果（不取整）。 */
+  public static function strategyEffectAmountFloat(base:Float, statValue:Int, stamina:Int):Float {
+    var mul = strategyEffectMultiplier(statValue, stamina);
+    var amt = base * mul;
+    if (amt < 0)
+      amt = 0;
+    return amt;
+  }
+
+  // ===== 指定玩家類策略（ver1 基礎效果 + §4.3 倍率）=====
+
+  /**
+   * 離間：降低忠誠度（ver1 基礎效果 = 10）。
+   * docs/數值算法.md 僅定義成功率與一般效果倍率；未定義基礎效果，先採 ver1 常數並套用倍率。
+   */
+  public static function dissensionLoyaltyLoss(wit:Int, stamina:Int):Int {
+    return strategyEffectAmountInt(10, wit, stamina);
+  }
+
+  /**
+   * 急襲：造成士兵損失（ver1 基礎效果：目標兵力 10% + might/10）。
+   * 套用 §4.3 倍率後向下取整。
+   */
+  public static function raidTroopLoss(defTroops:Int, might:Int, stamina:Int):Int {
+    var t = Math.max(0, defTroops);
+    var base = Std.int(Math.ceil(t * 0.1)) + Std.int(clampInt(might, 0, 100) / 10);
+    if (base < 0)
+      base = 0;
+    return strategyEffectAmountInt(base, might, stamina);
+  }
+
+  /**
+   * 徵兵：從目標奪取士兵（ver1 基礎效果：min(目標 5% + command/10, 20)）。
+   * 套用 §4.3 倍率後向下取整。
+   */
+  public static function conscriptionTroopTake(defTroops:Int, command:Int, stamina:Int):Int {
+    var t = Math.max(0, defTroops);
+    var base = Std.int(Math.ceil(t * 0.05)) + Std.int(clampInt(command, 0, 100) / 10);
+    if (base > 20)
+      base = 20;
+    if (base < 0)
+      base = 0;
+    return strategyEffectAmountInt(base, command, stamina);
+  }
+
   /** docs/數值算法.md 6.2：每回合糧食消耗係數（每 100 士兵消耗 1 糧食）。 */
   public static inline var GRAIN_UPKEEP_PER_TROOP:Float = 0.01;
 
@@ -186,6 +247,54 @@ class Balance {
     if (x < w.e)
       return Epic;
     return Legendary;
+  }
+
+  // ===== 策略解鎖（docs/策略系統.md：武將職位→可解鎖策略）=====
+
+  public static function positionRankValue(r:PositionRank):Int {
+    return switch r {
+      case Soldier: 0;
+      case SquadLeader: 1;
+      case SectionLeader: 2;
+      case Captain: 3;
+      case General: 4;
+      case GreatGeneral: 5;
+    };
+  }
+
+  public static inline function positionRankGte(a:PositionRank, b:PositionRank):Bool
+    return positionRankValue(a) >= positionRankValue(b);
+
+  /**
+   * docs/策略系統.md「策略與武將職位的關係」：回傳策略所需最低職位。
+   * 未列於文件者：ver1 預設為 GreatGeneral（避免過早解鎖）。
+   */
+  public static function requiredRankForStrategy(jiceKey:String):PositionRank {
+    return switch jiceKey {
+      // 士兵：基礎策略（火計、鼓舞、屯田）
+      case "jice_fire", "jice_inspire", "jice_farm",
+        // ver1 既有骨架策略（文件未列，但需可用於 smoke/test）
+        "jice_luoshi", "jice_roadblock":
+        Soldier;
+      // 伍長：+ 激勵、商路
+      case "jice_encourage", "jice_trade_route": SquadLeader;
+      // 什長：+ 療傷、築城、流言
+      case "jice_heal", "jice_fortify", "jice_rumor": SectionLeader;
+      // 校尉：+ 覺醒、破壞、離間
+      case "jice_awaken", "jice_sabotage", "jice_dissension": Captain;
+      // 將軍：+ 急襲、徵兵
+      case "jice_raid", "jice_conscription": General;
+      // 大將軍：所有策略（含未列者）
+      default: GreatGeneral;
+    };
+  }
+
+  /** ver1：部分策略不需要選將（例如路障）。 */
+  public static function strategyRequiresCaster(jiceKey:String):Bool {
+    return switch jiceKey {
+      case "jice_roadblock": false;
+      default: true;
+    };
   }
 }
 

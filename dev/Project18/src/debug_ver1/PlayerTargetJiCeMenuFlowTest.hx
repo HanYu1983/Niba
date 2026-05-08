@@ -32,6 +32,11 @@ class PlayerTargetJiCeMenuFlowTest {
     match.createGeneral("g-a", idA, 80, 80, 80, 80);
     match.createGeneral("g-b", idB, 80, 80, 80, 80);
 
+    // docs/策略系統.md：離間/流言屬較高職位解鎖；此測試只驗證骨架流程，故直接升到可用職位。
+    var rulerA0 = cast(match.activeMonarch(), Monarch);
+    var ga0 = cast(rulerA0.roster()[0], General);
+    ga0.grantMerit(800);
+
     // A 持有兩張【指定玩家】牌
     match.createJiCe(DissensionJiCe.REGISTRY_KEY, idA);
     match.createJiCe(RumorJiCe.REGISTRY_KEY, idA);

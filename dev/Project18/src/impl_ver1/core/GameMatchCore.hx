@@ -420,21 +420,35 @@ class GameMatchCore implements IGameMatch {
   }
 
   function rollTerrain(idx:TileIndex):TerrainKind {
-    // NOTE(num-algo): docs/數值算法.md §1.0（格子類型出現概率）屬「TileKind 生成」層面；
-    // ver1 的 terrain 先採近似均勻分布（尚未引入地形權重表）。
-    var u = Deterministic.hash01('terrain|t=${idx}');
-    // 依大致均勻分布（之後可改權重）
-    if (u < 0.18)
+    // NOTE(num-algo): docs 尚未提供「地形出現機率表」；ver1 先集中成可調權重，保持可重現。
+    // 權重直覺：平原/草原較常見；海岸/山地較少；河川/森林居中。
+    var wPlain = 0.25;
+    var wGrass = 0.20;
+    var wForest = 0.18;
+    var wRiver = 0.15;
+    var wMountain = 0.12;
+    var wCoast = 0.10;
+    var sum = wPlain + wGrass + wForest + wRiver + wMountain + wCoast;
+    if (sum <= 0)
       return TerrainKind.Plain;
-    if (u < 0.34)
-      return TerrainKind.Mountain;
-    if (u < 0.50)
+
+    var u = Deterministic.hash01('terrain|t=${idx}');
+    var x = u * sum;
+    if (x < wPlain)
+      return TerrainKind.Plain;
+    x -= wPlain;
+    if (x < wGrass)
+      return TerrainKind.Grassland;
+    x -= wGrass;
+    if (x < wForest)
       return TerrainKind.Forest;
-    if (u < 0.66)
+    x -= wForest;
+    if (x < wRiver)
       return TerrainKind.River;
-    if (u < 0.82)
-      return TerrainKind.Coast;
-    return TerrainKind.Grassland;
+    x -= wRiver;
+    if (x < wMountain)
+      return TerrainKind.Mountain;
+    return TerrainKind.Coast;
   }
 
   function rollGrowth(idx:TileIndex, terrain:TerrainKind):TileGrowth {

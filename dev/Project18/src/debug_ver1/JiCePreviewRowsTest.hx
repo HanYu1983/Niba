@@ -9,6 +9,8 @@ import game.MenuNodeQuery;
 import game.TileKind;
 import game.IPlayerMenuNode;
 import game.GameIds;
+import impl_ver1.model.Monarch;
+import impl_ver1.model.General;
 
 /**
  * 骨架測試：計策 staging 會產生成功率預覽列（previewRows）。
@@ -32,6 +34,11 @@ class JiCePreviewRowsTest {
 
     var actor:IPlayer = match.createPlayer(idA, "A");
     match.createPlayer(idB, "B");
+
+    // docs/策略系統.md：離間需較高職位解鎖；此測試只驗證 previewRows 骨架，故直接升職位。
+    var rulerA0 = cast(match.activeMonarch(), Monarch);
+    var g0 = cast(rulerA0.roster()[0], General);
+    g0.grantMerit(800);
 
     // 建一張離間，並從主選單打出進 staging（使 previewRows 由 action.previewRows 填入）
     match.createJiCe("jice_dissension", idA);

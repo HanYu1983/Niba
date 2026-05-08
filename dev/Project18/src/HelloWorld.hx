@@ -83,6 +83,10 @@ class HelloWorld {
     debug_ver1.MeritAndRankPromotionTest.testMeritAndRankPromotion();
     debug_ver1.StrategyStaminaCostRangeTest.testStrategyStaminaCostRange();
     debug_ver1.ShopRarityProgressionTest.testShopRarityProgression();
+    debug_ver1.TerrainGenerationWeightsTest.testTerrainGenerationWeights();
+    debug_ver1.StrategyEffectMultiplierTest.testStrategyEffectMultiplier();
+    debug_ver1.PlayerTargetStrategyEffectTest.testPlayerTargetStrategyEffect();
+    debug_ver1.StrategyUnlockByRankTest.testStrategyUnlockByRank(new impl_ver1.Game());
     trace("Hello world");
 
     // --- HTML view demo ---

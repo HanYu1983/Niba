@@ -89,6 +89,7 @@ class InspireJiCe implements IJiCe {
 
     var ruler = cast(gameMatch.activeMonarch(), Monarch);
     var caster = JiCeApply.requireCaster(ruler, casterId, "InspireJiCe");
+    JiCeApply.requireCasterRank(caster, Balance.requiredRankForStrategy(registryKey()), "InspireJiCe");
     var target = JiCeApply.requireCaster(ruler, targetId, "InspireJiCe");
 
     // 成功率（統率 × 基礎成功率 × 體力修正）
@@ -103,10 +104,12 @@ class InspireJiCe implements IJiCe {
     );
     var effectLines:Array<String> = [];
     if (roll.ok) {
-      // 效果：目標回復（先用 +20 當骨架；之後可依屬性/修正調整）
+      // docs/數值算法.md §4.3：效果 = 基礎效果 × (屬性/100) × 體力修正
+      // ver1：基礎效果 = +20
       var before = target.stamina();
-      target.setStamina(Balance.clampInt(before + 20, 0, 100));
-      effectLines.push('目標體力 ${before} → ${target.stamina()}（+20）');
+      var amt = Balance.strategyEffectAmountInt(20, caster.stat(Command), roll.before);
+      target.setStamina(Balance.clampInt(before + amt, 0, 100));
+      effectLines.push('目標體力 ${before} → ${target.stamina()}（+${amt}）');
     }
     JiCeApply.popupCaster(gameMatch, ruler.id(), designLabel(), phase, casterId, Command, tier, roll, '武將 $targetId', effectLines, "jice-inspire");
   }

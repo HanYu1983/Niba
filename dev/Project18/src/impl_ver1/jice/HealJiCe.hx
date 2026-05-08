@@ -88,6 +88,7 @@ class HealJiCe implements IJiCe {
 
     var ruler = cast(gameMatch.activeMonarch(), Monarch);
     var caster = JiCeApply.requireCaster(ruler, casterId, "HealJiCe");
+    JiCeApply.requireCasterRank(caster, Balance.requiredRankForStrategy(registryKey()), "HealJiCe");
     var target = JiCeApply.requireCaster(ruler, targetId, "HealJiCe");
 
     var tier = StrategyCostTier.High;
@@ -101,12 +102,14 @@ class HealJiCe implements IJiCe {
     );
     var effectLines:Array<String> = [];
     if (roll.ok) {
-      // 骨架：回復固定 +40（之後可參數化）
+      // docs/數值算法.md §4.3：效果 = 基礎效果 × (屬性/100) × 體力修正
+      // ver1：基礎效果 = +40
       var before = target.stamina();
-      target.setStamina(Balance.clampInt(before + 40, 0, 100));
-      target.removeOneDebuff();
-      effectLines.push('目標體力 ${before} → ${target.stamina()}（+40）');
-      effectLines.push("移除 1 個 debuff");
+      var amt = Balance.strategyEffectAmountInt(40, caster.stat(Wit), roll.before);
+      target.setStamina(Balance.clampInt(before + amt, 0, 100));
+      var removed = target.removeOneDebuff();
+      effectLines.push('目標體力 ${before} → ${target.stamina()}（+${amt}）');
+      effectLines.push(removed ? "移除 1 個 debuff" : "無 debuff 可移除");
     }
     JiCeApply.popupCaster(gameMatch, ruler.id(), designLabel(), phase, casterId, Wit, tier, roll, '武將 $targetId', effectLines, "jice-heal");
   }

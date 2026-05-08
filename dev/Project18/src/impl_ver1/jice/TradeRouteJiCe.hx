@@ -97,6 +97,7 @@ class TradeRouteJiCe implements IJiCe {
     if (gameMatch.forceGetPendingLandingTile() != null && targetTile != ruler.pawnIndex())
       throw "TradeRouteJiCe: post-move must target current tile";
     var caster = JiCeApply.requireCaster(ruler, casterId, "TradeRouteJiCe");
+    JiCeApply.requireCasterRank(caster, Balance.requiredRankForStrategy(registryKey()), "TradeRouteJiCe");
 
     var tier = StrategyCostTier.Low;
     var phase = gameMatch.forceGetPendingLandingTile() != null ? PostMove : PreMove;
@@ -112,8 +113,14 @@ class TradeRouteJiCe implements IJiCe {
       JiCeApply.popupCaster(gameMatch, ruler.id(), designLabel(), phase, casterId, Stewardship, tier, roll, '格 $targetTile', effectLines, "jice-trade-route");
       return;
     }
-    gameMatch.forceAddTileNextTurnGoldBonus(targetTile, 100); // NOTE(balance): 數值待平衡表調整
-    effectLines.push("下回合金錢產出 +100");
+    // docs/數值算法.md §4.3：效果 = 基礎效果 × (屬性/100) × 體力修正
+    var base = 100;
+    var mul = Balance.strategyEffectMultiplier(caster.stat(Stewardship), roll.before);
+    var amt = Std.int(Math.floor(base * mul));
+    if (amt < 0)
+      amt = 0;
+    gameMatch.forceAddTileNextTurnGoldBonus(targetTile, amt);
+    effectLines.push("下回合金錢產出 +" + amt);
     JiCeApply.popupCaster(gameMatch, ruler.id(), designLabel(), phase, casterId, Stewardship, tier, roll, '格 $targetTile', effectLines, "jice-trade-route");
   }
 

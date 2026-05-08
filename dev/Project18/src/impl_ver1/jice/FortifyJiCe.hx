@@ -97,6 +97,7 @@ class FortifyJiCe implements IJiCe {
     if (gameMatch.forceGetPendingLandingTile() != null && targetTile != ruler.pawnIndex())
       throw "FortifyJiCe: post-move must target current tile";
     var caster = JiCeApply.requireCaster(ruler, casterId, "FortifyJiCe");
+    JiCeApply.requireCasterRank(caster, Balance.requiredRankForStrategy(registryKey()), "FortifyJiCe");
 
     var tier = StrategyCostTier.Medium;
     var phase = gameMatch.forceGetPendingLandingTile() != null ? PostMove : PreMove;
@@ -112,8 +113,14 @@ class FortifyJiCe implements IJiCe {
       JiCeApply.popupCaster(gameMatch, ruler.id(), designLabel(), phase, casterId, Stewardship, tier, roll, '格 $targetTile', effectLines, "jice-fortify");
       return;
     }
-    gameMatch.forceAddTileDefenseBonus(targetTile, 0.15); // NOTE(balance): 數值待平衡表調整
-    effectLines.push("防禦加成 +0.15");
+    // docs/數值算法.md §4.3：效果 = 基礎效果 × (屬性/100) × 體力修正
+    var base = 0.15;
+    var mul = Balance.strategyEffectMultiplier(caster.stat(Stewardship), roll.before);
+    var amt = base * mul;
+    if (amt < 0)
+      amt = 0;
+    gameMatch.forceAddTileDefenseBonus(targetTile, amt);
+    effectLines.push("防禦加成 +" + Std.string(amt));
     JiCeApply.popupCaster(gameMatch, ruler.id(), designLabel(), phase, casterId, Stewardship, tier, roll, '格 $targetTile', effectLines, "jice-fortify");
   }
 
