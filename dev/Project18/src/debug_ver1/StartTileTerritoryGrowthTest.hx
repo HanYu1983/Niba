@@ -42,7 +42,7 @@ class StartTileTerritoryGrowthTest {
     match.forceSetTileGrowth(2, {gold: 9, grain: 8, troops: 7});
 
     var mon = cast(match.activeMonarch(), Monarch);
-    // 壓低聲望到 0：Start tile reward 固定 +50 gold（避免高聲望分支干擾）
+    // 壓低聲望到 0：Start tile reward 對齊 docs/數值算法.md 7.2 固定 +100 gold（避免高聲望分支干擾）
     mon.reducePrestige(100);
 
     var gold0 = mon.gold();
@@ -53,10 +53,10 @@ class StartTileTerritoryGrowthTest {
     match.applyMenuLeaf(actor, MenuNodeQuery.requireNodeWithKind(match.createPlayerMenu(actor), PlayerMenuKind.Move));
     // 不需要 LandingContinue 才能拿到「經過起點」的效果（移動過程每步落地即結算）
 
-    // Start reward: +50 gold（低聲望）
+    // Start reward: +100 gold（低聲望）
     // Territory growth: 寫入領地資源庫（城池儲備）
-    if (mon.gold() != gold0 + 50)
-      throw "StartTileTerritoryGrowthTest: expected gold +50 (start only)";
+    if (mon.gold() != gold0 + 100)
+      throw "StartTileTerritoryGrowthTest: expected gold +100 (start only)";
     if (match.forceGetCityStoredGold(2) != cityGold0 + 9)
       throw "StartTileTerritoryGrowthTest: expected city gold store +9";
     if (match.forceGetCityStoredGrain(2) != cityGr0 + 8)

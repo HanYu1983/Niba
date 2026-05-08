@@ -21,6 +21,7 @@ import impl_ver1.model.Monarch;
 import impl_ver1.model.General;
 import impl_ver1.model.PlayerMenu;
 import game.GameError;
+import impl_ver1.util.Deterministic;
 
 /**
  * 村落攻占（示範）：選一名武將 + 選擇投入士兵數（slider）→ 顯示勝率 → 確認提交。
@@ -98,17 +99,32 @@ class VillageConquerStagingAction implements IStagingAction {
 
     var atkPower = attackPower(commitTroops, gAtk);
     var defPower = defenderPower(vIdx, ruler.id());
-    var win = atkPower > defPower;
+    // docs/數值算法.md 3.2：雙方皆帶 0.85~1.15 隨機係數（勝負用；預覽不含隨機）
+    var rSeed = 'village_conquer|t=${vIdx}|r=${match.roundNumber()}|m=${ruler.id()}|g=${gid}|troops=${commitTroops}';
+    var atkRand = 0.85 + Deterministic.hash01(rSeed + "|atk") * 0.30;
+    var defRand = 0.85 + Deterministic.hash01(rSeed + "|def") * 0.30;
+    var win = (atkPower * atkRand) > (defPower * defRand);
 
-    // TODO(num-algo): docs/數值算法.md §3（攻占機率算法）與 §5.3（村落守軍）目前仍為骨架：
-    // - 缺 0.85~1.15 隨機係數
-    // - 守軍戰力目前用固定 defTroops/defMight/defCmd（未由村落等級/資源狀態推導）
-    // - friendlyModifier 係數文件 §5.3 為 0.5，但 Balance.friendlyModifier 目前為 0.3
-    // - 勝負後「掠奪比例/更完整資源處理」仍未對齊文件
-    // 骨架結算：先用 deterministic（無隨機）勝負。
+    // 結算對齊（最小版）：
+    // - docs/數值算法.md 3.2：加入 0.85~1.15 隨機係數（可重現）
+    // - docs/數值算法.md 5.3：守軍友好度修正採 0.5
+    // - docs/數值算法.md 3.3：攻占成功掠奪部分資源（ver1：村落儲備的 30%）
     if (win) {
       ruler.reduceTroops(commitTroops);
-      ruler.grantGrain(100);
+      // 掠奪村落儲備資源 30%（四捨五入到整數）；剩餘留在領地庫
+      var prevGold = match.forceGetVillageStoredGold(vIdx);
+      var prevGrain = match.forceGetVillageStoredGrain(vIdx);
+      var prevTroops = match.forceGetVillageStoredTroops(vIdx);
+      var lootGold = Std.int(Math.floor(prevGold * 0.30));
+      var lootGrain = Std.int(Math.floor(prevGrain * 0.30));
+      var lootTroops = Std.int(Math.floor(prevTroops * 0.30));
+      if (lootGold > 0)
+        ruler.grantGold(lootGold);
+      if (lootGrain > 0)
+        ruler.grantGrain(lootGrain);
+      if (lootTroops > 0)
+        ruler.grantTroops(lootTroops);
+      match.forcePutVillageStores(vIdx, prevTroops - lootTroops, prevGrain - lootGrain, prevGold - lootGold);
       // GDD 2.1.3：攻占成功後友好度重置為 50（中立），並成為領地（每回合產出）
       match.forceSetVillageFriendly(vIdx, ruler.id(), 50);
       match.forceSetVillageOwner(vIdx, ruler.id());
@@ -125,7 +141,7 @@ class VillageConquerStagingAction implements IStagingAction {
 
     var afterF = match.forceGetVillageFriendly(vIdx, ruler.id());
     var body = win
-      ? '攻占成功。\n格子：${vIdx}\n武將：${gid}\n投入兵力：${commitTroops}\n獲得：糧食 +100\n友好度：→ ${afterF}（重置）\n領地：已占領（每回合產出）\n（武將體力 -15）'
+      ? '攻占成功。\n格子：${vIdx}\n武將：${gid}\n投入兵力：${commitTroops}\n掠奪：村落儲備 30%\n友好度：→ ${afterF}（重置）\n領地：已占領（每回合產出）\n（武將體力 -15）'
       : '攻占失敗。\n格子：${vIdx}\n武將：${gid}\n投入兵力：${commitTroops}\n兵力損失約 20%\n友好度：→ ${afterF}\n（武將體力 -15）';
     match.pushInfoPopup(ruler.id(), win ? "攻占成功" : "攻占失敗", game.PopupPayload.Plain(body), "village-conquer");
   }
@@ -166,14 +182,24 @@ class VillageConquerStagingAction implements IStagingAction {
 
   function defenderPower(vIdx:TileIndex, attackerId:MonarchId):Float {
     // GDD 2.1.3：友好度越高，守軍戰鬥力越低
-    var defTroops = 800;
+    // docs/數值算法.md 5.3：守軍戰力 = (100 + 城池等級×50) × 友好度修正(0.5) × 隨機係數
+    // ver1：把「守軍戰力」映射到本模組的同形公式：以 defTroops 表示基礎守軍量，再乘 friendly 修正。
+    var lvl = match.forceGetVillageLevel(vIdx);
+    var n = switch lvl {
+      case Village: 1;
+      case SmallCity: 2;
+      case BigCity: 3;
+      case Capital: 4;
+    };
+    var defTroops = 100 + (n * 50);
     var defMight = 0.55;
     var defCmd = 0.55 * 0.5;
     var stamina = 1.0;
     var city = Balance.cityDefenseBonus(CityLevel.Village);
     // friendlyModifier：friendly 越低倍率越高；因此可直接套用
     var f = match.forceGetVillageFriendly(vIdx, attackerId);
-    var friendly = Balance.friendlyModifier(f);
+    // docs/數值算法.md 5.3：友好度修正係數為 0.5（與城池攻占的 0.3 不同）
+    var friendly = 1.0 + (100 - f) / 100.0 * 0.5;
     return defTroops * (defMight + defCmd) * stamina * city * friendly;
   }
 }

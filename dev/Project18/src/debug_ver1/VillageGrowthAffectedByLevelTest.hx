@@ -15,7 +15,7 @@ import impl_ver1.model.Monarch;
  * 對齊 2.1.7：村落等級（villageLevel）會影響成長倍率（起點觸發）。
  * - base growth 固定
  * - Village 等級：倍率 1.0
- * - BigCity 等級：倍率 1.5（目前規則）
+ * - BigCity 等級：倍率 1.6（對齊 docs/數值算法.md 6.1）
  */
 class VillageGrowthAffectedByLevelTest {
   public static function testVillageGrowthAffectedByLevel(game:IGame):Void {
@@ -24,10 +24,10 @@ class VillageGrowthAffectedByLevelTest {
     if (a.goldInc != 10 || a.grainInc != 10 || a.troopInc != 10)
       throw 'VillageGrowthAffectedByLevelTest: expected base 10/10/10, got ${a.goldInc}/${a.grainInc}/${a.troopInc}';
 
-    // Case B: BigCity => floor(10*1.5)=15
+    // Case B: BigCity => floor(10*1.6)=16
     var b = runOnce(game, CityLevel.BigCity);
-    if (b.goldInc != 15 || b.grainInc != 15 || b.troopInc != 15)
-      throw 'VillageGrowthAffectedByLevelTest: expected 15/15/15, got ${b.goldInc}/${b.grainInc}/${b.troopInc}';
+    if (b.goldInc != 16 || b.grainInc != 16 || b.troopInc != 16)
+      throw 'VillageGrowthAffectedByLevelTest: expected 16/16/16, got ${b.goldInc}/${b.grainInc}/${b.troopInc}';
 
     trace("[VillageGrowthAffectedByLevelTest] OK — village level affects growth multiplier");
   }

@@ -74,7 +74,7 @@ class VillagePlunderStagingAction implements IStagingAction {
     var g = impl_ver1.rules.GeneralAssignmentApply.requireOwnedGeneral(ruler, gid);
 
     // GDD 2.1.3：低成功率，高效果；武力影響；友好度 -20~-40（劇烈下降）
-    // TODO(num-algo): docs/數值算法.md §5.2（搶奪成功率）本實作已套用「0.30 + (武力/100)*20%*體力修正」；但搶奪資源掉落/上限仍為 ver1 自訂區間，尚未對齊 §2（搶奪戰鬥/資源獲取比例）完整規則。
+    // 對齊 GDD：搶奪成功時立即獲得村落「儲存資源」（ver1：把村落儲備全數掠走）。
     var might = g.stat(Might);
     var rate = 0.30 + (might / 100.0) * 0.20 * Balance.staminaModifier(g.stamina());
     if (rate < 0)
@@ -92,18 +92,18 @@ class VillagePlunderStagingAction implements IStagingAction {
     var nextF = Balance.clampInt(prevF - (ok ? fLoss : 10), 0, 100); // 失敗也 -10（GDD 只寫攻占失敗-10，但搶奪失敗亦應惡化）
     match.forceSetVillageFriendly(vIdx, ruler.id(), nextF);
 
-    // 高效果：成功時給較多資源（ver1 先用固定區間的 deterministic 掉落）
+    // 高效果：成功時獲取村落儲備資源
     var gainGold = 0;
     var gainGrain = 0;
     var gainTroops = 0;
     if (ok) {
-      var sBase = 'village_plunder_gain|t=${vIdx}|r=${match.roundNumber()}|m=${ruler.id()}|g=${gid}';
-      gainGold = 40 + Std.int(Math.floor(impl_ver1.util.Deterministic.hash01(sBase + "|gold") * 61)); // 40..100
-      gainGrain = 30 + Std.int(Math.floor(impl_ver1.util.Deterministic.hash01(sBase + "|grain") * 71)); // 30..100
-      gainTroops = 50 + Std.int(Math.floor(impl_ver1.util.Deterministic.hash01(sBase + "|troop") * 151)); // 50..200
+      gainGold = match.forceGetVillageStoredGold(vIdx);
+      gainGrain = match.forceGetVillageStoredGrain(vIdx);
+      gainTroops = match.forceGetVillageStoredTroops(vIdx);
       ruler.grantGold(gainGold);
       ruler.grantGrain(gainGrain);
       ruler.grantTroops(gainTroops);
+      match.forcePutVillageStores(vIdx, 0, 0, 0);
     }
 
     impl_ver1.rules.GeneralAssignmentApply.applyStaminaCost(g, 12);

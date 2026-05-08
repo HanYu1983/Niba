@@ -37,15 +37,15 @@ class EndOfRoundSettlementTest {
     var actor:IPlayer = match.createPlayer(idA, "A");
 
     var mon = cast(match.activeMonarch(), Monarch);
-    // 壓低聲望到 0，確保走「低聲望」分支（固定 +50 gold）
+    // 壓低聲望到 0，確保走「低聲望」分支（對齊 docs/數值算法.md 7.2：固定 +100 gold）
     mon.reducePrestige(100);
     var gen = cast(mon.roster()[0], General);
     gen.setStamina(10);
 
     // Move：經過起點，應拿到 gold
     match.applyMenuLeaf(actor, MenuNodeQuery.requireNodeWithKind(match.createPlayerMenu(actor), Move));
-    if (mon.gold() != 50)
-      throw "EndOfRoundSettlementTest: 預期經過起點 gold +50，got " + mon.gold();
+    if (mon.gold() != 100)
+      throw "EndOfRoundSettlementTest: 預期經過起點 gold +100，got " + mon.gold();
 
     // 落地讓切片完成
     match.applyMenuLeaf(actor, MenuNodeQuery.requireNodeWithKind(match.createPlayerMenu(actor), LandingContinue));

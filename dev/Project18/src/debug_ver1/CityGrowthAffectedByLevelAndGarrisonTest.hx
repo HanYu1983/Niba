@@ -26,9 +26,12 @@ class CityGrowthAffectedByLevelAndGarrisonTest {
 
     // Case B：SmallCity + 高能力駐將
     var got = runOnce(game, CityLevel.SmallCity, "g-hi");
-    // 預期 > base(10)，且至少 floor(10*1.2*1.5)=18
-    if (got < 18)
-      throw 'CityGrowthAffectedByLevelAndGarrisonTest: expected boosted growth >=18, got ' + got;
+    // 對齊 docs/數值算法.md 6.1：
+    // - 城池等級係數（SmallCity=1.3）
+    // - 武將政治加成（Stewardship=100 → 1 + 1*0.3 = 1.3）
+    // 期望至少 floor(10*1.3*1.3)=16
+    if (got < 16)
+      throw 'CityGrowthAffectedByLevelAndGarrisonTest: expected boosted growth >=16, got ' + got;
 
     trace("[CityGrowthAffectedByLevelAndGarrisonTest] OK — level and garrison affect growth");
   }

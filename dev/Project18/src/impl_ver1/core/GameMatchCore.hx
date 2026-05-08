@@ -308,17 +308,17 @@ class GameMatchCore implements IGameMatch {
   /** 規剘：經過起點給予獎勵（骨架：以 prestige 分三段）。 */
   public function onPassStartTile(ruler:Monarch):Void {
     // TODO(num-algo): docs/數值算法.md §7（聲望算法）目前僅有「三段獎勵」骨架，未對齊文件的聲望變化/影響全表與回合/行為觸發點。
-    // 先用簡化規剘：高/中/低聲望三段獎勵（之後可搬到 Balance 或資料表）
+    // 對齊 docs/數值算法.md 7.2（起點獎勵）：高/中/低聲望三段獎勵（之後可搬到 Balance 或資料表）
     var p = ruler.prestige();
     if (p >= 70) {
-      ruler.grantGold(200);
-      ruler.grantGrain(100);
-      ruler.grantTroops(100);
+      ruler.grantGold(300);
+      ruler.grantGrain(200);
+      ruler.grantTroops(200);
     } else if (p >= 40) {
-      ruler.grantGold(100);
-      ruler.grantGrain(100);
+      ruler.grantGold(200);
+      ruler.grantGrain(150);
     } else {
-      ruler.grantGold(50);
+      ruler.grantGold(100);
     }
 
     // GDD 2.1.12：經過起點時，領地資源成長一次（最小版）
@@ -397,42 +397,25 @@ class GameMatchCore implements IGameMatch {
   function cityLevelGrowthMultiplier(level:CityLevel):Float {
     return switch level {
       case Village: 1.0;
-      case SmallCity: 1.2;
-      case BigCity: 1.5;
-      case Capital: 1.8;
+      case SmallCity: 1.3;
+      case BigCity: 1.6;
+      case Capital: 2.0;
     };
   }
 
   function cityGarrisonGrowthMultiplier(at:TileIndex):{gold:Float, grain:Float, troops:Float} {
-    // TODO(num-algo): docs/數值算法.md §6.1 的「武將政治加成」尚未按文件公式落地；此處目前用最大 stat 映射到三資源倍率（最小版）。
-    // 取駐將中「各資源對應 stat」的最大值，作為加成來源（最小版）
-    // gold: 政治 Stewardship；grain: 智力 Wit；troops: 統率 Command
+    // 對齊 docs/數值算法.md 6.1：武將政治加成 = 1 + (駐守武將政治/100)*0.3
+    // - gold/grain 受政治加成
+    // - troops 不受政治加成（僅吃地形×城池等級）
     var bestPol = 0;
-    var bestWit = 0;
-    var bestCmd = 0;
     for (gid in forceGetCityGarrisonGeneralIds(at)) {
       var g = requireGeneral(gid);
       var pol = g.stat(game.GeneralStat.Stewardship);
-      var wit = g.stat(game.GeneralStat.Wit);
-      var cmd = g.stat(game.GeneralStat.Command);
       if (pol > bestPol)
         bestPol = pol;
-      if (wit > bestWit)
-        bestWit = wit;
-      if (cmd > bestCmd)
-        bestCmd = cmd;
     }
-    // 轉倍率：stat=0 → 1.0；stat=100 → 1.5（+50%）
-    var polMult = 1.0 + (bestPol / 200.0);
-    var witMult = 1.0 + (bestWit / 200.0);
-    var cmdMult = 1.0 + (bestCmd / 200.0);
-    // 體力修正：用 activeMonarch 的駐將體力平均（簡化：取最大體力的 modifier，避免太懲罰）
-    var staminaMult = 1.0;
-    for (gid in forceGetCityGarrisonGeneralIds(at)) {
-      var g = requireGeneral(gid);
-      staminaMult = Math.max(staminaMult, Balance.staminaModifier(g.stamina()));
-    }
-    return {gold: polMult * staminaMult, grain: witMult * staminaMult, troops: cmdMult * staminaMult};
+    var polMult = 1.0 + (Balance.clampInt(bestPol, 0, 100) / 100.0) * 0.3;
+    return {gold: polMult, grain: polMult, troops: 1.0};
   }
 
   function rollTerrain(idx:TileIndex):TerrainKind {
@@ -453,44 +436,16 @@ class GameMatchCore implements IGameMatch {
   }
 
   function rollGrowth(idx:TileIndex, terrain:TerrainKind):TileGrowth {
-    // TODO(num-algo): docs/數值算法.md §12（地形成長率數值表）尚未逐條落地；目前以簡化增量骨架（隨機 base + terrain 偏移）生成。
-    // 2.1.7：地形影響三資源的相對高低；這裡先用「每次觸發」的增量骨架
-    // base ranges（再依地形調整）
-    var uG = Deterministic.hash01('growth|t=${idx}|k=gold');
-    var uGr = Deterministic.hash01('growth|t=${idx}|k=grain');
-    var uT = Deterministic.hash01('growth|t=${idx}|k=troops');
-
-    var gold = 2 + Std.int(Math.floor(uG * 6)); // 2..7
-    var grain = 2 + Std.int(Math.floor(uGr * 6)); // 2..7
-    var troops = 2 + Std.int(Math.floor(uT * 6)); // 2..7
-
-    switch terrain {
-      case Plain:
-        grain += 4; // 高
-        gold += 2; // 中
-        troops += 2; // 中
-      case Mountain:
-        gold += 6; // 高（礦產）
-        grain += 0; // 低
-        troops += 0; // 低
-      case Forest:
-        grain += 2; // 中
-        gold += 0; // 低
-        troops += 2; // 中
-      case River:
-        grain += 6; // 高
-        gold += 2; // 中
-        troops += 0; // 低
-      case Coast:
-        gold += 6; // 高（貿易）
-        grain += 0; // 低
-        troops += 0; // 低
-      case Grassland:
-        troops += 6; // 高（牧馬）
-        grain += 2; // 中
-        gold += 0; // 低
-    }
-    return {gold: gold, grain: grain, troops: troops};
+    // 對齊 docs/數值算法.md §12：地形成長率數值表（每回合基礎成長量）
+    // 後續結算在 effectiveTerritoryGrowth 再乘上「城池等級係數」與「武將政治加成」。
+    return switch terrain {
+      case Plain: {grain: 15, gold: 10, troops: 8};
+      case Mountain: {grain: 5, gold: 15, troops: 3};
+      case Forest: {grain: 10, gold: 5, troops: 8};
+      case River: {grain: 15, gold: 10, troops: 5};
+      case Coast: {grain: 5, gold: 15, troops: 3};
+      case Grassland: {grain: 10, gold: 5, troops: 12};
+    };
   }
 
   function clearStaging():Void {
