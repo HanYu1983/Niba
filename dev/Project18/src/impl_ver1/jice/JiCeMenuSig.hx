@@ -1,6 +1,7 @@
 package impl_ver1.jice;
 
 import game.GameError;
+import game.StageChangeError;
 import impl_ver1.util.Deterministic;
 
 /**
@@ -52,7 +53,7 @@ class JiCeMenuSig {
 
   /** 常用：sig mismatch 時的使用者提示。 */
   public static function stateChangedError(msg:String, ctxKey:String):GameError {
-    return new GameError(msg, "狀態已變更", ctxKey);
+    return new StageChangeError(msg, ctxKey);
   }
 }
 
