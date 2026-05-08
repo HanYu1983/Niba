@@ -57,6 +57,9 @@ class VillageConquerStagingAction implements IStagingAction {
         defSel.push(gid);
     }
     var maxTroops = ruler.troops();
+    // 強語意：只要 submit enabled，使用者在 widget 約束內提交就不應因兵力=0被拒絕
+    var sliderMin = maxTroops > 0 ? 1 : 0;
+    var sliderMax = maxTroops;
     var defTroops = maxTroops > 0 ? Std.int(Math.min(500, maxTroops)) : 0;
     var conquerConfirm:MenuClientConfirm = {
       title: "確認攻占",
@@ -74,7 +77,7 @@ class VillageConquerStagingAction implements IStagingAction {
     var submit:IPlayerMenuEntry = match.createPlayerMenuEntry(PlayerMenuKind.StagingSubmit, "確認攻占", enabled, JiCeMenuSig.attach("conquer_ok", sig), conquerConfirm);
     var widgets:Array<MenuFormWidget> = [
       GeneralMultiPick("選擇攻占武將（單選）", choices, defSel),
-      Slider("投入士兵數", 0, maxTroops, 1, defTroops),
+      Slider("投入士兵數", sliderMin, sliderMax, 1, defTroops),
       Button(submit),
     ];
     var node = match.createPlayerMenuNode("攻占", null, [], widgets);
