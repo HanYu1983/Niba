@@ -65,6 +65,7 @@ class HtmlPlayerView {
     meta.appendChild(badge("位置", Std.string(m.pawnIndex()), null));
     meta.appendChild(badge("兵力", Std.string(m.troops()), "red"));
     meta.appendChild(badge("糧食", Std.string(m.grain()), "gold"));
+    meta.appendChild(badge("金錢", Std.string(m.gold()), null));
     root.appendChild(meta);
   }
 

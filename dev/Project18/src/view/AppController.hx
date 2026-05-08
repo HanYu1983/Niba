@@ -61,8 +61,10 @@ class AppController {
     }
 
     var match:IGameMatch = game.createGameMatch(levelKey);
-    // Demo/測試用初始化：先保留既有 HelloWorld 的內容
-    initDemoMatch(match);
+    // Demo/測試用初始化：只在 EMPTY level 才補上手工組局
+    // 其他 level（如 PROB_GEN_32）應由 Game.configureFromLevel 完整組立，避免覆蓋。
+    if (levelKey == LevelKeys.EMPTY)
+      initDemoMatch(match);
 
     vm = new BasicViewModel(match);
     EventCenter.publishViewModel(vm);

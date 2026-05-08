@@ -97,6 +97,7 @@ class HtmlInfoPanelView {
     stats.appendChild(badge("位置", Std.string(a.pawnIndex()), null));
     stats.appendChild(badge("兵力", Std.string(a.troops()), "red"));
     stats.appendChild(badge("糧食", Std.string(a.grain()), "gold"));
+    stats.appendChild(badge("金錢", Std.string(a.gold()), null));
     wrap.appendChild(stats);
 
     var gens = Browser.document.createDivElement();

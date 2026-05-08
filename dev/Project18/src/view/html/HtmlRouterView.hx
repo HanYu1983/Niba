@@ -141,6 +141,17 @@ class HtmlRouterView {
     btnP4.onclick = function(_) EventCenter.publishCommand(UiCommand.ChangePage(ViewState.TestPage4AI));
     bar.appendChild(btnP4);
 
+    var btnProbGen:ButtonElement = Browser.document.createButtonElement();
+    btnProbGen.className = "ui-btn";
+    btnProbGen.type = "button";
+    btnProbGen.textContent = "測試：PROB_GEN_32";
+    btnProbGen.onclick = function(_) {
+      // 直接用正式 level 建局（由 Game.configureFromLevel 組立），不走 EMPTY 手工組局
+      EventCenter.publishCommand(UiCommand.NewGame(LevelKeys.PROB_GEN_32));
+      setState(Main);
+    };
+    bar.appendChild(btnProbGen);
+
     // NOTE(router-ui): 「測試頁2」目前用 ChangePage(TestPage2) 觸發 controller 重建 match。
     // 若後續要新增更多測試場景，建議改成下拉選單：
     // - 選擇 SceneKey/LevelKey 後送 `UiCommand.NewGame(key)` 或新增 `UiCommand.LoadScene(sceneKey)`
