@@ -100,7 +100,9 @@ class JiCeApply {
     var rate = Balance.strategySuccessRate(caster.stat(stat), tier, before);
     var roll = Deterministic.hash01(seed);
     var ok = roll < rate;
-    var cost = Balance.strategyStaminaCost(tier);
+    // docs/數值算法.md §1.4：策略體力消耗採區間抽樣（deterministic）
+    var costU = Deterministic.hash01(seed + "|cost");
+    var cost = Balance.rollStrategyStaminaCost(tier, costU);
     caster.setStamina(Balance.clampInt(before - cost, 0, 100));
     var after = caster.stamina();
     // docs/數值算法.md §10.1：策略成功 → 功績 +10

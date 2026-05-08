@@ -58,13 +58,40 @@ class Balance {
     };
   }
 
-  /** docs/策略系統.md：策略體力消耗占位值（之後可改為區間抽樣）。 */
-  public static function strategyStaminaCost(tier:StrategyCostTier):Int {
+  /**
+   * docs/數值算法.md §1.4：策略體力消耗區間。
+   * - 低消耗：10~15
+   * - 中消耗：20~30
+   * - 高消耗：40~50
+   */
+  public static function strategyStaminaCostRange(tier:StrategyCostTier):{lo:Int, hi:Int} {
     return switch tier {
-      case Low: 10;
-      case Medium: 20;
-      case High: 40;
+      case Low: {lo: 10, hi: 15};
+      case Medium: {lo: 20, hi: 30};
+      case High: {lo: 40, hi: 50};
     };
+  }
+
+  /** 依 \(u\in[0,1)\) 在區間內抽取體力消耗（deterministic 由呼叫端提供 u）。 */
+  public static function rollStrategyStaminaCost(tier:StrategyCostTier, u:Float):Int {
+    var r = strategyStaminaCostRange(tier);
+    var lo = r.lo;
+    var hi = r.hi;
+    if (hi < lo)
+      throw "Balance.rollStrategyStaminaCost: invalid range";
+    // 包含上下界的整數抽樣：lo..hi
+    var span = hi - lo + 1;
+    var k = Std.int(Math.floor(Math.max(0, u) * span));
+    if (k < 0)
+      k = 0;
+    if (k >= span)
+      k = span - 1;
+    return lo + k;
+  }
+
+  /** 兼容：回傳該 tier 的最小消耗值。 */
+  public static function strategyStaminaCost(tier:StrategyCostTier):Int {
+    return strategyStaminaCostRange(tier).lo;
   }
 
   /** docs/數值算法.md 4.1：策略基礎成功率（依消耗級別）。 */

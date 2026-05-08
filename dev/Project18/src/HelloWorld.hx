@@ -81,6 +81,7 @@ class HelloWorld {
     debug_ver1.EquipmentBonusRangeTest.testEquipmentBonusRange();
     debug_ver1.GeneralGenerationByRarityTest.testGeneralGenerationByRarity();
     debug_ver1.MeritAndRankPromotionTest.testMeritAndRankPromotion();
+    debug_ver1.StrategyStaminaCostRangeTest.testStrategyStaminaCostRange();
     trace("Hello world");
 
     // --- HTML view demo ---

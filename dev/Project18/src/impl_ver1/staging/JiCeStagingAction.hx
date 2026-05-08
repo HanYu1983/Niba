@@ -111,14 +111,16 @@ class JiCeStagingAction implements IStagingAction {
   function previewRateRows(stat:GeneralStat, tier:StrategyCostTier, label:String):Array<IJiCeStagingPreviewRow> {
     var atk = cast(match.activeMonarch(), Monarch);
     var rows:Array<IJiCeStagingPreviewRow> = [];
-    var cost = Balance.strategyStaminaCost(tier);
+    var r = Balance.strategyStaminaCostRange(tier);
+    // 預覽用最大值做保守檢查（避免預覽可用但實際 roll 出較大消耗而不足）
+    var cost = r.hi;
     var previews = GeneralAssignmentOps.previewForRoster(
       registryKey(),
       atk.roster(),
       stat,
       cost,
       tier,
-      (_, rate) -> '$label：${Std.int(Math.floor(rate * 100))}%｜體力消耗 $cost'
+      (_, rate) -> '$label：${Std.int(Math.floor(rate * 100))}%｜體力消耗 ${r.lo}~${r.hi}'
     );
     for (p in previews)
       rows.push(new SimpleStagingPreviewRow(p.generalId, p.summary, 0));
