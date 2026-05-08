@@ -1919,12 +1919,23 @@ class GameMatchCore implements IGameMatch {
       var tPick = Deterministic.hash01(seedBase + "|type=" + i);
       var et:game.EquipmentType =
         if (tPick < 0.40) Weapon else if (tPick < 0.65) Armor else if (tPick < 0.85) TacticsBook else PoliticsBook;
+      // docs/裝備系統.md：依「進度 + 聲望」決定稀有度權重（deterministic）
+      var rarU = Deterministic.hash01(seedBase + "|rar=" + i);
+      var rar = Balance.rollShopRarity(roundNumber(), ruler.prestige(), rarU);
       var names = switch et {
-        case Weapon: WeaponCatalog.allNames();
-        case Armor: ArmorCatalog.allNames();
-        case TacticsBook: TacticsBookCatalog.allNames();
-        case PoliticsBook: PoliticsBookCatalog.allNames();
+        case Weapon: WeaponCatalog.namesByRarity(rar);
+        case Armor: ArmorCatalog.namesByRarity(rar);
+        case TacticsBook: TacticsBookCatalog.namesByRarity(rar);
+        case PoliticsBook: PoliticsBookCatalog.namesByRarity(rar);
       };
+      // 若某稀有度清單為空（理論上不會），回退到全列表避免 crash。
+      if (names == null || names.length == 0)
+        names = switch et {
+          case Weapon: WeaponCatalog.allNames();
+          case Armor: ArmorCatalog.allNames();
+          case TacticsBook: TacticsBookCatalog.allNames();
+          case PoliticsBook: PoliticsBookCatalog.allNames();
+        };
       var nm = names[Deterministic.pickIndex(seedBase + "|pick=" + i, names.length)];
       var eqId:EquipmentId = 'shop-${tileIdx}-${roundNumber()}-${i}';
       var eq = spawnStockEquipment(eqId, et, nm);

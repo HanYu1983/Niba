@@ -20,6 +20,14 @@ class CatalogCommon {
     return out;
   }
 
+  public static function namesByRarity(templates:Array<EquipmentTemplate>, r:Rarity):Array<String> {
+    var out:Array<String> = [];
+    for (t in templates)
+      if (t.rarity == r)
+        out.push(t.name);
+    return out;
+  }
+
   public static function spawnByName(
     catalogName:String,
     templates:Array<EquipmentTemplate>,

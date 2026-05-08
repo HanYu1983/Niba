@@ -82,6 +82,7 @@ class HelloWorld {
     debug_ver1.GeneralGenerationByRarityTest.testGeneralGenerationByRarity();
     debug_ver1.MeritAndRankPromotionTest.testMeritAndRankPromotion();
     debug_ver1.StrategyStaminaCostRangeTest.testStrategyStaminaCostRange();
+    debug_ver1.ShopRarityProgressionTest.testShopRarityProgression();
     trace("Hello world");
 
     // --- HTML view demo ---

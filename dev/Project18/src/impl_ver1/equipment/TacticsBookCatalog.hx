@@ -27,6 +27,10 @@ class TacticsBookCatalog {
     return CatalogCommon.allNames(templates);
   }
 
+  public static function namesByRarity(r:Rarity):Array<String> {
+    return CatalogCommon.namesByRarity(templates, r);
+  }
+
   public static function spawnByName(id:EquipmentId, name:String, ?price:Int):IEquipment {
     return CatalogCommon.spawnByName("TacticsBookCatalog", templates, id, name, TacticsBook, Wit, price);
   }

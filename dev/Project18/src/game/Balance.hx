@@ -127,5 +127,65 @@ class Balance {
       case Capital: {gold: 60, grain: 60};
     };
   }
+
+  /**
+   * docs/裝備系統.md「裝備程序化生成」：
+   * - 考慮遊戲進度（越後期越容易出現高稀有度）
+   * - 考慮聲望（高聲望略提高高稀有度機率）
+   *
+   * 規則（ver1 明確化）：
+   * - 以 round 作為進度 proxy（0..）
+   * - 用分段權重做抽樣（deterministic：呼叫端提供 u）
+   */
+  public static function shopRarityWeights(round:Int, prestige:Int):{c:Float, f:Float, e:Float, l:Float} {
+    var r = Math.max(0, round);
+    var base = if (r < 5) {
+      {c: 0.75, f: 0.22, e: 0.03, l: 0.00};
+    } else if (r < 10) {
+      {c: 0.60, f: 0.28, e: 0.10, l: 0.02};
+    } else if (r < 20) {
+      {c: 0.40, f: 0.33, e: 0.20, l: 0.07};
+    } else {
+      {c: 0.22, f: 0.33, e: 0.28, l: 0.17};
+    };
+
+    // 聲望修正：高聲望把一小段權重從 Common 移到 Epic/Legendary；低聲望反向（幅度保守）
+    var p = prestige;
+    var d = 0.0;
+    if (p >= 70)
+      d = 0.06;
+    else if (p >= 40)
+      d = 0.0;
+    else
+      d = -0.04;
+
+    var c = base.c - d;
+    var e = base.e + d * 0.6;
+    var l = base.l + d * 0.4;
+    var f = base.f;
+    // clamp 並重新歸一化
+    if (c < 0) c = 0;
+    if (f < 0) f = 0;
+    if (e < 0) e = 0;
+    if (l < 0) l = 0;
+    var sum = c + f + e + l;
+    if (sum <= 0)
+      return {c: 1.0, f: 0.0, e: 0.0, l: 0.0};
+    return {c: c / sum, f: f / sum, e: e / sum, l: l / sum};
+  }
+
+  public static function rollShopRarity(round:Int, prestige:Int, u:Float):Rarity {
+    var w = shopRarityWeights(round, prestige);
+    var x = Math.max(0, Math.min(0.999999, u));
+    if (x < w.c)
+      return Common;
+    x -= w.c;
+    if (x < w.f)
+      return Fine;
+    x -= w.f;
+    if (x < w.e)
+      return Epic;
+    return Legendary;
+  }
 }
 
