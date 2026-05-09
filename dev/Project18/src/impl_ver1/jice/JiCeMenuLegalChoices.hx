@@ -6,6 +6,7 @@ import game.MenuGeneralChoice;
 import game.MenuMonarchChoice;
 import game.MenuTileChoice;
 import game.StrategyCostTier;
+import game.HistoricalPeople;
 import impl_ver1.core.GameMatchCore;
 import impl_ver1.model.Monarch;
 
@@ -28,7 +29,7 @@ class JiCeMenuLegalChoices {
       if (g.stamina() < costHi)
         continue;
       var gid = g.id();
-      out.push({ generalId: gid, caption: gid });
+      out.push({ generalId: gid, caption: HistoricalPeople.generalName(gid) });
     }
     return out;
   }
@@ -38,7 +39,7 @@ class JiCeMenuLegalChoices {
     for (g in ruler.roster())
       if (g != null) {
         var gid = g.id();
-        out.push({ generalId: gid, caption: gid });
+        out.push({ generalId: gid, caption: HistoricalPeople.generalName(gid) });
       }
     return out;
   }
@@ -48,7 +49,7 @@ class JiCeMenuLegalChoices {
     for (m in match.monarchs())
       if (m != null && m.id() != selfId) {
         var mid = m.id();
-        out.push({ monarchId: mid, caption: mid });
+        out.push({ monarchId: mid, caption: HistoricalPeople.monarchName(mid) });
       }
     return out;
   }

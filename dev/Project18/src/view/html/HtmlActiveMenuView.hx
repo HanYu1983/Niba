@@ -224,7 +224,7 @@ class HtmlActiveMenuView {
             var head = Browser.document.createDivElement();
             head.className = "menu-pick";
             var selNow = selected != null ? selected.copy() : [];
-            head.textContent = lbl + " = " + selNow.join(",");
+            head.textContent = lbl + " = " + selNow.map(id -> HistoricalPeople.generalName(id)).join(",");
             wrap.appendChild(head);
             switch w {
               case GeneralMultiPick(_, choices, _):
@@ -243,7 +243,7 @@ class HtmlActiveMenuView {
                       if (j >= 0)
                         selNow.splice(j, 1);
                     }
-                    head.textContent = lbl + " = " + selNow.join(",");
+                    head.textContent = lbl + " = " + selNow.map(id -> HistoricalPeople.generalName(id)).join(",");
                     EventCenter.publishEvent(UiEvent.GeneralMultiPick(n, i, selNow));
                   };
                   row2.appendChild(cb);
