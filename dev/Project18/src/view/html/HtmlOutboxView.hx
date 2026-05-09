@@ -20,8 +20,11 @@ import view.UiSnapshot;
  * - 讀取 pendingOutbox(activeMonarch)
  * - 嚴格只 ack head（保序）
  * - FanOut2：允許同時顯示 head + next（但仍只 ack head）
+ * - activeMonarch 為 AI 時，popup 會在數秒後自動送出 PopupClose（與手動關閉同路徑）
  */
 class HtmlOutboxView {
+  static inline final AI_POPUP_AUTOCLOSE_MS = 3000;
+
   final host:Element;
   final root:DivElement;
   final popupRoot:DivElement;
@@ -30,6 +33,8 @@ class HtmlOutboxView {
   var evSub:Null<ISubscription> = null;
   var currentVm:Null<IViewModel> = null;
   var playing:Bool = false;
+  /** AI popup 自動關閉計時；重新渲染／手動關閉／dispose 時清除 */
+  var popupAutoCloseHandle:Null<Int> = null;
 
   public function new(mountElementId:String) {
     var el = Browser.document.getElementById(mountElementId);
@@ -73,7 +78,15 @@ class HtmlOutboxView {
     }
   }
 
+  function cancelPopupAutoClose():Void {
+    if (popupAutoCloseHandle != null) {
+      Browser.window.clearTimeout(popupAutoCloseHandle);
+      popupAutoCloseHandle = null;
+    }
+  }
+
   function clear():Void {
+    cancelPopupAutoClose();
     popupRoot.innerHTML = "";
     animRoot.innerHTML = "";
     popupRoot.style.display = "none";
@@ -138,6 +151,7 @@ class HtmlOutboxView {
   }
 
   function renderHeadAndMaybeNext(vm:IViewModel, mid:MonarchId, xs:Array<IOutboxMessage>):Void {
+    cancelPopupAutoClose();
     popupRoot.innerHTML = "";
     animRoot.innerHTML = "";
     popupRoot.style.display = "none";
@@ -147,7 +161,7 @@ class HtmlOutboxView {
     switch head.presentation() {
       case Popup(title, payload, _):
         popupRoot.style.display = "block";
-        renderPopup(head.id(), title, payloadText(payload));
+        renderPopup(vm, mid, head.id(), title, payloadText(payload));
       case Animation(_, payload, _):
         animRoot.style.display = "block";
         var texts:Array<String> = [payloadTextAnim(payload)];
@@ -163,7 +177,7 @@ class HtmlOutboxView {
     }
   }
 
-  function renderPopup(outboxId:String, titleText:String, bodyText:String):Void {
+  function renderPopup(vm:IViewModel, mid:MonarchId, outboxId:String, titleText:String, bodyText:String):Void {
     var overlay = Browser.document.createDivElement();
     overlay.className = "popup-overlay";
 
@@ -186,15 +200,21 @@ class HtmlOutboxView {
     closeBtn.className = "popup-btn";
     closeBtn.type = "button";
     closeBtn.textContent = "關閉";
-    closeBtn.onclick = function(_) {
+    function closePopup():Void {
+      cancelPopupAutoClose();
       // 仍沿用 PopupClose 事件，payload 改承載 outboxId
       EventCenter.publishEvent(UiEvent.PopupClose(outboxId));
-    };
+    }
+    closeBtn.onclick = function(_) closePopup();
     actions.appendChild(closeBtn);
     card.appendChild(actions);
 
     overlay.appendChild(card);
     popupRoot.appendChild(overlay);
+
+    if (vm.isAiMonarch(mid)) {
+      popupAutoCloseHandle = Browser.window.setTimeout(function() closePopup(), AI_POPUP_AUTOCLOSE_MS);
+    }
   }
 
   function renderAnimStack(texts:Array<String>):Void {
@@ -223,6 +243,7 @@ class HtmlOutboxView {
   }
 
   public function dispose():Void {
+    cancelPopupAutoClose();
     if (vmSub != null) {
       vmSub.unsubscribe();
       vmSub = null;
