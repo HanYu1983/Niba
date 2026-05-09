@@ -62,7 +62,8 @@ class Game implements IGame {
     for (i in 0...ids.length) {
       var mid = ids[i];
       match.createMonarch(mid, i, 0, 1000, 1000);
-      match.linkPlayerToMonarch(mid, match.createPlayer(mid, false));
+      // 第一席人類，其餘 AI（PROB_GEN_32 四人局）
+      match.linkPlayerToMonarch(mid, match.createPlayer(mid, i != 0));
       var mon = cast(match.monarchById(mid), Monarch);
       mon.reducePrestige(60); // 100 -> 40（保持中聲望）
       mon.grantGold(1000);
