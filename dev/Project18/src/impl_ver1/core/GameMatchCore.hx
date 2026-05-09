@@ -1983,9 +1983,24 @@ class GameMatchCore implements IGameMatch {
     var ruler = cast(activeMonarch(), Monarch);
     var seedBase = 'general|t=${tileIdx}|r=${roundNumber()}|m=${ruler.id()}';
     var count = 3 + Std.int(Math.floor(Deterministic.hash01(seedBase + "|n") * 3)); // 3~5
+    var unused = forceGetUnusedGeneralIds();
+    // 若名庫不足就縮減，避免生成重複人物
+    if (unused.length < count)
+      count = unused.length;
+    if (count < 1)
+      count = 1;
+
+    // deterministic shuffle：以 seed 對 unused 排序後取前 count
+    var pool = unused.copy();
+    pool.sort(function(a:GeneralId, b:GeneralId):Int {
+      var sa = Deterministic.hash01(seedBase + "|pick|" + a);
+      var sb = Deterministic.hash01(seedBase + "|pick|" + b);
+      return sa < sb ? -1 : (sa > sb ? 1 : 0);
+    });
+
     var out:Array<GeneralRecruitOffer> = [];
     for (i in 0...count) {
-      var id = 'gen-${tileIdx}-${roundNumber()}-${i}';
+      var id:GeneralId = pool[i];
       var s = seedBase + "|i=" + i;
       var rarity = rarityFrom01(Deterministic.hash01(s + "|rar"));
       var gen = rollGeneralStatsByRarity(rarity, s + "|gen");
@@ -1997,7 +2012,6 @@ class GameMatchCore implements IGameMatch {
       var finalCost = applyPrestigeRecruitModifier(ruler.prestige(), base, Deterministic.hash01(s + "|mod"));
       out.push({
         offerId: id,
-        displayName: "武將#" + (i + 1),
         rarity: rarity,
         command: cmd,
         might: mig,
@@ -2750,7 +2764,6 @@ class GameMatchCore implements IGameMatch {
               createGeneral(o.offerId, ruler.id(), o.command, o.might, o.wit, o.stewardship);
               recruited.push({
                 templateGeneralId: o.offerId,
-                displayName: o.displayName,
                 rarity: o.rarity,
                 costGold: o.costGold,
               });
@@ -3109,7 +3122,6 @@ class GameMatchCore implements IGameMatch {
 
 private typedef GeneralRecruitOffer = {
   offerId:String,
-  displayName:String,
   rarity:game.Rarity,
   command:Int,
   might:Int,

@@ -158,7 +158,7 @@ class OutboxPopupBodyText {
         terr ? '${gName} 體力：${sb} → ${sa}（+${sa - sb}，領地休整）' : '${gName} 體力：${sb} → ${sa}';
 
       case GeneralBatchRecruited(tile, lines, total):
-        var parts = [for (x in lines) '${x.displayName}（${rarityZh(x.rarity)}）金 ${x.costGold}'];
+        var parts = [for (x in lines) '${HistoricalPeople.generalName(x.templateGeneralId)}（${rarityZh(x.rarity)}）金 ${x.costGold}'];
         '武將格 ${tile}\n招募：\n- ${parts.join("\n- ")}\n\n總花費：金 ${total}';
 
       case ShopEquipmentPurchased(tile, gid, price, name, ty, rr, bst, bv, loy):

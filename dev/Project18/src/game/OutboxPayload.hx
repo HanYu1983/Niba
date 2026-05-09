@@ -18,7 +18,6 @@ typedef ResourceGrant = ResourceReward;
 /** 批次招募結果之一列（對應清單上一名武將）。 */
 typedef RecruitedGeneralLine = {
   var templateGeneralId:GeneralId;
-  var displayName:String;
   var rarity:Rarity;
   var costGold:Int;
 };
