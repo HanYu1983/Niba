@@ -54,7 +54,7 @@ class AssassinationAvoidableTileEvent implements ITileEvent implements IAvoidabl
     var ruler:Monarch = cast match.activeMonarch();
     var choices:Array<MenuGeneralChoice> = [];
     for (g in ruler.roster())
-      choices.push({generalId: g.id(), caption: g.id()});
+      choices.push({generalId: g.id()});
     var defSel:Array<String> = choices.length > 0 ? [choices[0].generalId] : [];
 
     var submit = match.createPlayerMenuEntry(PlayerMenuKind.TileEventPick, "確認：處理暗殺後果", true, "accept");

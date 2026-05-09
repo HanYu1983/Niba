@@ -1292,7 +1292,7 @@ class GameMatchCore implements IGameMatch {
   function menuChoicesFromRoster(mon:Monarch):Array<MenuGeneralChoice> {
     var out:Array<MenuGeneralChoice> = [];
     for (g in mon.roster())
-      out.push({generalId: g.id(), caption: HistoricalPeople.generalName(g.id())});
+      out.push({generalId: g.id()});
     return out;
   }
 
@@ -1304,7 +1304,7 @@ class GameMatchCore implements IGameMatch {
       ok.set(g.id(), true);
     for (gid in forceGetCityGarrisonGeneralIds(cityIdx))
       if (ok.exists(gid))
-        out.push({generalId: gid, caption: HistoricalPeople.generalName(gid)});
+        out.push({generalId: gid});
     return out;
   }
 
@@ -1587,7 +1587,7 @@ class GameMatchCore implements IGameMatch {
       var choices:Array<MenuGeneralChoice> = [];
       for (g in ruler.roster()) {
         var gid = g.id();
-        choices.push({generalId: gid, caption: HistoricalPeople.generalName(gid)});
+        choices.push({generalId: gid});
       }
       var rosterMember = new Map<String, Bool>();
       for (g in ruler.roster())
@@ -1638,9 +1638,7 @@ class GameMatchCore implements IGameMatch {
       var offers = _generalOffersByTile.exists(idx) ? _generalOffersByTile.get(idx) : [];
       var offerChoices:Array<MenuGeneralChoice> = [];
       for (o in offers) {
-        var cap = '${o.displayName}｜${Std.string(o.rarity)}｜金 ${o.costGold}\n'
-          + '統率 ${o.command}｜武力 ${o.might}｜智力 ${o.wit}｜政治 ${o.stewardship}';
-        offerChoices.push({generalId: o.offerId, caption: cap});
+        offerChoices.push({generalId: o.offerId});
       }
       var submit = createPlayerMenuEntry(GeneralRecruitSubmit, "批次招募（提交）", offerChoices.length > 0, "general_recruit_submit");
       var widgets:Array<MenuFormWidget> = [
@@ -1657,7 +1655,7 @@ class GameMatchCore implements IGameMatch {
       var ruler = cast(activeMonarch(), Monarch);
       var choices:Array<MenuGeneralChoice> = [];
       for (g in ruler.roster())
-        choices.push({generalId: g.id(), caption: HistoricalPeople.generalName(g.id())});
+        choices.push({generalId: g.id()});
       var defSel:Array<String> = choices.length > 0 ? [choices[0].generalId] : [];
 
       var shopChildren:Array<IPlayerMenuNode> = [];
@@ -1693,9 +1691,7 @@ class GameMatchCore implements IGameMatch {
               rate = 0;
             if (rate > 1)
               rate = 1;
-            var gName = HistoricalPeople.generalName(gid);
-            var cap = '${gName}｜${Std.string(stat)}=${statVal}｜成功率 ${Std.int(rate * 100)}%｜體力-${av.avoidanceStaminaCost()}';
-            choices.push({generalId: gid, caption: cap});
+            choices.push({generalId: gid});
           }
           var defSel:Array<String> = choices.length > 0 ? [choices[0].generalId] : [];
           var widgets:Array<MenuFormWidget> = [];

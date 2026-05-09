@@ -205,7 +205,7 @@ class HtmlActiveMenuView {
             for (c in choices) {
               var opt = Browser.document.createOptionElement();
               opt.value = c.monarchId;
-              opt.text = c.caption;
+              opt.text = HistoricalPeople.monarchName(c.monarchId);
               sel.add(opt);
             }
             if (selected != null && selected.length > 0)
@@ -248,7 +248,7 @@ class HtmlActiveMenuView {
                   };
                   row2.appendChild(cb);
                   var txt = Browser.document.createSpanElement();
-                  txt.textContent = c.caption;
+                  txt.textContent = HistoricalPeople.generalName(c.generalId);
                   row2.appendChild(txt);
 
                   // 若有 staging preview rows：把 outcomeDescription 顯示在同一列（generalId 對齊）

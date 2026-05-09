@@ -36,7 +36,7 @@ class GeneralChestTileEvent implements ITileEvent {
     var ruler = _match.activeMonarch();
     var choices:Array<MenuGeneralChoice> = [];
     for (g in ruler.roster())
-      choices.push({generalId: g.id(), caption: g.id()});
+      choices.push({generalId: g.id()});
     var widgets:Array<MenuFormWidget> = [];
     if (choices.length > 0) {
       var def:Array<String> = [choices[0].generalId];

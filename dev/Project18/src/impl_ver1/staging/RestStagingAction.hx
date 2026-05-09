@@ -44,7 +44,7 @@ class RestStagingAction implements IStagingAction {
     var defSel:Array<String> = [];
     for (g in ruler.roster()) {
       var gid = g.id();
-      choices.push({generalId: gid, caption: gid});
+      choices.push({generalId: gid});
       if (defSel.length == 0)
         defSel.push(gid);
     }
@@ -72,7 +72,7 @@ class RestStagingAction implements IStagingAction {
     var gid = GeneralAssignmentApply.pickSingleGeneralId(widgets);
     var nowChoices:Array<game.MenuGeneralChoice> = [];
     for (g in ruler.roster())
-      nowChoices.push({generalId: g.id(), caption: g.id()});
+      nowChoices.push({generalId: g.id()});
     var nowSig = JiCeMenuSig.make([registryKey(), "generals=" + nowChoices.map(c -> c.generalId).join(",")]);
     var sigMismatch = (gotSig != null && gotSig != nowSig);
     var gOk = false;

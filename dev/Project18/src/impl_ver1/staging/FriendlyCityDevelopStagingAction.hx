@@ -51,7 +51,7 @@ class FriendlyCityDevelopStagingAction implements IStagingAction {
     var defSel:Array<String> = [];
     for (g in ruler.roster()) {
       var gid = g.id();
-      choices.push({generalId: gid, caption: gid});
+      choices.push({generalId: gid});
       if (defSel.length == 0)
         defSel.push(gid);
     }
@@ -89,7 +89,7 @@ class FriendlyCityDevelopStagingAction implements IStagingAction {
     var idx = match.forceGetPendingFriendlyCityVisitTile();
     var nowChoices:Array<game.MenuGeneralChoice> = [];
     for (g in ruler.roster())
-      nowChoices.push({generalId: g.id(), caption: g.id()});
+      nowChoices.push({generalId: g.id()});
     var nowSig = JiCeMenuSig.make([
       registryKey(),
       "pending=" + (idx != null ? Std.string(idx) : "null"),
