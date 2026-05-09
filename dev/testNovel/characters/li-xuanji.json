@@ -1,0 +1,49 @@
+{
+  "name": "李玄機",
+  "name_en": "Li Xuanji",
+  "titles": ["蜀山掌門代表", "中道平衡者"],
+  "birth_oe": 24800,
+  "death_oe": null,
+  "appearance_age": "約 55-60 歲",
+  "race": "人類",
+  "origin": "神州·蜀地·蜀山劍派",
+  "identities": ["蜀山劍派掌門代表"],
+  "cultivation_systems": ["仙俠體系（劍修）"],
+  "current_realm": "元嬰期（劍宗）",
+  "spiritual_root": "天靈根（雷屬性）",
+  "magic_talents": [],
+  "personality": ["公正無私", "深思熟慮", "平衡各方", "決斷果敢"],
+  "core_philosophy": "公正無私，平衡各方，做出最佳判斷",
+  "aging": {
+    "stage": "元嬰期",
+    "last_breakthrough_oe": 24900,
+    "appearance_at_breakthrough": 50,
+    "aging_factor": 0.01
+  },
+  "timeline": [
+    { "year": 24814, "event": "入門蜀山", "description": "14 歲通過考核，成為掌門候選人" },
+    { "year": 24900, "event": "晉升元嬰期", "description": "100 歲晉升元嬰期，成為掌門代表" },
+    { "year": 25000, "event": "中立態度", "description": "對《靈魔交流協議》採取中立態度，觀察實際效果" },
+    { "year": 25350, "event": "成立調查小組", "description": "在陰煞之氣事件中，成立暗影調查小組，平衡各方意見" },
+    { "year": 25500, "event": "表彰艾琳娜", "description": "艾琳娜成功中和陰煞之氣後，授予她「靈魔橋樑」稱號" }
+  ],
+  "relationships": [
+    { "character": "張無涯", "relation": "平衡", "description": "平衡保守派意見，公正判斷" },
+    { "character": "王清風", "relation": "平衡", "description": "平衡革新派意見，公正判斷" },
+    { "character": "艾琳娜", "relation": "表彰", "description": "授予「靈魔橋樑」稱號，表彰其貢獻" },
+    { "character": "李雲鋒", "relation": "信任", "description": "信任李雲鋒的判斷，委託其遙控指揮暗影調查" }
+  ],
+  "artifacts": [
+    { "name": "鐵劍", "tier": "黃階", "source": "蜀山劍派", "year": 24814, "description": "入門贈送" },
+    { "name": "靈劍", "tier": "玄階", "source": "蜀山劍派", "year": 24820, "description": "內門考核通過後贈送" },
+    { "name": "劍池靈劍", "tier": "地階", "source": "蜀山劍派", "year": 24830, "description": "真傳考核通過後贈送" },
+    { "name": "雷靈劍", "tier": "地階", "source": "本命煉製", "year": 24900, "description": "晉升掌門代表時煉製，雷屬性靈劍" },
+    { "name": "蜀山劍印", "tier": "天階", "source": "掌門傳承", "year": 24900, "description": "掌門印記，掌控護山大陣" }
+  ],
+  "techniques": [
+    { "name": "基礎劍法", "tier": "黃階", "source": "蜀山劍派", "status": "已圓滿" },
+    { "name": "劍心通明訣", "tier": "玄階", "source": "蜀山劍派", "status": "已圓滿" },
+    { "name": "雷靈劍訣", "tier": "地階", "source": "蜀山劍派", "status": "已掌握" },
+    { "name": "兩儀微塵陣", "tier": "天階", "source": "蜀山劍派", "status": "已掌握" }
+  ]
+}

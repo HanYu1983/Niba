@@ -1,0 +1,58 @@
+{
+  "name": "梅林迪斯",
+  "name_en": "Merindis",
+  "titles": ["靈魔橋樑", "奧術先驅", "真理追尋者"],
+  "birth_oe": 24150,
+  "death_oe": null,
+  "appearance_age": "約 65-70 歲",
+  "race": "人類",
+  "origin": "艾爾德里亞·中央王國·奧術城",
+  "identities": ["奧術之塔院長", "十二席議會首席", "靈魔交流協議發起人"],
+  "cultivation_systems": ["西方魔法體系（奧術之道）"],
+  "current_realm": "魔導師（Archmage）/ 元嬰期",
+  "spiritual_root": null,
+  "magic_talents": ["奧術感知（頂級）", "元素親和（全屬性）", "真理之言（稀有）"],
+  "personality": ["睿智開明", "遠見卓識", "包容開放", "善於外交", "內心孤獨"],
+  "core_philosophy": "知識即力量，真理即魔法",
+  "aging": {
+    "stage": "魔導師",
+    "last_breakthrough_oe": 24500,
+    "appearance_at_breakthrough": 65,
+    "aging_factor": 0.01
+  },
+  "timeline": [
+    { "year": 24150, "event": "出生", "description": "出生於奧術城星輝家族" },
+    { "year": 24158, "event": "入學", "description": "8 歲進入奧術之塔學習" },
+    { "year": 24300, "event": "開創靈魔護盾原型", "description": "以見習法師身份融合東方靈氣概念" },
+    { "year": 24500, "event": "提出萬法同源理論", "description": "發現魔網與靈脈為同一能量網絡" },
+    { "year": 25000, "event": "簽訂靈魔交流協議", "description": "與雲霄劍尊於靈魔交界碑會面" },
+    { "year": 26000, "event": "成為院長", "description": "奧術之塔歷任最年輕院長" },
+    { "year": 30000, "event": "當前時代", "description": "推動東西方法術融合，面臨保守派挑戰" }
+  ],
+  "relationships": [
+    { "character": "雲霄劍尊", "relation": "東方盟友", "description": "蜀山劍派第六代掌門，靈魔交流協議簽訂者" },
+    { "character": "李雲鋒", "relation": "東方學生", "description": "首批交流使者，指導其魔法理論" },
+    { "character": "艾琳娜", "relation": "西方學徒", "description": "來蜀山學習劍修的魔法學徒" },
+    { "character": "保守派議員", "relation": "反對者", "description": "反對東西方法術融合，多次阻撓改革" }
+  ],
+  "artifacts": [
+    { "name": "學徒法杖", "tier": "基礎階", "source": "奧術之塔", "year": 24158, "description": "入門贈送，基礎修煉用" },
+    { "name": "基礎法杖", "tier": "精煉階", "source": "奧術之塔", "year": 24300, "description": "見習考核通過後贈送" },
+    { "name": "元素法杖", "tier": "史詩階", "source": "奧術之塔", "year": 24500, "description": "正式法師考核通過後贈送" },
+    { "name": "奧術法杖", "tier": "傳說階（可成長）", "source": "院長傳承", "year": 26000, "description": "院長傳承法杖，內含奧術之星，可吸收靈氣強化" },
+    { "name": "魔網之心", "tier": "史詩階", "source": "學院贈送", "year": 26000, "description": "院長上任時贈送，可感知魔網流動" },
+    { "name": "靈魔符典", "tier": "史詩階", "source": "自煉", "year": 27000, "description": "結合符籙與魔法的典籍，記錄融合魔法理論" },
+    { "name": "星輝項鏈", "tier": "精煉階", "source": "家族傳承", "year": 24150, "description": "家族傳承，可抵禦靈魂攻擊，保護心智" }
+  ],
+  "techniques": [
+    { "name": "魔網導論", "tier": "精煉階", "source": "奧術之塔", "status": "已圓滿" },
+    { "name": "基礎魔法", "tier": "基礎階", "source": "奧術之塔", "status": "已圓滿" },
+    { "name": "咒語結構學", "tier": "精煉階", "source": "奧術之塔", "status": "已圓滿" },
+    { "name": "元素法典", "tier": "史詩階", "source": "奧術之塔", "status": "已掌握" },
+    { "name": "奧術全書", "tier": "傳說階", "source": "奧術之塔", "status": "已掌握" },
+    { "name": "靈魔護盾", "tier": "精煉階（融合）", "source": "自創", "status": "已掌握" },
+    { "name": "奧術星辰", "tier": "傳說階", "source": "奧術之塔", "status": "已掌握" },
+    { "name": "時空扭曲", "tier": "史詩階", "source": "奧術之塔", "status": "已掌握" },
+    { "name": "真理之言", "tier": "傳說階", "source": "艾爾德里克傳承", "status": "已掌握" }
+  ]
+}

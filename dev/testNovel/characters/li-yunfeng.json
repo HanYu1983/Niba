@@ -1,0 +1,59 @@
+{
+  "name": "李雲鋒",
+  "name_en": "Li Yunfeng",
+  "titles": ["魔劍先驅", "靈魔劍尊"],
+  "birth_oe": 24680,
+  "death_oe": null,
+  "appearance_age": "約 50 歲",
+  "race": "人類",
+  "origin": "神州·蜀地·成都府",
+  "identities": ["蜀山劍派真傳弟子", "魔劍堂首任堂主"],
+  "cultivation_systems": ["仙俠體系（劍修）", "魔法體系（魔劍術）"],
+  "current_realm": "劍宗（元嬰期）/ 魔導師（Archmage）",
+  "spiritual_root": "天靈根（雷屬性）",
+  "magic_talents": ["元素親和（雷、火）", "奧術感知"],
+  "personality": ["開拓創新", "堅毅果敢", "好奇心強", "不拘一格"],
+  "core_philosophy": "劍道無界，萬法歸宗",
+  "aging": {
+    "stage": "元嬰期",
+    "last_breakthrough_oe": 24750,
+    "appearance_at_breakthrough": 50,
+    "aging_factor": 0.01
+  },
+  "timeline": [
+    { "year": 24692, "event": "入門蜀山", "description": "12 歲通過考核，被選為真傳弟子" },
+    { "year": 25000, "event": "簽訂交流協議", "description": "第一個報名參加東西方法術交流" },
+    { "year": 25000, "event": "奧術之塔留學", "description": "學習魔法理論，開創靈魔劍術基礎" },
+    { "year": 25500, "event": "歸宗", "description": "帶回魔劍術體系，說服宗門成立魔劍堂" },
+    { "year": 26000, "event": "魔劍堂成立", "description": "擔任首任堂主，開始培養雙修劍修" },
+    { "year": 27000, "event": "《靈魔劍典》完成", "description": "主編融合功法，列為宗門選修" },
+    { "year": 28000, "event": "靈魔劍術大賽", "description": "代表蜀山參賽，擊敗西方魔劍士" },
+    { "year": 30000, "event": "當前時代", "description": "魔劍堂發展穩定，但仍面臨保守派壓力" }
+  ],
+  "relationships": [
+    { "character": "雲霄劍尊", "relation": "師父", "description": "第六代掌門，力排眾議推薦他交流" },
+    { "character": "梅林迪斯", "relation": "西方導師", "description": "魔法議會大魔導師，指導他魔法理論" },
+    { "character": "蘇清月", "relation": "道侶", "description": "共同開創靈魔劍術，劍氣與魔力完美共鳴" },
+    { "character": "趙無極", "relation": "同批使者", "description": "陣堂弟子，共同研究魔法陣與劍陣" },
+    { "character": "艾琳娜", "relation": "西方學徒", "description": "來蜀山學習劍修的魔法學徒，亦師亦友" },
+    { "character": "保守派長老", "relation": "反對者", "description": "認為他偏離劍道正統，多次刁難" }
+  ],
+  "artifacts": [
+    { "name": "鐵劍", "tier": "黃階", "source": "蜀山劍派", "year": 24692, "description": "入門贈送，基礎修煉用" },
+    { "name": "靈劍", "tier": "玄階", "source": "蜀山劍派", "year": 24692, "description": "入門贈送，真傳弟子標配" },
+    { "name": "劍池靈劍", "tier": "地階", "source": "蜀山劍派", "year": 24750, "description": "真傳考核通過後贈送，約 70 歲" },
+    { "name": "雲魔劍", "tier": "地階→天階（可成長）", "source": "本命煉製", "year": 25500, "description": "本命法寶，留學期間煉製，可吸收魔法能量強化" },
+    { "name": "靈魔珠", "tier": "玄階→地階", "source": "奧術之塔贈送", "year": 25000, "description": "交流時贈送，可儲存魔力" },
+    { "name": "兩儀符甲", "tier": "地階（融合）", "source": "本命煉製", "year": 26000, "description": "歸宗後煉製，結合符籙與魔法護盾" }
+  ],
+  "techniques": [
+    { "name": "基礎劍法", "tier": "黃階", "source": "蜀山劍派", "status": "已圓滿" },
+    { "name": "劍心通明訣", "tier": "玄階", "source": "蜀山劍派", "status": "已圓滿" },
+    { "name": "天罡劍訣", "tier": "地階", "source": "蜀山劍派", "status": "已圓滿" },
+    { "name": "萬劍歸宗", "tier": "地階", "source": "蜀山劍派", "status": "已掌握" },
+    { "name": "靈魔劍典", "tier": "天階（融合）", "source": "魔劍堂", "status": "主編完成" },
+    { "name": "雷火雙極劍", "tier": "地階（融合）", "source": "自創", "status": "已掌握" },
+    { "name": "瞬影魔劍術", "tier": "玄階（融合）", "source": "自創", "status": "已掌握" },
+    { "name": "靈魔劍陣", "tier": "天階（融合）", "source": "魔劍堂", "status": "已掌握" }
+  ]
+}

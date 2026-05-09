@@ -1,0 +1,114 @@
+{
+  "version": "1.0.0",
+  "last_updated": "靈源紀元 30000 年",
+  "world_era": "靈源紀元（Origin Era）",
+  "current_year": 30000,
+  "characters": [
+    {
+      "id": "elena",
+      "name": "艾琳娜",
+      "name_en": "Elena",
+      "file": "elena.json",
+      "birth_oe": 24975,
+      "current_realm": "正式法師（Mage）/ 金丹期",
+      "role": "主角/跨界使者"
+    },
+    {
+      "id": "karl",
+      "name": "卡爾",
+      "name_en": "Karl",
+      "file": "karl.json",
+      "birth_oe": 24974,
+      "current_realm": "見習法師（Novice Mage）",
+      "role": "配角/競爭對手"
+    },
+    {
+      "id": "li-xuanji",
+      "name": "李玄機",
+      "name_en": "Li Xuanji",
+      "file": "li-xuanji.json",
+      "birth_oe": 24800,
+      "current_realm": "元嬰期（劍宗）",
+      "role": "掌門代表/中立派"
+    },
+    {
+      "id": "li-yunfeng",
+      "name": "李雲鋒",
+      "name_en": "Li Yunfeng",
+      "file": "li-yunfeng.json",
+      "birth_oe": 24680,
+      "current_realm": "劍宗（元嬰期）/ 魔導師（Archmage）",
+      "role": "魔劍堂堂主/革新派領袖"
+    },
+    {
+      "id": "lu-tianxing",
+      "name": "陸天行",
+      "name_en": "Lu Tianxing",
+      "file": "lu-tianxing.json",
+      "birth_oe": 24970,
+      "current_realm": "劍士（築基期）/ 見習法師（Apprentice Mage）",
+      "role": "主角/魔劍堂核心弟子"
+    },
+    {
+      "id": "merindis",
+      "name": "梅林迪斯",
+      "name_en": "Merindis",
+      "file": "merindis.json",
+      "birth_oe": 24150,
+      "current_realm": "魔導師（Archmage）/ 元嬰期",
+      "role": "奧術之塔院長/交流協議發起人"
+    },
+    {
+      "id": "su-qingyue",
+      "name": "蘇清月",
+      "name_en": "Su Qingyue",
+      "file": "su-qingyue.json",
+      "birth_oe": 24710,
+      "current_realm": "劍師（金丹期）/ 正式法師（Full Mage）",
+      "role": "魔劍堂副堂主/治癒者"
+    },
+    {
+      "id": "wang-qingfeng",
+      "name": "王清風",
+      "name_en": "Wang Qingfeng",
+      "file": "wang-qingfeng.json",
+      "birth_oe": 24900,
+      "current_realm": "金丹期（劍師）",
+      "role": "革新派長老"
+    },
+    {
+      "id": "zhang-wuya",
+      "name": "張無涯",
+      "name_en": "Zhang Wuya",
+      "file": "zhang-wuya.json",
+      "birth_oe": 24750,
+      "current_realm": "金丹期（劍師）",
+      "role": "保守派長老"
+    },
+    {
+      "id": "zhao-wuji",
+      "name": "趙無極",
+      "name_en": "Zhao Wuji",
+      "file": "zhao-wuji.json",
+      "birth_oe": 24700,
+      "current_realm": "劍士（築基期）/ 見習法師（Novice Mage）",
+      "role": "陣法研究員/交流使者"
+    }
+  ],
+  "aging_rules": {
+    "築基期": { "aging_factor": 0.025, "lifespan": "200-300 歲" },
+    "金丹期": { "aging_factor": 0.02, "lifespan": "500-800 歲" },
+    "元嬰期": { "aging_factor": 0.01, "lifespan": "1000-2000 歲" },
+    "魔導師": { "aging_factor": 0.01, "lifespan": "1000-2000 歲" }
+  },
+  "key_events": [
+    { "year": 25000, "event": "靈魔交流協議簽訂", "description": "梅林迪斯與雲霄劍尊於靈魔交界碑會面" },
+    { "year": 25000, "event": "首批交流使者出發", "description": "李雲鋒前往奧術之塔，蘇清月前往精靈森林，趙無極前往中央王國" },
+    { "year": 25000, "event": "艾琳娜入蜀山", "description": "作為西方交流學徒前往蜀山劍派" },
+    { "year": 25500, "event": "交流使者歸宗", "description": "李雲鋒、蘇清月、趙無極帶回西方知識，艾琳娜歸宗" },
+    { "year": 26000, "event": "魔劍堂成立", "description": "李雲鋒擔任首任堂主，蘇清月擔任副堂主" },
+    { "year": 26000, "event": "梅林迪斯成為院長", "description": "奧術之塔歷任最年輕院長" },
+    { "year": 27000, "event": "《靈魔劍典》完成", "description": "李雲鋒主編融合功法" },
+    { "year": 30000, "event": "當前時代", "description": "東西方法術交流持續進行" }
+  ]
+}
