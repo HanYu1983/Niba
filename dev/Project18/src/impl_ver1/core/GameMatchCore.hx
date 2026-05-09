@@ -92,6 +92,8 @@ class GameMatchCore implements IGameMatch {
   public static inline var DEFAULT_MOVE_DELTA = 3;
   public static inline var DICE_MIN = 1;
   public static inline var DICE_MAX = 6;
+  /** Outbox {@link AnimationKind.PawnMove} 播放時間（毫秒）。 */
+  public static inline var PAWN_MOVE_ANIM_MS = 500;
 
   // ========== 私有欄位（依狀態分區，後續重構時維持對應私有方法區塊）==========
 
@@ -2355,8 +2357,15 @@ class GameMatchCore implements IGameMatch {
             var dMove = forceGetLastRolledMoveDelta();
             var pos = pawnIndexOfMonarch(actor.monarchId());
             if (dMove != null)
-              pushOutboxAnim(actor.monarchId(), AnimationKind.PawnMove, AnimationPayload.PawnMove(before, pos, dMove), 450, OutboxPresentationMode.FanOut2, "anim-move");
-            pushOutboxPlain(actor.monarchId(), "移動", MoveCompleted(dMove, pos), "move");
+              pushOutboxAnim(actor.monarchId(), AnimationKind.PawnMove, AnimationPayload.PawnMove(before, pos, dMove), PAWN_MOVE_ANIM_MS, OutboxPresentationMode.FanOut2, "anim-move");
+            pushOutboxAnim(
+              actor.monarchId(),
+              AnimationKind.MoveSummary,
+              AnimationPayload.MoveCompleted(dMove, pos),
+              PAWN_MOVE_ANIM_MS,
+              OutboxPresentationMode.Serial,
+              "move"
+            );
           case TileEventPick:
             handleTileEventPick(actor, menuNode);
           case TileEventAvoidAttempt:

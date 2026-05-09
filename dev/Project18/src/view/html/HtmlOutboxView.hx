@@ -226,6 +226,8 @@ class HtmlOutboxView {
     return switch p {
       case PawnMove(from, to, delta):
         '移動：${from} → ${to}（${delta}步）';
+      case MoveCompleted(delta, pos):
+        OutboxPopupBodyText.moveCompletedBody(delta, pos);
       case Text(msg):
         msg;
     };

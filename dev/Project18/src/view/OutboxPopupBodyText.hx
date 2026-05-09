@@ -1,5 +1,6 @@
 package view;
 
+import game.GameIds.TileIndex;
 import game.CityLevel;
 import game.EquipmentType;
 import game.GeneralStat;
@@ -17,12 +18,17 @@ import game.PopupPayload.TerritoryStoresKind;
  * 將 {@link game.PopupPayload} 轉為預設中文正文（僅 UI 層；賽局不組排版字串）。
  */
 class OutboxPopupBodyText {
+  /** 移動結束摘要正文（Popup／Animation 共用）。 */
+  public static function moveCompletedBody(deltaSteps:Null<Int>, pawnTileIndex:TileIndex):String {
+    return (deltaSteps != null ? '本次移動步數：${deltaSteps}\n' : "") + '目前位置：格 ${pawnTileIndex}';
+  }
+
   public static function format(p:PopupPayload):String {
     return switch p {
       case FlowAck(k): flowAckBody(k);
 
       case MoveCompleted(delta, pos):
-        (delta != null ? '本次移動步數：${delta}\n' : "") + '目前位置：格 ${pos}';
+        moveCompletedBody(delta, pos);
 
       case EmptyCityOccupied(tile, troops, grain, guards):
         '城池格 ${tile}\n進駐兵力：${troops}\n進駐糧食：${grain}\n駐守武將：${guards.length > 0 ? guards.join(", ") : "（無）"}';
