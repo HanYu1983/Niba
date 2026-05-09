@@ -7,6 +7,7 @@ import game.IPlayerMenuEntry;
 import game.IPlayerMenuNode;
 import game.MatchTerminationReason;
 import game.MenuFormWidget;
+import game.IJiCeStagingPreviewRow;
 import js.Browser;
 import js.html.DivElement;
 import js.html.Element;
@@ -48,6 +49,42 @@ class HtmlActiveMenuView {
     var a = vm.activeMonarch();
     var actor:IPlayer = vm.playerForMonarch(a.id());
     var menu:IPlayerMenu = vm.createPlayerMenu(actor);
+
+    // Staging preview rows（供玩家在提交前快速檢視）
+    if (vm.forceHasPendingStaging()) {
+      var box = Browser.document.createDivElement();
+      box.className = "staging-preview";
+      var lab = Browser.document.createDivElement();
+      lab.className = "ui-label";
+      var title = vm.forceGetPendingStagingLabel();
+      lab.textContent = title != null ? ('暫存預覽｜' + title) : "暫存預覽";
+      box.appendChild(lab);
+
+      var rows:Array<IJiCeStagingPreviewRow> = vm.forceStagingPreviewRows();
+      if (rows == null || rows.length == 0) {
+        var empty = Browser.document.createDivElement();
+        empty.className = "ui-label";
+        empty.textContent = "（無預覽）";
+        box.appendChild(empty);
+      } else {
+        for (r in rows) {
+          var row = Browser.document.createDivElement();
+          row.className = "staging-preview-row";
+          var head = Browser.document.createDivElement();
+          head.className = "staging-preview-row-head";
+          head.textContent = r.generalId();
+          row.appendChild(head);
+          var body = Browser.document.createDivElement();
+          body.className = "staging-preview-row-body";
+          var loss = r.predictedTroopLoss();
+          body.textContent = (loss > 0 ? ('（預計折兵 ' + loss + '）\n') : "") + r.outcomeDescription();
+          row.appendChild(body);
+          box.appendChild(row);
+        }
+      }
+      root.appendChild(box);
+    }
+
     // AI 席位：每次取得並繪製選單後自動走一步（延後一個 macrotask，避免與 publishViewModel 訂閱鏈同步重入）
     if (actor.isAi()) {
       switch vm.getTerminationReason() {
