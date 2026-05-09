@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>靈源界 - 小說世界觀展示</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- 導航欄 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-globe"></i>
+                <span>靈源界</span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#world" class="nav-link active" data-section="world">
+                        <i class="fas fa-map"></i>
+                        <span>世界觀</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#characters" class="nav-link" data-section="characters">
+                        <i class="fas fa-users"></i>
+                        <span>人物</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#items" class="nav-link" data-section="items">
+                        <i class="fas fa-sword"></i>
+                        <span>物品</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#novels" class="nav-link" data-section="novels">
+                        <i class="fas fa-book"></i>
+                        <span>小說</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#places" class="nav-link" data-section="places">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>場所</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主內容區 -->
+    <main class="main-content">
+        <!-- 世界觀區塊 -->
+        <section id="world" class="section active">
+            <div class="section-header">
+                <h1><i class="fas fa-map"></i> 世界觀</h1>
+                <p class="section-subtitle">氣與瑪那交織的雙生世界</p>
+            </div>
+            <div class="content-container" id="world-content">
+                <!-- 動態加載世界觀內容 -->
+            </div>
+        </section>
+
+        <!-- 人物區塊 -->
+        <section id="characters" class="section">
+            <div class="section-header">
+                <h1><i class="fas fa-users"></i> 人物</h1>
+                <p class="section-subtitle">認識故事中的角色</p>
+            </div>
+            <div class="filter-bar" id="character-filters">
+                <!-- 動態生成篩選按鈕 -->
+            </div>
+            <div class="content-container grid-layout" id="characters-content">
+                <!-- 動態加載人物內容 -->
+            </div>
+        </section>
+
+        <!-- 物品區塊 -->
+        <section id="items" class="section">
+            <div class="section-header">
+                <h1><i class="fas fa-sword"></i> 物品</h1>
+                <p class="section-subtitle">探索世界中的裝備與道具</p>
+            </div>
+            <div class="filter-bar" id="item-filters">
+                <!-- 動態生成篩選按鈕 -->
+            </div>
+            <div class="content-container grid-layout" id="items-content">
+                <!-- 動態加載物品內容 -->
+            </div>
+        </section>
+
+        <!-- 小説區塊 -->
+        <section id="novels" class="section">
+            <div class="section-header">
+                <h1><i class="fas fa-book"></i> 小説</h1>
+                <p class="section-subtitle">閱讀精彩的故事章節</p>
+            </div>
+            <div class="filter-bar" id="novel-story-filters">
+                <!-- 動態生成故事篩選按鈕 -->
+            </div>
+            <div class="content-container" id="novels-content">
+                <!-- 動態加載小說內容 -->
+            </div>
+        </section>
+
+        <!-- 場所區塊 -->
+        <section id="places" class="section">
+            <div class="section-header">
+                <h1><i class="fas fa-map-marker-alt"></i> 場所</h1>
+                <p class="section-subtitle">探索世界中的重要地點</p>
+            </div>
+            <div class="filter-bar" id="place-filters">
+                <!-- 動態生成篩選按鈕 -->
+            </div>
+            <div class="content-container grid-layout" id="places-content">
+                <!-- 動態加載場所內容 -->
+            </div>
+        </section>
+    </main>
+
+    <!-- 模態框 -->
+    <div class="modal" id="detail-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title"></h2>
+                <button class="modal-close" id="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <!-- 動態加載詳細內容 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 加載中動畫 -->
+    <div class="loading-overlay" id="loading">
+        <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>加載中...</p>
+        </div>
+    </div>
+
+    <script src="js/data-loader.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

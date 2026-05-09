@@ -1,0 +1,101 @@
+[
+  {
+    "id": "novel_ch1",
+    "title": "第一章 — 奧術之塔的召喚",
+    "chapter": "第一章",
+    "volume": "艾琳娜的蜀山留學",
+    "summary": "艾琳娜在奧術之塔圖書館研究東方典籍，對劍修文化充滿好奇。梅林迪斯院長宣布《靈魔交流協議》即將啟動，艾琳娜通過層層考核，被選為首批交流使者之一，踏上前往蜀山劍派的旅程。",
+    "filePath": "../../novel/chapter-1.md",
+    "image": "images/novels/chapter1.jpg"
+  },
+  {
+    "id": "novel_ch2",
+    "title": "第二章 — 初臨蜀山",
+    "chapter": "第二章",
+    "volume": "艾琳娜的蜀山留學",
+    "summary": "艾琳娜乘坐飛船抵達蜀山劍派，九座山峰環繞的壯麗景象令她震撼。在山門外，她初次感受到濃郁的靈氣，並受到蜀山外務堂弟子陳明的熱情接待，開始了她在東方的留學生活。",
+    "filePath": "../../novel/chapter-2.md",
+    "image": "images/novels/chapter2.jpg"
+  },
+  {
+    "id": "novel_ch3",
+    "title": "第三章 — 靈氣初識",
+    "chapter": "第三章",
+    "volume": "艾琳娜的蜀山留學",
+    "summary": "靈源紀元25002年，艾琳娜開始在蜀山的日常修煉。清晨的晨鐘聲喚醒了她，她首次接觸到靈氣的概念，學習如何感知和引導這股與瑪那本質相同卻運用方式不同的能量。",
+    "filePath": "../../novel/chapter-3.md",
+    "image": "images/novels/chapter3.jpg"
+  },
+  {
+    "id": "novel_ch4",
+    "title": "第四章 — 劍意初悟",
+    "chapter": "第四章",
+    "volume": "艾琳娜的蜀山留學",
+    "summary": "靈源紀元25002年，春。艾琳娜在修煉中逐漸領悟劍意的奧妙，開始理解東方劍修不靠咒語和手勢，僅憑自身修煉就能操控能量的獨特方式。",
+    "filePath": "../../novel/chapter-4.md",
+    "image": "images/novels/chapter4.jpg"
+  },
+  {
+    "id": "novel_ch5",
+    "title": "第五章 — 劍影交心",
+    "chapter": "第五章",
+    "volume": "艾琳娜的蜀山留學",
+    "summary": "靈源紀元25005年，夏。艾琳娜在試劍台與陸天行比試交流，兩人從對手變為研究夥伴，共同探索劍術與魔法融合的可能性，情愫在劍影交錯中悄然萌生。",
+    "filePath": "../../novel/chapter-5.md",
+    "image": "images/novels/chapter5.jpg"
+  },
+  {
+    "id": "novel_ch6",
+    "title": "第六章 — 異變靈氣",
+    "chapter": "第六章",
+    "volume": "艾琳娜的蜀山留學",
+    "summary": "靈源紀元25030年，秋。蜀山靈氣出現異常波動，陰煞之氣開始滲透宗門防禦。艾琳娜的靈魔感知能力成為應對暗影威脅的關鍵，她面臨信任危機與信念考驗。",
+    "filePath": "../../novel/chapter-6.md",
+    "image": "images/novels/chapter6.jpg"
+  },
+  {
+    "id": "novel_ch7",
+    "title": "第七章 — 風雨同舟",
+    "chapter": "第七章",
+    "volume": "艾琳娜的蜀山留學",
+    "summary": "靈源紀元25031年，冬。面對陰煞之氣的威脅，艾琳娜與蜀山同門們並肩作戰。保守派與革新派的矛盾在危機中激化，艾琳娜必須證明自己的忠誠與價值。",
+    "filePath": "../../novel/chapter-7.md",
+    "image": "images/novels/chapter7.jpg"
+  },
+  {
+    "id": "novel_ch8",
+    "title": "第八章 — 靈魔覺醒",
+    "chapter": "第八章",
+    "volume": "艾琳娜的蜀山留學",
+    "summary": "靈源紀元25031年，冬。在關鍵時刻，艾琳娜成功將靈氣與魔力融合，開創獨特的靈魔感知能力，成功中和陰煞之氣，證明了「萬法同源」理論的正確性。",
+    "filePath": "../../novel/chapter-8.md",
+    "image": "images/novels/chapter8.jpg"
+  },
+  {
+    "id": "novel_ch9",
+    "title": "第九章 — 留學圓滿",
+    "chapter": "第九章",
+    "volume": "艾琳娜的蜀山留學",
+    "summary": "靈源紀元25500年，春。艾琳娜的留學生涯即將結束，她已從一名懵懂的魔法學徒成長為能夠同時感知靈氣與魔力的跨界使者。她回顧在蜀山的點滴，準備帶著所學回歸西方。",
+    "filePath": "../../novel/chapter-9.md",
+    "image": "images/novels/chapter9.jpg"
+  },
+  {
+    "id": "novel_ch10",
+    "title": "第十章 — 歸途",
+    "chapter": "第十章",
+    "volume": "艾琳娜的蜀山留學",
+    "summary": "靈源紀元25500年，夏。艾琳娜踏上歸途，與蜀山的師友們依依不捨。她與陸天行約定定期往返東西兩界保持聯繫，帶著靈魔融合的知識回歸奧術之塔。",
+    "filePath": "../../novel/chapter-10.md",
+    "image": "images/novels/chapter10.jpg"
+  },
+  {
+    "id": "novel_ch11",
+    "title": "第十一章 — 新的起點",
+    "chapter": "第十一章",
+    "volume": "艾琳娜的蜀山留學",
+    "summary": "靈源紀元25501年，春。艾琳娜回歸奧術之塔後，將東方修煉知識與西方魔法理論結合，成為東西方法術交流的重要橋樑。她的故事開啟了靈魔融合的新紀元。",
+    "filePath": "../../novel/chapter-11.md",
+    "image": "images/novels/chapter11.jpg"
+  }
+]

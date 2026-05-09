@@ -1,0 +1,2 @@
+// This is a temporary file to help discover the workspace structure
+// Please delete this file after reading it
