@@ -290,6 +290,12 @@ class BasicViewModel implements IViewModel {
   public function playerForMonarch(monarchId:MonarchId):IPlayer
     return match.playerForMonarch(monarchId);
 
+  public function forceGetUnusedMonarchIds():Array<MonarchId>
+    return match.forceGetUnusedMonarchIds();
+
+  public function forceGetUnusedGeneralIds():Array<GeneralId>
+    return match.forceGetUnusedGeneralIds();
+
   public function tileAt(index:TileIndex):ITile
     return match.tileAt(index);
 

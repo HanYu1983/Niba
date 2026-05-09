@@ -52,7 +52,7 @@ class Ver1SmokeTest {
     }
     switch fw[1] {
       case GeneralMultiPick(lbl, choices, _):
-        fw[1] = GeneralMultiPick(lbl, choices, ["g-might-high"]);
+        fw[1] = GeneralMultiPick(lbl, choices, [gHigh.id()]);
       case TileSinglePick(_, _, _):
         throw "Ver1SmokeTest: 不應出現 TileSinglePick";
       default:

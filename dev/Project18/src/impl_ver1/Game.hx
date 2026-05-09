@@ -11,6 +11,7 @@ import impl_ver1.util.Deterministic;
 import impl_ver1.model.Monarch;
 import game.Rarity;
 import impl_ver1.model.General;
+import game.HistoricalPeople;
 
 /**
  * Ver1：依 level_key 建立 {@link GameMatchCore} 並組立關卡局面。
@@ -32,12 +33,31 @@ class Game implements IGame {
         configureProbGen32(match, key);
         return;
       case "ver1/smoke":
-        match.createMonarch("m-atk", 0, 0, 500, 80);
-        match.createMonarch("m-def", 1, 0, 100, 200);
-        match.linkPlayerToMonarch("m-atk", match.createPlayer("m-atk", false));
-        match.linkPlayerToMonarch("m-def", match.createPlayer("m-def", false));
-        match.createGeneral("g-might-high", "m-atk", 1, 50, 1, 1);
-        match.createGeneral("g-might-low", "m-atk", 1, 20, 1, 1);
+        var mids = match.forceGetUnusedMonarchIds();
+        var atk = mids.length > 0 ? mids[0] : "m-atk";
+        var def = mids.length > 1 ? mids[1] : "m-def";
+        match.createMonarch(atk, 0, 0, 500, 80);
+        match.createMonarch(def, 1, 0, 100, 200);
+        match.linkPlayerToMonarch(atk, match.createPlayer(atk, false));
+        match.linkPlayerToMonarch(def, match.createPlayer(def, false));
+        // 兩名武將：取名庫中尚未使用者
+        var gids = match.forceGetUnusedGeneralIds();
+        var g1 = gids.length > 0 ? gids[0] : "g-might-high";
+        var g2 = gids.length > 1 ? gids[1] : "g-might-low";
+        var p1 = HistoricalPeople.generalPresetById(g1);
+        var p2 = HistoricalPeople.generalPresetById(g2);
+        if (p1 != null) {
+          var gg1 = cast(match.createGeneral(p1.id, atk, p1.command, p1.might, p1.wit, p1.stewardship), General);
+          gg1.setRarity(p1.rarity);
+        } else {
+          match.createGeneral(g1, atk, 1, 50, 1, 1);
+        }
+        if (p2 != null) {
+          var gg2 = cast(match.createGeneral(p2.id, atk, p2.command, p2.might, p2.wit, p2.stewardship), General);
+          gg2.setRarity(p2.rarity);
+        } else {
+          match.createGeneral(g2, atk, 1, 20, 1, 1);
+        }
         var tiles:Array<ITile> = [match.createTile(0, Plain)];
         match.createBoard(tiles);
       default:
@@ -56,29 +76,46 @@ class Game implements IGame {
       tiles.push(match.createTile(i, kinds[i]));
     match.createBoard(tiles);
 
-    // --- 4 名君主（對齊 docs/數值算法.md 1.3 普通難度初始值）---
-    // createMonarch 只帶 troops/grain；gold 需另外 grant。
-    var ids = ["m-a", "m-b", "m-c", "m-d"];
-    for (i in 0...ids.length) {
-      var mid = ids[i];
-      match.createMonarch(mid, i, 0, 1000, 1000);
-      // 第一席人類，其餘 AI（PROB_GEN_32 四人局）
+    // --- 4 名主公（GDD 3.2.1）---
+    // 先取未用主公 id，再建立；同名人物不得重複出現
+    var mids = match.forceGetUnusedMonarchIds();
+    if (mids.length < 4)
+      throw "Game.configureProbGen32: insufficient monarch ids in catalog";
+    var chosen = [mids[0], mids[1], mids[2], mids[3]];
+    for (i in 0...chosen.length) {
+      var mid = chosen[i];
+      // 普通難度基礎值：troops/grain=1000；gold 另 grant 1000
+      // GDD 3.2.1 初始優勢（最小版）：以資源微調表達
+      var troops = 1000;
+      var grain = 1000;
+      var gold = 1000;
+      switch mid {
+        case "織田信長":
+          gold += 300;
+        case "曹操":
+          troops += 300;
+        case "劉備":
+          grain += 300;
+        default:
+      }
+      match.createMonarch(mid, i, 0, troops, grain);
       match.linkPlayerToMonarch(mid, match.createPlayer(mid, i != 0));
       var mon = cast(match.monarchById(mid), Monarch);
       mon.reducePrestige(60); // 100 -> 40（保持中聲望）
-      mon.grantGold(1000);
+      mon.grantGold(gold);
 
-      // 初始武將 4 名：docs/數值算法.md 9.2
-      // - 1 名精良
-      // - 2 名普通
-      // - 1 名隨機（普通或精良）
-      var seed = seedBase + "|init_gen|" + mid;
-      spawnGeneratedGeneral(match, 'g-${mid}-1', mid, Fine, seed + "|1");
-      spawnGeneratedGeneral(match, 'g-${mid}-2', mid, Common, seed + "|2");
-      spawnGeneratedGeneral(match, 'g-${mid}-3', mid, Common, seed + "|3");
-      var u = Deterministic.hash01(seed + "|4rar");
-      var r4:Rarity = (u < 0.5) ? Common : Fine;
-      spawnGeneratedGeneral(match, 'g-${mid}-4', mid, r4, seed + "|4");
+      // 初始武將 4 名：先用歷史名庫（避免重複）
+      var gids = match.forceGetUnusedGeneralIds();
+      if (gids.length < 4)
+        throw "Game.configureProbGen32: insufficient general ids in catalog";
+      for (j in 0...4) {
+        var gid = gids[j];
+        var p = HistoricalPeople.generalPresetById(gid);
+        if (p == null)
+          throw 'Game.configureProbGen32: missing general preset "$gid"';
+        var g = cast(match.createGeneral(p.id, mid, p.command, p.might, p.wit, p.stewardship), General);
+        g.setRarity(p.rarity);
+      }
     }
   }
 

@@ -28,6 +28,7 @@ import game.PopupOption;
 import game.OutboxPayload;
 import game.OutboxPayload.FlowAckKind;
 import game.OutboxPayload.HostileSettlementBranch;
+import game.HistoricalPeople;
 import game.GeneralStat;
 import game.OutboxPayload.OutboxUiCopyKey;
 import game.OutboxPayload.RecruitedGeneralLine;
@@ -679,6 +680,11 @@ class GameMatchCore implements IGameMatch {
     return boardInstallOnce(tiles);
 
   public function createGeneral(id:GeneralId, owner:MonarchId, command:Int, might:Int, wit:Int, stewardship:Int):IGeneral {
+    // 同名人物不得重複出現
+    for (m in _monarchs)
+      for (g in m.roster())
+        if (g != null && g.id() == id)
+          throw 'GameMatchCore.createGeneral: general "$id" already exists';
     var gen = new General(id, owner, command, might, wit, stewardship);
     monarchWithId(owner).addGeneral(gen);
     return gen;
@@ -709,6 +715,10 @@ class GameMatchCore implements IGameMatch {
   }
 
   public function createMonarch(id:MonarchId, seat:Int, pawnIndex:TileIndex, ?troops:Int, ?grain:Int):IMonarch {
+    // 同名人物不得重複出現
+    for (m0 in _monarchs)
+      if (m0 != null && m0.id() == id)
+        throw 'GameMatchCore.createMonarch: monarch "$id" already exists';
     var t = troops != null ? troops : 0;
     var g = grain != null ? grain : 0;
     var m = new Monarch(id, seat, pawnIndex, t, g);
@@ -718,6 +728,31 @@ class GameMatchCore implements IGameMatch {
     if (_monarchs.length == 1)
       _activeId = m.id();
     return m;
+  }
+
+  public function forceGetUnusedMonarchIds():Array<MonarchId> {
+    var used = new Map<MonarchId, Bool>();
+    for (m in _monarchs)
+      if (m != null)
+        used.set(m.id(), true);
+    var out:Array<MonarchId> = [];
+    for (id in HistoricalPeople.monarchIds())
+      if (!used.exists(id))
+        out.push(id);
+    return out;
+  }
+
+  public function forceGetUnusedGeneralIds():Array<GeneralId> {
+    var used = new Map<GeneralId, Bool>();
+    for (m in _monarchs)
+      for (g in m.roster())
+        if (g != null)
+          used.set(g.id(), true);
+    var out:Array<GeneralId> = [];
+    for (id in HistoricalPeople.generalIds())
+      if (!used.exists(id))
+        out.push(id);
+    return out;
   }
 
   public function pendingOutbox(monarchId:MonarchId):Array<IOutboxMessage> {

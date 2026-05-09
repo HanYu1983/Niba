@@ -61,6 +61,20 @@ interface IGameMatchGetter {
    */
   function playerForMonarch(monarchId:MonarchId):IPlayer;
 
+  /**
+   * 組局/內容層：取得「尚未使用」的主公 id 候選（避免同一人物重複出現）。
+   * - 依 {@link game.HistoricalPeople} 的主公名庫
+   * - 會排除目前賽局中已存在的君主 id
+   */
+  function forceGetUnusedMonarchIds():Array<MonarchId>;
+
+  /**
+   * 組局/內容層：取得「尚未使用」的武將 id 候選（避免同一人物重複出現）。
+   * - 依 {@link game.HistoricalPeople} 的武將名庫
+   * - 會排除目前賽局中已存在的武將 id
+   */
+  function forceGetUnusedGeneralIds():Array<GeneralId>;
+
   /** 依格索引取得棋盤格（等同 {@link #board}.tileAt）。 */
   function tileAt(index:TileIndex):ITile;
 
