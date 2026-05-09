@@ -10,7 +10,7 @@ import game.IPlayerMenuNode;
 import game.IStagingAction;
 import game.MenuFormWidget;
 import game.PlayerMenuKind;
-import game.PopupPayload;
+import game.OutboxPayload;
 import impl_ver1.core.GameMatchCore;
 import impl_ver1.model.Monarch;
 import impl_ver1.model.General;
@@ -112,7 +112,7 @@ class FriendlyCityRestStagingAction implements IStagingAction {
     match.pushOutboxPlain(
       ruler.id(),
       "休整完成",
-      PopupPayload.RestStamina(gid, prevSt, next, Balance.STAMINA_RECOVER_TERRITORY_REST, true),
+      OutboxPayload.RestStamina(gid, prevSt, next, Balance.STAMINA_RECOVER_TERRITORY_REST, true),
       "friendly-city-rest"
     );
   }

@@ -9,7 +9,7 @@ import game.IPlayerMenu;
 import game.IPlayerMenuNode;
 import game.ITileEvent;
 import game.MenuActivation;
-import game.PopupPayload;
+import game.OutboxPayload;
 import game.PlayerMenuKind.TileEventPick;
 import impl_ver1.model.General;
 import impl_ver1.model.Monarch;
@@ -61,7 +61,7 @@ class DefectionAvoidableTileEvent implements ITileEvent implements IAvoidableTil
 
     var ruler:Monarch = cast match.activeMonarch();
     if (ruler.roster().length == 0) {
-      match.pushOutboxPlain(actor.monarchId(), "事件：叛逃事件", PopupPayload.DefectionNoGeneralsSkipped, "evt-defection");
+      match.pushOutboxPlain(actor.monarchId(), "事件：叛逃事件", OutboxPayload.DefectionNoGeneralsSkipped, "evt-defection");
       return;
     }
 
@@ -90,14 +90,14 @@ class DefectionAvoidableTileEvent implements ITileEvent implements IAvoidableTil
       match.pushOutboxPlain(
         actor.monarchId(),
         "事件：叛逃事件",
-        PopupPayload.DefectionResolved(picked.id(), Std.int(rate * 100), mult),
+        OutboxPayload.DefectionResolved(picked.id(), Std.int(rate * 100), mult),
         "evt-defection"
       );
     } else {
       match.pushOutboxPlain(
         actor.monarchId(),
         "事件：叛逃事件",
-        PopupPayload.DefectionNotTriggered(Std.int(rate * 100), mult),
+        OutboxPayload.DefectionNotTriggered(Std.int(rate * 100), mult),
         "evt-defection"
       );
     }

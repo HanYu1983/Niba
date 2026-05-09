@@ -9,7 +9,7 @@ import game.IPlayerMenu;
 import game.IPlayerMenuNode;
 import game.ITileEvent;
 import game.MenuActivation;
-import game.PopupPayload;
+import game.OutboxPayload;
 import game.PlayerMenuKind.TileEventPick;
 import impl_ver1.model.PlayerMenu;
 
@@ -67,7 +67,7 @@ class GranaryFireAvoidableTileEvent implements ITileEvent implements IAvoidableT
     match.pushOutboxPlain(
       actor.monarchId(),
       "事件：糧倉失火",
-      PopupPayload.GranaryFireResolved(loss, mult),
+      OutboxPayload.GranaryFireResolved(loss, mult),
       "evt-granary-fire"
     );
   }

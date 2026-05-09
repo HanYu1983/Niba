@@ -4,18 +4,18 @@ import game.GameIds.TileIndex;
 import game.CityLevel;
 import game.EquipmentType;
 import game.GeneralStat;
-import game.PopupPayload;
-import game.PopupPayload.FlowAckKind;
-import game.PopupPayload.HostileSettlementBranch;
-import game.PopupPayload.OutboxUiCopyKey;
-import game.PopupPayload.ResourceGrant;
+import game.OutboxPayload;
+import game.OutboxPayload.FlowAckKind;
+import game.OutboxPayload.HostileSettlementBranch;
+import game.OutboxPayload.OutboxUiCopyKey;
+import game.OutboxPayload.ResourceGrant;
 import game.Rarity;
 import game.StrategyCostTier;
 import game.StrategyPhase;
-import game.PopupPayload.TerritoryStoresKind;
+import game.OutboxPayload.TerritoryStoresKind;
 
 /**
- * 將 {@link game.PopupPayload} 轉為預設中文正文（僅 UI 層；賽局不組排版字串）。
+ * 將 {@link game.OutboxPayload} 轉為預設中文正文（僅 UI 層；賽局不組排版字串）。
  */
 class OutboxPopupBodyText {
   /** 移動結束摘要正文（Popup／Animation 共用）。 */
@@ -23,12 +23,18 @@ class OutboxPopupBodyText {
     return (deltaSteps != null ? '本次移動步數：${deltaSteps}\n' : "") + '目前位置：格 ${pawnTileIndex}';
   }
 
-  public static function format(p:PopupPayload):String {
+  public static function format(p:OutboxPayload):String {
     return switch p {
       case FlowAck(k): flowAckBody(k);
 
       case MoveCompleted(delta, pos):
         moveCompletedBody(delta, pos);
+
+      case PawnMove(from, to, delta):
+        '移動：${from} → ${to}（${delta}步）';
+
+      case AnimPlainText(msg):
+        msg;
 
       case EmptyCityOccupied(tile, troops, grain, guards):
         '城池格 ${tile}\n進駐兵力：${troops}\n進駐糧食：${grain}\n駐守武將：${guards.length > 0 ? guards.join(", ") : "（無）"}';

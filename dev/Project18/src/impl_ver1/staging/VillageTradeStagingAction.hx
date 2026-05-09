@@ -12,7 +12,7 @@ import game.IStagingAction;
 import game.MenuFormWidget;
 import game.MenuClientConfirm;
 import game.PlayerMenuKind;
-import game.PopupPayload;
+import game.OutboxPayload;
 import impl_ver1.rules.GeneralAssignmentOps;
 import impl_ver1.rules.GeneralAssignmentApply;
 import impl_ver1.rules.GeneralAssignmentKeys;
@@ -186,7 +186,7 @@ class VillageTradeStagingAction implements IStagingAction {
     match.pushOutboxPlain(
       ruler.id(),
       title,
-      PopupPayload.VillageTradeOutcome(
+      OutboxPayload.VillageTradeOutcome(
         ok,
         vIdx,
         gid,

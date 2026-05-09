@@ -13,7 +13,7 @@ import game.IStagingAction;
 import game.MenuFormWidget;
 import game.MenuClientConfirm;
 import game.PlayerMenuKind;
-import game.PopupPayload;
+import game.OutboxPayload;
 import impl_ver1.rules.GeneralAssignmentOps;
 import impl_ver1.rules.GeneralAssignmentApply;
 import impl_ver1.rules.GeneralAssignmentKeys;
@@ -192,7 +192,7 @@ class VillageConquerStagingAction implements IStagingAction {
     match.pushOutboxPlain(
       ruler.id(),
       win ? "攻占成功" : "攻占失敗",
-      PopupPayload.VillageConquerOutcome(win, vIdx, gid, commitTroops, afterF, lootGold, lootGrain, lootTroops, troopLossOnFail),
+      OutboxPayload.VillageConquerOutcome(win, vIdx, gid, commitTroops, afterF, lootGold, lootGrain, lootTroops, troopLossOnFail),
       "village-conquer"
     );
   }

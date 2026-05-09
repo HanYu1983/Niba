@@ -1,9 +1,9 @@
 package view.html;
 
-import game.AnimationPayload;
 import game.IOutboxMessage;
 import game.OutboxPresentation;
 import game.OutboxPresentationMode;
+import game.OutboxPayload;
 import game.GameIds;
 import js.Browser;
 import js.html.ButtonElement;
@@ -109,16 +109,14 @@ class HtmlOutboxView {
     renderHeadAndMaybeNext(vm, mid, xs);
 
     switch head.presentation() {
-      case Popup(_, _, _):
+      case Popup(_, _):
         // 阻塞：等待使用者按關閉（OutboxAck → vm ackOutbox → OutboxRefresh）
-      case Animation(_, _, durationMs):
+      case Animation(durationMs):
         playing = true;
 
-        // 動畫期間：套用「過程快照」（目前先支援 PawnMove：把棋子暫時顯示在 from）
         applySnapshotForHeadIfAny(vm, mid, head);
 
         Browser.window.setTimeout(function() {
-          // 動畫結束：清除快照，回到 match 真實狀態
           vm.setPresentationSnapshot(null);
           EventCenter.publishViewModel(vm);
 
@@ -131,18 +129,14 @@ class HtmlOutboxView {
   }
 
   function applySnapshotForHeadIfAny(vm:IViewModel, mid:MonarchId, head:IOutboxMessage):Void {
-    switch head.presentation() {
-      case Animation(_, payload, _):
-        switch payload {
-          case PawnMove(from, _, _):
-            var mp = new Map<MonarchId, TileIndex>();
-            mp.set(mid, from);
-            var s:UiSnapshot = { monarchPawnIndexById: mp };
-            vm.setPresentationSnapshot(s);
-            EventCenter.publishViewModel(vm);
-          case _:
-        }
-      case _:
+    switch head.payload() {
+      case PawnMove(from, _, _):
+        var mp = new Map<MonarchId, TileIndex>();
+        mp.set(mid, from);
+        var s:UiSnapshot = { monarchPawnIndexById: mp };
+        vm.setPresentationSnapshot(s);
+        EventCenter.publishViewModel(vm);
+      default:
     }
   }
 
@@ -155,18 +149,18 @@ class HtmlOutboxView {
 
     var head = xs[0];
     switch head.presentation() {
-      case Popup(title, payload, _):
+      case Popup(title, _):
         popupRoot.style.display = "block";
-        renderPopup(vm, mid, head.id(), title, OutboxPopupBodyText.format(payload));
-      case Animation(_, payload, _):
+        renderPopup(vm, mid, head.id(), title, OutboxPopupBodyText.format(head.payload()));
+      case Animation(_):
         animRoot.style.display = "block";
-        var texts:Array<String> = [payloadTextAnim(payload)];
+        var texts:Array<String> = [OutboxPopupBodyText.format(head.payload())];
         if (head.presentationMode() == OutboxPresentationMode.FanOut2 && xs.length >= 2) {
           var next = xs[1];
           switch next.presentation() {
-            case Animation(_, payload2, _):
-              texts.push(payloadTextAnim(payload2));
-            case Popup(_, _, _):
+            case Animation(_):
+              texts.push(OutboxPopupBodyText.format(next.payload()));
+            case Popup(_, _):
           }
         }
         renderAnimStack(texts);
@@ -222,17 +216,6 @@ class HtmlOutboxView {
     }
   }
 
-  static function payloadTextAnim(p:AnimationPayload):String {
-    return switch p {
-      case PawnMove(from, to, delta):
-        '移動：${from} → ${to}（${delta}步）';
-      case MoveCompleted(delta, pos):
-        OutboxPopupBodyText.moveCompletedBody(delta, pos);
-      case Text(msg):
-        msg;
-    };
-  }
-
   public function dispose():Void {
     cancelPopupAutoClose();
     if (vmSub != null) {
@@ -247,4 +230,3 @@ class HtmlOutboxView {
       root.parentElement.removeChild(root);
   }
 }
-

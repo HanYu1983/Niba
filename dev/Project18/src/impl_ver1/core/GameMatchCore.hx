@@ -25,16 +25,14 @@ import game.MenuClientConfirm;
 import game.MenuActivation;
 import game.MenuGeneralChoice;
 import game.MenuFormWidget;
-import game.AnimationKind;
-import game.AnimationPayload;
 import game.PopupOption;
-import game.PopupPayload;
-import game.PopupPayload.FlowAckKind;
-import game.PopupPayload.HostileSettlementBranch;
+import game.OutboxPayload;
+import game.OutboxPayload.FlowAckKind;
+import game.OutboxPayload.HostileSettlementBranch;
 import game.GeneralStat;
-import game.PopupPayload.OutboxUiCopyKey;
-import game.PopupPayload.RecruitedGeneralLine;
-import game.PopupPayload.TerritoryStoresKind;
+import game.OutboxPayload.OutboxUiCopyKey;
+import game.OutboxPayload.RecruitedGeneralLine;
+import game.OutboxPayload.TerritoryStoresKind;
 import game.PlayerMenuKind;
 import game.ResourceReward;
 import game.StrategyPhase;
@@ -83,7 +81,7 @@ import impl_ver1.staging.VillageDevelopStagingAction;
 @:allow(impl_ver1)
 class GameMatchCore implements IGameMatch {
   // NOTE(game-error): 目前仍有大量 `throw "GameMatchCore: ..."` 的字串例外。
-  // 若要讓 UI 可用 outbox（{@link game.PopupPayload.GameRuleFeedback}）呈現「可預期的玩家操作失敗」，可逐步改成 `throw new GameError(...)`：
+  // 若要讓 UI 可用 outbox（{@link game.OutboxPayload.GameRuleFeedback}）呈現「可預期的玩家操作失敗」，可逐步改成 `throw new GameError(...)`：
   // - 資源不足（兵/糧/金不足）
   // - 表單選擇不合法（應單選/未選等）
   // - 指令不可用（例如 StrategyPre/StrategyPost 不可用）若屬玩家可理解的規則拒絕也應轉為 GameError
@@ -92,7 +90,7 @@ class GameMatchCore implements IGameMatch {
   public static inline var DEFAULT_MOVE_DELTA = 3;
   public static inline var DICE_MIN = 1;
   public static inline var DICE_MAX = 6;
-  /** Outbox {@link AnimationKind.PawnMove} 播放時間（毫秒）。 */
+  /** Outbox 棋子移動動畫播放時間（毫秒）。 */
   public static inline var PAWN_MOVE_ANIM_MS = 500;
 
   // ========== 私有欄位（依狀態分區，後續重構時維持對應私有方法區塊）==========
@@ -740,7 +738,7 @@ class GameMatchCore implements IGameMatch {
       }
   }
 
-  public function pushOutboxPlain(monarchId:MonarchId, title:String, payload:PopupPayload, ctxKey:String):Void {
+  public function pushOutboxPlain(monarchId:MonarchId, title:String, payload:OutboxPayload, ctxKey:String):Void {
     pushOutboxPopup(monarchId, title, payload, Ok, ctxKey);
   }
 
@@ -755,7 +753,7 @@ class GameMatchCore implements IGameMatch {
     _outboxByMonarchId.get(monarchId).push(msg);
   }
 
-  function pushOutboxPopup(monarchId:MonarchId, title:String, payload:PopupPayload, option:PopupOption, ctxKey:String):String {
+  function pushOutboxPopup(monarchId:MonarchId, title:String, payload:OutboxPayload, option:PopupOption, ctxKey:String):String {
     var id = outboxId(monarchId, ctxKey);
     var msg = new OutboxMessage(
       id,
@@ -763,13 +761,14 @@ class GameMatchCore implements IGameMatch {
       ctxKey,
       true,
       OutboxPresentationMode.Serial,
-      OutboxPresentation.Popup(title, payload, option)
+      OutboxPresentation.Popup(title, option),
+      payload
     );
     pushOutboxToMonarch(monarchId, msg);
     return id;
   }
 
-  function pushOutboxAnim(monarchId:MonarchId, kind:AnimationKind, payload:AnimationPayload, durationMs:Int, mode:OutboxPresentationMode, ctxKey:String):String {
+  function pushOutboxAnim(monarchId:MonarchId, payload:OutboxPayload, durationMs:Int, mode:OutboxPresentationMode, ctxKey:String):String {
     var id = outboxId(monarchId, ctxKey);
     var msg = new OutboxMessage(
       id,
@@ -777,7 +776,8 @@ class GameMatchCore implements IGameMatch {
       ctxKey,
       false,
       mode,
-      OutboxPresentation.Animation(kind, payload, durationMs)
+      OutboxPresentation.Animation(durationMs),
+      payload
     );
     pushOutboxToMonarch(monarchId, msg);
     return id;
@@ -2357,15 +2357,8 @@ class GameMatchCore implements IGameMatch {
             var dMove = forceGetLastRolledMoveDelta();
             var pos = pawnIndexOfMonarch(actor.monarchId());
             if (dMove != null)
-              pushOutboxAnim(actor.monarchId(), AnimationKind.PawnMove, AnimationPayload.PawnMove(before, pos, dMove), PAWN_MOVE_ANIM_MS, OutboxPresentationMode.FanOut2, "anim-move");
-            pushOutboxAnim(
-              actor.monarchId(),
-              AnimationKind.MoveSummary,
-              AnimationPayload.MoveCompleted(dMove, pos),
-              PAWN_MOVE_ANIM_MS,
-              OutboxPresentationMode.Serial,
-              "move"
-            );
+              pushOutboxAnim(actor.monarchId(), PawnMove(before, pos, dMove), PAWN_MOVE_ANIM_MS, OutboxPresentationMode.FanOut2, "anim-move");
+            pushOutboxAnim(actor.monarchId(), MoveCompleted(dMove, pos), PAWN_MOVE_ANIM_MS, OutboxPresentationMode.Serial, "move");
           case TileEventPick:
             handleTileEventPick(actor, menuNode);
           case TileEventAvoidAttempt:

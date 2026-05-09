@@ -11,7 +11,7 @@ import game.IPlayerMenuNode;
 import game.IStagingAction;
 import game.MenuFormWidget;
 import game.PlayerMenuKind;
-import game.PopupPayload;
+import game.OutboxPayload;
 import game.CityLevel;
 import impl_ver1.core.GameMatchCore;
 import impl_ver1.model.General;
@@ -183,7 +183,7 @@ class VillageDevelopStagingAction implements IStagingAction {
     match.pushOutboxPlain(
       ruler.id(),
       ok ? "村落開發成功" : "村落開發失敗",
-      PopupPayload.VillageDevelopOutcome(ok, idx, gid, pol, Std.int(Math.floor(rate * 100)), costGold, costGrain, before, after),
+      OutboxPayload.VillageDevelopOutcome(ok, idx, gid, pol, Std.int(Math.floor(rate * 100)), costGold, costGrain, before, after),
       "village-develop"
     );
   }

@@ -9,7 +9,7 @@ import game.IPlayerMenu;
 import game.IPlayerMenuNode;
 import game.ITileEvent;
 import game.MenuActivation;
-import game.PopupPayload;
+import game.OutboxPayload;
 import game.PlayerMenuKind.TileEventPick;
 import impl_ver1.model.Monarch;
 import impl_ver1.model.PlayerMenu;
@@ -75,7 +75,7 @@ class EpidemicAvoidableTileEvent implements ITileEvent implements IAvoidableTile
     match.pushOutboxPlain(
       actor.monarchId(),
       "事件：疫病流行",
-      PopupPayload.EpidemicResolved(staminaLoss, troopLoss, mult),
+      OutboxPayload.EpidemicResolved(staminaLoss, troopLoss, mult),
       "evt-epidemic"
     );
   }

@@ -9,7 +9,7 @@ import game.IPlayerMenuNode;
 import game.IStagingAction;
 import game.MenuFormWidget;
 import game.PlayerMenuKind;
-import game.PopupPayload;
+import game.OutboxPayload;
 import game.ResourceReward;
 import impl_ver1.core.GameMatchCore;
 import impl_ver1.model.General;
@@ -123,7 +123,7 @@ class ResourceTileBoostStagingAction implements IStagingAction {
     match.pushOutboxPlain(
       ruler.id(),
       "資源格加成完成",
-      PopupPayload.ResourceBoostAssigned(tileIndex, gid, stat, statVal, prevSt, nextSt, base, bonus, grant),
+      OutboxPayload.ResourceBoostAssigned(tileIndex, gid, stat, statVal, prevSt, nextSt, base, bonus, grant),
       "resource-boost"
     );
   }

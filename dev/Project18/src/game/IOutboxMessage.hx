@@ -9,5 +9,6 @@ interface IOutboxMessage {
   function blocking():Bool;
   function presentationMode():OutboxPresentationMode;
   function presentation():OutboxPresentation;
+  function payload():OutboxPayload;
 }
 

@@ -10,7 +10,7 @@ import game.IGameMatch;
 import game.MenuActivation;
 import game.MenuFormWidget;
 import game.MenuGeneralChoice;
-import game.PopupPayload;
+import game.OutboxPayload;
 import game.PlayerMenuKind.TileEventPick;
 import impl_ver1.model.PlayerMenu;
 
@@ -64,7 +64,7 @@ class GeneralChestTileEvent implements ITileEvent {
           _match.pushOutboxPlain(
             actor.monarchId(),
             "奇遇：開箱領賞",
-            PopupPayload.ChestTroopReward(false, null, GRANT_NO_ROSTER),
+            OutboxPayload.ChestTroopReward(false, null, GRANT_NO_ROSTER),
             "evt-general-chest"
           );
         } else {
@@ -76,7 +76,7 @@ class GeneralChestTileEvent implements ITileEvent {
           _match.pushOutboxPlain(
             actor.monarchId(),
             "奇遇：開箱領賞",
-            PopupPayload.ChestTroopReward(true, ids[0], GRANT_PER_GENERAL),
+            OutboxPayload.ChestTroopReward(true, ids[0], GRANT_PER_GENERAL),
             "evt-general-chest"
           );
         }

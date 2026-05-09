@@ -6,16 +6,14 @@ import game.IGameMatch;
 import game.IOutboxMessage;
 import game.IPlayer;
 import game.MenuNodeQuery;
-import game.OutboxPresentation;
 import game.PlayerMenuKind;
-import game.PopupPayload;
 import game.TileKind;
 import game.LevelKeys;
 
 /**
  * 驗證 outbox 中阻塞型 Popup 訊息生命週期：
  * - 狀態變更後會產生對應 outbox 項目
- * - 可讀取 title／payload（{@link OutboxPresentation.Popup}）
+ * - 可讀取 title／payload（{@link IOutboxMessage#payload}）
  * - ack 後會自隊列移除
  */
 class PopupLifecycleTest {
@@ -52,7 +50,7 @@ class PopupLifecycleTest {
     var found:Null<IOutboxMessage> = null;
     for (m in xs) {
       switch m.presentation() {
-        case Popup(title, payload, _):
+        case Popup(title, _):
           if (title == "資源格收益") {
             found = m;
           }
@@ -64,17 +62,12 @@ class PopupLifecycleTest {
     if (found == null)
       throw 'PopupLifecycleTest: expected outbox title "資源格收益"';
 
-    switch found.presentation() {
-      case Popup(_, payload, _):
-        switch payload {
-          case ResourceClaimed(idx, _):
-            if (idx != 1)
-              throw 'PopupLifecycleTest: expected resource tile index 1, got ${idx}';
-          default:
-            throw "PopupLifecycleTest: expected ResourceClaimed payload";
-        }
+    switch found.payload() {
+      case ResourceClaimed(idx, _):
+        if (idx != 1)
+          throw 'PopupLifecycleTest: expected resource tile index 1, got ${idx}';
       default:
-        throw "PopupLifecycleTest: expected Popup presentation";
+        throw "PopupLifecycleTest: expected ResourceClaimed payload";
     }
 
     var beforeAckCount = xs.length;

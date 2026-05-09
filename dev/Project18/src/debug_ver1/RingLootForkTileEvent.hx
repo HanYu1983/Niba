@@ -9,7 +9,7 @@ import game.IGameMatch;
 import game.MenuActivation;
 import game.MenuFormWidget;
 import game.MenuGeneralChoice;
-import game.PopupPayload;
+import game.OutboxPayload;
 import game.PlayerMenuKind.TileEventPick;
 import impl_ver1.model.PlayerMenu;
 
@@ -70,20 +70,20 @@ class RingLootForkTileEvent implements ITileEvent {
       case "take_supplies":
         if (ruler.roster().length == 0) {
           ruler.grantTroops(15);
-          _match.pushOutboxPlain(actor.monarchId(), "事件：軍資", PopupPayload.RingArmyFundBonus(false, null, 15), "evt-ring-loot");
+          _match.pushOutboxPlain(actor.monarchId(), "事件：軍資", OutboxPayload.RingArmyFundBonus(false, null, 15), "evt-ring-loot");
         } else {
           var ids = parseTileEventGeneralIds(menuNode, ruler);
           if (ids.length != 1)
             throw "RingLootForkTileEvent.resolveChoice: 取軍資須恰好選擇一名麾下武將";
           ruler.grantTroops(15);
           lastResolvedChoice = "take_supplies:" + ids[0];
-          _match.pushOutboxPlain(actor.monarchId(), "事件：軍資", PopupPayload.RingArmyFundBonus(true, ids[0], 15), "evt-ring-loot");
+          _match.pushOutboxPlain(actor.monarchId(), "事件：軍資", OutboxPayload.RingArmyFundBonus(true, ids[0], 15), "evt-ring-loot");
         }
       case "take_grain":
         ruler.grantGrain(22);
-        _match.pushOutboxPlain(actor.monarchId(), "事件：糧秣", PopupPayload.RingSupplyBonus(22), "evt-ring-loot");
+        _match.pushOutboxPlain(actor.monarchId(), "事件：糧秣", OutboxPayload.RingSupplyBonus(22), "evt-ring-loot");
       case "pass":
-        _match.pushOutboxPlain(actor.monarchId(), "事件", PopupPayload.RingRewardSkipped, "evt-ring-loot");
+        _match.pushOutboxPlain(actor.monarchId(), "事件", OutboxPayload.RingRewardSkipped, "evt-ring-loot");
       default:
         throw "RingLootForkTileEvent.resolveChoice: unknown decisionToken " + tok;
     }

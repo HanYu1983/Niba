@@ -6,8 +6,8 @@ import game.IGameMatch;
 import game.ITile;
 import game.LevelKeys;
 import game.TileKind;
-import game.PopupPayload;
-import game.PopupPayload.OutboxUiCopyKey;
+import game.OutboxPayload;
+import game.OutboxPayload.OutboxUiCopyKey;
 import debug_ver1.EpidemicAvoidableTileEvent;
 import debug_ver1.GranaryFireAvoidableTileEvent;
 import impl_ver1.core.GameMatchCore;
@@ -250,7 +250,7 @@ class AppController {
 
     // 提示：讓玩家一進來就知道怎麼測
     var core = cast(match, GameMatchCore);
-    core.pushOutboxPlain("m-a", "測試頁3：計策測試", PopupPayload.UiCopy(OutboxUiCopyKey.TestPage3JiCeIntro), "test3-jice");
+    core.pushOutboxPlain("m-a", "測試頁3：計策測試", OutboxPayload.UiCopy(OutboxUiCopyKey.TestPage3JiCeIntro), "test3-jice");
   }
 
   /**
@@ -317,7 +317,7 @@ class AppController {
       match.forceGrantMonarchGrain(m.id(), 5000);
 
     var core = cast(match, GameMatchCore);
-    core.pushOutboxPlain("m-a", "測試頁4：AI 測試", PopupPayload.UiCopy(OutboxUiCopyKey.TestPage4AiIntro), "test4-ai");
+    core.pushOutboxPlain("m-a", "測試頁4：AI 測試", OutboxPayload.UiCopy(OutboxUiCopyKey.TestPage4AiIntro), "test4-ai");
   }
 
   public function dispose():Void {

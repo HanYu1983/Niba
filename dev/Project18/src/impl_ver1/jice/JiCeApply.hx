@@ -8,7 +8,7 @@ import game.MenuFormWidget;
 import game.PositionRank;
 import game.StrategyCostTier;
 import game.StrategyPhase;
-import game.PopupPayload;
+import game.OutboxPayload;
 import impl_ver1.core.GameMatchCore;
 import impl_ver1.util.Deterministic;
 import impl_ver1.model.General;
@@ -147,7 +147,7 @@ class JiCeApply {
     match.pushOutboxPlain(
       actorId,
       title,
-      PopupPayload.JiCeCasterOutcome(
+      OutboxPayload.JiCeCasterOutcome(
         cardLabel,
         phase,
         casterId,
@@ -178,7 +178,7 @@ class JiCeApply {
   ):Void {
     var title = '遭遇計策：${cardLabel}';
     var fx = effectLines != null ? effectLines.copy() : [];
-    match.pushOutboxPlain(targetMonarchId, title, PopupPayload.JiCeTargetOutcome(cardLabel, attackerMonarchId, casterId, fx), ctxKey);
+    match.pushOutboxPlain(targetMonarchId, title, OutboxPayload.JiCeTargetOutcome(cardLabel, attackerMonarchId, casterId, fx), ctxKey);
   }
 }
 

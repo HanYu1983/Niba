@@ -12,7 +12,7 @@ import game.ITileEvent;
 import game.MenuActivation;
 import game.MenuFormWidget;
 import game.MenuGeneralChoice;
-import game.PopupPayload;
+import game.OutboxPayload;
 import game.PlayerMenuKind;
 import game.PlayerMenuKind.TileEventPick;
 import impl_ver1.model.General;
@@ -75,7 +75,7 @@ class AssassinationAvoidableTileEvent implements ITileEvent implements IAvoidabl
       throw "AssassinationAvoidableTileEvent.resolveChoice: expected TileEventPick";
     var ruler:Monarch = cast match.activeMonarch();
     if (ruler.roster().length == 0) {
-      match.pushOutboxPlain(actor.monarchId(), "事件：暗殺企圖", PopupPayload.AssassinationNoGeneralsSkipped, "evt-assassination");
+      match.pushOutboxPlain(actor.monarchId(), "事件：暗殺企圖", OutboxPayload.AssassinationNoGeneralsSkipped, "evt-assassination");
       return;
     }
 
@@ -119,7 +119,7 @@ class AssassinationAvoidableTileEvent implements ITileEvent implements IAvoidabl
     match.pushOutboxPlain(
       actor.monarchId(),
       "事件：暗殺企圖",
-      PopupPayload.AssassinationResolved(gid, stat, loss, mult),
+      OutboxPayload.AssassinationResolved(gid, stat, loss, mult),
       "evt-assassination"
     );
   }
