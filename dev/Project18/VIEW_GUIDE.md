@@ -34,8 +34,27 @@
   - 玩家/君主資訊（例如 `monarchById`）
   - 玩家位置（例如 `pawnIndexOfMonarch`）
   - 地圖格資訊（例如 `tileAt`）
+  - **統一訊息佇列**：`pendingOutbox(monarchId)`／`ackOutbox(monarchId, outboxId)`（見下方「Outbox」）
 
-### 3) EventCenter（事件中樞）
+### 3) Outbox（統一訊息佇列）
+
+賽局在 `applyMenuLeaf` 等流程中產生的「需依序呈現」訊息（例如移動過場、結算說明），全部由 **`game.IGameMatchGetter` 的 outbox API** 暴露給 UI：
+
+- **`pendingOutbox(monarchId)`**：取得該君主視角下的佇列快照（嚴格保序）。
+- **`ackOutbox(monarchId, outboxId)`**：使用者確認或動畫播放完畢後消費一筆；不存在該 id 時為 no-op。
+
+佇列元素的呈現型態由 **`game.OutboxPresentation`** 描述（例如阻塞型文字卡、`Animation` 過場等）。UI **不得**再維護第二套「popup 佇列／animation 佇列」或對應的獨立 getter。
+
+賽局側若要寫入純文字結果訊息，契約方法為 **`IGameMatch.pushOutboxPlain(monarchId, title, payload, ctxKey)`**（內容載荷為 `game.PopupPayload`，目前以 `Plain(text)` 為主）。
+
+HTML 實作上由 **`src/view/html/HtmlOutboxView.hx`** 單一元件負責：
+
+- 訂閱 `EventCenter` 的 **`UiEvent.OutboxRefresh`**，於 `pendingOutbox(activeMonarch)` 有資料時渲染佇列頭部（必要時處理 `OutboxPresentationMode` 如並列預覽）。
+- 使用者按下關閉（或 AI 君主自動逾時）時，發送 **`UiEvent.OutboxAck(outboxId)`**；由 **`BasicViewModel`** 呼叫 `ackOutbox` 後再發 **`OutboxRefresh`** 推進下一筆。
+
+已不再使用獨立的 `HtmlPopupView`／`HtmlAnimationView`，亦不再有 `PopupRefresh`／`AnimationRefresh`／`PopupClose` 等平行事件。
+
+### 4) EventCenter（事件中樞）
 
 `EventCenter` 是 view 層唯一的全域事件匯流點：
 
@@ -64,29 +83,34 @@
 
 ## 事件規範（UI 事件一律透過 EventCenter）
 
+### `UiEvent`（實際使用的列舉）
+
+遊戲相關 UI 互動與系統→UI 提示，定義於 **`src/view/UiEvent.hx`**，經 **`EventCenter.eventSubject`** 傳遞。與 view 指引直接相關者包括：
+
+| 方向 | 事件 | 說明 |
+|------|------|------|
+| UI→系統 | `TileClick`、`PlayerClick`、`MenuClick`、各種表單 patch（`Slider`、`GeneralMultiPick` 等） | 由 HTML 元件發送，`BasicViewModel` 轉成對 `IGameMatch` 的操作 |
+| UI→系統 | `AiStep` | AI 席位自動推進一步 |
+| UI→系統 | **`OutboxAck(outboxId)`** | 關閉／確認目前阻塞型 outbox 項目（對應 **`ackOutbox`**） |
+| 系統→UI | **`OutboxRefresh`** | 提示 **`HtmlOutboxView`** 重新讀取 **`pendingOutbox`** 並渲染 |
+
+`BasicViewModel` 在 **`MenuClick`**／**`AiStep`** 成功套用選單後會發 **`OutboxRefresh`**（並 **`publishViewModel`**），無需再發送已移除的平行刷新事件。
+
 ### 事件命名與載荷（payload）
 
-UI 產生的事件統一使用下列兩種型別送出：
-
-- **OnClick**：`{ id }`
-- **OnSlider**：`{ id, value }`
-
-其中：
-
-- `id`：UI 元件/控制項的穩定識別（可用字串或結構化 id，但需可序列化、可比對）
-- `value`：Slider 的值（整數或浮點數依控件而定；先以 Int 為主）
+早期草稿曾約定泛用 **OnClick**／**OnSlider** payload；目前實作以 **`UiEvent` 之 ADT** 為準（見上表）。若新增控件，應擴充 `UiEvent` 或在現有事件中帶足夠結構化載荷，並在 `BasicViewModel.handleUiEvent` 集中處理。
 
 ### 事件發送流程
 
 - DOM handler（click / input）只做：
-  - 組裝 payload
-  - 呼叫 `EventCenter` 的事件送出方法（例如 `publishOnClick(...)`）
+  - 組裝對應的 **`UiEvent`**
+  - 呼叫 **`EventCenter.publishEvent(...)`**
 
 ### 事件訂閱流程
 
 需要處理 UI 事件的邏輯（例如應用到賽局、或驅動某種指令）：
 
-- 在外層（或 ViewModel）訂閱 `EventCenter` 的 UI 事件流
+- 在 **`BasicViewModel`**（或其他訂閱端）訂閱 `EventCenter.eventSubject`
 - 將事件轉譯為賽局指令或流程狀態更新
 
 ## 建議的元件最小介面（參考）
@@ -98,11 +122,10 @@ UI 產生的事件統一使用下列兩種型別送出：
 
 ## 後續待辦（配合此指引的 EventCenter API）
 
-目前 `EventCenter` 已有 ViewModel 的 `Subject<IViewModel>`。
-接下來建議補齊：
+目前 `EventCenter` 已具備：
 
-- `onClickSubject`：發送 `OnClick({id})`
-- `onSliderSubject`：發送 `OnSlider({id, value})`
+- **`viewModelSubject`**：`Subject<IViewModel>`，供元件訂閱當前 ViewModel。
+- **`eventSubject`**：傳遞 **`UiEvent`**（見 **`EventCenter.publishEvent`**）。
 
-並提供對應的 `publish...()` 方法，統一入口。
+後續若仍有「泛用控件 id → 行為」的需求，可在不重複發明第二套事件總線的前提下，於 **`UiEvent`** 增量擴充，或為特定複合控件新增獨立 `publish...()` 包裝（底層仍應呼叫 **`publishEvent`**）。
 
