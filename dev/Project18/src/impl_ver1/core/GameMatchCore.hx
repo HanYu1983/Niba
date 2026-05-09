@@ -739,6 +739,13 @@ class GameMatchCore implements IGameMatch {
     for (id in HistoricalPeople.monarchIds())
       if (!used.exists(id))
         out.push(id);
+    if (out.length == 0)
+      throw new GameError(
+        "可用主公人物不足：目前已無未使用的主公可供建立。\n請在 `game.HistoricalPeople` 增加更多主公人物，或調整局內需要建立的主公數量。",
+        "人物不足",
+        "people/insufficient-monarchs",
+        "INSUFFICIENT_MONARCH_CATALOG"
+      );
     return out;
   }
 
@@ -752,6 +759,13 @@ class GameMatchCore implements IGameMatch {
     for (id in HistoricalPeople.generalIds())
       if (!used.exists(id))
         out.push(id);
+    if (out.length == 0)
+      throw new GameError(
+        "可用武將人物不足：目前已無未使用的武將可供建立/招募。\n請在 `game.HistoricalPeople` 增加更多武將人物，或調整局內需要建立/招募的武將數量。",
+        "人物不足",
+        "people/insufficient-generals",
+        "INSUFFICIENT_GENERAL_CATALOG"
+      );
     return out;
   }
 
