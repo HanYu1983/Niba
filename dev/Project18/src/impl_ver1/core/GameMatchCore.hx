@@ -92,6 +92,8 @@ class GameMatchCore implements IGameMatch {
   public static inline var DICE_MAX = 6;
   /** Outbox 棋子移動動畫播放時間（毫秒）。 */
   public static inline var PAWN_MOVE_ANIM_MS = 500;
+  /** Outbox 流程確認（FlowAck）動畫播放時間（毫秒）。 */
+  public static inline var FLOW_ACK_ANIM_MS = 500;
 
   // ========== 私有欄位（依狀態分區，後續重構時維持對應私有方法區塊）==========
 
@@ -2257,7 +2259,13 @@ class GameMatchCore implements IGameMatch {
     if (_pendingEmptyCityTileIndex == null)
       throw "GameMatchCore: EmptyCityOccupyAbort 但無 pending 空城";
     GameMatchVer1Ops.onEmptyCityOccupyAbort(this);
-    pushOutboxPlain(actor.monarchId(), "已取消", FlowAck(FlowAckKind.EmptyCityOccupyAborted), "empty-city-abort");
+    pushOutboxAnim(
+      actor.monarchId(),
+      FlowAck(FlowAckKind.EmptyCityOccupyAborted),
+      FLOW_ACK_ANIM_MS,
+      OutboxPresentationMode.FanOut2,
+      "empty-city-abort"
+    );
     _pendingEmptyCityTileIndex = null;
     _activeSliceComplete = true;
     syncActiveSliceAfterMenuLeaf(EmptyCityOccupyAbort);
@@ -2295,7 +2303,13 @@ class GameMatchCore implements IGameMatch {
     if (_pendingFriendlyCityTileIndex == null)
       throw "GameMatchCore: FriendlyCityVisitEnd 但無 pending 我方城池拜訪";
     GameMatchVer1Ops.onFriendlyCityVisitEnd(this);
-    pushOutboxPlain(actor.monarchId(), "結束拜訪", FlowAck(FlowAckKind.FriendlyCityVisitEnded), "friendly-visit-end");
+    pushOutboxAnim(
+      actor.monarchId(),
+      FlowAck(FlowAckKind.FriendlyCityVisitEnded),
+      FLOW_ACK_ANIM_MS,
+      OutboxPresentationMode.FanOut2,
+      "friendly-visit-end"
+    );
     _pendingFriendlyCityTileIndex = null;
     _activeSliceComplete = true;
     syncActiveSliceAfterMenuLeaf(FriendlyCityVisitEnd);
@@ -2372,7 +2386,13 @@ class GameMatchCore implements IGameMatch {
             if (_pendingStaging == null)
               throw new GameError("目前沒有進行中的暫存操作。", "操作失敗", "staging/abort/no-pending");
             clearStaging();
-            pushOutboxPlain(actor.monarchId(), "已取消", FlowAck(FlowAckKind.StagingAborted), "staging-abort");
+            pushOutboxAnim(
+              actor.monarchId(),
+              FlowAck(FlowAckKind.StagingAborted),
+              FLOW_ACK_ANIM_MS,
+              OutboxPresentationMode.FanOut2,
+              "staging-abort"
+            );
             // 取消僅退出 staging；其他 pending（村落/領地/資源格等）保持不變
             syncActiveSliceAfterMenuLeaf(StagingAbort);
           case LandingContinue:
@@ -2407,7 +2427,13 @@ class GameMatchCore implements IGameMatch {
           case VillageEndTurn:
             if (_pendingVillageTileIndex == null)
               throw new GameError("目前不在村落互動中。", "操作失敗", "village/end/pending");
-            pushOutboxPlain(actor.monarchId(), "村落", FlowAck(FlowAckKind.VillageInteractionEnded), "village-end");
+            pushOutboxAnim(
+              actor.monarchId(),
+              FlowAck(FlowAckKind.VillageInteractionEnded),
+              FLOW_ACK_ANIM_MS,
+              OutboxPresentationMode.FanOut2,
+              "village-end"
+            );
             _pendingVillageTileIndex = null;
             _activeSliceComplete = true;
             syncActiveSliceAfterMenuLeaf(VillageEndTurn);
@@ -2471,7 +2497,13 @@ class GameMatchCore implements IGameMatch {
           case VillageVisitEnd:
             if (_pendingVillageTileIndex == null)
               throw new GameError("目前不在村落互動中。", "操作失敗", "village/visit-end/pending");
-            pushOutboxPlain(actor.monarchId(), "結束拜訪", FlowAck(FlowAckKind.VillageFriendlyVisitEnded), "village-visit-end");
+            pushOutboxAnim(
+              actor.monarchId(),
+              FlowAck(FlowAckKind.VillageFriendlyVisitEnded),
+              FLOW_ACK_ANIM_MS,
+              OutboxPresentationMode.FanOut2,
+              "village-visit-end"
+            );
             _pendingVillageTileIndex = null;
             _activeSliceComplete = true;
             syncActiveSliceAfterMenuLeaf(VillageVisitEnd);
@@ -2500,7 +2532,13 @@ class GameMatchCore implements IGameMatch {
           case ResourceEndTurn:
             if (_pendingResourceTileIndex == null)
               throw "GameMatchCore: ResourceEndTurn 但無 pendingResource";
-            pushOutboxPlain(actor.monarchId(), "資源格", FlowAck(FlowAckKind.ResourceInteractionEndedWithoutBoost), "resource-end");
+            pushOutboxAnim(
+              actor.monarchId(),
+              FlowAck(FlowAckKind.ResourceInteractionEndedWithoutBoost),
+              FLOW_ACK_ANIM_MS,
+              OutboxPresentationMode.FanOut2,
+              "resource-end"
+            );
             _pendingResourceTileIndex = null;
             _activeSliceComplete = true;
             syncActiveSliceAfterMenuLeaf(ResourceEndTurn);
@@ -2564,7 +2602,13 @@ class GameMatchCore implements IGameMatch {
           case GeneralEndTurn:
             if (_pendingGeneralTileIndex == null)
               throw "GameMatchCore: GeneralEndTurn 但無 pendingGeneral";
-            pushOutboxPlain(actor.monarchId(), "武將格", FlowAck(FlowAckKind.GeneralTileLeft), "general-end");
+            pushOutboxAnim(
+              actor.monarchId(),
+              FlowAck(FlowAckKind.GeneralTileLeft),
+              FLOW_ACK_ANIM_MS,
+              OutboxPresentationMode.FanOut2,
+              "general-end"
+            );
             _pendingGeneralTileIndex = null;
             _activeSliceComplete = true;
             syncActiveSliceAfterMenuLeaf(GeneralEndTurn);
@@ -2626,7 +2670,13 @@ class GameMatchCore implements IGameMatch {
           case ShopEndTurn:
             if (_pendingShopTileIndex == null)
               throw "GameMatchCore: ShopEndTurn 但無 pendingShop";
-            pushOutboxPlain(actor.monarchId(), "商店格", FlowAck(FlowAckKind.ShopTileLeft), "shop-end");
+            pushOutboxAnim(
+              actor.monarchId(),
+              FlowAck(FlowAckKind.ShopTileLeft),
+              FLOW_ACK_ANIM_MS,
+              OutboxPresentationMode.FanOut2,
+              "shop-end"
+            );
             _pendingShopTileIndex = null;
             _activeSliceComplete = true;
             syncActiveSliceAfterMenuLeaf(ShopEndTurn);
