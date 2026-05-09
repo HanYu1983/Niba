@@ -50,39 +50,13 @@ class HtmlActiveMenuView {
     var actor:IPlayer = vm.playerForMonarch(a.id());
     var menu:IPlayerMenu = vm.createPlayerMenu(actor);
 
-    // Staging preview rows（供玩家在提交前快速檢視）
+    // 供 GeneralMultiPick 使用：generalId -> previewRow
+    var previewByGeneralId:Map<String, IJiCeStagingPreviewRow> = new Map<String, IJiCeStagingPreviewRow>();
     if (vm.forceHasPendingStaging()) {
-      var box = Browser.document.createDivElement();
-      box.className = "staging-preview";
-      var lab = Browser.document.createDivElement();
-      lab.className = "ui-label";
-      var title = vm.forceGetPendingStagingLabel();
-      lab.textContent = title != null ? ('暫存預覽｜' + title) : "暫存預覽";
-      box.appendChild(lab);
-
-      var rows:Array<IJiCeStagingPreviewRow> = vm.forceStagingPreviewRows();
-      if (rows == null || rows.length == 0) {
-        var empty = Browser.document.createDivElement();
-        empty.className = "ui-label";
-        empty.textContent = "（無預覽）";
-        box.appendChild(empty);
-      } else {
-        for (r in rows) {
-          var row = Browser.document.createDivElement();
-          row.className = "staging-preview-row";
-          var head = Browser.document.createDivElement();
-          head.className = "staging-preview-row-head";
-          head.textContent = r.generalId();
-          row.appendChild(head);
-          var body = Browser.document.createDivElement();
-          body.className = "staging-preview-row-body";
-          var loss = r.predictedTroopLoss();
-          body.textContent = (loss > 0 ? ('（預計折兵 ' + loss + '）\n') : "") + r.outcomeDescription();
-          row.appendChild(body);
-          box.appendChild(row);
-        }
-      }
-      root.appendChild(box);
+      var rs = vm.forceStagingPreviewRows();
+      if (rs != null)
+        for (r in rs)
+          previewByGeneralId.set(r.generalId(), r);
     }
 
     // AI 席位：每次取得並繪製選單後自動走一步（延後一個 macrotask，避免與 publishViewModel 訂閱鏈同步重入）
@@ -115,10 +89,10 @@ class HtmlActiveMenuView {
     root.appendChild(tree);
 
     for (n in menu.rootNodes())
-      tree.appendChild(renderNode(n, 0));
+      tree.appendChild(renderNode(vm, previewByGeneralId, n, 0));
   }
 
-  function renderNode(n:IPlayerMenuNode, depth:Int):Element {
+  function renderNode(vm:IViewModel, previewByGeneralId:Map<String, IJiCeStagingPreviewRow>, n:IPlayerMenuNode, depth:Int):Element {
     var row = Browser.document.createDivElement();
     row.className = "menu-node";
     row.setAttribute("data-depth", Std.string(depth));
@@ -219,6 +193,18 @@ class HtmlActiveMenuView {
                   var txt = Browser.document.createSpanElement();
                   txt.textContent = c.caption;
                   row2.appendChild(txt);
+
+                  // 若有 staging preview rows：把 outcomeDescription 顯示在同一列（generalId 對齊）
+                  if (vm.forceHasPendingStaging() && previewByGeneralId.exists(c.generalId)) {
+                    var pr = previewByGeneralId.get(c.generalId);
+                    if (pr != null) {
+                      var desc = Browser.document.createDivElement();
+                      desc.className = "menu-pick-preview";
+                      var loss = pr.predictedTroopLoss();
+                      desc.textContent = (loss > 0 ? ('預計折兵 ' + loss + '｜') : "") + pr.outcomeDescription();
+                      row2.appendChild(desc);
+                    }
+                  }
                   wrap.appendChild(row2);
                 }
               default:
@@ -258,7 +244,7 @@ class HtmlActiveMenuView {
       var box = Browser.document.createDivElement();
       box.className = "menu-children";
       for (c in kids)
-        box.appendChild(renderNode(c, depth + 1));
+        box.appendChild(renderNode(vm, previewByGeneralId, c, depth + 1));
       row.appendChild(box);
     }
 
