@@ -636,6 +636,306 @@
             font-size: 0.8rem;
             margin-bottom: 10px;
         }
+
+        /* Character Section */
+        .character-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .character-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .character-card:hover {
+            background: var(--bg-card-hover);
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .character-header {
+            padding: 25px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .character-header.eastern {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(239, 68, 68, 0.05));
+            border-bottom: 2px solid var(--eastern);
+        }
+
+        .character-header.western {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0.05));
+            border-bottom: 2px solid var(--western);
+        }
+
+        .character-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .character-avatar.eastern {
+            background: rgba(239, 68, 68, 0.2);
+            border: 2px solid var(--eastern);
+        }
+
+        .character-avatar.western {
+            background: rgba(59, 130, 246, 0.2);
+            border: 2px solid var(--western);
+        }
+
+        .character-name {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .character-name.eastern {
+            color: var(--eastern);
+        }
+
+        .character-name.western {
+            color: var(--western);
+        }
+
+        .character-title-text {
+            font-size: 1rem;
+            color: var(--accent);
+            margin-bottom: 8px;
+        }
+
+        .character-role {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .character-body {
+            padding: 20px 25px;
+        }
+
+        .character-info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+        }
+
+        .character-info-row:last-child {
+            border-bottom: none;
+        }
+
+        .character-info-label {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .character-info-value {
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            text-align: right;
+        }
+
+        .character-traits {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 15px;
+        }
+
+        .character-quote {
+            background: rgba(245, 158, 11, 0.1);
+            border-left: 3px solid var(--accent);
+            padding: 12px 15px;
+            margin-top: 15px;
+            border-radius: 0 8px 8px 0;
+            font-style: italic;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Character Detail Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 40px 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            border-radius: 16px;
+            max-width: 800px;
+            width: 100%;
+            border: 1px solid var(--border);
+            animation: modalIn 0.3s ease;
+        }
+
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.95) translateY(-20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .modal-header {
+            padding: 30px;
+            position: relative;
+        }
+
+        .modal-header.eastern {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(239, 68, 68, 0.05));
+            border-bottom: 2px solid var(--eastern);
+        }
+
+        .modal-header.western {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(59, 130, 246, 0.05));
+            border-bottom: 2px solid var(--western);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: var(--text-primary);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .modal-section {
+            margin-bottom: 25px;
+        }
+
+        .modal-section h3 {
+            color: var(--primary);
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-section p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .modal-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .modal-section ul li {
+            color: var(--text-secondary);
+            padding: 5px 0 5px 20px;
+            position: relative;
+        }
+
+        .modal-section ul li::before {
+            content: '✦';
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+        }
+
+        .modal-achievement {
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+        }
+
+        .modal-achievement .year {
+            color: var(--accent);
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+
+        .modal-achievement .name {
+            color: var(--text-primary);
+            font-weight: bold;
+            margin: 3px 0;
+        }
+
+        .modal-achievement .desc {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .modal-relationship {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .modal-rel-item {
+            background: rgba(6, 182, 212, 0.1);
+            border-radius: 8px;
+            padding: 12px;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .modal-rel-item h5 {
+            color: var(--secondary);
+            margin-bottom: 5px;
+        }
+
+        .modal-rel-item p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .character-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                margin: 10px;
+            }
+
+            .modal-body {
+                padding: 20px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -646,6 +946,7 @@
 
     <nav class="nav">
         <button class="nav-btn active" data-section="overview">世界概覽</button>
+        <button class="nav-btn" data-section="characters">人物介紹</button>
         <button class="nav-btn" data-section="energy">能量體系</button>
         <button class="nav-btn" data-section="timeline">歷史時間軸</button>
         <button class="nav-btn" data-section="geography">地理版圖</button>
@@ -712,6 +1013,27 @@
                 </div>
             </div>
         </section>
+
+        <!-- 人物介紹 -->
+        <section id="characters" class="section">
+            <h2 class="section-title">人物介紹</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 30px;">點擊角色卡片查看詳細資訊</p>
+            <div class="character-grid" id="characters-container"></div>
+        </section>
+
+        <!-- Character Detail Modal -->
+        <div class="modal-overlay" id="character-modal">
+            <div class="modal-content">
+                <div class="modal-header" id="modal-header">
+                    <button class="modal-close" id="modal-close">✕</button>
+                    <div class="character-avatar" id="modal-avatar"></div>
+                    <h2 class="character-name" id="modal-name"></h2>
+                    <p class="character-title-text" id="modal-title"></p>
+                    <p class="character-role" id="modal-role"></p>
+                </div>
+                <div class="modal-body" id="modal-body"></div>
+            </div>
+        </div>
 
         <!-- 能量體系 -->
         <section id="energy" class="section">
@@ -868,6 +1190,17 @@
             const factionsData = await loadJSON('factions.json');
             const eventsData = await loadJSON('historical-events.json');
 
+            // Load character data
+            let charactersData = [];
+            try {
+                const yanData = await loadJSON('characters/yan.json');
+                charactersData.push(yanData.character);
+            } catch (e) { /* ignore if file not found */ }
+            try {
+                const ariyaData = await loadJSON('characters/ariya.json');
+                charactersData.push(ariyaData.character);
+            } catch (e) { /* ignore if file not found */ }
+
             const world = worldData.world;
             const energy = energyData.energySystem;
             const timeline = timelineData.timeline;
@@ -891,21 +1224,21 @@
             // Eastern characteristics
             const eastChars = document.getElementById('eastern-characteristics');
             eastChars.innerHTML = `
-                <li><strong>方向：</strong>${energy.eastern.cultivationDirection}</li>
-                <li><strong>描述：</strong>${energy.eastern.description}</li>
-                <li><strong>焦點：</strong>${energy.eastern.characteristics.focus}</li>
-                <li><strong>目標：</strong>${energy.eastern.characteristics.goal}</li>
-                <li><strong>方法：</strong>${energy.eastern.characteristics.method}</li>
+                <li><strong>方向：</strong>${energy.easternSystem.cultivationDirection}</li>
+                <li><strong>描述：</strong>${energy.easternSystem.description}</li>
+                <li><strong>焦點：</strong>${energy.easternSystem.characteristics.focus}</li>
+                <li><strong>目標：</strong>${energy.easternSystem.characteristics.goal}</li>
+                <li><strong>方法：</strong>${energy.easternSystem.characteristics.method}</li>
             `;
 
             // Western characteristics
             const westChars = document.getElementById('western-characteristics');
             westChars.innerHTML = `
-                <li><strong>方向：</strong>${energy.western.cultivationDirection}</li>
-                <li><strong>描述：</strong>${energy.western.description}</li>
-                <li><strong>焦點：</strong>${energy.western.characteristics.focus}</li>
-                <li><strong>目標：</strong>${energy.western.characteristics.goal}</li>
-                <li><strong>方法：</strong>${energy.western.characteristics.method}</li>
+                <li><strong>方向：</strong>${energy.westernSystem.cultivationDirection}</li>
+                <li><strong>描述：</strong>${energy.westernSystem.description}</li>
+                <li><strong>焦點：</strong>${energy.westernSystem.characteristics.focus}</li>
+                <li><strong>目標：</strong>${energy.westernSystem.characteristics.goal}</li>
+                <li><strong>方法：</strong>${energy.westernSystem.characteristics.method}</li>
             `;
 
             // Final Realm
@@ -1044,7 +1377,7 @@
             // Energy grades
             const gradesContainer = document.getElementById('energy-grades-container');
             const gradeIcons = ['🏠', '🏭', '🚀'];
-            gradesContainer.innerHTML = tech.socialImpact.energyEconomy.energyGrades.map((grade, i) => `
+            gradesContainer.innerHTML = tech.modernEra.socialImpact.energyEconomy.energyGrades.map((grade, i) => `
                 <div class="energy-grade">
                     <span class="grade-icon">${gradeIcons[i]}</span>
                     <div class="grade-info">
@@ -1068,7 +1401,7 @@
 
             // Social issues
             const issuesContainer = document.getElementById('social-issues-container');
-            issuesContainer.innerHTML = tech.socialImpact.socialIssues.map(issue => `
+            issuesContainer.innerHTML = tech.modernEra.socialImpact.socialIssues.map(issue => `
                 <div class="issue-card">
                     <h4>${issue.name}</h4>
                     <p>${issue.description}</p>
@@ -1087,7 +1420,252 @@
                     <h4>${disc}</h4>
                 </div>
             `).join('');
+
+            // Characters Section
+            renderCharacters(charactersData);
         }
+
+        // Render character cards
+        function renderCharacters(characters) {
+            const container = document.getElementById('characters-container');
+            container.innerHTML = characters.map((char, index) => {
+                const isEastern = char.region === '東方大陸';
+                const side = isEastern ? 'eastern' : 'western';
+                const avatar = isEastern ? '🔥' : '✨';
+                const traits = char.personality?.coreTraits?.slice(0, 3) || [];
+                const firstQuote = char.quotes?.[0];
+                const quoteText = typeof firstQuote === 'string' ? firstQuote : firstQuote?.text || '';
+
+                return `
+                    <div class="character-card" onclick="showCharacterDetail(${index})">
+                        <div class="character-header ${side}">
+                            <div class="character-avatar ${side}">${avatar}</div>
+                            <h3 class="character-name ${side}">${char.name}</h3>
+                            <p class="character-title-text">${char.title || ''}</p>
+                            <p class="character-role">${char.role || ''}</p>
+                        </div>
+                        <div class="character-body">
+                            <div class="character-info-row">
+                                <span class="character-info-label">時代</span>
+                                <span class="character-info-value">${char.era || '-'}</span>
+                            </div>
+                            <div class="character-info-row">
+                                <span class="character-info-label">壽命</span>
+                                <span class="character-info-value">${char.lifespan ? char.lifespan + ' 年' : '-'}</span>
+                            </div>
+                            <div class="character-info-row">
+                                <span class="character-info-label">狀態</span>
+                                <span class="character-info-value">${char.status || '-'}</span>
+                            </div>
+                            <div class="character-traits">
+                                ${traits.map(t => `<span class="tag ${side}">${t}</span>`).join('')}
+                            </div>
+                            ${quoteText ? `<div class="character-quote">「${quoteText}」</div>` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Store characters data globally for modal access
+            window._charactersData = characters;
+        }
+
+        // Show character detail modal
+        function showCharacterDetail(index) {
+            const char = window._charactersData[index];
+            if (!char) return;
+
+            const isEastern = char.region === '東方大陸';
+            const side = isEastern ? 'eastern' : 'western';
+            const avatar = isEastern ? '🔥' : '✨';
+
+            // Set header
+            const header = document.getElementById('modal-header');
+            header.className = `modal-header ${side}`;
+            document.getElementById('modal-avatar').className = `character-avatar ${side}`;
+            document.getElementById('modal-avatar').textContent = avatar;
+            document.getElementById('modal-name').className = `character-name ${side}`;
+            document.getElementById('modal-name').textContent = char.name;
+            document.getElementById('modal-title').textContent = char.title || '';
+            document.getElementById('modal-role').textContent = char.role || '';
+
+            // Build body
+            let bodyHTML = '';
+
+            // Appearance
+            if (char.appearance) {
+                bodyHTML += `
+                    <div class="modal-section">
+                        <h3>外貌描述</h3>
+                        <p>${char.appearance.description || ''}</p>
+                        ${char.appearance.height ? `<p><strong>身高：</strong>${char.appearance.height}</p>` : ''}
+                        ${char.appearance.build ? `<p><strong>體型：</strong>${char.appearance.build}</p>` : ''}
+                    </div>
+                `;
+            }
+
+            // Personality
+            if (char.personality) {
+                bodyHTML += `
+                    <div class="modal-section">
+                        <h3>性格特徵</h3>
+                        ${char.personality.coreTraits ? `<p><strong>核心性格：</strong>${char.personality.coreTraits.join('、')}</p>` : ''}
+                        ${char.personality.strengths ? `<p><strong>優點：</strong>${char.personality.strengths.join('、')}</p>` : ''}
+                        ${char.personality.weaknesses ? `<p><strong>缺點：</strong>${char.personality.weaknesses.join('、')}</p>` : ''}
+                        ${char.personality.beliefs ? `<p><strong>信念：</strong>${char.personality.beliefs}</p>` : ''}
+                    </div>
+                `;
+            }
+
+            // Background
+            if (char.background) {
+                bodyHTML += `
+                    <div class="modal-section">
+                        <h3>背景故事</h3>
+                        ${char.background.origin ? `<p>${char.background.origin}</p>` : ''}
+                        ${char.background.motivation ? `<p><strong>動機：</strong>${char.background.motivation}</p>` : ''}
+                        ${char.background.discovery ? `
+                            <div class="modal-achievement">
+                                <span class="year">${char.background.discovery.year} 年</span>
+                                <p class="name">${char.background.discovery.event}</p>
+                                <p class="desc">${char.background.discovery.description}</p>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }
+
+            // Cultivation Journey (Eastern)
+            if (char.cultivationJourney) {
+                const cj = char.cultivationJourney;
+                bodyHTML += `
+                    <div class="modal-section">
+                        <h3>修煉歷程</h3>
+                        ${cj.exploration ? `<p><strong>探索期：</strong>${cj.exploration.period}</p><p>${cj.exploration.description}</p>` : ''}
+                        ${cj.exploration?.breakthroughs ? `<ul>${cj.exploration.breakthroughs.map(b => `<li>${b}</li>`).join('')}</ul>` : ''}
+                        ${cj.systematization ? `<p><strong>系統化：</strong>${cj.systematization.period}</p><p>${cj.systematization.description}</p>` : ''}
+                        ${cj.advancedRealm ? `<p><strong>高深境界：</strong>${cj.advancedRealm.period}</p><p>${cj.advancedRealm.description}</p>` : ''}
+                    </div>
+                `;
+            }
+
+            // Abilities (Western)
+            if (char.abilities) {
+                const ab = char.abilities;
+                bodyHTML += `
+                    <div class="modal-section">
+                        <h3>能力體系</h3>
+                        <p><strong>能量體系：</strong>${ab.magicSystem || '-'}</p>
+                        ${ab.specializations ? `<p><strong>專長：</strong>${ab.specializations.join('、')}</p>` : ''}
+                        ${ab.signatureSpells ? ab.signatureSpells.map(spell => `
+                            <div class="modal-achievement">
+                                <p class="name">${spell.name}</p>
+                                <p class="desc">${spell.description}</p>
+                            </div>
+                        `).join('') : ''}
+                    </div>
+                `;
+            }
+
+            // Achievements
+            if (char.achievements && char.achievements.length > 0) {
+                bodyHTML += `
+                    <div class="modal-section">
+                        <h3>主要成就</h3>
+                        ${char.achievements.map(a => {
+                            if (typeof a === 'string') return `<p>✦ ${a}</p>`;
+                            return `
+                                <div class="modal-achievement">
+                                    <span class="year">${a.year ? a.year + ' 年' : ''}</span>
+                                    <p class="name">${a.name}</p>
+                                    <p class="desc">${a.description}</p>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+            }
+
+            // Relationships
+            if (char.relationships) {
+                const rel = char.relationships;
+                bodyHTML += `
+                    <div class="modal-section">
+                        <h3>人際關係</h3>
+                        <div class="modal-relationship">
+                            ${rel.family ? rel.family.map(f => `
+                                <div class="modal-rel-item">
+                                    <h5>${f.relation}：${f.name}</h5>
+                                    <p>${f.description || ''}</p>
+                                </div>
+                            `).join('') : ''}
+                            ${rel.disciples ? rel.disciples.map(d => `
+                                <div class="modal-rel-item">
+                                    <h5>${d.relation || d.role || '弟子'}：${d.name}</h5>
+                                    <p>${d.description || ''}</p>
+                                </div>
+                            `).join('') : ''}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Legend
+            if (char.legend) {
+                bodyHTML += `
+                    <div class="modal-section">
+                        <h3>傳說</h3>
+                        ${char.legend.disappearance ? `<p>${char.legend.disappearance.description}</p>` : ''}
+                        ${char.legend.culturalImpact ? `<p style="margin-top: 10px;">${char.legend.culturalImpact}</p>` : ''}
+                    </div>
+                `;
+            }
+
+            // Quotes
+            if (char.quotes && char.quotes.length > 0) {
+                bodyHTML += `
+                    <div class="modal-section">
+                        <h3>經典語錄</h3>
+                        ${char.quotes.map(q => {
+                            const text = typeof q === 'string' ? q : q.text;
+                            const context = typeof q === 'string' ? '' : (q.context || '');
+                            return `<div class="character-quote">「${text}」${context ? `<br><small style="color: var(--text-secondary);">— ${context}</small>` : ''}</div>`;
+                        }).join('')}
+                    </div>
+                `;
+            }
+
+            // Historical Significance
+            if (char.historicalSignificance) {
+                const hs = char.historicalSignificance;
+                bodyHTML += `
+                    <div class="modal-section">
+                        <h3>歷史意義</h3>
+                        ${hs.energySystem ? `<p><strong>能量體系：</strong>${hs.energySystem}</p>` : ''}
+                        ${hs.civilization ? `<p><strong>文明影響：</strong>${hs.civilization}</p>` : ''}
+                        ${hs.philosophy ? `<p><strong>哲學思想：</strong>${hs.philosophy}</p>` : ''}
+                        ${hs.timeline ? `<p><strong>時間線定位：</strong>${hs.timeline}</p>` : ''}
+                    </div>
+                `;
+            }
+
+            document.getElementById('modal-body').innerHTML = bodyHTML;
+            document.getElementById('character-modal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Close modal
+        document.getElementById('modal-close').addEventListener('click', () => {
+            document.getElementById('character-modal').classList.remove('active');
+            document.body.style.overflow = '';
+        });
+
+        document.getElementById('character-modal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('character-modal')) {
+                document.getElementById('character-modal').classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
 
         // Initialize
         renderAll();
