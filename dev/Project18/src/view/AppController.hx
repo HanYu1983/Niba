@@ -124,6 +124,8 @@ class AppController {
 
     match.createMonarch("m-a", 0, 0, 500, 80);
     match.createMonarch("m-b", 1, 5, 500, 80);
+    match.createPlayer("m-a", "m-a", false);
+    match.createPlayer("m-b", "m-b", true);
 
     match.createGeneral("g-a-1", "m-a", 1, 40, 1, 1);
     match.createGeneral("g-a-2", "m-a", 1, 20, 1, 1);
@@ -173,6 +175,8 @@ class AppController {
     // 兩位君主放在不同區塊，方便觀察占位 badge
     match.createMonarch("m-a", 0, 0, 800, 200);
     match.createMonarch("m-b", 1, 7, 800, 200);
+    match.createPlayer("m-a", "m-a", false);
+    match.createPlayer("m-b", "m-b", false);
 
     // 武將：給足夠 roster 以測試商店裝備、事件規避、資源加成等
     match.createGeneral("g-a-1", "m-a", 60, 40, 55, 70);
@@ -219,6 +223,8 @@ class AppController {
 
     match.createMonarch("m-a", 0, 0, 800, 200);
     match.createMonarch("m-b", 1, 6, 800, 200);
+    match.createPlayer("m-a", "m-a", false);
+    match.createPlayer("m-b", "m-b", false);
 
     match.createGeneral("g-a-1", "m-a", 60, 40, 55, 70);
     match.createGeneral("g-a-2", "m-a", 30, 80, 25, 20);
@@ -258,8 +264,7 @@ class AppController {
 
   /**
    * UI 測試頁4：AI 測試場景。
-   * - 4 位君主 + 混合格子（避免太單調）
-   * - 提示使用者在 Menu 勾選「AI 控制此主公」並用「AI 自動到結束回合」觀察循環
+   * - 4 位君主皆標記為 AI 席位；選單繪製後會自動排程 AiStep
    */
   static function initTestPage4AiMatch(match:IGameMatch):Void {
     var kinds:Array<TileKind> = [
@@ -286,6 +291,10 @@ class AppController {
     match.createMonarch("m-b", 1, 3, 800, 400);
     match.createMonarch("m-c", 2, 6, 800, 400);
     match.createMonarch("m-d", 3, 9, 800, 400);
+    match.createPlayer("m-a", "m-a", true);
+    match.createPlayer("m-b", "m-b", true);
+    match.createPlayer("m-c", "m-c", true);
+    match.createPlayer("m-d", "m-d", true);
 
     // 給每人 3 武將（能力分布刻意不同，便於之後加權）
     match.createGeneral("g-a-1", "m-a", 60, 40, 55, 70);
@@ -322,10 +331,8 @@ class AppController {
       "測試頁4：AI 測試",
       game.PopupPayload.Plain(
         "目標：測試 aiSuggest + AI 自動操作是否能推進回合並收束。\n\n"
-        + "建議步驟：\n"
-        + "1) 右側 Menu 上方勾選『AI 控制此主公』。\n"
-        + "2) 按『AI 自動到結束回合』觀察是否能自動完成 Move→落地→互動→ConfirmDone。\n"
-        + "3) 可逐一切換主公觀察四人輪轉。\n"
+        + "本場四名君主皆為 AI 席位：載入選單後會自動排程 AiStep（無需手動按鈕）。\n"
+        + "可觀察是否自動完成 Move→落地→互動→ConfirmDone 並輪轉四家。\n"
       ),
       "test4-ai"
     );

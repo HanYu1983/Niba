@@ -34,6 +34,8 @@ class Game implements IGame {
       case "ver1/smoke":
         match.createMonarch("m-atk", 0, 0, 500, 80);
         match.createMonarch("m-def", 1, 0, 100, 200);
+        match.createPlayer("m-atk", "m-atk", false);
+        match.createPlayer("m-def", "m-def", false);
         match.createGeneral("g-might-high", "m-atk", 1, 50, 1, 1);
         match.createGeneral("g-might-low", "m-atk", 1, 20, 1, 1);
         var tiles:Array<ITile> = [match.createTile(0, Plain)];
@@ -60,6 +62,7 @@ class Game implements IGame {
     for (i in 0...ids.length) {
       var mid = ids[i];
       match.createMonarch(mid, i, 0, 1000, 1000);
+      match.createPlayer(mid, mid, false);
       var mon = cast(match.monarchById(mid), Monarch);
       mon.reducePrestige(60); // 100 -> 40（保持中聲望）
       mon.grantGold(1000);

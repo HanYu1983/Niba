@@ -31,9 +31,10 @@ class VillageConquerSettlementTest {
 
     var idA:MonarchId = "m-a";
     match.createMonarch(idA, 0, 0, 2000, 0);
+    match.createPlayer(idA, idA, false);
     // 高武力/統率確保勝利
     match.createGeneral("g-a", idA, 100, 100, 10, 10);
-    var actor:IPlayer = match.createPlayer(idA, "A");
+    var actor:IPlayer = match.playerForMonarch(idA);
     var ruler = cast(match.activeMonarch(), Monarch);
 
     match.applyMenuLeaf(actor, MenuNodeQuery.requireNodeWithKind(match.createPlayerMenu(actor), Move));

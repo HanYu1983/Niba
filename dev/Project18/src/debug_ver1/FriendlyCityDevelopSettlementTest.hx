@@ -31,9 +31,10 @@ class FriendlyCityDevelopSettlementTest {
 
     var idA:MonarchId = "m-a";
     match.createMonarch(idA, 0, 0, 0, 0);
+    match.createPlayer(idA, idA, false);
     // 政治拉滿，提高成功率（但不保證）
     match.createGeneral("g-a", idA, 10, 10, 10, 100);
-    var actor:IPlayer = match.createPlayer(idA, "A");
+    var actor:IPlayer = match.playerForMonarch(idA);
 
     match.forceSetCityOwner(1, idA);
     match.forceSetCityLevel(1, CityLevel.Village);

@@ -20,14 +20,8 @@ enum UiEvent {
   /** 點擊選單項目（帶入 node 與 entry；entry.kind/decisionToken 由 entry 提供）。 */
   MenuClick(node:IPlayerMenuNode, entry:IPlayerMenuEntry);
 
-  /** 切換 AI 控制：僅影響 UI 自動操作。 */
-  AiToggle(monarchId:MonarchId, isAi:Bool);
-
-  /** AI：執行一步（查詢 menu → 填表/選 leaf → apply）。 */
+  /** AI：執行一步（查詢 menu → 填表/選 leaf → apply）；是否為 AI 席位由 {@link IPlayer#isAi}／組局標記決定。 */
   AiStep;
-
-  /** AI：自動跑到回合結束（或遇到終局/卡住）。 */
-  AiAuto;
 
   /** 調整 Slider：帶入 node 與 widgetIndex，並提供新值。 */
   Slider(node:IPlayerMenuNode, widgetIndex:Int, value:Int);

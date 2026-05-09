@@ -35,14 +35,11 @@ import view.UiSnapshot;
 class BasicViewModel implements IViewModel {
   final match:IGameMatch;
   var evSub:Null<ISubscription> = null;
-  final _aiByMonarchId:Map<MonarchId, Bool> = new Map();
   var _presentationSnapshot:Null<UiSnapshot> = null;
 
   public function new(match:IGameMatch) {
     this.match = match;
     evSub = EventCenter.eventSubject.subscribe(handleUiEvent);
-    // 預設：demo 先把 m-b 視為 AI（若不存在則無效果）；可在 UI 透過 AiToggle 更改
-    _aiByMonarchId.set("m-b", true);
   }
 
   public function dispose():Void {
@@ -71,26 +68,13 @@ class BasicViewModel implements IViewModel {
         EventCenter.publishEvent(PopupRefresh);
         EventCenter.publishEvent(AnimationRefresh);
         EventCenter.publishViewModel(this);
-      case AiToggle(monarchId, isAi):
-        _aiByMonarchId.set(monarchId, isAi);
-        EventCenter.publishViewModel(this);
       case AiStep:
-        if (!ensureActiveMonarchAiOrHint())
-          return;
         if (runAiStepOnce()) {
           EventCenter.publishEvent(OutboxRefresh);
           EventCenter.publishEvent(PopupRefresh);
           EventCenter.publishEvent(AnimationRefresh);
           EventCenter.publishViewModel(this);
         }
-      case AiAuto:
-        if (!ensureActiveMonarchAiOrHint())
-          return;
-        runAiAutoUntilStop();
-        EventCenter.publishEvent(OutboxRefresh);
-        EventCenter.publishEvent(PopupRefresh);
-        EventCenter.publishEvent(AnimationRefresh);
-        EventCenter.publishViewModel(this);
       case PopupClose(popupId):
         var mid = match.activeMonarch().id();
         match.ackOutbox(mid, popupId);
@@ -106,7 +90,7 @@ class BasicViewModel implements IViewModel {
   }
 
   public function isAiMonarch(monarchId:MonarchId):Bool {
-    return _aiByMonarchId.exists(monarchId) && _aiByMonarchId.get(monarchId);
+    return match.playerForMonarch(monarchId).isAi();
   }
 
   public function setPresentationSnapshot(snapshot:Null<UiSnapshot>):Void {
@@ -117,102 +101,22 @@ class BasicViewModel implements IViewModel {
     return _presentationSnapshot;
   }
 
-  function runAiStepOnce(?autoAckPopups:Bool = false):Bool {
+  function runAiStepOnce():Bool {
     var mid = match.activeMonarch().id();
-    if (!isAiMonarch(mid)) {
+    if (!isAiMonarch(mid))
       return false;
-    }
-    // 終局就不再自動操作
     switch match.getTerminationReason() {
-      case NotEnded:
-      case _:
+      case Draw | Victory(_):
         return false;
+      case NotEnded:
     }
 
-    var actor:IPlayer = new LocalPlayer(mid, "ai", true);
+    var actor:IPlayer = match.playerForMonarch(mid);
     var d = match.aiSuggest(actor);
-    if (d == null) {
+    if (d == null)
       return false;
-    }
     applyAiDecision(actor, d);
-    if (autoAckPopups) {
-      // 重要：若有 popup modal，UI 必須立即重繪才能把 overlay 移除，否則看起來會「卡住」
-      ackAllPopupsFor(mid);
-      EventCenter.publishEvent(OutboxRefresh);
-      EventCenter.publishEvent(PopupRefresh);
-    }
     return true;
-  }
-
-  function runAiAutoUntilStop():Void {
-    // 保守上限：避免死循環（例如規則 bug 或無可用操作）
-    var cap = 200;
-    var steps = 0;
-    var lastSig:Null<String> = null;
-    var repeat = 0;
-    while (steps < cap) {
-      // 簡單卡住偵測：若連續重複同一個「狀態簽章」太多次就停止
-      var sig = aiStateSignature();
-      if (lastSig != null && sig == lastSig) {
-        repeat++;
-        if (repeat >= 8)
-          break;
-      } else {
-        repeat = 0;
-        lastSig = sig;
-      }
-      if (!runAiStepOnce(true))
-        break;
-      steps++;
-      // 若切換到非 AI 或終局，停止
-      var mid = match.activeMonarch().id();
-      if (!isAiMonarch(mid))
-        break;
-      switch match.getTerminationReason() {
-        case NotEnded:
-        case _:
-          break;
-      }
-    }
-  }
-
-  function ensureActiveMonarchAiOrHint():Bool {
-    var mid = match.activeMonarch().id();
-    if (isAiMonarch(mid))
-      return true;
-    match.pushInfoPopup(
-      mid,
-      "AI 尚未啟用",
-      PopupPayload.Plain("請先在右側 Menu 勾選「AI 控制此主公」，再按 AI 執行一步 / 自動。"),
-      "ui-ai-not-enabled"
-    );
-    EventCenter.publishEvent(PopupRefresh);
-    EventCenter.publishViewModel(this);
-    return false;
-  }
-
-  function ackAllPopupsFor(monarchId:MonarchId):Void {
-    var xs = match.pendingPopups(monarchId);
-    if (xs == null || xs.length == 0)
-      return;
-    // 一次清空，避免 popup modal 卡住 AI 操作
-    for (p in xs)
-      match.ackPopup(monarchId, p.id());
-  }
-
-  function aiStateSignature():String {
-    // 只要能反映「是否有推進」即可，不追求完美
-    return 'r=${match.roundNumber()}|a=${match.activeMonarch().id()}'
-      + '|moved=${match.hasMovedThisTurn()}|slice=${match.isActivePlayerSliceComplete()}'
-      + '|landing=${match.forceGetPendingLandingTile() != null}'
-      + '|stg=${match.forceHasPendingStaging()}'
-      + '|tileEv=${match.forceGetPendingTileEvent() != null}'
-      + '|friendly=${match.forceGetPendingFriendlyCityVisitTile() != null}'
-      + '|village=${match.forceGetPendingVillageTile() != null}'
-      + '|resource=${match.forceGetPendingResourceTile() != null}'
-      + '|general=${match.forceGetPendingGeneralTile() != null}'
-      + '|shop=${match.forceGetPendingShopTile() != null}'
-      + '|hostile=${match.forceGetPendingHostileCityTile() != null}';
   }
 
   function applyAiDecision(actor:IPlayer, d:AiDecision):Void {
@@ -279,7 +183,7 @@ class BasicViewModel implements IViewModel {
       }
     }
     var a = match.activeMonarch();
-    var actor:IPlayer = new LocalPlayer(a.id(), "active");
+    var actor:IPlayer = match.playerForMonarch(a.id());
     try {
       match.applyMenuLeaf(actor, node);
     } catch (e:GameError) {
@@ -392,6 +296,9 @@ class BasicViewModel implements IViewModel {
 
   public function pawnIndexOfMonarch(monarchId:MonarchId):TileIndex
     return match.pawnIndexOfMonarch(monarchId);
+
+  public function playerForMonarch(monarchId:MonarchId):IPlayer
+    return match.playerForMonarch(monarchId);
 
   public function tileAt(index:TileIndex):ITile
     return match.tileAt(index);
@@ -545,20 +452,6 @@ class BasicViewModel implements IViewModel {
       case Plain(text): text;
     };
   }
-}
-
-private class LocalPlayer implements IPlayer {
-  final mid:MonarchId;
-  final name:String;
-  final ai:Bool;
-  public function new(mid:MonarchId, name:String, isAi:Bool = false) {
-    this.mid = mid;
-    this.name = name;
-    this.ai = isAi;
-  }
-  public function monarchId():MonarchId return mid;
-  public function displayName():String return name;
-  public function isAi():Bool return ai;
 }
 
 private class SnapshotMonarch implements game.IMonarch {

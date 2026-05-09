@@ -32,13 +32,14 @@ class TenEventTilesMenuFlowTest {
     match.createBoard(tiles);
 
     match.createMonarch("m-solo", 0, 0, 100, 50);
+    match.createPlayer("m-solo", "m-solo", false);
 
     var evt = new RingLootForkTileEvent(match);
     for (i in 0...RING_LEN)
       match.forceBindTileEvent(i, evt);
 
     var ruler = match.monarchs()[0];
-    var player:IPlayer = match.createPlayer(ruler.id(), "evt-solo");
+    var player:IPlayer = match.playerForMonarch(ruler.id());
 
     if (match.activeMonarch().id() != ruler.id())
       throw "TenEventTilesMenuFlowTest: 單君主應為當前行動方";

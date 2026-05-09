@@ -33,8 +33,9 @@ class RestMenuFlowTest {
 
     var idA:MonarchId = "m-a";
     match.createMonarch(idA, 0, 0, 200, 50);
+    match.createPlayer(idA, idA, false);
     match.createGeneral("g-a", idA, 10, 10, 10, 10);
-    var actor:IPlayer = match.createPlayer(idA, "A");
+    var actor:IPlayer = match.playerForMonarch(idA);
 
     // 走到己方城池（格 1）
     match.forceSetFixedMoveDelta(1);

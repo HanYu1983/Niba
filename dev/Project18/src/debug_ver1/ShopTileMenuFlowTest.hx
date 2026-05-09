@@ -31,8 +31,9 @@ class ShopTileMenuFlowTest {
 
     var idA:MonarchId = "m-a";
     match.createMonarch(idA, 0, 0, 500, 80);
+    match.createPlayer(idA, idA, false);
     match.createGeneral("g-a-1", idA, 10, 10, 10, 10);
-    var actor:IPlayer = match.createPlayer(idA, "A");
+    var actor:IPlayer = match.playerForMonarch(idA);
     // 購買需要金錢
     cast(match.activeMonarch(), Monarch).grantGold(100000);
 

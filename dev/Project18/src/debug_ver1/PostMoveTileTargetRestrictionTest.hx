@@ -29,12 +29,13 @@ class PostMoveTileTargetRestrictionTest {
     var idA:MonarchId = "m-a";
     var idB:MonarchId = "m-b";
     match.createMonarch(idA, 0, 0, 0, 0);
+    match.createPlayer(idA, idA, false);
     match.createGeneral("g-a", idA, 50, 50, 50, 50);
     match.createMonarch(idB, 1, 0, 0, 0);
+    match.createPlayer(idB, idB, false);
     match.createGeneral("g-b", idB, 10, 10, 10, 10);
 
-    var actorA:IPlayer = match.createPlayer(idA, "A");
-    match.createPlayer(idB, "B");
+    var actorA:IPlayer = match.playerForMonarch(idA);
 
     // 讓 A 持有火計（可移動後使用）
     match.createJiCe("jice_fire", idA);

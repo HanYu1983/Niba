@@ -31,13 +31,14 @@ class GeneralChestTileEventMenuTest {
     match.createBoard(tiles);
 
     match.createMonarch("m-chest", 0, 0, 100, 0);
+    match.createPlayer("m-chest", "m-chest", false);
     match.createGeneral("g-chest", "m-chest", 5, 5, 5, 5);
 
     var evt = new GeneralChestTileEvent(match);
     match.forceBindTileEvent(LANDING_IDX, evt);
 
     var ruler = match.monarchs()[0];
-    var player:IPlayer = match.createPlayer(ruler.id(), "evt-chest");
+    var player:IPlayer = match.playerForMonarch(ruler.id());
 
     match.applyMenuLeaf(player, MenuNodeQuery.requireNodeWithKind(match.createPlayerMenu(player), Move));
     // 移動後需先按落地，才會進入事件 pending

@@ -33,11 +33,12 @@ class EmptyCityVacantFormMenuTest {
     match.createBoard(tiles);
 
     match.createMonarch("m-city", 0, START_PAWN, 80, 40);
+    match.createPlayer("m-city", "m-city", false);
     match.createGeneral("g-a", "m-city", 1, 1, 1, 1);
     match.createGeneral("g-b", "m-city", 1, 1, 1, 1);
 
     var ruler = match.monarchs()[0];
-    var player:IPlayer = match.createPlayer(ruler.id(), "city-player");
+    var player:IPlayer = match.playerForMonarch(ruler.id());
 
     if (!match.cityVacantNoGarrison(CITY_IDX))
       throw "EmptyCityVacantFormMenuTest: 預期初始為空城";
@@ -98,11 +99,12 @@ class EmptyCityVacantFormMenuTest {
     match.createBoard(tiles);
 
     match.createMonarch("m-occ", 0, START_PAWN, 50, 20);
+    match.createPlayer("m-occ", "m-occ", false);
     match.createGeneral("g-guard", "m-occ", 1, 1, 1, 1);
     match.forceAssignCityGarrison(CITY_IDX, "g-guard");
 
     var ruler = match.monarchs()[0];
-    var player:IPlayer = match.createPlayer(ruler.id(), "occ-player");
+    var player:IPlayer = match.playerForMonarch(ruler.id());
 
     if (match.cityVacantNoGarrison(CITY_IDX))
       throw "EmptyCityVacantFormMenuTest: 有駐將後不應為空城";

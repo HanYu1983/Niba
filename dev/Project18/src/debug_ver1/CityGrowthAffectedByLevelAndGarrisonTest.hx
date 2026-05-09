@@ -47,9 +47,10 @@ class CityGrowthAffectedByLevelAndGarrisonTest {
     ]);
     var idA:MonarchId = "m-a";
     match.createMonarch(idA, 0, 0, 0, 0);
+    match.createPlayer(idA, idA, false);
     match.createGeneral("g-low", idA, 10, 10, 10, 10);
     match.createGeneral("g-hi", idA, 100, 10, 100, 100);
-    var actor:IPlayer = match.createPlayer(idA, "A");
+    var actor:IPlayer = match.playerForMonarch(idA);
 
     match.forceSetCityOwner(2, idA);
     match.forceSetCityLevel(2, level);

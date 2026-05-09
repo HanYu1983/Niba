@@ -31,8 +31,9 @@ class VillageDevelopSettlementTest {
 
     var idA:MonarchId = "m-a";
     match.createMonarch(idA, 0, 0, 0, 0);
+    match.createPlayer(idA, idA, false);
     match.createGeneral("g-a", idA, 10, 10, 10, 100);
-    var actor:IPlayer = match.createPlayer(idA, "A");
+    var actor:IPlayer = match.playerForMonarch(idA);
 
     match.forceSetVillageOwner(1, idA);
     match.forceSetVillageLevel(1, CityLevel.Village);

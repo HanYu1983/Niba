@@ -35,8 +35,9 @@ class VillagePlunderMenuFlowTest {
 
     var idA:MonarchId = "m-a";
     match.createMonarch(idA, 0, 0, 300, 80);
+    match.createPlayer(idA, idA, false);
     match.createGeneral("g-a-1", idA, 10, 40, 10, 10);
-    var actor:IPlayer = match.createPlayer(idA, "A");
+    var actor:IPlayer = match.playerForMonarch(idA);
 
     var m0 = match.createPlayerMenu(actor);
     match.applyMenuLeaf(actor, requireEnabledNode(m0, Move));

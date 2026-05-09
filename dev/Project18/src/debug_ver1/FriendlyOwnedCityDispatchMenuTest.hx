@@ -32,6 +32,7 @@ class FriendlyOwnedCityDispatchMenuTest {
     match.createBoard(tiles);
 
     match.createMonarch("m-own", 0, START_PAWN, 80, 40);
+    match.createPlayer("m-own", "m-own", false);
     match.forceSetCityOwner(CITY_IDX, "m-own");
     match.forcePutCityStores(CITY_IDX, 25, 15);
     match.forcePutCityStoredGold(CITY_IDX, 12);
@@ -40,7 +41,7 @@ class FriendlyOwnedCityDispatchMenuTest {
       throw "FriendlyOwnedCityDispatchMenuTest: 預期為我方城地";
 
     var ruler = cast(match.monarchs()[0], impl_ver1.model.Monarch);
-    var player:IPlayer = match.createPlayer(ruler.id(), "own-city");
+    var player:IPlayer = match.playerForMonarch(ruler.id());
     // 給金錢池，供調度測試使用
     ruler.grantGold(100);
 

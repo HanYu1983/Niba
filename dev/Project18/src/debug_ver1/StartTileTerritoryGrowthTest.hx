@@ -30,8 +30,9 @@ class StartTileTerritoryGrowthTest {
 
     var idA:MonarchId = "m-a";
     match.createMonarch(idA, 0, 0, 0, 0);
+    match.createPlayer(idA, idA, false);
     match.createGeneral("g-a", idA, 10, 10, 10, 10);
-    var actor:IPlayer = match.createPlayer(idA, "A");
+    var actor:IPlayer = match.playerForMonarch(idA);
 
     // 設置城池領地（本測試不依城等級；直接 forceSetTileGrowth）
     match.forceSetCityOwner(2, idA);

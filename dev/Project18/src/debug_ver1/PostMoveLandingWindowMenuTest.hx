@@ -31,8 +31,9 @@ class PostMoveLandingWindowMenuTest {
 
     var idA:MonarchId = "m-a";
     match.createMonarch(idA, 0, 0, 100, 0);
+    match.createPlayer(idA, idA, false);
     match.createGeneral("g-a", idA, 1, 1, 1, 1);
-    var actor:IPlayer = match.createPlayer(idA, "A");
+    var actor:IPlayer = match.playerForMonarch(idA);
 
     var m0 = match.createPlayerMenu(actor);
     match.applyMenuLeaf(actor, requireEnabledNode(m0, Move));

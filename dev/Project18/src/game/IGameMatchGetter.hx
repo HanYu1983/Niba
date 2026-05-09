@@ -58,6 +58,11 @@ interface IGameMatchGetter {
   /** 依君主 id 查詢目前所在格索引。 */
   function pawnIndexOfMonarch(monarchId:MonarchId):TileIndex;
 
+  /**
+   * 該君主席位對應之 {@link IPlayer}（組局時建立；{@link IPlayer#isAi} 等語意由此實例表達）。
+   */
+  function playerForMonarch(monarchId:MonarchId):IPlayer;
+
   /** 依格索引取得棋盤格（等同 {@link #board}.tileAt）。 */
   function tileAt(index:TileIndex):ITile;
 

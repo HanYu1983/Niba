@@ -46,8 +46,9 @@ class VillageGrowthAffectedByLevelTest {
     var idA:MonarchId = "m-a";
     // pawn 0 -> 1(Start) 觸發領地成長
     match.createMonarch(idA, 0, 0, 0, 0);
+    match.createPlayer(idA, idA, false);
     match.createGeneral("g-a", idA, 10, 10, 10, 10);
-    var actor:IPlayer = match.createPlayer(idA, "A");
+    var actor:IPlayer = match.playerForMonarch(idA);
     var mon = cast(match.activeMonarch(), Monarch);
     mon.reducePrestige(100); // 避免高聲望分支干擾（只測領地成長，不測獎勵）
 

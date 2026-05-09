@@ -213,8 +213,11 @@ interface IGameMatch extends IGameMatchGetter {
      */
     function createMonarch(id:MonarchId, seat:Int, pawnIndex:TileIndex, ?troops:Int, ?grain:Int):IMonarch;
 
-    /** 玩家視角物件；每位人類／AI 控制器一個實例，與 monarchId 綁定。 */
-    function createPlayer(monarchId:MonarchId, displayName:String):IPlayer;
+    /**
+     * 為已登錄之君主建立／綁定 {@link IPlayer}（席位操作者語意）；{@link IPlayer#isAi} 由 {@code isAi} 決定。
+     * 重複呼叫同一 {@code monarchId} 時以後呼叫覆寫先前綁定。
+     */
+    function createPlayer(monarchId:MonarchId, displayName:String, ?isAi:Bool):IPlayer;
 
     /** 單列選單條目；通常由 createPlayerMenu 內部組裝，亦允許模組化注入。 */
     function createPlayerMenuEntry(kind:PlayerMenuKind, caption:String, enabled:Bool, ?decisionToken:String, ?clientConfirm:MenuClientConfirm):IPlayerMenuEntry;

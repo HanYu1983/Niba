@@ -33,7 +33,9 @@ class StrategyTileTargetOwnershipRestrictionTest {
     var idA:MonarchId = "m-a";
     var idB:MonarchId = "m-b";
     match.createMonarch(idA, 0, 0, 200, 50);
+    match.createPlayer(idA, idA, false);
     match.createMonarch(idB, 1, 0, 200, 50);
+    match.createPlayer(idB, idB, false);
     match.createGeneral("g-a", idA, 80, 80, 80, 80);
     match.createGeneral("g-b", idB, 80, 80, 80, 80);
 
@@ -45,7 +47,7 @@ class StrategyTileTargetOwnershipRestrictionTest {
     match.createJiCe(FarmJiCe.REGISTRY_KEY, idA);
     match.createJiCe(FireJiCe.REGISTRY_KEY, idA);
 
-    var actor:IPlayer = match.createPlayer(idA, "A");
+    var actor:IPlayer = match.playerForMonarch(idA);
 
     // 先把武將升到足夠職位（避免解鎖干擾測試）
     var rulerA = cast(match.activeMonarch(), Monarch);
@@ -91,13 +93,15 @@ class StrategyTileTargetOwnershipRestrictionTest {
       var match2:IGameMatch = game.createGameMatch(LevelKeys.EMPTY);
       match2.createBoard([match2.createTile(0, City), match2.createTile(1, City)]);
       match2.createMonarch(idA, 0, 0, 200, 50);
+      match2.createPlayer(idA, idA, false);
       match2.createMonarch(idB, 1, 0, 200, 50);
+      match2.createPlayer(idB, idB, false);
       match2.createGeneral("g-a", idA, 80, 80, 80, 80);
       match2.createGeneral("g-b", idB, 80, 80, 80, 80);
       match2.forceSetCityOwner(0, idA);
       match2.forceSetCityOwner(1, idB);
       match2.createJiCe(FireJiCe.REGISTRY_KEY, idA);
-      var actor2:IPlayer = match2.createPlayer(idA, "A");
+      var actor2:IPlayer = match2.playerForMonarch(idA);
       var ruler2 = cast(match2.activeMonarch(), Monarch);
       var g2 = cast(ruler2.roster()[0], General);
       g2.grantMerit(800);

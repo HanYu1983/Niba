@@ -27,8 +27,9 @@ class VillageIncomeAtEndOfRoundTest {
     var idA:MonarchId = "m-a";
     // pawn 放在 2，走 1 步落在 0（Plain），避免踩到 Village 觸發 pendingVillage 而看不到 ConfirmDone
     match.createMonarch(idA, 0, 2, 0, 0);
+    match.createPlayer(idA, idA, false);
     match.createGeneral("g-a", idA, 10, 10, 10, 10);
-    var actor:IPlayer = match.createPlayer(idA, "A");
+    var actor:IPlayer = match.playerForMonarch(idA);
 
     // 直接標記村落歸順
     match.forceSetVillageOwner(1, idA);

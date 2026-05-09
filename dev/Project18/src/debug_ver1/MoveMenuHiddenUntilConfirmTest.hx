@@ -31,8 +31,9 @@ class MoveMenuHiddenUntilConfirmTest {
 
     var idA:MonarchId = "m-a";
     match.createMonarch(idA, 0, 0, 100, 0);
+    match.createPlayer(idA, idA, false);
     match.createGeneral("g-a", idA, 1, 1, 1, 1);
-    var actor:IPlayer = match.createPlayer(idA, "A");
+    var actor:IPlayer = match.playerForMonarch(idA);
 
     // 開局應出現 Move
     var m0 = match.createPlayerMenu(actor);

@@ -32,7 +32,9 @@ class StrategyUnlockByRankTest {
     var idA:MonarchId = "m-a";
     var idB:MonarchId = "m-b";
     match.createMonarch(idA, 0, 0, 200, 50);
+    match.createPlayer(idA, idA, false);
     match.createMonarch(idB, 1, 0, 200, 50);
+    match.createPlayer(idB, idB, false);
     match.createGeneral("g-a", idA, 80, 80, 80, 80);
     match.createGeneral("g-b", idB, 80, 80, 80, 80);
 
@@ -51,7 +53,7 @@ class StrategyUnlockByRankTest {
     match.createJiCe(RaidJiCe.REGISTRY_KEY, idA);
     match.createJiCe(ConscriptionJiCe.REGISTRY_KEY, idA);
 
-    var actorA:IPlayer = match.createPlayer(idA, "A");
+    var actorA:IPlayer = match.playerForMonarch(idA);
     var rulerA = cast(match.activeMonarch(), Monarch);
     var gA = cast(rulerA.roster()[0], General);
 

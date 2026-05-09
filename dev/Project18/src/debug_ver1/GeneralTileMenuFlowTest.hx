@@ -31,7 +31,8 @@ class GeneralTileMenuFlowTest {
     ]);
     var idA:MonarchId = "m-a";
     match.createMonarch(idA, 0, 0, 500, 80);
-    var actor:IPlayer = match.createPlayer(idA, "A");
+    match.createPlayer(idA, idA, false);
+    var actor:IPlayer = match.playerForMonarch(idA);
     // 招募需要金錢
     cast(match.activeMonarch(), Monarch).grantGold(100000);
 

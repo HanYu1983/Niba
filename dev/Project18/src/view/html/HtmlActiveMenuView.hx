@@ -5,6 +5,7 @@ import game.IPlayer;
 import game.IPlayerMenu;
 import game.IPlayerMenuEntry;
 import game.IPlayerMenuNode;
+import game.MatchTerminationReason;
 import game.MenuFormWidget;
 import js.Browser;
 import js.html.DivElement;
@@ -45,8 +46,16 @@ class HtmlActiveMenuView {
     root.innerHTML = "";
 
     var a = vm.activeMonarch();
-    var actor:IPlayer = new LocalPlayer(a.id(), "active", vm.isAiMonarch(a.id()));
+    var actor:IPlayer = vm.playerForMonarch(a.id());
     var menu:IPlayerMenu = vm.createPlayerMenu(actor);
+    // AI 席位：每次取得並繪製選單後自動走一步（延後一個 macrotask，避免與 publishViewModel 訂閱鏈同步重入）
+    if (actor.isAi()) {
+      switch vm.getTerminationReason() {
+        case NotEnded:
+          Browser.window.setTimeout(function() EventCenter.publishEvent(UiEvent.AiStep), 0);
+        case Draw | Victory(_):
+      }
+    }
 
     var title = Browser.document.createDivElement();
     title.className = "active-menu-title";
@@ -60,34 +69,6 @@ class HtmlActiveMenuView {
     tSub.textContent = "主公 " + a.id();
     title.appendChild(tSub);
     root.appendChild(title);
-
-    // AI 控制區（僅影響 UI 自動操作，不改變規則）
-    var aiBar = Browser.document.createDivElement();
-    aiBar.className = "active-menu-ai";
-    var chk = Browser.document.createInputElement();
-    chk.type = "checkbox";
-    chk.checked = actor.isAi();
-    chk.onchange = function(_) {
-      EventCenter.publishEvent(UiEvent.AiToggle(a.id(), chk.checked));
-    };
-    aiBar.appendChild(chk);
-    var lab = Browser.document.createSpanElement();
-    lab.textContent = "AI 控制此主公";
-    aiBar.appendChild(lab);
-
-    var btnStep = Browser.document.createButtonElement();
-    btnStep.textContent = "AI 執行一步";
-    btnStep.disabled = !chk.checked;
-    btnStep.onclick = function(_) EventCenter.publishEvent(UiEvent.AiStep);
-    aiBar.appendChild(btnStep);
-
-    var btnAuto = Browser.document.createButtonElement();
-    btnAuto.textContent = "AI 自動到結束回合";
-    btnAuto.disabled = !chk.checked;
-    btnAuto.onclick = function(_) EventCenter.publishEvent(UiEvent.AiAuto);
-    aiBar.appendChild(btnAuto);
-
-    root.appendChild(aiBar);
 
     var tree = Browser.document.createDivElement();
     tree.className = "active-menu-tree";
@@ -272,18 +253,3 @@ class HtmlActiveMenuView {
       root.parentElement.removeChild(root);
   }
 }
-
-private class LocalPlayer implements IPlayer {
-  final mid:MonarchId;
-  final name:String;
-  final ai:Bool;
-  public function new(mid:MonarchId, name:String, isAi:Bool = false) {
-    this.mid = mid;
-    this.name = name;
-    this.ai = isAi;
-  }
-  public function monarchId():MonarchId return mid;
-  public function displayName():String return name;
-  public function isAi():Bool return ai;
-}
-

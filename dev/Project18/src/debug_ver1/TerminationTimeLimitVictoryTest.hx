@@ -31,8 +31,10 @@ class TerminationTimeLimitVictoryTest {
     var a:MonarchId = "m-a";
     var b:MonarchId = "m-b";
     match.createMonarch(a, 0, 0, 0, 0);
+    match.createPlayer(a, a, false);
     match.createGeneral("g-a", a, 1, 1, 1, 1);
     match.createMonarch(b, 1, 0, 0, 0);
+    match.createPlayer(b, b, false);
     match.createGeneral("g-b", b, 1, 1, 1, 1);
 
     // 避免提前觸發征服：兩邊都有兵
@@ -45,8 +47,8 @@ class TerminationTimeLimitVictoryTest {
     // 讓 A 的分數更高（不達財富勝利門檻）
     cast(match.monarchById(a), impl_ver1.model.Monarch).grantGold(1000);
 
-    var actorA:IPlayer = match.createPlayer(a, "A");
-    var actorB:IPlayer = match.createPlayer(b, "B");
+    var actorA:IPlayer = match.playerForMonarch(a);
+    var actorB:IPlayer = match.playerForMonarch(b);
 
     match.forceSetFixedMoveDelta(1);
 

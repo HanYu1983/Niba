@@ -22,8 +22,9 @@ class StrategyAutoGrantByRankTest {
 
     var idA:MonarchId = "m-a";
     match.createMonarch(idA, 0, 0, 0, 0);
+    match.createPlayer(idA, idA, false);
     match.createGeneral("g-a", idA, 80, 80, 80, 80);
-    var actor:IPlayer = match.createPlayer(idA, "A");
+    var actor:IPlayer = match.playerForMonarch(idA);
 
     // 不手動 createJiCe；靠 auto-grant
     var menu0 = match.createPlayerMenu(actor);

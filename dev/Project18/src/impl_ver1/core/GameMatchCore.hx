@@ -100,6 +100,8 @@ class GameMatchCore implements IGameMatch {
 
   /** --- 君主列、當前行動方、行動切片、終局 --- */
   var _monarchs:Array<Monarch>;
+  /** 君主 id → 該席位之 {@link IPlayer}（語意含 {@link IPlayer#isAi}；與 {@link #playerForMonarch} 同源）。 */
+  var _seatPlayer:Map<MonarchId, Player>;
   var _activeId:MonarchId;
   var _roundNumber:Int;
   var _hasMovedThisTurn:Bool;
@@ -210,6 +212,7 @@ class GameMatchCore implements IGameMatch {
   public function new() {
     _board = cast null;
     _monarchs = [];
+    _seatPlayer = new Map();
     _activeId = "";
     _roundNumber = 1;
     _hasMovedThisTurn = false;
@@ -857,8 +860,18 @@ class GameMatchCore implements IGameMatch {
     throw 'GameMatchCore: monarch "$mid" not registered';
   }
 
-  public function createPlayer(monarchId:MonarchId, displayName:String):IPlayer
-    return new Player(monarchId, displayName, false);
+  public function playerForMonarch(monarchId:MonarchId):IPlayer {
+    if (!_seatPlayer.exists(monarchId))
+      throw 'GameMatchCore: no seat player for monarch "$monarchId"';
+    return _seatPlayer.get(monarchId);
+  }
+
+  public function createPlayer(monarchId:MonarchId, displayName:String, ?isAi:Bool):IPlayer {
+    monarchWithId(monarchId);
+    var p = new Player(monarchId, displayName, isAi == true);
+    _seatPlayer.set(monarchId, p);
+    return p;
+  }
 
   public function createPlayerMenuEntry(kind:PlayerMenuKind, caption:String, enabled:Bool, ?decisionToken:String, ?clientConfirm:MenuClientConfirm):IPlayerMenuEntry
     return new PlayerMenuEntry(kind, caption, enabled, decisionToken, clientConfirm);

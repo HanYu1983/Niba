@@ -27,13 +27,14 @@ class JiCePreviewRowsTest {
     var idA:MonarchId = "m-a";
     var idB:MonarchId = "m-b";
     match.createMonarch(idA, 0, 0, 0, 0);
+    match.createPlayer(idA, idA, false);
     match.createGeneral("g-a-1", idA, 60, 60, 60, 60);
     match.createGeneral("g-a-2", idA, 30, 30, 30, 30);
     match.createMonarch(idB, 1, 0, 0, 0);
+    match.createPlayer(idB, idB, false);
     match.createGeneral("g-b-1", idB, 10, 10, 10, 10);
 
-    var actor:IPlayer = match.createPlayer(idA, "A");
-    match.createPlayer(idB, "B");
+    var actor:IPlayer = match.playerForMonarch(idA);
 
     // docs/策略系統.md：離間需較高職位解鎖；此測試只驗證 previewRows 骨架，故直接升職位。
     var rulerA0 = cast(match.activeMonarch(), Monarch);

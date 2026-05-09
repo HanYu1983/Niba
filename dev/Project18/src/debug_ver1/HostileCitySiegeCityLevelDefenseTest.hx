@@ -53,12 +53,14 @@ class HostileCitySiegeCityLevelDefenseTest {
     var idA:MonarchId = "m-a";
     var idB:MonarchId = "m-b";
     match.createMonarch(idA, 0, 0, 0, 0);
+    match.createPlayer(idA, idA, false);
     match.createGeneral("g-a", idA, 90, 90, 10, 10);
     match.createMonarch(idB, 1, 0, 0, 0);
+    match.createPlayer(idB, idB, false);
     match.createGeneral("g-b", idB, 10, 10, 10, 10);
 
-    var actorA = match.createPlayer(idA, "A");
-    var actorB = match.createPlayer(idB, "B");
+    var actorA = match.playerForMonarch(idA);
+    var actorB = match.playerForMonarch(idB);
 
     match.forceSetCityOwner(1, idB);
     match.forceAssignCityGarrison(1, "g-b");

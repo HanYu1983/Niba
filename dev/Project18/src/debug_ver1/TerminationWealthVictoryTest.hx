@@ -25,8 +25,10 @@ class TerminationWealthVictoryTest {
     var a:MonarchId = "m-a";
     var b:MonarchId = "m-b";
     match.createMonarch(a, 0, 0, 0, 0);
+    match.createPlayer(a, a, false);
     match.createGeneral("g-a", a, 1, 1, 1, 1);
     match.createMonarch(b, 1, 0, 0, 0);
+    match.createPlayer(b, b, false);
     match.createGeneral("g-b", b, 1, 1, 1, 1);
 
     // 避免征服勝利先觸發：兩邊都給 1 兵

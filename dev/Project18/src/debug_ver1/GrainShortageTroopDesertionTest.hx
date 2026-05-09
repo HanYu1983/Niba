@@ -30,8 +30,9 @@ class GrainShortageTroopDesertionTest {
     var idA:MonarchId = "m-a";
     // troops=1000, grain=7（不足）
     match.createMonarch(idA, 0, 0, 1000, 7);
+    match.createPlayer(idA, idA, false);
     match.createGeneral("g-a", idA, 10, 10, 10, 10);
-    var actor:IPlayer = match.createPlayer(idA, "A");
+    var actor:IPlayer = match.playerForMonarch(idA);
     var mon = cast(match.activeMonarch(), Monarch);
 
     // 讓切片可結束 → ConfirmDone 觸發回合結算（單人局）

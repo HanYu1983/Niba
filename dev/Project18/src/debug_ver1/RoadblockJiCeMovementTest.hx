@@ -37,12 +37,14 @@ class RoadblockJiCeMovementTest {
     var idA:MonarchId = "m-a";
     var idB:MonarchId = "m-b";
     match.createMonarch(idA, 0, 0);
+    match.createPlayer(idA, idA, false);
     match.createMonarch(idB, 1, 5);
+    match.createPlayer(idB, idB, false);
     match.createGeneral("g-a", idA, 1, 1, 1, 1);
 
     var roadblock:IJiCe = match.createJiCe(RoadblockJiCe.REGISTRY_KEY, idB);
-    var actorA = match.createPlayer(idA, "A");
-    var actorB = match.createPlayer(idB, "B");
+    var actorA = match.playerForMonarch(idA);
+    var actorB = match.playerForMonarch(idB);
 
     if (match.activeMonarch().id() != idA)
       throw "RoadblockJiCeMovementTest: 預期先手為 A";
@@ -97,8 +99,10 @@ class RoadblockJiCeMovementTest {
     var idB:MonarchId = "m-b";
     var idA:MonarchId = "m-a";
     match.createMonarch(idB, 0, 5);
+    match.createPlayer(idB, idB, false);
     match.createMonarch(idA, 1, 0);
-    var actorB = match.createPlayer(idB, "B");
+    match.createPlayer(idA, idA, false);
+    var actorB = match.playerForMonarch(idB);
 
     if (match.activeMonarch().id() != idB)
       throw "RoadblockJiCeMovementTest(placer): 預期先手 B";

@@ -28,11 +28,12 @@ class StrategyPhaseRestrictionTest {
 
     var idA:MonarchId = "m-a";
     match.createMonarch(idA, 0, 0, 200, 50);
+    match.createPlayer(idA, idA, false);
     match.createGeneral("g-a", idA, 80, 80, 80, 80);
     match.createJiCe(DissensionJiCe.REGISTRY_KEY, idA); // PreMove only
     match.createJiCe(FireJiCe.REGISTRY_KEY, idA); // Pre+Post
 
-    var actor:IPlayer = match.createPlayer(idA, "A");
+    var actor:IPlayer = match.playerForMonarch(idA);
 
     // 先移動進入 pendingLanding，才能看到 StrategyPost
     match.applyMenuLeaf(actor, MenuNodeQuery.requireNodeWithKind(match.createPlayerMenu(actor), Move));

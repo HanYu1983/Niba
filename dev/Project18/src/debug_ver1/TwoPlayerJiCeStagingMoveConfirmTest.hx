@@ -37,7 +37,9 @@ class TwoPlayerJiCeStagingMoveConfirmTest {
     match.createBoard(tiles);
 
     match.createMonarch("m-atk", 0, 0, 500, 80);
+    match.createPlayer("m-atk", "m-atk", false);
     match.createMonarch("m-def", 1, 0, 100, 200);
+    match.createPlayer("m-def", "m-def", false);
     match.createGeneral("g-one", "m-atk", 1, 40, 1, 1);
 
     var atkId:MonarchId = "m-atk";
@@ -45,8 +47,7 @@ class TwoPlayerJiCeStagingMoveConfirmTest {
 
     var luoshi:IJiCe = match.createJiCe(LuoshiJiCe.REGISTRY_KEY, atkId);
 
-    var actorAtk = match.createPlayer(atkId, "攻");
-    match.createPlayer(defId, "守");
+    var actorAtk = match.playerForMonarch(atkId);
 
     if (match.activeMonarch().id() != atkId)
       throw "TwoPlayerJiCeStagingMoveConfirmTest: 預期先手為 m-atk";

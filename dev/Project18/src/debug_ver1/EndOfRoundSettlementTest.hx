@@ -33,8 +33,9 @@ class EndOfRoundSettlementTest {
 
     var idA:MonarchId = "m-a";
     match.createMonarch(idA, 0, 3, 0, 0);
+    match.createPlayer(idA, idA, false);
     match.createGeneral("g-a", idA, 1, 1, 1, 1);
-    var actor:IPlayer = match.createPlayer(idA, "A");
+    var actor:IPlayer = match.playerForMonarch(idA);
 
     var mon = cast(match.activeMonarch(), Monarch);
     // 壓低聲望到 0，確保走「低聲望」分支（對齊 docs/數值算法.md 7.2：固定 +100 gold）

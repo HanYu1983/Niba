@@ -31,12 +31,14 @@ class EmptyLevelFourPlayerLoopTest {
     match.createBoard(tiles);
 
     var monarchIds:Array<MonarchId> = ["m0", "m1", "m2", "m3"];
-    for (s in 0...4)
+    for (s in 0...4) {
       match.createMonarch(monarchIds[s], s, 0);
+      match.createPlayer(monarchIds[s], monarchIds[s], false);
+    }
 
     var players = new Map<MonarchId, IPlayer>();
     for (id in monarchIds)
-      players[id] = match.createPlayer(id, "player-" + id);
+      players[id] = match.playerForMonarch(id);
 
     var firstId = monarchIds[0];
     if (match.activeMonarch().id() != firstId)

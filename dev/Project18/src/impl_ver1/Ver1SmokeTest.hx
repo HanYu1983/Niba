@@ -31,7 +31,7 @@ class Ver1SmokeTest {
     var luoshi:IJiCe = match.createJiCe(LuoshiJiCe.REGISTRY_KEY, attacker.id());
     var inspire:IJiCe = match.createJiCe(InspireJiCe.REGISTRY_KEY, attacker.id());
 
-    var player:IPlayer = match.createPlayer(attacker.id(), "攻方");
+    var player:IPlayer = match.playerForMonarch(attacker.id());
 
     var menuJi = match.createPlayerMenu(player);
     match.applyMenuLeaf(player, MenuNodeQuery.requireNodeWithKind(menuJi, JiCe));

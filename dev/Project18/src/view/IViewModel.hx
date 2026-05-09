@@ -11,7 +11,7 @@ import view.UiSnapshot;
 interface IViewModel extends IGameMatchGetter {
   public function dispose():Void;
 
-  /** UI/AI：該君主是否由 AI 控制（僅影響 UI 自動操作，不改變規則）。 */
+  /** {@link game.IGameMatchGetter#playerForMonarch}{@code (...).isAi()}。 */
   public function isAiMonarch(monarchId:MonarchId):Bool;
 
   /** UI：設定/清除「呈現快照覆寫層」（未覆寫的欄位委派給 match）。 */
