@@ -83,11 +83,21 @@ class HostileCityConfrontMenuTest {
       throw "HostileCityConfrontMenuTest: 攻方選項按鈕不符";
     node.setActivationEntry(btn);
     match.applyMenuLeaf(atk, node);
-    if (match.forceGetHostileCityFlowPhase() != "DefenderResponse")
-      throw "HostileCityConfrontMenuTest: 送出後應進入守方階段";
+    // ver1：非單挑可允許「省略守方確認」直接進入攻方結算
+    var ph = match.forceGetHostileCityFlowPhase();
+    if (token == "duel") {
+      if (ph != "DefenderResponse")
+        throw "HostileCityConfrontMenuTest: 單挑送出後應進入守方階段";
+    } else {
+      if (ph != "DefenderResponse" && ph != "AttackerSettlement")
+        throw 'HostileCityConfrontMenuTest: 送出後應進入守方/結算階段 got=$ph';
+    }
   }
 
   static function applyDefenderAck(match:IGameMatch, def:IPlayer):Void {
+    // 若已直接進入結算階段，守方確認可略過
+    if (match.forceGetHostileCityFlowPhase() == "AttackerSettlement")
+      return;
     var n = MenuNodeQuery.requireNodeWithKind(match.createPlayerMenu(def), HostileCityDefenderAck);
     var btn = MenuNodeQuery.buttonEntryOnNode(n, HostileCityDefenderAck);
     if (btn == null)
