@@ -4,6 +4,7 @@ import game.GameIds.TileIndex;
 import game.CityLevel;
 import game.EquipmentType;
 import game.GeneralStat;
+import game.HistoricalPeople;
 import game.OutboxPayload;
 import game.OutboxPayload.FlowAckKind;
 import game.OutboxPayload.HostileSettlementBranch;
@@ -37,7 +38,7 @@ class OutboxPopupBodyText {
         msg;
 
       case EmptyCityOccupied(tile, troops, grain, guards):
-        '城池格 ${tile}\n進駐兵力：${troops}\n進駐糧食：${grain}\n駐守武將：${guards.length > 0 ? guards.join(", ") : "（無）"}';
+        '城池格 ${tile}\n進駐兵力：${troops}\n進駐糧食：${grain}\n駐守武將：${guards.length > 0 ? guards.map(gid -> HistoricalPeople.generalName(gid)).join(", ") : "（無）"}';
 
       case FriendlyCityDispatchCompleted(tile, tt, gg, gold):
         '城池格 ${tile}\n城池兵力調整為：${tt}\n城池糧食調整為：${gg}\n城池金錢調整為：${gold}';
@@ -50,23 +51,23 @@ class OutboxPopupBodyText {
         '${prefix}格 ${tile}\n${prefix}兵力調整為：${tt}\n${prefix}糧食調整為：${gg}\n${prefix}金錢調整為：${gold}';
 
       case HostileCombatSettlement(branch, tile, atk, def):
-        var atkS = atk != null ? atk : "（無）";
+        var atkS = atk != null ? HistoricalPeople.generalName(atk) : "（無）";
         var bRaw = switch branch {
           case PayToll: "過路費已付";
           case Negotiate: '談判（攻將 ${atkS}）｜協議草案已備';
           case Attrition: '消耗戰（攻將 ${atkS}）｜損耗預估完成';
           case Siege: '攻城戰（攻將 ${atkS}）｜城防推演完成';
           case Duel:
-            var d = def != null ? def : "?";
+            var d = def != null ? HistoricalPeople.generalName(def) : "?";
             '單挑（攻將 ${atkS} vs 守將 ${d}）｜勝負已裁定';
         };
         '結算：${bRaw}\n城池格 ${tile}';
 
       case TileEventAvoidanceSucceeded(gid, stat, sv, pct, mult):
-        '武將 ${gid} 規避成功（${statZh(stat)}=${sv}，率=${pct}%）\n事件效果倍率：${mult}';
+        '武將 ${HistoricalPeople.generalName(gid)} 規避成功（${statZh(stat)}=${sv}，率=${pct}%）\n事件效果倍率：${mult}';
 
       case TileEventAvoidanceFailed(gid, stat, sv, pct):
-        '武將 ${gid} 規避失敗（${statZh(stat)}=${sv}，率=${pct}%）\n請繼續處理事件選項。';
+        '武將 ${HistoricalPeople.generalName(gid)} 規避失敗（${statZh(stat)}=${sv}，率=${pct}%）\n請繼續處理事件選項。';
 
       case EpidemicResolved(stLoss, trLoss, mult):
         '武將體力 -${stLoss}（全體）\n士兵 -${trLoss}\n倍率 ${mult}';
@@ -78,7 +79,7 @@ class OutboxPopupBodyText {
         "（無麾下武將，事件略過）";
 
       case DefectionResolved(gid, pct, mult):
-        '武將 ${gid} 叛逃離開（率 ${pct}%｜倍率 ${mult}）';
+        '武將 ${HistoricalPeople.generalName(gid)} 叛逃離開（率 ${pct}%｜倍率 ${mult}）';
 
       case DefectionNotTriggered(pct, mult):
         '叛逃未發生（率 ${pct}%｜倍率 ${mult}）';
@@ -87,10 +88,10 @@ class OutboxPopupBodyText {
         "（無麾下武將，事件略過）";
 
       case AssassinationResolved(gid, stat, loss, mult):
-        '武將 ${gid}｜${statZh(stat)} 永久 -${loss}\n倍率 ${mult}';
+        '武將 ${HistoricalPeople.generalName(gid)}｜${statZh(stat)} 永久 -${loss}\n倍率 ${mult}';
 
       case RingArmyFundBonus(true, gid, amt):
-        '武將 ${gid} 領軍資\n獲得：兵力 +${amt}';
+        '武將 ${HistoricalPeople.generalName(gid)} 領軍資\n獲得：兵力 +${amt}';
       case RingArmyFundBonus(false, _, amt):
         '獲得：兵力 +${amt}';
 
@@ -101,7 +102,7 @@ class OutboxPopupBodyText {
         "略過獎勵。";
 
       case ChestTroopReward(true, gid, g):
-        '武將 ${gid} 領賞\n獲得：兵力 +${g}';
+        '武將 ${HistoricalPeople.generalName(gid)} 領賞\n獲得：兵力 +${g}';
       case ChestTroopReward(false, _, g):
         '獲得：兵力 +${g}\n（麾下無武將）';
 
@@ -109,48 +110,52 @@ class OutboxPopupBodyText {
         '格位 ${idx}\n獲得：金錢 +${g.gold}\n獲得：糧食 +${g.grain}\n獲得：兵力 +${g.troops}';
 
       case ResourceBoostAssigned(tile, gid, st, sv, sb, sa, base, bonus, total):
-        '格位 ${tile}\n指派武將：${gid}（${statZh(st)}=${sv}，體力 ${sb}→${sa}）\n'
+        '格位 ${tile}\n指派武將：${HistoricalPeople.generalName(gid)}（${statZh(st)}=${sv}，體力 ${sb}→${sa}）\n'
         + '基礎：金 ${base.gold}／糧 ${base.grain}／兵 ${base.troops}\n'
         + '加成：+${bonus}\n'
         + '合計：金 ${total.gold}／糧 ${total.grain}／兵 ${total.troops}';
 
       case VillageTradeOutcome(ok, v, gid, rpct, rtpct, goldSp, grainG, fp, fn, ownerAfter):
-        var head = '村落（格 ${v}）交易\n武將：${gid}\n成功率：約 ${rpct}%（roll=${rtpct}%）';
+        var gName = HistoricalPeople.generalName(gid);
+        var head = '村落（格 ${v}）交易\n武將：${gName}\n成功率：約 ${rpct}%（roll=${rtpct}%）';
         var mid = if (ok)
           '\n獲得：糧食 +${grainG}\n消耗：金錢 -${goldSp}'
         else
           "\n未完成交換（仍消耗體力）";
         var tail = '\n友好度：${fp} → ${fn}';
-        var own = ownerAfter != null ? '\n領地：已歸順（屬主 ${ownerAfter}）' : "";
-        head + mid + tail + own + '\n${gid} 體力 -10';
+        var own = ownerAfter != null ? '\n領地：已歸順（屬主 ${HistoricalPeople.monarchName(ownerAfter)}）' : "";
+        head + mid + tail + own + '\n${gName} 體力 -10';
 
       case VillagePlunderOutcome(ok, v, gid, rpct, gg, gr, gt, fp, fn, pLoss):
         var tag = ok ? "搶奪成功" : "搶奪失敗";
+        var gName = HistoricalPeople.generalName(gid);
         ok
-          ? '村落（格 ${v}）${tag}\n武將：${gid}\n成功率：約 ${rpct}%\n獲得：金 +${gg}｜糧 +${gr}｜兵 +${gt}\n友好度：${fp} → ${fn}\n聲望 -${pLoss}\n${gid} 體力 -12'
-          : '村落（格 ${v}）${tag}\n武將：${gid}\n成功率：約 ${rpct}%\n未獲得資源\n友好度：${fp} → ${fn}\n聲望 -${pLoss}\n${gid} 體力 -12';
+          ? '村落（格 ${v}）${tag}\n武將：${gName}\n成功率：約 ${rpct}%\n獲得：金 +${gg}｜糧 +${gr}｜兵 +${gt}\n友好度：${fp} → ${fn}\n聲望 -${pLoss}\n${gName} 體力 -12'
+          : '村落（格 ${v}）${tag}\n武將：${gName}\n成功率：約 ${rpct}%\n未獲得資源\n友好度：${fp} → ${fn}\n聲望 -${pLoss}\n${gName} 體力 -12';
 
       case VillageDevelopOutcome(ok, v, gid, pol, rpct, cg, ck, bef, aft):
         '村落格 ${v}\n'
-        + '武將：${gid}（政治=${pol}）\n'
+        + '武將：${HistoricalPeople.generalName(gid)}（政治=${pol}）\n'
         + '成功率：約 ${rpct}%\n'
         + '消耗：村落金 -${cg}、村落糧 -${ck}、體力 -12\n'
         + (ok ? '等級：${cityLvlZh(bef)} → ${cityLvlZh(aft)}' : '等級：${cityLvlZh(bef)}（不變）');
 
       case VillageConquerOutcome(win, v, gid, commit, af, _, _, _, lossFail):
+        var gName = HistoricalPeople.generalName(gid);
         win
-          ? '攻占成功。\n格子：${v}\n武將：${gid}\n投入兵力：${commit}\n掠奪：村落儲備 30%\n聲望 -3\n友好度：→ ${af}（重置）\n領地：已占領（每回合產出）\n（武將體力 -15）'
-          : '攻占失敗。\n格子：${v}\n武將：${gid}\n投入兵力：${commit}\n兵力損失約 20%（-${lossFail}）\n友好度：→ ${af}\n（武將體力 -15）';
+          ? '攻占成功。\n格子：${v}\n武將：${gName}\n投入兵力：${commit}\n掠奪：村落儲備 30%\n聲望 -3\n友好度：→ ${af}（重置）\n領地：已占領（每回合產出）\n（武將體力 -15）'
+          : '攻占失敗。\n格子：${v}\n武將：${gName}\n投入兵力：${commit}\n兵力損失約 20%（-${lossFail}）\n友好度：→ ${af}\n（武將體力 -15）';
 
       case FriendlyCityDevelopOutcome(ok, v, gid, pol, rpct, cg, ck, bef, aft):
         '城池格 ${v}\n'
-        + '武將：${gid}（政治=${pol}）\n'
+        + '武將：${HistoricalPeople.generalName(gid)}（政治=${pol}）\n'
         + '成功率：約 ${rpct}%\n'
         + '消耗：城池金 -${cg}、城池糧 -${ck}、體力 -15\n'
         + (ok ? '城等級：${cityLvlZh(bef)} → ${cityLvlZh(aft)}' : '城等級：${cityLvlZh(bef)}（不變）');
 
       case RestStamina(gid, sb, sa, _, terr):
-        terr ? '${gid} 體力：${sb} → ${sa}（+${sa - sb}，領地休整）' : '${gid} 體力：${sb} → ${sa}';
+        var gName = HistoricalPeople.generalName(gid);
+        terr ? '${gName} 體力：${sb} → ${sa}（+${sa - sb}，領地休整）' : '${gName} 體力：${sb} → ${sa}';
 
       case GeneralBatchRecruited(tile, lines, total):
         var parts = [for (x in lines) '${x.displayName}（${rarityZh(x.rarity)}）金 ${x.costGold}'];
@@ -158,13 +163,13 @@ class OutboxPopupBodyText {
 
       case ShopEquipmentPurchased(tile, gid, price, name, ty, rr, bst, bv, loy):
         '商店格 ${tile}\n購買：${name}（${equipTy(ty)}/${rarityZh(rr)}）\n'
-        + '花費：金 ${price}\n裝備給：${gid}\n'
+        + '花費：金 ${price}\n裝備給：${HistoricalPeople.generalName(gid)}\n'
         + '效果：${statZh(bst)}+${bv}｜忠誠+${loy}';
 
       case JiCeCasterOutcome(_, phase, caster, pst, tier, _, rate, roll, cost, sb, sa, tgt, fx):
         var buf = new StringBuf();
         buf.add('階段：${phaseZh(phase)}\n');
-        buf.add('施放武將：${caster}（體力 ${sb} → ${sa}，消耗 ${cost}）\n');
+        buf.add('施放武將：${HistoricalPeople.generalName(caster)}（體力 ${sb} → ${sa}，消耗 ${cost}）\n');
         buf.add(
           '成功率：約 ${pct(rate)}%（roll=${pct(roll)}%｜${statZh(pst)}｜消耗='
           + tierZh(tier)
@@ -181,8 +186,8 @@ class OutboxPopupBodyText {
 
       case JiCeTargetOutcome(_, atkMid, caster, fx):
         var buf = new StringBuf();
-        buf.add('施放者：${atkMid}\n');
-        buf.add('武將：${caster}\n');
+        buf.add('施放者：${HistoricalPeople.monarchName(atkMid)}\n');
+        buf.add('武將：${HistoricalPeople.generalName(caster)}\n');
         if (fx != null && fx.length > 0) {
           buf.add("影響：\n");
           for (x in fx)
