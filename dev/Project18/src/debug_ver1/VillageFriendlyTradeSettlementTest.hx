@@ -34,7 +34,7 @@ class VillageFriendlyTradeSettlementTest {
 
     var idA:MonarchId = "m-a";
     match.createMonarch(idA, 0, 0, 0, 0);
-    match.createPlayer(idA, idA, false);
+    match.linkPlayerToMonarch(idA, match.createPlayer(idA, false));
     // 政治拉滿，確保交易成功率=100%（避免 deterministic roll 造成測試不穩）
     match.createGeneral("g-a", idA, 10, 10, 10, 100);
     var actor:IPlayer = match.playerForMonarch(idA);

@@ -33,7 +33,7 @@ class EmptyCityVacantFormMenuTest {
     match.createBoard(tiles);
 
     match.createMonarch("m-city", 0, START_PAWN, 80, 40);
-    match.createPlayer("m-city", "m-city", false);
+    match.linkPlayerToMonarch("m-city", match.createPlayer("m-city", false));
     match.createGeneral("g-a", "m-city", 1, 1, 1, 1);
     match.createGeneral("g-b", "m-city", 1, 1, 1, 1);
 
@@ -99,7 +99,7 @@ class EmptyCityVacantFormMenuTest {
     match.createBoard(tiles);
 
     match.createMonarch("m-occ", 0, START_PAWN, 50, 20);
-    match.createPlayer("m-occ", "m-occ", false);
+    match.linkPlayerToMonarch("m-occ", match.createPlayer("m-occ", false));
     match.createGeneral("g-guard", "m-occ", 1, 1, 1, 1);
     match.forceAssignCityGarrison(CITY_IDX, "g-guard");
 

@@ -31,7 +31,7 @@ class GeneralChestTileEventMenuTest {
     match.createBoard(tiles);
 
     match.createMonarch("m-chest", 0, 0, 100, 0);
-    match.createPlayer("m-chest", "m-chest", false);
+    match.linkPlayerToMonarch("m-chest", match.createPlayer("m-chest", false));
     match.createGeneral("g-chest", "m-chest", 5, 5, 5, 5);
 
     var evt = new GeneralChestTileEvent(match);

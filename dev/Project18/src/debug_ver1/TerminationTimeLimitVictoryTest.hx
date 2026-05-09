@@ -31,10 +31,10 @@ class TerminationTimeLimitVictoryTest {
     var a:MonarchId = "m-a";
     var b:MonarchId = "m-b";
     match.createMonarch(a, 0, 0, 0, 0);
-    match.createPlayer(a, a, false);
+    match.linkPlayerToMonarch(a, match.createPlayer(a, false));
     match.createGeneral("g-a", a, 1, 1, 1, 1);
     match.createMonarch(b, 1, 0, 0, 0);
-    match.createPlayer(b, b, false);
+    match.linkPlayerToMonarch(b, match.createPlayer(b, false));
     match.createGeneral("g-b", b, 1, 1, 1, 1);
 
     // 避免提前觸發征服：兩邊都有兵

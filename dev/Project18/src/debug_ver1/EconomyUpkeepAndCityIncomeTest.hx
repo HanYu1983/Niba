@@ -29,7 +29,7 @@ class EconomyUpkeepAndCityIncomeTest {
     var idA:MonarchId = "m-a";
     // pawn 放在 1（城市格）再走 1 步到 2，避免「起點獎勵」干擾經濟斷言
     match.createMonarch(idA, 0, 1, 1000, 20);
-    match.createPlayer(idA, idA, false);
+    match.linkPlayerToMonarch(idA, match.createPlayer(idA, false));
     match.createGeneral("g-a", idA, 10, 10, 10, 10);
     var actor:IPlayer = match.playerForMonarch(idA);
 

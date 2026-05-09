@@ -124,8 +124,8 @@ class AppController {
 
     match.createMonarch("m-a", 0, 0, 500, 80);
     match.createMonarch("m-b", 1, 5, 500, 80);
-    match.createPlayer("m-a", "m-a", false);
-    match.createPlayer("m-b", "m-b", true);
+    match.linkPlayerToMonarch("m-a", match.createPlayer("m-a", false));
+    match.linkPlayerToMonarch("m-b", match.createPlayer("m-b", true));
 
     match.createGeneral("g-a-1", "m-a", 1, 40, 1, 1);
     match.createGeneral("g-a-2", "m-a", 1, 20, 1, 1);
@@ -175,8 +175,8 @@ class AppController {
     // 兩位君主放在不同區塊，方便觀察占位 badge
     match.createMonarch("m-a", 0, 0, 800, 200);
     match.createMonarch("m-b", 1, 7, 800, 200);
-    match.createPlayer("m-a", "m-a", false);
-    match.createPlayer("m-b", "m-b", false);
+    match.linkPlayerToMonarch("m-a", match.createPlayer("m-a", false));
+    match.linkPlayerToMonarch("m-b", match.createPlayer("m-b", false));
 
     // 武將：給足夠 roster 以測試商店裝備、事件規避、資源加成等
     match.createGeneral("g-a-1", "m-a", 60, 40, 55, 70);
@@ -223,8 +223,8 @@ class AppController {
 
     match.createMonarch("m-a", 0, 0, 800, 200);
     match.createMonarch("m-b", 1, 6, 800, 200);
-    match.createPlayer("m-a", "m-a", false);
-    match.createPlayer("m-b", "m-b", false);
+    match.linkPlayerToMonarch("m-a", match.createPlayer("m-a", false));
+    match.linkPlayerToMonarch("m-b", match.createPlayer("m-b", false));
 
     match.createGeneral("g-a-1", "m-a", 60, 40, 55, 70);
     match.createGeneral("g-a-2", "m-a", 30, 80, 25, 20);
@@ -291,10 +291,10 @@ class AppController {
     match.createMonarch("m-b", 1, 3, 800, 400);
     match.createMonarch("m-c", 2, 6, 800, 400);
     match.createMonarch("m-d", 3, 9, 800, 400);
-    match.createPlayer("m-a", "m-a", true);
-    match.createPlayer("m-b", "m-b", true);
-    match.createPlayer("m-c", "m-c", true);
-    match.createPlayer("m-d", "m-d", true);
+    match.linkPlayerToMonarch("m-a", match.createPlayer("m-a", true));
+    match.linkPlayerToMonarch("m-b", match.createPlayer("m-b", true));
+    match.linkPlayerToMonarch("m-c", match.createPlayer("m-c", true));
+    match.linkPlayerToMonarch("m-d", match.createPlayer("m-d", true));
 
     // 給每人 3 武將（能力分布刻意不同，便於之後加權）
     match.createGeneral("g-a-1", "m-a", 60, 40, 55, 70);

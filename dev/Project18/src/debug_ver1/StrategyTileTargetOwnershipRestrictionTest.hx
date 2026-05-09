@@ -33,9 +33,9 @@ class StrategyTileTargetOwnershipRestrictionTest {
     var idA:MonarchId = "m-a";
     var idB:MonarchId = "m-b";
     match.createMonarch(idA, 0, 0, 200, 50);
-    match.createPlayer(idA, idA, false);
+    match.linkPlayerToMonarch(idA, match.createPlayer(idA, false));
     match.createMonarch(idB, 1, 0, 200, 50);
-    match.createPlayer(idB, idB, false);
+    match.linkPlayerToMonarch(idB, match.createPlayer(idB, false));
     match.createGeneral("g-a", idA, 80, 80, 80, 80);
     match.createGeneral("g-b", idB, 80, 80, 80, 80);
 
@@ -93,9 +93,9 @@ class StrategyTileTargetOwnershipRestrictionTest {
       var match2:IGameMatch = game.createGameMatch(LevelKeys.EMPTY);
       match2.createBoard([match2.createTile(0, City), match2.createTile(1, City)]);
       match2.createMonarch(idA, 0, 0, 200, 50);
-      match2.createPlayer(idA, idA, false);
+      match2.linkPlayerToMonarch(idA, match2.createPlayer(idA, false));
       match2.createMonarch(idB, 1, 0, 200, 50);
-      match2.createPlayer(idB, idB, false);
+      match2.linkPlayerToMonarch(idB, match2.createPlayer(idB, false));
       match2.createGeneral("g-a", idA, 80, 80, 80, 80);
       match2.createGeneral("g-b", idB, 80, 80, 80, 80);
       match2.forceSetCityOwner(0, idA);

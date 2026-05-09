@@ -29,10 +29,10 @@ class PostMoveTileTargetRestrictionTest {
     var idA:MonarchId = "m-a";
     var idB:MonarchId = "m-b";
     match.createMonarch(idA, 0, 0, 0, 0);
-    match.createPlayer(idA, idA, false);
+    match.linkPlayerToMonarch(idA, match.createPlayer(idA, false));
     match.createGeneral("g-a", idA, 50, 50, 50, 50);
     match.createMonarch(idB, 1, 0, 0, 0);
-    match.createPlayer(idB, idB, false);
+    match.linkPlayerToMonarch(idB, match.createPlayer(idB, false));
     match.createGeneral("g-b", idB, 10, 10, 10, 10);
 
     var actorA:IPlayer = match.playerForMonarch(idA);

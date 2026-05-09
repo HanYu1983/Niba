@@ -95,10 +95,10 @@ class AiFourPlayersToTerminationTest {
     match.createMonarch("m-b", 1, 3, 800, 400);
     match.createMonarch("m-c", 2, 6, 800, 400);
     match.createMonarch("m-d", 3, 9, 800, 400);
-    match.createPlayer("m-a", "m-a", true);
-    match.createPlayer("m-b", "m-b", true);
-    match.createPlayer("m-c", "m-c", true);
-    match.createPlayer("m-d", "m-d", true);
+    match.linkPlayerToMonarch("m-a", match.createPlayer("m-a", true));
+    match.linkPlayerToMonarch("m-b", match.createPlayer("m-b", true));
+    match.linkPlayerToMonarch("m-c", match.createPlayer("m-c", true));
+    match.linkPlayerToMonarch("m-d", match.createPlayer("m-d", true));
 
     // 給測試一些計策（讓 AI 也會遇到策略分支/暫存）
     match.createJiCe("jice_dissension", "m-a"); // 指定玩家（PreMove）

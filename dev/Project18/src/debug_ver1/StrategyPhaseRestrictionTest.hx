@@ -28,7 +28,7 @@ class StrategyPhaseRestrictionTest {
 
     var idA:MonarchId = "m-a";
     match.createMonarch(idA, 0, 0, 200, 50);
-    match.createPlayer(idA, idA, false);
+    match.linkPlayerToMonarch(idA, match.createPlayer(idA, false));
     match.createGeneral("g-a", idA, 80, 80, 80, 80);
     match.createJiCe(DissensionJiCe.REGISTRY_KEY, idA); // PreMove only
     match.createJiCe(FireJiCe.REGISTRY_KEY, idA); // Pre+Post

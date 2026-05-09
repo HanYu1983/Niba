@@ -32,7 +32,7 @@ class FriendlyOwnedCityDispatchMenuTest {
     match.createBoard(tiles);
 
     match.createMonarch("m-own", 0, START_PAWN, 80, 40);
-    match.createPlayer("m-own", "m-own", false);
+    match.linkPlayerToMonarch("m-own", match.createPlayer("m-own", false));
     match.forceSetCityOwner(CITY_IDX, "m-own");
     match.forcePutCityStores(CITY_IDX, 25, 15);
     match.forcePutCityStoredGold(CITY_IDX, 12);

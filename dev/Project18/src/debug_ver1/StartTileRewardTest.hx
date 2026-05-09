@@ -25,7 +25,7 @@ class StartTileRewardTest {
 
     var idA:MonarchId = "m-a";
     match.createMonarch(idA, 0, 0, 0, 0);
-    match.createPlayer(idA, idA, false);
+    match.linkPlayerToMonarch(idA, match.createPlayer(idA, false));
     var actor:IPlayer = match.playerForMonarch(idA);
     var ruler = cast(match.activeMonarch(), Monarch);
     var g0 = ruler.gold();

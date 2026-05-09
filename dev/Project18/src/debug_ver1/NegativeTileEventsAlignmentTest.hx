@@ -32,7 +32,7 @@ class NegativeTileEventsAlignmentTest {
     ]);
     var idA:MonarchId = "m-a";
     match.createMonarch(idA, 0, 0, 0, 0);
-    match.createPlayer(idA, idA, false);
+    match.linkPlayerToMonarch(idA, match.createPlayer(idA, false));
     match.createGeneral("g-a", idA, 10, 10, 10, 10);
     match.createGeneral("g-b", idA, 10, 10, 10, 10);
     var actor:IPlayer = match.playerForMonarch(idA);

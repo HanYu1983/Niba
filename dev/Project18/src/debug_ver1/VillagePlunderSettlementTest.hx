@@ -33,7 +33,7 @@ class VillagePlunderSettlementTest {
 
     var idA:MonarchId = "m-a";
     match.createMonarch(idA, 0, 0, 0, 0);
-    match.createPlayer(idA, idA, false);
+    match.linkPlayerToMonarch(idA, match.createPlayer(idA, false));
     // 高武力提高成功率，但不保證
     match.createGeneral("g-a", idA, 10, 100, 10, 10);
     var actor:IPlayer = match.playerForMonarch(idA);

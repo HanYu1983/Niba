@@ -37,9 +37,9 @@ class TwoPlayerJiCeStagingMoveConfirmTest {
     match.createBoard(tiles);
 
     match.createMonarch("m-atk", 0, 0, 500, 80);
-    match.createPlayer("m-atk", "m-atk", false);
+    match.linkPlayerToMonarch("m-atk", match.createPlayer("m-atk", false));
     match.createMonarch("m-def", 1, 0, 100, 200);
-    match.createPlayer("m-def", "m-def", false);
+    match.linkPlayerToMonarch("m-def", match.createPlayer("m-def", false));
     match.createGeneral("g-one", "m-atk", 1, 40, 1, 1);
 
     var atkId:MonarchId = "m-atk";

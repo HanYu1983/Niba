@@ -39,7 +39,7 @@ class FriendlyCityDevelopRestMenuFlowTest {
 
     var idA:MonarchId = "m-a";
     match.createMonarch(idA, 0, 0, 500, 100);
-    match.createPlayer(idA, idA, false);
+    match.linkPlayerToMonarch(idA, match.createPlayer(idA, false));
     match.createGeneral("g-a-1", idA, 40, 40, 40, 40);
     var actor:IPlayer = match.playerForMonarch(idA);
 

@@ -36,9 +36,9 @@ class HostileCityConfrontMenuTest {
     var atkId:MonarchId = "m-atk";
     var defId:MonarchId = "m-def";
     match.createMonarch(atkId, 0, START_PAWN, 100, 50);
-    match.createPlayer(atkId, atkId, false);
+    match.linkPlayerToMonarch(atkId, match.createPlayer(atkId, false));
     match.createMonarch(defId, 1, 0, 100, 50);
-    match.createPlayer(defId, defId, false);
+    match.linkPlayerToMonarch(defId, match.createPlayer(defId, false));
     match.createGeneral("g-atk", atkId, 5, 8, 2, 2);
     match.createGeneral("g-def", defId, 4, 7, 3, 3);
 

@@ -7,7 +7,7 @@ import game.GameIds;
  * 四名玩家各對應一枚君主；本介面承載輸入綁定、人類可讀名等 UI 側關切，不取代 IMonarch 的狀態權威。
  */
 interface IPlayer {
-    /** 與君主主鍵一致，用於向 IGameMatch 查狀態。 */
+    /** 與君主主鍵一致；尚未經 IGameMatch.linkPlayerToMonarch 綁定時可為空字串。 */
     function monarchId():MonarchId;
 
     /**

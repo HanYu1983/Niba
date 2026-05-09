@@ -27,11 +27,11 @@ class JiCePreviewRowsTest {
     var idA:MonarchId = "m-a";
     var idB:MonarchId = "m-b";
     match.createMonarch(idA, 0, 0, 0, 0);
-    match.createPlayer(idA, idA, false);
+    match.linkPlayerToMonarch(idA, match.createPlayer(idA, false));
     match.createGeneral("g-a-1", idA, 60, 60, 60, 60);
     match.createGeneral("g-a-2", idA, 30, 30, 30, 30);
     match.createMonarch(idB, 1, 0, 0, 0);
-    match.createPlayer(idB, idB, false);
+    match.linkPlayerToMonarch(idB, match.createPlayer(idB, false));
     match.createGeneral("g-b-1", idB, 10, 10, 10, 10);
 
     var actor:IPlayer = match.playerForMonarch(idA);

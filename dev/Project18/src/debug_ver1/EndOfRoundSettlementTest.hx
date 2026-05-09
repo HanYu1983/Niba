@@ -33,7 +33,7 @@ class EndOfRoundSettlementTest {
 
     var idA:MonarchId = "m-a";
     match.createMonarch(idA, 0, 3, 0, 0);
-    match.createPlayer(idA, idA, false);
+    match.linkPlayerToMonarch(idA, match.createPlayer(idA, false));
     match.createGeneral("g-a", idA, 1, 1, 1, 1);
     var actor:IPlayer = match.playerForMonarch(idA);
 

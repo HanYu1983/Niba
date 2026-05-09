@@ -866,11 +866,34 @@ class GameMatchCore implements IGameMatch {
     return _seatPlayer.get(monarchId);
   }
 
-  public function createPlayer(monarchId:MonarchId, displayName:String, ?isAi:Bool):IPlayer {
+  public function createPlayer(displayName:String, ?isAi:Bool):IPlayer {
+    return new Player(displayName, isAi == true);
+  }
+
+  public function linkPlayerToMonarch(monarchId:MonarchId, player:IPlayer):Void {
     monarchWithId(monarchId);
-    var p = new Player(monarchId, displayName, isAi == true);
-    _seatPlayer.set(monarchId, p);
-    return p;
+    var pp = Std.downcast(player, Player);
+    if (pp == null)
+      throw "GameMatchCore: linkPlayerToMonarch requires impl_ver1.model.Player";
+
+    var rmSeats:Array<MonarchId> = [];
+    for (mid => seated in _seatPlayer)
+      if (seated == pp)
+        rmSeats.push(mid);
+    for (mid in rmSeats)
+      _seatPlayer.remove(mid);
+    pp.clearSeatBinding();
+
+    if (_seatPlayer.exists(monarchId)) {
+      var prev = _seatPlayer.get(monarchId);
+      if (prev != pp) {
+        prev.clearSeatBinding();
+        _seatPlayer.remove(monarchId);
+      }
+    }
+
+    pp.bindSeat(monarchId);
+    _seatPlayer.set(monarchId, pp);
   }
 
   public function createPlayerMenuEntry(kind:PlayerMenuKind, caption:String, enabled:Bool, ?decisionToken:String, ?clientConfirm:MenuClientConfirm):IPlayerMenuEntry

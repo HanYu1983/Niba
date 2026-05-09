@@ -214,10 +214,16 @@ interface IGameMatch extends IGameMatchGetter {
     function createMonarch(id:MonarchId, seat:Int, pawnIndex:TileIndex, ?troops:Int, ?grain:Int):IMonarch;
 
     /**
-     * 為已登錄之君主建立／綁定 {@link IPlayer}（席位操作者語意）；{@link IPlayer#isAi} 由 {@code isAi} 決定。
-     * 重複呼叫同一 {@code monarchId} 時以後呼叫覆寫先前綁定。
+     * 建立操作者（尚未綁定君主）；須再呼叫 {@link #linkPlayerToMonarch}。
+     * ver1 實作為 {@link impl_ver1.model.Player}。
      */
-    function createPlayer(monarchId:MonarchId, displayName:String, ?isAi:Bool):IPlayer;
+    function createPlayer(displayName:String, ?isAi:Bool):IPlayer;
+
+    /**
+     * 將 {@code player} 綁定為 {@code monarchId} 席上操作者（接手／換手可再次呼叫替換）。
+     * 同一實例改綁他君時會先自原席位卸下；該君席上原有操作者會解除綁定。
+     */
+    function linkPlayerToMonarch(monarchId:MonarchId, player:IPlayer):Void;
 
     /** 單列選單條目；通常由 createPlayerMenu 內部組裝，亦允許模組化注入。 */
     function createPlayerMenuEntry(kind:PlayerMenuKind, caption:String, enabled:Bool, ?decisionToken:String, ?clientConfirm:MenuClientConfirm):IPlayerMenuEntry;

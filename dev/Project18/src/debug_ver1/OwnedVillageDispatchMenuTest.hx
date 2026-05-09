@@ -34,7 +34,7 @@ class OwnedVillageDispatchMenuTest {
 
     var idA:MonarchId = "m-a";
     match.createMonarch(idA, 0, START_PAWN, 80, 40);
-    match.createPlayer(idA, idA, false);
+    match.linkPlayerToMonarch(idA, match.createPlayer(idA, false));
     match.createGeneral("g-a", idA, 10, 10, 10, 10);
     var actor:IPlayer = match.playerForMonarch(idA);
     var ruler = cast(match.monarchs()[0], Monarch);

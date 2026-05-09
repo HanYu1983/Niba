@@ -30,7 +30,7 @@ class GrainShortageTroopDesertionTest {
     var idA:MonarchId = "m-a";
     // troops=1000, grain=7（不足）
     match.createMonarch(idA, 0, 0, 1000, 7);
-    match.createPlayer(idA, idA, false);
+    match.linkPlayerToMonarch(idA, match.createPlayer(idA, false));
     match.createGeneral("g-a", idA, 10, 10, 10, 10);
     var actor:IPlayer = match.playerForMonarch(idA);
     var mon = cast(match.activeMonarch(), Monarch);

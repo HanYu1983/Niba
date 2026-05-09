@@ -26,10 +26,10 @@ class TerminationConquestVictoryTest {
     var a:MonarchId = "m-a";
     var b:MonarchId = "m-b";
     match.createMonarch(a, 0, 0, 0, 0);
-    match.createPlayer(a, a, false);
+    match.linkPlayerToMonarch(a, match.createPlayer(a, false));
     match.createGeneral("g-a", a, 1, 1, 1, 1);
     match.createMonarch(b, 1, 0, 0, 0);
-    match.createPlayer(b, b, false);
+    match.linkPlayerToMonarch(b, match.createPlayer(b, false));
     match.createGeneral("g-b", b, 1, 1, 1, 1);
 
     // A 有兵，B 無兵（含領地儲備也為 0）

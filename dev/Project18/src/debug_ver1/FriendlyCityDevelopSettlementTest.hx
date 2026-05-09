@@ -31,7 +31,7 @@ class FriendlyCityDevelopSettlementTest {
 
     var idA:MonarchId = "m-a";
     match.createMonarch(idA, 0, 0, 0, 0);
-    match.createPlayer(idA, idA, false);
+    match.linkPlayerToMonarch(idA, match.createPlayer(idA, false));
     // 政治拉滿，提高成功率（但不保證）
     match.createGeneral("g-a", idA, 10, 10, 10, 100);
     var actor:IPlayer = match.playerForMonarch(idA);

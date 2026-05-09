@@ -32,7 +32,7 @@ class TenEventTilesMenuFlowTest {
     match.createBoard(tiles);
 
     match.createMonarch("m-solo", 0, 0, 100, 50);
-    match.createPlayer("m-solo", "m-solo", false);
+    match.linkPlayerToMonarch("m-solo", match.createPlayer("m-solo", false));
 
     var evt = new RingLootForkTileEvent(match);
     for (i in 0...RING_LEN)

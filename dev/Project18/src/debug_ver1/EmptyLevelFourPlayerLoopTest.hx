@@ -33,7 +33,7 @@ class EmptyLevelFourPlayerLoopTest {
     var monarchIds:Array<MonarchId> = ["m0", "m1", "m2", "m3"];
     for (s in 0...4) {
       match.createMonarch(monarchIds[s], s, 0);
-      match.createPlayer(monarchIds[s], monarchIds[s], false);
+      match.linkPlayerToMonarch(monarchIds[s], match.createPlayer(monarchIds[s], false));
     }
 
     var players = new Map<MonarchId, IPlayer>();

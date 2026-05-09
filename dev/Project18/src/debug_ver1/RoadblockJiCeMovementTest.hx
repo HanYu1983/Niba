@@ -37,9 +37,9 @@ class RoadblockJiCeMovementTest {
     var idA:MonarchId = "m-a";
     var idB:MonarchId = "m-b";
     match.createMonarch(idA, 0, 0);
-    match.createPlayer(idA, idA, false);
+    match.linkPlayerToMonarch(idA, match.createPlayer(idA, false));
     match.createMonarch(idB, 1, 5);
-    match.createPlayer(idB, idB, false);
+    match.linkPlayerToMonarch(idB, match.createPlayer(idB, false));
     match.createGeneral("g-a", idA, 1, 1, 1, 1);
 
     var roadblock:IJiCe = match.createJiCe(RoadblockJiCe.REGISTRY_KEY, idB);
@@ -99,9 +99,9 @@ class RoadblockJiCeMovementTest {
     var idB:MonarchId = "m-b";
     var idA:MonarchId = "m-a";
     match.createMonarch(idB, 0, 5);
-    match.createPlayer(idB, idB, false);
+    match.linkPlayerToMonarch(idB, match.createPlayer(idB, false));
     match.createMonarch(idA, 1, 0);
-    match.createPlayer(idA, idA, false);
+    match.linkPlayerToMonarch(idA, match.createPlayer(idA, false));
     var actorB = match.playerForMonarch(idB);
 
     if (match.activeMonarch().id() != idB)
