@@ -175,7 +175,7 @@ class HtmlInfoPanelView {
       for (g in roster) {
         var r = Browser.document.createTableRowElement();
         var gid = g.id();
-        r.appendChild(td(gid, true));
+        r.appendChild(td(HistoricalPeople.generalName(gid), true));
         r.appendChild(td(Std.string(g.stat(Command)), false));
         r.appendChild(td(Std.string(g.stat(Might)), false));
         r.appendChild(td(Std.string(g.stat(Wit)), false));
