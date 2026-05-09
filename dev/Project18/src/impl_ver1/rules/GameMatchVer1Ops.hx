@@ -286,7 +286,9 @@ class GameMatchVer1Ops {
   }
 
   /** 進駐取消：無資源效果（預留未來紀錄／統計）。 */
-  public static function onEmptyCityOccupyAbort(m:GameMatchCore):Void {}
+  public static function onEmptyCityOccupyAbort(m:GameMatchCore, tileIndex:TileIndex, rulerId:MonarchId):Void {
+    // ver1：取消不產生數值效果；保留為擴充點（統計/音效/事件）
+  }
 
   /**
    * 我方城池調度：城池兵力／糧食目標與君主池同步（差額進出）。
@@ -322,16 +324,46 @@ class GameMatchVer1Ops {
   }
 
   /** 結束拜訪城池（預留事件／音效鉤子）。 */
-  public static function onFriendlyCityVisitEnd(m:GameMatchCore):Void {}
+  public static function onFriendlyCityVisitEnd(m:GameMatchCore, tileIndex:TileIndex, rulerId:MonarchId):Void {
+    // ver1：結束拜訪不產生數值效果；保留為擴充點（音效/事件/成就）
+  }
 
   /** 攻方敵城選項已確認（過路費試算、談判旗標等可在此擴充）。 */
-  public static function onHostileCityAttackerConfirmed(m:GameMatchCore, actor:IPlayer, menuNode:IPlayerMenuNode):Void {}
+  public static function onHostileCityAttackerConfirmed(
+    m:GameMatchCore,
+    tileIndex:TileIndex,
+    attackerId:MonarchId,
+    defenderId:MonarchId,
+    choiceToken:String,
+    attackerGeneralId:Null<GeneralId>
+  ):Void {
+    // ver1：目前對峙流程仍由 core 狀態機推進（AttackerChoosing -> DefenderResponse）。
+    // 這裡保留作擴充點（例如：先行試算、記錄戰報、音效等），不改變流程階段。
+  }
 
   /** 守方非單挑確認後鉤子（士氣／AI 反應等）。 */
-  public static function onHostileCityDefenderAck(m:GameMatchCore, actor:IPlayer, menuNode:IPlayerMenuNode):Void {}
+  public static function onHostileCityDefenderAck(
+    m:GameMatchCore,
+    tileIndex:TileIndex,
+    attackerId:MonarchId,
+    defenderId:MonarchId,
+    choiceToken:String
+  ):Void {
+    // ver1：主要由 core 進行 hostileCityPublishSettlementPreview；此 hook 保留擴充點
+  }
 
   /** 守方單挑應戰武將確定後鉤子（決鬥預覽数值）。 */
-  public static function onHostileCityDefenderDuelPickConfirmed(m:GameMatchCore, actor:IPlayer, menuNode:IPlayerMenuNode):Void {}
+  public static function onHostileCityDefenderDuelPickConfirmed(
+    m:GameMatchCore,
+    tileIndex:TileIndex,
+    attackerId:MonarchId,
+    defenderId:MonarchId,
+    attackerGeneralId:GeneralId,
+    defenderGeneralId:GeneralId
+  ):Void {
+    // ver1：決鬥結算仍由 applyHostileCitySettlementAck 套用（目前尚未實作 duel）。
+    // 此處保留做「預覽數值」或「AI 反應」等擴充。
+  }
 
   /** 攻方確認結算後套用實際戰果（扣糧、易主、駐軍損耗等）；呼叫時仍可讀 pending 暫存。 */
   public static function applyHostileCitySettlementAck(m:GameMatchCore, actor:IPlayer, menuNode:IPlayerMenuNode):Void {
@@ -343,8 +375,8 @@ class GameMatchVer1Ops {
     var tok = m.forceGetHostileCityAttackerChoiceToken();
     if (tok == null)
       return;
-    // ver1：先落地「消耗戰(搶奪)」與「攻城戰」兩條真結算線；其餘選項保留流程骨架。
-    if (tok != "siege" && tok != "attrition")
+    // ver1：目前落地「消耗戰(搶奪)」「攻城戰」「單挑」三條結算線；其餘選項保留流程骨架。
+    if (tok != "siege" && tok != "attrition" && tok != "duel")
       return;
 
     var atkId = m.forceGetHostileCityAttackerId();
@@ -410,6 +442,58 @@ class GameMatchVer1Ops {
     var atkRand = 0.85 + impl_ver1.util.Deterministic.hash01(seed + "|atk") * 0.30;
     var defRand = 0.85 + impl_ver1.util.Deterministic.hash01(seed + "|def") * 0.30;
     var win = (atkBase * atkRand) > (defBase * defRand);
+
+    // === C) 單挑：以雙方武將戰力決勝（不改變所有權；最小戰果：雙方武將體力消耗＋輸方兵力損失）===
+    if (tok == "duel") {
+      // 取守方武將（單挑應戰者）
+      var dgid = m._hostileCityDefenderGeneralId;
+      if (dgid == null)
+        return;
+      var gDef:Null<General> = null;
+      // defenderId roster 內找（已在 core 斷言為駐守武將）
+      var defMon = cast(m.monarchById(defId), Monarch);
+      for (gg in defMon.roster())
+        if (gg.id() == dgid) {
+          gDef = cast gg;
+          break;
+        }
+      if (gDef == null)
+        return;
+
+      // 單挑戰力：不吃城防、不吃士兵數；只看 (武力 + 統率*0.5) × staminaModifier × rand
+      var atkPow = ((gAtk.stat(Might) / 100.0) + (gAtk.stat(Command) / 100.0) * 0.5) * Balance.staminaModifier(gAtk.stamina()) * atkRand;
+      var defPow = ((gDef.stat(Might) / 100.0) + (gDef.stat(Command) / 100.0) * 0.5) * Balance.staminaModifier(gDef.stamina()) * defRand;
+      var atkWin = atkPow > defPow;
+
+      // 武將體力消耗：雙方 -10
+      gAtk.setStamina(Balance.clampInt(gAtk.stamina() - 10, 0, 100));
+      gDef.setStamina(Balance.clampInt(gDef.stamina() - 10, 0, 100));
+
+      if (atkWin) {
+        // 守方城池兵力損失：20%（上限 200）
+        var loss = Std.int(Math.floor(defCityTroops * 0.20));
+        if (loss > 200)
+          loss = 200;
+        if (loss < 0)
+          loss = 0;
+        if (loss > defCityTroops)
+          loss = defCityTroops;
+        if (loss > 0)
+          m.forcePutCityStores(idx, defCityTroops - loss, m.forceGetCityStoredGrain(idx));
+      } else {
+        // 攻方兵力損失：20%（上限 150，以投入上限 500 設計）
+        var loss = Std.int(Math.floor(commitAtk * 0.20));
+        if (loss > 150)
+          loss = 150;
+        if (loss < 0)
+          loss = 0;
+        if (loss > atkMon.troops())
+          loss = atkMon.troops();
+        if (loss > 0)
+          atkMon.reduceTroops(loss);
+      }
+      return;
+    }
 
     // === A) 消耗戰（搶奪）：docs/數值算法.md §2（500 vs 500，不改變所有權）===
     if (tok == "attrition") {

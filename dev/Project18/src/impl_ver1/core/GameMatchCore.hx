@@ -1421,7 +1421,14 @@ class GameMatchCore implements IGameMatch {
         throw 'GameMatchCore: 未知敵城攻方選項 $tok';
     }
     hostileCityRecordAttackerChoice(tok, picks);
-    GameMatchVer1Ops.onHostileCityAttackerConfirmed(this, actor, menuNode);
+    GameMatchVer1Ops.onHostileCityAttackerConfirmed(
+      this,
+      _pendingHostileCityTileIndex != null ? _pendingHostileCityTileIndex : -1,
+      _hostileCityAttackerId,
+      _hostileCityDefenderId,
+      tok,
+      picks.length > 0 ? picks[0] : null
+    );
     syncActiveSliceAfterMenuLeaf(HostileCityAttackerPick);
   }
 
@@ -1431,7 +1438,13 @@ class GameMatchCore implements IGameMatch {
     if (_hostileCityAwaitingDuel)
       throw "GameMatchCore: 單挑時不可使用守方簡認確認";
     hostileCityPublishSettlementPreview();
-    GameMatchVer1Ops.onHostileCityDefenderAck(this, actor, menuNode);
+    GameMatchVer1Ops.onHostileCityDefenderAck(
+      this,
+      _pendingHostileCityTileIndex != null ? _pendingHostileCityTileIndex : -1,
+      _hostileCityAttackerId,
+      _hostileCityDefenderId,
+      _hostileCityAttackerChoiceToken
+    );
     syncActiveSliceAfterMenuLeaf(HostileCityDefenderAck);
   }
 
@@ -1456,7 +1469,16 @@ class GameMatchCore implements IGameMatch {
       throw new GameError("守方單挑必須選擇該城池的駐守武將。", "選擇不合法", "hostile-city/defender-not-garrisoned");
     _hostileCityDefenderGeneralId = picks[0];
     hostileCityPublishSettlementPreview();
-    GameMatchVer1Ops.onHostileCityDefenderDuelPickConfirmed(this, actor, menuNode);
+    var atkG = _hostileCityAttackerGeneralIds.length > 0 ? _hostileCityAttackerGeneralIds[0] : null;
+    if (atkG != null)
+      GameMatchVer1Ops.onHostileCityDefenderDuelPickConfirmed(
+        this,
+        _pendingHostileCityTileIndex != null ? _pendingHostileCityTileIndex : -1,
+        _hostileCityAttackerId,
+        _hostileCityDefenderId,
+        atkG,
+        picks[0]
+      );
     syncActiveSliceAfterMenuLeaf(HostileCityDefenderPickSubmit);
   }
 
@@ -2455,7 +2477,7 @@ class GameMatchCore implements IGameMatch {
   function handleEmptyCityOccupyAbort(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
     if (_pendingEmptyCityTileIndex == null)
       throw "GameMatchCore: EmptyCityOccupyAbort 但無 pending 空城";
-    GameMatchVer1Ops.onEmptyCityOccupyAbort(this);
+    GameMatchVer1Ops.onEmptyCityOccupyAbort(this, _pendingEmptyCityTileIndex, actor.monarchId());
     pushOutboxAnim(
       actor.monarchId(),
       FlowAck(FlowAckKind.EmptyCityOccupyAborted),
@@ -2499,7 +2521,7 @@ class GameMatchCore implements IGameMatch {
   function handleFriendlyCityVisitEnd(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
     if (_pendingFriendlyCityTileIndex == null)
       throw "GameMatchCore: FriendlyCityVisitEnd 但無 pending 我方城池拜訪";
-    GameMatchVer1Ops.onFriendlyCityVisitEnd(this);
+    GameMatchVer1Ops.onFriendlyCityVisitEnd(this, _pendingFriendlyCityTileIndex, actor.monarchId());
     pushOutboxAnim(
       actor.monarchId(),
       FlowAck(FlowAckKind.FriendlyCityVisitEnded),
