@@ -76,12 +76,23 @@ class HtmlActiveMenuView {
       }
     }
 
-    // AI 席位：每次取得並繪製選單後自動走一步（延後一個 macrotask，避免與 publishViewModel 訂閱鏈同步重入）
-    if (actor.isAi()) {
+    // AI：若「責任者」為 AI，且 outbox 清空，則自動走一步
+    // - 責任者由 IPlayerMenuEntry.responsibleMonarchId 提供（多方互動時可精準判斷）
+    // - 仍延後一個 macrotask，避免與 publishViewModel 訂閱鏈同步重入
+    var enabledNow = collectEnabledEntries(menu.rootNodes());
+    var responsible:Null<MonarchId> = null;
+    for (x in enabledNow) {
+      var r = x.entry.responsibleMonarchId();
+      if (r == null)
+        r = a.id();
+      responsible = r;
+      break;
+    }
+    if (responsible != null && vm.isAiMonarch(responsible)) {
       switch vm.getTerminationReason() {
         case NotEnded:
           // 方案 1：只有 outbox 清空時才允許 AI 繼續走，避免動畫/訊息瞬間被換手淹沒
-          var xs = vm.pendingOutbox(a.id());
+          var xs = vm.pendingOutbox(responsible);
           if (xs == null || xs.length == 0)
             Browser.window.setTimeout(function() EventCenter.publishEvent(UiEvent.AiStep), 0);
         case Draw | Victory(_):

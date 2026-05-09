@@ -828,8 +828,27 @@ class GameMatchCore implements IGameMatch {
     _seatPlayer.set(monarchId, pp);
   }
 
-  public function createPlayerMenuEntry(kind:PlayerMenuKind, caption:String, enabled:Bool, ?decisionToken:String, ?clientConfirm:MenuClientConfirm):IPlayerMenuEntry
-    return new PlayerMenuEntry(kind, caption, enabled, decisionToken, clientConfirm);
+  public function createPlayerMenuEntry(
+    kind:PlayerMenuKind,
+    caption:String,
+    enabled:Bool,
+    ?decisionToken:String,
+    ?clientConfirm:MenuClientConfirm
+  ):IPlayerMenuEntry {
+    // 預設責任者：activeMonarch（與 createPlayerMenu(actor) 的 actor 一致）
+    var resp:Null<MonarchId> = activeMonarch() != null ? activeMonarch().id() : null;
+
+    // 特例：敵城對峙為雙方互動，責任者依 entry.kind 決定（避免 UI 只能靠猜 phase）
+    switch kind {
+      case HostileCityAttackerPick, HostileCitySettlementAck:
+        resp = _hostileCityAttackerId;
+      case HostileCityDefenderAck, HostileCityDefenderPickSubmit:
+        resp = _hostileCityDefenderId;
+      default:
+    }
+
+    return new PlayerMenuEntry(kind, caption, enabled, resp, decisionToken, clientConfirm);
+  }
 
   public function createPlayerMenuNode(caption:String, leaf:Null<IPlayerMenuEntry>, children:Array<IPlayerMenuNode>, ?formWidgets:Array<MenuFormWidget>):IPlayerMenuNode
     return new PlayerMenuNode(caption, leaf, children, formWidgets);
