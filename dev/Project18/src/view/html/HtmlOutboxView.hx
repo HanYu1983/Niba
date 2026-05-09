@@ -118,9 +118,10 @@ class HtmlOutboxView {
 
         Browser.window.setTimeout(function() {
           vm.setPresentationSnapshot(null);
-          EventCenter.publishViewModel(vm);
-
           vm.ackOutbox(mid, head.id());
+          // 重要：動畫是自動 ack，必須在 ack 後 publish VM，
+          // 才能讓 HtmlActiveMenuView 重新 render 並在 outbox 清空時排程 AiStep（方案 1）。
+          EventCenter.publishViewModel(vm);
           EventCenter.publishEvent(UiEvent.OutboxRefresh);
           playing = false;
           tryAdvance();

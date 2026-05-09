@@ -52,7 +52,10 @@ class HtmlActiveMenuView {
     if (actor.isAi()) {
       switch vm.getTerminationReason() {
         case NotEnded:
-          Browser.window.setTimeout(function() EventCenter.publishEvent(UiEvent.AiStep), 0);
+          // 方案 1：只有 outbox 清空時才允許 AI 繼續走，避免動畫/訊息瞬間被換手淹沒
+          var xs = vm.pendingOutbox(a.id());
+          if (xs == null || xs.length == 0)
+            Browser.window.setTimeout(function() EventCenter.publishEvent(UiEvent.AiStep), 0);
         case Draw | Victory(_):
       }
     }
