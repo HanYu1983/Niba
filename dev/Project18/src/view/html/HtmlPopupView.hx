@@ -12,9 +12,12 @@ import view.IViewModel;
 import view.UiEvent;
 
 /**
+ * （不使用）Popup 元件 — 已由 {@link HtmlOutboxView} 統一 queue；{@link HtmlRouterView} 未掛載本類別。
+ *
  * Popup 元件：接收 UiEvent.PopupRefresh 後讀取 pendingPopups 並顯示第一筆。
  * 關閉按鈕會送出 UiEvent.PopupClose(popupId)，由 ViewModel ack 後再觸發下一筆。
  */
+@:deprecated("不使用：popup 已由 HtmlOutboxView 統一處理，HtmlRouterView 未建立此類別。")
 class HtmlPopupView {
   final host:Element;
   final root:DivElement;

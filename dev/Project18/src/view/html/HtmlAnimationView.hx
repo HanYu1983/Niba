@@ -12,11 +12,14 @@ import view.IViewModel;
 import view.UiEvent;
 
 /**
+ * （不使用）動畫元件 — 已由 {@link HtmlOutboxView} 統一 queue；{@link HtmlRouterView} 未掛載本類別。
+ *
  * 動畫元件（最小版）：
  * - 讀取 pendingAnimations(activeMonarch)
  * - 以非阻塞 overlay 呈現第一筆訊息（文字版）
  * - 自動 ack 後播放下一筆
  */
+@:deprecated("不使用：動畫已由 HtmlOutboxView 統一處理，HtmlRouterView 未建立此類別。")
 class HtmlAnimationView {
   final host:Element;
   final root:DivElement;
