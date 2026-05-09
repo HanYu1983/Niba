@@ -21,18 +21,20 @@ class DataLoader {
             this.showLoading(true);
             
             // 並行加載所有JSON文件
-            const [worldData, charactersData, itemsData, novelsConfig, placesData] = await Promise.all([
+            const [worldData, characterIndex, itemsData, novelsConfig, placesData] = await Promise.all([
                 this.loadJSON('data/world.json'),
-                this.loadJSON('data/characters.json'),
+                this.loadJSON('data/characters/character-index.json'),
                 this.loadJSON('data/items.json'),
                 this.loadJSON('data/novels.json'),
                 this.loadJSON('data/places.json')
             ]);
 
             this.data.world = worldData;
-            this.data.characters = charactersData;
             this.data.items = itemsData;
             this.data.places = placesData;
+            
+            // 從 character-index.json 加載所有角色詳細資料
+            this.data.characters = await this.loadAllCharacters(characterIndex);
             
             // 加載小說章節MD內容
             this.data.novels = await this.loadNovelContents(novelsConfig);
@@ -48,6 +50,148 @@ class DataLoader {
         } finally {
             this.showLoading(false);
         }
+    }
+
+    /**
+     * 加載所有角色詳細資料
+     */
+    async loadAllCharacters(characterIndex) {
+        const characterPromises = characterIndex.characters.map(async (charMeta) => {
+            try {
+                const charData = await this.loadJSON(`data/characters/${charMeta.file}`);
+                return this.mapCharacterData(charMeta, charData);
+            } catch (error) {
+                console.warn(`無法加載角色: ${charMeta.file}`, error);
+                return this.mapCharacterData(charMeta, {});
+            }
+        });
+
+        return await Promise.all(characterPromises);
+    }
+
+    /**
+     * 將新角色數據結構映射為舊格式（保持兼容性）
+     */
+    mapCharacterData(meta, data) {
+        // 從 origin 提取 區域信息
+        const region = this.extractRegion(data.origin, meta.id);
+        
+        // 構建描述文本
+        const description = this.buildDescription(data, meta);
+        
+        // 構建背景故事
+        const background = this.buildBackground(data);
+        
+        // 構建能力列表
+        const abilities = this.buildAbilities(data);
+
+        return {
+            id: `char_${meta.id}`,
+            name: data.name || meta.name,
+            title: (data.titles || []).join('、'),
+            region: region,
+            race: data.race || '人類',
+            occupation: (data.identities || []).join('、'),
+            image: `images/characters/${meta.id}.png`,
+            video: `videos/characters/${meta.id}.mp4`,
+            description: description,
+            background: background,
+            abilities: abilities,
+            // 保留原始數據供詳細頁面使用
+            _raw: data,
+            _meta: meta
+        };
+    }
+
+    /**
+     * 從 origin 提取區域信息
+     */
+    extractRegion(origin, charId) {
+        if (!origin) {
+            // 默認區域映射
+            const defaults = {
+                'elena': '西方→東方',
+                'karl': '西方·中央王國',
+                'li-xuanji': '東方·蜀山劍派',
+                'li-yunfeng': '東方·蜀山劍派',
+                'lu-tianxing': '東方·蜀山劍派',
+                'merindis': '西方·奧術之塔',
+                'su-qingyue': '東方·蜀山劍派',
+                'wang-qingfeng': '東方·蜀山劍派',
+                'zhang-wuya': '東方·蜀山劍派',
+                'zhao-wuji': '東方·蜀山劍派'
+            };
+            return defaults[charId] || '未知';
+        }
+        
+        if (origin.includes('蜀山') || origin.includes('青城')) {
+            return '東方·蜀山劍派';
+        } else if (origin.includes('奧術') || origin.includes('中央王國')) {
+            return '西方·奧術之塔';
+        } else if (origin.includes('精靈')) {
+            return '西方·精靈森林';
+        }
+        return origin;
+    }
+
+    /**
+     * 構建角色描述
+     */
+    buildDescription(data, meta) {
+        const parts = [];
+        
+        if (data.core_philosophy) {
+            parts.push(`「${data.core_philosophy}」`);
+        }
+        
+        if (data.current_realm) {
+            parts.push(`當前境界：${data.current_realm}`);
+        }
+        
+        if (data.personality && data.personality.length > 0) {
+            parts.push(`性格：${data.personality.join('、')}`);
+        }
+        
+        return parts.join('。') || `${data.name || meta.name}，${meta.role || '未知角色'}`;
+    }
+
+    /**
+     * 構建背景故事
+     */
+    buildBackground(data) {
+        if (!data.timeline || data.timeline.length === 0) {
+            return '';
+        }
+        
+        return data.timeline.map(t => {
+            const year = t.year ? `OE ${t.year}年` : '';
+            return `${year} - ${t.event}：${t.description}`;
+        }).join('\n\n');
+    }
+
+    /**
+     * 構建能力列表
+     */
+    buildAbilities(data) {
+        const abilities = [];
+        
+        // 從魔法天賦構建
+        if (data.magic_talents && data.magic_talents.length > 0) {
+            data.magic_talents.forEach(talent => {
+                abilities.push(`天賦：${talent}`);
+            });
+        }
+        
+        // 從功法構建
+        if (data.techniques && data.techniques.length > 0) {
+            data.techniques.slice(0, 5).forEach(tech => {
+                const tier = tech.tier ? `（${tech.tier}）` : '';
+                const status = tech.status ? ` - ${tech.status}` : '';
+                abilities.push(`功法：${tech.name}${tier}${status}`);
+            });
+        }
+        
+        return abilities;
     }
 
     /**
