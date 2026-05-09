@@ -17,7 +17,6 @@ import game.IPlayerMenuNode;
 import game.IStagingAction;
 import game.ITile;
 import game.ITileEvent;
-import game.IPlayerCommand;
 import game.Balance;
 import game.IEquipment;
 import game.IOutboxMessage;
@@ -46,7 +45,6 @@ import game.AiDecision;
 import game.OutboxAudience;
 import game.OutboxPresentation;
 import game.OutboxPresentationMode;
-import impl_ver1.commands.Ver1MainCommands;
 import impl_ver1.flows.HostileCityPhase;
 import impl_ver1.jice.JiCeRegistry;
 import impl_ver1.model.Board;
@@ -1693,11 +1691,131 @@ class GameMatchCore implements IGameMatch {
       || _pendingFriendlyCityTileIndex != null
       || hostilePending;
     var actions:Array<IPlayerMenuNode> = [];
-    // 指令抽象：主指令由 command registry 產生（含計策列牌 children）。
-    for (cmd in Ver1MainCommands.build(this, actor)) {
-      var n = cmd.buildActionNode(actor);
-      if (n != null)
-        actions.push(n);
+
+    // --- 落地（pendingLanding）---
+    if (forceGetPendingLandingTile() != null) {
+      actions.push(createPlayerMenuNode("落地", createPlayerMenuEntry(LandingContinue, "繼續落地結算", true), []));
+    }
+
+    // --- 移動 ---
+    if (!isActivePlayerSliceComplete()) {
+      var moveBlocked =
+        pend != null
+        || stagingActive
+        || forceGetPendingLandingTile() != null
+        || _pendingEmptyCityTileIndex != null
+        || _pendingFriendlyCityTileIndex != null
+        || hostilePending
+        || _pendingVillageTileIndex != null
+        || _pendingResourceTileIndex != null
+        || _pendingGeneralTileIndex != null
+        || _pendingShopTileIndex != null;
+      actions.push(createPlayerMenuNode("移動", createPlayerMenuEntry(Move, "移動", !moveBlocked), []));
+    }
+
+    // --- 策略（移動前/移動後）：以所持計策列表生成 children ---
+    function buildStrategyNode(phase:StrategyPhase):Null<IPlayerMenuNode> {
+      if (phase == PreMove) {
+        if (!canUseStrategyPreMove())
+          return null;
+        if (forceGetPendingLandingTile() != null)
+          return null;
+      } else {
+        if (!canUseStrategyPostMove())
+          return null;
+        if (forceGetPendingLandingTile() == null)
+          return null;
+      }
+
+      var owned = availableJiCe(actor.monarchId());
+      var stagingActive = forceHasPendingStaging();
+      var hostilePending = forceGetPendingHostileCityTile() != null;
+      var pend = forceGetPendingTileEvent();
+
+      var jiEnabledBase = if (phase == PreMove)
+        (!stagingActive
+          && pend == null
+          && forceGetPendingLandingTile() == null
+          && forceGetPendingEmptyCityOccupyTile() == null
+          && forceGetPendingFriendlyCityVisitTile() == null
+          && !hostilePending
+          && forceGetPendingVillageTile() == null
+          && forceGetPendingResourceTile() == null
+          && forceGetPendingGeneralTile() == null
+          && forceGetPendingShopTile() == null)
+      else
+        (!stagingActive
+          && forceGetPendingVillageTile() == null
+          && forceGetPendingResourceTile() == null
+          && forceGetPendingGeneralTile() == null
+          && forceGetPendingShopTile() == null);
+
+      var jiChildren:Array<IPlayerMenuNode> = [];
+      var filtered:Array<IJiCe> = [];
+      var ruler = cast(activeMonarch(), Monarch);
+      var roster = ruler.roster();
+      function hasEligibleCaster(j:IJiCe):Bool {
+        if (!Balance.strategyRequiresCaster(j.registryKey()))
+          return true;
+        var req = Balance.requiredRankForStrategy(j.registryKey());
+        for (g in roster)
+          if (g != null && Balance.positionRankGte(g.positionRank(), req))
+            return true;
+        return false;
+      }
+      for (j in owned) {
+        var ok = false;
+        for (p in j.allowedPhases())
+          if (p == phase) {
+            ok = true;
+            break;
+          }
+        if (ok && hasEligibleCaster(j))
+          filtered.push(j);
+      }
+
+      if (filtered.length == 0) {
+        jiChildren.push(createPlayerMenuNode("(無所持計策)", createPlayerMenuEntry(JiCe, "（尚無所持計策）", false, null), []));
+      } else {
+        for (j in filtered) {
+          // decisionToken 仍需對應「原 owned 陣列索引」以便 applyMenuLeaf 取牌
+          var ownedIdx = -1;
+          for (k in 0...owned.length)
+            if (owned[k] == j) {
+              ownedIdx = k;
+              break;
+            }
+          if (ownedIdx < 0)
+            throw "GameMatchCore: strategy index mapping failed";
+          jiChildren.push(createPlayerMenuNode(j.designLabel(), createPlayerMenuEntry(JiCe, "打出：" + j.designLabel(), jiEnabledBase, Std.string(ownedIdx)), []));
+        }
+      }
+
+      return createPlayerMenuNode(phase == PreMove ? "策略（移動前）" : "策略（移動後）", null, jiChildren);
+    }
+
+    var pre = buildStrategyNode(PreMove);
+    if (pre != null)
+      actions.push(pre);
+    var post = buildStrategyNode(PostMove);
+    if (post != null)
+      actions.push(post);
+
+    // --- 結束（ConfirmDone）---
+    var allowConfirm =
+      isActivePlayerSliceComplete()
+      && forceGetPendingTileEvent() == null
+      && !forceHasPendingStaging()
+      && forceGetPendingLandingTile() == null
+      && forceGetPendingEmptyCityOccupyTile() == null
+      && forceGetPendingFriendlyCityVisitTile() == null
+      && forceGetPendingHostileCityTile() == null
+      && forceGetPendingVillageTile() == null
+      && forceGetPendingResourceTile() == null
+      && forceGetPendingGeneralTile() == null
+      && forceGetPendingShopTile() == null;
+    if (allowConfirm) {
+      actions.push(createPlayerMenuNode("結束", createPlayerMenuEntry(ConfirmDone, "結束本階段", true), []));
     }
 
     roots.push(createPlayerMenuNode("本回合", null, actions));
