@@ -163,7 +163,7 @@ class FriendlyCityDevelopStagingAction implements IStagingAction {
     }
 
     var title = ok ? "開發成功" : "開發失敗";
-    match.pushInfoPopup(
+    match.pushOutboxPlain(
       ruler.id(),
       title,
       game.PopupPayload.Plain(

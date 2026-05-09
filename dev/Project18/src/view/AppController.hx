@@ -248,7 +248,7 @@ class AppController {
 
     // 提示：讓玩家一進來就知道怎麼測
     var core = cast(match, GameMatchCore);
-    core.pushInfoPopup(
+    core.pushOutboxPlain(
       "m-a",
       "測試頁3：計策測試",
       game.PopupPayload.Plain(
@@ -326,7 +326,7 @@ class AppController {
       match.forceGrantMonarchGrain(m.id(), 5000);
 
     var core = cast(match, GameMatchCore);
-    core.pushInfoPopup(
+    core.pushOutboxPlain(
       "m-a",
       "測試頁4：AI 測試",
       game.PopupPayload.Plain(

@@ -126,7 +126,7 @@ interface IGameMatch extends IGameMatchGetter {
     // - 起點流程仍未完整對齊：
     //   - 文件要求「經過起點觸發聲望分段獎勵」與「領地資源成長」；目前尚未有明確的「經過起點」hook 與整局資源成長結算點（或僅零星實作）。
     // - 彈窗/日誌落地不足：
-    //   - 目前只有 `pushInfoPopup` outbox API；缺「日誌」資料結構與寫入 API（含 AI 通知、資源變化浮動提示的訊息源）。
+    //   - 目前只有 `pushOutboxPlain` outbox API；缺「日誌」資料結構與寫入 API（含 AI 通知、資源變化浮動提示的訊息源）。
 
     /**
      * 依資料鍵建立計策實例；{@code ownerMonarchId} 為持有／所屬君主（牌組歸屬），實作可據此校驗。
@@ -238,8 +238,8 @@ interface IGameMatch extends IGameMatchGetter {
     function applyMenuLeaf(actor:IPlayer, menuNode:IPlayerMenuNode):Void;
 
     /**
-     * docs/玩家指令.md §8：將結果／事件類訊息寫入該君主之彈窗 outbox（由 view 顯示並 ack）。
-     * {@code ctxKey} 供辨識來源；實際 popup id 仍含回合序與流水號。
+     * 將結果／事件類訊息入該君主之統一 outbox（阻塞型 Plain 內容；{@link IGameMatchGetter#pendingOutbox}／{@link IGameMatchGetter#ackOutbox}）。
+     * {@code ctxKey} 供辨識來源；訊息 id 含回合序與流水號。
      */
-    function pushInfoPopup(monarchId:MonarchId, title:String, payload:PopupPayload, ctxKey:String):Void;
+    function pushOutboxPlain(monarchId:MonarchId, title:String, payload:PopupPayload, ctxKey:String):Void;
 }

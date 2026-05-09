@@ -64,7 +64,7 @@ class GranaryFireAvoidableTileEvent implements ITileEvent implements IAvoidableT
       loss = 0;
     if (loss > 0)
       ruler.reduceGrain(loss);
-    match.pushInfoPopup(
+    match.pushOutboxPlain(
       actor.monarchId(),
       "事件：糧倉失火",
       PopupPayload.Plain('損失糧食：${loss}（倍率 ${mult}）'),

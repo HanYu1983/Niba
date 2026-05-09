@@ -179,7 +179,7 @@ class VillageDevelopStagingAction implements IStagingAction {
       };
       match.forceSetVillageLevel(idx, after);
     }
-    match.pushInfoPopup(
+    match.pushOutboxPlain(
       ruler.id(),
       ok ? "村落開發成功" : "村落開發失敗",
       game.PopupPayload.Plain(

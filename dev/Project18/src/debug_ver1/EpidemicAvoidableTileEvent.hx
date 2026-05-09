@@ -72,7 +72,7 @@ class EpidemicAvoidableTileEvent implements ITileEvent implements IAvoidableTile
     }
     if (troopLoss > 0)
       ruler.reduceTroops(troopLoss);
-    match.pushInfoPopup(
+    match.pushOutboxPlain(
       actor.monarchId(),
       "事件：疫病流行",
       PopupPayload.Plain('武將體力 -${staminaLoss}（全體）\n士兵 -${troopLoss}\n倍率 ${mult}'),

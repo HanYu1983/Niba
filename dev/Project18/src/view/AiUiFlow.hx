@@ -50,22 +50,6 @@ class AiUiFlow {
     return true;
   }
 
-  public static function ackAllPopups(match:IGameMatch, monarchId:MonarchId):Void {
-    var xs = match.pendingPopups(monarchId);
-    if (xs == null || xs.length == 0)
-      return;
-    for (p in xs)
-      match.ackPopup(monarchId, p.id());
-  }
-
-  public static function ackAllAnimations(match:IGameMatch, monarchId:MonarchId):Void {
-    var xs = match.pendingAnimations(monarchId);
-    if (xs == null || xs.length == 0)
-      return;
-    for (a in xs)
-      match.ackAnimation(monarchId, a.id());
-  }
-
   public static function ackAllOutbox(match:IGameMatch, monarchId:MonarchId):Void {
     var xs = match.pendingOutbox(monarchId);
     if (xs == null || xs.length == 0)

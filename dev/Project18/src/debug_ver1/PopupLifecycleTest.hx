@@ -3,17 +3,19 @@ package debug_ver1;
 import game.GameIds;
 import game.IGame;
 import game.IGameMatch;
+import game.IOutboxMessage;
 import game.IPlayer;
 import game.MenuNodeQuery;
+import game.OutboxPresentation;
 import game.PlayerMenuKind;
 import game.PopupPayload;
 import game.TileKind;
 import game.LevelKeys;
 
 /**
- * 驗證 popup outbox 生命週期：
- * - 狀態變更後會產生 popup
- * - 可讀取 title / payload
+ * 驗證 outbox 中阻塞型 Plain 訊息生命週期：
+ * - 狀態變更後會產生對應 outbox 項目
+ * - 可讀取 title／payload（{@link OutboxPresentation.Popup}）
  * - ack 後會自隊列移除
  */
 class PopupLifecycleTest {
@@ -35,7 +37,7 @@ class PopupLifecycleTest {
 
     match.applyMenuLeaf(actor, MenuNodeQuery.requireNodeWithKind(match.createPlayerMenu(actor), PlayerMenuKind.Move));
     match.applyMenuLeaf(actor, MenuNodeQuery.requireNodeWithKind(match.createPlayerMenu(actor), PlayerMenuKind.LandingContinue));
-    // 資源格改為 pending；需先按「領取」才會產生收益 popup
+    // 資源格改為 pending；需先按「領取」才會產生收益訊息
     var claimNode = MenuNodeQuery.requireNodeWithKind(match.createPlayerMenu(actor), PlayerMenuKind.ResourceClaim);
     var claimEntry = MenuNodeQuery.buttonEntryOnNode(claimNode, PlayerMenuKind.ResourceClaim);
     if (claimEntry == null)
@@ -43,37 +45,48 @@ class PopupLifecycleTest {
     claimNode.setActivationEntry(claimEntry);
     match.applyMenuLeaf(actor, claimNode);
 
-    var popups = match.pendingPopups(idA);
-    if (popups.length < 1)
-      throw "PopupLifecycleTest: expected at least 1 popup";
+    var xs = match.pendingOutbox(idA);
+    if (xs.length < 1)
+      throw "PopupLifecycleTest: expected at least 1 outbox item";
 
-    var p = null;
-    for (x in popups)
-      if (x.title() == "資源格收益") {
-        p = x;
-        break;
+    var found:Null<IOutboxMessage> = null;
+    for (m in xs) {
+      switch m.presentation() {
+        case Popup(title, payload, _):
+          if (title == "資源格收益") {
+            found = m;
+          }
+        default:
       }
-    if (p == null)
-      throw 'PopupLifecycleTest: expected popup title "資源格收益"';
+      if (found != null)
+        break;
+    }
+    if (found == null)
+      throw 'PopupLifecycleTest: expected outbox title "資源格收益"';
 
-    switch p.payload() {
-      case Plain(text):
-        if (text.indexOf("格位 1") < 0)
-          throw 'PopupLifecycleTest: unexpected popup payload "$text"';
+    switch found.presentation() {
+      case Popup(_, payload, _):
+        switch payload {
+          case Plain(text):
+            if (text.indexOf("格位 1") < 0)
+              throw 'PopupLifecycleTest: unexpected payload "$text"';
+          default:
+            throw "PopupLifecycleTest: expected Plain payload";
+        }
       default:
-        throw "PopupLifecycleTest: expected Plain payload";
+        throw "PopupLifecycleTest: expected Popup presentation";
     }
 
-    var beforeAckCount = popups.length;
-    match.ackPopup(idA, p.id());
+    var beforeAckCount = xs.length;
+    match.ackOutbox(idA, found.id());
 
-    var afterAck = match.pendingPopups(idA);
+    var afterAck = match.pendingOutbox(idA);
     if (afterAck.length != beforeAckCount - 1)
-      throw 'PopupLifecycleTest: popup count should decrease by 1, before=${beforeAckCount}, after=${afterAck.length}';
+      throw 'PopupLifecycleTest: outbox count should decrease by 1, before=${beforeAckCount}, after=${afterAck.length}';
     for (x in afterAck)
-      if (x.id() == p.id())
-        throw "PopupLifecycleTest: acked popup should be removed";
+      if (x.id() == found.id())
+        throw "PopupLifecycleTest: acked item should be removed";
 
-    trace("[PopupLifecycleTest] OK — popup create/read/ack lifecycle");
+    trace("[PopupLifecycleTest] OK — outbox create/read/ack lifecycle");
   }
 }

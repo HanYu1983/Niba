@@ -108,7 +108,7 @@ class FriendlyCityRestStagingAction implements IStagingAction {
     var next = Balance.clampInt(prevSt + Balance.STAMINA_RECOVER_TERRITORY_REST, 0, 100);
     g.setStamina(next);
 
-    match.pushInfoPopup(ruler.id(), "休整完成", game.PopupPayload.Plain('${gid} 體力：${prevSt} → ${next}（+${Balance.STAMINA_RECOVER_TERRITORY_REST}）'), "friendly-city-rest");
+    match.pushOutboxPlain(ruler.id(), "休整完成", game.PopupPayload.Plain('${gid} 體力：${prevSt} → ${next}（+${Balance.STAMINA_RECOVER_TERRITORY_REST}）'), "friendly-city-rest");
   }
 
   public function previewRows(actor:IPlayer):Array<IJiCeStagingPreviewRow> {

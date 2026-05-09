@@ -12,11 +12,9 @@ import game.IMonarch;
 import game.IPlayerMenuNode;
 import game.ITile;
 import game.CityLevel;
-import game.IPopupMessage;
 import game.TerrainKind;
 import game.TileGrowth;
 import game.AiDecision;
-import game.IAnimationMessage;
 import game.IOutboxMessage;
 
 /**
@@ -217,25 +215,7 @@ interface IGameMatchGetter {
    */
   function createPlayerMenu(actor:IPlayer):IPlayerMenu;
 
-  /**
-   * 彈窗 outbox：applyMenuLeaf 後由 view 查詢並顯示，再以 ackPopup 消費。
-   * 受眾為 {@link PopupAudience.ToMonarch} 時，僅該 monarchId 會取到。
-   */
-  function pendingPopups(monarchId:MonarchId):Array<IPopupMessage>;
-
-  /** 彈窗消費（顯示完畢後呼叫）；不存在則為 no-op。 */
-  function ackPopup(monarchId:MonarchId, popupId:String):Void;
-
-  /**
-   * 動畫 outbox：applyMenuLeaf 後由 view 查詢並播放，再以 ackAnimation 消費。
-   * 非阻塞（不需要使用者點擊）；建議 UI 以佇列方式依序播放。
-   */
-  function pendingAnimations(monarchId:MonarchId):Array<IAnimationMessage>;
-
-  /** 動畫消費（播放完畢後呼叫）；不存在則為 no-op。 */
-  function ackAnimation(monarchId:MonarchId, animationId:String):Void;
-
-  /** 統一 outbox（嚴格保序）：Animation/Popup 依產生順序排隊。 */
+  /** 統一 outbox（嚴格保序）：{@link game.OutboxPresentation} 各型態依產生順序排隊。 */
   function pendingOutbox(monarchId:MonarchId):Array<IOutboxMessage>;
 
   /** 消費 outbox（播放/顯示完畢後呼叫）；不存在則為 no-op。 */

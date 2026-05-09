@@ -151,7 +151,7 @@ class VillagePlunderStagingAction implements IStagingAction {
     var body = ok
       ? '村落（格 ${vIdx}）搶奪成功\n武將：${gid}\n成功率：約 ${Std.int(Math.floor(rate * 100))}%\n獲得：金 +${gainGold}｜糧 +${gainGrain}｜兵 +${gainTroops}\n友好度：${prevF} → ${nextF}\n聲望 -${pLoss}\n${gid} 體力 -12'
       : '村落（格 ${vIdx}）搶奪失敗\n武將：${gid}\n成功率：約 ${Std.int(Math.floor(rate * 100))}%\n未獲得資源\n友好度：${prevF} → ${nextF}\n聲望 -${pLoss}\n${gid} 體力 -12';
-    match.pushInfoPopup(ruler.id(), title, game.PopupPayload.Plain(body), "village-plunder");
+    match.pushOutboxPlain(ruler.id(), title, game.PopupPayload.Plain(body), "village-plunder");
   }
 
   public function previewRows(actor:IPlayer):Array<IJiCeStagingPreviewRow> {

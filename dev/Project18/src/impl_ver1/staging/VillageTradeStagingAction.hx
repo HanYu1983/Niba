@@ -184,7 +184,7 @@ class VillageTradeStagingAction implements IStagingAction {
     var title = ok ? "交易成功" : "交易失敗";
     var gainLine = ok ? ('\n獲得：糧食 +${gainGrain}\n消耗：金錢 -${costGold}') : "\n未完成交換（仍消耗體力）";
     var fNow = match.forceGetVillageFriendly(vIdx, ruler.id());
-    match.pushInfoPopup(
+    match.pushOutboxPlain(
       ruler.id(),
       title,
       game.PopupPayload.Plain('村落（格 ${vIdx}）交易\n武將：${gid}\n成功率：約 ${Std.int(Math.floor(rate * 100))}%（roll=${Std.int(Math.floor(roll * 100))}）${gainLine}\n友好度：${prevF} → ${fNow}${ownerLine}\n${gid} 體力 -10'),

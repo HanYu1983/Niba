@@ -20,17 +20,13 @@ import game.ITileEvent;
 import game.IPlayerCommand;
 import game.Balance;
 import game.IEquipment;
-import game.IPopupMessage;
-import game.IAnimationMessage;
 import game.IOutboxMessage;
 import game.MenuClientConfirm;
 import game.MenuActivation;
 import game.MenuGeneralChoice;
 import game.MenuFormWidget;
-import game.AnimationAudience;
 import game.AnimationKind;
 import game.AnimationPayload;
-import game.PopupAudience;
 import game.PopupOption;
 import game.PopupPayload;
 import game.PlayerMenuKind;
@@ -56,8 +52,6 @@ import impl_ver1.model.Player;
 import impl_ver1.model.PlayerMenu;
 import impl_ver1.model.PlayerMenuEntry;
 import impl_ver1.model.PlayerMenuNode;
-import impl_ver1.model.PopupMessage;
-import impl_ver1.model.AnimationMessage;
 import impl_ver1.model.OutboxMessage;
 import impl_ver1.model.Tile;
 import impl_ver1.equipment.WeaponCatalog;
@@ -83,7 +77,7 @@ import impl_ver1.staging.VillageDevelopStagingAction;
 @:allow(impl_ver1)
 class GameMatchCore implements IGameMatch {
   // NOTE(game-error): 目前仍有大量 `throw "GameMatchCore: ..."` 的字串例外。
-  // 若要讓 UI 可用 popup 呈現「可預期的玩家操作失敗」，可逐步改成 `throw new GameError(...)`：
+  // 若要讓 UI 可用 outbox（Plain）呈現「可預期的玩家操作失敗」，可逐步改成 `throw new GameError(...)`：
   // - 資源不足（兵/糧/金不足）
   // - 表單選擇不合法（應單選/未選等）
   // - 指令不可用（例如 StrategyPre/StrategyPost 不可用）若屬玩家可理解的規則拒絕也應轉為 GameError
@@ -118,15 +112,7 @@ class GameMatchCore implements IGameMatch {
   var _pendingTileEventAvoidanceDone:Bool;
   var _pendingTileEventEffectMultiplier:Float;
 
-  /** --- 彈窗 outbox（apply 產生、view 消費）--- */
-  var _popupSeq:Int;
-  var _popupsByMonarchId:Map<MonarchId, Array<IPopupMessage>>;
-
-  /** --- 動畫 outbox（apply 產生、view 消費；非阻塞）--- */
-  var _animSeq:Int;
-  var _animsByMonarchId:Map<MonarchId, Array<IAnimationMessage>>;
-
-  /** --- 統一 outbox（嚴格保序；Animation/Popup 混合）--- */
+  /** --- 統一 outbox（嚴格保序）--- */
   var _outboxSeq:Int;
   var _outboxByMonarchId:Map<MonarchId, Array<IOutboxMessage>>;
 
@@ -226,10 +212,6 @@ class GameMatchCore implements IGameMatch {
     _pendingTileEventIndex = null;
     _pendingTileEventAvoidanceDone = false;
     _pendingTileEventEffectMultiplier = 1.0;
-    _popupSeq = 0;
-    _popupsByMonarchId = new Map();
-    _animSeq = 0;
-    _animsByMonarchId = new Map();
     _outboxSeq = 0;
     _outboxByMonarchId = new Map();
     _pendingLandingTileIndex = null;
@@ -726,8 +708,6 @@ class GameMatchCore implements IGameMatch {
     var m = new Monarch(id, seat, pawnIndex, t, g);
     _monarchs.push(m);
     _ownedJiCe.set(id, []);
-    _popupsByMonarchId.set(id, []);
-    _animsByMonarchId.set(id, []);
     _outboxByMonarchId.set(id, []);
     if (_monarchs.length == 1)
       _activeId = m.id();
@@ -752,62 +732,8 @@ class GameMatchCore implements IGameMatch {
       }
   }
 
-  public function pendingAnimations(monarchId:MonarchId):Array<IAnimationMessage> {
-    var xs = pendingOutbox(monarchId);
-    if (xs == null || xs.length == 0)
-      return [];
-    var out:Array<IAnimationMessage> = [];
-    for (m in xs)
-      switch m.presentation() {
-        case Animation(kind, payload, _):
-          out.push(new AnimationMessage(m.id(), AnimationAudience.ToMonarch(monarchId), kind, payload, m.ctxKey()));
-        case Popup(_, _, _):
-      }
-    return out;
-  }
-
-  public function ackAnimation(monarchId:MonarchId, animationId:String):Void {
-    ackOutbox(monarchId, animationId);
-  }
-
-  public function pendingPopups(monarchId:MonarchId):Array<IPopupMessage> {
-    var xs = pendingOutbox(monarchId);
-    if (xs == null || xs.length == 0)
-      return [];
-    var out:Array<IPopupMessage> = [];
-    for (m in xs)
-      switch m.presentation() {
-        case Popup(title, payload, option):
-          out.push(new PopupMessage(m.id(), PopupAudience.ToMonarch(monarchId), title, payload, option));
-        case Animation(_, _, _):
-      }
-    return out;
-  }
-
-  public function ackPopup(monarchId:MonarchId, popupId:String):Void {
-    ackOutbox(monarchId, popupId);
-  }
-
-  public function pushInfoPopup(monarchId:MonarchId, title:String, payload:PopupPayload, ctxKey:String):Void {
+  public function pushOutboxPlain(monarchId:MonarchId, title:String, payload:PopupPayload, ctxKey:String):Void {
     pushOutboxPopup(monarchId, title, payload, Ok, ctxKey);
-  }
-
-  function pushPopupToMonarch(monarchId:MonarchId, title:String, payload:PopupPayload, option:PopupOption, ctxKey:String):String {
-    if (!_popupsByMonarchId.exists(monarchId))
-      _popupsByMonarchId.set(monarchId, []);
-    var id = popupId(monarchId, ctxKey);
-    _popupsByMonarchId.get(monarchId).push(new PopupMessage(id, ToMonarch(monarchId), title, payload, option));
-    return id;
-  }
-
-  function popupId(monarchId:MonarchId, ctxKey:String):String {
-    _popupSeq++;
-    return "pop-" + monarchId + "-" + ctxKey + "-" + _roundNumber + "-" + _popupSeq;
-  }
-
-  function animId(monarchId:MonarchId, ctxKey:String):String {
-    _animSeq++;
-    return "anim-" + monarchId + "-" + ctxKey + "-" + _roundNumber + "-" + _animSeq;
   }
 
   function outboxId(monarchId:MonarchId, ctxKey:String):String {
@@ -847,10 +773,6 @@ class GameMatchCore implements IGameMatch {
     );
     pushOutboxToMonarch(monarchId, msg);
     return id;
-  }
-
-  function pushAnimToMonarch(monarchId:MonarchId, kind:AnimationKind, payload:AnimationPayload, ctxKey:String):String {
-    return pushOutboxAnim(monarchId, kind, payload, 450, OutboxPresentationMode.FanOut2, ctxKey);
   }
 
   function monarchWithId(mid:MonarchId):Monarch {
@@ -1469,7 +1391,7 @@ class GameMatchCore implements IGameMatch {
     var atkId = _hostileCityAttackerId;
     GameMatchVer1Ops.applyHostileCitySettlementAck(this, actor, menuNode);
     clearHostileCityConfrontation();
-    pushInfoPopup(atkId, "戰鬥結果", Plain(sum), "hostile-settle");
+    pushOutboxPlain(atkId, "戰鬥結果", Plain(sum), "hostile-settle");
     _activeSliceComplete = true;
     syncActiveSliceAfterMenuLeaf(HostileCitySettlementAck);
   }
@@ -2167,7 +2089,7 @@ class GameMatchCore implements IGameMatch {
         _pendingTileEventEffectMultiplier = 0;
       if (_pendingTileEventEffectMultiplier > 1)
         _pendingTileEventEffectMultiplier = 1;
-      pushInfoPopup(
+      pushOutboxPlain(
         actor.monarchId(),
         "事件規避成功",
         Plain('武將 $gid 規避成功（${Std.string(stat)}=$statVal，率=${Std.int(rate * 100)}%）\n事件效果倍率：${_pendingTileEventEffectMultiplier}'),
@@ -2180,7 +2102,7 @@ class GameMatchCore implements IGameMatch {
       if (cost < 0)
         throw "GameMatchCore: avoidanceStaminaCost must be >=0";
       g.setStamina(Balance.clampInt(g.stamina() - cost, 0, 100));
-      pushInfoPopup(
+      pushOutboxPlain(
         actor.monarchId(),
         "事件規避失敗",
         Plain('武將 $gid 規避失敗（${Std.string(stat)}=$statVal，率=${Std.int(rate * 100)}%）\n請繼續處理事件選項。'),
@@ -2301,7 +2223,7 @@ class GameMatchCore implements IGameMatch {
       throw "GameMatchCore: 進駐數值超出君主可用資源";
     GameMatchVer1Ops.applyEmptyCityOccupySubmit(this, idx, ruler, tt, gg, garrisonIds);
     var gTxt = garrisonIds.length > 0 ? garrisonIds.join(", ") : "（無）";
-    pushInfoPopup(
+    pushOutboxPlain(
       ruler.id(),
       "進駐完成",
       Plain('城池格 ${idx}\n進駐兵力：${tt}\n進駐糧食：${gg}\n駐守武將：${gTxt}'),
@@ -2316,7 +2238,7 @@ class GameMatchCore implements IGameMatch {
     if (_pendingEmptyCityTileIndex == null)
       throw "GameMatchCore: EmptyCityOccupyAbort 但無 pending 空城";
     GameMatchVer1Ops.onEmptyCityOccupyAbort(this);
-    pushInfoPopup(actor.monarchId(), "已取消", Plain("未進駐空城。"), "empty-city-abort");
+    pushOutboxPlain(actor.monarchId(), "已取消", Plain("未進駐空城。"), "empty-city-abort");
     _pendingEmptyCityTileIndex = null;
     _activeSliceComplete = true;
     syncActiveSliceAfterMenuLeaf(EmptyCityOccupyAbort);
@@ -2346,7 +2268,7 @@ class GameMatchCore implements IGameMatch {
     if (dGold > ruler.gold())
       throw "GameMatchCore: 自君主池調出金錢不足";
     GameMatchVer1Ops.applyFriendlyCityDispatch(this, idx, ruler, tt, gg, gold);
-    pushInfoPopup(
+    pushOutboxPlain(
       ruler.id(),
       "調度完成",
       Plain('城池格 ${idx}\n城池兵力調整為：${tt}\n城池糧食調整為：${gg}\n城池金錢調整為：${gold}'),
@@ -2359,7 +2281,7 @@ class GameMatchCore implements IGameMatch {
     if (_pendingFriendlyCityTileIndex == null)
       throw "GameMatchCore: FriendlyCityVisitEnd 但無 pending 我方城池拜訪";
     GameMatchVer1Ops.onFriendlyCityVisitEnd(this);
-    pushInfoPopup(actor.monarchId(), "結束拜訪", Plain("已離開我方城池。"), "friendly-visit-end");
+    pushOutboxPlain(actor.monarchId(), "結束拜訪", Plain("已離開我方城池。"), "friendly-visit-end");
     _pendingFriendlyCityTileIndex = null;
     _activeSliceComplete = true;
     syncActiveSliceAfterMenuLeaf(FriendlyCityVisitEnd);
@@ -2421,8 +2343,8 @@ class GameMatchCore implements IGameMatch {
             var dMove = forceGetLastRolledMoveDelta();
             var pos = pawnIndexOfMonarch(actor.monarchId());
             if (dMove != null)
-              pushAnimToMonarch(actor.monarchId(), AnimationKind.PawnMove, AnimationPayload.PawnMove(before, pos, dMove), "anim-move");
-            pushInfoPopup(
+              pushOutboxAnim(actor.monarchId(), AnimationKind.PawnMove, AnimationPayload.PawnMove(before, pos, dMove), 450, OutboxPresentationMode.FanOut2, "anim-move");
+            pushOutboxPlain(
               actor.monarchId(),
               "移動",
               Plain((dMove != null ? '本次移動步數：${dMove}\n' : "") + '目前位置：格 ${pos}'),
@@ -2441,7 +2363,7 @@ class GameMatchCore implements IGameMatch {
             if (_pendingStaging == null)
               throw new GameError("目前沒有進行中的暫存操作。", "操作失敗", "staging/abort/no-pending");
             clearStaging();
-            pushInfoPopup(actor.monarchId(), "已取消", Plain("已取消暫存操作。"), "staging-abort");
+            pushOutboxPlain(actor.monarchId(), "已取消", Plain("已取消暫存操作。"), "staging-abort");
             // 取消僅退出 staging；其他 pending（村落/領地/資源格等）保持不變
             syncActiveSliceAfterMenuLeaf(StagingAbort);
           case LandingContinue:
@@ -2476,7 +2398,7 @@ class GameMatchCore implements IGameMatch {
           case VillageEndTurn:
             if (_pendingVillageTileIndex == null)
               throw new GameError("目前不在村落互動中。", "操作失敗", "village/end/pending");
-            pushInfoPopup(actor.monarchId(), "村落", Plain("已結束村落互動。"), "village-end");
+            pushOutboxPlain(actor.monarchId(), "村落", Plain("已結束村落互動。"), "village-end");
             _pendingVillageTileIndex = null;
             _activeSliceComplete = true;
             syncActiveSliceAfterMenuLeaf(VillageEndTurn);
@@ -2530,7 +2452,7 @@ class GameMatchCore implements IGameMatch {
             else if (dGold < 0)
               ruler.grantGold(-dGold);
             forcePutVillageStores(idx, tt, gg, gold);
-            pushInfoPopup(
+            pushOutboxPlain(
               ruler.id(),
               "調度完成",
               Plain('村落格 ${idx}\n村落兵力調整為：${tt}\n村落糧食調整為：${gg}\n村落金錢調整為：${gold}'),
@@ -2540,7 +2462,7 @@ class GameMatchCore implements IGameMatch {
           case VillageVisitEnd:
             if (_pendingVillageTileIndex == null)
               throw new GameError("目前不在村落互動中。", "操作失敗", "village/visit-end/pending");
-            pushInfoPopup(actor.monarchId(), "結束拜訪", Plain("已離開我方村落。"), "village-visit-end");
+            pushOutboxPlain(actor.monarchId(), "結束拜訪", Plain("已離開我方村落。"), "village-visit-end");
             _pendingVillageTileIndex = null;
             _activeSliceComplete = true;
             syncActiveSliceAfterMenuLeaf(VillageVisitEnd);
@@ -2556,7 +2478,7 @@ class GameMatchCore implements IGameMatch {
               ruler.grantGrain(rw.grain);
             if (rw.troops > 0)
               ruler.grantTroops(rw.troops);
-            pushInfoPopup(
+            pushOutboxPlain(
               actor.monarchId(),
               "資源格收益",
               Plain('格位 ${idx}\n獲得：金錢 +${rw.gold}\n獲得：糧食 +${rw.grain}\n獲得：兵力 +${rw.troops}'),
@@ -2574,7 +2496,7 @@ class GameMatchCore implements IGameMatch {
           case ResourceEndTurn:
             if (_pendingResourceTileIndex == null)
               throw "GameMatchCore: ResourceEndTurn 但無 pendingResource";
-            pushInfoPopup(actor.monarchId(), "資源格", Plain("已結束資源格互動（不加成）。"), "resource-end");
+            pushOutboxPlain(actor.monarchId(), "資源格", Plain("已結束資源格互動（不加成）。"), "resource-end");
             _pendingResourceTileIndex = null;
             _activeSliceComplete = true;
             syncActiveSliceAfterMenuLeaf(ResourceEndTurn);
@@ -2629,7 +2551,7 @@ class GameMatchCore implements IGameMatch {
                 rest.push(o);
             _generalOffersByTile.set(tileIdx, rest);
 
-            pushInfoPopup(
+            pushOutboxPlain(
               actor.monarchId(),
               "批次招募成功",
               Plain('武將格 ${tileIdx}\n招募：\n- ' + lines.join("\n- ") + '\n\n總花費：金 ${total}'),
@@ -2639,7 +2561,7 @@ class GameMatchCore implements IGameMatch {
           case GeneralEndTurn:
             if (_pendingGeneralTileIndex == null)
               throw "GameMatchCore: GeneralEndTurn 但無 pendingGeneral";
-            pushInfoPopup(actor.monarchId(), "武將格", Plain("已離開武將格。"), "general-end");
+            pushOutboxPlain(actor.monarchId(), "武將格", Plain("已離開武將格。"), "general-end");
             _pendingGeneralTileIndex = null;
             _activeSliceComplete = true;
             syncActiveSliceAfterMenuLeaf(GeneralEndTurn);
@@ -2681,7 +2603,7 @@ class GameMatchCore implements IGameMatch {
               if (x.stockId != picked.stockId)
                 rest.push(x);
             _shopStocksByTile.set(tileIdx, rest);
-            pushInfoPopup(
+            pushOutboxPlain(
               actor.monarchId(),
               "購買成功",
               Plain('商店格 ${tileIdx}\n購買：${eq.name()}（${Std.string(eq.type())}/${Std.string(eq.rarity())}）\n花費：金 ${picked.priceGold}\n裝備給：${gid}\n效果：${Std.string(eq.bonusStat())}+${eq.bonusValue()}｜忠誠+${eq.loyaltyBonus()}'),
@@ -2691,7 +2613,7 @@ class GameMatchCore implements IGameMatch {
           case ShopEndTurn:
             if (_pendingShopTileIndex == null)
               throw "GameMatchCore: ShopEndTurn 但無 pendingShop";
-            pushInfoPopup(actor.monarchId(), "商店格", Plain("已離開商店格。"), "shop-end");
+            pushOutboxPlain(actor.monarchId(), "商店格", Plain("已離開商店格。"), "shop-end");
             _pendingShopTileIndex = null;
             _activeSliceComplete = true;
             syncActiveSliceAfterMenuLeaf(ShopEndTurn);

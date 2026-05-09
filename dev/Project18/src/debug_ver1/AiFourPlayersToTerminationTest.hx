@@ -59,10 +59,8 @@ class AiFourPlayersToTerminationTest {
       if (!ok)
         throw "AiFourPlayersToTerminationTest: failed to apply AiDecision at step " + step;
 
-      // 模擬 UI：任何 apply 後若產生 outbox（含 popup/animation），必須能被 ack 掉，不然 UI 會被卡住
+      // 模擬 UI：任何 apply 後若產生 outbox，必須能被 ack 掉，不然 UI 會被卡住
       AiUiFlow.ackAllOutbox(match, mid);
-      AiUiFlow.ackAllPopups(match, mid);      // 相容：舊 outbox
-      AiUiFlow.ackAllAnimations(match, mid);  // 相容：舊 outbox
       var remain = match.pendingOutbox(mid);
       if (remain != null && remain.length > 0)
         throw "AiFourPlayersToTerminationTest: outbox not cleared after ack at step " + step;

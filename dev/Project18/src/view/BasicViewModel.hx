@@ -16,7 +16,6 @@ import game.MatchTerminationReason;
 import game.MenuFormWidget;
 import game.IGameMatch;
 import game.GameError;
-import game.IPopupMessage;
 import game.PopupPayload;
 import game.MenuClientConfirm;
 import game.TerrainKind;
@@ -65,26 +64,17 @@ class BasicViewModel implements IViewModel {
       case MenuClick(node, entry):
         applyMenuClick(node, entry);
         EventCenter.publishEvent(OutboxRefresh);
-        EventCenter.publishEvent(PopupRefresh);
-        EventCenter.publishEvent(AnimationRefresh);
         EventCenter.publishViewModel(this);
       case AiStep:
         if (runAiStepOnce()) {
           EventCenter.publishEvent(OutboxRefresh);
-          EventCenter.publishEvent(PopupRefresh);
-          EventCenter.publishEvent(AnimationRefresh);
           EventCenter.publishViewModel(this);
         }
-      case PopupClose(popupId):
+      case OutboxAck(outboxId):
         var mid = match.activeMonarch().id();
-        match.ackOutbox(mid, popupId);
-        match.ackPopup(mid, popupId);
+        match.ackOutbox(mid, outboxId);
         EventCenter.publishEvent(OutboxRefresh);
-        EventCenter.publishEvent(PopupRefresh);
-        EventCenter.publishEvent(AnimationRefresh);
         EventCenter.publishViewModel(this);
-      case PopupRefresh:
-      case AnimationRefresh:
       case OutboxRefresh:
     }
   }
@@ -189,7 +179,7 @@ class BasicViewModel implements IViewModel {
     } catch (e:GameError) {
       // 只攔截遊戲規則錯誤，轉成 popup，避免整個 UI 流程中斷
       node.setActivationEntry(null);
-      match.pushInfoPopup(actor.monarchId(), e.popupTitle, PopupPayload.Plain(e.message), e.ctxKey);
+      match.pushOutboxPlain(actor.monarchId(), e.popupTitle, PopupPayload.Plain(e.message), e.ctxKey);
     } catch (e:Dynamic) {
       // 非 GameError：視為系統/程式錯誤，使用 alert 直接顯示（方便回報與除錯）
       node.setActivationEntry(null);
@@ -429,29 +419,11 @@ class BasicViewModel implements IViewModel {
   public function createPlayerMenu(actor:IPlayer):IPlayerMenu
     return match.createPlayerMenu(actor);
 
-  public function pendingPopups(monarchId:MonarchId):Array<IPopupMessage>
-    return match.pendingPopups(monarchId);
-
-  public function ackPopup(monarchId:MonarchId, popupId:String):Void
-    match.ackPopup(monarchId, popupId);
-
-  public function pendingAnimations(monarchId:MonarchId):Array<game.IAnimationMessage>
-    return match.pendingAnimations(monarchId);
-
-  public function ackAnimation(monarchId:MonarchId, animationId:String):Void
-    match.ackAnimation(monarchId, animationId);
-
   public function pendingOutbox(monarchId:MonarchId):Array<game.IOutboxMessage>
     return match.pendingOutbox(monarchId);
 
   public function ackOutbox(monarchId:MonarchId, outboxId:String):Void
     match.ackOutbox(monarchId, outboxId);
-
-  static function popupPayloadText(p:PopupPayload):String {
-    return switch p {
-      case Plain(text): text;
-    };
-  }
 }
 
 private class SnapshotMonarch implements game.IMonarch {

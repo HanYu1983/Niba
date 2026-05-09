@@ -20,7 +20,7 @@ import view.UiSnapshot;
  * - 讀取 pendingOutbox(activeMonarch)
  * - 嚴格只 ack head（保序）
  * - FanOut2：允許同時顯示 head + next（但仍只 ack head）
- * - activeMonarch 為 AI 時，popup 會在數秒後自動送出 PopupClose（與手動關閉同路徑）
+ * - activeMonarch 為 AI 時，阻塞型項目會在數秒後自動送出 OutboxAck（與手動關閉同路徑）
  */
 class HtmlOutboxView {
   static inline final AI_POPUP_AUTOCLOSE_MS = 3000;
@@ -61,11 +61,6 @@ class HtmlOutboxView {
     evSub = EventCenter.eventSubject.subscribe(function(ev:UiEvent) {
       switch ev {
         case OutboxRefresh:
-          tryAdvance();
-        // 相容：舊事件也會觸發 outbox 重新處理
-        case PopupRefresh:
-          tryAdvance();
-        case AnimationRefresh:
           tryAdvance();
         default:
       }
@@ -114,7 +109,7 @@ class HtmlOutboxView {
 
     switch head.presentation() {
       case Popup(_, _, _):
-        // 阻塞：等待使用者按關閉（由 PopupClose → vm ack → OutboxRefresh 進行下一筆）
+        // 阻塞：等待使用者按關閉（OutboxAck → vm ackOutbox → OutboxRefresh）
       case Animation(_, _, durationMs):
         playing = true;
 
@@ -202,8 +197,7 @@ class HtmlOutboxView {
     closeBtn.textContent = "關閉";
     function closePopup():Void {
       cancelPopupAutoClose();
-      // 仍沿用 PopupClose 事件，payload 改承載 outboxId
-      EventCenter.publishEvent(UiEvent.PopupClose(outboxId));
+      EventCenter.publishEvent(UiEvent.OutboxAck(outboxId));
     }
     closeBtn.onclick = function(_) closePopup();
     actions.appendChild(closeBtn);

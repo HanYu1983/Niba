@@ -120,7 +120,7 @@ class ResourceTileBoostStagingAction implements IStagingAction {
     if (grant.troops > 0)
       ruler.grantTroops(grant.troops);
 
-    match.pushInfoPopup(
+    match.pushOutboxPlain(
       ruler.id(),
       "資源格加成完成",
       PopupPayload.Plain(

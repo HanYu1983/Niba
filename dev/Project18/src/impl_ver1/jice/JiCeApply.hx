@@ -153,7 +153,7 @@ class JiCeApply {
       for (x in effectLines)
         lines.push("- " + x);
     }
-    match.pushInfoPopup(actorId, title, PopupPayload.Plain(lines.join("\n")), ctxKey);
+    match.pushOutboxPlain(actorId, title, PopupPayload.Plain(lines.join("\n")), ctxKey);
   }
 
   /** 計策通用彈窗（受影響方；若沒有目標玩家可略）。 */
@@ -175,7 +175,7 @@ class JiCeApply {
       for (x in effectLines)
         lines.push("- " + x);
     }
-    match.pushInfoPopup(targetMonarchId, title, PopupPayload.Plain(lines.join("\n")), ctxKey);
+    match.pushOutboxPlain(targetMonarchId, title, PopupPayload.Plain(lines.join("\n")), ctxKey);
   }
 }
 
