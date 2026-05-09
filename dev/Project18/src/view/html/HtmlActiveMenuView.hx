@@ -5,6 +5,7 @@ import game.IPlayer;
 import game.IPlayerMenu;
 import game.IPlayerMenuEntry;
 import game.IPlayerMenuNode;
+import game.PlayerMenuKind;
 import game.MatchTerminationReason;
 import game.MenuFormWidget;
 import game.IJiCeStagingPreviewRow;
@@ -59,6 +60,22 @@ class HtmlActiveMenuView {
           previewByGeneralId.set(r.generalId(), r);
     }
 
+    // 人類席位：若只剩「結束/確認」(ConfirmDone) 一個可按項目，且 outbox 已清空，則自動點擊。
+    // 用途：減少流程末端的重複確認操作。
+    if (!actor.isAi()) {
+      var xs = vm.pendingOutbox(a.id());
+      if (xs == null || xs.length == 0) {
+        var enabled = collectEnabledEntries(menu.rootNodes());
+        if (enabled.length == 1 && enabled[0].entry.kind() == PlayerMenuKind.ConfirmDone) {
+          var one = enabled[0];
+          // 延後一個 macrotask，避免與 render 的 DOM 建構/訂閱鏈同步重入
+          Browser.window.setTimeout(function() {
+            EventCenter.publishEvent(UiEvent.MenuClick(one.node, one.entry));
+          }, 0);
+        }
+      }
+    }
+
     // AI 席位：每次取得並繪製選單後自動走一步（延後一個 macrotask，避免與 publishViewModel 訂閱鏈同步重入）
     if (actor.isAi()) {
       switch vm.getTerminationReason() {
@@ -90,6 +107,34 @@ class HtmlActiveMenuView {
 
     for (n in menu.rootNodes())
       tree.appendChild(renderNode(vm, previewByGeneralId, n, 0));
+  }
+
+  static function collectEnabledEntries(roots:Array<IPlayerMenuNode>):Array<{node:IPlayerMenuNode, entry:IPlayerMenuEntry}> {
+    var acc:Array<{node:IPlayerMenuNode, entry:IPlayerMenuEntry}> = [];
+    if (roots == null)
+      return acc;
+    for (n in roots)
+      collectEnabledEntriesOnNode(n, acc);
+    return acc;
+  }
+
+  static function collectEnabledEntriesOnNode(n:IPlayerMenuNode, acc:Array<{node:IPlayerMenuNode, entry:IPlayerMenuEntry}>):Void {
+    var leaf = n.leaf();
+    if (leaf != null && leaf.isEnabled())
+      acc.push({node: n, entry: leaf});
+    var ws = n.formWidgets();
+    if (ws != null)
+      for (w in ws)
+        switch w {
+          case Button(e):
+            if (e.isEnabled())
+              acc.push({node: n, entry: e});
+          default:
+        }
+    var kids = n.children();
+    if (kids != null)
+      for (c in kids)
+        collectEnabledEntriesOnNode(c, acc);
   }
 
   function renderNode(vm:IViewModel, previewByGeneralId:Map<String, IJiCeStagingPreviewRow>, n:IPlayerMenuNode, depth:Int):Element {
