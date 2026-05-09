@@ -1,0 +1,291 @@
+{
+  "historicalEvents": {
+    "description": "跨越萬年的標誌性歷史事件，推動世界觀演變",
+    "unit": "年",
+    "events": [
+      {
+        "id": "event_first_qi_awakening",
+        "name": "首次引氣入體",
+        "englishName": "First Qi Awakening",
+        "era": "遠古啟蒙期",
+        "year": -9500,
+        "region": "東方大陸",
+        "type": "能量覺醒",
+        "description": "東方部落首領『炎』在狩獵時意外發現將外界能量引入體內可恢復體力，成為史上第一位修煉者",
+        "impact": [
+          "開啟東方修煉文明",
+          "部落首領壽命延長，被視為神明",
+          "修煉成為權力象徵"
+        ],
+        "keyFigures": [
+          {
+            "name": "炎",
+            "role": "部落首領/首位修煉者",
+            "fate": "傳說活了三百年後化為純能量消失"
+          }
+        ]
+      },
+      {
+        "id": "event_first_mana_ritual",
+        "name": "首次瑪娜儀式",
+        "englishName": "First Mana Ritual",
+        "era": "遠古啟蒙期",
+        "year": -9200,
+        "region": "西方大陸",
+        "type": "能量覺醒",
+        "description": "西方祭司『艾莉婭』在祭祀時發現通過特定詠唱與手勢可引導外部能量影響自然，成為史上第一位法師",
+        "impact": [
+          "開啟西方魔法文明",
+          "祭司階層掌握自然操控能力",
+          "魔法成為宗教儀式核心"
+        ],
+        "keyFigures": [
+          {
+            "name": "艾莉婭",
+            "role": "祭司/首位法師",
+            "fate": "被尊為魔法之母，其詠唱流傳至今"
+          }
+        ]
+      },
+      {
+        "id": "event_meridian_theory",
+        "name": "經脈理論確立",
+        "englishName": "Meridian Theory Establishment",
+        "era": "體系建立期",
+        "year": -6500,
+        "region": "東方大陸",
+        "type": "理論突破",
+        "description": "東方學者『黃帝』系統化總結人體經脈網絡，建立完整的修煉理論體系",
+        "impact": [
+          "修煉從經驗變為可傳承的科學",
+          "宗門制度開始形成",
+          "修煉等級劃分確立"
+        ],
+        "keyFigures": [
+          {
+            "name": "黃帝",
+            "role": "學者/宗師",
+            "contribution": "撰寫《經脈圖譜》，成為修煉者必讀經典"
+          }
+        ]
+      },
+      {
+        "id": "event_rune_codification",
+        "name": "符文法典編纂",
+        "englishName": "Rune Codification",
+        "era": "體系建立期",
+        "year": -6200,
+        "region": "西方大陸",
+        "type": "理論突破",
+        "description": "西方大法師『梅林』將散落的魔法符文系統化，編纂首部魔法法典",
+        "impact": [
+          "魔法從口傳變為文字傳承",
+          "法師學院開始建立",
+          "魔法等級制度確立"
+        ],
+        "keyFigures": [
+          {
+            "name": "梅林",
+            "role": "大法師/學者",
+            "contribution": "編纂《符文法典》，奠定西方魔法基礎"
+          }
+        ]
+      },
+      {
+        "id": "event_first_contact",
+        "name": "首次東西接觸",
+        "englishName": "First East-West Contact",
+        "era": "鼎盛與碰撞期",
+        "year": -3500,
+        "region": "天脊山脈",
+        "type": "文化交流",
+        "description": "東方修仙者與西方法師在天脊山脈首次相遇，雙方對彼此的能力感到震驚與好奇",
+        "impact": [
+          "打破東西方互不往來的局面",
+          "開始零星技術交流",
+          "雙方傳統勢力視為異端"
+        ],
+        "keyFigures": [
+          {
+            "name": "李清風",
+            "role": "東方修仙者",
+            "fate": "首位學習西方魔法的東方人，被宗門除名"
+          },
+          {
+            "name": "亞瑟",
+            "role": "西方法師",
+            "fate": "首位學習東方修煉的西方人，被法師塔放逐"
+          }
+        ]
+      },
+      {
+        "id": "event_energy_war",
+        "name": "能量大戰",
+        "englishName": "The Energy War",
+        "era": "鼎盛與碰撞期",
+        "year": -2800,
+        "region": "中央海洋",
+        "type": "戰爭",
+        "description": "東西方因資源爭奪爆發首次大規模戰爭，持續百年，雙方損失慘重",
+        "impact": [
+          "中央海洋成為能量亂流區",
+          "雙方認識到戰爭的毀滅性",
+          "促進和平交流的聲音崛起"
+        ],
+        "casualties": {
+          "eastern": "數十萬修仙者隕落",
+          "western": "數百座法師塔被毀",
+          "environmental": "中央海洋生態破壞，至今未完全恢復"
+        }
+      },
+      {
+        "id": "event_twin_cities_foundation",
+        "name": "雙子城建立",
+        "englishName": "Foundation of Twin Cities",
+        "era": "鼎盛與碰撞期",
+        "year": -2500,
+        "region": "天脊山脈東西方交界",
+        "type": "和平建設",
+        "description": "戰後東西雙方共同建立雙子城，作為貿易與文化交流的中立地帶",
+        "impact": [
+          "成為東西文化融合典範",
+          "雙修者開始公開活動",
+          "促進技術交流與創新"
+        ],
+        "legacy": "至今仍是全球最重要的貿易與文化中心"
+      },
+      {
+        "id": "event_energy_unification_theory",
+        "name": "能量統一理論",
+        "englishName": "Energy Unification Theory",
+        "era": "工業革命期",
+        "year": -1200,
+        "region": "雙子城",
+        "type": "科學突破",
+        "description": "天才學者『諾娃』通過實驗證明氣與瑪娜是同一能量的不同表現形式，發表《能量統一理論》",
+        "impact": [
+          "打破東西方認知壁壘",
+          "開啟能量科學化研究",
+          "傳統修煉者與科學家的衝突加劇"
+        ],
+        "keyFigures": [
+          {
+            "name": "諾娃",
+            "role": "天才學者/雙修者",
+            "contribution": "發明能量頻率測量儀，首次量化生命能量",
+            "fate": "被傳統勢力追殺，隱居南方群島繼續研究"
+          }
+        ]
+      },
+      {
+        "id": "event_first_collection_tower",
+        "name": "首座采集塔建成",
+        "englishName": "First Collection Tower",
+        "era": "工業革命期",
+        "year": -800,
+        "region": "西方大陸",
+        "type": "科技里程碑",
+        "description": "基於諾娃的理論，西方工程師建成首座生命能量采集塔，實現能量機械化采集",
+        "impact": [
+          "普通人首次可使用生命能量",
+          "傳統修煉者地位開始動搖",
+          "能源工業革命正式開始"
+        ],
+        "specifications": {
+          "output": "相當於100名金丹期修仙者的輸出",
+          "operators": "只需10名培訓過的技術人員",
+          "significance": "證明科技比個人修煉更高效"
+        }
+      },
+      {
+        "id": "event_energy_standard",
+        "name": "能元標準確立",
+        "englishName": "Energy Credit Standard",
+        "era": "工業革命期",
+        "year": -500,
+        "region": "全球",
+        "type": "經濟里程碑",
+        "description": "全球統一採用「能元（EC）」作為能量計量與貨幣單位",
+        "impact": [
+          "全球能源市場形成",
+          "傳統宗門/法師塔轉型為企業",
+          "能源成為戰略資源"
+        ]
+      },
+      {
+        "id": "event_last_cultivator",
+        "name": "最後一位傳統修煉者逝去",
+        "englishName": "Death of the Last Traditional Cultivator",
+        "era": "統一能源時代",
+        "year": -50,
+        "region": "東方大陸",
+        "type": "歷史轉折",
+        "description": "最後一位純血統傳統修仙者『雲虛子』以1200歲高齡逝去，標誌傳統修煉時代正式結束",
+        "impact": [
+          "傳統修煉成為歷史名詞",
+          "古代修煉文化成為非物質文化遺產",
+          "引發文化懷舊運動"
+        ],
+        "keyFigures": [
+          {
+            "name": "雲虛子",
+            "role": "最後一位傳統修仙者",
+            "fate": "拒絕科技延壽，選擇自然老去，留下《最後的修煉筆記》"
+          }
+        ]
+      },
+      {
+        "id": "event_abyss_contact",
+        "name": "深淵聯盟首次接觸",
+        "englishName": "First Contact with Abyss Alliance",
+        "era": "統一能源時代",
+        "year": -20,
+        "region": "東方大陸地下",
+        "type": "秘密接觸",
+        "description": "地表勘探隊意外發現地下文明入口，首次與深淵聯盟接觸",
+        "impact": [
+          "證實古代修煉者後裔仍然存在",
+          "引發地表與地下的技術交流",
+          "深淵聯盟內部派系鬥爭加劇"
+        ],
+        "secrets": [
+          "深淵聯盟掌握完整的歸源境界修煉法門",
+          "地下存在巨大的天然生命能量脈絡",
+          "部分地表能源巨頭已與深淵聯盟秘密合作"
+        ]
+      },
+      {
+        "id": "event_energy_crisis",
+        "name": "第一次能源危機",
+        "englishName": "First Energy Crisis",
+        "era": "統一能源時代",
+        "year": -10,
+        "region": "全球",
+        "type": "社會危機",
+        "description": "過度采集導致多個地區生命能量枯竭，引發全球能源短缺",
+        "impact": [
+          "能源價格暴漲，社會動盪",
+          "生態災難頻發",
+          "促使各國簽訂《能源可持續發展協議》"
+        ],
+        "resolution": "建立采集上限制度，發展生態循環型采集技術"
+      },
+      {
+        "id": "event_guiyuan_discovery",
+        "name": "歸源海溝發現",
+        "englishName": "Discovery of Guiyuan Trench",
+        "era": "統一能源時代",
+        "year": -5,
+        "region": "中央海洋",
+        "type": "科學發現",
+        "description": "深海勘探隊在歸源海溝發現異常能量信號，疑似生命能量的源頭",
+        "impact": [
+          "引發各國勘探競賽",
+          "可能顛覆現有能量理論",
+          "深淵聯盟聲稱這是「禁地」，警告不要深入"
+        ],
+        "mystery": "海溝深處傳出未知頻率信號，與歸源境界的意識頻率相似"
+      }
+    ]
+  }
+}

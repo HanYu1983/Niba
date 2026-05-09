@@ -1,0 +1,163 @@
+{
+  "world": {
+    "name": "原生能量世界",
+    "description": "一個以生命能量為核心，經歷萬年演變的世界",
+    "timeSpan": {
+      "start": -10000,
+      "end": 0,
+      "unit": "年",
+      "description": "從遠古石器時代到現代科技時代，跨越約10000年"
+    },
+    "coreConcept": {
+      "energy": {
+        "originalName": "生命能量",
+        "englishName": "Life Energy",
+        "description": "所有活著的生命都擁有這種能量，平時會慢慢散發，未被好好利用",
+        "easternName": "氣",
+        "easternPinyin": "Qi",
+        "westernName": "瑪娜",
+        "westernNameEnglish": "Mana",
+        "modernUnifiedName": "生命能量",
+        "modernUnifiedNameEnglish": "Life Energy"
+      },
+      "cultivation": {
+        "eastern": {
+          "direction": "往身體內部修煉",
+          "description": "將散發的能量收回體內，循環利用，追求長壽與強大"
+        },
+        "western": {
+          "direction": "往外部世界探索",
+          "description": "引導散發的能量為己用，操控外部世界，施展法術與召喚"
+        },
+        "convergence": {
+          "principle": "殊途同歸",
+          "description": "雖然修煉方式不同，但最終境界相同"
+        }
+      },
+      "environmentalLimitation": {
+        "description": "環境限制導致東西方發展方向不同",
+        "eastern": {
+          "limitation": "環境限制外部探索",
+          "result": "被迫往身體內部修煉"
+        },
+        "western": {
+          "limitation": "環境限制內部修煉",
+          "result": "被迫往外部世界探索"
+        }
+      },
+      "crossCultivation": {
+        "possible": true,
+        "description": "雙方都可以修習對方的技術，但需要適應期",
+        "adaptationRequired": true
+      }
+    },
+    "technology": {
+      "integration": {
+        "description": "科技與能量體系融合發展",
+        "relationship": "科技是能量的應用層，彌補能量體系的不足"
+      },
+      "modernEra": {
+        "energyFacilities": "生命能量采集塔",
+        "description": "類似現實社會的各種發電設施，集中收集生命能量",
+        "traditionalCultivators": "已自然淘汰，科技更高效"
+      }
+    },
+    "historicalCatalyst": {
+      "type": "天才突破",
+      "description": "某位天才的突破推動了從神秘修煉到科學認知的轉變"
+    },
+    "geography": {
+      "worldMap": {
+        "description": "世界分為五大主要區域，各有不同的能量特徵與文明發展",
+        "regions": [
+          {
+            "id": "eastern_continent",
+            "name": "東方大陸",
+            "characteristics": "靈脈密集、古代宗門遺址眾多",
+            "modernRole": "能量儲存技術中心、文化遺產保護區"
+          },
+          {
+            "id": "western_continent",
+            "name": "西方大陸",
+            "characteristics": "瑪娜節點活躍、古代法師塔遺跡",
+            "modernRole": "能量應用技術中心、魔導工業基地"
+          },
+          {
+            "id": "central_ocean",
+            "name": "中央海洋",
+            "characteristics": "能量潮汐交匯處、不穩定區域",
+            "modernRole": "國際能源運輸通道、海上采集平台"
+          },
+          {
+            "id": "northern_icefield",
+            "name": "北境冰原",
+            "characteristics": "能量流動緩慢、古代封印之地",
+            "modernRole": "禁忌技術研究區、能量異常現象多發地"
+          },
+          {
+            "id": "southern_archipelago",
+            "name": "南方群島",
+            "characteristics": "能量生態多樣、原始部落保留",
+            "modernRole": "生態能量研究基地、中立貿易區"
+          }
+        ]
+      },
+      "specialLocations": [
+        {
+          "id": "tianji_mountains",
+          "name": "天脊山脈",
+          "description": "分隔東西方的天然屏障，古代稱為「絕靈之牆」"
+        },
+        {
+          "id": "guiyuan_trench",
+          "name": "歸源海溝",
+          "description": "海洋最深處，傳說為生命能量的源頭"
+        },
+        {
+          "id": "twin_cities",
+          "name": "雙子城",
+          "description": "位於東西方交界處的自由贸易城市，文化融合典範"
+        }
+      ]
+    },
+    "powerStructure": {
+      "type": "多極聯盟體制",
+      "description": "世界分為3-4個聯盟，各自掌控不同能量技術路線",
+      "alliances": [
+        {
+          "id": "eastern_alliance",
+          "name": "東方聯盟",
+          "expertise": "能量儲存與循環技術",
+          "baseRegion": "東方大陸"
+        },
+        {
+          "id": "western_alliance",
+          "name": "西方聯盟",
+          "expertise": "能量轉化與應用技術",
+          "baseRegion": "西方大陸"
+        },
+        {
+          "id": "neutral_alliance",
+          "name": "中立聯盟",
+          "expertise": "古代遺跡與禁忌技術",
+          "baseRegion": "南方群島"
+        }
+      ],
+      "conflicts": "聯盟間的技術競爭與資源爭奪"
+    },
+    "otherFactions": [
+      {
+        "id": "abyss_alliance",
+        "name": "深淵聯盟",
+        "type": "地下文明",
+        "description": "古代修煉者為躲避科技革命而遁入地下的後裔",
+        "characteristics": [
+          "仍保留傳統修煉體系",
+          "掌握地表已失傳的古代技術",
+          "與地表世界保持秘密接觸"
+        ],
+        "conflict": "是否應該重返地表？傳統 vs 現代的終極對決"
+      }
+    ]
+  }
+}

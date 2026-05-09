@@ -1,0 +1,72 @@
+{
+  "energySystem": {
+    "lifeEnergy": {
+      "name": "生命能量",
+      "englishName": "Life Energy",
+      "description": "所有活著的生命都擁有這種能量，平時會慢慢散發，未被好好利用",
+      "properties": {
+        "ubiquitous": true,
+        "source": "所有活著的生命",
+        "naturalBehavior": "慢慢散發",
+        "utilization": "未被好好利用"
+      }
+    },
+    "easternSystem": {
+      "name": "氣",
+      "pinyin": "Qi",
+      "cultivationDirection": "往身體內部修煉",
+      "description": "將散發的能量收回體內，循環利用",
+      "environmentalLimitation": "環境限制外部探索，被迫往身體內部修煉",
+      "characteristics": {
+        "focus": "內斂、循環、積累",
+        "goal": "長壽、強大、與天同壽",
+        "method": "經脈、丹田、煉氣"
+      }
+    },
+    "westernSystem": {
+      "name": "瑪娜",
+      "englishName": "Mana",
+      "cultivationDirection": "往外部世界探索",
+      "description": "引導散發的能量為己用，操控外部世界",
+      "environmentalLimitation": "環境限制內部修煉，被迫往外部世界探索",
+      "characteristics": {
+        "focus": "外放、操控、召喚",
+        "goal": "法術、元素操控、召喚",
+        "method": "符文、法陣、詠唱、媒介"
+      }
+    },
+    "convergence": {
+      "principle": "殊途同歸",
+      "description": "雖然修煉方式不同，但最終境界相同",
+      "finalRealm": {
+        "name": "歸源境界",
+        "easternName": "與道合真",
+        "westernName": "歸源之境",
+        "description": "修煉者/法師達到最高境界時，個人意識與生命能量完全融合",
+        "characteristics": [
+          "不再需要肉體，成為純能量存在",
+          "可自由轉化形態",
+          "意識頻率與生命能量頻率完全同步"
+        ],
+        "scientificExplanation": "意識頻率與生命能量頻率完全同步，達到質能轉換的臨界點"
+      }
+    },
+    "crossCultivation": {
+      "possible": true,
+      "description": "雙方都可以修習對方的技術，但需要適應期",
+      "adaptationRequired": true,
+      "easternLearningWestern": {
+        "difficulty": "不習慣外部能量操控",
+        "process": "需要重新開闢外部感知",
+        "risk": "可能經脈受損或魔力反噬",
+        "advantage": "一旦適應，內斂的氣能提供更穩定的魔力基礎"
+      },
+      "westernLearningEastern": {
+        "difficulty": "體內沒有丹田/經脈基礎，難以積累氣",
+        "process": "需要從零開始打通經脈，痛苦且緩慢",
+        "risk": "可能走火入魔或能量暴走",
+        "advantage": "一旦適應，外部感知能更快捕捉天地靈氣"
+      }
+    }
+  }
+}

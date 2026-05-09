@@ -1,0 +1,100 @@
+{
+  "timeline": {
+    "description": "跨越約10000年的世界演變歷史",
+    "unit": "年",
+    "eras": [
+      {
+        "id": "era_ancient_enlightenment",
+        "name": "遠古啟蒙期",
+        "timeRange": {
+          "start": -10000,
+          "end": -7000
+        },
+        "technologyLevel": "石器時代 → 青銅時代",
+        "energyCognition": "本能感知，薩滿/巫師時代",
+        "characteristics": {
+          "eastern": "部落首領偶然發現引氣入體，壽命延長，被視為「神」",
+          "western": "祭司發現外部能量可影響自然，被視為「神使」",
+          "interaction": "兩者互不往來，各自發展"
+        }
+      },
+      {
+        "id": "era_system_establishment",
+        "name": "體系建立期",
+        "timeRange": {
+          "start": -7000,
+          "end": -4000
+        },
+        "technologyLevel": "鐵器時代 → 早期帝國",
+        "energyCognition": "經驗總結，門派/學院萌芽",
+        "characteristics": {
+          "eastern": "經脈理論成型，宗門建立，修仙體系制度化",
+          "western": "魔法理論成型，法師塔/學院建立，魔法體系制度化",
+          "interaction": "開始有零星交流，但視為「異端」或「奇技淫巧」"
+        }
+      },
+      {
+        "id": "era_peak_collision",
+        "name": "鼎盛與碰撞期",
+        "timeRange": {
+          "start": -4000,
+          "end": -1500
+        },
+        "technologyLevel": "類似中世紀 → 文藝復興",
+        "energyCognition": "理論成熟，開始質疑與融合",
+        "characteristics": {
+          "eastern": "修仙文明達到巔峰，飛劍、丹藥、陣法高度發達",
+          "western": "魔法文明達到巔峰，禁咒、召喚、鍊金術高度發達",
+          "majorEvent": "大碰撞事件：東西方首次大規模接觸（戰爭？貿易？學術交流？）",
+          "dualCultivation": "開始出現雙修者，但被傳統勢力排斥"
+        }
+      },
+      {
+        "id": "era_industrial_revolution",
+        "name": "工業革命期",
+        "timeRange": {
+          "start": -1500,
+          "end": -200
+        },
+        "technologyLevel": "工業革命 → 電氣時代",
+        "energyCognition": "科學方法介入，能量開始被量化研究",
+        "characteristics": {
+          "breakthrough": "發現氣和瑪娜的本質相同，只是表現形式不同",
+          "mechanization": "能量開始被機械化利用：靈能引擎、魔導發電機",
+          "conflict": "傳統修煉者與科技勢力的衝突（保守派 vs 革新派）",
+          "democratization": "普通人也能通過科技使用能量，權力結構開始瓦解"
+        }
+      },
+      {
+        "id": "era_unified_energy",
+        "name": "統一能源時代",
+        "timeRange": {
+          "start": -200,
+          "end": 0
+        },
+        "technologyLevel": "現代 → 近未來",
+        "energyCognition": "完全科學化，統一命名為「生命能量」",
+        "characteristics": {
+          "traditionalCultivators": "傳統修仙者/魔法師成為歷史名詞",
+          "standardizedEnergy": "能量成為標準化能源，類似現在的電力/石油",
+          "socialChange": "社會結構徹底改變：不再以個人戰力為尊，而是以科技/資源為尊",
+          "energyFacilities": "生命能量采集塔（類似發電廠）"
+        }
+      }
+    ],
+    "catalyst": {
+      "type": "天才突破",
+      "description": "某位天才的突破推動了從神秘修煉到科學認知的轉變"
+    },
+    "traditionalCultivatorsDecline": {
+      "method": "自然淘汰",
+      "reason": "科技更高效",
+      "process": {
+        "early": "傳統修煉者鄙視科技（「奇技淫巧」）",
+        "middle": "年輕人開始轉向科技（更實用、門檻低）",
+        "late": "宗門/學院轉型為研究機構或企業",
+        "final": "最後一批傳統修煉者自然老去，成為歷史"
+      }
+    }
+  }
+}
