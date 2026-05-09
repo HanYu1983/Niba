@@ -29,6 +29,12 @@ import game.AnimationKind;
 import game.AnimationPayload;
 import game.PopupOption;
 import game.PopupPayload;
+import game.PopupPayload.FlowAckKind;
+import game.PopupPayload.HostileSettlementBranch;
+import game.GeneralStat;
+import game.PopupPayload.OutboxUiCopyKey;
+import game.PopupPayload.RecruitedGeneralLine;
+import game.PopupPayload.TerritoryStoresKind;
 import game.PlayerMenuKind;
 import game.ResourceReward;
 import game.StrategyPhase;
@@ -77,7 +83,7 @@ import impl_ver1.staging.VillageDevelopStagingAction;
 @:allow(impl_ver1)
 class GameMatchCore implements IGameMatch {
   // NOTE(game-error): 目前仍有大量 `throw "GameMatchCore: ..."` 的字串例外。
-  // 若要讓 UI 可用 outbox（Plain）呈現「可預期的玩家操作失敗」，可逐步改成 `throw new GameError(...)`：
+  // 若要讓 UI 可用 outbox（{@link game.PopupPayload.GameRuleFeedback}）呈現「可預期的玩家操作失敗」，可逐步改成 `throw new GameError(...)`：
   // - 資源不足（兵/糧/金不足）
   // - 表單選擇不合法（應單選/未選等）
   // - 指令不可用（例如 StrategyPre/StrategyPost 不可用）若屬玩家可理解的規則拒絕也應轉為 GameError
@@ -1387,11 +1393,28 @@ class GameMatchCore implements IGameMatch {
   function handleHostileCitySettlementAck(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
     if (_pendingHostileCityTileIndex == null || _hostileCityPhase != AttackerSettlement)
       throw "GameMatchCore: HostileCitySettlementAck 與對峙階段不符";
-    var sum = _hostileCitySettlementSummary;
     var atkId = _hostileCityAttackerId;
+    var settleTileIdx = _pendingHostileCityTileIndex;
+    var atkLead:Null<GeneralId> = _hostileCityAttackerGeneralIds.length > 0 ? _hostileCityAttackerGeneralIds[0] : null;
+    var tok = _hostileCityAttackerChoiceToken;
+    var defGen = _hostileCityDefenderGeneralId;
+    var branch:HostileSettlementBranch = switch tok {
+      case "pay_toll": HostileSettlementBranch.PayToll;
+      case "negotiate": HostileSettlementBranch.Negotiate;
+      case "attrition": HostileSettlementBranch.Attrition;
+      case "siege": HostileSettlementBranch.Siege;
+      case "duel": HostileSettlementBranch.Duel;
+      default:
+        throw 'GameMatchCore: hostile settle unknown tok ${tok}';
+    };
     GameMatchVer1Ops.applyHostileCitySettlementAck(this, actor, menuNode);
     clearHostileCityConfrontation();
-    pushOutboxPlain(atkId, "戰鬥結果", Plain(sum), "hostile-settle");
+    pushOutboxPlain(
+      atkId,
+      "戰鬥結果",
+      HostileCombatSettlement(branch, settleTileIdx != null ? settleTileIdx : -1, atkLead, defGen),
+      "hostile-settle"
+    );
     _activeSliceComplete = true;
     syncActiveSliceAfterMenuLeaf(HostileCitySettlementAck);
   }
@@ -2092,7 +2115,7 @@ class GameMatchCore implements IGameMatch {
       pushOutboxPlain(
         actor.monarchId(),
         "事件規避成功",
-        Plain('武將 $gid 規避成功（${Std.string(stat)}=$statVal，率=${Std.int(rate * 100)}%）\n事件效果倍率：${_pendingTileEventEffectMultiplier}'),
+        TileEventAvoidanceSucceeded(gid, stat, statVal, Std.int(rate * 100), _pendingTileEventEffectMultiplier),
         "evt-avoid-ok"
       );
       // 成功後仍進入事件本體（由事件自行用 multiplier 進行減半/無效等縮放）
@@ -2105,7 +2128,7 @@ class GameMatchCore implements IGameMatch {
       pushOutboxPlain(
         actor.monarchId(),
         "事件規避失敗",
-        Plain('武將 $gid 規避失敗（${Std.string(stat)}=$statVal，率=${Std.int(rate * 100)}%）\n請繼續處理事件選項。'),
+        TileEventAvoidanceFailed(gid, stat, statVal, Std.int(rate * 100)),
         "evt-avoid-fail"
       );
       _pendingTileEventAvoidanceDone = true;
@@ -2222,13 +2245,7 @@ class GameMatchCore implements IGameMatch {
     if (tt < 0 || gg < 0 || tt > ruler.troops() || gg > ruler.grain())
       throw "GameMatchCore: 進駐數值超出君主可用資源";
     GameMatchVer1Ops.applyEmptyCityOccupySubmit(this, idx, ruler, tt, gg, garrisonIds);
-    var gTxt = garrisonIds.length > 0 ? garrisonIds.join(", ") : "（無）";
-    pushOutboxPlain(
-      ruler.id(),
-      "進駐完成",
-      Plain('城池格 ${idx}\n進駐兵力：${tt}\n進駐糧食：${gg}\n駐守武將：${gTxt}'),
-      "empty-city-occupy"
-    );
+    pushOutboxPlain(ruler.id(), "進駐完成", EmptyCityOccupied(idx, tt, gg, garrisonIds), "empty-city-occupy");
     _pendingEmptyCityTileIndex = null;
     _activeSliceComplete = true;
     syncActiveSliceAfterMenuLeaf(EmptyCityOccupySubmit);
@@ -2238,7 +2255,7 @@ class GameMatchCore implements IGameMatch {
     if (_pendingEmptyCityTileIndex == null)
       throw "GameMatchCore: EmptyCityOccupyAbort 但無 pending 空城";
     GameMatchVer1Ops.onEmptyCityOccupyAbort(this);
-    pushOutboxPlain(actor.monarchId(), "已取消", Plain("未進駐空城。"), "empty-city-abort");
+    pushOutboxPlain(actor.monarchId(), "已取消", FlowAck(FlowAckKind.EmptyCityOccupyAborted), "empty-city-abort");
     _pendingEmptyCityTileIndex = null;
     _activeSliceComplete = true;
     syncActiveSliceAfterMenuLeaf(EmptyCityOccupyAbort);
@@ -2268,12 +2285,7 @@ class GameMatchCore implements IGameMatch {
     if (dGold > ruler.gold())
       throw "GameMatchCore: 自君主池調出金錢不足";
     GameMatchVer1Ops.applyFriendlyCityDispatch(this, idx, ruler, tt, gg, gold);
-    pushOutboxPlain(
-      ruler.id(),
-      "調度完成",
-      Plain('城池格 ${idx}\n城池兵力調整為：${tt}\n城池糧食調整為：${gg}\n城池金錢調整為：${gold}'),
-      "friendly-dispatch"
-    );
+    pushOutboxPlain(ruler.id(), "調度完成", FriendlyCityDispatchCompleted(idx, tt, gg, gold), "friendly-dispatch");
     syncActiveSliceAfterMenuLeaf(FriendlyCityDispatchApply);
   }
 
@@ -2281,7 +2293,7 @@ class GameMatchCore implements IGameMatch {
     if (_pendingFriendlyCityTileIndex == null)
       throw "GameMatchCore: FriendlyCityVisitEnd 但無 pending 我方城池拜訪";
     GameMatchVer1Ops.onFriendlyCityVisitEnd(this);
-    pushOutboxPlain(actor.monarchId(), "結束拜訪", Plain("已離開我方城池。"), "friendly-visit-end");
+    pushOutboxPlain(actor.monarchId(), "結束拜訪", FlowAck(FlowAckKind.FriendlyCityVisitEnded), "friendly-visit-end");
     _pendingFriendlyCityTileIndex = null;
     _activeSliceComplete = true;
     syncActiveSliceAfterMenuLeaf(FriendlyCityVisitEnd);
@@ -2344,12 +2356,7 @@ class GameMatchCore implements IGameMatch {
             var pos = pawnIndexOfMonarch(actor.monarchId());
             if (dMove != null)
               pushOutboxAnim(actor.monarchId(), AnimationKind.PawnMove, AnimationPayload.PawnMove(before, pos, dMove), 450, OutboxPresentationMode.FanOut2, "anim-move");
-            pushOutboxPlain(
-              actor.monarchId(),
-              "移動",
-              Plain((dMove != null ? '本次移動步數：${dMove}\n' : "") + '目前位置：格 ${pos}'),
-              "move"
-            );
+            pushOutboxPlain(actor.monarchId(), "移動", MoveCompleted(dMove, pos), "move");
           case TileEventPick:
             handleTileEventPick(actor, menuNode);
           case TileEventAvoidAttempt:
@@ -2363,7 +2370,7 @@ class GameMatchCore implements IGameMatch {
             if (_pendingStaging == null)
               throw new GameError("目前沒有進行中的暫存操作。", "操作失敗", "staging/abort/no-pending");
             clearStaging();
-            pushOutboxPlain(actor.monarchId(), "已取消", Plain("已取消暫存操作。"), "staging-abort");
+            pushOutboxPlain(actor.monarchId(), "已取消", FlowAck(FlowAckKind.StagingAborted), "staging-abort");
             // 取消僅退出 staging；其他 pending（村落/領地/資源格等）保持不變
             syncActiveSliceAfterMenuLeaf(StagingAbort);
           case LandingContinue:
@@ -2398,7 +2405,7 @@ class GameMatchCore implements IGameMatch {
           case VillageEndTurn:
             if (_pendingVillageTileIndex == null)
               throw new GameError("目前不在村落互動中。", "操作失敗", "village/end/pending");
-            pushOutboxPlain(actor.monarchId(), "村落", Plain("已結束村落互動。"), "village-end");
+            pushOutboxPlain(actor.monarchId(), "村落", FlowAck(FlowAckKind.VillageInteractionEnded), "village-end");
             _pendingVillageTileIndex = null;
             _activeSliceComplete = true;
             syncActiveSliceAfterMenuLeaf(VillageEndTurn);
@@ -2455,14 +2462,14 @@ class GameMatchCore implements IGameMatch {
             pushOutboxPlain(
               ruler.id(),
               "調度完成",
-              Plain('村落格 ${idx}\n村落兵力調整為：${tt}\n村落糧食調整為：${gg}\n村落金錢調整為：${gold}'),
+              TerritoryStoresDispatchCompleted(TerritoryStoresKind.VillageStores, idx, tt, gg, gold),
               "village-dispatch"
             );
             syncActiveSliceAfterMenuLeaf(VillageDispatchApply);
           case VillageVisitEnd:
             if (_pendingVillageTileIndex == null)
               throw new GameError("目前不在村落互動中。", "操作失敗", "village/visit-end/pending");
-            pushOutboxPlain(actor.monarchId(), "結束拜訪", Plain("已離開我方村落。"), "village-visit-end");
+            pushOutboxPlain(actor.monarchId(), "結束拜訪", FlowAck(FlowAckKind.VillageFriendlyVisitEnded), "village-visit-end");
             _pendingVillageTileIndex = null;
             _activeSliceComplete = true;
             syncActiveSliceAfterMenuLeaf(VillageVisitEnd);
@@ -2478,12 +2485,7 @@ class GameMatchCore implements IGameMatch {
               ruler.grantGrain(rw.grain);
             if (rw.troops > 0)
               ruler.grantTroops(rw.troops);
-            pushOutboxPlain(
-              actor.monarchId(),
-              "資源格收益",
-              Plain('格位 ${idx}\n獲得：金錢 +${rw.gold}\n獲得：糧食 +${rw.grain}\n獲得：兵力 +${rw.troops}'),
-              "resource-claim"
-            );
+            pushOutboxPlain(actor.monarchId(), "資源格收益", ResourceClaimed(idx, rw), "resource-claim");
             _pendingResourceTileIndex = null;
             _activeSliceComplete = true;
             syncActiveSliceAfterMenuLeaf(ResourceClaim);
@@ -2496,7 +2498,7 @@ class GameMatchCore implements IGameMatch {
           case ResourceEndTurn:
             if (_pendingResourceTileIndex == null)
               throw "GameMatchCore: ResourceEndTurn 但無 pendingResource";
-            pushOutboxPlain(actor.monarchId(), "資源格", Plain("已結束資源格互動（不加成）。"), "resource-end");
+            pushOutboxPlain(actor.monarchId(), "資源格", FlowAck(FlowAckKind.ResourceInteractionEndedWithoutBoost), "resource-end");
             _pendingResourceTileIndex = null;
             _activeSliceComplete = true;
             syncActiveSliceAfterMenuLeaf(ResourceEndTurn);
@@ -2534,11 +2536,15 @@ class GameMatchCore implements IGameMatch {
               throw new GameError("金錢不足，無法完成批次招募", "金錢不足", "general-recruit");
             ruler.reduceGold(total);
 
-            var lines:Array<String> = [];
+            var recruited:Array<RecruitedGeneralLine> = [];
             for (o in picked) {
-              var newId:GeneralId = o.offerId;
-              createGeneral(newId, ruler.id(), o.command, o.might, o.wit, o.stewardship);
-              lines.push('${o.displayName}（${Std.string(o.rarity)}）金 ${o.costGold}');
+              createGeneral(o.offerId, ruler.id(), o.command, o.might, o.wit, o.stewardship);
+              recruited.push({
+                templateGeneralId: o.offerId,
+                displayName: o.displayName,
+                rarity: o.rarity,
+                costGold: o.costGold,
+              });
             }
 
             // 從清單移除已招募者
@@ -2551,17 +2557,12 @@ class GameMatchCore implements IGameMatch {
                 rest.push(o);
             _generalOffersByTile.set(tileIdx, rest);
 
-            pushOutboxPlain(
-              actor.monarchId(),
-              "批次招募成功",
-              Plain('武將格 ${tileIdx}\n招募：\n- ' + lines.join("\n- ") + '\n\n總花費：金 ${total}'),
-              "general-recruit"
-            );
+            pushOutboxPlain(actor.monarchId(), "批次招募成功", GeneralBatchRecruited(tileIdx, recruited, total), "general-recruit");
             syncActiveSliceAfterMenuLeaf(GeneralRecruitSubmit);
           case GeneralEndTurn:
             if (_pendingGeneralTileIndex == null)
               throw "GameMatchCore: GeneralEndTurn 但無 pendingGeneral";
-            pushOutboxPlain(actor.monarchId(), "武將格", Plain("已離開武將格。"), "general-end");
+            pushOutboxPlain(actor.monarchId(), "武將格", FlowAck(FlowAckKind.GeneralTileLeft), "general-end");
             _pendingGeneralTileIndex = null;
             _activeSliceComplete = true;
             syncActiveSliceAfterMenuLeaf(GeneralEndTurn);
@@ -2606,14 +2607,24 @@ class GameMatchCore implements IGameMatch {
             pushOutboxPlain(
               actor.monarchId(),
               "購買成功",
-              Plain('商店格 ${tileIdx}\n購買：${eq.name()}（${Std.string(eq.type())}/${Std.string(eq.rarity())}）\n花費：金 ${picked.priceGold}\n裝備給：${gid}\n效果：${Std.string(eq.bonusStat())}+${eq.bonusValue()}｜忠誠+${eq.loyaltyBonus()}'),
+              ShopEquipmentPurchased(
+                tileIdx,
+                gid,
+                picked.priceGold,
+                eq.name(),
+                eq.type(),
+                eq.rarity(),
+                eq.bonusStat(),
+                eq.bonusValue(),
+                eq.loyaltyBonus()
+              ),
               "shop-buy"
             );
             syncActiveSliceAfterMenuLeaf(ShopBuy);
           case ShopEndTurn:
             if (_pendingShopTileIndex == null)
               throw "GameMatchCore: ShopEndTurn 但無 pendingShop";
-            pushOutboxPlain(actor.monarchId(), "商店格", Plain("已離開商店格。"), "shop-end");
+            pushOutboxPlain(actor.monarchId(), "商店格", FlowAck(FlowAckKind.ShopTileLeft), "shop-end");
             _pendingShopTileIndex = null;
             _activeSliceComplete = true;
             syncActiveSliceAfterMenuLeaf(ShopEndTurn);

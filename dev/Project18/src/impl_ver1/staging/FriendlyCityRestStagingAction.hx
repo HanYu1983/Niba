@@ -10,6 +10,7 @@ import game.IPlayerMenuNode;
 import game.IStagingAction;
 import game.MenuFormWidget;
 import game.PlayerMenuKind;
+import game.PopupPayload;
 import impl_ver1.core.GameMatchCore;
 import impl_ver1.model.Monarch;
 import impl_ver1.model.General;
@@ -108,7 +109,12 @@ class FriendlyCityRestStagingAction implements IStagingAction {
     var next = Balance.clampInt(prevSt + Balance.STAMINA_RECOVER_TERRITORY_REST, 0, 100);
     g.setStamina(next);
 
-    match.pushOutboxPlain(ruler.id(), "休整完成", game.PopupPayload.Plain('${gid} 體力：${prevSt} → ${next}（+${Balance.STAMINA_RECOVER_TERRITORY_REST}）'), "friendly-city-rest");
+    match.pushOutboxPlain(
+      ruler.id(),
+      "休整完成",
+      PopupPayload.RestStamina(gid, prevSt, next, Balance.STAMINA_RECOVER_TERRITORY_REST, true),
+      "friendly-city-rest"
+    );
   }
 
   public function previewRows(actor:IPlayer):Array<IJiCeStagingPreviewRow> {

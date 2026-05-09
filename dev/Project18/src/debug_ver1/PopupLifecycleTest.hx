@@ -13,7 +13,7 @@ import game.TileKind;
 import game.LevelKeys;
 
 /**
- * 驗證 outbox 中阻塞型 Plain 訊息生命週期：
+ * 驗證 outbox 中阻塞型 Popup 訊息生命週期：
  * - 狀態變更後會產生對應 outbox 項目
  * - 可讀取 title／payload（{@link OutboxPresentation.Popup}）
  * - ack 後會自隊列移除
@@ -67,11 +67,11 @@ class PopupLifecycleTest {
     switch found.presentation() {
       case Popup(_, payload, _):
         switch payload {
-          case Plain(text):
-            if (text.indexOf("格位 1") < 0)
-              throw 'PopupLifecycleTest: unexpected payload "$text"';
+          case ResourceClaimed(idx, _):
+            if (idx != 1)
+              throw 'PopupLifecycleTest: expected resource tile index 1, got ${idx}';
           default:
-            throw "PopupLifecycleTest: expected Plain payload";
+            throw "PopupLifecycleTest: expected ResourceClaimed payload";
         }
       default:
         throw "PopupLifecycleTest: expected Popup presentation";

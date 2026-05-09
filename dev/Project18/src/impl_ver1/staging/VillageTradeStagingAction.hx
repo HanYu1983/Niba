@@ -12,6 +12,7 @@ import game.IStagingAction;
 import game.MenuFormWidget;
 import game.MenuClientConfirm;
 import game.PlayerMenuKind;
+import game.PopupPayload;
 import impl_ver1.rules.GeneralAssignmentOps;
 import impl_ver1.rules.GeneralAssignmentApply;
 import impl_ver1.rules.GeneralAssignmentKeys;
@@ -180,14 +181,23 @@ class VillageTradeStagingAction implements IStagingAction {
 
     GeneralAssignmentApply.applyStaminaCost(gg, 10);
     var ownerNow = match.forceGetVillageOwner(vIdx);
-    var ownerLine = ownerNow == null ? "" : '\n領地：已歸順（屬主 ${ownerNow}）';
     var title = ok ? "交易成功" : "交易失敗";
-    var gainLine = ok ? ('\n獲得：糧食 +${gainGrain}\n消耗：金錢 -${costGold}') : "\n未完成交換（仍消耗體力）";
     var fNow = match.forceGetVillageFriendly(vIdx, ruler.id());
     match.pushOutboxPlain(
       ruler.id(),
       title,
-      game.PopupPayload.Plain('村落（格 ${vIdx}）交易\n武將：${gid}\n成功率：約 ${Std.int(Math.floor(rate * 100))}%（roll=${Std.int(Math.floor(roll * 100))}）${gainLine}\n友好度：${prevF} → ${fNow}${ownerLine}\n${gid} 體力 -10'),
+      PopupPayload.VillageTradeOutcome(
+        ok,
+        vIdx,
+        gid,
+        Std.int(Math.floor(rate * 100)),
+        Std.int(Math.floor(roll * 100)),
+        ok ? costGold : 0,
+        ok ? gainGrain : 0,
+        prevF,
+        fNow,
+        ownerNow
+      ),
       "village-trade"
     );
   }

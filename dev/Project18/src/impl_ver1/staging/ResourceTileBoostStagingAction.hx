@@ -123,13 +123,7 @@ class ResourceTileBoostStagingAction implements IStagingAction {
     match.pushOutboxPlain(
       ruler.id(),
       "資源格加成完成",
-      PopupPayload.Plain(
-        '格位 $tileIndex\n'
-        + '指派武將：$gid（${Std.string(stat)}=$statVal，體力 ${prevSt}→${nextSt}）\n'
-        + '基礎：金 ${base.gold}／糧 ${base.grain}／兵 ${base.troops}\n'
-        + '加成：+$bonus\n'
-        + '合計：金 ${grant.gold}／糧 ${grant.grain}／兵 ${grant.troops}'
-      ),
+      PopupPayload.ResourceBoostAssigned(tileIndex, gid, stat, statVal, prevSt, nextSt, base, bonus, grant),
       "resource-boost"
     );
   }

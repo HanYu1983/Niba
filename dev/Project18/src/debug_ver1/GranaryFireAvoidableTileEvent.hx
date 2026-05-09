@@ -67,7 +67,7 @@ class GranaryFireAvoidableTileEvent implements ITileEvent implements IAvoidableT
     match.pushOutboxPlain(
       actor.monarchId(),
       "事件：糧倉失火",
-      PopupPayload.Plain('損失糧食：${loss}（倍率 ${mult}）'),
+      PopupPayload.GranaryFireResolved(loss, mult),
       "evt-granary-fire"
     );
   }

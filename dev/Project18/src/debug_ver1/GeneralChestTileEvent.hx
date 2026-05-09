@@ -64,7 +64,7 @@ class GeneralChestTileEvent implements ITileEvent {
           _match.pushOutboxPlain(
             actor.monarchId(),
             "奇遇：開箱領賞",
-            Plain('獲得：兵力 +${GRANT_NO_ROSTER}\n（麾下無武將）'),
+            PopupPayload.ChestTroopReward(false, null, GRANT_NO_ROSTER),
             "evt-general-chest"
           );
         } else {
@@ -76,7 +76,7 @@ class GeneralChestTileEvent implements ITileEvent {
           _match.pushOutboxPlain(
             actor.monarchId(),
             "奇遇：開箱領賞",
-            Plain('武將 ${ids[0]} 領賞\n獲得：兵力 +${GRANT_PER_GENERAL}'),
+            PopupPayload.ChestTroopReward(true, ids[0], GRANT_PER_GENERAL),
             "evt-general-chest"
           );
         }

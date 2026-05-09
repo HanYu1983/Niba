@@ -238,7 +238,7 @@ interface IGameMatch extends IGameMatchGetter {
     function applyMenuLeaf(actor:IPlayer, menuNode:IPlayerMenuNode):Void;
 
     /**
-     * 將結果／事件類訊息入該君主之統一 outbox（阻塞型 Plain 內容；{@link IGameMatchGetter#pendingOutbox}／{@link IGameMatchGetter#ackOutbox}）。
+     * 將結果／事件類訊息入該君主之統一 outbox（阻塞型 Popup；{@link PopupPayload} 為結構化載荷；{@link IGameMatchGetter#pendingOutbox}／{@link IGameMatchGetter#ackOutbox}）。
      * {@code ctxKey} 供辨識來源；訊息 id 含回合序與流水號。
      */
     function pushOutboxPlain(monarchId:MonarchId, title:String, payload:PopupPayload, ctxKey:String):Void;

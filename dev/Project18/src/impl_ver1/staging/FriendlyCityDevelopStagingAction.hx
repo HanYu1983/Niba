@@ -11,6 +11,7 @@ import game.IPlayerMenuNode;
 import game.IStagingAction;
 import game.MenuFormWidget;
 import game.PlayerMenuKind;
+import game.PopupPayload;
 import impl_ver1.rules.GeneralAssignmentOps;
 import impl_ver1.rules.GeneralAssignmentKeys;
 import impl_ver1.core.GameMatchCore;
@@ -166,12 +167,16 @@ class FriendlyCityDevelopStagingAction implements IStagingAction {
     match.pushOutboxPlain(
       ruler.id(),
       title,
-      game.PopupPayload.Plain(
-        '城池格 ${idx}\n'
-        + '武將：${gid}（政治=${pol}）\n'
-        + '成功率：約 ${Std.int(Math.floor(rate * 100))}%\n'
-        + '消耗：城池金 -${costGold}、城池糧 -${costGrain}、體力 -15\n'
-        + (ok ? '城等級：${Std.string(beforeLvl)} → ${Std.string(afterLvl)}' : '城等級：${Std.string(beforeLvl)}（不變）')
+      PopupPayload.FriendlyCityDevelopOutcome(
+        ok,
+        idx,
+        gid,
+        pol,
+        Std.int(Math.floor(rate * 100)),
+        costGold,
+        costGrain,
+        beforeLvl,
+        afterLvl
       ),
       "friendly-develop"
     );

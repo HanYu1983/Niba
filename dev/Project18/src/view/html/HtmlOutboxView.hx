@@ -12,6 +12,7 @@ import js.html.Element;
 import rx.disposables.ISubscription;
 import view.EventCenter;
 import view.IViewModel;
+import view.OutboxPopupBodyText;
 import view.UiEvent;
 import view.UiSnapshot;
 
@@ -156,7 +157,7 @@ class HtmlOutboxView {
     switch head.presentation() {
       case Popup(title, payload, _):
         popupRoot.style.display = "block";
-        renderPopup(vm, mid, head.id(), title, payloadText(payload));
+        renderPopup(vm, mid, head.id(), title, OutboxPopupBodyText.format(payload));
       case Animation(_, payload, _):
         animRoot.style.display = "block";
         var texts:Array<String> = [payloadTextAnim(payload)];
@@ -219,12 +220,6 @@ class HtmlOutboxView {
       card.textContent = texts[i];
       animRoot.appendChild(card);
     }
-  }
-
-  static function payloadText(p:game.PopupPayload):String {
-    return switch p {
-      case Plain(text): text;
-    };
   }
 
   static function payloadTextAnim(p:AnimationPayload):String {

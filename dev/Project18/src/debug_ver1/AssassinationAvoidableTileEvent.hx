@@ -75,7 +75,7 @@ class AssassinationAvoidableTileEvent implements ITileEvent implements IAvoidabl
       throw "AssassinationAvoidableTileEvent.resolveChoice: expected TileEventPick";
     var ruler:Monarch = cast match.activeMonarch();
     if (ruler.roster().length == 0) {
-      match.pushOutboxPlain(actor.monarchId(), "事件：暗殺企圖", PopupPayload.Plain("（無麾下武將，事件略過）"), "evt-assassination");
+      match.pushOutboxPlain(actor.monarchId(), "事件：暗殺企圖", PopupPayload.AssassinationNoGeneralsSkipped, "evt-assassination");
       return;
     }
 
@@ -119,7 +119,7 @@ class AssassinationAvoidableTileEvent implements ITileEvent implements IAvoidabl
     match.pushOutboxPlain(
       actor.monarchId(),
       "事件：暗殺企圖",
-      PopupPayload.Plain('武將 $gid｜${Std.string(stat)} 永久 -${loss}\n倍率 ${mult}'),
+      PopupPayload.AssassinationResolved(gid, stat, loss, mult),
       "evt-assassination"
     );
   }

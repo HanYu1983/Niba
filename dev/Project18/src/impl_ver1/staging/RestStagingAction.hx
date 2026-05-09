@@ -9,6 +9,7 @@ import game.IPlayerMenuNode;
 import game.IStagingAction;
 import game.MenuFormWidget;
 import game.PlayerMenuKind;
+import game.PopupPayload;
 import game.IJiCeStagingPreviewRow;
 import impl_ver1.staging.SimpleStagingPreviewRow;
 import impl_ver1.rules.GeneralAssignmentApply;
@@ -90,7 +91,7 @@ class RestStagingAction implements IStagingAction {
     var prevSt = target.stamina();
     var next = Balance.clampInt(prevSt + Balance.STAMINA_RECOVER_REST, 0, 100);
     target.setStamina(next);
-    match.pushOutboxPlain(ruler.id(), "休整完成", game.PopupPayload.Plain('${gid} 體力：${prevSt} → ${next}'), "rest");
+    match.pushOutboxPlain(ruler.id(), "休整完成", PopupPayload.RestStamina(gid, prevSt, next, 0, false), "rest");
   }
 
   public function previewRows(actor:IPlayer):Array<IJiCeStagingPreviewRow> {

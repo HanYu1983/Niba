@@ -179,7 +179,7 @@ class BasicViewModel implements IViewModel {
     } catch (e:GameError) {
       // 只攔截遊戲規則錯誤，轉成 popup，避免整個 UI 流程中斷
       node.setActivationEntry(null);
-      match.pushOutboxPlain(actor.monarchId(), e.popupTitle, PopupPayload.Plain(e.message), e.ctxKey);
+      match.pushOutboxPlain(actor.monarchId(), e.popupTitle, PopupPayload.GameRuleFeedback(e.code, e.message), e.ctxKey);
     } catch (e:Dynamic) {
       // 非 GameError：視為系統/程式錯誤，使用 alert 直接顯示（方便回報與除錯）
       node.setActivationEntry(null);

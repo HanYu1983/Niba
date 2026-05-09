@@ -61,7 +61,7 @@ class DefectionAvoidableTileEvent implements ITileEvent implements IAvoidableTil
 
     var ruler:Monarch = cast match.activeMonarch();
     if (ruler.roster().length == 0) {
-      match.pushOutboxPlain(actor.monarchId(), "事件：叛逃事件", PopupPayload.Plain("（無麾下武將，事件略過）"), "evt-defection");
+      match.pushOutboxPlain(actor.monarchId(), "事件：叛逃事件", PopupPayload.DefectionNoGeneralsSkipped, "evt-defection");
       return;
     }
 
@@ -90,14 +90,14 @@ class DefectionAvoidableTileEvent implements ITileEvent implements IAvoidableTil
       match.pushOutboxPlain(
         actor.monarchId(),
         "事件：叛逃事件",
-        PopupPayload.Plain('武將 ${picked.id()} 叛逃離開（率 ${Std.int(rate * 100)}%｜倍率 ${mult}）'),
+        PopupPayload.DefectionResolved(picked.id(), Std.int(rate * 100), mult),
         "evt-defection"
       );
     } else {
       match.pushOutboxPlain(
         actor.monarchId(),
         "事件：叛逃事件",
-        PopupPayload.Plain('叛逃未發生（率 ${Std.int(rate * 100)}%｜倍率 ${mult}）'),
+        PopupPayload.DefectionNotTriggered(Std.int(rate * 100), mult),
         "evt-defection"
       );
     }

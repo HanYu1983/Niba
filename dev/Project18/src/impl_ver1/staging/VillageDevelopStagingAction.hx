@@ -11,6 +11,7 @@ import game.IPlayerMenuNode;
 import game.IStagingAction;
 import game.MenuFormWidget;
 import game.PlayerMenuKind;
+import game.PopupPayload;
 import game.CityLevel;
 import impl_ver1.core.GameMatchCore;
 import impl_ver1.model.General;
@@ -182,13 +183,7 @@ class VillageDevelopStagingAction implements IStagingAction {
     match.pushOutboxPlain(
       ruler.id(),
       ok ? "村落開發成功" : "村落開發失敗",
-      game.PopupPayload.Plain(
-        '村落格 ${idx}\n'
-        + '武將：${gid}（政治=${pol}）\n'
-        + '成功率：約 ${Std.int(Math.floor(rate * 100))}%\n'
-        + '消耗：村落金 -${costGold}、村落糧 -${costGrain}、體力 -12\n'
-        + (ok ? '等級：${Std.string(before)} → ${Std.string(after)}' : '等級：${Std.string(before)}（不變）')
-      ),
+      PopupPayload.VillageDevelopOutcome(ok, idx, gid, pol, Std.int(Math.floor(rate * 100)), costGold, costGrain, before, after),
       "village-develop"
     );
   }

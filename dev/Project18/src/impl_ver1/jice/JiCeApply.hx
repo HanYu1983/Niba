@@ -142,18 +142,28 @@ class JiCeApply {
     ctxKey:String
   ):Void {
     var title = '計策：${cardLabel}（' + (roll.ok ? "成功" : "失敗") + "）";
-    var lines:Array<String> = [];
-    lines.push('階段：' + phaseLabel(phase));
-    lines.push('施放武將：${casterId}（體力 ${roll.before} → ${roll.after}，消耗 ${roll.cost}）');
-    lines.push('成功率：約 ${pct(roll.rate)}%（roll=${pct(roll.roll)}%｜${statLabel(stat)}｜消耗=' + tierLabel(tier) + '）');
-    if (targetLine != null && targetLine.length > 0)
-      lines.push('目標：' + targetLine);
-    if (effectLines != null && effectLines.length > 0) {
-      lines.push("效果：");
-      for (x in effectLines)
-        lines.push("- " + x);
-    }
-    match.pushOutboxPlain(actorId, title, PopupPayload.Plain(lines.join("\n")), ctxKey);
+    var fx = effectLines != null ? effectLines.copy() : [];
+    var tgt:Null<String> = (targetLine != null && targetLine.length > 0) ? targetLine : null;
+    match.pushOutboxPlain(
+      actorId,
+      title,
+      PopupPayload.JiCeCasterOutcome(
+        cardLabel,
+        phase,
+        casterId,
+        stat,
+        tier,
+        roll.ok,
+        roll.rate,
+        roll.roll,
+        roll.cost,
+        roll.before,
+        roll.after,
+        tgt,
+        fx
+      ),
+      ctxKey
+    );
   }
 
   /** 計策通用彈窗（受影響方；若沒有目標玩家可略）。 */
@@ -167,15 +177,8 @@ class JiCeApply {
     ctxKey:String
   ):Void {
     var title = '遭遇計策：${cardLabel}';
-    var lines:Array<String> = [];
-    lines.push('施放者：${attackerMonarchId}');
-    lines.push('武將：${casterId}');
-    if (effectLines != null && effectLines.length > 0) {
-      lines.push("影響：");
-      for (x in effectLines)
-        lines.push("- " + x);
-    }
-    match.pushOutboxPlain(targetMonarchId, title, PopupPayload.Plain(lines.join("\n")), ctxKey);
+    var fx = effectLines != null ? effectLines.copy() : [];
+    match.pushOutboxPlain(targetMonarchId, title, PopupPayload.JiCeTargetOutcome(cardLabel, attackerMonarchId, casterId, fx), ctxKey);
   }
 }
 

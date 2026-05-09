@@ -75,7 +75,7 @@ class EpidemicAvoidableTileEvent implements ITileEvent implements IAvoidableTile
     match.pushOutboxPlain(
       actor.monarchId(),
       "事件：疫病流行",
-      PopupPayload.Plain('武將體力 -${staminaLoss}（全體）\n士兵 -${troopLoss}\n倍率 ${mult}'),
+      PopupPayload.EpidemicResolved(staminaLoss, troopLoss, mult),
       "evt-epidemic"
     );
   }

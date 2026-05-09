@@ -13,6 +13,7 @@ import game.IStagingAction;
 import game.MenuFormWidget;
 import game.MenuClientConfirm;
 import game.PlayerMenuKind;
+import game.PopupPayload;
 import impl_ver1.rules.GeneralAssignmentOps;
 import impl_ver1.rules.GeneralAssignmentApply;
 import impl_ver1.rules.GeneralAssignmentKeys;
@@ -143,6 +144,10 @@ class VillageConquerStagingAction implements IStagingAction {
     var atkRand = 0.85 + Deterministic.hash01(rSeed + "|atk") * 0.30;
     var defRand = 0.85 + Deterministic.hash01(rSeed + "|def") * 0.30;
     var win = (atkPower * atkRand) > (defPower * defRand);
+    var lootGold = 0;
+    var lootGrain = 0;
+    var lootTroops = 0;
+    var troopLossOnFail = 0;
 
     // 結算對齊（最小版）：
     // - docs/數值算法.md 3.2：加入 0.85~1.15 隨機係數（可重現）
@@ -159,9 +164,9 @@ class VillageConquerStagingAction implements IStagingAction {
       var prevGold = match.forceGetVillageStoredGold(vIdx);
       var prevGrain = match.forceGetVillageStoredGrain(vIdx);
       var prevTroops = match.forceGetVillageStoredTroops(vIdx);
-      var lootGold = Std.int(Math.floor(prevGold * 0.30));
-      var lootGrain = Std.int(Math.floor(prevGrain * 0.30));
-      var lootTroops = Std.int(Math.floor(prevTroops * 0.30));
+      lootGold = Std.int(Math.floor(prevGold * 0.30));
+      lootGrain = Std.int(Math.floor(prevGrain * 0.30));
+      lootTroops = Std.int(Math.floor(prevTroops * 0.30));
       if (lootGold > 0)
         ruler.grantGold(lootGold);
       if (lootGrain > 0)
@@ -174,8 +179,8 @@ class VillageConquerStagingAction implements IStagingAction {
       match.forceSetVillageOwner(vIdx, ruler.id());
     } else {
       // 攻占失敗：投入士兵損失 20%
-      var loss = Std.int(Math.floor(commitTroops * 0.2));
-      ruler.reduceTroops(loss);
+      troopLossOnFail = Std.int(Math.floor(commitTroops * 0.2));
+      ruler.reduceTroops(troopLossOnFail);
       // GDD 2.1.3：攻占失敗後友好度 -10
       var prevF = match.forceGetVillageFriendly(vIdx, ruler.id());
       match.forceSetVillageFriendly(vIdx, ruler.id(), Balance.clampInt(prevF - 10, 0, 100));
@@ -184,10 +189,12 @@ class VillageConquerStagingAction implements IStagingAction {
     GeneralAssignmentApply.applyStaminaCost(gAtk, 15);
 
     var afterF = match.forceGetVillageFriendly(vIdx, ruler.id());
-    var body = win
-      ? '攻占成功。\n格子：${vIdx}\n武將：${gid}\n投入兵力：${commitTroops}\n掠奪：村落儲備 30%\n聲望 -3\n友好度：→ ${afterF}（重置）\n領地：已占領（每回合產出）\n（武將體力 -15）'
-      : '攻占失敗。\n格子：${vIdx}\n武將：${gid}\n投入兵力：${commitTroops}\n兵力損失約 20%\n友好度：→ ${afterF}\n（武將體力 -15）';
-    match.pushOutboxPlain(ruler.id(), win ? "攻占成功" : "攻占失敗", game.PopupPayload.Plain(body), "village-conquer");
+    match.pushOutboxPlain(
+      ruler.id(),
+      win ? "攻占成功" : "攻占失敗",
+      PopupPayload.VillageConquerOutcome(win, vIdx, gid, commitTroops, afterF, lootGold, lootGrain, lootTroops, troopLossOnFail),
+      "village-conquer"
+    );
   }
 
   public function previewRows(actor:IPlayer):Array<IJiCeStagingPreviewRow> {

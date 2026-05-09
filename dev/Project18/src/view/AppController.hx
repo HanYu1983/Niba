@@ -6,6 +6,8 @@ import game.IGameMatch;
 import game.ITile;
 import game.LevelKeys;
 import game.TileKind;
+import game.PopupPayload;
+import game.PopupPayload.OutboxUiCopyKey;
 import debug_ver1.EpidemicAvoidableTileEvent;
 import debug_ver1.GranaryFireAvoidableTileEvent;
 import impl_ver1.core.GameMatchCore;
@@ -248,18 +250,7 @@ class AppController {
 
     // 提示：讓玩家一進來就知道怎麼測
     var core = cast(match, GameMatchCore);
-    core.pushOutboxPlain(
-      "m-a",
-      "測試頁3：計策測試",
-      game.PopupPayload.Plain(
-        "目標：測試策略（移動前/移動後）與計策暫存流程。\n\n"
-        + "建議步驟：\n"
-        + "1) 右側『Menu』→『本回合』→『策略（移動前）』：測試指定玩家/格子/武將類計策。\n"
-        + "2) 點『移動』後（仍在落地前窗口）再用『策略（移動後）』：應只能指定『所站格子』。\n"
-        + "3) 進入暫存後，可用『取消（返回）』退出 staging。\n"
-      ),
-      "test3-jice"
-    );
+    core.pushOutboxPlain("m-a", "測試頁3：計策測試", PopupPayload.UiCopy(OutboxUiCopyKey.TestPage3JiCeIntro), "test3-jice");
   }
 
   /**
@@ -326,16 +317,7 @@ class AppController {
       match.forceGrantMonarchGrain(m.id(), 5000);
 
     var core = cast(match, GameMatchCore);
-    core.pushOutboxPlain(
-      "m-a",
-      "測試頁4：AI 測試",
-      game.PopupPayload.Plain(
-        "目標：測試 aiSuggest + AI 自動操作是否能推進回合並收束。\n\n"
-        + "本場四名君主皆為 AI 席位：載入選單後會自動排程 AiStep（無需手動按鈕）。\n"
-        + "可觀察是否自動完成 Move→落地→互動→ConfirmDone 並輪轉四家。\n"
-      ),
-      "test4-ai"
-    );
+    core.pushOutboxPlain("m-a", "測試頁4：AI 測試", PopupPayload.UiCopy(OutboxUiCopyKey.TestPage4AiIntro), "test4-ai");
   }
 
   public function dispose():Void {
