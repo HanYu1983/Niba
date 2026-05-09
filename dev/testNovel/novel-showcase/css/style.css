@@ -484,6 +484,405 @@ body {
     font-size: 1.1rem;
 }
 
+/* 時間軸樣式 */
+.timeline-container {
+    padding: 20px 0;
+}
+
+.timeline-controls {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.timeline-controls label {
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+.timeline-controls select {
+    padding: 8px 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background-color: var(--bg-white);
+    color: var(--text-color);
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.timeline-controls select:focus {
+    outline: none;
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.timeline-view-toggle {
+    display: flex;
+    gap: 5px;
+    margin-left: auto;
+}
+
+.timeline-view-toggle button {
+    padding: 8px 15px;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-white);
+    color: var(--text-color);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 0.9rem;
+}
+
+.timeline-view-toggle button.active {
+    background-color: var(--secondary-color);
+    color: white;
+    border-color: var(--secondary-color);
+}
+
+/* 時程表樣式 */
+.timeline-table-wrapper {
+    overflow-x: auto;
+    overflow-y: auto;
+    max-height: 70vh;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    background-color: var(--bg-white);
+    box-shadow: var(--shadow);
+    position: relative;
+}
+
+.timeline-table {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: max-content;
+    min-width: 100%;
+}
+
+.timeline-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
+
+.timeline-table th,
+.timeline-table td {
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+    border-right: 1px solid #f0f0f0;
+    vertical-align: top;
+    min-width: 140px;
+    max-width: 200px;
+}
+
+.timeline-table th {
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: bold;
+    font-size: 0.85rem;
+    white-space: nowrap;
+}
+
+/* 固定角色列 */
+.timeline-sticky-col {
+    position: sticky;
+    left: 0;
+    z-index: 10;
+    min-width: 150px;
+    max-width: 180px;
+    background-color: var(--bg-white);
+}
+
+.timeline-table thead .timeline-sticky-col {
+    z-index: 30;
+    background-color: var(--primary-color);
+}
+
+.timeline-char-header {
+    font-size: 1rem;
+    min-width: 150px;
+}
+
+.timeline-char-cell {
+    padding: 12px;
+}
+
+.timeline-char-name {
+    font-weight: bold;
+    font-size: 0.95rem;
+    color: var(--text-color);
+    margin-bottom: 4px;
+}
+
+.timeline-char-realm {
+    font-size: 0.75rem;
+    color: var(--text-light);
+    line-height: 1.3;
+}
+
+.timeline-event-cell {
+    padding: 6px 8px;
+    vertical-align: top;
+}
+
+.timeline-event-bubble {
+    padding: 6px 10px;
+    border-radius: 6px;
+    color: white;
+    font-size: 0.78rem;
+    margin-bottom: 4px;
+    cursor: pointer;
+    transition: var(--transition);
+    line-height: 1.3;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+.timeline-event-bubble:hover {
+    transform: scale(1.05);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+}
+
+.bubble-event-name {
+    font-weight: bold;
+    white-space: normal;
+    word-break: break-word;
+}
+
+/* 時間軸主體 */
+.timeline-axis {
+    position: relative;
+    padding-left: 40px;
+}
+
+.timeline-axis::before {
+    content: '';
+    position: absolute;
+    left: 20px;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: linear-gradient(to bottom, var(--secondary-color), var(--accent-color));
+    border-radius: 2px;
+}
+
+.timeline-year-group {
+    position: relative;
+    margin-bottom: 30px;
+}
+
+.timeline-year-label {
+    position: relative;
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: var(--secondary-color);
+    margin-bottom: 15px;
+    padding-left: 20px;
+}
+
+.timeline-year-label::before {
+    content: '';
+    position: absolute;
+    left: -26px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 14px;
+    height: 14px;
+    background-color: var(--secondary-color);
+    border-radius: 50%;
+    border: 3px solid var(--bg-white);
+    box-shadow: 0 0 0 2px var(--secondary-color);
+}
+
+.timeline-events {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 15px;
+    padding-left: 20px;
+}
+
+.timeline-event-card {
+    background-color: var(--bg-white);
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: var(--shadow);
+    border-left: 4px solid var(--secondary-color);
+    transition: var(--transition);
+    cursor: pointer;
+}
+
+.timeline-event-card:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-2px);
+}
+
+.timeline-event-card .event-character {
+    font-weight: bold;
+    color: var(--secondary-color);
+    margin-bottom: 5px;
+    font-size: 0.95rem;
+}
+
+.timeline-event-card .event-title {
+    font-weight: bold;
+    color: var(--text-color);
+    margin-bottom: 8px;
+    font-size: 1rem;
+}
+
+.timeline-event-card .event-description {
+    color: var(--text-light);
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+/* 角色篩選標籤 */
+.timeline-character-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 10px;
+}
+
+.timeline-character-tag {
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    transition: var(--transition);
+    opacity: 0.7;
+}
+
+.timeline-character-tag.active {
+    opacity: 1;
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2);
+}
+
+.timeline-character-tag:hover {
+    opacity: 1;
+}
+
+/* 並行時間軸視圖 */
+.timeline-parallel {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.timeline-parallel-character {
+    background-color: var(--bg-white);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: var(--shadow);
+}
+
+.timeline-parallel-character h3 {
+    color: var(--secondary-color);
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.timeline-parallel-events {
+    position: relative;
+    padding-left: 20px;
+}
+
+.timeline-parallel-events::before {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: var(--border-color);
+}
+
+.timeline-parallel-event {
+    position: relative;
+    margin-bottom: 15px;
+    padding-left: 15px;
+}
+
+.timeline-parallel-event::before {
+    content: '';
+    position: absolute;
+    left: -18px;
+    top: 8px;
+    width: 10px;
+    height: 10px;
+    background-color: var(--secondary-color);
+    border-radius: 50%;
+    border: 2px solid var(--bg-white);
+}
+
+.timeline-parallel-event .event-year {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    font-weight: bold;
+}
+
+.timeline-parallel-event .event-title {
+    font-weight: bold;
+    color: var(--text-color);
+    margin: 3px 0;
+}
+
+.timeline-parallel-event .event-description {
+    font-size: 0.9rem;
+    color: var(--text-light);
+}
+
+/* 時間軸篩選按鈕 */
+#timeline-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 15px 20px;
+    background-color: var(--bg-white);
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* 響應式時間軸 */
+@media (max-width: 768px) {
+    .timeline-events {
+        grid-template-columns: 1fr;
+    }
+
+    .timeline-parallel {
+        grid-template-columns: 1fr;
+    }
+
+    .timeline-controls {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .timeline-view-toggle {
+        margin-left: 0;
+    }
+
+    .timeline-table th,
+    .timeline-table td {
+        min-width: 120px;
+        padding: 8px;
+        font-size: 0.8rem;
+    }
+
+    .timeline-sticky-col {
+        min-width: 120px;
+    }
+
+    .timeline-event-bubble {
+        font-size: 0.7rem;
+        padding: 4px 8px;
+    }
+}
+
 /* 響應式設計 */
 @media (max-width: 768px) {
     .nav-menu {

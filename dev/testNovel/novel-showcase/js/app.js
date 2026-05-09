@@ -8,7 +8,9 @@ class NovelShowcaseApp {
             characters: 'all',
             items: 'all',
             places: 'all',
-            novelStory: 'all'
+            novelStory: 'all',
+            timeline: 'all',
+            timelineView: 'merged' // 'merged' 或 'parallel'
         };
         this.init();
     }
@@ -29,6 +31,7 @@ class NovelShowcaseApp {
         this.renderItems();
         this.renderNovels();
         this.renderPlaces();
+        this.renderTimeline();
 
         console.log('應用初始化完成');
     }
@@ -447,6 +450,260 @@ class NovelShowcaseApp {
         });
 
         container.innerHTML = html || '<p class="no-data">暫無小說數據</p>';
+    }
+
+    /**
+     * 渲染時間綫內容（時程表視圖）
+     */
+    renderTimeline() {
+        const timelineData = dataLoader.getTimelineData();
+        const filterContainer = document.getElementById('timeline-filters');
+        const container = document.getElementById('timeline-content');
+
+        if (!container) return;
+
+        // 渲染篩選按鈕
+        if (filterContainer) {
+            let filterHtml = `
+                <button class="filter-btn ${this.currentFilter.timeline === 'all' ? 'active' : ''}" 
+                        data-filter="all">
+                    全部角色
+                </button>
+            `;
+
+            timelineData.characters.forEach(char => {
+                filterHtml += `
+                    <button class="filter-btn ${this.currentFilter.timeline === char.id ? 'active' : ''}" 
+                            data-filter="${char.id}">
+                        ${char.name}
+                    </button>
+                `;
+            });
+
+            filterContainer.innerHTML = filterHtml;
+
+            // 綁定篩選事件
+            filterContainer.querySelectorAll('.filter-btn[data-filter]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    this.currentFilter.timeline = e.target.dataset.filter;
+                    this.renderTimeline();
+                });
+            });
+        }
+
+        this.renderTimelineTable(timelineData, container);
+    }
+
+    /**
+     * 渲染時程表（直向角色、橫向時間）
+     */
+    renderTimelineTable(timelineData, container) {
+        if (!timelineData || timelineData.characters.length === 0) {
+            container.innerHTML = '<p class="no-data">暫無時間綫數據</p>';
+            return;
+        }
+
+        // 篩選角色
+        let characters = timelineData.characters;
+        if (this.currentFilter.timeline !== 'all') {
+            characters = characters.filter(c => c.id === this.currentFilter.timeline);
+        }
+
+        // 收集所有年份並排序
+        const allYears = new Set();
+        characters.forEach(char => {
+            if (char.timeline) {
+                char.timeline.forEach(event => allYears.add(event.year));
+            }
+        });
+        const sortedYears = Array.from(allYears).sort((a, b) => a - b);
+
+        if (sortedYears.length === 0) {
+            container.innerHTML = '<p class="no-data">暫無事件記錄</p>';
+            return;
+        }
+
+        // 構建事件查找表：key = "charId_year", value = event
+        const eventMap = {};
+        characters.forEach(char => {
+            if (char.timeline) {
+                char.timeline.forEach(event => {
+                    const key = `${char.id}_${event.year}`;
+                    if (!eventMap[key]) eventMap[key] = [];
+                    eventMap[key].push(event);
+                });
+            }
+        });
+
+        // 構建表格 HTML
+        let html = '<div class="timeline-table-wrapper">';
+        html += '<table class="timeline-table">';
+
+        // 表頭
+        html += '<thead><tr>';
+        html += '<th class="timeline-sticky-col timeline-char-header">角色</th>';
+        sortedYears.forEach(year => {
+            html += `<th class="timeline-year-header">OE ${year}</th>`;
+        });
+        html += '</tr></thead>';
+
+        // 表身
+        html += '<tbody>';
+        characters.forEach(char => {
+            const color = this.getCharacterColor(char.id);
+            html += '<tr>';
+            html += `<td class="timeline-sticky-col timeline-char-cell" style="background-color: ${color}20; border-left: 4px solid ${color};">`;
+            html += `<div class="timeline-char-name">${char.name}</div>`;
+            html += `<div class="timeline-char-realm">${char._raw?.current_realm || ''}</div>`;
+            html += '</td>';
+
+            sortedYears.forEach(year => {
+                const key = `${char.id}_${year}`;
+                const events = eventMap[key];
+                html += '<td class="timeline-event-cell">';
+                if (events) {
+                    events.forEach(event => {
+                        html += `
+                            <div class="timeline-event-bubble" 
+                                 style="background-color: ${color};" 
+                                 title="${event.event}: ${event.description}">
+                                <div class="bubble-event-name">${event.event}</div>
+                            </div>
+                        `;
+                    });
+                }
+                html += '</td>';
+            });
+
+            html += '</tr>';
+        });
+        html += '</tbody></table></div>';
+
+        container.innerHTML = html;
+    }
+
+    /**
+     * 設置時間綫視圖模式
+     */
+    setTimelineView(view) {
+        this.currentFilter.timelineView = view;
+        this.renderTimeline();
+    }
+
+    /**
+     * 渲染合併時間軸（所有角色事件按年份合併）
+     */
+    renderMergedTimeline(timelineData, container) {
+        if (!timelineData || timelineData.events.length === 0) {
+            container.innerHTML = '<p class="no-data">暫無時間綫數據</p>';
+            return;
+        }
+
+        // 按年份分組
+        const eventsByYear = {};
+        timelineData.events.forEach(event => {
+            if (!eventsByYear[event.year]) {
+                eventsByYear[event.year] = [];
+            }
+            eventsByYear[event.year].push(event);
+        });
+
+        // 按年份排序
+        const sortedYears = Object.keys(eventsByYear).sort((a, b) => parseInt(a) - parseInt(b));
+
+        let html = '<div class="timeline-container"><div class="timeline-axis">';
+
+        sortedYears.forEach(year => {
+            const events = eventsByYear[year];
+            html += `
+                <div class="timeline-year-group">
+                    <div class="timeline-year-label">OE ${year}</div>
+                    <div class="timeline-events">
+            `;
+
+            events.forEach(event => {
+                const color = this.getCharacterColor(event.characterId);
+                html += `
+                    <div class="timeline-event-card" style="border-left-color: ${color};" 
+                         onclick="app.showCharacterDetail('${event.characterId}')">
+                        <div class="event-character" style="color: ${color};">
+                            ${event.characterName}
+                        </div>
+                        <div class="event-title">${event.event}</div>
+                        <div class="event-description">${event.description}</div>
+                    </div>
+                `;
+            });
+
+            html += `</div></div>`;
+        });
+
+        html += '</div></div>';
+        container.innerHTML = html;
+    }
+
+    /**
+     * 渲染並行時間軸（每個角色獨立時間軸）
+     */
+    renderParallelTimeline(timelineData, container) {
+        if (!timelineData || timelineData.characters.length === 0) {
+            container.innerHTML = '<p class="no-data">暫無時間綫數據</p>';
+            return;
+        }
+
+        let html = '<div class="timeline-container"><div class="timeline-parallel">';
+
+        timelineData.characters.forEach(char => {
+            // 如果篩選了特定角色，只顯示該角色
+            if (this.currentFilter.timeline !== 'all' && this.currentFilter.timeline !== char.id) {
+                return;
+            }
+
+            const color = this.getCharacterColor(char.id);
+            html += `
+                <div class="timeline-parallel-character">
+                    <h3 style="color: ${color};">${char.name}</h3>
+                    <div class="timeline-parallel-events">
+            `;
+
+            if (char.timeline && char.timeline.length > 0) {
+                char.timeline.forEach(event => {
+                    html += `
+                        <div class="timeline-parallel-event">
+                            <div class="event-year">OE ${event.year}</div>
+                            <div class="event-title">${event.event}</div>
+                            <div class="event-description">${event.description}</div>
+                        </div>
+                    `;
+                });
+            } else {
+                html += '<p class="no-data">暫無事件記錄</p>';
+            }
+
+            html += '</div></div>';
+        });
+
+        html += '</div></div>';
+        container.innerHTML = html;
+    }
+
+    /**
+     * 獲取角色專屬顏色
+     */
+    getCharacterColor(charId) {
+        const colors = {
+            'elena': '#3498db',
+            'karl': '#e74c3c',
+            'li-xuanji': '#2ecc71',
+            'li-yunfeng': '#9b59b6',
+            'lu-tianxing': '#f39c12',
+            'merindis': '#1abc9c',
+            'su-qingyue': '#e91e63',
+            'wang-qingfeng': '#00bcd4',
+            'zhang-wuya': '#ff5722',
+            'zhao-wuji': '#8bc34a'
+        };
+        return colors[charId] || '#607d8b';
     }
 
     /**

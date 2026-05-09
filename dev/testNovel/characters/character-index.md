@@ -102,5 +102,49 @@
 
 ---
 
+## 同步規則
+
+### 角色資料同步至網頁 JSON
+
+當 `characters/` 資料夾內容有更動時，必須同步更新至網頁展示資料夾的角色 JSON 檔案：
+
+**同步目標路徑：**
+```
+novel-showcase/data/characters/
+```
+
+**同步規則：**
+
+1. **新增角色**：當在 `characters/` 建立新的角色 `.md` 檔案時，需同步在 `novel-showcase/data/characters/` 建立對應的 `.json` 檔案。
+
+2. **修改角色**：當修改既有角色 `.md` 檔案的內容（如基本資訊、背景故事、能力等）時，需同步更新 `novel-showcase/data/characters/` 中對應的 `.json` 檔案。
+
+3. **刪除角色**：當刪除 `characters/` 中的角色 `.md` 檔案時，需同步刪除 `novel-showcase/data/characters/` 中對應的 `.json` 檔案。
+
+4. **索引同步**：當修改本 `character-index.md` 的角色總覽時，需同步更新 `novel-showcase/data/characters/character-index.json`。
+
+**JSON 格式範例：**
+```json
+{
+  "id": "角色英文ID",
+  "name": "角色中文名",
+  "title": "稱號",
+  "faction": "陣營",
+  "status": "狀態",
+  "description": "簡短描述",
+  "background": "背景故事摘要",
+  "abilities": ["能力1", "能力2"],
+  "relationships": {
+    "角色ID": "關係描述"
+  }
+}
+```
+
+**執行方式：**
+- 手動同步：使用 `scripts/` 資料夾中的同步腳本（若存在）
+- 自動同步：可設定檔案監聽工具，在 `characters/` 有更動時自動觸發同步
+
+---
+
 *本索引基於「靈源紀元」世界觀建立。*
 *最後更新：靈源紀元 30000 年*

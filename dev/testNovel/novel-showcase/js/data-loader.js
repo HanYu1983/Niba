@@ -257,6 +257,51 @@ class DataLoader {
     }
 
     /**
+     * 獲取時間綫數據
+     */
+    getTimelineData() {
+        if (!this._timelineCache) {
+            this._timelineCache = this.buildTimelineData();
+        }
+        return this._timelineCache;
+    }
+
+    /**
+     * 構建時間綫數據
+     */
+    buildTimelineData() {
+        const characters = this.data.characters || [];
+        const allEvents = [];
+
+        characters.forEach(char => {
+            const raw = char._raw;
+            if (raw && raw.timeline && raw.timeline.length > 0) {
+                raw.timeline.forEach(event => {
+                    allEvents.push({
+                        year: event.year,
+                        characterId: char.id,
+                        characterName: char.name,
+                        event: event.event,
+                        description: event.description
+                    });
+                });
+            }
+        });
+
+        // 按年份排序
+        allEvents.sort((a, b) => a.year - b.year);
+
+        return {
+            characters: characters.map(c => ({
+                id: c.id,
+                name: c.name,
+                timeline: c._raw?.timeline || []
+            })),
+            events: allEvents
+        };
+    }
+
+    /**
      * 獲取物品數據
      */
     getItems() {
