@@ -16,6 +16,7 @@ import rx.disposables.ISubscription;
 import view.EventCenter;
 import view.IViewModel;
 import view.UiEvent;
+import game.HistoricalPeople;
 
 /**
  * 當前玩家（activeMonarch）選單顯示元件。
@@ -108,7 +109,7 @@ class HtmlActiveMenuView {
     var tSub = Browser.document.createSpanElement();
     tSub.className = "ui-badge";
     tSub.setAttribute("data-tone", "gold");
-    tSub.textContent = "主公 " + a.id();
+    tSub.textContent = "主公 " + HistoricalPeople.monarchName(a.id());
     title.appendChild(tSub);
     root.appendChild(title);
 

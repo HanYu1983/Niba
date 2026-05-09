@@ -1,6 +1,7 @@
 package view.html;
 
 import game.GeneralStat;
+import game.HistoricalPeople;
 import game.IEquipment;
 import game.IMonarch;
 import game.TileKind;
@@ -92,7 +93,7 @@ class HtmlInfoPanelView {
 
     var stats = Browser.document.createDivElement();
     stats.className = "info-stats";
-    stats.appendChild(badge("主公", a.id(), null));
+    stats.appendChild(badge("主公", HistoricalPeople.monarchName(a.id()), null));
     stats.appendChild(badge("席位", Std.string(a.seat()), null));
     stats.appendChild(badge("位置", Std.string(a.pawnIndex()), null));
     stats.appendChild(badge("兵力", Std.string(a.troops()), "red"));
@@ -111,7 +112,7 @@ class HtmlInfoPanelView {
       any = true;
       var b = Browser.document.createSpanElement();
       b.className = "ui-badge";
-      b.textContent = g.id();
+      b.textContent = HistoricalPeople.generalName(g.id());
       gens.appendChild(b);
     }
     if (!any) {
@@ -239,7 +240,7 @@ class HtmlInfoPanelView {
         r.appendChild(td(Std.string(eq.bonusStat()) + " +" + eq.bonusValue(), false));
         r.appendChild(td(Std.string(eq.loyaltyBonus()), false));
         r.appendChild(td(Std.string(eq.price()), false));
-        r.appendChild(td(x.gid, true));
+        r.appendChild(td(HistoricalPeople.generalName(x.gid), true));
         tbody.appendChild(r);
       }
     }

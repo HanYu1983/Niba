@@ -1292,7 +1292,7 @@ class GameMatchCore implements IGameMatch {
   function menuChoicesFromRoster(mon:Monarch):Array<MenuGeneralChoice> {
     var out:Array<MenuGeneralChoice> = [];
     for (g in mon.roster())
-      out.push({generalId: g.id(), caption: g.id()});
+      out.push({generalId: g.id(), caption: HistoricalPeople.generalName(g.id())});
     return out;
   }
 
@@ -1304,7 +1304,7 @@ class GameMatchCore implements IGameMatch {
       ok.set(g.id(), true);
     for (gid in forceGetCityGarrisonGeneralIds(cityIdx))
       if (ok.exists(gid))
-        out.push({generalId: gid, caption: gid});
+        out.push({generalId: gid, caption: HistoricalPeople.generalName(gid)});
     return out;
   }
 
@@ -1587,7 +1587,7 @@ class GameMatchCore implements IGameMatch {
       var choices:Array<MenuGeneralChoice> = [];
       for (g in ruler.roster()) {
         var gid = g.id();
-        choices.push({generalId: gid, caption: gid});
+        choices.push({generalId: gid, caption: HistoricalPeople.generalName(gid)});
       }
       var rosterMember = new Map<String, Bool>();
       for (g in ruler.roster())
@@ -1657,7 +1657,7 @@ class GameMatchCore implements IGameMatch {
       var ruler = cast(activeMonarch(), Monarch);
       var choices:Array<MenuGeneralChoice> = [];
       for (g in ruler.roster())
-        choices.push({generalId: g.id(), caption: g.id()});
+        choices.push({generalId: g.id(), caption: HistoricalPeople.generalName(g.id())});
       var defSel:Array<String> = choices.length > 0 ? [choices[0].generalId] : [];
 
       var shopChildren:Array<IPlayerMenuNode> = [];
@@ -1693,7 +1693,8 @@ class GameMatchCore implements IGameMatch {
               rate = 0;
             if (rate > 1)
               rate = 1;
-            var cap = '${gid}｜${Std.string(stat)}=${statVal}｜成功率 ${Std.int(rate * 100)}%｜體力-${av.avoidanceStaminaCost()}';
+            var gName = HistoricalPeople.generalName(gid);
+            var cap = '${gName}｜${Std.string(stat)}=${statVal}｜成功率 ${Std.int(rate * 100)}%｜體力-${av.avoidanceStaminaCost()}';
             choices.push({generalId: gid, caption: cap});
           }
           var defSel:Array<String> = choices.length > 0 ? [choices[0].generalId] : [];

@@ -5,6 +5,7 @@ import game.TileKind;
 import js.Browser;
 import js.html.DivElement;
 import js.html.Element;
+import game.HistoricalPeople;
 import view.EventCenter;
 import view.IViewModel;
 import view.UiEvent;
@@ -70,7 +71,7 @@ class HtmlTileView {
         var b = Browser.document.createSpanElement();
         b.className = "ui-badge";
         b.setAttribute("data-tone", tone);
-        b.textContent = pid;
+        b.textContent = HistoricalPeople.monarchName(pid);
         occBox.appendChild(b);
       }
     } else {
@@ -95,7 +96,7 @@ class HtmlTileView {
       case City:
         var owner = vm.forceGetCityOwner(tileIndex);
         var lvl = vm.forceGetCityLevel(tileIndex);
-        stats.appendChild(kv("屬主", owner != null ? owner : "（無）"));
+        stats.appendChild(kv("屬主", owner != null ? HistoricalPeople.monarchName(owner) : "（無）"));
         stats.appendChild(kv("等級", Std.string(lvl)));
         stats.appendChild(kv("金庫", Std.string(vm.forceGetCityStoredGold(tileIndex))));
         stats.appendChild(kv("糧庫", Std.string(vm.forceGetCityStoredGrain(tileIndex))));
@@ -103,7 +104,7 @@ class HtmlTileView {
       case Village:
         var owner = vm.forceGetVillageOwner(tileIndex);
         var lvl = vm.forceGetVillageLevel(tileIndex);
-        stats.appendChild(kv("屬主", owner != null ? owner : "（無）"));
+        stats.appendChild(kv("屬主", owner != null ? HistoricalPeople.monarchName(owner) : "（無）"));
         stats.appendChild(kv("等級", Std.string(lvl)));
         stats.appendChild(kv("金庫", Std.string(vm.forceGetVillageStoredGold(tileIndex))));
         stats.appendChild(kv("糧庫", Std.string(vm.forceGetVillageStoredGrain(tileIndex))));

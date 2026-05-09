@@ -1,6 +1,7 @@
 package view.html;
 
 import game.GameIds;
+import game.HistoricalPeople;
 import js.Browser;
 import js.html.DivElement;
 import js.html.Element;
@@ -50,7 +51,7 @@ class HtmlPlayerView {
 
     var name = Browser.document.createDivElement();
     name.className = "player-name";
-    name.textContent = m.id();
+    name.textContent = HistoricalPeople.monarchName(m.id());
     head.appendChild(name);
 
     var seat = Browser.document.createSpanElement();

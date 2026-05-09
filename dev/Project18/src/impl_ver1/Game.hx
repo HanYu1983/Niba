@@ -90,11 +90,11 @@ class Game implements IGame {
       var grain = 1000;
       var gold = 1000;
       switch mid {
-        case "織田信長":
+        case "m_oda_nobunaga":
           gold += 300;
-        case "曹操":
+        case "m_cao_cao":
           troops += 300;
-        case "劉備":
+        case "m_liu_bei":
           grain += 300;
         default:
       }
