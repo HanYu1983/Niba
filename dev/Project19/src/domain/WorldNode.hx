@@ -47,19 +47,3 @@ typedef NodeCost = {
 	var node:WorldNode;
 	var cost:Float;
 }
-
-/**
- * 取得指定節點的相連節點 (與成本) 的函式型別
- *
- * 契約:
- *   - 對方格節點 (Cell) 通常回傳 4 個方向 (上下左右) 的鄰居,
- *     若是 8 連通可回傳 8 個方向, 由實作端決定
- *   - 不可通過的鄰居 (例如 Wall) 由實作端選擇省略, 或標 cost = ∞
- *   - 邊界外的鄰居應省略
- *   - cost 為「從目前節點移動到該鄰居」的成本, 由地形 / 距離 / 高低差等決定
- *
- * 提供方:
- *   通常以 closure 形式由 World 持有 (見 World.getNeighbors),
- *   實作可內部引用地圖網格 / 動態障礙物清單
- */
-typedef NeighborProvider = (node:WorldNode) -> Array<NodeCost>;

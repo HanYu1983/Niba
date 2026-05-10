@@ -7,7 +7,8 @@ import domain.Machine;
 import domain.Projectile.ProjectileObject;
 import domain.Weapon.WeaponOnField;
 import domain.Weapon.WeaponOnMachine;
-import domain.WorldNode.NeighborProvider;
+import domain.WorldNode.NodeCost;
+import domain.WorldNode.WorldNode;
 
 /**
  * 戰場世界狀態 (執行時態)
@@ -23,10 +24,11 @@ import domain.WorldNode.NeighborProvider;
  *   - hitboxes:         所有目前存活的碰撞箱
  *   - markers:          場上的地點標記 (出生點 / 任務點 / 巡邏點等)
  *
- * 抽象方法 (function field):
- *   - getNeighbors: 給定一個 WorldNode, 回傳其相連節點與成本
- *                   (世界節點化的查詢介面, 詳見 WorldNode / NeighborProvider)
- *                   實作通常以 closure 持有地圖網格 / 動態障礙物資訊
+ * 世界節點化:
+ *   尋路 / 圖搜尋以 WorldNode + NeighborProvider 為介面 (見下方 typedef)。
+ *   NeighborProvider 不放在 World 上, 因為成本計算是「全息」的
+ *   (鄰居 / 成本可能依其他機體位置 / 動態障礙物 / 戰場狀態而變),
+ *   故由呼叫方在需要時把 World 與節點一併傳入。
  *
  * 設計注意:
  *   weaponsOnMachine 與 Machine.weapons 是同一批 WeaponOnMachine 物件的兩種視角
@@ -43,8 +45,21 @@ typedef World = {
 	var projectiles:Array<ProjectileObject>;
 	var hitboxes:Array<Hitbox>;
 	var markers:Array<Marker>;
-	var getNeighbors:NeighborProvider;
 }
+
+/**
+ * 取得指定節點的相連節點 (與成本) 的函式型別
+ *
+ * 契約:
+ *   - 第一參數 world 為「全息上下文」, 成本計算可能依機體位置 / 發射物 / 動態障礙等變動,
+ *     故必須帶入完整 World
+ *   - 對方格節點 (Cell) 通常回傳 4 個方向 (上下左右) 的鄰居;
+ *     8 連通由實作端決定
+ *   - 不可通過的鄰居 (例如 Wall / 被機體佔據的格子) 由實作端選擇省略, 或標 cost = ∞
+ *   - 邊界外的鄰居應省略
+ *   - cost 為「從目前節點移動到該鄰居」的成本, 由地形 / 距離 / 高低差 / 動態狀態等決定
+ */
+typedef NeighborProvider = (world:World, node:WorldNode) -> Array<NodeCost>;
 
 /**
  * World 查詢工具
