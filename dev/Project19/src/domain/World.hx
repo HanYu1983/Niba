@@ -2,6 +2,7 @@ package domain;
 
 import domain.Collision.Hitbox;
 import domain.FieldObject;
+import domain.FieldObject.Marker;
 import domain.Machine;
 import domain.Projectile.ProjectileObject;
 import domain.Weapon.WeaponOnField;
@@ -19,6 +20,7 @@ import domain.Weapon.WeaponOnMachine;
  *   - weaponsOnField:   所有掉落 / 部署 / 砲塔等場上武器
  *   - projectiles:      所有飛行 / 場域中的發射物實例
  *   - hitboxes:         所有目前存活的碰撞箱
+ *   - markers:          場上的地點標記 (出生點 / 任務點 / 巡邏點等)
  *
  * 設計注意:
  *   weaponsOnMachine 與 Machine.weapons 是同一批 WeaponOnMachine 物件的兩種視角
@@ -34,6 +36,7 @@ typedef World = {
 	var weaponsOnField:Array<WeaponOnField>;
 	var projectiles:Array<ProjectileObject>;
 	var hitboxes:Array<Hitbox>;
+	var markers:Array<Marker>;
 }
 
 /**
@@ -48,6 +51,7 @@ class WorldQuery {
 	 *   - weaponsOnField
 	 *   - projectiles
 	 *   - hitboxes
+	 *   - markers
 	 *
 	 * 不包含 weaponsOnMachine, 因為它們是 MountedObject,
 	 * 世界座標需由 owner 機體的 position / facing 推導, 不直接視為 FieldObject。
@@ -66,6 +70,9 @@ class WorldQuery {
 
 		for (hitbox in world.hitboxes)
 			objects.push(hitbox);
+
+		for (marker in world.markers)
+			objects.push(marker);
 
 		return objects;
 	}

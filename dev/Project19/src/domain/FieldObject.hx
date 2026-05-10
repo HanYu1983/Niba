@@ -45,3 +45,21 @@ typedef MountedObject = {
 	var localPosition:Vec2;
 	var localFacing:Float;
 }
+
+/**
+ * 場上地點標記
+ *
+ * 結構與 FieldObject 一致, 純粹以 typedef 名稱區分用途。
+ *
+ * 應用場景:
+ *   - 出生點 / 重生點
+ *   - 巡邏路徑點
+ *   - 任務 / 目標位置 (例: Goal 系統的「接近 A」中的 A)
+ *   - 相機錨點 / 鏡頭觸發
+ *
+ * 不擁有戰鬥屬性 (HP / 武器 / 防禦), 也不會被碰撞系統視為可打擊目標,
+ * 但仍可被 WorldQuery.getFieldObjects 取得以做為位置查詢來源。
+ */
+typedef Marker = {
+	> FieldObject,
+}

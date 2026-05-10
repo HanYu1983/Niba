@@ -40,7 +40,8 @@ class GoalDemo {
 		weaponsOnMachine: [],
 		weaponsOnField: [],
 		projectiles: [],
-		hitboxes: []
+		hitboxes: [],
+		markers: []
 	};
 
 	/**
