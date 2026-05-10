@@ -1,6 +1,7 @@
 package domain;
 
 import domain.Damage.Damage;
+import domain.Damage.DamageType;
 import domain.Damage.DefenseProfile;
 import domain.Weapon.WeaponOnMachine;
 import domain.Skill.Skill;
@@ -42,4 +43,33 @@ typedef Machine = {
 	var defense:DefenseProfile;
 	var weapons:Array<WeaponOnMachine>;
 	var skills:Array<Skill>;
+}
+
+/**
+ * 建立欄位都為預設值的空 Machine。
+ *
+ * 用途:
+ *   - sample / test 不必逐欄位手刻 literal
+ *   - 後續若 Machine / FieldObject 增欄位, 一處補預設即可
+ *
+ * 預設值:
+ *   - id / name 為空字串
+ *   - position 為原點, facing = 0
+ *   - 所有數值欄位為 0
+ *   - defense.weights 為空 Map
+ *   - weapons / skills 為空陣列
+ */
+function createEmptyMachine():Machine {
+	return {
+		id: "",
+		name: "",
+		position: {x: 0.0, y: 0.0},
+		facing: 0.0,
+		maxHp: 0.0,
+		maxEnergy: 0.0,
+		energyRegen: 0.0,
+		defense: {weights: new Map<DamageType, Float>()},
+		weapons: [],
+		skills: []
+	};
 }

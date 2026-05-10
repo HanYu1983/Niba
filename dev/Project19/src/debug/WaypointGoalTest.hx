@@ -1,10 +1,11 @@
 package debug;
 
 import debug.BasicNeighbors.basicNeighborProvider;
-import domain.Damage.DamageType;
 import domain.FieldObject.Marker;
+import domain.FieldObject.createEmptyMarker;
 import domain.Goal.GoalContext;
 import domain.Machine;
+import domain.Machine.createEmptyMachine;
 import domain.World;
 import domain.World.createEmptyWorld;
 import impl.SimpleAStarPathfinder;
@@ -18,11 +19,11 @@ class WaypointGoalTest {
 	public static function run():Void {
 		trace("=== Waypoint Goal Test ===");
 
-		var actor = makeActor();
+		var actor = buildActor();
 		var markers = [
-			makeMarker("wp_1", "Waypoint A", 200.0, 0.0),
-			makeMarker("wp_2", "Waypoint B", 200.0, 200.0),
-			makeMarker("wp_3", "Waypoint C", -100.0, 200.0)
+			buildMarker("wp_1", "Waypoint A", 200.0, 0.0),
+			buildMarker("wp_2", "Waypoint B", 200.0, 200.0),
+			buildMarker("wp_3", "Waypoint C", -100.0, 200.0)
 		];
 
 		var world = createWorld(actor, markers);
@@ -49,27 +50,21 @@ class WaypointGoalTest {
 		return world;
 	}
 
-	static function makeActor():Machine {
-		return {
-			id: "waypoint_actor",
-			name: "Waypoint Actor",
-			position: {x: 0.0, y: 0.0},
-			facing: 0.0,
-			maxHp: 100.0,
-			maxEnergy: 100.0,
-			energyRegen: 1.0,
-			defense: {weights: new Map<DamageType, Float>()},
-			weapons: [],
-			skills: []
-		};
+	static function buildActor():Machine {
+		var actor = createEmptyMachine();
+		actor.id = "waypoint_actor";
+		actor.name = "Waypoint Actor";
+		actor.maxHp = 100.0;
+		actor.maxEnergy = 100.0;
+		actor.energyRegen = 1.0;
+		return actor;
 	}
 
-	static function makeMarker(id:String, name:String, x:Float, y:Float):Marker {
-		return {
-			id: id,
-			name: name,
-			position: {x: x, y: y},
-			facing: 0.0
-		};
+	static function buildMarker(id:String, name:String, x:Float, y:Float):Marker {
+		var marker = createEmptyMarker();
+		marker.id = id;
+		marker.name = name;
+		marker.position = {x: x, y: y};
+		return marker;
 	}
 }

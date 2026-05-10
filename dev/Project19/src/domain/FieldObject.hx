@@ -63,3 +63,24 @@ typedef MountedObject = {
 typedef Marker = {
 	> FieldObject,
 }
+
+/**
+ * 建立欄位都為預設值的空 Marker。
+ *
+ * 用途:
+ *   - sample / test 不必逐欄位手刻 literal
+ *   - 後續若 FieldObject 增欄位, 一處補預設即可
+ *
+ * 慣例:
+ *   - id / name 為空字串
+ *   - position 為原點 (0, 0)
+ *   - facing 為 0 弧度 (+X 方向)
+ */
+function createEmptyMarker():Marker {
+	return {
+		id: "",
+		name: "",
+		position: {x: 0.0, y: 0.0},
+		facing: 0.0
+	};
+}

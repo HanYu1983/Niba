@@ -1,8 +1,8 @@
 package sample;
 
-import domain.Damage.DamageType;
 import domain.Goal;
 import domain.Machine;
+import domain.Machine.createEmptyMachine;
 import domain.World;
 import domain.World.createEmptyWorld;
 
@@ -22,18 +22,17 @@ import domain.World.createEmptyWorld;
  */
 class GoalDemo {
 	/** Mock 機體, 此處只為填 GoalContext.actor */
-	public static final mockActor:Machine = {
-		id: "demo_actor",
-		name: "Demo Actor",
-		position: {x: 0.0, y: 0.0},
-		facing: 0.0,
-		maxHp: 100.0,
-		maxEnergy: 100.0,
-		energyRegen: 1.0,
-		defense: {weights: new Map<DamageType, Float>()},
-		weapons: [],
-		skills: []
-	};
+	public static final mockActor:Machine = createMockActor();
+
+	private static function createMockActor():Machine {
+		var actor = createEmptyMachine();
+		actor.id = "demo_actor";
+		actor.name = "Demo Actor";
+		actor.maxHp = 100.0;
+		actor.maxEnergy = 100.0;
+		actor.energyRegen = 1.0;
+		return actor;
+	}
 
 	/** Mock 世界, 由 createEmptyWorld 建空世界後放入 mockActor */
 	public static final mockWorld:World = createMockWorld();

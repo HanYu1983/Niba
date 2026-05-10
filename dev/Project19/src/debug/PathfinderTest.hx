@@ -4,6 +4,7 @@ import debug.BasicNeighbors.CELL_STEP;
 import debug.BasicNeighbors.basicNeighborProvider;
 import domain.FieldObject;
 import domain.FieldObject.Marker;
+import domain.FieldObject.createEmptyMarker;
 import domain.Pathfinding.FieldObjectMatcher;
 import domain.Pathfinding.FieldObjectNodeResolver;
 import domain.World;
@@ -61,9 +62,9 @@ class PathfinderTest {
 		trace("--- [3] findNearestObjectPathTree: 3 markers, maxCost=1000 ---");
 
 		var world = createEmptyWorld();
-		world.markers.push(makeMarker("marker_a", "A", 200.0, 100.0));
-		world.markers.push(makeMarker("marker_b", "B", -100.0, 100.0));
-		world.markers.push(makeMarker("marker_c", "C", 0.0, -500.0));
+		world.markers.push(buildMarker("marker_a", "A", 200.0, 100.0));
+		world.markers.push(buildMarker("marker_b", "B", -100.0, 100.0));
+		world.markers.push(buildMarker("marker_c", "C", 0.0, -500.0));
 
 		var start = Cell({x: 0.0, y: 0.0}, Plain);
 
@@ -85,7 +86,7 @@ class PathfinderTest {
 		trace("--- [4] findNearestObjectPathTree: marker @ (1000, 0), maxCost=300 ---");
 
 		var world = createEmptyWorld();
-		world.markers.push(makeMarker("marker_far", "Far", 1000.0, 0.0));
+		world.markers.push(buildMarker("marker_far", "Far", 1000.0, 0.0));
 
 		var start = Cell({x: 0.0, y: 0.0}, Plain);
 
@@ -102,13 +103,12 @@ class PathfinderTest {
 		trace('found=${result.found} -> $name cost=${result.cost} expanded=${result.tree.entries.length}');
 	}
 
-	static function makeMarker(id:String, name:String, x:Float, y:Float):Marker {
-		return {
-			id: id,
-			name: name,
-			position: {x: x, y: y},
-			facing: 0.0
-		};
+	static function buildMarker(id:String, name:String, x:Float, y:Float):Marker {
+		var marker = createEmptyMarker();
+		marker.id = id;
+		marker.name = name;
+		marker.position = {x: x, y: y};
+		return marker;
 	}
 
 	static var markerMatcher:FieldObjectMatcher = (world, object) -> StringTools.startsWith(object.id, "marker_");
