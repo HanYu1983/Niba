@@ -1,4 +1,5 @@
 import sample.DashSlash;
+import sample.GoalDemo;
 
 class HelloWorld {
 	static public function main():Void {
@@ -16,5 +17,7 @@ class HelloWorld {
 			var weapon = s.weaponUse == null ? "no-weapon" : s.weaponUse.weaponId;
 			trace('  step ${i + 1}: dur=${s.duration}s | movement=$movement | weapon=$weapon');
 		}
+
+		GoalDemo.run();
 	}
 }
