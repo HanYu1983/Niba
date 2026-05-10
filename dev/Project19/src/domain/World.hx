@@ -2,7 +2,9 @@ package domain;
 
 import domain.Collision.Hitbox;
 import domain.FieldObject;
+import domain.FieldObject.DrawableObject;
 import domain.FieldObject.Marker;
+import domain.FieldObject.MovableObject;
 import domain.Machine;
 import domain.Projectile.ProjectileObject;
 import domain.Weapon.WeaponOnField;
@@ -62,6 +64,14 @@ typedef World = {
 typedef NeighborProvider = (world:World, node:WorldNode) -> Array<NodeCost>;
 
 /**
+ * 繪圖抽象函式
+ *
+ * domain 只定義「世界要求某個可繪圖物件被畫出來」,
+ * 實際用 Canvas / WebGL / SpriteBatch / debug trace 都由外部實作。
+ */
+typedef Drawer = (world:World, object:DrawableObject) -> Void;
+
+/**
  * 建立沒有任何場上物的空世界。
  *
  * 用途:
@@ -112,4 +122,75 @@ function getFieldObjects(world:World):Array<FieldObject> {
 		objects.push(marker);
 
 	return objects;
+}
+
+/**
+ * 取得所有可移動物件。
+ *
+ * 目前包含:
+ *   - machines: 機體具備速度, 可由 movement / physics 系統推進
+ *   - projectiles: 場上發射物具備速度, 可由飛行系統推進
+ */
+function getMovableObjects(world:World):Array<MovableObject> {
+	var objects:Array<MovableObject> = [];
+
+	for (machine in world.machines)
+		objects.push(machine);
+
+	for (projectile in world.projectiles)
+		objects.push(projectile);
+
+	return objects;
+}
+
+/**
+ * 取得所有可繪圖物件。
+ *
+ * DrawableObject 目前只要求 FieldObject 欄位, 因此所有實際存在於世界座標的物件
+ * 都可以交給上層 renderer 決定是否繪製、如何排序與使用哪個素材。
+ */
+function getDrawableObjects(world:World):Array<DrawableObject> {
+	var objects:Array<DrawableObject> = [];
+
+	for (machine in world.machines)
+		objects.push(machine);
+
+	for (weapon in world.weaponsOnField)
+		objects.push(weapon);
+
+	for (projectile in world.projectiles)
+		objects.push(projectile);
+
+	for (hitbox in world.hitboxes)
+		objects.push(hitbox);
+
+	for (marker in world.markers)
+		objects.push(marker);
+
+	return objects;
+}
+
+/**
+ * 可移動物件的最小具象移動規則。
+ *
+ * 規則:
+ *   position += velocity * dt
+ *
+ * 加速度、碰撞阻擋、尋路轉向、摩擦、最大速度等較複雜規則
+ * 應由更上層系統先更新 velocity 或另寫 movement resolver。
+ */
+function moveMovableObject(object:MovableObject, dt:Float):Void {
+	object.position = {
+		x: object.position.x + object.velocity.x * dt,
+		y: object.position.y + object.velocity.y * dt
+	};
+}
+
+/**
+ * 繪製可繪圖物件的抽象轉接點。
+ *
+ * 此函式不直接知道怎麼畫, 只把 DrawableObject 交給呼叫方注入的 Drawer。
+ */
+function drawDrawableObject(world:World, object:DrawableObject, drawer:Drawer):Void {
+	drawer(world, object);
 }

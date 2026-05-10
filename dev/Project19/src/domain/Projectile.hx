@@ -2,7 +2,7 @@ package domain;
 
 import domain.Collision.Hitbox;
 import domain.Damage.Damage;
-import domain.Geometry.Vec2;
+import domain.FieldObject.MovableObject;
 
 /**
  * 發射物本體 (enum 巢狀組合)
@@ -68,9 +68,8 @@ enum ProjectileStage {
  * - stage:      目前執行階段
  */
 typedef ProjectileObject = {
-	> FieldObject,
+	> MovableObject,
 	var projectile:Projectile;
-	var velocity:Vec2;
 	var age:Float;
 	var stage:ProjectileStage;
 }

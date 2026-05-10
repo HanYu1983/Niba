@@ -3,8 +3,9 @@ package domain;
 import domain.Damage.Damage;
 import domain.Damage.DamageType;
 import domain.Damage.DefenseProfile;
-import domain.Weapon.WeaponOnMachine;
+import domain.FieldObject.MovableObject;
 import domain.Skill.Skill;
+import domain.Weapon.WeaponOnMachine;
 
 /**
  * 可受傷實體的契約
@@ -36,7 +37,7 @@ interface IDamageable {
  * 可視需要再擴充, 此處僅放入相對計算必須的最小欄位
  */
 typedef Machine = {
-	> FieldObject,
+	> MovableObject,
 	var maxHp:Float;
 	var maxEnergy:Float;
 	var energyRegen:Float;
@@ -54,7 +55,7 @@ typedef Machine = {
  *
  * 預設值:
  *   - id / name 為空字串
- *   - position 為原點, facing = 0
+ *   - position / velocity 為零向量, facing = 0
  *   - 所有數值欄位為 0
  *   - defense.weights 為空 Map
  *   - weapons / skills 為空陣列
@@ -64,6 +65,7 @@ function createEmptyMachine():Machine {
 		id: "",
 		name: "",
 		position: {x: 0.0, y: 0.0},
+		velocity: {x: 0.0, y: 0.0},
 		facing: 0.0,
 		maxHp: 0.0,
 		maxEnergy: 0.0,

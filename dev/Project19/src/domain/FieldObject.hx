@@ -25,6 +25,32 @@ typedef FieldObject = {
 }
 
 /**
+ * 可移動場上物
+ *
+ * - position 來自 FieldObject, 表示當前世界座標
+ * - velocity 表示世界座標速度, 單位由 runtime 決定 (例: 每秒世界單位)
+ *
+ * 具體移動規則由 World.moveMovableObject 提供最小實作:
+ *   position += velocity * dt
+ */
+typedef MovableObject = {
+	> FieldObject,
+	var velocity:Vec2;
+}
+
+/**
+ * 可繪圖場上物
+ *
+ * 目前先只抽象出「存在於世界座標且可被繪圖系統取得」這件事,
+ * 不綁定 sprite / model / animation 欄位, 避免 domain 過早依賴某個 rendering 實作。
+ *
+ * 真正如何畫由 World.Drawer function type 注入。
+ */
+typedef DrawableObject = {
+	> FieldObject,
+}
+
+/**
  * 裝備於機體上的物件
  *
  * 與 FieldObject 對比:
