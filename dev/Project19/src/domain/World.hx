@@ -62,6 +62,30 @@ typedef World = {
 typedef NeighborProvider = (world:World, node:WorldNode) -> Array<NodeCost>;
 
 /**
+ * World 建立工具
+ */
+class WorldFactory {
+	/**
+	 * 建立沒有任何場上物的空世界。
+	 *
+	 * 用途:
+	 *   - sample / test 的起點
+	 *   - runtime 初始化戰場狀態
+	 *   - 避免每次 World 新增列表欄位時, 各處手刻 literal 都要同步補欄位
+	 */
+	public static function createEmptyWorld():World {
+		return {
+			machines: [],
+			weaponsOnMachine: [],
+			weaponsOnField: [],
+			projectiles: [],
+			hitboxes: [],
+			markers: []
+		};
+	}
+}
+
+/**
  * World 查詢工具
  */
 class WorldQuery {

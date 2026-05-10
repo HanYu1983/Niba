@@ -4,6 +4,7 @@ import domain.Damage.DamageType;
 import domain.Goal;
 import domain.Machine;
 import domain.World;
+import domain.World.WorldFactory;
 
 /**
  * 範例: 「接近並攻擊」目標
@@ -34,15 +35,14 @@ class GoalDemo {
 		skills: []
 	};
 
-	/** Mock 世界, 只放入 mockActor; 其餘列表皆空 */
-	public static final mockWorld:World = {
-		machines: [mockActor],
-		weaponsOnMachine: [],
-		weaponsOnField: [],
-		projectiles: [],
-		hitboxes: [],
-		markers: []
-	};
+	/** Mock 世界, 由 WorldFactory 建空世界後放入 mockActor */
+	public static final mockWorld:World = createMockWorld();
+
+	private static function createMockWorld():World {
+		var world = WorldFactory.createEmptyWorld();
+		world.machines.push(mockActor);
+		return world;
+	}
 
 	/**
 	 * 接近 leaf
