@@ -1,4 +1,5 @@
 import debug.PathfinderTest;
+import debug.WaypointGoalTest;
 import sample.DashSlash;
 import sample.GoalDemo;
 
@@ -21,5 +22,6 @@ class HelloWorld {
 
 		GoalDemo.run();
 		PathfinderTest.run();
+		WaypointGoalTest.run();
 	}
 }
