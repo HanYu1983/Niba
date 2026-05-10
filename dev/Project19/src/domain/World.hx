@@ -7,6 +7,7 @@ import domain.Machine;
 import domain.Projectile.ProjectileObject;
 import domain.Weapon.WeaponOnField;
 import domain.Weapon.WeaponOnMachine;
+import domain.WorldNode.NeighborProvider;
 
 /**
  * 戰場世界狀態 (執行時態)
@@ -21,6 +22,11 @@ import domain.Weapon.WeaponOnMachine;
  *   - projectiles:      所有飛行 / 場域中的發射物實例
  *   - hitboxes:         所有目前存活的碰撞箱
  *   - markers:          場上的地點標記 (出生點 / 任務點 / 巡邏點等)
+ *
+ * 抽象方法 (function field):
+ *   - getNeighbors: 給定一個 WorldNode, 回傳其相連節點與成本
+ *                   (世界節點化的查詢介面, 詳見 WorldNode / NeighborProvider)
+ *                   實作通常以 closure 持有地圖網格 / 動態障礙物資訊
  *
  * 設計注意:
  *   weaponsOnMachine 與 Machine.weapons 是同一批 WeaponOnMachine 物件的兩種視角
@@ -37,6 +43,7 @@ typedef World = {
 	var projectiles:Array<ProjectileObject>;
 	var hitboxes:Array<Hitbox>;
 	var markers:Array<Marker>;
+	var getNeighbors:NeighborProvider;
 }
 
 /**

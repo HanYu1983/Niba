@@ -34,14 +34,15 @@ class GoalDemo {
 		skills: []
 	};
 
-	/** Mock 世界, 只放入 mockActor; 其餘列表皆空 */
+	/** Mock 世界, 只放入 mockActor; 其餘列表皆空, getNeighbors 回傳空鄰居 */
 	public static final mockWorld:World = {
 		machines: [mockActor],
 		weaponsOnMachine: [],
 		weaponsOnField: [],
 		projectiles: [],
 		hitboxes: [],
-		markers: []
+		markers: [],
+		getNeighbors: (node) -> []
 	};
 
 	/**
