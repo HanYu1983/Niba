@@ -8,7 +8,8 @@ import domain.Geometry.Shape;
 import domain.Projectile;
 import domain.Skill.Skill;
 import domain.Skill.MovementType;
-import domain.Weapon.Weapon;
+import domain.Weapon.WeaponDefinition;
+import domain.Weapon.WeaponOnMachine;
 import domain.Weapon.WeaponCategory;
 import domain.Weapon.PowerSource;
 import domain.Weapon.FireMode;
@@ -24,14 +25,15 @@ import domain.Weapon.FireMode;
  *   3. 收招硬直 (純等待)
  *
  * 同時示範:
- *   - Weapon: 近戰武器以 Projectile.Field([Hitbox]) 表達 (不飛行, 直接在揮舞處生成 Hitbox)
+ *   - WeaponDefinition: 近戰武器以 Projectile.Field([Hitbox]) 表達 (不飛行, 直接在揮舞處生成 Hitbox)
+ *   - WeaponOnMachine:  裝備於機體掛點上的武器實例, Skill.weaponId 指向此實例 id
  *   - Hitbox: 一次性命中 (cooldownPerTarget = ∞) + Knockback 反應
  *   - Skill:  純位移 / 位移+武器 / 純等待 三種 SkillStep 型態
  *   - SkillStep.WeaponUse 只用倍率調整武器數值, 形狀由武器自身的 Hitbox 擁有
  */
 class DashSlash {
 	/**
-	 * 電漿刀 (Plasma Blade) - 近戰武器
+	 * 電漿刀 (Plasma Blade) - 武器規格
 	 *
 	 * - Melee 類別: 對應 dashSlash.requiredCategory
 	 * - power = NativeEnergy(8): 每揮一次扣機體本機能源 8 點
@@ -43,14 +45,18 @@ class DashSlash {
 	 *     damage:            Energy 30
 	 *     reactions:         Knockback(8)
 	 */
-	public static final plasmaBlade:Weapon = {
-		id: "blade_a",
+	public static final plasmaBladeDefinition:WeaponDefinition = {
+		id: "plasma_blade",
 		name: "Plasma Blade",
 		category: Melee,
 		power: NativeEnergy(8.0),
 		fire: Single,
 		projectile: Field([
 			{
+				id: "blade_a_slash_hitbox",
+				name: "Plasma Blade Slash Hitbox",
+				position: {x: 0.0, y: 0.0},
+				facing: 0.0,
 				shape: Rect(0.5, -0.4, 1.5, 0.8),
 				duration: 0.10,
 				cooldownPerTarget: Math.POSITIVE_INFINITY,
@@ -59,6 +65,22 @@ class DashSlash {
 			}
 		]),
 		baseAccuracy: 1.0
+	}
+
+	/**
+	 * 裝備於機體上的電漿刀實例
+	 *
+	 * - id = blade_a, 由 dashSlash.steps[1].weaponUse.weaponId 引用
+	 * - ownerMachineId 指向裝備者
+	 * - localPosition / localFacing 為相對機體的掛點資料
+	 */
+	public static final plasmaBlade:WeaponOnMachine = {
+		id: "blade_a",
+		name: "Right Arm Plasma Blade",
+		ownerMachineId: "sample_machine",
+		localPosition: {x: 0.35, y: -0.45},
+		localFacing: 0.0,
+		definition: plasmaBladeDefinition
 	}
 
 	/**

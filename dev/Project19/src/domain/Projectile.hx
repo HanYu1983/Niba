@@ -2,6 +2,7 @@ package domain;
 
 import domain.Collision.Hitbox;
 import domain.Damage.Damage;
+import domain.Geometry.Vec2;
 
 /**
  * 發射物本體 (enum 巢狀組合)
@@ -38,6 +39,40 @@ enum Projectile {
 	 * 持續時間 / 冷卻 / 範圍等皆由 Hitbox 各自控制
 	 */
 	Field(boxes:Array<Hitbox>);
+}
+
+/**
+ * 發射物階段
+ * 用於 ProjectileObject 追蹤 enum 模板在場上的執行狀態。
+ */
+enum ProjectileStage {
+	/** 飛行中, 尚未命中或結束 */
+	Flying;
+
+	/** 已命中, 正在執行 OnHit 流程 */
+	ResolvingHit(stepIndex:Int);
+
+	/** 已結束, 可由戰鬥系統移除 */
+	Expired;
+}
+
+/**
+ * 場上發射物
+ *
+ * Projectile enum 是發射物「定義 / 模板」; ProjectileObject 才是實際存在於
+ * 戰場中的發射物, 因此使用結構繼承取得 FieldObject 的 position / facing。
+ *
+ * - projectile: 原始發射物模板
+ * - velocity:   世界座標速度
+ * - age:        已存在時間
+ * - stage:      目前執行階段
+ */
+typedef ProjectileObject = {
+	> FieldObject,
+	var projectile:Projectile;
+	var velocity:Vec2;
+	var age:Float;
+	var stage:ProjectileStage;
 }
 
 /**

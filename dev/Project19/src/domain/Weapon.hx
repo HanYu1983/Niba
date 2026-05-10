@@ -1,5 +1,6 @@
 package domain;
 
+import domain.FieldObject.MountedObject;
 import domain.Projectile;
 
 /**
@@ -43,12 +44,16 @@ enum FireMode {
 }
 
 /**
- * 武器原型
- * - id 為機體中的唯一鍵, 由 Skill.WeaponUse.weaponId 引用
+ * 武器定義 / 規格
+ *
+ * 描述「這是什麼武器」, 不代表它正在場上或裝在誰身上。
+ * 同一份定義可以被多個 WeaponOnMachine / WeaponOnField 共用。
+ *
+ * - id 為武器規格 id (例: plasma_blade)
  * - projectile 為發射物模板; 巢狀爆炸 / 子母彈等行為由 Projectile 自身表達
  * - baseAccuracy 為基礎命中率, 由 SkillStep.WeaponUse.accuracyMul 乘算
  */
-typedef Weapon = {
+typedef WeaponDefinition = {
 	var id:String;
 	var name:String;
 	var category:WeaponCategory;
@@ -56,4 +61,27 @@ typedef Weapon = {
 	var fire:FireMode;
 	var projectile:Projectile;
 	var baseAccuracy:Float;
+}
+
+/**
+ * 裝備於機體上的武器
+ *
+ * - id 是裝備實例 id, 由 Skill.WeaponUse.weaponId 引用
+ *   例: 同一把 rifle 規格可有 left_rifle / right_rifle 兩個實例
+ * - localPosition / localFacing 來自 MountedObject, 表示掛點相對機體的位置與角度
+ * - definition 指向武器規格
+ */
+typedef WeaponOnMachine = {
+	> MountedObject,
+	var definition:WeaponDefinition;
+}
+
+/**
+ * 場上武器
+ *
+ * 表示掉落物、部署武器、砲塔、可拾取裝備等已經有世界座標的武器實體。
+ */
+typedef WeaponOnField = {
+	> FieldObject,
+	var definition:WeaponDefinition;
 }

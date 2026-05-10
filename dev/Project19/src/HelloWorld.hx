@@ -6,7 +6,8 @@ class HelloWorld {
 		var skill = DashSlash.dashSlash;
 
 		trace("Hello, World from Haxe!");
-		trace('Weapon : ${blade.name} (${blade.category})');
+		trace('Weapon : ${blade.name} -> ${blade.definition.name} (${blade.definition.category})');
+		trace('Mounted: owner=${blade.ownerMachineId} local=(${blade.localPosition.x}, ${blade.localPosition.y})');
 		trace('Skill  : ${skill.name} (${skill.steps.length} steps)');
 
 		for (i in 0...skill.steps.length) {

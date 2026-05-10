@@ -28,23 +28,24 @@ enum HitReaction {
 }
 
 /**
- * 碰撞箱 (Hitbox) - 戰鬥中的碰撞最小實體
+ * 碰撞箱 (Hitbox) - 戰鬥中的碰撞最小實體, 同時也是場上物
  *
  * ===== 戰鬥規則 =====
  *   1. Hitbox 由觸發源 (招式步驟 / Projectile.OnHit / Projectile.Field)
  *      在世界中生成, 存活 duration 秒
- *   2. shape 為「本機座標」(參見 Shape / ShapeResolver),
- *      由戰鬥系統依當下 facing / position 轉換到世界座標進行碰撞偵測
- *   3. 期間每 frame 對所有 IDamageable 偵測碰撞
- *   4. 命中目標 T 時:
+ *   2. position / facing 來自 FieldObject, 表示 Hitbox 的世界座標基準
+ *   3. shape 為「本機座標」(參見 Shape / ShapeResolver),
+ *      由戰鬥系統依此 Hitbox 的 facing / position 轉換到世界座標進行碰撞偵測
+ *   4. 期間每 frame 對所有 IDamageable 偵測碰撞
+ *   5. 命中目標 T 時:
  *      a. 對 T 套用 damage (依 IDamageable.defense 折抵)
  *      b. 對 T 套用 reactions
  *      c. 將 T 加入此 Hitbox 的「命中記錄表」, 鎖定 cooldownPerTarget 秒
- *   5. 鎖定期間此 Hitbox 不會再次命中 T
+ *   6. 鎖定期間此 Hitbox 不會再次命中 T
  *      (但仍可命中其他未鎖定的目標)
- *   6. cooldownPerTarget 到期 → T 從記錄移除 → 可再次被本 Hitbox 命中
+ *   7. cooldownPerTarget 到期 → T 從記錄移除 → 可再次被本 Hitbox 命中
  *      (DOT 場域 / 連斬等的循環觸發機制即是此規則)
- *   7. duration 結束 → Hitbox 消滅, 所有命中記錄一併釋放
+ *   8. duration 結束 → Hitbox 消滅, 所有命中記錄一併釋放
  *
  * ===== 設計對照表 =====
  *   一次性近戰刀光:
@@ -64,6 +65,7 @@ enum HitReaction {
  *     → 同 frame 內把範圍內所有目標各打一次後消失
  */
 typedef Hitbox = {
+	> FieldObject,
 	var shape:Shape;
 	var duration:Float;
 	var cooldownPerTarget:Float;

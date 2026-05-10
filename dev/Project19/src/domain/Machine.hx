@@ -2,7 +2,7 @@ package domain;
 
 import domain.Damage.Damage;
 import domain.Damage.DefenseProfile;
-import domain.Weapon.Weapon;
+import domain.Weapon.WeaponOnMachine;
 import domain.Skill.Skill;
 
 /**
@@ -29,18 +29,17 @@ interface IDamageable {
  *   - facing: 機體當下的朝向, 單位為弧度 (radian)
  *             慣例: 0 = +X 方向 (右), 逆時針為正
  *             供 MovementResolver / ShapeResolver 做相對到世界座標的轉換
+ *   - position: 機體當下世界座標位置
  *
  * 其他執行時狀態 (currentHp / currentEnergy / 彈匣餘量 / Projectile 階段等)
  * 可視需要再擴充, 此處僅放入相對計算必須的最小欄位
  */
 typedef Machine = {
-	var id:String;
-	var name:String;
+	> FieldObject,
 	var maxHp:Float;
 	var maxEnergy:Float;
 	var energyRegen:Float;
 	var defense:DefenseProfile;
-	var weapons:Array<Weapon>;
+	var weapons:Array<WeaponOnMachine>;
 	var skills:Array<Skill>;
-	var facing:Float;
 }

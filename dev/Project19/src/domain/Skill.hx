@@ -56,11 +56,11 @@ typedef MovementResolver = (movement:Movement, facing:Float, baseDistance:Float,
  * 步驟中的武器使用宣告
  *
  * 設計慣例:
- *   碰撞形狀本身由武器自己擁有 (Weapon.projectile 內的 Hitbox.shape),
+ *   碰撞形狀本身由武器定義擁有 (WeaponOnMachine.definition.projectile 內的 Hitbox.shape),
  *   招式步驟「不再覆寫 hitbox」, 只透過倍率對武器原始數值做縮放。
  *   如此可避免招式 / 武器兩處對形狀的描述不一致。
  *
- * - weaponId:      對應 Machine.weapons 中的武器
+ * - weaponId:      對應 Machine.weapons 中的 WeaponOnMachine.id (裝備實例 id)
  * - energyCostMul: 對該武器原始能量成本的倍率
  * - damageMul:     對該武器 Hitbox.damage.amount 的倍率
  * - accuracyMul:   對該武器 baseAccuracy 的倍率
