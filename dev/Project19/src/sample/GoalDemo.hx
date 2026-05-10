@@ -3,6 +3,7 @@ package sample;
 import domain.Damage.DamageType;
 import domain.Goal;
 import domain.Machine;
+import domain.World;
 
 /**
  * 範例: 「接近並攻擊」目標
@@ -19,7 +20,7 @@ import domain.Machine;
  *   - meleeStrike: 1 個 tick 完成揮刀
  */
 class GoalDemo {
-	/** Mock 機體, 戰場世界尚未實作, 此處只為填 GoalContext.actor */
+	/** Mock 機體, 此處只為填 GoalContext.actor */
 	public static final mockActor:Machine = {
 		id: "demo_actor",
 		name: "Demo Actor",
@@ -31,6 +32,15 @@ class GoalDemo {
 		defense: {weights: new Map<DamageType, Float>()},
 		weapons: [],
 		skills: []
+	};
+
+	/** Mock 世界, 只放入 mockActor; 其餘列表皆空 */
+	public static final mockWorld:World = {
+		machines: [mockActor],
+		weaponsOnMachine: [],
+		weaponsOnField: [],
+		projectiles: [],
+		hitboxes: []
 	};
 
 	/**
@@ -214,7 +224,7 @@ class GoalDemo {
 	public static function run():Void {
 		trace("=== Goal System Demo: 接近並揮刀 ===");
 		var node = makeNode(approachAndStrike);
-		var ctx:GoalContext = {actor: mockActor, world: null};
+		var ctx:GoalContext = {actor: mockActor, world: mockWorld};
 		var maxFrames = 30;
 		for (frame in 0...maxFrames) {
 			trace('--- frame ${frame + 1} ---');

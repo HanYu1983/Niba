@@ -1,5 +1,7 @@
 package domain;
 
+import domain.World;
+
 /**
  * 目標執行狀態
  */
@@ -103,11 +105,11 @@ typedef GoalPlanner = (ctx:GoalContext, children:Array<GoalSpec>, lastIndex:Int)
  * 目標執行的上下文
  *
  * - actor: 執行此目標的主體 (機體)
- * - world: 戰場世界查詢介面 (尚未定義, 暫用 Dynamic, 待戰鬥系統落地時換成具體型別)
+ * - world: 戰場世界狀態 (機體 / 武器 / 發射物 / 碰撞箱列表)
  */
 typedef GoalContext = {
 	var actor:Machine;
-	var world:Dynamic;
+	var world:World;
 }
 
 /**
