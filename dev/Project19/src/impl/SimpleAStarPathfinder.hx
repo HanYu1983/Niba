@@ -10,7 +10,7 @@ import domain.Pathfinding.ShortestPathTree;
 import domain.Pathfinding.ShortestPathTreeEntry;
 import domain.World;
 import domain.World.NeighborProvider;
-import domain.World.WorldQuery;
+import domain.World.getFieldObjects;
 import domain.WorldNode.WorldNode;
 
 private typedef SearchRecord = {
@@ -70,7 +70,7 @@ class SimpleAStarPathfinder implements IPathfinder {
 		var bestNodeKey:Null<String> = null;
 		var bestCost = Math.POSITIVE_INFINITY;
 
-		for (object in WorldQuery.getFieldObjects(world)) {
+		for (object in getFieldObjects(world)) {
 			if (!matcher(world, object))
 				continue;
 

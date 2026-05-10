@@ -4,7 +4,7 @@ import domain.Damage.DamageType;
 import domain.Goal;
 import domain.Machine;
 import domain.World;
-import domain.World.WorldFactory;
+import domain.World.createEmptyWorld;
 
 /**
  * 範例: 「接近並攻擊」目標
@@ -35,11 +35,11 @@ class GoalDemo {
 		skills: []
 	};
 
-	/** Mock 世界, 由 WorldFactory 建空世界後放入 mockActor */
+	/** Mock 世界, 由 createEmptyWorld 建空世界後放入 mockActor */
 	public static final mockWorld:World = createMockWorld();
 
 	private static function createMockWorld():World {
-		var world = WorldFactory.createEmptyWorld();
+		var world = createEmptyWorld();
 		world.machines.push(mockActor);
 		return world;
 	}

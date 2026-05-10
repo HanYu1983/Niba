@@ -117,7 +117,7 @@ interface IPathfinder {
 	 * 搜尋範圍:
 	 *   - maxCost 是圖上的累積移動成本, 不一定等同幾何距離
 	 *   - 實作通常先展開 start 周圍 maxCost 內的最短路徑樹,
-	 *     再從 WorldQuery.getFieldObjects(world) 中篩選 matcher=true 的物件,
+	 *     再從 getFieldObjects(world) 中篩選 matcher=true 的物件,
 	 *     用 resolveObjectNode 對應節點後挑最低成本者
 	 *
 	 * 若找不到:

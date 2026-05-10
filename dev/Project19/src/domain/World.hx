@@ -62,64 +62,54 @@ typedef World = {
 typedef NeighborProvider = (world:World, node:WorldNode) -> Array<NodeCost>;
 
 /**
- * World 建立工具
+ * 建立沒有任何場上物的空世界。
+ *
+ * 用途:
+ *   - sample / test 的起點
+ *   - runtime 初始化戰場狀態
+ *   - 避免每次 World 新增列表欄位時, 各處手刻 literal 都要同步補欄位
  */
-class WorldFactory {
-	/**
-	 * 建立沒有任何場上物的空世界。
-	 *
-	 * 用途:
-	 *   - sample / test 的起點
-	 *   - runtime 初始化戰場狀態
-	 *   - 避免每次 World 新增列表欄位時, 各處手刻 literal 都要同步補欄位
-	 */
-	public static function createEmptyWorld():World {
-		return {
-			machines: [],
-			weaponsOnMachine: [],
-			weaponsOnField: [],
-			projectiles: [],
-			hitboxes: [],
-			markers: []
-		};
-	}
+function createEmptyWorld():World {
+	return {
+		machines: [],
+		weaponsOnMachine: [],
+		weaponsOnField: [],
+		projectiles: [],
+		hitboxes: [],
+		markers: []
+	};
 }
 
 /**
- * World 查詢工具
+ * 取得所有實際存在於場上的物件。
+ *
+ * 包含:
+ *   - machines
+ *   - weaponsOnField
+ *   - projectiles
+ *   - hitboxes
+ *   - markers
+ *
+ * 不包含 weaponsOnMachine, 因為它們是 MountedObject,
+ * 世界座標需由 owner 機體的 position / facing 推導, 不直接視為 FieldObject。
  */
-class WorldQuery {
-	/**
-	 * 取得所有實際存在於場上的物件。
-	 *
-	 * 包含:
-	 *   - machines
-	 *   - weaponsOnField
-	 *   - projectiles
-	 *   - hitboxes
-	 *   - markers
-	 *
-	 * 不包含 weaponsOnMachine, 因為它們是 MountedObject,
-	 * 世界座標需由 owner 機體的 position / facing 推導, 不直接視為 FieldObject。
-	 */
-	public static function getFieldObjects(world:World):Array<FieldObject> {
-		var objects:Array<FieldObject> = [];
+function getFieldObjects(world:World):Array<FieldObject> {
+	var objects:Array<FieldObject> = [];
 
-		for (machine in world.machines)
-			objects.push(machine);
+	for (machine in world.machines)
+		objects.push(machine);
 
-		for (weapon in world.weaponsOnField)
-			objects.push(weapon);
+	for (weapon in world.weaponsOnField)
+		objects.push(weapon);
 
-		for (projectile in world.projectiles)
-			objects.push(projectile);
+	for (projectile in world.projectiles)
+		objects.push(projectile);
 
-		for (hitbox in world.hitboxes)
-			objects.push(hitbox);
+	for (hitbox in world.hitboxes)
+		objects.push(hitbox);
 
-		for (marker in world.markers)
-			objects.push(marker);
+	for (marker in world.markers)
+		objects.push(marker);
 
-		return objects;
-	}
+	return objects;
 }

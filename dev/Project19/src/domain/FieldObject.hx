@@ -58,7 +58,7 @@ typedef MountedObject = {
  *   - 相機錨點 / 鏡頭觸發
  *
  * 不擁有戰鬥屬性 (HP / 武器 / 防禦), 也不會被碰撞系統視為可打擊目標,
- * 但仍可被 WorldQuery.getFieldObjects 取得以做為位置查詢來源。
+ * 但仍可被 getFieldObjects(world) 取得以做為位置查詢來源。
  */
 typedef Marker = {
 	> FieldObject,
