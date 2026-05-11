@@ -5,6 +5,7 @@ import domain.FieldObject;
 import domain.FieldObject.CollidableObject;
 import domain.FieldObject.Marker;
 import domain.FieldObject.MovableObject;
+import domain.Geometry.Vec3;
 import domain.Machine;
 import domain.Projectile.ProjectileObject;
 import domain.Weapon.WeaponOnField;
@@ -25,6 +26,7 @@ import domain.WorldNode.WorldNode;
  *   - projectiles:      所有飛行 / 場域中的發射物實例
  *   - hitboxes:         所有目前存活的碰撞箱
  *   - markers:          場上的地點標記 (出生點 / 任務點 / 巡邏點等)
+ *   - cameraPos:        相機在世界中的 3D 位置, 供 view/render 層建立 camera 使用
  *
  * 世界節點化:
  *   尋路 / 圖搜尋以 WorldNode + NeighborProvider 為介面 (見下方 typedef)。
@@ -47,6 +49,7 @@ typedef World = {
 	var projectiles:Array<ProjectileObject>;
 	var hitboxes:Array<Hitbox>;
 	var markers:Array<Marker>;
+	var cameraPos:Vec3;
 }
 
 /**
@@ -78,7 +81,8 @@ function createEmptyWorld():World {
 		weaponsOnField: [],
 		projectiles: [],
 		hitboxes: [],
-		markers: []
+		markers: [],
+		cameraPos: {x: 0.0, y: 0.0, z: 0.0}
 	};
 }
 

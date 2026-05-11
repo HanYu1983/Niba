@@ -6,6 +6,13 @@ typedef Vec2 = {
 	var y:Float;
 }
 
+/** 三維向量 (3D 位置 / 相機位置) */
+typedef Vec3 = {
+	var x:Float;
+	var y:Float;
+	var z:Float;
+}
+
 /**
  * 碰撞形狀
  * 招式 hitbox / 爆炸範圍 / 場域等需要碰撞判定的場合共用
