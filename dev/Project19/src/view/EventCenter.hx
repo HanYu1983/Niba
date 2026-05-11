@@ -1,7 +1,9 @@
 package view;
 
 import domain.World;
+import domain.World.createEmptyWorld;
 import view.Camera.Camera2D;
+import view.Reactive.BehaviorSubject;
 import view.Reactive.Observable;
 import view.Reactive.Subject;
 import view.RenderWorld.RenderWorld;
@@ -37,12 +39,12 @@ typedef P5RenderFrame = {
  * - commandSubject: view 對遊戲流程提出的 command
  * - worldSubject: 外部手動呼叫 on_next(world) 推送最新 World
  * - renderWorldSubject: worldSubject 經 createRenderWorld 轉換後的 render stream
- * - p5RenderSubject: p5 setup + p5 tick + render world 的 combineLatest 結果
+ * - p5RenderSubject: p5 setup 後, 以最新 render world 搭配後續 p5 tick 產生 render frame
  */
 class EventCenter {
 	public final eventSubject:Subject<Event>;
 	public final commandSubject:Subject<Command>;
-	public final worldSubject:Subject<World>;
+	public final worldSubject:BehaviorSubject<World>;
 	public final renderWorldSubject:Observable<RenderWorld>;
 	public final p5SetupSubject:Observable<Event>;
 	public final p5TickSubject:Observable<Event>;
@@ -54,15 +56,16 @@ class EventCenter {
 		this.camera = camera;
 		eventSubject = new Subject<Event>();
 		commandSubject = new Subject<Command>();
-		worldSubject = new Subject<World>();
-		renderWorldSubject = Observable.map(worldSubject, world -> createRenderWorld(world, this.camera));
-		p5SetupSubject = Observable.filter(eventSubject, isP5Setup);
-		p5TickSubject = Observable.filter(eventSubject, isP5Tick);
-		p5RenderSubject = Observable.combineLatest(
-			cast p5SetupSubject,
-			[cast p5TickSubject, cast renderWorldSubject],
-			values -> createP5RenderFrame(cast values)
-		);
+		worldSubject = new BehaviorSubject<World>(createEmptyWorld());
+		renderWorldSubject = worldSubject.map(world -> createRenderWorld(world, this.camera));
+		p5SetupSubject = eventSubject.filter(isP5Setup);
+		p5TickSubject = eventSubject.filter(isP5Tick);
+		p5RenderSubject = p5SetupSubject.switchMap(setupEvent -> {
+			var p5 = p5FromSetupEvent(setupEvent);
+			return renderWorldSubject.switchMap(renderWorld ->
+				p5TickSubject.map(tickEvent -> createP5RenderFrame(p5, frameCountFromTickEvent(tickEvent), renderWorld))
+			);
+		});
 	}
 
 	public function nextWorld(world:World):Void {
@@ -83,26 +86,29 @@ class EventCenter {
 		}
 	}
 
-	static function createP5RenderFrame(values:Array<Dynamic>):P5RenderFrame {
-		var p5:Dynamic = null;
-		var frameCount = 0;
-
-		switch ((values[0] : Event)) {
+	static function p5FromSetupEvent(event:Event):Dynamic {
+		return switch (event) {
 			case P5Setup(setupP5):
-				p5 = setupP5;
+				setupP5;
 			default:
-		}
+				null;
+		};
+	}
 
-		switch ((values[1] : Event)) {
+	static function frameCountFromTickEvent(event:Event):Int {
+		return switch (event) {
 			case P5Tick(tickFrameCount):
-				frameCount = tickFrameCount;
+				tickFrameCount;
 			default:
-		}
+				0;
+		};
+	}
 
+	static function createP5RenderFrame(p5:Dynamic, frameCount:Int, renderWorld:RenderWorld):P5RenderFrame {
 		return {
 			p5: p5,
 			frameCount: frameCount,
-			renderWorld: cast values[2]
+			renderWorld: renderWorld
 		};
 	}
 }

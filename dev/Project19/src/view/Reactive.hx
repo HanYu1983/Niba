@@ -5,7 +5,8 @@ typedef Unsubscribe = Void -> Void;
 /**
  * 專案內極小 reactive primitive。
  *
- * 只支援目前 view 需要的 map / filter / combineLatest / subscribe / Subject.on_next。
+ * 只支援目前 view 需要的 map / filter / switchMap / combineLatest / subscribe / Subject.on_next。
+ * BehaviorSubject 會保存最後一筆值, 讓晚訂閱者可立刻取得目前狀態。
  * 不處理 complete/error/thread/scheduler, 避免把 view 事件流綁到外部 Rx 實作細節。
  */
 class Observable<T> {
@@ -25,18 +26,32 @@ class Observable<T> {
 			callback(value);
 	}
 
-	public static function map<T, R>(source:Observable<T>, transform:T -> R):Observable<R> {
+	public function map<R>(transform:T -> R):Observable<R> {
 		var output = new Observable<R>();
-		source.subscribe(value -> output.emit(transform(value)));
+		subscribe(value -> output.emit(transform(value)));
 		return output;
 	}
 
-	public static function filter<T>(source:Observable<T>, predicate:T -> Bool):Observable<T> {
+	public function filter(predicate:T -> Bool):Observable<T> {
 		var output = new Observable<T>();
-		source.subscribe(value -> {
+		subscribe(value -> {
 			if (predicate(value))
 				output.emit(value);
 		});
+		return output;
+	}
+
+	public function switchMap<R>(project:T -> Observable<R>):Observable<R> {
+		var output = new Observable<R>();
+		var unsubscribeInner:Null<Unsubscribe> = null;
+
+		subscribe(value -> {
+			if (unsubscribeInner != null)
+				unsubscribeInner();
+
+			unsubscribeInner = project(value).subscribe(innerValue -> output.emit(innerValue));
+		});
+
 		return output;
 	}
 
@@ -82,5 +97,35 @@ class Subject<T> extends Observable<T> {
 
 	public function on_next(value:T):Void {
 		emit(value);
+	}
+}
+
+class BehaviorSubject<T> extends Subject<T> {
+	var current:T;
+
+	public function new(initialValue:T) {
+		super();
+		current = initialValue;
+	}
+
+	override public function subscribe(callback:T -> Void):Unsubscribe {
+		var unsubscribe = super.subscribe(callback);
+		callback(current);
+		return unsubscribe;
+	}
+
+	override public function on_next(value:T):Void {
+		current = value;
+		super.on_next(value);
+	}
+
+	override public function map<R>(transform:T -> R):Observable<R> {
+		var output = new BehaviorSubject<R>(transform(current));
+		subscribe(value -> output.on_next(transform(value)));
+		return output;
+	}
+
+	public function getValue():T {
+		return current;
 	}
 }
