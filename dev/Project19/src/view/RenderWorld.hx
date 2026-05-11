@@ -3,7 +3,6 @@ package view;
 import domain.Collision.Hitbox;
 import domain.FieldObject.Marker;
 import domain.Geometry.Vec2;
-import domain.Geometry.Vec3;
 import domain.Machine;
 import domain.Projectile.ProjectileObject;
 import domain.Weapon.WeaponOnField;
@@ -24,7 +23,6 @@ typedef RenderWorld = {
 	var projectiles:Array<RenderProjectileObject>;
 	var hitboxes:Array<RenderHitbox>;
 	var markers:Array<RenderMarker>;
-	var cameraPos:Vec3;
 	var camera:Camera2D;
 	var viewMatrix:Mat3;
 	var projectionMatrix:Mat3;

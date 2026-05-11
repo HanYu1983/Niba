@@ -35,6 +35,6 @@ class HelloWorld {
 		p5.text('projectiles: ${world.projectiles.length}', 16, 124);
 		p5.text('hitboxes: ${world.hitboxes.length}', 16, 144);
 		p5.text('markers: ${world.markers.length}', 16, 164);
-		p5.text('cameraPos: (${world.cameraPos.x}, ${world.cameraPos.y}, ${world.cameraPos.z})', 16, 184);
+		p5.text('camera: (${world.camera.position.x}, ${world.camera.position.y}) zoom=${world.camera.zoom}', 16, 184);
 	}
 }
