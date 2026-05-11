@@ -1,11 +1,11 @@
 import debug.PathfinderTest;
 import debug.WaypointGoalTest;
 import domain.World.createEmptyWorld;
-import view.CameraController.createCameraController;
 import view.EventCenter;
 import view.EventCenter.P5RenderFrame;
 import view.P5App.createP5App;
 import view.component.CameraControlPanel.createCameraControlPanel;
+import view.component.CameraController.createCameraController;
 
 class HelloWorld {
 	static public function main():Void {
@@ -14,8 +14,8 @@ class HelloWorld {
 
 		var eventCenter = new EventCenter();
 		createCameraControlPanel(eventCenter);
-		createCameraController(eventCenter);
 		eventCenter.p5RenderSubject.subscribe(renderP5Frame);
+		createCameraController(eventCenter);
 		eventCenter.nextWorld(createEmptyWorld());
 		createP5App(eventCenter);
 	}

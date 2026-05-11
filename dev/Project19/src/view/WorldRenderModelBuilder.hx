@@ -19,7 +19,7 @@ import view.RenderWorld.RenderWorld;
  * 以重用 Render* 物件與矩陣快取。
  */
 function createRenderWorld(world:World, ?camera:Camera2D):RenderWorld {
-	var resolvedCamera = camera == null ? createDefaultCamera() : camera;
+	var resolvedCamera = camera == null ? createCameraFromWorld(world) : camera;
 
 	return {
 		machines: world.machines.copy(),
@@ -34,6 +34,13 @@ function createRenderWorld(world:World, ?camera:Camera2D):RenderWorld {
 		projectionMatrix: createProjectionMatrix(resolvedCamera),
 		viewProjectionMatrix: createViewProjectionMatrix(resolvedCamera)
 	};
+}
+
+private function createCameraFromWorld(world:World):Camera2D {
+	var camera = createDefaultCamera();
+	camera.position = {x: world.cameraPos.x, y: world.cameraPos.y};
+	camera.zoom = Math.max(0.1, 1.0 + world.cameraPos.z * 0.01);
+	return camera;
 }
 
 private function createRenderWeaponsOnMachine(world:World):Array<RenderWeaponOnMachine> {
