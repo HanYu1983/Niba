@@ -3,6 +3,7 @@ package domain;
 import domain.Damage.Damage;
 import domain.Damage.DamageType;
 import domain.Damage.DefenseProfile;
+import domain.FieldObject.CollidableObject;
 import domain.FieldObject.MovableObject;
 import domain.Skill.Skill;
 import domain.Weapon.WeaponOnMachine;
@@ -32,12 +33,14 @@ interface IDamageable {
  *             慣例: 0 = +X 方向 (右), 逆時針為正
  *             供 MovementResolver / ShapeResolver 做相對到世界座標的轉換
  *   - position: 機體當下世界座標位置
+ *   - shape: 機體自身碰撞體積, 以 position / facing 為基準的本機座標形狀
  *
  * 其他執行時狀態 (currentHp / currentEnergy / 彈匣餘量 / Projectile 階段等)
  * 可視需要再擴充, 此處僅放入相對計算必須的最小欄位
  */
 typedef Machine = {
 	> MovableObject,
+	> CollidableObject,
 	var maxHp:Float;
 	var maxEnergy:Float;
 	var energyRegen:Float;
@@ -55,7 +58,7 @@ typedef Machine = {
  *
  * 預設值:
  *   - id / name 為空字串
- *   - position / velocity 為零向量, facing = 0
+ *   - position / velocity 為零向量, facing = 0, shape 為零半徑圓形
  *   - 所有數值欄位為 0
  *   - defense.weights 為空 Map
  *   - weapons / skills 為空陣列
@@ -67,6 +70,7 @@ function createEmptyMachine():Machine {
 		position: {x: 0.0, y: 0.0},
 		velocity: {x: 0.0, y: 0.0},
 		facing: 0.0,
+		shape: Circle(0.0, 0.0, 0.0),
 		maxHp: 0.0,
 		maxEnergy: 0.0,
 		energyRegen: 0.0,

@@ -129,13 +129,14 @@ function getFieldObjects(world:World):Array<FieldObject> {
  * 取得所有可碰撞物件。
  *
  * 目前包含:
+ *   - machines: 機體自身碰撞體積
  *   - hitboxes: 戰鬥中實際參與碰撞判定的最小實體
- *
- * 機體 / 場上武器若之後需要阻擋體積或可被掃描範圍, 可改為繼承 CollidableObject
- * 並在此列表加入對應集合。
  */
 function getCollidableObjects(world:World):Array<CollidableObject> {
 	var objects:Array<CollidableObject> = [];
+
+	for (machine in world.machines)
+		objects.push(machine);
 
 	for (hitbox in world.hitboxes)
 		objects.push(hitbox);
