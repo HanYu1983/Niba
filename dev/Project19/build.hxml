@@ -1,4 +1,3 @@
 -cp src
--lib rxhaxe
 -main HelloWorld
 -js bin/HelloWorld.js

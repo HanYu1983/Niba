@@ -20,14 +20,6 @@ Project19/
 docker compose up -d
 ```
 
-## 安裝所需 Haxe libraries
-
-`rxhaxe` 不在 haxelib registry 上, 需由 GitHub 安裝:
-
-```powershell
-docker compose exec haxe haxelib git rxhaxe https://github.com/longde123/RxHaxe.git
-```
-
 ## 使用 Haxe 編譯為 JavaScript
 
 使用 `build.hxml` 編譯：
@@ -36,16 +28,10 @@ docker compose exec haxe haxelib git rxhaxe https://github.com/longde123/RxHaxe.
 docker compose exec haxe haxe build.hxml
 ```
 
-若程式碼使用 `rxhaxe`, 編譯時需加上 `-lib rxhaxe`：
-
-```powershell
-docker compose exec haxe haxe -lib rxhaxe build.hxml
-```
-
 或直接使用 Haxe 命令列參數：
 
 ```powershell
-docker compose exec haxe haxe -lib rxhaxe -cp src -main HelloWorld -js bin/HelloWorld.js
+docker compose exec haxe haxe -cp src -main HelloWorld -js bin/HelloWorld.js
 ```
 
 編譯完成後會產生：

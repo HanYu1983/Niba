@@ -1,9 +1,9 @@
 package view;
 
 import domain.World;
-import rx.Observable;
-import rx.Subject;
 import view.Camera.Camera2D;
+import view.Reactive.Observable;
+import view.Reactive.Subject;
 import view.RenderWorld.RenderWorld;
 import view.WorldRenderModelBuilder.createRenderWorld;
 
