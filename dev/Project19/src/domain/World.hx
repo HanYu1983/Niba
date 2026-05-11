@@ -3,8 +3,6 @@ package domain;
 import domain.Collision.Hitbox;
 import domain.FieldObject;
 import domain.FieldObject.CollidableObject;
-import domain.FieldObject.DrawableObject;
-import domain.FieldObject.FieldObjectKind;
 import domain.FieldObject.Marker;
 import domain.FieldObject.MovableObject;
 import domain.Machine;
@@ -64,14 +62,6 @@ typedef World = {
  *   - cost 為「從目前節點移動到該鄰居」的成本, 由地形 / 距離 / 高低差 / 動態狀態等決定
  */
 typedef NeighborProvider = (world:World, node:WorldNode) -> Array<NodeCost>;
-
-/**
- * 繪圖抽象函式
- *
- * domain 只定義「世界要求某個可繪圖物件被畫出來」,
- * 實際用 Canvas / WebGL / SpriteBatch / debug trace 都由外部實作。
- */
-typedef Drawer = (world:World, object:DrawableObject) -> Void;
 
 /**
  * 建立沒有任何場上物的空世界。
@@ -165,33 +155,6 @@ function getMovableObjects(world:World):Array<MovableObject> {
 }
 
 /**
- * 取得所有可繪圖目標。
- *
- * DrawableObject 是 FieldObjectRef 包裝。renderer 可依 target.kind 從 World 的對應列表
- * 取回完整 domain object。
- */
-function getDrawableObjects(world:World):Array<DrawableObject> {
-	var objects:Array<DrawableObject> = [];
-
-	for (machine in world.machines)
-		objects.push({target: {kind: FieldObjectKind.MachineKind, id: machine.id}});
-
-	for (weapon in world.weaponsOnField)
-		objects.push({target: {kind: FieldObjectKind.WeaponOnFieldKind, id: weapon.id}});
-
-	for (projectile in world.projectiles)
-		objects.push({target: {kind: FieldObjectKind.ProjectileKind, id: projectile.id}});
-
-	for (hitbox in world.hitboxes)
-		objects.push({target: {kind: FieldObjectKind.HitboxKind, id: hitbox.id}});
-
-	for (marker in world.markers)
-		objects.push({target: {kind: FieldObjectKind.MarkerKind, id: marker.id}});
-
-	return objects;
-}
-
-/**
  * 可移動物件的最小具象移動規則。
  *
  * 規則:
@@ -205,13 +168,4 @@ function moveMovableObject(object:MovableObject, dt:Float):Void {
 		x: object.position.x + object.velocity.x * dt,
 		y: object.position.y + object.velocity.y * dt
 	};
-}
-
-/**
- * 繪製可繪圖物件的抽象轉接點。
- *
- * 此函式不直接知道怎麼畫, 只把 DrawableObject 交給呼叫方注入的 Drawer。
- */
-function drawDrawableObject(world:World, object:DrawableObject, drawer:Drawer):Void {
-	drawer(world, object);
 }
