@@ -40,15 +40,37 @@ typedef MovableObject = {
 }
 
 /**
- * 可繪圖場上物
+ * 場上物種類。
  *
- * 目前先只抽象出「存在於世界座標且可被繪圖系統取得」這件事,
- * 不綁定 sprite / model / animation 欄位, 避免 domain 過早依賴某個 rendering 實作。
+ * 搭配 FieldObjectRef 使用, 讓 renderer / 系統能以 kind + id 從 World 的正確列表
+ * 取回完整 domain object。
+ */
+enum FieldObjectKind {
+	MachineKind;
+	WeaponOnFieldKind;
+	ProjectileKind;
+	HitboxKind;
+	MarkerKind;
+}
+
+/**
+ * 場上物參照。
  *
- * 真正如何畫由 World.Drawer function type 注入。
+ * id 可只保證在同一種 FieldObjectKind 內唯一; kind 負責指出要到 World 的哪個列表查找。
+ */
+typedef FieldObjectRef = {
+	var kind:FieldObjectKind;
+	var id:String;
+}
+
+/**
+ * 可繪圖目標。
+ *
+ * DrawableObject 是繪圖層的「參照」, 不是 domain object 本體。
+ * Drawer 取得 world + target 後, 可依 target.kind 從 World 的對應列表取回完整物件。
  */
 typedef DrawableObject = {
-	> FieldObject,
+	var target:FieldObjectRef;
 }
 
 /**

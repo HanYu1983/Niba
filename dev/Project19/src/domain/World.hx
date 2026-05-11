@@ -4,6 +4,7 @@ import domain.Collision.Hitbox;
 import domain.FieldObject;
 import domain.FieldObject.CollidableObject;
 import domain.FieldObject.DrawableObject;
+import domain.FieldObject.FieldObjectKind;
 import domain.FieldObject.Marker;
 import domain.FieldObject.MovableObject;
 import domain.Machine;
@@ -164,28 +165,28 @@ function getMovableObjects(world:World):Array<MovableObject> {
 }
 
 /**
- * 取得所有可繪圖物件。
+ * 取得所有可繪圖目標。
  *
- * DrawableObject 目前只要求 FieldObject 欄位, 因此所有實際存在於世界座標的物件
- * 都可以交給上層 renderer 決定是否繪製、如何排序與使用哪個素材。
+ * DrawableObject 是 FieldObjectRef 包裝。renderer 可依 target.kind 從 World 的對應列表
+ * 取回完整 domain object。
  */
 function getDrawableObjects(world:World):Array<DrawableObject> {
 	var objects:Array<DrawableObject> = [];
 
 	for (machine in world.machines)
-		objects.push(machine);
+		objects.push({target: {kind: FieldObjectKind.MachineKind, id: machine.id}});
 
 	for (weapon in world.weaponsOnField)
-		objects.push(weapon);
+		objects.push({target: {kind: FieldObjectKind.WeaponOnFieldKind, id: weapon.id}});
 
 	for (projectile in world.projectiles)
-		objects.push(projectile);
+		objects.push({target: {kind: FieldObjectKind.ProjectileKind, id: projectile.id}});
 
 	for (hitbox in world.hitboxes)
-		objects.push(hitbox);
+		objects.push({target: {kind: FieldObjectKind.HitboxKind, id: hitbox.id}});
 
 	for (marker in world.markers)
-		objects.push(marker);
+		objects.push({target: {kind: FieldObjectKind.MarkerKind, id: marker.id}});
 
 	return objects;
 }

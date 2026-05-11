@@ -1,7 +1,12 @@
 package impl;
 
+import domain.Collision.Hitbox;
+import domain.FieldObject;
 import domain.FieldObject.DrawableObject;
 import domain.Geometry.Shape;
+import domain.Machine;
+import domain.Projectile.ProjectileObject;
+import domain.Weapon.WeaponOnField;
 import domain.World;
 import domain.World.Drawer;
 import js.Browser;
@@ -16,24 +21,72 @@ function createP5Drawer():Drawer {
 	var p5:Dynamic = Browser.window;
 
 	return (world:World, object:DrawableObject) -> {
-		p5.push();
-		p5.translate(object.position.x, object.position.y);
-		p5.rotate(object.facing);
-
-		drawShapeIfPresent(p5, object);
-		drawFacing(p5);
-		drawLabel(p5, object);
-
-		p5.pop();
+		switch (object.target.kind) {
+			case MachineKind:
+				for (machine in world.machines)
+					if (machine.id == object.target.id) {
+						drawMachine(p5, machine);
+						return;
+					}
+			case WeaponOnFieldKind:
+				for (weapon in world.weaponsOnField)
+					if (weapon.id == object.target.id) {
+						drawWeaponOnField(p5, weapon);
+						return;
+					}
+			case ProjectileKind:
+				for (projectile in world.projectiles)
+					if (projectile.id == object.target.id) {
+						drawProjectile(p5, projectile);
+						return;
+					}
+			case HitboxKind:
+				for (hitbox in world.hitboxes)
+					if (hitbox.id == object.target.id) {
+						drawHitbox(p5, hitbox);
+						return;
+					}
+			case MarkerKind:
+				for (marker in world.markers)
+					if (marker.id == object.target.id) {
+						drawObjectBase(p5, marker);
+						return;
+					}
+		}
 	};
 }
 
-private function drawShapeIfPresent(p5:Dynamic, object:DrawableObject):Void {
-	if (!Reflect.hasField(object, "shape"))
-		return;
+private function drawMachine(p5:Dynamic, machine:Machine):Void {
+	drawObjectBase(p5, machine, machine.shape);
+}
 
-	var shape:Shape = cast Reflect.field(object, "shape");
+private function drawWeaponOnField(p5:Dynamic, weapon:WeaponOnField):Void {
+	drawObjectBase(p5, weapon);
+}
 
+private function drawProjectile(p5:Dynamic, projectile:ProjectileObject):Void {
+	drawObjectBase(p5, projectile);
+}
+
+private function drawHitbox(p5:Dynamic, hitbox:Hitbox):Void {
+	drawObjectBase(p5, hitbox, hitbox.shape);
+}
+
+private function drawObjectBase(p5:Dynamic, object:FieldObject, ?shape:Shape):Void {
+	p5.push();
+	p5.translate(object.position.x, object.position.y);
+	p5.rotate(object.facing);
+
+	if (shape != null)
+		drawShape(p5, shape);
+
+	drawFacing(p5);
+	drawLabel(p5, object);
+
+	p5.pop();
+}
+
+private function drawShape(p5:Dynamic, shape:Shape):Void {
 	p5.push();
 	p5.noFill();
 	p5.stroke(80, 180, 255);
@@ -57,7 +110,7 @@ private function drawFacing(p5:Dynamic):Void {
 	p5.pop();
 }
 
-private function drawLabel(p5:Dynamic, object:DrawableObject):Void {
+private function drawLabel(p5:Dynamic, object:FieldObject):Void {
 	if (object.name == "")
 		return;
 
