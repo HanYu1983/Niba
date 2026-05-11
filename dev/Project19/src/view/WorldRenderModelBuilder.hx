@@ -28,6 +28,7 @@ function createRenderWorld(world:World, ?camera:Camera2D):RenderWorld {
 		projectiles: world.projectiles.copy(),
 		hitboxes: world.hitboxes.copy(),
 		markers: world.markers.copy(),
+		cameraPos: world.cameraPos,
 		camera: resolvedCamera,
 		viewMatrix: createViewMatrix(resolvedCamera),
 		projectionMatrix: createProjectionMatrix(resolvedCamera),

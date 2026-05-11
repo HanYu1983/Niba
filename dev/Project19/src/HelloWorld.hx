@@ -1,9 +1,11 @@
 import debug.PathfinderTest;
 import debug.WaypointGoalTest;
 import domain.World.createEmptyWorld;
+import view.CameraController.createCameraController;
 import view.EventCenter;
 import view.EventCenter.P5RenderFrame;
 import view.P5App.createP5App;
+import view.component.CameraControlPanel.createCameraControlPanel;
 
 class HelloWorld {
 	static public function main():Void {
@@ -11,6 +13,8 @@ class HelloWorld {
 		WaypointGoalTest.run();
 
 		var eventCenter = new EventCenter();
+		createCameraControlPanel(eventCenter);
+		createCameraController(eventCenter);
 		eventCenter.p5RenderSubject.subscribe(renderP5Frame);
 		eventCenter.nextWorld(createEmptyWorld());
 		createP5App(eventCenter);
@@ -31,5 +35,6 @@ class HelloWorld {
 		p5.text('projectiles: ${world.projectiles.length}', 16, 124);
 		p5.text('hitboxes: ${world.hitboxes.length}', 16, 144);
 		p5.text('markers: ${world.markers.length}', 16, 164);
+		p5.text('cameraPos: (${world.cameraPos.x}, ${world.cameraPos.y}, ${world.cameraPos.z})', 16, 184);
 	}
 }
