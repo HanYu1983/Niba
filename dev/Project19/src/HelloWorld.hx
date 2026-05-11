@@ -1,27 +1,35 @@
 import debug.PathfinderTest;
 import debug.WaypointGoalTest;
-import sample.DashSlash;
-import sample.GoalDemo;
+import domain.World.createEmptyWorld;
+import view.EventCenter;
+import view.EventCenter.P5RenderFrame;
+import view.P5App.createP5App;
 
 class HelloWorld {
 	static public function main():Void {
-		var blade = DashSlash.plasmaBlade;
-		var skill = DashSlash.dashSlash;
-
-		trace("Hello, World from Haxe!");
-		trace('Weapon : ${blade.name} -> ${blade.definition.name} (${blade.definition.category})');
-		trace('Mounted: owner=${blade.ownerMachineId} local=(${blade.localPosition.x}, ${blade.localPosition.y})');
-		trace('Skill  : ${skill.name} (${skill.steps.length} steps)');
-
-		for (i in 0...skill.steps.length) {
-			var s = skill.steps[i];
-			var movement = s.movement == null ? "no-move" : Std.string(s.movement.type);
-			var weapon = s.weaponUse == null ? "no-weapon" : s.weaponUse.weaponId;
-			trace('  step ${i + 1}: dur=${s.duration}s | movement=$movement | weapon=$weapon');
-		}
-
-		GoalDemo.run();
 		PathfinderTest.run();
 		WaypointGoalTest.run();
+
+		var eventCenter = new EventCenter();
+		eventCenter.p5RenderSubject.subscribe(renderP5Frame);
+		eventCenter.nextWorld(createEmptyWorld());
+		createP5App(eventCenter);
+	}
+
+	static function renderP5Frame(frame:P5RenderFrame):Void {
+		var p5 = frame.p5;
+		var world = frame.renderWorld;
+
+		p5.background(17);
+		p5.noStroke();
+		p5.fill(255);
+		p5.text("Project19 p5 render smoke test", 16, 24);
+		p5.text('frame: ${frame.frameCount}', 16, 44);
+		p5.text('machines: ${world.machines.length}', 16, 64);
+		p5.text('weaponsOnMachine: ${world.weaponsOnMachine.length}', 16, 84);
+		p5.text('weaponsOnField: ${world.weaponsOnField.length}', 16, 104);
+		p5.text('projectiles: ${world.projectiles.length}', 16, 124);
+		p5.text('hitboxes: ${world.hitboxes.length}', 16, 144);
+		p5.text('markers: ${world.markers.length}', 16, 164);
 	}
 }
