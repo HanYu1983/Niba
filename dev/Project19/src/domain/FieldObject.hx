@@ -1,5 +1,6 @@
 package domain;
 
+import domain.Geometry.Shape;
 import domain.Geometry.Vec2;
 
 /**
@@ -48,6 +49,20 @@ typedef MovableObject = {
  */
 typedef DrawableObject = {
 	> FieldObject,
+}
+
+/**
+ * 可碰撞場上物
+ *
+ * - position / facing 來自 FieldObject, 表示此碰撞形狀的世界座標基準
+ * - shape 為「本機座標」形狀, 實際判定前由 ShapeResolver 依 position / facing 轉成世界座標
+ *
+ * 此抽象只描述「可被碰撞系統讀取的幾何資訊」, 不包含傷害、命中冷卻或碰撞反應。
+ * 例如 Hitbox 會在此基礎上再增加戰鬥規則欄位。
+ */
+typedef CollidableObject = {
+	> FieldObject,
+	var shape:Shape;
 }
 
 /**

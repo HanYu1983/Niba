@@ -1,7 +1,7 @@
 package domain;
 
 import domain.Damage.Damage;
-import domain.Geometry.Shape;
+import domain.FieldObject.CollidableObject;
 
 /**
  * 碰撞反應 - Hitbox 成功命中目標後對目標的附加效果
@@ -33,7 +33,7 @@ enum HitReaction {
  * ===== 戰鬥規則 =====
  *   1. Hitbox 由觸發源 (招式步驟 / Projectile.OnHit / Projectile.Field)
  *      在世界中生成, 存活 duration 秒
- *   2. position / facing 來自 FieldObject, 表示 Hitbox 的世界座標基準
+ *   2. position / facing / shape 來自 CollidableObject, 表示 Hitbox 的碰撞幾何
  *   3. shape 為「本機座標」(參見 Shape / ShapeResolver),
  *      由戰鬥系統依此 Hitbox 的 facing / position 轉換到世界座標進行碰撞偵測
  *   4. 期間每 frame 對所有 IDamageable 偵測碰撞
@@ -65,8 +65,7 @@ enum HitReaction {
  *     → 同 frame 內把範圍內所有目標各打一次後消失
  */
 typedef Hitbox = {
-	> FieldObject,
-	var shape:Shape;
+	> CollidableObject,
 	var duration:Float;
 	var cooldownPerTarget:Float;
 	var damage:Damage;

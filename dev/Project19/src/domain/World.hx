@@ -2,6 +2,7 @@ package domain;
 
 import domain.Collision.Hitbox;
 import domain.FieldObject;
+import domain.FieldObject.CollidableObject;
 import domain.FieldObject.DrawableObject;
 import domain.FieldObject.Marker;
 import domain.FieldObject.MovableObject;
@@ -120,6 +121,24 @@ function getFieldObjects(world:World):Array<FieldObject> {
 
 	for (marker in world.markers)
 		objects.push(marker);
+
+	return objects;
+}
+
+/**
+ * 取得所有可碰撞物件。
+ *
+ * 目前包含:
+ *   - hitboxes: 戰鬥中實際參與碰撞判定的最小實體
+ *
+ * 機體 / 場上武器若之後需要阻擋體積或可被掃描範圍, 可改為繼承 CollidableObject
+ * 並在此列表加入對應集合。
+ */
+function getCollidableObjects(world:World):Array<CollidableObject> {
+	var objects:Array<CollidableObject> = [];
+
+	for (hitbox in world.hitboxes)
+		objects.push(hitbox);
 
 	return objects;
 }
