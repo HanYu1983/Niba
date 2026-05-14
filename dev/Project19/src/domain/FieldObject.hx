@@ -30,6 +30,8 @@ typedef FieldObject = {
  *
  * - position 來自 FieldObject, 表示當前世界座標
  * - velocity 表示世界座標速度, 單位由 runtime 決定 (例: 每秒世界單位)
+ * - maxSpeed: 速度向量長度 |v| 的上限（與 velocity 相同的時間/距離單位）;
+ *             是否 clamp 由移動解析或上層系統決定
  *
  * 具體移動規則由 World.moveMovableObject 提供最小實作:
  *   position += velocity * dt
@@ -37,6 +39,7 @@ typedef FieldObject = {
 typedef MovableObject = {
 	> FieldObject,
 	var velocity:Vec2;
+	var maxSpeed:Float;
 }
 
 /**

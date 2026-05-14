@@ -58,7 +58,7 @@ typedef Machine = {
  *
  * 預設值:
  *   - id / name 為空字串
- *   - position / velocity 為零向量, facing = 0, shape 為零半徑圓形
+ *   - position / velocity 為零向量, maxSpeed = 0, facing = 0, shape 為零半徑圓形
  *   - 所有數值欄位為 0
  *   - defense.weights 為空 Map
  *   - weapons / skills 為空陣列
@@ -69,6 +69,7 @@ function createEmptyMachine():Machine {
 		name: "",
 		position: {x: 0.0, y: 0.0},
 		velocity: {x: 0.0, y: 0.0},
+		maxSpeed: 0.0,
 		facing: 0.0,
 		shape: Circle(0.0, 0.0, 0.0),
 		maxHp: 0.0,

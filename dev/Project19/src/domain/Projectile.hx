@@ -64,6 +64,7 @@ enum ProjectileStage {
  *
  * - projectile: 原始發射物模板
  * - velocity:   世界座標速度
+ * - maxSpeed:   繼承自 MovableObject, 飛行速度標量上限
  * - age:        已存在時間
  * - stage:      目前執行階段
  */
