@@ -668,7 +668,8 @@
                 (add-card [:A :space-area] "1" (create-card {:id "1"
                                                              :proto-id "test_card"})))
         ctx (update-global-effects ctx)
-        _ (println (get-global-effects ctx))]))
+        _ (println (get-global-effects ctx))
+        ]))
 
 
 (s/def ::text-id any?)
@@ -694,4 +695,5 @@
                                                              :proto-id "test_card"})))
         ctx (update-global-effects ctx)
         rows (get-player-id-card-id-text-id-action-id-action-tuple ctx)]
-    (println rows)))
+    (println (count rows))
+    ))
