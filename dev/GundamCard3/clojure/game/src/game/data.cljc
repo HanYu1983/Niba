@@ -1,13 +1,12 @@
 (ns game.data
   (:require [clojure.core :refer [read-string slurp]]
-            [clojure.spec.alpha :as s]
-            [game.basic :refer :all]))
+            [game.component :refer :all]))
 
 (defn get-card-data [card-id]
   ; 其它方法
   (-> card-id empty? (and (throw (ex-info (str "card-id must exist:" card-id) {}))))
   (-> card-id
-      (#(str "data/" % ".edn")) slurp read-string eval (#(s/assert :game.basic/card-proto %))))
+      (#(str "data/" % ".edn")) slurp read-string eval))
 
 (def get-card-data-memo (memoize get-card-data))
 

@@ -1,19 +1,19 @@
-(game.basic/card-proto-create
+(game.component/card-proto-create
  {:id "empty_character"
   :gsign [:blue :uc]
   :type :character
-  :texts [(game.basic/text-create
+  :texts [(game.component/text-create
            {:id "text-1"
-            :actions [(game.basic/action-create
+            :actions [(game.component/action-create
                        "action-1"
-                       [(game.basic/condition-create "cond1"
+                       [(game.component/condition-create "cond1"
                                                      `(fn [~'ctx ~'runtime]
                                                         :tip-1)
                                                      `(fn [~'ctx ~'runtime ~'tip]
                                                         (println "condition action " ~'tip)
                                                         #_(throw (ex-info "acc" {}))
                                                         (update ~'ctx :version inc)))
-                        (game.basic/condition-create "cond2"
+                        (game.component/condition-create "cond2"
                                                      `(fn [~'ctx ~'runtime]
                                                         :tip-2)
                                                      `(fn [~'ctx ~'runtime ~'tip]
