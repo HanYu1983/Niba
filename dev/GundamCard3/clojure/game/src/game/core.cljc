@@ -17,5 +17,6 @@
   (test-text)
   (test-query-command)
   (test-update-global-effects)
+  (test-get-player-id-card-id-text-id-action-id-action-tuple)
   ;(test-get-card-data)
   )

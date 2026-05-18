@@ -512,22 +512,22 @@
 
 ;
 (defn test-text []
-  (defmethod game-get-effect-card-id :game.basic [game eff]
+  (defmethod game-get-effect-card-id :test-text [game eff]
     "runtime-card-id")
 
-  (defmethod game-set-tip :game.basic [game card-id condition-id tip]
+  (defmethod game-set-tip :test-text [game card-id condition-id tip]
     (println "game-set-tip " card-id condition-id tip)
     (update-in game [:tips card-id condition-id] (constantly tip)))
 
-  (defmethod game-get-tip :game.basic [game card-id condition-id]
+  (defmethod game-get-tip :test-text [game card-id condition-id]
     (get-in game [:tips card-id condition-id]))
 
-  (defmethod game-get-tips :game.basic [game card-id]
+  (defmethod game-get-tips :test-text [game card-id]
     (get-in game [:tips card-id]))
 
-  (defmethod game-tip-is-ok-to-perform :game.basic [game tip]
+  (defmethod game-tip-is-ok-to-perform :test-text [game tip]
     true)
-  (let [ctx {:env :game.basic, :version 0}
+  (let [ctx {:env :test-text, :version 0}
         text (text-create {:id "text-1"
                            :actions [(action-create "action-1"
                                                     [(condition-create "cond1"
@@ -549,7 +549,7 @@
                                                        (update ~'ctx :version inc)))]
                            :event-script `(fn [~'ctx ~'effect ~'event] ~'ctx)
                            :effect-script `(fn [~'ctx ~'effect] ~'ctx)})
-        effect {:env :game.basic}
+        effect {:env :test-text}
         ;_ (println text)
         ; 先確認玩家使用哪一個action
         action (-> text (text-get-action 0))
@@ -673,3 +673,32 @@
                                                              :proto-id "test_card"})))
         ctx (update-global-effects ctx)
         _ (println (get-global-effects ctx))]))
+
+
+(s/def ::text-id any?)
+(s/def ::action-id any?)
+;
+(defn get-player-id-card-id-text-id-action-id-action-tuple [game]
+  (let [enabled-texts (get-player-id-card-id-texts-tuple game)
+        rows (map (fn [[player-id card-id texts]]
+                    (->> (map #(zipmap (range) (text-get-actions %)) texts)
+                         (zipmap (map :id texts))
+                         (mapcat (fn [[text-id action-map]]
+                                   (map (fn [[action-id action]]
+                                          [player-id card-id text-id action-id action])
+                                        action-map)))
+                         (s/assert (s/coll-of (s/tuple ::player-id ::card-id ::text-id ::action-id ::action)))))
+                  enabled-texts)]
+    rows))
+
+(defn test-get-player-id-card-id-text-id-action-id-action-tuple []
+  (let [ctx (-> {:env :test-update-global-effects}
+                (create-card-table)
+                (create-global-effects-component)
+                (add-card [:A :space-area] "0" (create-card {:id "0"
+                                                             :proto-id "test_card"}))
+                (add-card [:A :space-area] "1" (create-card {:id "1"
+                                                             :proto-id "test_card"})))
+        ctx (update-global-effects ctx)
+        rows (get-player-id-card-id-text-id-action-id-action-tuple ctx)]
+    (println rows)))
