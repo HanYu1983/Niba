@@ -583,33 +583,32 @@
 (s/def ::has-global-effects (s/keys :opt-un [::global-effects]))
 (s/def ::card-id any?)
 
-(defn get-player-id-card-id-texts-tuple [game]
+(defn get-player-id-card-id-text-id-text-tuple [game]
   (s/assert ::card-table game)
   (->> (get-decks game)
        (mapcat (fn [[[player-id ba-syou-keyword] card-ids]]
                  (let [enabled-texts (->> (map (comp get-card-data-memo :proto-id)
                                                (get-cards-by-ids game card-ids))
                                           (zipmap card-ids)
-                                          (map (fn [[card-id card-proto]]
-                                                 (let [texts (-> (card-proto-get-texts card-proto) vals)
-                                                       texts (cond
+                                          (mapcat (fn [[card-id card-proto]]
+                                                    (let [texts (-> (card-proto-get-texts card-proto) vals)
+                                                          texts (cond
                                                                        ; G區的內文
-                                                               (#{:g-zone} ba-syou-keyword)
-                                                               (filter (fn [text]
-                                                                         (-> text text-get-protect-level (>= 2)))
-                                                                       texts)
+                                                                  (#{:g-zone} ba-syou-keyword)
+                                                                  (filter (fn [text]
+                                                                            (-> text text-get-protect-level (>= 2)))
+                                                                          texts)
 
                                                                        ; 場上的內文
-                                                               (is-ba? ba-syou-keyword)
-                                                               texts
+                                                                  (is-ba? ba-syou-keyword)
+                                                                  texts
 
-                                                               :else
-                                                               [])]
-                                                   [player-id
-                                                    card-id
-                                                    texts]))))]
+                                                                  :else
+                                                                  [])]
+                                                      (for [text texts]
+                                                        [player-id card-id (:id text) text])))))]
                    enabled-texts)))
-       (s/assert (s/coll-of (s/tuple ::player-id ::card-id (s/coll-of ::text))))))
+       (s/assert (s/coll-of (s/tuple ::player-id ::card-id ::text-id ::text)))))
 
 (defn create-global-effects-component [ctx]
   (merge ctx {:global-effects {}}))
@@ -628,16 +627,13 @@
   (let [; 先清除快取
         game (set-global-effects game {})
         ; 先查出有效的內文
-        enabled-texts (get-player-id-card-id-texts-tuple game)
+        enabled-texts (get-player-id-card-id-text-id-text-tuple game)
         query-global-effects-map (fn [enabled-texts]
                                    (->> enabled-texts
-                                        (mapcat (fn [enabled-text]
-                                                  (let [[player-id card-id texts] enabled-text]
-                                                    (mapcat (fn [text]
-                                                              (let [effect-script (text-eval-effect-script text)
-                                                                    global-effects (effect-script game (create-effect-by-query-global-effect game player-id card-id text))]
-                                                                global-effects))
-                                                            texts))))
+                                        (mapcat (fn [[player-id card-id text-id text]]
+                                                  (let [effect-script (text-eval-effect-script text)
+                                                        global-effects (effect-script game (create-effect-by-query-global-effect game player-id card-id text))]
+                                                    global-effects)))
                                         (map (juxt :id identity))
                                         (into {})))
         ; 先查數值BUF
@@ -679,17 +675,14 @@
 (s/def ::action-id any?)
 ;
 (defn get-player-id-card-id-text-id-action-id-action-tuple [game]
-  (let [enabled-texts (get-player-id-card-id-texts-tuple game)
-        rows (map (fn [[player-id card-id texts]]
-                    (->> (map #(zipmap (range) (text-get-actions %)) texts)
-                         (zipmap (map :id texts))
-                         (mapcat (fn [[text-id action-map]]
-                                   (map (fn [[action-id action]]
-                                          [player-id card-id text-id action-id action])
-                                        action-map)))
-                         (s/assert (s/coll-of (s/tuple ::player-id ::card-id ::text-id ::action-id ::action)))))
-                  enabled-texts)]
-    rows))
+  (let [enabled-texts (get-player-id-card-id-text-id-text-tuple game)
+        rows (mapcat (fn [[player-id card-id text-id text]]
+                       (->> (text-get-actions text)
+                            (zipmap (range))
+                            (map (fn [[action-id action]]
+                                   [player-id card-id text-id action-id action]))))
+                     enabled-texts)]
+    (s/assert (s/coll-of (s/tuple ::player-id ::card-id ::text-id ::action-id ::action)) rows)))
 
 (defn test-get-player-id-card-id-text-id-action-id-action-tuple []
   (let [ctx (-> {:env :test-update-global-effects}
