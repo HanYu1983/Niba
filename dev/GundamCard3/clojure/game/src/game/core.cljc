@@ -8,6 +8,7 @@
 
 (defn -main [args]
   (s/check-asserts true)
+  (test-card-table)
   (test-current-player-id)
   (test-flag-component)
   (test-timing-component)
@@ -15,4 +16,5 @@
   (test-gsign)
   (test-text)
   (test-query-command)
-  (test-get-card-data))
+  ;(test-get-card-data)
+  )

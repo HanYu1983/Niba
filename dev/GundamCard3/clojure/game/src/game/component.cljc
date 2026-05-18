@@ -2,19 +2,74 @@
   (:require [clojure.spec.alpha :as s]
             [clojure.set :refer [difference]]
             [clojure.string :as str]
-            [clojure.core.match :refer [match]])
+            [clojure.core.match :refer [match]]
+            [game.data :refer :all])
   (:import
    (clojure.lang ExceptionInfo)))
 
 ; card-table
 (s/def ::card-table (s/keys :req-un [::decks ::cards]))
 (defn create-card-table [ctx] (merge ctx {:decks {} :cards {}}))
+(defn get-cards [ctx]
+  (s/assert ::card-table ctx)
+  (-> ctx :cards))
+
+(defn set-cards [ctx cards]
+  (s/assert ::card-table ctx)
+  (-> ctx (assoc :cards cards)))
+
 (defn add-card [ctx deck-id card-id card]
+  (s/assert ::card-table ctx)
   (-> ctx
-      (update-in [:decks deck-id] conj card-id)
-      (assoc-in [:cards card-id] card)))
-(defn remove-card [ctx card-id])
-(defn shuffle-deck [ctx deck-id])
+      (update :table (fn [table]
+                       (-> table
+                           (update :cards #(assoc % card-id card))
+                           (update :decks (fn [decks]
+                                            (if (get decks deck-id)
+                                              (update decks deck-id #(conj % card-id))
+                                              (assoc decks deck-id [card-id])))))))
+      (update :cards assoc card-id card)))
+
+(defn get-card [ctx card-id]
+  (s/assert ::card-table ctx)
+  (-> ctx :cards (get card-id)))
+
+(defn get-cards-by-ids [ctx ids]
+  (s/assert ::card-table ctx)
+  (-> ctx :cards (keep ids)))
+
+(defn get-card-ids-by-deck-id [ctx deck-id]
+  (s/assert ::card-table ctx)
+  (-> ctx :table :decks (get deck-id)))
+
+(defn get-decks [ctx]
+  (s/assert ::card-table ctx)
+  (-> ctx :table :decks))
+
+(defn is-card [ctx card-id]
+  (s/assert ::card-table ctx)
+  (-> ctx :cards (get card-id) nil? not))
+
+(defn remove-card [ctx card-id]
+  (s/assert ::card-table ctx)
+  (-> ctx
+      (update :cards dissoc card-id)
+      (update :table (fn [table]
+                       (-> table
+                           (update :decks (fn [decks]
+                                            (->> decks
+                                                 (map (fn [[deck-id cards]]
+                                                        [deck-id (into [] (remove #(= % card-id) cards))]))
+                                                 (into {}))))
+                           (update :cards dissoc card-id))))))
+
+(defn test-card-table []
+  (let [ctx (create-card-table {})
+        card "card"
+        ctx (-> ctx (add-card [:A :maintenance-area] "0" card))
+        _ (-> ctx (is-card "0") (or (throw (ex-info "must is card" {}))))
+        _ (-> ctx (get-card "0") (= card) (or (throw (ex-info "must be card" {}))))
+        _ (-> ctx (remove-card "0"))]))
 
 ; coin-table
 (defn create-coin-table [ctx] ctx)
@@ -249,21 +304,30 @@
 (defn basyou-create [player-id basyou-id]
   (s/assert ::basyou [player-id basyou-id]))
 
-(defn get-player-id [basyou]
+(defn basyou-get-player-id [basyou]
   (s/assert ::basyou basyou)
   (-> basyou first))
 
-(defn get-ba-syou-keyword [basyou]
+(defn basyou-get-ba-syou-keyword [basyou]
   (s/assert ::basyou basyou)
   (-> basyou second))
 
 (defn get-basyous-by-player-id [player-id]
   (->> ba-syou-keyword (map (fn [k] (basyou-create player-id k)))))
 
-(defn update-ba-syou-keyword [basyou kw]
+(defn basyou-update-ba-syou-keyword [basyou kw]
   (s/assert ::basyou basyou)
   (s/assert ::ba-syou-keyword kw)
-  (basyou-create (get-player-id basyou) kw))
+  (basyou-create (basyou-get-player-id basyou) kw))
+
+(defn create-basyous []
+  (for [player-id player-ids
+        ba-syou ba-syou-keyword]
+    (basyou-create player-id ba-syou)))
+
+(defn create-basyous-by-player-id [player-id]
+  (for [ba-syou ba-syou-keyword]
+    (basyou-create player-id ba-syou)))
 
 (defn test-basyou []
   (s/assert ::basyou [:A :sute-yama])
@@ -422,6 +486,8 @@
   (->> (text-get-actions text)
        (group-by (comp zero? count first
                        #(action-evaluate-conditions-errors % ctx effect)))))
+(defn text-get-protect-level [text]
+  (-> text :protect-level (or 0)))
 ; cost
 (s/def ::roll-cost-color (s/nilable :gsign/color))
 (s/def ::roll-cost (s/or :x #{:X} :colors (s/coll-of ::roll-cost-color :kind vector?)))
@@ -436,6 +502,10 @@
 
 (defn card-proto-create [{:keys [texts] :as info}]
   (s/assert ::card-proto (assoc info :texts (into {} (map (fn [text] [(:id text) text]) texts)))))
+
+(defn card-proto-get-texts [card-proto]
+  (s/assert ::card-proto card-proto)
+  (-> card-proto :texts))
 
 ;
 (defn test-text []
@@ -502,3 +572,78 @@
 
 (defn effect-get-text [effect]
   (-> effect :text))
+
+; =============
+#_(defn game-query-card-texts [game card-id]
+  (let [proto-id (-> (:card-table game) (card-table-get-card card-id) :proto-id)
+        proto (get-card-data-memo proto-id)
+        texts (:texts proto)]
+    texts))
+
+(defn game-query-card-ids [game]
+  (-> (:card-table game) :card-map keys))
+
+(defn game-query-card-battle-point [game card-id global-effects])
+
+(defn game-query-card-text-global-effects [game text]
+  (let [script (text-eval-effect-script text)
+        global-effects (script game {})]
+    (script game)))
+
+(defmulti create-effect-by-query-global-effect (fn [game player-id card-id text] (:env game)))
+
+(defmulti game-query-text-is-cancel (fn [game text] (:env game)))
+
+(defn game-assoc-global-effects [game]
+  (let [; 先清除快取
+        game (dissoc game :global-effects)
+        ; 先查出有效的內文
+        enabled-texts
+        (->> (get-decks game)
+             (map (fn [[[player-id ba-syou-keyword] card-ids]]
+                    (let [enabled-texts (->> (map (comp get-card-data-memo :proto-id)
+                                                  (get-cards-by-ids game card-ids))
+                                             (zipmap card-ids)
+                                             (mapcat (fn [[card-id card-proto]]
+                                                       (let [texts (card-proto-get-texts card-proto)
+                                                             texts (cond
+                                                                     ; G區的內文
+                                                                     (#{:g-zone} ba-syou-keyword)
+                                                                     (filter (fn [text]
+                                                                               (-> text text-get-protect-level (>= 2)))
+                                                                             texts)
+
+                                                                     ; 場上的內文
+                                                                     (is-ba? ba-syou-keyword)
+                                                                     texts
+
+                                                                     :else
+                                                                     [])]
+                                                         [(basyou-create player-id ba-syou-keyword)
+                                                          card-id
+                                                          texts]))))]
+                      enabled-texts))))
+        query-global-effects (fn [enabled-texts]
+                               (->> enabled-texts
+                                    (mapcat (fn [enabled-text]
+                                              (let [[basyou card-id texts] enabled-text
+                                                    player-id (basyou-get-player-id basyou)]
+                                                (mapcat (fn [text]
+                                                          (let [effect-script (text-eval-effect-script text)
+                                                                global-effects (effect-script game (create-effect-by-query-global-effect game player-id card-id text))]
+                                                            global-effects))
+                                                        texts))))))
+        ; 先查數值BUF
+        effects (query-global-effects enabled-texts)
+        ; 套用快取
+        game (assoc game :global-effects effects)
+        ; 再查有沒有因數值更動而產生的新效果
+        effects (merge effects (query-global-effects enabled-texts))
+        ; 套用快取
+        game (assoc game :global-effects effects)
+        ; 取得新內文
+        added-texts []
+        ; 計算新內文的效果
+        effects (merge effects (query-global-effects added-texts))
+        game (assoc game :global-effects effects)]
+    game))
