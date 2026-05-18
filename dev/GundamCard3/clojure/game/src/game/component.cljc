@@ -574,60 +574,50 @@
   (-> effect :text))
 
 ; =============
-#_(defn game-query-card-texts [game card-id]
-  (let [proto-id (-> (:card-table game) (card-table-get-card card-id) :proto-id)
-        proto (get-card-data-memo proto-id)
-        texts (:texts proto)]
-    texts))
-
-(defn game-query-card-ids [game]
-  (-> (:card-table game) :card-map keys))
-
-(defn game-query-card-battle-point [game card-id global-effects])
-
-(defn game-query-card-text-global-effects [game text]
-  (let [script (text-eval-effect-script text)
-        global-effects (script game {})]
-    (script game)))
 
 (defmulti create-effect-by-query-global-effect (fn [game player-id card-id text] (:env game)))
 
-(defmulti game-query-text-is-cancel (fn [game text] (:env game)))
+(s/def ::has-global-effects (s/keys :opt-un [::global-effects]))
 
-(defn game-assoc-global-effects [game]
+(defn get-player-id-card-id-texts-tuple [game]
+  (s/assert ::card-table game)
+  (->> (get-decks game)
+       (map (fn [[[player-id ba-syou-keyword] card-ids]]
+              (let [enabled-texts (->> (map (comp get-card-data-memo :proto-id)
+                                            (get-cards-by-ids game card-ids))
+                                       (zipmap card-ids)
+                                       (mapcat (fn [[card-id card-proto]]
+                                                 (let [texts (card-proto-get-texts card-proto)
+                                                       texts (cond
+                                                                       ; G區的內文
+                                                               (#{:g-zone} ba-syou-keyword)
+                                                               (filter (fn [text]
+                                                                         (-> text text-get-protect-level (>= 2)))
+                                                                       texts)
+
+                                                                       ; 場上的內文
+                                                               (is-ba? ba-syou-keyword)
+                                                               texts
+
+                                                               :else
+                                                               [])]
+                                                   [player-id
+                                                    card-id
+                                                    texts]))))]
+                enabled-texts)))
+       (s/assert (s/tuple ::player-id ::card-id (s/coll-of ::text)))))
+
+(defn update-global-effects [game]
+  (s/assert ::has-global-effects game)
+  (s/assert ::card-table game)
   (let [; 先清除快取
         game (dissoc game :global-effects)
         ; 先查出有效的內文
-        enabled-texts
-        (->> (get-decks game)
-             (map (fn [[[player-id ba-syou-keyword] card-ids]]
-                    (let [enabled-texts (->> (map (comp get-card-data-memo :proto-id)
-                                                  (get-cards-by-ids game card-ids))
-                                             (zipmap card-ids)
-                                             (mapcat (fn [[card-id card-proto]]
-                                                       (let [texts (card-proto-get-texts card-proto)
-                                                             texts (cond
-                                                                     ; G區的內文
-                                                                     (#{:g-zone} ba-syou-keyword)
-                                                                     (filter (fn [text]
-                                                                               (-> text text-get-protect-level (>= 2)))
-                                                                             texts)
-
-                                                                     ; 場上的內文
-                                                                     (is-ba? ba-syou-keyword)
-                                                                     texts
-
-                                                                     :else
-                                                                     [])]
-                                                         [(basyou-create player-id ba-syou-keyword)
-                                                          card-id
-                                                          texts]))))]
-                      enabled-texts))))
+        enabled-texts (get-player-id-card-id-texts-tuple game)
         query-global-effects (fn [enabled-texts]
                                (->> enabled-texts
                                     (mapcat (fn [enabled-text]
-                                              (let [[basyou card-id texts] enabled-text
-                                                    player-id (basyou-get-player-id basyou)]
+                                              (let [[player-id card-id texts] enabled-text]
                                                 (mapcat (fn [text]
                                                           (let [effect-script (text-eval-effect-script text)
                                                                 global-effects (effect-script game (create-effect-by-query-global-effect game player-id card-id text))]
