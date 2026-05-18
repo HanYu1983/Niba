@@ -90,7 +90,7 @@
    (= player-id ?player-id)
    (some? #{:space-area, :earth-area, :maintenance-area, :junk-yard} ba-syou-keyword)
    (= card-id ?card-id)]
-  [CardText (= card-id ?card-id) (= id ?text-id) (= level 1)]
+  [CardText (= card-id ?card-id) (= id ?text-id) (>= level 1)]
   =>
   (insert! (map->CardTextStep1 {:player-id ?player-id, :card-id ?card-id, :text-id text-id, :reason :default})))
 
@@ -100,7 +100,7 @@
    (= player-id ?player-id)
    (some? #{:g-zone} ba-syou-keyword)
    (= card-id ?card-id)]
-  [CardText (= card-id ?card-id) (= id ?text-id) (= level 2)]
+  [CardText (= card-id ?card-id) (= id ?text-id) (>= level 2)]
   =>
   (insert! (map->CardTextStep1 {:player-id ?player-id, :card-id ?card-id, :text-id text-id, :reason :g-zone})))
 
@@ -147,6 +147,45 @@
 
 (defquery card-can-play-by-hand [?player-id]
   [?values <- EffectCardCanPlayAsHand (= player-id ?player-id)])
+
+;================
+(defn game-query-card-texts [game card-id]
+  (let [proto-id (-> (:card-table game) (card-table-get-card card-id) :proto-id)
+        proto (get-card-data-memo proto-id)
+        texts (:texts proto)]
+    texts))
+
+(defn game-query-card-ids [game]
+  (-> (:card-table game) :card-map keys))
+
+(defn game-query-card-battle-point [game card-id global-effects])
+
+(defn game-query-card-text-global-effects [game text]
+  (let [script (text-eval-effect-script text)
+        global-effects (script game {})]
+    (script game)))
+
+(defn game-assoc-global-effects [game]
+  (let [; 先清除快取
+        game (dissoc game :global-effects)
+        ; 先查原始內文
+        origin-texts (mapcat #(game-query-card-texts game %) (game-query-card-ids game))
+        ; 先查數值BUF
+        effects (query-card-effects game origin-texts)
+        ; 套用快取
+        game (assoc game :global-effects effects)
+        ; 再查有沒有因數值更動而產生的新效果
+        effects2 (query-card-effects game origin-texts)
+        ; 套用快取
+        game (assoc game :global-effects (merge effects effects2))
+        ; 取得新內文
+        added-texts []
+        ; 計算新內文的效果
+        effects3 (query-card-effects game added-texts)
+        game (assoc game :global-effects (merge effects effects2 effects3))]
+    game))
+
+
 
 
 (defn game-query-play-card-effect [game player-id]
