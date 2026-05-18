@@ -215,26 +215,26 @@
               [:battle :end :adjust-hand]
               [:battle :end :turn-end]])
 
-(defn next-timing [curr-timing]
+(defn timing-next-timing [curr-timing]
   (->> timings cycle (take (inc (count timings))) (drop-while #(not (= % curr-timing))) next first))
 
 (s/def ::timing (into #{} timings))
 
-(defn can-play-card-or-text [timing]
+(defn timing-can-play-card-or-text [timing]
   (s/assert ::timing timing)
   (->> timing (filter #{:free1 :free2}) count pos?))
 
-(defn get-phase-keyword [timing]
+(defn timing-get-phase-keyword [timing]
   (s/assert ::timing timing)
   (->> timing first))
 
-(defn get-step-keyword [timing]
+(defn timing-get-step-keyword [timing]
   (s/assert ::timing timing)
   (match timing
     [:battle step-keyword _] step-keyword
     :else (throw (ex-info (str "no step:" timing) {}))))
 
-(defn is-free [timing]
+(defn timing-is-free [timing]
   (s/assert ::timing timing)
   (match timing
     (:or [_ :free1] [_ _ :free1] [_ :free2] [_ _ :free2])
@@ -244,8 +244,8 @@
     false))
 
 (defn test-timing []
-  (let [_ (-> [:battle :return :start] can-play-card-or-text (= false) (or (throw (ex-info "" {}))))
-        _ (-> [:battle :return :free1] can-play-card-or-text (= true) (or (throw (ex-info "" {}))))]))
+  (let [_ (-> [:battle :return :start] timing-can-play-card-or-text (= false) (or (throw (ex-info "" {}))))
+        _ (-> [:battle :return :free1] timing-can-play-card-or-text (= true) (or (throw (ex-info "" {}))))]))
 ;
 (s/def ::has-phase (s/keys :opt-un [::phase]))
 (defn create-phase-component [ctx]
@@ -262,7 +262,7 @@
 
 (defn next-phase [ctx]
   (s/assert ::has-phase ctx)
-  (-> ctx get-phase next-timing ((fn [timing] (set-phase ctx timing)))))
+  (-> ctx get-phase timing-next-timing ((fn [timing] (set-phase ctx timing)))))
 
 (defn test-timing-component []
   (let [_ (-> {:phase [:maintenance :start]} (set-phase [:reroll :rule]) get-phase (= [:reroll :rule]) (or (throw (ex-info "" {}))))
@@ -343,7 +343,7 @@
 (s/def ::battle-point-value (s/or :empty #{"*"} :int int?))
 (s/def ::battle-point (s/tuple ::battle-point-value ::battle-point-value ::battle-point-value))
 
-(defn add-value [& vs]
+(defn battle-point-add-value [& vs]
   (doseq [v vs] (s/assert ::battle-point-value v))
   (reduce (fn [acc-a a]
             (if (or (= "*" a) (= "*" acc-a))
@@ -352,13 +352,13 @@
           0
           vs))
 
-(defn add [& vs]
+(defn battle-point-add [& vs]
   (doseq [v vs] (s/assert ::battle-point v))
-  (->> vs (apply map vector) (mapv #(apply add-value %))))
+  (->> vs (apply map vector) (mapv #(apply battle-point-add-value %))))
 
 (defn test-battle-point []
-  (-> (add [1 1 1] [1 1 1] [1 1 1]) (= [3 3 3]) (or (throw (ex-info "must [3 3 3]" {}))))
-  (-> (add [1 1 1] [2 "*" 1] ["*" 1 -1]) (= ["*" "*" 1]) (or (throw (ex-info "must [* * 1]" {})))))
+  (-> (battle-point-add [1 1 1] [1 1 1] [1 1 1]) (= [3 3 3]) (or (throw (ex-info "must [3 3 3]" {}))))
+  (-> (battle-point-add [1 1 1] [2 "*" 1] ["*" 1 -1]) (= ["*" "*" 1]) (or (throw (ex-info "must [* * 1]" {})))))
 
 ;
 ; "緑" | "茶" | "青" | "白" | "紫" | "黒" | "赤";
@@ -366,7 +366,7 @@
 (s/def :gsign/property #{:uc :08})
 (s/def ::gsign (s/tuple :gsign/color :gsign/property))
 
-(defn can-pay-roll-cost
+(defn color-can-pay-roll-cost
   "紫國力用1個紫或2個非紫的支付
    其它國力用1個相應國力支付"
   [color pay-colors]
@@ -386,7 +386,7 @@
                               [:white [:white]]
                               [:black [:black]]
                               [:red [:red]]]]
-    (when (not (can-pay-roll-cost color pay-colors))
+    (when (not (color-can-pay-roll-cost color pay-colors))
       (throw (ex-info (str color " can not use " pay-colors " to pay") {}))))
   (doseq [[color pay-colors] [[:purple [:blue]]
                               [:purple [:blue :purple]]
@@ -395,7 +395,7 @@
                               [:black [:red]]
                               [:red [:black]]
                               [:red [:red :red]]]]
-    (when (can-pay-roll-cost color pay-colors)
+    (when (color-can-pay-roll-cost color pay-colors)
       (throw (ex-info (str color " must can not use " pay-colors " to pay") {})))))
 
 ; ========== Tip ============
