@@ -7,21 +7,21 @@
             :actions [(game.component/action-create
                        "action-1"
                        [(game.component/condition-create "cond1"
-                                                     `(fn [~'ctx ~'runtime]
+                                                     `(fn [~'ctx ~'effect]
                                                         :tip-1)
-                                                     `(fn [~'ctx ~'runtime ~'tip]
+                                                     `(fn [~'ctx ~'effect ~'tip]
                                                         (println "condition action " ~'tip)
                                                         #_(throw (ex-info "acc" {}))
                                                         (update ~'ctx :version inc)))
                         (game.component/condition-create "cond2"
-                                                     `(fn [~'ctx ~'runtime]
+                                                     `(fn [~'ctx ~'effect]
                                                         :tip-2)
-                                                     `(fn [~'ctx ~'runtime ~'tip]
+                                                     `(fn [~'ctx ~'effect ~'tip]
                                                         (println "condition action " ~'tip)
                                                         #_(throw (ex-info "acc" {}))
                                                         (update ~'ctx :version inc)))]
-                       `(fn [~'ctx ~'runtime ~'tips]
+                       `(fn [~'ctx ~'effect ~'tips]
                           (println "action action" ~'tips)
                           (update ~'ctx :version inc)))]
-            :event-script `(fn [~'ctx ~'runtime ~'event] ~'ctx)
-            :effect-script `(fn [~'ctx ~'runtime] ~'ctx)})]})
+            :event-script `(fn [~'ctx ~'effect ~'event] ~'ctx)
+            :effect-script `(fn [~'ctx ~'effect] [{:id (str "test-effect-" (game.component/game-get-effect-card-id ~'ctx ~'effect))}])})]})

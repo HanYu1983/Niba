@@ -16,5 +16,6 @@
   (test-gsign)
   (test-text)
   (test-query-command)
+  (test-update-global-effects)
   ;(test-get-card-data)
   )

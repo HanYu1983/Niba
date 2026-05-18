@@ -272,7 +272,10 @@
 
 ; card
 (s/def ::card (s/keys :req-un [::id ::tap? ::face-up? ::proto-id]))
-
+(defn create-card [{:keys [tap? face-up?] :as ctx}]
+  (s/assert ::card (assoc ctx
+                          :tap? (boolean tap?)
+                          :face-up? (boolean face-up?))))
 ;
 (def ba-syou-keyword [:hon-goku
                       :sute-yama
@@ -578,16 +581,17 @@
 (defmulti create-effect-by-query-global-effect (fn [game player-id card-id text] (:env game)))
 
 (s/def ::has-global-effects (s/keys :opt-un [::global-effects]))
+(s/def ::card-id any?)
 
 (defn get-player-id-card-id-texts-tuple [game]
   (s/assert ::card-table game)
   (->> (get-decks game)
-       (map (fn [[[player-id ba-syou-keyword] card-ids]]
-              (let [enabled-texts (->> (map (comp get-card-data-memo :proto-id)
-                                            (get-cards-by-ids game card-ids))
-                                       (zipmap card-ids)
-                                       (mapcat (fn [[card-id card-proto]]
-                                                 (let [texts (card-proto-get-texts card-proto)
+       (mapcat (fn [[[player-id ba-syou-keyword] card-ids]]
+                 (let [enabled-texts (->> (map (comp get-card-data-memo :proto-id)
+                                               (get-cards-by-ids game card-ids))
+                                          (zipmap card-ids)
+                                          (map (fn [[card-id card-proto]]
+                                                 (let [texts (-> (card-proto-get-texts card-proto) vals)
                                                        texts (cond
                                                                        ; G區的內文
                                                                (#{:g-zone} ba-syou-keyword)
@@ -604,36 +608,68 @@
                                                    [player-id
                                                     card-id
                                                     texts]))))]
-                enabled-texts)))
-       (s/assert (s/tuple ::player-id ::card-id (s/coll-of ::text)))))
+                   enabled-texts)))
+       (s/assert (s/coll-of (s/tuple ::player-id ::card-id (s/coll-of ::text))))))
+
+(defn create-global-effects-component [ctx]
+  (merge ctx {:global-effects {}}))
+
+(defn get-global-effects [game]
+  (s/assert ::has-global-effects game)
+  (-> game :global-effects))
+
+(defn set-global-effects [game effects]
+  (s/assert ::has-global-effects game)
+  (assoc game :global-effects effects))
 
 (defn update-global-effects [game]
   (s/assert ::has-global-effects game)
   (s/assert ::card-table game)
   (let [; 先清除快取
-        game (dissoc game :global-effects)
+        game (set-global-effects game {})
         ; 先查出有效的內文
         enabled-texts (get-player-id-card-id-texts-tuple game)
-        query-global-effects (fn [enabled-texts]
-                               (->> enabled-texts
-                                    (mapcat (fn [enabled-text]
-                                              (let [[player-id card-id texts] enabled-text]
-                                                (mapcat (fn [text]
-                                                          (let [effect-script (text-eval-effect-script text)
-                                                                global-effects (effect-script game (create-effect-by-query-global-effect game player-id card-id text))]
-                                                            global-effects))
-                                                        texts))))))
+        query-global-effects-map (fn [enabled-texts]
+                                   (->> enabled-texts
+                                        (mapcat (fn [enabled-text]
+                                                  (let [[player-id card-id texts] enabled-text]
+                                                    (mapcat (fn [text]
+                                                              (let [effect-script (text-eval-effect-script text)
+                                                                    global-effects (effect-script game (create-effect-by-query-global-effect game player-id card-id text))]
+                                                                global-effects))
+                                                            texts))))
+                                        (map (juxt :id identity))
+                                        (into {})))
         ; 先查數值BUF
-        effects (query-global-effects enabled-texts)
+        effects (query-global-effects-map enabled-texts)
         ; 套用快取
-        game (assoc game :global-effects effects)
+        game (set-global-effects game effects)
         ; 再查有沒有因數值更動而產生的新效果
-        effects (merge effects (query-global-effects enabled-texts))
+        effects (merge effects (query-global-effects-map enabled-texts))
         ; 套用快取
-        game (assoc game :global-effects effects)
+        game (set-global-effects game effects)
         ; 取得新內文
         added-texts []
         ; 計算新內文的效果
-        effects (merge effects (query-global-effects added-texts))
-        game (assoc game :global-effects effects)]
+        effects (merge effects (query-global-effects-map added-texts))
+        ; 套用快取
+        game (set-global-effects game effects)]
     game))
+
+(defn test-update-global-effects []
+  (defmethod create-effect-by-query-global-effect :test-update-global-effects [game player-id card-id text]
+    {:id (str "effect-" card-id "-" (:id text))
+     :card-id card-id
+     :reason :query
+     :text text})
+  (defmethod game-get-effect-card-id :test-update-global-effects [game effect]
+    (-> effect :card-id))
+  (let [ctx (-> {:env :test-update-global-effects}
+                (create-card-table)
+                (create-global-effects-component)
+                (add-card [:A :space-area] "0" (create-card {:id "0"
+                                                             :proto-id "test_card"}))
+                (add-card [:A :space-area] "1" (create-card {:id "1"
+                                                             :proto-id "test_card"})))
+        ctx (update-global-effects ctx)
+        _ (println (get-global-effects ctx))]))
