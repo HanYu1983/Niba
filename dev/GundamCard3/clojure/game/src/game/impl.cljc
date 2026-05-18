@@ -68,85 +68,87 @@
 (defmethod game-get-player-pass-cut :impl [game player-id]
   ((:player-has-cut game) player-id))
 
+;=================================
 
-
-(def empty-session (mk-session 'game.impl))
+(comment
+  (def empty-session (mk-session 'game.impl))
 
 ; level 0的內文可以被洗
-(defrule origin-card-text
-  [CardBaSyou
-   (= player-id ?player-id)
-   (some? #{:space-area, :earth-area, :maintenance-area, :junk-yard} ba-syou-keyword)
-   (= card-id ?card-id)]
-  [CardText (= card-id ?card-id) (= id ?text-id) (= level 0)]
-  [text-ids-cancel <- (acc/all :text-id) :from [EffectCancelText]]
-  [:check (not (contains? text-ids-cancel ?text-id))]
-  =>
-  (insert! (map->CardTextStep1 {:player-id ?player-id, :card-id ?card-id, :text-id text-id, :reason :default})))
+  (defrule origin-card-text
+    [CardBaSyou
+     (= player-id ?player-id)
+     (some? #{:space-area, :earth-area, :maintenance-area, :junk-yard} ba-syou-keyword)
+     (= card-id ?card-id)]
+    [CardText (= card-id ?card-id) (= id ?text-id) (= level 0)]
+    [text-ids-cancel <- (acc/all :text-id) :from [EffectCancelText]]
+    [:check (not (contains? text-ids-cancel ?text-id))]
+    =>
+    (insert! (map->CardTextStep1 {:player-id ?player-id, :card-id ?card-id, :text-id text-id, :reason :default})))
 
 ; level 1的內文不能被洗
-(defrule origin-card-text
-  [CardBaSyou
-   (= player-id ?player-id)
-   (some? #{:space-area, :earth-area, :maintenance-area, :junk-yard} ba-syou-keyword)
-   (= card-id ?card-id)]
-  [CardText (= card-id ?card-id) (= id ?text-id) (>= level 1)]
-  =>
-  (insert! (map->CardTextStep1 {:player-id ?player-id, :card-id ?card-id, :text-id text-id, :reason :default})))
+  (defrule origin-card-text
+    [CardBaSyou
+     (= player-id ?player-id)
+     (some? #{:space-area, :earth-area, :maintenance-area, :junk-yard} ba-syou-keyword)
+     (= card-id ?card-id)]
+    [CardText (= card-id ?card-id) (= id ?text-id) (>= level 1)]
+    =>
+    (insert! (map->CardTextStep1 {:player-id ?player-id, :card-id ?card-id, :text-id text-id, :reason :default})))
 
 ; level 2的內文在g-zone也不會被洗
-(defrule g-zone-card-text
-  [CardBaSyou
-   (= player-id ?player-id)
-   (some? #{:g-zone} ba-syou-keyword)
-   (= card-id ?card-id)]
-  [CardText (= card-id ?card-id) (= id ?text-id) (>= level 2)]
-  =>
-  (insert! (map->CardTextStep1 {:player-id ?player-id, :card-id ?card-id, :text-id text-id, :reason :g-zone})))
+  (defrule g-zone-card-text
+    [CardBaSyou
+     (= player-id ?player-id)
+     (some? #{:g-zone} ba-syou-keyword)
+     (= card-id ?card-id)]
+    [CardText (= card-id ?card-id) (= id ?text-id) (>= level 2)]
+    =>
+    (insert! (map->CardTextStep1 {:player-id ?player-id, :card-id ?card-id, :text-id text-id, :reason :g-zone})))
 
 
-(defrule card-text-step2
-  [texts-from-step1 <- (acc/all) :from [CardTextStep1]]
-  [text-ids-cancel <- (acc/all :text-id) :from [EffectCancelText]]
-  =>
-  (let [text-ids (clojure.set/difference)]
-    (doseq [text-id text-ids]
-      (insert! (map->CardTextStep2 {})))))
+  (defrule card-text-step2
+    [texts-from-step1 <- (acc/all) :from [CardTextStep1]]
+    [text-ids-cancel <- (acc/all :text-id) :from [EffectCancelText]]
+    =>
+    (let [text-ids (clojure.set/difference)]
+      (doseq [text-id text-ids]
+        (insert! (map->CardTextStep2 {})))))
 
-(defrule added-card-text
-  [EffectAddText (= player-id ?player-id) (= text ?text)]
-  =>
-  (insert! (map->CardTextStep2 {:player-id ?player-id, :card-id ?card-id, :text-id text-id, :reason :added})))
+  (defrule added-card-text
+    [EffectAddText (= player-id ?player-id) (= text ?text)]
+    =>
+    (insert! (map->CardTextStep2 {:player-id ?player-id, :card-id ?card-id, :text-id text-id, :reason :added})))
 
 
-(defrule card-text-step3
-  [texts-from-step2 <- (acc/all) :from [CardTextStep1]]
-  [text-ids-cancel <- (acc/all :text-id) :from [EffectCancelText]]
-  =>
-  (let [text-ids (clojure.set/difference)]
-    (doseq [text-id text-ids]
-      (insert! (map->CardTextStep3 {})))))
+  (defrule card-text-step3
+    [texts-from-step2 <- (acc/all) :from [CardTextStep1]]
+    [text-ids-cancel <- (acc/all :text-id) :from [EffectCancelText]]
+    =>
+    (let [text-ids (clojure.set/difference)]
+      (doseq [text-id text-ids]
+        (insert! (map->CardTextStep3 {})))))
 
 ; 從final card text的text id找出card-proto的text後叫用effect-script, 再轉成rule的record insert
-(defrule query-card-texts-step1
-  [?values <- CardTextStep1])
+  (defrule query-card-texts-step1
+    [?values <- CardTextStep1])
 ; 再查詢一次就包含新增的內文
-(defrule query-card-texts-final
-  [?values <- CardTextStepFinal])
+  (defrule query-card-texts-final
+    [?values <- CardTextStepFinal])
 
-(defrule play-card
-  [CardBaSyou (= player-id ?player-id) (= ba-syou-keyword :te-hu-ta) (= card-id ?card-id)]
-  [Card (= card-id ?card-id)]
-  =>
-  (insert! (map->CardCanPlayByHand {:card-id ?card-id, :player-id ?player-id})))
+  (defrule play-card
+    [CardBaSyou (= player-id ?player-id) (= ba-syou-keyword :te-hu-ta) (= card-id ?card-id)]
+    [Card (= card-id ?card-id)]
+    =>
+    (insert! (map->CardCanPlayByHand {:card-id ?card-id, :player-id ?player-id})))
 
-(defrule play-card-by-text
-  [EffectCardCanPlayAsHand (= player-id ?player-id) (= card-id ?card-id)]
-  =>
-  (insert! (map->CardCanPlayByHand {:card-id ?card-id, :player-id player-id})))
+  (defrule play-card-by-text
+    [EffectCardCanPlayAsHand (= player-id ?player-id) (= card-id ?card-id)]
+    =>
+    (insert! (map->CardCanPlayByHand {:card-id ?card-id, :player-id player-id})))
 
-(defquery card-can-play-by-hand [?player-id]
-  [?values <- EffectCardCanPlayAsHand (= player-id ?player-id)])
+  (defquery card-can-play-by-hand [?player-id]
+    [?values <- EffectCardCanPlayAsHand (= player-id ?player-id)])
+  )
 
 ;================
 (defn game-query-card-texts [game card-id]
@@ -165,7 +167,7 @@
         global-effects (script game {})]
     (script game)))
 
-(defn game-assoc-global-effects [game]
+#_(defn game-assoc-global-effects [game]
   (let [; 先清除快取
         game (dissoc game :global-effects)
         ; 先查原始內文
