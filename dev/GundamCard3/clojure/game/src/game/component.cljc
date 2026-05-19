@@ -304,6 +304,21 @@
   (or (is-battle-area? k)
       (is-maintenance-area? k)))
 
+(defn is-text-on? [k]
+  (not (#{:te-hu-ta :hanger :played-card :removed-card} k)))
+
+(defn basyou-keyword-get-all []
+  ba-syou-keyword)
+
+(defn basyou-keyword-get-ba-all []
+  (filter is-ba? ba-syou-keyword))
+
+(defn basyou-keyword-get-text-on []
+  (filter is-text-on? ba-syou-keyword))
+
+(defn basyou-keyword-get-battle-area []
+  (filter is-battle-area? ba-syou-keyword))
+
 (defn basyou-create [player-id basyou-id]
   (s/assert ::basyou [player-id basyou-id]))
 
@@ -326,6 +341,11 @@
 (defn create-basyous []
   (for [player-id player-ids
         ba-syou ba-syou-keyword]
+    (basyou-create player-id ba-syou)))
+
+(defn create-text-on-basyous []
+  (for [player-id player-ids
+        ba-syou (basyou-keyword-get-text-on)]
     (basyou-create player-id ba-syou)))
 
 (defn create-basyous-by-player-id [player-id]
@@ -401,9 +421,9 @@
 ; ========== Tip ============
 
 (defmulti game-is-phase :env)
-(defmulti game-set-tip (fn [game card-id condition-id tip] (:env game)))
-(defmulti game-get-tip (fn [game card-id condition-id] (:env game))) ; 
-(defmulti game-get-tips (fn [game card-id] (:env game))) ;
+(defmulti game-set-tip (fn [game effect-id condition-id tip] (:env game)))
+(defmulti game-get-tip (fn [game effect-id condition-id] (:env game))) ; 
+(defmulti game-get-tips (fn [game effect-id] (:env game))) ;
 (defmulti game-tip-is-ok-to-perform (fn [game tip] (:env game)))
 
 ; ========== Text =========== 
@@ -411,7 +431,7 @@
 (defmulti game-get-effect-owner-id (fn [game effect] (:env game)))
 (defmulti game-get-effect-card-id (fn [game effect] (:env game)))
 
-(s/def ::condition  (s/keys :opt-un [::id ::tip-script ::action-script]))
+(s/def ::condition  (s/keys :req-un [::id ::tip-script ::action-script]))
 
 (defn condition-create [id tip-script action-script]
   {:id id :tip-script tip-script :action-script action-script})
@@ -421,7 +441,7 @@
   (-> con :action-script (or `(fn [~'game ~'effect ~'tip])) eval))
 
 (s/def ::conditions (s/coll-of ::condition))
-(s/def ::action (s/keys :opt-un [::id ::conditions ::action-script]))
+(s/def ::action (s/keys :req-un [::id ::conditions ::action-script]))
 
 (defn action-create [id conditions action-script]
   {:id id, :conditions conditions, :action-script action-script})
@@ -435,7 +455,7 @@
                                                  (let [tip-script (condition-eval-tip-script con)
                                                        tip (tip-script ctx effect)
                                                        ctx (game-set-tip ctx
-                                                                         (game-get-effect-card-id ctx effect)
+                                                                         (:id effect)
                                                                          (:id con)
                                                                          tip)]
                                                    ctx))))]
@@ -446,7 +466,7 @@
                                                (fn [ctx con]
                                                  (println "action-evaluate-conditions-errors" ctx)
                                                  (let [action-script (condition-eval-action-script con)
-                                                       tip (game-get-tip ctx (game-get-effect-card-id ctx effect) (:id con))
+                                                       tip (game-get-tip ctx (:id effect) (:id con))
                                                        _ (when (->> (game-tip-is-ok-to-perform ctx tip) not)
                                                            (swap! errors conj "error tip"))
                                                        ctx (try (action-script ctx effect tip)
@@ -473,10 +493,42 @@
 (s/def ::actions (s/coll-of ::action))
 (s/def ::event-script any?)
 (s/def ::effect-script any?)
-(s/def ::text (s/keys :opt-un [::id ::actions ::event-script ::effect-script]))
+(s/def ::siyou-timing any?)
+(s/def :text-type/battle-bonus (s/tuple #{:battle-bonus} ::battle-point))
+(s/def :text-type/auto (s/tuple #{:auto} #{:constant :trigger :permanent}))
+(s/def :text-type/use (s/tuple #{:use} ::siyou-timing))
+(s/def :text-type-special/effect (s/or
+                                  :high-mobility (s/tuple #{:高機動})
+                                  :sokkou (s/tuple #{:速攻})
+                                  :psycommu (s/tuple #{:サイコミュ} int?)
+                                  :assault (s/tuple #{:強襲})
+                                  :area-weapon (s/tuple #{:範囲兵器} int?)
+                                  :gain (s/tuple #{:ゲイン})
+                                  :kaisou (s/tuple #{:改装} string?)
+                                  :kyouyuu (s/tuple #{:共有} string?)
+                                  :kyoukyuu (s/tuple #{:供給})
+                                  :cross-weapon (s/tuple #{:クロスウェポン} string?)
+                                  :ps-armor (s/tuple #{:【PS装甲】})
+                                  :quick (s/tuple #{:クイック})
+                                  :sentou-haibi (s/tuple #{:戦闘配備})
+                                  :stay (s/tuple #{:【ステイ】})
+                                  :one-card-limit (s/tuple #{:1枚制限})))
+(s/def :text/special (s/tuple #{:special} :text-type-special/effect))
+(s/def :text/type (s/or
+                   :battle-bonus :text-type/battle-bonus
+                   :auto :text-type/auto
+                   :use :text-type/use
+                   :special :text/special
+                   :none nil?))
+(s/def ::text (s/keys :req-un [::id ::actions ::event-script ::effect-script]
+                      :opt-un [:text/type]))
 
-(defn text-create [{:keys [id actions event-script effect-script]}]
-  {:id id, :actions actions, :event-script event-script :effect-script effect-script})
+(defn text-create [info]
+  {:id (:id info)
+   :actions (:actions info)
+   :event-script (:event-script info)
+   :effect-script (:effect-script info)
+   :type (:type info)})
 (defn text-get-actions [text]
   (-> text :actions (or [])))
 (defn text-eval-event-script [text]
@@ -499,16 +551,27 @@
 ; card proto
 (s/def ::texts (s/map-of any? ::text))
 (s/def ::type #{:unit :character :command :operation :operation-unit :graphic :ace})
-(s/def ::command-script list?)
-(s/def ::card-proto (s/keys :req-un [::id ::gsign ::type ::texts]
-                            :opt-un [::battle-point ::roll-cost ::total-cost ::pack ::char ::command-script]))
+(s/def ::command-text ::text)
+(s/def ::card-proto (s/keys :req-un [::id ::gsign ::type ::texts ::roll-cost ::total-cost]
+                            :opt-un [::battle-point ::pack ::char ::command-text]))
 
-(defn card-proto-create [{:keys [texts] :as info}]
-  (s/assert ::card-proto (assoc info :texts (into {} (map (fn [text] [(:id text) text]) texts)))))
+(defn card-proto-create [info]
+  (s/assert ::card-proto (assoc info
+                                :texts (into {} (map (fn [text] [(:id text) text]) (:texts info)))
+                                :roll-cost (or (:roll-cost info) [])
+                                :total-cost (or (:total-cost info) 0))))
 
 (defn card-proto-get-texts [card-proto]
   (s/assert ::card-proto card-proto)
   (-> card-proto :texts))
+
+(defn card-proto-is-command [card-proto]
+  (s/assert ::card-proto card-proto)
+  (-> card-proto :command-text nil? not))
+
+(defn card-proto-get-command-text [card-proto]
+  (s/assert ::card-proto card-proto)
+  (-> card-proto :command-text (or (throw (ex-info "card has no command text" {})))))
 
 ;
 (defn test-text []
@@ -549,7 +612,7 @@
                                                        (update ~'ctx :version inc)))]
                            :event-script `(fn [~'ctx ~'effect ~'event] ~'ctx)
                            :effect-script `(fn [~'ctx ~'effect] ~'ctx)})
-        effect {:env :test-text}
+        effect {:env :test-text, :id "effect-1"}
         ;_ (println text)
         ; 先確認玩家使用哪一個action
         action (-> text (text-get-action 0))
@@ -557,7 +620,7 @@
         ; 記下那個action的預設選擇, 然後給玩家選擇
         ctx (action-set-condition-tips action ctx effect)
         ; 取得某張卡的選擇
-        tips (game-get-tips ctx "card-id")
+        tips (game-get-tips ctx (:id effect))
         ; 檢查預設選擇是否滿足條件
         _ (doseq [tip tips]
             (-> (game-tip-is-ok-to-perform ctx tip) not (when (throw (ex-info "" {})))))
@@ -593,19 +656,30 @@
                                           (mapcat (fn [[card-id card-proto]]
                                                     (let [texts (-> (card-proto-get-texts card-proto) vals)
                                                           texts (cond
-                                                                       ; G區的內文
+                                                                  ; Gゾーン常駐 (在G區的<>常駐內文)
                                                                   (#{:g-zone} ba-syou-keyword)
                                                                   (filter (fn [text]
                                                                             (-> text text-get-protect-level (>= 2)))
                                                                           texts)
 
-                                                                       ; 場上的內文
+                                                                  ; 常駐(只在戰區和配置區)
                                                                   (is-ba? ba-syou-keyword)
+                                                                  ; todo: filter
+                                                                  texts
+
+                                                                  ; 恒常 & 使用型 (只要是牌面向上的的地方, 這裡包含使用型是為了計算事件)
+                                                                  (is-text-on? ba-syou-keyword)
+                                                                  ; todo: filter
                                                                   texts
 
                                                                   :else
-                                                                  [])]
-                                                      (for [text texts]
+                                                                  [])
+                                                          ; 指令. 為了計算事件
+                                                          command-text (if (card-proto-is-command card-proto)
+                                                                         [(card-proto-get-command-text card-proto)]
+                                                                         [])
+                                                          all-texts (concat texts command-text)]
+                                                      (for [text all-texts]
                                                         [player-id card-id (:id text) text])))))]
                    enabled-texts)))
        (s/assert (s/coll-of (s/tuple ::player-id ::card-id ::text-id ::text)))))
@@ -695,5 +769,4 @@
                                                              :proto-id "test_card"})))
         ctx (update-global-effects ctx)
         rows (get-player-id-card-id-text-id-action-id-action-tuple ctx)]
-    (println (count rows))
-    ))
+    (println (count rows))))
