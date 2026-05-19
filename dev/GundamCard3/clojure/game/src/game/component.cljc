@@ -659,18 +659,15 @@
                                                                   ; Gゾーン常駐 (在G區的<>常駐內文)
                                                                   (#{:g-zone} ba-syou-keyword)
                                                                   (filter (fn [text]
-                                                                            (-> text text-get-protect-level (>= 2)))
+                                                                            (and (-> text text-get-protect-level (>= 2))
+                                                                                 (-> text :type (match [:auto :constant] true :else false))))
                                                                           texts)
-
                                                                   ; 常駐(只在戰區和配置區)
                                                                   (is-ba? ba-syou-keyword)
-                                                                  ; todo: filter
-                                                                  texts
-
+                                                                  (filter #(-> % :type (match [:auto :constant] true :else false)) texts)
                                                                   ; 恒常 & 使用型 (只要是牌面向上的的地方, 這裡包含使用型是為了計算事件)
                                                                   (is-text-on? ba-syou-keyword)
-                                                                  ; todo: filter
-                                                                  texts
+                                                                  (filter #(-> % :type (match (:or [:use _] [:auto :permanent]) true :else false)) texts)
 
                                                                   :else
                                                                   [])

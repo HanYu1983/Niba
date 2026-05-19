@@ -4,6 +4,7 @@
   :type :character
   :texts [(game.component/text-create
            {:id "text-1"
+            :type [:auto :constant]
             :actions [(game.component/action-create
                        "action-1"
                        [(game.component/condition-create "cond1"
