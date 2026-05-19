@@ -521,7 +521,7 @@
                    :special :text/special
                    :none nil?))
 (s/def ::text (s/keys :req-un [::id ::actions ::event-script ::effect-script]
-                      :opt-un [:text/type]))
+                      :opt-un [:text/type ::create-play-effects-script]))
 
 (defn text-create [info]
   {:id (:id info)
