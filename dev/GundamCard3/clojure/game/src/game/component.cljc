@@ -641,7 +641,7 @@
 
 ; =============
 
-(defmulti create-effect-by-query-global-effect (fn [game player-id card-id text] (:env game)))
+(defmulti create-effect-by-query-global-effect (fn [game player-id card-id text reason] (:env game)))
 
 (s/def ::has-global-effects (s/keys :opt-un [::global-effects]))
 (s/def ::card-id any?)
@@ -672,6 +672,7 @@
                                                                   :else
                                                                   [])
                                                           ; 指令. 為了計算事件
+                                                          ; ex. "『常駐』：このカードは、ロールコストの支払いにおいて、白のGサインを持つ自軍Gとして扱う事ができる。（注：国力は発生しない）"
                                                           command-text (if (card-proto-is-command card-proto)
                                                                          [(card-proto-get-command-text card-proto)]
                                                                          [])
@@ -684,50 +685,52 @@
 (defn create-global-effects-component [ctx]
   (merge ctx {:global-effects {}}))
 
-(defn get-global-effects [game]
+(defn get-global-effects [game reason]
   (s/assert ::has-global-effects game)
-  (-> game :global-effects))
+  (-> game :global-effects (get reason)))
 
-(defn set-global-effects [game effects]
+(defn set-global-effects [game reason effects]
   (s/assert ::has-global-effects game)
-  (assoc game :global-effects effects))
+  (assoc-in game [:global-effects reason] effects))
 
-(defn update-global-effects [game]
+; 不同的reason都在桌面狀態更新後問一次
+; ex. "「特徴：装弾」を持つ自軍コマンドの効果で自軍Gをロールする場合"
+(defn update-global-effects [game reason]
   (s/assert ::has-global-effects game)
   (s/assert ::card-table game)
   (let [; 先清除快取
-        game (set-global-effects game {})
+        game (set-global-effects game reason {})
         ; 先查出有效的內文
         enabled-texts (get-basyou-card-id-text-id-text-tuple game)
         query-global-effects-map (fn [enabled-texts]
                                    (->> enabled-texts
                                         (mapcat (fn [[[player-id ba-syou-keyword] card-id text-id text]]
                                                   (let [effect-script (text-eval-effect-script text)
-                                                        global-effects (effect-script game (create-effect-by-query-global-effect game player-id card-id text))]
+                                                        global-effects (effect-script game (create-effect-by-query-global-effect game player-id card-id text reason))]
                                                     global-effects)))
                                         (map (juxt :id identity))
                                         (into {})))
         ; 先查數值BUF
         effects (query-global-effects-map enabled-texts)
         ; 套用快取
-        game (set-global-effects game effects)
+        game (set-global-effects game reason effects)
         ; 再查有沒有因數值更動而產生的新效果
         effects (merge effects (query-global-effects-map enabled-texts))
         ; 套用快取
-        game (set-global-effects game effects)
+        game (set-global-effects game reason effects)
         ; 取得新內文
         added-texts []
         ; 計算新內文的效果
         effects (merge effects (query-global-effects-map added-texts))
         ; 套用快取
-        game (set-global-effects game effects)]
+        game (set-global-effects game reason effects)]
     game))
 
 (defn test-update-global-effects []
-  (defmethod create-effect-by-query-global-effect :test-update-global-effects [game player-id card-id text]
+  (defmethod create-effect-by-query-global-effect :test-update-global-effects [game player-id card-id text reason]
     {:id (str "effect-" card-id "-" (:id text))
      :card-id card-id
-     :reason :query
+     :reason reason
      :text text})
   (defmethod game-get-effect-card-id :test-update-global-effects [game effect]
     (-> effect :card-id))
@@ -738,8 +741,8 @@
                                                              :proto-id "test_card"}))
                 (add-card [:A :space-area] "1" (create-card {:id "1"
                                                              :proto-id "test_card"})))
-        ctx (update-global-effects ctx)
-        _ (println (get-global-effects ctx))
+        ctx (update-global-effects ctx :test-update-global-effects)
+        _ (println (get-global-effects ctx :test-update-global-effects))
         ]))
 
 
@@ -764,6 +767,6 @@
                                                              :proto-id "test_card"}))
                 (add-card [:A :space-area] "1" (create-card {:id "1"
                                                              :proto-id "test_card"})))
-        ctx (update-global-effects ctx)
+        ctx (update-global-effects ctx :test-update-global-effects)
         rows (get-basyou-card-id-text-id-action-id-action-tuple ctx)]
     (println (count rows))))
