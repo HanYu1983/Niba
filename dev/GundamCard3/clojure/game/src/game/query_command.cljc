@@ -4,7 +4,7 @@
    [clojure.core.match :refer [match]]
    [clojure.string :as str]
    [clojure.spec.alpha :as s]
-   [game.basic :refer :all])
+   [game.component :refer :all])
   (:import
    (clojure.lang ExceptionInfo)))
 

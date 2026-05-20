@@ -227,6 +227,8 @@
   (-> text :actions (or [])))
 (defn text-eval-event-script [text]
   (-> text :event-script (or '(fn [game effect event])) eval))
+(defn text-eval-effect-script [text]
+  (-> text :effect-script (or '(fn [game effect])) eval))
 (defn text-get-action [text id]
   (-> text :actions (nth id)))
 (defn text-get-checked-actions [text ctx effect]
