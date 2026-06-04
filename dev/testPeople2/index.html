@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>提示詞生成器 — 聽雨軒</title>
+  <style>
+    :root {
+      --bg: #1a1a2e;
+      --surface: #16213e;
+      --surface2: #0f3460;
+      --accent: #e94560;
+      --accent2: #533483;
+      --text: #eee;
+      --text-dim: #aaa;
+      --border: #2a2a4a;
+      --success: #4ecca3;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Segoe UI", "Microsoft JhengHei", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    header {
+      background: linear-gradient(135deg, var(--surface), var(--surface2));
+      padding: 24px 32px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    header .logo {
+      width: 48px; height: 48px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px;
+    }
+    header h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    header p {
+      color: var(--text-dim);
+      font-size: 0.85rem;
+      margin-top: 2px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 860px) {
+      .container { grid-template-columns: 1fr; }
+    }
+
+    .panel {
+      background: var(--surface);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      padding: 24px;
+    }
+    .panel-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .panel-title .icon {
+      width: 28px; height: 28px;
+      background: var(--surface2);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px;
+    }
+
+    /* Selection Grid */
+    .selection-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 8px;
+    }
+    .selection-btn {
+      background: var(--surface2);
+      border: 2px solid transparent;
+      border-radius: 10px;
+      padding: 10px 12px;
+      color: var(--text);
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s;
+      font-size: 0.85rem;
+      line-height: 1.4;
+    }
+    .selection-btn:hover {
+      border-color: var(--accent);
+      background: rgba(233, 69, 96, 0.1);
+    }
+    .selection-btn.active {
+      border-color: var(--accent);
+      background: rgba(233, 69, 96, 0.2);
+      box-shadow: 0 0 12px rgba(233, 69, 96, 0.3);
+    }
+    .selection-btn .label {
+      font-weight: 600;
+      display: block;
+    }
+    .selection-btn .sublabel {
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      display: block;
+      margin-top: 2px;
+    }
+
+    /* Extra prompt textarea */
+    .extra-input {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.9rem;
+      resize: vertical;
+      min-height: 80px;
+      margin-top: 8px;
+    }
+    .extra-input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    /* Output area */
+    .output-area {
+      grid-column: 1 / -1;
+    }
+    .output-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .output-text {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      font-family: "Consolas", "Courier New", monospace;
+      font-size: 0.85rem;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      word-break: break-word;
+      max-height: 500px;
+      overflow-y: auto;
+      color: #d4d4d4;
+    }
+    .copy-btn {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border: none;
+      border-radius: 10px;
+      padding: 10px 24px;
+      color: white;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .copy-btn:hover { opacity: 0.85; }
+    .copy-btn.copied {
+      background: var(--success);
+    }
+
+    /* Generate buttons */
+    .action-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .generate-btn {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      border: none;
+      border-radius: 10px;
+      padding: 12px 16px;
+      color: white;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .generate-btn:hover:not(:disabled) { 
+      opacity: 0.9;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+    .generate-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .generate-btn.loading {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+    }
+    .generate-btn.success {
+      background: var(--success);
+    }
+    .generate-btn.error {
+      background: #e74c3c;
+    }
+    .generate-btn-spinner {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .generate-status {
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      display: none;
+    }
+    .generate-status.show {
+      display: block;
+    }
+    .generate-status.info {
+      background: rgba(102, 126, 234, 0.1);
+      border: 1px solid #667eea;
+      color: #a0aef7;
+    }
+    .generate-status.success {
+      background: rgba(78, 204, 163, 0.1);
+      border: 1px solid #4ecca3;
+      color: #4ecca3;
+    }
+    .generate-status.error {
+      background: rgba(231, 76, 60, 0.1);
+      border: 1px solid #e74c3c;
+      color: #e74c3c;
+    }
+
+    /* Section divider */
+    .section {
+      margin-bottom: 20px;
+    }
+    .section-label {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+
+    /* Summary chips */
+    .summary {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .chip {
+      background: var(--surface2);
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .chip .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+    .chip.empty .dot { background: var(--text-dim); }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--surface2); border-radius: 3px; }
+
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: var(--text-dim);
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">✦</div>
+  <div>
+    <h1>提示詞生成器</h1>
+    <p>聽雨軒 — 沈若蘭角色場景提示詞組合工具</p>
+  </div>
+</header>
+
+<div class="container" id="app-container">
+  <div class="loading">載入中...</div>
+</div>
+
+<script>
+// ============================================================
+// GLOBAL STATE
+// ============================================================
+let DATA = null;
+
+let state = {
+  scene: null,
+  hairstyle: null,
+  expression: null,
+  clothing: null,
+  camera: null,
+  size: "size_768x1024",
+  extra: ""
+};
+
+// ============================================================
+// LOAD DATA FROM JSON
+// ============================================================
+async function loadData() {
+  try {
+    const response = await fetch('./data.json');
+    if (!response.ok) {
+      throw new Error(`HTTP Error: ${response.status}`);
+    }
+    DATA = await response.json();
+    console.log('✓ Data loaded successfully');
+    initializeApp();
+  } catch (error) {
+    console.error('✗ Error loading data:', error);
+    document.getElementById('app-container').innerHTML = `
+      <div style="grid-column: 1 / -1; color: var(--accent); text-align: center; padding: 40px;">
+        <h2>⚠️ 無法載入數據</h2>
+        <p>${error.message}</p>
+        <p>請確保 <strong>data.json</strong> 文件在同一目錄中。</p>
+      </div>
+    `;
+  }
+}
+
+// ============================================================
+// INITIALIZE APP
+// ============================================================
+function initializeApp() {
+  const container = document.getElementById('app-container');
+  
+  container.innerHTML = `
+    <!-- ===== LEFT: Selections ===== -->
+    <div class="panel">
+      <div class="panel-title">
+        <span class="icon">🎬</span> 選擇場景
+      </div>
+      <div id="scene-section" class="section">
+        <div class="selection-grid" id="scene-grid"></div>
+      </div>
+
+      <div class="panel-title" style="margin-top:20px">
+        <span class="icon">💇</span> 選擇髮型
+      </div>
+      <div id="hairstyle-section" class="section">
+        <div class="selection-grid" id="hairstyle-grid"></div>
+      </div>
+
+      <div class="panel-title" style="margin-top:20px">
+        <span class="icon">😊</span> 選擇表情
+      </div>
+      <div id="expression-section" class="section">
+        <div class="selection-grid" id="expression-grid"></div>
+      </div>
+
+      <div class="panel-title" style="margin-top:20px">
+        <span class="icon">👗</span> 選擇服裝
+      </div>
+      <div id="clothing-section" class="section">
+        <div class="selection-grid" id="clothing-grid"></div>
+      </div>
+
+      <div class="panel-title" style="margin-top:20px">
+        <span class="icon">📷</span> 選擇鏡頭
+      </div>
+      <div id="camera-section" class="section">
+        <div class="selection-grid" id="camera-grid"></div>
+      </div>
+    </div>
+
+    <!-- ===== RIGHT: Extra + Summary ===== -->
+    <div class="panel">
+      <div class="panel-title">
+        <span class="icon">📋</span> 當前選擇
+      </div>
+      <div class="summary" id="summary">
+        <div class="chip empty" id="chip-scene"><span class="dot"></span> 場景：未選擇</div>
+        <div class="chip empty" id="chip-hairstyle"><span class="dot"></span> 髮型：未選擇</div>
+        <div class="chip empty" id="chip-expression"><span class="dot"></span> 表情：未選擇</div>
+        <div class="chip empty" id="chip-clothing"><span class="dot"></span> 服裝：未選擇</div>
+        <div class="chip empty" id="chip-camera"><span class="dot"></span> 鏡頭：未選擇</div>
+        <div class="chip empty" id="chip-size"><span class="dot"></span> 尺寸：1024×1024</div>
+      </div>
+
+      <div class="panel-title" style="margin-top:20px">
+        <span class="icon">📐</span> 圖片尺寸
+      </div>
+      <div class="selection-grid" id="size-grid"></div>
+
+      <div class="panel-title" style="margin-top:20px">
+        <span class="icon">✏️</span> 額外提示詞
+      </div>
+      <textarea class="extra-input" id="extra-input" placeholder="輸入角色動作或姿勢（例如：坐在沙發上喝茶、站在窗邊看風景、蹲下撫摸貓咪）。此內容會嵌入提示詞中權重較高的位置。"></textarea>
+
+      <div class="panel-title" style="margin-top:20px">
+        <span class="icon">📝</span> 完整提示詞
+      </div>
+      <div class="output-header">
+        <span style="color:var(--text-dim);font-size:0.8rem">點擊下方按鈕複製或生成</span>
+        <button class="copy-btn" id="copy-btn">📋 複製提示詞</button>
+      </div>
+      <div class="output-text" id="output-text">請選擇場景、髮型、表情、服裝和鏡頭，系統將自動生成完整提示詞...</div>
+      
+      <div class="action-buttons">
+        <button class="generate-btn" id="generate-ernie" data-model="ernie" disabled>
+          <span>🎨 文心繪圖</span>
+        </button>
+        <button class="generate-btn" id="generate-zimage" data-model="zimage" disabled>
+          <span>✨ 萬象繪圖</span>
+        </button>
+      </div>
+      <div class="generate-status" id="generate-status"></div>
+    </div>
+  `;
+
+  // Render all selection buttons
+  renderButtons('scene-grid', DATA.scenes, 'scene');
+  renderButtons('hairstyle-grid', DATA.hairstyles, 'hairstyle');
+  renderButtons('expression-grid', DATA.expressions, 'expression');
+  renderButtons('clothing-grid', DATA.clothings, 'clothing');
+  renderButtons('camera-grid', DATA.cameras, 'camera');
+  renderSizeButtons();
+
+  // Event listeners
+  document.getElementById('extra-input').addEventListener('input', (e) => {
+    state.extra = e.target.value;
+    generateOutput();
+  });
+
+  document.getElementById('copy-btn').addEventListener('click', copyOutput);
+
+  // Generate image buttons
+  document.getElementById('generate-ernie').addEventListener('click', () => {
+    COMFYUI_API.generateImage('ernie');
+  });
+
+  document.getElementById('generate-zimage').addEventListener('click', () => {
+    COMFYUI_API.generateImage('zimage');
+  });
+
+  renderAll();
+}
+
+// ============================================================
+// RENDER BUTTONS
+// ============================================================
+function renderButtons(containerId, items, stateKey) {
+  const grid = document.getElementById(containerId);
+  grid.innerHTML = "";
+  
+  items.forEach(item => {
+    const btn = document.createElement("button");
+    btn.className = "selection-btn";
+    btn.dataset.id = item.id;
+    btn.type = "button";
+    
+    let html = `<span class="label">${item.name}</span>`;
+    if (item.desc) {
+      html += `<span class="sublabel">${item.desc}</span>`;
+    }
+    if (item.en) {
+      html += `<span class="sublabel">${item.en}</span>`;
+    }
+    
+    btn.innerHTML = html;
+    
+    btn.addEventListener("click", () => {
+      // Toggle selection
+      state[stateKey] = (state[stateKey] === item.id) ? null : item.id;
+      renderAll();
+    });
+    
+    grid.appendChild(btn);
+  });
+}
+
+// ============================================================
+// RENDER SIZE BUTTONS
+// ============================================================
+function renderSizeButtons() {
+  const grid = document.getElementById('size-grid');
+  grid.innerHTML = "";
+  
+  DATA.sizes.forEach(size => {
+    const btn = document.createElement("button");
+    btn.className = "selection-btn";
+    btn.dataset.id = size.id;
+    btn.type = "button";
+    
+    btn.innerHTML = `<span class="label">${size.name}</span><span class="sublabel">${size.desc}</span>`;
+    
+    btn.addEventListener("click", () => {
+      // Toggle selection
+      state.size = (state.size === size.id) ? null : size.id;
+      renderAll();
+    });
+    
+    grid.appendChild(btn);
+  });
+}
+
+// ============================================================
+// RENDER ALL
+// ============================================================
+function renderAll() {
+  // Update active button states
+  document.querySelectorAll(".selection-btn").forEach(btn => {
+    const grid = btn.parentElement;
+    const containerId = grid.id;
+    const map = {
+      "scene-grid": "scene",
+      "hairstyle-grid": "hairstyle",
+      "expression-grid": "expression",
+      "clothing-grid": "clothing",
+      "camera-grid": "camera",
+      "size-grid": "size"
+    };
+    const key = map[containerId];
+    btn.classList.toggle("active", state[key] === btn.dataset.id);
+  });
+
+  // Update chips with current selections
+  updateChip("scene", DATA.scenes);
+  updateChip("hairstyle", DATA.hairstyles);
+  updateChip("expression", DATA.expressions);
+  updateChip("clothing", DATA.clothings);
+  updateChip("camera", DATA.cameras);
+  updateChip("size", DATA.sizes);
+
+  generateOutput();
+}
+
+function updateChip(key, dataArray) {
+  const chipId = `chip-${key}`;
+  const labelMap = {
+    scene: "場景",
+    hairstyle: "髮型",
+    expression: "表情",
+    clothing: "服裝",
+    camera: "鏡頭",
+    size: "尺寸"
+  };
+  
+  const el = document.getElementById(chipId);
+  const selected = dataArray.find(d => d.id === state[key]);
+  
+  if (selected) {
+    el.innerHTML = `<span class="dot"></span> ${labelMap[key]}：${selected.name}`;
+    el.classList.remove("empty");
+  } else {
+    el.innerHTML = `<span class="dot"></span> ${labelMap[key]}：未選擇`;
+    el.classList.add("empty");
+  }
+}
+
+// ============================================================
+// GENERATE OUTPUT
+// ============================================================
+function generateOutput() {
+  const output = document.getElementById("output-text");
+
+  // Check if any selection is made
+  if (!state.scene && !state.hairstyle && !state.expression && !state.clothing && !state.camera) {
+    output.textContent = "請選擇場景、髮型、表情、服裝和鏡頭，系統將自動生成完整提示詞...";
+    return;
+  }
+
+  const parts = [];
+
+  // Base character description
+  const baseDesc = DATA.character.baseDescription;
+  parts.push(baseDesc);
+
+  // Scene description
+  if (state.scene) {
+    const scene = DATA.scenes.find(s => s.id === state.scene);
+    if (scene && scene.prompt) {
+      parts.push("\n\nSCENE:");
+      parts.push(scene.prompt);
+    }
+  }
+
+  // Hairstyle description
+  if (state.hairstyle) {
+    const hairstyle = DATA.hairstyles.find(h => h.id === state.hairstyle);
+    if (hairstyle && hairstyle.prompt) {
+      parts.push("\n\n" + hairstyle.prompt);
+    }
+  }
+
+  // Clothing description
+  if (state.clothing) {
+    const clothing = DATA.clothings.find(c => c.id === state.clothing);
+    if (clothing && clothing.prompt) {
+      parts.push("\n\n" + clothing.prompt);
+    }
+  }
+
+  // Expression description
+  if (state.expression) {
+    const expression = DATA.expressions.find(e => e.id === state.expression);
+    if (expression && expression.prompt) {
+      parts.push("\n\n" + expression.prompt);
+    }
+  }
+
+  // Extra notes (placed before camera so camera pose takes priority)
+  const extra = state.extra.trim();
+  if (extra) {
+    parts.push(`\n\nACTION & POSE: ${extra}`);
+  }
+
+  // Camera description (placed after action so camera framing takes final priority)
+  if (state.camera) {
+    const camera = DATA.cameras.find(c => c.id === state.camera);
+    if (camera && camera.prompt) {
+      parts.push("\n\n" + camera.prompt);
+    }
+  }
+
+  // Quality suffix
+  const sizeInfo = state.size 
+    ? (DATA.sizes.find(s => s.id === state.size)?.name || "")
+    : "";
+  const sizeNote = sizeInfo ? `\n\nGeneration Size: ${sizeInfo}` : "";
+  parts.push(`\n\nLighting: Soft, diffused natural lighting, warm color temperature. Image Quality: High detail, photorealistic, professional photography, 8K resolution, natural skin texture, cinematic lighting. Artistic: Poetic, elegant, refined aesthetic.${sizeNote}`);
+
+  output.textContent = parts.join("").trim();
+  updateGenerateButtons();
+}
+
+// ============================================================
+// COPY TO CLIPBOARD
+// ============================================================
+function copyOutput() {
+  const text = document.getElementById("output-text").textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById("copy-btn");
+    const originalText = btn.textContent;
+    btn.textContent = "✅ 已複製！";
+    btn.classList.add("copied");
+    setTimeout(() => {
+      btn.textContent = originalText;
+      btn.classList.remove("copied");
+    }, 2000);
+  }).catch(err => {
+    console.error('Failed to copy:', err);
+    alert('複製失敗，請手動複製');
+  });
+}
+
+// ============================================================
+// COMFYUI API INTEGRATION
+// ============================================================
+const COMFYUI_API = {
+  host: '127.0.0.1',
+  port: 8188,
+  
+  getUrl() {
+    return `http://${this.host}:${this.port}`;
+  },
+
+  async checkConnection() {
+    try {
+      // Simple check: try to reach the server
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 3000);
+      
+      await fetch(`${this.getUrl()}/queue`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+        signal: controller.signal
+      });
+      
+      clearTimeout(timeout);
+      return true; // Server is reachable (regardless of HTTP status)
+    } catch (error) {
+      return false; // Network error - server not reachable
+    }
+  },
+
+  async generateImage(model, prompt) {
+    const prompt_text = document.getElementById("output-text").textContent;
+    
+    if (!prompt_text || prompt_text.includes("請選擇")) {
+      showGenerateStatus("請先生成完整提示詞", 'error');
+      return;
+    }
+
+    // Check if ComfyUI is reachable
+    const connected = await this.checkConnection();
+    if (!connected) {
+      showGenerateStatus(`❌ 無法連接到 ComfyUI (${this.host}:${this.port})。請確保 ComfyUI 伺服器正在運行。`, 'error');
+      return;
+    }
+
+    const workflow = this.getWorkflow(model, prompt_text);
+    if (!workflow) {
+      showGenerateStatus(`❌ 不支援的模型: ${model}`, 'error');
+      return;
+    }
+
+    try {
+      showGenerateStatus(`⏳ 正在連接到 ComfyUI...`, 'info');
+      
+      const response = await fetch(`${this.getUrl()}/prompt`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          client_id: this.generateClientId(),
+          prompt: workflow
+        })
+      });
+
+      if (!response.ok) {
+        let errorMsg = `HTTP ${response.status}: ${response.statusText}`;
+        try {
+          const errorData = await response.json();
+          errorMsg = errorData.error || errorMsg;
+        } catch (e) {
+          // Response is not JSON, use HTTP status
+        }
+        throw new Error(errorMsg);
+      }
+
+      const result = await response.json();
+      showGenerateStatus(`✅ 圖像生成已提交！任務ID: ${result.prompt_id}`, 'success');
+      
+      // Optional: show where the image will be saved
+      const modelName = model === 'ernie' ? '文心' : '萬象';
+      console.log(`${modelName} 圖像生成中...`, result);
+
+    } catch (error) {
+      console.error('API error:', error);
+      let errorMsg = error.message;
+      
+      // Provide helpful error messages
+      if (error.message.includes('Failed to fetch') || error.message.includes('ERR_ABORTED')) {
+        errorMsg = '無法連接到 ComfyUI。請確保: 1) ComfyUI 正在運行, 2) 地址正確 (localhost:8188), 3) 通過 HTTP 伺服器訪問此頁面而不是 file://';
+      } else if (error.message.includes('403')) {
+        errorMsg = 'ComfyUI 拒絕了請求 (403)。請在啟動 ComfyUI 時加上 --cors-policy "*" 參數以允許跨域請求';
+      }
+      
+      showGenerateStatus(`❌ 生成失敗: ${errorMsg}`, 'error');
+    }
+  },
+
+  getWorkflow(model, prompt) {
+    // Get size object from current state
+    const sizeObj = DATA.sizes.find(s => s.id === state.size) || { width: 768, height: 1024 };
+    
+    // Workflow templates for each model
+    if (model === 'ernie') {
+      return this.getErnieWorkflow(prompt, sizeObj);
+    } else if (model === 'zimage') {
+      return this.getZImageWorkflow(prompt, sizeObj);
+    }
+    return null;
+  },
+
+  getErnieWorkflow(prompt, sizeObj = { width: 768, height: 1024 }) {
+    return {
+      "88:62": {
+        "inputs": {
+          "clip_name": "ministral-3-3b.safetensors",
+          "type": "flux2",
+          "device": "default"
+        },
+        "class_type": "CLIPLoader"
+      },
+      "88:63": {
+        "inputs": {
+          "vae_name": "flux2-vae.safetensors"
+        },
+        "class_type": "VAELoader"
+      },
+      "88:66": {
+        "inputs": {
+          "unet_name": "ernie-image-turbo.safetensors",
+          "weight_dtype": "default"
+        },
+        "class_type": "UNETLoader"
+      },
+      "88:67": {
+        "inputs": {
+          "text": prompt,
+          "clip": ["88:62", 0]
+        },
+        "class_type": "CLIPTextEncode"
+      },
+      "88:70": {
+        "inputs": {
+          "seed": Math.floor(Math.random() * 281474976710656),
+          "steps": 8,
+          "cfg": 1,
+          "sampler_name": "euler",
+          "scheduler": "simple",
+          "denoise": 1,
+          "model": ["88:66", 0],
+          "positive": ["88:67", 0],
+          "negative": ["88:91", 0],
+          "latent_image": ["88:71", 0]
+        },
+        "class_type": "KSampler"
+      },
+      "88:71": {
+        "inputs": {
+          "width": sizeObj.width,
+          "height": sizeObj.height,
+          "batch_size": 1
+        },
+        "class_type": "EmptyFlux2LatentImage"
+      },
+      "88:65": {
+        "inputs": {
+          "samples": ["88:70", 0],
+          "vae": ["88:63", 0]
+        },
+        "class_type": "VAEDecode"
+      },
+      "73": {
+        "inputs": {
+          "filename_prefix": "Ernie-Image-Turbo",
+          "images": ["88:65", 0]
+        },
+        "class_type": "SaveImage"
+      },
+      "88:91": {
+        "inputs": {
+          "conditioning": ["88:67", 0]
+        },
+        "class_type": "ConditioningZeroOut"
+      }
+    };
+  },
+
+  getZImageWorkflow(prompt, sizeObj = { width: 768, height: 1024 }) {
+    return {
+      "57:28": {
+        "inputs": {
+          "unet_name": "z_image_turbo_bf16.safetensors",
+          "weight_dtype": "default"
+        },
+        "class_type": "UNETLoader"
+      },
+      "57:30": {
+        "inputs": {
+          "clip_name": "qwen_3_4b.safetensors",
+          "type": "lumina2",
+          "device": "default"
+        },
+        "class_type": "CLIPLoader"
+      },
+      "57:29": {
+        "inputs": {
+          "vae_name": "ae.safetensors"
+        },
+        "class_type": "VAELoader"
+      },
+      "57:27": {
+        "inputs": {
+          "text": prompt,
+          "clip": ["57:30", 0]
+        },
+        "class_type": "CLIPTextEncode"
+      },
+      "57:33": {
+        "inputs": {
+          "conditioning": ["57:27", 0]
+        },
+        "class_type": "ConditioningZeroOut"
+      },
+      "57:11": {
+        "inputs": {
+          "shift": 3,
+          "model": ["57:28", 0]
+        },
+        "class_type": "ModelSamplingAuraFlow"
+      },
+      "57:13": {
+        "inputs": {
+          "width": sizeObj.width,
+          "height": sizeObj.height,
+          "batch_size": 1
+        },
+        "class_type": "EmptySD3LatentImage"
+      },
+      "57:3": {
+        "inputs": {
+          "seed": Math.floor(Math.random() * 281474976710656),
+          "steps": 8,
+          "cfg": 1,
+          "sampler_name": "res_multistep",
+          "scheduler": "simple",
+          "denoise": 1,
+          "model": ["57:11", 0],
+          "positive": ["57:27", 0],
+          "negative": ["57:33", 0],
+          "latent_image": ["57:13", 0]
+        },
+        "class_type": "KSampler"
+      },
+      "57:8": {
+        "inputs": {
+          "samples": ["57:3", 0],
+          "vae": ["57:29", 0]
+        },
+        "class_type": "VAEDecode"
+      },
+      "9": {
+        "inputs": {
+          "filename_prefix": "z-image-turbo",
+          "images": ["57:8", 0]
+        },
+        "class_type": "SaveImage"
+      }
+    };
+  },
+
+  generateClientId() {
+    return 'client_' + Math.random().toString(36).substr(2, 9);
+  }
+};
+
+function showGenerateStatus(message, type) {
+  const statusEl = document.getElementById('generate-status');
+  statusEl.textContent = message;
+  statusEl.className = `generate-status show ${type}`;
+  
+  if (type === 'success') {
+    setTimeout(() => {
+      statusEl.classList.remove('show');
+    }, 5000);
+  }
+}
+
+// ============================================================
+// ENABLE/DISABLE GENERATE BUTTONS BASED ON OUTPUT
+// ============================================================
+function updateGenerateButtons() {
+  const output = document.getElementById("output-text").textContent;
+  const hasOutput = output && !output.includes("請選擇");
+  
+  document.getElementById('generate-ernie').disabled = !hasOutput;
+  document.getElementById('generate-zimage').disabled = !hasOutput;
+}
+
+// ============================================================
+// INITIALIZE ON PAGE LOAD
+// ============================================================
+window.addEventListener('DOMContentLoaded', loadData);
+</script>
+
+</body>
+</html>
