@@ -1,0 +1,7 @@
+services:
+  # docker-compose run -p 8080:8080 --rm node npx http-server -c-1 -p 8080
+  node:
+    image: node:22
+    working_dir: /app
+    volumes:
+      - ./:/app
