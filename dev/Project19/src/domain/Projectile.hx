@@ -9,24 +9,37 @@ import domain.FieldObject.MovableObject;
  * 發射物本體 (enum 巢狀組合)
  *
  * 範例:
- *   實體彈 → 命中後爆炸 (一次性) + 火焰場域 (持續):
- *     Solid(speed, dmg, Spawn([
+ *   實體彈 → 飛 3 秒未命中即自爆 + 命中後爆炸 (一次性) + 火焰場域 (持續):
+ *     Solid(speed, 3.0, dmg, Spawn([
  *       { shape:Circle(0,0,3), duration:ε,   cooldownPerTarget:∞,   damage:explDmg, reactions:[] },
  *       { shape:Circle(0,0,3), duration:5.0, cooldownPerTarget:0.5, damage:fireDmg, reactions:[] }
  *     ]))
  *
+ *   實體彈 → 不限時, 直到命中:
+ *     Solid(speed, -1.0, dmg, Spawn([...]))
+ *
  *   子母彈 → 命中後散發三顆子彈:
- *     Solid(speed, dmg, SpawnProjectiles([Solid(...), Solid(...), Solid(...)]))
+ *     Solid(speed, lifetime, dmg, SpawnProjectiles([Solid(...), Solid(...), Solid(...)]))
  *
  *   爆炸 + 子母彈同時觸發:
- *     Solid(speed, dmg, All([Spawn([...]), SpawnProjectiles([...])]))
+ *     Solid(speed, lifetime, dmg, All([Spawn([...]), SpawnProjectiles([...])]))
  *
  * 注意: Projectile 為「靜態定義」結構; 戰鬥系統需在執行階段
  *       追蹤每顆發射物目前的階段 (是否已命中, OnHit 進行到哪一層)
  */
 enum Projectile {
-	/** 實體彈: 直線飛行, 命中後觸發 OnHit; damage 為直接接觸的傷害 */
-	Solid(speed:Float, damage:Damage, onHit:OnHit);
+	/**
+	 * 實體彈: 直線飛行, 命中後觸發 OnHit; damage 為直接接觸的傷害。
+	 *
+	 * @param speed     飛行速度標量 (世界單位/秒)
+	 * @param lifetime  最長飛行時間 (秒)
+	 *                  >= 0: 飛行超過此秒數 (ProjectileObject.age >= lifetime) 仍未命中,
+	 *                        由 ProjectileSystem 視同「自爆」觸發同一條 onHit
+	 *                  <  0: 不計時, 等碰撞才結束 (例: 雷射筆 / 無限程子彈)
+	 * @param damage    接觸瞬間直接套用到目標的傷害
+	 * @param onHit     命中後 (或 lifetime 到期) 接著要展開的 OnHit 樹
+	 */
+	Solid(speed:Float, lifetime:Float, damage:Damage, onHit:OnHit);
 
 	/** 能量彈: 屬性偏 Energy, 飛行不受重力 */
 	Energy(speed:Float, damage:Damage, onHit:OnHit);

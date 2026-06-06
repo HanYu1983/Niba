@@ -61,7 +61,11 @@ class ProjectileSystem implements ISystem {
 			proj.age += dt;
 			switch (proj.stage) {
 				case Flying:
-					if (!hasOnHit(proj.projectile))
+					// 三種推進到 ResolvingHit 的條件:
+					//   a. 變體無 onHit (Beam / Field) — 立即進入解析
+					//   b. 變體有 lifetime 且已到期 — 視同自爆, 走同一條 onHit
+					//   c. (其它情況) 等 onCollide 觸發
+					if (!hasOnHit(proj.projectile) || isLifetimeExpired(proj))
 						proj.stage = ResolvingHit(0);
 				case ResolvingHit(_):
 					executeResolve(proj);
@@ -121,8 +125,25 @@ class ProjectileSystem implements ISystem {
 	/** Projectile 變體是否帶有 onHit 欄位 (Solid / Energy 有, Beam / Field 沒有) */
 	static function hasOnHit(p:Projectile):Bool {
 		return switch (p) {
-			case Solid(_, _, _) | Energy(_, _, _): true;
+			case Solid(_, _, _, _) | Energy(_, _, _): true;
 			case Beam(_, _) | Field(_): false;
+		}
+	}
+
+	/**
+	 * 此 projectile 是否因 lifetime 到期而應該觸發 onHit (自爆)。
+	 *
+	 * 規則:
+	 *   - 僅 Solid 攜帶 lifetime 欄位; 其它變體一律回傳 false
+	 *   - Solid.lifetime < 0 表示「不計時, 不會因時間到期觸發」, 也回傳 false
+	 *   - Solid.lifetime >= 0 且 proj.age >= lifetime: 視為已到期, 回傳 true
+	 */
+	static function isLifetimeExpired(proj:ProjectileObject):Bool {
+		return switch (proj.projectile) {
+			case Solid(_, lifetime, _, _):
+				lifetime >= 0.0 && proj.age >= lifetime;
+			case _:
+				false;
 		}
 	}
 
@@ -134,7 +155,7 @@ class ProjectileSystem implements ISystem {
 	 */
 	function executeResolve(proj:ProjectileObject):Void {
 		switch (proj.projectile) {
-			case Solid(_, _, onHit) | Energy(_, _, onHit):
+			case Solid(_, _, _, onHit) | Energy(_, _, onHit):
 				executeOnHit(onHit, proj);
 			case Beam(_, _):
 				trace('  [ProjectileSystem] Beam resolve TODO: id=${proj.id}');

@@ -60,8 +60,10 @@ private function handleEvent(eventCenter:EventCenter, world:World, event:Event, 
  * 屬性 (寫死於此, 不對外暴露):
  *   - position (0, 0), velocity (200, 0), maxSpeed 200 → 朝 +X 方向飛行
  *   - shape Circle(0, 0, 4)                            → 半徑 4 的圓
- *   - projectile = Solid(200, Physical 10,
- *                        Spawn([explosionHitbox]))     → 命中後留下半徑 30 / duration 0.1 的爆炸 Hitbox
+ *   - projectile = Solid(speed 200, lifetime 3.0,
+ *                        Physical 10,
+ *                        Spawn([explosionHitbox]))     → 命中或飛行 3 秒未命中皆觸發爆炸
+ *                                                        (半徑 30 / duration 0.1 的 Hitbox)
  *
  * @param sequence 此次 session 內的順序編號, 用來組出唯一 id
  */
@@ -74,7 +76,7 @@ private function buildDebugProjectile(sequence:Int):ProjectileObject {
 		velocity: {x: 200.0, y: 0.0},
 		maxSpeed: 200.0,
 		shape: Circle(0.0, 0.0, 4.0),
-		projectile: Solid(200.0, {type: Physical, amount: 10.0}, Spawn([
+		projectile: Solid(200.0, 1.0, {type: Physical, amount: 10.0}, Spawn([
 			{
 				id: 'debug_explosion_$sequence',
 				name: "Debug Explosion",
