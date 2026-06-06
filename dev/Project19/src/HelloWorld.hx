@@ -7,7 +7,7 @@ import domain.World;
 import domain.World.createEmptyWorld;
 import impl.GoalSystem;
 import impl.ISystem;
-import impl.MoveToPointGoal.createMoveToPointGoal;
+import impl.MoveToPointsGoal.createMoveToPointsGoal;
 import impl.MovementSystem;
 import impl.SharedLeafFactory.sharedLeafFactory;
 import sample.GoalDemo;
@@ -27,9 +27,14 @@ class HelloWorld {
 		var world = createEmptyWorld();
 		var demoMachine = createDemoMachine();
 		world.machines.push(demoMachine);
-		// 給 demo 機體掛一個「移動到 (200, 100)」的 goal, 由 GoalSystem 每幀
-		// 重新計算 velocity, 再由 MovementSystem 推進 position
-		world.goalNodes.push(createMoveToPointGoal(demoMachine.id, {x: 200.0, y: 100.0}));
+		// 給 demo 機體掛一個「依序走過多個點」的 Sequence goal, 由 GoalSystem 每幀
+		// 重新計算 velocity (內部由 MoveToPoint leaf 完成), 再由 MovementSystem 推進 position
+		world.goalNodes.push(createMoveToPointsGoal(demoMachine.id, [
+			{x: 200.0, y: 100.0},
+			{x: 0.0, y: 200.0},
+			{x: -200.0, y: 100.0},
+			{x: -150.0, y: 0.0}
+		]));
 
 		var eventCenter = new EventCenter();
 
