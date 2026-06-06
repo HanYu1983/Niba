@@ -6,8 +6,12 @@ import domain.Machine;
 import domain.Machine.createEmptyMachine;
 import domain.World;
 import domain.World.createEmptyWorld;
+import impl.GoalSystem;
 import impl.ISystem;
+import impl.MoveToPointGoal.createMoveToPointGoal;
 import impl.MovementSystem;
+import impl.SharedLeafFactory.sharedLeafFactory;
+import sample.GoalDemo;
 import view.EventCenter;
 import view.EventCenter.Event;
 import view.EventCenter.P5RenderFrame;
@@ -23,11 +27,20 @@ class HelloWorld {
 		WorldSerializeTest.run();
 
 		var world = createEmptyWorld();
-		world.machines.push(createDemoMachine());
+		var demoMachine = createDemoMachine();
+		world.machines.push(demoMachine);
+		// 給 demo 機體掛一個「移動到 (200, 100)」的 goal, 由 GoalSystem 每幀
+		// 重新計算 velocity, 再由 MovementSystem 推進 position
+		world.goalNodes.push(createMoveToPointGoal(demoMachine.id, {x: 200.0, y: 100.0}));
 
 		var eventCenter = new EventCenter();
 
-		var systems:Array<ISystem> = [new MovementSystem(world)];
+		// 系統執行順序: 先 GoalSystem (更新 velocity), 再 MovementSystem (套用 velocity 推進 position)
+		// 這樣本幀新算出的 velocity 同幀就會生效, 不會晚一幀
+		var systems:Array<ISystem> = [
+			new GoalSystem(world, sharedLeafFactory, GoalDemo.plannerFactory),
+			new MovementSystem(world)
+		];
 		eventCenter.eventSubject.subscribe(event -> dispatchEventToSystems(systems, event));
 
 		createCameraControlPanel(eventCenter);

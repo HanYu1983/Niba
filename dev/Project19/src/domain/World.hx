@@ -8,6 +8,12 @@ import domain.FieldObject.CollidableObject;
 import domain.FieldObject.Marker;
 import domain.FieldObject.MovableObject;
 import domain.Geometry.Vec3;
+import domain.Goal.GoalContext;
+import domain.Goal.GoalNode;
+import domain.Goal.LeafFactory;
+import domain.Goal.PlannerFactory;
+import domain.Goal.isFinal;
+import domain.Goal.runFrame;
 import domain.Machine;
 import domain.Projectile.ProjectileObject;
 import domain.Weapon.WeaponOnField;
@@ -28,6 +34,7 @@ import domain.WorldNode.WorldNode;
  *   - projectiles:      所有飛行 / 場域中的發射物實例
  *   - hitboxes:         所有目前存活的碰撞箱
  *   - markers:          場上的地點標記 (出生點 / 任務點 / 巡邏點等)
+ *   - goalNodes:        場上目前正在執行的 Goal 樹根節點 (一個機體可掛多個 goal)
  *   - cameraPos:        相機在世界中的 3D 位置, 供 view/render 層建立 camera 使用
  *
  * 世界節點化:
@@ -51,6 +58,7 @@ typedef World = {
 	var projectiles:Array<ProjectileObject>;
 	var hitboxes:Array<Hitbox>;
 	var markers:Array<Marker>;
+	var goalNodes:Array<GoalNode>;
 	var cameraPos:Vec3;
 }
 
@@ -84,6 +92,7 @@ function createEmptyWorld():World {
 		projectiles: [],
 		hitboxes: [],
 		markers: [],
+		goalNodes: [],
 		cameraPos: {x: 0.0, y: 0.0, z: 0.0}
 	};
 }
@@ -223,4 +232,37 @@ function moveMovableObject(object:MovableObject, dt:Float):Void {
 		x: object.position.x + object.velocity.x * dt,
 		y: object.position.y + object.velocity.y * dt
 	};
+}
+
+/**
+ * 推進 world 上所有 goal 一個 frame。
+ *
+ * 流程:
+ *   1. 對 world.goalNodes 中每個節點呼叫 Goal.runFrame, 推進其狀態
+ *   2. 已達終止狀態 (Succeeded / Failed) 的節點本幀仍會被執行 (runFrame 內部對終止狀態無動作),
+ *      推進完後一次性從 world.goalNodes 移除
+ *
+ * 設計:
+ *   - GoalContext 在這裡組裝 ({world: world}), 呼叫端只要丟 dt 與 factory 即可,
+ *     不需要每個系統自己組 ctx
+ *   - 推進與「清掉已完成 goal」綁在同一個函式, 避免呼叫端忘記 GC 造成
+ *     終止節點越積越多
+ *   - 不在這裡處理「goal 失敗時要不要重排 / 重新規劃」, 那是更上層 AI 系統的職責;
+ *     此函式只是純粹推進與清理
+ *
+ * @param world           戰場狀態; goalNodes 將被原地修改 (推進並移除已完成項)
+ * @param dt              本 frame 的時間步進 (秒)
+ * @param leafFactory     leaf 名稱 → LeafLifecycle 的工廠 (通常為 impl.SharedLeafFactory.sharedLeafFactory)
+ * @param plannerFactory  Custom composite planner 名稱 → GoalPlanner 的工廠
+ */
+function tickGoals(world:World, dt:Float, leafFactory:LeafFactory, plannerFactory:PlannerFactory):Void {
+	var ctx:GoalContext = {world: world};
+	for (node in world.goalNodes) {
+		runFrame(node, ctx, dt, leafFactory, plannerFactory);
+	}
+	var i = world.goalNodes.length;
+	while (i-- > 0) {
+		if (isFinal(world.goalNodes[i].status))
+			world.goalNodes.splice(i, 1);
+	}
 }
