@@ -51,13 +51,14 @@ class GoalSystem implements ISystem {
 
 	public function onTick(frameCount:Int, deltaTime:Float):Void {
 		var dt = deltaTime / MS_PER_SECOND;
-		// 在 tickGoals 之前先讀取「本幀是否有 goal 要跑」, 因為 tickGoals 可能會把
-		// 已完成的節點移除而導致 length 變 0, 失去翻 isDirty 的依據。
-		// 任一 goal 跑 runFrame 都可能更新 leafState / status, 並且絕大多數 lifecycle
-		// 會寫 actor.velocity 等 world 衍生欄位, 故統一視為本幀有 mutation。
-		var hadGoals = world.goalNodes.length > 0;
+		// 只在本幀 world.goalNodes 「實際被增刪」時翻 isDirty
+		// (對應 World.isDirty 的「增刪才翻」收斂規則):
+		//   - tickGoals 內部會把 isFinal 的節點從陣列 splice 掉, 此時 length 會減少
+		//   - leaf lifecycle 透過 actor.velocity 等寫入的修改不算增刪, 由參考經 MovementSystem
+		//     傳遞到 render snapshot, 不需要重新發 nextWorld
+		var prevGoalCount = world.goalNodes.length;
 		tickGoals(world, dt, leafFactory, plannerFactory);
-		if (hadGoals)
+		if (world.goalNodes.length != prevGoalCount)
 			world.isDirty = true;
 	}
 

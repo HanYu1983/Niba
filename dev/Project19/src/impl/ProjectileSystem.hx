@@ -56,7 +56,6 @@ class ProjectileSystem implements ISystem {
 
 	public function onTick(frameCount:Int, deltaTime:Float):Void {
 		var dt = deltaTime / MS_PER_SECOND;
-		var hadProjectiles = world.projectiles.length > 0;
 
 		for (proj in world.projectiles) {
 			proj.age += dt;
@@ -75,19 +74,18 @@ class ProjectileSystem implements ISystem {
 			}
 		}
 
+		// 只在 splice 實際發生時翻 isDirty (對應 World.isDirty 的「增刪才翻」規則):
+		// proj.age / stage 修改不翻 — RenderWorld 透過 array.copy() 的 shallow snapshot
+		// 持有同一份 projectile 參考, 屬性變化會自然反映到下一個 P5Tick 的 render frame。
 		var i = world.projectiles.length;
 		while (i-- > 0) {
 			switch (world.projectiles[i].stage) {
 				case Expired:
 					world.projectiles.splice(i, 1);
+					world.isDirty = true;
 				default:
 			}
 		}
-
-		// 本幀有 projectile 要跑 → 至少改了 age (還可能改 stage / hitboxes / projectiles 列表),
-		// 統一翻 isDirty 給 DirtyWorldPublisher 收尾發送。空陣列時不翻, 保持閒置場景無 render。
-		if (hadProjectiles)
-			world.isDirty = true;
 	}
 
 	public function onMousePressed(x:Float, y:Float):Void {}
@@ -99,12 +97,12 @@ class ProjectileSystem implements ISystem {
 	public function onMouseDragged(x:Float, y:Float):Void {}
 
 	public function onCollide(a:CollidableObject, b:CollidableObject):Void {
-		var transitioned = transitionIfFlying(a) || transitionIfFlying(b);
-		// onCollide 是 CollisionSystem 在 onTick 內回呼觸發, 本系統的 onTick 隨後會跑且
-		// 由 hadProjectiles 路徑翻 isDirty。這裡仍按「mutator 自己翻」的慣例補上,
-		// 讓 onCollide 不依賴後續 onTick 的順序也能維持不變式。
-		if (transitioned)
-			world.isDirty = true;
+		// 只是把 projectile.stage 從 Flying 轉成 ResolvingHit, 不對 world 陣列做增刪,
+		// 因此不翻 isDirty (見 World.isDirty 的「只在增刪時翻」規則)。
+		// 同幀稍後的 ProjectileSystem.onTick 會把 ResolvingHit → executeResolve (可能 push hitbox),
+		// 真正影響 render snapshot 的 hitbox 新增由那邊翻 flag。
+		transitionIfFlying(a);
+		transitionIfFlying(b);
 	}
 
 	public function onHitboxCollide(hitbox:Hitbox, target:CollidableObject):Void {}
@@ -113,24 +111,18 @@ class ProjectileSystem implements ISystem {
 	// 內部: 階段轉場 / OnHit 解析 / Hitbox 複製
 	// ====================================================================
 
-	/**
-	 * 若 c 是 world.projectiles 中某個 stage=Flying 的 projectile, 推進到 ResolvingHit(0)。
-	 *
-	 * @return  是否實際發生 stage 轉場 (用於外部決定要不要翻 world.isDirty)
-	 */
-	function transitionIfFlying(c:CollidableObject):Bool {
+	/** 若 c 是 world.projectiles 中某個 stage=Flying 的 projectile, 推進到 ResolvingHit(0) */
+	function transitionIfFlying(c:CollidableObject):Void {
 		for (proj in world.projectiles) {
 			if (sameRef(proj, c)) {
 				switch (proj.stage) {
 					case Flying:
 						proj.stage = ResolvingHit(0);
-						return true;
 					default:
 				}
-				return false;
+				return;
 			}
 		}
-		return false;
 	}
 
 	/** 兩個 CollidableObject 是否為同一個 JS 物件參考 (跳過型別檢查直接比 reference) */
@@ -199,10 +191,19 @@ class ProjectileSystem implements ISystem {
 		}
 	}
 
-	/** 把一組 Hitbox 模板複製到世界座標 (取 origin/facing) 後 push 進 world.hitboxes */
+	/**
+	 * 把一組 Hitbox 模板複製到世界座標 (取 origin/facing) 後 push 進 world.hitboxes。
+	 *
+	 * 實際 push 任一筆即視為「在 world 陣列上發生增刪」, 翻 world.isDirty,
+	 * 讓 DirtyWorldPublisher 在本幀末 emit, 確保新 hitbox 進入下一個 render snapshot。
+	 * 空 templates 不翻 (沒有實際增刪)。
+	 */
 	function spawnHitboxes(templates:Array<Hitbox>, origin:Vec2, facing:Float):Void {
+		if (templates.length == 0)
+			return;
 		for (template in templates)
 			world.hitboxes.push(cloneHitboxAt(template, origin, facing));
+		world.isDirty = true;
 	}
 
 	/**

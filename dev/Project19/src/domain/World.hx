@@ -40,10 +40,17 @@ import domain.WorldNode.WorldNode;
  *                       P5Tick 結束時讀取, 若為 true 則發送 worldSubject.nextWorld 並重置為 false
  *
  * isDirty 的不變式 (重要):
- *   - 任何系統 / view 元件「修改了 isDirty 以外的欄位 (含巢狀: machine.position / projectile.stage /
- *     cameraPos.x / *.push / *.splice 等)」, 都應把 world.isDirty 設為 true
- *   - 不要在 mutator 內直接呼叫 eventCenter.nextWorld; 透過 isDirty 統一交給
- *     DirtyWorldPublisher 在 P5Tick 收尾時批次發送, 每幀至多一次 render emit
+ *   - System (impl/*) 只在「對 world 的陣列 (machines / projectiles / hitboxes / goalNodes /
+ *     weaponsOnMachine / weaponsOnField / markers) 發生 push / splice 等增刪」時翻 isDirty。
+ *     單純修改既有元素的屬性 (machine.position / projectile.age / stage 等) 不翻 —
+ *     因 view.WorldRenderModelBuilder.createRenderWorld 對陣列做 shallow .copy(), 元素仍是同一
+ *     reference, 屬性變化會經由參考即時反映到下一個 P5Tick 的 render frame, 不需要重新發
+ *     nextWorld 來重建 snapshot。
+ *   - View 元件 (view/component/*) 在影響 render snapshot 但不屬於陣列增刪的修改 (例如
+ *     world.cameraPos.* — 在 createRenderWorld 內被算成 viewMatrix / projectionMatrix 快取)
+ *     仍應翻 isDirty, 否則畫面上看不到變化。
+ *   - 不要在 mutator 內直接呼叫 eventCenter.nextWorld; 一律透過 isDirty 交給
+ *     DirtyWorldPublisher 在 P5Tick 收尾時批次發送, 每幀至多一次 render emit。
  *
  * 世界節點化:
  *   尋路 / 圖搜尋以 WorldNode + NeighborProvider 為介面 (見下方 typedef)。

@@ -8,14 +8,18 @@ import view.EventCenter.Event;
  * 在每幀 P5Tick 收尾時批次把「本幀被弄髒的 world」推給 worldSubject 的 view 元件。
  *
  * 不變式 (對應 domain.World.isDirty doc):
- *   - 任一 mutator (system / view 元件 / 任何業務碼) 修改了 world 中
- *     「isDirty 以外的欄位」, 都應該把 world.isDirty 設為 true
+ *   - System (impl/*) 只在「對 world 的陣列 push / splice」時翻 isDirty;
+ *     單純修改既有元素 (machine.position / projectile.age 等) 不翻 — 那些變化
+ *     透過 RenderWorld 的 shallow .copy() 共用 reference 自動反映到後續幀
+ *   - View 元件 (view/component/*) 在影響 render snapshot 但不屬陣列增刪的修改
+ *     (例: world.cameraPos.*, 會被算進 viewMatrix 快取) 仍應翻 isDirty
  *   - 本元件是唯一在常駐迴圈中呼叫 eventCenter.nextWorld 的元件;
  *     其他地方只翻 flag, 不直接 emit
  *   - 每個 P5Tick 結束時, 若 isDirty 為 true:
  *       1. 先 eventCenter.nextWorld(world) (此時 isDirty 仍為 true, 訂閱者通常不會讀此欄位)
  *       2. 再把 world.isDirty 設為 false, 結束本幀的髒狀態
- *     若為 false: 整幀無任何 render emit, 達到「閒置場景不重繪」
+ *     若為 false: 整幀無任何 render emit (但 SceneRenderer 仍會收到 P5Tick 帶上一個
+ *     最新 RenderWorld snapshot 重繪 — 因為元素 reference 共用, 屬性變化會顯現)
  *
  * 訂閱位置:
  *   建議在 HelloWorld 把所有 system 訂閱 (dispatchEventToSystems) 完成「之後」再呼叫

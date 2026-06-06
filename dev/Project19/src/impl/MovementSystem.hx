@@ -39,16 +39,15 @@ class MovementSystem implements ISystem {
 
 	public function onTick(frameCount:Int, deltaTime:Float):Void {
 		var dt = deltaTime / MS_PER_SECOND;
-		var objects = getMovableObjects(world);
-		for (object in objects) {
+		for (object in getMovableObjects(world)) {
 			applyMaxSpeed(object);
 			moveMovableObject(object, dt);
 		}
-		// 有可移動物即被視為「本幀進行了 position / velocity 寫入」, 翻起 world.isDirty
-		// 讓 view.component.DirtyWorldPublisher 在本 P5Tick 末批次發送 render。
-		// 場上沒有可移動物時不翻, 真正閒置的場景就不會驅動 render 重發。
-		if (objects.length > 0)
-			world.isDirty = true;
+		// 不翻 world.isDirty: MovementSystem 只改 object.position / velocity 等屬性,
+		// 並未在 world 的陣列上增刪元素。RenderWorld 對陣列做 .copy() 是 shallow copy,
+		// 元素仍是同一份 reference, 因此位置變化會透過參考即時反映到下一個 P5Tick 的 render frame,
+		// 不需要重新發 nextWorld 來重建 snapshot。
+		// (世界級增刪 → 翻 isDirty 的規則見 domain.World.isDirty doc)
 	}
 
 	public function onMousePressed(x:Float, y:Float):Void {}
