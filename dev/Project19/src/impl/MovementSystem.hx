@@ -39,10 +39,16 @@ class MovementSystem implements ISystem {
 
 	public function onTick(frameCount:Int, deltaTime:Float):Void {
 		var dt = deltaTime / MS_PER_SECOND;
-		for (object in getMovableObjects(world)) {
+		var objects = getMovableObjects(world);
+		for (object in objects) {
 			applyMaxSpeed(object);
 			moveMovableObject(object, dt);
 		}
+		// 有可移動物即被視為「本幀進行了 position / velocity 寫入」, 翻起 world.isDirty
+		// 讓 view.component.DirtyWorldPublisher 在本 P5Tick 末批次發送 render。
+		// 場上沒有可移動物時不翻, 真正閒置的場景就不會驅動 render 重發。
+		if (objects.length > 0)
+			world.isDirty = true;
 	}
 
 	public function onMousePressed(x:Float, y:Float):Void {}

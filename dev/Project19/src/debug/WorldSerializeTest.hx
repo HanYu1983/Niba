@@ -38,6 +38,7 @@ class WorldSerializeTest {
 		assertEq("cameraPos.x", world.cameraPos.x, restored.cameraPos.x);
 		assertEq("cameraPos.y", world.cameraPos.y, restored.cameraPos.y);
 		assertEq("cameraPos.z", world.cameraPos.z, restored.cameraPos.z);
+		assertEq("isDirty", world.isDirty, restored.isDirty);
 
 		var originalMachine = world.machines[0];
 		var restoredMachine = restored.machines[0];
@@ -100,6 +101,7 @@ class WorldSerializeTest {
 		world.markers.push(marker);
 
 		world.cameraPos = {x: 10.0, y: 20.0, z: 30.0};
+		world.isDirty = true;
 
 		return world;
 	}

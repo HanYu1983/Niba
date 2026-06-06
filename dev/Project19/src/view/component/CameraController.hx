@@ -29,7 +29,9 @@ private function handleCameraEvent(eventCenter:EventCenter, input:CameraControll
 			if (!moveCamera(input.world, id, step))
 				return;
 
-			eventCenter.nextWorld(input.world);
+			// 遵循 World.isDirty 的不變式: 修改了 world.cameraPos 即翻 flag,
+			// 實際 render 發送交給 view.component.DirtyWorldPublisher 在下一 P5Tick 收尾批次處理。
+			input.world.isDirty = true;
 		default:
 	}
 }

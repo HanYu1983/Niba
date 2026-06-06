@@ -36,6 +36,14 @@ import domain.WorldNode.WorldNode;
  *   - markers:          場上的地點標記 (出生點 / 任務點 / 巡邏點等)
  *   - goalNodes:        場上目前正在執行的 Goal 樹根節點 (一個機體可掛多個 goal)
  *   - cameraPos:        相機在世界中的 3D 位置, 供 view/render 層建立 camera 使用
+ *   - isDirty:          render 髒旗標, 由 view.component.DirtyWorldPublisher 在每幀
+ *                       P5Tick 結束時讀取, 若為 true 則發送 worldSubject.nextWorld 並重置為 false
+ *
+ * isDirty 的不變式 (重要):
+ *   - 任何系統 / view 元件「修改了 isDirty 以外的欄位 (含巢狀: machine.position / projectile.stage /
+ *     cameraPos.x / *.push / *.splice 等)」, 都應把 world.isDirty 設為 true
+ *   - 不要在 mutator 內直接呼叫 eventCenter.nextWorld; 透過 isDirty 統一交給
+ *     DirtyWorldPublisher 在 P5Tick 收尾時批次發送, 每幀至多一次 render emit
  *
  * 世界節點化:
  *   尋路 / 圖搜尋以 WorldNode + NeighborProvider 為介面 (見下方 typedef)。
@@ -60,6 +68,7 @@ typedef World = {
 	var markers:Array<Marker>;
 	var goalNodes:Array<GoalNode>;
 	var cameraPos:Vec3;
+	var isDirty:Bool;
 }
 
 /**
@@ -93,7 +102,8 @@ function createEmptyWorld():World {
 		hitboxes: [],
 		markers: [],
 		goalNodes: [],
-		cameraPos: {x: 0.0, y: 0.0, z: 0.0}
+		cameraPos: {x: 0.0, y: 0.0, z: 0.0},
+		isDirty: false
 	};
 }
 

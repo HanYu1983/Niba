@@ -23,6 +23,7 @@ import view.P5App.createP5App;
 import view.component.CameraControlPanel.createCameraControlPanel;
 import view.component.CameraController.createCameraController;
 import view.component.DebugProjectile.createDebugProjectile;
+import view.component.DirtyWorldPublisher.createDirtyWorldPublisher;
 import view.component.SceneRenderer.createSceneRenderer;
 
 class HelloWorld {
@@ -70,6 +71,16 @@ class HelloWorld {
 		createCameraController(eventCenter);
 		createSceneRenderer(eventCenter);
 		createDebugProjectile(eventCenter);
+		// DirtyWorldPublisher 必須在 dispatchEventToSystems 訂閱「之後」才接上,
+		// 以利用 Observable.subscribe 的 FIFO 訂閱順序: 同一個 P5Tick 來臨時,
+		// 所有 system 先跑完 (可能翻起 world.isDirty), 接著本元件才檢查 flag 並
+		// 批次 nextWorld 出去。view event 元件 (CameraController / DebugProjectile)
+		// 順序排在前面對結果無影響, 它們只回應 OnClick / P5KeyPressed, 不消費 P5Tick。
+		createDirtyWorldPublisher(eventCenter, world);
+		// 初始 emit 一次, 把 worldSubject 的 current 從 createEmptyWorld() (BehaviorSubject
+		// 內部初始值) 切到 HelloWorld 真正持有的 world 參考, 讓所有用 switchMap(worldSubject)
+		// 訂閱事件的 view 元件 (CameraController / DebugProjectile) 在第一次事件來之前
+		// 就已切回正確 world. 後續的 render emit 全部交給 DirtyWorldPublisher 的 isDirty 路徑。
 		eventCenter.nextWorld(world);
 		createP5App(eventCenter);
 	}

@@ -28,7 +28,8 @@ private inline final SPACE_KEY_CODE = 32;
  *     view 層的元件直接訂閱 eventSubject 是現有慣例 (參考 CameraController)
  *   - 訂閱模式: worldSubject.switchMap(eventSubject), 與 CameraController 一致;
  *     確保產生 projectile 時拿到的是 BehaviorSubject 上最新的 world 參考
- *   - 產生後呼叫 eventCenter.nextWorld(world) 觸發 render world 更新, 讓畫面立即看到
+ *   - 產生後翻 world.isDirty = true; 實際 render 發送由
+ *     view.component.DirtyWorldPublisher 在下一 P5Tick 收尾批次處理 (見 World.hx 不變式)
  *
  * 注意:
  *   - 瀏覽器在按鍵 hold 住時會自動重複 keydown, 因而連續產生多顆 projectile;
@@ -49,7 +50,7 @@ private function handleEvent(eventCenter:EventCenter, world:World, event:Event, 
 		case P5KeyPressed(_, keyCode) if (keyCode == SPACE_KEY_CODE):
 			counter.value++;
 			world.projectiles.push(buildDebugProjectile(counter.value));
-			eventCenter.nextWorld(world);
+			world.isDirty = true;
 		default:
 	}
 }

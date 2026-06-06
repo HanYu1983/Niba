@@ -56,6 +56,7 @@ class ProjectileSystem implements ISystem {
 
 	public function onTick(frameCount:Int, deltaTime:Float):Void {
 		var dt = deltaTime / MS_PER_SECOND;
+		var hadProjectiles = world.projectiles.length > 0;
 
 		for (proj in world.projectiles) {
 			proj.age += dt;
@@ -82,6 +83,11 @@ class ProjectileSystem implements ISystem {
 				default:
 			}
 		}
+
+		// 本幀有 projectile 要跑 → 至少改了 age (還可能改 stage / hitboxes / projectiles 列表),
+		// 統一翻 isDirty 給 DirtyWorldPublisher 收尾發送。空陣列時不翻, 保持閒置場景無 render。
+		if (hadProjectiles)
+			world.isDirty = true;
 	}
 
 	public function onMousePressed(x:Float, y:Float):Void {}
@@ -93,8 +99,12 @@ class ProjectileSystem implements ISystem {
 	public function onMouseDragged(x:Float, y:Float):Void {}
 
 	public function onCollide(a:CollidableObject, b:CollidableObject):Void {
-		transitionIfFlying(a);
-		transitionIfFlying(b);
+		var transitioned = transitionIfFlying(a) || transitionIfFlying(b);
+		// onCollide 是 CollisionSystem 在 onTick 內回呼觸發, 本系統的 onTick 隨後會跑且
+		// 由 hadProjectiles 路徑翻 isDirty。這裡仍按「mutator 自己翻」的慣例補上,
+		// 讓 onCollide 不依賴後續 onTick 的順序也能維持不變式。
+		if (transitioned)
+			world.isDirty = true;
 	}
 
 	public function onHitboxCollide(hitbox:Hitbox, target:CollidableObject):Void {}
@@ -103,18 +113,24 @@ class ProjectileSystem implements ISystem {
 	// 內部: 階段轉場 / OnHit 解析 / Hitbox 複製
 	// ====================================================================
 
-	/** 若 c 是 world.projectiles 中某個 stage=Flying 的 projectile, 推進到 ResolvingHit(0) */
-	function transitionIfFlying(c:CollidableObject):Void {
+	/**
+	 * 若 c 是 world.projectiles 中某個 stage=Flying 的 projectile, 推進到 ResolvingHit(0)。
+	 *
+	 * @return  是否實際發生 stage 轉場 (用於外部決定要不要翻 world.isDirty)
+	 */
+	function transitionIfFlying(c:CollidableObject):Bool {
 		for (proj in world.projectiles) {
 			if (sameRef(proj, c)) {
 				switch (proj.stage) {
 					case Flying:
 						proj.stage = ResolvingHit(0);
+						return true;
 					default:
 				}
-				return;
+				return false;
 			}
 		}
+		return false;
 	}
 
 	/** 兩個 CollidableObject 是否為同一個 JS 物件參考 (跳過型別檢查直接比 reference) */
