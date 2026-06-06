@@ -5,6 +5,7 @@ import domain.Machine;
 import domain.Machine.createEmptyMachine;
 import domain.World;
 import domain.World.createEmptyWorld;
+import domain.World.findMachineById;
 
 /**
  * 範例: 「接近並攻擊」目標
@@ -47,18 +48,28 @@ class GoalDemo {
 	/**
 	 * 接近 leaf 的生命週期
 	 * leafState 欄位:
+	 *   - actorId: 執行此 leaf 的機體 id (由 makeNode 注入)
 	 *   - ticks:   累積 tick 計數
 	 *   - blocked: 路徑是否曾被阻擋過 (跨 reinit 保留)
 	 */
 	public static final approachLifecycle:LeafLifecycle = {
 		initialize: (ctx, state) -> {
-			trace('  [Approach] initialize: 規劃路徑');
+			var actor = findMachineById(ctx.world, state.actorId);
+			if (actor == null) {
+				trace('  [Approach] initialize: actor "${state.actorId}" 不存在, 放棄');
+				return false;
+			}
+			trace('  [Approach] initialize: actor=${actor.name} 規劃路徑');
 			state.ticks = 0;
 			if (state.blocked == null)
 				state.blocked = false;
 			return true;
 		},
 		validate: (ctx, state) -> {
+			if (findMachineById(ctx.world, state.actorId) == null) {
+				trace('  [Approach] validate: actor "${state.actorId}" 不存在');
+				return false;
+			}
 			if (state.ticks == 1 && !state.blocked) {
 				trace('  [Approach] validate: 路徑被阻擋! 觸發 re-init');
 				state.blocked = true;
@@ -80,15 +91,21 @@ class GoalDemo {
 	/**
 	 * 揮刀 leaf 的生命週期
 	 * leafState 欄位:
-	 *   - swung: 是否已揮過
+	 *   - actorId: 執行此 leaf 的機體 id (由 makeNode 注入)
+	 *   - swung:   是否已揮過
 	 */
 	public static final meleeStrikeLifecycle:LeafLifecycle = {
 		initialize: (ctx, state) -> {
-			trace('  [MeleeStrike] initialize: 鎖定目標');
+			var actor = findMachineById(ctx.world, state.actorId);
+			if (actor == null) {
+				trace('  [MeleeStrike] initialize: actor "${state.actorId}" 不存在, 放棄');
+				return false;
+			}
+			trace('  [MeleeStrike] initialize: actor=${actor.name} 鎖定目標');
 			state.swung = false;
 			return true;
 		},
-		validate: (ctx, state) -> true,
+		validate: (ctx, state) -> findMachineById(ctx.world, state.actorId) != null,
 		tick: (ctx, state, dt) -> {
 			state.swung = true;
 			trace('  [MeleeStrike] tick: 揮刀!');
@@ -129,15 +146,51 @@ class GoalDemo {
 	// 真正的戰鬥系統會把這段替換成自己的調度邏輯
 	// ==================================================================
 
-	/** 從 spec 建立對應的 runtime node */
-	public static function makeNode(spec:GoalSpec):GoalNode {
-		return {
-			spec: spec,
-			status: Pending,
-			children: [],
-			activeChildIndex: 0,
-			leafState: null
-		};
+	/**
+	 * 從 spec 建立對應的 runtime node。
+	 *
+	 * params 為「目標的初始參數」, 由呼叫端在 makeNode 時帶入,
+	 * 例如 {actorId: "m1"} 指定此 goal 是哪個機體在執行;
+	 * makeNode 會把 params 的所有欄位淺拷貝到該節點 (與所有子節點) 的 leafState,
+	 * Leaf 的 initialize / validate / tick 之後再讀寫 state 上的其他欄位。
+	 *
+	 * 設計重點:
+	 *   - 不再像舊版那樣把 actor 放在 GoalContext 上, 改由 state.actorId 帶 id,
+	 *     LeafLifecycle 內透過 findMachineById 查表得到實際物件,
+	 *     順便處理「actor 不存在 / 已陣亡」的情境
+	 *   - children 在 makeNode 時就遞迴建立並繼承同一份 params,
+	 *     讓整棵樹共享 actorId 等識別資訊
+	 */
+	public static function makeNode(spec:GoalSpec, ?params:Dynamic):GoalNode {
+		return switch (spec) {
+			case Leaf(_):
+				{
+					spec: spec,
+					status: Pending,
+					children: [],
+					activeChildIndex: 0,
+					leafState: copyParams(params)
+				};
+			case Sequence(children) | Selector(children) | Custom(_, children):
+				{
+					spec: spec,
+					status: Pending,
+					children: [for (c in children) makeNode(c, params)],
+					activeChildIndex: 0,
+					leafState: null
+				};
+		}
+	}
+
+	/** 將 params 的欄位淺拷貝到新的 Dynamic state 上; params 為 null 時回傳空物件 */
+	static function copyParams(params:Dynamic):Dynamic {
+		var state:Dynamic = {};
+		if (params != null) {
+			for (field in Reflect.fields(params)) {
+				Reflect.setField(state, field, Reflect.field(params, field));
+			}
+		}
+		return state;
 	}
 
 	/** status 是否為終止狀態 */
@@ -166,19 +219,15 @@ class GoalDemo {
 				switch (node.spec) {
 					case Leaf(beh):
 						var lifecycle = leafFactory(beh.name);
-						if (node.leafState == null)
-							node.leafState = {};
 						if (lifecycle.initialize(ctx, node.leafState)) {
 							node.status = Running;
 						} else {
 							node.status = Failed(InitFailed);
 						}
-					case Sequence(children) | Selector(children):
-						node.children = [for (c in children) makeNode(c)];
+					case Sequence(_) | Selector(_):
 						node.activeChildIndex = 0;
 						node.status = Running;
 					case Custom(plannerName, children):
-						node.children = [for (c in children) makeNode(c)];
 						var planner = plannerFactory(plannerName);
 						var idx = planner(ctx, children, -1);
 						if (idx < 0) {
@@ -254,8 +303,8 @@ class GoalDemo {
 	/** 執行整個 demo, 印出每個 frame 的狀態 */
 	public static function run():Void {
 		trace("=== Goal System Demo: 接近並揮刀 ===");
-		var node = makeNode(approachAndStrike);
-		var ctx:GoalContext = {actor: mockActor, world: mockWorld};
+		var node = makeNode(approachAndStrike, {actorId: mockActor.id});
+		var ctx:GoalContext = {world: mockWorld};
 		var maxFrames = 30;
 		for (frame in 0...maxFrames) {
 			trace('--- frame ${frame + 1} ---');

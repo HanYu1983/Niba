@@ -121,6 +121,23 @@ function unserializeWorld(s:String):World {
 }
 
 /**
+ * 以 id 查找場上的機體。
+ *
+ * 用途:
+ *   - Goal lifecycle 從 leafState.actorId 取得目前要操作的機體
+ *   - 戰鬥系統 / UI 透過 id 解析機體參考
+ *
+ * 找不到時回傳 null; 呼叫端通常將 null 視為「該機體已不存在」
+ * (例如已陣亡 / 被移除), 對 Goal 而言會觸發 init / validate 失敗。
+ */
+function findMachineById(world:World, id:String):Null<Machine> {
+	for (machine in world.machines)
+		if (machine.id == id)
+			return machine;
+	return null;
+}
+
+/**
  * 取得所有實際存在於場上的物件。
  *
  * 包含:

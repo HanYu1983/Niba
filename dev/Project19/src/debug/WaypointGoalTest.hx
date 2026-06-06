@@ -28,8 +28,8 @@ class WaypointGoalTest {
 
 		var world = createWorld(actor, markers);
 		var built = createWalkWaypointsGoal(markers, new SimpleAStarPathfinder(), basicNeighborProvider);
-		var node = GoalDemo.makeNode(built.spec);
-		var ctx:GoalContext = {actor: actor, world: world};
+		var node = GoalDemo.makeNode(built.spec, {actorId: actor.id});
+		var ctx:GoalContext = {world: world};
 
 		for (frame in 0...30) {
 			trace('--- waypoint frame ${frame + 1} ---');

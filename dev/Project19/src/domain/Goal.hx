@@ -138,11 +138,23 @@ typedef PlannerFactory = (name:String) -> GoalPlanner;
 /**
  * 目標執行的上下文
  *
- * - actor: 執行此目標的主體 (機體)
- * - world: 戰場世界狀態 (機體 / 武器 / 發射物 / 碰撞箱列表)
+ * 只持有「全局共享」的戰場狀態, 不放入每個目標自身的參數。
+ *   - world: 戰場世界狀態 (機體 / 武器 / 發射物 / 碰撞箱列表)
+ *
+ * 設計動機:
+ *   過去把 actor 放在 ctx 上, 等同把「目標的參數」與「戰場狀態」混在同一個物件,
+ *   一個 ctx 只能服務一個 actor 的目標。
+ *
+ *   現在改為:
+ *     - 每個目標的參數 (例如 actorId, targetId, 武器 id 等) 在 makeNode 時帶入,
+ *       並由 makeNode 寫入該節點的 leafState
+ *     - LeafLifecycle 從 state 取出 id, 再依 ctx.world 查表取得實際物件
+ *   好處:
+ *     - LeafLifecycle 自然會處理「actor 不存在 / 已陣亡 / 被移除」的情況
+ *     - 同一個 LeafLifecycle 可服務不同 actor (純函式行為, 透過 state.actorId 識別)
+ *     - GoalContext 維持簡單, 不需依目標數量增加欄位
  */
 typedef GoalContext = {
-	var actor:Machine;
 	var world:World;
 }
 
@@ -151,9 +163,12 @@ typedef GoalContext = {
  *
  * runtime 引擎為每個 GoalSpec 子節點建立對應的 GoalNode 子節點, 用以追蹤執行狀態:
  *   - status:           當前生命週期狀態
- *   - children:         與 spec 的 children 對應的子節點 (composite 用)
+ *   - children:         與 spec 的 children 對應的子節點 (composite 用),
+ *                       由 makeNode 在建構時遞迴建立
  *   - activeChildIndex: 目前正在跑的子節點 index (Sequence / Selector / Custom 用)
- *   - leafState:        Leaf 用的 Dynamic 狀態容器, 由 LeafBehavior 自管欄位
+ *   - leafState:        Leaf 用的 Dynamic 狀態容器
+ *                       由 makeNode 將初始 params (例: actorId) 寫入,
+ *                       lifecycle 的 initialize / validate / tick 可再讀寫
  */
 typedef GoalNode = {
 	var spec:GoalSpec;

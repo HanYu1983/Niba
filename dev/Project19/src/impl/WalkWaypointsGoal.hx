@@ -9,6 +9,7 @@ import domain.Goal.LeafLifecycle;
 import domain.Machine;
 import domain.Pathfinding.IPathfinder;
 import domain.World.NeighborProvider;
+import domain.World.findMachineById;
 import domain.WorldNode.WorldNode;
 
 /** 此 goal 在 GoalSpec 中的 leaf 名稱 */
@@ -40,6 +41,12 @@ typedef WalkWaypointsGoalBuilt = {
 function createWalkWaypointsGoal(markers:Array<Marker>, pathfinder:IPathfinder, neighbors:NeighborProvider, cellStep:Float = 100.0):WalkWaypointsGoalBuilt {
 	var lifecycle:LeafLifecycle = {
 		initialize: (ctx, state) -> {
+			var actor = findMachineById(ctx.world, state.actorId);
+			if (actor == null) {
+				trace('  [WalkWaypoints] initialize: actor "${state.actorId}" 不存在, 放棄');
+				return false;
+			}
+
 			if (state.markerIndex == null)
 				state.markerIndex = 0;
 
@@ -49,7 +56,7 @@ function createWalkWaypointsGoal(markers:Array<Marker>, pathfinder:IPathfinder, 
 				return true;
 			}
 
-			var start = nodeFromPosition(ctx.actor.position.x, ctx.actor.position.y, cellStep);
+			var start = nodeFromPosition(actor.position.x, actor.position.y, cellStep);
 			var target = nodeFromPosition(markers[state.markerIndex].position.x, markers[state.markerIndex].position.y, cellStep);
 			var result = pathfinder.findShortestPathTree(ctx.world, neighbors, start, target);
 
@@ -58,10 +65,12 @@ function createWalkWaypointsGoal(markers:Array<Marker>, pathfinder:IPathfinder, 
 
 			state.path = result.path;
 			state.pathIndex = result.path.length > 1 ? 1 : 0;
-			trace('  [WalkWaypoints] initialize: marker=${markers[state.markerIndex].name} cost=${result.cost} steps=${result.path.length}');
+			trace('  [WalkWaypoints] initialize: actor=${actor.name} marker=${markers[state.markerIndex].name} cost=${result.cost} steps=${result.path.length}');
 			return true;
 		},
 		validate: (ctx, state) -> {
+			if (findMachineById(ctx.world, state.actorId) == null)
+				return false;
 			if (state.markerIndex == null)
 				return false;
 			if (state.markerIndex >= markers.length)
@@ -71,6 +80,10 @@ function createWalkWaypointsGoal(markers:Array<Marker>, pathfinder:IPathfinder, 
 			return true;
 		},
 		tick: (ctx, state, dt) -> {
+			var actor = findMachineById(ctx.world, state.actorId);
+			if (actor == null)
+				return GoalStatus.Failed(GoalFailure.Custom('Actor disappeared: ${state.actorId}'));
+
 			if (state.markerIndex >= markers.length)
 				return GoalStatus.Succeeded;
 
@@ -78,7 +91,7 @@ function createWalkWaypointsGoal(markers:Array<Marker>, pathfinder:IPathfinder, 
 			var pathIndex:Int = state.pathIndex;
 
 			if (pathIndex < path.length) {
-				moveActorToNode(ctx.actor, path[pathIndex]);
+				moveActorToNode(actor, path[pathIndex]);
 				trace('  [WalkWaypoints] move: marker=${markers[state.markerIndex].name} node=${nodeLabel(path[pathIndex])}');
 				state.pathIndex = pathIndex + 1;
 				return GoalStatus.Running;
@@ -90,7 +103,7 @@ function createWalkWaypointsGoal(markers:Array<Marker>, pathfinder:IPathfinder, 
 			if (state.markerIndex >= markers.length)
 				return GoalStatus.Succeeded;
 
-			var start = nodeFromPosition(ctx.actor.position.x, ctx.actor.position.y, cellStep);
+			var start = nodeFromPosition(actor.position.x, actor.position.y, cellStep);
 			var target = nodeFromPosition(markers[state.markerIndex].position.x, markers[state.markerIndex].position.y, cellStep);
 			var result = pathfinder.findShortestPathTree(ctx.world, neighbors, start, target);
 
