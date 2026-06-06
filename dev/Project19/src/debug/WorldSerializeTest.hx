@@ -4,6 +4,7 @@ import domain.Damage.DamageType;
 import domain.FieldObject.createEmptyMarker;
 import domain.Machine.createEmptyMachine;
 import domain.Weapon.WeaponOnMachine;
+import domain.Weapon.createWeaponOnMachine;
 import domain.World;
 import domain.World.createEmptyWorld;
 import domain.World.serializeWorld;
@@ -73,22 +74,15 @@ class WorldSerializeTest {
 		machine.defense.weights.set(Fire, 80.0);
 		machine.defense.weights.set(Electric, 15.0);
 
-		var weapon:WeaponOnMachine = {
-			id: "w1",
+		var weapon:WeaponOnMachine = createWeaponOnMachine({
+			id: "plasma_blade",
 			name: "Plasma Blade",
-			ownerMachineId: machine.id,
-			localPosition: {x: 0.0, y: 0.0},
-			localFacing: 0.0,
-			definition: {
-				id: "plasma_blade",
-				name: "Plasma Blade",
-				category: Melee,
-				power: NativeEnergy(5.0),
-				fire: Single,
-				projectile: Beam(50.0, {type: Energy, amount: 25.0}),
-				baseAccuracy: 0.9
-			}
-		};
+			category: Melee,
+			power: NativeEnergy(5.0),
+			fire: Single,
+			projectile: Beam(50.0, {type: Energy, amount: 25.0}),
+			baseAccuracy: 0.9
+		}, machine.id, "w1");
 
 		machine.weapons.push(weapon);
 		world.machines.push(machine);

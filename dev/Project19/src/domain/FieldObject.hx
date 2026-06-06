@@ -79,6 +79,44 @@ typedef MountedObject = {
 }
 
 /**
+ * 計算 MountedObject 在世界座標的位置。
+ *
+ * 規則 (與 MountedObject doc 對齊):
+ *   worldPosition = owner.position + rotate(mounted.localPosition, owner.facing)
+ *   旋轉採用 2D 標準: (x', y') = (x·cos − y·sin, x·sin + y·cos), 0 = +X 方向, 逆時針為正
+ *
+ * 用途:
+ *   - WeaponFireSystem 發射時, 子彈起始點來自武器掛點的世界座標
+ *   - 視覺系統 (Render) 在繪製武器圖示 / 拖尾 / muzzle flash 時也需要相同的座標轉換
+ *
+ * 為什麼是函式不是 method:
+ *   - MountedObject 是 typedef (匿名結構), 不能掛 method;
+ *     module-level function 是 Haxe 慣用解法 (見 World.findMachineById / tickGoals 等)
+ *   - 純函式無狀態, 易測試, 不需要 DI
+ */
+function mountWorldPosition(mounted:MountedObject, owner:FieldObject):Vec2 {
+	var cos = Math.cos(owner.facing);
+	var sin = Math.sin(owner.facing);
+	return {
+		x: owner.position.x + mounted.localPosition.x * cos - mounted.localPosition.y * sin,
+		y: owner.position.y + mounted.localPosition.x * sin + mounted.localPosition.y * cos
+	};
+}
+
+/**
+ * 計算 MountedObject 在世界座標的朝向。
+ *
+ * 規則 (與 MountedObject doc 對齊):
+ *   worldFacing = owner.facing + mounted.localFacing
+ *
+ * 沒做 normalizeAngle: 由消費端 (例如 HomingSystem) 自行 wrap, 因為大多時候直接拿來
+ * 算 cos / sin 並不需要先收斂到 [-π, π]。
+ */
+inline function mountWorldFacing(mounted:MountedObject, owner:FieldObject):Float {
+	return owner.facing + mounted.localFacing;
+}
+
+/**
  * 場上地點標記
  *
  * 結構與 FieldObject 一致, 純粹以 typedef 名稱區分用途。

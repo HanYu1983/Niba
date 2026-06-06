@@ -59,6 +59,10 @@ private function createRenderWeaponsOnMachine(world:World):Array<RenderWeaponOnM
 private function createRenderWeaponOnMachine(weapon:WeaponOnMachine, owner:Machine):RenderWeaponOnMachine {
 	var worldPosition = toWorldPosition(owner.position, owner.facing, weapon.localPosition);
 
+	// RenderWeaponOnMachine 結構繼承 WeaponOnMachine, 因此 weapon 上新增的 runtime 欄位
+	// (isTrigger / prevTrigger / lastFireTime / magazineLeft / ammoLeft) 都得轉過來.
+	// 直接照欄位轉發即可 — render 端通常只取 worldPosition / worldFacing / definition 等顯示用值,
+	// runtime 欄位純粹是為了滿足型別合約 (有些 UI 之後可能要顯示 magazineLeft / ammoLeft).
 	return {
 		id: weapon.id,
 		name: weapon.name,
@@ -66,6 +70,11 @@ private function createRenderWeaponOnMachine(weapon:WeaponOnMachine, owner:Machi
 		localPosition: weapon.localPosition,
 		localFacing: weapon.localFacing,
 		definition: weapon.definition,
+		isTrigger: weapon.isTrigger,
+		prevTrigger: weapon.prevTrigger,
+		lastFireTime: weapon.lastFireTime,
+		magazineLeft: weapon.magazineLeft,
+		ammoLeft: weapon.ammoLeft,
 		worldPosition: worldPosition,
 		worldFacing: owner.facing + weapon.localFacing
 	};

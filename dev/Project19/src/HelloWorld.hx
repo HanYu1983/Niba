@@ -1,11 +1,19 @@
 import debug.HomingProjectileTest;
 import debug.PathfinderTest;
+import debug.WeaponFireTest;
 import debug.WorldSerializeTest;
 import domain.Collision.Hitbox;
 import domain.FieldObject.CollidableObject;
 import domain.Geometry.Shape;
+import domain.Damage.DamageType;
 import domain.Machine;
 import domain.Machine.createEmptyMachine;
+import domain.Weapon.FireMode;
+import domain.Weapon.PowerSource;
+import domain.Weapon.WeaponCategory;
+import domain.Weapon.WeaponDefinition;
+import domain.Weapon.WeaponOnMachine;
+import domain.Weapon.createWeaponOnMachine;
 import domain.World;
 import domain.World.createEmptyWorld;
 import impl.CollisionSystem;
@@ -19,6 +27,7 @@ import impl.MoveToPointsGoal.createMoveToPointsGoal;
 import impl.MovementSystem;
 import impl.ProjectileSystem;
 import impl.SharedLeafFactory.sharedLeafFactory;
+import impl.WeaponFireSystem;
 import sample.GoalDemo;
 import view.EventCenter;
 import view.EventCenter.Event;
@@ -27,6 +36,7 @@ import view.P5App.createP5App;
 import view.component.CameraControlPanel.createCameraControlPanel;
 import view.component.CameraController.createCameraController;
 import view.component.DebugProjectile.createDebugProjectile;
+import view.component.DebugWeaponTrigger.createDebugWeaponTrigger;
 import view.component.DirtyWorldPublisher.createDirtyWorldPublisher;
 import view.component.SceneRenderer.createSceneRenderer;
 
@@ -35,10 +45,18 @@ class HelloWorld {
 		PathfinderTest.run();
 		WorldSerializeTest.run();
 		HomingProjectileTest.run();
+		WeaponFireTest.run();
 
 		var world = createEmptyWorld();
 		var demoMachine = createDemoMachine();
 		world.machines.push(demoMachine);
+		// 給 demo 機體掛三把不同 FireMode 的測試武器, 同時掛兩處 (machine.weapons / world.weaponsOnMachine);
+		// 都共享一個 reference, 因此 weapon.isTrigger 由 DebugWeaponTrigger 寫到任一邊都會被 WeaponFireSystem 看見.
+		// 用 F 鍵同時驅動三把 (見 view.component.DebugWeaponTrigger).
+		for (weapon in createDemoWeapons(demoMachine.id)) {
+			demoMachine.weapons.push(weapon);
+			world.weaponsOnMachine.push(weapon);
+		}
 		// 給 demo 機體掛一個「依序走過多個點」的 Sequence goal, 由 GoalSystem 每幀
 		// 重新計算 velocity (內部由 MoveToPoint leaf 完成), 再由 MovementSystem 推進 position
 		world.goalNodes.push(createMoveToPointsGoal(demoMachine.id, [
@@ -51,25 +69,28 @@ class HelloWorld {
 		var eventCenter = new EventCenter();
 
 		// 系統執行順序:
-		//   1. GoalSystem       — 更新 machine.velocity (依 goal 目標重新規劃)
-		//   2. HomingSystem     — 更新 projectile.velocity / facing (追蹤彈依目標位置)
-		//                         必須排在 MovementSystem 之前, 與 GoalSystem 同層: 兩者只表達意圖
-		//   3. MovementSystem   — 套用 velocity 推 position (一次性消化上面兩個系統的決策)
-		//   4. HitboxSystem     — Hitbox age / duration 過期清除 (必須排在 CollisionSystem 之前,
-		//                         確保已過期的 Hitbox 不會被本幀的碰撞偵測誤判)
-		//   5. CollisionSystem  — 對最新 position 做碰撞偵測, 透過 collisionListener 廣播
-		//                         (HitboxSystem 透過 onHitboxCollide 收到事件, 過濾 cooldown
-		//                          後再透過 damageListener 廣播 onDamage)
-		//   6. ProjectileSystem — 跟蹤 projectile 階段, 依 onCollide 結果完成 OnHit
-		//                         (必須排在 CollisionSystem 之後, 才能在同一幀內收到
-		//                          onCollide 設好 stage, 再於 onTick 跑完 OnHit)
+		//   1. GoalSystem        — 更新 machine.velocity (依 goal 目標重新規劃)
+		//   2. WeaponFireSystem  — 讀 weapon.isTrigger + FireMode + PowerSource → spawn 新彈藥
+		//                          排在 HomingSystem 之前: 同幀新出生的追蹤彈也能被 HomingSystem 立即轉向
+		//   3. HomingSystem      — 更新 projectile.velocity / facing (追蹤彈依目標位置)
+		//                          必須排在 MovementSystem 之前, 與 GoalSystem 同層: 只表達意圖
+		//   4. MovementSystem    — 套用 velocity 推 position (一次性消化上面所有系統的決策)
+		//   5. HitboxSystem      — Hitbox age / duration 過期清除 (必須排在 CollisionSystem 之前,
+		//                          確保已過期的 Hitbox 不會被本幀的碰撞偵測誤判)
+		//   6. CollisionSystem   — 對最新 position 做碰撞偵測, 透過 collisionListener 廣播
+		//                          (HitboxSystem 透過 onHitboxCollide 收到事件, 過濾 cooldown
+		//                           後再透過 damageListener 廣播 onDamage)
+		//   7. ProjectileSystem  — 跟蹤 projectile 階段, 依 onCollide 結果完成 OnHit
+		//                          (必須排在 CollisionSystem 之後, 才能在同一幀內收到
+		//                           onCollide 設好 stage, 再於 onTick 跑完 OnHit)
 		//
 		// CollisionSystem / HitboxSystem 都需要 listener 才能建構, 但 listener 又需要看到
-		// systems 陣列 (要 fan-out 給所有系統), 故先建陣列 + GoalSystem + HomingSystem + MovementSystem,
+		// systems 陣列 (要 fan-out 給所有系統), 故先建陣列 + 前段系統,
 		// 再以該陣列建 fan-out listeners, 最後把後續系統推進同一個陣列。
 		// 由於 listener 持有的是 systems 陣列的「參考」, push 後新加入的系統也會被廣播。
 		var systems:Array<ISystem> = [
 			new GoalSystem(world, sharedLeafFactory, GoalDemo.plannerFactory),
+			new WeaponFireSystem(world),
 			new HomingSystem(world),
 			new MovementSystem(world)
 		];
@@ -85,6 +106,7 @@ class HelloWorld {
 		createCameraController(eventCenter);
 		createSceneRenderer(eventCenter);
 		createDebugProjectile(eventCenter);
+		createDebugWeaponTrigger(eventCenter, demoMachine.id);
 		// DirtyWorldPublisher 必須在 dispatchEventToSystems 訂閱「之後」才接上,
 		// 以利用 Observable.subscribe 的 FIFO 訂閱順序: 同一個 P5Tick 來臨時,
 		// 所有 system 先跑完 (可能翻起 world.isDirty), 接著本元件才檢查 flag 並
@@ -116,6 +138,101 @@ class HelloWorld {
 		machine.maxSpeed = 50.0;
 		machine.shape = Circle(0.0, 0.0, 15.0);
 		return machine;
+	}
+
+	/**
+	 * 建立 demo 機體的三把測試武器, 每把對應一種 FireMode, 共同綁到 F 鍵.
+	 *
+	 * 設計目的:
+	 *   - 一鍵同時測試 Single (edge) / Burst (interval) / Spread (count) 三條 path
+	 *   - 三把都用 Solid + Spawn(small explosion) 確保視覺一致 (一打就爆),
+	 *     差異只在「按一下 F 看到幾發 / 持續按看不看到連發」
+	 *   - PowerSource 各挑一個變體, 順便驗證 consumePower:
+	 *       Single  → NativeEnergy   (永遠允許, 對應 TODO 待 Machine.currentEnergy 上線)
+	 *       Burst   → Magazine(30, 1.0) — 每次扣 1, 滿匣可打 30 發
+	 *       Spread  → Ammo(8)          — 一次扣 1 發 (= 一次散彈 shell), 共 8 發 shell
+	 *   - 掛點 localPosition 稍微錯開, 讓 spawn 出來的彈藥不會擠在同一點上互撞,
+	 *     避免「剛出膛就被自己人 onCollide 觸發 ResolvingHit」
+	 */
+	static function createDemoWeapons(ownerMachineId:String):Array<WeaponOnMachine> {
+		var weapons:Array<WeaponOnMachine> = [];
+
+		var singleDef:WeaponDefinition = {
+			id: "demo_single_def",
+			name: "Demo Single Rifle",
+			category: Bullet,
+			power: NativeEnergy(2.0),
+			fire: Single,
+			projectile: Solid(220.0, 1.5, {type: Physical, amount: 12.0}, Spawn([
+				{
+					id: "demo_single_explosion",
+					name: "Demo Single Explosion",
+					position: {x: 0.0, y: 0.0},
+					facing: 0.0,
+					shape: Circle(0.0, 0.0, 18.0),
+					duration: 0.1,
+					cooldownPerTarget: Math.POSITIVE_INFINITY,
+					damage: {type: Explosion, amount: 25.0},
+					reactions: []
+				}
+			])),
+			baseAccuracy: 1.0
+		};
+		var singleWeapon = createWeaponOnMachine(singleDef, ownerMachineId, "demo_single");
+		singleWeapon.localPosition = {x: 18.0, y: -8.0};
+		weapons.push(singleWeapon);
+
+		var burstDef:WeaponDefinition = {
+			id: "demo_burst_def",
+			name: "Demo Burst Gun",
+			category: Bullet,
+			power: Magazine(30, 1.0),
+			fire: Burst(3, 0.15),
+			projectile: Solid(180.0, 1.2, {type: Physical, amount: 6.0}, Spawn([
+				{
+					id: "demo_burst_explosion",
+					name: "Demo Burst Explosion",
+					position: {x: 0.0, y: 0.0},
+					facing: 0.0,
+					shape: Circle(0.0, 0.0, 10.0),
+					duration: 0.08,
+					cooldownPerTarget: Math.POSITIVE_INFINITY,
+					damage: {type: Explosion, amount: 12.0},
+					reactions: []
+				}
+			])),
+			baseAccuracy: 0.95
+		};
+		var burstWeapon = createWeaponOnMachine(burstDef, ownerMachineId, "demo_burst");
+		burstWeapon.localPosition = {x: 18.0, y: 0.0};
+		weapons.push(burstWeapon);
+
+		var spreadDef:WeaponDefinition = {
+			id: "demo_spread_def",
+			name: "Demo Spread Shotgun",
+			category: Bullet,
+			power: Ammo(8),
+			fire: Spread(5, 30.0),
+			projectile: Solid(160.0, 0.8, {type: Physical, amount: 4.0}, Spawn([
+				{
+					id: "demo_spread_explosion",
+					name: "Demo Spread Pellet Explosion",
+					position: {x: 0.0, y: 0.0},
+					facing: 0.0,
+					shape: Circle(0.0, 0.0, 8.0),
+					duration: 0.06,
+					cooldownPerTarget: Math.POSITIVE_INFINITY,
+					damage: {type: Explosion, amount: 8.0},
+					reactions: []
+				}
+			])),
+			baseAccuracy: 0.8
+		};
+		var spreadWeapon = createWeaponOnMachine(spreadDef, ownerMachineId, "demo_spread");
+		spreadWeapon.localPosition = {x: 18.0, y: 8.0};
+		weapons.push(spreadWeapon);
+
+		return weapons;
 	}
 
 	/**

@@ -13,6 +13,7 @@ import domain.Weapon.WeaponOnMachine;
 import domain.Weapon.WeaponCategory;
 import domain.Weapon.PowerSource;
 import domain.Weapon.FireMode;
+import domain.Weapon.createWeaponOnMachine;
 
 /**
  * 範例: 衝刺斬 (Dash + Slash)
@@ -73,14 +74,15 @@ class DashSlash {
 	 * - id = blade_a, 由 dashSlash.steps[1].weaponUse.weaponId 引用
 	 * - ownerMachineId 指向裝備者
 	 * - localPosition / localFacing 為相對機體的掛點資料
+	 *
+	 * runtime 欄位 (isTrigger / prevTrigger / lastFireTime / magazineLeft / ammoLeft) 由
+	 * createWeaponOnMachine 依 power 變體填上預設值, 詳見 domain.Weapon.createWeaponOnMachine.
 	 */
 	public static final plasmaBlade:WeaponOnMachine = {
-		id: "blade_a",
-		name: "Right Arm Plasma Blade",
-		ownerMachineId: "sample_machine",
-		localPosition: {x: 0.35, y: -0.45},
-		localFacing: 0.0,
-		definition: plasmaBladeDefinition
+		var w = createWeaponOnMachine(plasmaBladeDefinition, "sample_machine", "blade_a");
+		w.name = "Right Arm Plasma Blade";
+		w.localPosition = {x: 0.35, y: -0.45};
+		w;
 	}
 
 	/**
