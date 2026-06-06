@@ -33,6 +33,28 @@ enum Shape {
 }
 
 /**
+ * 把任意弧度值 wrap 到 [-π, π] 區間的正規化。
+ *
+ * 用途:
+ *   - 計算「兩個朝向之間的最短夾角」: normalizeAngle(desired - current) 可以拿到
+ *     有號短弧 (正值代表逆時針轉, 負值代表順時針轉), 避免 naive 相減出 ±2π 等繞遠路
+ *   - HomingSystem 等轉向系統把 turn step clamp 到 turnRate * dt 之前, 必須先正規化
+ *     delta, 否則「從 +170° 想轉到 -170°」會被 clamp 在錯誤的方向 (340° 繞一大圈)
+ *
+ * 演算:
+ *   theta - 2π * floor((theta + π) / (2π))
+ *   等價於對 (2π) 做 floored modulo 後再平移到 [-π, π]
+ *
+ * 邊角:
+ *   - 輸入 NaN / Infinity 結果同樣 NaN / 異常, 呼叫端自行避免
+ *   - 不假設輸入範圍 (任意大 / 小皆可); 內部用一次 floor 直接歸位, 不用迴圈
+ */
+inline function normalizeAngle(theta:Float):Float {
+	var twoPi = 2.0 * Math.PI;
+	return theta - twoPi * Math.floor((theta + Math.PI) / twoPi);
+}
+
+/**
  * 碰撞形狀的世界座標解析函式型別 (遊戲規則: 相對機體朝向)
  *
  * 規則:

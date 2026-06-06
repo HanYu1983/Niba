@@ -85,6 +85,8 @@ enum ProjectileStage {
  *   - projectile: 原始發射物模板
  *   - age:        已存在時間
  *   - stage:      目前執行階段
+ *   - tracking:   選填; 若非 null, impl.HomingSystem 會每幀依目標位置改寫 velocity / facing,
+ *                 達成「追蹤彈」效果。null = 直線飛行 (預設, 與舊行為相容)
  */
 typedef ProjectileObject = {
 	> MovableObject,
@@ -92,6 +94,32 @@ typedef ProjectileObject = {
 	var projectile:Projectile;
 	var age:Float;
 	var stage:ProjectileStage;
+	var ?tracking:ProjectileTracking;
+}
+
+/**
+ * 發射物的追蹤行為 (runtime, 跟著 ProjectileObject 一起序列化)。
+ *
+ * 為什麼放在 ProjectileObject 上 (而不是 Projectile enum 模板上):
+ *   - targetId 是發射「當下」決定的, 同一個 Projectile 模板可以在不同時機鎖不同目標,
+ *     模板層只該描述「能否追蹤 / 機動性」, 不該綁定具體目標
+ *   - 跟 age / stage 一樣是 runtime 變化欄位, 放在 ProjectileObject 自然
+ *
+ * 設計選擇:
+ *   - targetId 用 id 字串, 與 Goal.leafState.actorId 慣例一致, 容易序列化, 容忍目標暫時離場
+ *   - 目標查找走 World.findCollidableObjectById, machine / projectile 皆可被追蹤;
+ *     hitbox / marker 目前不視為追蹤標的
+ *
+ * @field targetId 目標 FieldObject.id (對齊 machine / projectile)
+ * @field turnRate 每秒最大可轉向角速度 (弧度/秒);
+ *                 - 0  視同直線彈
+ *                 - ~π/2 (~1.57): 靈巧機動, 類 AIM-9
+ *                 - ~π  (~3.14): 半秒 U-turn 的超機動
+ *                 - +∞: 永遠對準 (snap-lock)
+ */
+typedef ProjectileTracking = {
+	var targetId:String;
+	var turnRate:Float;
 }
 
 /**

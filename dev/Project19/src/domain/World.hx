@@ -164,6 +164,30 @@ function findMachineById(world:World, id:String):Null<Machine> {
 }
 
 /**
+ * 以 id 查找場上的可碰撞物 (machines + projectiles)。
+ *
+ * 用途:
+ *   - HomingSystem 從 ProjectileObject.tracking.targetId 取得追蹤目標
+ *   - 未來的鎖定 / AOE / 視覺特效系統以 id 解析目標物
+ *
+ * 不含:
+ *   - hitboxes / markers / weaponsOnField: 不被視為「可被追蹤 / 鎖定」的目標
+ *   - weaponsOnMachine:                    不是 FieldObject, 世界座標需從 owner 推導
+ *
+ * 找不到時回傳 null; 呼叫端通常將 null 視為「目標已不存在 / 暫時離場」,
+ * 追蹤系統會選擇維持原 velocity 直線飛行 (而非清掉 tracking)。
+ */
+function findCollidableObjectById(world:World, id:String):Null<CollidableObject> {
+	for (machine in world.machines)
+		if (machine.id == id)
+			return machine;
+	for (projectile in world.projectiles)
+		if (projectile.id == id)
+			return projectile;
+	return null;
+}
+
+/**
  * 取得所有實際存在於場上的物件。
  *
  * 包含:

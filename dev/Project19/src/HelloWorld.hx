@@ -1,3 +1,4 @@
+import debug.HomingProjectileTest;
 import debug.PathfinderTest;
 import debug.WorldSerializeTest;
 import domain.Collision.Hitbox;
@@ -10,6 +11,7 @@ import domain.World.createEmptyWorld;
 import impl.CollisionSystem;
 import impl.GoalSystem;
 import impl.HitboxSystem;
+import impl.HomingSystem;
 import impl.ICollisionListener;
 import impl.IHitboxDamageListener;
 import impl.ISystem;
@@ -32,6 +34,7 @@ class HelloWorld {
 	static public function main():Void {
 		PathfinderTest.run();
 		WorldSerializeTest.run();
+		HomingProjectileTest.run();
 
 		var world = createEmptyWorld();
 		var demoMachine = createDemoMachine();
@@ -48,23 +51,26 @@ class HelloWorld {
 		var eventCenter = new EventCenter();
 
 		// 系統執行順序:
-		//   1. GoalSystem       — 更新 velocity (依 goal 目標重新規劃)
-		//   2. MovementSystem   — 套用 velocity 推 position
-		//   3. HitboxSystem     — Hitbox age / duration 過期清除 (必須排在 CollisionSystem 之前,
+		//   1. GoalSystem       — 更新 machine.velocity (依 goal 目標重新規劃)
+		//   2. HomingSystem     — 更新 projectile.velocity / facing (追蹤彈依目標位置)
+		//                         必須排在 MovementSystem 之前, 與 GoalSystem 同層: 兩者只表達意圖
+		//   3. MovementSystem   — 套用 velocity 推 position (一次性消化上面兩個系統的決策)
+		//   4. HitboxSystem     — Hitbox age / duration 過期清除 (必須排在 CollisionSystem 之前,
 		//                         確保已過期的 Hitbox 不會被本幀的碰撞偵測誤判)
-		//   4. CollisionSystem  — 對最新 position 做碰撞偵測, 透過 collisionListener 廣播
+		//   5. CollisionSystem  — 對最新 position 做碰撞偵測, 透過 collisionListener 廣播
 		//                         (HitboxSystem 透過 onHitboxCollide 收到事件, 過濾 cooldown
 		//                          後再透過 damageListener 廣播 onDamage)
-		//   5. ProjectileSystem — 跟蹤 projectile 階段, 依 onCollide 結果完成 OnHit
+		//   6. ProjectileSystem — 跟蹤 projectile 階段, 依 onCollide 結果完成 OnHit
 		//                         (必須排在 CollisionSystem 之後, 才能在同一幀內收到
 		//                          onCollide 設好 stage, 再於 onTick 跑完 OnHit)
 		//
 		// CollisionSystem / HitboxSystem 都需要 listener 才能建構, 但 listener 又需要看到
-		// systems 陣列 (要 fan-out 給所有系統), 故先建陣列 + GoalSystem + MovementSystem,
+		// systems 陣列 (要 fan-out 給所有系統), 故先建陣列 + GoalSystem + HomingSystem + MovementSystem,
 		// 再以該陣列建 fan-out listeners, 最後把後續系統推進同一個陣列。
 		// 由於 listener 持有的是 systems 陣列的「參考」, push 後新加入的系統也會被廣播。
 		var systems:Array<ISystem> = [
 			new GoalSystem(world, sharedLeafFactory, GoalDemo.plannerFactory),
+			new HomingSystem(world),
 			new MovementSystem(world)
 		];
 		var collisionListener:ICollisionListener = new FanOutCollisionListener(systems);
