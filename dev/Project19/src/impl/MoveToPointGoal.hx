@@ -91,8 +91,8 @@ final moveToPointLifecycle:LeafLifecycle = {
 /**
  * 建立一個「移動到指定點」的 GoalNode (已完成 makeNode + params 注入)。
  *
- * 與 WalkWaypointsGoal 不同, 本 goal 不需要回傳 spec + factory 配對 —
- * 因為 lifecycle 不依賴 closure, 已註冊在 SharedLeafFactory 上,
+ * 本 goal 不需要回傳 spec + factory 配對 —
+ * lifecycle 不依賴 closure, 已註冊在 SharedLeafFactory 上,
  * 故只需把 actorId / target / arrivalDistance 寫到 leafState 即可開始執行。
  *
  * 呼叫端用法:

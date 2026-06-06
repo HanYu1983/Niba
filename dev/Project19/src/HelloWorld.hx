@@ -1,5 +1,4 @@
 import debug.PathfinderTest;
-import debug.WaypointGoalTest;
 import debug.WorldSerializeTest;
 import domain.Geometry.Shape;
 import domain.Machine;
@@ -23,7 +22,6 @@ import view.component.SceneRenderer.createSceneRenderer;
 class HelloWorld {
 	static public function main():Void {
 		PathfinderTest.run();
-		WaypointGoalTest.run();
 		WorldSerializeTest.run();
 
 		var world = createEmptyWorld();
