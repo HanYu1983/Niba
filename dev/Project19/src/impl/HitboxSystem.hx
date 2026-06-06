@@ -48,7 +48,22 @@ class HitboxSystem implements ISystem {
 	final world:World;
 	final listener:IHitboxDamageListener;
 
-	/** Hitbox 參考 → 本系統為它維護的執行期狀態 (age / 命中記錄表) */
+	/**
+	 * Hitbox 參考 → 本系統為它維護的執行期狀態 (age / 命中記錄表)。
+	 *
+	 * 目前放在 system 內部 (純記憶體, 不參與 World 序列化):
+	 *   單機沒有存檔需求時, age / 命中表跟 system 一起活, 設計上最簡單,
+	 *   不需要每幀同步回 World, 也不會污染 World 的 typedef
+	 *
+	 * 若日後要支援遊戲儲存 / 讀檔 (或 server-side rollback / replay):
+	 *   - 這份 states 必須遷移到 domain.World 內 (例如新增 World.hitboxStates:Array<HitboxState>
+	 *     或 Map<Hitbox, HitboxState>), 才能透過 haxe.Serializer 一併寫入存檔
+	 *   - 留在 system 內的話, 載入存檔時所有 Hitbox 的 age 會重設為 0,
+	 *     命中記錄表也全空, 進行中的招式 / 場域 (例: 火焰 DOT) 會被視為剛生出, 戰況失真
+	 *   - 遷移時注意 ObjectMap<Hitbox, ...> 直接序列化的相容性: anon-struct key
+	 *     在 haxe.Serializer 的處理跟 typed class 不同, 可能需要改用平行陣列 (states[i]
+	 *     對齊 world.hitboxes[i]) 或在每個 Hitbox 上直接加 age / hits 欄位
+	 */
 	final states:ObjectMap<Hitbox, HitboxState>;
 
 	public function new(world:World, listener:IHitboxDamageListener) {
