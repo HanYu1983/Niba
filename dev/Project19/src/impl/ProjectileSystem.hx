@@ -36,13 +36,21 @@ import domain.World;
  *   - 「Hitbox 攔截飛行物」邏輯 (onHitboxCollide): 目前留空, 視日後設計需要再決定
  *
  * 未完成 TODO:
- *   - OnHit.SpawnProjectiles: 由 Projectile 模板建立新 ProjectileObject 需要決定
- *     id 規則 / 預設 shape / 速度導出方式, 目前留 trace 後跳過
  *   - Projectile.Beam: 沿 facing 方向以 range 長度生成 beam-shaped Hitbox 的細節
  *     (Rect 還是 Capsule, 是否帶旋轉等), 目前直接 Expired 不產生 hitbox
+ *
+ * OnHit.SpawnProjectiles 實作備忘:
+ *   - 子彈在父彈當下的 position 出生, 朝向以「父朝向 + i / N * 2π」均分 360° 形成放射狀散佈
+ *   - 為避免多顆子彈剛生出就互相重疊觸發 onCollide, 沿各自朝向往前偏移 CHILD_FORWARD_OFFSET 單位
+ *   - 子彈 shape 直接沿用父彈 shape (簡化, 後續若要差異化可在 Projectile 模板再擴一個 shape 欄位)
+ *   - Beam / Field 不具速度概念, 不適合作為 SpawnProjectiles 的子模板, 直接略過 (trace 提示)
  */
 class ProjectileSystem implements ISystem {
 	static inline final MS_PER_SECOND = 1000.0;
+
+	/** SpawnProjectiles 時, 每顆子彈沿自身 facing 方向往前的初始偏移 (世界單位),
+	 *  避免在父彈位置上重疊導致剛生出就觸發互撞。 */
+	static inline final CHILD_FORWARD_OFFSET = 5.0;
 
 	final world:World;
 
@@ -183,7 +191,7 @@ class ProjectileSystem implements ISystem {
 			case Spawn(boxes):
 				spawnHitboxes(boxes, proj.position, proj.facing);
 			case SpawnProjectiles(children):
-				trace('  [ProjectileSystem] SpawnProjectiles TODO: parent=${proj.id} children=${children.length}');
+				spawnChildProjectiles(children, proj);
 			case All(steps):
 				for (step in steps)
 					executeOnHit(step, proj);
@@ -204,6 +212,81 @@ class ProjectileSystem implements ISystem {
 		for (template in templates)
 			world.hitboxes.push(cloneHitboxAt(template, origin, facing));
 		world.isDirty = true;
+	}
+
+	/**
+	 * SpawnProjectiles 的解析: 把每個子彈模板依「均分 360°」展開為實際的 ProjectileObject。
+	 *
+	 * 散佈規則:
+	 *   - 共 N 顆 → 第 i 顆 facing = parent.facing + (i / N) * 2π
+	 *     (forward fan 形成放射狀, 簡單對稱; 若日後要 forward cone 可改寫此處)
+	 *   - 出生點: parent.position + CHILD_FORWARD_OFFSET * (cos, sin) — 沿各自 facing 推開,
+	 *     避免在父彈位置上彼此重疊瞬間互撞
+	 *
+	 * 子彈速度來源:
+	 *   - Solid(speed, ...) / Energy(speed, ...) 直接拿模板的 speed
+	 *   - Beam / Field 不具速度, 略過此顆 (留 trace 給日後追蹤)
+	 *
+	 * 子彈 shape 沿用父彈 shape — Projectile enum 不攜帶 shape, 集中在 ProjectileObject 層,
+	 * 簡化模板; 若日後需要差異化, 在此擴 child-shape 來源即可。
+	 *
+	 * 翻 isDirty: 任一顆子彈 push 進 world.projectiles 即視為增刪, 翻 flag 給
+	 * DirtyWorldPublisher 在本幀末批次 emit。
+	 */
+	function spawnChildProjectiles(children:Array<Projectile>, parent:ProjectileObject):Void {
+		if (children.length == 0)
+			return;
+		var n = children.length;
+		var anySpawned = false;
+		for (i in 0...n) {
+			var child = buildChildProjectile(children[i], parent, i, n);
+			if (child == null)
+				continue;
+			world.projectiles.push(child);
+			anySpawned = true;
+		}
+		if (anySpawned)
+			world.isDirty = true;
+	}
+
+	/**
+	 * 由子彈模板 + 父彈狀態 + 散佈索引組出一個實際的 ProjectileObject。
+	 * 若模板沒有速度概念 (Beam / Field), 回傳 null 由呼叫端跳過。
+	 */
+	function buildChildProjectile(template:Projectile, parent:ProjectileObject, index:Int, total:Int):Null<ProjectileObject> {
+		var speed = projectileSpeed(template);
+		if (speed < 0.0) {
+			trace('  [ProjectileSystem] SpawnProjectiles skip non-flying child: parent=${parent.id} index=$index');
+			return null;
+		}
+		var childFacing = parent.facing + (index / total) * 2.0 * Math.PI;
+		var cos = Math.cos(childFacing);
+		var sin = Math.sin(childFacing);
+		return {
+			id: '${parent.id}_child_$index',
+			name: '${parent.name} child $index',
+			position: {
+				x: parent.position.x + CHILD_FORWARD_OFFSET * cos,
+				y: parent.position.y + CHILD_FORWARD_OFFSET * sin
+			},
+			facing: childFacing,
+			velocity: {x: speed * cos, y: speed * sin},
+			maxSpeed: speed,
+			shape: parent.shape,
+			projectile: template,
+			age: 0.0,
+			stage: Flying
+		};
+	}
+
+	/** 取得 Projectile 模板的「飛行速度標量」; Beam / Field 不具速度概念, 回傳 -1.0 作為 sentinel。 */
+	static function projectileSpeed(p:Projectile):Float {
+		return switch (p) {
+			case Solid(speed, _, _, _): speed;
+			case Energy(speed, _, _): speed;
+			case Beam(_, _): -1.0;
+			case Field(_): -1.0;
+		}
 	}
 
 	/**
