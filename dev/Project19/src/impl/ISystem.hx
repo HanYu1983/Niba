@@ -8,19 +8,19 @@ package impl;
  * 各 ISystem 實作則依需要實作以下回呼, 不關心事件來源。
  *
  * 對應關係 (view.EventCenter.Event → ISystem):
- *   P5Setup(p5)          → onSetup()
- *   OnClick(id)          → onClick(id)
- *   P5Tick(frameCount)   → onTick(frameCount)
- *   P5MousePressed(x,y)  → onMousePressed(x,y)
- *   P5MouseReleased      → onMouseRelease()
- *   P5MouseMoved(x,y)    → onMouseMoved(x,y)
- *   P5MouseDragged(x,y)  → onMouseDragged(x,y)
+ *   P5Setup(p5)                       → onSetup()
+ *   OnClick(id)                       → onClick(id)
+ *   P5Tick(frameCount, deltaTime)     → onTick(frameCount, deltaTime)
+ *   P5MousePressed(x,y)               → onMousePressed(x,y)
+ *   P5MouseReleased                   → onMouseRelease()
+ *   P5MouseMoved(x,y)                 → onMouseMoved(x,y)
+ *   P5MouseDragged(x,y)               → onMouseDragged(x,y)
  *
  * onSetup / onTick 的分工:
  *   - onSetup: 系統建立時呼叫一次, 用於初始化內部狀態 / 訂閱外部資源。
  *              整個生命週期通常只觸發一次, 不依賴 render frame。
- *   - onTick:  與 render frame 對齊的回呼, 帶 frameCount;
- *              每個 render frame 呼叫一次, 通常用於與顯示 / 動畫同步的更新。
+ *   - onTick:  與 render frame 對齊的回呼, 帶 frameCount 與 deltaTime (毫秒);
+ *              每個 render frame 呼叫一次, 系統可依 deltaTime 推進物理 / 計時器。
  *
  * 設計慣例:
  *   - 所有 callback 為非破壞性回傳 (Void); 系統若需推送結果, 應透過自己持有的
@@ -50,8 +50,10 @@ interface ISystem {
 	 * 一個 render tick (與畫面更新對齊)。
 	 *
 	 * @param frameCount 目前已累積的 frame 數, 由 P5 / 主迴圈提供
+	 * @param deltaTime  自上一幀以來經過的時間, 單位為毫秒 (原值來自 p5.deltaTime);
+	 *                   消費端如需以秒為單位推進需自行 deltaTime / 1000
 	 */
-	public function onTick(frameCount:Int):Void;
+	public function onTick(frameCount:Int, deltaTime:Float):Void;
 
 	/**
 	 * 滑鼠按下。

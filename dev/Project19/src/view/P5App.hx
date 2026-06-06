@@ -17,7 +17,7 @@ function createP5App(eventCenter:EventCenter, canvasParentId:String = "canvas"):
 		};
 
 		p.draw = function() {
-			eventCenter.eventSubject.on_next(P5Tick(p.frameCount));
+			eventCenter.eventSubject.on_next(P5Tick(p.frameCount, p.deltaTime));
 		};
 
 		p.touchStarted = function() {

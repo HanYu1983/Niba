@@ -16,26 +16,27 @@ import domain.World.moveMovableObject;
  *   3. 呼叫 World.moveMovableObject(object, dt) 推進 position
  *
  * dt 來源:
- *   ISystem.onTick 簽名僅有 frameCount, 因此 dt 由 constructor 注入,
- *   預設 1/60 秒 (對應 P5App.frameRate(60))。
- *   如需動態 dt (依實際幀間隔), 可改為傳入函式 / 由 view 層另行廣播。
+ *   由 ISystem.onTick 帶進來的 deltaTime (毫秒, 來自 p5.deltaTime)。
+ *   本系統內部轉換為秒 (deltaTime / 1000) 後再交給 moveMovableObject,
+ *   讓 velocity / maxSpeed 以「每秒世界單位」為單位閱讀, 與 game design 慣例一致。
  *
  * 其他 ISystem callback (click / mouse / setup) 對此系統無作用, 留空實作。
  */
 class MovementSystem implements ISystem {
-	final world:World;
-	final dt:Float;
+	static inline final MS_PER_SECOND = 1000.0;
 
-	public function new(world:World, dt:Float = 1.0 / 60.0) {
+	final world:World;
+
+	public function new(world:World) {
 		this.world = world;
-		this.dt = dt;
 	}
 
 	public function onSetup():Void {}
 
 	public function onClick(id:String):Void {}
 
-	public function onTick(frameCount:Int):Void {
+	public function onTick(frameCount:Int, deltaTime:Float):Void {
+		var dt = deltaTime / MS_PER_SECOND;
 		for (object in getMovableObjects(world)) {
 			applyMaxSpeed(object);
 			moveMovableObject(object, dt);

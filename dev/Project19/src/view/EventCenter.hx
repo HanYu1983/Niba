@@ -12,7 +12,17 @@ import view.WorldRenderModelBuilder.createRenderWorld;
 enum Event {
 	OnClick(id:String);
 	P5Setup(p5:Dynamic);
-	P5Tick(frameCount:Int);
+
+	/**
+	 * 每個 p5 draw frame 觸發。
+	 *
+	 * @param frameCount p5.frameCount, 累計幀數
+	 * @param deltaTime  p5.deltaTime 原值, 「上一幀開始到本幀開始」的毫秒數 (ms)
+	 *                   消費端如需以秒為單位推進 (例: MovementSystem 的 position += velocity * dt),
+	 *                   需自行 deltaTime / 1000
+	 */
+	P5Tick(frameCount:Int, deltaTime:Float);
+
 	P5TouchStarted(x:Float, y:Float);
 	P5TouchEnded;
 	P5TouchMoved(x:Float, y:Float);
@@ -81,7 +91,7 @@ class EventCenter {
 
 	static function isP5Tick(event:Event):Bool {
 		return switch (event) {
-			case P5Tick(_): true;
+			case P5Tick(_, _): true;
 			default: false;
 		}
 	}
@@ -97,7 +107,7 @@ class EventCenter {
 
 	static function frameCountFromTickEvent(event:Event):Int {
 		return switch (event) {
-			case P5Tick(tickFrameCount):
+			case P5Tick(tickFrameCount, _):
 				tickFrameCount;
 			default:
 				0;

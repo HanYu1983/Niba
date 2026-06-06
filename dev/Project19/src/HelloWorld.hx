@@ -61,13 +61,13 @@ class HelloWorld {
 	 * 將 EventCenter 的 Event 依種類分派到所有 ISystem 的對應 callback。
 	 *
 	 * 對應關係 (與 impl.ISystem 文件保持一致):
-	 *   OnClick(id)          → onClick(id)
-	 *   P5Setup(_)           → onSetup()
-	 *   P5Tick(frameCount)   → onTick(frameCount)
-	 *   P5MousePressed(x,y)  → onMousePressed(x, y)
-	 *   P5MouseReleased      → onMouseRelease()
-	 *   P5MouseMoved(x,y)    → onMouseMoved(x, y)
-	 *   P5MouseDragged(x,y)  → onMouseDragged(x, y)
+	 *   OnClick(id)                       → onClick(id)
+	 *   P5Setup(_)                        → onSetup()
+	 *   P5Tick(frameCount, deltaTime)     → onTick(frameCount, deltaTime)
+	 *   P5MousePressed(x,y)               → onMousePressed(x, y)
+	 *   P5MouseReleased                   → onMouseRelease()
+	 *   P5MouseMoved(x,y)                 → onMouseMoved(x, y)
+	 *   P5MouseDragged(x,y)               → onMouseDragged(x, y)
 	 *
 	 * P5Touch* 系列尚未對應到 ISystem callback, 暫時略過。
 	 */
@@ -78,8 +78,8 @@ class HelloWorld {
 					system.onClick(id);
 				case P5Setup(_):
 					system.onSetup();
-				case P5Tick(frameCount):
-					system.onTick(frameCount);
+				case P5Tick(frameCount, deltaTime):
+					system.onTick(frameCount, deltaTime);
 				case P5MousePressed(x, y):
 					system.onMousePressed(x, y);
 				case P5MouseReleased:
