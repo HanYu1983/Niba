@@ -48,9 +48,28 @@ import domain.World;
 class ProjectileSystem implements ISystem {
 	static inline final MS_PER_SECOND = 1000.0;
 
-	/** SpawnProjectiles 時, 每顆子彈沿自身 facing 方向往前的初始偏移 (世界單位),
-	 *  避免在父彈位置上重疊導致剛生出就觸發互撞。 */
-	static inline final CHILD_FORWARD_OFFSET = 5.0;
+	/**
+	 * SpawnProjectiles 時, 每顆子彈沿自身 facing 方向往前的初始偏移 (世界單位)。
+	 *
+	 * 為什麼要設這個 offset:
+	 *   若所有子彈都從父彈中心點生出, 半徑大於 0 的 shape 會立刻彼此 / 與父彈包圍圓相交,
+	 *   下一幀 CollisionSystem 就會把它們全判為「互撞」 → ProjectileSystem.onCollide 把
+	 *   stage 從 Flying 轉到 ResolvingHit → 同幀 onTick 跑 executeResolve, 子彈馬上自爆,
+	 *   完全失去 lifetime 該有的飛行時間。所以必須把出生點往各自 facing 方向推開。
+	 *
+	 * 多少才夠 (幾何不變式):
+	 *   N 顆子彈均分 360°, 相鄰兩顆夾角 = 2π/N, 相鄰圓心距 = 2·offset·sin(π/N)。
+	 *   設子彈包圍圓半徑為 r, 不重疊需要:
+	 *     2·offset·sin(π/N) >= 2·r   →   offset >= r / sin(π/N)
+	 *   範例 (子彈半徑 r=6):
+	 *     - N=2, sin(π/2)=1     → offset >= 6
+	 *     - N=3, sin(π/3)≈0.866 → offset >= 6.93
+	 *     - N=4, sin(π/4)≈0.707 → offset >= 8.49
+	 *     - N=8, sin(π/8)≈0.383 → offset >= 15.66
+	 *   常數 20.0 對「半徑 ≤ 8、N ≤ 8」皆有充足裕度; 若日後 shape 比這更大 / N 更多,
+	 *   應改為動態 max(20, r / sin(π/N)) 計算, 或讓 CollisionSystem 支援 sibling 過濾。
+	 */
+	static inline final CHILD_FORWARD_OFFSET = 20.0;
 
 	final world:World;
 

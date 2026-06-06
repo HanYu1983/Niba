@@ -162,7 +162,7 @@ private function buildClusterChildren(sequence:Int):Array<Projectile> {
  * ProjectileSystem.cloneHitboxAt 目前不重新命名 Hitbox.id, 命名衝突要由模板層先排除。
  */
 private function buildClusterChild(sequence:Int, index:Int):Projectile {
-	return Solid(140.0, 3.0, {type: Physical, amount: 8.0}, Spawn([
+	return Solid(140.0, 1, {type: Physical, amount: 8.0}, Spawn([
 		{
 			id: 'debug_cluster_${sequence}_child_${index}_explosion',
 			name: "Debug Cluster Sub-Explosion",
