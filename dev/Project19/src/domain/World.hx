@@ -1,5 +1,7 @@
 package domain;
 
+import haxe.Serializer;
+import haxe.Unserializer;
 import domain.Collision.Hitbox;
 import domain.FieldObject;
 import domain.FieldObject.CollidableObject;
@@ -84,6 +86,38 @@ function createEmptyWorld():World {
 		markers: [],
 		cameraPos: {x: 0.0, y: 0.0, z: 0.0}
 	};
+}
+
+/**
+ * 將 World 序列化成字串。
+ *
+ * 使用 haxe.Serializer 直接序列化整個 World 結構,
+ * 內含的 Array / typedef / Vec3 等都會被遞迴處理。
+ *
+ * 注意:
+ *   - 必須顯式開啟 useCache = true。haxe.Serializer 預設只快取「具類型」物件
+ *     (class instance / enum), 對匿名結構 (typedef) 不做快取;
+ *     而 Machine / WeaponOnMachine 都是 typedef = 匿名結構,
+ *     若不開 useCache, weaponsOnMachine 與 machine.weapons 反序列化後
+ *     會是兩個內容相同但獨立的物件, 破壞「同一批物件兩種視角」的設計契約。
+ *   - 僅序列化資料欄位; 函式 / 閉包 / NeighborProvider 等不會被保存。
+ */
+function serializeWorld(world:World):String {
+	var serializer = new Serializer();
+	serializer.useCache = true;
+	serializer.serialize(world);
+	return serializer.toString();
+}
+
+/**
+ * 將字串反序列化回 World。
+ *
+ * 對應 serializeWorld 的逆操作; 傳入的字串必須是由
+ * haxe.Serializer 產生的格式, 否則會丟出例外。
+ */
+function unserializeWorld(s:String):World {
+	var unserializer = new Unserializer(s);
+	return unserializer.unserialize();
 }
 
 /**

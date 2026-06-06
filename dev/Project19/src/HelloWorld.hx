@@ -1,5 +1,6 @@
 import debug.PathfinderTest;
 import debug.WaypointGoalTest;
+import debug.WorldSerializeTest;
 import domain.World.createEmptyWorld;
 import view.EventCenter;
 import view.EventCenter.P5RenderFrame;
@@ -11,6 +12,7 @@ class HelloWorld {
 	static public function main():Void {
 		PathfinderTest.run();
 		WaypointGoalTest.run();
+		WorldSerializeTest.run();
 
 		var eventCenter = new EventCenter();
 		createCameraControlPanel(eventCenter);
