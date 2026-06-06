@@ -14,7 +14,12 @@ Project19/
     └── HelloWorld.js
 ```
 
-## 啟動 Haxe 容器
+## 啟動容器
+
+`docker-compose.yml` 包含兩個服務:
+
+- `haxe` (`haxe:4.3`)：負責 Haxe 編譯
+- `node` (`node:22`)：負責執行編譯後的 JavaScript (主機沒裝 Node.js 時的備援)
 
 ```powershell
 docker compose up -d
@@ -40,21 +45,40 @@ docker compose exec haxe haxe -cp src -main HelloWorld -js bin/HelloWorld.js
 bin/HelloWorld.js
 ```
 
-## 在主機執行編譯結果
+## 執行編譯結果
 
-本機已安裝 Node.js，編譯後直接於 PowerShell 執行：
+### 主機已安裝 Node.js
+
+編譯後直接於 PowerShell 執行：
 
 ```powershell
 node .\bin\HelloWorld.js
 ```
 
-> 註: `haxe:4.3` 官方映像檔不含 Node.js，所以執行 JS 走主機端而不是容器內。
-> 開發迴圈通常是「容器內 `haxe build.hxml` 編譯 → 主機 `node .\bin\HelloWorld.js` 執行」。
+### 主機未安裝 Node.js (使用 docker-compose 的 node 服務)
+
+`haxe:4.3` 官方映像檔不含 Node.js，因此在 `docker-compose.yml` 額外提供了 `node` 服務 (`node:22`) 作為執行環境。
+透過 `docker compose exec node` 即可在容器內執行編譯後的 JS：
+
+```powershell
+docker compose exec node node ./bin/HelloWorld.js
+```
+
+> 開發迴圈通常是「容器內 `haxe build.hxml` 編譯 → 主機或 `node` 容器執行 JS」。
+> 兩個服務共用同一個 `./:/workspace` volume，所以 `haxe` 容器編譯出的 `bin/HelloWorld.js` 可以直接被 `node` 容器讀到。
 
 ## 進入容器
 
+進入 Haxe 容器 (編譯用):
+
 ```powershell
 docker compose exec haxe bash
+```
+
+進入 Node 容器 (執行用):
+
+```powershell
+docker compose exec node bash
 ```
 
 ## 關閉容器
