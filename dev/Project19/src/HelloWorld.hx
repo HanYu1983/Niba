@@ -285,7 +285,7 @@ class HelloWorld {
 					duration: 0.30,
 					movement: {type: Dash, multiplier: 0.6},
 					weaponUse: {
-						weaponId: "demo_burst",
+						weaponId: "demo_single",
 						energyCostMul: 1.0,
 						damageMul: 1.0,
 						accuracyMul: 1.0
