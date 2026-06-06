@@ -6,7 +6,7 @@ import domain.Goal.GoalNode;
 import domain.Goal.GoalSpec;
 import domain.Goal.GoalStatus;
 import domain.Goal.LeafLifecycle;
-import domain.Goal.makeNode;
+import domain.Goal.createEmptyGoalNode;
 import domain.World.findMachineById;
 
 /** 此 goal 在 GoalSpec 中的 leaf 名稱 */
@@ -89,11 +89,14 @@ final moveToPointLifecycle:LeafLifecycle = {
 };
 
 /**
- * 建立一個「移動到指定點」的 GoalNode (已完成 makeNode + params 注入)。
+ * 建立一個「移動到指定點」的 GoalNode。
  *
  * 本 goal 不需要回傳 spec + factory 配對 —
  * lifecycle 不依賴 closure, 已註冊在 SharedLeafFactory 上,
  * 故只需把 actorId / target / arrivalDistance 寫到 leafState 即可開始執行。
+ *
+ * 實作: 先 createEmptyGoalNode 取得 Leaf 空殼 (leafState 已是空 Dynamic),
+ * 再把這個 goal 需要的參數直接寫進 leafState, 不依賴任何廣播機制。
  *
  * 呼叫端用法:
  *   var node = createMoveToPointGoal(machine.id, {x: 100, y: 200});
@@ -104,10 +107,10 @@ final moveToPointLifecycle:LeafLifecycle = {
  * @param arrivalDistance  抵達判定半徑 (預設 5 世界單位)
  */
 function createMoveToPointGoal(actorId:String, target:Vec2, arrivalDistance:Float = 5.0):GoalNode {
-	return makeNode(Leaf({name: MOVE_TO_POINT_LEAF_NAME}), {
-		actorId: actorId,
-		targetX: target.x,
-		targetY: target.y,
-		arrivalDistance: arrivalDistance
-	});
+	var node = createEmptyGoalNode(Leaf({name: MOVE_TO_POINT_LEAF_NAME}));
+	node.leafState.actorId = actorId;
+	node.leafState.targetX = target.x;
+	node.leafState.targetY = target.y;
+	node.leafState.arrivalDistance = arrivalDistance;
+	return node;
 }

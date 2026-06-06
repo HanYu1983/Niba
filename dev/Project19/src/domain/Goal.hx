@@ -146,8 +146,8 @@ typedef PlannerFactory = (name:String) -> GoalPlanner;
  *   一個 ctx 只能服務一個 actor 的目標。
  *
  *   現在改為:
- *     - 每個目標的參數 (例如 actorId, targetId, 武器 id 等) 在 makeNode 時帶入,
- *       並由 makeNode 寫入該節點的 leafState
+ *     - 每個目標的參數 (例如 actorId, targetId, 武器 id 等) 在建構 GoalNode 時
+ *       由呼叫端寫入該節點的 leafState (通常透過 createEmptyGoalNode 後直接賦值)
  *     - LeafLifecycle 從 state 取出 id, 再依 ctx.world 查表取得實際物件
  *   好處:
  *     - LeafLifecycle 自然會處理「actor 不存在 / 已陣亡 / 被移除」的情況
@@ -164,10 +164,10 @@ typedef GoalContext = {
  * runtime 引擎為每個 GoalSpec 子節點建立對應的 GoalNode 子節點, 用以追蹤執行狀態:
  *   - status:           當前生命週期狀態
  *   - children:         與 spec 的 children 對應的子節點 (composite 用),
- *                       由 makeNode 在建構時遞迴建立
+ *                       由呼叫端在建構時自行組裝 (通常先 createEmptyGoalNode 再指派)
  *   - activeChildIndex: 目前正在跑的子節點 index (Sequence / Selector / Custom 用)
  *   - leafState:        Leaf 用的 Dynamic 狀態容器
- *                       由 makeNode 將初始 params (例: actorId) 寫入,
+ *                       初始欄位 (例: actorId / target) 由呼叫端直接寫入,
  *                       lifecycle 的 initialize / validate / tick 可再讀寫
  */
 typedef GoalNode = {
@@ -179,61 +179,60 @@ typedef GoalNode = {
 }
 
 // ==================================================================
-// Runtime engine (從 GoalSpec 建立 GoalNode 並推進)
+// Runtime engine (建立 GoalNode 並推進)
 //
 // 設計重點:
-//   - makeNode 在建立 GoalNode 時就遞迴展開 spec 樹, 並把初始 params (例: actorId)
-//     淺拷貝到每個 Leaf 的 leafState; composite 節點不存 leafState, 子節點共享同一份 params
+//   - createEmptyGoalNode 只建一個「最小空殼」, 不展開 children 也不寫 leafState 欄位;
+//     呼叫端負責填 leafState (Leaf) 或組合 children (Composite)
 //   - runFrame 是同步、單執行緒的單幀推進函式; 不持有任何外部狀態
 //   - LeafLifecycle / GoalPlanner 的實際函式由呼叫端注入的 LeafFactory / PlannerFactory
 //     依名稱解析; runtime engine 本身對「leaf/planner 怎麼實作」一無所知
 // ==================================================================
 
 /**
- * 從 spec 建立對應的 runtime node。
+ * 建立一個「最小空殼」的 GoalNode, 剩餘欄位由呼叫端自行填寫。
  *
- * params 為「目標的初始參數」, 由呼叫端在 makeNode 時帶入,
- * 例如 {actorId: "m1"} 指定此 goal 是哪個機體在執行;
- * makeNode 會把 params 的所有欄位淺拷貝到該節點 (與所有子節點) 的 leafState,
- * Leaf 的 initialize / validate / tick 之後再讀寫 state 上的其他欄位。
+ * 預設值:
+ *   - status:           Pending
+ *   - children:         空陣列 (composite 需自行 push 或指派子節點)
+ *   - activeChildIndex: 0
+ *   - leafState:        Leaf 給空 Dynamic {} (callers 可直接 node.leafState.xxx = ...);
+ *                       Composite 給 null (不使用)
  *
- * 設計:
- *   - actor 不放在 GoalContext 上, 改由 state.actorId 帶 id,
- *     LeafLifecycle 內透過 findMachineById 查表得到實際物件,
- *     順便處理「actor 不存在 / 已陣亡」的情境
- *   - children 在 makeNode 時就遞迴建立並繼承同一份 params,
- *     讓整棵樹共享 actorId 等識別資訊
+ * 設計動機:
+ *   舊版 makeNode 一口氣建好整棵樹, 並把同一份 params 廣播到每個 leaf 的 leafState。
+ *   但「同一份 params 廣播」對「每個 leaf 帶不同參數」的場景 (例如多點導航) 反而要繞過,
+ *   且對「給特定 leaf 補不同欄位」也不直觀。
+ *
+ *   故移除 makeNode, 改用 createEmptyGoalNode 作為原子建構單元, 呼叫端依需求自行組合:
+ *     - 單一 Leaf:
+ *         var node = createEmptyGoalNode(Leaf({name: "X"}));
+ *         node.leafState.actorId = ...;
+ *     - Sequence / Selector:
+ *         先各別建出 leaf 子節點 (各自填好 leafState),
+ *         再 createEmptyGoalNode(Sequence(childSpecs)) 並把 node.children 指到子節點陣列
+ *
+ *   呼叫端因此能精確控制每個子節點的 leafState 內容, 不再受廣播行為限制。
+ *
+ * 不變式:
+ *   呼叫端有責任維持 node.spec 與 node.children 的同構 —
+ *   Sequence/Selector/Custom 的 spec.children 與 node.children 應該長度 / 順序對齊,
+ *   這是 runFrame 對 composite 的隱含假設。
  */
-function makeNode(spec:GoalSpec, ?params:Dynamic):GoalNode {
-	return switch (spec) {
+function createEmptyGoalNode(spec:GoalSpec):GoalNode {
+	var leafState:Dynamic = null;
+	switch (spec) {
 		case Leaf(_):
-			{
-				spec: spec,
-				status: Pending,
-				children: [],
-				activeChildIndex: 0,
-				leafState: copyParams(params)
-			};
-		case Sequence(children) | Selector(children) | Custom(_, children):
-			{
-				spec: spec,
-				status: Pending,
-				children: [for (c in children) makeNode(c, params)],
-				activeChildIndex: 0,
-				leafState: null
-			};
+			leafState = {};
+		case _:
 	}
-}
-
-/** 將 params 的欄位淺拷貝到新的 Dynamic state 上; params 為 null 時回傳空物件 */
-private function copyParams(params:Dynamic):Dynamic {
-	var state:Dynamic = {};
-	if (params != null) {
-		for (field in Reflect.fields(params)) {
-			Reflect.setField(state, field, Reflect.field(params, field));
-		}
-	}
-	return state;
+	return {
+		spec: spec,
+		status: Pending,
+		children: [],
+		activeChildIndex: 0,
+		leafState: leafState
+	};
 }
 
 /** status 是否為終止狀態 (Succeeded 或任一 Failed) */

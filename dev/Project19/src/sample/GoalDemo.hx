@@ -141,10 +141,34 @@ class GoalDemo {
 		Leaf({name: "MeleeStrike"})
 	]);
 
+	/**
+	 * 手動組裝 approachAndStrike 的 runtime tree。
+	 *
+	 * 沒有 makeNode 廣播 params, 改由本函式逐節點 createEmptyGoalNode 後寫 leafState:
+	 *   - approach / strike 兩個 leaf 各自 createEmptyGoalNode, 並寫入相同的 actorId
+	 *   - root Sequence 也 createEmptyGoalNode, 再把 children 指向上述兩個 leaf 節點
+	 *
+	 * 注意: root 的 spec 仍是 approachAndStrike (Sequence of Leaf), 與 node.children
+	 * 的順序 / 長度同構, 滿足 runFrame 對 Sequence 的隱含假設。
+	 */
+	static function buildApproachAndStrikeNode():GoalNode {
+		var actorId = mockActor.id;
+
+		var approachNode = createEmptyGoalNode(Leaf({name: "Approach"}));
+		approachNode.leafState.actorId = actorId;
+
+		var strikeNode = createEmptyGoalNode(Leaf({name: "MeleeStrike"}));
+		strikeNode.leafState.actorId = actorId;
+
+		var rootNode = createEmptyGoalNode(approachAndStrike);
+		rootNode.children = [approachNode, strikeNode];
+		return rootNode;
+	}
+
 	/** 執行整個 demo, 印出每個 frame 的狀態 (runtime engine 取自 domain.Goal) */
 	public static function run():Void {
 		trace("=== Goal System Demo: 接近並揮刀 ===");
-		var node = makeNode(approachAndStrike, {actorId: mockActor.id});
+		var node = buildApproachAndStrikeNode();
 		var ctx:GoalContext = {world: mockWorld};
 		var maxFrames = 30;
 		for (frame in 0...maxFrames) {

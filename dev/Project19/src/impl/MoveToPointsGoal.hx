@@ -1,9 +1,10 @@
 package impl;
 
 import domain.Geometry.Vec2;
-import domain.Goal.GoalSpec;
-import impl.MoveToPointGoal.createMoveToPointGoal;
 import domain.Goal.GoalNode;
+import domain.Goal.GoalSpec;
+import domain.Goal.createEmptyGoalNode;
+import impl.MoveToPointGoal.createMoveToPointGoal;
 
 /**
  * 建立一個「依序移動到多個指定點」的 Sequence GoalNode。
@@ -16,14 +17,10 @@ import domain.Goal.GoalNode;
  *   ])
  *
  * 實作方式:
- *   不直接用 domain.Goal.makeNode 一口氣建整棵樹, 因為 makeNode 的 params 會被
- *   「同一份」淺拷貝到所有 Leaf 的 leafState, 無法讓各個子節點帶不同的 targetX/Y。
- *
- *   改為:
- *     1. 對每個 point 呼叫 createMoveToPointGoal 產生獨立的 leaf GoalNode
- *        (各自帶自己的 targetX / targetY / arrivalDistance, 共享 actorId)
- *     2. 蒐集這些 leaf 的 spec 組成 Sequence GoalSpec
- *     3. 手動組一個 Sequence GoalNode, children 直接掛上述 leaf GoalNode
+ *   1. 對每個 point 呼叫 createMoveToPointGoal 產生獨立的 leaf GoalNode
+ *      (各自帶自己的 targetX / targetY / arrivalDistance, 共享 actorId)
+ *   2. 蒐集這些 leaf 的 spec 組成 Sequence GoalSpec
+ *   3. 用 createEmptyGoalNode 建出 Sequence 空殼, 再把 node.children 指到上述 leaf GoalNode 陣列
  *
  * 行為:
  *   - 由 domain.Goal.runFrame 的 Sequence 規則推進: 子節點全部 Succeeded 才整體 Succeeded;
@@ -51,11 +48,7 @@ function createMoveToPointsGoal(actorId:String, points:Array<Vec2>, arrivalDista
 	var children = [for (p in points) createMoveToPointGoal(actorId, p, arrivalDistance)];
 	var childSpecs:Array<GoalSpec> = [for (c in children) c.spec];
 
-	return {
-		spec: Sequence(childSpecs),
-		status: Pending,
-		children: children,
-		activeChildIndex: 0,
-		leafState: null
-	};
+	var node = createEmptyGoalNode(Sequence(childSpecs));
+	node.children = children;
+	return node;
 }
