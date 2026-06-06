@@ -99,3 +99,56 @@ typedef Skill = {
 	var requiredCategory:WeaponCategory;
 	var steps:Array<SkillStep>;
 }
+
+/**
+ * 機體目前正在施展的招式的 runtime 狀態 (掛在 Machine.currentSkill).
+ *
+ * 為什麼放在 Machine 上而不是另一個全域陣列:
+ *   - 一個機體同時只有一個施展中的招式 (互斥, 由更上層系統決定要不要打斷)
+ *   - 與 ProjectileObject.tracking / WeaponOnMachine.isTrigger 的設計一致 ——
+ *     runtime 變化欄位跟著主體物件走, 易序列化, 不必額外 ObjectMap 追蹤
+ *
+ * 為什麼 skillId 而非 Skill 直接參照:
+ *   - 沿用 leafState.actorId / ProjectileTracking.targetId 等 id-based reference 慣例,
+ *     便於 haxe.Serializer 處理, 容忍 Skill 定義被熱更新 / 替換
+ *   - 透過 domain.Machine.findSkillById 在每個 tick 解析一次
+ *
+ * 為什麼要記 stepStartPosition / stepStartFacing:
+ *   - MovementResolver 的契約是「相對 start 的位移向量」(見 Skill.MovementResolver doc),
+ *     start 隨 step 切換而換; 不能用「現在的 position / facing」當基準, 否則 step 進行中
+ *     機體已經移動, start 會跟著漂走, 軌跡會被自身位移污染.
+ *
+ * @field skillId          對應 machine.skills[*].id
+ * @field stepIndex        目前執行到第幾個 step (0-based)
+ * @field stepElapsed      該 step 已執行秒數
+ * @field stepStartPosition step 開始時的 machine.position (世界座標 snapshot, 必須是新物件)
+ * @field stepStartFacing  step 開始時的 machine.facing (弧度)
+ */
+typedef MachineCurrentSkill = {
+	var skillId:String;
+	var stepIndex:Int;
+	var stepElapsed:Float;
+	var stepStartPosition:Vec2;
+	var stepStartFacing:Float;
+}
+
+/**
+ * 為機體新建一個 MachineCurrentSkill, 用機體當下狀態做 step0 的起點 snapshot.
+ *
+ * 注意 stepStartPosition 必須 copy 一份新 Vec2, 不能直接拿 machine.position 的參考 ——
+ * 否則 MovementSystem / MachineCurrentSkillSystem 之後對 machine.position 賦值
+ * 會連帶把 stepStart 也改掉, 軌跡會塌成原地不動.
+ *
+ * 呼叫端負責確認:
+ *   - skillId 確實存在於 machine.skills (本函式不做驗證, 由系統在 onTick 找不到時自然失敗)
+ *   - 機體未在施展其它招式 (本函式僅構造資料, 不處理覆寫衝突)
+ */
+function createMachineCurrentSkill(skillId:String, machine:domain.Machine.Machine):MachineCurrentSkill {
+	return {
+		skillId: skillId,
+		stepIndex: 0,
+		stepElapsed: 0.0,
+		stepStartPosition: {x: machine.position.x, y: machine.position.y},
+		stepStartFacing: machine.facing
+	};
+}

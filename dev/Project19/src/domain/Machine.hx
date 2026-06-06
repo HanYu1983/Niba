@@ -5,6 +5,7 @@ import domain.Damage.DamageType;
 import domain.Damage.DefenseProfile;
 import domain.FieldObject.CollidableObject;
 import domain.FieldObject.MovableObject;
+import domain.Skill.MachineCurrentSkill;
 import domain.Skill.Skill;
 import domain.Weapon.WeaponOnMachine;
 
@@ -35,6 +36,12 @@ interface IDamageable {
  *   - position: 機體當下世界座標位置
  *   - shape: 機體自身碰撞體積, 以 position / facing 為基準的本機座標形狀
  *
+ * runtime 招式狀態:
+ *   - currentSkill: 目前正在施展的招式; null = 沒在施展.
+ *                   由 impl.MachineCurrentSkillSystem 在每個 tick 推進 step / 套用 movement /
+ *                   控制 weaponUse 對應的 weapon.isTrigger; 招式跑完後系統自動清回 null.
+ *                   一機只能同時施展一招 (互斥; 是否能被打斷由更上層系統決定).
+ *
  * 其他執行時狀態 (currentHp / currentEnergy / 彈匣餘量 / Projectile 階段等)
  * 可視需要再擴充, 此處僅放入相對計算必須的最小欄位
  */
@@ -47,6 +54,24 @@ typedef Machine = {
 	var defense:DefenseProfile;
 	var weapons:Array<WeaponOnMachine>;
 	var skills:Array<Skill>;
+	var ?currentSkill:MachineCurrentSkill;
+}
+
+/**
+ * 以 id 在機體裝載的招式中查找; 找不到回傳 null.
+ *
+ * 用途:
+ *   - MachineCurrentSkillSystem 從 machine.currentSkill.skillId 解析實際 Skill 定義
+ *   - UI / AI 行為層判斷機體有沒有某招、有沒有資格施展 (例如 requiredCategory 過濾)
+ *
+ * 為什麼以 id 查而不是直接持有 Skill 參考:
+ *   - 與 leafState.actorId / ProjectileTracking.targetId 等慣例一致, 易序列化, 容忍熱更新
+ */
+function findSkillById(machine:Machine, skillId:String):Null<Skill> {
+	for (s in machine.skills)
+		if (s.id == skillId)
+			return s;
+	return null;
 }
 
 /**

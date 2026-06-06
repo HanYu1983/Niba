@@ -1,3 +1,4 @@
+import debug.CurrentSkillTest;
 import debug.HomingProjectileTest;
 import debug.PathfinderTest;
 import debug.WeaponFireTest;
@@ -16,6 +17,7 @@ import domain.Weapon.WeaponOnMachine;
 import domain.Weapon.createWeaponOnMachine;
 import domain.World;
 import domain.World.createEmptyWorld;
+import domain.Skill.Skill;
 import impl.CollisionSystem;
 import impl.GoalSystem;
 import impl.HitboxSystem;
@@ -23,10 +25,12 @@ import impl.HomingSystem;
 import impl.ICollisionListener;
 import impl.IHitboxDamageListener;
 import impl.ISystem;
+import impl.MachineCurrentSkillSystem;
 import impl.MoveToPointsGoal.createMoveToPointsGoal;
 import impl.MovementSystem;
 import impl.ProjectileSystem;
 import impl.SharedLeafFactory.sharedLeafFactory;
+import impl.SimpleMovementResolver.simpleMovementResolver;
 import impl.WeaponFireSystem;
 import sample.GoalDemo;
 import view.EventCenter;
@@ -36,9 +40,19 @@ import view.P5App.createP5App;
 import view.component.CameraControlPanel.createCameraControlPanel;
 import view.component.CameraController.createCameraController;
 import view.component.DebugProjectile.createDebugProjectile;
+import view.component.DebugSkillLauncher.createDebugSkillLauncher;
 import view.component.DebugWeaponTrigger.createDebugWeaponTrigger;
 import view.component.DirtyWorldPublisher.createDirtyWorldPublisher;
 import view.component.SceneRenderer.createSceneRenderer;
+
+/**
+ * Skill demo 用的「機體基礎位移量」(世界單位).
+ *
+ * 對應 Skill.MovementResolver.baseDistance: 一格 Dash 等同的世界距離.
+ * 暫以 system-wide 常數注入 MachineCurrentSkillSystem,
+ * TODO 之後若需要不同機體有不同機動性, 改為從 Machine 屬性讀取.
+ */
+private inline final DEMO_BASE_DISTANCE = 60.0;
 
 class HelloWorld {
 	static public function main():Void {
@@ -46,6 +60,7 @@ class HelloWorld {
 		WorldSerializeTest.run();
 		HomingProjectileTest.run();
 		WeaponFireTest.run();
+		CurrentSkillTest.run();
 
 		var world = createEmptyWorld();
 		var demoMachine = createDemoMachine();
@@ -57,6 +72,9 @@ class HelloWorld {
 			demoMachine.weapons.push(weapon);
 			world.weaponsOnMachine.push(weapon);
 		}
+		// 給 demo 機體一個示範招式: Dash + Single 武器 + 收招等待. 由 DebugSkillLauncher 按 K 鍵觸發.
+		// MachineCurrentSkillSystem 期間會接管 machine.position / weapon.isTrigger, 結束自動清回.
+		demoMachine.skills.push(createDemoSkill());
 		// 給 demo 機體掛一個「依序走過多個點」的 Sequence goal, 由 GoalSystem 每幀
 		// 重新計算 velocity (內部由 MoveToPoint leaf 完成), 再由 MovementSystem 推進 position
 		world.goalNodes.push(createMoveToPointsGoal(demoMachine.id, [
@@ -69,20 +87,24 @@ class HelloWorld {
 		var eventCenter = new EventCenter();
 
 		// 系統執行順序:
-		//   1. GoalSystem        — 更新 machine.velocity (依 goal 目標重新規劃)
-		//   2. WeaponFireSystem  — 讀 weapon.isTrigger + FireMode + PowerSource → spawn 新彈藥
-		//                          排在 HomingSystem 之前: 同幀新出生的追蹤彈也能被 HomingSystem 立即轉向
-		//   3. HomingSystem      — 更新 projectile.velocity / facing (追蹤彈依目標位置)
-		//                          必須排在 MovementSystem 之前, 與 GoalSystem 同層: 只表達意圖
-		//   4. MovementSystem    — 套用 velocity 推 position (一次性消化上面所有系統的決策)
-		//   5. HitboxSystem      — Hitbox age / duration 過期清除 (必須排在 CollisionSystem 之前,
-		//                          確保已過期的 Hitbox 不會被本幀的碰撞偵測誤判)
-		//   6. CollisionSystem   — 對最新 position 做碰撞偵測, 透過 collisionListener 廣播
-		//                          (HitboxSystem 透過 onHitboxCollide 收到事件, 過濾 cooldown
-		//                           後再透過 damageListener 廣播 onDamage)
-		//   7. ProjectileSystem  — 跟蹤 projectile 階段, 依 onCollide 結果完成 OnHit
-		//                          (必須排在 CollisionSystem 之後, 才能在同一幀內收到
-		//                           onCollide 設好 stage, 再於 onTick 跑完 OnHit)
+		//   1. GoalSystem                — 更新 machine.velocity (依 goal 目標重新規劃)
+		//   2. MachineCurrentSkillSystem — 若機體在跑招式: 接管 machine.position + velocity 清 0,
+		//                                  並依當前 step.weaponUse 設 weapon.isTrigger.
+		//                                  排在 GoalSystem 之後是為了覆蓋 goal 的 velocity;
+		//                                  排在 WeaponFireSystem 之前是為了讓 isTrigger 同幀生效.
+		//   3. WeaponFireSystem          — 讀 weapon.isTrigger + FireMode + PowerSource → spawn 新彈藥
+		//                                  排在 HomingSystem 之前: 同幀新出生的追蹤彈也能被 HomingSystem 立即轉向
+		//   4. HomingSystem              — 更新 projectile.velocity / facing (追蹤彈依目標位置)
+		//                                  必須排在 MovementSystem 之前, 與 GoalSystem 同層: 只表達意圖
+		//   5. MovementSystem            — 套用 velocity 推 position (一次性消化上面所有系統的決策)
+		//   6. HitboxSystem              — Hitbox age / duration 過期清除 (必須排在 CollisionSystem 之前,
+		//                                  確保已過期的 Hitbox 不會被本幀的碰撞偵測誤判)
+		//   7. CollisionSystem           — 對最新 position 做碰撞偵測, 透過 collisionListener 廣播
+		//                                  (HitboxSystem 透過 onHitboxCollide 收到事件, 過濾 cooldown
+		//                                   後再透過 damageListener 廣播 onDamage)
+		//   8. ProjectileSystem          — 跟蹤 projectile 階段, 依 onCollide 結果完成 OnHit
+		//                                  (必須排在 CollisionSystem 之後, 才能在同一幀內收到
+		//                                   onCollide 設好 stage, 再於 onTick 跑完 OnHit)
 		//
 		// CollisionSystem / HitboxSystem 都需要 listener 才能建構, 但 listener 又需要看到
 		// systems 陣列 (要 fan-out 給所有系統), 故先建陣列 + 前段系統,
@@ -90,6 +112,7 @@ class HelloWorld {
 		// 由於 listener 持有的是 systems 陣列的「參考」, push 後新加入的系統也會被廣播。
 		var systems:Array<ISystem> = [
 			new GoalSystem(world, sharedLeafFactory, GoalDemo.plannerFactory),
+			new MachineCurrentSkillSystem(world, simpleMovementResolver, DEMO_BASE_DISTANCE),
 			new WeaponFireSystem(world),
 			new HomingSystem(world),
 			new MovementSystem(world)
@@ -107,6 +130,7 @@ class HelloWorld {
 		createSceneRenderer(eventCenter);
 		createDebugProjectile(eventCenter);
 		createDebugWeaponTrigger(eventCenter, demoMachine.id);
+		createDebugSkillLauncher(eventCenter, demoMachine.id, "demo_skill");
 		// DirtyWorldPublisher 必須在 dispatchEventToSystems 訂閱「之後」才接上,
 		// 以利用 Observable.subscribe 的 FIFO 訂閱順序: 同一個 P5Tick 來臨時,
 		// 所有 system 先跑完 (可能翻起 world.isDirty), 接著本元件才檢查 flag 並
@@ -233,6 +257,45 @@ class HelloWorld {
 		weapons.push(spreadWeapon);
 
 		return weapons;
+	}
+
+	/**
+	 * 示範招式: Dash 進場 → Dash + 開 Single 槍 → 純等待收招.
+	 *
+	 * 與 sample.DashSlash 的概念類似, 但這裡用 demo 機體已掛載的 Single 武器
+	 * ("demo_single") 而非近戰刀. 倍率欄位 (energyCostMul / damageMul / accuracyMul)
+	 * 暫時都填 1.0 — MachineCurrentSkillSystem 目前不套倍率 (見系統 doc).
+	 *
+	 * 時間 / 位移配比 (baseDistance = DEMO_BASE_DISTANCE = 60 世界單位):
+	 *   - step 1: 0.40s, Dash × 2.0 → 120 世界單位前進 (300 wu/s 高速)
+	 *   - step 2: 0.30s, Dash × 0.6 + 開 demo_single 槍 → 36 wu 緩進 + 一發子彈
+	 *   - step 3: 0.30s, 純等待收招 (velocity 自動清零, 停在原地)
+	 */
+	static function createDemoSkill():Skill {
+		return {
+			id: "demo_skill",
+			name: "Demo Dash Shot",
+			requiredCategory: Bullet,
+			steps: [
+				{
+					duration: 0.40,
+					movement: {type: Dash, multiplier: 2.0}
+				},
+				{
+					duration: 0.30,
+					movement: {type: Dash, multiplier: 0.6},
+					weaponUse: {
+						weaponId: "demo_burst",
+						energyCostMul: 1.0,
+						damageMul: 1.0,
+						accuracyMul: 1.0
+					}
+				},
+				{
+					duration: 0.30
+				}
+			]
+		};
 	}
 
 	/**
