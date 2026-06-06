@@ -13,6 +13,7 @@ import impl.ICollisionListener;
 import impl.ISystem;
 import impl.MoveToPointsGoal.createMoveToPointsGoal;
 import impl.MovementSystem;
+import impl.ProjectileSystem;
 import impl.SharedLeafFactory.sharedLeafFactory;
 import sample.GoalDemo;
 import view.EventCenter;
@@ -43,21 +44,24 @@ class HelloWorld {
 		var eventCenter = new EventCenter();
 
 		// 系統執行順序:
-		//   1. GoalSystem      — 更新 velocity (依 goal 目標重新規劃)
-		//   2. MovementSystem  — 套用 velocity 推 position
-		//   3. CollisionSystem — 對最新 position 做碰撞偵測, 透過 listener 廣播
+		//   1. GoalSystem       — 更新 velocity (依 goal 目標重新規劃)
+		//   2. MovementSystem   — 套用 velocity 推 position
+		//   3. CollisionSystem  — 對最新 position 做碰撞偵測, 透過 listener 廣播
+		//   4. ProjectileSystem — 跟蹤 projectile 階段, 依 onCollide 結果完成 OnHit
+		//                         (必須排在 CollisionSystem 之後, 才能在同一幀內收到
+		//                          onCollide 設好 stage, 再於 onTick 跑完 OnHit)
 		//
 		// CollisionSystem 需要 listener 才能建構, 但 listener 又需要看到 systems 陣列
-		// (要 fan-out 給所有系統), 故先建空陣列 + GoalSystem + MovementSystem, 再以
-		// 該陣列建 fan-out listener, 最後把 CollisionSystem 推進同一個陣列。
-		// 由於 listener 持有的是 systems 陣列的參考, push 後仍能看到 CollisionSystem 本身
-		// (這對 CollisionSystem 來說無妨, 其 onCollide / onHitboxCollide 為空實作)。
+		// (要 fan-out 給所有系統), 故先建陣列 + GoalSystem + MovementSystem, 再以
+		// 該陣列建 fan-out listener, 最後把後續系統推進同一個陣列。
+		// 由於 listener 持有的是 systems 陣列的參考, push 後新加入的系統也會被廣播。
 		var systems:Array<ISystem> = [
 			new GoalSystem(world, sharedLeafFactory, GoalDemo.plannerFactory),
 			new MovementSystem(world)
 		];
 		var collisionListener:ICollisionListener = new FanOutCollisionListener(systems);
 		systems.push(new CollisionSystem(world, collisionListener));
+		systems.push(new ProjectileSystem(world));
 		eventCenter.eventSubject.subscribe(event -> dispatchEventToSystems(systems, event));
 
 		createCameraControlPanel(eventCenter);
