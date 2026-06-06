@@ -2,6 +2,7 @@ package domain;
 
 import domain.Collision.Hitbox;
 import domain.Damage.Damage;
+import domain.FieldObject.CollidableObject;
 import domain.FieldObject.MovableObject;
 
 /**
@@ -62,14 +63,19 @@ enum ProjectileStage {
  * Projectile enum 是發射物「定義 / 模板」; ProjectileObject 才是實際存在於
  * 戰場中的發射物, 因此使用結構繼承取得 FieldObject 的 position / facing。
  *
- * - projectile: 原始發射物模板
- * - velocity:   世界座標速度
- * - maxSpeed:   繼承自 MovableObject, 飛行速度標量上限
- * - age:        已存在時間
- * - stage:      目前執行階段
+ * 繼承:
+ *   - MovableObject   → position / facing (來自 FieldObject) + velocity / maxSpeed
+ *   - CollidableObject → shape (本機座標, 由 ShapeResolver 轉到世界座標)
+ *   (兩者皆繼承 FieldObject, 重複欄位由 Haxe 結構繼承合併)
+ *
+ * 欄位:
+ *   - projectile: 原始發射物模板
+ *   - age:        已存在時間
+ *   - stage:      目前執行階段
  */
 typedef ProjectileObject = {
 	> MovableObject,
+	> CollidableObject,
 	var projectile:Projectile;
 	var age:Float;
 	var stage:ProjectileStage;

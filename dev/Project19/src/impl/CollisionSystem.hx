@@ -4,15 +4,20 @@ import domain.Collision.Hitbox;
 import domain.FieldObject.CollidableObject;
 import domain.Geometry.Vec2;
 import domain.World;
+import domain.World.getCollidableObjects;
 
 /**
  * 碰撞偵測系統。
  *
  * 每個 tick 對 world 內所有 CollidableObject 做兩類偵測, 並透過 listener 通知:
  *   1. 一般 collidable 對碰   → listener.onCollide(a, b)
- *      目前以 world.machines 之間為對象, 每對 (i, j) i<j 只通知一次以避免重複
+ *      對象取自 World.getCollidableObjects (目前為 machines + projectiles),
+ *      每對 (i, j) i<j 只通知一次以避免重複
  *   2. Hitbox 對 collidable  → listener.onHitboxCollide(hitbox, target)
- *      把 world.hitboxes × world.machines 都跑一輪
+ *      把 world.hitboxes × getCollidableObjects(world) 都跑一輪
+ *
+ *   兩條路徑明確分流: getCollidableObjects 不含 hitboxes, world.hitboxes 不含一般物,
+ *   故同一筆碰撞不會同時觸發 onCollide 與 onHitboxCollide。
  *
  * 偵測精度:
  *   每個 CollidableObject 取「世界座標下的包圍圓 (bounding circle)」做圓 vs 圓相交測試。
@@ -50,20 +55,20 @@ class CollisionSystem implements ISystem {
 	public function onClick(id:String):Void {}
 
 	public function onTick(frameCount:Int, deltaTime:Float):Void {
-		var machines = world.machines;
+		var collidables = getCollidableObjects(world);
 		var hitboxes = world.hitboxes;
 
-		for (i in 0...machines.length) {
-			for (j in (i + 1)...machines.length) {
-				if (overlap(machines[i], machines[j]))
-					listener.onCollide(machines[i], machines[j]);
+		for (i in 0...collidables.length) {
+			for (j in (i + 1)...collidables.length) {
+				if (overlap(collidables[i], collidables[j]))
+					listener.onCollide(collidables[i], collidables[j]);
 			}
 		}
 
 		for (hitbox in hitboxes) {
-			for (machine in machines) {
-				if (overlap(hitbox, machine))
-					listener.onHitboxCollide(hitbox, machine);
+			for (target in collidables) {
+				if (overlap(hitbox, target))
+					listener.onHitboxCollide(hitbox, target);
 			}
 		}
 	}

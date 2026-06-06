@@ -181,11 +181,21 @@ function getFieldObjects(world:World):Array<FieldObject> {
 }
 
 /**
- * 取得所有可碰撞物件。
+ * 取得所有可碰撞物件 (一般「被動」collidable)。
  *
  * 目前包含:
- *   - machines: 機體自身碰撞體積
- *   - hitboxes: 戰鬥中實際參與碰撞判定的最小實體
+ *   - machines:    機體自身碰撞體積
+ *   - projectiles: 場上飛行的發射物 (其 ProjectileObject 結構繼承了 CollidableObject)
+ *
+ * 不含 hitboxes:
+ *   Hitbox 在語意上是「主動傷害源」, 與一般 collidable 不同層次 ——
+ *   carbon-copy 一視同仁地丟進來會讓使用端 (例: CollisionSystem) 必須再次
+ *   區分「這是 Hitbox 還是一般物件」, 不如直接在來源就分流。
+ *
+ *   CollisionSystem 的設計是:
+ *     getCollidableObjects(world) × getCollidableObjects(world) → onCollide
+ *     world.hitboxes × getCollidableObjects(world)              → onHitboxCollide
+ *   兩條路徑各自走自己的回呼, 不在一張表上混。
  */
 function getCollidableObjects(world:World):Array<CollidableObject> {
 	var objects:Array<CollidableObject> = [];
@@ -193,8 +203,8 @@ function getCollidableObjects(world:World):Array<CollidableObject> {
 	for (machine in world.machines)
 		objects.push(machine);
 
-	for (hitbox in world.hitboxes)
-		objects.push(hitbox);
+	for (projectile in world.projectiles)
+		objects.push(projectile);
 
 	return objects;
 }
