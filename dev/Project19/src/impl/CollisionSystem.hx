@@ -85,6 +85,8 @@ class CollisionSystem implements ISystem {
 
 	public function onHitboxCollide(hitbox:Hitbox, target:CollidableObject):Void {}
 
+	public function onDamage(hitbox:Hitbox, target:CollidableObject):Void {}
+
 	// ====================================================================
 	// 內部: 世界座標包圍圓相交測試
 	// ====================================================================

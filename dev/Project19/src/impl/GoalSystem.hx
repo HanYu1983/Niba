@@ -73,4 +73,6 @@ class GoalSystem implements ISystem {
 	public function onCollide(a:CollidableObject, b:CollidableObject):Void {}
 
 	public function onHitboxCollide(hitbox:Hitbox, target:CollidableObject):Void {}
+
+	public function onDamage(hitbox:Hitbox, target:CollidableObject):Void {}
 }

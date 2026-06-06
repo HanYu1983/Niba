@@ -9,7 +9,9 @@ import domain.World;
 import domain.World.createEmptyWorld;
 import impl.CollisionSystem;
 import impl.GoalSystem;
+import impl.HitboxSystem;
 import impl.ICollisionListener;
+import impl.IHitboxDamageListener;
 import impl.ISystem;
 import impl.MoveToPointsGoal.createMoveToPointsGoal;
 import impl.MovementSystem;
@@ -48,20 +50,26 @@ class HelloWorld {
 		// 系統執行順序:
 		//   1. GoalSystem       — 更新 velocity (依 goal 目標重新規劃)
 		//   2. MovementSystem   — 套用 velocity 推 position
-		//   3. CollisionSystem  — 對最新 position 做碰撞偵測, 透過 listener 廣播
-		//   4. ProjectileSystem — 跟蹤 projectile 階段, 依 onCollide 結果完成 OnHit
+		//   3. HitboxSystem     — Hitbox age / duration 過期清除 (必須排在 CollisionSystem 之前,
+		//                         確保已過期的 Hitbox 不會被本幀的碰撞偵測誤判)
+		//   4. CollisionSystem  — 對最新 position 做碰撞偵測, 透過 collisionListener 廣播
+		//                         (HitboxSystem 透過 onHitboxCollide 收到事件, 過濾 cooldown
+		//                          後再透過 damageListener 廣播 onDamage)
+		//   5. ProjectileSystem — 跟蹤 projectile 階段, 依 onCollide 結果完成 OnHit
 		//                         (必須排在 CollisionSystem 之後, 才能在同一幀內收到
 		//                          onCollide 設好 stage, 再於 onTick 跑完 OnHit)
 		//
-		// CollisionSystem 需要 listener 才能建構, 但 listener 又需要看到 systems 陣列
-		// (要 fan-out 給所有系統), 故先建陣列 + GoalSystem + MovementSystem, 再以
-		// 該陣列建 fan-out listener, 最後把後續系統推進同一個陣列。
-		// 由於 listener 持有的是 systems 陣列的參考, push 後新加入的系統也會被廣播。
+		// CollisionSystem / HitboxSystem 都需要 listener 才能建構, 但 listener 又需要看到
+		// systems 陣列 (要 fan-out 給所有系統), 故先建陣列 + GoalSystem + MovementSystem,
+		// 再以該陣列建 fan-out listeners, 最後把後續系統推進同一個陣列。
+		// 由於 listener 持有的是 systems 陣列的「參考」, push 後新加入的系統也會被廣播。
 		var systems:Array<ISystem> = [
 			new GoalSystem(world, sharedLeafFactory, GoalDemo.plannerFactory),
 			new MovementSystem(world)
 		];
 		var collisionListener:ICollisionListener = new FanOutCollisionListener(systems);
+		var damageListener:IHitboxDamageListener = new FanOutDamageListener(systems);
+		systems.push(new HitboxSystem(world, damageListener));
 		systems.push(new CollisionSystem(world, collisionListener));
 		systems.push(new ProjectileSystem(world));
 		eventCenter.eventSubject.subscribe(event -> dispatchEventToSystems(systems, event));
@@ -195,5 +203,31 @@ class FanOutCollisionListener implements ICollisionListener {
 	public function onHitboxCollide(hitbox:Hitbox, target:CollidableObject):Void {
 		for (system in systems)
 			system.onHitboxCollide(hitbox, target);
+	}
+}
+
+/**
+ * 傷害事件 fan-out listener。
+ *
+ * HitboxSystem 在 cooldown 過濾後決定「本次相交確實要結算傷害」時呼叫此 listener,
+ * 由本類別把同一筆事件廣播給整個 systems 陣列裡每一個 ISystem (因為 ISystem extends
+ * IHitboxDamageListener, 每個系統皆有 onDamage 接口)。
+ *
+ * 設計動機 / 注意事項 與 FanOutCollisionListener 相同 — 把「事件源」與「消費者集合」
+ * 透過介面解耦; HitboxSystem 自身的 onDamage 也是空實作 (它是事件源, 不是消費者)。
+ *
+ * 目前還沒有任何系統實際消費 onDamage (HP / 計分 / 特效 等都尚未建立),
+ * 但保留 fan-out 通道讓日後加入消費者時無需動到 HitboxSystem 與本管線。
+ */
+class FanOutDamageListener implements IHitboxDamageListener {
+	final systems:Array<ISystem>;
+
+	public function new(systems:Array<ISystem>) {
+		this.systems = systems;
+	}
+
+	public function onDamage(hitbox:Hitbox, target:CollidableObject):Void {
+		for (system in systems)
+			system.onDamage(hitbox, target);
 	}
 }
