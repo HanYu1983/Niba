@@ -27,13 +27,13 @@ class WaypointGoalTest {
 		];
 
 		var world = createWorld(actor, markers);
-		var goal = createWalkWaypointsGoal(markers, new SimpleAStarPathfinder(), basicNeighborProvider);
-		var node = GoalDemo.makeNode(goal);
+		var built = createWalkWaypointsGoal(markers, new SimpleAStarPathfinder(), basicNeighborProvider);
+		var node = GoalDemo.makeNode(built.spec);
 		var ctx:GoalContext = {actor: actor, world: world};
 
 		for (frame in 0...30) {
 			trace('--- waypoint frame ${frame + 1} ---');
-			GoalDemo.runFrame(node, ctx, 0.1);
+			GoalDemo.runFrame(node, ctx, 0.1, built.factory, GoalDemo.plannerFactory);
 			trace('  actor=(${actor.position.x}, ${actor.position.y}) status=${node.status}');
 			if (GoalDemo.isFinal(node.status))
 				break;

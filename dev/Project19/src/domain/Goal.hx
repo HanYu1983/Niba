@@ -43,25 +43,44 @@ enum GoalFailure {
  * 目標規格 (composite 巢狀結構, immutable 宣告式)
  *
  * 慣例:
- *   - Leaf:     原子目標, 由 LeafBehavior 提供 init / validate / tick 三段生命週期
+ *   - Leaf:     原子目標, LeafBehavior 只持有「名稱」, 真正的 init / validate / tick
+ *               函式由 runtime 透過 LeafFactory 依名稱建立 (見下方 LeafBehavior / LeafFactory)
  *   - Sequence: 順序執行所有子目標, 任一失敗則整體 Failed(ChildFailed)
  *   - Selector: 嘗試子目標直到一個成功; 全部失敗才整體 Failed(ChildFailed)
  *               (你說的 fallback / 上層重新規劃即由此形成)
- *   - Custom:   由 GoalPlanner 任意算法決定下一個子目標 (例: GOAP / A*)
+ *   - Custom:   由名稱對應的 GoalPlanner 任意算法決定下一個子目標 (例: GOAP / A*)
+ *               planner 字串由 runtime 透過 PlannerFactory 解析為實際函式
  *
  * 注意:
  *   - 暫不提供 Parallel, 待真正需要再擴充本 enum
- *   - GoalSpec 是宣告式樹狀資料, 執行時態由同構的 GoalNode 追蹤
+ *   - GoalSpec 是純宣告式 / 可序列化的資料 (不含函式參考),
+ *     真正執行邏輯由 runtime 注入的工廠方法在執行時態解析
+ *   - GoalSpec 執行時態由同構的 GoalNode 追蹤
  */
 enum GoalSpec {
 	Leaf(behavior:LeafBehavior);
 	Sequence(children:Array<GoalSpec>);
 	Selector(children:Array<GoalSpec>);
-	Custom(planner:GoalPlanner, children:Array<GoalSpec>);
+	Custom(planner:String, children:Array<GoalSpec>);
 }
 
 /**
- * Leaf 目標的生命週期契約
+ * Leaf 目標的識別資料
+ *
+ * 只保留 name 作為「叫什麼名字的 leaf」; 真正的 init / validate / tick 函式
+ * 由實作端提供的 LeafFactory 依此名稱建立 (見 LeafFactory / LeafLifecycle)。
+ *
+ * 設計動機:
+ *   - GoalSpec 維持純資料 / 可序列化 (函式無法序列化)
+ *   - 同一個 leaf 名稱可在不同情境注入不同實作
+ *     (debug 用 mock, 戰鬥用真實邏輯)
+ */
+typedef LeafBehavior = {
+	var name:String;
+}
+
+/**
+ * Leaf 目標的生命週期函式集合
  *
  * 執行循環 (由 runtime 引擎負責):
  *   1. 進入 Running 前: 呼叫 initialize
@@ -81,12 +100,19 @@ enum GoalSpec {
  *   - initialize 可自行決定要重設或保留 state 中的欄位 (runtime 不會自動清空)
  *   - 暫以 Dynamic 簡化; 若日後想要強型別可換 generic 或 typedef 結構繼承
  */
-typedef LeafBehavior = {
-	var name:String;
+typedef LeafLifecycle = {
 	var initialize:(ctx:GoalContext, state:Dynamic) -> Bool;
 	var validate:(ctx:GoalContext, state:Dynamic) -> Bool;
 	var tick:(ctx:GoalContext, state:Dynamic, dt:Float) -> GoalStatus;
 }
+
+/**
+ * 由 leaf 名稱建立 LeafLifecycle 的工廠
+ *
+ * runtime 引擎在處理 Leaf 節點時, 會以 LeafBehavior.name 呼叫此工廠取得實際函式。
+ * 找不到對應名稱時建議直接 throw, 由上層回報設定錯誤。
+ */
+typedef LeafFactory = (name:String) -> LeafLifecycle;
 
 /**
  * Custom composite 的 planner
@@ -100,6 +126,14 @@ typedef LeafBehavior = {
  *   - -1: 無解 → 整體 Failed(ChildFailed)
  */
 typedef GoalPlanner = (ctx:GoalContext, children:Array<GoalSpec>, lastIndex:Int) -> Int;
+
+/**
+ * 由 planner 名稱建立 GoalPlanner 的工廠
+ *
+ * runtime 引擎在處理 Custom 節點時, 會以 GoalSpec.Custom 攜帶的字串呼叫此工廠取得實際函式。
+ * 與 LeafFactory 同理: GoalSpec 維持純資料, 規劃函式由實作端注入。
+ */
+typedef PlannerFactory = (name:String) -> GoalPlanner;
 
 /**
  * 目標執行的上下文

@@ -11,6 +11,7 @@ import domain.World.createEmptyWorld;
  *
  * 用來示範 Goal 系統的:
  *   - composite 巢狀結構 (Sequence + Leaf)
+ *   - LeafBehavior 僅持有 name, runtime 透過 LeafFactory 取得實際生命週期函式
  *   - leaf 的 init / validate / tick 生命週期
  *   - validate 失敗 → reinit → 繼續執行的循環
  *   - leaf 在 leafState 上自管欄位
@@ -44,13 +45,12 @@ class GoalDemo {
 	}
 
 	/**
-	 * 接近 leaf
+	 * 接近 leaf 的生命週期
 	 * leafState 欄位:
 	 *   - ticks:   累積 tick 計數
 	 *   - blocked: 路徑是否曾被阻擋過 (跨 reinit 保留)
 	 */
-	public static final approach:LeafBehavior = {
-		name: "Approach",
+	public static final approachLifecycle:LeafLifecycle = {
 		initialize: (ctx, state) -> {
 			trace('  [Approach] initialize: 規劃路徑');
 			state.ticks = 0;
@@ -78,12 +78,11 @@ class GoalDemo {
 	};
 
 	/**
-	 * 揮刀 leaf
+	 * 揮刀 leaf 的生命週期
 	 * leafState 欄位:
 	 *   - swung: 是否已揮過
 	 */
-	public static final meleeStrike:LeafBehavior = {
-		name: "MeleeStrike",
+	public static final meleeStrikeLifecycle:LeafLifecycle = {
 		initialize: (ctx, state) -> {
 			trace('  [MeleeStrike] initialize: 鎖定目標');
 			state.swung = false;
@@ -97,10 +96,32 @@ class GoalDemo {
 		}
 	};
 
-	/** 目標規格樹: 先接近, 再揮刀 */
+	/**
+	 * Demo 用的 LeafFactory: 依名稱回傳上面預設的 lifecycle。
+	 * 找不到名稱時直接 throw, 避免靜默忽略設定錯誤。
+	 */
+	public static function leafFactory(name:String):LeafLifecycle {
+		return switch (name) {
+			case "Approach": approachLifecycle;
+			case "MeleeStrike": meleeStrikeLifecycle;
+			case _: throw 'GoalDemo.leafFactory: unknown leaf "$name"';
+		}
+	}
+
+	/**
+	 * Demo 用的 PlannerFactory。
+	 * 此 demo 不使用 Custom composite, 但仍提供一個保底實作以滿足 runFrame 簽名。
+	 */
+	public static function plannerFactory(name:String):GoalPlanner {
+		return switch (name) {
+			case _: throw 'GoalDemo.plannerFactory: unknown planner "$name"';
+		}
+	}
+
+	/** 目標規格樹: 先接近, 再揮刀 (純資料, 不含函式) */
 	public static final approachAndStrike:GoalSpec = Sequence([
-		Leaf(approach),
-		Leaf(meleeStrike)
+		Leaf({name: "Approach"}),
+		Leaf({name: "MeleeStrike"})
 	]);
 
 	// ==================================================================
@@ -129,18 +150,25 @@ class GoalDemo {
 
 	/**
 	 * 跑一個 frame
+	 *
 	 * 流程:
 	 *   - Pending  → 初始化 (leaf 跑 initialize, composite 建立子節點)
 	 *   - Running  → leaf 走 validate-reinit-tick; composite 推進子節點
+	 *
+	 * 注意:
+	 *   leafFactory / plannerFactory 為工廠方法, runtime 在每次需要呼叫
+	 *   leaf lifecycle / custom planner 時才透過名稱解析出實際函式。
+	 *   這讓 GoalSpec 可保持純資料 (見 Goal.hx 設計動機)。
 	 */
-	public static function runFrame(node:GoalNode, ctx:GoalContext, dt:Float):Void {
+	public static function runFrame(node:GoalNode, ctx:GoalContext, dt:Float, leafFactory:LeafFactory, plannerFactory:PlannerFactory):Void {
 		switch (node.status) {
 			case Pending:
 				switch (node.spec) {
 					case Leaf(beh):
+						var lifecycle = leafFactory(beh.name);
 						if (node.leafState == null)
 							node.leafState = {};
-						if (beh.initialize(ctx, node.leafState)) {
+						if (lifecycle.initialize(ctx, node.leafState)) {
 							node.status = Running;
 						} else {
 							node.status = Failed(InitFailed);
@@ -149,8 +177,9 @@ class GoalDemo {
 						node.children = [for (c in children) makeNode(c)];
 						node.activeChildIndex = 0;
 						node.status = Running;
-					case Custom(planner, children):
+					case Custom(plannerName, children):
 						node.children = [for (c in children) makeNode(c)];
+						var planner = plannerFactory(plannerName);
 						var idx = planner(ctx, children, -1);
 						if (idx < 0) {
 							node.status = Failed(ChildFailed);
@@ -163,17 +192,18 @@ class GoalDemo {
 			case Running:
 				switch (node.spec) {
 					case Leaf(beh):
-						if (!beh.validate(ctx, node.leafState)) {
-							if (!beh.initialize(ctx, node.leafState)) {
+						var lifecycle = leafFactory(beh.name);
+						if (!lifecycle.validate(ctx, node.leafState)) {
+							if (!lifecycle.initialize(ctx, node.leafState)) {
 								node.status = Failed(Invalidated);
 								return;
 							}
 						}
-						node.status = beh.tick(ctx, node.leafState, dt);
+						node.status = lifecycle.tick(ctx, node.leafState, dt);
 
 					case Sequence(_):
 						var child = node.children[node.activeChildIndex];
-						runFrame(child, ctx, dt);
+						runFrame(child, ctx, dt, leafFactory, plannerFactory);
 						switch (child.status) {
 							case Succeeded:
 								node.activeChildIndex++;
@@ -187,7 +217,7 @@ class GoalDemo {
 
 					case Selector(_):
 						var child = node.children[node.activeChildIndex];
-						runFrame(child, ctx, dt);
+						runFrame(child, ctx, dt, leafFactory, plannerFactory);
 						switch (child.status) {
 							case Succeeded:
 								node.status = Succeeded;
@@ -199,13 +229,14 @@ class GoalDemo {
 							default:
 						}
 
-					case Custom(planner, children):
+					case Custom(plannerName, children):
 						var child = node.children[node.activeChildIndex];
-						runFrame(child, ctx, dt);
+						runFrame(child, ctx, dt, leafFactory, plannerFactory);
 						switch (child.status) {
 							case Succeeded:
 								node.status = Succeeded;
 							case Failed(_):
+								var planner = plannerFactory(plannerName);
 								var nextIdx = planner(ctx, children, node.activeChildIndex);
 								if (nextIdx < 0) {
 									node.status = Failed(ChildFailed);
@@ -228,7 +259,7 @@ class GoalDemo {
 		var maxFrames = 30;
 		for (frame in 0...maxFrames) {
 			trace('--- frame ${frame + 1} ---');
-			runFrame(node, ctx, 0.1);
+			runFrame(node, ctx, 0.1, leafFactory, plannerFactory);
 			trace('  root status: ${node.status}');
 			if (isFinal(node.status))
 				break;
