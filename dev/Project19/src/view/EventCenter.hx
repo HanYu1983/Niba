@@ -30,6 +30,24 @@ enum Event {
 	P5MouseReleased;
 	P5MouseMoved(x:Float, y:Float);
 	P5MouseDragged(x:Float, y:Float);
+
+	/**
+	 * 鍵盤按下。
+	 *
+	 * @param key     原始 p5.key, 字串型別 ("a" / " " / "Enter" / "ArrowUp" 等);
+	 *                可印字元就是該字元, 非可印鍵則為名稱字串
+	 * @param keyCode 原始 p5.keyCode, 整數鍵盤碼 (例: 32 = 空白, 13 = Enter, 37 = ←);
+	 *                以 keyCode 比對最穩定, key 在不同瀏覽器 / IME 下可能有差異
+	 */
+	P5KeyPressed(key:String, keyCode:Int);
+
+	/**
+	 * 鍵盤釋放。
+	 *
+	 * @param key     同 P5KeyPressed
+	 * @param keyCode 同 P5KeyPressed
+	 */
+	P5KeyReleased(key:String, keyCode:Int);
 }
 
 enum Command {

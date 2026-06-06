@@ -22,6 +22,7 @@ import view.EventCenter.P5RenderFrame;
 import view.P5App.createP5App;
 import view.component.CameraControlPanel.createCameraControlPanel;
 import view.component.CameraController.createCameraController;
+import view.component.DebugProjectile.createDebugProjectile;
 import view.component.SceneRenderer.createSceneRenderer;
 
 class HelloWorld {
@@ -68,6 +69,7 @@ class HelloWorld {
 		eventCenter.p5RenderSubject.subscribe(renderP5Frame);
 		createCameraController(eventCenter);
 		createSceneRenderer(eventCenter);
+		createDebugProjectile(eventCenter);
 		eventCenter.nextWorld(world);
 		createP5App(eventCenter);
 	}
@@ -123,6 +125,9 @@ class HelloWorld {
 				case P5MouseDragged(x, y):
 					system.onMouseDragged(x, y);
 				case P5TouchStarted(_, _) | P5TouchEnded | P5TouchMoved(_, _):
+				case P5KeyPressed(_, _) | P5KeyReleased(_, _):
+					// 目前 ISystem 沒有 onKey* 介面; 鍵盤事件由 view/component
+					// (例: DebugProjectile) 直接訂閱 eventSubject 處理
 			}
 		}
 	}

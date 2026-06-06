@@ -55,6 +55,14 @@ function createP5App(eventCenter:EventCenter, canvasParentId:String = "canvas"):
 		p.mouseDragged = function() {
 			eventCenter.eventSubject.on_next(P5MouseDragged(p.mouseX, p.mouseY));
 		};
+
+		p.keyPressed = function() {
+			eventCenter.eventSubject.on_next(P5KeyPressed(p.key, p.keyCode));
+		};
+
+		p.keyReleased = function() {
+			eventCenter.eventSubject.on_next(P5KeyReleased(p.key, p.keyCode));
+		};
 	}, canvasParentId);
 }
 
