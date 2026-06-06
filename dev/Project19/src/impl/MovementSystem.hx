@@ -1,5 +1,7 @@
 package impl;
 
+import domain.Collision.Hitbox;
+import domain.FieldObject.CollidableObject;
 import domain.FieldObject.MovableObject;
 import domain.World;
 import domain.World.getMovableObjects;
@@ -50,6 +52,10 @@ class MovementSystem implements ISystem {
 	public function onMouseMoved(x:Float, y:Float):Void {}
 
 	public function onMouseDragged(x:Float, y:Float):Void {}
+
+	public function onCollide(a:CollidableObject, b:CollidableObject):Void {}
+
+	public function onHitboxCollide(hitbox:Hitbox, target:CollidableObject):Void {}
 
 	/**
 	 * 將 object.velocity 等比縮放到不超過 object.maxSpeed。

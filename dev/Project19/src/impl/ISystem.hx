@@ -16,6 +16,11 @@ package impl;
  *   P5MouseMoved(x,y)                 → onMouseMoved(x,y)
  *   P5MouseDragged(x,y)               → onMouseDragged(x,y)
  *
+ * 額外整合 (ICollisionListener):
+ *   ISystem extends ICollisionListener, 也就是說所有系統都被視為碰撞事件的潛在消費者.
+ *   CollisionSystem 偵測到碰撞後透過 listener (HelloWorld 中的 fan-out 實作) 把
+ *   onCollide / onHitboxCollide 廣播給所有 ISystem, 各系統再自行過濾自己關心的對象.
+ *
  * onSetup / onTick 的分工:
  *   - onSetup: 系統建立時呼叫一次, 用於初始化內部狀態 / 訂閱外部資源。
  *              整個生命週期通常只觸發一次, 不依賴 render frame。
@@ -30,7 +35,7 @@ package impl;
  *   - 若實作不需要某個事件, 給空實作即可 (Haxe 沒有 default method,
  *     可考慮在 impl 端寫一個 SystemBase abstract class 提供預設空實作)。
  */
-interface ISystem {
+interface ISystem extends ICollisionListener {
 	/**
 	 * 場上物件被點選時呼叫。
 	 *

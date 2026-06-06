@@ -1,11 +1,15 @@
 import debug.PathfinderTest;
 import debug.WorldSerializeTest;
+import domain.Collision.Hitbox;
+import domain.FieldObject.CollidableObject;
 import domain.Geometry.Shape;
 import domain.Machine;
 import domain.Machine.createEmptyMachine;
 import domain.World;
 import domain.World.createEmptyWorld;
+import impl.CollisionSystem;
 import impl.GoalSystem;
+import impl.ICollisionListener;
 import impl.ISystem;
 import impl.MoveToPointsGoal.createMoveToPointsGoal;
 import impl.MovementSystem;
@@ -38,12 +42,22 @@ class HelloWorld {
 
 		var eventCenter = new EventCenter();
 
-		// 系統執行順序: 先 GoalSystem (更新 velocity), 再 MovementSystem (套用 velocity 推進 position)
-		// 這樣本幀新算出的 velocity 同幀就會生效, 不會晚一幀
+		// 系統執行順序:
+		//   1. GoalSystem      — 更新 velocity (依 goal 目標重新規劃)
+		//   2. MovementSystem  — 套用 velocity 推 position
+		//   3. CollisionSystem — 對最新 position 做碰撞偵測, 透過 listener 廣播
+		//
+		// CollisionSystem 需要 listener 才能建構, 但 listener 又需要看到 systems 陣列
+		// (要 fan-out 給所有系統), 故先建空陣列 + GoalSystem + MovementSystem, 再以
+		// 該陣列建 fan-out listener, 最後把 CollisionSystem 推進同一個陣列。
+		// 由於 listener 持有的是 systems 陣列的參考, push 後仍能看到 CollisionSystem 本身
+		// (這對 CollisionSystem 來說無妨, 其 onCollide / onHitboxCollide 為空實作)。
 		var systems:Array<ISystem> = [
 			new GoalSystem(world, sharedLeafFactory, GoalDemo.plannerFactory),
 			new MovementSystem(world)
 		];
+		var collisionListener:ICollisionListener = new FanOutCollisionListener(systems);
+		systems.push(new CollisionSystem(world, collisionListener));
 		eventCenter.eventSubject.subscribe(event -> dispatchEventToSystems(systems, event));
 
 		createCameraControlPanel(eventCenter);
@@ -125,5 +139,41 @@ class HelloWorld {
 		p5.text('hitboxes: ${world.hitboxes.length}', 16, 144);
 		p5.text('markers: ${world.markers.length}', 16, 164);
 		p5.text('camera: (${world.camera.position.x}, ${world.camera.position.y}) zoom=${world.camera.zoom}', 16, 184);
+	}
+}
+
+/**
+ * 碰撞事件 fan-out listener。
+ *
+ * CollisionSystem 偵測到碰撞時呼叫此 listener, 由本類別把同一筆事件廣播給
+ * 整個 systems 陣列裡每一個 ISystem (因為 ISystem extends ICollisionListener,
+ * 每個系統皆有 onCollide / onHitboxCollide 接口)。
+ *
+ * 設計動機:
+ *   - CollisionSystem 不直接持有 systems 陣列, 而是只依賴 ICollisionListener 介面,
+ *     避免「事件源」與「消費者集合」緊耦合
+ *   - 不關心系統的具體型別; 任何 ISystem 都可以靜默忽略事件 (空實作),
+ *     或在 onCollide / onHitboxCollide 內過濾自己關心的對象進行處理
+ *
+ * 注意:
+ *   持有的是 systems 陣列「參考」, 故 CollisionSystem push 進來後也會被 fan-out 到 —
+ *   但 CollisionSystem 自身的 onCollide / onHitboxCollide 為空實作 (它是事件源, 不是消費者),
+ *   故對 CollisionSystem 的回呼沒有副作用。
+ */
+class FanOutCollisionListener implements ICollisionListener {
+	final systems:Array<ISystem>;
+
+	public function new(systems:Array<ISystem>) {
+		this.systems = systems;
+	}
+
+	public function onCollide(a:CollidableObject, b:CollidableObject):Void {
+		for (system in systems)
+			system.onCollide(a, b);
+	}
+
+	public function onHitboxCollide(hitbox:Hitbox, target:CollidableObject):Void {
+		for (system in systems)
+			system.onHitboxCollide(hitbox, target);
 	}
 }
