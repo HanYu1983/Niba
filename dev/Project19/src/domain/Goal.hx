@@ -177,3 +177,167 @@ typedef GoalNode = {
 	var activeChildIndex:Int;
 	var ?leafState:Dynamic;
 }
+
+// ==================================================================
+// Runtime engine (從 GoalSpec 建立 GoalNode 並推進)
+//
+// 設計重點:
+//   - makeNode 在建立 GoalNode 時就遞迴展開 spec 樹, 並把初始 params (例: actorId)
+//     淺拷貝到每個 Leaf 的 leafState; composite 節點不存 leafState, 子節點共享同一份 params
+//   - runFrame 是同步、單執行緒的單幀推進函式; 不持有任何外部狀態
+//   - LeafLifecycle / GoalPlanner 的實際函式由呼叫端注入的 LeafFactory / PlannerFactory
+//     依名稱解析; runtime engine 本身對「leaf/planner 怎麼實作」一無所知
+// ==================================================================
+
+/**
+ * 從 spec 建立對應的 runtime node。
+ *
+ * params 為「目標的初始參數」, 由呼叫端在 makeNode 時帶入,
+ * 例如 {actorId: "m1"} 指定此 goal 是哪個機體在執行;
+ * makeNode 會把 params 的所有欄位淺拷貝到該節點 (與所有子節點) 的 leafState,
+ * Leaf 的 initialize / validate / tick 之後再讀寫 state 上的其他欄位。
+ *
+ * 設計:
+ *   - actor 不放在 GoalContext 上, 改由 state.actorId 帶 id,
+ *     LeafLifecycle 內透過 findMachineById 查表得到實際物件,
+ *     順便處理「actor 不存在 / 已陣亡」的情境
+ *   - children 在 makeNode 時就遞迴建立並繼承同一份 params,
+ *     讓整棵樹共享 actorId 等識別資訊
+ */
+function makeNode(spec:GoalSpec, ?params:Dynamic):GoalNode {
+	return switch (spec) {
+		case Leaf(_):
+			{
+				spec: spec,
+				status: Pending,
+				children: [],
+				activeChildIndex: 0,
+				leafState: copyParams(params)
+			};
+		case Sequence(children) | Selector(children) | Custom(_, children):
+			{
+				spec: spec,
+				status: Pending,
+				children: [for (c in children) makeNode(c, params)],
+				activeChildIndex: 0,
+				leafState: null
+			};
+	}
+}
+
+/** 將 params 的欄位淺拷貝到新的 Dynamic state 上; params 為 null 時回傳空物件 */
+private function copyParams(params:Dynamic):Dynamic {
+	var state:Dynamic = {};
+	if (params != null) {
+		for (field in Reflect.fields(params)) {
+			Reflect.setField(state, field, Reflect.field(params, field));
+		}
+	}
+	return state;
+}
+
+/** status 是否為終止狀態 (Succeeded 或任一 Failed) */
+function isFinal(status:GoalStatus):Bool {
+	return switch (status) {
+		case Succeeded | Failed(_): true;
+		default: false;
+	}
+}
+
+/**
+ * 推進一個 frame。
+ *
+ * 流程:
+ *   - Pending  → 初始化 (leaf 跑 initialize; composite 進入 Running)
+ *   - Running  → leaf 走 validate-reinit-tick; composite 推進子節點
+ *
+ * leafFactory / plannerFactory 為工廠方法, runtime 在每次需要呼叫
+ * leaf lifecycle / custom planner 時才透過名稱解析出實際函式,
+ * 這讓 GoalSpec 保持純資料 / 可序列化 (見上方 GoalSpec / LeafBehavior 註解)。
+ */
+function runFrame(node:GoalNode, ctx:GoalContext, dt:Float, leafFactory:LeafFactory, plannerFactory:PlannerFactory):Void {
+	switch (node.status) {
+		case Pending:
+			switch (node.spec) {
+				case Leaf(beh):
+					var lifecycle = leafFactory(beh.name);
+					if (lifecycle.initialize(ctx, node.leafState)) {
+						node.status = Running;
+					} else {
+						node.status = Failed(InitFailed);
+					}
+				case Sequence(_) | Selector(_):
+					node.activeChildIndex = 0;
+					node.status = Running;
+				case Custom(plannerName, children):
+					var planner = plannerFactory(plannerName);
+					var idx = planner(ctx, children, -1);
+					if (idx < 0) {
+						node.status = Failed(ChildFailed);
+					} else {
+						node.activeChildIndex = idx;
+						node.status = Running;
+					}
+			}
+
+		case Running:
+			switch (node.spec) {
+				case Leaf(beh):
+					var lifecycle = leafFactory(beh.name);
+					if (!lifecycle.validate(ctx, node.leafState)) {
+						if (!lifecycle.initialize(ctx, node.leafState)) {
+							node.status = Failed(Invalidated);
+							return;
+						}
+					}
+					node.status = lifecycle.tick(ctx, node.leafState, dt);
+
+				case Sequence(_):
+					var child = node.children[node.activeChildIndex];
+					runFrame(child, ctx, dt, leafFactory, plannerFactory);
+					switch (child.status) {
+						case Succeeded:
+							node.activeChildIndex++;
+							if (node.activeChildIndex >= node.children.length) {
+								node.status = Succeeded;
+							}
+						case Failed(_):
+							node.status = Failed(ChildFailed);
+						default:
+					}
+
+				case Selector(_):
+					var child = node.children[node.activeChildIndex];
+					runFrame(child, ctx, dt, leafFactory, plannerFactory);
+					switch (child.status) {
+						case Succeeded:
+							node.status = Succeeded;
+						case Failed(_):
+							node.activeChildIndex++;
+							if (node.activeChildIndex >= node.children.length) {
+								node.status = Failed(ChildFailed);
+							}
+						default:
+					}
+
+				case Custom(plannerName, children):
+					var child = node.children[node.activeChildIndex];
+					runFrame(child, ctx, dt, leafFactory, plannerFactory);
+					switch (child.status) {
+						case Succeeded:
+							node.status = Succeeded;
+						case Failed(_):
+							var planner = plannerFactory(plannerName);
+							var nextIdx = planner(ctx, children, node.activeChildIndex);
+							if (nextIdx < 0) {
+								node.status = Failed(ChildFailed);
+							} else {
+								node.activeChildIndex = nextIdx;
+							}
+						default:
+					}
+			}
+
+		case _:
+	}
+}

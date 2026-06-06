@@ -4,6 +4,9 @@ import debug.BasicNeighbors.basicNeighborProvider;
 import domain.FieldObject.Marker;
 import domain.FieldObject.createEmptyMarker;
 import domain.Goal.GoalContext;
+import domain.Goal.isFinal;
+import domain.Goal.makeNode;
+import domain.Goal.runFrame;
 import domain.Machine;
 import domain.Machine.createEmptyMachine;
 import domain.World;
@@ -28,14 +31,14 @@ class WaypointGoalTest {
 
 		var world = createWorld(actor, markers);
 		var built = createWalkWaypointsGoal(markers, new SimpleAStarPathfinder(), basicNeighborProvider);
-		var node = GoalDemo.makeNode(built.spec, {actorId: actor.id});
+		var node = makeNode(built.spec, {actorId: actor.id});
 		var ctx:GoalContext = {world: world};
 
 		for (frame in 0...30) {
 			trace('--- waypoint frame ${frame + 1} ---');
-			GoalDemo.runFrame(node, ctx, 0.1, built.factory, GoalDemo.plannerFactory);
+			runFrame(node, ctx, 0.1, built.factory, GoalDemo.plannerFactory);
 			trace('  actor=(${actor.position.x}, ${actor.position.y}) status=${node.status}');
-			if (GoalDemo.isFinal(node.status))
+			if (isFinal(node.status))
 				break;
 		}
 
