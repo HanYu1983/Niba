@@ -14,6 +14,9 @@ services:
       - ./custom_nodes:/root/ComfyUI/custom_nodes
     deploy:
       resources:
+        limits:
+          cpus: '4.0'              # 限制最多使用 4 個 CPU 核心
+          memory: 48G              # 限制容器最大實體記憶體為 16 GB
         reservations:
           devices:
             - driver: nvidia
