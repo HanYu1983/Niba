@@ -1,0 +1,33 @@
+# 使用支援 CUDA 12.4 的 PyTorch 2.4.1 基底鏡像
+FROM pytorch/pytorch:2.4.1-cuda12.4-cudnn9-runtime
+
+# 設定工作目錄
+WORKDIR /root/ComfyUI
+
+# 設定環境變數（注意前方的 ENV 指令）
+ENV DEBIAN_FRONTEND=noninteractive \
+    PYTHONUNBUFFERED=1
+
+# 安裝系統必要套件
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
+    ffmpeg \
+    libgl1 \
+    libglib2.0-0 \
+    wget \
+    aria2 \
+    && rm -rf /var/lib/apt/lists/*
+
+# 下載 ComfyUI 原始碼
+RUN git clone https://github.com/Comfy-Org/ComfyUI.git /root/ComfyUI
+
+# 安裝 ComfyUI 官方依賴及相關模組
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt && \
+    pip install --no-cache-dir comfy-aimdo blake3
+
+# 開放 ComfyUI 預設埠號
+EXPOSE 8188
+
+# 預設啟動命令
+CMD ["python3", "main.py", "--listen", "0.0.0.0", "--port", "8188"]
