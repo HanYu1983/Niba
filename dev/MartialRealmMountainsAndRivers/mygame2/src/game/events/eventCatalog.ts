@@ -69,6 +69,9 @@ export type EventRequirement =
 export type EventEffect =
   | { type: 'money'; amount: number }
   | { type: 'prestige'; amount: number }
+  | { type: 'health'; amount: number }
+  | { type: 'stamina'; amount: number }
+  | { type: 'inner-power'; amount: number }
   | { type: 'item'; itemId: string; quantity: number }
   | { type: 'learn-skill'; skillType: 'inner' | 'external' }
   | { type: 'spawn-creature'; creatureId: string }
@@ -390,6 +393,107 @@ const baseExplorationEventCatalog: ExplorationEventDefinition[] = [
     icon: '🏹',
     choices: [
       { id: 'finish-off', label: '協助掃除', description: '與射手配合殲滅殘敵，獲得經驗與聲望。', endsPlayerTurn: true, requirements: [{ type: 'adjacent-to-event' }, { type: 'active-player' }, { type: 'player-alive' }], effects: [{ type: 'prestige', amount: 10 }, { type: 'item', itemId: 'heal-wound-medicine', quantity: 1 }] },
+    ],
+  },
+  // ── 回合結束隨機事件：減益向（環境／人禍危害）──
+  {
+    type: 'toxic-mire',
+    name: '毒沼荒地',
+    description: '腐葉毒霧瀰漫林間，吸一口便覺喉頭發麻。',
+    icon: '🧪',
+    choices: [
+      { id: 'hold-breath', label: '屏息疾行', description: '強行穿過毒霧，氣血受損。', endsPlayerTurn: true, requirements: [{ type: 'adjacent-to-event' }, { type: 'active-player' }, { type: 'player-alive' }], effects: [{ type: 'health', amount: -12 }] },
+      { id: 'brew-antidote', label: '調製解藥', description: '消耗療傷藥調製解藥再通行，平安無事。', endsPlayerTurn: true, requirements: [{ type: 'adjacent-to-event' }, { type: 'active-player' }, { type: 'player-alive' }, { type: 'item-owned', itemId: 'heal-wound-medicine', quantity: 1 }], effects: [{ type: 'item', itemId: 'heal-wound-medicine', quantity: -1 }, { type: 'prestige', amount: 4 }] },
+    ],
+  },
+  {
+    type: 'flash-flood',
+    name: '山洪暴發',
+    description: '上游暴雨傾瀉，原本的山道轉眼成了奔流。',
+    icon: '⚡',
+    choices: [
+      { id: 'ford-rapids', label: '強渡激流', description: '冒險涉水而過，氣血與體力受損。', endsPlayerTurn: true, requirements: [{ type: 'adjacent-to-event' }, { type: 'active-player' }, { type: 'player-alive' }], effects: [{ type: 'health', amount: -10 }, { type: 'stamina', amount: -5 }] },
+      { id: 'detour-cliff', label: '攀崖繞道', description: '耗費大量體力繞過險路，安全無事。', endsPlayerTurn: true, requirements: [{ type: 'adjacent-to-event' }, { type: 'active-player' }, { type: 'player-alive' }], effects: [{ type: 'stamina', amount: -8 }] },
+    ],
+  },
+  {
+    type: 'quicksand-trap',
+    name: '流沙陷阱',
+    description: '腳下沙面忽然塌陷，雙腿已陷入流沙之中。',
+    icon: '⏳',
+    choices: [
+      { id: 'struggle-out', label: '奮力掙脫', description: '拼死爬出流沙，氣血與體力受損。', endsPlayerTurn: true, requirements: [{ type: 'adjacent-to-event' }, { type: 'active-player' }, { type: 'player-alive' }], effects: [{ type: 'health', amount: -8 }, { type: 'stamina', amount: -6 }] },
+      { id: 'drop-pack', label: '棄物減重', description: '丟棄一份療傷藥減輕行囊，輕鬆脫身。', endsPlayerTurn: true, requirements: [{ type: 'adjacent-to-event' }, { type: 'active-player' }, { type: 'player-alive' }, { type: 'item-owned', itemId: 'heal-wound-medicine', quantity: 1 }], effects: [{ type: 'item', itemId: 'heal-wound-medicine', quantity: -1 }] },
+    ],
+  },
+  {
+    type: 'highway-toll-gang',
+    name: '黑店攔路',
+    description: '路旁野店茶飯飄香，店家的眼神卻不太對勁。',
+    icon: '🏮',
+    choices: [
+      { id: 'pay-silence', label: '破財消災', description: '支付 25 金錢買一壺酒壓驚，蒙汗藥卻傷了些元氣。', endsPlayerTurn: true, requirements: [{ type: 'adjacent-to-event' }, { type: 'active-player' }, { type: 'player-alive' }, { type: 'money-at-least', amount: 25 }], effects: [{ type: 'money', amount: -25 }, { type: 'inner-power', amount: -8 }] },
+      { id: 'expose-trick', label: '當場揭穿', description: '識破蒙汗藥的把戲揚長而去，聲望提升。', endsPlayerTurn: true, requirements: [{ type: 'adjacent-to-event' }, { type: 'active-player' }, { type: 'player-alive' }], effects: [{ type: 'prestige', amount: 8 }] },
+    ],
+  },
+  {
+    type: 'night-haunt',
+    name: '夜梟襲擾',
+    description: '成群夜梟盤旋嘶鳴，盯上了你行囊中的乾糧。',
+    icon: '🦉',
+    choices: [
+      { id: 'drive-off', label: '點火驅趕', description: '連夜與梟群周旋，體力與氣血皆有所損。', endsPlayerTurn: true, requirements: [{ type: 'adjacent-to-event' }, { type: 'active-player' }, { type: 'player-alive' }], effects: [{ type: 'stamina', amount: -6 }, { type: 'health', amount: -4 }] },
+      { id: 'sacrifice-rations', label: '棄糧保命', description: '丟出一枚聚氣丹餵走梟群，安然無事。', endsPlayerTurn: true, requirements: [{ type: 'adjacent-to-event' }, { type: 'active-player' }, { type: 'player-alive' }, { type: 'item-owned', itemId: 'gather-qi-pill', quantity: 1 }], effects: [{ type: 'item', itemId: 'gather-qi-pill', quantity: -1 }] },
+    ],
+  },
+  {
+    type: 'cursed-fog',
+    name: '怨煞陰風',
+    description: '水面浮起白霧，霧中隱約傳來低泣與嘆息。',
+    icon: '💀',
+    choices: [
+      { id: 'press-through', label: '強闖陰地', description: '硬闖霧陣，內力與氣血被陰風侵蝕。', endsPlayerTurn: true, requirements: [{ type: 'adjacent-to-event' }, { type: 'active-player' }, { type: 'player-alive' }], effects: [{ type: 'inner-power', amount: -12 }, { type: 'health', amount: -6 }] },
+      { id: 'burn-incense', label: '焚香改道', description: '花費 8 金錢購香燭祭拜後改道而行。', endsPlayerTurn: true, requirements: [{ type: 'adjacent-to-event' }, { type: 'active-player' }, { type: 'player-alive' }, { type: 'money-at-least', amount: 8 }], effects: [{ type: 'money', amount: -8 }] },
+    ],
+  },
+  // ── 回合結束隨機事件：增益向（機緣）──
+  {
+    type: 'hermit-healer',
+    name: '隱世藥翁',
+    description: '白髮藥翁在路旁施診，見你風塵僕僕便招手喚你過去。',
+    icon: '💊',
+    choices: [
+      { id: 'receive-treatment', label: '求診贈藥', description: '獲得療傷藥與回氣丹，並得藥翁祝福聲望。', endsPlayerTurn: true, requirements: [{ type: 'adjacent-to-event' }, { type: 'active-player' }, { type: 'player-alive' }], effects: [{ type: 'item', itemId: 'heal-wound-medicine', quantity: 1 }, { type: 'item', itemId: 'recover-qi-pill', quantity: 1 }, { type: 'prestige', amount: 5 }] },
+    ],
+  },
+  {
+    type: 'old-friend-reunion',
+    name: '故人重逢',
+    description: '多年不見的舊識恰巧路經此地，執意邀你共飲一杯。',
+    icon: '🍶',
+    choices: [
+      { id: 'share-drinks', label: '把酒敘舊', description: '開懷暢飲，氣血舒暢、聲望提升。', endsPlayerTurn: true, requirements: [{ type: 'adjacent-to-event' }, { type: 'active-player' }, { type: 'player-alive' }], effects: [{ type: 'health', amount: 15 }, { type: 'prestige', amount: 8 }] },
+      { id: 'gift-travel-money', label: '贈銀餞別', description: '支付 10 金錢相贈盤纏，情義傳遍江湖。', endsPlayerTurn: true, requirements: [{ type: 'adjacent-to-event' }, { type: 'active-player' }, { type: 'player-alive' }, { type: 'money-at-least', amount: 10 }], effects: [{ type: 'money', amount: -10 }, { type: 'prestige', amount: 18 }] },
+    ],
+  },
+  {
+    type: 'hot-spring',
+    name: '暖玉溫泉',
+    description: '山岩間湧出氤氳溫泉，泉底隱隱透出暖玉光澤。',
+    icon: '♨️',
+    choices: [
+      { id: 'bathe', label: '浸浴療養', description: '暖泉洗去疲憊，氣血與體力大幅恢復。', endsPlayerTurn: true, requirements: [{ type: 'adjacent-to-event' }, { type: 'active-player' }, { type: 'player-alive' }], effects: [{ type: 'health', amount: 20 }, { type: 'stamina', amount: 10 }] },
+      { id: 'bottle-water', label: '兌泉水上路', description: '裝一瓶靈泉水，製成回氣丹備用。', endsPlayerTurn: true, requirements: [{ type: 'adjacent-to-event' }, { type: 'active-player' }, { type: 'player-alive' }], effects: [{ type: 'item', itemId: 'recover-qi-pill', quantity: 1 }] },
+    ],
+  },
+  {
+    type: 'moonlit-cultivation',
+    name: '月下悟道',
+    description: '林間月華如練，靈機清晰得不可思議。',
+    icon: '🌙',
+    choices: [
+      { id: 'cultivate', label: '順勢修煉', description: '藉月華運功一周天，內力充盈、聲望提升。', endsPlayerTurn: true, requirements: [{ type: 'adjacent-to-event' }, { type: 'active-player' }, { type: 'player-alive' }], effects: [{ type: 'inner-power', amount: 15 }, { type: 'prestige', amount: 6 }] },
+      { id: 'meditate-till-dawn', label: '靜坐至天明', description: '通宵參悟心得，略感疲倦但收穫豐富。', endsPlayerTurn: true, requirements: [{ type: 'adjacent-to-event' }, { type: 'active-player' }, { type: 'player-alive' }], effects: [{ type: 'stamina', amount: -4 }, { type: 'prestige', amount: 12 }] },
     ],
   },
 ]

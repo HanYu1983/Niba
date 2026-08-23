@@ -57,6 +57,23 @@ describe('事件效果：習得功法', () => {
     expect(next.externalSkillIds).toEqual(player.externalSkillIds)
   })
 
+  it('health／stamina／inner-power 效果會增減資源且以上限與 0 為界', () => {
+    const player = makePlayer({ health: 18, stamina: 8, innerPower: 4 })
+    const next = applyEventEffects(player, [
+      { type: 'health', amount: -12 },
+      { type: 'stamina', amount: -5 },
+      { type: 'inner-power', amount: 15 },
+    ])
+    expect(next.health).toBe(6)
+    expect(next.stamina).toBe(3)
+    expect(next.innerPower).toBe(10)
+
+    const floored = applyEventEffects(makePlayer(), [{ type: 'health', amount: -999 }, { type: 'stamina', amount: -999 }, { type: 'inner-power', amount: -999 }])
+    expect(floored.health).toBe(0)
+    expect(floored.stamina).toBe(0)
+    expect(floored.innerPower).toBe(0)
+  })
+
   it('江湖外功可透過事件習得', () => {
     const player = makePlayer()
     const next = applyEventEffects(player, [{ type: 'learn-skill', skillType: 'external' }])

@@ -102,6 +102,9 @@ export function applyEventEffects(player: PlayerState, effects: EventEffect[]): 
   return effects.reduce((currentPlayer, effect) => {
     if (effect.type === 'money') return { ...currentPlayer, money: Math.max(0, currentPlayer.money + effect.amount) }
     if (effect.type === 'prestige') return { ...currentPlayer, prestige: currentPlayer.prestige + effect.amount }
+    if (effect.type === 'health') return { ...currentPlayer, health: Math.max(0, Math.min(currentPlayer.maxHealth, currentPlayer.health + effect.amount)) }
+    if (effect.type === 'stamina') return { ...currentPlayer, stamina: Math.max(0, Math.min(currentPlayer.maxStamina, currentPlayer.stamina + effect.amount)) }
+    if (effect.type === 'inner-power') return { ...currentPlayer, innerPower: Math.max(0, Math.min(currentPlayer.maxInnerPower, currentPlayer.innerPower + effect.amount)) }
     if (effect.type === 'learn-skill') return learnSkill(currentPlayer, effect.skillType)
     if (effect.type === 'item') return addItem(currentPlayer, effect.itemId, effect.quantity)
     // spawn-creature 為狀態層級效果，由 applyEventStateEffects 處理，此處忽略。

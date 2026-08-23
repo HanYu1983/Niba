@@ -190,6 +190,9 @@ export function formatExplorationEventResult(eventName: string, choiceId: string
   const rewards = choice?.effects.map((effect) => {
     if (effect.type === 'money') return `${effect.amount >= 0 ? '金錢 +' : '金錢 '}${effect.amount}`
     if (effect.type === 'prestige') return `${effect.amount >= 0 ? '聲望 +' : '聲望 '}${effect.amount}`
+    if (effect.type === 'health') return `${effect.amount >= 0 ? '氣血 +' : '氣血 '}${effect.amount}`
+    if (effect.type === 'stamina') return `${effect.amount >= 0 ? '體力 +' : '體力 '}${effect.amount}`
+    if (effect.type === 'inner-power') return `${effect.amount >= 0 ? '內力 +' : '內力 '}${effect.amount}`
     if (effect.type === 'learn-skill') {
       return learnedSkillName
         ? `學會${effect.skillType === 'inner' ? '內功' : '外功'}：${learnedSkillName}`

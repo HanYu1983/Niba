@@ -290,6 +290,18 @@ export type ExplorationEventType =
   | 'desert-mirage'
   | 'buried-caravan'
   | 'wandering-ascetic'
+  // 回合結束事件：減益向（環境／人禍危害）
+  | 'toxic-mire'
+  | 'flash-flood'
+  | 'quicksand-trap'
+  | 'highway-toll-gang'
+  | 'night-haunt'
+  | 'cursed-fog'
+  // 回合結束事件：增益向（機緣）
+  | 'hermit-healer'
+  | 'old-friend-reunion'
+  | 'hot-spring'
+  | 'moonlit-cultivation'
 
 export type ExplorationEventState = {
   id: string

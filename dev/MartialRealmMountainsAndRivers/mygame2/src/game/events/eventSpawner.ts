@@ -1,19 +1,22 @@
 import type { ExplorationEventPoolId, ExplorationEventState, ExplorationEventType, MapState, Position } from '../types'
 import { explorationEventCatalog, type ExplorationEventPoolDefinition } from './eventCatalog'
 
-/** 回合結束事件可在任何地形發生的通用事件池。 */
+/** 回合結束事件可在任何地形發生的通用事件池（增益與減益並存）。 */
 export const COMMON_EXPLORATION_EVENT_TYPES: ExplorationEventType[] = [
   'lost-caravan',
   'wounded-traveler',
   'ancient-ruins',
+  'hermit-healer',
+  'night-haunt',
+  'cursed-fog',
 ]
 
 const terrainEventPool: Partial<Record<MapState['cells'][number]['terrain'], ExplorationEventType[]>> = {
-  plain: ['village-request', 'lost-caravan', 'abandoned-shrine'],
-  forest: ['forest-herb-gatherer', 'deep-forest-beast', 'ancient-tree-enlightenment'],
-  mountain: ['mountain-bandit-ambush', 'cliff-carved-scripture', 'mountain-spring-well'],
+  plain: ['village-request', 'lost-caravan', 'abandoned-shrine', 'highway-toll-gang', 'old-friend-reunion'],
+  forest: ['forest-herb-gatherer', 'deep-forest-beast', 'ancient-tree-enlightenment', 'toxic-mire', 'moonlit-cultivation'],
+  mountain: ['mountain-bandit-ambush', 'cliff-carved-scripture', 'mountain-spring-well', 'flash-flood', 'hot-spring'],
   water: ['ferry-merchant', 'waterfront-fisher', 'flooded-temple'],
-  desert: ['desert-mirage', 'buried-caravan', 'wandering-ascetic'],
+  desert: ['desert-mirage', 'buried-caravan', 'wandering-ascetic', 'quicksand-trap'],
 }
 
 export function getTerrainExplorationEventTypes(

@@ -15,12 +15,12 @@ const map: MapState = {
 
 describe('eventSpawner', () => {
   it('通用事件池包含跨地形可發生的事件', () => {
-    expect(COMMON_EXPLORATION_EVENT_TYPES).toEqual(['lost-caravan', 'wounded-traveler', 'ancient-ruins'])
+    expect(COMMON_EXPLORATION_EVENT_TYPES).toEqual(['lost-caravan', 'wounded-traveler', 'ancient-ruins', 'hermit-healer', 'night-haunt', 'cursed-fog'])
   })
 
   it('地形事件池依地形提供專屬事件', () => {
-     expect(getTerrainExplorationEventTypes('forest')).toEqual(['forest-herb-gatherer', 'deep-forest-beast', 'ancient-tree-enlightenment'])
-     expect(getTerrainExplorationEventTypes('desert')).toEqual(['desert-mirage', 'buried-caravan', 'wandering-ascetic'])
+     expect(getTerrainExplorationEventTypes('forest')).toEqual(['forest-herb-gatherer', 'deep-forest-beast', 'ancient-tree-enlightenment', 'toxic-mire', 'moonlit-cultivation'])
+     expect(getTerrainExplorationEventTypes('desert')).toEqual(['desert-mirage', 'buried-caravan', 'wandering-ascetic', 'quicksand-trap'])
   })
 
   it('所有地形事件池事件都存在於事件目錄', () => {

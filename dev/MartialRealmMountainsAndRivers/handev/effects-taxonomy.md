@@ -13,7 +13,7 @@
 | Buff buffCatalog | 45 | 22 個解譯欄位（屬性修正/乘區/地形/復活/週期回復…） |
 | 功法 | 54 | 內功 9（傷害公式閉包）、傷害外功 9、功能外功 36 |
 | 裝備 equipmentCatalog | 45 | **純五維 modifiers**，無特殊效果 |
-| 探索事件 eventCatalog | 31 型／約 60 選項 | `EventEffect` 9 種＋`EventRequirement` 6 種 |
+| 探索事件 eventCatalog | 41 型／約 79 選項 | `EventEffect` 12 種＋`EventRequirement` 6 種 |
 | 建築 buildingCatalog | 20 | bonus 欄位 3 種＋actions 3 種＋特例邏輯 |
 | 防禦設施 defenseStructureCatalog | 9 | 視野/阻擋/攻擊/改地形四種能力旗標 |
 | 政策 governancePolicyCatalog | 4 | 僅 3 條有效果（±5%，寫死在 policyRules） |
