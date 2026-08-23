@@ -48,4 +48,24 @@ describe('功能型外功等級縮放', () => {
     expect(getFunctionalSkillBuffOverrides('evasion', 1, definition)).toMatchObject({ evasionRateBonus: 15 })
     expect(getFunctionalSkillBuffOverrides('evasion', 3, definition)).toMatchObject({ evasionRateBonus: 21 })
   })
+
+  it('行氣功 Lv.1 保持基礎體力回復，Lv.3 提升比例', () => {
+    const definition = getBuff('jianghu-stamina-flow')!
+    const lv1 = getFunctionalSkillBuffOverrides('stamina-regen', 1, definition)
+    expect(lv1.staminaRegenPercent).toBeCloseTo(0.15, 10)
+    expect(getFunctionalSkillBuffOverrides('stamina-regen', 3, definition).staminaRegenPercent).toBeCloseTo(0.195, 10)
+  })
+
+  it('潮息功 Lv.1 保持基礎內力回復，Lv.3 提升比例', () => {
+    const definition = getBuff('jianghu-inner-tide')!
+    const lv1 = getFunctionalSkillBuffOverrides('inner-power-regen', 1, definition)
+    expect(lv1.innerPowerRegenPercent).toBeCloseTo(0.1, 10)
+    expect(getFunctionalSkillBuffOverrides('inner-power-regen', 3, definition).innerPowerRegenPercent).toBeCloseTo(0.13, 10)
+  })
+
+  it('瞬發技與免疫不產生 Buff 覆寫（無綁定）', () => {
+    expect(getFunctionalSkillBuffOverrides('cleanse', 5, getBuff('jianghu-stamina-flow')!)).toEqual({})
+    expect(getFunctionalSkillBuffOverrides('recover', 5, getBuff('jianghu-stamina-flow')!)).toEqual({})
+    expect(getFunctionalSkillBuffOverrides('berserk', 5, getBuff('jianghu-demonic-state')!)).toEqual({})
+  })
 })

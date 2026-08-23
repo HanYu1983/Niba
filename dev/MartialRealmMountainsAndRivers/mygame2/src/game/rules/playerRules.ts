@@ -50,21 +50,31 @@ export function applyPeriodicBuffEffects(players: PlayerState[]): PlayerState[] 
   return players.map((player) => {
     const effectiveAttributes = getEffectiveAttributesForPlayer(player)
     const effectiveMaxHealth = getMaxHealth(effectiveAttributes)
+    const effectiveMaxStamina = getMaxStamina(effectiveAttributes)
     const effectiveMaxInnerPower = getMaxInnerPower(effectiveAttributes)
 
     let damage = 0
     let regen = 0
+    let staminaRegen = 0
+    let innerPowerRegen = 0
     for (const definition of getActiveBuffDefinitions(player)) {
       const healthDamage = definition.maxHealthDamagePercent ?? 0
       if (healthDamage > 0) damage += Math.floor(effectiveMaxHealth * healthDamage)
       const healthRegen = definition.healthRegenPercent ?? 0
-      const innerPowerRegen = definition.innerPowerHealthRegenPercent ?? 0
+      const innerPowerHealthRegen = definition.innerPowerHealthRegenPercent ?? 0
       if (healthRegen > 0) regen += Math.floor(effectiveMaxHealth * healthRegen)
-      if (innerPowerRegen > 0) regen += Math.floor(effectiveMaxInnerPower * innerPowerRegen)
+      if (innerPowerHealthRegen > 0) regen += Math.floor(effectiveMaxInnerPower * innerPowerHealthRegen)
+      const staminaRegenPercent = definition.staminaRegenPercent ?? 0
+      if (staminaRegenPercent > 0) staminaRegen += Math.floor(effectiveMaxStamina * staminaRegenPercent)
+      const innerPowerRegenPercent = definition.innerPowerRegenPercent ?? 0
+      if (innerPowerRegenPercent > 0) innerPowerRegen += Math.floor(effectiveMaxInnerPower * innerPowerRegenPercent)
     }
 
     const health = Math.min(effectiveMaxHealth, Math.max(0, player.health - damage + regen))
-    return health !== player.health ? { ...player, health } : player
+    const stamina = Math.min(effectiveMaxStamina, player.stamina + staminaRegen)
+    const innerPower = Math.min(effectiveMaxInnerPower, player.innerPower + innerPowerRegen)
+    if (health === player.health && stamina === player.stamina && innerPower === player.innerPower) return player
+    return { ...player, health, stamina, innerPower }
   })
 }
 

@@ -10,8 +10,8 @@
 | 載體 | 條目數 | 承載效果的方式 |
 |---|---|---|
 | 道具 itemCatalog | 53 | `ItemEffectType`（10 種）＋分類欄位 |
-| Buff buffCatalog | 41 | 19 個解譯欄位（屬性修正/乘區/地形/復活…） |
-| 功法 | 44 | 內功 9（傷害公式閉包）、傷害外功 9、功能外功 26 |
+| Buff buffCatalog | 45 | 22 個解譯欄位（屬性修正/乘區/地形/復活/週期回復…） |
+| 功法 | 54 | 內功 9（傷害公式閉包）、傷害外功 9、功能外功 36 |
 | 裝備 equipmentCatalog | 45 | **純五維 modifiers**，無特殊效果 |
 | 探索事件 eventCatalog | 31 型／約 60 選項 | `EventEffect` 9 種＋`EventRequirement` 6 種 |
 | 建築 buildingCatalog | 20 | bonus 欄位 3 種＋actions 3 種＋特例邏輯 |
@@ -31,7 +31,7 @@
 | 屬性丹 | 5 | 9% | 五維各一顆永久+1 |
 | 特殊 | 1 | 2% | 回光玉（瀕死復活） |
 
-### 2.2 Buff（41 條）
+### 2.2 Buff（45 條）
 | 語義 | 數量 | 代表 |
 |---|---|---|
 | 移動/地形消耗 | 13 | 六步功＋驛路步、swift-wind-movement、主場×5 的移動部分 |
@@ -40,19 +40,21 @@
 | 減益/控場 | 7 | burning×2、cold-poison×2、immobilize、reflection×2、腐骨毒 |
 | 資源吸取回復 | 4 | bloodthirst、spring-return、qi-transformation、inner-power-drain |
 | 條件觸發 | 3 | back-to-water、nurture-qi、all-in |
-| 防禦減免 | 4 | iron-wall-art、home-turf-mountain/ruin、影匿（迴避） |
+| 防禦減免 | 5 | iron-wall-art、home-turf-mountain/ruin、影匿（迴避）、護體罡氣（免疫） |
 | 復活 | 1 | return-light |
 | ⚠️ 零使用欄位 | — | `terrainStaminaCostMultipliers`（乘算版地形消耗）無任何條目使用 |
 
-### 2.3 功能外功（25 種 effect，全部已接 Buff）
+### 2.3 功能外功（31 種 effect）
 | 語義 | 數量 |
 |---|---|
 | 移動/地形適應 | 8（terrain-adaptation＋七步） |
-| 資源吸取/週期回復 | 4 |
+| 資源吸取/週期回復 | 6（血飲/回春/化氣/汲元＋體力回復＋內力回復） |
 | 傷害增益 | 3（critical/damage-dealt/external-damage） |
 | 條件爆發 | 3 |
+| 屬性爆發 | 1（berserk：增益附反噬） |
 | 攻擊附著減益 | 3（burning/poison/attribute-reduction） |
-| 防禦反震/迴避 | 3（damage-reduction/reflection/evasion） |
+| 防禦反震/迴避/免疫 | 4（damage-reduction/reflection/evasion/debuff-immunity） |
+| 瞬發實用（無 Buff） | 3（experience-gain/cleanse/recover） |
 | 成長 | 1（experience-gain） |
 
 ### 2.4 事件效果（基礎事件池約 60 個選項的效果實例統計）
@@ -68,7 +70,7 @@
 
 ---
 
-## 3. 跨載體效果家族總表（合計約 225 個效果承載條目）
+## 3. 跨載體效果家族總表（合計約 235 個效果承載條目）
 
 占比為跨所有載體的粗估，用於判斷飽和度。
 

@@ -71,17 +71,19 @@ describe('skillProgressionCatalog', () => {
   })
 
   it('所有外功法使用的 functionalEffect 都在 registry 有對應 Buff', () => {
+    // 瞬發實用技不掛 Buff，為合法例外（施放時直接結算，無持續效果）。
+    const bufflessEffects = new Set(['experience-gain', 'cleanse', 'recover'])
     for (const skill of allExternalSkillCatalog) {
       if (!skill.functionalEffect) continue
-      expect(getFunctionalSkillBuffIds(skill.functionalEffect as never).length > 0 || skill.functionalEffect === 'experience-gain',
+      expect(getFunctionalSkillBuffIds(skill.functionalEffect as never).length > 0 || bufflessEffects.has(skill.functionalEffect),
         `功法 ${skill.id} 的效果 ${skill.functionalEffect} 應有對應 Buff`).toBe(true)
     }
   })
 })
 
 describe('江湖外功功法（無門派）', () => {
-  it('提供 10 個江湖外功，對應 10 個 Buff', () => {
-    expect(jianghuExternalSkills).toHaveLength(10)
+  it('提供 20 個江湖外功，皆為無門派的自我目標功能型外功', () => {
+    expect(jianghuExternalSkills).toHaveLength(20)
     expect(jianghuExternalSkills.every((skill) => !skill.schoolId)).toBe(true)
     expect(jianghuExternalSkills.every((skill) => skill.target === 'self')).toBe(true)
     expect(jianghuExternalSkills.every((skill) => skill.functionalEffect)).toBe(true)

@@ -96,6 +96,9 @@ export type BuffInstance = {
   damageDealtPercent?: number
   externalSkillDamagePercent?: number
   evasionRateBonus?: number
+  staminaRegenPercent?: number
+  innerPowerRegenPercent?: number
+  debuffImmunity?: boolean
 }
 
 export type MapCell = {

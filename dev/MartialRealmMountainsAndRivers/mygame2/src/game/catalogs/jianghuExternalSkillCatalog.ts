@@ -103,6 +103,69 @@ export const jianghuExternalSkills: ExternalSkill[] = [
     description: '江湖搏命之技，一擲乾坤。',
     functionalEffect: 'all-in',
   }),
+  // 洞悉與身法
+  createJianghuSkill({
+    id: 'jianghu-critical-eye',
+    name: '洞玄功',
+    description: '江湖眼力之術，洞察敵人破綻。',
+    functionalEffect: 'critical-rate',
+  }),
+  createJianghuSkill({
+    id: 'jianghu-wayfarer',
+    name: '遊方功',
+    description: '江湖行腳功夫，翻山越嶺如履平地。',
+    functionalEffect: 'terrain-adaptation',
+  }),
+  createJianghuSkill({
+    id: 'jianghu-mirror-return',
+    name: '鏡花功',
+    description: '江湖借力之法，以彼之道還施彼身。',
+    functionalEffect: 'reflection',
+  }),
+  createJianghuSkill({
+    id: 'jianghu-elusive-trail',
+    name: '迷蹤功',
+    description: '江湖遁形之技，身形飄忽難以捉摸。',
+    functionalEffect: 'evasion',
+  }),
+  // 周天運轉
+  createJianghuSkill({
+    id: 'jianghu-breath-cycle',
+    name: '行氣功',
+    description: '江湖導引術，行氣通脈不知疲倦。',
+    functionalEffect: 'stamina-regen',
+  }),
+  createJianghuSkill({
+    id: 'jianghu-tide-breath',
+    name: '潮息功',
+    description: '江湖吐納秘法，內息如潮生生不絕。',
+    functionalEffect: 'inner-power-regen',
+  }),
+  // 險功與自保
+  createJianghuSkill({
+    id: 'jianghu-demonic-frenzy',
+    name: '入魔功',
+    description: '江湖禁術，燃血入魔力量暴漲，卻傷及己身。',
+    functionalEffect: 'berserk',
+  }),
+  createJianghuSkill({
+    id: 'jianghu-dust-cleansing',
+    name: '滌塵功',
+    description: '江湖自保心法，滌盡身上異狀百毒。',
+    functionalEffect: 'cleanse',
+  }),
+  createJianghuSkill({
+    id: 'jianghu-sitting-forget',
+    name: '坐忘功',
+    description: '江湖靜坐之法，片刻調息體力內力雙復。',
+    functionalEffect: 'recover',
+  }),
+  createJianghuSkill({
+    id: 'jianghu-poison-proof',
+    name: '百毒不侵功',
+    description: '江湖橫練罡氣，毒邪不侵。',
+    functionalEffect: 'debuff-immunity',
+  }),
 ]
 
 export type JianghuExternalSkillEffect = FunctionalExternalSkillEffect

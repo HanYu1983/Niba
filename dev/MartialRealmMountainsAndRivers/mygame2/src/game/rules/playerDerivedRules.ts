@@ -62,9 +62,10 @@ function getEffectiveBuffDefinition(instance: BuffInstance): BuffDefinition | un
     'attributeMultiplier', 'maxHealthDamagePercent', 'criticalRateMultiplier', 'terrainCostOverride', 'reflectionPercent',
     'lifestealPercent', 'innerPowerLeechPercent', 'damageReductionPercent', 'healthRegenPercent',
     'innerPowerHealthRegenPercent', 'damageDealtPercent', 'externalSkillDamagePercent', 'evasionRateBonus',
+    'staminaRegenPercent', 'innerPowerRegenPercent', 'debuffImmunity',
   ] as const) {
     const value = instance[key]
-    if (value !== undefined) overrides[key] = value
+    if (value !== undefined) (overrides as Record<string, number | boolean>)[key] = value
   }
   return { ...definition, ...overrides }
 }

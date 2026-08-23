@@ -43,6 +43,8 @@ export function getFunctionalSkillBuffOverrides(
   if (effect === 'lifesteal') overrides.lifestealPercent = scaledPercent(definition.lifestealPercent, level)
   if (effect === 'damage-reduction') overrides.damageReductionPercent = scaledPercent(definition.damageReductionPercent, level)
   if (effect === 'health-regen') overrides.healthRegenPercent = scaledPercent(definition.healthRegenPercent, level)
+  if (effect === 'stamina-regen') overrides.staminaRegenPercent = scaledPercent(definition.staminaRegenPercent, level)
+  if (effect === 'inner-power-regen') overrides.innerPowerRegenPercent = scaledPercent(definition.innerPowerRegenPercent, level)
   if (effect === 'inner-power-health-regen') overrides.innerPowerHealthRegenPercent = scaledPercent(definition.innerPowerHealthRegenPercent, level)
   if (effect === 'inner-power-leech') overrides.innerPowerLeechPercent = scaledPercent(definition.innerPowerLeechPercent, level)
   if (effect === 'damage-dealt') overrides.damageDealtPercent = scaledPercent(definition.damageDealtPercent, level)

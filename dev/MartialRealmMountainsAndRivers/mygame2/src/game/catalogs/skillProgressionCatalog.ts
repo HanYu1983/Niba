@@ -183,7 +183,7 @@ const schoolFunctionalEffects: Record<string, FunctionalExternalSkillEffect> = {
 }
 
 /** 機能外功中作用於自身（而非目標）的效果。 */
-const SELF_TARGETED_FUNCTIONAL_EFFECTS: ReadonlySet<string> = new Set(['critical-rate', 'terrain-adaptation', 'reflection', 'experience-gain', 'evasion'])
+const SELF_TARGETED_FUNCTIONAL_EFFECTS: ReadonlySet<string> = new Set(['critical-rate', 'terrain-adaptation', 'reflection', 'experience-gain', 'evasion', 'stamina-regen', 'inner-power-regen', 'berserk', 'cleanse', 'recover', 'debuff-immunity'])
 
 export const progressionExternalSkills: ExternalSkill[] = schools.flatMap((school) => {
   const name = school.externalNames[0]

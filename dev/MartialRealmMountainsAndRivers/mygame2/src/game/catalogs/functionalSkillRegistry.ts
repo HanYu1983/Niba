@@ -18,6 +18,15 @@ export type FunctionalExternalSkillEffect =
   | 'poison'
   // 幽影流：影匿（迴避強化）
   | 'evasion'
+  // 江湖線：體力／內力週期回復
+  | 'stamina-regen'
+  | 'inner-power-regen'
+  // 江湖線：入魔（屬性暴漲但反噬）
+  | 'berserk'
+  // 江湖線：瞬發實用技（無 Buff）
+  | 'cleanse'
+  | 'recover'
+  | 'debuff-immunity'
   // 類別 1：資源轉換
   | 'lifesteal'
   | 'damage-reduction'
@@ -49,6 +58,13 @@ export const functionalExternalSkillDescriptions: Record<FunctionalExternalSkill
   'experience-gain': '自身與目前裝備的功法額外獲得 10 點功法經驗。',
   poison: '使目標中毒 3 回合，每回合損失最大生命 10%，且五維屬性降低 15%。',
   evasion: '自身 3 回合內回避率 +15%。',
+  // 江湖線
+  'stamina-regen': '自身 3 回合內每回合回復最大體力 15%。',
+  'inner-power-regen': '自身 3 回合內每回合回復最大內力 10%。',
+  berserk: '自身 3 回合內五維屬性 ×1.25，但每回合損失最大生命 5%。',
+  cleanse: '施放時立即解除自身所有減益效果。',
+  recover: '施放時立即回復 30% 最大體力與最大內力。',
+  'debuff-immunity': '自身 3 回合內免疫燃燒、中毒與屬性削弱等減益附著。',
   // 類別 1：資源轉換
   lifesteal: '自身 3 回合內造成傷害時，回復 30% 傷害值的血量。',
   'damage-reduction': '自身 3 回合內受到傷害時，最終傷害 -20%。',
@@ -81,6 +97,13 @@ export const functionalSkillBuffBindings: Record<FunctionalExternalSkillEffect, 
   'experience-gain': [],
   poison: ['hundred-poison-rot'],
   evasion: ['ghost-shadow-veil'],
+  // 江湖線
+  'stamina-regen': ['jianghu-stamina-flow'],
+  'inner-power-regen': ['jianghu-inner-tide'],
+  berserk: ['jianghu-demonic-state'],
+  cleanse: [],
+  recover: [],
+  'debuff-immunity': ['jianghu-immunity-aura'],
   // 類別 1：資源轉換
   lifesteal: ['bloodthirst'],
   'damage-reduction': ['iron-wall-art'],

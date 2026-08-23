@@ -56,6 +56,13 @@ export type BuffDefinition = {
   externalSkillDamagePercent?: number
   /** 回避率加成（百分比，直接加在身法決定的回避率上）。 */
   evasionRateBonus?: number
+  // 江湖線
+  /** 每回合回復最大體力比例。 */
+  staminaRegenPercent?: number
+  /** 每回合回復最大內力比例。 */
+  innerPowerRegenPercent?: number
+  /** 免疫燃燒／中毒／屬性削弱等減益附著。 */
+  debuffImmunity?: boolean
   // 類別 4：條件型
   /** 依血量區間觸發的五維乘算。 */
   conditional?: BuffConditional
@@ -104,6 +111,10 @@ export const buffCatalog: BuffDefinition[] = [
   { id: 'earth-mountain-reflection', name: '反震', description: '受到傷害時反彈同等傷害。', duration: 'rounds', durationRounds: 3, reflectionPercent: 1 },
   { id: 'hundred-poison-rot', name: '腐骨毒', description: '中毒：每回合損失最大生命 10%，且五維降低 15%。', duration: 'rounds', durationRounds: 3, category: 'debuff', maxHealthDamagePercent: 0.1, attributeMultiplier: 0.85 },
   { id: 'ghost-shadow-veil', name: '影匿', description: '身形融入陰影，回避率 +15%。', duration: 'rounds', durationRounds: 3, category: 'buff', evasionRateBonus: 15 },
+  { id: 'jianghu-stamina-flow', name: '氣血周流', description: '行氣通脈，每回合回復最大體力 15%。', duration: 'rounds', durationRounds: 3, category: 'buff', staminaRegenPercent: 0.15 },
+  { id: 'jianghu-inner-tide', name: '內息潮湧', description: '內息如潮，每回合回復最大內力 10%。', duration: 'rounds', durationRounds: 3, category: 'buff', innerPowerRegenPercent: 0.1 },
+  { id: 'jianghu-demonic-state', name: '入魔', description: '燃血入魔：五維 ×1.25，但每回合損失最大生命 5%。', duration: 'rounds', durationRounds: 3, category: 'buff', attributeMultiplier: 1.25, maxHealthDamagePercent: 0.05 },
+  { id: 'jianghu-immunity-aura', name: '護體罡氣', description: '罡氣護體，免疫燃燒、中毒與屬性削弱等減益附著。', duration: 'rounds', durationRounds: 3, category: 'buff', debuffImmunity: true },
   { id: 'trap-immobilize', name: '定身', description: '被陷阱定身，本回合無法移動。', duration: 'rounds', durationRounds: 3, immobilized: true },
   { id: 'return-light', name: '回光', description: '瀕死時攔截死亡，復活至 30% 血並清除所有 debuff（只保一次）。', duration: 'persistent', reviveOnDeath: true, reviveHealthPercent: 0.3, clearDebuffsOnRevive: true },
   // 類別 5：移動類 — 指定地形消耗降為 1

@@ -1,5 +1,37 @@
 # 開發日誌
 
+## 2026-08-23｜江湖線擴充：新增 10 個無門派功能型外功（含 6 個全新效果）
+
+### 本次完成
+
+- 江湖外功目錄由 10 擴充至 **20 個**，全部維持「無門派、自我目標、僅靠掉落取得」的既有約束（輕功仍為門派專屬）。
+- **沿用 4 個既有未用效果**：洞玄功（暴擊 ×2）、遊方功（地形適應）、鏡花功（傷害反彈）、迷蹤功（迴避 +15%）。
+- **發明 6 個全新效果**（registry + buffCatalog 同步擴充）：
+  - `stamina-regen` 行氣功→氣血周流：每回合回復最大體力 15%（隨功法等級成長）
+  - `inner-power-regen` 潮息功→內息潮湧：每回合回復最大內力 10%（隨等級成長）
+  - `berserk` 入魔功→入魔：五維 ×1.25 但每回合反噬最大生命 5%（固定值）
+  - `cleanse` 滌塵功：施放瞬間解除自身所有減益（無 Buff，同 experience-gain 先例）
+  - `recover` 坐忘功：施放瞬間回復 30% 體力與內力（無 Buff）
+  - `debuff-immunity` 百毒不侵功→護體罡氣：3 回合免疫燃燒／中毒／屬性削弱附著
+- 規則層改動：`BuffInstance` 新增 `staminaRegenPercent`／`innerPowerRegenPercent`／`debuffImmunity` 三欄位；回合結算消費體力與內力週期回復；戰鬥目標路徑對燃燒／中毒／屬性削弱加上免疫閘門；自我路徑新增滌塵／坐忘瞬發分支；縮放表補兩條成長曲線。
+
+### 影響檔案
+
+- `src/game/catalogs/jianghuExternalSkillCatalog.ts`、`functionalSkillRegistry.ts`、`buffCatalog.ts`、`skillProgressionCatalog.ts`
+- `src/game/types.ts`、`src/game/rules/playerRules.ts`、`playerDerivedRules.ts`、`functionalSkillScaling.ts`
+- `src/game/actions/combatActions.ts`
+- 測試：skillProgressionCatalog.test（數量 20＋瞬發效果豁免名單）、functionalSkillScaling.test（+4 案例）
+
+### 驗證結果
+
+- TypeScript：通過。測試：67 檔 / 703 項全數通過。`npm run analyze:combat` 已執行。
+
+### 待驗收項目
+
+1. 掉落取得行氣功後裝備施放，確認每回合體力回復且升級後比例提高。
+2. 中毒狀態下施放滌塵功，確認減益立即消失；施放坐忘功確認體力內力各回復 30%。
+3. 對持有護體罡氣的妖物使用赤炎流機能技，確認燃燒未附著。
+
 ## 2026-08-23｜功能外功等級縮放補齊（淬毒／影匿）與減益乘數方向修正
 
 ### 本次完成

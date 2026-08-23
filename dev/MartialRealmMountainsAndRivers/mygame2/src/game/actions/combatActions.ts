@@ -364,12 +364,26 @@ export function executeExternalDamage(
       const overrides = getFunctionalSkillBuffOverrides(skill.functionalEffect, playerSkillLevel, definition)
       return { ...currentPlayer, buffs: [...(currentPlayer.buffs ?? []).filter((buff) => buff.definitionId !== functionalBuffId), { id: `skill:${skillId}:${player.id}:${functionalBuffId}`, definitionId: functionalBuffId, sourceId: skillId, remainingRounds: overrides.remainingRounds ?? (definition.duration === 'rounds' ? definition.durationRounds ?? null : null), ...overrides }] }
     }, player)
+    const instantPlayer = skill.functionalEffect === 'cleanse'
+      ? { ...withBuff, buffs: (withBuff.buffs ?? []).filter((buff) => getBuff(buff.definitionId)?.category !== 'debuff') }
+      : skill.functionalEffect === 'recover'
+        ? (() => {
+          const attrs = getEffectiveAttributesForPlayer(withBuff)
+          const maxStamina = getMaxStamina(attrs)
+          const maxInnerPower = getMaxInnerPower(attrs)
+          return {
+            ...withBuff,
+            stamina: Math.min(maxStamina, withBuff.stamina + Math.floor(maxStamina * 0.3)),
+            innerPower: Math.min(maxInnerPower, withBuff.innerPower + Math.floor(maxInnerPower * 0.3)),
+          }
+        })()
+        : withBuff
     const trainedPlayer = skill.functionalEffect === 'experience-gain'
       ? [player.innerSkillId, ...player.equippedExternalSkillIds].reduce(
         (currentPlayer, equippedSkillId) => addSkillExperience(currentPlayer, equippedSkillId, 10),
-        withBuff,
+        instantPlayer,
       )
-      : withBuff
+      : instantPlayer
     const rewards: CombatRewards = { experienceGain: 0, moneyReward: 0, progressedPlayer: trainedPlayer }
     const nextPlayer = applyCombatPlayerState(state, trainedPlayer, rewards, dependencies, { innerPowerCost, externalSkillId: skillId, skipSkillExperience: true })
     return { state: { ...state, players: state.players.map((candidate) => candidate.id === playerId ? nextPlayer : candidate) }, result: { ok: true, data: { playerId, playerName: player.name, targetType: 'creature', targetId: playerId, targetName: player.name, skillId, skillName: skill.name, damage: 0, nextHealth: player.health, maxHealth: player.maxHealth, innerPowerCost, targetMode: 'self', defeated: false, experienceReward: rewards.experienceGain || undefined } } }
@@ -470,7 +484,9 @@ export function executeExternalDamage(
       target.player,
     )
     : target.player
-  const targetWithFunctionalBuff = functionalBuffs.length > 0 && targetType === 'creature'
+  const targetIsImmuneToDebuffs = ['burning', 'poison', 'attribute-reduction'].includes(skill.functionalEffect ?? '') &&
+    ((target.target as PlayerState).buffs ?? []).some((existing) => getBuff(existing.definitionId)?.debuffImmunity)
+  const targetWithFunctionalBuff = functionalBuffs.length > 0 && targetType === 'creature' && !targetIsImmuneToDebuffs
     ? functionalBuffs.reduce((currentTarget, buff) => {
       const overrides = getFunctionalSkillBuffOverrides(skill.functionalEffect, skillLevel, buff)
       return {
