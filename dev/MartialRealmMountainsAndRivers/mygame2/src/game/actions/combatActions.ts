@@ -13,7 +13,7 @@ import type {
   EquipmentDurabilityChange,
 } from '../types'
 import { addSkillExperience, getElementDamageMultiplier, getExternalSkill, getSchoolElement, getSkillDamage, getSkillEffectMultiplier, getSkillInnerPowerCost, getSkillProgression, SKILL_EXPERIENCE_PER_USE } from '../rules/skillRules'
-import { getBuff, getCreatureDamageReductionPercent, getEffectiveAttributesForPlayer, getExternalSkillDamagePercent, getInnerPowerLeechPercent, getLifestealPercent, getPlayerSkillExpGainPercent } from '../rules/playerDerivedRules'
+import { getBuff, getCreatureDamageReductionPercent, getEffectiveAttributesForPlayer, getExternalSkillDamagePercent, getExternalSkillInnerCostReduction, getInnerPowerLeechPercent, getLifestealPercent, getPlayerSkillExpGainPercent } from '../rules/playerDerivedRules'
 import { getMaxHealth, getMaxInnerPower, getMaxStamina } from '../rules/playerStatsRules'
 import { getAttackTarget } from '../rules/targetRules'
 import { reduceEquipmentDurability } from '../rules/equipmentRules'
@@ -344,7 +344,7 @@ export function executeExternalDamage(
   const playerSkillLevel = getSkillProgression(player ?? ({ skillProgression: {} } as PlayerState), skillId).level
   const baseInnerPowerCost = getSkillInnerPowerCost(skill.innerPowerCost, playerSkillLevel)
   const playerTerrain = player ? getTerrainAtPosition(state.map.cells, player.position) : undefined
-  const innerPowerCost = Math.max(1, baseInnerPowerCost - getTerrainResonanceInnerPowerDiscount(skill.element, playerTerrain))
+  const innerPowerCost = Math.max(1, baseInnerPowerCost - getTerrainResonanceInnerPowerDiscount(skill.element, playerTerrain) - (player ? getExternalSkillInnerCostReduction(player) : 0))
   const actionCheck = canPlayerPerformAction(state, playerId, ACTION_STAMINA_COSTS.externalSkill)
   if (!actionCheck.ok) return { state, result: { ok: false, reason: actionCheck.reason ?? '目前無法行動。' } }
   if (skill.target === 'self') {
@@ -376,7 +376,7 @@ export function executeExternalDamage(
   const targetSkillLevel = target ? getSkillProgression(target.player, skillId).level : 1
   const targetBaseInnerPowerCost = getSkillInnerPowerCost(skill.innerPowerCost, targetSkillLevel)
   const targetTerrain = target ? getTerrainAtPosition(state.map.cells, target.player.position) : undefined
-  const targetInnerPowerCost = Math.max(1, targetBaseInnerPowerCost - getTerrainResonanceInnerPowerDiscount(skill.element, targetTerrain))
+  const targetInnerPowerCost = Math.max(1, targetBaseInnerPowerCost - getTerrainResonanceInnerPowerDiscount(skill.element, targetTerrain) - (target ? getExternalSkillInnerCostReduction(target.player) : 0))
   if (!target || !target.player.equippedExternalSkillIds.includes(skillId) || target.player.innerPower < targetInnerPowerCost || (targetType === 'nest' && Boolean(skill.functionalEffect))) {
     return { state, result: { ok: false, reason: '目標不存在、外功未裝備，或內力不足。' } }
   }

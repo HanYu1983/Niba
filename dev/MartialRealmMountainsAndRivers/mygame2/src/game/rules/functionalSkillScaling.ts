@@ -52,6 +52,11 @@ export function getFunctionalSkillBuffOverrides(
   if (effect === 'terrain-adaptation') overrides.terrainCostOverride = definition.terrainCostOverride
   if (effect === 'basic-attack-stamina-reduction') overrides.basicAttackStaminaCostReduction = definition.basicAttackStaminaCostReduction
   if (effect?.endsWith('-step')) overrides.evasionRateBonus = (definition.evasionRateBonus ?? 0) + levelDelta
+  // 悟性輔助功法
+  if (effect === 'vision-expansion') overrides.visionRadiusBonus = Math.ceil(level / 3)
+  if (effect === 'skill-cost-reduction' && definition.externalSkillInnerCostReduction !== undefined) {
+    overrides.externalSkillInnerCostReduction = definition.externalSkillInnerCostReduction + levelDelta
+  }
 
   return Object.fromEntries(Object.entries(overrides).filter(([, value]) => value !== undefined))
 }

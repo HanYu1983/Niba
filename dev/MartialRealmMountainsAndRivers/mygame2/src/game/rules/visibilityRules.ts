@@ -6,6 +6,7 @@ import type {
   VisibilityState,
   VisibilityStateData,
 } from '../types'
+import { getActiveBuffDefinitions } from './playerDerivedRules'
 
 export const DEFAULT_VISION_RANGE = 3
 export const BASE_VISION_RANGE = 5
@@ -28,10 +29,15 @@ export function getScoutCellIds(map: MapState, position: Position, range: number
 }
 
 export function getPlayerVisionRange(_state: GameState, _playerId: string): number {
-  // 目前所有玩家使用相同基礎視野，保留 selector 供未來角色效果擴充。
-  void _state
-  void _playerId
-  return DEFAULT_VISION_RANGE
+  // 讀取玩家已生效 Buff 提供的視野加成（如天眼望氣），疊加在基礎視野上。
+  const player = _state.players.find((candidate) => candidate.id === _playerId)
+  let bonus = 0
+  if (player) {
+    for (const buff of getActiveBuffDefinitions(player)) {
+      bonus += buff.visionRadiusBonus ?? 0
+    }
+  }
+  return DEFAULT_VISION_RANGE + bonus
 }
 
 export function getPlayerVisibleCellIds(state: GameState, playerId: string): Set<string> {

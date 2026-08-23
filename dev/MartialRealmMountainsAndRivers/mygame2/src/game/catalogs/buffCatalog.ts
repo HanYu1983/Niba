@@ -119,6 +119,10 @@ export const buffCatalog: BuffDefinition[] = [
   { id: 'swift-wind-movement', name: '疾行', description: '地形消耗一律視為草地。', duration: 'rounds', durationRounds: 2, terrainCostOverride: 2 },
   { id: 'swift-wind-attack-focus', name: '追風攻勢', description: '普通攻擊體力消耗 -2。', duration: 'persistent', category: 'buff', basicAttackStaminaCostReduction: 2 },
   { id: 'void-spirit-return-qi', name: '迴氣悟道', description: '功法經驗獲得 +20%。', duration: 'persistent', category: 'buff', skillExpGainPercent: 0.2 },
+  // 悟性輔助功法（靈氣型外功）：天眼望氣
+  { id: 'sky-eye-vision', name: '天眼望氣', description: '自身地圖視野半徑 +1。', duration: 'persistent', category: 'buff', visionRadiusBonus: 1 },
+  // 悟性輔助功法（靈氣型外功）：四兩撥千斤
+  { id: 'four-ounces-thousand-pounds', name: '四兩撥千斤', description: '所有外功內力消耗 -1（最低 1）。', duration: 'persistent', category: 'buff', externalSkillInnerCostReduction: 1 },
   { id: 'scarlet-flame-burning', name: '燃燒', description: '每回合損失最大生命 20%。', duration: 'rounds', durationRounds: 3, maxHealthDamagePercent: 0.2 },
   { id: 'frost-water-cold-poison', name: '寒毒', description: '五維屬性降低 20%。', duration: 'rounds', durationRounds: 2, attributeMultiplier: 0.8 },
   { id: 'earth-mountain-reflection', name: '反震', description: '受到傷害時反彈同等傷害。', duration: 'rounds', durationRounds: 3, reflectionPercent: 1 },
@@ -141,7 +145,7 @@ export const buffCatalog: BuffDefinition[] = [
   { id: 'inner-power-drain', name: '汲元', description: '造成傷害時，回復 20% 傷害值的內力。', duration: 'rounds', durationRounds: 3, category: 'buff', innerPowerLeechPercent: 0.2 },
   { id: 'break-army-art', name: '破軍訣', description: '普通攻擊造成的最終傷害 +20%。', duration: 'rounds', durationRounds: 3, category: 'buff', damageDealtPercent: 0.2 },
   { id: 'vigor-art', name: '罡氣訣', description: '外功造成的最終傷害 +20%。', duration: 'rounds', durationRounds: 3, category: 'buff', externalSkillDamagePercent: 0.2 },
-  { id: 'phantom-step', name: '幻影步', description: '回避率 +5%。', duration: 'rounds', durationRounds: 3, category: 'buff', evasionRateBonus: 5 },
+  { id: 'phantom-step', name: '幻影步', description: '回避率 +5%。', duration: 'persistent', category: 'buff', evasionRateBonus: 5 },
   { id: 'home-turf-forest', name: '林隱狼性', description: '身處森林主場：回避率 +15%、造成傷害 +15%，森林移動消耗降為 2。', duration: 'persistent', category: 'buff', evasionRateBonus: 15, damageDealtPercent: 0.15, terrainCostOverrides: { forest: 2 } },
   { id: 'home-turf-mountain', name: '山嶽磐甲', description: '身處山嶽主場：受到傷害 -20%，山嶽移動消耗降為 2。', duration: 'persistent', category: 'buff', damageReductionPercent: 0.2, terrainCostOverrides: { mountain: 2 } },
   { id: 'home-turf-water', name: '狂瀾水息', description: '身處水域主場：造成傷害 +15%、內息 +2，水域移動消耗降為 2。', duration: 'persistent', category: 'buff', damageDealtPercent: 0.15, attributeModifiers: { innerEnergy: 2 }, terrainCostOverrides: { water: 2 } },

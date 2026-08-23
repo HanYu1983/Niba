@@ -11,7 +11,7 @@ import {
 } from './types'
 import { buffCatalog } from './catalogs/buffCatalog'
 import { getMaxStamina, getMaxInnerPower, getMaxHealth } from './rules/playerStatsRules'
-import { getActiveBuffsForPlayer, canTraverseTerrain, getDamageDealtPercent, getDamageReductionPercent, getEffectiveAttributesForPlayer, getEvasionRate, getExternalSkillDamagePercent, getInnerPowerLeechPercent, getLifestealPercent, getTerrainStaminaCost } from './rules/playerDerivedRules'
+import { getActiveBuffsForPlayer, canTraverseTerrain, getDamageDealtPercent, getDamageReductionPercent, getEffectiveAttributesForPlayer, getEvasionRate, getExternalSkillDamagePercent, getExternalSkillInnerCostReduction, getInnerPowerLeechPercent, getLifestealPercent, getTerrainStaminaCost } from './rules/playerDerivedRules'
 import { applyPeriodicBuffEffects } from './rules/playerRules'
 import { getPlayerTotalInsightCost, getPlayerInsightCapacityBreakdown, getSkillEffectMultiplier } from './rules/skillRules'
 
@@ -144,6 +144,11 @@ describe('類別 1：資源轉換 Buff', () => {
   it('罡氣訣：外功傷害 +20%', () => {
     const player = makePlayer({ buffs: [{ id: 'b1', definitionId: 'vigor-art', sourceId: 'test', remainingRounds: null }] })
     expect(getExternalSkillDamagePercent(player)).toBe(0.2)
+  })
+
+  it('四兩千斤：外功內力消耗 -1', () => {
+    const player = makePlayer({ buffs: [{ id: 'b1', definitionId: 'four-ounces-thousand-pounds', sourceId: 'test', remainingRounds: null }] })
+    expect(getExternalSkillInnerCostReduction(player)).toBe(1)
   })
 
   it('幻影步：回避率 +5%', () => {

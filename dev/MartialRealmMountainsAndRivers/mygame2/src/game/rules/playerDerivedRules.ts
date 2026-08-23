@@ -366,3 +366,8 @@ export function getExternalSkillDamagePercent(player: PlayerState): number {
 export function getPlayerSkillExpGainPercent(player: PlayerState): number {
   return sumBuffPercent(player, 'skillExpGainPercent')
 }
+
+/** 所有外功內力消耗減免值（四兩千斤等）。 */
+export function getExternalSkillInnerCostReduction(player: PlayerState): number {
+  return sumBuffPercent(player, 'externalSkillInnerCostReduction')
+}

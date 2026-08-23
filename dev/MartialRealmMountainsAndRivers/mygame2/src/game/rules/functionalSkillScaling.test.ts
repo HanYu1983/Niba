@@ -18,4 +18,28 @@ describe('功能型外功等級縮放', () => {
       remainingRounds: 4,
     })
   })
+
+  it('天眼望氣 Lv.1 視野 +1（ceil(Lv/3)）', () => {
+    const definition = getBuff('sky-eye-vision')!
+    expect(getFunctionalSkillBuffOverrides('vision-expansion', 1, definition)).toMatchObject({
+      visionRadiusBonus: 1,
+    })
+  })
+
+  it('天眼望氣 Lv.6 視野 +2（ceil(Lv/3)）', () => {
+    const definition = getBuff('sky-eye-vision')!
+    expect(getFunctionalSkillBuffOverrides('vision-expansion', 6, definition)).toMatchObject({
+      visionRadiusBonus: 2,
+    })
+  })
+
+  it('四兩千斤 Lv.1 外功內力消耗 -1，Lv.3 -3', () => {
+    const definition = getBuff('four-ounces-thousand-pounds')!
+    expect(getFunctionalSkillBuffOverrides('skill-cost-reduction', 1, definition)).toMatchObject({
+      externalSkillInnerCostReduction: 1,
+    })
+    expect(getFunctionalSkillBuffOverrides('skill-cost-reduction', 3, definition)).toMatchObject({
+      externalSkillInnerCostReduction: 3,
+    })
+  })
 })

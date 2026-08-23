@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { getCellVisibility, getPlayerVisibleCellIds, updatePlayerVisibility } from './visibilityRules'
+import { getCellVisibility, getPlayerVisibleCellIds, getPlayerVisionRange, updatePlayerVisibility } from './visibilityRules'
 import type { GameState, PlayerState } from '../types'
 import { getMaxHealth, getMaxInnerPower, getMaxStamina } from './playerStatsRules'
 
@@ -266,5 +266,19 @@ describe('visibility rules', () => {
 
     // 據點已解鎖視野，即使玩家不在附近，據點位置仍應可見
     expect(getCellVisibility(state, 'player-1', baseCell)).toBe('visible')
+  })
+
+  it('天眼望氣 Buff 擴大玩家視野半徑', () => {
+    const state = makeState({
+      players: [makePlayer({
+        buffs: [{ id: 'b1', definitionId: 'sky-eye-vision', sourceId: 'insight-sky-eye-vision', remainingRounds: null }],
+      })],
+    })
+    expect(getPlayerVisionRange(state, 'player-1')).toBeGreaterThan(3)
+  })
+
+  it('無視野 Buff 時玩家使用基礎視野', () => {
+    const state = makeState()
+    expect(getPlayerVisionRange(state, 'player-1')).toBe(3)
   })
 })
