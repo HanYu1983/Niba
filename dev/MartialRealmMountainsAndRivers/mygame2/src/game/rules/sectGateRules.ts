@@ -38,24 +38,20 @@ export function addSectGateExperience(gate: { experience: number; level: 1 | 2 |
   return { experience, level: getSectGateLevel(experience) }
 }
 
-/** 取得某門派的四個功法：內功 / 傷害型外功 / 技能型外功 / 軽功。 */
+/** 取得某門派的三個功法：內功 / 傷害型外功 / 靈氣型外功。 */
 export function getSectGateSkills(schoolId: MartialSchoolId | undefined): {
   inner: InnerSkill | null
   damage: ExternalSkill | null
-  functional: ExternalSkill | null
-  lightFoot: ExternalSkill | null
+  aura: ExternalSkill | null
 } {
   const inner = progressionInnerSkills.find((skill) => skill.schoolId === schoolId) ?? null
   const damage = progressionExternalSkills.find(
-    (skill) => skill.schoolId === schoolId && skill.functionalEffect === undefined,
+    (skill) => skill.schoolId === schoolId && skill.category === 'damage' && skill.id.endsWith('-external-damage'),
   ) ?? null
-  const functional = progressionExternalSkills.find(
-    (skill) => skill.schoolId === schoolId && skill.functionalEffect !== undefined && !skill.lootExcluded,
+  const aura = progressionExternalSkills.find(
+    (skill) => skill.schoolId === schoolId && skill.category === 'aura',
   ) ?? null
-  const lightFoot = progressionExternalSkills.find(
-    (skill) => skill.schoolId === schoolId && skill.lootExcluded,
-  ) ?? null
-  return { inner, damage, functional, lightFoot }
+  return { inner, damage, aura }
 }
 
 /** 學習門派功法的固定金錢消費（30 金錢）。 */

@@ -6,9 +6,10 @@ import { allExternalSkillCatalog, getMartialHallSkills, martialHallExternalSkill
 import { jianghuExternalSkills } from './jianghuExternalSkillCatalog'
 
 describe('skillProgressionCatalog', () => {
-  it('提供七個流派且每個流派都有一個內功、傷害外功、機能外功與輕功', () => {
+  it('提供七個流派且每個流派都有內功與外功', () => {
     expect(progressionInnerSkills).toHaveLength(7)
-    expect(progressionExternalSkills).toHaveLength(21)
+    // 每個門派：傷害型 + 靈氣型；赤焰/寒水/百毒另有 debuff 傷害型。
+    expect(progressionExternalSkills).toHaveLength(17)
 
     for (const skills of [progressionInnerSkills, progressionExternalSkills]) {
       const levelsBySchool = new Map<string, number[]>()
@@ -22,38 +23,46 @@ describe('skillProgressionCatalog', () => {
     }
   })
 
-  it('每個流派都有一個傷害外功、一個機能外功與一個門派輕功', () => {
+  it('每個流派都有傷害型與靈氣型外功；赤焰/寒水/百毒另有 debuff 傷害型', () => {
     for (const schoolId of ['golden-body', 'swift-wind', 'scarlet-flame', 'frost-water', 'earth-mountain', 'void-spirit', 'hundred-poison']) {
       const schoolSkills = progressionExternalSkills.filter((skill) => skill.schoolId === schoolId)
-      // 傷害外功：無 functionalEffect。
-      expect(schoolSkills.filter((skill) => !skill.functionalEffect)).toHaveLength(1)
-      // 機能外功：有 functionalEffect 且非輕功
-      expect(schoolSkills.filter((skill) => skill.functionalEffect && !skill.lootExcluded)).toHaveLength(1)
-      // 門派輕功：有 functionalEffect 且 lootExcluded
-      expect(schoolSkills.filter((skill) => skill.lootExcluded)).toHaveLength(1)
+      // 每個門派都有基礎傷害型外功。
+      expect(schoolSkills.filter((skill) => skill.category === 'damage' && skill.id.endsWith('-external-damage'))).toHaveLength(1)
+      // 每個門派都有靈氣型外功（含輕功效果）。
+      expect(schoolSkills.filter((skill) => skill.category === 'aura')).toHaveLength(1)
+    }
+    // 赤焰/寒水/百毒有額外 debuff 傷害型。
+    for (const schoolId of ['scarlet-flame', 'frost-water', 'hundred-poison']) {
+      const schoolSkills = progressionExternalSkills.filter((skill) => skill.schoolId === schoolId)
+      expect(schoolSkills.filter((skill) => skill.category === 'damage')).toHaveLength(2)
     }
   })
 
-  it('內功由一級武館學習，傷害型外功需要二級武館，功能型外功與輕功需要三級武館', () => {
+  it('內功由一級武館學習，傷害型外功需要二級武館，靈氣型外功需要三級武館', () => {
     expect(progressionInnerSkills.every((skill) => skill.requiredHallLevel === 1)).toBe(true)
-    expect(progressionExternalSkills.filter((skill) => !skill.functionalEffect).every((skill) => skill.id.endsWith('-external-damage') && skill.requiredHallLevel === 2)).toBe(true)
-    expect(progressionExternalSkills.filter((skill) => skill.functionalEffect).every((skill) => skill.requiredHallLevel === 3)).toBe(true)
+    expect(progressionExternalSkills.filter((skill) => skill.category === 'damage' && skill.id.endsWith('-external-damage')).every((skill) => skill.requiredHallLevel === 2)).toBe(true)
+    expect(progressionExternalSkills.filter((skill) => skill.category === 'aura').every((skill) => skill.requiredHallLevel === 3)).toBe(true)
   })
 
   it('武館販售目錄只包含太虛流進階功法', async () => {
     expect(martialHallInnerSkillCatalog.filter((skill) => skill.school)).toHaveLength(1)
-    expect(martialHallExternalSkillCatalog.filter((skill) => skill.school)).toHaveLength(3)
+    expect(martialHallExternalSkillCatalog.filter((skill) => skill.school)).toHaveLength(2)
     expect(martialHallInnerSkillCatalog.filter((skill) => skill.school).every((skill) => skill.school === '太虛流')).toBe(true)
     expect(martialHallExternalSkillCatalog.filter((skill) => skill.school).every((skill) => skill.school === '太虛流')).toBe(true)
   })
 
-  it('每個機能型外功與輕功都有具體效果描述', () => {
-    const functionalSkills = progressionExternalSkills.filter((skill) => skill.functionalEffect)
+  it('每個靈氣型外功與 debuff 型外功都有具體效果描述', () => {
+    const auraSkills = progressionExternalSkills.filter((skill) => skill.category === 'aura')
+    const debuffSkills = progressionExternalSkills.filter((skill) => skill.category === 'damage' && skill.id.endsWith('-external-damage-debuff'))
 
-    expect(functionalSkills).toHaveLength(14)
-    for (const skill of functionalSkills) {
-      const effect = skill.functionalEffect as keyof typeof functionalExternalSkillDescriptions
+    // 靈氣型：描述包含輕功效果（地形移動）的 formulaDescription。
+    for (const skill of auraSkills) {
       expect(skill.description).not.toContain('技能型外功')
+      expect(skill.description).toContain(skill.formulaDescription)
+    }
+    // debuff 型：描述包含自身 functionalEffect 效果。
+    for (const skill of debuffSkills) {
+      const effect = skill.functionalEffect as keyof typeof functionalExternalSkillDescriptions
       expect(skill.description).toContain(functionalExternalSkillDescriptions[effect])
       expect(skill.formulaDescription).toBe(functionalExternalSkillDescriptions[effect])
     }
