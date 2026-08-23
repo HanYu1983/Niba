@@ -140,12 +140,16 @@ id、中文名、出處故事一句話、所屬 catalog 與分類、關鍵參數
 
 ### 3.3 驗證工作流
 
+⚠️ 本機未安裝 Node.js——所有 node/npm 指令一律透過 Docker 執行（`mygame2/docker-compose.yml` 提供 `node:22` 服務，工作目錄掛載為 `/workspace`）：
+
 ```powershell
-npx tsc -b --pretty false    # union 改動最容易漏
-npx vitest run               # 全量回歸；重點: itemCatalog / skillProgressionCatalog / equipmentCatalog / lootFactory / eventCatalog
-npm run analyze:combat       # 動了傷害數值後跑平衡分析
-npm run dev                  # 手動冒煙：開一局拿到新內容走一遍流程
+docker compose run --rm node npx tsc -b --pretty false    # 型別（union 改動最容易漏）
+docker compose run --rm node npx vitest run               # 全量回歸；重點: itemCatalog / skillProgressionCatalog / equipmentCatalog / lootFactory / eventCatalog
+docker compose run --rm node npm run analyze:combat       # 動了傷害數值後跑平衡分析
+docker compose run --rm -p 5173:5173 node npm run dev     # 手動冒煙：開一局拿到新內容走一遍流程
 ```
+
+若相依套件有異動，先 `docker compose run --rm node npm i`。
 
 為跨目錄的新引用補存在性測試（仿 `itemCatalog.test.ts` 對 buff 的檢查）。
 

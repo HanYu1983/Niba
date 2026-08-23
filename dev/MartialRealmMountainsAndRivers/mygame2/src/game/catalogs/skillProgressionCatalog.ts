@@ -151,6 +151,22 @@ export const progressionExternalSkills: ExternalSkill[] = schools.flatMap((schoo
     target: 'target',
     calculateDamage: (attributes: PlayerAttributes) => school.calculate(attributes, 1) + 1,
   }
+  // 二層傳承：取流派名字表第二個名稱，同源公式 ×2，需四級武館方能研習。
+  const advancedDamageSkill: ExternalSkill = {
+    id: `${school.id}-external-damage-2`,
+    name: school.externalNames[1],
+    description: `${school.theme}二層傳承，威力更上一層樓的傷害型外功。`,
+    formulaDescription: `${school.formula}（最低 1）× 2`,
+    insightCost: 3,
+    requiredHallLevel: 4,
+    school: school.name,
+    schoolId: school.id,
+    element: school.element,
+    level: 1,
+    innerPowerCost: 6,
+    target: 'target',
+    calculateDamage: (attributes: PlayerAttributes) => school.calculate(attributes, 2),
+  }
   const functionalSkill: ExternalSkill = {
     id: `${school.id}-external-functional`,
     name: functionalName,
@@ -185,7 +201,7 @@ export const progressionExternalSkills: ExternalSkill[] = schools.flatMap((schoo
     // 門派輕功僅透過武館學習，不從怪物/巢穴掉落。
     lootExcluded: true,
   }
-  return [damageSkill, functionalSkill, lightFootSkill]
+  return [damageSkill, advancedDamageSkill, functionalSkill, lightFootSkill]
 })
 
 export const martialHallExternalSkills: ExternalSkill[] = progressionExternalSkills.filter((skill) => skill.school === martialHallSchool.name)

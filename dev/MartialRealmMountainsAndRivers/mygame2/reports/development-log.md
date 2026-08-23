@@ -1,5 +1,34 @@
 # 開發日誌
 
+## 2026-08-23｜六門派二層傳承傷害外功
+
+### 本次完成
+
+- 為六個門派各新增一個進階傷害型外功，取流派名字表第二個名稱（此前從未使用）：
+  - 金剛流「撼山拳」、追風流「踏雲掌」、赤炎流「赤焰指」、寒水流「凝霜指」、厚土流「崩山掌」、太虛流「空明掌」。
+- 定位為「二層傳承」：同源公式威力 ×2（使用既有 `school.calculate(attributes, 2)` 等級參數），成長曲線對齊既有外功階梯——
+  - 悟性成本 3（基礎外功 2 +1）、內力消耗 6（基礎 4 → 6）、需武館 Lv.4（基礎外功 Lv.2、功能外功 Lv.3 的下一階）。
+- 自動接入所有消費端：`allExternalSkillCatalog` 掉落池（Lv.4 以上怪物才會掉落）、各門派武館貨源（`getMartialHallSkills`）、編輯器選單與詞彙高亮。
+
+### 影響檔案
+
+- `src/game/catalogs/skillProgressionCatalog.ts`
+  - `progressionExternalSkills` 生成流程新增 `advancedDamageSkill`（id：`{schoolId}-external-damage-2`）。
+- `src/game/catalogs/skillProgressionCatalog.test.ts`
+  - 更新總量斷言（18 → 24）與各流派組成斷言。
+  - 新增測試：每流派進階外功與基礎外功同名不同招、成本更重、威力更高、元素一致。
+
+### 驗證結果
+
+- TypeScript：`npx tsc -b --pretty false` 通過。
+- 測試：67 個檔案 / 697 項全數通過。
+
+### 待驗收項目
+
+1. 在太虛武館將建築升級至 Lv.4，確認可學習「空明掌」且價格為 45 金（悟性成本 3 × 15）。
+2. 確認 Lv.4 以下怪物不掉落進階外功。
+3. 實戰施放任一進階外功，確認傷害約為基礎版兩倍。
+
 ## 2026-08-20｜地形深度系統收尾階段
 
 ### 本次完成
