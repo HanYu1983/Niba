@@ -347,6 +347,728 @@ export const campaignScenarioCatalog: Record<string, ScenarioDefinition> = {
       { id: 'trigger-victory', condition: 'on-victory', action: 'start-dialogue', actionParam: 'group-c1-victory' },
     ],
   },
+  // ── 番外篇「玄冥遺禍」三部曲：非教學關卡，難度以巢穴數與怪物數階梯遞增（1→2 巢、3→5→7 隻）──
+  'extra-1-blackstone-road': {
+    version: '1.0.0',
+    id: 'extra-1-blackstone-road',
+    title: '番外一：黑潮初現',
+    description: '玄冥封印十年，黑石驛道上卻再現妖影。追查失蹤行商的下落，斬殺妖物頭目「影牙」。',
+    chapterIndex: 100,
+    mapSize: { rows: 12, columns: 12 },
+    cells: (() => {
+      const rows = 12
+      const columns = 12
+      const cells: ScenarioDefinition['cells'] = []
+      for (let row = 0; row < rows; row++) {
+        for (let column = 0; column < columns; column++) {
+          const isBorder = row === 0 || column === 0 || row === rows - 1 || column === columns - 1
+          const isRoad = !isBorder && row === 6
+          const isForestA = !isBorder && !isRoad && row <= 4 && column >= 7 && column <= 10
+          const isForestB = !isBorder && !isRoad && row >= 8 && row <= 10 && column >= 5 && column <= 7
+          cells.push({
+            row,
+            column,
+            terrain: isBorder ? 'wall' : isRoad ? 'road' : isForestA || isForestB ? 'forest' : 'plain',
+          })
+        }
+      }
+      return cells
+    })(),
+    entities: [
+      {
+        id: 'player-1',
+        kind: 'player',
+        position: { row: 10, column: 2 },
+        data: {
+          name: '凌淵',
+          money: 80,
+          innerSkillId: 'tuna-gong',
+          innerSkillIds: ['tuna-gong'],
+          externalSkillIds: ['sky-breaking-palm'],
+          equippedExternalSkillIds: ['sky-breaking-palm'],
+          inventory: [
+            { itemId: 'heal-wound-medicine', quantity: 2 },
+            { itemId: 'gather-qi-pill', quantity: 1 },
+          ],
+        },
+      },
+      {
+        id: 'base-waystation-inn',
+        kind: 'base',
+        position: { row: 10, column: 3 },
+        data: {
+          name: '驛站小棧',
+          buildingMaterials: 70,
+          maxBuildingMaterials: 110,
+          health: 100,
+          maxHealth: 100,
+          discovered: true,
+          presetBuildings: [
+            { type: 'infirmary', level: 1 },
+            { type: 'board', level: 1 },
+          ],
+        },
+      },
+      {
+        id: 'nest-ex1',
+        kind: 'nest',
+        position: { row: 2, column: 9 },
+        data: {
+          name: '黑影妖窟',
+          health: 45,
+          maxHealth: 45,
+          spawnChance: 0.12,
+          cooldownRounds: 0,
+          spawnLevel: 1,
+          behaviorType: 'hunter',
+          schoolId: 'void-spirit',
+        },
+      },
+      {
+        id: 'elite-shadow-fang',
+        kind: 'creature',
+        position: { row: 4, column: 7 },
+        data: {
+          name: '影牙',
+          isBoss: false,
+          level: 2,
+          schoolId: 'void-spirit',
+          behaviorType: 'hunter',
+          homeNestId: 'nest-ex1',
+          attributes: { armStrength: 7, constitution: 6, agility: 9, innerEnergy: 6, insight: 7 },
+          aggroRange: 4,
+        },
+      },
+      {
+        id: 'patrol-ex1-a',
+        kind: 'creature',
+        position: { row: 5, column: 8 },
+        data: {
+          name: '巡影·甲',
+          level: 1,
+          schoolId: 'void-spirit',
+          behaviorType: 'roamer',
+          homeNestId: 'nest-ex1',
+          attributes: { armStrength: 6, constitution: 5, agility: 7, innerEnergy: 5, insight: 5 },
+          aggroRange: 2,
+        },
+      },
+      {
+        id: 'patrol-ex1-b',
+        kind: 'creature',
+        position: { row: 8, column: 7 },
+        data: {
+          name: '巡影·乙',
+          level: 1,
+          schoolId: 'void-spirit',
+          behaviorType: 'hunter',
+          homeNestId: 'nest-ex1',
+          attributes: { armStrength: 6, constitution: 5, agility: 8, innerEnergy: 5, insight: 5 },
+          aggroRange: 3,
+        },
+      },
+    ],
+    quests: {
+      victoryObjectives: [
+        {
+          id: 'obj-ex1-defeat-fang',
+          title: '誅殺妖物頭目影牙',
+          type: 'defeat-creature',
+          targetId: 'elite-shadow-fang',
+          targetValue: 1,
+        },
+        {
+          id: 'obj-ex1-survive',
+          title: '守住驛站小棧十二回合',
+          type: 'survive-rounds',
+          targetValue: 12,
+          isOptional: true,
+        },
+      ],
+      failConditions: {
+        baseMustSurvive: true,
+        playerMustSurvive: true,
+        maxRounds: 22,
+      },
+    },
+    dialogues: {
+      'group-ex1-start': {
+        name: '番外一開局對話',
+        steps: [
+          {
+            id: 'ex1-start-1',
+            speakerName: '白衣',
+            speakerIcon: '🤍',
+            content: '凌少俠，黑石驛道夜有黑影出沒，行商屢屢失蹤——那氣息……與玄冥爪牙同源。',
+          },
+          {
+            id: 'ex1-start-2',
+            speakerName: '凌淵',
+            speakerIcon: '🗡️',
+            content: '師父封印玄冥已十載，莫非封印有變？且先斬了這些探子。',
+          },
+        ],
+      },
+      'group-ex1-warn': {
+        name: '番外一第六回合警告對話',
+        steps: [
+          {
+            id: 'ex1-warn-1',
+            speakerName: '白衣',
+            speakerIcon: '🤍',
+            content: '影動愈密——巢穴裡的東西察覺我們了，速戰速決。',
+          },
+        ],
+      },
+      'group-ex1-victory': {
+        name: '番外一勝利對話',
+        steps: [
+          {
+            id: 'ex1-victory-1',
+            speakerName: '凌淵',
+            speakerIcon: '🗡️',
+            content: '影牙已誅，可這信物……不是尋常妖物該有的東西。',
+          },
+          {
+            id: 'ex1-victory-2',
+            speakerName: '白衣',
+            speakerIcon: '🤍',
+            content: '霜林渡方向妖氣更盛。看來，這只是前哨。',
+          },
+        ],
+      },
+    },
+    triggers: [
+      { id: 'trigger-ex1-start', condition: 'on-start', action: 'start-dialogue', actionParam: 'group-ex1-start' },
+      { id: 'trigger-ex1-round6', condition: 'on-round-reached', conditionParam: '6', action: 'start-dialogue', actionParam: 'group-ex1-warn' },
+      { id: 'trigger-ex1-victory', condition: 'on-victory', action: 'start-dialogue', actionParam: 'group-ex1-victory' },
+    ],
+  },
+  'extra-2-frost-ford': {
+    version: '1.0.0',
+    id: 'extra-2-frost-ford',
+    title: '番外二：霜林夜襲',
+    description: '蠱面判官率妖眾夜渡霜林渡口，北岸三鎮命懸一線。守住渡口客棧，反擊妖潮。',
+    chapterIndex: 101,
+    mapSize: { rows: 13, columns: 13 },
+    cells: (() => {
+      const rows = 13
+      const columns = 13
+      const cells: ScenarioDefinition['cells'] = []
+      for (let row = 0; row < rows; row++) {
+        for (let column = 0; column < columns; column++) {
+          const isBorder = row === 0 || column === 0 || row === rows - 1 || column === columns - 1
+          const isBridge = !isBorder && column === 6 && (row === 6 || row === 7)
+          const isRiver = !isBorder && column === 6 && !isBridge
+          const isForestW = !isBorder && column >= 2 && column <= 4 && row >= 1 && row <= 4
+          const isForestE = !isBorder && column >= 8 && column <= 11 && row >= 8 && row <= 11
+          cells.push({
+            row,
+            column,
+            terrain: isBorder ? 'wall' : isBridge ? 'road' : isRiver ? 'water' : isForestW || isForestE ? 'forest' : 'plain',
+          })
+        }
+      }
+      return cells
+    })(),
+    entities: [
+      {
+        id: 'player-1',
+        kind: 'player',
+        position: { row: 11, column: 2 },
+        data: {
+          name: '凌淵',
+          money: 100,
+          innerSkillId: 'tuna-gong',
+          innerSkillIds: ['tuna-gong'],
+          externalSkillIds: ['sky-breaking-palm'],
+          equippedExternalSkillIds: ['sky-breaking-palm'],
+          inventory: [
+            { itemId: 'heal-wound-medicine', quantity: 3 },
+            { itemId: 'gather-qi-pill', quantity: 2 },
+          ],
+        },
+      },
+      {
+        id: 'base-ford-inn',
+        kind: 'base',
+        position: { row: 11, column: 3 },
+        data: {
+          name: '渡口客棧',
+          buildingMaterials: 90,
+          maxBuildingMaterials: 120,
+          health: 100,
+          maxHealth: 100,
+          discovered: true,
+          presetBuildings: [
+            { type: 'infirmary', level: 1 },
+            { type: 'board', level: 1 },
+            { type: 'warehouse', level: 1 },
+          ],
+        },
+      },
+      {
+        id: 'nest-ex2-w',
+        kind: 'nest',
+        position: { row: 2, column: 3 },
+        data: {
+          name: '霧林妖窟·西',
+          health: 50,
+          maxHealth: 50,
+          spawnChance: 0.15,
+          cooldownRounds: 0,
+          spawnLevel: 2,
+          behaviorType: 'hunter',
+          schoolId: 'hundred-poison',
+        },
+      },
+      {
+        id: 'nest-ex2-e',
+        kind: 'nest',
+        position: { row: 2, column: 9 },
+        data: {
+          name: '霧林妖窟·東',
+          health: 50,
+          maxHealth: 50,
+          spawnChance: 0.15,
+          cooldownRounds: 0,
+          spawnLevel: 2,
+          behaviorType: 'roamer',
+          schoolId: 'void-spirit',
+        },
+      },
+      {
+        id: 'boss-poison-judge',
+        kind: 'creature',
+        position: { row: 5, column: 4 },
+        data: {
+          name: '蠱面判官',
+          isBoss: true,
+          level: 3,
+          schoolId: 'hundred-poison',
+          behaviorType: 'sieger',
+          homeNestId: 'nest-ex2-w',
+          attributes: { armStrength: 9, constitution: 9, agility: 10, innerEnergy: 9, insight: 10 },
+          maxHealthOverride: 60,
+          aggroRange: 4,
+        },
+      },
+      {
+        id: 'venom-ex2-a',
+        kind: 'creature',
+        position: { row: 4, column: 9 },
+        data: {
+          name: '毒卒·甲',
+          level: 1,
+          schoolId: 'hundred-poison',
+          behaviorType: 'hunter',
+          homeNestId: 'nest-ex2-w',
+          attributes: { armStrength: 6, constitution: 5, agility: 7, innerEnergy: 5, insight: 6 },
+          aggroRange: 3,
+        },
+      },
+      {
+        id: 'venom-ex2-b',
+        kind: 'creature',
+        position: { row: 8, column: 3 },
+        data: {
+          name: '毒卒·乙',
+          level: 1,
+          schoolId: 'hundred-poison',
+          behaviorType: 'roamer',
+          homeNestId: 'nest-ex2-w',
+          attributes: { armStrength: 5, constitution: 6, agility: 7, innerEnergy: 6, insight: 5 },
+          aggroRange: 2,
+        },
+      },
+      {
+        id: 'night-fiend-ex2',
+        kind: 'creature',
+        position: { row: 7, column: 8 },
+        data: {
+          name: '夜行妖',
+          level: 1,
+          schoolId: 'void-spirit',
+          behaviorType: 'hunter',
+          homeNestId: 'nest-ex2-e',
+          attributes: { armStrength: 6, constitution: 5, agility: 8, innerEnergy: 5, insight: 5 },
+          aggroRange: 3,
+        },
+      },
+      {
+        id: 'river-rover-ex2',
+        kind: 'creature',
+        position: { row: 9, column: 9 },
+        data: {
+          name: '巡河妖',
+          level: 1,
+          schoolId: 'void-spirit',
+          behaviorType: 'roamer',
+          homeNestId: 'nest-ex2-e',
+          attributes: { armStrength: 5, constitution: 6, agility: 7, innerEnergy: 5, insight: 6 },
+          aggroRange: 2,
+        },
+      },
+    ],
+    quests: {
+      victoryObjectives: [
+        {
+          id: 'obj-ex2-defeat-judge',
+          title: '擊敗蠱面判官',
+          type: 'defeat-creature',
+          targetId: 'boss-poison-judge',
+          targetValue: 1,
+        },
+        {
+          id: 'obj-ex2-survive',
+          title: '守住渡口客棧十五回合',
+          type: 'survive-rounds',
+          targetValue: 15,
+          isOptional: true,
+        },
+      ],
+      failConditions: {
+        baseMustSurvive: true,
+        playerMustSurvive: true,
+        maxRounds: 25,
+      },
+    },
+    dialogues: {
+      'group-ex2-start': {
+        name: '番外二開局對話',
+        steps: [
+          {
+            id: 'ex2-start-1',
+            speakerName: '白衣',
+            speakerIcon: '🤍',
+            content: '蠱面判官率眾夜襲霜林渡——渡口一失，北岸三鎮皆成孤島。',
+          },
+          {
+            id: 'ex2-start-2',
+            speakerName: '凌淵',
+            speakerIcon: '🗡️',
+            content: '守住宿頭，一個也不放它們過橋。',
+          },
+        ],
+      },
+      'group-ex2-warn': {
+        name: '番外二第八回合警告對話',
+        steps: [
+          {
+            id: 'ex2-warn-1',
+            speakerName: '凌淵',
+            speakerIcon: '🗡️',
+            content: '第二波妖物上來了——穩住陣腳，橋面狹窄，正好逐一擊破！',
+          },
+        ],
+      },
+      'group-ex2-victory': {
+        name: '番外二勝利對話',
+        steps: [
+          {
+            id: 'ex2-victory-1',
+            speakerName: '凌淵',
+            speakerIcon: '🗡️',
+            content: '判官伏誅。從他隨身的蠱囊裡搜出了地圖——玄岩妖窟。',
+          },
+          {
+            id: 'ex2-victory-2',
+            speakerName: '白衣',
+            speakerIcon: '🤍',
+            content: '直搗巢穴，絕其根源。此去兇險，少俠珍重。',
+          },
+        ],
+      },
+    },
+    triggers: [
+      { id: 'trigger-ex2-start', condition: 'on-start', action: 'start-dialogue', actionParam: 'group-ex2-start' },
+      { id: 'trigger-ex2-round8', condition: 'on-round-reached', conditionParam: '8', action: 'start-dialogue', actionParam: 'group-ex2-warn' },
+      { id: 'trigger-ex2-victory', condition: 'on-victory', action: 'start-dialogue', actionParam: 'group-ex2-victory' },
+    ],
+  },
+  'extra-3-darkrock-lair': {
+    version: '1.0.0',
+    id: 'extra-3-darkrock-lair',
+    title: '番外三：玄岩妖窟',
+    description: '玄冥首徒幽淵盤踞玄岩深處，三座妖窟遙相呼應。深入絕地，剷平妖窟，了結十年前的血債。',
+    chapterIndex: 102,
+    mapSize: { rows: 14, columns: 14 },
+    cells: (() => {
+      const rows = 14
+      const columns = 14
+      const cells: ScenarioDefinition['cells'] = []
+      for (let row = 0; row < rows; row++) {
+        for (let column = 0; column < columns; column++) {
+          const isBorder = row === 0 || column === 0 || row === rows - 1 || column === columns - 1
+          const isMountain = !isBorder && row <= 6 && column >= 4 && column <= 11
+          const isWater = !isBorder && row === 9 && column >= 10
+          cells.push({
+            row,
+            column,
+            terrain: isBorder ? 'wall' : isMountain ? 'mountain' : isWater ? 'water' : 'plain',
+          })
+        }
+      }
+      return cells
+    })(),
+    entities: [
+      {
+        id: 'player-1',
+        kind: 'player',
+        position: { row: 12, column: 2 },
+        data: {
+          name: '凌淵',
+          money: 120,
+          innerSkillId: 'tuna-gong',
+          innerSkillIds: ['tuna-gong'],
+          externalSkillIds: ['sky-breaking-palm'],
+          equippedExternalSkillIds: ['sky-breaking-palm'],
+          inventory: [
+            { itemId: 'heal-wound-medicine', quantity: 3 },
+            { itemId: 'gather-qi-pill', quantity: 3 },
+          ],
+        },
+      },
+      {
+        id: 'base-forward-camp',
+        kind: 'base',
+        position: { row: 12, column: 3 },
+        data: {
+          name: '北征前哨營',
+          buildingMaterials: 100,
+          maxBuildingMaterials: 130,
+          health: 100,
+          maxHealth: 100,
+          discovered: true,
+          presetBuildings: [
+            { type: 'infirmary', level: 2 },
+            { type: 'board', level: 1 },
+            { type: 'warehouse', level: 1 },
+          ],
+        },
+      },
+      {
+        id: 'nest-ex3-w',
+        kind: 'nest',
+        position: { row: 3, column: 4 },
+        data: {
+          name: '玄岩妖窟·西',
+          health: 55,
+          maxHealth: 55,
+          spawnChance: 0.15,
+          cooldownRounds: 0,
+          spawnLevel: 2,
+          behaviorType: 'hunter',
+          schoolId: 'void-spirit',
+        },
+      },
+      {
+        id: 'nest-ex3-m',
+        kind: 'nest',
+        position: { row: 5, column: 7 },
+        data: {
+          name: '玄岩妖窟·中',
+          health: 55,
+          maxHealth: 55,
+          spawnChance: 0.18,
+          cooldownRounds: 0,
+          spawnLevel: 2,
+          behaviorType: 'roamer',
+          schoolId: 'ghost-shadow',
+        },
+      },
+      {
+        id: 'nest-ex3-e',
+        kind: 'nest',
+        position: { row: 2, column: 10 },
+        data: {
+          name: '玄岩妖窟·東',
+          health: 55,
+          maxHealth: 55,
+          spawnChance: 0.15,
+          cooldownRounds: 0,
+          spawnLevel: 2,
+          behaviorType: 'hunter',
+          schoolId: 'void-spirit',
+        },
+      },
+      {
+        id: 'boss-youyuan',
+        kind: 'creature',
+        position: { row: 2, column: 8 },
+        data: {
+          name: '玄冥首徒·幽淵',
+          isBoss: true,
+          level: 4,
+          schoolId: 'void-spirit',
+          behaviorType: 'sieger',
+          homeNestId: 'nest-ex3-m',
+          attributes: { armStrength: 11, constitution: 11, agility: 13, innerEnergy: 11, insight: 11 },
+          maxHealthOverride: 85,
+          aggroRange: 5,
+        },
+      },
+      {
+        id: 'assassin-ex3-a',
+        kind: 'creature',
+        position: { row: 4, column: 6 },
+        data: {
+          name: '幽影殺手·甲',
+          level: 2,
+          schoolId: 'ghost-shadow',
+          behaviorType: 'hunter',
+          homeNestId: 'nest-ex3-m',
+          attributes: { armStrength: 8, constitution: 7, agility: 11, innerEnergy: 7, insight: 8 },
+          aggroRange: 4,
+        },
+      },
+      {
+        id: 'assassin-ex3-b',
+        kind: 'creature',
+        position: { row: 4, column: 9 },
+        data: {
+          name: '幽影殺手·乙',
+          level: 2,
+          schoolId: 'ghost-shadow',
+          behaviorType: 'hunter',
+          homeNestId: 'nest-ex3-e',
+          attributes: { armStrength: 8, constitution: 7, agility: 11, innerEnergy: 7, insight: 8 },
+          aggroRange: 4,
+        },
+      },
+      {
+        id: 'fiend-ex3-a',
+        kind: 'creature',
+        position: { row: 6, column: 4 },
+        data: {
+          name: '妖卒·甲',
+          level: 1,
+          schoolId: 'void-spirit',
+          behaviorType: 'roamer',
+          homeNestId: 'nest-ex3-w',
+          attributes: { armStrength: 6, constitution: 5, agility: 7, innerEnergy: 5, insight: 5 },
+          aggroRange: 2,
+        },
+      },
+      {
+        id: 'fiend-ex3-b',
+        kind: 'creature',
+        position: { row: 6, column: 10 },
+        data: {
+          name: '妖卒·乙',
+          level: 1,
+          schoolId: 'void-spirit',
+          behaviorType: 'hunter',
+          homeNestId: 'nest-ex3-e',
+          attributes: { armStrength: 6, constitution: 5, agility: 8, innerEnergy: 5, insight: 5 },
+          aggroRange: 3,
+        },
+      },
+      {
+        id: 'fiend-ex3-c',
+        kind: 'creature',
+        position: { row: 8, column: 7 },
+        data: {
+          name: '妖卒·丙',
+          level: 1,
+          schoolId: 'void-spirit',
+          behaviorType: 'roamer',
+          homeNestId: 'nest-ex3-m',
+          attributes: { armStrength: 5, constitution: 6, agility: 7, innerEnergy: 5, insight: 6 },
+          aggroRange: 2,
+        },
+      },
+      {
+        id: 'fiend-ex3-d',
+        kind: 'creature',
+        position: { row: 10, column: 9 },
+        data: {
+          name: '妖卒·丁',
+          level: 1,
+          schoolId: 'void-spirit',
+          behaviorType: 'hunter',
+          homeNestId: 'nest-ex3-e',
+          attributes: { armStrength: 6, constitution: 5, agility: 8, innerEnergy: 5, insight: 5 },
+          aggroRange: 3,
+        },
+      },
+    ],
+    quests: {
+      victoryObjectives: [
+        {
+          id: 'obj-ex3-defeat-youyuan',
+          title: '誅殺玄冥首徒幽淵',
+          type: 'defeat-creature',
+          targetId: 'boss-youyuan',
+          targetValue: 1,
+        },
+        {
+          id: 'obj-ex3-raze-nests',
+          title: '剷平三座妖窟',
+          type: 'destroy-nest',
+          targetValue: 3,
+          isOptional: true,
+        },
+      ],
+      failConditions: {
+        baseMustSurvive: true,
+        playerMustSurvive: true,
+        maxRounds: 28,
+      },
+    },
+    dialogues: {
+      'group-ex3-start': {
+        name: '番外三開局對話',
+        steps: [
+          {
+            id: 'ex3-start-1',
+            speakerName: '白衣',
+            speakerIcon: '🤍',
+            content: '妖窟深處氣息駭人。幽淵乃玄冥首徒——十年前圍殺你師父的人中，便有他一份。',
+          },
+          {
+            id: 'ex3-start-2',
+            speakerName: '凌淵',
+            speakerIcon: '🗡️',
+            content: '今日，便以他的血祭奠師父在天之靈。',
+          },
+        ],
+      },
+      'group-ex3-warn': {
+        name: '番外三第十回合警告對話',
+        steps: [
+          {
+            id: 'ex3-warn-1',
+            speakerName: '白衣',
+            speakerIcon: '🤍',
+            content: '三座妖窟同時震動——它們要傾巢而出，掩護幽淵了！',
+          },
+        ],
+      },
+      'group-ex3-victory': {
+        name: '番外三勝利對話',
+        steps: [
+          {
+            id: 'ex3-victory-1',
+            speakerName: '凌淵',
+            speakerIcon: '🗡️',
+            content: '幽淵授首。可他臨死前說……「封印將破，吾王將醒」。',
+          },
+          {
+            id: 'ex3-victory-2',
+            speakerName: '白衣',
+            speakerIcon: '🤍',
+            content: '看來這只是開端。少俠，江湖與山河，都需要你繼續走下去。',
+          },
+        ],
+      },
+    },
+    triggers: [
+      { id: 'trigger-ex3-start', condition: 'on-start', action: 'start-dialogue', actionParam: 'group-ex3-start' },
+      { id: 'trigger-ex3-round10', condition: 'on-round-reached', conditionParam: '10', action: 'start-dialogue', actionParam: 'group-ex3-warn' },
+      { id: 'trigger-ex3-victory', condition: 'on-victory', action: 'start-dialogue', actionParam: 'group-ex3-victory' },
+    ],
+  },
 }
 
 /** 取得所有章節的簡介清單（供章節選擇 UI 使用）。 */

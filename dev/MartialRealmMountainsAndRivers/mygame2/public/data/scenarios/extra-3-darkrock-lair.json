@@ -1,0 +1,1365 @@
+{
+  "version": "1.0.0",
+  "id": "extra-3-darkrock-lair",
+  "title": "番外三：玄岩妖窟",
+  "description": "玄冥首徒幽淵盤踞玄岩深處，三座妖窟遙相呼應。深入絕地，剷平妖窟，了結十年前的血債。",
+  "chapterIndex": 102,
+  "mapSize": {
+    "rows": 14,
+    "columns": 14
+  },
+  "cells": [
+    {
+      "row": 0,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 1,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 2,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 3,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 4,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 5,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 6,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 7,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 8,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 9,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 10,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 11,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 12,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 13,
+      "terrain": "wall"
+    },
+    {
+      "row": 1,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 1,
+      "column": 1,
+      "terrain": "plain"
+    },
+    {
+      "row": 1,
+      "column": 2,
+      "terrain": "plain"
+    },
+    {
+      "row": 1,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 1,
+      "column": 4,
+      "terrain": "mountain"
+    },
+    {
+      "row": 1,
+      "column": 5,
+      "terrain": "mountain"
+    },
+    {
+      "row": 1,
+      "column": 6,
+      "terrain": "mountain"
+    },
+    {
+      "row": 1,
+      "column": 7,
+      "terrain": "mountain"
+    },
+    {
+      "row": 1,
+      "column": 8,
+      "terrain": "mountain"
+    },
+    {
+      "row": 1,
+      "column": 9,
+      "terrain": "mountain"
+    },
+    {
+      "row": 1,
+      "column": 10,
+      "terrain": "mountain"
+    },
+    {
+      "row": 1,
+      "column": 11,
+      "terrain": "mountain"
+    },
+    {
+      "row": 1,
+      "column": 12,
+      "terrain": "plain"
+    },
+    {
+      "row": 1,
+      "column": 13,
+      "terrain": "wall"
+    },
+    {
+      "row": 2,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 2,
+      "column": 1,
+      "terrain": "plain"
+    },
+    {
+      "row": 2,
+      "column": 2,
+      "terrain": "plain"
+    },
+    {
+      "row": 2,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 2,
+      "column": 4,
+      "terrain": "mountain"
+    },
+    {
+      "row": 2,
+      "column": 5,
+      "terrain": "mountain"
+    },
+    {
+      "row": 2,
+      "column": 6,
+      "terrain": "mountain"
+    },
+    {
+      "row": 2,
+      "column": 7,
+      "terrain": "mountain"
+    },
+    {
+      "row": 2,
+      "column": 8,
+      "terrain": "mountain"
+    },
+    {
+      "row": 2,
+      "column": 9,
+      "terrain": "mountain"
+    },
+    {
+      "row": 2,
+      "column": 10,
+      "terrain": "mountain"
+    },
+    {
+      "row": 2,
+      "column": 11,
+      "terrain": "mountain"
+    },
+    {
+      "row": 2,
+      "column": 12,
+      "terrain": "plain"
+    },
+    {
+      "row": 2,
+      "column": 13,
+      "terrain": "wall"
+    },
+    {
+      "row": 3,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 3,
+      "column": 1,
+      "terrain": "plain"
+    },
+    {
+      "row": 3,
+      "column": 2,
+      "terrain": "plain"
+    },
+    {
+      "row": 3,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 3,
+      "column": 4,
+      "terrain": "mountain"
+    },
+    {
+      "row": 3,
+      "column": 5,
+      "terrain": "mountain"
+    },
+    {
+      "row": 3,
+      "column": 6,
+      "terrain": "mountain"
+    },
+    {
+      "row": 3,
+      "column": 7,
+      "terrain": "mountain"
+    },
+    {
+      "row": 3,
+      "column": 8,
+      "terrain": "mountain"
+    },
+    {
+      "row": 3,
+      "column": 9,
+      "terrain": "mountain"
+    },
+    {
+      "row": 3,
+      "column": 10,
+      "terrain": "mountain"
+    },
+    {
+      "row": 3,
+      "column": 11,
+      "terrain": "mountain"
+    },
+    {
+      "row": 3,
+      "column": 12,
+      "terrain": "plain"
+    },
+    {
+      "row": 3,
+      "column": 13,
+      "terrain": "wall"
+    },
+    {
+      "row": 4,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 4,
+      "column": 1,
+      "terrain": "plain"
+    },
+    {
+      "row": 4,
+      "column": 2,
+      "terrain": "plain"
+    },
+    {
+      "row": 4,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 4,
+      "column": 4,
+      "terrain": "mountain"
+    },
+    {
+      "row": 4,
+      "column": 5,
+      "terrain": "mountain"
+    },
+    {
+      "row": 4,
+      "column": 6,
+      "terrain": "mountain"
+    },
+    {
+      "row": 4,
+      "column": 7,
+      "terrain": "mountain"
+    },
+    {
+      "row": 4,
+      "column": 8,
+      "terrain": "mountain"
+    },
+    {
+      "row": 4,
+      "column": 9,
+      "terrain": "mountain"
+    },
+    {
+      "row": 4,
+      "column": 10,
+      "terrain": "mountain"
+    },
+    {
+      "row": 4,
+      "column": 11,
+      "terrain": "mountain"
+    },
+    {
+      "row": 4,
+      "column": 12,
+      "terrain": "plain"
+    },
+    {
+      "row": 4,
+      "column": 13,
+      "terrain": "wall"
+    },
+    {
+      "row": 5,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 5,
+      "column": 1,
+      "terrain": "plain"
+    },
+    {
+      "row": 5,
+      "column": 2,
+      "terrain": "plain"
+    },
+    {
+      "row": 5,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 5,
+      "column": 4,
+      "terrain": "mountain"
+    },
+    {
+      "row": 5,
+      "column": 5,
+      "terrain": "mountain"
+    },
+    {
+      "row": 5,
+      "column": 6,
+      "terrain": "mountain"
+    },
+    {
+      "row": 5,
+      "column": 7,
+      "terrain": "mountain"
+    },
+    {
+      "row": 5,
+      "column": 8,
+      "terrain": "mountain"
+    },
+    {
+      "row": 5,
+      "column": 9,
+      "terrain": "mountain"
+    },
+    {
+      "row": 5,
+      "column": 10,
+      "terrain": "mountain"
+    },
+    {
+      "row": 5,
+      "column": 11,
+      "terrain": "mountain"
+    },
+    {
+      "row": 5,
+      "column": 12,
+      "terrain": "plain"
+    },
+    {
+      "row": 5,
+      "column": 13,
+      "terrain": "wall"
+    },
+    {
+      "row": 6,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 6,
+      "column": 1,
+      "terrain": "plain"
+    },
+    {
+      "row": 6,
+      "column": 2,
+      "terrain": "plain"
+    },
+    {
+      "row": 6,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 6,
+      "column": 4,
+      "terrain": "mountain"
+    },
+    {
+      "row": 6,
+      "column": 5,
+      "terrain": "mountain"
+    },
+    {
+      "row": 6,
+      "column": 6,
+      "terrain": "mountain"
+    },
+    {
+      "row": 6,
+      "column": 7,
+      "terrain": "mountain"
+    },
+    {
+      "row": 6,
+      "column": 8,
+      "terrain": "mountain"
+    },
+    {
+      "row": 6,
+      "column": 9,
+      "terrain": "mountain"
+    },
+    {
+      "row": 6,
+      "column": 10,
+      "terrain": "mountain"
+    },
+    {
+      "row": 6,
+      "column": 11,
+      "terrain": "mountain"
+    },
+    {
+      "row": 6,
+      "column": 12,
+      "terrain": "plain"
+    },
+    {
+      "row": 6,
+      "column": 13,
+      "terrain": "wall"
+    },
+    {
+      "row": 7,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 7,
+      "column": 1,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 2,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 4,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 5,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 6,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 7,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 8,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 9,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 10,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 11,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 12,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 13,
+      "terrain": "wall"
+    },
+    {
+      "row": 8,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 8,
+      "column": 1,
+      "terrain": "plain"
+    },
+    {
+      "row": 8,
+      "column": 2,
+      "terrain": "plain"
+    },
+    {
+      "row": 8,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 8,
+      "column": 4,
+      "terrain": "plain"
+    },
+    {
+      "row": 8,
+      "column": 5,
+      "terrain": "plain"
+    },
+    {
+      "row": 8,
+      "column": 6,
+      "terrain": "plain"
+    },
+    {
+      "row": 8,
+      "column": 7,
+      "terrain": "plain"
+    },
+    {
+      "row": 8,
+      "column": 8,
+      "terrain": "plain"
+    },
+    {
+      "row": 8,
+      "column": 9,
+      "terrain": "plain"
+    },
+    {
+      "row": 8,
+      "column": 10,
+      "terrain": "plain"
+    },
+    {
+      "row": 8,
+      "column": 11,
+      "terrain": "plain"
+    },
+    {
+      "row": 8,
+      "column": 12,
+      "terrain": "plain"
+    },
+    {
+      "row": 8,
+      "column": 13,
+      "terrain": "wall"
+    },
+    {
+      "row": 9,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 9,
+      "column": 1,
+      "terrain": "plain"
+    },
+    {
+      "row": 9,
+      "column": 2,
+      "terrain": "plain"
+    },
+    {
+      "row": 9,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 9,
+      "column": 4,
+      "terrain": "plain"
+    },
+    {
+      "row": 9,
+      "column": 5,
+      "terrain": "plain"
+    },
+    {
+      "row": 9,
+      "column": 6,
+      "terrain": "plain"
+    },
+    {
+      "row": 9,
+      "column": 7,
+      "terrain": "plain"
+    },
+    {
+      "row": 9,
+      "column": 8,
+      "terrain": "plain"
+    },
+    {
+      "row": 9,
+      "column": 9,
+      "terrain": "plain"
+    },
+    {
+      "row": 9,
+      "column": 10,
+      "terrain": "water"
+    },
+    {
+      "row": 9,
+      "column": 11,
+      "terrain": "water"
+    },
+    {
+      "row": 9,
+      "column": 12,
+      "terrain": "water"
+    },
+    {
+      "row": 9,
+      "column": 13,
+      "terrain": "wall"
+    },
+    {
+      "row": 10,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 10,
+      "column": 1,
+      "terrain": "plain"
+    },
+    {
+      "row": 10,
+      "column": 2,
+      "terrain": "plain"
+    },
+    {
+      "row": 10,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 10,
+      "column": 4,
+      "terrain": "plain"
+    },
+    {
+      "row": 10,
+      "column": 5,
+      "terrain": "plain"
+    },
+    {
+      "row": 10,
+      "column": 6,
+      "terrain": "plain"
+    },
+    {
+      "row": 10,
+      "column": 7,
+      "terrain": "plain"
+    },
+    {
+      "row": 10,
+      "column": 8,
+      "terrain": "plain"
+    },
+    {
+      "row": 10,
+      "column": 9,
+      "terrain": "plain"
+    },
+    {
+      "row": 10,
+      "column": 10,
+      "terrain": "plain"
+    },
+    {
+      "row": 10,
+      "column": 11,
+      "terrain": "plain"
+    },
+    {
+      "row": 10,
+      "column": 12,
+      "terrain": "plain"
+    },
+    {
+      "row": 10,
+      "column": 13,
+      "terrain": "wall"
+    },
+    {
+      "row": 11,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 11,
+      "column": 1,
+      "terrain": "plain"
+    },
+    {
+      "row": 11,
+      "column": 2,
+      "terrain": "plain"
+    },
+    {
+      "row": 11,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 11,
+      "column": 4,
+      "terrain": "plain"
+    },
+    {
+      "row": 11,
+      "column": 5,
+      "terrain": "plain"
+    },
+    {
+      "row": 11,
+      "column": 6,
+      "terrain": "plain"
+    },
+    {
+      "row": 11,
+      "column": 7,
+      "terrain": "plain"
+    },
+    {
+      "row": 11,
+      "column": 8,
+      "terrain": "plain"
+    },
+    {
+      "row": 11,
+      "column": 9,
+      "terrain": "plain"
+    },
+    {
+      "row": 11,
+      "column": 10,
+      "terrain": "plain"
+    },
+    {
+      "row": 11,
+      "column": 11,
+      "terrain": "plain"
+    },
+    {
+      "row": 11,
+      "column": 12,
+      "terrain": "plain"
+    },
+    {
+      "row": 11,
+      "column": 13,
+      "terrain": "wall"
+    },
+    {
+      "row": 12,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 12,
+      "column": 1,
+      "terrain": "plain"
+    },
+    {
+      "row": 12,
+      "column": 2,
+      "terrain": "plain"
+    },
+    {
+      "row": 12,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 12,
+      "column": 4,
+      "terrain": "plain"
+    },
+    {
+      "row": 12,
+      "column": 5,
+      "terrain": "plain"
+    },
+    {
+      "row": 12,
+      "column": 6,
+      "terrain": "plain"
+    },
+    {
+      "row": 12,
+      "column": 7,
+      "terrain": "plain"
+    },
+    {
+      "row": 12,
+      "column": 8,
+      "terrain": "plain"
+    },
+    {
+      "row": 12,
+      "column": 9,
+      "terrain": "plain"
+    },
+    {
+      "row": 12,
+      "column": 10,
+      "terrain": "plain"
+    },
+    {
+      "row": 12,
+      "column": 11,
+      "terrain": "plain"
+    },
+    {
+      "row": 12,
+      "column": 12,
+      "terrain": "plain"
+    },
+    {
+      "row": 12,
+      "column": 13,
+      "terrain": "wall"
+    },
+    {
+      "row": 13,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 13,
+      "column": 1,
+      "terrain": "wall"
+    },
+    {
+      "row": 13,
+      "column": 2,
+      "terrain": "wall"
+    },
+    {
+      "row": 13,
+      "column": 3,
+      "terrain": "wall"
+    },
+    {
+      "row": 13,
+      "column": 4,
+      "terrain": "wall"
+    },
+    {
+      "row": 13,
+      "column": 5,
+      "terrain": "wall"
+    },
+    {
+      "row": 13,
+      "column": 6,
+      "terrain": "wall"
+    },
+    {
+      "row": 13,
+      "column": 7,
+      "terrain": "wall"
+    },
+    {
+      "row": 13,
+      "column": 8,
+      "terrain": "wall"
+    },
+    {
+      "row": 13,
+      "column": 9,
+      "terrain": "wall"
+    },
+    {
+      "row": 13,
+      "column": 10,
+      "terrain": "wall"
+    },
+    {
+      "row": 13,
+      "column": 11,
+      "terrain": "wall"
+    },
+    {
+      "row": 13,
+      "column": 12,
+      "terrain": "wall"
+    },
+    {
+      "row": 13,
+      "column": 13,
+      "terrain": "wall"
+    }
+  ],
+  "entities": [
+    {
+      "id": "player-1",
+      "kind": "player",
+      "position": {
+        "row": 12,
+        "column": 2
+      },
+      "data": {
+        "name": "凌淵",
+        "money": 120,
+        "innerSkillId": "tuna-gong",
+        "innerSkillIds": [
+          "tuna-gong"
+        ],
+        "externalSkillIds": [
+          "sky-breaking-palm"
+        ],
+        "equippedExternalSkillIds": [
+          "sky-breaking-palm"
+        ],
+        "inventory": [
+          {
+            "itemId": "heal-wound-medicine",
+            "quantity": 3
+          },
+          {
+            "itemId": "gather-qi-pill",
+            "quantity": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "base-forward-camp",
+      "kind": "base",
+      "position": {
+        "row": 12,
+        "column": 3
+      },
+      "data": {
+        "name": "北征前哨營",
+        "buildingMaterials": 100,
+        "maxBuildingMaterials": 130,
+        "health": 100,
+        "maxHealth": 100,
+        "discovered": true,
+        "presetBuildings": [
+          {
+            "type": "infirmary",
+            "level": 2
+          },
+          {
+            "type": "board",
+            "level": 1
+          },
+          {
+            "type": "warehouse",
+            "level": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "nest-ex3-w",
+      "kind": "nest",
+      "position": {
+        "row": 3,
+        "column": 4
+      },
+      "data": {
+        "name": "玄岩妖窟·西",
+        "health": 55,
+        "maxHealth": 55,
+        "spawnChance": 0.15,
+        "cooldownRounds": 0,
+        "spawnLevel": 2,
+        "behaviorType": "hunter",
+        "schoolId": "void-spirit"
+      }
+    },
+    {
+      "id": "nest-ex3-m",
+      "kind": "nest",
+      "position": {
+        "row": 5,
+        "column": 7
+      },
+      "data": {
+        "name": "玄岩妖窟·中",
+        "health": 55,
+        "maxHealth": 55,
+        "spawnChance": 0.18,
+        "cooldownRounds": 0,
+        "spawnLevel": 2,
+        "behaviorType": "roamer",
+        "schoolId": "ghost-shadow"
+      }
+    },
+    {
+      "id": "nest-ex3-e",
+      "kind": "nest",
+      "position": {
+        "row": 2,
+        "column": 10
+      },
+      "data": {
+        "name": "玄岩妖窟·東",
+        "health": 55,
+        "maxHealth": 55,
+        "spawnChance": 0.15,
+        "cooldownRounds": 0,
+        "spawnLevel": 2,
+        "behaviorType": "hunter",
+        "schoolId": "void-spirit"
+      }
+    },
+    {
+      "id": "boss-youyuan",
+      "kind": "creature",
+      "position": {
+        "row": 2,
+        "column": 8
+      },
+      "data": {
+        "name": "玄冥首徒·幽淵",
+        "isBoss": true,
+        "level": 4,
+        "schoolId": "void-spirit",
+        "behaviorType": "sieger",
+        "homeNestId": "nest-ex3-m",
+        "attributes": {
+          "armStrength": 11,
+          "constitution": 11,
+          "agility": 13,
+          "innerEnergy": 11,
+          "insight": 11
+        },
+        "maxHealthOverride": 85,
+        "aggroRange": 5
+      }
+    },
+    {
+      "id": "assassin-ex3-a",
+      "kind": "creature",
+      "position": {
+        "row": 4,
+        "column": 6
+      },
+      "data": {
+        "name": "幽影殺手·甲",
+        "level": 2,
+        "schoolId": "ghost-shadow",
+        "behaviorType": "hunter",
+        "homeNestId": "nest-ex3-m",
+        "attributes": {
+          "armStrength": 8,
+          "constitution": 7,
+          "agility": 11,
+          "innerEnergy": 7,
+          "insight": 8
+        },
+        "aggroRange": 4
+      }
+    },
+    {
+      "id": "assassin-ex3-b",
+      "kind": "creature",
+      "position": {
+        "row": 4,
+        "column": 9
+      },
+      "data": {
+        "name": "幽影殺手·乙",
+        "level": 2,
+        "schoolId": "ghost-shadow",
+        "behaviorType": "hunter",
+        "homeNestId": "nest-ex3-e",
+        "attributes": {
+          "armStrength": 8,
+          "constitution": 7,
+          "agility": 11,
+          "innerEnergy": 7,
+          "insight": 8
+        },
+        "aggroRange": 4
+      }
+    },
+    {
+      "id": "fiend-ex3-a",
+      "kind": "creature",
+      "position": {
+        "row": 6,
+        "column": 4
+      },
+      "data": {
+        "name": "妖卒·甲",
+        "level": 1,
+        "schoolId": "void-spirit",
+        "behaviorType": "roamer",
+        "homeNestId": "nest-ex3-w",
+        "attributes": {
+          "armStrength": 6,
+          "constitution": 5,
+          "agility": 7,
+          "innerEnergy": 5,
+          "insight": 5
+        },
+        "aggroRange": 2
+      }
+    },
+    {
+      "id": "fiend-ex3-b",
+      "kind": "creature",
+      "position": {
+        "row": 6,
+        "column": 10
+      },
+      "data": {
+        "name": "妖卒·乙",
+        "level": 1,
+        "schoolId": "void-spirit",
+        "behaviorType": "hunter",
+        "homeNestId": "nest-ex3-e",
+        "attributes": {
+          "armStrength": 6,
+          "constitution": 5,
+          "agility": 8,
+          "innerEnergy": 5,
+          "insight": 5
+        },
+        "aggroRange": 3
+      }
+    },
+    {
+      "id": "fiend-ex3-c",
+      "kind": "creature",
+      "position": {
+        "row": 8,
+        "column": 7
+      },
+      "data": {
+        "name": "妖卒·丙",
+        "level": 1,
+        "schoolId": "void-spirit",
+        "behaviorType": "roamer",
+        "homeNestId": "nest-ex3-m",
+        "attributes": {
+          "armStrength": 5,
+          "constitution": 6,
+          "agility": 7,
+          "innerEnergy": 5,
+          "insight": 6
+        },
+        "aggroRange": 2
+      }
+    },
+    {
+      "id": "fiend-ex3-d",
+      "kind": "creature",
+      "position": {
+        "row": 10,
+        "column": 9
+      },
+      "data": {
+        "name": "妖卒·丁",
+        "level": 1,
+        "schoolId": "void-spirit",
+        "behaviorType": "hunter",
+        "homeNestId": "nest-ex3-e",
+        "attributes": {
+          "armStrength": 6,
+          "constitution": 5,
+          "agility": 8,
+          "innerEnergy": 5,
+          "insight": 5
+        },
+        "aggroRange": 3
+      }
+    }
+  ],
+  "quests": {
+    "victoryObjectives": [
+      {
+        "id": "obj-ex3-defeat-youyuan",
+        "title": "誅殺玄冥首徒幽淵",
+        "type": "defeat-creature",
+        "targetId": "boss-youyuan",
+        "targetValue": 1
+      },
+      {
+        "id": "obj-ex3-raze-nests",
+        "title": "剷平三座妖窟",
+        "type": "destroy-nest",
+        "targetValue": 3,
+        "isOptional": true
+      }
+    ],
+    "failConditions": {
+      "baseMustSurvive": true,
+      "playerMustSurvive": true,
+      "maxRounds": 28
+    }
+  },
+  "dialogues": {
+    "group-ex3-start": {
+      "name": "番外三開局對話",
+      "steps": [
+        {
+          "id": "ex3-start-1",
+          "speakerName": "白衣",
+          "speakerIcon": "🤍",
+          "content": "妖窟深處氣息駭人。幽淵乃玄冥首徒——十年前圍殺你師父的人中，便有他一份。"
+        },
+        {
+          "id": "ex3-start-2",
+          "speakerName": "凌淵",
+          "speakerIcon": "🗡️",
+          "content": "今日，便以他的血祭奠師父在天之靈。"
+        }
+      ]
+    },
+    "group-ex3-warn": {
+      "name": "番外三第十回合警告對話",
+      "steps": [
+        {
+          "id": "ex3-warn-1",
+          "speakerName": "白衣",
+          "speakerIcon": "🤍",
+          "content": "三座妖窟同時震動——它們要傾巢而出，掩護幽淵了！"
+        }
+      ]
+    },
+    "group-ex3-victory": {
+      "name": "番外三勝利對話",
+      "steps": [
+        {
+          "id": "ex3-victory-1",
+          "speakerName": "凌淵",
+          "speakerIcon": "🗡️",
+          "content": "幽淵授首。可他臨死前說……「封印將破，吾王將醒」。"
+        },
+        {
+          "id": "ex3-victory-2",
+          "speakerName": "白衣",
+          "speakerIcon": "🤍",
+          "content": "看來這只是開端。少俠，江湖與山河，都需要你繼續走下去。"
+        }
+      ]
+    }
+  },
+  "triggers": [
+    {
+      "id": "trigger-ex3-start",
+      "condition": "on-start",
+      "action": "start-dialogue",
+      "actionParam": "group-ex3-start"
+    },
+    {
+      "id": "trigger-ex3-round10",
+      "condition": "on-round-reached",
+      "conditionParam": "10",
+      "action": "start-dialogue",
+      "actionParam": "group-ex3-warn"
+    },
+    {
+      "id": "trigger-ex3-victory",
+      "condition": "on-victory",
+      "action": "start-dialogue",
+      "actionParam": "group-ex3-victory"
+    }
+  ]
+}

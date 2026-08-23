@@ -1,5 +1,34 @@
 # 開發日誌
 
+## 2026-08-24｜番外篇「玄冥遺禍」三部曲（難度階梯：巢穴數×怪物數）
+
+### 本次完成
+
+- `campaignScenarioCatalog` 新增**番外篇三章**（非教學關卡，chapterIndex 100~102 排於主線之後），劇情銜接世界觀「玄冥封印」，以白衣旁白＋主角凌淵串連，結尾伏筆回扣主線：
+  - **番外一 黑石驛道**（`extra-1-blackstone-road`，12×12）：**1 巢穴＋3 妖物**，精英頭目影牙（Lv2 hunter）；主線誅影牙＋支線守驛站 12 回合；maxRounds 22
+  - **番外二 霜林渡**（`extra-2-frost-ford`，13×13）：**2 巢穴＋5 妖物**，頭目蠱面判官（百毒流 Lv3 sieger、血量 60）＋毒卒×2＋太虛妖×2；主線誅判官＋支線守渡口 15 回合；maxRounds 25；地圖含河流＋橋面瓶頸
+  - **番外三 玄岩妖窟**（`extra-3-darkrock-lair`，14×14）：**3 巢穴＋7 妖物**，最終首領幽淵（太虛 Lv4 sieger、敏捷 13、血量 85）＋幽影殺手×2＋妖卒×4；主線誅幽淵＋支線剷平三座妖窟（`destroy-nest` ×3——首次使用此目標型別，campaignRules/combatActions 原生支援）；maxRounds 28
+- 難度指標完全依巢穴數（1→2→3）與怪物數（3→5→7）階梯遞增，並寫入測試強制（`nestCounts=[1,2,3]`、`creatureCounts=[3,5,7]`、`maxRounds=[22,25,28]`）
+- 三章皆走完整供應鏈：導出 JSON＋註冊 index.json；玩家初始資源逐章微增（80→100→120 兩、丹藥遞增）反映連續劇情但不破壞沙盒錨點（技能不變）
+- 頭目階梯編碼進測試：番外一主線目標為精英（isBoss false）、二三為 isBoss true
+
+### 影響檔案
+
+- `src/game/catalogs/campaignScenarioCatalog.ts`（+3 章節定義）
+- `src/game/catalogs/campaignScenarioCatalog.test.ts`（清單案例更新＋三部曲難度階梯/結構測試）
+- `public/data/scenarios/extra-{1,2,3}-*.json`（導出）
+- `public/data/scenarios/index.json`（+3 註冊）
+
+### 驗證結果
+
+- TypeScript：通過。測試：68 檔 / 714 例全數通過。
+
+### 待驗收項目
+
+1. 從劇本分頁依序遊玩三章，確認難度曲線體感符合（一章輕鬆、三章緊繃）。
+2. 番外三「剷平三座妖窟」選配目標計數正確（摧毀任一巢穴皆累計）。
+3. 第 6/8/10 回合警告對話與勝利對話鏈正常播出。
+
 ## 2026-08-24｜新增情境地圖：第一章「荒廟影禍」
 
 ### 本次完成

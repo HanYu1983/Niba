@@ -15,6 +15,21 @@
       "id": "chapter1-shadow-temple",
       "file": "chapter1-shadow-temple.json",
       "version": "1.0.0"
+    },
+    {
+      "id": "extra-1-blackstone-road",
+      "file": "extra-1-blackstone-road.json",
+      "version": "1.0.0"
+    },
+    {
+      "id": "extra-2-frost-ford",
+      "file": "extra-2-frost-ford.json",
+      "version": "1.0.0"
+    },
+    {
+      "id": "extra-3-darkrock-lair",
+      "file": "extra-3-darkrock-lair.json",
+      "version": "1.0.0"
     }
   ]
 }

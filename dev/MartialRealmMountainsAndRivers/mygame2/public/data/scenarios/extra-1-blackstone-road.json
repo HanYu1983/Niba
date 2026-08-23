@@ -1,0 +1,972 @@
+{
+  "version": "1.0.0",
+  "id": "extra-1-blackstone-road",
+  "title": "番外一：黑潮初現",
+  "description": "玄冥封印十年，黑石驛道上卻再現妖影。追查失蹤行商的下落，斬殺妖物頭目「影牙」。",
+  "chapterIndex": 100,
+  "mapSize": {
+    "rows": 12,
+    "columns": 12
+  },
+  "cells": [
+    {
+      "row": 0,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 1,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 2,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 3,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 4,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 5,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 6,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 7,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 8,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 9,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 10,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 11,
+      "terrain": "wall"
+    },
+    {
+      "row": 1,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 1,
+      "column": 1,
+      "terrain": "plain"
+    },
+    {
+      "row": 1,
+      "column": 2,
+      "terrain": "plain"
+    },
+    {
+      "row": 1,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 1,
+      "column": 4,
+      "terrain": "plain"
+    },
+    {
+      "row": 1,
+      "column": 5,
+      "terrain": "plain"
+    },
+    {
+      "row": 1,
+      "column": 6,
+      "terrain": "plain"
+    },
+    {
+      "row": 1,
+      "column": 7,
+      "terrain": "forest"
+    },
+    {
+      "row": 1,
+      "column": 8,
+      "terrain": "forest"
+    },
+    {
+      "row": 1,
+      "column": 9,
+      "terrain": "forest"
+    },
+    {
+      "row": 1,
+      "column": 10,
+      "terrain": "forest"
+    },
+    {
+      "row": 1,
+      "column": 11,
+      "terrain": "wall"
+    },
+    {
+      "row": 2,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 2,
+      "column": 1,
+      "terrain": "plain"
+    },
+    {
+      "row": 2,
+      "column": 2,
+      "terrain": "plain"
+    },
+    {
+      "row": 2,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 2,
+      "column": 4,
+      "terrain": "plain"
+    },
+    {
+      "row": 2,
+      "column": 5,
+      "terrain": "plain"
+    },
+    {
+      "row": 2,
+      "column": 6,
+      "terrain": "plain"
+    },
+    {
+      "row": 2,
+      "column": 7,
+      "terrain": "forest"
+    },
+    {
+      "row": 2,
+      "column": 8,
+      "terrain": "forest"
+    },
+    {
+      "row": 2,
+      "column": 9,
+      "terrain": "forest"
+    },
+    {
+      "row": 2,
+      "column": 10,
+      "terrain": "forest"
+    },
+    {
+      "row": 2,
+      "column": 11,
+      "terrain": "wall"
+    },
+    {
+      "row": 3,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 3,
+      "column": 1,
+      "terrain": "plain"
+    },
+    {
+      "row": 3,
+      "column": 2,
+      "terrain": "plain"
+    },
+    {
+      "row": 3,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 3,
+      "column": 4,
+      "terrain": "plain"
+    },
+    {
+      "row": 3,
+      "column": 5,
+      "terrain": "plain"
+    },
+    {
+      "row": 3,
+      "column": 6,
+      "terrain": "plain"
+    },
+    {
+      "row": 3,
+      "column": 7,
+      "terrain": "forest"
+    },
+    {
+      "row": 3,
+      "column": 8,
+      "terrain": "forest"
+    },
+    {
+      "row": 3,
+      "column": 9,
+      "terrain": "forest"
+    },
+    {
+      "row": 3,
+      "column": 10,
+      "terrain": "forest"
+    },
+    {
+      "row": 3,
+      "column": 11,
+      "terrain": "wall"
+    },
+    {
+      "row": 4,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 4,
+      "column": 1,
+      "terrain": "plain"
+    },
+    {
+      "row": 4,
+      "column": 2,
+      "terrain": "plain"
+    },
+    {
+      "row": 4,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 4,
+      "column": 4,
+      "terrain": "plain"
+    },
+    {
+      "row": 4,
+      "column": 5,
+      "terrain": "plain"
+    },
+    {
+      "row": 4,
+      "column": 6,
+      "terrain": "plain"
+    },
+    {
+      "row": 4,
+      "column": 7,
+      "terrain": "forest"
+    },
+    {
+      "row": 4,
+      "column": 8,
+      "terrain": "forest"
+    },
+    {
+      "row": 4,
+      "column": 9,
+      "terrain": "forest"
+    },
+    {
+      "row": 4,
+      "column": 10,
+      "terrain": "forest"
+    },
+    {
+      "row": 4,
+      "column": 11,
+      "terrain": "wall"
+    },
+    {
+      "row": 5,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 5,
+      "column": 1,
+      "terrain": "plain"
+    },
+    {
+      "row": 5,
+      "column": 2,
+      "terrain": "plain"
+    },
+    {
+      "row": 5,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 5,
+      "column": 4,
+      "terrain": "plain"
+    },
+    {
+      "row": 5,
+      "column": 5,
+      "terrain": "plain"
+    },
+    {
+      "row": 5,
+      "column": 6,
+      "terrain": "plain"
+    },
+    {
+      "row": 5,
+      "column": 7,
+      "terrain": "plain"
+    },
+    {
+      "row": 5,
+      "column": 8,
+      "terrain": "plain"
+    },
+    {
+      "row": 5,
+      "column": 9,
+      "terrain": "plain"
+    },
+    {
+      "row": 5,
+      "column": 10,
+      "terrain": "plain"
+    },
+    {
+      "row": 5,
+      "column": 11,
+      "terrain": "wall"
+    },
+    {
+      "row": 6,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 6,
+      "column": 1,
+      "terrain": "road"
+    },
+    {
+      "row": 6,
+      "column": 2,
+      "terrain": "road"
+    },
+    {
+      "row": 6,
+      "column": 3,
+      "terrain": "road"
+    },
+    {
+      "row": 6,
+      "column": 4,
+      "terrain": "road"
+    },
+    {
+      "row": 6,
+      "column": 5,
+      "terrain": "road"
+    },
+    {
+      "row": 6,
+      "column": 6,
+      "terrain": "road"
+    },
+    {
+      "row": 6,
+      "column": 7,
+      "terrain": "road"
+    },
+    {
+      "row": 6,
+      "column": 8,
+      "terrain": "road"
+    },
+    {
+      "row": 6,
+      "column": 9,
+      "terrain": "road"
+    },
+    {
+      "row": 6,
+      "column": 10,
+      "terrain": "road"
+    },
+    {
+      "row": 6,
+      "column": 11,
+      "terrain": "wall"
+    },
+    {
+      "row": 7,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 7,
+      "column": 1,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 2,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 4,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 5,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 6,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 7,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 8,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 9,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 10,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 11,
+      "terrain": "wall"
+    },
+    {
+      "row": 8,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 8,
+      "column": 1,
+      "terrain": "plain"
+    },
+    {
+      "row": 8,
+      "column": 2,
+      "terrain": "plain"
+    },
+    {
+      "row": 8,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 8,
+      "column": 4,
+      "terrain": "plain"
+    },
+    {
+      "row": 8,
+      "column": 5,
+      "terrain": "forest"
+    },
+    {
+      "row": 8,
+      "column": 6,
+      "terrain": "forest"
+    },
+    {
+      "row": 8,
+      "column": 7,
+      "terrain": "forest"
+    },
+    {
+      "row": 8,
+      "column": 8,
+      "terrain": "plain"
+    },
+    {
+      "row": 8,
+      "column": 9,
+      "terrain": "plain"
+    },
+    {
+      "row": 8,
+      "column": 10,
+      "terrain": "plain"
+    },
+    {
+      "row": 8,
+      "column": 11,
+      "terrain": "wall"
+    },
+    {
+      "row": 9,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 9,
+      "column": 1,
+      "terrain": "plain"
+    },
+    {
+      "row": 9,
+      "column": 2,
+      "terrain": "plain"
+    },
+    {
+      "row": 9,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 9,
+      "column": 4,
+      "terrain": "plain"
+    },
+    {
+      "row": 9,
+      "column": 5,
+      "terrain": "forest"
+    },
+    {
+      "row": 9,
+      "column": 6,
+      "terrain": "forest"
+    },
+    {
+      "row": 9,
+      "column": 7,
+      "terrain": "forest"
+    },
+    {
+      "row": 9,
+      "column": 8,
+      "terrain": "plain"
+    },
+    {
+      "row": 9,
+      "column": 9,
+      "terrain": "plain"
+    },
+    {
+      "row": 9,
+      "column": 10,
+      "terrain": "plain"
+    },
+    {
+      "row": 9,
+      "column": 11,
+      "terrain": "wall"
+    },
+    {
+      "row": 10,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 10,
+      "column": 1,
+      "terrain": "plain"
+    },
+    {
+      "row": 10,
+      "column": 2,
+      "terrain": "plain"
+    },
+    {
+      "row": 10,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 10,
+      "column": 4,
+      "terrain": "plain"
+    },
+    {
+      "row": 10,
+      "column": 5,
+      "terrain": "forest"
+    },
+    {
+      "row": 10,
+      "column": 6,
+      "terrain": "forest"
+    },
+    {
+      "row": 10,
+      "column": 7,
+      "terrain": "forest"
+    },
+    {
+      "row": 10,
+      "column": 8,
+      "terrain": "plain"
+    },
+    {
+      "row": 10,
+      "column": 9,
+      "terrain": "plain"
+    },
+    {
+      "row": 10,
+      "column": 10,
+      "terrain": "plain"
+    },
+    {
+      "row": 10,
+      "column": 11,
+      "terrain": "wall"
+    },
+    {
+      "row": 11,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 11,
+      "column": 1,
+      "terrain": "wall"
+    },
+    {
+      "row": 11,
+      "column": 2,
+      "terrain": "wall"
+    },
+    {
+      "row": 11,
+      "column": 3,
+      "terrain": "wall"
+    },
+    {
+      "row": 11,
+      "column": 4,
+      "terrain": "wall"
+    },
+    {
+      "row": 11,
+      "column": 5,
+      "terrain": "wall"
+    },
+    {
+      "row": 11,
+      "column": 6,
+      "terrain": "wall"
+    },
+    {
+      "row": 11,
+      "column": 7,
+      "terrain": "wall"
+    },
+    {
+      "row": 11,
+      "column": 8,
+      "terrain": "wall"
+    },
+    {
+      "row": 11,
+      "column": 9,
+      "terrain": "wall"
+    },
+    {
+      "row": 11,
+      "column": 10,
+      "terrain": "wall"
+    },
+    {
+      "row": 11,
+      "column": 11,
+      "terrain": "wall"
+    }
+  ],
+  "entities": [
+    {
+      "id": "player-1",
+      "kind": "player",
+      "position": {
+        "row": 10,
+        "column": 2
+      },
+      "data": {
+        "name": "凌淵",
+        "money": 80,
+        "innerSkillId": "tuna-gong",
+        "innerSkillIds": [
+          "tuna-gong"
+        ],
+        "externalSkillIds": [
+          "sky-breaking-palm"
+        ],
+        "equippedExternalSkillIds": [
+          "sky-breaking-palm"
+        ],
+        "inventory": [
+          {
+            "itemId": "heal-wound-medicine",
+            "quantity": 2
+          },
+          {
+            "itemId": "gather-qi-pill",
+            "quantity": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "base-waystation-inn",
+      "kind": "base",
+      "position": {
+        "row": 10,
+        "column": 3
+      },
+      "data": {
+        "name": "驛站小棧",
+        "buildingMaterials": 70,
+        "maxBuildingMaterials": 110,
+        "health": 100,
+        "maxHealth": 100,
+        "discovered": true,
+        "presetBuildings": [
+          {
+            "type": "infirmary",
+            "level": 1
+          },
+          {
+            "type": "board",
+            "level": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "nest-ex1",
+      "kind": "nest",
+      "position": {
+        "row": 2,
+        "column": 9
+      },
+      "data": {
+        "name": "黑影妖窟",
+        "health": 45,
+        "maxHealth": 45,
+        "spawnChance": 0.12,
+        "cooldownRounds": 0,
+        "spawnLevel": 1,
+        "behaviorType": "hunter",
+        "schoolId": "void-spirit"
+      }
+    },
+    {
+      "id": "elite-shadow-fang",
+      "kind": "creature",
+      "position": {
+        "row": 4,
+        "column": 7
+      },
+      "data": {
+        "name": "影牙",
+        "isBoss": false,
+        "level": 2,
+        "schoolId": "void-spirit",
+        "behaviorType": "hunter",
+        "homeNestId": "nest-ex1",
+        "attributes": {
+          "armStrength": 7,
+          "constitution": 6,
+          "agility": 9,
+          "innerEnergy": 6,
+          "insight": 7
+        },
+        "aggroRange": 4
+      }
+    },
+    {
+      "id": "patrol-ex1-a",
+      "kind": "creature",
+      "position": {
+        "row": 5,
+        "column": 8
+      },
+      "data": {
+        "name": "巡影·甲",
+        "level": 1,
+        "schoolId": "void-spirit",
+        "behaviorType": "roamer",
+        "homeNestId": "nest-ex1",
+        "attributes": {
+          "armStrength": 6,
+          "constitution": 5,
+          "agility": 7,
+          "innerEnergy": 5,
+          "insight": 5
+        },
+        "aggroRange": 2
+      }
+    },
+    {
+      "id": "patrol-ex1-b",
+      "kind": "creature",
+      "position": {
+        "row": 8,
+        "column": 7
+      },
+      "data": {
+        "name": "巡影·乙",
+        "level": 1,
+        "schoolId": "void-spirit",
+        "behaviorType": "hunter",
+        "homeNestId": "nest-ex1",
+        "attributes": {
+          "armStrength": 6,
+          "constitution": 5,
+          "agility": 8,
+          "innerEnergy": 5,
+          "insight": 5
+        },
+        "aggroRange": 3
+      }
+    }
+  ],
+  "quests": {
+    "victoryObjectives": [
+      {
+        "id": "obj-ex1-defeat-fang",
+        "title": "誅殺妖物頭目影牙",
+        "type": "defeat-creature",
+        "targetId": "elite-shadow-fang",
+        "targetValue": 1
+      },
+      {
+        "id": "obj-ex1-survive",
+        "title": "守住驛站小棧十二回合",
+        "type": "survive-rounds",
+        "targetValue": 12,
+        "isOptional": true
+      }
+    ],
+    "failConditions": {
+      "baseMustSurvive": true,
+      "playerMustSurvive": true,
+      "maxRounds": 22
+    }
+  },
+  "dialogues": {
+    "group-ex1-start": {
+      "name": "番外一開局對話",
+      "steps": [
+        {
+          "id": "ex1-start-1",
+          "speakerName": "白衣",
+          "speakerIcon": "🤍",
+          "content": "凌少俠，黑石驛道夜有黑影出沒，行商屢屢失蹤——那氣息……與玄冥爪牙同源。"
+        },
+        {
+          "id": "ex1-start-2",
+          "speakerName": "凌淵",
+          "speakerIcon": "🗡️",
+          "content": "師父封印玄冥已十載，莫非封印有變？且先斬了這些探子。"
+        }
+      ]
+    },
+    "group-ex1-warn": {
+      "name": "番外一第六回合警告對話",
+      "steps": [
+        {
+          "id": "ex1-warn-1",
+          "speakerName": "白衣",
+          "speakerIcon": "🤍",
+          "content": "影動愈密——巢穴裡的東西察覺我們了，速戰速決。"
+        }
+      ]
+    },
+    "group-ex1-victory": {
+      "name": "番外一勝利對話",
+      "steps": [
+        {
+          "id": "ex1-victory-1",
+          "speakerName": "凌淵",
+          "speakerIcon": "🗡️",
+          "content": "影牙已誅，可這信物……不是尋常妖物該有的東西。"
+        },
+        {
+          "id": "ex1-victory-2",
+          "speakerName": "白衣",
+          "speakerIcon": "🤍",
+          "content": "霜林渡方向妖氣更盛。看來，這只是前哨。"
+        }
+      ]
+    }
+  },
+  "triggers": [
+    {
+      "id": "trigger-ex1-start",
+      "condition": "on-start",
+      "action": "start-dialogue",
+      "actionParam": "group-ex1-start"
+    },
+    {
+      "id": "trigger-ex1-round6",
+      "condition": "on-round-reached",
+      "conditionParam": "6",
+      "action": "start-dialogue",
+      "actionParam": "group-ex1-warn"
+    },
+    {
+      "id": "trigger-ex1-victory",
+      "condition": "on-victory",
+      "action": "start-dialogue",
+      "actionParam": "group-ex1-victory"
+    }
+  ]
+}
