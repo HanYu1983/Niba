@@ -1,0 +1,813 @@
+<!doctype html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="武行山河｜Martial Realm: Mountains and Rivers，一款以探索、戰鬥、功法與據點經營為核心的回合制武俠策略遊戲。">
+    <title>武行山河｜Martial Realm: Mountains and Rivers</title>
+    <style>
+        :root {
+            --ink: #1e2421;
+            --muted: #65706a;
+            --paper: #f7f3e8;
+            --paper-deep: #ede5d2;
+            --jade: #1d554b;
+            --jade-dark: #123b35;
+            --gold: #c8943d;
+            --red: #9d493d;
+            --line: rgba(30, 36, 33, .14);
+            --shadow: 0 20px 55px rgba(39, 46, 40, .13);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            color: var(--ink);
+            background: var(--paper);
+            font-family: "Noto Serif TC", "Source Han Serif TC", Georgia, serif;
+            line-height: 1.8;
+        }
+
+        a {
+            color: inherit;
+        }
+
+        .page {
+            overflow: hidden;
+        }
+
+        .container {
+            width: min(1120px, calc(100% - 40px));
+            margin: 0 auto;
+        }
+
+        nav {
+            position: absolute;
+            z-index: 2;
+            top: 0;
+            width: 100%;
+            color: #fff;
+        }
+
+        .nav-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 76px;
+        }
+
+        .brand {
+            font-weight: 700;
+            letter-spacing: .14em;
+        }
+
+        .brand small {
+            display: block;
+            color: #d8c79f;
+            font: 11px Arial, sans-serif;
+            letter-spacing: .18em;
+        }
+
+        nav a {
+            text-decoration: none;
+            font-size: 14px;
+            margin-left: 25px;
+            opacity: .9;
+        }
+
+        nav a:hover {
+            color: #e2b85d;
+        }
+
+        .hero {
+            position: relative;
+            min-height: 720px;
+            display: grid;
+            align-items: center;
+            color: #fff;
+            background: linear-gradient(115deg, rgba(12, 42, 37, .98), rgba(20, 62, 55, .72)), #163f38;
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            opacity: .12;
+            pointer-events: none;
+            background-image: radial-gradient(#fff 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            padding: 110px 0 70px;
+        }
+
+        .eyebrow {
+            color: #e0b763;
+            font: 700 12px Arial, sans-serif;
+            letter-spacing: .24em;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            margin: 16px 0 6px;
+            font-size: clamp(50px, 9vw, 96px);
+            line-height: 1.05;
+            letter-spacing: .1em;
+        }
+
+        .subtitle {
+            margin: 0 0 25px;
+            color: #e4d7b6;
+            font: 700 clamp(18px, 3vw, 27px) Arial, sans-serif;
+            letter-spacing: .09em;
+        }
+
+        .hero p {
+            max-width: 570px;
+            color: #e9eee8;
+            font-size: 17px;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 32px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 22px;
+            border: 1px solid #d8b35f;
+            border-radius: 3px;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .button.primary {
+            background: var(--gold);
+            border-color: var(--gold);
+            color: #172e29;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+        }
+
+        .section {
+            padding: 92px 0;
+        }
+
+        .section.alt {
+            background: var(--paper-deep);
+        }
+
+        .section-heading {
+            max-width: 700px;
+            margin-bottom: 42px;
+        }
+
+        .section-heading h2 {
+            margin: 8px 0 12px;
+            font-size: clamp(29px, 5vw, 45px);
+            line-height: 1.2;
+        }
+
+        .section-heading p {
+            color: var(--muted);
+            margin: 0;
+        }
+
+        .kicker {
+            color: var(--red);
+            font: 700 12px Arial, sans-serif;
+            letter-spacing: .2em;
+        }
+
+        .image-slot {
+            display: grid;
+            place-items: center;
+            min-height: 260px;
+            border: 1px dashed rgba(29, 85, 75, .48);
+            border-radius: 6px;
+            color: var(--jade);
+            background: linear-gradient(135deg, rgba(255, 255, 255, .6), rgba(213, 197, 157, .25));
+            text-align: center;
+            padding: 24px;
+        }
+
+        .image-slot strong {
+            display: block;
+            font-size: 20px;
+        }
+
+        .image-slot span {
+            display: block;
+            margin-top: 6px;
+            color: var(--muted);
+            font: 13px Arial, sans-serif;
+        }
+
+        .hero-image {
+            position: absolute;
+            z-index: 1;
+            right: max(20px, calc((100vw - 1120px) / 2));
+            bottom: 84px;
+            width: min(390px, 33vw);
+            min-height: 300px;
+            opacity: .75;
+        }
+
+        .intro-grid {
+            display: grid;
+            grid-template-columns: 1.1fr .9fr;
+            gap: 58px;
+            align-items: center;
+        }
+
+        .intro-copy p {
+            color: var(--muted);
+            font-size: 17px;
+        }
+
+        .quote {
+            margin-top: 26px;
+            padding: 18px 22px;
+            border-left: 3px solid var(--gold);
+            color: var(--jade-dark);
+            font-size: 20px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .card {
+            padding: 24px 20px;
+            border: 1px solid var(--line);
+            background: rgba(255, 255, 255, .48);
+            box-shadow: 0 8px 22px rgba(39, 46, 40, .04);
+        }
+
+        .card .number {
+            color: var(--gold);
+            font: 700 13px Arial, sans-serif;
+            letter-spacing: .12em;
+        }
+
+        .card h3 {
+            margin: 13px 0 8px;
+            color: var(--jade-dark);
+            font-size: 21px;
+        }
+
+        .card p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 28px;
+        }
+
+        .feature {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .feature:nth-child(even) .image-slot {
+            order: 2;
+        }
+
+        .feature h3 {
+            margin: 0 0 8px;
+            color: var(--jade-dark);
+            font-size: 25px;
+        }
+
+        .feature p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 15px;
+        }
+
+        .feature .image-slot {
+            min-height: 190px;
+        }
+
+        .flow {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .flow-item {
+            min-width: 140px;
+            padding: 18px 12px;
+            border: 1px solid rgba(29, 85, 75, .25);
+            background: rgba(255, 255, 255, .55);
+            text-align: center;
+            color: var(--jade-dark);
+            font-weight: 700;
+        }
+
+        .changelog-list {
+            display: grid;
+            gap: 18px;
+            max-height: min(720px, 70vh);
+            overflow-y: auto;
+            padding: 6px 12px 6px 4px;
+            overscroll-behavior: contain;
+            scrollbar-width: thin;
+            scrollbar-color: var(--gold) rgba(29, 85, 75, .12);
+        }
+
+        .changelog-list::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .changelog-list::-webkit-scrollbar-track {
+            border-radius: 999px;
+            background: rgba(29, 85, 75, .1);
+        }
+
+        .changelog-list::-webkit-scrollbar-thumb {
+            border: 2px solid transparent;
+            border-radius: 999px;
+            background: var(--gold);
+            background-clip: padding-box;
+        }
+
+        .changelog-entry {
+            padding: 24px 26px;
+            border: 1px solid var(--line);
+            border-left: 4px solid var(--gold);
+            background: rgba(255, 255, 255, .58);
+        }
+
+        .changelog-meta {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px 16px;
+            color: var(--muted);
+            font: 13px Arial, sans-serif;
+        }
+
+        .changelog-version {
+            color: var(--jade-dark);
+            font-weight: 700;
+        }
+
+        .changelog-tag {
+            padding: 2px 9px;
+            border-radius: 999px;
+            color: var(--jade-dark);
+            background: rgba(200, 148, 61, .2);
+        }
+
+        .changelog-entry h3 {
+            margin: 8px 0 6px;
+            color: var(--jade-dark);
+            font-size: 22px;
+        }
+
+        .changelog-entry ul {
+            margin: 8px 0 0;
+            padding-left: 22px;
+            color: var(--muted);
+        }
+
+        .changelog-status {
+            color: var(--muted);
+        }
+
+        .arrow {
+            color: var(--gold);
+            font: 700 24px Arial, sans-serif;
+        }
+
+        .about {
+            background: var(--paper-deep);
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+        .about h3 {
+            margin: 0 0 10px;
+            color: var(--jade-dark);
+            font-size: 24px;
+        }
+
+        .about p {
+            margin: 0 0 14px;
+            color: var(--muted);
+            font-size: 15px;
+        }
+
+        .about ul {
+            margin: 0;
+            padding-left: 22px;
+            color: var(--muted);
+            font-size: 15px;
+        }
+
+        .about .role-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .about .role-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .about .role-list li:last-child {
+            border-bottom: none;
+        }
+
+        .about .role-list strong {
+            color: var(--jade-dark);
+        }
+
+        .about .model-tag {
+            display: inline-block;
+            margin: 0 6px 6px 0;
+            padding: 4px 12px;
+            border: 1px solid rgba(29, 85, 75, .3);
+            border-radius: 999px;
+            color: var(--jade-dark);
+            background: rgba(255, 255, 255, .6);
+            font: 700 13px Arial, sans-serif;
+        }
+
+        .about .notice {
+            margin-top: 18px;
+            padding: 16px 18px;
+            border-left: 3px solid var(--gold);
+            background: rgba(255, 255, 255, .5);
+            color: var(--jade-dark);
+            font-size: 15px;
+        }
+
+        .cta {
+            color: #fff;
+            background: var(--jade-dark);
+            text-align: center;
+        }
+
+        .cta h2 {
+            margin: 0 0 12px;
+            font-size: clamp(30px, 5vw, 46px);
+        }
+
+        .cta p {
+            max-width: 620px;
+            margin: 0 auto 28px;
+            color: #d9e3da;
+        }
+
+        footer {
+            padding: 25px 0;
+            color: #aebbb1;
+            background: #0d2925;
+            font: 12px Arial, sans-serif;
+            text-align: center;
+        }
+
+        @media (max-width: 820px) {
+            .hero {
+                min-height: 660px;
+            }
+
+            .hero-image {
+                position: relative;
+                right: auto;
+                bottom: auto;
+                width: min(100%, 380px);
+                min-height: 180px;
+                margin: 10px auto 0;
+                opacity: .85;
+            }
+
+            .hero-content {
+                padding-top: 100px;
+            }
+
+            .intro-grid,
+            .feature-grid {
+                grid-template-columns: 1fr;
+                gap: 28px;
+            }
+
+            .cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .feature:nth-child(even) .image-slot {
+                order: initial;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .container {
+                width: min(100% - 28px, 1120px);
+            }
+
+            nav a {
+                display: none;
+            }
+
+            .hero {
+                min-height: 700px;
+            }
+
+            h1 {
+                font-size: 54px;
+            }
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            .feature {
+                grid-template-columns: 1fr;
+            }
+
+            .feature .image-slot {
+                min-height: 170px;
+            }
+
+            .section {
+                padding: 65px 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page">
+        <nav>
+            <div class="container nav-inner">
+                <div class="brand">武行山河<small>MARTIAL REALM</small></div>
+                <div>
+                    <a href="#world">世界</a>
+                    <a href="#features">特色</a>
+                    <a href="#flow">玩法</a>
+                    <a href="#about">關於本作</a>
+                    <a href="#changelog">更新日誌</a>
+                </div>
+            </div>
+        </nav>
+
+        <header class="hero">
+            <div class="container hero-content">
+                <div class="eyebrow">A TURN-BASED WUXIA STRATEGY GAME</div>
+                <h1>武行山河</h1>
+                <p class="subtitle">Martial Realm: Mountains and Rivers</p>
+                <p>踏入危險荒野，以武學立身，以選擇開路。探索未知地圖、挑戰怪物、收集功法與裝備，並建立一座能支撐你走得更遠的據點。</p>
+                <div class="actions">
+                    <!-- 將 href 替換成正式遊戲網址即可開始遊戲。 -->
+                    <a class="button primary" href="https://storage.googleapis.com/particle-resources/works/MartialRealmMountainsAndRivers/dist/index.html" target="_blank" rel="noopener">開始遊戲</a>
+                </div>
+            </div>
+            <div class="image-slot hero-image">
+                <img src="./images/main.png" alt="武行山河｜Martial Realm: Mountains and Rivers 遊戲封面"
+                    style="width: 100%; height: auto; object-fit: cover; border-radius: 6px;">
+                <!-- <div><strong>主視覺／遊戲封面</strong><span>建議圖片：地圖、角色或據點的寬幅截圖</span></div> -->
+            </div>
+        </header>
+
+        <main>
+            <section id="world" class="section">
+                <div class="container intro-grid">
+                    <div class="intro-copy">
+                        <div class="kicker">THE WORLD</div>
+                        <div class="section-heading">
+                            <h2>每一步，都可能改變你的江湖。</h2>
+                            <p>這不是單純追求數值的戰鬥遊戲。你需要在有限資源、未知威脅與長期成長之間做出選擇。</p>
+                        </div>
+                        <p>玩家將在荒野中尋找資源點、道具點、巢穴與事件，消耗生命、體力、內力與裝備耐久，並在適當時機回到據點補給、修整與建設。</p>
+                        <div class="quote">探索得越深，所要承擔的風險越大；但真正的武者，總要走出自己的路。</div>
+                    </div>
+                    <div class="image-slot">
+                        <img src="./images/world-map.png" alt="武行山河｜Martial Realm: Mountains and Rivers 世界地圖截圖"
+                            style="width: 100%; height: auto; object-fit: cover; border-radius: 6px;">
+                    </div>
+                </div>
+            </section>
+
+            <section class="section alt">
+                <div class="container">
+                    <div class="section-heading">
+                        <div class="kicker">FOUR PILLARS</div>
+                        <h2>以四種體驗，構成你的江湖旅程</h2>
+                    </div>
+                    <div class="cards">
+                        <article class="card">
+                            <div class="number">01 / EXPLORE</div>
+                            <h3>探索</h3>
+                            <p>穿越未知地圖，發現資源、事件、Creature 與巢穴。</p>
+                        </article>
+                        <article class="card">
+                            <div class="number">02 / FIGHT</div>
+                            <h3>戰鬥</h3>
+                            <p>運用內功、外功、裝備與五行，安排每一回合的行動。</p>
+                        </article>
+                        <article class="card">
+                            <div class="number">03 / GROW</div>
+                            <h3>成長</h3>
+                            <p>收集功法、強化屬性、管理裝備，打造自己的戰鬥流派。</p>
+                        </article>
+                        <article class="card">
+                            <div class="number">04 / BUILD</div>
+                            <h3>經營</h3>
+                            <p>建設據點與防禦設施，讓下一次遠征有更穩固的後盾。</p>
+                        </article>
+                    </div>
+                </div>
+            </section>
+
+            <section id="features" class="section">
+                <div class="container">
+                    <div class="section-heading">
+                        <div class="kicker">GAME FEATURES</div>
+                        <h2>你會在遊戲中做什麼？</h2>
+                        <p>每一個系統都會影響你的下一次決策：現在出發、留下補給，還是先挑戰那座危險巢穴？</p>
+                    </div>
+                    <div class="feature-grid">
+                        <article class="feature">
+                            <div>
+                                <h3>回合制武學對決</h3>
+                                <p>觀察敵我狀態，控制生命、體力與內力，在每一回合選擇最值得的行動。</p>
+                            </div>
+                        </article>
+                        <article class="feature">
+                            <div>
+                                <h3>建立你的功法配置</h3>
+                                <p>不同流派帶來不同戰鬥方向，透過內外功搭配與五行屬性形成自己的套路。</p>
+                            </div>
+                        </article>
+                        <article class="feature">
+                            <div>
+                                <h3>裝備與資源管理</h3>
+                                <p>武器、防具與配件各有耐久與屬性修正。強力裝備值得使用，但也要考慮它何時需要修理。</p>
+                            </div>
+                        </article>
+                        <article class="feature">
+                            <div>
+                                <h3>讓據點成為你的後盾</h3>
+                                <p>透過建築提升補給與防守能力，讓你能夠深入更危險的區域。</p>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </section>
+
+            <section id="flow" class="section alt">
+                <div class="container">
+                    <div class="section-heading">
+                        <div class="kicker">CORE LOOP</div>
+                        <h2>一場遠征，從選擇開始</h2>
+                    </div>
+                    <div class="flow">
+                        <div class="flow-item">探索地圖</div>
+                        <div class="arrow">→</div>
+                        <div class="flow-item">發現威脅</div>
+                        <div class="arrow">→</div>
+                        <div class="flow-item">戰鬥與互動</div>
+                        <div class="arrow">→</div>
+                        <div class="flow-item">取得戰利品</div>
+                        <div class="arrow">→</div>
+                        <div class="flow-item">回到據點</div>
+                        <div class="arrow">→</div>
+                        <div class="flow-item">建設與再出發</div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="changelog" class="section">
+                <div class="container">
+                    <div class="section-heading">
+                        <div class="kicker">CHANGELOG</div>
+                        <h2 id="changelog-title">更新日誌</h2>
+                        <p id="changelog-subtitle">正在讀取最新更新內容……</p>
+                    </div>
+                    <div id="changelog-list" class="changelog-list" aria-live="polite">
+                        <p class="changelog-status">正在讀取更新日誌……</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="about" class="section about">
+                <div class="container">
+                    <div class="section-heading">
+                        <div class="kicker">ABOUT THIS GAME</div>
+                        <h2>關於本作</h2>
+                        <p>這是一款由 AI 協作開發、以人為核心決策的武俠策略遊戲。</p>
+                    </div>
+                    <div class="about-grid">
+                        <div>
+                            <h3>開發方式</h3>
+                            <p>本作的程式碼由多個 AI 模型協作生成，透過「Vibe Coding」的方式快速迭代開發：</p>
+                            <div>
+                                <span class="model-tag">DeepSeek V4 Flash</span>
+                                <span class="model-tag">Hy3</span>
+                                <span class="model-tag">GPT-5.6 Luna</span>
+                            </div>
+                            <p style="margin-top:14px;">從遊戲邏輯、地圖系統到介面呈現，皆由 AI 輔助撰寫，再由人工進行企劃、測試與調整。</p>
+                        </div>
+                        <div>
+                            <h3>作者角色</h3>
+                            <ul class="role-list">
+                                <li><strong>企劃設定</strong>：負責世界觀、系統設計與玩法規劃。</li>
+                                <li><strong>遊戲測試</strong>：親自遊玩並回報問題，確保體驗流暢。</li>
+                                <li><strong>數值調整</strong>：根據測試結果持續平衡戰鬥與成長曲線。</li>
+                            </ul>
+                            <div class="notice">
+                                本遊戲為<strong>免費遊玩</strong>，以放置廣告的形式營運。它既是個人作品，也是一次嘗試創業的過程。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="testing" class="section cta">
+                <div class="container">
+                    <h2>現在，邀請你走進這片山河。</h2>
+                    <p>遊戲仍在持續開發與調整中。你的遊玩紀錄、操作感受與建議，將幫助武行山河變得更完整。</p>
+                    <a class="button primary" href="https://www.facebook.com/profile.php?id=100063836718643" target="_blank" rel="noopener">聯絡開發者</a>
+                </div>
+            </section>
+        </main>
+
+        <footer>武行山河 · Martial Realm: Mountains and Rivers · 遊戲測試版本</footer>
+    </div>
+
+    <script>
+        const changelogTitle = document.querySelector('#changelog-title')
+        const changelogSubtitle = document.querySelector('#changelog-subtitle')
+        const changelogList = document.querySelector('#changelog-list')
+
+        function renderChangelog(data) {
+            changelogTitle.textContent = data.title || '更新日誌'
+            changelogSubtitle.textContent = data.subtitle || ''
+
+            if (!Array.isArray(data.entries) || data.entries.length === 0) {
+                changelogList.innerHTML = '<p class="changelog-status">目前沒有更新內容。</p>'
+                return
+            }
+
+            changelogList.innerHTML = data.entries.map((entry) => `
+                <article class="changelog-entry">
+                    <div class="changelog-meta">
+                        <span class="changelog-version">${entry.version || '未指定版本'}</span>
+                        <time datetime="${entry.date || ''}">${entry.date || '日期未提供'}</time>
+                        ${entry.tag ? `<span class="changelog-tag">${entry.tag}</span>` : ''}
+                    </div>
+                    <h3>${entry.title || '版本更新'}</h3>
+                    <ul>${(Array.isArray(entry.changes) ? entry.changes : []).map((change) => `<li>${change}</li>`).join('')}</ul>
+                </article>
+            `).join('')
+        }
+
+        fetch('./data/changelog.json', { cache: 'no-cache' })
+            .then((response) => {
+                if (!response.ok) throw new Error(`HTTP ${response.status}`)
+                return response.json()
+            })
+            .then(renderChangelog)
+            .catch((error) => {
+                console.error('無法讀取更新日誌：', error)
+                changelogList.innerHTML = '<p class="changelog-status">更新日誌暫時無法載入，請稍後再試。</p>'
+            })
+    </script>
+</body>
+
+</html>

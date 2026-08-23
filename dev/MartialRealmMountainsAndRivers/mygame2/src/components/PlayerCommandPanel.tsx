@@ -1,0 +1,108 @@
+import { Button, Card, Flex, Tag, Tooltip, Typography } from 'antd'
+import type { ExternalSkill } from '../game/catalogs/externalSkillCatalog'
+import type { PlayerState } from '../game/types'
+import { ACTION_STAMINA_COSTS } from '../game/rules/actionCostRules'
+import { getSkillInnerPowerCost, getSkillProgression } from '../game/rules/skillRules'
+
+type PlayerCommandPanelProps = {
+  player: PlayerState | null
+  externalSkills: ExternalSkill[]
+  inventoryCount: number
+  movementEnabled: boolean
+  creatureTurnInProgress: boolean
+  onOpenInventory: () => void
+  onOpenEquipment: () => void
+  onOpenSkills: () => void
+  onAttack: () => void
+  onUseExternalSkill: (skillId: string) => void
+  onToggleMovement: () => void
+  onEndTurn: () => void
+  onOpenOptions: () => void
+}
+
+function PlayerCommandPanel({
+  player,
+  externalSkills,
+  inventoryCount,
+  movementEnabled,
+  creatureTurnInProgress,
+  onOpenInventory,
+  onOpenEquipment,
+  onOpenSkills,
+  onAttack,
+  onUseExternalSkill,
+  onToggleMovement,
+  onEndTurn,
+  onOpenOptions,
+}: PlayerCommandPanelProps) {
+  const canAct = Boolean(player && player.health > 0 && !player.turnEnded && !creatureTurnInProgress)
+  const canSpend = (cost: number) => canAct && Boolean(player && player.stamina >= cost)
+
+  return (
+    <Card className="player-command-panel" variant="borderless">
+      <Flex align="center" justify="space-between" gap={16} wrap>
+        <div className="player-command-panel__identity">
+          <Typography.Text strong>{creatureTurnInProgress ? 'Creature 行動中' : `體力 ${Math.floor(player?.stamina ?? 0)} / ${Math.floor(player?.maxStamina ?? 0)}`}</Typography.Text>
+          <Typography.Text>{player?.name ?? '無'}</Typography.Text>
+          {player && <Tag color={canAct ? 'green' : 'orange'}>{canAct ? '你的回合' : '回合已結束'}</Tag>}
+        </div>
+        <Flex gap={8} wrap>
+          <Tooltip title="快捷鍵 A">
+            <Button danger disabled={!canSpend(ACTION_STAMINA_COSTS.attack)} onClick={onAttack}>
+              ⚔️ 攻擊{ACTION_STAMINA_COSTS.attack > 0 ? ` ✦${ACTION_STAMINA_COSTS.attack}` : ''}（A）
+            </Button>
+          </Tooltip>
+          {player?.equippedExternalSkillIds.map((skillId) => {
+            const skill = externalSkills.find((currentSkill) => currentSkill.id === skillId)
+
+            if (!skill) {
+              return null
+            }
+
+            const usedThisTurn = player.externalSkillsUsedThisTurn?.includes(skill.id) ?? false
+            const skillLevel = getSkillProgression(player, skill.id).level
+            const actualInnerPowerCost = getSkillInnerPowerCost(skill.innerPowerCost, skillLevel)
+
+            return (
+              <Tooltip title={usedThisTurn ? '此外功本回合已使用' : `消耗內力 ${actualInnerPowerCost}｜${skill.description}`} key={skill.id}>
+                <Button disabled={!canAct || usedThisTurn || player.innerPower < actualInnerPowerCost} onClick={() => onUseExternalSkill(skill.id)}>
+                  ⚡ {skill.name}（內力 {actualInnerPowerCost}）
+                </Button>
+              </Tooltip>
+            )
+          })}
+          <Tooltip title="快捷鍵 W">
+            <Button
+              type={movementEnabled ? 'primary' : 'default'}
+              disabled={!canAct || !player || player.stamina <= 0}
+              onClick={onToggleMovement}
+            >
+              🧭 {movementEnabled ? '取消移動' : '移動'} ✦地形（W）
+            </Button>
+          </Tooltip>
+          <Tooltip title={`快捷鍵 B｜使用道具消耗 ${ACTION_STAMINA_COSTS.useItem} 點體力`}>
+            <Button disabled={!canSpend(ACTION_STAMINA_COSTS.useItem)} onClick={onOpenInventory}>
+              🎒 道具· {inventoryCount}{ACTION_STAMINA_COSTS.useItem > 0 ? `（使用 ✦${ACTION_STAMINA_COSTS.useItem}）` : ''}（B）
+            </Button>
+          </Tooltip>
+          <Tooltip title="快捷鍵 E">
+            <Button disabled={!canAct} onClick={onOpenEquipment}>🛡️ 裝備（E）</Button>
+          </Tooltip>
+          <Tooltip title="快捷鍵 S">
+            <Button disabled={!canAct} onClick={onOpenSkills}>
+              ☯ 功法（S）
+            </Button>
+          </Tooltip>
+          <Tooltip title="快捷鍵 Z">
+            <Button type="primary" danger disabled={!player || creatureTurnInProgress} onClick={onEndTurn}>
+              結束（Z）
+            </Button>
+          </Tooltip>
+          <Button onClick={onOpenOptions}>選項</Button>
+        </Flex>
+      </Flex>
+    </Card>
+  )
+}
+
+export default PlayerCommandPanel
