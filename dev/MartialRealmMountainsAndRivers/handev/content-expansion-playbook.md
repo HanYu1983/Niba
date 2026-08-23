@@ -32,6 +32,7 @@
 | 劇情章節 | `five-chapter-story-design.md`、`campaign-system-implementation-guide.md` | `catalogs/campaignScenarioCatalog.ts`（資料真源）、`editor/rules/scenarioCompiler.ts`、`game/scenarioStorage.ts`（供應鏈見附錄 C） |
 | 建築／防禦 | `defense-structures-design.md` | `buildingCatalog.ts`、`defenseStructureCatalog.ts`、`buildingActionRegistry.ts` |
 | 地形／世界 | `terrain-depth-system-design.md`、`fog-of-war-design.md` | `worldGeneration.ts`、`terrainLootCatalog.ts` |
+| 難度設計 | `difficulty-metrics-guide.md`（加難/減難指標總表＋分級配方＋創作陷阱） | `gameSettings.ts`、`creatureActions.ts`（巢穴常數）、`creatureAnimation.ts`（失敗判定） |
 
 另瀏覽 `reports/development-log.md` 最後幾篇，確認該系統目前進度與待驗收項目，避免做出已被否決的方向。
 
@@ -227,7 +228,7 @@ docker compose run --rm -p 5173:5173 node npm run dev     # 手動冒煙：開�
   - 可選裝飾：`itemPoint`（customDrops 掉寶）、`event`（custom 自訂事件或 eventType 引 eventCatalog）、`sectGate`／`defenseStructure`／`ruin`／`resourcePoint`。
 - **任務**：`quests.victoryObjectives` 主線一條＋選配支線（`isOptional: true`）；常用 type：`defeat-creature`（必填 `targetId`）、`survive-rounds`、`reach-position`、`build-building`。`failConditions` 至少給 `maxRounds`＋`baseMustSurvive`＋`playerMustSurvive`。
 - **對話與觸發器**：`dialogues` 定義對話組（steps 只含 speakerName/speakerIcon/content），`triggers` 接時機——三件套：`on-start` 開局、`on-round-reached`（conditionParam=回合數）中段伏筆、`on-victory` 收尾；另有 `on-defeat-boss`／`on-enter-region`／`on-object-destroyed` 可用。
-- **難度曲線**：Boss 參考附錄 A（序章 Lv3 五維約 10/10/9/8/8；敏捷型可壓血量拉敏捷，如第一章影魅護法 agi12＋maxHealthOverride 65）。隨機事件維持關閉（不設 `enableRandomEvents`）。
+- **難度曲線**：Boss 參考附錄 A（序章 Lv3 五維約 10/10/9/8/8；敏捷型可壓血量拉敏捷，如第一章影魅護法 agi12＋maxHealthOverride 65）。隨機事件維持關閉（不設 `enableRandomEvents`）。**巢穴數×初始怪數是難度主指標**——取值前先查 `difficulty-metrics-guide.md` 的分級配方與創作陷阱（特別是 T1：maxRounds 未接線、任一城失活即敗）。
 
 ### C.2 導出官方 JSON 並註冊
 

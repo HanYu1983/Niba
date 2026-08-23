@@ -1,5 +1,22 @@
 # 開發日誌
 
+## 2026-08-24｜新增難度指標對照手冊（handev/difficulty-metrics-guide.md）
+
+### 本次完成
+
+- 通盤研究規則層後產出 `handev/difficulty-metrics-guide.md`：把守城數量/巢穴/初始怪/資源點/地形成本/初始數值功法等要素分類為**加難度**（9 項）與**減難度**（10 項）指標，另立雙向指標（地形、地圖尺寸、隨機事件）、沙盒與劇本兩套難度分級配方、官方章節校準錨點
+- **關鍵發現（已寫入創作陷阱清單）**：failConditions 的 maxRounds/criticalBases/maxLostBasesCount 均未接線——實際失敗判定只有「任一據點失活」與「全玩家死亡」兩條寫死規則；巢穴無孵怪數量上限且 spawnChance 下限 0.1／上限 0.3；金錢無被動收入
+- content-expansion-playbook §1.1 與附錄 C 已加入交叉引用
+
+### 影響檔案
+
+- `handev/difficulty-metrics-guide.md`（新增）
+- `handev/content-expansion-playbook.md`（交叉引用）
+
+### 待驗收項目
+
+1. 若日後實作 failConditions 判定（回合到期判負／關鍵城制），須依手冊 §6 重寫陷阱清單並重新校準配方。
+
 ## 2026-08-24｜番外四「故地拾遺」：純敘事踩點章節
 
 ### 本次完成
