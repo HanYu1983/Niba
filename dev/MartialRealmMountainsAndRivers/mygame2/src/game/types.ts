@@ -96,6 +96,21 @@ export type BuffInstance = {
   damageDealtPercent?: number
   externalSkillDamagePercent?: number
   evasionRateBonus?: number
+  basicAttackStaminaCostReduction?: number
+  staminaToInnerPowerRatio?: number
+  externalSkillInnerCostReduction?: number
+  insightTrueDamageMultiplier?: number
+  visionRadiusBonus?: number
+  maxStaminaBonus?: number
+  gatherStaminaCostReduction?: number
+  gatherDoubleYieldChance?: number
+  buildingMaterialCostReduction?: number
+  buildingReputationBonus?: number
+  shopBuyPriceDiscount?: number
+  shopSellPriceBonus?: number
+  questRewardBonus?: number
+  confused?: boolean
+  damageTakenFromAlliesBonus?: number
 }
 
 export type MapCell = {

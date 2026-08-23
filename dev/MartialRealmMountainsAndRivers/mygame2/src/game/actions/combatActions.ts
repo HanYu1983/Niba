@@ -370,7 +370,11 @@ export function executeExternalDamage(
         withBuff,
       )
       : withBuff
-    const rewards: CombatRewards = { experienceGain: 0, moneyReward: 0, progressedPlayer: trainedPlayer }
+    // 定向強化型外功：直接施放、立即完成（無冷卻、不消耗體力）。目前支援回復自身最大生命百分比。
+    const activatedPlayer = skill.activationEffect?.kind === 'heal-self-percent'
+      ? { ...trainedPlayer, health: Math.min(trainedPlayer.maxHealth, trainedPlayer.health + Math.floor(trainedPlayer.maxHealth * skill.activationEffect.percent)) }
+      : trainedPlayer
+    const rewards: CombatRewards = { experienceGain: 0, moneyReward: 0, progressedPlayer: activatedPlayer }
     const nextPlayer = applyCombatPlayerState(state, trainedPlayer, rewards, dependencies, { innerPowerCost, externalSkillId: skillId, skipSkillExperience: true })
     return { state: { ...state, players: state.players.map((candidate) => candidate.id === playerId ? nextPlayer : candidate) }, result: { ok: true, data: { playerId, playerName: player.name, targetType: 'creature', targetId: playerId, targetName: player.name, skillId, skillName: skill.name, damage: 0, nextHealth: player.health, maxHealth: player.maxHealth, innerPowerCost, targetMode: 'self', defeated: false, experienceReward: rewards.experienceGain || undefined } } }
   }

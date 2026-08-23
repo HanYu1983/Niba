@@ -56,6 +56,22 @@ export type BuffDefinition = {
   externalSkillDamagePercent?: number
   /** 回避率加成（百分比，直接加在身法決定的回避率上）。 */
   evasionRateBonus?: number
+  /** 普通攻擊的體力消耗減免。 */
+  basicAttackStaminaCostReduction?: number
+  staminaToInnerPowerRatio?: number
+  externalSkillInnerCostReduction?: number
+  insightTrueDamageMultiplier?: number
+  visionRadiusBonus?: number
+  maxStaminaBonus?: number
+  gatherStaminaCostReduction?: number
+  gatherDoubleYieldChance?: number
+  buildingMaterialCostReduction?: number
+  buildingReputationBonus?: number
+  shopBuyPriceDiscount?: number
+  shopSellPriceBonus?: number
+  questRewardBonus?: number
+  confused?: boolean
+  damageTakenFromAlliesBonus?: number
   // 類別 4：條件型
   /** 依血量區間觸發的五維乘算。 */
   conditional?: BuffConditional
@@ -67,7 +83,7 @@ export const buffCatalog: BuffDefinition[] = [
     name: '吐納養氣',
     description: '裝備吐納功期間，提升悟性。',
     duration: 'persistent',
-    attributeModifiers: { insight: 1 },
+    attributeModifiers: { insight: 5 },
   },
   {
     id: 'iron-force-strength',
@@ -99,6 +115,7 @@ export const buffCatalog: BuffDefinition[] = [
   },
   { id: 'golden-body-critical-boost', name: '暴擊強化', description: '暴擊率 ×2。', duration: 'rounds', durationRounds: 2, criticalRateMultiplier: 2 },
   { id: 'swift-wind-movement', name: '疾行', description: '地形消耗一律視為草地。', duration: 'rounds', durationRounds: 2, terrainCostOverride: 2 },
+  { id: 'swift-wind-attack-focus', name: '追風攻勢', description: '普通攻擊體力消耗 -2。', duration: 'persistent', category: 'buff', basicAttackStaminaCostReduction: 2 },
   { id: 'scarlet-flame-burning', name: '燃燒', description: '每回合損失最大生命 20%。', duration: 'rounds', durationRounds: 3, maxHealthDamagePercent: 0.2 },
   { id: 'frost-water-cold-poison', name: '寒毒', description: '五維屬性降低 20%。', duration: 'rounds', durationRounds: 2, attributeMultiplier: 0.8 },
   { id: 'earth-mountain-reflection', name: '反震', description: '受到傷害時反彈同等傷害。', duration: 'rounds', durationRounds: 3, reflectionPercent: 1 },

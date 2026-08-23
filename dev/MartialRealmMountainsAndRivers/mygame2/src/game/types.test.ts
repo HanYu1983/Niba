@@ -258,7 +258,7 @@ describe('臂力普通攻擊暴擊率', () => {
 describe('悟性容量', () => {
   it('功法超出悟性上限時效果大幅衰減', () => {
     const player = makePlayer({
-      attributes: { ...baseAttributes, insight: 3 },
+      attributes: { ...baseAttributes, insight: 1 },
       equippedExternalSkillIds: ['sky-breaking-palm'],
     })
     expect(getSkillEffectMultiplier(player)).toBe(0.1)
@@ -286,8 +286,8 @@ describe('悟性容量', () => {
     expect(breakdown.inner).toBe(5)
     expect(breakdown.external).toBe(2)
     expect(breakdown.total).toBe(7)
-    // 吐納功本身提供悟性 +1，因此容量上限使用有效悟性 8。
-    expect(breakdown.limit).toBe(8)
+    // 吐納功提供悟性 +5，因此容量上限使用有效悟性 12。
+    expect(breakdown.limit).toBe(12)
     expect(breakdown.exceeded).toBe(false)
   })
 
@@ -295,7 +295,7 @@ describe('悟性容量', () => {
     const player = makePlayer({
       innerSkillId: 'tuna-gong',
       equippedExternalSkillIds: ['sky-breaking-palm'],
-      attributes: { ...baseAttributes, insight: 5 },
+      attributes: { ...baseAttributes, insight: 1 },
     })
     const breakdown = getPlayerInsightCapacityBreakdown(player)
     expect(breakdown.total).toBe(5 + 2)

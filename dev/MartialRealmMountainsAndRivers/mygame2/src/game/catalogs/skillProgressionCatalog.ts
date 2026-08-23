@@ -1,7 +1,7 @@
 import type { ExternalSkill } from './externalSkillCatalog'
 import type { InnerSkill } from './innerSkillCatalog'
 import type { PlayerAttributes } from '../types'
-import { type FunctionalExternalSkillEffect, functionalExternalSkillDescriptions } from './functionalSkillRegistry'
+import { type FunctionalExternalSkillEffect, functionalExternalSkillDescriptions, getFunctionalSkillBuffIds } from './functionalSkillRegistry'
 
 export type { FunctionalExternalSkillEffect }
 
@@ -134,8 +134,8 @@ const schoolLightFootTheme: Record<string, string> = {
 
 export const progressionExternalSkills: ExternalSkill[] = schools.flatMap((school) => {
   const name = school.externalNames[0]
-  const functionalName = `${school.name}·${school.id === 'golden-body' ? '暴擊強化' : school.id === 'swift-wind' ? '疾行' : school.id === 'scarlet-flame' ? '燎原' : school.id === 'frost-water' ? '凝霜' : school.id === 'earth-mountain' ? '反震' : '迴氣（悟道）'}`
-  const functionalEffect = (school.id === 'golden-body' ? 'critical-rate' : school.id === 'swift-wind' ? 'terrain-adaptation' : school.id === 'scarlet-flame' ? 'burning' : school.id === 'frost-water' ? 'attribute-reduction' : school.id === 'earth-mountain' ? 'reflection' : 'experience-gain') as FunctionalExternalSkillEffect
+  const functionalName = `${school.name}·${school.id === 'golden-body' ? '暴擊強化' : school.id === 'swift-wind' ? '追風攻勢' : school.id === 'scarlet-flame' ? '燎原' : school.id === 'frost-water' ? '凝霜' : school.id === 'earth-mountain' ? '反震' : '迴氣（悟道）'}`
+  const functionalEffect = (school.id === 'golden-body' ? 'critical-rate' : school.id === 'swift-wind' ? 'basic-attack-stamina-reduction' : school.id === 'scarlet-flame' ? 'burning' : school.id === 'frost-water' ? 'attribute-reduction' : school.id === 'earth-mountain' ? 'reflection' : 'experience-gain') as FunctionalExternalSkillEffect
   const damageSkill: ExternalSkill = {
     id: `${school.id}-external-damage`,
     name,
@@ -162,6 +162,8 @@ export const progressionExternalSkills: ExternalSkill[] = schools.flatMap((schoo
     schoolId: school.id,
     level: 1,
     innerPowerCost: 6,
+    category: school.id === 'scarlet-flame' || school.id === 'frost-water' ? 'damage' : 'aura',
+    passiveBuffIds: school.id === 'scarlet-flame' || school.id === 'frost-water' ? undefined : getFunctionalSkillBuffIds(functionalEffect),
     target: school.id === 'golden-body' || school.id === 'swift-wind' || school.id === 'earth-mountain' || school.id === 'void-spirit' ? 'self' : 'target',
     calculateDamage: () => 0,
     functionalEffect,
@@ -182,6 +184,7 @@ export const progressionExternalSkills: ExternalSkill[] = schools.flatMap((schoo
     target: 'self',
     calculateDamage: () => 0,
     functionalEffect: lightFootEffect,
+    category: 'aura',
     // 門派輕功僅透過武館學習，不從怪物/巢穴掉落。
     lootExcluded: true,
   }

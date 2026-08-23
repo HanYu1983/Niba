@@ -80,13 +80,22 @@ describe('skillProgressionCatalog', () => {
 })
 
 describe('江湖外功功法（無門派）', () => {
-  it('提供 10 個江湖外功，對應 10 個 Buff', () => {
-    expect(jianghuExternalSkills).toHaveLength(10)
+  it('提供 9 個江湖靈氣型外功，對應 9 個 Buff', () => {
+    expect(jianghuExternalSkills).toHaveLength(9)
     expect(jianghuExternalSkills.every((skill) => !skill.schoolId)).toBe(true)
     expect(jianghuExternalSkills.every((skill) => skill.target === 'self')).toBe(true)
+    expect(jianghuExternalSkills.every((skill) => skill.category === 'aura')).toBe(true)
     expect(jianghuExternalSkills.every((skill) => skill.functionalEffect)).toBe(true)
     // 輕功已改為門派專屬，不再屬於江湖外功。
     expect(jianghuExternalSkills.every((skill) => !skill.id.includes('step'))).toBe(true)
+  })
+
+  it('回春功為強化型外功，主動施放回復自身 20% 血量', () => {
+    const skill = allExternalSkillCatalog.find((candidate) => candidate.id === 'jianghu-spring-return')
+    expect(skill).toBeDefined()
+    expect(skill!.category).toBe('enhancement')
+    expect(skill!.target).toBe('self')
+    expect(skill!.activationEffect).toEqual({ kind: 'heal-self-percent', percent: 0.2 })
   })
 
   it('江湖外功已加入完整功法池', () => {

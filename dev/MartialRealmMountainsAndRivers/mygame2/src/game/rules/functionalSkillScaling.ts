@@ -40,6 +40,7 @@ export function getFunctionalSkillBuffOverrides(
   if (effect === 'damage-dealt') overrides.damageDealtPercent = scaledPercent(definition.damageDealtPercent, level)
   if (effect === 'external-skill-damage') overrides.externalSkillDamagePercent = scaledPercent(definition.externalSkillDamagePercent, level)
   if (effect === 'terrain-adaptation') overrides.terrainCostOverride = definition.terrainCostOverride
+  if (effect === 'basic-attack-stamina-reduction') overrides.basicAttackStaminaCostReduction = definition.basicAttackStaminaCostReduction
   if (effect?.endsWith('-step')) overrides.evasionRateBonus = (definition.evasionRateBonus ?? 0) + levelDelta
 
   return Object.fromEntries(Object.entries(overrides).filter(([, value]) => value !== undefined))

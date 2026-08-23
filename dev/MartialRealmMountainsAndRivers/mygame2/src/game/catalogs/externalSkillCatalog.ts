@@ -1,7 +1,9 @@
 import type { PlayerAttributes } from "../types"
 import type { FunctionalExternalSkillEffect } from "./functionalSkillRegistry"
+import type { AuraEffect, EnhancementActivationEffect } from "./skillFactory"
 
 export type ExternalSkillTarget = 'self' | 'target' | 'nest'
+export type ExternalSkillCategory = 'damage' | 'aura' | 'enhancement'
 
 export type ExternalSkill = {
   id: string
@@ -16,6 +18,15 @@ export type ExternalSkill = {
   level?: number
   innerPowerCost: number
   functionalEffect?: FunctionalExternalSkillEffect
+  /** 靈氣型外功常駐 Buff；開啟功法即生效。 */
+  passiveBuffIds?: string[]
+  /** 靈氣型外功的結構化靈氣效果（地形、經驗增益等非純 Buff 效果）。 */
+  auraEffect?: AuraEffect
+  /** 強化型外功的主動效果；直接施放、立即完成，無冷卻、不消耗體力。 */
+  activationEffect?: EnhancementActivationEffect
+  category?: ExternalSkillCategory
+  /** 指定目標的最遠曼哈頓距離；未設定時沿用相鄰目標規則。 */
+  range?: number
   target: ExternalSkillTarget
   /** 標記該功法不會從怪物/巢穴掉落（僅透過武館等指定途徑學習）。 */
   lootExcluded?: boolean

@@ -6,16 +6,16 @@ import {
   progressionExternalSkills,
   progressionInnerSkills,
 } from './skillProgressionCatalog'
-import { jianghuExternalSkills } from './jianghuExternalSkillCatalog'
+import { jianghuExternalSkills, springReturnEnhancement } from './jianghuExternalSkillCatalog'
 import type { MartialSchoolId } from './martialSchoolCatalog'
 
-/** 武館只販售太虛流進階功法；既有核心功法不列入商店。 */
+/** 武館只販售太虛流進階功法；既有武館功法不列入商店。 */
 export const martialHallInnerSkillCatalog: InnerSkill[] = martialHallInnerSkills
 export const martialHallExternalSkillCatalog: ExternalSkill[] = martialHallExternalSkills
 
 /** 完整查找目錄，供戰鬥、Buff 與已學功法使用。 */
 export const allInnerSkillCatalog: InnerSkill[] = [...innerSkillCatalog, ...progressionInnerSkills]
-export const allExternalSkillCatalog: ExternalSkill[] = [...externalSkillCatalog, ...progressionExternalSkills, ...jianghuExternalSkills]
+export const allExternalSkillCatalog: ExternalSkill[] = [...externalSkillCatalog, ...progressionExternalSkills, ...jianghuExternalSkills, springReturnEnhancement]
 
 export function getMartialHallSkills(schoolId: MartialSchoolId | undefined): {
   inner: InnerSkill[]

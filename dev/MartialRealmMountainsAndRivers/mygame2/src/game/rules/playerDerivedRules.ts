@@ -1,6 +1,8 @@
 import { buffCatalog, type BuffDefinition } from '../catalogs/buffCatalog'
 import { equipmentCatalog, type EquipmentDefinition } from '../catalogs/equipmentCatalog'
 import { innerSkillCatalog } from '../catalogs/innerSkillCatalog'
+import { allExternalSkillCatalog } from '../catalogs/martialHallSkillCatalog'
+import { getFunctionalSkillBuffOverrides } from './functionalSkillScaling'
 import type {
   EquipmentInstance,
   EquipmentLoadout,
@@ -62,9 +64,13 @@ function getEffectiveBuffDefinition(instance: BuffInstance): BuffDefinition | un
     'attributeMultiplier', 'maxHealthDamagePercent', 'criticalRateMultiplier', 'terrainCostOverride', 'reflectionPercent',
     'lifestealPercent', 'innerPowerLeechPercent', 'damageReductionPercent', 'healthRegenPercent',
     'innerPowerHealthRegenPercent', 'damageDealtPercent', 'externalSkillDamagePercent', 'evasionRateBonus',
+    'staminaToInnerPowerRatio', 'externalSkillInnerCostReduction', 'insightTrueDamageMultiplier',
+    'visionRadiusBonus', 'maxStaminaBonus', 'gatherStaminaCostReduction', 'gatherDoubleYieldChance',
+    'buildingMaterialCostReduction', 'buildingReputationBonus', 'shopBuyPriceDiscount',
+    'shopSellPriceBonus', 'questRewardBonus', 'confused', 'damageTakenFromAlliesBonus', 'basicAttackStaminaCostReduction',
   ] as const) {
     const value = instance[key]
-    if (value !== undefined) overrides[key] = value
+    if (value !== undefined) overrides[key] = value as never
   }
   return { ...definition, ...overrides }
 }
@@ -84,7 +90,30 @@ export function getActiveBuffsForPlayer(player: PlayerState): BuffInstance[] {
   return [
     ...explicitBuffs,
     ...(getInnerSkillBuffs(player) ?? []),
+    ...getEquippedExternalSkillBuffs(player),
   ]
+}
+
+/** 將已裝備的靈氣型外功轉成常駐 Buff；強化型外功（主動施放）刻意排除。 */
+function getEquippedExternalSkillBuffs(player: PlayerState): BuffInstance[] {
+  return player.equippedExternalSkillIds.flatMap((skillId) => {
+    const skill = allExternalSkillCatalog.find((candidate) => candidate.id === skillId)
+    if (!skill || skill.category !== 'aura' || !skill.passiveBuffIds?.length) return []
+    const level = Math.max(1, Math.floor(player.skillProgression?.[skillId]?.level ?? 1))
+    return skill.passiveBuffIds.map((definitionId) => {
+      const definition = getBuff(definitionId)
+      const overrides = definition && skill.functionalEffect
+        ? getFunctionalSkillBuffOverrides(skill.functionalEffect, level, definition)
+        : {}
+      return {
+        id: `external-skill:${skillId}:${definitionId}`,
+        definitionId,
+        sourceId: skillId,
+        remainingRounds: null,
+        ...overrides,
+      }
+    })
+  })
 }
 
 const creatureHomeTurfBuffs: Partial<Record<string, { terrain: TerrainType; definitionId: string }>> = {

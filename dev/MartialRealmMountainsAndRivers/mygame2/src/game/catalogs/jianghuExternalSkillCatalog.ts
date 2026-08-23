@@ -1,30 +1,29 @@
 import type { ExternalSkill } from './externalSkillCatalog'
 import type { FunctionalExternalSkillEffect } from './functionalSkillRegistry'
 import { functionalExternalSkillDescriptions } from './functionalSkillRegistry'
+import { createAuraExternalSkill, createEnhancementExternalSkill } from './skillFactory'
 
 /**
  * 江湖外功功法目錄。
  *
  * 所謂「江湖門派」就是沒有門派——這些功法由散修武者於江湖中流傳，
- * 不隸屬任何武館流派（無 `schoolId`），因此可在任何武館學習、也可自掉落取得。
+ * 不隸屬任何 `schoolId`，因此可在任何武館學習、也可自掉落取得。
  *
- * 每個功法對應一個 Buff，透過 `functionalEffect` → 功能型外功 registry 掛載到
- * 對應的 Buff 上（皆為 `target: 'self'`，施放時對自身施加 Buff）。
+ * 每個功法對應一個靈氣 Buff，透過 `functionalEffect` → 功能型外功 registry
+ * 掛載到對應的 Buff 上（皆為 `target: 'self'`、`category: 'aura'`，裝備後常駐生效）。
  */
 
-/** 江湖功法的固定屬性：所有功能型外功共用相同取得條件與施展成本。 */
-const JIANGHU_SKILL_DEFAULTS = {
+/** 江湖靈氣型外功的共用取得條件。 */
+const JIANGHU_AURA_DEFAULTS = {
   insightCost: 2,
   requiredHallLevel: 3,
   level: 1,
-  innerPowerCost: 5,
-  target: 'self' as const,
 }
 
 /**
- * 建立單一江湖功能型外功法。
+ * 建立單一江湖靈氣型外功。
  * `formulaDescription` 直接取自 `functionalExternalSkillDescriptions`，
- * 避免與效果說明（description）產生資料漂移。
+ * 避免與 `effect` 說明（description）產生資料漂移。
  */
 function createJianghuSkill(input: {
   id: string
@@ -32,12 +31,11 @@ function createJianghuSkill(input: {
   description: string
   functionalEffect: FunctionalExternalSkillEffect
 }): ExternalSkill {
-  return {
-    ...JIANGHU_SKILL_DEFAULTS,
+  return createAuraExternalSkill({
+    ...JIANGHU_AURA_DEFAULTS,
     ...input,
     formulaDescription: functionalExternalSkillDescriptions[input.functionalEffect],
-    calculateDamage: () => 0,
-  }
+  })
 }
 
 export const jianghuExternalSkills: ExternalSkill[] = [
@@ -53,12 +51,6 @@ export const jianghuExternalSkills: ExternalSkill[] = [
     name: '鐵壁功',
     description: '江湖橫練功夫，運勁護體。',
     functionalEffect: 'damage-reduction',
-  }),
-  createJianghuSkill({
-    id: 'jianghu-spring-return',
-    name: '回春功',
-    description: '江湖養生功法，氣血生生不息。',
-    functionalEffect: 'health-regen',
   }),
   createJianghuSkill({
     id: 'jianghu-qi-transformation',
@@ -104,5 +96,21 @@ export const jianghuExternalSkills: ExternalSkill[] = [
     functionalEffect: 'all-in',
   }),
 ]
+
+/**
+ * 強化型外功：回春功。
+ * 直接施放、立即回復自身最大生命的 20%；無冷卻、不消耗體力、允許滿血施放。
+ */
+export const springReturnEnhancement: ExternalSkill = createEnhancementExternalSkill({
+  id: 'jianghu-spring-return',
+  name: '回春功',
+  description: '江湖養生功法，施展後氣血迅速回覆。直接施放，回復自身最大生命的 20%。',
+  formulaDescription: '直接回復自身最大生命的 20%。',
+  insightCost: 2,
+  requiredHallLevel: 3,
+  level: 1,
+  innerPowerCost: 2,
+  activationEffect: { kind: 'heal-self-percent', percent: 0.2 },
+})
 
 export type JianghuExternalSkillEffect = FunctionalExternalSkillEffect

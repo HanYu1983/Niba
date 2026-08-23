@@ -10,6 +10,7 @@
 export type FunctionalExternalSkillEffect =
   | 'critical-rate'
   | 'terrain-adaptation'
+  | 'basic-attack-stamina-reduction'
   | 'burning'
   | 'attribute-reduction'
   | 'reflection'
@@ -38,6 +39,7 @@ export type FunctionalExternalSkillEffect =
 export const functionalExternalSkillDescriptions: Record<FunctionalExternalSkillEffect, string> = {
   'critical-rate': '自身暴擊率 ×2，持續 2 回合。',
   'terrain-adaptation': '自身接下來 2 回合移動時，所有地形體力消耗視為 2。',
+  'basic-attack-stamina-reduction': '執行普通攻擊時，體力消耗 -2。',
   burning: '使目標燃燒 3 回合，每回合損失最大生命 20%。',
   'attribute-reduction': '使目標 2 回合內五項基本屬性降低 20%。',
   reflection: '自身 3 回合內受到傷害時，反彈同等傷害。',
@@ -67,6 +69,7 @@ export const functionalExternalSkillDescriptions: Record<FunctionalExternalSkill
 export const functionalSkillBuffBindings: Record<FunctionalExternalSkillEffect, string[]> = {
   'critical-rate': ['golden-body-critical-boost'],
   'terrain-adaptation': ['swift-wind-movement'],
+  'basic-attack-stamina-reduction': ['swift-wind-attack-focus'],
   burning: ['scarlet-flame-burning'],
   'attribute-reduction': ['frost-water-cold-poison'],
   reflection: ['earth-mountain-reflection'],
@@ -84,12 +87,12 @@ export const functionalSkillBuffBindings: Record<FunctionalExternalSkillEffect, 
   'nurture-qi': ['nurture-qi'],
   'all-in': ['all-in'],
   // 類別 5：移動類
-  'plain-step': ['plain-step','phantom-step'],
-  'forest-step': ['forest-step', 'phantom-step'],
-  'water-step': ['water-step', 'phantom-step'],
-  'mountain-step': ['mountain-step', 'phantom-step'],
-  'desert-step': ['desert-step', 'phantom-step'],
-  'wall-step': ['wall-step', 'phantom-step'],
+  'plain-step': ['plain-step'],
+  'forest-step': ['forest-step'],
+  'water-step': ['water-step'],
+  'mountain-step': ['mountain-step'],
+  'desert-step': ['desert-step'],
+  'wall-step': ['wall-step'],
 }
 
 /** 取得某效果對應的 Buff 定義 ID 清單；無對應時回傳空陣列（例如 `experience-gain`）。 */
