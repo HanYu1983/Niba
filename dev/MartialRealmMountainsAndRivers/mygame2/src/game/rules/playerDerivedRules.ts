@@ -67,7 +67,7 @@ function getEffectiveBuffDefinition(instance: BuffInstance): BuffDefinition | un
     'staminaToInnerPowerRatio', 'externalSkillInnerCostReduction', 'insightTrueDamageMultiplier',
     'visionRadiusBonus', 'maxStaminaBonus', 'gatherStaminaCostReduction', 'gatherDoubleYieldChance',
     'buildingMaterialCostReduction', 'buildingReputationBonus', 'shopBuyPriceDiscount',
-    'shopSellPriceBonus', 'questRewardBonus', 'confused', 'damageTakenFromAlliesBonus', 'basicAttackStaminaCostReduction',
+    'shopSellPriceBonus', 'questRewardBonus', 'skillExpGainPercent', 'confused', 'damageTakenFromAlliesBonus', 'basicAttackStaminaCostReduction',
   ] as const) {
     const value = instance[key]
     if (value !== undefined) overrides[key] = value as never
@@ -360,4 +360,9 @@ export function getCreatureDamageReductionPercent(creature: CreatureState, terra
 /** 外功造成的最終傷害加成比例（罡氣訣）。 */
 export function getExternalSkillDamagePercent(player: PlayerState): number {
   return sumBuffPercent(player, 'externalSkillDamagePercent')
+}
+
+/** 功法經驗獲得加成比例（迴氣悟道等；乘以所得經驗）。 */
+export function getPlayerSkillExpGainPercent(player: PlayerState): number {
+  return sumBuffPercent(player, 'skillExpGainPercent')
 }

@@ -2,6 +2,7 @@ import type { ActionOutcome, GameState } from '../types'
 import { canPlayerPerformAction, spendPlayerStamina } from '../rules/actionCostRules'
 import { addSkillExperience, SKILL_EXPERIENCE_PER_USE } from '../rules/skillRules'
 import { getGlobalSkillExperienceMultiplier } from '../rules/globalBuffRules'
+import { getPlayerSkillExpGainPercent } from '../rules/playerDerivedRules'
 import {
   SECT_GATE_PRACTICE_STAMINA_COST,
   SECT_GATE_PRACTICE_EXPERIENCE,
@@ -119,7 +120,7 @@ export function practiceSkillAtSectGate(
     return { state, result: { ok: false, reason: '必須先學會此功法才能練習。' } }
   }
 
-  const experienceMultiplier = getGlobalSkillExperienceMultiplier(state)
+  const experienceMultiplier = getGlobalSkillExperienceMultiplier(state) * (1 + getPlayerSkillExpGainPercent(player))
   const nextGateProgress = addSectGateExperience(gate, SECT_GATE_PRACTICE_EXPERIENCE)
   return {
     state: {

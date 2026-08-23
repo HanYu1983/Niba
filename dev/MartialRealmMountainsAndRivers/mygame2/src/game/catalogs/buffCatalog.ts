@@ -70,6 +70,8 @@ export type BuffDefinition = {
   shopBuyPriceDiscount?: number
   shopSellPriceBonus?: number
   questRewardBonus?: number
+  /** 功法經驗獲取比例加成。 */
+  skillExpGainPercent?: number
   confused?: boolean
   damageTakenFromAlliesBonus?: number
   // 類別 4：條件型
@@ -116,6 +118,7 @@ export const buffCatalog: BuffDefinition[] = [
   { id: 'golden-body-critical-boost', name: '暴擊強化', description: '暴擊率 ×2。', duration: 'rounds', durationRounds: 2, criticalRateMultiplier: 2 },
   { id: 'swift-wind-movement', name: '疾行', description: '地形消耗一律視為草地。', duration: 'rounds', durationRounds: 2, terrainCostOverride: 2 },
   { id: 'swift-wind-attack-focus', name: '追風攻勢', description: '普通攻擊體力消耗 -2。', duration: 'persistent', category: 'buff', basicAttackStaminaCostReduction: 2 },
+  { id: 'void-spirit-return-qi', name: '迴氣悟道', description: '功法經驗獲得 +20%。', duration: 'persistent', category: 'buff', skillExpGainPercent: 0.2 },
   { id: 'scarlet-flame-burning', name: '燃燒', description: '每回合損失最大生命 20%。', duration: 'rounds', durationRounds: 3, maxHealthDamagePercent: 0.2 },
   { id: 'frost-water-cold-poison', name: '寒毒', description: '五維屬性降低 20%。', duration: 'rounds', durationRounds: 2, attributeMultiplier: 0.8 },
   { id: 'earth-mountain-reflection', name: '反震', description: '受到傷害時反彈同等傷害。', duration: 'rounds', durationRounds: 3, reflectionPercent: 1 },

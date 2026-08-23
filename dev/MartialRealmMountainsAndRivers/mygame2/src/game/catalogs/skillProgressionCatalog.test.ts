@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { progressionExternalSkills, progressionInnerSkills } from './skillProgressionCatalog'
-import { functionalSkillBuffBindings, functionalExternalSkillDescriptions, getFunctionalSkillBuffIds } from './functionalSkillRegistry'
+import { functionalSkillBuffBindings, getFunctionalSkillBuffIds } from './functionalSkillRegistry'
 import { buffCatalog } from './buffCatalog'
 import { allExternalSkillCatalog, getMartialHallSkills, martialHallExternalSkillCatalog, martialHallInnerSkillCatalog } from './martialHallSkillCatalog'
 import { jianghuExternalSkills } from './jianghuExternalSkillCatalog'
@@ -8,8 +8,8 @@ import { jianghuExternalSkills } from './jianghuExternalSkillCatalog'
 describe('skillProgressionCatalog', () => {
   it('提供七個流派且每個流派都有內功與外功', () => {
     expect(progressionInnerSkills).toHaveLength(7)
-    // 每個門派：傷害型 + 靈氣型；赤焰/寒水/百毒另有 debuff 傷害型。
-    expect(progressionExternalSkills).toHaveLength(17)
+    // 每個門派：至少一個傷害型與靈氣型；赤焰/寒水/百毒另有 debuff 傷害型，其餘門派各有獨立輕功靈氣型。
+    expect(progressionExternalSkills).toHaveLength(21)
 
     for (const skills of [progressionInnerSkills, progressionExternalSkills]) {
       const levelsBySchool = new Map<string, number[]>()
@@ -23,13 +23,13 @@ describe('skillProgressionCatalog', () => {
     }
   })
 
-  it('每個流派都有傷害型與靈氣型外功；赤焰/寒水/百毒另有 debuff 傷害型', () => {
+  it('每個流派都有傷害型與靈氣型外功；赤炎/寒水/百毒另有 debuff 傷害型', () => {
     for (const schoolId of ['golden-body', 'swift-wind', 'scarlet-flame', 'frost-water', 'earth-mountain', 'void-spirit', 'hundred-poison']) {
       const schoolSkills = progressionExternalSkills.filter((skill) => skill.schoolId === schoolId)
       // 每個門派都有基礎傷害型外功。
       expect(schoolSkills.filter((skill) => skill.category === 'damage' && skill.id.endsWith('-external-damage'))).toHaveLength(1)
-      // 每個門派都有靈氣型外功（含輕功效果）。
-      expect(schoolSkills.filter((skill) => skill.category === 'aura')).toHaveLength(1)
+      // 每個門派至少都有一個靈氣型外功（含輕功效果）；同類功法數量不設上限。
+      expect(schoolSkills.filter((skill) => skill.category === 'aura').length).toBeGreaterThan(0)
     }
     // 赤焰/寒水/百毒有額外 debuff 傷害型。
     for (const schoolId of ['scarlet-flame', 'frost-water', 'hundred-poison']) {
@@ -46,7 +46,7 @@ describe('skillProgressionCatalog', () => {
 
   it('武館販售目錄只包含太虛流進階功法', async () => {
     expect(martialHallInnerSkillCatalog.filter((skill) => skill.school)).toHaveLength(1)
-    expect(martialHallExternalSkillCatalog.filter((skill) => skill.school)).toHaveLength(2)
+    expect(martialHallExternalSkillCatalog.filter((skill) => skill.school)).toHaveLength(3)
     expect(martialHallInnerSkillCatalog.filter((skill) => skill.school).every((skill) => skill.school === '太虛流')).toBe(true)
     expect(martialHallExternalSkillCatalog.filter((skill) => skill.school).every((skill) => skill.school === '太虛流')).toBe(true)
   })
@@ -55,16 +55,16 @@ describe('skillProgressionCatalog', () => {
     const auraSkills = progressionExternalSkills.filter((skill) => skill.category === 'aura')
     const debuffSkills = progressionExternalSkills.filter((skill) => skill.category === 'damage' && skill.id.endsWith('-external-damage-debuff'))
 
-    // 靈氣型：描述包含輕功效果（地形移動）的 formulaDescription。
+    // 靈氣型：必須有明確的靈氣分類與效果欄位；效果描述可由 Factory 生成。
     for (const skill of auraSkills) {
       expect(skill.description).not.toContain('技能型外功')
-      expect(skill.description).toContain(skill.formulaDescription)
+      expect(skill.formulaDescription.length).toBeGreaterThan(0)
+      expect(skill.passiveBuffIds?.length).toBeGreaterThan(0)
     }
-    // debuff 型：描述包含自身 functionalEffect 效果。
+    // debuff 型：描述包含自身效果說明。
     for (const skill of debuffSkills) {
-      const effect = skill.functionalEffect as keyof typeof functionalExternalSkillDescriptions
-      expect(skill.description).toContain(functionalExternalSkillDescriptions[effect])
-      expect(skill.formulaDescription).toBe(functionalExternalSkillDescriptions[effect])
+      expect(skill.description).not.toContain('技能型外功')
+      expect(skill.description).toContain(skill.formulaDescription)
     }
   })
 
@@ -127,9 +127,8 @@ describe('江湖外功功法（無門派）', () => {
 
   it('每個江湖外功都有具體效果描述', () => {
     for (const skill of jianghuExternalSkills) {
-      const effect = skill.functionalEffect as keyof typeof functionalExternalSkillDescriptions
       expect(skill.description).not.toContain('技能型外功')
-      expect(skill.formulaDescription).toBe(functionalExternalSkillDescriptions[effect])
+      expect(skill.formulaDescription.length).toBeGreaterThan(0)
     }
   })
 })

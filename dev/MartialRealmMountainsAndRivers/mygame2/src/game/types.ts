@@ -109,6 +109,8 @@ export type BuffInstance = {
   shopBuyPriceDiscount?: number
   shopSellPriceBonus?: number
   questRewardBonus?: number
+  /** 功法經驗獲得加成比例（技能經驗乘算）。 */
+  skillExpGainPercent?: number
   confused?: boolean
   damageTakenFromAlliesBonus?: number
 }
