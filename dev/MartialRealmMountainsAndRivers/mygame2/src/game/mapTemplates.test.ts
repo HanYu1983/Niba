@@ -80,6 +80,66 @@ describe('內建模板', () => {
   })
 })
 
+describe('挑戰關卡模板（Lv1 簡單 ～ Lv20 極度困難）', () => {
+  const challengeTemplates = BUILTIN_TEMPLATES.filter((t) => t.id.startsWith('challenge-'))
+
+  it('提供 Lv1～Lv20 共二十級，id 連續且名稱帶等級與難度標籤', () => {
+    expect(challengeTemplates).toHaveLength(20)
+    challengeTemplates.forEach((template, index) => {
+      expect(template.id).toBe(`challenge-${String(index + 1).padStart(2, '0')}`)
+      expect(template.builtin).toBe(true)
+      expect(template.name).toContain(`Lv${index + 1}`)
+    })
+    const names = challengeTemplates.map((t) => t.name)
+    expect(new Set(names).size).toBe(names.length)
+    expect(challengeTemplates[0].name).toContain('簡單')
+    expect(challengeTemplates[19].name).toContain('極度困難')
+  })
+
+  it('加難軸隨等級不減：守城數／巢穴數／初始怪數單調遞增', () => {
+    for (let i = 1; i < challengeTemplates.length; i++) {
+      const prev = challengeTemplates[i - 1].settings
+      const curr = challengeTemplates[i].settings
+      expect(curr.baseCount, `Lv${i + 1}.baseCount`).toBeGreaterThanOrEqual(prev.baseCount)
+      expect(curr.nestCount, `Lv${i + 1}.nestCount`).toBeGreaterThanOrEqual(prev.nestCount)
+      expect(curr.creatureCount, `Lv${i + 1}.creatureCount`).toBeGreaterThanOrEqual(prev.creatureCount)
+    }
+  })
+
+  it('減難軸隨等級不增：資源點／道具點／廢墟／門派據點／探索事件單調遞減', () => {
+    for (let i = 1; i < challengeTemplates.length; i++) {
+      const prev = challengeTemplates[i - 1].settings
+      const curr = challengeTemplates[i].settings
+      expect(curr.resourcePointCount, `Lv${i + 1}.resourcePointCount`).toBeLessThanOrEqual(prev.resourcePointCount)
+      expect(curr.itemPointCount, `Lv${i + 1}.itemPointCount`).toBeLessThanOrEqual(prev.itemPointCount)
+      expect(curr.ruinCount, `Lv${i + 1}.ruinCount`).toBeLessThanOrEqual(prev.ruinCount)
+      expect(curr.sectGateCount ?? 0, `Lv${i + 1}.sectGateCount`).toBeLessThanOrEqual(prev.sectGateCount ?? 0)
+      expect(curr.explorationEventCount, `Lv${i + 1}.explorationEventCount`).toBeLessThanOrEqual(prev.explorationEventCount)
+      expect(curr.explorationTriggerChance ?? 0, `Lv${i + 1}.explorationTriggerChance`)
+        .toBeLessThanOrEqual(prev.explorationTriggerChance ?? 1)
+    }
+  })
+
+  it('首尾錨點符合校準：Lv1 單巢無初始怪，Lv20 多城多巢大軍壓境', () => {
+    const first = challengeTemplates[0].settings
+    const last = challengeTemplates[19].settings
+    expect(first.baseCount).toBe(1)
+    expect(first.nestCount).toBe(1)
+    expect(first.creatureCount).toBe(0)
+    expect(last.baseCount).toBeGreaterThanOrEqual(5)
+    expect(last.nestCount).toBeGreaterThanOrEqual(10)
+    expect(last.creatureCount).toBeGreaterThanOrEqual(40)
+    expect(last.resourcePointCount).toBeLessThanOrEqual(first.resourcePointCount / 2)
+  })
+
+  it('全部為單人局', () => {
+    for (const template of challengeTemplates) {
+      expect(template.settings.playerCount).toBe(1)
+      expect(template.settings.aiPlayerCount ?? 0).toBe(0)
+    }
+  })
+})
+
 describe('randomSeed', () => {
   it('產生 0–999999999 的整數', () => {
     for (let i = 0; i < 100; i++) {

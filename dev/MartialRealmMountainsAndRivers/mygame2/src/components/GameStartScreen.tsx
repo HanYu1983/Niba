@@ -136,8 +136,12 @@ function GameStartScreen({ onStart, onDebug, onOpenSkillTest, onOpenEditor, onSt
               onChange={applyTemplate}
               options={[
                 {
+                  label: '⚔️ 挑戰關卡',
+                  options: BUILTIN_TEMPLATES.filter((t) => t.id.startsWith('challenge-')).map((t) => ({ label: t.name, value: t.id })),
+                },
+                {
                   label: '內建模板',
-                  options: BUILTIN_TEMPLATES.map((t) => ({ label: t.name, value: t.id })),
+                  options: BUILTIN_TEMPLATES.filter((t) => !t.id.startsWith('challenge-')).map((t) => ({ label: t.name, value: t.id })),
                 },
                 {
                   label: '我的模板',

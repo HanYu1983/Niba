@@ -1,5 +1,36 @@
 # 開發日誌
 
+## 2026-08-24｜新增「挑戰關卡」開局模板 Lv1～Lv20（簡單→極度困難）
+
+### 本次完成
+
+- `mapTemplates.ts` 新增**二十級挑戰關卡模板**（id `challenge-01`～`challenge-20`，名稱「挑戰 LvN：武俠短語（難度標籤）」），以資料表＋生成函式維護；取值逐級對照 `handev/difficulty-metrics-guide.md` §4.1 沙盒配方的五檔錨點（入門/簡單/標準/困難/地獄）平滑內插
+- 難度階梯設計（單調性已寫入測試強制）：
+  - **加難軸遞增**：守城數 1→6、巢穴數 1→10、初始怪 0→44
+  - **減難軸遞減**：資源點 8→3、道具點 24→6、廢墟 24→0、門派據點 4→0、探索事件 5→0、回合事件機率 0.1→0
+  - **地形訊號**：草原偏重（低體力成本）→山嶽水域偏重（壓縮玩家有效行動，對應陷阱 T8）
+  - 地圖尺寸 15×15 → 50×50；Lv17 起門派據點歸零＝裸 kit 終局挑戰（對應地獄檔「玩家裸 kit」校準）
+- `GameStartScreen.tsx`：沙盒開局下拉選單新增「⚔️ 挑戰關卡」獨立分組（置於內建模板之前），依 id 前綴 `challenge-` 分流
+- 測試新增 5 案（mapTemplates.test.ts）：二十級/id 連續/名稱不重複帶難度標籤、加難軸單調不減、減難軸單調不增、首尾錨點校準斷言（Lv1 單巢零初始怪、Lv20 ≥5 城 ≥10 巢 ≥40 怪且資源 ≤半數）、全單人局
+
+### 影響檔案
+
+- `src/game/mapTemplates.ts`（CHALLENGE_LEVEL_DEFS 表＋CHALLENGE_TEMPLATES 生成，併入 BUILTIN_TEMPLATES 尾部）
+- `src/components/GameStartScreen.tsx`（模板下拉分組）
+- `src/game/mapTemplates.test.ts`（挑戰關卡 describe 區塊 5 案）
+
+### 驗證結果
+
+- TypeScript：通過（docker compose run --rm node npx tsc -b --pretty false）
+- Vitest 全量回歸：68 檔 / 722 例全數通過（原 717 例＋新 5 例）
+- ESLint：本次三個異動檔案無告警（GameStartScreen.tsx:86 `_seed` 未使用為既有債務，與本次無關）
+
+### 待驗收項目
+
+1. 手動冒煙：開場選單「⚔️ 挑戰關卡」分組選 Lv1／Lv20 各開一局，確認世界生成正常（巢穴/據點/資源點數量符合設定）
+2. 實測 Lv14～Lv20 體感曲線：多城守備＋裸 kit 的實際勝率若過於絕望，可微調 Lv17+ 的初始金/丹藥補償（目前沙盒模板無此參數，需另議）
+3. 沙盒 GameSettings 不含 nest spawnChance/spawnLevel（僅劇本可設）；若要讓高等級挑戰更貼近配方（0.18~0.25/Lv2~3），需先擴充 GameSettings 世界生成接線
+
 ## 2026-08-24｜新增難度指標對照手冊（handev/difficulty-metrics-guide.md）
 
 ### 本次完成
