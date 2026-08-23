@@ -16,6 +16,8 @@ export type FunctionalExternalSkillEffect =
   | 'experience-gain'
   // 百毒流：淬毒（持續傷害＋屬性削弱）
   | 'poison'
+  // 幽影流：影匿（迴避強化）
+  | 'evasion'
   // 類別 1：資源轉換
   | 'lifesteal'
   | 'damage-reduction'
@@ -46,6 +48,7 @@ export const functionalExternalSkillDescriptions: Record<FunctionalExternalSkill
   reflection: '自身 3 回合內受到傷害時，反彈同等傷害。',
   'experience-gain': '自身與目前裝備的功法額外獲得 10 點功法經驗。',
   poison: '使目標中毒 3 回合，每回合損失最大生命 10%，且五維屬性降低 15%。',
+  evasion: '自身 3 回合內回避率 +15%。',
   // 類別 1：資源轉換
   lifesteal: '自身 3 回合內造成傷害時，回復 30% 傷害值的血量。',
   'damage-reduction': '自身 3 回合內受到傷害時，最終傷害 -20%。',
@@ -77,6 +80,7 @@ export const functionalSkillBuffBindings: Record<FunctionalExternalSkillEffect, 
   reflection: ['earth-mountain-reflection'],
   'experience-gain': [],
   poison: ['hundred-poison-rot'],
+  evasion: ['ghost-shadow-veil'],
   // 類別 1：資源轉換
   lifesteal: ['bloodthirst'],
   'damage-reduction': ['iron-wall-art'],

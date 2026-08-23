@@ -183,6 +183,7 @@ describe('createCreatureNests', () => {
       'earth-mountain': 'plain',
       'void-spirit': 'plain',
       'hundred-poison': 'forest',
+      'ghost-shadow': 'plain',
     }
     const matched = nests.filter((nest) => {
       const cell = map.cells.find((candidate) => candidate.row === nest.position.row && candidate.column === nest.position.column)

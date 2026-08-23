@@ -104,6 +104,9 @@ export const buildingCatalog: BaseBuilding[] = [
         id: 'building-type-martial-hall-hundred-poison', type: 'martial-hall', name: '百毒武館', description: '傳授百毒流內功與外功。', constructionCost: 30, requiredRank: 1, schoolId: 'hundred-poison',
     },
     {
+        id: 'building-type-martial-hall-ghost-shadow', type: 'martial-hall', name: '幽影武館', description: '傳授幽影流內功與外功。', constructionCost: 30, requiredRank: 1, schoolId: 'ghost-shadow',
+    },
+    {
         id: 'building-type-infirmary',
         type: 'infirmary',
         name: '醫療室',

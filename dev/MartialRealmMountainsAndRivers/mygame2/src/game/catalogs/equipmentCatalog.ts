@@ -310,6 +310,9 @@ const sectEquipmentCatalog: EquipmentDefinition[] = [
   ['hundred-poison', '百毒蠱囊', 'accessory', '🧪', 1, 90, { agility: 2, armStrength: 1 }],
   ['hundred-poison', '毒蟒軟甲', 'armor', '🧥', 2, 150, { agility: 3, constitution: 1 }],
   ['hundred-poison', '蝕骨毒爪', 'weapon', '🗡️', 3, 210, { armStrength: 4, agility: 2 }],
+  ['ghost-shadow', '幽影面紗', 'accessory', '🎭', 1, 90, { agility: 2, insight: 1 }],
+  ['ghost-shadow', '夜行勁裝', 'armor', '🥋', 2, 150, { agility: 3, innerEnergy: 1 }],
+  ['ghost-shadow', '索命影刃', 'weapon', '🗡️', 3, 210, { agility: 4, insight: 2 }],
 ].map(([schoolId, name, slot, icon, sectGateLevel, _buyPrice, modifiers]) => ({
   id: `sect-${schoolId}-${slot}`,
   name: name as string,

@@ -252,6 +252,7 @@ export function createDebugGameState(): GameState {
     { id: 'debug-sect-gate-5', schoolId: 'scarlet-flame', position: { row: 12, column: 18 }, experience: 0, level: 1 },
     { id: 'debug-sect-gate-6', schoolId: 'void-spirit', position: { row: 17, column: 10 }, experience: 0, level: 1 },
     { id: 'debug-sect-gate-7', schoolId: 'hundred-poison', position: { row: 17, column: 4 }, experience: 0, level: 1 },
+    { id: 'debug-sect-gate-8', schoolId: 'ghost-shadow', position: { row: 13, column: 4 }, experience: 0, level: 1 },
   ]
   const debugCreatureDefinitions = [
     { id: 'debug-creature-water', name: 'Debug 寒水妖', schoolId: 'frost-water' as const, behaviorType: 'hunter' as const, position: { row: 10, column: 9 }, attributes: { armStrength: 7, constitution: 7, agility: 6, innerEnergy: 5, insight: 5 } },
@@ -261,6 +262,7 @@ export function createDebugGameState(): GameState {
     { id: 'debug-creature-earth', name: 'Debug 厚土妖', schoolId: 'earth-mountain' as const, behaviorType: 'scavenger' as const, position: { row: 9, column: 3 }, attributes: { armStrength: 6, constitution: 9, agility: 5, innerEnergy: 7, insight: 5 } },
     { id: 'debug-creature-void', name: 'Debug 太虛妖', schoolId: 'void-spirit' as const, behaviorType: 'sieger' as const, position: { row: 16, column: 11 }, attributes: { armStrength: 7, constitution: 7, agility: 7, innerEnergy: 7, insight: 7 } },
     { id: 'debug-creature-poison', name: 'Debug 百毒妖', schoolId: 'hundred-poison' as const, behaviorType: 'hunter' as const, position: { row: 18, column: 5 }, attributes: { armStrength: 8, constitution: 6, agility: 8, innerEnergy: 5, insight: 5 } },
+    { id: 'debug-creature-shadow', name: 'Debug 幽影妖', schoolId: 'ghost-shadow' as const, behaviorType: 'roamer' as const, position: { row: 14, column: 3 }, attributes: { armStrength: 6, constitution: 5, agility: 9, innerEnergy: 6, insight: 6 } },
   ]
   const debugCreatures = debugCreatureDefinitions.map((definition) => createCharacterState({
     id: definition.id,

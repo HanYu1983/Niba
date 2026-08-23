@@ -87,6 +87,16 @@ const schools: SchoolDefinition[] = [
     formula: '臂力 × 0.5 + 身法 × 0.5',
     calculate: (attributes, level) => Math.max(1, Math.floor(attributes.armStrength * 0.5 + attributes.agility * 0.5) * level),
   },
+  {
+    id: 'ghost-shadow',
+    element: 'none',
+    name: '幽影流',
+    innerNames: ['幽影藏息', '夜行真氣', '潛蹤心法', '斂影運功', '化影玄功', '萬影歸宗經'],
+    externalNames: ['魅影刺', '暗影拳', '穿心指', '夜幕斬', '索命影手', '滅魂無影腳'],
+    theme: '隱世刺客一脈，擅長迴避與伺機而擊，來去無蹤。',
+    formula: '身法 × 0.5 + 內息 × 0.5',
+    calculate: (attributes, level) => Math.max(1, Math.floor(attributes.agility * 0.5 + attributes.innerEnergy * 0.5) * level),
+  },
 ]
 
 export const MARTIAL_HALL_SCHOOL_ID = 'void-spirit'
@@ -121,6 +131,7 @@ const schoolLightFootEffect: Record<string, FunctionalExternalSkillEffect> = {
   'earth-mountain': 'mountain-step',
   'void-spirit': 'plain-step',
   'hundred-poison': 'road-step',
+  'ghost-shadow': 'wall-step',
 }
 
 /** 各門派輕功名稱。 */
@@ -132,6 +143,7 @@ const schoolLightFootName: Record<string, string> = {
   'earth-mountain': '登山功',
   'void-spirit': '草上飛',
   'hundred-poison': '驛路步',
+  'ghost-shadow': '遁形步',
 }
 
 /** 各門派輕功主題前綴（描述會接上效果說明）。 */
@@ -143,6 +155,7 @@ const schoolLightFootTheme: Record<string, string> = {
   'earth-mountain': '厚土流輕功',
   'void-spirit': '太虛流輕功',
   'hundred-poison': '百毒流輕功',
+  'ghost-shadow': '幽影流輕功',
 }
 
 /** 各門派機能外功名稱後綴。 */
@@ -154,6 +167,7 @@ const schoolFunctionalLabels: Record<string, string> = {
   'earth-mountain': '反震',
   'void-spirit': '迴氣（悟道）',
   'hundred-poison': '淬毒',
+  'ghost-shadow': '影匿',
 }
 
 /** 各門派機能外功效果。 */
@@ -165,10 +179,11 @@ const schoolFunctionalEffects: Record<string, FunctionalExternalSkillEffect> = {
   'earth-mountain': 'reflection',
   'void-spirit': 'experience-gain',
   'hundred-poison': 'poison',
+  'ghost-shadow': 'evasion',
 }
 
 /** 機能外功中作用於自身（而非目標）的效果。 */
-const SELF_TARGETED_FUNCTIONAL_EFFECTS: ReadonlySet<string> = new Set(['critical-rate', 'terrain-adaptation', 'reflection', 'experience-gain'])
+const SELF_TARGETED_FUNCTIONAL_EFFECTS: ReadonlySet<string> = new Set(['critical-rate', 'terrain-adaptation', 'reflection', 'experience-gain', 'evasion'])
 
 export const progressionExternalSkills: ExternalSkill[] = schools.flatMap((school) => {
   const name = school.externalNames[0]

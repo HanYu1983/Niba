@@ -103,6 +103,7 @@ export const buffCatalog: BuffDefinition[] = [
   { id: 'frost-water-cold-poison', name: '寒毒', description: '五維屬性降低 20%。', duration: 'rounds', durationRounds: 2, attributeMultiplier: 0.8 },
   { id: 'earth-mountain-reflection', name: '反震', description: '受到傷害時反彈同等傷害。', duration: 'rounds', durationRounds: 3, reflectionPercent: 1 },
   { id: 'hundred-poison-rot', name: '腐骨毒', description: '中毒：每回合損失最大生命 10%，且五維降低 15%。', duration: 'rounds', durationRounds: 3, category: 'debuff', maxHealthDamagePercent: 0.1, attributeMultiplier: 0.85 },
+  { id: 'ghost-shadow-veil', name: '影匿', description: '身形融入陰影，回避率 +15%。', duration: 'rounds', durationRounds: 3, category: 'buff', evasionRateBonus: 15 },
   { id: 'trap-immobilize', name: '定身', description: '被陷阱定身，本回合無法移動。', duration: 'rounds', durationRounds: 3, immobilized: true },
   { id: 'return-light', name: '回光', description: '瀕死時攔截死亡，復活至 30% 血並清除所有 debuff（只保一次）。', duration: 'persistent', reviveOnDeath: true, reviveHealthPercent: 0.3, clearDebuffsOnRevive: true },
   // 類別 5：移動類 — 指定地形消耗降為 1

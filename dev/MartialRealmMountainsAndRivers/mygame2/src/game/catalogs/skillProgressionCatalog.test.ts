@@ -6,9 +6,9 @@ import { allExternalSkillCatalog, getMartialHallSkills, martialHallExternalSkill
 import { jianghuExternalSkills } from './jianghuExternalSkillCatalog'
 
 describe('skillProgressionCatalog', () => {
-  it('提供七個流派且每個流派都有一個內功、傷害外功、機能外功與輕功', () => {
-    expect(progressionInnerSkills).toHaveLength(7)
-    expect(progressionExternalSkills).toHaveLength(21)
+  it('提供八個流派且每個流派都有一個內功、傷害外功、機能外功與輕功', () => {
+    expect(progressionInnerSkills).toHaveLength(8)
+    expect(progressionExternalSkills).toHaveLength(24)
 
     for (const skills of [progressionInnerSkills, progressionExternalSkills]) {
       const levelsBySchool = new Map<string, number[]>()
@@ -17,13 +17,13 @@ describe('skillProgressionCatalog', () => {
         const level = (skill as typeof skill & { level: number }).level
         levelsBySchool.set(school, [...(levelsBySchool.get(school) ?? []), level])
       }
-      expect(levelsBySchool.size).toBe(7)
+      expect(levelsBySchool.size).toBe(8)
       for (const levels of levelsBySchool.values()) expect(levels.every((level) => level === 1)).toBe(true)
     }
   })
 
   it('每個流派都有一個傷害外功、一個機能外功與一個門派輕功', () => {
-    for (const schoolId of ['golden-body', 'swift-wind', 'scarlet-flame', 'frost-water', 'earth-mountain', 'void-spirit', 'hundred-poison']) {
+    for (const schoolId of ['golden-body', 'swift-wind', 'scarlet-flame', 'frost-water', 'earth-mountain', 'void-spirit', 'hundred-poison', 'ghost-shadow']) {
       const schoolSkills = progressionExternalSkills.filter((skill) => skill.schoolId === schoolId)
       // 傷害外功：無 functionalEffect。
       expect(schoolSkills.filter((skill) => !skill.functionalEffect)).toHaveLength(1)
@@ -50,7 +50,7 @@ describe('skillProgressionCatalog', () => {
   it('每個機能型外功與輕功都有具體效果描述', () => {
     const functionalSkills = progressionExternalSkills.filter((skill) => skill.functionalEffect)
 
-    expect(functionalSkills).toHaveLength(14)
+    expect(functionalSkills).toHaveLength(16)
     for (const skill of functionalSkills) {
       const effect = skill.functionalEffect as keyof typeof functionalExternalSkillDescriptions
       expect(skill.description).not.toContain('技能型外功')

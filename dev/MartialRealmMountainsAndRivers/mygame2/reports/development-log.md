@@ -1,5 +1,36 @@
 # 開發日誌
 
+## 2026-08-23｜新增第八門派「幽影流」與其三式功法
+
+### 本次完成
+
+- 新增隱世刺客一脈**幽影流**（id：`ghost-shadow`，無屬性）：定位「不見經傳的小門派」，與百毒流同屬六章派之外的在野勢力。
+- 嚴格遵循門派功法三式限制，三式組合：
+  - **內功**「幽影藏息」（`ghost-shadow-inner`），公式：身法 × 0.5 + 內息 × 0.5（補上無人使用的屬性組合）。
+  - **傷害外功**「魅影刺」（`-external-damage`）。
+  - **功能外功**「幽影流·影匿」（`-external-functional`）＝全新效果 `evasion`：自身 3 回合回避率 +15%（新 Buff `ghost-shadow-veil`，僅用既有 `evasionRateBonus` 欄位，零規則層改動；目標為自身）。
+  - **輕功**「遁形步」（`-external-light-foot`）＝沿用既有 `wall-step` 效果（影子貼牆而行），不新增地形步。
+- 週邊註冊全數補齊：`martialSchoolCatalog`、幽影武館、三件門派裝備（面紗／勁裝／影刃）、妖物圖示 🦇 與屬性修正、debug 地圖第 8 山門與幽影妖、武館／山門彈窗圖示。主場刻意省略（同太虛流，呼應隱世設定）；元素走 `getSchoolElement` default 'none'，無需新 case。
+
+### 影響檔案
+
+- `src/game/catalogs/martialSchoolCatalog.ts`、`skillProgressionCatalog.ts`、`functionalSkillRegistry.ts`、`buffCatalog.ts`
+- `src/game/catalogs/buildingCatalog.ts`、`equipmentCatalog.ts`
+- `src/game/rules/creatureBehaviorRules.ts`
+- `src/components/MartialHallModal.tsx`、`SectGateDetailsModal.tsx`
+- `src/game/worldSetup.ts`＋測試更新（skillProgressionCatalog / debugMap / worldGeneration）
+
+### 驗證結果
+
+- TypeScript：通過。測試：67 檔 / 696 項全數通過。
+- `npm run analyze:combat` 已執行並寫出 `reports/combat-balance-report.md`。
+
+### 待驗收項目
+
+1. 於幽影武館／山門學習三式，確認「影匿」施放後自身迴避提升且持續 3 回合。
+2. 「遁形步」啟動後進入牆壁地形，確認移動消耗降為 2 且獲得幻影步迴避。
+3. 確認編輯器下拉選單自動收錄幽影流條目（catalog 驅動，理論免改）。
+
 ## 2026-08-23｜新增第七門派「百毒流」與其三式功法
 
 ### 本次完成
