@@ -29,7 +29,7 @@
 | 功法 | `insight-utility-skills-design.md` | `skillProgressionCatalog.ts`、`functionalSkillRegistry.ts` |
 | Buff | `buff-system-design.md` | `buffCatalog.ts`、`rules/playerDerivedRules.ts` |
 | 探索事件 | `exploration-events-design.md`（注意文末未完成清單） | `events/eventCatalog.ts`、`eventSpawner.ts`、`eventResolver.ts` |
-| 劇情章節 | `five-chapter-story-design.md`、`campaign-system-implementation-guide.md` | `campaignScenarioCatalog.ts`、`storyDialogueCatalog.ts` |
+| 劇情章節 | `five-chapter-story-design.md`、`campaign-system-implementation-guide.md` | `catalogs/campaignScenarioCatalog.ts`（資料真源）、`editor/rules/scenarioCompiler.ts`、`game/scenarioStorage.ts`（供應鏈見附錄 C） |
 | 建築／防禦 | `defense-structures-design.md` | `buildingCatalog.ts`、`defenseStructureCatalog.ts`、`buildingActionRegistry.ts` |
 | 地形／世界 | `terrain-depth-system-design.md`、`fog-of-war-design.md` | `worldGeneration.ts`、`terrainLootCatalog.ts` |
 
@@ -55,7 +55,7 @@
 | 門派裝備 id | 四五字兵器名 | `sect-{schoolId}-{slot}` | 九天追風刃 |
 | 地名 | 實感中國城鎮名 | —（僅中文） | 洛陽、青石村 |
 | 事件型別 | 敘事短語 | kebab-case | `lost-caravan`、`wandering-merchant` |
-| 章節 id | `{章別}-{地點}` | kebab-case | `prologue-village` |
+| 章節 id | `{章別}-{地點}` | kebab-case | `prologue-village`、`chapter1-shadow-temple` |
 
 ### 1.3 參數成長曲線萃取
 
@@ -143,6 +143,7 @@ id、中文名、出處故事一句話、所屬 catalog 與分類、關鍵參數
 - [ ] 新道具/裝備已分配地形特產池或刻意排除
 - [ ] 商店等級與掉落階級符合既有曲線，不會污染低等級掉落池
 - [ ] 劇情實體引用的 itemId/skillId 都存在（目前無自動測試，人工核對）
+- [ ] 新章節已導出官方 JSON 並註冊 `public/data/scenarios/index.json`（`campaignScenarioCatalog.test.ts` 會驗，流程見附錄 C）
 - [ ] 編輯器下拉選單會自動收錄（editorOptions 讀 catalog，無需改動，但需目視確認）
 - [ ] UI 文字分組（`components/itemGroups.ts`）與 highlightTerms 是否需要涵蓋新類別
 - [ ] 沒有更動任何既有 id 或 `itemCatalog[0]` 順序
@@ -198,4 +199,56 @@ docker compose run --rm -p 5173:5173 node npm run dev     # 手動冒煙：開�
 3. 至少一段敘事依托（事件文字、對話或描述欄位講得出故事）
 4. 交叉引用測試更新或新增
 5. development-log 一篇
+
+## 附錄 C：新增劇本地圖標準流程（範本：chapter1-shadow-temple）
+
+> 劇本地圖的資料流是「雙軌」的，新章節必須兩軌都接通，否則玩家看不到：
+>
+> ```
+> campaignScenarioCatalog.ts（資料真源，TS）
+>         │ ① 定義章節
+>         ├→ worldSetup.createPrologueGameState()（僅序章被此硬編碼引用）
+>         └─│② 導出腳本
+>           ▼
+> public/data/scenarios/{id}.json + index.json（官方發佈格式）
+>           ▼ CampaignScenarioTab → syncOfficialScenarios() → localStorage 副本
+>           ▼ gameStore.loadScenario() → scenarioCompiler.buildGameStateFromScenario()
+> ```
+
+### C.1 定義章節（`src/game/catalogs/campaignScenarioCatalog.ts`）
+
+照 `prologue-village`／`chapter1-shadow-temple` 的結構新增一個 `Record` 條目（型別：`editor/editorTypes.ts` 的 `ScenarioDefinition`）：
+
+- **基本欄位**：`version`（新章節從 `1.0.0` 起步）、`id`（`{章別}-{地點}` kebab-case）、`title`／`description`（武俠語感）、`chapterIndex` 遞增。
+- **地圖**：`cells` 用 IIFE 公式生成（邊界一律 `wall`），建議 10×10～12×12；地形語言對齊 §2.1 五行即地形。
+- **實體**（`entities[].data` 為鬆散 Record，欄位由 scenarioCompiler 消費）：
+  - 必備四種：`player`（name/money/innerSkillIds/externalSkillIds/inventory）、`base`（presetBuildings/buildingMaterials，可加 `allowedBuildings` 限建）、`nest`（spawnChance 0.1~0.15/spawnLevel/schoolId/behaviorType）、`creature`。
+  - creature 常用 data：`name`／`isBoss`／`level`／`schoolId`／`behaviorType`（`sieger` 直攻據點｜`hunter` 追獵玩家｜`roamer` 遊蕩）／`homeNestId`／`attributes`／`maxHealthOverride`（Boss 用）／`aggroRange`。
+  - 可選裝飾：`itemPoint`（customDrops 掉寶）、`event`（custom 自訂事件或 eventType 引 eventCatalog）、`sectGate`／`defenseStructure`／`ruin`／`resourcePoint`。
+- **任務**：`quests.victoryObjectives` 主線一條＋選配支線（`isOptional: true`）；常用 type：`defeat-creature`（必填 `targetId`）、`survive-rounds`、`reach-position`、`build-building`。`failConditions` 至少給 `maxRounds`＋`baseMustSurvive`＋`playerMustSurvive`。
+- **對話與觸發器**：`dialogues` 定義對話組（steps 只含 speakerName/speakerIcon/content），`triggers` 接時機——三件套：`on-start` 開局、`on-round-reached`（conditionParam=回合數）中段伏筆、`on-victory` 收尾；另有 `on-defeat-boss`／`on-enter-region`／`on-object-destroyed` 可用。
+- **難度曲線**：Boss 參考附錄 A（序章 Lv3 五維約 10/10/9/8/8；敏捷型可壓血量拉敏捷，如第一章影魅護法 agi12＋maxHealthOverride 65）。隨機事件維持關閉（不設 `enableRandomEvents`）。
+
+### C.2 導出官方 JSON 並註冊
+
+```powershell
+# Docker 內以 Node 22 type-stripping 直接讀 TS catalog 導出（含 round-trip 深度驗證）
+docker compose run --rm node node --experimental-strip-types scripts/exportOfficialScenario.mts chapter1-shadow-temple
+```
+
+然後把 `{ id, file, version }` 加進 `public/data/scenarios/index.json`——**version 必須與導出檔內的 `version` 一致**，否則 syncOfficialScenarios 的版本比對會誤報 outdated。
+
+### C.3 測試與驗證
+
+仿 `campaignScenarioCatalog.test.ts`：
+
+1. 「章節清單數量/排序」案例 +1。
+2. JSON 同步防呆案例自動涵蓋所有 catalog 章節（漏導出或漏註冊會直接紅）。
+3. 為新章節寫專屬案例：實體不落牆不重疊（邊界牆格數 = `2×(rows+columns)−4`）、玩家/base 配置、巢穴與妖物屬性、任務/對話/觸發器接線、`explorationTriggerChance === 0`。
+
+驗證走 §3.3 的 Docker 工作流；手動冒煙從開場選單「劇本地圖」分頁開局走一遍（開局對話→觸發器→勝利結算→通關紀錄）。
+
+### C.4 已知債務（處理前先確認現況）
+
+- 序章存在雙版本：catalog v1.0.0（簡化）vs 官方 JSON v1.2.0（完整，含自訂事件/箭塔），尚未收斂；新增第二章節時**不要**順手「同步序章」，除非明確決策方向（catalog 退役 or 反向同步）。
 
