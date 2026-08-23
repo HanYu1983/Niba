@@ -1,0 +1,1115 @@
+{
+  "version": "1.0.0",
+  "id": "extra-4-guardian-trail",
+  "title": "番外四：故地拾遺",
+  "description": "白衣引路，重訪師父當年的守護者舊徑。斷劍石、枯靈泉、無字碑——三處舊地，三段被封存的往事。",
+  "chapterIndex": 103,
+  "mapSize": {
+    "rows": 12,
+    "columns": 12
+  },
+  "cells": [
+    {
+      "row": 0,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 1,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 2,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 3,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 4,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 5,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 6,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 7,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 8,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 9,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 10,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 11,
+      "terrain": "wall"
+    },
+    {
+      "row": 1,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 1,
+      "column": 1,
+      "terrain": "forest"
+    },
+    {
+      "row": 1,
+      "column": 2,
+      "terrain": "forest"
+    },
+    {
+      "row": 1,
+      "column": 3,
+      "terrain": "forest"
+    },
+    {
+      "row": 1,
+      "column": 4,
+      "terrain": "mountain"
+    },
+    {
+      "row": 1,
+      "column": 5,
+      "terrain": "mountain"
+    },
+    {
+      "row": 1,
+      "column": 6,
+      "terrain": "mountain"
+    },
+    {
+      "row": 1,
+      "column": 7,
+      "terrain": "mountain"
+    },
+    {
+      "row": 1,
+      "column": 8,
+      "terrain": "mountain"
+    },
+    {
+      "row": 1,
+      "column": 9,
+      "terrain": "plain"
+    },
+    {
+      "row": 1,
+      "column": 10,
+      "terrain": "plain"
+    },
+    {
+      "row": 1,
+      "column": 11,
+      "terrain": "wall"
+    },
+    {
+      "row": 2,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 2,
+      "column": 1,
+      "terrain": "forest"
+    },
+    {
+      "row": 2,
+      "column": 2,
+      "terrain": "forest"
+    },
+    {
+      "row": 2,
+      "column": 3,
+      "terrain": "forest"
+    },
+    {
+      "row": 2,
+      "column": 4,
+      "terrain": "mountain"
+    },
+    {
+      "row": 2,
+      "column": 5,
+      "terrain": "mountain"
+    },
+    {
+      "row": 2,
+      "column": 6,
+      "terrain": "mountain"
+    },
+    {
+      "row": 2,
+      "column": 7,
+      "terrain": "mountain"
+    },
+    {
+      "row": 2,
+      "column": 8,
+      "terrain": "mountain"
+    },
+    {
+      "row": 2,
+      "column": 9,
+      "terrain": "plain"
+    },
+    {
+      "row": 2,
+      "column": 10,
+      "terrain": "plain"
+    },
+    {
+      "row": 2,
+      "column": 11,
+      "terrain": "wall"
+    },
+    {
+      "row": 3,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 3,
+      "column": 1,
+      "terrain": "forest"
+    },
+    {
+      "row": 3,
+      "column": 2,
+      "terrain": "forest"
+    },
+    {
+      "row": 3,
+      "column": 3,
+      "terrain": "forest"
+    },
+    {
+      "row": 3,
+      "column": 4,
+      "terrain": "mountain"
+    },
+    {
+      "row": 3,
+      "column": 5,
+      "terrain": "mountain"
+    },
+    {
+      "row": 3,
+      "column": 6,
+      "terrain": "mountain"
+    },
+    {
+      "row": 3,
+      "column": 7,
+      "terrain": "mountain"
+    },
+    {
+      "row": 3,
+      "column": 8,
+      "terrain": "mountain"
+    },
+    {
+      "row": 3,
+      "column": 9,
+      "terrain": "plain"
+    },
+    {
+      "row": 3,
+      "column": 10,
+      "terrain": "plain"
+    },
+    {
+      "row": 3,
+      "column": 11,
+      "terrain": "wall"
+    },
+    {
+      "row": 4,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 4,
+      "column": 1,
+      "terrain": "forest"
+    },
+    {
+      "row": 4,
+      "column": 2,
+      "terrain": "forest"
+    },
+    {
+      "row": 4,
+      "column": 3,
+      "terrain": "forest"
+    },
+    {
+      "row": 4,
+      "column": 4,
+      "terrain": "plain"
+    },
+    {
+      "row": 4,
+      "column": 5,
+      "terrain": "plain"
+    },
+    {
+      "row": 4,
+      "column": 6,
+      "terrain": "plain"
+    },
+    {
+      "row": 4,
+      "column": 7,
+      "terrain": "plain"
+    },
+    {
+      "row": 4,
+      "column": 8,
+      "terrain": "plain"
+    },
+    {
+      "row": 4,
+      "column": 9,
+      "terrain": "plain"
+    },
+    {
+      "row": 4,
+      "column": 10,
+      "terrain": "water"
+    },
+    {
+      "row": 4,
+      "column": 11,
+      "terrain": "wall"
+    },
+    {
+      "row": 5,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 5,
+      "column": 1,
+      "terrain": "forest"
+    },
+    {
+      "row": 5,
+      "column": 2,
+      "terrain": "forest"
+    },
+    {
+      "row": 5,
+      "column": 3,
+      "terrain": "forest"
+    },
+    {
+      "row": 5,
+      "column": 4,
+      "terrain": "plain"
+    },
+    {
+      "row": 5,
+      "column": 5,
+      "terrain": "plain"
+    },
+    {
+      "row": 5,
+      "column": 6,
+      "terrain": "plain"
+    },
+    {
+      "row": 5,
+      "column": 7,
+      "terrain": "plain"
+    },
+    {
+      "row": 5,
+      "column": 8,
+      "terrain": "plain"
+    },
+    {
+      "row": 5,
+      "column": 9,
+      "terrain": "plain"
+    },
+    {
+      "row": 5,
+      "column": 10,
+      "terrain": "water"
+    },
+    {
+      "row": 5,
+      "column": 11,
+      "terrain": "wall"
+    },
+    {
+      "row": 6,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 6,
+      "column": 1,
+      "terrain": "plain"
+    },
+    {
+      "row": 6,
+      "column": 2,
+      "terrain": "plain"
+    },
+    {
+      "row": 6,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 6,
+      "column": 4,
+      "terrain": "plain"
+    },
+    {
+      "row": 6,
+      "column": 5,
+      "terrain": "plain"
+    },
+    {
+      "row": 6,
+      "column": 6,
+      "terrain": "plain"
+    },
+    {
+      "row": 6,
+      "column": 7,
+      "terrain": "plain"
+    },
+    {
+      "row": 6,
+      "column": 8,
+      "terrain": "plain"
+    },
+    {
+      "row": 6,
+      "column": 9,
+      "terrain": "plain"
+    },
+    {
+      "row": 6,
+      "column": 10,
+      "terrain": "water"
+    },
+    {
+      "row": 6,
+      "column": 11,
+      "terrain": "wall"
+    },
+    {
+      "row": 7,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 7,
+      "column": 1,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 2,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 4,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 5,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 6,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 7,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 8,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 9,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 10,
+      "terrain": "water"
+    },
+    {
+      "row": 7,
+      "column": 11,
+      "terrain": "wall"
+    },
+    {
+      "row": 8,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 8,
+      "column": 1,
+      "terrain": "plain"
+    },
+    {
+      "row": 8,
+      "column": 2,
+      "terrain": "plain"
+    },
+    {
+      "row": 8,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 8,
+      "column": 4,
+      "terrain": "plain"
+    },
+    {
+      "row": 8,
+      "column": 5,
+      "terrain": "plain"
+    },
+    {
+      "row": 8,
+      "column": 6,
+      "terrain": "plain"
+    },
+    {
+      "row": 8,
+      "column": 7,
+      "terrain": "plain"
+    },
+    {
+      "row": 8,
+      "column": 8,
+      "terrain": "plain"
+    },
+    {
+      "row": 8,
+      "column": 9,
+      "terrain": "plain"
+    },
+    {
+      "row": 8,
+      "column": 10,
+      "terrain": "water"
+    },
+    {
+      "row": 8,
+      "column": 11,
+      "terrain": "wall"
+    },
+    {
+      "row": 9,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 9,
+      "column": 1,
+      "terrain": "plain"
+    },
+    {
+      "row": 9,
+      "column": 2,
+      "terrain": "plain"
+    },
+    {
+      "row": 9,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 9,
+      "column": 4,
+      "terrain": "plain"
+    },
+    {
+      "row": 9,
+      "column": 5,
+      "terrain": "plain"
+    },
+    {
+      "row": 9,
+      "column": 6,
+      "terrain": "plain"
+    },
+    {
+      "row": 9,
+      "column": 7,
+      "terrain": "plain"
+    },
+    {
+      "row": 9,
+      "column": 8,
+      "terrain": "plain"
+    },
+    {
+      "row": 9,
+      "column": 9,
+      "terrain": "plain"
+    },
+    {
+      "row": 9,
+      "column": 10,
+      "terrain": "plain"
+    },
+    {
+      "row": 9,
+      "column": 11,
+      "terrain": "wall"
+    },
+    {
+      "row": 10,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 10,
+      "column": 1,
+      "terrain": "plain"
+    },
+    {
+      "row": 10,
+      "column": 2,
+      "terrain": "plain"
+    },
+    {
+      "row": 10,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 10,
+      "column": 4,
+      "terrain": "plain"
+    },
+    {
+      "row": 10,
+      "column": 5,
+      "terrain": "plain"
+    },
+    {
+      "row": 10,
+      "column": 6,
+      "terrain": "plain"
+    },
+    {
+      "row": 10,
+      "column": 7,
+      "terrain": "plain"
+    },
+    {
+      "row": 10,
+      "column": 8,
+      "terrain": "plain"
+    },
+    {
+      "row": 10,
+      "column": 9,
+      "terrain": "plain"
+    },
+    {
+      "row": 10,
+      "column": 10,
+      "terrain": "plain"
+    },
+    {
+      "row": 10,
+      "column": 11,
+      "terrain": "wall"
+    },
+    {
+      "row": 11,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 11,
+      "column": 1,
+      "terrain": "wall"
+    },
+    {
+      "row": 11,
+      "column": 2,
+      "terrain": "wall"
+    },
+    {
+      "row": 11,
+      "column": 3,
+      "terrain": "wall"
+    },
+    {
+      "row": 11,
+      "column": 4,
+      "terrain": "wall"
+    },
+    {
+      "row": 11,
+      "column": 5,
+      "terrain": "wall"
+    },
+    {
+      "row": 11,
+      "column": 6,
+      "terrain": "wall"
+    },
+    {
+      "row": 11,
+      "column": 7,
+      "terrain": "wall"
+    },
+    {
+      "row": 11,
+      "column": 8,
+      "terrain": "wall"
+    },
+    {
+      "row": 11,
+      "column": 9,
+      "terrain": "wall"
+    },
+    {
+      "row": 11,
+      "column": 10,
+      "terrain": "wall"
+    },
+    {
+      "row": 11,
+      "column": 11,
+      "terrain": "wall"
+    }
+  ],
+  "entities": [
+    {
+      "id": "player-1",
+      "kind": "player",
+      "position": {
+        "row": 10,
+        "column": 2
+      },
+      "data": {
+        "name": "凌淵",
+        "money": 60,
+        "innerSkillId": "tuna-gong",
+        "innerSkillIds": [
+          "tuna-gong"
+        ],
+        "externalSkillIds": [
+          "sky-breaking-palm"
+        ],
+        "equippedExternalSkillIds": [],
+        "inventory": [
+          {
+            "itemId": "heal-wound-medicine",
+            "quantity": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "event-broken-sword",
+      "kind": "event",
+      "position": {
+        "row": 8,
+        "column": 3
+      },
+      "data": {
+        "type": "custom",
+        "name": "斷劍石",
+        "description": "林間一塊青石上斜插著半截斷劍，劍身斑駁，斷口卻平滑如鏡。",
+        "icon": "⚔️",
+        "choices": [
+          {
+            "id": "recall-broken-sword",
+            "label": "憑弔舊事",
+            "description": "細看這柄斷劍，想起兒時在此練功的往事。",
+            "endsPlayerTurn": false,
+            "requirements": [
+              {
+                "type": "active-player"
+              },
+              {
+                "type": "player-alive"
+              }
+            ],
+            "effects": [
+              {
+                "type": "start-dialogue",
+                "dialogueId": "group-ex4-story-sword"
+              }
+            ],
+            "resultMessage": "凌淵駐足良久，往事如潮湧上心頭。"
+          }
+        ]
+      }
+    },
+    {
+      "id": "event-withered-spring",
+      "kind": "event",
+      "position": {
+        "row": 6,
+        "column": 9
+      },
+      "data": {
+        "type": "custom",
+        "name": "枯靈泉",
+        "description": "泉眼早已龜裂見底，僅餘一縷細流向東南蜿蜒。泥底沉著幾片鱗狀碎屑。",
+        "icon": "💧",
+        "choices": [
+          {
+            "id": "inspect-withered-spring",
+            "label": "探看泉眼",
+            "description": "俯身查看乾涸的泉底與那些鱗狀碎屑。",
+            "endsPlayerTurn": false,
+            "requirements": [
+              {
+                "type": "active-player"
+              },
+              {
+                "type": "player-alive"
+              }
+            ],
+            "effects": [
+              {
+                "type": "start-dialogue",
+                "dialogueId": "group-ex4-story-spring"
+              }
+            ],
+            "resultMessage": "泥底的鱗片在日光下泛著微光——那是靈獸蛻下的鱗。"
+          }
+        ]
+      }
+    },
+    {
+      "id": "event-wordless-stele",
+      "kind": "event",
+      "position": {
+        "row": 2,
+        "column": 6
+      },
+      "data": {
+        "type": "custom",
+        "name": "無字碑",
+        "description": "封印崖頂孤零零立著一塊石碑，通體無一字刻痕，碑前香灰卻是新近的。",
+        "icon": "🗿",
+        "choices": [
+          {
+            "id": "read-wordless-stele",
+            "label": "佇立碑前",
+            "description": "撫去碑面塵土，靜立默思。",
+            "endsPlayerTurn": false,
+            "requirements": [
+              {
+                "type": "active-player"
+              },
+              {
+                "type": "player-alive"
+              }
+            ],
+            "effects": [
+              {
+                "type": "start-dialogue",
+                "dialogueId": "group-ex4-story-stele"
+              }
+            ],
+            "resultMessage": "山風掠過崖頂，碑影斜長，彷彿有人無聲佇立。"
+          }
+        ]
+      }
+    }
+  ],
+  "quests": {
+    "victoryObjectives": [
+      {
+        "id": "obj-ex4-hear-sword",
+        "title": "在斷劍石憑弔舊事",
+        "type": "interact-object",
+        "targetId": "event-broken-sword",
+        "targetValue": 1
+      },
+      {
+        "id": "obj-ex4-hear-spring",
+        "title": "探看枯竭的靈泉",
+        "type": "interact-object",
+        "targetId": "event-withered-spring",
+        "targetValue": 1
+      },
+      {
+        "id": "obj-ex4-hear-stele",
+        "title": "在無字碑前靜思",
+        "type": "interact-object",
+        "targetId": "event-wordless-stele",
+        "targetValue": 1
+      }
+    ],
+    "failConditions": {
+      "playerMustSurvive": true
+    }
+  },
+  "dialogues": {
+    "group-ex4-start": {
+      "name": "番外四開局對話",
+      "steps": [
+        {
+          "id": "ex4-start-1",
+          "speakerName": "白衣",
+          "speakerIcon": "🤍",
+          "content": "此地外人止步——從前，你的師父這麼說。今日，我帶你進來。"
+        },
+        {
+          "id": "ex4-start-2",
+          "speakerName": "凌淵",
+          "speakerIcon": "🗡️",
+          "content": "師父筆記裡反覆提到的守護者舊徑……原來入口就藏在黑石驛道之後。"
+        }
+      ]
+    },
+    "group-ex4-story-sword": {
+      "name": "番外四故事·斷劍石",
+      "steps": [
+        {
+          "id": "ex4-sword-1",
+          "speakerName": "白衣",
+          "speakerIcon": "🤍",
+          "content": "這半截斷劍，是你師父年輕時的佩劍。他親手折斷的。"
+        },
+        {
+          "id": "ex4-sword-2",
+          "speakerName": "凌淵",
+          "speakerIcon": "🗡️",
+          "content": "折斷？師父的劍術冠絕江湖，為何自折兵刃？"
+        },
+        {
+          "id": "ex4-sword-3",
+          "speakerName": "白衣",
+          "speakerIcon": "🤍",
+          "content": "他說：劍鋒所向，敵意所生。守護者若終身執利刃，總有一天，會忘了自己守的究竟是什麼。"
+        },
+        {
+          "id": "ex4-sword-4",
+          "speakerName": "凌淵",
+          "speakerIcon": "🗡️",
+          "content": "（伸手拂過平滑的斷口）所以後來師父改拄木杖……我一直以為，只是他老了。"
+        },
+        {
+          "id": "ex4-sword-5",
+          "speakerName": "白衣",
+          "speakerIcon": "🤍",
+          "content": "他在這塊石上教你扎馬步時，你可曾問過，為何先學站，再學打？"
+        },
+        {
+          "id": "ex4-sword-6",
+          "speakerName": "凌淵",
+          "speakerIcon": "🗡️",
+          "content": "站得穩，才接得住別人的跌倒。——這是我八歲那年，師父在這裡說的。"
+        },
+        {
+          "id": "ex4-sword-7",
+          "speakerName": "白衣",
+          "speakerIcon": "🤍",
+          "content": "記住這句話。往後的日子裡，它比任何劍招都要難練。"
+        }
+      ]
+    },
+    "group-ex4-story-spring": {
+      "name": "番外四故事·枯靈泉",
+      "steps": [
+        {
+          "id": "ex4-spring-1",
+          "speakerName": "凌淵",
+          "speakerIcon": "🗡️",
+          "content": "這就是靈泉？師父筆記裡寫它「映月則生輝」……如今只剩龜裂的泥底。"
+        },
+        {
+          "id": "ex4-spring-2",
+          "speakerName": "白衣",
+          "speakerIcon": "🤍",
+          "content": "十年前不是這樣的。那時泉水清得能數出雲影。"
+        },
+        {
+          "id": "ex4-spring-3",
+          "speakerName": "白衣",
+          "speakerIcon": "🤍",
+          "content": "玄冥原本是看守這眼泉的靈獸——山河靈氣在此匯聚，由牠日夜梳理。"
+        },
+        {
+          "id": "ex4-spring-4",
+          "speakerName": "凌淵",
+          "speakerIcon": "🗡️",
+          "content": "靈獸？可師父封印的，是禍亂山河的妖王……"
+        },
+        {
+          "id": "ex4-spring-5",
+          "speakerName": "白衣",
+          "speakerIcon": "🤍",
+          "content": "上游的人伐林開田，靈脈日漸枯竭；泉乾了，牠的性子也變了。妖氣趁虛而入，把守望者熬成了怨獸。"
+        },
+        {
+          "id": "ex4-spring-6",
+          "speakerName": "凌淵",
+          "speakerIcon": "🗡️",
+          "content": "所以妖氣不是源頭……是人先負了五行？"
+        },
+        {
+          "id": "ex4-spring-7",
+          "speakerName": "白衣",
+          "speakerIcon": "🤍",
+          "content": "金木水火土，缺一行則傾。玄冥不是第一隻被熬成的怨獸，也不會是最後一隻。"
+        },
+        {
+          "id": "ex4-spring-8",
+          "speakerName": "凌淵",
+          "speakerIcon": "🗡️",
+          "content": "（沉默良久）若只知誅妖而不修山河，師父的封印，也不過是把問題埋進了土裡。"
+        }
+      ]
+    },
+    "group-ex4-story-stele": {
+      "name": "番外四故事·無字碑",
+      "steps": [
+        {
+          "id": "ex4-stele-1",
+          "speakerName": "白衣",
+          "speakerIcon": "🤍",
+          "content": "到了。這塊碑，是你師父臨終前三天立的。"
+        },
+        {
+          "id": "ex4-stele-2",
+          "speakerName": "凌淵",
+          "speakerIcon": "🗡️",
+          "content": "無字？立碑卻不著一字……師父想留給誰看？"
+        },
+        {
+          "id": "ex4-stele-3",
+          "speakerName": "白衣",
+          "speakerIcon": "🤍",
+          "content": "留給願意爬上來的人。碑文不在石上，在一路的三個地方——你都走完了。"
+        },
+        {
+          "id": "ex4-stele-4",
+          "speakerName": "凌淵",
+          "speakerIcon": "🗡️",
+          "content": "斷劍教我「守」的本分，枯泉讓我看清妖的來處……"
+        },
+        {
+          "id": "ex4-stele-5",
+          "speakerName": "白衣",
+          "speakerIcon": "🤍",
+          "content": "還有第三課，在你自己心裡。說說看，你看到了什麼？"
+        },
+        {
+          "id": "ex4-stele-6",
+          "speakerName": "凌淵",
+          "speakerIcon": "🗡️",
+          "content": "我看到師父不是在封印一頭妖獸——他是在替所有人，償還欠山河的債。"
+        },
+        {
+          "id": "ex4-stele-7",
+          "speakerName": "白衣",
+          "speakerIcon": "🤍",
+          "content": "……十年了，總算有人把這句話說完整。"
+        },
+        {
+          "id": "ex4-stele-8",
+          "speakerName": "凌淵",
+          "speakerIcon": "🗡️",
+          "content": "（抬頭直視）你到底是誰？為何對師父的事，知道得這麼清楚？"
+        },
+        {
+          "id": "ex4-stele-9",
+          "speakerName": "白衣",
+          "speakerIcon": "🤍",
+          "content": "等封印之事了結，我自然告訴你。眼下——山那一邊的風，又帶著妖氣了。"
+        }
+      ]
+    },
+    "group-ex4-victory": {
+      "name": "番外四勝利對話",
+      "steps": [
+        {
+          "id": "ex4-victory-1",
+          "speakerName": "凌淵",
+          "speakerIcon": "🗡️",
+          "content": "下山吧。這一次，我要做的不再是復仇。"
+        },
+        {
+          "id": "ex4-victory-2",
+          "speakerName": "白衣",
+          "speakerIcon": "🤍",
+          "content": "哦？"
+        },
+        {
+          "id": "ex4-victory-3",
+          "speakerName": "凌淵",
+          "speakerIcon": "🗡️",
+          "content": "還債。替師父，也替所有人。"
+        }
+      ]
+    }
+  },
+  "triggers": [
+    {
+      "id": "trigger-ex4-start",
+      "condition": "on-start",
+      "action": "start-dialogue",
+      "actionParam": "group-ex4-start"
+    },
+    {
+      "id": "trigger-ex4-victory",
+      "condition": "on-victory",
+      "action": "start-dialogue",
+      "actionParam": "group-ex4-victory"
+    }
+  ]
+}

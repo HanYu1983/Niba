@@ -1,5 +1,34 @@
 # 開發日誌
 
+## 2026-08-24｜番外四「故地拾遺」：純敘事踩點章節
+
+### 本次完成
+
+- 新增**番外四**（`extra-4-guardian-trail`，chapterIndex 103，12×12）：全系列首個**零戰鬥關卡**——無巢穴、無怪物、無據點，玩法只剩行走與閱讀
+  - 三個踩點事件（custom event 實體）分散地圖三角：⚔️斷劍石(8,3)／💧枯靈泉(6,9)／🗿無字碑(2,6 封印崖頂)
+  - 勝利條件＝三條主線 `interact-object` 目標各自完成（首次以互動目標作為勝利判定）；`failConditions` 僅 playerMustSurvive、**不設 maxRounds**
+  - 對白句數：7／8／9 句（測試強制 5~10 句），內容深挖世界觀錨點——守護者一脈「劍鋒所向敵意所生」的守之道、玄冥原為泉眼靈獸被妖氣侵蝕的悲劇性、白衣身份懸念＋封印將破伏筆回扣番外三
+  - 觸發器僅 on-start／on-victory 兩個（無戰鬥故無回合警告）
+- 測試新增 3 案例：零戰鬥＋事件分散度（兩兩曼哈頓距離 ≥4）、對白組綁定與句數區間、勝利目標接線＋無回合上限
+- 過程中修掉一處座標 bug：(5,11) 落在右邊界牆上，枯靈泉移至 (6,9)
+
+### 影響檔案
+
+- `src/game/catalogs/campaignScenarioCatalog.ts`（+1 章節定義）
+- `src/game/catalogs/campaignScenarioCatalog.test.ts`（清單案例更新＋純敘事章節測試）
+- `public/data/scenarios/extra-4-guardian-trail.json`（導出）
+- `public/data/scenarios/index.json`（+1 註冊）
+
+### 驗證結果
+
+- TypeScript：通過。測試：68 檔 / 717 例全數通過。
+
+### 待驗收項目
+
+1. 實際遊走三章節：踩到事件點互動後對話播出、任務追蹤逐項打勾、第三個事件讀完即勝利。
+2. 無據點狀態下 UI（建造/武館按鈕等）不會誤啟用或報錯。
+3. 確認 interact-object 目標在 QuestTrackerPanel 的顯示文案自然。
+
 ## 2026-08-24｜番外篇「玄冥遺禍」三部曲（難度階梯：巢穴數×怪物數）
 
 ### 本次完成

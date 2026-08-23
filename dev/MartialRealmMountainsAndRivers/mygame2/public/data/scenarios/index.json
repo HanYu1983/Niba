@@ -30,6 +30,11 @@
       "id": "extra-3-darkrock-lair",
       "file": "extra-3-darkrock-lair.json",
       "version": "1.0.0"
+    },
+    {
+      "id": "extra-4-guardian-trail",
+      "file": "extra-4-guardian-trail.json",
+      "version": "1.0.0"
     }
   ]
 }

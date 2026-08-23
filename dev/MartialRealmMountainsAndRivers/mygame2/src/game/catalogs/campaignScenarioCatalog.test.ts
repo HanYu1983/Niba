@@ -15,6 +15,7 @@ describe('campaignScenarioCatalog 章節清單', () => {
       'extra-1-blackstone-road',
       'extra-2-frost-ford',
       'extra-3-darkrock-lair',
+      'extra-4-guardian-trail',
     ])
   })
 
@@ -172,4 +173,80 @@ describe('番外篇「玄冥遺禍」三部曲', () => {
       expect(state.explorationTriggerChance).toBe(0)
     })
   }
+})
+
+describe('番外四：故地拾遺（純敘事章節）', () => {
+  const scenario = campaignScenarioCatalog['extra-4-guardian-trail']
+
+  it('零戰鬥：無巢穴、無怪物、無據點，僅玩家與三個事件點', () => {
+    expect(scenario.entities.filter((entity) => entity.kind === 'nest').length).toBe(0)
+    expect(scenario.entities.filter((entity) => entity.kind === 'creature').length).toBe(0)
+    expect(scenario.entities.filter((entity) => entity.kind === 'base').length).toBe(0)
+    const eventPlacements = scenario.entities.filter((entity) => entity.kind === 'event')
+    expect(eventPlacements.length).toBe(3)
+    // 三個事件點分散於地圖（兩兩曼哈頓距離 ≥ 4）。
+    for (let i = 0; i < eventPlacements.length; i++) {
+      for (let j = i + 1; j < eventPlacements.length; j++) {
+        const distance =
+          Math.abs(eventPlacements[i].position.row - eventPlacements[j].position.row) +
+          Math.abs(eventPlacements[i].position.column - eventPlacements[j].position.column)
+        expect(distance).toBeGreaterThanOrEqual(4)
+      }
+    }
+  })
+
+  it('三個踩點事件各綁一組故事對白，句數介於 5~10 句', () => {
+    const storyGroups = ['group-ex4-story-sword', 'group-ex4-story-spring', 'group-ex4-story-stele']
+    const dialogues = scenario.dialogues
+    for (const groupId of storyGroups) {
+      const steps = dialogues[groupId]?.steps ?? []
+      expect(steps.length, `${groupId} 對白應為 5~10 句`).toBeGreaterThanOrEqual(5)
+      expect(steps.length, `${groupId} 對白應為 5~10 句`).toBeLessThanOrEqual(10)
+      expect(steps.every((step) => step.content.length > 0)).toBe(true)
+    }
+    // 每個事件的唯一選項效果必須指向對應的故事對白組。
+    const eventIds = ['event-broken-sword', 'event-withered-spring', 'event-wordless-stele']
+    for (const eventId of eventIds) {
+      const placement = scenario.entities.find((entity) => entity.id === eventId)
+      expect(placement?.kind).toBe('event')
+      const choices = ((placement?.data as { choices?: Array<{ effects: Array<{ type: string; dialogueId?: string }> }> }).choices ?? [])
+      const dialogueEffects = choices.flatMap((choice) => choice.effects.filter((effect) => effect.type === 'start-dialogue'))
+      expect(dialogueEffects.length).toBe(1)
+      expect(storyGroups).toContain(dialogueEffects[0].dialogueId)
+    }
+  })
+
+  it('勝利條件＝完成三個互動目標，無回合限制；開局與勝利對話接線', () => {
+    const state = buildGameStateFromScenario(scenario)
+    const campaign = state.campaignState
+    expect(campaign).toBeDefined()
+    if (!campaign) return
+
+    // 三條主線目標皆為 interact-object，分別綁定三個事件點。
+    const objectives = campaign.activeObjectives
+    expect(objectives.length).toBe(3)
+    expect(objectives.every((objective) => objective.type === 'interact-object' && !objective.isOptional)).toBe(true)
+    expect(new Set(objectives.map((objective) => objective.targetId))).toEqual(
+      new Set(['event-broken-sword', 'event-withered-spring', 'event-wordless-stele']),
+    )
+
+    // 純敘事關卡不設回合上限。
+    expect(campaign.failConditions.maxRounds).toBeUndefined()
+
+    // 邊界牆格數（12×12 → 44）、實體合法性、隨機事件關閉。
+    expect(state.map.cells.filter((cell) => cell.terrain === 'wall').length).toBe(44)
+    const occupied = new Set<string>()
+    for (const entity of scenario.entities) {
+      const key = `${entity.position.row}-${entity.position.column}`
+      const cell = state.map.cells.find((c) => c.row === entity.position.row && c.column === entity.position.column)
+      expect(cell?.terrain).not.toBe('wall')
+      expect(occupied.has(key)).toBe(false)
+      occupied.add(key)
+    }
+    expect(state.explorationTriggerChance).toBe(0)
+
+    const triggers = campaign.triggers ?? []
+    expect(triggers.some((trigger) => trigger.condition === 'on-start' && trigger.actionParam === 'group-ex4-start')).toBe(true)
+    expect(triggers.some((trigger) => trigger.condition === 'on-victory' && trigger.actionParam === 'group-ex4-victory')).toBe(true)
+  })
 })
