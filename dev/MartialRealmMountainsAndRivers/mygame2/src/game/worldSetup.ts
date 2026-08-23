@@ -10,6 +10,7 @@ import type {
   SectGateState,
 } from './types'
 import { buildingCatalog } from './catalogs/buildingCatalog'
+import { allInnerSkillCatalog, allExternalSkillCatalog } from './catalogs/martialHallSkillCatalog'
 import { getCreatureInnerSkillId } from './rules/creatureBehaviorRules'
 import { getPlayerVisibleCellIds } from './rules/visibilityRules'
 import { createCharacterState } from './characterFactory'
@@ -176,15 +177,22 @@ export function createDebugGameState(): GameState {
       id: `debug-building-${index + 1}`,
       level: 6,
     }))
+  // 測試用：裝備所有內功與外功（全部 Lv.10），方便快速驗證各類功法效果。
+  const debugAllInnerIds = allInnerSkillCatalog.map((skill) => skill.id)
+  const debugAllExternalIds = allExternalSkillCatalog.map((skill) => skill.id)
+  const debugSkillProgression = Object.fromEntries(
+    [...debugAllInnerIds, ...debugAllExternalIds].map((skillId) => [skillId, { experience: 0, level: 1 }]),
+  )
   const debugPlayer = createCharacterState({
     id: 'player-1',
     name: 'Debug 玩家',
     innerSkillId: 'tuna-gong',
-    innerSkillIds: ['tuna-gong'],
+    innerSkillIds: debugAllInnerIds,
     position: playerPosition,
     attributes: { armStrength: 8, constitution: 8, agility: 8, innerEnergy: 8, insight: 8 },
-    externalSkillIds: ['sky-breaking-palm'],
-    equippedExternalSkillIds: ['sky-breaking-palm'],
+    externalSkillIds: debugAllExternalIds,
+    equippedExternalSkillIds: [],
+    skillProgression: debugSkillProgression,
     prestige: 2000,
     money: 1000,
     experience: 1000,

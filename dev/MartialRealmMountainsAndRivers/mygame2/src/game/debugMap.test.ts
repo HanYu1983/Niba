@@ -68,7 +68,10 @@ describe('createDebugGameState', () => {
 
     expect(player.inventory).toEqual([])
     expect(player.equipmentInventory).toEqual([])
-    expect(player.equippedExternalSkillIds).toEqual(['sky-breaking-palm'])
+    // 測試用玩家裝備所有外功（含破空掌）。
+    expect(player.equippedExternalSkillIds).toContain('sky-breaking-palm')
+    expect(player.equippedExternalSkillIds.length).toBeGreaterThan(1)
+    expect(player.innerSkillIds.length).toBeGreaterThan(1)
     expect(state.bases[0].buildings.some((building) => building.type === 'board')).toBe(true)
     expect(state.bases[0].buildings.some((building) => building.type === 'wall')).toBe(false)
     // 貿易市場不預建，須由玩家自行建造以觸發全局靈氣。
