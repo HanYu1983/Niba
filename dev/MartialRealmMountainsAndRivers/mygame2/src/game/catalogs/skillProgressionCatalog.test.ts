@@ -86,6 +86,16 @@ describe('skillProgressionCatalog', () => {
         `功法 ${skill.id} 的效果 ${skill.functionalEffect} 應有對應 Buff`).toBe(true)
     }
   })
+
+  it('太虛流·迴氣為常駐靈氣外功，掛載 +20% 功法經驗 Buff', () => {
+    const aura = progressionExternalSkills.find((skill) => skill.name === '迴氣（悟道）')
+    expect(aura).toBeDefined()
+    expect(aura!.category).toBe('aura')
+    expect(aura!.passiveBuffIds).toContain('void-spirit-return-qi')
+    const buff = buffCatalog.find((candidate) => candidate.id === 'void-spirit-return-qi')
+    expect(buff?.duration).toBe('persistent')
+    expect(buff?.skillExpGainPercent).toBe(0.2)
+  })
 })
 
 describe('江湖外功功法（無門派）', () => {
