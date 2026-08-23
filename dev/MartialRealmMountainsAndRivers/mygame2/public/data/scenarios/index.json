@@ -1,0 +1,15 @@
+{
+  "version": "1.2.0",
+  "scenarios": [
+    {
+      "id": "prologue-village",
+      "file": "prologue-village.json",
+      "version": "1.2.0"
+    },
+    {
+      "id": "forest-hunt",
+      "file": "forest-hunt.json",
+      "version": "1.2.0"
+    }
+  ]
+}

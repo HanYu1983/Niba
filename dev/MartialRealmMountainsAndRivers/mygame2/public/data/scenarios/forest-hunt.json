@@ -1,0 +1,1703 @@
+{
+  "version": "1.2.0",
+  "id": "forest-hunt",
+  "title": "第二章：林海迷蹤",
+  "description": "主角進入林海，遇到獵人村落，發現妖氣源頭在森林深處的兩座巢穴。",
+  "chapterIndex": 1,
+  "enableRandomEvents": false,
+  "mapSize": {
+    "rows": 15,
+    "columns": 15
+  },
+  "cells": [
+    {
+      "row": 0,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 1,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 2,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 3,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 4,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 5,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 6,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 7,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 8,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 9,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 10,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 11,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 12,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 13,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 14,
+      "terrain": "wall"
+    },
+    {
+      "row": 1,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 1,
+      "column": 1,
+      "terrain": "forest"
+    },
+    {
+      "row": 1,
+      "column": 2,
+      "terrain": "forest"
+    },
+    {
+      "row": 1,
+      "column": 3,
+      "terrain": "mountain"
+    },
+    {
+      "row": 1,
+      "column": 4,
+      "terrain": "mountain"
+    },
+    {
+      "row": 1,
+      "column": 5,
+      "terrain": "mountain"
+    },
+    {
+      "row": 1,
+      "column": 6,
+      "terrain": "mountain"
+    },
+    {
+      "row": 1,
+      "column": 7,
+      "terrain": "mountain"
+    },
+    {
+      "row": 1,
+      "column": 8,
+      "terrain": "mountain"
+    },
+    {
+      "row": 1,
+      "column": 9,
+      "terrain": "mountain"
+    },
+    {
+      "row": 1,
+      "column": 10,
+      "terrain": "mountain"
+    },
+    {
+      "row": 1,
+      "column": 11,
+      "terrain": "forest"
+    },
+    {
+      "row": 1,
+      "column": 12,
+      "terrain": "forest"
+    },
+    {
+      "row": 1,
+      "column": 13,
+      "terrain": "forest"
+    },
+    {
+      "row": 1,
+      "column": 14,
+      "terrain": "wall"
+    },
+    {
+      "row": 2,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 2,
+      "column": 1,
+      "terrain": "plain"
+    },
+    {
+      "row": 2,
+      "column": 2,
+      "terrain": "plain"
+    },
+    {
+      "row": 2,
+      "column": 3,
+      "terrain": "forest"
+    },
+    {
+      "row": 2,
+      "column": 4,
+      "terrain": "mountain"
+    },
+    {
+      "row": 2,
+      "column": 5,
+      "terrain": "mountain"
+    },
+    {
+      "row": 2,
+      "column": 6,
+      "terrain": "mountain"
+    },
+    {
+      "row": 2,
+      "column": 7,
+      "terrain": "mountain"
+    },
+    {
+      "row": 2,
+      "column": 8,
+      "terrain": "mountain"
+    },
+    {
+      "row": 2,
+      "column": 9,
+      "terrain": "mountain"
+    },
+    {
+      "row": 2,
+      "column": 10,
+      "terrain": "mountain"
+    },
+    {
+      "row": 2,
+      "column": 11,
+      "terrain": "plain"
+    },
+    {
+      "row": 2,
+      "column": 12,
+      "terrain": "plain"
+    },
+    {
+      "row": 2,
+      "column": 13,
+      "terrain": "forest"
+    },
+    {
+      "row": 2,
+      "column": 14,
+      "terrain": "wall"
+    },
+    {
+      "row": 3,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 3,
+      "column": 1,
+      "terrain": "plain"
+    },
+    {
+      "row": 3,
+      "column": 2,
+      "terrain": "plain"
+    },
+    {
+      "row": 3,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 3,
+      "column": 4,
+      "terrain": "water"
+    },
+    {
+      "row": 3,
+      "column": 5,
+      "terrain": "water"
+    },
+    {
+      "row": 3,
+      "column": 6,
+      "terrain": "mountain"
+    },
+    {
+      "row": 3,
+      "column": 7,
+      "terrain": "forest"
+    },
+    {
+      "row": 3,
+      "column": 8,
+      "terrain": "mountain"
+    },
+    {
+      "row": 3,
+      "column": 9,
+      "terrain": "mountain"
+    },
+    {
+      "row": 3,
+      "column": 10,
+      "terrain": "mountain"
+    },
+    {
+      "row": 3,
+      "column": 11,
+      "terrain": "plain"
+    },
+    {
+      "row": 3,
+      "column": 12,
+      "terrain": "plain"
+    },
+    {
+      "row": 3,
+      "column": 13,
+      "terrain": "forest"
+    },
+    {
+      "row": 3,
+      "column": 14,
+      "terrain": "wall"
+    },
+    {
+      "row": 4,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 4,
+      "column": 1,
+      "terrain": "forest"
+    },
+    {
+      "row": 4,
+      "column": 2,
+      "terrain": "forest"
+    },
+    {
+      "row": 4,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 4,
+      "column": 4,
+      "terrain": "water"
+    },
+    {
+      "row": 4,
+      "column": 5,
+      "terrain": "water"
+    },
+    {
+      "row": 4,
+      "column": 6,
+      "terrain": "water"
+    },
+    {
+      "row": 4,
+      "column": 7,
+      "terrain": "forest"
+    },
+    {
+      "row": 4,
+      "column": 8,
+      "terrain": "forest"
+    },
+    {
+      "row": 4,
+      "column": 9,
+      "terrain": "mountain"
+    },
+    {
+      "row": 4,
+      "column": 10,
+      "terrain": "mountain"
+    },
+    {
+      "row": 4,
+      "column": 11,
+      "terrain": "forest"
+    },
+    {
+      "row": 4,
+      "column": 12,
+      "terrain": "plain"
+    },
+    {
+      "row": 4,
+      "column": 13,
+      "terrain": "forest"
+    },
+    {
+      "row": 4,
+      "column": 14,
+      "terrain": "wall"
+    },
+    {
+      "row": 5,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 5,
+      "column": 1,
+      "terrain": "mountain"
+    },
+    {
+      "row": 5,
+      "column": 2,
+      "terrain": "forest"
+    },
+    {
+      "row": 5,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 5,
+      "column": 4,
+      "terrain": "plain"
+    },
+    {
+      "row": 5,
+      "column": 5,
+      "terrain": "water"
+    },
+    {
+      "row": 5,
+      "column": 6,
+      "terrain": "water"
+    },
+    {
+      "row": 5,
+      "column": 7,
+      "terrain": "plain"
+    },
+    {
+      "row": 5,
+      "column": 8,
+      "terrain": "forest"
+    },
+    {
+      "row": 5,
+      "column": 9,
+      "terrain": "forest"
+    },
+    {
+      "row": 5,
+      "column": 10,
+      "terrain": "mountain"
+    },
+    {
+      "row": 5,
+      "column": 11,
+      "terrain": "forest"
+    },
+    {
+      "row": 5,
+      "column": 12,
+      "terrain": "plain"
+    },
+    {
+      "row": 5,
+      "column": 13,
+      "terrain": "forest"
+    },
+    {
+      "row": 5,
+      "column": 14,
+      "terrain": "wall"
+    },
+    {
+      "row": 6,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 6,
+      "column": 1,
+      "terrain": "mountain"
+    },
+    {
+      "row": 6,
+      "column": 2,
+      "terrain": "forest"
+    },
+    {
+      "row": 6,
+      "column": 3,
+      "terrain": "forest"
+    },
+    {
+      "row": 6,
+      "column": 4,
+      "terrain": "plain"
+    },
+    {
+      "row": 6,
+      "column": 5,
+      "terrain": "road"
+    },
+    {
+      "row": 6,
+      "column": 6,
+      "terrain": "plain"
+    },
+    {
+      "row": 6,
+      "column": 7,
+      "terrain": "plain"
+    },
+    {
+      "row": 6,
+      "column": 8,
+      "terrain": "forest"
+    },
+    {
+      "row": 6,
+      "column": 9,
+      "terrain": "forest"
+    },
+    {
+      "row": 6,
+      "column": 10,
+      "terrain": "forest"
+    },
+    {
+      "row": 6,
+      "column": 11,
+      "terrain": "forest"
+    },
+    {
+      "row": 6,
+      "column": 12,
+      "terrain": "plain"
+    },
+    {
+      "row": 6,
+      "column": 13,
+      "terrain": "forest"
+    },
+    {
+      "row": 6,
+      "column": 14,
+      "terrain": "wall"
+    },
+    {
+      "row": 7,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 7,
+      "column": 1,
+      "terrain": "forest"
+    },
+    {
+      "row": 7,
+      "column": 2,
+      "terrain": "forest"
+    },
+    {
+      "row": 7,
+      "column": 3,
+      "terrain": "forest"
+    },
+    {
+      "row": 7,
+      "column": 4,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 5,
+      "terrain": "water"
+    },
+    {
+      "row": 7,
+      "column": 6,
+      "terrain": "water"
+    },
+    {
+      "row": 7,
+      "column": 7,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 8,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 9,
+      "terrain": "forest"
+    },
+    {
+      "row": 7,
+      "column": 10,
+      "terrain": "forest"
+    },
+    {
+      "row": 7,
+      "column": 11,
+      "terrain": "forest"
+    },
+    {
+      "row": 7,
+      "column": 12,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 13,
+      "terrain": "forest"
+    },
+    {
+      "row": 7,
+      "column": 14,
+      "terrain": "wall"
+    },
+    {
+      "row": 8,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 8,
+      "column": 1,
+      "terrain": "forest"
+    },
+    {
+      "row": 8,
+      "column": 2,
+      "terrain": "forest"
+    },
+    {
+      "row": 8,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 8,
+      "column": 4,
+      "terrain": "plain"
+    },
+    {
+      "row": 8,
+      "column": 5,
+      "terrain": "forest"
+    },
+    {
+      "row": 8,
+      "column": 6,
+      "terrain": "water"
+    },
+    {
+      "row": 8,
+      "column": 7,
+      "terrain": "forest"
+    },
+    {
+      "row": 8,
+      "column": 8,
+      "terrain": "plain"
+    },
+    {
+      "row": 8,
+      "column": 9,
+      "terrain": "forest"
+    },
+    {
+      "row": 8,
+      "column": 10,
+      "terrain": "forest"
+    },
+    {
+      "row": 8,
+      "column": 11,
+      "terrain": "forest"
+    },
+    {
+      "row": 8,
+      "column": 12,
+      "terrain": "plain"
+    },
+    {
+      "row": 8,
+      "column": 13,
+      "terrain": "plain"
+    },
+    {
+      "row": 8,
+      "column": 14,
+      "terrain": "wall"
+    },
+    {
+      "row": 9,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 9,
+      "column": 1,
+      "terrain": "forest"
+    },
+    {
+      "row": 9,
+      "column": 2,
+      "terrain": "forest"
+    },
+    {
+      "row": 9,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 9,
+      "column": 4,
+      "terrain": "forest"
+    },
+    {
+      "row": 9,
+      "column": 5,
+      "terrain": "forest"
+    },
+    {
+      "row": 9,
+      "column": 6,
+      "terrain": "mountain"
+    },
+    {
+      "row": 9,
+      "column": 7,
+      "terrain": "mountain"
+    },
+    {
+      "row": 9,
+      "column": 8,
+      "terrain": "plain"
+    },
+    {
+      "row": 9,
+      "column": 9,
+      "terrain": "plain"
+    },
+    {
+      "row": 9,
+      "column": 10,
+      "terrain": "forest"
+    },
+    {
+      "row": 9,
+      "column": 11,
+      "terrain": "forest"
+    },
+    {
+      "row": 9,
+      "column": 12,
+      "terrain": "plain"
+    },
+    {
+      "row": 9,
+      "column": 13,
+      "terrain": "forest"
+    },
+    {
+      "row": 9,
+      "column": 14,
+      "terrain": "wall"
+    },
+    {
+      "row": 10,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 10,
+      "column": 1,
+      "terrain": "forest"
+    },
+    {
+      "row": 10,
+      "column": 2,
+      "terrain": "forest"
+    },
+    {
+      "row": 10,
+      "column": 3,
+      "terrain": "road"
+    },
+    {
+      "row": 10,
+      "column": 4,
+      "terrain": "forest"
+    },
+    {
+      "row": 10,
+      "column": 5,
+      "terrain": "forest"
+    },
+    {
+      "row": 10,
+      "column": 6,
+      "terrain": "forest"
+    },
+    {
+      "row": 10,
+      "column": 7,
+      "terrain": "mountain"
+    },
+    {
+      "row": 10,
+      "column": 8,
+      "terrain": "forest"
+    },
+    {
+      "row": 10,
+      "column": 9,
+      "terrain": "plain"
+    },
+    {
+      "row": 10,
+      "column": 10,
+      "terrain": "forest"
+    },
+    {
+      "row": 10,
+      "column": 11,
+      "terrain": "forest"
+    },
+    {
+      "row": 10,
+      "column": 12,
+      "terrain": "plain"
+    },
+    {
+      "row": 10,
+      "column": 13,
+      "terrain": "forest"
+    },
+    {
+      "row": 10,
+      "column": 14,
+      "terrain": "wall"
+    },
+    {
+      "row": 11,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 11,
+      "column": 1,
+      "terrain": "plain"
+    },
+    {
+      "row": 11,
+      "column": 2,
+      "terrain": "road"
+    },
+    {
+      "row": 11,
+      "column": 3,
+      "terrain": "road"
+    },
+    {
+      "row": 11,
+      "column": 4,
+      "terrain": "forest"
+    },
+    {
+      "row": 11,
+      "column": 5,
+      "terrain": "forest"
+    },
+    {
+      "row": 11,
+      "column": 6,
+      "terrain": "mountain"
+    },
+    {
+      "row": 11,
+      "column": 7,
+      "terrain": "mountain"
+    },
+    {
+      "row": 11,
+      "column": 8,
+      "terrain": "mountain"
+    },
+    {
+      "row": 11,
+      "column": 9,
+      "terrain": "forest"
+    },
+    {
+      "row": 11,
+      "column": 10,
+      "terrain": "plain"
+    },
+    {
+      "row": 11,
+      "column": 11,
+      "terrain": "plain"
+    },
+    {
+      "row": 11,
+      "column": 12,
+      "terrain": "plain"
+    },
+    {
+      "row": 11,
+      "column": 13,
+      "terrain": "forest"
+    },
+    {
+      "row": 11,
+      "column": 14,
+      "terrain": "wall"
+    },
+    {
+      "row": 12,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 12,
+      "column": 1,
+      "terrain": "plain"
+    },
+    {
+      "row": 12,
+      "column": 2,
+      "terrain": "road"
+    },
+    {
+      "row": 12,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 12,
+      "column": 4,
+      "terrain": "plain"
+    },
+    {
+      "row": 12,
+      "column": 5,
+      "terrain": "plain"
+    },
+    {
+      "row": 12,
+      "column": 6,
+      "terrain": "mountain"
+    },
+    {
+      "row": 12,
+      "column": 7,
+      "terrain": "mountain"
+    },
+    {
+      "row": 12,
+      "column": 8,
+      "terrain": "mountain"
+    },
+    {
+      "row": 12,
+      "column": 9,
+      "terrain": "forest"
+    },
+    {
+      "row": 12,
+      "column": 10,
+      "terrain": "forest"
+    },
+    {
+      "row": 12,
+      "column": 11,
+      "terrain": "plain"
+    },
+    {
+      "row": 12,
+      "column": 12,
+      "terrain": "plain"
+    },
+    {
+      "row": 12,
+      "column": 13,
+      "terrain": "forest"
+    },
+    {
+      "row": 12,
+      "column": 14,
+      "terrain": "wall"
+    },
+    {
+      "row": 13,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 13,
+      "column": 1,
+      "terrain": "road"
+    },
+    {
+      "row": 13,
+      "column": 2,
+      "terrain": "road"
+    },
+    {
+      "row": 13,
+      "column": 3,
+      "terrain": "road"
+    },
+    {
+      "row": 13,
+      "column": 4,
+      "terrain": "plain"
+    },
+    {
+      "row": 13,
+      "column": 5,
+      "terrain": "plain"
+    },
+    {
+      "row": 13,
+      "column": 6,
+      "terrain": "mountain"
+    },
+    {
+      "row": 13,
+      "column": 7,
+      "terrain": "mountain"
+    },
+    {
+      "row": 13,
+      "column": 8,
+      "terrain": "mountain"
+    },
+    {
+      "row": 13,
+      "column": 9,
+      "terrain": "forest"
+    },
+    {
+      "row": 13,
+      "column": 10,
+      "terrain": "forest"
+    },
+    {
+      "row": 13,
+      "column": 11,
+      "terrain": "forest"
+    },
+    {
+      "row": 13,
+      "column": 12,
+      "terrain": "forest"
+    },
+    {
+      "row": 13,
+      "column": 13,
+      "terrain": "forest"
+    },
+    {
+      "row": 13,
+      "column": 14,
+      "terrain": "wall"
+    },
+    {
+      "row": 14,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 14,
+      "column": 1,
+      "terrain": "wall"
+    },
+    {
+      "row": 14,
+      "column": 2,
+      "terrain": "wall"
+    },
+    {
+      "row": 14,
+      "column": 3,
+      "terrain": "wall"
+    },
+    {
+      "row": 14,
+      "column": 4,
+      "terrain": "wall"
+    },
+    {
+      "row": 14,
+      "column": 5,
+      "terrain": "wall"
+    },
+    {
+      "row": 14,
+      "column": 6,
+      "terrain": "wall"
+    },
+    {
+      "row": 14,
+      "column": 7,
+      "terrain": "wall"
+    },
+    {
+      "row": 14,
+      "column": 8,
+      "terrain": "wall"
+    },
+    {
+      "row": 14,
+      "column": 9,
+      "terrain": "wall"
+    },
+    {
+      "row": 14,
+      "column": 10,
+      "terrain": "wall"
+    },
+    {
+      "row": 14,
+      "column": 11,
+      "terrain": "wall"
+    },
+    {
+      "row": 14,
+      "column": 12,
+      "terrain": "wall"
+    },
+    {
+      "row": 14,
+      "column": 13,
+      "terrain": "wall"
+    },
+    {
+      "row": 14,
+      "column": 14,
+      "terrain": "wall"
+    }
+  ],
+  "entities": [
+    {
+      "id": "player-1",
+      "kind": "player",
+      "position": {
+        "row": 13,
+        "column": 1
+      },
+      "data": {
+        "name": "凌淵",
+        "money": 60,
+        "innerSkillId": "tuna-gong",
+        "innerSkillIds": [
+          "tuna-gong"
+        ],
+        "externalSkillIds": [
+          "sky-breaking-palm"
+        ],
+        "equippedExternalSkillIds": [
+          "sky-breaking-palm"
+        ],
+        "inventory": [
+          {
+            "itemId": "heal-wound-medicine",
+            "quantity": 3
+          },
+          {
+            "itemId": "gather-qi-pill",
+            "quantity": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "base-hunter",
+      "kind": "base",
+      "position": {
+        "row": 13,
+        "column": 2
+      },
+      "data": {
+        "name": "獵人村落",
+        "buildingMaterials": 70,
+        "maxBuildingMaterials": 100,
+        "health": 100,
+        "maxHealth": 100,
+        "discovered": true,
+        "presetBuildings": [
+          {
+            "type": "infirmary",
+            "level": 1
+          },
+          {
+            "type": "board",
+            "level": 1
+          },
+          {
+            "type": "item-shop",
+            "level": 1
+          }
+        ],
+        "allowedBuildings": [
+          {
+            "type": "infirmary",
+            "maxLevel": 1
+          },
+          {
+            "type": "board",
+            "maxLevel": 1
+          },
+          {
+            "type": "item-shop",
+            "maxLevel": 1
+          },
+          {
+            "type": "equipment-shop",
+            "maxLevel": 1
+          }
+        ],
+        "spawnOnLoad": true
+      }
+    },
+    {
+      "id": "nest-1",
+      "kind": "nest",
+      "position": {
+        "row": 2,
+        "column": 12
+      },
+      "data": {
+        "name": "妖物巢穴·東",
+        "health": 60,
+        "maxHealth": 60,
+        "spawnChance": 0.1,
+        "cooldownRounds": 0,
+        "spawnLevel": 1,
+        "behaviorType": "sieger",
+        "schoolId": "swift-wind"
+      }
+    },
+    {
+      "id": "creature-nest1-guard",
+      "kind": "creature",
+      "position": {
+        "row": 3,
+        "column": 12
+      },
+      "data": {
+        "name": "巢穴妖衛",
+        "isBoss": false,
+        "level": 2,
+        "schoolId": "swift-wind",
+        "behaviorType": "hunter",
+        "homeNestId": "nest-1",
+        "attributes": {
+          "armStrength": 10,
+          "constitution": 10,
+          "agility": 9,
+          "innerEnergy": 9,
+          "insight": 9
+        },
+        "spawnOnLoad": true,
+        "aggroRange": 3
+      }
+    },
+    {
+      "id": "creature-nest2-guard",
+      "kind": "creature",
+      "position": {
+        "row": 11,
+        "column": 12
+      },
+      "data": {
+        "name": "巢穴妖衛",
+        "isBoss": false,
+        "level": 2,
+        "schoolId": "swift-wind",
+        "behaviorType": "hunter",
+        "homeNestId": "nest-2",
+        "attributes": {
+          "armStrength": 10,
+          "constitution": 10,
+          "agility": 10,
+          "innerEnergy": 10,
+          "insight": 10
+        },
+        "spawnOnLoad": true,
+        "aggroRange": 3
+      }
+    },
+    {
+      "id": "creature-forest-roamer-1",
+      "kind": "creature",
+      "position": {
+        "row": 6,
+        "column": 8
+      },
+      "data": {
+        "name": "藤林遊妖",
+        "isBoss": false,
+        "level": 1,
+        "schoolId": "void-spirit",
+        "behaviorType": "roamer",
+        "attributes": {
+          "armStrength": 8,
+          "constitution": 8,
+          "agility": 8,
+          "innerEnergy": 8,
+          "insight": 8
+        },
+        "spawnOnLoad": true,
+        "aggroRange": 2
+      }
+    },
+    {
+      "id": "creature-forest-roamer-2",
+      "kind": "creature",
+      "position": {
+        "row": 9,
+        "column": 5
+      },
+      "data": {
+        "name": "藤林遊妖",
+        "isBoss": false,
+        "level": 1,
+        "schoolId": "void-spirit",
+        "behaviorType": "roamer",
+        "attributes": {
+          "armStrength": 8,
+          "constitution": 8,
+          "agility": 8,
+          "innerEnergy": 8,
+          "insight": 8
+        },
+        "spawnOnLoad": true,
+        "aggroRange": 2
+      }
+    },
+    {
+      "id": "itemPoint-herb",
+      "kind": "itemPoint",
+      "position": {
+        "row": 2,
+        "column": 1
+      },
+      "data": {
+        "position": {
+          "row": 5,
+          "column": 3
+        },
+        "name": "藥材",
+        "customDrops": [
+          {
+            "lootId": "heal-wound-medicine",
+            "chance": 100
+          }
+        ]
+      }
+    },
+    {
+      "id": "event-hunter-npc",
+      "kind": "event",
+      "position": {
+        "row": 13,
+        "column": 3
+      },
+      "data": {
+        "type": "custom",
+        "name": "獵人 老獵",
+        "description": "一位身背長弓的老獵人，目光銳利地打量著凌淵。",
+        "icon": "🏹",
+        "choices": [
+          {
+            "id": "talk",
+            "label": "與獵人交談",
+            "description": "向獵人打聽森林深處的妖氣源頭。",
+            "endsPlayerTurn": false,
+            "requirements": [
+              {
+                "type": "active-player"
+              },
+              {
+                "type": "player-alive"
+              }
+            ],
+            "effects": [
+              {
+                "type": "start-dialogue",
+                "dialogueId": "event-hunter-talk"
+              }
+            ]
+          }
+        ],
+        "spawnOnLoad": true
+      }
+    },
+    {
+      "id": "itemPoint-12-12-mt4qklsg",
+      "kind": "itemPoint",
+      "position": {
+        "row": 12,
+        "column": 12
+      },
+      "data": {
+        "position": {
+          "row": 12,
+          "column": 12
+        },
+        "name": "itemPoint"
+      }
+    },
+    {
+      "id": "resourcePoint-10-1-mt4qnfgj",
+      "kind": "resourcePoint",
+      "position": {
+        "row": 10,
+        "column": 1
+      },
+      "data": {
+        "position": {
+          "row": 10,
+          "column": 1
+        },
+        "name": "林間礦脈",
+        "ownerBaseId": "base-hunter",
+        "materialIncome": 10
+      }
+    },
+    {
+      "id": "event-11-1-mt4rkpno",
+      "kind": "event",
+      "position": {
+        "row": 11,
+        "column": 1
+      },
+      "data": {
+        "position": {
+          "row": 11,
+          "column": 1
+        },
+        "name": "觀察礦脈",
+        "type": "custom",
+        "description": "一座林間礦脈，礦石泛著微光，幾名獵人村民正揮汗挖掘。",
+        "icon": "⛏️",
+        "choices": [
+          {
+            "id": "choice-mt4rkwkk",
+            "label": "幫助挖礦",
+            "description": "上前幫村民挖掘礦脈，順便了解資源點的運作。",
+            "endsPlayerTurn": false,
+            "requirements": [
+              {
+                "type": "active-player"
+              },
+              {
+                "type": "player-alive"
+              }
+            ],
+            "effects": [
+              {
+                "type": "start-dialogue",
+                "dialogueId": "dialogue-mt4rm7fn"
+              },
+              {
+                "type": "item",
+                "itemId": "falling-rock-talisman",
+                "quantity": 1
+              }
+            ],
+            "resultMessage": "凌淵幫村民挖掘礦脈，礦石化作建料送往獵人村落。村民感激之餘，贈予一張落石符作為謝禮。"
+          }
+        ]
+      }
+    },
+    {
+      "id": "sectGate-8-7-mt4s2rzs",
+      "kind": "sectGate",
+      "position": {
+        "row": 8,
+        "column": 7
+      },
+      "data": {
+        "position": {
+          "row": 8,
+          "column": 7
+        },
+        "name": "sectGate",
+        "schoolId": "golden-body"
+      }
+    }
+  ],
+  "quests": {
+    "victoryObjectives": [
+      {
+        "id": "obj-destroy-nests",
+        "title": "摧毀 2 座妖物巢穴",
+        "type": "destroy-nest",
+        "targetValue": 2
+      }
+    ],
+    "failConditions": {
+      "baseMustSurvive": true,
+      "playerMustSurvive": true,
+      "maxRounds": 25
+    }
+  },
+  "dialogues": {
+    "event-forest-start": {
+      "name": "第二章開局",
+      "steps": [
+        {
+          "id": "forest-start-1",
+          "speakerName": "旁白",
+          "speakerIcon": "📜",
+          "content": "凌淵離開青石村，一路向東，踏入茫茫林海。林間妖氣瀰漫，鳥獸絕跡，唯有風穿林梢的嗚咽聲。"
+        },
+        {
+          "id": "forest-start-2",
+          "speakerName": "獵人 老獵",
+          "speakerIcon": "🏹",
+          "content": "站住！你是何人，竟敢孤身闖入這片妖林？"
+        },
+        {
+          "id": "forest-start-3",
+          "speakerName": "凌淵",
+          "speakerIcon": "🥋",
+          "content": "在下凌淵，自青石村而來，追尋妖氣源頭至此。"
+        },
+        {
+          "id": "forest-start-4",
+          "speakerName": "獵人 老獵",
+          "speakerIcon": "🏹",
+          "content": "青石村……你這運勁之法，老夫看著眼熟。這可是守護者一脈的傳承？"
+        },
+        {
+          "id": "forest-start-5",
+          "speakerName": "凌淵",
+          "speakerIcon": "🥋",
+          "content": "守護者一脈？我自幼在青石村長大，只知師父傳我這套功法，卻不知其名。"
+        },
+        {
+          "id": "forest-start-6",
+          "speakerName": "獵人 老獵",
+          "speakerIcon": "🏹",
+          "content": "錯不了。老夫年輕時見過守護者出手，你這運勁之法與他一模一樣。這林海深處的妖物巢穴，恐怕與你師父當年封印的妖王脫不了干係。"
+        },
+        {
+          "id": "forest-start-7",
+          "speakerName": "凌淵",
+          "speakerIcon": "🥋",
+          "content": "師父……他老人家早已仙逝。若這巢穴真與他有關，我更該查明真相。"
+        },
+        {
+          "id": "forest-start-8",
+          "speakerName": "獵人 老獵",
+          "speakerIcon": "🏹",
+          "content": "好！老夫這獵人村落願助你一臂之力。那兩座巢穴日夜生出妖物，威脅村落，你若能將它們盡數摧毀，便是救了全村性命！"
+        }
+      ]
+    },
+    "event-hunter-talk": {
+      "name": "與獵人交談",
+      "steps": [
+        {
+          "id": "hunter-talk-1",
+          "speakerName": "獵人 老獵",
+          "speakerIcon": "🏹",
+          "content": "少俠，那兩座巢穴一東一南，藏於林海深處。巢穴妖氣濃烈，日夜生出妖物，老夫的獵人村落已快抵擋不住了。"
+        },
+        {
+          "id": "hunter-talk-2",
+          "speakerName": "凌淵",
+          "speakerIcon": "🥋",
+          "content": "老獵放心，我這便深入林海，將那兩座巢穴連根拔起。"
+        },
+        {
+          "id": "hunter-talk-3",
+          "speakerName": "獵人 老獵",
+          "speakerIcon": "🏹",
+          "content": "老夫在此備好丹藥與箭矢，你若有需要，隨時可回村落補給。"
+        }
+      ]
+    },
+    "event-nest-destroyed": {
+      "name": "巢穴被摧毀",
+      "steps": [
+        {
+          "id": "nest-destroyed-1",
+          "speakerName": "旁白",
+          "speakerIcon": "📜",
+          "content": "轟然一聲巨響，妖物巢穴在凌淵的攻勢下轟然崩塌，盤踞其上的妖氣如煙般消散。"
+        },
+        {
+          "id": "nest-destroyed-2",
+          "speakerName": "凌淵",
+          "speakerIcon": "🥋",
+          "content": "一座巢穴已除。還剩一座，妖氣源頭便斷了。"
+        }
+      ]
+    },
+    "event-victory": {
+      "name": "林海安寧",
+      "steps": [
+        {
+          "id": "victory-1",
+          "speakerName": "旁白",
+          "speakerIcon": "📜",
+          "content": "最後一座妖物巢穴轟然倒塌，籠罩林海多時的妖氣終於徹底消散。陽光重新灑落林間，鳥鳴聲漸起。"
+        },
+        {
+          "id": "victory-2",
+          "speakerName": "獵人 老獵",
+          "speakerIcon": "🏹",
+          "content": "少俠果然了得！兩座巢穴盡數摧毀，這下獵人村落終於能安寧了！"
+        },
+        {
+          "id": "victory-3",
+          "speakerName": "凌淵",
+          "speakerIcon": "🥋",
+          "content": "老獵，你方才說我這功法是守護者一脈……能否再多說一些？"
+        },
+        {
+          "id": "victory-4",
+          "speakerName": "獵人 老獵",
+          "speakerIcon": "🏹",
+          "content": "老夫所知不多，只知守護者一脈世代守護山河，鎮壓妖邪。你既承此功法，日後必有大任。往東去，或許能尋得更多線索。"
+        },
+        {
+          "id": "victory-5",
+          "speakerName": "凌淵",
+          "speakerIcon": "🥋",
+          "content": "多謝老獵指點。江湖路長，我們後會有期。"
+        }
+      ]
+    },
+    "dialogue-mt4rm7fn": {
+      "name": "幫忙挖礦",
+      "steps": [
+        {
+          "id": "step-mt4rm7fn-1",
+          "speakerName": "旁白",
+          "speakerIcon": "📜",
+          "content": "凌淵來到礦脈前，幾名獵人村民正揮汗挖掘，礦石在陽光下泛著微光。"
+        },
+        {
+          "id": "step-mt4rm7fn-2",
+          "speakerName": "獵人村民",
+          "speakerIcon": "⛏️",
+          "content": "少俠來得正好！這座礦脈是村裡的資源點，挖出的礦石能化作建料，供村落建設之用。"
+        },
+        {
+          "id": "step-mt4rm7fn-3",
+          "speakerName": "凌淵",
+          "speakerIcon": "🥋",
+          "content": "建料……原來如此。據點要建造建築、修築防禦，都少不了這些建料。"
+        },
+        {
+          "id": "step-mt4rm7fn-4",
+          "speakerName": "獵人村民",
+          "speakerIcon": "⛏️",
+          "content": "正是！只要守住這資源點，每回合都能為村落產出建料。妖物若來襲，建料充足才能築起防線。"
+        },
+        {
+          "id": "step-mt4rm7fn-5",
+          "speakerName": "旁白",
+          "speakerIcon": "📜",
+          "content": "凌淵挽起衣袖，幫村民挖掘礦脈。礦石化作建料，源源送往獵人村落。"
+        },
+        {
+          "id": "step-mt4rm7fn-6",
+          "speakerName": "獵人村民",
+          "speakerIcon": "⛏️",
+          "content": "多謝少俠相助！這張落石符是村裡珍藏的土系符籙，危急時可轟落巨石傷敵，就贈予少俠聊表謝意。"
+        },
+        {
+          "id": "step-mt4rm7fn-7",
+          "speakerName": "凌淵",
+          "speakerIcon": "🥋",
+          "content": "多謝。這落石符我便收下了，日後對敵時必能派上用場。"
+        }
+      ]
+    }
+  },
+  "triggers": [
+    {
+      "id": "trigger-start-dialogue",
+      "condition": "on-start",
+      "action": "start-dialogue",
+      "actionParam": "event-forest-start"
+    },
+    {
+      "id": "trigger-nest1-destroyed",
+      "condition": "on-object-destroyed",
+      "action": "start-dialogue",
+      "actionParam": "event-nest-destroyed",
+      "conditionParam": "nest-1"
+    },
+    {
+      "id": "trigger-victory-dialogue",
+      "condition": "on-victory",
+      "action": "start-dialogue",
+      "actionParam": "event-victory"
+    }
+  ]
+}
