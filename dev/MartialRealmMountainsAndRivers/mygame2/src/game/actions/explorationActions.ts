@@ -9,6 +9,7 @@ import { getGlobalHealingMultiplier } from '../rules/globalBuffRules'
 import { getExplorationEventTarget, getResourceCollectionTarget } from '../rules/targetRules'
 import { ACTION_STAMINA_COSTS, canPlayerPerformAction, getActionablePlayer, spendPlayerStamina } from '../rules/actionCostRules'
 import { isAdjacent, isSameOrAdjacent } from '../types'
+import { getGatherDoubleYieldChance, getGatherStaminaCostReduction } from '../rules/playerDerivedRules'
 import { replenishInteractionPoint } from '../worldGeneration'
 import { incrementRunStat } from '../runStats'
 import { progressObjectives, checkVictory } from '../rules/campaignRules'
@@ -150,7 +151,8 @@ export function collectResourcePoint(state: GameState, playerId: string, resourc
   const player = getActionablePlayer(state, playerId)
   const resourcePoint = state.resourcePoints.find((point) => point.id === resourcePointId)
   const base = state.bases.find((candidate) => candidate.id === resourcePoint?.ownerBaseId)
-  const actionCheck = canPlayerPerformAction(state, playerId, ACTION_STAMINA_COSTS.collectResource)
+  const staminaCost = Math.max(1, ACTION_STAMINA_COSTS.collectResource - (player ? getGatherStaminaCostReduction(player) : 0))
+  const actionCheck = canPlayerPerformAction(state, playerId, staminaCost)
   if (!player) return { state, result: { ok: false, reason: '目前不是你的回合、回合已結束、玩家已死亡，或仍有未處理的結果。' } }
   if (!actionCheck.ok) return { state, result: { ok: false, reason: actionCheck.reason ?? '體力不足。' } }
   if (!resourcePoint || !base) return { state, result: { ok: false, reason: '資源點不存在或沒有所屬據點。' } }
@@ -168,14 +170,17 @@ export function collectResourcePoint(state: GameState, playerId: string, resourc
   if (target.base.buildingMaterials >= maxBuildingMaterials) {
     return { state, result: { ok: false, reason: '據點建料已達上限，請先使用或調度建料。' } }
   }
+  // 靈植百草鑑：依機率雙倍產出。
+  const yieldMultiplier = getGatherDoubleYieldChance(player) > 0 && defaultRandomSource() < getGatherDoubleYieldChance(player) ? 2 : 1
+  const effectiveGain = materialGain * yieldMultiplier
   return {
     state: {
       ...state,
       players: state.players.map((currentPlayer) => currentPlayer.id === target.player.id
-        ? spendPlayerStamina({ ...currentPlayer, prestige: currentPlayer.prestige + 5 }, ACTION_STAMINA_COSTS.collectResource)
+        ? spendPlayerStamina({ ...currentPlayer, prestige: currentPlayer.prestige + 5 }, staminaCost)
         : currentPlayer),
       bases: state.bases.map((currentBase) => currentBase.id === target.base.id
-        ? { ...currentBase, buildingMaterials: Math.min(maxBuildingMaterials, currentBase.buildingMaterials + materialGain) }
+        ? { ...currentBase, buildingMaterials: Math.min(maxBuildingMaterials, currentBase.buildingMaterials + effectiveGain) }
         : currentBase),
       resourcePoints: state.resourcePoints,
     },
@@ -198,8 +203,9 @@ export function collectResourcePointBatch(state: GameState, playerId: string, re
   if (!target) return { state, result: { ok: false, reason: '資源點目前無法採集。' } }
   const materialGain = getEffectiveMaterialGain(target.base, getResourceCollectionMaterialGain(target.base, target.resourcePoint.materialIncome), state)
   const maxBuildingMaterials = getBaseMaxBuildingMaterials(target.base)
+  const staminaCost = Math.max(1, ACTION_STAMINA_COSTS.collectResource - getGatherStaminaCostReduction(player))
   const count = Math.min(
-    Math.floor(player.stamina / ACTION_STAMINA_COSTS.collectResource),
+    Math.floor(player.stamina / staminaCost),
     materialGain > 0 ? Math.floor((maxBuildingMaterials - target.base.buildingMaterials) / materialGain) : 0,
   )
   if (count <= 0) return { state, result: { ok: false, reason: target.base.buildingMaterials >= maxBuildingMaterials ? '據點建料已達上限，請先使用或調度建料。' : '體力不足。' } }
@@ -207,7 +213,7 @@ export function collectResourcePointBatch(state: GameState, playerId: string, re
     state: {
       ...state,
       players: state.players.map((currentPlayer) => currentPlayer.id === playerId
-        ? spendPlayerStamina({ ...currentPlayer, prestige: currentPlayer.prestige + 5 * count }, ACTION_STAMINA_COSTS.collectResource * count)
+        ? spendPlayerStamina({ ...currentPlayer, prestige: currentPlayer.prestige + 5 * count }, staminaCost * count)
         : currentPlayer),
       bases: state.bases.map((currentBase) => currentBase.id === target.base.id
         ? { ...currentBase, buildingMaterials: Math.min(maxBuildingMaterials, currentBase.buildingMaterials + materialGain * count) }

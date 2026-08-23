@@ -5,6 +5,7 @@ import { applyBaseHealthBonuses, getBaseMaxBuildingMaterials, getBaseMaxHealth, 
 import { getBaseBuilding, getBuildingUpgradeResult, upgradeBuildingInBase, canPlayerBuildBuildingType } from '../rules/buildingProgressionRules'
 import { validateDefenseBuild } from '../rules/defenseRules'
 import { ACTION_STAMINA_COSTS, canPlayerPerformAction, spendPlayerStamina } from '../rules/actionCostRules'
+import { getBuildingMaterialCostReduction } from '../rules/playerDerivedRules'
 import { grantRandomGlobalBuff, upgradeGlobalBuffForBuilding } from '../rules/globalBuffRules'
 import { incrementRunStat } from '../runStats'
 import { progressObjectives, checkVictory } from '../rules/campaignRules'
@@ -31,8 +32,11 @@ export function constructBuilding(state: GameState, baseId: string, buildingId: 
   // 據點允許建築限制：若指定了 allowedBuildings，則僅允許清單內的建築類型。
   const allowed = base?.allowedBuildings
   const buildingAllowed = !allowed || allowed.some((entry) => entry.type === buildingTemplate?.type)
+  const constructionCost = player
+    ? Math.max(1, Math.floor((buildingTemplate?.constructionCost ?? 0) * (1 - getBuildingMaterialCostReduction(player))))
+    : (buildingTemplate?.constructionCost ?? 0)
 
-  if (!base || !isBaseActive(base) || !buildingTemplate || !rankUnlocked || !actionCheck.ok || schoolMismatch || alreadyBuilt || !buildingAllowed || base.buildingMaterials < buildingTemplate.constructionCost) {
+  if (!base || !isBaseActive(base) || !buildingTemplate || !rankUnlocked || !actionCheck.ok || schoolMismatch || alreadyBuilt || !buildingAllowed || base.buildingMaterials < constructionCost) {
     const reason = !base
       ? '據點不存在。'
       : !isBaseActive(base)
@@ -61,7 +65,7 @@ export function constructBuilding(state: GameState, baseId: string, buildingId: 
   const nextBase: BaseState = {
     ...base,
     buildings: [...base.buildings, building],
-    buildingMaterials: base.buildingMaterials - building.constructionCost,
+    buildingMaterials: base.buildingMaterials - constructionCost,
   }
   const nextBaseWithCapacity = {
     ...nextBase,

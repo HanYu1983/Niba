@@ -11,6 +11,7 @@ import { itemCatalog } from '../catalogs/itemCatalog'
 import { BUILDING_TYPES } from '../catalogs/buildingCatalog'
 import { assertPlayerTurn } from './actionCostRules'
 import { isBaseActive } from './baseRules'
+import { getShopBuyPriceDiscount, getShopSellPriceBonus } from './playerDerivedRules'
 
 /** 裝備賣出價格（依目前耐久比例）。 */
 export function getEquipmentSellPrice(instance: EquipmentInstance): number {
@@ -95,7 +96,7 @@ export function canBuyItem(
     return { ok: false, reason: `需要道具商店 Lv.${item.requiredShopLevel}。` }
   }
 
-  const price = getItemBuyPrice(base, itemId, state) * quantity
+  const price = Math.max(1, Math.floor(getItemBuyPrice(base, itemId, state) * (1 - getShopBuyPriceDiscount(player)) * quantity))
   if (player.money < price) {
     return { ok: false, reason: `金錢不足，需要 ${price} 金錢。` }
   }
@@ -126,7 +127,7 @@ export function canSellItem(
     return { ok: false, reason: `持有數量不足，目前持有 ${owned}。` }
   }
 
-  return { ok: true, price: getItemSellPrice(itemId) * quantity }
+  return { ok: true, price: Math.floor(getItemSellPrice(itemId) * (1 + getShopSellPriceBonus(player)) * quantity) }
 }
 
 export function canSellEquipment(
@@ -162,7 +163,7 @@ export function canSellEquipment(
     return { ok: false, reason: '已裝備的裝備需要先卸下。' }
   }
 
-  return { ok: true, price: getEquipmentSellPrice(instance) }
+  return { ok: true, price: Math.floor(getEquipmentSellPrice(instance) * (1 + getShopSellPriceBonus(player))) }
 }
 
 export function canBuyEquipment(
@@ -195,7 +196,7 @@ export function canBuyEquipment(
     return { ok: false, reason: `需要裝備商店 Lv.${equipment.requiredShopLevel}。` }
   }
 
-  const price = getEquipmentBuyPrice(base, equipmentId, state)
+  const price = Math.max(1, Math.floor(getEquipmentBuyPrice(base, equipmentId, state) * (1 - getShopBuyPriceDiscount(player))))
   if (player.money < price) {
     return { ok: false, reason: `金錢不足，需要 ${price} 金錢。` }
   }

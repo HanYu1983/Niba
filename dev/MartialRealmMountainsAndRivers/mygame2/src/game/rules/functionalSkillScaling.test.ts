@@ -42,4 +42,59 @@ describe('功能型外功等級縮放', () => {
       externalSkillInnerCostReduction: 3,
     })
   })
+
+  it('商道通鑑：買入折扣與賣出加成隨等級成長', () => {
+    const definition = getBuff('merchant-way')!
+    expect(getFunctionalSkillBuffOverrides('merchant-way', 1, definition)).toMatchObject({
+      shopBuyPriceDiscount: 0.15,
+      shopSellPriceBonus: 0.15,
+    })
+    expect(getFunctionalSkillBuffOverrides('merchant-way', 3, definition)).toMatchObject({
+      shopBuyPriceDiscount: 0.21,
+      shopSellPriceBonus: 0.21,
+    })
+  })
+
+  it('天工開物：材料減免與聲望加成隨等級成長', () => {
+    const definition = getBuff('heavenly-craftsman')!
+    expect(getFunctionalSkillBuffOverrides('craftsmanship', 1, definition)).toMatchObject({
+      buildingMaterialCostReduction: 0.25,
+      buildingReputationBonus: 0.5,
+    })
+    expect(getFunctionalSkillBuffOverrides('craftsmanship', 3, definition)).toMatchObject({
+      buildingMaterialCostReduction: 0.35,
+      buildingReputationBonus: 0.7,
+    })
+  })
+
+  it('靈植百草鑑：採集省體力與雙倍產出機率成長', () => {
+    const definition = getBuff('spirit-herb-hundred-grass')!
+    expect(getFunctionalSkillBuffOverrides('gathering', 1, definition)).toMatchObject({
+      gatherStaminaCostReduction: 1,
+      gatherDoubleYieldChance: 0.5,
+    })
+    expect(getFunctionalSkillBuffOverrides('gathering', 3, definition)).toMatchObject({
+      gatherDoubleYieldChance: 0.6,
+    })
+  })
+
+  it('神行八卦步：最大體力 +2，每級再 +1', () => {
+    const definition = getBuff('divine-movement-eight-trigrams')!
+    expect(getFunctionalSkillBuffOverrides('divine-movement', 1, definition)).toMatchObject({
+      maxStaminaBonus: 2,
+    })
+    expect(getFunctionalSkillBuffOverrides('divine-movement', 3, definition)).toMatchObject({
+      maxStaminaBonus: 4,
+    })
+  })
+
+  it('太虛引氣：體力轉化內力比例隨等級成長', () => {
+    const definition = getBuff('taixu-qi-conversion')!
+    expect(getFunctionalSkillBuffOverrides('qi-conversion', 1, definition)).toMatchObject({
+      staminaToInnerPowerRatio: 2,
+    })
+    expect(getFunctionalSkillBuffOverrides('qi-conversion', 3, definition)).toMatchObject({
+      staminaToInnerPowerRatio: 4,
+    })
+  })
 })

@@ -57,6 +57,24 @@ export function getFunctionalSkillBuffOverrides(
   if (effect === 'skill-cost-reduction' && definition.externalSkillInnerCostReduction !== undefined) {
     overrides.externalSkillInnerCostReduction = definition.externalSkillInnerCostReduction + levelDelta
   }
+  if (effect === 'merchant-way') {
+    if (definition.shopBuyPriceDiscount !== undefined) overrides.shopBuyPriceDiscount = 0.15 + levelDelta * 0.03
+    if (definition.shopSellPriceBonus !== undefined) overrides.shopSellPriceBonus = 0.15 + levelDelta * 0.03
+  }
+  if (effect === 'craftsmanship') {
+    if (definition.buildingMaterialCostReduction !== undefined) overrides.buildingMaterialCostReduction = 0.25 + levelDelta * 0.05
+    if (definition.buildingReputationBonus !== undefined) overrides.buildingReputationBonus = 0.5 + levelDelta * 0.1
+  }
+  if (effect === 'gathering') {
+    if (definition.gatherStaminaCostReduction !== undefined) overrides.gatherStaminaCostReduction = 1 + Math.floor(levelDelta / 2)
+    if (definition.gatherDoubleYieldChance !== undefined) overrides.gatherDoubleYieldChance = 0.5 + levelDelta * 0.05
+  }
+  if (effect === 'divine-movement') {
+    overrides.maxStaminaBonus = 2 + levelDelta
+  }
+  if (effect === 'qi-conversion') {
+    overrides.staminaToInnerPowerRatio = 2 + levelDelta
+  }
 
   return Object.fromEntries(Object.entries(overrides).filter(([, value]) => value !== undefined))
 }

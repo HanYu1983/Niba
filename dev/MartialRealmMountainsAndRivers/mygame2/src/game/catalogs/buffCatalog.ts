@@ -123,6 +123,16 @@ export const buffCatalog: BuffDefinition[] = [
   { id: 'sky-eye-vision', name: '天眼望氣', description: '自身地圖視野半徑 +1。', duration: 'persistent', category: 'buff', visionRadiusBonus: 1 },
   // 悟性輔助功法（靈氣型外功）：四兩撥千斤
   { id: 'four-ounces-thousand-pounds', name: '四兩撥千斤', description: '所有外功內力消耗 -1（最低 1）。', duration: 'persistent', category: 'buff', externalSkillInnerCostReduction: 1 },
+  // 悟性輔助功法（靈氣型外功）：商道通鑑
+  { id: 'merchant-way', name: '商道通鑑', description: '買入價格 -15%，賣出價格 +15%。', duration: 'persistent', category: 'buff', shopBuyPriceDiscount: 0.15, shopSellPriceBonus: 0.15 },
+  // 悟性輔助功法（靈氣型外功）：天工開物
+  { id: 'heavenly-craftsman', name: '天工開物', description: '建築材料消耗 -25%，建造聲望 +50%。', duration: 'persistent', category: 'buff', buildingMaterialCostReduction: 0.25, buildingReputationBonus: 0.5 },
+  // 悟性輔助功法（靈氣型外功）：靈植百草鑑
+  { id: 'spirit-herb-hundred-grass', name: '靈植百草', description: '採集體力消耗 -1，採集 50% 機率雙倍產出。', duration: 'persistent', category: 'buff', gatherStaminaCostReduction: 1, gatherDoubleYieldChance: 0.5 },
+  // 悟性輔助功法（靈氣型外功）：神行八卦步
+  { id: 'divine-movement-eight-trigrams', name: '神行八卦', description: '最大體力 +2。', duration: 'persistent', category: 'buff', maxStaminaBonus: 2 },
+  // 悟性輔助功法（靈氣型外功）：太虛引氣
+  { id: 'taixu-qi-conversion', name: '引氣歸元', description: '回合結束時，剩餘體力轉化為內力（1 體力 → 2 內力）。', duration: 'persistent', category: 'buff', staminaToInnerPowerRatio: 2 },
   { id: 'scarlet-flame-burning', name: '燃燒', description: '每回合損失最大生命 20%。', duration: 'rounds', durationRounds: 3, maxHealthDamagePercent: 0.2 },
   { id: 'frost-water-cold-poison', name: '寒毒', description: '五維屬性降低 20%。', duration: 'rounds', durationRounds: 2, attributeMultiplier: 0.8 },
   { id: 'earth-mountain-reflection', name: '反震', description: '受到傷害時反彈同等傷害。', duration: 'rounds', durationRounds: 3, reflectionPercent: 1 },

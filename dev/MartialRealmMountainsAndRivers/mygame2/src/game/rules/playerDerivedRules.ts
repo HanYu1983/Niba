@@ -371,3 +371,43 @@ export function getPlayerSkillExpGainPercent(player: PlayerState): number {
 export function getExternalSkillInnerCostReduction(player: PlayerState): number {
   return sumBuffPercent(player, 'externalSkillInnerCostReduction')
 }
+
+/** 商店買入價格折扣比例（商道通鑑；0.15 代表 -15%）。 */
+export function getShopBuyPriceDiscount(player: PlayerState): number {
+  return sumBuffPercent(player, 'shopBuyPriceDiscount')
+}
+
+/** 商店賣出價格加成比例（商道通鑑；0.15 代表 +15%）。 */
+export function getShopSellPriceBonus(player: PlayerState): number {
+  return sumBuffPercent(player, 'shopSellPriceBonus')
+}
+
+/** 最大體力加成（神行八卦步）。 */
+export function getMaxStaminaBonus(player: PlayerState): number {
+  return sumBuffPercent(player, 'maxStaminaBonus')
+}
+
+/** 建築材料消耗減免比例（天工開物；0.25 代表 -25%）。 */
+export function getBuildingMaterialCostReduction(player: PlayerState): number {
+  return sumBuffPercent(player, 'buildingMaterialCostReduction')
+}
+
+/** 建築獲得的聲望加成比例（天工開物）。 */
+export function getBuildingReputationBonus(player: PlayerState): number {
+  return sumBuffPercent(player, 'buildingReputationBonus')
+}
+
+/** 採集體力消耗減免值（靈植百草鑑）。 */
+export function getGatherStaminaCostReduction(player: PlayerState): number {
+  return sumBuffPercent(player, 'gatherStaminaCostReduction')
+}
+
+/** 採集雙倍產出機率（靈植百草鑑；0.5 代表 50%）。 */
+export function getGatherDoubleYieldChance(player: PlayerState): number {
+  return sumBuffPercent(player, 'gatherDoubleYieldChance')
+}
+
+/** 回合結束時剩餘體力轉化內力的比例（太虛引氣；1 體力 → N 內力）。 */
+export function getStaminaToInnerPowerRatio(player: PlayerState): number {
+  return sumBuffPercent(player, 'staminaToInnerPowerRatio')
+}

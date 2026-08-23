@@ -40,6 +40,11 @@ export type FunctionalExternalSkillEffect =
   // 悟性輔助功法
   | 'vision-expansion'
   | 'skill-cost-reduction'
+  | 'merchant-way'
+  | 'craftsmanship'
+  | 'gathering'
+  | 'divine-movement'
+  | 'qi-conversion'
 
 /** 每個功能效果對應的 Buff 定義 ID 清單（一個效果可對應多個 Buff）。完整清單由外部測試驗證逐項對應。 */
 export const functionalSkillBuffBindings: Record<FunctionalExternalSkillEffect, string[]> = {
@@ -74,6 +79,11 @@ export const functionalSkillBuffBindings: Record<FunctionalExternalSkillEffect, 
   // 悟性輔助功法
   'vision-expansion': ['sky-eye-vision'],
   'skill-cost-reduction': ['four-ounces-thousand-pounds'],
+  'merchant-way': ['merchant-way'],
+  'craftsmanship': ['heavenly-craftsman'],
+  'gathering': ['spirit-herb-hundred-grass'],
+  'divine-movement': ['divine-movement-eight-trigrams'],
+  'qi-conversion': ['taixu-qi-conversion'],
 }
 
 /** 取得某效果對應的 Buff 定義 ID 清單；無對應時回傳空陣列（例如 `experience-gain`）。 */

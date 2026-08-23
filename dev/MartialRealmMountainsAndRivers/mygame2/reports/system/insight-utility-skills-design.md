@@ -382,3 +382,37 @@
 | 🟡 後做 | `maxStaminaBonus`、採集/建造/交易 Buff | 需新增屬性與結算點，單項不難 |
 | 🔴 需設計 | 「真實傷害」、「迷惘（隨機移動 AI）」、「內功等級掛鉤」 | 目前無對應底層概念，需先補系統 |
 | ⚠️ 先決策 | 非戰鬥功法格位定位 | 影響所有實作路徑 |
+
+---
+
+## 附錄三：實作進度追蹤（2026-08-24）
+
+> 本節記錄依本文件逐步實作的進度，避免與「設計草案」混淆。設計責任仍以上方各節為準。
+
+### 已完成實作 ✅
+
+| 項目 | 對應功法 / Buff | 實作位置 | 說明 |
+| :--- | :--- | :--- | :--- |
+| 幻影步改常駐 | `phantom-step` | `buffCatalog.ts` | duration 改 `persistent` |
+| 江湖外功改常駐＋數值減半＋等級掛鉤 | 血飲/鐵壁/化氣/汲元/破軍/罡氣/背水/養氣/孤注 | `functionalSkillScaling.ts` | 加法式公式（Lv.1 = 減半值） |
+| 天眼望氣 | buff `sky-eye-vision` / effect `vision-expansion` | 新 `insightUtilityExternalSkillCatalog.ts` + `visibilityRules.ts` | 視野半徑 +ceil(Lv/3) |
+| 四兩撥千斤 | buff `four-ounces-thousand-pounds` / effect `skill-cost-reduction` | `insightUtilityExternalSkillCatalog.ts` + `combatActions.ts` | 外功內力消耗 -1 |
+| 商道通鑑 | buff `merchant-way` / effect `merchant-way` | `insightUtilityExternalSkillCatalog.ts` + `shopRules.ts` | 買價 -15%、賣價 +15%（+3%/級） |
+| 天工開物卷 | buff `heavenly-craftsman` / effect `craftsmanship` | `insightUtilityExternalSkillCatalog.ts` + `buildingProgressionRules.ts` `buildingActions.ts` | 材料 -25%（+5%/級） |
+| 靈植百草鑑 | buff `spirit-herb-hundred-grass` / effect `gathering` | `insightUtilityExternalSkillCatalog.ts` + `explorationActions.ts` | 採集省體力、雙倍產出 |
+| 神行八卦步 | buff `divine-movement-eight-trigrams` / effect `divine-movement` | `insightUtilityExternalSkillCatalog.ts` + `playerRules.ts` | 最大體力 +2（+1/級） |
+| 太虛引氣 | buff `taixu-qi-conversion` / effect `qi-conversion` | `insightUtilityExternalSkillCatalog.ts` + `playerRules.ts` | 剩餘體力→內力（2+級） |
+
+### 中風險：待開發（🟡）
+
+| 功法 | Buff 欄位 | 消費點 |
+| :--- | :--- | :--- |
+| （上述 5 項已全部完成） | — | — |
+
+### 高難度：本次不實作（🔴 需先補底層系統）
+
+| 項目 | 對應 | 原因 |
+| :--- | :--- | :--- |
+| 真實傷害 | 四兩千斤 `insightTrueDamageMultiplier` | 目前無「真實傷害」傷害通道，需新開 |
+| 迷惘（隨機移動 AI） | `confused` / 奇門惑心術 | 現有 `immobilized` 僅跳過移動，無隨機移動 AI |
+| 內功等級掛鉤 | 太虛引氣等內功 Buff | `getFunctionalSkillBuffOverrides` 不吃內功，需補內功等級掛鉤機制 |
