@@ -1,5 +1,97 @@
 # 開發日誌
 
+## 2026-08-23｜新增第七門派「百毒流」與其三式功法
+
+### 本次完成
+
+- 新增南疆小派**百毒流**（id：`hundred-poison`，木屬性）：世界觀定位為「名不經傳的小門派，卻也各家爭鳴，不能小看」，六章派並立敘事不變。
+- 嚴格遵循門派功法三式限制（傷害外功／功能外功／輕功），且三式皆為全新內容：
+  - **內功**「百毒納氣」（`hundred-poison-inner`），公式：臂力 × 0.5 + 身法 × 0.5（補上此前無人使用的屬性組合）。
+  - **傷害外功**「腐骨爪」（`-external-damage`）。
+  - **功能外功**「百毒流·淬毒」（`-external-functional`）＝全新效果 `poison`：目標中毒 3 回合，每回合損失最大生命 10% 且五維 -15%（新 Buff `hundred-poison-rot`，僅組合既有解譯欄位，零規則層改動）。
+  - **輕功**「驛路步」（`-external-light-foot`）＝全新效果 `road-step`：官道移動消耗降為 1（`road` 是唯一未被六步涵蓋的地形；新 Buff `road-step`）。
+- 週邊註冊全數補齊：`martialSchoolCatalog`、百毒武館建築、三件門派裝備（蠱囊／軟甲／毒爪）、妖物圖示 🐍 與屬性修正、森林主場 Buff 映射、`getSchoolElement` 木行對應、debug 地圖第七座山門與百毒妖、武館／山門彈窗圖示。
+- 順手重構：`skillProgressionCatalog` 的機能效果三元鏈改為 `schoolFunctionalLabels` / `schoolFunctionalEffects` / `SELF_TARGETED_FUNCTIONAL_EFFECTS` 映射表，未來再加門派不必增長鏈條。
+
+### 影響檔案
+
+- `src/game/catalogs/martialSchoolCatalog.ts`（union＋清單）
+- `src/game/catalogs/skillProgressionCatalog.ts`（學校定義＋映射重構）
+- `src/game/catalogs/functionalSkillRegistry.ts`（`poison` / `road-step` 型別、描述、綁定）
+- `src/game/catalogs/buffCatalog.ts`（`hundred-poison-rot`、`road-step`）
+- `src/game/catalogs/buildingCatalog.ts`（百毒武館）、`equipmentCatalog.ts`（三件裝備）
+- `src/game/rules/creatureBehaviorRules.ts`、`playerDerivedRules.ts`、`skillRules.ts`
+- `src/components/MartialHallModal.tsx`、`SectGateDetailsModal.tsx`
+- `src/game/worldSetup.ts`＋測試更新（skillProgressionCatalog / debugMap / worldGeneration）
+
+### 驗證結果
+
+- TypeScript：通過。測試：67 檔 / 696 項全數通過。
+- `npm run analyze:combat` 已執行並寫出 `reports/combat-balance-report.md`。
+
+### 待驗收項目
+
+1. 開局前往百毒武館／山門學習三式，確認淬毒命中後目標每回合掉血且五維下降、持續 3 回合。
+2. 裝備「驛路步」於官道移動，確認體力消耗降為 1 且獲得幻影步迴避。
+3. 確認編輯器下拉選單與詞彙高亮自動收錄百毒流條目（catalog 驅動，理論免改）。
+4. 後續可選：地圖上中毒妖物的視覺標記（MapGrid 的 buff class 過濾清單未納入 `hundred-poison-rot`）。
+
+## 2026-08-23｜移除門派進階傷害外功，確立門派功法三式限制
+
+### 本次完成
+
+- 依新的設計約束「**門派功法僅限三式**」（傷害外功／功能外功／輕功，見 `handev/content-expansion-playbook.md` 總原則 5），移除同日稍早新增的六門派進階傷害外功（`{schoolId}-external-damage-2`：撼山拳／踏雲掌／赤焰指／凝霜指／崩山掌／空明掌）。
+- 每個門派的功法組成回歸固定三式：`-external-damage`、`-external-functional`、`-external-light-foot`（後者 `lootExcluded`）。
+- 流派名字表（`externalNames` 等）維持不動，名稱留作未來等級擴充素材。
+
+### 影響檔案
+
+- `src/game/catalogs/skillProgressionCatalog.ts`
+  - 刪除 `advancedDamageSkill` 定義；`progressionExternalSkills` 每派回傳三式（24 → 18），並註解標記三式限制來源。
+- `src/game/catalogs/skillProgressionCatalog.test.ts`
+  - 總量斷言 24 → 18；移除「四級武館進階外功」相關斷言與同源對照測試。
+  - 武館販售目錄太虛流外功數 4 → 3。
+- 文件：`handev/content-expansion-playbook.md`（新約束＋檢查清單）、`handev/effects-taxonomy.md`（功法統計同步）。
+
+### 驗證結果
+
+- TypeScript：`docker compose run --rm node npx tsc -b --pretty false` 通過。
+- 測試：67 個檔案 / 696 項全數通過。
+
+### 待驗收項目
+
+1. 開一局加入任一門派，確認武館僅販售該派三式功法，無第四式。
+2. 確認 Lv.4 掉落池不再出現 `-external-damage-2` 功法。
+
+## 2026-08-23｜六門派二層傳承傷害外功
+
+### 本次完成
+
+- 為六個門派各新增一個進階傷害型外功，取流派名字表第二個名稱（此前從未使用）：
+  - 金剛流「撼山拳」、追風流「踏雲掌」、赤炎流「赤焰指」、寒水流「凝霜指」、厚土流「崩山掌」、太虛流「空明掌」。
+- 定位為「二層傳承」：同源公式威力 ×2（使用既有 `school.calculate(attributes, 2)` 等級參數），成長曲線對齊既有外功階梯——
+  - 悟性成本 3（基礎外功 2 +1）、內力消耗 6（基礎 4 → 6）、需武館 Lv.4（基礎外功 Lv.2、功能外功 Lv.3 的下一階）。
+- 自動接入所有消費端：`allExternalSkillCatalog` 掉落池（Lv.4 以上怪物才會掉落）、各門派武館貨源（`getMartialHallSkills`）、編輯器選單與詞彙高亮。
+
+### 影響檔案
+
+- `src/game/catalogs/skillProgressionCatalog.ts`
+  - `progressionExternalSkills` 生成流程新增 `advancedDamageSkill`（id：`{schoolId}-external-damage-2`）。
+- `src/game/catalogs/skillProgressionCatalog.test.ts`
+  - 更新總量斷言（18 → 24）與各流派組成斷言。
+  - 新增測試：每流派進階外功與基礎外功同名不同招、成本更重、威力更高、元素一致。
+
+### 驗證結果
+
+- TypeScript：`npx tsc -b --pretty false` 通過。
+- 測試：67 個檔案 / 697 項全數通過。
+
+### 待驗收項目
+
+1. 在太虛武館將建築升級至 Lv.4，確認可學習「空明掌」且價格為 45 金（悟性成本 3 × 15）。
+2. 確認 Lv.4 以下怪物不掉落進階外功。
+3. 實戰施放任一進階外功，確認傷害約為基礎版兩倍。
+
 ## 2026-08-20｜地形深度系統收尾階段
 
 ### 本次完成

@@ -6,9 +6,9 @@ import { allExternalSkillCatalog, getMartialHallSkills, martialHallExternalSkill
 import { jianghuExternalSkills } from './jianghuExternalSkillCatalog'
 
 describe('skillProgressionCatalog', () => {
-  it('提供六個流派且每個流派都有一個內功、傷害外功、機能外功與輕功', () => {
-    expect(progressionInnerSkills).toHaveLength(6)
-    expect(progressionExternalSkills).toHaveLength(18)
+  it('提供七個流派且每個流派都有一個內功、傷害外功、機能外功與輕功', () => {
+    expect(progressionInnerSkills).toHaveLength(7)
+    expect(progressionExternalSkills).toHaveLength(21)
 
     for (const skills of [progressionInnerSkills, progressionExternalSkills]) {
       const levelsBySchool = new Map<string, number[]>()
@@ -17,15 +17,15 @@ describe('skillProgressionCatalog', () => {
         const level = (skill as typeof skill & { level: number }).level
         levelsBySchool.set(school, [...(levelsBySchool.get(school) ?? []), level])
       }
-      expect(levelsBySchool.size).toBe(6)
+      expect(levelsBySchool.size).toBe(7)
       for (const levels of levelsBySchool.values()) expect(levels.every((level) => level === 1)).toBe(true)
     }
   })
 
   it('每個流派都有一個傷害外功、一個機能外功與一個門派輕功', () => {
-    for (const schoolId of ['golden-body', 'swift-wind', 'scarlet-flame', 'frost-water', 'earth-mountain', 'void-spirit']) {
+    for (const schoolId of ['golden-body', 'swift-wind', 'scarlet-flame', 'frost-water', 'earth-mountain', 'void-spirit', 'hundred-poison']) {
       const schoolSkills = progressionExternalSkills.filter((skill) => skill.schoolId === schoolId)
-      // 傷害外功：無 functionalEffect
+      // 傷害外功：無 functionalEffect。
       expect(schoolSkills.filter((skill) => !skill.functionalEffect)).toHaveLength(1)
       // 機能外功：有 functionalEffect 且非輕功
       expect(schoolSkills.filter((skill) => skill.functionalEffect && !skill.lootExcluded)).toHaveLength(1)
@@ -36,7 +36,7 @@ describe('skillProgressionCatalog', () => {
 
   it('內功由一級武館學習，傷害型外功需要二級武館，功能型外功與輕功需要三級武館', () => {
     expect(progressionInnerSkills.every((skill) => skill.requiredHallLevel === 1)).toBe(true)
-    expect(progressionExternalSkills.filter((skill) => !skill.functionalEffect).every((skill) => skill.requiredHallLevel === 2)).toBe(true)
+    expect(progressionExternalSkills.filter((skill) => !skill.functionalEffect).every((skill) => skill.id.endsWith('-external-damage') && skill.requiredHallLevel === 2)).toBe(true)
     expect(progressionExternalSkills.filter((skill) => skill.functionalEffect).every((skill) => skill.requiredHallLevel === 3)).toBe(true)
   })
 
@@ -50,7 +50,7 @@ describe('skillProgressionCatalog', () => {
   it('每個機能型外功與輕功都有具體效果描述', () => {
     const functionalSkills = progressionExternalSkills.filter((skill) => skill.functionalEffect)
 
-    expect(functionalSkills).toHaveLength(12)
+    expect(functionalSkills).toHaveLength(14)
     for (const skill of functionalSkills) {
       const effect = skill.functionalEffect as keyof typeof functionalExternalSkillDescriptions
       expect(skill.description).not.toContain('技能型外功')

@@ -15,6 +15,8 @@ export type FunctionalExternalSkillEffect =
   | 'attribute-reduction'
   | 'reflection'
   | 'experience-gain'
+  // 百毒流：淬毒（持續傷害＋屬性削弱）
+  | 'poison'
   // 類別 1：資源轉換
   | 'lifesteal'
   | 'damage-reduction'
@@ -34,6 +36,7 @@ export type FunctionalExternalSkillEffect =
   | 'mountain-step'
   | 'desert-step'
   | 'wall-step'
+  | 'road-step'
 
 /** 功能型外功的玩家可讀效果說明，避免目錄只顯示「技能型外功」。 */
 export const functionalExternalSkillDescriptions: Record<FunctionalExternalSkillEffect, string> = {
@@ -44,6 +47,7 @@ export const functionalExternalSkillDescriptions: Record<FunctionalExternalSkill
   'attribute-reduction': '使目標 2 回合內五項基本屬性降低 20%。',
   reflection: '自身 3 回合內受到傷害時，反彈同等傷害。',
   'experience-gain': '自身與目前裝備的功法額外獲得 10 點功法經驗。',
+  poison: '使目標中毒 3 回合，每回合損失最大生命 10%，且五維屬性降低 15%。',
   // 類別 1：資源轉換
   lifesteal: '自身 3 回合內造成傷害時，回復 30% 傷害值的血量。',
   'damage-reduction': '自身 3 回合內受到傷害時，最終傷害 -20%。',
@@ -63,6 +67,7 @@ export const functionalExternalSkillDescriptions: Record<FunctionalExternalSkill
   'mountain-step': '自身 2 回合內進入山嶽時，移動消耗降為 2。獲得「幻影步」效果，增加5%回避率。',
   'desert-step': '自身 2 回合內進入荒漠時，移動消耗降為 2。獲得「幻影步」效果，增加5%回避率。',
   'wall-step': '自身 2 回合內進入牆壁時，移動消耗降為 2。獲得「幻影步」效果，增加5%回避率。',
+  'road-step': '自身 2 回合內進入官道時，移動消耗降為 1。獲得「幻影步」效果，增加5%回避率。',
 }
 
 /** 每個功能效果對應的 Buff 定義 ID 清單（一個效果可對應多個 Buff）。完整清單由外部測試驗證逐項對應。 */
@@ -74,6 +79,7 @@ export const functionalSkillBuffBindings: Record<FunctionalExternalSkillEffect, 
   'attribute-reduction': ['frost-water-cold-poison'],
   reflection: ['earth-mountain-reflection'],
   'experience-gain': [],
+  poison: ['hundred-poison-rot'],
   // 類別 1：資源轉換
   lifesteal: ['bloodthirst'],
   'damage-reduction': ['iron-wall-art'],
@@ -93,6 +99,7 @@ export const functionalSkillBuffBindings: Record<FunctionalExternalSkillEffect, 
   'mountain-step': ['mountain-step'],
   'desert-step': ['desert-step'],
   'wall-step': ['wall-step'],
+  "road-step": ['road-step']
 }
 
 /** 取得某效果對應的 Buff 定義 ID 清單；無對應時回傳空陣列（例如 `experience-gain`）。 */

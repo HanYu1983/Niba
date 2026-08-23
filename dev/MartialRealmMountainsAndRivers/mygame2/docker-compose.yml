@@ -1,0 +1,13 @@
+services:
+  # docker compose run --rm node npm i
+  # docker compose run --rm -p 5173:5173 node npm run dev
+  # docker compose run --rm node npm run test
+  node:
+    image: node:22
+    container_name: node-cli
+    working_dir: /workspace
+    volumes:
+      - ./:/workspace
+    command: tail -f /dev/null
+    tty: true
+    stdin_open: true

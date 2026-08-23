@@ -17,7 +17,7 @@ type SectGateDetailsModalProps = {
 }
 
 const schoolIcon = (schoolId: string) =>
-  schoolId === 'golden-body' ? '🥋' : schoolId === 'swift-wind' ? '💨' : schoolId === 'scarlet-flame' ? '🔥' : schoolId === 'frost-water' ? '❄️' : schoolId === 'earth-mountain' ? '⛰️' : '☯'
+  schoolId === 'golden-body' ? '🥋' : schoolId === 'swift-wind' ? '💨' : schoolId === 'scarlet-flame' ? '🔥' : schoolId === 'frost-water' ? '❄️' : schoolId === 'earth-mountain' ? '⛰️' : schoolId === 'hundred-poison' ? '🐍' : '☯'
 
 function SectGateDetailsModal({ gate, player, onLearn, onPractice, onBuyEquipment, onClose }: SectGateDetailsModalProps) {
   const schoolName = gate ? martialSchoolCatalog.find((school) => school.id === gate.schoolId)?.name ?? '未知流派' : ''

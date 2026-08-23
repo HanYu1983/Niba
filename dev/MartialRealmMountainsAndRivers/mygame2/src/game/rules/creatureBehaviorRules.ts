@@ -20,6 +20,7 @@ export const CREATURE_SCHOOL_ICONS: Record<MartialSchoolId, string> = {
   'golden-body': '🦏',
   'scarlet-flame': '🦊',
   'void-spirit': '🐉',
+  'hundred-poison': '🐍',
 }
 
 export const CREATURE_BEHAVIOR_BY_INDEX: CreatureBehaviorType[] = [
@@ -51,6 +52,7 @@ export const CREATURE_SCHOOL_ATTRIBUTE_MODIFIERS: Record<MartialSchoolId, Partia
   'golden-body': { armStrength: 2, constitution: 2, agility: -2, innerEnergy: 0, insight: -1 },
   'scarlet-flame': { armStrength: 2, constitution: -1, agility: 0, innerEnergy: 3, insight: 0 },
   'void-spirit': { armStrength: 0, constitution: 0, agility: 0, innerEnergy: 0, insight: 0 },
+  'hundred-poison': { armStrength: 2, constitution: -1, agility: 2, innerEnergy: 0, insight: -1 },
 }
 
 const CREATURE_LEVEL_GROWTH: PlayerAttributes = {

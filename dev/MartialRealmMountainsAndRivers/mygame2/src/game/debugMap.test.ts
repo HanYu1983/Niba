@@ -31,7 +31,7 @@ describe('createDebugGameState', () => {
     expect(state.resourcePoints).toHaveLength(2)
     expect(state.itemPoints).toHaveLength(1)
     expect(state.creatureNests).toHaveLength(1)
-    expect(state.creatures).toHaveLength(6)
+    expect(state.creatures).toHaveLength(7)
     expect(state.bases.every((base) => base.health === 150 && base.maxHealth === 150)).toBe(true)
     expect(new Set(state.creatures.map((creature) => creature.behaviorType))).toEqual(new Set(['scavenger', 'hunter', 'sieger', 'wanderer', 'roamer']))
 
@@ -39,7 +39,7 @@ describe('createDebugGameState', () => {
     expect(isAdjacent(player.position, state.resourcePoints[0].position)).toBe(true)
     expect(isAdjacent(player.position, state.creatures[0].position)).toBe(true)
     expect(new Set(state.creatures.map((creature) => creature.schoolId))).toEqual(new Set([
-      'frost-water', 'golden-body', 'swift-wind', 'scarlet-flame', 'earth-mountain', 'void-spirit',
+      'frost-water', 'golden-body', 'swift-wind', 'scarlet-flame', 'earth-mountain', 'void-spirit', 'hundred-poison',
     ]))
 
     const occupiedPositions = [
@@ -73,7 +73,7 @@ describe('createDebugGameState', () => {
     expect(state.bases[0].buildings.some((building) => building.type === 'wall')).toBe(false)
     // 貿易市場不預建，須由玩家自行建造以觸發全局靈氣。
     expect(state.bases[0].buildings.some((building) => building.type === 'trade-market')).toBe(false)
-    expect(state.bases[0].buildings).toHaveLength(16)
+    expect(state.bases[0].buildings).toHaveLength(17)
     expect(state.bases[0].buildings.every((building) => building.level === 6)).toBe(true)
     expect(state.bases[0].buildingMaterials).toBeGreaterThan(0)
   })
@@ -95,9 +95,9 @@ describe('createDebugGameState', () => {
 
   it('包含不同門派的門派據點供測試（不再有等級差異）', () => {
     const state = createDebugGameState()
-    expect(state.sectGates ?? []).toHaveLength(6)
+    expect(state.sectGates ?? []).toHaveLength(7)
     expect(new Set((state.sectGates ?? []).map((gate) => gate.schoolId))).toEqual(new Set([
-      'golden-body', 'swift-wind', 'scarlet-flame', 'frost-water', 'earth-mountain', 'void-spirit',
+      'golden-body', 'swift-wind', 'scarlet-flame', 'frost-water', 'earth-mountain', 'void-spirit', 'hundred-poison',
     ]))
     expect((state.sectGates ?? []).every((gate) => gate.level === 1 && gate.experience === 0)).toBe(true)
   })
