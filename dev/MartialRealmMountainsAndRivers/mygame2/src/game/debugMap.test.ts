@@ -68,9 +68,10 @@ describe('createDebugGameState', () => {
 
     expect(player.inventory).toEqual([])
     expect(player.equipmentInventory).toEqual([])
-    // 測試用玩家裝備所有外功（含破空掌）。
-    expect(player.equippedExternalSkillIds).toContain('sky-breaking-palm')
-    expect(player.equippedExternalSkillIds.length).toBeGreaterThan(1)
+    // 測試用玩家已學會所有外功（含破空掌），但不預設裝備（避免超出裝備格位上限）。
+    expect(player.externalSkillIds).toContain('sky-breaking-palm')
+    expect(player.externalSkillIds.length).toBeGreaterThan(1)
+    expect(player.equippedExternalSkillIds).toEqual([])
     expect(player.innerSkillIds.length).toBeGreaterThan(1)
     expect(state.bases[0].buildings.some((building) => building.type === 'board')).toBe(true)
     expect(state.bases[0].buildings.some((building) => building.type === 'wall')).toBe(false)

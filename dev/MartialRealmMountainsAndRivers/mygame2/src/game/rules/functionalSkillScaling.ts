@@ -32,16 +32,51 @@ export function getFunctionalSkillBuffOverrides(
   }
   if (effect === 'attribute-reduction') overrides.attributeMultiplier = scaledPercent(definition.attributeMultiplier, level)
   if (effect === 'reflection') overrides.reflectionPercent = scaledPercent(definition.reflectionPercent, level)
-  if (effect === 'lifesteal') overrides.lifestealPercent = scaledPercent(definition.lifestealPercent, level)
-  if (effect === 'damage-reduction') overrides.damageReductionPercent = scaledPercent(definition.damageReductionPercent, level)
   if (effect === 'health-regen') overrides.healthRegenPercent = scaledPercent(definition.healthRegenPercent, level)
-  if (effect === 'inner-power-health-regen') overrides.innerPowerHealthRegenPercent = scaledPercent(definition.innerPowerHealthRegenPercent, level)
-  if (effect === 'inner-power-leech') overrides.innerPowerLeechPercent = scaledPercent(definition.innerPowerLeechPercent, level)
-  if (effect === 'damage-dealt') overrides.damageDealtPercent = scaledPercent(definition.damageDealtPercent, level)
-  if (effect === 'external-skill-damage') overrides.externalSkillDamagePercent = scaledPercent(definition.externalSkillDamagePercent, level)
+
+  // ── 江湖常駐靈氣：數值減半 + 加法式等級公式（Lv.1 = 減半基礎值） ──
+  if (effect) {
+    const jianghuPercent = JIANGHU_ADDITIVE_PERCENT[effect]
+    if (jianghuPercent && definition[jianghuPercent.field] !== undefined) {
+      overrides[jianghuPercent.field] = jianghuPercent.base + levelDelta * jianghuPercent.step
+    }
+    const jianghuConditional = JIANGHU_ADDITIVE_CONDITIONAL[effect]
+    if (jianghuConditional) {
+      overrides.conditional = {
+        when: jianghuConditional.when,
+        threshold: jianghuConditional.threshold,
+        multiplier: jianghuConditional.base + levelDelta * jianghuConditional.step,
+      }
+    }
+  }
   if (effect === 'terrain-adaptation') overrides.terrainCostOverride = definition.terrainCostOverride
   if (effect === 'basic-attack-stamina-reduction') overrides.basicAttackStaminaCostReduction = definition.basicAttackStaminaCostReduction
   if (effect?.endsWith('-step')) overrides.evasionRateBonus = (definition.evasionRateBonus ?? 0) + levelDelta
 
   return Object.fromEntries(Object.entries(overrides).filter(([, value]) => value !== undefined))
+}
+
+type JiāngHuPercentField =
+  | 'lifestealPercent'
+  | 'damageReductionPercent'
+  | 'innerPowerHealthRegenPercent'
+  | 'innerPowerLeechPercent'
+  | 'damageDealtPercent'
+  | 'externalSkillDamagePercent'
+
+/** 江湖常駐效果：非條件型。`base` 為減半後基礎值，`step` 為每等級增量（Lv.1 = base）。 */
+const JIANGHU_ADDITIVE_PERCENT: Partial<Record<FunctionalExternalSkillEffect, { field: JiāngHuPercentField; base: number; step: number }>> = {
+  lifesteal: { field: 'lifestealPercent', base: 0.15, step: 0.02 },
+  'damage-reduction': { field: 'damageReductionPercent', base: 0.1, step: 0.02 },
+  'inner-power-health-regen': { field: 'innerPowerHealthRegenPercent', base: 0.05, step: 0.01 },
+  'inner-power-leech': { field: 'innerPowerLeechPercent', base: 0.1, step: 0.02 },
+  'damage-dealt': { field: 'damageDealtPercent', base: 0.1, step: 0.02 },
+  'external-skill-damage': { field: 'externalSkillDamagePercent', base: 0.1, step: 0.02 },
+}
+
+/** 江湖常駐效果：條件型，等級僅縮放倍率，門檻固定。 */
+const JIANGHU_ADDITIVE_CONDITIONAL: Partial<Record<FunctionalExternalSkillEffect, { when: 'health-below' | 'health-above'; threshold: number; base: number; step: number }>> = {
+  'back-to-water': { when: 'health-below', threshold: 0.3, base: 1.25, step: 0.05 },
+  'nurture-qi': { when: 'health-above', threshold: 0.8, base: 1.1, step: 0.05 },
+  'all-in': { when: 'health-below', threshold: 0.15, base: 1.5, step: 0.1 },
 }

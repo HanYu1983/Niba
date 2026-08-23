@@ -67,7 +67,7 @@ function getEffectiveBuffDefinition(instance: BuffInstance): BuffDefinition | un
     'staminaToInnerPowerRatio', 'externalSkillInnerCostReduction', 'insightTrueDamageMultiplier',
     'visionRadiusBonus', 'maxStaminaBonus', 'gatherStaminaCostReduction', 'gatherDoubleYieldChance',
     'buildingMaterialCostReduction', 'buildingReputationBonus', 'shopBuyPriceDiscount',
-    'shopSellPriceBonus', 'questRewardBonus', 'skillExpGainPercent', 'confused', 'damageTakenFromAlliesBonus', 'basicAttackStaminaCostReduction',
+    'shopSellPriceBonus', 'questRewardBonus', 'skillExpGainPercent', 'confused', 'damageTakenFromAlliesBonus', 'basicAttackStaminaCostReduction', 'conditional',
   ] as const) {
     const value = instance[key]
     if (value !== undefined) overrides[key] = value as never
