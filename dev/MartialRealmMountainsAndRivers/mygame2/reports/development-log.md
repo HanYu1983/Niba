@@ -1,5 +1,32 @@
 # 開發日誌
 
+## 2026-08-23｜移除門派進階傷害外功，確立門派功法三式限制
+
+### 本次完成
+
+- 依新的設計約束「**門派功法僅限三式**」（傷害外功／功能外功／輕功，見 `handev/content-expansion-playbook.md` 總原則 5），移除同日稍早新增的六門派進階傷害外功（`{schoolId}-external-damage-2`：撼山拳／踏雲掌／赤焰指／凝霜指／崩山掌／空明掌）。
+- 每個門派的功法組成回歸固定三式：`-external-damage`、`-external-functional`、`-external-light-foot`（後者 `lootExcluded`）。
+- 流派名字表（`externalNames` 等）維持不動，名稱留作未來等級擴充素材。
+
+### 影響檔案
+
+- `src/game/catalogs/skillProgressionCatalog.ts`
+  - 刪除 `advancedDamageSkill` 定義；`progressionExternalSkills` 每派回傳三式（24 → 18），並註解標記三式限制來源。
+- `src/game/catalogs/skillProgressionCatalog.test.ts`
+  - 總量斷言 24 → 18；移除「四級武館進階外功」相關斷言與同源對照測試。
+  - 武館販售目錄太虛流外功數 4 → 3。
+- 文件：`handev/content-expansion-playbook.md`（新約束＋檢查清單）、`handev/effects-taxonomy.md`（功法統計同步）。
+
+### 驗證結果
+
+- TypeScript：`docker compose run --rm node npx tsc -b --pretty false` 通過。
+- 測試：67 個檔案 / 696 項全數通過。
+
+### 待驗收項目
+
+1. 開一局加入任一門派，確認武館僅販售該派三式功法，無第四式。
+2. 確認 Lv.4 掉落池不再出現 `-external-damage-2` 功法。
+
 ## 2026-08-23｜六門派二層傳承傷害外功
 
 ### 本次完成

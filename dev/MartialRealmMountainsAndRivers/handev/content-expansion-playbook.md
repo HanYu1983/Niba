@@ -10,6 +10,12 @@
 2. **先故事後數值**：每件新事物都要能回答「它在哪個故事或事件裡被發現？」——沒有敘事依托的數值不加入。
 3. **只加不改不刪**：GameState 只存 id，改動既有 id 會破壞玩家存檔。
 4. 文字使用繁中書面語與武俠語感；程式 id 用英文 kebab-case。
+5. **門派功法三式限制**：門派新增的功法只能是以下三種（與 `skillProgressionCatalog.ts` 的 `progressionExternalSkills` 現況一一對應）：
+   - `damageSkill` 傷害外功——id `{schoolId}-external-damage`
+   - `functionalSkill` 功能外功——id `{schoolId}-external-functional`
+   - `lightFootSkill` 輕功——id `{schoolId}-external-light-foot`（`lootExcluded`，僅武館傳授）
+
+   不為門派發明第四種功法型別（如二層傷害傳承已自回傳陣列移除），也不另擴充門派內功（維持基礎吐納＋一派一門）。想賦予門派新玩法時：改掛既有三式的 effect／數值，或把新效果放到江湖線（`jianghu-*`）與道具／Buff 承載。
 
 ---
 
@@ -28,6 +34,8 @@
 | 地形／世界 | `terrain-depth-system-design.md`、`fog-of-war-design.md` | `worldGeneration.ts`、`terrainLootCatalog.ts` |
 
 另瀏覽 `reports/development-log.md` 最後幾篇，確認該系統目前進度與待驗收項目，避免做出已被否決的方向。
+
+**效果分類速查**：無論擴充哪一類，先查 `handev/effects-taxonomy.md`——它列出各效果家族的占比與缺口（§4.2 補缺清單／§4.3 需動規則層的新類型），決定本次內容該「補缺」還是「發明新類型」。
 
 ### 1.2 命名風格萃取
 
@@ -122,13 +130,14 @@ id、中文名、出處故事一句話、所屬 catalog 與分類、關鍵參數
 
 ### 3.1 實作順序（依 catalogs-extension.md 的手法執行）
 
-1. **純資料層**：先加 catalog 條目（道具/裝備/Buff/功法），確認用現有 effect 欄位即可表達。
+1. **純資料層**：先加 catalog 條目（道具/裝備/Buff/功法），確認用現有 effect 欄位即可表達（判斷依據見 `effects-taxonomy.md` §4）。
 2. **引用層**：把新 id 接進掉落與取得管線——`terrainLootCatalog` 地形分配、商店 `requiredShopLevel`、事件效果 `item` / `learn-skill`。
 3. **敘事層**：需要時補 `storyDialogueCatalog` 對話步驟或探索事件定義，讓新事物「被發現」的過程有戲。
 4. **規則層**（僅當發明新機制）：擴 effect union → 補 handler → 補 scaling。這是最後手段。
 
 ### 3.2 缺漏檢查清單（每批新內容逐項打勾）
 
+- [ ] 門派新功法僅屬三式之一（damageSkill／functionalSkill／lightFootSkill），未發明新功法型別或第四式
 - [ ] 新 buff 類道具的 `buffDefinitionId` 在 buffCatalog 存在（`itemCatalog.test.ts` 會驗）
 - [ ] 功能外功的 effect → descriptions → buffBindings 三處同步（`skillProgressionCatalog.test.ts` 會驗）
 - [ ] 新道具/裝備已分配地形特產池或刻意排除

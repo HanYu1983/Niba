@@ -6,9 +6,9 @@ import { allExternalSkillCatalog, getMartialHallSkills, martialHallExternalSkill
 import { jianghuExternalSkills } from './jianghuExternalSkillCatalog'
 
 describe('skillProgressionCatalog', () => {
-  it('提供六個流派且每個流派都有一個內功、基礎與進階傷害外功、機能外功與輕功', () => {
+  it('提供六個流派且每個流派都有一個內功、傷害外功、機能外功與輕功', () => {
     expect(progressionInnerSkills).toHaveLength(6)
-    expect(progressionExternalSkills).toHaveLength(24)
+    expect(progressionExternalSkills).toHaveLength(18)
 
     for (const skills of [progressionInnerSkills, progressionExternalSkills]) {
       const levelsBySchool = new Map<string, number[]>()
@@ -22,12 +22,11 @@ describe('skillProgressionCatalog', () => {
     }
   })
 
-  it('每個流派都有一個基礎與進階傷害外功、一個機能外功與一個門派輕功', () => {
+  it('每個流派都有一個傷害外功、一個機能外功與一個門派輕功', () => {
     for (const schoolId of ['golden-body', 'swift-wind', 'scarlet-flame', 'frost-water', 'earth-mountain', 'void-spirit']) {
       const schoolSkills = progressionExternalSkills.filter((skill) => skill.schoolId === schoolId)
-      // 傷害外功：無 functionalEffect（基礎二級、進階四級各一）。
-      expect(schoolSkills.filter((skill) => !skill.functionalEffect && skill.requiredHallLevel === 2)).toHaveLength(1)
-      expect(schoolSkills.filter((skill) => !skill.functionalEffect && skill.requiredHallLevel === 4)).toHaveLength(1)
+      // 傷害外功：無 functionalEffect。
+      expect(schoolSkills.filter((skill) => !skill.functionalEffect)).toHaveLength(1)
       // 機能外功：有 functionalEffect 且非輕功
       expect(schoolSkills.filter((skill) => skill.functionalEffect && !skill.lootExcluded)).toHaveLength(1)
       // 門派輕功：有 functionalEffect 且 lootExcluded
@@ -35,32 +34,15 @@ describe('skillProgressionCatalog', () => {
     }
   })
 
-  it('內功由一級武館學習，傷害型外功需要二級武館，功能型外功與輕功需要三級武館，進階傷害外功需要四級武館', () => {
+  it('內功由一級武館學習，傷害型外功需要二級武館，功能型外功與輕功需要三級武館', () => {
     expect(progressionInnerSkills.every((skill) => skill.requiredHallLevel === 1)).toBe(true)
-    expect(progressionExternalSkills.filter((skill) => !skill.functionalEffect && skill.requiredHallLevel === 2).every((skill) => skill.id.endsWith('-external-damage'))).toBe(true)
-    expect(progressionExternalSkills.filter((skill) => !skill.functionalEffect && skill.requiredHallLevel === 4).every((skill) => skill.id.endsWith('-external-damage-2'))).toBe(true)
+    expect(progressionExternalSkills.filter((skill) => !skill.functionalEffect).every((skill) => skill.id.endsWith('-external-damage') && skill.requiredHallLevel === 2)).toBe(true)
     expect(progressionExternalSkills.filter((skill) => skill.functionalEffect).every((skill) => skill.requiredHallLevel === 3)).toBe(true)
-  })
-
-  it('每個流派的進階傷害外功與基礎外功同源且威力更高、成本更重', () => {
-    const attributes = { armStrength: 10, constitution: 10, agility: 10, innerEnergy: 10, insight: 10 }
-    for (const schoolId of ['golden-body', 'swift-wind', 'scarlet-flame', 'frost-water', 'earth-mountain', 'void-spirit']) {
-      const basic = progressionExternalSkills.find((skill) => skill.id === `${schoolId}-external-damage`)
-      const advanced = progressionExternalSkills.find((skill) => skill.id === `${schoolId}-external-damage-2`)
-      expect(basic, `${schoolId} 基礎傷害外功`).toBeDefined()
-      expect(advanced, `${schoolId} 進階傷害外功`).toBeDefined()
-      expect(advanced!.name).not.toBe(basic!.name)
-      expect(advanced!.insightCost).toBe(basic!.insightCost + 1)
-      expect(advanced!.innerPowerCost).toBeGreaterThan(basic!.innerPowerCost)
-      expect(advanced!.target).toBe('target')
-      expect(advanced!.element).toBe(basic!.element)
-      expect(advanced!.calculateDamage(attributes)).toBeGreaterThan(basic!.calculateDamage(attributes))
-    }
   })
 
   it('武館販售目錄只包含太虛流進階功法', async () => {
     expect(martialHallInnerSkillCatalog.filter((skill) => skill.school)).toHaveLength(1)
-    expect(martialHallExternalSkillCatalog.filter((skill) => skill.school)).toHaveLength(4)
+    expect(martialHallExternalSkillCatalog.filter((skill) => skill.school)).toHaveLength(3)
     expect(martialHallInnerSkillCatalog.filter((skill) => skill.school).every((skill) => skill.school === '太虛流')).toBe(true)
     expect(martialHallExternalSkillCatalog.filter((skill) => skill.school).every((skill) => skill.school === '太虛流')).toBe(true)
   })
