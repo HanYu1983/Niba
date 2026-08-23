@@ -119,7 +119,7 @@ id、中文名、出處故事一句話、所屬 catalog 與分類、關鍵參數
 優先從這些缺口構思，CP 值最高：
 
 1. 六級稀有事件制度僅部分落地——中階事件「古墓尋寶」「失傳武學傳承」設計過但未實作（見 exploration-events-design.md 未完成清單）。
-2. 第二章至第五章場景尚未製作（目前只有 prologue-village）——五章表格中的地點（獵人村落、湖畔村落、荒漠古城、古城深處）都是空白畫布。
+2. 第三章至第五章場景尚未製作（目前有 prologue-village 與 chapter1-shadow-temple「荒廟影禍」）——五章表格中的地點（獵人村落、湖畔村落、荒漠古城、古城深處）仍是空白畫布。
 3. `EventEffect.type: 'equipment'` 已定義未接通事件系統。
 4. `lootCatalog`（怪物掉落功法池）已被清空待重新設計江湖功法。
 5. NPC 商隊/護送/掠奪、區域控制/中立地標在 master-plan 中標記 Planned。

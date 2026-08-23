@@ -10,6 +10,11 @@
       "id": "forest-hunt",
       "file": "forest-hunt.json",
       "version": "1.2.0"
+    },
+    {
+      "id": "chapter1-shadow-temple",
+      "file": "chapter1-shadow-temple.json",
+      "version": "1.0.0"
     }
   ]
 }

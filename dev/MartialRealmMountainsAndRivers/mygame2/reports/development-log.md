@@ -1,5 +1,40 @@
 # 開發日誌
 
+## 2026-08-24｜新增情境地圖：第一章「荒廟影禍」
+
+### 本次完成
+
+- `campaignScenarioCatalog` 新增第二章節 **`chapter1-shadow-temple`（第一章：荒廟影禍，chapterIndex 1）**，劇情銜接序章（青石妖王殘黨遁入北嶺荒廟）並呼應幽影流內容
+  - 12×12 地圖：邊界牆＋北方山地（荒廟區）＋中部森林帶＋東側溪流＋南方平原（客棧區）
+  - 實體：玩家（80 兩、吐納功＋崩山掌、金瘡藥×3 聚氣丹×2）、山間客棧（醫館/客棧/倉庫各 Lv1、建材 80/120）、幽影巢穴（ghost-shadow roamer、生成率 0.15、Lv2）、首領影魅護法（boss、Lv3、敏捷 12、血量覆寫 65）、影卒×2（hunter/roamer）
+  - 任務：主目標擊敗影魅護法；選配目標守住客棧十回合（survive-rounds）；失敗條件 maxRounds 25＋據點/玩家存活
+  - 對話組 ×3（開局／第五回合夜警 on-round-reached／勝利），觸發器全接線；隨機事件維持關閉
+- 新增測試檔 `campaignScenarioCatalog.test.ts`（5 案例）：章節清單排序與數量、邊界牆 44 格＋實體不落牆不重疊、玩家/客棧配置、巢穴與妖物屬性、任務對話觸發器接線
+
+### 影響檔案
+
+- `src/game/catalogs/campaignScenarioCatalog.ts`（新章節定義）
+- `src/game/catalogs/campaignScenarioCatalog.test.ts`（新增＋JSON 同步防呆案例）
+- `scripts/exportOfficialScenario.mts`（新增：catalog → 官方 JSON 導出工具，含 round-trip 驗證）
+- `public/data/scenarios/chapter1-shadow-temple.json`（新增導出）
+- `public/data/scenarios/index.json`（註冊新關卡）
+
+### 補充：官方關卡供應鏈接通
+
+- 查明雙軌現況：UI 劇本分頁走 `public/data/scenarios/index.json`（fetch→localStorage 副本→loadScenario），`campaignScenarioCatalog` 僅被 `worldSetup.createPrologueGameState` 引用；兩者早已漂移（JSON 版序章 v1.2.0 遠較 catalog v1.0.0 豐富；forest-hunt 僅存在於 JSON）。
+- 新章節因此補走完整供應鏈：以 Node 22 `--experimental-strip-types` 直接從 catalog 導出 JSON＋註冊 index，並新增測試強制「每個 catalog 章節必須有對應 JSON 與 index 註冊」，防止未來再出現目錄有但玩家玩不到的缺口。
+- 待討論：序章雙版本漂移是否要收斂（catalog 退役或重新導出同步），尚未處理。
+
+### 驗證結果
+
+- TypeScript：通過。測試：68 檔 / 710 例全數通過。
+
+### 待驗收項目
+
+1. 開場選單選「第一章：荒廟影禍」開局，確認開局對話與地圖霧探索正常。
+2. 第五回合觸發夜警對話；巢穴孵出的影卒行為（roamer/hunter）符合預期。
+3. 擊敗首領後勝利結算與勝利對話播出，通關紀錄寫入 `chapter1-shadow-temple`。
+
 ## 2026-08-23｜新增 10 個回合結束事件，平衡增益／減益事件比例
 
 ### 本次完成
