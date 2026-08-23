@@ -182,6 +182,7 @@ describe('createCreatureNests', () => {
       'frost-water': 'water',
       'earth-mountain': 'plain',
       'void-spirit': 'plain',
+      'hundred-poison': 'forest',
     }
     const matched = nests.filter((nest) => {
       const cell = map.cells.find((candidate) => candidate.row === nest.position.row && candidate.column === nest.position.column)

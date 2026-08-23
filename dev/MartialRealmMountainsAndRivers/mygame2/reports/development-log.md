@@ -1,5 +1,41 @@
 # 開發日誌
 
+## 2026-08-23｜新增第七門派「百毒流」與其三式功法
+
+### 本次完成
+
+- 新增南疆小派**百毒流**（id：`hundred-poison`，木屬性）：世界觀定位為「名不經傳的小門派，卻也各家爭鳴，不能小看」，六章派並立敘事不變。
+- 嚴格遵循門派功法三式限制（傷害外功／功能外功／輕功），且三式皆為全新內容：
+  - **內功**「百毒納氣」（`hundred-poison-inner`），公式：臂力 × 0.5 + 身法 × 0.5（補上此前無人使用的屬性組合）。
+  - **傷害外功**「腐骨爪」（`-external-damage`）。
+  - **功能外功**「百毒流·淬毒」（`-external-functional`）＝全新效果 `poison`：目標中毒 3 回合，每回合損失最大生命 10% 且五維 -15%（新 Buff `hundred-poison-rot`，僅組合既有解譯欄位，零規則層改動）。
+  - **輕功**「驛路步」（`-external-light-foot`）＝全新效果 `road-step`：官道移動消耗降為 1（`road` 是唯一未被六步涵蓋的地形；新 Buff `road-step`）。
+- 週邊註冊全數補齊：`martialSchoolCatalog`、百毒武館建築、三件門派裝備（蠱囊／軟甲／毒爪）、妖物圖示 🐍 與屬性修正、森林主場 Buff 映射、`getSchoolElement` 木行對應、debug 地圖第七座山門與百毒妖、武館／山門彈窗圖示。
+- 順手重構：`skillProgressionCatalog` 的機能效果三元鏈改為 `schoolFunctionalLabels` / `schoolFunctionalEffects` / `SELF_TARGETED_FUNCTIONAL_EFFECTS` 映射表，未來再加門派不必增長鏈條。
+
+### 影響檔案
+
+- `src/game/catalogs/martialSchoolCatalog.ts`（union＋清單）
+- `src/game/catalogs/skillProgressionCatalog.ts`（學校定義＋映射重構）
+- `src/game/catalogs/functionalSkillRegistry.ts`（`poison` / `road-step` 型別、描述、綁定）
+- `src/game/catalogs/buffCatalog.ts`（`hundred-poison-rot`、`road-step`）
+- `src/game/catalogs/buildingCatalog.ts`（百毒武館）、`equipmentCatalog.ts`（三件裝備）
+- `src/game/rules/creatureBehaviorRules.ts`、`playerDerivedRules.ts`、`skillRules.ts`
+- `src/components/MartialHallModal.tsx`、`SectGateDetailsModal.tsx`
+- `src/game/worldSetup.ts`＋測試更新（skillProgressionCatalog / debugMap / worldGeneration）
+
+### 驗證結果
+
+- TypeScript：通過。測試：67 檔 / 696 項全數通過。
+- `npm run analyze:combat` 已執行並寫出 `reports/combat-balance-report.md`。
+
+### 待驗收項目
+
+1. 開局前往百毒武館／山門學習三式，確認淬毒命中後目標每回合掉血且五維下降、持續 3 回合。
+2. 裝備「驛路步」於官道移動，確認體力消耗降為 1 且獲得幻影步迴避。
+3. 確認編輯器下拉選單與詞彙高亮自動收錄百毒流條目（catalog 驅動，理論免改）。
+4. 後續可選：地圖上中毒妖物的視覺標記（MapGrid 的 buff class 過濾清單未納入 `hundred-poison-rot`）。
+
 ## 2026-08-23｜移除門派進階傷害外功，確立門派功法三式限制
 
 ### 本次完成

@@ -102,6 +102,7 @@ export const buffCatalog: BuffDefinition[] = [
   { id: 'scarlet-flame-burning', name: '燃燒', description: '每回合損失最大生命 20%。', duration: 'rounds', durationRounds: 3, maxHealthDamagePercent: 0.2 },
   { id: 'frost-water-cold-poison', name: '寒毒', description: '五維屬性降低 20%。', duration: 'rounds', durationRounds: 2, attributeMultiplier: 0.8 },
   { id: 'earth-mountain-reflection', name: '反震', description: '受到傷害時反彈同等傷害。', duration: 'rounds', durationRounds: 3, reflectionPercent: 1 },
+  { id: 'hundred-poison-rot', name: '腐骨毒', description: '中毒：每回合損失最大生命 10%，且五維降低 15%。', duration: 'rounds', durationRounds: 3, category: 'debuff', maxHealthDamagePercent: 0.1, attributeMultiplier: 0.85 },
   { id: 'trap-immobilize', name: '定身', description: '被陷阱定身，本回合無法移動。', duration: 'rounds', durationRounds: 3, immobilized: true },
   { id: 'return-light', name: '回光', description: '瀕死時攔截死亡，復活至 30% 血並清除所有 debuff（只保一次）。', duration: 'persistent', reviveOnDeath: true, reviveHealthPercent: 0.3, clearDebuffsOnRevive: true },
   // 類別 5：移動類 — 指定地形消耗降為 1
@@ -111,6 +112,7 @@ export const buffCatalog: BuffDefinition[] = [
   { id: 'mountain-step', name: '山行', description: '進入山嶽時，移動消耗降為 2。', duration: 'rounds', durationRounds: 2, terrainCostOverrides: { mountain: 2 } },
   { id: 'desert-step', name: '沙行', description: '進入荒漠時，移動消耗降為 2。', duration: 'rounds', durationRounds: 2, terrainCostOverrides: { desert: 2 } },
   { id: 'wall-step', name: '破壁', description: '進入牆壁時，移動消耗降為 2。', duration: 'rounds', durationRounds: 2, terrainCostOverrides: { wall: 2 } },
+  { id: 'road-step', name: '道行', description: '進入官道時，移動消耗降為 1。', duration: 'rounds', durationRounds: 2, terrainCostOverrides: { road: 1 } },
   // 類別 1：資源轉換
   { id: 'bloodthirst', name: '嗜血', description: '造成傷害時，回復 30% 傷害值的血量。', duration: 'rounds', durationRounds: 3, category: 'buff', lifestealPercent: 0.3 },
   { id: 'iron-wall-art', name: '鐵壁訣', description: '受到傷害時，最終傷害 -20%。', duration: 'rounds', durationRounds: 3, category: 'buff', damageReductionPercent: 0.2 },

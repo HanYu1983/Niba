@@ -287,7 +287,7 @@ const baseEquipmentCatalog: EquipmentDefinition[] = [
   },
 ]
 
-/** 六門派專屬裝備；每個門派各一武器、防具、配件，解鎖順序刻意不同。 */
+/** 各門派專屬裝備；每個門派各一武器、防具、配件，解鎖順序刻意不同。 */
 const sectEquipmentCatalog: EquipmentDefinition[] = [
   ['golden-body', '金剛震岳拳套', 'weapon', '🥊', 1, 90, { armStrength: 2, constitution: 1 }],
   ['golden-body', '不動金身甲', 'armor', '🛡️', 2, 150, { constitution: 4 }],
@@ -307,6 +307,9 @@ const sectEquipmentCatalog: EquipmentDefinition[] = [
   ['void-spirit', '太虛觀想冠', 'accessory', '🎐', 1, 90, { insight: 3 }],
   ['void-spirit', '空明無相衣', 'armor', '👘', 2, 150, { insight: 2, innerEnergy: 2 }],
   ['void-spirit', '萬象歸虛劍', 'weapon', '🗡️', 3, 210, { armStrength: 2, agility: 2, insight: 1 }],
+  ['hundred-poison', '百毒蠱囊', 'accessory', '🧪', 1, 90, { agility: 2, armStrength: 1 }],
+  ['hundred-poison', '毒蟒軟甲', 'armor', '🧥', 2, 150, { agility: 3, constitution: 1 }],
+  ['hundred-poison', '蝕骨毒爪', 'weapon', '🗡️', 3, 210, { armStrength: 4, agility: 2 }],
 ].map(([schoolId, name, slot, icon, sectGateLevel, _buyPrice, modifiers]) => ({
   id: `sect-${schoolId}-${slot}`,
   name: name as string,

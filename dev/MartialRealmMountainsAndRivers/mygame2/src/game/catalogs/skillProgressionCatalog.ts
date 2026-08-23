@@ -77,6 +77,16 @@ const schools: SchoolDefinition[] = [
     formula: '五項基本屬性總和 ÷ 5',
     calculate: (attributes, level) => Math.max(1, Math.floor((attributes.armStrength + attributes.constitution + attributes.agility + attributes.innerEnergy + attributes.insight) / 5) * level),
   },
+  {
+    id: 'hundred-poison',
+    element: 'wood',
+    name: '百毒流',
+    innerNames: ['百毒納氣', '蝕骨真氣', '瘴雲心法', '化血運功', '萬蠱玄功', '天毒萬蠱經'],
+    externalNames: ['腐骨爪', '淬毒針', '蝕心掌', '瘴雨飛砂', '萬蠱噬魂手', '天毒滅絕爪'],
+    theme: '南疆小派，以毒入武；擅長陰柔纏鬥與官道奔行，名不經傳卻不容小覷。',
+    formula: '臂力 × 0.5 + 身法 × 0.5',
+    calculate: (attributes, level) => Math.max(1, Math.floor(attributes.armStrength * 0.5 + attributes.agility * 0.5) * level),
+  },
 ]
 
 export const MARTIAL_HALL_SCHOOL_ID = 'void-spirit'
@@ -110,6 +120,7 @@ const schoolLightFootEffect: Record<string, FunctionalExternalSkillEffect> = {
   'frost-water': 'water-step',
   'earth-mountain': 'mountain-step',
   'void-spirit': 'plain-step',
+  'hundred-poison': 'road-step',
 }
 
 /** 各門派輕功名稱。 */
@@ -120,6 +131,7 @@ const schoolLightFootName: Record<string, string> = {
   'frost-water': '踏水功',
   'earth-mountain': '登山功',
   'void-spirit': '草上飛',
+  'hundred-poison': '驛路步',
 }
 
 /** 各門派輕功主題前綴（描述會接上效果說明）。 */
@@ -130,12 +142,38 @@ const schoolLightFootTheme: Record<string, string> = {
   'frost-water': '寒水流輕功',
   'earth-mountain': '厚土流輕功',
   'void-spirit': '太虛流輕功',
+  'hundred-poison': '百毒流輕功',
 }
+
+/** 各門派機能外功名稱後綴。 */
+const schoolFunctionalLabels: Record<string, string> = {
+  'golden-body': '暴擊強化',
+  'swift-wind': '疾行',
+  'scarlet-flame': '燎原',
+  'frost-water': '凝霜',
+  'earth-mountain': '反震',
+  'void-spirit': '迴氣（悟道）',
+  'hundred-poison': '淬毒',
+}
+
+/** 各門派機能外功效果。 */
+const schoolFunctionalEffects: Record<string, FunctionalExternalSkillEffect> = {
+  'golden-body': 'critical-rate',
+  'swift-wind': 'terrain-adaptation',
+  'scarlet-flame': 'burning',
+  'frost-water': 'attribute-reduction',
+  'earth-mountain': 'reflection',
+  'void-spirit': 'experience-gain',
+  'hundred-poison': 'poison',
+}
+
+/** 機能外功中作用於自身（而非目標）的效果。 */
+const SELF_TARGETED_FUNCTIONAL_EFFECTS: ReadonlySet<string> = new Set(['critical-rate', 'terrain-adaptation', 'reflection', 'experience-gain'])
 
 export const progressionExternalSkills: ExternalSkill[] = schools.flatMap((school) => {
   const name = school.externalNames[0]
-  const functionalName = `${school.name}·${school.id === 'golden-body' ? '暴擊強化' : school.id === 'swift-wind' ? '疾行' : school.id === 'scarlet-flame' ? '燎原' : school.id === 'frost-water' ? '凝霜' : school.id === 'earth-mountain' ? '反震' : '迴氣（悟道）'}`
-  const functionalEffect = (school.id === 'golden-body' ? 'critical-rate' : school.id === 'swift-wind' ? 'terrain-adaptation' : school.id === 'scarlet-flame' ? 'burning' : school.id === 'frost-water' ? 'attribute-reduction' : school.id === 'earth-mountain' ? 'reflection' : 'experience-gain') as FunctionalExternalSkillEffect
+  const functionalName = `${school.name}·${schoolFunctionalLabels[school.id] ?? '奧義'}`
+  const functionalEffect = schoolFunctionalEffects[school.id]
   const damageSkill: ExternalSkill = {
     id: `${school.id}-external-damage`,
     name,
@@ -163,7 +201,7 @@ export const progressionExternalSkills: ExternalSkill[] = schools.flatMap((schoo
     schoolId: school.id,
     level: 1,
     innerPowerCost: 6,
-    target: school.id === 'golden-body' || school.id === 'swift-wind' || school.id === 'earth-mountain' || school.id === 'void-spirit' ? 'self' : 'target',
+    target: SELF_TARGETED_FUNCTIONAL_EFFECTS.has(functionalEffect) ? 'self' : 'target',
     calculateDamage: () => 0,
     functionalEffect,
   }

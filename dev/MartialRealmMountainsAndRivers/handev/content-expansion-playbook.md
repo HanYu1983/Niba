@@ -48,7 +48,7 @@
 | 特殊道具 | X玉／X珠 | 意象英文名 | 回光玉 = `return-light-jade` |
 | Buff 名 | 二至四字意境詞 | 描述性 kebab-case | 背水 = `back-to-water` |
 | 主場 Buff | 四字名＋依地形 | `home-turf-{terrain}` | 林隱狼性 |
-| 門派 | 五行意象＋「流」 | golden-body / swift-wind / scarlet-flame / frost-water / earth-mountain / void-spirit | 金剛流 |
+| 門派 | 五行意象＋「流」 | golden-body / swift-wind / scarlet-flame / frost-water / earth-mountain / void-spirit / hundred-poison | 金剛流 |
 | 門派功法 id | 取流派名字表名稱 | `{schoolId}-inner` / `-external-damage` / `-external-functional` / `-external-light-foot` | 金剛拳 |
 | 輕功名 | 動詞＋地形意象 | 同上 `-light-foot` | 破壁功、草上飛、踏水功 |
 | 江湖功法 | 一律以「功」結尾 | `jianghu-{effect}` | 血飲功 |
@@ -83,7 +83,7 @@ id、中文名、出處故事一句話、所屬 catalog 與分類、關鍵參數
 - **山河靈氣 vs 妖氣**：五行平衡則萬物興盛；妖氣侵蝕導致靈氣失衡、據點失守——這是「保衛據點」玩法的敘事根基。
 - **守護者一脈**：主角師父封印妖王「玄冥」而犧牲；主角的功法是守護者傳承。
 - **玄冥的悲劇性**：原是守護山河的靈獸，因人類破壞五行而被妖氣侵蝕——反派不是純粹邪惡。
-- **六章派並立**：金剛/追風/赤炎/寒水/厚土/太虛六流各有武館；「江湖」是無門派的散修文化。
+- **六章派並立**：金剛/追風/赤炎/寒水/厚土/太虛六流各有武館；「江湖」是無門派的散修文化。另有南疆**百毒流**（`hundred-poison`）——名不經傳的小門派，卻也各家爭鳴，不能小看；新門派一律以「新興/在野勢力」融入，不改寫六章派的歷史地位。
 - **章節獨立沙盒**：每章能力從頭開始，敘事上串成同一主角的旅程。
 
 ### 2.2 故事發想方法：矩陣組合
