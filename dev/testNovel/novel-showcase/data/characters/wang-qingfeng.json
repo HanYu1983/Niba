@@ -1,0 +1,49 @@
+{
+  "name": "王清風",
+  "name_en": "Wang Qingfeng",
+  "titles": ["革新派首領", "開放劍道倡導者"],
+  "birth_oe": 24900,
+  "death_oe": null,
+  "appearance_age": "約 45-50 歲",
+  "race": "人類",
+  "origin": "神州·蜀地·蜀山劍派",
+  "identities": ["蜀山劍派革新派長老"],
+  "cultivation_systems": ["仙俠體系（劍修）"],
+  "current_realm": "金丹期（劍師）",
+  "spiritual_root": "天靈根（風屬性）",
+  "magic_talents": [],
+  "personality": ["開放創新", "善於思考", "包容開放", "遠見卓識"],
+  "core_philosophy": "東西方法術融合是蜀山劍派未來發展的必然趨勢",
+  "aging": {
+    "stage": "金丹期",
+    "last_breakthrough_oe": 24950,
+    "appearance_at_breakthrough": 40,
+    "aging_factor": 0.02
+  },
+  "timeline": [
+    { "year": 24914, "event": "入門蜀山", "description": "14 歲通過考核，成為內門弟子" },
+    { "year": 24950, "event": "晉升金丹期", "description": "50 歲晉升金丹期，成為長老候選人" },
+    { "year": 24960, "event": "晉升長老", "description": "60 歲晉升為長老，革新派核心人物" },
+    { "year": 25000, "event": "支持交流協議", "description": "強烈支持《靈魔交流協議》，認為是蜀山未來發展的必然趨勢" },
+    { "year": 25350, "event": "支持艾琳娜", "description": "在長老會議上支持艾琳娜，反對保守派的無端猜測" },
+    { "year": 25500, "event": "表彰艾琳娜", "description": "艾琳娜成功中和陰煞之氣後，積極推動表彰艾琳娜的提案" }
+  ],
+  "relationships": [
+    { "character": "張無涯", "relation": "對立", "description": "保守派長老，理念對立但互相尊重" },
+    { "character": "李玄機", "relation": "服從", "description": "掌門代表，服從其公正判斷" },
+    { "character": "艾琳娜", "relation": "支持", "description": "積極支持艾琳娜，認為她是東西方法術融合的關鍵" },
+    { "character": "李雲鋒", "relation": "合作", "description": "與李雲鋒合作研究東西方法術融合" }
+  ],
+  "artifacts": [
+    { "name": "鐵劍", "tier": "黃階", "source": "蜀山劍派", "year": 24914, "description": "入門贈送" },
+    { "name": "靈劍", "tier": "玄階", "source": "蜀山劍派", "year": 24920, "description": "內門考核通過後贈送" },
+    { "name": "劍池靈劍", "tier": "地階", "source": "蜀山劍派", "year": 24930, "description": "真傳考核通過後贈送" },
+    { "name": "風靈劍", "tier": "地階", "source": "本命煉製", "year": 24960, "description": "晉升長老時煉製，風屬性靈劍" }
+  ],
+  "techniques": [
+    { "name": "基礎劍法", "tier": "黃階", "source": "蜀山劍派", "status": "已圓滿" },
+    { "name": "劍心通明訣", "tier": "玄階", "source": "蜀山劍派", "status": "已圓滿" },
+    { "name": "風靈劍訣", "tier": "地階", "source": "蜀山劍派", "status": "已掌握" },
+    { "name": "風雷攻擊劍陣", "tier": "地階", "source": "蜀山劍派", "status": "已掌握" }
+  ]
+}

@@ -1,0 +1,14 @@
+{:paths ["src"]
+ :deps {org.clojure/clojure {:mvn/version "1.11.1"}
+        ;; 核心：規則引擎
+        com.cerner/clara-rules {:mvn/version "0.16.0"}
+        ;; 輔助：JSON 處理 (AI 最愛)
+        cheshire/cheshire {:mvn/version "5.11.0"}
+        ;; 輔助：時間處理 (廣告投放必備)
+        clj-time/clj-time {:mvn/version "0.15.2"}
+        ;; 核心：nREPL 伺服器
+        nrepl/nrepl {:mvn/version "1.0.0"}}
+ ;clj -M:run-repl
+ :aliases
+ {:run-repl
+  {:main-opts ["-m" "nrepl.cmdline" "--port" "7888" "--bind" "0.0.0.0"]}}}

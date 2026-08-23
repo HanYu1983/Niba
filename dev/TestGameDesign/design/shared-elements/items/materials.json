@@ -1,0 +1,125 @@
+{
+  "comment": "通用材料：礦石、素材等，可用於合成或任務，遊戲可自訂合成表",
+  "items": [
+    {
+      "id": "material_ore_iron",
+      "name": "鐵礦石",
+      "description": "常見的鐵礦，可冶煉成鐵錠。",
+      "category": "material",
+      "tags": ["ore", "metal", "craft"],
+      "rarity": "common",
+      "value": 5,
+      "weight": 1,
+      "stackable": true,
+      "maxStack": 99
+    },
+    {
+      "id": "material_ore_copper",
+      "name": "銅礦石",
+      "description": "銅礦石，用於鑄造或合成。",
+      "category": "material",
+      "tags": ["ore", "metal", "craft"],
+      "rarity": "common",
+      "value": 4,
+      "weight": 1,
+      "stackable": true,
+      "maxStack": 99
+    },
+    {
+      "id": "material_ore_silver",
+      "name": "銀礦石",
+      "description": "較稀有的銀礦。",
+      "category": "material",
+      "tags": ["ore", "metal", "craft"],
+      "rarity": "uncommon",
+      "value": 25,
+      "weight": 1,
+      "stackable": true,
+      "maxStack": 99
+    },
+    {
+      "id": "material_ore_gold",
+      "name": "金礦石",
+      "description": "貴重的金礦。",
+      "category": "material",
+      "tags": ["ore", "metal", "craft"],
+      "rarity": "rare",
+      "value": 80,
+      "weight": 1,
+      "stackable": true,
+      "maxStack": 99
+    },
+    {
+      "id": "material_herb_heal",
+      "name": "治癒草",
+      "description": "常見藥草，可調製恢復藥。",
+      "category": "material",
+      "tags": ["herb", "craft", "heal"],
+      "rarity": "common",
+      "value": 3,
+      "weight": 0.1,
+      "stackable": true,
+      "maxStack": 99
+    },
+    {
+      "id": "material_herb_mana",
+      "name": "魔力草",
+      "description": "蘊含魔力的藥草。",
+      "category": "material",
+      "tags": ["herb", "craft", "mana"],
+      "rarity": "common",
+      "value": 5,
+      "weight": 0.1,
+      "stackable": true,
+      "maxStack": 99
+    },
+    {
+      "id": "material_leather",
+      "name": "皮革",
+      "description": "鞣製過的皮革，可製作防具或配件。",
+      "category": "material",
+      "tags": ["leather", "craft"],
+      "rarity": "common",
+      "value": 12,
+      "weight": 0.5,
+      "stackable": true,
+      "maxStack": 99
+    },
+    {
+      "id": "material_cloth",
+      "name": "布料",
+      "description": "一般布料，用於輕型防具或裝飾。",
+      "category": "material",
+      "tags": ["cloth", "craft"],
+      "rarity": "common",
+      "value": 2,
+      "weight": 0.2,
+      "stackable": true,
+      "maxStack": 99
+    },
+    {
+      "id": "material_gem_red",
+      "name": "紅寶石",
+      "description": "紅色寶石，可鑲嵌或合成。",
+      "category": "material",
+      "tags": ["gem", "craft", "fire"],
+      "rarity": "rare",
+      "value": 150,
+      "weight": 0.1,
+      "stackable": true,
+      "maxStack": 99
+    },
+    {
+      "id": "material_gem_blue",
+      "name": "藍寶石",
+      "description": "藍色寶石，常與冰或魔力相關。",
+      "category": "material",
+      "tags": ["gem", "craft", "ice", "mana"],
+      "rarity": "rare",
+      "value": 140,
+      "weight": 0.1,
+      "stackable": true,
+      "maxStack": 99
+    }
+  ]
+}

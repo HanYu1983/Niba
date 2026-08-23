@@ -1,0 +1,1674 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>原生能量世界觀</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #06b6d4;
+            --accent: #f59e0b;
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --bg-card-hover: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --border: #334155;
+            --eastern: #ef4444;
+            --western: #3b82f6;
+            --unified: #8b5cf6;
+        }
+
+        body {
+            font-family: 'Microsoft JhengHei', 'PingFang TC', 'Noto Sans TC', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #1a1a3e 100%);
+            padding: 60px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 50%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 50%, rgba(6, 182, 212, 0.15) 0%, transparent 50%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            background: linear-gradient(135deg, var(--eastern), var(--unified), var(--western));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-top: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Navigation */
+        .nav {
+            background: var(--bg-card);
+            padding: 15px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary);
+            display: inline-block;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            background: var(--bg-card-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .card p {
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+        }
+
+        /* Grid Layouts */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        /* Energy System */
+        .energy-comparison {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .energy-side {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 25px;
+            border: 2px solid var(--border);
+        }
+
+        .energy-side.eastern {
+            border-color: var(--eastern);
+        }
+
+        .energy-side.western {
+            border-color: var(--western);
+        }
+
+        .energy-side h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .energy-side.eastern h3 {
+            color: var(--eastern);
+        }
+
+        .energy-side.western h3 {
+            color: var(--western);
+        }
+
+        .energy-vs {
+            font-size: 2rem;
+            color: var(--unified);
+            font-weight: bold;
+        }
+
+        .convergence {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(99, 102, 241, 0.2));
+            border: 2px solid var(--unified);
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .convergence h3 {
+            color: var(--unified);
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        /* Tags */
+        .tag {
+            display: inline-block;
+            background: rgba(99, 102, 241, 0.2);
+            color: var(--primary);
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            margin: 3px;
+        }
+
+        .tag.eastern {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--eastern);
+        }
+
+        .tag.western {
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--western);
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 40px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--eastern), var(--unified), var(--western));
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+        }
+
+        .timeline-item:hover {
+            background: var(--bg-card-hover);
+            transform: translateX(5px);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -33px;
+            top: 25px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--primary);
+            border: 2px solid var(--bg-dark);
+        }
+
+        .timeline-year {
+            font-size: 0.9rem;
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        .timeline-title {
+            font-size: 1.2rem;
+            margin: 5px 0;
+            color: var(--text-primary);
+        }
+
+        .timeline-era {
+            font-size: 0.85rem;
+            color: var(--secondary);
+            margin-bottom: 10px;
+        }
+
+        .timeline-desc {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .timeline-impact {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid var(--border);
+        }
+
+        .timeline-impact li {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-left: 20px;
+            margin-bottom: 5px;
+        }
+
+        /* Geography */
+        .region-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 20px;
+            border-left: 4px solid var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .region-card h4 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .region-card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Factions */
+        .faction-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .faction-card h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .faction-badge {
+            background: var(--primary);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+        }
+
+        .faction-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .stat-box {
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .stat-box h5 {
+            color: var(--accent);
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .stat-box ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .stat-box li {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            padding: 3px 0;
+            padding-left: 15px;
+            position: relative;
+        }
+
+        .stat-box li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+        }
+
+        .stat-box.strengths li::before {
+            color: #22c55e;
+        }
+
+        .stat-box.weaknesses li::before {
+            color: #ef4444;
+        }
+
+        /* Technology */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .tech-card {
+            background: var(--bg-card);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+        }
+
+        .tech-card:hover {
+            background: var(--bg-card-hover);
+            transform: scale(1.02);
+        }
+
+        .tech-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .tech-card h4 {
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .tech-card p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Social Issues */
+        .issue-card {
+            background: var(--bg-card);
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 4px solid #ef4444;
+            margin-bottom: 15px;
+        }
+
+        .issue-card h4 {
+            color: #ef4444;
+            margin-bottom: 8px;
+        }
+
+        .issue-card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .issue-conflict {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid var(--border);
+            color: var(--accent);
+            font-size: 0.9rem;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--bg-card);
+            padding: 30px 20px;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            margin-top: 50px;
+        }
+
+        .footer p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .energy-comparison {
+                grid-template-columns: 1fr;
+            }
+
+            .energy-vs {
+                text-align: center;
+            }
+
+            .faction-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .nav {
+                gap: 5px;
+            }
+
+            .nav-btn {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+
+        /* List styling */
+        ul.styled-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        ul.styled-list li {
+            padding: 8px 0 8px 25px;
+            position: relative;
+            color: var(--text-secondary);
+        }
+
+        ul.styled-list li::before {
+            content: '✦';
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+        }
+
+        /* Key figure */
+        .key-figure {
+            background: rgba(245, 158, 11, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 10px;
+            border-left: 3px solid var(--accent);
+        }
+
+        .key-figure h5 {
+            color: var(--accent);
+            margin-bottom: 5px;
+        }
+
+        .key-figure p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* Energy grade */
+        .energy-grade {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: var(--bg-card);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+
+        .grade-icon {
+            font-size: 2rem;
+        }
+
+        .grade-info h4 {
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .grade-info p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Organization */
+        .org-card {
+            background: var(--bg-card);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid var(--border);
+        }
+
+        .org-card h4 {
+            color: var(--secondary);
+            margin-bottom: 8px;
+        }
+
+        .org-type {
+            display: inline-block;
+            background: rgba(6, 182, 212, 0.2);
+            color: var(--secondary);
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+        }
+
+        /* Character Section */
+        .character-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .character-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .character-card:hover {
+            background: var(--bg-card-hover);
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .character-header {
+            padding: 25px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .character-header.eastern {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(239, 68, 68, 0.05));
+            border-bottom: 2px solid var(--eastern);
+        }
+
+        .character-header.western {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0.05));
+            border-bottom: 2px solid var(--western);
+        }
+
+        .character-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .character-avatar.eastern {
+            background: rgba(239, 68, 68, 0.2);
+            border: 2px solid var(--eastern);
+        }
+
+        .character-avatar.western {
+            background: rgba(59, 130, 246, 0.2);
+            border: 2px solid var(--western);
+        }
+
+        .character-name {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .character-name.eastern {
+            color: var(--eastern);
+        }
+
+        .character-name.western {
+            color: var(--western);
+        }
+
+        .character-title-text {
+            font-size: 1rem;
+            color: var(--accent);
+            margin-bottom: 8px;
+        }
+
+        .character-role {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .character-body {
+            padding: 20px 25px;
+        }
+
+        .character-info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+        }
+
+        .character-info-row:last-child {
+            border-bottom: none;
+        }
+
+        .character-info-label {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .character-info-value {
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            text-align: right;
+        }
+
+        .character-traits {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 15px;
+        }
+
+        .character-quote {
+            background: rgba(245, 158, 11, 0.1);
+            border-left: 3px solid var(--accent);
+            padding: 12px 15px;
+            margin-top: 15px;
+            border-radius: 0 8px 8px 0;
+            font-style: italic;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Character Detail Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 40px 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            border-radius: 16px;
+            max-width: 800px;
+            width: 100%;
+            border: 1px solid var(--border);
+            animation: modalIn 0.3s ease;
+        }
+
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.95) translateY(-20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .modal-header {
+            padding: 30px;
+            position: relative;
+        }
+
+        .modal-header.eastern {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(239, 68, 68, 0.05));
+            border-bottom: 2px solid var(--eastern);
+        }
+
+        .modal-header.western {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(59, 130, 246, 0.05));
+            border-bottom: 2px solid var(--western);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: var(--text-primary);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .modal-section {
+            margin-bottom: 25px;
+        }
+
+        .modal-section h3 {
+            color: var(--primary);
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-section p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .modal-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .modal-section ul li {
+            color: var(--text-secondary);
+            padding: 5px 0 5px 20px;
+            position: relative;
+        }
+
+        .modal-section ul li::before {
+            content: '✦';
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+        }
+
+        .modal-achievement {
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+        }
+
+        .modal-achievement .year {
+            color: var(--accent);
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+
+        .modal-achievement .name {
+            color: var(--text-primary);
+            font-weight: bold;
+            margin: 3px 0;
+        }
+
+        .modal-achievement .desc {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .modal-relationship {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .modal-rel-item {
+            background: rgba(6, 182, 212, 0.1);
+            border-radius: 8px;
+            padding: 12px;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .modal-rel-item h5 {
+            color: var(--secondary);
+            margin-bottom: 5px;
+        }
+
+        .modal-rel-item p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .character-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                margin: 10px;
+            }
+
+            .modal-body {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>原生能量世界觀</h1>
+        <p>一個以生命能量為核心，經歷萬年演變的世界</p>
+    </header>
+
+    <nav class="nav">
+        <button class="nav-btn active" data-section="overview">世界概覽</button>
+        <button class="nav-btn" data-section="characters">人物介紹</button>
+        <button class="nav-btn" data-section="energy">能量體系</button>
+        <button class="nav-btn" data-section="timeline">歷史時間軸</button>
+        <button class="nav-btn" data-section="geography">地理版圖</button>
+        <button class="nav-btn" data-section="factions">勢力組織</button>
+        <button class="nav-btn" data-section="technology">科技社會</button>
+    </nav>
+
+    <main class="container">
+        <!-- 世界概覽 -->
+        <section id="overview" class="section active">
+            <h2 class="section-title">世界概覽</h2>
+            
+            <div class="card">
+                <h3>核心概念</h3>
+                <p id="world-description"></p>
+                <div style="margin-top: 15px;">
+                    <span class="tag">時間跨度：約10,000年</span>
+                    <span class="tag">核心能源：生命能量</span>
+                    <span class="tag">發展主軸：從神秘修煉到科學能源</span>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <h3>🌅 東方修煉體系</h3>
+                    <p id="eastern-cultivation"></p>
+                    <div style="margin-top: 10px;">
+                        <span class="tag eastern">往身體內部修煉</span>
+                        <span class="tag eastern">氣（Qi）</span>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>🌆 西方魔法體系</h3>
+                    <p id="western-cultivation"></p>
+                    <div style="margin-top: 10px;">
+                        <span class="tag western">往外部世界探索</span>
+                        <span class="tag western">瑪娜（Mana）</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="convergence">
+                <h3>✨ 殊途同歸</h3>
+                <p id="convergence-desc"></p>
+            </div>
+
+            <div class="card" style="margin-top: 20px;">
+                <h3>🔄 跨體系修習</h3>
+                <p id="cross-cultivation"></p>
+            </div>
+
+            <div class="card">
+                <h3>🏛️ 環境限制</h3>
+                <p id="environmental-limitation"></p>
+                <div class="grid-2" style="margin-top: 15px;">
+                    <div>
+                        <strong style="color: var(--eastern);">東方：</strong>
+                        <span id="eastern-limitation"></span>
+                    </div>
+                    <div>
+                        <strong style="color: var(--western);">西方：</strong>
+                        <span id="western-limitation"></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 人物介紹 -->
+        <section id="characters" class="section">
+            <h2 class="section-title">人物介紹</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 30px;">點擊角色卡片查看詳細資訊</p>
+            <div class="character-grid" id="characters-container"></div>
+        </section>
+
+        <!-- Character Detail Modal -->
+        <div class="modal-overlay" id="character-modal">
+            <div class="modal-content">
+                <div class="modal-header" id="modal-header">
+                    <button class="modal-close" id="modal-close">✕</button>
+                    <div class="character-avatar" id="modal-avatar"></div>
+                    <h2 class="character-name" id="modal-name"></h2>
+                    <p class="character-title-text" id="modal-title"></p>
+                    <p class="character-role" id="modal-role"></p>
+                </div>
+                <div class="modal-body" id="modal-body"></div>
+            </div>
+        </div>
+
+        <!-- 能量體系 -->
+        <section id="energy" class="section">
+            <h2 class="section-title">能量體系</h2>
+
+            <div class="card">
+                <h3>生命能量（Life Energy）</h3>
+                <p id="energy-description"></p>
+                <div style="margin-top: 15px;">
+                    <span class="tag">所有生命皆擁有</span>
+                    <span class="tag">自然散發</span>
+                    <span class="tag">可被收集利用</span>
+                </div>
+            </div>
+
+            <div class="energy-comparison">
+                <div class="energy-side eastern">
+                    <h3>氣（Qi）</h3>
+                    <ul class="styled-list" id="eastern-characteristics"></ul>
+                </div>
+                <div class="energy-vs">VS</div>
+                <div class="energy-side western">
+                    <h3>瑪娜（Mana）</h3>
+                    <ul class="styled-list" id="western-characteristics"></ul>
+                </div>
+            </div>
+
+            <div class="convergence" style="margin-top: 30px;">
+                <h3>🌟 最終境界：歸源境界</h3>
+                <p id="final-realm-desc"></p>
+                <div style="margin-top: 15px; text-align: left;">
+                    <div class="grid-2">
+                        <div>
+                            <strong style="color: var(--eastern);">東方稱謂：</strong>
+                            <span id="final-realm-eastern"></span>
+                        </div>
+                        <div>
+                            <strong style="color: var(--western);">西方稱謂：</strong>
+                            <span id="final-realm-western"></span>
+                        </div>
+                    </div>
+                    <div style="margin-top: 15px;">
+                        <strong>特徵：</strong>
+                        <ul class="styled-list" id="final-realm-characteristics"></ul>
+                    </div>
+                    <div style="margin-top: 10px;">
+                        <strong>科學解釋：</strong>
+                        <span id="final-realm-science"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top: 20px;">
+                <h3>🔄 跨體系修習詳情</h3>
+                <div class="grid-2">
+                    <div>
+                        <h4 style="color: var(--eastern); margin-bottom: 10px;">東方人學習西方魔法</h4>
+                        <div id="eastern-learning-western"></div>
+                    </div>
+                    <div>
+                        <h4 style="color: var(--western); margin-bottom: 10px;">西方人學習東方仙術</h4>
+                        <div id="western-learning-eastern"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 歷史時間軸 -->
+        <section id="timeline" class="section">
+            <h2 class="section-title">歷史時間軸</h2>
+            <div class="timeline" id="timeline-container"></div>
+        </section>
+
+        <!-- 地理版圖 -->
+        <section id="geography" class="section">
+            <h2 class="section-title">地理版圖</h2>
+            
+            <div class="card">
+                <h3>世界地圖</h3>
+                <p id="geography-description"></p>
+            </div>
+
+            <h3 style="margin: 30px 0 20px; color: var(--primary);">五大區域</h3>
+            <div id="regions-container"></div>
+
+            <h3 style="margin: 30px 0 20px; color: var(--accent);">特殊地點</h3>
+            <div id="special-locations-container"></div>
+        </section>
+
+        <!-- 勢力組織 -->
+        <section id="factions" class="section">
+            <h2 class="section-title">勢力與組織</h2>
+
+            <h3 style="margin-bottom: 20px; color: var(--primary);">三大聯盟</h3>
+            <div id="alliances-container"></div>
+
+            <h3 style="margin: 30px 0 20px; color: var(--accent);">地下勢力</h3>
+            <div id="underground-container"></div>
+
+            <h3 style="margin: 30px 0 20px; color: var(--secondary);">重要組織</h3>
+            <div id="organizations-container"></div>
+        </section>
+
+        <!-- 科技社會 -->
+        <section id="technology" class="section">
+            <h2 class="section-title">科技與社會</h2>
+
+            <div class="card">
+                <h3>科技與能量的關係</h3>
+                <p id="tech-relationship"></p>
+            </div>
+
+            <h3 style="margin: 30px 0 20px; color: var(--primary);">能量分級</h3>
+            <div id="energy-grades-container"></div>
+
+            <h3 style="margin: 30px 0 20px; color: var(--primary);">生命能量采集塔類型</h3>
+            <div class="tech-grid" id="collection-towers-container"></div>
+
+            <h3 style="margin: 30px 0 20px; color: #ef4444;">社會問題</h3>
+            <div id="social-issues-container"></div>
+
+            <h3 style="margin: 30px 0 20px; color: var(--secondary);">現代學科</h3>
+            <div class="grid-3" id="disciplines-container"></div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>原生能量世界觀設定 | 跨越萬年的史詩世界</p>
+    </footer>
+
+    <script>
+        // Navigation
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                btn.classList.add('active');
+                document.getElementById(btn.dataset.section).classList.add('active');
+            });
+        });
+
+        // Load JSON data
+        async function loadJSON(filename) {
+            const response = await fetch(filename);
+            return response.json();
+        }
+
+        // Render all sections
+        async function renderAll() {
+            const worldData = await loadJSON('world-settings.json');
+            const energyData = await loadJSON('energy-system.json');
+            const timelineData = await loadJSON('timeline.json');
+            const techData = await loadJSON('technology.json');
+            const factionsData = await loadJSON('factions.json');
+            const eventsData = await loadJSON('historical-events.json');
+
+            // Load character data
+            let charactersData = [];
+            try {
+                const yanData = await loadJSON('characters/yan.json');
+                charactersData.push(yanData.character);
+            } catch (e) { /* ignore if file not found */ }
+            try {
+                const ariyaData = await loadJSON('characters/ariya.json');
+                charactersData.push(ariyaData.character);
+            } catch (e) { /* ignore if file not found */ }
+
+            const world = worldData.world;
+            const energy = energyData.energySystem;
+            const timeline = timelineData.timeline;
+            const tech = techData.technology;
+            const factions = factionsData.factions;
+            const events = eventsData.historicalEvents;
+
+            // Overview Section
+            document.getElementById('world-description').textContent = world.description;
+            document.getElementById('eastern-cultivation').textContent = world.coreConcept.cultivation.eastern.description;
+            document.getElementById('western-cultivation').textContent = world.coreConcept.cultivation.western.description;
+            document.getElementById('convergence-desc').textContent = world.coreConcept.cultivation.convergence.description;
+            document.getElementById('cross-cultivation').textContent = world.coreConcept.crossCultivation.description;
+            document.getElementById('environmental-limitation').textContent = world.coreConcept.environmentalLimitation.description;
+            document.getElementById('eastern-limitation').textContent = `${world.coreConcept.environmentalLimitation.eastern.limitation} → ${world.coreConcept.environmentalLimitation.eastern.result}`;
+            document.getElementById('western-limitation').textContent = `${world.coreConcept.environmentalLimitation.western.limitation} → ${world.coreConcept.environmentalLimitation.western.result}`;
+
+            // Energy Section
+            document.getElementById('energy-description').textContent = energy.lifeEnergy.description;
+            
+            // Eastern characteristics
+            const eastChars = document.getElementById('eastern-characteristics');
+            eastChars.innerHTML = `
+                <li><strong>方向：</strong>${energy.easternSystem.cultivationDirection}</li>
+                <li><strong>描述：</strong>${energy.easternSystem.description}</li>
+                <li><strong>焦點：</strong>${energy.easternSystem.characteristics.focus}</li>
+                <li><strong>目標：</strong>${energy.easternSystem.characteristics.goal}</li>
+                <li><strong>方法：</strong>${energy.easternSystem.characteristics.method}</li>
+            `;
+
+            // Western characteristics
+            const westChars = document.getElementById('western-characteristics');
+            westChars.innerHTML = `
+                <li><strong>方向：</strong>${energy.westernSystem.cultivationDirection}</li>
+                <li><strong>描述：</strong>${energy.westernSystem.description}</li>
+                <li><strong>焦點：</strong>${energy.westernSystem.characteristics.focus}</li>
+                <li><strong>目標：</strong>${energy.westernSystem.characteristics.goal}</li>
+                <li><strong>方法：</strong>${energy.westernSystem.characteristics.method}</li>
+            `;
+
+            // Final Realm
+            const finalRealm = energy.convergence.finalRealm;
+            document.getElementById('final-realm-desc').textContent = finalRealm.description;
+            document.getElementById('final-realm-eastern').textContent = finalRealm.easternName;
+            document.getElementById('final-realm-western').textContent = finalRealm.westernName;
+            document.getElementById('final-realm-science').textContent = finalRealm.scientificExplanation;
+            
+            const finalRealmChars = document.getElementById('final-realm-characteristics');
+            finalRealmChars.innerHTML = finalRealm.characteristics.map(c => `<li>${c}</li>`).join('');
+
+            // Cross cultivation details
+            const ecw = energy.crossCultivation.easternLearningWestern;
+            document.getElementById('eastern-learning-western').innerHTML = `
+                <p><strong>困難：</strong>${ecw.difficulty}</p>
+                <p><strong>過程：</strong>${ecw.process}</p>
+                <p><strong>風險：</strong>${ecw.risk}</p>
+                <p><strong>優勢：</strong>${ecw.advantage}</p>
+            `;
+
+            const wle = energy.crossCultivation.westernLearningEastern;
+            document.getElementById('western-learning-eastern').innerHTML = `
+                <p><strong>困難：</strong>${wle.difficulty}</p>
+                <p><strong>過程：</strong>${wle.process}</p>
+                <p><strong>風險：</strong>${wle.risk}</p>
+                <p><strong>優勢：</strong>${wle.advantage}</p>
+            `;
+
+            // Timeline Section
+            const timelineContainer = document.getElementById('timeline-container');
+            timelineContainer.innerHTML = events.events.map(event => `
+                <div class="timeline-item">
+                    <span class="timeline-year">${event.year} 年</span>
+                    <h4 class="timeline-title">${event.name}</h4>
+                    <span class="timeline-era">${event.era} | ${event.type}</span>
+                    <p class="timeline-desc">${event.description}</p>
+                    ${event.impact ? `
+                        <div class="timeline-impact">
+                            <strong>影響：</strong>
+                            <ul>
+                                ${event.impact.map(i => `<li>${i}</li>`).join('')}
+                            </ul>
+                        </div>
+                    ` : ''}
+                    ${event.keyFigures ? event.keyFigures.map(figure => `
+                        <div class="key-figure">
+                            <h5>${figure.name} - ${figure.role}</h5>
+                            <p>${figure.fate || figure.contribution || ''}</p>
+                        </div>
+                    `).join('') : ''}
+                </div>
+            `).join('');
+
+            // Geography Section
+            document.getElementById('geography-description').textContent = world.geography.worldMap.description;
+            
+            const regionsContainer = document.getElementById('regions-container');
+            regionsContainer.innerHTML = world.geography.worldMap.regions.map(region => `
+                <div class="region-card">
+                    <h4>${region.name}</h4>
+                    <p><strong>特徵：</strong>${region.characteristics}</p>
+                    <p><strong>現代定位：</strong>${region.modernRole}</p>
+                </div>
+            `).join('');
+
+            const specialLocationsContainer = document.getElementById('special-locations-container');
+            specialLocationsContainer.innerHTML = world.geography.specialLocations.map(loc => `
+                <div class="region-card" style="border-left-color: var(--accent);">
+                    <h4 style="color: var(--accent);">${loc.name}</h4>
+                    <p>${loc.description}</p>
+                </div>
+            `).join('');
+
+            // Factions Section
+            const alliancesContainer = document.getElementById('alliances-container');
+            alliancesContainer.innerHTML = factions.alliances.map(alliance => `
+                <div class="faction-card">
+                    <h3>${alliance.name} <span class="faction-badge">${alliance.baseRegion}</span></h3>
+                    <p>${alliance.description}</p>
+                    <p><strong>專精：</strong>${alliance.expertise}</p>
+                    <div class="faction-stats">
+                        <div class="stat-box strengths">
+                            <h5>優勢</h5>
+                            <ul>
+                                ${alliance.strengths.map(s => `<li>${s}</li>`).join('')}
+                            </ul>
+                        </div>
+                        <div class="stat-box weaknesses">
+                            <h5>劣勢</h5>
+                            <ul>
+                                ${alliance.weaknesses.map(w => `<li>${w}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Underground factions
+            const undergroundContainer = document.getElementById('underground-container');
+            undergroundContainer.innerHTML = factions.undergroundFactions.map(faction => `
+                <div class="faction-card" style="border-left: 4px solid var(--accent);">
+                    <h3>${faction.name} <span class="faction-badge" style="background: var(--accent);">${faction.type}</span></h3>
+                    <p>${faction.description}</p>
+                    <p><strong>特徵：</strong></p>
+                    <ul class="styled-list">
+                        ${faction.characteristics.map(c => `<li>${c}</li>`).join('')}
+                    </ul>
+                    <p style="margin-top: 15px;"><strong>內部派系：</strong></p>
+                    <div class="grid-3" style="margin-top: 10px;">
+                        ${faction.internalFactions.map(f => `
+                            <div class="card" style="margin: 0;">
+                                <h4 style="color: var(--accent);">${f.name}</h4>
+                                <p>${f.description}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <p style="margin-top: 15px;"><strong>核心衝突：</strong>${faction.conflict}</p>
+                </div>
+            `).join('');
+
+            // Organizations
+            const orgsContainer = document.getElementById('organizations-container');
+            orgsContainer.innerHTML = factions.organizations.map(org => `
+                <div class="org-card">
+                    <span class="org-type">${org.type}</span>
+                    <h4>${org.name}</h4>
+                    <p>${org.description}</p>
+                    <p style="margin-top: 10px;"><strong>職責：</strong>${org.role}</p>
+                </div>
+            `).join('');
+
+            // Technology Section
+            document.getElementById('tech-relationship').textContent = tech.relationship.description;
+
+            // Energy grades
+            const gradesContainer = document.getElementById('energy-grades-container');
+            const gradeIcons = ['🏠', '🏭', '🚀'];
+            gradesContainer.innerHTML = tech.modernEra.socialImpact.energyEconomy.energyGrades.map((grade, i) => `
+                <div class="energy-grade">
+                    <span class="grade-icon">${gradeIcons[i]}</span>
+                    <div class="grade-info">
+                        <h4>${grade.name}</h4>
+                        <p>${grade.usage}</p>
+                    </div>
+                </div>
+            `).join('');
+
+            // Collection towers
+            const towersContainer = document.getElementById('collection-towers-container');
+            const towerIcons = ['🌱', '🌊', '♻️'];
+            towersContainer.innerHTML = tech.modernEra.energyFacilities.types.map((tower, i) => `
+                <div class="tech-card">
+                    <div class="tech-icon">${towerIcons[i]}</div>
+                    <h4>${tower.name}</h4>
+                    <p>${tower.description}</p>
+                    <p style="margin-top: 10px; font-size: 0.85rem; color: var(--text-secondary);">類比：${tower.analogy}</p>
+                </div>
+            `).join('');
+
+            // Social issues
+            const issuesContainer = document.getElementById('social-issues-container');
+            issuesContainer.innerHTML = tech.modernEra.socialImpact.socialIssues.map(issue => `
+                <div class="issue-card">
+                    <h4>${issue.name}</h4>
+                    <p>${issue.description}</p>
+                    <div class="issue-conflict">
+                        <strong>潛在衝突：</strong>${issue.conflict}
+                    </div>
+                </div>
+            `).join('');
+
+            // Disciplines
+            const disciplinesContainer = document.getElementById('disciplines-container');
+            const disciplineIcons = ['⚛️', '🌿', '💊'];
+            disciplinesContainer.innerHTML = tech.scientificResearch.modernDisciplines.map((disc, i) => `
+                <div class="tech-card">
+                    <div class="tech-icon">${disciplineIcons[i]}</div>
+                    <h4>${disc}</h4>
+                </div>
+            `).join('');
+
+            // Characters Section
+            renderCharacters(charactersData);
+        }
+
+        // Render character cards
+        function renderCharacters(characters) {
+            const container = document.getElementById('characters-container');
+            container.innerHTML = characters.map((char, index) => {
+                const isEastern = char.region === '東方大陸';
+                const side = isEastern ? 'eastern' : 'western';
+                const avatar = isEastern ? '🔥' : '✨';
+                const traits = char.personality?.coreTraits?.slice(0, 3) || [];
+                const firstQuote = char.quotes?.[0];
+                const quoteText = typeof firstQuote === 'string' ? firstQuote : firstQuote?.text || '';
+
+                return `
+                    <div class="character-card" onclick="showCharacterDetail(${index})">
+                        <div class="character-header ${side}">
+                            <div class="character-avatar ${side}">${avatar}</div>
+                            <h3 class="character-name ${side}">${char.name}</h3>
+                            <p class="character-title-text">${char.title || ''}</p>
+                            <p class="character-role">${char.role || ''}</p>
+                        </div>
+                        <div class="character-body">
+                            <div class="character-info-row">
+                                <span class="character-info-label">時代</span>
+                                <span class="character-info-value">${char.era || '-'}</span>
+                            </div>
+                            <div class="character-info-row">
+                                <span class="character-info-label">壽命</span>
+                                <span class="character-info-value">${char.lifespan ? char.lifespan + ' 年' : '-'}</span>
+                            </div>
+                            <div class="character-info-row">
+                                <span class="character-info-label">狀態</span>
+                                <span class="character-info-value">${char.status || '-'}</span>
+                            </div>
+                            <div class="character-traits">
+                                ${traits.map(t => `<span class="tag ${side}">${t}</span>`).join('')}
+                            </div>
+                            ${quoteText ? `<div class="character-quote">「${quoteText}」</div>` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Store characters data globally for modal access
+            window._charactersData = characters;
+        }
+
+        // Show character detail modal
+        function showCharacterDetail(index) {
+            const char = window._charactersData[index];
+            if (!char) return;
+
+            const isEastern = char.region === '東方大陸';
+            const side = isEastern ? 'eastern' : 'western';
+            const avatar = isEastern ? '🔥' : '✨';
+
+            // Set header
+            const header = document.getElementById('modal-header');
+            header.className = `modal-header ${side}`;
+            document.getElementById('modal-avatar').className = `character-avatar ${side}`;
+            document.getElementById('modal-avatar').textContent = avatar;
+            document.getElementById('modal-name').className = `character-name ${side}`;
+            document.getElementById('modal-name').textContent = char.name;
+            document.getElementById('modal-title').textContent = char.title || '';
+            document.getElementById('modal-role').textContent = char.role || '';
+
+            // Build body
+            let bodyHTML = '';
+
+            // Appearance
+            if (char.appearance) {
+                bodyHTML += `
+                    <div class="modal-section">
+                        <h3>外貌描述</h3>
+                        <p>${char.appearance.description || ''}</p>
+                        ${char.appearance.height ? `<p><strong>身高：</strong>${char.appearance.height}</p>` : ''}
+                        ${char.appearance.build ? `<p><strong>體型：</strong>${char.appearance.build}</p>` : ''}
+                    </div>
+                `;
+            }
+
+            // Personality
+            if (char.personality) {
+                bodyHTML += `
+                    <div class="modal-section">
+                        <h3>性格特徵</h3>
+                        ${char.personality.coreTraits ? `<p><strong>核心性格：</strong>${char.personality.coreTraits.join('、')}</p>` : ''}
+                        ${char.personality.strengths ? `<p><strong>優點：</strong>${char.personality.strengths.join('、')}</p>` : ''}
+                        ${char.personality.weaknesses ? `<p><strong>缺點：</strong>${char.personality.weaknesses.join('、')}</p>` : ''}
+                        ${char.personality.beliefs ? `<p><strong>信念：</strong>${char.personality.beliefs}</p>` : ''}
+                    </div>
+                `;
+            }
+
+            // Background
+            if (char.background) {
+                bodyHTML += `
+                    <div class="modal-section">
+                        <h3>背景故事</h3>
+                        ${char.background.origin ? `<p>${char.background.origin}</p>` : ''}
+                        ${char.background.motivation ? `<p><strong>動機：</strong>${char.background.motivation}</p>` : ''}
+                        ${char.background.discovery ? `
+                            <div class="modal-achievement">
+                                <span class="year">${char.background.discovery.year} 年</span>
+                                <p class="name">${char.background.discovery.event}</p>
+                                <p class="desc">${char.background.discovery.description}</p>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }
+
+            // Cultivation Journey (Eastern)
+            if (char.cultivationJourney) {
+                const cj = char.cultivationJourney;
+                bodyHTML += `
+                    <div class="modal-section">
+                        <h3>修煉歷程</h3>
+                        ${cj.exploration ? `<p><strong>探索期：</strong>${cj.exploration.period}</p><p>${cj.exploration.description}</p>` : ''}
+                        ${cj.exploration?.breakthroughs ? `<ul>${cj.exploration.breakthroughs.map(b => `<li>${b}</li>`).join('')}</ul>` : ''}
+                        ${cj.systematization ? `<p><strong>系統化：</strong>${cj.systematization.period}</p><p>${cj.systematization.description}</p>` : ''}
+                        ${cj.advancedRealm ? `<p><strong>高深境界：</strong>${cj.advancedRealm.period}</p><p>${cj.advancedRealm.description}</p>` : ''}
+                    </div>
+                `;
+            }
+
+            // Abilities (Western)
+            if (char.abilities) {
+                const ab = char.abilities;
+                bodyHTML += `
+                    <div class="modal-section">
+                        <h3>能力體系</h3>
+                        <p><strong>能量體系：</strong>${ab.magicSystem || '-'}</p>
+                        ${ab.specializations ? `<p><strong>專長：</strong>${ab.specializations.join('、')}</p>` : ''}
+                        ${ab.signatureSpells ? ab.signatureSpells.map(spell => `
+                            <div class="modal-achievement">
+                                <p class="name">${spell.name}</p>
+                                <p class="desc">${spell.description}</p>
+                            </div>
+                        `).join('') : ''}
+                    </div>
+                `;
+            }
+
+            // Achievements
+            if (char.achievements && char.achievements.length > 0) {
+                bodyHTML += `
+                    <div class="modal-section">
+                        <h3>主要成就</h3>
+                        ${char.achievements.map(a => {
+                            if (typeof a === 'string') return `<p>✦ ${a}</p>`;
+                            return `
+                                <div class="modal-achievement">
+                                    <span class="year">${a.year ? a.year + ' 年' : ''}</span>
+                                    <p class="name">${a.name}</p>
+                                    <p class="desc">${a.description}</p>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+            }
+
+            // Relationships
+            if (char.relationships) {
+                const rel = char.relationships;
+                bodyHTML += `
+                    <div class="modal-section">
+                        <h3>人際關係</h3>
+                        <div class="modal-relationship">
+                            ${rel.family ? rel.family.map(f => `
+                                <div class="modal-rel-item">
+                                    <h5>${f.relation}：${f.name}</h5>
+                                    <p>${f.description || ''}</p>
+                                </div>
+                            `).join('') : ''}
+                            ${rel.disciples ? rel.disciples.map(d => `
+                                <div class="modal-rel-item">
+                                    <h5>${d.relation || d.role || '弟子'}：${d.name}</h5>
+                                    <p>${d.description || ''}</p>
+                                </div>
+                            `).join('') : ''}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Legend
+            if (char.legend) {
+                bodyHTML += `
+                    <div class="modal-section">
+                        <h3>傳說</h3>
+                        ${char.legend.disappearance ? `<p>${char.legend.disappearance.description}</p>` : ''}
+                        ${char.legend.culturalImpact ? `<p style="margin-top: 10px;">${char.legend.culturalImpact}</p>` : ''}
+                    </div>
+                `;
+            }
+
+            // Quotes
+            if (char.quotes && char.quotes.length > 0) {
+                bodyHTML += `
+                    <div class="modal-section">
+                        <h3>經典語錄</h3>
+                        ${char.quotes.map(q => {
+                            const text = typeof q === 'string' ? q : q.text;
+                            const context = typeof q === 'string' ? '' : (q.context || '');
+                            return `<div class="character-quote">「${text}」${context ? `<br><small style="color: var(--text-secondary);">— ${context}</small>` : ''}</div>`;
+                        }).join('')}
+                    </div>
+                `;
+            }
+
+            // Historical Significance
+            if (char.historicalSignificance) {
+                const hs = char.historicalSignificance;
+                bodyHTML += `
+                    <div class="modal-section">
+                        <h3>歷史意義</h3>
+                        ${hs.energySystem ? `<p><strong>能量體系：</strong>${hs.energySystem}</p>` : ''}
+                        ${hs.civilization ? `<p><strong>文明影響：</strong>${hs.civilization}</p>` : ''}
+                        ${hs.philosophy ? `<p><strong>哲學思想：</strong>${hs.philosophy}</p>` : ''}
+                        ${hs.timeline ? `<p><strong>時間線定位：</strong>${hs.timeline}</p>` : ''}
+                    </div>
+                `;
+            }
+
+            document.getElementById('modal-body').innerHTML = bodyHTML;
+            document.getElementById('character-modal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Close modal
+        document.getElementById('modal-close').addEventListener('click', () => {
+            document.getElementById('character-modal').classList.remove('active');
+            document.body.style.overflow = '';
+        });
+
+        document.getElementById('character-modal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('character-modal')) {
+                document.getElementById('character-modal').classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+
+        // Initialize
+        renderAll();
+    </script>
+</body>
+</html>

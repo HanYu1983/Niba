@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 1,
+  "startDate": "",
+  "endDate": "",
+  "platform": "google",
+  "credentialCustomId": "google-local-env",
+  "items": [
+    {
+      "adId": "2044490174.21433169163.164392207339.704864765504",
+      "adName": "02神奈川_麒麟麦酒_20240708-0818.02神奈川_通常配信",
+      "area": "",
+      "metadata": {
+        "isVideoAd": "true",
+        "resourceName": "customers/2044490174/adGroups/164392207339"
+      }
+    },
+    {
+      "adId": "2044490174.21433169163.164392207379.704864765507",
+      "adName": "02神奈川_麒麟麦酒_20240708-0818.02神奈川_気温30度以上＆晴れ配信",
+      "area": "",
+      "metadata": {
+        "isVideoAd": "true",
+        "resourceName": "customers/2044490174/adGroups/164392207379"
+      }
+    },
+    {
+      "adId": "2044490174.21433169163.164392207419.704864765510",
+      "adName": "02神奈川_麒麟麦酒_20240708-0818.02神奈川_時間帯配信",
+      "area": "",
+      "metadata": {
+        "isVideoAd": "true",
+        "resourceName": "customers/2044490174/adGroups/164392207419"
+      }
+    },
+    {
+      "adId": "2044490174.21443332732.162093746857.704748038544",
+      "adName": "01東京_麒麟麦酒_20240708-0818.01東京_時間帯配信",
+      "area": "",
+      "metadata": {
+        "isVideoAd": "true",
+        "resourceName": "customers/2044490174/adGroups/162093746857"
+      }
+    },
+    {
+      "adId": "2044490174.21443332732.164550175615.704747810295",
+      "adName": "01東京_麒麟麦酒_20240708-0818.01東京_通常配信",
+      "area": "",
+      "metadata": {
+        "isVideoAd": "true",
+        "resourceName": "customers/2044490174/adGroups/164550175615"
+      }
+    },
+    {
+      "adId": "2044490174.21443332732.167000952609.704856022049",
+      "adName": "01東京_麒麟麦酒_20240708-0818.01東京_気温30度以上＆晴れ配信",
+      "area": "",
+      "metadata": {
+        "isVideoAd": "true",
+        "resourceName": "customers/2044490174/adGroups/167000952609"
+      }
+    },
+    {
+      "adId": "2044490174.21443690377.167261839434.704866057664",
+      "adName": "03大阪_麒麟麦酒_20240708-0818.03大阪_通常配信",
+      "area": "",
+      "metadata": {
+        "isVideoAd": "true",
+        "resourceName": "customers/2044490174/adGroups/167261839434"
+      }
+    },
+    {
+      "adId": "2044490174.21443690377.167261839594.704866057667",
+      "adName": "03大阪_麒麟麦酒_20240708-0818.03大阪_気温30度以上＆晴れ配信",
+      "area": "",
+      "metadata": {
+        "isVideoAd": "true",
+        "resourceName": "customers/2044490174/adGroups/167261839594"
+      }
+    },
+    {
+      "adId": "2044490174.21443690377.167261839634.704866057670",
+      "adName": "03大阪_麒麟麦酒_20240708-0818.03大阪_時間帯配信",
+      "area": "",
+      "metadata": {
+        "isVideoAd": "true",
+        "resourceName": "customers/2044490174/adGroups/167261839634"
+      }
+    },
+    {
+      "adId": "2044490174.21443690380.167261839674.704866057673",
+      "adName": "04愛知_麒麟麦酒_20240708-0818.04愛知_通常配信",
+      "area": "",
+      "metadata": {
+        "isVideoAd": "true",
+        "resourceName": "customers/2044490174/adGroups/167261839674"
+      }
+    }
+  ]
+}

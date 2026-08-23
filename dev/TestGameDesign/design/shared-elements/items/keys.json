@@ -1,0 +1,77 @@
+{
+  "comment": "關鍵／任務道具：鑰匙、證明等，多為不可堆疊、劇情驅動",
+  "items": [
+    {
+      "id": "key_iron",
+      "name": "鐵鑰匙",
+      "description": "一把普通的鐵製鑰匙。",
+      "category": "key",
+      "tags": ["key", "door"],
+      "rarity": "common",
+      "value": 1,
+      "weight": 0.1,
+      "stackable": false,
+      "consumable": false
+    },
+    {
+      "id": "key_gold",
+      "name": "金鑰匙",
+      "description": "沉重的金鑰匙，似乎對應某處重要的大門。",
+      "category": "key",
+      "tags": ["key", "door", "quest"],
+      "rarity": "uncommon",
+      "value": 0,
+      "weight": 0.2,
+      "stackable": false,
+      "consumable": false
+    },
+    {
+      "id": "key_rusty",
+      "name": "生鏽的鑰匙",
+      "description": "鏽跡斑斑，不知還能用幾次。",
+      "category": "key",
+      "tags": ["key", "door"],
+      "rarity": "common",
+      "value": 0,
+      "weight": 0.15,
+      "stackable": false,
+      "consumable": false
+    },
+    {
+      "id": "key_item_letter",
+      "name": "密封的信",
+      "description": "一封蠟封的信件，收件人不明。",
+      "category": "key",
+      "tags": ["quest", "document"],
+      "rarity": "common",
+      "value": 0,
+      "weight": 0.05,
+      "stackable": false,
+      "consumable": false
+    },
+    {
+      "id": "key_item_badge",
+      "name": "識別證",
+      "description": "某組織的識別證，或許能通過特定關卡。",
+      "category": "key",
+      "tags": ["quest", "pass"],
+      "rarity": "uncommon",
+      "value": 0,
+      "weight": 0.05,
+      "stackable": false,
+      "consumable": false
+    },
+    {
+      "id": "key_item_map",
+      "name": "破舊地圖",
+      "description": "標記不明的地圖，可能指向寶藏或密道。",
+      "category": "key",
+      "tags": ["quest", "document", "treasure"],
+      "rarity": "uncommon",
+      "value": 0,
+      "weight": 0.1,
+      "stackable": false,
+      "consumable": false
+    }
+  ]
+}

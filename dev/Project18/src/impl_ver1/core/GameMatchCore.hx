@@ -1,0 +1,3174 @@
+package impl_ver1.core;
+
+import game.GameIds;
+import game.IBoard;
+import game.IAvoidableTileEvent;
+import game.IGameMatch;
+import game.MatchTerminationReason;
+import game.IGeneral;
+import game.IJiCe;
+import game.IJiCeMovementStepHook;
+import game.IJiCeStagingPreviewRow;
+import game.IMonarch;
+import game.IPlayer;
+import game.IPlayerMenu;
+import game.IPlayerMenuEntry;
+import game.IPlayerMenuNode;
+import game.IStagingAction;
+import game.ITile;
+import game.ITileEvent;
+import game.Balance;
+import game.IEquipment;
+import game.IOutboxMessage;
+import game.MenuClientConfirm;
+import game.MenuActivation;
+import game.MenuGeneralChoice;
+import game.MenuFormWidget;
+import game.PopupOption;
+import game.OutboxPayload;
+import game.OutboxPayload.FlowAckKind;
+import game.OutboxPayload.HostileSettlementBranch;
+import game.HistoricalPeople;
+import game.GeneralStat;
+import game.OutboxPayload.OutboxUiCopyKey;
+import game.OutboxPayload.RecruitedGeneralLine;
+import game.OutboxPayload.TerritoryStoresKind;
+import game.PlayerMenuKind;
+import game.ResourceReward;
+import game.StrategyPhase;
+import game.TileKind;
+import game.CityLevel;
+import game.GameError;
+import game.Rarity;
+import game.TerrainKind;
+import game.TileGrowth;
+import game.AiDecision;
+import game.OutboxAudience;
+import game.OutboxPresentation;
+import game.OutboxPresentationMode;
+import impl_ver1.flows.HostileCityPhase;
+import impl_ver1.jice.JiCeRegistry;
+import impl_ver1.model.Board;
+import impl_ver1.model.General;
+import impl_ver1.model.Monarch;
+import impl_ver1.model.Player;
+import impl_ver1.model.PlayerMenu;
+import impl_ver1.model.PlayerMenuEntry;
+import impl_ver1.model.PlayerMenuNode;
+import impl_ver1.model.OutboxMessage;
+import impl_ver1.model.Tile;
+import impl_ver1.equipment.WeaponCatalog;
+import impl_ver1.equipment.ArmorCatalog;
+import impl_ver1.equipment.TacticsBookCatalog;
+import impl_ver1.equipment.PoliticsBookCatalog;
+import impl_ver1.util.Deterministic;
+import impl_ver1.rules.GameMatchVer1Ops;
+import impl_ver1.staging.FriendlyCityDevelopStagingAction;
+import impl_ver1.staging.FriendlyCityRestStagingAction;
+import impl_ver1.staging.JiCeStagingAction;
+import impl_ver1.staging.ResourceTileBoostStagingAction;
+import impl_ver1.staging.RestStagingAction;
+import impl_ver1.staging.VillageConquerStagingAction;
+import impl_ver1.staging.VillagePlunderStagingAction;
+import impl_ver1.staging.VillageTradeStagingAction;
+import impl_ver1.staging.VillageDevelopStagingAction;
+
+/**
+ * Ver1 賽局核心：終局／「移動」葉委派 {@link GameMatchVer1Ops}（傳入 {@code this}，不靠建構注入）。
+ * 友元見 {@literal @:allow(impl_ver1)}。
+ */
+@:allow(impl_ver1)
+class GameMatchCore implements IGameMatch {
+  // NOTE(game-error): 目前仍有大量 `throw "GameMatchCore: ..."` 的字串例外。
+  // 若要讓 UI 可用 outbox（{@link game.OutboxPayload.GameRuleFeedback}）呈現「可預期的玩家操作失敗」，可逐步改成 `throw new GameError(...)`：
+  // - 資源不足（兵/糧/金不足）
+  // - 表單選擇不合法（應單選/未選等）
+  // - 指令不可用（例如 StrategyPre/StrategyPost 不可用）若屬玩家可理解的規則拒絕也應轉為 GameError
+  //
+  // 注意：真正的程式 bug（狀態機不一致、內部 invariant 破壞）仍應維持 throw 以利除錯。
+  public static inline var DEFAULT_MOVE_DELTA = 3;
+  public static inline var DICE_MIN = 1;
+  public static inline var DICE_MAX = 6;
+  /** Outbox 棋子移動動畫播放時間（毫秒）。 */
+  public static inline var PAWN_MOVE_ANIM_MS = 500;
+  /** Outbox 流程確認（FlowAck）動畫播放時間（毫秒）。 */
+  public static inline var FLOW_ACK_ANIM_MS = 500;
+
+  // ========== 私有欄位（依狀態分區，後續重構時維持對應私有方法區塊）==========
+
+  /** --- 棋盤 --- */
+  var _board:Board;
+
+  /** --- 君主列、當前行動方、行動切片、終局 --- */
+  var _monarchs:Array<Monarch>;
+  /** 君主 id → 該席位之 {@link IPlayer}（語意含 {@link IPlayer#isAi}；與 {@link #playerForMonarch} 同源）。 */
+  var _seatPlayer:Map<MonarchId, Player>;
+  var _activeId:MonarchId;
+  var _roundNumber:Int;
+  var _hasMovedThisTurn:Bool;
+  var _strategyPreUsed:Bool;
+  var _strategyPostUsed:Bool;
+  var _pendingStrategyPhase:Null<StrategyPhase>;
+  var _activeSliceComplete:Bool;
+  var _terminationReason:MatchTerminationReason;
+
+  /** --- 環上格子事件綁定與落地 pending --- */
+  var _tileEventByIndex:Map<Int, ITileEvent>;
+  var _pendingTileEvent:Null<ITileEvent>;
+  var _pendingTileEventIndex:Null<TileIndex>;
+  var _pendingTileEventAvoidanceDone:Bool;
+  var _pendingTileEventEffectMultiplier:Float;
+
+  /** --- 統一 outbox（嚴格保序）--- */
+  var _outboxSeq:Int;
+  var _outboxByMonarchId:Map<MonarchId, Array<IOutboxMessage>>;
+
+  /** 移動完成但尚未「落地分流」時，暫存落點索引（用於移動後策略窗口）。 */
+  var _pendingLandingTileIndex:Null<TileIndex>;
+
+  /** --- 計策暫存與君主所持牌 --- */
+  var _pendingStaging:Null<IStagingAction>;
+  var _stagingPreviewRows:Array<IJiCeStagingPreviewRow>;
+  var _ownedJiCe:Map<MonarchId, Array<IJiCe>>;
+
+  /** --- 移動逐步結算：已登錄之計策／場地效果勾子 --- */
+  var _movementStepHooks:Array<IJiCeMovementStepHook>;
+
+  /** --- 移動：骰點/步數規剘骨架 --- */
+  var _fixedMoveDelta:Null<Int>;
+  var _lastRolledMoveDelta:Null<Int>;
+
+  /** --- 城池：駐軍、儲備、屬主；踩中空城／我方城 pending --- */
+  /** 城池格索引 → 駐守武將 id 列表；無鍵或空陣列視為無駐將（空城語意）。 */
+  var _cityGarrisonGenerals:Map<Int, Array<GeneralId>>;
+  var _cityStockTroops:Map<Int, Int>;
+  var _cityStockGrain:Map<Int, Int>;
+  var _cityStockGold:Map<Int, Int>;
+  var _pendingEmptyCityTileIndex:Null<TileIndex>;
+  var _cityOwner:Map<Int, MonarchId>;
+  var _cityLevel:Map<Int, CityLevel>;
+  var _pendingFriendlyCityTileIndex:Null<TileIndex>;
+
+  /** --- 村落互動 pending（交易/搶奪/攻占）--- */
+  var _pendingVillageTileIndex:Null<TileIndex>;
+  /** 村落格索引 →（君主 id → 友好度 0~100）。 */
+  var _villageFriendly:Map<Int, Map<MonarchId, Int>>;
+  /** 村落格索引 → 屬主君主 id；用於「歸順後每回合產出」等領地語意。 */
+  var _villageOwner:Map<Int, MonarchId>;
+  /** 村落格索引 → 領地等級（先以 CityLevel.Village 表示，未來可升級）。 */
+  var _villageLevel:Map<Int, CityLevel>;
+
+  /** --- 2.1.7：地形與格子成長率（以 tileIndex 為鍵）--- */
+  var _terrainByIndex:Map<Int, TerrainKind>;
+  var _growthByIndex:Map<Int, TileGrowth>;
+
+  /** --- 村落領地資源庫（最小版；暫不暴露 UI）--- */
+  var _villageStockGold:Map<Int, Int>;
+  var _villageStockGrain:Map<Int, Int>;
+  var _villageStockTroops:Map<Int, Int>;
+
+  /** --- 資源格 pending（領取／指派武將加成）--- */
+  var _pendingResourceTileIndex:Null<TileIndex>;
+  /** 資源格：本次落地的資源包（程序化生成；離開格子或結算後刷新）。 */
+  var _resourceRewardsByTile:Map<Int, ResourceReward>;
+
+  /** --- 武將格/商店格 pending（骨架）--- */
+  var _pendingGeneralTileIndex:Null<TileIndex>;
+  var _pendingShopTileIndex:Null<TileIndex>;
+
+  /** 武將格：本次落地的招募清單（程序化生成；離開格子或招募後刷新）。 */
+  var _generalOffersByTile:Map<Int, Array<GeneralRecruitOffer>>;
+
+  /** 商店格：本次落地的商品清單（程序化生成；購買後從清單移除）。 */
+  var _shopStocksByTile:Map<Int, Array<ShopStockItem>>;
+
+  /** --- 策略（指定格子）暫存效果骨架 --- */
+  // NOTE(strategy): ver1 以「一次性下回合加成」作為最小可玩落地：
+  // - 由計策寫入 _tileNextTurn*Bonus
+  // - 於回合結算點統一套用到領地資源庫後清空（一次性消耗）
+  // _tileDefenseBonus 目前僅存放，尚未接到攻城/防禦計算（待策略系統完整化）。
+  var _tileNextTurnGrainBonus:Map<Int, Int>;
+  var _tileNextTurnGoldBonus:Map<Int, Int>;
+  var _tileDefenseBonus:Map<Int, Float>;
+
+  /** --- 敵城對峙多階段 --- */
+  var _pendingHostileCityTileIndex:Null<TileIndex>;
+  var _hostileCityPhase:Null<HostileCityPhase>;
+  var _hostileCityAttackerId:MonarchId;
+  var _hostileCityDefenderId:MonarchId;
+  var _hostileCityAwaitingDuel:Bool;
+  var _hostileCityAttackerChoiceToken:String;
+  var _hostileCityAttackerGeneralIds:Array<GeneralId>;
+  var _hostileCityDefenderGeneralId:Null<GeneralId>;
+  var _hostileCitySettlementSummary:String;
+
+  public function new() {
+    _board = cast null;
+    _monarchs = [];
+    _seatPlayer = new Map();
+    _activeId = "";
+    _roundNumber = 1;
+    _hasMovedThisTurn = false;
+    _strategyPreUsed = false;
+    _strategyPostUsed = false;
+    _pendingStrategyPhase = null;
+    _activeSliceComplete = false;
+    _terminationReason = NotEnded;
+    _tileEventByIndex = new Map();
+    _pendingTileEvent = null;
+    _pendingTileEventIndex = null;
+    _pendingTileEventAvoidanceDone = false;
+    _pendingTileEventEffectMultiplier = 1.0;
+    _outboxSeq = 0;
+    _outboxByMonarchId = new Map();
+    _pendingLandingTileIndex = null;
+    _pendingStaging = null;
+    _ownedJiCe = new Map();
+    _cityGarrisonGenerals = new Map();
+    _cityStockTroops = new Map();
+    _cityStockGrain = new Map();
+    _cityStockGold = new Map();
+    _pendingEmptyCityTileIndex = null;
+    _cityOwner = new Map();
+    _cityLevel = new Map();
+    _pendingFriendlyCityTileIndex = null;
+    _pendingVillageTileIndex = null;
+    _pendingResourceTileIndex = null;
+    _pendingGeneralTileIndex = null;
+    _pendingShopTileIndex = null;
+    _generalOffersByTile = new Map();
+    _shopStocksByTile = new Map();
+    _resourceRewardsByTile = new Map();
+    _villageFriendly = new Map();
+    _villageOwner = new Map();
+    _villageLevel = new Map();
+    _terrainByIndex = new Map();
+    _growthByIndex = new Map();
+    _villageStockGold = new Map();
+    _villageStockGrain = new Map();
+    _villageStockTroops = new Map();
+    _tileNextTurnGrainBonus = new Map();
+    _tileNextTurnGoldBonus = new Map();
+    _tileDefenseBonus = new Map();
+    _movementStepHooks = [];
+    _fixedMoveDelta = null;
+    _lastRolledMoveDelta = null;
+    clearHostileCityConfrontation();
+    clearStaging();
+  }
+
+  /** 規剘：擲骰（1~6）取得本次移動步數。 */
+  public function rollMoveDelta():Int {
+    if (_fixedMoveDelta != null) {
+      _lastRolledMoveDelta = _fixedMoveDelta;
+      return _fixedMoveDelta;
+    }
+    var d = Std.random(DICE_MAX) + DICE_MIN;
+    _lastRolledMoveDelta = d;
+    return d;
+  }
+
+  /** 測試/除錯：固定每次移動骰點（設為 null 代表恢復隨機）。 */
+  public function forceSetFixedMoveDelta(delta:Null<Int>):Void {
+    if (delta == null) {
+      _fixedMoveDelta = null;
+      return;
+    }
+    if (delta < DICE_MIN || delta > DICE_MAX)
+      throw "GameMatchCore.forceSetFixedMoveDelta: delta out of range";
+    _fixedMoveDelta = delta;
+  }
+
+  /** 測試/除錯：直接設定回合數（round 必須 >= 1）。 */
+  public function forceSetRoundNumber(round:Int):Void {
+    if (round < 1)
+      throw "GameMatchCore.forceSetRoundNumber: round must be >= 1";
+    _roundNumber = round;
+  }
+
+  /** 測試/除錯：直接增加君主糧食（n 必須 >= 0）。 */
+  public function forceGrantMonarchGrain(monarchId:MonarchId, n:Int):Void {
+    if (n < 0)
+      throw "GameMatchCore.forceGrantMonarchGrain: n must be >= 0";
+    var mon = monarchWithId(monarchId);
+    mon.grantGrain(n);
+  }
+
+  /** 除錯/UI：上一個擲出的移動步數（尚未擴充到 IGameMatchGetter）。 */
+  public function forceGetLastRolledMoveDelta():Null<Int>
+    return _lastRolledMoveDelta;
+
+  /** 規剘：經過起點給予獎勵（骨架：以 prestige 分三段）。 */
+  public function onPassStartTile(ruler:Monarch):Void {
+    // NOTE(num-algo): 起點獎勵對齊 docs/數值算法.md §7.2；其餘聲望變化/影響可逐步擴充。
+    // 對齊 docs/數值算法.md 7.2（起點獎勵）：高/中/低聲望三段獎勵（之後可搬到 Balance 或資料表）
+    var p = ruler.prestige();
+    if (p >= 70) {
+      ruler.grantGold(300);
+      ruler.grantGrain(200);
+      ruler.grantTroops(200);
+    } else if (p >= 40) {
+      ruler.grantGold(200);
+      ruler.grantGrain(150);
+    } else {
+      ruler.grantGold(100);
+    }
+
+    // GDD 2.1.12：經過起點時，領地資源成長一次（最小版）
+    applyTerritoryGrowthOnPassStart();
+  }
+
+  /**
+   * 起點觸發之領地資源成長（ver1 最小版）：
+   * - 城池：grain 成長寫入城池儲備；gold 成長直接發放給屬主（目前未建城池 gold 儲備模型）
+   * - 村落領地化：gold/grain 直接發放給屬主
+   *
+   * 後續對齊 2.1.7 時，應改為「地形/成長率」驅動並存入領地資源庫。
+   */
+  function applyTerritoryGrowthOnPassStart():Void {
+    // NOTE(num-algo): ver1 資源成長已對齊 docs/數值算法.md §6.1（等級係數、地形成長表、政治加成）。
+    if (_board == null)
+      return;
+    var len = _board.length();
+    for (i in 0...len) {
+      // 2.1.7：成長量由每格 base growth 決定，並受「城池等級」「駐守武將」影響（最小版）
+      var g = effectiveTerritoryGrowth(i);
+
+      // 城池領地：寫入領地資源庫（城池儲備）
+      if (_cityOwner.exists(i)) {
+        var prevGold = forceGetCityStoredGold(i);
+        var prevGr = forceGetCityStoredGrain(i);
+        var prevT = forceGetCityStoredTroops(i);
+        _cityStockGold.set(i, prevGold + g.gold);
+        _cityStockGrain.set(i, prevGr + g.grain);
+        _cityStockTroops.set(i, prevT + g.troops);
+      }
+
+      // 村落領地化：寫入村落領地資源庫（最小版；暫無調度 UI）
+      if (_villageOwner.exists(i)) {
+        var vg = _villageStockGold.exists(i) ? _villageStockGold.get(i) : 0;
+        var vgr = _villageStockGrain.exists(i) ? _villageStockGrain.get(i) : 0;
+        var vt = _villageStockTroops.exists(i) ? _villageStockTroops.get(i) : 0;
+        _villageStockGold.set(i, vg + g.gold);
+        _villageStockGrain.set(i, vgr + g.grain);
+        _villageStockTroops.set(i, vt + g.troops);
+      }
+    }
+  }
+
+  function effectiveTerritoryGrowth(at:TileIndex):TileGrowth {
+    var base = forceGetTileGrowth(at);
+    // 預設倍率
+    var levelMult = 1.0;
+    var goldMult = 1.0;
+    var grainMult = 1.0;
+    var troopMult = 1.0;
+
+    // 城池：等級倍率 + 駐守武將加成
+    if (_board != null && _board.tileAt(at).kind() == City && _cityOwner.exists(at)) {
+      var lvl = forceGetCityLevel(at);
+      levelMult = cityLevelGrowthMultiplier(lvl);
+      var gm = cityGarrisonGrowthMultiplier(at);
+      goldMult *= gm.gold;
+      grainMult *= gm.grain;
+      troopMult *= gm.troops;
+    }
+
+    // 村落領地化：暫用 Village 等級倍率（未來升級時可改讀 _villageLevel）
+    if (_villageOwner.exists(at)) {
+      var vLvl = _villageLevel.exists(at) ? _villageLevel.get(at) : CityLevel.Village;
+      levelMult = cityLevelGrowthMultiplier(vLvl);
+    }
+
+    return {
+      gold: Std.int(Math.floor(base.gold * levelMult * goldMult)),
+      grain: Std.int(Math.floor(base.grain * levelMult * grainMult)),
+      troops: Std.int(Math.floor(base.troops * levelMult * troopMult)),
+    };
+  }
+
+  function cityLevelGrowthMultiplier(level:CityLevel):Float {
+    return switch level {
+      case Village: 1.0;
+      case SmallCity: 1.3;
+      case BigCity: 1.6;
+      case Capital: 2.0;
+    };
+  }
+
+  function cityGarrisonGrowthMultiplier(at:TileIndex):{gold:Float, grain:Float, troops:Float} {
+    // 對齊 docs/數值算法.md 6.1：武將政治加成 = 1 + (駐守武將政治/100)*0.3
+    // - gold/grain 受政治加成
+    // - troops 不受政治加成（僅吃地形×城池等級）
+    var bestPol = 0;
+    for (gid in forceGetCityGarrisonGeneralIds(at)) {
+      var g = requireGeneral(gid);
+      var pol = g.stat(game.GeneralStat.Stewardship);
+      if (pol > bestPol)
+        bestPol = pol;
+    }
+    var polMult = 1.0 + (Balance.clampInt(bestPol, 0, 100) / 100.0) * 0.3;
+    return {gold: polMult, grain: polMult, troops: 1.0};
+  }
+
+  function rollTerrain(idx:TileIndex):TerrainKind {
+    // NOTE(num-algo): docs 尚未提供「地形出現機率表」；ver1 先集中成可調權重，保持可重現。
+    // 權重直覺：平原/草原較常見；海岸/山地較少；河川/森林居中。
+    var wPlain = 0.25;
+    var wGrass = 0.20;
+    var wForest = 0.18;
+    var wRiver = 0.15;
+    var wMountain = 0.12;
+    var wCoast = 0.10;
+    var sum = wPlain + wGrass + wForest + wRiver + wMountain + wCoast;
+    if (sum <= 0)
+      return TerrainKind.Plain;
+
+    var u = Deterministic.hash01('terrain|t=${idx}');
+    var x = u * sum;
+    if (x < wPlain)
+      return TerrainKind.Plain;
+    x -= wPlain;
+    if (x < wGrass)
+      return TerrainKind.Grassland;
+    x -= wGrass;
+    if (x < wForest)
+      return TerrainKind.Forest;
+    x -= wForest;
+    if (x < wRiver)
+      return TerrainKind.River;
+    x -= wRiver;
+    if (x < wMountain)
+      return TerrainKind.Mountain;
+    return TerrainKind.Coast;
+  }
+
+  function rollGrowth(idx:TileIndex, terrain:TerrainKind):TileGrowth {
+    // 對齊 docs/數值算法.md §12：地形成長率數值表（每回合基礎成長量）
+    // 後續結算在 effectiveTerritoryGrowth 再乘上「城池等級係數」與「武將政治加成」。
+    return switch terrain {
+      case Plain: {grain: 15, gold: 10, troops: 8};
+      case Mountain: {grain: 5, gold: 15, troops: 3};
+      case Forest: {grain: 10, gold: 5, troops: 8};
+      case River: {grain: 15, gold: 10, troops: 5};
+      case Coast: {grain: 5, gold: 15, troops: 3};
+      case Grassland: {grain: 10, gold: 5, troops: 12};
+    };
+  }
+
+  function clearStaging():Void {
+    _pendingStaging = null;
+    _stagingPreviewRows = ([] : Array<IJiCeStagingPreviewRow>);
+    _pendingStrategyPhase = null;
+  }
+
+  // ========== 私有行為（依欄位分組；公開方法與友元僅委派至此）==========
+
+  // --- 格子事件綁定 ---
+  private function tileEventBind(at:TileIndex, handler:ITileEvent):Void {
+    _tileEventByIndex.set(at, handler);
+  }
+
+  // --- 棋盤（單例安裝）---
+  private function boardInstallOnce(tiles:Array<ITile>):IBoard {
+    if (_board != null)
+      throw "GameMatchCore.createBoard: board already set";
+    var b = new Board(tiles);
+    _board = b;
+    // 2.1.7：安裝棋盤時生成地形與基礎成長率（可被 forceSet 覆寫）
+    var len = b.length();
+    for (i in 0...len) {
+      if (!_terrainByIndex.exists(i))
+        _terrainByIndex.set(i, rollTerrain(i));
+      if (!_growthByIndex.exists(i))
+        _growthByIndex.set(i, rollGrowth(i, _terrainByIndex.get(i)));
+    }
+    return b;
+  }
+
+  // --- 暫存（staging）寫入／友元讀取用（不將欄位暴露給套件外）---
+  private function stagingEnterJiCe(card:IJiCe):Void {
+    _pendingStaging = new JiCeStagingAction(this, card);
+    _stagingPreviewRows = ([] : Array<IJiCeStagingPreviewRow>);
+  }
+
+  /** 與暫存選單建構同步：直接回傳暫存列（勿在暫存期外依賴其內容）。 */
+  private function stagingPreviewRowsLive():Array<IJiCeStagingPreviewRow>
+    return _stagingPreviewRows;
+
+  private function stagingMatchesJiCe(card:IJiCe):Bool {
+    if (_pendingStaging == null)
+      return false;
+    var c = _pendingStaging.asJiCe();
+    return c != null && c == card;
+  }
+
+  private function stagingPredictedTroopLossForGeneralOrThrow(gid:GeneralId):Int {
+    for (r in _stagingPreviewRows)
+      if (r.generalId() == gid)
+        return r.predictedTroopLoss();
+    throw 'GameMatchCore: unknown general $gid in staging rows';
+  }
+
+  private function monarchTroopCount(mid:MonarchId):Int
+    return monarchWithId(mid).troops();
+
+  private function monarchApplyTroopLoss(mid:MonarchId, loss:Int):Void
+    monarchWithId(mid).reduceTroops(loss);
+
+  // --- 城池圖資：進駐／調度結果寫回（君主池已由規剘扣除或加回）---
+  private function cityMapsDepositOccupy(
+    tileIndex:TileIndex,
+    ownerMonarchId:MonarchId,
+    troops:Int,
+    grain:Int,
+    garrisonIds:Array<GeneralId>
+  ):Void {
+    var prevT = _cityStockTroops.exists(tileIndex) ? _cityStockTroops.get(tileIndex) : 0;
+    var prevG = _cityStockGrain.exists(tileIndex) ? _cityStockGrain.get(tileIndex) : 0;
+    _cityStockTroops.set(tileIndex, prevT + troops);
+    _cityStockGrain.set(tileIndex, prevG + grain);
+    if (!_cityStockGold.exists(tileIndex))
+      _cityStockGold.set(tileIndex, 0);
+    _cityOwner.set(tileIndex, ownerMonarchId);
+    _cityGarrisonGenerals.set(tileIndex, garrisonIds.copy());
+  }
+
+  private function cityMapsApplyFriendlyDispatchTargets(tileIndex:TileIndex, targetTroops:Int, targetGrain:Int):Void {
+    _cityStockTroops.set(tileIndex, targetTroops);
+    _cityStockGrain.set(tileIndex, targetGrain);
+    if (!_cityStockGold.exists(tileIndex))
+      _cityStockGold.set(tileIndex, 0);
+  }
+
+  // --- 落地 surface：清空事件／空城／友城 pending 並重置敵城對峙 ---
+  private function landingClearSurfacePendings():Void {
+    _pendingTileEvent = null;
+    _pendingTileEventIndex = null;
+    _pendingTileEventAvoidanceDone = false;
+    _pendingTileEventEffectMultiplier = 1.0;
+    _pendingEmptyCityTileIndex = null;
+    _pendingFriendlyCityTileIndex = null;
+    _pendingVillageTileIndex = null;
+    _pendingResourceTileIndex = null;
+    _pendingGeneralTileIndex = null;
+    _pendingShopTileIndex = null;
+    hostileCityResetAll();
+  }
+
+  private function landingArmPendingTileEventAt(idx:TileIndex):Void {
+    _pendingTileEvent = _tileEventByIndex.get(idx);
+    _pendingTileEventIndex = idx;
+    _pendingTileEventAvoidanceDone = false;
+    _pendingTileEventEffectMultiplier = 1.0;
+  }
+
+  /** 君主踩在 {@link game.TileKind.City}：依屬主／空城／駐軍決定 pending（語意集中於此）。 */
+  private function landingResolveCityTile(idx:TileIndex):Void {
+    if (_cityOwner.exists(idx) && _cityOwner.get(idx) == activeMonarch().id())
+      _pendingFriendlyCityTileIndex = idx;
+    else if (_cityOwner.exists(idx) && !cityVacantNoGarrison(idx))
+      hostileCityEnterConfrontationAt(idx);
+    else if (cityVacantNoGarrison(idx))
+      _pendingEmptyCityTileIndex = idx;
+  }
+
+  // --- 敵城對峙 ---
+  private function hostileCityResetAll():Void {
+    _pendingHostileCityTileIndex = null;
+    _hostileCityPhase = null;
+    _hostileCityAttackerId = "";
+    _hostileCityDefenderId = "";
+    _hostileCityAwaitingDuel = false;
+    _hostileCityAttackerChoiceToken = "";
+    _hostileCityAttackerGeneralIds = [];
+    _hostileCityDefenderGeneralId = null;
+    _hostileCitySettlementSummary = "";
+  }
+
+  private function hostileCityEnterConfrontationAt(idx:TileIndex):Void {
+    if (!_cityOwner.exists(idx))
+      throw "GameMatchCore.hostileCityEnterConfrontationAt: city has no owner";
+    _pendingHostileCityTileIndex = idx;
+    _hostileCityPhase = AttackerChoosing;
+    _hostileCityAttackerId = activeMonarch().id();
+    _hostileCityDefenderId = _cityOwner.get(idx);
+    _hostileCityAwaitingDuel = false;
+    _hostileCityAttackerChoiceToken = "";
+    _hostileCityAttackerGeneralIds = [];
+    _hostileCityDefenderGeneralId = null;
+    _hostileCitySettlementSummary = "";
+  }
+
+  private function hostileCityRecordAttackerChoice(tok:String, picks:Array<GeneralId>):Void {
+    _hostileCityAttackerChoiceToken = tok;
+    _hostileCityAttackerGeneralIds = picks.copy();
+    _hostileCityAwaitingDuel = tok == "duel";
+    _hostileCityPhase = DefenderResponse;
+  }
+
+  /** 依暫存攻方選項與將面組結算摘要文案。 */
+  private function hostileCityComputeSettlementSummaryText():String {
+    var tileIdx = _pendingHostileCityTileIndex != null ? _pendingHostileCityTileIndex : -1;
+    var tok = _hostileCityAttackerChoiceToken;
+    var atkG = _hostileCityAttackerGeneralIds.length > 0 ? _hostileCityAttackerGeneralIds[0] : "(無)";
+    switch tok {
+      case "pay_toll":
+        return '結算：過路費已付｜城池格 $tileIdx';
+      case "negotiate":
+        return '結算：談判（攻將 $atkG）｜協議草案已備';
+      case "attrition":
+        return '結算：消耗戰（攻將 $atkG）｜損耗預估完成';
+      case "siege":
+        return '結算：攻城戰（攻將 $atkG）｜城防推演完成';
+      case "duel":
+        var defG = _hostileCityDefenderGeneralId != null ? _hostileCityDefenderGeneralId : "?";
+        return '結算：單挑（攻將 $atkG vs 守將 $defG）｜勝負已裁定';
+      default:
+        throw 'GameMatchCore.hostileCityComputeSettlementSummaryText: 未知選項 $tok';
+    }
+  }
+
+  private function hostileCityPublishSettlementPreview():Void {
+    _hostileCitySettlementSummary = hostileCityComputeSettlementSummaryText();
+    _hostileCityPhase = AttackerSettlement;
+  }
+
+  public function movementStepHooks():Array<IJiCeMovementStepHook>
+    return _movementStepHooks.copy();
+
+  /** 規剘：登錄移動逐步勾子（正式 API；非 force）。 */
+  public function registerMovementStepHook(h:IJiCeMovementStepHook):Void {
+    for (x in _movementStepHooks)
+      if (x == h)
+        return;
+    _movementStepHooks.push(h);
+  }
+
+  public function forceRegisterMovementStepHook(h:IJiCeMovementStepHook):Void {
+    // NOTE(convention): force* 僅供測試/除錯使用；正式規剘請改呼叫 registerMovementStepHook。
+    registerMovementStepHook(h);
+  }
+
+  /** 規剘：移除先前登錄之勾子（正式 API；非 force）。 */
+  public function unregisterMovementStepHook(h:IJiCeMovementStepHook):Void {
+    var i = _movementStepHooks.length;
+    while (i-- > 0)
+      if (_movementStepHooks[i] == h)
+        _movementStepHooks.splice(i, 1);
+  }
+
+  public function forceUnregisterMovementStepHook(h:IJiCeMovementStepHook):Void {
+    // NOTE(convention): force* 僅供測試/除錯使用；正式規剘請改呼叫 unregisterMovementStepHook。
+    unregisterMovementStepHook(h);
+  }
+
+  /** 關卡/規剘：將事件腳本綁至環上索引（正式 API；非 force）。 */
+  public function bindTileEvent(at:TileIndex, handler:ITileEvent):Void {
+    tileEventBind(at, handler);
+  }
+
+  public function forceBindTileEvent(at:TileIndex, handler:ITileEvent):Void {
+    // NOTE(convention): force* 僅供測試/除錯使用；正式規剘請改呼叫 bindTileEvent。
+    bindTileEvent(at, handler);
+  }
+
+  public function createTile(index:TileIndex, kind:TileKind):ITile
+    return new Tile(index, kind);
+
+  public function createBoard(tiles:Array<ITile>):IBoard
+    return boardInstallOnce(tiles);
+
+  public function createGeneral(id:GeneralId, owner:MonarchId, command:Int, might:Int, wit:Int, stewardship:Int):IGeneral {
+    // 同名人物不得重複出現
+    for (m in _monarchs)
+      for (g in m.roster())
+        if (g != null && g.id() == id)
+          throw 'GameMatchCore.createGeneral: general "$id" already exists';
+    var gen = new General(id, owner, command, might, wit, stewardship);
+    monarchWithId(owner).addGeneral(gen);
+    return gen;
+  }
+
+  /**
+   * docs/裝備系統.md：裝備裝上不可拆下。
+   * ver1 暫提供 force API，供 demo/測試/關卡組立注入武器。
+   */
+  public function forceEquipWeaponByName(generalId:GeneralId, equipmentId:EquipmentId, weaponName:String, ?price:Int):Void {
+    var g = requireGeneral(generalId);
+    var eq = WeaponCatalog.spawnByName(equipmentId, weaponName, price);
+    g.addEquipment(eq);
+  }
+
+  /** demo/測試：直接注入任意裝備實例。 */
+  public function forceEquipEquipment(generalId:GeneralId, eq:IEquipment):Void {
+    var g = requireGeneral(generalId);
+    g.addEquipment(eq);
+  }
+
+  function requireGeneral(gid:GeneralId):General {
+    for (m in _monarchs)
+      for (g in m.roster())
+        if (g != null && g.id() == gid)
+          return cast g;
+    throw 'GameMatchCore: general "$gid" not found';
+  }
+
+  public function createMonarch(id:MonarchId, seat:Int, pawnIndex:TileIndex, ?troops:Int, ?grain:Int):IMonarch {
+    // 同名人物不得重複出現
+    for (m0 in _monarchs)
+      if (m0 != null && m0.id() == id)
+        throw 'GameMatchCore.createMonarch: monarch "$id" already exists';
+    var t = troops != null ? troops : 0;
+    var g = grain != null ? grain : 0;
+    var m = new Monarch(id, seat, pawnIndex, t, g);
+    _monarchs.push(m);
+    _ownedJiCe.set(id, []);
+    _outboxByMonarchId.set(id, []);
+    if (_monarchs.length == 1)
+      _activeId = m.id();
+    return m;
+  }
+
+  public function forceGetUnusedMonarchIds():Array<MonarchId> {
+    var used = new Map<MonarchId, Bool>();
+    for (m in _monarchs)
+      if (m != null)
+        used.set(m.id(), true);
+    var out:Array<MonarchId> = [];
+    for (id in HistoricalPeople.monarchIds())
+      if (!used.exists(id))
+        out.push(id);
+    if (out.length == 0)
+      throw new GameError(
+        "可用主公人物不足：目前已無未使用的主公可供建立。\n請在 `game.HistoricalPeople` 增加更多主公人物，或調整局內需要建立的主公數量。",
+        "人物不足",
+        "people/insufficient-monarchs",
+        "INSUFFICIENT_MONARCH_CATALOG"
+      );
+    return out;
+  }
+
+  public function forceGetUnusedGeneralIds():Array<GeneralId> {
+    var used = new Map<GeneralId, Bool>();
+    for (m in _monarchs)
+      for (g in m.roster())
+        if (g != null)
+          used.set(g.id(), true);
+    var out:Array<GeneralId> = [];
+    for (id in HistoricalPeople.generalIds())
+      if (!used.exists(id))
+        out.push(id);
+    if (out.length == 0)
+      throw new GameError(
+        "可用武將人物不足：目前已無未使用的武將可供建立/招募。\n請在 `game.HistoricalPeople` 增加更多武將人物，或調整局內需要建立/招募的武將數量。",
+        "人物不足",
+        "people/insufficient-generals",
+        "INSUFFICIENT_GENERAL_CATALOG"
+      );
+    return out;
+  }
+
+  public function pendingOutbox(monarchId:MonarchId):Array<IOutboxMessage> {
+    if (!_outboxByMonarchId.exists(monarchId))
+      return [];
+    return _outboxByMonarchId.get(monarchId).copy();
+  }
+
+  public function ackOutbox(monarchId:MonarchId, outboxId:String):Void {
+    if (!_outboxByMonarchId.exists(monarchId))
+      return;
+    var xs = _outboxByMonarchId.get(monarchId);
+    var i = xs.length;
+    while (i-- > 0)
+      if (xs[i] != null && xs[i].id() == outboxId) {
+        xs.splice(i, 1);
+        return;
+      }
+  }
+
+  public function pushOutboxPlain(monarchId:MonarchId, title:String, payload:OutboxPayload, ctxKey:String):Void {
+    pushOutboxPopup(monarchId, title, payload, Ok, ctxKey);
+  }
+
+  function outboxId(monarchId:MonarchId, ctxKey:String):String {
+    _outboxSeq++;
+    return "out-" + monarchId + "-" + ctxKey + "-" + _roundNumber + "-" + _outboxSeq;
+  }
+
+  function pushOutboxToMonarch(monarchId:MonarchId, msg:IOutboxMessage):Void {
+    if (!_outboxByMonarchId.exists(monarchId))
+      _outboxByMonarchId.set(monarchId, []);
+    _outboxByMonarchId.get(monarchId).push(msg);
+  }
+
+  function pushOutboxPopup(monarchId:MonarchId, title:String, payload:OutboxPayload, option:PopupOption, ctxKey:String):String {
+    var id = outboxId(monarchId, ctxKey);
+    var msg = new OutboxMessage(
+      id,
+      OutboxAudience.ToMonarch(monarchId),
+      ctxKey,
+      true,
+      OutboxPresentationMode.Serial,
+      OutboxPresentation.Popup(title, option),
+      payload
+    );
+    pushOutboxToMonarch(monarchId, msg);
+    return id;
+  }
+
+  function pushOutboxAnim(monarchId:MonarchId, payload:OutboxPayload, durationMs:Int, mode:OutboxPresentationMode, ctxKey:String):String {
+    var id = outboxId(monarchId, ctxKey);
+    var msg = new OutboxMessage(
+      id,
+      OutboxAudience.ToMonarch(monarchId),
+      ctxKey,
+      false,
+      mode,
+      OutboxPresentation.Animation(durationMs),
+      payload
+    );
+    pushOutboxToMonarch(monarchId, msg);
+    return id;
+  }
+
+  function monarchWithId(mid:MonarchId):Monarch {
+    for (m in _monarchs)
+      if (m.id() == mid)
+        return m;
+    throw 'GameMatchCore: monarch "$mid" not registered';
+  }
+
+  public function playerForMonarch(monarchId:MonarchId):IPlayer {
+    if (!_seatPlayer.exists(monarchId))
+      throw 'GameMatchCore: no seat player for monarch "$monarchId"';
+    return _seatPlayer.get(monarchId);
+  }
+
+  public function createPlayer(displayName:String, ?isAi:Bool):IPlayer {
+    return new Player(displayName, isAi == true);
+  }
+
+  public function linkPlayerToMonarch(monarchId:MonarchId, player:IPlayer):Void {
+    monarchWithId(monarchId);
+    var pp = Std.downcast(player, Player);
+    if (pp == null)
+      throw "GameMatchCore: linkPlayerToMonarch requires impl_ver1.model.Player";
+
+    var rmSeats:Array<MonarchId> = [];
+    for (mid => seated in _seatPlayer)
+      if (seated == pp)
+        rmSeats.push(mid);
+    for (mid in rmSeats)
+      _seatPlayer.remove(mid);
+    pp.clearSeatBinding();
+
+    if (_seatPlayer.exists(monarchId)) {
+      var prev = _seatPlayer.get(monarchId);
+      if (prev != pp) {
+        prev.clearSeatBinding();
+        _seatPlayer.remove(monarchId);
+      }
+    }
+
+    pp.bindSeat(monarchId);
+    _seatPlayer.set(monarchId, pp);
+  }
+
+  public function createPlayerMenuEntry(
+    kind:PlayerMenuKind,
+    caption:String,
+    enabled:Bool,
+    ?decisionToken:String,
+    ?clientConfirm:MenuClientConfirm
+  ):IPlayerMenuEntry {
+    // 預設責任者：activeMonarch（與 createPlayerMenu(actor) 的 actor 一致）
+    var resp:Null<MonarchId> = activeMonarch() != null ? activeMonarch().id() : null;
+
+    // 特例：敵城對峙為雙方互動，責任者依 entry.kind 決定（避免 UI 只能靠猜 phase）
+    switch kind {
+      case HostileCityAttackerPick, HostileCitySettlementAck:
+        resp = _hostileCityAttackerId;
+      case HostileCityDefenderAck, HostileCityDefenderPickSubmit:
+        resp = _hostileCityDefenderId;
+      default:
+    }
+
+    return new PlayerMenuEntry(kind, caption, enabled, resp, decisionToken, clientConfirm);
+  }
+
+  public function createPlayerMenuNode(caption:String, leaf:Null<IPlayerMenuEntry>, children:Array<IPlayerMenuNode>, ?formWidgets:Array<MenuFormWidget>):IPlayerMenuNode
+    return new PlayerMenuNode(caption, leaf, children, formWidgets);
+
+  function requireOwnerMonarch(ownerMonarchId:MonarchId):Void {
+    for (mon in _monarchs)
+      if (mon.id() == ownerMonarchId)
+        return;
+    throw 'GameMatchCore.createJiCe: owner "$ownerMonarchId" not in monarchs';
+  }
+
+  public function createJiCe(key:JiCeKey, ownerMonarchId:MonarchId):IJiCe {
+    requireOwnerMonarch(ownerMonarchId);
+    var card = JiCeRegistry.spawn(this, key);
+    _ownedJiCe.get(ownerMonarchId).push(card);
+    return card;
+  }
+
+  public function forceGetPendingTileEvent():Null<ITileEvent>
+    return _pendingTileEvent;
+
+  public function forceGetPendingTileEventEffectMultiplier():Float
+    return _pendingTileEventEffectMultiplier;
+
+  public function forceGetPendingLandingTile():Null<TileIndex>
+    return _pendingLandingTileIndex;
+
+  public function forceGetPendingJiCe():Null<IJiCe>
+    return _pendingStaging != null ? _pendingStaging.asJiCe() : null;
+
+  public function forceHasPendingStaging():Bool
+    return _pendingStaging != null;
+
+  public function forceGetPendingStagingKey():Null<String>
+    return _pendingStaging != null ? _pendingStaging.registryKey() : null;
+
+  public function forceGetPendingStagingLabel():Null<String>
+    return _pendingStaging != null ? _pendingStaging.designLabel() : null;
+
+  public function forceJiCeStagingPreviewRows():Array<IJiCeStagingPreviewRow> {
+    return forceStagingPreviewRows();
+  }
+
+  public function forceStagingPreviewRows():Array<IJiCeStagingPreviewRow> {
+    if (_pendingStaging == null)
+      return [];
+    return _stagingPreviewRows.copy();
+  }
+
+  public function forceEnterJiCeStaging(card:IJiCe):Void {
+    // 相容層：舊測試/除錯入口仍可用（無 actor 脈絡，因此不填 preview rows）
+    stagingEnterJiCe(card);
+  }
+
+  public function cityVacantNoGarrison(at:TileIndex):Bool {
+    if (_board == null)
+      return false;
+    var tile = _board.tileAt(at);
+    if (tile.kind() != City)
+      return false;
+    if (!_cityGarrisonGenerals.exists(at))
+      return true;
+    return _cityGarrisonGenerals.get(at).length == 0;
+  }
+
+  public function forceGetPendingEmptyCityOccupyTile():Null<TileIndex>
+    return _pendingEmptyCityTileIndex;
+
+  public function forceGetCityStoredTroops(at:TileIndex):Int
+    return _cityStockTroops.exists(at) ? _cityStockTroops.get(at) : 0;
+
+  public function forceGetCityStoredGrain(at:TileIndex):Int
+    return _cityStockGrain.exists(at) ? _cityStockGrain.get(at) : 0;
+
+  public function forceGetCityStoredGold(at:TileIndex):Int
+    return _cityStockGold.exists(at) ? _cityStockGold.get(at) : 0;
+
+  public function forceGetCityLevel(at:TileIndex):CityLevel {
+    if (_cityLevel.exists(at))
+      return _cityLevel.get(at);
+    return CityLevel.SmallCity;
+  }
+
+  public function forceSetCityLevel(at:TileIndex, level:CityLevel):Void {
+    if (_board == null)
+      throw "GameMatchCore.forceSetCityLevel: board not set";
+    if (_board.tileAt(at).kind() != City)
+      throw "GameMatchCore.forceSetCityLevel: not a City tile";
+    _cityLevel.set(at, level);
+  }
+
+  function ensureVillageRow(at:TileIndex):Map<MonarchId, Int> {
+    if (_villageFriendly.exists(at))
+      return _villageFriendly.get(at);
+    var row = new Map<MonarchId, Int>();
+    for (m in _monarchs)
+      row.set(m.id(), 50);
+    _villageFriendly.set(at, row);
+    return row;
+  }
+
+  public function forceGetVillageFriendly(at:TileIndex, monarchId:MonarchId):Int {
+    if (_board == null)
+      throw "GameMatchCore.forceGetVillageFriendly: board not set";
+    if (_board.tileAt(at).kind() != Village)
+      throw "GameMatchCore.forceGetVillageFriendly: not a Village tile";
+    var row = ensureVillageRow(at);
+    if (!row.exists(monarchId))
+      row.set(monarchId, 50);
+    return row.get(monarchId);
+  }
+
+  public function forceSetVillageFriendly(at:TileIndex, monarchId:MonarchId, friendly:Int):Void {
+    if (_board == null)
+      throw "GameMatchCore.forceSetVillageFriendly: board not set";
+    if (_board.tileAt(at).kind() != Village)
+      throw "GameMatchCore.forceSetVillageFriendly: not a Village tile";
+    monarchWithId(monarchId);
+    var v = Balance.clampInt(friendly, 0, 100);
+    ensureVillageRow(at).set(monarchId, v);
+  }
+
+  public function forceGetVillageOwner(at:TileIndex):Null<MonarchId> {
+    if (_board == null)
+      throw "GameMatchCore.forceGetVillageOwner: board not set";
+    if (_board.tileAt(at).kind() != Village)
+      throw "GameMatchCore.forceGetVillageOwner: not a Village tile";
+    return _villageOwner.exists(at) ? _villageOwner.get(at) : null;
+  }
+
+  public function forceSetVillageOwner(at:TileIndex, ownerMonarchId:Null<MonarchId>):Void {
+    if (_board == null)
+      throw "GameMatchCore.forceSetVillageOwner: board not set";
+    if (_board.tileAt(at).kind() != Village)
+      throw "GameMatchCore.forceSetVillageOwner: not a Village tile";
+    if (ownerMonarchId == null) {
+      _villageOwner.remove(at);
+      _villageLevel.remove(at);
+      return;
+    }
+    monarchWithId(ownerMonarchId);
+    _villageOwner.set(at, ownerMonarchId);
+    if (!_villageLevel.exists(at))
+      _villageLevel.set(at, CityLevel.Village);
+    if (!_villageStockGold.exists(at))
+      _villageStockGold.set(at, 0);
+    if (!_villageStockGrain.exists(at))
+      _villageStockGrain.set(at, 0);
+    if (!_villageStockTroops.exists(at))
+      _villageStockTroops.set(at, 0);
+  }
+
+  public function forceGetVillageStoredGold(at:TileIndex):Int {
+    if (_board == null)
+      throw "GameMatchCore.forceGetVillageStoredGold: board not set";
+    if (_board.tileAt(at).kind() != Village)
+      throw "GameMatchCore.forceGetVillageStoredGold: not a Village tile";
+    return _villageStockGold.exists(at) ? _villageStockGold.get(at) : 0;
+  }
+
+  public function forceGetVillageStoredGrain(at:TileIndex):Int {
+    if (_board == null)
+      throw "GameMatchCore.forceGetVillageStoredGrain: board not set";
+    if (_board.tileAt(at).kind() != Village)
+      throw "GameMatchCore.forceGetVillageStoredGrain: not a Village tile";
+    return _villageStockGrain.exists(at) ? _villageStockGrain.get(at) : 0;
+  }
+
+  public function forceGetVillageStoredTroops(at:TileIndex):Int {
+    if (_board == null)
+      throw "GameMatchCore.forceGetVillageStoredTroops: board not set";
+    if (_board.tileAt(at).kind() != Village)
+      throw "GameMatchCore.forceGetVillageStoredTroops: not a Village tile";
+    return _villageStockTroops.exists(at) ? _villageStockTroops.get(at) : 0;
+  }
+
+  public function forcePutVillageStores(at:TileIndex, troops:Int, grain:Int, gold:Int):Void {
+    if (_board == null)
+      throw "GameMatchCore.forcePutVillageStores: board not set";
+    if (_board.tileAt(at).kind() != Village)
+      throw "GameMatchCore.forcePutVillageStores: not a Village tile";
+    if (troops < 0 || grain < 0 || gold < 0)
+      throw "GameMatchCore.forcePutVillageStores: negative stock";
+    _villageStockTroops.set(at, troops);
+    _villageStockGrain.set(at, grain);
+    _villageStockGold.set(at, gold);
+  }
+
+  public function forceGetVillageLevel(at:TileIndex):CityLevel {
+    if (_board == null)
+      throw "GameMatchCore.forceGetVillageLevel: board not set";
+    if (_board.tileAt(at).kind() != Village)
+      throw "GameMatchCore.forceGetVillageLevel: not a Village tile";
+    return _villageLevel.exists(at) ? _villageLevel.get(at) : CityLevel.Village;
+  }
+
+  public function forceSetVillageLevel(at:TileIndex, level:CityLevel):Void {
+    if (_board == null)
+      throw "GameMatchCore.forceSetVillageLevel: board not set";
+    if (_board.tileAt(at).kind() != Village)
+      throw "GameMatchCore.forceSetVillageLevel: not a Village tile";
+    _villageLevel.set(at, level);
+  }
+
+  public function forceAssignCityGarrison(at:TileIndex, generalId:GeneralId):Void {
+    if (_board == null)
+      throw "GameMatchCore.forceAssignCityGarrison: board not set";
+    if (_board.tileAt(at).kind() != City)
+      throw "GameMatchCore.forceAssignCityGarrison: not a City tile";
+    _cityGarrisonGenerals.set(at, [generalId]);
+  }
+
+  /** 關卡/規剘：標記城池格已有駐守武將（正式 API；非 force）。 */
+  public function assignCityGarrison(at:TileIndex, generalId:GeneralId):Void {
+    forceAssignCityGarrison(at, generalId);
+  }
+
+  public function forceGetCityGarrisonGeneralIds(at:TileIndex):Array<GeneralId> {
+    if (!_cityGarrisonGenerals.exists(at))
+      return [];
+    return _cityGarrisonGenerals.get(at).copy();
+  }
+
+  public function forceSetCityOwner(at:TileIndex, ownerMonarchId:MonarchId):Void {
+    if (_board == null)
+      throw "GameMatchCore.forceSetCityOwner: board not set";
+    if (_board.tileAt(at).kind() != City)
+      throw "GameMatchCore.forceSetCityOwner: not a City tile";
+    monarchWithId(ownerMonarchId);
+    _cityOwner.set(at, ownerMonarchId);
+    if (!_cityLevel.exists(at))
+      _cityLevel.set(at, CityLevel.SmallCity);
+  }
+
+  /** 關卡/規剘：標記城池格屬主（正式 API；非 force）。 */
+  public function setCityOwner(at:TileIndex, ownerMonarchId:MonarchId):Void {
+    forceSetCityOwner(at, ownerMonarchId);
+  }
+
+  public function forcePutCityStores(at:TileIndex, troops:Int, grain:Int):Void {
+    if (_board == null)
+      throw "GameMatchCore.forcePutCityStores: board not set";
+    if (_board.tileAt(at).kind() != City)
+      throw "GameMatchCore.forcePutCityStores: not a City tile";
+    if (troops < 0 || grain < 0)
+      throw "GameMatchCore.forcePutCityStores: negative stock";
+    _cityStockTroops.set(at, troops);
+    _cityStockGrain.set(at, grain);
+  }
+
+  public function forcePutCityStoredGold(at:TileIndex, gold:Int):Void {
+    if (_board == null)
+      throw "GameMatchCore.forcePutCityStoredGold: board not set";
+    if (_board.tileAt(at).kind() != City)
+      throw "GameMatchCore.forcePutCityStoredGold: not a City tile";
+    if (gold < 0)
+      throw "GameMatchCore.forcePutCityStoredGold: negative stock";
+    _cityStockGold.set(at, gold);
+  }
+
+  public function forceGetTileTerrain(at:TileIndex):TerrainKind {
+    if (_board == null)
+      throw "GameMatchCore.forceGetTileTerrain: board not set";
+    // 若尚未生成則以 deterministic 生成
+    if (!_terrainByIndex.exists(at))
+      _terrainByIndex.set(at, rollTerrain(at));
+    return _terrainByIndex.get(at);
+  }
+
+  public function forceGetTileGrowth(at:TileIndex):TileGrowth {
+    if (_board == null)
+      throw "GameMatchCore.forceGetTileGrowth: board not set";
+    if (!_growthByIndex.exists(at)) {
+      var t = forceGetTileTerrain(at);
+      _growthByIndex.set(at, rollGrowth(at, t));
+    }
+    return _growthByIndex.get(at);
+  }
+
+  public function forceSetTileTerrain(at:TileIndex, terrain:TerrainKind):Void {
+    if (_board == null)
+      throw "GameMatchCore.forceSetTileTerrain: board not set";
+    _terrainByIndex.set(at, terrain);
+    // terrain 改變後預設也重 roll 成長率（測試可再 forceSetTileGrowth 覆寫）
+    _growthByIndex.set(at, rollGrowth(at, terrain));
+  }
+
+  public function forceSetTileGrowth(at:TileIndex, growth:TileGrowth):Void {
+    if (_board == null)
+      throw "GameMatchCore.forceSetTileGrowth: board not set";
+    var gGold = growth.gold;
+    var gGrain = growth.grain;
+    var gTroops = growth.troops;
+    if (gGold < 0)
+      gGold = 0;
+    if (gGrain < 0)
+      gGrain = 0;
+    if (gTroops < 0)
+      gTroops = 0;
+    var g = {
+      gold: gGold,
+      grain: gGrain,
+      troops: gTroops,
+    };
+    _growthByIndex.set(at, g);
+  }
+
+  /** 規剘：寫入城池格儲備（正式 API；非 force）。 */
+  public function putCityStores(at:TileIndex, troops:Int, grain:Int):Void {
+    forcePutCityStores(at, troops, grain);
+  }
+
+  public function forceGetPendingFriendlyCityVisitTile():Null<TileIndex>
+    return _pendingFriendlyCityTileIndex;
+
+  public function forceGetPendingVillageTile():Null<TileIndex>
+    return _pendingVillageTileIndex;
+
+  public function forceGetPendingResourceTile():Null<TileIndex>
+    return _pendingResourceTileIndex;
+
+  public function forceGetPendingGeneralTile():Null<TileIndex>
+    return _pendingGeneralTileIndex;
+
+  public function forceGetPendingShopTile():Null<TileIndex>
+    return _pendingShopTileIndex;
+
+  public function forceGetPendingHostileCityTile():Null<TileIndex>
+    return _pendingHostileCityTileIndex;
+
+  public function forceGetHostileCityAttackerId():Null<MonarchId> {
+    return _hostileCityAttackerId != "" ? _hostileCityAttackerId : null;
+  }
+
+  public function forceGetHostileCityDefenderId():Null<MonarchId> {
+    return _hostileCityDefenderId != "" ? _hostileCityDefenderId : null;
+  }
+
+  public function forceGetHostileCityAttackerChoiceToken():Null<String> {
+    return _hostileCityAttackerChoiceToken != "" ? _hostileCityAttackerChoiceToken : null;
+  }
+
+  public function forceGetHostileCityAttackerGeneralId():Null<GeneralId> {
+    return _hostileCityAttackerGeneralIds.length > 0 ? _hostileCityAttackerGeneralIds[0] : null;
+  }
+
+  public function forceGetHostileCityFlowPhase():Null<String> {
+    if (_hostileCityPhase == null)
+      return null;
+    return switch _hostileCityPhase {
+      case AttackerChoosing: "AttackerChoosing";
+      case DefenderResponse: "DefenderResponse";
+      case AttackerSettlement: "AttackerSettlement";
+    };
+  }
+
+  public function forceGetHostileCitySettlementSummary():Null<String> {
+    if (_pendingHostileCityTileIndex == null || _hostileCityPhase != AttackerSettlement)
+      return null;
+    return _hostileCitySettlementSummary;
+  }
+
+  public function cityOwnedByActiveMonarch(at:TileIndex):Bool {
+    if (_board == null)
+      return false;
+    if (_board.tileAt(at).kind() != City)
+      return false;
+    return _cityOwner.exists(at) && _cityOwner.get(at) == activeMonarch().id();
+  }
+
+  public function forceGetCityOwner(at:TileIndex):Null<MonarchId> {
+    if (_board == null)
+      throw "GameMatchCore.forceGetCityOwner: board not set";
+    if (_board.tileAt(at).kind() != City)
+      throw "GameMatchCore.forceGetCityOwner: not a City tile";
+    return _cityOwner.exists(at) ? _cityOwner.get(at) : null;
+  }
+
+  public function tileOwnedByMonarch(at:TileIndex, monarchId:MonarchId):Bool {
+    if (_board == null)
+      return false;
+    var k = _board.tileAt(at).kind();
+    if (k == City) {
+      return _cityOwner.exists(at) && _cityOwner.get(at) == monarchId;
+    }
+    if (k == Village) {
+      return _villageOwner.exists(at) && _villageOwner.get(at) == monarchId;
+    }
+    return false;
+  }
+
+  public function tileOwnedByActiveMonarch(at:TileIndex):Bool
+    return tileOwnedByMonarch(at, activeMonarch().id());
+
+  public function tileOwnedByOtherMonarch(at:TileIndex, monarchId:MonarchId):Bool {
+    if (_board == null)
+      return false;
+    var k = _board.tileAt(at).kind();
+    if (k == City) {
+      return _cityOwner.exists(at) && _cityOwner.get(at) != monarchId;
+    }
+    if (k == Village) {
+      return _villageOwner.exists(at) && _villageOwner.get(at) != monarchId;
+    }
+    return false;
+  }
+
+  function menuChoicesFromRoster(mon:Monarch):Array<MenuGeneralChoice> {
+    var out:Array<MenuGeneralChoice> = [];
+    for (g in mon.roster())
+      out.push({generalId: g.id()});
+    return out;
+  }
+
+  function menuChoicesFromCityGarrison(mon:Monarch, cityIdx:TileIndex):Array<MenuGeneralChoice> {
+    // GDD：守城/成長等應以「駐守武將」為主，因此選單候選以城池駐將為準。
+    var out:Array<MenuGeneralChoice> = [];
+    var ok = new Map<String, Bool>();
+    for (g in mon.roster())
+      ok.set(g.id(), true);
+    for (gid in forceGetCityGarrisonGeneralIds(cityIdx))
+      if (ok.exists(gid))
+        out.push({generalId: gid});
+    return out;
+  }
+
+  function appendHostileCityMenuRoots(actor:IPlayer, roots:Array<IPlayerMenuNode>):Void {
+    var idx = _pendingHostileCityTileIndex;
+    if (idx == null || _hostileCityPhase == null)
+      return;
+
+    var atkId = _hostileCityAttackerId;
+    var defId = _hostileCityDefenderId;
+
+    if (actor.monarchId() == atkId && _hostileCityPhase == AttackerChoosing) {
+      var atkMon = cast(monarchWithId(atkId), Monarch);
+      var choices = menuChoicesFromRoster(atkMon);
+      var defSel = choices.length > 0 ? [choices[0].generalId] : ([] : Array<String>);
+
+      function optNode(caption:String, token:String, needPick:Bool):IPlayerMenuNode {
+        var optLeaf = createPlayerMenuEntry(HostileCityAttackerPick, caption, true, token);
+        if (!needPick)
+          return createPlayerMenuNode(caption, null, ([] : Array<IPlayerMenuNode>), [Button(optLeaf)]);
+        var form:Array<MenuFormWidget> = [
+          GeneralMultiPick("選擇武將", choices, defSel),
+          Button(optLeaf),
+        ];
+        return createPlayerMenuNode(caption, null, ([] : Array<IPlayerMenuNode>), form);
+      }
+
+      var atkChildren:Array<IPlayerMenuNode> = [
+        optNode("付過路費", "pay_toll", false),
+        optNode("談判", "negotiate", true),
+        optNode("消耗戰", "attrition", true),
+        optNode("攻城戰", "siege", true),
+        optNode("單挑", "duel", true),
+      ];
+      roots.push(createPlayerMenuNode('敵城對峙（格 $idx）', null, atkChildren));
+    }
+
+    if (actor.monarchId() == defId && _hostileCityPhase == DefenderResponse) {
+      if (_hostileCityAwaitingDuel) {
+        var defMon = cast(monarchWithId(defId), Monarch);
+        // 守方單挑：僅允許城池駐守武將（若無駐將，理應不可單挑）
+        var dChoices = menuChoicesFromCityGarrison(defMon, idx);
+        var dDef = dChoices.length > 0 ? [dChoices[0].generalId] : ([] : Array<String>);
+        var duelLeaf = createPlayerMenuEntry(HostileCityDefenderPickSubmit, "確認應戰武將", dChoices.length > 0, "def_duel_pick");
+        var duelForm:Array<MenuFormWidget> = [
+          GeneralMultiPick("守方單挑武將", dChoices, dDef),
+          Button(duelLeaf),
+        ];
+        roots.push(createPlayerMenuNode("守方：單挑應戰", null, ([] : Array<IPlayerMenuNode>), duelForm));
+      } else {
+        var ackLeaf = createPlayerMenuEntry(HostileCityDefenderAck, "確認（無單挑）", true, "def_ack");
+        roots.push(createPlayerMenuNode("守方：結束", null, ([] : Array<IPlayerMenuNode>), [Button(ackLeaf)]));
+      }
+    }
+
+    if (actor.monarchId() == atkId && _hostileCityPhase == AttackerSettlement) {
+      var settleLeaf = createPlayerMenuEntry(HostileCitySettlementAck, "確認結算", true, "atk_settle_ok");
+      roots.push(createPlayerMenuNode(_hostileCitySettlementSummary, null, ([] : Array<IPlayerMenuNode>), [Button(settleLeaf)]));
+    }
+  }
+
+  function extractFirstGeneralMultiPickSelections(widgets:Array<MenuFormWidget>):Array<GeneralId> {
+    for (w in widgets)
+      switch w {
+        case GeneralMultiPick(_, _, sel):
+          return sel.copy();
+        case Slider(_, _, _, _, _):
+        case MonarchSinglePick(_, _, _):
+        case Button(_):
+        case TileSinglePick(_, _, _):
+      }
+    return [];
+  }
+
+  function assertGeneralOwnedBy(monarchId:MonarchId, gid:GeneralId):Void {
+    var mon = cast(monarchWithId(monarchId), Monarch);
+    for (g in mon.roster())
+      if (g.id() == gid)
+        return;
+    throw 'GameMatchCore: 武將 "$gid" 非君主 $monarchId 麾下';
+  }
+
+  function handleHostileCityAttackerPick(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
+    if (_pendingHostileCityTileIndex == null || _hostileCityPhase != AttackerChoosing)
+      throw "GameMatchCore: HostileCityAttackerPick 與對峙階段不符";
+    var leaf = MenuActivation.activatingEntry(menuNode);
+    var tok = leaf.decisionToken();
+    if (tok == null)
+      throw "GameMatchCore: HostileCityAttackerPick 需要 decisionToken";
+    var picks = extractFirstGeneralMultiPickSelections(menuNode.formWidgets());
+    switch tok {
+      case "pay_toll":
+        if (picks.length != 0)
+          throw "GameMatchCore: 付過路費不可附帶武將選取";
+      case "negotiate", "attrition", "siege", "duel":
+        if (picks.length != 1)
+          throw "GameMatchCore: 此攻勢選項須恰好選擇一名攻方武將";
+        assertGeneralOwnedBy(_hostileCityAttackerId, picks[0]);
+      default:
+        throw 'GameMatchCore: 未知敵城攻方選項 $tok';
+    }
+    hostileCityRecordAttackerChoice(tok, picks);
+    GameMatchVer1Ops.onHostileCityAttackerConfirmed(
+      this,
+      _pendingHostileCityTileIndex != null ? _pendingHostileCityTileIndex : -1,
+      _hostileCityAttackerId,
+      _hostileCityDefenderId,
+      tok,
+      picks.length > 0 ? picks[0] : null
+    );
+    syncActiveSliceAfterMenuLeaf(HostileCityAttackerPick);
+  }
+
+  function handleHostileCityDefenderAck(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
+    if (_pendingHostileCityTileIndex == null || _hostileCityPhase != DefenderResponse)
+      throw "GameMatchCore: HostileCityDefenderAck 與對峙階段不符";
+    if (_hostileCityAwaitingDuel)
+      throw "GameMatchCore: 單挑時不可使用守方簡認確認";
+    hostileCityPublishSettlementPreview();
+    GameMatchVer1Ops.onHostileCityDefenderAck(
+      this,
+      _pendingHostileCityTileIndex != null ? _pendingHostileCityTileIndex : -1,
+      _hostileCityAttackerId,
+      _hostileCityDefenderId,
+      _hostileCityAttackerChoiceToken
+    );
+    syncActiveSliceAfterMenuLeaf(HostileCityDefenderAck);
+  }
+
+  function handleHostileCityDefenderPickSubmit(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
+    if (_pendingHostileCityTileIndex == null || _hostileCityPhase != DefenderResponse)
+      throw "GameMatchCore: HostileCityDefenderPickSubmit 與對峙階段不符";
+    if (!_hostileCityAwaitingDuel)
+      throw "GameMatchCore: 僅攻方選單挑時守方選將";
+    var picks = extractFirstGeneralMultiPickSelections(menuNode.formWidgets());
+    if (picks.length != 1)
+      throw "GameMatchCore: 守方單挑須恰好選擇一名武將";
+    assertGeneralOwnedBy(_hostileCityDefenderId, picks[0]);
+    // GDD：守方出戰應優先由該城池駐守武將出任
+    var idx = _pendingHostileCityTileIndex;
+    var gOk = false;
+    for (gid in forceGetCityGarrisonGeneralIds(idx))
+      if (gid == picks[0]) {
+        gOk = true;
+        break;
+      }
+    if (!gOk)
+      throw new GameError("守方單挑必須選擇該城池的駐守武將。", "選擇不合法", "hostile-city/defender-not-garrisoned");
+    _hostileCityDefenderGeneralId = picks[0];
+    hostileCityPublishSettlementPreview();
+    var atkG = _hostileCityAttackerGeneralIds.length > 0 ? _hostileCityAttackerGeneralIds[0] : null;
+    if (atkG != null)
+      GameMatchVer1Ops.onHostileCityDefenderDuelPickConfirmed(
+        this,
+        _pendingHostileCityTileIndex != null ? _pendingHostileCityTileIndex : -1,
+        _hostileCityAttackerId,
+        _hostileCityDefenderId,
+        atkG,
+        picks[0]
+      );
+    syncActiveSliceAfterMenuLeaf(HostileCityDefenderPickSubmit);
+  }
+
+  function handleHostileCitySettlementAck(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
+    if (_pendingHostileCityTileIndex == null || _hostileCityPhase != AttackerSettlement)
+      throw "GameMatchCore: HostileCitySettlementAck 與對峙階段不符";
+    var atkId = _hostileCityAttackerId;
+    var settleTileIdx = _pendingHostileCityTileIndex;
+    var atkLead:Null<GeneralId> = _hostileCityAttackerGeneralIds.length > 0 ? _hostileCityAttackerGeneralIds[0] : null;
+    var tok = _hostileCityAttackerChoiceToken;
+    var defGen = _hostileCityDefenderGeneralId;
+    var branch:HostileSettlementBranch = switch tok {
+      case "pay_toll": HostileSettlementBranch.PayToll;
+      case "negotiate": HostileSettlementBranch.Negotiate;
+      case "attrition": HostileSettlementBranch.Attrition;
+      case "siege": HostileSettlementBranch.Siege;
+      case "duel": HostileSettlementBranch.Duel;
+      default:
+        throw 'GameMatchCore: hostile settle unknown tok ${tok}';
+    };
+    GameMatchVer1Ops.applyHostileCitySettlementAck(this, actor, menuNode);
+    clearHostileCityConfrontation();
+    pushOutboxPlain(
+      atkId,
+      "戰鬥結果",
+      HostileCombatSettlement(branch, settleTileIdx != null ? settleTileIdx : -1, atkLead, defGen),
+      "hostile-settle"
+    );
+    _activeSliceComplete = true;
+    syncActiveSliceAfterMenuLeaf(HostileCitySettlementAck);
+  }
+
+  function assertHostileCityApplyActor(actor:IPlayer, kind:PlayerMenuKind):Void {
+    switch kind {
+      case HostileCityAttackerPick:
+        if (actor.monarchId() != _hostileCityAttackerId || _hostileCityPhase != AttackerChoosing)
+          throw "GameMatchCore.applyMenuLeaf: 僅攻方於攻勢選擇階段可操作 HostileCityAttackerPick";
+      case HostileCityDefenderAck, HostileCityDefenderPickSubmit:
+        if (actor.monarchId() != _hostileCityDefenderId || _hostileCityPhase != DefenderResponse)
+          throw "GameMatchCore.applyMenuLeaf: 僅守方於守方應對階段可操作";
+      case HostileCitySettlementAck:
+        if (actor.monarchId() != _hostileCityAttackerId || _hostileCityPhase != AttackerSettlement)
+          throw "GameMatchCore.applyMenuLeaf: 僅攻方於結算確認階段可操作 HostileCitySettlementAck";
+      default:
+        throw "GameMatchCore.assertHostileCityApplyActor: internal";
+    }
+  }
+
+  public function createPlayerMenu(actor:IPlayer):IPlayerMenu {
+    var pend = _pendingTileEvent;
+    var stg = _pendingStaging;
+    var stagingActive = stg != null;
+    var hostilePending = _pendingHostileCityTileIndex != null;
+    var ctx = actor.monarchId() + "-" + isActivePlayerSliceComplete();
+    if (pend != null)
+      ctx += "-evt-" + pend.registryKey();
+    if (stagingActive && stg != null)
+      ctx += "-stg-" + stg.registryKey();
+    if (_pendingEmptyCityTileIndex != null)
+      ctx += "-empty-city-" + _pendingEmptyCityTileIndex;
+    if (_pendingFriendlyCityTileIndex != null)
+      ctx += "-friendly-city-" + _pendingFriendlyCityTileIndex;
+    if (hostilePending) {
+      var phaseTag = forceGetHostileCityFlowPhase();
+      ctx += "-hostile-city-" + (phaseTag != null ? phaseTag : "?");
+    }
+    if (_pendingResourceTileIndex != null)
+      ctx += "-resource-" + _pendingResourceTileIndex;
+    if (_pendingGeneralTileIndex != null)
+      ctx += "-general-" + _pendingGeneralTileIndex;
+    if (_pendingShopTileIndex != null)
+      ctx += "-shop-" + _pendingShopTileIndex;
+    if (_pendingVillageTileIndex != null)
+      ctx += "-village-" + _pendingVillageTileIndex;
+
+    var roots:Array<IPlayerMenuNode> = [];
+
+    appendHostileCityMenuRoots(actor, roots);
+
+    if (_pendingFriendlyCityTileIndex != null) {
+      var fidx = _pendingFriendlyCityTileIndex;
+      var rulerF = cast(activeMonarch(), Monarch);
+      var caps = GameMatchVer1Ops.friendlyCityDispatchSliderDefaults(this, fidx, rulerF);
+      var dispatchApplyLeaf = createPlayerMenuEntry(FriendlyCityDispatchApply, "確認調度", true, "dispatch_apply");
+      var dispatchWidgets:Array<MenuFormWidget> = [
+        Slider("調度兵力（目標城池兵力）", 0, caps.maxTroopSlider, 1, caps.defTroop),
+        Slider("調度糧食（目標城池糧食）", 0, caps.maxGrainSlider, 1, caps.defGrain),
+        Slider("調度金錢（目標城池金錢）", 0, caps.maxGoldSlider, 1, caps.defGold),
+        Button(dispatchApplyLeaf),
+      ];
+      roots.push(createPlayerMenuNode("調度", null, [], dispatchWidgets));
+      // 合法性下推到 menu：缺武將或缺領地資源就 disable，避免 AI/玩家進 staging 才被拒絕
+      var canDev = rulerF.roster().length > 0 && forceGetCityStoredGold(fidx) >= 30 && forceGetCityStoredGrain(fidx) >= 20;
+      var canRest = rulerF.roster().length > 0;
+      roots.push(createPlayerMenuNode("開發", createPlayerMenuEntry(FriendlyCityDevelop, "開發（示範）", canDev, "friendly_dev"), []));
+      roots.push(createPlayerMenuNode("休整", createPlayerMenuEntry(FriendlyCityRest, "休整（示範）", canRest, "friendly_rest"), []));
+      roots.push(
+        createPlayerMenuNode(
+          "結束拜訪",
+          createPlayerMenuEntry(FriendlyCityVisitEnd, "結束拜訪", true, "visit_end"),
+          ([] : Array<IPlayerMenuNode>)
+        )
+      );
+    }
+
+    if (_pendingVillageTileIndex != null) {
+      var vidx = _pendingVillageTileIndex;
+      var rulerV = cast(activeMonarch(), Monarch);
+      // 若村落已歸順（屬主為當前君主），視同「領地拜訪」：提供調度 + 結束拜訪
+      var owner = forceGetVillageOwner(vidx);
+      if (owner != null && owner == rulerV.id()) {
+        var vTroop = forceGetVillageStoredTroops(vidx);
+        var vGrain = forceGetVillageStoredGrain(vidx);
+        var vGold = forceGetVillageStoredGold(vidx);
+        var dispatchLeaf = createPlayerMenuEntry(VillageDispatchApply, "確認調度", true, "v_dispatch_apply");
+        var widgets:Array<MenuFormWidget> = [
+          Slider("調度兵力（目標村落兵力）", 0, rulerV.troops(), 1, Std.int(Math.min(vTroop, rulerV.troops()))),
+          Slider("調度糧食（目標村落糧食）", 0, rulerV.grain(), 1, Std.int(Math.min(vGrain, rulerV.grain()))),
+          Slider("調度金錢（目標村落金錢）", 0, rulerV.gold(), 1, Std.int(Math.min(vGold, rulerV.gold()))),
+          Button(dispatchLeaf),
+        ];
+        roots.push(createPlayerMenuNode("調度", null, [], widgets));
+        // 合法性下推到 menu：只有我方領地村落且資源足夠才可進入 staging
+        var canVillageDev = forceGetVillageStoredGold(vidx) >= 25 && forceGetVillageStoredGrain(vidx) >= 25 && rulerV.roster().length > 0;
+        roots.push(createPlayerMenuNode("開發", createPlayerMenuEntry(VillageDevelop, "開發", canVillageDev, "v_dev"), []));
+        roots.push(createPlayerMenuNode("結束拜訪", createPlayerMenuEntry(VillageVisitEnd, "結束拜訪", true, "v_visit_end"), []));
+      } else {
+        // 非我方村落：維持原互動指令
+        roots.push(createPlayerMenuNode("村落指令", null, [
+          // 合法性下推到 menu：缺武將/缺金/缺兵就先 disable，避免 AI/玩家進 staging 才被拒絕
+          createPlayerMenuNode("交易", createPlayerMenuEntry(VillageTrade, "交易", rulerV.roster().length > 0 && rulerV.gold() >= 20, "v_trade"), []),
+          createPlayerMenuNode("搶奪", createPlayerMenuEntry(VillagePlunder, "搶奪", rulerV.roster().length > 0, "v_plunder"), []),
+          createPlayerMenuNode("攻占", createPlayerMenuEntry(VillageConquer, "攻占", rulerV.roster().length > 0 && rulerV.troops() > 0, "v_conquer"), []),
+          createPlayerMenuNode("回合結束（村落）", createPlayerMenuEntry(VillageEndTurn, "回合結束", true, "v_end"), []),
+        ]));
+      }
+    }
+
+    if (_pendingEmptyCityTileIndex != null) {
+      var idx = _pendingEmptyCityTileIndex;
+      var ruler = cast(activeMonarch(), Monarch);
+      var choices:Array<MenuGeneralChoice> = [];
+      for (g in ruler.roster()) {
+        var gid = g.id();
+        choices.push({generalId: gid});
+      }
+      var rosterMember = new Map<String, Bool>();
+      for (g in ruler.roster())
+        rosterMember.set(g.id(), true);
+      var defGarrison:Array<String> = [];
+      for (gid in forceGetCityGarrisonGeneralIds(idx))
+        if (rosterMember.exists(gid))
+          defGarrison.push(gid);
+      var troopMax = ruler.troops();
+      var grainMax = ruler.grain();
+      var confirmLeaf = createPlayerMenuEntry(EmptyCityOccupySubmit, "確認進駐（套用表單）", true, "confirm_occupy");
+      var abortLeaf = createPlayerMenuEntry(EmptyCityOccupyAbort, "離開（不放資源）", true, "abort_occupy");
+      var occupyForm:Array<MenuFormWidget> = [
+        GeneralMultiPick("複選駐守武將（可不選）", choices, defGarrison),
+        Slider("進駐兵力（君主池扣除）", 0, troopMax, 1, 0),
+        Slider("進駐糧食（君主池扣除）", 0, grainMax, 1, 0),
+        Button(confirmLeaf),
+        Button(abortLeaf),
+      ];
+      roots.push(createPlayerMenuNode('空城進駐（格 $idx）', null, [], occupyForm));
+    }
+
+    if (_pendingResourceTileIndex != null) {
+      var idx = _pendingResourceTileIndex;
+      var ruler = cast(activeMonarch(), Monarch);
+      var rw:ResourceReward = _resourceRewardsByTile.exists(idx) ? _resourceRewardsByTile.get(idx) : {gold: 0, grain: 0, troops: 0};
+      var lines:Array<String> = [];
+      if (rw.gold > 0)
+        lines.push('金錢 +${rw.gold}');
+      if (rw.grain > 0)
+        lines.push('糧食 +${rw.grain}');
+      if (rw.troops > 0)
+        lines.push('兵力 +${rw.troops}');
+      if (lines.length == 0)
+        lines.push("（無）");
+
+      var claim = createPlayerMenuEntry(ResourceClaim, "領取資源", true, "resource_claim");
+      var canBoost = ruler.roster().length > 0;
+      var boost = createPlayerMenuEntry(ResourceBoost, "指派武將加成", canBoost, "resource_boost");
+      var widgets:Array<MenuFormWidget> = [Button(claim), Button(boost)];
+      roots.push(createPlayerMenuNode('資源格（格 $idx）', null, [], widgets));
+      roots.push(createPlayerMenuNode("本次資源包：" + lines.join("｜"), null, [], []));
+      roots.push(createPlayerMenuNode("回合結束（資源格）", createPlayerMenuEntry(ResourceEndTurn, "回合結束（不加成）", true, "resource_end"), []));
+    }
+
+    if (_pendingGeneralTileIndex != null) {
+      var idx = _pendingGeneralTileIndex;
+      var offers = _generalOffersByTile.exists(idx) ? _generalOffersByTile.get(idx) : [];
+      var offerChoices:Array<MenuGeneralChoice> = [];
+      for (o in offers) {
+        offerChoices.push({generalId: o.offerId});
+      }
+      var submit = createPlayerMenuEntry(GeneralRecruitSubmit, "批次招募（提交）", offerChoices.length > 0, "general_recruit_submit");
+      var widgets:Array<MenuFormWidget> = [
+        GeneralMultiPick("招募清單（可複選）", offerChoices, []),
+        Button(submit),
+      ];
+      roots.push(createPlayerMenuNode('武將格（格 $idx）', null, [], widgets));
+      roots.push(createPlayerMenuNode("回合結束（武將格）", createPlayerMenuEntry(GeneralEndTurn, "回合結束", true, "general_end"), []));
+    }
+
+    if (_pendingShopTileIndex != null) {
+      var idx = _pendingShopTileIndex;
+      var stocks = _shopStocksByTile.exists(idx) ? _shopStocksByTile.get(idx) : [];
+      var ruler = cast(activeMonarch(), Monarch);
+      var choices:Array<MenuGeneralChoice> = [];
+      for (g in ruler.roster())
+        choices.push({generalId: g.id()});
+      var defSel:Array<String> = choices.length > 0 ? [choices[0].generalId] : [];
+
+      var shopChildren:Array<IPlayerMenuNode> = [];
+      for (it in stocks) {
+        var eq = spawnStockEquipment(it.stockId, it.type, it.name, it.priceGold);
+        var disabled = choices.length == 0 || ruler.gold() < it.priceGold;
+        var leaf = createPlayerMenuEntry(ShopBuy, "購買並裝備", !disabled, it.stockId);
+        var widgets:Array<MenuFormWidget> = [
+          GeneralMultiPick("裝備給（需恰選 1 名武將）", choices, defSel),
+          Button(leaf),
+        ];
+        var title = '${eq.name()}｜${Std.string(eq.type())}｜${Std.string(eq.rarity())}｜${Std.string(eq.bonusStat())}+${eq.bonusValue()}｜忠誠+${eq.loyaltyBonus()}｜金 ${it.priceGold}';
+        shopChildren.push(createPlayerMenuNode(title, null, ([] : Array<IPlayerMenuNode>), widgets));
+      }
+      shopChildren.push(createPlayerMenuNode("回合結束（商店格）", createPlayerMenuEntry(ShopEndTurn, "回合結束", true, "shop_end"), []));
+      roots.push(createPlayerMenuNode('商店格（格 $idx）', null, shopChildren));
+    }
+
+    if (pend != null) {
+      // GDD 2.1.9：負面事件（可規避）在事件選單前插入「規避」流程
+      if (!_pendingTileEventAvoidanceDone && Std.isOfType(pend, IAvoidableTileEvent)) {
+        var av:IAvoidableTileEvent = cast pend;
+        if (av.isNegative()) {
+          var ruler = cast(activeMonarch(), Monarch);
+          var choices:Array<MenuGeneralChoice> = [];
+          var stat = av.avoidanceStat();
+          var baseRate = av.avoidanceBaseRate();
+          for (g in ruler.roster()) {
+            var gid = g.id();
+            var statVal = g.stat(stat);
+            var rate = baseRate + (statVal / 200.0);
+            if (rate < 0)
+              rate = 0;
+            if (rate > 1)
+              rate = 1;
+            choices.push({generalId: gid});
+          }
+          var defSel:Array<String> = choices.length > 0 ? [choices[0].generalId] : [];
+          var widgets:Array<MenuFormWidget> = [];
+          if (choices.length > 0)
+            widgets.push(GeneralMultiPick("規避指派武將（單選）", choices, defSel));
+          widgets.push(Button(createPlayerMenuEntry(TileEventAvoidAttempt, "嘗試規避（消耗體力）", choices.length > 0, "evt_avoid_try")));
+          widgets.push(Button(createPlayerMenuEntry(TileEventAvoidSkip, "略過規避，直接進入事件", true, "evt_avoid_skip")));
+          roots.push(createPlayerMenuNode("事件規避（可選）", null, [], widgets));
+        } else {
+          _pendingTileEventAvoidanceDone = true;
+        }
+      }
+
+      var evRoots = pend.buildPlayerMenu(actor).rootNodes();
+      roots.push(createPlayerMenuNode("事件：" + pend.registryKey(), null, evRoots));
+    }
+
+    if (stagingActive && stg != null) {
+      var stgRoots = stg.buildPlayerMenu(actor).rootNodes();
+      // 通用「取消暫存」：避免玩家被 staging 卡住（例如「暫存：領地：開發」需能取消返回）
+      stgRoots.push(createPlayerMenuNode("取消", createPlayerMenuEntry(StagingAbort, "取消（返回）", true, "stg_abort"), []));
+      roots.push(createPlayerMenuNode("暫存：" + stg.designLabel(), null, stgRoots));
+    }
+
+    var blockBasics =
+      pend != null
+      || stagingActive
+      || _pendingEmptyCityTileIndex != null
+      || _pendingFriendlyCityTileIndex != null
+      || hostilePending;
+    var actions:Array<IPlayerMenuNode> = [];
+
+    // --- 落地（pendingLanding）---
+    if (forceGetPendingLandingTile() != null) {
+      actions.push(createPlayerMenuNode("落地", createPlayerMenuEntry(LandingContinue, "繼續落地結算", true), []));
+    }
+
+    // --- 移動 ---
+    if (!isActivePlayerSliceComplete()) {
+      var moveBlocked =
+        pend != null
+        || stagingActive
+        || forceGetPendingLandingTile() != null
+        || _pendingEmptyCityTileIndex != null
+        || _pendingFriendlyCityTileIndex != null
+        || hostilePending
+        || _pendingVillageTileIndex != null
+        || _pendingResourceTileIndex != null
+        || _pendingGeneralTileIndex != null
+        || _pendingShopTileIndex != null;
+      actions.push(createPlayerMenuNode("移動", createPlayerMenuEntry(Move, "移動", !moveBlocked), []));
+    }
+
+    // --- 策略（移動前/移動後）：以所持計策列表生成 children ---
+    function buildStrategyNode(phase:StrategyPhase):Null<IPlayerMenuNode> {
+      if (phase == PreMove) {
+        if (!canUseStrategyPreMove())
+          return null;
+        if (forceGetPendingLandingTile() != null)
+          return null;
+      } else {
+        if (!canUseStrategyPostMove())
+          return null;
+        if (forceGetPendingLandingTile() == null)
+          return null;
+      }
+
+      var owned = availableJiCe(actor.monarchId());
+      var stagingActive = forceHasPendingStaging();
+      var hostilePending = forceGetPendingHostileCityTile() != null;
+      var pend = forceGetPendingTileEvent();
+
+      var jiEnabledBase = if (phase == PreMove)
+        (!stagingActive
+          && pend == null
+          && forceGetPendingLandingTile() == null
+          && forceGetPendingEmptyCityOccupyTile() == null
+          && forceGetPendingFriendlyCityVisitTile() == null
+          && !hostilePending
+          && forceGetPendingVillageTile() == null
+          && forceGetPendingResourceTile() == null
+          && forceGetPendingGeneralTile() == null
+          && forceGetPendingShopTile() == null)
+      else
+        (!stagingActive
+          && forceGetPendingVillageTile() == null
+          && forceGetPendingResourceTile() == null
+          && forceGetPendingGeneralTile() == null
+          && forceGetPendingShopTile() == null);
+
+      var jiChildren:Array<IPlayerMenuNode> = [];
+      var filtered:Array<IJiCe> = [];
+      var ruler = cast(activeMonarch(), Monarch);
+      var roster = ruler.roster();
+      function hasEligibleCaster(j:IJiCe):Bool {
+        if (!Balance.strategyRequiresCaster(j.registryKey()))
+          return true;
+        var req = Balance.requiredRankForStrategy(j.registryKey());
+        for (g in roster)
+          if (g != null && Balance.positionRankGte(g.positionRank(), req))
+            return true;
+        return false;
+      }
+      for (j in owned) {
+        var ok = false;
+        for (p in j.allowedPhases())
+          if (p == phase) {
+            ok = true;
+            break;
+          }
+        if (ok && hasEligibleCaster(j))
+          filtered.push(j);
+      }
+
+      if (filtered.length == 0) {
+        jiChildren.push(createPlayerMenuNode("(無所持計策)", createPlayerMenuEntry(JiCe, "（尚無所持計策）", false, null), []));
+      } else {
+        for (j in filtered) {
+          // decisionToken 仍需對應「原 owned 陣列索引」以便 applyMenuLeaf 取牌
+          var ownedIdx = -1;
+          for (k in 0...owned.length)
+            if (owned[k] == j) {
+              ownedIdx = k;
+              break;
+            }
+          if (ownedIdx < 0)
+            throw "GameMatchCore: strategy index mapping failed";
+          jiChildren.push(createPlayerMenuNode(j.designLabel(), createPlayerMenuEntry(JiCe, "打出：" + j.designLabel(), jiEnabledBase, Std.string(ownedIdx)), []));
+        }
+      }
+
+      return createPlayerMenuNode(phase == PreMove ? "策略（移動前）" : "策略（移動後）", null, jiChildren);
+    }
+
+    var pre = buildStrategyNode(PreMove);
+    if (pre != null)
+      actions.push(pre);
+    var post = buildStrategyNode(PostMove);
+    if (post != null)
+      actions.push(post);
+
+    // --- 結束（ConfirmDone）---
+    var allowConfirm =
+      isActivePlayerSliceComplete()
+      && forceGetPendingTileEvent() == null
+      && !forceHasPendingStaging()
+      && forceGetPendingLandingTile() == null
+      && forceGetPendingEmptyCityOccupyTile() == null
+      && forceGetPendingFriendlyCityVisitTile() == null
+      && forceGetPendingHostileCityTile() == null
+      && forceGetPendingVillageTile() == null
+      && forceGetPendingResourceTile() == null
+      && forceGetPendingGeneralTile() == null
+      && forceGetPendingShopTile() == null;
+    if (allowConfirm) {
+      actions.push(createPlayerMenuNode("結束", createPlayerMenuEntry(ConfirmDone, "結束本階段", true), []));
+    }
+
+    roots.push(createPlayerMenuNode("本回合", null, actions));
+    return new PlayerMenu(actor, ctx, roots);
+  }
+
+  function syncActiveSliceAfterMenuLeaf(kind:PlayerMenuKind):Void {
+    switch kind {
+      case ConfirmDone:
+        _activeSliceComplete = false;
+        _hasMovedThisTurn = false;
+        _strategyPreUsed = false;
+        _strategyPostUsed = false;
+        _pendingStrategyPhase = null;
+
+      // 任一玩家操作（除 ConfirmDone 外）都視為「本回合已行動過」，因此移動後策略才可用。
+      case Move, LandingContinue, JiCe, StagingSubmit, Status, StrategyPre, StrategyPost, Rest, VillageTrade, VillageConquer, VillagePlunder, VillageEndTurn, VillageDevelop, VillageDispatchApply, VillageVisitEnd, ResourceClaim, ResourceBoost, ResourceEndTurn, GeneralRecruit, GeneralRecruitSubmit, GeneralEndTurn, ShopBuy, ShopEndTurn, FriendlyCityDevelop, FriendlyCityRest, TileEventAvoidAttempt, TileEventAvoidSkip:
+        _hasMovedThisTurn = true;
+
+      // 這些 leaf 不改動 hasMovedThisTurn（但通常也不會在回合開始前出現）
+      case TileEventPick,
+        StagingAbort,
+        EmptyCityOccupySubmit,
+        EmptyCityOccupyAbort,
+        FriendlyCityDispatchApply,
+        FriendlyCityVisitEnd,
+        HostileCityAttackerPick,
+        HostileCityDefenderAck,
+        HostileCityDefenderPickSubmit,
+        HostileCitySettlementAck:
+    }
+  }
+
+  /** 子類 {@link #_applyMenuLeafForMove} 完成棋子位移後呼叫，處理落地與切片旗標。 */
+  public function settleAfterMoveLanding():Void {
+    // Ver2：移動後先進入「落地前」窗口（允許移動後策略一次），由 LandingContinue 再觸發 considerLandingAt。
+    var ruler = cast(activeMonarch(), Monarch);
+    _pendingLandingTileIndex = ruler.pawnIndex();
+    _activeSliceComplete = false;
+  }
+
+  function handleLandingContinue(actor:IPlayer):Void {
+    if (_pendingLandingTileIndex == null)
+      throw "GameMatchCore: LandingContinue 但無 pendingLanding";
+    var idx = _pendingLandingTileIndex;
+    _pendingLandingTileIndex = null;
+    considerLandingAt(idx);
+    _activeSliceComplete =
+      _pendingTileEvent == null
+      && _pendingEmptyCityTileIndex == null
+      && _pendingFriendlyCityTileIndex == null
+      && _pendingHostileCityTileIndex == null
+      && _pendingVillageTileIndex == null
+      && _pendingResourceTileIndex == null
+      && _pendingGeneralTileIndex == null
+      && _pendingShopTileIndex == null;
+  }
+
+  function clearHostileCityConfrontation():Void {
+    hostileCityResetAll();
+  }
+
+  function considerLandingAt(idx:TileIndex):Void {
+    landingClearSurfacePendings();
+    var tile = board().tileAt(idx);
+    switch tile.kind() {
+      case Event:
+        landingArmPendingTileEventAt(idx);
+      case City:
+        landingResolveCityTile(idx);
+      case Village:
+        // 骨架：第一次踩到某村落時，初始化每位君主友好度預設 50
+        ensureVillageRow(idx);
+        _pendingVillageTileIndex = idx;
+      case Resource:
+        landingArmPendingResourceTileAt(idx);
+      case General:
+        generalTileRefreshOffers(idx);
+        _pendingGeneralTileIndex = idx;
+      case Shop:
+        shopTileRefreshStock(idx);
+        _pendingShopTileIndex = idx;
+      case Start:
+      case Plain:
+      case Battle:
+      case Scheme:
+    }
+  }
+
+  function landingArmPendingResourceTileAt(idx:TileIndex):Void {
+    _pendingResourceTileIndex = idx;
+    // 每次落地刷新本次資源包（可重現）
+    _resourceRewardsByTile.set(idx, rollResourceReward(idx));
+  }
+
+  function rollResourceReward(idx:TileIndex):ResourceReward {
+    var ruler = cast(activeMonarch(), Monarch);
+    var seedBase = 'resource|t=${idx}|r=${roundNumber()}|m=${ruler.id()}';
+    var uType = Deterministic.hash01(seedBase + "|type");
+    var amt = 20 + Std.int(Math.floor(Deterministic.hash01(seedBase + "|amt") * 41)); // 20~60
+    // 聲望做微幅調整：高聲望 +0~10%，低聲望 -0~10%（保持可重現）
+    var p = ruler.prestige();
+    var modU = Deterministic.hash01(seedBase + "|pmod");
+    var mult:Float = 1.0;
+    if (p >= 70)
+      mult = 1.0 + (modU * 0.10);
+    else if (p < 40)
+      mult = 1.0 - (modU * 0.10);
+    var finalAmt = Std.int(Math.round(amt * mult));
+    if (finalAmt < 1)
+      finalAmt = 1;
+
+    if (uType < 0.34)
+      return {gold: finalAmt, grain: 0, troops: 0};
+    if (uType < 0.67)
+      return {gold: 0, grain: finalAmt, troops: 0};
+    return {gold: 0, grain: 0, troops: finalAmt};
+  }
+
+  // --- 武將格/商店格：程序化生成（先用可重現的簡易規則）---
+
+  static inline function clampInt(x:Int, lo:Int, hi:Int):Int {
+    if (x < lo)
+      return lo;
+    if (x > hi)
+      return hi;
+    return x;
+  }
+
+  // seed/hash 的底層實作統一由 Deterministic 提供（避免多處複製造成規則漂移）。
+
+  function generalTileRefreshOffers(tileIdx:TileIndex):Void {
+    var ruler = cast(activeMonarch(), Monarch);
+    var seedBase = 'general|t=${tileIdx}|r=${roundNumber()}|m=${ruler.id()}';
+    var count = 3 + Std.int(Math.floor(Deterministic.hash01(seedBase + "|n") * 3)); // 3~5
+    var unused = forceGetUnusedGeneralIds();
+    // 若名庫不足就縮減，避免生成重複人物
+    if (unused.length < count)
+      count = unused.length;
+    if (count < 1)
+      count = 1;
+
+    // deterministic shuffle：以 seed 對 unused 排序後取前 count
+    var pool = unused.copy();
+    pool.sort(function(a:GeneralId, b:GeneralId):Int {
+      var sa = Deterministic.hash01(seedBase + "|pick|" + a);
+      var sb = Deterministic.hash01(seedBase + "|pick|" + b);
+      return sa < sb ? -1 : (sa > sb ? 1 : 0);
+    });
+
+    var out:Array<GeneralRecruitOffer> = [];
+    for (i in 0...count) {
+      var id:GeneralId = pool[i];
+      var s = seedBase + "|i=" + i;
+      var rarity = rarityFrom01(Deterministic.hash01(s + "|rar"));
+      var gen = rollGeneralStatsByRarity(rarity, s + "|gen");
+      var cmd = gen.command;
+      var mig = gen.might;
+      var wit = gen.wit;
+      var stw = gen.stewardship;
+      var base = baseRecruitCost(rarity, cmd, mig, wit, stw);
+      var finalCost = applyPrestigeRecruitModifier(ruler.prestige(), base, Deterministic.hash01(s + "|mod"));
+      out.push({
+        offerId: id,
+        rarity: rarity,
+        command: cmd,
+        might: mig,
+        wit: wit,
+        stewardship: stw,
+        costGold: finalCost,
+      });
+    }
+    _generalOffersByTile.set(tileIdx, out);
+  }
+
+  /**
+   * docs/數值算法.md §9.1：依稀有度生成武將四維屬性（最小值 10）。
+   * - 先依稀有度抽「屬性總和」區間
+   * - 隨機決定主屬性，主屬性占比 30~40%
+   * - 其餘三屬性在保底 10 後按隨機權重分配
+   */
+  static function rollGeneralStatsByRarity(r:Rarity, seedBase:String):{command:Int, might:Int, wit:Int, stewardship:Int} {
+    var lo = switch r {
+      case Common: 150;
+      case Fine: 250;
+      case Epic: 350;
+      case Legendary: 450;
+    };
+    var hi = switch r {
+      case Common: 250;
+      case Fine: 350;
+      case Epic: 450;
+      case Legendary: 500;
+    };
+    var uSum = Deterministic.hash01(seedBase + "|sum");
+    var total = lo + Std.int(Math.floor(uSum * (hi - lo + 1)));
+    if (total < lo)
+      total = lo;
+    if (total > hi)
+      total = hi;
+
+    var mainPick = Std.int(Math.floor(Deterministic.hash01(seedBase + "|main") * 4));
+    if (mainPick < 0)
+      mainPick = 0;
+    if (mainPick > 3)
+      mainPick = 3;
+
+    var mainRatio = 0.30 + Deterministic.hash01(seedBase + "|mainRatio") * 0.10; // 0.30~0.40
+    var main = Std.int(Math.floor(total * mainRatio));
+    if (main < 10)
+      main = 10;
+    // 其餘三項先保底 10
+    var rest = total - main - 30;
+    if (rest < 0)
+      rest = 0;
+
+    // 隨機權重分配 rest
+    var w0 = Deterministic.hash01(seedBase + "|w0") + 0.01;
+    var w1 = Deterministic.hash01(seedBase + "|w1") + 0.01;
+    var w2 = Deterministic.hash01(seedBase + "|w2") + 0.01;
+    var ws = w0 + w1 + w2;
+    var a0 = Std.int(Math.floor(rest * (w0 / ws)));
+    var a1 = Std.int(Math.floor(rest * (w1 / ws)));
+    var a2 = rest - a0 - a1;
+
+    var base0 = 10 + a0;
+    var base1 = 10 + a1;
+    var base2 = 10 + a2;
+
+    // 組回四維
+    var cmd = 10;
+    var mig = 10;
+    var wit = 10;
+    var stw = 10;
+
+    // 先填主屬性
+    switch mainPick {
+      case 0:
+        cmd = main;
+      case 1:
+        mig = main;
+      case 2:
+        wit = main;
+      case 3:
+        stw = main;
+      default:
+    }
+
+    // 再把其餘三項依序填入（跳過主屬性）
+    var xs = [base0, base1, base2];
+    var xi = 0;
+    function take():Int {
+      var v = xs[xi];
+      xi++;
+      return v;
+    }
+    if (mainPick != 0)
+      cmd = take();
+    if (mainPick != 1)
+      mig = take();
+    if (mainPick != 2)
+      wit = take();
+    if (mainPick != 3)
+      stw = take();
+
+    // clamp 10..100（領域層假設）
+    cmd = Balance.clampInt(cmd, 10, 100);
+    mig = Balance.clampInt(mig, 10, 100);
+    wit = Balance.clampInt(wit, 10, 100);
+    stw = Balance.clampInt(stw, 10, 100);
+    return {command: cmd, might: mig, wit: wit, stewardship: stw};
+  }
+
+  function shopTileRefreshStock(tileIdx:TileIndex):Void {
+    var ruler = cast(activeMonarch(), Monarch);
+    var seedBase = 'shop|t=${tileIdx}|r=${roundNumber()}|m=${ruler.id()}';
+    var count = 3 + Std.int(Math.floor(Deterministic.hash01(seedBase + "|n") * 3)); // 3~5
+    var out:Array<ShopStockItem> = [];
+    for (i in 0...count) {
+      var tPick = Deterministic.hash01(seedBase + "|type=" + i);
+      var et:game.EquipmentType =
+        if (tPick < 0.40) Weapon else if (tPick < 0.65) Armor else if (tPick < 0.85) TacticsBook else PoliticsBook;
+      // docs/裝備系統.md：依「進度 + 聲望」決定稀有度權重（deterministic）
+      var rarU = Deterministic.hash01(seedBase + "|rar=" + i);
+      var rar = Balance.rollShopRarity(roundNumber(), ruler.prestige(), rarU);
+      var names = switch et {
+        case Weapon: WeaponCatalog.namesByRarity(rar);
+        case Armor: ArmorCatalog.namesByRarity(rar);
+        case TacticsBook: TacticsBookCatalog.namesByRarity(rar);
+        case PoliticsBook: PoliticsBookCatalog.namesByRarity(rar);
+      };
+      // 若某稀有度清單為空（理論上不會），回退到全列表避免 crash。
+      if (names == null || names.length == 0)
+        names = switch et {
+          case Weapon: WeaponCatalog.allNames();
+          case Armor: ArmorCatalog.allNames();
+          case TacticsBook: TacticsBookCatalog.allNames();
+          case PoliticsBook: PoliticsBookCatalog.allNames();
+        };
+      var nm = names[Deterministic.pickIndex(seedBase + "|pick=" + i, names.length)];
+      var eqId:EquipmentId = 'shop-${tileIdx}-${roundNumber()}-${i}';
+      var eq = spawnStockEquipment(eqId, et, nm);
+      // 價格再受聲望做些微調整（高聲望略便宜）；先保持可重現
+      var p = applyPrestigeShopPriceModifier(ruler.prestige(), eq.price(), Deterministic.hash01(seedBase + "|pmod=" + i));
+      out.push({
+        stockId: eqId,
+        type: et,
+        name: nm,
+        priceGold: p,
+      });
+    }
+    _shopStocksByTile.set(tileIdx, out);
+  }
+
+  function spawnStockEquipment(id:EquipmentId, et:game.EquipmentType, name:String, ?price:Int):IEquipment {
+    return switch et {
+      case Weapon: WeaponCatalog.spawnByName(id, name, price);
+      case Armor: ArmorCatalog.spawnByName(id, name, price);
+      case TacticsBook: TacticsBookCatalog.spawnByName(id, name, price);
+      case PoliticsBook: PoliticsBookCatalog.spawnByName(id, name, price);
+    };
+  }
+
+  function rarityFrom01(u:Float):game.Rarity {
+    // 先用簡化分佈：Common 50%, Fine 30%, Epic 15%, Legendary 5%
+    if (u < 0.50)
+      return Common;
+    if (u < 0.80)
+      return Fine;
+    if (u < 0.95)
+      return Epic;
+    return Legendary;
+  }
+
+  function baseRecruitCost(r:game.Rarity, c:Int, m:Int, w:Int, s:Int):Int {
+    var rarityBase = switch r {
+      case Common: 200;
+      case Fine: 500;
+      case Epic: 1200;
+      case Legendary: 3000;
+    };
+    // 以能力總和做線性放大
+    var sum = c + m + w + s;
+    return rarityBase + sum * 5;
+  }
+
+  function applyPrestigeRecruitModifier(prestige:Int, base:Int, u:Float):Int {
+    // 對齊 docs/數值算法.md 7.2（招募費用調整）：
+    // - prestige >= 70：折扣 0.7~0.8（-20%~-30%）
+    // - prestige >= 40：倍率 1.0
+    // - prestige < 40：加價 1.2~1.5（+20%~+50%）
+    // u 用於決定區間內幅度（保持可重現）。
+    var mult:Float;
+    if (prestige >= 70) {
+      var d = 0.20 + u * 0.10; // 20%~30%
+      mult = 1.0 - d;
+    } else if (prestige >= 40) {
+      mult = 1.0;
+    } else {
+      var up = 0.20 + u * 0.30; // 20%~50%
+      mult = 1.0 + up;
+    }
+    var v = Std.int(Math.round(base * mult));
+    if (v < 1)
+      v = 1;
+    return v;
+  }
+
+  function applyPrestigeShopPriceModifier(prestige:Int, base:Int, u:Float):Int {
+    // NOTE(num-algo): docs/數值算法.md 尚未定義「商店價格與聲望」的規則；
+    // ver1 先做輕微調整（高聲望 -5%~10%，低聲望 +5%~15%）保持可玩，待文件補齊再統一。
+    var mult:Float;
+    if (prestige >= 70) {
+      mult = 1.0 - (0.05 + u * 0.05);
+    } else if (prestige >= 40) {
+      mult = 1.0;
+    } else {
+      mult = 1.0 + (0.05 + u * 0.10);
+    }
+    var v = Std.int(Math.round(base * mult));
+    if (v < 1)
+      v = 1;
+    return v;
+  }
+
+  function handleTileEventPick(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
+    var ev = _pendingTileEvent;
+    if (ev == null)
+      throw "GameMatchCore: TileEventPick 但無 forceGetPendingTileEvent";
+    var leaf = MenuActivation.activatingEntry(menuNode);
+    if (leaf.decisionToken() == null)
+      throw "GameMatchCore: TileEventPick 需要 decisionToken";
+    ev.resolveChoice(actor, menuNode);
+    _pendingTileEvent = null;
+    _pendingTileEventIndex = null;
+    _pendingTileEventAvoidanceDone = false;
+    _pendingTileEventEffectMultiplier = 1.0;
+    _activeSliceComplete = true;
+  }
+
+  function handleTileEventAvoidAttempt(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
+    var ev = _pendingTileEvent;
+    if (ev == null)
+      throw "GameMatchCore: TileEventAvoidAttempt 但無 pendingTileEvent";
+    if (!Std.isOfType(ev, IAvoidableTileEvent))
+      throw "GameMatchCore: TileEventAvoidAttempt 但事件未 implements IAvoidableTileEvent";
+    var av:IAvoidableTileEvent = cast ev;
+    if (!av.isNegative()) {
+      _pendingTileEventAvoidanceDone = true;
+      return;
+    }
+
+    var tileIdx = _pendingTileEventIndex != null ? _pendingTileEventIndex : -1;
+    var ruler = cast(activeMonarch(), Monarch);
+    if (ruler.roster().length == 0)
+      throw "GameMatchCore: TileEventAvoidAttempt 需要至少 1 名麾下武將";
+
+    var sel = extractFirstGeneralMultiPickSelections(menuNode.formWidgets());
+    if (sel.length != 1)
+      throw new GameError("事件規避需恰好選擇 1 名武將", "選擇不合法", "evt-avoid");
+    var gid:GeneralId = sel[0];
+    var g = requireGeneral(gid);
+    if (g.owner() != ruler.id())
+      throw "GameMatchCore: 事件規避只能選擇自己麾下武將";
+
+    var stat = av.avoidanceStat();
+    var statVal = g.stat(stat);
+    var baseRate = av.avoidanceBaseRate();
+    // 對齊 docs/數值算法.md §11：規避成功率 = (stat/100) * baseRate * staminaModifier * 100%
+    // baseRate 由事件定義（文件建議 50%）
+    var rate = (Balance.clampInt(statVal, 0, 100) / 100.0) * baseRate * Balance.staminaModifier(g.stamina());
+    if (rate < 0)
+      rate = 0;
+    if (rate > 1)
+      rate = 1;
+
+    var seed = 'evt_avoid|k=${ev.registryKey()}|t=${tileIdx}|r=${roundNumber()}|m=${ruler.id()}|g=${gid}';
+    var roll = Deterministic.hash01(seed);
+    var ok = roll < rate;
+    if (ok) {
+      var cost = av.avoidanceStaminaCost();
+      if (cost < 0)
+        throw "GameMatchCore: avoidanceStaminaCost must be >=0";
+      g.setStamina(Balance.clampInt(g.stamina() - cost, 0, 100));
+      // docs/數值算法.md §10.1：規避事件成功 → 功績 +5
+      g.grantMerit(5);
+      _pendingTileEventEffectMultiplier = av.avoidanceSuccessMultiplier();
+      if (_pendingTileEventEffectMultiplier < 0)
+        _pendingTileEventEffectMultiplier = 0;
+      if (_pendingTileEventEffectMultiplier > 1)
+        _pendingTileEventEffectMultiplier = 1;
+      pushOutboxPlain(
+        actor.monarchId(),
+        "事件規避成功",
+        TileEventAvoidanceSucceeded(gid, stat, statVal, Std.int(rate * 100), _pendingTileEventEffectMultiplier),
+        "evt-avoid-ok"
+      );
+      // 成功後仍進入事件本體（由事件自行用 multiplier 進行減半/無效等縮放）
+      _pendingTileEventAvoidanceDone = true;
+    } else {
+      var cost = av.avoidanceStaminaCost();
+      if (cost < 0)
+        throw "GameMatchCore: avoidanceStaminaCost must be >=0";
+      g.setStamina(Balance.clampInt(g.stamina() - cost, 0, 100));
+      pushOutboxPlain(
+        actor.monarchId(),
+        "事件規避失敗",
+        TileEventAvoidanceFailed(gid, stat, statVal, Std.int(rate * 100)),
+        "evt-avoid-fail"
+      );
+      _pendingTileEventAvoidanceDone = true;
+    }
+    syncActiveSliceAfterMenuLeaf(TileEventAvoidAttempt);
+  }
+
+  function handleStagingSubmit(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
+    var stg = _pendingStaging;
+    if (stg == null)
+      throw "GameMatchCore: StagingSubmit 但無進行中之暫存";
+    var phase = _pendingStrategyPhase;
+    var asJiCe = stg.asJiCe();
+    stg.resolveChoice(actor, menuNode);
+    // docs/策略系統.md：每階段僅能提交一次（先以「提交即消耗」處理）
+    if (asJiCe != null && phase != null)
+      switch phase {
+        case PreMove:
+          _strategyPreUsed = true;
+        case PostMove:
+          _strategyPostUsed = true;
+      }
+    clearStaging();
+    // 若本次 staging 發生於村落互動，提交後視為已完成落地互動，可結束切片
+    if (_pendingVillageTileIndex != null) {
+      _pendingVillageTileIndex = null;
+      _activeSliceComplete = true;
+    }
+    // 資源格：若本次 staging 用於指派武將加成，提交後視為已完成落地互動，可結束切片
+    if (_pendingResourceTileIndex != null) {
+      _pendingResourceTileIndex = null;
+      _activeSliceComplete = true;
+    }
+    // 於我方領地拜訪下，staging 提交後仍停留在拜訪選單（由 VisitEnd 結束）
+    syncActiveSliceAfterMenuLeaf(StagingSubmit);
+  }
+
+  public function enterStaging(actor:IPlayer, action:IStagingAction, kindForSync:PlayerMenuKind):Void {
+    if (_pendingStaging != null)
+      throw "GameMatchCore: 已有進行中之暫存，請先完成";
+    _pendingStaging = action;
+    _stagingPreviewRows = action.previewRows(actor);
+    syncActiveSliceAfterMenuLeaf(kindForSync);
+  }
+
+  function dedupeGeneralIds(raw:Array<String>):Array<GeneralId> {
+    var seen = new Map<String, Bool>();
+    var uniq:Array<GeneralId> = [];
+    for (id in raw) {
+      if (seen.exists(id))
+        continue;
+      seen.set(id, true);
+      uniq.push(id);
+    }
+    return uniq;
+  }
+
+  function validateGarrisonAgainstRoster(uniq:Array<GeneralId>, ruler:Monarch):Void {
+    var ok = new Map<String, Bool>();
+    for (g in ruler.roster())
+      ok.set(g.id(), true);
+    for (gid in uniq)
+      if (!ok.exists(gid))
+        throw 'GameMatchCore: 複選駐將含非麾下武將 "$gid"';
+  }
+
+  function parseEmptyCityOccupyFromWidgets(widgets:Array<MenuFormWidget>, ruler:Monarch):{troops:Int, grain:Int, garrisonIds:Array<GeneralId>} {
+    var garrisonRaw:Array<String> = [];
+    var sliders:Array<Int> = [];
+    for (x in widgets)
+      switch x {
+        case GeneralMultiPick(_, _, sel):
+          garrisonRaw = sel.copy();
+        case Slider(_, _, _, _, v):
+          sliders.push(v);
+        case MonarchSinglePick(_, _, _):
+        case Button(_):
+        case TileSinglePick(_, _, _):
+      }
+    if (sliders.length < 2)
+      throw "GameMatchCore: 空城進駐節點須含 MultiPick 後至少兩個 Slider（兵力／糧食）";
+    var tt = sliders[0];
+    var gg = sliders[1];
+    var garrisonIds = dedupeGeneralIds(garrisonRaw);
+    validateGarrisonAgainstRoster(garrisonIds, ruler);
+    return {troops: tt, grain: gg, garrisonIds: garrisonIds};
+  }
+
+  function parseFriendlyDispatchTargets(widgets:Array<MenuFormWidget>):{tt:Int, gg:Int, gold:Int} {
+    var sliders:Array<Int> = [];
+    for (x in widgets)
+      switch x {
+        case Slider(_, _, _, _, v):
+          sliders.push(v);
+        case GeneralMultiPick(_, _, _):
+        case MonarchSinglePick(_, _, _):
+        case Button(_):
+        case TileSinglePick(_, _, _):
+      }
+    if (sliders.length < 3)
+      throw "GameMatchCore: 我方城池調度節點須含至少三個 Slider（兵力／糧食／金錢）";
+    return {tt: sliders[0], gg: sliders[1], gold: sliders[2]};
+  }
+
+  function handleEmptyCityOccupySubmit(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
+    if (_pendingEmptyCityTileIndex == null)
+      throw "GameMatchCore: EmptyCityOccupySubmit 但無 pending 空城";
+    var idx = _pendingEmptyCityTileIndex;
+    var ruler = cast(activeMonarch(), Monarch);
+    var parsed = parseEmptyCityOccupyFromWidgets(menuNode.formWidgets(), ruler);
+    var tt = parsed.troops;
+    var gg = parsed.grain;
+    var garrisonIds = parsed.garrisonIds;
+    if (tt < 0 || gg < 0 || tt > ruler.troops() || gg > ruler.grain())
+      throw "GameMatchCore: 進駐數值超出君主可用資源";
+    GameMatchVer1Ops.applyEmptyCityOccupySubmit(this, idx, ruler, tt, gg, garrisonIds);
+    pushOutboxPlain(ruler.id(), "進駐完成", EmptyCityOccupied(idx, tt, gg, garrisonIds), "empty-city-occupy");
+    _pendingEmptyCityTileIndex = null;
+    _activeSliceComplete = true;
+    syncActiveSliceAfterMenuLeaf(EmptyCityOccupySubmit);
+  }
+
+  function handleEmptyCityOccupyAbort(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
+    if (_pendingEmptyCityTileIndex == null)
+      throw "GameMatchCore: EmptyCityOccupyAbort 但無 pending 空城";
+    GameMatchVer1Ops.onEmptyCityOccupyAbort(this, _pendingEmptyCityTileIndex, actor.monarchId());
+    pushOutboxAnim(
+      actor.monarchId(),
+      FlowAck(FlowAckKind.EmptyCityOccupyAborted),
+      FLOW_ACK_ANIM_MS,
+      OutboxPresentationMode.FanOut2,
+      "empty-city-abort"
+    );
+    _pendingEmptyCityTileIndex = null;
+    _activeSliceComplete = true;
+    syncActiveSliceAfterMenuLeaf(EmptyCityOccupyAbort);
+  }
+
+  function handleFriendlyCityDispatchApply(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
+    if (_pendingFriendlyCityTileIndex == null)
+      throw "GameMatchCore: FriendlyCityDispatchApply 但無 pending 我方城池拜訪";
+    var idx = _pendingFriendlyCityTileIndex;
+    var parsed = parseFriendlyDispatchTargets(menuNode.formWidgets());
+    var tt = parsed.tt;
+    var gg = parsed.gg;
+    var gold = parsed.gold;
+    var oldT = forceGetCityStoredTroops(idx);
+    var oldG = forceGetCityStoredGrain(idx);
+    var oldGold = forceGetCityStoredGold(idx);
+    var ruler = cast(activeMonarch(), Monarch);
+    if (tt < 0 || gg < 0 || gold < 0)
+      throw "GameMatchCore: 調度目標不可為負";
+    var dT = tt - oldT;
+    var dG = gg - oldG;
+    var dGold = gold - oldGold;
+    if (dT > ruler.troops())
+      throw "GameMatchCore: 自君主池調出兵力不足";
+    if (dG > ruler.grain())
+      throw "GameMatchCore: 自君主池調出糧食不足";
+    if (dGold > ruler.gold())
+      throw "GameMatchCore: 自君主池調出金錢不足";
+    GameMatchVer1Ops.applyFriendlyCityDispatch(this, idx, ruler, tt, gg, gold);
+    pushOutboxPlain(ruler.id(), "調度完成", FriendlyCityDispatchCompleted(idx, tt, gg, gold), "friendly-dispatch");
+    syncActiveSliceAfterMenuLeaf(FriendlyCityDispatchApply);
+  }
+
+  function handleFriendlyCityVisitEnd(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
+    if (_pendingFriendlyCityTileIndex == null)
+      throw "GameMatchCore: FriendlyCityVisitEnd 但無 pending 我方城池拜訪";
+    GameMatchVer1Ops.onFriendlyCityVisitEnd(this, _pendingFriendlyCityTileIndex, actor.monarchId());
+    pushOutboxAnim(
+      actor.monarchId(),
+      FlowAck(FlowAckKind.FriendlyCityVisitEnded),
+      FLOW_ACK_ANIM_MS,
+      OutboxPresentationMode.FanOut2,
+      "friendly-visit-end"
+    );
+    _pendingFriendlyCityTileIndex = null;
+    _activeSliceComplete = true;
+    syncActiveSliceAfterMenuLeaf(FriendlyCityVisitEnd);
+  }
+
+  /**
+   * 終局規剘：僅在仍為 {@link MatchTerminationReason.NotEnded} 時呼叫；已終局不重算。
+   */
+  function evaluateTermination():Void {
+    GameMatchVer1Ops.evaluateTermination(this);
+  }
+
+  /**
+   * 供 {@link GameMatchVer1Ops}／規剘寫入終局（已非 {@link MatchTerminationReason.NotEnded} 時不重寫）。
+   */
+  function assignTerminationReason(reason:MatchTerminationReason):Void {
+    _terminationReason = reason;
+  }
+
+  public function getTerminationReason():MatchTerminationReason
+    return _terminationReason;
+
+  public function scoreOfMonarch(monarchId:MonarchId):Int {
+    return GameMatchVer1Ops.scoreOfMonarch(this, monarchId);
+  }
+
+  public function aiSuggest(actor:IPlayer):Null<AiDecision> {
+    return impl_ver1.ai.Ver1AiPolicy.choose(this, actor);
+  }
+
+  public function applyMenuLeaf(actor:IPlayer, menuNode:IPlayerMenuNode):Void {
+    var leaf = MenuActivation.activatingEntry(menuNode);
+    if (!leaf.isEnabled())
+      throw new GameError('此操作目前不可用：${leaf.caption()}', "操作失敗", "menu/disabled");
+
+    var lk = leaf.kind();
+    switch lk {
+      case HostileCityAttackerPick:
+        assertHostileCityApplyActor(actor, lk);
+        handleHostileCityAttackerPick(actor, menuNode);
+      case HostileCityDefenderAck:
+        assertHostileCityApplyActor(actor, lk);
+        handleHostileCityDefenderAck(actor, menuNode);
+      case HostileCityDefenderPickSubmit:
+        assertHostileCityApplyActor(actor, lk);
+        handleHostileCityDefenderPickSubmit(actor, menuNode);
+      case HostileCitySettlementAck:
+        assertHostileCityApplyActor(actor, lk);
+        handleHostileCitySettlementAck(actor, menuNode);
+      default:
+        if (actor.monarchId() != activeMonarch().id())
+          throw new GameError("目前不是你的回合，無法操作。", "操作失敗", "menu/not-active");
+
+        switch lk {
+          case Move:
+            var before = pawnIndexOfMonarch(actor.monarchId());
+            GameMatchVer1Ops.applyMenuLeafForMove(this, actor);
+            syncActiveSliceAfterMenuLeaf(Move);
+            var dMove = forceGetLastRolledMoveDelta();
+            var pos = pawnIndexOfMonarch(actor.monarchId());
+            if (dMove != null)
+              pushOutboxAnim(actor.monarchId(), PawnMove(before, pos, dMove), PAWN_MOVE_ANIM_MS, OutboxPresentationMode.FanOut2, "anim-move");
+            pushOutboxAnim(actor.monarchId(), MoveCompleted(dMove, pos), PAWN_MOVE_ANIM_MS, OutboxPresentationMode.Serial, "move");
+          case TileEventPick:
+            handleTileEventPick(actor, menuNode);
+          case TileEventAvoidAttempt:
+            handleTileEventAvoidAttempt(actor, menuNode);
+          case TileEventAvoidSkip:
+            _pendingTileEventAvoidanceDone = true;
+            syncActiveSliceAfterMenuLeaf(TileEventAvoidSkip);
+          case StagingSubmit:
+            handleStagingSubmit(actor, menuNode);
+          case StagingAbort:
+            if (_pendingStaging == null)
+              throw new GameError("目前沒有進行中的暫存操作。", "操作失敗", "staging/abort/no-pending");
+            clearStaging();
+            pushOutboxAnim(
+              actor.monarchId(),
+              FlowAck(FlowAckKind.StagingAborted),
+              FLOW_ACK_ANIM_MS,
+              OutboxPresentationMode.FanOut2,
+              "staging-abort"
+            );
+            // 取消僅退出 staging；其他 pending（村落/領地/資源格等）保持不變
+            syncActiveSliceAfterMenuLeaf(StagingAbort);
+          case LandingContinue:
+            handleLandingContinue(actor);
+          case StrategyPre, StrategyPost:
+            throw "GameMatchCore.applyMenuLeaf: StrategyPre/StrategyPost 不應為 leaf kind（父節點無 entry）";
+          case JiCe:
+            var card = resolvePlayedJiCeFromLeaf(actor, leaf);
+            // docs/策略系統.md：依是否處於 pendingLanding 窗口決定階段
+            if (forceGetPendingLandingTile() != null) {
+              if (!canUseStrategyPostMove())
+                throw "GameMatchCore: StrategyPost 不可用";
+              _pendingStrategyPhase = PostMove;
+              assertJiCeAllowedInPhase(card, PostMove);
+              enterStaging(actor, new JiCeStagingAction(this, card), StrategyPost);
+            } else {
+              if (!canUseStrategyPreMove())
+                throw "GameMatchCore: StrategyPre 不可用";
+              _pendingStrategyPhase = PreMove;
+              assertJiCeAllowedInPhase(card, PreMove);
+              enterStaging(actor, new JiCeStagingAction(this, card), StrategyPre);
+            }
+          case Rest:
+            // GDD：休整屬於「己方領地互動」；全局休整已移除
+            throw new GameError("全局休整已移除，請在己方領地使用【休整】。", "操作失敗", "rest/global-removed");
+          case VillageTrade:
+            enterStaging(actor, new VillageTradeStagingAction(this), VillageTrade);
+          case VillageConquer:
+            enterStaging(actor, new VillageConquerStagingAction(this), VillageConquer);
+          case VillagePlunder:
+            enterStaging(actor, new VillagePlunderStagingAction(this), VillagePlunder);
+          case VillageEndTurn:
+            if (_pendingVillageTileIndex == null)
+              throw new GameError("目前不在村落互動中。", "操作失敗", "village/end/pending");
+            pushOutboxAnim(
+              actor.monarchId(),
+              FlowAck(FlowAckKind.VillageInteractionEnded),
+              FLOW_ACK_ANIM_MS,
+              OutboxPresentationMode.FanOut2,
+              "village-end"
+            );
+            _pendingVillageTileIndex = null;
+            _activeSliceComplete = true;
+            syncActiveSliceAfterMenuLeaf(VillageEndTurn);
+          case VillageDevelop:
+            if (_pendingVillageTileIndex == null)
+              throw new GameError("目前不在村落互動中，無法開發。", "操作失敗", "village/develop/pending");
+            // 僅我方村落可開發
+            var vidx = _pendingVillageTileIndex;
+            var owner = forceGetVillageOwner(vidx);
+            var ruler = cast(activeMonarch(), Monarch);
+            if (owner == null || owner != ruler.id())
+              throw new GameError("只能對我方已歸順的村落進行開發。", "操作失敗", "village/develop/not-owned");
+            enterStaging(actor, new VillageDevelopStagingAction(this), VillageDevelop);
+          case VillageDispatchApply:
+            if (_pendingVillageTileIndex == null)
+              throw new GameError("目前不在村落互動中，無法調度。", "操作失敗", "village/dispatch/pending");
+            var idx = _pendingVillageTileIndex;
+            var owner = forceGetVillageOwner(idx);
+            var ruler = cast(activeMonarch(), Monarch);
+            if (owner == null || owner != ruler.id())
+              throw new GameError("只能對我方已歸順的村落進行調度。", "操作失敗", "village/dispatch/not-owned");
+            var parsed = parseFriendlyDispatchTargets(menuNode.formWidgets());
+            var tt = parsed.tt;
+            var gg = parsed.gg;
+            var gold = parsed.gold;
+            if (tt < 0 || gg < 0 || gold < 0)
+              throw new GameError("調度目標不可為負數。", "輸入不合法", "dispatch/negative");
+            var oldT = forceGetVillageStoredTroops(idx);
+            var oldG = forceGetVillageStoredGrain(idx);
+            var oldGold = forceGetVillageStoredGold(idx);
+            var dT = tt - oldT;
+            var dG = gg - oldG;
+            var dGold = gold - oldGold;
+            if (dT > ruler.troops())
+              throw new GameError("隨身兵力不足，無法調出指定數量。", "資源不足", "dispatch/insufficient-troops");
+            if (dG > ruler.grain())
+              throw new GameError("隨身糧食不足，無法調出指定數量。", "資源不足", "dispatch/insufficient-grain");
+            if (dGold > ruler.gold())
+              throw new GameError("隨身金錢不足，無法調出指定數量。", "資源不足", "dispatch/insufficient-gold");
+            // 差額進出
+            if (dT > 0)
+              ruler.reduceTroops(dT);
+            else if (dT < 0)
+              ruler.grantTroops(-dT);
+            if (dG > 0)
+              ruler.reduceGrain(dG);
+            else if (dG < 0)
+              ruler.grantGrain(-dG);
+            if (dGold > 0)
+              ruler.reduceGold(dGold);
+            else if (dGold < 0)
+              ruler.grantGold(-dGold);
+            forcePutVillageStores(idx, tt, gg, gold);
+            pushOutboxPlain(
+              ruler.id(),
+              "調度完成",
+              TerritoryStoresDispatchCompleted(TerritoryStoresKind.VillageStores, idx, tt, gg, gold),
+              "village-dispatch"
+            );
+            syncActiveSliceAfterMenuLeaf(VillageDispatchApply);
+          case VillageVisitEnd:
+            if (_pendingVillageTileIndex == null)
+              throw new GameError("目前不在村落互動中。", "操作失敗", "village/visit-end/pending");
+            pushOutboxAnim(
+              actor.monarchId(),
+              FlowAck(FlowAckKind.VillageFriendlyVisitEnded),
+              FLOW_ACK_ANIM_MS,
+              OutboxPresentationMode.FanOut2,
+              "village-visit-end"
+            );
+            _pendingVillageTileIndex = null;
+            _activeSliceComplete = true;
+            syncActiveSliceAfterMenuLeaf(VillageVisitEnd);
+          case ResourceClaim:
+            if (_pendingResourceTileIndex == null)
+              throw new GameError("目前不在資源格互動中。", "操作失敗", "resource/claim/pending");
+            var idx = _pendingResourceTileIndex;
+            var rw:ResourceReward = _resourceRewardsByTile.exists(idx) ? _resourceRewardsByTile.get(idx) : {gold: 0, grain: 0, troops: 0};
+            var ruler = cast(activeMonarch(), Monarch);
+            if (rw.gold > 0)
+              ruler.grantGold(rw.gold);
+            if (rw.grain > 0)
+              ruler.grantGrain(rw.grain);
+            if (rw.troops > 0)
+              ruler.grantTroops(rw.troops);
+            pushOutboxPlain(actor.monarchId(), "資源格收益", ResourceClaimed(idx, rw), "resource-claim");
+            _pendingResourceTileIndex = null;
+            _activeSliceComplete = true;
+            syncActiveSliceAfterMenuLeaf(ResourceClaim);
+          case ResourceBoost:
+            if (_pendingResourceTileIndex == null)
+              throw "GameMatchCore: ResourceBoost 但無 pendingResource";
+            var idx = _pendingResourceTileIndex;
+            var rw:ResourceReward = _resourceRewardsByTile.exists(idx) ? _resourceRewardsByTile.get(idx) : {gold: 0, grain: 0, troops: 0};
+            enterStaging(actor, new ResourceTileBoostStagingAction(this, idx, rw), ResourceBoost);
+          case ResourceEndTurn:
+            if (_pendingResourceTileIndex == null)
+              throw "GameMatchCore: ResourceEndTurn 但無 pendingResource";
+            pushOutboxAnim(
+              actor.monarchId(),
+              FlowAck(FlowAckKind.ResourceInteractionEndedWithoutBoost),
+              FLOW_ACK_ANIM_MS,
+              OutboxPresentationMode.FanOut2,
+              "resource-end"
+            );
+            _pendingResourceTileIndex = null;
+            _activeSliceComplete = true;
+            syncActiveSliceAfterMenuLeaf(ResourceEndTurn);
+          case GeneralRecruit:
+            throw "GameMatchCore: GeneralRecruit 已改為批次招募（GeneralRecruitSubmit）";
+          case GeneralRecruitSubmit:
+            if (_pendingGeneralTileIndex == null)
+              throw "GameMatchCore: GeneralRecruitSubmit 但無 pendingGeneral";
+            var tileIdx = _pendingGeneralTileIndex;
+            var offers = _generalOffersByTile.exists(tileIdx) ? _generalOffersByTile.get(tileIdx) : [];
+            var sel = extractFirstGeneralMultiPickSelections(menuNode.formWidgets());
+            if (sel.length == 0)
+              throw new GameError("請至少選擇 1 名欲招募武將", "選擇不合法", "general-recruit");
+
+            // 依 sel 順序挑出 offer（並去重）
+            var uniq = dedupeGeneralIds(sel);
+            var picked:Array<GeneralRecruitOffer> = [];
+            for (id in uniq) {
+              var found:Null<GeneralRecruitOffer> = null;
+              for (o in offers)
+                if (o.offerId == id) {
+                  found = o;
+                  break;
+                }
+              if (found == null)
+                throw 'GameMatchCore: 招募清單包含未知項目 "$id"';
+              picked.push(found);
+            }
+
+            var total = 0;
+            for (o in picked)
+              total += o.costGold;
+            var ruler = cast(activeMonarch(), Monarch);
+            if (ruler.gold() < total)
+              throw new GameError("金錢不足，無法完成批次招募", "金錢不足", "general-recruit");
+            ruler.reduceGold(total);
+
+            var recruited:Array<RecruitedGeneralLine> = [];
+            for (o in picked) {
+              createGeneral(o.offerId, ruler.id(), o.command, o.might, o.wit, o.stewardship);
+              recruited.push({
+                templateGeneralId: o.offerId,
+                rarity: o.rarity,
+                costGold: o.costGold,
+              });
+            }
+
+            // 從清單移除已招募者
+            var rest:Array<GeneralRecruitOffer> = [];
+            var removed = new Map<String, Bool>();
+            for (o in picked)
+              removed.set(o.offerId, true);
+            for (o in offers)
+              if (!removed.exists(o.offerId))
+                rest.push(o);
+            _generalOffersByTile.set(tileIdx, rest);
+
+            pushOutboxPlain(actor.monarchId(), "批次招募成功", GeneralBatchRecruited(tileIdx, recruited, total), "general-recruit");
+            syncActiveSliceAfterMenuLeaf(GeneralRecruitSubmit);
+          case GeneralEndTurn:
+            if (_pendingGeneralTileIndex == null)
+              throw "GameMatchCore: GeneralEndTurn 但無 pendingGeneral";
+            pushOutboxAnim(
+              actor.monarchId(),
+              FlowAck(FlowAckKind.GeneralTileLeft),
+              FLOW_ACK_ANIM_MS,
+              OutboxPresentationMode.FanOut2,
+              "general-end"
+            );
+            _pendingGeneralTileIndex = null;
+            _activeSliceComplete = true;
+            syncActiveSliceAfterMenuLeaf(GeneralEndTurn);
+          case ShopBuy:
+            if (_pendingShopTileIndex == null)
+              throw "GameMatchCore: ShopBuy 但無 pendingShop";
+            if (leaf.decisionToken() == null)
+              throw "GameMatchCore: ShopBuy 需要 decisionToken（stockId）";
+            var tileIdx = _pendingShopTileIndex;
+            var stocks = _shopStocksByTile.exists(tileIdx) ? _shopStocksByTile.get(tileIdx) : [];
+            var picked:Null<ShopStockItem> = null;
+            for (x in stocks)
+              if (x.stockId == leaf.decisionToken()) {
+                picked = x;
+                break;
+              }
+            if (picked == null)
+              throw "GameMatchCore: ShopBuy 找不到商品";
+            var ruler = cast(activeMonarch(), Monarch);
+            if (ruler.gold() < picked.priceGold)
+              throw new GameError("金錢不足，無法購買", "金錢不足", "shop-buy");
+
+            // 解析表單：需恰好選一名武將
+            var sel = extractFirstGeneralMultiPickSelections(menuNode.formWidgets());
+            if (sel.length != 1)
+              throw new GameError("商店購買需恰好選擇 1 名武將", "選擇不合法", "shop-buy");
+            var gid:GeneralId = sel[0];
+            var g = requireGeneral(gid);
+            if (g.owner() != ruler.id())
+              throw "GameMatchCore: 只能替自己麾下武將購買裝備";
+
+            ruler.reduceGold(picked.priceGold);
+            var eq = spawnStockEquipment(picked.stockId, picked.type, picked.name, picked.priceGold);
+            g.addEquipment(eq);
+
+            // 移除已購買商品；切片不結束，須按「回合結束」離開商店格
+            var rest:Array<ShopStockItem> = [];
+            for (x in stocks)
+              if (x.stockId != picked.stockId)
+                rest.push(x);
+            _shopStocksByTile.set(tileIdx, rest);
+            pushOutboxPlain(
+              actor.monarchId(),
+              "購買成功",
+              ShopEquipmentPurchased(
+                tileIdx,
+                gid,
+                picked.priceGold,
+                eq.name(),
+                eq.type(),
+                eq.rarity(),
+                eq.bonusStat(),
+                eq.bonusValue(),
+                eq.loyaltyBonus()
+              ),
+              "shop-buy"
+            );
+            syncActiveSliceAfterMenuLeaf(ShopBuy);
+          case ShopEndTurn:
+            if (_pendingShopTileIndex == null)
+              throw "GameMatchCore: ShopEndTurn 但無 pendingShop";
+            pushOutboxAnim(
+              actor.monarchId(),
+              FlowAck(FlowAckKind.ShopTileLeft),
+              FLOW_ACK_ANIM_MS,
+              OutboxPresentationMode.FanOut2,
+              "shop-end"
+            );
+            _pendingShopTileIndex = null;
+            _activeSliceComplete = true;
+            syncActiveSliceAfterMenuLeaf(ShopEndTurn);
+          case FriendlyCityDevelop:
+            enterStaging(actor, new FriendlyCityDevelopStagingAction(this), FriendlyCityDevelop);
+          case FriendlyCityRest:
+            enterStaging(actor, new FriendlyCityRestStagingAction(this), FriendlyCityRest);
+          case Status:
+            // GDD 未設計此 leaf，createPlayerMenu 已不會產生；保留分支僅為 switch 完整性
+            throw "GameMatchCore.applyMenuLeaf: Status leaf removed";
+          case ConfirmDone:
+            syncActiveSliceAfterMenuLeaf(ConfirmDone);
+            advanceActiveMonarchAfterConfirmDone();
+          case EmptyCityOccupySubmit:
+            handleEmptyCityOccupySubmit(actor, menuNode);
+          case EmptyCityOccupyAbort:
+            handleEmptyCityOccupyAbort(actor, menuNode);
+          case FriendlyCityDispatchApply:
+            handleFriendlyCityDispatchApply(actor, menuNode);
+          case FriendlyCityVisitEnd:
+            handleFriendlyCityVisitEnd(actor, menuNode);
+          case HostileCityAttackerPick, HostileCityDefenderAck, HostileCityDefenderPickSubmit, HostileCitySettlementAck:
+            throw "GameMatchCore.applyMenuLeaf: internal hostile routing";
+        }
+    }
+    evaluateTermination();
+    menuNode.setActivationEntry(null);
+  }
+
+  function advanceActiveMonarchAfterConfirmDone():Void {
+    var n = _monarchs.length;
+    if (n == 0)
+      return;
+    var idx = -1;
+    for (i in 0...n)
+      if (_monarchs[i].id() == _activeId) {
+        idx = i;
+        break;
+      }
+    if (idx < 0)
+      throw 'GameMatchCore.advanceActiveMonarchAfterConfirmDone: active ($_activeId) not in monarchs';
+    _activeId = _monarchs[(idx + 1) % n].id();
+    // 完整輪轉一圈（回到 seat=0）算一回合
+    if (activeMonarch().seat() == 0) {
+      _roundNumber += 1;
+      applyEndOfRoundSettlement();
+    }
+  }
+
+  function applyEndOfRoundSettlement():Void {
+    // 1) 回合末武將體力回復（全體）
+    for (m in _monarchs) {
+      var mon = cast(m, Monarch);
+      for (g in mon.roster()) {
+        var gg = cast(g, General);
+        gg.setStamina(Balance.clampInt(gg.stamina() + Balance.STAMINA_RECOVER_PER_TURN, 0, 100));
+      }
+    }
+
+    // 2) 套用「下回合」格子 bonus（寫入領地資源庫：城池儲備；村落暫存）。
+    for (at => amt in _tileNextTurnGrainBonus) {
+      if (amt <= 0)
+        continue;
+      if (_cityOwner.exists(at)) {
+        var prev = forceGetCityStoredGrain(at);
+        _cityStockGrain.set(at, prev + amt);
+      }
+      if (_villageOwner.exists(at)) {
+        var prev = _villageStockGrain.exists(at) ? _villageStockGrain.get(at) : 0;
+        _villageStockGrain.set(at, prev + amt);
+      }
+    }
+    for (at => amt in _tileNextTurnGoldBonus) {
+      if (amt <= 0)
+        continue;
+      if (_cityOwner.exists(at)) {
+        var prev = forceGetCityStoredGold(at);
+        _cityStockGold.set(at, prev + amt);
+      }
+      if (_villageOwner.exists(at)) {
+        var prev = _villageStockGold.exists(at) ? _villageStockGold.get(at) : 0;
+        _villageStockGold.set(at, prev + amt);
+      }
+    }
+    _tileNextTurnGrainBonus = new Map();
+    _tileNextTurnGoldBonus = new Map();
+    // _tileDefenseBonus 先不清除（目前尚未有消耗點）；後續接上戰鬥/攻城時再定義生命周期。
+
+    // 3) 每回合糧食消耗（士兵維持費）
+    for (m in _monarchs) {
+      var mon = cast(m, Monarch);
+      var cost = Balance.grainUpkeepForTroops(mon.troops());
+      if (cost <= 0)
+        continue;
+      var g = mon.grain();
+      if (g >= cost) {
+        mon.reduceGrain(cost);
+      } else {
+        // GDD 2.1.3：糧食不足 → 士兵依不足比例逃亡
+        // 例：僅夠 70% 需求 → 30% 士兵逃亡；糧食=0 → 大量逃亡（可視同 100%）
+        var keepRatio = cost > 0 ? (g / (cost * 1.0)) : 1.0; // 0..1
+        if (keepRatio < 0)
+          keepRatio = 0;
+        if (keepRatio > 1)
+          keepRatio = 1;
+        // 對齊 docs/數值算法.md §6.2：士兵逃亡比例 = (1 - keepRatio) * 0.5
+        var fleeRatio = (1.0 - keepRatio) * 0.5;
+        var loss = Std.int(Math.floor(mon.troops() * fleeRatio));
+        if (loss < 0)
+          loss = 0;
+        if (loss > mon.troops())
+          loss = mon.troops();
+        // 扣糧到 0
+        if (g > 0)
+          mon.reduceGrain(g);
+        // 扣兵
+        if (loss > 0)
+          mon.reduceTroops(loss);
+      }
+    }
+
+    // 4) 最小領地產出：統一寫入「領地資源庫」（避免直接加到君主身上）
+    if (_board != null) {
+      var len = _board.length();
+      for (i in 0...len) {
+        if (_cityOwner.exists(i)) {
+          var lvl = forceGetCityLevel(i);
+          var inc = Balance.cityBaseIncome(lvl);
+          _cityStockGold.set(i, forceGetCityStoredGold(i) + inc.gold);
+          _cityStockGrain.set(i, forceGetCityStoredGrain(i) + inc.grain);
+        }
+        // 4b) 村落領地化（歸順／攻占後）：先視同 CityLevel.Village 給基本產出
+        if (_villageOwner.exists(i)) {
+          var vLvl = _villageLevel.exists(i) ? _villageLevel.get(i) : CityLevel.Village;
+          var vInc = Balance.cityBaseIncome(vLvl);
+          var prevGold = _villageStockGold.exists(i) ? _villageStockGold.get(i) : 0;
+          var prevGrain = _villageStockGrain.exists(i) ? _villageStockGrain.get(i) : 0;
+          _villageStockGold.set(i, prevGold + vInc.gold);
+          _villageStockGrain.set(i, prevGrain + vInc.grain);
+        }
+      }
+    }
+  }
+
+  public function board():IBoard
+    return _board;
+
+  public function monarchs():Array<IMonarch>
+    return cast _monarchs;
+
+  public function activeMonarch():IMonarch {
+    for (m in _monarchs)
+      if (m.id() == _activeId)
+        return m;
+    throw 'GameMatchCore.activeMonarch: id not in roster ($_activeId)';
+  }
+
+  public function roundNumber():Int
+    return _roundNumber;
+
+  // NOTE(strategy-tile): 若 UI 要顯示格子加成/防禦，可補進 IGameMatchGetter 對應 query。
+  public function forceAddTileNextTurnGrainBonus(at:TileIndex, amount:Int):Void {
+    var prev = _tileNextTurnGrainBonus.exists(at) ? _tileNextTurnGrainBonus.get(at) : 0;
+    _tileNextTurnGrainBonus.set(at, prev + amount);
+  }
+
+  public function forceAddTileNextTurnGoldBonus(at:TileIndex, amount:Int):Void {
+    var prev = _tileNextTurnGoldBonus.exists(at) ? _tileNextTurnGoldBonus.get(at) : 0;
+    _tileNextTurnGoldBonus.set(at, prev + amount);
+  }
+
+  public function forceAddTileDefenseBonus(at:TileIndex, amount:Float):Void {
+    var prev = _tileDefenseBonus.exists(at) ? _tileDefenseBonus.get(at) : 0.0;
+    _tileDefenseBonus.set(at, prev + amount);
+  }
+
+  public function hasMovedThisTurn():Bool
+    return _hasMovedThisTurn;
+
+  public function canUseStrategyPreMove():Bool
+    return !_strategyPreUsed && !_hasMovedThisTurn;
+
+  public function canUseStrategyPostMove():Bool
+    return !_strategyPostUsed && _hasMovedThisTurn;
+
+  public function monarchById(monarchId:MonarchId):IMonarch
+    return monarchWithId(monarchId);
+
+  public function pawnIndexOfPlayer(player:IPlayer):TileIndex
+    return pawnIndexOfMonarch(player.monarchId());
+
+  public function pawnIndexOfMonarch(monarchId:MonarchId):TileIndex
+    return monarchWithId(monarchId).pawnIndex();
+
+  public function tileAt(index:TileIndex):ITile
+    return board().tileAt(index);
+
+  public function availableJiCe(monarchId:MonarchId):Array<IJiCe> {
+    ensureUnlockedJiCe(monarchId);
+    var row = _ownedJiCe.get(monarchId);
+    return row != null ? row.copy() : [];
+  }
+
+  function ensureUnlockedJiCe(monarchId:MonarchId):Void {
+    // ver1：依 docs/策略系統.md 的職位解鎖表，自動補齊已解鎖策略（追加到所持牌尾端，避免改變既有索引）。
+    requireOwnerMonarch(monarchId);
+    var ruler = monarchWithId(monarchId);
+    var roster = ruler.roster();
+    var maxRank = game.PositionRank.Soldier;
+    for (g in roster) {
+      if (g == null)
+        continue;
+      if (Balance.positionRankValue(g.positionRank()) > Balance.positionRankValue(maxRank))
+        maxRank = g.positionRank();
+    }
+
+    var owned = _ownedJiCe.get(monarchId);
+    if (owned == null)
+      return;
+    var ownedKey = new Map<String, Bool>();
+    for (c in owned)
+      if (c != null)
+        ownedKey.set(c.registryKey(), true);
+
+    for (k in Balance.rankUnlockableStrategyKeys()) {
+      var req = Balance.requiredRankForStrategy(k);
+      if (!Balance.positionRankGte(maxRank, req))
+        continue;
+      if (ownedKey.exists(k))
+        continue;
+      // 追加到尾端（保持既有 token=index 的穩定性）
+      createJiCe(k, monarchId);
+      ownedKey.set(k, true);
+    }
+  }
+
+  function resolvePlayedJiCeFromLeaf(actor:IPlayer, leaf:IPlayerMenuEntry):IJiCe {
+    var tok = leaf.decisionToken();
+    if (tok == null)
+      throw "GameMatchCore.applyMenuLeaf: JiCe leaf 須傳 playedJiCe，或選單葉 decisionToken（所持計策索引）";
+    var idx = Std.parseInt(tok);
+    if (idx == null)
+      throw "GameMatchCore.applyMenuLeaf: JiCe decisionToken 須為所持計策索引數字";
+    var owned = _ownedJiCe.get(actor.monarchId());
+    if (owned == null || idx < 0 || idx >= owned.length)
+      throw "GameMatchCore.applyMenuLeaf: 所持計策索引超出範圍 (" + tok + ")";
+    return owned[idx];
+  }
+
+  function assertJiCeAllowedInPhase(card:IJiCe, phase:StrategyPhase):Void {
+    var allowed = card.allowedPhases();
+    for (p in allowed)
+      if (p == phase)
+        return;
+    throw 'GameMatchCore: 計策 "${card.designLabel()}" 不可於階段 ${Std.string(phase)} 使用';
+  }
+
+  public function isActivePlayerSliceComplete():Bool
+    return _activeSliceComplete;
+}
+
+private typedef GeneralRecruitOffer = {
+  offerId:String,
+  rarity:game.Rarity,
+  command:Int,
+  might:Int,
+  wit:Int,
+  stewardship:Int,
+  costGold:Int,
+};
+
+private typedef ShopStockItem = {
+  stockId:EquipmentId,
+  type:game.EquipmentType,
+  name:String,
+  priceGold:Int,
+};

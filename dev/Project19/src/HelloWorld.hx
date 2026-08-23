@@ -1,0 +1,419 @@
+import debug.CurrentSkillTest;
+import debug.HomingProjectileTest;
+import debug.PathfinderTest;
+import debug.WeaponFireTest;
+import debug.WorldSerializeTest;
+import domain.Collision.Hitbox;
+import domain.FieldObject.CollidableObject;
+import domain.Geometry.Shape;
+import domain.Damage.DamageType;
+import domain.Machine;
+import domain.Machine.createEmptyMachine;
+import domain.Weapon.FireMode;
+import domain.Weapon.PowerSource;
+import domain.Weapon.WeaponCategory;
+import domain.Weapon.WeaponDefinition;
+import domain.Weapon.WeaponOnMachine;
+import domain.Weapon.createWeaponOnMachine;
+import domain.World;
+import domain.World.createEmptyWorld;
+import domain.Skill.Skill;
+import impl.CollisionSystem;
+import impl.GoalSystem;
+import impl.HitboxSystem;
+import impl.HomingSystem;
+import impl.ICollisionListener;
+import impl.IHitboxDamageListener;
+import impl.ISystem;
+import impl.MachineCurrentSkillSystem;
+import impl.MoveToPointsGoal.createMoveToPointsGoal;
+import impl.MovementSystem;
+import impl.ProjectileSystem;
+import impl.SharedLeafFactory.sharedLeafFactory;
+import impl.SimpleMovementResolver.simpleMovementResolver;
+import impl.WeaponFireSystem;
+import sample.GoalDemo;
+import view.EventCenter;
+import view.EventCenter.Event;
+import view.EventCenter.P5RenderFrame;
+import view.P5App.createP5App;
+import view.component.CameraControlPanel.createCameraControlPanel;
+import view.component.CameraController.createCameraController;
+import view.component.DebugProjectile.createDebugProjectile;
+import view.component.DebugSkillLauncher.createDebugSkillLauncher;
+import view.component.DebugWeaponTrigger.createDebugWeaponTrigger;
+import view.component.DirtyWorldPublisher.createDirtyWorldPublisher;
+import view.component.SceneRenderer.createSceneRenderer;
+
+/**
+ * Skill demo 用的「機體基礎位移量」(世界單位).
+ *
+ * 對應 Skill.MovementResolver.baseDistance: 一格 Dash 等同的世界距離.
+ * 暫以 system-wide 常數注入 MachineCurrentSkillSystem,
+ * TODO 之後若需要不同機體有不同機動性, 改為從 Machine 屬性讀取.
+ */
+private inline final DEMO_BASE_DISTANCE = 60.0;
+
+class HelloWorld {
+	static public function main():Void {
+		PathfinderTest.run();
+		WorldSerializeTest.run();
+		HomingProjectileTest.run();
+		WeaponFireTest.run();
+		CurrentSkillTest.run();
+
+		var world = createEmptyWorld();
+		var demoMachine = createDemoMachine();
+		world.machines.push(demoMachine);
+		// 給 demo 機體掛三把不同 FireMode 的測試武器, 同時掛兩處 (machine.weapons / world.weaponsOnMachine);
+		// 都共享一個 reference, 因此 weapon.isTrigger 由 DebugWeaponTrigger 寫到任一邊都會被 WeaponFireSystem 看見.
+		// 用 F 鍵同時驅動三把 (見 view.component.DebugWeaponTrigger).
+		for (weapon in createDemoWeapons(demoMachine.id)) {
+			demoMachine.weapons.push(weapon);
+			world.weaponsOnMachine.push(weapon);
+		}
+		// 給 demo 機體一個示範招式: Dash + Single 武器 + 收招等待. 由 DebugSkillLauncher 按 K 鍵觸發.
+		// MachineCurrentSkillSystem 期間會接管 machine.position / weapon.isTrigger, 結束自動清回.
+		demoMachine.skills.push(createDemoSkill());
+		// 給 demo 機體掛一個「依序走過多個點」的 Sequence goal, 由 GoalSystem 每幀
+		// 重新計算 velocity (內部由 MoveToPoint leaf 完成), 再由 MovementSystem 推進 position
+		world.goalNodes.push(createMoveToPointsGoal(demoMachine.id, [
+			{x: 200.0, y: 100.0},
+			{x: 0.0, y: 200.0},
+			{x: -200.0, y: 100.0},
+			{x: -150.0, y: 0.0}
+		]));
+
+		var eventCenter = new EventCenter();
+
+		// 系統執行順序:
+		//   1. GoalSystem                — 更新 machine.velocity (依 goal 目標重新規劃)
+		//   2. MachineCurrentSkillSystem — 若機體在跑招式: 接管 machine.position + velocity 清 0,
+		//                                  並依當前 step.weaponUse 設 weapon.isTrigger.
+		//                                  排在 GoalSystem 之後是為了覆蓋 goal 的 velocity;
+		//                                  排在 WeaponFireSystem 之前是為了讓 isTrigger 同幀生效.
+		//   3. WeaponFireSystem          — 讀 weapon.isTrigger + FireMode + PowerSource → spawn 新彈藥
+		//                                  排在 HomingSystem 之前: 同幀新出生的追蹤彈也能被 HomingSystem 立即轉向
+		//   4. HomingSystem              — 更新 projectile.velocity / facing (追蹤彈依目標位置)
+		//                                  必須排在 MovementSystem 之前, 與 GoalSystem 同層: 只表達意圖
+		//   5. MovementSystem            — 套用 velocity 推 position (一次性消化上面所有系統的決策)
+		//   6. HitboxSystem              — Hitbox age / duration 過期清除 (必須排在 CollisionSystem 之前,
+		//                                  確保已過期的 Hitbox 不會被本幀的碰撞偵測誤判)
+		//   7. CollisionSystem           — 對最新 position 做碰撞偵測, 透過 collisionListener 廣播
+		//                                  (HitboxSystem 透過 onHitboxCollide 收到事件, 過濾 cooldown
+		//                                   後再透過 damageListener 廣播 onDamage)
+		//   8. ProjectileSystem          — 跟蹤 projectile 階段, 依 onCollide 結果完成 OnHit
+		//                                  (必須排在 CollisionSystem 之後, 才能在同一幀內收到
+		//                                   onCollide 設好 stage, 再於 onTick 跑完 OnHit)
+		//
+		// CollisionSystem / HitboxSystem 都需要 listener 才能建構, 但 listener 又需要看到
+		// systems 陣列 (要 fan-out 給所有系統), 故先建陣列 + 前段系統,
+		// 再以該陣列建 fan-out listeners, 最後把後續系統推進同一個陣列。
+		// 由於 listener 持有的是 systems 陣列的「參考」, push 後新加入的系統也會被廣播。
+		var systems:Array<ISystem> = [
+			new GoalSystem(world, sharedLeafFactory, GoalDemo.plannerFactory),
+			new MachineCurrentSkillSystem(world, simpleMovementResolver, DEMO_BASE_DISTANCE),
+			new WeaponFireSystem(world),
+			new HomingSystem(world),
+			new MovementSystem(world)
+		];
+		var collisionListener:ICollisionListener = new FanOutCollisionListener(systems);
+		var damageListener:IHitboxDamageListener = new FanOutDamageListener(systems);
+		systems.push(new HitboxSystem(world, damageListener));
+		systems.push(new CollisionSystem(world, collisionListener));
+		systems.push(new ProjectileSystem(world));
+		eventCenter.eventSubject.subscribe(event -> dispatchEventToSystems(systems, event));
+
+		createCameraControlPanel(eventCenter);
+		eventCenter.p5RenderSubject.subscribe(renderP5Frame);
+		createCameraController(eventCenter);
+		createSceneRenderer(eventCenter);
+		createDebugProjectile(eventCenter);
+		createDebugWeaponTrigger(eventCenter, demoMachine.id);
+		createDebugSkillLauncher(eventCenter, demoMachine.id, "demo_skill");
+		// DirtyWorldPublisher 必須在 dispatchEventToSystems 訂閱「之後」才接上,
+		// 以利用 Observable.subscribe 的 FIFO 訂閱順序: 同一個 P5Tick 來臨時,
+		// 所有 system 先跑完 (可能翻起 world.isDirty), 接著本元件才檢查 flag 並
+		// 批次 nextWorld 出去。view event 元件 (CameraController / DebugProjectile)
+		// 順序排在前面對結果無影響, 它們只回應 OnClick / P5KeyPressed, 不消費 P5Tick。
+		createDirtyWorldPublisher(eventCenter, world);
+		// 初始 emit 一次, 把 worldSubject 的 current 從 createEmptyWorld() (BehaviorSubject
+		// 內部初始值) 切到 HelloWorld 真正持有的 world 參考, 讓所有用 switchMap(worldSubject)
+		// 訂閱事件的 view 元件 (CameraController / DebugProjectile) 在第一次事件來之前
+		// 就已切回正確 world. 後續的 render emit 全部交給 DirtyWorldPublisher 的 isDirty 路徑。
+		eventCenter.nextWorld(world);
+		createP5App(eventCenter);
+	}
+
+	/**
+	 * 建立一個朝向 +X (facing=0) 並具備速度的示範機體。
+	 *
+	 * velocity (30, 10) 與 maxSpeed 50 — |v| ≈ 31.6 小於 maxSpeed,
+	 * 因此 MovementSystem.applyMaxSpeed 不會裁切, 每秒實際位移為 (30, 10) 世界單位。
+	 *
+	 * shape Circle(0, 0, 15) — 讓 SceneRenderer 在近景模式下能畫出可見輪廓。
+	 */
+	static function createDemoMachine():Machine {
+		var machine = createEmptyMachine();
+		machine.id = "demo_machine";
+		machine.name = "Demo Machine";
+		machine.position = {x: -150.0, y: 0.0};
+		machine.velocity = {x: 30.0, y: 10.0};
+		machine.maxSpeed = 50.0;
+		machine.shape = Circle(0.0, 0.0, 15.0);
+		return machine;
+	}
+
+	/**
+	 * 建立 demo 機體的三把測試武器, 每把對應一種 FireMode, 共同綁到 F 鍵.
+	 *
+	 * 設計目的:
+	 *   - 一鍵同時測試 Single (edge) / Burst (interval) / Spread (count) 三條 path
+	 *   - 三把都用 Solid + Spawn(small explosion) 確保視覺一致 (一打就爆),
+	 *     差異只在「按一下 F 看到幾發 / 持續按看不看到連發」
+	 *   - PowerSource 各挑一個變體, 順便驗證 consumePower:
+	 *       Single  → NativeEnergy   (永遠允許, 對應 TODO 待 Machine.currentEnergy 上線)
+	 *       Burst   → Magazine(30, 1.0) — 每次扣 1, 滿匣可打 30 發
+	 *       Spread  → Ammo(8)          — 一次扣 1 發 (= 一次散彈 shell), 共 8 發 shell
+	 *   - 掛點 localPosition 稍微錯開, 讓 spawn 出來的彈藥不會擠在同一點上互撞,
+	 *     避免「剛出膛就被自己人 onCollide 觸發 ResolvingHit」
+	 */
+	static function createDemoWeapons(ownerMachineId:String):Array<WeaponOnMachine> {
+		var weapons:Array<WeaponOnMachine> = [];
+
+		var singleDef:WeaponDefinition = {
+			id: "demo_single_def",
+			name: "Demo Single Rifle",
+			category: Bullet,
+			power: NativeEnergy(2.0),
+			fire: Single,
+			projectile: Solid(220.0, 1.5, {type: Physical, amount: 12.0}, Spawn([
+				{
+					id: "demo_single_explosion",
+					name: "Demo Single Explosion",
+					position: {x: 0.0, y: 0.0},
+					facing: 0.0,
+					shape: Circle(0.0, 0.0, 18.0),
+					duration: 0.1,
+					cooldownPerTarget: Math.POSITIVE_INFINITY,
+					damage: {type: Explosion, amount: 25.0},
+					reactions: []
+				}
+			])),
+			baseAccuracy: 1.0
+		};
+		var singleWeapon = createWeaponOnMachine(singleDef, ownerMachineId, "demo_single");
+		singleWeapon.localPosition = {x: 18.0, y: -8.0};
+		weapons.push(singleWeapon);
+
+		var burstDef:WeaponDefinition = {
+			id: "demo_burst_def",
+			name: "Demo Burst Gun",
+			category: Bullet,
+			power: Magazine(30, 1.0),
+			fire: Burst(3, 0.15),
+			projectile: Solid(180.0, 1.2, {type: Physical, amount: 6.0}, Spawn([
+				{
+					id: "demo_burst_explosion",
+					name: "Demo Burst Explosion",
+					position: {x: 0.0, y: 0.0},
+					facing: 0.0,
+					shape: Circle(0.0, 0.0, 10.0),
+					duration: 0.08,
+					cooldownPerTarget: Math.POSITIVE_INFINITY,
+					damage: {type: Explosion, amount: 12.0},
+					reactions: []
+				}
+			])),
+			baseAccuracy: 0.95
+		};
+		var burstWeapon = createWeaponOnMachine(burstDef, ownerMachineId, "demo_burst");
+		burstWeapon.localPosition = {x: 18.0, y: 0.0};
+		weapons.push(burstWeapon);
+
+		var spreadDef:WeaponDefinition = {
+			id: "demo_spread_def",
+			name: "Demo Spread Shotgun",
+			category: Bullet,
+			power: Ammo(8),
+			fire: Spread(5, 30.0),
+			projectile: Solid(160.0, 0.8, {type: Physical, amount: 4.0}, Spawn([
+				{
+					id: "demo_spread_explosion",
+					name: "Demo Spread Pellet Explosion",
+					position: {x: 0.0, y: 0.0},
+					facing: 0.0,
+					shape: Circle(0.0, 0.0, 8.0),
+					duration: 0.06,
+					cooldownPerTarget: Math.POSITIVE_INFINITY,
+					damage: {type: Explosion, amount: 8.0},
+					reactions: []
+				}
+			])),
+			baseAccuracy: 0.8
+		};
+		var spreadWeapon = createWeaponOnMachine(spreadDef, ownerMachineId, "demo_spread");
+		spreadWeapon.localPosition = {x: 18.0, y: 8.0};
+		weapons.push(spreadWeapon);
+
+		return weapons;
+	}
+
+	/**
+	 * 示範招式: Dash 進場 → Dash + 開 Single 槍 → 純等待收招.
+	 *
+	 * 與 sample.DashSlash 的概念類似, 但這裡用 demo 機體已掛載的 Single 武器
+	 * ("demo_single") 而非近戰刀. 倍率欄位 (energyCostMul / damageMul / accuracyMul)
+	 * 暫時都填 1.0 — MachineCurrentSkillSystem 目前不套倍率 (見系統 doc).
+	 *
+	 * 時間 / 位移配比 (baseDistance = DEMO_BASE_DISTANCE = 60 世界單位):
+	 *   - step 1: 0.40s, Dash × 2.0 → 120 世界單位前進 (300 wu/s 高速)
+	 *   - step 2: 0.30s, Dash × 0.6 + 開 demo_single 槍 → 36 wu 緩進 + 一發子彈
+	 *   - step 3: 0.30s, 純等待收招 (velocity 自動清零, 停在原地)
+	 */
+	static function createDemoSkill():Skill {
+		return {
+			id: "demo_skill",
+			name: "Demo Dash Shot",
+			requiredCategory: Bullet,
+			steps: [
+				{
+					duration: 0.40,
+					movement: {type: Dash, multiplier: 2.0}
+				},
+				{
+					duration: 0.30,
+					movement: {type: Dash, multiplier: 0.6},
+					weaponUse: {
+						weaponId: "demo_single",
+						energyCostMul: 1.0,
+						damageMul: 1.0,
+						accuracyMul: 1.0
+					}
+				},
+				{
+					duration: 0.30
+				}
+			]
+		};
+	}
+
+	/**
+	 * 將 EventCenter 的 Event 依種類分派到所有 ISystem 的對應 callback。
+	 *
+	 * 對應關係 (與 impl.ISystem 文件保持一致):
+	 *   OnClick(id)                       → onClick(id)
+	 *   P5Setup(_)                        → onSetup()
+	 *   P5Tick(frameCount, deltaTime)     → onTick(frameCount, deltaTime)
+	 *   P5MousePressed(x,y)               → onMousePressed(x, y)
+	 *   P5MouseReleased                   → onMouseRelease()
+	 *   P5MouseMoved(x,y)                 → onMouseMoved(x, y)
+	 *   P5MouseDragged(x,y)               → onMouseDragged(x, y)
+	 *
+	 * P5Touch* 系列尚未對應到 ISystem callback, 暫時略過。
+	 */
+	static function dispatchEventToSystems(systems:Array<ISystem>, event:Event):Void {
+		for (system in systems) {
+			switch (event) {
+				case OnClick(id):
+					system.onClick(id);
+				case P5Setup(_):
+					system.onSetup();
+				case P5Tick(frameCount, deltaTime):
+					system.onTick(frameCount, deltaTime);
+				case P5MousePressed(x, y):
+					system.onMousePressed(x, y);
+				case P5MouseReleased:
+					system.onMouseRelease();
+				case P5MouseMoved(x, y):
+					system.onMouseMoved(x, y);
+				case P5MouseDragged(x, y):
+					system.onMouseDragged(x, y);
+				case P5TouchStarted(_, _) | P5TouchEnded | P5TouchMoved(_, _):
+				case P5KeyPressed(_, _) | P5KeyReleased(_, _):
+					// 目前 ISystem 沒有 onKey* 介面; 鍵盤事件由 view/component
+					// (例: DebugProjectile) 直接訂閱 eventSubject 處理
+			}
+		}
+	}
+
+	static function renderP5Frame(frame:P5RenderFrame):Void {
+		var p5 = frame.p5;
+		var world = frame.renderWorld;
+
+		p5.background(17);
+		p5.noStroke();
+		p5.fill(255);
+		p5.text("Project19 p5 render smoke test", 16, 24);
+		p5.text('frame: ${frame.frameCount}', 16, 44);
+		p5.text('machines: ${world.machines.length}', 16, 64);
+		p5.text('weaponsOnMachine: ${world.weaponsOnMachine.length}', 16, 84);
+		p5.text('weaponsOnField: ${world.weaponsOnField.length}', 16, 104);
+		p5.text('projectiles: ${world.projectiles.length}', 16, 124);
+		p5.text('hitboxes: ${world.hitboxes.length}', 16, 144);
+		p5.text('markers: ${world.markers.length}', 16, 164);
+		p5.text('camera: (${world.camera.position.x}, ${world.camera.position.y}) zoom=${world.camera.zoom}', 16, 184);
+	}
+}
+
+/**
+ * 碰撞事件 fan-out listener。
+ *
+ * CollisionSystem 偵測到碰撞時呼叫此 listener, 由本類別把同一筆事件廣播給
+ * 整個 systems 陣列裡每一個 ISystem (因為 ISystem extends ICollisionListener,
+ * 每個系統皆有 onCollide / onHitboxCollide 接口)。
+ *
+ * 設計動機:
+ *   - CollisionSystem 不直接持有 systems 陣列, 而是只依賴 ICollisionListener 介面,
+ *     避免「事件源」與「消費者集合」緊耦合
+ *   - 不關心系統的具體型別; 任何 ISystem 都可以靜默忽略事件 (空實作),
+ *     或在 onCollide / onHitboxCollide 內過濾自己關心的對象進行處理
+ *
+ * 注意:
+ *   持有的是 systems 陣列「參考」, 故 CollisionSystem push 進來後也會被 fan-out 到 —
+ *   但 CollisionSystem 自身的 onCollide / onHitboxCollide 為空實作 (它是事件源, 不是消費者),
+ *   故對 CollisionSystem 的回呼沒有副作用。
+ */
+class FanOutCollisionListener implements ICollisionListener {
+	final systems:Array<ISystem>;
+
+	public function new(systems:Array<ISystem>) {
+		this.systems = systems;
+	}
+
+	public function onCollide(a:CollidableObject, b:CollidableObject):Void {
+		for (system in systems)
+			system.onCollide(a, b);
+	}
+
+	public function onHitboxCollide(hitbox:Hitbox, target:CollidableObject):Void {
+		for (system in systems)
+			system.onHitboxCollide(hitbox, target);
+	}
+}
+
+/**
+ * 傷害事件 fan-out listener。
+ *
+ * HitboxSystem 在 cooldown 過濾後決定「本次相交確實要結算傷害」時呼叫此 listener,
+ * 由本類別把同一筆事件廣播給整個 systems 陣列裡每一個 ISystem (因為 ISystem extends
+ * IHitboxDamageListener, 每個系統皆有 onDamage 接口)。
+ *
+ * 設計動機 / 注意事項 與 FanOutCollisionListener 相同 — 把「事件源」與「消費者集合」
+ * 透過介面解耦; HitboxSystem 自身的 onDamage 也是空實作 (它是事件源, 不是消費者)。
+ *
+ * 目前還沒有任何系統實際消費 onDamage (HP / 計分 / 特效 等都尚未建立),
+ * 但保留 fan-out 通道讓日後加入消費者時無需動到 HitboxSystem 與本管線。
+ */
+class FanOutDamageListener implements IHitboxDamageListener {
+	final systems:Array<ISystem>;
+
+	public function new(systems:Array<ISystem>) {
+		this.systems = systems;
+	}
+
+	public function onDamage(hitbox:Hitbox, target:CollidableObject):Void {
+		for (system in systems)
+			system.onDamage(hitbox, target);
+	}
+}

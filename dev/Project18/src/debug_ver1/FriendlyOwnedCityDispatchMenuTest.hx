@@ -1,0 +1,159 @@
+package debug_ver1;
+
+import game.IGame;
+import game.IGameMatch;
+import game.IPlayer;
+import game.IPlayerMenu;
+import game.IPlayerMenuNode;
+import game.ITile;
+import game.MenuFormWidget;
+import game.MenuNodeQuery;
+import game.PlayerMenuKind;
+import game.PlayerMenuKind.LandingContinue;
+import game.TileKind;
+import game.LevelKeys;
+
+/**
+ * 踩中 {@link IGameMatch#cityOwnedByActiveMonarch 我方城池}：應持續出現「調度」表單（3 嵌件）與「結束拜訪」，
+ * 直至套用 {@link PlayerMenuKind.FriendlyCityVisitEnd}。
+ */
+class FriendlyOwnedCityDispatchMenuTest {
+  static inline var RING_LEN = 10;
+  static inline var START_PAWN = 2;
+  static inline var CITY_IDX = 5;
+
+  public static function testFriendlyCityPersistentMenuUntilVisitEnd(game:IGame):Void {
+    var match:IGameMatch = game.createGameMatch(LevelKeys.EMPTY);
+    match.forceSetFixedMoveDelta(3);
+
+    var tiles:Array<ITile> = [];
+    for (i in 0...RING_LEN)
+      tiles.push(match.createTile(i, i == CITY_IDX ? City : Plain));
+    match.createBoard(tiles);
+
+    match.createMonarch("m-own", 0, START_PAWN, 80, 40);
+    match.linkPlayerToMonarch("m-own", match.createPlayer("m-own", false));
+    match.forceSetCityOwner(CITY_IDX, "m-own");
+    match.forcePutCityStores(CITY_IDX, 25, 15);
+    match.forcePutCityStoredGold(CITY_IDX, 12);
+
+    if (!match.cityOwnedByActiveMonarch(CITY_IDX))
+      throw "FriendlyOwnedCityDispatchMenuTest: 預期為我方城地";
+
+    var ruler = cast(match.monarchs()[0], impl_ver1.model.Monarch);
+    var player:IPlayer = match.playerForMonarch(ruler.id());
+    // 給金錢池，供調度測試使用
+    ruler.grantGold(100);
+
+    match.applyMenuLeaf(player, MenuNodeQuery.requireNodeWithKind(match.createPlayerMenu(player), Move));
+    match.applyMenuLeaf(player, MenuNodeQuery.requireNodeWithKind(match.createPlayerMenu(player), LandingContinue));
+
+    if (ruler.pawnIndex() != CITY_IDX)
+      throw 'FriendlyOwnedCityDispatchMenuTest: 預期落在 $CITY_IDX';
+    if (match.forceGetPendingFriendlyCityVisitTile() != CITY_IDX)
+      throw "FriendlyOwnedCityDispatchMenuTest: 應 pending 我方城池拜訪";
+    if (match.forceGetPendingEmptyCityOccupyTile() != null)
+      throw "FriendlyOwnedCityDispatchMenuTest: 不應進空城進駐流程";
+
+    var menu1 = match.createPlayerMenu(player);
+    assertVisitMenuShape(menu1, 80, 40, ruler.gold(), 25, 15, 12);
+
+    var dNode = MenuNodeQuery.requireNodeWithKind(menu1, FriendlyCityDispatchApply);
+    var fw = dNode.formWidgets();
+    switch fw[0] {
+      case Slider(l0, mn0, mx0, st0, _):
+        fw[0] = Slider(l0, mn0, mx0, st0, 50);
+      default:
+        throw "FriendlyOwnedCityDispatchMenuTest: [0] Slider";
+    }
+    switch fw[1] {
+      case Slider(l1, mn1, mx1, st1, _):
+        fw[1] = Slider(l1, mn1, mx1, st1, 15);
+      default:
+        throw "FriendlyOwnedCityDispatchMenuTest: [1] Slider";
+    }
+    switch fw[2] {
+      case Slider(l2, mn2, mx2, st2, _):
+        fw[2] = Slider(l2, mn2, mx2, st2, 20);
+      default:
+        throw "FriendlyOwnedCityDispatchMenuTest: [2] Slider";
+    }
+    var dispatchBtn = MenuNodeQuery.buttonEntryOnNode(dNode, FriendlyCityDispatchApply);
+    if (dispatchBtn == null)
+      throw "FriendlyOwnedCityDispatchMenuTest: 缺少確認調度鈕";
+    dNode.setActivationEntry(dispatchBtn);
+    match.applyMenuLeaf(player, dNode);
+
+    if (match.forceGetPendingFriendlyCityVisitTile() != CITY_IDX)
+      throw "FriendlyOwnedCityDispatchMenuTest: 確認調度後仍應停留拜訪（選單持續）";
+    if (ruler.troops() != 55)
+      throw "FriendlyOwnedCityDispatchMenuTest: 兵力應為 80-(50-25)=55，got " + ruler.troops();
+    if (ruler.gold() != 92)
+      throw "FriendlyOwnedCityDispatchMenuTest: 金錢應為 100-(20-12)=92，got " + ruler.gold();
+    if (match.forceGetCityStoredTroops(CITY_IDX) != 50 || match.forceGetCityStoredGrain(CITY_IDX) != 15)
+      throw "FriendlyOwnedCityDispatchMenuTest: 城池儲備更新不符";
+    if (match.forceGetCityStoredGold(CITY_IDX) != 20)
+      throw "FriendlyOwnedCityDispatchMenuTest: 城池金錢儲備更新不符";
+
+    var menu2 = match.createPlayerMenu(player);
+    assertVisitMenuShape(menu2, 55, 40, 92, 50, 15, 20);
+
+    match.applyMenuLeaf(player, MenuNodeQuery.requireNodeWithKind(menu2, FriendlyCityVisitEnd));
+
+    if (match.forceGetPendingFriendlyCityVisitTile() != null)
+      throw "FriendlyOwnedCityDispatchMenuTest: 結束拜訪後應清除 pending";
+    MenuNodeQuery.requireNodeWithKind(match.createPlayerMenu(player), ConfirmDone);
+  }
+
+  static function assertVisitMenuShape(menu:IPlayerMenu, expMaxTroop:Int, expMaxGrain:Int, expMaxGold:Int, expDefTroop:Int, expDefGrain:Int, expDefGold:Int):Void {
+    var roots = menu.rootNodes();
+    if (roots.length < 2)
+      throw "FriendlyOwnedCityDispatchMenuTest: 預期至少調度 + 結束拜訪根節點";
+    var dispatchNode = roots[0];
+    if (dispatchNode.caption() != "調度")
+      throw 'FriendlyOwnedCityDispatchMenuTest: 第一項應為「調度」，got ${dispatchNode.caption()}';
+    var fw = dispatchNode.formWidgets();
+    if (fw.length != 4)
+      throw "FriendlyOwnedCityDispatchMenuTest: 調度表單應為 4 元件（3 Slider + 1 Button），got " + fw.length;
+
+    switch fw[0] {
+      case Slider(_, min, max, step, def):
+        if (min != 0 || max != expMaxTroop || step != 1 || def != expDefTroop)
+          throw "FriendlyOwnedCityDispatchMenuTest: 調度兵力 Slider 不符（max/預設應反映君主池與城池兵力）";
+      default:
+        throw "FriendlyOwnedCityDispatchMenuTest: [0] 應為調度兵力 Slider";
+    }
+    switch fw[1] {
+      case Slider(_, min, max, step, def):
+        if (min != 0 || max != expMaxGrain || step != 1 || def != expDefGrain)
+          throw "FriendlyOwnedCityDispatchMenuTest: 調度糧食 Slider 不符（max/預設應反映君主池與城池糧食）";
+      default:
+        throw "FriendlyOwnedCityDispatchMenuTest: [1] 應為調度糧食 Slider";
+    }
+    switch fw[2] {
+      case Slider(_, min, max, step, def):
+        if (min != 0 || max != expMaxGold || step != 1 || def != expDefGold)
+          throw "FriendlyOwnedCityDispatchMenuTest: 調度金錢 Slider 不符（max/預設應反映君主池與城池金錢）";
+      default:
+        throw "FriendlyOwnedCityDispatchMenuTest: [2] 應為調度金錢 Slider";
+    }
+    switch fw[3] {
+      case Button(e):
+        if (e.kind() != FriendlyCityDispatchApply)
+          throw "FriendlyOwnedCityDispatchMenuTest: 第三元件應為確認調度";
+      default:
+        throw "FriendlyOwnedCityDispatchMenuTest: [3] 應為 Button（確認調度）";
+    }
+
+    var foundEnd = false;
+    for (n in roots) {
+      var L = n.leaf();
+      if (L != null && L.kind() == FriendlyCityVisitEnd) {
+        foundEnd = true;
+        break;
+      }
+    }
+    if (!foundEnd)
+      throw "FriendlyOwnedCityDispatchMenuTest: 缺少結束拜訪葉";
+  }
+}

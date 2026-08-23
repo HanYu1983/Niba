@@ -1,0 +1,58 @@
+{
+  "name": "艾琳娜",
+  "name_en": "Elena",
+  "titles": ["靈魔橋樑", "西方劍心"],
+  "birth_oe": 24975,
+  "death_oe": null,
+  "appearance_age": "約 45-50 歲",
+  "race": "人類",
+  "origin": "艾爾德里亞·中央王國·奧術城",
+  "identities": ["奧術之塔學徒", "蜀山劍派交流生", "跨界使者"],
+  "cultivation_systems": ["西方魔法體系", "仙俠體系（劍修基礎）"],
+  "current_realm": "正式法師（Mage）/ 金丹期",
+  "spiritual_root": null,
+  "magic_talents": ["元素親和（水、風）", "奧術感知（中級）", "跨體系適應力（頂級）"],
+  "personality": ["好奇心強", "勇敢開朗", "善於學習", "適應力強", "樂觀向上"],
+  "core_philosophy": "萬法同源，文化無界",
+  "aging": {
+    "stage": "金丹期",
+    "last_breakthrough_oe": 25050,
+    "appearance_at_breakthrough": 45,
+    "aging_factor": 0.02
+  },
+  "timeline": [
+    { "year": 24975, "event": "出生", "description": "出生於中央王國普通魔法家庭" },
+    { "year": 24983, "event": "入學", "description": "8 歲進入奧術之塔學習" },
+    { "year": 24999, "event": "報名交流", "description": "報名參加《靈魔交流協議》交流使者選拔" },
+    { "year": 25000, "event": "前往蜀山", "description": "作為西方交流學徒前往蜀山劍派" },
+    { "year": 25050, "event": "適應完成", "description": "克服語言障礙，適應蜀山生活" },
+    { "year": 25200, "event": "基礎劍法圓滿", "description": "掌握所有基礎劍招，劍法熟練" },
+    { "year": 25300, "event": "劍心通明訣掌握", "description": "可感知劍意，劍心純粹" },
+    { "year": 25400, "event": "靈魔感知研究", "description": "開始研究同時感知靈氣與魔力" },
+    { "year": 25500, "event": "歸宗", "description": "留學結束，帶回東方修煉知識" },
+    { "year": 30000, "event": "當前時代", "description": "成為跨界使者，促進東西方法術交流" }
+  ],
+  "relationships": [
+    { "character": "梅林迪斯", "relation": "導師", "description": "院長梅林迪斯的「萬法同源」理論啟發了她" },
+    { "character": "陸天行", "relation": "戀人", "description": "跨文化戀情，共同開創靈魔劍術" },
+    { "character": "李雲鋒", "relation": "導師/朋友", "description": "魔劍堂堂主，指導她劍修理念" },
+    { "character": "蘇清月", "relation": "朋友", "description": "魔劍堂副堂主，亦師亦友" },
+    { "character": "李玄機", "relation": "表彰者", "description": "授予「靈魔橋樑」稱號" },
+    { "character": "張無涯", "relation": "質疑→認可", "description": "初期質疑其忠誠，後期承認錯誤並道歉" },
+    { "character": "王清風", "relation": "支持者", "description": "積極支持艾琳娜，認為她是東西方法術融合的關鍵" }
+  ],
+  "artifacts": [
+    { "name": "學徒法杖", "tier": "基礎階", "source": "奧術之塔", "year": 24983, "description": "入門贈送，基礎修煉用" },
+    { "name": "蜀山令牌", "tier": "特殊", "source": "蜀山劍派", "year": 25000, "description": "交流生身份證明，可進入蜀山" },
+    { "name": "靈氣感知玉", "tier": "玄階", "source": "蜀山劍派", "year": 25100, "description": "輔助靈氣感知的玉石" },
+    { "name": "東西翻譯筆記", "tier": "特殊", "source": "自創", "year": 25200, "description": "記錄東西方法術對比的筆記" }
+  ],
+  "techniques": [
+    { "name": "魔網導論", "tier": "精煉階", "source": "奧術之塔", "status": "已掌握" },
+    { "name": "基礎魔法", "tier": "基礎階", "source": "奧術之塔", "status": "已掌握" },
+    { "name": "基礎劍法", "tier": "黃階", "source": "蜀山劍派", "status": "已圓滿" },
+    { "name": "劍心通明訣", "tier": "玄階", "source": "蜀山劍派", "status": "已掌握" },
+    { "name": "靈氣感知", "tier": "特殊", "source": "蜀山劍派", "status": "已掌握" },
+    { "name": "靈魔感知", "tier": "特殊", "source": "自創", "status": "研究中" }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "name": "卡爾",
+  "name_en": "Karl",
+  "titles": [],
+  "birth_oe": 24974,
+  "death_oe": null,
+  "appearance_age": "約 26 歲",
+  "race": "人類",
+  "origin": "艾爾德里亞·中央王國·炎陽城",
+  "identities": ["奧術之塔學徒", "火系法師"],
+  "cultivation_systems": ["西方魔法體系"],
+  "current_realm": "見習法師（Novice Mage）",
+  "spiritual_root": null,
+  "magic_talents": ["元素親和（火屬性，頂級）", "奧術感知（中級）"],
+  "personality": ["自信好勝", "直率坦誠", "重視實力", "外冷內熱"],
+  "core_philosophy": "實力證明一切，但理論是實力的基礎",
+  "aging": {
+    "stage": "見習法師",
+    "last_breakthrough_oe": 24995,
+    "appearance_at_breakthrough": 21,
+    "aging_factor": 0.02
+  },
+  "timeline": [
+    { "year": 24974, "event": "出生", "description": "出生於中央王國炎陽城的魔法世家" },
+    { "year": 24986, "event": "進入奧術之塔", "description": "12 歲入學，展現火系天賦" },
+    { "year": 24998, "event": "理論考試第五", "description": "理論成績不如艾琳娜，心生不服" },
+    { "year": 25000, "event": "實戰考核落敗", "description": "與艾琳娜對決，最終落敗" },
+    { "year": 25000, "event": "交流選拔落選", "description": "未能成為首批交流使者" },
+    { "year": 25005, "event": "重新振作", "description": "開始重視理論學習，全面提升" },
+    { "year": 25010, "event": "成為火系教官", "description": "負責培養新一代火系法師" }
+  ],
+  "relationships": [
+    { "character": "艾琳娜", "relation": "同學/競爭對手", "description": "理論成績不如艾琳娜，實戰也落敗，但內心認可她的實力" },
+    { "character": "火系導師", "relation": "導師", "description": "重視卡爾的火系天賦，但也批評他忽視理論" },
+    { "character": "家族長輩", "relation": "家族", "description": "對卡爾寄予厚望，希望他成為家族驕傲" }
+  ],
+  "artifacts": [],
+  "techniques": [
+    { "name": "基礎火球術", "tier": "基礎階", "source": "奧術之塔", "status": "已圓滿" },
+    { "name": "火焰護盾", "tier": "精煉階", "source": "奧術之塔", "status": "已掌握" },
+    { "name": "烈焰風暴", "tier": "精煉階", "source": "自創改良", "status": "已掌握" },
+    { "name": "火元素召喚", "tier": "精煉階", "source": "奧術之塔", "status": "修煉中" }
+  ]
+}

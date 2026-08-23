@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>HelloSk.RicohMonitoring</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="RicohTypes.fs" />
+    <Compile Include="RicohEnv.fs" />
+    <Compile Include="RicohHttp.fs" />
+    <Compile Include="RicohSheets.fs" />
+    <Compile Include="RicohAds.fs" />
+    <Compile Include="RicohSpreadsheetLogic.fs" />
+    <Compile Include="RicohFetchAndUpdate.fs" />
+    <Compile Include="RicohPostToSlack.fs" />
+  </ItemGroup>
+
+</Project>

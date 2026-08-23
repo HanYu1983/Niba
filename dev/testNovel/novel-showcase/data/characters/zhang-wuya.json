@@ -1,0 +1,49 @@
+{
+  "name": "張無涯",
+  "name_en": "Zhang Wuya",
+  "titles": ["保守派首領", "正統劍道守護者"],
+  "birth_oe": 24750,
+  "death_oe": null,
+  "appearance_age": "約 60 歲",
+  "race": "人類",
+  "origin": "神州·蜀地·蜀山劍派",
+  "identities": ["蜀山劍派保守派長老"],
+  "cultivation_systems": ["仙俠體系（劍修）"],
+  "current_realm": "金丹期（劍師）",
+  "spiritual_root": "異靈根（金屬性）",
+  "magic_talents": [],
+  "personality": ["固執保守", "重視傳統", "警惕心強", "責任感重"],
+  "core_philosophy": "正統劍道不容污染，外族魔法必帶來災禍",
+  "aging": {
+    "stage": "金丹期",
+    "last_breakthrough_oe": 24850,
+    "appearance_at_breakthrough": 55,
+    "aging_factor": 0.02
+  },
+  "timeline": [
+    { "year": 24764, "event": "入門蜀山", "description": "14 歲通過考核，成為內門弟子" },
+    { "year": 24850, "event": "晉升金丹期", "description": "50 歲晉升金丹期，成為長老候選人" },
+    { "year": 24900, "event": "晉升長老", "description": "50 歲晉升為長老，保守派核心人物" },
+    { "year": 25000, "event": "反對交流協議", "description": "強烈反對《靈魔交流協議》，認為會污染正統劍道" },
+    { "year": 25350, "event": "質疑艾琳娜", "description": "在長老會議上質疑艾琳娜的忠誠，認為她是暗影勢力內應" },
+    { "year": 25500, "event": "承認錯誤", "description": "艾琳娜成功中和陰煞之氣後，向艾琳娜道歉" }
+  ],
+  "relationships": [
+    { "character": "王清風", "relation": "對立", "description": "革新派長老，理念對立但互相尊重" },
+    { "character": "李玄機", "relation": "服從", "description": "掌門代表，服從其公正判斷" },
+    { "character": "艾琳娜", "relation": "質疑→認可", "description": "初期質疑其忠誠，後期承認錯誤並道歉" },
+    { "character": "李雲鋒", "relation": "反對→認可", "description": "初期反對其交流理念，後期認可其貢獻" }
+  ],
+  "artifacts": [
+    { "name": "鐵劍", "tier": "黃階", "source": "蜀山劍派", "year": 24764, "description": "入門贈送" },
+    { "name": "靈劍", "tier": "玄階", "source": "蜀山劍派", "year": 24770, "description": "內門考核通過後贈送" },
+    { "name": "劍池靈劍", "tier": "地階", "source": "蜀山劍派", "year": 24800, "description": "真傳考核通過後贈送" },
+    { "name": "金鋒劍", "tier": "地階", "source": "本命煉製", "year": 24900, "description": "晉升長老時煉製，金屬性靈劍" }
+  ],
+  "techniques": [
+    { "name": "基礎劍法", "tier": "黃階", "source": "蜀山劍派", "status": "已圓滿" },
+    { "name": "劍心通明訣", "tier": "玄階", "source": "蜀山劍派", "status": "已圓滿" },
+    { "name": "金靈劍訣", "tier": "地階", "source": "蜀山劍派", "status": "已掌握" },
+    { "name": "兩儀防禦劍陣", "tier": "地階", "source": "蜀山劍派", "status": "已掌握" }
+  ]
+}
