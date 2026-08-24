@@ -1,10 +1,10 @@
-import { Button, Flex, Modal, Typography } from 'antd'
+import { Button, Collapse, Flex, Modal, Tag, Tooltip, Typography } from 'antd'
 import type { ReactNode } from 'react'
 import type { ExternalSkill } from '../game/catalogs/externalSkillCatalog'
 import type { InnerSkill } from '../game/catalogs/innerSkillCatalog'
 import type { CreatureState, MapCell, PlayerState } from '../game/types'
 import { getElementDamageMultiplier, getElementName, getInnerSkill, getPlayerInsightCapacityBreakdown, getSchoolElement, getSkillDamage, getSkillInnerPowerCost, getSkillProgression, isElementGenerating } from '../game/rules/skillRules'
-import { getEffectiveAttributesForPlayer } from '../game/rules/playerDerivedRules'
+import { getActiveBuffsForPlayer, getBuff, getEffectiveAttributesForPlayer } from '../game/rules/playerDerivedRules'
 import { getTerrainAtPosition, isTerrainResonant } from '../game/rules/terrainCombatRules'
 import UnifiedSkillCard from './UnifiedSkillCard'
 import StatValue from './StatValue'
@@ -90,7 +90,7 @@ function UnifiedSkillModal({
       onCancel={onClose}
       footer={<Button onClick={onClose}>關閉</Button>}
       destroyOnHidden
-      width={760}
+      width={820}
     >
       <Flex vertical gap={16}>
         <Flex wrap gap={24}>
@@ -109,65 +109,93 @@ function UnifiedSkillModal({
         </Flex>
 
         <div>
-          <Typography.Text strong style={{ display: 'block', marginBottom: 8 }}>內功（選擇一個）</Typography.Text>
-          <Flex wrap="wrap" gap={10}>
-            {innerCards.map((skill) => {
-              const equipped = player.innerSkillId === skill.id
-              const meetsRequirement = effective.insight >= skill.insightRequirement
-              const resonance = isTerrainResonant(skill.element, playerTerrain)
-              return (
-                <UnifiedSkillCard
-                  key={skill.id}
-                  kind="inner"
-                  icon="☯"
-                  element={skill.element}
-                  name={skill.name}
-                  status={equipped ? '已裝備' : undefined}
-                  level={getSkillProgression(player, skill.id).level}
-                  primaryLabel="傷害"
-                  primaryValue={getSkillDamage(effective, skill, getSkillProgression(player, skill.id).level)}
-                  resonance={resonance}
-                  equipped={equipped}
-                  clickable={!equipped && !player.turnEnded && meetsRequirement}
-                  tooltip={innerTooltip(skill)}
-                  onClick={() => onEquipInnerSkill(skill.id)}
-                />
-              )
-            })}
-          </Flex>
+          <Typography.Text strong style={{ display: 'block', marginBottom: 8 }}>靈氣（目前生效）</Typography.Text>
+          {getActiveBuffsForPlayer(player).length > 0 ? (
+            <Flex wrap gap={8}>
+              {getActiveBuffsForPlayer(player).map((buff) => {
+                const definition = getBuff(buff.definitionId)
+                return definition ? (
+                  <Tooltip key={buff.id} title={definition.description}>
+                    <Tag color="blue">✨ {definition.name}（{buff.remainingRounds === null ? '持續生效' : `剩 ${buff.remainingRounds} 回合`}）</Tag>
+                  </Tooltip>
+                ) : null
+              })}
+            </Flex>
+          ) : (
+            <Typography.Text type="secondary">目前沒有生效中的靈氣</Typography.Text>
+          )}
         </div>
 
-        <div>
-          <Typography.Text strong style={{ display: 'block', marginBottom: 8 }}>外功（可多個開啟）</Typography.Text>
-          <Flex wrap gap={10}>
-            {externalCards.map((skill) => {
-              const equipped = player.equippedExternalSkillIds.includes(skill.id)
-              const synergy = isElementGenerating(innerElement, skill.element)
-              const resonance = isTerrainResonant(skill.element, playerTerrain)
-              const triple = tripleResonanceTarget(skill.element)
-              const canEquip = equipped || (insightCapacity.total + skill.insightCost) <= effective.insight
-              return (
-                <UnifiedSkillCard
-                  key={skill.id}
-                  kind="external"
-                  icon="⚡"
-                  element={skill.element}
-                  name={skill.name}
-                  status={equipped ? '已開啟' : undefined}
-                  level={getSkillProgression(player, skill.id).level}
-                  primaryLabel="內力"
-                  primaryValue={getSkillInnerPowerCost(skill.innerPowerCost, getSkillProgression(player, skill.id).level)}
-                  interactions={{ synergy, resonance, tripleResonance: triple }}
-                  synergyHint={synergy && !equipped}
-                  equipped={equipped}
-                  clickable={!player.turnEnded && canEquip}
-                  tooltip={externalTooltip(skill)}
-                  onClick={() => onToggleExternalSkill(skill.id)}
-                />
-              )
-            })}
-          </Flex>
-        </div>
+        <Collapse
+          defaultActiveKey={['inner', 'external']}
+          items={[
+            {
+              key: 'inner',
+              label: <Typography.Text strong>內功（選擇一個）</Typography.Text>,
+              children: (
+                <Flex wrap="wrap" gap={10}>
+                  {innerCards.map((skill) => {
+                    const equipped = player.innerSkillId === skill.id
+                    const meetsRequirement = effective.insight >= skill.insightRequirement
+                    const resonance = isTerrainResonant(skill.element, playerTerrain)
+                    return (
+                      <UnifiedSkillCard
+                        key={skill.id}
+                        kind="inner"
+                        icon="☯"
+                        element={skill.element}
+                        name={skill.name}
+                        status={equipped ? '已裝備' : undefined}
+                        level={getSkillProgression(player, skill.id).level}
+                        primaryLabel="傷害"
+                        primaryValue={getSkillDamage(effective, skill, getSkillProgression(player, skill.id).level)}
+                        resonance={resonance}
+                        equipped={equipped}
+                        clickable={!equipped && !player.turnEnded && meetsRequirement}
+                        tooltip={innerTooltip(skill)}
+                        onClick={() => onEquipInnerSkill(skill.id)}
+                      />
+                    )
+                  })}
+                </Flex>
+              ),
+            },
+            {
+              key: 'external',
+              label: <Typography.Text strong>外功（可多個開啟）</Typography.Text>,
+              children: (
+                <Flex wrap gap={10}>
+                  {externalCards.map((skill) => {
+                    const equipped = player.equippedExternalSkillIds.includes(skill.id)
+                    const synergy = isElementGenerating(innerElement, skill.element)
+                    const resonance = isTerrainResonant(skill.element, playerTerrain)
+                    const triple = tripleResonanceTarget(skill.element)
+                    const canEquip = equipped || (insightCapacity.total + skill.insightCost) <= effective.insight
+                    return (
+                      <UnifiedSkillCard
+                        key={skill.id}
+                        kind="external"
+                        icon="⚡"
+                        element={skill.element}
+                        name={skill.name}
+                        status={equipped ? '已開啟' : undefined}
+                        level={getSkillProgression(player, skill.id).level}
+                        primaryLabel="內力"
+                        primaryValue={getSkillInnerPowerCost(skill.innerPowerCost, getSkillProgression(player, skill.id).level)}
+                        interactions={{ synergy, resonance, tripleResonance: triple }}
+                        synergyHint={synergy && !equipped}
+                        equipped={equipped}
+                        clickable={!player.turnEnded && canEquip}
+                        tooltip={externalTooltip(skill)}
+                        onClick={() => onToggleExternalSkill(skill.id)}
+                      />
+                    )
+                  })}
+                </Flex>
+              ),
+            },
+          ]}
+        />
       </Flex>
     </Modal>
   )
