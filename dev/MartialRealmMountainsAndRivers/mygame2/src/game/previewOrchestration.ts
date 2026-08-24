@@ -10,7 +10,7 @@ import type {
 import { getRepairSummary, getWorkshopLevel, hasBuilding, requiresAdjacentActivePlayer } from './rules/buildingRules'
 import { getElementDamageMultiplier, getElementInteractionText, getExternalSkill, getInnerSkill, getSchoolElement, getSkillDamage, getSkillEffectMultiplier, getSkillInnerPowerCost, getSkillProgression } from './rules/skillRules'
 import { getTerrainAtPosition, getTerrainResonanceCriticalRateBonus, getTerrainResonanceDamageMultiplier, getTerrainResonanceInnerPowerDiscount, getTerrainResonanceLabel } from './rules/terrainCombatRules'
-import { getCriticalRateForPlayer, getDamageDealtPercent, getEffectiveAttributesForPlayer, getExternalSkillInnerCostReduction } from './rules/playerDerivedRules'
+import { getCriticalRateForPlayer, getDamageDealtPercent, getEffectiveAttributesForPlayer, getExternalSkillCritRateForPlayer, getExternalSkillInnerCostReduction } from './rules/playerDerivedRules'
 import { calculateDamage } from './rules/playerRules'
 import { getAttackTarget } from './rules/targetRules'
 import { isAdjacent } from './types'
@@ -133,6 +133,7 @@ export function createExternalSkillPreview(
     skillName: skill.name,
     innerPowerCost,
     expectedDamage: skill.functionalEffect ? 0 : Math.max(1, Math.floor(getSkillDamage(getEffectiveAttributesForPlayer(target.player), skill, getSkillProgression(target.player, skill.id).level) * getSkillEffectMultiplier(target.player) * getElementDamageMultiplier(skill.element, getSchoolElement(target.target.schoolId)) * getTerrainResonanceDamageMultiplier(skill.element, targetTerrain))),
+    criticalRate: skill.functionalEffect ? undefined : getExternalSkillCritRateForPlayer(target.player),
     targetHealth: target.target.health,
     targetMaxHealth: target.target.maxHealth,
     targetMode: skill.target,

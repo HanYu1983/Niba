@@ -508,6 +508,8 @@ export type ExternalSkillPreview = {
   skillName: string
   innerPowerCost: number
   expectedDamage: number
+  /** 傷害型外功的暴擊率（內息每 1 點提供 2%）。 */
+  criticalRate?: number
   targetHealth?: number
   targetMaxHealth?: number
   targetMode?: 'self' | 'target' | 'nest'
@@ -760,6 +762,10 @@ export type ExternalDamageExecutionResult = {
   nextHealth: number
   maxHealth: number
   innerPowerCost: number
+  /** 傷害型外功的暴擊率（內息每 1 點提供 2%）。 */
+  criticalRate?: number
+  /** 本次外功是否觸發暴擊。 */
+  criticalHit?: boolean
   targetMode?: 'self' | 'target' | 'nest'
   terrainResonance?: string
   defeated: boolean

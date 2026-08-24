@@ -54,6 +54,7 @@ function SkillModal({
                         key={skill.id}
                         icon="☯"
                         label="內功"
+                        compact
                         element={skill.element}
                         name={skill.name}
                         description={skill.description}
@@ -100,6 +101,7 @@ function SkillModal({
                           key={skill.id}
                           icon="⚡"
                           label="外功"
+                          compact
                           element={skill.element}
                           name={skill.name}
                           description={skill.description}

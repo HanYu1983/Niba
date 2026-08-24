@@ -691,6 +691,62 @@
   flex: 1;
 }
 
+/* 精簡模式：縮小間距、字體與頭尾，供狹窄列表使用。 */
+.skill-card--compact {
+  gap: 4px;
+  padding: 7px 9px;
+  border-radius: 9px;
+}
+
+.skill-card--compact .skill-card__icon {
+  flex-basis: 22px;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  font-size: 14px;
+  box-shadow: none;
+}
+
+.skill-card--compact .skill-card__name {
+  font-size: 13px;
+  line-height: 1.2;
+}
+
+.skill-card--compact .skill-card__element-tag {
+  font-size: 10px;
+  line-height: 16px;
+  padding-inline: 6px;
+}
+
+.skill-card--compact .skill-card__description {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  font-size: 10px;
+  line-height: 1.3;
+}
+
+.skill-card--compact .skill-card__highlight {
+  padding: 4px 7px;
+  border-radius: 6px;
+  font-size: 10px;
+}
+
+.skill-card--compact .skill-card__highlight strong {
+  font-size: 14px;
+}
+
+.skill-card--compact .skill-card__meta {
+  gap: 2px;
+  font-size: 10px;
+}
+
+.skill-card--compact .skill-card__actions .ant-btn {
+  font-size: 12px;
+  height: 24px;
+}
+
 .inner-skill-modal__icon {
   font-size: 24px;
 }

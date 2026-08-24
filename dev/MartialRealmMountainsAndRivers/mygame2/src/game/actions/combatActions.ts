@@ -13,7 +13,7 @@ import type {
   EquipmentDurabilityChange,
 } from '../types'
 import { addSkillExperience, getElementDamageMultiplier, getExternalSkill, getSchoolElement, getSkillDamage, getSkillEffectMultiplier, getSkillInnerPowerCost, getSkillProgression, SKILL_EXPERIENCE_PER_USE } from '../rules/skillRules'
-import { getBuff, getCreatureDamageReductionPercent, getEffectiveAttributesForPlayer, getExternalSkillDamagePercent, getExternalSkillInnerCostReduction, getInnerPowerLeechPercent, getLifestealPercent, getPlayerSkillExpGainPercent } from '../rules/playerDerivedRules'
+import { getBuff, getCreatureDamageReductionPercent, getEffectiveAttributesForPlayer, getExternalSkillCritRateForPlayer, getExternalSkillDamagePercent, getExternalSkillInnerCostReduction, getInnerPowerLeechPercent, getLifestealPercent, getPlayerSkillExpGainPercent } from '../rules/playerDerivedRules'
 import { getMaxHealth, getMaxInnerPower, getMaxStamina } from '../rules/playerStatsRules'
 import { getAttackTarget } from '../rules/targetRules'
 import { reduceEquipmentDurability } from '../rules/equipmentRules'
@@ -398,11 +398,15 @@ export function executeExternalDamage(
   const baseDamage = skill.functionalEffect ? 0 : Math.max(1, Math.floor(getSkillDamage(getEffectiveAttributesForPlayer(target.player), skill, skillLevel) * getSkillEffectMultiplier(target.player) * elementMultiplier * resonanceMultiplier))
   // 罡氣訣：外功造成的最終傷害 +%
   const damageBeforeTargetReduction = Math.max(1, Math.floor(baseDamage * (1 + getExternalSkillDamagePercent(target.player))))
-  const damage = targetDamageReduction > 0
+  const damageBeforeCrit = targetDamageReduction > 0
     ? Math.max(1, Math.floor(damageBeforeTargetReduction * (1 - targetDamageReduction)))
     : damageBeforeTargetReduction
-  const nextHealth = Math.max(0, target.target.health - damage)
+  // 傷害型外功可暴擊：暴擊率 = 內息 × 2，暴擊造成 1.5 倍傷害。
   const random = dependencies.random ?? defaultRandomSource
+  const criticalRate = skill.functionalEffect ? 0 : getExternalSkillCritRateForPlayer(target.player)
+  const criticalHit = criticalRate > 0 && rollChance(criticalRate / 100, random)
+  const damage = criticalHit ? Math.floor(damageBeforeCrit * 1.5) : damageBeforeCrit
+  const nextHealth = Math.max(0, target.target.health - damage)
   const rewards = resolveCombatRewards(target, targetType, nextHealth, dependencies, random)
   const { experienceGain, moneyReward, loot, learnedSkill, progressedPlayer } = rewards
   const playerWithAccessoryWear = reduceEquipmentDurability(
@@ -450,6 +454,8 @@ export function executeExternalDamage(
     nextHealth,
     maxHealth: target.target.maxHealth,
     innerPowerCost: targetInnerPowerCost,
+    criticalRate: criticalRate > 0 ? criticalRate : undefined,
+    criticalHit: criticalHit || undefined,
     targetMode: skill.target,
     defeated: nextHealth === 0,
     moneyReward: moneyReward || undefined,

@@ -26,6 +26,9 @@ function ExternalSkillPreviewModal({ preview, onConfirm, onCancel }: Props) {
             ...(preview.targetMode === 'self'
               ? [{ label: '功法作用', value: preview.effectSummary ?? '作用於自身' }]
               : [{ label: '預期傷害', value: preview.expectedDamage }]),
+            ...(preview.targetMode !== 'self' && preview.criticalRate !== undefined
+              ? [{ label: '外功暴擊率', value: `${preview.criticalRate}%` }]
+              : []),
             ...(preview.terrainResonance ? [{ label: '天地共鳴', value: preview.terrainResonance }] : []),
             { label: '內力消耗', value: preview.innerPowerCost },
             ...(preview.elementInteraction ? [{ label: '五行相剋', value: preview.elementInteraction }] : []),

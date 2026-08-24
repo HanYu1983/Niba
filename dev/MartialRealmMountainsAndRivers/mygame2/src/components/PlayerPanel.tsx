@@ -121,6 +121,7 @@ function PlayerPanel({ player, isActive, onAllocateAttributePoint }: PlayerPanel
                 <SkillCard
                   icon="☯"
                   label="裝備內功"
+                  compact
                    element={innerSkill.element}
                   name={innerSkill.name}
                   description={innerSkill.description}
@@ -136,6 +137,7 @@ function PlayerPanel({ player, isActive, onAllocateAttributePoint }: PlayerPanel
                       key={skill.id}
                       icon="⚡"
                       label="外功"
+                      compact
                        element={skill.element}
                       name={skill.name}
                       description={skill.description}
