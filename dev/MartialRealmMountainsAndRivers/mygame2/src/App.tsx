@@ -119,6 +119,7 @@ function App() {
       getState: () => gameStore.getState(),
       runDefenseStep: (actorId) => gameStore.runAiDefenseStep(actorId),
       runSupportStep: (actorId) => gameStore.runAiSupportStep(actorId),
+      runConstructionStep: (actorId) => gameStore.runAiConstructionStep(actorId),
       endTurn: (actorId) => gameStore.endPlayerTurn(actorId),
     }),
   )
@@ -193,14 +194,20 @@ function App() {
     const activeAiOrder = gameState.aiOrders?.find(
       (order) => order.aiPlayerId === activePlayer.id && order.status === 'active',
     )
-    if (!activeAiOrder || (activeAiOrder.type !== 'protect-base' && activeAiOrder.type !== 'support-player')) {
+    if (activeAiOrder && (activeAiOrder.type === 'protect-base' || activeAiOrder.type === 'support-player')) {
+      // 戰術命令優先：威脅未解除前暫緩建設（命令完成後自動恢復）。
+      scheduler.requestStep(activePlayer.id, activeAiOrder.type)
+      return () => scheduler.cancel()
+    }
+    const constructionPlan = gameState.aiConstructionPlans?.find((plan) => plan.aiPlayerId === activePlayer.id)
+    if (!constructionPlan) {
       scheduler.cancel()
       return
     }
 
-    scheduler.requestStep(activePlayer.id, activeAiOrder.type)
+    scheduler.requestStep(activePlayer.id, 'construction')
     return () => scheduler.cancel()
-  }, [activePlayer, gameState.aiOrders, gameState.creatureTurnInProgress, gameState.blockingModal, gameState.gameOver, strategicCommandModalOpen, saveModalOpen, systemCommandModalOpen])
+  }, [activePlayer, gameState.aiOrders, gameState.aiConstructionPlans, gameState.creatureTurnInProgress, gameState.blockingModal, gameState.gameOver, strategicCommandModalOpen, saveModalOpen, systemCommandModalOpen])
 
   useKeyboardShortcuts({
     activePlayer,

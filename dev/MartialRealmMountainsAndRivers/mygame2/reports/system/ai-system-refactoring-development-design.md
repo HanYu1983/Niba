@@ -1009,7 +1009,7 @@ perception → decision → validation → execution → event
 ### Phase 6：建設 AI
 
 - Owner：AI Engineering
-- Status：Todo
+- Status：Done
 - Priority：P2
 - Acceptance Criteria：
   - AI 依據 `AiConstructionPlan` 自動選擇建築。
@@ -1018,6 +1018,7 @@ perception → decision → validation → execution → event
 - Test Method：
   - 建設決策純函式測試。
   - 固定據點建設情境測試。
+- Result（2026-08-24）：新增純決策模組 `src/game/ai/construction/constructionAi.ts`——`pickNextBuildCandidate()` 效用評分＝queue item priority＋方針類別加權（defense→城牆/兵營、economy→倉庫/貿易市場/交易所/總管府、frontline→醫療室/工坊/驛站；同分依佇列順序穩定排序），跳過 cancelled／completed，僅重試「建料不足。」的 blocked；武館以流派過濾解析唯一模板（未定流派 → 偽候選 `unknown:` 交執行層標記 blocked）。`runAiConstructionStep`：paused 方針不建造、改採集相鄰資源點或待命結束回合；體力不足直接結束回合（暫時性狀態不標 blocked）；逐候選嘗試 `constructBuilding`、失敗者標記 blocked（含原因）續試下一個；佇列全受阻且 allowUpgrade 時升級最低等建築。完成／升級成功寫入 AiActionEvent 日誌＋`showActionResult` 完成提醒彈窗。Scheduler 擴充 `'construction'` 步驟型別；App effect 戰術命令優先、無命令且有計畫時走建設步驟。測試 22 例（純函式 14＋store 情境 7＋scheduler 1），全套 **800 項通過**；tsc／ESLint／build 通過。
 
 ---
 

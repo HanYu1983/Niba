@@ -1,5 +1,37 @@
 # 開發日誌
 
+## 2026-08-24｜AI 重構切片 G：建設 AI（效用評分＋queue 狀態機＋完成提醒）
+
+### 本次完成
+
+- 新增純決策模組 `src/game/ai/construction/constructionAi.ts`：
+  - `pickNextBuildCandidate()`：效用評分＝queue item 的 priority＋方針類別加權（defense→城牆/兵營、economy→倉庫/貿易市場/交易所/總管府、frontline→醫療室/工坊/驛站；balanced/paused 不加權）；同分依佇列順序穩定排序。
+  - 狀態過濾：跳過 cancelled／completed；blocked 僅在原因為「建料不足。」時可重試（暫時性阻塞），永久性原因不再嘗試。
+  - 武館流派解析與 `constructBuilding` 同源：據點有 `martialSchoolId` 才能解析出唯一武館模板；未定流派時回傳偽候選（`unknown:` 前綴）交執行層標記 blocked，不在決策層靜默丟棄。
+  - `pickUpgradeCandidate()`／`chooseConstructionAction()`：建造優先、其次升級最低等建築、最後待命（含原因）。
+- gameStore 新增 `runAiConstructionStep(playerId)`：
+  - 守衛同其他 AI step（isAI／當前回合／creatureTurnInProgress／gameOver／計畫存在、據點存在）。
+  - `paused` 方針不主動建造：改為採集相鄰資源點（collectResourcePoint），無相鄰點則記 hold 並結束回合——符合「paused 方針不建造但可採集」驗收。
+  - 體力護欄：體力不足以建造時直接結束回合且**不**標 blocked（暫時性狀態不可污染 queue）。
+  - 逐候選嘗試 `constructBuilding`：成功 → item `completed`＋build succeeded 事件＋完成提醒彈窗（blockingModal 暫停排程器直到玩家關閉）；失敗 → item `blocked`（帶執行層中文原因）續試下一候選；全受阻且 `allowUpgrade` 時升級既有建築，否則結束回合。
+- 排程器整合：`aiTurnScheduler.ts` 的 `AiOrderKind` 新增 `'construction'`、deps 新增 `runConstructionStep`；App effect 改為戰術命令（防守／支援）優先，無活躍命令且有建設計畫時 requestStep('construction')——威脅解除後自動恢復建設。
+- 測試＋22（constructionAi 純函式 14 例：評分／方針加權／穩定排序／狀態過濾／武館解析／升級候選／決策優先序；gameStore.construction 7 例：建料不足標 blocked、補料自動重試 completed＋扣料＋日誌＋彈窗、硬阻擋跳過下一項、paused 採集／hold、體力不足保 planned、守衛拒絕；scheduler 1 例 construction 分派）。
+
+### 影響檔案
+
+- 新增：`src/game/ai/construction/constructionAi.ts`（含測試）、`src/game/gameStore.construction.test.ts`
+- 修改：`src/game/gameStore.ts`（runAiConstructionStep＋updateConstructionPlanItem helper）、`src/game/ai/aiTurnScheduler.ts`（construction 步驟型別）、`src/App.tsx`（effect 建設分支）、`src/game/testHelpers/aiTestFixtures.ts`（makeTestResourcePoint／makeConstructionPlan）
+- 文件：重構文件 §15 Phase 6（Done＋Result）、playbook §1／§3 G 列
+
+### 驗證結果
+
+- vitest：**77 檔／800 項全數通過**（前片 778＋本片 22）
+- tsc -b：通過；ESLint：新碼零警告（僅剩 App.tsx 既有一處 exhaustive-deps 舊警告）；Build：通過。
+
+### 下一步
+
+- 切片 **H**：JSON policy——把 AI 決策參數外移成資料檔（playbook §3 最後一片）。
+
 ## 2026-08-24｜AI 重構切片 F：Player AI 行動事件化＋全域行動日誌
 
 ### 本次完成

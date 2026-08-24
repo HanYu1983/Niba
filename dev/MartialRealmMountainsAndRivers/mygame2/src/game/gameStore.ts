@@ -29,6 +29,7 @@ import {
   type UpgradeableAttribute,
   type AiOrder,
   type AiConstructionPlan,
+  type AiConstructionPlanItem,
   type CampaignState,
   isAdjacent,
   isSameOrAdjacent,
@@ -92,6 +93,10 @@ import {
   constructDefenseStructure as constructDefenseStructureAction,
   upgradeBuilding as upgradeBuildingAction,
 } from './actions/buildingActions'
+import {
+  pickNextBuildCandidate,
+  pickUpgradeCandidate,
+} from './ai/construction/constructionAi'
 import {
   switchBasePolicy as switchBasePolicyAction,
   switchRemoteBasePolicy as switchRemoteBasePolicyAction,
@@ -268,6 +273,20 @@ function recordAiStepEvent(
     result: outcome.ok ? 'succeeded' : 'failed',
     reason: action.reason || outcome.reason,
   })])
+}
+
+/** 更新建設計畫中單一 queue item 的狀態（重構文件 §14.6 狀態機）。 */
+function updateConstructionPlanItem(
+  aiPlayerId: string,
+  itemIndex: number,
+  patch: Partial<Pick<AiConstructionPlanItem, 'status' | 'blockedReason'>>,
+): void {
+  updateGameState((current) => ({
+    ...current,
+    aiConstructionPlans: (current.aiConstructionPlans ?? []).map((plan) => plan.aiPlayerId === aiPlayerId
+      ? { ...plan, queue: plan.queue.map((item, index) => index === itemIndex ? { ...item, ...patch } : item) }
+      : plan),
+  }))
 }
 
 function updateGameState(updater: (state: GameState) => GameState) {
@@ -1856,6 +1875,133 @@ export const gameStore = {
     }
     gameStore.endPlayerTurn(playerId)
     recordAiStepEvent(state.round, playerId, player.name, defenseActionToAiAction(state, playerId, decision), { ok: true })
+    return { ok: true }
+  },
+
+  /**
+   * 建設 AI 步驟（重構文件 §12 Phase 4／§15 Phase 6）：
+   * - `paused` 方針不建造，僅嘗試採集相鄰資源點，否則待命。
+   * - 一般方針：依效用評分逐一套用 queue 候選；失敗者標記 `blocked`（含原因）並嘗試下一個；
+   *   建料不足的 blocked 在材料累積後會自動重試。
+   * - 佇列無候選且允許升級時，升級等級最低的建築。
+   * - 建造／升級成功：寫入全域日誌＋完成提醒彈窗（玩家確認後 AI 再繼續）。
+   */
+  runAiConstructionStep: (playerId: string): ActionOutcome => {
+    const state = gameState
+    const player = state.players.find((candidate) => candidate.id === playerId)
+    const plan = state.aiConstructionPlans?.find((candidate) => candidate.aiPlayerId === playerId)
+    if (!player?.isAI || state.activePlayerId !== playerId || state.creatureTurnInProgress || state.gameOver || !plan) {
+      return { ok: false, reason: '目前無法執行 AI 建設回合。' }
+    }
+    if (!state.bases.some((candidate) => candidate.id === plan.baseId)) {
+      return { ok: false, reason: '建設計畫的據點不存在。' }
+    }
+
+    // paused 方針：不主動建造，但可執行採集（§14.6）。
+    if (plan.policy === 'paused') {
+      const adjacentPoint = (state.resourcePoints ?? []).find((point) => isSameOrAdjacent(player.position, point.position))
+      if (adjacentPoint) {
+        const result = gameStore.collectResourcePoint(playerId, adjacentPoint.id)
+        recordAiStepEvent(
+          state.round,
+          playerId,
+          player.name,
+          { type: 'collect', actor: { id: playerId, kind: 'player' }, target: { id: adjacentPoint.id, kind: 'resource', position: adjacentPoint.position }, reason: '暫停建造，採集建料。' },
+          result.ok ? { ok: true } : { ok: false, reason: result.reason },
+        )
+        return result.ok ? { ok: true } : { ok: false, reason: result.reason ?? '採集失敗。' }
+      }
+      gameStore.endPlayerTurn(playerId)
+      recordAiStepEvent(
+        state.round,
+        playerId,
+        player.name,
+        { type: 'hold', actor: { id: playerId, kind: 'player' }, reason: '暫停建造：附近無可採集的資源點。' },
+        { ok: true },
+      )
+      return { ok: true }
+    }
+
+    // 體力護欄：體力不足以建造時直接結束回合；這是暫時性狀態，不可標記為 blocked。
+    if (!canPlayerPerformAction(gameState, playerId, ACTION_STAMINA_COSTS.build).ok) {
+      gameStore.endPlayerTurn(playerId)
+      recordAiStepEvent(
+        state.round,
+        playerId,
+        player.name,
+        { type: 'end-turn', actor: { id: playerId, kind: 'player' }, reason: '體力不足，結束建設回合。' },
+        { ok: true },
+      )
+      return { ok: true }
+    }
+
+    // 依效用評分逐一套用候選；失敗者標記 blocked（含原因）後換下一個。
+    const excluded = new Set<number>()
+    while (true) {
+      const candidate = pickNextBuildCandidate(gameState, plan, excluded)
+      if (!candidate) break
+      const outcome = constructBuildingAction(gameState, plan.baseId, candidate.buildingId, playerId)
+      if (outcome.result.ok) {
+        updateGameState(() => outcome.state)
+        updateConstructionPlanItem(playerId, candidate.itemIndex, { status: 'completed', blockedReason: undefined })
+        recordAiStepEvent(
+          gameState.round,
+          playerId,
+          player.name,
+          { type: 'build', actor: { id: playerId, kind: 'player' }, baseId: plan.baseId, buildingType: candidate.buildingType, reason: `建設計畫：${candidate.buildingName}（優先度 ${candidate.item.priority}）。` },
+          { ok: true },
+        )
+        gameStore.showActionResult({
+          title: '🏗️ 建設完成',
+          message: `${player.name} 已在據點完成「${candidate.buildingName}」。`,
+          rewards: [],
+        })
+        return { ok: true }
+      }
+      updateConstructionPlanItem(playerId, candidate.itemIndex, { status: 'blocked', blockedReason: outcome.result.reason })
+      excluded.add(candidate.itemIndex)
+    }
+
+    // 佇列全部受阻 → 升級 fallback（若允許）。
+    const upgradeCandidate = pickUpgradeCandidate(gameState, plan)
+    if (upgradeCandidate) {
+      const outcome = upgradeBuildingAction(gameState, playerId, plan.baseId, upgradeCandidate.buildingId)
+      if (outcome.result.ok) {
+        updateGameState(() => outcome.state)
+        recordAiStepEvent(
+          gameState.round,
+          playerId,
+          player.name,
+          { type: 'build', actor: { id: playerId, kind: 'player' }, baseId: plan.baseId, buildingType: upgradeCandidate.buildingName, reason: '佇列已無可建項目，升級既有建築。' },
+          { ok: true },
+        )
+        gameStore.showActionResult({
+          title: '⬆️ 建築升級',
+          message: `${player.name} 已將「${upgradeCandidate.buildingName}」升級。`,
+          rewards: [],
+        })
+        return { ok: true }
+      }
+      // 升級失敗不阻塞 queue：記錄待命原因即可。
+      gameStore.endPlayerTurn(playerId)
+      recordAiStepEvent(
+        gameState.round,
+        playerId,
+        player.name,
+        { type: 'hold', actor: { id: playerId, kind: 'player' }, reason: outcome.result.reason ?? '目前無法升級建築。' },
+        { ok: true },
+      )
+      return { ok: true }
+    }
+
+    gameStore.endPlayerTurn(playerId)
+    recordAiStepEvent(
+      gameState.round,
+      playerId,
+      player.name,
+      { type: 'end-turn', actor: { id: playerId, kind: 'player' }, reason: '沒有可執行的建設項目，結束回合。' },
+      { ok: true },
+    )
     return { ok: true }
   },
 

@@ -1,4 +1,4 @@
-import type { AiOrder, BaseState, CreatureNestState, CreatureState, GameState, MapState, PlayerState, Position } from '../types'
+import type { AiConstructionPlan, AiOrder, BaseState, CreatureNestState, CreatureState, GameState, MapState, PlayerState, Position, ResourcePointState } from '../types'
 
 /** 11×11 全平原小地圖：固定座標、無隨機牆，供 AI 決策與 store 整合測試使用。 */
 export function makePlainMap(rows = 11, columns = 11): MapState {
@@ -154,6 +154,33 @@ export function makeSupportPlayerOrder(
     priority: 90,
     retreatHealthPercent: 30,
     status: 'active',
+    ...overrides,
+  }
+}
+
+export function makeTestResourcePoint(overrides: Partial<ResourcePointState> = {}): ResourcePointState {
+  return {
+    id: 'resource-point-1',
+    name: '林場',
+    position: { row: 5, column: 4 },
+    ownerBaseId: 'base-1',
+    materialIncome: 10,
+    lastCollectedRound: null,
+    health: 30,
+    maxHealth: 30,
+    ...overrides,
+  }
+}
+
+export function makeConstructionPlan(
+  overrides: Partial<AiConstructionPlan> = {},
+): AiConstructionPlan {
+  return {
+    aiPlayerId: 'ai-1',
+    baseId: 'base-1',
+    policy: 'balanced',
+    allowUpgrade: false,
+    queue: [],
     ...overrides,
   }
 }

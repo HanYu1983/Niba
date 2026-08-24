@@ -14,13 +14,14 @@
 
 export const AI_TURN_STEP_DELAY_MS = 350
 
-export type AiOrderKind = 'protect-base' | 'support-player'
+export type AiOrderKind = 'protect-base' | 'support-player' | 'construction'
 
 export interface AiTurnSchedulerDeps {
   /** 讀取最新局面（判斷 Actor 是否仍是當前回合玩家）。 */
   getState(): { activePlayerId: string }
   runDefenseStep(actorId: string): { ok: boolean }
   runSupportStep(actorId: string): { ok: boolean }
+  runConstructionStep(actorId: string): { ok: boolean }
   /** step 失敗且 Actor 仍在回合中時，結束其回合。 */
   endTurn(actorId: string): void
 }
@@ -69,7 +70,9 @@ export function createAiTurnScheduler(deps: AiTurnSchedulerDeps): AiTurnSchedule
         }
         const result = orderType === 'protect-base'
           ? deps.runDefenseStep(scheduledActorId)
-          : deps.runSupportStep(scheduledActorId)
+          : orderType === 'support-player'
+            ? deps.runSupportStep(scheduledActorId)
+            : deps.runConstructionStep(scheduledActorId)
         if (!result.ok && deps.getState().activePlayerId === scheduledActorId) {
           deps.endTurn(scheduledActorId)
         }
