@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { gameStore } from './gameStore'
 import type { GameState, PlayerState } from './types'
 import {
@@ -128,6 +128,8 @@ describe('runAiDefenseStep／runAiSupportStep 整合', () => {
     expect(playerById('ai-1').stamina).toBe(3)
     expect(playerById('ai-1').turnEnded).toBe(false)
     expect(gameStore.getState().activePlayerId).toBe('ai-1')
+    expect(gameStore.getState().attackPreview).toBeNull()
+    expect(gameStore.getState().operation).toEqual({ type: 'idle' })
   })
 
   it('支援：相鄰威脅時攻擊成功並扣血', () => {
@@ -176,5 +178,33 @@ describe('runAiDefenseStep／runAiSupportStep 整合', () => {
     expect(gameStore.runAiSupportStep('ai-1')).toEqual({ ok: false, reason: '目前無法執行 AI 支援回合。' })
     expect(playerById('ai-1').turnEnded).toBe(false)
     expect(gameStore.getState().activePlayerId).toBe('ai-1')
+  })
+
+  it('AI 攻擊不經 preview API，且不留下 attackPreview', () => {
+    const previewSpy = vi.spyOn(gameStore, 'previewAttackTarget')
+    load({
+      creatures: [makeTestCreature({ health: 20, maxHealth: 20 })],
+      aiOrders: [makeProtectBaseOrder()],
+    })
+
+    const defense = gameStore.runAiDefenseStep('ai-1')
+    expect(defense.ok).toBe(true)
+    expect(previewSpy).not.toHaveBeenCalled()
+    expect(gameStore.getState().attackPreview).toBeNull()
+    expect(gameStore.getState().operation).toEqual({ type: 'idle' })
+
+    load({
+      players: [
+        makeTestPlayer({ position: { row: 5, column: 3 } }),
+        makeTestHuman({ position: { row: 5, column: 5 } }),
+      ],
+      creatures: [makeTestCreature({ position: { row: 5, column: 4 }, health: 20, maxHealth: 20 })],
+      aiOrders: [makeSupportPlayerOrder({ maxDistance: 10 })],
+    })
+    const support = gameStore.runAiSupportStep('ai-1')
+    expect(support.ok).toBe(true)
+    expect(previewSpy).not.toHaveBeenCalled()
+    expect(gameStore.getState().attackPreview).toBeNull()
+    previewSpy.mockRestore()
   })
 })

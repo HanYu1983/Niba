@@ -948,15 +948,16 @@ perception → decision → validation → execution → event
 ### Phase 2：AI Action Validator / Executor
 
 - Owner：AI Engineering
-- Status：Todo
+- Status：In Progress（前半：去 Preview 已完成；stale 重試尚未做）
 - Priority：P0
 - Acceptance Criteria：
-  - 玩家 AI 攻擊不再使用 Preview API。
-  - AI 行動前重新驗證。
+  - ~~玩家 AI 攻擊不再使用 Preview API。~~ **切片 A 已完成**（`executeAiAttack`）。
+  - AI 行動前重新驗證。（攻擊路徑已在執行前走 `createAttackPreview`／`getAttackTarget`）
   - stale action 可重試一次。
 - Test Method：
   - Action contract 測試。
   - GameStore 整合測試。
+- Result（2026-08-24）：`runAiDefenseStep`／`runAiSupportStep` 改呼叫 `executeAiAttack`；人類仍用 `previewAttackTarget`。A0＋新測試全過。
 
 ### Phase 3：統一 Player AI Scheduler
 
@@ -1046,8 +1047,8 @@ perception → decision → validation → execution → event
 
 第一個開發切片應為：
 
-0. ~~為 `runAiDefenseStep`／`runAiSupportStep` 補 gameStore 整合測試。~~ **A0 已完成**（`gameStore.aiSteps.test.ts` 8 例）。
-1. 玩家 AI 攻擊去 Preview 化（切片 A；A0 測試為驗收網）。
+0. ~~為 `runAiDefenseStep`／`runAiSupportStep` 補 gameStore 整合測試。~~ **A0 已完成**（`gameStore.aiSteps.test.ts`）。
+1. ~~玩家 AI 攻擊去 Preview 化。~~ **切片 A 已完成**（`src/game/ai/execution/executeAiAttack.ts`）。
 2. 抽出共用距離、阻擋、目標與可達性純函式。
 3. 建立通用 `AiAction` 型別。
 4. 建立 Action Validator，但先不改變現有行動結果。

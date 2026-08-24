@@ -112,6 +112,7 @@ import {
   executeExternalDamage as executeExternalDamageAction,
   resolveCreatureDefeatRewards,
 } from './actions/combatActions'
+import { executeAiAttack as executeAiAttackAction } from './ai/execution/executeAiAttack'
 import {
   depositEquipment as depositEquipmentAction,
   depositItem as depositItemAction,
@@ -1585,6 +1586,17 @@ export const gameStore = {
     return action.result
   },
 
+  /** AI 攻擊：走原子 domain action，不經過 previewAttackTarget。人類玩家仍用 Preview API。 */
+  executeAiAttack: (playerId: string, targetType: AttackTargetType, targetId: string): ActionExecutionResult<AttackExecutionResult> => {
+    return runActionExecution(updateGameState, (state) => executeAiAttackAction(state, playerId, targetType, targetId, {
+      getActionablePlayer,
+      createLootForPlayer,
+      getLearnableSkill,
+      applyExperienceAndLevelUp,
+      addLootToPlayer,
+    }), 'AI 攻擊失敗。')
+  },
+
   /** 選取元素爆發道具（element-burst）的目標並建立預覽。 */
   previewItemBurst: (targetType: AttackTargetType, targetId: string): ActionOutcome => {
     let result: ActionOutcome = { ok: false, reason: '元素爆發失敗。' }
@@ -1795,8 +1807,7 @@ export const gameStore = {
 
     const decision = chooseDefenseAction(state, playerId, order)
     if (decision.type === 'attack') {
-      gameStore.previewAttackTarget(playerId, decision.targetType, decision.targetId)
-      const result = gameStore.executeAttackTarget()
+      const result = gameStore.executeAiAttack(playerId, decision.targetType, decision.targetId)
       return result.ok ? { ok: true } : { ok: false, reason: result.reason ?? 'AI 攻擊失敗。' }
     }
     if (decision.type === 'move') {
@@ -1835,8 +1846,7 @@ export const gameStore = {
 
     const decision = chooseSupportAction(state, playerId, order)
     if (decision.type === 'attack') {
-      gameStore.previewAttackTarget(playerId, decision.targetType, decision.targetId)
-      const result = gameStore.executeAttackTarget()
+      const result = gameStore.executeAiAttack(playerId, decision.targetType, decision.targetId)
       return result.ok ? { ok: true } : { ok: false, reason: result.reason ?? 'AI 支援攻擊失敗。' }
     }
     if (decision.type === 'move') {

@@ -1,5 +1,44 @@
 # 開發日誌
 
+## 2026-08-24｜AI 重構切片 A：攻擊去 Preview 化
+
+### 本次完成
+
+- 新增原子 domain action `src/game/ai/execution/executeAiAttack.ts`：執行前用 `createAttackPreview` 再驗證目標，再呼叫既有 `executeAttack`，**不寫入** `attackPreview`／`operation`。
+- `runAiDefenseStep`／`runAiSupportStep` 改呼叫 `gameStore.executeAiAttack`；人類玩家仍走 `previewAttackTarget`。
+- 行為保持：決策函式、移動／結束回合、傷害結算路徑不變。體力不足失敗時不再留下殘餘 preview。
+
+### 本切片不改變什麼
+
+- 人類 Preview＋確認攻擊流程
+- `chooseDefenseAction`／`chooseSupportAction`／`chooseSelfPreservationAction`
+- `runAiDefenseStep`／`runAiSupportStep` 公開簽名與移動／待命／paused 路徑
+
+### 影響檔案
+
+- 新增：`src/game/ai/execution/executeAiAttack.ts`、`executeAiAttack.test.ts`
+- 改：`src/game/gameStore.ts`、`src/game/gameStore.aiSteps.test.ts`
+- 文件：`handev/ai-development-playbook.md`、`handev/mygame2-architecture.md`、`reports/system/ai-system-refactoring-development-design.md`
+
+### 驗證結果
+
+- TypeScript：通過。ESLint（本切片檔案）：通過。Build：通過。
+- 測試：70 檔 / **735 項全過**（A0 8 例＋不經 preview 1 例＋原子攻擊 3 例＋既有案例）。
+
+### 下一步
+
+- 切片 **B**：共用感知純函式＋ Creature 巡邏注入 `RandomSource`。
+
+## 2026-08-24｜對齊門派外功數測試：36 → 35
+
+### 本次完成
+
+- `skillProgressionCatalog.test.ts` 總數斷言落後於 catalog：百毒流「驛路步」已移除（同檔逐派測試已豁免靈氣），合計外功 35 而非 36。將預期值改為 35，註解寫明各派組成。未改功法資料。
+
+### 驗證結果
+
+- 該檔 14 項通過；全套 69 檔 / **731 項全過**。
+
 ## 2026-08-24｜AI 重構前置 A0：補 player AI 執行層整合測試
 
 ### 本次完成

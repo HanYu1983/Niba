@@ -14,7 +14,7 @@
 1. **決策與執行分離**：AI 規則層只產生行動意圖（`AiDefenseAction`，未來統一為 `AiAction`），不得直接修改 `GameState`；所有狀態變更必須經過既有 domain action 或 `gameStore`。
 2. **自保優先級鏈**：`死亡／無法行動 > AI 自保 > active 戰略命令／Creature 行為 > 戰術行動 > 待命或結束回合`。自保是隱藏的系統級優先級：不可被玩家命令覆蓋、不可修改命令內容、解除後恢復原命令。
 3. **行為保持遷移**：先抽共用核心並補測試，再遷移既有 AI；每個階段既有測試必須全部通過；行為差異用固定地圖＋固定 seed 比對。
-4. **不依賴 UI API**：AI 不得呼叫 `previewAttackTarget()` 等 preview／React API；preview 只服務人類玩家。（現况尚未達標，見 §1 缺口清單——這是最優先要還的債。）
+4. **不依賴 UI API**：AI 不得呼叫 `previewAttackTarget()` 等 preview／React API；preview 只服務人類玩家。（玩家 AI 攻擊已達標，見切片 A；Creature 批次仍走自己的結算路徑。）
 5. **隨機可重現**：domain AI 內禁止直接呼叫 `Math.random()`；一律注入 `RandomSource`（沿用 `rules/randomRules.ts` 的 `defaultRandomSource` 注入模式）。相同 seed＋相同 GameState 必須產生相同決策。
 6. **只加不改不刪**：舊入口（`moveCreatures()`、`runAiDefenseStep()`、`runAiSupportStep()`）保留為相容包裝層，直到新管線通過驗收才移除。
 7. **Data-driven 白名單**：JSON policy 只能描述條件、參數、權重與順序；condition／action 必須落在 TypeScript union 白名單內；驗證失敗時記錄日誌並 fallback，絕不讓 AI 回合卡死；JSON 內不得出現任何可執行程式碼。
@@ -29,7 +29,7 @@ AI 開發有**兩條主線**，各自有獨立設計文件，工作時必須分�
 | 主線 | 文件 | 性質 | 進度 |
 |---|---|---|---|
 | 功能線 | ai-strategy-and-construction（v0.8） | 玩家指揮 AI 的玩法功能 | M1～M3 已完成；M4 防守、M5 支援部分完成（單步決策＋自動回合已接入）；建設自動執行、逐步動畫、全域日誌未完成 |
-| 架構線 | ai-system-refactoring（v0.2 Draft） | Creature／玩家 AI 共用核心重構 | A0 已完成；Phase 1～6 仍 Todo；`src/game/ai/` 目錄尚未建立 |
+| 架構線 | ai-system-refactoring（v0.2 Draft） | Creature／玩家 AI 共用核心重構 | A0＋A 已完成；Phase 1～6 其餘 Todo；`src/game/ai/execution/` 已建立 |
 
 ### 1.1 已存在的實作（檔案地圖）
 
@@ -43,10 +43,10 @@ AI 開發有**兩條主線**，各自有獨立設計文件，工作時必須分�
 
 **執行層（gameStore.ts）**
 
-- `runAiDefenseStep`（`:1778`）／`runAiSupportStep`（`:1810`）：驗證（isAI＋輪次＋非 creature turn＋active 命令）→ 自保先行 → 讀決策 → `movePlayerTo` 或 **`previewAttackTarget`＋`executeAttackTarget`**（`:1798`、`:1838`）→ 失敗或待命則 `endPlayerTurn`。
-- 支援目標死亡時命令自動轉 `paused`（`:1826-1834`）。
-- ⚠️ 兩處攻擊都走 Preview API——違反總原則 4，為既存技術債。
-- 測試：`src/game/gameStore.aiSteps.test.ts`（A0，8 例，釘住結果不釘 preview 路徑）；共用夾具 `src/game/testHelpers/aiTestFixtures.ts`。
+- `runAiDefenseStep`（`:1790`）／`runAiSupportStep`（`:1821`）：驗證（isAI＋輪次＋非 creature turn＋active 命令）→ 自保先行 → 讀決策 → `movePlayerTo` 或 **`executeAiAttack`**（`:1810`、`:1849`）→ 失敗或待命則 `endPlayerTurn`。
+- 支援目標死亡時命令自動轉 `paused`。
+- 原子攻擊：`src/game/ai/execution/executeAiAttack.ts` 當場 `createAttackPreview`＋`executeAttack`，不寫入 `attackPreview`／`operation`。人類玩家仍走 `previewAttackTarget`。
+- 測試：`src/game/gameStore.aiSteps.test.ts`（A0 8 例＋A「不經 preview API」）；`executeAiAttack.test.ts`（3 例）；共用夾具 `src/game/testHelpers/aiTestFixtures.ts`。
 
 **排程層（App.tsx `:166-191`）**
 
@@ -69,7 +69,7 @@ AI 開發有**兩條主線**，各自有獨立設計文件，工作時必須分�
 
 ### 1.2 缺口清單（= 待辦池，依優先級）
 
-1. AI 攻擊去 Preview 化（總原則 4 的債）。
+1. ~~AI 攻擊去 Preview 化~~ **已完成（切片 A）**。
 2. 共用感知層（距離／阻擋／可達性）＋ Creature 巡邏 RandomSource 注入。
 3. 統一 `AiAction` 型別＋Action Validator。
 4. `moveCreatures()` 拆分為 perceive／select／plan／validate／execute／reduce。
@@ -93,7 +93,7 @@ AI 開發有**兩條主線**，各自有獨立設計文件，工作時必須分�
 **方針：合併「基礎設施」，不合併「行為決策」**（與重構文件 §1.2 非目標「不做同一套行為樹」一致）：
 
 值得合併的（已在付雙重維護稅）：
-- **感知層**：距離、阻擋、可達性兩邊各寫一份，已產生行為分歧（creature `blocked` fallback 亂打防禦設施、玩家側依賴 Preview API）。
+- **感知層**：距離、阻擋、可達性兩邊各寫一份，已產生行為分歧（creature `blocked` fallback 亂打防禦設施）。玩家攻擊已改走原子 action，不再依賴 Preview API。
 - **驗證與執行邊界**：統一 Validator＋原子 domain action，AI 才能在無 UI 環境測試與重播。
 - **事件格式**：全域日誌和逐步動畫需要單一事件協定，否則要寫兩套。
 
@@ -429,7 +429,7 @@ PowerShell 備忘：判斷成敗用 `$LASTEXITCODE`（`$?` 是 True/False）；d
 
 **由此推出的前置義務：**
 
-1. **切片 A0 已完成**（2026-08-24）：`runAiDefenseStep`／`runAiSupportStep` 8 例整合測試＋`src/game/testHelpers/aiTestFixtures.ts`。切片 A 可開工。
+1. **切片 A0＋A 已完成**（2026-08-24）：執行層整合測試與去 Preview 化。下一刀是切片 B（共用感知）。
 2. 之後所有重構切片以「11 決策＋8 執行＋既有 Creature 案例持續通過」為行為基準；新增元件各補單元測試：resolvePolicy 查表契約（回傳值只依賴 kind／型別／存活）、planAiAction 確定性評分（同輸入同 seed 同輸出）、Validator stale 矩陣。
 
 ---
@@ -439,7 +439,7 @@ PowerShell 備忘：判斷成敗用 `$LASTEXITCODE`（`$?` 是 True/False）；d
 | # | 切片 | 對應 | Priority | 驗收重點 |
 |---|---|---|---|---|
 | A0（A 的前置） | 為 `runAiDefenseStep`／`runAiSupportStep` 補 gameStore 整合測試（見 §2.7） | §14.4 生命週期 | P0 **已完成** | 8 例通過；此組測試即切片 A 的驗收網 |
-| A | AI 攻擊去 Preview 化：新增原子攻擊 domain action，`runAiDefenseStep`／`runAiSupportStep` 改呼叫之；preview 保留給人類玩家 | 重構 Phase 2 前半 | P0 | 新增「AI 不經 preview API 執行攻擊」測試；既有 AI 測試＋A0 測試全過 |
+| A | AI 攻擊去 Preview 化：新增原子攻擊 domain action，`runAiDefenseStep`／`runAiSupportStep` 改呼叫之；preview 保留給人類玩家 | 重構 Phase 2 前半 | P0 **已完成** | 「AI 不經 preview API」測試＋A0 全過 |
 | B | 共用感知純函式（距離／阻擋／存活／目標有效／可達性）＋ Creature 巡邏改注入 RandomSource | 重構 Phase 1＋§12 Phase 1 | P0 | 既有測試全過；相同 seed 巡邏結果一致；不可達目標會重選或安全待命 |
 | C | 統一 `AiAction` 型別＋`validateAiAction()`（先不改變行為） | 重構 Phase 1 後半＋Phase 2 | P0 | Validator 對既有四種決策都能給出 valid/reason；行為零變化 |
 | D | `moveCreatures()` 拆六段（perceive/select/plan/validate/execute/reduce），維持 `CreatureTurnResult` 相容 | 重構 §12 Phase 2 | P0 | 步驟化後既有 creature 測試全過；`blocked` 不再打錯防禦設施 |
@@ -454,7 +454,7 @@ PowerShell 備忘：判斷成敗用 `$LASTEXITCODE`（`$?` 是 True/False）；d
 
 ## 附錄：快速事實
 
-- 目前全套測試基準：2026-08-24 A0 後為 731 項（730 過／1 無關失敗：`skillProgressionCatalog` 外功數預期 36 實得 35，非 AI 切片改動）。AI 相關 11 決策＋8 執行全過。
+- 目前全套測試基準：2026-08-24 切片 A 後為 735 項全過（數字會漂移，動工前先跑一次記錄當下基準）。AI 相關 11 決策＋9 執行＋3 原子攻擊全過。
 - `AiOrder` 同時間每 AI 只能一個 active；建立異型新命令 → 舊命令降級 paused；完全同型同目標 → 拒絕。
 - 支援命令目標死亡 → 自動 `paused`（不是 failed）；據點被毀 → `failed` 且保存原因。
 - 建設方針五種：`defense | economy | frontline | balanced | paused`；`paused` 不建造但可行動。
