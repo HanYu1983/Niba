@@ -555,6 +555,8 @@ export type DialogueTriggerCondition =
   | 'on-start'                // 關卡開局時觸發
   | 'on-objective-complete'   // 特定任務目標達成時觸發（triggerParam = objectiveId）
   | 'on-enter-region'         // 玩家進入指定區域時觸發（triggerParam = "row,column" 或 region id）
+  | 'on-enter-area'           // 玩家進入編輯器定義的區域時觸發（triggerParam = areaId）
+  | 'on-exit-area'            // 玩家離開編輯器定義的區域時觸發（triggerParam = areaId）
   | 'on-defeat-boss'          // 擊敗首領時觸發（triggerParam = creatureId）
   | 'on-round-reached'        // 到達指定回合時觸發（triggerParam = round number）
   | 'on-object-destroyed'     // 指定物件從地圖消失時觸發（triggerParam = objectId；含生物死亡、建築/防禦設施被破壞等）
@@ -611,6 +613,12 @@ export type CampaignState = {
     conditionParam?: string
     action: 'start-dialogue' | 'spawn-creature'
     actionParam: string
+  }>
+  /** 編輯器定義的區域列表（供 on-enter-area / on-exit-area 觸發器使用）。 */
+  scenarioAreas?: Array<{
+    id: string
+    name: string
+    positions: Array<{ row: number; column: number }>
   }>
   /** 探索點消失後是否補充新探索點（劇本模式預設關閉）。 */
   replenishExplorationEvents?: boolean

@@ -54,6 +54,18 @@ export type ScenarioEntityPlacement = {
   data: Record<string, unknown>
 }
 
+/** 區域定義：一組格子座標，供觸發器使用（如 on-enter-area、on-exit-area）。 */
+export type ScenarioArea = {
+  /** 區域唯一 ID（供觸發器 conditionParam 參照）。 */
+  id: string
+  /** 區域名稱（顯示用）。 */
+  name: string
+  /** 區域包含的格子座標列表。 */
+  positions: Position[]
+  /** 區域自訂中繼資料。 */
+  customMetadata?: Record<string, unknown>
+}
+
 export type ScenarioDefinition = {
   version: string
   id: string
@@ -63,6 +75,8 @@ export type ScenarioDefinition = {
   mapSize: { rows: number; columns: number }
   cells: ScenarioCell[]
   entities: ScenarioEntityPlacement[]
+  /** 區域定義：供 on-enter-area / on-exit-area 觸發器使用。 */
+  areas?: ScenarioArea[]
   /** 是否啟用回合結束隨機探索事件（劇本地圖預設關閉）。 */
   enableRandomEvents?: boolean
   /** 探索點消失後是否補充新探索點（劇本模式預設關閉）。 */

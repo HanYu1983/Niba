@@ -17,6 +17,7 @@ import InspectorSidebar from './components/InspectorSidebar'
 import QuestSequencerModal from './components/QuestSequencerModal'
 import DialogueEditorModal from './components/DialogueEditorModal'
 import TriggerEditorModal from './components/TriggerEditorModal'
+import AreaEditorModal from './components/AreaEditorModal'
 import ScenarioManagerModal from './components/ScenarioManagerModal'
 import CustomEventEditorModal from './components/CustomEventEditorModal'
 import type { CustomEventData } from './editorTypes'
@@ -37,6 +38,7 @@ function EditorApp({ onBack, onPlaytest, scenario, onScenarioChange }: EditorApp
   const [questModalOpen, setQuestModalOpen] = useState(false)
   const [dialogueModalOpen, setDialogueModalOpen] = useState(false)
   const [triggerModalOpen, setTriggerModalOpen] = useState(false)
+  const [areaModalOpen, setAreaModalOpen] = useState(false)
   const [scenarioManagerOpen, setScenarioManagerOpen] = useState(false)
   const [customEventEntityId, setCustomEventEntityId] = useState<string | null>(null)
   const { brush, selectedEntityId, setSelectedEntityId, selectTerrainBrush, setBrushSize, selectEntityBrush, selectEraser, selectSelectTool, toggleSelectTool, toggleEraser } = useEditorSelection()
@@ -283,6 +285,7 @@ function EditorApp({ onBack, onPlaytest, scenario, onScenarioChange }: EditorApp
             onOpenQuest={() => setQuestModalOpen(true)}
             onOpenDialogue={() => setDialogueModalOpen(true)}
             onOpenTrigger={() => setTriggerModalOpen(true)}
+            onOpenArea={() => setAreaModalOpen(true)}
           />
         </div>
         <EditorCanvas
@@ -326,6 +329,12 @@ function EditorApp({ onBack, onPlaytest, scenario, onScenarioChange }: EditorApp
         scenario={scenario}
         onClose={() => setTriggerModalOpen(false)}
         onUpdateTriggers={(triggers) => onScenarioChange((prev) => ({ ...prev, triggers }))}
+      />
+      <AreaEditorModal
+        open={areaModalOpen}
+        scenario={scenario}
+        onClose={() => setAreaModalOpen(false)}
+        onUpdateAreas={(areas) => onScenarioChange((prev) => ({ ...prev, areas }))}
       />
       <ScenarioManagerModal
         open={scenarioManagerOpen}
