@@ -1,6 +1,6 @@
 import InventoryModal from '../InventoryModal'
 import EquipmentModal from '../EquipmentModal'
-import SkillModal from '../SkillModal'
+import UnifiedSkillModal from '../UnifiedSkillModal'
 import { gameStore } from '../../game/gameStore'
 import {
   formatItemUseResult,
@@ -68,10 +68,12 @@ function PlayerOverlays({
         onUnequip={(slot) => gameStore.unequipEquipment(gameState.activePlayerId, slot)}
         onClose={onCloseEquipment}
       />
-      <SkillModal
+      <UnifiedSkillModal
         player={gameState.players.find((player) => player.id === skillPlayerId) ?? null}
         innerSkills={allInnerSkillCatalog}
         externalSkills={allExternalSkillCatalog}
+        mapCells={gameState.map.cells}
+        creatures={gameState.creatures}
         onEquipInnerSkill={(skillId) => gameStore.equipInnerSkill(gameState.activePlayerId, skillId)}
         onToggleExternalSkill={(skillId) => gameStore.toggleExternalSkill(gameState.activePlayerId, skillId)}
         onClose={onCloseSkill}
