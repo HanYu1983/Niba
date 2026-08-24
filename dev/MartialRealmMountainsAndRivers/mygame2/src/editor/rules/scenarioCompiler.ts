@@ -354,6 +354,7 @@ function compileCampaignState(scenario: ScenarioDefinition): CampaignState {
       id: area.id,
       name: area.name,
       positions: area.positions,
+      destroyWhenTriggered: area.destroyWhenTriggered ?? false,
     })),
     // 探索點補充開關（劇本模式預設關閉）。
     replenishExplorationEvents: scenario.replenishExplorationEvents ?? false,

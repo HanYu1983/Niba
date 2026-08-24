@@ -20,6 +20,8 @@ function checkAreaTriggers(
   if (areas.length === 0) return state
 
   let currentState = state
+  // 收集預期會被觸發的一次性區域 id，觸發後將其從地圖移除。
+  const consumedAreaIds = new Set<string>()
 
   // 檢查離開區域
   for (const area of areas) {
@@ -29,6 +31,13 @@ function checkAreaTriggers(
       // 觸發 on-exit-area
       currentState = enqueueTriggeredDialogues(currentState, { type: 'on-exit-area', param: area.id })
       currentState = executeTriggers(currentState, { type: 'on-exit-area', param: area.id })
+      // 若此區域為一次性，且存在對應的 on-exit-area 觸發器，則消費該區域。
+      const hasExitTrigger = (currentState.campaignState?.triggers ?? []).some(
+        (trigger) => trigger.condition === 'on-exit-area' && trigger.conditionParam === area.id,
+      )
+      if (area.destroyWhenTriggered && hasExitTrigger) {
+        consumedAreaIds.add(area.id)
+      }
     }
   }
 
@@ -40,6 +49,27 @@ function checkAreaTriggers(
       // 觸發 on-enter-area
       currentState = enqueueTriggeredDialogues(currentState, { type: 'on-enter-area', param: area.id })
       currentState = executeTriggers(currentState, { type: 'on-enter-area', param: area.id })
+      // 若此區域為一次性，且存在對應的 on-enter-area 觸發器，則消費該區域。
+      const hasEntryTrigger = (currentState.campaignState?.triggers ?? []).some(
+        (trigger) => trigger.condition === 'on-enter-area' && trigger.conditionParam === area.id,
+      )
+      if (area.destroyWhenTriggered && hasEntryTrigger) {
+        consumedAreaIds.add(area.id)
+      }
+    }
+  }
+
+  if (consumedAreaIds.size > 0) {
+    currentState = {
+      ...currentState,
+      campaignState: currentState.campaignState
+        ? {
+          ...currentState.campaignState,
+          scenarioAreas: (currentState.campaignState.scenarioAreas ?? []).filter(
+            (area) => !consumedAreaIds.has(area.id),
+          ),
+        }
+        : currentState.campaignState,
     }
   }
 

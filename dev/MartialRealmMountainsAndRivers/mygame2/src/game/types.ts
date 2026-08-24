@@ -619,6 +619,8 @@ export type CampaignState = {
     id: string
     name: string
     positions: Array<{ row: number; column: number }>
+    /** 此區域的 on-enter-area 觸發器觸發一次後，即從地圖移除（一次性區域）。 */
+    destroyWhenTriggered?: boolean
   }>
   /** 探索點消失後是否補充新探索點（劇本模式預設關閉）。 */
   replenishExplorationEvents?: boolean

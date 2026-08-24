@@ -1166,7 +1166,14 @@
             "itemId": "gather-qi-pill",
             "quantity": 2
           }
-        ]
+        ],
+        "attributes": {
+          "armStrength": 19,
+          "constitution": 8,
+          "agility": 18,
+          "innerEnergy": 8,
+          "insight": 8
+        }
       }
     },
     {
@@ -1619,29 +1626,6 @@
         }
       ]
     },
-    "event-nest-destroyed": {
-      "name": "妖王巢穴被摧毀",
-      "steps": [
-        {
-          "id": "nest-destroyed-1",
-          "speakerName": "旁白",
-          "speakerIcon": "📜",
-          "content": "轟然一聲巨響，妖王巢穴在凌淵的攻勢下轟然崩塌，盤踞其上的濃郁妖氣如煙般消散，林間妖鳴聲戛然而止。"
-        },
-        {
-          "id": "nest-destroyed-2",
-          "speakerName": "凌淵",
-          "speakerIcon": "🥋",
-          "content": "妖王巢穴已除，妖氣源頭總算斷了。獵人村落也該重歸安寧了。"
-        },
-        {
-          "id": "nest-destroyed-3",
-          "speakerName": "凌淵",
-          "speakerIcon": "🥋",
-          "content": "區區妖邪，也敢在這片林海橫行霸道？就讓我用師父所傳的掌法，送你們回老家去！"
-        }
-      ]
-    },
     "event-victory": {
       "name": "林海安寧",
       "steps": [
@@ -1835,6 +1819,35 @@
           "content": "凌淵凝神運勁，氣機流轉周身，向妖衛與巢穴逼近。一場廝殺，一觸即發。"
         }
       ]
+    },
+    "dialogue-mt7al8fd": {
+      "name": "擊殺妖獸首領",
+      "steps": [
+        {
+          "id": "beast-slain-1",
+          "speakerName": "旁白",
+          "speakerIcon": "📜",
+          "content": "妖衛首領在凌淵的攻勢下發出最後一聲淒厲的咆哮，龐大的身軀轟然倒地，化作一縷黑煙消散於空中。"
+        },
+        {
+          "id": "beast-slain-2",
+          "speakerName": "凌淵",
+          "speakerIcon": "🥋",
+          "content": "呼……好險，這妖物出手狠辣，若非平日不輟練功，只怕已倒在這裡。"
+        },
+        {
+          "id": "beast-slain-3",
+          "speakerName": "凌淵",
+          "speakerIcon": "🥋",
+          "content": "守巢的妖獸首領已除，接下來便只剩那座妖王巢穴了。只要將其摧毀，這片林海的妖氣源頭便徹底斷絕！"
+        },
+        {
+          "id": "beast-slain-4",
+          "speakerName": "旁白",
+          "speakerIcon": "📜",
+          "content": "凌淵凝神望向不遠處那座仍在嗡嗡作響的妖王巢穴，提氣運勁，準備迎接最後一戰。"
+        }
+      ]
     }
   },
   "triggers": [
@@ -1843,13 +1856,6 @@
       "condition": "on-start",
       "action": "start-dialogue",
       "actionParam": "event-forest-start"
-    },
-    {
-      "id": "trigger-nest1-destroyed",
-      "condition": "on-object-destroyed",
-      "action": "start-dialogue",
-      "actionParam": "event-nest-destroyed",
-      "conditionParam": "nest-1"
     },
     {
       "id": "trigger-victory-dialogue",
@@ -1877,6 +1883,13 @@
       "action": "spawn-creature",
       "actionParam": "creature-nest1-guard",
       "conditionParam": "area-mt78hzgb7inr"
+    },
+    {
+      "id": "trigger-mt7allwk",
+      "condition": "on-object-destroyed",
+      "action": "start-dialogue",
+      "actionParam": "dialogue-mt7al8fd",
+      "conditionParam": "creature-nest1-guard"
     }
   ],
   "areas": [
@@ -1904,7 +1917,8 @@
           "row": 8,
           "column": 8
         }
-      ]
+      ],
+      "destroyWhenTriggered": true
     },
     {
       "id": "area-mt78hzgb7inr",
@@ -1946,7 +1960,8 @@
           "row": 3,
           "column": 13
         }
-      ]
+      ],
+      "destroyWhenTriggered": true
     }
   ]
 }

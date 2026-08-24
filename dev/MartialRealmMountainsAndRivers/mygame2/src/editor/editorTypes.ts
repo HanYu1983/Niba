@@ -62,6 +62,8 @@ export type ScenarioArea = {
   name: string
   /** 區域包含的格子座標列表。 */
   positions: Position[]
+  /** 此區域的任意 on-enter-area 觸發器觸發一次後，即從地圖移除（一次性區域）。 */
+  destroyWhenTriggered?: boolean
   /** 區域自訂中繼資料。 */
   customMetadata?: Record<string, unknown>
 }

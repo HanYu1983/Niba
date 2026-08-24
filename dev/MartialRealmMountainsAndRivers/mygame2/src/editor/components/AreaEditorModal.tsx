@@ -1,4 +1,4 @@
-import { Button, Divider, Flex, Input, Modal, type ModalProps, Typography } from 'antd'
+import { Button, Checkbox, Divider, Flex, Input, Modal, type ModalProps, Typography } from 'antd'
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons'
 import { useState } from 'react'
 import type { Position } from '../../game/types'
@@ -128,6 +128,12 @@ function AreaEditorModal({ open, scenario, onClose, onUpdateAreas, ...rest }: Ar
                   onChange={(e) => updateArea(activeArea.id, { name: e.target.value })}
                 />
               </Flex>
+              <Checkbox
+                checked={activeArea.destroyWhenTriggered ?? false}
+                onChange={(e) => updateArea(activeArea.id, { destroyWhenTriggered: e.target.checked })}
+              >
+                一次性區域（進入或離開觸發一次後即移除）
+              </Checkbox>
               <Divider style={{ margin: '6px 0' }} />
 
               <Typography.Text type="secondary" style={{ fontSize: 12 }}>
