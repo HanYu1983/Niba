@@ -100,9 +100,10 @@ describe('createDebugGameState', () => {
 
   it('包含不同門派的門派據點供測試（不再有等級差異）', () => {
     const state = createDebugGameState()
-    expect(state.sectGates ?? []).toHaveLength(7)
+    expect(state.sectGates ?? []).toHaveLength(12)
     expect(new Set((state.sectGates ?? []).map((gate) => gate.schoolId))).toEqual(new Set([
-      'golden-body', 'swift-wind', 'scarlet-flame', 'frost-water', 'earth-mountain', 'void-spirit', 'hundred-poison',
+      'golden-body', 'swift-wind', 'scarlet-flame', 'frost-water', 'earth-mountain', 'void-spirit',
+      'hundred-poison', 'sharp-edge', 'misty-rain', 'blazing-sun', 'yellow-earth', 'ghost-shadow',
     ]))
     expect((state.sectGates ?? []).every((gate) => gate.level === 1 && gate.experience === 0)).toBe(true)
   })
