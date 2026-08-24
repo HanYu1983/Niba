@@ -189,7 +189,7 @@ export function createDebugGameState(): GameState {
     innerSkillId: 'tuna-gong',
     innerSkillIds: debugAllInnerIds,
     position: playerPosition,
-    attributes: { armStrength: 8, constitution: 8, agility: 8, innerEnergy: 8, insight: 8 },
+    attributes: { armStrength: 30, constitution: 30, agility: 30, innerEnergy: 30, insight: 30 },
     externalSkillIds: debugAllExternalIds,
     equippedExternalSkillIds: [],
     skillProgression: debugSkillProgression,

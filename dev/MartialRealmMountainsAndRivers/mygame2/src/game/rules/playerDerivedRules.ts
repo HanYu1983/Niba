@@ -123,6 +123,10 @@ const creatureHomeTurfBuffs: Partial<Record<string, { terrain: TerrainType; defi
   'scarlet-flame': { terrain: 'desert', definitionId: 'home-turf-desert' },
   'golden-body': { terrain: 'mountain', definitionId: 'home-turf-ruin' },
   'hundred-poison': { terrain: 'forest', definitionId: 'home-turf-forest' },
+  'sharp-edge': { terrain: 'mountain', definitionId: 'home-turf-mountain' },
+  'misty-rain': { terrain: 'water', definitionId: 'home-turf-water' },
+  'blazing-sun': { terrain: 'desert', definitionId: 'home-turf-desert' },
+  'yellow-earth': { terrain: 'forest', definitionId: 'home-turf-forest' },
 }
 
 /** 取得怪物目前生效的 Buff；主場 Buff 僅依當前站立地形動態注入，不寫入 state。 */

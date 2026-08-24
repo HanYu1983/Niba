@@ -1,5 +1,37 @@
 # 開發日誌
 
+## 2026-08-24｜五行補全：新增五門派，每屬性兩派
+
+### 本次完成
+
+- 依「**每個五行元素應有 2 個門派**」的設計目標，一次新增五派（此前金/水/火/土/無各僅一派，木有兩派）：
+  - **銳鋒流**（`sharp-edge`，金）：新興鑄劍世家的快劍搶攻之道。內功「銳鋒淬芒」（臂力 ×0.7＋身法 ×0.3，補上無人使用的組合）；傷害外功「銳鋒斬」；靈氣外功「劍心明鑑」（視野 +1）、「凌厲劍勢」（普攻傷害 +10%）。
+  - **煙雨流**（`misty-rain`，水）：江南煙雨樓的養生綿掌。內功「煙雨養元」（內息 ×0.5＋悟性 ×0.5）；傷害外功「煙雨掌」；靈氣「雨潤回春」（每回合回血 5%）、「雨幕遮身」（減傷 10%）。
+  - **烈陽流**（`blazing-sun`，火）：西域烈陽教遺部的血性武學。內功「烈陽戰體」（根骨 ×0.6＋臂力 ×0.4）；傷害外功「烈陽轟」；靈氣「烈陽戰意」（臂根 +1）、「烈目凝芒」（暴擊 ×1.25）。
+  - **黃土流**（`yellow-earth`，土）：黃土溝壑獵戶自衛武團。內功「黃土紮根」（根骨 ×0.5＋身法 ×0.5）；傷害外功「裂石棍」；靈氣「夯土工事」（建材消耗 −15%）、「負重健行」（最大體力 +2）。
+  - **幽影流**（`ghost-shadow`，無）：playbook 世界觀既有的隱世幽影流落地。內功「幽影藏形」（身法 ×0.5＋悟性 ×0.5）；傷害外功「影襲」；靈氣「幽影蔽身」（迴避 +10%）、「孤影決絕」（血量 <25% 時五維 ×1.6）。
+- 每派嚴守三式限制（1 內功＋1 基礎傷害＋2 靈氣）；**零新規則層改動**——10 個新 Buff 全部只組合既有解譯欄位（visionRadiusBonus／damageDealtPercent／healthRegenPercent／damageReductionPercent／attributeModifiers／criticalRateMultiplier／buildingMaterialCostReduction／maxStaminaBonus／evasionRateBonus／conditional），未新增 `FunctionalExternalSkillEffect` 型別（31 種 effect 不變）。
+- 新門派刻意不佔用移動技位：七種地形 step 技已由原七派配滿，避免重複輕功。
+- 週邊註冊補齊：`MartialSchoolId` union、`getSchoolElement` 四行對應（幽影流走 default 'none'）、妖物圖示（🦂🐬🦁🐗🦇）與屬性修正、主場 Buff 映射（幽影流比照太虛流無主場）、武館／山門彈窗圖示鏈（⚔️🌧️☀️🧱🌑）。山門生成與編輯器下拉為 catalog 驅動，自動收錄 12 派。
+- 測試同步：流派數 7→12、外功總數 21→36；新增「**五行元素各由兩個門派守護**」防回退測試。
+
+### 影響檔案
+
+- `src/game/catalogs/martialSchoolCatalog.ts`、`skillProgressionCatalog.ts`、`buffCatalog.ts`
+- `src/game/rules/skillRules.ts`、`creatureBehaviorRules.ts`、`playerDerivedRules.ts`
+- `src/components/MartialHallModal.tsx`、`SectGateDetailsModal.tsx`（圖示鏈）
+- `src/game/catalogs/skillProgressionCatalog.test.ts`
+- 文件：`handev/effects-taxonomy.md`（Buff 45→55、功法 54→74）
+
+### 已知留白（後續可選）
+
+- 五個新門派暫無**武館建築**與**門派裝備**：學習途徑為山門據點（`sectGateCount` 生成時自動涵蓋 12 派池），取得路徑成立但不如六章派完整。
+- debug 地圖維持 7 座山門／7 隻妖物（測試夾具未強制含全派）。
+
+### 驗證結果
+
+- TypeScript：通過。ESLint：通過。測試：68 檔 / 721 項全數通過。
+
 ## 2026-08-23｜新增第七門派「百毒流」與其三式功法
 
 ### 本次完成

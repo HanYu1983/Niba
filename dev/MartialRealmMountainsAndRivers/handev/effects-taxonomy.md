@@ -10,8 +10,8 @@
 | 載體 | 條目數 | 承載效果的方式 |
 |---|---|---|
 | 道具 itemCatalog | 53 | `ItemEffectType`（10 種）＋分類欄位 |
-| Buff buffCatalog | 45 | 22 個解譯欄位（屬性修正/乘區/地形/復活/週期回復…） |
-| 功法 | 54 | 內功 9（傷害公式閉包）、傷害外功 9、功能外功 36 |
+| Buff buffCatalog | 55 | 22 個解譯欄位（屬性修正/乘區/地形/復活/週期回復…） |
+| 功法 | 74 | 內功 14（傷害公式閉包）、傷害外功 14、功能外功 46 |
 | 裝備 equipmentCatalog | 45 | **純五維 modifiers**，無特殊效果 |
 | 探索事件 eventCatalog | 41 型／約 79 選項 | `EventEffect` 12 種＋`EventRequirement` 6 種 |
 | 建築 buildingCatalog | 20 | bonus 欄位 3 種＋actions 3 種＋特例邏輯 |
@@ -31,16 +31,16 @@
 | 屬性丹 | 5 | 9% | 五維各一顆永久+1 |
 | 特殊 | 1 | 2% | 回光玉（瀕死復活） |
 
-### 2.2 Buff（45 條）
+### 2.2 Buff（55 條）
 | 語義 | 數量 | 代表 |
 |---|---|---|
 | 移動/地形消耗 | 13 | 六步功＋驛路步、swift-wind-movement、主場×5 的移動部分 |
-| 屬性修正 | 7 | 五維常駐×5、home-turf-water/ruin 的加值 |
-| 傷害乘區 | 6 | break-army/vigor、主場三兄弟的 +15%、共鳴迴避 |
+| 屬性修正 | 8 | 五維常駐×5、home-turf-water/ruin 的加值、烈陽戰意 |
+| 傷害乘區 | 8 | break-army/vigor、主場三兄弟的 +15%、共鳴迴避、凌厲劍勢、烈目凝芒 |
 | 減益/控場 | 7 | burning×2、cold-poison×2、immobilize、reflection×2、腐骨毒 |
-| 資源吸取回復 | 4 | bloodthirst、spring-return、qi-transformation、inner-power-drain |
-| 條件觸發 | 3 | back-to-water、nurture-qi、all-in |
-| 防禦減免 | 5 | iron-wall-art、home-turf-mountain/ruin、影匿（迴避）、護體罡氣（免疫） |
+| 資源吸取回復 | 5 | bloodthirst、spring-return、qi-transformation、inner-power-drain、雨潤回春 |
+| 條件觸發 | 4 | back-to-water、nurture-qi、all-in、孤影決絕 |
+| 防禦減免 | 7 | iron-wall-art、home-turf-mountain/ruin、影匿（迴避）、護體罡氣（免疫）、雨幕遮身、幽影蔽身 |
 | 復活 | 1 | return-light |
 | ⚠️ 零使用欄位 | — | `terrainStaminaCostMultipliers`（乘算版地形消耗）無任何條目使用 |
 

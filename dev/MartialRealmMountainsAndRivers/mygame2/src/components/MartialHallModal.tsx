@@ -19,7 +19,7 @@ function MartialHallModal({ base, player, onLearn, onClose }: MartialHallModalPr
   const schoolName = (schoolId?: string) =>
     schoolId ? martialSchoolCatalog.find((school) => school.id === schoolId)?.name ?? '未知流派' : '所有門派'
   const schoolIcon = (schoolId?: string) =>
-    schoolId === 'golden-body' ? '🥋' : schoolId === 'swift-wind' ? '💨' : schoolId === 'scarlet-flame' ? '🔥' : schoolId === 'frost-water' ? '❄️' : schoolId === 'earth-mountain' ? '⛰️' : schoolId === 'hundred-poison' ? '🐍' : '☯'
+    schoolId === 'golden-body' ? '🥋' : schoolId === 'swift-wind' ? '💨' : schoolId === 'scarlet-flame' ? '🔥' : schoolId === 'frost-water' ? '❄️' : schoolId === 'earth-mountain' ? '⛰️' : schoolId === 'hundred-poison' ? '🐍' : schoolId === 'sharp-edge' ? '⚔️' : schoolId === 'misty-rain' ? '🌧️' : schoolId === 'blazing-sun' ? '☀️' : schoolId === 'yellow-earth' ? '🧱' : schoolId === 'ghost-shadow' ? '🌑' : '☯'
 
   return (
     <Modal title={base ? `${base.name} · 武館` : '武館'} open={base !== null} onCancel={onClose} footer={<Button onClick={onClose}>關閉</Button>} destroyOnHidden>

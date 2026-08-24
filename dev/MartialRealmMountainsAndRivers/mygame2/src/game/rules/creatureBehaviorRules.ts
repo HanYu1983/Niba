@@ -21,6 +21,11 @@ export const CREATURE_SCHOOL_ICONS: Record<MartialSchoolId, string> = {
   'scarlet-flame': '🦊',
   'void-spirit': '🐉',
   'hundred-poison': '🐍',
+  'sharp-edge': '🦂',
+  'misty-rain': '🐬',
+  'blazing-sun': '🦁',
+  'yellow-earth': '🐗',
+  'ghost-shadow': '🦇',
 }
 
 export const CREATURE_BEHAVIOR_BY_INDEX: CreatureBehaviorType[] = [
@@ -53,6 +58,11 @@ export const CREATURE_SCHOOL_ATTRIBUTE_MODIFIERS: Record<MartialSchoolId, Partia
   'scarlet-flame': { armStrength: 2, constitution: -1, agility: 0, innerEnergy: 3, insight: 0 },
   'void-spirit': { armStrength: 0, constitution: 0, agility: 0, innerEnergy: 0, insight: 0 },
   'hundred-poison': { armStrength: 2, constitution: -1, agility: 2, innerEnergy: 0, insight: -1 },
+  'sharp-edge': { armStrength: 3, constitution: -1, agility: 2, innerEnergy: -1, insight: -1 },
+  'misty-rain': { armStrength: -1, constitution: 1, agility: 0, innerEnergy: 2, insight: 1 },
+  'blazing-sun': { armStrength: 3, constitution: 1, agility: -1, innerEnergy: 0, insight: -2 },
+  'yellow-earth': { armStrength: 1, constitution: 2, agility: 0, innerEnergy: 1, insight: -1 },
+  'ghost-shadow': { armStrength: 1, constitution: -1, agility: 3, innerEnergy: 0, insight: 1 },
 }
 
 const CREATURE_LEVEL_GROWTH: PlayerAttributes = {
