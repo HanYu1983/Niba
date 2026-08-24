@@ -449,7 +449,7 @@ function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], def
                     (() => {
                       const buffClassNames = getActiveBuffsForPlayer(creature)
                         .map((buff) => buff.definitionId)
-                        .filter((definitionId) => definitionId === 'scarlet-flame-burning' || definitionId === 'frost-water-cold-poison' || definitionId === 'earth-mountain-reflection' || definitionId === 'golden-body-critical-boost' || definitionId === 'swift-wind-movement')
+                        .filter((definitionId) => definitionId === 'scarlet-flame-burning' || definitionId === 'frost-water-cold-poison' || definitionId === 'earth-mountain-reflection' || definitionId === 'golden-body-critical-boost' || definitionId === 'swift-wind-movement' || definitionId === 'hundred-poison-rot')
                         .map((definitionId) => `creature--buff-${definitionId.replace(/-movement|-burning|-poison|-reflection|-boost/g, '')}`)
                         .join(' ')
                       return (
