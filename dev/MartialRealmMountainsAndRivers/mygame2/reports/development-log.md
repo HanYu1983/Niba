@@ -1,5 +1,37 @@
 # 開發日誌
 
+## 2026-08-24｜AI 重構切片 E：Player AI Scheduler 抽出 App.tsx
+
+### 本次完成
+
+- 新增 `src/game/ai/aiTurnScheduler.ts`（重構文件 §11 Turn Scheduler／§12 Phase 3）：
+  - 防守（`protect-base`）與支援（`support-player`）合併為單一執行框架——差異只剩 Policy（`requestStep(actorId, orderType)` 內部分派），計時、取消、失敗結束回合全部共用。
+  - **同 Actor 不重入**：同一 actor 已有待執行 step 時，重複請求為冪等操作（不新增、不重置計時器）；換 Actor 時自動取消前一筆。
+  - **stale 防護**：timer 觸發時先驗證 Actor 仍是當前回合玩家才執行；cancel 後不得觸發任何回呼。
+  - 失敗語意與原實作一致：step 回 `{ ok: false }` 且 Actor 仍在回合中 → 呼叫 `endTurn(actorId)`。
+  - `AI_TURN_STEP_DELAY_MS = 350` 成為具名常數；`setTimeout` 只作動畫節奏（§11.3）。
+- `App.tsx` 的 AI effect 從「自行 setTimeout＋分派」改為呼叫 scheduler（`requestStep`／cleanup `cancel()`）；App 不再直接決定 AI 下一步。scheduler 實例放 `useRef` 只建一次。
+- 測試＋7（fake timers）：延遲生命週期、兩種訂單正確分派、cancel 後 stale timer 不執行、同 Actor 冪等不重入（含不重置計時）、換 Actor 取消前一筆、失敗結束回合、換人後 stale 不執行也不誤結束新玩家回合。
+
+### 本切片不改變什麼
+
+- AI 決策本體（`runAiDefenseStep`／`runAiSupportStep`）與節奏（350ms）完全不變；純排程框架搬家＋防護強化。
+- Creature phase 排程與 §11 的統一 `runAiTurnStep` 入口屬後續切片（F/G 接線時收斂）。
+
+### 影響檔案
+
+- 新增：`src/game/ai/aiTurnScheduler.ts`（＋測試 7 例）
+- 改：`src/App.tsx`（AI effect 改用 scheduler）
+- 文件：本日誌、架構文件 §12 Phase 2 計畫表 Phase 3／§15 Phase 3、playbook §1／§3
+
+### 驗證結果
+
+- vitest：73 檔 / **767 項全過**。tsc -b：通過。ESLint：新碼零警告（App.tsx 剩 1 個既有的 `map.cells` exhaustive-deps 警告，位於拾取判定 effect，非本次範圍）。Build：通過。
+
+### 下一步
+
+- 切片 **F**：Player AI 事件化——`AiActionEvent[]` 取代 steps 快照陣列。
+
 ## 2026-08-24｜AI 重構切片 D：moveCreatures 拆六段管線＋blocked 誤擊修復
 
 ### 本次完成

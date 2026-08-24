@@ -853,6 +853,8 @@ executeAiAction()
 - `App.tsx` 不再直接決定 AI 下一步。
 - React 只負責監聽 Scheduler 事件與渲染 UI。
 
+- Status：Done（2026-08-24，切片 E）——`aiTurnScheduler.ts` 落地；App.tsx 的 `setTimeout` 邏輯改為呼叫 scheduler（`requestStep`／`cancel`），不再自行決定 AI 下一步。
+
 ### Phase 4：加入建設 Policy
 
 - 新增 `chooseConstructionAction()`。
@@ -966,7 +968,7 @@ perception → decision → validation → execution → event
 ### Phase 3：統一 Player AI Scheduler
 
 - Owner：Engineering
-- Status：Todo
+- Status：Done（2026-08-24，切片 E）
 - Priority：P1
 - Acceptance Criteria：
   - 防守與支援共用執行框架。
@@ -975,6 +977,7 @@ perception → decision → validation → execution → event
 - Test Method：
   - 回合生命週期測試。
   - timer cancellation 測試。
+- Result（2026-08-24）：新增 `src/game/ai/aiTurnScheduler.ts`（`createAiTurnScheduler`）：防守／支援只剩 Policy 差異（`requestStep(actorId, orderType)` 內部分派 `runDefenseStep`／`runSupportStep`），計時、取消、失敗結束回合共用；同 Actor 冪等不重入、換 Actor 自動取消前一筆、timer 觸發時驗證 Actor 仍是當前玩家（stale 防護）。`App.tsx` 只剩啟動／停止（effect 呼叫 `requestStep`＋cleanup `cancel()`）。測試 7 例：生命週期、兩種訂單分派、cancel 後 stale timer 不執行、不重入、換人取消、失敗結束回合、換人後不失誤結束新回合。
 
 ### Phase 4：Creature Action/Event Pipeline
 

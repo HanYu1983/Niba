@@ -23,6 +23,7 @@ import SystemCommandModal from './components/SystemCommandModal'
 import StrategicCommandModal from './components/StrategicCommandModal'
 import { createEmptyScenario, type ScenarioDefinition } from './editor/editorTypes'
 import { trackPageView, trackEvent } from './lib/analytics'
+import { createAiTurnScheduler } from './game/ai/aiTurnScheduler'
 
 function App() {
   const gameState = useGameState()
@@ -109,6 +110,16 @@ function App() {
     0,
   ) ?? 0
   const previousActivePlayerIdRef = useRef(gameState.activePlayerId)
+  // Player AI 回合排程器：防守／支援共用框架（重構文件 §11／§12 Phase 3）。
+  // React 只負責啟動與停止；計時、防重入與 stale 取消都在 scheduler 內。
+  const aiTurnSchedulerRef = useRef(
+    createAiTurnScheduler({
+      getState: () => gameStore.getState(),
+      runDefenseStep: (actorId) => gameStore.runAiDefenseStep(actorId),
+      runSupportStep: (actorId) => gameStore.runAiSupportStep(actorId),
+      endTurn: (actorId) => gameStore.endPlayerTurn(actorId),
+    }),
+  )
   const modalOpen = Boolean(
     gameState.blockingModal ||
     gameState.gameOver ||
@@ -164,6 +175,7 @@ function App() {
   }, [activePlayer, gameState.itemPoints, gameState.explorationEvents, gameState.creatureTurnInProgress, gameState.blockingModal, setDetailsExplorationEventId])
 
   useEffect(() => {
+    const scheduler = aiTurnSchedulerRef.current
     if (
       !activePlayer?.isAI ||
       gameState.creatureTurnInProgress ||
@@ -172,22 +184,19 @@ function App() {
       saveModalOpen ||
       systemCommandModalOpen
     ) {
+      scheduler.cancel()
       return
     }
     const activeAiOrder = gameState.aiOrders?.find(
       (order) => order.aiPlayerId === activePlayer.id && order.status === 'active',
     )
-    if (!activeAiOrder || (activeAiOrder.type !== 'protect-base' && activeAiOrder.type !== 'support-player')) return
+    if (!activeAiOrder || (activeAiOrder.type !== 'protect-base' && activeAiOrder.type !== 'support-player')) {
+      scheduler.cancel()
+      return
+    }
 
-    const timer = window.setTimeout(() => {
-      const result = activeAiOrder.type === 'protect-base'
-        ? gameStore.runAiDefenseStep(activePlayer.id)
-        : gameStore.runAiSupportStep(activePlayer.id)
-      if (!result.ok && gameStore.getState().activePlayerId === activePlayer.id) {
-        gameStore.endPlayerTurn(activePlayer.id)
-      }
-    }, 350)
-    return () => window.clearTimeout(timer)
+    scheduler.requestStep(activePlayer.id, activeAiOrder.type)
+    return () => scheduler.cancel()
   }, [activePlayer, gameState.aiOrders, gameState.creatureTurnInProgress, gameState.blockingModal, strategicCommandModalOpen, saveModalOpen, systemCommandModalOpen])
 
   useKeyboardShortcuts({
