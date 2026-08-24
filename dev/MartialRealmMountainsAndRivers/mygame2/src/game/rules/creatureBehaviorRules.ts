@@ -2,6 +2,7 @@ import type { BaseState, DefenseStructureState, GameState, ItemPointState, Playe
 import type { MartialSchoolId } from '../catalogs/martialSchoolCatalog'
 import { defaultRandomSource, rollWeighted } from './randomRules'
 import { getCreatureAiParameters } from '../ai/policy/aiPolicyRegistry'
+import { manhattanDistance as distance } from '../ai/perception/distance'
 
 export type CreatureBehaviorType = 'scavenger' | 'hunter' | 'sieger' | 'wanderer' | 'roamer'
 export type CreatureTargetType = 'player' | 'resource' | 'item' | 'base' | 'defense'
@@ -138,9 +139,7 @@ export type CreatureTarget = {
   defenseStructure?: DefenseStructureState
 }
 
-function distance(first: Position, second: Position): number {
-  return Math.abs(first.row - second.row) + Math.abs(first.column - second.column)
-}
+// 切片 L：距離計算委託感知層統一出口（上方 import 別名），本檔不再自帶實作。
 
 function nearest<T extends { id: string; position: Position }>(origin: Position, candidates: T[]): T | undefined {
   return [...candidates].sort((first, second) => distance(origin, first.position) - distance(origin, second.position) || first.id.localeCompare(second.id))[0]

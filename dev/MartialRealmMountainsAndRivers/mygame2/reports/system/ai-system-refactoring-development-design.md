@@ -963,6 +963,7 @@ perception → decision → validation → execution → event
   - 既有測試檔全部通過。
 - Result（2026-08-24，切片 B）：新增 `ai/perception/`（distance／targetDiscovery／blockedPositions／reachablePositions）；三個 ai*Rules 決策改委託感知層，行為不變且候選生成從「每格重跑一次 Dijkstra」改為「整輪一次成本圖」；`moveCreatures` 巡邏與攻擊 roll 注入 `RandomSource`。全套 747 項通過。
 - Result（2026-08-24，切片 C）：`AiAction` 六種行動型別＋`defenseActionToAiAction` Adapter＋`validateAiAction()`（§9.2 子集：actor 存活、回合合法性沿用 `canPlayerPerformAction`、move 可達性、attack 目標存活且相鄰；creature 回合階段檢查待切片 D）。Validator 尚未接線，執行路徑零變化。全套 758 項通過。
+- Result（2026-08-24，切片 L 補完）：Creature 側距離計算全部委託感知層統一出口——`creatureBehaviorRules.ts` 移除本地 `distance()`、管線 `stepDistance` 改為 `manhattanDistance` 別名，箭塔瞄準的內聯算式一併替換。貪婪步進移動為領域模型（體力／陷阱／堵路語意）而非重複路徑實作，維持原樣；自此雙份實作歸零。同 seed 釘住測試全過（839 項），行為等價。
 
 ### Phase 2：AI Action Validator / Executor
 
@@ -977,6 +978,7 @@ perception → decision → validation → execution → event
   - Action contract 測試。
   - GameStore 整合測試。
 - Result（2026-08-24）：`runAiDefenseStep`／`runAiSupportStep` 改呼叫 `executeAiAttack`；人類仍用 `previewAttackTarget`。A0＋新測試全過。
+- Result（2026-08-24，切片 I 補完）：§9.2 驗證已接線——玩家三 step（防守／支援／建設）所有執行分支先經 `validateAiAction()` 把關；Creature 管線補 `validateCreatureTurnEligibility` 回合資格檢查。「stale 重試一次」仍留待後續切片。
 
 ### Phase 3：統一 Player AI Scheduler
 

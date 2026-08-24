@@ -1,5 +1,28 @@
 # 開發日誌
 
+## 2026-08-24｜AI 重構切片 L：Creature 感知層委託（距離單一事實來源）
+
+### 本次完成
+
+- `src/game/rules/creatureBehaviorRules.ts`：移除本地 `distance()` 實作，改 import 感知層統一出口 `manhattanDistance`（`ai/perception/distance.ts` → `rules/mapCellStateRules.getManhattanDistance`），以別名保持呼叫點零改動；`nearest()` 的「距離相同依 id 破平手」屬目標選擇策略，保留在決策側但底層走感知層。
+- `src/game/actions/creatureTurnPipeline.ts`：本地 `stepDistance` 改為 `manhattanDistance` 別名；箭塔瞄準迴圈的內聯 `Math.abs` 距離算式一併替換。
+- 盤點結論：管線的貪婪步進移動是領域模型（體力結算／陷阱觸發／堵路反擊語意），不是 `collectReachableCells` 的重複實作，維持原樣。自此 Creature 側不再有任何自帶的距離／路徑重複算式，perception 匯出函式成為唯一事實來源。
+- 測試：本片為純重構（無新測試）；同 seed 巡邏／追擊釘住測試與全套 839 項零修改通過即為行為等價證明。
+
+### 影響檔案
+
+- 修改：`creatureBehaviorRules.ts`、`creatureTurnPipeline.ts`
+- 文件：重構文件 §12 Phase 1 Result、playbook §3 L 列
+
+### 驗證結果
+
+- vitest：**81 檔／839 項全數通過**（與前片持平）
+- tsc -b：通過；ESLint：零警告；Build：通過。
+
+### 下一步
+
+- §3 切片佇列（A0~L）全數完成。後續候選：§9.3 stale action 重試、policy priorities 強制排序（切片 K 已文件化的分歧）、外部 JSON config（§6.6）。
+
 ## 2026-08-24｜AI 重構切片 K：JSON policy 消費（emergency 參數＋Creature aggroRange 查表）
 
 ### 本次完成

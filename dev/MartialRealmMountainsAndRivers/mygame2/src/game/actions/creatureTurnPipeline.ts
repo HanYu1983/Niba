@@ -37,6 +37,7 @@ import { hasActivePolicy, MILITARY_DEFENSE_REDUCTION } from '../rules/policyRule
 import { defaultRandomSource, rollChance, type RandomSource } from '../rules/randomRules'
 import { createAiActionEvent, type AiActionEvent } from '../ai/aiActionEvent'
 import type { AiTargetKind } from '../ai/aiAction'
+import { manhattanDistance } from '../ai/perception/distance'
 
 /** Creature 回合計算與逐隻動畫共用的結果協定（維持與舊 moveCreatures 相容）。 */
 export type CreatureTurnResult = {
@@ -139,8 +140,8 @@ export function createCreatureTurnContext(inputs: {
 
 const CREATURE_DIRECTIONS = [{ row: -1, column: 0 }, { row: 1, column: 0 }, { row: 0, column: -1 }, { row: 0, column: 1 }]
 
-const stepDistance = (first: Position, second: Position) =>
-  Math.abs(first.row - second.row) + Math.abs(first.column - second.column)
+// 切片 L：距離計算委託感知層統一出口（rules/mapCellStateRules 單一實作），消除雙份實作。
+const stepDistance = manhattanDistance
 
 function isCellTraversable(context: CreatureTurnContext, creature: CreatureState, position: Position): boolean {
   const cell = context.map.cells.find((candidate) => candidate.row === position.row && candidate.column === position.column)
@@ -641,7 +642,7 @@ export function runCreatureTurn(inputs: RunCreatureTurnInputs): CreatureTurnResu
   )) {
     const target = damagedCreatures
       .filter((creature) => creature.health > 0 && hasValidPosition(creature))
-      .map((creature) => ({ creature, distance: Math.abs(creature.position.row - tower.position.row) + Math.abs(creature.position.column - tower.position.column) }))
+      .map((creature) => ({ creature, distance: manhattanDistance(creature.position, tower.position) }))
       .filter(({ distance }) => distance <= tower.attackRange)
       .sort((first, second) => first.distance - second.distance)[0]?.creature
     if (!target) continue
