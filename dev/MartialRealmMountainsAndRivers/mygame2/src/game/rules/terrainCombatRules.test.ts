@@ -6,6 +6,7 @@ import {
   getTerrainResonanceInnerPowerDiscount,
   getTerrainResonanceLabel,
   isTerrainResonant,
+  isTripleResonance,
 } from './terrainCombatRules'
 
 describe('天地共鳴規則', () => {
@@ -44,5 +45,30 @@ describe('天地共鳴規則', () => {
     ]
     expect(getTerrainAtPosition(cells, { row: 1, column: 2 })).toBe('forest')
     expect(getTerrainAtPosition(cells, { row: 9, column: 9 })).toBeUndefined()
+  })
+})
+
+describe('三重共振判定', () => {
+  it('同時滿足連攜＋共鳴＋相剋時觸發', () => {
+    // 內功水生外功木；木在森林共鳴；木克土（目標 earth-mountain 為土系）
+    expect(isTripleResonance({ innerElement: 'water', outerElement: 'wood', terrain: 'forest', targetSchoolId: 'earth-mountain' })).toBe(true)
+  })
+
+  it('缺少連攜時不觸發', () => {
+    // 內功金生土（非木），故無連攜
+    expect(isTripleResonance({ innerElement: 'metal', outerElement: 'wood', terrain: 'forest', targetSchoolId: 'earth-mountain' })).toBe(false)
+  })
+
+  it('缺少天地共鳴不觸發', () => {
+    expect(isTripleResonance({ innerElement: 'water', outerElement: 'wood', terrain: 'plain', targetSchoolId: 'earth-mountain' })).toBe(false)
+  })
+
+  it('缺少相剋不觸發', () => {
+    // 內功水生木，木在森林共鳴，但目標 swift-wind（木）；木不克木
+    expect(isTripleResonance({ innerElement: 'water', outerElement: 'wood', terrain: 'forest', targetSchoolId: 'swift-wind' })).toBe(false)
+  })
+
+  it('太虛內功不觸發', () => {
+    expect(isTripleResonance({ innerElement: 'none', outerElement: 'wood', terrain: 'forest', targetSchoolId: 'earth-mountain' })).toBe(false)
   })
 })

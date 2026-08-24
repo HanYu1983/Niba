@@ -26,6 +26,11 @@ function ExternalSkillPreviewModal({ preview, onConfirm, onCancel }: Props) {
             ...(preview.targetMode === 'self'
               ? [{ label: '功法作用', value: preview.effectSummary ?? '作用於自身' }]
               : [{ label: '預期傷害', value: preview.expectedDamage }]),
+            ...(preview.tripleResonance
+              ? [{ label: '三重共振', value: '連攜＋共鳴＋相剋｜傷害 ×1.95，目標震懾一回合' }]
+              : preview.synergy
+                ? [{ label: '五行相生', value: '內功生外功｜傷害 ×1.25' }]
+                : []),
             ...(preview.targetMode !== 'self' && preview.criticalRate !== undefined
               ? [{ label: '外功暴擊率', value: `${preview.criticalRate}%` }]
               : []),

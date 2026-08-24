@@ -64,7 +64,15 @@ function CombatOverlays({
         onConfirm={() => {
           const result = gameStore.executeExternalDamagePreview()
           if (result.ok) {
-            gameStore.showActionResult(formatExternalSkillResult(result.data))
+            if (result.data.tripleResonance) {
+              // 三重共振：先播放 0.5s 地圖震動，結束後再顯示結果彈窗（串行，避免同時播放）。
+              gameStore.triggerMapShake()
+              window.setTimeout(() => {
+                gameStore.showActionResult(formatExternalSkillResult(result.data))
+              }, 500)
+            } else {
+              gameStore.showActionResult(formatExternalSkillResult(result.data))
+            }
           } else {
             gameStore.showActionResult({ title: '外功失敗', message: result.reason, rewards: [] })
           }

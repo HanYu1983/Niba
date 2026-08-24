@@ -2,7 +2,7 @@ import { Button, Flex, Modal, Tabs } from 'antd'
 import type { ExternalSkill } from '../game/catalogs/externalSkillCatalog'
 import type { InnerSkill } from '../game/catalogs/innerSkillCatalog'
 import type { PlayerState } from '../game/types'
-import { getPlayerInsightCapacityBreakdown, getSkillDamage, getSkillInnerPowerCost, getSkillProgression } from '../game/rules/skillRules'
+import { getInnerSkill, getPlayerInsightCapacityBreakdown, getSkillDamage, getSkillInnerPowerCost, getSkillProgression, isElementGenerating } from '../game/rules/skillRules'
 import { getEffectiveAttributesForPlayer } from '../game/rules/playerDerivedRules'
 import SkillCard from './SkillCard'
 import StatValue from './StatValue'
@@ -26,6 +26,7 @@ function SkillModal({
 }: SkillModalProps) {
   const insightCapacity = player ? getPlayerInsightCapacityBreakdown(player) : null
   const effectiveInsight = player ? getEffectiveAttributesForPlayer(player).insight : 0
+  const innerElement = player ? getInnerSkill(player.innerSkillId).element : undefined
 
   return (
     <Modal
@@ -96,6 +97,7 @@ function SkillModal({
                       const canEquip = equipped || (insightCapacity?.total ?? 0) + skill.insightCost <= effectiveInsight
                       const skillLevel = getSkillProgression(player, skill.id).level
                       const innerPowerCost = getSkillInnerPowerCost(skill.innerPowerCost, skillLevel)
+                      const hasSynergy = isElementGenerating(innerElement, skill.element)
                       return (
                         <SkillCard
                           key={skill.id}
@@ -111,6 +113,7 @@ function SkillModal({
                               <StatValue label="公式">{skill.formulaDescription}</StatValue>
                               <StatValue label="容量">{skill.insightCost}</StatValue>
                               <StatValue label="內力消耗">{innerPowerCost}</StatValue>
+                              {hasSynergy && <StatValue label="相生連攜">內功生外功｜傷害 ×1.25</StatValue>}
                             </>
                           }
                         >

@@ -636,6 +636,11 @@ export const gameStore = {
     }))
   },
 
+  /** 觸發三重共振地圖震動動畫訊號（每次 +1），不開啟結果彈窗。 */
+  triggerMapShake: () => {
+    updateGameState((state) => ({ ...state, mapShakeSignal: (state.mapShakeSignal ?? 0) + 1 }))
+  },
+
   previewRepair: (playerId: string, baseId: string): RepairPreview | null => {
     let preview: RepairPreview | null = null
 
