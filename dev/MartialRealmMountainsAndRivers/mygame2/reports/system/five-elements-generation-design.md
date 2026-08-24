@@ -129,7 +129,69 @@
 | **適用對象** | 生物（Creature），不適用於巢穴（Nest） |
 | **顯示方式** | 目標頭像上顯示 ⚫ 標記，UI 提示「目標震懾中」 |
 
-#### 3.5.3 判定流程
+#### 3.5.3 視覺效果：地圖震動動畫
+
+觸發三重共振時，在地圖上呈現**震動動畫**，讓玩家直覺感受到強大的衝擊力。
+
+| 項目 | 內容 |
+| :--- | :--- |
+| **觸發時機** | `executeExternalDamage` 判定三重共振成立、傷害計算完成後立即播放 |
+| **動畫對象** | 被攻擊的生物（Creature）所在格子及其周圍 3×3 區域 |
+| **動畫類型** | 螢幕震動（Screen Shake）+ 目標震顫（Target Shake） |
+| **震動強度** | 位移幅度 8px，持續 0.5 秒，呈衰減正弦波 |
+| **粒子特效** | 震動期間在目標位置產生五行元素對應的粒子爆發（金=白/銀、木=綠、水=藍、火=紅、土=黃） |
+| **音效建議** | 低沉轟鳴聲（Boom），頻率由低到高再驟降 |
+
+##### 動畫規格
+
+```
+時間軸：
+  0.00s ── 傷害數字浮現 + 粒子爆發 + 螢幕開始震動（振幅 8px）
+  0.10s ── 振幅最大（8px）
+  0.25s ── 振幅 4px
+  0.35s ── 振幅 2px
+  0.50s ── 震動停止，目標開始 ⚫ 震懾標記閃爍
+              ↓
+          戰鬥結果彈窗出現
+```
+
+> **時程設計原則**：震動動畫播放完畢後，才顯示戰鬥結果彈窗。兩者**不並行**。
+> 三重共振觸發率約 10-15%，並不常見，因此 0.5 秒延遲不會干擾正常遊玩體驗。
+> 相反地，先看到震撼的震動效果、再看到詳細結果，能增強「三重共振」的爽感與儀式感。
+
+##### CSS / Canvas 實作方向
+
+| 技術方案 | 說明 |
+| :--- | :--- |
+| **CSS transform: translate()** | 對地圖容器套用 `@keyframes shake` 動畫，透過 class 切換觸發 |
+| **Canvas requestAnimationFrame** | 若使用 Canvas 渲染，於每幀根據衰減函數偏移繪製座標 |
+| **粒子系統** | 使用既有粒子系統（若有）或簡化版粒子陣列，依元素屬性設定顏色與發射角度 |
+
+##### 修改檔案清單（視覺效果相關）
+
+| 檔案 | 變更內容 |
+| :--- | :--- |
+| `src/game/actions/combatActions.ts` | 三重共振判定成立時，回傳 `tripleResonance: true` flag |
+| `src/game/types.ts` | `ExternalDamageExecutionResult` 新增 `tripleResonance?: boolean` 欄位 |
+| `src/components/MapGrid.tsx` 或地圖渲染元件 | 接收 `tripleResonance` flag，觸發震動動畫 class / Canvas 偏移 |
+| `src/components/CreatureMarker.tsx`（若有） | 目標生物格子上顯示震動動畫與粒子特效 |
+| `public/audio/` | 新增震動音效檔案（如 `triple-resonance.mp3`） |
+
+##### ⚠️ 風險評估：戰鬥結算彈窗時程調整
+
+> **設計決策已確定**：震動動畫播放完畢後，才顯示戰鬥結果彈窗。兩者不並行。
+> 
+> **理由**：
+> - 三重共振觸發率約 10-15%，並不常見，0.5 秒延遲不會干擾正常遊玩體驗。
+> - 先看到震撼的震動效果、再看到詳細結果，能增強「三重共振」的爽感與儀式感。
+> - 非三重共振的外功攻擊不受影響，維持原有即時彈窗流程。
+> 
+> **實作注意**：
+> - `executeExternalDamage` 回傳結果後，UI 層需等待 0.5 秒才開啟彈窗。
+> - 僅在 `tripleResonance === true` 時套用此延遲，一般外功攻擊不延遲。
+> - 無需跳過機制（因為不是每次都會觸發，玩家預期較低）。
+
+#### 3.5.4 判定流程
 
 ```
 施放外功 B（元素 B）
@@ -254,13 +316,13 @@ export function isElementGenerating(
 ```typescript
 /**
  * 取得五行相生連攜倍率。
- * 當內功元素生外功元素時返回 ×1.10，否則返回 ×1。
+ * 當內功元素生外功元素時返回 ×1.25，否則返回 ×1。
  */
 export function getGenerationSynergyMultiplier(
   innerElement: MartialElement | undefined,
   outerElement: MartialElement | undefined,
 ): number {
-  return isElementGenerating(innerElement, outerElement) ? 1.10 : 1
+  return isElementGenerating(innerElement, outerElement) ? 1.25 : 1
 }
 ```
 
@@ -268,12 +330,12 @@ export function getGenerationSynergyMultiplier(
 
 | 測試案例 | 內功元素 | 外功元素 | 預期輸出 |
 | :--- | :--- | :--- | :--- |
-| 正常相生 | 金 | 土 | ×1.10 |
+| 正常相生 | 金 | 土 | ×1.25 |
 | 反向不生 | 土 | 金 | ×1 |
 | 同屬性 | 火 | 火 | ×1 |
 | 太虛流內功 | none | 木 | ×1 |
 | 太虛流外功 | 金 | none | ×1 |
-| 完整循環 | 水→木、木→火、火→土、土→水、金→土 | — | 全部 ×1.10 |
+| 完整循環 | 水→木、木→火、火→土、土→水、金→土 | — | 全部 ×1.25 |
 
 ---
 
@@ -285,6 +347,30 @@ export function getGenerationSynergyMultiplier(
 - 連攜是「施放瞬間判定」，非持續性狀態。
 - 不需要跨回合追蹤。
 - 簡化實現，降低維護成本。
+
+#### 震懾 Buff 實作規格（三重共振額外效果）
+
+三重共振觸發的「停止活動一回合」效果透過既有 Buff 系統達成：
+
+| 項目 | 內容 |
+| :--- | :--- |
+| **Buff ID** | `stunned` |
+| **Buff 名稱** | 震懾 |
+| **持續時間** | 1 回合（`remainingRounds: 1`） |
+| **效果欄位** | `stunned: true`（於 `BuffInstance` 新增旗標） |
+| **觸發時機** | `executeExternalDamage` 中判定三重共振成立時，將 Buff 附加至目標 |
+| **AI 跳過邏輯** | AI 行動循環中檢查 `target.buffs?.some(b => b.definitionId === 'stunned')`，若為 true 則跳過該回合 |
+| **UI 顯示** | 目標頭像上顯示 ⚫ 標記；PlayerPanel 中顯示「震懾中」狀態 |
+
+##### 修改檔案清單（Buff 相關）
+
+| 檔案 | 變更內容 |
+| :--- | :--- |
+| `src/game/types.ts` | `BuffInstance` 新增 `stunned?: boolean` 欄位；`BuffDefinition` 新增 `stunned` 類型 |
+| `src/game/catalogs/buffCatalog.ts` | 新增 `stunned` Buff 定義 |
+| `src/game/actions/combatActions.ts` | `executeExternalDamage` 中三重共振判定成立時，將 `stunned` Buff 加入目標 |
+| `src/game/ai/` | AI 行動選擇邏輯中加入 stunned 檢查，跳過被震懾目標的回合 |
+| `src/components/` | 目標頭像與 PlayerPanel 中加入 stunned 視覺提示 |
 
 #### 震懾 Buff 實作規格
 
@@ -355,13 +441,125 @@ export function getGenerationSynergyMultiplier(
 
 ## 八、開發檢查清單
 
+### 8.1 核心邏輯
+
 - [ ] 新增 `isElementGenerating()` 至 `skillRules.ts`
 - [ ] 新增 `getGenerationSynergyMultiplier()` 至 `skillRules.ts`
-- [ ] 更新 `previewOrchestration.ts` 加入連攜判定
-- [ ] 更新 `combatActions.ts` 加入連攜倍率計算
-- [ ] 更新 `SkillModal.tsx` 顯示連攜標籤
-- [ ] 更新 `ExternalSkillPreviewModal.tsx` 顯示連攜資訊
+- [ ] 新增 `isTripleResonance(innerElement, outerElement, terrain, targetSchool)` 判定函式
+- [ ] 更新 `previewOrchestration.ts` 加入連攜判定與三重共振預覽
+- [ ] 更新 `combatActions.ts` 加入連攜倍率計算與三重共振判定
 - [ ] 更新 `actionResultFormatters.ts` 顯示連攜結果
-- [ ] 新增單元測試（相生、反向、同屬性、太虛流、完整循環）
+
+### 8.2 類型定義
+
+- [ ] `ExternalSkillPreview` 新增 `synergy?: boolean; tripleResonance?: boolean`
+- [ ] `ExternalDamageExecutionResult` 新增 `synergy?: boolean; tripleResonance?: boolean`
+- [ ] `BuffInstance` 新增 `stunned?: boolean` 欄位
+- [ ] `BuffDefinition` 新增 `stunned` 類型
+
+### 8.3 UI 顯示
+
+- [ ] 更新 `SkillModal.tsx` 顯示連攜標籤（💚 / 🔥）
+- [ ] 更新 `ExternalSkillPreviewModal.tsx` 顯示連攜與三重共振資訊
+- [ ] 更新 `actionResultFormatters.ts` 顯示連攜結果與三重共振提示
+- [ ] 目標頭像上顯示 ⚫ 震懾標記
+- [ ] PlayerPanel 中顯示「震懾中」狀態
+
+### 8.4 視覺效果（三重共振動畫）
+
+- [ ] 地圖容器套用 CSS `@keyframes shake` 動畫（位移幅度 8px，持續 0.5s）
+- [ ] 目標生物格子顯示震顫動畫
+- [ ] 依元素屬性設定粒子顏色（金=白/銀、木=綠、水=藍、火=紅、土=黃）
+- [ ] 新增震動音效檔案 `triple-resonance.mp3`
+- [ ] Canvas 渲染方案：每幀根據衰減函數偏移繪製座標
+
+### 8.5 Buff 系統
+
+- [ ] 新增 `stunned` Buff 定義至 `buffCatalog.ts`
+- [ ] `executeExternalDamage` 中三重共振成立時附加 stunned Buff 至目標
+- [ ] AI 行動循環中加入 stunned 檢查，跳過被震懾目標的回合
+
+### 8.6 測試與驗證
+
+- [ ] 新增單元測試（相生、反向、同屬性、太虛流、完整循環、三重共振判定）
 - [ ] 手動驗證所有 25 種元素組合的連攜判定
+- [ ] 手動觸發三重共振並驗證動畫播放
+- [ ] 監控多重疊乘傷害上限（最高 ×2.25）
 - [ ] 更新 changelog.json
+
+---
+
+## 九、開發要點與注意事項
+
+> 以下為分析既有程式碼後的實作關鍵點，避免踩坑。
+
+### 9.1 ⚠️ 元素欄位為「可選」，需補齊判定防護
+
+`ExternalSkill` 與 `InnerSkill` 的 `element` 欄位是**可選**的（`element?: 'none' | ...`）。例如 `externalSkillCatalog` 中的「破空掌」`sky-breaking-palm` 就**沒有標註 `element`**。
+
+- **風險**：`undefined` 元素直接參與相生／相剋判定會導致 `resonantTerrains[skillElement]`、`counters[attacker]` 讀取 `undefined` 索引而 crash 或誤判。
+- **對策**：`isElementGenerating`、`getGenerationSynergyMultiplier`、`isTripleResonance` 函式開頭一律防護 `undefined` 與 `'none'`，直接回傳 `false`／`×1`。
+- **資料補齊決策**：需逐一盤點 `externalSkillCatalog`／`innerSkillCatalog` 中缺漏 `element` 的功法，決定是「補上元素」還是「視為無屬性不參與連攜」。破空掌等無元素功法應明確歸屬。
+
+### 9.2 「震懾」是「完全跳過回合」，比既有控制 Buff 更強
+
+既有的 `buffCatalog` 已存在兩種控制類 Buff，但語意不同：
+
+| 既有 Buff | 效果 | 差異 |
+| :--- | :--- | :--- |
+| `trap-immobilize`（定身） | `immobilized: true`，僅**跳過移動** | 仍可攻擊 |
+| `confusion-maze`（惑心） | `confused: true`，**跳過攻擊＋隨機移動** | 仍會亂走 |
+| **`stunned`（震懾，本設計新增）** | **完全跳過回合**：不移動、不攻擊 | 最強控制 |
+
+- **風險**：若直接參考 `immobilized` 的實作位置（`creatureTurnPipeline.ts` 的 `planCreatureMovement` 內），只會跳過移動、仍會攻擊，**不符合設計意圖**。
+- **對策**：`stunned` 的檢查必須掛在**回合管線的最前段**（`validateCreatureTurnEligibility` 附近，select／plan 之前），直接整回合 return、不產生日誌。此處已存在 `validateCreatureTurnEligibility(creature)` 前段過濾，應在此加入 stunned 判斷，與「存活＋座標有效」同層級。
+- **Buff tick 仍要執行**：即使跳過行動，剩餘回合數（`remainingRounds`）仍需正常 -1，否則震懾永不結束。需確認 tick 邏輯在 skip 路徑仍被呼叫。
+
+### 9.3 連攜倍率需與「爆擊」先後順序一致
+
+前次實作的「傷害型外功暴擊」在 `executeExternalDamage` 中最後以 `Math.floor(damageBeforeCrit * 1.5)` 結算。連攜倍率（×1.25）應在**暴擊之前**併入基礎傷害，避免乘法順序導致小數捨入不一致。
+
+- **建議公式**：
+  ```
+  damage = floor( floor( baseDamage × 相剋 × 連攜 × 共鳴 × 其他 ) × (暴擊 ? 1.5 : 1) )
+  ```
+- **風險**：若連攜在暴擊後才乘，或與 `damageBeforeTargetReduction` 的命名混淆，會造成預覽與實際結算不符。
+
+### 9.4 內功元素來源要確認取得路徑
+
+連攜判定需要「當前裝備內功的元素」。目前 `createExternalSkillPreview`／`executeExternalDamage` 使用 `getInnerSkill(target.player.innerSkillId)` 取得內功。需確認：
+
+- 玩家 `innerSkillId` 是否永遠有效（有無空字串／未裝備情境）。
+- 太虛流（`void-spirit`）內功是否回傳 `'none'` 元素——若是，連攜自然失效，符合設計。
+
+### 9.5 三重共振判定需統一一處，避免預覽／結算分叉
+
+`createExternalSkillPreview`（預覽）與 `executeExternalDamage`（結算）**各自**計算傷害，若三重共振判定邏輯分開實作，極易兩邊結果不一致。
+
+- **對策**：將三重共振判定封裝成單一純函式 `isTripleResonance(innerElement, outerElement, terrain, targetSchool)`，兩處共用，並以單元測試鎖定。
+- 預覽與結果彈窗的顯示文案也應共用同一份 formatting，避免兩處文案漂移。
+
+### 9.6 彈窗延遲需在 UI 層而非 action 層處理
+
+0.5 秒震動動畫與彈窗的串行時程（先動畫、後彈窗）應在**元件層**處理，避免污染純函式的 `executeExternalDamage` 回傳。
+
+- `executeExternalDamage` 只回傳資料（含 `tripleResonance: true`），**不呼叫 setTimeout**。
+- UI 元件收到結果後，若 `tripleResonance === true`，先播放 0.5s 動畫，`onAnimationEnd` 再開啟彈窗；一般外功直接開彈窗。
+
+### 9.7 AI 也受震懾影響（含 AI 玩家）
+
+`stunned` Buff 掛在「生物（Creature）」上，AI 玩家的怪物回合管線需跳過。但要注意：
+
+- 若未來「震懾」也施放於 AI 玩家（人類玩家），需一併檢查玩家行動的入口（`canPlayerPerformAction`），否則 AI 玩家仍會行動。
+- 本設計目前僅對象為生物，暫不需處理玩家側，但需在程式碼註記此限制。
+
+### 9.8 檢查清單補充
+
+- [ ] 盤點所有功法 `element` 欄位，補齊或標明「無屬性」策略
+- [ ] `isElementGenerating` 等函式防護 `undefined`／`'none'`
+- [ ] `stunned` 檢查掛在回合管線最前段（`validateCreatureTurnEligibility` 層級）
+- [ ] 確認震懾跳過時 Buff `remainingRounds` 仍正常 tick
+- [ ] 連攜倍率在暴擊之前結算，乘法順序固定
+- [ ] 三重共振判定函式僅實作一處，預覽／結算共用
+- [ ] 彈窗延遲在 UI 層（onAnimationEnd）處理，action 層保持純函式
+- [ ] 用既有的 `immobilized`／`confused` 作為 `stunned` 的對照，避免語意混淆
