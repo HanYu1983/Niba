@@ -76,15 +76,25 @@ AI 開發有**兩條主線**，各自有獨立設計文件，工作時必須分�
 
 ### 1.2 缺口清單（= 待辦池，依優先級）
 
+> 2026-08-24 更新：切片 A0~H 已完成原缺口 1~7、9 的主體；下方 1~8 為**切片 H 後的統合盤點**（實測程式碼）找出的殘餘差距。
+
+原清單結案狀態：
 1. ~~AI 攻擊去 Preview 化~~ **已完成（切片 A）**。
-2. 共用感知層（距離／阻擋／可達性）＋ Creature 巡邏 RandomSource 注入。
-3. 統一 `AiAction` 型別＋Action Validator。
-4. `moveCreatures()` 拆分為 perceive／select／plan／validate／execute／reduce。
-5. Scheduler 抽出 App.tsx、合併防守／支援執行框架。
-6. 事件化回合結果＋逐步動畫＋全域遊戲日誌。
-7. 建設 AI：效用評分純函式→queue 狀態機→建築 action 執行→完成提醒。
-8. Creature 外功 AI（creature-system-design.md 明列未完成）。
-9. JSON policy 白名單系統。
+2. ~~共用感知層＋Creature 巡邏 RandomSource 注入~~ **已完成（切片 B）**——但僅玩家 AI 三規則委託；Creature 側尚未委託（見新缺口 5）。
+3. ~~統一 `AiAction` 型別＋Action Validator~~ **型別完成（切片 C）；Validator 尚未接線**（見新缺口 1）。
+4. ~~`moveCreatures()` 拆六段管線~~ **已完成（切片 D）**。
+5. ~~Scheduler 抽出 App.tsx~~ **已完成（切片 E）**——涵蓋玩家 AI 三步驟；Creature 回合維持批次模型（§1.3 已認可不強求）。
+6. ~~事件化回合結果~~ **玩家側完成（切片 F）**；逐步動畫接線與 Creature 事件流入全域日誌未做（見新缺口 2）。
+7. ~~建設 AI~~ **已完成（切片 G）**。
+8. Creature 外功 AI（creature-system-design.md 明列未完成）——功能線項目，非重構主線。
+9. ~~JSON policy 白名單系統~~ **基礎建設完成（切片 H）**；尚無任何決策路徑消費（見新缺口 3）。
+
+**新缺口（2026-08-24 統合盤點，已排入 §3 切片 I~L）**：
+
+1. **Validator 未接線**：`validateAiAction()` 全專案只有自身測試呼叫；玩家執行走 `executeAiAttack`／`movePlayerTo` 自帶檢查，Creature 管線完全不驗證（切片 C 註解「creature 回合階段檢查隨切片 D 補上」未兌現）。→ 切片 I
+2. **事件日誌兩套並存**：玩家 AI → `GameState.actionEvents`；Creature → `CreatureActionLog`/steps 快照。行動日誌面板看不到 Creature 行動，違反 §1.3「事件格式單一協定」。→ 切片 J
+3. **JSON policy 零消費**：registry 是純基礎建設，沒有任何實際決策讀取它（§6.2 分工圖的「JSON Policy 優先級與行為參數」環節缺席）。→ 切片 K
+4. **Creature 感知層未委託**：`selectCreatureTarget` 與管線 `planCreatureMovement` 仍自算距離/路徑，感知邏輯雙份維護（§1.3 點名的「付雙重維護稅」只剩這一段）。→ 切片 L
 
 ### 1.3 兩套 AI 的關係與合併方針（架構決策）
 
@@ -454,14 +464,18 @@ PowerShell 備忘：判斷成敗用 `$LASTEXITCODE`（`$?` 是 True/False）；d
 | F | ✅ 完成（2026-08-24）：`AiActionEvent`＋`GameState.actionEvents`＋ActionLogPanel UI；防守／支援全分支事件化 | 重構 Phase 3~5＋功能線 M4/M5 未完項 | P1 | 11 例新測試（含事件順序、Game Over、讀檔相容）；AI 規則結果零變化；Creature 動畫沿用既有 steps |
 | G | ✅ 完成（2026-08-24）：`constructionAi.ts` 效用評分＋`runAiConstructionStep` queue 狀態機（blocked 僅建料不足可重試、paused 只採集）；完成提醒彈窗＋事件；Scheduler 擴充 'construction' 步驟 | 功能線下一個 Milestone＋重構 Phase 6 | P2 | 22 例新測試（純函式 14＋store 情境 7＋scheduler 1）；前置不足／建料不足 → blocked 含原因；`paused` 方針不建造但可採集 |
 | H | ✅ 完成（2026-08-24）：`ai/policy/` 白名單＋Schema 驗證＋內建 config（defensive-guardian/creature-sieger/creature-scavenger）＋fallback registry | 重構 §6 | P2 | 19 例新測試；非法 condition/action 被拒、查無 id 或 actorKind 不符走同類 fallback、載入失敗不卡死 AI 回合 |
+| I | Validator 接線：玩家 AI 執行前經 `validateAiAction()` 檢核；Creature 管線在 validate 階段補回合合法性檢查（兌現切片 C 註解） | 重構 §9.2（§12 Phase 2 後半） | P1 | 接線後既有行為零變化（釘住網全過）；無效 AiAction 在執行前被擋並帶原因 |
+| J | Creature 行動事件化：pipeline 每隻決策同步產出 `AiActionEvent` 寫入 `GameState.actionEvents`（steps 動畫快照保留） | 重構 §12 Phase 4＋§1.3「事件格式單一協定」 | P1 | 行動日誌面板可見 Creature 攻擊/移動/待命；事件順序與批次結果一致；既有 creature 測試零修改 |
+| K | JSON policy 消費：玩家 AI 自保參數與決策優先序讀 `getAiJsonPolicy()`；Creature 依 `getCreaturePolicyId()` 取 policy 的 emergency／parameters 參數化行為門檻 | 重構 §6.2 分工圖（分岔點 ②Policy 查表） | P2 | 參數化後行為結果與現況一致（同 seed 測試釘住）；fallback 路徑生效（壞 id → 預設人格照常運作） |
+| L | Creature 感知層委託：`selectCreatureTarget` 與管線移動計算改用 `ai/perception/`，消除雙份距離/路徑實作 | §1.3 感知層合併（最後一段雙重維護稅） | P2 | 同 seed 巡邏/追擊路徑可重現（既有測試全過）；perception 匯出的函式成為唯一事實來源 |
 
-> 順序理由：A0 先織安全網，A 才能還債且解鎖 Executor；B 是所有後續共用地基；C/D 讓 Creature 與玩家 AI 有共同語言之後，E~H 才有意義。若使用者另有指示，以其為準。
+> 順序理由：A0 先織安全網，A 才能還債且解鎖 Executor；B 是所有後續共用地基；C/D 讓 Creature 與玩家 AI 有共同語言之後，E~H 才有意義。I~J 是統合盤點找出的「接線債」（基礎建設已備、只差消費），優先於 K~L 的深化。若使用者另有指示，以其為準。
 
 ---
 
 ## 附錄：快速事實
 
-- 目前全套測試基準：2026-08-24 切片 A 後為 735 項全過（數字會漂移，動工前先跑一次記錄當下基準）。AI 相關 11 決策＋9 執行＋3 原子攻擊全過。
+- 目前全套測試基準：2026-08-24 切片 H 後為 **819 項全過**（79 檔；數字會漂移，動工前先跑一次記錄當下基準）。AI 相關 11 決策＋9 執行＋3 原子攻擊全過。
 - `AiOrder` 同時間每 AI 只能一個 active；建立異型新命令 → 舊命令降級 paused；完全同型同目標 → 拒絕。
 - 支援命令目標死亡 → 自動 `paused`（不是 failed）；據點被毀 → `failed` 且保存原因。
 - 建設方針五種：`defense | economy | frontline | balanced | paused`；`paused` 不建造但可行動。
