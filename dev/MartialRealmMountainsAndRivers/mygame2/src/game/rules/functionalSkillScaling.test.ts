@@ -97,4 +97,27 @@ describe('功能型外功等級縮放', () => {
       staminaToInnerPowerRatio: 4,
     })
   })
+
+  it('幻影功：迴避率每級 +1%', () => {
+    const definition = getBuff('phantom-step')!
+    expect(getFunctionalSkillBuffOverrides('evasion', 1, definition)).toMatchObject({
+      evasionRateBonus: 5,
+    })
+    expect(getFunctionalSkillBuffOverrides('evasion', 3, definition)).toMatchObject({
+      evasionRateBonus: 7,
+    })
+  })
+
+  it('回光功：復活血量比例每級 +5%，上限 100%', () => {
+    const definition = getBuff('return-light')!
+    expect(getFunctionalSkillBuffOverrides('revive-guard', 1, definition)).toMatchObject({
+      reviveHealthPercent: 0.3,
+    })
+    expect(getFunctionalSkillBuffOverrides('revive-guard', 3, definition)).toMatchObject({
+      reviveHealthPercent: 0.4,
+    })
+    expect(getFunctionalSkillBuffOverrides('revive-guard', 20, definition)).toMatchObject({
+      reviveHealthPercent: 1,
+    })
+  })
 })

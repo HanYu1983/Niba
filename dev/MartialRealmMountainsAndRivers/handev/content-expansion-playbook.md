@@ -29,9 +29,10 @@
 | 功法 | `insight-utility-skills-design.md` | `skillProgressionCatalog.ts`、`functionalSkillRegistry.ts` |
 | Buff | `buff-system-design.md` | `buffCatalog.ts`、`rules/playerDerivedRules.ts` |
 | 探索事件 | `exploration-events-design.md`（注意文末未完成清單） | `events/eventCatalog.ts`、`eventSpawner.ts`、`eventResolver.ts` |
-| 劇情章節 | `five-chapter-story-design.md`、`campaign-system-implementation-guide.md` | `campaignScenarioCatalog.ts`、`storyDialogueCatalog.ts` |
+| 劇情章節 | `five-chapter-story-design.md`、`campaign-system-implementation-guide.md` | `catalogs/campaignScenarioCatalog.ts`（資料真源）、`editor/rules/scenarioCompiler.ts`、`game/scenarioStorage.ts`（供應鏈見附錄 C） |
 | 建築／防禦 | `defense-structures-design.md` | `buildingCatalog.ts`、`defenseStructureCatalog.ts`、`buildingActionRegistry.ts` |
 | 地形／世界 | `terrain-depth-system-design.md`、`fog-of-war-design.md` | `worldGeneration.ts`、`terrainLootCatalog.ts` |
+| 難度設計 | `difficulty-metrics-guide.md`（加難/減難指標總表＋分級配方＋創作陷阱） | `gameSettings.ts`、`creatureActions.ts`（巢穴常數）、`creatureAnimation.ts`（失敗判定） |
 
 另瀏覽 `reports/development-log.md` 最後幾篇，確認該系統目前進度與待驗收項目，避免做出已被否決的方向。
 
@@ -48,14 +49,14 @@
 | 特殊道具 | X玉／X珠 | 意象英文名 | 回光玉 = `return-light-jade` |
 | Buff 名 | 二至四字意境詞 | 描述性 kebab-case | 背水 = `back-to-water` |
 | 主場 Buff | 四字名＋依地形 | `home-turf-{terrain}` | 林隱狼性 |
-| 門派 | 五行意象＋「流」 | golden-body / swift-wind / scarlet-flame / frost-water / earth-mountain / void-spirit / hundred-poison | 金剛流 |
+| 門派 | 五行意象＋「流」 | golden-body / swift-wind / scarlet-flame / frost-water / earth-mountain / void-spirit / hundred-poison / ghost-shadow | 金剛流 |
 | 門派功法 id | 取流派名字表名稱 | `{schoolId}-inner` / `-external-damage` / `-external-functional` / `-external-light-foot` | 金剛拳 |
 | 輕功名 | 動詞＋地形意象 | 同上 `-light-foot` | 破壁功、草上飛、踏水功 |
 | 江湖功法 | 一律以「功」結尾 | `jianghu-{effect}` | 血飲功 |
 | 門派裝備 id | 四五字兵器名 | `sect-{schoolId}-{slot}` | 九天追風刃 |
 | 地名 | 實感中國城鎮名 | —（僅中文） | 洛陽、青石村 |
 | 事件型別 | 敘事短語 | kebab-case | `lost-caravan`、`wandering-merchant` |
-| 章節 id | `{章別}-{地點}` | kebab-case | `prologue-village` |
+| 章節 id | `{章別}-{地點}` | kebab-case | `prologue-village`、`chapter1-shadow-temple` |
 
 ### 1.3 參數成長曲線萃取
 
@@ -83,7 +84,7 @@ id、中文名、出處故事一句話、所屬 catalog 與分類、關鍵參數
 - **山河靈氣 vs 妖氣**：五行平衡則萬物興盛；妖氣侵蝕導致靈氣失衡、據點失守——這是「保衛據點」玩法的敘事根基。
 - **守護者一脈**：主角師父封印妖王「玄冥」而犧牲；主角的功法是守護者傳承。
 - **玄冥的悲劇性**：原是守護山河的靈獸，因人類破壞五行而被妖氣侵蝕——反派不是純粹邪惡。
-- **六章派並立**：金剛/追風/赤炎/寒水/厚土/太虛六流各有武館；「江湖」是無門派的散修文化。另有南疆**百毒流**（`hundred-poison`）——名不經傳的小門派，卻也各家爭鳴，不能小看；新門派一律以「新興/在野勢力」融入，不改寫六章派的歷史地位。
+- **六章派並立**：金剛/追風/赤炎/寒水/厚土/太虛六流各有武館；「江湖」是無門派的散修文化。另有在野小派——南疆**百毒流**（`hundred-poison`）與隱世**幽影流**（`ghost-shadow`）：名不經傳卻也各家爭鳴，不能小看；新門派一律以「新興/在野勢力」融入，不改寫六章派的歷史地位。
 - **章節獨立沙盒**：每章能力從頭開始，敘事上串成同一主角的旅程。
 
 ### 2.2 故事發想方法：矩陣組合
@@ -119,7 +120,7 @@ id、中文名、出處故事一句話、所屬 catalog 與分類、關鍵參數
 優先從這些缺口構思，CP 值最高：
 
 1. 六級稀有事件制度僅部分落地——中階事件「古墓尋寶」「失傳武學傳承」設計過但未實作（見 exploration-events-design.md 未完成清單）。
-2. 第二章至第五章場景尚未製作（目前只有 prologue-village）——五章表格中的地點（獵人村落、湖畔村落、荒漠古城、古城深處）都是空白畫布。
+2. 第三章至第五章場景尚未製作（目前有 prologue-village 與 chapter1-shadow-temple「荒廟影禍」）——五章表格中的地點（獵人村落、湖畔村落、荒漠古城、古城深處）仍是空白畫布。
 3. `EventEffect.type: 'equipment'` 已定義未接通事件系統。
 4. `lootCatalog`（怪物掉落功法池）已被清空待重新設計江湖功法。
 5. NPC 商隊/護送/掠奪、區域控制/中立地標在 master-plan 中標記 Planned。
@@ -143,6 +144,7 @@ id、中文名、出處故事一句話、所屬 catalog 與分類、關鍵參數
 - [ ] 新道具/裝備已分配地形特產池或刻意排除
 - [ ] 商店等級與掉落階級符合既有曲線，不會污染低等級掉落池
 - [ ] 劇情實體引用的 itemId/skillId 都存在（目前無自動測試，人工核對）
+- [ ] 新章節已導出官方 JSON 並註冊 `public/data/scenarios/index.json`（`campaignScenarioCatalog.test.ts` 會驗，流程見附錄 C）
 - [ ] 編輯器下拉選單會自動收錄（editorOptions 讀 catalog，無需改動，但需目視確認）
 - [ ] UI 文字分組（`components/itemGroups.ts`）與 highlightTerms 是否需要涵蓋新類別
 - [ ] 沒有更動任何既有 id 或 `itemCatalog[0]` 順序
@@ -198,4 +200,56 @@ docker compose run --rm -p 5173:5173 node npm run dev     # 手動冒煙：開�
 3. 至少一段敘事依托（事件文字、對話或描述欄位講得出故事）
 4. 交叉引用測試更新或新增
 5. development-log 一篇
+
+## 附錄 C：新增劇本地圖標準流程（範本：chapter1-shadow-temple）
+
+> 劇本地圖的資料流是「雙軌」的，新章節必須兩軌都接通，否則玩家看不到：
+>
+> ```
+> campaignScenarioCatalog.ts（資料真源，TS）
+>         │ ① 定義章節
+>         ├→ worldSetup.createPrologueGameState()（僅序章被此硬編碼引用）
+>         └─│② 導出腳本
+>           ▼
+> public/data/scenarios/{id}.json + index.json（官方發佈格式）
+>           ▼ CampaignScenarioTab → syncOfficialScenarios() → localStorage 副本
+>           ▼ gameStore.loadScenario() → scenarioCompiler.buildGameStateFromScenario()
+> ```
+
+### C.1 定義章節（`src/game/catalogs/campaignScenarioCatalog.ts`）
+
+照 `prologue-village`／`chapter1-shadow-temple` 的結構新增一個 `Record` 條目（型別：`editor/editorTypes.ts` 的 `ScenarioDefinition`）：
+
+- **基本欄位**：`version`（新章節從 `1.0.0` 起步）、`id`（`{章別}-{地點}` kebab-case）、`title`／`description`（武俠語感）、`chapterIndex` 遞增。
+- **地圖**：`cells` 用 IIFE 公式生成（邊界一律 `wall`），建議 10×10～12×12；地形語言對齊 §2.1 五行即地形。
+- **實體**（`entities[].data` 為鬆散 Record，欄位由 scenarioCompiler 消費）：
+  - 必備四種：`player`（name/money/innerSkillIds/externalSkillIds/inventory）、`base`（presetBuildings/buildingMaterials，可加 `allowedBuildings` 限建）、`nest`（spawnChance 0.1~0.15/spawnLevel/schoolId/behaviorType）、`creature`。
+  - creature 常用 data：`name`／`isBoss`／`level`／`schoolId`／`behaviorType`（`sieger` 直攻據點｜`hunter` 追獵玩家｜`roamer` 遊蕩）／`homeNestId`／`attributes`／`maxHealthOverride`（Boss 用）／`aggroRange`。
+  - 可選裝飾：`itemPoint`（customDrops 掉寶）、`event`（custom 自訂事件或 eventType 引 eventCatalog）、`sectGate`／`defenseStructure`／`ruin`／`resourcePoint`。
+- **任務**：`quests.victoryObjectives` 主線一條＋選配支線（`isOptional: true`）；常用 type：`defeat-creature`（必填 `targetId`）、`survive-rounds`、`reach-position`、`build-building`。`failConditions` 至少給 `maxRounds`＋`baseMustSurvive`＋`playerMustSurvive`。
+- **對話與觸發器**：`dialogues` 定義對話組（steps 只含 speakerName/speakerIcon/content），`triggers` 接時機——三件套：`on-start` 開局、`on-round-reached`（conditionParam=回合數）中段伏筆、`on-victory` 收尾；另有 `on-defeat-boss`／`on-enter-region`／`on-object-destroyed` 可用。
+- **難度曲線**：Boss 參考附錄 A（序章 Lv3 五維約 10/10/9/8/8；敏捷型可壓血量拉敏捷，如第一章影魅護法 agi12＋maxHealthOverride 65）。隨機事件維持關閉（不設 `enableRandomEvents`）。**巢穴數×初始怪數是難度主指標**——取值前先查 `difficulty-metrics-guide.md` 的分級配方與創作陷阱（特別是 T1：maxRounds 未接線、任一城失活即敗）。
+
+### C.2 導出官方 JSON 並註冊
+
+```powershell
+# Docker 內以 Node 22 type-stripping 直接讀 TS catalog 導出（含 round-trip 深度驗證）
+docker compose run --rm node node --experimental-strip-types scripts/exportOfficialScenario.mts chapter1-shadow-temple
+```
+
+然後把 `{ id, file, version }` 加進 `public/data/scenarios/index.json`——**version 必須與導出檔內的 `version` 一致**，否則 syncOfficialScenarios 的版本比對會誤報 outdated。
+
+### C.3 測試與驗證
+
+仿 `campaignScenarioCatalog.test.ts`：
+
+1. 「章節清單數量/排序」案例 +1。
+2. JSON 同步防呆案例自動涵蓋所有 catalog 章節（漏導出或漏註冊會直接紅）。
+3. 為新章節寫專屬案例：實體不落牆不重疊（邊界牆格數 = `2×(rows+columns)−4`）、玩家/base 配置、巢穴與妖物屬性、任務/對話/觸發器接線、`explorationTriggerChance === 0`。
+
+驗證走 §3.3 的 Docker 工作流；手動冒煙從開場選單「劇本地圖」分頁開局走一遍（開局對話→觸發器→勝利結算→通關紀錄）。
+
+### C.4 已知債務（處理前先確認現況）
+
+- 序章存在雙版本：catalog v1.0.0（簡化）vs 官方 JSON v1.2.0（完整，含自訂事件/箭塔），尚未收斂；新增第二章節時**不要**順手「同步序章」，除非明確決策方向（catalog 退役 or 反向同步）。
 

@@ -32,13 +32,23 @@ export const CocosIframe = () => {
           // sendMessageToIframe({ type: "test call cocos" })
           break
         case 'onCocosGameFlow':
-          console.log('flow', data.data.flow, 'id', data.data.clientId, 'version', appContext.viewModel.model.versionID )
+          // console.log('flow', data.data.flow, 'id', data.data.clientId, 'version', data.data.versionID )
           OnEvent.next({
             id: "OnClickFlowConfirm",
             clientId: data.data.clientId || "unknown",
             flow: data.data.flow,
-            versionID: appContext.viewModel.model.versionID
+            versionID: data.data.versionID
           });
+          break;
+        case 'onMethodCall':
+          const method = data.data.method
+          const args = data.data.args as any
+          console.log(`Cocos 呼叫方法: ${method}，參數:`, args);
+          const answer = (window as any)[method](...args)
+          if (answer !== null) {
+            sendMessageToIframe({ type: "onMethodCallAnswer", data: { callbackId: data.data.callbackId, response: answer } })
+          }
+          // window['getItemController']()
           break;
       }
     }

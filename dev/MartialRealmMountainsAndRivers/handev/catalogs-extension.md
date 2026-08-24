@@ -23,7 +23,7 @@
 | `martialSchoolCatalog.ts` | `martialSchoolCatalog[]` + `MartialSchoolId` union | 6 流派 | id 是封閉 union，加門派要改型別 |
 | `placeNameCatalog.ts` | `playerNames / cityNames / villageNames / resourceNames` | 各數十筆 | 世界生成隨機取名池 |
 | `storyDialogueCatalog.ts` | `storyDialogueCatalog: Record<chapterId, ScenarioDialogueStep[]>` | 序章 3 句 | 資料驅動對話；`triggerCondition` 由 dialogueTriggerRules 比對 |
-| `campaignScenarioCatalog.ts` | `campaignScenarioCatalog: Record<scenarioId, ScenarioDefinition>` | 序章 1 章 | 官方劇情章節（借用 editor 的 ScenarioDefinition 型別） |
+| `campaignScenarioCatalog.ts` | `campaignScenarioCatalog: Record<scenarioId, ScenarioDefinition>` | 2 章（序章＋第一章荒廟影禍） | 官方劇情章節（借用 editor 的 ScenarioDefinition 型別） |
 | `terrainLootCatalog.ts` | `terrainItemPointLootCatalog: Partial<Record<TerrainType, LootDefinition[]>>` | 5 地形 | `createTerrainLoot(itemIds, equipmentIds)` 以 id 清單生成；權重 = `12 − requiredShopLevel×2` |
 
 ⚠️ 另有兩個掉落池**不在 catalogs 資料夾**而在 `types.ts:340-354`：

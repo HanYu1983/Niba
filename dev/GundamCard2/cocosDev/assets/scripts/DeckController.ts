@@ -8,8 +8,8 @@ import { callWeb } from './PostMessageCallback';
 
 const { ccclass, property, requireComponent } = _decorator;
 
-@ccclass('HandController')
-export class HandController extends Component implements IInstanceGame<string> {
+@ccclass('DeckController')
+export class DeckController extends Component implements IInstanceGame<string> {
     @property(Node)
     public cardContainer: Node | null = null;
 
@@ -55,12 +55,6 @@ export class HandController extends Component implements IInstanceGame<string> {
     // }
 
     async sync(game: IGame, relative: string): Promise<void> {
-
-        // console.log("HandController syncing with game data:", game, relative);
-
-        // const cards = game.model.gameState.table.cardStack[deckId]
-
-        // this.states.hand(game, extra, this)
 
         this.cardInstances.forEach((instance) => {
             this.cardPool!.releaseInstance(instance);

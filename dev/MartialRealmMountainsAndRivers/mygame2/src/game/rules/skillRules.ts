@@ -13,6 +13,10 @@ export function getSchoolElement(schoolId?: string): MartialElement {
     case 'frost-water': return 'water'
     case 'earth-mountain': return 'earth'
     case 'hundred-poison': return 'wood'
+    case 'sharp-edge': return 'metal'
+    case 'misty-rain': return 'water'
+    case 'blazing-sun': return 'fire'
+    case 'yellow-earth': return 'earth'
     default: return 'none'
   }
 }

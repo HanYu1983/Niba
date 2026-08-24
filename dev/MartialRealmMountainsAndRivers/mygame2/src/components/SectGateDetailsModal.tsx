@@ -17,14 +17,14 @@ type SectGateDetailsModalProps = {
 }
 
 const schoolIcon = (schoolId: string) =>
-  schoolId === 'golden-body' ? '🥋' : schoolId === 'swift-wind' ? '💨' : schoolId === 'scarlet-flame' ? '🔥' : schoolId === 'frost-water' ? '❄️' : schoolId === 'earth-mountain' ? '⛰️' : schoolId === 'hundred-poison' ? '🐍' : '☯'
+  schoolId === 'golden-body' ? '🥋' : schoolId === 'swift-wind' ? '💨' : schoolId === 'scarlet-flame' ? '🔥' : schoolId === 'frost-water' ? '❄️' : schoolId === 'earth-mountain' ? '⛰️' : schoolId === 'hundred-poison' ? '🐍' : schoolId === 'sharp-edge' ? '⚔️' : schoolId === 'misty-rain' ? '🌧️' : schoolId === 'blazing-sun' ? '☀️' : schoolId === 'yellow-earth' ? '🧱' : schoolId === 'ghost-shadow' ? '🌑' : '☯'
 
 function SectGateDetailsModal({ gate, player, onLearn, onPractice, onBuyEquipment, onClose }: SectGateDetailsModalProps) {
   const schoolName = gate ? martialSchoolCatalog.find((school) => school.id === gate.schoolId)?.name ?? '未知流派' : ''
   const { inner, damage, aura } = gate
     ? getSectGateSkills(gate.schoolId)
-    : { inner: null, damage: null, aura: null }
-  const skills = [inner, damage, aura].filter((skill) => skill !== null)
+    : { inner: [], damage: [], aura: [] }
+  const skills = [...inner, ...damage, ...aura]
   const sectEquipment = gate
     ? equipmentCatalog.filter((equipment) => equipment.schoolId === gate.schoolId && equipment.sectGateLevel !== undefined)
     : []
@@ -45,7 +45,7 @@ function SectGateDetailsModal({ gate, player, onLearn, onPractice, onBuyEquipmen
           <Flex vertical gap={8}>
             {skills.map((skill) => {
               if (!skill) return null
-              const isInner = !!inner && skill.id === inner.id
+              const isInner = inner.some((candidate) => candidate.id === skill.id)
               const learned = isInner
                 ? player.innerSkillIds.includes(skill.id)
                 : player.externalSkillIds.includes(skill.id)

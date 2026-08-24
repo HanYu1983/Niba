@@ -221,7 +221,7 @@
     - 《血飲功》Buff `bloodthirst-persistent`（嗜血·常駐）：`lifestealPercent: (0.15 + Lv × 0.02)`（原 0.3）。
     - 《鐵壁功》Buff `iron-wall-persistent`（鐵壁訣·常駐）：`damageReductionPercent: (0.1 + Lv × 0.02)`（原 0.2）。
     - 《化氣功》Buff `qi-transformation-persistent`（化氣訣·常駐）：`innerPowerHealthRegenPercent: (0.05 + Lv × 0.01)`（原 0.1）。
-    - 《汲元功》Buff `inner-power-leech-persistent`（汲元·常駐）：`innerPowerLeechPercent: (0.1 + Lv × 0.02)`（原 0.2）。
+    - 《汲元功》Buff `inner-power-leech-persistent`（汲元·常駐）：`innerPowerLeechPercent: (0.08 + Lv × 0.015)`（原 0.2）。
     - 《破軍功》Buff `break-army-persistent`（破軍訣·常駐）：`damageDealtPercent: (0.1 + Lv × 0.02)`（原 0.2）。
     - 《罡氣功》Buff `vigor-persistent`（罡氣訣·常駐）：`externalSkillDamagePercent: (0.1 + Lv × 0.02)`（原 0.2）。
     - 《背水功》Buff `back-to-water-persistent`（背水·常駐）：`conditional: { when: 'health-below', threshold: 0.3, multiplier: (1.25 + Lv × 0.05) }`（原 1.5）。

@@ -77,7 +77,8 @@ describe('createDebugGameState', () => {
     expect(state.bases[0].buildings.some((building) => building.type === 'wall')).toBe(false)
     // 貿易市場不預建，須由玩家自行建造以觸發全局靈氣。
     expect(state.bases[0].buildings.some((building) => building.type === 'trade-market')).toBe(false)
-    expect(state.bases[0].buildings).toHaveLength(17)
+    // 全部建築（除牆與貿易市場）：含 12 座門派武館。
+    expect(state.bases[0].buildings).toHaveLength(22)
     expect(state.bases[0].buildings.every((building) => building.level === 6)).toBe(true)
     expect(state.bases[0].buildingMaterials).toBeGreaterThan(0)
   })
@@ -99,9 +100,10 @@ describe('createDebugGameState', () => {
 
   it('包含不同門派的門派據點供測試（不再有等級差異）', () => {
     const state = createDebugGameState()
-    expect(state.sectGates ?? []).toHaveLength(7)
+    expect(state.sectGates ?? []).toHaveLength(12)
     expect(new Set((state.sectGates ?? []).map((gate) => gate.schoolId))).toEqual(new Set([
-      'golden-body', 'swift-wind', 'scarlet-flame', 'frost-water', 'earth-mountain', 'void-spirit', 'hundred-poison',
+      'golden-body', 'swift-wind', 'scarlet-flame', 'frost-water', 'earth-mountain', 'void-spirit',
+      'hundred-poison', 'sharp-edge', 'misty-rain', 'blazing-sun', 'yellow-earth', 'ghost-shadow',
     ]))
     expect((state.sectGates ?? []).every((gate) => gate.level === 1 && gate.experience === 0)).toBe(true)
   })

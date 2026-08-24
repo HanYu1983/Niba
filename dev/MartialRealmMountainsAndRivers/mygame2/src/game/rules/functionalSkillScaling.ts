@@ -21,8 +21,8 @@ export function getFunctionalSkillBuffOverrides(
   const levelDelta = level - 1
   const overrides: Partial<BuffInstance> = {}
 
-  if (effect === 'critical-rate' && definition.criticalRateMultiplier !== undefined) {
-    overrides.criticalRateMultiplier = definition.criticalRateMultiplier + levelDelta * 0.25
+  if (effect === 'critical-rate' && definition.criticalRateBonus !== undefined) {
+    overrides.criticalRateBonus = definition.criticalRateBonus + levelDelta * 5
   }
   if (effect === 'burning') {
     overrides.maxHealthDamagePercent = scaledPercent(definition.maxHealthDamagePercent, level)
@@ -75,6 +75,13 @@ export function getFunctionalSkillBuffOverrides(
   if (effect === 'qi-conversion') {
     overrides.staminaToInnerPowerRatio = 2 + levelDelta
   }
+  // 江湖線：迴避與保命（幻影功／回光功）
+  if (effect === 'evasion') {
+    overrides.evasionRateBonus = (definition.evasionRateBonus ?? 0) + levelDelta
+  }
+  if (effect === 'revive-guard' && definition.reviveHealthPercent !== undefined) {
+    overrides.reviveHealthPercent = Math.min(1, definition.reviveHealthPercent + levelDelta * 0.05)
+  }
 
   return Object.fromEntries(Object.entries(overrides).filter(([, value]) => value !== undefined))
 }
@@ -92,7 +99,7 @@ const JIANGHU_ADDITIVE_PERCENT: Partial<Record<FunctionalExternalSkillEffect, { 
   lifesteal: { field: 'lifestealPercent', base: 0.15, step: 0.02 },
   'damage-reduction': { field: 'damageReductionPercent', base: 0.1, step: 0.02 },
   'inner-power-health-regen': { field: 'innerPowerHealthRegenPercent', base: 0.05, step: 0.01 },
-  'inner-power-leech': { field: 'innerPowerLeechPercent', base: 0.1, step: 0.02 },
+  'inner-power-leech': { field: 'innerPowerLeechPercent', base: 0.08, step: 0.015 },
   'damage-dealt': { field: 'damageDealtPercent', base: 0.1, step: 0.02 },
   'external-skill-damage': { field: 'externalSkillDamagePercent', base: 0.1, step: 0.02 },
 }

@@ -310,6 +310,26 @@ const sectEquipmentCatalog: EquipmentDefinition[] = [
   ['hundred-poison', '百毒蠱囊', 'accessory', '🧪', 1, 90, { agility: 2, armStrength: 1 }],
   ['hundred-poison', '毒蟒軟甲', 'armor', '🧥', 2, 150, { agility: 3, constitution: 1 }],
   ['hundred-poison', '蝕骨毒爪', 'weapon', '🗡️', 3, 210, { armStrength: 4, agility: 2 }],
+  // 銳鋒流（金）：快劍搶攻，臂力與身法並重
+  ['sharp-edge', '銳鋒疾影劍', 'weapon', '⚔️', 1, 90, { armStrength: 2, agility: 1 }],
+  ['sharp-edge', '薄刃軟鱗甲', 'armor', '🦺', 2, 150, { agility: 3, armStrength: 1 }],
+  ['sharp-edge', '凝鋒劍心佩', 'accessory', '📿', 3, 210, { armStrength: 3, agility: 3, insight: 1 }],
+  // 煙雨流（水）：養生回復，內息與悟性為主
+  ['misty-rain', '煙雨羅衣', 'armor', '👘', 1, 90, { innerEnergy: 2, insight: 1 }],
+  ['misty-rain', '雨潤青玉佩', 'accessory', '💧', 2, 150, { innerEnergy: 3 }],
+  ['misty-rain', '煙波傘中劍', 'weapon', '☂️', 3, 210, { innerEnergy: 4, insight: 2 }],
+  // 烈陽流（火）：血性剛猛，根骨與臂力為主
+  ['blazing-sun', '烈陽血玉佩', 'accessory', '☀️', 1, 90, { constitution: 2, armStrength: 1 }],
+  ['blazing-sun', '炎陽戰甲', 'armor', '🛡️', 2, 150, { constitution: 4 }],
+  ['blazing-sun', '焚天重拳', 'weapon', '👊', 3, 210, { armStrength: 5, constitution: 2 }],
+  // 黃土流（土）：持久游擊與工事，根骨與身法為主
+  ['yellow-earth', '裂石開山棍', 'weapon', '🪵', 1, 90, { armStrength: 2, constitution: 1 }],
+  ['yellow-earth', '負重行囊', 'accessory', '🎒', 2, 150, { constitution: 2, agility: 2 }],
+  ['yellow-earth', '溝壑獵皮甲', 'armor', '🧥', 3, 210, { constitution: 4, agility: 2 }],
+  // 幽影流（無）：隱匿暗襲，身法與悟性為主
+  ['ghost-shadow', '夜行蔽影墜', 'accessory', '🌑', 1, 90, { agility: 2, insight: 1 }],
+  ['ghost-shadow', '無蹤暗影刃', 'weapon', '🗡️', 2, 150, { agility: 3, insight: 1 }],
+  ['ghost-shadow', '幽冥蟬翼衣', 'armor', '🕴️', 3, 210, { agility: 4, insight: 2 }],
 ].map(([schoolId, name, slot, icon, sectGateLevel, _buyPrice, modifiers]) => ({
   id: `sect-${schoolId}-${slot}`,
   name: name as string,

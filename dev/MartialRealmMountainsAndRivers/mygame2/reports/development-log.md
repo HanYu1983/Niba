@@ -1,5 +1,89 @@
 # 開發日誌
 
+## 2026-08-24｜江湖線擴充：新增 10 個江湖功法
+
+### 本次完成
+
+- `jianghuExternalSkillCatalog` 由 9 個靈氣型外功擴至 **19 個**（皆 `target: 'self'`、常駐靈氣、可於任何武館學習或掉落取得）：
+  - **悟性輔助線 ×7**：天眼功（視野 +1）、四兩功（外功內力消耗 −1）、商道功（買 −15%／賣 +15%）、天工功（建材 −25%、聲望 +50%）、百草功（採集 −1 體力、50% 雙倍）、神行功（最大體力 +2）、引氣功（體力轉內力 1→2）。
+  - **資源回復線 ×1**：長生功（每回合回復最大血量 10%，掛既有 `spring-return-art` Buff）。
+  - **迴避與保命線 ×2**：幻影功（迴避 +5%）、回光功（瀕死復活至 30% 並清 debuff，掛既有 `return-light`）。
+- 新增 2 個 registry effect key（純資料層）：`evasion` → 既有 `phantom-step`、`revive-guard` → 既有 `return-light`，讓原本無功法來源的兩個孤兒 Buff 正式可取得；`FunctionalExternalSkillEffect` 31→33 種，未動任何規則層程式碼。
+- 測試同步：江湖靈氣型外功數 9→19。
+
+### 等級成長補全（同日追加）
+
+- 審查發現 10 個新功法中 8 個已有等級縮放（`functionalSkillScaling.ts`），**幻影功／回光功缺漏**，補齊：
+  - 幻影功：迴避率每級 +1%（比照 `-step` 系加法公式）。
+  - 回光功：復活血量 30%＋每級 5%（上限 100%）。此項需小改規則層：`BuffInstance` 新增 `reviveHealthPercent` 覆寫欄位，`creatureAnimation.ts` 復活時優先讀實例覆寫、回退定義基礎值（沿用 conditional 覆寫的既有模式）。
+- 兩功法描述同步改為成長式寫法；新增 3 條縮放測試。
+
+### 影響檔案
+
+- `src/game/catalogs/jianghuExternalSkillCatalog.ts`、`src/game/catalogs/functionalSkillRegistry.ts`
+- `src/game/catalogs/skillProgressionCatalog.test.ts`
+- 文件：`handev/effects-taxonomy.md`（功能外功 46→56、effect 34 種）
+
+### 驗證結果
+
+- TypeScript：通過。ESLint：通過。測試：68 檔 / 721 項全數通過（registry ↔ buffCatalog 綁定測試自動涵蓋新 effect）。
+
+## 2026-08-24｜五行補全：新增五門派，每屬性兩派
+
+### 本次完成
+
+- 依「**每個五行元素應有 2 個門派**」的設計目標，一次新增五派（此前金/水/火/土/無各僅一派，木有兩派）：
+  - **銳鋒流**（`sharp-edge`，金）：新興鑄劍世家的快劍搶攻之道。內功「銳鋒淬芒」（臂力 ×0.7＋身法 ×0.3，補上無人使用的組合）；傷害外功「銳鋒斬」；靈氣外功「劍心明鑑」（視野 +1）、「凌厲劍勢」（普攻傷害 +10%）。
+  - **煙雨流**（`misty-rain`，水）：江南煙雨樓的養生綿掌。內功「煙雨養元」（內息 ×0.5＋悟性 ×0.5）；傷害外功「煙雨掌」；靈氣「雨潤回春」（每回合回血 5%）、「雨幕遮身」（減傷 10%）。
+  - **烈陽流**（`blazing-sun`，火）：西域烈陽教遺部的血性武學。內功「烈陽戰體」（根骨 ×0.6＋臂力 ×0.4）；傷害外功「烈陽轟」；靈氣「烈陽戰意」（臂根 +1）、「烈目凝芒」（暴擊 ×1.25）。
+  - **黃土流**（`yellow-earth`，土）：黃土溝壑獵戶自衛武團。內功「黃土紮根」（根骨 ×0.5＋身法 ×0.5）；傷害外功「裂石棍」；靈氣「夯土工事」（建材消耗 −15%）、「負重健行」（最大體力 +2）。
+  - **幽影流**（`ghost-shadow`，無）：playbook 世界觀既有的隱世幽影流落地。內功「幽影藏形」（身法 ×0.5＋悟性 ×0.5）；傷害外功「影襲」；靈氣「幽影蔽身」（迴避 +10%）、「孤影決絕」（血量 <25% 時五維 ×1.6）。
+- 每派嚴守三式限制（1 內功＋1 基礎傷害＋2 靈氣）；**零新規則層改動**——10 個新 Buff 全部只組合既有解譯欄位（visionRadiusBonus／damageDealtPercent／healthRegenPercent／damageReductionPercent／attributeModifiers／criticalRateMultiplier／buildingMaterialCostReduction／maxStaminaBonus／evasionRateBonus／conditional），未新增 `FunctionalExternalSkillEffect` 型別（31 種 effect 不變）。
+- 新門派刻意不佔用移動技位：七種地形 step 技已由原七派配滿，避免重複輕功。
+- 週邊註冊補齊：`MartialSchoolId` union、`getSchoolElement` 四行對應（幽影流走 default 'none'）、妖物圖示（🦂🐬🦁🐗🦇）與屬性修正、主場 Buff 映射（幽影流比照太虛流無主場）、武館／山門彈窗圖示鏈（⚔️🌧️☀️🧱🌑）。山門生成與編輯器下拉為 catalog 驅動，自動收錄 12 派。
+- 測試同步：流派數 7→12、外功總數 21→36；新增「**五行元素各由兩個門派守護**」防回退測試。
+
+### 影響檔案
+
+- `src/game/catalogs/martialSchoolCatalog.ts`、`skillProgressionCatalog.ts`、`buffCatalog.ts`
+- `src/game/rules/skillRules.ts`、`creatureBehaviorRules.ts`、`playerDerivedRules.ts`
+- `src/components/MartialHallModal.tsx`、`SectGateDetailsModal.tsx`（圖示鏈）
+- `src/game/catalogs/skillProgressionCatalog.test.ts`
+- 文件：`handev/effects-taxonomy.md`（Buff 45→55、功法 54→74）
+
+### 已知留白（後續可選）
+
+- ~~五個新門派暫無**武館建築**與**門派裝備**~~ → 同日稍後已補齊，見下一篇日誌。
+- ~~debug 地圖維持 7 座山門~~ → 同日稍後已補上五新派山門（現 12 座，依主場地形分區配置；妖物仍維持 7 隻）。
+
+### 驗證結果
+
+- TypeScript：通過。ESLint：通過。測試：68 檔 / 721 項全數通過。
+
+## 2026-08-24｜補上五新派的武館建築與門派裝備
+
+### 本次完成
+
+- **武館建築 ×5**（`buildingCatalog.ts`）：銳鋒／煙雨／烈陽／黃土／幽影武館，id `building-type-martial-hall-{schoolId}`、造價 30、官階 1，與既有六派格式一致。玩家可在自建據點蓋對應武館學功法（`buildingActions` 依 `martialSchoolId` 過濾門派建築的機制自動生效）。
+- **門派裝備 ×15**（`equipmentCatalog.ts` 的 `sectEquipmentCatalog` tuple 表）：每派武器／防具／配件各一，id 自動為 `sect-{schoolId}-{slot}`，屬性總和與價格由既有平衡公式規範（每級 2 點／$30），解鎖順序刻意交錯（銳鋒 W→A→Ac、煙雨 A→Ac→W、烈陽 Ac→A→W、黃土 W→Ac→A、幽影 Ac→W→A）：
+  - 銳鋒流：銳鋒疾影劍 ⚔️／薄刃軟鱗甲 🦺／凝鋒劍心佩 📿
+  - 煙雨流：煙雨羅衣 👘／雨潤青玉佩 💧／煙波傘中劍 ☂️
+  - 烈陽流：烈陽血玉佩 ☀️／炎陽戰甲 🛡️／焚天重拳 👊
+  - 黃土流：裂石開山棍 🪵／負重行囊 🎒／溝壑獵皮甲 🧥
+  - 幽影流：夜行蔽影墜 🌑／無蹤暗影刃 🗡️／幽冥蟬翼衣 🕴️
+- 測試同步：debug 據點預建築數 17→22（debug 夾具本就收錄全 catalog 建築，12 座武館全數可用於測試）。
+- 文件回寫：`handev/effects-taxonomy.md`（裝備 45→60、建築 20→25）。
+
+### 影響檔案
+
+- `src/game/catalogs/buildingCatalog.ts`、`src/game/catalogs/equipmentCatalog.ts`
+- `src/game/debugMap.test.ts`
+- 文件：`handev/effects-taxonomy.md`
+
+### 驗證結果
+
+- TypeScript：通過。ESLint：通過。測試：68 檔 / 721 項全數通過（含 equipmentCatalog 數值規則對 15 件新裝備的自動驗證）。
+
 ## 2026-08-23｜新增第七門派「百毒流」與其三式功法
 
 ### 本次完成

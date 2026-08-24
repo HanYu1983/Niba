@@ -63,7 +63,7 @@ export const jianghuExternalSkills: ExternalSkill[] = [
     id: 'jianghu-inner-power-drain',
     name: '汲元功',
     description: '江湖奪氣之法，傷敵而補己。',
-    formulaDescription: '造成傷害時，回復「10% + 等級×2%」的傷害值的內力。',
+    formulaDescription: '造成傷害時，回復「8% + 等級×1.5%」的傷害值的內力。',
     functionalEffect: 'inner-power-leech',
   }),
   createJianghuSkill({
@@ -101,6 +101,78 @@ export const jianghuExternalSkills: ExternalSkill[] = [
     description: '江湖搏命之技，一擲乾坤。',
     formulaDescription: '血量低於 15% 時，五維 ×「1.5 + 等級×0.1」。',
     functionalEffect: 'all-in',
+  }),
+  // 悟性輔助線：散修謀生的市井功夫
+  createJianghuSkill({
+    id: 'jianghu-sky-eye',
+    name: '天眼功',
+    description: '登高望遠的散修眼法，練成後目光如炬。',
+    formulaDescription: '自身地圖視野半徑 +1（常駐）。',
+    functionalEffect: 'vision-expansion',
+  }),
+  createJianghuSkill({
+    id: 'jianghu-four-ounces',
+    name: '四兩功',
+    description: '以巧勁卸蠻力的江湖手法，出招省力。',
+    formulaDescription: '所有外功內力消耗 -1（最低 1，常駐）。',
+    functionalEffect: 'skill-cost-reduction',
+  }),
+  createJianghuSkill({
+    id: 'jianghu-merchant-way',
+    name: '商道功',
+    description: '行商護鏢練就的市井智慧，低買高賣。',
+    formulaDescription: '買入價格 -15%，賣出價格 +15%（常駐）。',
+    functionalEffect: 'merchant-way',
+  }),
+  createJianghuSkill({
+    id: 'jianghu-craftsman',
+    name: '天工功',
+    description: '匠人營造之術，築城修寨事半功倍。',
+    formulaDescription: '建築材料消耗 -25%，建造聲望 +50%（常駐）。',
+    functionalEffect: 'craftsmanship',
+  }),
+  createJianghuSkill({
+    id: 'jianghu-gathering',
+    name: '百草功',
+    description: '採藥人世代相傳的本事，識百草、辨靈物。',
+    formulaDescription: '採集體力消耗 -1，採集 50% 機率雙倍產出（常駐）。',
+    functionalEffect: 'gathering',
+  }),
+  createJianghuSkill({
+    id: 'jianghu-divine-movement',
+    name: '神行功',
+    description: '千里獨行的趕路功夫，氣長則行遠。',
+    formulaDescription: '最大體力 +2（常駐）。',
+    functionalEffect: 'divine-movement',
+  }),
+  createJianghuSkill({
+    id: 'jianghu-qi-conversion',
+    name: '引氣功',
+    description: '導引吐納之術，收斂餘勁化為內息。',
+    formulaDescription: '回合結束時，剩餘體力轉化為內力（1 體力 → 2 內力，常駐）。',
+    functionalEffect: 'qi-conversion',
+  }),
+  createJianghuSkill({
+    id: 'jianghu-longevity',
+    name: '長生功',
+    description: '江湖養生延年之術，氣血自生不絕。',
+    formulaDescription: '每回合回復最大血量 10% 的氣血。',
+    functionalEffect: 'health-regen',
+  }),
+  // 迴避與保命：江湖人身懷絕技以求自保
+  createJianghuSkill({
+    id: 'jianghu-phantom',
+    name: '幻影功',
+    description: '虛實難辨的詭異身法，敵招難以沾身。',
+    formulaDescription: '回避率 +「5% + 等級×1%」（常駐）。',
+    functionalEffect: 'evasion',
+  }),
+  createJianghuSkill({
+    id: 'jianghu-return-light',
+    name: '回光功',
+    description: '瀕死反擊的保命絕學，迴光返照絕處逢生。',
+    formulaDescription: '瀕死時攔截死亡，復活至「30% + 等級×5%」血量並清除所有 debuff（常駐，只保一次）。',
+    functionalEffect: 'revive-guard',
   }),
 ]
 

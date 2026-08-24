@@ -5,7 +5,7 @@ import Player from './Player'
 import { type MapCell, type BaseState, type CreatureNestState, type ResourcePointState, type DefenseStructureState, type ItemPointState, type ExplorationEventState, type PlayerState, type CreatureState, type Position, type GameState, type RuinState, type TrapState, type SectGateState, getAdjacentPositions } from '../game/types'
 import { getCellVisibility } from '../game/rules/visibilityRules'
 import { getCreatureIcon } from '../game/rules/creatureBehaviorRules'
-import { getActiveBuffsForPlayer } from '../game/rules/playerDerivedRules'
+import { getActiveBuffsForPlayer, getBuff } from '../game/rules/playerDerivedRules'
 import { getMapCellRangeState, resolveMapCellAction } from '../game/rules/mapCellStateRules'
 import { executeMapCellAction as executeInteractionAction, type MapInteractionHandlers } from './mapGridInteractionExecutor'
 
@@ -448,9 +448,9 @@ function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], def
                   {creaturesHere.map((creature) => (
                     (() => {
                       const buffClassNames = getActiveBuffsForPlayer(creature)
-                        .map((buff) => buff.definitionId)
-                        .filter((definitionId) => definitionId === 'scarlet-flame-burning' || definitionId === 'frost-water-cold-poison' || definitionId === 'earth-mountain-reflection' || definitionId === 'golden-body-critical-boost' || definitionId === 'swift-wind-movement')
-                        .map((definitionId) => `creature--buff-${definitionId.replace(/-movement|-burning|-poison|-reflection|-boost/g, '')}`)
+                        .map((buff) => getBuff(buff.definitionId))
+                        .filter((definition): definition is NonNullable<typeof definition> => Boolean(definition?.mapMarker))
+                        .map((definition) => `creature--buff-${definition.mapMarkerClass ?? definition.id.replace(/-movement|-burning|-poison|-reflection|-boost/g, '')}`)
                         .join(' ')
                       return (
                         <Player

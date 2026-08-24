@@ -91,4 +91,5 @@ interface IGame {
     cardSelection: any[];
     cardPositionSelection: any[];
     localMemory: ILocalMemory;
+    extra: any;
 }

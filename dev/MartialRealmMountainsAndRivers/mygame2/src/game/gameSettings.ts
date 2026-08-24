@@ -6,7 +6,7 @@ export const DEFAULT_GAME_SETTINGS: GameSettings = {
   columns: 40,
   baseCount: 5,
   nestCount: 2,
-  resourcePointCount: 10,
+  resourcePointCount: 15,
   itemPointCount: 8,
   playerCount: 1,
   aiPlayerCount: 0,

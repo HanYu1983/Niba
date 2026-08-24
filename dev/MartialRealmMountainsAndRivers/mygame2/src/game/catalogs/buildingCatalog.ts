@@ -104,6 +104,21 @@ export const buildingCatalog: BaseBuilding[] = [
         id: 'building-type-martial-hall-hundred-poison', type: 'martial-hall', name: '百毒武館', description: '傳授百毒流內功與外功。', constructionCost: 30, requiredRank: 1, schoolId: 'hundred-poison',
     },
     {
+        id: 'building-type-martial-hall-sharp-edge', type: 'martial-hall', name: '銳鋒武館', description: '傳授銳鋒流內功與外功。', constructionCost: 30, requiredRank: 1, schoolId: 'sharp-edge',
+    },
+    {
+        id: 'building-type-martial-hall-misty-rain', type: 'martial-hall', name: '煙雨武館', description: '傳授煙雨流內功與外功。', constructionCost: 30, requiredRank: 1, schoolId: 'misty-rain',
+    },
+    {
+        id: 'building-type-martial-hall-blazing-sun', type: 'martial-hall', name: '烈陽武館', description: '傳授烈陽流內功與外功。', constructionCost: 30, requiredRank: 1, schoolId: 'blazing-sun',
+    },
+    {
+        id: 'building-type-martial-hall-yellow-earth', type: 'martial-hall', name: '黃土武館', description: '傳授黃土流內功與外功。', constructionCost: 30, requiredRank: 1, schoolId: 'yellow-earth',
+    },
+    {
+        id: 'building-type-martial-hall-ghost-shadow', type: 'martial-hall', name: '幽影武館', description: '傳授幽影流內功與外功。', constructionCost: 30, requiredRank: 1, schoolId: 'ghost-shadow',
+    },
+    {
         id: 'building-type-infirmary',
         type: 'infirmary',
         name: '醫療室',
