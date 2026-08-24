@@ -21,8 +21,8 @@ export function getFunctionalSkillBuffOverrides(
   const levelDelta = level - 1
   const overrides: Partial<BuffInstance> = {}
 
-  if (effect === 'critical-rate' && definition.criticalRateMultiplier !== undefined) {
-    overrides.criticalRateMultiplier = definition.criticalRateMultiplier + levelDelta * 0.25
+  if (effect === 'critical-rate' && definition.criticalRateBonus !== undefined) {
+    overrides.criticalRateBonus = definition.criticalRateBonus + levelDelta * 5
   }
   if (effect === 'burning') {
     overrides.maxHealthDamagePercent = scaledPercent(definition.maxHealthDamagePercent, level)
