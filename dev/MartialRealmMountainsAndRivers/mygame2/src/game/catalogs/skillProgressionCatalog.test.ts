@@ -35,8 +35,10 @@ describe('skillProgressionCatalog', () => {
       const schoolSkills = progressionExternalSkills.filter((skill) => skill.schoolId === schoolId)
       // 每個門派都有基礎傷害型外功。
       expect(schoolSkills.filter((skill) => skill.category === 'damage' && skill.id.endsWith('-external-damage'))).toHaveLength(1)
-      // 每個門派至少都有一個靈氣型外功（含輕功效果）；同類功法數量不設上限。
-      expect(schoolSkills.filter((skill) => skill.category === 'aura').length).toBeGreaterThan(0)
+      // 每個門派至少都有一個靈氣型外功（含輕功效果）；百毒流暫無靈氣型（驛路步已移除）。
+      if (schoolId !== 'hundred-poison') {
+        expect(schoolSkills.filter((skill) => skill.category === 'aura').length).toBeGreaterThan(0)
+      }
     }
     // 赤焰/寒水/百毒有額外 debuff 傷害型。
     for (const schoolId of ['scarlet-flame', 'frost-water', 'hundred-poison']) {

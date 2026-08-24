@@ -1,45 +1,58 @@
-import { _decorator, Button, Component, EventMouse, EventTouch, Input, input, Node } from 'cc';
+import { _decorator, Button, CCBoolean, Component, EventMouse, EventTouch, Input, input, Node } from 'cc';
 import { HandController } from './HandController';
 import { OrbitCamera } from './OrbitCamera';
 import { CardController } from './CardController';
 import { CardUIController } from './CardUIController';
 import { startGameMockData } from './mockData/startGame';
-import { callWeb } from './Helper';
+import { PlayerInfoController } from './PlayerInfoController';
+import { PlayerCommandController } from './PlayerCommandController';
+import { ButtonController } from './ButtonController';
+import { startCardMockData } from './mockData/startCards';
+import { DEBUG } from 'cc/env';
+import { callWeb, solveCallback } from './PostMessageCallback';
+import { setView } from './System';
+import { DeckController } from './DeckController';
+import { PlayerFlow } from './PlayerFlow';
 
 const { ccclass, property } = _decorator;
 
 @ccclass('GameController')
 export class GameController extends Component implements IInstanceGame<IGame> {
     @property({ type: HandController })
-    public handControllers: IInstanceGame<string[]>[] = [];
+    public handControllers: IInstanceGame<string>[] = [];
 
-    @property({ type: HandController })
-    public deckControllers: IInstanceGame<string[]>[] = [];
+    @property({ type: DeckController })
+    public deckControllers: IInstanceGame<string>[] = [];
 
-    @property(Boolean)
-    public debug: boolean = true;
+    @property({ type: PlayerCommandController })
+    public playerCommandControllers: IInstanceGame<any>[] = [];
+
+    private playerFlows: IInstanceGame<string>[] = [new PlayerFlow(), new PlayerFlow()];
+
+    private lastGame: IGame | null = null;
 
     // @property({ type: OrbitCamera })
     // public camera: OrbitCamera | null = null;
 
     async sync(game: IGame, relative: IGame): Promise<void> {
-        console.log("GameController syncing with game data:", game);
+        await this.deckControllers[0].sync(game, '["PlayerA","本国"]');
+        await this.deckControllers[1].sync(game, '["PlayerB","本国"]');
 
-        await this.deckControllers[0].sync(game, game.model.gameState.table.cardStack['["PlayerA","本国"]']);
-        await this.deckControllers[1].sync(game, game.model.gameState.table.cardStack['["PlayerB","本国"]']);
+        await this.handControllers[0].sync(game, '["PlayerA","手札"]');
+        await this.handControllers[1].sync(game, '["PlayerB","手札"]');
 
-        if (game.localMemory.timing.toString().includes("リロールフェイズ,フェイズ開始")) {
+        this.playerCommandControllers[0].sync(game, 'PlayerA');
+        this.playerCommandControllers[1].sync(game, 'PlayerB');
 
-            callWeb("onCocosGameFlow", { clientId: game.localMemory.clientId, flow: game.playerCommands['PlayerA'][0] });
-            // callWeb("onCocosGameFlow", { clientId: game.localMemory.clientId, flow: game.playerCommands['PlayerA'][0] });
-            // console.log("Syncing hand controller with active player's cards:", game.model.gameState.cards);
-            // this.handController?.sync(game, game.model.gameState.playerStates[game.model.gameState.activePlayerID].cards);
-        }
+        this.playerFlows[0].sync(game, 'PlayerA');
+        this.playerFlows[1].sync(game, 'PlayerB');
+
+        this.lastGame = game;
     }
 
     onLoad(): void {
 
-        window['cocos'] = {
+        (window as any)['cocos'] = {
             receiveMessage: (msg: { type: string, data: any }) => {
                 console.log("Received message from web:", msg);
                 switch (msg.type) {
@@ -47,13 +60,16 @@ export class GameController extends Component implements IInstanceGame<IGame> {
                         const gameData: IGame = msg.data;
                         this.sync(gameData, gameData);
                         break;
+                    case 'onMethodCallAnswer':
+                        solveCallback(msg.data.callbackId, msg.data.response);
+                        break;
                     default:
                         console.warn("Unknown message type:", msg.type);
                 }
             }
         }
 
-        if (this.debug) {
+        if (DEBUG) {
             const mockGame: IGame = startGameMockData
             this.sync(mockGame, mockGame);
         }
@@ -72,6 +88,40 @@ export class GameController extends Component implements IInstanceGame<IGame> {
             // console.log(cardController);
             callWeb("cardClicked", { cardId: '1' });
         }
+    }
+
+    onPlayerACommandButtonClick(event: EventTouch) {
+        const btnNode: Node = event.currentTarget as Node;
+        // console.log("Player command button clicked:", btnNode);
+
+        if (btnNode) {
+            const commandController = btnNode.getComponent(ButtonController);
+            // console.log("Command controller:", commandController.buttonInfo);
+
+            callWeb("onCocosGameFlow", { clientId: 'PlayerA', flow: commandController.buttonInfo, versionID: this.lastGame?.model.versionID });
+        }
+    }
+
+    onPlayerBCommandButtonClick(event: EventTouch) {
+        const btnNode: Node = event.currentTarget as Node;
+        // console.log("Player command button clicked:", btnNode);
+
+        if (btnNode) {
+            const commandController = btnNode.getComponent(ButtonController);
+            // console.log("Command controller:", commandController.buttonInfo);
+
+            callWeb("onCocosGameFlow", { clientId: 'PlayerB', flow: commandController.buttonInfo, versionID: this.lastGame?.model.versionID });
+        }
+    }
+
+    onMainUIPlayerAButtonClick(event: EventTouch) {
+        setView('PlayerA');
+        this.sync(this.lastGame!, this.lastGame!);
+    }
+
+    onMainUIPlayerBButtonClick(event: EventTouch) {
+        setView('PlayerB');
+        this.sync(this.lastGame!, this.lastGame!);
     }
 
     // callWeb(type: string, data: any) {

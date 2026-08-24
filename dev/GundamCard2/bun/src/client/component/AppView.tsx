@@ -36,7 +36,7 @@ export function AppView() {
     <AppContextProvider>
       <ControlView></ControlView>
       <PlayerController clientId={PlayerA} isPlayer={true}></PlayerController>
-      {/* <PlayerController clientId={PlayerB} isPlayer={false}></PlayerController> */}
+      <PlayerController clientId={PlayerB} isPlayer={false}></PlayerController>
       <div style={{ border: "1px solid blue", display: "flex" }}>
         <div style={{ border: "1px solid red", flex: 1, width: 1200 }}>
           <ClientView clientId={PlayerA}></ClientView>

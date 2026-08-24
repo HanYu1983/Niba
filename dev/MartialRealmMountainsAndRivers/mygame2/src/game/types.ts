@@ -86,6 +86,7 @@ export type BuffInstance = {
   attributeMultiplier?: number
   maxHealthDamagePercent?: number
   criticalRateMultiplier?: number
+  criticalRateBonus?: number
   terrainCostOverride?: number
   reflectionPercent?: number
   lifestealPercent?: number

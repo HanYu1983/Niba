@@ -63,7 +63,7 @@ export const jianghuExternalSkills: ExternalSkill[] = [
     id: 'jianghu-inner-power-drain',
     name: '汲元功',
     description: '江湖奪氣之法，傷敵而補己。',
-    formulaDescription: '造成傷害時，回復「10% + 等級×2%」的傷害值的內力。',
+    formulaDescription: '造成傷害時，回復「8% + 等級×1.5%」的傷害值的內力。',
     functionalEffect: 'inner-power-leech',
   }),
   createJianghuSkill({

@@ -7,11 +7,11 @@ import {
 } from './sectGateRules'
 
 describe('sectGateRules', () => {
-  it('門派據點提供該門派一內功、一傷害外功與一靈氣外功', () => {
+  it('門派據點提供該門派內功、傷害外功與靈氣外功（允許同類型多本）', () => {
     const { inner, damage, aura } = getSectGateSkills('void-spirit')
-    expect(inner?.id).toBe('void-spirit-inner')
-    expect(damage?.id).toBe('void-spirit-external-damage')
-    expect(aura?.id).toBe('void-spirit-external-functional')
+    expect(inner.map((skill) => skill.id)).toContain('void-spirit-inner')
+    expect(damage.map((skill) => skill.id)).toContain('void-spirit-external-damage')
+    expect(aura.map((skill) => skill.id)).toContain('void-spirit-external-functional')
   })
 
   it('門派功法不再有等級鎖定，一律解鎖', () => {

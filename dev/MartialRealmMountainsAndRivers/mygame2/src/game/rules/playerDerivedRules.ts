@@ -61,7 +61,7 @@ function getEffectiveBuffDefinition(instance: BuffInstance): BuffDefinition | un
   if (!definition) return undefined
   const overrides: Partial<BuffDefinition> = {}
   for (const key of [
-    'attributeMultiplier', 'maxHealthDamagePercent', 'criticalRateMultiplier', 'terrainCostOverride', 'reflectionPercent',
+    'attributeMultiplier', 'maxHealthDamagePercent', 'criticalRateMultiplier', 'criticalRateBonus', 'terrainCostOverride', 'reflectionPercent',
     'lifestealPercent', 'innerPowerLeechPercent', 'damageReductionPercent', 'healthRegenPercent',
     'innerPowerHealthRegenPercent', 'damageDealtPercent', 'externalSkillDamagePercent', 'evasionRateBonus',
     'staminaToInnerPowerRatio', 'externalSkillInnerCostReduction', 'insightTrueDamageMultiplier',
@@ -298,8 +298,10 @@ export function getCreatureTerrainStaminaCost(creature: CreatureState, terrain: 
 
 export function getCriticalRateForPlayer(player: PlayerState): number {
   const baseRate = getEffectiveAttributesForPlayer(player).armStrength * 2
-  return getActiveBuffDefinitions(player)
-    .reduce((rate, definition) => rate * (definition.criticalRateMultiplier ?? 1), baseRate)
+  const definitions = getActiveBuffDefinitions(player)
+  const multiplier = definitions.reduce((rate, definition) => rate * (definition.criticalRateMultiplier ?? 1), 1)
+  const bonus = definitions.reduce((total, definition) => total + (definition.criticalRateBonus ?? 0), 0)
+  return baseRate * multiplier + bonus
 }
 
 /** 對指定 Buff 欄位求和（用於吸血、汲元、減傷、傷害加成等百分比欄位）。 */

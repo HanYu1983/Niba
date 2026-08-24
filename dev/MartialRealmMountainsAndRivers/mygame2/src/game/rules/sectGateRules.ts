@@ -38,19 +38,19 @@ export function addSectGateExperience(gate: { experience: number; level: 1 | 2 |
   return { experience, level: getSectGateLevel(experience) }
 }
 
-/** 取得某門派的三個功法：內功 / 傷害型外功 / 靈氣型外功。 */
+/** 取得某門派的全部功法（內功 / 傷害型外功 / 靈氣型外功），允許同類型有多本。 */
 export function getSectGateSkills(schoolId: MartialSchoolId | undefined): {
-  inner: InnerSkill | null
-  damage: ExternalSkill | null
-  aura: ExternalSkill | null
+  inner: InnerSkill[]
+  damage: ExternalSkill[]
+  aura: ExternalSkill[]
 } {
-  const inner = progressionInnerSkills.find((skill) => skill.schoolId === schoolId) ?? null
-  const damage = progressionExternalSkills.find(
-    (skill) => skill.schoolId === schoolId && skill.category === 'damage' && skill.id.endsWith('-external-damage'),
-  ) ?? null
-  const aura = progressionExternalSkills.find(
+  const inner = progressionInnerSkills.filter((skill) => skill.schoolId === schoolId)
+  const damage = progressionExternalSkills.filter(
+    (skill) => skill.schoolId === schoolId && skill.category === 'damage',
+  )
+  const aura = progressionExternalSkills.filter(
     (skill) => skill.schoolId === schoolId && skill.category === 'aura',
-  ) ?? null
+  )
   return { inner, damage, aura }
 }
 

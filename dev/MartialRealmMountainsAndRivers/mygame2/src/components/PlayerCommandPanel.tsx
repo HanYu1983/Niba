@@ -55,7 +55,8 @@ function PlayerCommandPanel({
           {player?.equippedExternalSkillIds.map((skillId) => {
             const skill = externalSkills.find((currentSkill) => currentSkill.id === skillId)
 
-            if (!skill) {
+            // 靈氣型外功為常駐開關，不顯示在公用指令欄，改由功法面板切換。
+            if (!skill || skill.category === 'aura') {
               return null
             }
 

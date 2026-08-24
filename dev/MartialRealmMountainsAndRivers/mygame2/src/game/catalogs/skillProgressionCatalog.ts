@@ -51,7 +51,7 @@ export const martialSchoolCatalog: MartialSchoolDefinition[] = [
     }],
     damage: [{ name: '金剛拳', description: '凝聚臂力與根骨之力，對相鄰單一敵人造成傷害。', innerPowerCost: 4 }],
     aura: [
-      { name: '暴擊強化', description: '自身暴擊率 ×2，持續 2 回合。', effect: 'critical-rate', passiveBuffIds: ['golden-body-critical-boost'] },
+      { name: '暴擊強化', description: '自身暴擊率 +15%（常駐）。', effect: 'critical-rate', passiveBuffIds: ['golden-body-critical-boost'] },
       { name: '破壁功', description: '進入牆壁時，移動消耗降為 2。', passiveBuffIds: ['wall-step'] },
     ],
     enhancement: [],
@@ -119,7 +119,7 @@ export const martialSchoolCatalog: MartialSchoolDefinition[] = [
     }],
     damage: [{ name: '裂地拳', description: '以大地之力震擊，對相鄰單一敵人造成傷害。', innerPowerCost: 4 }],
     aura: [
-      { name: '反震', description: '自身 3 回合內受到傷害時，反彈同等傷害。', effect: 'reflection', passiveBuffIds: ['earth-mountain-reflection'] },
+      { name: '反震', description: '開啟後受到傷害時，反彈同等傷害（常駐）。', effect: 'reflection', passiveBuffIds: ['earth-mountain-reflection'] },
       { name: '登山功', description: '進入山嶽時，移動消耗降為 2。', passiveBuffIds: ['mountain-step'] },
     ],
     enhancement: [],
@@ -155,7 +155,7 @@ export const martialSchoolCatalog: MartialSchoolDefinition[] = [
       { name: '腐骨爪', description: '毒爪抓向敵人，對相鄰單一敵人造成傷害。', innerPowerCost: 4 },
       { name: '淬毒', description: '使目標中毒 3 回合，每回合損失最大生命 10%，且五維屬性降低 15%。', effect: 'poison', innerPowerCost: 6 },
     ],
-    aura: [{ name: '驛路步', description: '進入官道時，移動消耗降為 1。', passiveBuffIds: ['road-step'] }],
+    aura: [],
     enhancement: [],
   },
   {
