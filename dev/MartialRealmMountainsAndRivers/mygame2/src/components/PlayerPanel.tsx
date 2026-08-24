@@ -9,7 +9,7 @@ import GovernanceRankSection from './GovernanceRankSection'
 import { type PlayerState, type UpgradeableAttribute, getExperienceRequired } from '../game/types'
 import { getInnerSkill, getPlayerInsightCapacityBreakdown, getSkillDamage, getSkillExperienceRequired, getSkillInnerPowerCost, getSkillProgression } from '../game/rules/skillRules'
 import { allExternalSkillCatalog } from '../game/catalogs/martialHallSkillCatalog'
-import { getActiveBuffsForPlayer, getBuff, getCriticalRateForPlayer, getEffectiveAttributesForPlayer, getEvasionRate, getRootReductionRate } from '../game/rules/playerDerivedRules'
+import { getActiveBuffsForPlayer, getBuff, getCriticalRateForPlayer, getEffectiveAttributesForPlayer, getEvasionRate, getExternalSkillCritRateForPlayer, getRootReductionRate } from '../game/rules/playerDerivedRules'
 import { getGovernanceRankName, getGovernanceRankNumber } from '../game/rules/governanceRules'
 
 type PlayerPanelProps = {
@@ -93,6 +93,11 @@ function PlayerPanel({ player, isActive, onAllocateAttributePoint }: PlayerPanel
                 <StatValue label="暴擊率">
                   <Tooltip title="攻擊時造成雙倍傷害的機率，依臂力決定（每 1 點臂力 +2%）。">
                     {renderRateWithIcons(getCriticalRateForPlayer(player), '⚔️')}
+                  </Tooltip>
+                </StatValue>
+                <StatValue label="爆發率">
+                  <Tooltip title="傷害型外功造成暴擊的機率，依內息決定（每 1 點內息 +2%）。">
+                    {renderRateWithIcons(getExternalSkillCritRateForPlayer(player), '💥')}
                   </Tooltip>
                 </StatValue>
                 <StatValue label="運功數值">
