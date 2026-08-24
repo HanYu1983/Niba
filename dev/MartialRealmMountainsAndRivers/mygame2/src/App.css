@@ -1341,6 +1341,18 @@
   background: linear-gradient(145deg, #a855f7, #6d28d9);
 }
 
+/* 震懾：三重共振命中的生物疊加灰色，提示暫時無法行動。 */
+.player--creature.creature--buff-triple-resonance-stun {
+  border-color: #9ca3af;
+  background: linear-gradient(145deg, #6b7280, #4b5563);
+  box-shadow:
+    0 0 0 2px rgba(156, 163, 175, 0.85),
+    0 0 10px rgba(156, 163, 175, 0.6),
+    0 1px 4px rgba(10, 20, 30, 0.5);
+  filter: saturate(0.4);
+  cursor: default;
+}
+
 .creature-command-panel {
   max-width: 350px;
 }
