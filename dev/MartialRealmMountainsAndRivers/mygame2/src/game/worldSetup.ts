@@ -189,7 +189,7 @@ export function createDebugGameState(): GameState {
     innerSkillId: 'tuna-gong',
     innerSkillIds: debugAllInnerIds,
     position: playerPosition,
-    attributes: { armStrength: 8, constitution: 8, agility: 8, innerEnergy: 8, insight: 8 },
+    attributes: { armStrength: 30, constitution: 30, agility: 30, innerEnergy: 30, insight: 30 },
     externalSkillIds: debugAllExternalIds,
     equippedExternalSkillIds: [],
     skillProgression: debugSkillProgression,
@@ -260,6 +260,12 @@ export function createDebugGameState(): GameState {
     { id: 'debug-sect-gate-5', schoolId: 'scarlet-flame', position: { row: 12, column: 18 }, experience: 0, level: 1 },
     { id: 'debug-sect-gate-6', schoolId: 'void-spirit', position: { row: 17, column: 10 }, experience: 0, level: 1 },
     { id: 'debug-sect-gate-7', schoolId: 'hundred-poison', position: { row: 17, column: 4 }, experience: 0, level: 1 },
+    // 新五行門派：依主場地形配置（幽影流無主場，比照太虛流水域測試區）。
+    { id: 'debug-sect-gate-8', schoolId: 'sharp-edge', position: { row: 15, column: 15 }, experience: 0, level: 1 },
+    { id: 'debug-sect-gate-9', schoolId: 'misty-rain', position: { row: 15, column: 11 }, experience: 0, level: 1 },
+    { id: 'debug-sect-gate-10', schoolId: 'blazing-sun', position: { row: 15, column: 18 }, experience: 0, level: 1 },
+    { id: 'debug-sect-gate-11', schoolId: 'yellow-earth', position: { row: 6, column: 7 }, experience: 0, level: 1 },
+    { id: 'debug-sect-gate-12', schoolId: 'ghost-shadow', position: { row: 4, column: 10 }, experience: 0, level: 1 },
   ]
   const debugCreatureDefinitions = [
     { id: 'debug-creature-water', name: 'Debug 寒水妖', schoolId: 'frost-water' as const, behaviorType: 'hunter' as const, position: { row: 10, column: 9 }, attributes: { armStrength: 7, constitution: 7, agility: 6, innerEnergy: 5, insight: 5 } },

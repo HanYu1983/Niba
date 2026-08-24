@@ -45,6 +45,9 @@ export type FunctionalExternalSkillEffect =
   | 'gathering'
   | 'divine-movement'
   | 'qi-conversion'
+  // 江湖線：迴避與保命（掛載既有幻影步／回光 Buff）
+  | 'evasion'
+  | 'revive-guard'
 
 /** 每個功能效果對應的 Buff 定義 ID 清單（一個效果可對應多個 Buff）。完整清單由外部測試驗證逐項對應。 */
 export const functionalSkillBuffBindings: Record<FunctionalExternalSkillEffect, string[]> = {
@@ -84,6 +87,8 @@ export const functionalSkillBuffBindings: Record<FunctionalExternalSkillEffect, 
   'gathering': ['spirit-herb-hundred-grass'],
   'divine-movement': ['divine-movement-eight-trigrams'],
   'qi-conversion': ['taixu-qi-conversion'],
+  evasion: ['phantom-step'],
+  'revive-guard': ['return-light'],
 }
 
 /** 取得某效果對應的 Buff 定義 ID 清單；無對應時回傳空陣列（例如 `experience-gain`）。 */

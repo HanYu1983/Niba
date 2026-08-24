@@ -175,4 +175,19 @@ export const buffCatalog: BuffDefinition[] = [
   { id: 'back-to-water', name: '背水', description: '血量低於 30% 時，五維 ×1.5。', duration: 'rounds', durationRounds: 3, category: 'buff', conditional: { when: 'health-below', threshold: 0.3, multiplier: 1.5 } },
   { id: 'nurture-qi', name: '養氣', description: '血量高於 80% 時，五維 ×1.2。', duration: 'rounds', durationRounds: 3, category: 'buff', conditional: { when: 'health-above', threshold: 0.8, multiplier: 1.2 } },
   { id: 'all-in', name: '孤注', description: '血量低於 15% 時，五維 ×2。', duration: 'rounds', durationRounds: 3, category: 'buff', conditional: { when: 'health-below', threshold: 0.15, multiplier: 2 } },
+  // 銳鋒流（金）：快劍搶攻
+  { id: 'sharp-edge-sword-heart', name: '劍心明鑑', description: '自身地圖視野半徑 +1。', duration: 'persistent', category: 'buff', visionRadiusBonus: 1 },
+  { id: 'sharp-edge-keen-edge', name: '凌厲劍勢', description: '普通攻擊造成的最終傷害 +10%。', duration: 'persistent', category: 'buff', damageDealtPercent: 0.1 },
+  // 煙雨流（水）：綿掌迴雪、養生回復
+  { id: 'misty-rain-drizzle-nourish', name: '雨潤回春', description: '每回合回復最大血量 5% 的氣血。', duration: 'persistent', category: 'buff', healthRegenPercent: 0.05 },
+  { id: 'misty-rain-rain-curtain', name: '雨幕遮身', description: '受到傷害時，最終傷害 -10%。', duration: 'persistent', category: 'buff', damageReductionPercent: 0.1 },
+  // 烈陽流（火）：血性剛猛、越戰越勇
+  { id: 'blazing-sun-fervor', name: '烈陽戰意', description: '臂力與根骨 +1。', duration: 'persistent', category: 'buff', attributeModifiers: { armStrength: 1, constitution: 1 } },
+  { id: 'blazing-sun-blazing-gaze', name: '烈目凝芒', description: '暴擊率 ×1.25。', duration: 'persistent', category: 'buff', criticalRateMultiplier: 1.25 },
+  // 黃土流（土）：持久游擊與工事
+  { id: 'yellow-earth-rammed-earth', name: '夯土工事', description: '建築材料消耗 -15%。', duration: 'persistent', category: 'buff', buildingMaterialCostReduction: 0.15 },
+  { id: 'yellow-earth-pack-march', name: '負重健行', description: '最大體力 +2。', duration: 'persistent', category: 'buff', maxStaminaBonus: 2 },
+  // 幽影流（無）：隱匿暗襲
+  { id: 'ghost-shadow-shadow-veil', name: '幽影蔽身', description: '回避率 +10%。', duration: 'persistent', category: 'buff', evasionRateBonus: 10 },
+  { id: 'ghost-shadow-lone-resolve', name: '孤影決絕', description: '血量低於 25% 時，五維 ×1.6，持續 3 回合。', duration: 'rounds', durationRounds: 3, category: 'buff', conditional: { when: 'health-below', threshold: 0.25, multiplier: 1.6 } },
 ]

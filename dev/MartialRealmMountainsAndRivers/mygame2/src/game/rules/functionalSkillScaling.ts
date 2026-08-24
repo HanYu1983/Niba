@@ -75,6 +75,13 @@ export function getFunctionalSkillBuffOverrides(
   if (effect === 'qi-conversion') {
     overrides.staminaToInnerPowerRatio = 2 + levelDelta
   }
+  // 江湖線：迴避與保命（幻影功／回光功）
+  if (effect === 'evasion') {
+    overrides.evasionRateBonus = (definition.evasionRateBonus ?? 0) + levelDelta
+  }
+  if (effect === 'revive-guard' && definition.reviveHealthPercent !== undefined) {
+    overrides.reviveHealthPercent = Math.min(1, definition.reviveHealthPercent + levelDelta * 0.05)
+  }
 
   return Object.fromEntries(Object.entries(overrides).filter(([, value]) => value !== undefined))
 }

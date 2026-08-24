@@ -1,5 +1,6 @@
 import type { GameSettings, TerrainWeights } from './types'
 import { DEFAULT_TERRAIN_WEIGHTS } from './worldGeneration'
+import { CHALLENGE_TEMPLATES_V1, CHALLENGE_TEMPLATES_V2 } from './challengeTemplates'
 
 /** 模板不含 seed，套用時另行隨機產生。 */
 export type MapTemplateSettings = Omit<GameSettings, 'seed'>
@@ -306,6 +307,8 @@ export const BUILTIN_TEMPLATES: MapTemplate[] = [
       terrainWeights: { plain: 25, forest: 25, water: 15, mountain: 20, desert: 15 },
     },
   },
+  ...CHALLENGE_TEMPLATES_V1,
+  ...CHALLENGE_TEMPLATES_V2,
 ]
 
 /** 產生 0–999999999 的隨機種子（沿用 seed 上限）。 */

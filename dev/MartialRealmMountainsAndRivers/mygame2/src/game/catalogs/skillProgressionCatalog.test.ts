@@ -1,15 +1,15 @@
 import { describe, expect, it } from 'vitest'
-import { progressionExternalSkills, progressionInnerSkills } from './skillProgressionCatalog'
+import { martialSchoolCatalog, progressionExternalSkills, progressionInnerSkills } from './skillProgressionCatalog'
 import { functionalSkillBuffBindings, getFunctionalSkillBuffIds } from './functionalSkillRegistry'
 import { buffCatalog } from './buffCatalog'
 import { allExternalSkillCatalog, getMartialHallSkills, martialHallExternalSkillCatalog, martialHallInnerSkillCatalog } from './martialHallSkillCatalog'
 import { jianghuExternalSkills } from './jianghuExternalSkillCatalog'
 
 describe('skillProgressionCatalog', () => {
-  it('提供七個流派且每個流派都有內功與外功', () => {
-    expect(progressionInnerSkills).toHaveLength(7)
-    // 每個門派：至少一個傷害型與靈氣型；赤焰/寒水/百毒另有 debuff 傷害型，其餘門派各有獨立輕功靈氣型。
-    expect(progressionExternalSkills).toHaveLength(20)
+  it('提供十二個流派且每個流派都有內功與外功', () => {
+    expect(progressionInnerSkills).toHaveLength(12)
+    // 每個門派：至少一個傷害型與靈氣型；赤焰/寒水/百毒另有 debuff 傷害型。
+    expect(progressionExternalSkills).toHaveLength(36)
 
     for (const skills of [progressionInnerSkills, progressionExternalSkills]) {
       const levelsBySchool = new Map<string, number[]>()
@@ -18,13 +18,20 @@ describe('skillProgressionCatalog', () => {
         const level = (skill as typeof skill & { level: number }).level
         levelsBySchool.set(school, [...(levelsBySchool.get(school) ?? []), level])
       }
-      expect(levelsBySchool.size).toBe(7)
+      expect(levelsBySchool.size).toBe(12)
       for (const levels of levelsBySchool.values()) expect(levels.every((level) => level === 1)).toBe(true)
     }
   })
 
+  it('五行元素各由兩個門派守護', () => {
+    for (const element of ['none', 'metal', 'wood', 'water', 'fire', 'earth'] as const) {
+      const schools = martialSchoolCatalog.filter((school) => school.element === element)
+      expect(schools, `element ${element}`).toHaveLength(2)
+    }
+  })
+
   it('每個流派都有傷害型與靈氣型外功；赤炎/寒水/百毒另有 debuff 傷害型', () => {
-    for (const schoolId of ['golden-body', 'swift-wind', 'scarlet-flame', 'frost-water', 'earth-mountain', 'void-spirit', 'hundred-poison']) {
+    for (const schoolId of ['golden-body', 'swift-wind', 'scarlet-flame', 'frost-water', 'earth-mountain', 'void-spirit', 'hundred-poison', 'sharp-edge', 'misty-rain', 'blazing-sun', 'yellow-earth', 'ghost-shadow']) {
       const schoolSkills = progressionExternalSkills.filter((skill) => skill.schoolId === schoolId)
       // 每個門派都有基礎傷害型外功。
       expect(schoolSkills.filter((skill) => skill.category === 'damage' && skill.id.endsWith('-external-damage'))).toHaveLength(1)
@@ -101,8 +108,8 @@ describe('skillProgressionCatalog', () => {
 })
 
 describe('江湖外功功法（無門派）', () => {
-  it('提供 9 個江湖靈氣型外功，對應 9 個 Buff', () => {
-    expect(jianghuExternalSkills).toHaveLength(9)
+  it('提供 19 個江湖靈氣型外功，對應 19 個 Buff', () => {
+    expect(jianghuExternalSkills).toHaveLength(19)
     expect(jianghuExternalSkills.every((skill) => !skill.schoolId)).toBe(true)
     expect(jianghuExternalSkills.every((skill) => skill.target === 'self')).toBe(true)
     expect(jianghuExternalSkills.every((skill) => skill.category === 'aura')).toBe(true)
