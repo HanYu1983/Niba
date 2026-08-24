@@ -1,5 +1,39 @@
 # 開發日誌
 
+## 2026-08-24｜AI 重構切片 D：moveCreatures 拆六段管線＋blocked 誤擊修復
+
+### 本次完成
+
+- 新增 `src/game/actions/creatureTurnPipeline.ts`，把 288 行的 `moveCreatures()` monolith 拆為六段（重構文件 §12 Phase 2）：
+  - `createCreatureTurnContext()`（perceive）：世界快照＋佔位圖＋可變累加器。
+  - `selectCreatureTarget()`（沿用既有規則）→ 最小目標快照 `CreatureTargetSelection`。
+  - `planCreatureMovement()`（plan）：貪婪步進預演，隨機來源消費順序與舊實作逐次一致（seed 巡邏測試原樣通過）。
+  - `validateCreaturePlan()`（validate）：終點可通行、未被他佔、體力非負、阻路設施仍存活；失敗則安全待命。
+  - `executeCreatureAction()`（execute）：陷阱套用＋互動分支（道具→據點→資源→玩家→防禦設施），傷害公式原樣搬移。
+  - `reduceCreatureEvents()`（reduce）：終點吞噬／反震／組裝下一隻快照與動畫 step。
+- **修復 blocked bug**：舊實作被擋時攻擊「任一相鄰」防禦設施（依陣列順序），可能打錯目標、甚至體力耗盡被牆擋住也誤擊無辜設施。新實作在 plan 段以 `findBlockingDefenseId` 找出真正堵住最佳去路的那座（除防禦設施外皆可通行且體力可負擔的鄰格中離目標最近者）；體力／地形造成的 blocked 不再觸發反擊。
+- `creatureActions.moveCreatures` 簽名與回傳契約不變（薄委託 `runCreatureTurn`）；`CreatureTurnResult`／`CreatureTurnStep` 型別移至管線檔並轉出口維持相容。
+- 測試＋2：兩座相鄰木柵只打「堵路的東側」（非陣列順序優先的北側）；體力耗盡被擋不誤擊旁邊木柵。
+
+### 本切片不改變什麼
+
+- 移動模型仍是貪婪步進（非 Dijkstra 重尋路——那是統一移動管線的後續議題）；巡邏 seed 可重現性原樣保留。
+- 箭塔先手攻擊、巢穴生成（`spawnCreaturesFromNests`）不在本次範圍。
+
+### 影響檔案
+
+- 新增：`src/game/actions/creatureTurnPipeline.ts`
+- 改：`src/game/actions/creatureActions.ts`（−288 行 monolith → 薄委託）、`creatureActions.test.ts`（+2 例）
+- 文件：本日誌、架構文件 §12 Phase 2、playbook §1／§3
+
+### 驗證結果
+
+- vitest：72 檔 / **760 項全過**（含既有 17 例 creature 測試零修改通過）。tsc -b：通過。ESLint：通過。Build：通過。
+
+### 下一步
+
+- 切片 **E**：Player AI Scheduler 抽出 App.tsx 成 `aiTurnScheduler.ts`（timer cancellation、同 Actor 不重入）。
+
 ## 2026-08-24｜AI 重構切片 C：統一 AiAction 型別＋Action Validator
 
 ### 本次完成

@@ -465,6 +465,103 @@ describe('moveCreatures 道具點被吃掉開關', () => {
   })
 })
 
+describe('moveCreatures blocked 只反擊堵路防禦設施', () => {
+  // 舊實作：blocked 時攻擊「任一」相鄰防禦設施（依陣列順序）；新實作只打真正堵住去路的那座。
+  function makeBarricade(id: string, name: string, position: { row: number; column: number }): DefenseStructureState {
+    return {
+      type: 'barricade',
+      name,
+      description: '',
+      icon: '🪵',
+      constructionCost: 10,
+      requiredRank: 0,
+      maxHealth: 50,
+      healthBonus: 0,
+      blocksMovement: true,
+      providesVision: false,
+      attackRange: 0,
+      attackDamage: 0,
+      id,
+      position,
+      ownerBaseId: '',
+      health: 50,
+    }
+  }
+
+  function runBlocked(state: GameState) {
+    return moveCreatures(
+      state.creatures,
+      state.map,
+      state.players,
+      state.bases,
+      state.resourcePoints,
+      state.defenseStructures ?? [],
+      state.itemPoints,
+      state.explorationEvents ?? [],
+      state.creatureNests,
+      state.ruins ?? [],
+      state.traps ?? [],
+      state.sectGates ?? [],
+      state.globalBuffs ?? [],
+    )
+  }
+
+  it('兩座相鄰木柵中，只攻擊離目標最近、真正堵路的那座（而非陣列順序優先者）', () => {
+    const wallCells = new Set(['4-3', '3-2'])
+    const map = {
+      rows: 40,
+      columns: 40,
+      cells: Array.from({ length: 40 * 40 }, (_, index) => {
+        const row = Math.floor(index / 40)
+        const column = index % 40
+        const isBorder = row === 0 || column === 0 || row === 39 || column === 39
+        return { id: `${row}-${column}`, row, column, terrain: (isBorder || wallCells.has(`${row}-${column}`) ? 'wall' : 'plain') as 'wall' | 'plain' }
+      }),
+    }
+    const chaser = { ...makeCreature('c1', { row: 3, column: 3 }), behaviorType: 'roamer' as const, aggroRange: 9 }
+    // 北側 (2,3) 的木柵在陣列中排第一；東側 (3,4) 才是通往目標的最佳去路。
+    const northBarricade = makeBarricade('barricade-north', '北木柵', { row: 2, column: 3 })
+    const eastBarricade = makeBarricade('barricade-east', '東木柵', { row: 3, column: 4 })
+    const state = makeGameState({
+      map,
+      creatures: [chaser],
+      players: [makePlayer({ position: { row: 3, column: 6 } })],
+      defenseStructures: [northBarricade, eastBarricade],
+    })
+
+    const result = runBlocked(state)
+
+    // 東木柵被攻擊（臂力 4 → 傷害 2），北木柵原封不動。
+    expect(result.defenseStructures?.find((structure) => structure.id === 'barricade-east')?.health).toBe(48)
+    expect(result.defenseStructures?.find((structure) => structure.id === 'barricade-north')?.health).toBe(50)
+    expect(result.logs.some((log) => log.message.includes('東木柵'))).toBe(true)
+    expect(result.logs.some((log) => log.message.includes('北木柵'))).toBe(false)
+  })
+
+  it('體力耗盡造成的 blocked 不會誤擊相鄰的無辜設施', () => {
+    const exhaustedChaser = {
+      ...makeCreature('c1', { row: 3, column: 3 }),
+      behaviorType: 'roamer' as const,
+      aggroRange: 9,
+      stamina: 2,
+      maxStamina: 2,
+    }
+    const bystander = makeBarricade('barricade-side', '旁邊木柵', { row: 2, column: 4 })
+    const state = makeGameState({
+      creatures: [exhaustedChaser],
+      players: [makePlayer({ position: { row: 3, column: 9 } })],
+      defenseStructures: [bystander],
+    })
+
+    const result = runBlocked(state)
+
+    // 怪物向東走一步後體力歸零被擋下；相鄰的旁邊木柵不應被攻擊。
+    expect(result.creatures.find((creature) => creature.id === 'c1')?.position).toEqual({ row: 3, column: 4 })
+    expect(result.defenseStructures?.[0]?.health).toBe(50)
+    expect(result.logs.some((log) => log.message.includes('旁邊木柵'))).toBe(false)
+  })
+})
+
 describe('moveCreatures 巡邏隨機注入', () => {
   // 遠離所有目標的游蕩型：警戒範圍 2 格內沒有玩家 → selectCreatureTarget 回 null → 走巡邏分支。
   function makePatrolInputs() {

@@ -796,6 +796,8 @@ executeCreatureAction()
 reduceCreatureEvents()
 ```
 
+- Status：Done（2026-08-24，切片 D）
+- Result：實作於 `src/game/actions/creatureTurnPipeline.ts`（`createCreatureTurnContext`／`selectCreatureTarget`／`planCreatureMovement`／`validateCreaturePlan`／`executeCreatureAction`／`reduceCreatureEvents`，orchestrator 為 `runCreatureTurn`）；`moveCreatures` 薄委託，`CreatureTurnResult` 相容。**blocked bug 已修**：只反擊真正堵住去路的防禦設施（`findBlockingDefenseId`），體力／地形被擋不再誤擊相鄰設施。移動模型維持貪婪步進、巡邏 seed 可重現。760 項測試全過。
 - 先維持 `CreatureTurnResult` 相容格式。
 - 測試穩定後，再改用 `AiActionEvent[]`。
 
