@@ -92,7 +92,7 @@ const JIANGHU_ADDITIVE_PERCENT: Partial<Record<FunctionalExternalSkillEffect, { 
   lifesteal: { field: 'lifestealPercent', base: 0.15, step: 0.02 },
   'damage-reduction': { field: 'damageReductionPercent', base: 0.1, step: 0.02 },
   'inner-power-health-regen': { field: 'innerPowerHealthRegenPercent', base: 0.05, step: 0.01 },
-  'inner-power-leech': { field: 'innerPowerLeechPercent', base: 0.1, step: 0.02 },
+  'inner-power-leech': { field: 'innerPowerLeechPercent', base: 0.08, step: 0.015 },
   'damage-dealt': { field: 'damageDealtPercent', base: 0.1, step: 0.02 },
   'external-skill-damage': { field: 'externalSkillDamagePercent', base: 0.1, step: 0.02 },
 }
