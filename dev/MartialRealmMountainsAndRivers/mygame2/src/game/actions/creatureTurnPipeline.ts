@@ -284,6 +284,20 @@ export function planCreatureMovement(
 
 export type CreaturePlanValidation = { ok: true } | { ok: false; reason: string }
 
+/**
+ * Creature 回合資格檢查（重構文件 §9.2 creature kind，切片 I 接線）：
+ * 行動者必須存活且座標有效。與玩家側 `validateAiAction` 的 actor 層檢查同源對應；
+ * 管線在 select／plan 之前先過此關，不合格者跳過該回合（不產生行動）。
+ */
+export function validateCreatureTurnEligibility(creature: CreatureState): CreaturePlanValidation {
+  if (creature.health <= 0) return { ok: false, reason: 'Creature 已無法行動。' }
+  const position = creature.position
+  if (!position || !Number.isFinite(position.row) || !Number.isFinite(position.column)) {
+    return { ok: false, reason: 'Creature 座標無效。' }
+  }
+  return { ok: true }
+}
+
 /** Validate 段（§9.2 子集）：最終位置、體力與阻路設施的健全性檢查。 */
 export function validateCreaturePlan(
   context: CreatureTurnContext,
@@ -582,6 +596,8 @@ export function runCreatureTurn(inputs: RunCreatureTurnInputs): CreatureTurnResu
   } as GameState
 
   const nextCreatures = survivingCreatures.map((creature) => {
+    // Validate 段前置：回合資格（存活＋座標有效）不合格者跳過，不產生任何行動或日誌。
+    if (!validateCreatureTurnEligibility(creature).ok) return { ...creature }
     const rawTarget = selectCreatureTarget(fakeStateForSelection, creature)
     const selection: CreatureTargetSelection | null = !rawTarget
       ? null

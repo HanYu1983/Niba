@@ -10,7 +10,7 @@ import {
 } from '../../testHelpers/aiTestFixtures'
 import { chooseDefenseAction } from '../../aiDefenseRules'
 import { defenseActionToAiAction } from '../aiAction'
-import { validateAiAction } from './validateAiAction'
+import { validateAiAction, validateAiDefenseDecision } from './validateAiAction'
 
 function makeMapWithWalls(walls: Array<{ row: number; column: number }>): MapState {
   const base = makePlainMap()
@@ -145,5 +145,50 @@ describe('collect 與 build 的最小驗證', () => {
 
     const staleCollect = { ...collect, target: { ...collect.target, id: 'creature-missing' } }
     expect(validateAiAction(state, staleCollect)).toEqual({ valid: false, reason: '採集目標不存在或已失效。' })
+  })
+})
+
+describe('validateAiDefenseDecision（切片 I：store step 執行前的單一把關）', () => {
+  const order = makeProtectBaseOrder()
+
+  it('合法決策（攻擊相鄰威脅／移動到可達格）通過', () => {
+    const state = makeAiTestState({ players: [makeTestPlayer()], creatures: [makeTestCreature()] })
+    expect(validateAiDefenseDecision(state, 'ai-1', { type: 'attack', targetId: 'creature-1', targetType: 'creature' })).toEqual({ valid: true })
+    expect(validateAiDefenseDecision(state, 'ai-1', { type: 'move', position: { row: 9, column: 5 }, reason: 'return-to-defense-radius' })).toEqual({ valid: true })
+  })
+
+  it('目標死亡或距離不符的攻擊決策被拒，原因與 §9.2 一致', () => {
+    const deadTargetState = makeAiTestState({
+      players: [makeTestPlayer()],
+      creatures: [makeTestCreature({ health: 0 })],
+    })
+    expect(validateAiDefenseDecision(deadTargetState, 'ai-1', { type: 'attack', targetId: 'creature-1', targetType: 'creature' }))
+      .toEqual({ valid: false, reason: '攻擊目標不存在或已死亡。' })
+
+    const farState = makeAiTestState({
+      players: [makeTestPlayer()],
+      creatures: [makeTestCreature({ position: { row: 10, column: 10 } })],
+    })
+    expect(validateAiDefenseDecision(farState, 'ai-1', { type: 'attack', targetId: 'creature-1', targetType: 'creature' }))
+      .toEqual({ valid: false, reason: '目標不在攻擊距離內。' })
+  })
+
+  it('不可達目的地的移動決策被拒；非當前回合拒絕行動', () => {
+    const walledState = makeAiTestState({
+      players: [makeTestPlayer()],
+      map: makeMapWithWalls([{ row: 0, column: 0 }, { row: 0, column: 1 }, { row: 0, column: 2 }, { row: 1, column: 0 }, { row: 1, column: 2 }, { row: 2, column: 0 }, { row: 2, column: 1 }, { row: 2, column: 2 }]),
+    })
+    expect(validateAiDefenseDecision(walledState, 'ai-1', { type: 'move', position: { row: 1, column: 1 }, reason: 'return-to-defense-radius' }))
+      .toEqual({ valid: false, reason: '目的地不可達或體力不足。' })
+
+    const notMyTurn = makeAiTestState({ players: [makeTestPlayer(), makeTestHuman()], activePlayerId: 'player-1' })
+    expect(validateAiDefenseDecision(notMyTurn, 'ai-1', { type: 'hold-position', reason: 'no-threat' }))
+      .toEqual({ valid: false, reason: '目前不是玩家回合。' })
+  })
+
+  it('決策層驗證與 Adapter 輸出一致：chooseDefenseAction 的實際輸出必過驗證（零行為變化保證）', () => {
+    const state = makeAiTestState({ players: [makeTestPlayer()], creatures: [makeTestCreature()] })
+    const decision = chooseDefenseAction(state, 'ai-1', order)
+    expect(validateAiDefenseDecision(state, 'ai-1', decision).valid).toBe(true)
   })
 })

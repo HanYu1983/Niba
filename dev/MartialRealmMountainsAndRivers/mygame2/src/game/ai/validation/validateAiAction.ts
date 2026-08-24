@@ -2,7 +2,8 @@ import type { GameState, Position } from '../../types'
 import { isAdjacent } from '../../types'
 import { canPlayerPerformAction } from '../../rules/actionCostRules'
 import { collectReachableCells } from '../perception/reachablePositions'
-import type { AiAction, AiTargetRef } from '../aiAction'
+import { defenseActionToAiAction, type AiAction, type AiTargetRef } from '../aiAction'
+import type { AiDefenseAction } from '../../aiDefenseRules'
 
 export type AiValidationResult = { valid: true } | { valid: false; reason: string }
 
@@ -31,9 +32,9 @@ function findTarget(state: GameState, target: AiTargetRef): { health: number; po
 /**
  * 通用行動驗證（重構文件 §9.2）。
  *
- * 切片 C 範圍：只驗證、不改變任何現有行動路徑（Scheduler／Creature 接線在後續切片）。
  * - player kind：回合合法性沿用 `canPlayerPerformAction` 單一事實來源。
- * - creature kind：回合階段檢查隨切片 D（Creature 管線）補上。
+ * - creature kind：回合資格檢查由 Creature 管線的 `validateCreatureTurnEligibility`
+ *   在 validate 段執行（切片 I 接線）；意圖層驗證共用本函式。
  */
 export function validateAiAction(state: GameState, action: AiAction): AiValidationResult {
   const actor = action.actor.kind === 'player'
@@ -74,4 +75,16 @@ export function validateAiAction(state: GameState, action: AiAction): AiValidati
     case 'end-turn':
       return { valid: true }
   }
+}
+
+/**
+ * 玩家 AI 決策層驗證（切片 I 接線）：把 `AiDefenseAction` 決策經 Adapter 轉成
+ * `AiAction` 後走同一套 §9.2 驗證，作為 store step 執行前的單一把關點。
+ */
+export function validateAiDefenseDecision(
+  state: GameState,
+  playerId: string,
+  decision: AiDefenseAction,
+): AiValidationResult {
+  return validateAiAction(state, defenseActionToAiAction(state, playerId, decision))
 }

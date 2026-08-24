@@ -674,6 +674,11 @@ validateAiAction(state: GameState, action: AiAction): {
 - 行動是否符合 active `AiOrder` 或 Creature Policy。
 - 是否有 blocking modal 或其他不可執行狀態。
 
+> 實作現況（2026-08-24 切片 I）：`validateAiAction()` 已落地並接線——
+> - 玩家側：`gameStore` 新增 `validateAiStepAction` helper，防守／支援／建設三個 step 的所有執行分支（attack／move／end-turn／build／collect）在執行前先驗證；決策層另有 `validateAiDefenseDecision(state, playerId, decision)`（Adapter 轉換後走同一套驗證）。不合格者記 failed `AiActionEvent` 並回傳失敗，不執行。
+> - Creature 側：管線新增 `validateCreatureTurnEligibility(creature)`（存活＋座標有限值）於 select／plan 前呼叫；完整 AiAction 化意圖驗證隨切片 J 事件化一併處理。
+> - 接線為零行為變化：既有釘住測試（含體力不足攻擊仍由 Executor 拒絕的案例）全數通過。
+
 ### 9.3 Stale Action 處理
 
 - Action 在執行前必須重新驗證。

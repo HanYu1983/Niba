@@ -1,5 +1,34 @@
 # 開發日誌
 
+## 2026-08-24｜AI 重構切片 I：Validator 接線（§9.2 單一把關落地）
+
+### 本次完成
+
+- `src/game/ai/validation/validateAiAction.ts`：
+  - 新增 export `validateAiDefenseDecision(state, playerId, decision)`：把 `AiDefenseAction` 決策經 Adapter（`defenseActionToAiAction`）轉成 `AiAction` 後走同一套 §9.2 驗證，作為 store step 執行前的單一把關點。
+  - 更新 docblock：creature kind 回合資格改由管線 `validateCreatureTurnEligibility` 執行（兌現切片 C 遺留註解）。
+- `src/game/actions/creatureTurnPipeline.ts`：
+  - 新增 export `validateCreatureTurnEligibility(creature)`（存活＋座標有限值），orchestrator 在 select／plan 前呼叫；不合格者跳過該回合、不產生行動或日誌。因倖存者清單已預過濾，行為零變化（釘住網全數通過即證明）。
+- `src/game/gameStore.ts`：
+  - 新增模組級 helper `validateAiStepAction`；防守／支援兩 step 的 attack／move／end-turn 分支與建設 step 的 build／paused-collect 分支全部改為「先建 AiAction → validateAiAction → 不合格記 failed 事件並回傳失敗；合格才執行既有路徑」。
+  - 建設 build 分支驗證失敗時將 queue item 標 blocked（原因＝驗證訊息）後換下一候選，沿用 §14.6 狀態機語意。
+- 測試＋7（validateAiAction.test.ts 新增 validateAiDefenseDecision 四例：合法攻擊／移動、死目標拒絕、超距離拒絕、牆內不可達移動拒絕、非當前回合拒絕、chooseDefenseAction 實際輸出必過驗證的零行為變化保證；新檔 creatureTurnPipeline.validate.test.ts 三例：存活通過／死亡拒絕／座標缺失或 NaN 拒絕）。
+
+### 影響檔案
+
+- 修改：`validateAiAction.ts`（＋測試）、`creatureTurnPipeline.ts`、`gameStore.ts`
+- 新增：`src/game/actions/creatureTurnPipeline.validate.test.ts`
+- 文件：重構文件 §9.2 補接線現況、playbook §3 I 列
+
+### 驗證結果
+
+- vitest：**80 檔／826 項全數通過**（前片 819＋本片 7）
+- tsc -b：通過；ESLint：新碼零警告；Build：通過。
+
+### 下一步
+
+- 切片 J：Creature 行動事件化（pipeline 決策同步產出 AiActionEvent 流入 GameState.actionEvents，行動日誌面板可見 Creature 行動）。
+
 ## 2026-08-24｜AI 重構切片 H：JSON policy 白名單系統（內建 config＋Schema 驗證＋fallback）
 
 ### 本次完成
