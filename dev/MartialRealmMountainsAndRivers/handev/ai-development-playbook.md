@@ -466,7 +466,7 @@ PowerShell 備忘：判斷成敗用 `$LASTEXITCODE`（`$?` 是 True/False）；d
 | H | ✅ 完成（2026-08-24）：`ai/policy/` 白名單＋Schema 驗證＋內建 config（defensive-guardian/creature-sieger/creature-scavenger）＋fallback registry | 重構 §6 | P2 | 19 例新測試；非法 condition/action 被拒、查無 id 或 actorKind 不符走同類 fallback、載入失敗不卡死 AI 回合 |
 | I | ✅ 完成（2026-08-24）：`validateAiDefenseDecision()` 決策層把關＋gameStore 四 step（防守／支援／建設）執行前驗證；Creature 管線 `validateCreatureTurnEligibility` 兌現切片 C 註解 | 重構 §9.2（§12 Phase 2 後半） | P1 | 7 例新測試；既有行為零變化（826 項釘住網全過）；無效 AiAction 在執行前被擋並帶原因 |
 | J | ✅ 完成（2026-08-24）：pipeline 逐隻產出 §4.5 `AiActionEvent`（`buildCreatureActionEvent`＋execute 段 outcome 判別），回合完成時經 `endPlayerTurn` 併入 `GameState.actionEvents`；steps 動畫快照保留 | 重構 §12 Phase 4＋§1.3「事件格式單一協定」 | P1 | 6 例新測試（攻擊全欄位／無目標待命／體力不足 failed／多隻順序一致；endPlayerTurn 整合兩例）；行動日誌面板可見 Creature 行動；既有 creature 測試零修改 |
-| K | JSON policy 消費：玩家 AI 自保參數與決策優先序讀 `getAiJsonPolicy()`；Creature 依 `getCreaturePolicyId()` 取 policy 的 emergency／parameters 參數化行為門檻 | 重構 §6.2 分工圖（分岔點 ②Policy 查表） | P2 | 參數化後行為結果與現況一致（同 seed 測試釘住）；fallback 路徑生效（壞 id → 預設人格照常運作） |
+| K | ✅ 完成（2026-08-24）：`getPlayerAiEmergency()`／`getCreatureAiParameters()` resolver；自保門檻與 Creature aggroRange 改 policy 查表（值與常數一致＝零變化）；`chooseDefenseAction` 分支序與 priorities 排序的分歧已文件化留待行為變更切片 | 重構 §6.2 分工圖（分岔點 ②Policy 查表） | P2 | 7 例新測試（覆寫生效、部分欄位 fallback、內建值與常數全等）；同 seed 既有釘住全過；壞 id → fallback 人格照常運作 |
 | L | Creature 感知層委託：`selectCreatureTarget` 與管線移動計算改用 `ai/perception/`，消除雙份距離/路徑實作 | §1.3 感知層合併（最後一段雙重維護稅） | P2 | 同 seed 巡邏/追擊路徑可重現（既有測試全過）；perception 匯出的函式成為唯一事實來源 |
 
 > 順序理由：A0 先織安全網，A 才能還債且解鎖 Executor；B 是所有後續共用地基；C/D 讓 Creature 與玩家 AI 有共同語言之後，E~H 才有意義。I~J 是統合盤點找出的「接線債」（基礎建設已備、只差消費），優先於 K~L 的深化。若使用者另有指示，以其為準。
@@ -475,7 +475,7 @@ PowerShell 備忘：判斷成敗用 `$LASTEXITCODE`（`$?` 是 True/False）；d
 
 ## 附錄：快速事實
 
-- 目前全套測試基準：2026-08-24 切片 J 後為 **832 項全過**（81 檔；數字會漂移，動工前先跑一次記錄當下基準）。AI 相關 11 決策＋9 執行＋3 原子攻擊全過。
+- 目前全套測試基準：2026-08-24 切片 K 後為 **839 項全過**（81 檔；數字會漂移，動工前先跑一次記錄當下基準）。AI 相關 11 決策＋9 執行＋3 原子攻擊全過。
 - `AiOrder` 同時間每 AI 只能一個 active；建立異型新命令 → 舊命令降級 paused；完全同型同目標 → 拒絕。
 - 支援命令目標死亡 → 自動 `paused`（不是 failed）；據點被毀 → `failed` 且保存原因。
 - 建設方針五種：`defense | economy | frontline | balanced | paused`；`paused` 不建造但可行動。

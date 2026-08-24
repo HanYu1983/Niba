@@ -174,6 +174,7 @@ import { chooseSupportAction } from './aiSupportRules'
 import { chooseSelfPreservationAction } from './aiSelfPreservationRules'
 import { defenseActionToAiAction } from './ai/aiAction'
 import { validateAiAction } from './ai/validation/validateAiAction'
+import { getPlayerAiEmergency } from './ai/policy/aiPolicyRegistry'
 import { defaultRandomSource } from './rules/randomRules'
 import { getBlockedPositions } from './rules/movementRules'
 
@@ -1860,7 +1861,7 @@ export const gameStore = {
       return { ok: false, reason: '目前無法執行 AI 防守回合。' }
     }
 
-    const selfPreservation = chooseSelfPreservationAction(state, playerId, order.retreatHealthPercent)
+    const selfPreservation = chooseSelfPreservationAction(state, playerId, order.retreatHealthPercent, getPlayerAiEmergency())
     if (selfPreservation?.type === 'move') {
       const action = defenseActionToAiAction(state, playerId, selfPreservation)
       const rejection = validateAiStepAction(state, action)
@@ -2061,7 +2062,7 @@ export const gameStore = {
     if (!player?.isAI || state.activePlayerId !== playerId || state.creatureTurnInProgress || state.gameOver || !order || order.type !== 'support-player') {
       return { ok: false, reason: '目前無法執行 AI 支援回合。' }
     }
-    const selfPreservation = chooseSelfPreservationAction(state, playerId, order.retreatHealthPercent)
+    const selfPreservation = chooseSelfPreservationAction(state, playerId, order.retreatHealthPercent, getPlayerAiEmergency())
     if (selfPreservation?.type === 'move') {
       const action = defenseActionToAiAction(state, playerId, selfPreservation)
       const rejection = validateAiStepAction(state, action)

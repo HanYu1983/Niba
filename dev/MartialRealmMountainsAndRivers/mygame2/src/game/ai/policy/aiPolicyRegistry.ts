@@ -93,3 +93,15 @@ export function getAiJsonPolicy(policyId: string | null | undefined, actorKind: 
   }
   return defaultPolicies[actorKind]
 }
+
+/** 切片 K：玩家 AI 緊急自保參數（§6.2 分岔點 ②Policy 查表）。預設人格無 emergency 欄位 → undefined。 */
+export function getPlayerAiEmergency(): AiJsonPolicy['emergency'] {
+  return getAiJsonPolicy(DEFAULT_PLAYER_POLICY_ID, 'player').emergency
+}
+
+/** 切片 K：Creature 依行為型別取 policy 的 parameters；查無對應 policy 時走 fallback（通常為 undefined）。 */
+export function getCreatureAiParameters(
+  behaviorType: CreatureBehaviorType,
+): Record<string, number | boolean | string> | undefined {
+  return getAiJsonPolicy(getCreaturePolicyId(behaviorType), 'creature').parameters
+}

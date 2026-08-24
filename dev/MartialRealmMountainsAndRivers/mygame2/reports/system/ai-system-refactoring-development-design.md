@@ -520,6 +520,7 @@ public/ai-configs/*.json
 - 內建設定：`src/game/ai/configs/`——`defensive-guardian.json`（§6.4 範例）、`creature-sieger.json`（§6.5 範例）、`creature-scavenger.json`（拾荒：自保→反擊→collect-resource→wander）。
 - Registry 與 fallback：`src/game/ai/policy/aiPolicyRegistry.ts`——`loadAiPolicyRegistry()` 驗證＋略過非法／重複 id 並回報錯誤；`getAiJsonPolicy(id, actorKind)` 查無或 actorKind 不符時回傳同類預設 fallback（自保→反擊→待命）；`getCreaturePolicyId()` 對應 sieger/scavenger 行為型別，其餘走 fallback。
 - 測試 19 例（Schema 白名單／範圍／凍結 13 例；載入 fallback／跨型別拒用／行為對應 6 例），全套 **819 項通過**。外部 JSON（`public/ai-configs/`）依 §6.6 留待後續需求再支援。
+- 消費現況（2026-08-24，切片 K）：registry 新增 `getPlayerAiEmergency()` 與 `getCreatureAiParameters(behaviorType)` 兩個 resolver。玩家自保門檻（`chooseSelfPreservationAction` 的 emergency 參數）與 Creature aggroRange（`getCreatureAggroRange()`，scavenger config 帶 `parameters.aggroRange: 5`）改經 policy 查表，未提供欄位時逐項退回既有常數——內建值與常數一致，零行為變化。`avoidFatalAttack` 暫不消費（需攻擊傷害預估）。**已知分歧**：`chooseDefenseAction` 分支執行序與 priorities 嚴格排序在「離基地過遠＋威脅進圈」同時成立時不同（return-to-radius 70 先於 intercept 80）；以 policy 排序驅動分支屬行為變更，留待後續切片。
 
 ---
 

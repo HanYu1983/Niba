@@ -1,5 +1,28 @@
 # 開發日誌
 
+## 2026-08-24｜AI 重構切片 K：JSON policy 消費（emergency 參數＋Creature aggroRange 查表）
+
+### 本次完成
+
+- `src/game/ai/policy/aiPolicyRegistry.ts`：新增兩個消費 resolver——`getPlayerAiEmergency()`（defensive-guardian 的 emergency）與 `getCreatureAiParameters(behaviorType)`（經 `getCreaturePolicyId` 查表，查無走 fallback 人格 → undefined）。
+- `src/game/aiSelfPreservationRules.ts`：`chooseSelfPreservationAction` 新增可選 `emergency` 參數；`minimumHealthPercent`／`surroundedEnemyCount` 未提供時逐項退回既有常數（10／2）。內建 defensive-guardian 的值與常數完全一致 → 零行為變化。`avoidFatalAttack` 欄位暫不消費（需要攻擊傷害預估，留待行為變更切片），已於文件註記。
+- `src/game/gameStore.ts`：防守／支援兩 step 的自保呼叫傳入 `getPlayerAiEmergency()`。
+- `src/game/rules/creatureBehaviorRules.ts`：新增 export `getCreatureAggroRange(behavior)`——policy 的 `parameters.aggroRange` 優先，fallback 退回 `CREATURE_AGGRO_RANGES` 常數表；`selectCreatureTarget` 改用之。`creature-scavenger.json` 補上 `"parameters": {"aggroRange": 5}`（=常數 5，零行為變化且讓消費路徑真實生效）。
+- 測試＋7（aiSelfPreservationRules 四例：minimumHealthPercent 覆寫、surroundedEnemyCount 覆寫、內建值與常數逐情境全等、部分欄位 fallback；aiPolicyRegistry 三例：resolver 回傳值、scavenger/sieger 參數差異、getCreatureAggroRange 的 policy 優先與常數退回）。全套既有釘住測試零修改通過＝同 seed 行為一致。
+
+### 已發現待處理（文件化，不在本片動）
+
+- `chooseDefenseAction` 目前的分支執行序（attack→return-to-radius→intercept→hold）與 defensive-guardian priorities 的嚴格排序（intercept 80 應先於 return-to-radius 70）在「同時離基地過遠且有威脅進圈」情境下會分歧。強制以 policy 排序驅動分支屬行為變更，留待後續切片連同 §9.3 stale 重試一起處理。
+
+### 驗證結果
+
+- vitest：**81 檔／839 項全數通過**（前片 832＋本片 7）
+- tsc -b：通過；ESLint：新碼零警告；Build：通過。
+
+### 下一步
+
+- 切片 L：Creature 感知層委託（`selectCreatureTarget` 與管線移動計算改用 `ai/perception/`，消除雙份距離/路徑實作）。
+
 ## 2026-08-24｜AI 重構切片 J：Creature 行動事件化（§1.3 事件格式單一協定）
 
 ### 本次完成
