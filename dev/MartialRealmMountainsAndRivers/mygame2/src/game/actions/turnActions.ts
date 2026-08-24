@@ -192,6 +192,10 @@ export function endPlayerTurn(
       itemPoints: isRoundComplete ? scheduledCreatureTurn?.itemPoints ?? state.itemPoints : state.itemPoints,
       explorationEvents: isRoundComplete ? scheduledCreatureTurn?.explorationEvents ?? state.explorationEvents : state.explorationEvents,
       creatureActionLogs: isRoundComplete ? nestSpawn?.logs ?? [] : state.creatureActionLogs,
+      // 切片 J：Creature 行動事件（§4.5 格式）併入全域行動日誌，行動日誌面板即可見。
+      actionEvents: isRoundComplete && scheduledCreatureTurn?.events?.length
+        ? [...(state.actionEvents ?? []), ...scheduledCreatureTurn.events]
+        : state.actionEvents,
       creatureTurnInProgress: isRoundComplete,
       activeCreatureId: null,
       operation: { type: 'idle' },

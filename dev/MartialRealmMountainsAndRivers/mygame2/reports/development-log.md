@@ -1,5 +1,108 @@
 # 開發日誌
 
+## 2026-08-24｜AI 重構切片 L：Creature 感知層委託（距離單一事實來源）
+
+### 本次完成
+
+- `src/game/rules/creatureBehaviorRules.ts`：移除本地 `distance()` 實作，改 import 感知層統一出口 `manhattanDistance`（`ai/perception/distance.ts` → `rules/mapCellStateRules.getManhattanDistance`），以別名保持呼叫點零改動；`nearest()` 的「距離相同依 id 破平手」屬目標選擇策略，保留在決策側但底層走感知層。
+- `src/game/actions/creatureTurnPipeline.ts`：本地 `stepDistance` 改為 `manhattanDistance` 別名；箭塔瞄準迴圈的內聯 `Math.abs` 距離算式一併替換。
+- 盤點結論：管線的貪婪步進移動是領域模型（體力結算／陷阱觸發／堵路反擊語意），不是 `collectReachableCells` 的重複實作，維持原樣。自此 Creature 側不再有任何自帶的距離／路徑重複算式，perception 匯出函式成為唯一事實來源。
+- 測試：本片為純重構（無新測試）；同 seed 巡邏／追擊釘住測試與全套 839 項零修改通過即為行為等價證明。
+
+### 影響檔案
+
+- 修改：`creatureBehaviorRules.ts`、`creatureTurnPipeline.ts`
+- 文件：重構文件 §12 Phase 1 Result、playbook §3 L 列
+
+### 驗證結果
+
+- vitest：**81 檔／839 項全數通過**（與前片持平）
+- tsc -b：通過；ESLint：零警告；Build：通過。
+
+### 下一步
+
+- §3 切片佇列（A0~L）全數完成。後續候選：§9.3 stale action 重試、policy priorities 強制排序（切片 K 已文件化的分歧）、外部 JSON config（§6.6）。
+
+## 2026-08-24｜AI 重構切片 K：JSON policy 消費（emergency 參數＋Creature aggroRange 查表）
+
+### 本次完成
+
+- `src/game/ai/policy/aiPolicyRegistry.ts`：新增兩個消費 resolver——`getPlayerAiEmergency()`（defensive-guardian 的 emergency）與 `getCreatureAiParameters(behaviorType)`（經 `getCreaturePolicyId` 查表，查無走 fallback 人格 → undefined）。
+- `src/game/aiSelfPreservationRules.ts`：`chooseSelfPreservationAction` 新增可選 `emergency` 參數；`minimumHealthPercent`／`surroundedEnemyCount` 未提供時逐項退回既有常數（10／2）。內建 defensive-guardian 的值與常數完全一致 → 零行為變化。`avoidFatalAttack` 欄位暫不消費（需要攻擊傷害預估，留待行為變更切片），已於文件註記。
+- `src/game/gameStore.ts`：防守／支援兩 step 的自保呼叫傳入 `getPlayerAiEmergency()`。
+- `src/game/rules/creatureBehaviorRules.ts`：新增 export `getCreatureAggroRange(behavior)`——policy 的 `parameters.aggroRange` 優先，fallback 退回 `CREATURE_AGGRO_RANGES` 常數表；`selectCreatureTarget` 改用之。`creature-scavenger.json` 補上 `"parameters": {"aggroRange": 5}`（=常數 5，零行為變化且讓消費路徑真實生效）。
+- 測試＋7（aiSelfPreservationRules 四例：minimumHealthPercent 覆寫、surroundedEnemyCount 覆寫、內建值與常數逐情境全等、部分欄位 fallback；aiPolicyRegistry 三例：resolver 回傳值、scavenger/sieger 參數差異、getCreatureAggroRange 的 policy 優先與常數退回）。全套既有釘住測試零修改通過＝同 seed 行為一致。
+
+### 已發現待處理（文件化，不在本片動）
+
+- `chooseDefenseAction` 目前的分支執行序（attack→return-to-radius→intercept→hold）與 defensive-guardian priorities 的嚴格排序（intercept 80 應先於 return-to-radius 70）在「同時離基地過遠且有威脅進圈」情境下會分歧。強制以 policy 排序驅動分支屬行為變更，留待後續切片連同 §9.3 stale 重試一起處理。
+
+### 驗證結果
+
+- vitest：**81 檔／839 項全數通過**（前片 832＋本片 7）
+- tsc -b：通過；ESLint：新碼零警告；Build：通過。
+
+### 下一步
+
+- 切片 L：Creature 感知層委託（`selectCreatureTarget` 與管線移動計算改用 `ai/perception/`，消除雙份距離/路徑實作）。
+
+## 2026-08-24｜AI 重構切片 J：Creature 行動事件化（§1.3 事件格式單一協定）
+
+### 本次完成
+
+- `src/game/actions/creatureTurnPipeline.ts`：
+  - `CreatureTurnContext`／`CreatureTurnResult` 新增 `events` 累加器與 `round` 輸入；`executeCreatureAction` 回傳 `CreatureExecutionOutcome`（attack 含目標 id/kind/position／move／idle）作為行為事實來源。
+  - 新增 export `buildCreatureActionEvent(...)`：把單一 Creature 的回合行動轉成 §4.5 `AiActionEvent`（與玩家 AI 同格式）。攻擊／移動記 succeeded；驗證失敗或體力不足的待命記 failed 並帶原因；無目標待命記 succeeded。
+  - orchestrator 逐隻 push 事件，順序與 `survivingCreatures` 輸入順序一致（批次結果一致）。
+- `src/game/actions/creatureActions.ts`：`moveCreatures` 尾端新增可選 `round` 參數（預設 0），傳入管線供事件歸屬回合。
+- `src/game/actions/turnActions.ts`：`endPlayerTurn` 回合完成時把 `scheduledCreatureTurn.events` 依序附加進回傳 state 的 `actionEvents`（既有玩家事件保留、舊存檔相容不變）；steps 動畫快照照舊。
+- `src/game/gameStore.ts`：moveCreatures dependency 補傳 `currentState.round`。行動日誌面板（ActionLogPanel 讀 `actionEvents`）自此可見 Creature 攻擊／移動／待命。
+- 測試＋6（新檔 creatureTurnPipeline.events.test.ts：相鄰攻擊事件全欄位、無目標待命 succeeded、體力不足 failed、多隻順序一致性；endPlayerTurn 整合兩例：回合完成時玩家事件保留＋Creature 附加、回合未完成 actionEvents 不變）。既有 creature 測試零修改全過。
+
+### 影響檔案
+
+- 修改：`creatureTurnPipeline.ts`、`creatureActions.ts`、`turnActions.ts`、`gameStore.ts`
+- 新增：`src/game/actions/creatureTurnPipeline.events.test.ts`
+- 文件：重構文件 §12 Phase 4 補實作現況、playbook §3 J 列
+
+### 驗證結果
+
+- vitest：**81 檔／832 項全數通過**（前片 826＋本片 6）
+- tsc -b：通過；ESLint：新碼零警告；Build：通過。
+
+### 下一步
+
+- 切片 K：JSON policy 消費（玩家 AI 自保參數與優先序讀 `getAiJsonPolicy()`；Creature 依 `getCreaturePolicyId()` 參數化門檻，同 seed 釘住）。
+
+## 2026-08-24｜AI 重構切片 I：Validator 接線（§9.2 單一把關落地）
+
+### 本次完成
+
+- `src/game/ai/validation/validateAiAction.ts`：
+  - 新增 export `validateAiDefenseDecision(state, playerId, decision)`：把 `AiDefenseAction` 決策經 Adapter（`defenseActionToAiAction`）轉成 `AiAction` 後走同一套 §9.2 驗證，作為 store step 執行前的單一把關點。
+  - 更新 docblock：creature kind 回合資格改由管線 `validateCreatureTurnEligibility` 執行（兌現切片 C 遺留註解）。
+- `src/game/actions/creatureTurnPipeline.ts`：
+  - 新增 export `validateCreatureTurnEligibility(creature)`（存活＋座標有限值），orchestrator 在 select／plan 前呼叫；不合格者跳過該回合、不產生行動或日誌。因倖存者清單已預過濾，行為零變化（釘住網全數通過即證明）。
+- `src/game/gameStore.ts`：
+  - 新增模組級 helper `validateAiStepAction`；防守／支援兩 step 的 attack／move／end-turn 分支與建設 step 的 build／paused-collect 分支全部改為「先建 AiAction → validateAiAction → 不合格記 failed 事件並回傳失敗；合格才執行既有路徑」。
+  - 建設 build 分支驗證失敗時將 queue item 標 blocked（原因＝驗證訊息）後換下一候選，沿用 §14.6 狀態機語意。
+- 測試＋7（validateAiAction.test.ts 新增 validateAiDefenseDecision 四例：合法攻擊／移動、死目標拒絕、超距離拒絕、牆內不可達移動拒絕、非當前回合拒絕、chooseDefenseAction 實際輸出必過驗證的零行為變化保證；新檔 creatureTurnPipeline.validate.test.ts 三例：存活通過／死亡拒絕／座標缺失或 NaN 拒絕）。
+
+### 影響檔案
+
+- 修改：`validateAiAction.ts`（＋測試）、`creatureTurnPipeline.ts`、`gameStore.ts`
+- 新增：`src/game/actions/creatureTurnPipeline.validate.test.ts`
+- 文件：重構文件 §9.2 補接線現況、playbook §3 I 列
+
+### 驗證結果
+
+- vitest：**80 檔／826 項全數通過**（前片 819＋本片 7）
+- tsc -b：通過；ESLint：新碼零警告；Build：通過。
+
+### 下一步
+
+- 切片 J：Creature 行動事件化（pipeline 決策同步產出 AiActionEvent 流入 GameState.actionEvents，行動日誌面板可見 Creature 行動）。
+
 ## 2026-08-24｜AI 重構切片 H：JSON policy 白名單系統（內建 config＋Schema 驗證＋fallback）
 
 ### 本次完成

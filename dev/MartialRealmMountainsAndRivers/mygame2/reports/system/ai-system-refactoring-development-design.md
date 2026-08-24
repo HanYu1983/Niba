@@ -520,6 +520,7 @@ public/ai-configs/*.json
 - 內建設定：`src/game/ai/configs/`——`defensive-guardian.json`（§6.4 範例）、`creature-sieger.json`（§6.5 範例）、`creature-scavenger.json`（拾荒：自保→反擊→collect-resource→wander）。
 - Registry 與 fallback：`src/game/ai/policy/aiPolicyRegistry.ts`——`loadAiPolicyRegistry()` 驗證＋略過非法／重複 id 並回報錯誤；`getAiJsonPolicy(id, actorKind)` 查無或 actorKind 不符時回傳同類預設 fallback（自保→反擊→待命）；`getCreaturePolicyId()` 對應 sieger/scavenger 行為型別，其餘走 fallback。
 - 測試 19 例（Schema 白名單／範圍／凍結 13 例；載入 fallback／跨型別拒用／行為對應 6 例），全套 **819 項通過**。外部 JSON（`public/ai-configs/`）依 §6.6 留待後續需求再支援。
+- 消費現況（2026-08-24，切片 K）：registry 新增 `getPlayerAiEmergency()` 與 `getCreatureAiParameters(behaviorType)` 兩個 resolver。玩家自保門檻（`chooseSelfPreservationAction` 的 emergency 參數）與 Creature aggroRange（`getCreatureAggroRange()`，scavenger config 帶 `parameters.aggroRange: 5`）改經 policy 查表，未提供欄位時逐項退回既有常數——內建值與常數一致，零行為變化。`avoidFatalAttack` 暫不消費（需攻擊傷害預估）。**已知分歧**：`chooseDefenseAction` 分支執行序與 priorities 嚴格排序在「離基地過遠＋威脅進圈」同時成立時不同（return-to-radius 70 先於 intercept 80）；以 policy 排序驅動分支屬行為變更，留待後續切片。
 
 ---
 
@@ -673,6 +674,11 @@ validateAiAction(state: GameState, action: AiAction): {
 - 體力是否足夠。
 - 行動是否符合 active `AiOrder` 或 Creature Policy。
 - 是否有 blocking modal 或其他不可執行狀態。
+
+> 實作現況（2026-08-24 切片 I）：`validateAiAction()` 已落地並接線——
+> - 玩家側：`gameStore` 新增 `validateAiStepAction` helper，防守／支援／建設三個 step 的所有執行分支（attack／move／end-turn／build／collect）在執行前先驗證；決策層另有 `validateAiDefenseDecision(state, playerId, decision)`（Adapter 轉換後走同一套驗證）。不合格者記 failed `AiActionEvent` 並回傳失敗，不執行。
+> - Creature 側：管線新增 `validateCreatureTurnEligibility(creature)`（存活＋座標有限值）於 select／plan 前呼叫；完整 AiAction 化意圖驗證隨切片 J 事件化一併處理。
+> - 接線為零行為變化：既有釘住測試（含體力不足攻擊仍由 Executor 拒絕的案例）全數通過。
 
 ### 9.3 Stale Action 處理
 
@@ -957,6 +963,7 @@ perception → decision → validation → execution → event
   - 既有測試檔全部通過。
 - Result（2026-08-24，切片 B）：新增 `ai/perception/`（distance／targetDiscovery／blockedPositions／reachablePositions）；三個 ai*Rules 決策改委託感知層，行為不變且候選生成從「每格重跑一次 Dijkstra」改為「整輪一次成本圖」；`moveCreatures` 巡邏與攻擊 roll 注入 `RandomSource`。全套 747 項通過。
 - Result（2026-08-24，切片 C）：`AiAction` 六種行動型別＋`defenseActionToAiAction` Adapter＋`validateAiAction()`（§9.2 子集：actor 存活、回合合法性沿用 `canPlayerPerformAction`、move 可達性、attack 目標存活且相鄰；creature 回合階段檢查待切片 D）。Validator 尚未接線，執行路徑零變化。全套 758 項通過。
+- Result（2026-08-24，切片 L 補完）：Creature 側距離計算全部委託感知層統一出口——`creatureBehaviorRules.ts` 移除本地 `distance()`、管線 `stepDistance` 改為 `manhattanDistance` 別名，箭塔瞄準的內聯算式一併替換。貪婪步進移動為領域模型（體力／陷阱／堵路語意）而非重複路徑實作，維持原樣；自此雙份實作歸零。同 seed 釘住測試全過（839 項），行為等價。
 
 ### Phase 2：AI Action Validator / Executor
 
@@ -971,6 +978,7 @@ perception → decision → validation → execution → event
   - Action contract 測試。
   - GameStore 整合測試。
 - Result（2026-08-24）：`runAiDefenseStep`／`runAiSupportStep` 改呼叫 `executeAiAttack`；人類仍用 `previewAttackTarget`。A0＋新測試全過。
+- Result（2026-08-24，切片 I 補完）：§9.2 驗證已接線——玩家三 step（防守／支援／建設）所有執行分支先經 `validateAiAction()` 把關；Creature 管線補 `validateCreatureTurnEligibility` 回合資格檢查。「stale 重試一次」仍留待後續切片。
 
 ### Phase 3：統一 Player AI Scheduler
 
@@ -989,7 +997,7 @@ perception → decision → validation → execution → event
 ### Phase 4：Creature Action/Event Pipeline
 
 - Owner：AI Engineering
-- Status：Todo
+- Status：Done（2026-08-24；管線六段分離與 blocked 誤擊修復於切片 D，事件化於切片 J 補齊）
 - Priority：P0
 - Acceptance Criteria：
   - Creature 目標、路徑、行動與 reducer 分離。
@@ -998,6 +1006,7 @@ perception → decision → validation → execution → event
 - Test Method：
   - 固定地圖情境。
   - 行動事件 reducer 測試。
+- Result（2026-08-24 切片 J）：`executeCreatureAction` 回傳 `CreatureExecutionOutcome`（attack 含目標 id/kind/position／move／idle）作為行為事實來源；`buildCreatureActionEvent` 把每隻 Creature 的回合行動轉成 §4.5 `AiActionEvent`（攻擊／移動 succeeded、驗證失敗或體力不足待命 failed 帶原因、無目標待命 succeeded），順序與輸入順序一致。回合完成時 `endPlayerTurn` 把 events 依序併入 `GameState.actionEvents`（既有玩家事件保留、舊檔相容），steps 動畫快照照舊。測試 6 例（含 endPlayerTurn 整合兩例）；全套 832 項通過，既有 creature 測試零修改。
 
 ### Phase 5：動畫與全域日誌
 
