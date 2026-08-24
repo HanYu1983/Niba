@@ -1,4 +1,4 @@
-import { Tag, Tooltip } from 'antd'
+import { Tooltip } from 'antd'
 import type { CSSProperties, ReactNode } from 'react'
 import { getElementName, type MartialElement } from '../game/rules/skillRules'
 
@@ -33,6 +33,7 @@ type UnifiedSkillCardProps = {
 
 function UnifiedSkillCard({
   icon,
+  kind,
   element = 'none',
   name,
   status,
@@ -58,8 +59,10 @@ function UnifiedSkillCard({
 
   const classes = [
     'unified-skill-card',
+    `unified-skill-card--${element}`,
     equipped ? 'unified-skill-card--equipped' : '',
-    !clickable ? 'unified-skill-card--disabled' : '',
+    // 已裝備的卡片不套用 disabled（避免半透明），僅無法點擊。
+    !clickable && !equipped ? 'unified-skill-card--disabled' : '',
     synergyHint && !equipped ? 'unified-skill-card--synergy-hint' : '',
   ].filter(Boolean).join(' ')
 
@@ -78,28 +81,26 @@ function UnifiedSkillCard({
         }}
       >
         <div className="unified-skill-card__header">
-          <span className="unified-skill-card__icon">{icon}</span>
+          <span className="unified-skill-card__icon" style={{ background: elementTagStyle[element].backgroundColor, color: elementTagStyle[element].color }}>{icon}</span>
           <span className="unified-skill-card__name" title={name}>{name}</span>
-          {status && <span className="unified-skill-card__status">{status}</span>}
+          <span className={`unified-skill-card__status${equipped ? '' : ' unified-skill-card__status--idle'}`}>
+            {equipped ? status ?? '裝備' : (kind === 'inner' ? '切換' : '開啟')}
+          </span>
         </div>
-        <Tag className="unified-skill-card__element" style={elementTagStyle[element]}>
-          {getElementName(element)}
-        </Tag>
-        <div className="unified-skill-card__primary">
-          <span>{primaryLabel}</span>
-          <strong>{primaryValue}</strong>
-          <span> · Lv.{level}</span>
+        <div className="unified-skill-card__info-row">
+          <span className="unified-skill-card__element" style={{ color: elementTagStyle[element].color, background: elementTagStyle[element].backgroundColor, borderColor: elementTagStyle[element].borderColor }}>
+            {getElementName(element)}
+          </span>
+          <span className="unified-skill-card__primary">
+            {primaryLabel} <strong>{primaryValue}</strong>
+          </span>
+          <span className="unified-skill-card__level">Lv.{level}</span>
         </div>
         <div className="unified-skill-card__tags">
           {interactions.synergy ? <span className="unified-skill-card__tag tag--synergy">💚 相生連攜</span> : null}
           {(interactions.resonance ?? resonance) ? <span className="unified-skill-card__tag tag--resonance">🌍 天地共鳴</span> : null}
           {interactions.tripleResonance ? <span className="unified-skill-card__tag tag--triple">🔥 三重共振：{interactions.tripleResonance}</span> : null}
         </div>
-        {clickable && (
-          <div className="unified-skill-card__action">
-            {equipped ? '已裝備' : '點擊切換'}
-          </div>
-        )}
       </div>
     </Tooltip>
   )

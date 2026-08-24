@@ -3,10 +3,9 @@ import type { ReactNode } from 'react'
 import type { ExternalSkill } from '../game/catalogs/externalSkillCatalog'
 import type { InnerSkill } from '../game/catalogs/innerSkillCatalog'
 import type { CreatureState, MapCell, PlayerState } from '../game/types'
-import { getElementDamageMultiplier, getInnerSkill, getPlayerInsightCapacityBreakdown, getSchoolElement, getSkillDamage, getSkillInnerPowerCost, getSkillProgression, isElementGenerating } from '../game/rules/skillRules'
+import { getElementDamageMultiplier, getElementName, getInnerSkill, getPlayerInsightCapacityBreakdown, getSchoolElement, getSkillDamage, getSkillInnerPowerCost, getSkillProgression, isElementGenerating } from '../game/rules/skillRules'
 import { getEffectiveAttributesForPlayer } from '../game/rules/playerDerivedRules'
 import { getTerrainAtPosition, isTerrainResonant } from '../game/rules/terrainCombatRules'
-import { martialSchoolCatalog } from '../game/catalogs/skillProgressionCatalog'
 import UnifiedSkillCard from './UnifiedSkillCard'
 import StatValue from './StatValue'
 
@@ -23,8 +22,9 @@ type UnifiedSkillModalProps = {
   onClose: () => void
 }
 
-function getSchoolName(schoolId: string | undefined): string {
-  return martialSchoolCatalog.find((school) => school.id === schoolId)?.name ?? schoolId ?? ''
+/** 門派對應的五行屬性名稱（如「土」）。 */
+function getSchoolElementName(schoolId: string | undefined): string {
+  return getElementName(getSchoolElement(schoolId))
 }
 
 /** 外功元素是否克制某門派元素。 */
@@ -56,7 +56,7 @@ function UnifiedSkillModal({
     const countered = creatures.find((creature) =>
       creature.schoolId && creature.health > 0 && isCounteredBy(outerElement, creature.schoolId),
     )
-    return countered ? getSchoolName(countered.schoolId) : undefined
+    return countered ? getSchoolElementName(countered.schoolId) : undefined
   }
 
   const innerCards = player.innerSkillIds
@@ -93,10 +93,20 @@ function UnifiedSkillModal({
       width={760}
     >
       <Flex vertical gap={16}>
-        <StatValue label="悟性容量">
-          {insightCapacity.total} / {insightCapacity.limit}
-          （內功 {insightCapacity.inner} + 外功 {insightCapacity.external}）
-        </StatValue>
+        <Flex wrap gap={24}>
+          <StatValue label="內力">
+            <span style={{ color: player.innerPower <= 0 ? '#dc2626' : undefined }}>
+              {Math.floor(player.innerPower)} / {Math.floor(player.maxInnerPower)}
+            </span>
+          </StatValue>
+          <StatValue label="悟性容量">
+            {insightCapacity.total} / {insightCapacity.limit}
+            （內功 {insightCapacity.inner} + 外功 {insightCapacity.external}）
+          </StatValue>
+        </Flex>
+        <Flex align="center" gap={8} wrap>
+          <Typography.Text type="secondary">切換內功 / 開啟外功各消耗 1% 內力</Typography.Text>
+        </Flex>
 
         <div>
           <Typography.Text strong style={{ display: 'block', marginBottom: 8 }}>內功（選擇一個）</Typography.Text>
