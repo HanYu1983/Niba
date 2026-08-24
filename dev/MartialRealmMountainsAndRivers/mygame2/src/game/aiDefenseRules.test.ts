@@ -1,40 +1,26 @@
 import { describe, expect, it } from 'vitest'
 import { chooseDefenseAction, assessBaseThreats } from './aiDefenseRules'
-import type { BaseState, CreatureState, GameState, PlayerState } from './types'
+import type { GameState, PlayerState } from './types'
+import {
+  makeAiTestState,
+  makeProtectBaseOrder,
+  makeTestCreature,
+  makeTestPlayer,
+} from './testHelpers/aiTestFixtures'
 
 function makePlayer(overrides: Partial<PlayerState> = {}): PlayerState {
-  return {
-    id: 'ai-1', name: 'AI 守城者', isAI: true, position: { row: 5, column: 5 },
-    attributes: { armStrength: 8, constitution: 8, agility: 7, innerEnergy: 5, insight: 7 },
-    innerSkillIds: ['tuna-gong'], innerSkillId: 'tuna-gong', externalSkillIds: [], equippedExternalSkillIds: [],
-    health: 30, maxHealth: 30, stamina: 10, maxStamina: 10, innerPower: 10, maxInnerPower: 10,
-    prestige: 0, money: 0, experience: 0, inventory: [], turnEnded: false, ...overrides,
-  }
-}
-
-function makeBase(): BaseState {
-  return { id: 'base-1', name: '洛陽', position: { row: 5, column: 5 }, buildings: [], buildingMaterials: 0, maxBuildingMaterials: 100, health: 100, maxHealth: 100 }
-}
-
-function makeCreature(overrides: Partial<CreatureState> = {}): CreatureState {
-  return { ...makePlayer({ id: 'creature-1', name: '敵人', isAI: false }), behaviorType: 'roamer', schoolId: 'scarlet-flame', position: { row: 5, column: 6 }, health: 20, maxHealth: 20, ...overrides } as CreatureState
+  return makeTestPlayer({ name: 'AI 守城者', stamina: 10, maxStamina: 10, ...overrides })
 }
 
 function makeState(overrides: Partial<GameState> = {}): GameState {
-  const rows = 11
-  const columns = 11
-  return {
-    map: { rows, columns, cells: Array.from({ length: rows * columns }, (_, index) => { const row = Math.floor(index / columns); const column = index % columns; return { id: `${row}-${column}`, row, column, terrain: 'plain' as const } }) },
-    bases: [makeBase()], defenseStructures: [], ruins: [], creatureNests: [], resourcePoints: [], itemPoints: [], explorationEvents: [],
-    players: [makePlayer()], creatures: [makeCreature()], activePlayerId: 'ai-1', round: 1, creatureActionLogs: [], attackPreview: null, externalSkillPreview: null,
-    repairPreview: null, creatureTurnInProgress: false, activeCreatureId: null, operation: { type: 'idle' }, blockingModal: null, sharedWarehouse: [], sharedEquipmentWarehouse: [], aiOrders: [], aiConstructionPlans: [],
+  return makeAiTestState({
+    players: [makePlayer()],
+    creatures: [makeTestCreature()],
     ...overrides,
-  }
+  })
 }
 
-const protectOrder = {
-  id: 'order-1', type: 'protect-base' as const, aiPlayerId: 'ai-1', baseId: 'base-1', radius: 6, priority: 80, retreatHealthPercent: 30, status: 'active' as const,
-}
+const protectOrder = makeProtectBaseOrder({ id: 'order-1' })
 
 describe('AI 防守決策', () => {
   it('相鄰威脅時優先攻擊', () => {
@@ -59,5 +45,24 @@ describe('AI 防守決策', () => {
   it('命令暫停時不會繼續執行防守行動', () => {
     const state = makeState()
     expect(chooseDefenseAction(state, 'ai-1', { ...protectOrder, status: 'paused' })).toEqual({ type: 'end-turn', reason: 'command-paused' })
+  })
+
+  it('超出防守半徑且體力不足以致無任何可達回防格時，安全待命不會誤判移動', () => {
+    const state = makeState({
+      players: [makePlayer({ position: { row: 10, column: 10 }, stamina: 1, maxStamina: 20 })],
+      creatures: [],
+    })
+    const action = chooseDefenseAction(state, 'ai-1', protectOrder)
+    expect(action).toEqual({ type: 'hold-position', reason: 'no-threat' })
+  })
+
+  it('威脅在半徑外太遠且不可攔截時，安全待命', () => {
+    const state = makeState({
+      players: [makePlayer({ position: { row: 5, column: 5 }, stamina: 20, maxStamina: 20 })],
+      creatures: [makeTestCreature({ id: 'creature-far', position: { row: 15, column: 5 } })],
+    })
+    // creature-far 距 base (5,5) 10 格：仍在感知範圍（≤12）內，但超出攔截門檻（半徑 6 + 3）；也不與 AI 相鄰。
+    const action = chooseDefenseAction(state, 'ai-1', protectOrder)
+    expect(action).toEqual({ type: 'hold-position', reason: 'no-threat' })
   })
 })

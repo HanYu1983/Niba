@@ -1,5 +1,292 @@
 # 開發日誌
 
+## 2026-08-24｜AI 重構切片 H：JSON policy 白名單系統（內建 config＋Schema 驗證＋fallback）
+
+### 本次完成
+
+- 新增 `src/game/ai/policy/aiJsonPolicy.ts`（重構文件 §6.3／§6.7）：
+  - `AiConditionId`（7 條件）與 `AiActionId`（9 行動）白名單常數；`SUPPORTED_AI_POLICY_VERSION = 1`。
+  - `validateAiJsonPolicy(raw)`：id 非空、version 必須為支援版本、actorKind 限 player/creature、condition/action 必須在白名單（非法項目一律拒絕，不執行任意內容）、priority 有限數值、生命百分比 0～100、包圍敵數非負、avoidFatalAttack 布林、parameters 僅 number/boolean/string。錯誤逐條彙報；通過後 `Object.freeze` 為不可變 Policy。
+- 內建設定檔 `src/game/ai/configs/`：`defensive-guardian.json`（§6.4 範例原文）、`creature-sieger.json`（§6.5 範例原文）、`creature-scavenger.json`（拾荒型：自保→反擊→collect-resource→wander）。tsconfig 加 `resolveJsonModule` 以型別安全載入 JSON。
+- 新增 `src/game/ai/policy/aiPolicyRegistry.ts`（§6.6／§6.8）：
+  - `loadAiPolicyRegistry(configs)`：驗證並註冊；非法設定與重複 id 被略過且回報錯誤清單（模組載入時對內建 config 執行，錯誤走 console.error）。
+  - `getAiJsonPolicy(id, actorKind)`：查無 id 或 actorKind 不符 → 回傳同類預設 fallback（default-player／default-creature：自保→反擊→待命），AI 回合不得卡死；設定不寫入 GameState。
+  - `getCreaturePolicyId(behaviorType)`：sieger→creature-sieger、scavenger→creature-scavenger，其餘行為回 null 走 fallback——供後續 Planner 依行為型別取 policy。
+- 測試＋19（aiJsonPolicy 13 例：白名單拒絕／範圍驗證／凍結不可變／多錯誤彙報；aiPolicyRegistry 6 例：三內建載入、未知 id fallback、跨 actorKind 拒用、行為型別對應、非法＋重複 id 載入路徑）。
+
+### 影響檔案
+
+- 新增：`src/game/ai/policy/aiJsonPolicy.ts`（含測試）、`src/game/ai/policy/aiPolicyRegistry.ts`（含測試）、`src/game/ai/configs/*.json` ×3
+- 修改：`tsconfig.app.json`（resolveJsonModule）
+- 文件：重構文件 §6 新增 §6.10 實作現況、playbook §1／§3 H 列
+
+### 驗證結果
+
+- vitest：**79 檔／819 項全數通過**（前片 800＋本片 19）
+- tsc -b：通過；ESLint：新碼零警告；Build：通過。
+
+### 下一步
+
+- 重構計畫 §3 切片佇列（A~H）全數完成；後續依 §15 各 Phase 剩餘項目（stale 重試、逐步動畫接線等）另開切片。
+
+## 2026-08-24｜AI 重構切片 G：建設 AI（效用評分＋queue 狀態機＋完成提醒）
+
+### 本次完成
+
+- 新增純決策模組 `src/game/ai/construction/constructionAi.ts`：
+  - `pickNextBuildCandidate()`：效用評分＝queue item 的 priority＋方針類別加權（defense→城牆/兵營、economy→倉庫/貿易市場/交易所/總管府、frontline→醫療室/工坊/驛站；balanced/paused 不加權）；同分依佇列順序穩定排序。
+  - 狀態過濾：跳過 cancelled／completed；blocked 僅在原因為「建料不足。」時可重試（暫時性阻塞），永久性原因不再嘗試。
+  - 武館流派解析與 `constructBuilding` 同源：據點有 `martialSchoolId` 才能解析出唯一武館模板；未定流派時回傳偽候選（`unknown:` 前綴）交執行層標記 blocked，不在決策層靜默丟棄。
+  - `pickUpgradeCandidate()`／`chooseConstructionAction()`：建造優先、其次升級最低等建築、最後待命（含原因）。
+- gameStore 新增 `runAiConstructionStep(playerId)`：
+  - 守衛同其他 AI step（isAI／當前回合／creatureTurnInProgress／gameOver／計畫存在、據點存在）。
+  - `paused` 方針不主動建造：改為採集相鄰資源點（collectResourcePoint），無相鄰點則記 hold 並結束回合——符合「paused 方針不建造但可採集」驗收。
+  - 體力護欄：體力不足以建造時直接結束回合且**不**標 blocked（暫時性狀態不可污染 queue）。
+  - 逐候選嘗試 `constructBuilding`：成功 → item `completed`＋build succeeded 事件＋完成提醒彈窗（blockingModal 暫停排程器直到玩家關閉）；失敗 → item `blocked`（帶執行層中文原因）續試下一候選；全受阻且 `allowUpgrade` 時升級既有建築，否則結束回合。
+- 排程器整合：`aiTurnScheduler.ts` 的 `AiOrderKind` 新增 `'construction'`、deps 新增 `runConstructionStep`；App effect 改為戰術命令（防守／支援）優先，無活躍命令且有建設計畫時 requestStep('construction')——威脅解除後自動恢復建設。
+- 測試＋22（constructionAi 純函式 14 例：評分／方針加權／穩定排序／狀態過濾／武館解析／升級候選／決策優先序；gameStore.construction 7 例：建料不足標 blocked、補料自動重試 completed＋扣料＋日誌＋彈窗、硬阻擋跳過下一項、paused 採集／hold、體力不足保 planned、守衛拒絕；scheduler 1 例 construction 分派）。
+
+### 影響檔案
+
+- 新增：`src/game/ai/construction/constructionAi.ts`（含測試）、`src/game/gameStore.construction.test.ts`
+- 修改：`src/game/gameStore.ts`（runAiConstructionStep＋updateConstructionPlanItem helper）、`src/game/ai/aiTurnScheduler.ts`（construction 步驟型別）、`src/App.tsx`（effect 建設分支）、`src/game/testHelpers/aiTestFixtures.ts`（makeTestResourcePoint／makeConstructionPlan）
+- 文件：重構文件 §15 Phase 6（Done＋Result）、playbook §1／§3 G 列
+
+### 驗證結果
+
+- vitest：**77 檔／800 項全數通過**（前片 778＋本片 22）
+- tsc -b：通過；ESLint：新碼零警告（僅剩 App.tsx 既有一處 exhaustive-deps 舊警告）；Build：通過。
+
+### 下一步
+
+- 切片 **H**：JSON policy——把 AI 決策參數外移成資料檔（playbook §3 最後一片）。
+
+## 2026-08-24｜AI 重構切片 F：Player AI 行動事件化＋全域行動日誌
+
+### 本次完成
+
+- 新增 `src/game/ai/aiActionEvent.ts`（重構文件 §4.5）：
+  - `AiActionEvent`＝`{ id, round, actor, action: AiAction, result: 'started'|'succeeded'|'failed', reason?, createdAt }`，可序列化、Creature／玩家 AI 同一格式（本切片先接 Player AI）。
+  - `createAiActionEvent()` 以遞增序號產生 id（同回合多筆可比對順序）；未顯式給 reason 時沿用 `action.reason`。
+  - `formatAiActionEvent()` 產生日誌一行文字（`[第 X 回合] 名字 動作細節（原因）`，失敗帶原因）。
+- `GameState.actionEvents?: AiActionEvent[]`（可選欄位，比照其他新進欄位慣例）：上限 `MAX_ACTION_EVENTS = 200` 只留最新，隨存檔整包序列化；舊存檔缺欄位 → 讀取端一律 `?? []` 相容。
+- **事件化接線**：`runAiDefenseStep`／`runAiSupportStep` 每一步決策經切片 C 的 `defenseActionToAiAction` 轉成通用 `AiAction` 後寫入事件——攻擊／移動／自保撤退／原地待命／支援目標消失暫停命令，成敗如實記錄（失敗含執行結果訊息，例如「體力不足。」）。決策→執行的對應邏輯零改動，只加側寫。
+- **Game Over 防護**：兩個 step 的守衛條件加上 `state.gameOver`（拒絕執行、不寫事件）；App.tsx 的 Scheduler effect 守衛同步加上 `gameState.gameOver`（取消待執行 timer）。讀檔清理＝讀檔整包替換 state＋effect 重跑自動 cancel。
+- **UI**：新增 `src/components/ActionLogPanel.tsx`（antd Modal＋List，最新在上、失敗紅字），遊戲畫面狀態卡旁新增「📜 行動日誌」按鈕開啟。
+- 測試＋11（aiActionEvent 4 例：id 遞增順序／格式化成功、失敗、無名 actor；gameStore.actionEvents 7 例：attack succeeded、hold+結束回合、failed 含原因、支援暫停 end-turn、連續兩步事件順序與 id 遞增、Game Over 拒絕不寫入、舊存檔缺欄位相容）。
+
+### 本切片不改變什麼
+
+- AI 決策與規則結果零變化（事件為純側寫；既有 aiSteps 釘住網原樣通過）。
+- Creature 行動仍走既有 steps 快照＋CreatureActionLog 動畫路徑（重構文件 §12：「測試穩定後再改用 AiActionEvent[]」——待 Creature 回合全面事件化時收斂）；人類玩家行動的日誌埋點留待建設 AI／正式 UI 里里程碑。
+
+### 影響檔案
+
+- 新增：`src/game/ai/aiActionEvent.ts`（＋測試）、`src/game/gameStore.actionEvents.test.ts`、`src/components/ActionLogPanel.tsx`
+- 改：`src/game/types.ts`（GameState.actionEvents）、`src/game/gameStore.ts`（append/record helpers＋兩 step 接線＋gameOver 守衛）、`src/App.tsx`（日誌按鈕＋面板＋scheduler gameOver 守衛）
+- 文件：本日誌、架構文件 §15 Phase 5、playbook §1／§3
+
+### 驗證結果
+
+- vitest：75 檔 / **778 項全過**。tsc -b：通過。ESLint：新碼零警告（僅剩 App.tsx 既有一處 exhaustive-deps 舊警告）。Build：通過。
+
+### 下一步
+
+- 切片 **G**：建設 AI——`chooseConstructionAction()` 效用評分 → queue 狀態機（planned/building/completed/blocked/cancelled）→ 建築 action 執行＋完成提醒彈窗。
+
+## 2026-08-24｜AI 重構切片 E：Player AI Scheduler 抽出 App.tsx
+
+### 本次完成
+
+- 新增 `src/game/ai/aiTurnScheduler.ts`（重構文件 §11 Turn Scheduler／§12 Phase 3）：
+  - 防守（`protect-base`）與支援（`support-player`）合併為單一執行框架——差異只剩 Policy（`requestStep(actorId, orderType)` 內部分派），計時、取消、失敗結束回合全部共用。
+  - **同 Actor 不重入**：同一 actor 已有待執行 step 時，重複請求為冪等操作（不新增、不重置計時器）；換 Actor 時自動取消前一筆。
+  - **stale 防護**：timer 觸發時先驗證 Actor 仍是當前回合玩家才執行；cancel 後不得觸發任何回呼。
+  - 失敗語意與原實作一致：step 回 `{ ok: false }` 且 Actor 仍在回合中 → 呼叫 `endTurn(actorId)`。
+  - `AI_TURN_STEP_DELAY_MS = 350` 成為具名常數；`setTimeout` 只作動畫節奏（§11.3）。
+- `App.tsx` 的 AI effect 從「自行 setTimeout＋分派」改為呼叫 scheduler（`requestStep`／cleanup `cancel()`）；App 不再直接決定 AI 下一步。scheduler 實例放 `useRef` 只建一次。
+- 測試＋7（fake timers）：延遲生命週期、兩種訂單正確分派、cancel 後 stale timer 不執行、同 Actor 冪等不重入（含不重置計時）、換 Actor 取消前一筆、失敗結束回合、換人後 stale 不執行也不誤結束新玩家回合。
+
+### 本切片不改變什麼
+
+- AI 決策本體（`runAiDefenseStep`／`runAiSupportStep`）與節奏（350ms）完全不變；純排程框架搬家＋防護強化。
+- Creature phase 排程與 §11 的統一 `runAiTurnStep` 入口屬後續切片（F/G 接線時收斂）。
+
+### 影響檔案
+
+- 新增：`src/game/ai/aiTurnScheduler.ts`（＋測試 7 例）
+- 改：`src/App.tsx`（AI effect 改用 scheduler）
+- 文件：本日誌、架構文件 §12 Phase 2 計畫表 Phase 3／§15 Phase 3、playbook §1／§3
+
+### 驗證結果
+
+- vitest：73 檔 / **767 項全過**。tsc -b：通過。ESLint：新碼零警告（App.tsx 剩 1 個既有的 `map.cells` exhaustive-deps 警告，位於拾取判定 effect，非本次範圍）。Build：通過。
+
+### 下一步
+
+- 切片 **F**：Player AI 事件化——`AiActionEvent[]` 取代 steps 快照陣列。
+
+## 2026-08-24｜AI 重構切片 D：moveCreatures 拆六段管線＋blocked 誤擊修復
+
+### 本次完成
+
+- 新增 `src/game/actions/creatureTurnPipeline.ts`，把 288 行的 `moveCreatures()` monolith 拆為六段（重構文件 §12 Phase 2）：
+  - `createCreatureTurnContext()`（perceive）：世界快照＋佔位圖＋可變累加器。
+  - `selectCreatureTarget()`（沿用既有規則）→ 最小目標快照 `CreatureTargetSelection`。
+  - `planCreatureMovement()`（plan）：貪婪步進預演，隨機來源消費順序與舊實作逐次一致（seed 巡邏測試原樣通過）。
+  - `validateCreaturePlan()`（validate）：終點可通行、未被他佔、體力非負、阻路設施仍存活；失敗則安全待命。
+  - `executeCreatureAction()`（execute）：陷阱套用＋互動分支（道具→據點→資源→玩家→防禦設施），傷害公式原樣搬移。
+  - `reduceCreatureEvents()`（reduce）：終點吞噬／反震／組裝下一隻快照與動畫 step。
+- **修復 blocked bug**：舊實作被擋時攻擊「任一相鄰」防禦設施（依陣列順序），可能打錯目標、甚至體力耗盡被牆擋住也誤擊無辜設施。新實作在 plan 段以 `findBlockingDefenseId` 找出真正堵住最佳去路的那座（除防禦設施外皆可通行且體力可負擔的鄰格中離目標最近者）；體力／地形造成的 blocked 不再觸發反擊。
+- `creatureActions.moveCreatures` 簽名與回傳契約不變（薄委託 `runCreatureTurn`）；`CreatureTurnResult`／`CreatureTurnStep` 型別移至管線檔並轉出口維持相容。
+- 測試＋2：兩座相鄰木柵只打「堵路的東側」（非陣列順序優先的北側）；體力耗盡被擋不誤擊旁邊木柵。
+
+### 本切片不改變什麼
+
+- 移動模型仍是貪婪步進（非 Dijkstra 重尋路——那是統一移動管線的後續議題）；巡邏 seed 可重現性原樣保留。
+- 箭塔先手攻擊、巢穴生成（`spawnCreaturesFromNests`）不在本次範圍。
+
+### 影響檔案
+
+- 新增：`src/game/actions/creatureTurnPipeline.ts`
+- 改：`src/game/actions/creatureActions.ts`（−288 行 monolith → 薄委託）、`creatureActions.test.ts`（+2 例）
+- 文件：本日誌、架構文件 §12 Phase 2、playbook §1／§3
+
+### 驗證結果
+
+- vitest：72 檔 / **760 項全過**（含既有 17 例 creature 測試零修改通過）。tsc -b：通過。ESLint：通過。Build：通過。
+
+### 下一步
+
+- 切片 **E**：Player AI Scheduler 抽出 App.tsx 成 `aiTurnScheduler.ts`（timer cancellation、同 Actor 不重入）。
+
+## 2026-08-24｜AI 重構切片 C：統一 AiAction 型別＋Action Validator
+
+### 本次完成
+
+- 新增通用資料模型 `src/game/ai/aiAction.ts`（重構文件 §4）：
+  - `AiActorRef`／`AiTargetKind`／`AiTargetRef` 與六種 `AiAction`（move／attack／collect／build／hold／end-turn）；collect、build 先定義型別供切片 D/G 使用。
+  - `defenseActionToAiAction(state, actorId, action)`：舊 `AiDefenseAction` → `AiAction` 的 Adapter（文件 §12 Phase 1 指定步驟）。舊 attack 不帶 reason，轉換時補空字串；目標位置查表補上，查不到以 (-1,-1) 佔位（有效性由 Validator 依 id 判定）。
+- 新增 `src/game/ai/validation/validateAiAction.ts`（重構文件 §9.2）：
+  - 行動者存在＋存活；player kind 的回合合法性沿用 `canPlayerPerformAction`（單一事實來源，非玩家回合／Creature 回合中／結果視窗／遊戲結束都會擋下）。
+  - move：目的地是否在 `collectReachableCells` 結果內（一次 Dijkstra 同時涵蓋牆、佔位與體力）。
+  - attack：目標存在且存活＋相鄰（與 `getAttackTarget` 契約一致）；collect/build 最小檢查；hold/end-turn 直接有效。
+  - creature kind 的回合階段檢查留待切片 D 接線。
+- 測試 `validateAiAction.test.ts`（11 例）：既有四種決策輸出經 Adapter 後全數 valid；死亡／過遠攻擊、體力不可達、佔位阻隔、牆中孤格、行動者不存在或死亡、非該玩家回合等 stale 情境給出明確 reason。
+
+### 本切片不改變什麼
+
+- 三個決策函式輸出仍是 `AiDefenseAction`；`gameStore` 執行路徑一行未動——Validator 只驗證不接線（Scheduler／Creature 管線在後續切片消費）。
+
+### 影響檔案
+
+- 新增：`src/game/ai/aiAction.ts`、`src/game/ai/validation/validateAiAction.ts` ＋測試
+- 文件：本日誌、`ai-system-refactoring-development-design.md` §15 Phase 1、`handev/ai-development-playbook.md` §1／§3
+
+### 驗證結果
+
+- vitest：72 檔 / **758 項全過**。tsc -b：通過。ESLint（新檔案）：通過。Build：通過。
+
+### 下一步
+
+- 切片 **D**：Creature 行為改走共用管線（Adapter → Policy → Validator → Executor），巡邏決策去 greedy 化。
+
+## 2026-08-24｜AI 重構切片 B：共用感知層＋巡邏隨機注入
+
+### 本次完成
+
+- 新增感知模組 `src/game/ai/perception/`（重構文件 §5.2 前四項）：
+  - `distance.ts`：曼哈頓距離統一出口（委託 `mapCellStateRules.getManhattanDistance`）。
+  - `targetDiscovery.ts`：存活敵對目標枚舉（`listHostileActors`）與目標有效檢查（`isHostileActorStillValid`，stale check 最小版）。
+  - `blockedPositions.ts`：阻擋／成本函式的 AI 層固定進入點（現階段直接轉出口 `rules/movementRules`）。
+  - `reachablePositions.ts`：`collectReachableCells` 一次 Dijkstra 成本圖列出體力可達格。
+- 三個決策純函式改委託感知層：`aiDefenseRules`／`aiSupportRules`／`aiSelfPreservationRules` 移除各自重複的距離、敵人枚舉與候選生成；**行為保持**（同樣的過濾、排序與 tie-break），並順帶把「每個候選格重跑一次 Dijkstra」改為整輪只建一次成本圖。
+- `moveCreatures` 注入 `RandomSource`（尾參，預設 `defaultRandomSource`）：巡邏步選格與攻擊閃避／根骨減傷 roll 都走注入來源，符合重構文件 §5.4「domain AI 不得直呼 Math.random()」。
+- 測試：新增 `perception.test.ts`（7 項）；`creatureActions.test.ts` 加「巡邏隨機注入」（3 項：同 seed 可重現、開闊地走盡體力、不同 seed 路徑不同）；`aiDefenseRules.test.ts` 加「不可達→安全待命」2 項。fixture 補 `makeTestNest`。
+
+### 本切片不改變什麼
+
+- 三個決策函式的輸出契約（既有 11 例原樣通過）、`CreatureTurnResult` 格式、巢穴生成隨機（`spawnCreaturesFromNests` 維持自己的 roll）。
+- Creature 移動仍走 greedy 步進模型（統一移動管線屬切片 D）。
+
+### 影響檔案
+
+- 新增：`src/game/ai/perception/`（5 檔含測試）
+- 改：`src/game/aiDefenseRules.ts`、`aiSupportRules.ts`、`aiSelfPreservationRules.ts`、`actions/creatureActions.ts`、`testHelpers/aiTestFixtures.ts`＋兩個對應測試檔
+- 文件：本日誌、`ai-system-refactoring-development-design.md` §15 Phase 1、`handev/ai-development-playbook.md` §3
+
+### 驗證結果
+
+- vitest：71 檔 / **747 項全過**。tsc -b：通過。ESLint（本切片檔案）：通過。Build：通過。
+
+### 下一步
+
+- 切片 **C**：統一 `AiAction` 型別＋`validateAiAction()`（先記錄不阻擋）。
+
+## 2026-08-24｜AI 重構切片 A：攻擊去 Preview 化
+
+### 本次完成
+
+- 新增原子 domain action `src/game/ai/execution/executeAiAttack.ts`：執行前用 `createAttackPreview` 再驗證目標，再呼叫既有 `executeAttack`，**不寫入** `attackPreview`／`operation`。
+- `runAiDefenseStep`／`runAiSupportStep` 改呼叫 `gameStore.executeAiAttack`；人類玩家仍走 `previewAttackTarget`。
+- 行為保持：決策函式、移動／結束回合、傷害結算路徑不變。體力不足失敗時不再留下殘餘 preview。
+
+### 本切片不改變什麼
+
+- 人類 Preview＋確認攻擊流程
+- `chooseDefenseAction`／`chooseSupportAction`／`chooseSelfPreservationAction`
+- `runAiDefenseStep`／`runAiSupportStep` 公開簽名與移動／待命／paused 路徑
+
+### 影響檔案
+
+- 新增：`src/game/ai/execution/executeAiAttack.ts`、`executeAiAttack.test.ts`
+- 改：`src/game/gameStore.ts`、`src/game/gameStore.aiSteps.test.ts`
+- 文件：`handev/ai-development-playbook.md`、`handev/mygame2-architecture.md`、`reports/system/ai-system-refactoring-development-design.md`
+
+### 驗證結果
+
+- TypeScript：通過。ESLint（本切片檔案）：通過。Build：通過。
+- 測試：70 檔 / **735 項全過**（A0 8 例＋不經 preview 1 例＋原子攻擊 3 例＋既有案例）。
+
+### 下一步
+
+- 切片 **B**：共用感知純函式＋ Creature 巡邏注入 `RandomSource`。
+
+## 2026-08-24｜對齊門派外功數測試：36 → 35
+
+### 本次完成
+
+- `skillProgressionCatalog.test.ts` 總數斷言落後於 catalog：百毒流「驛路步」已移除（同檔逐派測試已豁免靈氣），合計外功 35 而非 36。將預期值改為 35，註解寫明各派組成。未改功法資料。
+
+### 驗證結果
+
+- 該檔 14 項通過；全套 69 檔 / **731 項全過**。
+
+## 2026-08-24｜AI 重構前置 A0：補 player AI 執行層整合測試
+
+### 本次完成
+
+- 依 `handev/ai-development-playbook.md` 切片 **A0**（A 的前置安全網）：為 `runAiDefenseStep`／`runAiSupportStep` 補 8 例 gameStore 整合測試，**不改 production 行為**。
+- 案例：守衛拒絕（非 AI／非其回合／Creature 行動中）、防守攻擊成功、防守移動進半徑、無威脅結束回合、體力不足攻擊失敗不結束回合、支援攻擊成功、支援目標死亡 → `paused` 並結束回合、無 active 支援命令拒絕。
+- 斷言只看結果（血量／位置／回合／命令狀態），不鎖定 Preview API 路徑，作為切片 A 去 preview 化的驗收網。
+- 抽出共用夾具 `src/game/testHelpers/aiTestFixtures.ts`；三個既有 `ai*.test.ts` 改用同一套 helper。
+
+### 影響檔案
+
+- 新增：`src/game/gameStore.aiSteps.test.ts`、`src/game/testHelpers/aiTestFixtures.ts`
+- 改寫測試 helper：`aiDefenseRules.test.ts`、`aiSupportRules.test.ts`、`aiSelfPreservationRules.test.ts`
+- 文件：`handev/ai-development-playbook.md`、`handev/mygame2-architecture.md`、`reports/system/ai-system-refactoring-development-design.md`
+
+### 驗證結果
+
+- TypeScript：通過。ESLint（本切片檔案）：通過。Build：通過。
+- 測試：AI 相關 19 項全過（11 決策＋8 執行）；全套 731 項中 730 過。
+- 已知無關失敗：`skillProgressionCatalog.test.ts`「外功數預期 36 實得 35」（catalog 與測試不同步，非本切片改動）。
+
+### 下一步
+
+- 切片 **A**：AI 攻擊去 Preview 化（新增原子攻擊 domain action；A0 測試須持續全過）。
+
 ## 2026-08-24｜江湖線擴充：新增 10 個江湖功法
 
 ### 本次完成

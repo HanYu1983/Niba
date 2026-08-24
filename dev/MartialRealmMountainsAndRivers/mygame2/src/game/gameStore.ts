@@ -29,12 +29,16 @@ import {
   type UpgradeableAttribute,
   type AiOrder,
   type AiConstructionPlan,
+  type AiConstructionPlanItem,
   type CampaignState,
   isAdjacent,
   isSameOrAdjacent,
   isSamePosition,
   getAdjacentPositions,
 } from './types'
+import type { AiAction } from './ai/aiAction'
+import type { AiActionEvent } from './ai/aiActionEvent'
+import { createAiActionEvent } from './ai/aiActionEvent'
 import {
   getBuff,
   getEquipment,
@@ -90,6 +94,10 @@ import {
   upgradeBuilding as upgradeBuildingAction,
 } from './actions/buildingActions'
 import {
+  pickNextBuildCandidate,
+  pickUpgradeCandidate,
+} from './ai/construction/constructionAi'
+import {
   switchBasePolicy as switchBasePolicyAction,
   switchRemoteBasePolicy as switchRemoteBasePolicyAction,
   transferBaseMaterials as transferBaseMaterialsAction,
@@ -112,6 +120,7 @@ import {
   executeExternalDamage as executeExternalDamageAction,
   resolveCreatureDefeatRewards,
 } from './actions/combatActions'
+import { executeAiAttack as executeAiAttackAction } from './ai/execution/executeAiAttack'
 import {
   depositEquipment as depositEquipmentAction,
   depositItem as depositItemAction,
@@ -163,6 +172,7 @@ import type { ScenarioDefinition } from '../editor/editorTypes'
 import { chooseDefenseAction } from './aiDefenseRules'
 import { chooseSupportAction } from './aiSupportRules'
 import { chooseSelfPreservationAction } from './aiSelfPreservationRules'
+import { defenseActionToAiAction } from './ai/aiAction'
 import { defaultRandomSource } from './rules/randomRules'
 import { getBlockedPositions } from './rules/movementRules'
 
@@ -233,6 +243,52 @@ let currentScenarioId: string | null = null
  */
 let pendingCreatureTurn: CreatureTurnResult | null = null
 let pendingCreatureTurnBasePlayers: PlayerState[] | null = null
+
+/** 全域行動日誌上限：只保留最新 N 筆，避免長局面資料無限成長（重構文件 §4.5）。 */
+const MAX_ACTION_EVENTS = 200
+
+function appendActionEvents(events: AiActionEvent[]): void {
+  if (events.length === 0) return
+  updateGameState((current) => ({
+    ...current,
+    actionEvents: [...(current.actionEvents ?? []), ...events].slice(-MAX_ACTION_EVENTS),
+  }))
+}
+
+/**
+ * 把一次 Player AI step 的決策與結果寫入全域行動日誌（重構文件 §4.5／§15 Phase 5）。
+ * reason 優先取決策自帶理由；舊 attack 決策沒有理由欄位，退回執行結果的訊息。
+ */
+function recordAiStepEvent(
+  round: number,
+  playerId: string,
+  playerName: string,
+  action: AiAction,
+  outcome: { ok: boolean; reason?: string },
+): void {
+  appendActionEvents([createAiActionEvent({
+    round,
+    actor: { id: playerId, kind: 'player', name: playerName },
+    action,
+    result: outcome.ok ? 'succeeded' : 'failed',
+    reason: action.reason || outcome.reason,
+  })])
+}
+
+/** 更新建設計畫中單一 queue item 的狀態（重構文件 §14.6 狀態機）。 */
+function updateConstructionPlanItem(
+  aiPlayerId: string,
+  itemIndex: number,
+  patch: Partial<Pick<AiConstructionPlanItem, 'status' | 'blockedReason'>>,
+): void {
+  updateGameState((current) => ({
+    ...current,
+    aiConstructionPlans: (current.aiConstructionPlans ?? []).map((plan) => plan.aiPlayerId === aiPlayerId
+      ? { ...plan, queue: plan.queue.map((item, index) => index === itemIndex ? { ...item, ...patch } : item) }
+      : plan),
+  }))
+}
+
 function updateGameState(updater: (state: GameState) => GameState) {
   let nextGameState = updater(gameState)
 
@@ -1585,6 +1641,17 @@ export const gameStore = {
     return action.result
   },
 
+  /** AI 攻擊：走原子 domain action，不經過 previewAttackTarget。人類玩家仍用 Preview API。 */
+  executeAiAttack: (playerId: string, targetType: AttackTargetType, targetId: string): ActionExecutionResult<AttackExecutionResult> => {
+    return runActionExecution(updateGameState, (state) => executeAiAttackAction(state, playerId, targetType, targetId, {
+      getActionablePlayer,
+      createLootForPlayer,
+      getLearnableSkill,
+      applyExperienceAndLevelUp,
+      addLootToPlayer,
+    }), 'AI 攻擊失敗。')
+  },
+
   /** 選取元素爆發道具（element-burst）的目標並建立預覽。 */
   previewItemBurst: (targetType: AttackTargetType, targetId: string): ActionOutcome => {
     let result: ActionOutcome = { ok: false, reason: '元素爆發失敗。' }
@@ -1779,31 +1846,162 @@ export const gameStore = {
     const state = gameState
     const player = state.players.find((candidate) => candidate.id === playerId)
     const order = state.aiOrders?.find((candidate) => candidate.aiPlayerId === playerId && candidate.type === 'protect-base' && candidate.status === 'active')
-    if (!player?.isAI || state.activePlayerId !== playerId || state.creatureTurnInProgress || !order || order.type !== 'protect-base') {
+    if (!player?.isAI || state.activePlayerId !== playerId || state.creatureTurnInProgress || state.gameOver || !order || order.type !== 'protect-base') {
       return { ok: false, reason: '目前無法執行 AI 防守回合。' }
     }
 
     const selfPreservation = chooseSelfPreservationAction(state, playerId, order.retreatHealthPercent)
     if (selfPreservation?.type === 'move') {
       const result = gameStore.movePlayerTo(playerId, selfPreservation.position.row, selfPreservation.position.column)
+      recordAiStepEvent(state.round, playerId, player.name, defenseActionToAiAction(state, playerId, selfPreservation), result)
       return result.ok ? { ok: true } : { ok: false, reason: result.reason ?? 'AI 自保移動失敗。' }
     }
     if (selfPreservation) {
       gameStore.endPlayerTurn(playerId)
+      recordAiStepEvent(state.round, playerId, player.name, defenseActionToAiAction(state, playerId, selfPreservation), { ok: true })
       return { ok: true }
     }
 
     const decision = chooseDefenseAction(state, playerId, order)
     if (decision.type === 'attack') {
-      gameStore.previewAttackTarget(playerId, decision.targetType, decision.targetId)
-      const result = gameStore.executeAttackTarget()
+      const result = gameStore.executeAiAttack(playerId, decision.targetType, decision.targetId)
+      recordAiStepEvent(state.round, playerId, player.name, defenseActionToAiAction(state, playerId, decision), result.ok ? { ok: true } : { ok: false, reason: result.reason })
       return result.ok ? { ok: true } : { ok: false, reason: result.reason ?? 'AI 攻擊失敗。' }
     }
     if (decision.type === 'move') {
       const result = gameStore.movePlayerTo(playerId, decision.position.row, decision.position.column)
+      recordAiStepEvent(state.round, playerId, player.name, defenseActionToAiAction(state, playerId, decision), result)
       return result.ok ? { ok: true } : { ok: false, reason: result.reason ?? 'AI 移動失敗。' }
     }
     gameStore.endPlayerTurn(playerId)
+    recordAiStepEvent(state.round, playerId, player.name, defenseActionToAiAction(state, playerId, decision), { ok: true })
+    return { ok: true }
+  },
+
+  /**
+   * 建設 AI 步驟（重構文件 §12 Phase 4／§15 Phase 6）：
+   * - `paused` 方針不建造，僅嘗試採集相鄰資源點，否則待命。
+   * - 一般方針：依效用評分逐一套用 queue 候選；失敗者標記 `blocked`（含原因）並嘗試下一個；
+   *   建料不足的 blocked 在材料累積後會自動重試。
+   * - 佇列無候選且允許升級時，升級等級最低的建築。
+   * - 建造／升級成功：寫入全域日誌＋完成提醒彈窗（玩家確認後 AI 再繼續）。
+   */
+  runAiConstructionStep: (playerId: string): ActionOutcome => {
+    const state = gameState
+    const player = state.players.find((candidate) => candidate.id === playerId)
+    const plan = state.aiConstructionPlans?.find((candidate) => candidate.aiPlayerId === playerId)
+    if (!player?.isAI || state.activePlayerId !== playerId || state.creatureTurnInProgress || state.gameOver || !plan) {
+      return { ok: false, reason: '目前無法執行 AI 建設回合。' }
+    }
+    if (!state.bases.some((candidate) => candidate.id === plan.baseId)) {
+      return { ok: false, reason: '建設計畫的據點不存在。' }
+    }
+
+    // paused 方針：不主動建造，但可執行採集（§14.6）。
+    if (plan.policy === 'paused') {
+      const adjacentPoint = (state.resourcePoints ?? []).find((point) => isSameOrAdjacent(player.position, point.position))
+      if (adjacentPoint) {
+        const result = gameStore.collectResourcePoint(playerId, adjacentPoint.id)
+        recordAiStepEvent(
+          state.round,
+          playerId,
+          player.name,
+          { type: 'collect', actor: { id: playerId, kind: 'player' }, target: { id: adjacentPoint.id, kind: 'resource', position: adjacentPoint.position }, reason: '暫停建造，採集建料。' },
+          result.ok ? { ok: true } : { ok: false, reason: result.reason },
+        )
+        return result.ok ? { ok: true } : { ok: false, reason: result.reason ?? '採集失敗。' }
+      }
+      gameStore.endPlayerTurn(playerId)
+      recordAiStepEvent(
+        state.round,
+        playerId,
+        player.name,
+        { type: 'hold', actor: { id: playerId, kind: 'player' }, reason: '暫停建造：附近無可採集的資源點。' },
+        { ok: true },
+      )
+      return { ok: true }
+    }
+
+    // 體力護欄：體力不足以建造時直接結束回合；這是暫時性狀態，不可標記為 blocked。
+    if (!canPlayerPerformAction(gameState, playerId, ACTION_STAMINA_COSTS.build).ok) {
+      gameStore.endPlayerTurn(playerId)
+      recordAiStepEvent(
+        state.round,
+        playerId,
+        player.name,
+        { type: 'end-turn', actor: { id: playerId, kind: 'player' }, reason: '體力不足，結束建設回合。' },
+        { ok: true },
+      )
+      return { ok: true }
+    }
+
+    // 依效用評分逐一套用候選；失敗者標記 blocked（含原因）後換下一個。
+    const excluded = new Set<number>()
+    while (true) {
+      const candidate = pickNextBuildCandidate(gameState, plan, excluded)
+      if (!candidate) break
+      const outcome = constructBuildingAction(gameState, plan.baseId, candidate.buildingId, playerId)
+      if (outcome.result.ok) {
+        updateGameState(() => outcome.state)
+        updateConstructionPlanItem(playerId, candidate.itemIndex, { status: 'completed', blockedReason: undefined })
+        recordAiStepEvent(
+          gameState.round,
+          playerId,
+          player.name,
+          { type: 'build', actor: { id: playerId, kind: 'player' }, baseId: plan.baseId, buildingType: candidate.buildingType, reason: `建設計畫：${candidate.buildingName}（優先度 ${candidate.item.priority}）。` },
+          { ok: true },
+        )
+        gameStore.showActionResult({
+          title: '🏗️ 建設完成',
+          message: `${player.name} 已在據點完成「${candidate.buildingName}」。`,
+          rewards: [],
+        })
+        return { ok: true }
+      }
+      updateConstructionPlanItem(playerId, candidate.itemIndex, { status: 'blocked', blockedReason: outcome.result.reason })
+      excluded.add(candidate.itemIndex)
+    }
+
+    // 佇列全部受阻 → 升級 fallback（若允許）。
+    const upgradeCandidate = pickUpgradeCandidate(gameState, plan)
+    if (upgradeCandidate) {
+      const outcome = upgradeBuildingAction(gameState, playerId, plan.baseId, upgradeCandidate.buildingId)
+      if (outcome.result.ok) {
+        updateGameState(() => outcome.state)
+        recordAiStepEvent(
+          gameState.round,
+          playerId,
+          player.name,
+          { type: 'build', actor: { id: playerId, kind: 'player' }, baseId: plan.baseId, buildingType: upgradeCandidate.buildingName, reason: '佇列已無可建項目，升級既有建築。' },
+          { ok: true },
+        )
+        gameStore.showActionResult({
+          title: '⬆️ 建築升級',
+          message: `${player.name} 已將「${upgradeCandidate.buildingName}」升級。`,
+          rewards: [],
+        })
+        return { ok: true }
+      }
+      // 升級失敗不阻塞 queue：記錄待命原因即可。
+      gameStore.endPlayerTurn(playerId)
+      recordAiStepEvent(
+        gameState.round,
+        playerId,
+        player.name,
+        { type: 'hold', actor: { id: playerId, kind: 'player' }, reason: outcome.result.reason ?? '目前無法升級建築。' },
+        { ok: true },
+      )
+      return { ok: true }
+    }
+
+    gameStore.endPlayerTurn(playerId)
+    recordAiStepEvent(
+      gameState.round,
+      playerId,
+      player.name,
+      { type: 'end-turn', actor: { id: playerId, kind: 'player' }, reason: '沒有可執行的建設項目，結束回合。' },
+      { ok: true },
+    )
     return { ok: true }
   },
 
@@ -1811,16 +2009,18 @@ export const gameStore = {
     const state = gameState
     const player = state.players.find((candidate) => candidate.id === playerId)
     const order = state.aiOrders?.find((candidate) => candidate.aiPlayerId === playerId && candidate.type === 'support-player' && candidate.status === 'active')
-    if (!player?.isAI || state.activePlayerId !== playerId || state.creatureTurnInProgress || !order || order.type !== 'support-player') {
+    if (!player?.isAI || state.activePlayerId !== playerId || state.creatureTurnInProgress || state.gameOver || !order || order.type !== 'support-player') {
       return { ok: false, reason: '目前無法執行 AI 支援回合。' }
     }
     const selfPreservation = chooseSelfPreservationAction(state, playerId, order.retreatHealthPercent)
     if (selfPreservation?.type === 'move') {
       const result = gameStore.movePlayerTo(playerId, selfPreservation.position.row, selfPreservation.position.column)
+      recordAiStepEvent(state.round, playerId, player.name, defenseActionToAiAction(state, playerId, selfPreservation), result)
       return result.ok ? { ok: true } : { ok: false, reason: result.reason ?? 'AI 自保移動失敗。' }
     }
     if (selfPreservation) {
       gameStore.endPlayerTurn(playerId)
+      recordAiStepEvent(state.round, playerId, player.name, defenseActionToAiAction(state, playerId, selfPreservation), { ok: true })
       return { ok: true }
     }
     const target = state.players.find((candidate) => candidate.id === order.playerId)
@@ -1830,20 +2030,29 @@ export const gameStore = {
         aiOrders: (current.aiOrders ?? []).map((currentOrder) => currentOrder.id === order.id ? { ...currentOrder, status: 'paused' as const } : currentOrder),
       }))
       gameStore.endPlayerTurn(playerId)
+      recordAiStepEvent(
+        state.round,
+        playerId,
+        player.name,
+        { type: 'end-turn', actor: { id: playerId, kind: 'player' }, reason: '支援目標不存在，暫停支援命令。' },
+        { ok: true },
+      )
       return { ok: true }
     }
 
     const decision = chooseSupportAction(state, playerId, order)
     if (decision.type === 'attack') {
-      gameStore.previewAttackTarget(playerId, decision.targetType, decision.targetId)
-      const result = gameStore.executeAttackTarget()
+      const result = gameStore.executeAiAttack(playerId, decision.targetType, decision.targetId)
+      recordAiStepEvent(state.round, playerId, player.name, defenseActionToAiAction(state, playerId, decision), result.ok ? { ok: true } : { ok: false, reason: result.reason })
       return result.ok ? { ok: true } : { ok: false, reason: result.reason ?? 'AI 支援攻擊失敗。' }
     }
     if (decision.type === 'move') {
       const result = gameStore.movePlayerTo(playerId, decision.position.row, decision.position.column)
+      recordAiStepEvent(state.round, playerId, player.name, defenseActionToAiAction(state, playerId, decision), result)
       return result.ok ? { ok: true } : { ok: false, reason: result.reason ?? 'AI 支援移動失敗。' }
     }
     gameStore.endPlayerTurn(playerId)
+    recordAiStepEvent(state.round, playerId, player.name, defenseActionToAiAction(state, playerId, decision), { ok: true })
     return { ok: true }
   },
 

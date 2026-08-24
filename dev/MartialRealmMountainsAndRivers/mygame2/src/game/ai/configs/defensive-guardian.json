@@ -1,0 +1,17 @@
+{
+  "id": "defensive-guardian",
+  "version": 1,
+  "actorKind": "player",
+  "emergency": {
+    "minimumHealthPercent": 10,
+    "surroundedEnemyCount": 2,
+    "avoidFatalAttack": true
+  },
+  "priorities": [
+    { "condition": "self-preservation-needed", "action": "retreat", "priority": 100 },
+    { "condition": "adjacent-hostile", "action": "attack-adjacent-hostile", "priority": 90 },
+    { "condition": "protect-base-threatened", "action": "intercept-threat", "priority": 80 },
+    { "condition": "outside-defense-radius", "action": "return-to-base-radius", "priority": 70 },
+    { "condition": "no-threat", "action": "hold-position", "priority": 10 }
+  ]
+}

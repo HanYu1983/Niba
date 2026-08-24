@@ -514,6 +514,13 @@ public/ai-configs/*.json
 - 未通過 Validator 的移動、攻擊或建設。
 - 人類玩家對 AI 命令的修改權限。
 
+### 6.10 實作現況（2026-08-24，切片 H）
+
+- 型別與驗證：`src/game/ai/policy/aiJsonPolicy.ts`——`AiConditionId`（7 條件）／`AiActionId`（9 行動）白名單、`SUPPORTED_AI_POLICY_VERSION = 1`、`validateAiJsonPolicy()` 落地 §6.7 全部規則（id／version／actorKind／condition／action／priority 有限值／生命百分比 0～100／數量非負／parameters 僅基本型別），通過後 `Object.freeze` 為不可變 Policy；非法項目逐條回報錯誤。
+- 內建設定：`src/game/ai/configs/`——`defensive-guardian.json`（§6.4 範例）、`creature-sieger.json`（§6.5 範例）、`creature-scavenger.json`（拾荒：自保→反擊→collect-resource→wander）。
+- Registry 與 fallback：`src/game/ai/policy/aiPolicyRegistry.ts`——`loadAiPolicyRegistry()` 驗證＋略過非法／重複 id 並回報錯誤；`getAiJsonPolicy(id, actorKind)` 查無或 actorKind 不符時回傳同類預設 fallback（自保→反擊→待命）；`getCreaturePolicyId()` 對應 sieger/scavenger 行為型別，其餘走 fallback。
+- 測試 19 例（Schema 白名單／範圍／凍結 13 例；載入 fallback／跨型別拒用／行為對應 6 例），全套 **819 項通過**。外部 JSON（`public/ai-configs/`）依 §6.6 留待後續需求再支援。
+
 ---
 
 ## 7. Emergency Policy 自保層
@@ -796,6 +803,8 @@ executeCreatureAction()
 reduceCreatureEvents()
 ```
 
+- Status：Done（2026-08-24，切片 D）
+- Result：實作於 `src/game/actions/creatureTurnPipeline.ts`（`createCreatureTurnContext`／`selectCreatureTarget`／`planCreatureMovement`／`validateCreaturePlan`／`executeCreatureAction`／`reduceCreatureEvents`，orchestrator 為 `runCreatureTurn`）；`moveCreatures` 薄委託，`CreatureTurnResult` 相容。**blocked bug 已修**：只反擊真正堵住去路的防禦設施（`findBlockingDefenseId`），體力／地形被擋不再誤擊相鄰設施。移動模型維持貪婪步進、巡邏 seed 可重現。760 項測試全過。
 - 先維持 `CreatureTurnResult` 相容格式。
 - 測試穩定後，再改用 `AiActionEvent[]`。
 
@@ -851,6 +860,8 @@ executeAiAction()
 - `App.tsx` 不再直接決定 AI 下一步。
 - React 只負責監聽 Scheduler 事件與渲染 UI。
 
+- Status：Done（2026-08-24，切片 E）——`aiTurnScheduler.ts` 落地；App.tsx 的 `setTimeout` 邏輯改為呼叫 scheduler（`requestStep`／`cancel`），不再自行決定 AI 下一步。
+
 ### Phase 4：加入建設 Policy
 
 - 新增 `chooseConstructionAction()`。
@@ -903,7 +914,7 @@ perception → decision → validation → execution → event
 ### 14.4 回合生命週期
 
 - 所有玩家行動完成後才進入 Creature phase。
-- Creature phase 中不能執行玩家 AI。
+- Creature phase 中不能執行玩家 AI。（A0：`gameStore.aiSteps.test.ts` 已覆蓋 store 守衛）
 - Creature phase 結束後正確輪到下一位玩家。
 - 同一 Actor 不會同時啟動兩個 Scheduler。
 - Modal 開啟時 AI scheduler 暫停或取消。
@@ -935,33 +946,36 @@ perception → decision → validation → execution → event
 ### Phase 1：共用純函式與型別
 
 - Owner：AI Engineering
-- Status：Todo
+- Status：Done
 - Priority：P0
 - Acceptance Criteria：
-  - 共用距離、阻擋、存活、目標與可達性函式完成。
-  - `AiAction` 型別完成。
+  - ~~共用距離、阻擋、存活、目標與可達性函式完成。~~ **切片 B 已完成**（`src/game/ai/perception/`）。
+  - ~~`AiAction` 型別完成。~~ **切片 C 已完成**（`src/game/ai/aiAction.ts`＋Adapter＋Validator）。
   - 不改變既有外部行為。
 - Test Method：
-  - 共用感知單元測試。
-  - 既有 43 個測試檔全部通過。
+  - 共用感知單元測試（`perception.test.ts`）。
+  - 既有測試檔全部通過。
+- Result（2026-08-24，切片 B）：新增 `ai/perception/`（distance／targetDiscovery／blockedPositions／reachablePositions）；三個 ai*Rules 決策改委託感知層，行為不變且候選生成從「每格重跑一次 Dijkstra」改為「整輪一次成本圖」；`moveCreatures` 巡邏與攻擊 roll 注入 `RandomSource`。全套 747 項通過。
+- Result（2026-08-24，切片 C）：`AiAction` 六種行動型別＋`defenseActionToAiAction` Adapter＋`validateAiAction()`（§9.2 子集：actor 存活、回合合法性沿用 `canPlayerPerformAction`、move 可達性、attack 目標存活且相鄰；creature 回合階段檢查待切片 D）。Validator 尚未接線，執行路徑零變化。全套 758 項通過。
 
 ### Phase 2：AI Action Validator / Executor
 
 - Owner：AI Engineering
-- Status：Todo
+- Status：In Progress（前半：去 Preview 已完成；stale 重試尚未做）
 - Priority：P0
 - Acceptance Criteria：
-  - 玩家 AI 攻擊不再使用 Preview API。
-  - AI 行動前重新驗證。
+  - ~~玩家 AI 攻擊不再使用 Preview API。~~ **切片 A 已完成**（`executeAiAttack`）。
+  - AI 行動前重新驗證。（攻擊路徑已在執行前走 `createAttackPreview`／`getAttackTarget`）
   - stale action 可重試一次。
 - Test Method：
   - Action contract 測試。
   - GameStore 整合測試。
+- Result（2026-08-24）：`runAiDefenseStep`／`runAiSupportStep` 改呼叫 `executeAiAttack`；人類仍用 `previewAttackTarget`。A0＋新測試全過。
 
 ### Phase 3：統一 Player AI Scheduler
 
 - Owner：Engineering
-- Status：Todo
+- Status：Done（2026-08-24，切片 E）
 - Priority：P1
 - Acceptance Criteria：
   - 防守與支援共用執行框架。
@@ -970,6 +984,7 @@ perception → decision → validation → execution → event
 - Test Method：
   - 回合生命週期測試。
   - timer cancellation 測試。
+- Result（2026-08-24）：新增 `src/game/ai/aiTurnScheduler.ts`（`createAiTurnScheduler`）：防守／支援只剩 Policy 差異（`requestStep(actorId, orderType)` 內部分派 `runDefenseStep`／`runSupportStep`），計時、取消、失敗結束回合共用；同 Actor 冪等不重入、換 Actor 自動取消前一筆、timer 觸發時驗證 Actor 仍是當前玩家（stale 防護）。`App.tsx` 只剩啟動／停止（effect 呼叫 `requestStep`＋cleanup `cancel()`）。測試 7 例：生命週期、兩種訂單分派、cancel 後 stale timer 不執行、不重入、換人取消、失敗結束回合、換人後不失誤結束新回合。
 
 ### Phase 4：Creature Action/Event Pipeline
 
@@ -987,7 +1002,7 @@ perception → decision → validation → execution → event
 ### Phase 5：動畫與全域日誌
 
 - Owner：UI / Engineering
-- Status：Todo
+- Status：Done（2026-08-24，切片 F；Creature 動畫事件沿用既有 steps 快照路徑，人類行動埋點留待建設 AI 里程碑）
 - Priority：P1
 - Acceptance Criteria：
   - AI 與 Creature 行動都能產生動畫事件。
@@ -996,11 +1011,12 @@ perception → decision → validation → execution → event
 - Test Method：
   - 事件順序測試。
   - 動畫取消、讀檔與 Game Over 測試。
+- Result（2026-08-24）：`src/game/ai/aiActionEvent.ts` 落地 §4.5 事件格式（id 遞增序號可排序、reason 沿用 action.reason）；`GameState.actionEvents`（上限 200、隨存檔序列化、舊檔 `?? []` 相容）；防守／支援 step 全決策分支寫入事件（成敗如實）。Game Over：step 守衛＋Scheduler effect 雙層擋下。UI：ActionLogPanel Modal（最新在上、失敗紅字）＋狀態卡旁「📜 行動日誌」按鈕。測試 11 例（順序／成敗記錄／Game Over／讀檔相容），全套 778 項通過；AI 規則結果零變化。
 
 ### Phase 6：建設 AI
 
 - Owner：AI Engineering
-- Status：Todo
+- Status：Done
 - Priority：P2
 - Acceptance Criteria：
   - AI 依據 `AiConstructionPlan` 自動選擇建築。
@@ -1009,6 +1025,7 @@ perception → decision → validation → execution → event
 - Test Method：
   - 建設決策純函式測試。
   - 固定據點建設情境測試。
+- Result（2026-08-24）：新增純決策模組 `src/game/ai/construction/constructionAi.ts`——`pickNextBuildCandidate()` 效用評分＝queue item priority＋方針類別加權（defense→城牆/兵營、economy→倉庫/貿易市場/交易所/總管府、frontline→醫療室/工坊/驛站；同分依佇列順序穩定排序），跳過 cancelled／completed，僅重試「建料不足。」的 blocked；武館以流派過濾解析唯一模板（未定流派 → 偽候選 `unknown:` 交執行層標記 blocked）。`runAiConstructionStep`：paused 方針不建造、改採集相鄰資源點或待命結束回合；體力不足直接結束回合（暫時性狀態不標 blocked）；逐候選嘗試 `constructBuilding`、失敗者標記 blocked（含原因）續試下一個；佇列全受阻且 allowUpgrade 時升級最低等建築。完成／升級成功寫入 AiActionEvent 日誌＋`showActionResult` 完成提醒彈窗。Scheduler 擴充 `'construction'` 步驟型別；App effect 戰術命令優先、無命令且有計畫時走建設步驟。測試 22 例（純函式 14＋store 情境 7＋scheduler 1），全套 **800 項通過**；tsc／ESLint／build 通過。
 
 ---
 
@@ -1046,11 +1063,12 @@ perception → decision → validation → execution → event
 
 第一個開發切片應為：
 
-1. 抽出共用距離、阻擋、目標與可達性純函式。
-2. 建立通用 `AiAction` 型別。
-3. 建立 Action Validator，但先不改變現有行動結果。
-4. 為玩家 AI 與 Creature 補充固定地圖測試。
-5. 所有既有測試通過後，再移除 UI Preview 對 AI 的依賴。
+0. ~~為 `runAiDefenseStep`／`runAiSupportStep` 補 gameStore 整合測試。~~ **A0 已完成**（`gameStore.aiSteps.test.ts`）。
+1. ~~玩家 AI 攻擊去 Preview 化。~~ **切片 A 已完成**（`src/game/ai/execution/executeAiAttack.ts`）。
+2. 抽出共用距離、阻擋、目標與可達性純函式。
+3. 建立通用 `AiAction` 型別。
+4. 建立 Action Validator，但先不改變現有行動結果。
+5. 所有既有測試通過後，再進入 Scheduler／Creature 拆管線。
 
 ### 暫不允許
 

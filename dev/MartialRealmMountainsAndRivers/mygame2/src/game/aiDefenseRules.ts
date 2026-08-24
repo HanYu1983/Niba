@@ -1,6 +1,8 @@
-import type { AiOrder, BaseState, CreatureState, GameState, PlayerState, Position } from './types'
-import { isAdjacent, isSamePosition } from './types'
-import { getBlockedPositions, getMovementCostTo } from './rules/movementRules'
+import type { AiOrder, BaseState, CreatureState, GameState, Position } from './types'
+import { isAdjacent } from './types'
+import { manhattanDistance } from './ai/perception/distance'
+import { collectReachableCells } from './ai/perception/reachablePositions'
+import { getHostileActorPosition, listHostileActors } from './ai/perception/targetDiscovery'
 
 export type AiDefenseAction =
   | { type: 'attack'; targetId: string; targetType: 'creature' | 'nest' }
@@ -18,19 +20,16 @@ export type AiThreatAssessment = {
   directlyAttackingBase: boolean
 }
 
-function manhattanDistance(first: Position, second: Position): number {
-  return Math.abs(first.row - second.row) + Math.abs(first.column - second.column)
-}
-
 function getOrderBase(state: GameState, order: Extract<AiOrder, { type: 'protect-base' }>): BaseState | null {
   return state.bases.find((base) => base.id === order.baseId) ?? null
 }
 
 function getThreatTargets(state: GameState, base: BaseState): Array<{ target: CreatureState | GameState['creatureNests'][number]; targetType: 'creature' | 'nest' }> {
-  return [
-    ...state.creatures.filter((creature) => creature.health > 0).map((target) => ({ target, targetType: 'creature' as const })),
-    ...state.creatureNests.filter((nest) => nest.health > 0).map((target) => ({ target, targetType: 'nest' as const })),
-  ].filter(({ target }) => manhattanDistance(target.position, base.position) <= 12)
+  return listHostileActors(state)
+    .filter((actor) => manhattanDistance(getHostileActorPosition(actor), base.position) <= 12)
+    .map((actor) => actor.sourceType === 'creature'
+      ? { target: actor.creature, targetType: 'creature' as const }
+      : { target: actor.nest, targetType: 'nest' as const })
 }
 
 export function assessBaseThreats(state: GameState, baseId: string, aiPlayerId: string): AiThreatAssessment[] {
@@ -56,12 +55,9 @@ export function assessBaseThreats(state: GameState, baseId: string, aiPlayerId: 
     .sort((first, second) => second.threatScore - first.threatScore)
 }
 
-function getCandidateDefensePositions(state: GameState, aiPlayer: PlayerState, base: BaseState, radius: number): Position[] {
-  const blocked = getBlockedPositions(state, aiPlayer.id)
-  return state.map.cells
-    .filter((cell) => manhattanDistance(cell, base.position) <= radius && cell.terrain !== 'wall')
-    .filter((cell) => !blocked.some((position) => isSamePosition(position, cell)))
-    .map((cell) => ({ row: cell.row, column: cell.column }))
+function getDefenseRadiusCells(state: GameState, aiPlayer: GameState['players'][number], base: BaseState, radius: number) {
+  return collectReachableCells(state, aiPlayer)
+    .filter((cell) => manhattanDistance(cell.position, base.position) <= radius)
 }
 
 export function chooseDefenseAction(state: GameState, aiPlayerId: string, order: Extract<AiOrder, { type: 'protect-base' }>): AiDefenseAction {
@@ -76,25 +72,18 @@ export function chooseDefenseAction(state: GameState, aiPlayerId: string, order:
 
   const aiDistanceToBase = manhattanDistance(aiPlayer.position, base.position)
   if (aiDistanceToBase > order.radius) {
-    const candidates = getCandidateDefensePositions(state, aiPlayer, base, order.radius)
-      .map((position) => ({ position, cost: getMovementCostTo(state.map, aiPlayer, `${position.row}-${position.column}`, getBlockedPositions(state, aiPlayer.id)) }))
-      .filter((candidate): candidate is { position: Position; cost: number } => candidate.cost !== null && candidate.cost <= aiPlayer.stamina)
-      .sort((first, second) => manhattanDistance(first.position, base.position) - manhattanDistance(second.position, base.position) || first.cost - second.cost)
-    const destination = candidates[0]
+    const destination = getDefenseRadiusCells(state, aiPlayer, base, order.radius)
+      .sort((first, second) => manhattanDistance(first.position, base.position) - manhattanDistance(second.position, base.position) || first.cost - second.cost)[0]
     if (destination) return { type: 'move', position: destination.position, reason: 'return-to-defense-radius' }
   }
 
   const threat = threats[0]
   if (threat && threat.distanceToBase <= order.radius + 3) {
-    const candidates = getCandidateDefensePositions(state, aiPlayer, base, order.radius)
-      .map((position) => ({ position, cost: getMovementCostTo(state.map, aiPlayer, `${position.row}-${position.column}`, getBlockedPositions(state, aiPlayer.id)), threatDistance: manhattanDistance(position, threat.position) }))
-      .filter((candidate): candidate is { position: Position; cost: number; threatDistance: number } => candidate.cost !== null && candidate.cost <= aiPlayer.stamina)
-      .sort((first, second) => first.threatDistance - second.threatDistance || first.cost - second.cost)
-    const destination = candidates[0]
+    const destination = getDefenseRadiusCells(state, aiPlayer, base, order.radius)
+      .map((cell) => ({ ...cell, threatDistance: manhattanDistance(cell.position, threat.position) }))
+      .sort((first, second) => first.threatDistance - second.threatDistance || first.cost - second.cost)[0]
     if (destination) return { type: 'move', position: destination.position, reason: 'intercept-threat' }
   }
 
-  return threats.length === 0
-    ? { type: 'hold-position', reason: 'no-threat' }
-    : { type: 'hold-position', reason: 'no-threat' }
+  return { type: 'hold-position', reason: 'no-threat' }
 }

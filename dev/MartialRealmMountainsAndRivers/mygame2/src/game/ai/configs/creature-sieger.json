@@ -1,0 +1,11 @@
+{
+  "id": "creature-sieger",
+  "version": 1,
+  "actorKind": "creature",
+  "priorities": [
+    { "condition": "self-preservation-needed", "action": "retreat", "priority": 100 },
+    { "condition": "adjacent-hostile", "action": "attack-adjacent-hostile", "priority": 95 },
+    { "condition": "protect-base-threatened", "action": "intercept-threat", "priority": 80 },
+    { "condition": "no-target", "action": "wander", "priority": 10 }
+  ]
+}
