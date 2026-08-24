@@ -461,6 +461,7 @@ export function executeExternalDamage(
     targetType,
     targetId: target.target.id,
     targetName: target.target.name,
+    targetPosition: target.target.position,
     skillId,
     skillName: skill.name,
     damage,

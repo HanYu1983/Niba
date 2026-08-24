@@ -1003,7 +1003,7 @@
   width: max-content;
 }
 
-/* 三重共振：地圖震動動畫（0.5s 衰減正弦波，振幅漸減）。 */
+/* 三重共振：生物 icon 震動動畫（0.5s 衰減正弦波，振幅漸減）。 */
 @keyframes tripleResonanceShake {
   0% { transform: translate(0, 0); }
   10% { transform: translate(-8px, 4px); }
@@ -1016,10 +1016,14 @@
   80% { transform: translate(2px, -1px); }
   90% { transform: translate(-1px, 0.5px); }
   100% { transform: translate(0, 0); }
-}    
-.triple-resonance-shake {
-  width: max-content;
+}
+.creature--triple-resonance-shake {
+  animation-name: tripleResonanceShake;
+  animation-duration: 0.5s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: 1;
   will-change: transform;
+  z-index: 30;
 }
 
 .map-grid__cell {

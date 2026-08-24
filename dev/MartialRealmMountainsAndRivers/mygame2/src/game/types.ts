@@ -764,6 +764,8 @@ export type ExternalDamageExecutionResult = {
   targetType: AttackTargetType
   targetId: string
   targetName: string
+  /** 目標被擊殺前的格子位置（供震動動畫在被移除後仍能定位）。 */
+  targetPosition?: Position
   skillId: string
   skillName: string
   damage: number
@@ -929,8 +931,8 @@ export type GameState = {
   activeCreatureId: string | null
   operation: GameOperation
   blockingModal: BlockingModal
-  /** 三重共振地圖震動動畫觸發訊號：每次 +1，供 MapGrid 以 key 觸發 shake 動畫。 */
-  mapShakeSignal?: number
+  /** 三重共振震動動畫：記錄被命中生物的位置與觸發訊號；供該位置呈現 shake 動畫（即使生物已被移除）。 */
+  creatureShake?: { signal: number; targetId: string; position: Position; icon: string } | null
   gameOver?: boolean
   gameOverReason?: 'all-players-defeated' | 'any-base-destroyed'
   gameWon?: boolean

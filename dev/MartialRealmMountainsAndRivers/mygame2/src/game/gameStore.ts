@@ -632,13 +632,18 @@ export const gameStore = {
     updateGameState((state) => ({
       ...state,
       blockingModal: { type: 'action-result', result, continuation },
+      // 三重共振震動動畫在彈窗出現後清除，讓 ghost icon 在 0.5s 動畫結束後消失。
+      creatureShake: null,
       operation: { type: 'idle' },
     }))
   },
 
-  /** 觸發三重共振地圖震動動畫訊號（每次 +1），不開啟結果彈窗。 */
-  triggerMapShake: () => {
-    updateGameState((state) => ({ ...state, mapShakeSignal: (state.mapShakeSignal ?? 0) + 1 }))
+  /** 觸發三重共振震動動畫：指定被命中生物的位置與 icon，該位置播放 shake 動畫（訊號疊加），不開啟結果彈窗。 */
+  triggerCreatureShake: (targetId: string, position: Position, icon: string) => {
+    updateGameState((state) => ({
+      ...state,
+      creatureShake: { signal: (state.creatureShake?.signal ?? 0) + 1, targetId, position, icon },
+    }))
   },
 
   previewRepair: (playerId: string, baseId: string): RepairPreview | null => {

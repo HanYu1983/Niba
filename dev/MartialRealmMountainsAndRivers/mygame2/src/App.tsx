@@ -425,12 +425,7 @@ function App() {
                 gameStore.endPlayerTurn(gameState.activePlayerId)
               }}
             />
-            <div
-              key={gameState.mapShakeSignal ?? 0}
-              className={gameState.mapShakeSignal ? 'triple-resonance-shake' : undefined}
-              style={gameState.mapShakeSignal ? { animationName: 'tripleResonanceShake', animationDuration: '0.5s', animationIterationCount: 1 } : undefined}
-            >
-              <MapGrid
+            <MapGrid
                 map={gameState.map}
                 bases={gameState.bases}
                 creatureNests={gameState.creatureNests}
@@ -500,8 +495,8 @@ function App() {
               externalSkillTargeting={externalSkillTargetingId !== null}
               attackTargeting={attackTargeting}
               itemTargeting={itemTargeting}
+              creatureShake={gameState.creatureShake}
             />
-            </div>
 
           </Flex>
           <aside className="game-layout__players">
