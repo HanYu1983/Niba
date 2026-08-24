@@ -12,9 +12,9 @@
 | 道具 itemCatalog | 53 | `ItemEffectType`（10 種）＋分類欄位 |
 | Buff buffCatalog | 55 | 22 個解譯欄位（屬性修正/乘區/地形/復活/週期回復…） |
 | 功法 | 74 | 內功 14（傷害公式閉包）、傷害外功 14、功能外功 46 |
-| 裝備 equipmentCatalog | 45 | **純五維 modifiers**，無特殊效果 |
+| 裝備 equipmentCatalog | 60 | **純五維 modifiers**，無特殊效果 |
 | 探索事件 eventCatalog | 41 型／約 79 選項 | `EventEffect` 12 種＋`EventRequirement` 6 種 |
-| 建築 buildingCatalog | 20 | bonus 欄位 3 種＋actions 3 種＋特例邏輯 |
+| 建築 buildingCatalog | 25 | bonus 欄位 3 種＋actions 3 種＋特例邏輯（含 12 座門派武館） |
 | 防禦設施 defenseStructureCatalog | 9 | 視野/阻擋/攻擊/改地形四種能力旗標 |
 | 政策 governancePolicyCatalog | 4 | 僅 3 條有效果（±5%，寫死在 policyRules） |
 | 全局靈氣 GLOBAL_BUFF_POOL | 6 | 商店價/收入/醫療/城防/回合回復/練功經驗 |

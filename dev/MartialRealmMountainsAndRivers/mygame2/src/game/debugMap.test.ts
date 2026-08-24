@@ -77,7 +77,8 @@ describe('createDebugGameState', () => {
     expect(state.bases[0].buildings.some((building) => building.type === 'wall')).toBe(false)
     // 貿易市場不預建，須由玩家自行建造以觸發全局靈氣。
     expect(state.bases[0].buildings.some((building) => building.type === 'trade-market')).toBe(false)
-    expect(state.bases[0].buildings).toHaveLength(17)
+    // 全部建築（除牆與貿易市場）：含 12 座門派武館。
+    expect(state.bases[0].buildings).toHaveLength(22)
     expect(state.bases[0].buildings.every((building) => building.level === 6)).toBe(true)
     expect(state.bases[0].buildingMaterials).toBeGreaterThan(0)
   })

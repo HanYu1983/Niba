@@ -25,12 +25,36 @@
 
 ### 已知留白（後續可選）
 
-- 五個新門派暫無**武館建築**與**門派裝備**：學習途徑為山門據點（`sectGateCount` 生成時自動涵蓋 12 派池），取得路徑成立但不如六章派完整。
+- ~~五個新門派暫無**武館建築**與**門派裝備**~~ → 同日稍後已補齊，見下一篇日誌。
 - debug 地圖維持 7 座山門／7 隻妖物（測試夾具未強制含全派）。
 
 ### 驗證結果
 
 - TypeScript：通過。ESLint：通過。測試：68 檔 / 721 項全數通過。
+
+## 2026-08-24｜補上五新派的武館建築與門派裝備
+
+### 本次完成
+
+- **武館建築 ×5**（`buildingCatalog.ts`）：銳鋒／煙雨／烈陽／黃土／幽影武館，id `building-type-martial-hall-{schoolId}`、造價 30、官階 1，與既有六派格式一致。玩家可在自建據點蓋對應武館學功法（`buildingActions` 依 `martialSchoolId` 過濾門派建築的機制自動生效）。
+- **門派裝備 ×15**（`equipmentCatalog.ts` 的 `sectEquipmentCatalog` tuple 表）：每派武器／防具／配件各一，id 自動為 `sect-{schoolId}-{slot}`，屬性總和與價格由既有平衡公式規範（每級 2 點／$30），解鎖順序刻意交錯（銳鋒 W→A→Ac、煙雨 A→Ac→W、烈陽 Ac→A→W、黃土 W→Ac→A、幽影 Ac→W→A）：
+  - 銳鋒流：銳鋒疾影劍 ⚔️／薄刃軟鱗甲 🦺／凝鋒劍心佩 📿
+  - 煙雨流：煙雨羅衣 👘／雨潤青玉佩 💧／煙波傘中劍 ☂️
+  - 烈陽流：烈陽血玉佩 ☀️／炎陽戰甲 🛡️／焚天重拳 👊
+  - 黃土流：裂石開山棍 🪵／負重行囊 🎒／溝壑獵皮甲 🧥
+  - 幽影流：夜行蔽影墜 🌑／無蹤暗影刃 🗡️／幽冥蟬翼衣 🕴️
+- 測試同步：debug 據點預建築數 17→22（debug 夾具本就收錄全 catalog 建築，12 座武館全數可用於測試）。
+- 文件回寫：`handev/effects-taxonomy.md`（裝備 45→60、建築 20→25）。
+
+### 影響檔案
+
+- `src/game/catalogs/buildingCatalog.ts`、`src/game/catalogs/equipmentCatalog.ts`
+- `src/game/debugMap.test.ts`
+- 文件：`handev/effects-taxonomy.md`
+
+### 驗證結果
+
+- TypeScript：通過。ESLint：通過。測試：68 檔 / 721 項全數通過（含 equipmentCatalog 數值規則對 15 件新裝備的自動驗證）。
 
 ## 2026-08-23｜新增第七門派「百毒流」與其三式功法
 
