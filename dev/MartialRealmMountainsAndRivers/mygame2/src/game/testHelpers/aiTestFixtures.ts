@@ -1,4 +1,4 @@
-import type { AiOrder, BaseState, CreatureState, GameState, MapState, PlayerState, Position } from '../types'
+import type { AiOrder, BaseState, CreatureNestState, CreatureState, GameState, MapState, PlayerState, Position } from '../types'
 
 /** 11×11 全平原小地圖：固定座標、無隨機牆，供 AI 決策與 store 整合測試使用。 */
 export function makePlainMap(rows = 11, columns = 11): MapState {
@@ -75,6 +75,22 @@ export function makeTestBase(overrides: Partial<BaseState> = {}): BaseState {
     maxBuildingMaterials: 100,
     health: 100,
     maxHealth: 100,
+    ...overrides,
+  }
+}
+
+export function makeTestNest(overrides: Partial<CreatureNestState> = {}): CreatureNestState {
+  return {
+    id: 'nest-1',
+    name: '妖物巢穴',
+    position: { row: 8, column: 5 },
+    health: 120,
+    maxHealth: 120,
+    spawnChance: 0.1,
+    cooldownRounds: 0,
+    spawnLevel: 1,
+    behaviorType: 'scavenger',
+    schoolId: 'void-spirit',
     ...overrides,
   }
 }

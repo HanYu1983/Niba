@@ -46,4 +46,23 @@ describe('AI 防守決策', () => {
     const state = makeState()
     expect(chooseDefenseAction(state, 'ai-1', { ...protectOrder, status: 'paused' })).toEqual({ type: 'end-turn', reason: 'command-paused' })
   })
+
+  it('超出防守半徑且體力不足以致無任何可達回防格時，安全待命不會誤判移動', () => {
+    const state = makeState({
+      players: [makePlayer({ position: { row: 10, column: 10 }, stamina: 1, maxStamina: 20 })],
+      creatures: [],
+    })
+    const action = chooseDefenseAction(state, 'ai-1', protectOrder)
+    expect(action).toEqual({ type: 'hold-position', reason: 'no-threat' })
+  })
+
+  it('威脅在半徑外太遠且不可攔截時，安全待命', () => {
+    const state = makeState({
+      players: [makePlayer({ position: { row: 5, column: 5 }, stamina: 20, maxStamina: 20 })],
+      creatures: [makeTestCreature({ id: 'creature-far', position: { row: 15, column: 5 } })],
+    })
+    // creature-far 距 base (5,5) 10 格：仍在感知範圍（≤12）內，但超出攔截門檻（半徑 6 + 3）；也不與 AI 相鄰。
+    const action = chooseDefenseAction(state, 'ai-1', protectOrder)
+    expect(action).toEqual({ type: 'hold-position', reason: 'no-threat' })
+  })
 })

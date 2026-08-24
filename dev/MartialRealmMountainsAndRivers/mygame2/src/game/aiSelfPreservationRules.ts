@@ -1,37 +1,26 @@
 import type { GameState, PlayerState, Position } from './types'
-import { isAdjacent, isSamePosition } from './types'
-import { getBlockedPositions, getMovementCostTo } from './rules/movementRules'
+import { isAdjacent } from './types'
+import { manhattanDistance } from './ai/perception/distance'
+import { collectReachableCells } from './ai/perception/reachablePositions'
+import { getHostileActorPosition, listHostileActors } from './ai/perception/targetDiscovery'
 import type { AiDefenseAction } from './aiDefenseRules'
 
 const EMERGENCY_RETREAT_PERCENT = 10
 const SURROUNDED_ENEMY_COUNT = 2
 
-function distance(first: Position, second: Position): number {
-  return Math.abs(first.row - second.row) + Math.abs(first.column - second.column)
-}
-
 function enemyPositions(state: GameState): Position[] {
-  return [
-    ...state.creatures.filter((creature) => creature.health > 0).map((creature) => creature.position),
-    ...state.creatureNests.filter((nest) => nest.health > 0).map((nest) => nest.position),
-  ]
+  return listHostileActors(state).map((actor) => getHostileActorPosition(actor))
 }
 
 function getEscapePosition(state: GameState, player: PlayerState): Position | null {
   const enemies = enemyPositions(state)
-  const blocked = getBlockedPositions(state, player.id)
-  const candidates = state.map.cells
-    .filter((cell) => cell.terrain !== 'wall')
-    .filter((cell) => !blocked.some((position) => isSamePosition(position, cell)))
-    .map((cell) => {
-      const position = { row: cell.row, column: cell.column }
-      return {
-        position,
-        cost: getMovementCostTo(state.map, player, cell.id, blocked),
-        nearestEnemyDistance: enemies.length > 0 ? Math.min(...enemies.map((enemy) => distance(position, enemy))) : Infinity,
-      }
-    })
-    .filter((candidate): candidate is { position: Position; cost: number; nearestEnemyDistance: number } => candidate.cost !== null && candidate.cost > 0 && candidate.cost <= player.stamina)
+  const candidates = collectReachableCells(state, player)
+    .filter((cell) => cell.cost > 0)
+    .map((cell) => ({
+      position: cell.position,
+      cost: cell.cost,
+      nearestEnemyDistance: enemies.length > 0 ? Math.min(...enemies.map((enemy) => manhattanDistance(cell.position, enemy))) : Infinity,
+    }))
     .sort((first, second) => second.nearestEnemyDistance - first.nearestEnemyDistance || first.cost - second.cost)
 
   return candidates[0]?.position ?? null

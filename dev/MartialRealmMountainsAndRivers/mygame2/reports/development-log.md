@@ -1,5 +1,37 @@
 # 開發日誌
 
+## 2026-08-24｜AI 重構切片 B：共用感知層＋巡邏隨機注入
+
+### 本次完成
+
+- 新增感知模組 `src/game/ai/perception/`（重構文件 §5.2 前四項）：
+  - `distance.ts`：曼哈頓距離統一出口（委託 `mapCellStateRules.getManhattanDistance`）。
+  - `targetDiscovery.ts`：存活敵對目標枚舉（`listHostileActors`）與目標有效檢查（`isHostileActorStillValid`，stale check 最小版）。
+  - `blockedPositions.ts`：阻擋／成本函式的 AI 層固定進入點（現階段直接轉出口 `rules/movementRules`）。
+  - `reachablePositions.ts`：`collectReachableCells` 一次 Dijkstra 成本圖列出體力可達格。
+- 三個決策純函式改委託感知層：`aiDefenseRules`／`aiSupportRules`／`aiSelfPreservationRules` 移除各自重複的距離、敵人枚舉與候選生成；**行為保持**（同樣的過濾、排序與 tie-break），並順帶把「每個候選格重跑一次 Dijkstra」改為整輪只建一次成本圖。
+- `moveCreatures` 注入 `RandomSource`（尾參，預設 `defaultRandomSource`）：巡邏步選格與攻擊閃避／根骨減傷 roll 都走注入來源，符合重構文件 §5.4「domain AI 不得直呼 Math.random()」。
+- 測試：新增 `perception.test.ts`（7 項）；`creatureActions.test.ts` 加「巡邏隨機注入」（3 項：同 seed 可重現、開闊地走盡體力、不同 seed 路徑不同）；`aiDefenseRules.test.ts` 加「不可達→安全待命」2 項。fixture 補 `makeTestNest`。
+
+### 本切片不改變什麼
+
+- 三個決策函式的輸出契約（既有 11 例原樣通過）、`CreatureTurnResult` 格式、巢穴生成隨機（`spawnCreaturesFromNests` 維持自己的 roll）。
+- Creature 移動仍走 greedy 步進模型（統一移動管線屬切片 D）。
+
+### 影響檔案
+
+- 新增：`src/game/ai/perception/`（5 檔含測試）
+- 改：`src/game/aiDefenseRules.ts`、`aiSupportRules.ts`、`aiSelfPreservationRules.ts`、`actions/creatureActions.ts`、`testHelpers/aiTestFixtures.ts`＋兩個對應測試檔
+- 文件：本日誌、`ai-system-refactoring-development-design.md` §15 Phase 1、`handev/ai-development-playbook.md` §3
+
+### 驗證結果
+
+- vitest：71 檔 / **747 項全過**。tsc -b：通過。ESLint（本切片檔案）：通過。Build：通過。
+
+### 下一步
+
+- 切片 **C**：統一 `AiAction` 型別＋`validateAiAction()`（先記錄不阻擋）。
+
 ## 2026-08-24｜AI 重構切片 A：攻擊去 Preview 化
 
 ### 本次完成

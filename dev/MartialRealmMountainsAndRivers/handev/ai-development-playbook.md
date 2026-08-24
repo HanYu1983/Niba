@@ -40,6 +40,7 @@ AI 開發有**兩條主線**，各自有獨立設計文件，工作時必須分�
 | `src/game/aiDefenseRules.ts` | `AiDefenseAction` 型別（`:5`）、`assessBaseThreats` 威脅評估、`chooseDefenseAction`（`:67`）→ attack／move／hold-position／end-turn |
 | `src/game/aiSupportRules.ts` | `chooseSupportAction`（`:58`）：靠近支援目標、相鄰威脅優先攻擊 |
 | `src/game/aiSelfPreservationRules.ts` | `chooseSelfPreservationAction`（`:40`）：血量門檻／包圍 → move 或 end-turn；健康時回 null |
+| `src/game/ai/perception/`（切片 B 新增） | `distance.ts` 曼哈頓距離出口、`targetDiscovery.ts` 存活敵人枚舉＋目標有效、`blockedPositions.ts` 阻擋/成本出口、`reachablePositions.ts` `collectReachableCells`（一次 Dijkstra）；三個決策函式已委託此層 |
 
 **執行層（gameStore.ts）**
 
@@ -440,7 +441,7 @@ PowerShell 備忘：判斷成敗用 `$LASTEXITCODE`（`$?` 是 True/False）；d
 |---|---|---|---|---|
 | A0（A 的前置） | 為 `runAiDefenseStep`／`runAiSupportStep` 補 gameStore 整合測試（見 §2.7） | §14.4 生命週期 | P0 **已完成** | 8 例通過；此組測試即切片 A 的驗收網 |
 | A | AI 攻擊去 Preview 化：新增原子攻擊 domain action，`runAiDefenseStep`／`runAiSupportStep` 改呼叫之；preview 保留給人類玩家 | 重構 Phase 2 前半 | P0 **已完成** | 「AI 不經 preview API」測試＋A0 全過 |
-| B | 共用感知純函式（距離／阻擋／存活／目標有效／可達性）＋ Creature 巡邏改注入 RandomSource | 重構 Phase 1＋§12 Phase 1 | P0 | 既有測試全過；相同 seed 巡邏結果一致；不可達目標會重選或安全待命 |
+| B | ✅ 完成（2026-08-24）：共用感知 `src/game/ai/perception/`＋三規則檔委託＋`moveCreatures` 注入 RandomSource | 重構 Phase 1＋§12 Phase 1 | P0 | 既有測試全過；同 seed 巡邏一致（測試釘住）；不可達目標安全待命（測試釘住） |
 | C | 統一 `AiAction` 型別＋`validateAiAction()`（先不改變行為） | 重構 Phase 1 後半＋Phase 2 | P0 | Validator 對既有四種決策都能給出 valid/reason；行為零變化 |
 | D | `moveCreatures()` 拆六段（perceive/select/plan/validate/execute/reduce），維持 `CreatureTurnResult` 相容 | 重構 §12 Phase 2 | P0 | 步驟化後既有 creature 測試全過；`blocked` 不再打錯防禦設施 |
 | E | 統一 Player AI Scheduler：抽出 App.tsx 成 `src/game/ai/aiTurnScheduler.ts`，合併防守／支援執行框架 | 重構 Phase 3 | P1 | 回合生命週期測試；timer cancellation；同 Actor 不重入 |

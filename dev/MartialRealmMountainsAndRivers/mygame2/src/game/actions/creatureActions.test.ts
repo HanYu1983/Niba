@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { moveCreatures } from './creatureActions'
+import { moveCreatures, type CreatureTurnResult } from './creatureActions'
+import { createSeededRandom } from '../rules/randomRules'
 import type { CreatureState, DefenseStructureState, GameState, PlayerState, RuinState, TrapState } from '../types'
 
 function makePlayer(overrides: Partial<PlayerState> = {}): PlayerState {
@@ -461,6 +462,72 @@ describe('moveCreatures 道具點被吃掉開關', () => {
     const result = runWithItemPoint(true)
     expect(result.itemPoints?.find((point) => point.id === 'itempoint-1')).toBeUndefined()
     expect(result.logs.some((log) => log.message.includes('道具點'))).toBe(true)
+  })
+})
+
+describe('moveCreatures 巡邏隨機注入', () => {
+  // 遠離所有目標的游蕩型：警戒範圍 2 格內沒有玩家 → selectCreatureTarget 回 null → 走巡邏分支。
+  function makePatrolInputs() {
+    const roamer: CreatureState = {
+      ...makePlayer({
+        id: 'creature-1',
+        name: '游蕩妖物',
+        position: { row: 10, column: 10 },
+        // 偶數體力：平原每格成本 2，巡邏會正好走盡。
+        stamina: 6,
+        maxStamina: 6,
+      }),
+      behaviorType: 'roamer',
+      aggroRange: 2,
+    }
+    const farPlayer = makePlayer({ id: 'player-1', name: '玩家 1', position: { row: 25, column: 25 } })
+    const state = makeGameState({ creatures: [roamer], players: [farPlayer] })
+    return { roamer, farPlayer, state }
+  }
+
+  function runPatrol(seed: number): CreatureTurnResult {
+    const { roamer, farPlayer, state } = makePatrolInputs()
+    return moveCreatures(
+      [roamer],
+      state.map,
+      [farPlayer],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      state.globalBuffs ?? [],
+      createSeededRandom(seed),
+    )
+  }
+
+  it('相同 seed 的巡邏結果完全一致（可重現）', () => {
+    const first = runPatrol(42)
+    const second = runPatrol(42)
+
+    expect(second.creatures[0].position).toEqual(first.creatures[0].position)
+    expect(second.creatures[0].stamina).toBe(first.creatures[0].stamina)
+    expect(second.logs).toEqual(first.logs)
+  })
+
+  it('巡邏會消耗體力移動，直到體力用盡（開闊平原上每格成本 1）', () => {
+    const result = runPatrol(42)
+    const creature = result.creatures[0]
+
+    expect(creature.position).not.toEqual({ row: 10, column: 10 })
+    expect(creature.stamina).toBe(0)
+    expect(result.steps?.length ?? 0).toBe(1)
+  })
+
+  it('不同 seed 產生不同的巡邏序列（注入確實生效）', () => {
+    const seedA = runPatrol(42)
+    const seedB = runPatrol(1337)
+
+    expect(seedB.creatures[0].position).not.toEqual(seedA.creatures[0].position)
   })
 })
 

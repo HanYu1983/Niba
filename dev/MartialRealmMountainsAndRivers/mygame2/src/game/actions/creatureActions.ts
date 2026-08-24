@@ -24,7 +24,7 @@ import { getCreatureAttributes, getCreatureInnerSkillId, getCreatureSchoolId, se
 import { getInnerSkill, getSkillDamage, getSkillEffectMultiplier, getSkillProgression } from '../rules/skillRules'
 import { getGlobalBaseDefenseMultiplier } from '../rules/globalBuffRules'
 import { hasActivePolicy, MILITARY_DEFENSE_REDUCTION } from '../rules/policyRules'
-import { defaultRandomSource, rollChance } from '../rules/randomRules'
+import { defaultRandomSource, rollChance, type RandomSource } from '../rules/randomRules'
 
 export type CreatureActionDependencies = {
   createCreatureState: (input: {
@@ -236,6 +236,8 @@ export function moveCreatures(
   traps: TrapState[] = [],
   sectGates: SectGateState[] = [],
   globalBuffs: GameState['globalBuffs'] = [],
+  // 隨機來源注入：巡邏與攻擊閃避/減傷 roll 都經此參數，測試可傳固定偽隨機重現（重構文件 §5.4）。
+  randomSource: RandomSource = defaultRandomSource,
 ): CreatureTurnResult {
   const hasValidPosition = (value: { position?: Position } | null | undefined): value is { position: Position } => {
     const position = value?.position
@@ -379,7 +381,7 @@ export function moveCreatures(
             const cell = map.cells.find((current) => current.row === candidate.row && current.column === candidate.column)
             return { position: candidate, cost: cell ? getCreatureTerrainStaminaCost(creature, cell.terrain) : Infinity }
           }).filter((candidate) => candidate.cost <= remainingStamina)
-        const patrolStep = candidates[Math.floor(Math.random() * candidates.length)]
+        const patrolStep = candidates[Math.floor(randomSource() * candidates.length)]
         if (!patrolStep) break
         position = patrolStep.position
         remainingStamina -= patrolStep.cost
@@ -432,8 +434,8 @@ export function moveCreatures(
       const baseDamage = Math.max(1, Math.floor(
         getSkillDamage(creatureAttributes, innerSkill, innerSkillLevel) * getSkillEffectMultiplier(creature),
       ))
-      const avoided = rollChance(Math.min(1, getEvasionRate(adjacentPlayer) / 100), defaultRandomSource)
-      const halved = !avoided && rollChance(Math.min(1, adjacentPlayer.attributes.constitution * 2 / 100), defaultRandomSource)
+      const avoided = rollChance(Math.min(1, getEvasionRate(adjacentPlayer) / 100), randomSource)
+      const halved = !avoided && rollChance(Math.min(1, adjacentPlayer.attributes.constitution * 2 / 100), randomSource)
       const rawDamage = avoided ? 0 : halved ? Math.max(1, Math.floor(baseDamage / 2)) : baseDamage
       // 破軍訣：普通攻擊造成的最終傷害 +%（怪物攻擊玩家屬普攻）
       const damage = avoided

@@ -935,15 +935,16 @@ perception → decision → validation → execution → event
 ### Phase 1：共用純函式與型別
 
 - Owner：AI Engineering
-- Status：Todo
+- Status：In Progress（共用感知＝切片 B 已完成；`AiAction` 型別待切片 C）
 - Priority：P0
 - Acceptance Criteria：
-  - 共用距離、阻擋、存活、目標與可達性函式完成。
+  - ~~共用距離、阻擋、存活、目標與可達性函式完成。~~ **切片 B 已完成**（`src/game/ai/perception/`）。
   - `AiAction` 型別完成。
   - 不改變既有外部行為。
 - Test Method：
-  - 共用感知單元測試。
-  - 既有 43 個測試檔全部通過。
+  - 共用感知單元測試（`perception.test.ts`）。
+  - 既有測試檔全部通過。
+- Result（2026-08-24）：新增 `ai/perception/`（distance／targetDiscovery／blockedPositions／reachablePositions）；三個 ai*Rules 決策改委託感知層，行為不變且候選生成從「每格重跑一次 Dijkstra」改為「整輪一次成本圖」；`moveCreatures` 巡邏與攻擊 roll 注入 `RandomSource`。全套 747 項通過。
 
 ### Phase 2：AI Action Validator / Executor
 
