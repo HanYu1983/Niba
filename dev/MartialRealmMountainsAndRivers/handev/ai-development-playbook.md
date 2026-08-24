@@ -415,13 +415,31 @@ PowerShell 備忘：判斷成敗用 `$LASTEXITCODE`（`$?` 是 True/False）；d
 2. `reports/development-log.md`：新增日期條目（做了什麼、怎麼麼驗證、測試數）。
 3. 若慣例或檔案地圖改變 → 更新本文件 §1 與 `mygame2-architecture.md`。
 
+### 2.7 現有 AI 測試資產盤點（2026-08-24 實測）：重構安全網評估
+
+逐層對照「現有測試 ↔ 重構後元件」，結論：**決策與 Creature 層可沿用，執行層零覆蓋是最大風險。**
+
+| 層 | 現有測試 | 重構後可否沿用 | 備註 |
+|---|---|---|---|
+| 玩家決策純函式 | `aiDefenseRules.test.ts`（4 例）＋ `aiSupportRules.test.ts`（4 例）＋ `aiSelfPreservationRules.test.ts`（3 例） | ✅ 原樣沿用 | 斷言精確到輸出形狀與 reason 字串（`'no-threat'`／`'command-paused'`／`'self-preservation'`）。wrapper 策略下（簽名與輸出不變、內部委託新管線）一行不改持續綠燈＝行為保持證據；但會從單元測試降格為端到端行為釘住，新內部元件仍需自己的單元測試 |
+| Creature 批次行為 | `creatureActions.test.ts`（13 例）＋ `creatureNest.test.ts` 的 moveCreatures 互動（~10 例），全走公開批次介面黑箱斷言 | ✅ 大致可用 | 拆管線時只要 `CreatureTurnResult` 格式相容，這是最厚的安全網。⚠️ 切片 B 注入 RandomSource 後，凡走到巡邏分支的案例要把 Math.random stub 換成顯式注入偽隨機（現有案例幾乎都給了目標、未踩巡邏路徑，需逐一確認） |
+| 執行層 | `runAiDefenseStep`／`runAiSupportStep`：**零測試**（grep 全 src 只有 App.tsx 呼叫與 gameStore 定義） | ❌ 裸奔 | 切片 A 要改的正是這裡（去 preview 化），卻無任何安全網 |
+| Validator／Scheduler／事件化 | （全新元件） | — | 本來就沒有，按 §14.3/14.4 新寫 |
+
+**由此推出的前置義務：**
+
+1. **切片 A 開工前必先補 gameStore 整合測試**（約 6-8 例：攻擊成功／移動成功／行動失敗安全結束回合／paused 結束／非 AI 或非其回合拒絕）——否則違反總原則 3「先補測試再遷移」。這組測試同時就是去 preview 化的驗收網。
+2. 之後所有重構切片以「11＋33 既有案例持續通過」為行為基準；新增元件各補單元測試：resolvePolicy 查表契約（回傳值只依賴 kind／型別／存活）、planAiAction 確定性評分（同輸入同 seed 同輸出）、Validator stale 矩陣。
+3. 順手改善：三個 `ai*.test.ts` 的 `state()`／`player()` helper 幾乎重複，補測試時抽共用 fixture（放 `src/game/testHelpers/` 之類位置，不過度抽象）。
+
 ---
 
 ## 3. 建議切片順序（接手後的執行佇列）
 
 | # | 切片 | 對應 | Priority | 驗收重點 |
 |---|---|---|---|---|
-| A | AI 攻擊去 Preview 化：新增原子攻擊 domain action，`runAiDefenseStep`／`runAiSupportStep` 改呼叫之；preview 保留給人類玩家 | 重構 Phase 2 前半 | P0 | 新增「AI 不經 preview API 執行攻擊」測試；既有 AI 測試全過 |
+| A0（A 的前置） | 為 `runAiDefenseStep`／`runAiSupportStep` 補 gameStore 整合測試（見 §2.7） | §14.4 生命週期 | P0 | 6-8 例通過；此組測試即切片 A 的驗收網 |
+| A | AI 攻擊去 Preview 化：新增原子攻擊 domain action，`runAiDefenseStep`／`runAiSupportStep` 改呼叫之；preview 保留給人類玩家 | 重構 Phase 2 前半 | P0 | 新增「AI 不經 preview API 執行攻擊」測試；既有 AI 測試＋A0 測試全過 |
 | B | 共用感知純函式（距離／阻擋／存活／目標有效／可達性）＋ Creature 巡邏改注入 RandomSource | 重構 Phase 1＋§12 Phase 1 | P0 | 既有測試全過；相同 seed 巡邏結果一致；不可達目標會重選或安全待命 |
 | C | 統一 `AiAction` 型別＋`validateAiAction()`（先不改變行為） | 重構 Phase 1 後半＋Phase 2 | P0 | Validator 對既有四種決策都能給出 valid/reason；行為零變化 |
 | D | `moveCreatures()` 拆六段（perceive/select/plan/validate/execute/reduce），維持 `CreatureTurnResult` 相容 | 重構 §12 Phase 2 | P0 | 步驟化後既有 creature 測試全過；`blocked` 不再打錯防禦設施 |
@@ -430,7 +448,7 @@ PowerShell 備忘：判斷成敗用 `$LASTEXITCODE`（`$?` 是 True/False）；d
 | G | 建設 AI：`chooseConstructionAction()` 效用評分 → queue 狀態機（planned/building/completed/blocked/cancelled）→ 建築 action 執行＋完成提醒彈窗 | 功能線下一個 Milestone＋重構 Phase 6 | P2 | 前置不足／建料不足 → blocked 含原因；`paused` 方針不建造但可採集 |
 | H | JSON policy 白名單系統（defensive-guardian／creature-sieger 等內建 config） | 重構 §6 | P2 | Schema 驗證＋fallback 測試；非法 condition/action 被拒 |
 
-> 順序理由：A 還債最便宜且解鎖 Executor；B 是所有後續共用地基；C/D 讓 Creature 與玩家 AI 有共同語言之後，E~H 才有意義。若使用者另有指示，以其為準。
+> 順序理由：A0 先織安全網，A 才能還債且解鎖 Executor；B 是所有後續共用地基；C/D 讓 Creature 與玩家 AI 有共同語言之後，E~H 才有意義。若使用者另有指示，以其為準。
 
 ---
 
