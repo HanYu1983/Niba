@@ -24,6 +24,7 @@ import StrategicCommandModal from './components/StrategicCommandModal'
 import { createEmptyScenario, type ScenarioDefinition } from './editor/editorTypes'
 import { trackPageView, trackEvent } from './lib/analytics'
 import { createAiTurnScheduler } from './game/ai/aiTurnScheduler'
+import ActionLogPanel from './components/ActionLogPanel'
 
 function App() {
   const gameState = useGameState()
@@ -35,6 +36,7 @@ function App() {
   const [saveModalOpen, setSaveModalOpen] = useState(false)
   const [systemCommandModalOpen, setSystemCommandModalOpen] = useState(false)
   const [strategicCommandModalOpen, setStrategicCommandModalOpen] = useState(false)
+  const [actionLogOpen, setActionLogOpen] = useState(false)
   const [saveSlots, setSaveSlots] = useState(() => gameStore.getSaveSlots())
   const {
     selectedBaseId,
@@ -180,6 +182,7 @@ function App() {
       !activePlayer?.isAI ||
       gameState.creatureTurnInProgress ||
       gameState.blockingModal ||
+      gameState.gameOver ||
       strategicCommandModalOpen ||
       saveModalOpen ||
       systemCommandModalOpen
@@ -197,7 +200,7 @@ function App() {
 
     scheduler.requestStep(activePlayer.id, activeAiOrder.type)
     return () => scheduler.cancel()
-  }, [activePlayer, gameState.aiOrders, gameState.creatureTurnInProgress, gameState.blockingModal, strategicCommandModalOpen, saveModalOpen, systemCommandModalOpen])
+  }, [activePlayer, gameState.aiOrders, gameState.creatureTurnInProgress, gameState.blockingModal, gameState.gameOver, strategicCommandModalOpen, saveModalOpen, systemCommandModalOpen])
 
   useKeyboardShortcuts({
     activePlayer,
@@ -349,7 +352,14 @@ function App() {
           <div style={{ flex: 1, minWidth: 0 }}>
             <GameStatusCard gameState={gameState} />
           </div>
+          <Button onClick={() => setActionLogOpen(true)}>📜 行動日誌</Button>
         </Flex>
+
+        <ActionLogPanel
+          open={actionLogOpen}
+          events={gameState.actionEvents ?? []}
+          onClose={() => setActionLogOpen(false)}
+        />
 
         {playtestMode && (
           <div style={{ position: 'fixed', top: 8, right: 8, zIndex: 1000 }}>

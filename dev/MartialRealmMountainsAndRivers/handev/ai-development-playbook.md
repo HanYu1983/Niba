@@ -42,6 +42,7 @@ AI 開發有**兩條主線**，各自有獨立設計文件，工作時必須分�
 | `src/game/aiSelfPreservationRules.ts` | `chooseSelfPreservationAction`（`:40`）：血量門檻／包圍 → move 或 end-turn；健康時回 null |
 | `src/game/ai/perception/`（切片 B 新增） | `distance.ts` 曼哈頓距離出口、`targetDiscovery.ts` 存活敵人枚舉＋目標有效、`blockedPositions.ts` 阻擋/成本出口、`reachablePositions.ts` `collectReachableCells`（一次 Dijkstra）；三個決策函式已委託此層 |
 | `src/game/ai/aiAction.ts` ＋ `ai/validation/validateAiAction.ts`（切片 C 新增） | 通用 `AiAction` 六型（§4.4）＋舊 `AiDefenseAction` 的 `defenseActionToAiAction` Adapter；Validator 只驗證不接線，player 回合合法性沿用 `canPlayerPerformAction` |
+| `src/game/ai/aiActionEvent.ts` ＋ `components/ActionLogPanel.tsx`（切片 F 新增） | §4.5 `AiActionEvent`（id 遞增可排序、可序列化）＋`GameState.actionEvents`（上限 200、存檔相容）＋全域日誌 UI；防守／支援 step 全分支寫入事件，Game Over 雙層防護 |
 | `src/game/ai/aiTurnScheduler.ts`（切片 E 新增） | Player AI 回合排程器：防守／支援共用框架（`requestStep(actorId, orderType)`）、350ms 動畫節奏、cancel／stale 防護、同 Actor 不重入；`App.tsx` 只剩啟動／停止 |
 | `src/game/actions/creatureTurnPipeline.ts`（切片 D 新增） | `moveCreatures` 六段管線本體：context／select／plan／validate／execute／reduce＋`runCreatureTurn` orchestrator；blocked 只反擊堵路設施；`creatureActions.moveCreatures` 薄委託，型別轉出口維持相容 |
 
@@ -448,7 +449,7 @@ PowerShell 備忘：判斷成敗用 `$LASTEXITCODE`（`$?` 是 True/False）；d
 | C | ✅ 完成（2026-08-24）：`aiAction.ts` 六型＋Adapter；`validateAiAction()`（11 例，含四種既有決策全 valid） | 重構 Phase 1（完成）＋Phase 2 前置 | P0 | 四種決策經 Adapter 皆 valid/reason；執行路徑零變化（未接線） |
 | D | ✅ 完成（2026-08-24）：`creatureTurnPipeline.ts` 六段管線；blocked 只反擊堵路設施（誤擊 bug 修復） | 重構 §12 Phase 2 | P0 | 既有 creature 測試零修改全過＋seed 巡邏可重現；新增 2 例釘住堵路目標與體力 blocked 不誤擊 |
 | E | ✅ 完成（2026-08-24）：`aiTurnScheduler.ts` 落地，App.tsx 只剩啟動／停止；7 例生命週期測試全過 | 重構 Phase 3 | P1 | 回合生命週期 7 例；cancel 後 stale timer 不執行；同 Actor 冪等不重入、換人自動取消 |
-| F | 事件化回合結果＋全域遊戲日誌＋逐步動畫消費 steps | 重構 Phase 3~5＋功能線 M4/M5 未完項 | P1 | 事件順序測試；動畫不改變規則結果；讀檔/Game Over 清理 |
+| F | ✅ 完成（2026-08-24）：`AiActionEvent`＋`GameState.actionEvents`＋ActionLogPanel UI；防守／支援全分支事件化 | 重構 Phase 3~5＋功能線 M4/M5 未完項 | P1 | 11 例新測試（含事件順序、Game Over、讀檔相容）；AI 規則結果零變化；Creature 動畫沿用既有 steps |
 | G | 建設 AI：`chooseConstructionAction()` 效用評分 → queue 狀態機（planned/building/completed/blocked/cancelled）→ 建築 action 執行＋完成提醒彈窗 | 功能線下一個 Milestone＋重構 Phase 6 | P2 | 前置不足／建料不足 → blocked 含原因；`paused` 方針不建造但可採集 |
 | H | JSON policy 白名單系統（defensive-guardian／creature-sieger 等內建 config） | 重構 §6 | P2 | Schema 驗證＋fallback 測試；非法 condition/action 被拒 |
 

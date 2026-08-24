@@ -1,5 +1,38 @@
 # 開發日誌
 
+## 2026-08-24｜AI 重構切片 F：Player AI 行動事件化＋全域行動日誌
+
+### 本次完成
+
+- 新增 `src/game/ai/aiActionEvent.ts`（重構文件 §4.5）：
+  - `AiActionEvent`＝`{ id, round, actor, action: AiAction, result: 'started'|'succeeded'|'failed', reason?, createdAt }`，可序列化、Creature／玩家 AI 同一格式（本切片先接 Player AI）。
+  - `createAiActionEvent()` 以遞增序號產生 id（同回合多筆可比對順序）；未顯式給 reason 時沿用 `action.reason`。
+  - `formatAiActionEvent()` 產生日誌一行文字（`[第 X 回合] 名字 動作細節（原因）`，失敗帶原因）。
+- `GameState.actionEvents?: AiActionEvent[]`（可選欄位，比照其他新進欄位慣例）：上限 `MAX_ACTION_EVENTS = 200` 只留最新，隨存檔整包序列化；舊存檔缺欄位 → 讀取端一律 `?? []` 相容。
+- **事件化接線**：`runAiDefenseStep`／`runAiSupportStep` 每一步決策經切片 C 的 `defenseActionToAiAction` 轉成通用 `AiAction` 後寫入事件——攻擊／移動／自保撤退／原地待命／支援目標消失暫停命令，成敗如實記錄（失敗含執行結果訊息，例如「體力不足。」）。決策→執行的對應邏輯零改動，只加側寫。
+- **Game Over 防護**：兩個 step 的守衛條件加上 `state.gameOver`（拒絕執行、不寫事件）；App.tsx 的 Scheduler effect 守衛同步加上 `gameState.gameOver`（取消待執行 timer）。讀檔清理＝讀檔整包替換 state＋effect 重跑自動 cancel。
+- **UI**：新增 `src/components/ActionLogPanel.tsx`（antd Modal＋List，最新在上、失敗紅字），遊戲畫面狀態卡旁新增「📜 行動日誌」按鈕開啟。
+- 測試＋11（aiActionEvent 4 例：id 遞增順序／格式化成功、失敗、無名 actor；gameStore.actionEvents 7 例：attack succeeded、hold+結束回合、failed 含原因、支援暫停 end-turn、連續兩步事件順序與 id 遞增、Game Over 拒絕不寫入、舊存檔缺欄位相容）。
+
+### 本切片不改變什麼
+
+- AI 決策與規則結果零變化（事件為純側寫；既有 aiSteps 釘住網原樣通過）。
+- Creature 行動仍走既有 steps 快照＋CreatureActionLog 動畫路徑（重構文件 §12：「測試穩定後再改用 AiActionEvent[]」——待 Creature 回合全面事件化時收斂）；人類玩家行動的日誌埋點留待建設 AI／正式 UI 里里程碑。
+
+### 影響檔案
+
+- 新增：`src/game/ai/aiActionEvent.ts`（＋測試）、`src/game/gameStore.actionEvents.test.ts`、`src/components/ActionLogPanel.tsx`
+- 改：`src/game/types.ts`（GameState.actionEvents）、`src/game/gameStore.ts`（append/record helpers＋兩 step 接線＋gameOver 守衛）、`src/App.tsx`（日誌按鈕＋面板＋scheduler gameOver 守衛）
+- 文件：本日誌、架構文件 §15 Phase 5、playbook §1／§3
+
+### 驗證結果
+
+- vitest：75 檔 / **778 項全過**。tsc -b：通過。ESLint：新碼零警告（僅剩 App.tsx 既有一處 exhaustive-deps 舊警告）。Build：通過。
+
+### 下一步
+
+- 切片 **G**：建設 AI——`chooseConstructionAction()` 效用評分 → queue 狀態機（planned/building/completed/blocked/cancelled）→ 建築 action 執行＋完成提醒彈窗。
+
 ## 2026-08-24｜AI 重構切片 E：Player AI Scheduler 抽出 App.tsx
 
 ### 本次完成

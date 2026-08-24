@@ -35,6 +35,9 @@ import {
   isSamePosition,
   getAdjacentPositions,
 } from './types'
+import type { AiAction } from './ai/aiAction'
+import type { AiActionEvent } from './ai/aiActionEvent'
+import { createAiActionEvent } from './ai/aiActionEvent'
 import {
   getBuff,
   getEquipment,
@@ -164,6 +167,7 @@ import type { ScenarioDefinition } from '../editor/editorTypes'
 import { chooseDefenseAction } from './aiDefenseRules'
 import { chooseSupportAction } from './aiSupportRules'
 import { chooseSelfPreservationAction } from './aiSelfPreservationRules'
+import { defenseActionToAiAction } from './ai/aiAction'
 import { defaultRandomSource } from './rules/randomRules'
 import { getBlockedPositions } from './rules/movementRules'
 
@@ -234,6 +238,38 @@ let currentScenarioId: string | null = null
  */
 let pendingCreatureTurn: CreatureTurnResult | null = null
 let pendingCreatureTurnBasePlayers: PlayerState[] | null = null
+
+/** 全域行動日誌上限：只保留最新 N 筆，避免長局面資料無限成長（重構文件 §4.5）。 */
+const MAX_ACTION_EVENTS = 200
+
+function appendActionEvents(events: AiActionEvent[]): void {
+  if (events.length === 0) return
+  updateGameState((current) => ({
+    ...current,
+    actionEvents: [...(current.actionEvents ?? []), ...events].slice(-MAX_ACTION_EVENTS),
+  }))
+}
+
+/**
+ * 把一次 Player AI step 的決策與結果寫入全域行動日誌（重構文件 §4.5／§15 Phase 5）。
+ * reason 優先取決策自帶理由；舊 attack 決策沒有理由欄位，退回執行結果的訊息。
+ */
+function recordAiStepEvent(
+  round: number,
+  playerId: string,
+  playerName: string,
+  action: AiAction,
+  outcome: { ok: boolean; reason?: string },
+): void {
+  appendActionEvents([createAiActionEvent({
+    round,
+    actor: { id: playerId, kind: 'player', name: playerName },
+    action,
+    result: outcome.ok ? 'succeeded' : 'failed',
+    reason: action.reason || outcome.reason,
+  })])
+}
+
 function updateGameState(updater: (state: GameState) => GameState) {
   let nextGameState = updater(gameState)
 
@@ -1791,30 +1827,35 @@ export const gameStore = {
     const state = gameState
     const player = state.players.find((candidate) => candidate.id === playerId)
     const order = state.aiOrders?.find((candidate) => candidate.aiPlayerId === playerId && candidate.type === 'protect-base' && candidate.status === 'active')
-    if (!player?.isAI || state.activePlayerId !== playerId || state.creatureTurnInProgress || !order || order.type !== 'protect-base') {
+    if (!player?.isAI || state.activePlayerId !== playerId || state.creatureTurnInProgress || state.gameOver || !order || order.type !== 'protect-base') {
       return { ok: false, reason: '目前無法執行 AI 防守回合。' }
     }
 
     const selfPreservation = chooseSelfPreservationAction(state, playerId, order.retreatHealthPercent)
     if (selfPreservation?.type === 'move') {
       const result = gameStore.movePlayerTo(playerId, selfPreservation.position.row, selfPreservation.position.column)
+      recordAiStepEvent(state.round, playerId, player.name, defenseActionToAiAction(state, playerId, selfPreservation), result)
       return result.ok ? { ok: true } : { ok: false, reason: result.reason ?? 'AI 自保移動失敗。' }
     }
     if (selfPreservation) {
       gameStore.endPlayerTurn(playerId)
+      recordAiStepEvent(state.round, playerId, player.name, defenseActionToAiAction(state, playerId, selfPreservation), { ok: true })
       return { ok: true }
     }
 
     const decision = chooseDefenseAction(state, playerId, order)
     if (decision.type === 'attack') {
       const result = gameStore.executeAiAttack(playerId, decision.targetType, decision.targetId)
+      recordAiStepEvent(state.round, playerId, player.name, defenseActionToAiAction(state, playerId, decision), result.ok ? { ok: true } : { ok: false, reason: result.reason })
       return result.ok ? { ok: true } : { ok: false, reason: result.reason ?? 'AI 攻擊失敗。' }
     }
     if (decision.type === 'move') {
       const result = gameStore.movePlayerTo(playerId, decision.position.row, decision.position.column)
+      recordAiStepEvent(state.round, playerId, player.name, defenseActionToAiAction(state, playerId, decision), result)
       return result.ok ? { ok: true } : { ok: false, reason: result.reason ?? 'AI 移動失敗。' }
     }
     gameStore.endPlayerTurn(playerId)
+    recordAiStepEvent(state.round, playerId, player.name, defenseActionToAiAction(state, playerId, decision), { ok: true })
     return { ok: true }
   },
 
@@ -1822,16 +1863,18 @@ export const gameStore = {
     const state = gameState
     const player = state.players.find((candidate) => candidate.id === playerId)
     const order = state.aiOrders?.find((candidate) => candidate.aiPlayerId === playerId && candidate.type === 'support-player' && candidate.status === 'active')
-    if (!player?.isAI || state.activePlayerId !== playerId || state.creatureTurnInProgress || !order || order.type !== 'support-player') {
+    if (!player?.isAI || state.activePlayerId !== playerId || state.creatureTurnInProgress || state.gameOver || !order || order.type !== 'support-player') {
       return { ok: false, reason: '目前無法執行 AI 支援回合。' }
     }
     const selfPreservation = chooseSelfPreservationAction(state, playerId, order.retreatHealthPercent)
     if (selfPreservation?.type === 'move') {
       const result = gameStore.movePlayerTo(playerId, selfPreservation.position.row, selfPreservation.position.column)
+      recordAiStepEvent(state.round, playerId, player.name, defenseActionToAiAction(state, playerId, selfPreservation), result)
       return result.ok ? { ok: true } : { ok: false, reason: result.reason ?? 'AI 自保移動失敗。' }
     }
     if (selfPreservation) {
       gameStore.endPlayerTurn(playerId)
+      recordAiStepEvent(state.round, playerId, player.name, defenseActionToAiAction(state, playerId, selfPreservation), { ok: true })
       return { ok: true }
     }
     const target = state.players.find((candidate) => candidate.id === order.playerId)
@@ -1841,19 +1884,29 @@ export const gameStore = {
         aiOrders: (current.aiOrders ?? []).map((currentOrder) => currentOrder.id === order.id ? { ...currentOrder, status: 'paused' as const } : currentOrder),
       }))
       gameStore.endPlayerTurn(playerId)
+      recordAiStepEvent(
+        state.round,
+        playerId,
+        player.name,
+        { type: 'end-turn', actor: { id: playerId, kind: 'player' }, reason: '支援目標不存在，暫停支援命令。' },
+        { ok: true },
+      )
       return { ok: true }
     }
 
     const decision = chooseSupportAction(state, playerId, order)
     if (decision.type === 'attack') {
       const result = gameStore.executeAiAttack(playerId, decision.targetType, decision.targetId)
+      recordAiStepEvent(state.round, playerId, player.name, defenseActionToAiAction(state, playerId, decision), result.ok ? { ok: true } : { ok: false, reason: result.reason })
       return result.ok ? { ok: true } : { ok: false, reason: result.reason ?? 'AI 支援攻擊失敗。' }
     }
     if (decision.type === 'move') {
       const result = gameStore.movePlayerTo(playerId, decision.position.row, decision.position.column)
+      recordAiStepEvent(state.round, playerId, player.name, defenseActionToAiAction(state, playerId, decision), result)
       return result.ok ? { ok: true } : { ok: false, reason: result.reason ?? 'AI 支援移動失敗。' }
     }
     gameStore.endPlayerTurn(playerId)
+    recordAiStepEvent(state.round, playerId, player.name, defenseActionToAiAction(state, playerId, decision), { ok: true })
     return { ok: true }
   },
 

@@ -7,6 +7,7 @@ import type { GovernancePolicyId } from "./catalogs/governancePolicyCatalog"
 import type { InnerSkill } from "./catalogs/innerSkillCatalog"
 import type { MartialSchoolId } from './catalogs/martialSchoolCatalog'
 import type { EventEffect, EventRequirement } from './events/eventCatalog'
+import type { AiActionEvent } from './ai/aiActionEvent'
 import { itemCatalog } from './catalogs/itemCatalog'
 import { equipmentCatalog } from './catalogs/equipmentCatalog'
 
@@ -908,6 +909,8 @@ export type GameState = {
   sharedEquipmentWarehouse?: EquipmentInstance[]
   aiOrders?: AiOrder[]
   aiConstructionPlans?: AiConstructionPlan[]
+  /** 全域行動日誌（重構文件 §4.5 AiActionEvent）；只保留最新 MAX_ACTION_EVENTS 筆，隨存檔序列化。 */
+  actionEvents?: AiActionEvent[]
 }
 
 export type AiOrderStatus = 'active' | 'paused' | 'completed' | 'failed'

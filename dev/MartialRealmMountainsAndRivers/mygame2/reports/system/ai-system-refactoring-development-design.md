@@ -995,7 +995,7 @@ perception → decision → validation → execution → event
 ### Phase 5：動畫與全域日誌
 
 - Owner：UI / Engineering
-- Status：Todo
+- Status：Done（2026-08-24，切片 F；Creature 動畫事件沿用既有 steps 快照路徑，人類行動埋點留待建設 AI 里程碑）
 - Priority：P1
 - Acceptance Criteria：
   - AI 與 Creature 行動都能產生動畫事件。
@@ -1004,6 +1004,7 @@ perception → decision → validation → execution → event
 - Test Method：
   - 事件順序測試。
   - 動畫取消、讀檔與 Game Over 測試。
+- Result（2026-08-24）：`src/game/ai/aiActionEvent.ts` 落地 §4.5 事件格式（id 遞增序號可排序、reason 沿用 action.reason）；`GameState.actionEvents`（上限 200、隨存檔序列化、舊檔 `?? []` 相容）；防守／支援 step 全決策分支寫入事件（成敗如實）。Game Over：step 守衛＋Scheduler effect 雙層擋下。UI：ActionLogPanel Modal（最新在上、失敗紅字）＋狀態卡旁「📜 行動日誌」按鈕。測試 11 例（順序／成敗記錄／Game Over／讀檔相容），全套 778 項通過；AI 規則結果零變化。
 
 ### Phase 6：建設 AI
 
