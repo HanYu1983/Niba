@@ -45,13 +45,13 @@ export function learnSkillAtSectGate(
   }
 
   const { inner, damage, aura } = getSectGateSkills(gate.schoolId)
-  const all = [inner, damage, aura].filter((skill): skill is NonNullable<typeof skill> => skill !== null)
+  const all = [...inner, ...damage, ...aura]
   const skill = all.find((candidate) => candidate.id === skillId)
   if (!skill) {
     return { state, result: { ok: false, reason: '此門派據點沒有該功法。' } }
   }
 
-  const isInner = skillId === inner?.id
+  const isInner = inner.some((candidate) => candidate.id === skillId)
   if (isInner ? player.innerSkillIds.includes(skillId) : player.externalSkillIds.includes(skillId)) {
     return { state, result: { ok: false, reason: '玩家已學會此功法。' } }
   }
@@ -107,13 +107,13 @@ export function practiceSkillAtSectGate(
   }
 
   const { inner, damage, aura } = getSectGateSkills(gate.schoolId)
-  const all = [inner, damage, aura].filter((skill): skill is NonNullable<typeof skill> => skill !== null)
+  const all = [...inner, ...damage, ...aura]
   const skill = all.find((candidate) => candidate.id === skillId)
   if (!skill) {
     return { state, result: { ok: false, reason: '此門派據點沒有該功法。' } }
   }
   // 練習需玩家已學會。
-  const learned = (skillId === inner?.id)
+  const learned = (inner.some((candidate) => candidate.id === skill.id))
     ? player.innerSkillIds.includes(skillId)
     : player.externalSkillIds.includes(skillId)
   if (!learned) {

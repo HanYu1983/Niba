@@ -9,7 +9,7 @@ describe('skillProgressionCatalog', () => {
   it('提供七個流派且每個流派都有內功與外功', () => {
     expect(progressionInnerSkills).toHaveLength(7)
     // 每個門派：至少一個傷害型與靈氣型；赤焰/寒水/百毒另有 debuff 傷害型，其餘門派各有獨立輕功靈氣型。
-    expect(progressionExternalSkills).toHaveLength(21)
+    expect(progressionExternalSkills).toHaveLength(20)
 
     for (const skills of [progressionInnerSkills, progressionExternalSkills]) {
       const levelsBySchool = new Map<string, number[]>()
@@ -28,8 +28,10 @@ describe('skillProgressionCatalog', () => {
       const schoolSkills = progressionExternalSkills.filter((skill) => skill.schoolId === schoolId)
       // 每個門派都有基礎傷害型外功。
       expect(schoolSkills.filter((skill) => skill.category === 'damage' && skill.id.endsWith('-external-damage'))).toHaveLength(1)
-      // 每個門派至少都有一個靈氣型外功（含輕功效果）；同類功法數量不設上限。
-      expect(schoolSkills.filter((skill) => skill.category === 'aura').length).toBeGreaterThan(0)
+      // 每個門派至少都有一個靈氣型外功（含輕功效果）；百毒流暫無靈氣型（驛路步已移除）。
+      if (schoolId !== 'hundred-poison') {
+        expect(schoolSkills.filter((skill) => skill.category === 'aura').length).toBeGreaterThan(0)
+      }
     }
     // 赤焰/寒水/百毒有額外 debuff 傷害型。
     for (const schoolId of ['scarlet-flame', 'frost-water', 'hundred-poison']) {

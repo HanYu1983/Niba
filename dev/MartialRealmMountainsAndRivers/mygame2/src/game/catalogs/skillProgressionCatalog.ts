@@ -155,7 +155,7 @@ export const martialSchoolCatalog: MartialSchoolDefinition[] = [
       { name: '腐骨爪', description: '毒爪抓向敵人，對相鄰單一敵人造成傷害。', innerPowerCost: 4 },
       { name: '淬毒', description: '使目標中毒 3 回合，每回合損失最大生命 10%，且五維屬性降低 15%。', effect: 'poison', innerPowerCost: 6 },
     ],
-    aura: [{ name: '驛路步', description: '進入官道時，移動消耗降為 1。', passiveBuffIds: ['road-step'] }],
+    aura: [],
     enhancement: [],
   },
 ]
