@@ -10,11 +10,11 @@
 | 載體 | 條目數 | 承載效果的方式 |
 |---|---|---|
 | 道具 itemCatalog | 53 | `ItemEffectType`（10 種）＋分類欄位 |
-| Buff buffCatalog | 40 | 19 個解譯欄位（屬性修正/乘區/地形/復活…） |
-| 功法 | 40 | 內功 8（傷害公式閉包）、傷害外功 8、功能外功 24 |
-| 裝備 equipmentCatalog | 42 | **純五維 modifiers**，無特殊效果 |
-| 探索事件 eventCatalog | 31 型／約 60 選項 | `EventEffect` 9 種＋`EventRequirement` 6 種 |
-| 建築 buildingCatalog | 19 | bonus 欄位 3 種＋actions 3 種＋特例邏輯 |
+| Buff buffCatalog | 45 | 22 個解譯欄位（屬性修正/乘區/地形/復活/週期回復…） |
+| 功法 | 54 | 內功 9（傷害公式閉包）、傷害外功 9、功能外功 36 |
+| 裝備 equipmentCatalog | 45 | **純五維 modifiers**，無特殊效果 |
+| 探索事件 eventCatalog | 41 型／約 79 選項 | `EventEffect` 12 種＋`EventRequirement` 6 種 |
+| 建築 buildingCatalog | 20 | bonus 欄位 3 種＋actions 3 種＋特例邏輯 |
 | 防禦設施 defenseStructureCatalog | 9 | 視野/阻擋/攻擊/改地形四種能力旗標 |
 | 政策 governancePolicyCatalog | 4 | 僅 3 條有效果（±5%，寫死在 policyRules） |
 | 全局靈氣 GLOBAL_BUFF_POOL | 6 | 商店價/收入/醫療/城防/回合回復/練功經驗 |
@@ -31,7 +31,7 @@
 | 屬性丹 | 5 | 9% | 五維各一顆永久+1 |
 | 特殊 | 1 | 2% | 回光玉（瀕死復活） |
 
-### 2.2 Buff（40 條）
+### 2.2 Buff（45 條）
 | 語義 | 數量 | 代表 |
 |---|---|---|
 | 移動/地形消耗 | 13 | 六步功＋驛路步、swift-wind-movement、主場×5 的移動部分 |
@@ -40,19 +40,21 @@
 | 減益/控場 | 7 | burning×2、cold-poison×2、immobilize、reflection×2、腐骨毒 |
 | 資源吸取回復 | 4 | bloodthirst、spring-return、qi-transformation、inner-power-drain |
 | 條件觸發 | 3 | back-to-water、nurture-qi、all-in |
-| 防禦減免 | 3 | iron-wall-art、home-turf-mountain/ruin |
+| 防禦減免 | 5 | iron-wall-art、home-turf-mountain/ruin、影匿（迴避）、護體罡氣（免疫） |
 | 復活 | 1 | return-light |
 | ⚠️ 零使用欄位 | — | `terrainStaminaCostMultipliers`（乘算版地形消耗）無任何條目使用 |
 
-### 2.3 功能外功（24 種 effect，全部已接 Buff）
+### 2.3 功能外功（31 種 effect）
 | 語義 | 數量 |
 |---|---|
 | 移動/地形適應 | 8（terrain-adaptation＋七步） |
-| 資源吸取/週期回復 | 4 |
+| 資源吸取/週期回復 | 6（血飲/回春/化氣/汲元＋體力回復＋內力回復） |
 | 傷害增益 | 3（critical/damage-dealt/external-damage） |
 | 條件爆發 | 3 |
+| 屬性爆發 | 1（berserk：增益附反噬） |
 | 攻擊附著減益 | 3（burning/poison/attribute-reduction） |
-| 防禦反震 | 2（damage-reduction/reflection） |
+| 防禦反震/迴避/免疫 | 4（damage-reduction/reflection/evasion/debuff-immunity） |
+| 瞬發實用（無 Buff） | 3（experience-gain/cleanse/recover） |
 | 成長 | 1（experience-gain） |
 
 ### 2.4 事件效果（基礎事件池約 60 個選項的效果實例統計）
@@ -68,14 +70,14 @@
 
 ---
 
-## 3. 跨載體效果家族總表（合計約 215 個效果承載條目）
+## 3. 跨載體效果家族總表（合計約 235 個效果承載條目）
 
 占比為跨所有載體的粗估，用於判斷飽和度。
 
 | # | 效果家族 | 約數 | 占比 | 主要承載者 |
 |---|---|---|---|---|
-| F1 | 屬性修正／成長 | ~56 | **26%** | 裝備 42、屬性丹 5、五維常駐 Buff 7、經驗加成功法 |
-| F2 | 傷害輸出 | ~45 | 21% | 元素爆發道具 24、傷害功法 15、傷害乘區 Buff、箭塔 3 |
+| F1 | 屬性修正／成長 | ~59 | **26%** | 裝備 45、屬性丹 5、五維常駐 Buff 7、經驗加成功法 |
+| F2 | 傷害輸出 | ~46 | 21% | 元素爆發道具 24、傷害功法 16、傷害乘區 Buff、箭塔 3 |
 | F3 | 經濟／聲望 | ~33 | 16% | 事件 money/prestige、政策 3、全局靈氣 2、商隊事件 |
 | F4 | 資源管理（恢復／轉換） | ~24 | 11% | 恢復丹 12、取捨藥 6、吸取回復 Buff 4、休整/醫療 |
 | F5 | 機動／地形互動 | ~15 | 7% | 步法×7、輕功 6、官道、回營符 |
