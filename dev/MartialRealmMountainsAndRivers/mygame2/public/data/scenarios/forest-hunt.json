@@ -1168,9 +1168,9 @@
           }
         ],
         "attributes": {
-          "armStrength": 19,
+          "armStrength": 8,
           "constitution": 8,
-          "agility": 18,
+          "agility": 8,
           "innerEnergy": 8,
           "insight": 8
         }
