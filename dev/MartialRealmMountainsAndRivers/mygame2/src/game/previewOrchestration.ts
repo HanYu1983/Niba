@@ -10,7 +10,7 @@ import type {
 import { getRepairSummary, getWorkshopLevel, hasBuilding, requiresAdjacentActivePlayer } from './rules/buildingRules'
 import { getElementDamageMultiplier, getElementInteractionText, getExternalSkill, getInnerSkill, getSchoolElement, getSkillDamage, getSkillEffectMultiplier, getSkillInnerPowerCost, getSkillProgression } from './rules/skillRules'
 import { getTerrainAtPosition, getTerrainResonanceCriticalRateBonus, getTerrainResonanceDamageMultiplier, getTerrainResonanceInnerPowerDiscount, getTerrainResonanceLabel } from './rules/terrainCombatRules'
-import { getCriticalRateForPlayer, getDamageDealtPercent, getEffectiveAttributesForPlayer } from './rules/playerDerivedRules'
+import { getCriticalRateForPlayer, getDamageDealtPercent, getEffectiveAttributesForPlayer, getExternalSkillInnerCostReduction } from './rules/playerDerivedRules'
 import { calculateDamage } from './rules/playerRules'
 import { getAttackTarget } from './rules/targetRules'
 import { isAdjacent } from './types'
@@ -109,7 +109,7 @@ export function createExternalSkillPreview(
       targetName: player.name,
       skillId,
       skillName: skill.name,
-      innerPowerCost: Math.max(1, baseInnerPowerCost - getTerrainResonanceInnerPowerDiscount(skill.element, terrain)),
+      innerPowerCost: Math.max(1, baseInnerPowerCost - getTerrainResonanceInnerPowerDiscount(skill.element, terrain) - getExternalSkillInnerCostReduction(player)),
       expectedDamage: 0,
       targetMode: 'self',
       effectSummary: skill.description,
@@ -118,7 +118,7 @@ export function createExternalSkillPreview(
   }
   const baseInnerPowerCost = getSkillInnerPowerCost(skill.innerPowerCost, target ? getSkillProgression(target.player, skillId).level : 1)
   const targetTerrain = target ? getTerrainAtPosition(state.map.cells, target.player.position) : undefined
-  const innerPowerCost = Math.max(1, baseInnerPowerCost - getTerrainResonanceInnerPowerDiscount(skill.element, targetTerrain))
+  const innerPowerCost = Math.max(1, baseInnerPowerCost - getTerrainResonanceInnerPowerDiscount(skill.element, targetTerrain) - (target ? getExternalSkillInnerCostReduction(target.player) : 0))
   if (!target || !target.player.equippedExternalSkillIds.includes(skillId) || target.player.innerPower < innerPowerCost) {
     return null
   }

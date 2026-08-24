@@ -13,7 +13,7 @@ import type {
   EquipmentDurabilityChange,
 } from '../types'
 import { addSkillExperience, getElementDamageMultiplier, getExternalSkill, getSchoolElement, getSkillDamage, getSkillEffectMultiplier, getSkillInnerPowerCost, getSkillProgression, SKILL_EXPERIENCE_PER_USE } from '../rules/skillRules'
-import { getBuff, getCreatureDamageReductionPercent, getEffectiveAttributesForPlayer, getExternalSkillDamagePercent, getInnerPowerLeechPercent, getLifestealPercent } from '../rules/playerDerivedRules'
+import { getBuff, getCreatureDamageReductionPercent, getEffectiveAttributesForPlayer, getExternalSkillDamagePercent, getExternalSkillInnerCostReduction, getInnerPowerLeechPercent, getLifestealPercent, getPlayerSkillExpGainPercent } from '../rules/playerDerivedRules'
 import { getMaxHealth, getMaxInnerPower, getMaxStamina } from '../rules/playerStatsRules'
 import { getAttackTarget } from '../rules/targetRules'
 import { reduceEquipmentDurability } from '../rules/equipmentRules'
@@ -246,7 +246,7 @@ function applyCombatPlayerState(
       ? { ...withStamina, innerSkillIds: [...withStamina.innerSkillIds, rewards.learnedSkill.skill.id] }
       : { ...withStamina, externalSkillIds: [...withStamina.externalSkillIds, rewards.learnedSkill.skill.id] }
     : withStamina
-  const skillExperience = Math.round(SKILL_EXPERIENCE_PER_USE * getGlobalSkillExperienceMultiplier(state))
+  const skillExperience = Math.round(SKILL_EXPERIENCE_PER_USE * getGlobalSkillExperienceMultiplier(state) * (1 + getPlayerSkillExpGainPercent(player)))
   const withSkillExperience = options.skipSkillExperience
     ? withSkill
     : options.externalSkillId
@@ -344,7 +344,7 @@ export function executeExternalDamage(
   const playerSkillLevel = getSkillProgression(player ?? ({ skillProgression: {} } as PlayerState), skillId).level
   const baseInnerPowerCost = getSkillInnerPowerCost(skill.innerPowerCost, playerSkillLevel)
   const playerTerrain = player ? getTerrainAtPosition(state.map.cells, player.position) : undefined
-  const innerPowerCost = Math.max(1, baseInnerPowerCost - getTerrainResonanceInnerPowerDiscount(skill.element, playerTerrain))
+  const innerPowerCost = Math.max(1, baseInnerPowerCost - getTerrainResonanceInnerPowerDiscount(skill.element, playerTerrain) - (player ? getExternalSkillInnerCostReduction(player) : 0))
   const actionCheck = canPlayerPerformAction(state, playerId, ACTION_STAMINA_COSTS.externalSkill)
   if (!actionCheck.ok) return { state, result: { ok: false, reason: actionCheck.reason ?? '目前無法行動。' } }
   if (skill.target === 'self') {
@@ -364,21 +364,19 @@ export function executeExternalDamage(
       const overrides = getFunctionalSkillBuffOverrides(skill.functionalEffect, playerSkillLevel, definition)
       return { ...currentPlayer, buffs: [...(currentPlayer.buffs ?? []).filter((buff) => buff.definitionId !== functionalBuffId), { id: `skill:${skillId}:${player.id}:${functionalBuffId}`, definitionId: functionalBuffId, sourceId: skillId, remainingRounds: overrides.remainingRounds ?? (definition.duration === 'rounds' ? definition.durationRounds ?? null : null), ...overrides }] }
     }, player)
-    const trainedPlayer = skill.functionalEffect === 'experience-gain'
-      ? [player.innerSkillId, ...player.equippedExternalSkillIds].reduce(
-        (currentPlayer, equippedSkillId) => addSkillExperience(currentPlayer, equippedSkillId, 10),
-        withBuff,
-      )
+    // 定向強化型外功：直接施放、立即完成（無冷卻、不消耗體力）。目前支援回復自身最大生命百分比。
+    const activatedPlayer = skill.activationEffect?.kind === 'heal-self-percent'
+      ? { ...withBuff, health: Math.min(withBuff.maxHealth, withBuff.health + Math.floor(withBuff.maxHealth * skill.activationEffect.percent)) }
       : withBuff
-    const rewards: CombatRewards = { experienceGain: 0, moneyReward: 0, progressedPlayer: trainedPlayer }
-    const nextPlayer = applyCombatPlayerState(state, trainedPlayer, rewards, dependencies, { innerPowerCost, externalSkillId: skillId, skipSkillExperience: true })
+    const rewards: CombatRewards = { experienceGain: 0, moneyReward: 0, progressedPlayer: activatedPlayer }
+    const nextPlayer = applyCombatPlayerState(state, activatedPlayer, rewards, dependencies, { innerPowerCost, externalSkillId: skillId, skipSkillExperience: true })
     return { state: { ...state, players: state.players.map((candidate) => candidate.id === playerId ? nextPlayer : candidate) }, result: { ok: true, data: { playerId, playerName: player.name, targetType: 'creature', targetId: playerId, targetName: player.name, skillId, skillName: skill.name, damage: 0, nextHealth: player.health, maxHealth: player.maxHealth, innerPowerCost, targetMode: 'self', defeated: false, experienceReward: rewards.experienceGain || undefined } } }
   }
   const target = getAttackTarget(state, dependencies.getActionablePlayer(state, playerId), targetType, targetId)
   const targetSkillLevel = target ? getSkillProgression(target.player, skillId).level : 1
   const targetBaseInnerPowerCost = getSkillInnerPowerCost(skill.innerPowerCost, targetSkillLevel)
   const targetTerrain = target ? getTerrainAtPosition(state.map.cells, target.player.position) : undefined
-  const targetInnerPowerCost = Math.max(1, targetBaseInnerPowerCost - getTerrainResonanceInnerPowerDiscount(skill.element, targetTerrain))
+  const targetInnerPowerCost = Math.max(1, targetBaseInnerPowerCost - getTerrainResonanceInnerPowerDiscount(skill.element, targetTerrain) - (target ? getExternalSkillInnerCostReduction(target.player) : 0))
   if (!target || !target.player.equippedExternalSkillIds.includes(skillId) || target.player.innerPower < targetInnerPowerCost || (targetType === 'nest' && Boolean(skill.functionalEffect))) {
     return { state, result: { ok: false, reason: '目標不存在、外功未裝備，或內力不足。' } }
   }
@@ -464,12 +462,6 @@ export function executeExternalDamage(
     terrainResonance: getTerrainResonanceLabel(skill.element, targetTerrain),
   }
 
-  const functionalPlayer = skill.functionalEffect === 'experience-gain'
-    ? [target.player.innerSkillId, ...target.player.equippedExternalSkillIds].reduce(
-      (currentPlayer, skillToAdvance) => addSkillExperience(currentPlayer, skillToAdvance, 10),
-      target.player,
-    )
-    : target.player
   const targetWithFunctionalBuff = functionalBuffs.length > 0 && targetType === 'creature'
     ? functionalBuffs.reduce((currentTarget, buff) => {
       const overrides = getFunctionalSkillBuffOverrides(skill.functionalEffect, skillLevel, buff)
@@ -492,7 +484,7 @@ export function executeExternalDamage(
 
   const nextState = applyCombatHitState(
     state,
-    functionalPlayer,
+    target.player,
     target.target.id,
     targetType,
     targetWithDerivedValues,

@@ -2,6 +2,7 @@ import type { ActionOutcome, GameState } from '../types'
 import { canPlayerPerformAction, spendPlayerStamina } from '../rules/actionCostRules'
 import { addSkillExperience, SKILL_EXPERIENCE_PER_USE } from '../rules/skillRules'
 import { getGlobalSkillExperienceMultiplier } from '../rules/globalBuffRules'
+import { getPlayerSkillExpGainPercent } from '../rules/playerDerivedRules'
 import {
   SECT_GATE_PRACTICE_STAMINA_COST,
   SECT_GATE_PRACTICE_EXPERIENCE,
@@ -43,8 +44,8 @@ export function learnSkillAtSectGate(
     return { state, result: { ok: false, reason: '必須靠近門派據點才能學習功法。' } }
   }
 
-  const { inner, damage, functional, lightFoot } = getSectGateSkills(gate.schoolId)
-  const all = [inner, damage, functional, lightFoot].filter((skill): skill is NonNullable<typeof skill> => skill !== null)
+  const { inner, damage, aura } = getSectGateSkills(gate.schoolId)
+  const all = [inner, damage, aura].filter((skill): skill is NonNullable<typeof skill> => skill !== null)
   const skill = all.find((candidate) => candidate.id === skillId)
   if (!skill) {
     return { state, result: { ok: false, reason: '此門派據點沒有該功法。' } }
@@ -105,8 +106,8 @@ export function practiceSkillAtSectGate(
     return { state, result: { ok: false, reason: '必須靠近門派據點才能練習功法。' } }
   }
 
-  const { inner, damage, functional, lightFoot } = getSectGateSkills(gate.schoolId)
-  const all = [inner, damage, functional, lightFoot].filter((skill): skill is NonNullable<typeof skill> => skill !== null)
+  const { inner, damage, aura } = getSectGateSkills(gate.schoolId)
+  const all = [inner, damage, aura].filter((skill): skill is NonNullable<typeof skill> => skill !== null)
   const skill = all.find((candidate) => candidate.id === skillId)
   if (!skill) {
     return { state, result: { ok: false, reason: '此門派據點沒有該功法。' } }
@@ -119,7 +120,7 @@ export function practiceSkillAtSectGate(
     return { state, result: { ok: false, reason: '必須先學會此功法才能練習。' } }
   }
 
-  const experienceMultiplier = getGlobalSkillExperienceMultiplier(state)
+  const experienceMultiplier = getGlobalSkillExperienceMultiplier(state) * (1 + getPlayerSkillExpGainPercent(player))
   const nextGateProgress = addSectGateExperience(gate, SECT_GATE_PRACTICE_EXPERIENCE)
   return {
     state: {

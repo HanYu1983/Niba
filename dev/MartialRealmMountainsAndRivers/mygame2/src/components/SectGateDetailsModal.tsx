@@ -17,14 +17,14 @@ type SectGateDetailsModalProps = {
 }
 
 const schoolIcon = (schoolId: string) =>
-  schoolId === 'golden-body' ? '🥋' : schoolId === 'swift-wind' ? '💨' : schoolId === 'scarlet-flame' ? '🔥' : schoolId === 'frost-water' ? '❄️' : schoolId === 'earth-mountain' ? '⛰️' : '☯'
+  schoolId === 'golden-body' ? '🥋' : schoolId === 'swift-wind' ? '💨' : schoolId === 'scarlet-flame' ? '🔥' : schoolId === 'frost-water' ? '❄️' : schoolId === 'earth-mountain' ? '⛰️' : schoolId === 'hundred-poison' ? '🐍' : '☯'
 
 function SectGateDetailsModal({ gate, player, onLearn, onPractice, onBuyEquipment, onClose }: SectGateDetailsModalProps) {
   const schoolName = gate ? martialSchoolCatalog.find((school) => school.id === gate.schoolId)?.name ?? '未知流派' : ''
-  const { inner, damage, functional, lightFoot } = gate
+  const { inner, damage, aura } = gate
     ? getSectGateSkills(gate.schoolId)
-    : { inner: null, damage: null, functional: null, lightFoot: null }
-  const skills = [inner, damage, functional, lightFoot].filter((skill) => skill !== null)
+    : { inner: null, damage: null, aura: null }
+  const skills = [inner, damage, aura].filter((skill) => skill !== null)
   const sectEquipment = gate
     ? equipmentCatalog.filter((equipment) => equipment.schoolId === gate.schoolId && equipment.sectGateLevel !== undefined)
     : []
@@ -54,8 +54,8 @@ function SectGateDetailsModal({ gate, player, onLearn, onPractice, onBuyEquipmen
               return (
                 <SkillCard
                   key={skill.id}
-                  icon={isInner ? '☯' : (skill as { lootExcluded?: boolean }).lootExcluded ? '💨' : (skill as { functionalEffect?: unknown }).functionalEffect ? '✦' : '⚡'}
-                  label={isInner ? '內功' : (skill as { lootExcluded?: boolean }).lootExcluded ? '輕功' : (skill as { functionalEffect?: unknown }).functionalEffect ? '技能外功' : '外功'}
+                  icon={isInner ? '☯' : (skill as { category?: string }).category === 'aura' ? '✦' : '⚡'}
+                  label={isInner ? '內功' : (skill as { category?: string }).category === 'aura' ? '靈氣外功' : '外功'}
                   name={skill.name}
                   description={skill.description}
                    element={skill.element}

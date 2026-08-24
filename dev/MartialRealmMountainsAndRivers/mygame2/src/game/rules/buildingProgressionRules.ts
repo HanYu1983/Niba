@@ -1,6 +1,7 @@
 import { BUILDING_TYPES, buildingCatalog, type BaseBuilding } from '../catalogs/buildingCatalog'
 import type { BaseState, PlayerState } from '../types'
 import { getGovernanceRank, getMaxBuildingLevelForPlayer } from './governanceRules'
+import { getBuildingMaterialCostReduction, getBuildingReputationBonus } from './playerDerivedRules'
 
 /** 固定功能建築：建造後提供完整功能，不進入一般等級升級流程。 */
 export const FIXED_FUNCTION_BUILDING_TYPES: string[] = [
@@ -48,6 +49,19 @@ export function getBuildingUpgradeCost(building: BaseBuilding): number {
   return BUILDING_UPGRADE_COST_PER_LEVEL * getBuildingLevel(building)
 }
 
+/** 依玩家自帶「建築材料消耗減免」Buff 計算升級成本（天工開物）。 */
+export function getEffectiveBuildingUpgradeCost(building: BaseBuilding, player: PlayerState): number {
+  const baseCost = getBuildingUpgradeCost(building)
+  const reduction = getBuildingMaterialCostReduction(player)
+  return reduction > 0 ? Math.max(1, Math.floor(baseCost * (1 - reduction))) : baseCost
+}
+
+/** 依玩家自帶「建造聲望加成」計算建造/升級獲得的聲望（天工開物）。 */
+export function getEffectivePrestigeGain(player: PlayerState, basePrestige: number): number {
+  const bonus = getBuildingReputationBonus(player)
+  return bonus > 0 ? Math.floor(basePrestige * (1 + bonus)) : basePrestige
+}
+
 /** 判斷玩家官階是否足以解鎖指定建築類型。 */
 export function canPlayerBuildBuildingType(player: PlayerState, buildingType: string): boolean {
   const definition = buildingCatalog.find((building) => building.type === buildingType)
@@ -81,7 +95,7 @@ export function getBuildingUpgradeResult(
     return { ok: false, reason: `已達官階上限 Lv.${cap}。` }
   }
 
-  const cost = getBuildingUpgradeCost(building)
+  const cost = getEffectiveBuildingUpgradeCost(building, player)
 
   if (base.buildingMaterials < cost) {
     return { ok: false, reason: `建料不足，需要 ${cost} 建料。` }

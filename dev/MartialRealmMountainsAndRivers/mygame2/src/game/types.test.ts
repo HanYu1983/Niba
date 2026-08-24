@@ -11,7 +11,7 @@ import {
 } from './types'
 import { buffCatalog } from './catalogs/buffCatalog'
 import { getMaxStamina, getMaxInnerPower, getMaxHealth } from './rules/playerStatsRules'
-import { getActiveBuffsForPlayer, canTraverseTerrain, getDamageDealtPercent, getDamageReductionPercent, getEffectiveAttributesForPlayer, getEvasionRate, getExternalSkillDamagePercent, getInnerPowerLeechPercent, getLifestealPercent, getTerrainStaminaCost } from './rules/playerDerivedRules'
+import { getActiveBuffsForPlayer, canTraverseTerrain, getDamageDealtPercent, getDamageReductionPercent, getEffectiveAttributesForPlayer, getEvasionRate, getExternalSkillDamagePercent, getExternalSkillInnerCostReduction, getInnerPowerLeechPercent, getLifestealPercent, getTerrainStaminaCost } from './rules/playerDerivedRules'
 import { applyPeriodicBuffEffects } from './rules/playerRules'
 import { getPlayerTotalInsightCost, getPlayerInsightCapacityBreakdown, getSkillEffectMultiplier } from './rules/skillRules'
 
@@ -146,6 +146,11 @@ describe('類別 1：資源轉換 Buff', () => {
     expect(getExternalSkillDamagePercent(player)).toBe(0.2)
   })
 
+  it('四兩千斤：外功內力消耗 -1', () => {
+    const player = makePlayer({ buffs: [{ id: 'b1', definitionId: 'four-ounces-thousand-pounds', sourceId: 'test', remainingRounds: null }] })
+    expect(getExternalSkillInnerCostReduction(player)).toBe(1)
+  })
+
   it('幻影步：回避率 +5%', () => {
     const player = makePlayer({ buffs: [{ id: 'b1', definitionId: 'phantom-step', sourceId: 'test', remainingRounds: null }] })
     // 基礎回避率 = 身法 7，加上 Buff 加成 5 → 12
@@ -258,7 +263,7 @@ describe('臂力普通攻擊暴擊率', () => {
 describe('悟性容量', () => {
   it('功法超出悟性上限時效果大幅衰減', () => {
     const player = makePlayer({
-      attributes: { ...baseAttributes, insight: 3 },
+      attributes: { ...baseAttributes, insight: 1 },
       equippedExternalSkillIds: ['sky-breaking-palm'],
     })
     expect(getSkillEffectMultiplier(player)).toBe(0.1)
@@ -286,8 +291,8 @@ describe('悟性容量', () => {
     expect(breakdown.inner).toBe(5)
     expect(breakdown.external).toBe(2)
     expect(breakdown.total).toBe(7)
-    // 吐納功本身提供悟性 +1，因此容量上限使用有效悟性 8。
-    expect(breakdown.limit).toBe(8)
+    // 吐納功提供悟性 +5，因此容量上限使用有效悟性 12。
+    expect(breakdown.limit).toBe(12)
     expect(breakdown.exceeded).toBe(false)
   })
 
@@ -295,7 +300,7 @@ describe('悟性容量', () => {
     const player = makePlayer({
       innerSkillId: 'tuna-gong',
       equippedExternalSkillIds: ['sky-breaking-palm'],
-      attributes: { ...baseAttributes, insight: 5 },
+      attributes: { ...baseAttributes, insight: 1 },
     })
     const breakdown = getPlayerInsightCapacityBreakdown(player)
     expect(breakdown.total).toBe(5 + 2)

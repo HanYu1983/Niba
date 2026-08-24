@@ -1,5 +1,5 @@
 import type { CreatureState, PlayerState } from '../types'
-import { getActiveBuffDefinitions, getEffectiveAttributesForPlayer } from './playerDerivedRules'
+import { getActiveBuffDefinitions, getEffectiveAttributesForPlayer, getMaxStaminaBonus, getStaminaToInnerPowerRatio } from './playerDerivedRules'
 import { getMaxHealth, getMaxInnerPower, getMaxStamina } from './playerStatsRules'
 
 export function recoverFivePercent(currentValue: number, maxValue: number): number {
@@ -18,7 +18,7 @@ export function tickPlayerBuffs(player: PlayerState): PlayerState {
   const withBuffs = { ...player, buffs }
   const effectiveAttributes = getEffectiveAttributesForPlayer(withBuffs)
   const maxHealth = getMaxHealth(effectiveAttributes)
-  const maxStamina = getMaxStamina(effectiveAttributes)
+  const maxStamina = getMaxStamina(effectiveAttributes) + getMaxStaminaBonus(withBuffs)
   const maxInnerPower = getMaxInnerPower(effectiveAttributes)
   return {
     ...withBuffs,
@@ -35,11 +35,19 @@ export function recoverLivingPlayers(players: PlayerState[]): PlayerState[] {
   return players.map((player) => {
     if (player.health <= 0) return { ...player, health: 0, stamina: 0, innerPower: 0, turnEnded: true }
     const updatedPlayer = tickPlayerBuffs(player)
+    // 太虛引氣：將回合結束時剩餘體力依比例轉化為內力（1 體力 → N 內力）。
+    const staminaToInnerPowerRatio = getStaminaToInnerPowerRatio(updatedPlayer)
+    const innerPowerFromStamina = staminaToInnerPowerRatio > 0
+      ? Math.floor(updatedPlayer.stamina * staminaToInnerPowerRatio)
+      : 0
     return {
       ...updatedPlayer,
       stamina: updatedPlayer.maxStamina,
       health: recoverFivePercent(updatedPlayer.health, updatedPlayer.maxHealth),
-      innerPower: recoverFivePercent(updatedPlayer.innerPower, updatedPlayer.maxInnerPower),
+      innerPower: Math.min(
+        updatedPlayer.maxInnerPower,
+        recoverFivePercent(updatedPlayer.innerPower, updatedPlayer.maxInnerPower) + innerPowerFromStamina,
+      ),
       turnEnded: false,
     }
   })

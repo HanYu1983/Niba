@@ -10,6 +10,7 @@ import type {
   SectGateState,
 } from './types'
 import { buildingCatalog } from './catalogs/buildingCatalog'
+import { allInnerSkillCatalog, allExternalSkillCatalog } from './catalogs/martialHallSkillCatalog'
 import { getCreatureInnerSkillId } from './rules/creatureBehaviorRules'
 import { getPlayerVisibleCellIds } from './rules/visibilityRules'
 import { createCharacterState } from './characterFactory'
@@ -176,15 +177,22 @@ export function createDebugGameState(): GameState {
       id: `debug-building-${index + 1}`,
       level: 6,
     }))
+  // 測試用：裝備所有內功與外功（全部 Lv.10），方便快速驗證各類功法效果。
+  const debugAllInnerIds = allInnerSkillCatalog.map((skill) => skill.id)
+  const debugAllExternalIds = allExternalSkillCatalog.map((skill) => skill.id)
+  const debugSkillProgression = Object.fromEntries(
+    [...debugAllInnerIds, ...debugAllExternalIds].map((skillId) => [skillId, { experience: 0, level: 1 }]),
+  )
   const debugPlayer = createCharacterState({
     id: 'player-1',
     name: 'Debug 玩家',
     innerSkillId: 'tuna-gong',
-    innerSkillIds: ['tuna-gong'],
+    innerSkillIds: debugAllInnerIds,
     position: playerPosition,
     attributes: { armStrength: 8, constitution: 8, agility: 8, innerEnergy: 8, insight: 8 },
-    externalSkillIds: ['sky-breaking-palm'],
-    equippedExternalSkillIds: ['sky-breaking-palm'],
+    externalSkillIds: debugAllExternalIds,
+    equippedExternalSkillIds: [],
+    skillProgression: debugSkillProgression,
     prestige: 2000,
     money: 1000,
     experience: 1000,
@@ -244,13 +252,14 @@ export function createDebugGameState(): GameState {
     { id: 'debug-ruin-6', name: '迷途廢村', position: { row: 15, column: 17 }, status: 'intact' },
   ]
   const debugSectGates: SectGateState[] = [
-    // 六個門派各配置一個據點，分散在五個地形測試區。
+    // 各門派各配置一個據點，分散在五個地形測試區。
     { id: 'debug-sect-gate-1', schoolId: 'earth-mountain', position: { row: 8, column: 3 }, experience: 0, level: 1 },
     { id: 'debug-sect-gate-2', schoolId: 'swift-wind', position: { row: 9, column: 6 }, experience: 0, level: 1 },
     { id: 'debug-sect-gate-3', schoolId: 'frost-water', position: { row: 12, column: 10 }, experience: 0, level: 1 },
     { id: 'debug-sect-gate-4', schoolId: 'golden-body', position: { row: 8, column: 14 }, experience: 0, level: 1 },
     { id: 'debug-sect-gate-5', schoolId: 'scarlet-flame', position: { row: 12, column: 18 }, experience: 0, level: 1 },
     { id: 'debug-sect-gate-6', schoolId: 'void-spirit', position: { row: 17, column: 10 }, experience: 0, level: 1 },
+    { id: 'debug-sect-gate-7', schoolId: 'hundred-poison', position: { row: 17, column: 4 }, experience: 0, level: 1 },
   ]
   const debugCreatureDefinitions = [
     { id: 'debug-creature-water', name: 'Debug 寒水妖', schoolId: 'frost-water' as const, behaviorType: 'hunter' as const, position: { row: 10, column: 9 }, attributes: { armStrength: 7, constitution: 7, agility: 6, innerEnergy: 5, insight: 5 } },
@@ -259,6 +268,7 @@ export function createDebugGameState(): GameState {
     { id: 'debug-creature-fire', name: 'Debug 赤炎妖', schoolId: 'scarlet-flame' as const, behaviorType: 'roamer' as const, position: { row: 11, column: 18 }, attributes: { armStrength: 8, constitution: 6, agility: 5, innerEnergy: 9, insight: 5 } },
     { id: 'debug-creature-earth', name: 'Debug 厚土妖', schoolId: 'earth-mountain' as const, behaviorType: 'scavenger' as const, position: { row: 9, column: 3 }, attributes: { armStrength: 6, constitution: 9, agility: 5, innerEnergy: 7, insight: 5 } },
     { id: 'debug-creature-void', name: 'Debug 太虛妖', schoolId: 'void-spirit' as const, behaviorType: 'sieger' as const, position: { row: 16, column: 11 }, attributes: { armStrength: 7, constitution: 7, agility: 7, innerEnergy: 7, insight: 7 } },
+    { id: 'debug-creature-poison', name: 'Debug 百毒妖', schoolId: 'hundred-poison' as const, behaviorType: 'hunter' as const, position: { row: 18, column: 5 }, attributes: { armStrength: 8, constitution: 6, agility: 8, innerEnergy: 5, insight: 5 } },
   ]
   const debugCreatures = debugCreatureDefinitions.map((definition) => createCharacterState({
     id: definition.id,

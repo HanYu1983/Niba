@@ -1111,7 +1111,7 @@ describe('equipment', () => {
 
     expect(unequipped.ok).toBe(true)
     const nextPlayer = gameStore.getState().players[0]
-    expect(nextPlayer.attributes).toEqual({ ...player.attributes, insight: player.attributes.insight + 1 })
+    expect(nextPlayer.attributes).toEqual({ ...player.attributes, insight: player.attributes.insight + 5 })
     expect(nextPlayer.equipmentLoadout?.weaponInstanceId).toBeNull()
   })
 

@@ -56,6 +56,24 @@ export type BuffDefinition = {
   externalSkillDamagePercent?: number
   /** 回避率加成（百分比，直接加在身法決定的回避率上）。 */
   evasionRateBonus?: number
+  /** 普通攻擊的體力消耗減免。 */
+  basicAttackStaminaCostReduction?: number
+  staminaToInnerPowerRatio?: number
+  externalSkillInnerCostReduction?: number
+  insightTrueDamageMultiplier?: number
+  visionRadiusBonus?: number
+  maxStaminaBonus?: number
+  gatherStaminaCostReduction?: number
+  gatherDoubleYieldChance?: number
+  buildingMaterialCostReduction?: number
+  buildingReputationBonus?: number
+  shopBuyPriceDiscount?: number
+  shopSellPriceBonus?: number
+  questRewardBonus?: number
+  /** 功法經驗獲取比例加成。 */
+  skillExpGainPercent?: number
+  confused?: boolean
+  damageTakenFromAlliesBonus?: number
   // 類別 4：條件型
   /** 依血量區間觸發的五維乘算。 */
   conditional?: BuffConditional
@@ -67,7 +85,7 @@ export const buffCatalog: BuffDefinition[] = [
     name: '吐納養氣',
     description: '裝備吐納功期間，提升悟性。',
     duration: 'persistent',
-    attributeModifiers: { insight: 1 },
+    attributeModifiers: { insight: 5 },
   },
   {
     id: 'iron-force-strength',
@@ -99,9 +117,26 @@ export const buffCatalog: BuffDefinition[] = [
   },
   { id: 'golden-body-critical-boost', name: '暴擊強化', description: '暴擊率 ×2。', duration: 'rounds', durationRounds: 2, criticalRateMultiplier: 2 },
   { id: 'swift-wind-movement', name: '疾行', description: '地形消耗一律視為草地。', duration: 'rounds', durationRounds: 2, terrainCostOverride: 2 },
+  { id: 'swift-wind-attack-focus', name: '追風攻勢', description: '普通攻擊體力消耗 -2。', duration: 'persistent', category: 'buff', basicAttackStaminaCostReduction: 2 },
+  { id: 'void-spirit-return-qi', name: '迴氣悟道', description: '功法經驗獲得 +20%。', duration: 'persistent', category: 'buff', skillExpGainPercent: 0.2 },
+  // 悟性輔助功法（靈氣型外功）：天眼望氣
+  { id: 'sky-eye-vision', name: '天眼望氣', description: '自身地圖視野半徑 +1。', duration: 'persistent', category: 'buff', visionRadiusBonus: 1 },
+  // 悟性輔助功法（靈氣型外功）：四兩撥千斤
+  { id: 'four-ounces-thousand-pounds', name: '四兩撥千斤', description: '所有外功內力消耗 -1（最低 1）。', duration: 'persistent', category: 'buff', externalSkillInnerCostReduction: 1 },
+  // 悟性輔助功法（靈氣型外功）：商道通鑑
+  { id: 'merchant-way', name: '商道通鑑', description: '買入價格 -15%，賣出價格 +15%。', duration: 'persistent', category: 'buff', shopBuyPriceDiscount: 0.15, shopSellPriceBonus: 0.15 },
+  // 悟性輔助功法（靈氣型外功）：天工開物
+  { id: 'heavenly-craftsman', name: '天工開物', description: '建築材料消耗 -25%，建造聲望 +50%。', duration: 'persistent', category: 'buff', buildingMaterialCostReduction: 0.25, buildingReputationBonus: 0.5 },
+  // 悟性輔助功法（靈氣型外功）：靈植百草鑑
+  { id: 'spirit-herb-hundred-grass', name: '靈植百草', description: '採集體力消耗 -1，採集 50% 機率雙倍產出。', duration: 'persistent', category: 'buff', gatherStaminaCostReduction: 1, gatherDoubleYieldChance: 0.5 },
+  // 悟性輔助功法（靈氣型外功）：神行八卦步
+  { id: 'divine-movement-eight-trigrams', name: '神行八卦', description: '最大體力 +2。', duration: 'persistent', category: 'buff', maxStaminaBonus: 2 },
+  // 悟性輔助功法（靈氣型外功）：太虛引氣
+  { id: 'taixu-qi-conversion', name: '引氣歸元', description: '回合結束時，剩餘體力轉化為內力（1 體力 → 2 內力）。', duration: 'persistent', category: 'buff', staminaToInnerPowerRatio: 2 },
   { id: 'scarlet-flame-burning', name: '燃燒', description: '每回合損失最大生命 20%。', duration: 'rounds', durationRounds: 3, maxHealthDamagePercent: 0.2 },
   { id: 'frost-water-cold-poison', name: '寒毒', description: '五維屬性降低 20%。', duration: 'rounds', durationRounds: 2, attributeMultiplier: 0.8 },
   { id: 'earth-mountain-reflection', name: '反震', description: '受到傷害時反彈同等傷害。', duration: 'rounds', durationRounds: 3, reflectionPercent: 1 },
+  { id: 'hundred-poison-rot', name: '腐骨毒', description: '中毒：每回合損失最大生命 10%，且五維降低 15%。', duration: 'rounds', durationRounds: 3, category: 'debuff', maxHealthDamagePercent: 0.1, attributeMultiplier: 0.85 },
   { id: 'trap-immobilize', name: '定身', description: '被陷阱定身，本回合無法移動。', duration: 'rounds', durationRounds: 3, immobilized: true },
   { id: 'return-light', name: '回光', description: '瀕死時攔截死亡，復活至 30% 血並清除所有 debuff（只保一次）。', duration: 'persistent', reviveOnDeath: true, reviveHealthPercent: 0.3, clearDebuffsOnRevive: true },
   // 類別 5：移動類 — 指定地形消耗降為 1
@@ -111,6 +146,7 @@ export const buffCatalog: BuffDefinition[] = [
   { id: 'mountain-step', name: '山行', description: '進入山嶽時，移動消耗降為 2。', duration: 'rounds', durationRounds: 2, terrainCostOverrides: { mountain: 2 } },
   { id: 'desert-step', name: '沙行', description: '進入荒漠時，移動消耗降為 2。', duration: 'rounds', durationRounds: 2, terrainCostOverrides: { desert: 2 } },
   { id: 'wall-step', name: '破壁', description: '進入牆壁時，移動消耗降為 2。', duration: 'rounds', durationRounds: 2, terrainCostOverrides: { wall: 2 } },
+  { id: 'road-step', name: '道行', description: '進入官道時，移動消耗降為 1。', duration: 'rounds', durationRounds: 2, terrainCostOverrides: { road: 1 } },
   // 類別 1：資源轉換
   { id: 'bloodthirst', name: '嗜血', description: '造成傷害時，回復 30% 傷害值的血量。', duration: 'rounds', durationRounds: 3, category: 'buff', lifestealPercent: 0.3 },
   { id: 'iron-wall-art', name: '鐵壁訣', description: '受到傷害時，最終傷害 -20%。', duration: 'rounds', durationRounds: 3, category: 'buff', damageReductionPercent: 0.2 },
@@ -119,7 +155,7 @@ export const buffCatalog: BuffDefinition[] = [
   { id: 'inner-power-drain', name: '汲元', description: '造成傷害時，回復 20% 傷害值的內力。', duration: 'rounds', durationRounds: 3, category: 'buff', innerPowerLeechPercent: 0.2 },
   { id: 'break-army-art', name: '破軍訣', description: '普通攻擊造成的最終傷害 +20%。', duration: 'rounds', durationRounds: 3, category: 'buff', damageDealtPercent: 0.2 },
   { id: 'vigor-art', name: '罡氣訣', description: '外功造成的最終傷害 +20%。', duration: 'rounds', durationRounds: 3, category: 'buff', externalSkillDamagePercent: 0.2 },
-  { id: 'phantom-step', name: '幻影步', description: '回避率 +5%。', duration: 'rounds', durationRounds: 3, category: 'buff', evasionRateBonus: 5 },
+  { id: 'phantom-step', name: '幻影步', description: '回避率 +5%。', duration: 'persistent', category: 'buff', evasionRateBonus: 5 },
   { id: 'home-turf-forest', name: '林隱狼性', description: '身處森林主場：回避率 +15%、造成傷害 +15%，森林移動消耗降為 2。', duration: 'persistent', category: 'buff', evasionRateBonus: 15, damageDealtPercent: 0.15, terrainCostOverrides: { forest: 2 } },
   { id: 'home-turf-mountain', name: '山嶽磐甲', description: '身處山嶽主場：受到傷害 -20%，山嶽移動消耗降為 2。', duration: 'persistent', category: 'buff', damageReductionPercent: 0.2, terrainCostOverrides: { mountain: 2 } },
   { id: 'home-turf-water', name: '狂瀾水息', description: '身處水域主場：造成傷害 +15%、內息 +2，水域移動消耗降為 2。', duration: 'persistent', category: 'buff', damageDealtPercent: 0.15, attributeModifiers: { innerEnergy: 2 }, terrainCostOverrides: { water: 2 } },

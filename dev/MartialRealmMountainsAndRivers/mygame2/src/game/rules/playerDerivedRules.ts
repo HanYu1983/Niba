@@ -1,6 +1,8 @@
 import { buffCatalog, type BuffDefinition } from '../catalogs/buffCatalog'
 import { equipmentCatalog, type EquipmentDefinition } from '../catalogs/equipmentCatalog'
 import { innerSkillCatalog } from '../catalogs/innerSkillCatalog'
+import { allExternalSkillCatalog } from '../catalogs/martialHallSkillCatalog'
+import { getFunctionalSkillBuffOverrides } from './functionalSkillScaling'
 import type {
   EquipmentInstance,
   EquipmentLoadout,
@@ -62,9 +64,13 @@ function getEffectiveBuffDefinition(instance: BuffInstance): BuffDefinition | un
     'attributeMultiplier', 'maxHealthDamagePercent', 'criticalRateMultiplier', 'terrainCostOverride', 'reflectionPercent',
     'lifestealPercent', 'innerPowerLeechPercent', 'damageReductionPercent', 'healthRegenPercent',
     'innerPowerHealthRegenPercent', 'damageDealtPercent', 'externalSkillDamagePercent', 'evasionRateBonus',
+    'staminaToInnerPowerRatio', 'externalSkillInnerCostReduction', 'insightTrueDamageMultiplier',
+    'visionRadiusBonus', 'maxStaminaBonus', 'gatherStaminaCostReduction', 'gatherDoubleYieldChance',
+    'buildingMaterialCostReduction', 'buildingReputationBonus', 'shopBuyPriceDiscount',
+    'shopSellPriceBonus', 'questRewardBonus', 'skillExpGainPercent', 'confused', 'damageTakenFromAlliesBonus', 'basicAttackStaminaCostReduction', 'conditional',
   ] as const) {
     const value = instance[key]
-    if (value !== undefined) overrides[key] = value
+    if (value !== undefined) overrides[key] = value as never
   }
   return { ...definition, ...overrides }
 }
@@ -84,7 +90,30 @@ export function getActiveBuffsForPlayer(player: PlayerState): BuffInstance[] {
   return [
     ...explicitBuffs,
     ...(getInnerSkillBuffs(player) ?? []),
+    ...getEquippedExternalSkillBuffs(player),
   ]
+}
+
+/** 將已裝備的靈氣型外功轉成常駐 Buff；強化型外功（主動施放）刻意排除。 */
+function getEquippedExternalSkillBuffs(player: PlayerState): BuffInstance[] {
+  return player.equippedExternalSkillIds.flatMap((skillId) => {
+    const skill = allExternalSkillCatalog.find((candidate) => candidate.id === skillId)
+    if (!skill || skill.category !== 'aura' || !skill.passiveBuffIds?.length) return []
+    const level = Math.max(1, Math.floor(player.skillProgression?.[skillId]?.level ?? 1))
+    return skill.passiveBuffIds.map((definitionId) => {
+      const definition = getBuff(definitionId)
+      const overrides = definition && skill.functionalEffect
+        ? getFunctionalSkillBuffOverrides(skill.functionalEffect, level, definition)
+        : {}
+      return {
+        id: `external-skill:${skillId}:${definitionId}`,
+        definitionId,
+        sourceId: skillId,
+        remainingRounds: null,
+        ...overrides,
+      }
+    })
+  })
 }
 
 const creatureHomeTurfBuffs: Partial<Record<string, { terrain: TerrainType; definitionId: string }>> = {
@@ -93,6 +122,7 @@ const creatureHomeTurfBuffs: Partial<Record<string, { terrain: TerrainType; defi
   'frost-water': { terrain: 'water', definitionId: 'home-turf-water' },
   'scarlet-flame': { terrain: 'desert', definitionId: 'home-turf-desert' },
   'golden-body': { terrain: 'mountain', definitionId: 'home-turf-ruin' },
+  'hundred-poison': { terrain: 'forest', definitionId: 'home-turf-forest' },
 }
 
 /** 取得怪物目前生效的 Buff；主場 Buff 僅依當前站立地形動態注入，不寫入 state。 */
@@ -330,4 +360,54 @@ export function getCreatureDamageReductionPercent(creature: CreatureState, terra
 /** 外功造成的最終傷害加成比例（罡氣訣）。 */
 export function getExternalSkillDamagePercent(player: PlayerState): number {
   return sumBuffPercent(player, 'externalSkillDamagePercent')
+}
+
+/** 功法經驗獲得加成比例（迴氣悟道等；乘以所得經驗）。 */
+export function getPlayerSkillExpGainPercent(player: PlayerState): number {
+  return sumBuffPercent(player, 'skillExpGainPercent')
+}
+
+/** 所有外功內力消耗減免值（四兩千斤等）。 */
+export function getExternalSkillInnerCostReduction(player: PlayerState): number {
+  return sumBuffPercent(player, 'externalSkillInnerCostReduction')
+}
+
+/** 商店買入價格折扣比例（商道通鑑；0.15 代表 -15%）。 */
+export function getShopBuyPriceDiscount(player: PlayerState): number {
+  return sumBuffPercent(player, 'shopBuyPriceDiscount')
+}
+
+/** 商店賣出價格加成比例（商道通鑑；0.15 代表 +15%）。 */
+export function getShopSellPriceBonus(player: PlayerState): number {
+  return sumBuffPercent(player, 'shopSellPriceBonus')
+}
+
+/** 最大體力加成（神行八卦步）。 */
+export function getMaxStaminaBonus(player: PlayerState): number {
+  return sumBuffPercent(player, 'maxStaminaBonus')
+}
+
+/** 建築材料消耗減免比例（天工開物；0.25 代表 -25%）。 */
+export function getBuildingMaterialCostReduction(player: PlayerState): number {
+  return sumBuffPercent(player, 'buildingMaterialCostReduction')
+}
+
+/** 建築獲得的聲望加成比例（天工開物）。 */
+export function getBuildingReputationBonus(player: PlayerState): number {
+  return sumBuffPercent(player, 'buildingReputationBonus')
+}
+
+/** 採集體力消耗減免值（靈植百草鑑）。 */
+export function getGatherStaminaCostReduction(player: PlayerState): number {
+  return sumBuffPercent(player, 'gatherStaminaCostReduction')
+}
+
+/** 採集雙倍產出機率（靈植百草鑑；0.5 代表 50%）。 */
+export function getGatherDoubleYieldChance(player: PlayerState): number {
+  return sumBuffPercent(player, 'gatherDoubleYieldChance')
+}
+
+/** 回合結束時剩餘體力轉化內力的比例（太虛引氣；1 體力 → N 內力）。 */
+export function getStaminaToInnerPowerRatio(player: PlayerState): number {
+  return sumBuffPercent(player, 'staminaToInnerPowerRatio')
 }
