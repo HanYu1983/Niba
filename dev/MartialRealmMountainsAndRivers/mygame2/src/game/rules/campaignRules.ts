@@ -59,10 +59,29 @@ export function progressObjectives(
       return { ...objective, currentValue: objective.targetValue, completed: true }
     }
 
-    // interact-object：綁定 targetId 相符才推進。
+    // interact-object：支援三種語意：
+    // 1. targetIds（多物件）：需與清單中所有物件各互動一次。
+    // 2. targetId（單物件）：與指定物件互動一次即完成。
+    // 3. 皆無：任何 interact-object 事件都累計（需搭配 targetValue 次數）。
     if (objective.type === 'interact-object') {
-      if (event.type !== 'interact-object' || event.targetId !== objective.targetId) return objective
-      return { ...objective, currentValue: objective.targetValue, completed: true }
+      if (event.type !== 'interact-object') return objective
+      // 多物件目標：逐一倒入 doneTargetIds，全數互動過即完成。
+      if (objective.targetIds && objective.targetIds.length > 0) {
+        if (!objective.targetIds.includes(event.targetId)) return objective
+        const done = new Set(objective.doneTargetIds ?? [])
+        if (done.has(event.targetId)) return objective
+        done.add(event.targetId)
+        const completed = objective.targetIds.every((id) => done.has(id))
+        return { ...objective, doneTargetIds: [...done], currentValue: done.size, completed }
+      }
+      // 單一物件目標。
+      if (objective.targetId) {
+        if (event.targetId !== objective.targetId) return objective
+        return { ...objective, currentValue: objective.targetValue, completed: true }
+      }
+      // 無指定 → 依 targetValue 累計互動次數。
+      const next = Math.min(objective.targetValue, objective.currentValue + 1)
+      return { ...objective, currentValue: next, completed: next >= objective.targetValue }
     }
 
     // 綁定目標：事件目標必須相符才推進。

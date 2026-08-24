@@ -367,6 +367,7 @@ function compileCampaignState(scenario: ScenarioDefinition): CampaignState {
       completed: false,
       isOptional: objective.isOptional,
       targetId: objective.targetId,
+      targetIds: objective.targetIds,
       buildingType: objective.buildingType,
       buildingLevel: objective.buildingLevel,
       structureType: objective.structureType,

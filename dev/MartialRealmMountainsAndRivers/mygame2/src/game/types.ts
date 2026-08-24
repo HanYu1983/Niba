@@ -635,6 +635,10 @@ export type CampaignState = {
     isOptional?: boolean
     /** 目標關聯的物件 id（如擊敗的 Boss creatureId）。 */
     targetId?: string
+    /** 目標關聯的多個物件 id，全部互動/完成才計入目標（interact-object 用）。 */
+    targetIds?: string[]
+    /** 已完成的物件 id 集合（targetIds 目標用的運行時進度）。 */
+    doneTargetIds?: string[]
     /** 目標指定的到達位置列（reach-position 目標用）。 */
     targetRow?: number
     /** 目標指定的到達位置欄（reach-position 目標用）。 */

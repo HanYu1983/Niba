@@ -1,4 +1,4 @@
-import { Button, Card, Divider, Flex, Input, InputNumber, Modal, Select, Space, Tabs, Typography } from 'antd'
+import { Button, Card, Divider, Flex, Input, InputNumber, Modal, Select, Space, Tabs, Typography, message } from 'antd'
 import { useState } from 'react'
 import type { GameSettings, TerrainWeights } from '../game/types'
 import {
@@ -14,6 +14,7 @@ import {
 } from '../game/mapTemplates'
 import CampaignScenarioTab from './CampaignScenarioTab'
 import type { ScenarioDefinition } from '../editor/editorTypes'
+import { clearStoredScenarios } from '../game/scenarioStorage'
 
 type GameStartScreenProps = {
   onStart: (settings: GameSettings) => void
@@ -213,6 +214,13 @@ function GameStartScreen({ onStart, onDebug, onOpenSkillTest, onOpenEditor, onSt
                     <Button size="large" onClick={onDebug}>開啟 Debug 地圖</Button>
                     <Button size="large" onClick={onOpenSkillTest}>功法測試頁</Button>
                     <Button size="large" onClick={onOpenEditor}>🗺️ 場景編輯器</Button>
+                    <Button
+                      size="large"
+                      danger
+                      onClick={() => { clearStoredScenarios(); message.success('已清除所有劇本地圖存檔。') }}
+                    >
+                      🗑️ 清除劇本存檔
+                    </Button>
                   </Space>
                 </Space>
               ),

@@ -89,6 +89,8 @@ export type ScenarioDefinition = {
       title: string
       type: string
       targetId?: string
+      /** 目標關聯的多個物件 id，全部互動/完成才計入目標（interact-object 用）。 */
+      targetIds?: string[]
       targetValue: number
       isOptional?: boolean
       /** 目標指定的到達位置列（reach-position 目標用）。 */
