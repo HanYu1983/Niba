@@ -1,5 +1,30 @@
 # 開發日誌
 
+## 2026-08-24｜AI 重構前置 A0：補 player AI 執行層整合測試
+
+### 本次完成
+
+- 依 `handev/ai-development-playbook.md` 切片 **A0**（A 的前置安全網）：為 `runAiDefenseStep`／`runAiSupportStep` 補 8 例 gameStore 整合測試，**不改 production 行為**。
+- 案例：守衛拒絕（非 AI／非其回合／Creature 行動中）、防守攻擊成功、防守移動進半徑、無威脅結束回合、體力不足攻擊失敗不結束回合、支援攻擊成功、支援目標死亡 → `paused` 並結束回合、無 active 支援命令拒絕。
+- 斷言只看結果（血量／位置／回合／命令狀態），不鎖定 Preview API 路徑，作為切片 A 去 preview 化的驗收網。
+- 抽出共用夾具 `src/game/testHelpers/aiTestFixtures.ts`；三個既有 `ai*.test.ts` 改用同一套 helper。
+
+### 影響檔案
+
+- 新增：`src/game/gameStore.aiSteps.test.ts`、`src/game/testHelpers/aiTestFixtures.ts`
+- 改寫測試 helper：`aiDefenseRules.test.ts`、`aiSupportRules.test.ts`、`aiSelfPreservationRules.test.ts`
+- 文件：`handev/ai-development-playbook.md`、`handev/mygame2-architecture.md`、`reports/system/ai-system-refactoring-development-design.md`
+
+### 驗證結果
+
+- TypeScript：通過。ESLint（本切片檔案）：通過。Build：通過。
+- 測試：AI 相關 19 項全過（11 決策＋8 執行）；全套 731 項中 730 過。
+- 已知無關失敗：`skillProgressionCatalog.test.ts`「外功數預期 36 實得 35」（catalog 與測試不同步，非本切片改動）。
+
+### 下一步
+
+- 切片 **A**：AI 攻擊去 Preview 化（新增原子攻擊 domain action；A0 測試須持續全過）。
+
 ## 2026-08-24｜江湖線擴充：新增 10 個江湖功法
 
 ### 本次完成

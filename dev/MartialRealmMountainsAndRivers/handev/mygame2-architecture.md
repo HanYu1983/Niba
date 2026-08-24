@@ -50,7 +50,8 @@ mygame2/
 │   │   ├── rules/              # 純規則函式（~50 個檔案，多數附測試）
 │   │   ├── catalogs/           # 靜態資料目錄（功法/裝備/道具/建築/劇情…）
 │   │   ├── events/             # 探索事件：catalog / spawner / resolver
-│   │   └── ai*.ts              # AI 規則：防守 / 自保 / 支援
+│   │   ├── ai*.ts              # AI 規則：防守 / 自保 / 支援
+│   │   └── testHelpers/        # 測試夾具（AI 固定地圖／玩家／命令）
 │   ├── editor/                 # 關卡編輯器（獨立子應用 EditorApp）
 │   │   ├── components/         # Canvas / Palette / Inspector / 各編輯 Modal
 │   │   ├── hooks/              # useEditorHistory (undo/redo)、useEditorSelection

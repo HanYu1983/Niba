@@ -903,7 +903,7 @@ perception → decision → validation → execution → event
 ### 14.4 回合生命週期
 
 - 所有玩家行動完成後才進入 Creature phase。
-- Creature phase 中不能執行玩家 AI。
+- Creature phase 中不能執行玩家 AI。（A0：`gameStore.aiSteps.test.ts` 已覆蓋 store 守衛）
 - Creature phase 結束後正確輪到下一位玩家。
 - 同一 Actor 不會同時啟動兩個 Scheduler。
 - Modal 開啟時 AI scheduler 暫停或取消。
@@ -1046,11 +1046,12 @@ perception → decision → validation → execution → event
 
 第一個開發切片應為：
 
-1. 抽出共用距離、阻擋、目標與可達性純函式。
-2. 建立通用 `AiAction` 型別。
-3. 建立 Action Validator，但先不改變現有行動結果。
-4. 為玩家 AI 與 Creature 補充固定地圖測試。
-5. 所有既有測試通過後，再移除 UI Preview 對 AI 的依賴。
+0. ~~為 `runAiDefenseStep`／`runAiSupportStep` 補 gameStore 整合測試。~~ **A0 已完成**（`gameStore.aiSteps.test.ts` 8 例）。
+1. 玩家 AI 攻擊去 Preview 化（切片 A；A0 測試為驗收網）。
+2. 抽出共用距離、阻擋、目標與可達性純函式。
+3. 建立通用 `AiAction` 型別。
+4. 建立 Action Validator，但先不改變現有行動結果。
+5. 所有既有測試通過後，再進入 Scheduler／Creature 拆管線。
 
 ### 暫不允許
 

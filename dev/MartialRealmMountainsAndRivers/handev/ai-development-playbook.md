@@ -29,7 +29,7 @@ AI 開發有**兩條主線**，各自有獨立設計文件，工作時必須分�
 | 主線 | 文件 | 性質 | 進度 |
 |---|---|---|---|
 | 功能線 | ai-strategy-and-construction（v0.8） | 玩家指揮 AI 的玩法功能 | M1～M3 已完成；M4 防守、M5 支援部分完成（單步決策＋自動回合已接入）；建設自動執行、逐步動畫、全域日誌未完成 |
-| 架構線 | ai-system-refactoring（v0.2 Draft） | Creature／玩家 AI 共用核心重構 | Phase 1～6 全部 Todo；`src/game/ai/` 目錄尚未建立 |
+| 架構線 | ai-system-refactoring（v0.2 Draft） | Creature／玩家 AI 共用核心重構 | A0 已完成；Phase 1～6 仍 Todo；`src/game/ai/` 目錄尚未建立 |
 
 ### 1.1 已存在的實作（檔案地圖）
 
@@ -46,6 +46,7 @@ AI 開發有**兩條主線**，各自有獨立設計文件，工作時必須分�
 - `runAiDefenseStep`（`:1778`）／`runAiSupportStep`（`:1810`）：驗證（isAI＋輪次＋非 creature turn＋active 命令）→ 自保先行 → 讀決策 → `movePlayerTo` 或 **`previewAttackTarget`＋`executeAttackTarget`**（`:1798`、`:1838`）→ 失敗或待命則 `endPlayerTurn`。
 - 支援目標死亡時命令自動轉 `paused`（`:1826-1834`）。
 - ⚠️ 兩處攻擊都走 Preview API——違反總原則 4，為既存技術債。
+- 測試：`src/game/gameStore.aiSteps.test.ts`（A0，8 例，釘住結果不釘 preview 路徑）；共用夾具 `src/game/testHelpers/aiTestFixtures.ts`。
 
 **排程層（App.tsx `:166-191`）**
 
@@ -417,20 +418,19 @@ PowerShell 備忘：判斷成敗用 `$LASTEXITCODE`（`$?` 是 True/False）；d
 
 ### 2.7 現有 AI 測試資產盤點（2026-08-24 實測）：重構安全網評估
 
-逐層對照「現有測試 ↔ 重構後元件」，結論：**決策與 Creature 層可沿用，執行層零覆蓋是最大風險。**
+逐層對照「現有測試 ↔ 重構後元件」，結論：**決策與 Creature 層可沿用，執行層 A0 已補 8 例作為切片 A 驗收網。**
 
 | 層 | 現有測試 | 重構後可否沿用 | 備註 |
 |---|---|---|---|
 | 玩家決策純函式 | `aiDefenseRules.test.ts`（4 例）＋ `aiSupportRules.test.ts`（4 例）＋ `aiSelfPreservationRules.test.ts`（3 例） | ✅ 原樣沿用 | 斷言精確到輸出形狀與 reason 字串（`'no-threat'`／`'command-paused'`／`'self-preservation'`）。wrapper 策略下（簽名與輸出不變、內部委託新管線）一行不改持續綠燈＝行為保持證據；但會從單元測試降格為端到端行為釘住，新內部元件仍需自己的單元測試 |
 | Creature 批次行為 | `creatureActions.test.ts`（13 例）＋ `creatureNest.test.ts` 的 moveCreatures 互動（~10 例），全走公開批次介面黑箱斷言 | ✅ 大致可用 | 拆管線時只要 `CreatureTurnResult` 格式相容，這是最厚的安全網。⚠️ 切片 B 注入 RandomSource 後，凡走到巡邏分支的案例要把 Math.random stub 換成顯式注入偽隨機（現有案例幾乎都給了目標、未踩巡邏路徑，需逐一確認） |
-| 執行層 | `runAiDefenseStep`／`runAiSupportStep`：**零測試**（grep 全 src 只有 App.tsx 呼叫與 gameStore 定義） | ❌ 裸奔 | 切片 A 要改的正是這裡（去 preview 化），卻無任何安全網 |
+| 執行層 | `gameStore.aiSteps.test.ts`（8 例，A0 已補） | ✅ 沿用為切片 A 驗收網 | 斷言結果（扣血／位移／回合／命令狀態），不鎖定 Preview API 內部路徑。失敗步由 store 回 `ok: false`、App.tsx 才 `endPlayerTurn` |
 | Validator／Scheduler／事件化 | （全新元件） | — | 本來就沒有，按 §14.3/14.4 新寫 |
 
 **由此推出的前置義務：**
 
-1. **切片 A 開工前必先補 gameStore 整合測試**（約 6-8 例：攻擊成功／移動成功／行動失敗安全結束回合／paused 結束／非 AI 或非其回合拒絕）——否則違反總原則 3「先補測試再遷移」。這組測試同時就是去 preview 化的驗收網。
-2. 之後所有重構切片以「11＋33 既有案例持續通過」為行為基準；新增元件各補單元測試：resolvePolicy 查表契約（回傳值只依賴 kind／型別／存活）、planAiAction 確定性評分（同輸入同 seed 同輸出）、Validator stale 矩陣。
-3. 順手改善：三個 `ai*.test.ts` 的 `state()`／`player()` helper 幾乎重複，補測試時抽共用 fixture（放 `src/game/testHelpers/` 之類位置，不過度抽象）。
+1. **切片 A0 已完成**（2026-08-24）：`runAiDefenseStep`／`runAiSupportStep` 8 例整合測試＋`src/game/testHelpers/aiTestFixtures.ts`。切片 A 可開工。
+2. 之後所有重構切片以「11 決策＋8 執行＋既有 Creature 案例持續通過」為行為基準；新增元件各補單元測試：resolvePolicy 查表契約（回傳值只依賴 kind／型別／存活）、planAiAction 確定性評分（同輸入同 seed 同輸出）、Validator stale 矩陣。
 
 ---
 
@@ -438,7 +438,7 @@ PowerShell 備忘：判斷成敗用 `$LASTEXITCODE`（`$?` 是 True/False）；d
 
 | # | 切片 | 對應 | Priority | 驗收重點 |
 |---|---|---|---|---|
-| A0（A 的前置） | 為 `runAiDefenseStep`／`runAiSupportStep` 補 gameStore 整合測試（見 §2.7） | §14.4 生命週期 | P0 | 6-8 例通過；此組測試即切片 A 的驗收網 |
+| A0（A 的前置） | 為 `runAiDefenseStep`／`runAiSupportStep` 補 gameStore 整合測試（見 §2.7） | §14.4 生命週期 | P0 **已完成** | 8 例通過；此組測試即切片 A 的驗收網 |
 | A | AI 攻擊去 Preview 化：新增原子攻擊 domain action，`runAiDefenseStep`／`runAiSupportStep` 改呼叫之；preview 保留給人類玩家 | 重構 Phase 2 前半 | P0 | 新增「AI 不經 preview API 執行攻擊」測試；既有 AI 測試＋A0 測試全過 |
 | B | 共用感知純函式（距離／阻擋／存活／目標有效／可達性）＋ Creature 巡邏改注入 RandomSource | 重構 Phase 1＋§12 Phase 1 | P0 | 既有測試全過；相同 seed 巡邏結果一致；不可達目標會重選或安全待命 |
 | C | 統一 `AiAction` 型別＋`validateAiAction()`（先不改變行為） | 重構 Phase 1 後半＋Phase 2 | P0 | Validator 對既有四種決策都能給出 valid/reason；行為零變化 |
@@ -454,7 +454,7 @@ PowerShell 備忘：判斷成敗用 `$LASTEXITCODE`（`$?` 是 True/False）；d
 
 ## 附錄：快速事實
 
-- 目前全套測試基準：2026-08-24 為 723 項全過（數字會漂移，動工前先跑一次記錄當下基準）。
+- 目前全套測試基準：2026-08-24 A0 後為 731 項（730 過／1 無關失敗：`skillProgressionCatalog` 外功數預期 36 實得 35，非 AI 切片改動）。AI 相關 11 決策＋8 執行全過。
 - `AiOrder` 同時間每 AI 只能一個 active；建立異型新命令 → 舊命令降級 paused；完全同型同目標 → 拒絕。
 - 支援命令目標死亡 → 自動 `paused`（不是 failed）；據點被毀 → `failed` 且保存原因。
 - 建設方針五種：`defense | economy | frontline | balanced | paused`；`paused` 不建造但可行動。
