@@ -556,6 +556,8 @@ export type DialogueTriggerCondition =
   | 'on-start'                // 關卡開局時觸發
   | 'on-objective-complete'   // 特定任務目標達成時觸發（triggerParam = objectiveId）
   | 'on-enter-region'         // 玩家進入指定區域時觸發（triggerParam = "row,column" 或 region id）
+  | 'on-enter-area'           // 玩家進入編輯器定義的區域時觸發（triggerParam = areaId）
+  | 'on-exit-area'            // 玩家離開編輯器定義的區域時觸發（triggerParam = areaId）
   | 'on-defeat-boss'          // 擊敗首領時觸發（triggerParam = creatureId）
   | 'on-round-reached'        // 到達指定回合時觸發（triggerParam = round number）
   | 'on-object-destroyed'     // 指定物件從地圖消失時觸發（triggerParam = objectId；含生物死亡、建築/防禦設施被破壞等）
@@ -613,6 +615,14 @@ export type CampaignState = {
     action: 'start-dialogue' | 'spawn-creature'
     actionParam: string
   }>
+  /** 編輯器定義的區域列表（供 on-enter-area / on-exit-area 觸發器使用）。 */
+  scenarioAreas?: Array<{
+    id: string
+    name: string
+    positions: Array<{ row: number; column: number }>
+    /** 此區域的 on-enter-area 觸發器觸發一次後，即從地圖移除（一次性區域）。 */
+    destroyWhenTriggered?: boolean
+  }>
   /** 探索點消失後是否補充新探索點（劇本模式預設關閉）。 */
   replenishExplorationEvents?: boolean
   /** 任務目標運行時狀態。 */
@@ -626,6 +636,10 @@ export type CampaignState = {
     isOptional?: boolean
     /** 目標關聯的物件 id（如擊敗的 Boss creatureId）。 */
     targetId?: string
+    /** 目標關聯的多個物件 id，全部互動/完成才計入目標（interact-object 用）。 */
+    targetIds?: string[]
+    /** 已完成的物件 id 集合（targetIds 目標用的運行時進度）。 */
+    doneTargetIds?: string[]
     /** 目標指定的到達位置列（reach-position 目標用）。 */
     targetRow?: number
     /** 目標指定的到達位置欄（reach-position 目標用）。 */

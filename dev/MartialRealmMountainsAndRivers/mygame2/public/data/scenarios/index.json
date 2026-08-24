@@ -10,6 +10,11 @@
       "id": "forest-hunt",
       "file": "forest-hunt.json",
       "version": "1.2.0"
+    },
+    {
+      "id": "frost-water-lament",
+      "file": "lake-wind-lament.json",
+      "version": "1.2.0"
     }
   ]
 }
