@@ -23,6 +23,8 @@ import SystemCommandModal from './components/SystemCommandModal'
 import StrategicCommandModal from './components/StrategicCommandModal'
 import { createEmptyScenario, type ScenarioDefinition } from './editor/editorTypes'
 import { trackPageView, trackEvent } from './lib/analytics'
+import { createAiTurnScheduler } from './game/ai/aiTurnScheduler'
+import ActionLogPanel from './components/ActionLogPanel'
 
 function App() {
   const gameState = useGameState()
@@ -34,6 +36,7 @@ function App() {
   const [saveModalOpen, setSaveModalOpen] = useState(false)
   const [systemCommandModalOpen, setSystemCommandModalOpen] = useState(false)
   const [strategicCommandModalOpen, setStrategicCommandModalOpen] = useState(false)
+  const [actionLogOpen, setActionLogOpen] = useState(false)
   const [saveSlots, setSaveSlots] = useState(() => gameStore.getSaveSlots())
   const {
     selectedBaseId,
@@ -109,6 +112,17 @@ function App() {
     0,
   ) ?? 0
   const previousActivePlayerIdRef = useRef(gameState.activePlayerId)
+  // Player AI 回合排程器：防守／支援共用框架（重構文件 §11／§12 Phase 3）。
+  // React 只負責啟動與停止；計時、防重入與 stale 取消都在 scheduler 內。
+  const aiTurnSchedulerRef = useRef(
+    createAiTurnScheduler({
+      getState: () => gameStore.getState(),
+      runDefenseStep: (actorId) => gameStore.runAiDefenseStep(actorId),
+      runSupportStep: (actorId) => gameStore.runAiSupportStep(actorId),
+      runConstructionStep: (actorId) => gameStore.runAiConstructionStep(actorId),
+      endTurn: (actorId) => gameStore.endPlayerTurn(actorId),
+    }),
+  )
   const modalOpen = Boolean(
     gameState.blockingModal ||
     gameState.gameOver ||
@@ -164,31 +178,36 @@ function App() {
   }, [activePlayer, gameState.itemPoints, gameState.explorationEvents, gameState.creatureTurnInProgress, gameState.blockingModal, setDetailsExplorationEventId])
 
   useEffect(() => {
+    const scheduler = aiTurnSchedulerRef.current
     if (
       !activePlayer?.isAI ||
       gameState.creatureTurnInProgress ||
       gameState.blockingModal ||
+      gameState.gameOver ||
       strategicCommandModalOpen ||
       saveModalOpen ||
       systemCommandModalOpen
     ) {
+      scheduler.cancel()
       return
     }
     const activeAiOrder = gameState.aiOrders?.find(
       (order) => order.aiPlayerId === activePlayer.id && order.status === 'active',
     )
-    if (!activeAiOrder || (activeAiOrder.type !== 'protect-base' && activeAiOrder.type !== 'support-player')) return
+    if (activeAiOrder && (activeAiOrder.type === 'protect-base' || activeAiOrder.type === 'support-player')) {
+      // 戰術命令優先：威脅未解除前暫緩建設（命令完成後自動恢復）。
+      scheduler.requestStep(activePlayer.id, activeAiOrder.type)
+      return () => scheduler.cancel()
+    }
+    const constructionPlan = gameState.aiConstructionPlans?.find((plan) => plan.aiPlayerId === activePlayer.id)
+    if (!constructionPlan) {
+      scheduler.cancel()
+      return
+    }
 
-    const timer = window.setTimeout(() => {
-      const result = activeAiOrder.type === 'protect-base'
-        ? gameStore.runAiDefenseStep(activePlayer.id)
-        : gameStore.runAiSupportStep(activePlayer.id)
-      if (!result.ok && gameStore.getState().activePlayerId === activePlayer.id) {
-        gameStore.endPlayerTurn(activePlayer.id)
-      }
-    }, 350)
-    return () => window.clearTimeout(timer)
-  }, [activePlayer, gameState.aiOrders, gameState.creatureTurnInProgress, gameState.blockingModal, strategicCommandModalOpen, saveModalOpen, systemCommandModalOpen])
+    scheduler.requestStep(activePlayer.id, 'construction')
+    return () => scheduler.cancel()
+  }, [activePlayer, gameState.aiOrders, gameState.aiConstructionPlans, gameState.creatureTurnInProgress, gameState.blockingModal, gameState.gameOver, strategicCommandModalOpen, saveModalOpen, systemCommandModalOpen])
 
   useKeyboardShortcuts({
     activePlayer,
@@ -340,7 +359,14 @@ function App() {
           <div style={{ flex: 1, minWidth: 0 }}>
             <GameStatusCard gameState={gameState} />
           </div>
+          <Button onClick={() => setActionLogOpen(true)}>📜 行動日誌</Button>
         </Flex>
+
+        <ActionLogPanel
+          open={actionLogOpen}
+          events={gameState.actionEvents ?? []}
+          onClose={() => setActionLogOpen(false)}
+        />
 
         {playtestMode && (
           <div style={{ position: 'fixed', top: 8, right: 8, zIndex: 1000 }}>

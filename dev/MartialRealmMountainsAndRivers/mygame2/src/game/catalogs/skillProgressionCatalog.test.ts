@@ -8,8 +8,8 @@ import { jianghuExternalSkills } from './jianghuExternalSkillCatalog'
 describe('skillProgressionCatalog', () => {
   it('提供十二個流派且每個流派都有內功與外功', () => {
     expect(progressionInnerSkills).toHaveLength(12)
-    // 每個門派：至少一個傷害型與靈氣型；赤焰/寒水/百毒另有 debuff 傷害型。
-    expect(progressionExternalSkills).toHaveLength(36)
+    // 12 門派外功合計 35：多數派 1 傷害＋2 靈氣；赤炎／寒水為 2 傷害＋1 靈氣；百毒流僅 2 傷害（驛路步已移除）。
+    expect(progressionExternalSkills).toHaveLength(35)
 
     for (const skills of [progressionInnerSkills, progressionExternalSkills]) {
       const levelsBySchool = new Map<string, number[]>()
