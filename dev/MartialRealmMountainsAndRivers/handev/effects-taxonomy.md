@@ -11,7 +11,7 @@
 |---|---|---|
 | 道具 itemCatalog | 53 | `ItemEffectType`（10 種）＋分類欄位 |
 | Buff buffCatalog | 55 | 22 個解譯欄位（屬性修正/乘區/地形/復活/週期回復…） |
-| 功法 | 74 | 內功 14（傷害公式閉包）、傷害外功 14、功能外功 46 |
+| 功法 | 84 | 內功 14（傷害公式閉包）、傷害外功 14、功能外功 56 |
 | 裝備 equipmentCatalog | 60 | **純五維 modifiers**，無特殊效果 |
 | 探索事件 eventCatalog | 41 型／約 79 選項 | `EventEffect` 12 種＋`EventRequirement` 6 種 |
 | 建築 buildingCatalog | 25 | bonus 欄位 3 種＋actions 3 種＋特例邏輯（含 12 座門派武館） |
@@ -44,7 +44,7 @@
 | 復活 | 1 | return-light |
 | ⚠️ 零使用欄位 | — | `terrainStaminaCostMultipliers`（乘算版地形消耗）無任何條目使用 |
 
-### 2.3 功能外功（31 種 effect）
+### 2.3 功能外功（34 種 effect）
 | 語義 | 數量 |
 |---|---|
 | 移動/地形適應 | 8（terrain-adaptation＋七步） |
@@ -53,7 +53,8 @@
 | 條件爆發 | 3 |
 | 屬性爆發 | 1（berserk：增益附反噬） |
 | 攻擊附著減益 | 3（burning/poison/attribute-reduction） |
-| 防禦反震/迴避/免疫 | 4（damage-reduction/reflection/evasion/debuff-immunity） |
+| 防禦反震/迴避/免疫 | 5（damage-reduction/reflection/evasion/debuff-immunity） |
+| 保命復活 | 1（revive-guard：回光） |
 | 瞬發實用（無 Buff） | 3（experience-gain/cleanse/recover） |
 | 成長 | 1（experience-gain） |
 

@@ -106,8 +106,8 @@ describe('skillProgressionCatalog', () => {
 })
 
 describe('江湖外功功法（無門派）', () => {
-  it('提供 9 個江湖靈氣型外功，對應 9 個 Buff', () => {
-    expect(jianghuExternalSkills).toHaveLength(9)
+  it('提供 19 個江湖靈氣型外功，對應 19 個 Buff', () => {
+    expect(jianghuExternalSkills).toHaveLength(19)
     expect(jianghuExternalSkills.every((skill) => !skill.schoolId)).toBe(true)
     expect(jianghuExternalSkills.every((skill) => skill.target === 'self')).toBe(true)
     expect(jianghuExternalSkills.every((skill) => skill.category === 'aura')).toBe(true)

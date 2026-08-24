@@ -1,5 +1,33 @@
 # 開發日誌
 
+## 2026-08-24｜江湖線擴充：新增 10 個江湖功法
+
+### 本次完成
+
+- `jianghuExternalSkillCatalog` 由 9 個靈氣型外功擴至 **19 個**（皆 `target: 'self'`、常駐靈氣、可於任何武館學習或掉落取得）：
+  - **悟性輔助線 ×7**：天眼功（視野 +1）、四兩功（外功內力消耗 −1）、商道功（買 −15%／賣 +15%）、天工功（建材 −25%、聲望 +50%）、百草功（採集 −1 體力、50% 雙倍）、神行功（最大體力 +2）、引氣功（體力轉內力 1→2）。
+  - **資源回復線 ×1**：長生功（每回合回復最大血量 10%，掛既有 `spring-return-art` Buff）。
+  - **迴避與保命線 ×2**：幻影功（迴避 +5%）、回光功（瀕死復活至 30% 並清 debuff，掛既有 `return-light`）。
+- 新增 2 個 registry effect key（純資料層）：`evasion` → 既有 `phantom-step`、`revive-guard` → 既有 `return-light`，讓原本無功法來源的兩個孤兒 Buff 正式可取得；`FunctionalExternalSkillEffect` 31→33 種，未動任何規則層程式碼。
+- 測試同步：江湖靈氣型外功數 9→19。
+
+### 等級成長補全（同日追加）
+
+- 審查發現 10 個新功法中 8 個已有等級縮放（`functionalSkillScaling.ts`），**幻影功／回光功缺漏**，補齊：
+  - 幻影功：迴避率每級 +1%（比照 `-step` 系加法公式）。
+  - 回光功：復活血量 30%＋每級 5%（上限 100%）。此項需小改規則層：`BuffInstance` 新增 `reviveHealthPercent` 覆寫欄位，`creatureAnimation.ts` 復活時優先讀實例覆寫、回退定義基礎值（沿用 conditional 覆寫的既有模式）。
+- 兩功法描述同步改為成長式寫法；新增 3 條縮放測試。
+
+### 影響檔案
+
+- `src/game/catalogs/jianghuExternalSkillCatalog.ts`、`src/game/catalogs/functionalSkillRegistry.ts`
+- `src/game/catalogs/skillProgressionCatalog.test.ts`
+- 文件：`handev/effects-taxonomy.md`（功能外功 46→56、effect 34 種）
+
+### 驗證結果
+
+- TypeScript：通過。ESLint：通過。測試：68 檔 / 721 項全數通過（registry ↔ buffCatalog 綁定測試自動涵蓋新 effect）。
+
 ## 2026-08-24｜五行補全：新增五門派，每屬性兩派
 
 ### 本次完成

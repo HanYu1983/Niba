@@ -20,7 +20,8 @@ function revivePlayersWithReturnLight(players: PlayerState[]): PlayerState[] {
     )
     if (!returnLightBuff) return player
     const definition = getBuff(returnLightBuff.definitionId)
-    const revivePercent = definition?.reviveHealthPercent ?? 0.3
+    // 復活血量優先取實例覆寫值（等級縮放），無覆寫時回退定義基礎值。
+    const revivePercent = returnLightBuff.reviveHealthPercent ?? definition?.reviveHealthPercent ?? 0.3
     const clearDebuffs = definition?.clearDebuffsOnRevive ?? true
     const revivedHealth = Math.max(1, Math.floor(player.maxHealth * revivePercent))
     const remainingBuffs = clearDebuffs

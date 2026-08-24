@@ -113,6 +113,8 @@ export type BuffInstance = {
   skillExpGainPercent?: number
   confused?: boolean
   damageTakenFromAlliesBonus?: number
+  /** 復活時恢復的血量比例（覆寫定義基礎值，供等級縮放；reviveOnDeath 仍由定義旗標決定）。 */
+  reviveHealthPercent?: number
   /** 條件觸發型：依血量區間觸發的四維乘算（覆寫定義基礎值，供等級縮放）。 */
   conditional?: {
     when: 'health-below' | 'health-above'
