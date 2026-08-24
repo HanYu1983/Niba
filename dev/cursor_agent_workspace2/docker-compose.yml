@@ -1,0 +1,15 @@
+services:
+  fsharp-dev:
+    image: mcr.microsoft.com/dotnet/sdk:8.0
+    container_name: fsharp-dev
+    working_dir: /app
+    volumes:
+      - .:/app
+    stdin_open: true
+    tty: true
+    command:
+      [
+        "bash",
+        "-c",
+        "dotnet --version && echo '--- F# 開發環境就緒。可用: dotnet fsi, dotnet run, dotnet build ---' && exec bash",
+      ]

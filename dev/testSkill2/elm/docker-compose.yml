@@ -1,0 +1,12 @@
+services:
+  # docker-compose run --rm elm npm run build
+  # docker-compose up elm
+  # docker-compose run --rm elm
+  elm:
+    image: node:22
+    working_dir: /app
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    command: sh -c "npm install && npm run start"

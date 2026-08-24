@@ -161,3 +161,12 @@ bin/
 .cpcache
 
 localtmp
+
+
+elm-stuff
+
+.venv
+__pycache__
+
+
+.calva

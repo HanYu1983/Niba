@@ -1,0 +1,1108 @@
+{
+  "version": "1.2.0",
+  "id": "prologue-village",
+  "title": "序章：青石遺恨",
+  "description": "青石村妖氣頻生，村長委託凌淵討伐盤踞村外的妖物。",
+  "chapterIndex": 0,
+  "enableRandomEvents": false,
+  "mapSize": {
+    "rows": 10,
+    "columns": 10
+  },
+  "cells": [
+    {
+      "row": 0,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 1,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 2,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 3,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 4,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 5,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 6,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 7,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 8,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 9,
+      "terrain": "wall"
+    },
+    {
+      "row": 1,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 1,
+      "column": 1,
+      "terrain": "forest"
+    },
+    {
+      "row": 1,
+      "column": 2,
+      "terrain": "water"
+    },
+    {
+      "row": 1,
+      "column": 3,
+      "terrain": "water"
+    },
+    {
+      "row": 1,
+      "column": 4,
+      "terrain": "plain"
+    },
+    {
+      "row": 1,
+      "column": 5,
+      "terrain": "mountain"
+    },
+    {
+      "row": 1,
+      "column": 6,
+      "terrain": "mountain"
+    },
+    {
+      "row": 1,
+      "column": 7,
+      "terrain": "plain"
+    },
+    {
+      "row": 1,
+      "column": 8,
+      "terrain": "mountain"
+    },
+    {
+      "row": 1,
+      "column": 9,
+      "terrain": "wall"
+    },
+    {
+      "row": 2,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 2,
+      "column": 1,
+      "terrain": "forest"
+    },
+    {
+      "row": 2,
+      "column": 2,
+      "terrain": "plain"
+    },
+    {
+      "row": 2,
+      "column": 3,
+      "terrain": "water"
+    },
+    {
+      "row": 2,
+      "column": 4,
+      "terrain": "water"
+    },
+    {
+      "row": 2,
+      "column": 5,
+      "terrain": "road"
+    },
+    {
+      "row": 2,
+      "column": 6,
+      "terrain": "mountain"
+    },
+    {
+      "row": 2,
+      "column": 7,
+      "terrain": "plain"
+    },
+    {
+      "row": 2,
+      "column": 8,
+      "terrain": "plain"
+    },
+    {
+      "row": 2,
+      "column": 9,
+      "terrain": "wall"
+    },
+    {
+      "row": 3,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 3,
+      "column": 1,
+      "terrain": "forest"
+    },
+    {
+      "row": 3,
+      "column": 2,
+      "terrain": "plain"
+    },
+    {
+      "row": 3,
+      "column": 3,
+      "terrain": "forest"
+    },
+    {
+      "row": 3,
+      "column": 4,
+      "terrain": "water"
+    },
+    {
+      "row": 3,
+      "column": 5,
+      "terrain": "road"
+    },
+    {
+      "row": 3,
+      "column": 6,
+      "terrain": "mountain"
+    },
+    {
+      "row": 3,
+      "column": 7,
+      "terrain": "mountain"
+    },
+    {
+      "row": 3,
+      "column": 8,
+      "terrain": "forest"
+    },
+    {
+      "row": 3,
+      "column": 9,
+      "terrain": "wall"
+    },
+    {
+      "row": 4,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 4,
+      "column": 1,
+      "terrain": "forest"
+    },
+    {
+      "row": 4,
+      "column": 2,
+      "terrain": "forest"
+    },
+    {
+      "row": 4,
+      "column": 3,
+      "terrain": "forest"
+    },
+    {
+      "row": 4,
+      "column": 4,
+      "terrain": "forest"
+    },
+    {
+      "row": 4,
+      "column": 5,
+      "terrain": "forest"
+    },
+    {
+      "row": 4,
+      "column": 6,
+      "terrain": "forest"
+    },
+    {
+      "row": 4,
+      "column": 7,
+      "terrain": "forest"
+    },
+    {
+      "row": 4,
+      "column": 8,
+      "terrain": "forest"
+    },
+    {
+      "row": 4,
+      "column": 9,
+      "terrain": "wall"
+    },
+    {
+      "row": 5,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 5,
+      "column": 1,
+      "terrain": "plain"
+    },
+    {
+      "row": 5,
+      "column": 2,
+      "terrain": "forest"
+    },
+    {
+      "row": 5,
+      "column": 3,
+      "terrain": "forest"
+    },
+    {
+      "row": 5,
+      "column": 4,
+      "terrain": "forest"
+    },
+    {
+      "row": 5,
+      "column": 5,
+      "terrain": "forest"
+    },
+    {
+      "row": 5,
+      "column": 6,
+      "terrain": "forest"
+    },
+    {
+      "row": 5,
+      "column": 7,
+      "terrain": "forest"
+    },
+    {
+      "row": 5,
+      "column": 8,
+      "terrain": "forest"
+    },
+    {
+      "row": 5,
+      "column": 9,
+      "terrain": "wall"
+    },
+    {
+      "row": 6,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 6,
+      "column": 1,
+      "terrain": "plain"
+    },
+    {
+      "row": 6,
+      "column": 2,
+      "terrain": "plain"
+    },
+    {
+      "row": 6,
+      "column": 3,
+      "terrain": "road"
+    },
+    {
+      "row": 6,
+      "column": 4,
+      "terrain": "plain"
+    },
+    {
+      "row": 6,
+      "column": 5,
+      "terrain": "forest"
+    },
+    {
+      "row": 6,
+      "column": 6,
+      "terrain": "forest"
+    },
+    {
+      "row": 6,
+      "column": 7,
+      "terrain": "forest"
+    },
+    {
+      "row": 6,
+      "column": 8,
+      "terrain": "road"
+    },
+    {
+      "row": 6,
+      "column": 9,
+      "terrain": "wall"
+    },
+    {
+      "row": 7,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 7,
+      "column": 1,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 2,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 3,
+      "terrain": "road"
+    },
+    {
+      "row": 7,
+      "column": 4,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 5,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 6,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 7,
+      "terrain": "forest"
+    },
+    {
+      "row": 7,
+      "column": 8,
+      "terrain": "road"
+    },
+    {
+      "row": 7,
+      "column": 9,
+      "terrain": "wall"
+    },
+    {
+      "row": 8,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 8,
+      "column": 1,
+      "terrain": "road"
+    },
+    {
+      "row": 8,
+      "column": 2,
+      "terrain": "road"
+    },
+    {
+      "row": 8,
+      "column": 3,
+      "terrain": "road"
+    },
+    {
+      "row": 8,
+      "column": 4,
+      "terrain": "road"
+    },
+    {
+      "row": 8,
+      "column": 5,
+      "terrain": "road"
+    },
+    {
+      "row": 8,
+      "column": 6,
+      "terrain": "road"
+    },
+    {
+      "row": 8,
+      "column": 7,
+      "terrain": "road"
+    },
+    {
+      "row": 8,
+      "column": 8,
+      "terrain": "road"
+    },
+    {
+      "row": 8,
+      "column": 9,
+      "terrain": "wall"
+    },
+    {
+      "row": 9,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 9,
+      "column": 1,
+      "terrain": "wall"
+    },
+    {
+      "row": 9,
+      "column": 2,
+      "terrain": "wall"
+    },
+    {
+      "row": 9,
+      "column": 3,
+      "terrain": "wall"
+    },
+    {
+      "row": 9,
+      "column": 4,
+      "terrain": "wall"
+    },
+    {
+      "row": 9,
+      "column": 5,
+      "terrain": "wall"
+    },
+    {
+      "row": 9,
+      "column": 6,
+      "terrain": "wall"
+    },
+    {
+      "row": 9,
+      "column": 7,
+      "terrain": "wall"
+    },
+    {
+      "row": 9,
+      "column": 8,
+      "terrain": "wall"
+    },
+    {
+      "row": 9,
+      "column": 9,
+      "terrain": "wall"
+    }
+  ],
+  "entities": [
+    {
+      "id": "player-1",
+      "kind": "player",
+      "position": {
+        "row": 8,
+        "column": 2
+      },
+      "data": {
+        "name": "凌淵",
+        "money": 50,
+        "innerSkillId": "tuna-gong",
+        "innerSkillIds": [
+          "tuna-gong"
+        ],
+        "externalSkillIds": [
+          "sky-breaking-palm"
+        ],
+        "equippedExternalSkillIds": [
+          "sky-breaking-palm"
+        ],
+        "inventory": [
+          {
+            "itemId": "heal-wound-medicine",
+            "quantity": 2
+          },
+          {
+            "itemId": "gather-qi-pill",
+            "quantity": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "base-qingshi",
+      "kind": "base",
+      "position": {
+        "row": 8,
+        "column": 3
+      },
+      "data": {
+        "name": "青石村",
+        "buildingMaterials": 60,
+        "maxBuildingMaterials": 100,
+        "health": 100,
+        "maxHealth": 100,
+        "discovered": true,
+        "presetBuildings": [
+          {
+            "type": "infirmary",
+            "level": 1
+          },
+          {
+            "type": "board",
+            "level": 1
+          },
+          {
+            "type": "item-shop",
+            "level": 1
+          }
+        ],
+        "allowedBuildings": [
+          {
+            "type": "infirmary",
+            "maxLevel": 1
+          },
+          {
+            "type": "board",
+            "maxLevel": 1
+          },
+          {
+            "type": "item-shop",
+            "maxLevel": 1
+          }
+        ],
+        "spawnOnLoad": true
+      }
+    },
+    {
+      "id": "boss-prologue",
+      "kind": "creature",
+      "position": {
+        "row": 1,
+        "column": 8
+      },
+      "data": {
+        "name": "青石妖王",
+        "isBoss": true,
+        "level": 3,
+        "schoolId": "swift-wind",
+        "behaviorType": "sieger",
+        "homeNestId": "nest-prologue",
+        "attributes": {
+          "armStrength": 11,
+          "constitution": 11,
+          "agility": 11,
+          "innerEnergy": 11,
+          "insight": 11
+        },
+        "spawnOnLoad": false,
+        "aggroRange": 5
+      }
+    },
+    {
+      "id": "creature-spring-guard",
+      "kind": "creature",
+      "position": {
+        "row": 5,
+        "column": 4
+      },
+      "data": {
+        "name": "靈泉妖衛",
+        "isBoss": false,
+        "level": 1,
+        "schoolId": "void-spirit",
+        "behaviorType": "roamer",
+        "spawnOnLoad": false,
+        "aggroRange": 3
+      }
+    },
+    {
+      "id": "event-spring",
+      "kind": "event",
+      "position": {
+        "row": 5,
+        "column": 3
+      },
+      "data": {
+        "type": "custom",
+        "name": "靈泉",
+        "description": "清澈的靈泉，散發著微光。",
+        "icon": "⛲",
+        "choices": [
+          {
+            "id": "inspect",
+            "label": "調查靈泉",
+            "description": "仔細查看靈泉的異樣。",
+            "endsPlayerTurn": false,
+            "resultMessage": "凌淵仔細查看靈泉，發現泉水泛著詭異的青黑色，隱隱散發著腥臭之氣。",
+            "requirements": [
+              {
+                "type": "active-player"
+              },
+              {
+                "type": "player-alive"
+              }
+            ],
+            "effects": [
+              {
+                "type": "start-dialogue",
+                "dialogueId": "event-spring-monster"
+              },
+              {
+                "type": "spawn-creature",
+                "creatureId": "creature-spring-guard"
+              },
+              {
+                "type": "spawn-event",
+                "eventId": "event-2-8-mt3ysxw2"
+              }
+            ]
+          },
+          {
+            "id": "investigate-withered-plant",
+            "label": "調查枯萎的植物",
+            "description": "查看靈泉旁枯萎的植物，似乎散發著淡淡的血氣。",
+            "resultMessage": "凌淵查看靈泉旁枯萎的植物，發現其葉片焦黑蜷縮，莖幹上滲出淡淡的血氣。",
+            "endsPlayerTurn": true,
+            "requirements": [
+              {
+                "type": "active-player"
+              },
+              {
+                "type": "player-alive"
+              }
+            ],
+            "effects": [
+              {
+                "type": "start-dialogue",
+                "dialogueId": "event-withered-plant"
+              },
+              {
+                "type": "item",
+                "itemId": "exchange-spirit-talisman",
+                "quantity": 1
+              },
+              {
+                "type": "spawn-event",
+                "eventId": "event-2-8-mt3ysxw2"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "itemPoint-1-2-mt396sz0",
+      "kind": "itemPoint",
+      "position": {
+        "row": 1,
+        "column": 2
+      },
+      "data": {
+        "position": {
+          "row": 1,
+          "column": 2
+        },
+        "name": "itemPoint",
+        "customDrops": [
+          {
+            "lootId": "mystic-ice-needle",
+            "chance": 100
+          }
+        ]
+      }
+    },
+    {
+      "id": "itemPoint-6-8-mt396yxc",
+      "kind": "itemPoint",
+      "position": {
+        "row": 6,
+        "column": 8
+      },
+      "data": {
+        "position": {
+          "row": 6,
+          "column": 8
+        },
+        "name": "itemPoint",
+        "customDrops": [
+          {
+            "lootId": "iron-sword",
+            "chance": 100
+          }
+        ]
+      }
+    },
+    {
+      "id": "creature-3-6-mt3b6vd7",
+      "kind": "creature",
+      "position": {
+        "row": 4,
+        "column": 7
+      },
+      "data": {
+        "position": {
+          "row": 3,
+          "column": 6
+        },
+        "name": "藤林遊妖",
+        "attributes": {
+          "armStrength": 8,
+          "constitution": 8,
+          "agility": 8,
+          "innerEnergy": 8,
+          "insight": 8
+        },
+        "aggroRange": 2
+      }
+    },
+    {
+      "id": "defenseStructure-7-5-mt3xi8re",
+      "kind": "defenseStructure",
+      "position": {
+        "row": 7,
+        "column": 5
+      },
+      "data": {
+        "position": {
+          "row": 7,
+          "column": 5
+        },
+        "name": "青石村哨站",
+        "type": "small-arrow-tower"
+      }
+    },
+    {
+      "id": "event-2-8-mt3ysxw2",
+      "kind": "event",
+      "position": {
+        "row": 2,
+        "column": 8
+      },
+      "data": {
+        "position": {
+          "row": 2,
+          "column": 8
+        },
+        "name": "調查巢穴",
+        "type": "custom",
+        "description": "一座幽深的巢穴隱於藤蔓之後，洞口水氣與腥臭交織，青黑色的妖氣如活物般盤踞不散，隱約可聞低沉的嘶鳴，令人心悸。",
+        "icon": "🗨️",
+        "choices": [
+          {
+            "id": "choice-mt3yt4yy",
+            "label": "準備進入巢穴",
+            "description": "凌淵來到巢穴前，準備進入巢穴一探究竟。",
+            "resultMessage": "凌淵來到巢穴前，只見巢穴外圍散發著濃烈的妖氣，巢穴口被青黑色的藤蔓纏繞，彷彿有生命般蠕動著。",
+            "endsPlayerTurn": false,
+            "requirements": [],
+            "effects": [
+              {
+                "type": "start-dialogue",
+                "dialogueId": "event-nest-investigate"
+              },
+              {
+                "type": "spawn-creature",
+                "creatureId": "boss-prologue"
+              }
+            ]
+          }
+        ],
+        "spawnOnLoad": false
+      }
+    },
+    {
+      "id": "creature-1-1-mt43gfvw",
+      "kind": "creature",
+      "position": {
+        "row": 1,
+        "column": 1
+      },
+      "data": {
+        "position": {
+          "row": 1,
+          "column": 1
+        },
+        "name": "水澤殭",
+        "attributes": {
+          "armStrength": 8,
+          "constitution": 8,
+          "agility": 8,
+          "innerEnergy": 8,
+          "insight": 8
+        },
+        "aggroRange": 1
+      }
+    }
+  ],
+  "quests": {
+    "victoryObjectives": [
+      {
+        "id": "obj-defeat-boss",
+        "title": "擊敗青石妖王",
+        "type": "defeat-creature",
+        "targetId": "boss-prologue",
+        "targetValue": 1
+      }
+    ],
+    "failConditions": {
+      "baseMustSurvive": true,
+      "playerMustSurvive": true,
+      "maxRounds": 20
+    }
+  },
+  "dialogues": {
+    "event-xxx": {
+      "name": "序章對話",
+      "steps": [
+        {
+          "id": "prologue-start-1",
+          "speakerName": "村長 趙無極",
+          "speakerIcon": "👴",
+          "content": "少俠，村外妖氣頻生，靈泉也莫名變了色。老夫想請你出手相除，還這片村子一個安寧。"
+        },
+        {
+          "id": "prologue-start-4",
+          "speakerName": "凌淵",
+          "speakerIcon": "🥋",
+          "content": "靈泉變色——這是妖氣侵蝕地脈之兆。村長可知妖物在何處？"
+        },
+        {
+          "id": "prologue-start-5",
+          "speakerName": "獵人 老周",
+          "speakerIcon": "🏹",
+          "content": "老夫見過那妖物，一身青黑，盤踞在村外東北的山嶺上。"
+        },
+        {
+          "id": "prologue-start-6",
+          "speakerName": "凌淵",
+          "speakerIcon": "🥋",
+          "content": "多謝老周指點。我這便收拾行裝，前去會會那妖物。"
+        }
+      ]
+    },
+    "event-spring": {
+      "name": "調查靈泉",
+      "steps": [
+        {
+          "id": "spring-1",
+          "speakerName": "旁白",
+          "speakerIcon": "📜",
+          "content": "凌淵來到靈泉邊，只見泉水泛著詭異的青黑色，隱隱散發著腥臭之氣。"
+        },
+        {
+          "id": "spring-2",
+          "speakerName": "凌淵",
+          "speakerIcon": "🥋",
+          "content": "這泉水……果然如村長所言變了色。妖氣侵蝕地脈，連靈泉都未能倖免。"
+        },
+        {
+          "id": "spring-3",
+          "speakerName": "旁白",
+          "speakerIcon": "📜",
+          "content": "凌淵俯身細看，發現泉底沉著幾縷青黑色的妖氣，正順著水流緩緩擴散。"
+        },
+        {
+          "id": "spring-4",
+          "speakerName": "凌淵",
+          "speakerIcon": "🥋",
+          "content": "妖氣源頭應在村外東北的山嶺上。若不早日除去那妖物，這靈泉遲早會徹底枯竭。"
+        }
+      ]
+    },
+    "event-spring-monster": {
+      "name": "靈泉異變",
+      "steps": [
+        {
+          "id": "spring-monster-1",
+          "speakerName": "旁白",
+          "speakerIcon": "📜",
+          "content": "話音未落，靈泉驟然翻湧，一道青黑色的妖氣自泉底衝天而起！"
+        },
+        {
+          "id": "spring-monster-2",
+          "speakerName": "凌淵",
+          "speakerIcon": "🥋",
+          "content": "這妖氣……竟藏著活物！"
+        },
+        {
+          "id": "spring-monster-3",
+          "speakerName": "旁白",
+          "speakerIcon": "📜",
+          "content": "妖氣凝形，一隻通體青黑的妖衛自泉中躍出，張牙舞爪地撲向凌淵！"
+        },
+        {
+          "id": "spring-monster-2b",
+          "speakerName": "凌淵",
+          "speakerIcon": "🥋",
+          "content": "（心中思忖）若此戰有變，我可回青石村購置丹藥、雇請郎中療傷，再作打算。"
+        }
+      ]
+    },
+    "event-withered-plant": {
+      "name": "枯萎的植物",
+      "steps": [
+        {
+          "id": "withered-plant-1",
+          "speakerName": "旁白",
+          "speakerIcon": "📜",
+          "content": "凌淵蹲下身，仔細查看那株枯萎的植物。葉片焦黑蜷縮，莖幹上卻滲出一絲暗紅的血氣，妖異絢麗。"
+        },
+        {
+          "id": "withered-plant-2",
+          "speakerName": "凌淵",
+          "speakerIcon": "🥋",
+          "content": "這植物的根部……竟壓著一張符籙，上面畫著晦澀的符文，似在汲取妖血之力。"
+        },
+        {
+          "id": "withered-plant-3",
+          "speakerName": "旁白",
+          "speakerIcon": "📜",
+          "content": "凌淵拾起那張換元符，收入懷中。此符可將體力轉化為生命，雖有副作用，危急時或可一用。"
+        }
+      ]
+    },
+    "event-tower-destroyed": {
+      "name": "哨站失守",
+      "steps": [
+        {
+          "id": "tower-destroyed-1",
+          "speakerName": "旁白",
+          "speakerIcon": "📜",
+          "content": "轟然一聲，青石村哨站的箭塔在妖物衝擊下轟然倒塌，化作一地殘骸。"
+        },
+        {
+          "id": "tower-destroyed-2",
+          "speakerName": "村長 趙無極",
+          "speakerIcon": "👴",
+          "content": "糟了！連哨站的箭塔都被妖物攻破了……這妖氣只會愈發猖獗，妖物恐怕還會不斷湧來！"
+        },
+        {
+          "id": "tower-destroyed-3",
+          "speakerName": "凌淵",
+          "speakerIcon": "🥋",
+          "content": "村長放心，我這便直取妖王。若再拖延，只怕妖物會越聚越多，屆時就難以收拾了。"
+        }
+      ]
+    },
+    "event-nest-investigate": {
+      "name": "調查巢穴",
+      "steps": [
+        {
+          "id": "nest-investigate-1",
+          "speakerName": "旁白",
+          "speakerIcon": "📜",
+          "content": "凌淵撥開層層藤蔓，一座幽深的巢穴赫然現於眼前。洞口盤繞著青黑色的妖氣，隱隱透出腥臭與低沉的嘶鳴，彷彿整座山嶺都在這巢穴的吐息下微微顫動。"
+        },
+        {
+          "id": "nest-investigate-2",
+          "speakerName": "凌淵",
+          "speakerIcon": "🥋",
+          "content": "這巢穴……妖氣濃得化不開，恐怕正是妖物盤踞的根源。"
+        },
+        {
+          "id": "nest-investigate-3",
+          "speakerName": "旁白",
+          "speakerIcon": "📜",
+          "content": "凌淵凝神戒備，正要踏入洞口之際，巢穴深處驟然湧出一股狂暴的妖氣，大地為之震動！"
+        },
+        {
+          "id": "nest-investigate-4",
+          "speakerName": "青石妖王",
+          "speakerIcon": "👹",
+          "content": "吼——！"
+        },
+        {
+          "id": "nest-investigate-5",
+          "speakerName": "旁白",
+          "speakerIcon": "📜",
+          "content": "一道青黑色的身影自巢穴中衝天而起，正是盤踞此地的青石妖王！牠雙目赤紅，獠牙畢露，妖氣如潮水般向凌淵壓來。"
+        },
+        {
+          "id": "nest-investigate-6",
+          "speakerName": "凌淵",
+          "speakerIcon": "🥋",
+          "content": "果然是你！今日我便要替青石村除此禍患！"
+        }
+      ]
+    },
+    "event-victory": {
+      "name": "凱旋",
+      "steps": [
+        {
+          "id": "victory-1",
+          "speakerName": "旁白",
+          "speakerIcon": "📜",
+          "content": "青石妖王轟然倒下，籠罩青石村多時的妖氣終於消散。凌淵帶著一身的疲憊與功績，踏入村口。"
+        },
+        {
+          "id": "victory-2",
+          "speakerName": "村長 趙無極",
+          "speakerIcon": "👴",
+          "content": "少俠！你果真除了那妖物，還青石村一個清朗。此恩此德，老夫與全村老少皆銘記在心！"
+        },
+        {
+          "id": "victory-3",
+          "speakerName": "獵人 老周",
+          "speakerIcon": "🏹",
+          "content": "哈哈，老夫就知道你行！這一身本事，往後江湖何處去不得？"
+        },
+        {
+          "id": "victory-4",
+          "speakerName": "凌淵",
+          "speakerIcon": "🥋",
+          "content": "諸位保重。妖患已除，這青石村日後想必也能安穩度日了。江湖路長，我們後會有期。"
+        },
+        {
+          "id": "victory-5",
+          "speakerName": "村民們",
+          "speakerIcon": "🎉",
+          "content": "恭送少俠！願少俠一路平安，他日名動天下！"
+        }
+      ]
+    }
+  },
+  "triggers": [
+    {
+      "id": "trigger-start-dialogue",
+      "condition": "on-start",
+      "action": "start-dialogue",
+      "actionParam": "event-xxx"
+    },
+    {
+      "id": "trigger-spring-dialogue",
+      "condition": "on-enter-region",
+      "conditionParam": "5,3",
+      "action": "start-dialogue",
+      "actionParam": "event-spring"
+    },
+    {
+      "id": "trigger-mt3y6pl5",
+      "condition": "on-object-destroyed",
+      "action": "start-dialogue",
+      "actionParam": "event-tower-destroyed",
+      "conditionParam": "defenseStructure-7-5-mt3xi8re"
+    },
+    {
+      "id": "trigger-victory-dialogue",
+      "condition": "on-victory",
+      "action": "start-dialogue",
+      "actionParam": "event-victory"
+    }
+  ]
+}

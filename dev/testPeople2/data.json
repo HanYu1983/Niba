@@ -1,0 +1,504 @@
+{
+  "scenes": [
+    {
+      "id": "building_exterior",
+      "name": "建築外觀",
+      "group": "外觀",
+      "desc": "現代極簡線條搭配中式元素的建築外觀",
+      "prompt": "Exterior shot of a modern-classical East Asian residence named \"聽雨軒\". The facade features minimalist modern lines with Chinese elements. The walls are finished with light gray stucco as the base, accented with dark wooden grilles. The entrance has a small covered porch with traditional upturned eaves, covered with dark gray roof tiles. Black iron details complement the design. The color palette is light gray, dark gray, and deep wood tones."
+    },
+    {
+      "id": "entrance",
+      "name": "入口",
+      "group": "外觀",
+      "desc": "深色實木雙開門，銅質門環，灰色石板步道",
+      "prompt": "The entrance features a dark solid wood double door with simple copper door knockers. A gray stone slab pathway leads to the door, flanked by evergreen potted plants (podocarpus, orchids). A round stone lantern beside the door emits a warm, soft glow at night."
+    },
+    {
+      "id": "front_garden",
+      "name": "前院庭院",
+      "group": "外觀",
+      "desc": "枯山水與中式園林結合的庭院",
+      "prompt": "The front yard is a blend of Japanese karesansui (dry landscape) and Chinese garden. White gravel is spread across the center, dotted with green stone stepping stones. Tall green bamboo and a red Japanese maple tree stand in the corners. A small bamboo shishi-odoshi (water bamboo clapper) creates a gentle trickling sound. A stone table and two stone benches are placed in the garden for tea and relaxation. The atmosphere is serene and quiet, with bamboo shadows swaying and the soft sound of water."
+    },
+    {
+      "id": "back_courtyard",
+      "name": "後院天井",
+      "group": "外觀",
+      "desc": "半開放式天井，香草花圃，梅花樹",
+      "prompt": "The backyard is a semi-open courtyard with dark wooden flooring. A small flower bed grows herbs and flowers (jasmine, osmanthus, camellia). A small plum tree in the corner blooms in winter with a subtle fragrance. The courtyard is open to the sky above. Sunlight bathes the space, flowers perfume the air — a perfect spot for solitary meditation or reading."
+    },
+    {
+      "id": "foyer",
+      "name": "玄關",
+      "group": "一樓",
+      "desc": "深色石材地板，木質掛鉤，竹框全身鏡",
+      "prompt": "Interior shot of a refined foyer entrance in a modern-classical East Asian residence named \"聽雨軒\". The floor is laid with dark stone tiles, creating a visual boundary from the interior wood flooring. On the wall, a row of wooden hooks and a narrow wooden shelf (genkan stand) are mounted for hanging coats, placing keys, and small everyday items. A light-colored natural wood open shoe rack is neatly arranged with several pairs of simple cloth shoes and a pair of wooden geta sandals. In the corner stands a full-length mirror with a dark bamboo frame, reflecting the warm light of the space. Recessed ceiling spotlights cast a warm white glow downward. The space is compact (approximately 8 sqm) yet meticulously organized — clean lines, natural materials, and a sense of calm orderliness."
+    },
+    {
+      "id": "living_room",
+      "name": "客廳",
+      "group": "一樓",
+      "desc": "挑高開放式客廳，布藝沙發，落地窗",
+      "prompt": "Spacious double-height living room. The floor is covered with light oak hardwood planks. A low-profile linen sofa in off-white/beige is centered in the room, paired with a dark wooden coffee table. On the table sits a white porcelain tea set and a small potted asparagus fern (wenzhu). Behind the sofa is a large floor-to-ceiling window overlooking the front yard bamboo grove, dressed with semi-sheer white gauze curtains that filter soft, warm natural light into the room. The TV wall features a raw concrete finish with built-in niches displaying ceramic vessels and antique thread-bound books. In the corner, a large floor-standing paper lantern emits a warm, ambient glow. The space is open and bright (approximately 35 sqm), with a warm and refined elegance."
+    },
+    {
+      "id": "dining_room",
+      "name": "餐廳",
+      "group": "一樓",
+      "desc": "深色實木長桌，布面餐椅，竹編吊燈",
+      "prompt": "Semi-open dining room connected to the living room, separated by a soft wooden lattice partition. A dark solid wood long table (seats six) is centered in the room, surrounded by four light gray linen dining chairs. A celadon vase on the table holds seasonal flowers (spring cherry blossoms, summer lotus, autumn chrysanthemum, winter plum). A Chinese ink wash landscape painting hangs on the wall in a thin black iron frame. A bamboo-woven pendant light hangs from the ceiling, casting warm, gentle light. The atmosphere is warm and elegant, ideal for family dinners and tea."
+    },
+    {
+      "id": "kitchen",
+      "name": "廚房",
+      "group": "一樓",
+      "desc": "L型流理台，白色地鐵磚，窗台香草",
+      "prompt": "Semi-open kitchen separated from the dining room by a counter with a dark marble top and two high stools. Inside, an L-shaped counter with white matte lacquer cabinets and wooden handles, light gray quartz countertops. White subway tiles cover the walls. Storage shelves neatly display ceramic jars and glass containers (spices, dried goods, tea). A window faces the backyard with good natural light; the windowsill holds several pots of herbs (mint, basil, rosemary). Clean, bright, and functional with a lived-in feel."
+    },
+    {
+      "id": "study_room",
+      "name": "書房",
+      "group": "一樓",
+      "desc": "深色胡桃木地板，開放式書架，藤編搖椅",
+      "prompt": "A semi-open study room in the corner of the first floor, separated from the living room by a glass sliding door. A large dark solid wood desk sits in the center, neatly arranged with brush, ink, paper, ink stone, a brass desk lamp (warm light), and a cup of tea. Behind the desk is a full-wall open bookshelf filled with books (literature, history, philosophy, poetry), with small potted plants and antique trinkets in some sections. To the left of the desk is a small window overlooking the backyard plum tree. In the corner, a rattan rocking chair and a floor reading lamp provide a comfortable long-reading spot. Quiet and steady, the scent of books and wood intertwined."
+    },
+    {
+      "id": "bathroom_1f",
+      "name": "一樓客用衛浴",
+      "group": "一樓",
+      "desc": "乾濕分離，淺灰色石材，木質洗手台",
+      "prompt": "Compact and refined guest bathroom with dry-wet separation. Walls and floor are laid with light gray stone tiles, paired with a wooden vanity and round mirror. The shower area is partitioned by transparent glass with a niche for toiletries. A celadon soap dish and a small bottle of sandalwood diffuser sit on the vanity. Simple and elegant with a faint sandalwood fragrance."
+    },
+    {
+      "id": "storage_1f",
+      "name": "一樓儲藏室",
+      "group": "一樓",
+      "desc": "開放式層架系統，收納季節性物品",
+      "prompt": "A small storage space beside the foyer for seasonal items, luggage, vacuum cleaners, etc. Open shelving system with neatly categorized items. The door panel blends with the interior wall for visual cleanliness. Hidden and practical without affecting the overall aesthetic."
+    },
+    {
+      "id": "corridor",
+      "name": "二樓走廊",
+      "group": "二樓",
+      "desc": "深色胡桃木地板，水墨小品，展示櫃",
+      "prompt": "A wooden corridor connecting the rooms on the second floor. Dark walnut hardwood flooring, walls in off-white latex paint, hung with several small ink wash paintings and photographs. At the end of the corridor is a large window overlooking the front yard bamboo grove. One side features a built-in display cabinet showcasing travel souvenirs and mementos. Quiet and long, with the warmth of living memories."
+    },
+    {
+      "id": "master_bedroom",
+      "name": "主臥室",
+      "group": "二樓",
+      "desc": "低矮實木床架，亞麻床單，貴妃椅",
+      "prompt": "Spacious and comfortable master bedroom, the owner's private retreat. Dark walnut hardwood flooring. A low solid wood bed frame (light wood color) is centered, with off-white linen sheets and light gray cotton blankets. Small pendant lights (paper shades, warm yellow light) hang on both sides of the bed instead of nightstands, replaced by small side tables. The headboard wall is in a light gray-green tone, hung with an ink wash lotus painting. A large sliding door leads to an outside terrace, with double-layered curtains (white gauze + blackout). A chaise longue (light fabric) in the corner is for pre-sleep reading. The wardrobe is built-in with wooden louvered doors. Warm and quiet, ideal for peaceful sleep."
+    },
+    {
+      "id": "master_bathroom",
+      "name": "主臥衛浴",
+      "group": "二樓",
+      "desc": "獨立式白色浴缸，雨淋花灑，雙人洗手台",
+      "prompt": "Spacious master bathroom with dry-wet separation. A freestanding white ceramic bathtub is centered by the window, allowing views while bathing. The shower area features stone walls with a glass partition and rain shower head. The vanity is double-sized with a large mirror and hidden storage cabinets. Dark stone tiles on the floor, light gray stone on the walls. A small wooden stool beside the bathtub holds towels and bath products. The bathroom has underfloor heating for winter comfort. High-end and comfortable, with a spa-like relaxation feel."
+    },
+    {
+      "id": "walk_in_closet",
+      "name": "更衣室",
+      "group": "二樓",
+      "desc": "開放式衣桿，小島台，梳妝台",
+      "prompt": "A walk-in closet connected to the master bedroom, square in layout. Open hanging rods and shelf systems on both sides, clothes organized by color and season. A central island table holds a jewelry box and perfume bottles. By the window is a vanity with a round mirror and vanity light. Light wood flooring with a full-length mirror. Neat and orderly, a ceremonial daily dressing space."
+    },
+    {
+      "id": "guest_room",
+      "name": "客房",
+      "group": "二樓",
+      "desc": "單人床，小書桌，簡潔溫馨",
+      "prompt": "Simple and comfortable guest room for visiting friends and family. Light wood flooring. A single bed (light wood frame) is centered with white cotton sheets and light blue blankets. A small desk lamp and mini bookshelf at the bedside. A small desk and wooden chair by the window with a bottle of dried flowers. White walls with a small landscape photograph. Built-in wardrobe with panels matching the wall color. Simple and warm, making guests feel at home."
+    },
+    {
+      "id": "bathroom_2f",
+      "name": "二樓客用衛浴",
+      "group": "二樓",
+      "desc": "乾濕分離，淺灰色石材磚",
+      "prompt": "Guest bathroom adjacent to the guest room, consistent in style with the first-floor guest bathroom. Dry-wet separation, light gray stone tiles with wooden vanity. Shower area has a niche, soap dish and diffuser on the vanity. Simple and elegant, unified with the whole house style."
+    },
+    {
+      "id": "balcony_terrace",
+      "name": "主臥陽台露台",
+      "group": "二樓",
+      "desc": "防腐木地板，藤編躺椅，花架",
+      "prompt": "A private terrace accessible from the master bedroom via a sliding door. Anti-corrosion wood flooring. Two rattan lounge chairs and a small round table for morning tea or evening views. A small flower trellis in one corner with wisteria or trumpet vine climbing. Black iron railings with wooden handrails, open views overlooking the bamboo grove and stream. String lights and small solar ground lights for nighttime. Open and free, with different charms day and night, perfect for solitary relaxation."
+    },
+    {
+      "id": "tea_corner",
+      "name": "品茗角",
+      "group": "特殊",
+      "desc": "低矮茶席桌，紫砂壺，榻榻米墊",
+      "prompt": "A dedicated tea corner in the transition area between the living room and study. A low tea ceremony table (dark solid wood) is set with a Yixing clay teapot, tea sea, tea cups, and tea scoop. An open tea cabinet on the wall collects various teas (oolon, pu-erh, white tea, green tea) and tea ware. A small corner window provides soft light. Tatami mats on the floor for cross-legged seating. A quiet and elegant space for daily tea tasting, meditation, and receiving close friends."
+    },
+    {
+      "id": "reading_nook",
+      "name": "閱讀角",
+      "group": "特殊",
+      "desc": "書房窗邊，閱讀燈，舒適座椅",
+      "prompt": "A cozy reading nook by the window inside the study room. A comfortable armchair or window seat cushion beside a small side table with a cup of tea. A dedicated reading lamp casts warm light. The window overlooks the garden. Books and a soft blanket within reach. A peaceful retreat for long reading sessions."
+    }
+  ],
+  "hairstyles": [
+    {
+      "id": "style_01",
+      "name": "古典低髻",
+      "desc": "長直髮及腰，低髻固定於後腦勺，木簪或白玉簪",
+      "occasion": "日常、正式場合",
+      "prompt": "HAIR: Pure black with natural sheen, showing deep brown highlights in light. Long straight hair reaching the waist, smooth and sleek without frizz. Hair is styled in a low bun secured below the back of the head with a dark wood hairpin or white jade hairpin. The bun is round and neat. A few wispy strands hang naturally beside the ears and neck. No bangs, center-parted fringe, revealing a smooth forehead."
+    },
+    {
+      "id": "style_02",
+      "name": "半挽流雲髻",
+      "desc": "上半部挽成雲髻，下半部自然垂落，銀絲髮釵",
+      "occasion": "宴會、節慶",
+      "prompt": "HAIR: Pure black with natural sheen, straight and smooth. Upper half of hair is swept up and secured with a silver-wire hairpin, forming a voluminous cloud-shaped bun positioned toward the back of the crown. Lower half of hair hangs naturally to the waist. Small pearl hair ornaments adorn the bun. Side-parted fringe with a few soft wispy strands framing the cheeks."
+    },
+    {
+      "id": "style_03",
+      "name": "雙環少女髻",
+      "desc": "左右兩股綁成圓環小髻，緞帶蝴蝶結",
+      "occasion": "出遊、休閒",
+      "prompt": "HAIR: Pure black, straight and smooth. Hair is divided into two sides, each tied with a ribbon into a small round loop-shaped bun behind the ears. The remaining hair hangs naturally. Ribbon bows in matching clothing colors adorn the buns. Side-parted with short wispy strands at the temples. Overall style is lively yet dignified."
+    },
+    {
+      "id": "style_04",
+      "name": "現代微捲長髮",
+      "desc": "中長波浪捲髮至胸口，大弧度鬆散捲曲",
+      "occasion": "日常、上班、咖啡廳",
+      "prompt": "HAIR: Dark brown with black, showing caramel highlights in light. Medium-length wavy curly hair reaching the chest, with natural large loose curls, irregular but well-layered. Side-parted long bangs naturally fall above one eyebrow. Overall style is gentle and intellectual, suitable for modern urban daily wear."
+    },
+    {
+      "id": "style_05",
+      "name": "俐落高馬尾",
+      "desc": "頭髮向後梳攏，高馬尾至肩胛骨，黑色髮圈",
+      "occasion": "運動、工作、正式場合",
+      "prompt": "HAIR: Pure black, sleek and smooth. All hair is combed backward and secured with a black hair tie into a high ponytail positioned above the crown of the head. The ponytail hangs naturally down to the shoulder blade area. Hair is combed neatly and precisely but not overly tight. A few natural wispy strands remain at the sides of the forehead. No bangs, fully exposing the forehead and facial contours. Overall style is clean, sharp, and radiates modern confidence and energy."
+    },
+    {
+      "id": "style_06",
+      "name": "空氣感短鮑伯",
+      "desc": "短鮑伯頭至下巴，髮尾微內彎，輕盈蓬鬆",
+      "occasion": "日常、文藝風格",
+      "prompt": "HAIR: Deep black with very deep blue-black tones. Short bob haircut, length to about two finger-widths below the chin, with slightly curled ends. Light and airy volume, hair is fluffy but not flat against the scalp, with natural flowing lines on the surface. Side-parted with no obvious bangs, hair naturally swept to one side, partially exposing the forehead. Overall style is fresh and modern with a literary artistic vibe."
+    },
+    {
+      "id": "style_07",
+      "name": "低鬆丸子頭",
+      "desc": "後腦勺下方鬆散丸子頭，慵懶隨性",
+      "occasion": "日常、休閒",
+      "prompt": "HAIR: Pure black with natural sheen, straight to slightly wavy. Medium-length hair loosely gathered and tied into a round messy bun positioned at the lower back of the head. The bun is naturally voluminous and deliberately imperfect, with a few strands of hair escaping and framing the face. All front hair is combed backward and secured with small black hairpins, exposing a clean forehead. A few soft wispy strands are left at the sides of the ears for a gentle touch. Overall style is casually messy yet elegant."
+    },
+    {
+      "id": "style_08",
+      "name": "側編魚骨辮",
+      "desc": "單側魚骨辮垂落胸前，其餘自然披散",
+      "occasion": "出遊、約會、休閒",
+      "prompt": "HAIR: Pure black with natural sheen, straight to slightly wavy. A single fishtail braid draped over one side of the chest, secured at the end with a small ribbon or delicate hair tie. The remaining hair hangs naturally down the back in smooth, flowing strands. A few soft wispy strands frame the face at the temples. Side-parted with no bangs. Overall style is feminine and romantic with a touch of effortless charm."
+    },
+    {
+      "id": "style_09",
+      "name": "優雅盤髮包頭",
+      "desc": "全部頭髮向後梳攏盤成光滑包頭，無碎髮",
+      "occasion": "正式場合、宴會",
+      "prompt": "HAIR: Pure black with high sheen, sleek and polished. All hair is combed tightly backward and wrapped into a smooth, compact bun at the back of the head. No loose strands or flyaways — the surface is immaculately smooth. The hairline is clean and defined, fully exposing the forehead and facial contours. Secured with black hairpins and a touch of hair gel for a refined finish. Overall style is sophisticated, regal, and perfectly controlled."
+    },
+    {
+      "id": "style_10",
+      "name": "自然直髮披肩",
+      "desc": "長直髮自然披散，中分或側分，無任何裝飾",
+      "occasion": "日常、居家、閱讀",
+      "prompt": "HAIR: Pure black with natural sheen, long straight hair reaching mid-back, completely loose and flowing. Center-parted or side-parted with no bangs. Hair falls naturally and smoothly on both sides, with a gentle drape over the shoulders. No hairpins, ties, or accessories. A few strands may fall across the forehead or cheeks naturally. Overall style is simple, pure, and effortlessly graceful — like a classical painting come to life."
+    },
+    {
+      "id": "style_11",
+      "name": "日系空氣劉海短髮",
+      "desc": "齊眉空氣劉海，耳下短髮，輕盈層次",
+      "occasion": "日常、校園、咖啡廳",
+      "prompt": "HAIR: Deep black with subtle blue tones. Short haircut reaching just below the ears, with light layered texture at the ends. Soft airy bangs cut straight across the eyebrows, light and wispy — not heavy or thick. The hair has a natural slight wave, giving it a soft, youthful volume. Side-swept with a natural part. Overall style is fresh, cute, and modern — a contemporary East Asian everyday look."
+    }
+  ],
+  "expressions": [
+    {
+      "id": "expr_01",
+      "name": "淺笑",
+      "desc": "嘴角微微上揚，含蓄的微笑，不露齒",
+      "prompt": "EXPRESSION: A gentle, reserved smile. Corners of the mouth slightly curved upward without showing teeth. Eyes softly narrowed with warmth. Cheeks slightly flushed. Overall atmosphere is warm, calm, and quietly joyful — like a spring breeze brushing past."
+    },
+    {
+      "id": "expr_02",
+      "name": "沉思",
+      "desc": "眼神略微向下，眉頭微蹙，陷入思考",
+      "prompt": "EXPRESSION: Deep in thought. Eyes slightly lowered, gazing into the distance or at the ground. Eyebrows slightly furrowed in concentration. Lips gently pressed together or slightly parted. Overall atmosphere is introspective, quiet, and contemplative — as if pondering something profound or recalling a distant memory."
+    },
+    {
+      "id": "expr_03",
+      "name": "驚訝",
+      "desc": "眼睛微睜，嘴唇輕啟，略帶驚喜",
+      "prompt": "EXPRESSION: Pleasantly surprised and startled. Eyes slightly widened with a bright sparkle. Eyebrows gently raised. Lips slightly parted in a soft \"O\" shape. Cheeks slightly flushed. Overall atmosphere is lively and animated yet still graceful and composed — as if she just heard unexpected good news. A sense of gentle excitement breaking through her usual calm demeanor."
+    },
+    {
+      "id": "expr_04",
+      "name": "憂傷",
+      "desc": "眼眶微泛淚光，嘴角下垂，神情哀傷",
+      "prompt": "EXPRESSION: Sad and sorrowful. Eyes glistening with unshed tears, a few tears rolling down the cheeks. The gaze is distant and melancholic. Corners of the mouth slightly downturned. Eyebrows slightly knitted with a hint of pain. Overall atmosphere is heartbreakingly beautiful — a quiet, restrained grief that is deeply moving. The sadness feels poetic and profound, not dramatic."
+    },
+    {
+      "id": "expr_05",
+      "name": "開心大笑",
+      "desc": "眼睛瞇成彎月，嘴角大幅上揚，露出牙齒",
+      "prompt": "EXPRESSION: Joyfully laughing. Eyes narrowed into happy crescent moons, crinkled at the corners. Mouth wide open in a genuine laugh, showing upper teeth. Cheeks raised and flushed with warmth. Head tilted slightly back. Overall atmosphere is radiant, uninhibited, and infectious — a rare moment of pure, unguarded happiness breaking through her usual composure."
+    },
+    {
+      "id": "expr_06",
+      "name": "害羞臉紅",
+      "desc": "臉頰泛紅，眼神飄移，嘴角微抿",
+      "prompt": "EXPRESSION: Shy and blushing. Cheeks flushed with a warm rosy pink. Eyes looking downward or to the side, avoiding direct gaze. Lips pressed together in a small, self-conscious smile. One hand may be near the face or fidgeting. Overall atmosphere is endearingly bashful — like being caught in a moment of vulnerability, tender and sweet."
+    },
+    {
+      "id": "expr_07",
+      "name": "堅定自信",
+      "desc": "眼神直視前方，嘴角微抿，神情專注",
+      "prompt": "EXPRESSION: Determined and confident. Eyes focused and steady, looking directly forward with quiet intensity. Lips set in a firm, composed line — not smiling, not frowning. Eyebrows level and calm. Jaw set with subtle resolve. Overall atmosphere is strong, self-assured, and quietly powerful — the look of someone who knows exactly who they are."
+    },
+    {
+      "id": "expr_08",
+      "name": "慵懶放鬆",
+      "desc": "眼神迷濛，嘴角微揚，身體放鬆",
+      "prompt": "EXPRESSION: Relaxed and languid. Eyes half-lidded with a soft, dreamy quality — as if just waking up or resting on a lazy afternoon. Corners of the mouth curved in a faint, contented smile. Overall body language is loose and unhurried. Overall atmosphere is warm, drowsy, and deeply comfortable — like a cat basking in a sunbeam."
+    }
+  ],
+  "clothings": [
+    {
+      "id": "clothing_01",
+      "name": "漢服改良常服",
+      "desc": "漢服元素現代改良，寬鬆飄逸，交領或立領",
+      "occasion": "日常、正式場合",
+      "prompt": "CLOTHING: Modernized Hanfu-inspired outfit in muted traditional colors (moon white, dusty blue, lotus pink, bamboo green, sandalwood brown). Loose and flowing cut, cross-collar or stand collar, wide sleeves. Minimal jewelry, occasionally a jade bracelet or small pearl earrings."
+    },
+    {
+      "id": "clothing_02",
+      "name": "簡約現代洋裝",
+      "desc": "簡約剪裁連衣裙或襯衫搭長褲，線條乾淨",
+      "occasion": "日常、上班、城市",
+      "prompt": "CLOTHING: Modern minimalist outfit. A soft, well-fitted crew-neck sweater in oatmeal cream or light heather gray, made of fine cashmere or soft knit fabric. Clean lines, no logos or patterns. The neckline subtly reveals the collarbone. Paired with simple tailored trousers in soft charcoal or navy. A delicate thin gold chain necklace rests at the collarbone. Small gold or pearl stud earrings. The overall aesthetic is understated elegance."
+    },
+    {
+      "id": "clothing_03",
+      "name": "古典漢服正裝",
+      "desc": "傳統漢服形制，交領右衽，寬袖或琵琶袖",
+      "occasion": "正式、宴會",
+      "prompt": "CLOTHING: Traditional Hanfu formal attire with cross-collar right lapel (jiaoling youren), wide sleeves or pipa sleeves. The garment length reaches the ankles, with a silk sash or waist wrap at the waist, layered and structured. Colors in deep traditional tones (dark blue, sandalwood brown, dark green, deep purple). Accessories include a jade pendant, buyao hairpin, and embroidered sachet."
+    },
+    {
+      "id": "clothing_04",
+      "name": "素雅旗袍",
+      "desc": "改良式短袖旗袍，立領盤扣，膝上剪裁",
+      "occasion": "正式、茶會、約會",
+      "prompt": "CLOTHING: Modernized qipao (cheongsam) in a refined, understated style. Short cap sleeves with a high mandarin collar and delicate frog buttons (pankou) in matching thread. The silhouette is slim and fitted, hemline just above the knee for ease of movement. Fabric is matte silk in a soft celadon green or misty blue with a subtle self-pattern of plum blossoms. A small jade brooch pinned at the collar. Sheer skin-tone stockings and low-heeled Mary Jane shoes in dark velvet. The overall aesthetic is graceful and nostalgic, blending Republican-era elegance with modern comfort."
+    },
+    {
+      "id": "clothing_05",
+      "name": "文藝棉麻長裙",
+      "desc": "棉麻材質寬鬆長裙，自然褶皺，大地色系",
+      "occasion": "日常、閱讀、品茗",
+      "prompt": "CLOTHING: Bohemian-literary outfit in natural earth tones. A loose-fitting cotton-linen A-line midi skirt in warm sand or sage green with natural wrinkled texture. Paired with an oversized cotton-linen blouse in off-white or pale oatmeal, with a soft rounded collar and rolled-up three-quarter sleeves. A thin braided leather belt loosely cinches the waist. Bare feet or simple cloth flat shoes. A woven straw tote bag and a simple wooden bangle on the wrist. The overall aesthetic is relaxed, earthy, and contemplative — like a poet in her garden."
+    },
+    {
+      "id": "clothing_06",
+      "name": "新中式茶服",
+      "desc": "寬鬆對襟短上衣搭寬褲，棉麻或絲麻混紡",
+      "occasion": "品茗、居家、待客",
+      "prompt": "CLOTHING: New Chinese-style tea ceremony outfit. A loose, boxy short jacket with a straight collar and cloth knot buttons, in unbleached natural linen or silk-linen blend in warm ivory or light bamboo green. The jacket falls just below the hip with wide three-quarter sleeves. Paired with wide-leg ankle-length trousers in matching or complementary tone (charcoal gray or deep tea brown). A thin silk sash in a contrasting muted color is loosely tied at the waist. Simple cloth slippers on the feet. No jewelry except perhaps a small jade ring. The overall aesthetic is serene, meditative, and unhurried — designed for the ritual of tea and quiet living."
+    },
+    {
+      "id": "clothing_07",
+      "name": "晚宴披肩禮服",
+      "desc": "絲緞修身長裙搭刺繡披肩，典雅華貴",
+      "occasion": "宴會、晚會、重要場合",
+      "prompt": "CLOTHING: Elegant evening gown ensemble. A floor-length slim-fit dress in deep midnight blue or dark plum silk satin, with a subtle sheen. The bodice has a modest boat neckline and cap sleeves. The skirt flows gracefully to the ankles with a slight train at the back. Over the shoulders, a sheer organza or silk-chiffon shawl embroidered with delicate silver-thread plum blossoms and scattered seed pearls. Small silver drop earrings. Hair adorned with a single silver buyao hairpin with a dangling pearl. Dark velvet platform heels. The overall aesthetic is dignified and luminous — quiet luxury befitting a classical beauty at a grand occasion."
+    },
+    {
+      "id": "clothing_08",
+      "name": "俏皮吊帶短褲套裝",
+      "desc": "細肩帶吊帶背心搭高腰短褲，活潑可愛",
+      "occasion": "夏日、出遊、逛街",
+      "prompt": "CLOTHING: Playful and cute two-piece set. A thin-strap camisole top in pastel pink or lemon yellow, fitted but not tight, with a subtle lace trim along the neckline. Paired with high-waisted denim shorts in light wash blue, slightly loose with a rolled-up hem. A thin white cotton cardigan is loosely draped over the shoulders (not buttoned). White canvas sneakers and a small crossbody bag in cream leather. A delicate anklet with a tiny charm. Hair accessories include a small pastel scrunchie or a pair of colorful hair clips. The overall aesthetic is youthful, carefree, and effortlessly cute — perfect for a sunny day out."
+    },
+    {
+      "id": "clothing_09",
+      "name": "甜美荷葉邊連衣裙",
+      "desc": "碎花荷葉邊連衣裙，泡泡袖，膝上裙擺",
+      "occasion": "約會、下午茶、拍照",
+      "prompt": "CLOTHING: Sweet and feminine sundress. A knee-length A-line dress in soft white or pale blue with a delicate floral print (tiny daisies or roses). Puffed short sleeves with ruffled edges, a sweetheart neckline with a small ribbon bow at the center. The skirt has a layered ruffled hem that sways with movement. Paired with white ankle socks and Mary Jane shoes in patent leather. A small straw hat with a ribbon band. Pearl stud earrings and a dainty heart-shaped pendant necklace. The overall aesthetic is sweet, romantic, and picture-perfect — like a scene from a coming-of-age film."
+    },
+    {
+      "id": "clothing_10",
+      "name": "oversize 塗鴉 T 恤",
+      "desc": "寬鬆塗鴉印花 T 恤，下身失蹤風格",
+      "occasion": "居家、逛街、休閒",
+      "prompt": "CLOTHING: Casual and playful oversized graphic tee. A baggy, dropped-shoulder T-shirt in soft heather gray or off-white, featuring a quirky hand-drawn illustration or cute cartoon character print in muted colors. The hem falls to mid-thigh, worn as a dress (no visible bottoms, or very short shorts underneath). Chunky white sneakers and colorful mismatched socks. A backwards baseball cap or a messy bun with a scrunchie. A small enamel pin (cat or star shape) attached to the shirt. The overall aesthetic is laid-back, cheeky, and effortlessly cool — the art student who rolled out of bed looking this good."
+    },
+    {
+      "id": "clothing_11",
+      "name": "針織背心格子裙",
+      "desc": "針織背心搭格子百褶裙，學院風格",
+      "occasion": "校園、日常、文青風",
+      "prompt": "CLOTHING: Preppy school-inspired outfit. A fitted V-neck knit vest in warm burgundy or forest green, worn over a crisp white button-down shirt with the collar popped. A pleated tartan mini skirt in matching tones (red-green or brown-beige plaid), falling well above the knee. Knee-high socks in solid white or black, paired with chunky loafers or platform shoes. A canvas tote bag with a book peeking out. Round wire-frame glasses (optional). Hair in low twin braids or a single side braid with a ribbon. The overall aesthetic is smart, bookish, and adorably studious — a charming campus look."
+    },
+    {
+      "id": "clothing_12",
+      "name": "露肩荷葉上衣熱褲",
+      "desc": "一字肩荷葉邊上衣搭牛仔熱褲，夏日清涼",
+      "occasion": "夏日、海邊、音樂節",
+      "prompt": "CLOTHING: Flirty off-shoulder summer look. A one-shoulder or off-shoulder blouse with dramatic ruffled tiers in bright coral or tropical print (hibiscus flowers, palm leaves). The ruffles cascade from the shoulder to the waist, creating a playful, voluminous silhouette. Paired with high-waisted denim hot shorts in medium wash. Strappy flat sandals in tan leather. A woven rattan crossbody bag. Oversized round sunglasses pushed up on the head. Colorful beaded bracelets stacked on one wrist. The overall aesthetic is vibrant, flirty, and full of summer energy — ready for a beach party or music festival."
+    },
+    {
+      "id": "clothing_13",
+      "name": "電工師傅工作服",
+      "desc": "女性化電工工作服，帶俏皮元素",
+      "occasion": "工作、維修、角色扮演",
+      "prompt": "CLOTHING: Feminine electrician workwear outfit. A fitted navy blue or dark teal work jumpsuit with a slightly cinched waist to flatter the figure, made of durable cotton canvas with reinforced knees. The jumpsuit has multiple functional pockets with brass snap buttons, a tool belt slung low on the hips with a cute pink or pastel yellow multimeter and wire strippers tucked in. The sleeves are rolled up to the elbows, revealing forearms. A pair of insulated work gloves in bright pink are tucked into the belt. Steel-toe work boots in a surprisingly stylish cut, laced up neatly. A hard hat in pastel lavender or soft coral sits slightly tilted on the head, with a small sticker of a cartoon cat or flower on the side. A few playful enamel pins (lightning bolt, heart, star) are attached to the chest pocket. Hair pulled back in a high ponytail with a colorful scrunchie, with a few loose strands framing the face. Safety goggles pushed up on the forehead. The overall aesthetic is capable, confident, and charmingly cute — a skilled craftswoman who brings feminine flair to the job site."
+    }
+  ],
+  "cameras": [
+    {
+      "id": "camera_01",
+      "name": "正面大頭照",
+      "en": "Front Headshot",
+      "desc": "臉部正面朝向鏡頭，面部居中",
+      "best_for": "角色頭像、表情特寫",
+      "prompt": "CAMERA: Close-up headshot, framing from the top of the head to just above the shoulders. Both ears visible. Symmetrical composition. Standard 85mm portrait focal length, shallow depth of field."
+    },
+    {
+      "id": "camera_02",
+      "name": "側面大頭照",
+      "en": "Side Profile",
+      "desc": "臉部側面朝向鏡頭，呈現側臉輪廓",
+      "best_for": "展現臉部輪廓、古典氣質",
+      "prompt": "CAMERA: Close-up side profile headshot, framing from forehead to chin. 90-degree side angle. Emphasis on the nose bridge, jawline, and neck curve. 85mm focal length, shallow depth of field."
+    },
+    {
+      "id": "camera_03",
+      "name": "四分之三側面",
+      "en": "Three-Quarter View",
+      "desc": "臉部約 45 度角朝向鏡頭",
+      "best_for": "經典肖像、展現立體感",
+      "prompt": "CAMERA: Close-up three-quarter view portrait, approximately 45-degree angle. Both eyes visible with natural depth and dimension. 85mm focal length, soft shallow depth of field."
+    },
+    {
+      "id": "camera_04",
+      "name": "仰角鏡頭",
+      "en": "Low Angle",
+      "desc": "鏡頭從下方仰視角色",
+      "best_for": "展現自信、高貴感",
+      "prompt": "CAMERA: Low angle shot, camera positioned below eye line looking upward. Emphasizes the neck and jawline. 35mm focal length, slight wide-angle distortion for dramatic effect."
+    },
+    {
+      "id": "camera_05",
+      "name": "俯角鏡頭",
+      "en": "High Angle",
+      "desc": "鏡頭從上方俯視角色",
+      "best_for": "展現溫柔、親切感",
+      "prompt": "CAMERA: High angle shot, camera positioned above eye line looking downward. Emphasizes the eyes and softness of the face. 50mm focal length, intimate framing."
+    },
+    {
+      "id": "camera_06",
+      "name": "半身照",
+      "en": "Medium Shot",
+      "desc": "從腰部以上的半身構圖",
+      "best_for": "展示服裝、上半身姿態",
+      "prompt": "CAMERA: Medium shot, framing from the top of the head to the waist. Upper body and clothing details visible. Balanced composition with the subject slightly off-center. 50mm focal length, moderate depth of field."
+    },
+    {
+      "id": "camera_07",
+      "name": "全身照",
+      "en": "Full Body",
+      "desc": "從頭到腳的全身構圖",
+      "best_for": "展示完整造型、身材比例",
+      "prompt": "CAMERA: Full body shot, framing from head to toe. Complete outfit and body proportions visible. Feet included in frame. Background shows environment context. 35mm focal length, deep depth of field."
+    },
+    {
+      "id": "camera_08",
+      "name": "過肩鏡頭",
+      "en": "Over-the-Shoulder",
+      "desc": "從肩膀後方拍攝，角色回頭",
+      "best_for": "故事性、不經意的瞬間",
+      "prompt": "CAMERA: Over-the-shoulder shot, camera positioned behind and slightly above one shoulder. The shoulder and back of the head create foreground depth. Mid-ground subject softly focused. 50mm focal length, shallow depth of field for layered depth."
+    },
+    {
+      "id": "camera_09",
+      "name": "遠景鏡頭",
+      "en": "Wide Shot",
+      "desc": "角色在畫面中較小，以環境為主",
+      "best_for": "場景敘事、氛圍營造",
+      "prompt": "CAMERA: Wide shot, the subject is small within the frame, surrounded by the environment. Full body visible with ample space around. Emphasis on atmosphere and setting. 24mm wide-angle focal length, deep depth of field, cinematic composition."
+    },
+    {
+      "id": "camera_10",
+      "name": "眼部特寫",
+      "en": "Eye Close-Up",
+      "desc": "極近距離拍攝眼睛與眼周區域",
+      "best_for": "眼神特寫、細節展示",
+      "prompt": "CAMERA: Extreme close-up of the eyes and eye area, framing from the bridge of the nose to just above the eyebrows. Both eyes visible. Sharp focus on irises, inner double eyelids, and natural eyelashes. 100mm macro focal length, very shallow depth of field."
+    },
+    {
+      "id": "camera_11",
+      "name": "嘴唇特寫",
+      "en": "Lips Close-Up",
+      "desc": "極近距離拍攝嘴唇與下巴區域",
+      "best_for": "嘴唇特寫、表情細節",
+      "prompt": "CAMERA: Extreme close-up of the lips and chin area, framing from just below the nose to below the chin. Focus on the lip shape and skin texture. 100mm macro focal length, very shallow depth of field, intimate framing."
+    },
+    {
+      "id": "camera_12",
+      "name": "背影鏡頭",
+      "en": "Back View",
+      "desc": "從角色正後方拍攝",
+      "best_for": "背影、神秘感",
+      "prompt": "CAMERA: Back view shot, camera facing the back of the subject. The back is centered in the frame, showing the neck, hairstyle from behind, and shoulder line. Hair details and accessories visible. 50mm focal length, shallow depth of field."
+    }
+  ],
+  "sizes": [
+    {
+      "id": "size_512x768",
+      "name": "512×768",
+      "width": 512,
+      "height": 768,
+      "desc": "較小尺寸",
+      "best_for": "快速生成、移動設備"
+    },
+    {
+      "id": "size_768x1024",
+      "name": "768×1024",
+      "width": 768,
+      "height": 1024,
+      "desc": "標準尺寸",
+      "best_for": "標準肖像、推薦"
+    },
+    {
+      "id": "size_1024x1536",
+      "name": "1024×1536",
+      "width": 1024,
+      "height": 1536,
+      "desc": "大尺寸",
+      "best_for": "高品質肖像、詳細細節"
+    },
+    {
+      "id": "size_1024x1984",
+      "name": "1024×1984",
+      "width": 1024,
+      "height": 1984,
+      "desc": "超大尺寸",
+      "best_for": "極高品質、全身像"
+    }
+  ],
+  "character": {
+    "name": "沈若蘭",
+    "age": 22,
+    "temperament": "古典溫婉，帶有傳統書卷氣",
+    "baseDescription": "A 22-year-old East Asian woman named 沈若蘭 (Shen Ruolan), with a classical and elegant temperament. Oval face with soft flowing lines and a slightly pointed chin. Fair skin with warm ivory tone, smooth and delicate texture. Cheeks with a natural soft peach-pink flush. Thin elongated willow-leaf eyebrows in deep black. Inner double eyelids, elongated almond-shaped eyes with slightly upturned outer corners, deep brown irises nearly black. Straight but not overly high nose bridge with a rounded petite tip. Small lips with thinner upper lip and slightly fuller lower lip in natural rose-dusty pink. 163cm tall, slender but not frail build, small frame, narrow and rounded shoulders. Graceful posture and elegant bearing."
+  }
+}

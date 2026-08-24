@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "startDate": "2025-03-01",
+  "endDate": "2025-03-31",
+  "platform": "demo",
+  "credentialCustomId": "demo-key",
+  "items": [
+    {
+      "adId": "same.id.here",
+      "adName": "x",
+      "area": "tw",
+      "metadata": {}
+    }
+  ]
+}

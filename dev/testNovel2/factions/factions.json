@@ -1,0 +1,148 @@
+{
+  "factions": {
+    "description": "世界上的主要勢力與組織",
+    "alliances": [
+      {
+        "id": "eastern_alliance",
+        "name": "東方聯盟",
+        "englishName": "Eastern Alliance",
+        "baseRegion": "東方大陸",
+        "expertise": "能量儲存與循環技術",
+        "description": "繼承東方古代修煉文明，擅長將生命能量高效儲存與循環利用",
+        "characteristics": [
+          "重視文化遺產保護",
+          "能量技術偏向內斂、穩定",
+          "社會結構較為傳統"
+        ],
+        "strengths": [
+          "能量儲存效率全球第一",
+          "循環技術減少能量浪費",
+          "古代遺跡研究領先"
+        ],
+        "weaknesses": [
+          "技術創新速度較慢",
+          "保守勢力阻礙改革",
+          "對外貿易依賴度高"
+        ]
+      },
+      {
+        "id": "western_alliance",
+        "name": "西方聯盟",
+        "englishName": "Western Alliance",
+        "baseRegion": "西方大陸",
+        "expertise": "能量轉化與應用技術",
+        "description": "繼承西方古代魔法文明，擅長將生命能量轉化為各種實用應用",
+        "characteristics": [
+          "重視技術創新與實用性",
+          "能量技術偏向外放、高效",
+          "社會結構較為開放"
+        ],
+        "strengths": [
+          "能量轉化效率全球第一",
+          "魔導工業發達",
+          "軍事技術領先"
+        ],
+        "weaknesses": [
+          "能量儲存技術落後",
+          "過度依賴外部能源",
+          "社會階級分化嚴重"
+        ]
+      },
+      {
+        "id": "neutral_alliance",
+        "name": "中立聯盟",
+        "englishName": "Neutral Alliance",
+        "baseRegion": "南方群島",
+        "expertise": "古代遺跡與禁忌技術",
+        "description": "由南方群島組成的中立貿易區，掌握大量古代遺跡與禁忌技術",
+        "characteristics": [
+          "政治中立，與各方保持貿易關係",
+          "古代遺跡研究領先",
+          "禁忌技術的保管者"
+        ],
+        "strengths": [
+          "地理位置優越，貿易樞紐",
+          "古代知識儲備豐富",
+          "外交手段靈活"
+        ],
+        "weaknesses": [
+          "軍事力量薄弱",
+          "依賴大國保護",
+          "內部派系林立"
+        ]
+      }
+    ],
+    "undergroundFactions": [
+      {
+        "id": "abyss_alliance",
+        "name": "深淵聯盟",
+        "englishName": "Abyss Alliance",
+        "type": "地下文明",
+        "description": "古代修煉者為躲避科技革命而遁入地下的後裔",
+        "location": "地底深處，具體位置不明",
+        "characteristics": [
+          "仍保留傳統修煉體系",
+          "掌握地表已失傳的古代技術",
+          "與地表世界保持秘密接觸"
+        ],
+        "internalFactions": [
+          {
+            "id": "returners",
+            "name": "歸返派",
+            "description": "主張重返地表，與現代社會融合"
+          },
+          {
+            "id": "traditionalists",
+            "name": "傳統派",
+            "description": "主張保持地下生活，守護傳統修煉文化"
+          },
+          {
+            "id": "integrators",
+            "name": "融合派",
+            "description": "主張將古代技術與現代科技結合，開創新道路"
+          }
+        ],
+        "conflict": "是否應該重返地表？傳統 vs 現代的終極對決",
+        "secrets": [
+          "掌握完整的歸源境界修煉法門",
+          "擁有遠古時期關於生命能量本質的完整記錄",
+          "地下存在巨大的天然生命能量脈絡"
+        ]
+      }
+    ],
+    "organizations": [
+      {
+        "id": "energy_research_institute",
+        "name": "全球能量研究院",
+        "englishName": "Global Energy Research Institute",
+        "type": "學術機構",
+        "description": "跨聯盟的學術研究機構，致力於生命能量科學研究",
+        "role": "制定能量技術標準、發表研究成果、培養人才"
+      },
+      {
+        "id": "energy_trade_association",
+        "name": "國際能源貿易協會",
+        "englishName": "International Energy Trade Association",
+        "type": "經濟組織",
+        "description": "協調各聯盟間的能源貿易，維護能元匯率穩定",
+        "role": "能源定價、貿易仲裁、市場監管"
+      },
+      {
+        "id": "ancient_heritage_foundation",
+        "name": "古代遺產基金會",
+        "englishName": "Ancient Heritage Foundation",
+        "type": "文化組織",
+        "description": "保護與研究古代修煉/魔法遺跡的非營利組織",
+        "role": "遺跡保護、文化傳承、學術交流"
+      },
+      {
+        "id": "energy_security_council",
+        "name": "能源安全理事會",
+        "englishName": "Energy Security Council",
+        "type": "軍事/安全組織",
+        "description": "維護全球能源設施安全，打擊能量恐怖主義",
+        "role": "設施保護、反恐行動、情報收集"
+      }
+    ]
+  }
+}

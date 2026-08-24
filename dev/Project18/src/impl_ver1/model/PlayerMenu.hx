@@ -1,0 +1,52 @@
+package impl_ver1.model;
+
+import game.IPlayer;
+import game.IPlayerMenu;
+import game.IPlayerMenuEntry;
+import game.IPlayerMenuNode;
+import game.MenuFormWidget;
+
+class PlayerMenu implements IPlayerMenu {
+  var _player:IPlayer;
+  var _contextId:String;
+  var _roots:Array<IPlayerMenuNode>;
+
+  public function new(player:IPlayer, contextId:String, roots:Array<IPlayerMenuNode>) {
+    _player = player;
+    _contextId = contextId;
+    _roots = roots;
+  }
+
+  public function forPlayer():IPlayer
+    return _player;
+
+  public function matchContextId():String
+    return _contextId;
+
+  public function rootNodes():Array<IPlayerMenuNode>
+    return _roots;
+
+  public function entries():Array<IPlayerMenuEntry> {
+    var acc = new Array<IPlayerMenuEntry>();
+    collectLeaves(_roots, acc);
+    return acc;
+  }
+
+  static function collectLeaves(nodes:Array<IPlayerMenuNode>, acc:Array<IPlayerMenuEntry>):Void {
+    for (n in nodes) {
+      var leaf = n.leaf();
+      if (leaf != null)
+        acc.push(leaf);
+      collectLeaves(n.children(), acc);
+      for (w in n.formWidgets())
+        switch w {
+          case Button(entry):
+            acc.push(entry);
+          case Slider(_, _, _, _, _):
+          case MonarchSinglePick(_, _, _):
+          case GeneralMultiPick(_, _, _):
+          case TileSinglePick(_, _, _):
+        }
+    }
+  }
+}

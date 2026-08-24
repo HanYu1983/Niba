@@ -1,0 +1,55 @@
+{
+  "name": "蘇清月",
+  "name_en": "Su Qingyue",
+  "titles": ["自然劍心", "靈魔月華"],
+  "birth_oe": 24710,
+  "death_oe": null,
+  "appearance_age": "約 48-52 歲",
+  "race": "人類",
+  "origin": "神州·蜀地·青城山",
+  "identities": ["蜀山劍派內門弟子", "魔劍堂副堂主"],
+  "cultivation_systems": ["仙俠體系（劍修）", "自然魔法"],
+  "current_realm": "劍師（金丹期）/ 正式法師（Full Mage）",
+  "spiritual_root": "異靈根（冰屬性）",
+  "magic_talents": ["自然親和（頂級）", "元素親和（冰、水）"],
+  "personality": ["溫柔堅韌", "細膩敏感", "善於觀察", "外柔內剛"],
+  "core_philosophy": "劍道如月，柔韌兼濟",
+  "aging": {
+    "stage": "金丹期",
+    "last_breakthrough_oe": 24800,
+    "appearance_at_breakthrough": 50,
+    "aging_factor": 0.02
+  },
+  "timeline": [
+    { "year": 24724, "event": "入門蜀山", "description": "14 歲通過考核，成為內門弟子" },
+    { "year": 24900, "event": "開創冰華劍域原型", "description": "以內門弟子身份融合自然靈氣" },
+    { "year": 25000, "event": "簽訂交流協議", "description": "被選為首批交流使者，前往精靈森林" },
+    { "year": 25000, "event": "精靈森林留學", "description": "學習自然魔法，與李雲鋒書信往來" },
+    { "year": 25500, "event": "歸宗", "description": "帶回自然魔法體系，協助成立魔劍堂" },
+    { "year": 25800, "event": "結為道侶", "description": "與李雲鋒結為道侶，成為修真界佳話" },
+    { "year": 26000, "event": "魔劍堂副堂主", "description": "擔任副堂主，專注治癒與輔助研究" },
+    { "year": 30000, "event": "當前時代", "description": "魔劍堂發展穩定，繼續研究自然劍術" }
+  ],
+  "relationships": [
+    { "character": "李雲鋒", "relation": "道侶", "description": "共同開創靈魔劍術，劍氣與魔力完美共鳴" },
+    { "character": "精靈導師", "relation": "西方導師", "description": "精靈森林自然魔法導師，指導她自然魔法" },
+    { "character": "趙無極", "relation": "同批使者", "description": "陣堂弟子，共同研究魔法陣與劍陣" },
+    { "character": "艾琳娜", "relation": "西方學徒", "description": "來蜀山學習劍修的魔法學徒，亦師亦友" },
+    { "character": "保守派長老", "relation": "反對者", "description": "認為她偏離劍道正統，但尊重其治癒能力" }
+  ],
+  "artifacts": [
+    { "name": "鐵劍", "tier": "黃階", "source": "蜀山劍派", "year": 24724, "description": "入門贈送，基礎修煉用" },
+    { "name": "靈劍", "tier": "玄階", "source": "蜀山劍派", "year": 24730, "description": "入門後不久，內門考核通過後贈送" },
+    { "name": "月華劍", "tier": "地階→天階（可成長）", "source": "本命煉製", "year": 25600, "description": "歸宗後與器堂首座共同煉製，可吸收自然能量強化" },
+    { "name": "自然之心", "tier": "史詩階", "source": "精靈森林贈送", "year": 25500, "description": "精靈贈送，可感知自然魔力，輔助治癒" },
+    { "name": "冰華符甲", "tier": "地階（融合）", "source": "本命煉製", "year": 26000, "description": "歸宗後煉製，結合符籙與自然魔法" }
+  ],
+  "techniques": [
+    { "name": "基礎劍法", "tier": "黃階", "source": "蜀山劍派", "status": "已圓滿" },
+    { "name": "劍心通明訣", "tier": "玄階", "source": "蜀山劍派", "status": "已圓滿" },
+    { "name": "冰華劍訣", "tier": "地階", "source": "蜀山劍派", "status": "已掌握" },
+    { "name": "自然劍典", "tier": "天階（融合）", "source": "魔劍堂", "status": "主編完成" },
+    { "name": "靈魔治癒術", "tier": "玄階（融合）", "source": "自創", "status": "已掌握" },
+    { "name": "月華劍陣", "tier": "天階（融合）", "source": "魔劍堂", "status": "已掌握" }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+    "clientId": "123",
+    "startDate": "2026-03-22T00:00:00.0000000Z",
+    "endDate": "2026-03-23T00:00:00.0000000Z",
+    "conditions": [
+        "temperatureMinMax",
+        "10",
+        "20"
+    ],
+    "items": [
+        {
+            "id": "1",
+            "name": "Item 1",
+            "area": "Area 1",
+            "googleMeta": {
+                "resourceName": "Resource 1",
+                "isVideo": true
+            },
+            "desiredState": "On"
+        }
+    ]
+}

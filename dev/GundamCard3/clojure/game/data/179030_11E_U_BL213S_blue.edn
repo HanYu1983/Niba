@@ -1,0 +1,50 @@
+;; 179030_11E_U_BL213S_blue
+;; S
+;; 閃光のハサウェイ
+;; ペーネロペー［†］
+;; ペーネロペー系　MS　専用「レーン・エイム」
+;; 戦闘配備　高機動　〔１〕：改装［ペーネロペー系］
+;; 『常駐』：このカードは、＋X／＋X／＋Xを得る。Xの値は、自軍手札の枚数とする。
+;; 『起動』：このカードが場に出た場合、カード３枚を引く。この記述の効果は、プレイヤー毎に１ターンに１回しか起動しない。
+{:gsign [:blue :uc]
+ :type :unit
+ :texts {"『常駐』：このカードは、＋X／＋X／＋Xを得る。Xの値は、自軍手札の枚数とする。"
+         {:type [:automatic :residents]
+          :game-effects ['(fn [ctx runtime]
+                            (let [x (-> ctx game.data.dynamic/get-my-hand count)]
+                              {:description "このカードは、＋X／＋X／＋Xを得る。Xの値は、自軍手札の枚数とする。"
+                               :battle-point [x x x]}))]}
+         "『起動』：このカードが場に出た場合、カード３枚を引く。この記述の効果は、プレイヤー毎に１ターンに１回しか起動しない。"
+         {:type [:automatic :trigger]
+          :events
+          ['(fn [ctx runtime evt]
+              (clojure.core.match/match evt
+                [:on-end-turn {:player-id player-id}]
+                (let [this-card-id (-> runtime game.define.runtime/get-card-id)]
+                  (-> ctx
+                      (game.data.dynamic/get-card-state this-card-id)
+                      (dissoc "このカードが場に出た場合、カード３枚を引く")
+                      ((fn [ctx] (game.data.dynamic/set-card-state ctx this-card-id ctx)))))
+                [:on-enter-field {:card-id on-enter-card-id}]
+                (let [this-card-id (-> runtime game.define.runtime/get-card-id)
+                      not-yet (-> ctx
+                                  (game.data.dynamic/get-card-state this-card-id)
+                                  (get "このカードが場に出た場合、カード３枚を引く")
+                                  nil?)]
+                  (if (-> this-card-id (= on-enter-card-id) (and not-yet))
+                    (game.data.dynamic/add-immediate-effect ctx (->> {:reason [:card-text this-card-id]
+                                                                      :text (->> {:type :system
+                                                                                  :logic {"このカードが場に出た場合、カード３枚を引く"
+                                                                                          ['(And)
+                                                                                           '(fn [ctx runtime]
+                                                                                              (let [this-card-id (-> runtime game.define.runtime/get-card-id)
+                                                                                                    ctx (-> ctx
+                                                                                                            (game.data.dynamic/get-card-state this-card-id)
+                                                                                                            (assoc "このカードが場に出た場合、カード３枚を引く")
+                                                                                                            ((fn [ctx] (game.data.dynamic/set-card-state ctx this-card-id)))
+                                                                                                            (game.data.dynamic/draw-card 3))]
+                                                                                                ctx))]}}
+                                                                                 (merge game.define.card-text/card-text-value))}
+                                                                     (merge game.define.effect/effect-value)))
+
+                    ctx))))]}}}

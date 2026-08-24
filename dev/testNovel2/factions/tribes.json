@@ -1,0 +1,87 @@
+{
+  "tribes": [
+    {
+      "id": "red_flame_tribe",
+      "name": "赤焰部落",
+      "englishName": "Red Flame Tribe",
+      "era": "遠古啟蒙期",
+      "region": "東方大陸東部",
+      "leader": "炎 (Yan)",
+      "foundingYear": -9800,
+      "dissolutionYear": -9200,
+      "description": "東方大陸東部最古老的修煉文明發源地，由炎領導開啟人類首次系統化修煉生命的先河",
+      "history": {
+        "origin": "起源於東方大陸東部天脊山脈東麓的狩獵部落，最初以狩獵採集為生",
+        "rise": "在炎的領導下，部落從普通狩獵族群轉變為修煉文明的先驅",
+        "peak": "統一周邊數十個部落，建立首個部落聯盟，人口達數千人",
+        "legacy": "炎消失後，部落逐漸解體，但其修煉傳統流傳至今"
+      },
+      "culture": {
+        "beliefs": "信奉自然神靈與生命能量，認為天地間充滿可被人類利用的無形之力",
+        "rituals": "由薩滿主持的祭祀儀式，融入修煉元素的狩獵慶典",
+        "socialStructure": "以首領為核心的氏族制度，重視長者與修煉者的智慧",
+        "values": "團結、堅韌、對自然的敬畏，以及對未知事物的探索精神"
+      },
+      "practices": {
+        "economy": "狩獵採集為主，輔以簡單的農業與畜牧",
+        "technology": "石器時代晚期技術，無金屬工具",
+        "cultivation": "炎息訣為基礎的修煉體系，強調呼吸節奏與能量循環",
+        "education": "口耳相傳的修煉知識，由長者與薩滿傳授"
+      },
+      "achievements": [
+        {
+          "name": "開啟修煉文明",
+          "year": -9500,
+          "description": "炎首次引氣入體，證明人類可主動利用生命能量"
+        },
+        {
+          "name": "創立炎息訣",
+          "year": -9450,
+          "description": "系統化修煉方法，成為後世修煉法的基礎"
+        },
+        {
+          "name": "統一東部部落",
+          "year": -9350,
+          "description": "建立首個部落聯盟，促進文化交流"
+        }
+      ],
+      "legacy": {
+        "culturalImpact": "奠定東方修煉文化的基礎，影響萬年文明發展",
+        "sites": "赤焰部落遺址成為修煉者朝聖之地",
+        "traditions": "炎息訣與部落傳說流傳至今",
+        "philosophicalFoundation": "內斂修煉哲學：通過自身努力與天地合一"
+      },
+      "notableMembers": [
+        {
+          "name": "炎",
+          "role": "首領與修煉始祖",
+          "significance": "開啟修煉文明，壽命達300年"
+        },
+        {
+          "name": "燧",
+          "role": "首徒",
+          "significance": "繼承炎息訣，成為第二代修煉領袖"
+        },
+        {
+          "name": "焱",
+          "role": "親傳弟子",
+          "significance": "協助整理修煉口訣，隱居修煉"
+        }
+      ],
+      "artifacts": [
+        {
+          "name": "炎息訣石碑",
+          "description": "刻有炎息訣的石碑，保存在部落遺址",
+          "significance": "修煉知識的載體"
+        }
+      ],
+      "quotes": [
+        {
+          "text": "天地之間，有無形之氣流動。能感知者，可得其力。",
+          "source": "炎的修煉心得",
+          "context": "部落修煉儀式中的核心教誨"
+        }
+      ]
+    }
+  ]
+}

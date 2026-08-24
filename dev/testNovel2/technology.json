@@ -1,0 +1,136 @@
+{
+  "technology": {
+    "description": "科技與生命能量體系的融合發展",
+    "relationship": {
+      "concept": "科技是能量的應用層",
+      "description": "科技彌補能量體系的不足，讓普通人也能使用生命能量"
+    },
+    "comparison": {
+      "eastern": {
+        "advantages": ["個人戰力極強", "壽命長"],
+        "disadvantages": ["修煉門檻高", "耗時長"],
+        "technologyComplement": "科技幫助量產靈藥/法器"
+      },
+      "western": {
+        "advantages": ["群體法術", "元素操控"],
+        "disadvantages": ["依賴外部環境", "不穩定"],
+        "technologyComplement": "科技穩定魔力輸出"
+      },
+      "technology": {
+        "advantages": ["量產", "標準化", "無門檻"],
+        "disadvantages": ["無法突破人體極限"],
+        "energyComplement": "能量提供超常動力"
+      }
+    },
+    "modernEra": {
+      "energyFacilities": {
+        "name": "生命能量采集塔",
+        "description": "類似現實社會的各種發電設施，集中收集生命能量",
+        "types": [
+          {
+            "id": "collection_tower_bio_farm",
+            "name": "生物農場型",
+            "description": "大量培養微生物/植物/動物，收集散發的能量",
+            "analogy": "類似農業設施"
+          },
+          {
+            "id": "collection_tower_natural_gathering",
+            "name": "自然聚集型",
+            "description": "在生命能量自然積聚的地點建設采集設施",
+            "analogy": "類似水力發電（利用自然流動）"
+          },
+          {
+            "id": "collection_tower_ecological_cycle",
+            "name": "生態循環型",
+            "description": "利用整個生態系統的能量流動",
+            "analogy": "類似生態循環系統"
+          }
+        ]
+      },
+      "socialImpact": {
+        "energyEconomy": {
+          "currency": {
+            "name": "能元",
+            "englishName": "Energy Credit",
+            "abbreviation": "EC",
+            "description": "以標準化生命能量單位為基準的貨幣"
+          },
+          "energyGrades": [
+            {
+              "id": "civilian_grade",
+              "name": "民用級",
+              "usage": "日常生活供能（照明、交通、通訊）"
+            },
+            {
+              "id": "industrial_grade",
+              "name": "工業級",
+              "usage": "工廠、生產線、大型機械"
+            },
+            {
+              "id": "strategic_grade",
+              "name": "戰略級",
+              "usage": "軍事、太空探索、維度實驗"
+            }
+          ]
+        },
+        "socialIssues": [
+          {
+            "id": "energy_inequality",
+            "name": "能源貧富差距",
+            "description": "高濃度能量區居民享有更多資源",
+            "conflict": "階級固化、能量貧民窟"
+          },
+          {
+            "id": "ecological_imbalance",
+            "name": "生態失衡",
+            "description": "過度采集導致局部地區生命能量枯竭",
+            "conflict": "植物枯萎、動物異常、生態災難"
+          },
+          {
+            "id": "energy_addiction",
+            "name": "能量成癮",
+            "description": "直接注射高純度能量產生快感",
+            "conflict": "黑市交易、能量毒品"
+          },
+          {
+            "id": "ancient_relics_dispute",
+            "name": "古代遺跡爭奪",
+            "description": "遺跡中藏有未公開的高階能量技術",
+            "conflict": "跨國糾紛、非法挖掘"
+          },
+          {
+            "id": "energy_terrorism",
+            "name": "能量恐怖主義",
+            "description": "極端組織企圖破壞采集塔或製造能量武器",
+            "conflict": "社會恐慌、政府鎮壓"
+          }
+        ]
+      }
+    },
+    "historicalDevelopment": {
+      "ancient": {
+        "eastern": "將散發的能量收回體內，循環利用 → 長壽、強大",
+        "western": "引導散發的能量為己用，操控外部 → 法術、召喚"
+      },
+      "modern": {
+        "description": "科學理解能量散發規律，建設采集設施集中收集",
+        "standardization": "將能量標準化、儲存、分配給社會使用"
+      }
+    },
+    "scientificResearch": {
+      "geniusBreakthrough": {
+        "description": "某位天才的突破",
+        "possibleDiscoveries": [
+          "發現生命能量的散發規律（頻率、波長、週期）",
+          "發明能量收集與儲存技術",
+          "證明氣與瑪娜是同一能量的不同表現形式"
+        ]
+      },
+      "modernDisciplines": [
+        "生命能量物理學",
+        "能量生態學",
+        "能量醫學"
+      ]
+    }
+  }
+}

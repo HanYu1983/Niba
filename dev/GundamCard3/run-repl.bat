@@ -1,0 +1,1 @@
+docker compose -f docker/docker-compose.local.yml run -p 7888:7888 --rm clojure clojure -M:nrepl

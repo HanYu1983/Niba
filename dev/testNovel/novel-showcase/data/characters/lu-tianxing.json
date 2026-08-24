@@ -1,0 +1,59 @@
+{
+  "name": "陸天行",
+  "name_en": "Lu Tianxing",
+  "titles": ["天行劍子", "靈魔先鋒"],
+  "birth_oe": 24970,
+  "death_oe": null,
+  "appearance_age": "約 30 歲",
+  "race": "人類",
+  "origin": "神州·蜀地·劍閣府",
+  "identities": ["蜀山劍派劍堂弟子", "魔劍堂首批核心弟子"],
+  "cultivation_systems": ["仙俠體系（劍修）", "魔法體系（魔劍術）"],
+  "current_realm": "劍士（築基期）/ 見習法師（Apprentice Mage）",
+  "spiritual_root": "天靈根（火屬性）",
+  "magic_talents": ["元素親和（火、風）", "奧術感知"],
+  "personality": ["開朗熱情", "善於交際", "理念開放", "勇於創新"],
+  "core_philosophy": "劍道無界，創新為先",
+  "aging": {
+    "stage": "築基期",
+    "last_breakthrough_oe": 25000,
+    "appearance_at_breakthrough": 30,
+    "aging_factor": 0.025
+  },
+  "timeline": [
+    { "year": 24984, "event": "入門蜀山", "description": "14 歲通過考核，成為劍堂內門弟子" },
+    { "year": 25000, "event": "報名交流", "description": "第一個報名參與魔劍術預研" },
+    { "year": 25000, "event": "初遇艾琳娜", "description": "試劍台上注意到艾琳娜觀看練劍，主動上前搭話（艾琳娜 25 歲，陸天行 30 歲）" },
+    { "year": 25005, "event": "比試交流", "description": "兩人多次比試，互相學習對方文化" },
+    { "year": 25010, "event": "成為研究夥伴", "description": "與艾琳娜共同研究劍術與魔法融合" },
+    { "year": 25200, "event": "共同突破", "description": "合作開創「靈魔感知」基礎理論" },
+    { "year": 25300, "event": "感情確認", "description": "與艾琳娜明確表達感情，成為戀人" },
+    { "year": 25400, "event": "共同考驗", "description": "面對宗門壓力與暗影威脅" },
+    { "year": 25500, "event": "依依惜別", "description": "艾琳娜歸宗，約定定期往返東西兩界" },
+    { "year": 26000, "event": "魔劍堂成立", "description": "成為首批核心弟子，擔任劍術教官" },
+    { "year": 30000, "event": "當前時代", "description": "魔劍堂發展穩定，繼續培養雙修劍修" }
+  ],
+  "relationships": [
+    { "character": "艾琳娜", "relation": "戀人", "description": "跨文化戀情，共同開創靈魔劍術" },
+    { "character": "李雲鋒", "relation": "導師/上司", "description": "魔劍堂堂主，指導他魔劍術" },
+    { "character": "蘇清月", "relation": "副堂主", "description": "魔劍堂副堂主，指導他自然劍術" },
+    { "character": "趙無極", "relation": "同門", "description": "陣堂弟子，共同研究劍陣與魔法陣" },
+    { "character": "保守派長老", "relation": "反對者", "description": "認為他偏離劍道正統，多次刁難" }
+  ],
+  "artifacts": [
+    { "name": "鐵劍", "tier": "黃階", "source": "蜀山劍派", "year": 24984, "description": "入門贈送，基礎修煉用" },
+    { "name": "靈劍", "tier": "玄階", "source": "蜀山劍派", "year": 24990, "description": "內門考核通過後贈送" },
+    { "name": "劍池靈劍", "tier": "地階", "source": "蜀山劍派", "year": 25100, "description": "內門考核通過後贈送" },
+    { "name": "天行劍", "tier": "玄階→地階（可成長）", "source": "本命煉製", "year": 25600, "description": "本命法寶，可吸收魔法能量強化" },
+    { "name": "靈魔珠（副）", "tier": "玄階", "source": "奧術之塔贈送", "year": 25200, "description": "艾琳娜代為贈送，可儲存魔力" },
+    { "name": "兩儀符甲（融合版）", "tier": "地階（融合）", "source": "本命煉製", "year": 26000, "description": "結合符籙與魔法護盾" }
+  ],
+  "techniques": [
+    { "name": "基礎劍法", "tier": "黃階", "source": "蜀山劍派", "status": "已圓滿" },
+    { "name": "劍心通明訣", "tier": "玄階", "source": "蜀山劍派", "status": "已掌握" },
+    { "name": "天罡劍訣", "tier": "地階", "source": "蜀山劍派", "status": "修煉中" },
+    { "name": "火靈劍典", "tier": "玄階", "source": "自創", "status": "已掌握" },
+    { "name": "靈魔劍訣", "tier": "玄階（融合）", "source": "與艾琳娜共創", "status": "已掌握" },
+    { "name": "天行劍陣", "tier": "地階（融合）", "source": "魔劍堂", "status": "已掌握" }
+  ]
+}

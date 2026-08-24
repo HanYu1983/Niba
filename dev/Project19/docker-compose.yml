@@ -1,0 +1,21 @@
+services:
+  # docker compose exec haxe haxe build.hxml
+  haxe:
+    image: haxe:4.3
+    container_name: haxe-cli
+    working_dir: /workspace
+    volumes:
+      - ./:/workspace
+    command: tail -f /dev/null
+    tty: true
+    stdin_open: true
+  # docker compose exec node node ./bin/HelloWorld.js
+  node:
+    image: node:22
+    container_name: node-cli
+    working_dir: /workspace
+    volumes:
+      - ./:/workspace
+    command: tail -f /dev/null
+    tty: true
+    stdin_open: true

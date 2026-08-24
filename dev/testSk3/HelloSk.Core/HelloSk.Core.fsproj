@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>HelloSk.Core</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Shared.fs" />
+    <Compile Include="ToolsPlugin.fs" />
+    <Compile Include="CodeHelperPlugin.fs" />
+    <Compile Include="FacebookPlugin.fs" />
+    <Compile Include="GoogleAdsPlugin.fs" />
+    <Compile Include="AwsPlugin.fs" />
+    <Compile Include="RealTasksPlugin.fs" />
+    <Compile Include="RagPlugin.fs" />
+    <Compile Include="RicohMonitoringPlugin.fs" />
+    <Compile Include="PluginRegistration.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AWSSDK.ElasticBeanstalk" Version="4.0.2.14" />
+    <PackageReference Include="AWSSDK.S3" Version="4.0.18.7" />
+    <PackageReference Include="Microsoft.SemanticKernel" Version="1.51.0" />
+    <PackageReference Include="Microsoft.SemanticKernel.Connectors.OpenAI" Version="1.51.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HelloSk.Rag\HelloSk.Rag.fsproj" />
+    <ProjectReference Include="..\HelloSk.RicohMonitoring\HelloSk.RicohMonitoring.fsproj" />
+  </ItemGroup>
+
+</Project>

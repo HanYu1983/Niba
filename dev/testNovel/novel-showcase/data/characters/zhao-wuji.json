@@ -1,0 +1,51 @@
+{
+  "name": "趙無極",
+  "name_en": "Zhao Wuji",
+  "titles": ["陣道宗師", "靈魔陣眼"],
+  "birth_oe": 24700,
+  "death_oe": null,
+  "appearance_age": "約 80 歲",
+  "race": "人類",
+  "origin": "神州·蜀地·成都府",
+  "identities": ["蜀山劍派陣堂弟子", "交流使者", "靈魔陣法研究員"],
+  "cultivation_systems": ["仙俠體系（陣法）", "魔法體系（魔法陣）"],
+  "current_realm": "劍士（築基期）/ 見習法師（Novice Mage）",
+  "spiritual_root": "雜靈根（土、金、水三屬性混合）",
+  "magic_talents": ["奧術感知（頂級）", "陣法親和（頂級）", "元素親和（土）"],
+  "personality": ["沉穩內斂", "專注研究", "善於分析", "耐心細緻", "追求完美"],
+  "core_philosophy": "陣法無界，萬陣同源",
+  "aging": {
+    "stage": "築基期",
+    "last_breakthrough_oe": 24900,
+    "appearance_at_breakthrough": 80,
+    "aging_factor": 0.0125
+  },
+  "timeline": [
+    { "year": 24700, "event": "出生", "description": "出生於蜀地普通陣法師家庭" },
+    { "year": 24695, "event": "入門", "description": "15 歲通過蜀山陣堂入門考核" },
+    { "year": 24900, "event": "改良小兩儀陣", "description": "將陣法效率提升 30%，引起關注" },
+    { "year": 25000, "event": "前往中央王國", "description": "作為交流使者前往研究魔法陣" },
+    { "year": 25100, "event": "學習魔法陣", "description": "掌握魔法陣繪製技術" },
+    { "year": 25300, "event": "靈魔陣法基礎", "description": "開創靈魔陣法基礎理論" },
+    { "year": 25500, "event": "歸宗", "description": "帶回魔法陣知識，協助改良靈魔劍陣" }
+  ],
+  "relationships": [
+    { "character": "李雲鋒", "relation": "同批使者", "description": "陣堂弟子，共同研究魔法陣與劍陣" },
+    { "character": "蘇清月", "relation": "同批使者", "description": "陣堂弟子，共同研究魔法陣與劍陣" },
+    { "character": "陸天行", "relation": "同門", "description": "陣堂弟子，共同研究劍陣與魔法陣" },
+    { "character": "魔法陣導師", "relation": "西方導師", "description": "奧術之塔的魔法陣導師，指導他魔法陣繪製技術" }
+  ],
+  "artifacts": [
+    { "name": "陣盤", "tier": "玄階", "source": "蜀山劍派", "year": 24695, "description": "陣堂弟子標配，可儲存陣法" },
+    { "name": "陣筆", "tier": "玄階", "source": "蜀山劍派", "year": 24695, "description": "繪製陣法的專用筆" },
+    { "name": "魔法陣圖鑑", "tier": "史詩階", "source": "奧術之塔", "year": 25100, "description": "記錄魔法陣理論的圖鑑" },
+    { "name": "靈魔陣圖", "tier": "天階（融合）", "source": "自創", "year": 25600, "description": "融合劍陣與魔法陣的陣圖" }
+  ],
+  "techniques": [
+    { "name": "基礎劍法", "tier": "黃階", "source": "蜀山劍派", "status": "已圓滿" },
+    { "name": "劍心通明訣", "tier": "玄階", "source": "蜀山劍派", "status": "已掌握" },
+    { "name": "兩儀微塵陣", "tier": "天階", "source": "蜀山劍派", "status": "研究中" },
+    { "name": "魔法陣大全", "tier": "史詩階", "source": "奧術之塔", "status": "學習中" },
+    { "name": "靈魔陣法", "tier": "天階（融合）", "source": "自創", "status": "研究中" }
+  ]
+}
