@@ -97,8 +97,14 @@ function CampaignScenarioTab({ onStartScenario }: CampaignScenarioTabProps) {
           renderItem={(entry) => (
             <List.Item
               actions={[
-                <Button key="start" type="primary" size="small" onClick={() => handleStart(entry)}>
-                  開始
+                <Button
+                  key="start"
+                  type="primary"
+                  size="small"
+                  disabled={entry.inDevelopment ?? false}
+                  onClick={() => handleStart(entry)}
+                >
+                  {entry.inDevelopment ? '開發中' : '開始'}
                 </Button>,
                 entry.source === 'custom' ? (
                   <Button key="delete" size="small" danger onClick={() => handleDelete(entry.id)}>
@@ -111,6 +117,9 @@ function CampaignScenarioTab({ onStartScenario }: CampaignScenarioTabProps) {
                 title={
                   <Space>
                     <Typography.Text>{entry.scenario.title}</Typography.Text>
+                    {entry.inDevelopment ? (
+                      <Tag color="warning" style={{ marginInlineEnd: 0 }}>開發中</Tag>
+                    ) : null}
                     {clearances[entry.id] === true ? (
                       <Tag icon={<CheckCircleOutlined />} color="success" style={{ marginInlineEnd: 0 }}>已通關</Tag>
                     ) : clearances[entry.id] === false ? (
