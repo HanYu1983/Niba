@@ -1,5 +1,34 @@
 # 開發日誌
 
+## 2026-08-24｜AI 重構切片 H：JSON policy 白名單系統（內建 config＋Schema 驗證＋fallback）
+
+### 本次完成
+
+- 新增 `src/game/ai/policy/aiJsonPolicy.ts`（重構文件 §6.3／§6.7）：
+  - `AiConditionId`（7 條件）與 `AiActionId`（9 行動）白名單常數；`SUPPORTED_AI_POLICY_VERSION = 1`。
+  - `validateAiJsonPolicy(raw)`：id 非空、version 必須為支援版本、actorKind 限 player/creature、condition/action 必須在白名單（非法項目一律拒絕，不執行任意內容）、priority 有限數值、生命百分比 0～100、包圍敵數非負、avoidFatalAttack 布林、parameters 僅 number/boolean/string。錯誤逐條彙報；通過後 `Object.freeze` 為不可變 Policy。
+- 內建設定檔 `src/game/ai/configs/`：`defensive-guardian.json`（§6.4 範例原文）、`creature-sieger.json`（§6.5 範例原文）、`creature-scavenger.json`（拾荒型：自保→反擊→collect-resource→wander）。tsconfig 加 `resolveJsonModule` 以型別安全載入 JSON。
+- 新增 `src/game/ai/policy/aiPolicyRegistry.ts`（§6.6／§6.8）：
+  - `loadAiPolicyRegistry(configs)`：驗證並註冊；非法設定與重複 id 被略過且回報錯誤清單（模組載入時對內建 config 執行，錯誤走 console.error）。
+  - `getAiJsonPolicy(id, actorKind)`：查無 id 或 actorKind 不符 → 回傳同類預設 fallback（default-player／default-creature：自保→反擊→待命），AI 回合不得卡死；設定不寫入 GameState。
+  - `getCreaturePolicyId(behaviorType)`：sieger→creature-sieger、scavenger→creature-scavenger，其餘行為回 null 走 fallback——供後續 Planner 依行為型別取 policy。
+- 測試＋19（aiJsonPolicy 13 例：白名單拒絕／範圍驗證／凍結不可變／多錯誤彙報；aiPolicyRegistry 6 例：三內建載入、未知 id fallback、跨 actorKind 拒用、行為型別對應、非法＋重複 id 載入路徑）。
+
+### 影響檔案
+
+- 新增：`src/game/ai/policy/aiJsonPolicy.ts`（含測試）、`src/game/ai/policy/aiPolicyRegistry.ts`（含測試）、`src/game/ai/configs/*.json` ×3
+- 修改：`tsconfig.app.json`（resolveJsonModule）
+- 文件：重構文件 §6 新增 §6.10 實作現況、playbook §1／§3 H 列
+
+### 驗證結果
+
+- vitest：**79 檔／819 項全數通過**（前片 800＋本片 19）
+- tsc -b：通過；ESLint：新碼零警告；Build：通過。
+
+### 下一步
+
+- 重構計畫 §3 切片佇列（A~H）全數完成；後續依 §15 各 Phase 剩餘項目（stale 重試、逐步動畫接線等）另開切片。
+
 ## 2026-08-24｜AI 重構切片 G：建設 AI（效用評分＋queue 狀態機＋完成提醒）
 
 ### 本次完成

@@ -46,6 +46,7 @@ AI 開發有**兩條主線**，各自有獨立設計文件，工作時必須分�
 | `src/game/ai/aiTurnScheduler.ts`（切片 E 新增） | Player AI 回合排程器：防守／支援／建設共用框架（`requestStep(actorId, orderType)`）、350ms 動畫節奏、cancel／stale 防護、同 Actor 不重入；`App.tsx` 只剩啟動／停止 |
 | `src/game/actions/creatureTurnPipeline.ts`（切片 D 新增） | `moveCreatures` 六段管線本體：context／select／plan／validate／execute／reduce＋`runCreatureTurn` orchestrator；blocked 只反擊堵路設施；`creatureActions.moveCreatures` 薄委託，型別轉出口維持相容 |
 | `src/game/ai/construction/constructionAi.ts`（切片 G 新增） | 建設 AI 純決策：`pickNextBuildCandidate()` 效用評分（priority＋方針類別加權、同分依佇列序）、blocked 僅「建料不足。」可重試、武館流派模板解析；`pickUpgradeCandidate()`／`chooseConstructionAction()`；執行層 `runAiConstructionStep`（paused 只採集、體力不足不標 blocked、完成彈窗＋事件） |
+| `src/game/ai/policy/` ＋ `ai/configs/*.json`（切片 H 新增） | §6 JSON policy：`AiConditionId`/`AiActionId` 白名單＋`validateAiJsonPolicy()` Schema 驗證（凍結不可變）；內建 defensive-guardian/creature-sieger/creature-scavenger；`getAiJsonPolicy()` 查無即同類 fallback、`getCreaturePolicyId()` 行為型別對應；設定不寫入 GameState |
 
 **執行層（gameStore.ts）**
 
@@ -452,7 +453,7 @@ PowerShell 備忘：判斷成敗用 `$LASTEXITCODE`（`$?` 是 True/False）；d
 | E | ✅ 完成（2026-08-24）：`aiTurnScheduler.ts` 落地，App.tsx 只剩啟動／停止；7 例生命週期測試全過 | 重構 Phase 3 | P1 | 回合生命週期 7 例；cancel 後 stale timer 不執行；同 Actor 冪等不重入、換人自動取消 |
 | F | ✅ 完成（2026-08-24）：`AiActionEvent`＋`GameState.actionEvents`＋ActionLogPanel UI；防守／支援全分支事件化 | 重構 Phase 3~5＋功能線 M4/M5 未完項 | P1 | 11 例新測試（含事件順序、Game Over、讀檔相容）；AI 規則結果零變化；Creature 動畫沿用既有 steps |
 | G | ✅ 完成（2026-08-24）：`constructionAi.ts` 效用評分＋`runAiConstructionStep` queue 狀態機（blocked 僅建料不足可重試、paused 只採集）；完成提醒彈窗＋事件；Scheduler 擴充 'construction' 步驟 | 功能線下一個 Milestone＋重構 Phase 6 | P2 | 22 例新測試（純函式 14＋store 情境 7＋scheduler 1）；前置不足／建料不足 → blocked 含原因；`paused` 方針不建造但可採集 |
-| H | JSON policy 白名單系統（defensive-guardian／creature-sieger 等內建 config） | 重構 §6 | P2 | Schema 驗證＋fallback 測試；非法 condition/action 被拒 |
+| H | ✅ 完成（2026-08-24）：`ai/policy/` 白名單＋Schema 驗證＋內建 config（defensive-guardian/creature-sieger/creature-scavenger）＋fallback registry | 重構 §6 | P2 | 19 例新測試；非法 condition/action 被拒、查無 id 或 actorKind 不符走同類 fallback、載入失敗不卡死 AI 回合 |
 
 > 順序理由：A0 先織安全網，A 才能還債且解鎖 Executor；B 是所有後續共用地基；C/D 讓 Creature 與玩家 AI 有共同語言之後，E~H 才有意義。若使用者另有指示，以其為準。
 

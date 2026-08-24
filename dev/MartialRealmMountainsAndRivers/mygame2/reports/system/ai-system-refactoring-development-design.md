@@ -514,6 +514,13 @@ public/ai-configs/*.json
 - 未通過 Validator 的移動、攻擊或建設。
 - 人類玩家對 AI 命令的修改權限。
 
+### 6.10 實作現況（2026-08-24，切片 H）
+
+- 型別與驗證：`src/game/ai/policy/aiJsonPolicy.ts`——`AiConditionId`（7 條件）／`AiActionId`（9 行動）白名單、`SUPPORTED_AI_POLICY_VERSION = 1`、`validateAiJsonPolicy()` 落地 §6.7 全部規則（id／version／actorKind／condition／action／priority 有限值／生命百分比 0～100／數量非負／parameters 僅基本型別），通過後 `Object.freeze` 為不可變 Policy；非法項目逐條回報錯誤。
+- 內建設定：`src/game/ai/configs/`——`defensive-guardian.json`（§6.4 範例）、`creature-sieger.json`（§6.5 範例）、`creature-scavenger.json`（拾荒：自保→反擊→collect-resource→wander）。
+- Registry 與 fallback：`src/game/ai/policy/aiPolicyRegistry.ts`——`loadAiPolicyRegistry()` 驗證＋略過非法／重複 id 並回報錯誤；`getAiJsonPolicy(id, actorKind)` 查無或 actorKind 不符時回傳同類預設 fallback（自保→反擊→待命）；`getCreaturePolicyId()` 對應 sieger/scavenger 行為型別，其餘走 fallback。
+- 測試 19 例（Schema 白名單／範圍／凍結 13 例；載入 fallback／跨型別拒用／行為對應 6 例），全套 **819 項通過**。外部 JSON（`public/ai-configs/`）依 §6.6 留待後續需求再支援。
+
 ---
 
 ## 7. Emergency Policy 自保層
