@@ -1355,7 +1355,7 @@ describe('executeAttack', () => {
     expect(gameStore.getState().players[0].experience).toBe(3)
   })
 
-  it('擊殺生物時不會掉落裝備', () => {
+  it('擊殺生物時可掉落裝備並加入裝備背包', () => {
     vi.spyOn(Math, 'random')
       .mockReturnValueOnce(0.7)
       .mockReturnValueOnce(0.1)
@@ -1375,8 +1375,8 @@ describe('executeAttack', () => {
 
     expect(result.ok).toBe(true)
     if (!result.ok) return
-    expect(result.data.loot?.kind).not.toBe('equipment')
-    expect(gameStore.getState().players[0].equipmentInventory).toHaveLength(3)
+    expect(result.data.loot?.kind).toBe('equipment')
+    expect(gameStore.getState().players[0].equipmentInventory).toHaveLength(4)
     vi.restoreAllMocks()
   })
 
