@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button, Divider, Flex, Input, InputNumber, Modal, Select, Space, Switch, Typography } from 'antd'
+import { Button, Divider, Flex, Input, InputNumber, Modal, Select, Space, Switch, Tag, Typography } from 'antd'
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons'
 import type { ScenarioDefinition } from '../editorTypes'
 import { BUILDING_OPTIONS } from '../editorOptions'
@@ -205,13 +205,46 @@ function QuestSequencerModal({ open, scenario, onClose, onUpdateQuests, onUpdate
                                 </>
                             )}
                             {objective.type === 'interact-object' && (
-                                <Input
-                                    size="small"
-                                    value={objective.targetId ?? ''}
-                                    placeholder="物件 ID"
-                                    onChange={(e) => updateObjective(index, { targetId: e.target.value || undefined })}
-                                    style={{ width: 180 }}
-                                />
+                                <Flex vertical gap={4} style={{ flex: 1, minWidth: 200 }}>
+                                    <Space wrap>
+                                        {objective.targetIds?.map((id) => (
+                                            <Tag
+                                                key={id}
+                                                closable
+                                                onClose={(e) => {
+                                                    e.preventDefault()
+                                                    updateObjective(index, {
+                                                        targetIds: objective.targetIds?.filter((x) => x !== id),
+                                                    })
+                                                }}
+                                            >
+                                                {id}
+                                            </Tag>
+                                        ))}
+                                        {!objective.targetIds?.length && (
+                                            <Typography.Text type="secondary" style={{ fontSize: 12 }}>
+                                                請填入需要互動的物件 ID
+                                            </Typography.Text>
+                                        )}
+                                    </Space>
+                                    <Flex gap={8}>
+                                        <Input
+                                            size="small"
+                                            value={''}
+                                            placeholder="輸入物件 ID，按 Enter 加入清單"
+                                            onPressEnter={(e) => {
+                                                const value = (e.target as HTMLInputElement).value.trim()
+                                                if (!value) return
+                                                const ids = objective.targetIds ?? []
+                                                if (!ids.includes(value)) {
+                                                    updateObjective(index, { targetIds: [...ids, value] })
+                                                }
+                                                ;(e.target as HTMLInputElement).value = ''
+                                            }}
+                                            style={{ flex: 1 }}
+                                        />
+                                    </Flex>
+                                </Flex>
                             )}
                             <Space>
                                 <Typography.Text type="secondary" style={{ fontSize: 12 }}>支線</Typography.Text>

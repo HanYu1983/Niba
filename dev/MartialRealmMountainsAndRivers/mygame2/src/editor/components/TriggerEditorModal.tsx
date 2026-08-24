@@ -13,7 +13,9 @@ type TriggerEditorModalProps = {
 const CONDITION_OPTIONS = [
   { value: 'on-start', label: '開局觸發' },
   { value: 'on-objective-complete', label: '目標達成時' },
-  { value: 'on-enter-region', label: '進入區域時' },
+  { value: 'on-enter-region', label: '進入座標時' },
+  { value: 'on-enter-area', label: '進入區域時' },
+  { value: 'on-exit-area', label: '離開區域時' },
   { value: 'on-defeat-boss', label: '擊敗首領時' },
   { value: 'on-round-reached', label: '到達指定回合' },
   { value: 'on-object-destroyed', label: '物件銷毀時' },
@@ -28,12 +30,14 @@ const ACTION_OPTIONS = [
 ]
 
 /** 需要時機參數的條件。 */
-const CONDITIONS_WITH_PARAM = new Set(['on-objective-complete', 'on-enter-region', 'on-defeat-boss', 'on-round-reached', 'on-object-destroyed'])
+const CONDITIONS_WITH_PARAM = new Set(['on-objective-complete', 'on-enter-region', 'on-enter-area', 'on-exit-area', 'on-defeat-boss', 'on-round-reached', 'on-object-destroyed'])
 
 /** 時機參數的 placeholder 提示。 */
 const CONDITION_PARAM_PLACEHOLDER: Record<string, string> = {
   'on-objective-complete': '目標 ID',
   'on-enter-region': '座標（row,column）',
+  'on-enter-area': '區域 ID',
+  'on-exit-area': '區域 ID',
   'on-defeat-boss': '首領 ID',
   'on-round-reached': '回合數',
   'on-object-destroyed': '物件 ID',
@@ -60,6 +64,12 @@ function TriggerEditorModal({ open, scenario, onClose, onUpdateTriggers }: Trigg
       value: entity.id,
       label: (entity.data.name as string) || entity.id,
     }))
+
+  /** 區域選項：讓 on-enter-area / on-exit-area 的參數改為選單。 */
+  const areaOptions = (scenario.areas ?? []).map((area) => ({
+    value: area.id,
+    label: area.name || area.id,
+  }))
 
   const updateTrigger = (index: number, patch: Partial<ScenarioTrigger>) => {
     onUpdateTriggers(triggers.map((trigger, i) => (i === index ? { ...trigger, ...patch } : trigger)))
@@ -112,13 +122,24 @@ function TriggerEditorModal({ open, scenario, onClose, onUpdateTriggers }: Trigg
               onChange={(value) => updateTrigger(index, { condition: value })}
             />
             {CONDITIONS_WITH_PARAM.has(trigger.condition) && (
-              <Input
-                size="small"
-                value={trigger.conditionParam ?? ''}
-                placeholder={CONDITION_PARAM_PLACEHOLDER[trigger.condition] ?? '時機參數'}
-                onChange={(e) => updateTrigger(index, { conditionParam: e.target.value || undefined })}
-                style={{ flex: 1 }}
-              />
+              trigger.condition === 'on-enter-area' || trigger.condition === 'on-exit-area' ? (
+                <Select
+                  size="small"
+                  value={trigger.conditionParam}
+                  options={areaOptions}
+                  placeholder="選擇區域"
+                  style={{ flex: 1 }}
+                  onChange={(value) => updateTrigger(index, { conditionParam: value })}
+                />
+              ) : (
+                <Input
+                  size="small"
+                  value={trigger.conditionParam ?? ''}
+                  placeholder={CONDITION_PARAM_PLACEHOLDER[trigger.condition] ?? '時機參數'}
+                  onChange={(e) => updateTrigger(index, { conditionParam: e.target.value || undefined })}
+                  style={{ flex: 1 }}
+                />
+              )
             )}
             <Button size="small" danger icon={<DeleteOutlined />} onClick={() => removeTrigger(index)} />
           </Flex>

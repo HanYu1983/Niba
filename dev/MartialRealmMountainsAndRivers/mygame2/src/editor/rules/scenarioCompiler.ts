@@ -349,6 +349,13 @@ function compileCampaignState(scenario: ScenarioDefinition): CampaignState {
     ),
     // 事件觸發器：時機 → 行為 → id。
     triggers: scenario.triggers ?? [],
+    // 編輯器定義的區域列表（供 on-enter-area / on-exit-area 觸發器使用）。
+    scenarioAreas: (scenario.areas ?? []).map((area) => ({
+      id: area.id,
+      name: area.name,
+      positions: area.positions,
+      destroyWhenTriggered: area.destroyWhenTriggered ?? false,
+    })),
     // 探索點補充開關（劇本模式預設關閉）。
     replenishExplorationEvents: scenario.replenishExplorationEvents ?? false,
     activeObjectives: scenario.quests.victoryObjectives.map((objective) => ({
@@ -360,6 +367,7 @@ function compileCampaignState(scenario: ScenarioDefinition): CampaignState {
       completed: false,
       isOptional: objective.isOptional,
       targetId: objective.targetId,
+      targetIds: objective.targetIds,
       buildingType: objective.buildingType,
       buildingLevel: objective.buildingLevel,
       structureType: objective.structureType,

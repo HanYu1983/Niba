@@ -90,6 +90,11 @@ export function deleteStoredScenario(id: string): void {
   localStorage.setItem(SCENARIO_COPIES_STORAGE_KEY, JSON.stringify(map))
 }
 
+/** 清空所有儲存的劇本副本（官方副本與自訂關卡皆移除）。 */
+export function clearStoredScenarios(): void {
+  localStorage.removeItem(SCENARIO_COPIES_STORAGE_KEY)
+}
+
 /** 產生一個不與既有 id 衝突的自訂關卡 id（`custom-` 前綴 + 時間戳）。 */
 export function generateCustomScenarioId(): string {
   const existing = getStoredScenarios()

@@ -8,34 +8,109 @@ import { collectTriggeredDialogues, type DialogueTrigger } from '../rules/dialog
 import { enqueueDialogue } from './dialogueActions'
 import { executeTriggers } from '../rules/triggerRules'
 
+/** 檢查玩家進入/離開區域觸發器。 */
+function checkAreaTriggers(
+  state: GameState,
+  prevRow: number,
+  prevCol: number,
+  newRow: number,
+  newCol: number,
+): GameState {
+  const areas = state.campaignState?.scenarioAreas ?? []
+  if (areas.length === 0) return state
+
+  let currentState = state
+  // 收集預期會被觸發的一次性區域 id，觸發後將其從地圖移除。
+  const consumedAreaIds = new Set<string>()
+
+  // 檢查離開區域
+  for (const area of areas) {
+    const wasInArea = area.positions.some((pos) => pos.row === prevRow && pos.column === prevCol)
+    const isInArea = area.positions.some((pos) => pos.row === newRow && pos.column === newCol)
+    if (wasInArea && !isInArea) {
+      // 觸發 on-exit-area
+      currentState = enqueueTriggeredDialogues(currentState, { type: 'on-exit-area', param: area.id })
+      currentState = executeTriggers(currentState, { type: 'on-exit-area', param: area.id })
+      // 若此區域為一次性，且存在對應的 on-exit-area 觸發器，則消費該區域。
+      const hasExitTrigger = (currentState.campaignState?.triggers ?? []).some(
+        (trigger) => trigger.condition === 'on-exit-area' && trigger.conditionParam === area.id,
+      )
+      if (area.destroyWhenTriggered && hasExitTrigger) {
+        consumedAreaIds.add(area.id)
+      }
+    }
+  }
+
+  // 檢查進入區域
+  for (const area of areas) {
+    const wasInArea = area.positions.some((pos) => pos.row === prevRow && pos.column === prevCol)
+    const isInArea = area.positions.some((pos) => pos.row === newRow && pos.column === newCol)
+    if (!wasInArea && isInArea) {
+      // 觸發 on-enter-area
+      currentState = enqueueTriggeredDialogues(currentState, { type: 'on-enter-area', param: area.id })
+      currentState = executeTriggers(currentState, { type: 'on-enter-area', param: area.id })
+      // 若此區域為一次性，且存在對應的 on-enter-area 觸發器，則消費該區域。
+      const hasEntryTrigger = (currentState.campaignState?.triggers ?? []).some(
+        (trigger) => trigger.condition === 'on-enter-area' && trigger.conditionParam === area.id,
+      )
+      if (area.destroyWhenTriggered && hasEntryTrigger) {
+        consumedAreaIds.add(area.id)
+      }
+    }
+  }
+
+  if (consumedAreaIds.size > 0) {
+    currentState = {
+      ...currentState,
+      campaignState: currentState.campaignState
+        ? {
+          ...currentState.campaignState,
+          scenarioAreas: (currentState.campaignState.scenarioAreas ?? []).filter(
+            (area) => !consumedAreaIds.has(area.id),
+          ),
+        }
+        : currentState.campaignState,
+    }
+  }
+
+  return currentState
+}
+
 export function movePlayer(
   state: GameState,
   playerId: string,
   row: number,
   column: number,
 ): { state: GameState; result: ActionOutcome } {
-  const target = getMovementTarget(state, getActionablePlayer(state, playerId), playerId, row, column)
+  const player = getActionablePlayer(state, playerId)
+  if (!player) return { state, result: { ok: false, reason: '找不到可行動的玩家。' } }
+  const target = getMovementTarget(state, player, playerId, row, column)
   if (!target) return { state, result: { ok: false, reason: '無法移動至目標位置。' } }
+
+  const prevRow = player.position.row
+  const prevCol = player.position.column
 
   const nextState = {
     ...state,
-    players: state.players.map((player) => player.id === playerId
+    players: state.players.map((p) => p.id === playerId
       ? {
-        ...player,
+        ...p,
         position: { row, column },
-        stamina: player.stamina - target.staminaCost,
+        stamina: p.stamina - target.staminaCost,
       }
-      : player),
+      : p),
   }
 
   const stateWithHealthBonus = applyBaseHealthBonuses(nextState)
   // 移動完成後推進 reach-position 目標並檢查勝利。
   const withObjectives = progressObjectives(stateWithHealthBonus, { type: 'reach-position', row, column })
-  // 移動完成後檢查 on-enter-region 對話與觸發器（玩家進入指定區域時觸發）。
+  // 移動完成後檢查 on-enter-region 對話與觸發器（玩家進入指定座標時觸發，舊版相容）。
   const withDialogue = enqueueTriggeredDialogues(withObjectives, { type: 'on-enter-region', param: `${row},${column}` })
   const withTriggers = executeTriggers(withDialogue, { type: 'on-enter-region', param: `${row},${column}` })
+  // 檢查編輯器定義的區域觸發器（on-enter-area / on-exit-area）。
+  const withAreaTriggers = checkAreaTriggers(withTriggers, prevRow, prevCol, row, column)
   return {
-    state: { ...checkVictory(withTriggers), visibility: updatePlayerVisibility(withTriggers, playerId) },
+    state: { ...checkVictory(withAreaTriggers), visibility: updatePlayerVisibility(withAreaTriggers, playerId) },
     result: { ok: true },
   }
 }

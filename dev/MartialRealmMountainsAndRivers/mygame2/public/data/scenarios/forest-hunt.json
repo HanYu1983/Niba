@@ -2,7 +2,7 @@
   "version": "1.2.0",
   "id": "forest-hunt",
   "title": "第二章：林海迷蹤",
-  "description": "主角進入林海，遇到獵人村落，發現妖氣源頭在森林深處的兩座巢穴。",
+  "description": "主角進入林海，遇到獵人村落，發現妖氣源頭在森林深處的妖王巢穴。",
   "chapterIndex": 1,
   "enableRandomEvents": false,
   "mapSize": {
@@ -1166,7 +1166,14 @@
             "itemId": "gather-qi-pill",
             "quantity": 2
           }
-        ]
+        ],
+        "attributes": {
+          "armStrength": 8,
+          "constitution": 8,
+          "agility": 8,
+          "innerEnergy": 8,
+          "insight": 8
+        }
       }
     },
     {
@@ -1226,7 +1233,7 @@
         "column": 12
       },
       "data": {
-        "name": "妖物巢穴·東",
+        "name": "妖王巢穴",
         "health": 60,
         "maxHealth": 60,
         "spawnChance": 0.1,
@@ -1240,25 +1247,25 @@
       "id": "creature-nest1-guard",
       "kind": "creature",
       "position": {
-        "row": 3,
+        "row": 1,
         "column": 12
       },
       "data": {
-        "name": "巢穴妖衛",
+        "name": "妖衛首領",
         "isBoss": false,
         "level": 2,
         "schoolId": "swift-wind",
         "behaviorType": "hunter",
         "homeNestId": "nest-1",
         "attributes": {
-          "armStrength": 10,
-          "constitution": 10,
-          "agility": 9,
-          "innerEnergy": 9,
-          "insight": 9
+          "armStrength": 15,
+          "constitution": 13,
+          "agility": 11,
+          "innerEnergy": 12,
+          "insight": 10
         },
-        "spawnOnLoad": true,
-        "aggroRange": 3
+        "spawnOnLoad": false,
+        "aggroRange": 4
       }
     },
     {
@@ -1276,11 +1283,11 @@
         "behaviorType": "hunter",
         "homeNestId": "nest-2",
         "attributes": {
-          "armStrength": 10,
-          "constitution": 10,
-          "agility": 10,
-          "innerEnergy": 10,
-          "insight": 10
+          "armStrength": 11,
+          "constitution": 9,
+          "agility": 11,
+          "innerEnergy": 9,
+          "insight": 11
         },
         "spawnOnLoad": true,
         "aggroRange": 3
@@ -1301,10 +1308,10 @@
         "behaviorType": "roamer",
         "attributes": {
           "armStrength": 8,
-          "constitution": 8,
+          "constitution": 10,
           "agility": 8,
           "innerEnergy": 8,
-          "insight": 8
+          "insight": 6
         },
         "spawnOnLoad": true,
         "aggroRange": 2
@@ -1326,8 +1333,8 @@
         "attributes": {
           "armStrength": 8,
           "constitution": 8,
-          "agility": 8,
-          "innerEnergy": 8,
+          "agility": 10,
+          "innerEnergy": 6,
           "insight": 8
         },
         "spawnOnLoad": true,
@@ -1349,7 +1356,7 @@
         "name": "藥材",
         "customDrops": [
           {
-            "lootId": "heal-wound-medicine",
+            "lootId": "bronze-blade",
             "chance": 100
           }
         ]
@@ -1373,6 +1380,7 @@
             "label": "與獵人交談",
             "description": "向獵人打聽森林深處的妖氣源頭。",
             "endsPlayerTurn": false,
+            "resultMessage": "開始和老獵人對談",
             "requirements": [
               {
                 "type": "active-player"
@@ -1404,7 +1412,13 @@
           "row": 12,
           "column": 12
         },
-        "name": "itemPoint"
+        "name": "itemPoint",
+        "customDrops": [
+          {
+            "lootId": "thunderclap-bomb",
+            "chance": 100
+          }
+        ]
       }
     },
     {
@@ -1443,7 +1457,7 @@
         "choices": [
           {
             "id": "choice-mt4rkwkk",
-            "label": "幫助挖礦",
+            "label": "查訪礦脈",
             "description": "上前幫村民挖掘礦脈，順便了解資源點的運作。",
             "endsPlayerTurn": false,
             "requirements": [
@@ -1465,7 +1479,7 @@
                 "quantity": 1
               }
             ],
-            "resultMessage": "凌淵幫村民挖掘礦脈，礦石化作建料送往獵人村落。村民感激之餘，贈予一張落石符作為謝禮。"
+            "resultMessage": "進入礦脈, 遭遇一名村民"
           }
         ]
       }
@@ -1485,15 +1499,48 @@
         "name": "sectGate",
         "schoolId": "golden-body"
       }
+    },
+    {
+      "id": "event-5-4-mt79gcm7",
+      "kind": "event",
+      "position": {
+        "row": 5,
+        "column": 4
+      },
+      "data": {
+        "position": {
+          "row": 5,
+          "column": 4
+        },
+        "name": "event",
+        "eventType": "wandering-scholar"
+      }
+    },
+    {
+      "id": "event-10-10-mt79gmol",
+      "kind": "event",
+      "position": {
+        "row": 10,
+        "column": 10
+      },
+      "data": {
+        "position": {
+          "row": 10,
+          "column": 10
+        },
+        "name": "event",
+        "eventType": "resource-cache"
+      }
     }
   ],
   "quests": {
     "victoryObjectives": [
       {
         "id": "obj-destroy-nests",
-        "title": "摧毀 2 座妖物巢穴",
+        "title": "摧毀妖物巢穴",
         "type": "destroy-nest",
-        "targetValue": 2
+        "targetValue": 1,
+        "targetId": "nest-1"
       }
     ],
     "failConditions": {
@@ -1552,7 +1599,7 @@
           "id": "forest-start-8",
           "speakerName": "獵人 老獵",
           "speakerIcon": "🏹",
-          "content": "好！老夫這獵人村落願助你一臂之力。那兩座巢穴日夜生出妖物，威脅村落，你若能將它們盡數摧毀，便是救了全村性命！"
+          "content": "好！老夫這獵人村落願助你一臂之力。那座妖王巢穴日夜生出妖物，威脅村落，你若能將它連根拔起，便是救了全村性命！"
         }
       ]
     },
@@ -1563,36 +1610,19 @@
           "id": "hunter-talk-1",
           "speakerName": "獵人 老獵",
           "speakerIcon": "🏹",
-          "content": "少俠，那兩座巢穴一東一南，藏於林海深處。巢穴妖氣濃烈，日夜生出妖物，老夫的獵人村落已快抵擋不住了。"
+          "content": "少俠，那妖王巢穴就藏於林海深處。巢穴妖氣濃烈，日夜生出妖物，老夫的獵人村落已快抵擋不住了。"
         },
         {
           "id": "hunter-talk-2",
           "speakerName": "凌淵",
           "speakerIcon": "🥋",
-          "content": "老獵放心，我這便深入林海，將那兩座巢穴連根拔起。"
+          "content": "老獵放心，我這便深入林海，將那妖王巢穴連根拔起。"
         },
         {
           "id": "hunter-talk-3",
           "speakerName": "獵人 老獵",
           "speakerIcon": "🏹",
           "content": "老夫在此備好丹藥與箭矢，你若有需要，隨時可回村落補給。"
-        }
-      ]
-    },
-    "event-nest-destroyed": {
-      "name": "巢穴被摧毀",
-      "steps": [
-        {
-          "id": "nest-destroyed-1",
-          "speakerName": "旁白",
-          "speakerIcon": "📜",
-          "content": "轟然一聲巨響，妖物巢穴在凌淵的攻勢下轟然崩塌，盤踞其上的妖氣如煙般消散。"
-        },
-        {
-          "id": "nest-destroyed-2",
-          "speakerName": "凌淵",
-          "speakerIcon": "🥋",
-          "content": "一座巢穴已除。還剩一座，妖氣源頭便斷了。"
         }
       ]
     },
@@ -1609,7 +1639,7 @@
           "id": "victory-2",
           "speakerName": "獵人 老獵",
           "speakerIcon": "🏹",
-          "content": "少俠果然了得！兩座巢穴盡數摧毀，這下獵人村落終於能安寧了！"
+          "content": "少俠果然了得！妖王巢穴一除，這下獵人村落終於能安寧了！"
         },
         {
           "id": "victory-3",
@@ -1677,6 +1707,147 @@
           "content": "多謝。這落石符我便收下了，日後對敵時必能派上用場。"
         }
       ]
+    },
+    "dialogue-mt789msi": {
+      "name": "到達門派",
+      "steps": [
+        {
+          "id": "sect-arrive-1",
+          "speakerName": "旁白",
+          "speakerIcon": "📜",
+          "content": "凌淵循著山徑深入林海，一座隱於蒼翠之間的金剛武館赫然映入眼簾。門前石獅威嚴，匾額上「金剛」二字蒼勁有力。"
+        },
+        {
+          "id": "sect-arrive-2",
+          "speakerName": "守門弟子",
+          "speakerIcon": "🥋",
+          "content": "來者何人？此地乃金剛武館，非門中弟子不得擅闖。"
+        },
+        {
+          "id": "sect-arrive-3",
+          "speakerName": "凌淵",
+          "speakerIcon": "🧙",
+          "content": "在下凌淵，追尋妖氣源頭途經此地，見貴派威名遠播，特來拜會，還望通報一聲。"
+        },
+        {
+          "id": "sect-arrive-4",
+          "speakerName": "守門弟子",
+          "speakerIcon": "🥋",
+          "content": "原來是斬妖除魔的俠士。此事好辦，我這便帶你入內見掌門。"
+        },
+        {
+          "id": "sect-arrive-5",
+          "speakerName": "金剛掌門",
+          "speakerIcon": "🥋",
+          "content": "少俠一身剛猛正氣，與我金剛流頗有淵源。既到武館，不妨在此歇腳。我金剛武館除了可學習金剛流內外功法，也打造有鎧甲兵刃，供門中弟子購置對敵。"
+        },
+        {
+          "id": "sect-arrive-6",
+          "speakerName": "凌淵",
+          "speakerIcon": "🧙",
+          "content": "學習功法與購置裝備？敢問掌門該如何進行？"
+        },
+        {
+          "id": "sect-arrive-7",
+          "speakerName": "金剛掌門",
+          "speakerIcon": "🥋",
+          "content": "其一，武館內設有藏經閣，你可前往參觀。只要付出足夠的聲望與金錢，便能擇一門合適的內功或外功修習；武館愈高，能傳授的功法便愈精深。"
+        },
+        {
+          "id": "sect-arrive-8",
+          "speakerName": "金剛掌門",
+          "speakerIcon": "🥋",
+          "content": "其二，館旁的兵器坊陳列著我金剛流的鎧甲與兵刃。你可用金錢購置，增添攻防。切記量力而為，選與自身功法相配的裝備方是上策。"
+        },
+        {
+          "id": "sect-arrive-9",
+          "speakerName": "凌淵",
+          "speakerIcon": "🧙",
+          "content": "多謝掌門指點。學得功法、添置裝備，我斬妖除魔的底氣便更足了。"
+        },
+        {
+          "id": "sect-arrive-10",
+          "speakerName": "金剛掌門",
+          "speakerIcon": "🥋",
+          "content": "善。妖氣源頭仍在林海深處，少俠多加保重。金剛武館的大門，永遠為除魔衛道的俠士敞開。"
+        }
+      ]
+    },
+    "dialogue-mt78iimj": {
+      "name": "到達巢穴",
+      "steps": [
+        {
+          "id": "nest-arrive-1",
+          "speakerName": "旁白",
+          "speakerIcon": "📜",
+          "content": "越過重重密林，妖氣愈發濃烈。前方的樹木盡皆枯槁，枝椏扭曲如爪，隱約可見一座被墨色妖氣籠罩的巢穴，發出陣陣低沉的嗡鳴。"
+        },
+        {
+          "id": "nest-arrive-2",
+          "speakerName": "凌淵",
+          "speakerIcon": "🧙",
+          "content": "這股妖氣……與獵人所言相符，想必就是那妖物巢穴了。只是這妖氣如此濃重，恐怕巢中妖物不在少數。"
+        },
+        {
+          "id": "nest-arrive-3",
+          "speakerName": "旁白",
+          "speakerIcon": "📜",
+          "content": "巢穴深處忽然傳來一聲淒厲的咆哮，一名周身纏繞妖氣的妖衛猛然竄出，攔在凌淵身前，齜牙咧嘴，目露凶光。"
+        },
+        {
+          "id": "nest-arrive-4",
+          "speakerName": "巢穴妖衛",
+          "speakerIcon": "🐺",
+          "content": "吼——擅闖巢穴者，殺無赦！"
+        },
+        {
+          "id": "nest-arrive-5",
+          "speakerName": "凌淵",
+          "speakerIcon": "🧙",
+          "content": "果然盤踞著妖物。老獵說得對，若不將這巢穴連根拔起，獵人村落遲早被這源源不絕的妖物吞沒。"
+        },
+        {
+          "id": "nest-arrive-6",
+          "speakerName": "凌淵",
+          "speakerIcon": "🧙",
+          "content": "妖物，就讓我用手中招式，替這片林海除害！"
+        },
+        {
+          "id": "nest-arrive-7",
+          "speakerName": "旁白",
+          "speakerIcon": "📜",
+          "content": "凌淵凝神運勁，氣機流轉周身，向妖衛與巢穴逼近。一場廝殺，一觸即發。"
+        }
+      ]
+    },
+    "dialogue-mt7al8fd": {
+      "name": "擊殺妖獸首領",
+      "steps": [
+        {
+          "id": "beast-slain-1",
+          "speakerName": "旁白",
+          "speakerIcon": "📜",
+          "content": "妖衛首領在凌淵的攻勢下發出最後一聲淒厲的咆哮，龐大的身軀轟然倒地，化作一縷黑煙消散於空中。"
+        },
+        {
+          "id": "beast-slain-2",
+          "speakerName": "凌淵",
+          "speakerIcon": "🥋",
+          "content": "呼……好險，這妖物出手狠辣，若非平日不輟練功，只怕已倒在這裡。"
+        },
+        {
+          "id": "beast-slain-3",
+          "speakerName": "凌淵",
+          "speakerIcon": "🥋",
+          "content": "守巢的妖獸首領已除，接下來便只剩那座妖王巢穴了。只要將其摧毀，這片林海的妖氣源頭便徹底斷絕！"
+        },
+        {
+          "id": "beast-slain-4",
+          "speakerName": "旁白",
+          "speakerIcon": "📜",
+          "content": "凌淵凝神望向不遠處那座仍在嗡嗡作響的妖王巢穴，提氣運勁，準備迎接最後一戰。"
+        }
+      ]
     }
   },
   "triggers": [
@@ -1687,17 +1858,110 @@
       "actionParam": "event-forest-start"
     },
     {
-      "id": "trigger-nest1-destroyed",
-      "condition": "on-object-destroyed",
-      "action": "start-dialogue",
-      "actionParam": "event-nest-destroyed",
-      "conditionParam": "nest-1"
-    },
-    {
       "id": "trigger-victory-dialogue",
       "condition": "on-victory",
       "action": "start-dialogue",
       "actionParam": "event-victory"
+    },
+    {
+      "id": "trigger-mt7890a2",
+      "condition": "on-enter-area",
+      "action": "start-dialogue",
+      "actionParam": "dialogue-mt789msi",
+      "conditionParam": "area-mt788iexue3y"
+    },
+    {
+      "id": "trigger-nest-area",
+      "condition": "on-enter-area",
+      "action": "start-dialogue",
+      "actionParam": "dialogue-mt78iimj",
+      "conditionParam": "area-mt78hzgb7inr"
+    },
+    {
+      "id": "trigger-mt79kmrx",
+      "condition": "on-enter-area",
+      "action": "spawn-creature",
+      "actionParam": "creature-nest1-guard",
+      "conditionParam": "area-mt78hzgb7inr"
+    },
+    {
+      "id": "trigger-mt7allwk",
+      "condition": "on-object-destroyed",
+      "action": "start-dialogue",
+      "actionParam": "dialogue-mt7al8fd",
+      "conditionParam": "creature-nest1-guard"
+    }
+  ],
+  "areas": [
+    {
+      "id": "area-mt788iexue3y",
+      "name": "門派周邊",
+      "positions": [
+        {
+          "row": 7,
+          "column": 7
+        },
+        {
+          "row": 8,
+          "column": 7
+        },
+        {
+          "row": 9,
+          "column": 7
+        },
+        {
+          "row": 8,
+          "column": 6
+        },
+        {
+          "row": 8,
+          "column": 8
+        }
+      ],
+      "destroyWhenTriggered": true
+    },
+    {
+      "id": "area-mt78hzgb7inr",
+      "name": "巢穴周邊",
+      "positions": [
+        {
+          "row": 1,
+          "column": 11
+        },
+        {
+          "row": 2,
+          "column": 11
+        },
+        {
+          "row": 3,
+          "column": 11
+        },
+        {
+          "row": 3,
+          "column": 12
+        },
+        {
+          "row": 2,
+          "column": 12
+        },
+        {
+          "row": 1,
+          "column": 12
+        },
+        {
+          "row": 1,
+          "column": 13
+        },
+        {
+          "row": 2,
+          "column": 13
+        },
+        {
+          "row": 3,
+          "column": 13
+        }
+      ],
+      "destroyWhenTriggered": true
     }
   ]
 }

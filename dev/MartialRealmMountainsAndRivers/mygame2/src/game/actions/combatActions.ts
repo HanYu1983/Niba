@@ -85,9 +85,11 @@ export function applyTargetDefeat(
     return nextState
   }
   const destroyedLastNest = state.creatureNests.length === 1
+  // 僅在沙盒模式（無 campaignState）預設 gameWon；劇情模式下由 checkVictory 依目標判定，
+  // 否則 checkVictory 會因 gameWon 已為 true 而 early-return，導致 on-victory 觸發器（勝利對話）永不觸發。
   let nextState: GameState = incrementRunStat({
     ...state,
-    gameWon: destroyedLastNest ? true : state.gameWon,
+    gameWon: !state.campaignState && destroyedLastNest ? true : state.gameWon,
     creatureNests: state.creatureNests.filter((nest) => nest.id !== targetId),
   }, 'nestsDestroyed')
   // 物件從地圖消失（巢穴被摧毀）時觸發 on-object-destroyed 觸發器。

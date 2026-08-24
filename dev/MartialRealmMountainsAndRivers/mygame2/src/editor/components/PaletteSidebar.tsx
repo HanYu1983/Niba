@@ -26,6 +26,7 @@ type PaletteSidebarProps = {
   onOpenQuest: () => void
   onOpenDialogue: () => void
   onOpenTrigger: () => void
+  onOpenArea: () => void
 }
 
 function PaletteSidebar({
@@ -38,6 +39,7 @@ function PaletteSidebar({
   onOpenQuest,
   onOpenDialogue,
   onOpenTrigger,
+  onOpenArea,
 }: PaletteSidebarProps) {
   const isTerrainBrush = brush.kind === 'terrain'
   const currentTerrain = isTerrainBrush ? brush.terrain : null
@@ -116,6 +118,7 @@ function PaletteSidebar({
         <Button size="small" onClick={onOpenQuest}>🎯 任務與勝敗條件</Button>
         <Button size="small" onClick={onOpenDialogue}>💬 劇情對話</Button>
         <Button size="small" onClick={onOpenTrigger}>⚡ 事件觸發器</Button>
+        <Button size="small" onClick={onOpenArea}>📍 區域繪製</Button>
       </Flex>
     </Flex>
   )
