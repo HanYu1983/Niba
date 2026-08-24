@@ -1,5 +1,36 @@
 # 開發日誌
 
+## 2026-08-24｜AI 重構切片 C：統一 AiAction 型別＋Action Validator
+
+### 本次完成
+
+- 新增通用資料模型 `src/game/ai/aiAction.ts`（重構文件 §4）：
+  - `AiActorRef`／`AiTargetKind`／`AiTargetRef` 與六種 `AiAction`（move／attack／collect／build／hold／end-turn）；collect、build 先定義型別供切片 D/G 使用。
+  - `defenseActionToAiAction(state, actorId, action)`：舊 `AiDefenseAction` → `AiAction` 的 Adapter（文件 §12 Phase 1 指定步驟）。舊 attack 不帶 reason，轉換時補空字串；目標位置查表補上，查不到以 (-1,-1) 佔位（有效性由 Validator 依 id 判定）。
+- 新增 `src/game/ai/validation/validateAiAction.ts`（重構文件 §9.2）：
+  - 行動者存在＋存活；player kind 的回合合法性沿用 `canPlayerPerformAction`（單一事實來源，非玩家回合／Creature 回合中／結果視窗／遊戲結束都會擋下）。
+  - move：目的地是否在 `collectReachableCells` 結果內（一次 Dijkstra 同時涵蓋牆、佔位與體力）。
+  - attack：目標存在且存活＋相鄰（與 `getAttackTarget` 契約一致）；collect/build 最小檢查；hold/end-turn 直接有效。
+  - creature kind 的回合階段檢查留待切片 D 接線。
+- 測試 `validateAiAction.test.ts`（11 例）：既有四種決策輸出經 Adapter 後全數 valid；死亡／過遠攻擊、體力不可達、佔位阻隔、牆中孤格、行動者不存在或死亡、非該玩家回合等 stale 情境給出明確 reason。
+
+### 本切片不改變什麼
+
+- 三個決策函式輸出仍是 `AiDefenseAction`；`gameStore` 執行路徑一行未動——Validator 只驗證不接線（Scheduler／Creature 管線在後續切片消費）。
+
+### 影響檔案
+
+- 新增：`src/game/ai/aiAction.ts`、`src/game/ai/validation/validateAiAction.ts` ＋測試
+- 文件：本日誌、`ai-system-refactoring-development-design.md` §15 Phase 1、`handev/ai-development-playbook.md` §1／§3
+
+### 驗證結果
+
+- vitest：72 檔 / **758 項全過**。tsc -b：通過。ESLint（新檔案）：通過。Build：通過。
+
+### 下一步
+
+- 切片 **D**：Creature 行為改走共用管線（Adapter → Policy → Validator → Executor），巡邏決策去 greedy 化。
+
 ## 2026-08-24｜AI 重構切片 B：共用感知層＋巡邏隨機注入
 
 ### 本次完成
