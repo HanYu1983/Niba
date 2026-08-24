@@ -17,23 +17,20 @@ function makeMap(rows = 40, columns = 40) {
 }
 
 describe('門派據點生成', () => {
-  it('依 sectGateCount 生成且門派不重複', () => {
+  it('依 sectGateCount 生成指定數量門派', () => {
     const g1 = createSectGates(makeMap(), 3, 100, [])
     expect(g1).toHaveLength(3)
-    const schoolIds = g1.map((gate) => gate.schoolId)
-    expect(new Set(schoolIds).size).toBe(3)
     expect(g1.every((gate) => gate.level === 1 && gate.experience === 0)).toBe(true)
   })
 
-  it('超過門派總數時，前 6 個不重複，超過部分可重複門派', () => {
-    const gates = createSectGates(makeMap(), 99, 200, [])
-    expect(gates.length).toBe(99)
+  it('每次生成皆從目錄隨機選取門派，允許重複', () => {
+    const gates = createSectGates(makeMap(), martialSchoolCatalog.length + 2, 200, [])
+    expect(gates.length).toBe(martialSchoolCatalog.length + 2)
     const schoolIds = gates.map((gate) => gate.schoolId)
-    // 前 6 個門派不重複
-    const firstSix = schoolIds.slice(0, martialSchoolCatalog.length)
-    expect(new Set(firstSix).size).toBe(martialSchoolCatalog.length)
-    // 超過部分允許重複（整體可能出現重複門派）
-    expect(new Set(schoolIds).size).toBeLessThanOrEqual(martialSchoolCatalog.length)
+    // 所有門派都來自目錄。
+    expect(schoolIds.every((id) => martialSchoolCatalog.some((school) => school.id === id))).toBe(true)
+    // 生成數量超過門派總數時必定出現重複。
+    expect(new Set(schoolIds).size).toBe(martialSchoolCatalog.length)
   })
 
   it('createGameState 預設生成 3 個門派據點', () => {

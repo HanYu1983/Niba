@@ -1,4 +1,4 @@
-import { Button, Card, Divider, Flex, Input, InputNumber, Modal, Select, Space, Tabs, Tag, Typography, message } from 'antd'
+import { Button, Card, Divider, Flex, Input, InputNumber, Modal, Select, Space, Tabs, Typography, message } from 'antd'
 import { useState } from 'react'
 import type { GameSettings, TerrainWeights } from '../game/types'
 import {
