@@ -285,7 +285,8 @@ function validateAiStepAction(state: GameState, action: AiAction): string | null
   return validation.valid ? null : validation.reason
 }
 
-/** 更新建設計畫中單一 queue item 的狀態（重構文件 §14.6 狀態機）。 */function updateConstructionPlanItem(
+/** 更新建設計畫中單一 queue item 的狀態（重構文件 §14.6 狀態機）。 */
+function updateConstructionPlanItem(
   aiPlayerId: string,
   itemIndex: number,
   patch: Partial<Pick<AiConstructionPlanItem, 'status' | 'blockedReason'>>,
@@ -2157,6 +2158,8 @@ export const gameStore = {
           currentState.traps ?? [],
           currentState.sectGates ?? [],
           currentState.globalBuffs ?? [],
+          defaultRandomSource,
+          currentState.round,
         ),
         spawnCreaturesFromNests: (currentState, creatures, players) => spawnCreaturesFromNests(
           currentState.creatureNests,

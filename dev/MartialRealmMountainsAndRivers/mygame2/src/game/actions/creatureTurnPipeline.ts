@@ -35,6 +35,8 @@ import { getInnerSkill, getSkillDamage, getSkillEffectMultiplier, getSkillProgre
 import { getGlobalBaseDefenseMultiplier } from '../rules/globalBuffRules'
 import { hasActivePolicy, MILITARY_DEFENSE_REDUCTION } from '../rules/policyRules'
 import { defaultRandomSource, rollChance, type RandomSource } from '../rules/randomRules'
+import { createAiActionEvent, type AiActionEvent } from '../ai/aiActionEvent'
+import type { AiTargetKind } from '../ai/aiAction'
 
 /** Creature 回合計算與逐隻動畫共用的結果協定（維持與舊 moveCreatures 相容）。 */
 export type CreatureTurnResult = {
@@ -49,6 +51,7 @@ export type CreatureTurnResult = {
   traps?: TrapState[]
   logs: CreatureActionLog[]
   steps?: CreatureTurnStep[]
+  events?: AiActionEvent[]
 }
 
 export type CreatureTurnStep = {
@@ -86,6 +89,9 @@ export type CreatureTurnContext = {
   reflectedDamageByCreatureId: Map<string, number>
   logs: CreatureActionLog[]
   steps: CreatureTurnStep[]
+  /** 切片 J：全域行動日誌事件（與玩家 AI 共用 §4.5 格式），回合結束後併入 GameState.actionEvents。 */
+  events: AiActionEvent[]
+  round: number
 }
 
 /** Perceive 段前置：建立整個 Creature 回合共用的世界情境。 */
@@ -101,9 +107,10 @@ export function createCreatureTurnContext(inputs: {
   nests: CreatureNestState[]
   ruins: RuinState[]
   traps: TrapState[]
-  sectGates: SectGateState[]
-  survivingCreatures: CreatureState[]
-}): CreatureTurnContext {
+   sectGates: SectGateState[]
+   survivingCreatures: CreatureState[]
+   round?: number
+ }): CreatureTurnContext {
   return {
     map: inputs.map,
     globalBuffs: inputs.globalBuffs,
@@ -125,6 +132,8 @@ export function createCreatureTurnContext(inputs: {
     reflectedDamageByCreatureId: new Map(),
     logs: [],
     steps: [],
+    events: [],
+    round: inputs.round ?? 0,
   }
 }
 
@@ -346,6 +355,12 @@ function applyTrapAt(context: CreatureTurnContext, creature: CreatureState, posi
   }
 }
 
+/** Execute 段的行動判別（切片 J）：事件化與日誌共用的單一事實來源。 */
+export type CreatureExecutionOutcome =
+  | { type: 'attack'; targetId: string; targetKind: AiTargetKind; targetPosition: Position; targetName?: string }
+  | { type: 'move' }
+  | { type: 'idle' }
+
 /** Execute 段：套用移動（含陷阱）並結算互動分支。順序與舊實作一致：道具→據點→資源→玩家→防禦設施。 */
 export function executeCreatureAction(
   context: CreatureTurnContext,
@@ -353,7 +368,7 @@ export function executeCreatureAction(
   selection: CreatureTargetSelection | null,
   plan: CreatureMovementPlan,
   randomSource: RandomSource,
-): void {
+): CreatureExecutionOutcome {
   const position = plan.finalPosition
   if (plan.trappedAt) applyTrapAt(context, creature, plan.trappedAt)
 
@@ -377,6 +392,7 @@ export function executeCreatureAction(
   if (reachedItem && reachedItem.eatableByCreatures !== false) {
     context.itemPoints = context.itemPoints.filter((point) => point.id !== reachedItem.id)
     context.logs.push({ creatureId: creature.id, creatureName: creature.name, message: `${creature.name} 吃掉了道具點。` })
+    return { type: 'move' }
   } else if (adjacentBase) {
     const rawDamage = Math.max(1, creature.attributes.armStrength - 2)
     // 據點承傷加成：軍事政策（-5%）與全局靈氣「城防堅固」相乘。
@@ -391,6 +407,7 @@ export function executeCreatureAction(
     if (globalDefenseMultiplier < 1) reductions.push('城防堅固')
     const reducedNote = reductions.length > 0 ? `（傷害因${reductions.join('、')}降低）` : ''
     context.logs.push({ creatureId: creature.id, creatureName: creature.name, message: `${creature.name} 攻擊${adjacentBase.name}，造成 ${damage} 點傷害${health === 0 ? '並將其摧毀' : ''}${reducedNote}。` })
+    return { type: 'attack', targetId: adjacentBase.id, targetKind: 'base', targetPosition: adjacentBase.position, targetName: adjacentBase.name }
   } else if (adjacentResource) {
     const damage = Math.max(1, creature.attributes.armStrength - 2)
     const health = Math.max(0, adjacentResource.health - damage)
@@ -398,8 +415,10 @@ export function executeCreatureAction(
       ? { ...point, health, active: health > 0 }
       : point)
     context.logs.push({ creatureId: creature.id, creatureName: creature.name, message: health <= 0 ? `${creature.name} 摧毀了${adjacentResource.name}。` : `${creature.name} 攻擊${adjacentResource.name}，造成 ${damage} 點傷害。` })
+    return { type: 'attack', targetId: adjacentResource.id, targetKind: 'resource', targetPosition: adjacentResource.position, targetName: adjacentResource.name }
   } else if (adjacentPlayer) {
     resolveAttackAgainstPlayer(context, creature, adjacentPlayer, randomSource)
+    return { type: 'attack', targetId: adjacentPlayer.id, targetKind: 'player', targetPosition: adjacentPlayer.position, targetName: adjacentPlayer.name }
   } else if (adjacentDefense) {
     const damage = Math.max(1, creature.attributes.armStrength - 2)
     const health = Math.max(0, adjacentDefense.health - damage)
@@ -416,9 +435,12 @@ export function executeCreatureAction(
       context.defenseStructures = context.defenseStructures.map((structure) => structure.id === adjacentDefense.id ? { ...structure, health } : structure)
     }
     context.logs.push({ creatureId: creature.id, creatureName: creature.name, message: health === 0 ? `${creature.name} 攻擊${adjacentDefense.name}，造成 ${damage} 點傷害並將其摧毀。` : `${creature.name} 攻擊${adjacentDefense.name}，造成 ${damage} 點傷害。` })
+    return { type: 'attack', targetId: adjacentDefense.id, targetKind: 'defense', targetPosition: adjacentDefense.position, targetName: adjacentDefense.name }
   } else if (plan.moved && selection) {
     context.logs.push({ creatureId: creature.id, creatureName: creature.name, message: `${creature.name} 朝 ${selection.name ?? selection.id} 移動到 (${position.row + 1}, ${position.column + 1})。` })
+    return { type: 'move' }
   }
+  return { type: 'idle' }
 }
 
 /** Creature 對玩家的攻擊結算（閃避／根骨減傷／破軍／鐵壁／嗜血／反震），公式與舊實作一致。 */
@@ -460,6 +482,60 @@ function resolveAttackAgainstPlayer(
     context.logs.push({ creatureId: adjacentPlayer.id, creatureName: adjacentPlayer.name, message: `${adjacentPlayer.name} 的反震對 ${creature.name} 造成 ${reflectedDamage} 點傷害。` })
   }
   context.logs.push({ creatureId: creature.id, creatureName: creature.name, message: `${creature.name} 攻擊 ${adjacentPlayer.name}，${avoided ? '被閃避。' : halved ? `造成 ${damage} 點傷害（根骨減傷）。` : `造成 ${damage} 點傷害。`}` })
+}
+
+/**
+ * 切片 J：把單一 Creature 的回合行動轉成 §4.5 全域事件（與玩家 AI 同格式）。
+ * 攻擊／移動如實記錄；原地待命依原因區分成敗（驗證失敗或體力不足視為 failed）。
+ */
+export function buildCreatureActionEvent(
+  context: CreatureTurnContext,
+  creature: CreatureState,
+  selection: CreatureTargetSelection | null,
+  plan: CreatureMovementPlan,
+  outcome: CreatureExecutionOutcome,
+  validation: CreaturePlanValidation,
+): AiActionEvent {
+  const actor = { id: creature.id, kind: 'creature' as const, name: creature.name }
+  if (outcome.type === 'attack') {
+    return createAiActionEvent({
+      round: context.round,
+      actor,
+      action: {
+        type: 'attack',
+        actor: { id: creature.id, kind: 'creature' },
+        target: { id: outcome.targetId, kind: outcome.targetKind, position: outcome.targetPosition },
+        reason: `與 ${outcome.targetName ?? outcome.targetId} 交戰。`,
+      },
+      result: 'succeeded',
+    })
+  }
+  if (outcome.type === 'move') {
+    return createAiActionEvent({
+      round: context.round,
+      actor,
+      action: {
+        type: 'move',
+        actor: { id: creature.id, kind: 'creature' },
+        destination: plan.finalPosition,
+        reason: selection ? `移動接近 ${selection.name ?? selection.id}。` : '巡邏移動。',
+      },
+      result: 'succeeded',
+    })
+  }
+  const reason = !validation.ok
+    ? validation.reason
+    : plan.blocked
+      ? '體力不足，無法繼續移動。'
+      : selection
+        ? '未能接近目標，原地待命。'
+        : '沒有可執行的目標，原地待命。'
+  return createAiActionEvent({
+    round: context.round,
+    actor,
+    action: { type: 'hold', actor: { id: creature.id, kind: 'creature' }, reason },
+    result: !validation.ok || plan.blocked ? 'failed' : 'succeeded',
+  })
 }
 
 /** Reduce 段：結算終點的道具／事件吞噬、反震傷害，組出下一隻 Creature 快照與動畫 step。 */
@@ -524,6 +600,8 @@ export type RunCreatureTurnInputs = {
   sectGates?: SectGateState[]
   globalBuffs?: GameState['globalBuffs']
   randomSource?: RandomSource
+  /** 切片 J：事件歸屬回合（GameState.round），未提供時為 0（單元測試情境）。 */
+  round?: number
 }
 
 /** 六段管線 orchestrator：perceive（情境＋箭塔）→ select → plan → validate → execute → reduce。 */
@@ -531,7 +609,7 @@ export function runCreatureTurn(inputs: RunCreatureTurnInputs): CreatureTurnResu
   const {
     creatures, map, players, bases, resourcePoints, defenseStructures, itemPoints,
     explorationEvents, nests = [], ruins = [], traps = [], sectGates = [], globalBuffs = [],
-    randomSource = defaultRandomSource,
+    randomSource = defaultRandomSource, round = 0,
   } = inputs
 
   const hasValidPosition = (value: { position?: Position } | null | undefined): value is { position: Position } => {
@@ -555,6 +633,7 @@ export function runCreatureTurn(inputs: RunCreatureTurnInputs): CreatureTurnResu
     traps,
     sectGates,
     survivingCreatures: damagedCreatures,
+    round,
   })
 
   for (const tower of defenseStructures.filter((structure) =>
@@ -619,7 +698,8 @@ export function runCreatureTurn(inputs: RunCreatureTurnInputs): CreatureTurnResu
     if (!validation.ok) {
       plan = { finalPosition: creature.position, remainingStamina: creature.maxStamina, moved: false, blocked: false, blockingDefenseId: null, trappedAt: null }
     }
-    executeCreatureAction(context, creature, selection, plan, randomSource)
+    const outcome = executeCreatureAction(context, creature, selection, plan, randomSource)
+    context.events.push(buildCreatureActionEvent(context, creature, selection, plan, outcome, validation))
     return reduceCreatureEvents(context, creature, plan)
   })
 
@@ -636,6 +716,7 @@ export function runCreatureTurn(inputs: RunCreatureTurnInputs): CreatureTurnResu
     traps: context.traps,
     logs: context.logs,
     steps: context.steps,
+    events: context.events,
   }
 }
 

@@ -994,7 +994,7 @@ perception → decision → validation → execution → event
 ### Phase 4：Creature Action/Event Pipeline
 
 - Owner：AI Engineering
-- Status：Todo
+- Status：Done（2026-08-24；管線六段分離與 blocked 誤擊修復於切片 D，事件化於切片 J 補齊）
 - Priority：P0
 - Acceptance Criteria：
   - Creature 目標、路徑、行動與 reducer 分離。
@@ -1003,6 +1003,7 @@ perception → decision → validation → execution → event
 - Test Method：
   - 固定地圖情境。
   - 行動事件 reducer 測試。
+- Result（2026-08-24 切片 J）：`executeCreatureAction` 回傳 `CreatureExecutionOutcome`（attack 含目標 id/kind/position／move／idle）作為行為事實來源；`buildCreatureActionEvent` 把每隻 Creature 的回合行動轉成 §4.5 `AiActionEvent`（攻擊／移動 succeeded、驗證失敗或體力不足待命 failed 帶原因、無目標待命 succeeded），順序與輸入順序一致。回合完成時 `endPlayerTurn` 把 events 依序併入 `GameState.actionEvents`（既有玩家事件保留、舊檔相容），steps 動畫快照照舊。測試 6 例（含 endPlayerTurn 整合兩例）；全套 832 項通過，既有 creature 測試零修改。
 
 ### Phase 5：動畫與全域日誌
 

@@ -214,6 +214,7 @@ export function moveCreatures(
   sectGates: SectGateState[] = [],
   globalBuffs: GameState['globalBuffs'] = [],
   randomSource: RandomSource = defaultRandomSource,
+  round: number = 0,
 ): CreatureTurnResult {
   return runCreatureTurn({
     creatures,
@@ -230,6 +231,7 @@ export function moveCreatures(
     sectGates,
     globalBuffs,
     randomSource,
+    round,
   })
 }
 

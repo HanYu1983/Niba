@@ -1,5 +1,33 @@
 # 開發日誌
 
+## 2026-08-24｜AI 重構切片 J：Creature 行動事件化（§1.3 事件格式單一協定）
+
+### 本次完成
+
+- `src/game/actions/creatureTurnPipeline.ts`：
+  - `CreatureTurnContext`／`CreatureTurnResult` 新增 `events` 累加器與 `round` 輸入；`executeCreatureAction` 回傳 `CreatureExecutionOutcome`（attack 含目標 id/kind/position／move／idle）作為行為事實來源。
+  - 新增 export `buildCreatureActionEvent(...)`：把單一 Creature 的回合行動轉成 §4.5 `AiActionEvent`（與玩家 AI 同格式）。攻擊／移動記 succeeded；驗證失敗或體力不足的待命記 failed 並帶原因；無目標待命記 succeeded。
+  - orchestrator 逐隻 push 事件，順序與 `survivingCreatures` 輸入順序一致（批次結果一致）。
+- `src/game/actions/creatureActions.ts`：`moveCreatures` 尾端新增可選 `round` 參數（預設 0），傳入管線供事件歸屬回合。
+- `src/game/actions/turnActions.ts`：`endPlayerTurn` 回合完成時把 `scheduledCreatureTurn.events` 依序附加進回傳 state 的 `actionEvents`（既有玩家事件保留、舊存檔相容不變）；steps 動畫快照照舊。
+- `src/game/gameStore.ts`：moveCreatures dependency 補傳 `currentState.round`。行動日誌面板（ActionLogPanel 讀 `actionEvents`）自此可見 Creature 攻擊／移動／待命。
+- 測試＋6（新檔 creatureTurnPipeline.events.test.ts：相鄰攻擊事件全欄位、無目標待命 succeeded、體力不足 failed、多隻順序一致性；endPlayerTurn 整合兩例：回合完成時玩家事件保留＋Creature 附加、回合未完成 actionEvents 不變）。既有 creature 測試零修改全過。
+
+### 影響檔案
+
+- 修改：`creatureTurnPipeline.ts`、`creatureActions.ts`、`turnActions.ts`、`gameStore.ts`
+- 新增：`src/game/actions/creatureTurnPipeline.events.test.ts`
+- 文件：重構文件 §12 Phase 4 補實作現況、playbook §3 J 列
+
+### 驗證結果
+
+- vitest：**81 檔／832 項全數通過**（前片 826＋本片 6）
+- tsc -b：通過；ESLint：新碼零警告；Build：通過。
+
+### 下一步
+
+- 切片 K：JSON policy 消費（玩家 AI 自保參數與優先序讀 `getAiJsonPolicy()`；Creature 依 `getCreaturePolicyId()` 參數化門檻，同 seed 釘住）。
+
 ## 2026-08-24｜AI 重構切片 I：Validator 接線（§9.2 單一把關落地）
 
 ### 本次完成
