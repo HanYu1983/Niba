@@ -46,8 +46,8 @@ const WORLD_SEED_OFFSETS = {
 
 export function createGameState(settings: GameSettings = DEFAULT_GAME_SETTINGS): GameState {
   const humanPlayerCount = Math.min(4, Math.max(1, Math.round(settings.playerCount ?? 1)))
-  // AI 玩家設定暫時關閉；即使舊模板或舊存檔設定含有 aiPlayerCount，也不生成 AI 玩家。
-  const playerCount = humanPlayerCount
+  const aiPlayerCount = Math.min(8, Math.max(0, Math.round(settings.aiPlayerCount ?? 0)))
+  const playerCount = humanPlayerCount + aiPlayerCount
   const map: MapState = {
     rows: settings.rows,
     columns: settings.columns,
