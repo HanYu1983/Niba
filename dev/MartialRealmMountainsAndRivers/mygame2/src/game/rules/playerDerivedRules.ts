@@ -63,7 +63,7 @@ function getEffectiveBuffDefinition(instance: BuffInstance): BuffDefinition | un
   for (const key of [
     'attributeMultiplier', 'maxHealthDamagePercent', 'criticalRateMultiplier', 'criticalRateBonus', 'terrainCostOverride', 'reflectionPercent',
     'lifestealPercent', 'innerPowerLeechPercent', 'damageReductionPercent', 'healthRegenPercent',
-    'innerPowerHealthRegenPercent', 'damageDealtPercent', 'externalSkillDamagePercent', 'evasionRateBonus',
+    'innerPowerHealthRegenPercent', 'innerPowerRegenPercent', 'damageDealtPercent', 'externalSkillDamagePercent', 'evasionRateBonus',
     'staminaToInnerPowerRatio', 'externalSkillInnerCostReduction', 'insightTrueDamageMultiplier',
     'visionRadiusBonus', 'maxStaminaBonus', 'gatherStaminaCostReduction', 'gatherDoubleYieldChance',
     'buildingMaterialCostReduction', 'buildingReputationBonus', 'shopBuyPriceDiscount',

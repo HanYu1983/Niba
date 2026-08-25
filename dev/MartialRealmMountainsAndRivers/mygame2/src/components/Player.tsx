@@ -77,8 +77,8 @@ function Player({
         </span>
       )}
       {appearance === 'creature' && health !== undefined && maxHealth !== undefined && (
-        <span className="player__health" aria-label={`血量 ${health} / ${maxHealth}`}>
-          ♥{health}/{maxHealth}
+        <span className="player__health" aria-label={`血量 ${Math.floor(health)} / ${Math.floor(maxHealth)}`}>
+          ♥{Math.floor(health)}/{Math.floor(maxHealth)}
         </span>
       )}
       <span className="player__marker" />
