@@ -2180,11 +2180,11 @@ export const gameStore = {
       // 4. Select
       let { goal, result } = selectBestGoal(goalResults)
 
-      // 5. Threshold：低於門檻時 fallback 到 construction（預設目標）
+      // 5. Threshold：低於門檻時 fallback 到 exploration（預設目標）
       if (result.score < MIN_THRESHOLD) {
-        const fallback = goalResults.construction
+        const fallback = goalResults.exploration
         if (fallback.score > 0) {
-          goal = 'construction'
+          goal = 'exploration'
           Object.assign(result, fallback)
         } else {
           exitReason = `所有目標分數過低（最高 ${goal} = ${result.score.toFixed(2)} < ${MIN_THRESHOLD}）`

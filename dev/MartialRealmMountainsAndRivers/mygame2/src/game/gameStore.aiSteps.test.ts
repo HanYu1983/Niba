@@ -212,16 +212,18 @@ describe('runAiDefenseStep／runAiSupportStep 整合', () => {
 
 describe('runTest1Step', () => {
   it('無興趣點時直接結束回合', () => {
+    // 全地圖已探索（exploration fallback 也為 0）→ 迴圈退出
+    const allCellIds = Array.from({ length: 121 }, (_, i) => `${Math.floor(i / 11)}-${i % 11}`)
     load({
       players: [
         makeTestPlayer({ position: { row: 5, column: 3 }, stamina: 20 }),
         makeTestHuman(),
       ],
       bases: [],
+      visibility: { exploredCellIds: allCellIds, mode: 'fog' },
       aiOrders: [makeTest1Order()],
     })
     const result = gameStore.runTest1Step('ai-1')
-    // 迴圈因分數過低且無據點（construction fallback 也為 0）退出，回傳 ok:false
     expect(result.ok).toBe(false)
     expect(playerById('ai-1').position.column).toBe(3) // 未移動
   })

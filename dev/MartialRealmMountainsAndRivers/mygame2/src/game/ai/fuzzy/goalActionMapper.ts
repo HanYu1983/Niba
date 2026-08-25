@@ -26,6 +26,8 @@ export function buildActionSequence(
       return buildPositioningActions(actor, result, state, player)
     case 'construction':
       return buildConstructionActions(actor, result, state, player)
+    case 'exploration':
+      return buildExplorationActions(actor, result)
   }
 }
 
@@ -211,4 +213,22 @@ function buildConstructionActions(
   }
 
   return [{ type: 'hold', actor, reason: '建設：無行動需求' }]
+}
+
+// ─── exploration ──────────────────────────────────────────────────
+
+function buildExplorationActions(
+  actor: AiActorRef,
+  result: GoalResult,
+): AiAction[] {
+  if (result.target?.kind === 'explore') {
+    return [{
+      type: 'move',
+      actor,
+      destination: result.target.position,
+      reason: `探索：移動到未探索格 (${result.target.position.row},${result.target.position.column})`,
+    }]
+  }
+
+  return [{ type: 'hold', actor, reason: '探索：無未探索格' }]
 }

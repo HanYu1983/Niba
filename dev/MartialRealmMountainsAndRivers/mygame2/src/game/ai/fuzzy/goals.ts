@@ -2,7 +2,7 @@ import type { Position } from '../../types'
 import { trapezoid, fuzzyAnd, fuzzyOr } from './membershipFunctions'
 import type { FuzzyInputs } from './fuzzyInputs'
 
-export type GoalName = 'selfPreservation' | 'collectItems' | 'positioning' | 'construction'
+export type GoalName = 'selfPreservation' | 'collectItems' | 'positioning' | 'construction' | 'exploration'
 
 export interface GoalResult {
   score: number
@@ -17,6 +17,7 @@ export type GoalTarget =
   | { kind: 'exit'; position: Position }
   | { kind: 'build'; baseId: string; buildingId: string; buildingName: string }
   | { kind: 'resource-point'; resourcePointId: string; position: Position }
+  | { kind: 'explore'; position: Position }
 
 // ─── selfPreservation ──────────────────────────────────────────────
 
@@ -85,6 +86,7 @@ export function evaluateAllGoals(inputs: FuzzyInputs): Record<GoalName, GoalResu
     collectItems: evaluateCollectItems(inputs),
     positioning: evaluatePositioning(inputs),
     construction: evaluateConstruction(inputs),
+    exploration: evaluateExploration(inputs),
   }
 }
 
@@ -125,6 +127,27 @@ function evaluateConstruction(inputs: FuzzyInputs): GoalResult {
   return {
     score: nearestBase ? 0.1 : 0,
     context: { materialRatio },
+  }
+}
+
+// ─── exploration ──────────────────────────────────────────────────
+// 預設目標：有未探索可達格 → 高分 + 移動到最近的未探索格
+
+function evaluateExploration(inputs: FuzzyInputs): GoalResult {
+  const { unexploredReachableCount, nearestUnexploredPosition, staminaRatio } = inputs
+
+  if (unexploredReachableCount === 0 || !nearestUnexploredPosition) {
+    return { score: 0 }
+  }
+
+  // 未探索格越多分數越高，體力充足時加分
+  const baseScore = Math.min(1, unexploredReachableCount / 10)
+  const score = staminaRatio > 0.3 ? baseScore : baseScore * 0.5
+
+  return {
+    score,
+    target: { kind: 'explore', position: nearestUnexploredPosition },
+    context: { unexploredReachableCount },
   }
 }
 

@@ -6,6 +6,7 @@ import { canTraverseTerrain } from '../../rules/playerDerivedRules'
 import { getAdjacentPositions } from '../../types'
 import { buildingCatalog } from '../../catalogs/buildingCatalog'
 import { canPlayerBuildBuildingType } from '../../rules/buildingProgressionRules'
+import { collectReachableCells } from '../perception/reachablePositions'
 
 export interface FuzzyInputs {
   /** 能扛幾下攻擊（health / maxEnemyDamage），無敵人時 = 99 */
@@ -42,6 +43,10 @@ export interface FuzzyInputs {
   distToNearestResourcePoint: number
   /** 是否與資源點相鄰 */
   isAdjacentToResourcePoint: boolean
+  /** 體力內可達且未探索的格子數 */
+  unexploredReachableCount: number
+  /** 最近的未探索可達格子位置，無則 undefined */
+  nearestUnexploredPosition: Position | undefined
 }
 
 function manhattan(a: Position, b: Position): number {
@@ -129,6 +134,15 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
     : Infinity
   const isAdjacentToResourcePoint = distToNearestResourcePoint === 1
 
+  // 探索相關：可達且未探索的格子
+  const exploredIds = new Set(state.visibility?.exploredCellIds ?? [])
+  const reachableCells = collectReachableCells(state, player)
+  const unexploredCells = reachableCells.filter((c) => !exploredIds.has(c.cellId) && c.cost > 0)
+  const unexploredReachableCount = unexploredCells.length
+  const nearestUnexploredPosition = unexploredCells.length > 0
+    ? unexploredCells.reduce((best, c) => c.cost < best.cost ? c : best).position
+    : undefined
+
   return {
     hitsSurvivable,
     staminaRatio: player.stamina / player.maxStamina,
@@ -147,5 +161,7 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
     nearestResourcePoint,
     distToNearestResourcePoint,
     isAdjacentToResourcePoint,
+    unexploredReachableCount,
+    nearestUnexploredPosition,
   }
 }
