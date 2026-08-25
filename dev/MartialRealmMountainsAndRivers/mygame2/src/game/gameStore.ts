@@ -2168,8 +2168,9 @@ export const gameStore = {
       }
     }
 
-    const endAction = { type: 'end-turn' as const, actor, reason: interests.length > 0 ? `巡檢 ${interests.length} 個興趣點，結束回合。` : '無興趣點，結束回合。' }
-    gameStore.executeAiAction(endAction)
+    const endReason = interests.length > 0 ? `巡檢 ${interests.length} 個興趣點，結束回合。` : '無興趣點，結束回合。'
+    const endAction = { type: 'end-turn' as const, actor, reason: endReason }
+    gameStore.endPlayerTurn(playerId)
     recordAiStepEvent(state.round, playerId, player.name, endAction, { ok: true })
     return { ok: true }
   },
