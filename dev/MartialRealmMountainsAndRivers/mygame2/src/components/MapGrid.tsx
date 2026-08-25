@@ -7,7 +7,8 @@ import { getCellVisibility } from '../game/rules/visibilityRules'
 import { getCreatureIcon } from '../game/rules/creatureBehaviorRules'
 import { getActiveBuffsForPlayer, getBuff } from '../game/rules/playerDerivedRules'
 import { getBastionMultipliers } from '../game/rules/defenseBastionRules'
-import { DEFENSE_BUILD_RANGE } from '../game/rules/defenseRules'
+import { getDefenseBuildRange } from '../game/rules/defenseRules'
+import { getGovernanceRank } from '../game/rules/governanceRules'
 import { getMapCellRangeState, resolveMapCellAction } from '../game/rules/mapCellStateRules'
 import { resolveTargetShapeCells } from '../game/rules/targetingRules'
 import { executeMapCellAction as executeInteractionAction, type MapInteractionHandlers } from './mapGridInteractionExecutor'
@@ -81,6 +82,10 @@ function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], def
   const { rows, columns, cells } = map
   const activePlayer = players.find((player) => player.id === activePlayerId)
   const selectedBase = bases.find((base) => base.id === selectedBaseId)
+  // 建造範圍隨官階增長：基礎 5 +（官階 - 1），官階 6 達最大 10 格。
+  const defenseBuildRange = activePlayer
+    ? getDefenseBuildRange(getGovernanceRank(activePlayer.prestige).rank)
+    : 0
   const blockedPositions = useMemo(() => activePlayer
     ? [
       ...players
@@ -319,11 +324,11 @@ function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], def
                 ? Math.abs(defenseBuildMode.basePosition.row - cell.row) + Math.abs(defenseBuildMode.basePosition.column - cell.column)
                 : Infinity
               const canSelectDefensePosition = Boolean(
-                defenseBuildMode && defenseDistance <= DEFENSE_BUILD_RANGE && cell.terrain !== 'wall' &&
+                defenseBuildMode && defenseDistance <= defenseBuildRange && cell.terrain !== 'wall' &&
                 !blockedPositions.some((position) => position.row === cell.row && position.column === cell.column),
               )
               const isDefenseBuildRange = Boolean(
-                defenseBuildMode && defenseDistance <= DEFENSE_BUILD_RANGE && cell.terrain !== 'wall',
+                defenseBuildMode && defenseDistance <= defenseBuildRange && cell.terrain !== 'wall',
               )
               const { isBaseInfluence: isSelectedBaseRange } = getMapCellRangeState(
                 cell,
