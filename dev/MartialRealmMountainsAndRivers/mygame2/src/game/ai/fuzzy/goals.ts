@@ -2,7 +2,7 @@ import type { Position } from '../../types'
 import { trapezoid, fuzzyAnd, fuzzyOr } from './membershipFunctions'
 import type { FuzzyInputs } from './fuzzyInputs'
 
-export type GoalName = 'selfPreservation' | 'collectItems' | 'positioning'
+export type GoalName = 'selfPreservation' | 'collectItems' | 'positioning' | 'construction' | 'exploration'
 
 export interface GoalResult {
   score: number
@@ -15,6 +15,9 @@ export type GoalTarget =
   | { kind: 'item'; id: string; position: Position }
   | { kind: 'attack'; targetId: string; targetType: 'creature' | 'nest'; position: Position }
   | { kind: 'exit'; position: Position }
+  | { kind: 'build'; baseId: string; buildingId: string; buildingName: string }
+  | { kind: 'resource-point'; resourcePointId: string; position: Position }
+  | { kind: 'explore'; position: Position }
 
 // ─── selfPreservation ──────────────────────────────────────────────
 
@@ -82,6 +85,69 @@ export function evaluateAllGoals(inputs: FuzzyInputs): Record<GoalName, GoalResu
     selfPreservation: evaluateSelfPreservation(inputs),
     collectItems: evaluateCollectItems(inputs),
     positioning: evaluatePositioning(inputs),
+    construction: evaluateConstruction(inputs),
+    exploration: evaluateExploration(inputs),
+  }
+}
+
+// ─── construction ──────────────────────────────────────────────────
+// 建料滿 + 可蓋 → 高分 build；建料不足 + 有資源點 → 移動/採集
+
+function evaluateConstruction(inputs: FuzzyInputs): GoalResult {
+  const { materialRatio, canBuild, buildableBuilding, nearestBase, nearestResourcePoint, distToNearestResourcePoint, isAdjacentToResourcePoint } = inputs
+
+  // 情境 A：建料滿 + 可建造 → 高分 + build target
+  if (materialRatio >= 1 && canBuild && buildableBuilding && nearestBase) {
+    return {
+      score: 0.9,
+      target: { kind: 'build', baseId: nearestBase.id, buildingId: buildableBuilding.id, buildingName: buildableBuilding.name },
+      context: { materialRatio, action: 'build' },
+    }
+  }
+
+  // 情境 B：已與資源點相鄰 → 採集（高分）
+  if (isAdjacentToResourcePoint && nearestResourcePoint) {
+    return {
+      score: 0.8,
+      target: { kind: 'resource-point', resourcePointId: nearestResourcePoint.id, position: nearestResourcePoint.position },
+      context: { materialRatio, action: 'collect' },
+    }
+  }
+
+  // 情境 C：建料不足 + 有資源點 → 移動到資源點（中高分）
+  if (materialRatio < 1 && nearestResourcePoint && distToNearestResourcePoint < Infinity) {
+    return {
+      score: 0.5,
+      target: { kind: 'resource-point', resourcePointId: nearestResourcePoint.id, position: nearestResourcePoint.position },
+      context: { materialRatio, distToNearestResourcePoint, action: 'move-to-resource' },
+    }
+  }
+
+  // 無據點或無資源點 → 低分
+  return {
+    score: nearestBase ? 0.1 : 0,
+    context: { materialRatio },
+  }
+}
+
+// ─── exploration ──────────────────────────────────────────────────
+// 預設目標：有未探索可達格 → 高分 + 移動到最近的未探索格
+
+function evaluateExploration(inputs: FuzzyInputs): GoalResult {
+  const { unexploredReachableCount, nearestUnexploredPosition, staminaRatio } = inputs
+
+  if (unexploredReachableCount === 0 || !nearestUnexploredPosition) {
+    return { score: 0 }
+  }
+
+  // 未探索格越多分數越高，體力充足時加分
+  const baseScore = Math.min(1, unexploredReachableCount / 10)
+  const score = staminaRatio > 0.3 ? baseScore : baseScore * 0.5
+
+  return {
+    score,
+    target: { kind: 'explore', position: nearestUnexploredPosition },
+    context: { unexploredReachableCount },
   }
 }
 

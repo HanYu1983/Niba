@@ -26,6 +26,15 @@ function makeInputs(overrides: Partial<FuzzyInputs> = {}): FuzzyInputs {
     distToNearestItem: Infinity,
     exitCount: 4,
     nearestExit: undefined,
+    nearestBase: undefined,
+    materialRatio: 0,
+    canBuild: false,
+    buildableBuilding: undefined,
+    nearestResourcePoint: undefined,
+    distToNearestResourcePoint: Infinity,
+    isAdjacentToResourcePoint: false,
+    unexploredReachableCount: 0,
+    nearestUnexploredPosition: undefined,
     ...overrides,
   }
 }
