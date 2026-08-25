@@ -137,7 +137,9 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
   const canBuild = !!buildableBuilding
 
   // 最近資源點（屬於最近據點）
-  const baseResourcePoints = state.resourcePoints.filter((rp) => rp.ownerBaseId === nearestBase?.id && rp.active !== false && rp.health > 0)
+  const baseResourcePoints = nearestBase
+    ? state.resourcePoints.filter((rp) => rp.ownerBaseId === nearestBase!.id && rp.active !== false && rp.health > 0)
+    : []
   const nearestResourcePoint = baseResourcePoints.length > 0
     ? baseResourcePoints.reduce((best, rp) => manhattan(player.position, rp.position) < manhattan(player.position, best.position) ? rp : best)
     : undefined

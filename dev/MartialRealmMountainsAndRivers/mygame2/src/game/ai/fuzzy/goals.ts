@@ -57,7 +57,7 @@ export function evaluateCollectItems(inputs: FuzzyInputs): GoalResult {
 
   const f_manyItems = trapezoid(reachableItemCount, 0, 0, 3, 5)    // >=5 → 1.0, >=3 → 0.6
   const f_staminaHigh = trapezoid(staminaRatio, 0.7, 0.85, 1, 1)
-  const f_hasItems = trapezoid(reachableItemCount, 0, 0, 1, 2)     // 有道具就 > 0
+  const f_hasItems = trapezoid(reachableItemCount, 0, 0, 99, 99)     // 有道具就 = 1
 
   let score = fuzzyOr(
     fuzzyAnd(f_manyItems, f_staminaHigh),
@@ -212,8 +212,8 @@ function evaluateConstruction(inputs: FuzzyInputs): GoalResult {
     }
   }
 
-  // 情境 C：建料不足 + 有資源點 → 移動到資源點（中高分）
-  if (materialRatio < 1 && nearestResourcePoint && distToNearestResourcePoint < Infinity) {
+  // 情境 C：有據點 + 建料不足 + 有資源點 → 移動到資源點（中高分）
+  if (nearestBase && materialRatio < 1 && nearestResourcePoint && distToNearestResourcePoint < Infinity) {
     return {
       score: 0.5,
       target: { kind: 'resource-point', resourcePointId: nearestResourcePoint.id, position: nearestResourcePoint.position },

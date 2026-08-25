@@ -7,7 +7,6 @@ import { endPlayerTurn, type TurnActionDependencies } from '../../actions/turnAc
 import { executeAiAttack } from './executeAiAttack'
 import { collectItemPointAction } from '../../actions/itemActions'
 import type { CombatActionDependencies } from '../../actions/combatActions'
-import type { UpgradeableAttribute } from '../../types'
 
 export type ExecuteAiActionDependencies = {
   combat: CombatActionDependencies
@@ -24,9 +23,6 @@ export function executeAiAction(
   state: GameState,
   action: AiAction,
   dependencies: ExecuteAiActionDependencies,
-  allocateAttribute?: (playerId: string, attribute: UpgradeableAttribute) => boolean,
-  useItem?: (playerId: string, itemId: string) => ActionOutcome,
-  equipEquipment?: (playerId: string, instanceId: string) => ActionOutcome,
 ): { state: GameState; result: ActionOutcome } {
   switch (action.type) {
     case 'move':
@@ -47,18 +43,6 @@ export function executeAiAction(
       const result = constructBuilding(state, action.baseId, action.buildingType, action.actor.id)
       return { state: result.state, result: result.result }
     }
-    case 'allocate-attribute': {
-      const ok = allocateAttribute?.(action.actor.id, action.attribute) ?? false
-      return { state, result: ok ? { ok: true } : { ok: false, reason: '屬性分配失敗。' } }
-    }
-    case 'use-item': {
-      const result = useItem?.(action.actor.id, action.itemId) ?? { ok: false, reason: '無法使用道具。' }
-      return { state, result }
-    }
-    case 'equip': {
-      const result = equipEquipment?.(action.actor.id, action.instanceId) ?? { ok: false, reason: '無法裝備。' }
-      return { state, result }
-    }
     case 'hold':
       return { state, result: { ok: true } }
     // 注意：此分支僅回傳純 state，不會觸發 creature turn 動畫
@@ -68,5 +52,8 @@ export function executeAiAction(
       const result = endPlayerTurn(state, action.actor.id, dependencies.turn)
       return { state: result.state, result: { ok: true } }
     }
+    // allocate-attribute / use-item / equip 由 gameStore 層直接處理，不經過此領域函數。
+    default:
+      return { state, result: { ok: false, reason: `未知行動類型：${(action as { type: string }).type}` } }
   }
 }
