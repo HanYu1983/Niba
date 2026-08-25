@@ -143,7 +143,7 @@ export const buffCatalog: BuffDefinition[] = [
   { id: 'taixu-qi-conversion', name: '引氣歸元', description: '回合結束時，剩餘體力轉化為內力（1 體力 → 2 內力）。', duration: 'persistent', category: 'buff', staminaToInnerPowerRatio: 2 },
   { id: 'scarlet-flame-burning', name: '燃燒', description: '每回合損失最大生命 20%。', duration: 'rounds', durationRounds: 3, maxHealthDamagePercent: 0.2, mapMarker: true, mapMarkerClass: 'scarlet-flame' },
   { id: 'frost-water-cold-poison', name: '寒毒', description: '五維屬性降低 20%。', duration: 'rounds', durationRounds: 2, attributeMultiplier: 0.8, mapMarker: true, mapMarkerClass: 'frost-water-cold' },
-  { id: 'earth-mountain-reflection', name: '反震', description: '受到傷害時反彈同等傷害。', duration: 'persistent', category: 'buff', reflectionPercent: 1, mapMarker: true, mapMarkerClass: 'earth-mountain' },
+  { id: 'earth-mountain-reflection', name: '反震', description: '受到傷害時反彈 25% 傷害。', duration: 'persistent', category: 'buff', reflectionPercent: 0.25, mapMarker: true, mapMarkerClass: 'earth-mountain' },
   { id: 'hundred-poison-rot', name: '腐骨毒', description: '中毒：每回合損失最大生命 10%，且五維降低 15%。', duration: 'rounds', durationRounds: 3, category: 'debuff', maxHealthDamagePercent: 0.1, attributeMultiplier: 0.85, mapMarker: true, mapMarkerClass: 'hundred-poison' },
   { id: 'trap-immobilize', name: '定身', description: '被陷阱定身，本回合無法移動。', duration: 'rounds', durationRounds: 3, immobilized: true },
   { id: 'triple-resonance-stun', name: '震懾', description: '三重共振衝擊，目標下一個回合完全無法行動。', duration: 'rounds', durationRounds: 1, stunned: true, mapMarker: true, mapMarkerClass: 'triple-resonance-stun' },
