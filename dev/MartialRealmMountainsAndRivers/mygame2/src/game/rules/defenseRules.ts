@@ -7,6 +7,9 @@ import type {
 import { isAdjacent, isSamePosition } from '../types'
 import { getGovernanceRank } from './governanceRules'
 
+/** 防禦設施建造範圍：據點曼哈頓距離內可建造。 */
+export const DEFENSE_BUILD_RANGE = 5
+
 export function validateDefenseBuild(
   state: GameState,
   player: PlayerState | null,
@@ -36,7 +39,7 @@ export function validateDefenseBuild(
   if (base.buildingMaterials < definition.constructionCost) return `建料不足，還需要 ${definition.constructionCost - base.buildingMaterials}。`
   if (!cell || cell.terrain === 'wall') return '目標格不可建造。'
   const distance = Math.abs(base.position.row - position.row) + Math.abs(base.position.column - position.column)
-  if (distance > 5) return '目標格超出據點 5 格建造範圍。'
+  if (distance > DEFENSE_BUILD_RANGE) return `目標格超出據點 ${DEFENSE_BUILD_RANGE} 格建造範圍。`
   // 道路不佔格子，可鋪設在已被其他物件佔用的格子上（但不可鋪在牆上）。
   if (!definition.changesTerrain && occupied.some((candidate) => isSamePosition(candidate, position))) return '目標格已被佔用。'
   return null

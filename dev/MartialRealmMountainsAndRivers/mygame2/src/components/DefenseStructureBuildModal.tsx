@@ -6,6 +6,7 @@ import type { DefenseStructureType } from '../game/catalogs/defenseStructureCata
 import { buildableDefenseStructureCatalog } from '../game/catalogs/defenseStructureCatalog'
 import { getGovernanceRank } from '../game/rules/governanceRules'
 import { ACTION_STAMINA_COSTS } from '../game/rules/actionCostRules'
+import { DEFENSE_BUILD_RANGE } from '../game/rules/defenseRules'
 
 type DefenseStructureBuildModalProps = {
   base: BaseState | null
@@ -47,7 +48,7 @@ function DefenseStructureBuildModal({
       {base && selectedDefinition && (
         <Flex vertical gap={16}>
           <Typography.Paragraph style={{ margin: 0 }}>
-            選擇防禦建築後，點擊地圖上據點周圍 6 格內的空格，再確認建造。
+            選擇防禦建築後即自動進入「選擇建造位置」，點擊地圖上據點周圍 {DEFENSE_BUILD_RANGE} 格內的空格，再確認建造。
           </Typography.Paragraph>
 
           <Typography.Text>
@@ -86,7 +87,9 @@ function DefenseStructureBuildModal({
                     disabled: !affordable || !rankUnlocked,
                     onClick: () => {
                       setError(null)
+                      // 選擇建築後自動進入「選擇建造位置」，省去手動點擊按鈕的流程。
                       onSelectStructure(definition.type)
+                      onBeginPositionSelection()
                     },
                   }]}
                 />
@@ -94,38 +97,34 @@ function DefenseStructureBuildModal({
             })}
           </Flex>
 
-          <Alert
-            type={position ? 'info' : 'warning'}
-            showIcon
-            title={position
-              ? `建造位置：(${position.row + 1}, ${position.column + 1})`
-              : '尚未選擇建造位置，請點擊地圖上的高亮空格。'}
-          />
-
           {error && <Alert type="error" showIcon title={error} />}
 
           <Space>
             <Button onClick={() => { setError(null); onCancel() }}>取消</Button>
-            <Button
-              disabled={!selectedDefinition || base.buildingMaterials < selectedDefinition.constructionCost}
-              onClick={() => {
-                setError(null)
-                onBeginPositionSelection()
-              }}
-            >
-              選擇建造位置
-            </Button>
-            <Button
-              type="primary"
-              disabled={!position || !selectedDefinition || !base || base.buildingMaterials < selectedDefinition.constructionCost}
-              onClick={() => {
-                if (!onConfirm()) {
-                  setError('建造失敗：位置可能已被佔用、建料不足，或目前已無法建造。')
-                }
-              }}
-            >
-              確認建造
-            </Button>
+            {!position && (
+              <Button
+                disabled={!selectedDefinition || base.buildingMaterials < selectedDefinition.constructionCost}
+                onClick={() => {
+                  setError(null)
+                  onBeginPositionSelection()
+                }}
+              >
+                選擇建造位置
+              </Button>
+            )}
+            {position && (
+              <Button
+                type="primary"
+                disabled={!selectedDefinition || !base || base.buildingMaterials < selectedDefinition.constructionCost}
+                onClick={() => {
+                  if (!onConfirm()) {
+                    setError('建造失敗：位置可能已被佔用、建料不足，或目前已無法建造。')
+                  }
+                }}
+              >
+                確認建造
+              </Button>
+            )}
           </Space>
         </Flex>
       )}
