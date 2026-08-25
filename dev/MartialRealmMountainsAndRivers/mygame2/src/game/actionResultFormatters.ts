@@ -59,23 +59,33 @@ export function formatAttackResult(result: AttackExecutionResult): ActionResult 
 
 export function formatExternalSkillResult(result: ExternalDamageExecutionResult): ActionResult {
   const selfCast = result.targetMode === 'self'
+  const isArea = Boolean(result.areaTargets && result.areaTargets.length > 0)
   return {
-    title: '外功結果',
+    title: isArea ? '範圍外功結果' : '外功結果',
     message: selfCast
       ? `${result.playerName} 施放 ${result.skillName}，效果作用於自身。`
-      : `${result.playerName} 施放 ${result.skillName} 於 ${result.targetName}。`,
+      : isArea
+        ? `${result.playerName} 施放範圍外功 ${result.skillName}，命中 ${result.areaTargets?.length} 個目標。`
+        : `${result.playerName} 施放 ${result.skillName} 於 ${result.targetName}。`,
     rewards: [
       ...(selfCast ? [result.skillName.includes('悟道') ? '已增加目前裝備功法經驗' : '技能效果已生效'] : [
-        `造成傷害 ${result.damage}`,
+        ...(isArea
+          ? (result.areaTargets ?? []).map((target) => {
+            const isNest = target.targetType === 'nest'
+            return `${target.targetName}：造成傷害 ${target.damage}${target.defeated
+              ? (isNest ? '｜巢穴已摧毀' : '｜目標已被擊敗')
+              : `｜剩餘 ${target.nextHealth} / ${target.maxHealth}`}`
+          })
+          : [`造成傷害 ${result.damage}`]),
         ...(result.terrainResonance ? [`天地共鳴：${result.terrainResonance}`] : []),
         ...(result.synergy ? ['五行相生連攜：內功生外功｜傷害 ×1.25'] : []),
         ...(result.tripleResonance ? ['⚡ 三重共振！目標震懾一回合'] : []),
         ...(result.criticalHit ? ['暴擊！造成 1.5 倍傷害。'] : []),
         ...(result.criticalRate !== undefined && result.criticalRate > 0 ? [`外功暴擊率 ${result.criticalRate}%`] : []),
         ...(result.appliedBuffs ?? []).map((buff) => `施加 Buff：${buff.name}（${buff.description}，持續 ${buff.remainingRounds === null ? '持續生效' : `${buff.remainingRounds} 回合`}）`),
-        result.defeated
+        !isArea && result.defeated
           ? result.targetType === 'nest' ? '巢穴已摧毀' : '目標已被擊敗'
-          : `目標剩餘血量 ${result.nextHealth} / ${result.maxHealth}`,
+          : undefined,
         ...(result.experienceReward ? [`玩家經驗 +${result.experienceReward}`] : []),
         ...(result.loot ? [`掉落：${formatLootLabel(result.loot)}`] : []),
       ]),
@@ -90,7 +100,7 @@ export function formatExternalSkillResult(result: ExternalDamageExecutionResult)
       ...(result.learnedSkill
         ? [`學會${result.learnedSkill.type === 'inner' ? '內功' : '外功'}：${result.learnedSkill.skill.name}`]
         : []),
-    ],
+    ].filter((line): line is string => Boolean(line)),
   }
 }
 

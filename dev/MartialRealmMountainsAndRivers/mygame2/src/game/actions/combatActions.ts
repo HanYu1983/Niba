@@ -11,11 +11,13 @@ import type {
   LootResult,
   PlayerState,
   EquipmentDurabilityChange,
+  Position,
 } from '../types'
 import { addSkillExperience, getElementDamageMultiplier, getExternalSkill, getGenerationSynergyMultiplier, getInnerSkill, getSchoolElement, getSkillDamage, getSkillEffectMultiplier, getSkillInnerPowerCost, getSkillProgression, isElementGenerating, SKILL_EXPERIENCE_PER_USE } from '../rules/skillRules'
 import { getBuff, getCreatureDamageReductionPercent, getEffectiveAttributesForPlayer, getExternalSkillCritRateForPlayer, getExternalSkillDamagePercent, getExternalSkillInnerCostReduction, getInnerPowerLeechPercent, getLifestealPercent, getPlayerSkillExpGainPercent } from '../rules/playerDerivedRules'
 import { getMaxHealth, getMaxInnerPower, getMaxStamina } from '../rules/playerStatsRules'
 import { getAttackTarget } from '../rules/targetRules'
+import { resolveTargetShapeCells } from '../rules/targetingRules'
 import { reduceEquipmentDurability } from '../rules/equipmentRules'
 import { ACTION_STAMINA_COSTS, canPlayerPerformAction, spendPlayerStamina } from '../rules/actionCostRules'
 import { defaultRandomSource, rollChance, type RandomSource } from '../rules/randomRules'
@@ -340,6 +342,7 @@ export function executeExternalDamage(
   targetId: string,
   skillId: string,
   dependencies: CombatActionDependencies,
+  internal?: { areaPass?: boolean },
 ): { state: GameState; result: ActionExecutionResult<ExternalDamageExecutionResult> } {
   const skill = getExternalSkill(skillId)
   const player = state.players.find((candidate) => candidate.id === playerId)
@@ -373,6 +376,10 @@ export function executeExternalDamage(
     const rewards: CombatRewards = { experienceGain: 0, moneyReward: 0, progressedPlayer: activatedPlayer }
     const nextPlayer = applyCombatPlayerState(state, activatedPlayer, rewards, dependencies, { innerPowerCost, externalSkillId: skillId, skipSkillExperience: true })
     return { state: { ...state, players: state.players.map((candidate) => candidate.id === playerId ? nextPlayer : candidate) }, result: { ok: true, data: { playerId, playerName: player.name, targetType: 'creature', targetId: playerId, targetName: player.name, skillId, skillName: skill.name, damage: 0, nextHealth: player.health, maxHealth: player.maxHealth, innerPowerCost, targetMode: 'self', defeated: false, experienceReward: rewards.experienceGain || undefined } } }
+  }
+  // 範圍攻擊（selectionMode = all）：對形狀範圍內的所有合法目標逐一結算傷害。
+  if (skill.selectionMode?.kind === 'all' && !internal?.areaPass) {
+    return executeAreaExternalDamage(state, playerId, targetType, targetId, skillId, dependencies)
   }
   const target = getAttackTarget(state, dependencies.getActionablePlayer(state, playerId), targetType, targetId, skill.shape ?? { kind: 'radius', range: skill.range ?? 1 })
   const targetSkillLevel = target ? getSkillProgression(target.player, skillId).level : 1
@@ -524,6 +531,86 @@ export function executeExternalDamage(
     { innerPowerCost: targetInnerPowerCost, externalSkillId: skillId },
   )
   return { state: nextState, result: { ok: true, data: result } }
+}
+
+/**
+ * 範圍攻擊（selectionMode = all）：對形狀範圍內的所有合法目標逐一施放單體外功。
+ * 以玩家為中心，依 skill.shape 計算範圍，將範圍內所有存活生物與巢穴作為目標。
+ */
+function executeAreaExternalDamage(
+  state: GameState,
+  playerId: string,
+  _targetType: AttackTargetType,
+  _targetId: string,
+  skillId: string,
+  dependencies: CombatActionDependencies,
+): { state: GameState; result: ActionExecutionResult<ExternalDamageExecutionResult> } {
+  const skill = getExternalSkill(skillId)
+  const player = dependencies.getActionablePlayer(state, playerId)
+  if (!player) return { state, result: { ok: false, reason: '自身不存在或無法行動。' } }
+
+  const shape = skill.shape ?? { kind: 'radius', range: skill.range ?? 1 }
+  const shapeCells = resolveTargetShapeCells(shape, player.position, state.map)
+  const inRangeTargets: Array<{ type: AttackTargetType; id: string; position: Position }> = []
+  for (const creature of state.creatures) {
+    if (creature.health > 0 && shapeCells.has(`${creature.position.row}-${creature.position.column}`)) {
+      inRangeTargets.push({ type: 'creature', id: creature.id, position: creature.position })
+    }
+  }
+  for (const nest of state.creatureNests) {
+    if (nest.health > 0 && shapeCells.has(`${nest.position.row}-${nest.position.column}`)) {
+      inRangeTargets.push({ type: 'nest', id: nest.id, position: nest.position })
+    }
+  }
+  if (inRangeTargets.length === 0) {
+    return { state, result: { ok: false, reason: '範圍內沒有可攻擊的目標。' } }
+  }
+
+  // 依序對每個目標施加單體外功，逐步累加狀態；範圍攻擊共享一次內力消耗。
+  let currentState = state
+  const areaTargets: NonNullable<ExternalDamageExecutionResult['areaTargets']> = []
+  let primaryResult: ExternalDamageExecutionResult | null = null
+  for (let idx = 0; idx < inRangeTargets.length; idx += 1) {
+    const t = inRangeTargets[idx]
+    // 範圍攻擊多目標共享一次施放：
+    // - 首個目標後清除「本回合已使用」標記，避免單體路徑視為已使用而拒絕。
+    // - 首個目標後還原內力消耗，最終僅在首個目標支付一次內力。
+    const passState = idx === 0
+      ? currentState
+      : {
+          ...currentState,
+          players: currentState.players.map((p) => p.id === playerId
+            ? {
+                ...p,
+                externalSkillsUsedThisTurn: (p.externalSkillsUsedThisTurn ?? []).filter((used) => used !== skillId),
+                innerPower: p.innerPower + (primaryResult?.innerPowerCost ?? 0),
+              }
+            : p),
+        }
+    const single = executeExternalDamage(passState, playerId, t.type, t.id, skillId, dependencies, { areaPass: true })
+    currentState = single.state
+    if (!single.result.ok) {
+      if (!primaryResult && !areaTargets.length) return { state: currentState, result: single.result }
+      continue
+    }
+    const data = single.result.data
+    if (!primaryResult) {
+      primaryResult = { ...data, areaTargets: [] }
+    }
+    areaTargets.push({
+      targetType: data.targetType,
+      targetId: data.targetId,
+      targetName: data.targetName,
+      targetPosition: data.targetPosition,
+      damage: data.damage,
+      nextHealth: data.nextHealth,
+      maxHealth: data.maxHealth,
+      defeated: data.defeated,
+    })
+  }
+  if (!primaryResult) return { state: currentState, result: { ok: false, reason: '範圍攻擊未命中任何目標。' } }
+  primaryResult.areaTargets = areaTargets
+  return { state: currentState, result: { ok: true, data: primaryResult } }
 }
 
 export function executeAttack(
