@@ -79,9 +79,6 @@ import {
 } from './characterFactory'
 import { getMaxHealth, getMaxInnerPower, getMaxStamina } from './rules/playerStatsRules'
 import {
-  replenishInteractionPoint,
-} from './worldGeneration'
-import {
   buyEquipment as buyEquipmentAction,
   buySectEquipment as buySectEquipmentAction,
   buyItem as buyItemAction,
@@ -128,6 +125,7 @@ import {
   withdrawItem as withdrawItemAction,
 } from './actions/storageActions'
 import { movePlayer as movePlayerAction } from './actions/movementActions'
+import { collectItemPointAction } from './actions/itemActions'
 import {
   endPlayerTurn as endPlayerTurnAction,
   startPlayerTurn as startPlayerTurnAction,
@@ -154,13 +152,11 @@ import {
 } from './previewOrchestration'
 import {
   addLootToPlayer,
-  createItemPointLootForPlayer,
   createLootForPlayer,
-  createLootFromId,
   getLearnableSkill,
 } from './lootFactory'
 import { runActionExecution, runActionOutcome } from './storeAdapters'
-import { incrementRunStat, recordMaxLevel } from './runStats'
+import { recordMaxLevel } from './runStats'
 import { enqueueDialogue, skipAllDialogue } from './actions/dialogueActions'
 import { collectTriggeredDialogues } from './rules/dialogueTriggerRules'
 import { checkVictory } from './rules/campaignRules'
@@ -175,6 +171,8 @@ import { chooseSelfPreservationAction } from './aiSelfPreservationRules'
 import { defenseActionToAiAction } from './ai/aiAction'
 import { validateAiAction } from './ai/validation/validateAiAction'
 import { getPlayerAiEmergency } from './ai/policy/aiPolicyRegistry'
+import { collectReachableInterests } from './ai/perception/reachableInterests'
+import { executeAiAction as executeAiActionDomain } from './ai/execution/executeAiAction'
 import { defaultRandomSource } from './rules/randomRules'
 import { getBlockedPositions } from './rules/movementRules'
 
@@ -963,49 +961,7 @@ export const gameStore = {
   },
 
   collectItemPoint: (playerId: string, itemPointId: string): ActionExecutionResult<LootResult[]> => {
-    let pickupResult: ActionExecutionResult<LootResult[]> = { ok: false, reason: '撿取失敗。' }
-
-    updateGameState((state) => {
-      const itemPoint = state.itemPoints.find((point) => point.id === itemPointId)
-      const player = getActionablePlayer(state, playerId)
-
-      if (
-        !itemPoint ||
-        !player ||
-        player.position.row !== itemPoint.position.row ||
-        player.position.column !== itemPoint.position.column
-      ) {
-        pickupResult = { ok: false, reason: '道具點不存在、玩家未進入所在格，或目前無法行動。' }
-        return state
-      }
-
-      const terrain = state.map.cells.find((cell) => cell.row === itemPoint.position.row && cell.column === itemPoint.position.column)?.terrain
-      // 自訂掉落物：依機率逐一判定，掉落多個道具；否則依地形隨機掉落單一物資。
-      const loots: LootResult[] = itemPoint.customDrops && itemPoint.customDrops.length > 0
-        ? itemPoint.customDrops
-            .filter((drop) => Math.random() * 100 < drop.chance)
-            .map((drop) => createLootFromId(player, drop.lootId))
-            .filter((loot): loot is LootResult => loot !== undefined)
-        : [createItemPointLootForPlayer(player, terrain)]
-      pickupResult = { ok: true, data: loots }
-
-      const nextState = {
-        ...state,
-        itemPoints: state.itemPoints.filter((point) => point.id !== itemPointId),
-        players: state.players.map((currentPlayer) =>
-          currentPlayer.id === playerId
-            ? {
-                ...currentPlayer,
-                ...loots.reduce((acc, loot) => addLootToPlayer(acc, loot), currentPlayer),
-                turnEnded: currentPlayer.turnEnded,
-              }
-            : currentPlayer,
-        ),
-      }
-      return incrementRunStat(replenishInteractionPoint(nextState, true, null), 'itemsCollected')
-    })
-
-    return pickupResult
+    return runActionExecution(updateGameState, (state) => collectItemPointAction(state, playerId, itemPointId), '撿取失敗。')
   },
 
   useItem: (playerId: string, itemId: string): ActionOutcome => {
@@ -1675,6 +1631,46 @@ export const gameStore = {
     }), 'AI 攻擊失敗。')
   },
 
+  /** 通用 AI 行動執行器：所有 AI 行動經此單一入口執行。 */
+  executeAiAction: (action: import('./ai/aiAction').AiAction): ActionOutcome => {
+    return runActionOutcome(updateGameState, (state) => executeAiActionDomain(state, action, {
+      combat: {
+        getActionablePlayer,
+        createLootForPlayer,
+        getLearnableSkill,
+        applyExperienceAndLevelUp,
+        addLootToPlayer,
+      },
+      turn: {
+        moveCreatures: (currentState) => moveCreatures(
+          currentState.creatures,
+          currentState.map,
+          currentState.players,
+          currentState.bases,
+          currentState.resourcePoints,
+          currentState.defenseStructures ?? [],
+          currentState.itemPoints ?? [],
+          currentState.explorationEvents ?? [],
+          currentState.creatureNests,
+          currentState.ruins ?? [],
+          currentState.traps ?? [],
+          currentState.sectGates ?? [],
+          currentState.globalBuffs ?? [],
+          defaultRandomSource,
+          currentState.round,
+        ),
+        spawnCreaturesFromNests: (currentState, creatures, players) => spawnCreaturesFromNests(
+          currentState.creatureNests,
+          creatures,
+          currentState.map,
+          players,
+          currentState.bases,
+          currentState.round + 1,
+        ),
+      },
+    }), 'AI 行動失敗。')
+  },
+
   /** 選取元素爆發道具（element-burst）的目標並建立預覽。 */
   previewItemBurst: (targetType: AttackTargetType, targetId: string): ActionOutcome => {
     let result: ActionOutcome = { ok: false, reason: '元素爆發失敗。' }
@@ -2158,17 +2154,24 @@ export const gameStore = {
       return { ok: false, reason: '目前無法執行 AI test1 回合。' }
     }
 
-    const targetColumn = state.map.columns - 1
-    const result = gameStore.movePlayerTo(playerId, player.position.row, targetColumn)
+    const interests = collectReachableInterests(state, player)
+    const actor = { id: playerId, kind: 'player' as const }
+    for (const interest of interests) {
+      const moveAction = { type: 'move' as const, actor, destination: interest.position, reason: '巡檢移動' }
+      const moveResult = gameStore.executeAiAction(moveAction)
+      recordAiStepEvent(state.round, playerId, player.name, moveAction, moveResult)
 
+      if (interest.kind === 'item') {
+        const collectAction = { type: 'collect' as const, actor, target: { id: interest.ref.id, kind: 'item' as const, position: interest.position }, reason: '拾取道具' }
+        const collectResult = gameStore.executeAiAction(collectAction)
+        recordAiStepEvent(state.round, playerId, player.name, collectAction, collectResult)
+      }
+    }
+
+    const endReason = interests.length > 0 ? `巡檢 ${interests.length} 個興趣點，結束回合。` : '無興趣點，結束回合。'
+    const endAction = { type: 'end-turn' as const, actor, reason: endReason }
     gameStore.endPlayerTurn(playerId)
-    recordAiStepEvent(
-      state.round,
-      playerId,
-      player.name,
-      { type: 'end-turn', actor: { id: playerId, kind: 'player' }, reason: result.ok ? '移動至最右方，結束回合。' : '移動失敗，結束回合。' },
-      { ok: true },
-    )
+    recordAiStepEvent(state.round, playerId, player.name, endAction, { ok: true })
     return { ok: true }
   },
 

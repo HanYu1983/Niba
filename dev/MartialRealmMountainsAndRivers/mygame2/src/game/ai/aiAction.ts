@@ -9,7 +9,7 @@ export type AiActorRef = {
   kind: AiActorKind
 }
 
-export type AiTargetKind = 'player' | 'creature' | 'nest' | 'base' | 'resource' | 'defense'
+export type AiTargetKind = 'player' | 'creature' | 'nest' | 'base' | 'resource' | 'defense' | 'item'
 
 export type AiTargetRef = {
   id: string

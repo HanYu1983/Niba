@@ -211,7 +211,7 @@ describe('runAiDefenseStep／runAiSupportStep 整合', () => {
 })
 
 describe('runTest1Step', () => {
-  it('移動至最右方後結束回合', () => {
+  it('無興趣點時直接結束回合', () => {
     load({
       players: [
         makeTestPlayer({ position: { row: 5, column: 3 }, stamina: 20 }),
@@ -221,7 +221,7 @@ describe('runTest1Step', () => {
     })
     const result = gameStore.runTest1Step('ai-1')
     expect(result.ok).toBe(true)
-    expect(playerById('ai-1').position.column).toBe(10) // map.columns - 1 = 10
+    expect(playerById('ai-1').position.column).toBe(3) // 未移動
     expect(gameStore.getState().activePlayerId).toBe('player-1') // turn ended
   })
 

@@ -26,6 +26,10 @@ function findTarget(state: GameState, target: AiTargetRef): { health: number; po
       return state.resourcePoints.find((candidate) => candidate.id === target.id) ?? null
     case 'defense':
       return (state.defenseStructures ?? []).find((candidate) => candidate.id === target.id) ?? null
+    case 'item': {
+      const item = state.itemPoints.find((candidate) => candidate.id === target.id)
+      return item ? { health: 1, position: item.position } : null
+    }
   }
 }
 
