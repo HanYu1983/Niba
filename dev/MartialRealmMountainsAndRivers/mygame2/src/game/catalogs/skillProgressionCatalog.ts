@@ -193,7 +193,7 @@ export const martialSchoolCatalog: MartialSchoolDefinition[] = [
     }],
     damage: [{ name: '煙雨掌', description: '掌如細雨連綿，對相鄰單一敵人造成傷害。', innerPowerCost: 4 }],
     aura: [
-      { name: '雨潤回春', description: '每回合回復最大血量 5% 的氣血（常駐）。', passiveBuffIds: ['misty-rain-drizzle-nourish'] },
+      { name: '雨潤回春', description: '每回合回復最大內力 10% 的內力（常駐）。', passiveBuffIds: ['misty-rain-drizzle-nourish'] },
       { name: '雨幕遮身', description: '受到傷害時，最終傷害 -10%（常駐）。', passiveBuffIds: ['misty-rain-rain-curtain'] },
     ],
     enhancement: [],
@@ -210,7 +210,7 @@ export const martialSchoolCatalog: MartialSchoolDefinition[] = [
     }],
     damage: [{ name: '烈陽轟', description: '陽罡之氣轟然擊出，對周圍 1 格內所有敵人造成傷害。', innerPowerCost: 8, shape: { kind: 'radius', range: 1 }, selectionMode: { kind: 'all' } }],
     aura: [
-      { name: '烈陽戰意', description: '臂力與根骨 +1（常駐）。', passiveBuffIds: ['blazing-sun-fervor'] },
+      { name: '烈陽戰意', description: '臂力與根骨 +3（常駐）。', passiveBuffIds: ['blazing-sun-fervor'] },
       { name: '烈目凝芒', description: '暴擊率 ×1.25（常駐）。', passiveBuffIds: ['blazing-sun-blazing-gaze'] },
     ],
     enhancement: [],
@@ -228,7 +228,7 @@ export const martialSchoolCatalog: MartialSchoolDefinition[] = [
     damage: [{ name: '裂石棍', description: '鐵棍劈裂山石，對相鄰單一敵人造成傷害。', innerPowerCost: 4 }],
     aura: [
       { name: '夯土工事', description: '建築材料消耗 -15%（常駐）。', passiveBuffIds: ['yellow-earth-rammed-earth'] },
-      { name: '負重健行', description: '最大體力 +2（常駐）。', passiveBuffIds: ['yellow-earth-pack-march'] },
+      { name: '負重健行', description: '最大體力 +4（常駐）。', passiveBuffIds: ['yellow-earth-pack-march'] },
     ],
     enhancement: [],
   },

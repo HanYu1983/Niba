@@ -61,18 +61,24 @@ export function applyPeriodicBuffEffects(players: PlayerState[]): PlayerState[] 
     const effectiveMaxInnerPower = getMaxInnerPower(effectiveAttributes)
 
     let damage = 0
-    let regen = 0
+    let healthRegen = 0
+    let innerPowerRegen = 0
     for (const definition of getActiveBuffDefinitions(player)) {
       const healthDamage = definition.maxHealthDamagePercent ?? 0
       if (healthDamage > 0) damage += Math.floor(effectiveMaxHealth * healthDamage)
-      const healthRegen = definition.healthRegenPercent ?? 0
-      const innerPowerRegen = definition.innerPowerHealthRegenPercent ?? 0
-      if (healthRegen > 0) regen += Math.floor(effectiveMaxHealth * healthRegen)
-      if (innerPowerRegen > 0) regen += Math.floor(effectiveMaxInnerPower * innerPowerRegen)
+      const healthRegenPercent = definition.healthRegenPercent ?? 0
+      const innerPowerToHealthRegen = definition.innerPowerHealthRegenPercent ?? 0
+      const innerPowerRegenPercent = definition.innerPowerRegenPercent ?? 0
+      if (healthRegenPercent > 0) healthRegen += Math.floor(effectiveMaxHealth * healthRegenPercent)
+      if (innerPowerToHealthRegen > 0) healthRegen += Math.floor(effectiveMaxInnerPower * innerPowerToHealthRegen)
+      if (innerPowerRegenPercent > 0) innerPowerRegen += Math.floor(effectiveMaxInnerPower * innerPowerRegenPercent)
     }
 
-    const health = Math.min(effectiveMaxHealth, Math.max(0, player.health - damage + regen))
-    return health !== player.health ? { ...player, health } : player
+    const health = Math.min(effectiveMaxHealth, Math.max(0, player.health - damage + healthRegen))
+    const innerPower = Math.min(effectiveMaxInnerPower, player.innerPower + innerPowerRegen)
+    const healthChanged = health !== player.health
+    const innerPowerChanged = innerPower !== player.innerPower
+    return healthChanged || innerPowerChanged ? { ...player, health, innerPower } : player
   })
 }
 

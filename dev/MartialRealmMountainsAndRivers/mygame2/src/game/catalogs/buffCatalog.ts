@@ -57,6 +57,8 @@ export type BuffDefinition = {
   healthRegenPercent?: number
   /** 每回合回復「最大內力 × 比例」的血量。 */
   innerPowerHealthRegenPercent?: number
+  /** 每回合回復「最大內力 × 比例」的內力。 */
+  innerPowerRegenPercent?: number
   // 類別 1：傷害增益
   /** 普通攻擊造成的最終傷害加成比例。 */
   damageDealtPercent?: number
@@ -161,7 +163,7 @@ export const buffCatalog: BuffDefinition[] = [
   { id: 'iron-wall-art', name: '鐵壁訣', description: '受到傷害時，最終傷害 -20%。', duration: 'rounds', durationRounds: 3, category: 'buff', damageReductionPercent: 0.2 },
   { id: 'spring-return-art', name: '回春訣', description: '每回合回復最大血量 10% 的氣血。', duration: 'rounds', durationRounds: 3, category: 'buff', healthRegenPercent: 0.1 },
   { id: 'qi-transformation-art', name: '化氣訣', description: '每回合回復「最大內力 ×10%」的氣血。', duration: 'rounds', durationRounds: 3, category: 'buff', innerPowerHealthRegenPercent: 0.1 },
-  { id: 'inner-power-drain', name: '汲元', description: '造成傷害時，回復 20% 傷害值的內力。', duration: 'rounds', durationRounds: 3, category: 'buff', innerPowerLeechPercent: 0.2 },
+  { id: 'inner-power-drain', name: '汲元', description: '造成傷害時，回復 10% 傷害值的內力。', duration: 'rounds', durationRounds: 3, category: 'buff', innerPowerLeechPercent: 0.1 },
   { id: 'break-army-art', name: '破軍訣', description: '普通攻擊造成的最終傷害 +20%。', duration: 'rounds', durationRounds: 3, category: 'buff', damageDealtPercent: 0.2 },
   { id: 'vigor-art', name: '罡氣訣', description: '外功造成的最終傷害 +20%。', duration: 'rounds', durationRounds: 3, category: 'buff', externalSkillDamagePercent: 0.2 },
   { id: 'phantom-step', name: '幻影步', description: '回避率 +5%。', duration: 'persistent', category: 'buff', evasionRateBonus: 5 },
@@ -170,26 +172,27 @@ export const buffCatalog: BuffDefinition[] = [
   { id: 'home-turf-water', name: '狂瀾水息', description: '身處水域主場：造成傷害 +15%、內息 +2，水域移動消耗降為 2。', duration: 'persistent', category: 'buff', damageDealtPercent: 0.15, attributeModifiers: { innerEnergy: 2 }, terrainCostOverrides: { water: 2 } },
   { id: 'home-turf-desert', name: '沙暴凶煞', description: '身處荒漠主場：造成傷害 +15%，荒漠移動消耗降為 2。', duration: 'persistent', category: 'buff', damageDealtPercent: 0.15, terrainCostOverrides: { desert: 2 } },
   { id: 'home-turf-ruin', name: '金剛古陣', description: '身處山嶽主場：受到傷害 -25%、臂力與根骨 +2，山嶽移動消耗降為 2。', duration: 'persistent', category: 'buff', damageReductionPercent: 0.25, attributeModifiers: { armStrength: 2, constitution: 2 }, terrainCostOverrides: { mountain: 2 } },
-  { id: 'terrain-resonance-swift-evasion', name: '林風迴避', description: '追風流在森林施放共鳴後，回避率 +5%，持續 2 回合。', duration: 'rounds', durationRounds: 2, category: 'buff', evasionRateBonus: 5 },
-  { id: 'terrain-resonance-burning', name: '炎砂灼燒', description: '赤炎流在荒漠共鳴：每回合損失最大生命 25%，持續 3 回合。', duration: 'rounds', durationRounds: 3, category: 'debuff', maxHealthDamagePercent: 0.25 },
-  { id: 'terrain-resonance-cold-poison', name: '寒潭玄毒', description: '寒水流在水域共鳴：五維降低 30%，持續 2 回合。', duration: 'rounds', durationRounds: 2, category: 'debuff', attributeMultiplier: 0.7 },
-  { id: 'terrain-resonance-earth-reflection', name: '厚土反震', description: '厚土流在草地共鳴：反震傷害額外 +10%，持續 3 回合。', duration: 'rounds', durationRounds: 3, category: 'buff', reflectionPercent: 0.1 },
+  // 天地共鳴目標附加效果（林風迴避/炎砂灼燒/寒潭玄毒/厚土反震）：效果尚未設計周全，暫停使用。
+  // { id: 'terrain-resonance-swift-evasion', name: '林風迴避', ... },
+  // { id: 'terrain-resonance-burning', name: '炎砂灼燒', ... },
+  // { id: 'terrain-resonance-cold-poison', name: '寒潭玄毒', ... },
+  // { id: 'terrain-resonance-earth-reflection', name: '厚土反震', ... },
   // 類別 4：條件型
   { id: 'back-to-water', name: '背水', description: '血量低於 30% 時，五維 ×1.5。', duration: 'rounds', durationRounds: 3, category: 'buff', conditional: { when: 'health-below', threshold: 0.3, multiplier: 1.5 } },
   { id: 'nurture-qi', name: '養氣', description: '血量高於 80% 時，五維 ×1.2。', duration: 'rounds', durationRounds: 3, category: 'buff', conditional: { when: 'health-above', threshold: 0.8, multiplier: 1.2 } },
   { id: 'all-in', name: '孤注', description: '血量低於 15% 時，五維 ×2。', duration: 'rounds', durationRounds: 3, category: 'buff', conditional: { when: 'health-below', threshold: 0.15, multiplier: 2 } },
   // 銳鋒流（金）：快劍搶攻
-  { id: 'sharp-edge-sword-heart', name: '劍心明鑑', description: '自身地圖視野半徑 +1。', duration: 'persistent', category: 'buff', visionRadiusBonus: 1 },
+  { id: 'sharp-edge-sword-heart', name: '劍心明鑑', description: '自身地圖視野半徑 +2。', duration: 'persistent', category: 'buff', visionRadiusBonus: 2 },
   { id: 'sharp-edge-keen-edge', name: '凌厲劍勢', description: '普通攻擊造成的最終傷害 +10%。', duration: 'persistent', category: 'buff', damageDealtPercent: 0.1 },
   // 煙雨流（水）：綿掌迴雪、養生回復
-  { id: 'misty-rain-drizzle-nourish', name: '雨潤回春', description: '每回合回復最大血量 5% 的氣血。', duration: 'persistent', category: 'buff', healthRegenPercent: 0.05 },
+  { id: 'misty-rain-drizzle-nourish', name: '雨潤回春', description: '每回合回復最大內力 10% 的內力。', duration: 'persistent', category: 'buff', innerPowerRegenPercent: 0.1 },
   { id: 'misty-rain-rain-curtain', name: '雨幕遮身', description: '受到傷害時，最終傷害 -10%。', duration: 'persistent', category: 'buff', damageReductionPercent: 0.1 },
   // 烈陽流（火）：血性剛猛、越戰越勇
-  { id: 'blazing-sun-fervor', name: '烈陽戰意', description: '臂力與根骨 +1。', duration: 'persistent', category: 'buff', attributeModifiers: { armStrength: 1, constitution: 1 } },
+  { id: 'blazing-sun-fervor', name: '烈陽戰意', description: '臂力與根骨 +3。', duration: 'persistent', category: 'buff', attributeModifiers: { armStrength: 3, constitution: 3 } },
   { id: 'blazing-sun-blazing-gaze', name: '烈目凝芒', description: '暴擊率 ×1.25。', duration: 'persistent', category: 'buff', criticalRateMultiplier: 1.25 },
   // 黃土流（土）：持久游擊與工事
   { id: 'yellow-earth-rammed-earth', name: '夯土工事', description: '建築材料消耗 -15%。', duration: 'persistent', category: 'buff', buildingMaterialCostReduction: 0.15 },
-  { id: 'yellow-earth-pack-march', name: '負重健行', description: '最大體力 +2。', duration: 'persistent', category: 'buff', maxStaminaBonus: 2 },
+  { id: 'yellow-earth-pack-march', name: '負重健行', description: '最大體力 +4。', duration: 'persistent', category: 'buff', maxStaminaBonus: 4 },
   // 幽影流（無）：隱匿暗襲
   { id: 'ghost-shadow-shadow-veil', name: '幽影蔽身', description: '回避率 +10%。', duration: 'persistent', category: 'buff', evasionRateBonus: 10 },
   { id: 'ghost-shadow-lone-resolve', name: '孤影決絕', description: '血量低於 25% 時，五維 ×1.6，持續 3 回合。', duration: 'rounds', durationRounds: 3, category: 'buff', conditional: { when: 'health-below', threshold: 0.25, multiplier: 1.6 } },

@@ -95,6 +95,8 @@ export type BuffInstance = {
   damageReductionPercent?: number
   healthRegenPercent?: number
   innerPowerHealthRegenPercent?: number
+  /** 每回合回復「最大內力 × 比例」的內力。 */
+  innerPowerRegenPercent?: number
   damageDealtPercent?: number
   externalSkillDamagePercent?: number
   evasionRateBonus?: number

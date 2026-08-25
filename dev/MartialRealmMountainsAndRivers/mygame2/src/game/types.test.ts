@@ -126,9 +126,9 @@ describe('類別 1：資源轉換 Buff', () => {
     expect(getLifestealPercent(player)).toBe(0.3)
   })
 
-  it('汲元：造成傷害時回復 20% 傷害值的內力', () => {
+  it('汲元：造成傷害時回復 10% 傷害值的內力', () => {
     const player = makePlayer({ buffs: [{ id: 'b1', definitionId: 'inner-power-drain', sourceId: 'test', remainingRounds: null }] })
-    expect(getInnerPowerLeechPercent(player)).toBe(0.2)
+    expect(getInnerPowerLeechPercent(player)).toBe(0.1)
   })
 
   it('鐵壁訣：受到傷害時最終傷害 -20%', () => {
