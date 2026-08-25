@@ -79,7 +79,7 @@ function StrategicCommandForm({ aiPlayers, players, bases, orders, constructionP
   const [radius, setRadius] = useState(initialProtect?.radius ?? 6)
   const [maxDistance, setMaxDistance] = useState(initialSupport?.maxDistance ?? 8)
   const [priority, setPriority] = useState(initialOrder?.priority ?? 50)
-  const [retreatHealthPercent, setRetreatHealthPercent] = useState(initialOrder?.retreatHealthPercent ?? 30)
+  const [retreatHealthPercent, setRetreatHealthPercent] = useState(initialOrder && 'retreatHealthPercent' in initialOrder ? initialOrder.retreatHealthPercent : 30)
   const [policy, setPolicy] = useState<AiConstructionPolicy>(initialPlan?.policy ?? defaultPolicy)
   const [allowUpgrade, setAllowUpgrade] = useState(initialPlan?.allowUpgrade ?? true)
   const [constructionQueue, setConstructionQueue] = useState<AiConstructionPlan['queue']>(initialPlan?.queue ?? [])
@@ -105,7 +105,7 @@ function StrategicCommandForm({ aiPlayers, players, bases, orders, constructionP
       setMaxDistance(order.maxDistance)
     }
     setPriority(order?.priority ?? 50)
-    setRetreatHealthPercent(order?.retreatHealthPercent ?? 30)
+    setRetreatHealthPercent(order && 'retreatHealthPercent' in order ? order.retreatHealthPercent : 30)
     setPolicy(plan?.policy ?? defaultPolicy)
     setAllowUpgrade(plan?.allowUpgrade ?? true)
     setConstructionQueue(plan?.queue ?? [])
@@ -117,7 +117,10 @@ function StrategicCommandForm({ aiPlayers, players, bases, orders, constructionP
     if (selectedOrder.type === 'protect-base') {
       return `保護 ${bases.find((base) => base.id === selectedOrder.baseId)?.name ?? selectedOrder.baseId}`
     }
-    return `支援 ${players.find((player) => player.id === selectedOrder.playerId)?.name ?? selectedOrder.playerId}`
+    if (selectedOrder.type === 'support-player') {
+      return `支援 ${players.find((player) => player.id === selectedOrder.playerId)?.name ?? selectedOrder.playerId}`
+    }
+    return '測試1'
   }, [bases, players, selectedOrder])
 
   const saveOrder = () => {
@@ -125,7 +128,9 @@ function StrategicCommandForm({ aiPlayers, players, bases, orders, constructionP
     const id = selectedOrder?.id ?? `ai-order-${selectedAi.id}-${Date.now()}`
     const order: AiOrder = orderType === 'protect-base'
       ? { id, type: 'protect-base', aiPlayerId: selectedAi.id, baseId: targetBaseId, radius, priority, retreatHealthPercent, status: 'active' }
-      : { id, type: 'support-player', aiPlayerId: selectedAi.id, playerId: targetPlayerId, maxDistance, priority, retreatHealthPercent, status: 'active' }
+      : orderType === 'support-player'
+        ? { id, type: 'support-player', aiPlayerId: selectedAi.id, playerId: targetPlayerId, maxDistance, priority, retreatHealthPercent, status: 'active' }
+        : { id, type: 'test1', aiPlayerId: selectedAi.id, priority, status: 'active' }
     const result = onSaveOrder(order)
     onMessage(result.ok ? '戰略命令已保存。' : result.reason ?? '戰略命令保存失敗。')
   }
@@ -189,22 +194,22 @@ function StrategicCommandForm({ aiPlayers, players, bases, orders, constructionP
       <Flex gap={12} wrap>
         <label className="strategic-command-modal__field">
           <Typography.Text strong>命令類型</Typography.Text>
-          <Select value={orderType} onChange={setOrderType} options={[{ label: '保護據點', value: 'protect-base' }, { label: '支援玩家', value: 'support-player' }]} />
+          <Select value={orderType} onChange={setOrderType} options={[{ label: '保護據點', value: 'protect-base' }, { label: '支援玩家', value: 'support-player' }, { label: '測試1', value: 'test1' }]} />
         </label>
         {orderType === 'protect-base' ? (
           <label className="strategic-command-modal__field">
             <Typography.Text strong>目標據點</Typography.Text>
             <Select value={targetBaseId} onChange={setTargetBaseId} options={bases.map((base) => ({ label: base.name, value: base.id }))} />
           </label>
-        ) : (
+        ) : orderType === 'support-player' ? (
           <label className="strategic-command-modal__field">
             <Typography.Text strong>支援目標</Typography.Text>
             <Select value={targetPlayerId} onChange={setTargetPlayerId} options={targetPlayers.map((player) => ({ label: player.name, value: player.id }))} />
           </label>
-        )}
+        ) : null}
       </Flex>
       <Flex gap={12} wrap>
-        {orderType === 'protect-base' ? <label className="strategic-command-modal__field"><Typography.Text strong>防守半徑（格）</Typography.Text><InputNumber min={0} max={40} value={radius} onChange={(value) => value !== null && setRadius(value)} /></label> : <label className="strategic-command-modal__field"><Typography.Text strong>最大支援距離（格）</Typography.Text><InputNumber min={0} max={40} value={maxDistance} onChange={(value) => value !== null && setMaxDistance(value)} /></label>}
+        {orderType === 'protect-base' ? <label className="strategic-command-modal__field"><Typography.Text strong>防守半徑（格）</Typography.Text><InputNumber min={0} max={40} value={radius} onChange={(value) => value !== null && setRadius(value)} /></label> : orderType === 'support-player' ? <label className="strategic-command-modal__field"><Typography.Text strong>最大支援距離（格）</Typography.Text><InputNumber min={0} max={40} value={maxDistance} onChange={(value) => value !== null && setMaxDistance(value)} /></label> : null}
         <label className="strategic-command-modal__field"><Typography.Text strong>優先級（玩家設定）</Typography.Text><InputNumber min={0} max={100} value={priority} onChange={(value) => value !== null && setPriority(value)} /></label>
         <label className="strategic-command-modal__field"><Typography.Text strong>撤退生命百分比</Typography.Text><InputNumber min={0} max={100} value={retreatHealthPercent} onChange={(value) => value !== null && setRetreatHealthPercent(value)} /></label>
       </Flex>

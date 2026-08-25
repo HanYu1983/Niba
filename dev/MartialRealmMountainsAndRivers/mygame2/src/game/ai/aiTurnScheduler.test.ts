@@ -15,6 +15,7 @@ describe('aiTurnScheduler', () => {
       defenseSteps: [] as string[],
       supportSteps: [] as string[],
       constructionSteps: [] as string[],
+      test1Steps: [] as string[],
       endedTurns: [] as string[],
     }
     const deps: AiTurnSchedulerDeps = {
@@ -29,6 +30,10 @@ describe('aiTurnScheduler', () => {
       },
       runConstructionStep: (actorId) => {
         calls.constructionSteps.push(actorId)
+        return { ok: true }
+      },
+      runTest1Step: (actorId) => {
+        calls.test1Steps.push(actorId)
         return { ok: true }
       },
       endTurn: (actorId) => {
@@ -75,6 +80,19 @@ describe('aiTurnScheduler', () => {
     expect(calls.constructionSteps).toEqual(['p1'])
     expect(calls.defenseSteps).toEqual([])
     expect(scheduler.isPending()).toBe(false)
+  })
+
+  it('test1 訂單走 test1 步驟', () => {
+    const { calls, deps } = createDeps()
+    const scheduler = createAiTurnScheduler(deps)
+
+    scheduler.requestStep('p1', 'test1')
+    vi.advanceTimersByTime(AI_TURN_STEP_DELAY_MS)
+
+    expect(calls.test1Steps).toEqual(['p1'])
+    expect(calls.defenseSteps).toEqual([])
+    expect(calls.supportSteps).toEqual([])
+    expect(calls.constructionSteps).toEqual([])
   })
 
   it('cancel 之後不得執行 stale timer', () => {
