@@ -803,6 +803,17 @@ export type ExternalDamageExecutionResult = {
   nextHealth: number
   maxHealth: number
   innerPowerCost: number
+  /** 範圍攻擊（selectionMode = all）：各目標的傷害結果；單體攻擊時為 undefined。 */
+  areaTargets?: Array<{
+    targetType: AttackTargetType
+    targetId: string
+    targetName: string
+    targetPosition?: Position
+    damage: number
+    nextHealth: number
+    maxHealth: number
+    defeated: boolean
+  }>
   /** 傷害型外功的暴擊率（內息每 1 點提供 2%）。 */
   criticalRate?: number
   /** 本次外功是否觸發暴擊。 */
