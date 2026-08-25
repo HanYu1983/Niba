@@ -4,6 +4,7 @@ import { innerSkillCatalog } from '../catalogs/innerSkillCatalog'
 import { allExternalSkillCatalog } from '../catalogs/martialHallSkillCatalog'
 import { getFunctionalSkillBuffOverrides } from './functionalSkillScaling'
 import type {
+  ActionOutcome,
   EquipmentInstance,
   EquipmentLoadout,
   PlayerAttributes,
@@ -11,8 +12,10 @@ import type {
   CreatureState,
   TerrainType,
   BuffInstance,
+  UpgradeableAttribute,
 } from '../types'
-import { terrainStaminaCost } from '../types'
+import { terrainStaminaCost, type GameState } from '../types'
+import { restoreAfterAttributeChange } from '../characterFactory'
 
 /** 以 ID 快取目錄查詢，避免重複線性掃描；目錄在模組載入時固定。 */
 const buffById = new Map(buffCatalog.map((buff) => [buff.id, buff] as const))
@@ -425,4 +428,37 @@ export function getGatherDoubleYieldChance(player: PlayerState): number {
 /** 回合結束時剩餘體力轉化內力的比例（太虛引氣；1 體力 → N 內力）。 */
 export function getStaminaToInnerPowerRatio(player: PlayerState): number {
   return sumBuffPercent(player, 'staminaToInnerPowerRatio')
+}
+
+/**
+ * 分配屬性點數的純領域函數。
+ * 玩家有可分配點數時，將指定屬性 +1 並扣除 1 點。
+ */
+export function allocateAttributePointAction(
+  state: GameState,
+  playerId: string,
+  attribute: UpgradeableAttribute,
+): { state: GameState; result: ActionOutcome } {
+  const player = state.players.find((candidate) => candidate.id === playerId)
+  const points = player?.availableAttributePoints ?? 0
+  if (!player || points <= 0) {
+    return { state, result: { ok: false, reason: '無可分配屬性點數。' } }
+  }
+
+  const baseAttributes = player.baseAttributes ?? player.attributes
+  const nextAttributes = { ...baseAttributes, [attribute]: Math.max(1, baseAttributes[attribute] + 1) }
+
+  return {
+    state: {
+      ...state,
+      players: state.players.map((candidate) => candidate.id === playerId
+        ? restoreAfterAttributeChange({
+          ...candidate,
+          baseAttributes: nextAttributes,
+          availableAttributePoints: points - 1,
+        }, getEffectiveAttributesForPlayer({ ...candidate, baseAttributes: nextAttributes }))
+        : candidate),
+    },
+    result: { ok: true },
+  }
 }

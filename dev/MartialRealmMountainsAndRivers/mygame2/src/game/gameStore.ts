@@ -1636,18 +1636,6 @@ export const gameStore = {
 
   /** 通用 AI 行動執行器：所有 AI 行動經此單一入口執行。 */
   executeAiAction: (action: import('./ai/aiAction').AiAction): ActionOutcome => {
-    // Store 方法（allocateAttributePoint / useItem / equipEquipment）內部已呼叫 updateGameState，
-    // 不能經 runActionOutcome 包覆（會覆寫內部變更），直接呼叫並回傳結果。
-    if (action.type === 'allocate-attribute') {
-      const ok = gameStore.allocateAttributePoint(action.actor.id, action.attribute)
-      return ok ? { ok: true } : { ok: false, reason: '屬性分配失敗。' }
-    }
-    if (action.type === 'use-item') {
-      return gameStore.useItem(action.actor.id, action.itemId)
-    }
-    if (action.type === 'equip') {
-      return gameStore.equipEquipment(action.actor.id, action.instanceId)
-    }
     return runActionOutcome(updateGameState, (state) => executeAiActionDomain(state, action, {
       combat: {
         getActionablePlayer,
