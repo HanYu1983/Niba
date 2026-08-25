@@ -71,6 +71,12 @@ export type AiAction =
       itemId: string
       reason: string
     }
+  | {
+      type: 'equip'
+      actor: AiActorRef
+      instanceId: string
+      reason: string
+    }
 
 const MISSING_POSITION: Position = { row: -1, column: -1 }
 

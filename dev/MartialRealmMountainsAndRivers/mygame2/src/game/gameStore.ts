@@ -1674,6 +1674,7 @@ export const gameStore = {
     },
     gameStore.allocateAttributePoint,
     gameStore.useItem,
+    gameStore.equipEquipment,
     ), 'AI 行動失敗。')
   },
 

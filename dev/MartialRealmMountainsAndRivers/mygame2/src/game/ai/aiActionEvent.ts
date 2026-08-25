@@ -55,6 +55,7 @@ const ACTION_TYPE_LABELS: Record<AiAction['type'], string> = {
   'end-turn': '結束回合',
   'allocate-attribute': '分配屬性',
   'use-item': '使用道具',
+  equip: '裝備',
 }
 
 function formatActionDetail(action: AiAction): string {

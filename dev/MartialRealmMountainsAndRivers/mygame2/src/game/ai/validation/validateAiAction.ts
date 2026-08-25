@@ -79,6 +79,7 @@ export function validateAiAction(state: GameState, action: AiAction): AiValidati
     case 'end-turn':
     case 'allocate-attribute':
     case 'use-item':
+    case 'equip':
       return { valid: true }
   }
 }

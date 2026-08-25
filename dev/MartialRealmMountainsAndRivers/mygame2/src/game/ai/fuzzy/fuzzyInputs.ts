@@ -8,6 +8,7 @@ import { buildingCatalog } from '../../catalogs/buildingCatalog'
 import { canPlayerBuildBuildingType } from '../../rules/buildingProgressionRules'
 import { collectReachableCells } from '../perception/reachablePositions'
 import { itemCatalog } from '../../catalogs/itemCatalog'
+import { equipmentCatalog } from '../../catalogs/equipmentCatalog'
 
 export interface FuzzyInputs {
   /** 能扛幾下攻擊（health / maxEnemyDamage），無敵人時 = 99 */
@@ -56,6 +57,8 @@ export interface FuzzyInputs {
   availableAttributePoints: number
   /** 建議使用的道具（id + effect），無則 undefined */
   bestItemToUse: { id: string; effect: string; name: string } | undefined
+  /** 建議裝備的裝備（部位空 or 耐久=0 需替換），無則 undefined */
+  equipableEquipment: { instanceId: string; equipmentId: string; slot: string; name: string; durability: number } | undefined
 }
 
 function manhattan(a: Position, b: Position): number {
@@ -178,6 +181,9 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
     ? pickBestItem(inventory, itemCatalog, healthRatio, staminaRatioVal, unexploredCells.length, nearestBase)
     : undefined
 
+  // 裝備相關：找出值得裝備的裝備
+  const equipableEquipment = findBestEquipCandidate(player)
+
   return {
     hitsSurvivable,
     staminaRatio: player.stamina / player.maxStamina,
@@ -202,6 +208,7 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
     nearestCreatureId: nearestCreature?.id ?? '',
     availableAttributePoints,
     bestItemToUse,
+    equipableEquipment,
   }
 }
 
@@ -246,6 +253,67 @@ function pickBestItem(
   // 屬性提升道具
   const attrUp = [...byEffect.entries()].find(([, d]) => d.effect === 'attribute-up')
   if (attrUp) return { id: attrUp[0], effect: 'attribute-up', name: attrUp[1].name }
+
+  return undefined
+}
+
+function findBestEquipCandidate(player: PlayerState): { instanceId: string; equipmentId: string; slot: string; name: string; durability: number } | undefined {
+  const loadout = player.equipmentLoadout
+  const inventory = player.equipmentInventory ?? []
+  if (inventory.length === 0) return undefined
+
+  const getDef = (equipmentId: string) => equipmentCatalog.find((e) => e.id === equipmentId)
+  const slotKeys: Array<{ slot: string; key: 'weaponInstanceId' | 'armorInstanceId' | 'accessoryInstanceId' }> = [
+    { slot: 'weapon', key: 'weaponInstanceId' },
+    { slot: 'armor', key: 'armorInstanceId' },
+    { slot: 'accessory', key: 'accessoryInstanceId' },
+  ]
+
+  for (const { slot, key } of slotKeys) {
+    const currentInstanceId = loadout?.[key]
+    const currentInstance = currentInstanceId
+      ? inventory.find((e) => e.instanceId === currentInstanceId)
+      : undefined
+
+    // 情況 A：部位空 → 找第一個該部位、耐久 > 0 的裝備
+    if (!currentInstance) {
+      const candidate = inventory.find((e) => {
+        if (e.durability <= 0) return false
+        const def = getDef(e.equipmentId)
+        return def?.slot === slot
+      })
+      if (candidate) {
+        const def = getDef(candidate.equipmentId)
+        return {
+          instanceId: candidate.instanceId,
+          equipmentId: candidate.equipmentId,
+          slot,
+          name: def?.name ?? candidate.equipmentId,
+          durability: candidate.durability,
+        }
+      }
+    }
+
+    // 情況 B：部位有裝備但耐久 = 0 → 找同部位替換品（耐久 > 0）
+    if (currentInstance && currentInstance.durability <= 0) {
+      const candidate = inventory.find((e) => {
+        if (e.instanceId === currentInstance.instanceId) return false
+        if (e.durability <= 0) return false
+        const def = getDef(e.equipmentId)
+        return def?.slot === slot
+      })
+      if (candidate) {
+        const def = getDef(candidate.equipmentId)
+        return {
+          instanceId: candidate.instanceId,
+          equipmentId: candidate.equipmentId,
+          slot,
+          name: def?.name ?? candidate.equipmentId,
+          durability: candidate.durability,
+        }
+      }
+    }
+  }
 
   return undefined
 }

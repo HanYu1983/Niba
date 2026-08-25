@@ -34,6 +34,8 @@ export function buildActionSequence(
       return buildAllocateAttributeActions(actor, result)
     case 'useItem':
       return buildUseItemActions(actor, result)
+    case 'equipEquipment':
+      return buildEquipActions(actor, result)
   }
 }
 
@@ -324,5 +326,23 @@ function buildUseItemActions(
     actor,
     itemId: result.target.itemId,
     reason: `使用道具：${result.context?.name ?? result.target.itemId}`,
+  }]
+}
+
+// ─── equipEquipment ────────────────────────────────────────────
+
+function buildEquipActions(
+  actor: AiActorRef,
+  result: GoalResult,
+): AiAction[] {
+  if (!result.target || result.target.kind !== 'equip') {
+    return [{ type: 'hold', actor, reason: '裝備：無可裝備物品' }]
+  }
+
+  return [{
+    type: 'equip',
+    actor,
+    instanceId: result.target.instanceId,
+    reason: `裝備：${result.context?.name ?? result.target.instanceId}（${result.context?.slot ?? ''}）`,
   }]
 }

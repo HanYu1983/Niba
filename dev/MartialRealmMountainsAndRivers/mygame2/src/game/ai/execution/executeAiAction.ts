@@ -26,6 +26,7 @@ export function executeAiAction(
   dependencies: ExecuteAiActionDependencies,
   allocateAttribute?: (playerId: string, attribute: UpgradeableAttribute) => boolean,
   useItem?: (playerId: string, itemId: string) => ActionOutcome,
+  equipEquipment?: (playerId: string, instanceId: string) => ActionOutcome,
 ): { state: GameState; result: ActionOutcome } {
   switch (action.type) {
     case 'move':
@@ -52,6 +53,10 @@ export function executeAiAction(
     }
     case 'use-item': {
       const result = useItem?.(action.actor.id, action.itemId) ?? { ok: false, reason: '無法使用道具。' }
+      return { state, result }
+    }
+    case 'equip': {
+      const result = equipEquipment?.(action.actor.id, action.instanceId) ?? { ok: false, reason: '無法裝備。' }
       return { state, result }
     }
     case 'hold':

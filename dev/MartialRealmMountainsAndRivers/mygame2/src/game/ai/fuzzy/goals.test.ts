@@ -39,6 +39,7 @@ function makeInputs(overrides: Partial<FuzzyInputs> = {}): FuzzyInputs {
     nearestCreatureId: '',
     availableAttributePoints: 0,
     bestItemToUse: undefined,
+    equipableEquipment: undefined,
     ...overrides,
   }
 }

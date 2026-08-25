@@ -2,7 +2,7 @@ import type { Position } from '../../types'
 import { trapezoid, fuzzyAnd, fuzzyOr } from './membershipFunctions'
 import type { FuzzyInputs } from './fuzzyInputs'
 
-export type GoalName = 'selfPreservation' | 'collectItems' | 'positioning' | 'construction' | 'exploration' | 'engageCombat' | 'allocateAttributes' | 'useItem'
+export type GoalName = 'selfPreservation' | 'collectItems' | 'positioning' | 'construction' | 'exploration' | 'engageCombat' | 'allocateAttributes' | 'useItem' | 'equipEquipment'
 
 export interface GoalResult {
   score: number
@@ -20,6 +20,7 @@ export type GoalTarget =
   | { kind: 'explore'; position: Position }
   | { kind: 'allocate-attribute'; attribute: string }
   | { kind: 'use-item'; itemId: string }
+  | { kind: 'equip'; instanceId: string }
 
 // ─── selfPreservation ──────────────────────────────────────────────
 
@@ -154,6 +155,23 @@ function evaluateUseItem(inputs: FuzzyInputs): GoalResult {
   }
 }
 
+// ─── equipEquipment ────────────────────────────────────────────
+// 有可裝備的武具（部位空 or 耐久=0）→ score = 1
+
+function evaluateEquipEquipment(inputs: FuzzyInputs): GoalResult {
+  const { equipableEquipment } = inputs
+
+  if (!equipableEquipment) {
+    return { score: 0 }
+  }
+
+  return {
+    score: 1,
+    target: { kind: 'equip', instanceId: equipableEquipment.instanceId },
+    context: { slot: equipableEquipment.slot, name: equipableEquipment.name, durability: equipableEquipment.durability },
+  }
+}
+
 // ─── evaluateAllGoals ──────────────────────────────────────────────
 
 export function evaluateAllGoals(inputs: FuzzyInputs): Record<GoalName, GoalResult> {
@@ -166,6 +184,7 @@ export function evaluateAllGoals(inputs: FuzzyInputs): Record<GoalName, GoalResu
     engageCombat: evaluateEngageCombat(inputs),
     allocateAttributes: evaluateAllocateAttributes(inputs),
     useItem: evaluateUseItem(inputs),
+    equipEquipment: evaluateEquipEquipment(inputs),
   }
 }
 

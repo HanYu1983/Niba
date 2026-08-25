@@ -10,6 +10,7 @@ export const SELF_PRESERVATION_OVERRIDE = 0.6
 const PRIORITY_ORDER: GoalName[] = [
   'selfPreservation',
   'allocateAttributes',
+  'equipEquipment',
   'positioning',
   'engageCombat',
   'collectItems',
