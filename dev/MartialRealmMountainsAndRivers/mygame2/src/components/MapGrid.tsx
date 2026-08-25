@@ -7,7 +7,7 @@ import { getCellVisibility } from '../game/rules/visibilityRules'
 import { getCreatureIcon } from '../game/rules/creatureBehaviorRules'
 import { getActiveBuffsForPlayer, getBuff } from '../game/rules/playerDerivedRules'
 import { getMapCellRangeState, resolveMapCellAction } from '../game/rules/mapCellStateRules'
-import { resolveTargetableCellIds } from '../game/rules/targetingRules'
+import { resolveTargetShapeCells } from '../game/rules/targetingRules'
 import { executeMapCellAction as executeInteractionAction, type MapInteractionHandlers } from './mapGridInteractionExecutor'
 import type { TargetingSpec } from '../game/types'
 
@@ -98,13 +98,14 @@ function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], def
     activePlayer && movementEnabled && activePlayer.stamina > 0 && !activePlayer.turnEnded
       ? getReachableCellIds(map, activePlayer, blockedPositions)
       : new Set<string>(), [activePlayer, movementEnabled, map, blockedPositions])
-  // 新框架：提供 targetingSpec 時，由形狀×模式計算高亮格；否則沿用既有硬編碼相鄰邏輯。
-  const specTargetCellIds = useMemo(() => {
+  // 新框架：提供 targetingSpec 時，高亮整個形狀範圍的格（純視覺提示可選範圍）。
+  // 實際「可點擊目標」由 resolveMapCellAction 依 targeting flag 與格子上是否有目標判定。
+  const specRangeCellIds = useMemo(() => {
     if (activePlayer && targetingSpec) {
-      return resolveTargetableCellIds(map, creatures, creatureNests, targetingSpec, activePlayer.position)
+      return resolveTargetShapeCells(targetingSpec.shape, activePlayer.position, map)
     }
     return new Set<string>()
-  }, [activePlayer, targetingSpec, creatures, creatureNests, map])
+  }, [activePlayer, targetingSpec, map])
   const attackableTargetCellIds = useMemo(() => activePlayer
     ? new Set(
       [
@@ -124,9 +125,9 @@ function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], def
         .map((position) => `${position.row}-${position.column}`),
     )
     : new Set<string>(), [activePlayer, creatures, creatureNests])
-  // 統一目標格：有 spec 用 spec，否則用既有相鄰邏輯（依 targeting 旗標選取對應 Set）。
+  // 統一目標格（高亮）：有 spec 用「整個範圍」（視覺提示可選範圍），否則沿用既有相鄰邏輯。
   const targetCellIds = targetingSpec
-    ? specTargetCellIds
+    ? specRangeCellIds
     : externalSkillTargeting ? attackableTargetCellIds
       : attackTargeting ? attackableTargetCellIds
         : itemTargeting ? attackableTargetCellIds
