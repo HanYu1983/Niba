@@ -1,4 +1,4 @@
-import type { GameState, Position } from '../types'
+import type { GameState, Position, UpgradeableAttribute } from '../types'
 import type { AiDefenseAction } from '../aiDefenseRules'
 
 /** 通用 Actor 參照：player 對應 PlayerState、creature 對應 CreatureState，兩種 State 不合併（重構文件 §4.1）。 */
@@ -57,6 +57,24 @@ export type AiAction =
   | {
       type: 'end-turn'
       actor: AiActorRef
+      reason: string
+    }
+  | {
+      type: 'allocate-attribute'
+      actor: AiActorRef
+      attribute: UpgradeableAttribute
+      reason: string
+    }
+  | {
+      type: 'use-item'
+      actor: AiActorRef
+      itemId: string
+      reason: string
+    }
+  | {
+      type: 'equip'
+      actor: AiActorRef
+      instanceId: string
       reason: string
     }
 

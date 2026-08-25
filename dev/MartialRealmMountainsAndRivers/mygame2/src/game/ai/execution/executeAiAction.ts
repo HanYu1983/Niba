@@ -52,5 +52,8 @@ export function executeAiAction(
       const result = endPlayerTurn(state, action.actor.id, dependencies.turn)
       return { state: result.state, result: { ok: true } }
     }
+    // allocate-attribute / use-item / equip 由 gameStore 層直接處理，不經過此領域函數。
+    default:
+      return { state, result: { ok: false, reason: `未知行動類型：${(action as { type: string }).type}` } }
   }
 }
