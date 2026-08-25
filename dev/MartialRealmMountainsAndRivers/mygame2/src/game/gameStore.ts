@@ -171,8 +171,11 @@ import { chooseSelfPreservationAction } from './aiSelfPreservationRules'
 import { defenseActionToAiAction } from './ai/aiAction'
 import { validateAiAction } from './ai/validation/validateAiAction'
 import { getPlayerAiEmergency } from './ai/policy/aiPolicyRegistry'
-import { collectReachableInterests } from './ai/perception/reachableInterests'
 import { executeAiAction as executeAiActionDomain } from './ai/execution/executeAiAction'
+import { computeFuzzyInputs } from './ai/fuzzy/fuzzyInputs'
+import { evaluateAllGoals } from './ai/fuzzy/goals'
+import { selectBestGoal, MIN_THRESHOLD } from './ai/fuzzy/decision'
+import { buildActionSequence } from './ai/fuzzy/goalActionMapper'
 import { defaultRandomSource } from './rules/randomRules'
 import { getBlockedPositions } from './rules/movementRules'
 
@@ -2154,22 +2157,48 @@ export const gameStore = {
       return { ok: false, reason: '目前無法執行 AI test1 回合。' }
     }
 
-    const interests = collectReachableInterests(state, player)
     const actor = { id: playerId, kind: 'player' as const }
-    for (const interest of interests) {
-      const moveAction = { type: 'move' as const, actor, destination: interest.position, reason: '巡檢移動' }
-      const moveResult = gameStore.executeAiAction(moveAction)
-      recordAiStepEvent(state.round, playerId, player.name, moveAction, moveResult)
+    let loopCount = 0
+    const MAX_LOOPS = 50
 
-      if (interest.kind === 'item') {
-        const collectAction = { type: 'collect' as const, actor, target: { id: interest.ref.id, kind: 'item' as const, position: interest.position }, reason: '拾取道具' }
-        const collectResult = gameStore.executeAiAction(collectAction)
-        recordAiStepEvent(state.round, playerId, player.name, collectAction, collectResult)
+    // 模糊邏輯迴圈：每步 perceive → evaluate → select → execute
+    while (gameState.players.find((p) => p.id === playerId)!.stamina > 0 && loopCount < MAX_LOOPS) {
+      loopCount++
+      const currentPlayer = gameState.players.find((p) => p.id === playerId)!
+
+      // 1. Perceive
+      const inputs = computeFuzzyInputs(gameState, currentPlayer)
+
+      // 2. Evaluate
+      const goalResults = evaluateAllGoals(inputs)
+
+      // 3. Override：selfPreservation > 0.6 時不攻擊（V1 暫無 combat，此處記錄）
+      // （V2 加入 engageCombat 時生效）
+
+      // 4. Select
+      const { goal, result } = selectBestGoal(goalResults)
+
+      // 5. Threshold
+      if (result.score < MIN_THRESHOLD) {
+        break
+      }
+
+      // 6. Build actions
+      const actions = buildActionSequence(goal, result, gameState, currentPlayer)
+      if (actions.length === 0) break
+
+      // 7. Execute
+      for (const action of actions) {
+        const cp = gameState.players.find((p) => p.id === playerId)
+        if (!cp || cp.stamina <= 0) break
+        const actionResult = gameStore.executeAiAction(action)
+        recordAiStepEvent(gameState.round, playerId, currentPlayer.name, action, actionResult)
+        if (!actionResult.ok) break
       }
     }
 
-    const endReason = interests.length > 0 ? `巡檢 ${interests.length} 個興趣點，結束回合。` : '無興趣點，結束回合。'
-    const endAction = { type: 'end-turn' as const, actor, reason: endReason }
+    // 結束回合
+    const endAction = { type: 'end-turn' as const, actor, reason: `模糊迴圈結束（${loopCount} 步）` }
     gameStore.endPlayerTurn(playerId)
     recordAiStepEvent(state.round, playerId, player.name, endAction, { ok: true })
     return { ok: true }
