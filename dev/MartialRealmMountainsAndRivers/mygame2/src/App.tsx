@@ -5,6 +5,7 @@ import PlayerPanel from './components/PlayerPanel'
 import BasePanel from './components/BasePanel'
 import { gameStore, useGameState } from './game/gameStore'
 import { getActiveGlobalBuffs } from './game/rules/globalBuffRules'
+import { resolveTargetingSpec } from './game/rules/targetingRules'
 import './App.css'
 import PlayerCommandPanel from './components/PlayerCommandPanel'
 import GameOverlays from './components/GameOverlays'
@@ -95,6 +96,8 @@ function App() {
     : null
   const attackTargeting = gameState.operation.type === 'targeting-attack'
   const itemTargeting = gameState.operation.type === 'targeting-item'
+  // 目標選取規格（新框架）：依 operation 計算形狀×模式，供 MapGrid 高亮。
+  const targetingSpec = resolveTargetingSpec(gameState.operation, externalSkillTargetingId ?? undefined)
   const defenseBuildMode = gameState.operation.type === 'building-defense'
     ? (() => {
       const operation = gameState.operation
@@ -497,6 +500,7 @@ function App() {
               externalSkillTargeting={externalSkillTargetingId !== null}
               attackTargeting={attackTargeting}
               itemTargeting={itemTargeting}
+              targetingSpec={targetingSpec}
               creatureShake={gameState.creatureShake}
             />
 

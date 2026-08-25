@@ -96,8 +96,8 @@ export function createExternalSkillPreview(
   targetId: string,
   skillId: string,
 ): ExternalSkillPreview | null {
-  const target = getAttackTarget(state, player, targetType, targetId)
   const skill = getExternalSkill(skillId)
+  const target = getAttackTarget(state, player, targetType, targetId, skill.shape ?? { kind: 'radius', range: skill.range ?? 1 })
   if (player && skill.target === 'self') {
     const terrain = getTerrainAtPosition(state.map.cells, player.position)
     const baseInnerPowerCost = getSkillInnerPowerCost(skill.innerPowerCost, getSkillProgression(player, skillId).level)

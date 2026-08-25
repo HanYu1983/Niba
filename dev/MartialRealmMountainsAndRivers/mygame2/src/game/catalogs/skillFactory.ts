@@ -1,4 +1,5 @@
 import type { PlayerAttributes, TerrainType } from '../types'
+import type { SelectionMode, TargetingShape } from '../types'
 import type { InnerSkill } from './innerSkillCatalog'
 import type { ExternalSkill } from './externalSkillCatalog'
 import type { FunctionalExternalSkillEffect } from './functionalSkillRegistry'
@@ -76,6 +77,10 @@ export type CreateDamageExternalSkillInput = {
   level?: number
   innerPowerCost: number
   range?: number
+  /** 範圍形狀（targeting 框架）；未設定時依 range 推導 radius。 */
+  shape?: TargetingShape
+  /** 選取模式（targeting 框架）；未設定時預設 single。 */
+  selectionMode?: SelectionMode
   functionalEffect?: FunctionalExternalSkillEffect
   calculateDamage?: (attributes: PlayerAttributes) => number
 }
@@ -176,6 +181,8 @@ export function createDamageExternalSkill(input: CreateDamageExternalSkillInput)
     target: 'target',
     innerPowerCost: input.innerPowerCost,
     range: input.range,
+    shape: input.shape,
+    selectionMode: input.selectionMode,
     functionalEffect: input.functionalEffect,
     calculateDamage: input.calculateDamage ?? zeroDamage,
   }

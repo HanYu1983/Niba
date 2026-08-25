@@ -543,6 +543,31 @@ export type GameOperation =
   | { type: 'previewing-external-skill' }
   | { type: 'building-defense'; baseId: string; structureType: DefenseStructureType; position: Position | null }
 
+/** 目標選取來源種類（用於高亮樣式與 preview 分派）。 */
+export type TargetingSource = 'attack' | 'external-skill' | 'item-burst'
+
+/** 範圍形狀：決定「哪些格子是合法目標」。 */
+export type TargetingShape =
+  | { kind: 'radius'; range: number }          // 曼哈頓半徑 range 格內（range=1 即周遭 4 格）
+  | { kind: 'cross'; length: number }          // 十字形（上下左右各 length 格）
+  | { kind: 'line'; length: number }           // 直線（需搭配方向，Phase 後續支援）
+  | { kind: 'custom'; cellIds: string[] }      // 自訂格子集合（編輯器）
+
+/** 選取模式：決定「如何選取、命中多少目標」。 */
+export type SelectionMode =
+  | { kind: 'single' }              // 點選 1 個目標
+  | { kind: 'all' }                 // 一次命中範圍內所有目標
+  | { kind: 'multi'; max: number }  // 點選多個（上限 max）
+
+/** 目標選取規格：範圍形狀 × 選取模式 × 目標類型的組合契約。 */
+export type TargetingSpec = {
+  shape: TargetingShape
+  mode: SelectionMode
+  targetTypes: AttackTargetType[]
+  hint: string
+  source: TargetingSource
+}
+
 export type ActionResult = {
   title: string
   message: string
@@ -778,6 +803,17 @@ export type ExternalDamageExecutionResult = {
   nextHealth: number
   maxHealth: number
   innerPowerCost: number
+  /** 範圍攻擊（selectionMode = all）：各目標的傷害結果；單體攻擊時為 undefined。 */
+  areaTargets?: Array<{
+    targetType: AttackTargetType
+    targetId: string
+    targetName: string
+    targetPosition?: Position
+    damage: number
+    nextHealth: number
+    maxHealth: number
+    defeated: boolean
+  }>
   /** 傷害型外功的暴擊率（內息每 1 點提供 2%）。 */
   criticalRate?: number
   /** 本次外功是否觸發暴擊。 */
@@ -863,8 +899,14 @@ export function isSamePosition(first: Position, second: Position): boolean {
   return first.row === second.row && first.column === second.column
 }
 
+/** 判斷 target 是否在 origin 的 range 格曼哈頓距離內（range = 1 等同相鄰；距離 0 回傳 false）。 */
+export function isWithinRange(origin: Position, target: Position, range: number): boolean {
+  const distance = Math.abs(origin.row - target.row) + Math.abs(origin.column - target.column)
+  return distance <= range && distance > 0
+}
+
 export function isAdjacent(first: Position, second: Position): boolean {
-  return getAdjacentPositions(first).some((position) => isSamePosition(position, second))
+  return isWithinRange(first, second, 1)
 }
 
 /** 判斷位置是否在目標自身格或周圍一格內。 */
