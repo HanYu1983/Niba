@@ -1,6 +1,9 @@
 import type { GameState, PlayerState, Position } from '../../types'
 import { listHostileActors, type HostileActor } from '../perception/targetDiscovery'
 import { collectReachableInterests, type ReachableInterest } from '../perception/reachableInterests'
+import { getBlockedPositions } from '../../rules/movementRules'
+import { canTraverseTerrain } from '../../rules/playerDerivedRules'
+import { getAdjacentPositions } from '../../types'
 
 export interface FuzzyInputs {
   /** 能扛幾下攻擊（health / maxEnemyDamage），無敵人時 = 99 */
@@ -19,6 +22,10 @@ export interface FuzzyInputs {
   reachableInterests: ReturnType<typeof collectReachableInterests>
   /** 到最近道具的距離（格數），無道具 = Infinity */
   distToNearestItem: number
+  /** 四方向可通行出口數（0~4） */
+  exitCount: number
+  /** 最近出口位置（曼哈頓 1 格內），無出口 = undefined */
+  nearestExit: Position | undefined
 }
 
 function manhattan(a: Position, b: Position): number {
@@ -55,6 +62,23 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
     ? Math.min(...itemInterests.map((i: ReachableInterest) => i.cost))
     : Infinity
 
+  // 四方向出口計算：上下左右可通行且未被佔據 = 出口
+  const blocked = new Set(
+    getBlockedPositions(state, player.id).map((p) => `${p.row}-${p.column}`),
+  )
+  const cellsByPosition = new Map(state.map.cells.map((c) => [`${c.row}-${c.column}`, c]))
+  const adjacents = getAdjacentPositions(player.position)
+  let exitCount = 0
+  let nearestExit: Position | undefined
+  for (const pos of adjacents) {
+    const cell = cellsByPosition.get(`${pos.row}-${pos.column}`)
+    const isBlocked = blocked.has(`${pos.row}-${pos.column}`)
+    if (cell && canTraverseTerrain(cell.terrain, player) && !isBlocked) {
+      exitCount++
+      if (!nearestExit) nearestExit = pos
+    }
+  }
+
   return {
     hitsSurvivable,
     staminaRatio: player.stamina / player.maxStamina,
@@ -64,5 +88,7 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
     reachableResourceCount: interests.filter((i: ReachableInterest) => i.kind === 'resource').length,
     reachableInterests: interests,
     distToNearestItem,
+    exitCount,
+    nearestExit,
   }
 }

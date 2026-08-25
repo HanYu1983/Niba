@@ -2,11 +2,12 @@ import type { GameState, PlayerState } from '../../types'
 import type { AiAction, AiActorRef } from '../aiAction'
 import type { GoalName, GoalResult } from './goals'
 import { collectReachableCells } from '../perception/reachablePositions'
+import { externalSkillCatalog } from '../../catalogs/externalSkillCatalog'
 
 /**
  * 目標→行動序列映射：將 GoalResult 轉為 AiAction[] 供 executeAiAction 逐步執行。
  *
- * V1：selfPreservation 和 collectItems 各回傳 1~2 步行動。
+ * V1：selfPreservation / collectItems / positioning 各回傳 1~2 步行動。
  */
 export function buildActionSequence(
   goal: GoalName,
@@ -21,6 +22,8 @@ export function buildActionSequence(
       return buildRetreatActions(actor, result, state, player)
     case 'collectItems':
       return buildCollectItemActions(actor, result, state, player)
+    case 'positioning':
+      return buildPositioningActions(actor, result, state, player)
   }
 }
 
@@ -92,4 +95,74 @@ function buildCollectItemActions(
       reason: '收集道具：拾取',
     },
   ]
+}
+
+// ─── positioning ──────────────────────────────────────────────────
+
+function buildPositioningActions(
+  actor: AiActorRef,
+  result: GoalResult,
+  state: GameState,
+  player: PlayerState,
+): AiAction[] {
+  // 無出口 → 攻擊最近怪物（優先外功傷害型）
+  if (result.target?.kind === 'attack') {
+    return buildPositioningAttack(actor, state, player)
+  }
+
+  // 有出口 → 移動到最近出口
+  if (result.target?.kind === 'exit') {
+    return [{
+      type: 'move',
+      actor,
+      destination: result.target.position,
+      reason: `定位：前往出口 (${result.target.position.row},${result.target.position.column})`,
+    }]
+  }
+
+  return [{ type: 'hold', actor, reason: '定位：無行動需求' }]
+}
+
+function buildPositioningAttack(
+  actor: AiActorRef,
+  state: GameState,
+  player: PlayerState,
+): AiAction[] {
+  // 找最近的怪物
+  const nearestCreature = state.creatures
+    .filter((c) => c.health > 0)
+    .sort((a, b) => {
+      const da = Math.abs(a.position.row - player.position.row) + Math.abs(a.position.column - player.position.column)
+      const db = Math.abs(b.position.row - player.position.row) + Math.abs(b.position.column - player.position.column)
+      return da - db
+    })[0]
+
+  if (!nearestCreature) {
+    return [{ type: 'hold', actor, reason: '定位：無出口但無可攻擊怪物' }]
+  }
+
+  const targetType = 'creature'
+  const targetId = nearestCreature.id
+  const position = nearestCreature.position
+
+  // 優先使用已裝備的外功傷害型技能
+  const damageSkill = player.equippedExternalSkillIds
+    .map((id) => externalSkillCatalog.find((s) => s.id === id))
+    .find((s): s is NonNullable<typeof s> => s != null && s.category === 'damage' && s.target === 'target')
+
+  if (damageSkill) {
+    return [{
+      type: 'attack',
+      actor,
+      target: { id: targetId, kind: targetType, position },
+      reason: `定位：無出口→攻擊（外功 ${damageSkill.name}）`,
+    }]
+  }
+
+  return [{
+    type: 'attack',
+    actor,
+    target: { id: targetId, kind: targetType, position },
+    reason: '定位：無出口→攻擊',
+  }]
 }

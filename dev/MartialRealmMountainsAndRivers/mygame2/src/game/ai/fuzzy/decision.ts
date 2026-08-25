@@ -9,6 +9,7 @@ export const SELF_PRESERVATION_OVERRIDE = 0.6
 /** tie-breaking 優先級：分數相同時依此順序選擇 */
 const PRIORITY_ORDER: GoalName[] = [
   'selfPreservation',
+  'positioning',
   'collectItems',
 ]
 

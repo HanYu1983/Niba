@@ -2,7 +2,7 @@ import type { Position } from '../../types'
 import { trapezoid, fuzzyAnd, fuzzyOr } from './membershipFunctions'
 import type { FuzzyInputs } from './fuzzyInputs'
 
-export type GoalName = 'selfPreservation' | 'collectItems'
+export type GoalName = 'selfPreservation' | 'collectItems' | 'positioning'
 
 export interface GoalResult {
   score: number
@@ -13,6 +13,8 @@ export interface GoalResult {
 export type GoalTarget =
   | { kind: 'retreat'; escapeDirection: Position }
   | { kind: 'item'; id: string; position: Position }
+  | { kind: 'attack'; targetId: string; targetType: 'creature' | 'nest'; position: Position }
+  | { kind: 'exit'; position: Position }
 
 // ─── selfPreservation ──────────────────────────────────────────────
 
@@ -79,5 +81,37 @@ export function evaluateAllGoals(inputs: FuzzyInputs): Record<GoalName, GoalResu
   return {
     selfPreservation: evaluateSelfPreservation(inputs),
     collectItems: evaluateCollectItems(inputs),
+    positioning: evaluatePositioning(inputs),
+  }
+}
+
+// ─── positioning ──────────────────────────────────────────────────
+// 出口越少 → 分數越高；無出口且有怪 → attack target；有出口 → exit target
+
+function evaluatePositioning(inputs: FuzzyInputs): GoalResult {
+  const { exitCount, distToNearestThreat, nearestExit } = inputs
+
+  // 出口越少分數越高：0 exits → 1.0, 1 → 0.7, 2 → 0.3, >=3 → 0
+  const f_fewExits = trapezoid(exitCount, 0, 0, 2, 3)
+
+  // 無出口時的危險加成：周圍有怪則更高
+  const f_threatClose = trapezoid(distToNearestThreat, 0, 0, 2, 4)
+  const score = exitCount === 0
+    ? Math.min(1, f_fewExits + f_threatClose * 0.3)
+    : f_fewExits
+
+  // target：無出口 → 用 nearestCreature（由 mapper 找最近怪）；有出口 → exit
+  let target: GoalTarget | undefined
+  if (exitCount === 0 && distToNearestThreat < Infinity) {
+    // attack target：由 mapper 從 state 中找最近 creature
+    target = { kind: 'attack', targetId: '', targetType: 'creature', position: { row: -1, column: -1 } }
+  } else if (nearestExit) {
+    target = { kind: 'exit', position: nearestExit }
+  }
+
+  return {
+    score,
+    target,
+    context: { exitCount, distToNearestThreat },
   }
 }
