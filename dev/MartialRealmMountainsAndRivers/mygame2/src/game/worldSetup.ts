@@ -1,4 +1,5 @@
 import type {
+  AiOrder,
   BaseState,
   CreatureNestState,
   GameSettings,
@@ -86,6 +87,9 @@ export function createGameState(settings: GameSettings = DEFAULT_GAME_SETTINGS):
     ...interactionPointPositions,
   ])
   const players = createInitialPlayers(playerPositions, settings.seed + WORLD_SEED_OFFSETS.players, humanPlayerCount)
+  const aiOrders: AiOrder[] = players
+    .filter((p) => p.isAI)
+    .map((p) => ({ id: `ai-order-test1-${p.id}`, type: 'test1' as const, aiPlayerId: p.id, priority: 50, status: 'active' as const }))
   const fallbackRandom = createSeededRandom(settings.seed + WORLD_SEED_OFFSETS.players + 333)
   const fallbackPlayerName = pickRandom(playerNames, fallbackRandom) ?? '玩家 1'
   const player = players[0] ?? createCharacterState({ id: 'player-1', name: fallbackPlayerName, innerSkillId: 'tuna-gong', position: { row: 1, column: 1 }, attributes: { armStrength: 8, constitution: 8, agility: 8, innerEnergy: 8, insight: 8 }, prestige: 0, money: 0, experience: 0, turnEnded: false })
@@ -132,7 +136,7 @@ export function createGameState(settings: GameSettings = DEFAULT_GAME_SETTINGS):
     runStats: createEmptyRunStats(),
     sharedWarehouse: [],
     sharedEquipmentWarehouse: [],
-    aiOrders: [],
+    aiOrders,
     aiConstructionPlans: [],
   }
 }
