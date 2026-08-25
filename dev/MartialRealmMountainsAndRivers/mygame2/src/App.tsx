@@ -508,6 +508,7 @@ function App() {
                 player={player}
                 isActive={player.id === gameState.activePlayerId}
                 onAllocateAttributePoint={(attribute) => gameStore.allocateAttributePoint(player.id, attribute)}
+                gameState={gameState}
               />
             ))}
           </aside>

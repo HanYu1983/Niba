@@ -1,6 +1,5 @@
-import { Card, Flex, Statistic, Tag, Tooltip, Typography } from 'antd'
+import { Card, Flex, Statistic, Typography } from 'antd'
 import type { GameState } from '../game/types'
-import { getActiveGlobalBuffs, getGlobalBuffDisplayEntries } from '../game/rules/globalBuffRules'
 
 type GameStatusCardProps = {
   gameState: GameState
@@ -13,8 +12,6 @@ function GameStatusCard({ gameState }: GameStatusCardProps) {
   const bases = gameState.bases.length
   const exploredCells = gameState.visibility?.exploredCellIds.length ?? 0
   const totalCells = gameState.map.cells.length
-  const activeBuffs = getActiveGlobalBuffs(gameState)
-  const buffEntries = getGlobalBuffDisplayEntries(activeBuffs)
 
   return (
     <Card className="game-status-card" variant="borderless" size="small">
@@ -37,24 +34,6 @@ function GameStatusCard({ gameState }: GameStatusCardProps) {
             <Typography.Text strong style={{ fontSize: 20, color: '#4b3a22' }}>
               {activePlayer.name}
             </Typography.Text>
-          </Flex>
-        )}
-
-        {buffEntries.length > 0 && (
-          <Flex vertical gap={4}>
-            <Typography.Text type="secondary">全局靈氣</Typography.Text>
-            <Flex wrap gap={4}>
-              {buffEntries.map((entry) => {
-                const levelLabel = entry.count === 1
-                  ? `Lv.${entry.levels[0]}`
-                  : entry.levels.map((level) => `Lv.${level}`).join('、')
-                return (
-                  <Tooltip key={entry.kind} title={`${entry.name}：${entry.description}（共 ${entry.count} 層、${levelLabel}，合計 ${entry.totalPercent}%）`}>
-                    <Tag color="purple">{entry.name} {levelLabel}</Tag>
-                  </Tooltip>
-                )
-              })}
-            </Flex>
           </Flex>
         )}
       </Flex>
