@@ -5,6 +5,7 @@ import {
   makeAiTestState,
   makeProtectBaseOrder,
   makeSupportPlayerOrder,
+  makeTest1Order,
   makeTestCreature,
   makeTestHuman,
   makeTestPlayer,
@@ -206,5 +207,40 @@ describe('runAiDefenseStep／runAiSupportStep 整合', () => {
     expect(previewSpy).not.toHaveBeenCalled()
     expect(gameStore.getState().attackPreview).toBeNull()
     previewSpy.mockRestore()
+  })
+})
+
+describe('runTest1Step', () => {
+  it('移動至最右方後結束回合', () => {
+    load({
+      players: [
+        makeTestPlayer({ position: { row: 5, column: 3 }, stamina: 20 }),
+        makeTestHuman(),
+      ],
+      aiOrders: [makeTest1Order()],
+    })
+    const result = gameStore.runTest1Step('ai-1')
+    expect(result.ok).toBe(true)
+    expect(playerById('ai-1').position.column).toBe(10) // map.columns - 1 = 10
+    expect(gameStore.getState().activePlayerId).toBe('player-1') // turn ended
+  })
+
+  it('非 AI、非其回合、無 active test1 命令時拒絕', () => {
+    load({
+      players: [makeTestPlayer({ isAI: false }), makeTestHuman()],
+      aiOrders: [makeTest1Order()],
+    })
+    expect(gameStore.runTest1Step('ai-1')).toEqual({ ok: false, reason: '目前無法執行 AI test1 回合。' })
+
+    load({
+      activePlayerId: 'player-1',
+      aiOrders: [makeTest1Order()],
+    })
+    expect(gameStore.runTest1Step('ai-1')).toEqual({ ok: false, reason: '目前無法執行 AI test1 回合。' })
+
+    load({
+      aiOrders: [],
+    })
+    expect(gameStore.runTest1Step('ai-1')).toEqual({ ok: false, reason: '目前無法執行 AI test1 回合。' })
   })
 })

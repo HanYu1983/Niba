@@ -502,7 +502,9 @@ export const gameStore = {
         current.type === order.type &&
         (order.type === 'protect-base'
           ? current.type === 'protect-base' && current.baseId === order.baseId
-          : current.type === 'support-player' && current.playerId === order.playerId),
+          : order.type === 'support-player'
+            ? current.type === 'support-player' && current.playerId === order.playerId
+            : order.type === 'test1'),
       )
       if (duplicate) return state
       saved = true
@@ -2146,6 +2148,28 @@ export const gameStore = {
       recordAiStepEvent(state.round, playerId, player.name, action, { ok: true })
       return { ok: true }
     }
+  },
+
+  runTest1Step: (playerId: string): ActionOutcome => {
+    const state = gameState
+    const player = state.players.find((candidate) => candidate.id === playerId)
+    const order = state.aiOrders?.find((candidate) => candidate.aiPlayerId === playerId && candidate.type === 'test1' && candidate.status === 'active')
+    if (!player?.isAI || state.activePlayerId !== playerId || state.creatureTurnInProgress || state.gameOver || !order) {
+      return { ok: false, reason: '目前無法執行 AI test1 回合。' }
+    }
+
+    const targetColumn = state.map.columns - 1
+    const result = gameStore.movePlayerTo(playerId, player.position.row, targetColumn)
+
+    gameStore.endPlayerTurn(playerId)
+    recordAiStepEvent(
+      state.round,
+      playerId,
+      player.name,
+      { type: 'end-turn', actor: { id: playerId, kind: 'player' }, reason: result.ok ? '移動至最右方，結束回合。' : '移動失敗，結束回合。' },
+      { ok: true },
+    )
+    return { ok: true }
   },
 
   endPlayerTurn: (playerId: string) => {

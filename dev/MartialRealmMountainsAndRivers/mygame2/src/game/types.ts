@@ -978,6 +978,13 @@ export type AiOrder =
       retreatHealthPercent: number
       status: AiOrderStatus
     }
+  | {
+      id: string
+      type: 'test1'
+      aiPlayerId: string
+      priority: number
+      status: AiOrderStatus
+    }
 
 export type AiConstructionPolicy = 'defense' | 'economy' | 'frontline' | 'balanced' | 'paused'
 
