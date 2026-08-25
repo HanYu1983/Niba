@@ -107,6 +107,26 @@ describe('createDebugGameState', () => {
     ]))
     expect((state.sectGates ?? []).every((gate) => gate.level === 1 && gate.experience === 0)).toBe(true)
   })
+
+  it('提供可測試三重共振的便利配置（水生木：玩家站水域、內功土生外功水、水克火目標）', () => {
+    const state = createDebugGameState()
+    const player = state.players[0]
+    const fireCreature = state.creatures.find((creature) => creature.schoolId === 'scarlet-flame')
+    const playerTerrain = state.map.cells.find((cell) => cell.row === player.position.row && cell.column === player.position.column)?.terrain
+    const fireTerrain = fireCreature ? state.map.cells.find((cell) => cell.row === fireCreature.position.row && cell.column === fireCreature.position.column)?.terrain : undefined
+
+    // 三重共振組合：內功土(earth-mountain-inner)生外功水(frost-water-external-damage)
+    expect(state.players[0].innerSkillIds).toContain('earth-mountain-inner')
+    expect(state.players[0].externalSkillIds).toContain('frost-water-external-damage')
+    // 目標為火系生物（外功水克火）
+    expect(fireCreature?.schoolId).toBe('scarlet-flame')
+    // 玩家起始位於水域（外功水共鳴地形）；赤炎妖也在水域，移動一步即可站在相鄰水域格攻擊它。
+    expect(playerTerrain).toBe('water')
+    expect(fireTerrain).toBe('water')
+    // 兩者距離 2（玩家一步踏到火旁水域，第二步即可攻擊）
+    const manhattan = Math.abs(player.position.row - fireCreature!.position.row) + Math.abs(player.position.column - fireCreature!.position.column)
+    expect(manhattan).toBeLessThanOrEqual(2)
+  })
 })
 
 describe('createGameState', () => {

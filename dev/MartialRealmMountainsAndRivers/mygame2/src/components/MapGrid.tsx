@@ -56,6 +56,8 @@ type MapGridProps = {
   visibilityPlayerId?: string
   revealedCreatureCellIds?: string[]
   revealedCreatureUntilRound?: number
+  /** 三重共振：被命中的生物位置與 icon（即使生物已從 state 移除仍顯示 shake 動畫）。 */
+  creatureShake?: { signal: number; targetId: string; position: Position; icon: string } | null
 }
 
 import { TERRAIN_STYLES } from '../editor/terrainStyles'
@@ -65,7 +67,7 @@ function hasValidPosition(value: { position?: Position } | null | undefined): va
   return Boolean(position && Number.isFinite(position.row) && Number.isFinite(position.column))
 }
 
-function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], defenseStructures = [], itemPoints = [], explorationEvents = [], ruins = [], traps = [], sectGates = [], selectedBaseId = null, onClearSelectedBase, players = [], creatures = [], activePlayerId, movementEnabled = false, creatureTurnInProgress = false, gameOver = false, blockingModal = false, activeCreatureId = null, onPlayerMoved, onMovePlayerTo, onBaseSelect, onBaseDetails, onCreatureNestSelect, onCreatureNestDetails, onResourcePointDetails, onItemPointDetails, onDefenseStructureDetails, onRuinDetails, onCreatureSelect, externalSkillTargeting = false, attackTargeting = false, itemTargeting = false, defenseBuildMode, onDefensePositionSelect, onExplorationEventDetails, onSectGateDetails, visibility, visibilityPlayerId, revealedCreatureCellIds, revealedCreatureUntilRound }: MapGridProps) {
+function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], defenseStructures = [], itemPoints = [], explorationEvents = [], ruins = [], traps = [], sectGates = [], selectedBaseId = null, onClearSelectedBase, players = [], creatures = [], activePlayerId, movementEnabled = false, creatureTurnInProgress = false, gameOver = false, blockingModal = false, activeCreatureId = null, onPlayerMoved, onMovePlayerTo, onBaseSelect, onBaseDetails, onCreatureNestSelect, onCreatureNestDetails, onResourcePointDetails, onItemPointDetails, onDefenseStructureDetails, onRuinDetails, onCreatureSelect, externalSkillTargeting = false, attackTargeting = false, itemTargeting = false, defenseBuildMode, onDefensePositionSelect, onExplorationEventDetails, onSectGateDetails, visibility, visibilityPlayerId, revealedCreatureCellIds, revealedCreatureUntilRound, creatureShake }: MapGridProps) {
   const [isDraggingMap, setIsDraggingMap] = useState(false)
   const mapScrollRef = useRef<HTMLDivElement>(null)
   const dragStateRef = useRef({ active: false, dragged: false, pointerId: -1, startX: 0, startY: 0, scrollLeft: 0, scrollTop: 0 })
@@ -452,6 +454,8 @@ function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], def
                         .filter((definition): definition is NonNullable<typeof definition> => Boolean(definition?.mapMarker))
                         .map((definition) => `creature--buff-${definition.mapMarkerClass ?? definition.id.replace(/-movement|-burning|-poison|-reflection|-boost/g, '')}`)
                         .join(' ')
+                      // 三重共振且生物存活：直接對生物 icon 播放 shake 動畫。
+                      const isShaking = creatureShake?.targetId === creature.id && creatureShake.position.row === cell.row && creatureShake.position.column === cell.column
                       return (
                         <Player
                           key={creature.id}
@@ -462,7 +466,7 @@ function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], def
                           icon={getCreatureIcon(creature)}
                           health={creature.health}
                           maxHealth={creature.maxHealth}
-                          className={[creature.id === activeCreatureId ? 'player--current-creature' : '', buffClassNames].filter(Boolean).join(' ') || undefined}
+                          className={[creature.id === activeCreatureId ? 'player--current-creature' : '', buffClassNames, isShaking ? 'creature--triple-resonance-shake' : ''].filter(Boolean).join(' ') || undefined}
                           onClick={(event) => {
                             event.stopPropagation()
                             executeMapCellAction(resolveMarkerAction('creature', creature.id), event.currentTarget.getBoundingClientRect())
@@ -471,6 +475,19 @@ function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], def
                       )
                     })()
                   ))}
+                  {/* 三重共振：若被命中的生物已被移除（擊殺），在此格顯示 ghost icon 並播放 shake 動畫。 */}
+                  {creatureShake && isVisible && creatureShake.position.row === cell.row && creatureShake.position.column === cell.column
+                    && !creaturesHere.some((creature) => creature.id === creatureShake.targetId) ? (
+                    <Player
+                      key={`shake-${creatureShake.signal}-${creatureShake.targetId}`}
+                      id={creatureShake.targetId}
+                      name="震懾"
+                      controllable={false}
+                      appearance="creature"
+                      icon={creatureShake.icon}
+                      className="creature--triple-resonance-shake"
+                    />
+                  ) : null}
                   {basesHere.map((base) => (
                     <div
                       key={base.id}

@@ -32,7 +32,7 @@ function createEquipmentLoot(player: PlayerState, equipmentId: string, fallback:
 }
 
 /** 依階級決定掉落權重：階級越高越稀有。 */
-function getTierWeight(tier: number): number {
+export function getTierWeight(tier: number): number {
   // 階級 1 權重 20，階級 2 權重 10，階級 3 權重 5，階級 4 權重 3，階級 5 權重 1
   return Math.max(1, Math.round(20 / Math.pow(2, tier - 1)))
 }
@@ -61,7 +61,7 @@ function toSkillLoot(
 export function createLootForPlayer(player: PlayerState, creatureLevel = 1): LootResult | undefined {
   const level = Math.max(1, creatureLevel)
 
-  // 道具：以 requiredShopLevel 作為階級，只掉落階級 ≤ 怪物等級的道具。
+  // 道具：以 requiredShopLevel 作為階級，只取貨階級 ≤ 怪物等級的道具。
   const itemLoot: LootDefinition[] = itemCatalog
     .filter((item) => (item.requiredShopLevel ?? 1) <= level)
     .map((item) => ({
@@ -76,7 +76,12 @@ export function createLootForPlayer(player: PlayerState, creatureLevel = 1): Loo
     ...toSkillLoot(allExternalSkillCatalog, 'external', new Set(player.externalSkillIds), level),
   ]
 
-  const availableLoot = [...lootCatalog, ...itemLoot, ...skillLoot]
+  // 裝備：從所有非門派專屬裝備中依階級抽取，只掉落階級 ≤ 怪物等級的裝備。
+  const equipmentLoot: LootDefinition[] = equipmentCatalog
+    .filter((equipment) => !equipment.schoolId && equipment.requiredShopLevel <= level)
+    .map((equipment) => ({ kind: 'equipment' as const, equipmentId: equipment.id, weight: getTierWeight(equipment.requiredShopLevel) }))
+
+  const availableLoot = [...lootCatalog, ...itemLoot, ...skillLoot, ...equipmentLoot]
   const totalWeight = availableLoot.reduce((total, loot) => total + loot.weight, 0)
   if (totalWeight <= 0) return undefined
 
@@ -91,6 +96,11 @@ export function createLootForPlayer(player: PlayerState, creatureLevel = 1): Loo
   if (loot.kind === 'item') {
     const item = itemById.get(loot.itemId)
     return item ? { kind: 'item', itemId: item.id, itemName: item.name, itemIcon: item.icon } : undefined
+  }
+
+  if (loot.kind === 'equipment') {
+    const equipment = getEquipment(loot.equipmentId)
+    return equipment ? createEquipmentLoot(player, equipment.id, equipment) : undefined
   }
 
   if (loot.kind === 'skill') {

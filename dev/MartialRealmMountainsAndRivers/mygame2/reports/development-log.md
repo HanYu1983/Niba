@@ -1,5 +1,38 @@
 # 開發日誌
 
+## 2026-08-25｜情境地圖 `inDevelopment` 標記與 UI 組件更新
+
+### 本次完成
+
+- **情境標記系統**：`public/data/scenarios/index.json` 新增 `inDevelopment` 旗標（預設 `false`），用於標記尚未完成開發的情境。編輯器下拉選單與遊戲開始畫面自動過濾未完成的內容。
+- **湖風嘆情境重構**：`lake-wind-lament.json` 大幅重寫（+676 / -214 行）：
+  - 重新設計地圖佈局與事件觸發邏輯。
+  - 優化角色屬性平衡與難度曲線。
+  - 新增區域進入／離開觸發器支援一次性區域移除功能。
+- **UI 組件更新**：
+  - `CampaignScenarioTab.tsx`：情境標籤頁支援顯示 `inDevelopment` 狀態提示。
+  - `GameStartScreen.tsx`：遊戲開始畫面過濾未完成情境，僅顯示可玩內容。
+  - `QuestSequencerModal.tsx`：任務序列彈窗改進區域觸發器的視覺化配置。
+  - `scenarioStorage.ts`：情境存儲系統更新以支援新標記與清除已儲存情境功能。
+- **編輯器功能增強**：
+  - 新增區域編輯功能與進入／離開觸發器配置。
+  - 實現一次性區域移除功能（由進入／離開事件觸發）。
+
+### 影響檔案
+
+- 修改：`public/data/scenarios/index.json`、`lake-wind-lament.json`
+- 修改：`src/components/CampaignScenarioTab.tsx`、`GameStartScreen.tsx`、`QuestSequencerModal.tsx`
+- 修改：`src/game/scenarioStorage.ts`
+
+### 驗證結果
+
+- TypeScript：通過。ESLint：通過。Build：通過。
+
+### 下一步
+
+- 持續完善情境編輯器的工作流。
+- 考慮為 `inDevelopment` 情境提供開發者專用開關（如 dev mode 或查詢參數）。
+
 ## 2026-08-24｜AI 重構切片 L：Creature 感知層委託（距離單一事實來源）
 
 ### 本次完成

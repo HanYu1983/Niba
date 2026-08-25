@@ -23,15 +23,17 @@ type SkillCardProps = {
   highlight?: { label: ReactNode; value: ReactNode }
   /** 漸層主色，預設紫色系（功法）。 */
   tone?: 'violet' | 'gold'
+  /** 精簡模式：縮小間距與字體、隱藏非必要資訊，用於狹窄列表版面。 */
+  compact?: boolean
   /** 底部操作區（按鈕等）。 */
   children?: ReactNode
 }
 
 /**
- * 功法技能卡（L3 封裝元件）。
+ * 功法護能卡（L3 封裝元件）。
  * 統一內功 / 外功卡片的呈現，視覺收斂於元件內部，畫面層零 CSS。
  */
-function SkillCard({ icon, label, element = 'none', name, description, status, meta, highlight, tone = 'violet', children }: SkillCardProps) {
+function SkillCard({ icon, label, element = 'none', name, description, status, meta, highlight, tone = 'violet', compact = false, children }: SkillCardProps) {
   const elementTagColor: Record<MartialElement, string> = {
     none: 'default',
     metal: 'gold',
@@ -50,8 +52,8 @@ function SkillCard({ icon, label, element = 'none', name, description, status, m
   }
 
   return (
-    <div className={`skill-card skill-card--${tone}`}>
-      <Flex align="center" gap={8}>
+    <div className={`skill-card skill-card--${tone}${compact ? ' skill-card--compact' : ''}`}>
+      <Flex align="center" gap={compact ? 6 : 8}>
         <div className="skill-card__icon">{icon}</div>
         <Flex vertical flex={1} style={{ minWidth: 0 }}>
           <StatLabel>{label}</StatLabel>

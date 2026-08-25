@@ -48,6 +48,33 @@ export function getElementDamageMultiplier(attacker: MartialElement | undefined,
   return 1
 }
 
+/** 五行相生：generator 元素是否生成 generated 元素（金→土→水→木→火→金）。太虛流不參與相生。 */
+export function isElementGenerating(
+  generator: MartialElement | undefined,
+  generated: MartialElement | undefined,
+): boolean {
+  if (!generator || !generated || generator === 'none' || generated === 'none') return false
+  const generation: Record<Exclude<MartialElement, 'none'>, Exclude<MartialElement, 'none'>> = {
+    metal: 'earth',
+    earth: 'water',
+    water: 'wood',
+    wood: 'fire',
+    fire: 'metal',
+  }
+  return generation[generator] === generated
+}
+
+/** 五行相生連攜倍率：內功元素生外功元素時傷害 ×1.25，否則 ×1。 */
+export const GENERATION_SYNERGY_MULTIPLIER = 1.25
+
+/** 五行相生連攜：內功元素生外功元素時回傳倍率，否則 ×1。 */
+export function getGenerationSynergyMultiplier(
+  innerElement: MartialElement | undefined,
+  outerElement: MartialElement | undefined,
+): number {
+  return isElementGenerating(innerElement, outerElement) ? GENERATION_SYNERGY_MULTIPLIER : 1
+}
+
 export function getElementName(element: MartialElement | undefined): string {
   return ({ none: '無屬性', metal: '金', wood: '木', water: '水', fire: '火', earth: '土' } satisfies Record<MartialElement, string>)[element ?? 'none']
 }

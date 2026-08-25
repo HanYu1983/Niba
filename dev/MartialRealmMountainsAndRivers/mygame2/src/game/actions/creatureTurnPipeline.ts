@@ -305,6 +305,10 @@ export function validateCreatureTurnEligibility(creature: CreatureState): Creatu
   if (!position || !Number.isFinite(position.row) || !Number.isFinite(position.column)) {
     return { ok: false, reason: 'Creature 座標無效。' }
   }
+  // 震懾：三重共振觸發，目標完全跳過下一個回合。
+  if (getActiveBuffsForPlayer(creature).some((buff) => getBuff(buff.definitionId)?.stunned)) {
+    return { ok: false, reason: 'Creature 被震懾，本回合無法行動。' }
+  }
   return { ok: true }
 }
 

@@ -180,7 +180,7 @@ function GameStartScreen({ onStart, onDebug, onOpenSkillTest, onOpenEditor, onSt
           <label>資源點數量<InputNumber min={0} max={60} value={settings.resourcePointCount} onChange={(value) => update('resourcePointCount', value)} /></label>
           <label>道具點數量<InputNumber min={0} max={60} value={settings.itemPointCount} onChange={(value) => update('itemPointCount', value)} /></label>
           <label>人類玩家數量<InputNumber min={1} max={4} value={settings.playerCount} onChange={(value) => update('playerCount', value)} /></label>
-          <label>AI 玩家數量<InputNumber min={0} max={8} value={settings.aiPlayerCount ?? 0} onChange={(value) => update('aiPlayerCount', value)} /></label>
+          <label>AI 玩家數量(開發中)<InputNumber min={0} max={8} value={settings.aiPlayerCount ?? 0} onChange={(value) => update('aiPlayerCount', value)} /></label>
           <label>探索點數量<InputNumber min={0} max={60} value={settings.explorationEventCount} onChange={(value) => update('explorationEventCount', value)} /></label>
           <label>回合結束事件機率<InputNumber min={0} max={1} step={0.05} value={settings.explorationTriggerChance ?? 0.2} onChange={(value) => update('explorationTriggerChance', value)} /></label>
           <label>門派據點<InputNumber min={0} max={30} value={settings.sectGateCount} onChange={(value) => update('sectGateCount', value)} /></label>

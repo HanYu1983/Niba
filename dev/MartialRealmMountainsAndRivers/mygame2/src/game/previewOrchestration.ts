@@ -8,9 +8,9 @@ import type {
   RepairPreview,
 } from './types'
 import { getRepairSummary, getWorkshopLevel, hasBuilding, requiresAdjacentActivePlayer } from './rules/buildingRules'
-import { getElementDamageMultiplier, getElementInteractionText, getExternalSkill, getInnerSkill, getSchoolElement, getSkillDamage, getSkillEffectMultiplier, getSkillInnerPowerCost, getSkillProgression } from './rules/skillRules'
-import { getTerrainAtPosition, getTerrainResonanceCriticalRateBonus, getTerrainResonanceDamageMultiplier, getTerrainResonanceInnerPowerDiscount, getTerrainResonanceLabel } from './rules/terrainCombatRules'
-import { getCriticalRateForPlayer, getDamageDealtPercent, getEffectiveAttributesForPlayer, getExternalSkillInnerCostReduction } from './rules/playerDerivedRules'
+import { getElementDamageMultiplier, getElementInteractionText, getExternalSkill, getGenerationSynergyMultiplier, getInnerSkill, getSchoolElement, getSkillDamage, getSkillEffectMultiplier, getSkillInnerPowerCost, getSkillProgression, isElementGenerating } from './rules/skillRules'
+import { getTerrainAtPosition, getTerrainResonanceCriticalRateBonus, getTerrainResonanceDamageMultiplier, getTerrainResonanceInnerPowerDiscount, getTerrainResonanceLabel, isTerrainResonant, isTripleResonance } from './rules/terrainCombatRules'
+import { getCriticalRateForPlayer, getDamageDealtPercent, getEffectiveAttributesForPlayer, getExternalSkillCritRateForPlayer, getExternalSkillInnerCostReduction } from './rules/playerDerivedRules'
 import { calculateDamage } from './rules/playerRules'
 import { getAttackTarget } from './rules/targetRules'
 import { isAdjacent } from './types'
@@ -122,6 +122,15 @@ export function createExternalSkillPreview(
   if (!target || !target.player.equippedExternalSkillIds.includes(skillId) || target.player.innerPower < innerPowerCost) {
     return null
   }
+  const innerElement = getInnerSkill(target.player.innerSkillId).element
+  const outerElement = skill.element
+  const synergy = isElementGenerating(innerElement, outerElement)
+  const tripleResonance = !skill.functionalEffect && isTripleResonance({
+    innerElement,
+    outerElement,
+    terrain: targetTerrain,
+    targetSchoolId: target.target.schoolId,
+  })
 
   return {
     playerId: target.player.id,
@@ -132,7 +141,11 @@ export function createExternalSkillPreview(
     targetName: target.target.name,
     skillName: skill.name,
     innerPowerCost,
-    expectedDamage: skill.functionalEffect ? 0 : Math.max(1, Math.floor(getSkillDamage(getEffectiveAttributesForPlayer(target.player), skill, getSkillProgression(target.player, skill.id).level) * getSkillEffectMultiplier(target.player) * getElementDamageMultiplier(skill.element, getSchoolElement(target.target.schoolId)) * getTerrainResonanceDamageMultiplier(skill.element, targetTerrain))),
+    expectedDamage: skill.functionalEffect ? 0 : Math.max(1, Math.floor(getSkillDamage(getEffectiveAttributesForPlayer(target.player), skill, getSkillProgression(target.player, skill.id).level) * getSkillEffectMultiplier(target.player) * getElementDamageMultiplier(skill.element, getSchoolElement(target.target.schoolId)) * getTerrainResonanceDamageMultiplier(skill.element, targetTerrain) * getGenerationSynergyMultiplier(innerElement, skill.element))),
+    criticalRate: skill.functionalEffect ? undefined : getExternalSkillCritRateForPlayer(target.player),
+    synergy: synergy || undefined,
+    tripleResonance: tripleResonance || undefined,
+    synergyResonanceState: tripleResonance ? 'triple' : synergy && isTerrainResonant(outerElement, targetTerrain) ? 'dual' : synergy ? 'single' : undefined,
     targetHealth: target.target.health,
     targetMaxHealth: target.target.maxHealth,
     targetMode: skill.target,

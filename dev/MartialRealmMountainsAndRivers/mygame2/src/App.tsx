@@ -426,9 +426,9 @@ function App() {
               }}
             />
             <MapGrid
-              map={gameState.map}
-              bases={gameState.bases}
-              creatureNests={gameState.creatureNests}
+                map={gameState.map}
+                bases={gameState.bases}
+                creatureNests={gameState.creatureNests}
               resourcePoints={gameState.resourcePoints}
               defenseStructures={gameState.defenseStructures}
               explorationEvents={gameState.explorationEvents}
@@ -495,6 +495,7 @@ function App() {
               externalSkillTargeting={externalSkillTargetingId !== null}
               attackTargeting={attackTargeting}
               itemTargeting={itemTargeting}
+              creatureShake={gameState.creatureShake}
             />
 
           </Flex>

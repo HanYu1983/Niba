@@ -9,7 +9,7 @@ import GovernanceRankSection from './GovernanceRankSection'
 import { type PlayerState, type UpgradeableAttribute, getExperienceRequired } from '../game/types'
 import { getInnerSkill, getPlayerInsightCapacityBreakdown, getSkillDamage, getSkillExperienceRequired, getSkillInnerPowerCost, getSkillProgression } from '../game/rules/skillRules'
 import { allExternalSkillCatalog } from '../game/catalogs/martialHallSkillCatalog'
-import { getActiveBuffsForPlayer, getBuff, getCriticalRateForPlayer, getEffectiveAttributesForPlayer, getEvasionRate, getRootReductionRate } from '../game/rules/playerDerivedRules'
+import { getActiveBuffsForPlayer, getBuff, getCriticalRateForPlayer, getEffectiveAttributesForPlayer, getEvasionRate, getExternalSkillCritRateForPlayer, getRootReductionRate } from '../game/rules/playerDerivedRules'
 import { getGovernanceRankName, getGovernanceRankNumber } from '../game/rules/governanceRules'
 
 type PlayerPanelProps = {
@@ -95,6 +95,11 @@ function PlayerPanel({ player, isActive, onAllocateAttributePoint }: PlayerPanel
                     {renderRateWithIcons(getCriticalRateForPlayer(player), '⚔️')}
                   </Tooltip>
                 </StatValue>
+                <StatValue label="爆發率">
+                  <Tooltip title="傷害型外功造成暴擊的機率，依內息決定（每 1 點內息 +2%）。">
+                    {renderRateWithIcons(getExternalSkillCritRateForPlayer(player), '💥')}
+                  </Tooltip>
+                </StatValue>
                 <StatValue label="運功數值">
                   <span style={{ color: insightCapacity.exceeded ? '#dc2626' : undefined }}>
                     {insightCapacity.total} / {insightCapacity.limit}
@@ -121,6 +126,7 @@ function PlayerPanel({ player, isActive, onAllocateAttributePoint }: PlayerPanel
                 <SkillCard
                   icon="☯"
                   label="裝備內功"
+                  compact
                    element={innerSkill.element}
                   name={innerSkill.name}
                   description={innerSkill.description}
@@ -136,6 +142,7 @@ function PlayerPanel({ player, isActive, onAllocateAttributePoint }: PlayerPanel
                       key={skill.id}
                       icon="⚡"
                       label="外功"
+                      compact
                        element={skill.element}
                       name={skill.name}
                       description={skill.description}

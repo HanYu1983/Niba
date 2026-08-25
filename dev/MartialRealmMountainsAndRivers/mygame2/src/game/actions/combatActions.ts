@@ -12,8 +12,8 @@ import type {
   PlayerState,
   EquipmentDurabilityChange,
 } from '../types'
-import { addSkillExperience, getElementDamageMultiplier, getExternalSkill, getSchoolElement, getSkillDamage, getSkillEffectMultiplier, getSkillInnerPowerCost, getSkillProgression, SKILL_EXPERIENCE_PER_USE } from '../rules/skillRules'
-import { getBuff, getCreatureDamageReductionPercent, getEffectiveAttributesForPlayer, getExternalSkillDamagePercent, getExternalSkillInnerCostReduction, getInnerPowerLeechPercent, getLifestealPercent, getPlayerSkillExpGainPercent } from '../rules/playerDerivedRules'
+import { addSkillExperience, getElementDamageMultiplier, getExternalSkill, getGenerationSynergyMultiplier, getInnerSkill, getSchoolElement, getSkillDamage, getSkillEffectMultiplier, getSkillInnerPowerCost, getSkillProgression, isElementGenerating, SKILL_EXPERIENCE_PER_USE } from '../rules/skillRules'
+import { getBuff, getCreatureDamageReductionPercent, getEffectiveAttributesForPlayer, getExternalSkillCritRateForPlayer, getExternalSkillDamagePercent, getExternalSkillInnerCostReduction, getInnerPowerLeechPercent, getLifestealPercent, getPlayerSkillExpGainPercent } from '../rules/playerDerivedRules'
 import { getMaxHealth, getMaxInnerPower, getMaxStamina } from '../rules/playerStatsRules'
 import { getAttackTarget } from '../rules/targetRules'
 import { reduceEquipmentDurability } from '../rules/equipmentRules'
@@ -23,7 +23,7 @@ import { getFunctionalSkillBuffOverrides } from '../rules/functionalSkillScaling
 import { getGlobalSkillExperienceMultiplier } from '../rules/globalBuffRules'
 import { getFunctionalSkillBuffIds } from '../catalogs/functionalSkillRegistry'
 import { bumpRunStatMax, incrementRunStat } from '../runStats'
-import { getTerrainAtPosition, getTerrainResonanceDamageMultiplier, getTerrainResonanceInnerPowerDiscount, getTerrainResonanceLabel } from '../rules/terrainCombatRules'
+import { getTerrainAtPosition, getTerrainResonanceDamageMultiplier, getTerrainResonanceInnerPowerDiscount, getTerrainResonanceLabel, isTripleResonance } from '../rules/terrainCombatRules'
 import { collectTriggeredDialogues, type DialogueTrigger } from '../rules/dialogueTriggerRules'
 import { enqueueDialogue } from './dialogueActions'
 import { progressObjectives, checkVictory } from '../rules/campaignRules'
@@ -395,14 +395,28 @@ export function executeExternalDamage(
     : 0
   const resonanceMultiplier = getTerrainResonanceDamageMultiplier(skill.element, targetTerrain)
   const elementMultiplier = getElementDamageMultiplier(skill.element, getSchoolElement(target.target.schoolId))
-  const baseDamage = skill.functionalEffect ? 0 : Math.max(1, Math.floor(getSkillDamage(getEffectiveAttributesForPlayer(target.player), skill, skillLevel) * getSkillEffectMultiplier(target.player) * elementMultiplier * resonanceMultiplier))
+  const innerElement = getInnerSkill(target.player.innerSkillId).element
+  const synergy = !skill.functionalEffect && isElementGenerating(innerElement, skill.element)
+  // 三重共振：連攜＋天地共鳴＋五行相剋（僅限傷害型外功、對象為生物）。需在暴擊之前套用乘算。
+  const synergyMultiplier = getGenerationSynergyMultiplier(innerElement, skill.element)
+  const tripleResonance = targetType === 'creature' && !skill.functionalEffect && isTripleResonance({
+    innerElement,
+    outerElement: skill.element,
+    terrain: targetTerrain,
+    targetSchoolId: target.target.schoolId,
+  })
+  const baseDamage = skill.functionalEffect ? 0 : Math.max(1, Math.floor(getSkillDamage(getEffectiveAttributesForPlayer(target.player), skill, skillLevel) * getSkillEffectMultiplier(target.player) * elementMultiplier * resonanceMultiplier * synergyMultiplier))
   // 罡氣訣：外功造成的最終傷害 +%
   const damageBeforeTargetReduction = Math.max(1, Math.floor(baseDamage * (1 + getExternalSkillDamagePercent(target.player))))
-  const damage = targetDamageReduction > 0
+  const damageBeforeCrit = targetDamageReduction > 0
     ? Math.max(1, Math.floor(damageBeforeTargetReduction * (1 - targetDamageReduction)))
     : damageBeforeTargetReduction
-  const nextHealth = Math.max(0, target.target.health - damage)
+  // 傷害型外功可暴擊：暴擊率 = 內息 × 2，暴擊造成 1.5 倍傷害。
   const random = dependencies.random ?? defaultRandomSource
+  const criticalRate = skill.functionalEffect ? 0 : getExternalSkillCritRateForPlayer(target.player)
+  const criticalHit = criticalRate > 0 && rollChance(criticalRate / 100, random)
+  const damage = criticalHit ? Math.floor(damageBeforeCrit * 1.5) : damageBeforeCrit
+  const nextHealth = Math.max(0, target.target.health - damage)
   const rewards = resolveCombatRewards(target, targetType, nextHealth, dependencies, random)
   const { experienceGain, moneyReward, loot, learnedSkill, progressedPlayer } = rewards
   const playerWithAccessoryWear = reduceEquipmentDurability(
@@ -428,15 +442,18 @@ export function executeExternalDamage(
   const functionalBuffs = effectiveFunctionalBuffIds
     .map((buffId) => getBuff(buffId))
     .filter((buff): buff is NonNullable<typeof buff> => Boolean(buff))
-  const appliedBuffs = functionalBuffs.length > 0 && targetType === 'creature'
-    ? functionalBuffs.map((buff) => ({
-      ...(() => {
-        const overrides = getFunctionalSkillBuffOverrides(skill.functionalEffect, skillLevel, buff)
-        return { description: `${buff.description}${overrides.maxHealthDamagePercent !== undefined ? `（目前 ${Math.round(overrides.maxHealthDamagePercent * 100)}%）` : ''}` }
-      })(),
-      name: buff.name,
-      remainingRounds: getFunctionalSkillBuffOverrides(skill.functionalEffect, skillLevel, buff).remainingRounds ?? (buff.duration === 'rounds' ? buff.durationRounds ?? null : null),
-    }))
+  const appliedBuffs = (functionalBuffs.length > 0 || tripleResonance) && targetType === 'creature'
+    ? [
+      ...functionalBuffs.map((buff) => ({
+        ...(() => {
+          const overrides = getFunctionalSkillBuffOverrides(skill.functionalEffect, skillLevel, buff)
+          return { description: `${buff.description}${overrides.maxHealthDamagePercent !== undefined ? `（目前 ${Math.round(overrides.maxHealthDamagePercent * 100)}%）` : ''}` }
+        })(),
+        name: buff.name,
+        remainingRounds: getFunctionalSkillBuffOverrides(skill.functionalEffect, skillLevel, buff).remainingRounds ?? (buff.duration === 'rounds' ? buff.durationRounds ?? null : null),
+      })),
+      ...(tripleResonance ? [{ name: '震懾', description: '三重共振衝擊，目標下一個回合完全無法行動。', remainingRounds: 1 }] : []),
+    ]
     : undefined
   const result: ExternalDamageExecutionResult = {
     playerId: target.player.id,
@@ -444,12 +461,17 @@ export function executeExternalDamage(
     targetType,
     targetId: target.target.id,
     targetName: target.target.name,
+    targetPosition: target.target.position,
     skillId,
     skillName: skill.name,
     damage,
     nextHealth,
     maxHealth: target.target.maxHealth,
     innerPowerCost: targetInnerPowerCost,
+    criticalRate: criticalRate > 0 ? criticalRate : undefined,
+    criticalHit: criticalHit || undefined,
+    synergy: synergy || undefined,
+    tripleResonance: tripleResonance || undefined,
     targetMode: skill.target,
     defeated: nextHealth === 0,
     moneyReward: moneyReward || undefined,
@@ -464,8 +486,13 @@ export function executeExternalDamage(
     terrainResonance: getTerrainResonanceLabel(skill.element, targetTerrain),
   }
 
-  const targetWithFunctionalBuff = functionalBuffs.length > 0 && targetType === 'creature'
-    ? functionalBuffs.reduce((currentTarget, buff) => {
+  // 三重共振時，對目標施加震懾（stunned）Buff：完全跳過下一個回合。
+  const stunnedDefinition = getBuff('triple-resonance-stun')
+  const allAppliedBuffDefinitions = tripleResonance && stunnedDefinition
+    ? [...functionalBuffs, stunnedDefinition]
+    : functionalBuffs
+  const targetWithFunctionalBuff = allAppliedBuffDefinitions.length > 0 && targetType === 'creature'
+    ? allAppliedBuffDefinitions.reduce((currentTarget, buff) => {
       const overrides = getFunctionalSkillBuffOverrides(skill.functionalEffect, skillLevel, buff)
       return {
         ...currentTarget,

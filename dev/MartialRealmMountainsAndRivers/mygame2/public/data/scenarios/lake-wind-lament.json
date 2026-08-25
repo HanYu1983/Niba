@@ -6,172 +6,622 @@
   "chapterIndex": 2,
   "enableRandomEvents": false,
   "mapSize": {
-    "rows": 12,
-    "columns": 12
+    "rows": 11,
+    "columns": 11
   },
   "cells": [
-    { "row": 0, "column": 0, "terrain": "wall" },
-    { "row": 0, "column": 1, "terrain": "wall" },
-    { "row": 0, "column": 2, "terrain": "wall" },
-    { "row": 0, "column": 3, "terrain": "wall" },
-    { "row": 0, "column": 4, "terrain": "forest" },
-    { "row": 0, "column": 5, "terrain": "forest" },
-    { "row": 0, "column": 6, "terrain": "forest" },
-    { "row": 0, "column": 7, "terrain": "wall" },
-    { "row": 0, "column": 8, "terrain": "wall" },
-    { "row": 0, "column": 9, "terrain": "wall" },
-    { "row": 0, "column": 10, "terrain": "wall" },
-    { "row": 0, "column": 11, "terrain": "wall" },
-
-    { "row": 1, "column": 0, "terrain": "wall" },
-    { "row": 1, "column": 1, "terrain": "plain" },
-    { "row": 1, "column": 2, "terrain": "plain" },
-    { "row": 1, "column": 3, "terrain": "plain" },
-    { "row": 1, "column": 4, "terrain": "water" },
-    { "row": 1, "column": 5, "terrain": "water" },
-    { "row": 1, "column": 6, "terrain": "water" },
-    { "row": 1, "column": 7, "terrain": "plain" },
-    { "row": 1, "column": 8, "terrain": "plain" },
-    { "row": 1, "column": 9, "terrain": "plain" },
-    { "row": 1, "column": 10, "terrain": "wall" },
-    { "row": 1, "column": 11, "terrain": "wall" },
-
-    { "row": 2, "column": 0, "terrain": "wall" },
-    { "row": 2, "column": 1, "terrain": "plain" },
-    { "row": 2, "column": 2, "terrain": "road" },
-    { "row": 2, "column": 3, "terrain": "plain" },
-    { "row": 2, "column": 4, "terrain": "water" },
-    { "row": 2, "column": 5, "terrain": "water" },
-    { "row": 2, "column": 6, "terrain": "water" },
-    { "row": 2, "column": 7, "terrain": "plain" },
-    { "row": 2, "column": 8, "terrain": "forest" },
-    { "row": 2, "column": 9, "terrain": "plain" },
-    { "row": 2, "column": 10, "terrain": "wall" },
-    { "row": 2, "column": 11, "terrain": "wall" },
-
-    { "row": 3, "column": 0, "terrain": "wall" },
-    { "row": 3, "column": 1, "terrain": "plain" },
-    { "row": 3, "column": 2, "terrain": "road" },
-    { "row": 3, "column": 3, "terrain": "plain" },
-    { "row": 3, "column": 4, "terrain": "water" },
-    { "row": 3, "column": 5, "terrain": "water" },
-    { "row": 3, "column": 6, "terrain": "water" },
-    { "row": 3, "column": 7, "terrain": "plain" },
-    { "row": 3, "column": 8, "terrain": "plain" },
-    { "row": 3, "column": 9, "terrain": "plain" },
-    { "row": 3, "column": 10, "terrain": "wall" },
-    { "row": 3, "column": 11, "terrain": "wall" },
-
-    { "row": 4, "column": 0, "terrain": "wall" },
-    { "row": 4, "column": 1, "terrain": "forest" },
-    { "row": 4, "column": 2, "terrain": "plain" },
-    { "row": 4, "column": 3, "terrain": "plain" },
-    { "row": 4, "column": 4, "terrain": "water" },
-    { "row": 4, "column": 5, "terrain": "water" },
-    { "row": 4, "column": 6, "terrain": "water" },
-    { "row": 4, "column": 7, "terrain": "plain" },
-    { "row": 4, "column": 8, "terrain": "plain" },
-    { "row": 4, "column": 9, "terrain": "forest" },
-    { "row": 4, "column": 10, "terrain": "wall" },
-    { "row": 4, "column": 11, "terrain": "wall" },
-
-    { "row": 5, "column": 0, "terrain": "wall" },
-    { "row": 5, "column": 1, "terrain": "forest" },
-    { "row": 5, "column": 2, "terrain": "plain" },
-    { "row": 5, "column": 3, "terrain": "plain" },
-    { "row": 5, "column": 4, "terrain": "plain" },
-    { "row": 5, "column": 5, "terrain": "plain" },
-    { "row": 5, "column": 6, "terrain": "plain" },
-    { "row": 5, "column": 7, "terrain": "plain" },
-    { "row": 5, "column": 8, "terrain": "plain" },
-    { "row": 5, "column": 9, "terrain": "forest" },
-    { "row": 5, "column": 10, "terrain": "wall" },
-    { "row": 5, "column": 11, "terrain": "wall" },
-
-    { "row": 6, "column": 0, "terrain": "wall" },
-    { "row": 6, "column": 1, "terrain": "forest" },
-    { "row": 6, "column": 2, "terrain": "plain" },
-    { "row": 6, "column": 3, "terrain": "plain" },
-    { "row": 6, "column": 4, "terrain": "plain" },
-    { "row": 6, "column": 5, "terrain": "plain" },
-    { "row": 6, "column": 6, "terrain": "plain" },
-    { "row": 6, "column": 7, "terrain": "plain" },
-    { "row": 6, "column": 8, "terrain": "plain" },
-    { "row": 6, "column": 9, "terrain": "forest" },
-    { "row": 6, "column": 10, "terrain": "wall" },
-    { "row": 6, "column": 11, "terrain": "wall" },
-
-    { "row": 7, "column": 0, "terrain": "wall" },
-    { "row": 7, "column": 1, "terrain": "forest" },
-    { "row": 7, "column": 2, "terrain": "plain" },
-    { "row": 7, "column": 3, "terrain": "plain" },
-    { "row": 7, "column": 4, "terrain": "plain" },
-    { "row": 7, "column": 5, "terrain": "plain" },
-    { "row": 7, "column": 6, "terrain": "plain" },
-    { "row": 7, "column": 7, "terrain": "plain" },
-    { "row": 7, "column": 8, "terrain": "plain" },
-    { "row": 7, "column": 9, "terrain": "forest" },
-    { "row": 7, "column": 10, "terrain": "wall" },
-    { "row": 7, "column": 11, "terrain": "wall" },
-
-    { "row": 8, "column": 0, "terrain": "wall" },
-    { "row": 8, "column": 1, "terrain": "plain" },
-    { "row": 8, "column": 2, "terrain": "road" },
-    { "row": 8, "column": 3, "terrain": "plain" },
-    { "row": 8, "column": 4, "terrain": "plain" },
-    { "row": 8, "column": 5, "terrain": "plain" },
-    { "row": 8, "column": 6, "terrain": "plain" },
-    { "row": 8, "column": 7, "terrain": "forest" },
-    { "row": 8, "column": 8, "terrain": "plain" },
-    { "row": 8, "column": 9, "terrain": "plain" },
-    { "row": 8, "column": 10, "terrain": "wall" },
-    { "row": 8, "column": 11, "terrain": "wall" },
-
-    { "row": 9, "column": 0, "terrain": "wall" },
-    { "row": 9, "column": 1, "terrain": "plain" },
-    { "row": 9, "column": 2, "terrain": "road" },
-    { "row": 9, "column": 3, "terrain": "plain" },
-    { "row": 9, "column": 4, "terrain": "plain" },
-    { "row": 9, "column": 5, "terrain": "plain" },
-    { "row": 9, "column": 6, "terrain": "plain" },
-    { "row": 9, "column": 7, "terrain": "forest" },
-    { "row": 9, "column": 8, "terrain": "plain" },
-    { "row": 9, "column": 9, "terrain": "plain" },
-    { "row": 9, "column": 10, "terrain": "wall" },
-    { "row": 9, "column": 11, "terrain": "wall" },
-
-    { "row": 10, "column": 0, "terrain": "wall" },
-    { "row": 10, "column": 1, "terrain": "wall" },
-    { "row": 10, "column": 2, "terrain": "wall" },
-    { "row": 10, "column": 3, "terrain": "wall" },
-    { "row": 10, "column": 4, "terrain": "wall" },
-    { "row": 10, "column": 5, "terrain": "wall" },
-    { "row": 10, "column": 6, "terrain": "wall" },
-    { "row": 10, "column": 7, "terrain": "wall" },
-    { "row": 10, "column": 8, "terrain": "wall" },
-    { "row": 10, "column": 9, "terrain": "wall" },
-    { "row": 10, "column": 10, "terrain": "wall" },
-    { "row": 10, "column": 11, "terrain": "wall" },
-
-    { "row": 11, "column": 0, "terrain": "wall" },
-    { "row": 11, "column": 1, "terrain": "wall" },
-    { "row": 11, "column": 2, "terrain": "wall" },
-    { "row": 11, "column": 3, "terrain": "wall" },
-    { "row": 11, "column": 4, "terrain": "wall" },
-    { "row": 11, "column": 5, "terrain": "wall" },
-    { "row": 11, "column": 6, "terrain": "wall" },
-    { "row": 11, "column": 7, "terrain": "wall" },
-    { "row": 11, "column": 8, "terrain": "wall" },
-    { "row": 11, "column": 9, "terrain": "wall" },
-    { "row": 11, "column": 10, "terrain": "wall" },
-    { "row": 11, "column": 11, "terrain": "wall" }
+    {
+      "row": 0,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 1,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 2,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 3,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 4,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 5,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 6,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 7,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 8,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 9,
+      "terrain": "wall"
+    },
+    {
+      "row": 0,
+      "column": 10,
+      "terrain": "wall"
+    },
+    {
+      "row": 1,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 1,
+      "column": 1,
+      "terrain": "plain"
+    },
+    {
+      "row": 1,
+      "column": 2,
+      "terrain": "plain"
+    },
+    {
+      "row": 1,
+      "column": 3,
+      "terrain": "water"
+    },
+    {
+      "row": 1,
+      "column": 4,
+      "terrain": "water"
+    },
+    {
+      "row": 1,
+      "column": 5,
+      "terrain": "water"
+    },
+    {
+      "row": 1,
+      "column": 6,
+      "terrain": "water"
+    },
+    {
+      "row": 1,
+      "column": 7,
+      "terrain": "plain"
+    },
+    {
+      "row": 1,
+      "column": 8,
+      "terrain": "plain"
+    },
+    {
+      "row": 1,
+      "column": 9,
+      "terrain": "plain"
+    },
+    {
+      "row": 1,
+      "column": 10,
+      "terrain": "wall"
+    },
+    {
+      "row": 2,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 2,
+      "column": 1,
+      "terrain": "plain"
+    },
+    {
+      "row": 2,
+      "column": 2,
+      "terrain": "road"
+    },
+    {
+      "row": 2,
+      "column": 3,
+      "terrain": "water"
+    },
+    {
+      "row": 2,
+      "column": 4,
+      "terrain": "water"
+    },
+    {
+      "row": 2,
+      "column": 5,
+      "terrain": "water"
+    },
+    {
+      "row": 2,
+      "column": 6,
+      "terrain": "water"
+    },
+    {
+      "row": 2,
+      "column": 7,
+      "terrain": "plain"
+    },
+    {
+      "row": 2,
+      "column": 8,
+      "terrain": "forest"
+    },
+    {
+      "row": 2,
+      "column": 9,
+      "terrain": "plain"
+    },
+    {
+      "row": 2,
+      "column": 10,
+      "terrain": "wall"
+    },
+    {
+      "row": 3,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 3,
+      "column": 1,
+      "terrain": "plain"
+    },
+    {
+      "row": 3,
+      "column": 2,
+      "terrain": "road"
+    },
+    {
+      "row": 3,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 3,
+      "column": 4,
+      "terrain": "water"
+    },
+    {
+      "row": 3,
+      "column": 5,
+      "terrain": "water"
+    },
+    {
+      "row": 3,
+      "column": 6,
+      "terrain": "water"
+    },
+    {
+      "row": 3,
+      "column": 7,
+      "terrain": "water"
+    },
+    {
+      "row": 3,
+      "column": 8,
+      "terrain": "plain"
+    },
+    {
+      "row": 3,
+      "column": 9,
+      "terrain": "plain"
+    },
+    {
+      "row": 3,
+      "column": 10,
+      "terrain": "wall"
+    },
+    {
+      "row": 4,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 4,
+      "column": 1,
+      "terrain": "forest"
+    },
+    {
+      "row": 4,
+      "column": 2,
+      "terrain": "plain"
+    },
+    {
+      "row": 4,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 4,
+      "column": 4,
+      "terrain": "water"
+    },
+    {
+      "row": 4,
+      "column": 5,
+      "terrain": "water"
+    },
+    {
+      "row": 4,
+      "column": 6,
+      "terrain": "water"
+    },
+    {
+      "row": 4,
+      "column": 7,
+      "terrain": "water"
+    },
+    {
+      "row": 4,
+      "column": 8,
+      "terrain": "plain"
+    },
+    {
+      "row": 4,
+      "column": 9,
+      "terrain": "forest"
+    },
+    {
+      "row": 4,
+      "column": 10,
+      "terrain": "wall"
+    },
+    {
+      "row": 5,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 5,
+      "column": 1,
+      "terrain": "forest"
+    },
+    {
+      "row": 5,
+      "column": 2,
+      "terrain": "plain"
+    },
+    {
+      "row": 5,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 5,
+      "column": 4,
+      "terrain": "plain"
+    },
+    {
+      "row": 5,
+      "column": 5,
+      "terrain": "water"
+    },
+    {
+      "row": 5,
+      "column": 6,
+      "terrain": "water"
+    },
+    {
+      "row": 5,
+      "column": 7,
+      "terrain": "plain"
+    },
+    {
+      "row": 5,
+      "column": 8,
+      "terrain": "plain"
+    },
+    {
+      "row": 5,
+      "column": 9,
+      "terrain": "forest"
+    },
+    {
+      "row": 5,
+      "column": 10,
+      "terrain": "wall"
+    },
+    {
+      "row": 6,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 6,
+      "column": 1,
+      "terrain": "forest"
+    },
+    {
+      "row": 6,
+      "column": 2,
+      "terrain": "plain"
+    },
+    {
+      "row": 6,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 6,
+      "column": 4,
+      "terrain": "plain"
+    },
+    {
+      "row": 6,
+      "column": 5,
+      "terrain": "plain"
+    },
+    {
+      "row": 6,
+      "column": 6,
+      "terrain": "plain"
+    },
+    {
+      "row": 6,
+      "column": 7,
+      "terrain": "plain"
+    },
+    {
+      "row": 6,
+      "column": 8,
+      "terrain": "plain"
+    },
+    {
+      "row": 6,
+      "column": 9,
+      "terrain": "forest"
+    },
+    {
+      "row": 6,
+      "column": 10,
+      "terrain": "wall"
+    },
+    {
+      "row": 7,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 7,
+      "column": 1,
+      "terrain": "forest"
+    },
+    {
+      "row": 7,
+      "column": 2,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 4,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 5,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 6,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 7,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 8,
+      "terrain": "plain"
+    },
+    {
+      "row": 7,
+      "column": 9,
+      "terrain": "forest"
+    },
+    {
+      "row": 7,
+      "column": 10,
+      "terrain": "wall"
+    },
+    {
+      "row": 8,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 8,
+      "column": 1,
+      "terrain": "plain"
+    },
+    {
+      "row": 8,
+      "column": 2,
+      "terrain": "road"
+    },
+    {
+      "row": 8,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 8,
+      "column": 4,
+      "terrain": "plain"
+    },
+    {
+      "row": 8,
+      "column": 5,
+      "terrain": "plain"
+    },
+    {
+      "row": 8,
+      "column": 6,
+      "terrain": "plain"
+    },
+    {
+      "row": 8,
+      "column": 7,
+      "terrain": "forest"
+    },
+    {
+      "row": 8,
+      "column": 8,
+      "terrain": "plain"
+    },
+    {
+      "row": 8,
+      "column": 9,
+      "terrain": "plain"
+    },
+    {
+      "row": 8,
+      "column": 10,
+      "terrain": "wall"
+    },
+    {
+      "row": 9,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 9,
+      "column": 1,
+      "terrain": "plain"
+    },
+    {
+      "row": 9,
+      "column": 2,
+      "terrain": "road"
+    },
+    {
+      "row": 9,
+      "column": 3,
+      "terrain": "plain"
+    },
+    {
+      "row": 9,
+      "column": 4,
+      "terrain": "plain"
+    },
+    {
+      "row": 9,
+      "column": 5,
+      "terrain": "plain"
+    },
+    {
+      "row": 9,
+      "column": 6,
+      "terrain": "plain"
+    },
+    {
+      "row": 9,
+      "column": 7,
+      "terrain": "forest"
+    },
+    {
+      "row": 9,
+      "column": 8,
+      "terrain": "plain"
+    },
+    {
+      "row": 9,
+      "column": 9,
+      "terrain": "plain"
+    },
+    {
+      "row": 9,
+      "column": 10,
+      "terrain": "wall"
+    },
+    {
+      "row": 10,
+      "column": 0,
+      "terrain": "wall"
+    },
+    {
+      "row": 10,
+      "column": 1,
+      "terrain": "wall"
+    },
+    {
+      "row": 10,
+      "column": 2,
+      "terrain": "wall"
+    },
+    {
+      "row": 10,
+      "column": 3,
+      "terrain": "wall"
+    },
+    {
+      "row": 10,
+      "column": 4,
+      "terrain": "wall"
+    },
+    {
+      "row": 10,
+      "column": 5,
+      "terrain": "wall"
+    },
+    {
+      "row": 10,
+      "column": 6,
+      "terrain": "wall"
+    },
+    {
+      "row": 10,
+      "column": 7,
+      "terrain": "wall"
+    },
+    {
+      "row": 10,
+      "column": 8,
+      "terrain": "wall"
+    },
+    {
+      "row": 10,
+      "column": 9,
+      "terrain": "wall"
+    },
+    {
+      "row": 10,
+      "column": 10,
+      "terrain": "wall"
+    }
   ],
   "entities": [
     {
       "id": "player-1",
       "kind": "player",
       "position": {
-        "row": 8,
+        "row": 9,
         "column": 2
       },
       "data": {
@@ -191,39 +641,11 @@
       }
     },
     {
-      "id": "base-lakeside",
-      "kind": "base",
-      "position": {
-        "row": 8,
-        "column": 3
-      },
-      "data": {
-        "name": "湖畔村落",
-        "buildingMaterials": 80,
-        "maxBuildingMaterials": 120,
-        "health": 100,
-        "maxHealth": 100,
-        "discovered": true,
-        "presetBuildings": [
-          { "type": "infirmary", "level": 1 },
-          { "type": "board", "level": 1 },
-          { "type": "item-shop", "level": 1 }
-        ],
-        "allowedBuildings": [
-          { "type": "infirmary", "maxLevel": 2 },
-          { "type": "board", "maxLevel": 1 },
-          { "type": "item-shop", "maxLevel": 2 },
-          { "type": "equipment-shop", "maxLevel": 2 }
-        ],
-        "spawnOnLoad": true
-      }
-    },
-    {
       "id": "event-spring1",
       "kind": "event",
       "position": {
-        "row": 2,
-        "column": 6
+        "row": 3,
+        "column": 7
       },
       "data": {
         "type": "custom",
@@ -238,8 +660,12 @@
             "endsPlayerTurn": false,
             "resultMessage": "凌淵運起內氣，雙掌抵入湖面，青黑色油污逐步散開，靈泉重現清澈。",
             "requirements": [
-              { "type": "active-player" },
-              { "type": "player-alive" }
+              {
+                "type": "active-player"
+              },
+              {
+                "type": "player-alive"
+              }
             ],
             "effects": [
               {
@@ -257,7 +683,7 @@
       "kind": "event",
       "position": {
         "row": 1,
-        "column": 7
+        "column": 6
       },
       "data": {
         "type": "custom",
@@ -272,8 +698,12 @@
             "endsPlayerTurn": false,
             "resultMessage": "凌淵查看泉眼，發現湖水底下遺有一道熟悉的封印印記。",
             "requirements": [
-              { "type": "active-player" },
-              { "type": "player-alive" }
+              {
+                "type": "active-player"
+              },
+              {
+                "type": "player-alive"
+              }
             ],
             "effects": [
               {
@@ -290,8 +720,8 @@
       "id": "event-spring3",
       "kind": "event",
       "position": {
-        "row": 7,
-        "column": 6
+        "row": 4,
+        "column": 4
       },
       "data": {
         "type": "custom",
@@ -306,8 +736,12 @@
             "endsPlayerTurn": false,
             "resultMessage": "凌淵以內氣淨化沼澤死水，底部漸清的泉眼重現生機。",
             "requirements": [
-              { "type": "active-player" },
-              { "type": "player-alive" }
+              {
+                "type": "active-player"
+              },
+              {
+                "type": "player-alive"
+              }
             ],
             "effects": [
               {
@@ -324,8 +758,8 @@
       "id": "villager-wang",
       "kind": "event",
       "position": {
-        "row": 9,
-        "column": 2
+        "row": 7,
+        "column": 3
       },
       "data": {
         "type": "custom",
@@ -339,8 +773,12 @@
             "endsPlayerTurn": false,
             "resultMessage": "王伯訴說村民飲用汙水後相繼病倒，懇求凌淵伸出援手。",
             "requirements": [
-              { "type": "active-player" },
-              { "type": "player-alive" }
+              {
+                "type": "active-player"
+              },
+              {
+                "type": "player-alive"
+              }
             ],
             "effects": [
               {

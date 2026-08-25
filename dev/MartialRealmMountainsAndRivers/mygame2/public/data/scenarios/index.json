@@ -14,7 +14,8 @@
     {
       "id": "frost-water-lament",
       "file": "lake-wind-lament.json",
-      "version": "1.2.0"
+      "version": "1.2.0",
+      "inDevelopment": true
     }
   ]
 }

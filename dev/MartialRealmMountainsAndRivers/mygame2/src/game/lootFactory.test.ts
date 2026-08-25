@@ -2,10 +2,29 @@ import { describe, expect, it } from 'vitest'
 import { equipmentCatalog } from './catalogs/equipmentCatalog'
 import { itemCatalog } from './catalogs/itemCatalog'
 import { itemPointLootCatalog, lootCatalog } from './types'
-import { createItemPointLootForPlayer, createLootForPlayer, getLearnableSkill } from './lootFactory'
+import { createItemPointLootForPlayer, createLootForPlayer, getLearnableSkill, getTierWeight } from './lootFactory'
 import { allExternalSkillCatalog, allInnerSkillCatalog } from './catalogs/martialHallSkillCatalog'
 import { jianghuExternalSkills } from './catalogs/jianghuExternalSkillCatalog'
 import { terrainItemPointLootCatalog } from './catalogs/terrainLootCatalog'
+
+function getSkillLootRoll(player: { innerSkillIds: string[]; externalSkillIds: string[] }, level: number): number {
+  const itemWeight = itemCatalog
+    .filter((item) => (item.requiredShopLevel ?? 1) <= level)
+    .reduce((total, item) => total + getTierWeight(item.requiredShopLevel ?? 1), 0)
+  const learnedInnerIds = new Set(player.innerSkillIds)
+  const learnedExternalIds = new Set(player.externalSkillIds)
+  const skillWeight = [
+    ...allInnerSkillCatalog.filter((skill) => !learnedInnerIds.has(skill.id)),
+    ...allExternalSkillCatalog.filter((skill) => !learnedExternalIds.has(skill.id)),
+  ]
+    .filter((skill) => !(skill as { lootExcluded?: boolean }).lootExcluded && (skill.requiredHallLevel ?? 1) <= level)
+    .reduce((total, skill) => total + getTierWeight(skill.requiredHallLevel ?? 1), 0)
+  const equipmentWeight = equipmentCatalog
+    .filter((equipment) => !equipment.schoolId && equipment.requiredShopLevel <= level)
+    .reduce((total, equipment) => total + getTierWeight(equipment.requiredShopLevel), 0)
+  const totalWeight = itemWeight + skillWeight + equipmentWeight
+  return (itemWeight + skillWeight / 2) / totalWeight
+}
 
 describe('loot catalogs', () => {
   it('保留可擴充的額外怪物掉落池', () => {
@@ -103,8 +122,8 @@ describe('loot catalogs', () => {
     } as never
 
     const originalRandom = Math.random
-    // 讓 roll 落在功法區段（道具總權重之後）
-    Math.random = () => 0.999
+    // 讓 roll 穩定落在功法區段（道具之後、裝備之前）。
+    Math.random = () => getSkillLootRoll(player, 1)
     try {
       const loot = createLootForPlayer(player, 1)
       expect(loot?.kind).toBe('skill')
@@ -124,13 +143,35 @@ describe('loot catalogs', () => {
     } as never
 
     const originalRandom = Math.random
-    // 讓 roll 落在功法區段（道具總權重之後）
-    Math.random = () => 0.999
+    // 讓 roll 穩定落在功法區段（道具之後、裝備之前）。
+    Math.random = () => getSkillLootRoll(player, 6)
     try {
       const loot = createLootForPlayer(player, 6)
       expect(loot?.kind).toBe('skill')
       if (loot?.kind === 'skill') {
         expect(jianghuExternalSkills.some((skill) => skill.id === loot.skill.id)).toBe(true)
+      }
+    } finally {
+      Math.random = originalRandom
+    }
+  })
+
+  it('怪物擊殺時可掉落非門派專屬裝備', () => {
+    const player = {
+      innerSkillIds: allInnerSkillCatalog.map((skill) => skill.id),
+      externalSkillIds: allExternalSkillCatalog.map((skill) => skill.id),
+    } as never
+
+    const originalRandom = Math.random
+    // 讓 roll 落在裝備區段（道具＋功法總權重之後）
+    Math.random = () => 0.999
+    try {
+      const loot = createLootForPlayer(player, 1)
+      expect(loot?.kind).toBe('equipment')
+      if (loot?.kind === 'equipment') {
+        // 掉落的裝備必須是非門派專屬（無 schoolId）
+        const equipment = equipmentCatalog.find((candidate) => candidate.id === loot.equipment.id)
+        expect(equipment?.schoolId).toBeUndefined()
       }
     } finally {
       Math.random = originalRandom
