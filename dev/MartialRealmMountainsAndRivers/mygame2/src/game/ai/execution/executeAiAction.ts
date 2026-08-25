@@ -6,6 +6,9 @@ import { constructBuilding } from '../../actions/buildingActions'
 import { endPlayerTurn, type TurnActionDependencies } from '../../actions/turnActions'
 import { executeAiAttack } from './executeAiAttack'
 import { collectItemPointAction } from '../../actions/itemActions'
+import { useItemAction } from '../../actions/itemActions'
+import { allocateAttributePointAction } from '../../rules/playerDerivedRules'
+import { equipEquipmentAction } from '../../rules/equipmentRules'
 import type { CombatActionDependencies } from '../../actions/combatActions'
 
 export type ExecuteAiActionDependencies = {
@@ -43,17 +46,17 @@ export function executeAiAction(
       const result = constructBuilding(state, action.baseId, action.buildingType, action.actor.id)
       return { state: result.state, result: result.result }
     }
+    case 'allocate-attribute':
+      return allocateAttributePointAction(state, action.actor.id, action.attribute)
+    case 'use-item':
+      return useItemAction(state, action.actor.id, action.itemId)
+    case 'equip':
+      return equipEquipmentAction(state, action.actor.id, action.instanceId)
     case 'hold':
       return { state, result: { ok: true } }
-    // 注意：此分支僅回傳純 state，不會觸發 creature turn 動畫
-    // （animateCreatureTurn 等 side-effect 必須由 store 方法處理）。
-    // 呼叫端若需完整回合結束流程，應直接使用 gameStore.endPlayerTurn。
     case 'end-turn': {
       const result = endPlayerTurn(state, action.actor.id, dependencies.turn)
       return { state: result.state, result: { ok: true } }
     }
-    // allocate-attribute / use-item / equip 由 gameStore 層直接處理，不經過此領域函數。
-    default:
-      return { state, result: { ok: false, reason: `未知行動類型：${(action as { type: string }).type}` } }
   }
 }

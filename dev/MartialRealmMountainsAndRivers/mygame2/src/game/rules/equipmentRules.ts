@@ -1,16 +1,19 @@
 import type {
+  ActionOutcome,
   EquipmentLoadout,
+  GameState,
   PlayerState,
 } from '../types'
 import type { EquipmentSlot } from '../catalogs/equipmentCatalog'
 import {
-} from '../types'
-import {
   getEffectiveAttributesForPlayer,
+  getEquipment,
   getEquipmentInventory,
   getEquipmentLoadout,
 } from './playerDerivedRules'
+import { getActionablePlayer } from './actionCostRules'
 import { getMaxHealth, getMaxInnerPower, getMaxStamina } from './playerStatsRules'
+import { applyBaseHealthBonuses } from './baseRules'
 
 export function applyEquipmentLoadout(player: PlayerState, equipmentLoadout: EquipmentLoadout): PlayerState {
   const baseAttributes = player.baseAttributes ?? player.attributes
@@ -50,4 +53,47 @@ export function reduceEquipmentDurability(
   )
 
   return applyEquipmentLoadout({ ...player, equipmentInventory }, loadout)
+}
+
+/**
+ * 裝備道具的純領域函數。
+ * 將指定 instanceId 的裝備套用到對應部位。
+ */
+export function equipEquipmentAction(
+  state: GameState,
+  playerId: string,
+  instanceId: string,
+): { state: GameState; result: ActionOutcome } {
+  const player = getActionablePlayer(state, playerId)
+  const instance = player
+    ? getEquipmentInventory(player).find((candidate) => candidate.instanceId === instanceId)
+    : undefined
+  const equipment = instance ? getEquipment(instance.equipmentId) : undefined
+
+  if (!player || !instance || !equipment || instance.durability <= 0) {
+    return { state, result: { ok: false, reason: '裝備不存在、已損壞，或玩家目前無法行動。' } }
+  }
+
+  const currentLoadout = getEquipmentLoadout(player)
+  const nextLoadout: EquipmentLoadout = {
+    ...currentLoadout,
+    [`${equipment.slot}InstanceId`]: instance.instanceId,
+  }
+
+  return {
+    state: applyBaseHealthBonuses({
+      ...state,
+      players: state.players.map((currentPlayer) =>
+        currentPlayer.id === playerId
+          ? applyEquipmentLoadout(
+            currentPlayer.equipmentInventory?.some((candidate) => candidate.instanceId === instance.instanceId)
+              ? currentPlayer
+              : { ...currentPlayer, equipmentInventory: [...getEquipmentInventory(currentPlayer), instance] },
+            nextLoadout,
+          )
+          : currentPlayer,
+      ),
+    }),
+    result: { ok: true },
+  }
 }
