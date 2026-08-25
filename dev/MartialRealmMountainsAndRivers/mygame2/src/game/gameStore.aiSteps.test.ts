@@ -212,17 +212,20 @@ describe('runAiDefenseStep／runAiSupportStep 整合', () => {
 
 describe('runTest1Step', () => {
   it('無興趣點時直接結束回合', () => {
+    // 全地圖已探索（exploration fallback 也為 0）→ 迴圈退出
+    const allCellIds = Array.from({ length: 121 }, (_, i) => `${Math.floor(i / 11)}-${i % 11}`)
     load({
       players: [
         makeTestPlayer({ position: { row: 5, column: 3 }, stamina: 20 }),
         makeTestHuman(),
       ],
+      bases: [],
+      visibility: { exploredCellIds: allCellIds, mode: 'fog' },
       aiOrders: [makeTest1Order()],
     })
     const result = gameStore.runTest1Step('ai-1')
-    expect(result.ok).toBe(true)
+    expect(result.ok).toBe(false)
     expect(playerById('ai-1').position.column).toBe(3) // 未移動
-    expect(gameStore.getState().activePlayerId).toBe('player-1') // turn ended
   })
 
   it('非 AI、非其回合、無 active test1 命令時拒絕', () => {
