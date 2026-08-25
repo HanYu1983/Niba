@@ -3,6 +3,24 @@
   "subtitle": "記錄武行山河的版本更新、系統調整與開發進度。",
   "entries": [
     {
+      "version": "0.10.26",
+      "date": "2026-08-25",
+      "title": "目標選取抽象化與範圍攻擊系統",
+      "tag": "功法／戰鬥／架構",
+      "changes": [
+        "將攻擊目標選取流程抽象化為「範圍形狀 × 選取模式」框架，取代以往硬編碼的「相鄰一格」假設。",
+        "新增 TargetingShape（radius 曼哈頓半徑 / cross 十字 / line 直線 / custom 自訂）與 SelectionMode（single 單體 / all 範圍 / multi 多選）型別。",
+        "新增 isWithinRange、resolveTargetShapeCells、resolveTargetingSpec、resolveTargetableCellIds 純函式，供規則層與 UI 層共用。",
+        "getAttackTarget 改為接收範圍形狀參數（預設相鄰一格，向後相容）；執行與預覽路徑依功法 shape 驗證範圍。",
+        "MapGrid 高亮改由 TargetingSpec 驅動：可高亮整個可選範圍（含無生物的格），並依 source 套用不同高亮樣式。",
+        "修復元素爆發道具選格時缺少 `--item-target` 高亮樣式的既有缺陷。",
+        "ExternalSkill 新增 shape / selectionMode 欄位（保留 range 作為 radius 簡寫），Factory 與門派目錄完整支援傳遞。",
+        "為部分門派傷害型外功設計不同範圍：追風腿、靈犀指、銳鋒斬、影襲改為 2 格單體；烈陽轟、燎原、凝霜改為周遭 1 格範圍攻擊（selectionMode = all）。",
+        "實作範圍攻擊（all 模式）多目標執行：對形狀範圍內所有存活生物／巢穴逐一結算傷害，共享一次內力消耗，結果彈窗逐目標列出傷害與擊敗狀態。",
+        "新增目標選取框架與範圍攻擊的單元測試。"
+      ]
+    },
+    {
       "version": "0.10.25",
       "date": "2026-08-25",
       "title": "傷害型外功暴擊、五行相生連攜與三重共振",
