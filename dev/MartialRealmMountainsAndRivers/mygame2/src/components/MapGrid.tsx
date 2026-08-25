@@ -6,6 +6,7 @@ import { type MapCell, type BaseState, type CreatureNestState, type ResourcePoin
 import { getCellVisibility } from '../game/rules/visibilityRules'
 import { getCreatureIcon } from '../game/rules/creatureBehaviorRules'
 import { getActiveBuffsForPlayer, getBuff } from '../game/rules/playerDerivedRules'
+import { getBastionMultipliers } from '../game/rules/defenseBastionRules'
 import { getMapCellRangeState, resolveMapCellAction } from '../game/rules/mapCellStateRules'
 import { resolveTargetShapeCells } from '../game/rules/targetingRules'
 import { executeMapCellAction as executeInteractionAction, type MapInteractionHandlers } from './mapGridInteractionExecutor'
@@ -389,11 +390,14 @@ function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], def
                     {isDefenseBuildRange && <span className="map-grid__overlay map-grid__overlay--defense-range" />}
                     {canSelectDefensePosition && <span className="map-grid__overlay map-grid__overlay--defense-buildable" />}
                   </span>
-                  {defenseStructuresHere.map((structure) => (
+                  {defenseStructuresHere.map((structure) => {
+                    const bastionBoosted = getBastionMultipliers(defenseStructures, structure)
+                    const boosted = bastionBoosted.hpMultiplier > 1
+                    return (
                     <div
                       key={structure.id}
-                      className="defense-structure-marker"
-                      title={`${structure.name}${structure.originName ? `（源自 ${structure.originName}）` : ''} · ${structure.health}/${structure.maxHealth}`}
+                      className={`defense-structure-marker${boosted ? ' defense-structure-marker--bastion-boosted' : ''}`}
+                      title={`${structure.name}${structure.originName ? `（源自 ${structure.originName}）` : ''} · ${structure.health}/${structure.maxHealth}${boosted ? ` · 受軍壘強化：HP×${bastionBoosted.hpMultiplier}${bastionBoosted.attackMultiplier > 1 ? `、攻擊×${bastionBoosted.attackMultiplier}` : ''}` : ''}`}
                       aria-label={structure.name}
                       role="button"
                       tabIndex={0}
@@ -409,9 +413,11 @@ function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], def
                         }
                       }}
                     >
+                      {boosted ? <span className="defense-structure-marker__boost">✦</span> : null}
                       {structure.icon}
                     </div>
-                  ))}
+                    )
+                  })}
                   {explorationEventsHere.map((event) => (
                     <div
                       key={event.id}
@@ -573,7 +579,7 @@ function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], def
                         }
                       }}
                     >
-                      {resourcePoint.active === false ? '❗' : '💎'}
+                      {resourcePoint.active === false ? '❗' : resourcePoint.name === '輜重庫' ? '🏮' : '💎'}
                     </div>
                   ))}
                   {itemPointsHere.map((itemPoint) => (

@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import { gameStore } from './gameStore'
-import type { BaseState, CreatureState, DefenseStructureState, GameState, PlayerState } from './types'
+import { moveCreatures } from './actions/creatureActions'
+import type { BaseState, CreatureState, DefenseStructureState, GameState, PlayerState, MapState } from './types'
 import { getBastionMultipliers, getEffectiveAttackDamage, isWithinAnyWarcampBastion, restoreTowerHealthForBastion } from './rules/defenseBastionRules'
 import { defenseStructureCatalog, type DefenseStructureType } from './catalogs/defenseStructureCatalog'
 import { evaluateWarningBeaconReveal } from './rules/warningBeaconRules'
@@ -89,14 +90,27 @@ function makeDefense(type: DefenseStructureType, position: { row: number; column
 }
 
 function makeCreature(id: string, name: string, position: { row: number; column: number }, health = 100): CreatureState {
-  return {
+  return makePlayer({
     id,
     name,
     position,
     health,
     maxHealth: health,
     attributes: { armStrength: 3, constitution: 3, agility: 5, innerEnergy: 0, insight: 2 },
-  } as CreatureState
+  }) as unknown as CreatureState
+}
+
+function makeSmallMap(): MapState {
+  return {
+    rows: 10,
+    columns: 10,
+    cells: Array.from({ length: 10 * 10 }, (_, index) => {
+      const row = Math.floor(index / 10)
+      const column = index % 10
+      const isBorder = row === 0 || column === 0 || row === 9 || column === 9
+      return { id: `${row}-${column}`, row, column, terrain: isBorder ? 'wall' : 'plain' }
+    }),
+  }
 }
 
 beforeEach(() => {
@@ -118,6 +132,8 @@ describe('輜重庫 supply-depot', () => {
     expect(state.resourcePoints[0].materialIncome).toBe(45)
     expect(state.resourcePoints[0].ownerBaseId).toBe('base-1')
     expect(state.resourcePoints[0].position).toEqual({ row: 4, column: 5 })
+    // 輜重庫不新增實體防禦設施，避免與大型資源點形成雙 icon 疊加。
+    expect(state.defenseStructures ?? []).toHaveLength(0)
   })
 
   it('官階不足 3 無法建造輜重庫', () => {
@@ -209,5 +225,47 @@ describe('轟城砲 bombard-cannon', () => {
     const cannon = makeDefense('bombard-cannon', { row: 5, column: 5 }, { cooldownRemaining: 2 })
     const result = countdownBombardCooldowns([cannon])
     expect(result[0].cooldownRemaining).toBe(1)
+  })
+})
+
+describe('軍壘整合（真實 Creature 回合）', () => {
+  it('軍壘 3 格內箭塔在 Creature 回合造成 ×2 傷害', () => {
+    const bastion = makeDefense('warcamp-bastion', { row: 4, column: 4 })
+    // 箭塔位於軍壘 3 格內，對 (5,5) 的敵軍（距離 1）射擊。
+    const tower = makeDefense('arrow-tower', { row: 4, column: 5 })
+    const creature = makeCreature('c1', '狼', { row: 5, column: 5 }, 100)
+
+    // 無軍壘：箭塔造成 10 傷。
+    const without = moveCreatures(
+      [creature], makeSmallMap(), [], [], [], [tower], [], [],
+    )
+    // 軍壘強化：箭塔造成 20 傷。
+    const withBastion = moveCreatures(
+      [creature], makeSmallMap(), [], [], [], [bastion, tower], [], [],
+    )
+
+    // 箭塔在 Creature 行動前先造成傷害，因此最終剩餘 HP 不同。
+    expect(without.creatures[0].health).toBe(90)
+    expect(withBastion.creatures[0].health).toBe(80)
+  })
+
+  it('軍壘 3 格內箭塔承受 Creature 傷害減半（HP×2 等效）', () => {
+    // 敵軍位於箭塔旁，會攻擊箭塔。
+    const tower = makeDefense('arrow-tower', { row: 4, column: 5 })
+    const creature = makeCreature('c1', '狼', { row: 4, column: 4 }, 100)
+    creature.attributes = { armStrength: 12, constitution: 3, agility: 5, innerEnergy: 0, insight: 2 }
+
+    // 無軍壘：箭塔受 (12-2)=10 傷。
+    const without = moveCreatures(
+      [creature], makeSmallMap(), [], [], [], [tower], [], [],
+    )
+    // 軍壘：箭塔受 floor(10/2)=5 傷。
+    const bastion = makeDefense('warcamp-bastion', { row: 3, column: 5 })
+    const withBastion = moveCreatures(
+      [creature], makeSmallMap(), [], [], [], [bastion, tower], [], [],
+    )
+
+    expect(without.defenseStructures![0].health).toBe(40) // 50 - 10
+    expect(withBastion.defenseStructures?.find((s) => s.id === tower.id)?.health).toBe(45) // 50 - 5
   })
 })

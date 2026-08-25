@@ -218,14 +218,21 @@ export function constructDefenseStructure(
     ? createImmediateBeaconReveal({ ...state, defenseStructures: [...(state.defenseStructures ?? []), structure] })
     : null
 
+  // 輜重庫等設施：不新增實體防禦設施（僅生成大型資源點），避免地圖上疊加雙 icon。
+  // 其他設施則照常新增；軍壘另需觸發建造瞬間的回復範圍塔類 HP。
+  const isDepot = Boolean(definition.resourceIncomeMultiplier)
+  const nextDefenseStructures = isDepot
+    ? (state.defenseStructures ?? [])
+    : definition.type === 'warcamp-bastion'
+      ? restoreTowerHealthForBastion([...(state.defenseStructures ?? []), structure], position)
+      : [...(state.defenseStructures ?? []), structure]
+
   const defenseState: GameState = incrementRunStat({
     ...state,
     bases: state.bases.map((candidate) => candidate.id === baseId
       ? { ...candidate, buildingMaterials: candidate.buildingMaterials - definition.constructionCost }
       : candidate),
-    defenseStructures: definition.type === 'warcamp-bastion'
-      ? restoreTowerHealthForBastion([...(state.defenseStructures ?? []), structure], position)
-      : [...(state.defenseStructures ?? []), structure],
+    defenseStructures: nextDefenseStructures,
     resourcePoints,
     revealedCreatureCellIds: immediateBeaconReveal?.revealedCreatureCellIds ?? state.revealedCreatureCellIds,
     revealedCreatureUntilRound: immediateBeaconReveal?.revealedCreatureUntilRound ?? state.revealedCreatureUntilRound,
