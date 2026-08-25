@@ -6,6 +6,7 @@ import StatValue from './StatValue'
 import LevelBadge from './LevelBadge'
 import SkillCard from './SkillCard'
 import GovernanceRankSection from './GovernanceRankSection'
+import BuffTag from './BuffTag'
 import { type PlayerState, type UpgradeableAttribute, getExperienceRequired } from '../game/types'
 import { getInnerSkill, getPlayerInsightCapacityBreakdown, getSkillDamage, getSkillExperienceRequired, getSkillInnerPowerCost, getSkillProgression } from '../game/rules/skillRules'
 import { allExternalSkillCatalog } from '../game/catalogs/martialHallSkillCatalog'
@@ -135,7 +136,7 @@ function PlayerPanel({ player, isActive, onAllocateAttributePoint, gameState }: 
                   icon="☯"
                   label="裝備內功"
                   compact
-                   element={innerSkill.element}
+                  element={innerSkill.element}
                   name={innerSkill.name}
                   description={innerSkill.description}
                   status="已裝備"
@@ -151,7 +152,7 @@ function PlayerPanel({ player, isActive, onAllocateAttributePoint, gameState }: 
                       icon="⚡"
                       label="外功"
                       compact
-                       element={skill.element}
+                      element={skill.element}
                       name={skill.name}
                       description={skill.description}
                       meta={`功法等級 Lv.${progression.level}｜經驗 ${progression.experience} / ${getSkillExperienceRequired(progression.level)}｜內力 -${innerPowerCost}`}
@@ -168,45 +169,51 @@ function PlayerPanel({ player, isActive, onAllocateAttributePoint, gameState }: 
                 {activeBuffs.length > 0 && <Flex wrap="wrap" gap={8}>{activeBuffs.map((buff) => {
                   const definition = getBuff(buff.definitionId)
                   return definition ? (
-                    <Tooltip key={buff.id} title={definition.description}>
-                      <Tag color="blue">✨ {definition.name}（{buff.remainingRounds === null ? '持續生效' : `剩 ${buff.remainingRounds} 回合`}）</Tag>
-                    </Tooltip>
+                    <BuffTag
+                      key={buff.id}
+                      name={definition.name}
+                      icon="✨"
+                      tone="neutral"
+                      meta={buff.remainingRounds === null ? '持續生效' : `剩 ${buff.remainingRounds} 回合`}
+                      tooltip={definition.description}
+                    />
                   ) : null
                 })}</Flex>}
 
                 {globalBuffEntries.length > 0 && (
-                  <Flex vertical gap={4}>
-                    <Typography.Text type="secondary">全局靈氣</Typography.Text>
-                    <Flex wrap gap={4}>
-                      {globalBuffEntries.map((entry) => {
-                        const levelLabel = entry.count === 1
-                          ? `Lv.${entry.levels[0]}`
-                          : entry.levels.map((level) => `Lv.${level}`).join('、')
-                        return (
-                          <Tooltip key={entry.kind} title={`${entry.name}：${entry.description}（共 ${entry.count} 層、${levelLabel}，合計 ${entry.totalPercent}%）`}>
-                            <Tag color="purple">{entry.name} {levelLabel}</Tag>
-                          </Tooltip>
-                        )
-                      })}
-                    </Flex>
+                  <Flex wrap gap={4}>
+                    {globalBuffEntries.map((entry) => {
+                      const levelLabel = entry.count === 1
+                        ? `Lv.${entry.levels[0]}`
+                        : entry.levels.map((level) => `Lv.${level}`).join('、')
+                      return (
+                        <BuffTag
+                          key={entry.kind}
+                          name={entry.name}
+                          icon="✨"
+                          tone="global"
+                          meta={levelLabel}
+                          tooltip={`${entry.name}：${entry.description}（共 ${entry.count} 層、${levelLabel}，合計 ${entry.totalPercent}%）`}
+                        />
+                      )
+                    })}
                   </Flex>
                 )}
 
                 {auraEntries.length > 0 && (
-                  <Flex vertical gap={4}>
-                    <Typography.Text type="secondary">當前區域靈氣</Typography.Text>
-                    <Flex wrap gap={4}>
-                      {auraEntries.map((entry, index) => {
-                        const isHarmful = entry.kind === 'damage-over-time'
-                        return (
-                          <Tooltip key={`${entry.sourceId}-${index}`} title={`${entry.sourceName}：${entry.description}`}>
-                            <Tag color={isHarmful ? 'red' : 'green'}>
-                              {isHarmful ? '🔥' : '💚'} {entry.sourceName}（{entry.description}）
-                            </Tag>
-                          </Tooltip>
-                        )
-                      })}
-                    </Flex>
+                  <Flex wrap gap={4}>
+                    {auraEntries.map((entry, index) => {
+                      const isHarmful = entry.kind === 'damage-over-time'
+                      return (
+                        <BuffTag
+                          key={`${entry.sourceId}-${index}`}
+                          name={entry.sourceName}
+                          icon={isHarmful ? '🔥' : '💚'}
+                          tone={isHarmful ? 'debuff' : 'buff'}
+                          tooltip={`${entry.sourceName}：${entry.description}`}
+                        />
+                      )
+                    })}
                   </Flex>
                 )}
 
