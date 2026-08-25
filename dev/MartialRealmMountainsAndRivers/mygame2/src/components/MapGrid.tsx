@@ -7,7 +7,9 @@ import { getCellVisibility } from '../game/rules/visibilityRules'
 import { getCreatureIcon } from '../game/rules/creatureBehaviorRules'
 import { getActiveBuffsForPlayer, getBuff } from '../game/rules/playerDerivedRules'
 import { getMapCellRangeState, resolveMapCellAction } from '../game/rules/mapCellStateRules'
+import { resolveTargetableCellIds } from '../game/rules/targetingRules'
 import { executeMapCellAction as executeInteractionAction, type MapInteractionHandlers } from './mapGridInteractionExecutor'
+import type { TargetingSpec } from '../game/types'
 
 type MapGridProps = {
   map: {
@@ -52,6 +54,8 @@ type MapGridProps = {
   externalSkillTargeting?: boolean
   attackTargeting?: boolean
   itemTargeting?: boolean
+  /** 目標選取規格（新框架）；提供時由 spec 決定高亮範圍，取代外部透傳的 targeting 旗標。 */
+  targetingSpec?: TargetingSpec | null
   visibility?: GameState['visibility']
   visibilityPlayerId?: string
   revealedCreatureCellIds?: string[]
@@ -67,7 +71,7 @@ function hasValidPosition(value: { position?: Position } | null | undefined): va
   return Boolean(position && Number.isFinite(position.row) && Number.isFinite(position.column))
 }
 
-function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], defenseStructures = [], itemPoints = [], explorationEvents = [], ruins = [], traps = [], sectGates = [], selectedBaseId = null, onClearSelectedBase, players = [], creatures = [], activePlayerId, movementEnabled = false, creatureTurnInProgress = false, gameOver = false, blockingModal = false, activeCreatureId = null, onPlayerMoved, onMovePlayerTo, onBaseSelect, onBaseDetails, onCreatureNestSelect, onCreatureNestDetails, onResourcePointDetails, onItemPointDetails, onDefenseStructureDetails, onRuinDetails, onCreatureSelect, externalSkillTargeting = false, attackTargeting = false, itemTargeting = false, defenseBuildMode, onDefensePositionSelect, onExplorationEventDetails, onSectGateDetails, visibility, visibilityPlayerId, revealedCreatureCellIds, revealedCreatureUntilRound, creatureShake }: MapGridProps) {
+function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], defenseStructures = [], itemPoints = [], explorationEvents = [], ruins = [], traps = [], sectGates = [], selectedBaseId = null, onClearSelectedBase, players = [], creatures = [], activePlayerId, movementEnabled = false, creatureTurnInProgress = false, gameOver = false, blockingModal = false, activeCreatureId = null, onPlayerMoved, onMovePlayerTo, onBaseSelect, onBaseDetails, onCreatureNestSelect, onCreatureNestDetails, onResourcePointDetails, onItemPointDetails, onDefenseStructureDetails, onRuinDetails, onCreatureSelect, externalSkillTargeting = false, attackTargeting = false, itemTargeting = false, targetingSpec = null, defenseBuildMode, onDefensePositionSelect, onExplorationEventDetails, onSectGateDetails, visibility, visibilityPlayerId, revealedCreatureCellIds, revealedCreatureUntilRound, creatureShake }: MapGridProps) {
   const [isDraggingMap, setIsDraggingMap] = useState(false)
   const mapScrollRef = useRef<HTMLDivElement>(null)
   const dragStateRef = useRef({ active: false, dragged: false, pointerId: -1, startX: 0, startY: 0, scrollLeft: 0, scrollTop: 0 })
@@ -94,6 +98,13 @@ function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], def
     activePlayer && movementEnabled && activePlayer.stamina > 0 && !activePlayer.turnEnded
       ? getReachableCellIds(map, activePlayer, blockedPositions)
       : new Set<string>(), [activePlayer, movementEnabled, map, blockedPositions])
+  // 新框架：提供 targetingSpec 時，由形狀×模式計算高亮格；否則沿用既有硬編碼相鄰邏輯。
+  const specTargetCellIds = useMemo(() => {
+    if (activePlayer && targetingSpec) {
+      return resolveTargetableCellIds(map, creatures, creatureNests, targetingSpec, activePlayer.position)
+    }
+    return new Set<string>()
+  }, [activePlayer, targetingSpec, creatures, creatureNests, map])
   const attackableTargetCellIds = useMemo(() => activePlayer
     ? new Set(
       [
@@ -113,9 +124,16 @@ function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], def
         .map((position) => `${position.row}-${position.column}`),
     )
     : new Set<string>(), [activePlayer, creatures, creatureNests])
-  const skillTargetCellIds = externalSkillTargeting ? attackableTargetCellIds : new Set<string>()
-  const attackTargetCellIds = attackTargeting ? attackableTargetCellIds : new Set<string>()
-  const itemTargetCellIds = itemTargeting ? attackableTargetCellIds : new Set<string>()
+  // 統一目標格：有 spec 用 spec，否則用既有相鄰邏輯（依 targeting 旗標選取對應 Set）。
+  const targetCellIds = targetingSpec
+    ? specTargetCellIds
+    : externalSkillTargeting ? attackableTargetCellIds
+      : attackTargeting ? attackableTargetCellIds
+        : itemTargeting ? attackableTargetCellIds
+          : new Set<string>()
+  const skillTargetCellIds = targetingSpec && targetingSpec.source === 'external-skill' ? targetCellIds : new Set<string>()
+  const attackTargetCellIds = targetingSpec && targetingSpec.source === 'attack' ? targetCellIds : new Set<string>()
+  const itemTargetCellIds = targetingSpec && targetingSpec.source === 'item-burst' ? targetCellIds : new Set<string>()
   const interactionHandlers: MapInteractionHandlers = {
     move: (playerId, position) => onMovePlayerTo?.(playerId, position.row, position.column),
     playerMoved: () => onPlayerMoved?.(),
@@ -218,11 +236,13 @@ function MapGrid({ map, bases = [], creatureNests = [], resourcePoints = [], def
         <div className="map-card__target-hint" role="status" aria-live="polite">
           {defenseBuildMode
             ? '🛡️ 請點選黃色高亮的空格建造防禦設施'
-            : itemTargeting
-              ? '💥 請點選相鄰的生物或巢穴作為道具目標'
-              : externalSkillTargeting
-                ? '⚡ 請點選相鄰的生物或巢穴作為外功目標'
-                : '⚔️ 請點選相鄰的生物或巢穴作為攻擊目標'}
+            : targetingSpec
+              ? targetingSpec.hint
+              : itemTargeting
+                ? '💥 請點選相鄰的生物或巢穴作為道具目標'
+                : externalSkillTargeting
+                  ? '⚡ 請點選相鄰的生物或巢穴作為外功目標'
+                  : '⚔️ 請點選相鄰的生物或巢穴作為攻擊目標'}
         </div>
       )}
 
