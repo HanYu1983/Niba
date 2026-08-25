@@ -2,7 +2,7 @@ import type { Position } from '../../types'
 import { trapezoid, fuzzyAnd, fuzzyOr } from './membershipFunctions'
 import type { FuzzyInputs } from './fuzzyInputs'
 
-export type GoalName = 'selfPreservation' | 'collectItems' | 'positioning'
+export type GoalName = 'selfPreservation' | 'collectItems' | 'positioning' | 'construction'
 
 export interface GoalResult {
   score: number
@@ -15,6 +15,8 @@ export type GoalTarget =
   | { kind: 'item'; id: string; position: Position }
   | { kind: 'attack'; targetId: string; targetType: 'creature' | 'nest'; position: Position }
   | { kind: 'exit'; position: Position }
+  | { kind: 'build'; baseId: string; buildingId: string; buildingName: string }
+  | { kind: 'resource-point'; resourcePointId: string; position: Position }
 
 // ─── selfPreservation ──────────────────────────────────────────────
 
@@ -82,6 +84,47 @@ export function evaluateAllGoals(inputs: FuzzyInputs): Record<GoalName, GoalResu
     selfPreservation: evaluateSelfPreservation(inputs),
     collectItems: evaluateCollectItems(inputs),
     positioning: evaluatePositioning(inputs),
+    construction: evaluateConstruction(inputs),
+  }
+}
+
+// ─── construction ──────────────────────────────────────────────────
+// 建料滿 + 可蓋 → 高分 build；建料不足 + 有資源點 → 移動/採集
+
+function evaluateConstruction(inputs: FuzzyInputs): GoalResult {
+  const { materialRatio, canBuild, buildableBuilding, nearestBase, nearestResourcePoint, distToNearestResourcePoint, isAdjacentToResourcePoint } = inputs
+
+  // 情境 A：建料滿 + 可建造 → 高分 + build target
+  if (materialRatio >= 1 && canBuild && buildableBuilding && nearestBase) {
+    return {
+      score: 0.9,
+      target: { kind: 'build', baseId: nearestBase.id, buildingId: buildableBuilding.id, buildingName: buildableBuilding.name },
+      context: { materialRatio, action: 'build' },
+    }
+  }
+
+  // 情境 B：已與資源點相鄰 → 採集（高分）
+  if (isAdjacentToResourcePoint && nearestResourcePoint) {
+    return {
+      score: 0.8,
+      target: { kind: 'resource-point', resourcePointId: nearestResourcePoint.id, position: nearestResourcePoint.position },
+      context: { materialRatio, action: 'collect' },
+    }
+  }
+
+  // 情境 C：建料不足 + 有資源點 → 移動到資源點（中高分）
+  if (materialRatio < 1 && nearestResourcePoint && distToNearestResourcePoint < Infinity) {
+    return {
+      score: 0.5,
+      target: { kind: 'resource-point', resourcePointId: nearestResourcePoint.id, position: nearestResourcePoint.position },
+      context: { materialRatio, distToNearestResourcePoint, action: 'move-to-resource' },
+    }
+  }
+
+  // 無據點或無資源點 → 低分
+  return {
+    score: nearestBase ? 0.1 : 0,
+    context: { materialRatio },
   }
 }
 

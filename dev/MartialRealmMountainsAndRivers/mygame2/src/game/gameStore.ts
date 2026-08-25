@@ -2178,12 +2178,18 @@ export const gameStore = {
       // （V2 加入 engageCombat 時生效）
 
       // 4. Select
-      const { goal, result } = selectBestGoal(goalResults)
+      let { goal, result } = selectBestGoal(goalResults)
 
-      // 5. Threshold
+      // 5. Threshold：低於門檻時 fallback 到 construction（預設目標）
       if (result.score < MIN_THRESHOLD) {
-        exitReason = `所有目標分數過低（最高 ${goal} = ${result.score.toFixed(2)} < ${MIN_THRESHOLD}）`
-        continue
+        const fallback = goalResults.construction
+        if (fallback.score > 0) {
+          goal = 'construction'
+          Object.assign(result, fallback)
+        } else {
+          exitReason = `所有目標分數過低（最高 ${goal} = ${result.score.toFixed(2)} < ${MIN_THRESHOLD}）`
+          continue
+        }
       }
 
       // 6. Build actions

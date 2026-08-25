@@ -1,9 +1,11 @@
-import type { GameState, PlayerState, Position } from '../../types'
+import type { BaseState, GameState, PlayerState, Position, ResourcePointState } from '../../types'
 import { listHostileActors, type HostileActor } from '../perception/targetDiscovery'
 import { collectReachableInterests, type ReachableInterest } from '../perception/reachableInterests'
 import { getBlockedPositions } from '../../rules/movementRules'
 import { canTraverseTerrain } from '../../rules/playerDerivedRules'
 import { getAdjacentPositions } from '../../types'
+import { buildingCatalog } from '../../catalogs/buildingCatalog'
+import { canPlayerBuildBuildingType } from '../../rules/buildingProgressionRules'
 
 export interface FuzzyInputs {
   /** 能扛幾下攻擊（health / maxEnemyDamage），無敵人時 = 99 */
@@ -26,6 +28,20 @@ export interface FuzzyInputs {
   exitCount: number
   /** 最近出口位置（曼哈頓 1 格內），無出口 = undefined */
   nearestExit: Position | undefined
+  /** 最近的友方據點 */
+  nearestBase: BaseState | undefined
+  /** 據點建料比 0~1（buildingMaterials / maxBuildingMaterials），無據點 = 0 */
+  materialRatio: number
+  /** 據點是否可建造建築（有模板 + rank 夠 + 材料夠） */
+  canBuild: boolean
+  /** 可建造的建築模板（第一個） */
+  buildableBuilding: { id: string; type: string; name: string } | undefined
+  /** 最近的資源點（屬於最近據點） */
+  nearestResourcePoint: ResourcePointState | undefined
+  /** 到最近資源點的距離，無資源點 = Infinity */
+  distToNearestResourcePoint: number
+  /** 是否與資源點相鄰 */
+  isAdjacentToResourcePoint: boolean
 }
 
 function manhattan(a: Position, b: Position): number {
@@ -79,6 +95,40 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
     }
   }
 
+  // 建設相關：找最近友方據點 + 建料 + 可建造建築 + 最近資源點
+  const activeBases = state.bases.filter((b) => b.active !== false && b.health > 0)
+  const nearestBase = activeBases.length > 0
+    ? activeBases.reduce((best, b) => manhattan(player.position, b.position) < manhattan(player.position, best.position) ? b : best)
+    : undefined
+
+  const materialRatio = nearestBase
+    ? nearestBase.buildingMaterials / Math.max(1, nearestBase.maxBuildingMaterials)
+    : 0
+
+  // 找可建造的建築：材料夠 + rank 夠 + 未建過同類型
+  const existingTypes = new Set(nearestBase?.buildings.map((b) => b.type) ?? [])
+  const buildableBuilding = nearestBase
+    ? buildingCatalog.find((template) => {
+      if (existingTypes.has(template.type)) return false
+      if (nearestBase.martialSchoolId && template.schoolId && template.schoolId !== nearestBase.martialSchoolId) return false
+      if (nearestBase.allowedBuildings && !nearestBase.allowedBuildings.some((a) => a.type === template.type)) return false
+      if (!canPlayerBuildBuildingType(player, template.type)) return false
+      if (nearestBase.buildingMaterials < template.constructionCost) return false
+      return true
+    })
+    : undefined
+  const canBuild = !!buildableBuilding
+
+  // 最近資源點（屬於最近據點）
+  const baseResourcePoints = state.resourcePoints.filter((rp) => rp.ownerBaseId === nearestBase?.id && rp.active !== false && rp.health > 0)
+  const nearestResourcePoint = baseResourcePoints.length > 0
+    ? baseResourcePoints.reduce((best, rp) => manhattan(player.position, rp.position) < manhattan(player.position, best.position) ? rp : best)
+    : undefined
+  const distToNearestResourcePoint = nearestResourcePoint
+    ? manhattan(player.position, nearestResourcePoint.position)
+    : Infinity
+  const isAdjacentToResourcePoint = distToNearestResourcePoint === 1
+
   return {
     hitsSurvivable,
     staminaRatio: player.stamina / player.maxStamina,
@@ -90,5 +140,12 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
     distToNearestItem,
     exitCount,
     nearestExit,
+    nearestBase,
+    materialRatio,
+    canBuild,
+    buildableBuilding: buildableBuilding ? { id: buildableBuilding.id, type: buildableBuilding.type, name: buildableBuilding.name } : undefined,
+    nearestResourcePoint,
+    distToNearestResourcePoint,
+    isAdjacentToResourcePoint,
   }
 }

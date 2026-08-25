@@ -24,6 +24,8 @@ export function buildActionSequence(
       return buildCollectItemActions(actor, result, state, player)
     case 'positioning':
       return buildPositioningActions(actor, result, state, player)
+    case 'construction':
+      return buildConstructionActions(actor, result, state, player)
   }
 }
 
@@ -165,4 +167,48 @@ function buildPositioningAttack(
     target: { id: targetId, kind: targetType, position },
     reason: '定位：無出口→攻擊',
   }]
+}
+
+// ─── construction ──────────────────────────────────────────────────
+
+function buildConstructionActions(
+  actor: AiActorRef,
+  result: GoalResult,
+  _state: GameState,
+  _player: PlayerState,
+): AiAction[] {
+  const action = result.context?.action as string | undefined
+
+  // build：直接蓋建築
+  if (result.target?.kind === 'build') {
+    return [{
+      type: 'build',
+      actor,
+      baseId: result.target.baseId,
+      buildingType: result.target.buildingId,
+      reason: `建設：建造 ${result.target.buildingName}`,
+    }]
+  }
+
+  // collect：已在資源點旁，採集
+  if (action === 'collect' && result.target?.kind === 'resource-point') {
+    return [{
+      type: 'collect',
+      actor,
+      target: { id: result.target.resourcePointId, kind: 'resource', position: result.target.position },
+      reason: '建設：採集建料',
+    }]
+  }
+
+  // move-to-resource：移動到資源點
+  if (action === 'move-to-resource' && result.target?.kind === 'resource-point') {
+    return [{
+      type: 'move',
+      actor,
+      destination: result.target.position,
+      reason: '建設：移動到資源點',
+    }]
+  }
+
+  return [{ type: 'hold', actor, reason: '建設：無行動需求' }]
 }

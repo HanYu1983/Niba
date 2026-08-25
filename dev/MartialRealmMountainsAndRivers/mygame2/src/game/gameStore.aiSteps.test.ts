@@ -217,10 +217,11 @@ describe('runTest1Step', () => {
         makeTestPlayer({ position: { row: 5, column: 3 }, stamina: 20 }),
         makeTestHuman(),
       ],
+      bases: [],
       aiOrders: [makeTest1Order()],
     })
     const result = gameStore.runTest1Step('ai-1')
-    // 迴圈因分數過低退出，回傳 ok:false（scheduler 會負責 endTurn）
+    // 迴圈因分數過低且無據點（construction fallback 也為 0）退出，回傳 ok:false
     expect(result.ok).toBe(false)
     expect(playerById('ai-1').position.column).toBe(3) // 未移動
   })
