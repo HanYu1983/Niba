@@ -17,6 +17,7 @@ describe('aiTurnScheduler', () => {
       constructionSteps: [] as string[],
       test1Steps: [] as string[],
       endedTurns: [] as string[],
+      stepFailures: [] as { actorId: string; reason: string }[],
     }
     const deps: AiTurnSchedulerDeps = {
       getState: () => ({ activePlayerId: 'p1' }),
@@ -38,6 +39,9 @@ describe('aiTurnScheduler', () => {
       },
       endTurn: (actorId) => {
         calls.endedTurns.push(actorId)
+      },
+      onStepFailed: (actorId, reason) => {
+        calls.stepFailures.push({ actorId, reason })
       },
       ...overrides,
     }
@@ -144,6 +148,32 @@ describe('aiTurnScheduler', () => {
     scheduler.requestStep('p1', 'protect-base')
     vi.advanceTimersByTime(AI_TURN_STEP_DELAY_MS)
 
+    expect(calls.endedTurns).toEqual(['p1'])
+  })
+
+  it('step 失敗時呼叫 onStepFailed 並傳遞 reason', () => {
+    const { calls, deps } = createDeps({
+      runDefenseStep: () => ({ ok: false, reason: '目前無法執行 AI 防守回合。' }),
+    })
+    const scheduler = createAiTurnScheduler(deps)
+
+    scheduler.requestStep('p1', 'protect-base')
+    vi.advanceTimersByTime(AI_TURN_STEP_DELAY_MS)
+
+    expect(calls.stepFailures).toEqual([{ actorId: 'p1', reason: '目前無法執行 AI 防守回合。' }])
+    expect(calls.endedTurns).toEqual(['p1'])
+  })
+
+  it('step 失敗但無 reason 時不呼叫 onStepFailed', () => {
+    const { calls, deps } = createDeps({
+      runDefenseStep: () => ({ ok: false }),
+    })
+    const scheduler = createAiTurnScheduler(deps)
+
+    scheduler.requestStep('p1', 'protect-base')
+    vi.advanceTimersByTime(AI_TURN_STEP_DELAY_MS)
+
+    expect(calls.stepFailures).toEqual([])
     expect(calls.endedTurns).toEqual(['p1'])
   })
 

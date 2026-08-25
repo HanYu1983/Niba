@@ -1,4 +1,4 @@
-import { Button, Flex, Layout, Typography } from 'antd'
+import { Button, Flex, Layout, Typography, message } from 'antd'
 import { useEffect, useRef, useState } from 'react'
 import MapGrid from './components/MapGrid'
 import PlayerPanel from './components/PlayerPanel'
@@ -122,6 +122,7 @@ function App() {
       runConstructionStep: (actorId) => gameStore.runAiConstructionStep(actorId),
       runTest1Step: (actorId) => gameStore.runTest1Step(actorId),
       endTurn: (actorId) => gameStore.endPlayerTurn(actorId),
+      onStepFailed: (_actorId, reason) => { message.warning(reason) },
     }),
   )
   const modalOpen = Boolean(
