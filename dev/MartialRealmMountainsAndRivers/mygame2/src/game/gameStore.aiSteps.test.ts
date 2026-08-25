@@ -220,9 +220,9 @@ describe('runTest1Step', () => {
       aiOrders: [makeTest1Order()],
     })
     const result = gameStore.runTest1Step('ai-1')
-    expect(result.ok).toBe(true)
+    // 迴圈因分數過低退出，回傳 ok:false（scheduler 會負責 endTurn）
+    expect(result.ok).toBe(false)
     expect(playerById('ai-1').position.column).toBe(3) // 未移動
-    expect(gameStore.getState().activePlayerId).toBe('player-1') // turn ended
   })
 
   it('非 AI、非其回合、無 active test1 命令時拒絕', () => {

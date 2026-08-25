@@ -7,6 +7,7 @@ import LevelBadge from './LevelBadge'
 import SkillCard from './SkillCard'
 import GovernanceRankSection from './GovernanceRankSection'
 import BuffTag from './BuffTag'
+import AiDebugPanel from './AiDebugPanel'
 import { type PlayerState, type UpgradeableAttribute, getExperienceRequired } from '../game/types'
 import { getInnerSkill, getPlayerInsightCapacityBreakdown, getSkillDamage, getSkillExperienceRequired, getSkillInnerPowerCost, getSkillProgression } from '../game/rules/skillRules'
 import { allExternalSkillCatalog } from '../game/catalogs/martialHallSkillCatalog'
@@ -72,7 +73,7 @@ function PlayerPanel({ player, isActive, onAllocateAttributePoint, gameState }: 
 
         <Collapse
           className="player-panel__collapse"
-          defaultActiveKey={['rank', 'basic', 'attributes', 'skills', 'qi']}
+          defaultActiveKey={['rank', 'basic', 'attributes', 'skills', 'qi', 'ai-debug']}
           items={[
             {
               key: 'rank',
@@ -221,6 +222,12 @@ function PlayerPanel({ player, isActive, onAllocateAttributePoint, gameState }: 
                   <Typography.Text type="secondary">目前沒有生效中的靈氣</Typography.Text>
                 )}
               </Flex>,
+            },
+            {
+              key: 'ai-debug',
+              label: <Typography.Text strong>AI 除錯</Typography.Text>,
+              extra: <Typography.Text type="secondary">模糊邏輯決策</Typography.Text>,
+              children: <AiDebugPanel player={player} gameState={gameState} />,
             },
           ]}
         />
