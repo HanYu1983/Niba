@@ -348,11 +348,16 @@ export function createSectGates(
     .map((cell) => ({ row: cell.row, column: cell.column }))
   const positions = createRandomPositions(map, requested, seed, [...excludedPositions, ...waterPositions])
   const random = createSeededRandom(seed + 655)
-  // 門派眾多，每座門派據點直接從目錄隨機選取，允許重複。
+  // 先將門派目錄隨機排列，確保每個門派至少出現一次；超過目錄數量後循環分配並允許重複。
   const allSchoolIds: MartialSchoolId[] = martialSchoolCatalog.map((school) => school.id)
+  const shuffledSchoolIds = [...allSchoolIds]
+  for (let index = shuffledSchoolIds.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(random() * (index + 1))
+    ;[shuffledSchoolIds[index], shuffledSchoolIds[swapIndex]] = [shuffledSchoolIds[swapIndex], shuffledSchoolIds[index]]
+  }
   return positions.map((position, index) => ({
     id: `sect-gate-${index + 1}`,
-    schoolId: pickRandom(allSchoolIds, random) ?? 'void-spirit',
+    schoolId: shuffledSchoolIds[index % shuffledSchoolIds.length] ?? 'void-spirit',
     position,
     experience: 0,
     level: 1,
