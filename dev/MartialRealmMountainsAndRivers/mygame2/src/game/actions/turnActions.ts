@@ -5,6 +5,7 @@ import { applyBaseHealthBonuses, getBaseMaxBuildingMaterials } from '../rules/ba
 import { resolveRoundEndAuraEffects } from '../rules/auraRules'
 import { getEffectivePassiveMaterialIncome } from '../rules/policyRules'
 import { getGlobalRoundEndRecoveryPercent } from '../rules/globalBuffRules'
+import { evaluateWarningBeaconReveal } from '../rules/warningBeaconRules'
 import { recoverFivePercent, recoverLivingPlayers, uniqueCreaturesById } from '../rules/playerRules'
 import { applyExperienceAndLevelUp } from '../characterFactory'
 import { explorationEventCatalog } from '../events/eventCatalog'
@@ -148,6 +149,13 @@ export function endPlayerTurn(
     })
     : state.creatures
 
+  // 烽燧臺（warning-beacon）：每回合 50% 機率揭示全圖敵軍。
+  // 須基於「回合結算後的敵軍位置」計算揭示，故建一份僅供查詢的臨時 state。
+  let beaconReveal: { revealedCreatureCellIds: string[]; revealedCreatureUntilRound: number } | null = null
+  if (isRoundComplete) {
+    beaconReveal = evaluateWarningBeaconReveal({ ...state, creatures: nextCreatures })
+  }
+
   // 結束回合的玩家，依「結束當下」的剩餘體力獲得經驗值（體力 × 5）。
   // 需在 recoverLivingPlayers 把體力重置為上限之前，先以原始剩餘體力計算加成。
   const endingPlayer = state.players.find((candidate) => candidate.id === playerId)
@@ -207,16 +215,21 @@ export function endPlayerTurn(
       activeCreatureId: null,
       operation: { type: 'idle' },
       // 鳴鑼符（reveal-creatures）：回合遞增超過到期回合時清空暫時揭示。
-      revealedCreatureCellIds: isRoundComplete && state.revealedCreatureUntilRound !== undefined && state.round + 1 > state.revealedCreatureUntilRound
-        ? undefined
+      revealedCreatureCellIds: isRoundComplete
+        ? beaconReveal?.revealedCreatureCellIds
+          ?? (state.revealedCreatureUntilRound !== undefined && state.round + 1 > state.revealedCreatureUntilRound
+            ? undefined
+            : state.revealedCreatureCellIds)
         : state.revealedCreatureCellIds,
-      revealedCreatureUntilRound: isRoundComplete && state.revealedCreatureUntilRound !== undefined && state.round + 1 > state.revealedCreatureUntilRound
-        ? undefined
+      revealedCreatureUntilRound: isRoundComplete
+        ? beaconReveal?.revealedCreatureUntilRound
+          ?? (state.revealedCreatureUntilRound !== undefined && state.round + 1 > state.revealedCreatureUntilRound
+            ? undefined
+            : state.revealedCreatureUntilRound)
         : state.revealedCreatureUntilRound,
     },
   }
 }
-
 export function startPlayerTurn(state: GameState, playerId: string): GameState {
   if (state.activePlayerId !== playerId) return state
   return applyBaseHealthBonuses({
