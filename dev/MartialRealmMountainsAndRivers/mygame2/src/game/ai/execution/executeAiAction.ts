@@ -45,6 +45,9 @@ export function executeAiAction(
     }
     case 'hold':
       return { state, result: { ok: true } }
+    // 注意：此分支僅回傳純 state，不會觸發 creature turn 動畫
+    // （animateCreatureTurn 等 side-effect 必須由 store 方法處理）。
+    // 呼叫端若需完整回合結束流程，應直接使用 gameStore.endPlayerTurn。
     case 'end-turn': {
       const result = endPlayerTurn(state, action.actor.id, dependencies.turn)
       return { state: result.state, result: { ok: true } }
