@@ -11,11 +11,16 @@ import { getInnerSkill, getPlayerInsightCapacityBreakdown, getSkillDamage, getSk
 import { allExternalSkillCatalog } from '../game/catalogs/martialHallSkillCatalog'
 import { getActiveBuffsForPlayer, getBuff, getCriticalRateForPlayer, getEffectiveAttributesForPlayer, getEvasionRate, getExternalSkillCritRateForPlayer, getRootReductionRate } from '../game/rules/playerDerivedRules'
 import { getGovernanceRankName, getGovernanceRankNumber } from '../game/rules/governanceRules'
+import { getActiveGlobalBuffs, getGlobalBuffDisplayEntries } from '../game/rules/globalBuffRules'
+import { getAuraDisplayEntries } from '../game/rules/auraRules'
+import type { GameState } from '../game/types'
 
 type PlayerPanelProps = {
   player: PlayerState
   isActive: boolean
   onAllocateAttributePoint: (attribute: UpgradeableAttribute) => void
+  /** 用於顯示全局靈氣與區域靈氣。 */
+  gameState: GameState
 }
 
 /** 每 10% 一個 icon，最多顯示 10 個（100%），剩餘以數字補足。 */
@@ -32,13 +37,16 @@ function renderRateWithIcons(rate: number, icon: string): ReactNode {
   )
 }
 
-function PlayerPanel({ player, isActive, onAllocateAttributePoint }: PlayerPanelProps) {
+function PlayerPanel({ player, isActive, onAllocateAttributePoint, gameState }: PlayerPanelProps) {
   const innerSkill = getInnerSkill(player.innerSkillId)
   const innerProgression = getSkillProgression(player, innerSkill.id)
   const equippedExternalSkills = player.equippedExternalSkillIds.map((id) => allExternalSkillCatalog.find((skill) => skill.id === id)).filter((skill): skill is NonNullable<typeof skill> => Boolean(skill))
   const effectiveAttributes = getEffectiveAttributesForPlayer(player)
   const insightCapacity = getPlayerInsightCapacityBreakdown(player)
   const activeBuffs = getActiveBuffsForPlayer(player)
+  // 全局靈氣（貿易市場）與區域靈氣（巢穴/防衛營）統一整合在此區塊。
+  const globalBuffEntries = getGlobalBuffDisplayEntries(getActiveGlobalBuffs(gameState))
+  const auraEntries = getAuraDisplayEntries(gameState, player.position, 'player')
 
   return (
     <Card
@@ -156,14 +164,56 @@ function PlayerPanel({ player, isActive, onAllocateAttributePoint }: PlayerPanel
               key: 'qi',
               label: <Typography.Text strong>靈氣</Typography.Text>,
               extra: <Typography.Text type="secondary">目前生效效果</Typography.Text>,
-              children: activeBuffs.length > 0 ? <Flex wrap="wrap" gap={8}>{activeBuffs.map((buff) => {
-                const definition = getBuff(buff.definitionId)
-                return definition ? (
-                  <Tooltip key={buff.id} title={definition.description}>
-                    <Tag color="blue">✨ {definition.name}（{buff.remainingRounds === null ? '持續生效' : `剩 ${buff.remainingRounds} 回合`}）</Tag>
-                  </Tooltip>
-                ) : null
-              })}</Flex> : <Typography.Text type="secondary">目前沒有生效中的靈氣</Typography.Text>,
+              children: <Flex vertical gap={8}>
+                {activeBuffs.length > 0 && <Flex wrap="wrap" gap={8}>{activeBuffs.map((buff) => {
+                  const definition = getBuff(buff.definitionId)
+                  return definition ? (
+                    <Tooltip key={buff.id} title={definition.description}>
+                      <Tag color="blue">✨ {definition.name}（{buff.remainingRounds === null ? '持續生效' : `剩 ${buff.remainingRounds} 回合`}）</Tag>
+                    </Tooltip>
+                  ) : null
+                })}</Flex>}
+
+                {globalBuffEntries.length > 0 && (
+                  <Flex vertical gap={4}>
+                    <Typography.Text type="secondary">全局靈氣</Typography.Text>
+                    <Flex wrap gap={4}>
+                      {globalBuffEntries.map((entry) => {
+                        const levelLabel = entry.count === 1
+                          ? `Lv.${entry.levels[0]}`
+                          : entry.levels.map((level) => `Lv.${level}`).join('、')
+                        return (
+                          <Tooltip key={entry.kind} title={`${entry.name}：${entry.description}（共 ${entry.count} 層、${levelLabel}，合計 ${entry.totalPercent}%）`}>
+                            <Tag color="purple">{entry.name} {levelLabel}</Tag>
+                          </Tooltip>
+                        )
+                      })}
+                    </Flex>
+                  </Flex>
+                )}
+
+                {auraEntries.length > 0 && (
+                  <Flex vertical gap={4}>
+                    <Typography.Text type="secondary">當前區域靈氣</Typography.Text>
+                    <Flex wrap gap={4}>
+                      {auraEntries.map((entry, index) => {
+                        const isHarmful = entry.kind === 'damage-over-time'
+                        return (
+                          <Tooltip key={`${entry.sourceId}-${index}`} title={`${entry.sourceName}：${entry.description}`}>
+                            <Tag color={isHarmful ? 'red' : 'green'}>
+                              {isHarmful ? '🔥' : '💚'} {entry.sourceName}（{entry.description}）
+                            </Tag>
+                          </Tooltip>
+                        )
+                      })}
+                    </Flex>
+                  </Flex>
+                )}
+
+                {activeBuffs.length === 0 && globalBuffEntries.length === 0 && auraEntries.length === 0 && (
+                  <Typography.Text type="secondary">目前沒有生效中的靈氣</Typography.Text>
+                )}
+              </Flex>,
             },
           ]}
         />

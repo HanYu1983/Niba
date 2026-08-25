@@ -1,7 +1,5 @@
-import { Card, Flex, Statistic, Tag, Tooltip, Typography } from 'antd'
+import { Card, Flex, Statistic, Typography } from 'antd'
 import type { GameState } from '../game/types'
-import { getActiveGlobalBuffs, getGlobalBuffDisplayEntries } from '../game/rules/globalBuffRules'
-import { getAuraDisplayEntries } from '../game/rules/auraRules'
 
 type GameStatusCardProps = {
   gameState: GameState
@@ -14,12 +12,6 @@ function GameStatusCard({ gameState }: GameStatusCardProps) {
   const bases = gameState.bases.length
   const exploredCells = gameState.visibility?.exploredCellIds.length ?? 0
   const totalCells = gameState.map.cells.length
-  const activeBuffs = getActiveGlobalBuffs(gameState)
-  const buffEntries = getGlobalBuffDisplayEntries(activeBuffs)
-  // 目前行動玩家所在位置的區域靈氣（巢穴灼燒/金煞、防衛營回血）。
-  const auraEntries = activePlayer
-    ? getAuraDisplayEntries(gameState, activePlayer.position, 'player')
-    : []
 
   return (
     <Card className="game-status-card" variant="borderless" size="small">
@@ -42,42 +34,6 @@ function GameStatusCard({ gameState }: GameStatusCardProps) {
             <Typography.Text strong style={{ fontSize: 20, color: '#4b3a22' }}>
               {activePlayer.name}
             </Typography.Text>
-          </Flex>
-        )}
-
-        {buffEntries.length > 0 && (
-          <Flex vertical gap={4}>
-            <Typography.Text type="secondary">全局靈氣</Typography.Text>
-            <Flex wrap gap={4}>
-              {buffEntries.map((entry) => {
-                const levelLabel = entry.count === 1
-                  ? `Lv.${entry.levels[0]}`
-                  : entry.levels.map((level) => `Lv.${level}`).join('、')
-                return (
-                  <Tooltip key={entry.kind} title={`${entry.name}：${entry.description}（共 ${entry.count} 層、${levelLabel}，合計 ${entry.totalPercent}%）`}>
-                    <Tag color="purple">{entry.name} {levelLabel}</Tag>
-                  </Tooltip>
-                )
-              })}
-            </Flex>
-          </Flex>
-        )}
-
-        {auraEntries.length > 0 && (
-          <Flex vertical gap={4}>
-            <Typography.Text type="secondary">當前區域靈氣</Typography.Text>
-            <Flex wrap gap={4}>
-              {auraEntries.map((entry, index) => {
-                const isHarmful = entry.kind === 'damage-over-time'
-                return (
-                  <Tooltip key={`${entry.sourceId}-${index}`} title={`${entry.sourceName}：${entry.description}`}>
-                    <Tag color={isHarmful ? 'red' : 'green'}>
-                      {isHarmful ? '🔥' : '💚'} {entry.sourceName}（{entry.description}）
-                    </Tag>
-                  </Tooltip>
-                )
-              })}
-            </Flex>
           </Flex>
         )}
       </Flex>
