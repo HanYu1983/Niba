@@ -220,7 +220,8 @@ describe('runTest1Step', () => {
       aiOrders: [makeTest1Order()],
     })
     const result = gameStore.runTest1Step('ai-1')
-    expect(result.ok).toBe(true)
+    expect(result.ok).toBe(false)
+    expect('reason' in result && typeof result.reason === 'string').toBe(true)
     expect(playerById('ai-1').position.column).toBe(3) // 未移動
     expect(gameStore.getState().activePlayerId).toBe('player-1') // turn ended
   })

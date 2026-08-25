@@ -2160,6 +2160,7 @@ export const gameStore = {
     const actor = { id: playerId, kind: 'player' as const }
     let loopCount = 0
     const MAX_LOOPS = 50
+    let exitReason = ''
 
     // 模糊邏輯迴圈：每步 perceive → evaluate → select → execute
     while (gameState.players.find((p) => p.id === playerId)!.stamina > 0 && loopCount < MAX_LOOPS) {
@@ -2180,28 +2181,45 @@ export const gameStore = {
 
       // 5. Threshold
       if (result.score < MIN_THRESHOLD) {
+        exitReason = `所有目標分數過低（最高 ${goal} = ${result.score.toFixed(2)} < ${MIN_THRESHOLD}）`
         break
       }
 
       // 6. Build actions
       const actions = buildActionSequence(goal, result, gameState, currentPlayer)
-      if (actions.length === 0) break
+      if (actions.length === 0) {
+        exitReason = `目標 ${goal} 無法產生行動序列`
+        break
+      }
 
       // 7. Execute
+      let actionFailed = false
       for (const action of actions) {
         const cp = gameState.players.find((p) => p.id === playerId)
-        if (!cp || cp.stamina <= 0) break
+        if (!cp || cp.stamina <= 0) {
+          exitReason = `體力耗盡（剩餘 ${cp?.stamina ?? 0}）`
+          break
+        }
         const actionResult = gameStore.executeAiAction(action)
         recordAiStepEvent(gameState.round, playerId, currentPlayer.name, action, actionResult)
-        if (!actionResult.ok) break
+        if (!actionResult.ok) {
+          exitReason = `行動失敗：${actionResult.reason ?? '未知錯誤'}`
+          actionFailed = true
+          break
+        }
       }
+      if (actionFailed) break
     }
 
-    // 結束回合
-    const endAction = { type: 'end-turn' as const, actor, reason: `模糊迴圈結束（${loopCount} 步）` }
+    if (!exitReason) {
+      exitReason = `迴圈正常結束（${loopCount} 步）`
+    }
+
+    // 結束回合（無論迴圈如何退出，都必須結束回合）
+    const endAction = { type: 'end-turn' as const, actor, reason: exitReason }
     gameStore.endPlayerTurn(playerId)
     recordAiStepEvent(state.round, playerId, player.name, endAction, { ok: true })
-    return { ok: true }
+    return { ok: false, reason: exitReason }
   },
 
   endPlayerTurn: (playerId: string) => {
