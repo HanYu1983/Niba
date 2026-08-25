@@ -175,6 +175,7 @@ import { chooseSelfPreservationAction } from './aiSelfPreservationRules'
 import { defenseActionToAiAction } from './ai/aiAction'
 import { validateAiAction } from './ai/validation/validateAiAction'
 import { getPlayerAiEmergency } from './ai/policy/aiPolicyRegistry'
+import { collectReachableInterests } from './ai/perception/reachableInterests'
 import { defaultRandomSource } from './rules/randomRules'
 import { getBlockedPositions } from './rules/movementRules'
 
@@ -2158,15 +2159,17 @@ export const gameStore = {
       return { ok: false, reason: '目前無法執行 AI test1 回合。' }
     }
 
-    const targetColumn = state.map.columns - 1
-    const result = gameStore.movePlayerTo(playerId, player.position.row, targetColumn)
+    const interests = collectReachableInterests(state, player)
+    for (const interest of interests) {
+      gameStore.movePlayerTo(playerId, interest.position.row, interest.position.column)
+    }
 
     gameStore.endPlayerTurn(playerId)
     recordAiStepEvent(
       state.round,
       playerId,
       player.name,
-      { type: 'end-turn', actor: { id: playerId, kind: 'player' }, reason: result.ok ? '移動至最右方，結束回合。' : '移動失敗，結束回合。' },
+      { type: 'end-turn', actor: { id: playerId, kind: 'player' }, reason: interests.length > 0 ? `巡檢 ${interests.length} 個興趣點，結束回合。` : '無興趣點，結束回合。' },
       { ok: true },
     )
     return { ok: true }
