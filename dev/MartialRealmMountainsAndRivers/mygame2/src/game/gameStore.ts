@@ -1671,7 +1671,10 @@ export const gameStore = {
           currentState.round + 1,
         ),
       },
-    }), 'AI 行動失敗。')
+    },
+    gameStore.allocateAttributePoint,
+    gameStore.useItem,
+    ), 'AI 行動失敗。')
   },
 
   /** 選取元素爆發道具（element-burst）的目標並建立預覽。 */

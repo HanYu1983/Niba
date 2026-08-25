@@ -7,6 +7,7 @@ import { getAdjacentPositions } from '../../types'
 import { buildingCatalog } from '../../catalogs/buildingCatalog'
 import { canPlayerBuildBuildingType } from '../../rules/buildingProgressionRules'
 import { collectReachableCells } from '../perception/reachablePositions'
+import { itemCatalog } from '../../catalogs/itemCatalog'
 
 export interface FuzzyInputs {
   /** 能扛幾下攻擊（health / maxEnemyDamage），無敵人時 = 99 */
@@ -47,6 +48,14 @@ export interface FuzzyInputs {
   unexploredReachableCount: number
   /** 最近的未探索可達格子位置，無則 undefined */
   nearestUnexploredPosition: Position | undefined
+  /** 到最近怪物的距離，無怪物 = Infinity */
+  distToNearestCreature: number
+  /** 最近怪物 id，無則空字串 */
+  nearestCreatureId: string
+  /** 可分配屬性點數 */
+  availableAttributePoints: number
+  /** 建議使用的道具（id + effect），無則 undefined */
+  bestItemToUse: { id: string; effect: string; name: string } | undefined
 }
 
 function manhattan(a: Position, b: Position): number {
@@ -143,6 +152,32 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
     ? unexploredCells.reduce((best, c) => c.cost < best.cost ? c : best).position
     : undefined
 
+  // 戰鬥相關：最近怪物
+  const creatures = state.creatures.filter((c) => c.health > 0)
+  const distToNearestCreature = creatures.length > 0
+    ? Math.min(...creatures.map((c) => manhattan(player.position, c.position)))
+    : Infinity
+  const nearestCreature = creatures.length > 0
+    ? creatures.reduce((best, c) => manhattan(player.position, c.position) < manhattan(player.position, best.position) ? c : best)
+    : undefined
+
+  // 屬性分配
+  const availableAttributePoints = player.availableAttributePoints ?? 0
+
+  // 道具使用：找最值得用的道具（低血→回血，低體力→回體力，未探索→探地符，遠離據點→回營符）
+  const usedEffects = new Set(player.itemEffectsUsedThisTurn ?? [])
+  const inventory = player.inventory
+    .filter((e) => e.quantity > 0)
+    .filter((e) => {
+      const def = itemCatalog.find((c) => c.id === e.itemId)
+      return def != null && !usedEffects.has(def.effect)
+    })
+  const healthRatio = player.health / player.maxHealth
+  const staminaRatioVal = player.stamina / player.maxStamina
+  const bestItemToUse = inventory.length > 0
+    ? pickBestItem(inventory, itemCatalog, healthRatio, staminaRatioVal, unexploredCells.length, nearestBase)
+    : undefined
+
   return {
     hitsSurvivable,
     staminaRatio: player.stamina / player.maxStamina,
@@ -163,5 +198,54 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
     isAdjacentToResourcePoint,
     unexploredReachableCount,
     nearestUnexploredPosition,
+    distToNearestCreature,
+    nearestCreatureId: nearestCreature?.id ?? '',
+    availableAttributePoints,
+    bestItemToUse,
   }
+}
+
+function pickBestItem(
+  inventory: Array<{ itemId: string; quantity: number }>,
+  catalog: typeof itemCatalog,
+  healthRatio: number,
+  staminaRatio: number,
+  unexploredCount: number,
+  nearestBase: BaseState | undefined,
+): { id: string; effect: string; name: string } | undefined {
+  // 優先級：低血回血 > 低體力回氣 > 探地符(有未探索) > 回營符(離據點遠) > 其他
+  const byEffect = new Map(inventory.map((e) => {
+    const def = catalog.find((c) => c.id === e.itemId)
+    return [e.itemId, def] as const
+  }).filter((pair): pair is [string, NonNullable<typeof pair[1]>] => pair[1] !== undefined))
+
+  // 低血回血
+  if (healthRatio < 0.5) {
+    const heal = [...byEffect.entries()].find(([, d]) => d.effect === 'health')
+    if (heal) return { id: heal[0], effect: 'health', name: heal[1].name }
+  }
+
+  // 低體力回氣
+  if (staminaRatio < 0.4) {
+    const stamina = [...byEffect.entries()].find(([, d]) => d.effect === 'stamina')
+    if (stamina) return { id: stamina[0], effect: 'stamina', name: stamina[1].name }
+  }
+
+  // 探地符（有未探索格）
+  if (unexploredCount > 0) {
+    const scout = [...byEffect.entries()].find(([, d]) => d.effect === 'scout')
+    if (scout) return { id: scout[0], effect: 'scout', name: scout[1].name }
+  }
+
+  // 回營符（有據點時）
+  if (nearestBase) {
+    const recall = [...byEffect.entries()].find(([, d]) => d.effect === 'recall-base')
+    if (recall) return { id: recall[0], effect: 'recall-base', name: recall[1].name }
+  }
+
+  // 屬性提升道具
+  const attrUp = [...byEffect.entries()].find(([, d]) => d.effect === 'attribute-up')
+  if (attrUp) return { id: attrUp[0], effect: 'attribute-up', name: attrUp[1].name }
+
+  return undefined
 }

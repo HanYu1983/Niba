@@ -35,6 +35,10 @@ function makeInputs(overrides: Partial<FuzzyInputs> = {}): FuzzyInputs {
     isAdjacentToResourcePoint: false,
     unexploredReachableCount: 0,
     nearestUnexploredPosition: undefined,
+    distToNearestCreature: Infinity,
+    nearestCreatureId: '',
+    availableAttributePoints: 0,
+    bestItemToUse: undefined,
     ...overrides,
   }
 }

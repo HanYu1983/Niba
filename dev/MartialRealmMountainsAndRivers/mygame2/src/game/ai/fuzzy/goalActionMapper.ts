@@ -28,6 +28,12 @@ export function buildActionSequence(
       return buildConstructionActions(actor, result, state, player)
     case 'exploration':
       return buildExplorationActions(actor, result)
+    case 'engageCombat':
+      return buildEngageCombatActions(actor, result, state, player)
+    case 'allocateAttributes':
+      return buildAllocateAttributeActions(actor, result)
+    case 'useItem':
+      return buildUseItemActions(actor, result)
   }
 }
 
@@ -231,4 +237,92 @@ function buildExplorationActions(
   }
 
   return [{ type: 'hold', actor, reason: '探索：無未探索格' }]
+}
+
+// ─── engageCombat ───────────────────────────────────────────────
+
+function buildEngageCombatActions(
+  actor: AiActorRef,
+  result: GoalResult,
+  state: GameState,
+  player: PlayerState,
+): AiAction[] {
+  if (!result.target || result.target.kind !== 'attack') {
+    return [{ type: 'hold', actor, reason: '交戰：無可攻擊目標' }]
+  }
+
+  const targetId = (result.target as { targetId?: string }).targetId
+  if (!targetId) {
+    return [{ type: 'hold', actor, reason: '交戰：無可攻擊目標' }]
+  }
+
+  const creature = state.creatures.find((c) => c.id === targetId)
+  if (!creature || creature.health <= 0) {
+    return [{ type: 'hold', actor, reason: '交戰：目標無效' }]
+  }
+
+  const targetPosition = creature.position
+  const dist = Math.abs(targetPosition.row - player.position.row) + Math.abs(targetPosition.column - player.position.column)
+
+  // 相鄰 → 直接攻擊
+  if (dist <= 1) {
+    return [{
+      type: 'attack',
+      actor,
+      target: { id: creature.id, kind: 'creature', position: targetPosition },
+      reason: `交戰：攻擊 ${creature.name}`,
+    }]
+  }
+
+  // 不相鄰 → 先移動再攻擊
+  return [
+    {
+      type: 'move',
+      actor,
+      destination: targetPosition,
+      reason: `交戰：移動到 ${creature.name} 附近`,
+    },
+    {
+      type: 'attack',
+      actor,
+      target: { id: creature.id, kind: 'creature', position: targetPosition },
+      reason: `交戰：攻擊 ${creature.name}`,
+    },
+  ]
+}
+
+// ─── allocateAttributes ─────────────────────────────────────────
+
+function buildAllocateAttributeActions(
+  actor: AiActorRef,
+  result: GoalResult,
+): AiAction[] {
+  if (!result.target || result.target.kind !== 'allocate-attribute') {
+    return [{ type: 'hold', actor, reason: '屬性分配：無可分配屬性' }]
+  }
+
+  return [{
+    type: 'allocate-attribute',
+    actor,
+    attribute: result.target.attribute as 'armStrength',
+    reason: `屬性分配：提升 ${result.target.attribute}`,
+  }]
+}
+
+// ─── useItem ────────────────────────────────────────────────────
+
+function buildUseItemActions(
+  actor: AiActorRef,
+  result: GoalResult,
+): AiAction[] {
+  if (!result.target || result.target.kind !== 'use-item') {
+    return [{ type: 'hold', actor, reason: '使用道具：無可用道具' }]
+  }
+
+  return [{
+    type: 'use-item',
+    actor,
+    itemId: result.target.itemId,
+    reason: `使用道具：${result.context?.name ?? result.target.itemId}`,
+  }]
 }

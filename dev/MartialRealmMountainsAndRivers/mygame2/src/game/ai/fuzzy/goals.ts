@@ -2,7 +2,7 @@ import type { Position } from '../../types'
 import { trapezoid, fuzzyAnd, fuzzyOr } from './membershipFunctions'
 import type { FuzzyInputs } from './fuzzyInputs'
 
-export type GoalName = 'selfPreservation' | 'collectItems' | 'positioning' | 'construction' | 'exploration'
+export type GoalName = 'selfPreservation' | 'collectItems' | 'positioning' | 'construction' | 'exploration' | 'engageCombat' | 'allocateAttributes' | 'useItem'
 
 export interface GoalResult {
   score: number
@@ -18,6 +18,8 @@ export type GoalTarget =
   | { kind: 'build'; baseId: string; buildingId: string; buildingName: string }
   | { kind: 'resource-point'; resourcePointId: string; position: Position }
   | { kind: 'explore'; position: Position }
+  | { kind: 'allocate-attribute'; attribute: string }
+  | { kind: 'use-item'; itemId: string }
 
 // ─── selfPreservation ──────────────────────────────────────────────
 
@@ -78,6 +80,80 @@ export function evaluateCollectItems(inputs: FuzzyInputs): GoalResult {
   }
 }
 
+// ─── engageCombat ───────────────────────────────────────────────
+// 附近有怪物 → 高分；體力充足 + 血量健康 → 加分
+
+function evaluateEngageCombat(inputs: FuzzyInputs): GoalResult {
+  const { distToNearestCreature, staminaRatio, hitsSurvivable, nearestCreatureId } = inputs
+
+  if (!nearestCreatureId || distToNearestCreature === Infinity) {
+    return { score: 0 }
+  }
+
+  const f_closeCreature = distToNearestCreature <= 1
+    ? 1
+    : distToNearestCreature <= 3
+      ? 0.7
+      : 0.3
+
+  const f_staminaHigh = trapezoid(staminaRatio, 0.4, 0.6, 1, 1)
+  const f_healthy = trapezoid(hitsSurvivable, 3, 5, 10, 10)
+
+  const score = fuzzyAnd(fuzzyOr(f_closeCreature, f_healthy), fuzzyOr(f_staminaHigh, f_closeCreature))
+
+  return {
+    score,
+    target: { kind: 'attack', targetId: nearestCreatureId, targetType: 'creature', position: { row: -1, column: -1 } },
+    context: { distToNearestCreature, nearestCreatureId },
+  }
+}
+
+// ─── allocateAttributes ─────────────────────────────────────────
+// 有可分配屬性點 → 分數 = 1（最高優先）
+
+function evaluateAllocateAttributes(inputs: FuzzyInputs): GoalResult {
+  const { availableAttributePoints } = inputs
+
+  if (availableAttributePoints <= 0) {
+    return { score: 0 }
+  }
+
+  // V1：固定分配 armStrength（攻擊力）
+  return {
+    score: 1,
+    target: { kind: 'allocate-attribute', attribute: 'armStrength' },
+    context: { availableAttributePoints },
+  }
+}
+
+// ─── useItem ────────────────────────────────────────────────────
+// 有值得用的道具 → 高分
+
+function evaluateUseItem(inputs: FuzzyInputs): GoalResult {
+  const { bestItemToUse } = inputs
+
+  if (!bestItemToUse) {
+    return { score: 0 }
+  }
+
+  // 回血/回體力道具根據需求程度給分
+  if (bestItemToUse.effect === 'health' || bestItemToUse.effect === 'stamina') {
+    const score = bestItemToUse.effect === 'health' ? 0.8 : 0.6
+    return {
+      score,
+      target: { kind: 'use-item', itemId: bestItemToUse.id },
+      context: { effect: bestItemToUse.effect, name: bestItemToUse.name },
+    }
+  }
+
+  // 探地符/回營符等：中等分數
+  return {
+    score: 0.4,
+    target: { kind: 'use-item', itemId: bestItemToUse.id },
+    context: { effect: bestItemToUse.effect, name: bestItemToUse.name },
+  }
+}
+
 // ─── evaluateAllGoals ──────────────────────────────────────────────
 
 export function evaluateAllGoals(inputs: FuzzyInputs): Record<GoalName, GoalResult> {
@@ -87,6 +163,9 @@ export function evaluateAllGoals(inputs: FuzzyInputs): Record<GoalName, GoalResu
     positioning: evaluatePositioning(inputs),
     construction: evaluateConstruction(inputs),
     exploration: evaluateExploration(inputs),
+    engageCombat: evaluateEngageCombat(inputs),
+    allocateAttributes: evaluateAllocateAttributes(inputs),
+    useItem: evaluateUseItem(inputs),
   }
 }
 

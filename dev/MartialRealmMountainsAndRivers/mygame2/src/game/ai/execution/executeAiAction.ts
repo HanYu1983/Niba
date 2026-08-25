@@ -7,6 +7,7 @@ import { endPlayerTurn, type TurnActionDependencies } from '../../actions/turnAc
 import { executeAiAttack } from './executeAiAttack'
 import { collectItemPointAction } from '../../actions/itemActions'
 import type { CombatActionDependencies } from '../../actions/combatActions'
+import type { UpgradeableAttribute } from '../../types'
 
 export type ExecuteAiActionDependencies = {
   combat: CombatActionDependencies
@@ -23,6 +24,8 @@ export function executeAiAction(
   state: GameState,
   action: AiAction,
   dependencies: ExecuteAiActionDependencies,
+  allocateAttribute?: (playerId: string, attribute: UpgradeableAttribute) => boolean,
+  useItem?: (playerId: string, itemId: string) => ActionOutcome,
 ): { state: GameState; result: ActionOutcome } {
   switch (action.type) {
     case 'move':
@@ -42,6 +45,14 @@ export function executeAiAction(
     case 'build': {
       const result = constructBuilding(state, action.baseId, action.buildingType, action.actor.id)
       return { state: result.state, result: result.result }
+    }
+    case 'allocate-attribute': {
+      const ok = allocateAttribute?.(action.actor.id, action.attribute) ?? false
+      return { state, result: ok ? { ok: true } : { ok: false, reason: '屬性分配失敗。' } }
+    }
+    case 'use-item': {
+      const result = useItem?.(action.actor.id, action.itemId) ?? { ok: false, reason: '無法使用道具。' }
+      return { state, result }
     }
     case 'hold':
       return { state, result: { ok: true } }
