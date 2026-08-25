@@ -1,4 +1,4 @@
-import { Button, Flex, Layout, Typography } from 'antd'
+import { Button, Flex, Layout, Typography, message } from 'antd'
 import { useEffect, useRef, useState } from 'react'
 import MapGrid from './components/MapGrid'
 import PlayerPanel from './components/PlayerPanel'
@@ -120,7 +120,9 @@ function App() {
       runDefenseStep: (actorId) => gameStore.runAiDefenseStep(actorId),
       runSupportStep: (actorId) => gameStore.runAiSupportStep(actorId),
       runConstructionStep: (actorId) => gameStore.runAiConstructionStep(actorId),
+      runTest1Step: (actorId) => gameStore.runTest1Step(actorId),
       endTurn: (actorId) => gameStore.endPlayerTurn(actorId),
+      onStepFailed: (_actorId, reason) => { message.warning(reason) },
     }),
   )
   const modalOpen = Boolean(
@@ -194,7 +196,7 @@ function App() {
     const activeAiOrder = gameState.aiOrders?.find(
       (order) => order.aiPlayerId === activePlayer.id && order.status === 'active',
     )
-    if (activeAiOrder && (activeAiOrder.type === 'protect-base' || activeAiOrder.type === 'support-player')) {
+    if (activeAiOrder && (activeAiOrder.type === 'protect-base' || activeAiOrder.type === 'support-player' || activeAiOrder.type === 'test1')) {
       // 戰術命令優先：威脅未解除前暫緩建設（命令完成後自動恢復）。
       scheduler.requestStep(activePlayer.id, activeAiOrder.type)
       return () => scheduler.cancel()

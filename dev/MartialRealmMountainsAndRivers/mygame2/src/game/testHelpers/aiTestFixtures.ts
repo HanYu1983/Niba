@@ -158,6 +158,19 @@ export function makeSupportPlayerOrder(
   }
 }
 
+export function makeTest1Order(
+  overrides: Partial<Extract<AiOrder, { type: 'test1' }>> = {},
+): Extract<AiOrder, { type: 'test1' }> {
+  return {
+    id: 'order-test1',
+    type: 'test1',
+    aiPlayerId: 'ai-1',
+    priority: 50,
+    status: 'active',
+    ...overrides,
+  }
+}
+
 export function makeTestResourcePoint(overrides: Partial<ResourcePointState> = {}): ResourcePointState {
   return {
     id: 'resource-point-1',
