@@ -1,7 +1,8 @@
 import type { CreatureActionLog, CreatureState, GameState, PlayerState, CreatureNestState, ExplorationEventState, ExplorationEventType } from '../types'
 import { type CreatureTurnResult } from './creatureActions'
 import { isAdjacent } from '../types'
-import { applyBaseHealthBonuses, getBarracksRecovery, getBaseMaxBuildingMaterials, isPlayerWithinBaseVision } from '../rules/baseRules'
+import { applyBaseHealthBonuses, getBaseMaxBuildingMaterials } from '../rules/baseRules'
+import { resolveRoundEndAuraEffects } from '../rules/auraRules'
 import { getEffectivePassiveMaterialIncome } from '../rules/policyRules'
 import { getGlobalRoundEndRecoveryPercent } from '../rules/globalBuffRules'
 import { recoverFivePercent, recoverLivingPlayers, uniqueCreaturesById } from '../rules/playerRules'
@@ -119,18 +120,24 @@ export function endPlayerTurn(
     })
     : state.bases
   const roundEndRecoveryPercent = isRoundComplete ? getGlobalRoundEndRecoveryPercent(state) : 0
+  // 區域靈氣：回合結束解析「累積型」效果（防衛營回血 + 巢穴灼燒/金煞）。
+  // 使用回合結算後的據點與巢穴，確保來源失活判定正確。
+  const auraRecoveredPlayers = isRoundComplete
+    ? resolveRoundEndAuraEffects(
+        scheduledCreatureTurn?.bases ?? state.bases,
+        nestSpawn?.nests ?? state.creatureNests,
+        recoverLivingPlayers(scheduledCreatureTurn?.players ?? state.players),
+      )
+    : []
   const recoveredPlayers = isRoundComplete
-    ? recoverLivingPlayers(scheduledCreatureTurn?.players ?? state.players).map((candidate) => {
-      const recovery = (scheduledCreatureTurn?.bases ?? state.bases)
-        .filter((base) => isPlayerWithinBaseVision(base, candidate))
-        .reduce((total, base) => total + getBarracksRecovery(base), 0)
+    ? auraRecoveredPlayers.map((candidate) => {
       // 全局靈氣：每回合結束額外回復一定比例氣血與內力（隨疊加而增加）。
       const bonusHealth = Math.floor(candidate.maxHealth * roundEndRecoveryPercent / 100)
       const bonusInnerPower = Math.floor(candidate.maxInnerPower * roundEndRecoveryPercent / 100)
       return {
         ...candidate,
-        health: Math.min(candidate.maxHealth, candidate.health + recovery + bonusHealth),
-        innerPower: Math.min(candidate.maxInnerPower, candidate.innerPower + recovery + bonusInnerPower),
+        health: Math.min(candidate.maxHealth, candidate.health + bonusHealth),
+        innerPower: Math.min(candidate.maxInnerPower, candidate.innerPower + bonusInnerPower),
       }
     })
     : []

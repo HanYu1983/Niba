@@ -27,6 +27,7 @@ import {
   rollRoamerLevel,
 } from './rules/creatureBehaviorRules'
 import { createSeededRandom, pickRandom } from './rules/randomRules'
+import { getSchoolElement } from './rules/skillRules'
 import { getPlayerVisibleCellIds } from './rules/visibilityRules'
 import { NEST_SPAWN_BASE_CHANCE, getNestMaxHealth } from './actions/creatureActions'
 import { createExplorationEventsFromCatalog } from './events/eventSpawner'
@@ -230,6 +231,8 @@ export function createCreatureNests(
     // 巢穴流派與行為類型隨機生成，決定其生成 Creature 的屬性與內功。
     schoolId: selectedSchools[index] ?? 'void-spirit',
     behaviorType: pickRandom(behaviors, random) ?? 'scavenger',
+    // 巢穴主導元素由流派推導（區域靈氣系統）；太虛流等無屬性流派為 'none'。
+    dominantElement: getSchoolElement(selectedSchools[index]),
   }))
 }
 
