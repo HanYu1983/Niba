@@ -12,6 +12,7 @@
 import { describe, expect, it } from 'vitest'
 import { evaluateSelfPreservation, evaluateCollectItems, evaluatePositioning } from './goals'
 import type { FuzzyInputs } from './fuzzyInputs'
+import { MIN_THRESHOLD } from './decision'
 
 function makeInputs(overrides: Partial<FuzzyInputs> = {}): FuzzyInputs {
   return {
@@ -45,7 +46,7 @@ describe('evaluateSelfPreservation', () => {
 })
 
 describe('evaluateCollectItems', () => {
-  it('有道具（count=1, dist=1）→ score 應該高於 0', () => {
+  it('有道具（count=1, dist=1）→ score 應該高於 MIN_THRESHOLD', () => {
     const result = evaluateCollectItems(makeInputs({
       reachableItemCount: 1,
       distToNearestItem: 1,
@@ -57,7 +58,7 @@ describe('evaluateCollectItems', () => {
         ref: { id: 'item-1', position: { row: 5, column: 4 } } as never,
       }],
     }))
-    expect(result.score).toBeGreaterThan(0)
+    expect(result.score).toBeGreaterThan(MIN_THRESHOLD)
   })
 
   it('無道具 → score 應該等於 0', () => {
