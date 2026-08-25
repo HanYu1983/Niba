@@ -374,7 +374,7 @@ export function executeExternalDamage(
     const nextPlayer = applyCombatPlayerState(state, activatedPlayer, rewards, dependencies, { innerPowerCost, externalSkillId: skillId, skipSkillExperience: true })
     return { state: { ...state, players: state.players.map((candidate) => candidate.id === playerId ? nextPlayer : candidate) }, result: { ok: true, data: { playerId, playerName: player.name, targetType: 'creature', targetId: playerId, targetName: player.name, skillId, skillName: skill.name, damage: 0, nextHealth: player.health, maxHealth: player.maxHealth, innerPowerCost, targetMode: 'self', defeated: false, experienceReward: rewards.experienceGain || undefined } } }
   }
-  const target = getAttackTarget(state, dependencies.getActionablePlayer(state, playerId), targetType, targetId)
+  const target = getAttackTarget(state, dependencies.getActionablePlayer(state, playerId), targetType, targetId, skill.shape ?? { kind: 'radius', range: skill.range ?? 1 })
   const targetSkillLevel = target ? getSkillProgression(target.player, skillId).level : 1
   const targetBaseInnerPowerCost = getSkillInnerPowerCost(skill.innerPowerCost, targetSkillLevel)
   const targetTerrain = target ? getTerrainAtPosition(state.map.cells, target.player.position) : undefined

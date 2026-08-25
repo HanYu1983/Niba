@@ -1,5 +1,5 @@
 import type { InnerSkill } from './innerSkillCatalog'
-import type { PlayerAttributes } from '../types'
+import type { PlayerAttributes, SelectionMode, TargetingShape } from '../types'
 import { type FunctionalExternalSkillEffect } from './functionalSkillRegistry'
 import type { ExternalSkill } from './externalSkillCatalog'
 import { createAuraExternalSkill, createDamageExternalSkill, createInnerSkill } from './skillFactory'
@@ -20,6 +20,12 @@ type ExternalSkillEntry = {
   effect?: FunctionalExternalSkillEffect
   innerPowerCost?: number
   passiveBuffIds?: string[]
+  /** 曼哈頓距離範圍（targeting 框架）；未設定時為相鄰。 */
+  range?: number
+  /** 範圍形狀（targeting 框架）；未設定時依 range 推導 radius。 */
+  shape?: TargetingShape
+  /** 選取模式（targeting 框架）；未設定時預設 single。 */
+  selectionMode?: SelectionMode
 }
 
 type MartialSchoolDefinition = {
@@ -66,7 +72,7 @@ export const martialSchoolCatalog: MartialSchoolDefinition[] = [
       formula: '身法 × 0.6 + 悟性 × 0.4',
       calculate: (attributes, level) => Math.max(1, Math.floor(attributes.agility * 0.6 + attributes.insight * 0.4) * level),
     }],
-    damage: [{ name: '追風腿', description: '以身法帶動腿勁，對相鄰單一敵人造成傷害。', innerPowerCost: 4 }],
+    damage: [{ name: '追風腿', description: '以身法帶動腿勁，朝 2 格內單一敵人造成傷害。', innerPowerCost: 4, range: 2 }],
     aura: [
       { name: '疾行', description: '地形消耗一律視為草地。', passiveBuffIds: ['swift-wind-movement'] },
       { name: '林間步', description: '進入森林時，移動消耗降為 2。', passiveBuffIds: ['forest-step'] },
@@ -85,7 +91,7 @@ export const martialSchoolCatalog: MartialSchoolDefinition[] = [
     }],
     damage: [
       { name: '炎火掌', description: '凝聚炎力一掌擊出，對相鄰單一敵人造成傷害。', innerPowerCost: 4 },
-      { name: '燎原', description: '使目標燃燒 3 回合，每回合損失最大生命 20%。', effect: 'burning', innerPowerCost: 6 },
+      { name: '燎原', description: '使周圍 1 格內目標燃燒 3 回合，每回合損失最大生命 20%。', effect: 'burning', innerPowerCost: 6, shape: { kind: 'radius', range: 1 }, selectionMode: { kind: 'all' } },
     ],
     aura: [{ name: '踏沙功', description: '進入荒漠時，移動消耗降為 2。', passiveBuffIds: ['desert-step'] }],
     enhancement: [],
@@ -102,7 +108,7 @@ export const martialSchoolCatalog: MartialSchoolDefinition[] = [
     }],
     damage: [
       { name: '寒水掌', description: '寒氣凝於掌上，對相鄰單一敵人造成傷害。', innerPowerCost: 4 },
-      { name: '凝霜', description: '使目標 2 回合內五項基本屬性降低 20%。', effect: 'attribute-reduction', innerPowerCost: 6 },
+      { name: '凝霜', description: '使周圍 1 格內目標 2 回合內五項基本屬性降低 20%。', effect: 'attribute-reduction', innerPowerCost: 6, shape: { kind: 'radius', range: 1 }, selectionMode: { kind: 'all' } },
     ],
     aura: [{ name: '踏水功', description: '進入水域時，移動消耗降為 2。', passiveBuffIds: ['water-step'] }],
     enhancement: [],
@@ -134,7 +140,7 @@ export const martialSchoolCatalog: MartialSchoolDefinition[] = [
       formula: '五項基本屬性總和 ÷ 5',
       calculate: (attributes, level) => Math.max(1, Math.floor((attributes.armStrength + attributes.constitution + attributes.agility + attributes.innerEnergy + attributes.insight) / 5) * level),
     }],
-    damage: [{ name: '靈犀指', description: '以靈犀一指點出，對相鄰單一敵人造成傷害。', innerPowerCost: 4 }],
+    damage: [{ name: '靈犀指', description: '以靈犀一指點出，朝 2 格內單一敵人造成傷害。', innerPowerCost: 4, range: 2 }],
     aura: [
       { name: '迴氣（悟道）', description: '開啟後功法經驗獲得 +20%（常駐）。', passiveBuffIds: ['void-spirit-return-qi'] },
       { name: '草上飛', description: '進入草地時，移動消耗降為 1。', passiveBuffIds: ['plain-step'] },
@@ -168,7 +174,7 @@ export const martialSchoolCatalog: MartialSchoolDefinition[] = [
       formula: '臂力 × 0.7 + 身法 × 0.3',
       calculate: (attributes, level) => Math.max(1, Math.floor(attributes.armStrength * 0.7 + attributes.agility * 0.3) * level),
     }],
-    damage: [{ name: '銳鋒斬', description: '快劍疾斬而出，對相鄰單一敵人造成傷害。', innerPowerCost: 4 }],
+    damage: [{ name: '銳鋒斬', description: '快劍疾斬而出，朝 2 格內單一敵人造成傷害。', innerPowerCost: 4, range: 2 }],
     aura: [
       { name: '劍心明鑑', description: '自身地圖視野半徑 +1（常駐）。', passiveBuffIds: ['sharp-edge-sword-heart'] },
       { name: '凌厲劍勢', description: '普通攻擊造成的最終傷害 +10%（常駐）。', passiveBuffIds: ['sharp-edge-keen-edge'] },
@@ -202,7 +208,7 @@ export const martialSchoolCatalog: MartialSchoolDefinition[] = [
       formula: '根骨 × 0.6 + 臂力 × 0.4',
       calculate: (attributes, level) => Math.max(1, Math.floor(attributes.constitution * 0.6 + attributes.armStrength * 0.4) * level),
     }],
-    damage: [{ name: '烈陽轟', description: '陽罡之氣轟然擊出，對相鄰單一敵人造成傷害。', innerPowerCost: 4 }],
+    damage: [{ name: '烈陽轟', description: '陽罡之氣轟然擊出，對周圍 1 格內所有敵人造成傷害。', innerPowerCost: 4, shape: { kind: 'radius', range: 1 }, selectionMode: { kind: 'all' } }],
     aura: [
       { name: '烈陽戰意', description: '臂力與根骨 +1（常駐）。', passiveBuffIds: ['blazing-sun-fervor'] },
       { name: '烈目凝芒', description: '暴擊率 ×1.25（常駐）。', passiveBuffIds: ['blazing-sun-blazing-gaze'] },
@@ -236,7 +242,7 @@ export const martialSchoolCatalog: MartialSchoolDefinition[] = [
       formula: '身法 × 0.5 + 悟性 × 0.5',
       calculate: (attributes, level) => Math.max(1, Math.floor(attributes.agility * 0.5 + attributes.insight * 0.5) * level),
     }],
-    damage: [{ name: '影襲', description: '自暗處無聲刺出，對相鄰單一敵人造成傷害。', innerPowerCost: 4 }],
+    damage: [{ name: '影襲', description: '自暗處無聲刺出，朝 2 格內單一敵人造成傷害。', innerPowerCost: 4, range: 2 }],
     aura: [
       { name: '幽影蔽身', description: '回避率 +10%（常駐）。', passiveBuffIds: ['ghost-shadow-shadow-veil'] },
       { name: '孤影決絕', description: '血量低於 25% 時五維 ×1.6，持續 3 回合。', passiveBuffIds: ['ghost-shadow-lone-resolve'] },
@@ -278,6 +284,9 @@ export const progressionExternalSkills: ExternalSkill[] = martialSchoolCatalog.f
     element: school.element,
     level: 1,
     innerPowerCost: entry.innerPowerCost ?? (index === 0 ? 4 : 6),
+    range: entry.range,
+    shape: entry.shape,
+    selectionMode: entry.selectionMode,
     functionalEffect: entry.effect,
     calculateDamage: index === 0 ? (attributes) => school.inner[0].calculate(attributes, 1) + 1 : undefined,
   }))
