@@ -88,11 +88,11 @@ export function evaluateAllGoals(inputs: FuzzyInputs): Record<GoalName, GoalResu
 // ─── positioning ──────────────────────────────────────────────────
 // 出口越少 → 分數越高；無出口且有怪 → attack target；有出口 → exit target
 
-function evaluatePositioning(inputs: FuzzyInputs): GoalResult {
+export function evaluatePositioning(inputs: FuzzyInputs): GoalResult {
   const { exitCount, distToNearestThreat, nearestExit } = inputs
 
-  // 出口越少分數越高：0 exits → 1.0, 1 → 0.7, 2 → 0.3, >=3 → 0
-  const f_fewExits = trapezoid(exitCount, 0, 0, 2, 3)
+  // 出口越少分數越高：0 → 1.0, 1 → 0.667, 2 → 0.333, >=3 → 0
+  const f_fewExits = exitCount >= 3 ? 0 : (3 - exitCount) / 3
 
   // 無出口時的危險加成：周圍有怪則更高
   const f_threatClose = trapezoid(distToNearestThreat, 0, 0, 2, 4)
