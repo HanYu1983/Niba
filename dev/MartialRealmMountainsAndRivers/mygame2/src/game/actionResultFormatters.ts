@@ -68,6 +68,10 @@ export function formatExternalSkillResult(result: ExternalDamageExecutionResult)
       ...(selfCast ? [result.skillName.includes('悟道') ? '已增加目前裝備功法經驗' : '技能效果已生效'] : [
         `造成傷害 ${result.damage}`,
         ...(result.terrainResonance ? [`天地共鳴：${result.terrainResonance}`] : []),
+        ...(result.synergy ? ['五行相生連攜：內功生外功｜傷害 ×1.25'] : []),
+        ...(result.tripleResonance ? ['⚡ 三重共振！目標震懾一回合'] : []),
+        ...(result.criticalHit ? ['暴擊！造成 1.5 倍傷害。'] : []),
+        ...(result.criticalRate !== undefined && result.criticalRate > 0 ? [`外功暴擊率 ${result.criticalRate}%`] : []),
         ...(result.appliedBuffs ?? []).map((buff) => `施加 Buff：${buff.name}（${buff.description}，持續 ${buff.remainingRounds === null ? '持續生效' : `${buff.remainingRounds} 回合`}）`),
         result.defeated
           ? result.targetType === 'nest' ? '巢穴已摧毀' : '目標已被擊敗'

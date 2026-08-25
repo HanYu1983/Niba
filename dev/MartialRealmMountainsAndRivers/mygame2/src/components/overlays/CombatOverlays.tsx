@@ -4,6 +4,7 @@ import ItemBurstPreviewModal from '../ItemBurstPreviewModal'
 import CreatureActionModal from '../CreatureActionModal'
 import CreatureCommandPanel from '../CreatureCommandPanel'
 import { getTerrainAtPosition } from '../../game/rules/terrainCombatRules'
+import { getCreatureIcon } from '../../game/rules/creatureBehaviorRules'
 import { gameStore } from '../../game/gameStore'
 import {
   formatAttackResult,
@@ -62,9 +63,26 @@ function CombatOverlays({
         preview={gameState.externalSkillPreview}
         onCancel={() => gameStore.clearExternalSkillPreview()}
         onConfirm={() => {
+          // 在執行前預先擷取目標生物資料（執行後生物可能已從 state 移除，供震動動畫定位）。
+          const previewTarget = gameState.externalSkillPreview
+          const targetCreature = previewTarget?.targetType === 'creature'
+            ? gameState.creatures.find((creature) => creature.id === previewTarget.targetId)
+            : undefined
           const result = gameStore.executeExternalDamagePreview()
           if (result.ok) {
-            gameStore.showActionResult(formatExternalSkillResult(result.data))
+            if (result.data.tripleResonance) {
+              // 三重共振：先對被命中的生物位置播放 0.5s 震動動畫，結束後再顯示結果彈窗（串行）。
+              gameStore.triggerCreatureShake(
+                result.data.targetId,
+                result.data.targetPosition ?? targetCreature?.position ?? { row: 0, column: 0 },
+                targetCreature ? getCreatureIcon(targetCreature) : '👾',
+              )
+              window.setTimeout(() => {
+                gameStore.showActionResult(formatExternalSkillResult(result.data))
+              }, 500)
+            } else {
+              gameStore.showActionResult(formatExternalSkillResult(result.data))
+            }
           } else {
             gameStore.showActionResult({ title: '外功失敗', message: result.reason, rewards: [] })
           }

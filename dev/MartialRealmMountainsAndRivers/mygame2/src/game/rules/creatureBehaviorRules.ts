@@ -1,6 +1,8 @@
 import type { BaseState, DefenseStructureState, GameState, ItemPointState, PlayerAttributes, PlayerState, Position, ResourcePointState, CreatureState } from '../types'
 import type { MartialSchoolId } from '../catalogs/martialSchoolCatalog'
 import { defaultRandomSource, rollWeighted } from './randomRules'
+import { getCreatureAiParameters } from '../ai/policy/aiPolicyRegistry'
+import { manhattanDistance as distance } from '../ai/perception/distance'
 
 export type CreatureBehaviorType = 'scavenger' | 'hunter' | 'sieger' | 'wanderer' | 'roamer'
 export type CreatureTargetType = 'player' | 'resource' | 'item' | 'base' | 'defense'
@@ -41,6 +43,16 @@ export const CREATURE_AGGRO_RANGES: Record<CreatureBehaviorType, number> = {
   sieger: 7,
   wanderer: 4,
   roamer: 2,
+}
+
+/**
+ * 切片 K：Creature 警戒範圍改經 policy 查表（§6.2 分岔點 ②）。
+ * policy 的 `parameters.aggroRange` 優先；查無（fallback 人格或未設定）時
+ * 沿用既有常數表——數值一致即零行為變化。
+ */
+export function getCreatureAggroRange(behavior: CreatureBehaviorType): number {
+  const parameter = getCreatureAiParameters(behavior)?.aggroRange
+  return typeof parameter === 'number' ? parameter : CREATURE_AGGRO_RANGES[behavior]
 }
 
 // 開局游蕩妖物等級權重：整體調弱後僅 Lv1-3，且以 Lv1 為大宗，使初始怪易於擊退。
@@ -127,9 +139,7 @@ export type CreatureTarget = {
   defenseStructure?: DefenseStructureState
 }
 
-function distance(first: Position, second: Position): number {
-  return Math.abs(first.row - second.row) + Math.abs(first.column - second.column)
-}
+// 切片 L：距離計算委託感知層統一出口（上方 import 別名），本檔不再自帶實作。
 
 function nearest<T extends { id: string; position: Position }>(origin: Position, candidates: T[]): T | undefined {
   return [...candidates].sort((first, second) => distance(origin, first.position) - distance(origin, second.position) || first.id.localeCompare(second.id))[0]
@@ -184,7 +194,7 @@ export const ARROW_TOWER_AGGRO_RANGE = 5
 
 export function selectCreatureTarget(state: GameState, creature: CreatureState): CreatureTarget | null {
   const behavior = getCreatureBehaviorType(creature)
-  const range = creature.aggroRange ?? CREATURE_AGGRO_RANGES[behavior]
+  const range = creature.aggroRange ?? getCreatureAggroRange(behavior)
 
   if (behavior === 'roamer') {
     const targets = state.players.filter((player) => player.health > 0 && distance(creature.position, player.position) <= range)

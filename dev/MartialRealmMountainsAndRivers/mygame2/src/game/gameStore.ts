@@ -173,6 +173,8 @@ import { chooseDefenseAction } from './aiDefenseRules'
 import { chooseSupportAction } from './aiSupportRules'
 import { chooseSelfPreservationAction } from './aiSelfPreservationRules'
 import { defenseActionToAiAction } from './ai/aiAction'
+import { validateAiAction } from './ai/validation/validateAiAction'
+import { getPlayerAiEmergency } from './ai/policy/aiPolicyRegistry'
 import { defaultRandomSource } from './rules/randomRules'
 import { getBlockedPositions } from './rules/movementRules'
 
@@ -273,6 +275,15 @@ function recordAiStepEvent(
     result: outcome.ok ? 'succeeded' : 'failed',
     reason: action.reason || outcome.reason,
   })])
+}
+
+/**
+ * 切片 I：AI step 執行前的單一驗證關卡（重構文件 §9.2）。
+ * 回傳 null 代表可執行；否則回傳拒絕原因（呼叫端負責記錄 failed 事件）。
+ */
+function validateAiStepAction(state: GameState, action: AiAction): string | null {
+  const validation = validateAiAction(state, action)
+  return validation.valid ? null : validation.reason
 }
 
 /** 更新建設計畫中單一 queue item 的狀態（重構文件 §14.6 狀態機）。 */
@@ -621,7 +632,17 @@ export const gameStore = {
     updateGameState((state) => ({
       ...state,
       blockingModal: { type: 'action-result', result, continuation },
+      // 三重共振震動動畫在彈窗出現後清除，讓 ghost icon 在 0.5s 動畫結束後消失。
+      creatureShake: null,
       operation: { type: 'idle' },
+    }))
+  },
+
+  /** 觸發三重共振震動動畫：指定被命中生物的位置與 icon，該位置播放 shake 動畫（訊號疊加），不開啟結果彈窗。 */
+  triggerCreatureShake: (targetId: string, position: Position, icon: string) => {
+    updateGameState((state) => ({
+      ...state,
+      creatureShake: { signal: (state.creatureShake?.signal ?? 0) + 1, targetId, position, icon },
     }))
   },
 
@@ -1850,32 +1871,64 @@ export const gameStore = {
       return { ok: false, reason: '目前無法執行 AI 防守回合。' }
     }
 
-    const selfPreservation = chooseSelfPreservationAction(state, playerId, order.retreatHealthPercent)
+    const selfPreservation = chooseSelfPreservationAction(state, playerId, order.retreatHealthPercent, getPlayerAiEmergency())
     if (selfPreservation?.type === 'move') {
+      const action = defenseActionToAiAction(state, playerId, selfPreservation)
+      const rejection = validateAiStepAction(state, action)
+      if (rejection) {
+        recordAiStepEvent(state.round, playerId, player.name, action, { ok: false, reason: rejection })
+        return { ok: false, reason: rejection }
+      }
       const result = gameStore.movePlayerTo(playerId, selfPreservation.position.row, selfPreservation.position.column)
-      recordAiStepEvent(state.round, playerId, player.name, defenseActionToAiAction(state, playerId, selfPreservation), result)
+      recordAiStepEvent(state.round, playerId, player.name, action, result)
       return result.ok ? { ok: true } : { ok: false, reason: result.reason ?? 'AI 自保移動失敗。' }
     }
     if (selfPreservation) {
+      const action = defenseActionToAiAction(state, playerId, selfPreservation)
+      const rejection = validateAiStepAction(state, action)
+      if (rejection) {
+        recordAiStepEvent(state.round, playerId, player.name, action, { ok: false, reason: rejection })
+        return { ok: false, reason: rejection }
+      }
       gameStore.endPlayerTurn(playerId)
-      recordAiStepEvent(state.round, playerId, player.name, defenseActionToAiAction(state, playerId, selfPreservation), { ok: true })
+      recordAiStepEvent(state.round, playerId, player.name, action, { ok: true })
       return { ok: true }
     }
 
     const decision = chooseDefenseAction(state, playerId, order)
     if (decision.type === 'attack') {
+      const action = defenseActionToAiAction(state, playerId, decision)
+      const rejection = validateAiStepAction(state, action)
+      if (rejection) {
+        recordAiStepEvent(state.round, playerId, player.name, action, { ok: false, reason: rejection })
+        return { ok: false, reason: rejection }
+      }
       const result = gameStore.executeAiAttack(playerId, decision.targetType, decision.targetId)
-      recordAiStepEvent(state.round, playerId, player.name, defenseActionToAiAction(state, playerId, decision), result.ok ? { ok: true } : { ok: false, reason: result.reason })
+      recordAiStepEvent(state.round, playerId, player.name, action, result.ok ? { ok: true } : { ok: false, reason: result.reason })
       return result.ok ? { ok: true } : { ok: false, reason: result.reason ?? 'AI 攻擊失敗。' }
     }
     if (decision.type === 'move') {
+      const action = defenseActionToAiAction(state, playerId, decision)
+      const rejection = validateAiStepAction(state, action)
+      if (rejection) {
+        recordAiStepEvent(state.round, playerId, player.name, action, { ok: false, reason: rejection })
+        return { ok: false, reason: rejection }
+      }
       const result = gameStore.movePlayerTo(playerId, decision.position.row, decision.position.column)
-      recordAiStepEvent(state.round, playerId, player.name, defenseActionToAiAction(state, playerId, decision), result)
+      recordAiStepEvent(state.round, playerId, player.name, action, result)
       return result.ok ? { ok: true } : { ok: false, reason: result.reason ?? 'AI 移動失敗。' }
     }
-    gameStore.endPlayerTurn(playerId)
-    recordAiStepEvent(state.round, playerId, player.name, defenseActionToAiAction(state, playerId, decision), { ok: true })
-    return { ok: true }
+    {
+      const action = defenseActionToAiAction(state, playerId, decision)
+      const rejection = validateAiStepAction(state, action)
+      if (rejection) {
+        recordAiStepEvent(state.round, playerId, player.name, action, { ok: false, reason: rejection })
+        return { ok: false, reason: rejection }
+      }
+      gameStore.endPlayerTurn(playerId)
+      recordAiStepEvent(state.round, playerId, player.name, action, { ok: true })
+      return { ok: true }
+    }
   },
 
   /**
@@ -1901,14 +1954,14 @@ export const gameStore = {
     if (plan.policy === 'paused') {
       const adjacentPoint = (state.resourcePoints ?? []).find((point) => isSameOrAdjacent(player.position, point.position))
       if (adjacentPoint) {
+        const collectAction: AiAction = { type: 'collect', actor: { id: playerId, kind: 'player' }, target: { id: adjacentPoint.id, kind: 'resource', position: adjacentPoint.position }, reason: '暫停建造，採集建料。' }
+        const rejection = validateAiStepAction(state, collectAction)
+        if (rejection) {
+          recordAiStepEvent(state.round, playerId, player.name, collectAction, { ok: false, reason: rejection })
+          return { ok: false, reason: rejection }
+        }
         const result = gameStore.collectResourcePoint(playerId, adjacentPoint.id)
-        recordAiStepEvent(
-          state.round,
-          playerId,
-          player.name,
-          { type: 'collect', actor: { id: playerId, kind: 'player' }, target: { id: adjacentPoint.id, kind: 'resource', position: adjacentPoint.position }, reason: '暫停建造，採集建料。' },
-          result.ok ? { ok: true } : { ok: false, reason: result.reason },
-        )
+        recordAiStepEvent(state.round, playerId, player.name, collectAction, result.ok ? { ok: true } : { ok: false, reason: result.reason })
         return result.ok ? { ok: true } : { ok: false, reason: result.reason ?? '採集失敗。' }
       }
       gameStore.endPlayerTurn(playerId)
@@ -1940,6 +1993,13 @@ export const gameStore = {
     while (true) {
       const candidate = pickNextBuildCandidate(gameState, plan, excluded)
       if (!candidate) break
+      const buildAction: AiAction = { type: 'build', actor: { id: playerId, kind: 'player' }, baseId: plan.baseId, buildingType: candidate.buildingType, reason: `建設計畫：${candidate.buildingName}（優先度 ${candidate.item.priority}）。` }
+      const rejection = validateAiStepAction(gameState, buildAction)
+      if (rejection) {
+        updateConstructionPlanItem(playerId, candidate.itemIndex, { status: 'blocked', blockedReason: rejection })
+        excluded.add(candidate.itemIndex)
+        continue
+      }
       const outcome = constructBuildingAction(gameState, plan.baseId, candidate.buildingId, playerId)
       if (outcome.result.ok) {
         updateGameState(() => outcome.state)
@@ -1948,7 +2008,7 @@ export const gameStore = {
           gameState.round,
           playerId,
           player.name,
-          { type: 'build', actor: { id: playerId, kind: 'player' }, baseId: plan.baseId, buildingType: candidate.buildingType, reason: `建設計畫：${candidate.buildingName}（優先度 ${candidate.item.priority}）。` },
+          buildAction,
           { ok: true },
         )
         gameStore.showActionResult({
@@ -2012,15 +2072,27 @@ export const gameStore = {
     if (!player?.isAI || state.activePlayerId !== playerId || state.creatureTurnInProgress || state.gameOver || !order || order.type !== 'support-player') {
       return { ok: false, reason: '目前無法執行 AI 支援回合。' }
     }
-    const selfPreservation = chooseSelfPreservationAction(state, playerId, order.retreatHealthPercent)
+    const selfPreservation = chooseSelfPreservationAction(state, playerId, order.retreatHealthPercent, getPlayerAiEmergency())
     if (selfPreservation?.type === 'move') {
+      const action = defenseActionToAiAction(state, playerId, selfPreservation)
+      const rejection = validateAiStepAction(state, action)
+      if (rejection) {
+        recordAiStepEvent(state.round, playerId, player.name, action, { ok: false, reason: rejection })
+        return { ok: false, reason: rejection }
+      }
       const result = gameStore.movePlayerTo(playerId, selfPreservation.position.row, selfPreservation.position.column)
-      recordAiStepEvent(state.round, playerId, player.name, defenseActionToAiAction(state, playerId, selfPreservation), result)
+      recordAiStepEvent(state.round, playerId, player.name, action, result)
       return result.ok ? { ok: true } : { ok: false, reason: result.reason ?? 'AI 自保移動失敗。' }
     }
     if (selfPreservation) {
+      const action = defenseActionToAiAction(state, playerId, selfPreservation)
+      const rejection = validateAiStepAction(state, action)
+      if (rejection) {
+        recordAiStepEvent(state.round, playerId, player.name, action, { ok: false, reason: rejection })
+        return { ok: false, reason: rejection }
+      }
       gameStore.endPlayerTurn(playerId)
-      recordAiStepEvent(state.round, playerId, player.name, defenseActionToAiAction(state, playerId, selfPreservation), { ok: true })
+      recordAiStepEvent(state.round, playerId, player.name, action, { ok: true })
       return { ok: true }
     }
     const target = state.players.find((candidate) => candidate.id === order.playerId)
@@ -2042,18 +2114,38 @@ export const gameStore = {
 
     const decision = chooseSupportAction(state, playerId, order)
     if (decision.type === 'attack') {
+      const action = defenseActionToAiAction(state, playerId, decision)
+      const rejection = validateAiStepAction(state, action)
+      if (rejection) {
+        recordAiStepEvent(state.round, playerId, player.name, action, { ok: false, reason: rejection })
+        return { ok: false, reason: rejection }
+      }
       const result = gameStore.executeAiAttack(playerId, decision.targetType, decision.targetId)
-      recordAiStepEvent(state.round, playerId, player.name, defenseActionToAiAction(state, playerId, decision), result.ok ? { ok: true } : { ok: false, reason: result.reason })
+      recordAiStepEvent(state.round, playerId, player.name, action, result.ok ? { ok: true } : { ok: false, reason: result.reason })
       return result.ok ? { ok: true } : { ok: false, reason: result.reason ?? 'AI 支援攻擊失敗。' }
     }
     if (decision.type === 'move') {
+      const action = defenseActionToAiAction(state, playerId, decision)
+      const rejection = validateAiStepAction(state, action)
+      if (rejection) {
+        recordAiStepEvent(state.round, playerId, player.name, action, { ok: false, reason: rejection })
+        return { ok: false, reason: rejection }
+      }
       const result = gameStore.movePlayerTo(playerId, decision.position.row, decision.position.column)
-      recordAiStepEvent(state.round, playerId, player.name, defenseActionToAiAction(state, playerId, decision), result)
+      recordAiStepEvent(state.round, playerId, player.name, action, result)
       return result.ok ? { ok: true } : { ok: false, reason: result.reason ?? 'AI 支援移動失敗。' }
     }
-    gameStore.endPlayerTurn(playerId)
-    recordAiStepEvent(state.round, playerId, player.name, defenseActionToAiAction(state, playerId, decision), { ok: true })
-    return { ok: true }
+    {
+      const action = defenseActionToAiAction(state, playerId, decision)
+      const rejection = validateAiStepAction(state, action)
+      if (rejection) {
+        recordAiStepEvent(state.round, playerId, player.name, action, { ok: false, reason: rejection })
+        return { ok: false, reason: rejection }
+      }
+      gameStore.endPlayerTurn(playerId)
+      recordAiStepEvent(state.round, playerId, player.name, action, { ok: true })
+      return { ok: true }
+    }
   },
 
   endPlayerTurn: (playerId: string) => {
@@ -2077,6 +2169,8 @@ export const gameStore = {
           currentState.traps ?? [],
           currentState.sectGates ?? [],
           currentState.globalBuffs ?? [],
+          defaultRandomSource,
+          currentState.round,
         ),
         spawnCreaturesFromNests: (currentState, creatures, players) => spawnCreaturesFromNests(
           currentState.creatureNests,

@@ -114,6 +114,8 @@ export type BuffInstance = {
   /** 功法經驗獲得加成比例（技能經驗乘算）。 */
   skillExpGainPercent?: number
   confused?: boolean
+  /** 震懾：三重共振觸發時施加，目標完全跳過下一個回合。 */
+  stunned?: boolean
   damageTakenFromAlliesBonus?: number
   /** 復活時恢復的血量比例（覆寫定義基礎值，供等級縮放；reviveOnDeath 仍由定義旗標決定）。 */
   reviveHealthPercent?: number
@@ -508,6 +510,14 @@ export type ExternalSkillPreview = {
   skillName: string
   innerPowerCost: number
   expectedDamage: number
+  /** 傷害型外功的暴擊率（內息每 1 點提供 2%）。 */
+  criticalRate?: number
+  /** 是否觸發五行相生連攜（內功生外功）。 */
+  synergy?: boolean
+  /** 是否觸發三重共振（連攜＋天地共鳴＋五行相剋）。 */
+  tripleResonance?: boolean
+  /** 連攜共振狀態：single 僅連攜、dual 連攜＋共鳴、triple 三重共振。 */
+  synergyResonanceState?: 'single' | 'dual' | 'triple'
   targetHealth?: number
   targetMaxHealth?: number
   targetMode?: 'self' | 'target' | 'nest'
@@ -754,12 +764,22 @@ export type ExternalDamageExecutionResult = {
   targetType: AttackTargetType
   targetId: string
   targetName: string
+  /** 目標被擊殺前的格子位置（供震動動畫在被移除後仍能定位）。 */
+  targetPosition?: Position
   skillId: string
   skillName: string
   damage: number
   nextHealth: number
   maxHealth: number
   innerPowerCost: number
+  /** 傷害型外功的暴擊率（內息每 1 點提供 2%）。 */
+  criticalRate?: number
+  /** 本次外功是否觸發暴擊。 */
+  criticalHit?: boolean
+  /** 本次外功是否觸發五行相生連攜。 */
+  synergy?: boolean
+  /** 本次外功是否觸發三重共振（連攜＋共鳴＋相剋）。 */
+  tripleResonance?: boolean
   targetMode?: 'self' | 'target' | 'nest'
   terrainResonance?: string
   defeated: boolean
@@ -911,6 +931,8 @@ export type GameState = {
   activeCreatureId: string | null
   operation: GameOperation
   blockingModal: BlockingModal
+  /** 三重共振震動動畫：記錄被命中生物的位置與觸發訊號；供該位置呈現 shake 動畫（即使生物已被移除）。 */
+  creatureShake?: { signal: number; targetId: string; position: Position; icon: string } | null
   gameOver?: boolean
   gameOverReason?: 'all-players-defeated' | 'any-base-destroyed'
   gameWon?: boolean

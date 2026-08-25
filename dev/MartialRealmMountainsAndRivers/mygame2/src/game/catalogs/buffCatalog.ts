@@ -33,6 +33,8 @@ export type BuffDefinition = {
   attributeMultiplier?: number
   /** 定身：持有此 Buff 的怪物本回合跳過移動。 */
   immobilized?: boolean
+  /** 震懾：三重共振觸發時施加，目標完全跳過下一個回合。 */
+  stunned?: boolean
   /** 是否在地圖生物 icon 上顯示顏色標記（需搭配 CSS `.creature--buff-*` 樣式）。 */
   mapMarker?: boolean
   /** 地圖標記的 CSS class 後綴；未指定時由 `id` 推導。 */
@@ -144,6 +146,7 @@ export const buffCatalog: BuffDefinition[] = [
   { id: 'earth-mountain-reflection', name: '反震', description: '受到傷害時反彈同等傷害。', duration: 'persistent', category: 'buff', reflectionPercent: 1, mapMarker: true, mapMarkerClass: 'earth-mountain' },
   { id: 'hundred-poison-rot', name: '腐骨毒', description: '中毒：每回合損失最大生命 10%，且五維降低 15%。', duration: 'rounds', durationRounds: 3, category: 'debuff', maxHealthDamagePercent: 0.1, attributeMultiplier: 0.85, mapMarker: true, mapMarkerClass: 'hundred-poison' },
   { id: 'trap-immobilize', name: '定身', description: '被陷阱定身，本回合無法移動。', duration: 'rounds', durationRounds: 3, immobilized: true },
+  { id: 'triple-resonance-stun', name: '震懾', description: '三重共振衝擊，目標下一個回合完全無法行動。', duration: 'rounds', durationRounds: 1, stunned: true, mapMarker: true, mapMarkerClass: 'triple-resonance-stun' },
   { id: 'return-light', name: '回光', description: '瀕死時攔截死亡，復活至 30% 血並清除所有 debuff（只保一次）。', duration: 'persistent', reviveOnDeath: true, reviveHealthPercent: 0.3, clearDebuffsOnRevive: true },
   // 類別 5：移動類 — 指定地形消耗降為 1
   { id: 'plain-step', name: '草行', description: '進入草地時，移動消耗降為 1。', duration: 'persistent', category: 'buff', terrainCostOverrides: { plain: 1 } },

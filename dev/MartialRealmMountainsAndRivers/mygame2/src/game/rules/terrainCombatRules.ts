@@ -1,5 +1,6 @@
 import type { TerrainType } from '../types'
 import type { MartialElement } from './skillRules'
+import { getElementDamageMultiplier, getSchoolElement, isElementGenerating } from './skillRules'
 
 /** 天地共鳴的傷害倍率。 */
 export const TERRAIN_RESONANCE_DAMAGE_MULTIPLIER = 1.25
@@ -56,4 +57,21 @@ export function getTerrainResonanceLabel(
   return isTerrainResonant(skillElement, terrain)
     ? `地形共鳴（${terrain}）：傷害 +25%、內力 -1`
     : undefined
+}
+
+/**
+ * 三重共振：一次外功攻擊同時滿足「相生連攜（內功生外功）＋天地共鳴＋五行相剋」。
+ * 觸發時對目標施加震懾，並播放地圖震動動畫。
+ */
+export function isTripleResonance(params: {
+  innerElement: MartialElement | undefined
+  outerElement: MartialElement | undefined
+  terrain: TerrainType | undefined
+  targetSchoolId?: string
+}): boolean {
+  const { innerElement, outerElement, terrain, targetSchoolId } = params
+  if (!isElementGenerating(innerElement, outerElement)) return false
+  if (!isTerrainResonant(outerElement, terrain)) return false
+  const targetElement = getSchoolElement(targetSchoolId)
+  return getElementDamageMultiplier(outerElement, targetElement) > 1
 }

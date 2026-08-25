@@ -22,6 +22,8 @@ export type StoredScenario = {
   sourceVersion?: string
   /** 玩家是否修改過此副本（自訂關卡恆為 true）。 */
   modified: boolean
+  /** 是否為開發中關卡（index 標記，UI 顯示「開發中」且不可開始）。 */
+  inDevelopment?: boolean
   scenario: ScenarioDefinition
 }
 
@@ -30,7 +32,7 @@ export type StoredScenarioMap = Record<string, StoredScenario>
 
 export type OfficialScenarioIndex = {
   version: string
-  scenarios: Array<{ id: string; file: string; version: string }>
+  scenarios: Array<{ id: string; file: string; version: string; inDevelopment?: boolean }>
 }
 
 export const SCENARIO_COPIES_STORAGE_KEY = 'mygame2.scenario-copies'
@@ -131,11 +133,16 @@ export async function syncOfficialScenarios(): Promise<{
         source: 'official',
         sourceVersion: official.version,
         modified: false,
+        inDevelopment: entry.inDevelopment ?? false,
         scenario: official,
       }
-    } else if (existing.source === 'official' && existing.sourceVersion !== official.version) {
-      // 官方版本更新 → 標記 outdated，保留副本供 UI 提示。
-      outdated.push({ official, stored: existing })
+    } else if (existing.source === 'official') {
+      // 官方副本：同步「開發中」標記（即使版本未變也可能調整 inDevelopment）。
+      stored[entry.id] = { ...existing, inDevelopment: entry.inDevelopment ?? false }
+      if (existing.sourceVersion !== official.version) {
+        // 官方版本更新 → 標記 outdated，保留副本供 UI 提示。
+        outdated.push({ official, stored: existing })
+      }
     }
   }
 
@@ -161,6 +168,7 @@ export function saveAsCustomScenario(stored: StoredScenario): StoredScenario {
     id: generateCustomScenarioId(),
     source: 'custom',
     modified: true,
+    inDevelopment: false,
     scenario: stored.scenario,
   }
   saveStoredScenario(custom)

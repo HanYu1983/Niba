@@ -161,6 +161,33 @@ describe('moveCreatures 陷阱觸發', () => {
     // 位置不變（原地不動）
     expect(movedCreature?.position).toEqual({ row: 3, column: 3 })
   })
+
+  it('持有震懾 Buff 的怪物本回合完全跳過行動', () => {
+    const creature = makeCreature('c1', { row: 3, column: 3 })
+    const stunnedCreature = {
+      ...creature,
+      buffs: [{ id: 'stun-1', definitionId: 'triple-resonance-stun', sourceId: 'player-1', remainingRounds: 1 }],
+    }
+    const state = makeGameState({ creatures: [stunnedCreature] })
+
+    const result = moveCreatures(
+      state.creatures,
+      state.map,
+      state.players,
+      state.bases,
+      state.resourcePoints,
+      state.defenseStructures ?? [],
+      state.itemPoints,
+      state.explorationEvents ?? [],
+      state.creatureNests,
+      state.ruins ?? [],
+      state.traps ?? [],
+    )
+
+    const skippedCreature = result.creatures.find((c) => c.id === 'c1')
+    // 震懾：完全不移動，且不產生移動日誌
+    expect(skippedCreature?.position).toEqual({ row: 3, column: 3 })
+  })
 })
 
 describe('moveCreatures 阻擋邏輯', () => {

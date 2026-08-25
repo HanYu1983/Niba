@@ -45,6 +45,8 @@ const OBJECTIVE_TYPE_OPTIONS = [
 function QuestSequencerModal({ open, scenario, onClose, onUpdateQuests, onUpdateScenario }: QuestSequencerModalProps) {
     const quests = scenario.quests
     const [objectiveType, setObjectiveType] = useState('defeat-creature')
+    // 每個 interact-object 目標的暫存輸入文字（避免受控元件 value 固定為空導致無法輸入）。
+    const [interactInputs, setInteractInputs] = useState<Record<string, string>>({})
 
     const updateObjective = (index: number, patch: Record<string, unknown>) => {
         onUpdateQuests({
@@ -230,16 +232,20 @@ function QuestSequencerModal({ open, scenario, onClose, onUpdateQuests, onUpdate
                                     <Flex gap={8}>
                                         <Input
                                             size="small"
-                                            value={''}
+                                            value={interactInputs[objective.id] ?? ''}
                                             placeholder="輸入物件 ID，按 Enter 加入清單"
-                                            onPressEnter={(e) => {
-                                                const value = (e.target as HTMLInputElement).value.trim()
+                                            onChange={(e) => setInteractInputs((prev) => ({
+                                                ...prev,
+                                                [objective.id]: e.target.value,
+                                            }))}
+                                            onPressEnter={() => {
+                                                const value = interactInputs[objective.id]?.trim() ?? ''
                                                 if (!value) return
                                                 const ids = objective.targetIds ?? []
                                                 if (!ids.includes(value)) {
                                                     updateObjective(index, { targetIds: [...ids, value] })
                                                 }
-                                                ;(e.target as HTMLInputElement).value = ''
+                                                setInteractInputs((prev) => ({ ...prev, [objective.id]: '' }))
                                             }}
                                             style={{ flex: 1 }}
                                         />

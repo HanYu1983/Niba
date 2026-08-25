@@ -3,9 +3,12 @@ import {
   BUILTIN_POLICY_IDS,
   DEFAULT_PLAYER_POLICY_ID,
   getAiJsonPolicy,
+  getCreatureAiParameters,
   getCreaturePolicyId,
+  getPlayerAiEmergency,
   loadAiPolicyRegistry,
 } from './aiPolicyRegistry'
+import { CREATURE_AGGRO_RANGES, getCreatureAggroRange } from '../../rules/creatureBehaviorRules'
 
 /**
  * 切片 H：內建 policy 載入與 fallback（重構文件 §6.6／§6.8）。
@@ -78,5 +81,24 @@ describe('aiPolicyRegistry', () => {
   it('玩家 AI 預設 policy id 常數指向內建 defensive-guardian', () => {
     expect(DEFAULT_PLAYER_POLICY_ID).toBe('defensive-guardian')
     expect(getAiJsonPolicy(DEFAULT_PLAYER_POLICY_ID, 'player').id).toBe('defensive-guardian')
+  })
+})
+
+describe('切片 K：policy 消費 resolvers', () => {
+  it('getPlayerAiEmergency 回 defensive-guardian 的 emergency（與既有常數一致）', () => {
+    expect(getPlayerAiEmergency()).toEqual({ minimumHealthPercent: 10, surroundedEnemyCount: 2, avoidFatalAttack: true })
+  })
+
+  it('getCreatureAiParameters：scavenger 讀內建 parameters；sieger 走 fallback 無參數', () => {
+    expect(getCreatureAiParameters('scavenger')).toEqual({ aggroRange: 5 })
+    expect(getCreatureAiParameters('sieger')).toBeUndefined()
+  })
+
+  it('getCreatureAggroRange：policy parameters 優先、fallback 人格退回常數表（零行為變化）', () => {
+    // scavenger 的 aggroRange 來自 creature-scavenger.json parameters（=5，與常數一致）。
+    expect(getCreatureAggroRange('scavenger')).toBe(5)
+    // hunter 沒有對應 policy → default-creature 無 parameters → 常數表。
+    expect(getCreatureAggroRange('hunter')).toBe(CREATURE_AGGRO_RANGES.hunter)
+    expect(getCreatureAggroRange('sieger')).toBe(CREATURE_AGGRO_RANGES.sieger)
   })
 })

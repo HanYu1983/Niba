@@ -2,6 +2,9 @@
   "id": "creature-scavenger",
   "version": 1,
   "actorKind": "creature",
+  "parameters": {
+    "aggroRange": 5
+  },
   "priorities": [
     { "condition": "self-preservation-needed", "action": "retreat", "priority": 100 },
     { "condition": "adjacent-hostile", "action": "attack-adjacent-hostile", "priority": 90 },

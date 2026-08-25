@@ -304,6 +304,15 @@ export function getCriticalRateForPlayer(player: PlayerState): number {
   return baseRate * multiplier + bonus
 }
 
+/** 傷害型外功的暴擊率：內息每 1 點提供 2%（與普通攻擊的臂力暴擊率共用暴擊 Buff 加成）。 */
+export function getExternalSkillCritRateForPlayer(player: PlayerState): number {
+  const baseRate = getEffectiveAttributesForPlayer(player).innerEnergy * 2
+  const definitions = getActiveBuffDefinitions(player)
+  const multiplier = definitions.reduce((rate, definition) => rate * (definition.criticalRateMultiplier ?? 1), 1)
+  const bonus = definitions.reduce((total, definition) => total + (definition.criticalRateBonus ?? 0), 0)
+  return baseRate * multiplier + bonus
+}
+
 /** 對指定 Buff 欄位求和（用於吸血、汲元、減傷、傷害加成等百分比欄位）。 */
 function sumBuffPercent(player: PlayerState, field: keyof BuffDefinition): number {
   return getActiveBuffDefinitions(player).reduce((total, definition) => {
