@@ -8,8 +8,10 @@ import type {
   PlayerState,
   ResourcePointState,
   AttackTargetType,
+  TargetingShape,
 } from '../types'
-import { isAdjacent, isSameOrAdjacent } from '../types'
+import { isSameOrAdjacent } from '../types'
+import { resolveTargetShapeCells } from './targetingRules'
 import { getBlockedPositions, getMovementCostTo } from './movementRules'
 import { canTraverseTerrain } from './playerDerivedRules'
 
@@ -18,14 +20,15 @@ export function getAttackTarget(
   player: PlayerState | null,
   targetType: AttackTargetType,
   targetId: string,
+  shape: TargetingShape = { kind: 'radius', range: 1 },
 ): { player: PlayerState; target: CreatureState | CreatureNestState } | null {
   const target = targetType === 'creature'
     ? state.creatures.find((currentCreature) => currentCreature.id === targetId)
     : state.creatureNests.find((nest) => nest.id === targetId)
 
-  if (!player || !target || target.health <= 0 || !isAdjacent(player.position, target.position)) {
-    return null
-  }
+  if (!player || !target || target.health <= 0) return null
+  const shapeCells = resolveTargetShapeCells(shape, player.position, state.map)
+  if (!shapeCells.has(`${target.position.row}-${target.position.column}`)) return null
 
   return { player, target }
 }

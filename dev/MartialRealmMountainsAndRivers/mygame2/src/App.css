@@ -1246,6 +1246,14 @@
   background: rgba(249, 115, 22, 0.18);
 }
 
+.map-grid__overlay--item-target {
+  z-index: 3;
+  border: 2px solid #e11d48;
+  border-radius: 3px;
+  background: rgba(225, 29, 72, 0.16);
+  animation: item-target-pulse 1s ease-in-out infinite alternate;
+}
+
 .map-grid__overlay--defense-range {
   z-index: 2;
   border: 1px dashed rgba(234, 179, 8, 0.9);
@@ -1300,6 +1308,11 @@
 @keyframes skill-target-pulse {
   from { box-shadow: inset 0 0 0 2px #facc15, 0 0 0 1px rgba(234, 179, 8, 0.55); }
   to { box-shadow: inset 0 0 0 2px #fff7ae, 0 0 0 3px rgba(234, 179, 8, 0.95); }
+}
+
+@keyframes item-target-pulse {
+  from { box-shadow: inset 0 0 0 2px #e11d48, 0 0 0 1px rgba(225, 29, 72, 0.55); }
+  to { box-shadow: inset 0 0 0 2px #fda4af, 0 0 0 3px rgba(225, 29, 72, 0.95); }
 }
 
 .map-grid__cell--move-interactive,
