@@ -106,6 +106,9 @@ export type BuffInstance = {
   insightTrueDamageMultiplier?: number
   visionRadiusBonus?: number
   maxStaminaBonus?: number
+  maxHealthMultiplier?: number
+  maxStaminaMultiplier?: number
+  maxInnerPowerMultiplier?: number
   gatherStaminaCostReduction?: number
   gatherDoubleYieldChance?: number
   buildingMaterialCostReduction?: number
@@ -194,6 +197,10 @@ export type PlayerState = {
   equipmentInventory?: EquipmentInstance[]
   equipmentLoadout?: EquipmentLoadout
   buffs?: BuffInstance[]
+  /** 角色外觀 icon（來自名册角色，可選）。 */
+  portrait?: string
+  /** 角色稱號（來自名册角色，可選）。 */
+  title?: string
   turnEnded: boolean,
 }
 

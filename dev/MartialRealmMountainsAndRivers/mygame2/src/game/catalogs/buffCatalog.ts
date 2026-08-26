@@ -73,6 +73,12 @@ export type BuffDefinition = {
   insightTrueDamageMultiplier?: number
   visionRadiusBonus?: number
   maxStaminaBonus?: number
+  /** 最大生命值上限倍率（resource-limit 原語；預設 1，可 <1 或 >1）。 */
+  maxHealthMultiplier?: number
+  /** 最大體力上限倍率（resource-limit 原語；預設 1）。 */
+  maxStaminaMultiplier?: number
+  /** 最大內力上限倍率（resource-limit 原語；預設 1）。 */
+  maxInnerPowerMultiplier?: number
   gatherStaminaCostReduction?: number
   gatherDoubleYieldChance?: number
   buildingMaterialCostReduction?: number
@@ -195,4 +201,15 @@ export const buffCatalog: BuffDefinition[] = [
   // 幽影流（無）：隱匿暗襲
   { id: 'ghost-shadow-shadow-veil', name: '幽影蔽身', description: '回避率 +10%。', duration: 'persistent', category: 'buff', evasionRateBonus: 10 },
   { id: 'ghost-shadow-lone-resolve', name: '孤影決絕', description: '血量低於 25% 時，五維 ×1.6，持續 3 回合。', duration: 'rounds', durationRounds: 3, category: 'buff', conditional: { when: 'health-below', threshold: 0.25, multiplier: 1.6 } },
+  // 天賦（passive-buff 原語）：由 talentCatalog 參照，開局隨角色注入為常駐 buff。
+  { id: 'talent-cartographer-vision', name: '天賦·製圖', description: '製圖師：自身地圖視野半徑 +1。', duration: 'persistent', category: 'buff', visionRadiusBonus: 1 },
+  { id: 'talent-scavenger-gather', name: '天賦·拾荒', description: '拾荒者：採集時 25% 機率雙倍產出。', duration: 'persistent', category: 'buff', gatherDoubleYieldChance: 0.25 },
+  { id: 'talent-phantom-dodge', name: '天賦·幻影步', description: '幻影步：回避率 +6%、暴擊率 -3%。', duration: 'persistent', category: 'buff', evasionRateBonus: 6, criticalRateBonus: -3 },
+  { id: 'talent-merchant-king', name: '天賦·商賈', description: '商賈巨擘：買入價格 -20%、賣出價格 +20%、普攻最終傷害 +10%。', duration: 'persistent', category: 'buff', shopBuyPriceDiscount: 0.2, shopSellPriceBonus: 0.2, damageDealtPercent: 0.1 },
+  // 天賦（resource-limit 原語）：內息調度 — 內力上限 ×1.1、體力上限 ×0.9。以 buff multiplier 表達，統一走 getResourceLimit 管線。
+  { id: 'talent-qi-master', name: '天賦·內息調度', description: '內息調度：內力上限 +10%、體力上限 -10%。', duration: 'persistent', category: 'buff', maxInnerPowerMultiplier: 1.1, maxStaminaMultiplier: 0.9 },
+  // 天賦（resource-limit）：簡化三雄類 — 單一增益、直觀無取捨。
+  { id: 'talent-vital-body', name: '天賦·金剛體魄', description: '金剛體魄：最大血量 +10%。', duration: 'persistent', category: 'buff', maxHealthMultiplier: 1.1 },
+  { id: 'talent-deep-dantian', name: '天賦·丹田凝息', description: '丹田凝息：最大內力 +10%。', duration: 'persistent', category: 'buff', maxInnerPowerMultiplier: 1.1 },
+  { id: 'talent-sturdy-legs', name: '天賦·力士雙足', description: '力士雙足：最大體力 +2。', duration: 'persistent', category: 'buff', maxStaminaBonus: 2 },
 ]

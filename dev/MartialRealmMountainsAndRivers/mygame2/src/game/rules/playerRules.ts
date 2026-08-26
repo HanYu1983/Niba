@@ -1,6 +1,5 @@
 import type { CreatureState, PlayerState } from '../types'
-import { getActiveBuffDefinitions, getEffectiveAttributesForPlayer, getMaxStaminaBonus, getStaminaToInnerPowerRatio } from './playerDerivedRules'
-import { getMaxHealth, getMaxInnerPower, getMaxStamina } from './playerStatsRules'
+import { getActiveBuffDefinitions, getPlayerResourceLimit, getStaminaToInnerPowerRatio } from './playerDerivedRules'
 
 export function recoverFivePercent(currentValue: number, maxValue: number): number {
   return Math.min(maxValue, currentValue + Math.max(1, Math.floor(maxValue * 0.05)))
@@ -16,10 +15,9 @@ export function tickPlayerBuffs(player: PlayerState): PlayerState {
     .filter((buff) => buff.remainingRounds === null || buff.remainingRounds > 0)
 
   const withBuffs = { ...player, buffs }
-  const effectiveAttributes = getEffectiveAttributesForPlayer(withBuffs)
-  const maxHealth = getMaxHealth(effectiveAttributes)
-  const maxStamina = getMaxStamina(effectiveAttributes) + getMaxStaminaBonus(withBuffs)
-  const maxInnerPower = getMaxInnerPower(effectiveAttributes)
+  const maxHealth = getPlayerResourceLimit(withBuffs, 'health')
+  const maxStamina = getPlayerResourceLimit(withBuffs, 'stamina')
+  const maxInnerPower = getPlayerResourceLimit(withBuffs, 'innerPower')
   return {
     ...withBuffs,
     maxHealth,
@@ -56,9 +54,8 @@ export function recoverLivingPlayers(players: PlayerState[]): PlayerState[] {
 /** 回合結束時套用週期性 Buff 效果（傷害與回復），回傳更新後的玩家陣列。 */
 export function applyPeriodicBuffEffects(players: PlayerState[]): PlayerState[] {
   return players.map((player) => {
-    const effectiveAttributes = getEffectiveAttributesForPlayer(player)
-    const effectiveMaxHealth = getMaxHealth(effectiveAttributes)
-    const effectiveMaxInnerPower = getMaxInnerPower(effectiveAttributes)
+    const effectiveMaxHealth = getPlayerResourceLimit(player, 'health')
+    const effectiveMaxInnerPower = getPlayerResourceLimit(player, 'innerPower')
 
     let damage = 0
     let healthRegen = 0

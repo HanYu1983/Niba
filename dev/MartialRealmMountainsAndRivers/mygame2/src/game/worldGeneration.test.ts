@@ -175,14 +175,20 @@ describe('createCreatureNests', () => {
   it('巢穴優先生成在流派親和地形', () => {
     const map = createMap(40, 40)
     const nests = createCreatureNests(map, 6, SEED, [])
+    // 五行對應：每個門派皆傾向生成在其五行對應的地形（含同五行的多流派）。
     const affinity: Record<string, string> = {
       'golden-body': 'mountain',
+      'sharp-edge': 'mountain',
       'swift-wind': 'forest',
-      'scarlet-flame': 'desert',
-      'frost-water': 'water',
-      'earth-mountain': 'plain',
-      'void-spirit': 'plain',
       'hundred-poison': 'forest',
+      'scarlet-flame': 'desert',
+      'blazing-sun': 'desert',
+      'frost-water': 'water',
+      'misty-rain': 'water',
+      'earth-mountain': 'plain',
+      'yellow-earth': 'plain',
+      'void-spirit': 'plain',
+      'ghost-shadow': 'plain',
     }
     const matched = nests.filter((nest) => {
       const cell = map.cells.find((candidate) => candidate.row === nest.position.row && candidate.column === nest.position.column)
@@ -269,6 +275,43 @@ describe('createInitialPlayers', () => {
       { itemId: 'heal-wound-medicine', quantity: 2 },
       { itemId: 'gather-qi-pill', quantity: 1 },
     ]))
+  })
+
+  it('套用五維加成到人類玩家', () => {
+    const players = createInitialPlayers(
+      [{ row: 1, column: 1 }],
+      20260803,
+      1,
+      { armStrength: 2, constitution: 0, agility: 1, innerEnergy: 0, insight: 0 },
+    )
+    expect(players[0]?.attributes.armStrength).toBe(10)
+    expect(players[0]?.attributes.agility).toBe(9)
+    expect(players[0]?.attributes.constitution).toBe(8)
+  })
+
+  it('五維加成不套用到 AI 玩家', () => {
+    const players = createInitialPlayers(
+      [{ row: 1, column: 1 }, { row: 2, column: 2 }],
+      20260803,
+      1, // 只有第一位是人類
+      { armStrength: 5, constitution: 0, agility: 0, innerEnergy: 0, insight: 0 },
+    )
+    expect(players[0]?.attributes.armStrength).toBe(13)
+    expect(players[1]?.attributes.armStrength).toBe(8)
+    expect(players[1]?.isAI).toBe(true)
+  })
+
+  it('套用名册角色名稱到第一位人類玩家', () => {
+    const players = createInitialPlayers(
+      [{ row: 1, column: 1 }, { row: 2, column: 2 }],
+      20260803,
+      1,
+      undefined,
+      '張三',
+    )
+    expect(players[0]?.name).toBe('張三')
+    // AI 玩家不受影響，仍為隨機名稱。
+    expect(players[1]?.name).not.toBe('張三')
   })
 })
 

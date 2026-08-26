@@ -10,29 +10,27 @@ import {
   getEquipment,
   getEquipmentInventory,
   getEquipmentLoadout,
+  getPlayerResourceLimit,
 } from './playerDerivedRules'
 import { getActionablePlayer } from './actionCostRules'
-import { getMaxHealth, getMaxInnerPower, getMaxStamina } from './playerStatsRules'
 import { applyBaseHealthBonuses } from './baseRules'
 
 export function applyEquipmentLoadout(player: PlayerState, equipmentLoadout: EquipmentLoadout): PlayerState {
   const baseAttributes = player.baseAttributes ?? player.attributes
   const attributes = getEffectiveAttributesForPlayer({ ...player, equipmentLoadout })
-  const maxHealth = getMaxHealth(attributes)
-  const maxStamina = getMaxStamina(attributes)
-  const maxInnerPower = getMaxInnerPower(attributes)
+  const updated = { ...player, baseAttributes, attributes, equipmentLoadout }
+  const maxHealth = getPlayerResourceLimit(updated, 'health')
+  const maxStamina = getPlayerResourceLimit(updated, 'stamina')
+  const maxInnerPower = getPlayerResourceLimit(updated, 'innerPower')
 
   return {
-    ...player,
-    baseAttributes,
-    attributes,
+    ...updated,
     maxHealth,
     health: Math.min(player.health, maxHealth),
     maxStamina,
     stamina: Math.min(player.stamina, maxStamina),
     maxInnerPower,
     innerPower: Math.min(player.innerPower, maxInnerPower),
-    equipmentLoadout,
   }
 }
 

@@ -5,6 +5,7 @@ import {
   type MapCell,
   type MapState,
   type PlayerState,
+  type PlayerAttributes,
   type CreatureState,
   type ItemPointState,
   type ExplorationEventState,
@@ -17,6 +18,7 @@ import {
   isSamePosition,
 } from './types'
 import { buildingCatalog } from './catalogs/buildingCatalog'
+import { getTalentBuffs } from './catalogs/talentCatalog'
 import { martialSchoolCatalog, type MartialSchoolId } from './catalogs/martialSchoolCatalog'
 import { cityNames, playerNames, resourceNames, villageNames } from './catalogs/placeNameCatalog'
 import {
@@ -31,7 +33,7 @@ import { getPlayerVisibleCellIds } from './rules/visibilityRules'
 import { NEST_SPAWN_BASE_CHANCE, getNestMaxHealth } from './actions/creatureActions'
 import { createExplorationEventsFromCatalog } from './events/eventSpawner'
 import { createCharacterState } from './characterFactory'
-import { getSchoolElement } from './catalogs/skillProgressionCatalog'
+import { getSchoolElement, martialSchoolCatalog as progressionMartialSchoolCatalog, type SchoolElement } from './catalogs/skillProgressionCatalog'
 
 /**
  * 世界生成純函式集合。
@@ -203,19 +205,27 @@ export function createCreatureNests(
   const schools: MartialSchoolId[] = martialSchoolCatalog.map((school) => school.id)
   const behaviors: CreatureBehaviorType[] = CREATURE_BEHAVIOR_BY_INDEX
   const random = createSeededRandom(seed + 999)
-  const schoolByTerrain: Partial<Record<TerrainType, MartialSchoolId>> = {
-    mountain: 'golden-body',
-    forest: 'swift-wind',
-    desert: 'scarlet-flame',
-    water: 'frost-water',
-    plain: 'earth-mountain',
+  // 地形 → 五行屬性對應：依地形推導巢穴應有的五行，再從該五行的門派中隨機選取。
+  const elementByTerrain: Partial<Record<TerrainType, SchoolElement>> = {
+    mountain: 'metal',
+    forest: 'wood',
+    desert: 'fire',
+    water: 'water',
+    plain: 'earth',
   }
-  // 70% 依巢穴所在格地形決定流派，30% 完全隨機，保留世界生成的不確定性。
+  // 依五行屬性取得 skillProgressionCatalog 中同屬性的門派清單；無對應屬性時回傳所有門派。
+  const schoolsByElement = (element: SchoolElement): MartialSchoolId[] => {
+    const matches = progressionMartialSchoolCatalog
+      .filter((school) => school.element === element)
+      .map((school) => school.id as MartialSchoolId)
+    return matches.length > 0 ? matches : schools
+  }
+  // 70% 依巢穴所在格地形對應的五行決定流派，30% 完全隨機，保留世界生成的不確定性。
   const selectedSchools = positions.map((position) => {
     const terrain = map.cells.find((cell) => cell.row === position.row && cell.column === position.column)?.terrain
-    const terrainSchool = terrain ? schoolByTerrain[terrain] : undefined
-    return terrainSchool && random() < 0.7
-      ? terrainSchool
+    const terrainElement = terrain ? elementByTerrain[terrain] : undefined
+    return terrainElement && random() < 0.7
+      ? pickRandom(schoolsByElement(terrainElement), random) ?? 'void-spirit'
       : pickRandom(schools, random) ?? 'void-spirit'
   })
 
@@ -556,17 +566,35 @@ export function createRoamerCreatures(
 
 /**
  * 建立開局玩家清單。
+ *
+ * @param humanAttributeBonuses 可選：套用於人類玩家的五維永久加成（來自名册角色）。
+ *   僅套用於 index < humanPlayerCount 的人類玩家；AI 玩家維持預設全 8。
+ * @param humanName 可選：套用於第一位人類玩家的名稱（來自名册角色）。
+ * @param initialInternalSkillId 可選：第一位人類玩家的初始內功（預設吐納功）。
+ * @param initialExternalSkillIds 可選：第一位人類玩家的初始外功清單。
+ * @param talentIds 可選：第一位人類玩家所屬名册角色的天賦 ids；開局會轉為常駐 buff 注入。
+ * @param humanPortrait 可選：第一位人類玩家的外觀 icon（來自名册角色）。
+ * @param humanTitle 可選：第一位人類玩家的稱號（來自名册角色）。
  */
 export function createInitialPlayers(
   playerPositions: Position[],
   seed = 20260803,
   humanPlayerCount = playerPositions.length,
+  humanAttributeBonuses?: PlayerAttributes,
+  humanName?: string,
+  initialInternalSkillId?: string,
+  initialExternalSkillIds?: string[],
+  talentIds?: string[],
+  humanPortrait?: string,
+  humanTitle?: string,
 ): PlayerState[] {
   const random = createSeededRandom(seed + 111)
   const availableNames = [...playerNames]
   const usedNames = new Set<string>()
   return playerPositions.map((position, index) => {
-    let name = pickRandom(availableNames, random)
+    const isAI = index >= humanPlayerCount
+    // 第一位人類玩家若指定了名册角色名稱，直接採用；其餘照常隨機取名。
+    let name = !isAI && index === 0 && humanName ? humanName : pickRandom(availableNames, random)
     const nameIndex = name ? availableNames.indexOf(name) : -1
     if (nameIndex >= 0) availableNames.splice(nameIndex, 1)
     if (!name || usedNames.has(name)) {
@@ -578,18 +606,36 @@ export function createInitialPlayers(
       }
     }
     usedNames.add(name)
+    const base = { armStrength: 8, constitution: 8, agility: 8, innerEnergy: 8, insight: 8 }
+    const attributes = !isAI && humanAttributeBonuses
+      ? {
+          armStrength: base.armStrength + (humanAttributeBonuses.armStrength ?? 0),
+          constitution: base.constitution + (humanAttributeBonuses.constitution ?? 0),
+          agility: base.agility + (humanAttributeBonuses.agility ?? 0),
+          innerEnergy: base.innerEnergy + (humanAttributeBonuses.innerEnergy ?? 0),
+          insight: base.insight + (humanAttributeBonuses.insight ?? 0),
+        }
+      : base
+    // 第一位人類玩家套用名册角色的初始功法；其餘維持預設吐納功、無外功。
+    const useCharacterSkills = !isAI && index === 0
+    const innerSkillId = useCharacterSkills && initialInternalSkillId ? initialInternalSkillId : 'tuna-gong'
+    const externalSkillIds = useCharacterSkills ? (initialExternalSkillIds ?? []) : []
+    const talentBuffs = useCharacterSkills ? getTalentBuffs(talentIds ?? []) : []
     return createCharacterState({
       id: `player-${index + 1}`,
       name,
-      isAI: index >= humanPlayerCount,
-      innerSkillId: 'tuna-gong',
+      isAI,
+      portrait: useCharacterSkills ? humanPortrait : undefined,
+      title: useCharacterSkills ? humanTitle : undefined,
+      innerSkillId,
       position,
-      attributes: { armStrength: 8, constitution: 8, agility: 8, innerEnergy: 8, insight: 8 },
+      attributes,
+      buffs: talentBuffs,
       prestige: 0,
       money: 30,
       experience: 0,
-      externalSkillIds: [],
-      equippedExternalSkillIds: [],
+      externalSkillIds,
+      equippedExternalSkillIds: externalSkillIds,
       // 玩家起始道具：絆馬索、定身鎖、探地符各 1，另有療傷藥 2 與聚氣丹 1（人類與 AI 皆給）。
       inventory: [
         { itemId: 'hobble-rope', quantity: 1 },
