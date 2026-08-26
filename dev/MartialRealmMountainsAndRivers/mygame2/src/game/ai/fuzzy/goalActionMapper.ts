@@ -384,6 +384,17 @@ function buildConstructionActions(
     }]
   }
 
+  // move-to-base-for-build：建料滿但不在據點旁，移動到據點
+  if (action === 'move-to-base-for-build' && result.target?.kind === 'resource-point') {
+    const moveDest = findClosestReachablePosition(state, player, result.target.position)
+    return [{
+      type: 'move',
+      actor,
+      destination: moveDest,
+      reason: '建設：移動到據點準備建造',
+    }]
+  }
+
   // work：據點未 active，嘗試採集資源
   if (action === 'work') {
     return [{ type: 'hold', actor, reason: '打工：據點未啟用，採集資源中' }]

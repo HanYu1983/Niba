@@ -136,6 +136,8 @@ export interface FuzzyInputs {
   buildableDefenseStructure: { type: string; name: string } | undefined
   /** 據點附近的威脅數量（曼哈頓 ≤ 5） */
   threatCountNearBase: number
+  /** 是否與最近的 active 據點相鄰 */
+  isAdjacentToBase: boolean
   /** 各目標可行性資料 */
   feasibility: FeasibilityData
 }
@@ -354,6 +356,9 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
     }).length
     : 0
 
+  // 是否與最近 active 據點相鄰
+  const isAdjacentToBase = nearestBase != null && manhattan(player.position, nearestBase.position) === 1
+
   // ── feasibility ────────────────────────────────────────────────
 
   // 學招（門派）：學費 + 距離
@@ -434,6 +439,7 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
     buyableHealItem,
     buildableDefenseStructure,
     threatCountNearBase,
+    isAdjacentToBase,
     feasibility: {
       learnGateCost,
       canAffordGateLearn,

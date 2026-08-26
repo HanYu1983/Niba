@@ -287,7 +287,7 @@ export function evaluateAllGoals(inputs: FuzzyInputs): Record<GoalName, GoalResu
 // 建料滿 + 可蓋 → 高分 build；建料不足 + 有資源點 → 移動/採集
 
 function evaluateConstruction(inputs: FuzzyInputs): GoalResult {
-  const { materialRatio, canBuild, buildableBuilding, nearestBase, nearestResourcePoint, distToNearestResourcePoint, isAdjacentToResourcePoint, visibleBaseIds } = inputs
+  const { materialRatio, canBuild, buildableBuilding, nearestBase, nearestResourcePoint, distToNearestResourcePoint, isAdjacentToResourcePoint, visibleBaseIds, isAdjacentToBase } = inputs
 
   // 無可見據點 → 分數 0
   if (visibleBaseIds.length === 0) {
@@ -305,12 +305,21 @@ function evaluateConstruction(inputs: FuzzyInputs): GoalResult {
     }
   }
 
-  // 情境 B：建料滿 + 可建造 → 高分 + build target
+  // 情境 B：建料滿 + 可建造
   if (materialRatio >= 1 && canBuild && buildableBuilding && nearestBase) {
+    // B1：已在據點旁 → 直接建造（高分）
+    if (isAdjacentToBase) {
+      return {
+        score: 0.9,
+        target: { kind: 'build', baseId: nearestBase.id, buildingId: buildableBuilding.id, buildingName: buildableBuilding.name },
+        context: { materialRatio, action: 'build' },
+      }
+    }
+    // B2：不在據點旁 → 移動到據點（中高分）
     return {
-      score: 0.9,
-      target: { kind: 'build', baseId: nearestBase.id, buildingId: buildableBuilding.id, buildingName: buildableBuilding.name },
-      context: { materialRatio, action: 'build' },
+      score: 0.7,
+      target: { kind: 'resource-point', resourcePointId: '', position: nearestBase.position },
+      context: { materialRatio, action: 'move-to-base-for-build' },
     }
   }
 
