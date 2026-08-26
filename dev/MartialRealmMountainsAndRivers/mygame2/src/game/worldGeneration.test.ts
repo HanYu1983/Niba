@@ -276,6 +276,43 @@ describe('createInitialPlayers', () => {
       { itemId: 'gather-qi-pill', quantity: 1 },
     ]))
   })
+
+  it('套用五維加成到人類玩家', () => {
+    const players = createInitialPlayers(
+      [{ row: 1, column: 1 }],
+      20260803,
+      1,
+      { armStrength: 2, constitution: 0, agility: 1, innerEnergy: 0, insight: 0 },
+    )
+    expect(players[0]?.attributes.armStrength).toBe(10)
+    expect(players[0]?.attributes.agility).toBe(9)
+    expect(players[0]?.attributes.constitution).toBe(8)
+  })
+
+  it('五維加成不套用到 AI 玩家', () => {
+    const players = createInitialPlayers(
+      [{ row: 1, column: 1 }, { row: 2, column: 2 }],
+      20260803,
+      1, // 只有第一位是人類
+      { armStrength: 5, constitution: 0, agility: 0, innerEnergy: 0, insight: 0 },
+    )
+    expect(players[0]?.attributes.armStrength).toBe(13)
+    expect(players[1]?.attributes.armStrength).toBe(8)
+    expect(players[1]?.isAI).toBe(true)
+  })
+
+  it('套用名册角色名稱到第一位人類玩家', () => {
+    const players = createInitialPlayers(
+      [{ row: 1, column: 1 }, { row: 2, column: 2 }],
+      20260803,
+      1,
+      undefined,
+      '張三',
+    )
+    expect(players[0]?.name).toBe('張三')
+    // AI 玩家不受影響，仍為隨機名稱。
+    expect(players[1]?.name).not.toBe('張三')
+  })
 })
 
 describe('createRuins', () => {

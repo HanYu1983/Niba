@@ -5,6 +5,7 @@ import {
   type GameSettings,
   type MapState,
   type PlayerState,
+  type PlayerAttributes,
   type CreatureState,
   type BaseState,
   type CreatureNestState,
@@ -360,11 +361,11 @@ export const gameStore = {
     return allocated
   },
 
-  startGame: (settings: GameSettings) => {
+  startGame: (settings: GameSettings, selectedCharacter?: { attributeBonuses: PlayerAttributes; name?: string }) => {
     lastGameSettings = { ...settings }
     pendingCreatureTurn = null
     pendingCreatureTurnBasePlayers = null
-    gameState = createGameState(lastGameSettings)
+    gameState = createGameState(lastGameSettings, selectedCharacter)
     listeners.forEach((listener) => listener())
   },
 

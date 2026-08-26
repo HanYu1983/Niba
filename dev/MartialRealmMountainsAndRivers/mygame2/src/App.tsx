@@ -14,6 +14,7 @@ import QuestTrackerPanel from './components/QuestTrackerPanel'
 import useKeyboardShortcuts from './hooks/useKeyboardShortcuts'
 import useModalState from './hooks/useModalState'
 import GameStartScreen from './components/GameStartScreen'
+import type { PersistentCharacter } from './game/characterRoster'
 import SkillTestPage from './components/SkillTestPage'
 import EditorApp from './editor/EditorApp'
 import { allExternalSkillCatalog } from './game/catalogs/martialHallSkillCatalog'
@@ -252,8 +253,8 @@ function App() {
     },
   })
 
-  const startGame = (settings: GameSettings) => {
-    gameStore.startGame(settings)
+  const startGame = (settings: GameSettings, selectedCharacter?: PersistentCharacter) => {
+    gameStore.startGame(settings, selectedCharacter)
     setScreen('game')
     trackEvent('Gameplay', 'game_start', 'quick_start')
   }

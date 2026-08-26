@@ -6,6 +6,7 @@ import type {
   GameState,
   ItemPointState,
   MapState,
+  PlayerAttributes,
   ResourcePointState,
   RuinState,
   SectGateState,
@@ -45,7 +46,10 @@ const WORLD_SEED_OFFSETS = {
   sectGates: 911,
 } as const
 
-export function createGameState(settings: GameSettings = DEFAULT_GAME_SETTINGS): GameState {
+export function createGameState(
+  settings: GameSettings = DEFAULT_GAME_SETTINGS,
+  selectedCharacter?: { attributeBonuses: PlayerAttributes; name?: string },
+): GameState {
   const humanPlayerCount = Math.min(4, Math.max(1, Math.round(settings.playerCount ?? 1)))
   const aiPlayerCount = Math.min(8, Math.max(0, Math.round(settings.aiPlayerCount ?? 0)))
   const playerCount = humanPlayerCount + aiPlayerCount
@@ -86,7 +90,13 @@ export function createGameState(settings: GameSettings = DEFAULT_GAME_SETTINGS):
   const creatureNests = createCreatureNests(map, settings.nestCount, settings.seed + WORLD_SEED_OFFSETS.nests, [
     ...interactionPointPositions,
   ])
-  const players = createInitialPlayers(playerPositions, settings.seed + WORLD_SEED_OFFSETS.players, humanPlayerCount)
+  const players = createInitialPlayers(
+    playerPositions,
+    settings.seed + WORLD_SEED_OFFSETS.players,
+    humanPlayerCount,
+    selectedCharacter?.attributeBonuses,
+    selectedCharacter?.name,
+  )
   const aiOrders: AiOrder[] = players
     .filter((p) => p.isAI)
     .map((p) => ({ id: `ai-order-test1-${p.id}`, type: 'test1' as const, aiPlayerId: p.id, priority: 50, status: 'active' as const }))

@@ -5,6 +5,7 @@ import {
   type MapCell,
   type MapState,
   type PlayerState,
+  type PlayerAttributes,
   type CreatureState,
   type ItemPointState,
   type ExplorationEventState,
@@ -564,17 +565,25 @@ export function createRoamerCreatures(
 
 /**
  * 建立開局玩家清單。
+ *
+ * @param humanAttributeBonuses 可選：套用於人類玩家的五維永久加成（來自名册角色）。
+ *   僅套用於 index < humanPlayerCount 的人類玩家；AI 玩家維持預設全 8。
+ * @param humanName 可選：套用於第一位人類玩家的名稱（來自名册角色）。
  */
 export function createInitialPlayers(
   playerPositions: Position[],
   seed = 20260803,
   humanPlayerCount = playerPositions.length,
+  humanAttributeBonuses?: PlayerAttributes,
+  humanName?: string,
 ): PlayerState[] {
   const random = createSeededRandom(seed + 111)
   const availableNames = [...playerNames]
   const usedNames = new Set<string>()
   return playerPositions.map((position, index) => {
-    let name = pickRandom(availableNames, random)
+    const isAI = index >= humanPlayerCount
+    // 第一位人類玩家若指定了名册角色名稱，直接採用；其餘照常隨機取名。
+    let name = !isAI && index === 0 && humanName ? humanName : pickRandom(availableNames, random)
     const nameIndex = name ? availableNames.indexOf(name) : -1
     if (nameIndex >= 0) availableNames.splice(nameIndex, 1)
     if (!name || usedNames.has(name)) {
@@ -586,13 +595,23 @@ export function createInitialPlayers(
       }
     }
     usedNames.add(name)
+    const base = { armStrength: 8, constitution: 8, agility: 8, innerEnergy: 8, insight: 8 }
+    const attributes = !isAI && humanAttributeBonuses
+      ? {
+          armStrength: base.armStrength + (humanAttributeBonuses.armStrength ?? 0),
+          constitution: base.constitution + (humanAttributeBonuses.constitution ?? 0),
+          agility: base.agility + (humanAttributeBonuses.agility ?? 0),
+          innerEnergy: base.innerEnergy + (humanAttributeBonuses.innerEnergy ?? 0),
+          insight: base.insight + (humanAttributeBonuses.insight ?? 0),
+        }
+      : base
     return createCharacterState({
       id: `player-${index + 1}`,
       name,
-      isAI: index >= humanPlayerCount,
+      isAI,
       innerSkillId: 'tuna-gong',
       position,
-      attributes: { armStrength: 8, constitution: 8, agility: 8, innerEnergy: 8, insight: 8 },
+      attributes,
       prestige: 0,
       money: 30,
       experience: 0,
