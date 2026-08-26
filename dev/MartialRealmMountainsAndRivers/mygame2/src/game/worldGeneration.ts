@@ -31,7 +31,7 @@ import { getPlayerVisibleCellIds } from './rules/visibilityRules'
 import { NEST_SPAWN_BASE_CHANCE, getNestMaxHealth } from './actions/creatureActions'
 import { createExplorationEventsFromCatalog } from './events/eventSpawner'
 import { createCharacterState } from './characterFactory'
-import { getSchoolElement } from './catalogs/skillProgressionCatalog'
+import { getSchoolElement, martialSchoolCatalog as progressionMartialSchoolCatalog, type SchoolElement } from './catalogs/skillProgressionCatalog'
 
 /**
  * 世界生成純函式集合。
@@ -203,19 +203,27 @@ export function createCreatureNests(
   const schools: MartialSchoolId[] = martialSchoolCatalog.map((school) => school.id)
   const behaviors: CreatureBehaviorType[] = CREATURE_BEHAVIOR_BY_INDEX
   const random = createSeededRandom(seed + 999)
-  const schoolByTerrain: Partial<Record<TerrainType, MartialSchoolId>> = {
-    mountain: 'golden-body',
-    forest: 'swift-wind',
-    desert: 'scarlet-flame',
-    water: 'frost-water',
-    plain: 'earth-mountain',
+  // 地形 → 五行屬性對應：依地形推導巢穴應有的五行，再從該五行的門派中隨機選取。
+  const elementByTerrain: Partial<Record<TerrainType, SchoolElement>> = {
+    mountain: 'metal',
+    forest: 'wood',
+    desert: 'fire',
+    water: 'water',
+    plain: 'earth',
   }
-  // 70% 依巢穴所在格地形決定流派，30% 完全隨機，保留世界生成的不確定性。
+  // 依五行屬性取得 skillProgressionCatalog 中同屬性的門派清單；無對應屬性時回傳所有門派。
+  const schoolsByElement = (element: SchoolElement): MartialSchoolId[] => {
+    const matches = progressionMartialSchoolCatalog
+      .filter((school) => school.element === element)
+      .map((school) => school.id as MartialSchoolId)
+    return matches.length > 0 ? matches : schools
+  }
+  // 70% 依巢穴所在格地形對應的五行決定流派，30% 完全隨機，保留世界生成的不確定性。
   const selectedSchools = positions.map((position) => {
     const terrain = map.cells.find((cell) => cell.row === position.row && cell.column === position.column)?.terrain
-    const terrainSchool = terrain ? schoolByTerrain[terrain] : undefined
-    return terrainSchool && random() < 0.7
-      ? terrainSchool
+    const terrainElement = terrain ? elementByTerrain[terrain] : undefined
+    return terrainElement && random() < 0.7
+      ? pickRandom(schoolsByElement(terrainElement), random) ?? 'void-spirit'
       : pickRandom(schools, random) ?? 'void-spirit'
   })
 

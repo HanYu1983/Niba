@@ -175,14 +175,20 @@ describe('createCreatureNests', () => {
   it('巢穴優先生成在流派親和地形', () => {
     const map = createMap(40, 40)
     const nests = createCreatureNests(map, 6, SEED, [])
+    // 五行對應：每個門派皆傾向生成在其五行對應的地形（含同五行的多流派）。
     const affinity: Record<string, string> = {
       'golden-body': 'mountain',
+      'sharp-edge': 'mountain',
       'swift-wind': 'forest',
-      'scarlet-flame': 'desert',
-      'frost-water': 'water',
-      'earth-mountain': 'plain',
-      'void-spirit': 'plain',
       'hundred-poison': 'forest',
+      'scarlet-flame': 'desert',
+      'blazing-sun': 'desert',
+      'frost-water': 'water',
+      'misty-rain': 'water',
+      'earth-mountain': 'plain',
+      'yellow-earth': 'plain',
+      'void-spirit': 'plain',
+      'ghost-shadow': 'plain',
     }
     const matched = nests.filter((nest) => {
       const cell = map.cells.find((candidate) => candidate.row === nest.position.row && candidate.column === nest.position.column)
