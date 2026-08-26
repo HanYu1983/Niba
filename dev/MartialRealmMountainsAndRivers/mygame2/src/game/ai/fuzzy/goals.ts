@@ -38,10 +38,10 @@ export function evaluateSelfPreservation(inputs: FuzzyInputs): GoalResult {
   const f_hitsLow = trapezoid(hitsSurvivable, 0, 0, 1.5, 3)
   const f_threatClose = trapezoid(distToNearestThreat, 0, 0, 2, 4)
 
-  const score = fuzzyOr(
+  const score = Math.min(0.9, fuzzyOr(
     f_hitsLow,
     fuzzyAnd(f_hitsLow, f_threatClose),
-  )
+  ))
 
   return {
     score,
@@ -137,25 +137,27 @@ function evaluateUseItem(inputs: FuzzyInputs): GoalResult {
     return { score: 0 }
   }
 
-  // 回血道具：恢復量 / 缺血量，佔比越高分數越高
+  // 回血道具：恢復量 / 缺血量，佔比越高分數越高；可完全恢復時 score = 1
   if (bestItemToUse.effect === 'health') {
     const missingHealth = 1 - healthRatio
     if (missingHealth <= 0) return { score: 0 }
-    const restoreRatio = Math.min(1, bestItemToUse.effectValue / (missingHealth * 100))
+    const restoreRatio = bestItemToUse.effectValue / (missingHealth * 100)
+    const score = restoreRatio >= 1 ? 1 : restoreRatio
     return {
-      score: restoreRatio,
+      score,
       target: { kind: 'use-item', itemId: bestItemToUse.id },
       context: { effect: bestItemToUse.effect, name: bestItemToUse.name, effectValue: bestItemToUse.effectValue },
     }
   }
 
-  // 回內力道具：恢復量 / 缺內力量，佔比越高分數越高
+  // 回內力道具：恢復量 / 缺內力量，佔比越高分數越高；可完全恢復時 score = 1
   if (bestItemToUse.effect === 'inner-power') {
     const missingInnerPower = 1 - innerPowerRatio
     if (missingInnerPower <= 0) return { score: 0 }
-    const restoreRatio = Math.min(1, bestItemToUse.effectValue / (missingInnerPower * 100))
+    const restoreRatio = bestItemToUse.effectValue / (missingInnerPower * 100)
+    const score = restoreRatio >= 1 ? 1 : restoreRatio
     return {
-      score: restoreRatio,
+      score,
       target: { kind: 'use-item', itemId: bestItemToUse.id },
       context: { effect: bestItemToUse.effect, name: bestItemToUse.name, effectValue: bestItemToUse.effectValue },
     }
