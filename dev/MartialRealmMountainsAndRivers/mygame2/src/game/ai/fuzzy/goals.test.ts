@@ -91,9 +91,14 @@ describe('evaluateCollectItems', () => {
 })
 
 describe('evaluatePositioning', () => {
-  it('無出口（exitCount=0）→ score 應該高於 0.9', () => {
-    const result = evaluatePositioning(makeInputs({ exitCount: 0 }))
+  it('無出口（exitCount=0）且有怪 → score 應該高於 0.9', () => {
+    const result = evaluatePositioning(makeInputs({ exitCount: 0, distToNearestThreat: 1 }))
     expect(result.score).toBeGreaterThan(0.9)
+  })
+
+  it('無出口（exitCount=0）且無怪 → score 應該低於 0.4（除 3）', () => {
+    const result = evaluatePositioning(makeInputs({ exitCount: 0 }))
+    expect(result.score).toBeLessThan(0.4)
   })
 
   it('出口多（exitCount=4）→ score 應該低於 0.1', () => {

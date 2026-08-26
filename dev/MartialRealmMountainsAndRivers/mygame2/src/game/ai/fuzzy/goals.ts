@@ -285,6 +285,9 @@ export function evaluatePositioning(inputs: FuzzyInputs): GoalResult {
     ? Math.min(1, f_fewExits + f_threatClose * 0.3)
     : f_fewExits
 
+  // 四周無怪時分數除 3
+  const finalScore = distToNearestThreat === Infinity ? score / 3 : score
+
   // target：無出口 → 用 nearestCreature（由 mapper 找最近怪）；有出口 → exit
   let target: GoalTarget | undefined
   if (exitCount === 0 && distToNearestThreat < Infinity) {
@@ -295,7 +298,7 @@ export function evaluatePositioning(inputs: FuzzyInputs): GoalResult {
   }
 
   return {
-    score,
+    score: finalScore,
     target,
     context: { exitCount, distToNearestThreat },
   }
