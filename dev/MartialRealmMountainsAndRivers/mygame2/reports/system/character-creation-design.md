@@ -220,6 +220,8 @@ export type TalentDefinition = {
 }
 ```
 
+> **📌 實作現況（dev-log）**：`TalentEffect` 的 `passive-buff` 欄位實作時命名為 `buffId`（非 `definitionId`）；`TalentDefinition` 另增 `available: boolean` 標記效果是否已在 runtime 生效（resource-limit / hook 尚未接入時標 `false` 不開放選用）。以上為資料結構實作時的微調，不改變「三類原語」抽象本意。
+
 ### 三類原語的對應機制
 
 | 原語 | 實作基座（已存在） | 說明 |
@@ -227,6 +229,8 @@ export type TalentDefinition = {
 | ① `passive-buff` | `buffCatalog` 的 `BuffDefinition` + `playerDerivedRules.sumBuffPercent` | 天賦 = 一個「永遠啟用的被動 buff」。數值型一律走 buff field |
 | ② `resource-limit` | `playerStatsRules` 收斂的 `getResourceLimit` | 影響血量／體力／內力上限，走單一入口 |
 | ③ `hook` | 各規則／action 的掛鉤點 | 需改寫流程的天賦（採集轉換、槽位、行動消耗） |
+
+> **📌 實作進度**：① 已上線（4 個天賦：製圖師／拾荒者／幻影步／商賈巨擘）；② 已上線（`qi-master` 內息調度，採 `max{Health,Stamina,InnerPower}Multiplier` buff 欄位表達，統一走 `getPlayerResourceLimit`）；③ **尚未實作**（`alchemist` / `chain-hand` / `smith` 需先建立鉤子點入口）。
 
 ### 保留的 8 個天賦 → 原語歸屬與掛鉤
 
@@ -240,6 +244,8 @@ export type TalentDefinition = {
 | `phantom-dodge` | ① passive-buff | — | 映射 `evasionRateBonus` / `criticalRateBonus` |
 | `smith` | ③ hook | `equipment-slot` | 多穿一個配件槽 |
 | `merchant-king` | ① passive-buff | — | 買價／賣價／普攻傷害全走既有欄位 |
+
+> **📌 已實作天賦（catalog 現況）**：`cartographer`（視野半徑 +1）、`scavenger`（採集 25% 雙倍）、`phantom-dodge`（回避 +6%、暴擊 **-3%** — 原設計 +6% 因過強下修）、`merchant-king`（買 -20%、賣 +20%、普攻 +10%）、`qi-master`（內力 ×1.1、體力 ×0.9，以 `talent-qi-master` buff 表達）。`alchemist` / `chain-hand` / `smith` 尚未加入。
 
 > **前 5 個原語「① 被動 buff」今天即可上線**：R1 到 R3 的抽象都是現成的（`BuffDefinition` + `sumBuffPercent`）。只有 `alchemist` / `smith` / `chain-hand` 三個鉤子型天賦各需新增一個原語入口，而非新增一個「天賦框架」。
 
@@ -259,6 +265,12 @@ export function getResourceLimit(
 
 每個 `resource-limit` 天賦在 `talentCatalog` 宣告其 `resource + multiplier`，由 `getActiveTalent` 統一彙整後傳入 `getResourceLimit`。新增同類天賦只需在 catalog 加一條，無須改動各呼叫點。
 
+> **📌 實際收斂（已實作，分兩層）**：
+> - **層1 純函式核心** `getResourceLimit(attributes, resource, modifiers?)`（`playerStatsRules.ts`）：`baseLimit × multiplier + bonus`；三個既有 getter `getMaxHealth/getMaxStamina/getMaxInnerPower` 內部改呼叫核心，白箱相容。
+> - **層2 buff 橋接** `getPlayerResourceLimit(player, resource)`（`playerDerivedRules.ts`）：以 effective 五維為 base，疊乘生效 buff 的 `max{Health,Stamina,InnerPower}Multiplier`，加總 `maxStaminaBonus`。
+> - 所有 max* 重算點（`characterFactory` / `playerRules` / `equipmentRules` / `itemActions` / `gameStore`）已改走層2，**一併修正了原先 4 處 `maxStaminaBonus` 遺漏**。
+> - **resource-limit 天賦以 buff 表達**（非 effect kind）：`qi-master` 在 `buffCatalog` 定義 `maxInnerPowerMultiplier: 1.1, maxStaminaMultiplier: 0.9`，經 buff 管線自動生效；`getResourceLimitModifiers` 彙整函式保留供直接用 resource-limit effect 的未來擴充。
+
 - ~~既有 `backgroundBonuses.attributeModifiers` 只能表達「起始數值」…~~（✗ 背景不採用；卷系統僅保留天賦概念於 §12.9，§5.4 純屬參考）
   - 天賦（`talentIds`）：玩法改寫（§5.4，參考用）。
   - 舊方案主張「背景＋天賦並存」；卷系統已取消背景，此段不再成立。
@@ -270,6 +282,8 @@ export function getResourceLimit(
 > **R5** 多個天賦的加入需考量**搭配平衡**（synergy／counter），避免無腦堆疊所有賺錢型或全輸出型天賦；具體限制方式（可選同類上限、成本遞增）待平衡測試時定。
 > **R3** 上限修正一律走 `getResourceLimit` 單一入口，禁止在 `getMaxHealth/getMaxStamina/getMaxInnerPower` 呼叫點再各寫一份邏輯。
 > **R4** 鉤子型天賦必須宣告 `hookPoint`，且該 hook 函式**透過參數注入 modifiers**、天賦本身不做判斷——新增同類天賦只需加 catalog 條目。
+
+> **📌 實作遵循確認（dev-log）**：目前實作嚴格遵守 R1–R4。R2 落地為「把 `maxHealthMultiplier/maxStaminaMultiplier/maxInnerPowerMultiplier` 擴充進 `BuffDefinition`（含 `BuffInstance` override 與 `playerDerivedRules.getEffectiveBuffDefinition` 白名單同步更新）」，而非在天賦規則層寫條件分支。R3 落地為分層收斂 `getResourceLimit` / `getPlayerResourceLimit`。天賦解鎖／開啟另有經濟約束（花卷解鎖 `unlockTalent`、開啟免費 `setCharacterTalent`，未解鎖不可開啟），呼應 R5 的成本遞增構想。
 
 ## 7. UI 架構
 
