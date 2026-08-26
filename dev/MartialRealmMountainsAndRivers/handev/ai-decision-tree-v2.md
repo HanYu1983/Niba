@@ -450,34 +450,7 @@ if (lastAction?.type === 'attack' && findAdjacentKillableCreature(...)) {
 
 **好處**：解決「三心二意」但比 momentum 更直接。
 
-### 6.3 子樹（Subtree）
-
-複雜條件可以封裝為子決策樹：
-
-```typescript
-function decideCombatAction(state: GameState, player: PlayerState): AiAction | null {
-  // 子樹：戰鬥決策
-  const creatures = listVisibleHostiles(state, player.id)
-
-  // 1. 能一回合击殺 → 打最近的
-  const killable = creatures.find(c => canKillInOneTurn(player, c) && manhattan(player, c.position) === 1)
-  if (killable) return { type: 'attack', targetId: killable.id, targetType: 'creature' }
-
-  // 2. 旁邊有怪但殺不死 → 評估要不要打
-  const adjacent = creatures.find(c => manhattan(player, c.position) === 1)
-  if (adjacent && player.health > player.maxHealth * 0.5) {
-    return { type: 'attack', targetId: adjacent.id, targetType: 'creature' }
-  }
-
-  // 3. 遠處有弱怪 → 走過去
-  const weak = creatures.find(c => c.health <= player.maxHealth * 0.3 && manhattan(player, c.position) <= 3)
-  if (weak && player.stamina >= 4) {
-    return buildMoveToAction(state, player, weak.position)
-  }
-
-  return null  // 沒有好的戰鬥目標
-}
-```
+### 6.3 子樹（Subtree）→ 見 §9「層級決策樹」
 
 ---
 
@@ -524,3 +497,502 @@ while (player.stamina > 0 && !gameOver) {
 | 4 | 改寫 `runTest1Step` 使用決策樹 | step 3 |
 | 5 | 保留 `fuzzyInputs.ts` 中的感知函數供條件使用 | 無 |
 | 6 | （可選）逐步將模糊邏輯的行為遷移到決策樹 | step 4 |
+
+---
+
+## 9. 層級決策樹（Hierarchical Decision Tree）
+
+### 9.1 問題：平面決策樹不適合長期目標
+
+§2 的平面決策樹每步都從頭掃描所有條件——**沒有記憶**。  
+這對即時反應（保命、撿道具）很好，但對長期目標（「這一局專注建造」）沒用：AI 這步撿了道具，下步可能去探路，永遠不會累積性地「做同一件事」。
+
+### 9.2 核心概念：戰略 → 戰術 → 動作
+
+將決策分為三層，每層的**變化頻率遞增**：
+
+```
+┌─────────────────────────────────────────────────┐
+│  戰略層（Strategic）                              │
+│  「這個階段該做什麼大方向？」                       │
+│  變化頻率：低（幾十步才切換一次）                   │
+│  例：專注建造、積極戰鬥、穩健探索                    │
+│                                                  │
+│  ┌───────────────────────────────────────────┐   │
+│  │  戰術層（Tactical）                        │   │
+│  │  「大方向下，現在該執行哪個子目標？」         │   │
+│  │  變化頻率：中（每 3~5 步可能切換）           │   │
+│  │  例：建造子樹中 → 搬材料 / 移動到據點 / 建造  │   │
+│  │                                           │   │
+│  │  ┌─────────────────────────────────────┐  │   │
+│  │  │  動作層（Action）                    │  │   │
+│  │  │  「子目標下，這步做什麼具體動作？」    │  │   │
+│  │  │  變化頻率：高（每步都可能不同）        │  │   │
+│  │  │  例：move to (3,5) / attack creature │  │   │
+│  │  └─────────────────────────────────────┘  │   │
+│  └───────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────┘
+```
+
+### 9.3 層級粒度與切換條件
+
+| 層級 | 決策內容 | 切換條件 | 例子 |
+|------|---------|---------|------|
+| **戰略** | 進入哪棵子樹 | 高層條件改變（局勢大變） | 血量驟降 → 從「建造」切到「保命」；遊戲後期 → 從「探索」切到「戰鬥」 |
+| **戰術** | 子樹內選哪個子目標 | 子目標完成或不可行 | 材料搬完了 → 從「搬材料」切到「建造」；路被擋了 → 換一條路 |
+| **動作** | 具體執行哪個 AiAction | 每步重新判斷 | 移動到 (3,5) 後 → 改為 attack creature |
+
+**關鍵原則**：**上層不變則下層穩定**。戰略層選了「建造子樹」後，戰術層只在建造子目標之間切換，不會突然跑去打怪。
+
+### 9.4 方案 A：Subtree 介面 + 數據驅動
+
+每棵子樹 = 一個**子目標**，有獨立的：
+- **進入條件**（entry condition）：什麼時候該進入這棵子樹
+- **內部決策**：子樹內的戰術級條件鏈
+- **退出條件**（exit condition）：什麼時候該離開這棵子樹
+
+```typescript
+interface Subtree {
+  name: string
+  /** 戰略級條件：是否應該進入這棵子樹 */
+  entryCondition: (state: GameState, player: PlayerState) => boolean
+  /** 戰術級決策：子樹內部的條件鏈，回傳具體行動 */
+  decide: (state: GameState, player: PlayerState) => AiAction | null
+  /** 退出條件：子目標完成或不再可行時 return true */
+  exitCondition: (state: GameState, player: PlayerState) => boolean
+}
+```
+
+#### 9.4.1 戰略層：子樹選擇器
+
+```typescript
+// 子樹定義（按優先級排列）
+const SUBTREES: Subtree[] = [
+  retreatSubtree,      // 保命子樹（最高優先）
+  emergencySubtree,    // 緊急交互子樹（修理、醫務室）
+  combatSubtree,       // 戰鬥子樹
+  buildSubtree,        // 建造子樹
+  learnSubtree,        // 學習子樹
+  exploreSubtree,      // 探索子樹
+]
+
+// 當前活躍的子樹（跨步保留）
+let activeSubtree: Subtree | null = null
+
+function decideNextAction(state: GameState, playerId: string): AiAction | null {
+  const player = getPlayer(state, playerId)
+  if (!player) return null
+
+  // ═══════════════════════════════════════════════════
+  // 戰略層：檢查是否該切換子樹
+  // ═══════════════════════════════════════════════════
+
+  // 1. 當前子樹是否該退出？
+  if (activeSubtree && activeSubtree.exitCondition(state, player)) {
+    activeSubtree = null
+  }
+
+  // 2. 按優先級掃描，找到第一個 entryCondition 成立的子樹
+  if (!activeSubtree) {
+    for (const subtree of SUBTREES) {
+      if (subtree.entryCondition(state, player)) {
+        activeSubtree = subtree
+        break
+      }
+    }
+  }
+
+  // 3. 沒有子樹匹配 → 回退到平面決策（兜底）
+  if (!activeSubtree) {
+    return flatDecisionFallback(state, player)
+  }
+
+  // ═══════════════════════════════════════════════════
+  // 戰術層：在子樹內部做決策
+  // ═══════════════════════════════════════════════════
+  const candidate = activeSubtree.decide(state, player)
+
+  // ═══════════════════════════════════════════════════
+  // 動作層：validate
+  // ═══════════════════════════════════════════════════
+  if (candidate && validateAiAction(state, playerId, candidate)) {
+    return candidate
+  }
+
+  // 子樹產出的 action 不合法 → 試圖退出子樹
+  activeSubtree = null
+  return null  // 下一步重新選擇
+}
+```
+
+#### 9.4.2 子樹實例：建造子樹
+
+```typescript
+const buildSubtree: Subtree = {
+  name: 'build',
+
+  // 戰略級進入條件：有據點 + 建料不足 或 有空建造槽
+  entryCondition: (state, player) => {
+    const base = getOwnedBase(state, player.id)
+    if (!base) return false
+    return base.buildingMaterials < base.maxBuildingMaterials * 0.7
+        || hasEmptyBuildSlot(state, base)
+  },
+
+  // 戰術級決策：子目標鏈
+  decide: (state, player) => {
+    const base = getOwnedBase(state, player.id)!
+    const isAdjacent = manhattan(player.position, base.position) === 1
+
+    // 戰術 1：已與據點相鄰 + 有材料 → 建造
+    if (isAdjacent && base.buildingMaterials >= 3) {
+      const candidate = buildConstructAction(state, player, base)
+      if (candidate && validateAiAction(state, player.id, candidate)) return candidate
+    }
+
+    // 戰術 2：已與資源點相鄰 + 建料不足 → 採集
+    if (base.buildingMaterials < base.maxBuildingMaterials * 0.7) {
+      const resource = findAdjacentResourcePoint(state, player)
+      if (resource) {
+        const candidate: AiAction = { type: 'collect-resource', resourcePointId: resource.id }
+        if (validateAiAction(state, player.id, candidate)) return candidate
+      }
+    }
+
+    // 戰術 3：不在據點旁 → 移動到據點
+    if (!isAdjacent) {
+      const candidate = buildMoveToAction(state, player, base.position)
+      if (candidate && validateAiAction(state, player.id, candidate)) return candidate
+    }
+
+    // 戰術 4：不在資源點旁 + 需要材料 → 移動到資源點
+    if (base.buildingMaterials < base.maxBuildingMaterials * 0.7) {
+      const nearest = findNearestResourcePoint(state, player)
+      if (nearest) {
+        const candidate = buildMoveToAction(state, player, nearest.position)
+        if (candidate && validateAiAction(state, player.id, candidate)) return candidate
+      }
+    }
+
+    return null
+  },
+
+  // 戰略級退出條件：建料充足 + 無空建造槽
+  exitCondition: (state, player) => {
+    const base = getOwnedBase(state, player.id)
+    if (!base) return true  // 據點沒了，退出
+    return base.buildingMaterials >= base.maxBuildingMaterials * 0.9
+        && !hasEmptyBuildSlot(state, base)
+  },
+}
+```
+
+#### 9.4.3 子樹實例：戰鬥子樹
+
+```typescript
+const combatSubtree: Subtree = {
+  name: 'combat',
+
+  entryCondition: (state, player) => {
+    const creatures = listVisibleHostiles(state, player.id)
+    return creatures.some(c => manhattan(player.position, c.position) <= 3)
+  },
+
+  decide: (state, player) => {
+    const creatures = listVisibleHostiles(state, player.id)
+
+    // 戰術 1：能一回合击殺 + 相鄰 → 打
+    const killable = creatures.find(c =>
+      canKillInOneTurn(player, c) && manhattan(player.position, c.position) === 1
+    )
+    if (killable) {
+      const candidate: AiAction = { type: 'attack', targetId: killable.id, targetType: 'creature' }
+      if (validateAiAction(state, player.id, candidate)) return candidate
+    }
+
+    // 戰術 2：相鄰但殺不死 + 血量充足 → 打
+    const adjacent = creatures.find(c => manhattan(player.position, c.position) === 1)
+    if (adjacent && player.health > player.maxHealth * 0.5) {
+      const candidate: AiAction = { type: 'attack', targetId: adjacent.id, targetType: 'creature' }
+      if (validateAiAction(state, player.id, candidate)) return candidate
+    }
+
+    // 戰術 3：遠處有弱怪 + 體力足 → 移動過去
+    const weak = creatures
+      .filter(c => c.health <= player.maxHealth * 0.3 && manhattan(player.position, c.position) <= 3)
+      .sort((a, b) => manhattan(player.position, a.position) - manhattan(player.position, b.position))[0]
+    if (weak && player.stamina >= 4) {
+      const candidate = buildMoveToAction(state, player, weak.position)
+      if (candidate && validateAiAction(state, player.id, candidate)) return candidate
+    }
+
+    return null
+  },
+
+  exitCondition: (state, player) => {
+    const creatures = listVisibleHostiles(state, player.id)
+    return !creatures.some(c => manhattan(player.position, c.position) <= 3)
+  },
+}
+```
+
+---
+
+### 9.5 方案 B：純 if + function（無介面）
+
+不用 `Subtree` 介面、不用數組、不用迴圈。  
+**進入條件 = if，子樹 = function，退出條件 = if**。完全直接。
+
+#### 9.5.1 主決策函數
+
+```typescript
+// 當前活躍子樹的名稱（跨步保留）
+let activeSubtree: string | null = null
+
+function decideNextAction(state: GameState, playerId: string): AiAction | null {
+  const player = getPlayer(state, playerId)
+  if (!player) return null
+
+  // ═══════════════════════════════════════════════════
+  // 戰略層：退出檢查
+  // ═══════════════════════════════════════════════════
+  if (activeSubtree === 'build' && !shouldContinueBuild(state, player)) {
+    activeSubtree = null
+  }
+  if (activeSubtree === 'combat' && !shouldContinueCombat(state, player)) {
+    activeSubtree = null
+  }
+  // ... 其他子樹同理
+
+  // ═══════════════════════════════════════════════════
+  // 戰略層：進入檢查（按優先級）
+  // ═══════════════════════════════════════════════════
+  if (!activeSubtree) {
+    if (shouldEnterRetreat(state, player))       activeSubtree = 'retreat'
+    else if (shouldEnterEmergency(state, player)) activeSubtree = 'emergency'
+    else if (shouldEnterCombat(state, player))    activeSubtree = 'combat'
+    else if (shouldEnterBuild(state, player))     activeSubtree = 'build'
+    else if (shouldEnterLearn(state, player))     activeSubtree = 'learn'
+    else if (shouldEnterExplore(state, player))   activeSubtree = 'explore'
+  }
+
+  // 沒有子樹匹配 → 平面決策兜底
+  if (!activeSubtree) {
+    return flatDecisionFallback(state, player)
+  }
+
+  // ═══════════════════════════════════════════════════
+  // 戰術層：委派到子樹 function
+  // ═══════════════════════════════════════════════════
+  let candidate: AiAction | null = null
+
+  switch (activeSubtree) {
+    case 'retreat':  candidate = decideRetreat(state, player); break
+    case 'emergency': candidate = decideEmergency(state, player); break
+    case 'combat':   candidate = decideCombat(state, player); break
+    case 'build':    candidate = decideBuild(state, player); break
+    case 'learn':    candidate = decideLearn(state, player); break
+    case 'explore':  candidate = decideExplore(state, player); break
+  }
+
+  // ═══════════════════════════════════════════════════
+  // 動作層：validate
+  // ═══════════════════════════════════════════════════
+  if (candidate && validateAiAction(state, playerId, candidate)) {
+    return candidate
+  }
+
+  // 不合法 → 退出子樹
+  activeSubtree = null
+  return null
+}
+```
+
+#### 9.5.2 子樹函數實例：建造
+
+```typescript
+// ─── 進入條件 ───
+function shouldEnterBuild(state: GameState, player: PlayerState): boolean {
+  const base = getOwnedBase(state, player.id)
+  if (!base) return false
+  return base.buildingMaterials < base.maxBuildingMaterials * 0.7
+      || hasEmptyBuildSlot(state, base)
+}
+
+// ─── 退出條件 ───
+function shouldContinueBuild(state: GameState, player: PlayerState): boolean {
+  const base = getOwnedBase(state, player.id)
+  if (!base) return false
+  return base.buildingMaterials < base.maxBuildingMaterials * 0.9
+      || hasEmptyBuildSlot(state, base)
+}
+
+// ─── 子樹內部決策 ───
+function decideBuild(state: GameState, player: PlayerState): AiAction | null {
+  const base = getOwnedBase(state, player.id)!
+  const isAdjacent = manhattan(player.position, base.position) === 1
+
+  // 相鄰 + 有材料 → 建造
+  if (isAdjacent && base.buildingMaterials >= 3) {
+    const candidate = buildConstructAction(state, player, base)
+    if (candidate && validateAiAction(state, player.id, candidate)) return candidate
+  }
+
+  // 旁邊有資源 + 建料不足 → 採集
+  if (base.buildingMaterials < base.maxBuildingMaterials * 0.7) {
+    const resource = findAdjacentResourcePoint(state, player)
+    if (resource) {
+      const candidate: AiAction = { type: 'collect-resource', resourcePointId: resource.id }
+      if (validateAiAction(state, player.id, candidate)) return candidate
+    }
+  }
+
+  // 不在據點旁 → 移動到據點
+  if (!isAdjacent) {
+    const candidate = buildMoveToAction(state, player, base.position)
+    if (candidate && validateAiAction(state, player.id, candidate)) return candidate
+  }
+
+  // 需要材料但不在資源點旁 → 移動到資源點
+  if (base.buildingMaterials < base.maxBuildingMaterials * 0.7) {
+    const nearest = findNearestResourcePoint(state, player)
+    if (nearest) {
+      const candidate = buildMoveToAction(state, player, nearest.position)
+      if (candidate && validateAiAction(state, player.id, candidate)) return candidate
+    }
+  }
+
+  return null
+}
+```
+
+#### 9.5.3 子樹函數實例：戰鬥
+
+```typescript
+function shouldEnterCombat(state: GameState, player: PlayerState): boolean {
+  const creatures = listVisibleHostiles(state, player.id)
+  return creatures.some(c => manhattan(player.position, c.position) <= 3)
+}
+
+function shouldContinueCombat(state: GameState, player: PlayerState): boolean {
+  const creatures = listVisibleHostiles(state, player.id)
+  return creatures.some(c => manhattan(player.position, c.position) <= 3)
+}
+
+function decideCombat(state: GameState, player: PlayerState): AiAction | null {
+  const creatures = listVisibleHostiles(state, player.id)
+
+  const killable = creatures.find(c =>
+    canKillInOneTurn(player, c) && manhattan(player.position, c.position) === 1
+  )
+  if (killable) {
+    const candidate: AiAction = { type: 'attack', targetId: killable.id, targetType: 'creature' }
+    if (validateAiAction(state, player.id, candidate)) return candidate
+  }
+
+  const adjacent = creatures.find(c => manhattan(player.position, c.position) === 1)
+  if (adjacent && player.health > player.maxHealth * 0.5) {
+    const candidate: AiAction = { type: 'attack', targetId: adjacent.id, targetType: 'creature' }
+    if (validateAiAction(state, player.id, candidate)) return candidate
+  }
+
+  const weak = creatures
+    .filter(c => c.health <= player.maxHealth * 0.3 && manhattan(player.position, c.position) <= 3)
+    .sort((a, b) => manhattan(player.position, a.position) - manhattan(player.position, b.position))[0]
+  if (weak && player.stamina >= 4) {
+    const candidate = buildMoveToAction(state, player, weak.position)
+    if (candidate && validateAiAction(state, player.id, candidate)) return candidate
+  }
+
+  return null
+}
+```
+
+---
+
+### 9.6 方案比較
+
+| | 方案 A（Subtree 介面） | 方案 B（if + function） |
+|---|---|---|
+| **結構** | 數據驅動，子樹是對象 | 過程式，子樹是函數 |
+| **新增子樹** | 寫一個 Subtree 對象 + 加入數組 | 寫 3 個函數 + 加一行 if |
+| **可讀性** | 高（結構統一，一目了然） | 中（要翻多個函數） |
+| **維護性** | 好（改一個子樹不動其他） | 好（改一個函數不動其他） |
+| **適合場景** | 子樹多（>5）、需要動態增減 | 子樹少（≤5）、邏輯簡單 |
+| **複雜度** | 多一層抽象（介面、數組、迴圈） | 零抽象，就是 if-else |
+
+**建議**：先用方案 B 快速實作，子樹數量超過 5 棵或覺得重複代碼太多時再重構為方案 A。
+
+### 9.7 切換流程圖（兩方案共用）
+
+```
+start
+  │
+  ▼
+┌──────────────────────┐
+│ 當前子樹該退出？       │── Yes ──► activeSubtree = null
+│ (exitCondition /      │
+│  shouldContinueXxx)   │
+└──────────┬───────────┘
+           │ No
+           ▼
+┌──────────────────────┐
+│ 有活躍子樹？          │── No ──┐
+└──────────┬───────────┘        │
+           │ Yes                ▼
+           │           ┌─────────────────────────┐
+           │           │ 方案A: 迴圈掃描SUBTREES   │
+           │           │ 方案B: if/else if 鏈      │
+           │           │ entryCondition 成立？     │
+           │           │ 找到 → active = 該子樹    │
+           │           │ 沒找到 → flatFallback     │
+           │           └─────────────────────────┘
+           ▼
+┌──────────────────────┐
+│ 方案A: .decide()     │
+│ 方案B: switch→函數   │
+│ (戰術級決策)         │
+└──────────┬───────────┘
+           │
+           ▼
+┌──────────────────────┐
+│ validateAiAction?    │── No ──► activeSubtree = null
+└──────────┬───────────┘         (退出子樹，下一步重選)
+           │ Yes
+           ▼
+      return action
+```
+
+### 9.8 粒度對應表
+
+| 概念 | 戰略層 | 戰術層 | 動作層 |
+|------|--------|--------|--------|
+| **決策對象** | 進入哪棵子樹 | 子樹內選哪個子目標 | 執行哪個 AiAction |
+| **變化頻率** | 低（幾十步） | 中（3~5 步） | 高（每步） |
+| **條件類型** | 局勢判斷（血量、據點狀態、遊戲階段） | 子目標可行性（位置、資源、冷卻） | 行動合法性（validateAiAction） |
+| **記憶需求** | 跨步保留 activeSubtree | 子樹內部自行管理 | 不需要（每步獨立） |
+| **例子** | 「建造子樹」 | 「搬材料→建造→搬材料」 | move(3,5) → constructBuilding |
+
+### 9.10 與平面決策樹的關係
+
+平面決策樹（§2）並非被取代，而是作為**兜底**存在：
+
+```
+有活躍子樹？ → 用子樹的 decide()
+沒有？      → 回退到平面決策鏈（§2 的 if-else）
+```
+
+**平面決策鏈處理的是「沒有明確大方向」的情況**——保命、撿路邊道具等即時反應。  
+子樹處理的是「有明確大方向，需要持續執行」的情況——建造、系統性戰鬥、學習等。
+
+### 9.11 實作順序（更新）
+
+| 步驟 | 內容 | 依賴 |
+|------|------|------|
+| 1 | 建立 `ai/decisionTree/conditions.ts` | 無 |
+| 2 | 方案B：建立 `ai/decisionTree/subtrees/` 各子樹函數（shouldEnter + shouldContinue + decide） | step 1 |
+| 2' | 方案A（若選用）：建立 `ai/decisionTree/subtrees.ts`（Subtree 介面 + 數組） | step 2 |
+| 3 | 建立 `ai/decisionTree/decideNextAction.ts`（戰略層 + 戰術層委派） | step 2 |
+| 4 | 建立 `ai/decisionTree/actionBuilders.ts` | step 3 |
+| 5 | 改寫 `runTest1Step` | step 4 |
+| 6 | 保留感知函數 | 無 |
