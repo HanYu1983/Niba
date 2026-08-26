@@ -1017,6 +1017,13 @@ export type AiOrder =
       priority: number
       status: AiOrderStatus
     }
+  | {
+      id: string
+      type: 'test2'
+      aiPlayerId: string
+      priority: number
+      status: AiOrderStatus
+    }
 
 export type AiConstructionPolicy = 'defense' | 'economy' | 'frontline' | 'balanced' | 'paused'
 
