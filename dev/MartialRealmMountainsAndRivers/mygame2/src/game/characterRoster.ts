@@ -9,6 +9,7 @@
  */
 
 import type { PlayerAttributes, RunStats } from './types'
+import { getTalent } from './catalogs/talentCatalog'
 
 /** 名冊版本：用於未來欄位演進的相容處理。 */
 export const CHARACTER_ROSTER_VERSION = 1
@@ -42,7 +43,9 @@ export type PersistentCharacter = {
   initialExternalSkillIds: string[]
   /** 開局內功（預設 'tuna-gong'，可為庫內其他內功）。 */
   initialInternalSkillId: string
-  /** 已選用天賦 ids（可多個；對局開局時注入為常駐效果，見 catalogs/talentCatalog）。 */
+  /** 已花卷解鎖的天賦 ids（可多個；解鎖後才能開啟，見 catalogs/talentCatalog）。 */
+  unlockedTalentIds: string[]
+  /** 已開啟（啟用）的天賦 ids（限 unlockedTalentIds 內；開局注入為常駐效果）。 */
   talentIds: string[]
   /** 養成統計。 */
   gamesPlayed: number
@@ -70,6 +73,7 @@ export function createDefaultProgression(): Pick<
   | 'learnedSkillIds'
   | 'initialExternalSkillIds'
   | 'initialInternalSkillId'
+  | 'unlockedTalentIds'
   | 'talentIds'
 > {
   return {
@@ -78,6 +82,7 @@ export function createDefaultProgression(): Pick<
     learnedSkillIds: [DEFAULT_LEARNED_INNER_SKILL_ID],
     initialExternalSkillIds: [],
     initialInternalSkillId: DEFAULT_LEARNED_INNER_SKILL_ID,
+    unlockedTalentIds: [],
     talentIds: [],
   }
 }
@@ -102,6 +107,11 @@ function getStored(): PersistentCharacter[] {
         ...character,
         // 既有角色若有 talentIds 則保留，否則補空陣列。
         talentIds: Array.isArray(character.talentIds) ? character.talentIds : [],
+        unlockedTalentIds: Array.isArray(character.unlockedTalentIds)
+          ? character.unlockedTalentIds
+          : Array.isArray(character.talentIds)
+            ? character.talentIds
+            : [],
       }))
     }
     // 舊版存檔：缺少 unlockedSkillIds 欄位。將舊 learnedSkillIds 視為「已解鎖（可培養）」，
@@ -175,7 +185,8 @@ export function createCharacter(input: {
   return character
 }
 
-/** 更新角色基本資料（名稱／外觀／稱號／五維加成／天賦）。名稱重複或空白時回傳 false。 */
+/** 更新角色基本資料（名稱／外觀／稱號／五維加成）。名稱重複或空白時回傳 false。
+ * 天賦的開啟／解除請用 setCharacterTalent（需先解鎖）。 */
 export function updateCharacter(
   id: string,
   patch: {
@@ -183,7 +194,6 @@ export function updateCharacter(
     portrait?: string
     title?: string
     attributeBonuses?: Partial<PlayerAttributes>
-    talentIds?: string[]
   },
 ): boolean {
   const characters = getStored()
@@ -199,7 +209,6 @@ export function updateCharacter(
     name: nextName,
     portrait: patch.portrait !== undefined ? patch.portrait : current.portrait,
     title: patch.title !== undefined ? patch.title : current.title,
-    talentIds: patch.talentIds ? [...patch.talentIds] : current.talentIds,
     attributeBonuses: patch.attributeBonuses
       ? { ...current.attributeBonuses, ...patch.attributeBonuses }
       : current.attributeBonuses,
@@ -356,6 +365,69 @@ export function learnSkill(id: string, skillId: string): { ok: boolean; reason?:
     ...current,
     scrolls: (current.scrolls ?? 0) - cost,
     learnedSkillIds: [...(current.learnedSkillIds ?? []), skillId],
+  }
+  persist(next)
+  return { ok: true }
+}
+
+/** 開啟天賦時的成本基準（與功法學習同公式，依「已解鎖天賦數」遞增）。 */
+export function getTalentUnlockCost(unlockedCount: number): number {
+  return getSkillLearnCost(unlockedCount)
+}
+
+/**
+ * 花卷「解鎖」天賦：將天賦加入 unlockedTalentIds。
+ * 需是已定義天賦、尚未解鎖、卷數足夠。
+ * 解鎖後才能開啟（setCharacterTalent 切換 talentIds）。回傳 { ok, reason? }。
+ */
+export function unlockTalent(id: string, talentId: string): { ok: boolean; reason?: string } {
+  const characters = getStored()
+  const index = characters.findIndex((character) => character.id === id)
+  if (index < 0) return { ok: false, reason: '角色不存在。' }
+  if (!getTalent(talentId)) return { ok: false, reason: '未知的天賦。' }
+
+  const current = characters[index]
+  const unlocked = current.unlockedTalentIds ?? []
+  if (unlocked.includes(talentId)) return { ok: false, reason: '此天賦已解鎖。' }
+
+  const cost = getTalentUnlockCost(unlocked.length)
+  if ((current.scrolls ?? 0) < cost) return { ok: false, reason: '卷不足。' }
+
+  const next = [...characters]
+  next[index] = {
+    ...current,
+    scrolls: (current.scrolls ?? 0) - cost,
+    unlockedTalentIds: [...unlocked, talentId],
+  }
+  persist(next)
+  return { ok: true }
+}
+
+/**
+ * 開啟／關閉已解鎖的天賦（在 unlockedTalentIds 內切換 talentIds）。
+ * 開啟／關閉不花卷（解鎖時已花費）；僅能操作已解鎖天賦。
+ * 回傳 { ok, reason? }。
+ */
+export function setCharacterTalent(id: string, talentId: string, enabled: boolean): { ok: boolean; reason?: string } {
+  const characters = getStored()
+  const index = characters.findIndex((character) => character.id === id)
+  if (index < 0) return { ok: false, reason: '角色不存在。' }
+
+  const current = characters[index]
+  const unlocked = current.unlockedTalentIds ?? []
+  if (!unlocked.includes(talentId)) return { ok: false, reason: '尚未解鎖此天賦，無法開啟。' }
+
+  const selected = new Set(current.talentIds ?? [])
+  if (enabled) {
+    selected.add(talentId)
+  } else {
+    selected.delete(talentId)
+  }
+
+  const next = [...characters]
+  next[index] = {
+    ...current,
+    talentIds: [...selected],
   }
   persist(next)
   return { ok: true }
