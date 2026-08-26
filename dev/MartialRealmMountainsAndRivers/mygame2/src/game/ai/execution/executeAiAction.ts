@@ -9,6 +9,7 @@ import { collectItemPointAction } from '../../actions/itemActions'
 import { useItemAction } from '../../actions/itemActions'
 import { allocateAttributePointAction } from '../../rules/playerDerivedRules'
 import { equipEquipmentAction } from '../../rules/equipmentRules'
+import { equipInnerSkillAction } from '../../rules/skillRules'
 import type { CombatActionDependencies } from '../../actions/combatActions'
 
 export type ExecuteAiActionDependencies = {
@@ -52,6 +53,8 @@ export function executeAiAction(
       return useItemAction(state, action.actor.id, action.itemId)
     case 'equip':
       return equipEquipmentAction(state, action.actor.id, action.instanceId)
+    case 'equip-inner-skill':
+      return equipInnerSkillAction(state, action.actor.id, action.skillId)
     case 'hold':
       return { state, result: { ok: true } }
     case 'end-turn': {

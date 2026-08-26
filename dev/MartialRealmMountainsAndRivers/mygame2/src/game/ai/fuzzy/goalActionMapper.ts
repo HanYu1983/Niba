@@ -36,6 +36,12 @@ export function buildActionSequence(
       return buildUseItemActions(actor, result)
     case 'equipEquipment':
       return buildEquipActions(actor, result)
+    case 'attackNest':
+      return buildAttackNestActions(actor, result, state, player)
+    case 'equipInnerSkill':
+      return buildEquipInnerSkillActions(actor, result)
+    case 'useInnerSkillAttack':
+      return buildUseInnerSkillAttackActions(actor, result, state, player)
   }
 }
 
@@ -345,4 +351,126 @@ function buildEquipActions(
     instanceId: result.target.instanceId,
     reason: `裝備：${result.context?.name ?? result.target.instanceId}（${result.context?.slot ?? ''}）`,
   }]
+}
+
+// ─── attackNest ────────────────────────────────────────────────
+
+function buildAttackNestActions(
+  actor: AiActorRef,
+  result: GoalResult,
+  state: GameState,
+  player: PlayerState,
+): AiAction[] {
+  if (!result.target || result.target.kind !== 'attack') {
+    return [{ type: 'hold', actor, reason: '打巢穴：無目標' }]
+  }
+
+  // 找最近巢穴
+  const nest = state.creatureNests
+    .filter((n) => n.health > 0)
+    .sort((a, b) => {
+      const da = Math.abs(a.position.row - player.position.row) + Math.abs(a.position.column - player.position.column)
+      const db = Math.abs(b.position.row - player.position.row) + Math.abs(b.position.column - player.position.column)
+      return da - db
+    })[0]
+
+  if (!nest) {
+    return [{ type: 'hold', actor, reason: '打巢穴：無可攻擊巢穴' }]
+  }
+
+  const dist = Math.abs(nest.position.row - player.position.row) + Math.abs(nest.position.column - player.position.column)
+
+  if (dist <= 1) {
+    return [{
+      type: 'attack',
+      actor,
+      target: { id: nest.id, kind: 'nest', position: nest.position },
+      reason: `打巢穴：攻擊 ${nest.name}`,
+    }]
+  }
+
+  return [
+    {
+      type: 'move',
+      actor,
+      destination: nest.position,
+      reason: `打巢穴：移動到 ${nest.name} 附近`,
+    },
+    {
+      type: 'attack',
+      actor,
+      target: { id: nest.id, kind: 'nest', position: nest.position },
+      reason: `打巢穴：攻擊 ${nest.name}`,
+    },
+  ]
+}
+
+// ─── equipInnerSkill ──────────────────────────────────────────
+
+function buildEquipInnerSkillActions(
+  actor: AiActorRef,
+  result: GoalResult,
+): AiAction[] {
+  if (!result.target || result.target.kind !== 'equip-inner-skill') {
+    return [{ type: 'hold', actor, reason: '裝備功法：無可裝備功法' }]
+  }
+
+  return [{
+    type: 'equip-inner-skill',
+    actor,
+    skillId: result.target.skillId,
+    reason: `裝備功法：${result.context?.skillName ?? result.target.skillId}`,
+  }]
+}
+
+// ─── useInnerSkillAttack ─────────────────────────────────────
+
+function buildUseInnerSkillAttackActions(
+  actor: AiActorRef,
+  result: GoalResult,
+  state: GameState,
+  player: PlayerState,
+): AiAction[] {
+  if (!result.target || result.target.kind !== 'use-inner-skill-attack') {
+    return [{ type: 'hold', actor, reason: '使用功法：無可用目標' }]
+  }
+
+  // 找最近的怪物
+  const nearestCreature = state.creatures
+    .filter((c) => c.health > 0)
+    .sort((a, b) => {
+      const da = Math.abs(a.position.row - player.position.row) + Math.abs(a.position.column - player.position.column)
+      const db = Math.abs(b.position.row - player.position.row) + Math.abs(b.position.column - player.position.column)
+      return da - db
+    })[0]
+
+  if (!nearestCreature) {
+    return [{ type: 'hold', actor, reason: '使用功法：無可攻擊生物' }]
+  }
+
+  const dist = Math.abs(nearestCreature.position.row - player.position.row) + Math.abs(nearestCreature.position.column - player.position.column)
+
+  if (dist <= 1) {
+    return [{
+      type: 'attack',
+      actor,
+      target: { id: nearestCreature.id, kind: 'creature', position: nearestCreature.position },
+      reason: `使用功法攻擊：${nearestCreature.name}`,
+    }]
+  }
+
+  return [
+    {
+      type: 'move',
+      actor,
+      destination: nearestCreature.position,
+      reason: `使用功法：移動到 ${nearestCreature.name} 附近`,
+    },
+    {
+      type: 'attack',
+      actor,
+      target: { id: nearestCreature.id, kind: 'creature', position: nearestCreature.position },
+      reason: `使用功法攻擊：${nearestCreature.name}`,
+    },
+  ]
 }

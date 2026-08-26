@@ -80,6 +80,7 @@ export function validateAiAction(state: GameState, action: AiAction): AiValidati
     case 'allocate-attribute':
     case 'use-item':
     case 'equip':
+    case 'equip-inner-skill':
       return { valid: true }
   }
 }

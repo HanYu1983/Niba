@@ -2,9 +2,12 @@ import { type ExternalSkill } from '../catalogs/externalSkillCatalog'
 import { type InnerSkill } from '../catalogs/innerSkillCatalog'
 import { allExternalSkillCatalog, allInnerSkillCatalog } from '../catalogs/martialHallSkillCatalog'
 import type { SchoolElement } from '../catalogs/skillProgressionCatalog'
-import type { InsightCapacityBreakdown, PlayerAttributes, PlayerState } from '../types'
+import type { ActionOutcome, GameState, InsightCapacityBreakdown, PlayerAttributes, PlayerState } from '../types'
+import { getMaxInnerPower } from './playerStatsRules'
+import { applyBaseHealthBonuses } from './baseRules'
 import { getEffectiveAttributesForPlayer } from './playerDerivedRules'
-
+export type MartialElement = 'none' | 'metal' | 'wood' | 'water' | 'fire' | 'earth'
+  
 export type { SchoolElement } from '../catalogs/skillProgressionCatalog'
 export { getSchoolElement } from '../catalogs/skillProgressionCatalog'
 
@@ -150,4 +153,52 @@ export function getSkillEffectMultiplier(player: PlayerState): number {
   return getPlayerInsightCapacityBreakdown(player).exceeded
     ? OVERCAPACITY_SKILL_EFFECT_MULTIPLIER
     : 1
+}
+
+export function equipInnerSkillAction(
+  state: GameState,
+  playerId: string,
+  skillId: string,
+): { state: GameState; result: ActionOutcome } {
+  const player = state.players.find((p) => p.id === playerId)
+  if (!player) {
+    return { state, result: { ok: false, reason: '玩家不存在' } }
+  }
+
+  const skill = allInnerSkillCatalog.find((s) => s.id === skillId)
+  if (!skill) {
+    return { state, result: { ok: false, reason: '功法不存在' } }
+  }
+
+  if (player.innerSkillId === skillId) {
+    return { state, result: { ok: false, reason: '已裝備此功法' } }
+  }
+
+  if (!player.innerSkillIds.includes(skillId)) {
+    return { state, result: { ok: false, reason: '未學會此功法' } }
+  }
+
+  const effectiveAttributes = getEffectiveAttributesForPlayer(player)
+  if (effectiveAttributes.insight < skill.insightRequirement) {
+    return { state, result: { ok: false, reason: '悟性不足' } }
+  }
+
+  const maxInnerPower = getMaxInnerPower(effectiveAttributes)
+  const innerPowerCost = Math.max(1, Math.floor(maxInnerPower * 0.01))
+
+  const nextPlayer: PlayerState = {
+    ...player,
+    innerSkillId: skillId,
+    innerPower: Math.max(0, player.innerPower - innerPowerCost),
+  }
+
+  const nextState: GameState = {
+    ...state,
+    players: state.players.map((p) => (p.id === playerId ? nextPlayer : p)),
+  }
+
+  return {
+    state: applyBaseHealthBonuses(nextState),
+    result: { ok: true },
+  }
 }
