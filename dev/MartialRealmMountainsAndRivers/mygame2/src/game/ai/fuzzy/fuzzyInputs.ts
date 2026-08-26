@@ -70,6 +70,8 @@ export interface FuzzyInputs {
   nearestBase: BaseState | undefined
   /** 視野範圍內的據點 id 陣列（近到遠排序） */
   visibleBaseIds: string[]
+  /** 所有據點是否都在視野內 */
+  allBasesVisible: boolean
   /** 據點建料比 0~1（buildingMaterials / maxBuildingMaterials），無據點 = 0 */
   materialRatio: number
   /** 據點是否可建造建築（有模板 + rank 夠 + 材料夠） */
@@ -212,6 +214,10 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
     })
     .sort((a, b) => manhattan(player.position, a.position) - manhattan(player.position, b.position))
   const visibleBaseIds = allVisibleBases.map((b) => b.id)
+
+  // 所有據點是否都在視野內（排除已毀滅的）
+  const activeBaseCount = state.bases.filter((b) => b.health > 0).length
+  const allBasesVisible = visibleBaseIds.length >= activeBaseCount && activeBaseCount > 0
 
   const nearestBase = activeBases.length > 0
     ? activeBases.reduce((best, b) => manhattan(player.position, b.position) < manhattan(player.position, best.position) ? b : best)
@@ -410,6 +416,7 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
     nearestExit,
     nearestBase,
     visibleBaseIds,
+    allBasesVisible,
     materialRatio,
     canBuild,
     buildableBuilding: buildableBuilding ? { id: buildableBuilding.id, type: buildableBuilding.type, name: buildableBuilding.name } : undefined,
