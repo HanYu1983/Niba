@@ -387,10 +387,11 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
     return cost > 0
   })()
 
-  // 任務/修理/就醫：最近有設施的據點 id
-  const missionBaseId = state.bases.find((b) => b.active !== false && b.health > 0 && hasBuilding(b, 'board'))?.id ?? ''
-  const repairBaseId = state.bases.find((b) => b.active !== false && b.health > 0 && hasBuilding(b, 'workshop'))?.id ?? ''
-  const healBaseId = state.bases.find((b) => b.active !== false && b.health > 0 && hasBuilding(b, 'infirmary'))?.id ?? ''
+  // 任務/修理/就醫：視野內最近有設施的據點 id
+  const visibleBases = state.bases.filter((b) => visibleBaseIds.includes(b.id))
+  const missionBaseId = visibleBases.find((b) => b.active !== false && b.health > 0 && hasBuilding(b, 'board'))?.id ?? ''
+  const repairBaseId = visibleBases.find((b) => b.active !== false && b.health > 0 && hasBuilding(b, 'workshop'))?.id ?? ''
+  const healBaseId = visibleBases.find((b) => b.active !== false && b.health > 0 && hasBuilding(b, 'infirmary'))?.id ?? ''
 
   // 到最近 active 據點距離
   const distToNearestActiveBase = nearestBase ? manhattan(player.position, nearestBase.position) : Infinity

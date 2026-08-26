@@ -785,25 +785,23 @@ function buildMissionActions(
   if (!result.target || result.target.kind !== 'use-facility') {
     return [{ type: 'hold', actor, reason: '任務：無告示牌' }]
   }
+  const target = result.target
 
-  // 找最近有告示牌的據點
-  const baseWithBoard = state.bases.find((b) =>
-    b.health > 0 && b.buildings.some((bl) => bl.type === 'board'),
-  )
-  if (!baseWithBoard) return [{ type: 'hold', actor, reason: '任務：無告示牌據點' }]
+  const base = state.bases.find((b) => b.id === target.baseId)
+  if (!base) return [{ type: 'hold', actor, reason: '任務：據點不存在' }]
 
-  const dist = Math.abs(player.position.row - baseWithBoard.position.row) + Math.abs(player.position.column - baseWithBoard.position.column)
+  const dist = Math.abs(player.position.row - base.position.row) + Math.abs(player.position.column - base.position.column)
   if (dist <= 1) {
     return [{
       type: 'use-facility',
       actor,
-      baseId: baseWithBoard.id,
+      baseId: base.id,
       facilityType: 'mission',
       reason: '任務：執行告示牌任務',
     }]
   }
 
-  const moveDest = findClosestReachablePosition(state, player, baseWithBoard.position)
+  const moveDest = findClosestReachablePosition(state, player, base.position)
   return [{
     type: 'move',
     actor,
@@ -823,24 +821,23 @@ function buildRepairActions(
   if (!result.target || result.target.kind !== 'use-facility') {
     return [{ type: 'hold', actor, reason: '修理：無受損裝備' }]
   }
+  const target = result.target
 
-  const baseWithWorkshop = state.bases.find((b) =>
-    b.health > 0 && b.buildings.some((bl) => bl.type === 'workshop'),
-  )
-  if (!baseWithWorkshop) return [{ type: 'hold', actor, reason: '修理：無工坊據點' }]
+  const base = state.bases.find((b) => b.id === target.baseId)
+  if (!base) return [{ type: 'hold', actor, reason: '修理：據點不存在' }]
 
-  const dist = Math.abs(player.position.row - baseWithWorkshop.position.row) + Math.abs(player.position.column - baseWithWorkshop.position.column)
+  const dist = Math.abs(player.position.row - base.position.row) + Math.abs(player.position.column - base.position.column)
   if (dist <= 1) {
     return [{
       type: 'use-facility',
       actor,
-      baseId: baseWithWorkshop.id,
+      baseId: base.id,
       facilityType: 'repair',
       reason: '修理：使用工坊修理裝備',
     }]
   }
 
-  const moveDest = findClosestReachablePosition(state, player, baseWithWorkshop.position)
+  const moveDest = findClosestReachablePosition(state, player, base.position)
   return [{
     type: 'move',
     actor,

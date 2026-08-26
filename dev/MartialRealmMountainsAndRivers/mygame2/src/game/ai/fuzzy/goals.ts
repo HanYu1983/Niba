@@ -41,7 +41,7 @@ export function evaluateSelfPreservation(inputs: FuzzyInputs): GoalResult {
     const f_threatClose = trapezoid(distToNearestThreat, 0, 0, 2, 4)
 
     // 逃命分數
-    const retreatScore = Math.min(0.9, fuzzyOr(
+    const retreatScore = Math.min(0.95, fuzzyOr(
       f_hitsLow,
       fuzzyAnd(f_hitsLow, f_threatClose),
     ))
@@ -55,7 +55,7 @@ export function evaluateSelfPreservation(inputs: FuzzyInputs): GoalResult {
       const f_urgency = trapezoid(healthRatio, 0, 0.2, 0.5, 0.8)
       // 回復佔比越高，分數越高
       const f_effectiveness = Math.min(1, restoreRatio)
-      healScore = Math.min(0.85, fuzzyAnd(f_urgency, f_effectiveness))
+      healScore = Math.min(0.9, fuzzyAnd(f_urgency, f_effectiveness))
     }
 
     // 取較高者：逃命 vs 用道具續命
@@ -78,7 +78,7 @@ export function evaluateSelfPreservation(inputs: FuzzyInputs): GoalResult {
   if (healthRatio < 0.5 && bestItemToUse?.effect === 'health') {
     const missingHealth = 1 - healthRatio
     const restoreRatio = bestItemToUse.effectValue / (missingHealth * 100)
-    const score = Math.min(0.8, restoreRatio >= 1 ? 0.8 : restoreRatio * 0.8)
+    const score = Math.min(0.85, restoreRatio >= 1 ? 0.85 : restoreRatio * 0.85)
     return {
       score,
       target: { kind: 'use-item', itemId: bestItemToUse.id },
@@ -89,14 +89,14 @@ export function evaluateSelfPreservation(inputs: FuzzyInputs): GoalResult {
   // 無威脅 + 血量低 + 無回血道具 → 回據點醫治
   if (healthRatio < 0.3 && nearestBase) {
     if (hasInfirmary && inputs.feasibility.healBaseId) {
-      const score = Math.min(0.8, (0.3 - healthRatio) / 0.3)
+      const score = Math.min(0.85, (0.3 - healthRatio) / 0.3)
       return {
         score,
         target: { kind: 'use-facility', baseId: inputs.feasibility.healBaseId, facilityType: 'heal' },
         context: { healthRatio },
       }
     }
-    const score = Math.min(0.6, (0.3 - healthRatio) / 0.3)
+    const score = Math.min(0.7, (0.3 - healthRatio) / 0.3)
     return {
       score,
       target: { kind: 'return-to-base-heal', baseId: nearestBase.id, position: nearestBase.position },
@@ -370,7 +370,7 @@ function evaluateExploration(inputs: FuzzyInputs): GoalResult {
   }
 
   // 不可見未探索格越多分數越高，體力充足時加分，上限 0.8
-  const baseScore = Math.min(0.8, unexploredInvisibleCells / 10)
+  const baseScore = Math.min(0.6, unexploredInvisibleCells / 10)
   const score = staminaRatio > 0.3 ? baseScore : baseScore * 0.5
 
   return {
