@@ -44,6 +44,10 @@ export function validateDefenseBuild(
   if (!isAdjacent(player.position, base.position)) return '玩家必須位於據點旁。'
   if (base.buildingMaterials < definition.constructionCost) return `建料不足，還需要 ${definition.constructionCost - base.buildingMaterials}。`
   if (!cell || cell.terrain === 'wall') return '目標格不可建造。'
+  // 輜重庫每據點最多一座：輜重庫於生成時轉為同所屬據點的大型資源點（name = 輜重庫）。
+  if (structureType === 'supply-depot' && (state.resourcePoints ?? []).some(
+    (point) => point.ownerBaseId === baseId && point.name === '輜重庫',
+  )) return '每座據點最多只能擁有一座輜重庫。'
   const buildRange = getDefenseBuildRange(playerRank)
   const distance = Math.abs(base.position.row - position.row) + Math.abs(base.position.column - position.column)
   if (distance > buildRange) return `目標格超出據點 ${buildRange} 格建造範圍。`
