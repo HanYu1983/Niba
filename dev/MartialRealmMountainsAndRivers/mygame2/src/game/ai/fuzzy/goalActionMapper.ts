@@ -5,6 +5,7 @@ import type { GoalName, GoalResult } from './goals'
 import { collectReachableCells } from '../perception/reachablePositions'
 import { getBlockedPositions } from '../perception/blockedPositions'
 import { canTraverseTerrain, getTerrainStaminaCost } from '../../rules/playerDerivedRules'
+import { getPlayerVisibleCellIds } from '../../rules/visibilityRules'
 import { externalSkillCatalog } from '../../catalogs/externalSkillCatalog'
 
 /**
@@ -131,9 +132,15 @@ function buildRetreatActions(
     return [{ type: 'hold', actor, reason: '保命：無逃離方向，原地待命' }]
   }
 
-  // 找最近威脅位置
+  // 找視野內最近威脅位置
+  const visibleCellIds = getPlayerVisibleCellIds(state, player.id)
+  const cellsByPosition = new Map(state.map.cells.map((c) => [`${c.row}-${c.column}`, c]))
   const nearestThreat = state.creatures
-    .filter((c) => c.health > 0)
+    .filter((c) => {
+      if (c.health <= 0) return false
+      const cell = cellsByPosition.get(`${c.position.row}-${c.position.column}`)
+      return cell != null && visibleCellIds.has(cell.id)
+    })
     .sort((a, b) => {
       const da = Math.abs(a.position.row - player.position.row) + Math.abs(a.position.column - player.position.column)
       const db = Math.abs(b.position.row - player.position.row) + Math.abs(b.position.column - player.position.column)

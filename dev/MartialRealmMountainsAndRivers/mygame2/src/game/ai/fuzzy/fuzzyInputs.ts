@@ -97,10 +97,18 @@ function manhattan(a: Position, b: Position): number {
 export function computeFuzzyInputs(state: GameState, player: PlayerState): FuzzyInputs {
   const hostiles = listHostileActors(state)
 
-  // 粗估敵人最高傷害力：取最強生物的 health * 0.3
+  // 先計算視野，後續用於過濾可見生物
+  const visibleCellIds = getPlayerVisibleCellIds(state, player.id)
+  const cellsByPosition = new Map(state.map.cells.map((c) => [`${c.row}-${c.column}`, c]))
+
+  // 粗估敵人最高傷害力：只取視野內生物的 health * 0.3
   const creatureHostiles = hostiles.filter((h): h is HostileActor & { sourceType: 'creature'; creature: { health: number; position: Position } } => h.sourceType === 'creature')
-  const maxVisibleEnemyDamage = creatureHostiles.length > 0
-    ? Math.max(...creatureHostiles.map((h) => Math.max(1, Math.floor(h.creature.health * 0.3))))
+  const visibleCreatures = creatureHostiles.filter((h) => {
+    const cell = cellsByPosition.get(`${h.creature.position.row}-${h.creature.position.column}`)
+    return cell != null && visibleCellIds.has(cell.id)
+  })
+  const maxVisibleEnemyDamage = visibleCreatures.length > 0
+    ? Math.max(...visibleCreatures.map((h) => Math.max(1, Math.floor(h.creature.health * 0.3))))
     : 0
 
   const hitsSurvivable = maxVisibleEnemyDamage > 0
@@ -122,8 +130,6 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
   const blocked = new Set(
     getBlockedPositions(state, player.id).map((p) => `${p.row}-${p.column}`),
   )
-  const cellsByPosition = new Map(state.map.cells.map((c) => [`${c.row}-${c.column}`, c]))
-  const visibleCellIds = getPlayerVisibleCellIds(state, player.id)
   const adjacents = getAdjacentPositions(player.position)
   let exitCount = 0
   let nearestExit: Position | undefined
@@ -198,18 +204,11 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
     : undefined
 
   // 戰鬥相關：視野內生物（近到遠）
-  const visibleCreatures = state.creatures
-    .filter((c) => {
-      if (c.health <= 0) return false
-      const cell = cellsByPosition.get(`${c.position.row}-${c.position.column}`)
-      return cell != null && visibleCellIds.has(cell.id)
-    })
-    .sort((a, b) => manhattan(player.position, a.position) - manhattan(player.position, b.position))
-  const visibleCreatureIds = visibleCreatures.map((c) => c.id)
+  const visibleCreatureIds = visibleCreatures.map((c) => c.creature.id)
   const distToNearestCreature = visibleCreatures.length > 0
-    ? manhattan(player.position, visibleCreatures[0].position)
+    ? manhattan(player.position, visibleCreatures[0].creature.position)
     : Infinity
-  const nearestCreature = visibleCreatures[0]
+  const nearestCreature = visibleCreatures[0]?.creature
 
   // 屬性分配
   const availableAttributePoints = player.availableAttributePoints ?? 0
