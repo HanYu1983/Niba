@@ -47,7 +47,7 @@ import {
   getEquipmentInventory,
   canTraverseTerrain,
 } from './rules/playerDerivedRules'
-import { getExternalSkill, getPlayerTotalInsightCost, getElementDamageMultiplier, getSchoolElement } from './rules/skillRules'
+import { getExternalSkill, getPlayerTotalInsightCost, getElementDamageMultiplier, getSchoolElement, equipInnerSkillAction } from './rules/skillRules'
 import {
   applyBaseHealthBonuses,
 } from './rules/baseRules'
@@ -68,7 +68,6 @@ import {
   applyEquipmentLoadout,
 } from './rules/equipmentRules'
 import { type EquipmentSlot } from './catalogs/equipmentCatalog'
-import { allInnerSkillCatalog } from './catalogs/martialHallSkillCatalog'
 import type { DefenseStructureType } from './catalogs/defenseStructureCatalog'
 import type { GovernancePolicyId } from './catalogs/governancePolicyCatalog'
 import { ACTION_STAMINA_COSTS, canPlayerPerformAction, getActionablePlayer, spendPlayerStamina } from './rules/actionCostRules'
@@ -758,34 +757,8 @@ export const gameStore = {
 
   equipInnerSkill: (playerId: string, skillId: string) => {
     updateGameState((state) => {
-      const player = getActionablePlayer(state, playerId)
-
-      if (
-        !player ||
-        player.innerSkillId === skillId ||
-        !player.innerSkillIds.includes(skillId) ||
-        !allInnerSkillCatalog.some(
-          (skill) => skill.id === skillId && getEffectiveAttributesForPlayer(player).insight >= skill.insightRequirement,
-        )
-      ) {
-        return state
-      }
-
-      const effectiveAttributes = getEffectiveAttributesForPlayer(player)
-      const maxInnerPower = getMaxInnerPower(effectiveAttributes)
-      const innerPowerCost = Math.max(1, Math.floor(maxInnerPower * 0.01))
-
-      return applyBaseHealthBonuses({
-        ...state,
-        players: state.players.map((currentPlayer) =>
-          currentPlayer.id === playerId
-            ? applyEquipmentLoadout(
-              { ...currentPlayer, innerSkillId: skillId, innerPower: Math.max(0, currentPlayer.innerPower - innerPowerCost) },
-              getEquipmentLoadout(currentPlayer),
-            )
-            : currentPlayer,
-          ),
-      })
+      const result = equipInnerSkillAction(state, playerId, skillId)
+      return result.state
     })
   },
 

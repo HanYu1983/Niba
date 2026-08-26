@@ -77,6 +77,12 @@ export type AiAction =
       instanceId: string
       reason: string
     }
+  | {
+      type: 'equip-inner-skill'
+      actor: AiActorRef
+      skillId: string
+      reason: string
+    }
 
 const MISSING_POSITION: Position = { row: -1, column: -1 }
 

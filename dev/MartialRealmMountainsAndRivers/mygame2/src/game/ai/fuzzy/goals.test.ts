@@ -10,7 +10,7 @@
  *   3. 修改 goals.ts 中的算分邏輯直到測試通過
  */
 import { describe, expect, it } from 'vitest'
-import { evaluateSelfPreservation, evaluateCollectItems, evaluatePositioning } from './goals'
+import { evaluateSelfPreservation, evaluateCollectItems, evaluatePositioning, evaluateAttackNest, evaluateEquipInnerSkill, evaluateUseInnerSkillAttack } from './goals'
 import type { FuzzyInputs } from './fuzzyInputs'
 import { MIN_THRESHOLD } from './decision'
 
@@ -40,6 +40,12 @@ function makeInputs(overrides: Partial<FuzzyInputs> = {}): FuzzyInputs {
     availableAttributePoints: 0,
     bestItemToUse: undefined,
     equipableEquipment: undefined,
+    distToNearestNest: Infinity,
+    nearestNestId: '',
+    visibleCreatureCount: 0,
+    betterInnerSkill: undefined,
+    hasDamageInnerSkill: false,
+    innerPowerRatio: 0,
     ...overrides,
   }
 }
@@ -90,5 +96,64 @@ describe('evaluatePositioning', () => {
   it('出口多（exitCount=4）→ score 應該低於 0.1', () => {
     const result = evaluatePositioning(makeInputs({ exitCount: 4 }))
     expect(result.score).toBeLessThan(0.1)
+  })
+})
+
+describe('evaluateAttackNest', () => {
+  it('安全血量 + 無生物 + 巢穴近（dist=1）→ score 應該高於 0.6', () => {
+    const result = evaluateAttackNest(makeInputs({
+      hitsSurvivable: 8,
+      visibleCreatureCount: 0,
+      distToNearestNest: 1,
+    }))
+    expect(result.score).toBeGreaterThan(0.6)
+  })
+
+  it('有可見生物 → score 應該等於 0', () => {
+    const result = evaluateAttackNest(makeInputs({
+      visibleCreatureCount: 1,
+      distToNearestNest: 1,
+    }))
+    expect(result.score).toBe(0)
+  })
+
+  it('無巢穴 → score 應該等於 0', () => {
+    const result = evaluateAttackNest(makeInputs())
+    expect(result.score).toBe(0)
+  })
+})
+
+describe('evaluateEquipInnerSkill', () => {
+  it('有更強內功 + 內力充足 → score 應該高於 0.5', () => {
+    const result = evaluateEquipInnerSkill(makeInputs({
+      betterInnerSkill: { id: 'tuna-gong', name: '吐納功', insightRequirement: 5 },
+      innerPowerRatio: 0.5,
+    }))
+    expect(result.score).toBeGreaterThan(0.5)
+  })
+
+  it('無更強內功 → score 應該等於 0', () => {
+    const result = evaluateEquipInnerSkill(makeInputs())
+    expect(result.score).toBe(0)
+  })
+})
+
+describe('evaluateUseInnerSkillAttack', () => {
+  it('有傷害內功 + 內力足夠 + 敵人近 → score 應該高於 0.5', () => {
+    const result = evaluateUseInnerSkillAttack(makeInputs({
+      hasDamageInnerSkill: true,
+      innerPowerRatio: 0.5,
+      visibleCreatureCount: 1,
+      distToNearestThreat: 1,
+    }))
+    expect(result.score).toBeGreaterThan(0.5)
+  })
+
+  it('無傷害內功 → score 應該等於 0', () => {
+    const result = evaluateUseInnerSkillAttack(makeInputs({
+      visibleCreatureCount: 1,
+      distToNearestThreat: 1,
+    }))
+    expect(result.score).toBe(0)
   })
 })
