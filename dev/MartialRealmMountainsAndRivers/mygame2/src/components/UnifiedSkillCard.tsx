@@ -1,6 +1,6 @@
 import { Tooltip } from 'antd'
 import type { CSSProperties, ReactNode } from 'react'
-import { getElementName, type MartialElement } from '../game/rules/skillRules'
+import { getElementName, type SchoolElement } from '../game/rules/skillRules'
 
 export type InteractionFlag = {
   synergy?: boolean
@@ -12,7 +12,7 @@ type UnifiedSkillCardProps = {
   icon: ReactNode
   /** 作用區分：『內功』或『外功』。 */
   kind: 'inner' | 'external'
-  element?: MartialElement
+  element?: SchoolElement
   name: string
   status?: string
   level: number
@@ -48,7 +48,7 @@ function UnifiedSkillCard({
   tooltip,
   onClick,
 }: UnifiedSkillCardProps) {
-  const elementTagStyle: Record<MartialElement, CSSProperties> = {
+  const elementTagStyle: Record<SchoolElement, CSSProperties> = {
     none: { backgroundColor: '#f3f4f6', borderColor: '#9ca3af', color: '#374151' },
     metal: { backgroundColor: '#fef3c7', borderColor: '#d97706', color: '#92400e' },
     wood: { backgroundColor: '#dcfce7', borderColor: '#16a34a', color: '#166534' },

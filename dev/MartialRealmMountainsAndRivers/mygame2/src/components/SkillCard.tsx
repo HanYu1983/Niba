@@ -2,7 +2,7 @@ import { Flex, Tag, Typography } from 'antd'
 import type { CSSProperties, ReactNode } from 'react'
 import StatLabel from './StatLabel'
 import HighlightText from './HighlightText'
-import { getElementName, type MartialElement } from '../game/rules/skillRules'
+import { getElementName, type SchoolElement } from '../game/rules/skillRules'
 
 type SkillCardProps = {
   /** 卡片圖示（emoji）。 */
@@ -10,7 +10,7 @@ type SkillCardProps = {
   /** 頂部小標籤（如「裝備內功」「外功」）。 */
   label: ReactNode
   /** 功法五行屬性。未指定時視為無屬性。 */
-  element?: MartialElement
+  element?: SchoolElement
   /** 技能名稱。 */
   name: ReactNode
   /** 技能描述。 */
@@ -34,7 +34,7 @@ type SkillCardProps = {
  * 統一內功 / 外功卡片的呈現，視覺收斂於元件內部，畫面層零 CSS。
  */
 function SkillCard({ icon, label, element = 'none', name, description, status, meta, highlight, tone = 'violet', compact = false, children }: SkillCardProps) {
-  const elementTagColor: Record<MartialElement, string> = {
+  const elementTagColor: Record<SchoolElement, string> = {
     none: 'default',
     metal: 'gold',
     wood: 'green',
@@ -42,7 +42,7 @@ function SkillCard({ icon, label, element = 'none', name, description, status, m
     fire: 'red',
     earth: 'orange',
   }
-  const elementTagStyle: Record<MartialElement, CSSProperties> = {
+  const elementTagStyle: Record<SchoolElement, CSSProperties> = {
     none: { backgroundColor: '#f3f4f6', borderColor: '#9ca3af', color: '#374151' },
     metal: { backgroundColor: '#fef3c7', borderColor: '#d97706', color: '#92400e' },
     wood: { backgroundColor: '#dcfce7', borderColor: '#16a34a', color: '#166534' },

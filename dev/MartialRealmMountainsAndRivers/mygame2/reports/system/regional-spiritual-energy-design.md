@@ -11,7 +11,7 @@
 ## 2. 設計目標
 
 - **統一抽象**：巢穴（負面靈氣）與據點建築（正面靈氣）共用一套「來源 → 影響力場 → 效果 → 目標」的抽象鏈。
-- **復用既有語意**：元素復用 `MartialElement`；效果欄位復用 `BuffDefinition` 的效果語意；範圍採用既有曼哈頓距離。
+- **復用既有語意**：元素復用 `SchoolElement`；效果欄位復用 `BuffDefinition` 的效果語意；範圍採用既有曼哈頓距離。
 - **低耦合、純查詢**：靈氣解析是純函式查詢，不主動寫入狀態，避免污染回合管線與既有 action。
 - **可擴充**：未來可新增任意「靈氣來源」與「靈氣效果」而不改動框架。
 
@@ -21,12 +21,12 @@
 
 設計前先盤點既有系統，確認哪些概念可直接復用、哪些需抽象。
 
-### 3.1 元素：復用 `MartialElement`
+### 3.1 元素：復用 `SchoolElement`
 
 `src/game/rules/skillRules.ts` 已定義：
 
 ```ts
-export type MartialElement = 'none' | 'metal' | 'wood' | 'water' | 'fire' | 'earth'
+export type SchoolElement = 'none' | 'metal' | 'wood' | 'water' | 'fire' | 'earth'
 ```
 
 並提供 `getSchoolElement(schoolId)` 將功法流派映射到元素。區域靈氣的「屬性」**直接復用此型別**，不再另建 `ElementalAffinity`。
@@ -139,7 +139,7 @@ graph TD
 | `sourceId` | string | 回溯來源 |
 | `position` | Position | 中心點（= 來源位置） |
 | `radius` | number | 影響半徑（曼哈頓距離） |
-| `element` | `MartialElement` | 靈氣屬性（`none` = 中性靈氣） |
+| `element` | `SchoolElement` | 靈氣屬性（`none` = 中性靈氣） |
 | `effects` | `AuraEffect[]` | 此場內施加的效果清單 |
 
 **範圍規則**：
@@ -235,7 +235,7 @@ type AuraTargetType = 'player' | 'creature' | 'all'
 
 | 既有檔案/符號 | 在抽象系統中的角色 |
 | :--- | :--- |
-| `skillRules.ts` 的 `MartialElement` / `getSchoolElement` | 靈氣元素型別與「流派→元素」映射 |
+| `skillRules.ts` 的 `SchoolElement` / `getSchoolElement` | 靈氣元素型別與「流派→元素」映射 |
 | `buffCatalog.ts` 的 `BuffDefinition` | 靈氣效果欄位的語意來源 |
 | `globalBuffRules.ts` 的 `GlobalBuff` / `getActiveGlobalBuffs` | 來源追蹤、失活判定、疊加策略的參考骨架 |
 | `baseRules.ts` 的 `getBarracksRecovery` / `isPlayerWithinBaseVision` / `BASE_INFLUENCE_RANGE` | 防衛營回血與範圍判定的既有錨點 |
@@ -250,7 +250,7 @@ type AuraTargetType = 'player' | 'creature' | 'all'
 
 ## 9. 開發檢查清單（抽象層，非實作）
 
-- [ ] 確認 `CreatureNestState` 新增 `dominantElement?: MartialElement` 欄位（無屬性巢穴可省略或設 `none`）。
+- [ ] 確認 `CreatureNestState` 新增 `dominantElement?: SchoolElement` 欄位（無屬性巢穴可省略或設 `none`）。
 - [ ] 定義 `AuraEffectKind` 枚舉與每種效果的「每回合累積型 / 被動查詢型」分類。
 - [ ] 定義曼哈頓距離半徑的預設值與各來源的 `radius` 來源（巢穴固定值、防衛營沿用 `BASE_INFLUENCE_RANGE`）。
 - [ ] 明確巢穴靈氣的 `target`（`player` vs `all`）——是否傷及自家怪物。

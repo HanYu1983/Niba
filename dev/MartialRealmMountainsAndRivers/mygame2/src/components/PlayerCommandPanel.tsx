@@ -3,6 +3,7 @@ import type { ExternalSkill } from '../game/catalogs/externalSkillCatalog'
 import type { PlayerState } from '../game/types'
 import { ACTION_STAMINA_COSTS } from '../game/rules/actionCostRules'
 import { getSkillInnerPowerCost, getSkillProgression } from '../game/rules/skillRules'
+import { getCommandPanelSkills } from '../game/rules/commandPanelSkills'
 
 type PlayerCommandPanelProps = {
   player: PlayerState | null
@@ -16,6 +17,7 @@ type PlayerCommandPanelProps = {
   onAttack: () => void
   onUseExternalSkill: (skillId: string) => void
   onToggleMovement: () => void
+  onBuildRoad: () => void
   onEndTurn: () => void
   onOpenOptions: () => void
 }
@@ -32,11 +34,13 @@ function PlayerCommandPanel({
   onAttack,
   onUseExternalSkill,
   onToggleMovement,
+  onBuildRoad,
   onEndTurn,
   onOpenOptions,
 }: PlayerCommandPanelProps) {
   const canAct = Boolean(player && player.health > 0 && !player.turnEnded && !creatureTurnInProgress)
   const canSpend = (cost: number) => canAct && Boolean(player && player.stamina >= cost)
+  const commandPanelSkills = getCommandPanelSkills(player, externalSkills)
 
   return (
     <Card className="player-command-panel" variant="borderless">
@@ -52,22 +56,16 @@ function PlayerCommandPanel({
               ⚔️ 攻擊{ACTION_STAMINA_COSTS.attack > 0 ? ` ✦${ACTION_STAMINA_COSTS.attack}` : ''}（A）
             </Button>
           </Tooltip>
-          {player?.equippedExternalSkillIds.map((skillId) => {
-            const skill = externalSkills.find((currentSkill) => currentSkill.id === skillId)
-
-            // 靈氣型外功為常駐開關，不顯示在公用指令欄，改由功法面板切換。
-            if (!skill || skill.category === 'aura') {
-              return null
-            }
-
-            const usedThisTurn = player.externalSkillsUsedThisTurn?.includes(skill.id) ?? false
-            const skillLevel = getSkillProgression(player, skill.id).level
+          {commandPanelSkills.map((skill, index) => {
+            const usedThisTurn = player?.externalSkillsUsedThisTurn?.includes(skill.id) ?? false
+            const skillLevel = getSkillProgression(player!, skill.id).level
             const actualInnerPowerCost = getSkillInnerPowerCost(skill.innerPowerCost, skillLevel)
+            const hotkey = index + 1
 
             return (
-              <Tooltip title={usedThisTurn ? '此外功本回合已使用' : `消耗內力 ${actualInnerPowerCost}｜${skill.description}`} key={skill.id}>
-                <Button disabled={!canAct || usedThisTurn || player.innerPower < actualInnerPowerCost} onClick={() => onUseExternalSkill(skill.id)}>
-                  ⚡ {skill.name}（內力 {actualInnerPowerCost}）
+              <Tooltip title={usedThisTurn ? '此外功本回合已使用' : `快捷鍵 ${hotkey}｜消耗內力 ${actualInnerPowerCost}｜${skill.description}`} key={skill.id}>
+                <Button disabled={!canAct || usedThisTurn || (player?.innerPower ?? 0) < actualInnerPowerCost} onClick={() => onUseExternalSkill(skill.id)}>
+                  ⚡ {skill.name}（內力 {actualInnerPowerCost}）（{hotkey}）
                 </Button>
               </Tooltip>
             )
@@ -79,6 +77,11 @@ function PlayerCommandPanel({
               onClick={onToggleMovement}
             >
               🧭 {movementEnabled ? '取消移動' : '移動'} ✦地形（W）
+            </Button>
+          </Tooltip>
+          <Tooltip title={`快捷鍵 R｜修路：將所在格改為道路，消耗 ${ACTION_STAMINA_COSTS.buildRoad} 點體力`}>
+            <Button disabled={!canSpend(ACTION_STAMINA_COSTS.buildRoad)} onClick={onBuildRoad}>
+              🛤️ 修路 ✦{ACTION_STAMINA_COSTS.buildRoad}（R）
             </Button>
           </Tooltip>
           <Tooltip title={`快捷鍵 B｜使用道具消耗 ${ACTION_STAMINA_COSTS.useItem} 點體力`}>

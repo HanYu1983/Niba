@@ -17,6 +17,8 @@ export const ACTION_STAMINA_COSTS = {
   defenseBuild: 3,
   resourcePointBuild: 10,
   roadBuild: 1,
+  /** 公用指令欄「修路」：將玩家所在格改為道路。 */
+  buildRoad: 2,
   exploration: 0,
 } as const
 

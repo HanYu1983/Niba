@@ -27,11 +27,11 @@ import {
   rollRoamerLevel,
 } from './rules/creatureBehaviorRules'
 import { createSeededRandom, pickRandom } from './rules/randomRules'
-import { getSchoolElement } from './rules/skillRules'
 import { getPlayerVisibleCellIds } from './rules/visibilityRules'
 import { NEST_SPAWN_BASE_CHANCE, getNestMaxHealth } from './actions/creatureActions'
 import { createExplorationEventsFromCatalog } from './events/eventSpawner'
 import { createCharacterState } from './characterFactory'
+import { getSchoolElement } from './catalogs/skillProgressionCatalog'
 
 /**
  * 世界生成純函式集合。

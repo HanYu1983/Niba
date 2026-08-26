@@ -5,7 +5,6 @@ import type {
   MaterialTransferResult,
 } from '../types'
 import type { GovernancePolicyId } from '../catalogs/governancePolicyCatalog'
-import { applyConstructionPrestige } from '../rules/governanceRules'
 import { canSwitchPolicy as validatePolicySwitch } from '../rules/policyRules'
 import { canSwitchRemotePolicy, canTransferMaterials } from '../rules/regionalManagementRules'
 import { isBaseActive } from '../rules/baseRules'
@@ -33,9 +32,7 @@ export function switchBasePolicy(
   return {
     state: {
       ...state,
-      players: state.players.map((currentPlayer) => currentPlayer.id === playerId
-        ? applyConstructionPrestige(currentPlayer, 'policy-switch')
-        : currentPlayer),
+      players: state.players,
       bases: state.bases.map((currentBase) => currentBase.id === baseId
         ? { ...currentBase, activePolicyId: policyId, lastPolicySwitchRound: state.round }
         : currentBase),
@@ -56,9 +53,7 @@ export function switchRemoteBasePolicy(
   return {
     state: {
       ...state,
-      players: state.players.map((currentPlayer) => currentPlayer.id === playerId
-        ? applyConstructionPrestige(currentPlayer, 'policy-switch')
-        : currentPlayer),
+      players: state.players,
       bases: state.bases.map((currentBase) => currentBase.id === targetBaseId
         ? { ...currentBase, activePolicyId: policyId, lastPolicySwitchRound: state.round }
         : currentBase),

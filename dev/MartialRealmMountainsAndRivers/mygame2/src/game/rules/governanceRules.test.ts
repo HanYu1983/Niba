@@ -7,6 +7,8 @@ import {
   getMaxBuildingLevelForPlayer,
   applyPrestigeGain,
   getAvailablePolicyIds,
+  getMaterialPrestigeAmount,
+  applyMaterialPrestige,
 } from './governanceRules'
 import type { PlayerState } from '../types'
 import { getMaxHealth, getMaxInnerPower, getMaxStamina } from './playerStatsRules'
@@ -173,5 +175,32 @@ describe('applyPrestigeGain', () => {
     expect(next.unlockedPolicyIds).toContain('civilian')
     expect(next.unlockedPolicyIds).toContain('military')
     expect(next.unlockedPolicyIds).toContain('economic')
+  })
+})
+
+describe('建料聲望', () => {
+  it('聲望 = 使用的建料數量 / 5（向下取整）', () => {
+    expect(getMaterialPrestigeAmount(0)).toBe(0)
+    expect(getMaterialPrestigeAmount(5)).toBe(1)
+    expect(getMaterialPrestigeAmount(20)).toBe(4)
+    expect(getMaterialPrestigeAmount(30)).toBe(6)
+    expect(getMaterialPrestigeAmount(40)).toBe(8)
+    expect(getMaterialPrestigeAmount(9)).toBe(1)
+    expect(getMaterialPrestigeAmount(-10)).toBe(0)
+  })
+
+  it('套用建造聲望加成（如天工開物）時聲望依比例增加', () => {
+    // 建料 40 / 5 = 8；天工開物加成 50% → 8 * 1.5 = 12
+    expect(getMaterialPrestigeAmount(40, 0.5)).toBe(12)
+    expect(getMaterialPrestigeAmount(20, 0.5)).toBe(6)
+    // 加成為 0 時不變
+    expect(getMaterialPrestigeAmount(40, 0)).toBe(8)
+  })
+
+  it('applyMaterialPrestige 依建料數量與加成發放聲望並更新官階', () => {
+    const player = makePlayer({ prestige: 0 })
+    const next = applyMaterialPrestige(player, 40, 0.5)
+    expect(next.prestige).toBe(12)
+    expect(next.governanceRank).toBe(1)
   })
 })

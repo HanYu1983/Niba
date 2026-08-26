@@ -4,7 +4,11 @@ import { type FunctionalExternalSkillEffect } from './functionalSkillRegistry'
 import type { ExternalSkill } from './externalSkillCatalog'
 import { createAuraExternalSkill, createDamageExternalSkill, createInnerSkill } from './skillFactory'
 
-type SchoolElement = 'none' | 'metal' | 'wood' | 'water' | 'fire' | 'earth'
+export type SchoolElement = 'none' | 'metal' | 'wood' | 'water' | 'fire' | 'earth'
+
+export function getSchoolElement(schoolId?: string): SchoolElement {
+  return martialSchoolCatalog.find(school => school.id === schoolId)?.element ?? 'none'
+}
 
 type InnerSkillEntry = {
   name: string

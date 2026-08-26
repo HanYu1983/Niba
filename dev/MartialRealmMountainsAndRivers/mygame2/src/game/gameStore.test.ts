@@ -1426,7 +1426,8 @@ describe('防衛營', () => {
       const nextBase = gameStore.getState().bases[0]
       expect(nextBase.maxHealth).toBe(480)
       expect(nextBase.health).toBe(330)
-      expect(gameStore.getState().players[0].prestige).toBe(245)
+      // 建造聲望 = 使用的建料 / 5（強化城牆建料 30 → 6）。
+      expect(gameStore.getState().players[0].prestige).toBe(246)
     })
 
     it('同一據點不能重複建造強化城牆', () => {
@@ -1948,7 +1949,8 @@ describe('建設聲望', () => {
     gameStore.setStateForTest(makeGameState({ players: [player], bases: [base] }))
 
     expect(gameStore.constructDefenseStructure('player-1', 'base-1', 'barricade', { row: 5, column: 4 }).ok).toBe(true)
-    expect(gameStore.getState().players[0].prestige).toBe(5)
+    // 建造聲望 = 使用的建料 / 5（木柵建料 20 → 4）。
+    expect(gameStore.getState().players[0].prestige).toBe(4)
   })
 })
 
@@ -1961,14 +1963,14 @@ describe('switchBasePolicy', () => {
     expect(gameStore.getState().bases[0].activePolicyId).toBeUndefined()
   })
 
-  it('已解鎖政策時可切換並獲得聲望', () => {
+  it('已解鎖政策時可切換（不增加聲望）', () => {
     const player = makePlayer({ prestige: 80, governanceRank: 2, unlockedPolicyIds: ['basic', 'civilian'] })
     gameStore.setStateForTest(makeGameState({ players: [player] }))
 
     expect(gameStore.switchBasePolicy('player-1', 'base-1', 'civilian').ok).toBe(true)
     const state = gameStore.getState()
     expect(state.bases[0].activePolicyId).toBe('civilian')
-    expect(state.players[0].prestige).toBe(80 + 4)
+    expect(state.players[0].prestige).toBe(80)
   })
 
   it('切換政策後進入冷卻，需等待 3 回合才能再次切換', () => {

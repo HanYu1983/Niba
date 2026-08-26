@@ -46,14 +46,15 @@ import {
   getEffectiveAttributesForPlayer,
   getEquipmentInventory,
   canTraverseTerrain,
+  getBuildingReputationBonus,
 } from './rules/playerDerivedRules'
-import { getExternalSkill, getPlayerTotalInsightCost, getElementDamageMultiplier, getSchoolElement, equipInnerSkillAction } from './rules/skillRules'
+import { getExternalSkill, getPlayerTotalInsightCost, getElementDamageMultiplier, equipInnerSkillAction } from './rules/skillRules'
 import {
   applyBaseHealthBonuses,
 } from './rules/baseRules'
 import { validateDefenseBuild } from './rules/defenseRules'
 import { getRepairSummary, getWorkshopLevel, repairEquipmentInventory } from './rules/buildingRules'
-import { applyConstructionPrestige } from './rules/governanceRules'
+import { applyMaterialPrestige } from './rules/governanceRules'
 import {
   canTransportPlayer,
   getTransportLandingPosition,
@@ -85,6 +86,7 @@ import {
   sellItem as sellItemAction,
 } from './actions/shopActions'
 import {
+  buildRoadAtPlayer as buildRoadAtPlayerAction,
   constructBuilding as constructBuildingAction,
   constructDefenseStructure as constructDefenseStructureAction,
   upgradeBuilding as upgradeBuildingAction,
@@ -177,6 +179,7 @@ import { selectBestGoal, MIN_THRESHOLD } from './ai/fuzzy/decision'
 import { buildActionSequence } from './ai/fuzzy/goalActionMapper'
 import { defaultRandomSource } from './rules/randomRules'
 import { getBlockedPositions } from './rules/movementRules'
+import { getSchoolElement } from './catalogs/skillProgressionCatalog'
 
 export function spawnCreaturesFromNests(
   nests: CreatureNestState[],
@@ -1294,7 +1297,7 @@ export const gameStore = {
       return {
         ...action.state,
         players: action.state.players.map((currentPlayer) => currentPlayer.id === playerId
-          ? applyConstructionPrestige(currentPlayer, 'build')
+          ? applyMaterialPrestige(currentPlayer, action.materialsUsed ?? 0, getBuildingReputationBonus(currentPlayer))
           : currentPlayer),
       }
     })
@@ -1310,7 +1313,7 @@ export const gameStore = {
       return {
         ...action.state,
         players: action.state.players.map((currentPlayer) => currentPlayer.id === playerId
-          ? applyConstructionPrestige(currentPlayer, 'upgrade')
+          ? applyMaterialPrestige(currentPlayer, action.materialsUsed ?? 0, getBuildingReputationBonus(currentPlayer))
           : currentPlayer),
       }
     })
@@ -1335,11 +1338,15 @@ export const gameStore = {
       return {
         ...action.state,
         players: action.state.players.map((currentPlayer) => currentPlayer.id === playerId
-          ? applyConstructionPrestige(currentPlayer, 'build')
+          ? applyMaterialPrestige(currentPlayer, action.materialsUsed ?? 0, getBuildingReputationBonus(currentPlayer))
           : currentPlayer),
       }
     })
     return result
+  },
+
+  buildRoad: (playerId: string): ActionOutcome => {
+    return runActionOutcome(updateGameState, (state) => buildRoadAtPlayerAction(state, playerId), '修路失敗。')
   },
 
   reconstructRuin: (playerId: string, ruinId: string, structureType: DefenseStructureType): ActionOutcome => {
@@ -1374,7 +1381,7 @@ export const gameStore = {
       if (resourcePoint.active !== false) return { state, result: { ok: false, reason: '資源點目前不需要修復。' } }
       const actionCheck = canPlayerPerformAction(state, playerId, ACTION_STAMINA_COSTS.resourcePointBuild)
       if (!actionCheck.ok) return { state, result: { ok: false, reason: actionCheck.reason ?? '體力不足。' } }
-      if (!isAdjacent(player.position, resourcePoint.position)) return { state, result: { ok: false, reason: '玩家必須位於資源點旁。' } }
+      if (!isSameOrAdjacent(player.position, resourcePoint.position)) return { state, result: { ok: false, reason: '玩家需位於資源點自身格或周圍一格。' } }
       return {
         state: {
           ...state,
