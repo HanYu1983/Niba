@@ -5,20 +5,32 @@ import { collectReachableCells } from '../perception/reachablePositions'
 import { externalSkillCatalog } from '../../catalogs/externalSkillCatalog'
 
 /**
- * 找出距目標位置最近的可到達格子。
- * 若玩家已在目標或目標可直接到達，回傳目標本身。
- * 否則回傳 reachable 中距目標最近的格子。
+ * 從玩家的相鄰可達格中，找出距目標位置最近的格子。
+ * 只考慮與玩家相鄰（manhattan=1）的可達格，確保每步只移動一格。
+ * 若目標本身與玩家相鄰且可達，直接回傳目標。
  */
 function findClosestReachablePosition(state: GameState, player: PlayerState, targetPosition: { row: number; column: number }): { row: number; column: number } {
   const reachable = collectReachableCells(state, player)
   if (reachable.length === 0) return player.position
 
-  // 目標本身可達
-  const targetReachable = reachable.find((c) => c.position.row === targetPosition.row && c.position.column === targetPosition.column)
-  if (targetReachable) return targetPosition
+  // 目標本身與玩家相鄰且可達
+  const distToTarget = Math.abs(player.position.row - targetPosition.row) + Math.abs(player.position.column - targetPosition.column)
+  if (distToTarget <= 1) {
+    const targetReachable = reachable.find((c) => c.position.row === targetPosition.row && c.position.column === targetPosition.column)
+    if (targetReachable) return targetPosition
+  }
 
-  // 找 reachable 中距目標最近的格子
-  const best = reachable.reduce((best, c) => {
+  // 只取相鄰格（cost > 0 表示不是原地，manhattan ≤ 1 表示相鄰）
+  const adjacents = reachable.filter((c) => {
+    if (c.cost === 0) return false // 排除原地
+    const d = Math.abs(c.position.row - player.position.row) + Math.abs(c.position.column - player.position.column)
+    return d <= 1
+  })
+
+  if (adjacents.length === 0) return player.position
+
+  // 從相鄰格中選距目標最近的
+  const best = adjacents.reduce((best, c) => {
     const dBest = Math.abs(best.position.row - targetPosition.row) + Math.abs(best.position.column - targetPosition.column)
     const dC = Math.abs(c.position.row - targetPosition.row) + Math.abs(c.position.column - targetPosition.column)
     return dC < dBest ? c : best
