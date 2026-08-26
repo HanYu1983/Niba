@@ -199,12 +199,23 @@ export function evaluateAllGoals(inputs: FuzzyInputs): Record<GoalName, GoalResu
 function evaluateConstruction(inputs: FuzzyInputs): GoalResult {
   const { materialRatio, canBuild, buildableBuilding, nearestBase, nearestResourcePoint, distToNearestResourcePoint, isAdjacentToResourcePoint, visibleBaseIds } = inputs
 
-  // 若有可見但尚未 active 的據點 → 回傳高分，執行打工（採集資源幫助據點啟用）
-  // visibleBaseIds 已按距離排序，取最近的未 active 據點
-  // （注意：fuzzyInputs 中 nearestBase 只含 active 據點，此處需從 gameState 判斷）
-  // 但 goals 是純函數只接收 FuzzyInputs → 用 nearestBase 為 undefined 且 visibleBaseIds 非空來判斷
+  // 無可見據點 → 分數 0
+  if (visibleBaseIds.length === 0) {
+    return { score: 0 }
+  }
 
-  // 情境 A：建料滿 + 可建造 → 高分 + build target
+  const primaryBaseId = visibleBaseIds[0]
+  const primaryBaseIsActive = nearestBase?.id === primaryBaseId
+
+  // 情境 A：最近可見據點未 active → 高分打工（採集資源）
+  if (!primaryBaseIsActive) {
+    return {
+      score: 0.7,
+      context: { visibleBaseIds, action: 'work' },
+    }
+  }
+
+  // 情境 B：建料滿 + 可建造 → 高分 + build target
   if (materialRatio >= 1 && canBuild && buildableBuilding && nearestBase) {
     return {
       score: 0.9,
@@ -213,7 +224,7 @@ function evaluateConstruction(inputs: FuzzyInputs): GoalResult {
     }
   }
 
-  // 情境 B：已與資源點相鄰 → 採集（高分）
+  // 情境 C：已與資源點相鄰 → 採集（高分）
   if (isAdjacentToResourcePoint && nearestResourcePoint) {
     return {
       score: 0.8,
@@ -222,8 +233,8 @@ function evaluateConstruction(inputs: FuzzyInputs): GoalResult {
     }
   }
 
-  // 情境 C：有據點 + 建料不足 + 有資源點 → 移動到資源點（中高分）
-  if (nearestBase && materialRatio < 1 && nearestResourcePoint && distToNearestResourcePoint < Infinity) {
+  // 情境 D：有據點 + 建料不足 + 有資源點 → 移動到資源點（中高分）
+  if (materialRatio < 1 && nearestResourcePoint && distToNearestResourcePoint < Infinity) {
     return {
       score: 0.5,
       target: { kind: 'resource-point', resourcePointId: nearestResourcePoint.id, position: nearestResourcePoint.position },
@@ -231,17 +242,9 @@ function evaluateConstruction(inputs: FuzzyInputs): GoalResult {
     }
   }
 
-  // 情境 D：有可見據點但全部未 active → 高分打工（採集資源）
-  if (visibleBaseIds.length > 0 && !nearestBase) {
-    return {
-      score: 0.7,
-      context: { visibleBaseIds, action: 'work' },
-    }
-  }
-
-  // 無據點或無資源點 → 低分
+  // 無資源點 → 低分
   return {
-    score: nearestBase ? 0.1 : 0,
+    score: 0.1,
     context: { materialRatio },
   }
 }
