@@ -33,18 +33,40 @@ export type GoalTarget =
 // ─── selfPreservation ──────────────────────────────────────────────
 
 export function evaluateSelfPreservation(inputs: FuzzyInputs): GoalResult {
-  const { hitsSurvivable, distToNearestThreat, healthRatio, nearestBase, hasInfirmary } = inputs
+  const { hitsSurvivable, distToNearestThreat, healthRatio, bestItemToUse, nearestBase, hasInfirmary } = inputs
 
-  // 有威脅 → 評估逃命
+  // 有威脅 → 評估逃命或用道具續命
   if (distToNearestThreat !== Infinity) {
     const f_hitsLow = trapezoid(hitsSurvivable, 0, 0.5, 1, 2)
     const f_threatClose = trapezoid(distToNearestThreat, 0, 0, 2, 4)
 
-    const score = Math.min(0.9, fuzzyOr(
+    // 逃命分數
+    const retreatScore = Math.min(0.9, fuzzyOr(
       f_hitsLow,
       fuzzyAnd(f_hitsLow, f_threatClose),
     ))
 
+    // 用回血道具續命：血越低 + 道具回血越多 → 分數越高
+    let healScore = 0
+    if (bestItemToUse?.effect === 'health' && healthRatio < 0.8) {
+      const missingHealth = 1 - healthRatio
+      const restoreRatio = bestItemToUse.effectValue / (missingHealth * 100)
+      // 血量越低，回血越值得
+      const f_urgency = trapezoid(healthRatio, 0, 0.2, 0.5, 0.8)
+      // 回復佔比越高，分數越高
+      const f_effectiveness = Math.min(1, restoreRatio)
+      healScore = Math.min(0.85, fuzzyAnd(f_urgency, f_effectiveness))
+    }
+
+    // 取較高者：逃命 vs 用道具續命
+    const score = Math.max(retreatScore, healScore)
+    if (healScore > retreatScore) {
+      return {
+        score,
+        target: { kind: 'use-item', itemId: bestItemToUse!.id },
+        context: { hitsSurvivable, distToNearestThreat, action: 'heal-in-combat' },
+      }
+    }
     return {
       score,
       target: { kind: 'retreat', escapeDirection: { row: 0, column: 0 } },
@@ -52,9 +74,20 @@ export function evaluateSelfPreservation(inputs: FuzzyInputs): GoalResult {
     }
   }
 
-  // 無威脅 + 血量低 → 回據點醫治（不管有無道具，醫治 > 道具）
+  // 無威脅 + 血量低 → 先試用回血道具，再考慮回據點
+  if (healthRatio < 0.5 && bestItemToUse?.effect === 'health') {
+    const missingHealth = 1 - healthRatio
+    const restoreRatio = bestItemToUse.effectValue / (missingHealth * 100)
+    const score = Math.min(0.8, restoreRatio >= 1 ? 0.8 : restoreRatio * 0.8)
+    return {
+      score,
+      target: { kind: 'use-item', itemId: bestItemToUse.id },
+      context: { healthRatio, action: 'heal-out-of-combat' },
+    }
+  }
+
+  // 無威脅 + 血量低 + 無回血道具 → 回據點醫治
   if (healthRatio < 0.3 && nearestBase) {
-    // 有醫療室 → 回據點用醫療室就醫（以 feasibility.healBaseId 為準）
     if (hasInfirmary && inputs.feasibility.healBaseId) {
       const score = Math.min(0.8, (0.3 - healthRatio) / 0.3)
       return {
@@ -63,7 +96,6 @@ export function evaluateSelfPreservation(inputs: FuzzyInputs): GoalResult {
         context: { healthRatio },
       }
     }
-    // 無醫療室 → 純移動回據點（希望被動恢復）
     const score = Math.min(0.6, (0.3 - healthRatio) / 0.3)
     return {
       score,
