@@ -358,6 +358,25 @@ function buildExplorationActions(
     }]
   }
 
+  // 無未探索格 → 回據點
+  const bases = state.bases.filter((b) => b.health > 0)
+  if (bases.length > 0) {
+    const nearestBase = bases.reduce((best, b) => {
+      const dBest = Math.abs(best.position.row - player.position.row) + Math.abs(best.position.column - player.position.column)
+      const dB = Math.abs(b.position.row - player.position.row) + Math.abs(b.position.column - player.position.column)
+      return dB < dBest ? b : best
+    })
+    const moveDest = findClosestReachablePosition(state, player, nearestBase.position)
+    if (moveDest.row !== player.position.row || moveDest.column !== player.position.column) {
+      return [{
+        type: 'move',
+        actor,
+        destination: moveDest,
+        reason: `探索：無未探索格，回據點 ${nearestBase.name}`,
+      }]
+    }
+  }
+
   return [{ type: 'hold', actor, reason: '探索：無未探索格' }]
 }
 
