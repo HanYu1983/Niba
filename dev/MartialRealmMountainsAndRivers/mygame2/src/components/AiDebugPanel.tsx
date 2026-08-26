@@ -43,7 +43,7 @@ function AiDebugPanel({ player, gameState }: AiDebugPanelProps) {
             <SectionTitle title="道具" />
             <Row label="reachableItemCount" value={formatNumber(inputs.reachableItemCount)} />
             <Row label="distToNearestItem" value={formatNumber(inputs.distToNearestItem)} />
-            <Row label="bestItemToUse" value={inputs.bestItemToUse ? `${inputs.bestItemToUse.name} (${inputs.bestItemToUse.effect})` : '—'} />
+            <Row label="bestItemToUse" value={inputs.bestItemToUse ? `${inputs.bestItemToUse.name} (${inputs.bestItemToUse.effect} +${inputs.bestItemToUse.effectValue})` : '—'} />
             <SectionTitle title="資源" />
             <Row label="reachableResourceCount" value={formatNumber(inputs.reachableResourceCount)} />
             <Row label="nearestResourcePoint" value={inputs.nearestResourcePoint ? `(${inputs.nearestResourcePoint.position.row},${inputs.nearestResourcePoint.position.column})` : '—'} />

@@ -133,23 +133,46 @@ function evaluateAllocateAttributes(inputs: FuzzyInputs): GoalResult {
 // 有值得用的道具 → 高分
 
 function evaluateUseItem(inputs: FuzzyInputs): GoalResult {
-  const { bestItemToUse } = inputs
+  const { bestItemToUse, healthRatio, innerPowerRatio } = inputs
 
   if (!bestItemToUse) {
     return { score: 0 }
   }
 
-  // 回血/回體力道具根據需求程度給分
-  if (bestItemToUse.effect === 'health' || bestItemToUse.effect === 'stamina') {
-    const score = bestItemToUse.effect === 'health' ? 0.8 : 0.6
+  // 回血道具：恢復量 / 缺血量，佔比越高分數越高
+  if (bestItemToUse.effect === 'health') {
+    const missingHealth = 1 - healthRatio
+    if (missingHealth <= 0) return { score: 0 }
+    const restoreRatio = Math.min(1, bestItemToUse.effectValue / (missingHealth * 100))
     return {
-      score,
+      score: restoreRatio,
+      target: { kind: 'use-item', itemId: bestItemToUse.id },
+      context: { effect: bestItemToUse.effect, name: bestItemToUse.name, effectValue: bestItemToUse.effectValue },
+    }
+  }
+
+  // 回內力道具：恢復量 / 缺內力量，佔比越高分數越高
+  if (bestItemToUse.effect === 'inner-power') {
+    const missingInnerPower = 1 - innerPowerRatio
+    if (missingInnerPower <= 0) return { score: 0 }
+    const restoreRatio = Math.min(1, bestItemToUse.effectValue / (missingInnerPower * 100))
+    return {
+      score: restoreRatio,
+      target: { kind: 'use-item', itemId: bestItemToUse.id },
+      context: { effect: bestItemToUse.effect, name: bestItemToUse.name, effectValue: bestItemToUse.effectValue },
+    }
+  }
+
+  // 回體力道具：固定分數
+  if (bestItemToUse.effect === 'stamina') {
+    return {
+      score: 0.6,
       target: { kind: 'use-item', itemId: bestItemToUse.id },
       context: { effect: bestItemToUse.effect, name: bestItemToUse.name },
     }
   }
 
-  // 探地符/回營符等：中等分數
+  // 其他道具：中等分數
   return {
     score: 0.4,
     target: { kind: 'use-item', itemId: bestItemToUse.id },
@@ -285,8 +308,8 @@ export function evaluatePositioning(inputs: FuzzyInputs): GoalResult {
     ? Math.min(1, f_fewExits + f_threatClose * 0.3)
     : f_fewExits
 
-  // 四周無怪時分數除 3
-  const finalScore = distToNearestThreat === Infinity ? score / 3 : score
+  // 四周無怪時
+  const finalScore = distToNearestThreat === Infinity ? 0 : score
 
   // target：無出口 → 用 nearestCreature（由 mapper 找最近怪）；有出口 → exit
   let target: GoalTarget | undefined
@@ -347,6 +370,9 @@ export function evaluateEquipInnerSkill(inputs: FuzzyInputs): GoalResult {
 // ─── useInnerSkillAttack ───────────────────────────────────────
 
 export function evaluateUseInnerSkillAttack(inputs: FuzzyInputs): GoalResult {
+  // 先關閉
+  return { score: 0 }
+
   const { hasDamageInnerSkill, innerPowerRatio, distToNearestThreat, visibleCreatureIds } = inputs
 
   if (!hasDamageInnerSkill || visibleCreatureIds.length === 0) return { score: 0 }

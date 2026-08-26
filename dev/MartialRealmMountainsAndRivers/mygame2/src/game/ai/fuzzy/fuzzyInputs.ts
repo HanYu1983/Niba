@@ -18,6 +18,8 @@ export interface FuzzyInputs {
   hitsSurvivable: number
   /** 體力比 0~1 */
   staminaRatio: number
+  /** 血量比 0~1 */
+  healthRatio: number
   /** 到最近威脅的距離 */
   distToNearestThreat: number
   /** 場上可見生物最高傷害力（粗估） */
@@ -65,7 +67,7 @@ export interface FuzzyInputs {
   /** 可分配屬性點數 */
   availableAttributePoints: number
   /** 建議使用的道具（id + effect），無則 undefined */
-  bestItemToUse: { id: string; effect: string; name: string } | undefined
+  bestItemToUse: { id: string; effect: string; name: string; effectValue: number } | undefined
   /** 建議裝備的裝備（部位空 or 耐久=0 需替換），無則 undefined */
   equipableEquipment: { instanceId: string; equipmentId: string; slot: string; name: string; durability: number } | undefined
   /** 到最近巢穴的距離，無巢穴 = Infinity */
@@ -250,6 +252,7 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
   return {
     hitsSurvivable,
     staminaRatio: player.stamina / player.maxStamina,
+    healthRatio: player.health / player.maxHealth,
     distToNearestThreat,
     maxVisibleEnemyDamage,
     reachableItemCount: itemInterests.length,
@@ -293,7 +296,7 @@ function pickBestItem(
   staminaRatio: number,
   unexploredCount: number,
   nearestBase: BaseState | undefined,
-): { id: string; effect: string; name: string } | undefined {
+): { id: string; effect: string; name: string; effectValue: number } | undefined {
   // 優先級：低血回血 > 低體力回氣 > 探地符(有未探索) > 回營符(離據點遠) > 其他
   const byEffect = new Map(inventory.map((e) => {
     const def = catalog.find((c) => c.id === e.itemId)
@@ -303,30 +306,30 @@ function pickBestItem(
   // 低血回血
   if (healthRatio < 0.5) {
     const heal = [...byEffect.entries()].find(([, d]) => d.effect === 'health')
-    if (heal) return { id: heal[0], effect: 'health', name: heal[1].name }
+    if (heal) return { id: heal[0], effect: 'health', name: heal[1].name, effectValue: heal[1].effectValue ?? 0 }
   }
 
   // 低體力回氣
   if (staminaRatio < 0.4) {
     const stamina = [...byEffect.entries()].find(([, d]) => d.effect === 'stamina')
-    if (stamina) return { id: stamina[0], effect: 'stamina', name: stamina[1].name }
+    if (stamina) return { id: stamina[0], effect: 'stamina', name: stamina[1].name, effectValue: stamina[1].effectValue ?? 0 }
   }
 
   // 探地符（有未探索格）
   if (unexploredCount > 0) {
     const scout = [...byEffect.entries()].find(([, d]) => d.effect === 'scout')
-    if (scout) return { id: scout[0], effect: 'scout', name: scout[1].name }
+    if (scout) return { id: scout[0], effect: 'scout', name: scout[1].name, effectValue: scout[1].effectValue ?? 0 }
   }
 
   // 回營符（有據點時）
   if (nearestBase) {
     const recall = [...byEffect.entries()].find(([, d]) => d.effect === 'recall-base')
-    if (recall) return { id: recall[0], effect: 'recall-base', name: recall[1].name }
+    if (recall) return { id: recall[0], effect: 'recall-base', name: recall[1].name, effectValue: recall[1].effectValue ?? 0 }
   }
 
   // 屬性提升道具
   const attrUp = [...byEffect.entries()].find(([, d]) => d.effect === 'attribute-up')
-  if (attrUp) return { id: attrUp[0], effect: 'attribute-up', name: attrUp[1].name }
+  if (attrUp) return { id: attrUp[0], effect: 'attribute-up', name: attrUp[1].name, effectValue: attrUp[1].effectValue ?? 0 }
 
   return undefined
 }
