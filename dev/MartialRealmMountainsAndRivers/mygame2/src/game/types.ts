@@ -488,6 +488,10 @@ export type DefenseStructureState = DefenseStructureDefinition & {
   health: number
   /** 由廢墟修復而成時，記錄來源廢墟的村落名。 */
   originName?: string
+  /** 轟城砲等範圍砲擊設施的冷卻剩餘回合數（0 表示可發射）。 */
+  cooldownRemaining?: number
+  /** 紀錄最後一次砲擊的回合，供測試與判定單回合多次砲擊。 */
+  lastFiredRound?: number
 }
 
 export type RuinState = {

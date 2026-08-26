@@ -17,6 +17,8 @@ import type {
   TrapState,
 } from '../types'
 import { isAdjacent, isSamePosition } from '../types'
+import { getBastionMultipliers, getEffectiveAttackDamage } from '../rules/defenseBastionRules'
+import { countdownBombardCooldowns, fireBombardCannons } from '../rules/bombardCannonRules'
 import { uniqueCreaturesById } from '../rules/playerRules'
 import {
   getActiveBuffsForPlayer,
@@ -425,7 +427,9 @@ export function executeCreatureAction(
     resolveAttackAgainstPlayer(context, creature, adjacentPlayer, randomSource)
     return { type: 'attack', targetId: adjacentPlayer.id, targetKind: 'player', targetPosition: adjacentPlayer.position, targetName: adjacentPlayer.name }
   } else if (adjacentDefense) {
-    const damage = Math.max(1, creature.attributes.armStrength - 2)
+    // 軍壘強化：3 格內塔類 HP×2，等同減半承受傷害（動態查詢，軍壘失活自動失效）。
+    const bastionBoosted = getBastionMultipliers(context.defenseStructures, adjacentDefense)
+    const damage = Math.max(1, Math.floor((creature.attributes.armStrength - 2) / bastionBoosted.hpMultiplier))
     const health = Math.max(0, adjacentDefense.health - damage)
     if (health === 0) {
       context.defenseStructures = context.defenseStructures.filter((structure) => structure.id !== adjacentDefense.id)
@@ -624,6 +628,7 @@ export function runCreatureTurn(inputs: RunCreatureTurnInputs): CreatureTurnResu
 
   // 舊存檔或異常資料可能缺少 position；忽略該筆資料，避免怪物回合崩潰。
   const damagedCreatures = creatures.filter(hasValidPosition).map((creature) => ({ ...creature, attributes: { ...creature.attributes } }))
+  let damagedCreaturesForActions = damagedCreatures
   const context = createCreatureTurnContext({
     map,
     globalBuffs,
@@ -641,20 +646,30 @@ export function runCreatureTurn(inputs: RunCreatureTurnInputs): CreatureTurnResu
     round,
   })
 
+  // 轟城砲：冷卻遞減，再執行範圍砲擊（與箭塔同一結算時序前段）。
+  context.defenseStructures = countdownBombardCooldowns(context.defenseStructures)
+  const bombardResult = fireBombardCannons(context.defenseStructures, damagedCreaturesForActions, round)
+  damagedCreaturesForActions = bombardResult.creatures
+  context.defenseStructures = bombardResult.defenseStructures
+  for (const message of bombardResult.logs) {
+    context.logs.push({ creatureId: '', creatureName: '', message })
+  }
+
   for (const tower of defenseStructures.filter((structure) =>
     hasValidPosition(structure) && (structure.type === 'arrow-tower' || structure.type === 'advanced-arrow-tower' || structure.type === 'small-arrow-tower'),
   )) {
-    const target = damagedCreatures
+    const target = damagedCreaturesForActions
       .filter((creature) => creature.health > 0 && hasValidPosition(creature))
       .map((creature) => ({ creature, distance: manhattanDistance(creature.position, tower.position) }))
       .filter(({ distance }) => distance <= tower.attackRange)
       .sort((first, second) => first.distance - second.distance)[0]?.creature
     if (!target) continue
-    target.health = Math.max(0, target.health - tower.attackDamage)
-    context.logs.push({ creatureId: target.id, creatureName: target.name, message: `${tower.name} 攻擊 ${target.name}，造成 ${tower.attackDamage} 點傷害${target.health === 0 ? '並將其擊敗' : ''}。` })
+    const attackDamage = getEffectiveAttackDamage(defenseStructures, tower)
+    target.health = Math.max(0, target.health - attackDamage)
+    context.logs.push({ creatureId: target.id, creatureName: target.name, message: `${tower.name} 攻擊 ${target.name}，造成 ${attackDamage} 點傷害${target.health === 0 ? '並將其擊敗' : ''}。` })
   }
 
-  const survivingCreatures = damagedCreatures.filter((creature) => creature.health > 0)
+  const survivingCreatures = damagedCreaturesForActions.filter((creature) => creature.health > 0)
   const aliveIds = new Set(survivingCreatures.map((creature) => creature.id))
   for (const creatureId of [...context.occupiedByCreatures.keys()]) if (!aliveIds.has(creatureId)) context.occupiedByCreatures.delete(creatureId)
 

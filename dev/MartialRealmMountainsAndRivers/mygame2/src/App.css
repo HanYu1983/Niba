@@ -1754,6 +1754,23 @@
   background: rgba(15, 23, 42, 0.18);
 }
 
+/* 軍壘強化中的塔類設施：金色發光 + 右上角 ✦ 徽記，便於玩家辨識效果。 */
+.defense-structure-marker--bastion-boosted {
+  outline: 1px solid rgba(250, 204, 21, 0.85);
+  box-shadow: 0 0 6px rgba(250, 204, 21, 0.7);
+}
+
+.defense-structure-marker__boost {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  font-size: 10px;
+  line-height: 1;
+  color: #facc15;
+  text-shadow: 0 0 3px rgba(0, 0, 0, 0.8);
+  pointer-events: none;
+}
+
 .resource-point-marker,
 .item-point-marker {
   width: 24px;

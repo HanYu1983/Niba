@@ -220,6 +220,7 @@ function WorldObjectOverlays({
       <DefenseStructureDetailsModal
         structure={detailsDefenseStructure}
         ownerBase={detailsDefenseStructureBase}
+        allDefenseStructures={gameState.defenseStructures}
         onOpenTransport={(structureId) => {
           onCloseDefenseStructureDetails()
           setSmallWaystationTransportId(structureId)

@@ -1,9 +1,11 @@
 import { buildingCatalog } from '../catalogs/buildingCatalog'
 import { defenseStructureCatalog, type DefenseStructureType } from '../catalogs/defenseStructureCatalog'
-import type { ActionOutcome, BaseState, DefenseStructureState, GameState, Position } from '../types'
+import type { ActionOutcome, BaseState, DefenseStructureState, GameState, Position, ResourcePointState } from '../types'
 import { applyBaseHealthBonuses, getBaseMaxBuildingMaterials, getBaseMaxHealth, isBaseActive } from '../rules/baseRules'
 import { getBaseBuilding, getBuildingUpgradeResult, upgradeBuildingInBase, canPlayerBuildBuildingType } from '../rules/buildingProgressionRules'
 import { validateDefenseBuild } from '../rules/defenseRules'
+import { restoreTowerHealthForBastion } from '../rules/defenseBastionRules'
+import { createImmediateBeaconReveal } from '../rules/warningBeaconRules'
 import { ACTION_STAMINA_COSTS, canPlayerPerformAction, spendPlayerStamina } from '../rules/actionCostRules'
 import { getBuildingMaterialCostReduction } from '../rules/playerDerivedRules'
 import { grantRandomGlobalBuff, upgradeGlobalBuffForBuilding } from '../rules/globalBuffRules'
@@ -197,12 +199,43 @@ export function constructDefenseStructure(
     }
   }
 
+  // 輜重庫等設施：於自身位置生成大型資源點（採集量 ×N），歸屬所屬據點。
+  const resourcePoints = definition.resourceIncomeMultiplier
+    ? [...(state.resourcePoints ?? []), {
+        id: `${baseId}-resource-${(state.resourcePoints ?? []).length + 1}`,
+        name: definition.name,
+        position,
+        ownerBaseId: baseId,
+        materialIncome: 15 * definition.resourceIncomeMultiplier,
+        lastCollectedRound: null,
+        health: 100,
+        maxHealth: 100,
+      } satisfies ResourcePointState]
+    : state.resourcePoints ?? []
+
+  // 烽燧臺建成瞬間：直接揭示全圖敵軍一次（不經機率）。
+  const immediateBeaconReveal = definition.type === 'warning-beacon'
+    ? createImmediateBeaconReveal({ ...state, defenseStructures: [...(state.defenseStructures ?? []), structure] })
+    : null
+
+  // 輜重庫等設施：不新增實體防禦設施（僅生成大型資源點），避免地圖上疊加雙 icon。
+  // 其他設施則照常新增；軍壘另需觸發建造瞬間的回復範圍塔類 HP。
+  const isDepot = Boolean(definition.resourceIncomeMultiplier)
+  const nextDefenseStructures = isDepot
+    ? (state.defenseStructures ?? [])
+    : definition.type === 'warcamp-bastion'
+      ? restoreTowerHealthForBastion([...(state.defenseStructures ?? []), structure], position)
+      : [...(state.defenseStructures ?? []), structure]
+
   const defenseState: GameState = incrementRunStat({
     ...state,
     bases: state.bases.map((candidate) => candidate.id === baseId
       ? { ...candidate, buildingMaterials: candidate.buildingMaterials - definition.constructionCost }
       : candidate),
-    defenseStructures: [...(state.defenseStructures ?? []), structure],
+    defenseStructures: nextDefenseStructures,
+    resourcePoints,
+    revealedCreatureCellIds: immediateBeaconReveal?.revealedCreatureCellIds ?? state.revealedCreatureCellIds,
+    revealedCreatureUntilRound: immediateBeaconReveal?.revealedCreatureUntilRound ?? state.revealedCreatureUntilRound,
     players: state.players.map((candidate) => candidate.id === playerId
       ? spendPlayerStamina(candidate, staminaCost)
       : candidate),
