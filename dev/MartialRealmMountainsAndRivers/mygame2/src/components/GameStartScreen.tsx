@@ -28,7 +28,7 @@ type GameStartScreenProps = {
 }
 
 function GameStartScreen({ onStart, onDebug, onOpenSkillTest, onOpenEditor, onStartScenario }: GameStartScreenProps) {
-  const [rosterCharacters] = useState<PersistentCharacter[]>(() => getCharacters())
+  const [rosterCharacters, setRosterCharacters] = useState<PersistentCharacter[]>(() => getCharacters())
   const [selectedCharacterId, setSelectedCharacterId] = useState<string | undefined>(undefined)
   const [activeTab, setActiveTab] = useState('sandbox')
 
@@ -36,6 +36,14 @@ function GameStartScreen({ onStart, onDebug, onOpenSkillTest, onOpenEditor, onSt
     setSelectedCharacterId(character.id)
     setActiveTab('sandbox')
     message.success(`已選用「${character.name}」，可於沙盒地圖開始遊戲。`)
+  }
+
+  // 名册角色清單變更（新增／刪除／更新）時同步下拉選單；若選取的角色已不存在則清除選取。
+  const handleCharactersChanged = (characters: PersistentCharacter[]) => {
+    setRosterCharacters(characters)
+    setSelectedCharacterId((currentId) =>
+      currentId && characters.some((character) => character.id === currentId) ? currentId : undefined,
+    )
   }
   // 每次進入地圖設定頁，套用上次選擇的模板（若無記錄則用「入門地圖」）。
   // 地圖設定不再自動寫入 localStorage，僅「儲存為模板」與「所選模板」會持久化。
@@ -250,7 +258,7 @@ function GameStartScreen({ onStart, onDebug, onOpenSkillTest, onOpenEditor, onSt
               key: 'roster',
               label: '🗂️ 俠客名冊',
               children: (
-                <CharacterLibraryScreen onSelect={handleSelectCharacter} />
+                <CharacterLibraryScreen onSelect={handleSelectCharacter} onCharactersChanged={handleCharactersChanged} />
               ),
             },
             {

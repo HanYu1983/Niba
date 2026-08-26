@@ -16,9 +16,11 @@ const ATTRIBUTE_KEYS: UpgradeableAttribute[] = ['armStrength', 'constitution', '
 type CharacterLibraryScreenProps = {
   /** 選用某角色（本階段僅回傳角色，供後續對局流程使用）。 */
   onSelect?: (character: PersistentCharacter) => void
+  /** 角色清單變更（新增／刪除／更新）後通知父層，供同步下拉等外部快照。 */
+  onCharactersChanged?: (characters: PersistentCharacter[]) => void
 }
 
-function CharacterLibraryScreen({ onSelect }: CharacterLibraryScreenProps) {
+function CharacterLibraryScreen({ onSelect, onCharactersChanged }: CharacterLibraryScreenProps) {
   const [characters, setCharacters] = useState<PersistentCharacter[]>(() => getCharacters())
   const [modalOpen, setModalOpen] = useState(false)
   const [editing, setEditing] = useState<PersistentCharacter | null>(null)
@@ -32,6 +34,8 @@ function CharacterLibraryScreen({ onSelect }: CharacterLibraryScreenProps) {
       if (!current) return current
       return latest.find((candidate) => candidate.id === current.id) ?? current
     })
+    // 通知父層角色清單已變更（供下拉等外部快照同步）。
+    onCharactersChanged?.(latest)
   }
 
   const openCreate = () => {
