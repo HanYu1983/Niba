@@ -3,14 +3,14 @@ import { listHostileActors, type HostileActor } from '../perception/targetDiscov
 import { collectReachableInterests, type ReachableInterest } from '../perception/reachableInterests'
 import { getBlockedPositions } from '../../rules/movementRules'
 import { canTraverseTerrain } from '../../rules/playerDerivedRules'
-import { getAdjacentPositions, manhattan } from '../../types'
+import { getAdjacentPositions } from '../../types'
 import { buildingCatalog } from '../../catalogs/buildingCatalog'
 import { canPlayerBuildBuildingType } from '../../rules/buildingProgressionRules'
 import { collectReachableCells } from '../perception/reachablePositions'
 import { itemCatalog } from '../../catalogs/itemCatalog'
 import { equipmentCatalog } from '../../catalogs/equipmentCatalog'
 import { allInnerSkillCatalog } from '../../catalogs/martialHallSkillCatalog'
-import { getEffectiveAttributesForPlayer, getBuff } from '../../rules/playerDerivedRules'
+import { getEffectiveAttributesForPlayer } from '../../rules/playerDerivedRules'
 
 export interface FuzzyInputs {
   /** 能扛幾下攻擊（health / maxEnemyDamage），無敵人時 = 99 */
@@ -363,10 +363,10 @@ function findBestEquipCandidate(player: PlayerState): { instanceId: string; equi
 
 function findBetterInnerSkill(
   player: PlayerState,
-  effectiveAttributes: { insight: number },
+  effectiveAttributes: { insight: number; armStrength: number; constitution: number; agility: number; innerEnergy: number },
 ): { id: string; name: string; insightRequirement: number } | undefined {
   const currentSkill = allInnerSkillCatalog.find((s) => s.id === player.innerSkillId)
-  const currentDamage = currentSkill?.calculateDamage?.({ armStrength: 0, constitution: 0, agility: 0, innerEnergy: 0, insight: 0 }) ?? 0
+  const currentDamage = currentSkill?.calculateDamage?.(effectiveAttributes) ?? 0
 
   const candidates = allInnerSkillCatalog.filter((s) => player.innerSkillIds.includes(s.id) && s.id !== player.innerSkillId)
 

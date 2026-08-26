@@ -174,25 +174,25 @@ export function equipInnerSkillAction(
 ): { state: GameState; result: ActionOutcome } {
   const player = state.players.find((p) => p.id === playerId)
   if (!player) {
-    return { state, result: { kind: 'failure', reason: '玩家不存在' } }
+    return { state, result: { ok: false, reason: '玩家不存在' } }
   }
 
   const skill = allInnerSkillCatalog.find((s) => s.id === skillId)
   if (!skill) {
-    return { state, result: { kind: 'failure', reason: '功法不存在' } }
+    return { state, result: { ok: false, reason: '功法不存在' } }
   }
 
   if (player.innerSkillId === skillId) {
-    return { state, result: { kind: 'failure', reason: '已裝備此功法' } }
+    return { state, result: { ok: false, reason: '已裝備此功法' } }
   }
 
   if (!player.innerSkillIds.includes(skillId)) {
-    return { state, result: { kind: 'failure', reason: '未學會此功法' } }
+    return { state, result: { ok: false, reason: '未學會此功法' } }
   }
 
   const effectiveAttributes = getEffectiveAttributesForPlayer(player)
   if (effectiveAttributes.insight < skill.insightRequirement) {
-    return { state, result: { kind: 'failure', reason: '悟性不足' } }
+    return { state, result: { ok: false, reason: '悟性不足' } }
   }
 
   const maxInnerPower = getMaxInnerPower(effectiveAttributes)
@@ -211,6 +211,6 @@ export function equipInnerSkillAction(
 
   return {
     state: applyBaseHealthBonuses(nextState),
-    result: { kind: 'success', details: `裝備功法：${skill.name}` },
+    result: { ok: true },
   }
 }
