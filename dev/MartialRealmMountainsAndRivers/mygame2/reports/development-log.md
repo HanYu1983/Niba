@@ -1,5 +1,32 @@
 # 開發日誌
 
+## 2026-08-26｜怪物主場五行化、視野抽象化、修路快捷指令
+
+### 本次完成
+
+- **怪物主場 Buff 改以五行屬性判斷**：將硬編碼的 `schoolId → 主場` 對應表改為「五行 → 主場」共有對應（`skillProgressionCatalog` 的 `martialSchoolCatalog[].element` 為單一事實來源）。新增流派只需具備五行屬性即自動獲得對應主場，無需逐一註冊。金、土皆歸山嶽主場（`home-turf-mountain`）；移除孤兒 Buff `home-turf-ruin`。五行概念（`MartialElement`、`getSchoolElement`、`elementHomeTurfBuffs`）集中於 `martialSchoolCatalog.ts`，`skillRules` 與 `playerDerivedRules` 皆自此引用，打破原本的循環依賴。
+- **修復資源點修復距離條件**：`repairResourcePoint` 與採集一致，改用 `isSameOrAdjacent`（自身格或相鄰一格），修正 UI（Modal 允許自身格修復）與後端不一致的問題。
+- **傷害型外功數字快捷鍵**：公用指令欄中傷害型外功依顯示順序對應數字鍵 1..N。新增共用 helper `getCommandPanelSkills`（依裝備順序過濾非 aura 外功），指令面板與快捷鍵監聽共用同一順序，確保兩者同步。
+- **防禦建築視野抽象化**：將視野範圍抽到建築參數 `visionRange`（取代 `visibilityRules` 硬編碼的各地形常數）。所有防禦建築至少提供自身一格範圍（曼哈頓距離 ≤ 1）的視野；瞭望塔類依 `visionRange` 維持較大範圍。廢墟修復後的探索範圍同步改用 `visionRange`。
+- **公用指令欄新增「修路」**：消耗 2 體力，將玩家所在格地形改為 `road`；不需據點、不需選格、不消耗建料。快捷鍵 **R**。新增 `buildRoadAtPlayer` action 與 `gameStore.buildRoad`，並移除防禦建築目錄中的「道路」（`'road'` 移出 `DefenseStructureType`，建造面板不再顯示）。保留 `changesTerrain`／`roadBuild` 作為未來非實體設施的擴充基礎。
+
+### 影響檔案
+
+- 修改：`src/game/catalogs/martialSchoolCatalog.ts`、`skillProgressionCatalog.ts`、`buffCatalog.ts`、`defenseStructureCatalog.ts`
+- 修改：`src/game/rules/skillRules.ts`、`playerDerivedRules.ts`、`visibilityRules.ts`、`commandPanelSkills.ts`、`actionCostRules.ts`
+- 修改：`src/game/actions/buildingActions.ts`、`ruinActions.ts`；`src/game/gameStore.ts`
+- 修改：`src/hooks/useKeyboardShortcuts.ts`；`src/components/PlayerCommandPanel.tsx`；`src/App.tsx`
+- 修改：`src/editor/rules/scenarioCompiler.ts`；測試若干
+
+### 驗證結果
+
+- TypeScript：通過。Build：通過。vitest：**88 檔／930 項全數通過**。
+
+### 下一步
+
+- 可為「修路」補上操作回饋（如成功後地圖格動畫）。
+- 檢視 `home-turf-*` 各主場數值是否需依五行再平衡。
+
 ## 2026-08-25｜情境地圖 `inDevelopment` 標記與 UI 組件更新
 
 ### 本次完成
