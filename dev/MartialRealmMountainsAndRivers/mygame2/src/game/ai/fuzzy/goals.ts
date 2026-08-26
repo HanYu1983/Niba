@@ -43,7 +43,7 @@ export function evaluateSelfPreservation(inputs: FuzzyInputs): GoalResult {
     const f_threatClose = trapezoid(distToNearestThreat, 0, 0, 2, 4)
 
     // 逃命分數
-    const retreatScore = Math.min(0.95, fuzzyOr(
+    const retreatScore = Math.min(1, fuzzyOr(
       f_hitsLow,
       fuzzyAnd(f_hitsLow, f_threatClose),
     ))
@@ -57,7 +57,7 @@ export function evaluateSelfPreservation(inputs: FuzzyInputs): GoalResult {
       const f_urgency = trapezoid(healthRatio, 0, 0.2, 0.5, 0.8)
       // 回復佔比越高，分數越高
       const f_effectiveness = Math.min(1, restoreRatio)
-      healScore = Math.min(0.9, fuzzyAnd(f_urgency, f_effectiveness))
+      healScore = Math.min(0.95, fuzzyAnd(f_urgency, f_effectiveness))
     }
 
     // 取較高者：逃命 vs 用道具續命
@@ -73,7 +73,7 @@ export function evaluateSelfPreservation(inputs: FuzzyInputs): GoalResult {
     return {
       score,
       target: { kind: 'retreat', escapeDirection: { row: 0, column: 0 } },
-      distanceToTarget: distToNearestThreat,
+      distanceToTarget: 0,
       context: { hitsSurvivable, distToNearestThreat },
     }
   }
@@ -82,7 +82,7 @@ export function evaluateSelfPreservation(inputs: FuzzyInputs): GoalResult {
   if (healthRatio < 0.5 && bestItemToUse?.effect === 'health') {
     const missingHealth = 1 - healthRatio
     const restoreRatio = bestItemToUse.effectValue / (missingHealth * 100)
-    const score = Math.min(0.85, restoreRatio >= 1 ? 0.85 : restoreRatio * 0.85)
+    const score = Math.min(0.95, restoreRatio >= 1 ? 0.95 : restoreRatio * 0.95)
     return {
       score,
       target: { kind: 'use-item', itemId: bestItemToUse.id },
@@ -94,7 +94,7 @@ export function evaluateSelfPreservation(inputs: FuzzyInputs): GoalResult {
   // 無威脅 + 血量低 + 無回血道具 → 回據點醫治
   if (healthRatio < 0.3 && nearestBase) {
     if (hasInfirmary && inputs.feasibility.healBaseId) {
-      const score = Math.min(0.85, (0.3 - healthRatio) / 0.3)
+      const score = Math.min(0.95, (0.3 - healthRatio) / 0.3)
       return {
         score,
         target: { kind: 'use-facility', baseId: inputs.feasibility.healBaseId, facilityType: 'heal' },
@@ -102,7 +102,7 @@ export function evaluateSelfPreservation(inputs: FuzzyInputs): GoalResult {
         context: { healthRatio },
       }
     }
-    const score = Math.min(0.7, (0.3 - healthRatio) / 0.3)
+    const score = Math.min(0.85, (0.3 - healthRatio) / 0.3)
     return {
       score,
       target: { kind: 'return-to-base-heal', baseId: nearestBase.id, position: nearestBase.position },
@@ -194,17 +194,20 @@ function evaluateEngageCombat(inputs: FuzzyInputs): GoalResult {
 // 有可分配屬性點 → 分數 = 1（最高優先）
 
 function evaluateAllocateAttributes(inputs: FuzzyInputs): GoalResult {
-  const { availableAttributePoints } = inputs
+  const { availableAttributePoints, healthRatio } = inputs
 
   if (availableAttributePoints <= 0) {
     return { score: 0 }
   }
 
-  // V1：固定分配 armStrength（攻擊力）
+  // 血量低 → 優先根骨（增加 maxHealth）
+  // 血量正常 → 70% 根骨 / 30% 臂力
+  const attribute = healthRatio < 0.5 ? 'constitution' : (Math.random() < 0.7 ? 'constitution' : 'armStrength')
+
   return {
     score: 1,
-    target: { kind: 'allocate-attribute', attribute: 'armStrength' },
-    context: { availableAttributePoints },
+    target: { kind: 'allocate-attribute', attribute },
+    context: { availableAttributePoints, chosen: attribute },
   }
 }
 
