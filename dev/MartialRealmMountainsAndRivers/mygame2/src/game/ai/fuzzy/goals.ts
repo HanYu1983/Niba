@@ -34,8 +34,8 @@ export function evaluateSelfPreservation(inputs: FuzzyInputs): GoalResult {
     return { score: 0 }
   }
 
-  // hitsSurvivable < 2 → LOW 高（危險）；> 5 → HIGH 高（安全）
-  const f_hitsLow = trapezoid(hitsSurvivable, 0, 0, 1.5, 3)
+  // hitsSurvivable < 1 → 1拳就死（危險）；>= 2 → 可扛2拳（安全，分數大幅下降）
+  const f_hitsLow = trapezoid(hitsSurvivable, 0, 0.5, 1, 2)
   const f_threatClose = trapezoid(distToNearestThreat, 0, 0, 2, 4)
 
   const score = Math.min(0.9, fuzzyOr(
