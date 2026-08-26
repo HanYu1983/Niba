@@ -1,13 +1,50 @@
 import type { GameState, PlayerState } from '../../types'
+import { getAdjacentPositions } from '../../types'
 import type { AiAction, AiActorRef } from '../aiAction'
 import type { GoalName, GoalResult } from './goals'
 import { collectReachableCells } from '../perception/reachablePositions'
+import { getBlockedPositions } from '../perception/blockedPositions'
+import { canTraverseTerrain, getTerrainStaminaCost } from '../../rules/playerDerivedRules'
 import { externalSkillCatalog } from '../../catalogs/externalSkillCatalog'
 
 /**
- * 從玩家的相鄰可達格中，找出距目標位置最近的格子。
- * 只考慮與玩家相鄰（manhattan=1）的可達格，確保每步只移動一格。
- * 若目標本身與玩家相鄰且可達，直接回傳目標。
+ * 從指定位置出發，用 Dijkstra 計算到所有可达格的最短路徑成本。
+ * 回傳 cellId → cost 的 Map（起點 cost = 0）。
+ */
+function buildCostMapFrom(
+  state: GameState,
+  start: { row: number; column: number },
+  player: PlayerState,
+): Map<string, number> {
+  const cellsByPosition = new Map(
+    state.map.cells.map((c) => [`${c.row}-${c.column}`, c]),
+  )
+  const blockedKeys = new Set(
+    getBlockedPositions(state, player.id).map((p) => `${p.row}-${p.column}`),
+  )
+  const costs = new Map<string, number>()
+  const queue: Array<{ row: number; column: number; cost: number }> = [{ ...start, cost: 0 }]
+  let head = 0
+  costs.set(`${start.row}-${start.column}`, 0)
+
+  while (head < queue.length) {
+    const cur = queue[head++]
+    for (const adj of getAdjacentPositions(cur)) {
+      const cell = cellsByPosition.get(`${adj.row}-${adj.column}`)
+      if (!cell || !canTraverseTerrain(cell.terrain, player) || blockedKeys.has(cell.id)) continue
+      const nextCost = cur.cost + getTerrainStaminaCost(cell.terrain, player)
+      const prev = costs.get(cell.id)
+      if (prev !== undefined && prev <= nextCost) continue
+      costs.set(cell.id, nextCost)
+      queue.push({ row: cell.row, column: cell.column, cost: nextCost })
+    }
+  }
+  return costs
+}
+
+/**
+ * 從玩家的相鄰可達格中，找出沿最短路徑最接近目標的格子。
+ * 使用 Dijkstra 從目標反向建最短路徑樹，取代 manhattan 距離。
  */
 function findClosestReachablePosition(state: GameState, player: PlayerState, targetPosition: { row: number; column: number }): { row: number; column: number } {
   const reachable = collectReachableCells(state, player)
@@ -22,17 +59,20 @@ function findClosestReachablePosition(state: GameState, player: PlayerState, tar
 
   // 只取相鄰格（cost > 0 表示不是原地，manhattan ≤ 1 表示相鄰）
   const adjacents = reachable.filter((c) => {
-    if (c.cost === 0) return false // 排除原地
+    if (c.cost === 0) return false
     const d = Math.abs(c.position.row - player.position.row) + Math.abs(c.position.column - player.position.column)
     return d <= 1
   })
 
   if (adjacents.length === 0) return player.position
 
-  // 從相鄰格中選距目標最近的
+  // 從目標位置建最短路徑樹
+  const targetCosts = buildCostMapFrom(state, targetPosition, player)
+
+  // 從相鄰格中選「沿最短路徑最接近目標」的格子
   const best = adjacents.reduce((best, c) => {
-    const dBest = Math.abs(best.position.row - targetPosition.row) + Math.abs(best.position.column - targetPosition.column)
-    const dC = Math.abs(c.position.row - targetPosition.row) + Math.abs(c.position.column - targetPosition.column)
+    const dBest = targetCosts.get(best.cellId) ?? Infinity
+    const dC = targetCosts.get(c.cellId) ?? Infinity
     return dC < dBest ? c : best
   })
   return best.position
