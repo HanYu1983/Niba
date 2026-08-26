@@ -1,6 +1,8 @@
 import type { GameState } from '../../types'
 import type { AiAction } from '../aiAction'
 import { validateAiAction } from '../validation/validateAiAction'
+import { buildingCatalog } from '../../catalogs/buildingCatalog'
+import { canPlayerBuildBuildingType } from '../../rules/buildingProgressionRules'
 import {
   isHealthCritical,
   isExhausted,
@@ -104,14 +106,25 @@ export function decideNextAction(state: GameState, playerId: string): AiAction |
 
     // 4.1 已與據點相鄰 + 建料足夠 → 建造
     if (isAtBase && base.buildingMaterials >= 3) {
-      const candidate: AiAction = {
-        type: 'build',
-        actor: { id: player.id, kind: 'player' },
-        baseId: base.id,
-        buildingType: 'basic',
-        reason: '建造防禦',
+      const existingTypes = new Set(base.buildings.map((b) => b.type))
+      const buildable = buildingCatalog.find((template) => {
+        if (existingTypes.has(template.type)) return false
+        if (base.martialSchoolId && template.schoolId && template.schoolId !== base.martialSchoolId) return false
+        if (base.allowedBuildings && !base.allowedBuildings.some((a) => a.type === template.type)) return false
+        if (!canPlayerBuildBuildingType(player, template.type)) return false
+        if (base.buildingMaterials < template.constructionCost) return false
+        return true
+      })
+      if (buildable) {
+        const candidate: AiAction = {
+          type: 'build',
+          actor: { id: player.id, kind: 'player' },
+          baseId: base.id,
+          buildingType: buildable.id,
+          reason: `建造 ${buildable.name}`,
+        }
+        if (validateAiAction(state, candidate).valid) return candidate
       }
-      if (validateAiAction(state, candidate).valid) return candidate
     }
 
     // 4.2 旁邊有資源點 + 建料不足 → 採集

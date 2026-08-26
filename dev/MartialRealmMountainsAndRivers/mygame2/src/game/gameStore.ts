@@ -1968,7 +1968,7 @@ export const gameStore = {
     while (true) {
       const candidate = pickNextBuildCandidate(gameState, plan, excluded)
       if (!candidate) break
-      const buildAction: AiAction = { type: 'build', actor: { id: playerId, kind: 'player' }, baseId: plan.baseId, buildingType: candidate.buildingType, reason: `建設計畫：${candidate.buildingName}（優先度 ${candidate.item.priority}）。` }
+      const buildAction: AiAction = { type: 'build', actor: { id: playerId, kind: 'player' }, baseId: plan.baseId, buildingType: candidate.buildingId, reason: `建設計畫：${candidate.buildingName}（優先度 ${candidate.item.priority}）。` }
       const rejection = validateAiStepAction(gameState, buildAction)
       if (rejection) {
         updateConstructionPlanItem(playerId, candidate.itemIndex, { status: 'blocked', blockedReason: rejection })

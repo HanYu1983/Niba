@@ -131,7 +131,7 @@ describe('validateAiAction 拒絕失效行動', () => {
 describe('collect 與 build 的最小驗證', () => {
     it('build：據點存在 → 有效；不存在 → 無效', () => {
     const state = makeAiTestState({ players: [makeTestPlayer()] })
-    const buildAction = { type: 'build' as const, actor: { id: 'ai-1', kind: 'player' as const }, baseId: 'base-1', buildingType: 'board', reason: 'construction-plan' }
+    const buildAction = { type: 'build' as const, actor: { id: 'ai-1', kind: 'player' as const }, baseId: 'base-1', buildingType: 'building-type-board', reason: 'construction-plan' }
     expect(validateAiAction(state, buildAction)).toEqual({ valid: true })
 
     const missingBase = { ...buildAction, baseId: 'base-missing' }
