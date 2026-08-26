@@ -34,7 +34,7 @@ function AiDebugPanel({ player, gameState }: AiDebugPanelProps) {
             <SectionTitle title="威脅" />
             <Row label="distToNearestThreat" value={formatNumber(inputs.distToNearestThreat)} />
             <Row label="maxVisibleEnemyDamage" value={formatNumber(inputs.maxVisibleEnemyDamage)} />
-            <Row label="visibleCreatureCount" value={formatNumber(inputs.visibleCreatureCount)} />
+            <Row label="visibleCreatureIds" value={inputs.visibleCreatureIds.length > 0 ? inputs.visibleCreatureIds.join(', ') : '—'} />
             <Row label="distToNearestCreature" value={formatNumber(inputs.distToNearestCreature)} />
             <Row label="nearestCreatureId" value={inputs.nearestCreatureId || '—'} />
             <SectionTitle title="巢穴" />

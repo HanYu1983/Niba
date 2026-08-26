@@ -304,12 +304,12 @@ export function evaluatePositioning(inputs: FuzzyInputs): GoalResult {
 // ─── attackNest ─────────────────────────────────────────────────
 
 export function evaluateAttackNest(inputs: FuzzyInputs): GoalResult {
-  const { hitsSurvivable, distToNearestNest, visibleCreatureCount } = inputs
+  const { hitsSurvivable, distToNearestNest, visibleCreatureIds } = inputs
 
   if (distToNearestNest === Infinity) return { score: 0 }
 
   const f_safeHealth = trapezoid(hitsSurvivable, 4, 6, 10, 10)
-  const f_noCreatures = visibleCreatureCount === 0 ? 1 : 0
+  const f_noCreatures = visibleCreatureIds.length === 0 ? 1 : 0
   const f_nestClose = distToNearestNest <= 1
     ? 1
     : trapezoid(distToNearestNest, 1, 2, 5, 8)
@@ -319,7 +319,7 @@ export function evaluateAttackNest(inputs: FuzzyInputs): GoalResult {
   return {
     score,
     target: { kind: 'attack', targetId: '', targetType: 'nest', position: { row: -1, column: -1 } },
-    context: { distToNearestNest, visibleCreatureCount },
+    context: { distToNearestNest, visibleCreatureCount: visibleCreatureIds.length },
   }
 }
 
@@ -344,9 +344,9 @@ export function evaluateEquipInnerSkill(inputs: FuzzyInputs): GoalResult {
 // ─── useInnerSkillAttack ───────────────────────────────────────
 
 export function evaluateUseInnerSkillAttack(inputs: FuzzyInputs): GoalResult {
-  const { hasDamageInnerSkill, innerPowerRatio, distToNearestThreat, visibleCreatureCount } = inputs
+  const { hasDamageInnerSkill, innerPowerRatio, distToNearestThreat, visibleCreatureIds } = inputs
 
-  if (!hasDamageInnerSkill || visibleCreatureCount === 0) return { score: 0 }
+  if (!hasDamageInnerSkill || visibleCreatureIds.length === 0) return { score: 0 }
 
   const f_hasSkill = 1
   const f_hasPower = trapezoid(innerPowerRatio, 0.15, 0.25, 1, 1)

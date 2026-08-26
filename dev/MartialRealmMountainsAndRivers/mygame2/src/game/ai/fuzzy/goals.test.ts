@@ -43,7 +43,7 @@ function makeInputs(overrides: Partial<FuzzyInputs> = {}): FuzzyInputs {
     equipableEquipment: undefined,
     distToNearestNest: Infinity,
     nearestNestId: '',
-    visibleCreatureCount: 0,
+    visibleCreatureIds: [],
     betterInnerSkill: undefined,
     hasDamageInnerSkill: false,
     innerPowerRatio: 0,
@@ -104,7 +104,7 @@ describe('evaluateAttackNest', () => {
   it('安全血量 + 無生物 + 巢穴近（dist=1）→ score 應該高於 0.6', () => {
     const result = evaluateAttackNest(makeInputs({
       hitsSurvivable: 8,
-      visibleCreatureCount: 0,
+    visibleCreatureIds: [],
       distToNearestNest: 1,
     }))
     expect(result.score).toBeGreaterThan(0.6)
@@ -112,7 +112,7 @@ describe('evaluateAttackNest', () => {
 
   it('有可見生物 → score 應該等於 0', () => {
     const result = evaluateAttackNest(makeInputs({
-      visibleCreatureCount: 1,
+      visibleCreatureIds: ['c1'],
       distToNearestNest: 1,
     }))
     expect(result.score).toBe(0)
@@ -144,7 +144,7 @@ describe('evaluateUseInnerSkillAttack', () => {
     const result = evaluateUseInnerSkillAttack(makeInputs({
       hasDamageInnerSkill: true,
       innerPowerRatio: 0.5,
-      visibleCreatureCount: 1,
+      visibleCreatureIds: ['c1'],
       distToNearestThreat: 1,
     }))
     expect(result.score).toBeGreaterThan(0.5)
@@ -152,7 +152,7 @@ describe('evaluateUseInnerSkillAttack', () => {
 
   it('無傷害內功 → score 應該等於 0', () => {
     const result = evaluateUseInnerSkillAttack(makeInputs({
-      visibleCreatureCount: 1,
+      visibleCreatureIds: ['c1'],
       distToNearestThreat: 1,
     }))
     expect(result.score).toBe(0)

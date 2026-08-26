@@ -68,8 +68,8 @@ export interface FuzzyInputs {
   distToNearestNest: number
   /** 最近巢穴 id，無則空字串 */
   nearestNestId: string
-  /** 場上可見生物數量 */
-  visibleCreatureCount: number
+  /** 視野範圍內的生物 id 陣列（近到遠排序） */
+  visibleCreatureIds: string[]
   /** 建議裝備的內功（有更強的未裝備內功），無則 undefined */
   betterInnerSkill: { id: string; name: string; insightRequirement: number } | undefined
   /** 是否有傷害型內功已裝備 */
@@ -117,6 +117,7 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
     getBlockedPositions(state, player.id).map((p) => `${p.row}-${p.column}`),
   )
   const cellsByPosition = new Map(state.map.cells.map((c) => [`${c.row}-${c.column}`, c]))
+  const visibleCellIds = getPlayerVisibleCellIds(state, player.id)
   const adjacents = getAdjacentPositions(player.position)
   let exitCount = 0
   let nearestExit: Position | undefined
@@ -130,8 +131,6 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
   }
 
   // 建設相關：找可見據點（近到遠）+ 最近據點 + 建料 + 可建造建築 + 最近資源點
-  const visibleCellIds = getPlayerVisibleCellIds(state, player.id)
-
   const activeBases = state.bases.filter((b) => b.active !== false && b.health > 0)
   const allVisibleBases = state.bases
     .filter((b) => {
@@ -185,14 +184,19 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
     ? unexploredCells.reduce((best, c) => c.cost < best.cost ? c : best).position
     : undefined
 
-  // 戰鬥相關：最近怪物
-  const creatures = state.creatures.filter((c) => c.health > 0)
-  const distToNearestCreature = creatures.length > 0
-    ? Math.min(...creatures.map((c) => manhattan(player.position, c.position)))
+  // 戰鬥相關：視野內生物（近到遠）
+  const visibleCreatures = state.creatures
+    .filter((c) => {
+      if (c.health <= 0) return false
+      const cell = cellsByPosition.get(`${c.position.row}-${c.position.column}`)
+      return cell != null && visibleCellIds.has(cell.id)
+    })
+    .sort((a, b) => manhattan(player.position, a.position) - manhattan(player.position, b.position))
+  const visibleCreatureIds = visibleCreatures.map((c) => c.id)
+  const distToNearestCreature = visibleCreatures.length > 0
+    ? manhattan(player.position, visibleCreatures[0].position)
     : Infinity
-  const nearestCreature = creatures.length > 0
-    ? creatures.reduce((best, c) => manhattan(player.position, c.position) < manhattan(player.position, best.position) ? c : best)
-    : undefined
+  const nearestCreature = visibleCreatures[0]
 
   // 屬性分配
   const availableAttributePoints = player.availableAttributePoints ?? 0
@@ -222,9 +226,6 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
   const nearestNest = nests.length > 0
     ? nests.reduce((best, n) => manhattan(player.position, n.position) < manhattan(player.position, best.position) ? n : best)
     : undefined
-
-  // 可見生物數量
-  const visibleCreatureCount = creatures.length
 
   // 內功相關：裝備更好的內功 / 傷害型內功 / 內力比
   const effectiveAttributes = getEffectiveAttributesForPlayer(player)
@@ -263,7 +264,7 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
     equipableEquipment,
     distToNearestNest,
     nearestNestId: nearestNest?.id ?? '',
-    visibleCreatureCount,
+    visibleCreatureIds,
     betterInnerSkill: bestInnerSkill,
     hasDamageInnerSkill,
     innerPowerRatio,
