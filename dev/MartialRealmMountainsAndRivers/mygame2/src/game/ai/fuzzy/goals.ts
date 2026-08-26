@@ -29,6 +29,11 @@ export type GoalTarget =
 export function evaluateSelfPreservation(inputs: FuzzyInputs): GoalResult {
   const { hitsSurvivable, staminaRatio, distToNearestThreat } = inputs
 
+  // 無威脅 → 不需要保命
+  if (distToNearestThreat === Infinity) {
+    return { score: 0 }
+  }
+
   // hitsSurvivable < 2 → LOW 高（危險）；> 5 → HIGH 高（安全）
   const f_hitsLow = trapezoid(hitsSurvivable, 0, 0, 1.5, 3)
   const f_staminaDepleted = trapezoid(staminaRatio, 0, 0, 0.1, 0.2)
@@ -40,14 +45,9 @@ export function evaluateSelfPreservation(inputs: FuzzyInputs): GoalResult {
     fuzzyAnd(f_hitsLow, f_threatClose),
   )
 
-  // 逃離方向：遠離最近威脅（V1 簡化：往威脅反方向）
-  const escapeDirection: Position | undefined = distToNearestThreat < Infinity
-    ? { row: 0, column: 0 } // V1: 佔位，由 goalActionMapper 計算具體方向
-    : undefined
-
   return {
     score,
-    target: escapeDirection ? { kind: 'retreat', escapeDirection } : undefined,
+    target: { kind: 'retreat', escapeDirection: { row: 0, column: 0 } },
     context: { hitsSurvivable, distToNearestThreat },
   }
 }
@@ -348,7 +348,7 @@ export function evaluateUseInnerSkillAttack(inputs: FuzzyInputs): GoalResult {
 
   if (!hasDamageInnerSkill || visibleCreatureIds.length === 0) return { score: 0 }
 
-  const f_hasSkill = 1
+  const f_hasSkill = .6
   const f_hasPower = trapezoid(innerPowerRatio, 0.15, 0.25, 1, 1)
   const f_threatClose = distToNearestThreat <= 1
     ? 1

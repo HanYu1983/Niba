@@ -91,19 +91,43 @@ function buildRetreatActions(
     return [{ type: 'hold', actor, reason: '保命：無逃離方向，原地待命' }]
   }
 
-  // 找離威脅最遠的可到達鄰格
-  const reachable = collectReachableCells(state, player)
-  if (reachable.length === 0) {
-    return [{ type: 'hold', actor, reason: '保命：無法移動，原地待命' }]
+  // 找最近威脅位置
+  const nearestThreat = state.creatures
+    .filter((c) => c.health > 0)
+    .sort((a, b) => {
+      const da = Math.abs(a.position.row - player.position.row) + Math.abs(a.position.column - player.position.column)
+      const db = Math.abs(b.position.row - player.position.row) + Math.abs(b.position.column - player.position.column)
+      return da - db
+    })[0]
+
+  if (!nearestThreat) {
+    return [{ type: 'hold', actor, reason: '保命：無威脅，原地待命' }]
   }
 
-  // V1: 取體力內可到達的最遠格（作為逃離方向）
-  const bestEscape = reachable[reachable.length - 1]
+  // 只取相鄰可達格，選離威脅最遠的
+  const reachable = collectReachableCells(state, player)
+  const adjacents = reachable.filter((c) => {
+    if (c.cost === 0) return false
+    const d = Math.abs(c.position.row - player.position.row) + Math.abs(c.position.column - player.position.column)
+    return d <= 1
+  })
+
+  if (adjacents.length === 0) {
+    return [{ type: 'hold', actor, reason: '保命：無可移動鄰格，原地待命' }]
+  }
+
+  const threatPos = nearestThreat.position
+  const bestEscape = adjacents.reduce((best, c) => {
+    const dBest = Math.abs(best.position.row - threatPos.row) + Math.abs(best.position.column - threatPos.column)
+    const dC = Math.abs(c.position.row - threatPos.row) + Math.abs(c.position.column - threatPos.column)
+    return dC > dBest ? c : best
+  })
+
   return [{
     type: 'move',
     actor,
     destination: bestEscape.position,
-    reason: `保命：逃離（hitsSurvivable=${result.context?.hitsSurvivable ?? '?'}）`,
+    reason: `保命：逃離 ${nearestThreat.name}（hitsSurvivable=${result.context?.hitsSurvivable ?? '?'}）`,
   }]
 }
 
