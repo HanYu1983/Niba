@@ -27,7 +27,7 @@ export type GoalTarget =
 // ─── selfPreservation ──────────────────────────────────────────────
 
 export function evaluateSelfPreservation(inputs: FuzzyInputs): GoalResult {
-  const { hitsSurvivable, staminaRatio, distToNearestThreat } = inputs
+  const { hitsSurvivable, distToNearestThreat } = inputs
 
   // 無威脅 → 不需要保命
   if (distToNearestThreat === Infinity) {
@@ -36,12 +36,10 @@ export function evaluateSelfPreservation(inputs: FuzzyInputs): GoalResult {
 
   // hitsSurvivable < 2 → LOW 高（危險）；> 5 → HIGH 高（安全）
   const f_hitsLow = trapezoid(hitsSurvivable, 0, 0, 1.5, 3)
-  const f_staminaDepleted = trapezoid(staminaRatio, 0, 0, 0.1, 0.2)
   const f_threatClose = trapezoid(distToNearestThreat, 0, 0, 2, 4)
 
   const score = fuzzyOr(
     f_hitsLow,
-    f_staminaDepleted,
     fuzzyAnd(f_hitsLow, f_threatClose),
   )
 
