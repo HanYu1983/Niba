@@ -16,6 +16,7 @@ describe('aiTurnScheduler', () => {
       supportSteps: [] as string[],
       constructionSteps: [] as string[],
       test1Steps: [] as string[],
+      test2Steps: [] as string[],
       endedTurns: [] as string[],
       stepFailures: [] as { actorId: string; reason: string }[],
     }
@@ -35,6 +36,10 @@ describe('aiTurnScheduler', () => {
       },
       runTest1Step: (actorId) => {
         calls.test1Steps.push(actorId)
+        return { ok: true }
+      },
+      runTest2Step: (actorId) => {
+        calls.test2Steps.push(actorId)
         return { ok: true }
       },
       endTurn: (actorId) => {

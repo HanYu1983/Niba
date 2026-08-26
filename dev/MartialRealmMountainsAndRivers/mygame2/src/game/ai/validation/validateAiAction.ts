@@ -4,6 +4,7 @@ import { canPlayerPerformAction } from '../../rules/actionCostRules'
 import { collectReachableCells } from '../perception/reachablePositions'
 import { defenseActionToAiAction, type AiAction, type AiTargetRef } from '../aiAction'
 import type { AiDefenseAction } from '../../aiDefenseRules'
+import { buildingCatalog } from '../../catalogs/buildingCatalog'
 
 export type AiValidationResult = { valid: true } | { valid: false; reason: string }
 
@@ -73,6 +74,8 @@ export function validateAiAction(state: GameState, action: AiAction): AiValidati
     case 'build': {
       const base = state.bases.find((candidate) => candidate.id === action.baseId)
       if (!base) return { valid: false, reason: '建築目標據點不存在。' }
+      const template = buildingCatalog.find((b) => b.id === action.buildingType)
+      if (!template) return { valid: false, reason: `未知建築：${action.buildingType}` }
       return { valid: true }
     }
     case 'hold':

@@ -181,6 +181,7 @@ import { computeFuzzyInputs } from './ai/fuzzy/fuzzyInputs'
 import { evaluateAllGoals } from './ai/fuzzy/goals'
 import { MIN_THRESHOLD, rankGoals } from './ai/fuzzy/decision'
 import { buildActionSequence } from './ai/fuzzy/goalActionMapper'
+import { decideNextAction } from './ai/decisionTree/decideNextAction'
 import { defaultRandomSource } from './rules/randomRules'
 import { getBlockedPositions } from './rules/movementRules'
 import { getSchoolElement } from './catalogs/skillProgressionCatalog'
@@ -530,7 +531,7 @@ export const gameStore = {
           ? current.type === 'protect-base' && current.baseId === order.baseId
           : order.type === 'support-player'
             ? current.type === 'support-player' && current.playerId === order.playerId
-            : order.type === 'test1'),
+            : order.type === 'test1' || order.type === 'test2'),
       )
       if (duplicate) return state
       saved = true
@@ -1996,7 +1997,7 @@ export const gameStore = {
     while (true) {
       const candidate = pickNextBuildCandidate(gameState, plan, excluded)
       if (!candidate) break
-      const buildAction: AiAction = { type: 'build', actor: { id: playerId, kind: 'player' }, baseId: plan.baseId, buildingType: candidate.buildingType, reason: `建設計畫：${candidate.buildingName}（優先度 ${candidate.item.priority}）。` }
+      const buildAction: AiAction = { type: 'build', actor: { id: playerId, kind: 'player' }, baseId: plan.baseId, buildingType: candidate.buildingId, reason: `建設計畫：${candidate.buildingName}（優先度 ${candidate.item.priority}）。` }
       const rejection = validateAiStepAction(gameState, buildAction)
       if (rejection) {
         updateConstructionPlanItem(playerId, candidate.itemIndex, { status: 'blocked', blockedReason: rejection })
@@ -2226,6 +2227,47 @@ export const gameStore = {
       return { ok: true }
     }
     // 異常退出：不呼叫 endPlayerTurn，回傳 ok:false（scheduler 會負責結束回合）
+    return { ok: false, reason: exitReason }
+  },
+
+  runTest2Step: (playerId: string): ActionOutcome => {
+    const state = gameState
+    const player = state.players.find((candidate) => candidate.id === playerId)
+    const order = state.aiOrders?.find((candidate) => candidate.aiPlayerId === playerId && candidate.type === 'test2' && candidate.status === 'active')
+    if (!player?.isAI || state.activePlayerId !== playerId || state.creatureTurnInProgress || state.gameOver || !order) {
+      return { ok: false, reason: '目前無法執行 AI test2 回合。' }
+    }
+
+    const actor = { id: playerId, kind: 'player' as const }
+    let loopCount = 0
+    const MAX_LOOPS = 50
+    let exitReason = ''
+
+    while (!exitReason && gameState.players.find((p) => p.id === playerId)!.stamina > 0 && loopCount < MAX_LOOPS) {
+      loopCount++
+      const currentPlayer = gameState.players.find((p) => p.id === playerId)!
+
+      const action = decideNextAction(gameState, playerId)
+
+      if (!action) {
+        exitReason = '決策樹無可執行行動'
+        continue
+      }
+
+      const actionResult = gameStore.executeAiAction(action)
+      recordAiStepEvent(gameState.round, playerId, currentPlayer.name, action, actionResult)
+      if (!actionResult.ok) {
+        exitReason = `行動失敗：${actionResult.reason ?? '未知錯誤'}`
+        continue
+      }
+    }
+
+    if (!exitReason) {
+      const endAction = { type: 'end-turn' as const, actor, reason: `決策樹迴圈結束（${loopCount} 步）` }
+      gameStore.endPlayerTurn(playerId)
+      recordAiStepEvent(state.round, playerId, player.name, endAction, { ok: true })
+      return { ok: true }
+    }
     return { ok: false, reason: exitReason }
   },
 

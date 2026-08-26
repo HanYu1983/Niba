@@ -14,7 +14,7 @@
 
 export const AI_TURN_STEP_DELAY_MS = 350
 
-export type AiOrderKind = 'protect-base' | 'support-player' | 'construction' | 'test1'
+export type AiOrderKind = 'protect-base' | 'support-player' | 'construction' | 'test1' | 'test2'
 
 export interface AiTurnSchedulerDeps {
   /** 讀取最新局面（判斷 Actor 是否仍是當前回合玩家）。 */
@@ -23,6 +23,7 @@ export interface AiTurnSchedulerDeps {
   runSupportStep(actorId: string): { ok: boolean; reason?: string }
   runConstructionStep(actorId: string): { ok: boolean; reason?: string }
   runTest1Step(actorId: string): { ok: boolean; reason?: string }
+  runTest2Step(actorId: string): { ok: boolean; reason?: string }
   /** step 失敗且 Actor 仍在回合中時，結束其回合。 */
   endTurn(actorId: string): void
   /** step 失敗時通知 UI 顯示原因（可選）。 */
@@ -77,7 +78,9 @@ export function createAiTurnScheduler(deps: AiTurnSchedulerDeps): AiTurnSchedule
             ? deps.runSupportStep(scheduledActorId)
             : orderType === 'construction'
               ? deps.runConstructionStep(scheduledActorId)
-              : deps.runTest1Step(scheduledActorId)
+              : orderType === 'test2'
+                ? deps.runTest2Step(scheduledActorId)
+                : deps.runTest1Step(scheduledActorId)
         if (!result.ok && deps.getState().activePlayerId === scheduledActorId) {
           if (result.reason) {
             deps.onStepFailed?.(scheduledActorId, result.reason)
