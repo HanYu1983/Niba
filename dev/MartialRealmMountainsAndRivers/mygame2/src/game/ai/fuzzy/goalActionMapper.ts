@@ -128,7 +128,25 @@ function buildRetreatActions(
   state: GameState,
   player: PlayerState,
 ): AiAction[] {
-  if (!result.target || result.target.kind !== 'retreat') {
+  if (!result.target) {
+    return [{ type: 'hold', actor, reason: '保命：無目標，原地待命' }]
+  }
+
+  // 回據點醫治：往據點方向移動
+  if (result.target.kind === 'return-to-base-heal') {
+    const moveDest = findClosestReachablePosition(state, player, result.target.position)
+    if (moveDest.row === player.position.row && moveDest.column === player.position.column) {
+      return [{ type: 'hold', actor, reason: '保命：已在據點，原地待命' }]
+    }
+    return [{
+      type: 'move',
+      actor,
+      destination: moveDest,
+      reason: `保命：回據點醫治（血量比=${result.context?.healthRatio ?? '?'}）`,
+    }]
+  }
+
+  if (result.target.kind !== 'retreat') {
     return [{ type: 'hold', actor, reason: '保命：無逃離方向，原地待命' }]
   }
 

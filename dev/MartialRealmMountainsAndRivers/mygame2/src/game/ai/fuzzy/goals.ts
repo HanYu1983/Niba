@@ -23,31 +23,45 @@ export type GoalTarget =
   | { kind: 'equip'; instanceId: string }
   | { kind: 'equip-inner-skill'; skillId: string }
   | { kind: 'use-inner-skill-attack'; targetId: string; targetType: 'creature'; position: Position }
+  | { kind: 'return-to-base-heal'; baseId: string; position: Position }
 
 // ─── selfPreservation ──────────────────────────────────────────────
 
 export function evaluateSelfPreservation(inputs: FuzzyInputs): GoalResult {
-  const { hitsSurvivable, distToNearestThreat } = inputs
+  const { hitsSurvivable, distToNearestThreat, healthRatio, bestItemToUse, nearestBase } = inputs
 
-  // 無威脅 → 不需要保命
-  if (distToNearestThreat === Infinity) {
-    return { score: 0 }
+  // 有威脅 → 評估逃命
+  if (distToNearestThreat !== Infinity) {
+    const f_hitsLow = trapezoid(hitsSurvivable, 0, 0.5, 1, 2)
+    const f_threatClose = trapezoid(distToNearestThreat, 0, 0, 2, 4)
+
+    const score = Math.min(0.9, fuzzyOr(
+      f_hitsLow,
+      fuzzyAnd(f_hitsLow, f_threatClose),
+    ))
+
+    return {
+      score,
+      target: { kind: 'retreat', escapeDirection: { row: 0, column: 0 } },
+      context: { hitsSurvivable, distToNearestThreat },
+    }
   }
 
-  // hitsSurvivable < 1 → 1拳就死（危險）；>= 2 → 可扛2拳（安全，分數大幅下降）
-  const f_hitsLow = trapezoid(hitsSurvivable, 0, 0.5, 1, 2)
-  const f_threatClose = trapezoid(distToNearestThreat, 0, 0, 2, 4)
-
-  const score = Math.min(0.9, fuzzyOr(
-    f_hitsLow,
-    fuzzyAnd(f_hitsLow, f_threatClose),
-  ))
-
-  return {
-    score,
-    target: { kind: 'retreat', escapeDirection: { row: 0, column: 0 } },
-    context: { hitsSurvivable, distToNearestThreat },
+  // 無威脅 + 血量低 → 回據點醫治
+  // 條件：healthRatio < 0.3 且無可恢復道具（或道具恢復不足）
+  if (healthRatio < 0.3 && nearestBase) {
+    const hasHealItem = bestItemToUse?.effect === 'health'
+    if (!hasHealItem) {
+      const score = Math.min(0.8, (0.3 - healthRatio) / 0.3)
+      return {
+        score,
+        target: { kind: 'return-to-base-heal', baseId: nearestBase.id, position: nearestBase.position },
+        context: { healthRatio },
+      }
+    }
   }
+
+  return { score: 0 }
 }
 
 // ─── collectItems ──────────────────────────────────────────────────
