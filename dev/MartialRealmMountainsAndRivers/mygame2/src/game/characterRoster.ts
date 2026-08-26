@@ -59,7 +59,7 @@ export const DEFAULT_LEARNED_INNER_SKILL_ID = 'tuna-gong'
 export const DEFAULT_UNLOCKED_EXTERNAL_SKILL_IDS = ['sky-breaking-palm']
 
 /** 新角色預設持有的武學殘卷數。 */
-export const DEFAULT_STARTING_SCROLLS = 2000
+export const DEFAULT_STARTING_SCROLLS = 20
 
 /**
  * 建立預設養成欄位（供新角色與缺省相容使用）。
@@ -231,11 +231,11 @@ export function deleteCharacter(id: string): boolean {
 
 /** 卷獲取公式的起點值（可調）。 */
 export const SCROLL_REWARD = {
-  winBase: 20,
-  loseBase: 8,
-  perLevel: 3,
-  perCreature: 2,
-  perNewSkill: 5,
+  winBase: 6,
+  loseBase: 3,
+  perLevel: 1,
+  perCreature: 1,
+  perNewSkill: 2,
 } as const
 
 /**

@@ -140,17 +140,17 @@ describe('characterRoster', () => {
 describe('computeScrollReward', () => {
   it('勝利基礎卷 + 等級 + 擊殺 + 新功法', () => {
     const stats = { ...createEmptyRunStats(), maxLevelReached: 5, creaturesDefeated: 3 }
-    expect(computeScrollReward(stats, true, 2)).toBe(20 + 5 * 3 + 3 * 2 + 2 * 5)
+    expect(computeScrollReward(stats, true, 2)).toBe(6 + 5 * 1 + 3 * 1 + 2 * 2)
   })
 
   it('敗退基礎卷較低', () => {
     const stats = createEmptyRunStats()
-    expect(computeScrollReward(stats, false)).toBe(8)
+    expect(computeScrollReward(stats, false)).toBe(3)
   })
 
   it('無新功法時不計功法加成', () => {
     const stats = { ...createEmptyRunStats(), maxLevelReached: 1 }
-    expect(computeScrollReward(stats, true, 0)).toBe(20 + 3)
+    expect(computeScrollReward(stats, true, 0)).toBe(6 + 1)
   })
 })
 
