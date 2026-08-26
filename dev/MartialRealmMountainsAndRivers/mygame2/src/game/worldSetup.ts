@@ -53,6 +53,7 @@ export function createGameState(
     name?: string
     initialInternalSkillId?: string
     initialExternalSkillIds?: string[]
+    talentIds?: string[]
   },
 ): GameState {
   const humanPlayerCount = Math.min(4, Math.max(1, Math.round(settings.playerCount ?? 1)))
@@ -103,6 +104,7 @@ export function createGameState(
     selectedCharacter?.name,
     selectedCharacter?.initialInternalSkillId,
     selectedCharacter?.initialExternalSkillIds,
+    selectedCharacter?.talentIds,
   )
   const aiOrders: AiOrder[] = players
     .filter((p) => p.isAI)

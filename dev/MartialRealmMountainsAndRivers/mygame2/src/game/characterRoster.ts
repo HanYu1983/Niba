@@ -42,6 +42,8 @@ export type PersistentCharacter = {
   initialExternalSkillIds: string[]
   /** 開局內功（預設 'tuna-gong'，可為庫內其他內功）。 */
   initialInternalSkillId: string
+  /** 已選用天賦 ids（可多個；對局開局時注入為常駐效果，見 catalogs/talentCatalog）。 */
+  talentIds: string[]
   /** 養成統計。 */
   gamesPlayed: number
   createdAt: number
@@ -63,7 +65,12 @@ export const DEFAULT_STARTING_SCROLLS = 2000
  */
 export function createDefaultProgression(): Pick<
   PersistentCharacter,
-  'scrolls' | 'unlockedSkillIds' | 'learnedSkillIds' | 'initialExternalSkillIds' | 'initialInternalSkillId'
+  | 'scrolls'
+  | 'unlockedSkillIds'
+  | 'learnedSkillIds'
+  | 'initialExternalSkillIds'
+  | 'initialInternalSkillId'
+  | 'talentIds'
 > {
   return {
     scrolls: DEFAULT_STARTING_SCROLLS,
@@ -71,6 +78,7 @@ export function createDefaultProgression(): Pick<
     learnedSkillIds: [DEFAULT_LEARNED_INNER_SKILL_ID],
     initialExternalSkillIds: [],
     initialInternalSkillId: DEFAULT_LEARNED_INNER_SKILL_ID,
+    talentIds: [],
   }
 }
 
@@ -86,9 +94,15 @@ function getStored(): PersistentCharacter[] {
     if (!raw) return []
     const parsed = JSON.parse(raw) as Partial<RosterPayload>
     if (!parsed || !Array.isArray(parsed.characters)) return []
-    // 缺省相容：新角色已含完整欄位則原樣回傳。
+    // 缺省相容：新角色已含完整欄位則回傳（對缺少新增欄位的舊角色補預設）。
     if (parsed.characters.some((character) => Array.isArray(character.unlockedSkillIds))) {
-      return parsed.characters
+      const defaults = createDefaultProgression()
+      return parsed.characters.map((character) => ({
+        ...defaults,
+        ...character,
+        // 既有角色若有 talentIds 則保留，否則補空陣列。
+        talentIds: Array.isArray(character.talentIds) ? character.talentIds : [],
+      }))
     }
     // 舊版存檔：缺少 unlockedSkillIds 欄位。將舊 learnedSkillIds 視為「已解鎖（可培養）」，
     // 並補上 scrolls、五維加成等預設值。
@@ -161,7 +175,7 @@ export function createCharacter(input: {
   return character
 }
 
-/** 更新角色基本資料（名稱／外觀／稱號／五維加成）。名稱重複或空白時回傳 false。 */
+/** 更新角色基本資料（名稱／外觀／稱號／五維加成／天賦）。名稱重複或空白時回傳 false。 */
 export function updateCharacter(
   id: string,
   patch: {
@@ -169,6 +183,7 @@ export function updateCharacter(
     portrait?: string
     title?: string
     attributeBonuses?: Partial<PlayerAttributes>
+    talentIds?: string[]
   },
 ): boolean {
   const characters = getStored()
@@ -184,6 +199,7 @@ export function updateCharacter(
     name: nextName,
     portrait: patch.portrait !== undefined ? patch.portrait : current.portrait,
     title: patch.title !== undefined ? patch.title : current.title,
+    talentIds: patch.talentIds ? [...patch.talentIds] : current.talentIds,
     attributeBonuses: patch.attributeBonuses
       ? { ...current.attributeBonuses, ...patch.attributeBonuses }
       : current.attributeBonuses,

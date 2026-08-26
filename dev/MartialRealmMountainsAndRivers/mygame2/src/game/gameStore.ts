@@ -371,6 +371,7 @@ export const gameStore = {
     name?: string
     initialInternalSkillId?: string
     initialExternalSkillIds?: string[]
+    talentIds?: string[]
   }) => {
     lastGameSettings = { ...settings }
     pendingCreatureTurn = null

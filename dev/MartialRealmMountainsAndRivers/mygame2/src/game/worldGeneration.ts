@@ -18,6 +18,7 @@ import {
   isSamePosition,
 } from './types'
 import { buildingCatalog } from './catalogs/buildingCatalog'
+import { getTalentBuffs } from './catalogs/talentCatalog'
 import { martialSchoolCatalog, type MartialSchoolId } from './catalogs/martialSchoolCatalog'
 import { cityNames, playerNames, resourceNames, villageNames } from './catalogs/placeNameCatalog'
 import {
@@ -571,6 +572,7 @@ export function createRoamerCreatures(
  * @param humanName 可選：套用於第一位人類玩家的名稱（來自名册角色）。
  * @param initialInternalSkillId 可選：第一位人類玩家的初始內功（預設吐納功）。
  * @param initialExternalSkillIds 可選：第一位人類玩家的初始外功清單。
+ * @param talentIds 可選：第一位人類玩家所屬名册角色的天賦 ids；開局會轉為常駐 buff 注入。
  */
 export function createInitialPlayers(
   playerPositions: Position[],
@@ -580,6 +582,7 @@ export function createInitialPlayers(
   humanName?: string,
   initialInternalSkillId?: string,
   initialExternalSkillIds?: string[],
+  talentIds?: string[],
 ): PlayerState[] {
   const random = createSeededRandom(seed + 111)
   const availableNames = [...playerNames]
@@ -613,6 +616,7 @@ export function createInitialPlayers(
     const useCharacterSkills = !isAI && index === 0
     const innerSkillId = useCharacterSkills && initialInternalSkillId ? initialInternalSkillId : 'tuna-gong'
     const externalSkillIds = useCharacterSkills ? (initialExternalSkillIds ?? []) : []
+    const talentBuffs = useCharacterSkills ? getTalentBuffs(talentIds ?? []) : []
     return createCharacterState({
       id: `player-${index + 1}`,
       name,
@@ -620,6 +624,7 @@ export function createInitialPlayers(
       innerSkillId,
       position,
       attributes,
+      buffs: talentBuffs,
       prestige: 0,
       money: 30,
       experience: 0,

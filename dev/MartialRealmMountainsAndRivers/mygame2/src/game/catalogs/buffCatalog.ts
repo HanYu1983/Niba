@@ -195,4 +195,9 @@ export const buffCatalog: BuffDefinition[] = [
   // 幽影流（無）：隱匿暗襲
   { id: 'ghost-shadow-shadow-veil', name: '幽影蔽身', description: '回避率 +10%。', duration: 'persistent', category: 'buff', evasionRateBonus: 10 },
   { id: 'ghost-shadow-lone-resolve', name: '孤影決絕', description: '血量低於 25% 時，五維 ×1.6，持續 3 回合。', duration: 'rounds', durationRounds: 3, category: 'buff', conditional: { when: 'health-below', threshold: 0.25, multiplier: 1.6 } },
+  // 天賦（passive-buff 原語）：由 talentCatalog 參照，開局隨角色注入為常駐 buff。
+  { id: 'talent-cartographer-vision', name: '天賦·製圖', description: '製圖師：自身地圖視野半徑 +1。', duration: 'persistent', category: 'buff', visionRadiusBonus: 1 },
+  { id: 'talent-scavenger-gather', name: '天賦·拾荒', description: '拾荒者：採集時 25% 機率雙倍產出。', duration: 'persistent', category: 'buff', gatherDoubleYieldChance: 0.25 },
+  { id: 'talent-phantom-dodge', name: '天賦·幻影步', description: '幻影步：回避率 +6%、暴擊率 +6%。', duration: 'persistent', category: 'buff', evasionRateBonus: 6, criticalRateBonus: 6 },
+  { id: 'talent-merchant-king', name: '天賦·商賈', description: '商賈巨擘：買入價格 -20%、賣出價格 +20%、普攻最終傷害 +10%。', duration: 'persistent', category: 'buff', shopBuyPriceDiscount: 0.2, shopSellPriceBonus: 0.2, damageDealtPercent: 0.1 },
 ]

@@ -9,6 +9,7 @@ import {
 } from '../game/characterRoster'
 import { ATTRIBUTE_NAMES, type UpgradeableAttribute } from '../game/types'
 import CharacterTrainingPanel from './CharacterTrainingPanel'
+import CharacterTalentPanel from './CharacterTalentPanel'
 
 const ATTRIBUTE_KEYS: UpgradeableAttribute[] = ['armStrength', 'constitution', 'agility', 'innerEnergy', 'insight']
 
@@ -173,6 +174,13 @@ function CharacterLibraryScreen({ onSelect }: CharacterLibraryScreenProps) {
                 label: '培養',
                 children: (
                   <CharacterTrainingPanel character={editing} onChanged={refresh} />
+                ),
+              },
+              {
+                key: 'talent',
+                label: '天賦',
+                children: (
+                  <CharacterTalentPanel character={editing} onChanged={refresh} />
                 ),
               },
             ]}
