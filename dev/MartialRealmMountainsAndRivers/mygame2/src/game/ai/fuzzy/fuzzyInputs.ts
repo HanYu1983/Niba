@@ -126,36 +126,68 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
     }
   }
 
-  // 建設相關：找最近友方據點 + 建料 + 可建造建築 + 最近資源點
+  // 建設相關：評估所有可見友方據點，找最佳建設機會
   const activeBases = state.bases.filter((b) => b.active !== false && b.health > 0)
+
+  // 對每個據點找可建造建築（材料夠 + rank 夠 + 未建過同類型）
+  function findBuildableBuilding(base: typeof activeBases[number]) {
+    const existingTypes = new Set(base.buildings.map((b) => b.type))
+    return buildingCatalog.find((template) => {
+      if (existingTypes.has(template.type)) return false
+      if (base.martialSchoolId && template.schoolId && template.schoolId !== base.martialSchoolId) return false
+      if (base.allowedBuildings && !base.allowedBuildings.some((a) => a.type === template.type)) return false
+      if (!canPlayerBuildBuildingType(player, template.type)) return false
+      if (base.buildingMaterials < template.constructionCost) return false
+      return true
+    })
+  }
+
+  // 從所有據點中選最佳建設候選：優先選材料滿且可蓋的，否則選材料比最高且可蓋的
+  let bestConstructionBase: typeof activeBases[number] | undefined
+  let bestConstructionBuilding: ReturnType<typeof findBuildableBuilding>
+  let bestMaterialRatio = 0
+
+  for (const base of activeBases) {
+    const building = findBuildableBuilding(base)
+    const ratio = base.buildingMaterials / Math.max(1, base.maxBuildingMaterials)
+    if (building) {
+      // 可建造：材料滿 → 立即選；否則選材料比最高的
+      if (ratio >= 1) {
+        bestConstructionBase = base
+        bestConstructionBuilding = building
+        bestMaterialRatio = ratio
+        break
+      }
+      if (!bestConstructionBase || ratio > bestMaterialRatio) {
+        bestConstructionBase = base
+        bestConstructionBuilding = building
+        bestMaterialRatio = ratio
+      }
+    }
+  }
+
+  // fallback：最近據點（供 pickBestItem 等使用）
   const nearestBase = activeBases.length > 0
     ? activeBases.reduce((best, b) => manhattan(player.position, b.position) < manhattan(player.position, best.position) ? b : best)
     : undefined
 
-  const materialRatio = nearestBase
-    ? nearestBase.buildingMaterials / Math.max(1, nearestBase.maxBuildingMaterials)
+  const materialRatio = bestConstructionBase
+    ? bestConstructionBase.buildingMaterials / Math.max(1, bestConstructionBase.maxBuildingMaterials)
     : 0
 
-  // 找可建造的建築：材料夠 + rank 夠 + 未建過同類型
-  const existingTypes = new Set(nearestBase?.buildings.map((b) => b.type) ?? [])
-  const buildableBuilding = nearestBase
-    ? buildingCatalog.find((template) => {
-      if (existingTypes.has(template.type)) return false
-      if (nearestBase.martialSchoolId && template.schoolId && template.schoolId !== nearestBase.martialSchoolId) return false
-      if (nearestBase.allowedBuildings && !nearestBase.allowedBuildings.some((a) => a.type === template.type)) return false
-      if (!canPlayerBuildBuildingType(player, template.type)) return false
-      if (nearestBase.buildingMaterials < template.constructionCost) return false
-      return true
-    })
+  const buildableBuilding = bestConstructionBuilding
+    ? { id: bestConstructionBuilding.id, type: bestConstructionBuilding.type, name: bestConstructionBuilding.name }
     : undefined
   const canBuild = !!buildableBuilding
 
-  // 最近資源點（屬於最近據點）
-  const baseResourcePoints = nearestBase
-    ? state.resourcePoints.filter((rp) => rp.ownerBaseId === nearestBase!.id && rp.active !== false && rp.health > 0)
-    : []
-  const nearestResourcePoint = baseResourcePoints.length > 0
-    ? baseResourcePoints.reduce((best, rp) => manhattan(player.position, rp.position) < manhattan(player.position, best.position) ? rp : best)
+  // 最近資源點（屬於最佳建設據點）
+  const bestBaseResourcePoints = bestConstructionBase
+    ? state.resourcePoints.filter((rp) => rp.ownerBaseId === bestConstructionBase!.id && rp.active !== false && rp.health > 0)
+    : nearestBase
+      ? state.resourcePoints.filter((rp) => rp.ownerBaseId === nearestBase.id && rp.active !== false && rp.health > 0)
+      : []
+  const nearestResourcePoint = bestBaseResourcePoints.length > 0
+    ? bestBaseResourcePoints.reduce((best, rp) => manhattan(player.position, rp.position) < manhattan(player.position, best.position) ? rp : best)
     : undefined
   const distToNearestResourcePoint = nearestResourcePoint
     ? manhattan(player.position, nearestResourcePoint.position)
@@ -232,10 +264,10 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
     distToNearestItem,
     exitCount,
     nearestExit,
-    nearestBase,
+    nearestBase: bestConstructionBase ?? nearestBase,
     materialRatio,
     canBuild,
-    buildableBuilding: buildableBuilding ? { id: buildableBuilding.id, type: buildableBuilding.type, name: buildableBuilding.name } : undefined,
+    buildableBuilding,
     nearestResourcePoint,
     distToNearestResourcePoint,
     isAdjacentToResourcePoint,
