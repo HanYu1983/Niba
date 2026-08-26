@@ -18,6 +18,9 @@ import type { ScenarioDefinition } from '../editor/editorTypes'
 import { clearStoredScenarios } from '../game/scenarioStorage'
 import { getCharacters, type PersistentCharacter } from '../game/characterRoster'
 
+/** 記住玩家上次選擇的俠客 id（localStorage key）。 */
+const SELECTED_CHARACTER_KEY = 'mygame2.selected-character-id'
+
 type GameStartScreenProps = {
   onStart: (settings: GameSettings, selectedCharacter?: PersistentCharacter) => void
   onDebug: () => void
@@ -29,11 +32,25 @@ type GameStartScreenProps = {
 
 function GameStartScreen({ onStart, onDebug, onOpenSkillTest, onOpenEditor, onStartScenario }: GameStartScreenProps) {
   const [rosterCharacters, setRosterCharacters] = useState<PersistentCharacter[]>(() => getCharacters())
-  const [selectedCharacterId, setSelectedCharacterId] = useState<string | undefined>(undefined)
+  const [selectedCharacterId, setSelectedCharacterId] = useState<string | undefined>(() => {
+    // 讀回上次選擇的俠客（若仍存在於名册）。
+    const savedId = localStorage.getItem(SELECTED_CHARACTER_KEY)
+    return savedId ? getCharacters().find((character) => character.id === savedId)?.id : undefined
+  })
   const [activeTab, setActiveTab] = useState('sandbox')
+
+  // 記住/清除玩家選擇的俠客；角色被刪除時一併清除快取。
+  const persistSelectedCharacter = (id: string | undefined) => {
+    if (id) {
+      localStorage.setItem(SELECTED_CHARACTER_KEY, id)
+    } else {
+      localStorage.removeItem(SELECTED_CHARACTER_KEY)
+    }
+  }
 
   const handleSelectCharacter = (character: PersistentCharacter) => {
     setSelectedCharacterId(character.id)
+    persistSelectedCharacter(character.id)
     setActiveTab('sandbox')
     message.success(`已選用「${character.name}」，可於沙盒地圖開始遊戲。`)
   }
@@ -41,9 +58,12 @@ function GameStartScreen({ onStart, onDebug, onOpenSkillTest, onOpenEditor, onSt
   // 名册角色清單變更（新增／刪除／更新）時同步下拉選單；若選取的角色已不存在則清除選取。
   const handleCharactersChanged = (characters: PersistentCharacter[]) => {
     setRosterCharacters(characters)
-    setSelectedCharacterId((currentId) =>
-      currentId && characters.some((character) => character.id === currentId) ? currentId : undefined,
-    )
+    setSelectedCharacterId((currentId) => {
+      const next = currentId && characters.some((character) => character.id === currentId) ? currentId : undefined
+      // 所選角色被刪除時，同步清除 localStorage 快取。
+      if (currentId && !next) persistSelectedCharacter(undefined)
+      return next
+    })
   }
   // 每次進入地圖設定頁，套用上次選擇的模板（若無記錄則用「入門地圖」）。
   // 地圖設定不再自動寫入 localStorage，僅「儲存為模板」與「所選模板」會持久化。
