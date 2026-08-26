@@ -253,20 +253,20 @@ function evaluateConstruction(inputs: FuzzyInputs): GoalResult {
 // 預設目標：有未探索可達格 → 高分 + 移動到最近的未探索格
 
 function evaluateExploration(inputs: FuzzyInputs): GoalResult {
-  const { unexploredReachableCount, nearestUnexploredPosition, staminaRatio } = inputs
+  const { unexploredInvisibleCells, nearestUnexploredInvisiblePosition, staminaRatio } = inputs
 
-  if (unexploredReachableCount === 0 || !nearestUnexploredPosition) {
+  if (unexploredInvisibleCells === 0 || !nearestUnexploredInvisiblePosition) {
     return { score: 0 }
   }
 
-  // 未探索格越多分數越高，體力充足時加分
-  const baseScore = Math.min(1, unexploredReachableCount / 10)
+  // 不可見未探索格越多分數越高，體力充足時加分
+  const baseScore = Math.min(1, unexploredInvisibleCells / 10)
   const score = staminaRatio > 0.3 ? baseScore : baseScore * 0.5
 
   return {
     score,
-    target: { kind: 'explore', position: nearestUnexploredPosition },
-    context: { unexploredReachableCount },
+    target: { kind: 'explore', position: nearestUnexploredInvisiblePosition },
+    context: { unexploredInvisibleCells },
   }
 }
 

@@ -61,6 +61,8 @@ function AiDebugPanel({ player, gameState }: AiDebugPanelProps) {
             <SectionTitle title="探索" />
             <Row label="unexploredReachableCount" value={formatNumber(inputs.unexploredReachableCount)} />
             <Row label="nearestUnexploredPosition" value={inputs.nearestUnexploredPosition ? `(${inputs.nearestUnexploredPosition.row},${inputs.nearestUnexploredPosition.column})` : '—'} />
+            <Row label="unexploredInvisibleCells" value={formatNumber(inputs.unexploredInvisibleCells)} />
+            <Row label="nearestUnexploredInvisiblePosition" value={inputs.nearestUnexploredInvisiblePosition ? `(${inputs.nearestUnexploredInvisiblePosition.row},${inputs.nearestUnexploredInvisiblePosition.column})` : '—'} />
             <SectionTitle title="屬性" />
             <Row label="availableAttributePoints" value={formatNumber(inputs.availableAttributePoints)} />
             <SectionTitle title="裝備" />

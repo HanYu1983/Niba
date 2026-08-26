@@ -54,6 +54,10 @@ export interface FuzzyInputs {
   unexploredReachableCount: number
   /** 最近的未探索可達格子位置，無則 undefined */
   nearestUnexploredPosition: Position | undefined
+  /** 不可見且未探索的格子數量 */
+  unexploredInvisibleCells: number
+  /** 最近的不可見未探索格子位置，無則 undefined */
+  nearestUnexploredInvisiblePosition: Position | undefined
   /** 到最近怪物的距離，無怪物 = Infinity */
   distToNearestCreature: number
   /** 最近怪物 id，無則空字串 */
@@ -184,6 +188,13 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
     ? unexploredCells.reduce((best, c) => c.cost < best.cost ? c : best).position
     : undefined
 
+  // 不可見且未探索的格子：玩家從未看見也當前看不見的格子
+  const allInvisibleUnexplored = state.map.cells.filter((c) => !visibleCellIds.has(c.id) && !exploredIds.has(c.id))
+  const unexploredInvisibleCells = allInvisibleUnexplored.length
+  const nearestUnexploredInvisiblePosition = allInvisibleUnexplored.length > 0
+    ? allInvisibleUnexplored.reduce((best, c) => manhattan(player.position, c) < manhattan(player.position, best) ? c : best)
+    : undefined
+
   // 戰鬥相關：視野內生物（近到遠）
   const visibleCreatures = state.creatures
     .filter((c) => {
@@ -257,6 +268,10 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
     isAdjacentToResourcePoint,
     unexploredReachableCount,
     nearestUnexploredPosition,
+    unexploredInvisibleCells,
+    nearestUnexploredInvisiblePosition: nearestUnexploredInvisiblePosition
+      ? { row: nearestUnexploredInvisiblePosition.row, column: nearestUnexploredInvisiblePosition.column }
+      : undefined,
     distToNearestCreature,
     nearestCreatureId: nearestCreature?.id ?? '',
     availableAttributePoints,

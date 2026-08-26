@@ -5,6 +5,28 @@ import { collectReachableCells } from '../perception/reachablePositions'
 import { externalSkillCatalog } from '../../catalogs/externalSkillCatalog'
 
 /**
+ * 找出距目標位置最近的可到達格子。
+ * 若玩家已在目標或目標可直接到達，回傳目標本身。
+ * 否則回傳 reachable 中距目標最近的格子。
+ */
+function findClosestReachablePosition(state: GameState, player: PlayerState, targetPosition: { row: number; column: number }): { row: number; column: number } {
+  const reachable = collectReachableCells(state, player)
+  if (reachable.length === 0) return player.position
+
+  // 目標本身可達
+  const targetReachable = reachable.find((c) => c.position.row === targetPosition.row && c.position.column === targetPosition.column)
+  if (targetReachable) return targetPosition
+
+  // 找 reachable 中距目標最近的格子
+  const best = reachable.reduce((best, c) => {
+    const dBest = Math.abs(best.position.row - targetPosition.row) + Math.abs(best.position.column - targetPosition.column)
+    const dC = Math.abs(c.position.row - targetPosition.row) + Math.abs(c.position.column - targetPosition.column)
+    return dC < dBest ? c : best
+  })
+  return best.position
+}
+
+/**
  * 目標→行動序列映射：將 GoalResult 轉為 AiAction[] 供 executeAiAction 逐步執行。
  *
  * V1：selfPreservation / collectItems / positioning 各回傳 1~2 步行動。
@@ -27,7 +49,7 @@ export function buildActionSequence(
     case 'construction':
       return buildConstructionActions(actor, result, state, player)
     case 'exploration':
-      return buildExplorationActions(actor, result)
+      return buildExplorationActions(actor, result, state, player)
     case 'engageCombat':
       return buildEngageCombatActions(actor, result, state, player)
     case 'allocateAttributes':
@@ -78,7 +100,7 @@ function buildRetreatActions(
 function buildCollectItemActions(
   actor: AiActorRef,
   result: GoalResult,
-  _state: GameState,
+  state: GameState,
   player: PlayerState,
 ): AiAction[] {
   if (!result.target || result.target.kind !== 'item') {
@@ -89,7 +111,6 @@ function buildCollectItemActions(
   const onSameCell = player.position.row === target.position.row && player.position.column === target.position.column
 
   if (onSameCell) {
-    // 已在道具格上，直接撿
     return [{
       type: 'collect',
       actor,
@@ -98,12 +119,12 @@ function buildCollectItemActions(
     }]
   }
 
-  // 需要先移動到道具格
+  const moveDest = findClosestReachablePosition(state, player, target.position)
   return [
     {
       type: 'move',
       actor,
-      destination: target.position,
+      destination: moveDest,
       reason: '收集道具：移動到道具位置',
     },
     {
@@ -130,10 +151,11 @@ function buildPositioningActions(
 
   // 有出口 → 移動到最近出口
   if (result.target?.kind === 'exit') {
+    const moveDest = findClosestReachablePosition(state, player, result.target.position)
     return [{
       type: 'move',
       actor,
-      destination: result.target.position,
+      destination: moveDest,
       reason: `定位：前往出口 (${result.target.position.row},${result.target.position.column})`,
     }]
   }
@@ -190,8 +212,8 @@ function buildPositioningAttack(
 function buildConstructionActions(
   actor: AiActorRef,
   result: GoalResult,
-  _state: GameState,
-  _player: PlayerState,
+  state: GameState,
+  player: PlayerState,
 ): AiAction[] {
   const action = result.context?.action as string | undefined
 
@@ -218,10 +240,11 @@ function buildConstructionActions(
 
   // move-to-resource：移動到資源點
   if (action === 'move-to-resource' && result.target?.kind === 'resource-point') {
+    const moveDest = findClosestReachablePosition(state, player, result.target.position)
     return [{
       type: 'move',
       actor,
-      destination: result.target.position,
+      destination: moveDest,
       reason: '建設：移動到資源點',
     }]
   }
@@ -239,12 +262,15 @@ function buildConstructionActions(
 function buildExplorationActions(
   actor: AiActorRef,
   result: GoalResult,
+  state: GameState,
+  player: PlayerState,
 ): AiAction[] {
   if (result.target?.kind === 'explore') {
+    const moveDest = findClosestReachablePosition(state, player, result.target.position)
     return [{
       type: 'move',
       actor,
-      destination: result.target.position,
+      destination: moveDest,
       reason: `探索：移動到未探索格 (${result.target.position.row},${result.target.position.column})`,
     }]
   }
@@ -288,11 +314,12 @@ function buildEngageCombatActions(
   }
 
   // 不相鄰 → 先移動再攻擊
+  const moveDest = findClosestReachablePosition(state, player, targetPosition)
   return [
     {
       type: 'move',
       actor,
-      destination: targetPosition,
+      destination: moveDest,
       reason: `交戰：移動到 ${creature.name} 附近`,
     },
     {
@@ -394,11 +421,12 @@ function buildAttackNestActions(
     }]
   }
 
+  const moveDest = findClosestReachablePosition(state, player, nest.position)
   return [
     {
       type: 'move',
       actor,
-      destination: nest.position,
+      destination: moveDest,
       reason: `打巢穴：移動到 ${nest.name} 附近`,
     },
     {
@@ -464,11 +492,12 @@ function buildUseInnerSkillAttackActions(
     }]
   }
 
+  const moveDest = findClosestReachablePosition(state, player, nearestCreature.position)
   return [
     {
       type: 'move',
       actor,
-      destination: nearestCreature.position,
+      destination: moveDest,
       reason: `使用功法：移動到 ${nearestCreature.name} 附近`,
     },
     {
