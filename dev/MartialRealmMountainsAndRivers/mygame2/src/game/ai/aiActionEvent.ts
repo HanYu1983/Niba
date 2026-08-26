@@ -57,6 +57,11 @@ const ACTION_TYPE_LABELS: Record<AiAction['type'], string> = {
   'use-item': '使用道具',
   equip: '裝備',
   'equip-inner-skill': '裝備功法',
+  'learn-skill': '學習功法',
+  'practice-skill': '練功',
+  'use-facility': '使用設施',
+  'defense-build': '建造防禦',
+  'buy-item': '購買道具',
 }
 
 function formatActionDetail(action: AiAction): string {

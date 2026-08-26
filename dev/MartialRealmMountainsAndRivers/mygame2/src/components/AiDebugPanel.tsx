@@ -34,7 +34,7 @@ function AiDebugPanel({ player, gameState }: AiDebugPanelProps) {
             <SectionTitle title="威脅" />
             <Row label="distToNearestThreat" value={formatNumber(inputs.distToNearestThreat)} />
             <Row label="maxVisibleEnemyDamage" value={formatNumber(inputs.maxVisibleEnemyDamage)} />
-            <Row label="visibleCreatureCount" value={formatNumber(inputs.visibleCreatureCount)} />
+            <Row label="visibleCreatureIds" value={inputs.visibleCreatureIds.length > 0 ? inputs.visibleCreatureIds.join(', ') : '—'} />
             <Row label="distToNearestCreature" value={formatNumber(inputs.distToNearestCreature)} />
             <Row label="nearestCreatureId" value={inputs.nearestCreatureId || '—'} />
             <SectionTitle title="巢穴" />
@@ -43,7 +43,7 @@ function AiDebugPanel({ player, gameState }: AiDebugPanelProps) {
             <SectionTitle title="道具" />
             <Row label="reachableItemCount" value={formatNumber(inputs.reachableItemCount)} />
             <Row label="distToNearestItem" value={formatNumber(inputs.distToNearestItem)} />
-            <Row label="bestItemToUse" value={inputs.bestItemToUse ? `${inputs.bestItemToUse.name} (${inputs.bestItemToUse.effect})` : '—'} />
+            <Row label="bestItemToUse" value={inputs.bestItemToUse ? `${inputs.bestItemToUse.name} (${inputs.bestItemToUse.effect} +${inputs.bestItemToUse.effectValue})` : '—'} />
             <SectionTitle title="資源" />
             <Row label="reachableResourceCount" value={formatNumber(inputs.reachableResourceCount)} />
             <Row label="nearestResourcePoint" value={inputs.nearestResourcePoint ? `(${inputs.nearestResourcePoint.position.row},${inputs.nearestResourcePoint.position.column})` : '—'} />
@@ -51,6 +51,7 @@ function AiDebugPanel({ player, gameState }: AiDebugPanelProps) {
             <Row label="isAdjacentToResourcePoint" value={inputs.isAdjacentToResourcePoint ? '是' : '否'} />
             <SectionTitle title="建設" />
             <Row label="nearestBase" value={inputs.nearestBase ? inputs.nearestBase.name : '—'} />
+            <Row label="visibleBaseIds" value={inputs.visibleBaseIds.length > 0 ? inputs.visibleBaseIds.join(', ') : '—'} />
             <Row label="materialRatio" value={formatNumber(inputs.materialRatio)} />
             <Row label="canBuild" value={inputs.canBuild ? '是' : '否'} />
             <Row label="buildableBuilding" value={inputs.buildableBuilding ? inputs.buildableBuilding.name : '—'} />
@@ -60,6 +61,8 @@ function AiDebugPanel({ player, gameState }: AiDebugPanelProps) {
             <SectionTitle title="探索" />
             <Row label="unexploredReachableCount" value={formatNumber(inputs.unexploredReachableCount)} />
             <Row label="nearestUnexploredPosition" value={inputs.nearestUnexploredPosition ? `(${inputs.nearestUnexploredPosition.row},${inputs.nearestUnexploredPosition.column})` : '—'} />
+            <Row label="unexploredInvisibleCells" value={formatNumber(inputs.unexploredInvisibleCells)} />
+            <Row label="nearestUnexploredInvisiblePosition" value={inputs.nearestUnexploredInvisiblePosition ? `(${inputs.nearestUnexploredInvisiblePosition.row},${inputs.nearestUnexploredInvisiblePosition.column})` : '—'} />
             <SectionTitle title="屬性" />
             <Row label="availableAttributePoints" value={formatNumber(inputs.availableAttributePoints)} />
             <SectionTitle title="裝備" />

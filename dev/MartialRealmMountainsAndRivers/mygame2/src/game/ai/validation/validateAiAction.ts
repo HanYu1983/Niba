@@ -81,6 +81,11 @@ export function validateAiAction(state: GameState, action: AiAction): AiValidati
     case 'use-item':
     case 'equip':
     case 'equip-inner-skill':
+    case 'learn-skill':
+    case 'practice-skill':
+    case 'use-facility':
+    case 'defense-build':
+    case 'buy-item':
       return { valid: true }
   }
 }

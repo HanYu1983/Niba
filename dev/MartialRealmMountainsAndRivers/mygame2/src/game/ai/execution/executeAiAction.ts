@@ -2,7 +2,7 @@ import type { ActionOutcome, AttackTargetType, GameState } from '../../types'
 import type { AiAction } from '../aiAction'
 import { movePlayer } from '../../actions/movementActions'
 import { collectResourcePoint } from '../../actions/explorationActions'
-import { constructBuilding } from '../../actions/buildingActions'
+import { constructBuilding, constructDefenseStructure } from '../../actions/buildingActions'
 import { endPlayerTurn, type TurnActionDependencies } from '../../actions/turnActions'
 import { executeAiAttack } from './executeAiAttack'
 import { collectItemPointAction } from '../../actions/itemActions'
@@ -10,6 +10,10 @@ import { useItemAction } from '../../actions/itemActions'
 import { allocateAttributePointAction } from '../../rules/playerDerivedRules'
 import { equipEquipmentAction } from '../../rules/equipmentRules'
 import { equipInnerSkillAction } from '../../rules/skillRules'
+import { learnSkillAtMartialHall } from '../../actions/martialHallActions'
+import { learnSkillAtSectGate, practiceSkillAtSectGate } from '../../actions/sectGateActions'
+import { useInfirmary, executeMission } from '../../actions/explorationActions'
+import { buyItem } from '../../actions/shopActions'
 import type { CombatActionDependencies } from '../../actions/combatActions'
 
 export type ExecuteAiActionDependencies = {
@@ -55,6 +59,40 @@ export function executeAiAction(
       return equipEquipmentAction(state, action.actor.id, action.instanceId)
     case 'equip-inner-skill':
       return equipInnerSkillAction(state, action.actor.id, action.skillId)
+    case 'learn-skill': {
+      if (action.baseId) {
+        const result = learnSkillAtMartialHall(state, action.actor.id, action.baseId, action.skillType, action.skillId)
+        return { state: result.state, result: result.result }
+      }
+      if (action.gateId) {
+        const result = learnSkillAtSectGate(state, action.actor.id, action.gateId, action.skillId)
+        return { state: result.state, result: result.result }
+      }
+      return { state, result: { ok: false, reason: '學招：無據點或門派目標' } }
+    }
+    case 'practice-skill': {
+      const result = practiceSkillAtSectGate(state, action.actor.id, action.gateId, action.skillId)
+      return { state: result.state, result: result.result }
+    }
+    case 'use-facility': {
+      if (action.facilityType === 'heal') {
+        const result = useInfirmary(state, action.actor.id, action.baseId)
+        return { state: result.state, result: result.result }
+      }
+      if (action.facilityType === 'mission') {
+        const result = executeMission(state, action.actor.id, action.baseId)
+        return { state: result.state, result: result.result }
+      }
+      return { state, result: { ok: true } }
+    }
+    case 'defense-build': {
+      const result = constructDefenseStructure(state, action.actor.id, action.baseId, action.structureType as import('../../catalogs/defenseStructureCatalog').DefenseStructureType, action.position)
+      return { state: result.state, result: result.result }
+    }
+    case 'buy-item': {
+      const result = buyItem(state, action.actor.id, action.itemId, 1)
+      return { state: result.state, result: result.result }
+    }
     case 'hold':
       return { state, result: { ok: true } }
     case 'end-turn': {

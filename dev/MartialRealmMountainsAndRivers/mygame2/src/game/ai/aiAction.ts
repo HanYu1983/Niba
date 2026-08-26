@@ -83,6 +83,44 @@ export type AiAction =
       skillId: string
       reason: string
     }
+  | {
+      type: 'learn-skill'
+      actor: AiActorRef
+      baseId?: string
+      gateId?: string
+      skillType: 'inner' | 'external'
+      skillId: string
+      reason: string
+    }
+  | {
+      type: 'practice-skill'
+      actor: AiActorRef
+      gateId: string
+      skillId: string
+      reason: string
+    }
+  | {
+      type: 'use-facility'
+      actor: AiActorRef
+      baseId: string
+      facilityType: 'heal' | 'mission' | 'repair'
+      reason: string
+    }
+  | {
+      type: 'defense-build'
+      actor: AiActorRef
+      baseId: string
+      structureType: string
+      position: Position
+      reason: string
+    }
+  | {
+      type: 'buy-item'
+      actor: AiActorRef
+      baseId: string
+      itemId: string
+      reason: string
+    }
 
 const MISSING_POSITION: Position = { row: -1, column: -1 }
 
