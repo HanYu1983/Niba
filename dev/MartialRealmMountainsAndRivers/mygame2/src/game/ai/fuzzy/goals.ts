@@ -54,12 +54,12 @@ export function evaluateSelfPreservation(inputs: FuzzyInputs): GoalResult {
 
   // 無威脅 + 血量低 → 回據點醫治（不管有無道具，醫治 > 道具）
   if (healthRatio < 0.3 && nearestBase) {
-    // 有醫療室 → 回據點用醫療室就醫
-    if (hasInfirmary) {
+    // 有醫療室 → 回據點用醫療室就醫（以 feasibility.healBaseId 為準）
+    if (hasInfirmary && inputs.feasibility.healBaseId) {
       const score = Math.min(0.8, (0.3 - healthRatio) / 0.3)
       return {
         score,
-        target: { kind: 'use-facility', baseId: nearestBase.id, facilityType: 'heal' },
+        target: { kind: 'use-facility', baseId: inputs.feasibility.healBaseId, facilityType: 'heal' },
         context: { healthRatio },
       }
     }
@@ -431,23 +431,23 @@ export function evaluateUseInnerSkillAttack(inputs: FuzzyInputs): GoalResult {
 // 武館/門派有可學技能 → 高分
 
 function evaluateLearnMartialSkill(inputs: FuzzyInputs): GoalResult {
-  const { learnableSkillAtHall, learnableSkillAtGate, staminaRatio } = inputs
+  const { learnableSkillAtHall, learnableSkillAtGate, staminaRatio, feasibility } = inputs
 
-  // 門派學招：需要 3 體力 + 30 金錢
-  if (learnableSkillAtGate && staminaRatio > 0.3) {
+  // 門派學招：需要可步行到達 + 體力夠 + 金錢夠
+  if (learnableSkillAtGate && feasibility.canReachNearestGate && feasibility.canAffordGateLearn && staminaRatio > 0.3) {
     return {
       score: 0.7,
       target: { kind: 'learn-skill', gateId: learnableSkillAtGate.gateId, skillType: 'inner', skillId: learnableSkillAtGate.skillId },
-      context: { source: 'gate', name: learnableSkillAtGate.name },
+      context: { source: 'gate', name: learnableSkillAtGate.name, cost: feasibility.learnGateCost },
     }
   }
 
-  // 武館學招：不需要體力，只需金錢
-  if (learnableSkillAtHall) {
+  // 武館學招：需要金錢夠
+  if (learnableSkillAtHall && feasibility.canAffordHallLearn) {
     return {
       score: 0.6,
       target: { kind: 'learn-skill', baseId: learnableSkillAtHall.baseId, skillType: learnableSkillAtHall.skillType, skillId: learnableSkillAtHall.skillId },
-      context: { source: 'hall', name: learnableSkillAtHall.name },
+      context: { source: 'hall', name: learnableSkillAtHall.name, cost: feasibility.learnHallCost },
     }
   }
 
@@ -458,9 +458,10 @@ function evaluateLearnMartialSkill(inputs: FuzzyInputs): GoalResult {
 // 門派有可練技能 → 中分（需要體力）
 
 function evaluatePracticeSkill(inputs: FuzzyInputs): GoalResult {
-  const { practiceableSkillAtGate, staminaRatio, needsLeveling } = inputs
+  const { practiceableSkillAtGate, staminaRatio, needsLeveling, feasibility } = inputs
 
   if (!practiceableSkillAtGate) return { score: 0 }
+  if (!feasibility.canReachNearestGate) return { score: 0 }
   if (staminaRatio < 0.3) return { score: 0 }
 
   // 等級落後時練功優先度提升
@@ -478,17 +479,18 @@ function evaluatePracticeSkill(inputs: FuzzyInputs): GoalResult {
 // 有告示牌 + 體力夠 → 執行任務（金錢+聲望）
 
 function evaluateExecuteMission(inputs: FuzzyInputs): GoalResult {
-  const { hasMissionBoard, staminaRatio, materialRatio } = inputs
+  const { hasMissionBoard, staminaRatio, materialRatio, feasibility } = inputs
 
   if (!hasMissionBoard) return { score: 0 }
   if (staminaRatio < 0.2) return { score: 0 }
+  if (!feasibility.missionBaseId) return { score: 0 }
 
   // 建料充足時做任務的動機較低（已不需要金錢），建料不足時動機高
   const f_needMaterials = materialRatio < 0.5 ? 0.7 : 0.4
 
   return {
     score: f_needMaterials,
-    target: { kind: 'use-facility', baseId: '', facilityType: 'mission' },
+    target: { kind: 'use-facility', baseId: feasibility.missionBaseId, facilityType: 'mission' },
     context: { materialRatio },
   }
 }
@@ -497,14 +499,15 @@ function evaluateExecuteMission(inputs: FuzzyInputs): GoalResult {
 // 有工坊 + 裝備受損 → 修理
 
 function evaluateRepairEquipment(inputs: FuzzyInputs): GoalResult {
-  const { hasWorkshopDamaged, staminaRatio } = inputs
+  const { hasWorkshopDamaged, staminaRatio, feasibility } = inputs
 
   if (!hasWorkshopDamaged) return { score: 0 }
   if (staminaRatio < 0.2) return { score: 0 }
+  if (!feasibility.repairBaseId) return { score: 0 }
 
   return {
     score: 0.5,
-    target: { kind: 'use-facility', baseId: '', facilityType: 'repair' },
+    target: { kind: 'use-facility', baseId: feasibility.repairBaseId, facilityType: 'repair' },
   }
 }
 

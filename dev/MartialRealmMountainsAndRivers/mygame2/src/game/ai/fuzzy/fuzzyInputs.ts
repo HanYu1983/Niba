@@ -9,12 +9,39 @@ import { canPlayerBuildBuildingType } from '../../rules/buildingProgressionRules
 import { collectReachableCells } from '../perception/reachablePositions'
 import { itemCatalog } from '../../catalogs/itemCatalog'
 import { equipmentCatalog } from '../../catalogs/equipmentCatalog'
-import { allInnerSkillCatalog, getMartialHallSkills } from '../../catalogs/martialHallSkillCatalog'
+import { allInnerSkillCatalog, getMartialHallSkills, martialHallInnerSkillCatalog, martialHallExternalSkillCatalog } from '../../catalogs/martialHallSkillCatalog'
 import { getEffectiveAttributesForPlayer } from '../../rules/playerDerivedRules'
 import { getPlayerVisibleCellIds } from '../../rules/visibilityRules'
-import { getSectGateSkills } from '../../rules/sectGateRules'
+import { getSectGateSkills, getSectGateLearnCost } from '../../rules/sectGateRules'
 import { defenseStructureCatalog } from '../../catalogs/defenseStructureCatalog'
 import { getRepairSummary, hasBuilding } from '../../rules/buildingRules'
+import { getMartialHallSkillCost } from '../../actions/martialHallActions'
+
+/** 各目標的可行性資料：「能不能做」+「走多遠」 */
+export interface FeasibilityData {
+  /** 學招：最近門派學費 */
+  learnGateCost: number
+  /** 學招：玩家金錢是否夠門派學費 */
+  canAffordGateLearn: boolean
+  /** 學招：到最近門派距離 */
+  distToNearestGate: number
+  /** 學招：最近武館學費 */
+  learnHallCost: number
+  /** 學招：玩家金錢是否夠武館學費 */
+  canAffordHallLearn: boolean
+  /** 學招：到最近有武館的據點距離 */
+  distToNearestHallBase: number
+  /** 練功/學招：門派是否可步行到達 */
+  canReachNearestGate: boolean
+  /** 任務：最近有告示牌的據點 id */
+  missionBaseId: string
+  /** 修理：最近有工坊的據點 id */
+  repairBaseId: string
+  /** 就醫：最近有醫療室的據點 id */
+  healBaseId: string
+  /** 據點：到最近 active 據點距離 */
+  distToNearestActiveBase: number
+}
 
 export interface FuzzyInputs {
   /** 能扛幾下攻擊（health / maxEnemyDamage），無敵人時 = 99 */
@@ -109,6 +136,8 @@ export interface FuzzyInputs {
   buildableDefenseStructure: { type: string; name: string } | undefined
   /** 據點附近的威脅數量（曼哈頓 ≤ 5） */
   threatCountNearBase: number
+  /** 各目標可行性資料 */
+  feasibility: FeasibilityData
 }
 
 function manhattan(a: Position, b: Position): number {
@@ -325,6 +354,37 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
     }).length
     : 0
 
+  // ── feasibility ────────────────────────────────────────────────
+
+  // 學招（門派）：學費 + 距離
+  const learnGateCost = nearestSectGate ? getSectGateLearnCost(nearestSectGate.schoolId, '') : Infinity
+  const canAffordGateLearn = learnGateCost !== Infinity && (player.money ?? 0) >= learnGateCost
+  const distToNearestGate = nearestSectGate ? manhattan(player.position, nearestSectGate.position) : Infinity
+
+  // 學招（武館）：學費 + 距離
+  const hallSkills = nearestBase ? getMartialHallSkills(nearestBase.martialSchoolId) : { inner: [] as typeof martialHallInnerSkillCatalog, external: [] as typeof martialHallExternalSkillCatalog }
+  const learnableHallSkill = hallSkills.inner.find((s) => !player.innerSkillIds.includes(s.id) && (player.attributes?.insight ?? 0) >= s.insightRequirement)
+    ?? hallSkills.external.find((s) => !player.externalSkillIds.includes(s.id))
+  const learnHallCost = learnableHallSkill ? getMartialHallSkillCost('insightCost' in learnableHallSkill ? learnableHallSkill.insightCost : learnableHallSkill.insightRequirement) : Infinity
+  const canAffordHallLearn = learnHallCost !== Infinity && (player.money ?? 0) >= learnHallCost
+  const distToNearestHallBase = nearestBase && learnableHallSkill ? manhattan(player.position, nearestBase.position) : Infinity
+
+  // 門派是否可步行到達（Dijkstra 成本圖，成本 > 0 即可達）
+  const canReachNearestGate = (() => {
+    if (!nearestSectGate) return false
+    const costs = buildMovementCostMap(state.map, player)
+    const cost = costs.get(`${nearestSectGate.position.row}-${nearestSectGate.position.column}`) ?? 0
+    return cost > 0
+  })()
+
+  // 任務/修理/就醫：最近有設施的據點 id
+  const missionBaseId = state.bases.find((b) => b.active !== false && b.health > 0 && hasBuilding(b, 'board'))?.id ?? ''
+  const repairBaseId = state.bases.find((b) => b.active !== false && b.health > 0 && hasBuilding(b, 'workshop'))?.id ?? ''
+  const healBaseId = state.bases.find((b) => b.active !== false && b.health > 0 && hasBuilding(b, 'infirmary'))?.id ?? ''
+
+  // 到最近 active 據點距離
+  const distToNearestActiveBase = nearestBase ? manhattan(player.position, nearestBase.position) : Infinity
+
   return {
     hitsSurvivable,
     staminaRatio: player.stamina / player.maxStamina,
@@ -374,6 +434,19 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
     buyableHealItem,
     buildableDefenseStructure,
     threatCountNearBase,
+    feasibility: {
+      learnGateCost,
+      canAffordGateLearn,
+      distToNearestGate,
+      learnHallCost,
+      canAffordHallLearn,
+      distToNearestHallBase,
+      canReachNearestGate,
+      missionBaseId,
+      repairBaseId,
+      healBaseId,
+      distToNearestActiveBase,
+    },
   }
 }
 
