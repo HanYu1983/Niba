@@ -796,3 +796,190 @@ function computeFuzzyInputs(state: GameState, player: PlayerState): FuzzyInputs 
 | 7 | 改寫 `runTest1Step` 使用新管線 | step 6 |
 | 8 | 建立 `ai/fuzzy/fuzzyAi.test.ts`（端到端測試） | step 7 |
 | 9 | （可選）JSON 配置檔讀取 | step 8 |
+
+---
+
+## 12. 已知缺陷與技術解法
+
+### 12.1 缺陷一：多目標分數接近時「三心二意」
+
+**症狀**：探索=0.55、交戰=0.52、採集=0.50，AI 每步切換目標——探索一步→交戰一步→採集一步→回到探索，什麼都做不成。
+
+**根本原因**：argmax 沒有「慣性」，每步都是獨立決策，不記得上一步選了什麼。
+
+#### 解法 A：遲滯（Hysteresis）—— 切換需要「明顯更優」
+
+```
+currentGoal = 上一步選出的目標（跨步保留）
+
+// 切換條件：新目標分數 > 當前目標分數 + HYSTERESIS_MARGIN
+HYSTERESIS_MARGIN = 0.15
+
+if (bestGoal !== currentGoal && bestScore < currentGoalScore + HYSTERESIS_MARGIN):
+    bestGoal = currentGoal  // 不切換，繼續執行原目標
+```
+
+**效果**：探索=0.55 時交戰要到 0.70 以上才會切過去，0.52 不夠。
+
+**優點**：實現簡單，一行判斷。
+**缺點**： margin 太大 → AI 反應遲鈍（血低了還不跑）；太小 → 效果不明顯。
+
+#### 解法 B：慣性加成（Momentum）—— 持續執行加分
+
+```
+// 每步執行同一目標時，累積 momentum bonus
+momentum[goal] += 0.03  // 每步 +0.03，上限 0.15
+
+// 換目標時 momentum 歸零
+if (bestGoal !== currentGoal):
+    momentum[bestGoal] = 0
+
+// 最終分數 = 原始分數 + momentum
+finalScore = rawScore + momentum[goal]
+```
+
+**效果**：已執行 3 步的探索 goal 自動 +0.09，交戰要 0.64 以上才能贏。
+
+**優點**：比 hysteresis 更自然——不是硬切，是「越做越想做」。
+**缺點**：多一個需要調的參數（每步加多少、上限多少）。
+
+#### 解法 C：最小承諾步數（Commitment Steps）
+
+```
+// 選出目標後，鎖定 COMMITMENT_STEPS 步不切換
+COMMITMENT_STEPS = 2
+
+if (stepsSinceGoalChange < COMMITMENT_STEPS):
+    bestGoal = currentGoal  // 強制執行
+```
+
+**優點**：最簡單，保證至少做 2 步。
+**缺點**：最粗暴——鎖定期間遇到緊急狀況（如血量驟降）也不能切換。
+
+#### 建議：解法 A + B 組合
+
+```
+// 遲滯 + 慣性
+currentGoalScore = rawScore[currentGoal] + momentum[currentGoal]
+
+// 切換條件：新目標分數 > 當前目標分數 + margin
+if (bestGoal !== currentGoal && bestScore < currentGoalScore + 0.1):
+    bestGoal = currentGoal
+
+// 慣性累積
+if (bestGoal === currentGoal):
+    momentum[bestGoal] = min(0.15, momentum[bestGoal] + 0.03)
+else:
+    momentum = {} // 歸零
+```
+
+---
+
+### 12.2 缺陷二：參數不易調適
+
+**症狀**：調了 selfPreservation 的梯形邊界，結果交戰分數也跟著變；想讓 AI 多打怪，改了 engageCombat 權重，結果 AI 不撿道具了。
+
+**根本原因**：
+1. 目標之間**非正交**——同一輸入（如 `hitsSurvivable`）影響多個目標
+2. 模糊函數的邊界值是**魔術數字**，沒有直覺意義
+3. 調一個參數的**連鎖反應**不可預測
+
+#### 解法 A：正規化輸入（Normalize Inputs）
+
+把所有輸入映射到 0\~1，讓隸屬函數的邊界值有統一意義：
+
+```
+// 之前：hitsSurvivable 可能是 0\~99，梯形邊界 [0, 0.5, 1, 2]
+// 之後：映射到 0\~1，邊界 [0, 0.1, 0.2, 0.4]
+
+function normalize(value, min, max):
+    return clamp((value - min) / (max - min), 0, 1)
+```
+
+**效果**：所有隸屬函數都在 0\~1 範圍內工作，調參時有統一基準。
+
+#### 解法 B：規則與數值分離（Rule-Value Separation）
+
+把「決策邏輯」和「數值閾值」分開：
+
+```json
+// rules.json — 只描述「什麼條件下做什麼」，不含數字
+{
+  "selfPreservation": {
+    "rules": [
+      { "if": "hitsSurvivable is LOW", "then": "score += HIGH" },
+      { "if": "hitsSurvivable is LOW and threat is CLOSE", "then": "score += VERY_HIGH" }
+    ]
+  }
+}
+
+// thresholds.json — 只描述「LOW 是多少」
+{
+  "hitsSurvivable": { "LOW": [0, 0.5, 1, 2] },
+  "threatDistance": { "CLOSE": [0, 0, 2, 4] }
+}
+```
+
+**效果**：調「LOW 的定義」不影響規則邏輯；改規則不影響數值。
+
+#### 解法 C：情境化預設（Contextual Presets）
+
+不同遊戲階段用不同參數集：
+
+```
+presets = {
+  early: { // 前期：探索優先、戰鬥保守
+    engageCombat_weight: 0.6,
+    exploration_weight: 1.5,
+    selfPreservation_threshold: 0.7
+  },
+  mid: { // 中期：平衡
+    engageCombat_weight: 1.0,
+    exploration_weight: 1.0,
+    selfPreservation_threshold: 0.6
+  },
+  late: { // 後期：積極戰鬥
+    engageCombat_weight: 1.4,
+    exploration_weight: 0.5,
+    selfPreservation_threshold: 0.5
+  }
+}
+
+// 根據 roundNumber 自動選擇 preset
+currentPreset = presets[round < 15 ? 'early' : round < 30 ? 'mid' : 'late']
+```
+
+**效果**：不需要一套參數打天下，每個階段獨立調整。
+
+#### 解法 D：決策日誌 + 回放（Decision Logging + Replay）
+
+記錄每次決策的完整資訊，方便事後分析：
+
+```typescript
+interface DecisionLog {
+  round: number
+  step: number
+  inputs: FuzzyInputs          // 當時的所有輸入
+  rawScores: Record<GoalName, number>  // 各目標原始分數
+  finalScores: Record<GoalName, number> // 加權後分數
+  selected: GoalName           // 最終選擇
+  reason: string               // 為什麼選這個（最高分/tie-breaking/...）
+}
+```
+
+**效果**：出問題時可以回放「當時為什麼做這個決定」，精確找到哪個參數不合理。
+
+---
+
+### 12.3 綜合建議：V2 架構方向
+
+| 改進 | 優先度 | 複雜度 | 效果 |
+|------|--------|--------|------|
+| 慣性加成（Momentum） | 高 | 低 | 解決三心二意 |
+| 遲滯門檻（Hysteresis） | 高 | 低 | 解決三心二意 |
+| 決策日誌 | 高 | 低 | 解決不易調適 |
+| 正規化輸入 | 中 | 中 | 解決不易調適 |
+| 規則與數值分離 | 中 | 中 | 解決不易調適 |
+| 情境化預設 | 低 | 中 | 解決不易調適 |
+
+**V2 最低可行改進**：加 Momentum + Hysteresis + DecisionLog，三件事就能大幅改善兩個缺陷。
