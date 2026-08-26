@@ -392,13 +392,18 @@ function evaluateConstruction(inputs: FuzzyInputs): GoalResult {
 // 預設目標：有未探索可達格 → 高分 + 移動到最近的未探索格
 
 function evaluateExploration(inputs: FuzzyInputs): GoalResult {
-  const { unexploredInvisibleCells, nearestUnexploredInvisiblePosition, staminaRatio } = inputs
+  const { unexploredInvisibleCells, nearestUnexploredInvisiblePosition, staminaRatio, allBasesVisible } = inputs
 
   if (unexploredInvisibleCells === 0 || !nearestUnexploredInvisiblePosition) {
     return { score: 0 }
   }
 
-  // 不可見未探索格越多分數越高，體力充足時加分，上限 0.8
+  // 所有據點在視野內 → 探索分數急降
+  if (allBasesVisible) {
+    return { score: 0.1 }
+  }
+
+  // 不可見未探索格越多分數越高，體力充足時加分，上限 0.6
   const baseScore = Math.min(0.6, unexploredInvisibleCells / 10)
   const score = staminaRatio > 0.3 ? baseScore : baseScore * 0.5
 
