@@ -215,15 +215,11 @@ export const governanceRankCatalog: GovernanceRank[] = [
 
 /** 建設相關聲望來源，用於追蹤建設指令的聲望發放。 */
 export type ConstructionPrestigeSource =
-  | 'build'
-  | 'upgrade'
   | 'repair'
   | 'heal'
   | 'policy-switch'
 
 export const CONSTRUCTION_PRESTIGE: Record<ConstructionPrestigeSource, number> = {
-  build: 5,
-  upgrade: 8,
   repair: 3,
   heal: 2,
   'policy-switch': 4,

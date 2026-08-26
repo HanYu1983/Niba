@@ -15,6 +15,8 @@ import { progressObjectives, checkVictory } from '../rules/campaignRules'
 export type BuildingActionResult = {
   state: GameState
   result: ActionOutcome
+  /** 本次建造／升級實際消耗的建料數量（供聲望計算）。 */
+  materialsUsed?: number
 }
 
 export function constructBuilding(state: GameState, baseId: string, buildingId: string, playerId?: string): BuildingActionResult {
@@ -101,6 +103,7 @@ export function constructBuilding(state: GameState, baseId: string, buildingId: 
   return {
     state: withProgress,
     result: { ok: true },
+    materialsUsed: constructionCost,
   }
 }
 
@@ -142,6 +145,7 @@ export function upgradeBuilding(state: GameState, playerId: string, baseId: stri
   return {
     state: withProgress,
     result: { ok: true },
+    materialsUsed: validation.cost ?? 0,
   }
 }
 
@@ -245,6 +249,7 @@ export function constructDefenseStructure(
       ? checkVictory(progressObjectives(defenseState, { type: 'build-defense-structure', structureType }))
       : defenseState,
     result: { ok: true },
+    materialsUsed: definition.constructionCost,
   }
 }
 

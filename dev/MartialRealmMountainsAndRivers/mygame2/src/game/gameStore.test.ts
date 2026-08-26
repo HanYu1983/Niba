@@ -1426,7 +1426,8 @@ describe('防衛營', () => {
       const nextBase = gameStore.getState().bases[0]
       expect(nextBase.maxHealth).toBe(480)
       expect(nextBase.health).toBe(330)
-      expect(gameStore.getState().players[0].prestige).toBe(245)
+      // 建造聲望 = 使用的建料 / 5（強化城牆建料 30 → 6）。
+      expect(gameStore.getState().players[0].prestige).toBe(246)
     })
 
     it('同一據點不能重複建造強化城牆', () => {
@@ -1948,7 +1949,8 @@ describe('建設聲望', () => {
     gameStore.setStateForTest(makeGameState({ players: [player], bases: [base] }))
 
     expect(gameStore.constructDefenseStructure('player-1', 'base-1', 'barricade', { row: 5, column: 4 }).ok).toBe(true)
-    expect(gameStore.getState().players[0].prestige).toBe(5)
+    // 建造聲望 = 使用的建料 / 5（木柵建料 20 → 4）。
+    expect(gameStore.getState().players[0].prestige).toBe(4)
   })
 })
 

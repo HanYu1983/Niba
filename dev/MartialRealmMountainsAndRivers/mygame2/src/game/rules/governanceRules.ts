@@ -9,6 +9,9 @@ import {
   governanceRankCatalog,
 } from '../types'
 
+/** 建造／升級時，每使用多少建料換取 1 點聲望（建料 / 此常數）。 */
+export const PRESTIGE_PER_MATERIAL_DIVISOR = 5
+
 /**
  * 依累計聲望計算玩家目前的官階。
  * 官階不會因聲望暫時減少而倒退；取滿足條件的最高官階。
@@ -107,4 +110,14 @@ export function applyConstructionPrestige(
 
 export function getConstructionPrestigeAmount(source: ConstructionPrestigeSource): number {
   return CONSTRUCTION_PRESTIGE[source]
+}
+
+/** 依「使用的建料數量」計算建造／升級聲望：建料 / PRESTIGE_PER_MATERIAL_DIVISOR。 */
+export function getMaterialPrestigeAmount(materialsUsed: number): number {
+  return Math.max(0, Math.floor(materialsUsed / PRESTIGE_PER_MATERIAL_DIVISOR))
+}
+
+/** 依使用建料數量發放建造／升級聲望；預覽、取消或失敗操作不應呼叫此函式。 */
+export function applyMaterialPrestige(player: PlayerState, materialsUsed: number): PlayerState {
+  return applyPrestigeGain(player, getMaterialPrestigeAmount(materialsUsed))
 }

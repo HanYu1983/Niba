@@ -53,7 +53,7 @@ import {
 } from './rules/baseRules'
 import { validateDefenseBuild } from './rules/defenseRules'
 import { getRepairSummary, getWorkshopLevel, repairEquipmentInventory } from './rules/buildingRules'
-import { applyConstructionPrestige } from './rules/governanceRules'
+import { applyMaterialPrestige } from './rules/governanceRules'
 import {
   canTransportPlayer,
   getTransportLandingPosition,
@@ -1323,7 +1323,7 @@ export const gameStore = {
       return {
         ...action.state,
         players: action.state.players.map((currentPlayer) => currentPlayer.id === playerId
-          ? applyConstructionPrestige(currentPlayer, 'build')
+          ? applyMaterialPrestige(currentPlayer, action.materialsUsed ?? 0)
           : currentPlayer),
       }
     })
@@ -1339,7 +1339,7 @@ export const gameStore = {
       return {
         ...action.state,
         players: action.state.players.map((currentPlayer) => currentPlayer.id === playerId
-          ? applyConstructionPrestige(currentPlayer, 'upgrade')
+          ? applyMaterialPrestige(currentPlayer, action.materialsUsed ?? 0)
           : currentPlayer),
       }
     })
@@ -1364,7 +1364,7 @@ export const gameStore = {
       return {
         ...action.state,
         players: action.state.players.map((currentPlayer) => currentPlayer.id === playerId
-          ? applyConstructionPrestige(currentPlayer, 'build')
+          ? applyMaterialPrestige(currentPlayer, action.materialsUsed ?? 0)
           : currentPlayer),
       }
     })
