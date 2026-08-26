@@ -32,6 +32,7 @@ import {
   type AiConstructionPlan,
   type AiConstructionPlanItem,
   type CampaignState,
+  type RunStats,
   isAdjacent,
   isSameOrAdjacent,
   isSamePosition,
@@ -159,6 +160,7 @@ import {
 } from './lootFactory'
 import { runActionExecution, runActionOutcome } from './storeAdapters'
 import { recordMaxLevel } from './runStats'
+import { applyEndGameRewards } from './characterRoster'
 import { enqueueDialogue, skipAllDialogue } from './actions/dialogueActions'
 import { collectTriggeredDialogues } from './rules/dialogueTriggerRules'
 import { checkVictory } from './rules/campaignRules'
@@ -228,6 +230,8 @@ let lastGameSettings = getSavedGameSettings()
 const listeners = new Set<() => void>()
 /** 目前載入的劇本關卡 id（記錄通關進度用）；非劇本模式為 null。 */
 let currentScenarioId: string | null = null
+/** 目前對局選用的名册角色 id；未選用（預設角色）為 null。 */
+let activeCharacterId: string | null = null
 
 /**
  * 暫存的敵人行動結果（回合結束觸發探索事件時延後執行）。
@@ -361,12 +365,28 @@ export const gameStore = {
     return allocated
   },
 
-  startGame: (settings: GameSettings, selectedCharacter?: { attributeBonuses: PlayerAttributes; name?: string }) => {
+  startGame: (settings: GameSettings, selectedCharacter?: {
+    id?: string
+    attributeBonuses: PlayerAttributes
+    name?: string
+    initialInternalSkillId?: string
+    initialExternalSkillIds?: string[]
+  }) => {
     lastGameSettings = { ...settings }
     pendingCreatureTurn = null
     pendingCreatureTurnBasePlayers = null
+    activeCharacterId = selectedCharacter?.id ?? null
     gameState = createGameState(lastGameSettings, selectedCharacter)
     listeners.forEach((listener) => listener())
+  },
+
+  /** 取得目前對局選用的名册角色 id；未選用為 null。 */
+  getActiveCharacterId: () => activeCharacterId,
+
+  /** 局末回寫：將本局表現結算為卷並併入功法庫。 */
+  settleActiveCharacterRewards: (stats: RunStats, won: boolean, learnedSkillIds: string[]) => {
+    if (!activeCharacterId) return null
+    return applyEndGameRewards(activeCharacterId, stats, won, learnedSkillIds)
   },
 
   /**

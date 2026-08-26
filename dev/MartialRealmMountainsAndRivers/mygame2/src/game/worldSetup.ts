@@ -48,7 +48,12 @@ const WORLD_SEED_OFFSETS = {
 
 export function createGameState(
   settings: GameSettings = DEFAULT_GAME_SETTINGS,
-  selectedCharacter?: { attributeBonuses: PlayerAttributes; name?: string },
+  selectedCharacter?: {
+    attributeBonuses: PlayerAttributes
+    name?: string
+    initialInternalSkillId?: string
+    initialExternalSkillIds?: string[]
+  },
 ): GameState {
   const humanPlayerCount = Math.min(4, Math.max(1, Math.round(settings.playerCount ?? 1)))
   const aiPlayerCount = Math.min(8, Math.max(0, Math.round(settings.aiPlayerCount ?? 0)))
@@ -96,6 +101,8 @@ export function createGameState(
     humanPlayerCount,
     selectedCharacter?.attributeBonuses,
     selectedCharacter?.name,
+    selectedCharacter?.initialInternalSkillId,
+    selectedCharacter?.initialExternalSkillIds,
   )
   const aiOrders: AiOrder[] = players
     .filter((p) => p.isAI)

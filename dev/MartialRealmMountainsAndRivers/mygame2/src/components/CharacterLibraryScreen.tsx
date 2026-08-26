@@ -1,4 +1,4 @@
-import { Button, Card, Flex, Form, Input, InputNumber, List, Modal, Popconfirm, Space, Typography, message } from 'antd'
+import { Button, Card, Flex, Form, Input, List, Modal, Popconfirm, Space, Tabs, Typography, message } from 'antd'
 import { useState } from 'react'
 import {
   createCharacter,
@@ -8,6 +8,7 @@ import {
   type PersistentCharacter,
 } from '../game/characterRoster'
 import { ATTRIBUTE_NAMES, type UpgradeableAttribute } from '../game/types'
+import CharacterTrainingPanel from './CharacterTrainingPanel'
 
 const ATTRIBUTE_KEYS: UpgradeableAttribute[] = ['armStrength', 'constitution', 'agility', 'innerEnergy', 'insight']
 
@@ -36,23 +37,19 @@ function CharacterLibraryScreen({ onSelect }: CharacterLibraryScreenProps) {
       name: character.name,
       portrait: character.portrait,
       title: character.title,
-      ...character.attributeBonuses,
     })
     setModalOpen(true)
   }
 
   const handleSubmit = async () => {
     const values = await form.validateFields()
-    const attributeBonuses = Object.fromEntries(
-      ATTRIBUTE_KEYS.map((key) => [key, values[key] ?? 0]),
-    )
 
     if (editing) {
+      // 五維加成僅由「培養」Tab 調整，儲存基本資料時不覆蓋。
       const ok = updateCharacter(editing.id, {
         name: values.name,
         portrait: values.portrait,
         title: values.title,
-        attributeBonuses,
       })
       if (!ok) {
         message.error('更新失敗：名稱重複或空白。')
@@ -64,7 +61,6 @@ function CharacterLibraryScreen({ onSelect }: CharacterLibraryScreenProps) {
         name: values.name,
         portrait: values.portrait,
         title: values.title,
-        attributeBonuses,
       })
       if (!created) {
         message.error('建立失敗：名稱重複或空白。')
@@ -104,7 +100,7 @@ function CharacterLibraryScreen({ onSelect }: CharacterLibraryScreenProps) {
           <List.Item
             actions={[
               <Button key="select" type="link" onClick={() => onSelect?.(character)}>選用</Button>,
-              <Button key="edit" type="link" onClick={() => openEdit(character)}>編輯</Button>,
+              <Button key="edit" type="link" onClick={() => openEdit(character)}>編輯／培養</Button>,
               <Popconfirm
                 key="delete"
                 title="確定刪除此角色？"
@@ -128,6 +124,7 @@ function CharacterLibraryScreen({ onSelect }: CharacterLibraryScreenProps) {
                       {ATTRIBUTE_NAMES[key]} +{character.attributeBonuses[key]}
                     </Typography.Text>
                   ))}
+                  <Typography.Text type="secondary">📜 武學殘卷 {character.scrolls ?? 0}</Typography.Text>
                   <Typography.Text type="secondary">對局 {character.gamesPlayed} 次</Typography.Text>
                 </Space>
               }
@@ -137,38 +134,65 @@ function CharacterLibraryScreen({ onSelect }: CharacterLibraryScreenProps) {
       />
 
       <Modal
-        title={editing ? '編輯角色' : '新建角色'}
+        title={editing ? `編輯／培養「${editing.name}」` : '新建角色'}
         open={modalOpen}
         onOk={handleSubmit}
         onCancel={() => setModalOpen(false)}
         okText="儲存"
         cancelText="取消"
         destroyOnClose
+        width={620}
       >
-        <Form form={form} layout="vertical" initialValues={{ portrait: '', title: '' }}>
-          <Form.Item
-            name="name"
-            label="角色名稱"
-            rules={[{ required: true, whitespace: true, message: '請輸入角色名稱' }]}
-          >
-            <Input placeholder="例如：張三" maxLength={20} />
-          </Form.Item>
-          <Form.Item name="portrait" label="外觀 icon（選填）">
-            <Input placeholder="例如：sword / shield / fan" maxLength={20} />
-          </Form.Item>
-          <Form.Item name="title" label="稱號（選填）">
-            <Input placeholder="例如：劍客" maxLength={20} />
-          </Form.Item>
-
-          <Typography.Text strong>五維加成（開局疊加）</Typography.Text>
-          <Flex gap={12} wrap style={{ marginTop: 8 }}>
-            {ATTRIBUTE_KEYS.map((key) => (
-              <Form.Item key={key} name={key} label={ATTRIBUTE_NAMES[key]} style={{ marginBottom: 8 }}>
-                <InputNumber min={0} max={15} />
-              </Form.Item>
-            ))}
-          </Flex>
-        </Form>
+        {editing ? (
+          <Tabs
+            items={[
+              {
+                key: 'basic',
+                label: '基本資料',
+                children: (
+                  <Form form={form} layout="vertical" initialValues={{ portrait: '', title: '' }}>
+                    <Form.Item
+                      name="name"
+                      label="角色名稱"
+                      rules={[{ required: true, whitespace: true, message: '請輸入角色名稱' }]}
+                    >
+                      <Input placeholder="例如：張三" maxLength={20} />
+                    </Form.Item>
+                    <Form.Item name="portrait" label="外觀 icon（選填）">
+                      <Input placeholder="例如：sword / shield / fan" maxLength={20} />
+                    </Form.Item>
+                    <Form.Item name="title" label="稱號（選填）">
+                      <Input placeholder="例如：劍客" maxLength={20} />
+                    </Form.Item>
+                  </Form>
+                ),
+              },
+              {
+                key: 'train',
+                label: '培養',
+                children: (
+                  <CharacterTrainingPanel character={editing} onChanged={refresh} />
+                ),
+              },
+            ]}
+          />
+        ) : (
+          <Form form={form} layout="vertical" initialValues={{ portrait: '', title: '' }}>
+            <Form.Item
+              name="name"
+              label="角色名稱"
+              rules={[{ required: true, whitespace: true, message: '請輸入角色名稱' }]}
+            >
+              <Input placeholder="例如：張三" maxLength={20} />
+            </Form.Item>
+            <Form.Item name="portrait" label="外觀 icon（選填）">
+              <Input placeholder="例如：sword / shield / fan" maxLength={20} />
+            </Form.Item>
+            <Form.Item name="title" label="稱號（選填）">
+              <Input placeholder="例如：劍客" maxLength={20} />
+            </Form.Item>
+          </Form>
+        )}
       </Modal>
     </Card>
   )

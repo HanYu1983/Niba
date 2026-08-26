@@ -4,6 +4,7 @@ import StoryDialogueModal from '../StoryDialogueModal'
 import { gameStore } from '../../game/gameStore'
 import type { GameState } from '../../game/types'
 import { computeBattleRecord } from '../../game/battleRecord'
+import { createEmptyRunStats } from '../../game/runStats'
 import { trackGameEnd } from '../../lib/analytics'
 import { useEffect, useRef } from 'react'
 
@@ -33,6 +34,16 @@ function SystemOverlays({ gameState, onRestartToMap }: SystemOverlaysProps) {
       if (!recordedRef.current) {
         recordedRef.current = true
         gameStore.recordCurrentScenarioClearance(Boolean(gameState.gameWon))
+        // 局末回寫：將本局表現結算為卷並併入名册角色的功法庫（若選用了名册角色）。
+        const humanPlayer = gameState.players.find((player) => !player.isAI)
+        const learnedSkillIds = humanPlayer
+          ? [...(humanPlayer.innerSkillIds ?? []), ...(humanPlayer.externalSkillIds ?? [])]
+          : []
+        gameStore.settleActiveCharacterRewards(
+          gameState.runStats ?? createEmptyRunStats(),
+          Boolean(gameState.gameWon),
+          learnedSkillIds,
+        )
         const record = computeBattleRecord(gameState)
         trackGameEnd(record.won, {
           roundsSurvived: record.roundsSurvived,

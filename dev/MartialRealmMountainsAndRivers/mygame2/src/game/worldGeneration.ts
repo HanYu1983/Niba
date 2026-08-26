@@ -569,6 +569,8 @@ export function createRoamerCreatures(
  * @param humanAttributeBonuses 可選：套用於人類玩家的五維永久加成（來自名册角色）。
  *   僅套用於 index < humanPlayerCount 的人類玩家；AI 玩家維持預設全 8。
  * @param humanName 可選：套用於第一位人類玩家的名稱（來自名册角色）。
+ * @param initialInternalSkillId 可選：第一位人類玩家的初始內功（預設吐納功）。
+ * @param initialExternalSkillIds 可選：第一位人類玩家的初始外功清單。
  */
 export function createInitialPlayers(
   playerPositions: Position[],
@@ -576,6 +578,8 @@ export function createInitialPlayers(
   humanPlayerCount = playerPositions.length,
   humanAttributeBonuses?: PlayerAttributes,
   humanName?: string,
+  initialInternalSkillId?: string,
+  initialExternalSkillIds?: string[],
 ): PlayerState[] {
   const random = createSeededRandom(seed + 111)
   const availableNames = [...playerNames]
@@ -605,18 +609,22 @@ export function createInitialPlayers(
           insight: base.insight + (humanAttributeBonuses.insight ?? 0),
         }
       : base
+    // 第一位人類玩家套用名册角色的初始功法；其餘維持預設吐納功、無外功。
+    const useCharacterSkills = !isAI && index === 0
+    const innerSkillId = useCharacterSkills ? (initialInternalSkillId ?? 'tuna-gong') : 'tuna-gong'
+    const externalSkillIds = useCharacterSkills ? (initialExternalSkillIds ?? []) : []
     return createCharacterState({
       id: `player-${index + 1}`,
       name,
       isAI,
-      innerSkillId: 'tuna-gong',
+      innerSkillId,
       position,
       attributes,
       prestige: 0,
       money: 30,
       experience: 0,
-      externalSkillIds: [],
-      equippedExternalSkillIds: [],
+      externalSkillIds,
+      equippedExternalSkillIds: externalSkillIds,
       // 玩家起始道具：絆馬索、定身鎖、探地符各 1，另有療傷藥 2 與聚氣丹 1（人類與 AI 皆給）。
       inventory: [
         { itemId: 'hobble-rope', quantity: 1 },
