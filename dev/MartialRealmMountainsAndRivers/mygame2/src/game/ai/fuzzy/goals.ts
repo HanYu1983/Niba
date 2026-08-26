@@ -7,6 +7,8 @@ export type GoalName = 'selfPreservation' | 'collectItems' | 'positioning' | 'co
 export interface GoalResult {
   score: number
   target?: GoalTarget
+  /** 目標距離（格數），供距離衰減使用；undefined = 不衰減 */
+  distanceToTarget?: number
   context?: Record<string, unknown>
 }
 
@@ -64,12 +66,14 @@ export function evaluateSelfPreservation(inputs: FuzzyInputs): GoalResult {
       return {
         score,
         target: { kind: 'use-item', itemId: bestItemToUse!.id },
+        distanceToTarget: 0,
         context: { hitsSurvivable, distToNearestThreat, action: 'heal-in-combat' },
       }
     }
     return {
       score,
       target: { kind: 'retreat', escapeDirection: { row: 0, column: 0 } },
+      distanceToTarget: distToNearestThreat,
       context: { hitsSurvivable, distToNearestThreat },
     }
   }
@@ -82,6 +86,7 @@ export function evaluateSelfPreservation(inputs: FuzzyInputs): GoalResult {
     return {
       score,
       target: { kind: 'use-item', itemId: bestItemToUse.id },
+      distanceToTarget: 0,
       context: { healthRatio, action: 'heal-out-of-combat' },
     }
   }
@@ -93,6 +98,7 @@ export function evaluateSelfPreservation(inputs: FuzzyInputs): GoalResult {
       return {
         score,
         target: { kind: 'use-facility', baseId: inputs.feasibility.healBaseId, facilityType: 'heal' },
+        distanceToTarget: inputs.feasibility.distToNearestActiveBase,
         context: { healthRatio },
       }
     }
@@ -100,6 +106,7 @@ export function evaluateSelfPreservation(inputs: FuzzyInputs): GoalResult {
     return {
       score,
       target: { kind: 'return-to-base-heal', baseId: nearestBase.id, position: nearestBase.position },
+      distanceToTarget: inputs.feasibility.distToNearestActiveBase,
       context: { healthRatio },
     }
   }
@@ -134,6 +141,7 @@ export function evaluateCollectItems(inputs: FuzzyInputs): GoalResult {
     target: bestItem
       ? { kind: 'item', id: bestItem.ref.id, position: bestItem.position }
       : undefined,
+    distanceToTarget: distToNearestItem === Infinity ? undefined : distToNearestItem,
     context: { reachableItemCount, distToNearestItem },
   }
 }
@@ -153,6 +161,7 @@ function evaluateEngageCombat(inputs: FuzzyInputs): GoalResult {
     return {
       score: 1,
       target: { kind: 'attack', targetId: nearestCreatureId, targetType: 'creature', position: { row: -1, column: -1 } },
+      distanceToTarget: distToNearestCreature,
       context: { distToNearestCreature, nearestCreatureId, killable: true },
     }
   }
@@ -176,6 +185,7 @@ function evaluateEngageCombat(inputs: FuzzyInputs): GoalResult {
   return {
     score,
     target: { kind: 'attack', targetId: nearestCreatureId, targetType: 'creature', position: { row: -1, column: -1 } },
+    distanceToTarget: distToNearestCreature,
     context: { distToNearestCreature, nearestCreatureId, killable: false },
   }
 }
@@ -271,7 +281,7 @@ function evaluateEquipEquipment(inputs: FuzzyInputs): GoalResult {
 // ─── evaluateAllGoals ──────────────────────────────────────────────
 
 export function evaluateAllGoals(inputs: FuzzyInputs): Record<GoalName, GoalResult> {
-  return {
+  const results: Record<GoalName, GoalResult> = {
     selfPreservation: evaluateSelfPreservation(inputs),
     collectItems: evaluateCollectItems(inputs),
     positioning: evaluatePositioning(inputs),
@@ -290,6 +300,19 @@ export function evaluateAllGoals(inputs: FuzzyInputs): Record<GoalName, GoalResu
     repairEquipment: evaluateRepairEquipment(inputs),
     buildDefense: evaluateBuildDefense(inputs),
   }
+
+  // 距離衰減：除探索外，有 distanceToTarget 的目標分數隨距離下降
+  for (const goal of Object.keys(results) as GoalName[]) {
+    if (goal === 'exploration') continue
+    const r = results[goal]
+    if (r.distanceToTarget != null && r.distanceToTarget > 0) {
+      // 每格衰減 0.05，到 10 格以上分數歸零
+      const decay = Math.max(0, 1 - r.distanceToTarget * 0.05)
+      r.score *= decay
+    }
+  }
+
+  return results
 }
 
 // ─── construction ──────────────────────────────────────────────────
@@ -328,6 +351,7 @@ function evaluateConstruction(inputs: FuzzyInputs): GoalResult {
     return {
       score: 0.7,
       target: { kind: 'resource-point', resourcePointId: '', position: nearestBase.position },
+      distanceToTarget: inputs.feasibility.distToNearestActiveBase,
       context: { materialRatio, action: 'move-to-base-for-build' },
     }
   }
@@ -338,6 +362,7 @@ function evaluateConstruction(inputs: FuzzyInputs): GoalResult {
     return {
       score: 0.8 * f_materialUrgency,
       target: { kind: 'resource-point', resourcePointId: nearestResourcePoint.id, position: nearestResourcePoint.position },
+      distanceToTarget: 1,
       context: { materialRatio, action: 'collect' },
     }
   }
@@ -348,6 +373,7 @@ function evaluateConstruction(inputs: FuzzyInputs): GoalResult {
     return {
       score: 0.5 * f_materialUrgency,
       target: { kind: 'resource-point', resourcePointId: nearestResourcePoint.id, position: nearestResourcePoint.position },
+      distanceToTarget: distToNearestResourcePoint,
       context: { materialRatio, distToNearestResourcePoint, action: 'move-to-resource' },
     }
   }
@@ -432,6 +458,7 @@ export function evaluateAttackNest(inputs: FuzzyInputs): GoalResult {
   return {
     score,
     target: { kind: 'attack', targetId: '', targetType: 'nest', position: { row: -1, column: -1 } },
+    distanceToTarget: distToNearestNest,
     context: { distToNearestNest, visibleCreatureCount: visibleCreatureIds.length },
   }
 }
@@ -490,6 +517,7 @@ function evaluateLearnMartialSkill(inputs: FuzzyInputs): GoalResult {
     return {
       score: 0.7,
       target: { kind: 'learn-skill', gateId: learnableSkillAtGate.gateId, skillType: 'inner', skillId: learnableSkillAtGate.skillId },
+      distanceToTarget: feasibility.distToNearestGate,
       context: { source: 'gate', name: learnableSkillAtGate.name, cost: feasibility.learnGateCost },
     }
   }
@@ -499,6 +527,7 @@ function evaluateLearnMartialSkill(inputs: FuzzyInputs): GoalResult {
     return {
       score: 0.6,
       target: { kind: 'learn-skill', baseId: learnableSkillAtHall.baseId, skillType: learnableSkillAtHall.skillType, skillId: learnableSkillAtHall.skillId },
+      distanceToTarget: feasibility.distToNearestHallBase,
       context: { source: 'hall', name: learnableSkillAtHall.name, cost: feasibility.learnHallCost },
     }
   }
@@ -523,6 +552,7 @@ function evaluatePracticeSkill(inputs: FuzzyInputs): GoalResult {
   return {
     score: baseScore * f_stamina,
     target: { kind: 'practice-skill', gateId: practiceableSkillAtGate.gateId, skillId: practiceableSkillAtGate.skillId, position: practiceableSkillAtGate.position },
+    distanceToTarget: feasibility.distToNearestGate,
     context: { name: practiceableSkillAtGate.name, needsLeveling },
   }
 }
@@ -543,6 +573,7 @@ function evaluateExecuteMission(inputs: FuzzyInputs): GoalResult {
   return {
     score: f_needMaterials,
     target: { kind: 'use-facility', baseId: feasibility.missionBaseId, facilityType: 'mission' },
+    distanceToTarget: feasibility.distToNearestActiveBase,
     context: { materialRatio },
   }
 }
@@ -560,6 +591,7 @@ function evaluateRepairEquipment(inputs: FuzzyInputs): GoalResult {
   return {
     score: 0.5,
     target: { kind: 'use-facility', baseId: feasibility.repairBaseId, facilityType: 'repair' },
+    distanceToTarget: feasibility.distToNearestActiveBase,
   }
 }
 
@@ -583,6 +615,7 @@ function evaluateBuildDefense(inputs: FuzzyInputs): GoalResult {
   return {
     score: score * 0.7,
     target: { kind: 'defense-build', baseId: nearestBase.id, structureType: buildableDefenseStructure.type, position: nearestBase.position },
+    distanceToTarget: inputs.feasibility.distToNearestActiveBase,
     context: { structureName: buildableDefenseStructure.name, threatCountNearBase },
   }
 }
