@@ -12,13 +12,18 @@ const PRIORITY_ORDER: GoalName[] = [
   'allocateAttributes',
   'equipInnerSkill',
   'equipEquipment',
+  'learnMartialSkill',
+  'practiceSkill',
   'useInnerSkillAttack',
   'engageCombat',
   'attackNest',
   'positioning',
   'collectItems',
   'useItem',
+  'repairEquipment',
   'construction',
+  'buildDefense',
+  'executeMission',
   'exploration',
 ]
 
@@ -51,4 +56,38 @@ export function selectBestGoal(weightedResults: Record<GoalName, GoalResult>): {
   }
 
   return { goal: bestGoal, result: weightedResults[bestGoal] }
+}
+
+/**
+ * 回傳按分數降序排列的目標清單（同分按 PRIORITY_ORDER 決勝）。
+ * 供呼叫端逐一嘗試直到找到可執行的目標。
+ */
+export function rankGoals(weightedResults: Record<GoalName, GoalResult>): Array<{ goal: GoalName; result: GoalResult }> {
+  const allGoals = Object.keys(weightedResults) as GoalName[]
+
+  // 先按分數降序排
+  const sorted = allGoals
+    .map((g) => ({ goal: g, score: weightedResults[g].score }))
+    .sort((a, b) => b.score - a.score)
+
+  // 同分者按 PRIORITY_ORDER 排序
+  const priorityIndex = new Map(PRIORITY_ORDER.map((g, i) => [g, i]))
+  const result: Array<{ goal: GoalName; result: GoalResult }> = []
+  let i = 0
+  while (i < sorted.length) {
+    const currentScore = sorted[i].score
+    // 取出所有同分的
+    const tied: GoalName[] = []
+    while (i < sorted.length && sorted[i].score === currentScore) {
+      tied.push(sorted[i].goal)
+      i++
+    }
+    // 同分內按 PRIORITY_ORDER 排
+    tied.sort((a, b) => (priorityIndex.get(a) ?? 999) - (priorityIndex.get(b) ?? 999))
+    for (const g of tied) {
+      result.push({ goal: g, result: weightedResults[g] })
+    }
+  }
+
+  return result
 }

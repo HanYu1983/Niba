@@ -175,7 +175,7 @@ import { getPlayerAiEmergency } from './ai/policy/aiPolicyRegistry'
 import { executeAiAction as executeAiActionDomain } from './ai/execution/executeAiAction'
 import { computeFuzzyInputs } from './ai/fuzzy/fuzzyInputs'
 import { evaluateAllGoals } from './ai/fuzzy/goals'
-import { selectBestGoal, MIN_THRESHOLD } from './ai/fuzzy/decision'
+import { MIN_THRESHOLD, rankGoals } from './ai/fuzzy/decision'
 import { buildActionSequence } from './ai/fuzzy/goalActionMapper'
 import { defaultRandomSource } from './rules/randomRules'
 import { getBlockedPositions } from './rules/movementRules'
@@ -2157,29 +2157,29 @@ export const gameStore = {
       // 3. Override：selfPreservation > 0.6 時不攻擊（V1 暫無 combat，此處記錄）
       // （V2 加入 engageCombat 時生效）
 
-      // 4. Select
-      let { goal, result } = selectBestGoal(goalResults)
+      // 4. Select（含 fallback：逐一嘗試直到有可執行的目標）
+      const rankedGoals = rankGoals(goalResults)
+      let actions: ReturnType<typeof buildActionSequence> = []
+      let goalFound = false
 
-      // 5. Threshold：低於門檻時 fallback 到 exploration（預設目標）
-      if (result.score < MIN_THRESHOLD) {
-        const fallback = goalResults.exploration
-        if (fallback.score > 0) {
-          goal = 'exploration'
-          Object.assign(result, fallback)
-        } else {
-          exitReason = `所有目標分數過低（最高 ${goal} = ${result.score.toFixed(2)} < ${MIN_THRESHOLD}）`
-          continue
-        }
+      for (const candidate of rankedGoals) {
+        if (candidate.result.score < MIN_THRESHOLD) break
+
+        const candidateActions = buildActionSequence(candidate.goal, candidate.result, gameState, currentPlayer)
+        if (candidateActions.length === 0) continue
+        if (candidateActions.every((a) => a.type === 'hold')) continue
+
+        actions = candidateActions
+        goalFound = true
+        break
       }
 
-      // 6. Build actions
-      const actions = buildActionSequence(goal, result, gameState, currentPlayer)
-      if (actions.length === 0) {
-        exitReason = `目標 ${goal} 無法產生行動序列`
+      if (!goalFound) {
+        exitReason = `所有目標分數過低或無法產生有效行動（最高 ${rankedGoals[0]?.goal} = ${rankedGoals[0]?.result.score.toFixed(2)}）`
         continue
       }
 
-      // 7. Execute
+      // 6. Execute
       for (const action of actions) {
         const cp = gameState.players.find((p) => p.id === playerId)
         if (!cp || cp.stamina <= 0) {
