@@ -166,7 +166,7 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
     return cell != null && visibleCellIds.has(cell.id)
   })
   const maxVisibleEnemyDamage = visibleCreatures.length > 0
-    ? Math.max(...visibleCreatures.map((h) => Math.max(1, Math.floor(h.creature.health * 0.3))))
+    ? Math.max(...visibleCreatures.map((h) => Math.max(1, Math.floor(h.creature.maxHealth * 0.3))))
     : 0
 
   const hitsSurvivable = maxVisibleEnemyDamage > 0
