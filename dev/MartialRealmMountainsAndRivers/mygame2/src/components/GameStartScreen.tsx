@@ -239,7 +239,10 @@ function GameStartScreen({ onStart, onDebug, onOpenSkillTest, onOpenEditor, onSt
               placeholder="預設角色（五維全 8）"
               allowClear
               value={selectedCharacterId}
-              onChange={setSelectedCharacterId}
+              onChange={(id) => {
+                setSelectedCharacterId(id)
+                persistSelectedCharacter(id)
+              }}
               options={rosterCharacters.map((character) => ({
                 label: `${character.name}${character.title ? `（${character.title}）` : ''}`,
                 value: character.id,
