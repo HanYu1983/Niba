@@ -1,3 +1,7 @@
+import type { SchoolElement } from './skillProgressionCatalog'
+
+export type { SchoolElement } from './skillProgressionCatalog'
+
 export type ItemEffectType =
   | 'health'
   | 'stamina'
@@ -9,8 +13,6 @@ export type ItemEffectType =
   | 'reveal-creatures'
   | 'recall-base'
   | 'element-burst'
-
-export type MartialElement = 'none' | 'metal' | 'wood' | 'water' | 'fire' | 'earth'
 
 export type ItemCategory =
   | 'resource-tradeoff'
@@ -37,7 +39,7 @@ export type ItemDefinition = {
   /** 陷阱類（trap）的陷阱種類。 */
   trapType?: 'snare' | 'immobilize'
   /** 元素爆發類（element-burst）的元素。 */
-  element?: MartialElement
+  element?: SchoolElement
   /** 資源取捨型道具的立即代價；扣除當前值，不設下限。 */
   cost?: Partial<{
     health: number

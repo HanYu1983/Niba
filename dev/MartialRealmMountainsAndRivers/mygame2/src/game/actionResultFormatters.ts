@@ -11,7 +11,7 @@ import type { ItemDefinition } from './catalogs/itemCatalog'
 import { getMissionReward } from './rules/buildingProgressionRules'
 import type { DefenseStructureDefinition } from './catalogs/defenseStructureCatalog'
 import { explorationEventCatalog } from './events/eventCatalog'
-import { itemCatalog, type MartialElement } from './catalogs/itemCatalog'
+import { itemCatalog, type SchoolElement } from './catalogs/itemCatalog'
 import { getElementName } from './rules/skillRules'
 
 export function formatRepairResult(result: RepairPreview): ActionResult {
@@ -111,7 +111,7 @@ export function formatItemBurstResult(result: ItemBurstExecutionResult): ActionR
     message: `${result.playerName} 使用 ${result.itemName} 攻擊 ${result.targetName}。`,
     rewards: [
       `造成傷害 ${result.damage}`,
-      ...(result.element && result.targetType === 'creature' ? [`屬性：${getElementName(result.element as MartialElement | undefined)}`] : []),
+      ...(result.element && result.targetType === 'creature' ? [`屬性：${getElementName(result.element as SchoolElement | undefined)}`] : []),
       result.defeated
         ? result.targetType === 'nest' ? '巢穴已摧毀' : '目標已被擊敗'
         : `目標剩餘血量 ${result.nextHealth} / ${result.maxHealth}`,

@@ -240,11 +240,11 @@ src/game/
 
 **新增檔案 `src/game/catalogs/terrainAffinityCatalog.ts`**
 ```ts
-import type { MartialElement } from '../types'
+import type { SchoolElement } from '../types'
 import type { TerrainType } from '../types'
 
 /** 各五行屬性對應的親和地形清單。 */
-export const ELEMENT_RESONANT_TERRAINS: Record<Exclude<MartialElement, 'none'>, TerrainType[]> = {
+export const ELEMENT_RESONANT_TERRAINS: Record<Exclude<SchoolElement, 'none'>, TerrainType[]> = {
   metal: ['mountain'],
   wood: ['forest'],
   water: ['water'],
@@ -257,7 +257,7 @@ export const ELEMENT_RESONANT_TERRAINS: Record<Exclude<MartialElement, 'none'>, 
 ```ts
 /** 天地共鳴傷害倍率（親和地形 ×1.25，否則 ×1）。 */
 export function getTerrainResonanceDamageMultiplier(
-  skillElement: MartialElement | undefined,
+  skillElement: SchoolElement | undefined,
   standingTerrain: TerrainType,
 ): number {
   if (!skillElement || skillElement === 'none') return 1
@@ -266,7 +266,7 @@ export function getTerrainResonanceDamageMultiplier(
 
 /** 天地共鳴內力減免（親和時 -1，否則 0）。 */
 export function getTerrainResonanceInnerPowerDiscount(
-  skillElement: MartialElement | undefined,
+  skillElement: SchoolElement | undefined,
   standingTerrain: TerrainType,
 ): number {
   return getTerrainResonanceDamageMultiplier(skillElement, standingTerrain) > 1 ? 1 : 0

@@ -47,7 +47,7 @@ import {
   getEquipmentInventory,
   canTraverseTerrain,
 } from './rules/playerDerivedRules'
-import { getExternalSkill, getPlayerTotalInsightCost, getElementDamageMultiplier, getSchoolElement } from './rules/skillRules'
+import { getExternalSkill, getPlayerTotalInsightCost, getElementDamageMultiplier } from './rules/skillRules'
 import {
   applyBaseHealthBonuses,
 } from './rules/baseRules'
@@ -178,6 +178,7 @@ import { selectBestGoal, MIN_THRESHOLD } from './ai/fuzzy/decision'
 import { buildActionSequence } from './ai/fuzzy/goalActionMapper'
 import { defaultRandomSource } from './rules/randomRules'
 import { getBlockedPositions } from './rules/movementRules'
+import { getSchoolElement } from './catalogs/skillProgressionCatalog'
 
 export function spawnCreaturesFromNests(
   nests: CreatureNestState[],

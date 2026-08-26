@@ -171,7 +171,6 @@ export const buffCatalog: BuffDefinition[] = [
   { id: 'home-turf-mountain', name: '山嶽磐甲', description: '身處山嶽主場：受到傷害 -20%，山嶽移動消耗降為 2。', duration: 'persistent', category: 'buff', damageReductionPercent: 0.2, terrainCostOverrides: { mountain: 2 } },
   { id: 'home-turf-water', name: '狂瀾水息', description: '身處水域主場：造成傷害 +15%、內息 +2，水域移動消耗降為 2。', duration: 'persistent', category: 'buff', damageDealtPercent: 0.15, attributeModifiers: { innerEnergy: 2 }, terrainCostOverrides: { water: 2 } },
   { id: 'home-turf-desert', name: '沙暴凶煞', description: '身處荒漠主場：造成傷害 +15%，荒漠移動消耗降為 2。', duration: 'persistent', category: 'buff', damageDealtPercent: 0.15, terrainCostOverrides: { desert: 2 } },
-  { id: 'home-turf-ruin', name: '金剛古陣', description: '身處山嶽主場：受到傷害 -25%、臂力與根骨 +2，山嶽移動消耗降為 2。', duration: 'persistent', category: 'buff', damageReductionPercent: 0.25, attributeModifiers: { armStrength: 2, constitution: 2 }, terrainCostOverrides: { mountain: 2 } },
   // 天地共鳴目標附加效果（林風迴避/炎砂灼燒/寒潭玄毒/厚土反震）：效果尚未設計周全，暫停使用。
   // { id: 'terrain-resonance-swift-evasion', name: '林風迴避', ... },
   // { id: 'terrain-resonance-burning', name: '炎砂灼燒', ... },

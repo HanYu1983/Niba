@@ -424,7 +424,7 @@ export type CreatureNestState = {
   /**
    * 巢穴主導元素（區域靈氣系統）。
    * 有屬性巢穴產生對應元素的靈氣場；無屬性巢穴（省略或 'none'）不產生靈氣。
-   * 對齊 `skillRules.ts` 的 `MartialElement`。
+   * 對齊 `skillRules.ts` 的 `SchoolElement`。
    */
   dominantElement?: 'none' | 'metal' | 'wood' | 'water' | 'fire' | 'earth'
 }

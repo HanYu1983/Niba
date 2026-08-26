@@ -3,6 +3,7 @@ import { equipmentCatalog, type EquipmentDefinition } from '../catalogs/equipmen
 import { innerSkillCatalog } from '../catalogs/innerSkillCatalog'
 import { allExternalSkillCatalog } from '../catalogs/martialHallSkillCatalog'
 import { getFunctionalSkillBuffOverrides } from './functionalSkillScaling'
+import { elementHomeTurfBuffs } from '../catalogs/martialSchoolCatalog'
 import type {
   ActionOutcome,
   EquipmentInstance,
@@ -16,7 +17,7 @@ import type {
 } from '../types'
 import { terrainStaminaCost, type GameState } from '../types'
 import { restoreAfterAttributeChange } from '../characterFactory'
-
+import { getSchoolElement } from '../catalogs/skillProgressionCatalog'
 /** 以 ID 快取目錄查詢，避免重複線性掃描；目錄在模組載入時固定。 */
 const buffById = new Map(buffCatalog.map((buff) => [buff.id, buff] as const))
 const equipmentById = new Map(equipmentCatalog.map((equipment) => [equipment.id, equipment] as const))
@@ -119,22 +120,9 @@ function getEquippedExternalSkillBuffs(player: PlayerState): BuffInstance[] {
   })
 }
 
-const creatureHomeTurfBuffs: Partial<Record<string, { terrain: TerrainType; definitionId: string }>> = {
-  'swift-wind': { terrain: 'forest', definitionId: 'home-turf-forest' },
-  'earth-mountain': { terrain: 'mountain', definitionId: 'home-turf-mountain' },
-  'frost-water': { terrain: 'water', definitionId: 'home-turf-water' },
-  'scarlet-flame': { terrain: 'desert', definitionId: 'home-turf-desert' },
-  'golden-body': { terrain: 'mountain', definitionId: 'home-turf-ruin' },
-  'hundred-poison': { terrain: 'forest', definitionId: 'home-turf-forest' },
-  'sharp-edge': { terrain: 'mountain', definitionId: 'home-turf-mountain' },
-  'misty-rain': { terrain: 'water', definitionId: 'home-turf-water' },
-  'blazing-sun': { terrain: 'desert', definitionId: 'home-turf-desert' },
-  'yellow-earth': { terrain: 'forest', definitionId: 'home-turf-forest' },
-}
-
-/** 取得怪物目前生效的 Buff；主場 Buff 僅依當前站立地形動態注入，不寫入 state。 */
+/** 取得怪物目前正在變的 Buff；主場 Buff 依「五行屬性」推導，僅依當前站立地形動態注入，不寫入 state。 */
 export function getActiveBuffsForCreature(creature: CreatureState, terrain?: TerrainType): BuffInstance[] {
-  const homeTurf = terrain ? creatureHomeTurfBuffs[creature.schoolId ?? ''] : undefined
+  const homeTurf = terrain ? elementHomeTurfBuffs[getSchoolElement(creature.schoolId)] : undefined
   const homeTurfBuff = homeTurf && homeTurf.terrain === terrain
     ? [{ id: `home-turf:${creature.id}:${homeTurf.definitionId}`, definitionId: homeTurf.definitionId, sourceId: 'terrain', remainingRounds: null }]
     : []

@@ -13,7 +13,7 @@ import type {
   EquipmentDurabilityChange,
   Position,
 } from '../types'
-import { addSkillExperience, getElementDamageMultiplier, getExternalSkill, getGenerationSynergyMultiplier, getInnerSkill, getSchoolElement, getSkillDamage, getSkillEffectMultiplier, getSkillInnerPowerCost, getSkillProgression, isElementGenerating, SKILL_EXPERIENCE_PER_USE } from '../rules/skillRules'
+import { addSkillExperience, getElementDamageMultiplier, getExternalSkill, getGenerationSynergyMultiplier, getInnerSkill, getSkillDamage, getSkillEffectMultiplier, getSkillInnerPowerCost, getSkillProgression, isElementGenerating, SKILL_EXPERIENCE_PER_USE } from '../rules/skillRules'
 import { getBuff, getCreatureDamageReductionPercent, getEffectiveAttributesForPlayer, getExternalSkillCritRateForPlayer, getExternalSkillDamagePercent, getExternalSkillInnerCostReduction, getInnerPowerLeechPercent, getLifestealPercent, getPlayerSkillExpGainPercent } from '../rules/playerDerivedRules'
 import { getMaxHealth, getMaxInnerPower, getMaxStamina } from '../rules/playerStatsRules'
 import { getAttackTarget } from '../rules/targetRules'
@@ -30,6 +30,7 @@ import { collectTriggeredDialogues, type DialogueTrigger } from '../rules/dialog
 import { enqueueDialogue } from './dialogueActions'
 import { progressObjectives, checkVictory } from '../rules/campaignRules'
 import { executeTriggers } from '../rules/triggerRules'
+import { getSchoolElement } from '../catalogs/skillProgressionCatalog'
 
 export type CombatActionDependencies = {
   getActionablePlayer: (state: GameState, playerId: string) => PlayerState | null

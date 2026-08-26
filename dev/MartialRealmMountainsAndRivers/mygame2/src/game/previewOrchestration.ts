@@ -8,13 +8,14 @@ import type {
   RepairPreview,
 } from './types'
 import { getRepairSummary, getWorkshopLevel, hasBuilding, requiresAdjacentActivePlayer } from './rules/buildingRules'
-import { getElementDamageMultiplier, getElementInteractionText, getExternalSkill, getGenerationSynergyMultiplier, getInnerSkill, getSchoolElement, getSkillDamage, getSkillEffectMultiplier, getSkillInnerPowerCost, getSkillProgression, isElementGenerating } from './rules/skillRules'
+import { getElementDamageMultiplier, getElementInteractionText, getExternalSkill, getGenerationSynergyMultiplier, getInnerSkill, getSkillDamage, getSkillEffectMultiplier, getSkillInnerPowerCost, getSkillProgression, isElementGenerating } from './rules/skillRules'
 import { getTerrainAtPosition, getTerrainResonanceCriticalRateBonus, getTerrainResonanceDamageMultiplier, getTerrainResonanceInnerPowerDiscount, getTerrainResonanceLabel, isTerrainResonant, isTripleResonance } from './rules/terrainCombatRules'
 import { getCriticalRateForPlayer, getDamageDealtPercent, getEffectiveAttributesForPlayer, getExternalSkillCritRateForPlayer, getExternalSkillInnerCostReduction } from './rules/playerDerivedRules'
 import { calculateDamage } from './rules/playerRules'
 import { getAttackTarget } from './rules/targetRules'
 import { isAdjacent } from './types'
 import { itemCatalog } from './catalogs/itemCatalog'
+import { getSchoolElement } from './catalogs/skillProgressionCatalog'
 
 export function createAttackPreview(
   state: GameState,

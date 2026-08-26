@@ -1,25 +1,12 @@
 import { type ExternalSkill } from '../catalogs/externalSkillCatalog'
 import { type InnerSkill } from '../catalogs/innerSkillCatalog'
 import { allExternalSkillCatalog, allInnerSkillCatalog } from '../catalogs/martialHallSkillCatalog'
+import type { SchoolElement } from '../catalogs/skillProgressionCatalog'
 import type { InsightCapacityBreakdown, PlayerAttributes, PlayerState } from '../types'
 import { getEffectiveAttributesForPlayer } from './playerDerivedRules'
-export type MartialElement = 'none' | 'metal' | 'wood' | 'water' | 'fire' | 'earth'
 
-export function getSchoolElement(schoolId?: string): MartialElement {
-  switch (schoolId) {
-    case 'golden-body': return 'metal'
-    case 'swift-wind': return 'wood'
-    case 'scarlet-flame': return 'fire'
-    case 'frost-water': return 'water'
-    case 'earth-mountain': return 'earth'
-    case 'hundred-poison': return 'wood'
-    case 'sharp-edge': return 'metal'
-    case 'misty-rain': return 'water'
-    case 'blazing-sun': return 'fire'
-    case 'yellow-earth': return 'earth'
-    default: return 'none'
-  }
-}
+export type { SchoolElement } from '../catalogs/skillProgressionCatalog'
+export { getSchoolElement } from '../catalogs/skillProgressionCatalog'
 
 export const OVERCAPACITY_SKILL_EFFECT_MULTIPLIER = 0.1
 /** 每次使用/練習功法獲得的功法經驗。 */
@@ -34,9 +21,9 @@ export function getSkillExperienceRequired(level: number): number {
 }
 
 /** 五行相剋：攻擊方克制防守方時傷害 ×1.25，反之 ×0.75。太虛流不參與相剋。 */
-export function getElementDamageMultiplier(attacker: MartialElement | undefined, defender: MartialElement | undefined): number {
+export function getElementDamageMultiplier(attacker: SchoolElement | undefined, defender: SchoolElement | undefined): number {
   if (!attacker || !defender || attacker === 'none' || defender === 'none' || attacker === defender) return 1
-  const counters: Record<Exclude<MartialElement, 'none'>, Exclude<MartialElement, 'none'>> = {
+  const counters: Record<Exclude<SchoolElement, 'none'>, Exclude<SchoolElement, 'none'>> = {
     metal: 'wood',
     wood: 'earth',
     earth: 'water',
@@ -50,11 +37,11 @@ export function getElementDamageMultiplier(attacker: MartialElement | undefined,
 
 /** 五行相生：generator 元素是否生成 generated 元素（金→土→水→木→火→金）。太虛流不參與相生。 */
 export function isElementGenerating(
-  generator: MartialElement | undefined,
-  generated: MartialElement | undefined,
+  generator: SchoolElement | undefined,
+  generated: SchoolElement | undefined,
 ): boolean {
   if (!generator || !generated || generator === 'none' || generated === 'none') return false
-  const generation: Record<Exclude<MartialElement, 'none'>, Exclude<MartialElement, 'none'>> = {
+  const generation: Record<Exclude<SchoolElement, 'none'>, Exclude<SchoolElement, 'none'>> = {
     metal: 'earth',
     earth: 'water',
     water: 'wood',
@@ -69,18 +56,18 @@ export const GENERATION_SYNERGY_MULTIPLIER = 1.25
 
 /** 五行相生連攜：內功元素生外功元素時回傳倍率，否則 ×1。 */
 export function getGenerationSynergyMultiplier(
-  innerElement: MartialElement | undefined,
-  outerElement: MartialElement | undefined,
+  innerElement: SchoolElement | undefined,
+  outerElement: SchoolElement | undefined,
 ): number {
   return isElementGenerating(innerElement, outerElement) ? GENERATION_SYNERGY_MULTIPLIER : 1
 }
 
-export function getElementName(element: MartialElement | undefined): string {
-  return ({ none: '無屬性', metal: '金', wood: '木', water: '水', fire: '火', earth: '土' } satisfies Record<MartialElement, string>)[element ?? 'none']
+export function getElementName(element: SchoolElement | undefined): string {
+  return ({ none: '無屬性', metal: '金', wood: '木', water: '水', fire: '火', earth: '土' } satisfies Record<SchoolElement, string>)[element ?? 'none']
 }
 
 /** 供戰鬥預覽顯示攻守雙方屬性與實際傷害倍率。 */
-export function getElementInteractionText(attacker: MartialElement | undefined, defender: MartialElement | undefined): string {
+export function getElementInteractionText(attacker: SchoolElement | undefined, defender: SchoolElement | undefined): string {
   const multiplier = getElementDamageMultiplier(attacker, defender)
   const attackerName = getElementName(attacker)
   const defenderName = getElementName(defender)
