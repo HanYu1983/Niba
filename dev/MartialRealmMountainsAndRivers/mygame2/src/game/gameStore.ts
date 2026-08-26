@@ -1402,7 +1402,7 @@ export const gameStore = {
       if (resourcePoint.active !== false) return { state, result: { ok: false, reason: '資源點目前不需要修復。' } }
       const actionCheck = canPlayerPerformAction(state, playerId, ACTION_STAMINA_COSTS.resourcePointBuild)
       if (!actionCheck.ok) return { state, result: { ok: false, reason: actionCheck.reason ?? '體力不足。' } }
-      if (!isAdjacent(player.position, resourcePoint.position)) return { state, result: { ok: false, reason: '玩家必須位於資源點旁。' } }
+      if (!isSameOrAdjacent(player.position, resourcePoint.position)) return { state, result: { ok: false, reason: '玩家需位於資源點自身格或周圍一格。' } }
       return {
         state: {
           ...state,

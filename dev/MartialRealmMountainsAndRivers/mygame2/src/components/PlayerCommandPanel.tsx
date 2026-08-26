@@ -3,6 +3,7 @@ import type { ExternalSkill } from '../game/catalogs/externalSkillCatalog'
 import type { PlayerState } from '../game/types'
 import { ACTION_STAMINA_COSTS } from '../game/rules/actionCostRules'
 import { getSkillInnerPowerCost, getSkillProgression } from '../game/rules/skillRules'
+import { getCommandPanelSkills } from '../game/rules/commandPanelSkills'
 
 type PlayerCommandPanelProps = {
   player: PlayerState | null
@@ -37,6 +38,7 @@ function PlayerCommandPanel({
 }: PlayerCommandPanelProps) {
   const canAct = Boolean(player && player.health > 0 && !player.turnEnded && !creatureTurnInProgress)
   const canSpend = (cost: number) => canAct && Boolean(player && player.stamina >= cost)
+  const commandPanelSkills = getCommandPanelSkills(player, externalSkills)
 
   return (
     <Card className="player-command-panel" variant="borderless">
@@ -52,22 +54,16 @@ function PlayerCommandPanel({
               ⚔️ 攻擊{ACTION_STAMINA_COSTS.attack > 0 ? ` ✦${ACTION_STAMINA_COSTS.attack}` : ''}（A）
             </Button>
           </Tooltip>
-          {player?.equippedExternalSkillIds.map((skillId) => {
-            const skill = externalSkills.find((currentSkill) => currentSkill.id === skillId)
-
-            // 靈氣型外功為常駐開關，不顯示在公用指令欄，改由功法面板切換。
-            if (!skill || skill.category === 'aura') {
-              return null
-            }
-
-            const usedThisTurn = player.externalSkillsUsedThisTurn?.includes(skill.id) ?? false
-            const skillLevel = getSkillProgression(player, skill.id).level
+          {commandPanelSkills.map((skill, index) => {
+            const usedThisTurn = player?.externalSkillsUsedThisTurn?.includes(skill.id) ?? false
+            const skillLevel = getSkillProgression(player!, skill.id).level
             const actualInnerPowerCost = getSkillInnerPowerCost(skill.innerPowerCost, skillLevel)
+            const hotkey = index + 1
 
             return (
-              <Tooltip title={usedThisTurn ? '此外功本回合已使用' : `消耗內力 ${actualInnerPowerCost}｜${skill.description}`} key={skill.id}>
-                <Button disabled={!canAct || usedThisTurn || player.innerPower < actualInnerPowerCost} onClick={() => onUseExternalSkill(skill.id)}>
-                  ⚡ {skill.name}（內力 {actualInnerPowerCost}）
+              <Tooltip title={usedThisTurn ? '此外功本回合已使用' : `快捷鍵 ${hotkey}｜消耗內力 ${actualInnerPowerCost}｜${skill.description}`} key={skill.id}>
+                <Button disabled={!canAct || usedThisTurn || (player?.innerPower ?? 0) < actualInnerPowerCost} onClick={() => onUseExternalSkill(skill.id)}>
+                  ⚡ {skill.name}（內力 {actualInnerPowerCost}）（{hotkey}）
                 </Button>
               </Tooltip>
             )

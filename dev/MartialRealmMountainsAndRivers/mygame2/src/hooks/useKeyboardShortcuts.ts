@@ -1,5 +1,7 @@
 import { useEffect } from 'react'
 import type { PlayerState } from '../game/types'
+import type { ExternalSkill } from '../game/catalogs/externalSkillCatalog'
+import { getCommandPanelSkills } from '../game/rules/commandPanelSkills'
 
 type UseKeyboardShortcutsParams = {
   activePlayer: PlayerState | null
@@ -7,11 +9,13 @@ type UseKeyboardShortcutsParams = {
   blockingModal: boolean
   modalOpen: boolean
   movementUsed: boolean
+  externalSkills: ExternalSkill[]
   onToggleMovement: () => void
   onBeginAttackTargeting: () => void
   onOpenInventory: () => void
   onOpenEquipment: () => void
   onOpenSkills: () => void
+  onUseExternalSkill: (skillId: string) => void
   onEndTurn: () => void
 }
 
@@ -21,11 +25,13 @@ function useKeyboardShortcuts({
   blockingModal,
   modalOpen,
   movementUsed,
+  externalSkills,
   onToggleMovement,
   onBeginAttackTargeting,
   onOpenInventory,
   onOpenEquipment,
   onOpenSkills,
+  onUseExternalSkill,
   onEndTurn,
 }: UseKeyboardShortcutsParams) {
   useEffect(() => {
@@ -84,6 +90,21 @@ function useKeyboardShortcuts({
         onOpenSkills()
       }
 
+      // 數字鍵 1..N：對應公用指令欄中傷害型外功的順序。
+      if (/^[1-9]$/.test(key)) {
+        const skillIndex = Number(key) - 1
+        const commandPanelSkills = getCommandPanelSkills(activePlayer, externalSkills)
+        const skill = commandPanelSkills[skillIndex]
+        if (skill) {
+          const usedThisTurn = activePlayer.externalSkillsUsedThisTurn?.includes(skill.id) ?? false
+          const canCast = !usedThisTurn && activePlayer.innerPower >= skill.innerPowerCost
+          if (canCast) {
+            event.preventDefault()
+            onUseExternalSkill(skill.id)
+          }
+        }
+      }
+
       if (key === 'z') {
         event.preventDefault()
         onEndTurn()
@@ -98,12 +119,14 @@ function useKeyboardShortcuts({
     modalOpen,
     creatureTurnInProgress,
     movementUsed,
+    externalSkills,
     onBeginAttackTargeting,
     onEndTurn,
     onOpenInventory,
     onOpenEquipment,
     onOpenSkills,
     onToggleMovement,
+    onUseExternalSkill,
   ])
 }
 

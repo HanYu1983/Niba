@@ -220,6 +220,7 @@ function App() {
     modalOpen,
     creatureTurnInProgress: gameState.creatureTurnInProgress,
     movementUsed,
+    externalSkills: allExternalSkillCatalog,
     onToggleMovement: () => gameStore.setOperation({ type: movementEnabled ? 'idle' : 'moving', movementUsed: false }),
     onBeginAttackTargeting: () => {
       setSelectedCreatureId(null)
@@ -228,6 +229,12 @@ function App() {
     onOpenInventory: () => setInventoryPlayerId(gameState.activePlayerId),
     onOpenEquipment: () => setEquipmentPlayerId(gameState.activePlayerId),
     onOpenSkills: () => setSkillPlayerId(gameState.activePlayerId),
+    onUseExternalSkill: (skillId) => {
+      gameStore.setOperation({ type: 'idle' })
+      gameStore.clearExternalSkillPreview()
+      setSelectedCreatureId(null)
+      gameStore.beginExternalSkillTargeting(skillId)
+    },
     onEndTurn: () => {
       if (gameState.creatureTurnInProgress) {
         return
