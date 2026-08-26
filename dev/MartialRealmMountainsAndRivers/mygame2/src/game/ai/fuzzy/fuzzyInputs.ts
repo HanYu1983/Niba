@@ -11,6 +11,7 @@ import { itemCatalog } from '../../catalogs/itemCatalog'
 import { equipmentCatalog } from '../../catalogs/equipmentCatalog'
 import { allInnerSkillCatalog } from '../../catalogs/martialHallSkillCatalog'
 import { getEffectiveAttributesForPlayer } from '../../rules/playerDerivedRules'
+import { getPlayerVisibleCellIds } from '../../rules/visibilityRules'
 
 export interface FuzzyInputs {
   /** 能扛幾下攻擊（health / maxEnemyDamage），無敵人時 = 99 */
@@ -129,9 +130,15 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
   }
 
   // 建設相關：找可見據點（近到遠）+ 最近據點 + 建料 + 可建造建築 + 最近資源點
+  const visibleCellIds = getPlayerVisibleCellIds(state, player.id)
+
   const activeBases = state.bases.filter((b) => b.active !== false && b.health > 0)
   const allVisibleBases = state.bases
-    .filter((b) => b.health > 0)
+    .filter((b) => {
+      if (b.health <= 0) return false
+      const cell = cellsByPosition.get(`${b.position.row}-${b.position.column}`)
+      return cell != null && visibleCellIds.has(cell.id)
+    })
     .sort((a, b) => manhattan(player.position, a.position) - manhattan(player.position, b.position))
   const visibleBaseIds = allVisibleBases.map((b) => b.id)
 
