@@ -313,6 +313,7 @@ function compileDefenseStructures(placements: ScenarioEntityPlacement[]): Defens
         healthBonus: 0,
         blocksMovement: true,
         providesVision: false,
+        visionRange: 1,
         attackRange: 0,
         attackDamage: 0,
       }),

@@ -116,7 +116,7 @@ export function reconstructRuin(
   // 廢墟修復的小型設施所在格立即視為已探索；提供視野的設施（瞭望臺/箭塔）另納入其視野範圍，
   // 確保即使不在玩家目前視野內，下一步仍會顯示設施 marker（避免「修復後看不到」的霧中怪異現象）。
   const cellId = `${ruin.position.row}-${ruin.position.column}`
-  const structureVisionRange = structure.providesVision ? 1 : 0
+  const structureVisionRange = Math.max(1, structure.visionRange ?? 0)
   const exploredIds = [cellId, ...getScoutCellIds(state.map, ruin.position, structureVisionRange)]
   const existingExploredCellIds = (state.visibility ?? { exploredCellIds: [], mode: 'fog' as const }).exploredCellIds ?? []
 

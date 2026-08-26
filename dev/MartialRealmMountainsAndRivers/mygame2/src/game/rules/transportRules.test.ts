@@ -23,6 +23,7 @@ function makeSmallWaystation(overrides: Partial<DefenseStructureState> = {}): De
     healthBonus: 0,
     blocksMovement: true,
     providesVision: false,
+    visionRange: 1,
     attackRange: 0,
     attackDamage: 0,
     position: { row: 5, column: 6 },
