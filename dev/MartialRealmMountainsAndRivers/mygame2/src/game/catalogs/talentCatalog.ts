@@ -53,7 +53,7 @@ export const talentCatalog: TalentDefinition[] = [
   {
     id: 'phantom-dodge',
     name: '幻影步',
-    description: '身法飄忽，回避與暴擊皆有所長。',
+    description: '身法飄忽，回避率 +6%、暴擊率 -3%。',
     available: true,
     effects: [{ kind: 'passive-buff', buffId: 'talent-phantom-dodge' }],
   },
