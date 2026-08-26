@@ -5,11 +5,10 @@ import { addLootToPlayer, createItemPointLootForPlayer, createLootFromId } from 
 import { incrementRunStat } from '../runStats'
 import { replenishInteractionPoint } from '../worldGeneration'
 import { itemCatalog } from '../catalogs/itemCatalog'
-import { canTraverseTerrain, getEffectiveAttributesForPlayer, getBuff } from '../rules/playerDerivedRules'
+import { canTraverseTerrain, getEffectiveAttributesForPlayer, getBuff, getPlayerResourceLimit } from '../rules/playerDerivedRules'
 import { getActionablePlayer } from '../rules/actionCostRules'
 import { restoreAfterAttributeChange } from '../characterFactory'
 import { getScoutCellIds, updatePlayerVisibility } from '../rules/visibilityRules'
-import { getMaxHealth, getMaxStamina, getMaxInnerPower } from '../rules/playerStatsRules'
 
 export type CollectItemPointResult = {
   state: GameState
@@ -315,26 +314,25 @@ export function useItemAction(
     return {
       state: {
         ...state,
-        players: state.players.map((currentPlayer) =>
-          currentPlayer.id === playerId
-            ? {
-              ...currentPlayer,
-              buffs: [...(currentPlayer.buffs ?? []), buffInstance],
-              maxHealth: getMaxHealth(getEffectiveAttributesForPlayer({ ...currentPlayer, buffs: [...(currentPlayer.buffs ?? []), buffInstance] })),
-              maxStamina: getMaxStamina(getEffectiveAttributesForPlayer({ ...currentPlayer, buffs: [...(currentPlayer.buffs ?? []), buffInstance] })),
-              maxInnerPower: getMaxInnerPower(getEffectiveAttributesForPlayer({ ...currentPlayer, buffs: [...(currentPlayer.buffs ?? []), buffInstance] })),
-              inventory: currentPlayer.inventory
-                .map((entry) =>
-                  entry.itemId === itemId
-                    ? { ...entry, quantity: entry.quantity - 1 }
-                    : entry,
-                )
-                .filter((entry) => entry.quantity > 0),
-              itemEffectsUsedThisTurn: [...(currentPlayer.itemEffectsUsedThisTurn ?? []), item.effect],
-              turnEnded: currentPlayer.turnEnded,
-            }
-            : currentPlayer,
-        ),
+        players: state.players.map((currentPlayer) => {
+          if (currentPlayer.id !== playerId) return currentPlayer
+          const withBuff = { ...currentPlayer, buffs: [...(currentPlayer.buffs ?? []), buffInstance] }
+          return {
+            ...withBuff,
+            maxHealth: getPlayerResourceLimit(withBuff, 'health'),
+            maxStamina: getPlayerResourceLimit(withBuff, 'stamina'),
+            maxInnerPower: getPlayerResourceLimit(withBuff, 'innerPower'),
+            inventory: currentPlayer.inventory
+              .map((entry) =>
+                entry.itemId === itemId
+                  ? { ...entry, quantity: entry.quantity - 1 }
+                  : entry,
+              )
+              .filter((entry) => entry.quantity > 0),
+            itemEffectsUsedThisTurn: [...(currentPlayer.itemEffectsUsedThisTurn ?? []), item.effect],
+            turnEnded: currentPlayer.turnEnded,
+          }
+        }),
       },
       result: { ok: true },
     }

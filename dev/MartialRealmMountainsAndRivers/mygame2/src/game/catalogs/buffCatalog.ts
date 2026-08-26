@@ -73,6 +73,12 @@ export type BuffDefinition = {
   insightTrueDamageMultiplier?: number
   visionRadiusBonus?: number
   maxStaminaBonus?: number
+  /** 最大生命值上限倍率（resource-limit 原語；預設 1，可 <1 或 >1）。 */
+  maxHealthMultiplier?: number
+  /** 最大體力上限倍率（resource-limit 原語；預設 1）。 */
+  maxStaminaMultiplier?: number
+  /** 最大內力上限倍率（resource-limit 原語；預設 1）。 */
+  maxInnerPowerMultiplier?: number
   gatherStaminaCostReduction?: number
   gatherDoubleYieldChance?: number
   buildingMaterialCostReduction?: number
@@ -200,4 +206,6 @@ export const buffCatalog: BuffDefinition[] = [
   { id: 'talent-scavenger-gather', name: '天賦·拾荒', description: '拾荒者：採集時 25% 機率雙倍產出。', duration: 'persistent', category: 'buff', gatherDoubleYieldChance: 0.25 },
   { id: 'talent-phantom-dodge', name: '天賦·幻影步', description: '幻影步：回避率 +6%、暴擊率 -3%。', duration: 'persistent', category: 'buff', evasionRateBonus: 6, criticalRateBonus: -3 },
   { id: 'talent-merchant-king', name: '天賦·商賈', description: '商賈巨擘：買入價格 -20%、賣出價格 +20%、普攻最終傷害 +10%。', duration: 'persistent', category: 'buff', shopBuyPriceDiscount: 0.2, shopSellPriceBonus: 0.2, damageDealtPercent: 0.1 },
+  // 天賦（resource-limit 原語）：內息調度 — 內力上限 ×1.1、體力上限 ×0.9。以 buff multiplier 表達，統一走 getResourceLimit 管線。
+  { id: 'talent-qi-master', name: '天賦·內息調度', description: '內息調度：內力上限 +10%、體力上限 -10%。', duration: 'persistent', category: 'buff', maxInnerPowerMultiplier: 1.1, maxStaminaMultiplier: 0.9 },
 ]

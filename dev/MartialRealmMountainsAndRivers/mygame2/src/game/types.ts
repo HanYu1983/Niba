@@ -106,6 +106,9 @@ export type BuffInstance = {
   insightTrueDamageMultiplier?: number
   visionRadiusBonus?: number
   maxStaminaBonus?: number
+  maxHealthMultiplier?: number
+  maxStaminaMultiplier?: number
+  maxInnerPowerMultiplier?: number
   gatherStaminaCostReduction?: number
   gatherDoubleYieldChance?: number
   buildingMaterialCostReduction?: number

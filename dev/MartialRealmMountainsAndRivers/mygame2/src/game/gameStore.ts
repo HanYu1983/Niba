@@ -49,6 +49,7 @@ import {
   getEquipmentInventory,
   canTraverseTerrain,
   getBuildingReputationBonus,
+  getPlayerResourceLimit,
 } from './rules/playerDerivedRules'
 import { getExternalSkill, getPlayerTotalInsightCost, getElementDamageMultiplier, equipInnerSkillAction } from './rules/skillRules'
 import {
@@ -79,7 +80,7 @@ import {
   applyExperienceAndLevelUp,
   restoreAfterAttributeChange,
 } from './characterFactory'
-import { getMaxHealth, getMaxInnerPower, getMaxStamina } from './rules/playerStatsRules'
+import { getMaxInnerPower } from './rules/playerStatsRules'
 import {
   buyEquipment as buyEquipmentAction,
   buySectEquipment as buySectEquipmentAction,
@@ -1214,28 +1215,27 @@ export const gameStore = {
         }
         return {
           ...state,
-          players: state.players.map((currentPlayer) =>
-            currentPlayer.id === playerId
-              ? {
-                ...currentPlayer,
-                buffs: [...(currentPlayer.buffs ?? []), buffInstance],
-                maxHealth: getMaxHealth(getEffectiveAttributesForPlayer({ ...currentPlayer, buffs: [...(currentPlayer.buffs ?? []), buffInstance] })),
-                maxStamina: getMaxStamina(getEffectiveAttributesForPlayer({ ...currentPlayer, buffs: [...(currentPlayer.buffs ?? []), buffInstance] })),
-                maxInnerPower: getMaxInnerPower(getEffectiveAttributesForPlayer({ ...currentPlayer, buffs: [...(currentPlayer.buffs ?? []), buffInstance] })),
-                inventory: currentPlayer.inventory
-                  .map((entry) =>
-                    entry.itemId === itemId
-                      ? { ...entry, quantity: entry.quantity - 1 }
-                      : entry,
-                  )
-                  .filter((entry) => entry.quantity > 0),
-                itemEffectsUsedThisTurn: item.effect === 'buff'
-                  ? [...(currentPlayer.itemEffectsUsedThisTurn ?? []), item.effect]
-                  : currentPlayer.itemEffectsUsedThisTurn,
-                turnEnded: currentPlayer.turnEnded,
-              }
-              : currentPlayer,
-          ),
+          players: state.players.map((currentPlayer) => {
+            if (currentPlayer.id !== playerId) return currentPlayer
+            const withBuff = { ...currentPlayer, buffs: [...(currentPlayer.buffs ?? []), buffInstance] }
+            return {
+              ...withBuff,
+              maxHealth: getPlayerResourceLimit(withBuff, 'health'),
+              maxStamina: getPlayerResourceLimit(withBuff, 'stamina'),
+              maxInnerPower: getPlayerResourceLimit(withBuff, 'innerPower'),
+              inventory: currentPlayer.inventory
+                .map((entry) =>
+                  entry.itemId === itemId
+                    ? { ...entry, quantity: entry.quantity - 1 }
+                    : entry,
+                )
+                .filter((entry) => entry.quantity > 0),
+              itemEffectsUsedThisTurn: item.effect === 'buff'
+                ? [...(currentPlayer.itemEffectsUsedThisTurn ?? []), item.effect]
+                : currentPlayer.itemEffectsUsedThisTurn,
+              turnEnded: currentPlayer.turnEnded,
+            }
+          }),
         }
       }
 

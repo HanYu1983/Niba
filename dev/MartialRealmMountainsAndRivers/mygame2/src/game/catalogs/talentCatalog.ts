@@ -1,19 +1,20 @@
 import type { BuffInstance } from '../types'
+import type { ResourceLimit, ResourceLimitModifiers } from '../rules/playerStatsRules'
 
 /**
  * 天賦目錄（Talent Catalog）。
  *
  * 天賦為跨對局角色（PersistentCharacter）的可選玩法模組，開局時隨角色注入對局。
  * 依設計文件 §6.3，每個天賦效果必須能分解為三類原語之一（passive-buff / resource-limit / hook）。
- * 本目錄為 MVP：先支援 `passive-buff` 原語（天賦 = 一個永遠啟用的被動 buff，複用 buffCatalog）；
- * `resource-limit` / `hook` 原語保留型別，供後續批次擴充。
+ * 本目錄支援 `passive-buff`（天賦 = 一個永遠啟用的被動 buff，複用 buffCatalog）與
+ * `resource-limit`（透過 getResourceLimit 統一入口修正資源上限）；`hook` 原語保留型別，供後續批次擴充。
  *
  * 新增天賦契約（設計 §6.4 R1–R5）：
  * - 每個天賦只能由三類原語組成，禁止無分類特例。
  * - 數值型一律走 buff field；缺欄位時擴充 `BuffDefinition`，不得在規則層寫 if(talentIds.includes(...))。
  */
 
-/** 三類原語：resource-limit（上限修正）與 hook（鉤子）為保留型別，MVP 未實作效果。 */
+/** 三類原語：resource-limit（上限修正）與 hook（鉤子）為保留型別。 */
 export type TalentEffect =
   | { kind: 'passive-buff'; buffId: string }
   | { kind: 'resource-limit'; resource: 'health' | 'stamina' | 'innerPower'; multiplier: number }
@@ -64,6 +65,13 @@ export const talentCatalog: TalentDefinition[] = [
     available: true,
     effects: [{ kind: 'passive-buff', buffId: 'talent-merchant-king' }],
   },
+  {
+    id: 'qi-master',
+    name: '內息調度',
+    description: '擅長操縱炁機：內力上限提升、體力稍降。',
+    available: true,
+    effects: [{ kind: 'passive-buff', buffId: 'talent-qi-master' }],
+  },
 ]
 
 /** 依 id 查天賦定義；不存在回傳 undefined。 */
@@ -79,9 +87,9 @@ export function getAvailableTalents(): TalentDefinition[] {
 /**
  * 彙整角色已選天賦，轉出為對局中「常駐 Buff」清單。
  *
- * 僅處理 MVP 支援的 `passive-buff` 原語：每個效果產生一個永久（remainingRounds: null）
- * 的 BuffInstance，開局可注入 PlayerState.buffs。`resource-limit` / `hook` 原語
- * 尚未接入，予以忽略（其天賦已於 catalog 標記 available: false）。
+ * 處理 `passive-buff` 原語：每個效果產生一個永久（remainingRounds: null）
+ * 的 BuffInstance，開局可注入 PlayerState.buffs。`resource-limit` 效果不產生 buff
+ * （改由 getResourceLimitModifiers 彙整，見下）；`hook` 原語尚未接入，予以忽略。
  *
  * 產出的 BuffInstance 以 `sourceId` 標記所屬天賦，供排程與除錯識別。
  */
@@ -101,4 +109,24 @@ export function getTalentBuffs(talentIds: string[]): BuffInstance[] {
     }
   }
   return buffs
+}
+
+/**
+ * 彙整角色已選天賦的 resource-limit 修正量。
+ *
+ * 遍歷 `resource-limit` 原語，把相同資源的 multiplier 疊乘；回傳的 modifiers 可傳入
+ * `getPlayerResourceLimit` / `getResourceLimit` 對資源上限做倍率修正。
+ * （MVP 中的 resource-limit 天賦 multiplier 作用在 effective 五維的資源基礎公式上。）
+ */
+export function getResourceLimitModifiers(talentIds: string[]): ResourceLimitModifiers {
+  const multiplier: Partial<Record<ResourceLimit, number>> = {}
+  for (const talentId of talentIds) {
+    const talent = getTalent(talentId)
+    if (!talent) continue
+    for (const effect of talent.effects) {
+      if (effect.kind !== 'resource-limit') continue
+      multiplier[effect.resource] = (multiplier[effect.resource] ?? 1) * effect.multiplier
+    }
+  }
+  return { multiplier }
 }
