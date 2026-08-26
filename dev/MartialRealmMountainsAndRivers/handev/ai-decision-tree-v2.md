@@ -910,89 +910,270 @@ function decideCombat(state: GameState, player: PlayerState): AiAction | null {
 
 ---
 
-### 9.6 方案比較
+### 9.6 方案 C：無狀態分層——小樹在前、大樹在後
 
-| | 方案 A（Subtree 介面） | 方案 B（if + function） |
-|---|---|---|
-| **結構** | 數據驅動，子樹是對象 | 過程式，子樹是函數 |
-| **新增子樹** | 寫一個 Subtree 對象 + 加入數組 | 寫 3 個函數 + 加一行 if |
-| **可讀性** | 高（結構統一，一目了然） | 中（要翻多個函數） |
-| **維護性** | 好（改一個子樹不動其他） | 好（改一個函數不動其他） |
-| **適合場景** | 子樹多（>5）、需要動態增減 | 子樹少（≤5）、邏輯簡單 |
-| **複雜度** | 多一層抽象（介面、數組、迴圈） | 零抽象，就是 if-else |
+取消 entryCondition / exitCondition / activeSubtree 的顯式概念。  
+**核心洞察**：人類思考不是「先選戰略再選戰術」，而是「能做的就做，沒得做才想長遠」。
 
-**建議**：先用方案 B 快速實作，子樹數量超過 5 棵或覺得重複代碼太多時再重構為方案 A。
+#### 9.6.1 概念
 
-### 9.7 切換流程圖（兩方案共用）
+```
+前方小樹（高優先）：即時反應，條件成立就 return
+  ├─ 小樹 A：旁邊有怪 + 有外功 → 打一拳
+  ├─ 小樹 B：旁邊有怪 + 沒外功 → 離開（自然 fallback，不需要「退出條件」）
+  ├─ 小樹 C：血低 → 逃命
+  │
+中段中樹（中優先）：短期目標
+  ├─ 中樹 D：據點旁 + 有材料 → 建造
+  ├─ 中樹 E：有資源點可採 → 採集
+  │
+後方大樹（低優先）：長期戰略，等於「預設行為」
+  └─ 大樹 F：探索 / 移動到遠處目標
+```
 
+**沒有「進入」也沒有「退出」**——條件成立就做，不成立就 fall through 到下一棵。  
+「離開戰鬥」不是 exitCondition 觸發，而是「戰鬥條件不再成立，自然 fall through 到建造或探索」。
+
+#### 9.6.2 為什麼不需要 activeSubtree
+
+| 方案 A/B | 方案 C |
+|---------|--------|
+| 需要記住「我在哪棵子樹」 | 不需要——每步都是全新的掃描 |
+| 退出需要 exitCondition | 不需要——條件不成立就 fall through |
+| 可能卡在子樹裡（exitCondition 寫錯） | 不可能——沒有狀態可以卡 |
+| 戰略和戰術分開寫 | 戰略 = 後方的大樹，戰術 = 前方的小樹 |
+
+**方案 C 的「戰略」就是 fallback**：前方小樹都沒匹配時，剩下的大樹就是當前的「戰略方向」。
+
+#### 9.6.3 實例：戰鬥 + 建造的混合
+
+```typescript
+function decideNextAction(state: GameState, playerId: string): AiAction | null {
+  const player = getPlayer(state, playerId)
+  if (!player) return null
+
+  // ═══════════════════════════════════════════════════
+  // 小樹 1：保命（最高優先，任何時候都先處理）
+  // ═══════════════════════════════════════════════════
+  if (player.health <= player.maxHealth * 0.2) {
+    const candidate = buildRetreatAction(state, player)
+    if (candidate && validateAiAction(state, player.id, candidate)) return candidate
+  }
+
+  // ═══════════════════════════════════════════════════
+  // 小樹 2：即時戰鬥（有怪 + 能打就打）
+  // ═══════════════════════════════════════════════════
+  const creatures = listVisibleHostiles(state, player.id)
+
+  // 2a. 旁邊有怪 + 有外功 + 體力足 → 打一拳
+  const adjacent = creatures.find(c => manhattan(player.position, c.position) === 1)
+  if (adjacent && hasRangedAttack(state, player) && player.stamina >= 3) {
+    const candidate = buildAttackAction(state, player, adjacent)
+    if (candidate && validateAiAction(state, player.id, candidate)) return candidate
+  }
+
+  // 2b. 旁邊有怪 + 沒外功 → 離開（自然 fallback，不需要「退出條件」）
+  if (adjacent && !hasRangedAttack(state, player)) {
+    const candidate = buildMoveAwayAction(state, player, adjacent.position)
+    if (candidate && validateAiAction(state, player.id, candidate)) return candidate
+  }
+
+  // 2c. 遠處有弱怪 + 體力足 → 走過去
+  const weak = creatures
+    .filter(c => c.health <= player.maxHealth * 0.3 && manhattan(player.position, c.position) <= 3)
+    .sort((a, b) => manhattan(player.position, a.position) - manhattan(player.position, b.position))[0]
+  if (weak && player.stamina >= 4) {
+    const candidate = buildMoveToAction(state, player, weak.position)
+    if (candidate && validateAiAction(state, player.id, candidate)) return candidate
+  }
+
+  // ═══════════════════════════════════════════════════
+  // 中樹 3：建造（短期目標）
+  // ═══════════════════════════════════════════════════
+  const base = getOwnedBase(state, player.id)
+  if (base) {
+    const isAdjacent = manhattan(player.position, base.position) === 1
+
+    // 3a. 據點旁 + 有材料 → 建造
+    if (isAdjacent && base.buildingMaterials >= 3) {
+      const candidate = buildConstructAction(state, player, base)
+      if (candidate && validateAiAction(state, player.id, candidate)) return candidate
+    }
+
+    // 3b. 旁邊有資源 + 建料不足 → 採集
+    if (base.buildingMaterials < base.maxBuildingMaterials * 0.7) {
+      const resource = findAdjacentResourcePoint(state, player)
+      if (resource) {
+        const candidate: AiAction = { type: 'collect-resource', resourcePointId: resource.id }
+        if (validateAiAction(state, player.id, candidate)) return candidate
+      }
+    }
+
+    // 3c. 不在據點旁 → 移動到據點
+    if (!isAdjacent) {
+      const candidate = buildMoveToAction(state, player, base.position)
+      if (candidate && validateAiAction(state, player.id, candidate)) return candidate
+    }
+
+    // 3d. 需要材料 → 移動到資源點
+    if (base.buildingMaterials < base.maxBuildingMaterials * 0.7) {
+      const nearest = findNearestResourcePoint(state, player)
+      if (nearest) {
+        const candidate = buildMoveToAction(state, player, nearest.position)
+        if (candidate && validateAiAction(state, player.id, candidate)) return candidate
+      }
+    }
+  }
+
+  // ═══════════════════════════════════════════════════
+  // 大樹 4：探索（預設戰略，最低優先）
+  // ═══════════════════════════════════════════════════
+  const exploreTarget = findUnexploredNearby(state, player)
+  if (exploreTarget) {
+    const candidate = buildMoveToAction(state, player, exploreTarget)
+    if (candidate && validateAiAction(state, player.id, candidate)) return candidate
+  }
+
+  // ═══════════════════════════════════════════════════
+  // 兜底
+  // ═══════════════════════════════════════════════════
+  return null
+}
+```
+
+#### 9.6.4 「退出」如何自然發生
+
+以戰鬥為例：
+
+```
+步驟 1：旁邊有怪 → 小樹 2a 成立 → 打一拳
+步驟 2：怪死了 → 小樹 2a/b/c 全不成立 → fall through → 中樹 3 成立 → 建造
+步驟 3：怪又出現了 → 小樹 2a 再次成立 → 打怪（自然切回戰鬥）
+```
+
+沒有 exitCondition，沒有 activeSubtree，沒有狀態切換——**條件的成立/不成立本身就是「進入/退出」**。
+
+#### 9.6.5 分層=優先級=return 順序
+
+| 位置 | 類型 | 行為 | 例子 |
+|------|------|------|------|
+| 前方（先 return） | 即時反應 | 有條件就做，做完就走 | 打旁邊的怪、撿旁邊的道具 |
+| 中段 | 短期目標 | 需要幾步完成 | 搬材料→建造→採集 |
+| 後方（最後 return） | 預設戰略 | 沒別的事做就做這個 | 探索、移動到遠處 |
+
+**後方的大樹=預設戰略**。不需要 entryCondition——「沒別的事做」本身就是進入條件。
+
+---
+
+### 9.7 方案比較
+
+| | 方案 A（Subtree 介面） | 方案 B（if + function） | 方案 C（無狀態分層） |
+|---|---|---|---|
+| **結構** | 數據驅動，子樹是對象 | 過程式，子樹是函數 | 平面 if-else，自然分層 |
+| **狀態管理** | activeSubtree（跨步保留） | activeSubtree（跨步保留） | **無狀態**（每步全新掃描） |
+| **進入/退出** | 顯式 entryCondition / exitCondition | 顯式 shouldEnter / shouldContinue | **無**——條件成立=進入，不成立=退出 |
+| **新增子樹** | 寫 Subtree 對象 + 加入數組 | 寫 3 個函數 + 加一行 if | 加一段 if-else 區塊 |
+| **可讀性** | 高（結構統一） | 中（要翻多個函數） | 高（從上往下讀就是優先級） |
+| **適合場景** | 子樹多（>5）、需要追蹤狀態 | 子樹少（≤5）、需要記住目標 | 邏輯清晰、不需要「記住」做什麼 |
+| **缺點** | 最複雜，要管狀態 | 要管 activeSubtree | 長期目標可能被中斷 |
+
+**建議**：方案 C 最簡單，先用方案 C。若發現 AI 在長期目標（建造）上被反覆中斷，再升級為方案 B 加入 activeSubtree 記憶。
+
+### 9.8 切換流程圖
+
+**方案 A / B**（有狀態）：
 ```
 start
   │
   ▼
 ┌──────────────────────┐
 │ 當前子樹該退出？       │── Yes ──► activeSubtree = null
-│ (exitCondition /      │
-│  shouldContinueXxx)   │
 └──────────┬───────────┘
            │ No
            ▼
 ┌──────────────────────┐
-│ 有活躍子樹？          │── No ──┐
-└──────────┬───────────┘        │
-           │ Yes                ▼
-           │           ┌─────────────────────────┐
-           │           │ 方案A: 迴圈掃描SUBTREES   │
-           │           │ 方案B: if/else if 鏈      │
-           │           │ entryCondition 成立？     │
-           │           │ 找到 → active = 該子樹    │
-           │           │ 沒找到 → flatFallback     │
-           │           └─────────────────────────┘
+│ 有活躍子樹？          │── No ──► 掃描 entry 條件
+└──────────┬───────────┘
+           │ Yes
            ▼
 ┌──────────────────────┐
-│ 方案A: .decide()     │
-│ 方案B: switch→函數   │
-│ (戰術級決策)         │
+│ 子樹 .decide()       │
 └──────────┬───────────┘
            │
            ▼
 ┌──────────────────────┐
 │ validateAiAction?    │── No ──► activeSubtree = null
-└──────────┬───────────┘         (退出子樹，下一步重選)
+└──────────┬───────────┘
            │ Yes
            ▼
       return action
 ```
 
-### 9.8 粒度對應表
+**方案 C**（無狀態）：
+```
+start
+  │
+  ▼
+┌──────────────────┐
+│ 小樹 1 保命      │── match → validate → return
+└────────┬─────────┘
+         │ no match
+         ▼
+┌──────────────────┐
+│ 小樹 2 即時戰鬥  │── match → validate → return
+└────────┬─────────┘
+         │ no match
+         ▼
+┌──────────────────┐
+│ 中樹 3 建造      │── match → validate → return
+└────────┬─────────┘
+         │ no match
+         ▼
+┌──────────────────┐
+│ 大樹 4 探索      │── match → validate → return
+└────────┬─────────┘
+         │ no match
+         ▼
+      return null
+```
 
-| 概念 | 戰略層 | 戰術層 | 動作層 |
-|------|--------|--------|--------|
-| **決策對象** | 進入哪棵子樹 | 子樹內選哪個子目標 | 執行哪個 AiAction |
-| **變化頻率** | 低（幾十步） | 中（3~5 步） | 高（每步） |
-| **條件類型** | 局勢判斷（血量、據點狀態、遊戲階段） | 子目標可行性（位置、資源、冷卻） | 行動合法性（validateAiAction） |
-| **記憶需求** | 跨步保留 activeSubtree | 子樹內部自行管理 | 不需要（每步獨立） |
-| **例子** | 「建造子樹」 | 「搬材料→建造→搬材料」 | move(3,5) → constructBuilding |
+方案 C 沒有「切換」——每步從頭掃描，自然 fall through。
+
+### 9.9 粒度對應表
+
+| 概念 | 方案 A/B | 方案 C |
+|------|---------|--------|
+| **戰略層** | 活躍子樹（跨步保留） | 後方大樹（低優先 fallback） |
+| **戰術層** | 子樹內部 .decide() | 中段中樹 |
+| **動作層** | validateAiAction | validateAiAction |
+| **切換機制** | exitCondition → 重新掃描 | 條件不成立 → 自然 fall through |
+| **記憶需求** | 需要（activeSubtree） | 不需要 |
+| **例子** | 「建造子樹」→ 搬材料→建造→搬材料 | 小樹沒匹配 → fall through 到建造區塊 → 建造 |
 
 ### 9.10 與平面決策樹的關係
 
-平面決策樹（§2）並非被取代，而是作為**兜底**存在：
+方案 C 本質上**就是**平面決策樹（§2），只是有意識地將條件分為小/中/大樹三層：
 
 ```
-有活躍子樹？ → 用子樹的 decide()
-沒有？      → 回退到平面決策鏈（§2 的 if-else）
+§2 的平面決策樹：  if (保命) ... else if (戰鬥) ... else if (建造) ... else (探索)
+§9 方案 C：        小樹(保命) → 小樹(戰鬥) → 中樹(建造) → 大樹(探索)
+                   ↑ 同一件事，只是加了「分層」的思維
 ```
 
-**平面決策鏈處理的是「沒有明確大方向」的情況**——保命、撿路邊道具等即時反應。  
-子樹處理的是「有明確大方向，需要持續執行」的情況——建造、系統性戰鬥、學習等。
+**差異在於思維框架**：
+- §2：「我有一堆 if-else」
+- §9 方案 C：「我有即時反應 + 短期目標 + 預設戰略，它們的 return 順序就是優先級」
+
+方案 A/B 則是**真正的不同**——它們有狀態記憶，能在多步之間維持同一個戰略方向。
 
 ### 9.11 實作順序（更新）
 
 | 步驟 | 內容 | 依賴 |
 |------|------|------|
 | 1 | 建立 `ai/decisionTree/conditions.ts` | 無 |
-| 2 | 方案B：建立 `ai/decisionTree/subtrees/` 各子樹函數（shouldEnter + shouldContinue + decide） | step 1 |
-| 2' | 方案A（若選用）：建立 `ai/decisionTree/subtrees.ts`（Subtree 介面 + 數組） | step 2 |
-| 3 | 建立 `ai/decisionTree/decideNextAction.ts`（戰略層 + 戰術層委派） | step 2 |
-| 4 | 建立 `ai/decisionTree/actionBuilders.ts` | step 3 |
-| 5 | 改寫 `runTest1Step` | step 4 |
-| 6 | 保留感知函數 | 無 |
+| 2 | 方案C（推薦先用）：建立 `ai/decisionTree/decideNextAction.ts`，直接寫小/中/大樹的 if-else | step 1 |
+| 2' | 方案B（若需要狀態記憶）：拆為 shouldEnterXxx / shouldContinueXxx / decideXxx 函數 | step 2 |
+| 2'' | 方案A（若子樹 >5 棵）：建立 Subtree 介面 + 數組 + 迴圈掃描 | step 2' |
+| 3 | 建立 `ai/decisionTree/actionBuilders.ts` | step 2 |
+| 4 | 改寫 `runTest1Step` | step 3 |
+| 5 | 保留感知函數 | 無 |
