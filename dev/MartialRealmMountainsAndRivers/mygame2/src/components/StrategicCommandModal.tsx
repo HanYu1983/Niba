@@ -120,7 +120,7 @@ function StrategicCommandForm({ aiPlayers, players, bases, orders, constructionP
     if (selectedOrder.type === 'support-player') {
       return `支援 ${players.find((player) => player.id === selectedOrder.playerId)?.name ?? selectedOrder.playerId}`
     }
-    return '測試1'
+    return '模糊策略'
   }, [bases, players, selectedOrder])
 
   const saveOrder = () => {
@@ -194,7 +194,7 @@ function StrategicCommandForm({ aiPlayers, players, bases, orders, constructionP
       <Flex gap={12} wrap>
         <label className="strategic-command-modal__field">
           <Typography.Text strong>命令類型</Typography.Text>
-          <Select value={orderType} onChange={setOrderType} options={[{ label: '保護據點', value: 'protect-base' }, { label: '支援玩家', value: 'support-player' }, { label: '測試1', value: 'test1' }]} />
+          <Select value={orderType} onChange={setOrderType} options={[{ label: '保護據點', value: 'protect-base' }, { label: '支援玩家', value: 'support-player' }, { label: '模糊策略', value: 'test1' }]} />
         </label>
         {orderType === 'protect-base' ? (
           <label className="strategic-command-modal__field">
