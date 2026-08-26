@@ -271,6 +271,28 @@ export function getResourceLimit(
 > - 所有 max* 重算點（`characterFactory` / `playerRules` / `equipmentRules` / `itemActions` / `gameStore`）已改走層2，**一併修正了原先 4 處 `maxStaminaBonus` 遺漏**。
 > - **resource-limit 天賦以 buff 表達**（非 effect kind）：`qi-master` 在 `buffCatalog` 定義 `maxInnerPowerMultiplier: 1.1, maxStaminaMultiplier: 0.9`，經 buff 管線自動生效；`getResourceLimitModifiers` 彙整函式保留供直接用 resource-limit effect 的未來擴充。
 
+### 6.3.1 resource-limit 型天賦提案（走既有抽象，尚未實作）
+
+> **設計說明**：以下三項天賦與 `qi-master` 同源（資源上限修正），但刻意簡化為**單一增益、無取捨**的直觀效果，降低玩家理解與選擇成本。均以既有 `buff field` 表達，開局注入後經 `getPlayerResourceLimit` 自動生效；**新增每條只需在 `buffCatalog`（buff 定義）＋ `talentCatalog`（天賦條目）各加一行，無需改動任何規則／呼叫點**。
+
+| 天賦 id | 名稱 | 效果 | 對應 buff field |
+|---|---|---|---|
+| `vital-body` | 金剛體魄 | 最大血量 +10% | `maxHealthMultiplier: 1.1` |
+| `deep-dantian` | 丹田凝息 | 最大內力 +10% | `maxInnerPowerMultiplier: 1.1` |
+| `sturdy-legs` | 力士雙足 | 最大體力 +2 | `maxStaminaBonus: 2` |
+
+> **catalog 條目示意**（待採用時才需填入 `buffCatalog`／`talentCatalog`）：
+> ```ts
+> // buffCatalog.ts
+> { id: 'talent-vital-body', name: '天賦·金剛體魄', description: '最大血量 +10%。', duration: 'persistent', category: 'buff', maxHealthMultiplier: 1.1 },
+> { id: 'talent-deep-dantian', name: '天賦·丹田凝息', description: '最大內力 +10%。', duration: 'persistent', category: 'buff', maxInnerPowerMultiplier: 1.1 },
+> { id: 'talent-sturdy-legs', name: '天賦·力士雙足', description: '最大體力 +2。', duration: 'persistent', category: 'buff', maxStaminaBonus: 2 },
+> // talentCatalog.ts（with available: true）
+> { id: 'vital-body', name: '金剛體魄', description: '最大血量 +10%。', available: true, effects: [{ kind: 'passive-buff', buffId: 'talent-vital-body' }] },
+> { id: 'deep-dantian', name: '丹田凝息', description: '最大內力 +10%。', available: true, effects: [{ kind: 'passive-buff', buffId: 'talent-deep-dantian' }] },
+> { id: 'sturdy-legs', name: '力士雙足', description: '最大體力 +2。', available: true, effects: [{ kind: 'passive-buff', buffId: 'talent-sturdy-legs' }] },
+> ```
+
 - ~~既有 `backgroundBonuses.attributeModifiers` 只能表達「起始數值」…~~（✗ 背景不採用；卷系統僅保留天賦概念於 §12.9，§5.4 純屬參考）
   - 天賦（`talentIds`）：玩法改寫（§5.4，參考用）。
   - 舊方案主張「背景＋天賦並存」；卷系統已取消背景，此段不再成立。

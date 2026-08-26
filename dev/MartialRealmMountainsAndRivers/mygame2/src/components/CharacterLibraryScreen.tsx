@@ -24,7 +24,15 @@ function CharacterLibraryScreen({ onSelect }: CharacterLibraryScreenProps) {
   const [editing, setEditing] = useState<PersistentCharacter | null>(null)
   const [form] = Form.useForm()
 
-  const refresh = () => setCharacters(getCharacters())
+  const refresh = () => {
+    const latest = getCharacters()
+    setCharacters(latest)
+    // 同步更新 editing reference，讓 Modal 內（標題／培養／天賦）反映最新資料，無需重整頁面。
+    setEditing((current) => {
+      if (!current) return current
+      return latest.find((candidate) => candidate.id === current.id) ?? current
+    })
+  }
 
   const openCreate = () => {
     setEditing(null)

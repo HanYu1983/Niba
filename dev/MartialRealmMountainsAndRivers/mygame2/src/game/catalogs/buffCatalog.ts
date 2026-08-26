@@ -208,4 +208,8 @@ export const buffCatalog: BuffDefinition[] = [
   { id: 'talent-merchant-king', name: '天賦·商賈', description: '商賈巨擘：買入價格 -20%、賣出價格 +20%、普攻最終傷害 +10%。', duration: 'persistent', category: 'buff', shopBuyPriceDiscount: 0.2, shopSellPriceBonus: 0.2, damageDealtPercent: 0.1 },
   // 天賦（resource-limit 原語）：內息調度 — 內力上限 ×1.1、體力上限 ×0.9。以 buff multiplier 表達，統一走 getResourceLimit 管線。
   { id: 'talent-qi-master', name: '天賦·內息調度', description: '內息調度：內力上限 +10%、體力上限 -10%。', duration: 'persistent', category: 'buff', maxInnerPowerMultiplier: 1.1, maxStaminaMultiplier: 0.9 },
+  // 天賦（resource-limit）：簡化三雄類 — 單一增益、直觀無取捨。
+  { id: 'talent-vital-body', name: '天賦·金剛體魄', description: '金剛體魄：最大血量 +10%。', duration: 'persistent', category: 'buff', maxHealthMultiplier: 1.1 },
+  { id: 'talent-deep-dantian', name: '天賦·丹田凝息', description: '丹田凝息：最大內力 +10%。', duration: 'persistent', category: 'buff', maxInnerPowerMultiplier: 1.1 },
+  { id: 'talent-sturdy-legs', name: '天賦·力士雙足', description: '力士雙足：最大體力 +2。', duration: 'persistent', category: 'buff', maxStaminaBonus: 2 },
 ]

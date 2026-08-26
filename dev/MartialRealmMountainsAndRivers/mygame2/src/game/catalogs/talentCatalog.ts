@@ -72,6 +72,27 @@ export const talentCatalog: TalentDefinition[] = [
     available: true,
     effects: [{ kind: 'passive-buff', buffId: 'talent-qi-master' }],
   },
+  {
+    id: 'vital-body',
+    name: '金剛體魄',
+    description: '最大血量 +10%。',
+    available: true,
+    effects: [{ kind: 'passive-buff', buffId: 'talent-vital-body' }],
+  },
+  {
+    id: 'deep-dantian',
+    name: '丹田凝息',
+    description: '最大內力 +10%。',
+    available: true,
+    effects: [{ kind: 'passive-buff', buffId: 'talent-deep-dantian' }],
+  },
+  {
+    id: 'sturdy-legs',
+    name: '力士雙足',
+    description: '最大體力 +2。',
+    available: true,
+    effects: [{ kind: 'passive-buff', buffId: 'talent-sturdy-legs' }],
+  },
 ]
 
 /** 依 id 查天賦定義；不存在回傳 undefined。 */
