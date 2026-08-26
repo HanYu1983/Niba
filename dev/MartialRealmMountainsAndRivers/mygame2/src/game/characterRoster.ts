@@ -57,7 +57,7 @@ export const DEFAULT_UNLOCKED_INNER_SKILL_IDS = []
 export const DEFAULT_UNLOCKED_EXTERNAL_SKILL_IDS = ['sky-breaking-palm']
 
 /** 新角色預設持有的武學殘卷數。 */
-export const DEFAULT_STARTING_SCROLLS = 200
+export const DEFAULT_STARTING_SCROLLS = 20
 
 /**
  * 建立預設養成欄位（供新角色與缺省相容使用）。
