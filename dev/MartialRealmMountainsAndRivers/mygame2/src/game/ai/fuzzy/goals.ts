@@ -282,19 +282,21 @@ function evaluateConstruction(inputs: FuzzyInputs): GoalResult {
     }
   }
 
-  // 情境 C：已與資源點相鄰 → 採集（高分）
+  // 情境 C：已與資源點相鄰 → 採集（高分，但建料充足時快速降低）
   if (isAdjacentToResourcePoint && nearestResourcePoint) {
+    const f_materialUrgency = materialRatio <= 0.33 ? 1 : materialRatio <= 0.66 ? 0.4 : 0.1
     return {
-      score: 0.8,
+      score: 0.8 * f_materialUrgency,
       target: { kind: 'resource-point', resourcePointId: nearestResourcePoint.id, position: nearestResourcePoint.position },
       context: { materialRatio, action: 'collect' },
     }
   }
 
-  // 情境 D：有據點 + 建料不足 + 有資源點 → 移動到資源點（中高分）
+  // 情境 D：有據點 + 建料不足 + 有資源點 → 移動到資源點（中分，建料充足時快速降低）
   if (materialRatio < 1 && nearestResourcePoint && distToNearestResourcePoint < Infinity) {
+    const f_materialUrgency = materialRatio <= 0.33 ? 1 : materialRatio <= 0.66 ? 0.4 : 0.1
     return {
-      score: 0.5,
+      score: 0.5 * f_materialUrgency,
       target: { kind: 'resource-point', resourcePointId: nearestResourcePoint.id, position: nearestResourcePoint.position },
       context: { materialRatio, distToNearestResourcePoint, action: 'move-to-resource' },
     }
