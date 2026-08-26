@@ -34,34 +34,47 @@ export type PersistentCharacter = {
   attributeBonuses: PlayerAttributes
   /** 累積武學殘卷（單一貨幣）。 */
   scrolls: number
-  /** 功法庫：跨局累積「曾學過」的技能 id（內功＋外功）。 */
+  /** 可培養功法：遊戲中獲得過的技能 id（內功＋外功），尚未花卷學習。 */
+  unlockedSkillIds: string[]
+  /** 已學習功法：花卷學會的技能 id（內功＋外功），限 unlockedSkillIds 內。 */
   learnedSkillIds: string[]
-  /** 用卷設為開局攜帶的外功（限 learnedSkillIds 內）。 */
+  /** 用卷開啟（設為開局攜帶）的外功（限 learnedSkillIds 內）。 */
   initialExternalSkillIds: string[]
-  /** 開局內功（預設 'tuna-gong'，可改為庫內其他內功）。 */
+  /** 開局內功（預設 'tuna-gong'，可為庫內其他內功）。 */
   initialInternalSkillId: string
   /** 養成統計。 */
   gamesPlayed: number
   createdAt: number
 }
 
-/** 新角色預設已開啟的內功（吐納功）。 */
+/** 新角色預設已解鎖的內功（吐納功）。 */
 export const DEFAULT_LEARNED_INNER_SKILL_ID = 'tuna-gong'
 
-/** 新角色預設已開啟的可學習外功（破空掌）。 */
-export const DEFAULT_LEARNED_EXTERNAL_SKILL_IDS = ['sky-breaking-palm']
+/** 新角色預設已解鎖的可培養內功（測試用青嵐心法）。 */
+export const DEFAULT_UNLOCKED_INNER_SKILL_IDS = []
+
+/** 新角色預設已解鎖的可培養外功（破空掌）。 */
+export const DEFAULT_UNLOCKED_EXTERNAL_SKILL_IDS = ['sky-breaking-palm']
 
 /** 新角色預設持有的武學殘卷數。 */
-export const DEFAULT_STARTING_SCROLLS = 20
+export const DEFAULT_STARTING_SCROLLS = 200
 
-/** 建立預設養成欄位（供新角色與缺省相容使用）。 */
+/**
+ * 建立預設養成欄位（供新角色與缺省相容使用）。
+ * 吐納功為初始武學，新角色預設「已學會」（learnedSkillIds 含之）。
+ */
 export function createDefaultProgression(): Pick<
   PersistentCharacter,
-  'scrolls' | 'learnedSkillIds' | 'initialExternalSkillIds' | 'initialInternalSkillId'
+  'scrolls' | 'unlockedSkillIds' | 'learnedSkillIds' | 'initialExternalSkillIds' | 'initialInternalSkillId'
 > {
   return {
     scrolls: DEFAULT_STARTING_SCROLLS,
-    learnedSkillIds: [DEFAULT_LEARNED_INNER_SKILL_ID, ...DEFAULT_LEARNED_EXTERNAL_SKILL_IDS],
+    unlockedSkillIds: [
+      DEFAULT_LEARNED_INNER_SKILL_ID,
+      ...DEFAULT_UNLOCKED_INNER_SKILL_IDS,
+      ...DEFAULT_UNLOCKED_EXTERNAL_SKILL_IDS,
+    ],
+    learnedSkillIds: [DEFAULT_LEARNED_INNER_SKILL_ID],
     initialExternalSkillIds: [],
     initialInternalSkillId: DEFAULT_LEARNED_INNER_SKILL_ID,
   }
@@ -79,10 +92,21 @@ function getStored(): PersistentCharacter[] {
     if (!raw) return []
     const parsed = JSON.parse(raw) as Partial<RosterPayload>
     if (!parsed || !Array.isArray(parsed.characters)) return []
-    // 缺省相容：舊存檔角色可能缺少養成欄位（scrolls/learnedSkillIds 等），補上預設值。
+    // 缺省相容：新角色已含完整欄位則原樣回傳。
+    if (parsed.characters.some((character) => Array.isArray(character.unlockedSkillIds))) {
+      return parsed.characters
+    }
+    // 舊版存檔：缺少 unlockedSkillIds 欄位。將舊 learnedSkillIds 視為「已解鎖（可培養）」，
+    // 並補上 scrolls、五維加成等預設值。
+    const defaults = createDefaultProgression()
     return parsed.characters.map((character) => ({
-      ...createDefaultProgression(),
+      ...defaults,
       ...character,
+      unlockedSkillIds: [...new Set([
+        ...defaults.unlockedSkillIds,
+        ...(character.learnedSkillIds ?? []),
+      ])],
+      learnedSkillIds: [],
       attributeBonuses: { ...DEFAULT_ATTRIBUTE_BONUSES, ...(character.attributeBonuses ?? {}) },
     }))
   } catch {
@@ -211,28 +235,29 @@ export function computeScrollReward(stats: RunStats, won: boolean, newSkillCount
 }
 
 /**
- * 局末回寫：將本局表現結算為卷並累加，同時把本局學到的功法併入功法庫（去重）。
+ * 局末回寫：將本局表現結算為卷並累加，同時把本局獲得的功法併入「可培養清單」（unlockedSkillIds，去重）。
+ * 注意：遊戲中「獲得」功法僅解鎖到可培養清單，需另行花卷「學習」（learnSkill）後才會加入 learnedSkillIds。
  * 回傳更新後的角色；角色不存在回傳 undefined。
  */
 export function applyEndGameRewards(
   id: string,
   stats: RunStats,
   won: boolean,
-  learnedSkillIds: string[],
+  gainedSkillIds: string[],
 ): PersistentCharacter | undefined {
   const characters = getStored()
   const index = characters.findIndex((character) => character.id === id)
   if (index < 0) return undefined
 
   const current = characters[index]
-  const merged = [...new Set([...(current.learnedSkillIds ?? []), ...learnedSkillIds])]
-  const newSkillCount = merged.length - (current.learnedSkillIds ?? []).length
+  const merged = [...new Set([...(current.unlockedSkillIds ?? []), ...gainedSkillIds])]
+  const newSkillCount = merged.length - (current.unlockedSkillIds ?? []).length
   const scrolls = computeScrollReward(stats, won, newSkillCount)
 
   const updated: PersistentCharacter = {
     ...current,
     scrolls: (current.scrolls ?? 0) + scrolls,
-    learnedSkillIds: merged,
+    unlockedSkillIds: merged,
     gamesPlayed: (current.gamesPlayed ?? 0) + 1,
   }
 
@@ -258,15 +283,19 @@ export const SCROLL_COST = {
   /** 五維每點基礎成本：10 + 5 × 已投點數。 */
   attributeBase: 10,
   attributePerPoint: 5,
-  /** 初始功法解鎖成本。 */
-  skillUnlock: 30,
-  /** 初始外功上限。 */
-  maxInitialExternalSkills: 2,
+  /** 功法學習成本：基礎 30 + 20 × 已學習功法數（越學越貴，與五維同模式）。 */
+  skillBase: 30,
+  skillPerPoint: 20,
 } as const
 
 /** 計算某維下一點的成本：10 + 5 × 已投點數。 */
 export function getAttributeUpgradeCost(currentBonus: number): number {
   return SCROLL_COST.attributeBase + SCROLL_COST.attributePerPoint * currentBonus
+}
+
+/** 計算下一項功法的學習成本：30 + 20 × 已學習功法數（越學越貴）。 */
+export function getSkillLearnCost(learnedCount: number): number {
+  return SCROLL_COST.skillBase + SCROLL_COST.skillPerPoint * learnedCount
 }
 
 /**
@@ -294,8 +323,38 @@ export function spendScrollsOnAttribute(id: string, attribute: keyof PlayerAttri
 }
 
 /**
- * 花卷設定初始外功（限功法庫內、未重複、未達上限）。
- * 回傳 { ok, reason? }；成功時寫入 initialExternalSkillIds。
+ * 花卷「學習」功法：將可培養清單（unlockedSkillIds）中的功法正式學會（加入 learnedSkillIds）。
+ * 需先獲得（在 unlockedSkillIds 內）、尚未學習、卷數足夠。
+ * 回傳 { ok, reason? }。
+ */
+export function learnSkill(id: string, skillId: string): { ok: boolean; reason?: string } {
+  const characters = getStored()
+  const index = characters.findIndex((character) => character.id === id)
+  if (index < 0) return { ok: false, reason: '角色不存在。' }
+
+  const current = characters[index]
+  const unlocked = current.unlockedSkillIds ?? []
+  if (!unlocked.includes(skillId)) return { ok: false, reason: '尚未獲得此功法，無法學習。' }
+  if ((current.learnedSkillIds ?? []).includes(skillId)) return { ok: false, reason: '此功法已學習。' }
+
+  const learnedCount = (current.learnedSkillIds ?? []).length
+  const cost = getSkillLearnCost(learnedCount)
+  if ((current.scrolls ?? 0) < cost) return { ok: false, reason: '卷不足。' }
+
+  const next = [...characters]
+  next[index] = {
+    ...current,
+    scrolls: (current.scrolls ?? 0) - cost,
+    learnedSkillIds: [...(current.learnedSkillIds ?? []), skillId],
+  }
+  persist(next)
+  return { ok: true }
+}
+
+/**
+ * 開啟已學習的外功為開局攜帶（加入 initialExternalSkillIds）。
+ * 需已學習、未重複、未達上限。開啟／關閉不花卷（學習時已花費）。
+ * 回傳 { ok, reason? }。
  */
 export function setInitialExternalSkill(id: string, skillId: string): { ok: boolean; reason?: string } {
   const characters = getStored()
@@ -304,17 +363,12 @@ export function setInitialExternalSkill(id: string, skillId: string): { ok: bool
 
   const current = characters[index]
   const learned = current.learnedSkillIds ?? []
-  if (!learned.includes(skillId)) return { ok: false, reason: '尚未學過此功法，無法設為初始。' }
+  if (!learned.includes(skillId)) return { ok: false, reason: '尚未學習此功法，無法開啟。' }
   if ((current.initialExternalSkillIds ?? []).includes(skillId)) return { ok: false, reason: '此功法已是初始外功。' }
-if ((current.initialExternalSkillIds ?? []).length >= SCROLL_COST.maxInitialExternalSkills) {
-    return { ok: false, reason: `外功已達上限（${SCROLL_COST.maxInitialExternalSkills} 個）。` }
-  }
-  if ((current.scrolls ?? 0) < SCROLL_COST.skillUnlock) return { ok: false, reason: '卷不足。' }
 
   const next = [...characters]
   next[index] = {
     ...current,
-    scrolls: (current.scrolls ?? 0) - SCROLL_COST.skillUnlock,
     initialExternalSkillIds: [...(current.initialExternalSkillIds ?? []), skillId],
   }
   persist(next)
@@ -322,7 +376,8 @@ if ((current.initialExternalSkillIds ?? []).length >= SCROLL_COST.maxInitialExte
 }
 
 /**
- * 花卷設定初始內功（限功法庫內）。成功時更新 initialInternalSkillId。
+ * 開啟已學習的內功為開局內功。開啟／關閉不花卷（學習時已花費）。
+ * 成功時更新 initialInternalSkillId。
  */
 export function setInitialInternalSkill(id: string, skillId: string): { ok: boolean; reason?: string } {
   const characters = getStored()
@@ -331,15 +386,53 @@ export function setInitialInternalSkill(id: string, skillId: string): { ok: bool
 
   const current = characters[index]
   const learned = current.learnedSkillIds ?? []
-  if (!learned.includes(skillId)) return { ok: false, reason: '尚未學過此內功，無法設為初始。' }
-  if ((current.scrolls ?? 0) < SCROLL_COST.skillUnlock) return { ok: false, reason: '卷不足。' }
+  if (!learned.includes(skillId)) return { ok: false, reason: '尚未學習此內功，無法開啟。' }
 
   const next = [...characters]
   next[index] = {
     ...current,
-    scrolls: (current.scrolls ?? 0) - SCROLL_COST.skillUnlock,
     initialInternalSkillId: skillId,
   }
   persist(next)
   return { ok: true }
+}
+
+/**
+ * 關閉已開啟的外功（取消設為開局攜帶）。不花卷、不退卷。
+ * 若該外功不在開啟清單則回傳 false。
+ */
+export function closeInitialExternalSkill(id: string, skillId: string): boolean {
+  const characters = getStored()
+  const index = characters.findIndex((character) => character.id === id)
+  if (index < 0) return false
+
+  const current = characters[index]
+  const opened = current.initialExternalSkillIds ?? []
+  if (!opened.includes(skillId)) return false
+
+  const next = [...characters]
+  next[index] = {
+    ...current,
+    initialExternalSkillIds: opened.filter((candidate) => candidate !== skillId),
+  }
+  persist(next)
+  return true
+}
+
+/**
+ * 關閉已開啟的內功（取消設為開局內功，清空為未開啟）。
+ * 若目前沒有開啟內功則回傳 false。
+ */
+export function closeInitialInternalSkill(id: string): boolean {
+  const characters = getStored()
+  const index = characters.findIndex((character) => character.id === id)
+  if (index < 0) return false
+
+  const current = characters[index]
+  if (!current.initialInternalSkillId) return false
+
+  const next = [...characters]
+  next[index] = { ...current, initialInternalSkillId: '' }
+  persist(next)
+  return true
 }

@@ -611,7 +611,7 @@ export function createInitialPlayers(
       : base
     // 第一位人類玩家套用名册角色的初始功法；其餘維持預設吐納功、無外功。
     const useCharacterSkills = !isAI && index === 0
-    const innerSkillId = useCharacterSkills ? (initialInternalSkillId ?? 'tuna-gong') : 'tuna-gong'
+    const innerSkillId = useCharacterSkills && initialInternalSkillId ? initialInternalSkillId : 'tuna-gong'
     const externalSkillIds = useCharacterSkills ? (initialExternalSkillIds ?? []) : []
     return createCharacterState({
       id: `player-${index + 1}`,

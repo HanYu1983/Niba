@@ -1,17 +1,35 @@
-import { Button, Divider, Flex, Select, Space, Typography, message } from 'antd'
-import { useState } from 'react'
+import { Button, Divider, Flex, Space, Typography, message } from 'antd'
+import { useState, type ReactNode } from 'react'
 import {
   getCharacter,
   getAttributeUpgradeCost,
+  getSkillLearnCost,
+  learnSkill,
   spendScrollsOnAttribute,
   setInitialExternalSkill,
   setInitialInternalSkill,
+  closeInitialExternalSkill,
+  closeInitialInternalSkill,
   type PersistentCharacter,
 } from '../game/characterRoster'
 import { ATTRIBUTE_NAMES, type UpgradeableAttribute } from '../game/types'
 import { allInnerSkillCatalog, allExternalSkillCatalog } from '../game/catalogs/martialHallSkillCatalog'
+import { getExternalSkill, getInnerSkill } from '../game/rules/skillRules'
+import SkillCard from './SkillCard'
 
 const ATTRIBUTE_KEYS: UpgradeableAttribute[] = ['armStrength', 'constitution', 'agility', 'innerEnergy', 'insight']
+
+/** 功法展示圖示（共用視覺縮影，與遊戲內功法頁一致）。 */
+function skillIcon(skill: { element?: string }): ReactNode {
+  const emoji: Record<string, string> = {
+    metal: '⚔️',
+    wood: '🌿',
+    water: '💧',
+    fire: '🔥',
+    earth: '⛰️',
+  }
+  return emoji[skill.element ?? 'none'] ?? '📜'
+}
 
 type CharacterTrainingPanelProps = {
   character: PersistentCharacter
@@ -39,39 +57,80 @@ function CharacterTrainingPanel({ character, onChanged }: CharacterTrainingPanel
     }
   }
 
+  const handleLearnSkill = (skillId: string) => {
+    const result = learnSkill(character.id, skillId)
+    if (result.ok) {
+      message.success('已學習功法。')
+      refresh()
+    } else {
+      message.error(result.reason ?? '學習失敗。')
+    }
+  }
+
   const handleSetExternal = (skillId: string) => {
     const result = setInitialExternalSkill(character.id, skillId)
     if (result.ok) {
-      message.success('已設為初始外功。')
+      message.success('已開啟為初始外功。')
       refresh()
     } else {
-      message.error(result.reason ?? '設定失敗。')
+      message.error(result.reason ?? '開啟失敗。')
     }
   }
 
   const handleSetInternal = (skillId: string) => {
     const result = setInitialInternalSkill(character.id, skillId)
     if (result.ok) {
-      message.success('已設為初始內功。')
+      message.success('已開啟為初始內功。')
       refresh()
     } else {
-      message.error(result.reason ?? '設定失敗。')
+      message.error(result.reason ?? '開啟失敗。')
     }
   }
 
-  const learnedExternal = allExternalSkillCatalog.filter((skill) => current.learnedSkillIds.includes(skill.id))
-  const learnedInternal = allInnerSkillCatalog.filter((skill) => current.learnedSkillIds.includes(skill.id))
-  const externalOptions = learnedExternal
-    .filter((skill) => !current.initialExternalSkillIds.includes(skill.id))
-    .map((skill) => ({ label: skill.name, value: skill.id }))
-  const internalOptions = learnedInternal
-    .filter((skill) => skill.id !== current.initialInternalSkillId)
-    .map((skill) => ({ label: skill.name, value: skill.id }))
+  const handleCloseExternal = (skillId: string) => {
+    if (closeInitialExternalSkill(character.id, skillId)) {
+      message.success('已關閉此初始外功。')
+      refresh()
+    } else {
+      message.error('關閉失敗。')
+    }
+  }
+
+  const handleCloseInternal = () => {
+    if (closeInitialInternalSkill(character.id)) {
+      message.success('已關閉初始內功。')
+      refresh()
+    } else {
+      message.error('關閉失敗。')
+    }
+  }
+
+  // 已開啟（開局攜帶）功法所占用的悟性。
+  const innerInsight = current.initialInternalSkillId ? getInnerSkill(current.initialInternalSkillId).insightRequirement : 0
+  const externalInsight = (current.initialExternalSkillIds ?? []).reduce(
+    (total, skillId) => total + getExternalSkill(skillId).insightCost,
+    0,
+  )
+  const totalInsight = innerInsight + externalInsight
+  const insightCapacity = 8 + (current.attributeBonuses.insight ?? 0)
+
+  // 可培養清單：遊戲中獲得過的功法（含已學習與尚未學習）。
+  const unlockExternal = allExternalSkillCatalog.filter((skill) => current.unlockedSkillIds.includes(skill.id))
+  const unlockInternal = allInnerSkillCatalog.filter((skill) => current.unlockedSkillIds.includes(skill.id))
+
+  // 下一項功法的學習成本（隨已學習功法數遞增）。
+  const nextLearnCost = getSkillLearnCost((current.learnedSkillIds ?? []).length)
 
   return (
     <>
       <Typography.Paragraph type="secondary">
         目前持有 <Typography.Text strong>📜 {current.scrolls}</Typography.Text> 武學殘卷。
+      </Typography.Paragraph>
+      <Typography.Paragraph type="secondary">
+        已開啟功法占用悟性：<Typography.Text strong>{totalInsight}</Typography.Text> /{' '}
+        <Typography.Text strong>{insightCapacity}</Typography.Text>{' '}
+        <Typography.Text type="secondary">（剩餘 {Math.max(0, insightCapacity - totalInsight)}）</Typography.Text>{' '}
+        （內功 {innerInsight} + 外功 {externalInsight}）
       </Typography.Paragraph>
 
       <Divider>五維永久加成</Divider>
@@ -82,7 +141,8 @@ function CharacterTrainingPanel({ character, onChanged }: CharacterTrainingPanel
           return (
             <Space key={attribute} direction="vertical" align="center">
               <Typography.Text>{ATTRIBUTE_NAMES[attribute]}</Typography.Text>
-              <Typography.Text strong>+{bonus}</Typography.Text>
+              <Typography.Text strong>{8 + bonus}</Typography.Text>
+              <Typography.Text type="secondary">（加成 +{bonus}）</Typography.Text>
               <Button
                 size="small"
                 disabled={current.scrolls < cost}
@@ -95,40 +155,105 @@ function CharacterTrainingPanel({ character, onChanged }: CharacterTrainingPanel
         })}
       </Flex>
 
-      <Divider>初始功法（花卷設定）</Divider>
-      <Space direction="vertical" style={{ width: '100%' }}>
-        <div>
-          <Typography.Text>初始外功（上限 2）：</Typography.Text>
-          <Space wrap>
-            {current.initialExternalSkillIds.map((id) => {
-              const skill = allExternalSkillCatalog.find((candidate) => candidate.id === id)
-              return <Typography.Text key={id} type="secondary">✓ {skill?.name ?? id}</Typography.Text>
-            })}
-          </Space>
-          <Select
-            style={{ width: '100%', marginTop: 8 }}
-            placeholder="選擇已學過的外功設為初始（30 卷）"
-            value={undefined}
-            onChange={handleSetExternal}
-            options={externalOptions}
-            disabled={externalOptions.length === 0}
-          />
-        </div>
-        <div>
-          <Typography.Text>初始內功：</Typography.Text>
-          <Typography.Text type="secondary">
-            {allInnerSkillCatalog.find((skill) => skill.id === current.initialInternalSkillId)?.name ?? current.initialInternalSkillId}
-          </Typography.Text>
-          <Select
-            style={{ width: '100%', marginTop: 8 }}
-            placeholder="選擇已學到的內功設為初始（30 卷）"
-            value={undefined}
-            onChange={handleSetInternal}
-            options={internalOptions}
-            disabled={internalOptions.length === 0}
-          />
-        </div>
-      </Space>
+      <Divider>可培養外功</Divider>
+      <Flex gap={12} wrap>
+        {unlockExternal.map((skill) => {
+          const isLearned = current.learnedSkillIds.includes(skill.id)
+          const isOpened = current.initialExternalSkillIds.includes(skill.id)
+          const status = isOpened ? '已開啟' : isLearned ? '已學習' : '可學習'
+          return (
+            <div key={skill.id} style={{ width: 220 }}>
+              <SkillCard
+                icon={skillIcon(skill)}
+                label="外功"
+                element={skill.element}
+                name={skill.name}
+                description={skill.description}
+                status={status}
+                compact
+              >
+                {!isLearned ? (
+                  <Button
+                    size="small"
+                    disabled={current.scrolls < nextLearnCost}
+                    onClick={() => handleLearnSkill(skill.id)}
+                  >
+                    學習（{nextLearnCost} 卷）
+                  </Button>
+                ) : isOpened ? (
+                  <Button
+                    size="small"
+                    danger
+                    onClick={() => handleCloseExternal(skill.id)}
+                  >
+                    關閉
+                  </Button>
+                ) : (
+                  <Button
+                    size="small"
+                    onClick={() => handleSetExternal(skill.id)}
+                  >
+                    開啟
+                  </Button>
+                )}
+              </SkillCard>
+            </div>
+          )
+        })}
+        {unlockExternal.length === 0 && (
+          <Typography.Text type="secondary">尚未獲得任何外功。</Typography.Text>
+        )}
+      </Flex>
+
+      <Divider>可培養內功</Divider>
+      <Flex gap={12} wrap>
+        {unlockInternal.map((skill) => {
+          const isLearned = current.learnedSkillIds.includes(skill.id)
+          const isOpened = current.initialInternalSkillId === skill.id
+          const status = isOpened ? '已開啟' : isLearned ? '已學習' : '可學習'
+          return (
+            <div key={skill.id} style={{ width: 220 }}>
+              <SkillCard
+                icon={skillIcon(skill)}
+                label="內功"
+                element={skill.element}
+                name={skill.name}
+                description={skill.description}
+                status={status}
+                compact
+              >
+                {!isLearned ? (
+                  <Button
+                    size="small"
+                    disabled={current.scrolls < nextLearnCost}
+                    onClick={() => handleLearnSkill(skill.id)}
+                  >
+                    學習（{nextLearnCost} 卷）
+                  </Button>
+                ) : isOpened ? (
+                  <Button
+                    size="small"
+                    danger
+                    onClick={handleCloseInternal}
+                  >
+                    關閉
+                  </Button>
+                ) : (
+                  <Button
+                    size="small"
+                    onClick={() => handleSetInternal(skill.id)}
+                  >
+                    開啟
+                  </Button>
+                )}
+              </SkillCard>
+            </div>
+          )
+        })}
+        {unlockInternal.length === 0 && (
+          <Typography.Text type="secondary">尚未獲得任何內功。</Typography.Text>
+        )}
+      </Flex>
     </>
   )
 }

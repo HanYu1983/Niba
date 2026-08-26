@@ -121,7 +121,7 @@ function CharacterLibraryScreen({ onSelect }: CharacterLibraryScreenProps) {
                 <Space wrap>
                   {ATTRIBUTE_KEYS.map((key) => (
                     <Typography.Text key={key} type="secondary">
-                      {ATTRIBUTE_NAMES[key]} +{character.attributeBonuses[key]}
+                      {ATTRIBUTE_NAMES[key]} {8 + character.attributeBonuses[key]}
                     </Typography.Text>
                   ))}
                   <Typography.Text type="secondary">📜 武學殘卷 {character.scrolls ?? 0}</Typography.Text>

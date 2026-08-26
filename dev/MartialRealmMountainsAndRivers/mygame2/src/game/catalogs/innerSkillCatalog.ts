@@ -35,4 +35,23 @@ export const innerSkillCatalog: InnerSkill[] = [
       ),
     ),
   },
+  {
+    id: 'cyan-mist-heart-method',
+    name: '青嵐心法',
+    description: '引青嵐入體，涵養經脈與內息。',
+    formulaDescription: '內息 × 0.5 + 五項基本屬性總和 ÷ 10（最低 1）',
+    insightRequirement: 4,
+    requiredHallLevel: 1,
+    calculateDamage: (attributes) => Math.max(
+      1,
+      Math.floor(
+        attributes.innerEnergy * .5 +
+        (attributes.armStrength +
+          attributes.constitution +
+          attributes.agility +
+          attributes.innerEnergy +
+          attributes.insight) / 10,
+      ),
+    ),
+  },
 ]

@@ -12,6 +12,7 @@ import {
   addScrolls,
   getAttributeUpgradeCost,
   spendScrollsOnAttribute,
+  learnSkill,
   setInitialExternalSkill,
   setInitialInternalSkill,
 } from './characterRoster'
@@ -47,16 +48,18 @@ describe('characterRoster', () => {
   })
 
   it('舊存檔角色缺養成欄位時補上預設值', () => {
-    // 模擬 Phase C 之前建立的舊角色（無 scrolls/learnedSkillIds 等欄位）。
+    // 模擬 Phase C 之前建立的舊角色（無 scrolls/unlockedSkillIds 等欄位）。
     localStorage.setItem('mygame2.character-roster', JSON.stringify({
       version: 1,
       characters: [{ id: 'old-1', name: '舊角色', attributeBonuses: { armStrength: 2 }, gamesPlayed: 0, createdAt: 0 }],
     }))
     const character = getCharacter('old-1')!
     expect(character.scrolls).toBe(20)
-    expect(character.learnedSkillIds).toEqual(['tuna-gong', 'sky-breaking-palm'])
+    // 預設解鎖吐納功與破空掌（尚未學習）。
+    expect(character.unlockedSkillIds).toEqual(['tuna-gong', 'sky-breaking-palm'])
+    expect(character.learnedSkillIds).toEqual([])
     expect(character.initialExternalSkillIds).toEqual([])
-    expect(character.initialInternalSkillId).toBe('tuna-gong')
+    expect(character.initialInternalSkillId).toBe('')
     // 缺省的五維加成補 0。
     expect(character.attributeBonuses.constitution).toBe(0)
     expect(character.attributeBonuses.armStrength).toBe(2)
@@ -121,12 +124,14 @@ describe('characterRoster', () => {
     expect(isCharacterNameTaken('丁', character.id)).toBe(false)
   })
 
-  it('新角色預設開啟吐納功與破空掌且持有 20 武學殘卷', () => {
+  it('新角色預設解鎖吐納功與破空掌且持有 20 武學殘卷', () => {
     const character = createCharacter({ name: '戊' })!
     expect(character.scrolls).toBe(20)
-    expect(character.learnedSkillIds).toEqual(['tuna-gong', 'sky-breaking-palm'])
+    // 獲得＝解鎖（可培養），尚未花卷學習／開啟。
+    expect(character.unlockedSkillIds).toEqual(['tuna-gong', 'sky-breaking-palm'])
+    expect(character.learnedSkillIds).toEqual([])
     expect(character.initialExternalSkillIds).toEqual([])
-    expect(character.initialInternalSkillId).toBe('tuna-gong')
+    expect(character.initialInternalSkillId).toBe('')
   })
 })
 
@@ -148,12 +153,14 @@ describe('computeScrollReward', () => {
 })
 
 describe('applyEndGameRewards', () => {
-  it('累加卷、併入功法庫並增加對局次數', () => {
+  it('累加卷、併入可培養清單並增加對局次數', () => {
     const character = createCharacter({ name: '己' })!
     const stats = { ...createEmptyRunStats(), maxLevelReached: 2 }
     const updated = applyEndGameRewards(character.id, stats, true, ['skill-a', 'skill-b'])!
     expect(updated.scrolls).toBe(20 + computeScrollReward(stats, true, 2))
-    expect(updated.learnedSkillIds).toEqual(['tuna-gong', 'sky-breaking-palm', 'skill-a', 'skill-b'])
+    // 局末獲得只解鎖到可培養清單，不算已學習。
+    expect(updated.unlockedSkillIds).toEqual(['tuna-gong', 'sky-breaking-palm', 'skill-a', 'skill-b'])
+    expect(updated.learnedSkillIds).toEqual([])
     expect(updated.gamesPlayed).toBe(1)
   })
 
@@ -162,7 +169,7 @@ describe('applyEndGameRewards', () => {
     const first = applyEndGameRewards(character.id, createEmptyRunStats(), true, ['skill-a'])!
     const stats = { ...createEmptyRunStats(), maxLevelReached: 1 }
     const updated = applyEndGameRewards(character.id, stats, true, ['skill-a', 'skill-b'])!
-    expect(updated.learnedSkillIds).toEqual(['tuna-gong', 'sky-breaking-palm', 'skill-a', 'skill-b'])
+    expect(updated.unlockedSkillIds).toEqual(['tuna-gong', 'sky-breaking-palm', 'skill-a', 'skill-b'])
     // 第二次只有 skill-b 是新增，故只計 1 個新功法；卷為累加（含第一次）。
     expect(updated.scrolls).toBe(first.scrolls + computeScrollReward(stats, true, 1))
   })
@@ -221,35 +228,85 @@ describe('花卷：五維永久加成', () => {
   })
 })
 
-describe('花卷：初始功法設定', () => {
+describe('花卷：學習功法', () => {
   beforeEach(() => {
     stubLocalStorage()
   })
 
-  it('設定初始外功需先學過且扣卷', () => {
+  it('學習需先獲得（在可培養清單）且扣卷', () => {
     const character = createCharacter({ name: '丙' })!
     addScrolls(character.id, -100) // 歸零
     addScrolls(character.id, 100)
-    const result = setInitialExternalSkill(character.id, 'sky-breaking-palm') // 破空掌預設已學
+    const result = learnSkill(character.id, 'sky-breaking-palm') // 破空掌預設已解鎖
     expect(result.ok).toBe(true)
     const updated = getCharacter(character.id)!
-    expect(updated.initialExternalSkillIds).toContain('sky-breaking-palm')
-    // 100 - 30 = 70
+    expect(updated.learnedSkillIds).toContain('sky-breaking-palm')
+    // 已解鎖但仍須花卷學習
     expect(updated.scrolls).toBe(70)
   })
 
-  it('未學過的功法不能設為初始外功', () => {
+  it('未獲得的功法無法學習', () => {
     const character = createCharacter({ name: '丁' })!
     addScrolls(character.id, 100)
-    const result = setInitialExternalSkill(character.id, 'not-learned-external')
+    const result = learnSkill(character.id, 'never-gained-skill')
     expect(result.ok).toBe(false)
-    expect(result.reason).toContain('尚未學過')
+    expect(result.reason).toContain('尚未獲得')
   })
 
-  it('初始外功達上限後無法再設', () => {
+  it('已學習的功法不能重複學習', () => {
     const character = createCharacter({ name: '戊' })!
+    addScrolls(character.id, 100)
+    learnSkill(character.id, 'sky-breaking-palm')
+    const again = learnSkill(character.id, 'sky-breaking-palm')
+    expect(again.ok).toBe(false)
+    expect(again.reason).toContain('已學習')
+  })
+
+  it('卷不足時無法學習', () => {
+    const character = createCharacter({ name: '己' })!
+    addScrolls(character.id, -100) // 歸零
+    addScrolls(character.id, 10)
+    const result = learnSkill(character.id, 'sky-breaking-palm')
+    expect(result.ok).toBe(false)
+    expect(result.reason).toContain('卷不足')
+  })
+})
+
+describe('花卷：開啟初始功法', () => {
+  beforeEach(() => {
+    stubLocalStorage()
+  })
+
+  it('開啟外功需先學習且扣卷', () => {
+    const character = createCharacter({ name: '庚' })!
+    addScrolls(character.id, -100) // 歸零
+    addScrolls(character.id, 200)
+    learnSkill(character.id, 'sky-breaking-palm') // 花 30 學習
+    const result = setInitialExternalSkill(character.id, 'sky-breaking-palm') // 花 30 開啟
+    expect(result.ok).toBe(true)
+    const updated = getCharacter(character.id)!
+    expect(updated.initialExternalSkillIds).toContain('sky-breaking-palm')
+    // 200 - 30(學習) - 30(開啟) = 140
+    expect(updated.scrolls).toBe(140)
+  })
+
+  it('未學習的功法不能開啟為初始外功', () => {
+    const character = createCharacter({ name: '辛' })!
+    addScrolls(character.id, 100)
+    // 破空掌已解鎖但未學習
+    const result = setInitialExternalSkill(character.id, 'sky-breaking-palm')
+    expect(result.ok).toBe(false)
+    expect(result.reason).toContain('未學習')
+  })
+
+  it('外功開啟達上限後無法再開啟', () => {
+    const character = createCharacter({ name: '壬' })!
+    addScrolls(character.id, -100) // 歸零
     addScrolls(character.id, 1000)
     applyEndGameRewards(character.id, createEmptyRunStats(), true, ['skill-a', 'skill-b', 'skill-c'])
+    learnSkill(character.id, 'skill-a')
+    learnSkill(character.id, 'skill-b')
+    learnSkill(character.id, 'skill-c')
     expect(setInitialExternalSkill(character.id, 'skill-a').ok).toBe(true)
     expect(setInitialExternalSkill(character.id, 'skill-b').ok).toBe(true)
     const third = setInitialExternalSkill(character.id, 'skill-c')
@@ -257,21 +314,23 @@ describe('花卷：初始功法設定', () => {
     expect(third.reason).toContain('上限')
   })
 
-  it('設定初始內功需先學過且扣卷', () => {
-    const character = createCharacter({ name: '己' })!
+  it('開啟內功需先學習且扣卷', () => {
+    const character = createCharacter({ name: '癸' })!
     addScrolls(character.id, -100) // 歸零
-    addScrolls(character.id, 100)
-    const result = setInitialInternalSkill(character.id, 'tuna-gong')
+    addScrolls(character.id, 200)
+    learnSkill(character.id, 'tuna-gong') // 吐納功預設已解鎖，花 30 學習
+    const result = setInitialInternalSkill(character.id, 'tuna-gong') // 花 30 開啟
     expect(result.ok).toBe(true)
     expect(getCharacter(character.id)!.initialInternalSkillId).toBe('tuna-gong')
-    // tuna-gong 已預設學過；100 卷 - 30 = 70
-    expect(getCharacter(character.id)!.scrolls).toBe(70)
+    expect(getCharacter(character.id)!.scrolls).toBe(140)
   })
 
-  it('未學過的內功不能設為初始', () => {
-    const character = createCharacter({ name: '庚' })!
+  it('未學習的內功不能開啟', () => {
+    const character = createCharacter({ name: '子' })!
     addScrolls(character.id, 100)
-    const result = setInitialInternalSkill(character.id, 'not-learned-inner')
+    // 吐納功已解鎖但未學習
+    const result = setInitialInternalSkill(character.id, 'tuna-gong')
     expect(result.ok).toBe(false)
+    expect(result.reason).toContain('未學習')
   })
 })

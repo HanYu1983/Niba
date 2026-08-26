@@ -50,4 +50,15 @@ export const externalSkillCatalog: ExternalSkill[] = [
     target: 'target',
     calculateDamage: (attributes) => Math.max(1, attributes.armStrength * .6 + attributes.innerEnergy * .4) * .8,
   },
+  {
+    id: 'starlight-crescent-step',
+    name: '星芒折身步',
+    description: '借星芒之勢騰挪閃擊，對相鄰單一敵人造成傷害。',
+    formulaDescription: '身法 × 0.7 + 內息 × 0.3（最低 1）',
+    insightCost: 2,
+    requiredHallLevel: 1,
+    innerPowerCost: 3,
+    target: 'target',
+    calculateDamage: (attributes) => Math.max(1, attributes.agility * .7 + attributes.innerEnergy * .3) * .8,
+  },
 ]
