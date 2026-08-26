@@ -46,6 +46,7 @@ import {
   getEffectiveAttributesForPlayer,
   getEquipmentInventory,
   canTraverseTerrain,
+  getBuildingReputationBonus,
 } from './rules/playerDerivedRules'
 import { getExternalSkill, getPlayerTotalInsightCost, getElementDamageMultiplier } from './rules/skillRules'
 import {
@@ -1323,7 +1324,7 @@ export const gameStore = {
       return {
         ...action.state,
         players: action.state.players.map((currentPlayer) => currentPlayer.id === playerId
-          ? applyMaterialPrestige(currentPlayer, action.materialsUsed ?? 0)
+          ? applyMaterialPrestige(currentPlayer, action.materialsUsed ?? 0, getBuildingReputationBonus(currentPlayer))
           : currentPlayer),
       }
     })
@@ -1339,7 +1340,7 @@ export const gameStore = {
       return {
         ...action.state,
         players: action.state.players.map((currentPlayer) => currentPlayer.id === playerId
-          ? applyMaterialPrestige(currentPlayer, action.materialsUsed ?? 0)
+          ? applyMaterialPrestige(currentPlayer, action.materialsUsed ?? 0, getBuildingReputationBonus(currentPlayer))
           : currentPlayer),
       }
     })
@@ -1364,7 +1365,7 @@ export const gameStore = {
       return {
         ...action.state,
         players: action.state.players.map((currentPlayer) => currentPlayer.id === playerId
-          ? applyMaterialPrestige(currentPlayer, action.materialsUsed ?? 0)
+          ? applyMaterialPrestige(currentPlayer, action.materialsUsed ?? 0, getBuildingReputationBonus(currentPlayer))
           : currentPlayer),
       }
     })

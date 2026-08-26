@@ -9,6 +9,7 @@ import type {
 } from './types'
 import type { ItemDefinition } from './catalogs/itemCatalog'
 import { getMissionReward } from './rules/buildingProgressionRules'
+import { getMaterialPrestigeAmount } from './rules/governanceRules'
 import type { DefenseStructureDefinition } from './catalogs/defenseStructureCatalog'
 import { explorationEventCatalog } from './events/eventCatalog'
 import { itemCatalog, type SchoolElement } from './catalogs/itemCatalog'
@@ -154,11 +155,13 @@ export function formatMissionResult(baseName: string, boardLevel = 1): ActionRes
 export function formatDefenseStructureBuildResult(
   definition: DefenseStructureDefinition,
   position: Position,
+  bonus = 0,
 ): ActionResult {
+  const prestigeGain = getMaterialPrestigeAmount(definition.constructionCost, bonus)
   return {
     title: '防禦建築建造完成',
     message: `已在 (${position.row + 1}, ${position.column + 1}) 建造設施。`,
-    rewards: [`消耗 ${definition.constructionCost} 建料`, '玩家聲望 +5'],
+    rewards: [`消耗 ${definition.constructionCost} 建料`, prestigeGain > 0 ? `玩家聲望 +${prestigeGain}` : '玩家聲望 +0'],
   }
 }
 

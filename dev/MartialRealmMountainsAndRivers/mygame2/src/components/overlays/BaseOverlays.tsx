@@ -24,6 +24,7 @@ import { getResourceCollectionMaterialGain } from '../../game/rules/baseRules'
 import { getEffectiveMaterialGain } from '../../game/rules/policyRules'
 import { getAvailablePolicyIds } from '../../game/rules/governanceRules'
 import { getGovernanceRankUpMessage } from '../../game/rules/governanceRules'
+import { getBuildingReputationBonus } from '../../game/rules/playerDerivedRules'
 import { getTransportTargets } from '../../game/rules/transportRules'
 import type { GameState, PlayerState } from '../../game/types'
 
@@ -318,7 +319,9 @@ function BaseOverlays({
             )
             if (definition) {
               const beforePrestige = gameState.players.find((player) => player.id === gameState.activePlayerId)?.prestige ?? 0
-              const actionResult = formatDefenseStructureBuildResult(definition, operation.position)
+              const builder = gameState.players.find((player) => player.id === gameState.activePlayerId)
+              const bonus = builder ? getBuildingReputationBonus(builder) : 0
+              const actionResult = formatDefenseStructureBuildResult(definition, operation.position, bonus)
               gameStore.showActionResult({
                 ...actionResult,
                 rewards: withRankUpReward(beforePrestige, actionResult.rewards),

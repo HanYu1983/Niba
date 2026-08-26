@@ -213,18 +213,6 @@ export const governanceRankCatalog: GovernanceRank[] = [
   { rank: 6, name: '勢力盟主', requiredPrestige: 1800, maxBuildingLevel: 6 },
 ]
 
-/** 建設相關聲望來源，用於追蹤建設指令的聲望發放。 */
-export type ConstructionPrestigeSource =
-  | 'repair'
-  | 'heal'
-  | 'policy-switch'
-
-export const CONSTRUCTION_PRESTIGE: Record<ConstructionPrestigeSource, number> = {
-  repair: 3,
-  heal: 2,
-  'policy-switch': 4,
-}
-
 export type UpgradeableAttribute = keyof PlayerAttributes
 
 export const ATTRIBUTE_NAMES: Record<UpgradeableAttribute, string> = {

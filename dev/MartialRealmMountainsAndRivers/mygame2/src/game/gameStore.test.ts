@@ -1963,14 +1963,14 @@ describe('switchBasePolicy', () => {
     expect(gameStore.getState().bases[0].activePolicyId).toBeUndefined()
   })
 
-  it('已解鎖政策時可切換並獲得聲望', () => {
+  it('已解鎖政策時可切換（不增加聲望）', () => {
     const player = makePlayer({ prestige: 80, governanceRank: 2, unlockedPolicyIds: ['basic', 'civilian'] })
     gameStore.setStateForTest(makeGameState({ players: [player] }))
 
     expect(gameStore.switchBasePolicy('player-1', 'base-1', 'civilian').ok).toBe(true)
     const state = gameStore.getState()
     expect(state.bases[0].activePolicyId).toBe('civilian')
-    expect(state.players[0].prestige).toBe(80 + 4)
+    expect(state.players[0].prestige).toBe(80)
   })
 
   it('切換政策後進入冷卻，需等待 3 回合才能再次切換', () => {
