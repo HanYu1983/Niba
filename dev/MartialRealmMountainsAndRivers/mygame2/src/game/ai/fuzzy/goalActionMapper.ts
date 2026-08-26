@@ -226,6 +226,11 @@ function buildConstructionActions(
     }]
   }
 
+  // work：據點未 active，嘗試採集資源
+  if (action === 'work') {
+    return [{ type: 'hold', actor, reason: '打工：據點未啟用，採集資源中' }]
+  }
+
   return [{ type: 'hold', actor, reason: '建設：無行動需求' }]
 }
 

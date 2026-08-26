@@ -27,6 +27,7 @@ function makeInputs(overrides: Partial<FuzzyInputs> = {}): FuzzyInputs {
     exitCount: 4,
     nearestExit: undefined,
     nearestBase: undefined,
+    visibleBaseIds: [],
     materialRatio: 0,
     canBuild: false,
     buildableBuilding: undefined,

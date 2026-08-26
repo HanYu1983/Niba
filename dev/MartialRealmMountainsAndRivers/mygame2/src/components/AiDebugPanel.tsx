@@ -51,6 +51,7 @@ function AiDebugPanel({ player, gameState }: AiDebugPanelProps) {
             <Row label="isAdjacentToResourcePoint" value={inputs.isAdjacentToResourcePoint ? '是' : '否'} />
             <SectionTitle title="建設" />
             <Row label="nearestBase" value={inputs.nearestBase ? inputs.nearestBase.name : '—'} />
+            <Row label="visibleBaseIds" value={inputs.visibleBaseIds.length > 0 ? inputs.visibleBaseIds.join(', ') : '—'} />
             <Row label="materialRatio" value={formatNumber(inputs.materialRatio)} />
             <Row label="canBuild" value={inputs.canBuild ? '是' : '否'} />
             <Row label="buildableBuilding" value={inputs.buildableBuilding ? inputs.buildableBuilding.name : '—'} />

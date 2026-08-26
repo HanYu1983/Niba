@@ -197,7 +197,12 @@ export function evaluateAllGoals(inputs: FuzzyInputs): Record<GoalName, GoalResu
 // 建料滿 + 可蓋 → 高分 build；建料不足 + 有資源點 → 移動/採集
 
 function evaluateConstruction(inputs: FuzzyInputs): GoalResult {
-  const { materialRatio, canBuild, buildableBuilding, nearestBase, nearestResourcePoint, distToNearestResourcePoint, isAdjacentToResourcePoint } = inputs
+  const { materialRatio, canBuild, buildableBuilding, nearestBase, nearestResourcePoint, distToNearestResourcePoint, isAdjacentToResourcePoint, visibleBaseIds } = inputs
+
+  // 若有可見但尚未 active 的據點 → 回傳高分，執行打工（採集資源幫助據點啟用）
+  // visibleBaseIds 已按距離排序，取最近的未 active 據點
+  // （注意：fuzzyInputs 中 nearestBase 只含 active 據點，此處需從 gameState 判斷）
+  // 但 goals 是純函數只接收 FuzzyInputs → 用 nearestBase 為 undefined 且 visibleBaseIds 非空來判斷
 
   // 情境 A：建料滿 + 可建造 → 高分 + build target
   if (materialRatio >= 1 && canBuild && buildableBuilding && nearestBase) {
@@ -223,6 +228,14 @@ function evaluateConstruction(inputs: FuzzyInputs): GoalResult {
       score: 0.5,
       target: { kind: 'resource-point', resourcePointId: nearestResourcePoint.id, position: nearestResourcePoint.position },
       context: { materialRatio, distToNearestResourcePoint, action: 'move-to-resource' },
+    }
+  }
+
+  // 情境 D：有可見據點但全部未 active → 高分打工（採集資源）
+  if (visibleBaseIds.length > 0 && !nearestBase) {
+    return {
+      score: 0.7,
+      context: { visibleBaseIds, action: 'work' },
     }
   }
 
