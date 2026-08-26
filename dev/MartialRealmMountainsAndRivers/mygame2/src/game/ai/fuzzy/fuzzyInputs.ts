@@ -138,6 +138,8 @@ export interface FuzzyInputs {
   threatCountNearBase: number
   /** 是否與最近的 active 據點相鄰 */
   isAdjacentToBase: boolean
+  /** 是否有可擊殺的生物（相鄰 + 扛得住 + 體力夠） */
+  killableCreature: boolean
   /** 各目標可行性資料 */
   feasibility: FeasibilityData
 }
@@ -359,6 +361,9 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
   // 是否與最近 active 據點相鄰
   const isAdjacentToBase = nearestBase != null && manhattan(player.position, nearestBase.position) === 1
 
+  // 可擊殺：怪在相鄰格 + 扛得住 + 體力夠
+  const killableCreature = distToNearestCreature === 1 && hitsSurvivable >= 1 && player.stamina > 0
+
   // ── feasibility ────────────────────────────────────────────────
 
   // 學招（門派）：學費 + 距離
@@ -440,6 +445,7 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
     buildableDefenseStructure,
     threatCountNearBase,
     isAdjacentToBase,
+    killableCreature,
     feasibility: {
       learnGateCost,
       canAffordGateLearn,

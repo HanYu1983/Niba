@@ -142,10 +142,19 @@ export function evaluateCollectItems(inputs: FuzzyInputs): GoalResult {
 // 附近有怪物 → 高分；體力充足 + 血量健康 → 加分
 
 function evaluateEngageCombat(inputs: FuzzyInputs): GoalResult {
-  const { distToNearestCreature, staminaRatio, hitsSurvivable, nearestCreatureId, needsLeveling } = inputs
+  const { distToNearestCreature, staminaRatio, hitsSurvivable, nearestCreatureId, needsLeveling, killableCreature } = inputs
 
   if (!nearestCreatureId || distToNearestCreature === Infinity) {
     return { score: 0 }
+  }
+
+  // 可擊殺 → score = 1
+  if (killableCreature) {
+    return {
+      score: 1,
+      target: { kind: 'attack', targetId: nearestCreatureId, targetType: 'creature', position: { row: -1, column: -1 } },
+      context: { distToNearestCreature, nearestCreatureId, killable: true },
+    }
   }
 
   const f_closeCreature = distToNearestCreature <= 1
@@ -157,17 +166,17 @@ function evaluateEngageCombat(inputs: FuzzyInputs): GoalResult {
   const f_staminaHigh = trapezoid(staminaRatio, 0.4, 0.6, 1, 1)
   const f_healthy = trapezoid(hitsSurvivable, 3, 5, 10, 10)
 
-  let score = fuzzyAnd(fuzzyOr(f_closeCreature, f_healthy), fuzzyOr(f_staminaHigh, f_closeCreature))
+  let score = Math.min(0.85, fuzzyAnd(fuzzyOr(f_closeCreature, f_healthy), fuzzyOr(f_staminaHigh, f_closeCreature)))
 
-  // 等級落後時打怪分數提升（積極練等）
+  // 等級落後時打怪分數提升
   if (needsLeveling) {
-    score = Math.min(1, score * 1.5)
+    score = Math.min(0.85, score * 1.5)
   }
 
   return {
     score,
     target: { kind: 'attack', targetId: nearestCreatureId, targetType: 'creature', position: { row: -1, column: -1 } },
-    context: { distToNearestCreature, nearestCreatureId },
+    context: { distToNearestCreature, nearestCreatureId, killable: false },
   }
 }
 
@@ -360,8 +369,8 @@ function evaluateExploration(inputs: FuzzyInputs): GoalResult {
     return { score: 0 }
   }
 
-  // 不可見未探索格越多分數越高，體力充足時加分
-  const baseScore = Math.min(1, unexploredInvisibleCells / 10)
+  // 不可見未探索格越多分數越高，體力充足時加分，上限 0.8
+  const baseScore = Math.min(0.8, unexploredInvisibleCells / 10)
   const score = staminaRatio > 0.3 ? baseScore : baseScore * 0.5
 
   return {
