@@ -9,6 +9,8 @@ import { canPlayerBuildBuildingType } from '../../rules/buildingProgressionRules
 import { collectReachableCells } from '../perception/reachablePositions'
 import { itemCatalog } from '../../catalogs/itemCatalog'
 import { equipmentCatalog } from '../../catalogs/equipmentCatalog'
+import { allInnerSkillCatalog } from '../../catalogs/martialHallSkillCatalog'
+import { getEffectiveAttributesForPlayer } from '../../rules/playerDerivedRules'
 
 export interface FuzzyInputs {
   /** 能扛幾下攻擊（health / maxEnemyDamage），無敵人時 = 99 */
@@ -59,6 +61,18 @@ export interface FuzzyInputs {
   bestItemToUse: { id: string; effect: string; name: string } | undefined
   /** 建議裝備的裝備（部位空 or 耐久=0 需替換），無則 undefined */
   equipableEquipment: { instanceId: string; equipmentId: string; slot: string; name: string; durability: number } | undefined
+  /** 到最近巢穴的距離，無巢穴 = Infinity */
+  distToNearestNest: number
+  /** 最近巢穴 id，無則空字串 */
+  nearestNestId: string
+  /** 場上可見生物數量 */
+  visibleCreatureCount: number
+  /** 建議裝備的內功（有更強的未裝備內功），無則 undefined */
+  betterInnerSkill: { id: string; name: string; insightRequirement: number } | undefined
+  /** 是否有傷害型內功已裝備 */
+  hasDamageInnerSkill: boolean
+  /** 內力比 0~1 */
+  innerPowerRatio: number
 }
 
 function manhattan(a: Position, b: Position): number {
@@ -186,6 +200,27 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
   // 裝備相關：找出值得裝備的裝備
   const equipableEquipment = findBestEquipCandidate(player)
 
+  // 巢穴相關：最近巢穴
+  const nests = state.creatureNests.filter((n) => n.health > 0)
+  const distToNearestNest = nests.length > 0
+    ? Math.min(...nests.map((n) => manhattan(player.position, n.position)))
+    : Infinity
+  const nearestNest = nests.length > 0
+    ? nests.reduce((best, n) => manhattan(player.position, n.position) < manhattan(player.position, best.position) ? n : best)
+    : undefined
+
+  // 可見生物數量
+  const visibleCreatureCount = creatures.length
+
+  // 內功相關：裝備更好的內功 / 傷害型內功 / 內力比
+  const effectiveAttributes = getEffectiveAttributesForPlayer(player)
+  const innerPowerRatio = player.maxInnerPower > 0 ? player.innerPower / player.maxInnerPower : 0
+  const currentInnerSkill = allInnerSkillCatalog.find((s) => s.id === player.innerSkillId)
+  const hasDamageInnerSkill = currentInnerSkill != null && currentInnerSkill.calculateDamage != null
+
+  // 找更好的內功：已學會但未裝備，且悟性足夠，且比目前內功更強
+  const bestInnerSkill = findBetterInnerSkill(player, effectiveAttributes)
+
   return {
     hitsSurvivable,
     staminaRatio: player.stamina / player.maxStamina,
@@ -211,6 +246,12 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
     availableAttributePoints,
     bestItemToUse,
     equipableEquipment,
+    distToNearestNest,
+    nearestNestId: nearestNest?.id ?? '',
+    visibleCreatureCount,
+    betterInnerSkill: bestInnerSkill,
+    hasDamageInnerSkill,
+    innerPowerRatio,
   }
 }
 
@@ -318,4 +359,28 @@ function findBestEquipCandidate(player: PlayerState): { instanceId: string; equi
   }
 
   return undefined
+}
+
+function findBetterInnerSkill(
+  player: PlayerState,
+  effectiveAttributes: { insight: number; armStrength: number; constitution: number; agility: number; innerEnergy: number },
+): { id: string; name: string; insightRequirement: number } | undefined {
+  const currentSkill = allInnerSkillCatalog.find((s) => s.id === player.innerSkillId)
+  const currentDamage = currentSkill?.calculateDamage?.(effectiveAttributes) ?? 0
+
+  const candidates = allInnerSkillCatalog.filter((s) => player.innerSkillIds.includes(s.id) && s.id !== player.innerSkillId)
+
+  let best: { id: string; name: string; insightRequirement: number } | undefined
+  let bestDamage = currentDamage
+
+  for (const skill of candidates) {
+    if (effectiveAttributes.insight < skill.insightRequirement) continue
+    const damage = skill.calculateDamage(effectiveAttributes)
+    if (damage > bestDamage) {
+      bestDamage = damage
+      best = { id: skill.id, name: skill.name, insightRequirement: skill.insightRequirement }
+    }
+  }
+
+  return best
 }

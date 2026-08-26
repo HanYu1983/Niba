@@ -56,6 +56,7 @@ const ACTION_TYPE_LABELS: Record<AiAction['type'], string> = {
   'allocate-attribute': '分配屬性',
   'use-item': '使用道具',
   equip: '裝備',
+  'equip-inner-skill': '裝備功法',
 }
 
 function formatActionDetail(action: AiAction): string {

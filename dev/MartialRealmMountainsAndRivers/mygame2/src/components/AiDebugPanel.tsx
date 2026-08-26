@@ -27,15 +27,46 @@ function AiDebugPanel({ player, gameState }: AiDebugPanelProps) {
           key: 'fuzzy-inputs',
           label: <Typography.Text strong>Fuzzy Inputs</Typography.Text>,
           children: <Flex vertical gap={4}>
+            <SectionTitle title="生存" />
             <Row label="hitsSurvivable" value={formatNumber(inputs.hitsSurvivable)} />
             <Row label="staminaRatio" value={formatNumber(inputs.staminaRatio)} />
+            <Row label="innerPowerRatio" value={formatNumber(inputs.innerPowerRatio)} />
+            <SectionTitle title="威脅" />
             <Row label="distToNearestThreat" value={formatNumber(inputs.distToNearestThreat)} />
             <Row label="maxVisibleEnemyDamage" value={formatNumber(inputs.maxVisibleEnemyDamage)} />
+            <Row label="visibleCreatureCount" value={formatNumber(inputs.visibleCreatureCount)} />
+            <Row label="distToNearestCreature" value={formatNumber(inputs.distToNearestCreature)} />
+            <Row label="nearestCreatureId" value={inputs.nearestCreatureId || '—'} />
+            <SectionTitle title="巢穴" />
+            <Row label="distToNearestNest" value={formatNumber(inputs.distToNearestNest)} />
+            <Row label="nearestNestId" value={inputs.nearestNestId || '—'} />
+            <SectionTitle title="道具" />
             <Row label="reachableItemCount" value={formatNumber(inputs.reachableItemCount)} />
-            <Row label="reachableResourceCount" value={formatNumber(inputs.reachableResourceCount)} />
             <Row label="distToNearestItem" value={formatNumber(inputs.distToNearestItem)} />
+            <Row label="bestItemToUse" value={inputs.bestItemToUse ? `${inputs.bestItemToUse.name} (${inputs.bestItemToUse.effect})` : '—'} />
+            <SectionTitle title="資源" />
+            <Row label="reachableResourceCount" value={formatNumber(inputs.reachableResourceCount)} />
+            <Row label="nearestResourcePoint" value={inputs.nearestResourcePoint ? `(${inputs.nearestResourcePoint.position.row},${inputs.nearestResourcePoint.position.column})` : '—'} />
+            <Row label="distToNearestResourcePoint" value={formatNumber(inputs.distToNearestResourcePoint)} />
+            <Row label="isAdjacentToResourcePoint" value={inputs.isAdjacentToResourcePoint ? '是' : '否'} />
+            <SectionTitle title="建設" />
+            <Row label="nearestBase" value={inputs.nearestBase ? inputs.nearestBase.name : '—'} />
+            <Row label="materialRatio" value={formatNumber(inputs.materialRatio)} />
+            <Row label="canBuild" value={inputs.canBuild ? '是' : '否'} />
+            <Row label="buildableBuilding" value={inputs.buildableBuilding ? inputs.buildableBuilding.name : '—'} />
+            <SectionTitle title="定位" />
             <Row label="exitCount" value={formatNumber(inputs.exitCount)} />
             <Row label="nearestExit" value={inputs.nearestExit ? `(${inputs.nearestExit.row},${inputs.nearestExit.column})` : '—'} />
+            <SectionTitle title="探索" />
+            <Row label="unexploredReachableCount" value={formatNumber(inputs.unexploredReachableCount)} />
+            <Row label="nearestUnexploredPosition" value={inputs.nearestUnexploredPosition ? `(${inputs.nearestUnexploredPosition.row},${inputs.nearestUnexploredPosition.column})` : '—'} />
+            <SectionTitle title="屬性" />
+            <Row label="availableAttributePoints" value={formatNumber(inputs.availableAttributePoints)} />
+            <SectionTitle title="裝備" />
+            <Row label="equipableEquipment" value={inputs.equipableEquipment ? `${inputs.equipableEquipment.name} (${inputs.equipableEquipment.slot}, 耐久${inputs.equipableEquipment.durability})` : '—'} />
+            <SectionTitle title="內功" />
+            <Row label="betterInnerSkill" value={inputs.betterInnerSkill ? `${inputs.betterInnerSkill.name} (悟性${inputs.betterInnerSkill.insightRequirement})` : '—'} />
+            <Row label="hasDamageInnerSkill" value={inputs.hasDamageInnerSkill ? '是' : '否'} />
           </Flex>,
         },
         {
@@ -59,6 +90,14 @@ function AiDebugPanel({ player, gameState }: AiDebugPanelProps) {
         },
       ]}
     />
+  )
+}
+
+function SectionTitle({ title }: { title: string }) {
+  return (
+    <Typography.Text type="secondary" style={{ fontSize: 11, marginTop: 4, borderBottom: '1px solid #f0f0f0', paddingBottom: 2, display: 'block' }}>
+      {title}
+    </Typography.Text>
   )
 }
 
