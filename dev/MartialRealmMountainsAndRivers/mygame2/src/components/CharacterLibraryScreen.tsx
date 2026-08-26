@@ -1,4 +1,4 @@
-import { Button, Card, Flex, Form, Input, List, Modal, Popconfirm, Space, Tabs, Typography, message } from 'antd'
+import { Button, Card, Flex, Form, Input, List, Modal, Popconfirm, Select, Space, Tabs, Typography, message } from 'antd'
 import { useState } from 'react'
 import {
   createCharacter,
@@ -12,6 +12,18 @@ import CharacterTrainingPanel from './CharacterTrainingPanel'
 import CharacterTalentPanel from './CharacterTalentPanel'
 
 const ATTRIBUTE_KEYS: UpgradeableAttribute[] = ['armStrength', 'constitution', 'agility', 'innerEnergy', 'insight']
+
+/** 角色外觀 icon 選項（value 為存檔字串，標籤含 emoji 供直觀選擇）。 */
+const PORTRAIT_OPTIONS = [
+  { value: '⚔️', label: '⚔️ 劍客' },
+  { value: '🛡️', label: '🛡️ 武者' },
+  { value: '🏹', label: '🏹 獵手' },
+  { value: '🔪', label: '🔪 刀客' },
+  { value: '🪶', label: '🪶 隱士' },
+  { value: '🧘', label: '🧘 僧侶' },
+  { value: '🎭', label: '🎭 遊俠' },
+  { value: '🗡️', label: '🗡️ 刺客' },
+]
 
 type CharacterLibraryScreenProps = {
   /** 選用某角色（本階段僅回傳角色，供後續對局流程使用）。 */
@@ -173,7 +185,11 @@ function CharacterLibraryScreen({ onSelect, onCharactersChanged }: CharacterLibr
                       <Input placeholder="例如：張三" maxLength={20} />
                     </Form.Item>
                     <Form.Item name="portrait" label="外觀 icon（選填）">
-                      <Input placeholder="例如：sword / shield / fan" maxLength={20} />
+                      <Select
+                        allowClear
+                        placeholder="選擇外觀 icon"
+                        options={PORTRAIT_OPTIONS}
+                      />
                     </Form.Item>
                     <Form.Item name="title" label="稱號（選填）">
                       <Input placeholder="例如：劍客" maxLength={20} />
@@ -207,7 +223,11 @@ function CharacterLibraryScreen({ onSelect, onCharactersChanged }: CharacterLibr
               <Input placeholder="例如：張三" maxLength={20} />
             </Form.Item>
             <Form.Item name="portrait" label="外觀 icon（選填）">
-              <Input placeholder="例如：sword / shield / fan" maxLength={20} />
+              <Select
+                allowClear
+                placeholder="選擇外觀 icon"
+                options={PORTRAIT_OPTIONS}
+              />
             </Form.Item>
             <Form.Item name="title" label="稱號（選填）">
               <Input placeholder="例如：劍客" maxLength={20} />

@@ -51,6 +51,8 @@ export function createGameState(
   selectedCharacter?: {
     attributeBonuses: PlayerAttributes
     name?: string
+    portrait?: string
+    title?: string
     initialInternalSkillId?: string
     initialExternalSkillIds?: string[]
     talentIds?: string[]
@@ -105,6 +107,8 @@ export function createGameState(
     selectedCharacter?.initialInternalSkillId,
     selectedCharacter?.initialExternalSkillIds,
     selectedCharacter?.talentIds,
+    selectedCharacter?.portrait,
+    selectedCharacter?.title,
   )
   const aiOrders: AiOrder[] = players
     .filter((p) => p.isAI)

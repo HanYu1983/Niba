@@ -573,6 +573,8 @@ export function createRoamerCreatures(
  * @param initialInternalSkillId 可選：第一位人類玩家的初始內功（預設吐納功）。
  * @param initialExternalSkillIds 可選：第一位人類玩家的初始外功清單。
  * @param talentIds 可選：第一位人類玩家所屬名册角色的天賦 ids；開局會轉為常駐 buff 注入。
+ * @param humanPortrait 可選：第一位人類玩家的外觀 icon（來自名册角色）。
+ * @param humanTitle 可選：第一位人類玩家的稱號（來自名册角色）。
  */
 export function createInitialPlayers(
   playerPositions: Position[],
@@ -583,6 +585,8 @@ export function createInitialPlayers(
   initialInternalSkillId?: string,
   initialExternalSkillIds?: string[],
   talentIds?: string[],
+  humanPortrait?: string,
+  humanTitle?: string,
 ): PlayerState[] {
   const random = createSeededRandom(seed + 111)
   const availableNames = [...playerNames]
@@ -621,6 +625,8 @@ export function createInitialPlayers(
       id: `player-${index + 1}`,
       name,
       isAI,
+      portrait: useCharacterSkills ? humanPortrait : undefined,
+      title: useCharacterSkills ? humanTitle : undefined,
       innerSkillId,
       position,
       attributes,

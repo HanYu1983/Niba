@@ -371,6 +371,8 @@ export const gameStore = {
     id?: string
     attributeBonuses: PlayerAttributes
     name?: string
+    portrait?: string
+    title?: string
     initialInternalSkillId?: string
     initialExternalSkillIds?: string[]
     talentIds?: string[]

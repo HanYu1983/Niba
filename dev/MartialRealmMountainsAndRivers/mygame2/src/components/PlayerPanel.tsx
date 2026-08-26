@@ -60,7 +60,8 @@ function PlayerPanel({ player, isActive, onAllocateAttributePoint, gameState }: 
         <div className="player-panel__identity">
           <div className="player-panel__identity-copy">
             <Typography.Title level={4}>
-              {player.name}
+              {player.portrait ? `${player.portrait} ` : ''}{player.name}
+              {player.title ? <Typography.Text type="secondary">（{player.title}）</Typography.Text> : null}
               {player.isAI && <Tag color="purple">AI</Tag>}
             </Typography.Title>
             <Typography.Text type="secondary">{player.id}</Typography.Text>
