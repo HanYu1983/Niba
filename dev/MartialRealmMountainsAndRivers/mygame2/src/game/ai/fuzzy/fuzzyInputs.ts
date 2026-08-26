@@ -197,7 +197,12 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
     : undefined
 
   // 不可見且未探索的格子：玩家從未看見也當前看不見的格子
-  const allInvisibleUnexplored = state.map.cells.filter((c) => !visibleCellIds.has(c.id) && !exploredIds.has(c.id))
+  // 無穿牆輕功時，排除牆壁地形（最外圍一圈）
+  const hasWallStep = (player.buffs ?? []).some((b) => b.definitionId === 'wall-step')
+  const allInvisibleUnexplored = state.map.cells.filter((c) => {
+    if (!hasWallStep && c.terrain === 'wall') return false
+    return !visibleCellIds.has(c.id) && !exploredIds.has(c.id)
+  })
   const unexploredInvisibleCells = allInvisibleUnexplored.length
   const nearestUnexploredInvisiblePosition = allInvisibleUnexplored.length > 0
     ? allInvisibleUnexplored.reduce((best, c) => manhattan(player.position, c) < manhattan(player.position, best) ? c : best)
