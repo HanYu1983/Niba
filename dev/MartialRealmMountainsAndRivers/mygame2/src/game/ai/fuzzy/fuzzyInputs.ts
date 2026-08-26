@@ -1,7 +1,7 @@
-import type { BaseState, GameState, PlayerState, Position, ResourcePointState } from '../../types'
+import type { BaseState, GameState, PlayerState, Position, ResourcePointState, SectGateState } from '../../types'
 import { listHostileActors, type HostileActor } from '../perception/targetDiscovery'
 import { collectReachableInterests, type ReachableInterest } from '../perception/reachableInterests'
-import { getBlockedPositions } from '../../rules/movementRules'
+import { getBlockedPositions, buildMovementCostMap } from '../../rules/movementRules'
 import { canTraverseTerrain } from '../../rules/playerDerivedRules'
 import { getAdjacentPositions } from '../../types'
 import { buildingCatalog } from '../../catalogs/buildingCatalog'
@@ -9,9 +9,12 @@ import { canPlayerBuildBuildingType } from '../../rules/buildingProgressionRules
 import { collectReachableCells } from '../perception/reachablePositions'
 import { itemCatalog } from '../../catalogs/itemCatalog'
 import { equipmentCatalog } from '../../catalogs/equipmentCatalog'
-import { allInnerSkillCatalog } from '../../catalogs/martialHallSkillCatalog'
+import { allInnerSkillCatalog, getMartialHallSkills } from '../../catalogs/martialHallSkillCatalog'
 import { getEffectiveAttributesForPlayer } from '../../rules/playerDerivedRules'
 import { getPlayerVisibleCellIds } from '../../rules/visibilityRules'
+import { getSectGateSkills } from '../../rules/sectGateRules'
+import { defenseStructureCatalog } from '../../catalogs/defenseStructureCatalog'
+import { getRepairSummary, hasBuilding } from '../../rules/buildingRules'
 
 export interface FuzzyInputs {
   /** 能扛幾下攻擊（health / maxEnemyDamage），無敵人時 = 99 */
@@ -82,6 +85,30 @@ export interface FuzzyInputs {
   hasDamageInnerSkill: boolean
   /** 內力比 0~1 */
   innerPowerRatio: number
+  /** 可在武館學習的技能（最近據點的武館），無則 undefined */
+  learnableSkillAtHall: { baseId: string; skillType: 'inner' | 'external'; skillId: string; name: string } | undefined
+  /** 可在門派據點學習的技能（最近門派），無則 undefined */
+  learnableSkillAtGate: { gateId: string; skillId: string; name: string; position: Position } | undefined
+  /** 可在門派據點練功的技能，無則 undefined */
+  practiceableSkillAtGate: { gateId: string; skillId: string; name: string; position: Position } | undefined
+  /** 附近據點是否有告示牌（可執行任務） */
+  hasMissionBoard: boolean
+  /** 附近據點是否有醫療室（可就醫） */
+  hasInfirmary: boolean
+  /** 附近據點有工坊且裝備受損（可修理） */
+  hasWorkshopDamaged: boolean
+  /** 玩家等級 */
+  playerLevel: number
+  /** 預期等級（round / 5），低於此值表示落後 */
+  expectedLevel: number
+  /** 等級是否落後（需要積極打怪） */
+  needsLeveling: boolean
+  /** 可在商店購買的回血道具（有商店 + 有錢 + 未買過） */
+  buyableHealItem: { itemId: string; name: string; price: number } | undefined
+  /** 可建造的防禦設施（材料夠 + rank 夠），取最近據點 */
+  buildableDefenseStructure: { type: string; name: string } | undefined
+  /** 據點附近的威脅數量（曼哈頓 ≤ 5） */
+  threatCountNearBase: number
 }
 
 function manhattan(a: Position, b: Position): number {
@@ -204,9 +231,17 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
     return !visibleCellIds.has(c.id) && !exploredIds.has(c.id)
   })
   const unexploredInvisibleCells = allInvisibleUnexplored.length
-  const nearestUnexploredInvisiblePosition = allInvisibleUnexplored.length > 0
-    ? allInvisibleUnexplored.reduce((best, c) => manhattan(player.position, c) < manhattan(player.position, best) ? c : best)
-    : undefined
+  // 用 Dijkstra 從玩家位置建成本圖，找路徑最近的不可見未探索格
+  let nearestUnexploredInvisiblePosition: Position | undefined
+  if (allInvisibleUnexplored.length > 0) {
+    const playerCosts = buildMovementCostMap(state.map, player)
+    nearestUnexploredInvisiblePosition = allInvisibleUnexplored
+      .reduce<Position | undefined>((best, c) => {
+        const costBest = best ? (playerCosts.get(`${best.row}-${best.column}`) ?? Infinity) : Infinity
+        const costC = playerCosts.get(`${c.row}-${c.column}`) ?? Infinity
+        return costC < costBest ? c : best
+      }, undefined)
+  }
 
   // 戰鬥相關：視野內生物（近到遠）
   const visibleCreatureIds = visibleCreatures.map((c) => c.creature.id)
@@ -253,6 +288,43 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
   // 找更好的內功：已學會但未裝備，且悟性足夠，且比目前內功更強
   const bestInnerSkill = findBetterInnerSkill(player, effectiveAttributes)
 
+  // ── 新增目標相關輸入 ──────────────────────────────────────────
+
+  // 武館學招：找最近據點的武館，是否有未學技能
+  const learnableSkillAtHall = findLearnableSkillAtHall(player, nearestBase)
+
+  // 門派學招/練功：找最近門派據點
+  const nearestSectGate = (state.sectGates ?? []).length > 0
+    ? (state.sectGates ?? []).reduce((best, g) => manhattan(player.position, g.position) < manhattan(player.position, best.position) ? g : best)
+    : undefined
+  const learnableSkillAtGate = findLearnableSkillAtGate(player, nearestSectGate)
+  const practiceableSkillAtGate = findPracticeableSkillAtGate(player, nearestSectGate)
+
+  // 告示牌任務 / 醫療室 / 修理工坊
+  const hasMissionBoard = nearestBase != null && hasBuilding(nearestBase, 'board')
+  const hasInfirmary = nearestBase != null && hasBuilding(nearestBase, 'infirmary')
+  const hasWorkshopDamaged = nearestBase != null && hasBuilding(nearestBase, 'workshop')
+    && getRepairSummary(player, nearestBase.buildings.find((b) => b.type === 'workshop')?.level ?? 1).equipmentCount > 0
+
+  // 等級相關
+  const playerLevel = player.level ?? 1
+  const expectedLevel = Math.max(1, Math.floor(state.round / 5))
+  const needsLeveling = playerLevel < expectedLevel
+
+  // 商店買道具：附近有道具商店 + 有錢買回血道具
+  const buyableHealItem = findBuyableHealItem(player, nearestBase, state)
+
+  // 防禦建設：找可建造的防禦設施
+  const buildableDefenseStructure = findBuildableDefenseStructure(player, nearestBase)
+
+  // 據點附近威脅數（曼哈頓 ≤ 5）
+  const threatCountNearBase = nearestBase
+    ? hostiles.filter((h) => {
+      const pos = h.sourceType === 'creature' ? h.creature.position : h.nest.position
+      return manhattan(nearestBase.position, pos) <= 5
+    }).length
+    : 0
+
   return {
     hitsSurvivable,
     staminaRatio: player.stamina / player.maxStamina,
@@ -290,6 +362,18 @@ export function computeFuzzyInputs(state: GameState, player: PlayerState): Fuzzy
     betterInnerSkill: bestInnerSkill,
     hasDamageInnerSkill,
     innerPowerRatio,
+    learnableSkillAtHall,
+    learnableSkillAtGate,
+    practiceableSkillAtGate,
+    hasMissionBoard,
+    hasInfirmary,
+    hasWorkshopDamaged,
+    playerLevel,
+    expectedLevel,
+    needsLeveling,
+    buyableHealItem,
+    buildableDefenseStructure,
+    threatCountNearBase,
   }
 }
 
@@ -421,4 +505,95 @@ function findBetterInnerSkill(
   }
 
   return best
+}
+
+// ── 新增目標輔助函數 ───────────────────────────────────────────
+
+function findLearnableSkillAtHall(
+  player: PlayerState,
+  base: BaseState | undefined,
+): { baseId: string; skillType: 'inner' | 'external'; skillId: string; name: string } | undefined {
+  if (!base) return undefined
+  const hall = base.buildings.find((b) => b.type.startsWith('martial-hall'))
+  if (!hall) return undefined
+  const skills = getMartialHallSkills(base.martialSchoolId)
+  // 找未學會的內功
+  const unlearnedInner = skills.inner.find((s) => !player.innerSkillIds.includes(s.id) && (player.attributes?.insight ?? 0) >= s.insightRequirement)
+  if (unlearnedInner) return { baseId: base.id, skillType: 'inner', skillId: unlearnedInner.id, name: unlearnedInner.name }
+  // 找未學會的外功
+  const unlearnedExternal = skills.external.find((s) => !player.externalSkillIds.includes(s.id))
+  if (unlearnedExternal) return { baseId: base.id, skillType: 'external', skillId: unlearnedExternal.id, name: unlearnedExternal.name }
+  return undefined
+}
+
+function findLearnableSkillAtGate(
+  player: PlayerState,
+  gate: SectGateState | undefined,
+): { gateId: string; skillId: string; name: string; position: Position } | undefined {
+  if (!gate) return undefined
+  const skills = getSectGateSkills(gate.schoolId)
+  const all = [...skills.inner, ...skills.damage, ...skills.aura]
+  const unlearned = all.find((s) => {
+    if ('insightRequirement' in s) return !player.innerSkillIds.includes(s.id)
+    return !player.externalSkillIds.includes(s.id)
+  })
+  if (!unlearned) return undefined
+  return { gateId: gate.id, skillId: unlearned.id, name: unlearned.name, position: gate.position }
+}
+
+function findPracticeableSkillAtGate(
+  player: PlayerState,
+  gate: SectGateState | undefined,
+): { gateId: string; skillId: string; name: string; position: Position } | undefined {
+  if (!gate) return undefined
+  const skills = getSectGateSkills(gate.schoolId)
+  const all = [...skills.inner, ...skills.damage, ...skills.aura]
+  const learned = all.find((s) => {
+    if ('insightRequirement' in s) return player.innerSkillIds.includes(s.id)
+    return player.externalSkillIds.includes(s.id)
+  })
+  if (!learned) return undefined
+  return { gateId: gate.id, skillId: learned.id, name: learned.name, position: gate.position }
+}
+
+function findBuyableHealItem(
+  player: PlayerState,
+  base: BaseState | undefined,
+  _state: GameState,
+): { itemId: string; name: string; price: number } | undefined {
+  if (!base) return undefined
+  if (!hasBuilding(base, 'item-shop')) return undefined
+  const healthMissing = player.maxHealth - player.health
+  if (healthMissing <= 0) return undefined
+  const healItems = itemCatalog.filter((i) => i.effect === 'health' && i.buyPrice > 0)
+  // 找玩家買得起且未使用過的回血道具（由低到高）
+  const usedEffects = new Set(player.itemEffectsUsedThisTurn ?? [])
+  const affordable = healItems
+    .filter((i) => i.buyPrice <= (player.money ?? 0) && !usedEffects.has(i.effect))
+    .sort((a, b) => a.buyPrice - b.buyPrice)
+  if (affordable.length === 0) return undefined
+  const best = affordable[0]
+  return { itemId: best.id, name: best.name, price: best.buyPrice }
+}
+
+function findBuildableDefenseStructure(
+  player: PlayerState,
+  base: BaseState | undefined,
+): { type: string; name: string } | undefined {
+  if (!base) return undefined
+  // 從防禦設施目錄中找玩家 rank 夠且材料夠的設施
+  const materialBudget = base.buildingMaterials
+  const rank = player.governanceRank ?? 1
+  const candidates = defenseStructureCatalog.filter((d) => {
+    if (d.constructionCost > materialBudget) return false
+    if (d.requiredRank != null && rank < d.requiredRank) return false
+    return true
+  })
+  if (candidates.length === 0) return undefined
+  // 優先箭塔（主動防禦），其次城牆（被動防禦）
+  const arrowTower = candidates.find((d) => d.type === 'arrow-tower')
+  if (arrowTower) return { type: arrowTower.type, name: arrowTower.name }
+  const wall = candidates.find((d) => d.type === 'barricade')
+  if (wall) return { type: wall.type, name: wall.name }
+  return { type: candidates[0].type, name: candidates[0].name }
 }

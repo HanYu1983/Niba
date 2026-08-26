@@ -2,7 +2,7 @@ import type { Position } from '../../types'
 import { trapezoid, fuzzyAnd, fuzzyOr } from './membershipFunctions'
 import type { FuzzyInputs } from './fuzzyInputs'
 
-export type GoalName = 'selfPreservation' | 'collectItems' | 'positioning' | 'construction' | 'exploration' | 'engageCombat' | 'allocateAttributes' | 'useItem' | 'equipEquipment' | 'attackNest' | 'equipInnerSkill' | 'useInnerSkillAttack'
+export type GoalName = 'selfPreservation' | 'collectItems' | 'positioning' | 'construction' | 'exploration' | 'engageCombat' | 'allocateAttributes' | 'useItem' | 'equipEquipment' | 'attackNest' | 'equipInnerSkill' | 'useInnerSkillAttack' | 'learnMartialSkill' | 'practiceSkill' | 'executeMission' | 'repairEquipment' | 'buildDefense'
 
 export interface GoalResult {
   score: number
@@ -24,11 +24,16 @@ export type GoalTarget =
   | { kind: 'equip-inner-skill'; skillId: string }
   | { kind: 'use-inner-skill-attack'; targetId: string; targetType: 'creature'; position: Position }
   | { kind: 'return-to-base-heal'; baseId: string; position: Position }
+  | { kind: 'learn-skill'; baseId?: string; gateId?: string; skillType: 'inner' | 'external'; skillId: string }
+  | { kind: 'practice-skill'; gateId: string; skillId: string; position: Position }
+  | { kind: 'use-facility'; baseId: string; facilityType: 'heal' | 'mission' | 'repair' }
+  | { kind: 'defense-build'; baseId: string; structureType: string; position: Position }
+  | { kind: 'buy-item'; baseId: string; itemId: string }
 
 // ─── selfPreservation ──────────────────────────────────────────────
 
 export function evaluateSelfPreservation(inputs: FuzzyInputs): GoalResult {
-  const { hitsSurvivable, distToNearestThreat, healthRatio, bestItemToUse, nearestBase } = inputs
+  const { hitsSurvivable, distToNearestThreat, healthRatio, nearestBase, hasInfirmary } = inputs
 
   // 有威脅 → 評估逃命
   if (distToNearestThreat !== Infinity) {
@@ -47,17 +52,23 @@ export function evaluateSelfPreservation(inputs: FuzzyInputs): GoalResult {
     }
   }
 
-  // 無威脅 + 血量低 → 回據點醫治
-  // 條件：healthRatio < 0.3 且無可恢復道具（或道具恢復不足）
+  // 無威脅 + 血量低 → 回據點醫治（不管有無道具，醫治 > 道具）
   if (healthRatio < 0.3 && nearestBase) {
-    const hasHealItem = bestItemToUse?.effect === 'health'
-    if (!hasHealItem) {
+    // 有醫療室 → 回據點用醫療室就醫
+    if (hasInfirmary) {
       const score = Math.min(0.8, (0.3 - healthRatio) / 0.3)
       return {
         score,
-        target: { kind: 'return-to-base-heal', baseId: nearestBase.id, position: nearestBase.position },
+        target: { kind: 'use-facility', baseId: nearestBase.id, facilityType: 'heal' },
         context: { healthRatio },
       }
+    }
+    // 無醫療室 → 純移動回據點（希望被動恢復）
+    const score = Math.min(0.6, (0.3 - healthRatio) / 0.3)
+    return {
+      score,
+      target: { kind: 'return-to-base-heal', baseId: nearestBase.id, position: nearestBase.position },
+      context: { healthRatio },
     }
   }
 
@@ -99,7 +110,7 @@ export function evaluateCollectItems(inputs: FuzzyInputs): GoalResult {
 // 附近有怪物 → 高分；體力充足 + 血量健康 → 加分
 
 function evaluateEngageCombat(inputs: FuzzyInputs): GoalResult {
-  const { distToNearestCreature, staminaRatio, hitsSurvivable, nearestCreatureId } = inputs
+  const { distToNearestCreature, staminaRatio, hitsSurvivable, nearestCreatureId, needsLeveling } = inputs
 
   if (!nearestCreatureId || distToNearestCreature === Infinity) {
     return { score: 0 }
@@ -114,7 +125,12 @@ function evaluateEngageCombat(inputs: FuzzyInputs): GoalResult {
   const f_staminaHigh = trapezoid(staminaRatio, 0.4, 0.6, 1, 1)
   const f_healthy = trapezoid(hitsSurvivable, 3, 5, 10, 10)
 
-  const score = fuzzyAnd(fuzzyOr(f_closeCreature, f_healthy), fuzzyOr(f_staminaHigh, f_closeCreature))
+  let score = fuzzyAnd(fuzzyOr(f_closeCreature, f_healthy), fuzzyOr(f_staminaHigh, f_closeCreature))
+
+  // 等級落後時打怪分數提升（積極練等）
+  if (needsLeveling) {
+    score = Math.min(1, score * 1.5)
+  }
 
   return {
     score,
@@ -227,6 +243,11 @@ export function evaluateAllGoals(inputs: FuzzyInputs): Record<GoalName, GoalResu
     attackNest: evaluateAttackNest(inputs),
     equipInnerSkill: evaluateEquipInnerSkill(inputs),
     useInnerSkillAttack: evaluateUseInnerSkillAttack(inputs),
+    learnMartialSkill: evaluateLearnMartialSkill(inputs),
+    practiceSkill: evaluatePracticeSkill(inputs),
+    executeMission: evaluateExecuteMission(inputs),
+    repairEquipment: evaluateRepairEquipment(inputs),
+    buildDefense: evaluateBuildDefense(inputs),
   }
 }
 
@@ -242,10 +263,10 @@ function evaluateConstruction(inputs: FuzzyInputs): GoalResult {
   }
 
   const primaryBaseId = visibleBaseIds[0]
-  const primaryBaseIsActive = nearestBase?.id === primaryBaseId
 
   // 情境 A：最近可見據點未 active → 高分打工（採集資源）
-  if (!primaryBaseIsActive) {
+  // 注意：這裡判斷 nearestBase 是否就是 primaryBase，若是但非 active 則打工
+  if (nearestBase && nearestBase.id === primaryBaseId && nearestBase.active === false) {
     return {
       score: 0.7,
       context: { visibleBaseIds, action: 'work' },
@@ -403,5 +424,110 @@ export function evaluateUseInnerSkillAttack(inputs: FuzzyInputs): GoalResult {
     score,
     target: { kind: 'use-inner-skill-attack', targetId: '', targetType: 'creature', position: { row: -1, column: -1 } },
     context: { innerPowerRatio, distToNearestThreat },
+  }
+}
+
+// ─── learnMartialSkill ─────────────────────────────────────────
+// 武館/門派有可學技能 → 高分
+
+function evaluateLearnMartialSkill(inputs: FuzzyInputs): GoalResult {
+  const { learnableSkillAtHall, learnableSkillAtGate, staminaRatio } = inputs
+
+  // 門派學招：需要 3 體力 + 30 金錢
+  if (learnableSkillAtGate && staminaRatio > 0.3) {
+    return {
+      score: 0.7,
+      target: { kind: 'learn-skill', gateId: learnableSkillAtGate.gateId, skillType: 'inner', skillId: learnableSkillAtGate.skillId },
+      context: { source: 'gate', name: learnableSkillAtGate.name },
+    }
+  }
+
+  // 武館學招：不需要體力，只需金錢
+  if (learnableSkillAtHall) {
+    return {
+      score: 0.6,
+      target: { kind: 'learn-skill', baseId: learnableSkillAtHall.baseId, skillType: learnableSkillAtHall.skillType, skillId: learnableSkillAtHall.skillId },
+      context: { source: 'hall', name: learnableSkillAtHall.name },
+    }
+  }
+
+  return { score: 0 }
+}
+
+// ─── practiceSkill ─────────────────────────────────────────────
+// 門派有可練技能 → 中分（需要體力）
+
+function evaluatePracticeSkill(inputs: FuzzyInputs): GoalResult {
+  const { practiceableSkillAtGate, staminaRatio, needsLeveling } = inputs
+
+  if (!practiceableSkillAtGate) return { score: 0 }
+  if (staminaRatio < 0.3) return { score: 0 }
+
+  // 等級落後時練功優先度提升
+  const baseScore = needsLeveling ? 0.6 : 0.4
+  const f_stamina = trapezoid(staminaRatio, 0.3, 0.5, 1, 1)
+
+  return {
+    score: baseScore * f_stamina,
+    target: { kind: 'practice-skill', gateId: practiceableSkillAtGate.gateId, skillId: practiceableSkillAtGate.skillId, position: practiceableSkillAtGate.position },
+    context: { name: practiceableSkillAtGate.name, needsLeveling },
+  }
+}
+
+// ─── executeMission ────────────────────────────────────────────
+// 有告示牌 + 體力夠 → 執行任務（金錢+聲望）
+
+function evaluateExecuteMission(inputs: FuzzyInputs): GoalResult {
+  const { hasMissionBoard, staminaRatio, materialRatio } = inputs
+
+  if (!hasMissionBoard) return { score: 0 }
+  if (staminaRatio < 0.2) return { score: 0 }
+
+  // 建料充足時做任務的動機較低（已不需要金錢），建料不足時動機高
+  const f_needMaterials = materialRatio < 0.5 ? 0.7 : 0.4
+
+  return {
+    score: f_needMaterials,
+    target: { kind: 'use-facility', baseId: '', facilityType: 'mission' },
+    context: { materialRatio },
+  }
+}
+
+// ─── repairEquipment ──────────────────────────────────────────
+// 有工坊 + 裝備受損 → 修理
+
+function evaluateRepairEquipment(inputs: FuzzyInputs): GoalResult {
+  const { hasWorkshopDamaged, staminaRatio } = inputs
+
+  if (!hasWorkshopDamaged) return { score: 0 }
+  if (staminaRatio < 0.2) return { score: 0 }
+
+  return {
+    score: 0.5,
+    target: { kind: 'use-facility', baseId: '', facilityType: 'repair' },
+  }
+}
+
+// ─── buildDefense ──────────────────────────────────────────────
+// 據點附近有威脅 + 可建造防禦設施 → 建造
+
+function evaluateBuildDefense(inputs: FuzzyInputs): GoalResult {
+  const { buildableDefenseStructure, threatCountNearBase, materialRatio, staminaRatio, nearestBase } = inputs
+
+  if (!buildableDefenseStructure || !nearestBase) return { score: 0 }
+  if (staminaRatio < 0.3 || materialRatio < 0.5) return { score: 0 }
+
+  // 據點附近威脅越多 → 建造動機越高
+  const f_threat = trapezoid(threatCountNearBase, 0, 1, 3, 5)
+  // 建料充足 → 加分
+  const f_material = trapezoid(materialRatio, 0.5, 0.7, 1, 1)
+
+  const score = fuzzyAnd(f_threat, f_material)
+  if (score <= 0) return { score: 0 }
+
+  return {
+    score: score * 0.7,
+    target: { kind: 'defense-build', baseId: nearestBase.id, structureType: buildableDefenseStructure.type, position: nearestBase.position },
+    context: { structureName: buildableDefenseStructure.name, threatCountNearBase },
   }
 }
