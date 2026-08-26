@@ -50,18 +50,16 @@ export type PersistentCharacter = {
 /** 新角色預設已解鎖的內功（吐納功）。 */
 export const DEFAULT_LEARNED_INNER_SKILL_ID = 'tuna-gong'
 
-/** 新角色預設已解鎖的可培養內功（測試用青嵐心法）。 */
-export const DEFAULT_UNLOCKED_INNER_SKILL_IDS = []
-
 /** 新角色預設已解鎖的可培養外功（破空掌）。 */
 export const DEFAULT_UNLOCKED_EXTERNAL_SKILL_IDS = ['sky-breaking-palm']
 
 /** 新角色預設持有的武學殘卷數。 */
-export const DEFAULT_STARTING_SCROLLS = 20
+export const DEFAULT_STARTING_SCROLLS = 2000
 
 /**
  * 建立預設養成欄位（供新角色與缺省相容使用）。
- * 吐納功為初始武學，新角色預設「已學會」（learnedSkillIds 含之）。
+ * 吐納功為初始武學，新角色預設「已學會」（learnedSkillIds 含之）；
+ * 可培養外功預設解鎖破空掌。
  */
 export function createDefaultProgression(): Pick<
   PersistentCharacter,
@@ -69,11 +67,7 @@ export function createDefaultProgression(): Pick<
 > {
   return {
     scrolls: DEFAULT_STARTING_SCROLLS,
-    unlockedSkillIds: [
-      DEFAULT_LEARNED_INNER_SKILL_ID,
-      ...DEFAULT_UNLOCKED_INNER_SKILL_IDS,
-      ...DEFAULT_UNLOCKED_EXTERNAL_SKILL_IDS,
-    ],
+    unlockedSkillIds: [DEFAULT_LEARNED_INNER_SKILL_ID, ...DEFAULT_UNLOCKED_EXTERNAL_SKILL_IDS],
     learnedSkillIds: [DEFAULT_LEARNED_INNER_SKILL_ID],
     initialExternalSkillIds: [],
     initialInternalSkillId: DEFAULT_LEARNED_INNER_SKILL_ID,

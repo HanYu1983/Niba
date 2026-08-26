@@ -141,7 +141,8 @@ function CharacterLibraryScreen({ onSelect }: CharacterLibraryScreenProps) {
         okText="儲存"
         cancelText="取消"
         destroyOnClose
-        width={620}
+        width={1000}
+        style={{ maxWidth: 'calc(100vw - 32px)' }}
       >
         {editing ? (
           <Tabs

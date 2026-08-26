@@ -125,10 +125,10 @@ describe('characterRoster', () => {
     expect(isCharacterNameTaken('丁', character.id)).toBe(false)
   })
 
-  it('新角色預設解鎖吐納功與破空掌，持有 20 武學殘卷，吐納功為初始武學', () => {
+    it('新角色預設解鎖所有功法，持有 20 武學殘卷，吐納功為初始武學', () => {
     const character = createCharacter({ name: '戊' })!
     expect(character.scrolls).toBe(20)
-    // 獲得＝解鎖（可培養）。
+    // 預設解鎖吐納功與破空掌（可培養）。
     expect(character.unlockedSkillIds).toEqual(['tuna-gong', 'sky-breaking-palm'])
     // 吐納功為初始武學，預設已學會並開啟。
     expect(character.learnedSkillIds).toEqual(['tuna-gong'])
@@ -160,8 +160,9 @@ describe('applyEndGameRewards', () => {
     const stats = { ...createEmptyRunStats(), maxLevelReached: 2 }
     const updated = applyEndGameRewards(character.id, stats, true, ['skill-a', 'skill-b'])!
     expect(updated.scrolls).toBe(20 + computeScrollReward(stats, true, 2))
-    // 局末獲得只解鎖到可培養清單，不算已學習（吐納功為初始武學已學會）。
+    // 局末獲得併入可培養清單；skill-a/b 為新增，故 newSkillCount = 2。
     expect(updated.unlockedSkillIds).toEqual(['tuna-gong', 'sky-breaking-palm', 'skill-a', 'skill-b'])
+    // 局末獲得不算已學習（吐納功為初始武學已學會）。
     expect(updated.learnedSkillIds).toEqual(['tuna-gong'])
     expect(updated.gamesPlayed).toBe(1)
   })

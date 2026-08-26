@@ -1,4 +1,4 @@
-import { Button, Divider, Flex, Space, Typography, message } from 'antd'
+import { Button, Divider, Flex, Space, Tag, Typography, message } from 'antd'
 import { useState, type ReactNode } from 'react'
 import {
   getCharacter,
@@ -13,11 +13,65 @@ import {
   type PersistentCharacter,
 } from '../game/characterRoster'
 import { ATTRIBUTE_NAMES, type UpgradeableAttribute } from '../game/types'
-import { allInnerSkillCatalog, allExternalSkillCatalog } from '../game/catalogs/martialHallSkillCatalog'
+import {
+  allInnerSkillCatalog,
+  allExternalSkillCatalog,
+} from '../game/catalogs/martialHallSkillCatalog'
+import type { ExternalSkill } from '../game/catalogs/externalSkillCatalog'
 import { getExternalSkill, getInnerSkill } from '../game/rules/skillRules'
 import SkillCard from './SkillCard'
 
+/** 外功類別（不含 undefined，作為篩選用明確型別）。 */
+type ExternalSkillCategory = 'damage' | 'aura' | 'enhancement'
+/** 五行元素（不含 undefined）。 */
+type ElementKey = ExternalSkill['element'] & string
+
 const ATTRIBUTE_KEYS: UpgradeableAttribute[] = ['armStrength', 'constitution', 'agility', 'innerEnergy', 'insight']
+
+/** 五行屬性篩選標籤。 */
+const ELEMENT_TAGS: { label: string; value: ElementKey }[] = [
+  { label: '⚔️ 金', value: 'metal' },
+  { label: '🌿 木', value: 'wood' },
+  { label: '💧 水', value: 'water' },
+  { label: '🔥 火', value: 'fire' },
+  { label: '⛰️ 土', value: 'earth' },
+  { label: '❄️ 無', value: 'none' },
+]
+
+/** 外功類別篩選標籤。 */
+const CATEGORY_TAGS: { label: string; value: ExternalSkillCategory }[] = [
+  { label: '⚔️ 傷害型', value: 'damage' },
+  { label: '💫 靈氣型', value: 'aura' },
+  { label: '💪 強化型', value: 'enhancement' },
+]
+
+/** 篩選標籤列：「全部」＋多個可切換 tag。單選，再點同一 tag 取消。 */
+function FilterTagRow<T extends string>({
+  options,
+  value,
+  onChange,
+}: {
+  options: { label: string; value: T }[]
+  value: T | null
+  onChange: (next: T | null) => void
+}) {
+  return (
+    <Space wrap size={[4, 4]} style={{ marginBottom: 8 }}>
+      <Tag.CheckableTag checked={value === null} onChange={() => onChange(null)}>
+        全部
+      </Tag.CheckableTag>
+      {options.map((option) => (
+        <Tag.CheckableTag
+          key={option.value}
+          checked={value === option.value}
+          onChange={() => onChange(value === option.value ? null : option.value)}
+        >
+          {option.label}
+        </Tag.CheckableTag>
+      ))}
+    </Space>
+  )
+}
 
 /** 功法展示圖示（共用視覺縮影，與遊戲內功法頁一致）。 */
 function skillIcon(skill: { element?: string }): ReactNode {
@@ -40,6 +94,11 @@ type CharacterTrainingPanelProps = {
 /** 培養面板：花卷提升五維、設定初始功法。由角色 Modal 的「培養」Tab 使用。 */
 function CharacterTrainingPanel({ character, onChanged }: CharacterTrainingPanelProps) {
   const [current, setCurrent] = useState<PersistentCharacter>(character)
+  /** 外功篩選：類別＋五行。 */
+  const [externalCategory, setExternalCategory] = useState<ExternalSkillCategory | null>(null)
+  const [externalElement, setExternalElement] = useState<ElementKey | null>(null)
+  /** 內功篩選：五行（內功無類別）。 */
+  const [internalElement, setInternalElement] = useState<ElementKey | null>(null)
 
   const refresh = () => {
     const latest = getCharacter(character.id)
@@ -115,8 +174,18 @@ function CharacterTrainingPanel({ character, onChanged }: CharacterTrainingPanel
   const insightCapacity = 8 + (current.attributeBonuses.insight ?? 0)
 
   // 可培養清單：遊戲中獲得過的功法（含已學習與尚未學習）。
-  const unlockExternal = allExternalSkillCatalog.filter((skill) => current.unlockedSkillIds.includes(skill.id))
-  const unlockInternal = allInnerSkillCatalog.filter((skill) => current.unlockedSkillIds.includes(skill.id))
+  const allExternal = allExternalSkillCatalog.filter((skill) => current.unlockedSkillIds.includes(skill.id))
+  const allInternal = allInnerSkillCatalog.filter((skill) => current.unlockedSkillIds.includes(skill.id))
+
+  // 套用篩選。
+  const unlockExternal = allExternal.filter(
+    (skill) =>
+      (externalCategory === null || skill.category === externalCategory) &&
+      (externalElement === null || skill.element === externalElement),
+  )
+  const unlockInternal = allInternal.filter(
+    (skill) => internalElement === null || skill.element === internalElement,
+  )
 
   // 下一項功法的學習成本（隨已學習功法數遞增）。
   const nextLearnCost = getSkillLearnCost((current.learnedSkillIds ?? []).length)
@@ -156,7 +225,13 @@ function CharacterTrainingPanel({ character, onChanged }: CharacterTrainingPanel
       </Flex>
 
       <Divider>可培養外功</Divider>
-      <Flex gap={12} wrap>
+      <FilterTagRow options={CATEGORY_TAGS} value={externalCategory} onChange={setExternalCategory} />
+      <FilterTagRow options={ELEMENT_TAGS} value={externalElement} onChange={setExternalElement} />
+      <Flex
+        gap={12}
+        wrap
+        style={{ maxHeight: 320, overflowY: 'auto', paddingRight: 8 }}
+      >
         {unlockExternal.map((skill) => {
           const isLearned = current.learnedSkillIds.includes(skill.id)
           const isOpened = current.initialExternalSkillIds.includes(skill.id)
@@ -206,7 +281,12 @@ function CharacterTrainingPanel({ character, onChanged }: CharacterTrainingPanel
       </Flex>
 
       <Divider>可培養內功</Divider>
-      <Flex gap={12} wrap>
+      <FilterTagRow options={ELEMENT_TAGS} value={internalElement} onChange={setInternalElement} />
+      <Flex
+        gap={12}
+        wrap
+        style={{ maxHeight: 320, overflowY: 'auto', paddingRight: 8 }}
+      >
         {unlockInternal.map((skill) => {
           const isLearned = current.learnedSkillIds.includes(skill.id)
           const isOpened = current.initialInternalSkillId === skill.id
