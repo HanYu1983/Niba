@@ -13,6 +13,7 @@ import {
   type MapTemplate,
 } from '../game/mapTemplates'
 import CampaignScenarioTab from './CampaignScenarioTab'
+import CharacterLibraryScreen from './CharacterLibraryScreen'
 import type { ScenarioDefinition } from '../editor/editorTypes'
 import { clearStoredScenarios } from '../game/scenarioStorage'
 
@@ -200,6 +201,13 @@ function GameStartScreen({ onStart, onDebug, onOpenSkillTest, onOpenEditor, onSt
               label: '📜 劇本地圖',
               children: (
                 <CampaignScenarioTab onStartScenario={onStartScenario} />
+              ),
+            },
+            {
+              key: 'roster',
+              label: '🗂️ 俠客名冊',
+              children: (
+                <CharacterLibraryScreen />
               ),
             },
             {
