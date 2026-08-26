@@ -149,6 +149,67 @@ describe('輜重庫 supply-depot', () => {
   })
 })
 
+describe('修路 buildRoad', () => {
+  it('將玩家所在格地形改為 road，並消耗 2 點體力', () => {
+    const player = makePlayer({ position: { row: 5, column: 5 }, stamina: 10 })
+    gameStore.setStateForTest(makeGameState({ players: [player], bases: [] }))
+
+    const result = gameStore.buildRoad('player-1')
+    expect(result.ok).toBe(true)
+    const state = gameStore.getState()
+    const cell = state.map.cells.find((candidate) => candidate.row === 5 && candidate.column === 5)!
+    expect(cell.terrain).toBe('road')
+    expect(state.players[0].stamina).toBe(8)
+  })
+
+  it('所在格已是道路時無法重複修路', () => {
+    const player = makePlayer({ position: { row: 5, column: 5 }, stamina: 10 })
+    gameStore.setStateForTest(makeGameState({
+      players: [player],
+      bases: [],
+      map: {
+        rows: 40,
+        columns: 40,
+        cells: Array.from({ length: 40 * 40 }, (_, index) => {
+          const row = Math.floor(index / 40)
+          const column = index % 40
+          return {
+            id: `${row}-${column}`,
+            row,
+            column,
+            terrain: row === 5 && column === 5 ? ('road' as const) : ('plain' as const),
+          }
+        }),
+      },
+    }))
+
+    const result = gameStore.buildRoad('player-1')
+    expect(result.ok).toBe(false)
+    if (result.ok) throw new Error('expected failure')
+    expect(result.reason).toContain('已是道路')
+  })
+
+  it('體力不足時無法修路', () => {
+    const player = makePlayer({ position: { row: 5, column: 5 }, stamina: 1 })
+    gameStore.setStateForTest(makeGameState({ players: [player], bases: [] }))
+
+    const result = gameStore.buildRoad('player-1')
+    expect(result.ok).toBe(false)
+    if (result.ok) throw new Error('expected failure')
+    expect(result.reason).toContain('體力不足')
+  })
+
+  it('牆壁無法鋪設道路', () => {
+    const player = makePlayer({ position: { row: 0, column: 0 }, stamina: 10 })
+    gameStore.setStateForTest(makeGameState({ players: [player], bases: [] }))
+
+    const result = gameStore.buildRoad('player-1')
+    expect(result.ok).toBe(false)
+    if (result.ok) throw new Error('expected failure')
+    expect(result.reason).toContain('牆壁')
+  })
+})
+
 describe('軍壘 warcamp-bastion', () => {
   it('軍壘 3 格內箭塔攻擊 ×2、HP ×2', () => {
     const bastion = makeDefense('warcamp-bastion', { row: 5, column: 5 })

@@ -17,6 +17,7 @@ type PlayerCommandPanelProps = {
   onAttack: () => void
   onUseExternalSkill: (skillId: string) => void
   onToggleMovement: () => void
+  onBuildRoad: () => void
   onEndTurn: () => void
   onOpenOptions: () => void
 }
@@ -33,6 +34,7 @@ function PlayerCommandPanel({
   onAttack,
   onUseExternalSkill,
   onToggleMovement,
+  onBuildRoad,
   onEndTurn,
   onOpenOptions,
 }: PlayerCommandPanelProps) {
@@ -75,6 +77,11 @@ function PlayerCommandPanel({
               onClick={onToggleMovement}
             >
               🧭 {movementEnabled ? '取消移動' : '移動'} ✦地形（W）
+            </Button>
+          </Tooltip>
+          <Tooltip title={`快捷鍵 R｜修路：將所在格改為道路，消耗 ${ACTION_STAMINA_COSTS.buildRoad} 點體力`}>
+            <Button disabled={!canSpend(ACTION_STAMINA_COSTS.buildRoad)} onClick={onBuildRoad}>
+              🛤️ 修路 ✦{ACTION_STAMINA_COSTS.buildRoad}（R）
             </Button>
           </Tooltip>
           <Tooltip title={`快捷鍵 B｜使用道具消耗 ${ACTION_STAMINA_COSTS.useItem} 點體力`}>

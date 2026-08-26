@@ -1,4 +1,4 @@
-export type DefenseStructureType = 'barricade' | 'strong-barricade' | 'watchtower' | 'advanced-watchtower' | 'arrow-tower' | 'advanced-arrow-tower' | 'small-watchtower' | 'small-arrow-tower' | 'small-waystation' | 'road' | 'supply-depot' | 'warcamp-bastion' | 'warning-beacon' | 'bombard-cannon'
+export type DefenseStructureType = 'barricade' | 'strong-barricade' | 'watchtower' | 'advanced-watchtower' | 'arrow-tower' | 'advanced-arrow-tower' | 'small-watchtower' | 'small-arrow-tower' | 'small-waystation' | 'supply-depot' | 'warcamp-bastion' | 'warning-beacon' | 'bombard-cannon'
 
 export type DefenseStructureDefinition = {
   type: DefenseStructureType
@@ -30,7 +30,7 @@ export const defenseStructureCatalog: DefenseStructureDefinition[] = [
   { type: 'advanced-watchtower', name: '進階瞭望塔', description: '提供更廣的視野。', icon: '🗼', constructionCost: 60, requiredRank: 4, maxHealth: 60, healthBonus: 0, blocksMovement: false, providesVision: true, visionRange: 5, attackRange: 0, attackDamage: 0 },
   { type: 'arrow-tower', name: '箭塔', description: 'Creature 回合自動攻擊周遭兩格內的怪物。', icon: '🏹', constructionCost: 40, requiredRank: 1, maxHealth: 50, healthBonus: 0, blocksMovement: false, providesVision: false, visionRange: 1, attackRange: 2, attackDamage: 10 },
   { type: 'advanced-arrow-tower', name: '進階箭塔', description: 'Creature 回合自動攻擊周遭三格內的怪物。', icon: '🏹', constructionCost: 80, requiredRank: 3, maxHealth: 70, healthBonus: 0, blocksMovement: false, providesVision: false, visionRange: 1, attackRange: 3, attackDamage: 18 },
-  { type: 'road', name: '道路', description: '鋪設道路，將地形改為道路，移動阻力降為 1。', icon: '🛤️', constructionCost: 5, requiredRank: 1, maxHealth: 0, healthBonus: 0, blocksMovement: false, providesVision: false, visionRange: 1, attackRange: 0, attackDamage: 0, changesTerrain: true },
+  
   { type: 'supply-depot', name: '輜重庫', description: '於原位生成一座大型資源點，資源採集量 ×3。', icon: '📦', constructionCost: 120, requiredRank: 3, maxHealth: 160, healthBonus: 0, blocksMovement: false, providesVision: false, visionRange: 1, attackRange: 0, attackDamage: 0, resourceIncomeMultiplier: 3 },
   { type: 'warcamp-bastion', name: '軍壘', description: '強化 3 格內箭塔／瞭望塔，HP ×2、箭塔攻擊 ×2。', icon: '🏰', constructionCost: 150, requiredRank: 4, maxHealth: 100, healthBonus: 0, blocksMovement: false, providesVision: false, visionRange: 1, attackRange: 0, attackDamage: 0 },
   { type: 'warning-beacon', name: '烽燧臺', description: '每回合 50% 機率揭示全圖敵軍；剛建完立即揭示一次。', icon: '🔔', constructionCost: 100, requiredRank: 6, maxHealth: 140, healthBonus: 0, blocksMovement: false, providesVision: false, visionRange: 1, attackRange: 0, attackDamage: 0 },

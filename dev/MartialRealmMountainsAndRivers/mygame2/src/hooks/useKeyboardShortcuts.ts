@@ -16,6 +16,7 @@ type UseKeyboardShortcutsParams = {
   onOpenEquipment: () => void
   onOpenSkills: () => void
   onUseExternalSkill: (skillId: string) => void
+  onBuildRoad: () => void
   onEndTurn: () => void
 }
 
@@ -32,6 +33,7 @@ function useKeyboardShortcuts({
   onOpenEquipment,
   onOpenSkills,
   onUseExternalSkill,
+  onBuildRoad,
   onEndTurn,
 }: UseKeyboardShortcutsParams) {
   useEffect(() => {
@@ -90,6 +92,14 @@ function useKeyboardShortcuts({
         onOpenSkills()
       }
 
+      // 修路：將所在格改為道路。
+      if (key === 'r') {
+        if (activePlayer.stamina >= 2) {
+          event.preventDefault()
+          onBuildRoad()
+        }
+      }
+
       // 數字鍵 1..N：對應公用指令欄中傷害型外功的順序。
       if (/^[1-9]$/.test(key)) {
         const skillIndex = Number(key) - 1
@@ -127,6 +137,7 @@ function useKeyboardShortcuts({
     onOpenSkills,
     onToggleMovement,
     onUseExternalSkill,
+    onBuildRoad,
   ])
 }
 

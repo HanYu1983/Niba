@@ -86,6 +86,7 @@ import {
   sellItem as sellItemAction,
 } from './actions/shopActions'
 import {
+  buildRoadAtPlayer as buildRoadAtPlayerAction,
   constructBuilding as constructBuildingAction,
   constructDefenseStructure as constructDefenseStructureAction,
   upgradeBuilding as upgradeBuildingAction,
@@ -1368,6 +1369,10 @@ export const gameStore = {
       }
     })
     return result
+  },
+
+  buildRoad: (playerId: string): ActionOutcome => {
+    return runActionOutcome(updateGameState, (state) => buildRoadAtPlayerAction(state, playerId), '修路失敗。')
   },
 
   reconstructRuin: (playerId: string, ruinId: string, structureType: DefenseStructureType): ActionOutcome => {

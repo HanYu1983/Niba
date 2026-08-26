@@ -247,3 +247,43 @@ export function constructDefenseStructure(
     result: { ok: true },
   }
 }
+
+/**
+ * 修路：將玩家所在位置的地形改為 road。
+ * 不消耗建料、不需據點，僅消耗體力（ACTION_STAMINA_COSTS.buildRoad）。
+ */
+export function buildRoadAtPlayer(state: GameState, playerId: string): BuildingActionResult {
+  const player = state.players.find((candidate) => candidate.id === playerId)
+  const actionCheck = canPlayerPerformAction(state, playerId, ACTION_STAMINA_COSTS.buildRoad)
+  if (!actionCheck.ok) return { state, result: { ok: false, reason: actionCheck.reason ?? '目前無法行動。' } }
+  if (!player) return { state, result: { ok: false, reason: '玩家不存在。' } }
+
+  const cell = state.map.cells.find(
+    (candidate) => candidate.row === player.position.row && candidate.column === player.position.column,
+  )
+  if (!cell) return { state, result: { ok: false, reason: '玩家所在格不存在。' } }
+  if (cell.terrain === 'road') return { state, result: { ok: false, reason: '此處已是道路。' } }
+  if (cell.terrain === 'wall') return { state, result: { ok: false, reason: '牆壁無法鋪設道路。' } }
+
+  const roadState: GameState = incrementRunStat({
+    ...state,
+    map: {
+      ...state.map,
+      cells: state.map.cells.map((candidate) =>
+        candidate.row === player.position.row && candidate.column === player.position.column
+          ? { ...candidate, terrain: 'road' as const }
+          : candidate,
+      ),
+    },
+    players: state.players.map((candidate) => candidate.id === playerId
+      ? spendPlayerStamina(candidate, ACTION_STAMINA_COSTS.buildRoad)
+      : candidate),
+  }, 'defenseStructuresBuilt')
+
+  return {
+    state: roadState.campaignState
+      ? checkVictory(progressObjectives(roadState, { type: 'build-defense-structure', structureType: 'road' }))
+      : roadState,
+    result: { ok: true },
+  }
+}

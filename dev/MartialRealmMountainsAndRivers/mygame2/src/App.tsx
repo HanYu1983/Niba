@@ -235,6 +235,14 @@ function App() {
       setSelectedCreatureId(null)
       gameStore.beginExternalSkillTargeting(skillId)
     },
+    onBuildRoad: () => {
+      const result = gameStore.buildRoad(gameState.activePlayerId)
+      if (result.ok) {
+        gameStore.setOperation({ type: 'idle' })
+      } else {
+        gameStore.showActionResult({ title: '修路失敗', message: result.reason, rewards: [] })
+      }
+    },
     onEndTurn: () => {
       if (gameState.creatureTurnInProgress) {
         return
@@ -428,6 +436,14 @@ function App() {
                 gameStore.beginExternalSkillTargeting(skillId)
               }}
               onToggleMovement={() => gameStore.setOperation({ type: movementEnabled ? 'idle' : 'moving', movementUsed: false })}
+              onBuildRoad={() => {
+                const result = gameStore.buildRoad(gameState.activePlayerId)
+                if (result.ok) {
+                  gameStore.setOperation({ type: 'idle' })
+                } else {
+                  gameStore.showActionResult({ title: '修路失敗', message: result.reason, rewards: [] })
+                }
+              }}
               onOpenOptions={() => setSystemCommandModalOpen(true)}
               onEndTurn={() => {
                 if (gameState.creatureTurnInProgress) {
