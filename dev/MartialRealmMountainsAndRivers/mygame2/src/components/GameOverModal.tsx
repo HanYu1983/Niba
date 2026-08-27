@@ -40,7 +40,7 @@ function GameOverModal({ open, won = false, reason, record, scrollReward, onRest
           </Flex>
         )}
 
-        {typeof scrollReward === 'number' && (
+        {typeof scrollReward === 'number' && scrollReward > 0 && (
           <Flex
             justify="center"
             align="center"
