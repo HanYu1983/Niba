@@ -394,7 +394,7 @@ export const gameStore = {
     pendingCreatureTurnBasePlayers = null
     activeCharacterId = selectedCharacter?.id ?? null
     rewardSettled = false
-    gameState = createGameState(lastGameSettings, selectedCharacter)
+    gameState = { ...createGameState(lastGameSettings, selectedCharacter), activeCharacterId }
     listeners.forEach((listener) => listener())
   },
 
@@ -418,9 +418,16 @@ export const gameStore = {
       rewardSettled = true
       return null
     }
-    rewardSettled = true
     const result = applyEndGameRewards(activeCharacterId, stats, won, learnedSkillIds)
-    if (result && runId) markRunSettled(runId)
+    if (result) {
+      rewardSettled = true
+      if (runId) markRunSettled(runId)
+      // 結算發生在 GameOverModal 顯示後；此時原本的自動存檔仍是局末前狀態，
+      // 因此要把包含局末旗標與同一 runId 的最新狀態寫回自動存檔，
+      // 讓存檔摘要能顯示「已領取殘卷」，讀檔也能正確沿用防重登記。
+      // activeCharacterId 已隨 GameState 序列化，故不需再以參數傳入。
+      saveGameStateToSlot(gameState, AUTO_SAVE_SLOT)
+    }
     return result
   },
 
@@ -525,10 +532,15 @@ export const gameStore = {
       aiOrders: result.state.aiOrders ?? [],
       aiConstructionPlans: result.state.aiConstructionPlans ?? [],
     }
-    // 還原名册角色 id：避免局末結算回寫到錯誤角色（bug.md 殘卷重複計算）。
-    activeCharacterId = result.activeCharacterId
-    // 載入局末存檔視為已結算：SystemOverlays 重新 mount 時不得重算殘卷。
-    rewardSettled = gameState.gameWon === true || gameState.gameOver === true
+    // 還原名册角色 id：優先取 GameState.activeCharacterId（隨存檔序列化），
+    // 舊存檔缺漏時回退到 payload 的 activeCharacterId（向下相容）。
+    activeCharacterId = gameState.activeCharacterId ?? result.activeCharacterId ?? null
+    // 以 runId 登記表判斷是否已結算；局末但尚未登記的存檔需允許補發殘卷。
+    // 舊存檔沒有 runId 時，沿用舊規則視為局末已結算，避免重複發放。
+    rewardSettled = Boolean(
+      (gameState.runId && isRunSettled(gameState.runId))
+      || (!gameState.runId && (gameState.gameWon || gameState.gameOver)),
+    )
     listeners.forEach((listener) => listener())
     return { ok: true }
   },
@@ -546,10 +558,15 @@ export const gameStore = {
       aiOrders: result.state.aiOrders ?? [],
       aiConstructionPlans: result.state.aiConstructionPlans ?? [],
     }
-    // 還原名册角色 id：避免局末結算回寫到錯誤角色（bug.md 殘卷重複計算）。
-    activeCharacterId = result.activeCharacterId
-    // 載入局末存檔視為已結算：SystemOverlays 重新 mount 時不得重算殘卷。
-    rewardSettled = gameState.gameWon === true || gameState.gameOver === true
+    // 還原名册角色 id：優先從 GameState.activeCharacterId（隨存檔序列化），
+    // 舊存檔無此欄位時回退到 payload 的 activeCharacterId，避免結算回寫錯誤角色。
+    activeCharacterId = gameState.activeCharacterId ?? result.activeCharacterId ?? null
+    // 以 runId 登記表判斷是否已結算；局末但未 runId 的存檔需允許補發殘卷。
+    // 舊存檔沒有 runId 時，回退舊規則視為局末已結算，避免重複發放。
+    rewardSettled = Boolean(
+      (gameState.runId && isRunSettled(gameState.runId))
+      || (!gameState.runId && (gameState.gameWon || gameState.gameOver)),
+    )
     listeners.forEach((listener) => listener())
     return { ok: true }
   },
@@ -632,7 +649,9 @@ export const gameStore = {
   },
 
   loadDebugMap: () => {
-    gameState = createDebugGameState()
+    // Debug 地圖不綁定名册角色，清除並同步 state。
+    activeCharacterId = null
+    gameState = { ...createDebugGameState(), activeCharacterId: null }
     listeners.forEach((listener) => listener())
   },
 
@@ -640,7 +659,9 @@ export const gameStore = {
   startTestCampaign: () => {
     pendingCreatureTurn = null
     pendingCreatureTurnBasePlayers = null
-    gameState = createTestCampaignGameState()
+    // 測試劇情不綁定名册角色，清除並同步 state。
+    activeCharacterId = null
+    gameState = { ...createTestCampaignGameState(), activeCharacterId: null }
     // 觸發開局（on-start）對話：收集符合的步驟並填入佇列（updateGameState 會自動顯示）。
     updateGameState((state) => {
       const steps = collectTriggeredDialogues(state, { type: 'on-start' })
@@ -669,7 +690,9 @@ export const gameStore = {
     }
     pendingCreatureTurn = null
     pendingCreatureTurnBasePlayers = null
-    gameState = buildGameStateFromScenario(scenario)
+    // 劇本模式不綁定名册角色，清除並同步 state。
+    activeCharacterId = null
+    gameState = { ...buildGameStateFromScenario(scenario), activeCharacterId: null }
     currentScenarioId = scenario.id
     // 觸發開局（on-start）對話與觸發器。
     updateGameState((state) => {
@@ -686,7 +709,8 @@ export const gameStore = {
     pendingCreatureTurnBasePlayers = null
     currentScenarioId = null
     rewardSettled = false
-    gameState = createGameState(lastGameSettings)
+    // 刻意沿用目前選用的名册角色（bug.md 記錄的設計），並同步寫入新 state。
+    gameState = { ...createGameState(lastGameSettings), activeCharacterId }
     listeners.forEach((listener) => listener())
   },
 
@@ -2540,6 +2564,7 @@ export const gameStore = {
   resetForTest: () => {
     gameState = initialGameState
     lastGameSettings = { ...DEFAULT_GAME_SETTINGS }
+    activeCharacterId = null
     rewardSettled = false
     listeners.forEach((listener) => listener())
   },
@@ -2547,6 +2572,8 @@ export const gameStore = {
   /** 僅供測試使用：直接覆寫目前狀態。 */
   setStateForTest: (nextState: GameState) => {
     gameState = nextState
+    // 同步還原名册角色 id（若測試 state 有帶）。
+    activeCharacterId = nextState.activeCharacterId ?? null
     listeners.forEach((listener) => listener())
   },
 }

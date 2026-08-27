@@ -62,7 +62,7 @@ function SystemOverlays({ gameState, onRestartToMap }: SystemOverlaysProps) {
             ? (getCharacter(activeCharacterId)?.unlockedSkillIds ?? []).length
             : 0
           const newSkillCount = Math.max(0, afterCount - beforeCount)
-          const reward = gameStore.getActiveCharacterId()
+          const reward = settled
             ? computeScrollReward(gameState.runStats ?? createEmptyRunStats(), Boolean(gameState.gameWon), newSkillCount)
             : 0
           setScrollReward(reward)

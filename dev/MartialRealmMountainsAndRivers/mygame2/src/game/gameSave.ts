@@ -76,7 +76,10 @@ export function saveGameStateToSlot(state: GameState, slot: number, activeCharac
   if (!isValidSlot(slot)) return { ok: false, reason: '存檔欄位不存在。' }
   if (typeof localStorage === 'undefined') return { ok: false, reason: '目前環境不支援儲存。' }
   try {
-    localStorage.setItem(getSlotKey(slot), JSON.stringify({ version: GAME_SAVE_VERSION, savedAt: new Date().toISOString(), state, activeCharacterId } satisfies GameSaveData))
+    // activeCharacterId 已隨 GameState 序列化；payload 欄位保留作向下相容，
+    // 呼叫端未傳時回退讀取 state.activeCharacterId。
+    const resolvedId = activeCharacterId ?? state.activeCharacterId ?? null
+    localStorage.setItem(getSlotKey(slot), JSON.stringify({ version: GAME_SAVE_VERSION, savedAt: new Date().toISOString(), state, activeCharacterId: resolvedId } satisfies GameSaveData))
     return { ok: true }
   } catch {
     return { ok: false, reason: '儲存失敗，可能是瀏覽器儲存空間不足。' }
@@ -104,7 +107,10 @@ export function deleteGameStateFromSlot(slot: number): void {
 export function saveGameState(state: GameState, activeCharacterId: string | null = null): { ok: boolean; reason?: string } {
   if (typeof localStorage === 'undefined') return { ok: false, reason: '目前環境不支援儲存。' }
   try {
-    const payload: GameSaveData = { version: GAME_SAVE_VERSION, savedAt: new Date().toISOString(), state, activeCharacterId }
+    // activeCharacterId 已隨 GameState 序列化；payload 欄位保留作向下相容，
+    // 呼叫端未傳時回退讀取 state.activeCharacterId。
+    const resolvedId = activeCharacterId ?? state.activeCharacterId ?? null
+    const payload: GameSaveData = { version: GAME_SAVE_VERSION, savedAt: new Date().toISOString(), state, activeCharacterId: resolvedId }
     localStorage.setItem(GAME_SAVE_STORAGE_KEY, JSON.stringify(payload))
     return { ok: true }
   } catch {

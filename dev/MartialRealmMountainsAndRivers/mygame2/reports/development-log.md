@@ -1,5 +1,33 @@
 # 開發日誌
 
+## 2026-08-27｜名冊角色功法帶入、殘卷結算與戰績修正
+
+### 本次完成
+
+- **名冊角色功法帶入功法設定頁**：`createInitialPlayers` 開局時只把初始內功寫入 `innerSkillId`（當前裝備），未寫入 `innerSkillIds`（已知內功清單），導致功法設定頁（`UnifiedSkillModal` 讀 `player.innerSkillIds`）看不到名冊角色帶入的內功。修正為將初始內功一併寫入 `innerSkillIds`（含吐納功，去重），外功原本就正確傳入 `externalSkillIds`。
+- **「單回合最高傷害」NaN 修正**：`runStats.ts` 的 `recordDamageDealt`／`bumpRunStatMax` 對非有限數字不再寫入戰績，並以 `0` 為基準重新計算既有異常值；`GameOverModal` 顯示戰績時加 `Number.isFinite` 防護。
+- **名冊角色殘卷結算修正**：
+  - 結算成功後同步寫回最新自動存檔，讓存檔摘要正確顯示「已領取殘卷」。
+  - 載入局末但尚未結算的存檔時，改以 `runId` 登記表判斷是否已結算，允許正常補發殘卷（舊存檔無 `runId` 時沿用舊規則防重）。
+  - 僅在名冊角色實際寫入成功後才鎖定本局結算，避免角色資料異常時永久遺失獎勵。
+- **`activeCharacterId` 移入 `GameState`**：名冊角色 id 直接隨存檔序列化（`GameState.activeCharacterId`），讀檔後優先從 state 還原、舊存檔回退到 payload 欄位；`startGame`／`restartGame`／`loadScenario`／`loadDebugMap`／`startTestCampaign`／`resetForTest` 皆同步模組變數與 state。`gameSave.ts` 的 payload 欄位保留作向下相容。
+
+### 影響檔案
+
+- 修改：`src/game/worldGeneration.ts`（`createInitialPlayers` 寫入 `innerSkillIds`）
+- 修改：`src/game/runStats.ts`、`src/components/GameOverModal.tsx`（NaN 防護）
+- 修改：`src/game/gameStore.ts`、`src/game/gameSave.ts`、`src/game/types.ts`（`activeCharacterId` 序列化與殘卷結算）
+- 修改：`src/components/overlays/SystemOverlays.tsx`（以實際結算結果顯示殘卷）
+
+### 驗證結果
+
+- TypeScript：通過。vitest：**93 檔／1010 項全數通過**。
+
+### 下一步
+
+- 確認沙盒選用名冊角色後，功法設定頁能顯示帶入的內功／外功。
+- 確認名冊角色完成對局後，結算畫面顯示殘卷、存檔標記「已領取」。
+
 ## 2026-08-26｜怪物主場五行化、視野抽象化、修路快捷指令
 
 ### 本次完成
