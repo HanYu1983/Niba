@@ -9,10 +9,12 @@ type GameOverModalProps = {
   won?: boolean
   reason?: 'all-players-defeated' | 'any-base-destroyed'
   record?: BattleRecord
+  /** 本局結算獲得的武學殘卷（null 表示未選用名册角色；'skipped' 表示此局已領取過）。 */
+  scrollReward?: number | 'skipped' | null
   onRestart: () => void
 }
 
-function GameOverModal({ open, won = false, reason, record, onRestart }: GameOverModalProps) {
+function GameOverModal({ open, won = false, reason, record, scrollReward, onRestart }: GameOverModalProps) {
   const anyBaseDestroyed = reason === 'any-base-destroyed'
   const stats = record?.stats
   const attributes = stats?.attributesAtMaxLevel
@@ -32,6 +34,29 @@ function GameOverModal({ open, won = false, reason, record, onRestart }: GameOve
           {won ? '玩家成功清除地圖上的所有威脅，本局冒險勝利！' : anyBaseDestroyed ? '有一個據點被摧毀，本局冒險結束。' : 'Creature 已消滅所有玩家，本局冒險結束。'}
         </Typography.Paragraph>
 
+        {scrollReward === 'skipped' && (
+          <Flex justify="center" align="center" style={{ border: '1px solid #666', borderRadius: 12, padding: '12px' }}>
+            <Typography.Text type="secondary">此局已領取過武學殘卷獎勵。</Typography.Text>
+          </Flex>
+        )}
+
+        {typeof scrollReward === 'number' && scrollReward > 0 && (
+          <Flex
+            justify="center"
+            align="center"
+            style={{
+              border: '2px solid #d4a93a',
+              borderRadius: 12,
+              background: 'linear-gradient(135deg, #2b2110, #4a3a14)',
+              padding: '16px 12px',
+            }}
+          >
+            <Typography.Text style={{ fontSize: 28, fontWeight: 700, color: '#f3d57c' }}>
+              📜 獲得武學殘卷 ×{scrollReward}
+            </Typography.Text>
+          </Flex>
+        )}
+
         {record && (
           <Descriptions
             title="本局戰績"
@@ -49,6 +74,7 @@ function GameOverModal({ open, won = false, reason, record, onRestart }: GameOve
               { key: 'nests', label: '摧毀巢穴', children: stats?.nestsDestroyed ?? 0 },
               { key: 'maxNormal', label: '最高普攻傷害', children: stats?.maxNormalAttackDamage ?? 0 },
               { key: 'maxExternal', label: '最高外功傷害', children: stats?.maxExternalSkillDamage ?? 0 },
+              { key: 'maxRoundDamage', label: '單回合最高傷害', children: stats?.maxDamageInSingleRound ?? 0 },
               { key: 'built', label: '建造建築', children: stats?.buildingsBuilt ?? 0 },
               { key: 'upgraded', label: '升級建築', children: stats?.buildingsUpgraded ?? 0 },
               { key: 'defense', label: '建造防禦設施', children: stats?.defenseStructuresBuilt ?? 0 },

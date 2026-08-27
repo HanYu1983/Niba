@@ -124,8 +124,9 @@ function App() {
       runDefenseStep: (actorId) => gameStore.runAiDefenseStep(actorId),
       runSupportStep: (actorId) => gameStore.runAiSupportStep(actorId),
       runConstructionStep: (actorId) => gameStore.runAiConstructionStep(actorId),
-      runTest1Step: (actorId) => gameStore.runTest1Step(actorId),
-      runTest2Step: (actorId) => gameStore.runTest2Step(actorId),
+      runFuzzyStep: (actorId) => gameStore.runFuzzyStep(actorId),
+      runDecisionTreeStep: (actorId) => gameStore.runDecisionTreeStep(actorId),
+      runGraphSearchStep: (actorId) => gameStore.runGraphSearchStep(actorId),
       endTurn: (actorId) => gameStore.endPlayerTurn(actorId),
       onStepFailed: (_actorId, reason) => { message.warning(reason) },
     }),
@@ -201,8 +202,8 @@ function App() {
     const activeAiOrder = gameState.aiOrders?.find(
       (order) => order.aiPlayerId === activePlayer.id && order.status === 'active',
     )
-    if (activeAiOrder && (activeAiOrder.type === 'protect-base' || activeAiOrder.type === 'support-player' || activeAiOrder.type === 'test1' || activeAiOrder.type === 'test2')) {
-      // 戰術命令優先：威脅未解除前暫緩建設（命令完成後自動恢復）。
+    if (activeAiOrder) {
+      // 戰術命令優先：有 active 訂單即要求排程（非法類型由 scheduler 的 runStep switch 斷言攔截）。
       scheduler.requestStep(activePlayer.id, activeAiOrder.type)
       return () => scheduler.cancel()
     }

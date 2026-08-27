@@ -4,6 +4,7 @@ import {
   bumpRunStatMax,
   createEmptyRunStats,
   incrementRunStat,
+  recordDamageDealt,
   recordMaxLevel,
 } from './runStats'
 import type { GameState } from './types'
@@ -75,6 +76,33 @@ describe('addMoneySpent', () => {
 
   it('非正數不累加（回傳原 state）', () => {
     const state = addMoneySpent(makeState(), 0)
+    expect(state.runStats).toBeUndefined()
+  })
+})
+
+describe('recordDamageDealt（單回合最高傷害）', () => {
+  it('回合內累加傷害並刷新峰值', () => {
+    let state = recordDamageDealt(makeState(), 30)
+    expect(state.damageDealtThisRound).toBe(30)
+    expect(state.runStats?.maxDamageInSingleRound).toBe(30)
+    // 同回合第二擊：累積 30 + 20 = 50，峰值刷新。
+    state = recordDamageDealt(state, 20)
+    expect(state.damageDealtThisRound).toBe(50)
+    expect(state.runStats?.maxDamageInSingleRound).toBe(50)
+  })
+
+  it('新回合歸零後峰值保留較高者', () => {
+    let state = recordDamageDealt(makeState(), 50)
+    // 模擬回合開始歸零（startPlayerTurn 行為）。
+    state = { ...state, damageDealtThisRound: 0 }
+    state = recordDamageDealt(state, 20)
+    expect(state.damageDealtThisRound).toBe(20)
+    expect(state.runStats?.maxDamageInSingleRound).toBe(50)
+  })
+
+  it('非正數傷害不累加', () => {
+    const state = recordDamageDealt(makeState(), 0)
+    expect(state.damageDealtThisRound).toBeUndefined()
     expect(state.runStats).toBeUndefined()
   })
 })

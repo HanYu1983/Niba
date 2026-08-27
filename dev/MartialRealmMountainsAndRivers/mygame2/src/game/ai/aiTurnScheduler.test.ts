@@ -15,8 +15,9 @@ describe('aiTurnScheduler', () => {
       defenseSteps: [] as string[],
       supportSteps: [] as string[],
       constructionSteps: [] as string[],
-      test1Steps: [] as string[],
-      test2Steps: [] as string[],
+      fuzzySteps: [] as string[],
+      decisionTreeSteps: [] as string[],
+      graphSearchSteps: [] as string[],
       endedTurns: [] as string[],
       stepFailures: [] as { actorId: string; reason: string }[],
     }
@@ -34,12 +35,16 @@ describe('aiTurnScheduler', () => {
         calls.constructionSteps.push(actorId)
         return { ok: true }
       },
-      runTest1Step: (actorId) => {
-        calls.test1Steps.push(actorId)
+      runFuzzyStep: (actorId) => {
+        calls.fuzzySteps.push(actorId)
         return { ok: true }
       },
-      runTest2Step: (actorId) => {
-        calls.test2Steps.push(actorId)
+      runDecisionTreeStep: (actorId) => {
+        calls.decisionTreeSteps.push(actorId)
+        return { ok: true }
+      },
+      runGraphSearchStep: (actorId) => {
+        calls.graphSearchSteps.push(actorId)
         return { ok: true }
       },
       endTurn: (actorId) => {
@@ -91,14 +96,14 @@ describe('aiTurnScheduler', () => {
     expect(scheduler.isPending()).toBe(false)
   })
 
-  it('test1 訂單走 test1 步驟', () => {
+  it('fuzzy 訂單走 fuzzy 步驟', () => {
     const { calls, deps } = createDeps()
     const scheduler = createAiTurnScheduler(deps)
 
-    scheduler.requestStep('p1', 'test1')
+    scheduler.requestStep('p1', 'fuzzy')
     vi.advanceTimersByTime(AI_TURN_STEP_DELAY_MS)
 
-    expect(calls.test1Steps).toEqual(['p1'])
+    expect(calls.fuzzySteps).toEqual(['p1'])
     expect(calls.defenseSteps).toEqual([])
     expect(calls.supportSteps).toEqual([])
     expect(calls.constructionSteps).toEqual([])

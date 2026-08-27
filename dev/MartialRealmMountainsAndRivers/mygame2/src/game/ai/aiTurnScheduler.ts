@@ -14,7 +14,7 @@
 
 export const AI_TURN_STEP_DELAY_MS = 350
 
-export type AiOrderKind = 'protect-base' | 'support-player' | 'construction' | 'test1' | 'test2'
+export type AiOrderKind = 'protect-base' | 'support-player' | 'construction' | 'fuzzy' | 'decision-tree' | 'graph-search'
 
 export interface AiTurnSchedulerDeps {
   /** 讀取最新局面（判斷 Actor 是否仍是當前回合玩家）。 */
@@ -22,8 +22,9 @@ export interface AiTurnSchedulerDeps {
   runDefenseStep(actorId: string): { ok: boolean; reason?: string }
   runSupportStep(actorId: string): { ok: boolean; reason?: string }
   runConstructionStep(actorId: string): { ok: boolean; reason?: string }
-  runTest1Step(actorId: string): { ok: boolean; reason?: string }
-  runTest2Step(actorId: string): { ok: boolean; reason?: string }
+  runFuzzyStep(actorId: string): { ok: boolean; reason?: string }
+  runDecisionTreeStep(actorId: string): { ok: boolean; reason?: string }
+  runGraphSearchStep(actorId: string): { ok: boolean; reason?: string }
   /** step 失敗且 Actor 仍在回合中時，結束其回合。 */
   endTurn(actorId: string): void
   /** step 失敗時通知 UI 顯示原因（可選）。 */
@@ -57,6 +58,21 @@ export function createAiTurnScheduler(deps: AiTurnSchedulerDeps): AiTurnSchedule
     pendingActorId = null
   }
 
+  // 依 orderType 選取對應 step；switch 對 AiOrderKind 窮盡分支，
+  // default 用窮盡性斷言（never）攔截非法 orderType——正常流程永遠不會抵達。
+  function runStep(actorId: string, orderType: AiOrderKind): { ok: boolean; reason?: string } {
+    switch (orderType) {
+      case 'protect-base':   return deps.runDefenseStep(actorId)
+      case 'support-player': return deps.runSupportStep(actorId)
+      case 'construction':   return deps.runConstructionStep(actorId)
+      case 'fuzzy':          return deps.runFuzzyStep(actorId)
+      case 'decision-tree':  return deps.runDecisionTreeStep(actorId)
+      case 'graph-search':   return deps.runGraphSearchStep(actorId)
+    }
+    const never: never = orderType
+    throw new Error(`非法 AI 訂單類型：${never as string}`)
+  }
+
   return {
     requestStep(actorId, orderType): void {
       if (pendingActorId === actorId) {
@@ -72,15 +88,7 @@ export function createAiTurnScheduler(deps: AiTurnSchedulerDeps): AiTurnSchedule
         if (scheduledActorId === null || deps.getState().activePlayerId !== scheduledActorId) {
           return
         }
-        const result = orderType === 'protect-base'
-          ? deps.runDefenseStep(scheduledActorId)
-          : orderType === 'support-player'
-            ? deps.runSupportStep(scheduledActorId)
-            : orderType === 'construction'
-              ? deps.runConstructionStep(scheduledActorId)
-              : orderType === 'test2'
-                ? deps.runTest2Step(scheduledActorId)
-                : deps.runTest1Step(scheduledActorId)
+        const result = runStep(scheduledActorId, orderType)
         if (!result.ok && deps.getState().activePlayerId === scheduledActorId) {
           if (result.reason) {
             deps.onStepFailed?.(scheduledActorId, result.reason)

@@ -78,13 +78,13 @@ describe('Player AI 行動事件化', () => {
       aiOrders: [makeProtectBaseOrder()],
     })
 
-    expect(gameStore.runAiDefenseStep('ai-1')).toEqual({ ok: false, reason: '體力不足。' })
+    expect(gameStore.runAiDefenseStep('ai-1')).toEqual({ ok: false, reason: '體力不足（需要 5，剩餘 3）。' })
 
     const log = events()
     expect(log).toHaveLength(1)
     expect(log[0].action.type).toBe('attack')
     expect(log[0].result).toBe('failed')
-    expect(log[0].reason).toBe('體力不足。')
+    expect(log[0].reason).toBe('體力不足（需要 5，剩餘 3）。')
   })
 
   it('支援：目標死亡暫停命令 → 記錄帶原因的 end-turn 事件', () => {

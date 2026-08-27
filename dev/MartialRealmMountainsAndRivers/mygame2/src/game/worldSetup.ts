@@ -33,6 +33,7 @@ import { pickRandom, createSeededRandom } from './rules/randomRules'
 import { createExplorationEventsFromCatalog } from './events/eventSpawner'
 import { DEFAULT_GAME_SETTINGS } from './gameSettings'
 import { createEmptyRunStats } from './runStats'
+import { generateRunId } from './settledRuns'
 import { buildGameStateFromScenario } from '../editor/rules/scenarioCompiler'
 import { campaignScenarioCatalog } from './catalogs/campaignScenarioCatalog'
 
@@ -112,7 +113,7 @@ export function createGameState(
   )
   const aiOrders: AiOrder[] = players
     .filter((p) => p.isAI)
-    .map((p) => ({ id: `ai-order-test1-${p.id}`, type: 'test1' as const, aiPlayerId: p.id, priority: 50, status: 'active' as const }))
+    .map((p) => ({ id: `ai-order-graph-search-${p.id}`, type: 'graph-search' as const, aiPlayerId: p.id, priority: 50, status: 'active' as const }))
   const fallbackRandom = createSeededRandom(settings.seed + WORLD_SEED_OFFSETS.players + 333)
   const fallbackPlayerName = pickRandom(playerNames, fallbackRandom) ?? '玩家 1'
   const player = players[0] ?? createCharacterState({ id: 'player-1', name: fallbackPlayerName, innerSkillId: 'tuna-gong', position: { row: 1, column: 1 }, attributes: { armStrength: 8, constitution: 8, agility: 8, innerEnergy: 8, insight: 8 }, prestige: 0, money: 0, experience: 0, turnEnded: false })
@@ -157,6 +158,7 @@ export function createGameState(
     operation: { type: 'idle' },
     blockingModal: null,
     runStats: createEmptyRunStats(),
+    runId: generateRunId(),
     sharedWarehouse: [],
     sharedEquipmentWarehouse: [],
     aiOrders,
@@ -474,6 +476,7 @@ export function createPrologueGameState(): GameState {
     operation: { type: 'idle' },
     blockingModal: null,
     runStats: createEmptyRunStats(),
+    runId: generateRunId(),
     sharedWarehouse: [],
     sharedEquipmentWarehouse: [],
     aiOrders: [],

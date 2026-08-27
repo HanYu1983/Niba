@@ -158,12 +158,25 @@ export function makeSupportPlayerOrder(
   }
 }
 
-export function makeTest1Order(
-  overrides: Partial<Extract<AiOrder, { type: 'test1' }>> = {},
-): Extract<AiOrder, { type: 'test1' }> {
+export function makeFuzzyOrder(
+  overrides: Partial<Extract<AiOrder, { type: 'fuzzy' }>> = {},
+): Extract<AiOrder, { type: 'fuzzy' }> {
   return {
-    id: 'order-test1',
-    type: 'test1',
+    id: 'order-fuzzy',
+    type: 'fuzzy',
+    aiPlayerId: 'ai-1',
+    priority: 50,
+    status: 'active',
+    ...overrides,
+  }
+}
+
+export function makeGraphSearchOrder(
+  overrides: Partial<Extract<AiOrder, { type: 'graph-search' }>> = {},
+): Extract<AiOrder, { type: 'graph-search' }> {
+  return {
+    id: 'order-graph-search',
+    type: 'graph-search',
     aiPlayerId: 'ai-1',
     priority: 50,
     status: 'active',
