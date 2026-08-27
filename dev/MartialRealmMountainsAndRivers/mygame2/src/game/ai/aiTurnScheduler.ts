@@ -58,6 +58,21 @@ export function createAiTurnScheduler(deps: AiTurnSchedulerDeps): AiTurnSchedule
     pendingActorId = null
   }
 
+  // 依 orderType 選取對應 step；switch 對 AiOrderKind 窮盡分支，
+  // default 用窮盡性斷言（never）攔截非法 orderType——正常流程永遠不會抵達。
+  function runStep(actorId: string, orderType: AiOrderKind): { ok: boolean; reason?: string } {
+    switch (orderType) {
+      case 'protect-base':   return deps.runDefenseStep(actorId)
+      case 'support-player': return deps.runSupportStep(actorId)
+      case 'construction':   return deps.runConstructionStep(actorId)
+      case 'fuzzy':          return deps.runFuzzyStep(actorId)
+      case 'decision-tree':  return deps.runDecisionTreeStep(actorId)
+      case 'graph-search':   return deps.runGraphSearchStep(actorId)
+    }
+    const never: never = orderType
+    throw new Error(`非法 AI 訂單類型：${never as string}`)
+  }
+
   return {
     requestStep(actorId, orderType): void {
       if (pendingActorId === actorId) {
@@ -73,17 +88,7 @@ export function createAiTurnScheduler(deps: AiTurnSchedulerDeps): AiTurnSchedule
         if (scheduledActorId === null || deps.getState().activePlayerId !== scheduledActorId) {
           return
         }
-        const result = orderType === 'protect-base'
-          ? deps.runDefenseStep(scheduledActorId)
-          : orderType === 'support-player'
-            ? deps.runSupportStep(scheduledActorId)
-            : orderType === 'construction'
-              ? deps.runConstructionStep(scheduledActorId)
-              : orderType === 'decision-tree'
-                ? deps.runDecisionTreeStep(scheduledActorId)
-                : orderType === 'graph-search'
-                  ? deps.runGraphSearchStep(scheduledActorId)
-                  : deps.runFuzzyStep(scheduledActorId)
+        const result = runStep(scheduledActorId, orderType)
         if (!result.ok && deps.getState().activePlayerId === scheduledActorId) {
           if (result.reason) {
             deps.onStepFailed?.(scheduledActorId, result.reason)

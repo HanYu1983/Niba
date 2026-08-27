@@ -202,8 +202,8 @@ function App() {
     const activeAiOrder = gameState.aiOrders?.find(
       (order) => order.aiPlayerId === activePlayer.id && order.status === 'active',
     )
-    if (activeAiOrder && (activeAiOrder.type === 'protect-base' || activeAiOrder.type === 'support-player' || activeAiOrder.type === 'fuzzy' || activeAiOrder.type === 'decision-tree' || activeAiOrder.type === 'graph-search')) {
-      // 戰術命令優先：威脅未解除前暫緩建設（命令完成後自動恢復）。
+    if (activeAiOrder) {
+      // 戰術命令優先：有 active 訂單即要求排程（非法類型由 scheduler 的 runStep switch 斷言攔截）。
       scheduler.requestStep(activePlayer.id, activeAiOrder.type)
       return () => scheduler.cancel()
     }
