@@ -148,6 +148,35 @@ describe('collect 與 build 的最小驗證', () => {
   })
 })
 
+describe('體力驗證', () => {
+  it('attack：體力不足 → 無效', () => {
+    const state = makeAiTestState({
+      players: [makeTestPlayer({ stamina: 2, maxStamina: 20 })],
+      creatures: [makeTestCreature()],
+    })
+    const attack = { type: 'attack' as const, actor: { id: 'ai-1', kind: 'player' as const }, target: { id: 'creature-1', kind: 'creature' as const, position: { row: 5, column: 6 } }, reason: 'attack' }
+    expect(validateAiAction(state, attack)).toEqual({ valid: false, reason: '體力不足（需要 5，剩餘 2）。' })
+  })
+
+  it('build：體力不足 → 無效', () => {
+    const state = makeAiTestState({
+      players: [makeTestPlayer({ stamina: 1, maxStamina: 20 })],
+    })
+    const build = { type: 'build' as const, actor: { id: 'ai-1', kind: 'player' as const }, baseId: 'base-1', buildingType: 'building-type-board', reason: 'build' }
+    expect(validateAiAction(state, build)).toEqual({ valid: false, reason: '體力不足（需要 3，剩餘 1）。' })
+  })
+
+  it('hold / end-turn：不消耗體力 → 體力 0 也有效', () => {
+    const state = makeAiTestState({
+      players: [makeTestPlayer({ stamina: 0, maxStamina: 20 })],
+    })
+    const hold = { type: 'hold' as const, actor: { id: 'ai-1', kind: 'player' as const }, reason: 'wait' }
+    expect(validateAiAction(state, hold)).toEqual({ valid: true })
+    const endTurn = { type: 'end-turn' as const, actor: { id: 'ai-1', kind: 'player' as const }, reason: 'done' }
+    expect(validateAiAction(state, endTurn)).toEqual({ valid: true })
+  })
+})
+
 describe('validateAiDefenseDecision（切片 I：store step 執行前的單一把關）', () => {
   const order = makeProtectBaseOrder()
 

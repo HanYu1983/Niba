@@ -1,4 +1,6 @@
 import type { GameState, PlayerState } from '../types'
+import type { AiAction } from '../ai/aiAction'
+import { getTerrainStaminaCost } from './playerDerivedRules'
 
 export const ACTION_STAMINA_COSTS = {
   attack: 5,
@@ -55,4 +57,53 @@ export function assertPlayerTurn(
 
 export function spendPlayerStamina(player: PlayerState, cost: number): PlayerState {
   return { ...player, stamina: Math.max(0, player.stamina - cost) }
+}
+
+const AVG_MOVEMENT_COST = 2
+
+/**
+ * 從 AiAction + GameState 計算體力消耗。validateAiAction 和 V3 search 共用此函數。
+ *
+ * - move（相鄰格）：getTerrainStaminaCost 精確計算
+ * - move（非相鄰格）：manhattan × AVG_MOVEMENT_COST 估算
+ * - 其他 action：查 ACTION_STAMINA_COSTS
+ */
+export function getAiActionStaminaCost(state: GameState, action: AiAction): number {
+  switch (action.type) {
+    case 'move': {
+      const player = state.players.find((p) => p.id === action.actor.id)
+      if (!player) return Infinity
+      const dist = Math.abs(player.position.row - action.destination.row)
+                 + Math.abs(player.position.column - action.destination.column)
+      if (dist <= 1) {
+        const destCell = state.map.cells.find(
+          (c) => c.row === action.destination.row && c.column === action.destination.column,
+        )
+        if (!destCell) return Infinity
+        return getTerrainStaminaCost(destCell.terrain, player)
+      }
+      return dist * AVG_MOVEMENT_COST
+    }
+    case 'attack':        return ACTION_STAMINA_COSTS.attack
+    case 'collect':       return action.target.kind === 'item'
+                             ? ACTION_STAMINA_COSTS.collectItem
+                             : ACTION_STAMINA_COSTS.collectResource
+    case 'build':         return ACTION_STAMINA_COSTS.build
+    case 'defense-build': return ACTION_STAMINA_COSTS.defenseBuild
+    case 'buy-item':      return ACTION_STAMINA_COSTS.shop
+    case 'use-facility':
+      switch (action.facilityType) {
+        case 'heal':     return ACTION_STAMINA_COSTS.heal
+        case 'mission':  return ACTION_STAMINA_COSTS.mission
+        case 'repair':   return ACTION_STAMINA_COSTS.repair
+      }
+    case 'hold':               return 0
+    case 'end-turn':           return 0
+    case 'allocate-attribute': return 0
+    case 'use-item':           return 0
+    case 'equip':              return 0
+    case 'equip-inner-skill':  return 0
+    case 'learn-skill':        return 0
+    case 'practice-skill':     return 0
+  }
 }
