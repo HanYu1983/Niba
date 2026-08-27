@@ -124,7 +124,7 @@ describe('runAiDefenseStep／runAiSupportStep 整合', () => {
     const result = gameStore.runAiDefenseStep('ai-1')
     const creature = gameStore.getState().creatures.find((candidate) => candidate.id === 'creature-1')
 
-    expect(result).toEqual({ ok: false, reason: '體力不足。' })
+    expect(result).toEqual({ ok: false, reason: '體力不足（需要 5，剩餘 3）。' })
     expect(creature?.health).toBe(20)
     expect(playerById('ai-1').stamina).toBe(3)
     expect(playerById('ai-1').turnEnded).toBe(false)

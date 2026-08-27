@@ -1,6 +1,6 @@
 import type { GameState, Position } from '../../types'
 import { isAdjacent } from '../../types'
-import { canPlayerPerformAction } from '../../rules/actionCostRules'
+import { canPlayerPerformAction, getAiActionStaminaCost } from '../../rules/actionCostRules'
 import { collectReachableCells } from '../perception/reachablePositions'
 import { defenseActionToAiAction, type AiAction, type AiTargetRef } from '../aiAction'
 import type { AiDefenseAction } from '../../aiDefenseRules'
@@ -51,6 +51,14 @@ export function validateAiAction(state: GameState, action: AiAction): AiValidati
   if (action.actor.kind === 'player') {
     const turnCheck = canPlayerPerformAction(state, action.actor.id, 0)
     if (!turnCheck.ok) return { valid: false, reason: turnCheck.reason ?? '目前無法行動。' }
+
+    const staminaCost = getAiActionStaminaCost(state, action)
+    if (staminaCost > 0 && action.type !== 'move') {
+      const player = state.players.find((candidate) => candidate.id === action.actor.id)
+      if (player && player.stamina < staminaCost) {
+        return { valid: false, reason: `體力不足（需要 ${staminaCost}，剩餘 ${player.stamina}）。` }
+      }
+    }
   }
 
   switch (action.type) {
