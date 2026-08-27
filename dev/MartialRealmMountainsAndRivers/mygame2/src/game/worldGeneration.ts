@@ -619,6 +619,8 @@ export function createInitialPlayers(
     // 第一位人類玩家套用名册角色的初始功法；其餘維持預設吐納功、無外功。
     const useCharacterSkills = !isAI && index === 0
     const innerSkillId = useCharacterSkills && initialInternalSkillId ? initialInternalSkillId : 'tuna-gong'
+    // 已知內功清單需含初始內功（含吐納功），否則功法設定頁不會顯示名册角色帶入的內功。
+    const innerSkillIds = [...new Set(['tuna-gong', innerSkillId])]
     const externalSkillIds = useCharacterSkills ? (initialExternalSkillIds ?? []) : []
     const talentBuffs = useCharacterSkills ? getTalentBuffs(talentIds ?? []) : []
     return createCharacterState({
@@ -628,6 +630,7 @@ export function createInitialPlayers(
       portrait: useCharacterSkills ? humanPortrait : undefined,
       title: useCharacterSkills ? humanTitle : undefined,
       innerSkillId,
+      innerSkillIds,
       position,
       attributes,
       buffs: talentBuffs,
