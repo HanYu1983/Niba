@@ -198,9 +198,11 @@ function generateKillThisTurnActions(node: AiNode): AiEdge[] {
     if (hitsToKill > hitsToDie) continue  // 殺不掉
     if (hitsToKill > 1) continue  // 需要多回合
 
-    // 體力驗證
-    const moveCost = dist > 1 ? (dist - 1) * 2 : 0
-    const attackCost = ACTION_STAMINA_COSTS.attack
+    // 體力驗證（用 getAiActionStaminaCost）
+    const moveAction: AiAction = { type: 'move', actor: { id: playerId, kind: 'player' }, destination: enemy.position, reason: '' }
+    const attackAction: AiAction = { type: 'attack', actor: { id: playerId, kind: 'player' }, target: { id: enemy.id, kind: 'creature', position: enemy.position }, reason: '' }
+    const moveCost = getAiActionStaminaCost(state, moveAction)
+    const attackCost = getAiActionStaminaCost(state, attackAction)
     const totalCost = moveCost + attackCost
     if (totalCost > node.remainingStamina) continue
 
@@ -295,7 +297,7 @@ getAdjacentNodes(): AiEdge[] {
     const candidates = gen.generate(this)
     for (const edge of candidates) {
       // 體力驗證：本步 action 的 stamina cost ≤ 剩餘體力
-      const staminaCost = ACTION_STAMINA_COSTS[edge.action.type] ?? 0
+      const staminaCost = getAiActionStaminaCost(this.state, edge.action)
       if (staminaCost > this.remainingStamina) continue  // 體力不足，跳過
 
       // 建立新節點，扣除體力
@@ -315,31 +317,13 @@ getAdjacentNodes(): AiEdge[] {
 }
 ```
 
-**ACTION_STAMINA_COSTS**（復用現有常數）：
-
-```typescript
-const ACTION_STAMINA_COSTS: Record<string, number> = {
-  build: 3,
-  upgrade: 3,
-  collectResource: 2,
-  attack: 1,      // 攻擊消耗 1 體力
-  move: 0,        // 移動消耗在 pathfinding 層計算（每格 2 體力）
-  hold: 0,
-  'end-turn': 0,
-  'allocate-attribute': 0,
-  'use-item': 0,
-  equip: 0,
-  'learn-skill': 0,
-  'practice-skill': 0,
-  'use-facility': 0,
-  'defense-build': 3,
-  'buy-item': 0,
-}
-```
-
-**移動的體力計算**：移動不在 `ACTION_STAMINA_COSTS` 裡，而是在 pathfinding 層。  
-`collectReachableCells` 已經考慮了每格 2 體力的成本，所以移動action的體力消耗 = `移動格數 × 2`。  
-在生成移動候選時，直接從 `remainingStamina` 扣除 `path.length × 2`。
+**體力計算**：統一由 `getAiActionStaminaCost(state, action)` 處理（見重構文件 `refactor-validate-stamina.md` §2.1）。  
+此函數接受 `GameState` + `AiAction`，回傳正確的體力消耗：
+- `move`：從 `state.players` 取 player.position，算 manhattan 距離 × 2
+- `attack`：5
+- `build` / `defense-build`：3
+- `collect`：2（resource）/ 0（item）
+- 其他：0
 
 **本回合击殺的體力驗證**：
 
@@ -356,9 +340,11 @@ function canKillThisTurn(state: GameState, playerId: string, remainingStamina: n
     if (hitsToKill > hitsToDie) continue  // 殺不掉
     if (hitsToKill > 1) continue  // 需要多回合（V3 目前只考慮本回合击殺）
 
-    // 本回合击殺：需要移動體力 + 攻擊體力
-    const moveCost = dist > 1 ? (dist - 1) * 2 : 0  // 移動到相鄰格
-    const attackCost = ACTION_STAMINA_COSTS.attack
+    // 用 getAiActionStaminaCost 算移動 + 攻擊的體力
+    const moveAction: AiAction = { type: 'move', actor: { id: playerId, kind: 'player' }, destination: enemy.position, reason: '' }
+    const attackAction: AiAction = { type: 'attack', actor: { id: playerId, kind: 'player' }, target: { id: enemy.id, kind: 'creature', position: enemy.position }, reason: '' }
+    const moveCost = getAiActionStaminaCost(state, moveAction)
+    const attackCost = getAiActionStaminaCost(state, attackAction)
     const totalCost = moveCost + attackCost
 
     if (totalCost <= remainingStamina) return true
