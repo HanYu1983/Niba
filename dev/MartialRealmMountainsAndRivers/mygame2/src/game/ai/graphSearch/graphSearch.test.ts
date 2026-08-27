@@ -119,22 +119,23 @@ describe('scoring', () => {
 })
 
 describe('runGraphSearchStep', () => {
-  it('stamina 0 回無行動且結束回合', () => {
+  it('stamina 0 回無行動', () => {
     const state = makeState()
     state.players[0].stamina = 0
     const result = runGraphSearchStep(state, 'ai-1', deps)
     expect(result.actions).toEqual([])
-    expect(result.endTurn).toBe(true)
+    expect(result.exitReason).toBe('體力耗盡')
   })
 
-  it('無威脅時回退探索或直接結束回合', () => {
+  it('無威脅時回退探索；沒有可行動則交由出口結束回合', () => {
     const state = makeState()
     state.map.cells = state.map.cells.map((c) => ({ ...c, terrain: c.terrain }))
     const result = runGraphSearchStep(state, 'ai-1', deps)
     if (result.actions.length > 0) {
+      expect(result.actions.every((action) => action.type !== 'end-turn')).toBe(true)
       expect(result.actions[0].type).toBe('move')
     } else {
-      expect(result.endTurn).toBe(true)
+      expect(result.exitReason).toBe('無可行動')
     }
   })
 

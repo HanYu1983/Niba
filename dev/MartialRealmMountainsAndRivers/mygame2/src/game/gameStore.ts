@@ -2370,10 +2370,10 @@ export const gameStore = {
       loopCount++
       const currentPlayer = gameState.players.find((p) => p.id === playerId)!
 
-      const { actions, endTurn } = runGraphSearchStep(gameState, playerId, aiDeps)
+      const { actions, exitReason: searchExit } = runGraphSearchStep(gameState, playerId, aiDeps)
 
-      if (actions.length === 0 && !endTurn) {
-        exitReason = '圖搜索無結果'
+      if (actions.length === 0) {
+        exitReason = searchExit ?? '圖搜索無結果'
         continue
       }
 
@@ -2395,14 +2395,12 @@ export const gameStore = {
           break
         }
       }
-
-      // 最佳路徑以結束回合收尾：淨空 exitReason 交由出口邏輯統一結束回合，
-      // 不在此迴圈內執行 end-turn 行動。
-      if (endTurn) {
-        break
-      }
     }
 
+    // ── 出口邏輯 ──────────────────────────────────────────────
+    // 圖搜索不再把 end-turn 當行動執行。迴圈結束後只走兩個出口：
+    // - 無 exitReason（體力耗盡／迴圈上限）：此處 endPlayerTurn，ok:true（scheduler 不重複結束）
+    // - 有 exitReason（無可行動／驗證失敗等）：ok:false，由 scheduler.endTurn 結束回合
     if (!exitReason) {
       const endAction = { type: 'end-turn' as const, actor, reason: `圖搜索迴圈結束（${loopCount} 步）` }
       gameStore.endPlayerTurn(playerId)
