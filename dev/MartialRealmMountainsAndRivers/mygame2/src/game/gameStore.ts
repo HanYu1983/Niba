@@ -533,7 +533,7 @@ export const gameStore = {
           ? current.type === 'protect-base' && current.baseId === order.baseId
           : order.type === 'support-player'
             ? current.type === 'support-player' && current.playerId === order.playerId
-            : order.type === 'test1' || order.type === 'test2'),
+            : order.type === 'fuzzy' || order.type === 'decision-tree'),
       )
       if (duplicate) return state
       saved = true
@@ -2154,12 +2154,12 @@ export const gameStore = {
     }
   },
 
-  runTest1Step: (playerId: string): ActionOutcome => {
+  runFuzzyStep: (playerId: string): ActionOutcome => {
     const state = gameState
     const player = state.players.find((candidate) => candidate.id === playerId)
-    const order = state.aiOrders?.find((candidate) => candidate.aiPlayerId === playerId && candidate.type === 'test1' && candidate.status === 'active')
+    const order = state.aiOrders?.find((candidate) => candidate.aiPlayerId === playerId && candidate.type === 'fuzzy' && candidate.status === 'active')
     if (!player?.isAI || state.activePlayerId !== playerId || state.creatureTurnInProgress || state.gameOver || !order) {
-      return { ok: false, reason: '目前無法執行 AI test1 回合。' }
+      return { ok: false, reason: '目前無法執行模糊策略回合。' }
     }
 
     const actor = { id: playerId, kind: 'player' as const }
@@ -2232,12 +2232,12 @@ export const gameStore = {
     return { ok: false, reason: exitReason }
   },
 
-  runTest2Step: (playerId: string): ActionOutcome => {
+  runDecisionTreeStep: (playerId: string): ActionOutcome => {
     const state = gameState
     const player = state.players.find((candidate) => candidate.id === playerId)
-    const order = state.aiOrders?.find((candidate) => candidate.aiPlayerId === playerId && candidate.type === 'test2' && candidate.status === 'active')
+    const order = state.aiOrders?.find((candidate) => candidate.aiPlayerId === playerId && candidate.type === 'decision-tree' && candidate.status === 'active')
     if (!player?.isAI || state.activePlayerId !== playerId || state.creatureTurnInProgress || state.gameOver || !order) {
-      return { ok: false, reason: '目前無法執行 AI test2 回合。' }
+      return { ok: false, reason: '目前無法執行決策樹回合。' }
     }
 
     const actor = { id: playerId, kind: 'player' as const }
