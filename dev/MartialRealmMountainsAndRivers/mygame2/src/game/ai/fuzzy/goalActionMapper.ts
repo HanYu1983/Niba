@@ -7,6 +7,8 @@ import { getBlockedPositions } from '../perception/blockedPositions'
 import { canTraverseTerrain, getTerrainStaminaCost } from '../../rules/playerDerivedRules'
 import { getPlayerVisibleCellIds } from '../../rules/visibilityRules'
 import { externalSkillCatalog } from '../../catalogs/externalSkillCatalog'
+import { validateAiAction } from '../validation/validateAiAction'
+import { executeAiAction, type ExecuteAiActionDependencies } from '../execution/executeAiAction'
 
 /**
  * 從指定位置出發，用 Dijkstra 計算到所有可达格的最短路徑成本。
@@ -77,6 +79,33 @@ function findClosestReachablePosition(state: GameState, player: PlayerState, tar
     return dC < dBest ? c : best
   })
   return best.position
+}
+
+/**
+ * 生成行動序列 + 逐步驗證 + 逐步 apply。
+ *
+ * 每個 action 先 validateAiAction（含體力檢查），通過後 executeAiAction 產出新 GameState。
+ * 新 GameState 作為下一步的驗證基準。任何一步失敗 → 回傳空陣列（整組放棄）。
+ */
+export function buildValidatedActionSequence(
+  goal: GoalName,
+  result: GoalResult,
+  state: GameState,
+  player: PlayerState,
+  dependencies: ExecuteAiActionDependencies,
+): AiAction[] {
+  const actions = buildActionSequence(goal, result, state, player)
+  if (actions.length === 0) return []
+
+  let current = state
+  for (const action of actions) {
+    const validation = validateAiAction(current, action)
+    if (!validation.valid) return []
+    const outcome = executeAiAction(current, action, dependencies)
+    if (!outcome.result.ok) return []
+    current = outcome.state
+  }
+  return actions
 }
 
 /**
