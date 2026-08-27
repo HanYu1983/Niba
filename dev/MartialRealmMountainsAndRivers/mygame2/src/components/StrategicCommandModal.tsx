@@ -122,6 +122,7 @@ function StrategicCommandForm({ aiPlayers, players, bases, orders, constructionP
     }
     if (selectedOrder.type === 'fuzzy') return '模糊策略'
     if (selectedOrder.type === 'decision-tree') return '決策樹'
+    if (selectedOrder.type === 'graph-search') return '圖搜索'
   }, [bases, players, selectedOrder])
 
   const saveOrder = () => {
@@ -133,7 +134,9 @@ function StrategicCommandForm({ aiPlayers, players, bases, orders, constructionP
         ? { id, type: 'support-player', aiPlayerId: selectedAi.id, playerId: targetPlayerId, maxDistance, priority, retreatHealthPercent, status: 'active' }
         : orderType === 'decision-tree'
           ? { id, type: 'decision-tree', aiPlayerId: selectedAi.id, priority, status: 'active' }
-          : { id, type: 'fuzzy', aiPlayerId: selectedAi.id, priority, status: 'active' }
+          : orderType === 'graph-search'
+            ? { id, type: 'graph-search', aiPlayerId: selectedAi.id, priority, status: 'active' }
+            : { id, type: 'fuzzy', aiPlayerId: selectedAi.id, priority, status: 'active' }
     const result = onSaveOrder(order)
     onMessage(result.ok ? '戰略命令已保存。' : result.reason ?? '戰略命令保存失敗。')
   }
@@ -197,7 +200,7 @@ function StrategicCommandForm({ aiPlayers, players, bases, orders, constructionP
       <Flex gap={12} wrap>
         <label className="strategic-command-modal__field">
           <Typography.Text strong>命令類型</Typography.Text>
-          <Select value={orderType} onChange={setOrderType} options={[{ label: '保護據點', value: 'protect-base' }, { label: '支援玩家', value: 'support-player' }, { label: '模糊策略', value: 'fuzzy' }, { label: '決策樹', value: 'decision-tree' }]} />
+          <Select value={orderType} onChange={setOrderType} options={[{ label: '保護據點', value: 'protect-base' }, { label: '支援玩家', value: 'support-player' }, { label: '模糊策略', value: 'fuzzy' }, { label: '決策樹', value: 'decision-tree' }, { label: '圖搜索', value: 'graph-search' }]} />
         </label>
         {orderType === 'protect-base' ? (
           <label className="strategic-command-modal__field">

@@ -181,6 +181,7 @@ import { computeFuzzyInputs } from './ai/fuzzy/fuzzyInputs'
 import { evaluateAllGoals } from './ai/fuzzy/goals'
 import { MIN_THRESHOLD, rankGoals } from './ai/fuzzy/decision'
 import { decideNextAction } from './ai/decisionTree/decideNextAction'
+import { runGraphSearchStep } from './ai/graphSearch/runGraphSearchStep'
 import { defaultRandomSource } from './rules/randomRules'
 import { getBlockedPositions } from './rules/movementRules'
 import { getSchoolElement } from './catalogs/skillProgressionCatalog'
@@ -2308,6 +2309,96 @@ export const gameStore = {
 
     if (!exitReason) {
       const endAction = { type: 'end-turn' as const, actor, reason: `決策樹迴圈結束（${loopCount} 步）` }
+      gameStore.endPlayerTurn(playerId)
+      recordAiStepEvent(state.round, playerId, player.name, endAction, { ok: true })
+      return { ok: true }
+    }
+    return { ok: false, reason: exitReason }
+  },
+
+  runGraphSearchStep: (playerId: string): ActionOutcome => {
+    const state = gameState
+    const player = state.players.find((candidate) => candidate.id === playerId)
+    const order = state.aiOrders?.find((candidate) => candidate.aiPlayerId === playerId && candidate.type === 'graph-search' && candidate.status === 'active')
+    if (!player?.isAI || state.activePlayerId !== playerId || state.creatureTurnInProgress || state.gameOver || !order) {
+      return { ok: false, reason: '目前無法執行圖搜索回合。' }
+    }
+
+    const actor = { id: playerId, kind: 'player' as const }
+    let loopCount = 0
+    const MAX_LOOPS = 50
+    let exitReason = ''
+
+    const aiDeps: import('./ai/execution/executeAiAction').ExecuteAiActionDependencies = {
+      combat: {
+        getActionablePlayer,
+        createLootForPlayer,
+        getLearnableSkill,
+        applyExperienceAndLevelUp,
+        addLootToPlayer,
+      },
+      turn: {
+        moveCreatures: (currentState) => moveCreatures(
+          currentState.creatures,
+          currentState.map,
+          currentState.players,
+          currentState.bases,
+          currentState.resourcePoints,
+          currentState.defenseStructures ?? [],
+          currentState.itemPoints ?? [],
+          currentState.explorationEvents ?? [],
+          currentState.creatureNests,
+          currentState.ruins ?? [],
+          currentState.traps ?? [],
+          currentState.sectGates ?? [],
+          currentState.globalBuffs ?? [],
+          defaultRandomSource,
+          currentState.round,
+        ),
+        spawnCreaturesFromNests: (currentState, creatures, players) => spawnCreaturesFromNests(
+          currentState.creatureNests,
+          creatures,
+          currentState.map,
+          players,
+          currentState.bases,
+          currentState.round + 1,
+        ),
+      },
+    }
+
+    while (!exitReason && gameState.players.find((p) => p.id === playerId)!.stamina > 0 && loopCount < MAX_LOOPS) {
+      loopCount++
+      const currentPlayer = gameState.players.find((p) => p.id === playerId)!
+
+      const { actions, exitReason: searchExit } = runGraphSearchStep(gameState, playerId, aiDeps)
+
+      if (actions.length === 0) {
+        exitReason = searchExit ?? '圖搜索無結果'
+        continue
+      }
+
+      for (const action of actions) {
+        const cp = gameState.players.find((p) => p.id === playerId)
+        if (!cp || cp.stamina <= 0) {
+          exitReason = `體力耗盡（剩餘 ${cp?.stamina ?? 0}）`
+          break
+        }
+        const validation = validateAiAction(gameState, action)
+        if (!validation.valid) {
+          exitReason = `保底驗證失敗（代碼 bug）：${validation.reason}`
+          break
+        }
+        const actionResult = gameStore.executeAiAction(action)
+        recordAiStepEvent(gameState.round, playerId, currentPlayer.name, action, actionResult)
+        if (!actionResult.ok) {
+          exitReason = `行動失敗：${actionResult.reason ?? '未知錯誤'}`
+          break
+        }
+      }
+    }
+
+    if (!exitReason) {
+      const endAction = { type: 'end-turn' as const, actor, reason: `圖搜索迴圈結束（${loopCount} 步）` }
       gameStore.endPlayerTurn(playerId)
       recordAiStepEvent(state.round, playerId, player.name, endAction, { ok: true })
       return { ok: true }

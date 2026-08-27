@@ -126,6 +126,7 @@ function App() {
       runConstructionStep: (actorId) => gameStore.runAiConstructionStep(actorId),
       runFuzzyStep: (actorId) => gameStore.runFuzzyStep(actorId),
       runDecisionTreeStep: (actorId) => gameStore.runDecisionTreeStep(actorId),
+      runGraphSearchStep: (actorId) => gameStore.runGraphSearchStep(actorId),
       endTurn: (actorId) => gameStore.endPlayerTurn(actorId),
       onStepFailed: (_actorId, reason) => { message.warning(reason) },
     }),
@@ -201,7 +202,7 @@ function App() {
     const activeAiOrder = gameState.aiOrders?.find(
       (order) => order.aiPlayerId === activePlayer.id && order.status === 'active',
     )
-    if (activeAiOrder && (activeAiOrder.type === 'protect-base' || activeAiOrder.type === 'support-player' || activeAiOrder.type === 'fuzzy' || activeAiOrder.type === 'decision-tree')) {
+    if (activeAiOrder && (activeAiOrder.type === 'protect-base' || activeAiOrder.type === 'support-player' || activeAiOrder.type === 'fuzzy' || activeAiOrder.type === 'decision-tree' || activeAiOrder.type === 'graph-search')) {
       // 戰術命令優先：威脅未解除前暫緩建設（命令完成後自動恢復）。
       scheduler.requestStep(activePlayer.id, activeAiOrder.type)
       return () => scheduler.cancel()
