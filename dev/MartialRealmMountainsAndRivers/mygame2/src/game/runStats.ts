@@ -50,10 +50,12 @@ export function bumpRunStatMax(
   key: 'maxNormalAttackDamage' | 'maxExternalSkillDamage' | 'maxLevelReached',
   value: number,
 ): GameState {
+  if (!Number.isFinite(value)) return state
   const stats = getRunStats(state)
+  const previous = Number.isFinite(stats[key]) ? stats[key] : 0
   return withRunStats(state, {
     ...stats,
-    [key]: Math.max(stats[key], value),
+    [key]: Math.max(previous, value),
   })
 }
 
@@ -65,15 +67,21 @@ export function bumpRunStatMax(
  * 刷新 maxDamageInSingleRound。
  */
 export function recordDamageDealt(state: GameState, amount: number): GameState {
-  if (amount <= 0) return state
-  const dealtThisRound = (state.damageDealtThisRound ?? 0) + amount
+  if (!Number.isFinite(amount) || amount <= 0) return state
+  const previousThisRound = typeof state.damageDealtThisRound === 'number' && Number.isFinite(state.damageDealtThisRound)
+    ? state.damageDealtThisRound
+    : 0
+  const dealtThisRound = previousThisRound + amount
   const stats = getRunStats(state)
+  const previousPeak = typeof stats.maxDamageInSingleRound === 'number' && Number.isFinite(stats.maxDamageInSingleRound)
+    ? stats.maxDamageInSingleRound
+    : 0
   return withRunStats({
     ...state,
     damageDealtThisRound: dealtThisRound,
   }, {
     ...stats,
-    maxDamageInSingleRound: Math.max(stats.maxDamageInSingleRound, dealtThisRound),
+    maxDamageInSingleRound: Math.max(previousPeak, dealtThisRound),
   })
 }
 

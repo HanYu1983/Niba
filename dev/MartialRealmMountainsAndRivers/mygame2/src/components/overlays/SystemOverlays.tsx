@@ -53,18 +53,21 @@ function SystemOverlays({ gameState, onRestartToMap }: SystemOverlaysProps) {
           Boolean(gameState.gameWon),
           learnedSkillIds,
         )
+        console.log('activeCharacterId:', activeCharacterId, 'beforeCount:', beforeCount)
         if (settled === null && activeCharacterId) {
           // 已選角色但未結算：此局已領取過（runId 已登記或 session 旗標）。
           setScrollReward('skipped')
         } else {
+          console.log('settled:', settled, 'beforeCount:', beforeCount)
           // 計算本局「新增功法」帶來的卷獎勵與總獲得量，供結算畫面顯示。
           const afterCount = activeCharacterId
             ? (getCharacter(activeCharacterId)?.unlockedSkillIds ?? []).length
             : 0
           const newSkillCount = Math.max(0, afterCount - beforeCount)
-          const reward = gameStore.getActiveCharacterId()
+          const reward = settled
             ? computeScrollReward(gameState.runStats ?? createEmptyRunStats(), Boolean(gameState.gameWon), newSkillCount)
             : 0
+          console.log('newSkillCount:', newSkillCount, 'reward:', reward)
           setScrollReward(reward)
         }
         const record = computeBattleRecord(gameState)

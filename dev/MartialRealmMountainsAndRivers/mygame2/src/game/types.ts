@@ -985,6 +985,8 @@ export type GameState = {
   gameWon?: boolean
   /** 本局唯一識別（startGame/restartGame/loadScenario 時產生），隨存檔序列化；供殘卷結算跨 session 去重。 */
   runId?: string
+  /** 本局選用的名册角色 id（未選用為 null/缺漏）。隨存檔序列化，讀檔後還原，避免局末結算回寫到錯誤角色。 */
+  activeCharacterId?: string | null
   /** 人類玩家本回合已造成的傷害累積（供「單回合最高傷害」戰績計算）；回合開始時歸零。 */
   damageDealtThisRound?: number
   /** 本局累積戰績；由各行動模組累加，供結局彈窗結算顯示。 */
