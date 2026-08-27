@@ -180,7 +180,6 @@ import { executeAiAction as executeAiActionDomain } from './ai/execution/execute
 import { computeFuzzyInputs } from './ai/fuzzy/fuzzyInputs'
 import { evaluateAllGoals } from './ai/fuzzy/goals'
 import { MIN_THRESHOLD, rankGoals } from './ai/fuzzy/decision'
-import { buildActionSequence } from './ai/fuzzy/goalActionMapper'
 import { decideNextAction } from './ai/decisionTree/decideNextAction'
 import { defaultRandomSource } from './rules/randomRules'
 import { getBlockedPositions } from './rules/movementRules'
@@ -2167,6 +2166,44 @@ export const gameStore = {
     const MAX_LOOPS = 50
     let exitReason = ''
 
+    // evaluateAllGoals 需要的 dependencies（與 executeAiAction 共用）
+    const aiDeps: import('./ai/execution/executeAiAction').ExecuteAiActionDependencies = {
+      combat: {
+        getActionablePlayer,
+        createLootForPlayer,
+        getLearnableSkill,
+        applyExperienceAndLevelUp,
+        addLootToPlayer,
+      },
+      turn: {
+        moveCreatures: (currentState) => moveCreatures(
+          currentState.creatures,
+          currentState.map,
+          currentState.players,
+          currentState.bases,
+          currentState.resourcePoints,
+          currentState.defenseStructures ?? [],
+          currentState.itemPoints ?? [],
+          currentState.explorationEvents ?? [],
+          currentState.creatureNests,
+          currentState.ruins ?? [],
+          currentState.traps ?? [],
+          currentState.sectGates ?? [],
+          currentState.globalBuffs ?? [],
+          defaultRandomSource,
+          currentState.round,
+        ),
+        spawnCreaturesFromNests: (currentState, creatures, players) => spawnCreaturesFromNests(
+          currentState.creatureNests,
+          creatures,
+          currentState.map,
+          players,
+          currentState.bases,
+          currentState.round + 1,
+        ),
+      },
+    }
+
     // 模糊邏輯迴圈：每步 perceive → evaluate → select → execute
     // 所有 break 只設定 exitReason，迴圈結束後統一走 endPlayerTurn 出口。
     while (!exitReason && gameState.players.find((p) => p.id === playerId)!.stamina > 0 && loopCount < MAX_LOOPS) {
@@ -2176,22 +2213,22 @@ export const gameStore = {
       // 1. Perceive
       const inputs = computeFuzzyInputs(gameState, currentPlayer)
 
-      // 2. Evaluate
-      const goalResults = evaluateAllGoals(inputs)
+      // 2. Evaluate（evaluateAllGoals 內部已做 validate + apply）
+      const goalResults = evaluateAllGoals(inputs, gameState, currentPlayer, aiDeps)
 
       // 3. Override：selfPreservation > 0.6 時不攻擊（V1 暫無 combat，此處記錄）
       // （V2 加入 engageCombat 時生效）
 
-      // 4. Select（含 fallback：逐一嘗試直到有可執行的目標）
+      // 4. Select（result.actions 已由 evaluate 保證合法）
       const rankedGoals = rankGoals(goalResults)
-      let actions: ReturnType<typeof buildActionSequence> = []
+      let actions: import('./ai/aiAction').AiAction[] = []
       let goalFound = false
 
       for (const candidate of rankedGoals) {
         if (candidate.result.score < MIN_THRESHOLD) break
 
-        const candidateActions = buildActionSequence(candidate.goal, candidate.result, gameState, currentPlayer)
-        if (candidateActions.length === 0) continue
+        const candidateActions = candidate.result.actions
+        if (!candidateActions || candidateActions.length === 0) continue
         if (candidateActions.every((a) => a.type === 'hold')) continue
 
         actions = candidateActions
@@ -2204,11 +2241,16 @@ export const gameStore = {
         continue
       }
 
-      // 6. Execute
+      // 6. Execute（保底 validate：正常必定通過，不通過 = 代碼 bug）
       for (const action of actions) {
         const cp = gameState.players.find((p) => p.id === playerId)
         if (!cp || cp.stamina <= 0) {
           exitReason = `體力耗盡（剩餘 ${cp?.stamina ?? 0}）`
+          break
+        }
+        const validation = validateAiAction(gameState, action)
+        if (!validation.valid) {
+          exitReason = `保底驗證失敗（代碼 bug）：${validation.reason}`
           break
         }
         const actionResult = gameStore.executeAiAction(action)
